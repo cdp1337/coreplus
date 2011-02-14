@@ -624,7 +624,9 @@ class Component extends InstallArchiveAPI{
 		if(!$this->isLoadable()) return false;
 		
 		$this->_parseDBSchema();
-				
+		
+		$this->_parseConfigs();
+		
 		// Run through each task under <install> and execute it.
 		if($this->getRootDOM()->getElementsByTagName('install')->item(0)){
 			InstallTask::ParseNode(
@@ -652,6 +654,8 @@ class Component extends InstallArchiveAPI{
 		if(!$this->isInstalled()) return false;
 		
 		$this->_parseDBSchema();
+		
+		$this->_parseConfigs();
 		
 		// @todo What else should be done?
 		
@@ -686,7 +690,37 @@ class Component extends InstallArchiveAPI{
 		}
 		
 		$this->_parseDBSchema();
+		
+		$this->_parseConfigs();
 	}
+	
+	/**
+	 * Internal function to parse and handle the configs in the component.xml file.
+	 * This is used for installations and upgrades.
+	 */
+	private function _parseConfigs(){
+		// I need to get the schema definitions first.
+		$node = $this->getElement('configs');
+		//$prefix = $node->getAttribute('prefix');
+		
+		// Now, get every table under this node.
+		foreach($node->getElementsByTagName('config') as $confignode){
+			// <config key="/core/theme" type="string" default="default" description="The theme of the site"/>
+			// Insert/Update the defaults for an entry in the database.
+			$s = new SQLBuilderInsertUpdate();
+			$s->table(DB_PREFIX . 'config');
+			$s->set('key', $confignode->getAttribute('key'));
+			$s->set('type', $confignode->getAttribute('type'), true);
+			$s->set('default_value', $confignode->getAttribute('default'), true);
+			$s->set('value', $confignode->getAttribute('default')); // Do not "update" value, keep whatever the user set previously.
+			$s->set('description', $confignode->getAttribute('description'), true);
+			
+			//echo $s->query() . '<br/>';
+			
+			$s->execute();
+		}
+	}
+	
 	
 	/**
 	 * Internal function to parse and handle the DBSchema in the component.xml file.

@@ -58,6 +58,7 @@ require_once(ROOT_PDIR . "core/libs/core/ISingleton.interface.php");
 //require_once("core/classes/IDatabaseClass.interface.php");
 require_once(ROOT_PDIR . 'core/libs/core/XMLLoader.class.php');
 //require_once(ROOT_PDIR . 'core/libs/core/JSLibrary.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/SQLBuilder.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/InstallArchive.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/InstallArchiveAPI.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Component.class.php');

@@ -44,6 +44,11 @@ class SQLBuilder {
 		// Allow chaining
 		return $this;
 	}
+	
+	// Alias of from
+	public function table($table){
+		return $this->from($table);
+	}
 
 	public function where($where){
 		if($where === null || $where === false){
@@ -140,6 +145,27 @@ class SQLBuilderInsert extends SQLBuilder{
 
 	public function set($column, $value){
 		$this->_sets["`$column`"] = DB::qstr($value);
+	}
+}
+
+class SQLBuilderInsertUpdate extends SQLBuilder{
+	protected $_sets = array();
+	protected $_updates = array();
+
+	public function query(){
+		$q = "INSERT INTO " . implode(', ', $this->_tables);
+		$q .= " ( " . implode(', ', array_keys($this->_sets)) . " )";
+		$q .= " VALUES ";
+		$q .= " ( " . implode(', ', array_values($this->_sets)) . " )";
+		
+		// And the 'ON DUPLICATE' part
+		$q .= " ON DUPLICATE KEY UPDATE " . implode(', ', $this->_updates);
+		return $q;
+	}
+
+	public function set($column, $value, $onupdate = false){
+		$this->_sets["`$column`"] = DB::qstr($value);
+		if($onupdate) $this->_updates[] = "`$column` = " . DB::qstr($value);
 	}
 }
 
