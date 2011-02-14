@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<configuration>
+
+	<define name="PORT_NUMBER" type="int">
+		<defaultValue>80</defaultValue>
+		<value>80</value>
+		<description>Port number server is listening on for normal connections.</description>
+	</define>
+	
+	<define name="PORT_NUMBER_SSL" type="int">
+		<defaultValue>443</defaultValue>
+		<value>443</value>
+		<description>Port number server is listening on for secured connections.</description>
+	</define>
+	
+	<define name="ENABLE_SSL" type="Boolean">
+		<defaultValue>false</defaultValue>
+		<value>false</value>
+		<description>Enable or disable secured communication to this server.	It is suggested to enable this if possible.</description>
+	</define>
+	
+	<_define name="ENABLE_LOGGING" type="Boolean">
+		<defaultValue>true</defaultValue>
+		<value>true</value>
+		<description>Enable the ability for the system to log to the filesystem.</description>
+	</_define>
+	
+	<_define name="LOGDIR" type="string">
+		<defaultValue>logs/</defaultValue>
+		<value>logs/</value>
+		<description>Directory log files are written to. MUST end in the directory separator for the OS, ie: / or \ for win32.
+If this begins with a / or [drive]:/ absolute files are used,
+else relative to the root directory is used.
+
+**NOTICE** This directory MUST be writable by the user who executes PHP, usually apache or www-data.</description>
+	</_define>
+	
+	<_define name="LOG_FILEFORMAT" type="string">
+		<defaultValue>{dateYmd}.{filename}.log</defaultValue>
+		<value>{dateYmd}.{filename}.log</value>
+		<description>Format of log files.	This can contain several variables, such as...
+ *	 {date???} - replace ??? with the date format you want as per php's Date() function
+ *	 @see http://www.php.net/date
+ *	 {filename} - Filename requested to be saved from the application, such as user, email, access, etc...
+ *	 {remoteIP} - Remote IP of the connecting machine.
+ *	 {type}		 - Type of error, such as notice, warning, error, etc...</description>
+	</_define>
+	
+	<_define name="LOG_LINEFORMAT" type="string">
+		<defaultValue>{dateM d H:i:s} {remoteIP}: [{type}] {text}</defaultValue>
+		<value>{dateM d H:i:s} {remoteIP}: [{type}] {text}</value>
+		<description>Format inside log files.	This can contain the above mentioned variables plus...
+ *	 {text}	- Body message of error. (really probably should have at least this...)</description>
+	</_define>
+	
+	<define name="SITENAME" type="string">
+		<defaultValue>My KaiToo</defaultValue>
+		<value></value>
+		<description>The site name that can be used for emails and page titles.</description>
+	</define>
+	
+	<return name="site_url" type="string">
+		<defaultValue/>
+		<value></value>
+		<description>If a site url is provided and not blank, force the servername 
+		to match it.	Useful for restricting access to www.domain.com.
+		Please note, if you set this to an invalid location, you or anyone else will
+		NOT be able to access the site.</description>
+	</return>
+	
+	<define name="SITE_CONFIGURED" type="boolean" display="no">
+		<defaultValue>false</defaultValue>
+		<value>true</value>
+	</define>
+	
+	<define name="DEVELOPMENT_MODE" type="boolean">
+		<defaultValue>false</defaultValue>
+		<value>true</value>
+		<description>If this is a production site, it is advised to disable this.</description>
+	</define>
+	
+	<!-- These don't like to be defined in here.... it comes out literally "\n" -->
+	<!--
+	<define name="NL" type="string">
+		<defaultValue>\n</defaultValue>
+		<value>\n</value>
+		<description>The newline character to use.</description>
+	</define>
+	
+	<define name="TAB" type="string">
+		<defaultValue>\t</defaultValue>
+		<value>\t</value>
+		<description>The tab character to use.</description>
+	</define>
+	-->
+</configuration>
