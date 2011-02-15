@@ -37,13 +37,19 @@ img { border:0px; }
 fieldset { border:1px solid #AAA; padding:0.75em; margin:0.5em; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;}
 fieldset legend { color:#555; font-size:84%; }
 header { padding: 5px 2px 1px; display:block;}
-footer { height:50px; }
+footer { height:50px; clear:both;}
 
 
 /*** Navigation breadcrumbs and other sub-nav elements ***/
 nav#breadcrumbs { font-size:80%; margin-bottom:0.5em; margin-left:1em; color:#555; padding-bottom:0.5em; border-bottom:1px solid #888; }
 nav#breadcrumbs a { color:#555; }
 nav#breadcrumbs ul.controls { float:right; margin-top:-4px; }
+
+
+/*** Left-column ***/
+.pagecolumn { width:170px; }
+.column1 #leftcol { float:left; }
+.column1 section.pagecontent { margin-left:175px; }
 
 
 /*** Controls that can be implemented throughout the site ***/
