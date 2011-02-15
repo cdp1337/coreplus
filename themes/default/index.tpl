@@ -49,7 +49,7 @@
 					</p>
 				{/if}
 				<aside id="leftcol" class="pagecolumn">
-					[[ plugin ]]
+					{widget name="AdminMenuWidget"}
 				</aside>
 				<section class="pagecontent">
 					{$body}

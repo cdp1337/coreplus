@@ -22,5 +22,12 @@
  */
 
 class WidgetController {
-	// @todo Do some shit here!
+	public static function View(View $page){
+		
+	}
+	
+	public static function Edit(View $page){
+		
+	}
+	
 }
