@@ -271,7 +271,7 @@
 		<file filename="core/libs/core/InstallArchive.class.php" md5="d9063bc8b13fe8955ef3a2fe23d7dae8">
 			<provides type="class" name="InstallArchive"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="84f78148c92e07121652954e0addd5d3">
+		<file filename="core/libs/core/Component.class.php" md5="f2feb4ab9e91793d804c0b8dc345c70d">
 			<provides type="class" name="Component"/>
 		</file>
 		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="054ebae9c223fa54d6cb2232a593c4d7">
@@ -642,7 +642,7 @@
 		<file filename="core/libs/core/PageModel.class.php" md5="7ba8fc8144bea9751f98abfd31576e6d">
 			<provides type="class" name="PageModel"/>
 		</file>
-		<file filename="core/libs/core/SQLBuilder.class.php" md5="1c66b6c760a424629019b9d5ea5e5dde">
+		<file filename="core/libs/core/SQLBuilder.class.php" md5="dfa26ae1a81300231aa05049713eeca7">
 			<provides type="class" name="SQLBuilder"/>
 			<provides type="class" name="SQLBuilderSelect"/>
 			<provides type="class" name="SQLBuilderUpdate"/>
@@ -689,10 +689,16 @@
 		<file filename="core/libs/core/View.class.php" md5="73b94fcae5682e507e6759296b260ace">
 			<provides type="class" name="View"/>
 		</file>
+		<file filename="core/libs/core/WidgetController.class.php" md5="67e9156f01e36c8425929864dc4e4856">
+			<provides type="class" name="WidgetController"/>
+		</file>
 	</library>
 	<module>
 		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
 			<provides type="controller" name="ErrorController"/>
+		</file>
+		<file filename="core/controllers/CoreWidget.php" md5="8852205fcb705e5d3b1ce7085408cafe">
+			<provides type="widgetcontroller" name="CoreWidgetController"/>
 		</file>
 	</module>
 	<view searchdir="core/templates">
@@ -715,17 +721,10 @@
 		<file filename="core/templates/forms/groups/default.tpl" md5="7a6fa4a3c2303dd4e07c98aee5d57db1"/>
 		<file filename="core/templates/pages/error/error404.tpl" md5="94db4b150349c6170a72cf39172b4cd8"/>
 	</view>
-	<install>
-		<!-- @todo Move these to their own section, just like the database definitions. -->
-		<addconfig set="core" key="admin_notifies" type="setting" valuetype="string" description="Any email addresses you want administrative notifications sent to. (comma-separate multiple addresses.)" value="admin@yourdomain.com"/>
-		<addconfig set="core" key="gmt_offset" type="setting" valuetype="int" description="" value="0"/>
-		<addconfig set="core" key="index_page" type="setting" valuetype="string" description=""/>
-		<addconfig set="core" key="theme" type="setting" valuetype="string" description="" value="default"/>
-		<addconfig set="core" key="timezone" type="setting" valuetype="int" description="" value="-5"/>
-	</install>
+	<install/>
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
-			<date>Sun, 13 Feb 2011 20:24:42 -0500</date>
+			<date>Sun, 13 Feb 2011 21:10:59 -0500</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
@@ -932,7 +931,7 @@
 		<file filename="license.txt" md5="73f1eb20517c55bf9493b7dd6e480788"/>
 		<file filename="packager.php" md5="7178a77c09ff884d484e4d834c768b25"/>
 		<file filename="assets/default/logo.png" md5="ec0a7fe6809e4f051bb09e1c21aab52c"/>
-		<file filename="assets/default/css/styles.css" md5="88255e842ffd6be7473bd14be6f7320e"/>
+		<file filename="assets/default/css/styles.css" md5="aefe2d3010280a64fbe20df347e83b4f"/>
 		<file filename="assets/default/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
 		<file filename="assets/default/icons/view.png" md5="5108ec1f152e29684be1bfe393ef2fc8"/>
 		<file filename="assets/default/icons/directory.png" md5="50afe6c35c14f4174d8d2e33f5025f14"/>

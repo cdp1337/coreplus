@@ -150,6 +150,11 @@ class Component extends InstallArchiveAPI{
 							$el = $this->getElement('/module/file[@filename="' . $fname . '"]');
 							$getnames = true;
 						}
+						// WidgetControllers also go in the module section.
+						elseif(preg_match('/^(abstract ){0,1}class[ ]*[a-z0-9_\-]*[ ]*extends widgetcontroller/im', $fconts)){
+							$el = $this->getElement('/module/file[@filename="' . $fname . '"]');
+							$getnames = true;
+						}
 						elseif(preg_match('/^(abstract |final ){0,1}class[ ]*[a-z0-9_\-]*/im', $fconts)){
 							$el = $this->getElement('/library/file[@filename="' . $fname . '"]');
 							$getnames = true;
@@ -168,6 +173,14 @@ class Component extends InstallArchiveAPI{
 						preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller/im', $fconts, $ret);
 						foreach($ret[2] as $foundclass){
 							$this->getElementFrom('provides[@type="controller"][@name="' . $foundclass . '"]', $el);
+							// This is needed to tell the rest of the save logic to ignore the save for classes.
+							$viewclasses[] = $foundclass;
+						}
+						
+						preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*widgetcontroller/im', $fconts, $ret);
+						foreach($ret[2] as $foundclass){
+							$this->getElementFrom('provides[@type="widgetcontroller"][@name="' . $foundclass . '"]', $el);
+							// This is needed to tell the rest of the save logic to ignore the save for classes.
 							$viewclasses[] = $foundclass;
 						}
 						
@@ -369,6 +382,7 @@ class Component extends InstallArchiveAPI{
 					switch(strtolower($p->getAttribute('type'))){
 						case 'class':
 						case 'controller':
+						case 'widgetcontroller':
 							$classes[$p->getAttribute('name')] = $filename;
 							break;
 					}
