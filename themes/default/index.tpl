@@ -49,7 +49,8 @@
 					</p>
 				{/if}
 				<aside id="leftcol" class="pagecolumn">
-					{widget name="AdminMenuWidget"}
+					{widget name="/Admin/Menu"}
+					{*widget name="/Content/View/5"*}
 				</aside>
 				<section class="pagecontent">
 					{$body}

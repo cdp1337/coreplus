@@ -16,6 +16,12 @@ class View {
 	const ERROR_NOERROR = 200;
 	const ERROR_NOTFOUND = 404;
 	const ERROR_ACCESSDENIED = 403;
+	
+	const MODE_PAGE = 'page';
+	const MODE_WIDGET = 'widget';
+	// @todo Implement the rest of the modes.
+	//const MODE_AJAX = 'ajax';
+	// const MODE_JSON = 'json';
 
 
 	public $error;
@@ -31,9 +37,11 @@ class View {
 	public $mastertemplate;
 	public $breadcrumbs = array();
 	public $controls = array();
+	public $mode;
 
 	public function __construct(){
 		$this->error = View::ERROR_NOERROR;
+		$this->mode = View::MODE_PAGE;
 	}
 
 	public function setParameters($params){
@@ -75,14 +83,42 @@ class View {
 	}
 
 	public function fetchBody(){
-		$t = $this->getTemplate();
+		switch($this->mode){
+			case View::MODE_PAGE:
+				$t = $this->getTemplate();
+				return $t->fetch($this->templatename);
+				break;
+			case View::MODE_WIDGET:
+				// This template can be a couple things.
+				$tn = Template::ResolveFile(preg_replace('/^pages\//', 'widgets/', $this->templatename));
+				if(!$tn) $tn = $this->templatename;
+				//var_dump($tn);
+				$t = $this->getTemplate();
+				//var_dump($t);
+				return $t->fetch($tn);
+				break;
+		}
+		
 
-		return $t->fetch($this->templatename);
+		
 	}
 
 	public function render(){
 		// Whee!
-		$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::GetValue('/core/theme') . '/' . $this->mastertemplate;
+		//var_dump($this->templatename, Template::ResolveFile($this->templatename));
+		// Master template depends on the render mode.
+		switch($this->mode){
+			case View::MODE_PAGE:
+				$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::GetValue('/core/theme') . '/' . $this->mastertemplate;
+				break;
+			case View::MODE_WIDGET:
+				$mastertpl = Template::ResolveFile('widgetcontainers/' . $this->mastertemplate);
+				break;
+		}
+		
+		// If there's no template, I have nothing to even do!
+		if(!$mastertpl) return $this->fetchBody ();
+		
 
 		$head = '';
 		foreach($this->metas as $k => $v){

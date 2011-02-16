@@ -88,6 +88,8 @@ class ContentController extends Controller {
 
 		// Save the model
 		$m = $form->getModel();
+		// These pages are widget-able.
+		$m->getLink('Page')->set('widget', true);
 		$m->save();
 		return $m->get('baseurl');
 	}

@@ -96,6 +96,7 @@ class CurrentPage{
 		}
 		
 		
+		
 		if($view->error != View::ERROR_NOERROR){
 			// Update some information in the view.
 			// Transpose some useful data for it.

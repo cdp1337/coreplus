@@ -686,7 +686,7 @@
 			<provides type="class" name="FormPageInsertables"/>
 			<provides type="class" name="FormPageMeta"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="73b94fcae5682e507e6759296b260ace">
+		<file filename="core/libs/core/View.class.php" md5="d899a7f194ddb666f55bfb6a7f3acd2e">
 			<provides type="class" name="View"/>
 		</file>
 		<file filename="core/libs/core/WidgetController.class.php" md5="9d3ce60d27542c97f16be9c67609a64d">
@@ -703,8 +703,12 @@
 		<file filename="core/controllers/CoreWidget.php" md5="8852205fcb705e5d3b1ce7085408cafe">
 			<provides type="widgetcontroller" name="CoreWidgetController"/>
 		</file>
-		<file filename="core/controllers/AdminMenuWidgetController.php" md5="b014084141d91cc4eb855530a1dbdaed">
+		<file filename="core/controllers/AdminMenuWidgetController.php" md5="37946e6b8a0b81acf1d0058ed7a63510">
 			<provides type="widgetcontroller" name="AdminMenuWidgetController"/>
+			<provides type="controller" name="AdminMenuController"/>
+		</file>
+		<file filename="core/controllers/AdminController.php" md5="7f4406a7a5f92e654551adb55666aca0">
+			<provides type="controller" name="AdminController"/>
 		</file>
 	</module>
 	<view searchdir="core/templates">
@@ -726,11 +730,13 @@
 		<file filename="core/templates/forms/elements/password.tpl" md5="9642512379195999ea4c0a71b876d80f"/>
 		<file filename="core/templates/forms/groups/default.tpl" md5="7a6fa4a3c2303dd4e07c98aee5d57db1"/>
 		<file filename="core/templates/pages/error/error404.tpl" md5="94db4b150349c6170a72cf39172b4cd8"/>
+		<file filename="core/templates/widgets/adminmenu/index.tpl" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="core/templates/widgets/admin/menu.tpl" md5="2780a2aafc1e2c3269fe6dc49c1f543e"/>
 	</view>
 	<install/>
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
-			<date>Tue, 15 Feb 2011 01:56:05 -0500</date>
+			<date>Tue, 15 Feb 2011 21:52:59 -0500</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
@@ -772,7 +778,7 @@
 		<file filename="license.txt" md5="73f1eb20517c55bf9493b7dd6e480788"/>
 		<file filename="core/bootstrap_predefines.php" md5="dab15e3b2136b94a6b900116d0f6b74e"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="fbb313bab37183e80a90cdfa1ceeb30a"/>
-		<file filename="core/libs/smarty-plugins/function.widget.php" md5="e03ad03acab98668041b870bcc950ccf"/>
+		<file filename="core/libs/smarty-plugins/function.widget.php" md5="efee56afd71540793fa9ad94d9c63662"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="800e464e8bae160ad7aba53d63ab78c8"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
@@ -1219,6 +1225,18 @@
 				</comment>
 			</column>
 			<column>
+				<field>widget</field>
+				<type>enum('0','1')</type>
+				<collation>latin1_swedish_ci</collation>
+				<null>NO</null>
+				<key></key>
+				<default>0</default>
+				<extra></extra>
+				<comment>
+					If this page can be viewed as a widget
+				</comment>
+			</column>
+			<column>
 				<field>admin</field>
 				<type>enum('0','1')</type>
 				<collation>latin1_swedish_ci</collation>
@@ -1227,7 +1245,7 @@
 				<default>0</default>
 				<extra></extra>
 				<comment>
-					[Cached] If this page is an administration page
+					If this page is an administration page
 				</comment>
 			</column>
 			<column>
