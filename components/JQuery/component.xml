@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component>
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.0~1" name="JQuery" execmode="web">
+	<changelog version="1.5.0~1">
+		<packagemeta>
+			<date>Fri, 18 Feb 2011 01:13:41 -0500</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.1-dev1</packager>
+		</packagemeta>
+	</changelog>
+	<assets>
+		<file filename="assets/js/jquery/jquery-1.5.min.js" md5="75aab072591089f5dc0007a97431b4b1"/>
+		<file filename="assets/js/jquery/jquery-1.5.js" md5="847945778a448af8cd0af49c4e69a6ee"/>
+	</assets>
+	<library>
+		<scriptlibrary name="jquery" call="JQuery::IncludeJQuery"/>
+		<scriptlibrary name="jqueryui" call="JQuery::IncludeJQueryUI"/>
+		<file filename="JQuery.lib.php" md5="7f1da6321e54582d4a340adad6d707e8">
+			<provides type="class" name="JQuery"/>
+		</file>
+	</library>
+	<author name="powellc"/>
+	<otherfiles/>
+	<dbschema prefix="CAE2_"/>
+</component>
+
