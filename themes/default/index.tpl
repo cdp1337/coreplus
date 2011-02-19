@@ -6,7 +6,7 @@
 		<!--[if lt IE 9]>
 			<script type="text/javascript" src="{asset src='js/html5.js'}"></script>
 		<![endif]-->
-		{$head}
+		{head}
 		<title>{$title}</title>
 	</head>
 
