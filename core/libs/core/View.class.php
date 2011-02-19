@@ -38,6 +38,9 @@ class View {
 	public $breadcrumbs = array();
 	public $controls = array();
 	public $mode;
+	
+	public $headscripts = array();
+	public $headstylesheets = array();
 
 	public function __construct(){
 		$this->error = View::ERROR_NOERROR;
@@ -119,11 +122,12 @@ class View {
 		// If there's no template, I have nothing to even do!
 		if(!$mastertpl) return $this->fetchBody ();
 		
-
-		$head = '';
-		foreach($this->metas as $k => $v){
-			$head .= '<meta name="' . $k . '" content="' . $v . '"/>' . "\n";
-		}
+		
+		// @todo Handle the metadata.
+		// Tack on the meta data.
+		//foreach($this->metas as $k => $v){
+		//	$head .= '<meta name="' . $k . '" content="' . $v . '"/>' . "\n";
+		//}
 		
 		// Make sure the last element on breadcrumbs is not empty.
 		if(($n = sizeof($this->breadcrumbs)) && !$this->breadcrumbs[$n-1]['title']){
@@ -132,7 +136,6 @@ class View {
 
 		$template = new Template();
 		$template->setBaseURL('/');
-		$template->assign('head', $head);
 		$template->assign('title', $this->title);
 		$template->assign('body', $this->fetchBody());
 		$template->assign('breadcrumbs', $this->breadcrumbs);

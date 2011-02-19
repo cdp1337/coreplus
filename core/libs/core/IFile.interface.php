@@ -1,0 +1,86 @@
+<?php
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author powellc
+ */
+interface IFile {
+	public function __construct($filename = null);
+	
+	public function getFilesize($formatted = false);
+	
+	public function getMimetype();
+	
+	public function getExtension();
+
+	/**
+	 * Get a filename that can be retrieved from the web.
+	 * Resolves with the ROOT_DIR prefix already attached.
+	 * 
+	 * @return string | false
+	 */
+	public function getURL();
+	
+	
+	/**
+	 * Get the filename of this file resolved to a specific directory, usually ROOT_PDIR or ROOT_WDIR.
+	 */
+	public function getFilename($prefix = ROOT_PDIR);
+	
+	/**
+	 * Get the base filename of this file.
+	 */
+	public function getBaseFilename($withoutext = false);
+	
+	/**
+	 * Get the hash for this file.
+	 */
+	public function getHash();
+	
+	public function delete();
+
+	public function isImage();
+	
+	public function isText();
+	
+	/**
+	 * Get if this file can be previewed in the web browser.
+	 * 
+	 * @return boolean
+	 */
+	public function isPreviewable();
+	
+
+	/**
+	 * See if this file is in the requested directory.
+	 * 
+	 * @param $path string
+	 * @return boolean
+	 */
+	public function inDirectory($path);
+
+	public function identicalTo($otherfile);
+	
+	/**
+	 * Copies the file to the requested destination.
+	 * If the destination is a directory (ends with a '/'), the same filename is used, (if possible).
+	 * If the destination is relative, ('.' or 'subdir/'), it is assumed relative to the current file.
+	 *
+	 * @param string $dest
+	 * @param boolean $overwrite
+	 * @return File
+	 */
+	public function copyTo($dest, $overwrite = false);
+	
+	/**
+	 * The recipient of the copyTo command, should $dest be this object instead of a filename.
+	 */
+	public function copyFrom($src);
+}
+
+?>

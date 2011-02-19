@@ -126,6 +126,7 @@ class Component extends InstallArchiveAPI{
 		$it = $this->getDirectoryIterator();
 		$hasview = $this->hasView();
 		$viewd = ($hasview)? $this->getViewSearchDir() : null;
+		$assetd = $this->getAssetDir();
 		$strlen = strlen($this->getBaseDir());
 		foreach($it as $file){
 			$el = false;
@@ -133,6 +134,10 @@ class Component extends InstallArchiveAPI{
 
 			if($hasview && $file->inDirectory($viewd)){
 				$el = $this->getElement('/view/file[@filename="' . $fname . '"]');
+			}
+			elseif($file->inDirectory($assetd)){
+				// It's an asset!
+				$el = $this->getElement('/assets/file[@filename="' . $fname . '"]');
 			}
 			else{
 				// Only add it if the file doesn't exist already.
@@ -204,6 +209,35 @@ class Component extends InstallArchiveAPI{
 				$el->setAttribute('md5', $file->getHash());
 			}
 		}
+		
+		
+		///////////////  Handle the hard-set pages, ie: admin ones \\\\\\\\\\\\\
+		if(!isset($viewclasses)) $viewclasses = array();
+		foreach($viewclasses as $c){
+			// Should end in Controller.
+			if(strlen($c) - strpos($c, 'Controller') == 10) $c = substr($c, 0, -10);
+			$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "page WHERE ( `baseurl` = '/$c' OR `baseurl` LIKE '/$c/%' ) AND `fuzzy` = '0' AND `admin` = '1'");
+			foreach($rs as $row){
+				$node = $this->getElement('/pages/page[@baseurl="' . $row['baseurl'] . '"]');
+				$node->setAttribute('admin', $row['admin']);
+				$node->setAttribute('widget', $row['widget']);
+				$node->setAttribute('access', $row['access']);
+				$node->setAttribute('title', $row['title']);
+			}
+		}
+		
+		
+		
+		///////////////////////  Handle the config options \\\\\\\\\\\\\\\\\\\\\
+		
+		$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "config WHERE `key` LIKE '/" . $this->getName() . "/%'");
+		foreach($rs as $row){
+			$node = $this->getElement('/configs/config[@key="' . $row['key'] . '"]');
+			$node->setAttribute('type', $row['type']);
+			$node->setAttribute('default', $row['default_value']);
+			$node->setAttribute('description', $row['description']);
+		}
+		
 
 
 		//////////////  Handle the database and its information  \\\\\\\\\\\\\\\
@@ -316,6 +350,8 @@ class Component extends InstallArchiveAPI{
 		$XMLFilename = $this->getXMLFilename();
 		//echo $this->asPrettyXML(); // DEBUG //
 		file_put_contents($XMLFilename, $this->asPrettyXML());
+		// and this would be a minimized version
+		//file_put_contents(substr($XMLFilename, 0, -4) . '-min.xml', $this->asMinifiedXML());
 	}
 	
 	
@@ -337,6 +373,7 @@ class Component extends InstallArchiveAPI{
 			$type = @$h->getAttribute('type');
 			HookHandler::AttachToHook($event, $call, $type);
 		}
+		
 		
 		return true;
 	}
@@ -425,6 +462,16 @@ class Component extends InstallArchiveAPI{
 		}
 		return $views;
 	}
+	
+	public function getScriptLibraryList(){
+		$libs = array();
+		if($this->hasLibrary()){
+			foreach($this->getElementByTagName('library')->getElementsByTagName('scriptlibrary') as $s){
+				$libs[$s->getAttribute('name')] = $s->getAttribute('call');
+			}
+		}
+		return $libs;
+	}
 
 	/* Why would there be more than 1 searchdir?
 	public function getViewSearchDirs(){
@@ -451,6 +498,13 @@ class Component extends InstallArchiveAPI{
 				return $this->getBaseDir() . $att . '/';
 			}
 		}
+	}
+	
+	public function getAssetDir(){
+		$d = $this->getBaseDir() . 'assets';
+		
+		if(is_dir($d)) return $d;
+		else return null;
 	}
 	
 	public function getIncludePaths(){
@@ -641,6 +695,10 @@ class Component extends InstallArchiveAPI{
 		
 		$this->_parseConfigs();
 		
+		$this->_parsePages();
+		
+		$this->_installAssets();
+		
 		// Run through each task under <install> and execute it.
 		if($this->getRootDOM()->getElementsByTagName('install')->item(0)){
 			InstallTask::ParseNode(
@@ -670,6 +728,10 @@ class Component extends InstallArchiveAPI{
 		$this->_parseDBSchema();
 		
 		$this->_parseConfigs();
+		
+		$this->_parsePages();
+		
+		$this->_installAssets();
 		
 		// @todo What else should be done?
 		
@@ -706,6 +768,24 @@ class Component extends InstallArchiveAPI{
 		$this->_parseDBSchema();
 		
 		$this->_parseConfigs();
+		
+		$this->_parsePages();
+		
+		$this->_installAssets();
+	}
+	
+	/**
+	 * Copy in all the assets for this component into the assets location.
+	 */
+	private function _installAssets(){
+		foreach($this->getElements('/assets/file') as $node){
+			$b = $this->getBaseDir();
+			$f = new File($b . $node->getAttribute('filename'));
+			$nf = new Asset($node->getAttribute('filename'));
+			
+			$f->copyTo($nf);
+			var_dump($f, $nf);
+		}
 	}
 	
 	/**
@@ -728,6 +808,36 @@ class Component extends InstallArchiveAPI{
 			$s->set('default_value', $confignode->getAttribute('default'), true);
 			$s->set('value', $confignode->getAttribute('default')); // Do not "update" value, keep whatever the user set previously.
 			$s->set('description', $confignode->getAttribute('description'), true);
+			
+			//echo $s->query() . '<br/>';
+			
+			$s->execute();
+		}
+	}
+	
+	/**
+	 * Internal function to parse and handle the configs in the component.xml file.
+	 * This is used for installations and upgrades.
+	 */
+	private function _parsePages(){
+		// I need to get the schema definitions first.
+		$node = $this->getElement('pages');
+		//$prefix = $node->getAttribute('prefix');
+		
+		// Now, get every table under this node.
+		foreach($node->getElementsByTagName('page') as $subnode){
+			// <config key="/core/theme" type="string" default="default" description="The theme of the site"/>
+			// Insert/Update the defaults for an entry in the database.
+			$s = new SQLBuilderInsertUpdate();
+			$s->table(DB_PREFIX . 'page');
+			$s->set('baseurl', $subnode->getAttribute('baseurl'));
+			$s->set('rewriteurl', $subnode->getAttribute('baseurl')); // Do not "update" value, keep whatever the user set previously.
+			$s->set('title', $subnode->getAttribute('title')); // Do not "update" value, keep whatever the user set previously.
+			$s->set('access', $subnode->getAttribute('access')); // Do not "update" value, keep whatever the user set previously.
+			$s->set('widget', $subnode->getAttribute('widget'), true);
+			$s->set('admin', $subnode->getAttribute('admin'), true);
+			$s->set('created', 'UNIX_TIMESTAMP()');
+			$s->set('updated', 'UNIX_TIMESTAMP()', true);
 			
 			//echo $s->query() . '<br/>';
 			

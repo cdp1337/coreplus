@@ -18,6 +18,10 @@
  */
 
 require_once(ROOT_PDIR . 'core/libs/core/Component.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/IFile.interface.php');
+require_once(ROOT_PDIR . 'core/libs/core/File.class.php');
+//require_once(ROOT_PDIR . 'core/libs/core/FileAWSS3.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/Asset.class.php');
 
 
 /**
@@ -55,10 +59,10 @@ class ComponentHandler implements ISingleton{
 	private $_libraries = array();
 	
 	/**
-	 * List of every available jslibrary and its DOMNode object..
-	 * @var array <<DOMNode>>
+	 * List of every available jslibrary and its call..
+	 * @var array <<String>>
 	 */
-	private $_jslibraries = array();
+	private $_scriptlibraries = array();
 	
 	/**
 	 * List of every installed module and its version.
@@ -230,12 +234,11 @@ class ComponentHandler implements ISingleton{
 			foreach($c->getIncludePaths() as $path){
 				set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 			}
+			
+			$this->_scriptlibraries = array_merge($this->_scriptlibraries, $c->getScriptLibraryList());
 		}
 		if($c->hasModule()) $this->_modules[$c->getName()] = $c->getVersionInstalled();
-		if($c->hasJSLibrary()){
-			// Load the JS library into the array.
-			$this->_jslibraries = array_merge($this->_jslibraries, $c->getJSLibraries());
-		}
+		
 		$this->_classes = array_merge($this->_classes, $c->getClassList());
 		$this->_viewClasses = array_merge($this->_viewClasses, $c->getViewClassList());
 		$this->_loadedComponents[$c->getName()] = $c;
@@ -315,8 +318,10 @@ class ComponentHandler implements ISingleton{
 		return ComponentHandler::Singleton()->_jslibraries[$library];
 	}
 	
-	public static function LoadJSLibrary($library){
-		$out = ComponentHandler::Singleton()->_jslibraries[$library]->includeFiles();
+	public static function LoadScriptLibrary($library){
+		if(isset(ComponentHandler::Singleton()->_scriptlibraries[$library])){
+			call_user_func(ComponentHandler::Singleton()->_scriptlibraries[$library]);
+		}
 	}
 	
 	public static function IsComponentAvailable($name, $version = false, $operation = 'ge'){

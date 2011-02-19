@@ -20,7 +20,7 @@
 // This file depends on the PEAR MIME_Type class.
 //require_once('MIME/Type.php');
 
-class File{
+class File implements IFile{
 	
 	public $filename = null;
 	
@@ -79,7 +79,7 @@ class File{
 	 * 
 	 * @return string | false
 	 */
-	public function getWebFilename(){
+	public function getURL(){
 		if(!preg_match('/^' . str_replace('/', '\\/', ROOT_PDIR) . '/', $this->filename)) return false;
 		
 		return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', ROOT_WDIR . '$1', $this->filename);
@@ -125,7 +125,7 @@ class File{
 	 * If the destination is a directory (ends with a '/'), the same filename is used, (if possible).
 	 * If the destination is relative, ('.' or 'subdir/'), it is assumed relative to the current file.
 	 *
-	 * @param string $dest
+	 * @param string|File $dest
 	 * @param boolean $overwrite
 	 * @return File
 	 */
@@ -171,6 +171,10 @@ class File{
 
 		// And return the new file so operations can begin immediately on it.
 		return new File($dest);
+	}
+	
+	public function copyFrom($src){
+		
 	}
 
 	

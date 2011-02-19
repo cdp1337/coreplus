@@ -35,6 +35,10 @@
  */
 class CurrentPage{
 	private static $_instance = null;
+	
+	private $_headscripts = array();
+	
+	private $_headstylesheets = array();
 
 	/**
 	 * @var PageModel The page component currently being viewed.
@@ -69,6 +73,10 @@ class CurrentPage{
 		}
 	}
 
+	/**
+	 *
+	 * @return CurrentPage
+	 */
 	public static function Singleton(){
 		// This system has no function in CLI mode.
 		if(EXEC_MODE != 'WEB') return null;
@@ -84,6 +92,25 @@ class CurrentPage{
 	public static function Render(){
 		return self::Singleton()->_render();
 	}
+	
+	public static function AddScript($script){
+		if(strpos($script, '<script') === false){
+			// Resolve the script and wrap it with a script block.
+			$script = '<script type="text/javascript" src="' . Core::ResolveAsset($script) . '"></script>';
+		}
+		
+		$obj = self::Singleton();
+		// I can check to see if this script has been loaded before.
+		if(!in_array($script, $obj->_headscripts)) $obj->_headscripts[] = $script;
+	}
+	
+	public static function GetHead(){
+		$obj = self::Singleton();
+		
+		$out = implode("\n", $obj->_headscripts);
+		
+		return $out;
+	}
 
 	private function _render(){
 		// This may or may not be the original page...
@@ -96,7 +123,6 @@ class CurrentPage{
 		}
 		
 		
-		
 		if($view->error != View::ERROR_NOERROR){
 			// Update some information in the view.
 			// Transpose some useful data for it.
@@ -106,7 +132,8 @@ class CurrentPage{
 			$view->mastertemplate = ConfigHandler::GetValue('/core/theme/default_template');
 		}
 		
-		$view->render();
 		
+		//$view->headscripts = array_merge($view->headscripts, $this->_headscripts);
+		$view->render();
 	}
 }

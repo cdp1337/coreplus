@@ -180,7 +180,7 @@ class ConfigHandler implements ISingleton {
 		*/
 
 		// Any config strings that may be set, (cache them to speed up later requests.)
-		$rs = DB::Execute("SELECT `key`, `value`, `type` FROM " . DB_PREFIX . "config");
+		$rs = DB::Execute("SELECT `key`, `value`, `type`, `mapto` FROM " . DB_PREFIX . "config");
 		if(!$rs) return false;
 		foreach ($rs as $row) {
 			switch ($row['type']) {
@@ -192,6 +192,9 @@ class ConfigHandler implements ISingleton {
 			}
 			
 			ConfigHandler::$cacheFromDB[$row['key']] = $row['value'];
+			
+			// Also map this value if it's set to do so.
+			if($row['mapto'] && !defined($row['mapto'])) define($row['mapto'], $row['value']);
 		}
 	}
 
