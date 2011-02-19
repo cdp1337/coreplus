@@ -3,11 +3,11 @@
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.1-dev1" name="Content" execmode="web">
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
-			<date>Fri, 11 Feb 2011 00:09:47 -0500</date>
+			<date>Thu, 17 Feb 2011 01:57:58 -0500</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
-		<notes></notes>
+		<notes/>
 	</changelog>
 	<view searchdir="templates">
 		<file filename="templates/pages/content/view.tpl" md5="b149433e9927396cb65c8e2880395663"/>
@@ -22,13 +22,16 @@
 		</file>
 	</library>
 	<module>
-		<file filename="ContentController.php" md5="a94e79054a726ebdefd0c5cc0c9fcdb2">
+		<file filename="ContentController.php" md5="86ac3aca3ec6b28bc76623f5e4f4d94e">
 			<provides type="controller" name="ContentController"/>
 		</file>
 	</module>
 	<description>
 		Provides basic HTML page functionality.
 	</description>
+	<pages>
+		<page baseurl="/Content" admin="1" widget="0" access="*" title="Content Pages"/>
+	</pages>
 	<author name="powellc"/>
 	<otherfiles/>
 	<dbschema prefix="CAE2_">
