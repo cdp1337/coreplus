@@ -365,6 +365,32 @@ class XMLLoader{
 		return $ret;
 	}
 	
+	public function asMinifiedXML(){
+		// Get the XML output as a string.
+		$string = $this->getDOM()->saveXML();
+		
+		// Ensure standard line-endings.
+		$string = str_replace(array("\r\n", "\r", "\n"), NL, $string);
+		
+		// Remove any whitespace for <...> lines.
+		$string = preg_replace('/^(\s*)</m', '<', $string);
+		
+		// Remove the first newline... it's probably there.
+		$string = preg_replace('/^' . NL . '/', '', $string);
+		
+		// Remove extra blank newlines.
+		$string = preg_replace('/' . NL . '+/', NL, $string);
+		
+		// Remove newlines after tags, they're not needed.
+		$string = preg_replace('/>$' . NL . '/m', '>', $string);
+		
+		// A few special tags need their own lines.
+		$string = preg_replace('/(<\?xml version="1.0" encoding="UTF-8"\?>)/', '$1' . NL, $string);
+		$string = preg_replace('/(<!DOCTYPE component>)/', '$1' . NL, $string);
+		
+		return $string;
+	}
+	
 	/**
 	 * Prettifies an XML string into a human-readable and indented work of art
 	 * @param boolean $html_output True if the output should be escaped (for use in HTML)
