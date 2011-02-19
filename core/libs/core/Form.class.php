@@ -280,6 +280,7 @@ class Form extends FormGroup{
 
 	public static $Mappings = array(
 		'text' => 'FormTextInput',
+		'password' => 'FormPasswordInput',
 		'hidden' => 'FormHiddenInput',
 		'wysiwyg' => 'FormTextareaInput',
 		'textarea' => 'FormTextareaInput',
@@ -540,6 +541,16 @@ class FormTextInput extends FormElement{
 
 		// Some defaults
 		$this->_attributes['class'] = 'formelement formtextinput';
+		$this->_validattributes = array('accesskey', 'autocomplete', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'size', 'tabindex', 'width', 'height', 'value', 'style');
+	}
+}
+
+class FormPasswordInput extends FormElement{
+	public function  __construct($atts = null) {
+		parent::__construct($atts);
+
+		// Some defaults
+		$this->_attributes['class'] = 'formelement formpasswordinput';
 		$this->_validattributes = array('accesskey', 'autocomplete', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'size', 'tabindex', 'width', 'height', 'value', 'style');
 	}
 }
