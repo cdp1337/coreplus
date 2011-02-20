@@ -10,6 +10,12 @@ class AdminController extends Controller {
 		// Just run through every component currently installed and reinstall it.
 		// This will just ensure that the component is up to date and correct as per the component.xml metafile.
 		
+		foreach(ThemeHandler::GetAllThemes() as $t){
+			if(!$t->isInstalled()) continue;
+			
+			$t->reinstall();
+		}
+		
 		foreach(ComponentHandler::GetAllComponents() as $c){
 			if(!$c->isInstalled()) continue;
 			

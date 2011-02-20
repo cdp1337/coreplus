@@ -663,6 +663,158 @@ EOD;
 	}
 } // function process_component($component)
 
+
+function process_theme($theme, $forcerelease = false){
+	global $packagername, $packageremail;
+	
+	$t = new Theme($theme);
+	
+	$ans = false;
+	
+	// If just updating a current release, no need to ask for a version number.
+	if($forcerelease){
+		// if it's a force release... don't bother asking the user what they want to do.
+		$reltype = 'release';
+	}
+	else{
+		$reltype = CLI::PromptUser('Are you releasing a new release or just updating an existing theme?', array('update' => 'Update to Existing Version', 'release' => 'New Release'));
+	}
+
+
+	if($reltype == 'release'){
+		// Try to determine if it's an official package based on the author email.
+		$original = false;
+		foreach($t->getAuthors() as $aut){
+			if($aut['email'] == $packageremail) $original = true;
+		}
+		
+		// Try to explode the version by a ~ sign, this signifies not the original packager/source.
+		// ie: ForeignComponent 3.2.4 may be versioned 3.2.4~thisproject5
+		// if it's the 5th revision of the upstream version 3.2.4 for 'thisproject'.
+		$version = _increment_version($t->getVersion(), $original);
+		
+		$version = CLI::PromptUser('Please set the version of the new release', 'text', $version);
+		$c->setVersion($version);
+	}
+	else{
+		$version = $t->getVersion();
+	}
+	
+	
+	// Set the packager information on this release.
+	$t->setPackageMaintainer($packagername, $packageremail);
+	
+	// Grep through the files and pull out the documentation... this will populate the licenses and authors.
+	$licenses = $t->getLicenses();
+	$authors = $t->getAuthors();
+	//$it = new DirectoryCAEIterator($c->getBaseDir());
+	$it = $t->getDirectoryIterator();
+	foreach($it as $file){
+		$docelements = parse_for_documentation($file->filename);
+		$licenses = array_merge($licenses, $docelements['licenses']);
+		// @todo Should I skip the authors?
+		$authors = array_merge($authors, $docelements['authors']);
+	}
+	
+	$t->setAuthors(get_unique_authors($authors));
+
+
+	$t->setLicenses(get_unique_licenses($licenses));
+	
+	while($ans != 'finish'){
+		$opts = array(
+			'editdesc' => 'Edit Description',
+			'editchange' => 'Edit Changelog',
+			'finish' => 'Finish Editing, Save it!',
+		);
+		$ans = CLI::PromptUser('What do you want to edit for theme ' . $t->getName() . ' ' . $version, $opts);
+		
+		switch($ans){
+			case 'editdesc':
+				$t->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $c->getDescription()));
+				break;
+			case 'editchange':
+				$t->setChangelog(CLI::PromptUser('Enter the changelog.', 'textarea', $c->getChangelog()));
+				break;
+		}
+	}
+	
+	
+	// @todo Add SVN integration using libraries from the websvn project.
+	
+	
+	// User must have selected 'finish'...
+	$t->save();
+	echo "Saved!" . NL;
+	
+	if($reltype == 'release'){
+		if($forcerelease){
+			// if force release, don't give the user an option... just do it.
+			$bundleyn = true;
+		}
+		else{
+			$bundleyn = CLI::PromptUser('Package saved, do you want to bundle the changes into a package?', 'boolean');
+		}
+		
+		
+		if($bundleyn){
+			// Create a temp directory to contain all these
+			// @todo Bundle up the component, add a META-INF.xml file and (ideally), sign the package.
+			$dir = '/tmp/packager-' . $t->getName() . '/';
+			$tgz = ROOT_PDIR . 'exports/themes/' . $t->getName() . '-' . $t->getVersion() . '.tgz';
+		
+			// Ensure the export directory exists.
+			if(!is_dir(dirname($tgz))) exec('mkdir -p "' . dirname($tgz) . '"');
+			//mkdir(dirname($tgz));
+		
+			if(!is_dir($dir)) mkdir($dir);
+			if(!is_dir($dir . 'data/')) mkdir($dir . 'data/');
+			if(!is_dir($dir . 'META-INF/')) mkdir($dir . 'META-INF/');
+			
+			//smartCopy(ROOT_PDIR . '/components/' . $c->getName(), $dir . '/data');
+			//smartCopy($c->getBaseDir(), $dir . 'data/');
+			foreach($t->getAllFilenames() as $f){
+				$file = new File($t->getBaseDir() . $f['file']);
+				$file->copyTo($dir . 'data/' . $f['file']);
+			}
+			// Don't forget the metafile....
+			$file = new File($t->getXMLFilename());
+			$file->copyTo($dir . 'data/' . $t->getXMLFilename(''));
+
+			$packager = 'CAE2 ' . ComponentHandler::GetComponent('core')->getVersion();
+			$packagename = $t->getName();
+			
+			// Different component types require a different bundle type.
+			$bundletype = 'theme';
+		
+			// This is the data that will be added to the manifest file.
+			// That file tells the installer what the archive is, ie: component, template, etc.
+			$meta = <<<EOD
+Manifest-Version: 1.0
+Created-By: $packager
+Bundle-ContactAddress: $packageremail
+Bundle-Name: $packagename
+Bundle-Version: $version
+Bundle-Type: $bundletype
+EOD;
+			file_put_contents($dir . 'META-INF/MANIFEST.MF', $meta);
+			exec('tar -czf ' . $tgz . ' -C ' . $dir . ' --exclude=.svn --exclude=*~ --exclude=._* .');
+			$bundle = $tgz;
+		
+			if(CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
+				exec('gpg -u "' . $packageremail . '" -a --sign "' . $tgz . '"');
+				$bundle .= '.asc';
+			}
+		
+			// And remove the tmp directory.
+			exec('rm -fr "' . $dir . '"');
+		
+			echo "Created package of " . $t->getName() . ' ' . $t->getVersion() . NL . " as " . $bundle . NL;
+		}
+	}
+} // function process_theme($theme)
+
+
 function process_bundle(){
 	global $_cversions;
 	// Create a default list of components to bundle.
@@ -944,7 +1096,8 @@ CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 $ans = CLI::PromptUser(
 	"What operation do you want to do?", 
 	array(
-		'component' => 'Manage a Component Version',
+		'component' => 'Manage a Component',
+		'theme' => 'Manage a Theme',
 		'bundle' => 'Installation Bundle',
 		'exit' => 'Exit the script',
 	),
@@ -971,6 +1124,24 @@ switch($ans){
 		sort($files);
 		$ans = CLI::PromptUser("Which component do you want to package/manage?", $files);
 		process_component($files[$ans]);
+		break; // case 'component'
+	case 'theme':
+		// Open the "themes" directory and look for anything with a valid theme.xml file.
+		$files = array();
+		$dir = ROOT_PDIR . 'themes';
+		$dh = opendir($dir);
+		while(($file = readdir($dh)) !== false){
+			if($file{0} == '.') continue;
+			if(!is_dir($dir . '/' . $file)) continue;
+			if(!is_readable($dir . '/' . $file . '/' . 'theme.xml')) continue;
+			
+			$files[] = $file;
+		}
+		closedir($dh);
+		// They should be in alphabetical order...
+		sort($files);
+		$ans = CLI::PromptUser("Which theme do you want to package/manage?", $files);
+		process_theme($files[$ans]);
 		break; // case 'component'
 	case 'bundle':
 		// Process a release bundle.

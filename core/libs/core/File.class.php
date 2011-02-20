@@ -111,6 +111,8 @@ class File implements IFile{
 	 * Get the hash for this file.
 	 */
 	public function getHash(){
+		if(!file_exists($this->filename)) return null;
+		
 		return md5_file($this->filename);
 	}
 	
@@ -131,50 +133,88 @@ class File implements IFile{
 	 */
 	public function copyTo($dest, $overwrite = false){
 		//echo "Copying " . $this->filename . " to " . $dest . "\n"; // DEBUG //
-		//
-		// Get the location of the destination, be it relative or absolute.
-		if($dest{0} != '/'){
-			$dest = dirname($this->filename) . '/' . $dest;
+		
+		if(is_a($dest, 'File') || $dest instanceof IFile){
+			// Don't need to do anything! The object either is a File
+			// Or is an implmentation of the IFile interface.
 		}
-		// Is the destination a directory or filename?
-		if($dest{strlen($dest)-1} == '/'){
-			$dest .= basename($this->filename);
+		else{
+			// Well it should be damnit!....
+			$file = $dest;
+			
+			// Get the location of the destination, be it relative or absolute.
+			// If the file does not start with a "/", assume it's relative to this current file.
+			if($file{0} != '/'){
+				$file = dirname($this->filename) . '/' . $file;
+			}
+			
+			// Is the destination a directory or filename?
+			// If it's a directory just tack on this current file's basename.
+			if(substr($file, -1) == '/'){
+				$file .= $this->getBaseFilename();
+			}
+			
+			// Now dest can be instantiated as a valid file object!
+			$dest = new File($file);
 		}
+		
+		if($this->identicalTo($dest)) return $this;
+		
+		// GO!
+		// The receiving function's logic will handle the rest.
+		$dest->copyFrom($this, $overwrite);
+		
+		return $dest;
+		
 
 		// Now I can ensure that $dest is an absolutely positioned filename of an actual file.
 		if(!is_dir(dirname($dest))){
 			// PHP doesn't support the '-p' argument... :(
 			exec('mkdir -p "' . dirname($dest) . '"');
 		}
-
-		// @todo Should this do something different?
-		if($this->identicalTo($dest)) return false;
-
+	}
+	
+	public function copyFrom($src, $overwrite = false){
 		// Don't overwrite existing files unless told otherwise...
 		if(!$overwrite){
 			$c = 0;
-			$ext = File::GetExtensionFromString($dest);
-			$base = basename($dest);
-			$base = substr($base, 0, (-1 - strlen($ext) ) );
-			$dir = dirname($dest);
-			while(file_exists($dest)){
-				// @todo Should this do something different?
-				if($this->identicalTo($dest)) return false;
-				
-				$dest = $dir . '/' . $base . ' (' . ++$c . ')' . '.' . $ext;
+			$ext = $this->getExtension();
+			$base = $this->getBaseFilename(true);
+			$dir = dirname($this->filename);
+			
+			$f = $dir . '/' . $base . '.' . $ext;
+			while(file_exists($f)){
+				$f = $dir . '/' . $base . ' (' . ++$c . ')' . '.' . $ext;
+			}
+			
+			$this->filename = $f;
+		}
+		
+		
+		// Ensure the directory exists.
+		// This is essentially a recursive mkdir.
+		$ds = explode('/', dirname($this->filename));
+		$d = '';
+		foreach($ds as $dir){
+			if($dir == '') continue;
+			$d .= '/' . $dir;
+			if(!is_dir($d)){
+				if(mkdir($d) === false) throw new Exception("Unable to make directory $d, please check permissions.");
 			}
 		}
 
-		// And do the actual copy!
-		// @todo Should there be error/exception handling here?
-		if(!copy($this->filename, $dest)) return false;
+		// @todo Should this incorporate permissions, to prevent files being wrote as "www-data"?
 
-		// And return the new file so operations can begin immediately on it.
-		return new File($dest);
+		// And do the actual copy!
+		$this->putContents($src->getContents());
 	}
 	
-	public function copyFrom($src){
-		
+	public function getContents(){
+		return file_get_contents($this->filename);
+	}
+	
+	public function putContents($data){
+		return file_put_contents($this->filename, $data);
 	}
 
 	
@@ -327,16 +367,24 @@ class File implements IFile{
 	public function inDirectory($path){
 		// The path should be fully resolved, (the file is).
 		if(strpos($path, ROOT_PDIR) === false) $path = ROOT_PDIR . $path;
+		
 		// Just a simple strpos shortcut...
 		return (strpos($this->filename, $path) !== false);
 	}
 
 	public function identicalTo($otherfile){
-		// Can't be the same if it doesn't exist!
-		if(!file_exists($otherfile)) return false;
-		if(!file_exists($this->filename)) return false;
-		$result = exec('diff -q "' . $this->filename . '" "' . $otherfile . '"', $array, $return);
-		return ($return == 0);
+	
+		if(is_a($otherfile, 'File') || $otherfile instanceof IFile){
+			// Just compare the hashes.
+			return ($this->getHash() == $otherfile->getHash());
+		}
+		else{
+			// Can't be the same if it doesn't exist!
+			if(!file_exists($otherfile)) return false;
+			if(!file_exists($this->filename)) return false;
+			$result = exec('diff -q "' . $this->filename . '" "' . $otherfile . '"', $array, $return);
+			return ($return == 0);
+		}		
 	}
 	
 }

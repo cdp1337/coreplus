@@ -16,10 +16,15 @@ class Asset implements IFile {
 	 */
 	private $_backend;
 	
-	public function __construct($filename = null) {
+	public function __construct($filename = null, $set = 'default') {
 		switch(ConfigHandler::GetValue('/core/asset_backend')){
-			case 'local': $this->_backend = new File(ROOT_PDIR . 'assets/default/' . $filename); break;
 			case 'aws-s3': $this->_backend = new FileAWSS3($filename); break;
+			default: // "local" is deafult.
+			case 'local':
+				// Trim off the "assets" from the filename, it'll get a new prefix.
+				if(strpos($filename, 'assets/') === 0) $filename = substr($filename, 7);
+				$this->_backend = new File(ROOT_PDIR . 'assets/' . $set . '/' . $filename);
+				break;
 		}
 	}
 	
@@ -119,8 +124,16 @@ class Asset implements IFile {
 	/**
 	 * The recipient of the copyTo command, should $dest be this object instead of a filename.
 	 */
-	public function copyFrom($src){
-		return $this->_backend->copyFrom($src);
+	public function copyFrom($src, $overwrite = false){
+		return $this->_backend->copyFrom($src, $overwrite);
+	}
+	
+	public function getContents(){
+		return $this->_backend->getContents();
+	}
+	
+	public function putContents($data){
+		return $this->_backend->putContents($data);
 	}
 }
 

@@ -80,7 +80,11 @@ interface IFile {
 	/**
 	 * The recipient of the copyTo command, should $dest be this object instead of a filename.
 	 */
-	public function copyFrom($src);
+	public function copyFrom($src, $overwrite = false);
+	
+	public function getContents();
+	
+	public function putContents($data);
 }
 
 ?>

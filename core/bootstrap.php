@@ -374,6 +374,13 @@ if(EXEC_MODE == 'WEB'){
 // Load in the ViewClass object, will help with the connection of page requests and the classes behind them.
 //require_once("core/classes/ViewClass.class.php");
 
+
+
+// Load all the themes on the system.
+require_once(ROOT_PDIR . 'core/libs/core/ThemeHandler.class.php');
+ThemeHandler::Load();
+
+
 /**
  * Load all the components, these are hybrid library/modules, created for convenience to the developer.
  */

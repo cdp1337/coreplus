@@ -236,7 +236,7 @@
 		<file filename="core/libs/core/Session.class.php" md5="ff0e48c2031ecfb306cfb72e33db1875">
 			<provides type="class" name="Session"/>
 		</file>
-		<file filename="core/libs/core/CLI.class.php" md5="460b08c78972d55ce3e8236e8f5b887b">
+		<file filename="core/libs/core/CLI.class.php" md5="fe817b1c7f07d48fceac662654db4cd3">
 			<provides type="class" name="CLI"/>
 		</file>
 		<file filename="core/libs/core/HookHandler.class.php" md5="22622763a124b588b64ad8e4af73baba">
@@ -246,7 +246,7 @@
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="cc381fac0a83f5364aa51935d979dc2b">
 			<provides type="class" name="CAEDirectoryIterator"/>
 		</file>
-		<file filename="core/libs/core/File.class.php" md5="ac24c49fa675bbfee5865137bf43974b">
+		<file filename="core/libs/core/File.class.php" md5="be36aadfbaf9f00fcb76019e7f0211d2">
 			<provides type="class" name="File"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="e8ddd45cd9cec59e1ab5a3797210a3dc">
@@ -271,16 +271,16 @@
 		<file filename="core/libs/core/InstallArchive.class.php" md5="d9063bc8b13fe8955ef3a2fe23d7dae8">
 			<provides type="class" name="InstallArchive"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="ec4104463ddec644c506547765969e35">
+		<file filename="core/libs/core/Component.class.php" md5="e6a48d11994aff97ba37a099a8c1b42c">
 			<provides type="class" name="Component"/>
 		</file>
-		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="388d87b6c3539ce05f36c0e1c3ccfbd0">
+		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="6da5b1986a5cb84894380371831aeaf7">
 			<provides type="class" name="InstallArchiveAPI"/>
 		</file>
 		<file filename="core/libs/core/InstallTask.class.php" md5="aff7379efc097dd3783833b91d391aea">
 			<provides type="class" name="InstallTask"/>
 		</file>
-		<file filename="core/libs/core/ComponentHandler.class.php" md5="f8ec4986c6136ead2ba58dd86697f935">
+		<file filename="core/libs/core/ComponentHandler.class.php" md5="acba79e524ffcd8c43f5bb7c4ec2422b">
 			<provides type="class" name="ComponentHandler"/>
 		</file>
 		<file filename="core/libs/core/DB.class.php" md5="3e16cd9418e364ff4c82434033b94420">
@@ -836,6 +836,18 @@
 			<provides type="class" name="CloudFront_Exception"/>
 			<provides type="class" name="AmazonCloudFront"/>
 		</file>
+		<file filename="core/libs/core/Theme.class.php" md5="637006036651e06c7cfe5ca6d9994f96">
+			<provides type="class" name="Theme"/>
+		</file>
+		<file filename="core/libs/core/Asset.class.php" md5="595e241ad57ecd9d88376814582818f5">
+			<provides type="class" name="Asset"/>
+		</file>
+		<file filename="core/libs/core/FileAWSS3.class.php" md5="654c42e02e1115cc62f7d4c50298e00f">
+			<provides type="class" name="FileAWSS3"/>
+		</file>
+		<file filename="core/libs/core/ThemeHandler.class.php" md5="516cfc998811e8009220a1bcc92effe6">
+			<provides type="class" name="ThemeHandler"/>
+		</file>
 	</library>
 	<module>
 		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
@@ -848,7 +860,7 @@
 			<provides type="widgetcontroller" name="AdminMenuWidgetController"/>
 			<provides type="controller" name="AdminMenuController"/>
 		</file>
-		<file filename="core/controllers/AdminController.php" md5="7f4406a7a5f92e654551adb55666aca0">
+		<file filename="core/controllers/AdminController.php" md5="f521f24e858a961887513448c068f4fa">
 			<provides type="controller" name="AdminController"/>
 		</file>
 	</module>
@@ -878,7 +890,7 @@
 	<install/>
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
-			<date>Sat, 19 Feb 2011 15:55:45 -0500</date>
+			<date>Sat, 19 Feb 2011 20:55:48 -0500</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
@@ -895,8 +907,7 @@
 		<config key="/core/aws/canonicalid" type="string" default="" description="Your CanonicalUser ID. Used for setting access control settings in AmazonS3. Found in the AWS Security Credentials."/>
 		<config key="/core/aws/canonicalname" type="string" default="" description="Your CanonicalUser DisplayName. Used for setting access control settings in AmazonS3. Found in the AWS Security Credentials (i.e. &quot;Welcome, AWS_CANONICAL_NAME&quot;)."/>
 	</configs>
-	<assets>
-	</assets>
+	<assets/>
 	<author name="Charlie Powell" email="powellc@powelltechs.com"/>
 	<author name="Monte Ohrt" email="monte at ohrt dot com"/>
 	<author name="Uwe Tews"/>
@@ -924,208 +935,207 @@
 		GNU Lesser General Public License v3
 	</license>
 	<otherfiles>
+		<file filename="index.php" md5="74db5770fa915546d172804eec0ab521"/>
 		<file filename="install/install.tpl" md5="ff00c0c52c265ca1c1f857849a281060"/>
-		<file filename="license.txt" md5="73f1eb20517c55bf9493b7dd6e480788"/>
+		<file filename="core/bootstrap.php" md5="ab05ac10a029920fff2dbb6b1babbe07"/>
 		<file filename="core/bootstrap_predefines.php" md5="dab15e3b2136b94a6b900116d0f6b74e"/>
-		<file filename="core/component-min.xml" md5="c275d672bfe2a245d55eb2486a44cd1a"/>
-		<file filename="core/libs/smarty-plugins/block.a.php" md5="fbb313bab37183e80a90cdfa1ceeb30a"/>
-		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>
-		<file filename="core/libs/smarty-plugins/function.widget.php" md5="efee56afd71540793fa9ad94d9c63662"/>
-		<file filename="core/libs/smarty-plugins/function.script.php" md5="fff11b9cdf71f4cd7120d0edbd70761a"/>
-		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
-		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="800e464e8bae160ad7aba53d63ab78c8"/>
-		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
+		<file filename="core/libs/smarty/SMARTY2_BC_NOTES" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
 		<file filename="core/libs/smarty/README" md5="83797fcbeab9d4f5090510a3023bc4a5"/>
 		<file filename="core/libs/smarty/debug.tpl" md5="6c0554c7a9cdb4c26f079fa8dff98036"/>
-		<file filename="core/libs/smarty/SMARTY2_BC_NOTES" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
+		<file filename="core/libs/smarty/plugins/function.math.php" md5="a875f349e9a8e87f5b6682147bf76e11"/>
+		<file filename="core/libs/smarty/plugins/function.html_options.php" md5="09121e8634418dd8659cad79740f63b0"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.count_sentences.php" md5="4f51312afd28ea6d0fb18d6238b28700"/>
 		<file filename="core/libs/smarty/plugins/function.html_radios.php" md5="3ee52cebd46f4ec763cd1a1f4e67421e"/>
-		<file filename="core/libs/smarty/plugins/variablefilter.htmlspecialchars.php" md5="41de646253dc1c98805575bb386a8d2a"/>
-		<file filename="core/libs/smarty/plugins/function.html_select_date.php" md5="4666629080c1ed4ad8b353734c23559a"/>
-		<file filename="core/libs/smarty/plugins/function.html_select_time.php" md5="5a0fb7851c9c7a13663048d711e1fe5a"/>
 		<file filename="core/libs/smarty/plugins/modifiercompiler.cat.php" md5="34f3e6a6edac6e8726db55497d5f294f"/>
-		<file filename="core/libs/smarty/plugins/function.popup_init.php" md5="aa5a044ef546a75aad30e52b1ddd3139"/>
+		<file filename="core/libs/smarty/plugins/function.fetch.php" md5="e10809109b026f17efbf13a48ef946b9"/>
+		<file filename="core/libs/smarty/plugins/function.html_image.php" md5="b60f74e5701f3fe7d61457cacf99fc1e"/>
+		<file filename="core/libs/smarty/plugins/function.html_select_date.php" md5="4666629080c1ed4ad8b353734c23559a"/>
+		<file filename="core/libs/smarty/plugins/function.popup.php" md5="52222036b18ff779b8dd8446a771bfeb"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.string_format.php" md5="ff4cfec7b7afbff18ff39b49186e219b"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.noprint.php" md5="9197523f0e32b65d0fdfba4c3f3144f3"/>
+		<file filename="core/libs/smarty/plugins/block.php.php" md5="1c9e67cac3c206a0101e0079a2703a9d"/>
+		<file filename="core/libs/smarty/plugins/modifier.escape.php" md5="9a63a217a2efd829910d63b83223eb69"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.count_characters.php" md5="c329b115ed7ef9bed6fc1da5aeba1991"/>
+		<file filename="core/libs/smarty/plugins/function.cycle.php" md5="3aed60eca7828872ff8158a73f39939b"/>
+		<file filename="core/libs/smarty/plugins/modifier.regex_replace.php" md5="b653d97c4d77c145de9f54231d34f169"/>
+		<file filename="core/libs/smarty/plugins/shared.escape_special_chars.php" md5="bdf83b31ad1b08a07a86e793243c091a"/>
+		<file filename="core/libs/smarty/plugins/modifier.date_format.php" md5="774823f8be73a797d725ffd263deefc8"/>
 		<file filename="core/libs/smarty/plugins/modifiercompiler.default.php" md5="af7a62544fd4009fe952274d0fb6f0cd"/>
 		<file filename="core/libs/smarty/plugins/modifier.capitalize.php" md5="106dd54c9db24786990a582c117a1a5e"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.indent.php" md5="1bbc6a4b89dee0352afc6f7193e1d1e9"/>
-		<file filename="core/libs/smarty/plugins/modifier.regex_replace.php" md5="b653d97c4d77c145de9f54231d34f169"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.strip_tags.php" md5="a3dad011660a8a908f25ff5c5004d443"/>
-		<file filename="core/libs/smarty/plugins/function.math.php" md5="a875f349e9a8e87f5b6682147bf76e11"/>
-		<file filename="core/libs/smarty/plugins/function.counter.php" md5="44f45da4f4608820c6809b4df5b31a26"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.upper.php" md5="6a0c77764cf5de77a65443ddf49835be"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.count_paragraphs.php" md5="946217452bfde277222cee8b6bf40331"/>
-		<file filename="core/libs/smarty/plugins/function.popup.php" md5="52222036b18ff779b8dd8446a771bfeb"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.count_sentences.php" md5="4f51312afd28ea6d0fb18d6238b28700"/>
-		<file filename="core/libs/smarty/plugins/modifier.spacify.php" md5="6f38e4d3371e83a3d06d4381c881a329"/>
-		<file filename="core/libs/smarty/plugins/modifier.date_format.php" md5="774823f8be73a797d725ffd263deefc8"/>
-		<file filename="core/libs/smarty/plugins/function.html_table.php" md5="21d1c0da84832f84713ceac075522702"/>
-		<file filename="core/libs/smarty/plugins/function.fetch.php" md5="e10809109b026f17efbf13a48ef946b9"/>
-		<file filename="core/libs/smarty/plugins/shared.make_timestamp.php" md5="109e856f42e4882fb8e48414d3d37885"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.count_words.php" md5="bf8a26007facbb5ad9c9a1ed2459c58d"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.noprint.php" md5="9197523f0e32b65d0fdfba4c3f3144f3"/>
-		<file filename="core/libs/smarty/plugins/function.html_options.php" md5="09121e8634418dd8659cad79740f63b0"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.strip.php" md5="fdb9720a0bfee16ef86cbc61a107907f"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.count_characters.php" md5="c329b115ed7ef9bed6fc1da5aeba1991"/>
-		<file filename="core/libs/smarty/plugins/shared.escape_special_chars.php" md5="bdf83b31ad1b08a07a86e793243c091a"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.string_format.php" md5="ff4cfec7b7afbff18ff39b49186e219b"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.lower.php" md5="6cc744ae832d8c8b7b8a86e84f2ae711"/>
-		<file filename="core/libs/smarty/plugins/modifier.replace.php" md5="ba55bfcf134690b6676061de7fcd8ba0"/>
-		<file filename="core/libs/smarty/plugins/modifier.debug_print_var.php" md5="7cf549b8d0bc352447083172158759c4"/>
-		<file filename="core/libs/smarty/plugins/function.html_checkboxes.php" md5="1987102af1a373c52107c8afbf49ea1b"/>
-		<file filename="core/libs/smarty/plugins/block.php.php" md5="1c9e67cac3c206a0101e0079a2703a9d"/>
 		<file filename="core/libs/smarty/plugins/function.mailto.php" md5="a2ee11c42200791f08176869e3731c3f"/>
-		<file filename="core/libs/smarty/plugins/modifier.truncate.php" md5="181754eb8f60a81c40ef54c01e541fd7"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.wordwrap.php" md5="ee19796e5252f46905c9bb144568fdd6"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.count_words.php" md5="bf8a26007facbb5ad9c9a1ed2459c58d"/>
 		<file filename="core/libs/smarty/plugins/outputfilter.trimwhitespace.php" md5="de5de4f6feaa040784f255e93f581b64"/>
-		<file filename="core/libs/smarty/plugins/function.html_image.php" md5="b60f74e5701f3fe7d61457cacf99fc1e"/>
-		<file filename="core/libs/smarty/plugins/function.cycle.php" md5="3aed60eca7828872ff8158a73f39939b"/>
-		<file filename="core/libs/smarty/plugins/modifier.escape.php" md5="9a63a217a2efd829910d63b83223eb69"/>
+		<file filename="core/libs/smarty/plugins/function.html_table.php" md5="21d1c0da84832f84713ceac075522702"/>
+		<file filename="core/libs/smarty/plugins/variablefilter.htmlspecialchars.php" md5="41de646253dc1c98805575bb386a8d2a"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.lower.php" md5="6cc744ae832d8c8b7b8a86e84f2ae711"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.indent.php" md5="1bbc6a4b89dee0352afc6f7193e1d1e9"/>
+		<file filename="core/libs/smarty/plugins/function.counter.php" md5="44f45da4f4608820c6809b4df5b31a26"/>
+		<file filename="core/libs/smarty/plugins/shared.make_timestamp.php" md5="109e856f42e4882fb8e48414d3d37885"/>
+		<file filename="core/libs/smarty/plugins/modifier.debug_print_var.php" md5="7cf549b8d0bc352447083172158759c4"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.upper.php" md5="6a0c77764cf5de77a65443ddf49835be"/>
+		<file filename="core/libs/smarty/plugins/function.html_checkboxes.php" md5="1987102af1a373c52107c8afbf49ea1b"/>
+		<file filename="core/libs/smarty/plugins/modifier.replace.php" md5="ba55bfcf134690b6676061de7fcd8ba0"/>
+		<file filename="core/libs/smarty/plugins/modifier.truncate.php" md5="181754eb8f60a81c40ef54c01e541fd7"/>
+		<file filename="core/libs/smarty/plugins/function.popup_init.php" md5="aa5a044ef546a75aad30e52b1ddd3139"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.strip.php" md5="fdb9720a0bfee16ef86cbc61a107907f"/>
+		<file filename="core/libs/smarty/plugins/function.html_select_time.php" md5="5a0fb7851c9c7a13663048d711e1fe5a"/>
 		<file filename="core/libs/smarty/plugins/block.textformat.php" md5="aac643cdd456ffaa42464cc0d4bab8f5"/>
-		<file filename="core/libs/core/IFile.interface.php" md5="90d0d0be070d24649d4899eda6a5cfd3"/>
-		<file filename="core/libs/core/Form.class.php-DISABLED" md5="a894bb169fb280f540fa91bbbb87791d"/>
+		<file filename="core/libs/smarty/plugins/modifier.spacify.php" md5="6f38e4d3371e83a3d06d4381c881a329"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.strip_tags.php" md5="a3dad011660a8a908f25ff5c5004d443"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.wordwrap.php" md5="ee19796e5252f46905c9bb144568fdd6"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.count_paragraphs.php" md5="946217452bfde277222cee8b6bf40331"/>
+		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/core/ISingleton.interface.php" md5="4812be45e675d1856a952cb402c885eb"/>
-		<file filename="core/libs/aws-sdk/README.md" md5="b290d5d6e4b4c494df4093ea05257ccf"/>
-		<file filename="core/libs/aws-sdk/lib/cachecore/icachecore.interface.php" md5="eddc7dec5da4bad0faaba229b7bbb9b1"/>
-		<file filename="core/libs/aws-sdk/lib/cachecore/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
+		<file filename="core/libs/core/Form.class.php-DISABLED" md5="a894bb169fb280f540fa91bbbb87791d"/>
+		<file filename="core/libs/core/IFile.interface.php" md5="1fe08f59ce89b307958449ae649eea5d"/>
+		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
+		<file filename="core/libs/smarty-plugins/block.a.php" md5="fbb313bab37183e80a90cdfa1ceeb30a"/>
+		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="800e464e8bae160ad7aba53d63ab78c8"/>
+		<file filename="core/libs/smarty-plugins/function.script.php" md5="fff11b9cdf71f4cd7120d0edbd70761a"/>
+		<file filename="core/libs/smarty-plugins/function.widget.php" md5="efee56afd71540793fa9ad94d9c63662"/>
+		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>
+		<file filename="core/libs/aws-sdk/package.xml" md5="f074a8d2f61e38eaaae117277b50c256"/>
+		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test_cli.php" md5="d5d30c8021dd8573eb4bbeb913baf025"/>
+		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test.php" md5="9877bcc06f33dfa16b79328474064f00"/>
+		<file filename="core/libs/aws-sdk/_compatibility_test/README.md" md5="4b2ad499f8315322bfc745050a2ca396"/>
+		<file filename="core/libs/aws-sdk/_docs/NOTICE.md" md5="4265f813fbcd0334f9df940ff18bd659"/>
+		<file filename="core/libs/aws-sdk/_docs/LICENSE.md" md5="c101f69c0271135eef789cd808a30eae"/>
+		<file filename="core/libs/aws-sdk/_docs/CHANGELOG.md" md5="a8a20953f58a3be68b01ef825d52b936"/>
+		<file filename="core/libs/aws-sdk/_docs/CONTRIBUTORS.md" md5="8132b78b65200261ccd239bda698cdb4"/>
+		<file filename="core/libs/aws-sdk/_samples/test_files/plain.txt" md5="c947c2eb40966243d4471eab7926961c"/>
+		<file filename="core/libs/aws-sdk/_samples/test_files/audio.wav" md5="36235fb7f88a1cec806119529058f806"/>
+		<file filename="core/libs/aws-sdk/_samples/test_files/video.mp4" md5="c784874fd5b2532e64a9ca1090e68a9b"/>
+		<file filename="core/libs/aws-sdk/_samples/test_files/word.doc" md5="1efd2ffd8cb5426e5c405b709f924b11"/>
+		<file filename="core/libs/aws-sdk/_samples/cli-s3_get_urls_for_uploads.php" md5="45bfb473c0ed4d133b0e3c4dc141b6be"/>
+		<file filename="core/libs/aws-sdk/_samples/html-sdb_create_domain_data.php" md5="bcfdf7dfa92e4c7c7066b21d280be3f6"/>
+		<file filename="core/libs/aws-sdk/_samples/cli-ec2_sorting_and_filtering.php" md5="bb569fdfbac5d6cefc245f7663b968de"/>
+		<file filename="core/libs/aws-sdk/_samples/README.md" md5="13d920a4d2473746f18573c343d31baf"/>
+		<file filename="core/libs/aws-sdk/config-sample.inc.php" md5="64903e5db2d65fd103a4b4f8c9c91d5d"/>
+		<file filename="core/libs/aws-sdk/lib/yaml/README.markdown" md5="872df9017f6485111a36d2ce9c1e8bdc"/>
+		<file filename="core/libs/aws-sdk/lib/yaml/LICENSE" md5="4828aab1cb984d8a5d29e1c0df3cdcbd"/>
+		<file filename="core/libs/aws-sdk/lib/requestcore/README.md" md5="702485f100351d8dcc1346d087d09656"/>
+		<file filename="core/libs/aws-sdk/lib/requestcore/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
 		<file filename="core/libs/aws-sdk/lib/cachecore/README" md5="69bacd091afe98a53695d99b1deca48e"/>
+		<file filename="core/libs/aws-sdk/lib/cachecore/icachecore.interface.php" md5="eddc7dec5da4bad0faaba229b7bbb9b1"/>
 		<file filename="core/libs/aws-sdk/lib/cachecore/_sql/pgsql.sql" md5="ddc5308c119fb421b3d26eff1238229a"/>
 		<file filename="core/libs/aws-sdk/lib/cachecore/_sql/README" md5="bb14abe0c209c9f54256975bae796c9f"/>
 		<file filename="core/libs/aws-sdk/lib/cachecore/_sql/mysql.sql" md5="dc8b835b3e737bfb5905a61391b6e4a6"/>
 		<file filename="core/libs/aws-sdk/lib/cachecore/_sql/sqlite3.sql" md5="12810a853ca7e2b5dc35654fb241cee5"/>
-		<file filename="core/libs/aws-sdk/lib/yaml/LICENSE" md5="4828aab1cb984d8a5d29e1c0df3cdcbd"/>
-		<file filename="core/libs/aws-sdk/lib/yaml/README.markdown" md5="872df9017f6485111a36d2ce9c1e8bdc"/>
-		<file filename="core/libs/aws-sdk/lib/requestcore/README.md" md5="702485f100351d8dcc1346d087d09656"/>
-		<file filename="core/libs/aws-sdk/lib/requestcore/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
-		<file filename="core/libs/aws-sdk/package.xml" md5="f074a8d2f61e38eaaae117277b50c256"/>
-		<file filename="core/libs/aws-sdk/_samples/README.md" md5="13d920a4d2473746f18573c343d31baf"/>
-		<file filename="core/libs/aws-sdk/_samples/test_files/plain.txt" md5="c947c2eb40966243d4471eab7926961c"/>
-		<file filename="core/libs/aws-sdk/_samples/test_files/word.doc" md5="1efd2ffd8cb5426e5c405b709f924b11"/>
-		<file filename="core/libs/aws-sdk/_samples/test_files/audio.wav" md5="36235fb7f88a1cec806119529058f806"/>
-		<file filename="core/libs/aws-sdk/_samples/test_files/video.mp4" md5="c784874fd5b2532e64a9ca1090e68a9b"/>
-		<file filename="core/libs/aws-sdk/_samples/cli-ec2_sorting_and_filtering.php" md5="bb569fdfbac5d6cefc245f7663b968de"/>
-		<file filename="core/libs/aws-sdk/_samples/html-sdb_create_domain_data.php" md5="bcfdf7dfa92e4c7c7066b21d280be3f6"/>
-		<file filename="core/libs/aws-sdk/_samples/cli-s3_get_urls_for_uploads.php" md5="45bfb473c0ed4d133b0e3c4dc141b6be"/>
-		<file filename="core/libs/aws-sdk/_compatibility_test/README.md" md5="4b2ad499f8315322bfc745050a2ca396"/>
-		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test_cli.php" md5="d5d30c8021dd8573eb4bbeb913baf025"/>
-		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test.php" md5="9877bcc06f33dfa16b79328474064f00"/>
-		<file filename="core/libs/aws-sdk/_docs/NOTICE.md" md5="4265f813fbcd0334f9df940ff18bd659"/>
-		<file filename="core/libs/aws-sdk/_docs/CONTRIBUTORS.md" md5="8132b78b65200261ccd239bda698cdb4"/>
-		<file filename="core/libs/aws-sdk/_docs/LICENSE.md" md5="c101f69c0271135eef789cd808a30eae"/>
-		<file filename="core/libs/aws-sdk/_docs/CHANGELOG.md" md5="a8a20953f58a3be68b01ef825d52b936"/>
-		<file filename="core/libs/aws-sdk/config-sample.inc.php" md5="64903e5db2d65fd103a4b4f8c9c91d5d"/>
-		<file filename="core/libs/adodb5/xmlschema03.dtd" md5="1cd47a61a1edb4da944b23a6fe59bd2a"/>
-		<file filename="core/libs/adodb5/adodb-errorpear.inc.php" md5="7ab4957859c051ba7401fa1f1dc60d3b"/>
+		<file filename="core/libs/aws-sdk/lib/cachecore/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
+		<file filename="core/libs/aws-sdk/README.md" md5="b290d5d6e4b4c494df4093ea05257ccf"/>
+		<file filename="core/libs/adodb5/adodb-iterator.inc.php" md5="360456539eabb9bbd08622829df546a7"/>
+		<file filename="core/libs/adodb5/pivottable.inc.php" md5="a423422f9f9398e3669b5f1879157838"/>
+		<file filename="core/libs/adodb5/xmlschema.dtd" md5="26f3f629d55257aafcf66840d7c66618"/>
+		<file filename="core/libs/adodb5/adodb-lib.inc.php" md5="7e3134038851eac3fd9153835f59dfe2"/>
+		<file filename="core/libs/adodb5/lang/adodb-hu.inc.php" md5="f308d107e1335ec36f71f101bc5324cf"/>
+		<file filename="core/libs/adodb5/lang/adodb-uk1251.inc.php" md5="822a0c4c44527e99acdb3bc2f50ff6f1"/>
+		<file filename="core/libs/adodb5/lang/adodb-nl.inc.php" md5="ed3d417b04f361e178f1a258d193b929"/>
+		<file filename="core/libs/adodb5/lang/adodb-da.inc.php" md5="2ea23878b1027f3d07c8a9b8bbe4e3a3"/>
+		<file filename="core/libs/adodb5/lang/adodb-fa.inc.php" md5="32dd4402ea6055f588cc4c999f1dd21f"/>
+		<file filename="core/libs/adodb5/lang/adodb-bg.inc.php" md5="37b0880076545e8d8e3809002c8b1960"/>
+		<file filename="core/libs/adodb5/lang/adodb-ro.inc.php" md5="71052ad0e1622d8514b5a41622d2ce33"/>
+		<file filename="core/libs/adodb5/lang/adodb-ar.inc.php" md5="56602de7a184aa22984f46954b22934b"/>
+		<file filename="core/libs/adodb5/lang/adodb-sv.inc.php" md5="81fac3276333ca136f83c1f3c35f5f3f"/>
+		<file filename="core/libs/adodb5/lang/adodb-cn.inc.php" md5="155efb4dceeced3de044f660a9528265"/>
+		<file filename="core/libs/adodb5/lang/adodb-en.inc.php" md5="c5420bb506f4eae64a6f84e33bb31523"/>
+		<file filename="core/libs/adodb5/lang/adodb-bgutf8.inc.php" md5="ed08fdc9f392628cf2bf5eb9c814eb6a"/>
+		<file filename="core/libs/adodb5/lang/adodb-it.inc.php" md5="15e2c634116779844db3c9e8f1c4ceb0"/>
+		<file filename="core/libs/adodb5/lang/adodb-esperanto.inc.php" md5="32b94a998cb1a8b1ee14089af407d585"/>
+		<file filename="core/libs/adodb5/lang/adodb-de.inc.php" md5="26c57777b17e3ff924b83d3ac36a6e1c"/>
+		<file filename="core/libs/adodb5/lang/adodb_th.inc.php" md5="201d8ae7eda2a23f6b71c9d88ac77ded"/>
+		<file filename="core/libs/adodb5/lang/adodb-fr.inc.php" md5="dd47dbd2afc066b15e4944297da957b2"/>
+		<file filename="core/libs/adodb5/lang/adodb-pt-br.inc.php" md5="14cc56d6565900543e3b26130aace1b7"/>
+		<file filename="core/libs/adodb5/lang/adodb-ca.inc.php" md5="b9030fa70d9d0f2ba408ac61c31958c3"/>
+		<file filename="core/libs/adodb5/lang/adodb-pl.inc.php" md5="8a53c82baf19cf137ef125d7e410c647"/>
+		<file filename="core/libs/adodb5/lang/adodb-cz.inc.php" md5="6964322c13c74d4435a42c3d14ab7d6a"/>
+		<file filename="core/libs/adodb5/lang/adodb-es.inc.php" md5="de0722a45173d1e076216f41090232d1"/>
+		<file filename="core/libs/adodb5/lang/adodb-ru1251.inc.php" md5="e828ddb6371ea135bfff0d6b59229eb3"/>
+		<file filename="core/libs/adodb5/adodb-csvlib.inc.php" md5="db96167213233bcd01081742a7f84f92"/>
+		<file filename="core/libs/adodb5/drivers/adodb-sqlanywhere.inc.php" md5="ea7eddf0099ba27da2db4ad51d36a2e2"/>
+		<file filename="core/libs/adodb5/drivers/adodb-postgres.inc.php" md5="4229030f20214dfe3955053be6267596"/>
 		<file filename="core/libs/adodb5/drivers/adodb-proxy.inc.php" md5="3505ce7b12fa571ba35d12ca5a595237"/>
 		<file filename="core/libs/adodb5/drivers/adodb-postgres8.inc.php" md5="0d1fdbe1e7d3a6b1ecb211bb41981737"/>
-		<file filename="core/libs/adodb5/drivers/adodb-postgres.inc.php" md5="4229030f20214dfe3955053be6267596"/>
-		<file filename="core/libs/adodb5/drivers/adodb-sqlanywhere.inc.php" md5="ea7eddf0099ba27da2db4ad51d36a2e2"/>
-		<file filename="core/libs/adodb5/docs/docs-datadict.htm" md5="ff505ffedb7c5d245e904d071c9ba1e8"/>
-		<file filename="core/libs/adodb5/docs/readme.htm" md5="9a0e51379d70a597d2be5cf38ee0dbed"/>
-		<file filename="core/libs/adodb5/docs/old-changelog.htm" md5="3158a33f9d5eda38a369b5749198dd02"/>
-		<file filename="core/libs/adodb5/docs/tips_portable_sql.htm" md5="a7da0dd37a34ff695dc4cd9f112aabfa"/>
-		<file filename="core/libs/adodb5/docs/tute.htm" md5="7929ac9a3a6a7015a4e1e292f26d1907"/>
-		<file filename="core/libs/adodb5/docs/docs-active-record.htm" md5="0512e46c84c4683b8f88abcff5adba09"/>
-		<file filename="core/libs/adodb5/docs/docs-perf.htm" md5="d06294c17fe88314e9b580028ff39d87"/>
-		<file filename="core/libs/adodb5/docs/docs-session.old.htm" md5="5da9e8741f4a32de7ddb1a158c99386e"/>
-		<file filename="core/libs/adodb5/docs/docs-adodb.htm" md5="43e18a26970f5202d14a8f692ce9e433"/>
-		<file filename="core/libs/adodb5/docs/docs-oracle.htm" md5="0c837ca143b015ec7a3ff1d4b1acb5a2"/>
-		<file filename="core/libs/adodb5/docs/docs-session.htm" md5="1038820bcb025b2d9e97391af51a8a78"/>
-		<file filename="core/libs/adodb5/pivottable.inc.php" md5="a423422f9f9398e3669b5f1879157838"/>
-		<file filename="core/libs/adodb5/lang/adodb-cz.inc.php" md5="6964322c13c74d4435a42c3d14ab7d6a"/>
-		<file filename="core/libs/adodb5/lang/adodb-it.inc.php" md5="15e2c634116779844db3c9e8f1c4ceb0"/>
-		<file filename="core/libs/adodb5/lang/adodb-de.inc.php" md5="26c57777b17e3ff924b83d3ac36a6e1c"/>
-		<file filename="core/libs/adodb5/lang/adodb-bg.inc.php" md5="37b0880076545e8d8e3809002c8b1960"/>
-		<file filename="core/libs/adodb5/lang/adodb-ru1251.inc.php" md5="e828ddb6371ea135bfff0d6b59229eb3"/>
-		<file filename="core/libs/adodb5/lang/adodb-da.inc.php" md5="2ea23878b1027f3d07c8a9b8bbe4e3a3"/>
-		<file filename="core/libs/adodb5/lang/adodb-sv.inc.php" md5="81fac3276333ca136f83c1f3c35f5f3f"/>
-		<file filename="core/libs/adodb5/lang/adodb-pl.inc.php" md5="8a53c82baf19cf137ef125d7e410c647"/>
-		<file filename="core/libs/adodb5/lang/adodb-bgutf8.inc.php" md5="ed08fdc9f392628cf2bf5eb9c814eb6a"/>
-		<file filename="core/libs/adodb5/lang/adodb-uk1251.inc.php" md5="822a0c4c44527e99acdb3bc2f50ff6f1"/>
-		<file filename="core/libs/adodb5/lang/adodb-fr.inc.php" md5="dd47dbd2afc066b15e4944297da957b2"/>
-		<file filename="core/libs/adodb5/lang/adodb-hu.inc.php" md5="f308d107e1335ec36f71f101bc5324cf"/>
-		<file filename="core/libs/adodb5/lang/adodb-ro.inc.php" md5="71052ad0e1622d8514b5a41622d2ce33"/>
-		<file filename="core/libs/adodb5/lang/adodb-nl.inc.php" md5="ed3d417b04f361e178f1a258d193b929"/>
-		<file filename="core/libs/adodb5/lang/adodb_th.inc.php" md5="201d8ae7eda2a23f6b71c9d88ac77ded"/>
-		<file filename="core/libs/adodb5/lang/adodb-ar.inc.php" md5="56602de7a184aa22984f46954b22934b"/>
-		<file filename="core/libs/adodb5/lang/adodb-esperanto.inc.php" md5="32b94a998cb1a8b1ee14089af407d585"/>
-		<file filename="core/libs/adodb5/lang/adodb-ca.inc.php" md5="b9030fa70d9d0f2ba408ac61c31958c3"/>
-		<file filename="core/libs/adodb5/lang/adodb-es.inc.php" md5="de0722a45173d1e076216f41090232d1"/>
-		<file filename="core/libs/adodb5/lang/adodb-en.inc.php" md5="c5420bb506f4eae64a6f84e33bb31523"/>
-		<file filename="core/libs/adodb5/lang/adodb-cn.inc.php" md5="155efb4dceeced3de044f660a9528265"/>
-		<file filename="core/libs/adodb5/lang/adodb-fa.inc.php" md5="32dd4402ea6055f588cc4c999f1dd21f"/>
-		<file filename="core/libs/adodb5/lang/adodb-pt-br.inc.php" md5="14cc56d6565900543e3b26130aace1b7"/>
-		<file filename="core/libs/adodb5/readme.txt" md5="856de932c83745af0a66cd21d6d1abbf"/>
-		<file filename="core/libs/adodb5/tohtml.inc.php" md5="f6967c4a18db47ea938c71e279170a0c"/>
+		<file filename="core/libs/adodb5/toexport.inc.php" md5="3514b11651b24c2a444cf829c13c848e"/>
+		<file filename="core/libs/adodb5/xsl/convert-0.2-0.3.xsl" md5="409846921dd94e5bbb473ff65314ea2a"/>
 		<file filename="core/libs/adodb5/xsl/convert-0.2-0.1.xsl" md5="5d2788a525f2591249dedab11fa603b4"/>
-		<file filename="core/libs/adodb5/xsl/convert-0.1-0.3.xsl" md5="6aadb6a50dc09f6e776d5847f70432d0"/>
-		<file filename="core/libs/adodb5/xsl/convert-0.1-0.2.xsl" md5="29d98453a420d4cbaee77cf29e79ccea"/>
 		<file filename="core/libs/adodb5/xsl/remove-0.2.xsl" md5="0b2b85762fe8c79ec259c25098840e4d"/>
 		<file filename="core/libs/adodb5/xsl/remove-0.3.xsl" md5="678d96591452812ec32cfffc56877b51"/>
-		<file filename="core/libs/adodb5/xsl/convert-0.2-0.3.xsl" md5="409846921dd94e5bbb473ff65314ea2a"/>
-		<file filename="core/libs/adodb5/xmlschema.dtd" md5="26f3f629d55257aafcf66840d7c66618"/>
-		<file filename="core/libs/adodb5/session/adodb-session-clob2.php" md5="703dc9969d5b89f8cb6883bd05deb790"/>
-		<file filename="core/libs/adodb5/session/adodb-sessions.oracle.sql" md5="08d0fc1f5fbf8b79a4dca43cbd30e3a1"/>
-		<file filename="core/libs/adodb5/session/adodb-sessions.mysql.sql" md5="42fef0886af1f6da31a06de273876b71"/>
-		<file filename="core/libs/adodb5/session/session_schema.xml" md5="644334444418c6b39d20b6f22f3cf634"/>
-		<file filename="core/libs/adodb5/session/adodb-sess.txt" md5="260bf23fe50279cf27842c0ac8b12ed4"/>
-		<file filename="core/libs/adodb5/session/old/adodb-session.php" md5="282277237bbde90cd4f2999f96c972ca"/>
-		<file filename="core/libs/adodb5/session/old/adodb-session-clob.php" md5="c4c895a14c892311114a295e7d069d5f"/>
-		<file filename="core/libs/adodb5/session/old/adodb-cryptsession.php" md5="39efaebf074096a8736ffbcb8c9a644c"/>
-		<file filename="core/libs/adodb5/session/adodb-session-clob.php" md5="414f85519a96b9a356909cc01c9b58b3"/>
-		<file filename="core/libs/adodb5/session/adodb-cryptsession2.php" md5="14db9569ea91a84c414771bb0f249cde"/>
-		<file filename="core/libs/adodb5/session/session_schema2.xml" md5="34094c892ec3ab48bdaead67fd0d09be"/>
-		<file filename="core/libs/adodb5/session/adodb-sessions.oracle.clob.sql" md5="3c64f822ee1b493b319c6e8196cc06b8"/>
-		<file filename="core/libs/adodb5/session/adodb-cryptsession.php" md5="f2462fd839ae3e6f21d72a8e1be56e99"/>
+		<file filename="core/libs/adodb5/xsl/convert-0.1-0.2.xsl" md5="29d98453a420d4cbaee77cf29e79ccea"/>
+		<file filename="core/libs/adodb5/xsl/convert-0.1-0.3.xsl" md5="6aadb6a50dc09f6e776d5847f70432d0"/>
+		<file filename="core/libs/adodb5/adodb-errorhandler.inc.php" md5="5adda31fbccb7c666535a332f530c636"/>
+		<file filename="core/libs/adodb5/adodb-errorpear.inc.php" md5="7ab4957859c051ba7401fa1f1dc60d3b"/>
+		<file filename="core/libs/adodb5/adodb-memcache.lib.inc.php" md5="1b010ac54b5a9c4b780c8c5235d199ce"/>
+		<file filename="core/libs/adodb5/rsfilter.inc.php" md5="cd4e50501a4e93cbf2c483d67dfa1c5b"/>
+		<file filename="core/libs/adodb5/docs/docs-session.old.htm" md5="5da9e8741f4a32de7ddb1a158c99386e"/>
+		<file filename="core/libs/adodb5/docs/docs-oracle.htm" md5="0c837ca143b015ec7a3ff1d4b1acb5a2"/>
+		<file filename="core/libs/adodb5/docs/tute.htm" md5="7929ac9a3a6a7015a4e1e292f26d1907"/>
+		<file filename="core/libs/adodb5/docs/docs-adodb.htm" md5="43e18a26970f5202d14a8f692ce9e433"/>
+		<file filename="core/libs/adodb5/docs/readme.htm" md5="9a0e51379d70a597d2be5cf38ee0dbed"/>
+		<file filename="core/libs/adodb5/docs/docs-session.htm" md5="1038820bcb025b2d9e97391af51a8a78"/>
+		<file filename="core/libs/adodb5/docs/docs-active-record.htm" md5="0512e46c84c4683b8f88abcff5adba09"/>
+		<file filename="core/libs/adodb5/docs/tips_portable_sql.htm" md5="a7da0dd37a34ff695dc4cd9f112aabfa"/>
+		<file filename="core/libs/adodb5/docs/docs-datadict.htm" md5="ff505ffedb7c5d245e904d071c9ba1e8"/>
+		<file filename="core/libs/adodb5/docs/old-changelog.htm" md5="3158a33f9d5eda38a369b5749198dd02"/>
+		<file filename="core/libs/adodb5/docs/docs-perf.htm" md5="d06294c17fe88314e9b580028ff39d87"/>
+		<file filename="core/libs/adodb5/pear/readme.Auth.txt" md5="497018d573a00f8e9c6881907cac4a63"/>
 		<file filename="core/libs/adodb5/license.txt" md5="8bd77614212dddcfe8ef04c95fbd92e6"/>
-		<file filename="core/libs/adodb5/cute_icons_for_site/adodb.gif" md5="943052b5ea2b4188ca4453f9b62cebae"/>
+		<file filename="core/libs/adodb5/tohtml.inc.php" md5="f6967c4a18db47ea938c71e279170a0c"/>
 		<file filename="core/libs/adodb5/cute_icons_for_site/adodb2.gif" md5="f5405fa66aa4da4f6507c9356581b539"/>
-		<file filename="core/libs/adodb5/adodb.inc.php" md5="28e802e8b9cab09aaa4bb764fbea3bc6"/>
-		<file filename="core/libs/adodb5/adodb-error.inc.php" md5="e76c52524f38c42f9c6fe8fc16e4c7a7"/>
-		<file filename="core/libs/adodb5/adodb-lib.inc.php" md5="7e3134038851eac3fd9153835f59dfe2"/>
-		<file filename="core/libs/adodb5/tests/testoci8cursor.php" md5="6121721c05c4d28abd4bf37458992677"/>
-		<file filename="core/libs/adodb5/tests/test-datadict.php" md5="56af04eb4a75b7ff79c3bb33b2014855"/>
-		<file filename="core/libs/adodb5/tests/testmssql.php" md5="2921b6cf758e41c8f4b71fe892d62b72"/>
-		<file filename="core/libs/adodb5/tests/xmlschema-mssql.xml" md5="38cd368e4ecfc7cf00a5700ed421f8a9"/>
+		<file filename="core/libs/adodb5/cute_icons_for_site/adodb.gif" md5="943052b5ea2b4188ca4453f9b62cebae"/>
+		<file filename="core/libs/adodb5/contrib/toxmlrpc.inc.php" md5="8a022e02714ce3186f310cc65d936ad5"/>
 		<file filename="core/libs/adodb5/tests/test-php5.php" md5="65355a07a224a59161c1d128327450b2"/>
-		<file filename="core/libs/adodb5/tests/tmssql.php" md5="0c20155fc80aa778985e6d1393032781"/>
-		<file filename="core/libs/adodb5/tests/testgenid.php" md5="15760f299c223f7345703c6b14e38cdc"/>
-		<file filename="core/libs/adodb5/tests/test_rs_array.php" md5="1ccf2778737a7c41eab84989e464a642"/>
-		<file filename="core/libs/adodb5/tests/test-active-relations.php" md5="abdb93731fad7cab1039df5b9b744739"/>
-		<file filename="core/libs/adodb5/tests/benchmark.php" md5="6c42b1e9055b4787de9d29f1ec224ca3"/>
-		<file filename="core/libs/adodb5/tests/client.php" md5="8e1c7ad5393bf89451a8ad5f25fbed79"/>
-		<file filename="core/libs/adodb5/tests/testpear.php" md5="51118047ff052e9769802134f3824250"/>
-		<file filename="core/libs/adodb5/tests/test-active-relationsx.php" md5="1e3a649544c21a5fe2dbeb8b1cf2bc2d"/>
-		<file filename="core/libs/adodb5/tests/test2.php" md5="4501cba98f22b7c111ec1132dce339c3"/>
-		<file filename="core/libs/adodb5/tests/pdo.php" md5="418638c9528ead891f89b0728799ecc1"/>
-		<file filename="core/libs/adodb5/tests/testoci8.php" md5="5dc84adad88b3db7339129b4a592e3e0"/>
-		<file filename="core/libs/adodb5/tests/time.php" md5="72bc2f5ab0d835eb68b1d58dda5beba6"/>
-		<file filename="core/libs/adodb5/tests/testcache.php" md5="97b4ffd1b05bdbdf36a7f9ca1670e12a"/>
-		<file filename="core/libs/adodb5/tests/test.php" md5="5f35d6136f55658d9ae36eed5c764e5d"/>
-		<file filename="core/libs/adodb5/tests/test-pgblob.php" md5="62b6b5f397babd852597f9d9ec5749fe"/>
-		<file filename="core/libs/adodb5/tests/test4.php" md5="df22f879ecf8e116b804a8e7c45c4550"/>
-		<file filename="core/libs/adodb5/tests/test-active-recs2.php" md5="7b9edb390ecef854d0dbec12f3158370"/>
-		<file filename="core/libs/adodb5/tests/test5.php" md5="b4a95563acab0802f8ed6962cf5583ac"/>
-		<file filename="core/libs/adodb5/tests/test-active-record.php" md5="3a3d3dd71f1fdf32b85952939e9ba6c6"/>
-		<file filename="core/libs/adodb5/tests/xmlschema.xml" md5="d0b48b1134ab6aff026753d6b684948e"/>
+		<file filename="core/libs/adodb5/tests/test3.php" md5="bf5e4d7c160a61aff75d066cf7714f10"/>
 		<file filename="core/libs/adodb5/tests/test-xmlschema.php" md5="c64f9923dda687bb398a44ceb708197a"/>
+		<file filename="core/libs/adodb5/tests/client.php" md5="8e1c7ad5393bf89451a8ad5f25fbed79"/>
+		<file filename="core/libs/adodb5/tests/test.php" md5="5f35d6136f55658d9ae36eed5c764e5d"/>
+		<file filename="core/libs/adodb5/tests/test-perf.php" md5="b95e98b55a0c97573682d39616eafc6d"/>
+		<file filename="core/libs/adodb5/tests/testcache.php" md5="97b4ffd1b05bdbdf36a7f9ca1670e12a"/>
+		<file filename="core/libs/adodb5/tests/testgenid.php" md5="15760f299c223f7345703c6b14e38cdc"/>
+		<file filename="core/libs/adodb5/tests/test-active-relationsx.php" md5="1e3a649544c21a5fe2dbeb8b1cf2bc2d"/>
+		<file filename="core/libs/adodb5/tests/testsessions.php" md5="17e3b646266337cd2a142220ee41ace1"/>
+		<file filename="core/libs/adodb5/tests/test-active-relations.php" md5="abdb93731fad7cab1039df5b9b744739"/>
+		<file filename="core/libs/adodb5/tests/test-pgblob.php" md5="62b6b5f397babd852597f9d9ec5749fe"/>
+		<file filename="core/libs/adodb5/tests/test-datadict.php" md5="56af04eb4a75b7ff79c3bb33b2014855"/>
+		<file filename="core/libs/adodb5/tests/test-active-recs2.php" md5="7b9edb390ecef854d0dbec12f3158370"/>
+		<file filename="core/libs/adodb5/tests/testoci8cursor.php" md5="6121721c05c4d28abd4bf37458992677"/>
+		<file filename="core/libs/adodb5/tests/pdo.php" md5="418638c9528ead891f89b0728799ecc1"/>
+		<file filename="core/libs/adodb5/tests/test-active-record.php" md5="3a3d3dd71f1fdf32b85952939e9ba6c6"/>
+		<file filename="core/libs/adodb5/tests/time.php" md5="72bc2f5ab0d835eb68b1d58dda5beba6"/>
 		<file filename="core/libs/adodb5/tests/testdatabases.inc.php" md5="39ec5c9cbd02898a6226ddc52d7f3164"/>
 		<file filename="core/libs/adodb5/tests/testpaging.php" md5="6276c415c9414d8d33196817d37a6aa9"/>
-		<file filename="core/libs/adodb5/tests/testsessions.php" md5="17e3b646266337cd2a142220ee41ace1"/>
-		<file filename="core/libs/adodb5/tests/test-perf.php" md5="b95e98b55a0c97573682d39616eafc6d"/>
-		<file filename="core/libs/adodb5/tests/test3.php" md5="bf5e4d7c160a61aff75d066cf7714f10"/>
-		<file filename="core/libs/adodb5/adodb-csvlib.inc.php" md5="db96167213233bcd01081742a7f84f92"/>
-		<file filename="core/libs/adodb5/rsfilter.inc.php" md5="cd4e50501a4e93cbf2c483d67dfa1c5b"/>
-		<file filename="core/libs/adodb5/adodb-iterator.inc.php" md5="360456539eabb9bbd08622829df546a7"/>
-		<file filename="core/libs/adodb5/adodb-errorhandler.inc.php" md5="5adda31fbccb7c666535a332f530c636"/>
-		<file filename="core/libs/adodb5/toexport.inc.php" md5="3514b11651b24c2a444cf829c13c848e"/>
-		<file filename="core/libs/adodb5/adodb-memcache.lib.inc.php" md5="1b010ac54b5a9c4b780c8c5235d199ce"/>
+		<file filename="core/libs/adodb5/tests/testmssql.php" md5="2921b6cf758e41c8f4b71fe892d62b72"/>
+		<file filename="core/libs/adodb5/tests/testoci8.php" md5="5dc84adad88b3db7339129b4a592e3e0"/>
+		<file filename="core/libs/adodb5/tests/xmlschema.xml" md5="d0b48b1134ab6aff026753d6b684948e"/>
+		<file filename="core/libs/adodb5/tests/xmlschema-mssql.xml" md5="38cd368e4ecfc7cf00a5700ed421f8a9"/>
+		<file filename="core/libs/adodb5/tests/test_rs_array.php" md5="1ccf2778737a7c41eab84989e464a642"/>
+		<file filename="core/libs/adodb5/tests/test5.php" md5="b4a95563acab0802f8ed6962cf5583ac"/>
+		<file filename="core/libs/adodb5/tests/benchmark.php" md5="6c42b1e9055b4787de9d29f1ec224ca3"/>
+		<file filename="core/libs/adodb5/tests/testpear.php" md5="51118047ff052e9769802134f3824250"/>
+		<file filename="core/libs/adodb5/tests/tmssql.php" md5="0c20155fc80aa778985e6d1393032781"/>
+		<file filename="core/libs/adodb5/tests/test2.php" md5="4501cba98f22b7c111ec1132dce339c3"/>
+		<file filename="core/libs/adodb5/tests/test4.php" md5="df22f879ecf8e116b804a8e7c45c4550"/>
+		<file filename="core/libs/adodb5/session/adodb-session-clob2.php" md5="703dc9969d5b89f8cb6883bd05deb790"/>
+		<file filename="core/libs/adodb5/session/old/adodb-session-clob.php" md5="c4c895a14c892311114a295e7d069d5f"/>
+		<file filename="core/libs/adodb5/session/old/adodb-session.php" md5="282277237bbde90cd4f2999f96c972ca"/>
+		<file filename="core/libs/adodb5/session/old/adodb-cryptsession.php" md5="39efaebf074096a8736ffbcb8c9a644c"/>
+		<file filename="core/libs/adodb5/session/adodb-session-clob.php" md5="414f85519a96b9a356909cc01c9b58b3"/>
+		<file filename="core/libs/adodb5/session/adodb-sessions.mysql.sql" md5="42fef0886af1f6da31a06de273876b71"/>
+		<file filename="core/libs/adodb5/session/session_schema2.xml" md5="34094c892ec3ab48bdaead67fd0d09be"/>
+		<file filename="core/libs/adodb5/session/adodb-sessions.oracle.sql" md5="08d0fc1f5fbf8b79a4dca43cbd30e3a1"/>
+		<file filename="core/libs/adodb5/session/adodb-cryptsession2.php" md5="14db9569ea91a84c414771bb0f249cde"/>
+		<file filename="core/libs/adodb5/session/adodb-sess.txt" md5="260bf23fe50279cf27842c0ac8b12ed4"/>
+		<file filename="core/libs/adodb5/session/adodb-sessions.oracle.clob.sql" md5="3c64f822ee1b493b319c6e8196cc06b8"/>
+		<file filename="core/libs/adodb5/session/adodb-cryptsession.php" md5="f2462fd839ae3e6f21d72a8e1be56e99"/>
+		<file filename="core/libs/adodb5/session/session_schema.xml" md5="644334444418c6b39d20b6f22f3cf634"/>
+		<file filename="core/libs/adodb5/xmlschema03.dtd" md5="1cd47a61a1edb4da944b23a6fe59bd2a"/>
 		<file filename="core/libs/adodb5/server.php" md5="ebb57c7469946a64c4252bb59276689a"/>
+		<file filename="core/libs/adodb5/readme.txt" md5="856de932c83745af0a66cd21d6d1abbf"/>
 		<file filename="core/libs/adodb5/ReleaseNotes-adodb.511.txt" md5="cb14ca2d7f9a9ac21cc11fe09c7a637f"/>
-		<file filename="core/libs/adodb5/pear/readme.Auth.txt" md5="497018d573a00f8e9c6881907cac4a63"/>
 		<file filename="core/libs/adodb5/adodb-time.inc.php" md5="2ef85aecdab2c9479fb0726fd54c5c7a"/>
-		<file filename="core/libs/adodb5/contrib/toxmlrpc.inc.php" md5="8a022e02714ce3186f310cc65d936ad5"/>
-		<file filename="core/bootstrap.php" md5="ab05ac10a029920fff2dbb6b1babbe07"/>
-		<file filename="packager.php" md5="7178a77c09ff884d484e4d834c768b25"/>
-		<file filename="index.php" md5="a5a962b29c2019624c14c31b6c4f85ea"/>
+		<file filename="core/libs/adodb5/adodb.inc.php" md5="28e802e8b9cab09aaa4bb764fbea3bc6"/>
+		<file filename="core/libs/adodb5/adodb-error.inc.php" md5="e76c52524f38c42f9c6fe8fc16e4c7a7"/>
+		<file filename="license.txt" md5="73f1eb20517c55bf9493b7dd6e480788"/>
+		<file filename="packager.php" md5="ec6921844826a4b339f6aab728091e08"/>
 	</otherfiles>
 	<dbschema prefix="CAE2_">
 		<table name="CAE2_component" engine="MyISAM" charset="latin1">
@@ -1158,9 +1168,7 @@
 			</index>
 		</table>
 		<table name="CAE2_config" engine="MyISAM" charset="latin1">
-			<comment>
-				Configuration settings that modules, libraries, and the core
-			</comment>
+			<comment></comment>
 			<column>
 				<field>key</field>
 				<type>varchar(256)</type>
@@ -1455,7 +1463,7 @@
 				<collation>latin1_swedish_ci</collation>
 				<null>NO</null>
 				<key>PRI</key>
-				<default></default>
+				<default xsi:nil="true"/>
 				<extra></extra>
 				<comment></comment>
 			</column>

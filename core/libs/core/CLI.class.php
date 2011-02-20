@@ -27,7 +27,7 @@ class CLI{
 				$answerhash = array();
 				$x=0;
 				foreach($answers as $a => $q){
-					if($a == 'exit' && $x+1 == sizeof($answers)){
+					if(($a === 'exit') && ($x+1 == sizeof($answers))){
 						// This is a 'special' action, so it gets a special key.
 						$answerhash['x'] = $a;
 						echo TAB . " x - $q" . NL;
@@ -47,8 +47,11 @@ class CLI{
 				}
 				
 				// Print the "enter a number 1-10..." text.
-				echo NL . "(Enter a number, 1-$x";
+				if($x == 1) echo NL . '(Enter 1 to continue';
+				else echo NL . "(Enter a number, 1-$x";
+				
 				if($hasexit) echo " or 'x'";
+				
 				echo ") ";
 				
 				// Read the response.

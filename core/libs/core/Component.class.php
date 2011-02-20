@@ -784,7 +784,6 @@ class Component extends InstallArchiveAPI{
 			$nf = new Asset($node->getAttribute('filename'));
 			
 			$f->copyTo($nf);
-			var_dump($f, $nf);
 		}
 	}
 	

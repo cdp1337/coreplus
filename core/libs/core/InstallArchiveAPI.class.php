@@ -154,6 +154,9 @@ abstract class InstallArchiveAPI extends XMLLoader{
 			case InstallArchiveAPI::TYPE_LIBRARY:
 				return $prefix . 'libraries/' . $this->_name . '/' . 'library.xml';
 				break;
+			case InstallArchiveAPI::TYPE_THEME:
+				return $prefix . 'themes/' . $this->_name . '/' . 'theme.xml';
+				break;
 		}
 	}
 	
@@ -166,7 +169,9 @@ abstract class InstallArchiveAPI extends XMLLoader{
 			case InstallArchiveAPI::TYPE_LIBRARY:
 				return $prefix . 'libraries/' . $this->_name . '/';
 				break;
-
+			case InstallArchiveAPI::TYPE_THEME:
+				return $prefix . 'themes/' . $this->_name . '/';
+				break;
 		}
 		
 	}
