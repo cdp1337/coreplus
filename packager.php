@@ -424,15 +424,26 @@ function get_unique_authors($authors){
 		// If there are no more unset names, no need to keep this array laying about.
 		if(!sizeof($ea[''])) unset($ea['']);
 	}
+	
 
 	$authors = array();
 	// Now handle every email.
 	foreach($ea as $e => $na){
-		array_unique($na);
+		$na = array_unique($na);
 		if($e == ''){
 			foreach($na as $name) $authors[] = array('name' => $name);
 			continue;
 		}
+		
+		
+		// Match differences such as Tomas V.V.Cox and Tomas V. V. Cox
+		$simsearch = array();
+		foreach($na as $k => $name){
+			$key = preg_replace('/[^a-z]/i', '', $name);
+			if(in_array($key, $simsearch)) unset($na[$k]);
+			else $simsearch[] = $key;
+		}
+		
 
 		// There may be a pattern in the names, ie: Charlie Powell == cpowell == powellc == charlie.powell
 		$aliases = array();
