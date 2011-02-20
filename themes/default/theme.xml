@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="default">
+	<assets>
+		<file filename="assets/logo.png" md5="ec0a7fe6809e4f051bb09e1c21aab52c"/>
+		<file filename="assets/css/styles.css" md5="aefe2d3010280a64fbe20df347e83b4f"/>
+		<file filename="assets/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
+		<file filename="assets/icons/view.png" md5="5108ec1f152e29684be1bfe393ef2fc8"/>
+		<file filename="assets/icons/directory.png" md5="50afe6c35c14f4174d8d2e33f5025f14"/>
+		<file filename="assets/icons/delete-lg.png" md5="11503d71985ef12f09c37bb7c14bf873"/>
+		<file filename="assets/icons/lock-sm.png" md5="fec403cfda74d62e539fd0ae50dca11c"/>
+		<file filename="assets/icons/move.png" md5="74932504970ad90017e3413613e9889f"/>
+		<file filename="assets/icons/move-sm.png" md5="490566b692bd23e2b75e54cbe5680e1d"/>
+		<file filename="assets/icons/edit-sm.png" md5="f75b02c22881f4d0f2c4b6e76ab7ff80"/>
+		<file filename="assets/icons/add-sm.png" md5="64d74ce097072a88c225fa09d7f24bab"/>
+		<file filename="assets/icons/view-lg.png" md5="a4c68ef8ba297f51ce01de807acc656f"/>
+		<file filename="assets/icons/add.png" md5="826f54d0901dd6c6d392ddf6997a76cd"/>
+		<file filename="assets/icons/view-sm.png" md5="31c0d2c70ac4f53e7c1b0748efa48e7a"/>
+		<file filename="assets/icons/edit.png" md5="1f7c0fab746187012ef137a1e4df2333"/>
+		<file filename="assets/icons/edit-lg.png" md5="66a1a2a05a4ab4604acec077f14ada1d"/>
+		<file filename="assets/icons/add-lg.png" md5="b1e2a07f1eb1a49af949b2fb251c51c3"/>
+		<file filename="assets/icons/lock.png" md5="3dae2bac1271b3eee81b57bf2573a5c6"/>
+		<file filename="assets/icons/email-sm.png" md5="2b9ecc49d4b27276e2972a6b1c850117"/>
+		<file filename="assets/icons/delete.png" md5="ed684274665ea47e42982fa7a05c851f"/>
+		<file filename="assets/icons/email-lg.png" md5="0f20b7d3cb3d9590c4f600c3c02aed0b"/>
+		<file filename="assets/icons/delete-sm.png" md5="ef78e3ddd8658ddbc1a708e2409328a5"/>
+		<file filename="assets/icons/email.png" md5="55dcda1f2bc0e54e0a34c49df62dbc08"/>
+		<file filename="assets/icons/lock-lg.png" md5="ea1051e469c6b759e7d915a5a1ee4415"/>
+		<file filename="assets/icons/move-lg.png" md5="ee2354c1e09c09db9b3c7ed98a4966e1"/>
+		<file filename="assets/fonts/Cousine-Bold.ttf" md5="8b6cde097069d84859cf7b24403faeca"/>
+		<file filename="assets/fonts/Puritan-Italic.ttf" md5="a698cb186856b0785c795e4ec8d4a392"/>
+		<file filename="assets/fonts/PT_Sans-Italic.ttf" md5="3c1732457ed32a353b3be70a6c5354dc"/>
+		<file filename="assets/fonts/Puritan-Regular.ttf" md5="02d2067f1f6151e847d06354c5de358d"/>
+		<file filename="assets/fonts/Cousine-Regular.ttf" md5="07f0482b1dd16541ce1cd59d92d2f46f"/>
+		<file filename="assets/fonts/Puritan-Bold.ttf" md5="614d9bbe1edcf99e0541a92dcb271d80"/>
+		<file filename="assets/fonts/PT_Sans-Regular.ttf" md5="21a8438cc80da94c65ea62ccc1233f50"/>
+		<file filename="assets/fonts/OFL.txt" md5="88d3f3dcbf0c2389e6a9b1c7dcdabe22"/>
+		<file filename="assets/fonts/Puritan-BoldItalic.ttf" md5="f6d45f1870364fe214b6e4234bb34b9b"/>
+		<file filename="assets/fonts/PT_Sans-BoldItalic.ttf" md5="494fff9755804cd781e4431bf134bacf"/>
+		<file filename="assets/fonts/PT_Sans-Bold.ttf" md5="29eba82ed387922f39f2727e5e5883e2"/>
+		<file filename="assets/fonts/Cousine-Italic.ttf" md5="8a0dacd2cc9ef158fff2daec2b7bc435"/>
+		<file filename="assets/fonts/Cousine-BoldItalic.ttf" md5="aa6b45a45a88a9547e30d6a6a9dcf75c"/>
+		<file filename="assets/js/html5.js" md5="e919b7e0d6dc0226e3356aeb07bf63c2"/>
+	</assets>
+	<changelog version="1.0.0">
+		<packagemeta>
+			<date>Sat, 19 Feb 2011 20:47:54 -0500</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.1-dev1</packager>
+		</packagemeta>
+	</changelog>
+	<view>
+		<file filename="index.tpl" md5="c77b78c8c7b3b8c8035ce984a5691aa9"/>
+	</view>
+	<otherfiles/>
+</theme>
+
