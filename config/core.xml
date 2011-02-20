@@ -79,6 +79,12 @@ else relative to the root directory is used.
 		<description>If this is a production site, it is advised to disable this.</description>
 	</define>
 	
+	<define name="TMP_DIR" type="string">
+		<defaultValue>/tmp/</defaultValue>
+		<value>/tmp/cae2/</value>
+		<description>The location of the tmp directory for cache, compile, and general temporary files.  Please ensure that this ends with a "/"</description>
+	</define>
+	
 	<!-- These don't like to be defined in here.... it comes out literally "\n" -->
 	<!--
 	<define name="NL" type="string">
