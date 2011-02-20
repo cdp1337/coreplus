@@ -263,5 +263,9 @@ class Theme extends InstallArchiveAPI{
 			
 			$f->copyTo($nf);
 		}
+		
+		// Make sure the asset cache is purged!
+		$c = Cache::Singleton('asset-resolveurl');
+		$c->delete();
 	}
 }

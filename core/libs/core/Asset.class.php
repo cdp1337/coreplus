@@ -149,15 +149,30 @@ class Asset implements IFile {
 	
 	
 	public static function ResolveURL($file){
-		// Try the theme'd version first.
-		$t = ConfigHandler::GetValue('/core/theme');
+		// Maybe it's cached :)
+		$keyname = 'asset-resolveurl';
+		$keyttl  = (3600 * 12);
+		$cachevalue = Cache::Get($keyname, $keyttl);
 		
-		$a = new Asset($file, $t);
-		if($a->exists()) return $a->getURL();
+		if(!isset($cachevalue[$file])){
+			// Try the theme'd version first.
+			$t = ConfigHandler::GetValue('/core/theme');
+
+			$a = new Asset($file, $t);
+			if($a->exists()){
+				$cachevalue[$file] = $a->getURL();
+			}
+			else{
+				// Doesn't exist?  Just use the default.
+				$a = new Asset($file);
+				$cachevalue[$file] = $a->getURL();
+			}
+			
+			Cache::Set($keyname, $cachevalue, $keyttl);
+		}
 		
-		// Doesn't exist?  Just use the default.
-		$a = new Asset($file);
-		return $a->getURL();
+		// Return the cached value!
+		return $cachevalue[$file];
 	}
 	
 }

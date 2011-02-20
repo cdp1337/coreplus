@@ -120,6 +120,17 @@ if(!SITE_CONFIGURED){
 	//die('If your browser does not refresh, please <a href="install.php">Click Here</a>');
 }
 
+// The TMP_DIR needs to be writable!
+if(!is_dir(TMP_DIR)){
+	$ds = explode('/', TMP_DIR);
+	$d = '';
+	foreach($ds as $dir){
+		if($dir == '') continue;
+		$d .= '/' . $dir;
+		if(!is_dir($d)) mkdir($d) or die("Please ensure that " . TMP_DIR . " is writable.");
+	}
+}
+
 
 
 /*******   CALCULATE SEVERAL REQUIRED CONSTANTS, MAINLY ONES FOR PATH AND URL INFORMATION  ********/

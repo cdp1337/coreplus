@@ -86,8 +86,6 @@ define('FULL_DEBUG', false);
 define('NL', "\n");
 define('TAB', "\t");
 
-define('TMP_DIR', '/tmp/');
-
 /**
  * define shorthand directory separator constant
  */

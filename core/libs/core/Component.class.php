@@ -164,6 +164,10 @@ class Component extends InstallArchiveAPI{
 							$el = $this->getElement('/library/file[@filename="' . $fname . '"]');
 							$getnames = true;
 						}
+						elseif(preg_match('/^interface[ ]*[a-z0-9_\-]*/im', $fconts)){
+							$el = $this->getElement('/library/file[@filename="' . $fname . '"]');
+							$getnames = true;
+						}
 						else{
 							$el = $this->getElement('/otherfiles/file[@filename="' . $fname . '"]');
 							$getnames = false;
@@ -189,10 +193,18 @@ class Component extends InstallArchiveAPI{
 							$viewclasses[] = $foundclass;
 						}
 						
+						// Add any class found in this file.
 						preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
 						foreach($ret[2] as $foundclass){
 							if(in_array($foundclass, $viewclasses)) continue;
 							$this->getElementFrom('provides[@type="class"][@name="' . $foundclass . '"]', $el);
+						}
+						
+						// Allow interfaces to be associated as a provided element too.
+						preg_match_all('/^(interface)[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
+						foreach($ret[2] as $foundclass){
+							if(in_array($foundclass, $viewclasses)) continue;
+							$this->getElementFrom('provides[@type="interface"][@name="' . $foundclass . '"]', $el);
 						}
 					}
 				}
@@ -408,6 +420,8 @@ class Component extends InstallArchiveAPI{
 				$filename = $this->getBaseDir() . $f->getAttribute('filename');
 				foreach($f->getElementsByTagName('provides') as $p){
 					if(strtolower($p->getAttribute('type')) == 'class') $classes[$p->getAttribute('name')] = $filename;
+					// also allow interfaces to be returned.
+					if(strtolower($p->getAttribute('type')) == 'interface') $classes[$p->getAttribute('name')] = $filename;
 				}
 			}
 		}
@@ -785,6 +799,10 @@ class Component extends InstallArchiveAPI{
 			
 			$f->copyTo($nf, true);
 		}
+		
+		// Make sure the asset cache is purged!
+		$c = Cache::Singleton('asset-resolveurl');
+		$c->delete();
 	}
 	
 	/**
