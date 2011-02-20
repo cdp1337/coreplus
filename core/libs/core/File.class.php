@@ -38,7 +38,28 @@ class File implements IFile{
 	}
 	
 	public function getMimetype(){
-		return MIME_Type::autoDetect($this->filename);
+		// PEAR, you have failed me for the last time... :'(
+		//return MIME_Type::autoDetect($this->filename);
+		
+		$finfo = finfo_open(FILEINFO_MIME);
+		$type  = finfo_file($finfo, $this->filename);
+		finfo_close($finfo);
+		
+		// $type may have some extra crap after a semicolon.
+		if(($pos = strpos($type, ';')) !== false) $type = substr($type, 0, $pos);
+		$type = trim($type);
+		
+		// There are a few exceptions to the rule.... namely with plain text.
+		$ext = strtolower($this->getExtension());
+		if($ext == 'js' && $type == 'text/plain')                    $type = 'text/javascript';
+		elseif($ext == 'js' && $type == 'text/x-c++')                $type = 'text/javascript';
+		elseif($ext == 'css' && $type == 'text/plain')               $type = 'text/css';
+		elseif($ext == 'css' && $type == 'text/x-c')                 $type = 'text/css';
+		elseif($ext == 'html' && $type == 'text/plain')              $type = 'text/html';
+		elseif($ext == 'ttf' && $type == 'application/octet-stream') $type = 'font/ttf';
+		elseif($ext == 'otf' && $type == 'application/octet-stream') $type = 'font/otf';
+		
+		return $type;
 	}
 	
 	public function getExtension(){
@@ -385,6 +406,10 @@ class File implements IFile{
 			$result = exec('diff -q "' . $this->filename . '" "' . $otherfile . '"', $array, $return);
 			return ($return == 0);
 		}		
+	}
+	
+	public function exists(){
+		return file_exists($this->filename);
 	}
 	
 }

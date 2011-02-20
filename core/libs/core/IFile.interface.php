@@ -85,6 +85,8 @@ interface IFile {
 	public function getContents();
 	
 	public function putContents($data);
+	
+	public function exists();
 }
 
 ?>

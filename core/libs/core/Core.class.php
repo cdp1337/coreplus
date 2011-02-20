@@ -255,10 +255,7 @@ class Core implements ISingleton{
 	 * @return string The full url of the asset, including the http://...
 	 */
 	public static function ResolveAsset($asset){
-		$t = ConfigHandler::GetValue('/core/theme');
-		
-		if(file_exists(ROOT_PDIR . '/assets/' . $t . '/' . $asset)) return ROOT_URL . 'assets/' . $t . '/' . $asset;
-		else return ROOT_URL . 'assets/default/' . $asset;
+		return Asset::ResolveURL($asset);
 	}
 	
 	/**

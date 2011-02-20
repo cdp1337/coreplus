@@ -135,7 +135,7 @@ class Component extends InstallArchiveAPI{
 			if($hasview && $file->inDirectory($viewd)){
 				$el = $this->getElement('/view/file[@filename="' . $fname . '"]');
 			}
-			elseif($file->inDirectory($assetd)){
+			elseif($assetd && $file->inDirectory($assetd)){
 				// It's an asset!
 				$el = $this->getElement('/assets/file[@filename="' . $fname . '"]');
 			}
@@ -783,7 +783,7 @@ class Component extends InstallArchiveAPI{
 			$f = new File($b . $node->getAttribute('filename'));
 			$nf = new Asset($node->getAttribute('filename'));
 			
-			$f->copyTo($nf);
+			$f->copyTo($nf, true);
 		}
 	}
 	

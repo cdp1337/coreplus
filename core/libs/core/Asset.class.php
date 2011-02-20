@@ -18,7 +18,14 @@ class Asset implements IFile {
 	
 	public function __construct($filename = null, $set = 'default') {
 		switch(ConfigHandler::GetValue('/core/asset_backend')){
-			case 'aws-s3': $this->_backend = new FileAWSS3($filename); break;
+			case 'aws-s3':
+				// Trim off the "assets" from the filename, it'll get a new prefix.
+				if(strpos($filename, 'assets/') === 0) $filename = substr($filename, 7);
+				// Prepend the set.
+				$filename = $set . '/' . $filename;
+				$this->_backend = new FileAWSS3($filename, ConfigHandler::GetValue('/core/aws/asset_bucket'));
+				$this->_backend->storage = AmazonS3::STORAGE_REDUCED; // These are copies of static assets, their reliability really isn't important.
+				break;
 			default: // "local" is deafult.
 			case 'local':
 				// Trim off the "assets" from the filename, it'll get a new prefix.
@@ -135,6 +142,22 @@ class Asset implements IFile {
 	public function putContents($data){
 		return $this->_backend->putContents($data);
 	}
+	
+	public function exists(){
+		return $this->_backend->exists();
+	}
+	
+	
+	public static function ResolveURL($file){
+		// Try the theme'd version first.
+		$t = ConfigHandler::GetValue('/core/theme');
+		
+		$a = new Asset($file, $t);
+		if($a->exists()) return $a->getURL();
+		
+		// Doesn't exist?  Just use the default.
+		$a = new Asset($file);
+		return $a->getURL();
+	}
+	
 }
-
-?>
