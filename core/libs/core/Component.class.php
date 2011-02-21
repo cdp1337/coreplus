@@ -118,6 +118,10 @@ class Component extends InstallArchiveAPI{
 
 		// Purge the 'otherfiles' section.
 		$this->removeElements('//otherfiles');
+		// Also purge any module/library/view files, as these are built automatically.
+		$this->removeElements('//library/file');
+		$this->removeElements('//module/file');
+		$this->removeElements('//view/file');
 		//if($this->getElement('/otherfiles', false)){
 		//	$this->getRootDOM()->removeChild($this->getElement('/otherfiles'));
 		//}
@@ -145,6 +149,13 @@ class Component extends InstallArchiveAPI{
 				// Scan through this file and file any classes that are provided.
 				if(preg_match('/\.php$/i', $fname)){
 					$fconts = file_get_contents($file->getFilename());
+					
+					// Trim out the comments to prevent false readings.
+					
+					// Will remove /* ... */ multi-line comments.
+					$fconts = preg_replace(':/\*.*\*/:Us', '', $fconts);
+					// Will remove // single-line comments.
+					$fconts = preg_replace('://.*$:', '', $fconts);
 					
 					if($el){
 						$getnames = ($el->parentNode->nodeName == 'library' || $el->parentNode->nodeName == 'module');
@@ -378,12 +389,19 @@ class Component extends InstallArchiveAPI{
 			}
 		}
 		
+		
 		// Register any events that may be present.
 		foreach($this->getElementsByTagName('hook') as $h){
 			$event = $h->getAttribute('event');
 			$call = $h->getAttribute('call');
 			$type = @$h->getAttribute('type');
 			HookHandler::AttachToHook($event, $call, $type);
+		}
+		
+		
+		// This component may have special form elements registered.  Check!
+		foreach($this->getElements('/forms/formelement') as $node){
+			Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
 		}
 		
 		
