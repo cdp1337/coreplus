@@ -49,10 +49,17 @@ class FormGroup{
 	public function addElement($element, $atts = null){
 		// Since this allows for just plain names to be submitted, translate
 		// them to the form object to be rendered.
+		
+		if($element instanceof FormElement || is_a($element, 'FormElement')){
+			// w00t, already in the right format!
+			if($atts) $element->setFromArray ($atts);
+			$this->_elements[] = $element;
+		}
+		else{
+			if(!isset(Form::$Mappings[$element])) $element = 'text'; // Default.
 
-		if(!isset(Form::$Mappings[$element])) $element = 'text'; // Default.
-
-		$this->_elements[] = new Form::$Mappings[$element]($atts);
+			$this->_elements[] = new Form::$Mappings[$element]($atts);
+		}
 	}
 
 	public function getTemplateName(){
@@ -279,15 +286,15 @@ class FormElement{
 class Form extends FormGroup{
 
 	public static $Mappings = array(
-		'text' => 'FormTextInput',
-		'password' => 'FormPasswordInput',
 		'hidden' => 'FormHiddenInput',
-		'wysiwyg' => 'FormTextareaInput',
-		'textarea' => 'FormTextareaInput',
 		'pageinsertables' => 'FormPageInsertables',
 		'pagemeta' => 'FormPageMeta',
+		'password' => 'FormPasswordInput',
 		'select' => 'FormSelectInput',
 		'submit' => 'FormSubmitInput',
+		'text' => 'FormTextInput',
+		'textarea' => 'FormTextareaInput',
+		'wysiwyg' => 'FormTextareaInput',
 	);
 
 	/*public function get($key){
@@ -593,6 +600,8 @@ class FormSelectInput extends FormElement{
 		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'rows', 'cols', 'style');
 	}
 }
+
+
 
 class FormPageInsertables extends FormGroup{
 
