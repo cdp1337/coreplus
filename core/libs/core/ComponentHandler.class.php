@@ -132,13 +132,15 @@ class ComponentHandler implements ISingleton{
 		$c = Core::GetComponent();
 		$c->load();
 		//if(Core::NeedsUpdated()) $c->upgrade();
+		//
+		// Ensure the core is the first component in the array, it's just easier that way!
+		$ch->_componentCache = array_reverse($ch->_componentCache, true);
 		$ch->_componentCache['core'] = $c;
+		$ch->_componentCache = array_reverse($ch->_componentCache, true);
 		
 		if(Core::IsInstalled()){
 			if($c->needsUpdated()) $c->upgrade();
-
 		}
-		
 		
 
 		/*
@@ -178,25 +180,29 @@ class ComponentHandler implements ISingleton{
 		//echo "Loading...";
 		// Now that I have a list of components available, copy them into a list of 
 		//	components that are installed.
-		$list = array();
-		foreach($ch->_componentCache as $c){
-			if($c->isInstalled()){
-				$list[] = $c;
-			}
-			elseif(DEVELOPMENT_MODE){
-				// Allow components to be installed automatically.
-				if($c->install()) $list[] = $c;
-			}
-		}
 		
-		// Now list should contain just components that have been installed.
-		//	Go ahead and try to include them.
+		$list = $ch->_componentCache;
+		
 		do{
 			$size = sizeof($list);
 			foreach($list as $n => $c){
+				// If it's not installed, remove it from the list, unless 
+				// it's in DEVELOPMENT mode... then try to install it, or just continue to the next.
+				if(!$c->isInstalled() && DEVELOPMENT_MODE){
+					// w00t
+					if($c->isLoadable()) $c->install();
+				}
+				else{
+					// Not installed and not DEV, don't care!
+					unset($list[$n]);
+				}
+				
+				// Allow for on-the-fly package upgrading regardless of DEV mode or not.
 				if($c->needsUpdated() && $c->isLoadable()){
 					$c->upgrade();
 				}
+				
+				// If it's loaded, register it and remove it from the list!
 				if($c->isLoadable() && $c->loadFiles()){
 					$ch->_registerComponent($c);
 					unset($list[$n]);
