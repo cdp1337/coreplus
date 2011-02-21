@@ -138,8 +138,14 @@ class Model {
 					$type = 'boolean';
 					$maxlen = null;
 				}
+				elseif(strpos($row['Type'], 'enum(') !== false){
+					$type = 'enum';
+					$maxlen = null;
+					$opt = explode(',', substr($row['Type'], 5, -1));
+					foreach($opt as $k => $v) $opt[$k] = substr($v, 1, -1); // Opts will be surrounded by single quotes.
+				}
 				else{
-					var_dump($row['Type']);
+					echo "<pre class='xdebug-var-dump'>Unsupported column definition: " . $row['Type'] . "</pre>";
 					$type = 'other';
 					$maxlen = null;
 				}
@@ -150,6 +156,7 @@ class Model {
 				$null = ($row['Null'] == 'YES');
 
 				$l['columns'][$row['Field']] = array('name' => $name, 'type' => $type, 'maxlength' => $maxlen, 'primary' => $primary, 'unique' => $unique, 'autoinc' => $ai, 'allownull' => $null);
+				if($type == 'enum') $l['columns'][$row['Field']]['opts'] = $opt;
 			}
 		} // if(!isset(Model::$_ModelStructureCache[$this->getTableName()]))
 		
