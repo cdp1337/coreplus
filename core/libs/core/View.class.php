@@ -19,6 +19,7 @@ class View {
 	
 	const MODE_PAGE = 'page';
 	const MODE_WIDGET = 'widget';
+	const MODE_NOOUTPUT = 'nooutput';
 	// @todo Implement the rest of the modes.
 	//const MODE_AJAX = 'ajax';
 	// const MODE_JSON = 'json';
@@ -111,6 +112,9 @@ class View {
 		//var_dump($this->templatename, Template::ResolveFile($this->templatename));
 		// Master template depends on the render mode.
 		switch($this->mode){
+			case View::MODE_NOOUTPUT:
+				$mastertpl = false;
+				break;
 			case View::MODE_PAGE:
 				$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::GetValue('/core/theme') . '/' . $this->mastertemplate;
 				break;
@@ -133,15 +137,19 @@ class View {
 		if(($n = sizeof($this->breadcrumbs)) && !$this->breadcrumbs[$n-1]['title']){
 			$this->breadcrumbs[$n-1]['title'] = $this->title;
 		}
-
+		
 		$template = new Template();
 		$template->setBaseURL('/');
+		// Page-level views have some special variables.
+		if($this->mode == View::MODE_PAGE){
+			$template->assign('breadcrumbs', $this->breadcrumbs);
+			$template->assign('controls', $this->controls);
+			$template->assign('messages', Core::GetMessages());
+			$template->assign('foot', '');
+		}
 		$template->assign('title', $this->title);
 		$template->assign('body', $this->fetchBody());
-		$template->assign('breadcrumbs', $this->breadcrumbs);
-		$template->assign('controls', $this->controls);
-		$template->assign('foot', '');
-
+		
 		echo $template->fetch($mastertpl);
 	}
 	
