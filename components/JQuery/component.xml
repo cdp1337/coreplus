@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component>
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.0~1" name="JQuery" execmode="web">
+	<requires name="core" type="component"/>
 	<changelog version="1.5.0~1">
 		<packagemeta>
 			<date>Fri, 18 Feb 2011 01:13:41 -0500</date>
