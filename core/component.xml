@@ -11,6 +11,30 @@
 		<file filename="install/index.php" md5="6858964a2abebbfd1956dca311a92648">
 			<provides type="class" name="InstallPage"/>
 		</file>
+		<file filename="core/libs/cachecore/cachecore.class.php" md5="2cdb13d6cd892f9ab80dd5a09c34aead">
+			<provides type="class" name="CacheCore"/>
+		</file>
+		<file filename="core/libs/cachecore/cachemc.class.php" md5="b419adf0fa1bffb68d1690e236f29399">
+			<provides type="class" name="CacheMC"/>
+		</file>
+		<file filename="core/libs/cachecore/icachecore.interface.php" md5="f69cb850a7e948a1a8fdd1243bb27bb8">
+			<provides type="interface" name="ICacheCore"/>
+		</file>
+		<file filename="core/libs/cachecore/cacheapc.class.php" md5="897b56db0ebdb170c431a4370e18234f">
+			<provides type="class" name="CacheAPC"/>
+		</file>
+		<file filename="core/libs/cachecore/_tests/AllTests.php" md5="8971cbd66ad355fa4624e52bb79975d1">
+			<provides type="class" name="Console_CommandLine_AllTests"/>
+		</file>
+		<file filename="core/libs/cachecore/cachefile.class.php" md5="06a242fbc285eec69446ccd35590a8c2">
+			<provides type="class" name="CacheFile"/>
+		</file>
+		<file filename="core/libs/cachecore/cachexcache.class.php" md5="93538d20d1aba8fa6f4bbb92a69a43e0">
+			<provides type="class" name="CacheXCache"/>
+		</file>
+		<file filename="core/libs/cachecore/cachepdo.class.php" md5="f4062163c142e64cdadc4e067dc90107">
+			<provides type="class" name="CachePDO"/>
+		</file>
 		<file filename="core/libs/smarty/Smarty.class.php" md5="4911b2e61dc704261e2d6ea48abb6bb1">
 			<provides type="class" name="Smarty"/>
 			<provides type="class" name="SmartyException"/>
@@ -230,11 +254,17 @@
 			<provides type="class" name="Smarty_Internal_Compile_Sectionelse"/>
 			<provides type="class" name="Smarty_Internal_Compile_Sectionclose"/>
 		</file>
+		<file filename="core/libs/core/Theme.class.php" md5="bcc44cd202b26cba4bf42ef71928a576">
+			<provides type="class" name="Theme"/>
+		</file>
 		<file filename="core/libs/core/Debug.class.php" md5="0aade6cc94e5a8a6f5f7d5badfce7398">
 			<provides type="class" name="Debug"/>
 		</file>
 		<file filename="core/libs/core/Session.class.php" md5="ff0e48c2031ecfb306cfb72e33db1875">
 			<provides type="class" name="Session"/>
+		</file>
+		<file filename="core/libs/core/Cache.class.php" md5="53beefc5697d6ed3c3842126cbe89668">
+			<provides type="class" name="Cache"/>
 		</file>
 		<file filename="core/libs/core/CLI.class.php" md5="fe817b1c7f07d48fceac662654db4cd3">
 			<provides type="class" name="CLI"/>
@@ -246,45 +276,224 @@
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="cc381fac0a83f5364aa51935d979dc2b">
 			<provides type="class" name="CAEDirectoryIterator"/>
 		</file>
+		<file filename="core/libs/core/FileAWSS3.class.php" md5="508d8ab7cdcf650879636da9663ed353">
+			<provides type="class" name="FileAWSS3"/>
+		</file>
 		<file filename="core/libs/core/File.class.php" md5="682d6b1eec5c758202466e397fc00350">
 			<provides type="class" name="File"/>
+		</file>
+		<file filename="core/libs/core/Form.class.php" md5="2f067935dbe6cba5c144bf48c09985bd">
+			<provides type="class" name="FormGroup"/>
+			<provides type="class" name="FormElement"/>
+			<provides type="class" name="Form"/>
+			<provides type="class" name="FormTextInput"/>
+			<provides type="class" name="FormPasswordInput"/>
+			<provides type="class" name="FormSubmitInput"/>
+			<provides type="class" name="FormTextareaInput"/>
+			<provides type="class" name="FormHiddenInput"/>
+			<provides type="class" name="FormSelectInput"/>
+			<provides type="class" name="FormPageInsertables"/>
+			<provides type="class" name="FormPageMeta"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="e8ddd45cd9cec59e1ab5a3797210a3dc">
 			<provides type="class" name="ConfigHandler"/>
 		</file>
+		<file filename="core/libs/core/PageModel.class.php" md5="7ba8fc8144bea9751f98abfd31576e6d">
+			<provides type="class" name="PageModel"/>
+		</file>
 		<file filename="core/libs/core/Controller.class.php" md5="a40b22a95d5e218a1c12a683fd1d9dcc">
 			<provides type="class" name="Controller"/>
+		</file>
+		<file filename="core/libs/core/Asset.class.php" md5="9ccf3bbe3ba55cf4e0fe5be8242b2622">
+			<provides type="class" name="Asset"/>
+		</file>
+		<file filename="core/libs/core/IFile.interface.php" md5="6a15055b926bcdd9f5ba444a1a416100">
+			<provides type="interface" name="IFile"/>
+		</file>
+		<file filename="core/libs/core/View.class.php" md5="cd528de855c5b7578c435be09a7c5db0">
+			<provides type="class" name="View"/>
+		</file>
+		<file filename="core/libs/core/ISingleton.interface.php" md5="4812be45e675d1856a952cb402c885eb">
+			<provides type="interface" name="ISingleton"/>
+		</file>
+		<file filename="core/libs/core/WidgetModel.class.php" md5="c7ddfb3e52c8d2f12b27c45d5081e84b">
+			<provides type="class" name="WidgetModel"/>
 		</file>
 		<file filename="core/libs/core/Core.class.php" md5="888e3a8d73d76ce4d6f4f4de8bab47ea">
 			<provides type="class" name="Core"/>
 		</file>
+		<file filename="core/libs/core/Insertable.class.php" md5="e5fbde0a9ca1eb18d4ee126095d17696">
+			<provides type="class" name="InsertableModel"/>
+		</file>
 		<file filename="core/libs/core/XMLLoader.class.php" md5="30f240fef8cdc0a5cea92634fed841d3">
 			<provides type="class" name="XMLLoader"/>
+		</file>
+		<file filename="core/libs/core/Template.class.php" md5="c4d6fe3a0a183a665e6a2d8d1de55943">
+			<provides type="class" name="Template"/>
 		</file>
 		<file filename="core/libs/core/Time.class.php" md5="8fb01c34bb263765e3d13effdd04c6bd">
 			<provides type="class" name="Time"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="d2f0f326345511bae6f4f23802ff79b5">
+		<file filename="core/libs/core/Model.class.php" md5="9e7301723101d679a108b5e56a73a9f1">
 			<provides type="class" name="Model"/>
 			<provides type="class" name="ModelFactory"/>
+		</file>
+		<file filename="core/libs/core/SQLBuilder.class.php" md5="3dd45aeabbe00d40a5a1a92d1c821102">
+			<provides type="class" name="SQLBuilder"/>
+			<provides type="class" name="SQLBuilderSelect"/>
+			<provides type="class" name="SQLBuilderUpdate"/>
+			<provides type="class" name="SQLBuilderInsert"/>
+			<provides type="class" name="SQLBuilderInsertUpdate"/>
+			<provides type="class" name="SQLBuilderDelete"/>
 		</file>
 		<file filename="core/libs/core/InstallArchive.class.php" md5="d9063bc8b13fe8955ef3a2fe23d7dae8">
 			<provides type="class" name="InstallArchive"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="93d6f8a560d5ad9534fa10c65d68d1c9">
+		<file filename="core/libs/core/Component.class.php" md5="223a6b5fe1d4cc746ff8fe9aaf765734">
 			<provides type="class" name="Component"/>
 		</file>
 		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="6da5b1986a5cb84894380371831aeaf7">
 			<provides type="class" name="InstallArchiveAPI"/>
 		</file>
+		<file filename="core/libs/core/ThemeHandler.class.php" md5="2db7ed24faaa0004f3d0ea33bf9cdae1">
+			<provides type="class" name="ThemeHandler"/>
+		</file>
+		<file filename="core/libs/core/CurrentPage.class.php" md5="d62aed6fab5562c071e659f5c1a7364c">
+			<provides type="class" name="CurrentPage"/>
+		</file>
+		<file filename="core/libs/core/WidgetController.class.php" md5="9d3ce60d27542c97f16be9c67609a64d">
+			<provides type="class" name="WidgetController"/>
+		</file>
 		<file filename="core/libs/core/InstallTask.class.php" md5="aff7379efc097dd3783833b91d391aea">
 			<provides type="class" name="InstallTask"/>
 		</file>
-		<file filename="core/libs/core/ComponentHandler.class.php" md5="acba79e524ffcd8c43f5bb7c4ec2422b">
+		<file filename="core/libs/core/ComponentHandler.class.php" md5="e9130467dc2a97dc92566a62d0327779">
 			<provides type="class" name="ComponentHandler"/>
 		</file>
 		<file filename="core/libs/core/DB.class.php" md5="3e16cd9418e364ff4c82434033b94420">
 			<provides type="class" name="DB"/>
+		</file>
+		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlDumper.php" md5="28196a0efdcea67d72e1eaf71e936958">
+			<provides type="class" name="sfYamlDumper"/>
+		</file>
+		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlInline.php" md5="9a63c1c4637eea3b4e208bea63e52baa">
+			<provides type="class" name="sfYamlInline"/>
+		</file>
+		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlParser.php" md5="91d3546a19262abc38275eb8f9d6dfb4">
+			<provides type="class" name="sfYamlParser"/>
+		</file>
+		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYaml.php" md5="2b7116a9f3bf6f9e8cd914c81bf79830">
+			<provides type="class" name="sfYaml"/>
+		</file>
+		<file filename="core/libs/aws-sdk/lib/requestcore/requestcore.class.php" md5="7af89f4463f4b5cab1f464c38481500c">
+			<provides type="class" name="RequestCore"/>
+			<provides type="class" name="ResponseCore"/>
+			<provides type="class" name="RequestCore_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/sdk.class.php" md5="a1781821328ceeec0abd3e1c2d27da23">
+			<provides type="class" name="CFRuntime_Exception"/>
+			<provides type="class" name="CFRuntime"/>
+			<provides type="class" name="CFLoader"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/stepconfig.class.php" md5="a38c9f3f668fa4b63647359912fe333c">
+			<provides type="class" name="CFStepConfig"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/complextype.class.php" md5="62413ec15d34a88326498eacc7cac3aa">
+			<provides type="class" name="CFComplexType"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/response.class.php" md5="128a6eff75168fbcddbb1872aa46088d">
+			<provides type="class" name="CFResponse"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/batchrequest.class.php" md5="21ce55b019eb80d01e47b8c01ecd5481">
+			<provides type="class" name="CFBatchRequest_Exception"/>
+			<provides type="class" name="CFBatchRequest"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/request.class.php" md5="efaf41d5e00e5891bc0c3df91ca74eb4">
+			<provides type="class" name="CFRequest"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/simplexml.class.php" md5="0e50c38a4681e9cb84a68ea789da3445">
+			<provides type="class" name="CFSimpleXML"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/manifest.class.php" md5="9e1cb2514d1c8d1cc54c2419d1f08ff9">
+			<provides type="class" name="CFManifest"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/hadoopstep.class.php" md5="7188a08779be549d1708e683b1930ce4">
+			<provides type="class" name="CFHadoopStep"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/mimetypes.class.php" md5="59e025e5f2909a69510f67979ff3e617">
+			<provides type="class" name="CFMimeTypes"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/info.class.php" md5="8d90241070bfcc1f1dde20e4d583624a">
+			<provides type="class" name="CFInfo"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/utilities.class.php" md5="7ef08a416322208d5d57cf5d95937512">
+			<provides type="class" name="CFUtilities"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/array.class.php" md5="c774cbca2e1bbcf93979f53d948f0e77">
+			<provides type="class" name="CFArray"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/policy.class.php" md5="adcb5b1de211f72a75ce450d41d7fc1c">
+			<provides type="class" name="CFPolicy"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/ses.class.php" md5="4a75d7e756a98f7a005f48ecbf843f02">
+			<provides type="class" name="AmazonSES"/>
+			<provides type="class" name="Email_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/rds.class.php" md5="d41238fbaac148a9abf67ecbee0a5a11">
+			<provides type="class" name="AmazonRDS"/>
+			<provides type="class" name="RDS_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/cloudwatch.class.php" md5="55d7e44eab912e1e0fd7ed91574c7f5b">
+			<provides type="class" name="AmazonCloudWatch"/>
+			<provides type="class" name="CloudWatch_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/s3.class.php" md5="520c240ad8a53ef5de2bd47831a66c32">
+			<provides type="class" name="S3_Exception"/>
+			<provides type="class" name="AmazonS3"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/sdb.class.php" md5="7aea786b7ff0cb2d3d70166d386e399b">
+			<provides type="class" name="AmazonSDB"/>
+			<provides type="class" name="SDB_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/as.class.php" md5="ed1cbbef4b81de0e0fffaa2bffd02cdc">
+			<provides type="class" name="AmazonAS"/>
+			<provides type="class" name="AS_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/elasticbeanstalk.class.php" md5="e38fca8d343b61c62e3d4d009cf7c2d9">
+			<provides type="class" name="AmazonElasticBeanstalk"/>
+			<provides type="class" name="ElasticBeanstalk_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/elb.class.php" md5="921b4dad03709d180e75340ada5a66fa">
+			<provides type="class" name="AmazonELB"/>
+			<provides type="class" name="ELB_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/sqs.class.php" md5="b19f73328ef483d5330d285221be0ba4">
+			<provides type="class" name="AmazonSQS"/>
+			<provides type="class" name="SQS_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/importexport.class.php" md5="e49faceaaa5763fdbc957df8cef6a23b">
+			<provides type="class" name="AmazonImportExport"/>
+			<provides type="class" name="ImportExport_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/iam.class.php" md5="413cded5ddc76100a613b99829d208f1">
+			<provides type="class" name="AmazonIAM"/>
+			<provides type="class" name="IAM_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/sns.class.php" md5="90155de1fe88a9f830b6ab620821729f">
+			<provides type="class" name="AmazonSNS"/>
+			<provides type="class" name="SNS_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/emr.class.php" md5="bbdb8c35e1c09905fc5c88ea6259abb9">
+			<provides type="class" name="AmazonEMR"/>
+			<provides type="class" name="EMR_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/ec2.class.php" md5="c6a3d737504dd7f98774b6662feeb4bc">
+			<provides type="class" name="AmazonEC2"/>
+			<provides type="class" name="EC2_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/cloudfront.class.php" md5="bfa0f3e40691337fb67191d48e9f9100">
+			<provides type="class" name="CloudFront_Exception"/>
+			<provides type="class" name="AmazonCloudFront"/>
 		</file>
 		<file filename="core/libs/adodb5/datadict/datadict-firebird.inc.php" md5="c97ce14989b4f144d947e6faf360252e">
 			<provides type="class" name="ADODB2_firebird"/>
@@ -636,268 +845,18 @@
 		<file filename="core/libs/adodb5/pear/Auth/Container/ADOdb.php" md5="5abeb5902f7f36cfc27520900f148164">
 			<provides type="class" name="Auth_Container_ADOdb"/>
 		</file>
-		<file filename="core/libs/core/CurrentPage.class.php" md5="56decb5e3a1ec3f6e28b346c3740efdd">
-			<provides type="class" name="CurrentPage"/>
-		</file>
-		<file filename="core/libs/core/PageModel.class.php" md5="7ba8fc8144bea9751f98abfd31576e6d">
-			<provides type="class" name="PageModel"/>
-		</file>
-		<file filename="core/libs/core/SQLBuilder.class.php" md5="dfa26ae1a81300231aa05049713eeca7">
-			<provides type="class" name="SQLBuilder"/>
-			<provides type="class" name="SQLBuilderSelect"/>
-			<provides type="class" name="SQLBuilderUpdate"/>
-			<provides type="class" name="SQLBuilderInsert"/>
-			<provides type="class" name="SQLBuilderInsertUpdate"/>
-			<provides type="class" name="SQLBuilderDelete"/>
-		</file>
-		<file filename="core/libs/core/Template.class.php" md5="c4d6fe3a0a183a665e6a2d8d1de55943">
-			<provides type="class" name="Template"/>
-		</file>
-		<file filename="core/libs/core/Insertable.class.php" md5="e5fbde0a9ca1eb18d4ee126095d17696">
-			<provides type="class" name="Insertable"/>
-			<provides type="class" name="InsertableModel"/>
-		</file>
-		<file filename="core/libs/core/Form.class.php" md5="1e553d5269cf6f45fbfaebef9ec66fc8">
-			<provides type="class" name="_FormObject"/>
-			<provides type="class" name="_FormParentObject"/>
-			<provides type="class" name="Form"/>
-			<provides type="class" name="FormGroup"/>
-			<provides type="class" name="FormElement"/>
-			<provides type="class" name="FormCheckbox"/>
-			<provides type="class" name="FormCheckboxes"/>
-			<provides type="class" name="FormHidden"/>
-			<provides type="class" name="FormText"/>
-			<provides type="class" name="FormTextarea"/>
-			<provides type="class" name="FormPassword"/>
-			<provides type="class" name="FormFile"/>
-			<provides type="class" name="FormSelect"/>
-			<provides type="class" name="FormHTML"/>
-			<provides type="class" name="FormButton"/>
-			<provides type="class" name="FormReset"/>
-			<provides type="class" name="FormSubmit"/>
-			<provides type="class" name="FormImage"/>
-			<provides type="class" name="FormRadio"/>
-			<provides type="class" name="_FormValueMulitple"/>
-			<provides type="class" name="FormTextInput"/>
-			<provides type="class" name="FormSubmitInput"/>
-			<provides type="class" name="FormTextareaInput"/>
-			<provides type="class" name="FormHiddenInput"/>
-			<provides type="class" name="FormSelectInput"/>
-			<provides type="class" name="FormPageInsertables"/>
-			<provides type="class" name="FormPageMeta"/>
-			<provides type="class" name="FormPasswordInput"/>
-		</file>
-		<file filename="core/libs/core/View.class.php" md5="623a2b9ec7d14d4cf343b00252fbe57f">
-			<provides type="class" name="View"/>
-		</file>
-		<file filename="core/libs/core/WidgetController.class.php" md5="9d3ce60d27542c97f16be9c67609a64d">
-			<provides type="class" name="WidgetController"/>
-		</file>
-		<file filename="core/libs/core/WidgetModel.class.php" md5="c7ddfb3e52c8d2f12b27c45d5081e84b">
-			<provides type="class" name="WidgetModel"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/cachecore/cachecore.class.php" md5="363929249b7fd4c99b5bbb8eccd04191">
-			<provides type="class" name="CacheCore"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/cachecore/cachemc.class.php" md5="cf9a6f7b028825a95daf61636a81b166">
-			<provides type="class" name="CacheMC"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/cachecore/cacheapc.class.php" md5="e6e1274daf85672e79b5c62cc52e29fd">
-			<provides type="class" name="CacheAPC"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/cachecore/cachefile.class.php" md5="7f06aae849bb34830a360a8caf943d0f">
-			<provides type="class" name="CacheFile"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/cachecore/cachexcache.class.php" md5="fab01e4a814d6f11ce71f78db9b57149">
-			<provides type="class" name="CacheXCache"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/cachecore/cachepdo.class.php" md5="6ee8f4fe4dd609a9c67882065ff52e27">
-			<provides type="class" name="CachePDO"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlDumper.php" md5="28196a0efdcea67d72e1eaf71e936958">
-			<provides type="class" name="sfYamlDumper"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlInline.php" md5="9a63c1c4637eea3b4e208bea63e52baa">
-			<provides type="class" name="sfYamlInline"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlParser.php" md5="91d3546a19262abc38275eb8f9d6dfb4">
-			<provides type="class" name="sfYamlParser"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYaml.php" md5="2b7116a9f3bf6f9e8cd914c81bf79830">
-			<provides type="class" name="sfYaml"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/requestcore/requestcore.class.php" md5="7af89f4463f4b5cab1f464c38481500c">
-			<provides type="class" name="RequestCore"/>
-			<provides type="class" name="ResponseCore"/>
-			<provides type="class" name="RequestCore_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/sdk.class.php" md5="a1781821328ceeec0abd3e1c2d27da23">
-			<provides type="class" name="CFRuntime_Exception"/>
-			<provides type="class" name="CFRuntime"/>
-			<provides type="class" name="CFLoader"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/stepconfig.class.php" md5="a38c9f3f668fa4b63647359912fe333c">
-			<provides type="class" name="CFStepConfig"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/complextype.class.php" md5="62413ec15d34a88326498eacc7cac3aa">
-			<provides type="class" name="CFComplexType"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/response.class.php" md5="128a6eff75168fbcddbb1872aa46088d">
-			<provides type="class" name="CFResponse"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/batchrequest.class.php" md5="21ce55b019eb80d01e47b8c01ecd5481">
-			<provides type="class" name="CFBatchRequest_Exception"/>
-			<provides type="class" name="CFBatchRequest"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/request.class.php" md5="efaf41d5e00e5891bc0c3df91ca74eb4">
-			<provides type="class" name="CFRequest"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/simplexml.class.php" md5="0e50c38a4681e9cb84a68ea789da3445">
-			<provides type="class" name="CFSimpleXML"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/manifest.class.php" md5="9e1cb2514d1c8d1cc54c2419d1f08ff9">
-			<provides type="class" name="CFManifest"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/hadoopstep.class.php" md5="7188a08779be549d1708e683b1930ce4">
-			<provides type="class" name="CFHadoopStep"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/mimetypes.class.php" md5="59e025e5f2909a69510f67979ff3e617">
-			<provides type="class" name="CFMimeTypes"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/info.class.php" md5="8d90241070bfcc1f1dde20e4d583624a">
-			<provides type="class" name="CFInfo"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/utilities.class.php" md5="7ef08a416322208d5d57cf5d95937512">
-			<provides type="class" name="CFUtilities"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/array.class.php" md5="c774cbca2e1bbcf93979f53d948f0e77">
-			<provides type="class" name="CFArray"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/policy.class.php" md5="adcb5b1de211f72a75ce450d41d7fc1c">
-			<provides type="class" name="CFPolicy"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/ses.class.php" md5="4a75d7e756a98f7a005f48ecbf843f02">
-			<provides type="class" name="AmazonSES"/>
-			<provides type="class" name="Email_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/rds.class.php" md5="d41238fbaac148a9abf67ecbee0a5a11">
-			<provides type="class" name="AmazonRDS"/>
-			<provides type="class" name="RDS_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/cloudwatch.class.php" md5="55d7e44eab912e1e0fd7ed91574c7f5b">
-			<provides type="class" name="AmazonCloudWatch"/>
-			<provides type="class" name="CloudWatch_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/s3.class.php" md5="520c240ad8a53ef5de2bd47831a66c32">
-			<provides type="class" name="S3_Exception"/>
-			<provides type="class" name="AmazonS3"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/sdb.class.php" md5="7aea786b7ff0cb2d3d70166d386e399b">
-			<provides type="class" name="AmazonSDB"/>
-			<provides type="class" name="SDB_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/as.class.php" md5="ed1cbbef4b81de0e0fffaa2bffd02cdc">
-			<provides type="class" name="AmazonAS"/>
-			<provides type="class" name="AS_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/elasticbeanstalk.class.php" md5="e38fca8d343b61c62e3d4d009cf7c2d9">
-			<provides type="class" name="AmazonElasticBeanstalk"/>
-			<provides type="class" name="ElasticBeanstalk_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/elb.class.php" md5="921b4dad03709d180e75340ada5a66fa">
-			<provides type="class" name="AmazonELB"/>
-			<provides type="class" name="ELB_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/sqs.class.php" md5="b19f73328ef483d5330d285221be0ba4">
-			<provides type="class" name="AmazonSQS"/>
-			<provides type="class" name="SQS_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/importexport.class.php" md5="e49faceaaa5763fdbc957df8cef6a23b">
-			<provides type="class" name="AmazonImportExport"/>
-			<provides type="class" name="ImportExport_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/iam.class.php" md5="413cded5ddc76100a613b99829d208f1">
-			<provides type="class" name="AmazonIAM"/>
-			<provides type="class" name="IAM_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/sns.class.php" md5="90155de1fe88a9f830b6ab620821729f">
-			<provides type="class" name="AmazonSNS"/>
-			<provides type="class" name="SNS_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/emr.class.php" md5="bbdb8c35e1c09905fc5c88ea6259abb9">
-			<provides type="class" name="AmazonEMR"/>
-			<provides type="class" name="EMR_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/ec2.class.php" md5="c6a3d737504dd7f98774b6662feeb4bc">
-			<provides type="class" name="AmazonEC2"/>
-			<provides type="class" name="EC2_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/cloudfront.class.php" md5="bfa0f3e40691337fb67191d48e9f9100">
-			<provides type="class" name="CloudFront_Exception"/>
-			<provides type="class" name="AmazonCloudFront"/>
-		</file>
-		<file filename="core/libs/core/Theme.class.php" md5="637006036651e06c7cfe5ca6d9994f96">
-			<provides type="class" name="Theme"/>
-		</file>
-		<file filename="core/libs/core/Asset.class.php" md5="9ccf3bbe3ba55cf4e0fe5be8242b2622">
-			<provides type="class" name="Asset"/>
-		</file>
-		<file filename="core/libs/core/FileAWSS3.class.php" md5="508d8ab7cdcf650879636da9663ed353">
-			<provides type="class" name="FileAWSS3"/>
-		</file>
-		<file filename="core/libs/core/ThemeHandler.class.php" md5="2db7ed24faaa0004f3d0ea33bf9cdae1">
-			<provides type="class" name="ThemeHandler"/>
-		</file>
-		<file filename="core/libs/cachecore/cachecore.class.php" md5="2cdb13d6cd892f9ab80dd5a09c34aead">
-			<provides type="class" name="CacheCore"/>
-		</file>
-		<file filename="core/libs/cachecore/cachemc.class.php" md5="b419adf0fa1bffb68d1690e236f29399">
-			<provides type="class" name="CacheMC"/>
-		</file>
-		<file filename="core/libs/cachecore/cacheapc.class.php" md5="897b56db0ebdb170c431a4370e18234f">
-			<provides type="class" name="CacheAPC"/>
-		</file>
-		<file filename="core/libs/cachecore/_tests/AllTests.php" md5="8971cbd66ad355fa4624e52bb79975d1">
-			<provides type="class" name="Console_CommandLine_AllTests"/>
-		</file>
-		<file filename="core/libs/cachecore/cachefile.class.php" md5="06a242fbc285eec69446ccd35590a8c2">
-			<provides type="class" name="CacheFile"/>
-		</file>
-		<file filename="core/libs/cachecore/cachexcache.class.php" md5="93538d20d1aba8fa6f4bbb92a69a43e0">
-			<provides type="class" name="CacheXCache"/>
-		</file>
-		<file filename="core/libs/cachecore/cachepdo.class.php" md5="f4062163c142e64cdadc4e067dc90107">
-			<provides type="class" name="CachePDO"/>
-		</file>
-		<file filename="core/libs/core/Cache.class.php" md5="694472f9442593f0c1af1bddcab96204">
-			<provides type="class" name="Cache"/>
-		</file>
-		<file filename="core/libs/cachecore/icachecore.interface.php" md5="f69cb850a7e948a1a8fdd1243bb27bb8">
-			<provides type="interface" name="ICacheCore"/>
-		</file>
-		<file filename="core/libs/core/IFile.interface.php" md5="6a15055b926bcdd9f5ba444a1a416100">
-			<provides type="interface" name="IFile"/>
-		</file>
-		<file filename="core/libs/core/ISingleton.interface.php" md5="4812be45e675d1856a952cb402c885eb">
-			<provides type="interface" name="ISingleton"/>
-		</file>
 	</library>
 	<module>
-		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
-			<provides type="controller" name="ErrorController"/>
-		</file>
-		<file filename="core/controllers/CoreWidget.php" md5="8852205fcb705e5d3b1ce7085408cafe">
-			<provides type="widgetcontroller" name="CoreWidgetController"/>
-		</file>
-		<file filename="core/controllers/AdminMenuWidgetController.php" md5="37946e6b8a0b81acf1d0058ed7a63510">
-			<provides type="widgetcontroller" name="AdminMenuWidgetController"/>
-			<provides type="controller" name="AdminMenuController"/>
-		</file>
 		<file filename="core/controllers/AdminController.php" md5="f521f24e858a961887513448c068f4fa">
 			<provides type="controller" name="AdminController"/>
 		</file>
+		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
+			<provides type="controller" name="ErrorController"/>
+		</file>
 	</module>
 	<view searchdir="core/templates">
+		<file filename="core/templates/pages/error/error404.tpl" md5="94db4b150349c6170a72cf39172b4cd8"/>
+		<file filename="core/templates/widgets/admin/menu.tpl" md5="2780a2aafc1e2c3269fe6dc49c1f543e"/>
 		<file filename="core/templates/forms/form.tpl" md5="3de78674adf4fd0d357536d0de042112"/>
 		<file filename="core/templates/forms/elements/image.tpl" md5="dc4f74a0297b099ea7913d7582125837"/>
 		<file filename="core/templates/forms/elements/checkbox.tpl" md5="070475a9b15c813ca8b958afff81ff54"/>
@@ -910,20 +869,16 @@
 		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="25d8a31f91dced6089c868eb97903086"/>
 		<file filename="core/templates/forms/elements/reset.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
 		<file filename="core/templates/forms/elements/checkboxes.tpl" md5="db51515cb765780037065add38db169d"/>
+		<file filename="core/templates/forms/elements/formpasswordinput.tpl" md5="9642512379195999ea4c0a71b876d80f"/>
 		<file filename="core/templates/forms/elements/formtextinput.tpl" md5="0f09b0b0b3e6ce316e89e312c311482e"/>
 		<file filename="core/templates/forms/elements/radio.tpl" md5="976a3f259f0757f64c8279020377f36e"/>
 		<file filename="core/templates/forms/elements/file.tpl" md5="90e30e0242238cee016d8b30571e9ac1"/>
-		<file filename="core/templates/forms/elements/password.tpl" md5="9642512379195999ea4c0a71b876d80f"/>
 		<file filename="core/templates/forms/groups/default.tpl" md5="7a6fa4a3c2303dd4e07c98aee5d57db1"/>
-		<file filename="core/templates/pages/error/error404.tpl" md5="94db4b150349c6170a72cf39172b4cd8"/>
-		<file filename="core/templates/widgets/adminmenu/index.tpl" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="core/templates/widgets/admin/menu.tpl" md5="2780a2aafc1e2c3269fe6dc49c1f543e"/>
-		<file filename="core/templates/forms/elements/formpasswordinput.tpl" md5="9642512379195999ea4c0a71b876d80f"/>
 	</view>
 	<install/>
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
-			<date>Sun, 20 Feb 2011 02:55:26 -0500</date>
+			<date>Tue, 22 Feb 2011 03:34:16 -0500</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
@@ -966,9 +921,7 @@
 	<author name="Fabien Potencier" email="fabien.potencier@symfony-project.com"/>
 	<author name="David JEAN LOUIS" email="izimobil@gmail.com"/>
 	<author name="David JEAN" email="izimobil@gmail.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-		See the included NOTICE.md file for more information.
-	</license>
+	<license url="http://www.gnu.org/licenses/agpl-3.0.txt"></license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.txt">
 		GNU Lesser General Public License v3
 	</license>
@@ -1086,6 +1039,7 @@
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="efee56afd71540793fa9ad94d9c63662"/>
 		<file filename="core/libs/smarty-plugins/function.script.php" md5="fff11b9cdf71f4cd7120d0edbd70761a"/>
+		<file filename="core/libs/smarty-plugins/function.link.php" md5="ee67260eea6c696b8634a593cece14bd"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="800e464e8bae160ad7aba53d63ab78c8"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
@@ -1271,7 +1225,7 @@
 		<file filename="core/libs/adodb5/contrib/toxmlrpc.inc.php" md5="8a022e02714ce3186f310cc65d936ad5"/>
 		<file filename="core/bootstrap.php" md5="5034cd492944ccac6cb6e5776243b56e"/>
 		<file filename="packager.php" md5="10a16d8ae884ce4be0073f2ff5698542"/>
-		<file filename="index.php" md5="a5a962b29c2019624c14c31b6c4f85ea"/>
+		<file filename="index.php" md5="889f67bd60efea0e26b5704a4ed67706"/>
 	</otherfiles>
 	<dbschema prefix="CAE2_">
 		<table name="CAE2_component" engine="MyISAM" charset="latin1">
