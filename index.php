@@ -17,40 +17,11 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-/**
- * This page is responsible for nearly every page load for the application.
- */
-
-// First check... if the directory 'core' doesn't exist... it's probably not installed yet.
-if(!is_dir('core')){
-	header('Location: install/');
-	die('<a href="install/">Please click here</a> to go to the installer.');
-}
-
-//var_dump(DateTimeZone::listIdentifiers());
-$tz = new DateTimeZone('GMT');
-//var_dump($tz->getName());
-
-
-
+// Include the system bootstrap.
+// This basically does everything.....
 require_once('core/bootstrap.php');
-
-
-
-/*
-$time_end = microtime(true);
-$time = round($time_end - $time_start, 4);
-if(class_exists('CurrentPage')) CurrentPage::assign('_pageLoadTime', $time);
-*/
-
 
 // Tell the hook handler that I'm ready to begin rendering of the page.
 HookHandler::DispatchHook('render_page');
 
-echo '<pre class="xdebug-var-dump">';
-echo "Number of queries: " . DB::Singleton()->counter . "\n";
-echo "Amount of memory used by PHP: " . File::FormatSize(memory_get_usage()) . "\n";
-echo "Total processing time: " . round(Core::GetProfileTimeTotal(), 3) . ' seconds';
-echo '</pre>';
-
-var_dump(Core::Singleton());
+// That's it!  If you're looking for something, chances are it'll be in the bootstrap file!
