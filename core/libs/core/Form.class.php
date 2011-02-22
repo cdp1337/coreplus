@@ -15,7 +15,7 @@ class FormGroup{
 	}
 	
 	public function set($key, $value){
-		$this->_attributes[$key] = $value;
+		$this->_attributes[strtolower($key)] = $value;
 	}
 	
 	public function get($key){
@@ -120,6 +120,14 @@ class FormGroup{
 		}
 		return $els;
 	}
+	
+	/**
+	 * Shortcut of getElementByName()
+	 * @param string $name 
+	 */
+	public function getElement($name){
+		return $this->getElementByName($name);
+	}
 
 	public function getElementByName($name){
 		$els = $this->getElements();
@@ -205,8 +213,13 @@ class FormElement{
 		return $this->_error;
 	}
 
-	public function setError($err){
+	public function setError($err, $displayMessage = true){
 		$this->_error = $err;
+		if($err && $displayMessage) Core::SetMessage ($err, 'error');
+	}
+	
+	public function clearError(){
+		$this->setError(false);
 	}
 
 	public function getTemplateName(){
@@ -237,7 +250,7 @@ class FormElement{
 		$r = $this->get('required');
 		$e = $this->hasError();
 
-		return $c . (($r)? ' FormRequired' : '') . (($e)? ' FormError' : '');
+		return $c . (($r)? ' formrequired' : '') . (($e)? ' formerror' : '');
 	}
 
 	/**
@@ -337,6 +350,14 @@ class Form extends FormGroup{
 				$this->set('uniqueid', $hash);
 				$this->getElementByName('___formid')->set('value', $hash);
 			}
+			
+			// Was this form already submitted, (and thus saved in the session?
+			// If so, render that form instead!  This way the values get transported seemlessly.
+			if(isset($_SESSION['FormData'][$this->get('uniqueid')])){
+				if(($savedform = unserialize($_SESSION['FormData'][$this->get('uniqueid')]))){
+					$this->_elements = $savedform->_elements;
+				}
+			}
 		}
 
 		$out = parent::render();
@@ -407,6 +428,7 @@ class Form extends FormGroup{
 	 * @return void
 	 */
 	private function saveToSession(){
+		
 		if(!$this->get('callsmethod')) return; // Don't save anything if there's no method to call.
 
 		$this->set('expires', Time::GetCurrent() + 1800); // 30 minutes
@@ -456,6 +478,8 @@ class Form extends FormGroup{
 		$els = $form->getElements();
 		foreach($els as $e){
 			if($e instanceof FormGroup) continue;
+			// Be sure to clear any errors from the previous page load....
+			$e->clearError();
 			$e->set('value', $e->lookupValueFrom($src));
 			if($e->hasError()) Core::SetMessage($e->getError(), 'error');
 		}
