@@ -135,5 +135,14 @@ class CurrentPage{
 		
 		//$view->headscripts = array_merge($view->headscripts, $this->_headscripts);
 		$view->render();
+		
+		// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
+		if(DEVELOPMENT_MODE && $view->mode == View::MODE_PAGE){
+			echo '<pre class="xdebug-var-dump">';
+			echo "Number of queries: " . DB::Singleton()->counter . "\n";
+			echo "Amount of memory used by PHP: " . File::FormatSize(memory_get_usage()) . "\n";
+			echo "Total processing time: " . round(Core::GetProfileTimeTotal(), 3) . ' seconds';
+			echo '</pre>';
+		}
 	}
 }
