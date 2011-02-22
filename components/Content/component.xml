@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component>
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.1-dev1" name="Content" execmode="web">
+	<requires name="core" type="component"/>
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
 			<date>Thu, 17 Feb 2011 01:57:58 -0500</date>
