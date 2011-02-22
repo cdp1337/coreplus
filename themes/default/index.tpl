@@ -43,16 +43,19 @@
 					{/if}
 				</nav>
 				
-				{if !empty($error)}
-					<p class="message-error rounded">
-						{$error}
-					</p>
-				{/if}
 				<aside id="leftcol" class="pagecolumn">
 					{widget name="/Admin/Menu"}
 					{*widget name="/Content/View/5"*}
 				</aside>
 				<section class="pagecontent">
+					{if !empty($messages)}
+						{foreach from=$messages item="m"}
+							<p class="message-{$m.mtype} rounded">
+								{$m.mtext}
+							</p>
+						{/foreach}
+					{/if}
+					
 					{$body}
 				</section>
 			</div>

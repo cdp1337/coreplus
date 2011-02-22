@@ -70,13 +70,18 @@ a.button.delete { background-image:url('../icons/delete-lg.png'); padding-left:2
 
 
 
-.message-note { background:none repeat scroll 0 0 #FCF0AD; border:1px solid #BCB06D; padding:1em 2em; text-align:center; }
-.message-error { background:none repeat scroll 0 0 #FCA0AD; border:1px solid #BC606D; padding:1em 2em; text-align:center; }
+.message-note,
+.message-error { -moz-box-shadow: 3px 3px 5px #888; -webkit-box-shadow: 3px 3px 5px #888; box-shadow: 3px 3px 5px #888; padding:0.35em 2em; margin:0.05em 2em; text-align:center; }
+.message-note { background:#FCF0AD; border:1px solid #BCB06D;}
+.message-error { background:#FCe5ed; border:1px solid #BC606D; color:#DF101D;}
 .rounded-large { border-radius:10px; -moz-border-radius:10px; -webkit-border-radius:10px; }
 .rounded { border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; }
 
 .formelement { margin-bottom:0.5em; }
 .formelement label { display:block; }
+.formelement.formerror input,
+.formelement.formerror select,
+.formelement.formerror textarea { border:2px inset red;}
 
 table.listing { width:100%; border:1px solid #AAA; border-collapse:collapse;}
 table.listing tr:nth-child(odd) { background-color:#DDEDDD; }
