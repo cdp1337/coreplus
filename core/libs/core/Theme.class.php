@@ -261,7 +261,7 @@ class Theme extends InstallArchiveAPI{
 			$f = new File($b . $node->getAttribute('filename'));
 			$nf = new Asset($node->getAttribute('filename'), $this->getName());
 			
-			$f->copyTo($nf);
+			$f->copyTo($nf, true);
 		}
 		
 		// Make sure the asset cache is purged!
