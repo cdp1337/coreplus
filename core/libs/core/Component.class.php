@@ -414,15 +414,14 @@ class Component extends InstallArchiveAPI{
 		
 		if($this->hasLibrary()){
 			$libs[$this->_name] = $this->_versionDB;
-			
-			foreach($this->getElementByTagName('library')->getElementsByTagName('file') as $f){
-				foreach($f->getElementsByTagName('provides') as $p){
-					if(strtolower($p->getAttribute('type')) == 'library'){
-						$v = @$p->getAttribute('version');
-						if(!$v) $v = $this->_versionDB;
-						$libs[$p->getAttribute('name')] = $v;
-					}
-				}
+		}
+		
+		
+		foreach($this->getElements('//provides') as $p){
+			if(strtolower($p->getAttribute('type')) == 'library'){
+				$v = @$p->getAttribute('version');
+				if(!$v) $v = $this->_versionDB;
+				$libs[$p->getAttribute('name')] = $v;
 			}
 		}
 		
