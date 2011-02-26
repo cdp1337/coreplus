@@ -495,6 +495,9 @@
 			<provides type="class" name="CloudFront_Exception"/>
 			<provides type="class" name="AmazonCloudFront"/>
 		</file>
+		<file filename="core/libs/phpass/PasswordHash.php" md5="f7b1f77efb5fde33917083ab2192e75d">
+			<provides type="class" name="PasswordHash"/>
+		</file>
 		<file filename="core/libs/adodb5/datadict/datadict-firebird.inc.php" md5="c97ce14989b4f144d947e6faf360252e">
 			<provides type="class" name="ADODB2_firebird"/>
 		</file>
@@ -878,7 +881,7 @@
 	<install/>
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
-			<date>Tue, 22 Feb 2011 03:34:16 -0500</date>
+			<date>Sat, 26 Feb 2011 03:19:32 -0500</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
@@ -921,7 +924,9 @@
 	<author name="Fabien Potencier" email="fabien.potencier@symfony-project.com"/>
 	<author name="David JEAN LOUIS" email="izimobil@gmail.com"/>
 	<author name="David JEAN" email="izimobil@gmail.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt"></license>
+	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+		See the included NOTICE.md file for more information.
+	</license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.txt">
 		GNU Lesser General Public License v3
 	</license>
@@ -1225,7 +1230,7 @@
 		<file filename="core/libs/adodb5/contrib/toxmlrpc.inc.php" md5="8a022e02714ce3186f310cc65d936ad5"/>
 		<file filename="core/bootstrap.php" md5="5034cd492944ccac6cb6e5776243b56e"/>
 		<file filename="packager.php" md5="10a16d8ae884ce4be0073f2ff5698542"/>
-		<file filename="index.php" md5="889f67bd60efea0e26b5704a4ed67706"/>
+		<file filename="index.php" md5="72c59fa14e9fb6625e52bf2fee01c3a2"/>
 	</otherfiles>
 	<dbschema prefix="CAE2_">
 		<table name="CAE2_component" engine="MyISAM" charset="latin1">
