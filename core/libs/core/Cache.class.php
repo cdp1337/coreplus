@@ -28,6 +28,7 @@ class Cache implements ICacheCore{
 				$obj = new CacheAPC($key, null, $expires, $gzip);
 				break;
 			case 'file':
+			default:
 				if(!is_dir(TMP_DIR . 'cache')) mkdir(TMP_DIR . 'cache');
 				$obj = new CacheFile($key, TMP_DIR . 'cache', $expires, $gzip);
 				break;
