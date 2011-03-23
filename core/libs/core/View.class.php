@@ -12,10 +12,11 @@
  */
 class View {
 
-	const ERROR_OTHER = 1;
-	const ERROR_NOERROR = 200;
-	const ERROR_NOTFOUND = 404;
+	const ERROR_OTHER        = 1;
+	const ERROR_NOERROR      = 200;
 	const ERROR_ACCESSDENIED = 403;
+	const ERROR_NOTFOUND     = 404;
+	const ERROR_SERVERERROR  = 500;
 	
 	const MODE_PAGE = 'page';
 	const MODE_WIDGET = 'widget';
@@ -39,6 +40,7 @@ class View {
 	public $breadcrumbs = array();
 	public $controls = array();
 	public $mode;
+	public $contenttype = 'text/html';
 	
 	public $headscripts = array();
 	public $headstylesheets = array();
@@ -107,7 +109,7 @@ class View {
 		
 	}
 
-	public function render(){
+	public function fetch(){
 		// Whee!
 		//var_dump($this->templatename, Template::ResolveFile($this->templatename));
 		// Master template depends on the render mode.
@@ -150,7 +152,11 @@ class View {
 		$template->assign('title', $this->title);
 		$template->assign('body', $this->fetchBody());
 		
-		echo $template->fetch($mastertpl);
+		return $template->fetch($mastertpl);
+	}
+	
+	public function render(){
+		echo $this->fetch();
 	}
 	
 	public function addBreadcrumb($title, $link = null){
