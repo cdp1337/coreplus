@@ -333,6 +333,62 @@ class PageModel extends Model{
 		
 		return (($key = array_search($url, self::$_RewriteCache)) !== false)? $key : $url;
 	}
+	
+	/**
+	 * Get all pages, (with an optional where clause), as a valid option array
+	 * 
+	 * This array contains key of "baseurl", value of "parent &raquo; title ( url )"
+	 * that is directly pluggable into the Form system or a manual foreach loop.
+	 * 
+	 * @param mixed $where Either a ModelFactory (usually with custom-crafted where clauses),
+	 *                     or an array of valid SQLBuilder where clauses
+	 *                     or a string of the where clause
+	 *                     or false to omit the where clause.
+	 * @param mixed $blanktext The text to include with the blank entry
+	 *                         If false, no blank field is included.
+	 * @return array
+	 */
+	public static function GetPagesAsOptions($where = false, $blanktext = false){
+		if($where instanceof ModelFactory){
+			$f = $where;
+		}
+		elseif(!$where){
+			$f = new ModelFactory('PageModel');
+		}
+		else{
+			$f = new ModelFactory('PageModel');
+			$f->where($where);
+		}
+		
+		// Get the pages
+		$pages = $f->get();
 
+		// Assemble a list of page titles for quick reference.
+		//$titles = array();
+		//foreach($pages as $p){
+		//	$titles[$p->get('baseurl')] = $p->get('title');
+		//}
+
+		// Now I can assemble the list of options with useful labels
+		$opts = array();
+		foreach($pages as $p){
+			$t = '';
+			foreach($p->getParentTree() as $subp){
+				$t .= $subp->get('title') . ' &raquo; ';
+			}
+			$t .= $p->get('title');
+			$t .= ' ( ' . $p->get('rewriteurl') . ' )';
+			$opts[$p->get('baseurl')] = $t;
+		}
+
+		// Sort'em
+		asort($opts);
+
+		// Default should always be at the top (if requested).
+		if($blanktext) $opts = array_merge(array("" => $blanktext), $opts);
+		
+		// And here ya go!
+		return $opts;
+	}
 }
 ?>
