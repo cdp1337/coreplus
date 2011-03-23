@@ -365,6 +365,15 @@ class ComponentHandler implements ISingleton{
 		}
 	}
 	
+	/**
+	 * Just check if the class is available, do not load it.
+	 * 
+	 * @return boolean
+	 */
+	public static function IsClassAvailable($classname){
+		return (isset(self::Singleton()->_classes[$classname]));
+	}
+	
 	public static function GetAllComponents(){
 		return ComponentHandler::Singleton()->_componentCache;
 	}
