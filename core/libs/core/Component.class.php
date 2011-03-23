@@ -49,10 +49,11 @@ class Component extends InstallArchiveAPI{
 	private $_execMode = 'WEB';
 	
 	// A set of error codes components may encounter.
-	const ERROR_NOERROR = 0;
-	const ERROR_INVALID = 1;
-	const ERROR_WRONGEXECMODE = 2;
-	const ERROR_MISSINGDEPENDENCY = 4;
+	const ERROR_NOERROR = 0;           // 0000
+	const ERROR_INVALID = 1;           // 0001
+	const ERROR_WRONGEXECMODE = 2;     // 0010
+	const ERROR_MISSINGDEPENDENCY = 4; // 0100
+	const ERROR_CONFLICT = 8;          // 1000
 	
 	/**
 	 * This is the error code of any errors encountered.
@@ -520,14 +521,18 @@ class Component extends InstallArchiveAPI{
 		if($this->hasView()){
 			// Using the searchdir attribute is the preferred method.
 			$att = @$this->getElement('/view')->getAttribute('searchdir');
-			if(!$att){
-				// Try the 'searchdir' element instead.
-				$att = $this->getElements('/view/searchdir');
-				if($att) return $this->getBaseDir() .$att->item(0)->getAttribute('dir') . '/';
-			}
-			else{
+			if($att){
 				return $this->getBaseDir() . $att . '/';
 			}
+			elseif(($att = $this->getElements('/view/searchdir')->item(0))){
+				// Try the 'searchdir' element instead.
+				return $this->getBaseDir() .$att->getAttribute('dir') . '/';
+			}
+			elseif(is_dir($this->getBaseDir() . 'templates')){
+				// Still no?!?  Try just a filesystem check instead...
+				return $this->getBaseDir() . 'templates';
+			}
+			else return false;
 		}
 	}
 	
@@ -671,6 +676,18 @@ class Component extends InstallArchiveAPI{
 						$this->errstrs[] = 'Requires wrong define ' . $r['name'] . '(' . $r['value'] . ')';
 					}
 					break;
+			}
+		}
+		
+		if($this->error) return false;
+		
+		// Check classes.  If a class is provided in another package, DON'T LOAD!
+		$cs = $this->getClassList();
+		foreach($cs as $c => $file){
+			if(ComponentHandler::IsClassAvailable($c)){
+				$this->error = $this->error | Component::ERROR_CONFLICT;
+				$this->errstrs[] = $c . ' already defined in another component';
+				break;
 			}
 		}
 		
