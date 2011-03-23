@@ -16,10 +16,6 @@ abstract class JQuery {
 		if(ConfigHandler::GetValue('/jquery/minified')) CurrentPage::AddScript ('js/jquery/jquery-1.5.min.js');
 		else CurrentPage::AddScript ('js/jquery/jquery-1.5.js');
 	}
-	
-	public static function IncludeJQueryUI(){
-		
-	}
 }
 
 ?>

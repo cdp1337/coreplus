@@ -4,7 +4,7 @@
 	<requires name="core" type="component"/>
 	<changelog version="1.5.0~1">
 		<packagemeta>
-			<date>Fri, 18 Feb 2011 01:13:41 -0500</date>
+			<date>Tue, 22 Mar 2011 22:18:34 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
@@ -15,8 +15,7 @@
 	</assets>
 	<library>
 		<scriptlibrary name="jquery" call="JQuery::IncludeJQuery"/>
-		<scriptlibrary name="jqueryui" call="JQuery::IncludeJQueryUI"/>
-		<file filename="JQuery.lib.php" md5="7f1da6321e54582d4a340adad6d707e8">
+		<file filename="JQuery.lib.php" md5="1428d7c5c1d4c83ebdab9af8fe4eb2a4">
 			<provides type="class" name="JQuery"/>
 		</file>
 	</library>
