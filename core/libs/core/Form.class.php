@@ -332,9 +332,9 @@ class Form extends FormGroup{
 		return 'forms/form.tpl';
 	}
 
-	public function  render() {
+	public function  render($part = null) {
 		// Slip in the formid tracker to remember this submission.
-		if($this->get('callsmethod')){
+		if(($part === null || $part == 'body') && $this->get('callsmethod')){
 			$e = new FormHiddenInput(array('name' => '___formid', 'value' => $this->get('uniqueid')));
 			$this->_elements = array_merge(array($e), $this->_elements);
 
@@ -359,11 +359,27 @@ class Form extends FormGroup{
 				}
 			}
 		}
-
-		$out = parent::render();
-
+		
+		$tpl = new Template();
+		$tpl->assign('group', $this);
+		if($part === null || $part == 'body'){
+			$els = '';
+			// Fill in the elements
+			foreach($this->_elements as $e){
+				$els .= $e->render();
+			}
+			$tpl->assign('elements', $els);
+		}
+		
+		switch($part){
+			case null:   $out = $tpl->fetch('forms/form.tpl');      break;
+			case 'head': $out = $tpl->fetch('forms/form.head.tpl'); break;
+			case 'body': $out = $tpl->fetch('forms/form.body.tpl'); break;
+			case 'foot': $out = $tpl->fetch('forms/form.foot.tpl'); break;
+		}
+		
 		// Save it
-		if($this->get('callsmethod')){
+		if(($part === null || $part == 'foot') && $this->get('callsmethod')){
 			$this->saveToSession();
 		}
 
@@ -735,31 +751,7 @@ class FormPageMeta extends FormGroup{
 		// I need to get a list of pages to offer as a dropdown for selecting the "parent" page.
 		$f = new ModelFactory('PageModel');
 		$f->where('baseurl != ?', $this->get('baseurl'));
-		$pages = $f->get();
-
-		// Assemble a list of page titles for quick reference.
-		$titles = array();
-		foreach($pages as $p){
-			$titles[$p->get('baseurl')] = $p->get('title');
-		}
-
-		// Now I can assemble the list of options with useful labels
-		$opts = array();
-		foreach($pages as $p){
-			$t = '';
-			foreach($p->getParentTree() as $subp){
-				$t .= $subp->get('title') . ' &raquo; ';
-			}
-			$t .= $p->get('title');
-			$t .= ' ( ' . $p->get('rewriteurl') . ' )';
-			$opts[$p->get('baseurl')] = $t;
-		}
-
-		// Sort'em
-		arsort($opts);
-
-		// Default should always be at the top.
-		$opts = array_merge(array("" => "-- No Parent Page --"), $opts);
+		$opts = PageModel::GetPagesAsOptions($f, '-- No Parent Page --');
 
 		$this->addElement('select', array('name' => 'page[parenturl]', 'title' => 'Parent URL', 'value' => $page->get('parenturl'), 'options' => $opts));
 
