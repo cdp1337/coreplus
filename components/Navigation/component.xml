@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component>
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.1-dev1" name="Navigation" execmode="web">
+	<requires name="core" type="component"/>
+	<changelog version="0.0.1-dev1">
+		<packagemeta>
+			<date>Sat, 26 Mar 2011 01:17:38 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.1-dev1</packager>
+		</packagemeta>
+	</changelog>
+	<library>
+		<file filename="NavigationEntry.model.php" md5="9f3e7d0e5d525f4a95a432c84579467e">
+			<provides type="class" name="NavigationEntryModel"/>
+		</file>
+		<file filename="Navigation.model.php" md5="8e0620f21e0dd3c102f4286bbacfca3f">
+			<provides type="class" name="NavigationModel"/>
+		</file>
+	</library>
+	<module>
+		<file filename="Navigation.controller.php" md5="d5db3861c0e7ff3eb181e4702b3b7095">
+			<provides type="controller" name="NavigationController"/>
+		</file>
+	</module>
+	<view>
+		<file filename="templates/pages/navigation/index.tpl" md5="3b93dd42e0f3540bbd6721bbe5bc1f6c"/>
+		<file filename="templates/pages/navigation/view.tpl" md5="b149433e9927396cb65c8e2880395663"/>
+		<file filename="templates/pages/navigation/create.tpl" md5="75c1c4157d0b64b0f5e05fa3a0ee9846"/>
+		<file filename="templates/pages/navigation/edit.tpl" md5="a6eda39bbc1a33dac2888ffe43ab7868"/>
+		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="bbebd462f42a257770490bf9d27eb3ce"/>
+		<file filename="templates/pages/navigation/delete.tpl" md5="64255b05d03ba0b58cbacb107e2b2dff"/>
+	</view>
+	<pages>
+		<page baseurl="/Navigation" admin="1" widget="0" access="" title="Navigation Listings"/>
+	</pages>
+	<author name="powellc"/>
+	<otherfiles/>
+	<dbschema prefix="CAE2_">
+		<table name="CAE2_navigation" engine="MyISAM" charset="latin1">
+			<comment></comment>
+			<column>
+				<field>id</field>
+				<type>int(11)</type>
+				<collation xsi:nil="true"/>
+				<null>NO</null>
+				<key>PRI</key>
+				<default xsi:nil="true"/>
+				<extra>auto_increment</extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>name</field>
+				<type>varchar(128)</type>
+				<collation>latin1_swedish_ci</collation>
+				<null>NO</null>
+				<key>UNI</key>
+				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>access</field>
+				<type>varchar(512)</type>
+				<collation>latin1_swedish_ci</collation>
+				<null>NO</null>
+				<key></key>
+				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>created</field>
+				<type>int(11)</type>
+				<collation xsi:nil="true"/>
+				<null>NO</null>
+				<key></key>
+				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>updated</field>
+				<type>int(11)</type>
+				<collation xsi:nil="true"/>
+				<null>NO</null>
+				<key></key>
+				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<index>
+				<name>PRIMARY</name>
+				<nonunique>0</nonunique>
+				<column>id</column>
+				<comment></comment>
+			</index>
+			<index>
+				<name>name</name>
+				<nonunique>0</nonunique>
+				<column>name</column>
+				<comment></comment>
+			</index>
+		</table>
+		<table name="CAE2_navigation_entry" engine="MyISAM" charset="latin1">
+			<comment></comment>
+			<column>
+				<field>id</field>
+				<type>int(11)</type>
+				<collation xsi:nil="true"/>
+				<null>NO</null>
+				<key>PRI</key>
+				<default xsi:nil="true"/>
+				<extra>auto_increment</extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>navigationid</field>
+				<type>int(11)</type>
+				<collation xsi:nil="true"/>
+				<null>NO</null>
+				<key></key>
+				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>parentid</field>
+				<type>int(11)</type>
+				<collation xsi:nil="true"/>
+				<null>NO</null>
+				<key></key>
+				<default>0</default>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>type</field>
+				<type>varchar(6)</type>
+				<collation>latin1_swedish_ci</collation>
+				<null>NO</null>
+				<key></key>
+				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>baseurl</field>
+				<type>varchar(256)</type>
+				<collation>latin1_swedish_ci</collation>
+				<null>NO</null>
+				<key></key>
+				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>title</field>
+				<type>varchar(64)</type>
+				<collation>latin1_swedish_ci</collation>
+				<null>NO</null>
+				<key></key>
+				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>target</field>
+				<type>varchar(16)</type>
+				<collation>latin1_swedish_ci</collation>
+				<null>NO</null>
+				<key></key>
+				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>weight</field>
+				<type>int(11)</type>
+				<collation xsi:nil="true"/>
+				<null>NO</null>
+				<key></key>
+				<default>0</default>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>created</field>
+				<type>int(11)</type>
+				<collation xsi:nil="true"/>
+				<null>NO</null>
+				<key></key>
+				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>updated</field>
+				<type>int(11)</type>
+				<collation xsi:nil="true"/>
+				<null>NO</null>
+				<key></key>
+				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<index>
+				<name>PRIMARY</name>
+				<nonunique>0</nonunique>
+				<column>id</column>
+				<comment></comment>
+			</index>
+		</table>
+	</dbschema>
+</component>
+

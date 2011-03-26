@@ -108,3 +108,11 @@ table.listing td{ padding:0.15em 0.5em; border:1px solid #AAA; vertical-align:to
 
 /*** Debugging Classes ***/
 pre.xdebug-var-dump { background: none repeat scroll 0 0 white; border: 1px solid #FFE5C0; padding: 0.5em; text-align: left; }
+
+
+/*** Sortables and Nested Sortables ***/
+ul.sortable-listing { margin:0.5em 0pt; }
+ul.sortable-listing li {  display: block; list-style: none outside none;  }
+ul.sortable-listing li div.entry { border: 1px solid #BBBBBB; padding: 0.25em; }
+ul.sortable-listing li.placeholder { border: 1px solid #BBBBBB; background:#BBB;}
+ul.sortable-listing ol { margin-left:1em; }
