@@ -21,9 +21,15 @@
  * @date [date]
  */
 
-class WidgetController {
+class WidgetController extends Controller{
 	public static function View(View $page){
+		// Lookup the widget requested.
 		
+		if(!$page->getParameter('widget')) return View::ERROR_NOTFOUND;
+		
+		$widgetbaseurl = $page->getParameter('widget');
+		$w = new WidgetModel($widgetbaseurl);
+		var_dump($w->execute());
 	}
 	
 	public static function Edit(View $page){

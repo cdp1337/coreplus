@@ -74,6 +74,9 @@ class PageModel extends Model{
 		$p = $this->getParameters();
 		return (array_key_exists($key, $p))? $p[$key] : null;
 	}
+	public function setParameter($key, $val){
+		$this->_params[$key] = $val;
+	}
 
 	public function getTemplateName(){
 		$t = 'pages/';

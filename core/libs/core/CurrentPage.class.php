@@ -50,9 +50,10 @@ class CurrentPage{
 
 		// If blank, default to '/' (should be root url)
 		if(!$uri) $uri = '/';
+		
 
 		// Trim off anything after the first & if present.
-		if(strpos('&', $uri)) $uri = substr($uri, 0, strpos('&', $uri));
+		if(strpos($uri, '&') !== false) $uri = substr($uri, 0, strpos($uri, '&'));
 		
 		$p = PageModel::Find(array('rewriteurl' => $uri, 'fuzzy' => 0), 1);
 		
@@ -69,6 +70,16 @@ class CurrentPage{
 				$p->set('baseurl', $uri);
 				$p->set('rewriteurl', $uri);
 				$this->_page = $p;
+			}
+		}
+		
+		// Merge in any GET parameters.
+		if(is_array($_GET)){
+			// Skip the first one...
+			array_shift($_GET);
+			foreach($_GET as $k => $v){
+				if(is_numeric($k)) continue;
+				$this->_page->setParameter($k, $v);
 			}
 		}
 	}

@@ -361,7 +361,7 @@
 		<file filename="core/libs/core/CurrentPage.class.php" md5="d62aed6fab5562c071e659f5c1a7364c">
 			<provides type="class" name="CurrentPage"/>
 		</file>
-		<file filename="core/libs/core/WidgetController.class.php" md5="9d3ce60d27542c97f16be9c67609a64d">
+		<file filename="core/controllers/WidgetController.class.php" md5="9d3ce60d27542c97f16be9c67609a64d">
 			<provides type="class" name="WidgetController"/>
 		</file>
 		<file filename="core/libs/core/InstallTask.class.php" md5="aff7379efc097dd3783833b91d391aea">
@@ -857,6 +857,9 @@
 			<provides type="controller" name="ErrorController"/>
 		</file>
 	</module>
+	<pages>
+		<page baseurl="/Admin/ReinstallAll" admin="1" widget="0" access="*" title="Reinstall All Components"/>
+	</pages>
 	<view searchdir="core/templates">
 		<file filename="core/templates/pages/error/error404.tpl" md5="94db4b150349c6170a72cf39172b4cd8"/>
 		<file filename="core/templates/widgets/admin/menu.tpl" md5="2780a2aafc1e2c3269fe6dc49c1f543e"/>

@@ -433,6 +433,21 @@ class Form extends FormGroup{
 			$this->getElementByName('page')->getModel($page);
 		}
 		
+		
+		// Add support for inline Widgets for models.
+		if($model->get('baseurl') && $model->getLink('Widget') instanceof WidgetModel){
+			// All I have to do is just "get" it.... that's it!
+			// The save algorithm will do the rest.
+			$widget = $model->getLink('Widget');
+			
+			// Update the cached information in the page.
+			//if($model->get('title') !== null) $page->set('title', $model->get('title'));
+			//if($model->get('access') !== null) $page->set('access', $model->get('access'));
+			
+			// Tack on the Page data too!
+			//$this->getElementByName('page')->getModel($page);
+		}
+		
 
 		return $model;
 	}

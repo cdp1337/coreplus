@@ -156,6 +156,14 @@ class ComponentHandler implements ISingleton{
 		// Load every component first.
 		foreach($ch->_componentCache as $n => $c){
 			$c->load();
+			
+			// First check before anything else is even done.... Did the user disable it?
+			if(!$c->enabled){
+				//echo "Skipping " . $c->getName() . " because it is disabled<br/>";
+				unset($ch->_componentCache[$n]);
+				continue;
+			}
+			
 			//var_dump($c);
 			// Doesn't contain a valid xml, just remove it.
 			if(!$c->isValid()){

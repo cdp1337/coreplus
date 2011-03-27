@@ -4,6 +4,6 @@
 	{/if}
 	<input type="{$type}"{$element->getInputAttributes()}>
 	{if $element->get('description')}
-		<p class="FormDescription">{$element->get('description')}</p>
+		<p class="formdescription">{$element->get('description')}</p>
 	{/if}
 </div>

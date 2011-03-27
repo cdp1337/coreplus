@@ -265,6 +265,9 @@ class Core implements ISingleton{
 	 * @return string The full url of the link, including the http://...
 	 */
 	public static function ResolveLink($url){
+		// Allow "#" to be verbatim without translation.
+		if($url == '#') return $url;
+		
 		$a = PageModel::SplitBaseURL($url);
 		//var_dump($a);
 		// Instead of going through the overhead of a pagemodel call, SplitBaseURL provides what I need!

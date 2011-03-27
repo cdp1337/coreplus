@@ -24,6 +24,13 @@
  */
 class Component extends InstallArchiveAPI{
 	/**
+	 * User can disable a component in the admin, if not enabled don't load the component at all.
+	 * 
+	 * @var boolean
+	 */
+	public $enabled = true;
+	
+	/**
 	 * Version of the component, as per the database (installed version).
 	 * 
 	 * @var string
@@ -92,14 +99,18 @@ class Component extends InstallArchiveAPI{
 		// Now look up the component in the database (for installed version).
 		//if(class_exists('DB') && Core::IsInstalled()){
 		if(class_exists('DB')){
-			$q = DB::Execute("SELECT `version` FROM `" . DB_PREFIX . "component` WHERE `name` = ?", $this->_name);
+			$q = DB::Execute("SELECT * FROM `" . DB_PREFIX . "component` WHERE `name` = ?", $this->_name);
 			if(!$q) return false;
 			
 			if($q->numRows() > 0){
 				$this->_versionDB = $q->fields['version'];
+				$this->enabled = ($q->fields['enabled']);
 			}
 			else{
+				// Indicate it's not installed yet
 				$this->_versionDB = false;
+				// But it is not disabled...
+				$this->enabled = true;
 			}
 		}
 		
