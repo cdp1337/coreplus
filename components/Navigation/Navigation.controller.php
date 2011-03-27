@@ -21,7 +21,7 @@ class NavigationController extends Controller {
 		
 		$page->addControl('New Navigation Menu', '/Navigation/Create', 'add');
 	}
-	
+	/*
     public static function View(View $page){
 		$m = new NavigationModel($page->getParameter(0));
 
@@ -40,6 +40,7 @@ class NavigationController extends Controller {
 		$page->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
 		$page->addControl('All Content Pages', '/Content', 'directory');
 	}
+	*/
 
 	public static function Edit(View $page){
 		$m = new NavigationModel($page->getParameter(0));
@@ -51,19 +52,20 @@ class NavigationController extends Controller {
 		
 		// I only want non-fuzzy pages to display.
 		$pages = PageModel::GetPagesAsOptions("fuzzy = '0'");
+		
+		// Get the entries for this model as well.
+		$entries = $m->getLink('NavigationEntry');
 
 		// @todo Check page permissions
 		
 		$page->title = 'Edit ' . $m->get('name');
 		$page->assignVariable('model', $m);
 		$page->assignVariable('form', $form);
-		
-		// Get the entries for this model as well.
-		var_dump($m->getLink('NavigationEntry'));
+		$page->assignVariable('pages', $pages);
+		$page->assignVariable('entries', $entries);
 		
 		$page->addControl('New Navigation Menu', '/Navigation/Create', 'add');
-		$page->addControl('View Page', '/Content/View/' . $m->get('id'), 'view');
-		$page->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
+		//$page->addControl('Delete Menu', '/Content/Delete/' . $m->get('id'), 'delete');
 		$page->addControl('Navigation Listings', '/Navigation', 'directory');
 	}
 
@@ -96,7 +98,6 @@ class NavigationController extends Controller {
 		$widget = $m->getLink('Widget');
 		
 		
-		echo '<pre>';var_dump($_POST, $m);
 		// "entry[new1]=root&entry[new2]=root"
 		// This will split up all the entries based on their sort order and parent.
 		preg_match_all('/entry\[([^\]]*)\]=([^&]*)/', $_POST['entries-sorting'], $matches);
@@ -121,7 +122,7 @@ class NavigationController extends Controller {
 			$entry->set('baseurl', $_POST['entries'][$id]['url']);
 			$entry->set('title',   $_POST['entries'][$id]['title']);
 			$entry->set('target',  $_POST['entries'][$id]['target']);
-			var_dump($_POST['entries'][$id], $entry);
+			
 			$entry->save();
 			
 			// I need to update the link of any other element with this as the parent.
@@ -132,13 +133,7 @@ class NavigationController extends Controller {
 			}
 		}
 		
-		var_dump($matches);
-		die();
-		
-		// These pages are widget-able.
-		$m->getLink('Page')->set('widget', true);
-		
-		return $m->get('baseurl');
+		return '/Navigation';
 	}
 	
 	public static function Delete(View $page){

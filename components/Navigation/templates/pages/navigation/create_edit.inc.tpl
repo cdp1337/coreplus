@@ -18,6 +18,21 @@
 
 	<!-- Create new entry heading -->
 	<ul class="sortable-listing" id="entry-listings">
+		{if isset($entries)}
+			<!-- CRITICAL NOTE, make sure this HTML remains in sync with the javsacript logic below!!! -->
+			{foreach from=$entries item="e"}
+				<li id="entry-{$e->get('id')}" entryid="{$e->get('id')}" parentid="{$e->get('parentid')}">
+					<div class="entry">
+						<input type="hidden" name="entries[{$e->get('id')}][type]" value="{$e->get('type')}"/>
+						<input type="hidden" name="entries[{$e->get('id')}][url]" value="{$e->get('baseurl')}"/>
+						<input type="hidden" name="entries[{$e->get('id')}][target]" value="{$e->get('target')}"/>
+						<input type="hidden" name="entries[{$e->get('id')}][title]" value="{$e->get('title')}"/>
+						{$e->get('title')}
+						<a href="#" class="edit-entry-link" style="float:right;">(edit entry)</a>
+					</div>
+				</li>
+			{/foreach}
+		{/if}
 	</ul>
 	
 </fieldset>
@@ -28,6 +43,8 @@
 
 
 <div class="add-entry-options add-entry-options-int" style="display:none;">
+	<input type="hidden" name="id"/>
+	<input type="hidden" name="type" value="int"/>
 	<div class="formelement">
 		<label>Page</label>
 		<select name="url">
@@ -53,23 +70,36 @@
 	</div>
 	
 	<div class="formelement">
-		<a href="#" class="button add submit-btn">Add Entry</a>
+		<a href="#" class="button add submit-btn">Add/Update Entry</a>
 	</div>
 </div>
 
 <div class="add-entry-options add-entry-options-ext" style="display:none;">
-	<select name="add-url-protocol">
-		<option value="http://">http://</option>
-		<option value="https://">https://</option>
-		<option value="ftp://">ftp://</option>
-	</select>
-	<input type="text" name="add-url"/>
+	<input type="hidden" name="id"/>
+	<input type="hidden" name="type" value="ext"/>
+	
+	<div class="formelement">
+		<label>URL</label>
+		<input type="text" name="url"/>
+		<!--<p class="formdescription">Please ensure to include the http:// or other protocol.</p>-->
+	</div>
+	
+	<div class="formelement">
+		<label>Label/Title</label>
+		<input type="text" name="title"/>
+	</div>
 
-	Opens in
-	<select name="add-openin">
-		<option value="Current Window">Current Window</option>
-		<option value="New Window">New Window</option>
-	</select>
+	<div class="formelement">
+		<label>Opens in</label>
+		<select name="target">
+			<option value="">Current Window</option>
+			<option value="_BLANK">New Window</option>
+		</select>
+	</div>
+	
+	<div class="formelement">
+		<a href="#" class="button add submit-btn">Add/Update Entry</a>
+	</div>
 </div>
 
 
@@ -80,55 +110,122 @@
 	addcounter = 0;
 	
 	$(function(){
+		$('#add-entry-select').click();
+		
+		// Capture the add new entry link.
 		$('.add-entry-btn').click(function(){
+			addcounter++;
+			
 			$el = $('#add-entry-select').find('option:selected');
-			v = $el.val();
-			//$t = $('#add-entry-table');
-			//$t.find('.add-entry-options').hide();
-			//$t.find('.add-entry-options-' + v).show();
-			$('.add-entry-options-' + v).show().dialog({
+			
+			id = 'new' + addcounter;
+			type = $el.val();
+			title = '';
+			url = '';
+			target = '';
+			$dialog = $('.add-entry-options-' + type);
+			
+			// Populate the entries in.
+			$dialog.find('input[name=id]').val(id);
+			$dialog.find('input[name=title]').val(title);
+			$dialog.find(':input[name=url]').val(url);
+			$dialog.find(':input[name=target]').val(target);
+			
+			// Open the dialog
+			$dialog.show().dialog({
 				modal: true,
 				autoOpen: false,
-				title: $el.html() + ' Options'
+				title: 'New ' + $el.html() + ' Options',
+				width: '500px'
 			}).dialog('open');
 		
 			return false;
 		});
+		
+		// Capture click events for the edit link.
+		$('#entry-listings a.edit-entry-link').live('click', function(){
+			$this = $(this);
+			id = $this.closest('li').attr('entryid');
+			type = $this.closest('div').find('input[name="entries[' + id + '][type]"]').val();
+			title = $this.closest('div').find('input[name="entries[' + id + '][title]"]').val();
+			url = $this.closest('div').find('input[name="entries[' + id + '][url]"]').val();
+			target = $this.closest('div').find('input[name="entries[' + id + '][target]"]').val();
+			$dialog = $('.add-entry-options-' + type);
+			
+			// Populate the entries in.
+			$dialog.find('input[name=id]').val(id);
+			$dialog.find('input[name=title]').val(title);
+			$dialog.find(':input[name=url]').val(url);
+			$dialog.find(':input[name=target]').val(target);
+			
+			// Open the dialog
+			$dialog.show().dialog({
+				modal: true,
+				autoOpen: false,
+				title: title + ' Options',
+				width: '500px'
+			}).dialog('open');
+		});
 	
-		$('#add-entry-select').click();
-	
-		$('.add-entry-options-int').find('.submit-btn').click(function(){
+		// Capture the save entry options event.
+		$('.add-entry-options').find('.submit-btn').click(function(){
 			// Save the data to the form for submission.
-			$dialog = $('.add-entry-options-int');
-			addcounter++;
+			$dialog = $(this).closest('.add-entry-options');
 			
-			id = 'new' + addcounter;
+			id = $dialog.find('input[name=id]').val();
 			elid = 'entry-' + id;
-			type = 'int';
+			type = $dialog.find('input[name=type]').val();
 			title = $dialog.find('input[name=title]').val();
-			url = $dialog.find('select[name=url]').val();
-			target = $dialog.find('select[name=target]').val();
+			url = $dialog.find(':input[name=url]').val();
+			target = $dialog.find(':input[name=target]').val();
 			
-			html = '<li id="' + elid + '" entryid="' + id + '">'
-			     + '<div class="entry">'
-			     + '<input type="hidden" name="entries[' + id + '][type]" value="' + type + '"/>'
+			
+			innerhtml = '<input type="hidden" name="entries[' + id + '][type]" value="' + type + '"/>'
 			     + '<input type="hidden" name="entries[' + id + '][url]" value="' + url + '"/>'
 			     + '<input type="hidden" name="entries[' + id + '][target]" value="' + target + '"/>'
 			     + '<input type="hidden" name="entries[' + id + '][title]" value="' + title + '"/>'
 			     + title
+				 + '<a href="#" class="edit-entry-link" style="float:right;">(edit entry)</a>';
+			 
+			 // Does this element already exist on the form?
+			 if($('#' + elid).length){
+				 $('#' + elid + ' div.entry').html(innerhtml);
+			 }
+			 // Guess not...
+			 else{
+				 html = '<li id="' + elid + '" entryid="' + id + '">'
+			     + '<div class="entry">'
+			     + innerhtml
 			     + '</div>'
 			     + '</li>';
 			
-			$('#entry-listings').append(html);
+				$('#entry-listings').append(html);
+			 }
+			 
 			
 			$dialog.dialog('close');
 			return false;
 		});
 		
+		// Run through any statically placed elements and sort them appropriately.
+		// This is mandatory for the "edit" function of the template.
+		$('#entry-listings').find('li[parentid!=0]').each(function(){
+			// Move this element to it's rightful parent!
+			var $this = $(this);
+			var parentid = $this.attr('parentid');
+			if(!$('#entry-listings').find('li[entryid=' + parentid + '] ol').length){
+				// Add a sub level to this element.
+				$('#entry-listings').find('li[entryid=' + parentid + ']').append('<ol/>');
+			}
+			// And do the move!
+			$('#entry-listings').find('li[entryid=' + parentid + '] ol').append($this);
+		});
+		
+		// Do the actual sortable logic
 		$('#entry-listings').nestedSortable({
 			disableNesting: 'no-nest',
 			forcePlaceholderSize: true,
-			handle: 'div',
+			handle: 'div.entry',
 			helper:	'clone',
 			items: 'li',
 			opacity: .6,
@@ -137,7 +234,7 @@
 			tolerance: 'pointer',
 			toleranceElement: '> div'
 		});
-		
+				
 		// Capture the parent form submit too!
 		$('#entry-listings').closest('form').submit(function(){
 			// Create a new input field for the sort order of the listings.
