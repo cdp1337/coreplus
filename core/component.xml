@@ -263,7 +263,7 @@
 		<file filename="core/libs/core/Session.class.php" md5="ff0e48c2031ecfb306cfb72e33db1875">
 			<provides type="class" name="Session"/>
 		</file>
-		<file filename="core/libs/core/Cache.class.php" md5="53beefc5697d6ed3c3842126cbe89668">
+		<file filename="core/libs/core/Cache.class.php" md5="00c5e45bb3724d375d0b861f30fef7c3">
 			<provides type="class" name="Cache"/>
 		</file>
 		<file filename="core/libs/core/CLI.class.php" md5="fe817b1c7f07d48fceac662654db4cd3">
@@ -282,7 +282,7 @@
 		<file filename="core/libs/core/File.class.php" md5="682d6b1eec5c758202466e397fc00350">
 			<provides type="class" name="File"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="2f067935dbe6cba5c144bf48c09985bd">
+		<file filename="core/libs/core/Form.class.php" md5="e83cfba48a1ecd1cafd5ec11757949da">
 			<provides type="class" name="FormGroup"/>
 			<provides type="class" name="FormElement"/>
 			<provides type="class" name="Form"/>
@@ -298,7 +298,7 @@
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="e8ddd45cd9cec59e1ab5a3797210a3dc">
 			<provides type="class" name="ConfigHandler"/>
 		</file>
-		<file filename="core/libs/core/PageModel.class.php" md5="7ba8fc8144bea9751f98abfd31576e6d">
+		<file filename="core/libs/core/PageModel.class.php" md5="fb6ae8add5c0bd4a84d002a003a97eff">
 			<provides type="class" name="PageModel"/>
 		</file>
 		<file filename="core/libs/core/Controller.class.php" md5="a40b22a95d5e218a1c12a683fd1d9dcc">
@@ -310,7 +310,7 @@
 		<file filename="core/libs/core/IFile.interface.php" md5="6a15055b926bcdd9f5ba444a1a416100">
 			<provides type="interface" name="IFile"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="cd528de855c5b7578c435be09a7c5db0">
+		<file filename="core/libs/core/View.class.php" md5="05c4de03a79639e5e3969d18ae8b090d">
 			<provides type="class" name="View"/>
 		</file>
 		<file filename="core/libs/core/ISingleton.interface.php" md5="4812be45e675d1856a952cb402c885eb">
@@ -319,7 +319,7 @@
 		<file filename="core/libs/core/WidgetModel.class.php" md5="c7ddfb3e52c8d2f12b27c45d5081e84b">
 			<provides type="class" name="WidgetModel"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="888e3a8d73d76ce4d6f4f4de8bab47ea">
+		<file filename="core/libs/core/Core.class.php" md5="946d49e86022e5f7eb3a687da2775810">
 			<provides type="class" name="Core"/>
 		</file>
 		<file filename="core/libs/core/Insertable.class.php" md5="e5fbde0a9ca1eb18d4ee126095d17696">
@@ -349,7 +349,7 @@
 		<file filename="core/libs/core/InstallArchive.class.php" md5="d9063bc8b13fe8955ef3a2fe23d7dae8">
 			<provides type="class" name="InstallArchive"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="223a6b5fe1d4cc746ff8fe9aaf765734">
+		<file filename="core/libs/core/Component.class.php" md5="f874d26a4dccab8849e3651fdf880476">
 			<provides type="class" name="Component"/>
 		</file>
 		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="6da5b1986a5cb84894380371831aeaf7">
@@ -358,16 +358,13 @@
 		<file filename="core/libs/core/ThemeHandler.class.php" md5="2db7ed24faaa0004f3d0ea33bf9cdae1">
 			<provides type="class" name="ThemeHandler"/>
 		</file>
-		<file filename="core/libs/core/CurrentPage.class.php" md5="d62aed6fab5562c071e659f5c1a7364c">
+		<file filename="core/libs/core/CurrentPage.class.php" md5="3db83b08f33e7d14d9c505ec5017f6cb">
 			<provides type="class" name="CurrentPage"/>
-		</file>
-		<file filename="core/controllers/WidgetController.class.php" md5="9d3ce60d27542c97f16be9c67609a64d">
-			<provides type="class" name="WidgetController"/>
 		</file>
 		<file filename="core/libs/core/InstallTask.class.php" md5="aff7379efc097dd3783833b91d391aea">
 			<provides type="class" name="InstallTask"/>
 		</file>
-		<file filename="core/libs/core/ComponentHandler.class.php" md5="e9130467dc2a97dc92566a62d0327779">
+		<file filename="core/libs/core/ComponentHandler.class.php" md5="a98470f65cb83deaca94bb6172e8a3cc">
 			<provides type="class" name="ComponentHandler"/>
 		</file>
 		<file filename="core/libs/core/DB.class.php" md5="3e16cd9418e364ff4c82434033b94420">
@@ -420,8 +417,18 @@
 		<file filename="core/libs/aws-sdk/utilities/hadoopstep.class.php" md5="7188a08779be549d1708e683b1930ce4">
 			<provides type="class" name="CFHadoopStep"/>
 		</file>
+		<file filename="core/libs/aws-sdk/utilities/gzipdecode.class.php" md5="477c20f818f603ec6b8a5c20164bb2a6">
+			<provides type="class" name="CFGzipDecode"/>
+		</file>
 		<file filename="core/libs/aws-sdk/utilities/mimetypes.class.php" md5="59e025e5f2909a69510f67979ff3e617">
 			<provides type="class" name="CFMimeTypes"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/stacktemplate.class.php" md5="23fbd558174900733c91c6d5ee9d2e72">
+			<provides type="class" name="CFStackTemplate"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/json.class.php" md5="0e59ecab5b1dbabb1f477afb82da9069">
+			<provides type="class" name="CFJSON"/>
+			<provides type="class" name="JSON_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/info.class.php" md5="8d90241070bfcc1f1dde20e4d583624a">
 			<provides type="class" name="CFInfo"/>
@@ -442,6 +449,10 @@
 		<file filename="core/libs/aws-sdk/services/rds.class.php" md5="d41238fbaac148a9abf67ecbee0a5a11">
 			<provides type="class" name="AmazonRDS"/>
 			<provides type="class" name="RDS_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/cloudformation.class.php" md5="a2c054e601f0a453866ca60aaa64a833">
+			<provides type="class" name="AmazonCloudFormation"/>
+			<provides type="class" name="CloudFormation_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/cloudwatch.class.php" md5="55d7e44eab912e1e0fd7ed91574c7f5b">
 			<provides type="class" name="AmazonCloudWatch"/>
@@ -494,6 +505,9 @@
 		<file filename="core/libs/aws-sdk/services/cloudfront.class.php" md5="bfa0f3e40691337fb67191d48e9f9100">
 			<provides type="class" name="CloudFront_Exception"/>
 			<provides type="class" name="AmazonCloudFront"/>
+		</file>
+		<file filename="core/libs/aws-sdk/_samples/lib/ProgressBar.php" md5="b7af80295476f281425cfe6095cfcfde">
+			<provides type="class" name="Console_ProgressBar"/>
 		</file>
 		<file filename="core/libs/phpass/PasswordHash.php" md5="f7b1f77efb5fde33917083ab2192e75d">
 			<provides type="class" name="PasswordHash"/>
@@ -853,6 +867,9 @@
 		<file filename="core/controllers/AdminController.php" md5="f521f24e858a961887513448c068f4fa">
 			<provides type="controller" name="AdminController"/>
 		</file>
+		<file filename="core/controllers/WidgetController.class.php" md5="7afd4a0301fe5f8b07a27d05380ffb80">
+			<provides type="controller" name="WidgetController"/>
+		</file>
 		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
 			<provides type="controller" name="ErrorController"/>
 		</file>
@@ -861,9 +878,13 @@
 		<page baseurl="/Admin/ReinstallAll" admin="1" widget="0" access="*" title="Reinstall All Components"/>
 	</pages>
 	<view searchdir="core/templates">
-		<file filename="core/templates/pages/error/error404.tpl" md5="94db4b150349c6170a72cf39172b4cd8"/>
+		<file filename="core/templates/pages/error/error404.tpl" md5="2b6ad918a5cb9d960e5670fa16761162"/>
+		<file filename="core/templates/pages/error/error500.tpl" md5="128c99e44e5f3aaf741d9ee9a7011b3e"/>
 		<file filename="core/templates/widgets/admin/menu.tpl" md5="2780a2aafc1e2c3269fe6dc49c1f543e"/>
-		<file filename="core/templates/forms/form.tpl" md5="3de78674adf4fd0d357536d0de042112"/>
+		<file filename="core/templates/forms/form.tpl" md5="2910e3a5d1cc14ff87bfea0a15c927ce"/>
+		<file filename="core/templates/forms/form.foot.tpl" md5="6e6d3353848b64921070b812c7c99936"/>
+		<file filename="core/templates/forms/form.body.tpl" md5="8ab5bcc9f1307da533c72b3d18113a74"/>
+		<file filename="core/templates/forms/form.head.tpl" md5="efe24a11d8a7a54ad55a68fd09abb0a1"/>
 		<file filename="core/templates/forms/elements/image.tpl" md5="dc4f74a0297b099ea7913d7582125837"/>
 		<file filename="core/templates/forms/elements/checkbox.tpl" md5="070475a9b15c813ca8b958afff81ff54"/>
 		<file filename="core/templates/forms/elements/formtextareainput.tpl" md5="776611113ba0fb36c29565ac91146129"/>
@@ -872,7 +893,7 @@
 		<file filename="core/templates/forms/elements/formselectinput.tpl" md5="abd02a8d21de44b0c4359a0be186e5f2"/>
 		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="b253627a7cac7c2db9c53160272e103c"/>
 		<file filename="core/templates/forms/elements/formsubmitinput.tpl" md5="bf76c8874f76293157502c0999206069"/>
-		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="25d8a31f91dced6089c868eb97903086"/>
+		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="a71a92a59b7b6dd8acade08d02aa7e69"/>
 		<file filename="core/templates/forms/elements/reset.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
 		<file filename="core/templates/forms/elements/checkboxes.tpl" md5="db51515cb765780037065add38db169d"/>
 		<file filename="core/templates/forms/elements/formpasswordinput.tpl" md5="9642512379195999ea4c0a71b876d80f"/>
@@ -884,7 +905,7 @@
 	<install/>
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
-			<date>Sat, 26 Feb 2011 03:19:32 -0500</date>
+			<date>Sun, 27 Mar 2011 20:38:57 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
@@ -927,14 +948,13 @@
 	<author name="Fabien Potencier" email="fabien.potencier@symfony-project.com"/>
 	<author name="David JEAN LOUIS" email="izimobil@gmail.com"/>
 	<author name="David JEAN" email="izimobil@gmail.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-		See the included NOTICE.md file for more information.
-	</license>
+	<license url="http://www.gnu.org/licenses/agpl-3.0.txt"></license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.txt">
 		GNU Lesser General Public License v3
 	</license>
 	<otherfiles>
 		<file filename="install/install.tpl" md5="ff00c0c52c265ca1c1f857849a281060"/>
+		<file filename="yuicompressor-2.4.2.jar" md5="de7f9bf5ecb82166493ba7839f62a73e"/>
 		<file filename="license.txt" md5="73f1eb20517c55bf9493b7dd6e480788"/>
 		<file filename="core/bootstrap_predefines.php" md5="50e24c76fbfddfa0b942c293ec1c26f9"/>
 		<file filename="core/libs/cachecore/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
@@ -1043,7 +1063,7 @@
 		<file filename="core/libs/cachecore/_tests/memcached_method_reset.phpt" md5="43cf63834cf00a635eb67c6c8afa0ed4"/>
 		<file filename="core/libs/cachecore/_tests/memcached_method_read.phpt" md5="fd2fbd23360facb9f4d6b6f0365f5d9f"/>
 		<file filename="core/libs/cachecore/_tests/test_request.txt" md5="44daf28deeecb35cbe53e6af784082e9"/>
-		<file filename="core/libs/smarty-plugins/block.a.php" md5="fbb313bab37183e80a90cdfa1ceeb30a"/>
+		<file filename="core/libs/smarty-plugins/block.a.php" md5="5df1078564ecb59c547531218c684374"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="efee56afd71540793fa9ad94d9c63662"/>
 		<file filename="core/libs/smarty-plugins/function.script.php" md5="fff11b9cdf71f4cd7120d0edbd70761a"/>
@@ -1111,11 +1131,13 @@
 		<file filename="core/libs/aws-sdk/_samples/cli-ec2_sorting_and_filtering.php" md5="bb569fdfbac5d6cefc245f7663b968de"/>
 		<file filename="core/libs/aws-sdk/_samples/html-sdb_create_domain_data.php" md5="bcfdf7dfa92e4c7c7066b21d280be3f6"/>
 		<file filename="core/libs/aws-sdk/_samples/cli-s3_get_urls_for_uploads.php" md5="45bfb473c0ed4d133b0e3c4dc141b6be"/>
+		<file filename="core/libs/aws-sdk/_samples/cli-s3_progress_bar.php" md5="fe5c55a00aae5e5cada13a5399345075"/>
 		<file filename="core/libs/aws-sdk/_compatibility_test/README.md" md5="4b2ad499f8315322bfc745050a2ca396"/>
 		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test_cli.php" md5="d5d30c8021dd8573eb4bbeb913baf025"/>
 		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test.php" md5="9877bcc06f33dfa16b79328474064f00"/>
 		<file filename="core/libs/aws-sdk/_docs/NOTICE.md" md5="4265f813fbcd0334f9df940ff18bd659"/>
 		<file filename="core/libs/aws-sdk/_docs/CONTRIBUTORS.md" md5="8132b78b65200261ccd239bda698cdb4"/>
+		<file filename="core/libs/aws-sdk/_docs/WHERE_IS_THE_API_REFERENCE.md" md5="8d9d9d1b44dc35483b4cae8619ed95a6"/>
 		<file filename="core/libs/aws-sdk/_docs/LICENSE.md" md5="c101f69c0271135eef789cd808a30eae"/>
 		<file filename="core/libs/aws-sdk/_docs/CHANGELOG.md" md5="a8a20953f58a3be68b01ef825d52b936"/>
 		<file filename="core/libs/aws-sdk/config-sample.inc.php" md5="64903e5db2d65fd103a4b4f8c9c91d5d"/>
@@ -1233,7 +1255,7 @@
 		<file filename="core/libs/adodb5/contrib/toxmlrpc.inc.php" md5="8a022e02714ce3186f310cc65d936ad5"/>
 		<file filename="core/bootstrap.php" md5="5034cd492944ccac6cb6e5776243b56e"/>
 		<file filename="packager.php" md5="10a16d8ae884ce4be0073f2ff5698542"/>
-		<file filename="index.php" md5="72c59fa14e9fb6625e52bf2fee01c3a2"/>
+		<file filename="index.php" md5="889f67bd60efea0e26b5704a4ed67706"/>
 	</otherfiles>
 	<dbschema prefix="CAE2_">
 		<table name="CAE2_component" engine="MyISAM" charset="latin1">
@@ -1255,6 +1277,16 @@
 				<null>NO</null>
 				<key></key>
 				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment></comment>
+			</column>
+			<column>
+				<field>enabled</field>
+				<type>enum('0','1')</type>
+				<collation>latin1_swedish_ci</collation>
+				<null>NO</null>
+				<key></key>
+				<default>1</default>
 				<extra></extra>
 				<comment></comment>
 			</column>
