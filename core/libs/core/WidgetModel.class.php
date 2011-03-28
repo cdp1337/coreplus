@@ -173,10 +173,10 @@ class WidgetModel extends Model{
 		if(strpos($base, '/')) $controller = substr($base, 0, strpos($base, '/'));
 		else $controller = $base;
 
-		if(class_exists($controller . 'Controller') && is_subclass_of($controller . 'Controller', 'WidgetController')){
+		if(class_exists($controller . 'Controller') && is_subclass_of($controller . 'Controller', 'Controller')){
 			$controller = $controller . 'Controller';
 		}
-		elseif(class_exists($controller) && is_subclass_of($controller, 'WidgetController')){
+		elseif(class_exists($controller) && is_subclass_of($controller, 'Controller')){
 			$controller = $controller;
 		}
 		else{

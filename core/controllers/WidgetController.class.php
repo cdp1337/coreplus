@@ -29,6 +29,9 @@ class WidgetController extends Controller{
 		
 		$widgetbaseurl = $page->getParameter('widget');
 		$w = new WidgetModel($widgetbaseurl);
+		$w->getControllerClass();
+		$w->getControllerMethod();
+		var_dump($w);
 		var_dump($w->execute());
 	}
 	
