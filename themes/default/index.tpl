@@ -58,6 +58,7 @@
 					
 					{$body}
 				</section>
+				<div style="clear:both;"></div>
 			</div>
 			<footer></footer>
 		</div>
