@@ -6,7 +6,6 @@
 		<!--[if lt IE 9]>
 			<script type="text/javascript" src="{asset src='js/html5.js'}"></script>
 		<![endif]-->
-		{head}
 		<title>{$title}</title>
 	</head>
 
@@ -15,6 +14,10 @@
 			<header>
 				<a href="{$smarty.const.ROOT_URL}" title="Home"><img src="{asset src='logo.png'}" alt="Home"/></a>
 			</header>
+			<nav id="primary-nav">
+				{widget name="/Navigation/View/1"}
+			</nav>
+			<div style="clear:both;"></div>
 			<div id="innerwrapper" class="rounded-large">
 				<nav id="breadcrumbs">
 					{foreach from=$breadcrumbs item=crumb name=crumbs}
@@ -62,8 +65,6 @@
 			</div>
 			<footer></footer>
 		</div>
-		
-		{$foot}
 	</body>
 
 </html>
