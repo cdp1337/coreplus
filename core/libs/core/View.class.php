@@ -147,12 +147,21 @@ class View {
 			$template->assign('breadcrumbs', $this->breadcrumbs);
 			$template->assign('controls', $this->controls);
 			$template->assign('messages', Core::GetMessages());
-			$template->assign('foot', '');
 		}
 		$template->assign('title', $this->title);
 		$template->assign('body', $this->fetchBody());
 		
-		return $template->fetch($mastertpl);
+		$data = $template->fetch($mastertpl);
+		
+		if($this->mode == View::MODE_PAGE){
+			// Replace the </head> tag with the head data from the current page
+			// and the </body> with the foot data from the current page.
+			// This is needed to be done at this stage because some element in the template after rendering may add additional script to the head.
+			$data = str_replace('</head>', CurrentPage::GetHead() . "\n" . '</head>', $data);
+			$data = str_replace('</body>', CurrentPage::GetFoot() . "\n" . '</body>', $data);
+		}
+		
+		return $data;
 	}
 	
 	public function render(){

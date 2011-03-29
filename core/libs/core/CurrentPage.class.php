@@ -38,6 +38,8 @@ class CurrentPage{
 	
 	private $_headscripts = array();
 	
+	private $_footscripts = array();
+	
 	private $_headstylesheets = array();
 
 	/**
@@ -104,15 +106,21 @@ class CurrentPage{
 		return self::Singleton()->_render();
 	}
 	
-	public static function AddScript($script){
+	public static function AddScript($script, $location = 'head'){
 		if(strpos($script, '<script') === false){
 			// Resolve the script and wrap it with a script block.
 			$script = '<script type="text/javascript" src="' . Core::ResolveAsset($script) . '"></script>';
 		}
 		
 		$obj = self::Singleton();
+		
 		// I can check to see if this script has been loaded before.
-		if(!in_array($script, $obj->_headscripts)) $obj->_headscripts[] = $script;
+		if(in_array($script, $obj->_headscripts)) return;
+		if(in_array($script, $obj->_footscripts)) return;
+		
+		// No? alright, add it to the requested location!
+		if($location == 'head') $obj->_headscripts[] = $script;
+		else $obj->_footscripts[] = $script;
 	}
 	
 	public static function AddStylesheet($link, $media="all"){
@@ -133,7 +141,15 @@ class CurrentPage{
 		$out .= "\n";
 		$out .= implode("\n", $obj->_headstylesheets);
 		
-		return $out;
+		return trim($out);
+	}
+	
+	public static function GetFoot(){
+		$obj = self::Singleton();
+		
+		$out = implode("\n", $obj->_footscripts);
+		
+		return trim($out);
 	}
 
 	private function _render(){
@@ -157,7 +173,6 @@ class CurrentPage{
 		}
 		
 		
-		//$view->headscripts = array_merge($view->headscripts, $this->_headscripts);
 		try{
 			$data = $view->fetch();
 		}

@@ -101,6 +101,7 @@ class WidgetModel extends Model{
 			$this->_view->baseurl = $this->get('baseurl');
 			$this->_view->setParameters($this->getParameters());
 			$this->_view->templatename = $this->getTemplateName();
+			$this->_view->mode = View::MODE_WIDGET;
 			// These views don't actually have master templates, as they're just stub HTML bits.
 			//$this->_view->mastertemplate = ($this->get('template'))? $this->get('template') : ConfigHandler::GetValue('/core/theme/default_template');
 		}

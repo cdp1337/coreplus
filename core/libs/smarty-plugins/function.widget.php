@@ -4,10 +4,10 @@ function smarty_function_widget($params, $template){
 	
 	$name = $params['name'];
 	
-	//$model = new WidgetModel($name);
-	$model = new PageModel($name);
+	$model = new WidgetModel($name);
+	//$model = new PageModel($name);
 	$out = $model->execute();
-	$out->mode = View::MODE_WIDGET;
+	//$out->mode = View::MODE_WIDGET;
 	//var_dump($out); return;
 	return $out->render();
 	var_dump($out);

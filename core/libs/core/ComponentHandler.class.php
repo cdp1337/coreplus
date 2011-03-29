@@ -334,7 +334,10 @@ class ComponentHandler implements ISingleton{
 	
 	public static function LoadScriptLibrary($library){
 		if(isset(ComponentHandler::Singleton()->_scriptlibraries[$library])){
-			call_user_func(ComponentHandler::Singleton()->_scriptlibraries[$library]);
+			return call_user_func(ComponentHandler::Singleton()->_scriptlibraries[$library]);
+		}
+		else{
+			return false;
 		}
 	}
 	

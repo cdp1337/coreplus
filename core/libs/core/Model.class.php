@@ -457,7 +457,7 @@ class Model {
 		return $wheres;
 	}
 	
-	public function getLink($linkname){
+	public function getLink($linkname, $order = null){
 		if(!isset($this->_linked[$linkname])) return null; // @todo Error Handling
 		
 		// Try to keep these in cache, so when they change I'll be able to save them on the parent's save function.
@@ -469,6 +469,7 @@ class Model {
 			
 			$wheres = $this->_getLinkWhereArray($linkname);
 			$f->where($wheres);
+			if($order) $f->order($order);
 			
 			$this->_linked[$linkname]['records'] = $f->get();
 			
@@ -641,6 +642,7 @@ class ModelFactory{
 			$this->_model->getSQLBuilder()->where($where);
 		}
 		else{
+			// @todo Retool this so it does not need to rely on "eval"...
 			$execargs = '$where';
 			$args = array();
 			foreach(func_get_args() as $k => $a){
@@ -651,6 +653,10 @@ class ModelFactory{
 			$builder = $this->_model->getSQLBuilder();
 			eval('$builder->where(' . $execargs . ');');
 		}
+	}
+	
+	public function order($order){
+		$this->_model->getSQLBuilder()->order($order);
 	}
 
 	public function limit($limit){
