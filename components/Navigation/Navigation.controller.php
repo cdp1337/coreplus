@@ -21,26 +21,68 @@ class NavigationController extends Controller {
 		
 		$page->addControl('New Navigation Menu', '/Navigation/Create', 'add');
 	}
-	/*
+	
     public static function View(View $page){
 		$m = new NavigationModel($page->getParameter(0));
 
 		if(!$m->exists()) return View::ERROR_NOTFOUND;
+		
+		// Get the entries for this model as well.
+		$entries = $m->getLink('NavigationEntry', 'weight ASC');
+		
+		//var_dump($entries);
+		// View won't quite just have a flat list of entries, as they need to be checked and sorted
+		// into a nested array.
+		$sortedentries = array();
+		// First level children
+		foreach($entries as $k => $e){
+			if(!$e->get('parentid')){
+				$sortedentries[] = array('obj' => $e, 'children' => array());
+				unset($entries[$k]);
+			}
+		}
+		// One level deep
+		if(sizeof($entries)){
+			foreach($sortedentries as $sk => $se){
+				foreach($entries as $k => $e){
+					if($e->get('parentid') == $se['obj']->get('id')){
+						$sortedentries[$sk]['children'][] = array('obj' => $e, 'children' => array());
+						unset($entries[$k]);
+					}
+				}
+			}
+		}
+		// Two levels deep
+		// this would be so much simplier if the menu was in DOM format... :/
+		if(sizeof($entries)){
+			foreach($sortedentries as $sk => $se){
+				foreach($se['children'] as $subsk => $subse){
+					foreach($entries as $k => $e){
+						if($e->get('parentid') == $subse['obj']->get('id')){
+							$sortedentries[$sk]['children'][$subsk]['children'][] = array('obj' => $e, 'children' => array());
+							unset($entries[$k]);
+						}
+					}
+				}
+			}
+		}
+		
 
 		// @todo Check page permissions
 
 		$page->title = $m->get('title');
-		$page->metas['description'] = $m->get('description');
-		$page->metas['keywords'] = $m->get('keywords');
 		$page->access = $m->get('access');
-		$page->assignVariable('model', $m);
 		
+		$page->assignVariable('model', $m);
+		$page->assignVariable('entries', $sortedentries);
+		/*
 		$page->addControl('New Navigation Menu', '/Navigation/Create', 'add');
 		$page->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
 		$page->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
 		$page->addControl('All Content Pages', '/Content', 'directory');
+		*/
 	}
-	*/
+	
 
 	public static function Edit(View $page){
 		$m = new NavigationModel($page->getParameter(0));
@@ -54,7 +96,7 @@ class NavigationController extends Controller {
 		$pages = PageModel::GetPagesAsOptions("fuzzy = '0'");
 		
 		// Get the entries for this model as well.
-		$entries = $m->getLink('NavigationEntry');
+		$entries = $m->getLink('NavigationEntry', 'weight ASC');
 
 		// @todo Check page permissions
 		

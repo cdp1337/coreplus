@@ -1,5 +1,5 @@
-{script name="jqueryui"}
-{script name="jqueryui.nestedSortable"}
+{script name="jqueryui"}{/script}
+{script name="jqueryui.nestedSortable"}{/script}
 
 {$form->render('head')}
 
@@ -11,6 +11,7 @@
 	<select id="add-entry-select">
 		<option value="int">Internal Page</option>
 		<option value="ext">External Page</option>
+		<option value="none">Text Only</option>
 		<!--<option value="mailto">Mailto</option>-->
 	</select>
 	
@@ -95,6 +96,22 @@
 			<option value="">Current Window</option>
 			<option value="_BLANK">New Window</option>
 		</select>
+	</div>
+	
+	<div class="formelement">
+		<a href="#" class="button add submit-btn">Add/Update Entry</a>
+	</div>
+</div>
+
+<div class="add-entry-options add-entry-options-none" style="display:none;">
+	<input type="hidden" name="id"/>
+	<input type="hidden" name="type" value="none"/>
+	<input type="hidden" name="url" value=""/>
+	<input type="hidden" name="target" value=""/>
+	
+	<div class="formelement">
+		<label>Label/Title</label>
+		<input type="text" name="title"/>
 	</div>
 	
 	<div class="formelement">
