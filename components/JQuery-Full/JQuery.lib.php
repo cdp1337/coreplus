@@ -40,6 +40,33 @@ abstract class JQuery {
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
+	
+	public static function Include_readonly(){
+		$base = 'jquery.ui.readonly';
+		// I need jquery ui first.
+		self::IncludeJQueryUI();
+		
+		CurrentPage::AddStylesheet('css/jquery.readonly.css');
+		
+		if(ConfigHandler::GetValue('/jquery/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
+		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+		
+		// IMPORTANT!  Tells the script that the include succeeded!
+		return true;
+	}
+	
+	public static function Include_json(){
+		$base = 'jquery.json-2.2';
+		
+		// I need jquery first.
+		self::IncludeJQuery();
+		
+		if(ConfigHandler::GetValue('/jquery/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
+		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+		
+		// IMPORTANT!  Tells the script that the include succeeded!
+		return true;
+	}
 }
 
 ?>
