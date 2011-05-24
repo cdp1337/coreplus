@@ -14,8 +14,9 @@
 	<return name="type" type="enum">
 		<option>mysql</option>
 		<option>mysqli</option>
+		<option>cassandra</option>
 		<defaultValue>mysqli</defaultValue>
-		<value>mysqli</value>
+		<value>cassandra</value>
 	</return>
 	
 	<return name="name" type="string">

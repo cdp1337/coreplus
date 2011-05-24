@@ -48,42 +48,75 @@ class CurrentPage{
 	private $_page;
 
 	private function __construct(){
-		$uri = $_SERVER['QUERY_STRING'];
+		$uri = $_SERVER['REQUEST_URI'];
 
 		// If blank, default to '/' (should be root url)
-		if(!$uri) $uri = '/';
+		if(!$uri) $uri = ROOT_WDIR;
 		
-
+		// Now I can trim off the prefix, since that's not needed in deciding the path.
+		$uri = substr($uri, strlen(ROOT_WDIR));
+		
+		// Split the string on the '?'.  Obviously anything after are parameters.
+		if(($_qpos = strpos($uri, '?')) !== false) $uri = substr($uri, 0, $_qpos);
+		
+		// the URI should start with a '/'.
+		if($uri{0} != '/') $uri = '/' . $uri;
+		
+		// If the useragent requested a specifc mode type, remember that and set it for the page.
+		if(preg_match('/\.[a-z]{3,4}$/i', $uri)){
+			$ctype = strtolower(preg_replace('/^.*\.([a-z]{3,4})$/i', '\1', $uri));
+			$uri = substr($uri, 0, -1 - strlen($ctype));
+		}
+		else{
+			$ctype = 'html';
+		}
+		
+		
 		// Trim off anything after the first & if present.
-		if(strpos($uri, '&') !== false) $uri = substr($uri, 0, strpos($uri, '&'));
+		//if(strpos($uri, '&') !== false) $uri = substr($uri, 0, strpos($uri, '&'));
 		
 		$p = PageModel::Find(array('rewriteurl' => $uri, 'fuzzy' => 0), 1);
 		
-
+		// Split this URL, it'll be used somewhere.
+		$pagedat = PageModel::SplitBaseURL($uri);
+		
 		if($p){
 			// :) Found it
 			$this->_page = $p;
 		}
-		else{
+		elseif($pagedat){
 			// Is this even a valid controller?
-			$a = PageModel::SplitBaseURL($uri);
-			if($a){
-				$p = new PageModel();
-				$p->set('baseurl', $uri);
-				$p->set('rewriteurl', $uri);
-				$this->_page = $p;
-			}
+			$p = new PageModel();
+			$p->set('baseurl', $uri);
+			$p->set('rewriteurl', $uri);
+			$this->_page = $p;
 		}
 		
-		// Merge in any GET parameters.
+		// Make sure all the parameters from both standard GET and core parameters are tacked on.
+		if($pagedat && $pagedat['parameters']){
+			foreach($pagedat['parameters'] as $k => $v){
+				$this->_page->setParameter($k, $v);
+			}
+		}
 		if(is_array($_GET)){
-			// Skip the first one...
-			array_shift($_GET);
 			foreach($_GET as $k => $v){
 				if(is_numeric($k)) continue;
 				$this->_page->setParameter($k, $v);
 			}
 		}
+		
+		// Some pages may support dynamic content types from the getgo.
+		// @todo Should the $_SERVER['HTTP_ACCEPT'] flag be used here?
+		switch($ctype){
+			case 'xml':  $ctype = View::CTYPE_XML;  break;
+			case 'json': $ctype = View::CTYPE_JSON; break;
+			default:     $ctype = View::CTYPE_HTML; break;
+		}
+		
+		$this->_page->getView()->contenttype = $ctype;
+		
+		//$this->_page->getView();
+		//var_dump($this->_page); die();
 	}
 
 	/**
@@ -153,6 +186,7 @@ class CurrentPage{
 	}
 
 	private function _render(){
+		
 		// This may or may not be the original page...
 		if($this->_page){
 			$view = $this->_page->execute();
@@ -214,7 +248,7 @@ class CurrentPage{
 		
 		
 		// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
-		if(DEVELOPMENT_MODE && $view->mode == View::MODE_PAGE){
+		if(DEVELOPMENT_MODE && $view->mode == View::MODE_PAGE && $view->contenttype == View::CTYPE_HTML){
 			echo '<pre class="xdebug-var-dump">';
 			echo "Number of queries: " . DB::Singleton()->counter . "\n";
 			echo "Amount of memory used by PHP: " . File::FormatSize(memory_get_usage()) . "\n";

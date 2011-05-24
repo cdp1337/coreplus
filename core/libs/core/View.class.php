@@ -12,18 +12,29 @@
  */
 class View {
 
+	/* Errors that may be occured with views */
 	const ERROR_OTHER        = 1;
 	const ERROR_NOERROR      = 200;
 	const ERROR_ACCESSDENIED = 403;
 	const ERROR_NOTFOUND     = 404;
 	const ERROR_SERVERERROR  = 500;
 	
-	const MODE_PAGE = 'page';
-	const MODE_WIDGET = 'widget';
-	const MODE_NOOUTPUT = 'nooutput';
-	// @todo Implement the rest of the modes.
-	//const MODE_AJAX = 'ajax';
-	// const MODE_JSON = 'json';
+	/* Modes for handling the rendering of the view */
+	/**
+	 * Handle the rendering of this view as a normal page.
+	 */
+	const MODE_PAGE       = 'page';
+	const MODE_WIDGET     = 'widget';
+	const MODE_NOOUTPUT   = 'nooutput';
+	const MODE_AJAX       = 'ajax';
+	const MODE_PAGEORAJAX = 'pageorajax';
+	//const MODE_JSON       = 'json';
+	
+	/* Content types for this view */
+	const CTYPE_HTML      = 'text/html';
+	const CTYPE_PLAIN     = 'text/plain';
+	const CTYPE_JSON      = 'application/json';
+	const CTYPE_XML       = 'application/xml';
 
 
 	public $error;
@@ -41,6 +52,7 @@ class View {
 	public $controls = array();
 	public $mode;
 	public $contenttype = 'text/html';
+	
 	
 	public $headscripts = array();
 	public $headstylesheets = array();
@@ -85,12 +97,49 @@ class View {
 	}
 
 	public function getVariable($key){
-		return $this->getTemplate()->getVariable($key);
+		// Damn smarty and its being more difficult...
+		$v = $this->getTemplate()->getVariable($key);
+		return ($v)? $v->value : null;
 	}
 
 	public function fetchBody(){
+		// If there is set to be no system content, don't even bother with anything here!
+		if($this->mode == View::MODE_NOOUTPUT){
+			return null;
+		}
+		//var_dump($this);
+		
+		// If the content type is set to something other that html, check if that template exists.
+		switch($this->contenttype){
+			case View::CTYPE_XML:
+				$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'xml.tpl', $this->templatename));
+				if($ctemp){
+					$this->templatename = $ctemp;
+					$this->mastertemplate = 'index.xml.tpl';
+				}
+				else{
+					$this->contenttype = View::CTYPE_HTML;
+				}
+				break;
+			case View::CTYPE_JSON:
+				$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'json.tpl', $this->templatename));
+				if($ctemp){
+					$this->templatename = $ctemp;
+					//$this->mastertemplate = 'index.json.tpl';
+					$this->mastertemplate = false;
+				}
+				else{
+					$this->contenttype = View::CTYPE_HTML;
+				}
+				break;
+		}
+		//var_dump($this->templatename, $this->contenttype);
+		
+		
 		switch($this->mode){
 			case View::MODE_PAGE:
+			case View::MODE_AJAX:
+			case View::MODE_PAGEORAJAX:
 				$t = $this->getTemplate();
 				return $t->fetch($this->templatename);
 				break;
@@ -105,28 +154,39 @@ class View {
 				break;
 		}
 		
-
-		
 	}
 
 	public function fetch(){
+		$body = $this->fetchBody();
+		
 		// Whee!
 		//var_dump($this->templatename, Template::ResolveFile($this->templatename));
-		// Master template depends on the render mode.
-		switch($this->mode){
-			case View::MODE_NOOUTPUT:
-				$mastertpl = false;
-				break;
-			case View::MODE_PAGE:
-				$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::GetValue('/core/theme') . '/' . $this->mastertemplate;
-				break;
-			case View::MODE_WIDGET:
-				$mastertpl = Template::ResolveFile('widgetcontainers/' . $this->mastertemplate);
-				break;
+		// Content types take priority on controlling the master template.
+		if($this->contenttype == View::CTYPE_JSON){
+			$mastertpl = false;
+		}
+		else{
+			// Master template depends on the render mode.
+			switch($this->mode){
+				case View::MODE_PAGEORAJAX:
+					if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') $mastertpl = false;
+					else $mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::GetValue('/core/theme') . '/' . $this->mastertemplate;
+					break;
+				case View::MODE_NOOUTPUT:
+				case View::MODE_AJAX:
+					$mastertpl = false;
+					break;
+				case View::MODE_PAGE:
+					$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::GetValue('/core/theme') . '/' . $this->mastertemplate;
+					break;
+				case View::MODE_WIDGET:
+					$mastertpl = Template::ResolveFile('widgetcontainers/' . $this->mastertemplate);
+					break;
+			}
 		}
 		
 		// If there's no template, I have nothing to even do!
-		if(!$mastertpl) return $this->fetchBody ();
+		if(!$mastertpl) return $body;
 		
 		
 		// @todo Handle the metadata.
@@ -148,12 +208,17 @@ class View {
 			$template->assign('controls', $this->controls);
 			$template->assign('messages', Core::GetMessages());
 		}
+		// Widgets need some special variables too.
+		if($this->mode == View::MODE_WIDGET){
+			//var_dump($this->getVariable('widget')); die();
+			$template->assign('widget', $this->getVariable('widget'));
+		}
 		$template->assign('title', $this->title);
-		$template->assign('body', $this->fetchBody());
+		$template->assign('body', $body);
 		
 		$data = $template->fetch($mastertpl);
 		
-		if($this->mode == View::MODE_PAGE){
+		if($this->mode == View::MODE_PAGE && $this->contenttype == 'text/html'){
 			// Replace the </head> tag with the head data from the current page
 			// and the </body> with the foot data from the current page.
 			// This is needed to be done at this stage because some element in the template after rendering may add additional script to the head.
@@ -184,4 +249,9 @@ class View {
 	public function addControl($title, $link, $class = 'edit'){
 		$this->controls[] = array('title' => $title, 'link' => Core::ResolveLink($link), 'class' => $class);
 	}
+}
+
+
+class ViewException extends Exception{
+	
 }

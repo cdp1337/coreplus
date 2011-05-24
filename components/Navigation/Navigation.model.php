@@ -35,5 +35,11 @@ class NavigationModel extends Model{
 				return parent::get($k);
 		}
 	}
+	
+	public function save(){
+		// Make sure the linked widget is kept in sync.
+		$this->getLink('Widget')->set('title', $this->get('name'));
+		return parent::save();
+	}
 }
 ?>

@@ -441,8 +441,8 @@ class Form extends FormGroup{
 			$widget = $model->getLink('Widget');
 			
 			// Update the cached information in the page.
-			//if($model->get('title') !== null) $page->set('title', $model->get('title'));
-			//if($model->get('access') !== null) $page->set('access', $model->get('access'));
+			if($model->get('title') !== null) $widget->set('title', $model->get('title'));
+			if($model->get('access') !== null) $widget->set('access', $model->get('access'));
 			
 			// Tack on the Page data too!
 			//$this->getElementByName('page')->getModel($page);
