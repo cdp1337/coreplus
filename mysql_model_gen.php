@@ -110,6 +110,15 @@ foreach($backend->_getTables() as $name){
 			$c['type'] = 'Model::ATT_TYPE_ENUM';
 			$c['options'] = 'array(' . substr($row['type'], 5, -1) . ')';
 		}
+		elseif(strpos($row['type'], 'int(') !== false && $c['name'] == 'updated'){
+			$c['type'] = 'Model::ATT_TYPE_UPDATED';
+		}
+		elseif(strpos($row['type'], 'int(') !== false && $c['name'] == 'created'){
+			$c['type'] = 'Model::ATT_TYPE_CREATED';
+		}
+		elseif(strpos($row['type'], 'int(') !== false && isset($index['PRIMARY']) && in_array($c['name'], $index['PRIMARY']['columns'])){
+			$c['type'] = 'Model::ATT_TYPE_ID';
+		}
 		elseif(strpos($row['type'], 'int(') !== false){
 			$c['type'] = 'Model::ATT_TYPE_INT';
 		}
@@ -130,7 +139,16 @@ foreach($backend->_getTables() as $name){
 		}
 		
 		// Comment?
-		if($row['comment']) $c['comment'] = str_replace("'", "\\'", $row['comment']);
+		if($row['comment']) $c['comment'] = trim(str_replace("'", "\\'", $row['comment']));
+		
+		
+		// Default
+		if($row['default'] === NULL && $row['null'] == 'YES') $c['default'] = 'null';
+		elseif($row['default']) $c['default'] = "'" . str_replace("'", "\\'", $row['default']) . "'";
+		
+		// Null?
+		if($row['null'] == 'YES') $c['null'] = 'true';
+		else $c['null'] = 'false';
 		
 		$cols[] = $c;
 	}
@@ -167,8 +185,10 @@ foreach($cols as $k => $col){
 		. "\n\t\t\t'type' => {$col['type']},"
 		. (isset($col['maxlength'])? "\n\t\t\t'maxlength' => {$col['maxlength']}," : '')
 		. (isset($col['options'])? "\n\t\t\t'options' => {$col['options']}," : '')
+		. (isset($col['default'])? "\n\t\t\t'default' => {$col['default']}," : '')
 		. (isset($col['required'])? "\n\t\t\t'required' => {$col['required']}," : '')
 		. (isset($col['comment'])? "\n\t\t\t'comment' => '{$col['comment']}'," : '')
+		. (isset($col['null'])? "\n\t\t\t'null' => {$col['null']}," : '')
 		. "\n\t\t),";
 }
 $code .= "\n\t);

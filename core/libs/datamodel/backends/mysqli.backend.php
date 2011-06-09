@@ -158,12 +158,16 @@ class DMI_mysqli_backend implements DMI_Backend {
 			if(!isset($coldef['maxlength'])) $coldef['maxlength'] = false;
 			if(!isset($coldef['null'])) $coldef['null'] = false;
 			if(!isset($coldef['comment'])) $coldef['comment'] = false;
-			if(!isset($coldef['default'])) $coldef['default'] = null;
+			if(!isset($coldef['default'])) $coldef['default'] = false;
 			
 			$type = $this->_getSchemaFromType($coldef);
 			$null = ($coldef['null'])? 'NULL' : 'NOT NULL'; // Required for the query.
 			$checknull = ($coldef['null'])? 'YES' : 'NO'; // Required for the schema check.
-			$default = (($coldef['default'])? "'" . $this->_conn->escape_string($coldef['default']) . "'" : (($coldef['null'])? 'NULL' : "''"));
+			
+			if($coldef['null'] && $coldef['default'] === null) $default = 'NULL';
+			elseif($coldef['default'] !== false) $default = "'" . $this->_conn->escape_string($coldef['default']) . "'";
+			else $default = false;
+			//(($coldef['default'])? "'" . $this->_conn->escape_string($coldef['default']) . "'" : (($coldef['null'])? 'NULL' : "''"));
 			$checkdefault = (($coldef['default'])? $coldef['default'] : (($coldef['null'])? 'NULL' : ''));
 			
 			
@@ -249,7 +253,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$q .= $type . ' ';
 				//if($coldef['collation']) $q .= 'COLLATE ' . $coldef['collation'] . ' ';
 				$q .= $null . ' ';
-				$q .= 'DEFAULT ' . $default . ' ';
+				if($default !== false) $q .= 'DEFAULT ' . $default . ' ';
 				if($coldef['comment']) $q .= 'COMMENT \'' . $coldef['comment'] . '\' ';
 				//echo $q . '<br/>';
 				$this->_rawExecute($q);
@@ -270,7 +274,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 		foreach($newschema['indexes'] as $idx => $columns){
 			
 			// Damn negatives for variables.... 1 means that it's NOT unique, ie: a standard key.
-			$nonunique = (!(strpos('unique:', $idx) === 0 || $idx == 'primary'));
+			$nonunique = (!(strpos($idx, 'unique:') === 0 || $idx == 'primary'));
 			
 			// Ensure that idxdef['column'] is an array if it's not.
 			if(!is_array($columns)) $columns = array($columns);
@@ -376,6 +380,13 @@ class DMI_mysqli_backend implements DMI_Backend {
 			case Model::ATT_TYPE_TEXT:
 				$type = "text";
 				break;
+			case Model::ATT_TYPE_CREATED:
+			case Model::ATT_TYPE_UPDATED:
+				$type = 'int(11)';
+				break;
+			default:
+				throw new DMI_Exception('Unsupported model type for ' . $table . '.' . $column . ' [' . $coldef['type'] . ']');
+				break;
 		}
 		
 		return $type;
@@ -475,6 +486,8 @@ class DMI_mysqli_backend implements DMI_Backend {
 		
 		$res = $this->_conn->query($string);
 		if($this->_conn->errno){
+			// @todo Should this be implemented in the DMI_Exception?
+			if(DEVELOPMENT_MODE) echo '<pre class="cae2_debug">' . $string . '</pre>';
 			throw new DMI_Exception($this->_conn->error, $this->_conn->errno);
 		}
 		return $res;

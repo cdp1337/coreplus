@@ -6,44 +6,54 @@
  * Please update result to your preferences and copy to the final location.
  * 
  * @author Charlie Powell <powellc@powelltechs.com>
- * @date 2011-06-08 20:43:40
+ * @date 2011-06-09 01:14:48
  */
 class NavigationEntryModel extends Model {
 	public static $Schema = array(
 		'id' => array(
-			'type' => Model::ATT_TYPE_INT,
+			'type' => Model::ATT_TYPE_ID,
 			'required' => true,
+			'null' => false,
 		),
 		'navigationid' => array(
 			'type' => Model::ATT_TYPE_INT,
+			'null' => false,
 		),
 		'parentid' => array(
 			'type' => Model::ATT_TYPE_INT,
+			'null' => false,
 		),
 		'type' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 6,
+			'null' => false,
 		),
 		'baseurl' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 256,
+			'null' => false,
 		),
 		'title' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,
+			'null' => false,
 		),
 		'target' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 16,
+			'null' => false,
 		),
 		'weight' => array(
 			'type' => Model::ATT_TYPE_INT,
+			'null' => false,
 		),
 		'created' => array(
-			'type' => Model::ATT_TYPE_INT,
+			'type' => Model::ATT_TYPE_CREATED,
+			'null' => false,
 		),
 		'updated' => array(
-			'type' => Model::ATT_TYPE_INT,
+			'type' => Model::ATT_TYPE_UPDATED,
+			'null' => false,
 		),
 	);
 	

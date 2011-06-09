@@ -6,7 +6,7 @@
  * Please update result to your preferences and copy to the final location.
  * 
  * @author Charlie Powell <powellc@powelltechs.com>
- * @date 2011-06-08 20:43:40
+ * @date 2011-06-09 01:14:48
  */
 class ComponentModel extends Model {
 	public static $Schema = array(
@@ -14,13 +14,17 @@ class ComponentModel extends Model {
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 48,
 			'required' => true,
+			'null' => false,
 		),
 		'version' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 24,
+			'null' => false,
 		),
 		'enabled' => array(
 			'type' => Model::ATT_TYPE_BOOL,
+			'default' => '1',
+			'null' => false,
 		),
 	);
 	

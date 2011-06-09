@@ -6,7 +6,7 @@
  * Please update result to your preferences and copy to the final location.
  * 
  * @author Charlie Powell <powellc@powelltechs.com>
- * @date 2011-06-08 20:43:40
+ * @date 2011-06-09 01:14:48
  */
 class ViewClassesModel extends Model {
 	public static $Schema = array(
@@ -14,13 +14,16 @@ class ViewClassesModel extends Model {
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,
 			'required' => true,
+			'null' => false,
 		),
 		'class_alias' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,
+			'null' => false,
 		),
 		'widgetable' => array(
 			'type' => Model::ATT_TYPE_BOOL,
+			'null' => false,
 		),
 	);
 	

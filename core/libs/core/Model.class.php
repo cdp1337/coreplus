@@ -30,6 +30,8 @@ class Model {
 	const ATT_TYPE_BOOL = 'boolean';
 	const ATT_TYPE_ENUM = 'enum';
 	const ATT_TYPE_ID = '__id';
+	const ATT_TYPE_UPDATED = '__updated';
+	const ATT_TYPE_CREATED = '__created';
 	
 	// Regex to match anything not blank.
 	const VALIDATION_NOTBLANK = "/^.+$/";

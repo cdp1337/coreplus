@@ -11,20 +11,81 @@
  */
 class PageModel extends Model{
 	
-	protected $_schema = array(
-		'baseurl' => array(),
-		'rewriteurl' => array(),
-		'parenturl' => array(),
-		'title' => array(),
-		'metas' => array(),
-		'theme_template' => array(),
-		'page_template' => array(),
-		'access' => array(),
-		'fuzzy' => array(),
-		'widget' => array(),
-		'admin' => array(),
-		'created' => array(),
-		'updated' => array(),
+	public static $Schema = array(
+		'baseurl' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'required' => true,
+			'null' => false,
+		),
+		'rewriteurl' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'null' => false,
+		),
+		'parenturl' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'null' => false,
+		),
+		'title' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'default' => null,
+			'comment' => '[Cached] Title of the page',
+			'null' => true,
+		),
+		'metas' => array(
+			'type' => Model::ATT_TYPE_TEXT,
+			'comment' => '[Cached] Serialized array of metainformation',
+			'null' => false,
+		),
+		'theme_template' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'default' => null,
+			'null' => true,
+		),
+		'page_template' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 64,
+			'default' => null,
+			'null' => true,
+		),
+		'access' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 512,
+			'comment' => '[Cached] Access string of the page',
+			'null' => false,
+		),
+		'fuzzy' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'comment' => '[Cached] If this url is fuzzy or an exact match',
+			'null' => false,
+		),
+		'widget' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'comment' => 'If this page can be viewed as a widget',
+			'null' => false,
+		),
+		'admin' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'comment' => 'If this page is an administration page',
+			'null' => false,
+		),
+		'created' => array(
+			'type' => Model::ATT_TYPE_CREATED,
+			'null' => false,
+		),
+		'updated' => array(
+			'type' => Model::ATT_TYPE_UPDATED,
+			'null' => false,
+		),
+	);
+	
+	public static $Indexes = array(
+		'primary' => array('baseurl'),
+		'unique:rewrite_url' => array('rewriteurl'),
 	);
 
 	private $_class;

@@ -6,29 +6,36 @@
  * Please update result to your preferences and copy to the final location.
  * 
  * @author Charlie Powell <powellc@powelltechs.com>
- * @date 2011-06-08 20:43:40
+ * @date 2011-06-09 01:14:48
  */
 class ForumTopicsModel extends Model {
 	public static $Schema = array(
 		'id' => array(
-			'type' => Model::ATT_TYPE_INT,
+			'type' => Model::ATT_TYPE_ID,
 			'required' => true,
+			'null' => false,
 		),
 		'category_id' => array(
 			'type' => Model::ATT_TYPE_INT,
+			'null' => false,
 		),
 		'parent_id' => array(
 			'type' => Model::ATT_TYPE_INT,
+			'default' => null,
+			'null' => true,
 		),
 		'name' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 127,
+			'null' => false,
 		),
 		'description' => array(
 			'type' => Model::ATT_TYPE_TEXT,
+			'null' => false,
 		),
 		'weight' => array(
 			'type' => Model::ATT_TYPE_INT,
+			'null' => false,
 		),
 	);
 	
