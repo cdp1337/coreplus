@@ -107,9 +107,13 @@ class DMI_mysqli_backend implements DMI_Backend {
 			$directives[] = $d;
 		}
 		
+		if(!sizeof($directives)){
+			throw new DMI_Exception('Cowardly refusing to create a table [ ' . $table . ' ] with no column definitions!');
+		}
 
 		$q .= '( ' . implode(', ', $directives) . ' ) ';
 		
+		//echo $q . '<br/>';
 		// and GO!
 		return ($this->_rawExecute($q));
 		
@@ -257,33 +261,68 @@ class DMI_mysqli_backend implements DMI_Backend {
 			$x++;
 		} // foreach($this->getElementFrom('column', $tblnode, false) as $colnode)
 
-var_dump($column, $type, $coldef, $schema); die();
+//var_dump($column, $type, $coldef, $schema); die();
 		// The columns should be done; onto the indexes.
 		$schema = $this->_describeTableIndexes('_tmptable');
-		foreach($this->getElementsFrom('index', $tblnode) as $idxnode){
-			$idxdef = $this->elementToArray($idxnode);
+		
+		//var_dump($newschema['indexes'], $schema); die();
+		$keysgood = array(); // Used to know what keys have been validated and conformed.
+		foreach($newschema['indexes'] as $idx => $columns){
+			
+			// Damn negatives for variables.... 1 means that it's NOT unique, ie: a standard key.
+			$nonunique = (!(strpos('unique:', $idx) === 0 || $idx == 'primary'));
+			
 			// Ensure that idxdef['column'] is an array if it's not.
-			if(!is_array($idxdef['column'])) $idxdef['column'] = array($idxdef['column']);
-			// @todo do all the indexes here.
-			if($idxdef['name'] == 'PRIMARY'){
-				$name = 'PRIMARY KEY';
+			if(!is_array($columns)) $columns = array($columns);
+			
+			// Figure out the names for this so I only have to have the logic executed once.
+			if($idx == 'primary'){
+				$idxkey = 'PRIMARY';
+				$idxname = 'PRIMARY KEY';
+				$idxdropname = 'PRIMARY KEY';
 			}
-			elseif($idxdef['nonunique'] == 0){
-				$name = 'UNIQUE `' . $idxdef['name'] . '`';
+			elseif($nonunique){
+				$idxkey = $idx;
+				$idxname = 'KEY ' . $idxkey;
+				$idxdropname = 'INDEX ' . $idxkey;
 			}
 			else{
-				$name = 'INDEX `' . $idxdef['name'] . '`';
+				$idxkey = substr($idx, 7);
+				$idxname = 'UNIQUE KEY ' . $idxkey; // Create requires the UNIQUE flag, but
+				$idxdropname = 'INDEX ' . $idxkey; // Drop does not require it.
 			}
-
-			if(!isset($schema[$idxdef['name']])){
-				$this->_rawExecute('ALTER TABLE `_tmptable` ADD ' . $name . ' (`' . implode('`, `', $idxdef['column']) . '`)');
+			
+			
+			// These are the index creates/modifies.
+			if(!isset($schema[$idxkey])){
+				// Doesn't exist, create it.
+				$this->_rawExecute('ALTER TABLE `_tmptable` ADD ' . $idxname . ' (`' . implode('`, `', $columns) . '`)');
+				$keysgood[] = $idxkey;
 				$schema = $this->_describeTableIndexes('_tmptable');
 			}
-			// There can only be 1!
-			elseif(sizeof(array_diff($idxdef['column'], $schema[$idxdef['name']]['columns']))){
-				$this->_rawExecute('ALTER TABLE `_tmptable` DROP ' . $name . ', ADD ' . $name . ' (`' . implode('`, `', $idxdef['column']) . '`)');
+			elseif(
+				$schema[$idxkey]['columns'] != $columns ||
+				$nonunique != ($schema[$idxkey]['nonunique'])
+			){
+				// Rebuild it.
+				$this->_rawExecute('ALTER TABLE `_tmptable` DROP ' . $idxdropname . '');
+				$this->_rawExecute('ALTER TABLE `_tmptable` ADD ' . $idxname . ' (`' . implode('`, `', $columns) . '`)');
+				$keysgood[] = $idxkey;
 				$schema = $this->_describeTableIndexes('_tmptable');
 			}
+			else{
+				// PK Matches, nothing needs to be done.
+				$keysgood[] = $idxkey;
+			}
+			
+			// And the key deletions.
+			foreach($schema as $idx => $val){
+				if(!in_array($idx, $keysgood)){
+					// DROP IT!
+					$this->_rawExecute('ALTER TABLE `_tmptable` DROP INDEX ' . $idx . '');
+				}
+			}
+			
 		} // foreach($this->getElementFrom('index', $tblnode, false) as $idxnode)
 
 

@@ -142,6 +142,7 @@ catch(Exception $e){
 	$dbinfo = ConfigHandler::LoadConfigFile('db');
 	$dbuser = $dbinfo['user'];
 	$dbname = $dbinfo['name'];
+	$dbpass = $dbinfo['pass'];
 
 	// Different connection backends will have different instructions.
 	switch($dbinfo['type']){
@@ -170,8 +171,8 @@ for the default site datamodel store.  If this is incorrect, please correct this
 <em>before</em> proceeding.  Otherwise... please verify that the settings in 
 config/core.xml and config/db.xml are as desired and continue.</p>
 
-<p>Please execute the following commands with mysql or another interface.</p>
-<pre>CREATE USER '$dbuser' IDENTIFIED BY 'the.password.in.db.xml';
+<p>Please execute the following commands with mysql or another interface, (like phpMyAdmin or toad).</p>
+<pre>CREATE USER '$dbuser' IDENTIFIED BY '$dbpass';
 CREATE DATABASE IF NOT EXISTS $dbname;
 GRANT ALL ON $dbname.* TO '$dbuser';
 FLUSH PRIVILEGES;
