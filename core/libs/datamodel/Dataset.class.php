@@ -46,7 +46,7 @@ class Dataset {
 		if(!$interface) $interface = DMI::GetSystemDMI();
 		
 		// This actually goes the other way, as the interface has the logic.
-		return $interface->execute($this);
+		return $interface->connection()->execute($this);
 	}
 }
 

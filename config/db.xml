@@ -21,7 +21,7 @@
 	
 	<return name="name" type="string">
 		<defaultValue>db_name</defaultValue>
-			<value>db_name</value>
+			<value>db_name_build20110608</value>
 	</return>
 	
 	<return name="user" type="string">

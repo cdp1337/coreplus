@@ -24,8 +24,19 @@ class DMI_mysqli_backend implements DMI_Backend {
 		if(strpos($host, ':') !== false) list($host, $port) = explode(':', $host);
 		else $port = 3306;
 		
+		if(!class_exists('mysqli')){
+			throw new DMI_Exception('Unable to locate the PHP MySQLi library.  Please switch to a supported driver or see http://us3.php.net/manual/en/book.mysqli.php for more information.');
+		}
+		
 		$this->_conn = new mysqli();
-		$this->_conn->real_connect($host, $user, $pass, $database, $port);
+		
+		// Errors, SHHH!  I'll handle them manually!
+		@$this->_conn->real_connect($host, $user, $pass, $database, $port);
+		
+		if($this->_conn->errno){
+			throw new DMI_Exception($this->_conn->error, null, null, $this->_conn->errno);
+		}
+		
 		
 		return ($this->_conn);
 	}
