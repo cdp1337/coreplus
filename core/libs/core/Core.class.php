@@ -28,51 +28,8 @@ class Core implements ISingleton{
 	 */
 	private $_profiletimes = array();
 	
-	private function __construct(){
-		//$this->load();
-		$this->_componentobj = new Component('core');
-		//$this->_componentobj->load();
-		//var_dump($this->_componentobj); die();
-	}
 	
-	private function _addProfileTime($event, $microtime = null){
-		// If no microtime requested, grab the current.
-		if($microtime === null) $microtime = microtime(true);
-		// Find the differences between the first and now.
-		$time = (sizeof($this->_profiletimes))? ($microtime - $this->_profiletimes[0]['microtime']) : 0;
-		
-		// And record!
-		$this->_profiletimes[] = array(
-			'event' => $event,
-			'microtime' => $microtime,
-			'timetotal' => $time
-		);
-	}
-	
-	public static function AddProfileTime($event, $microtime = null){
-		self::Singleton()->_addProfileTime($event, $microtime);
-	}
-	
-	public static function GetProfileTimeTotal(){
-		$microtime = microtime(true);
-		// Find the differences between the first and now.
-		return (sizeof(self::Singleton()->_profiletimes))? ($microtime - self::Singleton()->_profiletimes[0]['microtime']) : 0;
-	}
-	
-	/**
-	 * Get the component object for the core.
-	 * @return Component
-	 */
-	public static function GetComponent(){
-		return self::Singleton()->_componentobj;
-	}
-	
-	public static function Singleton(){
-		if(is_null(self::$instance)) self::$instance = new self();
-		return self::$instance;
-	}
-	
-	public static function GetInstance(){ return self::Singleton(); }
+	/*****     PUBLIC METHODS       *********/
 	
 	
 	public function load(){
@@ -161,31 +118,6 @@ class Core implements ISingleton{
 		return array();
 	}
 	
-	public static function _LoadFromDatabase(){
-		if(!self::GetComponent()->load()){
-			// Guess the core isn't installed.  If it's in development mode install it!
-			if(DEVELOPMENT_MODE){
-				self::GetComponent()->install();
-				die('Installed core!  <a href="' . ROOT_WDIR . '">continue</a>');
-			}
-			else{
-				die('There was a server error, please notify the administrator of this.');
-			}
-		}
-		return;
-		/*
-		// Retrieve some information from the database when it becomes available.
-		$q = @DB::Execute("SELECT `version` FROM `" . DB_PREFIX . "component` WHERE `name` = 'Core'");
-		if(!$q) return;
-		if($q->numRows() > 0){
-			Core::Singleton()->versionDB = $q->fields['version'];
-		}
-		else{
-			Core::Singleton()->versionDB = false;
-		}
-		 */
-	}
-	
 	public function install(){
 	
 		if($this->_isInstalled()) return;
@@ -225,6 +157,34 @@ class Core implements ISingleton{
 		}
 	}
 	
+	
+	
+	/******      PRIVATE METHODS     *******/
+	
+	
+	
+	private function __construct(){
+		//$this->load();
+		$this->_componentobj = new Component('core');
+		//$this->_componentobj->load();
+		//var_dump($this->_componentobj); die();
+	}
+	
+	private function _addProfileTime($event, $microtime = null){
+		// If no microtime requested, grab the current.
+		if($microtime === null) $microtime = microtime(true);
+		// Find the differences between the first and now.
+		$time = (sizeof($this->_profiletimes))? ($microtime - $this->_profiletimes[0]['microtime']) : 0;
+		
+		// And record!
+		$this->_profiletimes[] = array(
+			'event' => $event,
+			'microtime' => $microtime,
+			'timetotal' => $time
+		);
+	}
+	
+	
 	private function _isInstalled(){
 		//var_dump($this->_componentobj, $this->_componentobj->getVersion()); die();
 		return ($this->_componentobj->getVersionInstalled() === false)? false : true;
@@ -233,6 +193,77 @@ class Core implements ISingleton{
 	private function _needsUpdated(){
 		return ($this->_componentobj->getVersionInstalled() != $this->_componentobj->getVersion());
 	}
+	
+	
+	
+	
+	
+	
+	/*****      PUBLIC STATIC METHODS       *******/
+	
+	
+	/**
+	 * Shortcut function to get the current system database/datamodel interface.
+	 * 
+	 * @return DMI_Interface
+	 */
+	public static function DB(){
+		return DMI::GetSystemDMI()->connection();
+	}
+	
+	
+	
+	public static function AddProfileTime($event, $microtime = null){
+		self::Singleton()->_addProfileTime($event, $microtime);
+	}
+	
+	public static function GetProfileTimeTotal(){
+		$microtime = microtime(true);
+		// Find the differences between the first and now.
+		return (sizeof(self::Singleton()->_profiletimes))? ($microtime - self::Singleton()->_profiletimes[0]['microtime']) : 0;
+	}
+	
+	/**
+	 * Get the component object for the core.
+	 * @return Component
+	 */
+	public static function GetComponent(){
+		return self::Singleton()->_componentobj;
+	}
+	
+	public static function Singleton(){
+		if(is_null(self::$instance)) self::$instance = new self();
+		return self::$instance;
+	}
+	
+	public static function GetInstance(){ return self::Singleton(); }
+	
+	
+	public static function _LoadFromDatabase(){
+		if(!self::GetComponent()->load()){
+			// Guess the core isn't installed.  If it's in development mode install it!
+			if(DEVELOPMENT_MODE){
+				self::GetComponent()->install();
+				die('Installed core!  <a href="' . ROOT_WDIR . '">continue</a>');
+			}
+			else{
+				die('There was a server error, please notify the administrator of this.');
+			}
+		}
+		return;
+		/*
+		// Retrieve some information from the database when it becomes available.
+		$q = @DB::Execute("SELECT `version` FROM `" . DB_PREFIX . "component` WHERE `name` = 'Core'");
+		if(!$q) return;
+		if($q->numRows() > 0){
+			Core::Singleton()->versionDB = $q->fields['version'];
+		}
+		else{
+			Core::Singleton()->versionDB = false;
+		}
+		 */
+	}
+	
 	
 	public static function IsInstalled(){
 		return Core::Singleton()->_isInstalled();
@@ -465,8 +496,6 @@ class Core implements ISingleton{
 
 		return $sorted_records;
 	}
-
-
 
 
 	/**

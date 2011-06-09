@@ -88,6 +88,9 @@
 			<provides type="class" name="_smarty_text"/>
 			<provides type="class" name="_smarty_linebreak"/>
 		</file>
+		<file filename="core/libs/core/ConfigModel.class.php">
+			<provides type="class" name="ConfigModel"/>
+		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_append.php" md5="10db44dbab4a83128fc833a4e8b97f45">
 			<provides type="class" name="Smarty_Internal_Compile_Append"/>
 		</file>
@@ -254,6 +257,9 @@
 			<provides type="class" name="Smarty_Internal_Compile_Sectionelse"/>
 			<provides type="class" name="Smarty_Internal_Compile_Sectionclose"/>
 		</file>
+		<file filename="core/libs/core/WidgetInstanceModel.class.php" md5="85e5c07254a0619433a54dc44f0f15f8">
+			<provides type="class" name="WidgetInstanceModel"/>
+		</file>
 		<file filename="core/libs/core/Theme.class.php" md5="bcc44cd202b26cba4bf42ef71928a576">
 			<provides type="class" name="Theme"/>
 		</file>
@@ -282,7 +288,7 @@
 		<file filename="core/libs/core/File.class.php" md5="682d6b1eec5c758202466e397fc00350">
 			<provides type="class" name="File"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="e83cfba48a1ecd1cafd5ec11757949da">
+		<file filename="core/libs/core/Form.class.php" md5="82a33696bc62e7a16a602c7828a8828a">
 			<provides type="class" name="FormGroup"/>
 			<provides type="class" name="FormElement"/>
 			<provides type="class" name="Form"/>
@@ -310,13 +316,14 @@
 		<file filename="core/libs/core/IFile.interface.php" md5="6a15055b926bcdd9f5ba444a1a416100">
 			<provides type="interface" name="IFile"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="05c4de03a79639e5e3969d18ae8b090d">
+		<file filename="core/libs/core/View.class.php" md5="9d205f7a27e8eaf37f48ae2bc10c70d3">
 			<provides type="class" name="View"/>
+			<provides type="class" name="ViewException"/>
 		</file>
 		<file filename="core/libs/core/ISingleton.interface.php" md5="4812be45e675d1856a952cb402c885eb">
 			<provides type="interface" name="ISingleton"/>
 		</file>
-		<file filename="core/libs/core/WidgetModel.class.php" md5="c7ddfb3e52c8d2f12b27c45d5081e84b">
+		<file filename="core/libs/core/WidgetModel.class.php" md5="5a91025caeb3f62145b8879ec4a76253">
 			<provides type="class" name="WidgetModel"/>
 		</file>
 		<file filename="core/libs/core/Core.class.php" md5="946d49e86022e5f7eb3a687da2775810">
@@ -334,7 +341,7 @@
 		<file filename="core/libs/core/Time.class.php" md5="8fb01c34bb263765e3d13effdd04c6bd">
 			<provides type="class" name="Time"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="9e7301723101d679a108b5e56a73a9f1">
+		<file filename="core/libs/core/Model.class.php" md5="de4bf31c0fbbacdc9b132bd4c93ec733">
 			<provides type="class" name="Model"/>
 			<provides type="class" name="ModelFactory"/>
 		</file>
@@ -358,16 +365,16 @@
 		<file filename="core/libs/core/ThemeHandler.class.php" md5="2db7ed24faaa0004f3d0ea33bf9cdae1">
 			<provides type="class" name="ThemeHandler"/>
 		</file>
-		<file filename="core/libs/core/CurrentPage.class.php" md5="3db83b08f33e7d14d9c505ec5017f6cb">
+		<file filename="core/libs/core/CurrentPage.class.php" md5="117663f0248aebacd13cbd9d1bf26cf4">
 			<provides type="class" name="CurrentPage"/>
 		</file>
 		<file filename="core/libs/core/InstallTask.class.php" md5="aff7379efc097dd3783833b91d391aea">
 			<provides type="class" name="InstallTask"/>
 		</file>
-		<file filename="core/libs/core/ComponentHandler.class.php" md5="a98470f65cb83deaca94bb6172e8a3cc">
+		<file filename="core/libs/core/ComponentHandler.class.php" md5="c6fbba66ad9290632f50b83c04afba81">
 			<provides type="class" name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/DB.class.php" md5="3e16cd9418e364ff4c82434033b94420">
+		<file filename="core/libs/core/DB.class.php" md5="5e44fd6dab5f67139d16710604a9a6fc">
 			<provides type="class" name="DB"/>
 		</file>
 		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlDumper.php" md5="28196a0efdcea67d72e1eaf71e936958">
@@ -508,6 +515,172 @@
 		</file>
 		<file filename="core/libs/aws-sdk/_samples/lib/ProgressBar.php" md5="b7af80295476f281425cfe6095cfcfde">
 			<provides type="class" name="Console_ProgressBar"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/transport/TPhpStream.php" md5="7862beac54fc21ae4d2d30ff98aca353">
+			<provides type="class" name="TPhpStream"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/transport/TMemoryBuffer.php" md5="a7f2f9951bd965578926eab93798fdc4">
+			<provides type="class" name="TMemoryBuffer"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/transport/TBufferedTransport.php" md5="29ad92e05b3dd7c9dc8a41e2e8a26b62">
+			<provides type="class" name="TBufferedTransport"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/transport/TServerSocket.php" md5="79223ea1bb7225374365277202a02562">
+			<provides type="class" name="TServerSocket"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/transport/TTransportFactory.php" md5="c3ddb6d18771dd873d785875ffbf9179">
+			<provides type="class" name="TTransportFactory"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/transport/TNullTransport.php" md5="34d14bc6411ff96561f4acdb1f4176ff">
+			<provides type="class" name="TNullTransport"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/transport/TSocket.php" md5="4ee33f2052f5e2bb380393e6e7f34b4d">
+			<provides type="class" name="TSocket"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/transport/TTransport.php" md5="0ed9cae8b94cba3a76daf52de00a8d54">
+			<provides type="class" name="TTransportException"/>
+			<provides type="class" name="TTransport"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/transport/TSocketPool.php" md5="5bcc1d6dc794cc0dbecbff89fdf5571a">
+			<provides type="class" name="TSocketPool"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/transport/TFramedTransport.php" md5="a6af4768d74986b4bf512c20ff0f2ebe">
+			<provides type="class" name="TFramedTransport"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/transport/TServerTransport.php" md5="f778a85bc8fc52e752a7b88b4b9088a7">
+			<provides type="class" name="TServerTransport"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/transport/THttpClient.php" md5="890dbc43471e9e799cec6f5dafb037a5">
+			<provides type="class" name="THttpClient"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/packages/cassandra/Cassandra.php" md5="a08814c3226458b10489530d0b0b61a3">
+			<provides type="class" name="CassandraClient"/>
+			<provides type="class" name="cassandra_Cassandra_login_args"/>
+			<provides type="class" name="cassandra_Cassandra_login_result"/>
+			<provides type="class" name="cassandra_Cassandra_set_keyspace_args"/>
+			<provides type="class" name="cassandra_Cassandra_set_keyspace_result"/>
+			<provides type="class" name="cassandra_Cassandra_get_args"/>
+			<provides type="class" name="cassandra_Cassandra_get_result"/>
+			<provides type="class" name="cassandra_Cassandra_get_slice_args"/>
+			<provides type="class" name="cassandra_Cassandra_get_slice_result"/>
+			<provides type="class" name="cassandra_Cassandra_get_count_args"/>
+			<provides type="class" name="cassandra_Cassandra_get_count_result"/>
+			<provides type="class" name="cassandra_Cassandra_multiget_slice_args"/>
+			<provides type="class" name="cassandra_Cassandra_multiget_slice_result"/>
+			<provides type="class" name="cassandra_Cassandra_multiget_count_args"/>
+			<provides type="class" name="cassandra_Cassandra_multiget_count_result"/>
+			<provides type="class" name="cassandra_Cassandra_get_range_slices_args"/>
+			<provides type="class" name="cassandra_Cassandra_get_range_slices_result"/>
+			<provides type="class" name="cassandra_Cassandra_get_indexed_slices_args"/>
+			<provides type="class" name="cassandra_Cassandra_get_indexed_slices_result"/>
+			<provides type="class" name="cassandra_Cassandra_insert_args"/>
+			<provides type="class" name="cassandra_Cassandra_insert_result"/>
+			<provides type="class" name="cassandra_Cassandra_remove_args"/>
+			<provides type="class" name="cassandra_Cassandra_remove_result"/>
+			<provides type="class" name="cassandra_Cassandra_batch_mutate_args"/>
+			<provides type="class" name="cassandra_Cassandra_batch_mutate_result"/>
+			<provides type="class" name="cassandra_Cassandra_truncate_args"/>
+			<provides type="class" name="cassandra_Cassandra_truncate_result"/>
+			<provides type="class" name="cassandra_Cassandra_describe_schema_versions_args"/>
+			<provides type="class" name="cassandra_Cassandra_describe_schema_versions_result"/>
+			<provides type="class" name="cassandra_Cassandra_describe_keyspaces_args"/>
+			<provides type="class" name="cassandra_Cassandra_describe_keyspaces_result"/>
+			<provides type="class" name="cassandra_Cassandra_describe_cluster_name_args"/>
+			<provides type="class" name="cassandra_Cassandra_describe_cluster_name_result"/>
+			<provides type="class" name="cassandra_Cassandra_describe_version_args"/>
+			<provides type="class" name="cassandra_Cassandra_describe_version_result"/>
+			<provides type="class" name="cassandra_Cassandra_describe_ring_args"/>
+			<provides type="class" name="cassandra_Cassandra_describe_ring_result"/>
+			<provides type="class" name="cassandra_Cassandra_describe_partitioner_args"/>
+			<provides type="class" name="cassandra_Cassandra_describe_partitioner_result"/>
+			<provides type="class" name="cassandra_Cassandra_describe_snitch_args"/>
+			<provides type="class" name="cassandra_Cassandra_describe_snitch_result"/>
+			<provides type="class" name="cassandra_Cassandra_describe_keyspace_args"/>
+			<provides type="class" name="cassandra_Cassandra_describe_keyspace_result"/>
+			<provides type="class" name="cassandra_Cassandra_describe_splits_args"/>
+			<provides type="class" name="cassandra_Cassandra_describe_splits_result"/>
+			<provides type="class" name="cassandra_Cassandra_system_add_column_family_args"/>
+			<provides type="class" name="cassandra_Cassandra_system_add_column_family_result"/>
+			<provides type="class" name="cassandra_Cassandra_system_drop_column_family_args"/>
+			<provides type="class" name="cassandra_Cassandra_system_drop_column_family_result"/>
+			<provides type="class" name="cassandra_Cassandra_system_add_keyspace_args"/>
+			<provides type="class" name="cassandra_Cassandra_system_add_keyspace_result"/>
+			<provides type="class" name="cassandra_Cassandra_system_drop_keyspace_args"/>
+			<provides type="class" name="cassandra_Cassandra_system_drop_keyspace_result"/>
+			<provides type="class" name="cassandra_Cassandra_system_update_keyspace_args"/>
+			<provides type="class" name="cassandra_Cassandra_system_update_keyspace_result"/>
+			<provides type="class" name="cassandra_Cassandra_system_update_column_family_args"/>
+			<provides type="class" name="cassandra_Cassandra_system_update_column_family_result"/>
+			<provides type="interface" name="CassandraIf"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/packages/cassandra/cassandra_types.php" md5="2447354cc84e716506374cf518a991e3">
+			<provides type="class" name="cassandra_ConsistencyLevel"/>
+			<provides type="class" name="cassandra_IndexOperator"/>
+			<provides type="class" name="cassandra_IndexType"/>
+			<provides type="class" name="cassandra_Column"/>
+			<provides type="class" name="cassandra_SuperColumn"/>
+			<provides type="class" name="cassandra_ColumnOrSuperColumn"/>
+			<provides type="class" name="cassandra_NotFoundException"/>
+			<provides type="class" name="cassandra_InvalidRequestException"/>
+			<provides type="class" name="cassandra_UnavailableException"/>
+			<provides type="class" name="cassandra_TimedOutException"/>
+			<provides type="class" name="cassandra_AuthenticationException"/>
+			<provides type="class" name="cassandra_AuthorizationException"/>
+			<provides type="class" name="cassandra_ColumnParent"/>
+			<provides type="class" name="cassandra_ColumnPath"/>
+			<provides type="class" name="cassandra_SliceRange"/>
+			<provides type="class" name="cassandra_SlicePredicate"/>
+			<provides type="class" name="cassandra_IndexExpression"/>
+			<provides type="class" name="cassandra_IndexClause"/>
+			<provides type="class" name="cassandra_KeyRange"/>
+			<provides type="class" name="cassandra_KeySlice"/>
+			<provides type="class" name="cassandra_KeyCount"/>
+			<provides type="class" name="cassandra_Deletion"/>
+			<provides type="class" name="cassandra_Mutation"/>
+			<provides type="class" name="cassandra_TokenRange"/>
+			<provides type="class" name="cassandra_AuthenticationRequest"/>
+			<provides type="class" name="cassandra_ColumnDef"/>
+			<provides type="class" name="cassandra_CfDef"/>
+			<provides type="class" name="cassandra_KsDef"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/Thrift.php" md5="38e4f20321bc4d07f8ddde0859949c3a">
+			<provides type="class" name="TType"/>
+			<provides type="class" name="TMessageType"/>
+			<provides type="class" name="TException"/>
+			<provides type="class" name="TBase"/>
+			<provides type="class" name="TApplicationException"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/protocol/TBinarySerializer.php" md5="32eda29932063dba4ed75bdaaf419b8e">
+			<provides type="class" name="TBinarySerializer"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/protocol/TProtocol.php" md5="946f288d0939f2f7eb8c3c2eafae5d89">
+			<provides type="class" name="TProtocolException"/>
+			<provides type="class" name="TProtocol"/>
+			<provides type="interface" name="TProtocolFactory"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/protocol/TBinaryProtocol.php" md5="96576e9e8519a6d9324b0e2f3e01f2ee">
+			<provides type="class" name="TBinaryProtocol"/>
+			<provides type="class" name="TBinaryProtocolFactory"/>
+			<provides type="class" name="TBinaryProtocolAccelerated"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/uuid.php" md5="e18fff7e213a2d00ce0ee67782b7b774">
+			<provides type="class" name="UUID"/>
+			<provides type="class" name="UUIDException"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/connection.php" md5="8b74a4725cbaba42c1571d5e30a939c9">
+			<provides type="class" name="NoServerAvailable"/>
+			<provides type="class" name="IncompatibleAPIException"/>
+			<provides type="class" name="MaxRetriesException"/>
+			<provides type="class" name="ConnectionWrapper"/>
+			<provides type="class" name="ConnectionPool"/>
+			<provides type="class" name="Connection"/>
+		</file>
+		<file filename="core/libs/phpcassa-0.7.a.4/columnfamily.php" md5="1737cba1a62b1c85653c9065d8c4adfe">
+			<provides type="class" name="CassandraUtil"/>
+			<provides type="class" name="ColumnFamily"/>
+			<provides type="class" name="ColumnFamilyIterator"/>
+			<provides type="class" name="RangeColumnFamilyIterator"/>
+			<provides type="class" name="IndexedColumnFamilyIterator"/>
 		</file>
 		<file filename="core/libs/phpass/PasswordHash.php" md5="f7b1f77efb5fde33917083ab2192e75d">
 			<provides type="class" name="PasswordHash"/>
@@ -867,7 +1040,7 @@
 		<file filename="core/controllers/AdminController.php" md5="f521f24e858a961887513448c068f4fa">
 			<provides type="controller" name="AdminController"/>
 		</file>
-		<file filename="core/controllers/WidgetController.class.php" md5="7afd4a0301fe5f8b07a27d05380ffb80">
+		<file filename="core/controllers/WidgetController.class.php" md5="48d30b322eed7eb689f7f4d8775c9862">
 			<provides type="controller" name="WidgetController"/>
 		</file>
 		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
@@ -880,7 +1053,9 @@
 	<view searchdir="core/templates">
 		<file filename="core/templates/pages/error/error404.tpl" md5="2b6ad918a5cb9d960e5670fa16761162"/>
 		<file filename="core/templates/pages/error/error500.tpl" md5="128c99e44e5f3aaf741d9ee9a7011b3e"/>
-		<file filename="core/templates/widgets/admin/menu.tpl" md5="2780a2aafc1e2c3269fe6dc49c1f543e"/>
+		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
+		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
+		<file filename="core/templates/widgets/admin/menu.tpl" md5="3bd5f6b3d939c4928842ea0f5cc6bf61"/>
 		<file filename="core/templates/forms/form.tpl" md5="2910e3a5d1cc14ff87bfea0a15c927ce"/>
 		<file filename="core/templates/forms/form.foot.tpl" md5="6e6d3353848b64921070b812c7c99936"/>
 		<file filename="core/templates/forms/form.body.tpl" md5="8ab5bcc9f1307da533c72b3d18113a74"/>
@@ -901,11 +1076,12 @@
 		<file filename="core/templates/forms/elements/radio.tpl" md5="976a3f259f0757f64c8279020377f36e"/>
 		<file filename="core/templates/forms/elements/file.tpl" md5="90e30e0242238cee016d8b30571e9ac1"/>
 		<file filename="core/templates/forms/groups/default.tpl" md5="7a6fa4a3c2303dd4e07c98aee5d57db1"/>
+		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
 	</view>
 	<install/>
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
-			<date>Sun, 27 Mar 2011 20:38:57 -0400</date>
+			<date>Sun, 22 May 2011 02:00:52 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
@@ -1065,8 +1241,10 @@
 		<file filename="core/libs/cachecore/_tests/test_request.txt" md5="44daf28deeecb35cbe53e6af784082e9"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="5df1078564ecb59c547531218c684374"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>
-		<file filename="core/libs/smarty-plugins/function.widget.php" md5="efee56afd71540793fa9ad94d9c63662"/>
-		<file filename="core/libs/smarty-plugins/function.script.php" md5="fff11b9cdf71f4cd7120d0edbd70761a"/>
+		<file filename="core/libs/smarty-plugins/function.widget.php" md5="5ab4be1d83a3ddac67094ca670fe721b"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="1621c445a086fdd03bbd44564becd9b9"/>
+		<file filename="core/libs/smarty-plugins/block.script.php" md5="9ea92ef8d9f62bc176ae199bdbd63c6b"/>
+		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="0675deafa3f09a4cbe5a4f8f35d61ab2"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="ee67260eea6c696b8634a593cece14bd"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="800e464e8bae160ad7aba53d63ab78c8"/>
@@ -1142,6 +1320,16 @@
 		<file filename="core/libs/aws-sdk/_docs/CHANGELOG.md" md5="a8a20953f58a3be68b01ef825d52b936"/>
 		<file filename="core/libs/aws-sdk/config-sample.inc.php" md5="64903e5db2d65fd103a4b4f8c9c91d5d"/>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
+		<file filename="core/libs/phpcassa-0.7.a.4/README.mkd" md5="fc4ba805cbfbbfc9a7e87484a10c823b"/>
+		<file filename="core/libs/phpcassa-0.7.a.4/AUTHORS" md5="c0722ecbe902d4770f9e17b43db3d8e6"/>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/ext/thrift_protocol/php_thrift_protocol.cpp" md5="68afba6d36b9ceb0dbf9c2a8efdb2b0c"/>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/ext/thrift_protocol/php_thrift_protocol.h" md5="3972e26403d22e6c4c3235f9840b6176"/>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/ext/thrift_protocol/config.m4" md5="a493ce66388c698cc2cf26ff73e1dc4d"/>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/packages/cassandra/cassandra_constants.php" md5="5ead52dd649285c8c8d9de14944d6e61"/>
+		<file filename="core/libs/phpcassa-0.7.a.4/thrift/autoload.php" md5="7ffd1e5fb8bf906cf0d8843117ae3ac9"/>
+		<file filename="core/libs/phpcassa-0.7.a.4/LICENSE" md5="f7a55fbb7aaf9aa2771bb0d7a9556f54"/>
+		<file filename="core/libs/phpcassa-0.7.a.4/INSTALLING" md5="045fa051387023d98e4b8f6df1e939ff"/>
+		<file filename="core/libs/phpcassa-0.7.a.4/CHANGES" md5="13d7743013d98276f645cc884cd39912"/>
 		<file filename="core/libs/adodb5/xmlschema03.dtd" md5="1cd47a61a1edb4da944b23a6fe59bd2a"/>
 		<file filename="core/libs/adodb5/adodb-errorpear.inc.php" md5="7ab4957859c051ba7401fa1f1dc60d3b"/>
 		<file filename="core/libs/adodb5/drivers/adodb-proxy.inc.php" md5="3505ce7b12fa571ba35d12ca5a595237"/>
@@ -1253,7 +1441,7 @@
 		<file filename="core/libs/adodb5/pear/readme.Auth.txt" md5="497018d573a00f8e9c6881907cac4a63"/>
 		<file filename="core/libs/adodb5/adodb-time.inc.php" md5="2ef85aecdab2c9479fb0726fd54c5c7a"/>
 		<file filename="core/libs/adodb5/contrib/toxmlrpc.inc.php" md5="8a022e02714ce3186f310cc65d936ad5"/>
-		<file filename="core/bootstrap.php" md5="5034cd492944ccac6cb6e5776243b56e"/>
+		<file filename="core/bootstrap.php" md5="12570b5a058c7ee07a2a2e4ff15a0a64"/>
 		<file filename="packager.php" md5="10a16d8ae884ce4be0073f2ff5698542"/>
 		<file filename="index.php" md5="889f67bd60efea0e26b5704a4ed67706"/>
 	</otherfiles>
@@ -1674,6 +1862,26 @@
 				<default xsi:nil="true"/>
 				<extra></extra>
 				<comment></comment>
+			</column>
+			<column>
+				<field>title</field>
+				<type>varchar(128)</type>
+				<collation>latin1_swedish_ci</collation>
+				<null>NO</null>
+				<key></key>
+				<default xsi:nil="true"/>
+				<extra></extra>
+				<comment>[cached]</comment>
+			</column>
+			<column>
+				<field>access</field>
+				<type>varchar(512)</type>
+				<collation>latin1_swedish_ci</collation>
+				<null>NO</null>
+				<key></key>
+				<default>*</default>
+				<extra></extra>
+				<comment>[cached]</comment>
 			</column>
 			<column>
 				<field>created</field>

@@ -20,8 +20,16 @@ class SQLBuilder {
 
 	}
 
-	public function query(){
-		// Extend this method in the particular builder type.
+	public function query($engine = null){
+		/*if(!$engine) */$engine = DB::GetConn()->databaseType;
+		
+		switch($engine){
+			case 'cassandra':
+				return $this->_query_cassandra();
+				break;
+			default:
+				return $this->_query_mysql();
+		}
 	}
 
 	public function execute(){
@@ -95,8 +103,9 @@ class SQLBuilderSelect extends SQLBuilder{
 	protected $_order = array();
 	
 	protected $_joins = array();
+	
 
-	public function query(){
+	protected function _query_mysql(){
 		$q = "SELECT " . implode(', ', $this->_selects);
 		$q .= " FROM " . implode(', ', $this->_tables);
 		if(!empty($this->_wheres)) $q .= ' WHERE ' . implode(' AND ', $this->_wheres);
@@ -108,6 +117,13 @@ class SQLBuilderSelect extends SQLBuilder{
 		if(!empty($this->_order)) $q .= ' ORDER BY ' . implode(', ', $this->_order);
 		if($this->_limit) $q .= ' LIMIT ' . $this->_limit;
 		return $q;
+	}
+	
+	protected function _query_cassandra(){
+		if(sizeof($this->_tables) > 1) throw new Exception('Cassandra does not support joins.  Please either change your code or use an RDBMS.');
+		
+		$dat = new ColumnFamily(DB::GetConn()->getBackend());
+		var_dump($this, $this->_query_mysql()); die();
 	}
 
 	public function select($select){

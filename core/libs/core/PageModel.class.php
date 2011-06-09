@@ -10,6 +10,22 @@
  * @author powellc
  */
 class PageModel extends Model{
+	
+	protected $_schema = array(
+		'baseurl' => array(),
+		'rewriteurl' => array(),
+		'parenturl' => array(),
+		'title' => array(),
+		'metas' => array(),
+		'theme_template' => array(),
+		'page_template' => array(),
+		'access' => array(),
+		'fuzzy' => array(),
+		'widget' => array(),
+		'admin' => array(),
+		'created' => array(),
+		'updated' => array(),
+	);
 
 	private $_class;
 	private $_method;

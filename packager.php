@@ -43,8 +43,7 @@ $_cversions = null;
  * @param $options //folderPermission,filePermission
  * @return boolean
  */
-function smartCopy($source, $dest, $options=array('folderPermission'=>0755,'filePermission'=>0755))
-{
+function smartCopy($source, $dest, $options=array('folderPermission'=>0755,'filePermission'=>0755)){
     $result=false;
    
     if (is_file($source)) {
@@ -110,8 +109,7 @@ function smartCopy($source, $dest, $options=array('folderPermission'=>0755,'file
  * @param array $array
  * @return array
  */
-function arrayUnique($array, $preserveKeys = false)
-{
+function arrayUnique($array, $preserveKeys = false){
     // Unique Array for return
     $arrayRewrite = array();
     // Array with the md5 hashes

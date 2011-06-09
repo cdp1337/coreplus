@@ -102,8 +102,12 @@ class WidgetModel extends Model{
 			$this->_view->setParameters($this->getParameters());
 			$this->_view->templatename = $this->getTemplateName();
 			$this->_view->mode = View::MODE_WIDGET;
+			$this->_view->mastertemplate = 'default/container.tpl';
 			// These views don't actually have master templates, as they're just stub HTML bits.
 			//$this->_view->mastertemplate = ($this->get('template'))? $this->get('template') : ConfigHandler::GetValue('/core/theme/default_template');
+			
+			// Set some information so the template can relate back to this object if needed.
+			$this->_view->assignVariable('widget', $this);
 		}
 		
 		return $this->_view;
@@ -134,6 +138,7 @@ class WidgetModel extends Model{
 		}
 
 		$r = call_user_func(array($c, $m), $transport);
+		//var_dump($transport); die();
 
 		// Multiple return values can be accepted.
 		// nothing, an error code, or the page.

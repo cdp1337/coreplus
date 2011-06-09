@@ -37,6 +37,10 @@ if(PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')){
 	die('This application cannot run with magic_quotes_gpc enabled, please disable them now!');
 }
 
+if(PHP_VERSION < '5.3.0'){
+	die('This application requires at least PHP 5.3 to run!');
+}
+
 // Start a timer for performance tuning purposes.
 // This will be saved into the Core once that's available.
 $start_time = microtime(true);
@@ -287,67 +291,23 @@ Core::AddProfileTime('predefines_complete', $predefines_time);
 Core::AddProfileTime('preincludes_complete', $preincludes_time);
 Core::AddProfileTime('maindefines_complete', $maindefines_time);
 
-// Database, GOGO!
-require_once(ROOT_PDIR . 'core/libs/core/DB.class.php');
-// Don't try to run the system if the database can't establish a connection!
-if(!DB::GetConn()){
+// Datamodel, GOGO!
+require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
+try{
+	$dbconn = DMI::GetSystemDMI();
+}
+catch(Exception $e){
 	// Couldn't establish connection... do something fun!
 	if(DEVELOPMENT_MODE){
-		
-		// @todo Move this somewhere else besides the bootstrap.
-		if(isset($_POST['__root_db_password_foo'])){
-			$dbinfo = ConfigHandler::LoadConfigFile('db');
-			$dbinfo['rootuser'] = 'root';
-			$dbinfo['rootpass'] = $_POST['__root_db_password_foo'];
-			
-			$cmds = array(
-				"CREATE USER '" . $dbinfo['user'] . "' IDENTIFIED BY '" . str_replace("'", "\\'", $dbinfo['pass']) . "'",
-				"CREATE DATABASE IF NOT EXISTS " . $dbinfo['name'] . "",
-				"GRANT ALL ON " . $dbinfo['name'] . ".* TO '" . $dbinfo['user'] . "'",
-				"FLUSH PRIVILEGES",
-			);
-			
-			switch($dbinfo['type']){
-				case 'mysql':
-					mysql_connect($dbinfo['server'] . ':' . $dbinfo['port'], $dbinfo['rootuser'], $dbinfo['rootpass']);
-					foreach($cmds as $c) mysql_query($c);
-					if(!mysql_errno()){
-						die('Executed appropriate commands successfully, please <a href="' . ROOT_WDIR . '">continue</a>');
-					}
-					break;
-				case 'mysqli':
-					$conn = new mysqli($dbinfo['server'], $dbinfo['rootuser'], $dbinfo['rootpass'], false, $dbinfo['port']);
-					if(mysqli_connect_error()){
-						echo "Unable to connect to root with supplied password!<br/>";
-					}
-					else{
-						foreach($cmds as $c) $conn->query($c);
-						if(!$conn->errno){
-							die('Executed appropriate commands successfully, please <a href="' . ROOT_WDIR . '">continue</a>');
-						}
-					}
-					break;
-			}
-		}
-		// @todo i18n
-		$html = <<<EOD
-<br/><b>Database connection could not be established!</b>
-<p>If you are the administrator of this site and have not setup the 
-database yet, please either grant your user access to the assigned 
-database, (as per the XML configurations), or enter your root password for 
-the database and the system will do the rest.</p>
-<form action="" method="POST">
-	<input type="password" name="__root_db_password_foo"/>
-	<input type="submit" value="Continue"/> (MySQL databases only)
-</form>
-EOD;
-		die($html);
+		header('Location: ' . ROOT_WDIR . 'install');
+		die();
 	}
 	else{
 		require(ROOT_PDIR . 'core/fatal_error.inc.html');
 		die();
 	}
 }
+
 
 HookHandler::DispatchHook('db_ready');
 unset($start_time, $predefines_time, $preincludes_time, $maindefines_time);

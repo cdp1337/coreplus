@@ -9,6 +9,7 @@ class Debug{
 		foreach($argv as $arg){
 			if($arg typeof 'Array') $out .= '<span class="cae2_debug_array">Array ' . 
 		}*/
-		echo "<div class='cae2_debug'>" . $text . "</div>"; 
+		if(EXEC_MODE == 'CLI') echo '[ DEBUG ] - ' . $text . "\n";
+		else echo "<div class='cae2_debug'>" . $text . "</div>"; 
 	}
 }

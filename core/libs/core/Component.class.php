@@ -919,265 +919,32 @@ class Component extends InstallArchiveAPI{
 		
 		
 		// Get the table structure as it exists in the database first, this will be the comparison point.
+		$classes = $this->getClassList();
+		foreach($classes as $k => $v){
+			if($k == 'Model' || strpos($k, 'Model') !== strlen($k) - 5) unset($classes[$k]);
+		}
 		
-		
-		// Now, get every table under this node.
-		foreach($node->getElementsByTagName('table') as $tblnode){
-			$table = DB_PREFIX . preg_replace('/^' . $prefix . '/', '', $tblnode->getAttribute('name'));
-			// Check if the table exists to begin with.
-			if(!DB::TableExists($table)){
-				// Table doesn't exist, just do a simple create
-				$q = 'CREATE TABLE `' . $table . '` ';
-				$directives = array();
-				foreach($this->getElementsFrom('column', $tblnode) as $colnode){
-					$coldef = $this->elementToArray($colnode);
-					$d = '`' . $coldef['field'] . '` ';
-					$d .= $coldef['type'] . ' ';
-					if($coldef['collation']) $d .= 'COLLATE ' . $coldef['collation'] . ' ';
-					$d .= (($coldef['null'] == 'NO')? 'NOT NULL' : 'NULL') . ' ';
-					if($coldef['default']) $d .= 'DEFAULT ' . "'" . $coldef['default'] . "'";
-					if($coldef['extra'] == 'auto_increment') $d .= 'AUTO_INCREMENT ';
-					if($coldef['comment']) $d .= 'COMMENT \'' . $coldef['comment'] . '\' ';
-					$directives[] = $d;
-				}
-				
-				foreach($this->getElementsFrom('index', $tblnode) as $idxnode){
-					$idxdef = $this->elementToArray($idxnode);
-					$d = '';
-					if($idxdef['name'] == 'PRIMARY') $d .= 'PRIMARY KEY ';
-					elseif($idxdef['nonunique'] == 0) $d .= 'UNIQUE KEY `' . $idxdef['name'] . '` ';
-					else $d .= 'KEY `' . $idxdef['name'] . '` ';
-					
-					if(is_array($idxdef['column'])){
-						$d .= '(`' . implode('`, `', $idxdef['column']) . '`) ';
-					}
-					else{
-						$d .= '(`' . $idxdef['column'] . '`) ';
-					}
-					if($idxdef['comment']) $d .= 'COMMENT \'' . $idxdef['comment'] . '\' ';
-					$directives[] = $d;
-				}
-				
-				$q .= '( ' . implode(', ', $directives) . ' ) ';
-				$q .= 'ENGINE=' . $tblnode->getAttribute('engine') . ' ';
-				$q .= 'DEFAULT CHARSET=' . $tblnode->getAttribute('charset') . ' ';
-				if($tblnode->getAttribute('comment')) $q .= 'COMMENT=\'' . $tblnode->getAttribute('comment') . '\' ';
-				// @todo should AUTO_INCREMENT be available here?
-				
-				DB::Execute($q);
-			} // if(!DB::TableExists($table))
-			else{
-				// Table does exist... I need to do a merge of the data schemas.
-				// Create a temp table to do the operations on.
-				DB::Execute('CREATE TEMPORARY TABLE _tmptable LIKE ' . $table);
-				DB::Execute('INSERT INTO _tmptable SELECT * FROM ' . $table);
-				
-				// My simple counter.  Helps keep track of column order.
-				$x = 0;
-				// This will contain the current table schema of the tmptable.
-				// It will get reloaded after any change.
-				$schema = $this->_describeTableSchema('_tmptable');
-				
-				foreach($this->getElementsFrom('column', $tblnode) as $colnode){
-					$coldef = $this->elementToArray($colnode);
-					
-					/*
-					// Get the column schema from the XML node.
-					$coldef = array();
-					foreach($colnode->getElementsByTagName('field') as $f){
-						if($f->getAttribute('xsi:nil')) $coldef[$f->getAttribute('name')] = null;
-						else $coldef[$f->getAttribute('name')] = trim($f->nodeValue);
-					}
-					*/
-					// coldef should now contain:
-					// array(
-					//   'field' => 'name_of_field',
-					//   'type' => 'type definition, ie: int(11), varchar(32), etc',
-					//   'null' => 'NO|YES',
-					//   'key' => 'PRI|MUL|UNI|[blank]'
-					//   'default' => default value
-					//   'extra' => 'auto_increment|[blank]',
-					//   'collation' => 'some collation type',
-					//   'comment' => 'some comment',
-					// );
-					
-					// Check that the current column is in the same location as in the database.
-					if($schema['ord'][$x] != $coldef['field']){
-						// Is it even present?
-						if(isset($schema['def'][$coldef['field']])){
-							// w00t, move it to this position.
-							// ALTER TABLE `test` MODIFY COLUMN `fieldfoo` mediumint AFTER `something`
-							$q = 'ALERT TABLE _tmptable MODIFY COLUMN `' . $coldef['field'] . '` ' . $coldef['type'] . ' ';
-							$q .= ($x == 0)? 'FIRST' : 'AFTER ' . $schema['ord'][$x-1];
-							DB::Execute($q);
-							
-							// Moving the column will change the definition... reload that.
-							$schema = $this->_describeTableSchema('_tmptable');
-						}
-						// No? Ok, create it.
-						else{
-							// ALTER TABLE `test` ADD `newfield` TEXT NOT NULL AFTER `something` 
-							$q = 'ALTER TABLE _tmptable ADD `' . $coldef['field'] . '` ' . $coldef['type'] . ' ';
-							$q .= (($coldef['null'] == 'NO')? 'NOT NULL' : 'NULL') . ' ';
-							$q .= ($x == 0)? 'FIRST' : 'AFTER ' . $schema['ord'][$x-1];
-							DB::Execute($q);
-							
-							// Adding the column will change the definition... reload that.
-							$schema = $this->_describeTableSchema('_tmptable');
-						}
-					}
-					
-					// coldef should now contain:
-					// array(
-					//   'field' => 'name_of_field',
-					//   'type' => 'type definition, ie: int(11), varchar(32), etc',
-					//   'null' => 'NO|YES',
-					//   'key' => 'PRI|MUL|UNI|[blank]'
-					//   'default' => default value
-					//   'extra' => 'auto_increment|[blank]',
-					//   'collation' => 'some collation type',
-					//   'comment' => 'some comment',
-					// );
-					
-					// Now the column should exist and be in the correct location.  Check its structure.
-					// ALTER TABLE `test` CHANGE `newfield` `newfield` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL 
-					// Check its AI and primary states first.
-					if(
-						$coldef['extra'] == 'auto_increment' && $coldef['key'] == 'PRI' && 
-						(!isset($schema['def'][$coldef['field']]) || ($schema['def'][$coldef['field']]['extra'] == '' && $schema['def'][$coldef['field']]['key'] == ''))
-					){
-						// An AI value was added to the table.  I need to add that column as the primary key first, then
-						// tack on the AI property.
-						// ALTER TABLE `test` ADD PRIMARY KEY(`id`)
-						$q = 'ALTER TABLE _tmptable ADD PRIMARY KEY (`' . $coldef['field'] . '`)';
-						DB::Execute($q);
-						$q = 'ALTER TABLE _tmptable CHANGE `' . $coldef['field'] . '` `' . $coldef['field'] . '` ' . $coldef['type'] . ' ';
-						$q .= (($coldef['null'] == 'NO')? 'NOT NULL' : 'NULL') . ' ';
-						// Durka durka, AI columns don't have a default value.
-						//$q .= 'DEFAULT ' . (($coldef['default'] == '')? (($coldef['null'] == 'NO')? "''" : 'NULL') : "'" . $coldef['Default'] . "'") . ' ';
-						$q .= 'AUTO_INCREMENT';
-						DB::Execute($q);
-						
-						// And reload the schema.
-						$schema = $this->_describeTableSchema('_tmptable');
-					}
-					
-					// Now, check everything else.
-					if(
-						$coldef['type'] != $schema['def'][$coldef['field']]['type'] ||
-						$coldef['null'] != $schema['def'][$coldef['field']]['null'] ||
-						$coldef['default'] != $schema['def'][$coldef['field']]['default'] ||
-						$coldef['collation'] != $schema['def'][$coldef['field']]['collation'] || 
-						$coldef['comment'] != $schema['def'][$coldef['field']]['comment']
-					){
-						$q = 'ALTER TABLE _tmptable CHANGE `' . $coldef['field'] . '` `' . $coldef['field'] . '` ';
-						$q .= $coldef['type'] . ' ';
-						if($coldef['collation']) $q .= 'COLLATE ' . $coldef['collation'] . ' ';
-						$q .= (($coldef['null'] == 'NO')? 'NOT NULL' : 'NULL') . ' ';
-						$q .= 'DEFAULT ' . (($coldef['default'] == '')? (($coldef['null'] == 'NO')? "''" : 'NULL') : "'" . $coldef['default'] . "'") . ' ';
-						if($coldef['comment']) $q .= 'COMMENT \'' . $coldef['comment'] . '\' ';
-						DB::Execute($q);
-						
-						// And reload the schema.
-						$schema = $this->_describeTableSchema('_tmptable');
-					}
-					
-					$x++;
-				} // foreach($this->getElementFrom('column', $tblnode, false) as $colnode)
-				
-				/*
-			<index>
-				<name>PRIMARY</name>
-				<nonunique>0</nonunique>
-				<column>id</column>
-				<comment></comment>
-			</index>
-			<index>
-				<name>data</name>
-				<nonunique>0</nonunique>
-				<column>data</column>
-				<comment></comment>
-			</index>
-			<index>
-				<name>something</name>
-				<nonunique>1</nonunique>
-				<column>something</column>
-				<comment></comment>
-				<column>data</column>
-			</index> */
+		// Do the actual processing of every Model.
+		foreach($classes as $m => $file){
+			require_once($file);
 			
-				// The columns should be done; onto the indexes.
-				$schema = $this->_describeTableIndexes('_tmptable');
-				foreach($this->getElementsFrom('index', $tblnode) as $idxnode){
-					$idxdef = $this->elementToArray($idxnode);
-					// Ensure that idxdef['column'] is an array if it's not.
-					if(!is_array($idxdef['column'])) $idxdef['column'] = array($idxdef['column']);
-					// @todo do all the indexes here.
-					if($idxdef['name'] == 'PRIMARY'){
-						$name = 'PRIMARY KEY';
-					}
-					elseif($idxdef['nonunique'] == 0){
-						$name = 'UNIQUE `' . $idxdef['name'] . '`';
-					}
-					else{
-						$name = 'INDEX `' . $idxdef['name'] . '`';
-					}
-					
-					if(!isset($schema[$idxdef['name']])){
-						DB::Execute('ALTER TABLE `_tmptable` ADD ' . $name . ' (`' . implode('`, `', $idxdef['column']) . '`)');
-						$schema = $this->_describeTableIndexes('_tmptable');
-					}
-					// There can only be 1!
-					elseif(sizeof(array_diff($idxdef['column'], $schema[$idxdef['name']]['columns']))){
-						DB::Execute('ALTER TABLE `_tmptable` DROP ' . $name . ', ADD ' . $name . ' (`' . implode('`, `', $idxdef['column']) . '`)');
-						$schema = $this->_describeTableIndexes('_tmptable');
-					}
-				} // foreach($this->getElementFrom('index', $tblnode, false) as $idxnode)
-				
-				
-				// All operations should be completed now; move the temp table back to the original one.
-				DB::Execute('DROP TABLE `' . $table . '`');
-				DB::Execute('CREATE TABLE `' . $table . '` LIKE _tmptable');
-				DB::Execute('INSERT INTO `' . $table . '` SELECT * FROM _tmptable');
-				
-				// Drop the table so it's ready for the next table.
-				DB::Execute('DROP TABLE _tmptable');
-			} // else if(!DB::TableExists($table))
-		} // foreach($node->getElementsByTagName('table') as $tblnode)
+			$s = call_user_func(array($m, 'GetSchema'));
+			$i = call_user_func(array($m, 'GetIndexes'));
+			$tablename = call_user_func(array($m, 'GetTableName'));
+
+			$schema = array('schema' => $s, 'indexes' => $i);
+			
+			if(Core::DB()->tableExists($tablename)){
+				// Exists, ensure that it's up to date instead.
+				Core::DB()->modifyTable($tablename, $schema);
+			}
+			else{
+				// Pass this schema into the DMI processor for create table.
+				Core::DB()->createTable($tablename, $schema);
+			}
+			
+		}
 	} // private function _parseDBSchema()
 	
-	private function _describeTableSchema($table){
-		$rs = DB::Execute('SHOW FULL COLUMNS FROM `' . $table . '`');
-		$tabledef = array();
-		$tableord = array();
-		foreach($rs as $row){
-			$tabledef[$row['Field']] = array();
-			foreach($row as $k => $v){
-				$tabledef[$row['Field']][strtolower($k)] = $v;
-			}
-			$tableord[] = $row['Field'];
-		}
-		return array('def' => $tabledef, 'ord' => $tableord);
-	}
 	
-	private function _describeTableIndexes($table){
-		$rs = DB::Execute('SHOW INDEXES FROM `' . $table . '`');
-		$def = array();
-		foreach($rs as $row){
-			// Non_unique | Key_name | Column_name | Comment
-			if(isset($def[$row['Key_name']])){
-				// Add a column.
-				$def[$row['Key_name']]['columns'][] = $row['Column_name'];
-			}
-			else{
-				$def[$row['Key_name']] = array(
-					'name' => $row['Key_name'],
-					'nonunique' => $row['Non_unique'],
-					'comment' => $row['Comment'],
-					'columns' => array($row['Column_name']),
-				);
-			}
-		}
-		return $def;
-	}
 }

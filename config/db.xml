@@ -16,7 +16,7 @@
 		<option>mysqli</option>
 		<option>cassandra</option>
 		<defaultValue>mysqli</defaultValue>
-		<value>cassandra</value>
+		<value>mysqli</value>
 	</return>
 	
 	<return name="name" type="string">

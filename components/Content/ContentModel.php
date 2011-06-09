@@ -10,6 +10,15 @@
  * @author powellc
  */
 class ContentModel extends Model{
+	
+	protected $_schema = array(
+		'id' => array(),
+		'title' => array(),
+		'description' => array(),
+		'keywords' => array(),
+		'access' => array(),
+	);
+	
     public function __construct($key = null) {
 		$this->_linked = array(
 			'Page' => array(

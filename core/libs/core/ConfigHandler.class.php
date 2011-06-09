@@ -180,7 +180,25 @@ class ConfigHandler implements ISingleton {
 		*/
 
 		// Any config strings that may be set, (cache them to speed up later requests.)
-		$rs = DB::Execute("SELECT `key`, `value`, `type`, `mapto` FROM " . DB_PREFIX . "config");
+		try{
+			$obj = new Dataset('config');
+			$obj->select(array('key', 'value', 'type', 'mapto'));
+			$rs = $obj->execute();
+		}
+		catch(DMI_Exception $e){
+			if(DEVELOPMENT_MODE){
+				if($e->ansicode) echo 'ERROR (' . $e->ansicode . '): ' . $e->getMessage();
+				else echo 'ERROR: ' . $e->getMessage();
+			}
+			return false;
+		}
+		/*
+		$obj = new SQLBuilderSelect();
+		$obj->from(DB_PREFIX . 'config');
+		$obj->select(array('key', 'value', 'type', 'mapto'));
+		*/
+		
+		//$rs = DB::Execute("SELECT `key`, `value`, `type`, `mapto` FROM " . DB_PREFIX . "config");
 		if(!$rs) return false;
 		foreach ($rs as $row) {
 			switch ($row['type']) {

@@ -23,6 +23,20 @@
 
 class Model {
 
+	const ATT_TYPE_STRING = 'string';
+	const ATT_TYPE_TEXT = 'text';
+	const ATT_TYPE_INT = 'int';
+	const ATT_TYPE_FLOAT = 'float';
+	const ATT_TYPE_BOOL = 'boolean';
+	const ATT_TYPE_ENUM = 'enum';
+	const ATT_TYPE_ID = '__id';
+	
+	// Regex to match anything not blank.
+	const VALIDATION_NOTBLANK = "/^.+$/";
+	// Regex to match email addresses.
+	// @see http://www.regular-expressions.info/email.html
+	const VALIDATION_EMAIL = "/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/";
+
 	/**
 	 * @var string The table name corresponding to this Model.
 	 */
@@ -70,8 +84,13 @@ class Model {
 
 	/**
 	 * @var array The columns and their structure.
+	 * @deprecated
 	 */
 	protected $_columns;
+	
+	public static $Schema = array();
+	
+	public static $Indexes = array();
 	
 	private static $_ModelDataCache = array();
 	
@@ -547,6 +566,8 @@ class Model {
 		}
 	}
 
+	// Moving this to a static function
+	/*
 	public function getTableName(){
 		if(!$this->_tablename){
 			// Calculate the table class.
@@ -571,6 +592,7 @@ class Model {
 		}
 		return $this->_tablename;
 	}
+	*/
 
 	public function getColumnStructure(){
 		return $this->_columns;
@@ -595,8 +617,7 @@ class Model {
 	public function isnew(){
 		return !$this->_exists;
 	}
-
-
+	
 
 
 	/*****************    Factory-Related Static Methods *******************/
@@ -611,6 +632,50 @@ class Model {
 		$fac->where($where);
 		$fac->limit($limit);
 		return $fac->get();
+	}
+	
+	
+	
+	/*******************   Other Static Methods *************************/
+	public static function GetTableName(){
+		static $_tablename;
+		if(!$_tablename){
+			// Calculate the table class.
+
+			// It's based on the main class's name.
+			$tbl = get_called_class();
+			//$tbl = get_class($this);
+
+			// If it ends in Model... trim that bit off.  It's assumed that the prefix is what we want.
+			if(preg_match('/Model$/', $tbl)) $tbl = substr($tbl, 0, -5);
+
+			// Replace any capitalized letters with a _[letter].
+			$tbl = preg_replace('/([A-Z])/', '_$1', $tbl);
+
+			// Of course this would produce something similar to _Foo_Mep_Blah.. don't need the beginning _.
+			if($tbl{0} == '_') $tbl = substr($tbl, 1);
+
+			// And lowercase.
+			$tbl = strtolower($tbl);
+
+			// Prepend the DB_PREFIX and save!
+			$_tablename = DB_PREFIX . $tbl;
+		}
+		return $_tablename;
+	}
+	
+	public static function GetSchema(){
+		// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
+		$m = get_called_class();
+		
+		return $m::$Schema;
+	}
+	
+	public static function GetIndexes(){
+		//// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
+		$m = get_called_class();
+		
+		return $m::$Indexes;
 	}
 }
 

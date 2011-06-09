@@ -15,23 +15,28 @@
 				<a href="{$smarty.const.ROOT_URL}" title="Home"><img src="{asset src='logo.png'}" alt="Home"/></a>
 			</header>
 			<nav id="primary-nav">
-				{widget name="/Navigation/View/1"}
+				{widgetarea name="Primary Navigation"}
 			</nav>
 			<div style="clear:both;"></div>
 			<div id="innerwrapper" class="rounded-large">
+				
 				<nav id="breadcrumbs">
-					{foreach from=$breadcrumbs item=crumb name=crumbs}
-						{if $crumb.link && !$smarty.foreach.crumbs.last}
-							<a href="{$crumb.link}">{$crumb.title}</a>
-						{else}
-							{$crumb.title}
-						{/if}
+					{if isset($breadcrumbs)}
+						{foreach from=$breadcrumbs item=crumb name=crumbs}
+							{if $crumb.link && !$smarty.foreach.crumbs.last}
+								<a href="{$crumb.link}">{$crumb.title}</a>
+							{else}
+								{$crumb.title}
+							{/if}
 
-						{if !$smarty.foreach.crumbs.last}
-							&raquo;
-						{/if}
-					{/foreach}
-					{if sizeof($controls)}
+							{if !$smarty.foreach.crumbs.last}
+								&raquo;
+							{/if}
+						{/foreach}
+					{else}
+						{$title}
+					{/if}
+					{if isset($controls) && sizeof($controls)}
 						<ul class="controls">
 							{foreach from=$controls item=control}
 								<li class="{$control.class}">
@@ -49,6 +54,7 @@
 				<aside id="leftcol" class="pagecolumn">
 					{widget name="/Admin/Menu"}
 					{*widget name="/Content/View/5"*}
+					{widgetarea name="Left Column"}
 				</aside>
 				<section class="pagecontent">
 					{if !empty($messages)}
@@ -59,11 +65,17 @@
 						{/foreach}
 					{/if}
 					
+					{widgetarea name="Above Body"}
+					
 					{$body}
+					
+					{widgetarea name="After Body"}
 				</section>
 				<div style="clear:both;"></div>
 			</div>
-			<footer></footer>
+			<footer>
+				{widgetarea name="Footer"}
+			</footer>
 		</div>
 	</body>
 

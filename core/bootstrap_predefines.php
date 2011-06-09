@@ -22,6 +22,15 @@
  */
 
 
+if(PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')){
+	die('This application cannot run with magic_quotes_gpc enabled, please disable them now!' . "\n");
+}
+
+if(PHP_VERSION < '5.3.0'){
+	die('This application requires at least PHP 5.3 to run!' . "\n");
+}
+
+
 /********************* Initial system defines *********************************/
 
 // Right off the bat, I need to decide which mode I'm running in, either as a CLI script or regular.
@@ -80,8 +89,8 @@ define('REMOTE_IP', $rip);
  *
  * @var boolean
  */
-//define('FULL_DEBUG', true);
-define('FULL_DEBUG', false);
+define('FULL_DEBUG', true);
+//define('FULL_DEBUG', false);
 
 define('NL', "\n");
 define('TAB', "\t");

@@ -28,6 +28,12 @@ function smarty_block_a($params, $innercontent, $template, &$repeat){
 	// Start the A tag
 	$content = '<a';
 	
+	// Allow "confirm" text to override the href and onClick functions.
+	if(isset($params['confirm'])){
+		$params['onClick'] = "if(confirm('" . str_replace("'", "\\'", $params['confirm']) . "')){ window.location.href = '" . str_replace("'", "\\'", Core::ResolveLink($params['href'])) . "'; } return false;";
+		$params['href'] = '#';
+	}
+	
 	// Add in any attributes.
 	foreach($params as $k => $v){
 		$k = strtolower($k);

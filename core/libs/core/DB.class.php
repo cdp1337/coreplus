@@ -41,21 +41,34 @@ class DB implements ISingleton{
 	private function __construct(){
 		$connectionSettings = ConfigHandler::LoadConfigFile("db");
 		
-		$dsn = "{$connectionSettings['type']}://"
+		switch($connectionSettings['type']){
+			case 'cassandra':
+				require_once(ROOT_PDIR . 'core/libs/phpcassa-0.7.a.4/connection.php');
+				require_once(ROOT_PDIR . 'core/libs/core/ADODB_cassandra.class.php');
+				$this->connection = new ADODB_cassandra();
+				$this->connection->connect($connectionSettings['server'], null, null, $connectionSettings['name']);
+				//var_dump($this->connection); die();
+				break;
+			default:
+				$dsn = "{$connectionSettings['type']}://"
 				 . "{$connectionSettings['user']}:{$connectionSettings['pass']}"
 				 . "@{$connectionSettings['server']}"
 				 . "/{$connectionSettings['name']}"
 				 . "?persist&fetchmode=ASSOC";
+				$this->connection =& ADONewConnection($dsn);
+				
+				break;
+		}
 		
-		$this->connection =& ADONewConnection($dsn);
+		
 		// No go?
 		if(!$this->connection) return;
 		
 		// Caching?
 		// @todo Make this a config option.
-		$this->connection->memCache = true;
-		$this->connection->memCacheHost = 'localhost';
-		$this->connection->memCacheCompress = false;
+		//$this->connection->memCache = true;
+		//$this->connection->memCacheHost = 'localhost';
+		//$this->connection->memCacheCompress = false;
 	}
 	
 	
@@ -87,8 +100,8 @@ class DB implements ISingleton{
 		$db->counter++;
 		//echo $sql . '<br/>';
 		// @todo Make this toggleable.
-		return $db->connection->CacheExecute(3600, $sql, $inputarr);
-		//return $db->connection->Execute($sql, $inputarr);
+		//return $db->connection->CacheExecute(3600, $sql, $inputarr);
+		return $db->connection->Execute($sql, $inputarr);
 	}
 	
 	public static function qstr($string){
