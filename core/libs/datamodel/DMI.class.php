@@ -1,4 +1,12 @@
 <?php
+/**
+ * Provides the main interface system for the DMI subsystem.
+ * 
+ * @author Charlie Powell <powellc@powelltechs.com>
+ * @package Core
+ * @subpackage Datamodel
+ * @since 20110610
+ */
 
 
 

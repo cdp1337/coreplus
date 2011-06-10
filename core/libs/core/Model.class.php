@@ -47,27 +47,27 @@ class Model {
 	/**
 	 * @var array Associative array of the data in this corresponding record.
 	 */
-	protected $_data;
+	protected $_data = array();
 
 	/**
 	 * @var array The primary key column of the corresponding table.
 	 */
-	protected $_pkcolumns;
+	//protected $_pkcolumns;
 
 	/**
 	 * @var string The AI column of this table.
 	 */
-	protected $_aicolumn;
+	//protected $_aicolumn;
 
 	/**
 	 * @var string The "created" column of the corresponding table.
 	 */
-	protected $_createdcolumn;
+	//protected $_createdcolumn;
 
 	/**
 	 * @var string The "Updated" column of the corresponding table.
 	 */
-	protected $_updatedcolumn;
+	//protected $_updatedcolumn;
 
 	/**
 	 * @var boolean Dirty flag, if true the data in the model has been changed.
@@ -96,9 +96,9 @@ class Model {
 	
 	private static $_ModelDataCache = array();
 	
-	private static $_ModelStructureCache = array();
-	
 	protected $_linked = array();
+	
+	protected $_cacheable = true;
 	
 	const LINK_HASONE = 'one';
 	const LINK_HASMANY = 'many';
@@ -108,11 +108,13 @@ class Model {
 	public function __construct($key = null){
 		// Build a query to describe the table.
 		// @todo Sometime tie this into a cache system!
-		$this->_data = array();
-		$this->_exists = false;
-		$this->_pkcolumns = array();
-		$this->_columns = array();
+		//$this->_data = array();
+		//$this->_exists = false;
+		//$this->_pkcolumns = array();
+		//$this->_columns = array();
 		
+		
+		/*
 		if(!isset(Model::$_ModelStructureCache[$this->getTableName()])){
 			
 			$l =& Model::$_ModelStructureCache[$this->getTableName()];
@@ -180,42 +182,48 @@ class Model {
 				if($type == 'enum') $l['columns'][$row['Field']]['opts'] = $opt;
 			}
 		} // if(!isset(Model::$_ModelStructureCache[$this->getTableName()]))
+		*/
 		
 		// Load in the structure from the cache.
-		$l =& Model::$_ModelStructureCache[$this->getTableName()];
+		/*$l =& Model::$_ModelStructureCache[$this->getTableName()];
 		$this->_data = $l['data'];
 		$this->_pkcolumns = $l['pkcolumns'];
 		$this->_createdcolumn = $l['createdcolumn'];
 		$this->_updatedcolumn = $l['updatedcolumn'];
 		$this->_aicolumn = $l['aicolumn'];
 		$this->_columns = $l['columns'];
+		*/
 		
-
-		if(($n = func_num_args()) && $n == sizeof($this->_pkcolumns)){
-			foreach($this->_pkcolumns as $k => $v){
+		// Check the index (primary), and the incoming data.  If it matches, load it up!
+		$i = self::$Indexes;
+		
+		if(isset($i['primary']) && func_num_args() == sizeof($i['primary'])){
+			foreach($i['primary'] as $k => $v){
 				$this->_data[$v] = func_get_arg($k);
 			}
 		}
 
 		$this->load();
-
-		//if($key !== null && $this->_pkcolumn){
-		//	$this->_data[$this->_pkcolumn] = $key;
-		//
-		//	$this->load();
-		//}
 	}
 
 	public function load(){
 
 		// I need to check the pks first.
 		// If they're not set I can't load anything from the database.
-		if(sizeof($this->_pkcolumns)){
-			foreach($this->_pkcolumns as $v){
-				if($this->get($v) === null) return;
+		$i = self::$Indexes;
+		
+		if(isset($i['primary']) && sizeof($i['primary'])){
+			foreach($i['primary'] as $k){
+				if($this->get($k) === null) return;
 			}
 		}
 		
+		if($this->_cacheable){
+			$cachekey = $this->_getCacheKey();
+			$cache = Core::Cache()->get($cachekey);
+			
+			// do something if cache succeeds....
+		}
 		
 		// Enable cache, w00t!
 		if(!isset(Model::$_ModelDataCache[$this->getTableName()])) Model::$_ModelDataCache[$this->getTableName()] = array();
@@ -618,6 +626,22 @@ class Model {
 
 	public function isnew(){
 		return !$this->_exists;
+	}
+	
+	
+	protected function _getCacheKey(){
+		if(!$this->_cacheable) return false;
+		if(!(isset($i['primary']) && sizeof($i['primary']))) return false;
+		
+		$cachekeys = array();
+		foreach($i['primary'] as $k){
+			$val = $this->get($k);
+			if($val === null) $val = 'null';
+			elseif($val === false) $val = 'false';
+			$cachekeys[] = $val;
+		}
+		
+		return 'DATA:' . self::GetTableName() . ':' . implode('-', $cachekeys);
 	}
 	
 

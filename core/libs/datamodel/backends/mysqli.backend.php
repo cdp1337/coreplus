@@ -1,8 +1,11 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * mysqli datamodel backend system.
+ * 
+ * @author Charlie Powell <powellc@powelltechs.com>
+ * @package Core
+ * @subpackage Datamodel
+ * @since 20110610
  */
 
 /**

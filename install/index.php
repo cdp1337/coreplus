@@ -64,10 +64,10 @@ require_once(ROOT_PDIR . 'core/libs/core/Component.class.php');
 // Many of these are needed because some systems, such as the installer
 // execute before the ComponentHandler has loaded the class locations.
 require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
-require_once(ROOT_PDIR . 'core/libs/cachecore/icachecore.interface.php');
-require_once(ROOT_PDIR . 'core/libs/cachecore/cachecore.class.php');
-require_once(ROOT_PDIR . 'core/libs/cachecore/cachefile.class.php');
-require_once(ROOT_PDIR . 'core/libs/core/Cache.class.php');
+require_once(ROOT_PDIR . 'core/libs/cachecore/backends/icachecore.interface.php');
+require_once(ROOT_PDIR . 'core/libs/cachecore/backends/cachecore.class.php');
+require_once(ROOT_PDIR . 'core/libs/cachecore/backends/cachefile.class.php');
+require_once(ROOT_PDIR . 'core/libs/cachecore/Cache.class.php');
 
 // The PHP elements of the MVC framework.
 require_once(ROOT_PDIR . 'core/libs/core/Model.class.php');

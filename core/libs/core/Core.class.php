@@ -211,6 +211,15 @@ class Core implements ISingleton{
 		return DMI::GetSystemDMI()->connection();
 	}
 	
+	/**
+	 * Shortcut function to get the current system cache interface.
+	 * 
+	 * @return Cache
+	 */
+	public static function Cache(){
+		return Cache::GetSystemCache();
+	}
+	
 	
 	
 	public static function AddProfileTime($event, $microtime = null){

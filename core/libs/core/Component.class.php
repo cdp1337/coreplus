@@ -861,15 +861,22 @@ class Component extends InstallArchiveAPI{
 		
 		// Now, get every table under this node.
 		foreach($node->getElementsByTagName('config') as $confignode){
+			$m = new ConfigModel($confignode->getAttribute('key'));
+			$m->set('type', $confignode->getAttribute('type'));
+			$m->set('default_value', $confignode->getAttribute('default'));
+			if(!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
+			$m->set('description', $confignode->getAttribute('description'));
+			var_dump($m); die();
+			
 			// <config key="/core/theme" type="string" default="default" description="The theme of the site"/>
 			// Insert/Update the defaults for an entry in the database.
-			$s = new SQLBuilderInsertUpdate();
-			$s->table(DB_PREFIX . 'config');
-			$s->set('key', $confignode->getAttribute('key'));
-			$s->set('type', $confignode->getAttribute('type'), true);
-			$s->set('default_value', $confignode->getAttribute('default'), true);
-			$s->set('value', $confignode->getAttribute('default')); // Do not "update" value, keep whatever the user set previously.
-			$s->set('description', $confignode->getAttribute('description'), true);
+			//$s = new SQLBuilderInsertUpdate();
+			//$s->table(DB_PREFIX . 'config');
+			//$s->set('key', $confignode->getAttribute('key'));
+			//$s->set('type', $confignode->getAttribute('type'), true);
+			//$s->set('default_value', $confignode->getAttribute('default'), true);
+			//$s->set('value', $confignode->getAttribute('default')); // Do not "update" value, keep whatever the user set previously.
+			//$s->set('description', $confignode->getAttribute('description'), true);
 			
 			//echo $s->query() . '<br/>';
 			

@@ -1,4 +1,14 @@
 <?php
+/**
+ * Cassandra datamodel backend system.
+ * 
+ * -- EXPERIMENTAL --
+ * 
+ * @author Charlie Powell <powellc@powelltechs.com>
+ * @package Core
+ * @subpackage Datamodel
+ * @since 20110610
+ */
 
 
 // give me the driver for this system!
