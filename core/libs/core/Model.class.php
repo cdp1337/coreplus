@@ -194,8 +194,14 @@ class Model {
 		$this->_columns = $l['columns'];
 		*/
 		
+		// Update the _data array based on the schema.
+		$s = self::GetSchema();
+		foreach($s as $k => $v){
+			$this->_data[$k] = (isset($v['default']))? $v['default'] : null;
+		}
+		
 		// Check the index (primary), and the incoming data.  If it matches, load it up!
-		$i = self::$Indexes;
+		$i = self::GetIndexes();
 		
 		if(isset($i['primary']) && func_num_args() == sizeof($i['primary'])){
 			foreach($i['primary'] as $k => $v){
@@ -210,11 +216,15 @@ class Model {
 
 		// I need to check the pks first.
 		// If they're not set I can't load anything from the database.
-		$i = self::$Indexes;
+		$i = self::GetIndexes();
 		
+		$keys = array();
 		if(isset($i['primary']) && sizeof($i['primary'])){
 			foreach($i['primary'] as $k){
-				if($this->get($k) === null) return;
+				if(($v = $this->get($k)) === null) return;
+				
+				// Remember the PK's for the query lookup later on.
+				$keys[$k] = $v;
 			}
 		}
 		
@@ -225,16 +235,25 @@ class Model {
 			// do something if cache succeeds....
 		}
 		
-		// Enable cache, w00t!
-		if(!isset(Model::$_ModelDataCache[$this->getTableName()])) Model::$_ModelDataCache[$this->getTableName()] = array();
-		$cachekey = '';
-		if(sizeof($this->_pkcolumns)){
-			foreach($this->_pkcolumns as $v){
-				$cachekey .= (($cachekey == '')? '' : '-') . $this->_data[$v];
-			}
+		$data = Dataset::Init()
+			->select('*')
+			->table(self::GetTableName())
+			->where($keys)
+			->execute();
+		
+		if($data->num_rows){
+			$this->_data = $data->current();
+			$this->_dirty = false;
+			$this->_exists = true;
+		}
+		else{
+			$this->_dirty = true;
+			$this->_exists = false;
 		}
 		
-		if(!isset(Model::$_ModelDataCache[$this->getTableName()][$cachekey])){
+		return;
+		
+		//if(!isset(Model::$_ModelDataCache[$this->getTableName()][$cachekey])){
 			$builder = $this->getSQLBuilder();
 
 			if(sizeof($this->_pkcolumns)){
@@ -247,7 +266,7 @@ class Model {
 			if(!$rs) throw new Exception(DB::Error());
 
 			Model::$_ModelDataCache[$this->getTableName()][$cachekey] = $rs->fields;
-		}
+		//}
 
 
 		if(!Model::$_ModelDataCache[$this->getTableName()][$cachekey]){

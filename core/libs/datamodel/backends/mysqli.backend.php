@@ -45,7 +45,44 @@ class DMI_mysqli_backend implements DMI_Backend {
 	}
 	
 	public function execute(Dataset $dataset){
+		switch($dataset->_mode){
+			case Dataset::MODE_GET:
+				$this->_executeGet($dataset);
+				break;
+		}
+	}
+	
+	private function _executeGet(Dataset $dataset){
+		// Generate a query to run.
+		$q = 'SELECT';
+		$ss = array();
+		foreach($dataset->_selects as $s){
+			if(strpos($s, '.')) $s = '`' . str_replace('.', '`.`', trim($s)) . '`';
+			// `*` is not a valid column.
+			if(strpos($s, '`*`') !== false) $s = str_replace('`*`', '*', $s);
+			$ss[] = $s;
+		}
+		$q .= ' ' . implode(', ', $ss);
 		
+		$q .= ' FROM `' . $dataset->_table . '`';
+		
+		if(sizeof($dataset->_where)){
+			$ws = array();
+			foreach($dataset->_where as $w){
+				$w['value'] = $this->_conn->real_escape_string($w['value']);
+				$ws[] = "`{$w['field']}` {$w['op']} '{$w['value']}'";
+			}
+			$q .= ' WHERE ' . implode(' AND ', $ws);
+		}
+		
+		// Execute this and populate the dataset appropriately.
+		$res = $this->_rawExecute($q);
+		
+		$dataset->num_rows = $res->num_rows;
+		$dataset->_data = array();
+		while($row = $res->fetch_assoc()){
+			$dataset->_data[] = $row;
+		}
 	}
 	
 	public function tableExists($tablename){

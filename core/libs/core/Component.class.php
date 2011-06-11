@@ -866,7 +866,7 @@ class Component extends InstallArchiveAPI{
 			$m->set('default_value', $confignode->getAttribute('default'));
 			if(!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
 			$m->set('description', $confignode->getAttribute('description'));
-			var_dump($m); die();
+			var_dump($m); die('whee');
 			
 			// <config key="/core/theme" type="string" default="default" description="The theme of the site"/>
 			// Insert/Update the defaults for an entry in the database.
