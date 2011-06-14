@@ -170,7 +170,7 @@ EOD;
 }
 
 
-
+try{
 // Data model backend should be ready now.
 require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
@@ -182,12 +182,11 @@ $csingleton = ComponentHandler::Singleton();
 
 ComponentHandler::Load();
 
+}
+catch(Exception $e){
+	InstallPage::SetVariable('error', $e->getMessage());
+	InstallPage::SetVariable('body', 'An error occured, please check and fix it.');
+	InstallPage::Render();
+}
 
 
-
-// GO!
-$dm = new Dataset('config');
-$dm->select('*');
-$rs = $dm->execute();
-
-var_dump($rs);

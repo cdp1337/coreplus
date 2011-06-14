@@ -36,10 +36,12 @@ class Cache{
 	}
 	
 	public function get($key, $expires = 7200){
+		if(!isset($this)) throw new Exception('Cannot call Cache::get() statically, please use Core::Cache()->get() instead.');
 		return $this->_factory($key, $expires)->read();
 	}
 	
 	public function set($key, $value, $expires = 7200){
+		if(!isset($this)) throw new Exception('Cannot call Cache::set() statically, please use Core::Cache()->set() instead.');
 		$c = $this->_factory($key, $expires);
 		
 		// Try to create and if that fails try an update.

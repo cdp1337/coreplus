@@ -224,7 +224,10 @@ class Theme extends InstallArchiveAPI{
 		$this->_installAssets();
 		
 		// Yay, it should be installed now.	Update the version in the database.
-		DB::Execute("REPLACE INTO `" . DB_PREFIX . "component` (`name`, `version`) VALUES (?, ?)", array('theme/' . $this->_name, $this->_version));
+		$c = new ComponentModel('theme/' . $this->_name);
+		$c->set('version', $this->_version);
+		$c->save();
+		
 		$this->_versionDB = $this->_version;
 		
 		
@@ -265,7 +268,6 @@ class Theme extends InstallArchiveAPI{
 		}
 		
 		// Make sure the asset cache is purged!
-		$c = Cache::Singleton('asset-resolveurl');
-		$c->delete();
+		Core::Cache()->delete('asset-resolveurl');
 	}
 }

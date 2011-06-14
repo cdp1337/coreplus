@@ -60,9 +60,12 @@ class DMI_mysqli_backend implements DMI_Backend {
 		$q = 'SELECT';
 		$ss = array();
 		foreach($dataset->_selects as $s){
+			// Check the escaping for this column.
 			if(strpos($s, '.')) $s = '`' . str_replace('.', '`.`', trim($s)) . '`';
 			// `*` is not a valid column.
-			if(strpos($s, '`*`') !== false) $s = str_replace('`*`', '*', $s);
+			elseif($s == '*') $s = $s; // (just don't change it)
+			else $s = '`' . $s . '`';
+			
 			$ss[] = $s;
 		}
 		$q .= ' ' . implode(', ', $ss);

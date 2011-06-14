@@ -26,7 +26,7 @@ class PageModel extends Model{
 		'parenturl' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
-			'null' => false,
+			'null' => true,
 		),
 		'title' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -39,6 +39,7 @@ class PageModel extends Model{
 			'type' => Model::ATT_TYPE_TEXT,
 			'comment' => '[Cached] Serialized array of metainformation',
 			'null' => false,
+			'default' => ''
 		),
 		'theme_template' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -57,11 +58,13 @@ class PageModel extends Model{
 			'maxlength' => 512,
 			'comment' => '[Cached] Access string of the page',
 			'null' => false,
+			'default' => '*'
 		),
 		'fuzzy' => array(
 			'type' => Model::ATT_TYPE_BOOL,
 			'comment' => '[Cached] If this url is fuzzy or an exact match',
 			'null' => false,
+			'default' => '0'
 		),
 		'widget' => array(
 			'type' => Model::ATT_TYPE_BOOL,
@@ -390,9 +393,9 @@ class PageModel extends Model{
 	 */
 	private static function _LookupUrl($url){
 		if(!self::$_RewriteCache){
-			$s = new SQLBuilderSelect();
+			$s = new Dataset();
 			$s->select('rewriteurl, baseurl');
-			$s->from(DB_PREFIX . 'page');
+			$s->table(DB_PREFIX . 'page');
 			$rs = $s->execute();
 			self::$_RewriteCache = array();
 			foreach($rs as $row){

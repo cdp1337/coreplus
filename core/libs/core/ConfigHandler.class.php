@@ -181,12 +181,14 @@ class ConfigHandler implements ISingleton {
 
 		// Any config strings that may be set, (cache them to speed up later requests.)
 		try{
-			$obj = new Dataset('config');
+			$obj = new Dataset();
+			$obj->table('config');
 			$obj->select(array('key', 'value', 'type', 'mapto'));
 			$rs = $obj->execute();
 		}
 		catch(DMI_Exception $e){
 			if(DEVELOPMENT_MODE){
+				echo 'Error retrieving configuration from database.<br/>';
 				if($e->ansicode) echo 'ERROR (' . $e->ansicode . '): ' . $e->getMessage();
 				else echo 'ERROR: ' . $e->getMessage();
 			}

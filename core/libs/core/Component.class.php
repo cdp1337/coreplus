@@ -745,6 +745,7 @@ class Component extends InstallArchiveAPI{
 	
 	
 	public function install(){
+		
 		// @todo I need actual error checking here.
 		if($this->isInstalled()) return false;
 		
@@ -759,15 +760,21 @@ class Component extends InstallArchiveAPI{
 		$this->_installAssets();
 		
 		// Run through each task under <install> and execute it.
+		/*
 		if($this->getRootDOM()->getElementsByTagName('install')->item(0)){
 			InstallTask::ParseNode(
 				$this->getRootDOM()->getElementsByTagName('install')->item(0), 
 				$this->getBaseDir()
 			);
 		}
+		*/
+		
 		
 		// Yay, it should be installed now.	Update the version in the database.
-		DB::Execute("REPLACE INTO `" . DB_PREFIX . "component` (`name`, `version`) VALUES (?, ?)", array($this->_name, $this->_version));
+		$c = new ComponentModel($this->_name);
+		$c->set('version', $this->_version);
+		$c->save();
+		//DB::Execute("REPLACE INTO `" . DB_PREFIX . "component` (`name`, `version`) VALUES (?, ?)", array($this->_name, $this->_version));
 		$this->_versionDB = $this->_version;
 		
 		// And load this component into the system so anything else can access it immediately.

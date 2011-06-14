@@ -91,6 +91,9 @@
 		<file filename="core/libs/core/ConfigModel.class.php">
 			<provides type="class" name="ConfigModel"/>
 		</file>
+		<file filename="core/libs/core/ComponentModel.class.php">
+			<provides type="class" name="ComponentModel"/>
+		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_append.php" md5="10db44dbab4a83128fc833a4e8b97f45">
 			<provides type="class" name="Smarty_Internal_Compile_Append"/>
 		</file>

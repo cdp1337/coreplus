@@ -63,10 +63,6 @@ class Model {
 	 */
 	protected $_exists = false;
 
-	/**
-	 * @var SQLBuilderSelect The builder for the query.
-	 */
-	protected $_sqlbuilder;
 
 	/**
 	 * @var array The columns and their structure.
@@ -182,6 +178,25 @@ class Model {
 		// Only do the same operation if it's been changed.
 		if(!$this->_dirty) return false;
 		
+		// Do the key validation first of all.
+		if(get_class($this) == 'PageModel'){
+			$s = self::GetSchema();
+			foreach($this->_data as $k => $v){
+				// Date created and updated have their own validations.
+				if(
+					$s[$k]['type'] == Model::ATT_TYPE_CREATED ||
+					$s[$k]['type'] == Model::ATT_TYPE_UPDATED
+				){
+					if(!(is_numeric($v) || !$v)) throw new DMI_Exception('Unable to save ' . self::GetTableName() . '.' . $k . ' has an invalid value.');
+					continue;
+				}
+				// This key null?
+				if($v === null && !(isset($s[$k]['null']) && $s[$k]['null'])){
+					if(!isset($s[$k]['default'])) throw new DMI_Exception('Unable to save ' . self::GetTableName() . '.' . $k . ', null is not allowed and there is no default value set.');
+				}
+			}
+		}
+		
 		if($this->_exists) $this->_saveExisting();
 		else $this->_saveNew();
 		
@@ -292,6 +307,7 @@ class Model {
 		$this->setFromArray($record);
 
 		// And since this is supposed to be the initial load method... toggle the appropriate flags.
+		$this->_datainit = $this->_data;
 		$this->_dirty = false;
 		$this->_exists = true;
 	}
@@ -555,6 +571,7 @@ class Model {
 		$fac = new ModelFactory(get_called_class());
 		$fac->where($where);
 		$fac->limit($limit);
+		var_dump($fac);
 		return $fac->get();
 	}
 	
@@ -613,65 +630,52 @@ class Model {
 class ModelFactory{
 
 	/**
-	 * @var Model An instance of the model for lookup-reasons.
+	 * What model is this a factory of?
+	 * @var string 
 	 */
 	private $_model;
+	
+	/**
+	 *
+	 * @var Dataset
+	 */
+	private $_dataset;
 
 	public function __construct($model){
 		
-		// Allow a Model object to be passed in.
-		if($model instanceof Model) $this->_model = $model;
-		else $this->_model = new $model();
-
-		if(!$this->_model instanceof Model) throw new Exception ($model . ' is not an instance of Model!');
-
-		// Reset the "limit" option set from the Model.
-		// The model is designed to get ONLY 1 record, so it needs to be cleared.
-		$this->_model->getSQLBuilder()->limit(false);
+		$this->_model = $model;
+		
+		$m = $this->_model;
+		$this->_dataset = new Dataset();
+		$this->_dataset->table($m::GetTablename());
+		$this->_dataset->select('*');
 	}
 
-	public function where($where){
-		// Due to the fact that I need to support an arbitrary number of arguments....
-		if(func_num_args() == 1){
-			$this->_model->getSQLBuilder()->where($where);
-		}
-		else{
-			// @todo Retool this so it does not need to rely on "eval"...
-			$execargs = '$where';
-			$args = array();
-			foreach(func_get_args() as $k => $a){
-				if($k == 0) continue; // Skip the first argument... already taken into account.
-				$args[$k] = $a;
-				$execargs .= ', $args[' . $k . ']';
-			}
-			$builder = $this->_model->getSQLBuilder();
-			eval('$builder->where(' . $execargs . ');');
-		}
+	public function where(){
+		call_user_func_array(array($this->_dataset, 'where'), func_get_args());
 	}
 	
-	public function order($order){
-		$this->_model->getSQLBuilder()->order($order);
+	public function order(){
+		call_user_func_array(array($this->_dataset, 'order'), func_get_args());
 	}
 
-	public function limit($limit){
-		$this->_model->getSQLBuilder()->limit($limit);
+	public function limit(){
+		call_user_func_array(array($this->_dataset, 'limit'), func_get_args());
 	}
 
 	public function get(){
-		$rs = $this->_model->getSQLBuilder()->execute();
-		// @todo Make a DBException.
-		if(!$rs) throw new Exception(DB::Error());
-
+		$rs = $this->_dataset->execute();
+		
 		$ret = array();
 		foreach($rs as $row){
-			$model = clone $this->_model;
+			$model = new $this->_model();
 			$model->_loadFromRecord($row);
 			$ret[] = $model;
 		}
 
 
 		// Only return the model if "1" was requested as the limit.
-		if($this->_model->getSQLBuilder()->getLimit() == 1){
+		if($this->_dataset->_limit == 1){
 			return (sizeof($ret))? $ret[0] : null;
 		}
 		else{

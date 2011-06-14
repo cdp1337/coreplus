@@ -152,7 +152,7 @@ class Asset implements IFile {
 		// Maybe it's cached :)
 		$keyname = 'asset-resolveurl';
 		$keyttl  = (3600 * 12);
-		$cachevalue = Cache::Get($keyname, $keyttl);
+		$cachevalue = Core::Cache()->get($keyname, $keyttl);
 		
 		if(!isset($cachevalue[$file])){
 			// Try the theme'd version first.
@@ -168,7 +168,7 @@ class Asset implements IFile {
 				$cachevalue[$file] = $a->getURL();
 			}
 			
-			Cache::Set($keyname, $cachevalue, $keyttl);
+			Core::Cache()->set($keyname, $cachevalue, $keyttl);
 		}
 		
 		// Return the cached value!

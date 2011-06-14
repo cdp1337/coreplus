@@ -39,7 +39,41 @@ class NavigationModel extends Model {
 		'primary' => array('id'),
 		'unique:name' => array('name'),
 	);
-
-	// @todo Put your code here.
+	
+		/*
+    public function __construct($key = null) {
+		$this->_linked = array(
+			'Widget' => array(
+				'link' => Model::LINK_HASONE,
+				'on' => 'baseurl',
+			),
+			'NavigationEntry' => array(
+				'link' => Model::LINK_HASMANY,
+				'on' => array('navigationid' => 'id'),
+			),
+		);
+		
+		parent::__construct($key);
+	}
+	*/
+	
+	public function get($k) {
+		$k = strtolower($k);
+		switch($k){
+			case 'baseurl':
+				return '/Navigation/View/' . $this->_data['id'];
+				break;
+			default:
+				return parent::get($k);
+		}
+	}
+	
+	/*
+	public function save(){
+		// Make sure the linked widget is kept in sync.
+		$this->getLink('Widget')->set('title', $this->get('name'));
+		return parent::save();
+	}
+	*/
 
 } // END class NavigationModel extends Model

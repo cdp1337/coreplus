@@ -39,6 +39,8 @@ class Dataset implements Iterator{
 	
 	public $_idval = null;
 	
+	public $_limit = false;
+	
 	public $_data = null;
 	
 	public $num_rows = null;
@@ -76,8 +78,21 @@ class Dataset implements Iterator{
 		
 		$args = func_get_args();
 		foreach($args as $a){
-			if(is_array($a)) $this->_selects = array_merge($this->_selects, $a);
-			else $this->_selects[] = $a;
+			if(is_array($a)){
+				// It should just be a flat array, ie: array('cola', 'colb', 'colc', ...);
+				$this->_selects = array_merge($this->_selects, $a);
+			}
+			elseif(strpos($a, ',') !== false){
+				// User submitted a comma-separated list... damn them
+				$parts = explode(',', $a);
+				foreach($parts as $p){
+					$this->_selects[] = trim($p);
+				}
+			}
+			else{
+				// Just a regular column, yay
+				$this->_selects[] = $a;
+			}
 		}
 
 		// Ensure no duplicate entries.
@@ -179,18 +194,11 @@ class Dataset implements Iterator{
 		return $this;
 	}
 	
-	private function _parseWhere($statement){
-		// The user may have sent something like "blah = mep" or "datecreated < somedate"
-		
-		$chars = array('=', '>', '<', '<=', '>=');
-		
-		foreach($chars as $c){
-			if(($pos = strpos($statement, $c)) !== false){
-				list($k, $v) = explode($c, $statement);
-				$this->_where[] = array('field' => trim($k), 'op' => $c, 'value' => trim($v));
-				return;
-			}
-		}
+	public function limit(){
+		$n = func_num_args();
+		if($n == 1) $this->_limit = func_get_arg(0);
+		elseif($n == 2) $this->_limit = func_get_arg(0) . ', ' . func_get_arg(1);
+		else throw new DMI_Exception('Invalid amount of parameters requested for Dataset::limit()');
 	}
 	
 	
@@ -244,6 +252,22 @@ class Dataset implements Iterator{
 		if($this->_data === null) $this->execute();
 		
 		return isset($this->_data[key($this->_data)]);
+	}
+	
+	
+	
+	private function _parseWhere($statement){
+		// The user may have sent something like "blah = mep" or "datecreated < somedate"
+		
+		$chars = array('=', '>', '<', '<=', '>=');
+		
+		foreach($chars as $c){
+			if(($pos = strpos($statement, $c)) !== false){
+				list($k, $v) = explode($c, $statement);
+				$this->_where[] = array('field' => trim($k), 'op' => $c, 'value' => trim($v));
+				return;
+			}
+		}
 	}
 	
 	

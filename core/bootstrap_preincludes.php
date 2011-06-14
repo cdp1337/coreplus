@@ -19,9 +19,11 @@ require_once(ROOT_PDIR . 'core/libs/cachecore/backends/cachecore.class.php');
 require_once(ROOT_PDIR . 'core/libs/cachecore/backends/cachefile.class.php');
 require_once(ROOT_PDIR . 'core/libs/cachecore/Cache.class.php');
 
-// Time is a useful component.
-require_once(ROOT_PDIR . 'core/libs/core/Time.class.php');
-
 // The PHP elements of the MVC framework.
 require_once(ROOT_PDIR . 'core/libs/core/Model.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Controller.class.php');
+
+// Time is a useful component.
+require_once(ROOT_PDIR . 'core/libs/core/Time.class.php');
+
+require_once(ROOT_PDIR . 'core/libs/core/ComponentModel.class.php');
