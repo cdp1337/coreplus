@@ -49,6 +49,9 @@ class DMI_mysqli_backend implements DMI_Backend {
 			case Dataset::MODE_GET:
 				$this->_executeGet($dataset);
 				break;
+			case Dataset::MODE_INSERT:
+				$this->_executeInsert($dataset);
+				break;
 		}
 	}
 	
@@ -83,6 +86,31 @@ class DMI_mysqli_backend implements DMI_Backend {
 		while($row = $res->fetch_assoc()){
 			$dataset->_data[] = $row;
 		}
+	}
+	
+	private function _executeInsert(Dataset $dataset){
+		// Generate a query to run.
+		$q = "INSERT INTO `" . $dataset->_table . "`";
+		
+		$keys = array();
+		$vals = array();
+		foreach($dataset->_sets as $k => $v){
+			$keys[] = "`$k`";
+			$vals[] = "'" . $this->_conn->real_escape_string($v) . "'";
+		}
+		
+		$q .= " ( " . implode(', ', $keys) . " )";
+		$q .= " VALUES ";
+		$q .= " ( " . implode(', ', $vals) . " )";
+		
+		
+		// Execute this and populate the dataset appropriately.
+		$res = $this->_rawExecute($q);
+		
+		$dataset->num_rows = 1;
+		$dataset->_data = array();
+		// Inserts don't have any data, but do have an ID, (which mysql handles internally)
+		if($dataset->_idcol) $dataset->_idval = $this->_conn->insert_id;
 	}
 	
 	public function tableExists($tablename){
@@ -191,9 +219,8 @@ class DMI_mysqli_backend implements DMI_Backend {
 			throw new DMI_Exception('No schema provided for table ' . $table);
 		}
 		
+		
 		foreach($newschema['schema'] as $column => $coldef){
-			
-			
 			if(!isset($coldef['type'])) $coldef['type'] = Model::ATT_TYPE_TEXT; // Default if not present.
 			if(!isset($coldef['maxlength'])) $coldef['maxlength'] = false;
 			if(!isset($coldef['null'])) $coldef['null'] = false;
@@ -231,7 +258,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 			// );
 
 			// Check that the current column is in the same location as in the database.
-			if($schema['ord'][$x] != $column){
+			if(!(isset($schema['ord'][$x]) && $schema['ord'][$x] == $column)){
 				// Is it even present?
 				if(isset($schema['def'][$column])){
 					// w00t, move it to this position.
@@ -256,10 +283,6 @@ class DMI_mysqli_backend implements DMI_Backend {
 				}
 			}
 			
-			
-			
-
-
 			// Now the column should exist and be in the correct location.  Check its structure.
 			// ALTER TABLE `test` CHANGE `newfield` `newfield` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL 
 			// Check its AI and primary states first.
@@ -267,6 +290,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$coldef['type'] == Model::ATT_TYPE_ID && ($newschema['indexes']['primary'] && in_array($column, $newschema['indexes']['primary'])) && 
 				(!isset($schema['def'][$column]) || ($schema['def'][$column]['extra'] == '' && $schema['def'][$column]['key'] == ''))
 			){
+				var_dump($table, $newschema);
 				// An AI value was added to the table.  I need to add that column as the primary key first, then
 				// tack on the AI property.
 				// ALTER TABLE `test` ADD PRIMARY KEY(`id`)
@@ -307,7 +331,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 
 //var_dump($column, $type, $coldef, $schema); die();
 		// The columns should be done; onto the indexes.
-		$schema = $this->_describeTableIndexes('_tmptable');
+		$indexes = $this->_describeTableIndexes('_tmptable');
 		
 		//var_dump($newschema['indexes'], $schema); die();
 		$keysgood = array(); // Used to know what keys have been validated and conformed.
@@ -338,21 +362,21 @@ class DMI_mysqli_backend implements DMI_Backend {
 			
 			
 			// These are the index creates/modifies.
-			if(!isset($schema[$idxkey])){
+			if(!isset($indexes[$idxkey])){
 				// Doesn't exist, create it.
 				$this->_rawExecute('ALTER TABLE `_tmptable` ADD ' . $idxname . ' (`' . implode('`, `', $columns) . '`)');
 				$keysgood[] = $idxkey;
-				$schema = $this->_describeTableIndexes('_tmptable');
+				$indexes = $this->_describeTableIndexes('_tmptable');
 			}
 			elseif(
-				$schema[$idxkey]['columns'] != $columns ||
-				$nonunique != ($schema[$idxkey]['nonunique'])
+				$indexes[$idxkey]['columns'] != $columns ||
+				$nonunique != ($indexes[$idxkey]['nonunique'])
 			){
 				// Rebuild it.
 				$this->_rawExecute('ALTER TABLE `_tmptable` DROP ' . $idxdropname . '');
 				$this->_rawExecute('ALTER TABLE `_tmptable` ADD ' . $idxname . ' (`' . implode('`, `', $columns) . '`)');
 				$keysgood[] = $idxkey;
-				$schema = $this->_describeTableIndexes('_tmptable');
+				$indexes = $this->_describeTableIndexes('_tmptable');
 			}
 			else{
 				// PK Matches, nothing needs to be done.
@@ -360,7 +384,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 			}
 			
 			// And the key deletions.
-			foreach($schema as $idx => $val){
+			foreach($indexes as $idx => $val){
 				if(!in_array($idx, $keysgood)){
 					// DROP IT!
 					$this->_rawExecute('ALTER TABLE `_tmptable` DROP INDEX ' . $idx . '');

@@ -846,8 +846,7 @@ class Component extends InstallArchiveAPI{
 		}
 		
 		// Make sure the asset cache is purged!
-		$c = Cache::Singleton('asset-resolveurl');
-		$c->delete();
+		Core::Cache()->delete('asset-resolveurl');
 	}
 	
 	/**
@@ -866,21 +865,7 @@ class Component extends InstallArchiveAPI{
 			$m->set('default_value', $confignode->getAttribute('default'));
 			if(!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
 			$m->set('description', $confignode->getAttribute('description'));
-			var_dump($m); die('whee');
-			
-			// <config key="/core/theme" type="string" default="default" description="The theme of the site"/>
-			// Insert/Update the defaults for an entry in the database.
-			//$s = new SQLBuilderInsertUpdate();
-			//$s->table(DB_PREFIX . 'config');
-			//$s->set('key', $confignode->getAttribute('key'));
-			//$s->set('type', $confignode->getAttribute('type'), true);
-			//$s->set('default_value', $confignode->getAttribute('default'), true);
-			//$s->set('value', $confignode->getAttribute('default')); // Do not "update" value, keep whatever the user set previously.
-			//$s->set('description', $confignode->getAttribute('description'), true);
-			
-			//echo $s->query() . '<br/>';
-			
-			$s->execute();
+			$m->save();
 		}
 	}
 	
@@ -897,20 +882,16 @@ class Component extends InstallArchiveAPI{
 		foreach($node->getElementsByTagName('page') as $subnode){
 			// <config key="/core/theme" type="string" default="default" description="The theme of the site"/>
 			// Insert/Update the defaults for an entry in the database.
-			$s = new SQLBuilderInsertUpdate();
-			$s->table(DB_PREFIX . 'page');
-			$s->set('baseurl', $subnode->getAttribute('baseurl'));
-			$s->set('rewriteurl', $subnode->getAttribute('baseurl')); // Do not "update" value, keep whatever the user set previously.
-			$s->set('title', $subnode->getAttribute('title')); // Do not "update" value, keep whatever the user set previously.
-			$s->set('access', $subnode->getAttribute('access')); // Do not "update" value, keep whatever the user set previously.
-			$s->set('widget', $subnode->getAttribute('widget'), true);
-			$s->set('admin', $subnode->getAttribute('admin'), true);
-			$s->set('created', 'UNIX_TIMESTAMP()');
-			$s->set('updated', 'UNIX_TIMESTAMP()', true);
-			
-			//echo $s->query() . '<br/>';
-			
-			$s->execute();
+			$m = new PageModel($subnode->getAttribute('baseurl'));
+			// Do not "update" value, keep whatever the user set previously.
+			if(!$m->get('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
+			// Do not "update" value, keep whatever the user set previously.
+			if(!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
+			// Do not "update" value, keep whatever the user set previously.
+			if(!$m->get('access')) $m->set('access', $subnode->getAttribute('access'));
+			$m->set('widget', $subnode->getAttribute('widget'));
+			$m->set('admin', $subnode->getAttribute('admin'));
+			$m->save();
 		}
 	}
 	
@@ -935,9 +916,9 @@ class Component extends InstallArchiveAPI{
 		foreach($classes as $m => $file){
 			require_once($file);
 			
-			$s = call_user_func(array($m, 'GetSchema'));
-			$i = call_user_func(array($m, 'GetIndexes'));
-			$tablename = call_user_func(array($m, 'GetTableName'));
+			$s = $m::GetSchema();
+			$i = $m::GetIndexes();
+			$tablename = $m::GetTableName();
 
 			$schema = array('schema' => $s, 'indexes' => $i);
 			

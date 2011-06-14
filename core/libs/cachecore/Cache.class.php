@@ -48,6 +48,10 @@ class Cache{
 		else return false;
 	}
 	
+	public function delete($key){
+		return $this->_factory($key)->delete();
+	}
+	
 	public function _factory($key, $expires = 7200){
 		$obj = false;
 		
@@ -68,8 +72,8 @@ class Cache{
 	}
 	
 	/**
-	 * Get the current system DMI based on configuration values.
-	 * @return DMI
+	 * Get the current system Cache based on configuration values.
+	 * @return Cache
 	 */
 	public static function GetSystemCache(){
 		if(self::$_Interface !== null) return self::$_Interface;

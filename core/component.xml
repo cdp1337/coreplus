@@ -1099,7 +1099,7 @@
 		<config key="/core/aws/canonicalname" type="string" default="" description="Your CanonicalUser DisplayName. Used for setting access control settings in AmazonS3. Found in the AWS Security Credentials (i.e. &quot;Welcome, AWS_CANONICAL_NAME&quot;)."/>
 		<config key="/core/asset_backend" type="enum" default="local" description="What type of storage should be used for assets?  This will determine the CDN that is used."/>
 		<config key="/core/aws/asset_bucket" type="string" default="" description=""/>
-		<config key="/core/cache_backend" type="string" default="file" description="apc; file; memcache; xcache"/>
+		<config key="/core/cache_backend" type="string" default="file" description="apc; file; memcache; xcache; BLAH"/>
 	</configs>
 	<assets/>
 	<author name="Charlie Powell" email="powellc@powelltechs.com"/>

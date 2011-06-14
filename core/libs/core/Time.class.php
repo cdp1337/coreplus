@@ -31,7 +31,7 @@ class Time{
 	 */
 	public static function GetCurrentGMT($format = 'U'){
 		//$dt = new DateTime('now', 0);
-		return date($format, time() + ConfigHandler::getValue('core', 'gmt_offset'));
+		return date($format, time() + TIME_GMT_OFFSET);
 	}
 	
 	/**
@@ -116,8 +116,9 @@ class Time{
 	private static function ConvertGMT($timeInGMT, $timezone){
 		switch($timezone){
 			case Time::TIMEZONE_SERVER:
-				return $timeInGMT + (ConfigHandler::getValue('core', 'timezone') * 3600);
+				return $timeInGMT + (TIME_DEFAULT_TIMEZONE * 3600);
 			case Time::TIMEZONE_USER:
+				// Obviously has to be called after the system is fully available.
 				return $timeInGMT + (CurrentUser::GetUser()->getPreference('timezone')->value * 3600);
 			default:
 				return $timeInGMT + ($timezone * 3600);

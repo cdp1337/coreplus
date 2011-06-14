@@ -39,37 +39,21 @@ class Model {
 	// @see http://www.regular-expressions.info/email.html
 	const VALIDATION_EMAIL = "/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/";
 
-	/**
-	 * @var string The table name corresponding to this Model.
-	 */
-	protected $_tablename = null;
 	
 	/**
 	 * @var array Associative array of the data in this corresponding record.
 	 */
 	protected $_data = array();
-
+	
 	/**
-	 * @var array The primary key column of the corresponding table.
+	 * The data according to the database.
+	 * Useful for something.... :/
+	 * @var array
 	 */
-	//protected $_pkcolumns;
+	protected $_datainit = array();
 
 	/**
-	 * @var string The AI column of this table.
-	 */
-	//protected $_aicolumn;
-
-	/**
-	 * @var string The "created" column of the corresponding table.
-	 */
-	//protected $_createdcolumn;
-
-	/**
-	 * @var string The "Updated" column of the corresponding table.
-	 */
-	//protected $_updatedcolumn;
-
-	/**
+	 * This is quicker than checking if $data and $datainit are the same every time.
 	 * @var boolean Dirty flag, if true the data in the model has been changed.
 	 */
 	protected $_dirty = false;
@@ -102,97 +86,11 @@ class Model {
 	
 	const LINK_HASONE = 'one';
 	const LINK_HASMANY = 'many';
+	
 
 
 	
 	public function __construct($key = null){
-		// Build a query to describe the table.
-		// @todo Sometime tie this into a cache system!
-		//$this->_data = array();
-		//$this->_exists = false;
-		//$this->_pkcolumns = array();
-		//$this->_columns = array();
-		
-		
-		/*
-		if(!isset(Model::$_ModelStructureCache[$this->getTableName()])){
-			
-			$l =& Model::$_ModelStructureCache[$this->getTableName()];
-			$l = array('data' => array(), 'pkcolumns' => array(), 'columns' => array(), 'createdcolumn' => $this->_createdcolumn, 'updatedcolumn' => $this->_updatedcolumn, 'aicolumn' => $this->_aicolumn);
-		
-			$q = "DESCRIBE `" . $this->getTableName() . "`";
-			$rs = DB::Execute($q);
-			foreach($rs as $row){
-				//var_dump($row);
-				$l['data'][$row['Field']] = null;
-
-				// Primary key column?
-				if($row['Key'] == 'PRI') $l['pkcolumns'][] = $row['Field'];
-
-				// "Created" column?
-				if(!$l['createdcolumn'] && $row['Field'] == 'created' && $row['Type'] == 'int(11)') $l['createdcolumn'] = $row['Field'];
-
-				// "Updated" column?
-				if(!$l['updatedcolumn'] && $row['Field'] == 'updated' && $row['Type'] == 'int(11)') $l['updatedcolumn'] = $row['Field'];
-
-				// AI column?
-				if($row['Extra'] == 'auto_increment') $l['aicolumn'] = $row['Field'];
-
-				// Save this column definition too.
-				// This is useful for the meta functions down the road.
-				if($row['Field'] == 'access' && $row['Type'] == 'varchar(512)'){
-					// Interpuret this as an access string.
-					$type = 'accessstring';
-					$maxlen = 512;
-				}
-				elseif(strpos($row['Type'], 'int(') !== false){
-					$type = 'int';
-					$maxlen = substr($row['Type'], 4, -1);
-				}
-				elseif(strpos($row['Type'], 'varchar(') !== false){
-					$type = 'string';
-					$maxlen = substr($row['Type'], 8, -1);
-				}
-				elseif($row['Type'] == 'text'){
-					$type = 'text';
-					$maxlen = null;
-				}
-				elseif($row['Type'] == "enum('0','1')" || $row['Type'] == "enum('1','0')"){
-					$type = 'boolean';
-					$maxlen = null;
-				}
-				elseif(strpos($row['Type'], 'enum(') !== false){
-					$type = 'enum';
-					$maxlen = null;
-					$opt = explode(',', substr($row['Type'], 5, -1));
-					foreach($opt as $k => $v) $opt[$k] = substr($v, 1, -1); // Opts will be surrounded by single quotes.
-				}
-				else{
-					echo "<pre class='xdebug-var-dump'>Unsupported column definition: " . $row['Type'] . "</pre>";
-					$type = 'other';
-					$maxlen = null;
-				}
-				$name = ucwords(str_replace('_', ' ', $row['Field']));
-				$primary = ($row['Key'] == 'PRI');
-				$unique = ($row['Key'] == 'PRI' || $row['Key'] == 'UNI');
-				$ai = ($row['Extra'] == 'auto_increment');
-				$null = ($row['Null'] == 'YES');
-
-				$l['columns'][$row['Field']] = array('name' => $name, 'type' => $type, 'maxlength' => $maxlen, 'primary' => $primary, 'unique' => $unique, 'autoinc' => $ai, 'allownull' => $null);
-				if($type == 'enum') $l['columns'][$row['Field']]['opts'] = $opt;
-			}
-		} // if(!isset(Model::$_ModelStructureCache[$this->getTableName()]))
-		*/
-		
-		// Load in the structure from the cache.
-		/*$l =& Model::$_ModelStructureCache[$this->getTableName()];
-		$this->_data = $l['data'];
-		$this->_pkcolumns = $l['pkcolumns'];
-		$this->_createdcolumn = $l['createdcolumn'];
-		$this->_updatedcolumn = $l['updatedcolumn'];
-		$this->_aicolumn = $l['aicolumn'];
-		$this->_columns = $l['columns'];
-		*/
 		
 		// Update the _data array based on the schema.
 		$s = self::GetSchema();
@@ -243,6 +141,8 @@ class Model {
 		
 		if($data->num_rows){
 			$this->_data = $data->current();
+			$this->_datainit = $data->current();
+			
 			$this->_dirty = false;
 			$this->_exists = true;
 		}
@@ -280,38 +180,16 @@ class Model {
 	public function save(){
 		
 		// Only do the same operation if it's been changed.
-		if($this->_dirty){
-			// Add support for automatic timestamps.
-			if($this->_updatedcolumn) $this->set($this->_updatedcolumn, Time::GetCurrentGMT() );
-			
-			// @todo Should this be in the set instead?
-			// Update all NULL values to blank for values that aren't allowed to be null.
-			foreach($this->_data as $k => $v){
-				if($this->_columns[$k]['type'] == 'boolean'){
-					// If null is allowed and either null or a blank string, set those as null.
-					if($this->_columns[$k]['allownull'] && ($v === null || $v === '')) $this->_data[$k] = null;
-					// Otherwise use PHP to evaluate any possible "true" condition to simply "1".
-					else $this->_data[$k] = ($v)? '1' : '0'; 
-				}
-				elseif($v === null && !$this->_columns[$k]['allownull']){
-					$this->_data[$k] = '';
-				}
-			}
-
-			if($this->isnew()){
-				$ret = $this->_saveNew();
-			}
-			else{
-				$ret = $this->_saveExisting();
-			}
-			
-			if(!$ret){
-				// @todo Make a DBI exception.
-				throw new Exception(DB::Error());
-			}
-		}
+		if(!$this->_dirty) return false;
 		
+		if($this->_exists) $this->_saveExisting();
+		else $this->_saveNew();
 		
+		$this->_exists = true;
+		$this->_dirty = false;
+		$this->_dataatinit = $this->_data;
+		
+		/*
 		// Go through any linked tables and ensure that they're saved as well.
 		foreach($this->_linked as $k => $l){
 			if(!(isset($l['records']) || $this->_dirty)) continue; // No need to save if it was never loaded.
@@ -324,61 +202,90 @@ class Model {
 				$model->save();
 			}
 		}
+		*/
 	}
 
 	private function _saveNew(){
-		$builder = new SQLBuilderInsert();
-
-		$builder->from($this->getTableName());
-
-		// Add support for automatic timestamps.
-		if($this->_createdcolumn) $this->set($this->_createdcolumn, Time::GetCurrentGMT() );
-
+		$i = self::GetIndexes();
+		$s = self::GetSchema();
+		
+		if(!isset($i['primary'])) $i['primary'] = array(); // No primary schema defined... just don't make the in_array bail out.
+		
+		$dat = new Dataset();
+		$dat->table(self::GetTableName());
+		
+		$idcol = false;
 		foreach($this->_data as $k => $v){
-			// Skip the AI column.
-			if($k == $this->_aicolumn) continue;
+			$keyschema = $s[$k];
 			
-			$builder->set($k, $v);
+			switch($keyschema['type']){
+				case Model::ATT_TYPE_CREATED:
+				case Model::ATT_TYPE_UPDATED:
+					$nv = Time::GetCurrentGMT();
+					$dat->insert($k, $nv);
+					$this->_data[$k] = $nv;
+					break;
+				
+				case Model::ATT_TYPE_ID:
+					$dat->setID($k, $this->_data[$k]);
+					$idcol = $k; // Remember this for after the save.
+					break;
+				default:
+					$dat->set($k, $v);
+					break;
+			}
 		}
 		
-		if($builder->execute()){
-			// Set the insert id appropriately.
-			if($this->_aicolumn) $this->_data[$this->_aicolumn] = DB::Insert_ID ();
-
-			$this->_dirty = false;
-			$this->_exists = true;
-			return true;
-		}
-		else{
-			return false;
-		}
+		$dat->execute();
+		
+		if($idcol) $this->_data[$idcol] = $dat->getID();
 	}
 
 	private function _saveExisting(){
-		$builder = new SQLBuilderUpdate();
-
-		$builder->from($this->getTableName());
-
-		if(sizeof($this->_pkcolumns)){
-			foreach($this->_pkcolumns as $v){
-				$builder->where(array($v => $this->_data[$v]));
+		$i = self::GetIndexes();
+		$s = self::GetSchema();
+		
+		if(!isset($i['primary'])) $i['primary'] = array(); // No primary schema defined... just don't make the in_array bail out.
+		
+		$dat = new Dataset();
+		$dat->table(self::GetTableName());
+		
+		$idcol = false;
+		foreach($this->_data as $k => $v){
+			$keyschema = $s[$k];
+			
+			// Certain key types have certain functions.
+			switch($keyschema['type']){
+				case Model::ATT_TYPE_CREATED:
+					// Already created... don't update the flag.
+					continue;
+				case Model::ATT_TYPE_UPDATED:
+					$nv = Time::GetCurrentGMT();
+					$dat->update($k, $nv);
+					$this->_data[$k] = $nv;
+					continue;
+				case Model::ATT_TYPE_ID:
+					$dat->setID($k, $this->_data[$k]);
+					$idcol = $k; // Remember this for after the save.
+					continue;
+			}
+			
+			// Everything else
+			if(in_array($k, $i['primary'])){
+				// Just in case the new data changed....
+				if($this->_datainit[$k] != $v) $dat->update($k, $v);
+				
+				$dat->where($k, $this->_datainit[$k]);
+				
+				$this->_data[$k] = $v;
+			}
+			else{
+				$dat->update($k, $v);
 			}
 		}
-
-		$builder->limit(1);
-
-		foreach($this->_data as $k => $v){
-			if(!in_array($k, $this->_pkcolumns)) $builder->set($k, $v);
-		}
-
-		if($builder->execute()){
-			$this->_dirty = false;
-			$this->_exists = true;
-			return true;
-		}
-		else{
-			return false;
-		}
+		
+		$dat->execute();
+		// IDs don't change in updates, else they wouldn't be the id.
 	}
 
 	public function _loadFromRecord($record){
@@ -595,34 +502,6 @@ class Model {
 		}
 	}
 
-	// Moving this to a static function
-	/*
-	public function getTableName(){
-		if(!$this->_tablename){
-			// Calculate the table class.
-
-			// It's based on the main class's name.
-			$tbl = get_class($this);
-
-			// If it ends in Model... trim that bit off.  It's assumed that the prefix is what we want.
-			if(preg_match('/Model$/', $tbl)) $tbl = substr($tbl, 0, -5);
-
-			// Replace any capitalized letters with a _[letter].
-			$tbl = preg_replace('/([A-Z])/', '_$1', $tbl);
-
-			// Of course this would produce something similar to _Foo_Mep_Blah.. don't need the beginning _.
-			if($tbl{0} == '_') $tbl = substr($tbl, 1);
-
-			// And lowercase.
-			$tbl = strtolower($tbl);
-
-			// Prepend the DB_PREFIX and save!
-			$this->_tablename = DB_PREFIX . $tbl;
-		}
-		return $this->_tablename;
-	}
-	*/
-
 	public function getColumnStructure(){
 		return $this->_columns;
 	}
@@ -683,12 +562,16 @@ class Model {
 	
 	/*******************   Other Static Methods *************************/
 	public static function GetTableName(){
-		static $_tablename;
-		if(!$_tablename){
+		// Just a lookup table for rendered table names.
+		// This is useful so the regex functions don't have to run more than once.
+		static $_tablenames = array();
+		$m = get_called_class();
+		
+		if(!isset($_tablenames[$m])){
 			// Calculate the table class.
 
 			// It's based on the main class's name.
-			$tbl = get_called_class();
+			$tbl = $m;
 			//$tbl = get_class($this);
 
 			// If it ends in Model... trim that bit off.  It's assumed that the prefix is what we want.
@@ -704,9 +587,10 @@ class Model {
 			$tbl = strtolower($tbl);
 
 			// Prepend the DB_PREFIX and save!
-			$_tablename = DB_PREFIX . $tbl;
+			$_tablenames[$m] = DB_PREFIX . $tbl;
 		}
-		return $_tablename;
+		
+		return $_tablenames[$m];
 	}
 	
 	public static function GetSchema(){

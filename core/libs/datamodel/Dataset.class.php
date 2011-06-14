@@ -33,6 +33,12 @@ class Dataset implements Iterator{
 	
 	public $_mode = Dataset::MODE_GET;
 	
+	public $_sets = array();
+	
+	public $_idcol = null;
+	
+	public $_idval = null;
+	
 	public $_data = null;
 	
 	public $num_rows = null;
@@ -55,8 +61,12 @@ class Dataset implements Iterator{
 	 */
 	public function select(){
 		
+		$n = func_num_args();
+		
+		if($n == 0) throw new DMI_Exception ('Invalid amount of parameters requested for Dataset::set()');
+		
 		// Allow null to clear out the selects.
-		if(func_num_args() == 1 && func_get_arg(0) === null){
+		if($n == 1 && func_get_arg(0) === null){
 			$this->_selects = array();
 			return $this;
 		}
@@ -75,6 +85,57 @@ class Dataset implements Iterator{
 
 		// Allow chaining
 		return $this;
+	}
+	
+	public function insert(){
+		call_user_func_array(array($this, '_set'), func_get_args());
+		$this->_mode = Dataset::MODE_INSERT;
+		
+		return $this;
+	}
+	
+	public function update(){
+		call_user_func_array(array($this, '_set'), func_get_args());
+		$this->_mode = Dataset::MODE_UPDATE;
+		
+		return $this;
+	}
+	
+	public function set(){
+		call_user_func_array(array($this, '_set'), func_get_args());
+		$this->_mode = Dataset::MODE_INSERTUPDATE;
+		
+		return $this;
+	}
+	
+	private function _set(){
+		$n = func_num_args();
+		
+		if($n == 0 || $n > 2){
+			throw new DMI_Exception ('Invalid amount of parameters requested for Dataset::set(), ' . $n . ' provided, exactly 1 or 2 expected');
+		}
+		elseif($n == 1){
+			$a = func_get_arg(0);
+			if(!is_array($a)) throw new DMI_Exception ('Invalid parameter sent for Dataset::set()');
+			
+			foreach($a as $k => $v){
+				$this->_sets[$k] = $v;
+			}
+		}
+		else{
+			$k = func_get_arg(0);
+			$v = func_get_arg(1);
+			$this->_sets[$k] = $v;
+		}
+	}
+	
+	public function setID($key, $val = null){
+		$this->_idcol = $key;
+		$this->_idval = $val;
+	}
+	
+	public function getID(){
+		return $this->_idval;
 	}
 	
 	/**
@@ -145,7 +206,7 @@ class Dataset implements Iterator{
 		// This actually goes the other way, as the interface has the logic.
 		$interface->connection()->execute($this);
 		
-		reset($this->_data);
+		if($this->_data !== null) reset($this->_data);
 		
 		// Allow Chaining
 		return $this;

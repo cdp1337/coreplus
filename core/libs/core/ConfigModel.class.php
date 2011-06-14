@@ -50,6 +50,12 @@ class ConfigModel extends Model {
 			'comment' => 'The define constant to map the value to on system load.',
 			'null' => true,
 		),
+		'created' => array(
+			'type' => Model::ATT_TYPE_CREATED
+		),
+		'updated' => array(
+			'type' => Model::ATT_TYPE_UPDATED
+		)
 	);
 	
 	public static $Indexes = array(
