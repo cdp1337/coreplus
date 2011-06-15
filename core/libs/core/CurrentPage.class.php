@@ -86,10 +86,15 @@ class CurrentPage{
 		}
 		elseif($pagedat){
 			// Is this even a valid controller?
+			// This will allow a page to be called with it being in the pages database.
 			$p = new PageModel();
 			$p->set('baseurl', $uri);
 			$p->set('rewriteurl', $uri);
 			$this->_page = $p;
+		}
+		else{
+			// No page in the database and no valid controller... sigh
+			return false;
 		}
 		
 		// Make sure all the parameters from both standard GET and core parameters are tacked on.
@@ -250,7 +255,7 @@ class CurrentPage{
 		// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
 		if(DEVELOPMENT_MODE && $view->mode == View::MODE_PAGE && $view->contenttype == View::CTYPE_HTML){
 			echo '<pre class="xdebug-var-dump">';
-			echo "Number of queries: " . DB::Singleton()->counter . "\n";
+			//echo "Number of queries: " . DB::Singleton()->counter . "\n";
 			echo "Amount of memory used by PHP: " . File::FormatSize(memory_get_usage()) . "\n";
 			echo "Total processing time: " . round(Core::GetProfileTimeTotal(), 3) . ' seconds';
 			echo '</pre>';
