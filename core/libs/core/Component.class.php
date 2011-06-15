@@ -98,21 +98,14 @@ class Component extends InstallArchiveAPI{
 		
 		// Now look up the component in the database (for installed version).
 		//if(class_exists('DB') && Core::IsInstalled()){
-		if(class_exists('DB')){
-			$q = DB::Execute("SELECT * FROM `" . DB_PREFIX . "component` WHERE `name` = ?", $this->_name);
-			if(!$q) return false;
-			
-			if($q->numRows() > 0){
-				$this->_versionDB = $q->fields['version'];
-				$this->enabled = ($q->fields['enabled']);
-			}
-			else{
-				// Indicate it's not installed yet
-				$this->_versionDB = false;
-				// But it is not disabled...
-				$this->enabled = true;
-			}
-		}
+		$res = Dataset::Init()->table('component')->select('*')->where('name = ' . $this->_name)->limit(1)->execute();
+		
+		if(!$res->num_rows) return false;
+		
+		$data = $res->current();
+		$this->_versionDB = $data['version'];
+		$this->enabled = $data['enabled'];
+		
 		
 		return true;
 	}

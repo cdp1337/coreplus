@@ -246,7 +246,7 @@ class Model {
 					$idcol = $k; // Remember this for after the save.
 					break;
 				default:
-					$dat->set($k, $v);
+					$dat->insert($k, $v);
 					break;
 			}
 		}
