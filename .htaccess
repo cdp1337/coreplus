@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
 	RewriteEngine On
-	RewriteBase /cae2
+	RewriteBase /CAE2
 
 
 	## Ignore these directories.

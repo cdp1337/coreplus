@@ -571,7 +571,7 @@ class Model {
 		$fac = new ModelFactory(get_called_class());
 		$fac->where($where);
 		$fac->limit($limit);
-		var_dump($fac);
+		//var_dump($fac);
 		return $fac->get();
 	}
 	
