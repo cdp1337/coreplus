@@ -89,7 +89,11 @@ ConfigHandler::Singleton();
 
 // Give me core settings!
 // This will do the defines for the site, and provide any core variables to get started.
-$core_settings = ConfigHandler::LoadConfigFile("core");
+$core_settings = ConfigHandler::LoadConfigFile("configuration");
+
+if(!$core_settings){
+	die("Please ensure that you copy /config/configuration.xml.example to /config/configuration.xml and edit the appropriate values.");
+}
 
 
 /**
@@ -107,11 +111,11 @@ if(!DEVELOPMENT_MODE){
 
 // Site not configured yet?
 // This config-based constant will be set automatically after an installation to mark it's done.
-if(!SITE_CONFIGURED){
-	die('This site has not been configured yet.  If you are the administrator, please edit the XML files in "config" and be sure to set "SITE_CONFIGURED" to true when done.');
+//if(!SITE_CONFIGURED){
+//	die('This site has not been configured yet.  If you are the administrator, please edit the XML files in "config" and be sure to set "SITE_CONFIGURED" to true when done.');
 	//header('Location: install/');
 	//die('If your browser does not refresh, please <a href="install.php">Click Here</a>');
-}
+//}
 
 // The TMP_DIR needs to be writable!
 if(!is_dir(TMP_DIR)){

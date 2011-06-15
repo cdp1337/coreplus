@@ -98,7 +98,13 @@ class Component extends InstallArchiveAPI{
 		
 		// Now look up the component in the database (for installed version).
 		//if(class_exists('DB') && Core::IsInstalled()){
-		$res = Dataset::Init()->table('component')->select('*')->where('name = ' . $this->_name)->limit(1)->execute();
+		try{
+			$res = Dataset::Init()->table('component')->select('*')->where('name = ' . $this->_name)->limit(1)->execute();
+		}
+		catch(Exception $e){
+			// Just return false, I don't actually care that it failed.
+			return false;
+		}
 		
 		if(!$res->num_rows) return false;
 		

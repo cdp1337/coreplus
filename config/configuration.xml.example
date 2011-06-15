@@ -61,4 +61,50 @@
 		<value>-4</value>
 		<description>The default timezone to display times in.</description>
 	</define>
+
+	<return name="cache_type" type="enum">
+		<option>apc</option>
+		<option>file</option>
+		<defaultValue>file</defaultValue>
+		<value>file</value>
+	</return>
+
+	<return name="database_server" type="string">
+		<defaultValue>localhost</defaultValue>
+		<value>localhost</value>
+		<description>The server that will be hosting the database, usually leaving this localhost will suffice.</description>
+	</return>
+	
+	<return name="database_port" type="int">
+		<defaultValue>3306</defaultValue>
+		<value>3306</value>
+	</return>
+	
+	<return name="database_type" type="enum">
+		<option>mysql</option>
+		<option>mysqli</option>
+		<option>cassandra</option>
+		<defaultValue>mysqli</defaultValue>
+		<value>mysqli</value>
+	</return>
+	
+	<return name="database_name" type="string">
+		<defaultValue>db_name</defaultValue>
+		<value>db_name_build20110608</value>
+	</return>
+	
+	<return name="database_user" type="string">
+		<defaultValue>user</defaultValue>
+		<value>db_user</value>
+	</return>
+	
+	<return name="database_pass" type="string">
+		<defaultValue/>
+		<value>db_pass</value>
+	</return>
+	
+	<define name="DB_PREFIX" type="string">
+		<defaultValue>CAE2_</defaultValue>
+		<value>CAE2_</value>
+	</define>
 </configuration>

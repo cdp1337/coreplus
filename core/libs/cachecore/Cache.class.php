@@ -28,8 +28,8 @@ class Cache{
 	
 	public function __construct($backend = null){
 		if(!$backend){
-			$cs = ConfigHandler::LoadConfigFile("cache");
-			$backend = $cs['type'];
+			$cs = ConfigHandler::LoadConfigFile("configuration");
+			$backend = $cs['cache_type'];
 		}
 		
 		$this->_backend = $backend;

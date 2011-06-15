@@ -61,12 +61,12 @@ ConfigHandler::singleton();
 
 // Give me core settings!
 // This will do the defines for the site, and provide any core variables to get started.
-$core_settings = ConfigHandler::LoadConfigFile("core");
+$core_settings = ConfigHandler::LoadConfigFile("configuration");
 
 
-if(!DEVELOPMENT_MODE){
-	die('Installation cannot proceed while site is NOT in Development mode.');
-}
+//if(!DEVELOPMENT_MODE){
+//	die('Installation cannot proceed while site is NOT in Development mode.');
+//}
 
 
 
@@ -119,13 +119,13 @@ catch(Exception $e){
 	// Couldn't establish connection... do something fun!
 
 	InstallPage::SetVariable('error', $e->getMessage());
-	$dbinfo = ConfigHandler::LoadConfigFile('db');
-	$dbuser = $dbinfo['user'];
-	$dbname = $dbinfo['name'];
-	$dbpass = $dbinfo['pass'];
+	//$dbinfo = ConfigHandler::LoadConfigFile('db');
+	$dbuser = $core_settings['database_user'];
+	$dbname = $core_settings['database_name'];
+	$dbpass = $core_settings['database_pass'];
 
 	// Different connection backends will have different instructions.
-	switch($dbinfo['type']){
+	switch($core_settings['database_type']){
 		case 'cassandra':
 			$body = <<<EOD
 <h2>Cassandra Installation Instructions</h2>
@@ -171,16 +171,16 @@ EOD;
 
 
 try{
-// Data model backend should be ready now.
-require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
-require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
+	// Data model backend should be ready now.
+	require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
+	require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
 
-// Get the preinstalled components in the system.
-$csingleton = ComponentHandler::Singleton();
-//$components = ComponentHandler::Singleton()->GetAllComponents();
-//var_dump($components);
+	// Get the preinstalled components in the system.
+	$csingleton = ComponentHandler::Singleton();
+	//$components = ComponentHandler::Singleton()->GetAllComponents();
+	//var_dump($components);
 
-ComponentHandler::Load();
+	ComponentHandler::Load();
 
 }
 catch(Exception $e){
@@ -189,4 +189,5 @@ catch(Exception $e){
 	InstallPage::Render();
 }
 
-
+// In theory, everything should be installed now.
+header('Location:../');

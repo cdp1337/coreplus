@@ -2,3 +2,5 @@
 nbproject/project.xml
 nbproject/project.properties
 .htaccess
+/config/configuration.xml
+assets/

@@ -82,11 +82,11 @@ class DMI {
 		
 		// Because this is the system data connection, I also need to pull the settings automatically.
 		
-		$cs = ConfigHandler::LoadConfigFile("db");
+		$cs = ConfigHandler::LoadConfigFile("configuration");
 		
-		self::$_Interface->setBackend($cs['type']);
+		self::$_Interface->setBackend($cs['database_type']);
 		
-		self::$_Interface->connect($cs['server'], $cs['user'], $cs['pass'], $cs['name']);
+		self::$_Interface->connect($cs['database_server'], $cs['database_user'], $cs['database_pass'], $cs['database_name']);
 		
 		return self::$_Interface;
 	}
