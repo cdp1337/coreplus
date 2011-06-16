@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component>
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="jPlayer" execmode="web">
+	<requires name="core" type="component"/>
+	<!--<requires name="JQuery" type="component"/>-->
+	<assets>
+		<file filename="assets/css/skin/jplayer.blue.monday.css"/>
+		<file filename="assets/css/skin/jplayer.blue.monday.jpg"/>
+		<file filename="assets/css/skin/jplayer.blue.monday.video.play.hover.png"/>
+		<file filename="assets/css/skin/jplayer.blue.monday.video.play.png"/>
+		<file filename="assets/css/skin/pbar-ani.gif"/>
+		<file filename="assets/js/jquery.jplayer.min.js"/>
+		<file filename="assets/swf/Jplayer.swf"/>
+	</assets>
+	<library>
+		<scriptlibrary name="jplayer" call="jPlayer::IncludeJPlayer"/>
+		<file filename="jPlayer.class.php">
+			<provides type="class" name="jPlayer"/>
+		</file>
+	</library>
+	<author name="hinschn" email="hinschn@gmail.com"/>
+	<otherfiles/>
+	<dbschema prefix="CAE2_"/>
+</component>
+
