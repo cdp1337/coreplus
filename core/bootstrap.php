@@ -1,20 +1,16 @@
 <?php
 /**
- * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ * Core bootstrap file that kicks off the entire application
  * 
- * Copyright (C) 2009  Charlie Powell <powellc@powelltechs.com>
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * 
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+ * @package Core
+ * @since 2011.06
+ * @author Charlie Powell <powellc@powelltechs.com>
+ * @copyright Copyright 2011, Charlie Powell
+ * @license GNU Lesser General Public License v3 <http://www.gnu.org/licenses/lgpl-3.0.html>
+ * This system is licensed under the GNU LGPL, feel free to incorporate it into
+ * custom applications, but keep all references of the original authors intact,
+ * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>, 
+ * and please contribute back to the community :)
  */
 
 /**
@@ -89,7 +85,11 @@ ConfigHandler::Singleton();
 
 // Give me core settings!
 // This will do the defines for the site, and provide any core variables to get started.
-$core_settings = ConfigHandler::LoadConfigFile("core");
+$core_settings = ConfigHandler::LoadConfigFile("configuration");
+
+if(!$core_settings){
+	die("Please ensure that you copy /config/configuration.xml.example to /config/configuration.xml and edit the appropriate values.");
+}
 
 
 /**
@@ -107,11 +107,11 @@ if(!DEVELOPMENT_MODE){
 
 // Site not configured yet?
 // This config-based constant will be set automatically after an installation to mark it's done.
-if(!SITE_CONFIGURED){
-	die('This site has not been configured yet.  If you are the administrator, please edit the XML files in "config" and be sure to set "SITE_CONFIGURED" to true when done.');
+//if(!SITE_CONFIGURED){
+//	die('This site has not been configured yet.  If you are the administrator, please edit the XML files in "config" and be sure to set "SITE_CONFIGURED" to true when done.');
 	//header('Location: install/');
 	//die('If your browser does not refresh, please <a href="install.php">Click Here</a>');
-}
+//}
 
 // The TMP_DIR needs to be writable!
 if(!is_dir(TMP_DIR)){
@@ -215,7 +215,7 @@ else{
 	$rooturl = $servername . ROOT_WDIR;
 	$rooturlNOSSL = $servernameNOSSL . ROOT_WDIR;
 	$rooturlSSL = $servername . ROOT_WDIR;
-	$curcall = $rooturl . '?' . $_SERVER['QUERY_STRING'];
+	$curcall = $servername . $_SERVER['REQUEST_URI'];
 }
 
 /**

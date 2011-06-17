@@ -1,4 +1,17 @@
 <?php
+/**
+ * // enter a good description here
+ * 
+ * @package Core
+ * @since 2011.06
+ * @author Charlie Powell <powellc@powelltechs.com>
+ * @copyright Copyright 2011, Charlie Powell
+ * @license GNU Lesser General Public License v3 <http://www.gnu.org/licenses/lgpl-3.0.html>
+ * This system is licensed under the GNU LGPL, feel free to incorporate it into
+ * custom applications, but keep all references of the original authors intact,
+ * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>, 
+ * and please contribute back to the community :)
+ */
 
 class FormGroup{
 	protected $_elements;
@@ -162,6 +175,21 @@ class FormElement{
 				break;
 			case 'label': // This is an alias for title.
 				$this->_attributes['title'] = $value;
+			case 'options':
+				// This will require a little bit more attention, as if only the title
+				// is given, use that for the value as well.
+				if(!is_array($value)){
+					$this->_attributes[$key] = $value;
+				}
+				else{
+					$o = array();
+					foreach($value as $k => $v){
+						if(is_numeric($k)) $o[$v] = $v;
+						else $o[$k] = $v;
+					}
+					$this->_attributes[$key] = $o;
+				}
+				break;
 			default:
 				$this->_attributes[$key] = $value;
 				break;
@@ -303,6 +331,7 @@ class Form extends FormGroup{
 		'pageinsertables' => 'FormPageInsertables',
 		'pagemeta' => 'FormPageMeta',
 		'password' => 'FormPasswordInput',
+		'radio' => 'FormRadioInput',
 		'select' => 'FormSelectInput',
 		'submit' => 'FormSubmitInput',
 		'text' => 'FormTextInput',
@@ -452,6 +481,17 @@ class Form extends FormGroup{
 		return $model;
 	}
 	
+	public function loadFrom($src){
+		$els = $this->getElements();
+		foreach($els as $e){
+			if($e instanceof FormGroup) continue;
+			// Be sure to clear any errors from the previous page load....
+			$e->clearError();
+			$e->set('value', $e->lookupValueFrom($src));
+			if($e->hasError()) Core::SetMessage($e->getError(), 'error');
+		}
+	}
+	
 	/**
 	 * Internal method to save a serialized version of this object
 	 *	 into the database so it can be loaded upon submitting.
@@ -506,14 +546,7 @@ class Form extends FormGroup{
 		if(strtoupper($form->get('method')) == 'POST') $src =& $_POST;
 		else $src =& $_GET;
 
-		$els = $form->getElements();
-		foreach($els as $e){
-			if($e instanceof FormGroup) continue;
-			// Be sure to clear any errors from the previous page load....
-			$e->clearError();
-			$e->set('value', $e->lookupValueFrom($src));
-			if($e->hasError()) Core::SetMessage($e->getError(), 'error');
-		}
+		$form->loadFrom($src);
 
 		// Still good?
 		if(!$form->hasError()) $status = call_user_func($form->get('callsmethod'), $form);
@@ -651,9 +684,21 @@ class FormSelectInput extends FormElement{
 		parent::__construct($atts);
 
 		// Some defaults
-		$this->_attributes['class'] = 'formelement formtextareainput';
+		$this->_attributes['class'] = 'formelement formselect';
 		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'rows', 'cols', 'style');
 	}
+}
+
+
+class FormRadioInput extends FormElement{
+	public function  __construct($atts = null) {
+		parent::__construct($atts);
+
+		// Some defaults
+		$this->_attributes['class'] = 'formelement formradioinput';
+		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style');
+	}
+	
 }
 
 

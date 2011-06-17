@@ -1,4 +1,7 @@
 /nbproject/private/
-nbproject/project.xml
-nbproject/project.properties
-.htaccess
+/nbproject/project.xml
+/nbproject/project.properties
+/.htaccess
+/config/configuration.xml
+/assets/
+/.DS_Store
