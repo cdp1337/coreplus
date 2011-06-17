@@ -215,7 +215,7 @@ else{
 	$rooturl = $servername . ROOT_WDIR;
 	$rooturlNOSSL = $servernameNOSSL . ROOT_WDIR;
 	$rooturlSSL = $servername . ROOT_WDIR;
-	$curcall = $rooturl . '?' . $_SERVER['QUERY_STRING'];
+	$curcall = $servername . $_SERVER['REQUEST_URI'];
 }
 
 /**
