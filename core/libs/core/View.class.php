@@ -1,7 +1,16 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * // enter a good description here
+ * 
+ * @package Core
+ * @since 2011.06
+ * @author Charlie Powell <powellc@powelltechs.com>
+ * @copyright Copyright 2011, Charlie Powell
+ * @license GNU Lesser General Public License v3 <http://www.gnu.org/licenses/lgpl-3.0.html>
+ * This system is licensed under the GNU LGPL, feel free to incorporate it into
+ * custom applications, but keep all references of the original authors intact,
+ * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>, 
+ * and please contribute back to the community :)
  */
 
 /**
@@ -45,8 +54,29 @@ class View {
 	public $baseurl;
 	public $title;
 	public $metas = array();
+	
+	/**
+	 * The access string for this page.
+	 * @var string
+	 */
 	public $access;
+	
+	/**
+	 * The template to render this view with.
+	 * Should be the partial path of the template, including pages/
+	 * 
+	 * @example pages/mycomponent/view.tpl
+	 * @var string
+	 */
 	public $templatename;
+	
+	/**
+	 * The master template to render this view with.
+	 * Should be just the filename, as it will be located automatically.
+	 * 
+	 * @example index.tpl
+	 * @var string
+	 */
 	public $mastertemplate;
 	public $breadcrumbs = array();
 	public $controls = array();
@@ -92,10 +122,32 @@ class View {
 		return $this->_template;
 	}
 
-	public function assignVariable($key, $val){
+	/**
+	 * Assign a variable to this view
+	 * 
+	 * @param $key string
+	 * @param $val mixed
+	 */
+	public function assign($key, $val){
 		$this->getTemplate()->assign($key, $val);
 	}
+	
+	/**
+	 * Alias of assign
+	 * 
+	 * @param $key string
+	 * @param $val mixed
+	 */
+	public function assignVariable($key, $val){
+		$this->assign($key, $val);
+	}
 
+	/**
+	 * Get a variable that was set with "assign()"
+	 * 
+	 * @param string $key
+	 * @return mixed 
+	 */
 	public function getVariable($key){
 		// Damn smarty and its being more difficult...
 		$v = $this->getTemplate()->getVariable($key);
