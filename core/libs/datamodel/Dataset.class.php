@@ -267,7 +267,11 @@ class Dataset implements Iterator{
 	private function _parseWhere($statement){
 		// The user may have sent something like "blah = mep" or "datecreated < somedate"
 		
-		$chars = array('=', '>', '<', '<=', '>=');
+		// @FIXME There is a potential bug wherein if the clause contains
+		//        `somefield` = 'the equation is mxb+a=c'
+		//        the explode function will cut that into 3 pieces, not 2 like it should.
+		
+		$chars = array('=', '>', '<', '<=', '>=', ' LIKE ');
 		
 		foreach($chars as $c){
 			if(($pos = strpos($statement, $c)) !== false){

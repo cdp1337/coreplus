@@ -116,7 +116,7 @@ class Component extends InstallArchiveAPI{
 	 * Save this component metadata back to its XML file.
 	 * Useful in packager scripts.
 	 */
-	public function save(){
+	public function save($minified = false){
 		// Ensure there's a required namespace on the root node.
 		$this->getRootDOM()->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 
@@ -246,8 +246,21 @@ class Component extends InstallArchiveAPI{
 		foreach($viewclasses as $c){
 			// Should end in Controller.
 			if(strlen($c) - strpos($c, 'Controller') == 10) $c = substr($c, 0, -10);
-			$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "page WHERE ( `baseurl` = '/$c' OR `baseurl` LIKE '/$c/%' ) AND `fuzzy` = '0' AND `admin` = '1'");
-			foreach($rs as $row){
+			$data = Dataset::Init()->table('page')->select('*')->where("baseurl = /$c", 'admin=1', 'fuzzy=0')->execute();
+			
+			//$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "page WHERE ( `baseurl` = '/$c' OR `baseurl` LIKE '/$c/%' ) AND `fuzzy` = '0' AND `admin` = '1'");
+			foreach($data as $row){
+				$node = $this->getElement('/pages/page[@baseurl="' . $row['baseurl'] . '"]');
+				$node->setAttribute('admin', $row['admin']);
+				$node->setAttribute('widget', $row['widget']);
+				$node->setAttribute('access', $row['access']);
+				$node->setAttribute('title', $row['title']);
+			}
+			
+			$data = Dataset::Init()->table('page')->select('*')->where("baseurl LIKE /$c/%", 'admin=1', 'fuzzy=0')->execute();
+			
+			//$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "page WHERE ( `baseurl` = '/$c' OR `baseurl` LIKE '/$c/%' ) AND `fuzzy` = '0' AND `admin` = '1'");
+			foreach($data as $row){
 				$node = $this->getElement('/pages/page[@baseurl="' . $row['baseurl'] . '"]');
 				$node->setAttribute('admin', $row['admin']);
 				$node->setAttribute('widget', $row['widget']);
@@ -259,9 +272,9 @@ class Component extends InstallArchiveAPI{
 		
 		
 		///////////////////////  Handle the config options \\\\\\\\\\\\\\\\\\\\\
-		
-		$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "config WHERE `key` LIKE '/" . $this->getName() . "/%'");
-		foreach($rs as $row){
+		$data = Dataset::Init()->table('config')->select('*')->where('key LIKE /' . $this->getName() . '/%')->execute();
+		//$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "config WHERE `key` LIKE '/" . $this->getName() . "/%'");
+		foreach($data as $row){
 			$node = $this->getElement('/configs/config[@key="' . $row['key'] . '"]');
 			$node->setAttribute('type', $row['type']);
 			$node->setAttribute('default', $row['default_value']);
@@ -269,119 +282,15 @@ class Component extends InstallArchiveAPI{
 		}
 		
 
-
-		//////////////  Handle the database and its information  \\\\\\\\\\\\\\\
-		
-		$tables = $this->getDBSchemaTableNames();
-		
-		// Purge the existing dbschema... it'll get rebuilt.
-		$this->getRootDOM()->removeChild($this->getElement('/dbschema'));
-		// And recreate it.
-		$node = $this->getElement('/dbschema[@prefix="' . DB_PREFIX . '"]');
-		
-		// Run through each dbschema table and get the structure of that table.
-		foreach($tables as $name){
-			$node = $this->getElement('/dbschema/table[@name="' . $name . '"]');
-			//$name = $node->getAttribute('name');
-						
-			// I need to get some information about this table first... such as collation and engine.
-			$rs = DB::Execute('SHOW TABLE STATUS like \'' . $name . '\'');
-			$node->setAttribute('engine', $rs->fields['Engine']);
-			$node->setAttribute('charset', substr($rs->fields['Collation'], 0, strpos($rs->fields['Collation'], '_')));
-			// @todo Should I include the Auto_increment field too?
-			$nn = $this->getElementFrom('comment', $node);
-			$nn->nodeValue = $rs->fields['Comment'];
-			
-			// Note, I don't need to use DB_PREFIX in this case because the table should already have that attached.
-			
-			
-			// This is a slight variant of the standard one.
-			$rs = DB::Execute('SHOW FULL COLUMNS FROM `' . $name . '`');
-			foreach($rs as $row){
-				$innernode = $this->getDOM()->createElement('column');
-				$node->appendChild($innernode);
-				foreach($row as $k => $v){
-					if(is_numeric($k)) continue;
-					// There are a few columns I don't need either.
-					if($k == 'Privileges') continue;
-					$nn = $this->getDOM()->createElement(strtolower($k));
-					if(is_null($v)) $nn->setAttribute('xsi:nil', 'true');
-					else $nn->nodeValue = $v;
-					$innernode->appendChild($nn);
-					unset($nn);
-				}
-				unset($innernode);
-			}
-			
-			// And this will handle the indexes.
-			$indexes = array(); // I need to keep track of the index by name.
-			$rs = DB::Execute('SHOW INDEXES FROM `' . $name . '`');
-			foreach($rs as $row){
-				//  Table | Non_unique | Key_name  | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment
-				if(isset($indexes[$row['Key_name']])){
-					// Just tack on the column to the existing index record.
-					$innernode =& $indexes[$row['Key_name']];
-					$nn = $this->getDOM()->createElement('column');
-					$nn->nodeValue = $row['Column_name'];
-					$innernode->appendChild($nn);
-					unset($nn);
-				}
-				else{
-					$innernode = $this->getDOM()->createElement('index');
-					$node->appendChild($innernode);
-					
-					$nn = $this->getDOM()->createElement('name');
-					$nn->nodeValue = $row['Key_name'];
-					$innernode->appendChild($nn);
-					unset($nn);
-					
-					$nn = $this->getDOM()->createElement('nonunique');
-					$nn->nodeValue = $row['Non_unique'];
-					$innernode->appendChild($nn);
-					unset($nn);
-					
-					$nn = $this->getDOM()->createElement('column');
-					$nn->nodeValue = $row['Column_name'];
-					$innernode->appendChild($nn);
-					unset($nn);
-					
-					$nn = $this->getDOM()->createElement('comment');
-					$nn->nodeValue = $row['Comment'];
-					$innernode->appendChild($nn);
-					unset($nn);
-					
-					$indexes[$row['Key_name']] =& $innernode;
-				}
-				unset($innernode);
-			}
-			
-			// This bit of code will produce compliant XML code to that of the mysql command with --xml option.
-			// It may be useful in the DB system at some point.
-			/*
-			$rs = DB::Execute("SHOW FULL COLUMNS FROM `$name`");
-			foreach($rs as $row){
-				$innernode = $this->getDOM()->createElement('row');
-				$node->appendChild($innernode);
-				foreach($row as $k => $v){
-					if(is_numeric($k)) continue;
-					$nn = $this->getDOM()->createElement('field');
-					$nn->setAttribute('name', $k);
-					if(is_null($v)) $nn->setAttribute('xsi:nil', 'true');
-					else $nn->nodeValue = $v;
-					$innernode->appendChild($nn);
-					unset($nn);
-				}
-				unset($innernode);
-			}
-			*/
-		}
-		
 		// This needs to be the final step... write the XML doc back to the file.
 		$XMLFilename = $this->getXMLFilename();
 		//echo $this->asPrettyXML(); // DEBUG //
-		file_put_contents($XMLFilename, $this->asPrettyXML());
-		// and this would be a minimized version
-		//file_put_contents(substr($XMLFilename, 0, -4) . '-min.xml', $this->asMinifiedXML());
+		if($minified){
+			file_put_contents($XMLFilename, $this->asMinifiedXML());
+		}
+		else{
+			file_put_contents($XMLFilename, $this->asPrettyXML());
+		}
 	}
 	
 	
