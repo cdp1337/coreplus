@@ -239,6 +239,7 @@ function parse_for_documentation($file){
 	// This is the counter for non valid doc lines.
 	$counter = 0;
 	$inphpdoc = false;
+	$incomment = false;
 	
 	while(!feof($fh) && $counter <= 10){
 		// I want to limit the number of lines read so this doesn't continue on reading the entire file.
@@ -317,6 +318,56 @@ function parse_for_documentation($file){
 					}
 				}
 				break; // type: 'php'
+			case 'js':
+				// This only support multi-line phpdocs.
+				// start of a multiline comment.
+				if($line == '/*' || $line == '/*!' || $line == '/**'){
+					$incomment = true;
+					break;
+				}
+				// end of a phpDoc comment.  This indicates the end of the reading of the file...
+				if($line == '*/'){
+					$incomment = false;
+					break;
+				}
+				// Not in phpdoc... ok
+				if(!$incomment){
+					$counter++;
+					break;
+				}
+				
+				// Recognize "* Author: Person Blah" syntax... basically just [space]*[space]license...
+				if($incomment){
+					// Is this line Author: ?
+					if(stripos($line, 'author:') !== false){
+						$aut = preg_replace('/\*[ ]*author:[ ]*/i', '', $line);
+						$autdata = array();
+						if(strpos($aut, '<') !== false && strpos($aut, '>') !== false && preg_match('/<[^>]*(@| at )[^>]*>/i', $aut)){
+							// Resembles: @author user foo <email@domain.com>
+							// or         @author user foo <email at domain dot com>
+							preg_match('/(.*) <([^>]*)>/', $aut, $matches);
+							$autdata = array('name' => $matches[1], 'email' => $matches[2]);
+						}
+						elseif(strpos($aut, '(') !== false && strpos($aut, ')') !== false && preg_match('/\([^\)]*(@| at )[^\)]*\)/i', $aut)){
+							// Resembles: @author user foo (email@domain.com)
+							// of         @author user foo (email at domain dot com)
+							preg_match('/(.*) \(([^\)]*)\)/', $aut, $matches);
+							$autdata = array('name' => $matches[1], 'email' => $matches[2]);
+						}
+						else{
+							// Eh, must be something else...
+							$autdata = array('name' => $aut, 'email' => null);
+						}
+
+						// Sometimes the @author line may consist of:
+						// @author credit to someone <someone@somewhere.com>
+						$autdata['name'] = preg_replace('/^credit[s]* to/i', '', $autdata['name']);
+						$autdata['name'] = preg_replace('/^contribution[s]* from/i', '', $autdata['name']);
+						$autdata['name'] = trim($autdata['name']);
+						$ret['authors'][] = $autdata;
+					}
+				}
+				break; // type: 'js'
 			default:
 				break(2);
 		}
