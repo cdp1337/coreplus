@@ -87,6 +87,10 @@ class DMI_mysqli_backend implements DMI_Backend {
 			$q .= ' WHERE ' . implode(' AND ', $ws);
 		}
 		
+		if($dataset->_limit) $q .= ' LIMIT ' . $dataset->_limit;
+		
+		if($dataset->_order) $q .= ' ORDER BY ' . $dataset->_order;
+		
 		// Execute this and populate the dataset appropriately.
 		$res = $this->_rawExecute($q);
 		

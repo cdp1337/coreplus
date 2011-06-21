@@ -563,6 +563,7 @@ class Model {
 		$fac = new ModelFactory(get_called_class());
 		$fac->where($where);
 		$fac->limit($limit);
+		$fac->order($order);
 		//var_dump($fac);
 		return $fac->get();
 	}

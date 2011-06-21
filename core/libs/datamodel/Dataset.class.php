@@ -47,6 +47,8 @@ class Dataset implements Iterator{
 	
 	public $_limit = false;
 	
+	public $_order = false;
+	
 	public $_data = null;
 	
 	public $num_rows = null;
@@ -206,6 +208,18 @@ class Dataset implements Iterator{
 		elseif($n == 2) $this->_limit = func_get_arg(0) . ', ' . func_get_arg(1);
 		else throw new DMI_Exception('Invalid amount of parameters requested for Dataset::limit()');
 		
+		// Allow chaining
+		return $this;
+	}
+	
+	
+	public function order(){
+		$n = func_num_args();
+		if($n == 1) $this->_order = func_get_arg(0);
+		elseif($n == 2) $this->_order = func_get_arg(0) . ', ' . func_get_arg(1);
+		else throw new DMI_Exception('Invalid amount of parameters requested for Dataset::order()');
+		
+		// Allow chaining
 		return $this;
 	}
 	
