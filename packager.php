@@ -3,6 +3,16 @@
 /**
  * The purpose of this file is to archive up the core, components, and bundles.
  * and to set all the appropriate information.
+ * 
+ * @package Core
+ * @since 2011.06
+ * @author Charlie Powell <powellc@powelltechs.com>
+ * @copyright Copyright 2011, Charlie Powell
+ * @license GNU Lesser General Public License v3 <http://www.gnu.org/licenses/lgpl-3.0.html>
+ * This system is licensed under the GNU LGPL, feel free to incorporate it into
+ * custom applications, but keep all references of the original authors intact,
+ * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>, 
+ * and please contribute back to the community :)
  */
 
 
@@ -11,7 +21,7 @@ if(!isset($_SERVER['SHELL'])){
 }
 
 
-// This will basically bootstrap the regular web core to make use of its features.
+// Inlude the core bootstrap, this will get the system functional.
 require_once('core/bootstrap.php');
 
 
@@ -229,6 +239,7 @@ function parse_for_documentation($file){
 	// This is the counter for non valid doc lines.
 	$counter = 0;
 	$inphpdoc = false;
+	$incomment = false;
 	
 	while(!feof($fh) && $counter <= 10){
 		// I want to limit the number of lines read so this doesn't continue on reading the entire file.
@@ -307,18 +318,79 @@ function parse_for_documentation($file){
 					}
 				}
 				break; // type: 'php'
+			case 'js':
+				// This only support multi-line phpdocs.
+				// start of a multiline comment.
+				if($line == '/*' || $line == '/*!' || $line == '/**'){
+					$incomment = true;
+					break;
+				}
+				// end of a phpDoc comment.  This indicates the end of the reading of the file...
+				if($line == '*/'){
+					$incomment = false;
+					break;
+				}
+				// Not in phpdoc... ok
+				if(!$incomment){
+					$counter++;
+					break;
+				}
+				
+				// Recognize "* Author: Person Blah" syntax... basically just [space]*[space]license...
+				if($incomment){
+					// Is this line Author: ?
+					if(stripos($line, 'author:') !== false){
+						$aut = preg_replace('/\*[ ]*author:[ ]*/i', '', $line);
+						$autdata = array();
+						if(strpos($aut, '<') !== false && strpos($aut, '>') !== false && preg_match('/<[^>]*(@| at )[^>]*>/i', $aut)){
+							// Resembles: @author user foo <email@domain.com>
+							// or         @author user foo <email at domain dot com>
+							preg_match('/(.*) <([^>]*)>/', $aut, $matches);
+							$autdata = array('name' => $matches[1], 'email' => $matches[2]);
+						}
+						elseif(strpos($aut, '(') !== false && strpos($aut, ')') !== false && preg_match('/\([^\)]*(@| at )[^\)]*\)/i', $aut)){
+							// Resembles: @author user foo (email@domain.com)
+							// of         @author user foo (email at domain dot com)
+							preg_match('/(.*) \(([^\)]*)\)/', $aut, $matches);
+							$autdata = array('name' => $matches[1], 'email' => $matches[2]);
+						}
+						else{
+							// Eh, must be something else...
+							$autdata = array('name' => $aut, 'email' => null);
+						}
+
+						// Sometimes the @author line may consist of:
+						// @author credit to someone <someone@somewhere.com>
+						$autdata['name'] = preg_replace('/^credit[s]* to/i', '', $autdata['name']);
+						$autdata['name'] = preg_replace('/^contribution[s]* from/i', '', $autdata['name']);
+						$autdata['name'] = trim($autdata['name']);
+						$ret['authors'][] = $autdata;
+					}
+				}
+				break; // type: 'js'
 			default:
 				break(2);
 		}
 	}
 	fclose($fh);
 	
-	// I don't want 5 million duplicates... so 'uniqize' the results.
+	// I don't want 5 million duplicates... so remove all the duplicate results.
+	// I need to use arrayUnique because the arrays are multi-dimensional.
 	$ret['licenses'] = arrayUnique($ret['licenses']);
 	$ret['authors'] = arrayUnique($ret['authors']);
 	return $ret;
 }
 
+/**
+ * Simple function to intelligently "up" the version number.
+ * Supports Ubuntu-style versioning for non-original maintainers (~extraversionnum)
+ * 
+ * Will try to utilize the versioning names, ie: dev to alpha to beta, etc.
+ * 
+ * @param string $version
+ * @param boolean $original
+ * @return string 
+ */
 function _increment_version($version, $original){
 	if($original){
 		
@@ -365,7 +437,8 @@ function _increment_version($version, $original){
 		$version = "$vmaj.$vmin.$vrev";
 	}
 	else{
-		// This is a release, but not the canonical packager.
+		// This is a release, but not the original packager.
+		// Therefore, all versions should be after the ~ to signify this.
 		if(strpos($version, '~') === false){
 			$version .= '~1';
 		}
@@ -567,15 +640,24 @@ function process_component($component, $forcerelease = false){
 	
 	while($ans != 'finish'){
 		$opts = array(
+			'editvers' => 'Edit Version Number',
 			'editdesc' => 'Edit Description',
 			'editchange' => 'Edit Changelog',
-			'dbtables' => 'Manage DB Tables',
-			'printdebug' => 'DEBUG - Print the XML',
+			//'dbtables' => 'Manage DB Tables',
+			//'printdebug' => 'DEBUG - Print the XML',
 			'finish' => 'Finish Editing, Save it!',
+			'exit' => 'Abort and exit without saving changes',
 		);
 		$ans = CLI::PromptUser('What do you want to edit for component ' . $c->getName() . ' ' . $version, $opts);
 		
 		switch($ans){
+			case 'editvers':
+				// Do not need to increment it, just provide the user with the ability to change it.
+				// This could be useful if the developer accidently entered the wrong version before.
+				//$version = _increment_version($c->getVersion(), $original);
+				$version = CLI::PromptUser('Please set the new version or', 'text', $version);
+				$c->setVersion($version);
+				break;
 			case 'editdesc':
 				$c->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $c->getDescription()));
 				break;
@@ -588,11 +670,12 @@ function process_component($component, $forcerelease = false){
 			case 'printdebug':
 				echo $c->getRawXML() . NL;
 				break;
+			case 'exit':
+				echo "Aborting build" . NL;
+				exit;
+				break;
 		}
 	}
-	
-	
-	// @todo Add SVN integration using libraries from the websvn project.
 	
 	// User must have selected 'finish'...
 	$c->save();

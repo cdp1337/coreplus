@@ -25,6 +25,9 @@ class Template extends Smarty{
     public function  __construct() {
 		parent::__construct();
 
+		// Tack on the current theme's directory.
+		$this->addTemplateDir(ROOT_PDIR . 'themes/' . ConfigHandler::GetValue('/core/theme') . '/');
+
 		// Tack on the search directories from the loaded components.
 		foreach(ComponentHandler::GetLoadedComponents() as $c){
 			$d = $c->getViewSearchDir();

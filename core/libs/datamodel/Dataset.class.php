@@ -47,6 +47,8 @@ class Dataset implements Iterator{
 	
 	public $_limit = false;
 	
+	public $_order = false;
+	
 	public $_data = null;
 	
 	public $num_rows = null;
@@ -184,6 +186,16 @@ class Dataset implements Iterator{
 	 */
 	public function where(){
 		$args = func_get_args();
+		
+		// Allow $k, $v to be passed in.
+		if(sizeof($args) == 2 && !is_array($args[0]) && !is_array($args[1])){
+			$this->_where[] = array('field' => $args[0], 'op' => '=', 'value' => $args[1]);
+			
+			// Allow chaining.
+			return $this;
+		}
+		
+		// Otherwise, interpret each argument as its own entity.
 		foreach($args as $a){
 			if(is_array($a)){
 				foreach($a as $k => $v){
@@ -206,6 +218,18 @@ class Dataset implements Iterator{
 		elseif($n == 2) $this->_limit = func_get_arg(0) . ', ' . func_get_arg(1);
 		else throw new DMI_Exception('Invalid amount of parameters requested for Dataset::limit()');
 		
+		// Allow chaining
+		return $this;
+	}
+	
+	
+	public function order(){
+		$n = func_num_args();
+		if($n == 1) $this->_order = func_get_arg(0);
+		elseif($n == 2) $this->_order = func_get_arg(0) . ', ' . func_get_arg(1);
+		else throw new DMI_Exception('Invalid amount of parameters requested for Dataset::order()');
+		
+		// Allow chaining
 		return $this;
 	}
 	
@@ -267,7 +291,11 @@ class Dataset implements Iterator{
 	private function _parseWhere($statement){
 		// The user may have sent something like "blah = mep" or "datecreated < somedate"
 		
-		$chars = array('=', '>', '<', '<=', '>=');
+		// @FIXME There is a potential bug wherein if the clause contains
+		//        `somefield` = 'the equation is mxb+a=c'
+		//        the explode function will cut that into 3 pieces, not 2 like it should.
+		
+		$chars = array('=', '>', '<', '<=', '>=', ' LIKE ');
 		
 		foreach($chars as $c){
 			if(($pos = strpos($statement, $c)) !== false){
