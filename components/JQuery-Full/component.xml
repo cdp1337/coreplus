@@ -46,13 +46,12 @@
 	</library>
 	<changelog version="1.5.1~cae1">
 		<packagemeta>
-			<date>Wed, 11 May 2011 01:35:04 -0400</date>
+			<date>Sat, 18 Jun 2011 02:11:08 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
 	</changelog>
 	<author name="powellc"/>
 	<otherfiles/>
-	<dbschema prefix="CAE2_"/>
 </component>
 
