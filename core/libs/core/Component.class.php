@@ -730,7 +730,10 @@ class Component extends InstallArchiveAPI{
 					}
 					
 					$this->_versionDB = @$u->getAttribute('to');
-					DB::Execute("REPLACE INTO `" . DB_PREFIX . "component` (`name`, `version`) VALUES (?, ?)", array($this->_name, $this->_versionDB));
+					$c = new ComponentModel($this->_name);
+					$c->set('version', $this->_versionDB);
+					$c->save();
+					//DB::Execute("REPLACE INTO `" . DB_PREFIX . "component` (`name`, `version`) VALUES (?, ?)", array($this->_name, $this->_versionDB));
 				}
 			}
 		}
