@@ -11,6 +11,6 @@
 	#
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule (.*) index.php?/$1 [L]
+	RewriteRule (.*) index.php%{REQUEST_URI} [L]
 </IfModule>
 
