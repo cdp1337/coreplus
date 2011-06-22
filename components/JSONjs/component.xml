@@ -40,6 +40,7 @@
 	</component>
 	<otherfiles/>
 	<library>
+		<scriptlibrary name="jsonjs" call="JSONjs::IncludeJS"/>
 		<file filename="JSONjs.lib.php" md5="bc2ad828000f718d1315a9e61a63ccd6">
 			<provides type="class" name="JSONjs"/>
 		</file>
