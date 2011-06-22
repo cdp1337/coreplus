@@ -186,6 +186,16 @@ class Dataset implements Iterator{
 	 */
 	public function where(){
 		$args = func_get_args();
+		
+		// Allow $k, $v to be passed in.
+		if(sizeof($args) == 2 && !is_array($args[0]) && !is_array($args[1])){
+			$this->_where[] = array('field' => $args[0], 'op' => '=', 'value' => $args[1]);
+			
+			// Allow chaining.
+			return $this;
+		}
+		
+		// Otherwise, interpret each argument as its own entity.
 		foreach($args as $a){
 			if(is_array($a)){
 				foreach($a as $k => $v){

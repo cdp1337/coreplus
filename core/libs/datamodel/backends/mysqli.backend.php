@@ -58,6 +58,12 @@ class DMI_mysqli_backend implements DMI_Backend {
 			case Dataset::MODE_INSERT:
 				$this->_executeInsert($dataset);
 				break;
+			case Dataset::MODE_UPDATE:
+				$this->_executeUpdate($dataset);
+				break;
+			default:
+				throw new Exception('Invalid dataset mode [' . $dataset->_mode . ']');
+				break;
 		}
 	}
 	
@@ -124,6 +130,37 @@ class DMI_mysqli_backend implements DMI_Backend {
 		$dataset->_data = array();
 		// Inserts don't have any data, but do have an ID, (which mysql handles internally)
 		if($dataset->_idcol) $dataset->_idval = $this->_conn->insert_id;
+	}
+	
+	private function _executeUpdate(Dataset $dataset){
+		// Generate a query to run.
+		$q = "UPDATE `" . $dataset->_table . "`";
+		
+		$sets = array();
+		foreach($dataset->_sets as $k => $v){
+			$sets[] = "`$k` = '" . $this->_conn->real_escape_string($v) . "'";
+		}
+		
+		$q .= ' SET ' . implode(', ', $sets);
+		
+		if(sizeof($dataset->_where)){
+			$ws = array();
+			foreach($dataset->_where as $w){
+				$w['value'] = $this->_conn->real_escape_string($w['value']);
+				$ws[] = "`{$w['field']}` {$w['op']} '{$w['value']}'";
+			}
+			$q .= ' WHERE ' . implode(' AND ', $ws);
+		}
+		
+		if($dataset->_limit) $q .= ' LIMIT ' . $dataset->_limit;
+		
+		// Execute this and populate the dataset appropriately.
+		$res = $this->_rawExecute($q);
+		
+		//$dataset->num_rows = 1;
+		$dataset->_data = array();
+		// Inserts don't have any data, but do have an ID, (which mysql handles internally)
+		//if($dataset->_idcol) $dataset->_idval = $this->_conn->insert_id;
 	}
 	
 	public function tableExists($tablename){
