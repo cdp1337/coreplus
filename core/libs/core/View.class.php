@@ -83,6 +83,7 @@ class View {
 	public $mode;
 	public $contenttype = 'text/html';
 	
+	public $jsondata = array();
 	
 	public $headscripts = array();
 	public $headstylesheets = array();
@@ -159,7 +160,7 @@ class View {
 		if($this->mode == View::MODE_NOOUTPUT){
 			return null;
 		}
-		//var_dump($this);
+		//var_dump($this);die();
 		
 		// If the content type is set to something other that html, check if that template exists.
 		switch($this->contenttype){
@@ -174,6 +175,13 @@ class View {
 				}
 				break;
 			case View::CTYPE_JSON:
+				// Did the controller send data to this view directly?
+				// (because JSON supports raw data ^_^ )
+				if(sizeof($this->jsondata)){
+					$this->mastertemplate = false;
+					$this->templatename = false;
+					return json_encode($this->jsondata);
+				}
 				$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'json.tpl', $this->templatename));
 				if($ctemp){
 					$this->templatename = $ctemp;
