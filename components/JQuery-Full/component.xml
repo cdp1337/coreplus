@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.1~cae2" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.1~cae3" name="JQuery-Full" execmode="web">
 	<requires name="core" type="component"/>
-	<provides name="JQuery" version="1.5.1~cae1" type="component"/>
-	<provides name="JQueryUI" version="1.8.11~cae1" type="component"/>
-	<provides name="JQueryUI.NestesSortable" version="1.2.2~cae1" type="component"/>
-	<provides name="JQueryUI.readonly" version="1.0-beta1~cae1" type="component"/>
-	<provides name="JQuery.json" version="2.2" type="component"/>
+	<provides name="JQuery" version="1.5.1~cae1" type="library"/>
+	<provides name="JQueryUI" version="1.8.11~cae1" type="library"/>
+	<provides name="JQueryUI.NestesSortable" version="1.2.2~cae1" type="library"/>
+	<provides name="JQueryUI.readonly" version="1.0-beta1~cae1" type="library"/>
+	<provides name="JQuery.json" version="2.2" type="library"/>
 	<assets>
 		<file filename="assets/css/jquery-ui.css" md5="0c9633d2550c2e4ac62b4683e8c8a645"/>
 		<file filename="assets/css/images/ui-bg_highlight-hard_100_fafaf4_1x100.png" md5="5fab734991bc927dd729e4b2c4500a34"/>
@@ -62,7 +62,23 @@
 			Switch the system to use "/core/javascript/minified" configuration option instead of "/jquery/minfied".  This is because other systems may use the same logic to determine if the minified versions should be used or standard/dev.
 		</notes>
 	</changelog>
+	<upgrade from="1.5.1~cae2" to="1.5.1~cae3"/>
+	<changelog version="1.5.1~cae3">
+		<packagemeta>
+			<date>Thu, 23 Jun 2011 19:21:03 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.2</packager>
+		</packagemeta>
+		<notes>
+			Set the included libraries to be 'library' instead of 'component'.  This allows them to be "required" by other components via &lt;require name="JQuery.plugin.desired" type="library"/&gt;
+		</notes>
+	</changelog>
 	<author name="powellc"/>
+	<description>
+		jQuery is a fast and concise JavaScript Library that simplifies HTML document traversing, event handling, animating, and Ajax interactions for rapid web development. jQuery is designed to change the way that you write JavaScript.
+		Also provides jQueryUI full package.
+		jQuery UI provides abstractions for low-level interaction and animation, advanced effects and high-level, themeable widgets, built on top of the jQuery JavaScript Library, that you can use to build highly interactive web applications.
+	</description>
 	<otherfiles/>
 </component>
 

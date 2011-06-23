@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="JSONjs" execmode="web" version="2011.02.23~cae1">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="JSONjs" execmode="web" version="2011.02.23~cae2">
+	<requires name="JQuery" type="library" version="1.4"/>
 	<upgrade from="" to="2011.02.23~cae1"/>
 	<changelog version="2011.02.23~cae1">
 		<packagemeta>
@@ -33,17 +34,26 @@
 		<file filename="assets/js/json2.js" md5="74d903049683e5bbea9ccb7544a42bca"/>
 		<file filename="assets/js/json2-min.js" md5="ba3293970e13b03a2ea92f5b6b5bf544"/>
 	</assets>
-	<author name="Douglas Crockford" email="douglas@crockford.com"/>
-	<author name="powellc"/>
 	<component>
 		<license></license>
 	</component>
-	<otherfiles/>
 	<library>
 		<scriptlibrary name="jsonjs" call="JSONjs::IncludeJS"/>
 		<file filename="JSONjs.lib.php" md5="bc2ad828000f718d1315a9e61a63ccd6">
 			<provides type="class" name="JSONjs"/>
 		</file>
 	</library>
+	<upgrade from="2011.02.23~cae1" to="2011.02.23~cae2"/>
+	<changelog version="2011.02.23~cae2">
+		<packagemeta>
+			<date>Thu, 23 Jun 2011 19:31:01 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.2</packager>
+		</packagemeta>
+		<notes>Set to require jquery 1.4</notes>
+	</changelog>
+	<author name="Douglas Crockford" email="douglas@crockford.com"/>
+	<author name="powellc"/>
+	<otherfiles/>
 </component>
 
