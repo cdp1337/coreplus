@@ -190,26 +190,36 @@ class ComponentHandler implements ISingleton{
 		do{
 			$size = sizeof($list);
 			foreach($list as $n => $c){
-				// If it's not installed, remove it from the list, unless 
-				// it's in DEVELOPMENT mode... then try to install it, or just continue to the next.
-				if(!$c->isInstalled() && DEVELOPMENT_MODE){
-					// w00t
-					if($c->isLoadable()) $c->install();
-				}
-				else{
-					// Not installed and not DEV, don't care!
-					unset($list[$n]);
-				}
-				
-				// Allow for on-the-fly package upgrading regardless of DEV mode or not.
-				if($c->needsUpdated() && $c->isLoadable()){
-					$c->upgrade();
-				}
 				
 				// If it's loaded, register it and remove it from the list!
-				if($c->isLoadable() && $c->loadFiles()){
+				if($c->isInstalled() && $c->isLoadable() && $c->loadFiles()){
 					$ch->_registerComponent($c);
 					unset($list[$n]);
+					continue;
+				}
+				
+				
+				// Allow for on-the-fly package upgrading regardless of DEV mode or not.
+				if($c->isInstalled() && $c->needsUpdated() && $c->isLoadable()){
+					$c->upgrade();
+					$c->loadFiles();
+					$ch->_registerComponent($c);
+					unset($list[$n]);
+					continue;
+				}
+				
+				
+				// Allow packages to be auto-installed if in DEV mode.
+				// this should NEVER be enabled on production, due to the GIANT
+				// security risk that it could potentially cause if someone manages
+				// to get a rogue component.xml file on the filesystem. (in theory at least)
+				if(!$c->isInstalled() && DEVELOPMENT_MODE && $c->isLoadable()){
+					// w00t
+					$c->install();
+					$c->loadFiles();
+					$ch->_registerComponent($c);
+					unset($list[$n]);
+					continue;
 				}
 			}
 		} while($size > 0 && ($size != sizeof($list)));
@@ -304,12 +314,12 @@ class ComponentHandler implements ISingleton{
 	
 	public static function IsLibraryAvailable($name, $version = false, $operation = 'ge'){
 		$ch = ComponentHandler::Singleton();
-		
+		//var_dump($ch->_libraries[$name], version_compare(str_replace('~', '-', $ch->_libraries[$name]), $version, $operation));
 		//if($name == 'DB') return true;
 		//echo "Checking library name[$name] v[$version] op[$operation]<br>";
 		if(!isset($ch->_libraries[$name])) return false;
 		// There's a bit of an issue with the debian-style versions... PHP considers 1.2.3~1 < 1.2.3...
-		elseif($version) return version_compare(str_replace('~', '-', $ch->_libraries[$name]), $version, $operation);
+		elseif($version !== false) return version_compare(str_replace('~', '-', $ch->_libraries[$name]), $version, $operation);
 		else return true;
 	}
 	
