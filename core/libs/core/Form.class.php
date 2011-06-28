@@ -575,7 +575,9 @@ class Form extends FormGroup{
 
 		// Add the initial model tracker, will remember which model is attached.
 		$f->set('___modelname', get_class($model));
-
+		$s = $model->GetSchema();
+		$i = $model->GetIndexes();
+var_dump($i, $model); die();
 		$new = $model->isnew();
 
 		if(!$new){

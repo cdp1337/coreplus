@@ -802,7 +802,7 @@ class Component extends InstallArchiveAPI{
 			// Do not "update" value, keep whatever the user set previously.
 			if(!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
 			// Do not "update" value, keep whatever the user set previously.
-			if(!$m->get('access')) $m->set('access', $subnode->getAttribute('access'));
+			if($m->get('access') == '*') $m->set('access', $subnode->getAttribute('access'));
 			$m->set('widget', $subnode->getAttribute('widget'));
 			$m->set('admin', $subnode->getAttribute('admin'));
 			$m->save();

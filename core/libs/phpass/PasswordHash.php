@@ -1,37 +1,71 @@
 <?php
-#
-# Portable PHP password hashing framework.
-#
-# Version 0.3 / genuine.
-#
-# Written by Solar Designer <solar at openwall.com> in 2004-2006 and placed in
-# the public domain.  Revised in subsequent years, still public domain.
-#
-# There's absolutely no warranty.
-#
-# The homepage URL for this framework is:
-#
-#	http://www.openwall.com/phpass/
-#
-# Please be sure to update the Version line if you edit this file in any way.
-# It is suggested that you leave the main version number intact, but indicate
-# your project name (after the slash) and add your own revision information.
-#
-# Please do not change the "private" password hashing method implemented in
-# here, thereby making your hashes incompatible.  However, if you must, please
-# change the hash type identifier (the "$P$") to something different.
-#
-# Obviously, since this code is in the public domain, the above are not
-# requirements (there can be none), but merely suggestions.
-#
-class PasswordHash {
-	var $itoa64;
-	var $iteration_count_log2;
-	var $portable_hashes;
-	var $random_state;
+/**
+ * Portable PHP password hashing framework.
+ *
+ * Version 0.3 / ~cae1
+ * 
+ * Written by Solar Designer <solar at openwall.com> in 2004-2006 and placed in
+ * the public domain.  Revised in subsequent years, still public domain.
+ *
+ * There's absolutely no warranty.
+ *
+ * The homepage URL for this framework is:
+ *
+ *	http://www.openwall.com/phpass/
+ *
+ * Please be sure to update the Version line if you edit this file in any way.
+ * It is suggested that you leave the main version number intact, but indicate
+ * your project name (after the slash) and add your own revision information.
+ *
+ * Please do not change the "private" password hashing method implemented in
+ * here, thereby making your hashes incompatible.  However, if you must, please
+ * change the hash type identifier (the "$P$") to something different.
+ *
+ * Obviously, since this code is in the public domain, the above are not
+ * requirements (there can be none), but merely suggestions.
+ * 
+ * 2011.06 - Updating this library to be more PHP5/6 centric by adding 
+ *           private/public methods and changing some capitalization.
+ * 
+ *           Also adding in a MIT license, since public domain is not techincally
+ *           a license according to some territories.
+ *           
+ *           Set $portable_hashes to be false by default if not defined.
+ * 
+ * @license Public Domain
+ * @license MIT <http://www.opensource.org/licenses/mit-license.php>
+ * 
+ * @version 0.3~cae1
+ * @author Solar Designer <solar at openwall.com>
+ * @copyright (c) 2004 - 2006
+ * @package phpass
+ */
 
-	function PasswordHash($iteration_count_log2, $portable_hashes)
-	{
+
+/**
+ * The main hasher class.
+ * 
+ * The following code illustrates how to use this hashing library.
+ * <code>
+ *     $t_hasher = new PasswordHash(8, FALSE);
+ *   
+ *     $correct = 'test12345';
+ *     $hash = $t_hasher->hashPassword($correct);
+ *     
+ *     print 'Hash: ' . $hash . "\n";
+ *     
+ *     $check = $t_hasher->checkPassword($correct, $hash);
+ *     if ($check) echo "Good!";
+ * </code>
+ */
+class PasswordHash {
+	
+	private $itoa64;
+	private $iteration_count_log2;
+	private $portable_hashes;
+	private $random_state;
+
+	public function __construct($iteration_count_log2, $portable_hashes = false) {
 		$this->itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
 		if ($iteration_count_log2 < 4 || $iteration_count_log2 > 31)
@@ -44,9 +78,63 @@ class PasswordHash {
 		if (function_exists('getmypid'))
 			$this->random_state .= getmypid();
 	}
+	
+	/**
+	 * Hash a given string.
+	 * 
+	 * @param string $password
+	 * @return string (hashed)
+	 */
+	public function hashPassword($password) {
+		$random = '';
 
-	function get_random_bytes($count)
-	{
+		if (CRYPT_BLOWFISH == 1 && !$this->portable_hashes) {
+			$random = $this->get_random_bytes(16);
+			$hash =
+			    crypt($password, $this->gensalt_blowfish($random));
+			if (strlen($hash) == 60)
+				return $hash;
+		}
+
+		if (CRYPT_EXT_DES == 1 && !$this->portable_hashes) {
+			if (strlen($random) < 3)
+				$random = $this->get_random_bytes(3);
+			$hash =
+			    crypt($password, $this->gensalt_extended($random));
+			if (strlen($hash) == 20)
+				return $hash;
+		}
+
+		if (strlen($random) < 6)
+			$random = $this->get_random_bytes(6);
+		$hash =
+		    $this->crypt_private($password,
+		    $this->gensalt_private($random));
+		if (strlen($hash) == 34)
+			return $hash;
+
+		# Returning '*' on error is safe here, but would _not_ be safe
+		# in a crypt(3)-like function used _both_ for generating new
+		# hashes and for validating passwords against existing hashes.
+		return '*';
+	}
+
+	/**
+	 * Check if a given password string matches the stored hash.
+	 * 
+	 * @param string $password (as plain text)
+	 * @param string $stored_hash (as encrypted hash)
+	 * @return boolean
+	 */
+	public function checkPassword($password, $stored_hash) {
+		$hash = $this->crypt_private($password, $stored_hash);
+		if ($hash[0] == '*')
+			$hash = crypt($password, $stored_hash);
+
+		return $hash == $stored_hash;
+	}
+
+	private function get_random_bytes($count) {
 		$output = '';
 		if (is_readable('/dev/urandom') &&
 		    ($fh = @fopen('/dev/urandom', 'rb'))) {
@@ -68,8 +156,7 @@ class PasswordHash {
 		return $output;
 	}
 
-	function encode64($input, $count)
-	{
+	private function encode64($input, $count) {
 		$output = '';
 		$i = 0;
 		do {
@@ -91,8 +178,7 @@ class PasswordHash {
 		return $output;
 	}
 
-	function gensalt_private($input)
-	{
+	private function gensalt_private($input) {
 		$output = '$P$';
 		$output .= $this->itoa64[min($this->iteration_count_log2 +
 			((PHP_VERSION >= '5') ? 5 : 3), 30)];
@@ -101,8 +187,7 @@ class PasswordHash {
 		return $output;
 	}
 
-	function crypt_private($password, $setting)
-	{
+	private function crypt_private($password, $setting) {
 		$output = '*0';
 		if (substr($setting, 0, 2) == $output)
 			$output = '*1';
@@ -146,8 +231,7 @@ class PasswordHash {
 		return $output;
 	}
 
-	function gensalt_extended($input)
-	{
+	private function gensalt_extended($input) {
 		$count_log2 = min($this->iteration_count_log2 + 8, 24);
 		# This should be odd to not reveal weak DES keys, and the
 		# maximum valid value is (2**24 - 1) which is odd anyway.
@@ -164,8 +248,7 @@ class PasswordHash {
 		return $output;
 	}
 
-	function gensalt_blowfish($input)
-	{
+	private function gensalt_blowfish($input) {
 		# This one needs to use a different order of characters and a
 		# different encoding scheme from the one in encode64() above.
 		# We care because the last character in our encoded string will
@@ -204,50 +287,4 @@ class PasswordHash {
 
 		return $output;
 	}
-
-	function HashPassword($password)
-	{
-		$random = '';
-
-		if (CRYPT_BLOWFISH == 1 && !$this->portable_hashes) {
-			$random = $this->get_random_bytes(16);
-			$hash =
-			    crypt($password, $this->gensalt_blowfish($random));
-			if (strlen($hash) == 60)
-				return $hash;
-		}
-
-		if (CRYPT_EXT_DES == 1 && !$this->portable_hashes) {
-			if (strlen($random) < 3)
-				$random = $this->get_random_bytes(3);
-			$hash =
-			    crypt($password, $this->gensalt_extended($random));
-			if (strlen($hash) == 20)
-				return $hash;
-		}
-
-		if (strlen($random) < 6)
-			$random = $this->get_random_bytes(6);
-		$hash =
-		    $this->crypt_private($password,
-		    $this->gensalt_private($random));
-		if (strlen($hash) == 34)
-			return $hash;
-
-		# Returning '*' on error is safe here, but would _not_ be safe
-		# in a crypt(3)-like function used _both_ for generating new
-		# hashes and for validating passwords against existing hashes.
-		return '*';
-	}
-
-	function CheckPassword($password, $stored_hash)
-	{
-		$hash = $this->crypt_private($password, $stored_hash);
-		if ($hash[0] == '*')
-			$hash = crypt($password, $stored_hash);
-
-		return $hash == $stored_hash;
-	}
 }
-
-?>
