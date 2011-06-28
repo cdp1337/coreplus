@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component>
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.1-dev1" name="User" execmode="web">
+	<requires name="core" type="component"/>
+	<library>
+		<file filename="User_Backend.interface.php" md5="35947d2a81dc0ea51d2f440c0ebc1bd8">
+			<provides type="interface" name="User_Backend"/>
+		</file>
+		<file filename="backends/datamodel.backend.php" md5="9f938b18e934274d93c0b2e009e47e95">
+			<provides type="class" name="User_datamodel_backend"/>
+		</file>
+		<file filename="libs/core/UserModel.class.php" md5="602e8b01e5225bc8a81fd575dbc4fcad">
+			<provides type="class" name="UserModel"/>
+		</file>
+		<file filename="User.class.php" md5="1a21d857afdeec7a971bf5880c84ca30">
+			<provides type="class" name="User"/>
+			<provides type="class" name="User_Exception"/>
+		</file>
+	</library>
+	<module>
+		<file filename="UserController.class.php" md5="7299cefa0ef495639db0d895b26619dc">
+			<provides type="controller" name="UserController"/>
+		</file>
+	</module>
+	<view>
+		<file filename="templates/pages/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/user/login.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+	</view>
+	<pages>
+		<page baseurl="/User/Login" admin="0" widget="0" access="!g:authenticated" title="Login"/>
+		<page baseurl="/User/Register" admin="0" widget="0" access="!g:authenticated" title="Register"/>
+		<page baseurl="/User/Logout" admin="0" widget="0" access="g:authenticated" title="Logout"/>
+	</pages>
+	<changelog version="0.0.1-dev1">
+		<packagemeta>
+			<date>Tue, 28 Jun 2011 01:58:52 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.2</packager>
+		</packagemeta>
+	</changelog>
+	<configs>
+		<config key="/user/backend" type="enum" default="datamodel" description=""/>
+		<config key="/user/register/requirecaptcha" type="boolean" default="0" description=""/>
+	</configs>
+	<author name="powellc"/>
+	<author name="Charlie Powell" email="powellc@powelltechs.com"/>
+	<otherfiles/>
+</component>
+
