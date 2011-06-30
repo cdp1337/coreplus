@@ -322,6 +322,12 @@ class FormElement{
 			else return $src[$n];
 		}
 	}
+	
+	public static function Factory($type, $attributes = array()){
+		if(!isset(Form::$Mappings[$type])) $type = 'text'; // Default.
+
+		return new Form::$Mappings[$type]($attributes);
+	}
 }
 
 class Form extends FormGroup{
@@ -426,6 +432,7 @@ class Form extends FormGroup{
 		if(!$m) return null; // A model needs to be defined first of all...
 
 		$model = new $m();
+		
 		if(!$model instanceof Model) return null; // It needs to be a model... :/
 
 		// Set the PK's...
@@ -438,8 +445,6 @@ class Form extends FormGroup{
 			$model->load();
 		}
 
-		
-
 		// Now, get every "model[...]" element, as they key up 1-to-1.
 		$els = $this->getElements();
 		foreach($els as $e){
@@ -448,6 +453,11 @@ class Form extends FormGroup{
 
 			$model->set($matches[1], $e->get('value'));
 		}
+		
+		
+		return $model;
+		
+		// The below logic in this method is no longer functional yet.
 		
 		
 		// Add support for inline Pages for models.
@@ -577,57 +587,54 @@ class Form extends FormGroup{
 		$f->set('___modelname', get_class($model));
 		$s = $model->GetSchema();
 		$i = $model->GetIndexes();
-var_dump($i, $model); die();
+		if(!isset($i['primary'])) $i['primary'] = array();
+
 		$new = $model->isnew();
 
 		if(!$new){
 			// Save the PKs of this model in the SESSION data so they don't have to be sent to the browser.
 			$pks = array();
-			foreach($model->getColumnStructure() as $k => $v){
-				if($v['primary']) $pks[$k] = $model->get($k);
+			foreach($i['primary'] as $k => $v){
+				$pks[$k] = $model->get($k);
 			}
 			$f->set('___modelpks', $pks);
 		}
 
-		foreach($model->getColumnStructure() as $k => $v){
-			if($new && $v['autoinc']) continue; // Skip the AI column if it doesn't exist.
+		foreach($s as $k => $v){
+			// Skip the AI column if it doesn't exist.
+			if($new && $v['type'] == Model::ATT_TYPE_ID) continue;
 
+			// These are already taken care above in the SESSION data.
+			if(!$new && in_array($k, $i['primary'])) continue; 
 
-			if(!$new && $v['primary']) continue; // These are already taken care above in the SESSION data.
-
-			/*if(!$new && $v['primary'] && $k == 'id'){
-				// This is a hidden form element.
-				$f->addElement('hidden', array('name' => "model[$k]", 'value' => $model->get($k)));
-				continue;
-			}*/
-
-			if($v['type'] == 'accessstring'){
-				// @todo Implement this with the new user system.
-				//$f->addElement(new Form)
-				$f->addElement('hidden', array('name' => "model[$k]", 'value' => '*'));
-				continue;
+			$title = ucwords($k);
+			$required = (isset($v['required']))? ($v['required']) : false;
+			
+			if($v['type'] == Model::ATT_TYPE_BOOL){
+				$el = FormElement::Factory('radio');
+				$el->set('options', array('Yes', 'No'));
 			}
-
-			if($v['type'] == 'string'){
-				$f->addElement('text', array('name' => "model[$k]", 'value' => $model->get($k), 'maxlength' => $v['maxlength'], 'title' => $v['name']));
-				continue;
+			elseif($v['type'] == Model::ATT_TYPE_STRING){
+				$el = FormElement::Factory('text');
 			}
-
-			if($v['type'] == 'text'){
-				$f->addElement('textarea', array('name' => "model[$k]", 'value' => $model->get($k), 'maxlength' => $v['maxlength'], 'title' => $v['name']));
-				continue;
+			else{
+				die('Unsupported model attribute type for Form Builder');
 			}
-
-			//var_dump($v);
+			
+			$el->set('name', 'model[' . $k . ']');
+			$el->set('required', $required);
+			$el->set('title', $title);
+			
+			$f->addElement($el);
 		}
-		
+		/*
 		// If this model supports Pages, add that too!
 		if($model->get('baseurl') && $model->getLink('Page') instanceof PageModel){
 			// Tack on the page meta inputs for this page.
 			// This will include the rewriteurl, parenturl, theme template and page template.
 			$f->addElement('pagemeta', $model->getLink('Page'));
 		}
-
+		*/
 		return $f;
 	}
 }

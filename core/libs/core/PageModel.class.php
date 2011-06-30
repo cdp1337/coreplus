@@ -332,8 +332,21 @@ class PageModel extends Model{
 
 		// Remove the first '/'.
 		if($base{0} == '/') $base = substr($base, 1);
-
-
+		
+		
+		$args = null;
+		// Support additional arguments
+		if(($qpos = strpos($base, '?')) !== false){
+			$argstring = substr($base, $qpos + 1);
+			preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
+			$args = array();
+			foreach($matches[1] as $k => $v){
+				if(!$v) continue;
+				$args[$v] = $matches[2][$k];
+			}
+			$base = substr($base, 0, $qpos);
+		}
+		
 		// Logic for the Controller.
 		if(strpos($base, '/')) $controller = substr($base, 0, strpos($base, '/'));
 		else $controller = $base;
@@ -392,6 +405,15 @@ class PageModel extends Model{
 		$baseurl .= ($params)? '/' . implode('/', $params) : '';
 		// Rewrite URL may be useful too!
 		$rewriteurl = self::_LookupReverseUrl($baseurl);
+		
+		// Keep the arguments on the rewrite version.
+		if($args){
+			$rewriteurl .= '?' . $argstring;
+			if($params) $params = array_merge($params, $args);
+			else $params = $args;
+		}
+		
+		// Tack on the "arguments" too, these are 
 
 		return array('controller' => $controller, 'method' => $method, 'parameters' => $params, 'baseurl' => $baseurl, 'rewriteurl' => $rewriteurl);
 	}

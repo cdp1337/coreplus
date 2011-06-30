@@ -322,7 +322,7 @@ class Core implements ISingleton{
 		if($url == '#') return $url;
 		
 		$a = PageModel::SplitBaseURL($url);
-		//var_dump($a);
+		
 		// Instead of going through the overhead of a pagemodel call, SplitBaseURL provides what I need!
 		return ROOT_URL . substr($a['rewriteurl'], 1);
 		
@@ -359,9 +359,9 @@ class Core implements ISingleton{
 	static public function Redirect($page){
 		//This is NOT designed to refresh the current page.	If the pageto redirect to IS
 		// this current page, simply do nothing.
-		 
+		
 		$page = self::ResolveLink($page);
-		//var_dump($page);
+		
 		//if(!preg_match('/^[a-zA-Z]{0,7}:\/\//', $page)){
 		//	$m = PageModel::Find(array('baseurl' => $page), 1);
 		//	if(!$m) $page = ROOT_WDIR;
