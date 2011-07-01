@@ -834,6 +834,7 @@ class FormRadioInput extends FormElement{
 		// is set to the value, it should correctly propagate to "Yes" or "No"
 		if(
 			isset($this->_attributes['options']) &&
+			isset($this->_attributes['value']) &&
 			is_array($this->_attributes['options']) &&
 			sizeof($this->_attributes['options']) == 2 &&
 			isset($this->_attributes['options']['Yes']) &&
