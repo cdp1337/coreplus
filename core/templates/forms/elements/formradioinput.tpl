@@ -5,7 +5,7 @@
 	
 	{foreach from=$element->get('options') item=title key=key}
 		<label>
-			<input type="radio" {$element->getInputAttributes()} value="{$key}" {if $key == $element->get('value')}checked{/if}/>
+			<input type="radio" {$element->getInputAttributes()} value="{$key}" {if $key == $element->getChecked()}checked{/if}/>
 			{$title|escape}
 		</label>
 	{/foreach}

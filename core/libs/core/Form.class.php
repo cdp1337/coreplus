@@ -74,6 +74,25 @@ class FormGroup{
 			$this->_elements[] = new Form::$Mappings[$element]($atts);
 		}
 	}
+	
+	public function switchElement(FormElement $oldelement, FormElement $newelement){
+		foreach($this->_elements as $k => $el){
+			// A match found?  Replace it!
+			if($el == $oldelement){
+				$this->_elements[$k] = $newelement;
+				return true;
+			}
+			
+			// If the element was another group, tell that group to scan too!
+			if($el instanceof FormGroup){
+				// Scan this object too!
+				if($el->switchElement($oldelement, $newelement)) return true;
+			}
+		}
+		
+		// No replacement?...
+		return false;
+	}
 
 	public function getTemplateName(){
 		return 'forms/groups/default.tpl';
@@ -106,7 +125,7 @@ class FormGroup{
 		$r = $this->get('required');
 		$e = $this->hasError();
 
-		return $c . (($r)? ' FormRequired' : '') . (($e)? ' FormError' : '');
+		return $c . (($r)? ' formrequired' : '') . (($e)? ' formerror' : '');
 	}
 
 	/**
@@ -135,13 +154,23 @@ class FormGroup{
 	}
 	
 	/**
+	 * Lookup and return an element based on its name.
+	 * 
 	 * Shortcut of getElementByName()
-	 * @param string $name 
+	 * 
+	 * @param string $name The name of the element to lookup.
+	 * @return FormElement
 	 */
 	public function getElement($name){
 		return $this->getElementByName($name);
 	}
 
+	/**
+	 * Lookup and return an element based on its name.
+	 * 
+	 * @param string $name The name of the element to lookup.
+	 * @return FormElement
+	 */
 	public function getElementByName($name){
 		$els = $this->getElements();
 
@@ -207,6 +236,19 @@ class FormElement{
 			default:
 				return (isset($this->_attributes[$key]))? $this->_attributes[$key] : null;
 		}
+	}
+	
+	/**
+	 * Get all attributes of this form element as a flat array.
+	 * @return array
+	 */
+	public function getAsArray(){
+		$ret = array();
+		$ret['__class'] = get_class($this);
+		foreach($this->_validattributes as $k){
+			$ret[$k] = (isset($this->_attributes[$k]))? $this->_attributes[$k] : null;
+		}
+		return $ret;
 	}
 
 	public function setFromArray($array){
@@ -289,7 +331,7 @@ class FormElement{
 	public function getInputAttributes(){
 		$out = '';
 		foreach($this->_validattributes as $k){
-			if(($v = $this->get($k))) $out .= " $k=\"" . str_replace('"', '\\"', $v) . "\"";
+			if(($v = $this->get($k)) !== null) $out .= " $k=\"" . str_replace('"', '\\"', $v) . "\"";
 		}
 		return $out;
 	}
@@ -330,8 +372,17 @@ class FormElement{
 	}
 }
 
+/**
+ * The main Form object.
+ */
 class Form extends FormGroup{
 
+	/**
+	 * Standard mappings for 'text' to class of the FormElement.
+	 * This can be extended, ie: wysiwyg or captcha.
+	 * 
+	 * @var array
+	 */
 	public static $Mappings = array(
 		'hidden' => 'FormHiddenInput',
 		'pageinsertables' => 'FormPageInsertables',
@@ -345,15 +396,10 @@ class Form extends FormGroup{
 		'wysiwyg' => 'FormTextareaInput',
 	);
 
-	/*public function get($key){
-		switch(strtolower($key)){
-			case 'uniqueid':
-
-			default:
-				return parent::get($key);
-		}
-	}*/
-
+	/**
+	 * Construct a new Form object
+	 * @param array $atts Array of attribute to assign to this form off the bat.
+	 */
 	public function  __construct($atts = null) {
 		parent::__construct($atts);
 
@@ -367,6 +413,20 @@ class Form extends FormGroup{
 		return 'forms/form.tpl';
 	}
 
+	/**
+	 * Render this form and all inside elements to valid HTML.
+	 * 
+	 * This will also save the form to the session data for post-submission validation.
+	 *  (if called with null or "foot")
+	 * 
+	 * @param mixed $part "body|head|foot| or null
+	 *        Render just a specific part of the form.  Useful for advanced usage.
+	 *        null: Render all of the form and its element.
+	 *        "head": Render just the beginning of the form, including the <form> opening tag.
+	 *        "body": Render just the body of the form, specifically the elements.
+	 *        "foot": Render just the end of the form, including the </form> closing tag.
+	 * @return string (valid HTML)
+	 */
 	public function  render($part = null) {
 		// Slip in the formid tracker to remember this submission.
 		if(($part === null || $part == 'body') && $this->get('callsmethod')){
@@ -491,6 +551,12 @@ class Form extends FormGroup{
 		return $model;
 	}
 	
+	/**
+	 * Load this form's values from the provided array, usually GET or POST.
+	 * This is really an internal function that should not be called externally.
+	 * 
+	 * @param array $src 
+	 */
 	public function loadFrom($src){
 		$els = $this->getElements();
 		foreach($els as $e){
@@ -500,6 +566,38 @@ class Form extends FormGroup{
 			$e->set('value', $e->lookupValueFrom($src));
 			if($e->hasError()) Core::SetMessage($e->getError(), 'error');
 		}
+	}
+	
+	/**
+	 * Switch an element type from one to another.
+	 * This is useful for doing some fine tuning on a pre-generated form, ie
+	 *  a "string" field in the Model should be interperuted as an image upload.
+	 * 
+	 * @param string $elementname The name of the element to switch
+	 * @param string $newtype The standard name of the new element type
+	 * @return boolean Return true on success, false on failure.
+	 */
+	public function switchElementType($elementname, $newtype){
+		$el = $this->getElement($elementname);
+		if(!$el) return false;
+		
+		// Default.
+		if(!isset(self::$Mappings[$newtype])) $newtype = 'text';
+		
+		$cls = self::$Mappings[$newtype];
+		
+		// If it's already the newtype, no change required.
+		if(get_class($el) == $cls) return false;
+		
+		$atts = $el->getAsArray();
+		
+		// Don't need this one
+		unset($atts['__class']);
+		$newel = new $cls();
+		$newel->setFromArray($atts);
+		//var_dump($el, $atts, $newel, $newel->getInputAttributes());
+		$this->switchElement($el, $newel);
+		return true;
 	}
 	
 	/**
@@ -517,6 +615,13 @@ class Form extends FormGroup{
 		$_SESSION['FormData'][$this->get('uniqueid')] = serialize($this);
 	}
 
+	
+	/**
+	 * Function that is fired off on page load.
+	 * This checks if a form was submitted and that form was present in the SESSION.
+	 * 
+	 * @return null
+	 */
 	public static function CheckSavedSessionData(){
 		// There has to be data in the session.
 		if(!(isset($_SESSION['FormData']) && is_array($_SESSION['FormData']))) return;
@@ -580,6 +685,12 @@ class Form extends FormGroup{
 		else Core::Redirect($status);
 	}
 
+	/**
+	 * Scan through a standard Model object and populate elements with the correct fields and information.
+	 * 
+	 * @param Model $model
+	 * @return Form 
+	 */
 	public static function BuildFromModel(Model $model){
 		$f = new Form();
 
@@ -617,13 +728,19 @@ class Form extends FormGroup{
 			elseif($v['type'] == Model::ATT_TYPE_STRING){
 				$el = FormElement::Factory('text');
 			}
+			elseif($v['type'] == Model::ATT_TYPE_INT){
+				$el = FormElement::Factory('text');
+			}
 			else{
-				die('Unsupported model attribute type for Form Builder');
+				die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
 			}
 			
 			$el->set('name', 'model[' . $k . ']');
 			$el->set('required', $required);
 			$el->set('title', $title);
+			
+			if($model->get($k)) $el->set('value', $model->get($k));
+			elseif(isset($v['default'])) $el->set('value', $v['default']);
 			
 			$f->addElement($el);
 		}
@@ -675,7 +792,7 @@ class FormTextareaInput extends FormElement{
 
 		// Some defaults
 		$this->_attributes['class'] = 'formelement formtextareainput';
-		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'rows', 'cols', 'style');
+		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'rows', 'cols', 'style', 'class');
 	}
 }
 
@@ -694,7 +811,7 @@ class FormSelectInput extends FormElement{
 
 		// Some defaults
 		$this->_attributes['class'] = 'formelement formselect';
-		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'rows', 'cols', 'style');
+		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'rows', 'cols');
 	}
 }
 
@@ -705,7 +822,38 @@ class FormRadioInput extends FormElement{
 
 		// Some defaults
 		$this->_attributes['class'] = 'formelement formradioinput';
-		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style');
+		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style', 'value');
+	}
+	
+	/**
+	 * Return the key of the currently checked value.
+	 * This will intelligently scan for Yes/No values.
+	 */
+	public function getChecked() {
+		// If this is a boolean (yes/no) radio option and a true or false
+		// is set to the value, it should correctly propagate to "Yes" or "No"
+		if(
+			isset($this->_attributes['options']) &&
+			is_array($this->_attributes['options']) &&
+			sizeof($this->_attributes['options']) == 2 &&
+			isset($this->_attributes['options']['Yes']) &&
+			isset($this->_attributes['options']['No'])
+		){
+			switch(strtolower($this->_attributes['value'])){
+				case true:
+				case '1':
+				case 'true':
+				case 'yes':
+					return 'Yes';
+					break;
+				default:
+					return 'No';
+					break;
+			}
+		}
+		else{
+			return $this->_attributes['value'];
+		}
 	}
 	
 }
