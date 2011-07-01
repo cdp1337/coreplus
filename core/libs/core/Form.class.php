@@ -832,9 +832,11 @@ class FormRadioInput extends FormElement{
 	public function getChecked() {
 		// If this is a boolean (yes/no) radio option and a true or false
 		// is set to the value, it should correctly propagate to "Yes" or "No"
-		if(
+		if(!isset($this->_attributes['value'])){
+			return null;
+		}
+		elseif(
 			isset($this->_attributes['options']) &&
-			isset($this->_attributes['value']) &&
 			is_array($this->_attributes['options']) &&
 			sizeof($this->_attributes['options']) == 2 &&
 			isset($this->_attributes['options']['Yes']) &&
