@@ -250,6 +250,14 @@ class PageModel extends Model{
 			$transport->error = View::ERROR_NOTFOUND;
 			return $transport;
 		}
+		
+		// Populate the transport view object with some preliminary information
+		// if the page exists and has it.
+		// This information can get overwrote in the view method if requested.
+		if($this->exists()){
+			$transport->title = $this->get('title');
+			$transport->access = $this->get('access');
+		}
 
 		$r = call_user_func(array($c, $m), $transport);
 

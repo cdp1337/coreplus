@@ -36,7 +36,6 @@ class DMI {
 	 */
 	protected $_backend = null;
 	
-	
 	/**
 	 * This points to the system/global DMI object.
 	 * 

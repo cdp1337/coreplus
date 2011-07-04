@@ -13,10 +13,8 @@
  * and please contribute back to the community :)
  */
 
-// This file depends on the PEAR MIME_Type class.
-//require_once('MIME/Type.php');
 
-class File implements IFile{
+class File_local_backend implements File_Backend{
 	
 	public $filename = null;
 	
@@ -24,13 +22,43 @@ class File implements IFile{
 		if(!is_null($filename)){
 			// Do some cleaning on the filename, ie: // should be just /.
 			$filename = preg_replace(':/+:', '/', $filename);
+			
+			// Also lookup this filename and resolve it.
+			// ie, if it starts with "asset/", it should be an asset.
+			// public/, public.
+			// private/, private.
+			
+			if(strpos($filename, 'assets/') === 0){
+				$base = ConfigHandler::GetValue('/core/filestore/assetdir');
+				if($base{0} != '/') $base = ROOT_PDIR . $base; // Needs to be fully resolved
+				$theme = ConfigHandler::GetValue('/core/theme');
+				$filename = substr($filename, 7); // Trim off the 'asset/' prefix.
+				if(file_exists($base . $theme . '/' . $filename)) $filename = $base . $theme . '/' . $filename;
+				else $filename = $base . 'default/' . $filename;
+			}
+			elseif(strpos($filename, 'public/') === 0){
+				$filename = substr($filename, 7); // Trim off the 'public/' prefix.
+				$base = ConfigHandler::GetValue('/core/filestore/publicdir');
+				if($base{0} != '/') $base = ROOT_PDIR . $base; // Needs to be fully resolved
+				$filename = $base . $filename;
+			}
+			elseif(strpos($filename, 'private/') === 0){
+				$filename = substr($filename, 8); // Trim off the 'private/' prefix.
+				$base = ConfigHandler::GetValue('/core/filestore/privatedir');
+				if($base{0} != '/') $base = ROOT_PDIR . $base; // Needs to be fully resolved
+				$filename = $base . $filename;
+			}
+			else{
+				// Nothing to do on the else, just use this filename as-is.
+			}
+			
 			$this->filename = $filename;
 		}
 	}
 	
 	public function getFilesize($formatted = false){
 		$f = filesize($this->filename);
-		return ($formatted)? File::FormatSize($f, 2) : $f;
+		return ($formatted)? Core::FormatSize($f, 2) : $f;
 	}
 	
 	public function getMimetype(){
@@ -61,33 +89,6 @@ class File implements IFile{
 	public function getExtension(){
 		return File::GetExtensionFromString($this->filename);
 		//return substr($this->filename, strrpos($this->filename, '.'));
-	}
-
-	public static function GetExtensionFromString($str){
-		// I *could* use php's pathinfo function... but that doesn't handle "tar.gz" files too well...
-		$exts = explode('.', $str);
-		$s = sizeof($exts);
-		// File doesn't have any extension... easy enough!
-		if($s == 1) return '';
-
-		$ext = strtolower($exts[--$s]);
-		if($s == 1) return $ext;
-
-		// Some extensions have some 'extra' logic required...
-		if($ext == 'php' && strtolower($exts[$s-1]) == 'inc'){
-			// PHP files may have .inc.php for them...
-			return 'inc.php';
-		}
-		if($ext == 'gz' || $ext == 'asc'){
-			// gz can compress ANYTHING.... sadly, but gladly too.. 0.o
-			// GPG can also encrypt anything...
-			if(strlen($exts[$s-1]) > 1 && strlen($exts[$s-1]) < 5) $ext = strtolower($exts[--$s]) . '.' . $ext;
-			if($s == 1) return $ext;
-			// This second one will allow for a file such as: something.tar.gz.asc or something.tar.asc.gz
-			if(strlen($exts[$s-1]) > 1 && strlen($exts[$s-1]) < 5) $ext = strtolower($exts[--$s]) . '.' . $ext;
-		}
-
-		return $ext;
 	}
 	
 	/**
@@ -151,9 +152,9 @@ class File implements IFile{
 	public function copyTo($dest, $overwrite = false){
 		//echo "Copying " . $this->filename . " to " . $dest . "\n"; // DEBUG //
 		
-		if(is_a($dest, 'File') || $dest instanceof IFile){
+		if(is_a($dest, 'File') || $dest instanceof File_Backend){
 			// Don't need to do anything! The object either is a File
-			// Or is an implmentation of the IFile interface.
+			// Or is an implmentation of the File_Backend interface.
 		}
 		else{
 			// Well it should be damnit!....
@@ -172,7 +173,7 @@ class File implements IFile{
 			}
 			
 			// Now dest can be instantiated as a valid file object!
-			$dest = new File($file);
+			$dest = new File_local_backend($file);
 		}
 		
 		if($this->identicalTo($dest)) return $this;
@@ -233,17 +234,6 @@ class File implements IFile{
 	public function putContents($data){
 		return file_put_contents($this->filename, $data);
 	}
-
-	
-	public static function FormatSize($filesize, $round = 2){
-		$suf = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
-		$c = 0;
-		while($filesize >= 1024){
-			$c++;
-			$filesize = $filesize / 1024;
-		}
-		return (round($filesize, $round) . ' ' . $suf[$c]);
-	}
 	
 	public function isImage(){
 		$m = $this->getMimetype();
@@ -262,48 +252,6 @@ class File implements IFile{
 	 */
 	public function isPreviewable(){
 		return ($this->isImage() || $this->isText());
-	}
-	
-	/**
-	 * Guess the mimetype for a given extension.
-	 * 
-	 * Some extensions may have multiple mimetypes based on the detection software,
-	 *	so an array is returned with all possibilities for that extension.
-	 * 
-	 * @return array
-	 */
-	public static function GetMimetypeFromExtension($ext){
-		// Remove the beginning '.' if there is one.
-		if($ext{0} == '.') $ext = substr($ext, 1);
-		
-		switch(strtolower($ext)){
-			case 'gif':
-				return array('image/gif');
-			case 'jpg':
-			case 'jpeg':
-				return array('image/jpeg');
-			case 'pdf':
-				return array('application/pdf');
-			case 'png':
-				return array('image/png');
-			case 'sh':
-				return array('application/x-shellscript', 'text/plain');
-			case 'txt':
-				return array('text/plain');
-			case 'zip':
-				return array('application/x-zip', 'application/zip');
-			default:
-				return array();
-		}
-	}
-	
-	public static function GetMimetypesFromExtensions($exts = array()){
-		if(!is_array($exts)) return array();
-		$ret = array();
-		foreach($exts as $ext){
-			$ret = array_merge($ret, File::GetMimetypeFromExtension($ext));
-		}
-		return $ret;
 	}
 	
 	/**
@@ -391,7 +339,7 @@ class File implements IFile{
 
 	public function identicalTo($otherfile){
 	
-		if(is_a($otherfile, 'File') || $otherfile instanceof IFile){
+		if(is_a($otherfile, 'File') || $otherfile instanceof File_Backend){
 			// Just compare the hashes.
 			return ($this->getHash() == $otherfile->getHash());
 		}
@@ -407,6 +355,81 @@ class File implements IFile{
 	public function exists(){
 		return file_exists($this->filename);
 	}
+
+	
+	public static function GetExtensionFromString($str){
+		// I *could* use php's pathinfo function... but that doesn't handle "tar.gz" files too well...
+		$exts = explode('.', $str);
+		$s = sizeof($exts);
+		// File doesn't have any extension... easy enough!
+		if($s == 1) return '';
+
+		$ext = strtolower($exts[--$s]);
+		if($s == 1) return $ext;
+
+		// Some extensions have some 'extra' logic required...
+		if($ext == 'php' && strtolower($exts[$s-1]) == 'inc'){
+			// PHP files may have .inc.php for them...
+			return 'inc.php';
+		}
+		if($ext == 'gz' || $ext == 'asc'){
+			// gz can compress ANYTHING.... sadly, but gladly too.. 0.o
+			// GPG can also encrypt anything...
+			if(strlen($exts[$s-1]) > 1 && strlen($exts[$s-1]) < 5) $ext = strtolower($exts[--$s]) . '.' . $ext;
+			if($s == 1) return $ext;
+			// This second one will allow for a file such as: something.tar.gz.asc or something.tar.asc.gz
+			if(strlen($exts[$s-1]) > 1 && strlen($exts[$s-1]) < 5) $ext = strtolower($exts[--$s]) . '.' . $ext;
+		}
+
+		return $ext;
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Guess the mimetype for a given extension.
+	 * 
+	 * Some extensions may have multiple mimetypes based on the detection software,
+	 *	so an array is returned with all possibilities for that extension.
+	 * 
+	 * @return array
+	 */
+	public static function GetMimetypeFromExtension($ext){
+		// Remove the beginning '.' if there is one.
+		if($ext{0} == '.') $ext = substr($ext, 1);
+		
+		switch(strtolower($ext)){
+			case 'gif':
+				return array('image/gif');
+			case 'jpg':
+			case 'jpeg':
+				return array('image/jpeg');
+			case 'pdf':
+				return array('application/pdf');
+			case 'png':
+				return array('image/png');
+			case 'sh':
+				return array('application/x-shellscript', 'text/plain');
+			case 'txt':
+				return array('text/plain');
+			case 'zip':
+				return array('application/x-zip', 'application/zip');
+			default:
+				return array();
+		}
+	}
+	
+	public static function GetMimetypesFromExtensions($exts = array()){
+		if(!is_array($exts)) return array();
+		$ret = array();
+		foreach($exts as $ext){
+			$ret = array_merge($ret, File::GetMimetypeFromExtension($ext));
+		}
+		return $ret;
+	}
+	
 	
 }
 ?>

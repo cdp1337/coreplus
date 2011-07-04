@@ -715,11 +715,11 @@ function process_component($component, $forcerelease = false){
 			//smartCopy(ROOT_PDIR . '/components/' . $c->getName(), $dir . '/data');
 			//smartCopy($c->getBaseDir(), $dir . 'data/');
 			foreach($c->getAllFilenames() as $f){
-				$file = new File($c->getBaseDir() . $f['file']);
+				$file = new File_local_backend($c->getBaseDir() . $f['file']);
 				$file->copyTo($dir . 'data/' . $f['file']);
 			}
 			// Don't forget the metafile....
-			$file = new File($c->getXMLFilename());
+			$file = new File_local_backend($c->getXMLFilename());
 			$file->copyTo($dir . 'data/' . $c->getXMLFilename(''));
 
 			$packager = 'CAE2 ' . ComponentHandler::GetComponent('core')->getVersion();
@@ -866,11 +866,11 @@ function process_theme($theme, $forcerelease = false){
 			//smartCopy(ROOT_PDIR . '/components/' . $c->getName(), $dir . '/data');
 			//smartCopy($c->getBaseDir(), $dir . 'data/');
 			foreach($t->getAllFilenames() as $f){
-				$file = new File($t->getBaseDir() . $f['file']);
+				$file = new File_local_backend($t->getBaseDir() . $f['file']);
 				$file->copyTo($dir . 'data/' . $f['file']);
 			}
 			// Don't forget the metafile....
-			$file = new File($t->getXMLFilename());
+			$file = new File_local_backend($t->getXMLFilename());
 			$file->copyTo($dir . 'data/' . $t->getXMLFilename(''));
 
 			$packager = 'CAE2 ' . ComponentHandler::GetComponent('core')->getVersion();

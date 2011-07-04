@@ -24,6 +24,11 @@ require_once(ROOT_PDIR . 'core/libs/core/InstallArchive.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/InstallArchiveAPI.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Component.class.php');
 
+// File manipulation is a core feature required by the component system.
+require_once(ROOT_PDIR . 'core/libs/file-abstraction/File_Backend.interface.php');
+require_once(ROOT_PDIR . 'core/libs/file-abstraction/backends/awss3.backend.php');
+require_once(ROOT_PDIR . 'core/libs/file-abstraction/backends/local.backend.php');
+
 // Many of these are needed because some systems, such as the installer
 // execute before the ComponentHandler has loaded the class locations.
 require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');

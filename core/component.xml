@@ -319,8 +319,8 @@
 		<file filename="core/libs/core/Asset.class.php" md5="c104d25e7870163e2e05c01f5d655109">
 			<provides type="class" name="Asset"/>
 		</file>
-		<file filename="core/libs/core/IFile.interface.php" md5="53ca54232cd40876a5ba7b74f2f2ed5c">
-			<provides type="interface" name="IFile"/>
+		<file filename="core/libs/core/file-abstraction/File_Backend.interface.php" md5="53ca54232cd40876a5ba7b74f2f2ed5c">
+			<provides type="interface" name="File_Backend"/>
 		</file>
 		<file filename="core/libs/core/View.class.php" md5="769771b24694eda4d7c65c7efc638504">
 			<provides type="class" name="View"/>

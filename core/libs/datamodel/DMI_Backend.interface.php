@@ -19,6 +19,15 @@
  * @author powellc
  */
 interface DMI_Backend {
+	/**
+	 * Create a new connection to the backend server.
+	 * 
+	 * @param type $host
+	 * @param type $user
+	 * @param type $pass
+	 * @param type $database
+	 * @return mixed 
+	 */
 	public function connect($host, $user, $pass, $database);
 	
 	public function execute(Dataset $dataset);
@@ -26,6 +35,10 @@ interface DMI_Backend {
 	public function tableExists($tablename);
 	
 	public function createTable($tablename, $schema);
+	
+	public function readCount();
+	
+	public function writeCount();
 }
 
 ?>

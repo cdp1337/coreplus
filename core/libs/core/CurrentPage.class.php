@@ -94,6 +94,8 @@ class CurrentPage{
 			return false;
 		}
 		
+		//var_dump($p); die();
+		
 		// Make sure all the parameters from both standard GET and core parameters are tacked on.
 		if($pagedat && $pagedat['parameters']){
 			foreach($pagedat['parameters'] as $k => $v){
@@ -227,8 +229,12 @@ class CurrentPage{
 		if($view->error == View::ERROR_NOERROR){
 			// Save this page data too.
 			if($this->_page->exists()){
+				
+				// Make sure the database has something.
+				// (this should be pulled from the database if nothing else anyway)
 				$this->_page->set('title', $view->title);
 				$this->_page->set('access', $view->access);
+				
 				$this->_page->save();
 			} 
 		}
@@ -252,8 +258,10 @@ class CurrentPage{
 		// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
 		if(DEVELOPMENT_MODE && $view->mode == View::MODE_PAGE && $view->contenttype == View::CTYPE_HTML){
 			echo '<pre class="xdebug-var-dump">';
+			echo "Database Reads: " . Core::DB()->readCount() . "\n";
+			echo "Database Writes: " . Core::DB()->writeCount() . "\n";
 			//echo "Number of queries: " . DB::Singleton()->counter . "\n";
-			echo "Amount of memory used by PHP: " . File::FormatSize(memory_get_usage()) . "\n";
+			echo "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
 			echo "Total processing time: " . round(Core::GetProfileTimeTotal(), 3) . ' seconds';
 			echo '</pre>';
 		}

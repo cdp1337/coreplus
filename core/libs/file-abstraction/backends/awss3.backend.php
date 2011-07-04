@@ -18,7 +18,7 @@
  *
  * @author powellc
  */
-class FileAWSS3 implements IFile {
+class File_awss3_backend implements File_Backend {
 	/**
 	 * @var AmazonS3
 	 */
@@ -53,7 +53,7 @@ class FileAWSS3 implements IFile {
 		if(!$d) return null;
 		
 		$f = $d['Size'];
-		return ($formatted)? File::FormatSize($f, 2) : $f;
+		return ($formatted)? Core::FormatSize($f, 2) : $f;
 	}
 	
 	public function getMimetype(){
@@ -135,9 +135,9 @@ class FileAWSS3 implements IFile {
 	public function copyTo($dest, $overwrite = false){
 		//echo "Copying " . $this->filename . " to " . $dest . "\n"; // DEBUG //
 		
-		if(is_a($dest, 'File') || $dest instanceof IFile){
+		if(is_a($dest, 'File') || $dest instanceof File_Backend){
 			// Don't need to do anything! The object either is a File
-			// Or is an implmentation of the IFile interface.
+			// Or is an implmentation of the File_Backend interface.
 		}
 		else{
 			// Well it should be damnit!....
@@ -156,7 +156,7 @@ class FileAWSS3 implements IFile {
 			}
 			
 			// Now dest can be instantiated as a valid file object!
-			$dest = new File($file);
+			$dest = new File_awss3_backend($file);
 		}
 		
 		if($this->identicalTo($dest)) return $this;
@@ -269,7 +269,7 @@ class FileAWSS3 implements IFile {
 
 	public function identicalTo($otherfile){
 	
-		if(is_a($otherfile, 'File') || $otherfile instanceof IFile){
+		if(is_a($otherfile, 'File') || $otherfile instanceof File_Backend){
 			// Just compare the hashes.
 			return ($this->getHash() == $otherfile->getHash());
 		}

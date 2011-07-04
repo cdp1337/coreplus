@@ -695,17 +695,21 @@ class Component extends InstallArchiveAPI{
 		// @todo I need actual error checking here.
 		if(!$this->isInstalled()) return false;
 		
-		$this->_parseDBSchema();
+		$changed = false;
+		
+		if($this->_parseDBSchema()) $changed = true;
 		
 		$this->_parseConfigs();
 		
 		$this->_parsePages();
 		
-		$this->_installAssets();
+		if($this->_installAssets()) $changed = true;
 		
 		// @todo What else should be done?
 		
-		return true;
+		// So I'm kind of giving up on the whole changed thing... Models 
+		// need a little bit of work to get this to be useful yet.
+		return $changed;
 	}
 	
 	public function upgrade(){
@@ -748,22 +752,6 @@ class Component extends InstallArchiveAPI{
 	}
 	
 	/**
-	 * Copy in all the assets for this component into the assets location.
-	 */
-	private function _installAssets(){
-		foreach($this->getElements('/assets/file') as $node){
-			$b = $this->getBaseDir();
-			$f = new File($b . $node->getAttribute('filename'));
-			$nf = new Asset($node->getAttribute('filename'));
-			
-			$f->copyTo($nf, true);
-		}
-		
-		// Make sure the asset cache is purged!
-		Core::Cache()->delete('asset-resolveurl');
-	}
-	
-	/**
 	 * Internal function to parse and handle the configs in the component.xml file.
 	 * This is used for installations and upgrades.
 	 */
@@ -781,7 +769,8 @@ class Component extends InstallArchiveAPI{
 			$m->set('description', $confignode->getAttribute('description'));
 			$m->save();
 		}
-	}
+		
+	} // private function _parseConfigs
 	
 	/**
 	 * Internal function to parse and handle the configs in the component.xml file.
@@ -819,6 +808,8 @@ class Component extends InstallArchiveAPI{
 		$node = $this->getElement('dbschema');
 		$prefix = $node->getAttribute('prefix');
 		
+		$changed = false;
+		
 		
 		// Get the table structure as it exists in the database first, this will be the comparison point.
 		$classes = $this->getClassList();
@@ -844,8 +835,9 @@ class Component extends InstallArchiveAPI{
 				// Pass this schema into the DMI processor for create table.
 				Core::DB()->createTable($tablename, $schema);
 			}
-			
 		}
+		
+		return $changed;
 	} // private function _parseDBSchema()
 	
 	

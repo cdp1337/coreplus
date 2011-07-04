@@ -28,14 +28,32 @@ class View {
 	const ERROR_NOTFOUND     = 404;
 	const ERROR_SERVERERROR  = 500;
 	
-	/* Modes for handling the rendering of the view */
+	/*** Modes for handling the rendering of the view ***/
+	
 	/**
-	 * Handle the rendering of this view as a normal page.
+	 * Standard page inside the master page template
 	 */
 	const MODE_PAGE       = 'page';
+	/**
+	 * Widget page inside a given widget container
+	 */
 	const MODE_WIDGET     = 'widget';
+	/**
+	 * No automatic output whatsoever
+	 * Useful for file downloads and completely custom views.
+	 */
 	const MODE_NOOUTPUT   = 'nooutput';
+	/**
+	 * Render a template, but do not wrap in a master page template
+	 * This is useful if you want the power of a template, but for an 
+	 * ajax or otherwise custom response.
+	 */
 	const MODE_AJAX       = 'ajax';
+	/**
+	 * Detect if the page request is a standard or ajax, toggle between respectively
+	 * If the page is loaded via an ajax request, no master template is used.
+	 * otherwise, a standard page load will render with the master page template.
+	 */
 	const MODE_PAGEORAJAX = 'pageorajax';
 	//const MODE_JSON       = 'json';
 	

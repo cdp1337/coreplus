@@ -196,6 +196,7 @@ class Model {
 		$this->_dirty = false;
 		$this->_dataatinit = $this->_data;
 		
+		
 		/*
 		// Go through any linked tables and ensure that they're saved as well.
 		foreach($this->_linked as $k => $l){
@@ -248,33 +249,39 @@ class Model {
 		if($idcol) $this->_data[$idcol] = $dat->getID();
 	}
 
+	/**
+	 * Save an existing Model object into the database.
+	 * Will create, set and execute a dataset object as appropriately internally.
+	 */
 	private function _saveExisting(){
 		$i = self::GetIndexes();
 		$s = self::GetSchema();
 		
-		if(!isset($i['primary'])) $i['primary'] = array(); // No primary schema defined... just don't make the in_array bail out.
+		// No primary schema defined... just don't make the in_array bail out.
+		if(!isset($i['primary'])) $i['primary'] = array(); 
 		
+		// This is the dataset object that will be integral in this function.
 		$dat = new Dataset();
 		$dat->table(self::GetTableName());
 		
 		$idcol = false;
 		foreach($this->_data as $k => $v){
 			$keyschema = $s[$k];
-			
 			// Certain key types have certain functions.
 			switch($keyschema['type']){
 				case Model::ATT_TYPE_CREATED:
 					// Already created... don't update the flag.
-					continue;
+					continue 2;
 				case Model::ATT_TYPE_UPDATED:
+					// Update the updated timestamp with now.
 					$nv = Time::GetCurrentGMT();
 					$dat->update($k, $nv);
 					$this->_data[$k] = $nv;
-					continue;
+					continue 2;
 				case Model::ATT_TYPE_ID:
 					$dat->setID($k, $this->_data[$k]);
 					$idcol = $k; // Remember this for after the save.
-					continue;
+					continue 2;
 			}
 			
 			// Everything else
@@ -287,6 +294,8 @@ class Model {
 				$this->_data[$k] = $v;
 			}
 			else{
+				if($this->_datainit[$k] == $v) continue; // Skip non-changed columns
+				echo "Setting [$k] = [$v]<br/>";
 				$dat->update($k, $v);
 			}
 		}

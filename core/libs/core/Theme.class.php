@@ -234,11 +234,13 @@ class Theme extends InstallArchiveAPI{
 		// @todo I need actual error checking here.
 		if(!$this->isInstalled()) return false;
 		
-		$this->_installAssets();
+		$changed = false;
+		
+		if($this->_installAssets()) $changed = true;
 		
 		// @todo What else should be done?
 		
-		return true;
+		return $changed;
 	}
 	
 	public function upgrade(){
@@ -249,21 +251,5 @@ class Theme extends InstallArchiveAPI{
 		$this->_versionDB = $this->_version;
 		
 		$this->_installAssets();
-	}
-	
-	/**
-	 * Copy in all the assets for this component into the assets location.
-	 */
-	private function _installAssets(){
-		foreach($this->getElements('/assets/file') as $node){
-			$b = $this->getBaseDir();
-			$f = new File($b . $node->getAttribute('filename'));
-			$nf = new Asset($node->getAttribute('filename'), $this->getName());
-			
-			$f->copyTo($nf, true);
-		}
-		
-		// Make sure the asset cache is purged!
-		Core::Cache()->delete('asset-resolveurl');
 	}
 }

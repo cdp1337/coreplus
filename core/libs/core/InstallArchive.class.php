@@ -38,7 +38,7 @@ class InstallArchive{
 		}
 		else{
 			// @todo Add support for URLs.
-			$this->_file = new File($file);
+			$this->_file = new File_local_backend($file);
 		}
 	}
 	

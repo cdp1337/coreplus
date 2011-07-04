@@ -17,7 +17,7 @@
  *
  * @author powellc
  */
-interface IFile {
+interface File_Backend {
 	public function __construct($filename = null);
 	
 	public function getFilesize($formatted = false);

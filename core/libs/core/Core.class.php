@@ -234,6 +234,22 @@ class Core implements ISingleton{
 	}
 	
 	
+	public static function File($filename = null){
+		$backend = ConfigHandler::GetValue('/core/filestore/backend');
+		switch($backend){
+			case 'aws':
+				return new File_awss3_backend($filename);
+				break;
+			case 'local':
+			default:
+				// Automatically resolve this file.
+				//$filename = File_local_backend:
+				return new File_local_backend($filename);
+				break;
+		}
+	}
+	
+	
 	
 	public static function AddProfileTime($event, $microtime = null){
 		self::Singleton()->_addProfileTime($event, $microtime);
@@ -308,7 +324,29 @@ class Core implements ISingleton{
 	 * @return string The full url of the asset, including the http://...
 	 */
 	public static function ResolveAsset($asset){
-		return Asset::ResolveURL($asset);
+		
+		// Since an asset is just a file, I'll use the builtin file store system.
+		// (although every file coming in should be assumed to be an asset, so
+		//  allow for a partial path name to come in, assuming asset/).
+		
+		if(strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
+		
+		// Maybe it's cached :)
+		$keyname = 'asset-resolveurl';
+		$cachevalue = self::Cache()->get($keyname, (3600 * 24));
+		
+		if(!$cachevalue) $cachevalue = array();
+		
+		if(!isset($cachevalue[$asset])){
+			// Well, look it up!
+			$f = self::File($asset);
+			
+			$cachevalue[$asset] = $f->getURL();
+			// Save this for future lookups.
+			self::Cache()->set($keyname, $cachevalue, (3600 * 24));
+		}
+		
+		return $cachevalue[$asset];
 	}
 	
 	/**
@@ -566,6 +604,24 @@ class Core implements ISingleton{
 		}
 		
 		return $output;
+	}
+	
+	
+	/**
+	 * Utility function to translate a filesize in bytes into a human-readable version.
+	 * 
+	 * @param int $filesize Filesize in bytes
+	 * @param int $round Precision to round to
+	 * @return string 
+	 */
+	public static function FormatSize($filesize, $round = 2){
+		$suf = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
+		$c = 0;
+		while($filesize >= 1024){
+			$c++;
+			$filesize = $filesize / 1024;
+		}
+		return (round($filesize, $round) . ' ' . $suf[$c]);
 	}
 	
 }

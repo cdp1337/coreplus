@@ -22,11 +22,34 @@
 class DMI_mysqli_backend implements DMI_Backend {
 	
 	/**
+	 * Number of reads done from the database from the 'execute' function.
+	 * @var int
+	 */
+	private $_reads = 0;
+	
+	/**
+	 * Number of writes done to the database from the 'execute' function.
+	 * @var int
+	 */
+	private $_writes = 0;
+	
+	
+	/**
 	 *
 	 * @var mysqli
 	 */
 	private $_conn = null;
 	
+	
+	/**
+	 * Create a new connection to a mysql server.
+	 * 
+	 * @param type $host
+	 * @param type $user
+	 * @param type $pass
+	 * @param type $database
+	 * @return type 
+	 */
 	public function connect($host, $user, $pass, $database){
 		
 		// Did the host come in with a port attached?
@@ -53,12 +76,15 @@ class DMI_mysqli_backend implements DMI_Backend {
 	public function execute(Dataset $dataset){
 		switch($dataset->_mode){
 			case Dataset::MODE_GET:
+				++$this->_reads;
 				$this->_executeGet($dataset);
 				break;
 			case Dataset::MODE_INSERT:
+				++$this->_writes;
 				$this->_executeInsert($dataset);
 				break;
 			case Dataset::MODE_UPDATE:
+				++$this->_writes;
 				$this->_executeUpdate($dataset);
 				break;
 			default:
@@ -243,6 +269,8 @@ class DMI_mysqli_backend implements DMI_Backend {
 	}
 	
 	public function modifyTable($table, $newschema){
+		$changed = false;
+		
 		// Check if the table exists to begin with.
 		if(!$this->tableExists($table)){
 			throw new DMI_Exception('Cannot modify table [' . $table . '] as it does not exist');
@@ -311,6 +339,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 			if(!(isset($schema['ord'][$x]) && $schema['ord'][$x] == $column)){
 				// Is it even present?
 				if(isset($schema['def'][$column])){
+					$changed = true;
 					// w00t, move it to this position.
 					// ALTER TABLE `test` MODIFY COLUMN `fieldfoo` mediumint AFTER `something`
 					$q = 'ALTER TABLE _tmptable MODIFY COLUMN `' . $column . '` ' . $type . ' ';
@@ -322,6 +351,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				}
 				// No? Ok, create it.
 				else{
+					$changed = true;
 					// ALTER TABLE `test` ADD `newfield` TEXT NOT NULL AFTER `something` 
 					$q = 'ALTER TABLE _tmptable ADD `' . $column . '` ' . $type . ' ';
 					$q .= $null . ' ';
@@ -340,7 +370,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$coldef['type'] == Model::ATT_TYPE_ID && ($newschema['indexes']['primary'] && in_array($column, $newschema['indexes']['primary'])) && 
 				(!isset($schema['def'][$column]) || ($schema['def'][$column]['extra'] == '' && $schema['def'][$column]['key'] == ''))
 			){
-				var_dump($table, $newschema);
+				$changed = true;
 				// An AI value was added to the table.  I need to add that column as the primary key first, then
 				// tack on the AI property.
 				// ALTER TABLE `test` ADD PRIMARY KEY(`id`)
@@ -363,6 +393,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				//$coldef['collation'] != $schema['def'][$coldef['field']]['collation'] || 
 				$coldef['comment'] != $schema['def'][$column]['comment']
 			){
+				$changed = true;
 				$q = 'ALTER TABLE _tmptable CHANGE `' . $column . '` `' . $column . '` ';
 				$q .= $type . ' ';
 				//if($coldef['collation']) $q .= 'COLLATE ' . $coldef['collation'] . ' ';
@@ -413,6 +444,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 			
 			// These are the index creates/modifies.
 			if(!isset($indexes[$idxkey])){
+				$changed = true;
 				// Doesn't exist, create it.
 				$this->_rawExecute('ALTER TABLE `_tmptable` ADD ' . $idxname . ' (`' . implode('`, `', $columns) . '`)');
 				$keysgood[] = $idxkey;
@@ -422,6 +454,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$indexes[$idxkey]['columns'] != $columns ||
 				$nonunique != ($indexes[$idxkey]['nonunique'])
 			){
+				$changed = true;
 				// Rebuild it.
 				$this->_rawExecute('ALTER TABLE `_tmptable` DROP ' . $idxdropname . '');
 				$this->_rawExecute('ALTER TABLE `_tmptable` ADD ' . $idxname . ' (`' . implode('`, `', $columns) . '`)');
@@ -436,6 +469,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 			// And the key deletions.
 			foreach($indexes as $idx => $val){
 				if(!in_array($idx, $keysgood)){
+					$changed = true;
 					// DROP IT!
 					$this->_rawExecute('ALTER TABLE `_tmptable` DROP INDEX ' . $idx . '');
 				}
@@ -443,14 +477,31 @@ class DMI_mysqli_backend implements DMI_Backend {
 			
 		} // foreach($this->getElementFrom('index', $tblnode, false) as $idxnode)
 
+		if(!$changed){
+			// Drop the table so it's ready for the next table.
+			$this->_rawExecute('DROP TABLE _tmptable');
+			
+			return false;
+		}
+		else{
+			// All operations should be completed now; move the temp table back to the original one.
+			$this->_rawExecute('DROP TABLE `' . $table . '`');
+			$this->_rawExecute('CREATE TABLE `' . $table . '` LIKE _tmptable');
+			$this->_rawExecute('INSERT INTO `' . $table . '` SELECT * FROM _tmptable');
 
-		// All operations should be completed now; move the temp table back to the original one.
-		$this->_rawExecute('DROP TABLE `' . $table . '`');
-		$this->_rawExecute('CREATE TABLE `' . $table . '` LIKE _tmptable');
-		$this->_rawExecute('INSERT INTO `' . $table . '` SELECT * FROM _tmptable');
-
-		// Drop the table so it's ready for the next table.
-		$this->_rawExecute('DROP TABLE _tmptable');
+			// Drop the table so it's ready for the next table.
+			$this->_rawExecute('DROP TABLE _tmptable');
+			
+			return true;
+		}
+	}
+	
+	public function readCount() {
+		return $this->_reads;
+	}
+	
+	public function writeCount() {
+		return $this->_writes;
 	}
 	
 	

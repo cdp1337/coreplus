@@ -366,4 +366,41 @@ abstract class InstallArchiveAPI extends XMLLoader{
 		// It tends to be very schroeder-esque.....  Damn effing cat!
 		return clone $this->_iterator;
 	}
+	
+	/**
+	 * Copy in all the assets for this component into the assets location.
+	 * 
+	 * @return boolean True if something changed, false if nothing changed.
+	 */
+	protected function _installAssets(){
+		$assetbase = ConfigHandler::GetValue('/core/filestore/assetdir');
+		$theme = ConfigHandler::GetValue('/core/theme');
+		$changed = false;
+		
+		foreach($this->getElements('/assets/file') as $node){
+			$b = $this->getBaseDir();
+			// Local file is guaranteed to be a local file.
+			$f = new File_local_backend($b . $node->getAttribute('filename'));
+			$nf = Core::File($node->getAttribute('filename'));
+			// The new destination must be in the default directory, this is a 
+			// bit of a hack from the usual behaviour of the filestore system.
+			if($theme != 'default' && strpos($nf->filename, $assetbase . $theme) !== false){
+				$nf->filename = str_replace($assetbase . $theme, $assetbase . 'default');
+			}
+			
+			// Check if this file even needs updated. (this is primarily used for reporting reasons)
+			if($nf->exists() && $nf->identicalTo($f)) continue;
+			
+			$f->copyTo($nf, true);
+			// Something changed.
+			$changed = true;
+		}
+		
+		if(!$changed) return false;
+		
+		// Make sure the asset cache is purged!
+		Core::Cache()->delete('asset-resolveurl');
+		
+		return true;
+	}
 }

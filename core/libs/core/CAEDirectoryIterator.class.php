@@ -131,7 +131,7 @@ class CAEDirectoryIterator implements Iterator{
 			}
 			else{
 				// @todo have intelligent file matching to return the appropriate object.
-				$this->_files[] = new File($dir . $sub);
+				$this->_files[] = new File_local_backend($dir . $sub);
 			}
 		}
 		

@@ -14,10 +14,6 @@
  */
 
 require_once(ROOT_PDIR . 'core/libs/core/Theme.class.php');
-require_once(ROOT_PDIR . 'core/libs/core/IFile.interface.php');
-require_once(ROOT_PDIR . 'core/libs/core/File.class.php');
-//require_once(ROOT_PDIR . 'core/libs/core/FileAWSS3.class.php');
-require_once(ROOT_PDIR . 'core/libs/core/Asset.class.php');
 
 
 /**
