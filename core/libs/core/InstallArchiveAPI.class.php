@@ -385,7 +385,7 @@ abstract class InstallArchiveAPI extends XMLLoader{
 			// The new destination must be in the default directory, this is a 
 			// bit of a hack from the usual behaviour of the filestore system.
 			if($theme != 'default' && strpos($nf->filename, $assetbase . $theme) !== false){
-				$nf->filename = str_replace($assetbase . $theme, $assetbase . 'default');
+				$nf->filename = str_replace($assetbase . $theme, $assetbase . 'default', $nf->filename);
 			}
 			
 			// Check if this file even needs updated. (this is primarily used for reporting reasons)
