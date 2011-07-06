@@ -293,6 +293,8 @@ catch(Exception $e){
 
 HookHandler::DispatchHook('db_ready');
 unset($start_time, $predefines_time, $preincludes_time, $maindefines_time);
+/*
+ * This is all done from within the component handler now.
 Core::_LoadFromDatabase();
 
 // Does the core require an update?
@@ -301,10 +303,9 @@ if(Core::GetComponent()->needsUpdated()){
 	Core::GetComponent()->upgrade();
 }
 Core::AddProfileTime('core_ready');
-
+*/
 
 // Give me some other useful core systems.
-require_once(ROOT_PDIR . 'core/libs/core/Time.class.php');
 if(EXEC_MODE == 'WEB'){
 	// Sessions are always useful for web apps
 	require_once(ROOT_PDIR . 'core/libs/core/Session.class.php');
@@ -336,19 +337,20 @@ if(EXEC_MODE == 'WEB'){
 
 
 
-// Load all the themes on the system.
-require_once(ROOT_PDIR . 'core/libs/core/ThemeHandler.class.php');
-ThemeHandler::Load();
+
 
 
 /**
- * Load all the components, these are hybrid library/modules, created for convenience to the developer.
+ * Load all the components
  */
 require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
 ComponentHandler::Singleton();
-ComponentHandler::Load();
 //var_dump(ComponentHandler::Singleton());die();
 //var_dump(LibraryHandler::singleton());
+
+// Load all the themes on the system.
+require_once(ROOT_PDIR . 'core/libs/core/ThemeHandler.class.php');
+ThemeHandler::Load();
 
 HookHandler::DispatchHook('components_loaded');
 //var_dump(ComponentHandler::Singleton());

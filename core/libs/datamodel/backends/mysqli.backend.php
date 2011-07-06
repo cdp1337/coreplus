@@ -648,7 +648,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$offset = $pos + strlen($sanitizedk);
 			}
 		}
-		
+		//echo $string . '<br/>'; // DEBUGGING //
 		$res = $this->_conn->query($string);
 		if($this->_conn->errno){
 			// @todo Should this be implemented in the DMI_Exception?

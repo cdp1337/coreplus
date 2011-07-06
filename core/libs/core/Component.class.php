@@ -31,7 +31,7 @@ class Component extends InstallArchiveAPI{
 	 * 
 	 * @var string
 	 */
-	private $_versionDB = false;
+	public $_versionDB = false;
 	
 
 	// @todo What was this going to be used for again?
@@ -84,6 +84,7 @@ class Component extends InstallArchiveAPI{
 			parent::load();
 		}
 		catch(Exception $e){
+			echo '<pre>' . $e->__toString() . '</pre>';
 			// Damn... couldn't load the component...
 			die("Could not load " . $this->getName());
 		}
@@ -94,7 +95,7 @@ class Component extends InstallArchiveAPI{
 		
 		// Now look up the component in the database (for installed version).
 		//if(class_exists('DB') && Core::IsInstalled()){
-		try{
+		/*try{
 			$res = Dataset::Init()->table('component')->select('*')->where('name = ' . $this->_name)->limit(1)->execute();
 		}
 		catch(Exception $e){
@@ -107,7 +108,7 @@ class Component extends InstallArchiveAPI{
 		$data = $res->current();
 		$this->_versionDB = $data['version'];
 		$this->enabled = $data['enabled'];
-		
+		*/
 		
 		return true;
 	}
@@ -329,7 +330,7 @@ class Component extends InstallArchiveAPI{
 		$libs = array();
 		
 		if($this->hasLibrary()){
-			$libs[$this->_name] = $this->_versionDB;
+			$libs[strtolower($this->_name)] = $this->_versionDB;
 		}
 		
 		
@@ -337,7 +338,7 @@ class Component extends InstallArchiveAPI{
 			if(strtolower($p->getAttribute('type')) == 'library'){
 				$v = @$p->getAttribute('version');
 				if(!$v) $v = $this->_versionDB;
-				$libs[$p->getAttribute('name')] = $v;
+				$libs[strtolower($p->getAttribute('name'))] = $v;
 			}
 		}
 		
@@ -414,7 +415,7 @@ class Component extends InstallArchiveAPI{
 		$libs = array();
 		if($this->hasLibrary()){
 			foreach($this->getElementByTagName('library')->getElementsByTagName('scriptlibrary') as $s){
-				$libs[$s->getAttribute('name')] = $s->getAttribute('call');
+				$libs[strtolower($s->getAttribute('name'))] = $s->getAttribute('call');
 			}
 		}
 		return $libs;
@@ -624,7 +625,7 @@ class Component extends InstallArchiveAPI{
 			$lib->version = (($v = @$node->getAttribute('version'))? $v : $this->getRootDOM()->getAttribute('version'));
 			$lib->baseDirectory = ROOT_PDIR . 'components/' . $this->getName() . '/';
 			$lib->DOMNode = $node;
-			$ret[$lib->name] = $lib;
+			$ret[strtolower($lib->name)] = $lib;
 		}
 		return $ret;
 	}

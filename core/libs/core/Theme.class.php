@@ -37,18 +37,11 @@ class Theme extends InstallArchiveAPI{
 	public function load(){
 		parent::load();
 		
-		// Now look up the theme in the database (for installed version).
-		if(class_exists('DB')){
-			$q = DB::Execute("SELECT `version` FROM `" . DB_PREFIX . "component` WHERE `name` = ?", 'theme/' . $this->_name);
-			if(!$q) return false;
-			
-			if($q->numRows() > 0){
-				$this->_versionDB = $q->fields['version'];
-			}
-			else{
-				$this->_versionDB = false;
-			}
-		}
+		// Lookup this theme data in the component handler cache.
+		$c = ComponentHandler::Singleton()->_dbcache;
+		if(!isset($c['theme/' . $this->_name])) return false;
+		
+		$this->_versionDB = $c['theme/' . $this->_name]['version'];
 		
 		return true;
 	}

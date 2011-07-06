@@ -77,6 +77,14 @@ class ComponentHandler implements ISingleton{
 	private $_loadedComponents = array();
 	
 	private $_viewSearchDirs = array();
+	
+	/**
+	 * key/value array of records in the database.
+	 * Used as a lookup so the components only have to be queried once.
+	 * 
+	 * @var array
+	 */
+	public $_dbcache = array();
 		
 	/**
 	 * Private constructor class to prevent outside instantiation.
@@ -84,6 +92,9 @@ class ComponentHandler implements ISingleton{
 	 * @return void
 	 */
 	private function __construct(){
+		// Add in the core component for the first element.
+		$this->_componentCache['core'] = $c = Core::GetComponent();
+		
 		// Run through the libraries directory and look for, well... components.
 		
 		// First, build my cache of components, regardless if the component is installed or not.
@@ -100,8 +111,11 @@ class ComponentHandler implements ISingleton{
 				if(!is_readable(ROOT_PDIR . 'components/' . $file . '/component.xml')) continue;
 				
 				// Finally, load the component and keep it in cache.
-				
 				$c = new Component($file);
+				
+				// All further operations are case insensitive.
+				// The original call to Component needs to be case sensitive because it sets the filename to pull.
+				$file = strtolower($file);
 				
 				// If the component was flagged as invalid.. just skip to the next one.
 				if(!$c->isValid()){
@@ -117,26 +131,17 @@ class ComponentHandler implements ISingleton{
 		closedir($dh);
 	}
 	
-	public static function Load(){
-		$ch = ComponentHandler::Singleton();
-		if($ch->_loaded) return;
+	private function load(){
+		if($this->_loaded) return;
 		
-		// Check the core application.
-		
-		$c = Core::GetComponent();
-		$c->load();
-		//if(Core::NeedsUpdated()) $c->upgrade();
-		//
-		// Ensure the core is the first component in the array, it's just easier that way!
-		$ch->_componentCache = array_reverse($ch->_componentCache, true);
-		$ch->_componentCache['core'] = $c;
-		$ch->_componentCache = array_reverse($ch->_componentCache, true);
-		
-		if(Core::IsInstalled()){
-			if($c->needsUpdated()) $c->upgrade();
+		// Load in all the data in the components table.
+		$res = Dataset::Init()->table('component')->select('*')->execute();
+		$this->_dbcache = array();
+		foreach($res as $r){
+			$n = strtolower($r['name']);
+			$this->_dbcache[$n] = $r;
 		}
 		
-
 		/*
 		// Add all the libraries from the LibraryHandler.
 		foreach(LibraryHandler::singleton()->librariesLoaded as $l){
@@ -148,13 +153,22 @@ class ComponentHandler implements ISingleton{
 		 */
 		
 		// Load every component first.
-		foreach($ch->_componentCache as $n => $c){
+		foreach($this->_componentCache as $n => $c){
+			// If the component is not in the initial dbcache, it must not be installed.
+			if(!isset($this->_dbcache[$n])){
+				unset($this->_componentCache[$n]);
+				continue;
+			}
+			
+			// Set the data from the loaded cache
+			$c->_versionDB = $this->_dbcache[$n]['version'];
+			$c->enabled = ($this->_dbcache[$n]['enabled']);
 			$c->load();
 			
 			// First check before anything else is even done.... Did the user disable it?
 			if(!$c->enabled){
 				//echo "Skipping " . $c->getName() . " because it is disabled<br/>";
-				unset($ch->_componentCache[$n]);
+				unset($this->_componentCache[$n]);
 				continue;
 			}
 			
@@ -165,13 +179,13 @@ class ComponentHandler implements ISingleton{
 					echo 'Component ' . $c->getName() . ' appears to be invalid due to:<br/>' . $c->getErrors();
 					//CAEUtils::AddMessage('Component ' . $c->name . ' appears to be invalid due to:<br/>' . $c->_invalidReason);
 				}
-				unset($ch->_componentCache[$n]);
+				unset($this->_componentCache[$n]);
 			}
 		}
 		
 		// If the execution mode is CLI, ensure the CLI tools are installed!
 		if(EXEC_MODE == 'CLI'){
-			$cli_component = $ch->getComponent('CLI');
+			$cli_component = $this->getComponent('CLI');
 			// CLI is bundled with the core.
 			// How do you expect to use the CLI tools if they're not installed?	hmm???
 			//if(!$cli_component) die("Cannot execute anything in CLI mode without the CLI component, please download that.\n");
@@ -183,7 +197,7 @@ class ComponentHandler implements ISingleton{
 		// Now that I have a list of components available, copy them into a list of 
 		//	components that are installed.
 		
-		$list = $ch->_componentCache;
+		$list = $this->_componentCache;
 		
 		do{
 			$size = sizeof($list);
@@ -191,7 +205,7 @@ class ComponentHandler implements ISingleton{
 				
 				// If it's loaded, register it and remove it from the list!
 				if($c->isInstalled() && $c->isLoadable() && $c->loadFiles()){
-					$ch->_registerComponent($c);
+					$this->_registerComponent($c);
 					unset($list[$n]);
 					continue;
 				}
@@ -201,7 +215,7 @@ class ComponentHandler implements ISingleton{
 				if($c->isInstalled() && $c->needsUpdated() && $c->isLoadable()){
 					$c->upgrade();
 					$c->loadFiles();
-					$ch->_registerComponent($c);
+					$this->_registerComponent($c);
 					unset($list[$n]);
 					continue;
 				}
@@ -215,7 +229,7 @@ class ComponentHandler implements ISingleton{
 					// w00t
 					$c->install();
 					$c->loadFiles();
-					$ch->_registerComponent($c);
+					$this->_registerComponent($c);
 					unset($list[$n]);
 					continue;
 				}
@@ -235,7 +249,7 @@ class ComponentHandler implements ISingleton{
 		}
 		
 		
-		$ch->_loaded = true;
+		$this->_loaded = true;
 	}
 	
 	/**
@@ -245,6 +259,8 @@ class ComponentHandler implements ISingleton{
 	 * Expects all checks to be done already.
 	 */
 	public function _registerComponent($c){
+		$name = strtolower($c->getName());
+		
 		if($c->hasLibrary()){
 			$this->_libraries = array_merge($this->_libraries, $c->getLibraryList());
 			
@@ -255,11 +271,11 @@ class ComponentHandler implements ISingleton{
 			
 			$this->_scriptlibraries = array_merge($this->_scriptlibraries, $c->getScriptLibraryList());
 		}
-		if($c->hasModule()) $this->_modules[$c->getName()] = $c->getVersionInstalled();
+		if($c->hasModule()) $this->_modules[$name] = $c->getVersionInstalled();
 		
 		$this->_classes = array_merge($this->_classes, $c->getClassList());
 		$this->_viewClasses = array_merge($this->_viewClasses, $c->getViewClassList());
-		$this->_loadedComponents[$c->getName()] = $c;
+		$this->_loadedComponents[$name] = $c;
 	}
 	
 	/**
@@ -267,7 +283,11 @@ class ComponentHandler implements ISingleton{
 	 * @return ComponentHandler
 	 */
 	public static function Singleton(){
-		if(is_null(self::$instance)) self::$instance = new self();
+		if(is_null(self::$instance)){
+			self::$instance = new self();
+			
+			self::$instance->load();
+		}
 		return self::$instance;
 	}
 	
@@ -306,12 +326,14 @@ class ComponentHandler implements ISingleton{
 	 * @return Component
 	 */
 	public static function GetComponent($componentName){
+		$componentName = strtolower($componentName);
 		if(isset(ComponentHandler::Singleton()->_componentCache[$componentName])) return ComponentHandler::Singleton()->_componentCache[$componentName];
 		else return false;
 	}
 	
 	public static function IsLibraryAvailable($name, $version = false, $operation = 'ge'){
 		$ch = ComponentHandler::Singleton();
+		$name = strtolower($name);
 		//var_dump($ch->_libraries[$name], version_compare(str_replace('~', '-', $ch->_libraries[$name]), $version, $operation));
 		//if($name == 'DB') return true;
 		//echo "Checking library name[$name] v[$version] op[$operation]<br>";
@@ -323,7 +345,7 @@ class ComponentHandler implements ISingleton{
 	
 	public static function IsJSLibraryAvailable($name, $version = false, $operation = 'ge'){
 		$ch = ComponentHandler::Singleton();
-		
+		$name = strtolower($name);
 		//if($name == 'DB') return true;
 		//echo "Checking jslibrary name[$name] v[$version] op[$operation]<br>";
 		if(!isset($ch->_jslibraries[$name])) return false;
@@ -333,10 +355,12 @@ class ComponentHandler implements ISingleton{
 	}
 	
 	public static function GetJSLibrary($library){
+		$library = strtolower($library);
 		return ComponentHandler::Singleton()->_jslibraries[$library];
 	}
 	
 	public static function LoadScriptLibrary($library){
+		$library = strtolower($library);
 		if(isset(ComponentHandler::Singleton()->_scriptlibraries[$library])){
 			return call_user_func(ComponentHandler::Singleton()->_scriptlibraries[$library]);
 		}
@@ -347,7 +371,7 @@ class ComponentHandler implements ISingleton{
 	
 	public static function IsComponentAvailable($name, $version = false, $operation = 'ge'){
 		$ch = ComponentHandler::Singleton();
-		
+		$name = strtolower($name);
 		// The DB object is specifically a library, and MUST remain as such.
 		if($name == 'DB') return ComponentHandler::IsLibraryAvailable($name, $version, $operation);
 		

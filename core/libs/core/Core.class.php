@@ -276,7 +276,7 @@ class Core implements ISingleton{
 	
 	public static function GetInstance(){ return self::Singleton(); }
 	
-	
+	// @todo Is this really needed?...
 	public static function _LoadFromDatabase(){
 		if(!self::GetComponent()->load()){
 			// Guess the core isn't installed.  If it's in development mode install it!
