@@ -295,11 +295,11 @@ class Model {
 			}
 			else{
 				if($this->_datainit[$k] == $v) continue; // Skip non-changed columns
-				echo "Setting [$k] = [$v]<br/>";
+				//echo "Setting [$k] = [$v]<br/>"; // DEBUG
 				$dat->update($k, $v);
 			}
 		}
-		
+		//var_dump($dat); die(); // DEBUG
 		$dat->execute();
 		// IDs don't change in updates, else they wouldn't be the id.
 	}
