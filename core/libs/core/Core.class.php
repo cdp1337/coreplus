@@ -233,7 +233,13 @@ class Core implements ISingleton{
 		return Cache::GetSystemCache();
 	}
 	
-	
+	/**
+	 * Instantiate a new File object, ready for manipulation or access.
+	 * 
+	 * @since 2011.07.09
+	 * @param string $filename
+	 * @return File_Backend 
+	 */
 	public static function File($filename = null){
 		$backend = ConfigHandler::GetValue('/core/filestore/backend');
 		switch($backend){
@@ -245,6 +251,29 @@ class Core implements ISingleton{
 				// Automatically resolve this file.
 				//$filename = File_local_backend:
 				return new File_local_backend($filename);
+				break;
+		}
+	}
+	
+	
+	/**
+	 * Instantiate a new Directory object, ready for manipulation or access.
+	 * 
+	 * @since 2011.07.09
+	 * @param string $directory
+	 * @return Directory_Backend 
+	 */
+	public static function Directory($directory){
+		$backend = ConfigHandler::GetValue('/core/filestore/backend');
+		switch($backend){
+			case 'aws':
+				return new Directory_awss3_backend($directory);
+				break;
+			case 'local':
+			default:
+				// Automatically resolve this file.
+				//$filename = File_local_backend:
+				return new Directory_local_backend($directory);
 				break;
 		}
 	}
@@ -622,6 +651,33 @@ class Core implements ISingleton{
 			$filesize = $filesize / 1024;
 		}
 		return (round($filesize, $round) . ' ' . $suf[$c]);
+	}
+	
+	public static function GetExtensionFromString($str){
+		// I *could* use php's pathinfo function... but that doesn't handle "tar.gz" files too well...
+		$exts = explode('.', strtolower($str));
+		$s = sizeof($exts);
+		// File doesn't have any extension... easy enough!
+		if($s == 1) return '';
+
+		$ext = $exts[--$s];
+		if($s == 1) return $ext;
+
+		// Some extensions have some 'extra' logic required...
+		if($ext == 'php' && $exts[$s-1] == 'inc'){
+			// PHP files may have .inc.php for them...
+			return 'inc.php';
+		}
+		if($ext == 'gz' || $ext == 'asc'){
+			// gz can compress ANYTHING.... sadly, but gladly too.. 0.o
+			// GPG can also encrypt anything...
+			if(strlen($exts[$s-1]) > 1 && strlen($exts[$s-1]) < 5) $ext = $exts[--$s] . '.' . $ext;
+			if($s == 1) return $ext;
+			// This second one will allow for a file such as: something.tar.gz.asc or something.tar.asc.gz
+			if(strlen($exts[$s-1]) > 1 && strlen($exts[$s-1]) < 5) $ext = $exts[--$s] . '.' . $ext;
+		}
+
+		return $ext;
 	}
 	
 }

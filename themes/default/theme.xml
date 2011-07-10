@@ -2,7 +2,7 @@
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="default">
 	<assets>
 		<file filename="assets/logo.png" md5="ec0a7fe6809e4f051bb09e1c21aab52c"/>
-		<file filename="assets/css/styles.css" md5="aefe2d3010280a64fbe20df347e83b4f"/>
+		<file filename="assets/css/styles.css" md5="e7d9ba4f7399ea5460eefb6001a50cad"/>
 		<file filename="assets/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
 		<file filename="assets/icons/view.png" md5="5108ec1f152e29684be1bfe393ef2fc8"/>
 		<file filename="assets/icons/directory.png" md5="50afe6c35c14f4174d8d2e33f5025f14"/>
@@ -40,16 +40,27 @@
 		<file filename="assets/fonts/Cousine-Italic.ttf" md5="8a0dacd2cc9ef158fff2daec2b7bc435"/>
 		<file filename="assets/fonts/Cousine-BoldItalic.ttf" md5="aa6b45a45a88a9547e30d6a6a9dcf75c"/>
 		<file filename="assets/js/html5.js" md5="e919b7e0d6dc0226e3356aeb07bf63c2"/>
+		<file filename="assets/mimetype_icons/unknown-lg.png" md5="e78e2e6e8d40c6a632f654561ec53e47"/>
+		<file filename="assets/mimetype_icons/jpeg-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
+		<file filename="assets/mimetype_icons/gif-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
+		<file filename="assets/mimetype_icons/jpg-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
+		<file filename="assets/mimetype_icons/png-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
+		<file filename="assets/mimetype_icons/gif.png" md5="953f1d26444d97955905718687815607"/>
+		<file filename="assets/mimetype_icons/unknown.png" md5="11eee3c2e6806986c5abfe920d3256a5"/>
+		<file filename="assets/mimetype_icons/jpg.png" md5="953f1d26444d97955905718687815607"/>
+		<file filename="assets/mimetype_icons/jpeg.png" md5="953f1d26444d97955905718687815607"/>
+		<file filename="assets/mimetype_icons/png.png" md5="953f1d26444d97955905718687815607"/>
 	</assets>
 	<changelog version="1.0.0">
 		<packagemeta>
-			<date>Sat, 19 Feb 2011 20:47:54 -0500</date>
+			<date>Sun, 10 Jul 2011 00:14:54 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.1-dev1</packager>
+			<packager>CAE2 0.0.2-1</packager>
 		</packagemeta>
 	</changelog>
 	<view>
-		<file filename="index.tpl" md5="c77b78c8c7b3b8c8035ce984a5691aa9"/>
+		<file filename="index.tpl" md5="2a760a4a7c07fe3e7c2f550d838cfe08"/>
+		<file filename="index.xml.tpl" md5="4481a87aa93de8014d79bc17468dcce0"/>
 	</view>
 	<otherfiles/>
 </theme>

@@ -94,6 +94,11 @@ interface File_Backend {
 	
 	public function putContents($data);
 	
+	/**
+	 * Check if this file exists on the filesystem currently.
+	 * 
+	 * @return boolean
+	 */
 	public function exists();
 }
 

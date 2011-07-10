@@ -233,17 +233,23 @@
 			<provides type="class" name="SmartyException"/>
 			<provides type="class" name="SmartyCompilerException"/>
 		</file>
-		<file filename="core/libs/file-abstraction/Asset.class-DISABLED.php" md5="f3910b9cea31546dc81076a968ca79c1">
+		<file filename="core/libs/filestore/Directory_Backend.interface.php" md5="4fc76ff1998699378c87f4dfa88b1719">
+			<provides type="interface" name="Directory_Backend"/>
+		</file>
+		<file filename="core/libs/filestore/Asset.class-DISABLED.php" md5="f3910b9cea31546dc81076a968ca79c1">
 			<provides type="class" name="Asset"/>
 		</file>
-		<file filename="core/libs/file-abstraction/File_Backend.interface.php" md5="eca33b00eb8e7dae8fe90bae3c3e8627">
+		<file filename="core/libs/filestore/File_Backend.interface.php" md5="88e18353e9bae0a0f4038682cbbaf672">
 			<provides type="interface" name="File_Backend"/>
 		</file>
-		<file filename="core/libs/file-abstraction/backends/local.backend.php" md5="db67c04fe8880cd0f836ca8d0f95672a">
+		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="2f6e846a252c24ade87e99615b326f37">
+			<provides type="class" name="File_awss3_backend"/>
+		</file>
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="db67c04fe8880cd0f836ca8d0f95672a">
 			<provides type="class" name="File_local_backend"/>
 		</file>
-		<file filename="core/libs/file-abstraction/backends/awss3.backend.php" md5="2f6e846a252c24ade87e99615b326f37">
-			<provides type="class" name="File_awss3_backend"/>
+		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="4821b7071b6e411f4747657bfb8fcece">
+			<provides type="class" name="Directory_local_backend"/>
 		</file>
 		<file filename="core/libs/core/ConfigModel.class.php" md5="c4bff888acef42b2a4c1ff422a4b91e0">
 			<provides type="class" name="ConfigModel"/>
@@ -301,7 +307,7 @@
 		<file filename="core/libs/core/Template.class.php" md5="9bbf476c17b2f4dbbca3c5cb23cbe245">
 			<provides type="class" name="Template"/>
 		</file>
-		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="8c3a7c94e9d19cee9e78cb283c3a52a9">
+		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="f25507da2cd5eea288d9bd06ce71aae5">
 			<provides type="class" name="InstallArchiveAPI"/>
 		</file>
 		<file filename="core/libs/core/HookHandler.class.php" md5="fb6476475532353430b30768af80d983">
@@ -341,7 +347,7 @@
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="b1f1dbc20bc16a38a59b8a0852bf1bd0">
 			<provides type="class" name="CAEDirectoryIterator"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="8950cf828c82f063d92e40af2e352da1">
+		<file filename="core/libs/core/Core.class.php" md5="153f48b75196087550a5d9b8b9b8db02">
 			<provides type="class" name="Core"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="e5380f06701a7c28c593af10c011c280">
@@ -350,7 +356,7 @@
 		<file filename="core/libs/core/CurrentPage.class.php" md5="c2dfd0ccc631b19b80bef684697609df">
 			<provides type="class" name="CurrentPage"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="c249e75c864684a28e6531369a149d67">
+		<file filename="core/libs/core/Model.class.php" md5="93e72879d014216180b111db07f86fd2">
 			<provides type="class" name="Model"/>
 			<provides type="class" name="ModelFactory"/>
 		</file>
@@ -697,8 +703,14 @@
 		</file>
 	</library>
 	<module>
+		<file filename="core/controllers/FileController.class.php" md5="45782639f5f8269689c5325d7a77fdbc">
+			<provides type="controller" name="FileController"/>
+		</file>
 		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
 			<provides type="controller" name="ErrorController"/>
+		</file>
+		<file filename="core/controllers/DirectoryController.class.php" md5="eda5fe88efacffdac32dd770b7fdfc40">
+			<provides type="controller" name="DirectoryController"/>
 		</file>
 		<file filename="core/controllers/AdminController.php" md5="42694134543796a0126142a29a289929">
 			<provides type="controller" name="AdminController"/>
@@ -759,7 +771,6 @@
 		<config key="/core/aws/accountid" type="string" default="" description="Amazon Account ID without dashes. Used for identification with Amazon EC2. Found in the AWS Security Credentials."/>
 		<config key="/core/aws/canonicalid" type="string" default="" description="Your CanonicalUser ID. Used for setting access control settings in AmazonS3. Found in the AWS Security Credentials."/>
 		<config key="/core/aws/canonicalname" type="string" default="" description="Your CanonicalUser DisplayName. Used for setting access control settings in AmazonS3. Found in the AWS Security Credentials (i.e. &quot;Welcome, AWS_CANONICAL_NAME&quot;)."/>
-		<config key="/core/asset_backend" type="enum" default="local" description="What type of storage should be used for assets?  This will determine the CDN that is used."/>
 		<config key="/core/aws/asset_bucket" type="string" default="" description=""/>
 		<config key="/core/cache_backend" type="string" default="file" description="apc; file; memcache; xcache; BLAH"/>
 		<config key="/core/javascript/minified" type="boolean" default="true" description=""/>
@@ -782,7 +793,7 @@
 	<upgrade from="0.0.2" to="0.0.2-1"/>
 	<changelog version="0.0.2-1">
 		<packagemeta>
-			<date>Wed, 06 Jul 2011 01:41:05 -0400</date>
+			<date>Sat, 09 Jul 2011 22:37:11 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.2-1</packager>
 		</packagemeta>
@@ -814,20 +825,25 @@
 	<author name="David JEAN LOUIS" email="izimobil@gmail.com"/>
 	<author name="David JEAN" email="izimobil@gmail.com"/>
 	<author name="Solar Designer" email="solar at openwall.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-		See the included NOTICE.md file for more information.
+	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
+	<license url="http://www.gnu.org/licenses/lgpl-3.0.html">
+		GNU Lesser General Public License v3
 	</license>
-	<license url="http://www.gnu.org/licenses/lgpl-3.0.html"></license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.txt">
 		GNU Lesser General Public License v3
 	</license>
 	<license url="http://www.opensource.org/licenses/mit-license.php">MIT</license>
 	<otherfiles>
-		<file filename="index.php" md5="889f67bd60efea0e26b5704a4ed67706"/>
+		<file filename="index.php" md5="5a12a04aed9867fd66720cdefbb2f120"/>
 		<file filename="install/install.tpl" md5="d2b9cd0e22bdabcbdac3264111b95d5d"/>
+		<file filename="filestore/public/test12/logo.png" md5="ec0a7fe6809e4f051bb09e1c21aab52c"/>
+		<file filename="filestore/public/test12/move-sm.png" md5="490566b692bd23e2b75e54cbe5680e1d"/>
+		<file filename="filestore/public/test12/add-sm.png" md5="64d74ce097072a88c225fa09d7f24bab"/>
+		<file filename="filestore/public/test12/delete.png" md5="ed684274665ea47e42982fa7a05c851f"/>
+		<file filename="filestore/public/test12/email-lg.png" md5="0f20b7d3cb3d9590c4f600c3c02aed0b"/>
 		<file filename="yuicompressor-2.4.2.jar" md5="de7f9bf5ecb82166493ba7839f62a73e"/>
 		<file filename="core/bootstrap.php" md5="1f80831dca15b31b873be8a2d1446ba4"/>
-		<file filename="core/bootstrap_preincludes.php" md5="caabf4a74fe72e8426ce30f74b156db6"/>
+		<file filename="core/bootstrap_preincludes.php" md5="35063652ad4eb9c5a40d90b18efd3eb7"/>
 		<file filename="core/bootstrap_predefines.php" md5="4d323a3a529c1faab172604cff40a1f1"/>
 		<file filename="core/libs/smarty/SMARTY2_BC_NOTES" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
 		<file filename="core/libs/smarty/README" md5="83797fcbeab9d4f5090510a3023bc4a5"/>
@@ -1024,7 +1040,7 @@
 		<file filename="core/libs/aws-sdk/lib/requestcore/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
 		<file filename="core/libs/aws-sdk/README.md" md5="b290d5d6e4b4c494df4093ea05257ccf"/>
 		<file filename="COPYING.LESSER" md5="e6a600fd5e1d9cbde2d983680233ad02"/>
-		<file filename="packager.php" md5="bbe23ba95d2eb0e6ed7b471e1ea80ff0"/>
+		<file filename="packager.php" md5="e61effb88ea83071e6b8e37b84d9cd00"/>
 		<file filename="COPYING" md5="d32239bcb673463ab874e80d47fae504"/>
 		<file filename="htaccess.ex" md5="30fef15aa900706f3e7f51df4497053c"/>
 	</otherfiles>

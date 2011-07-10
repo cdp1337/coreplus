@@ -87,7 +87,7 @@ class File_local_backend implements File_Backend{
 	}
 	
 	public function getExtension(){
-		return File::GetExtensionFromString($this->filename);
+		return Core::GetExtensionFromString($this->filename);
 		//return substr($this->filename, strrpos($this->filename, '.'));
 	}
 	
@@ -357,36 +357,6 @@ class File_local_backend implements File_Backend{
 	}
 
 	
-	public static function GetExtensionFromString($str){
-		// I *could* use php's pathinfo function... but that doesn't handle "tar.gz" files too well...
-		$exts = explode('.', $str);
-		$s = sizeof($exts);
-		// File doesn't have any extension... easy enough!
-		if($s == 1) return '';
-
-		$ext = strtolower($exts[--$s]);
-		if($s == 1) return $ext;
-
-		// Some extensions have some 'extra' logic required...
-		if($ext == 'php' && strtolower($exts[$s-1]) == 'inc'){
-			// PHP files may have .inc.php for them...
-			return 'inc.php';
-		}
-		if($ext == 'gz' || $ext == 'asc'){
-			// gz can compress ANYTHING.... sadly, but gladly too.. 0.o
-			// GPG can also encrypt anything...
-			if(strlen($exts[$s-1]) > 1 && strlen($exts[$s-1]) < 5) $ext = strtolower($exts[--$s]) . '.' . $ext;
-			if($s == 1) return $ext;
-			// This second one will allow for a file such as: something.tar.gz.asc or something.tar.asc.gz
-			if(strlen($exts[$s-1]) > 1 && strlen($exts[$s-1]) < 5) $ext = strtolower($exts[--$s]) . '.' . $ext;
-		}
-
-		return $ext;
-	}
-	
-	
-	
-	
 	
 	/**
 	 * Guess the mimetype for a given extension.
@@ -396,7 +366,7 @@ class File_local_backend implements File_Backend{
 	 * 
 	 * @return array
 	 */
-	public static function GetMimetypeFromExtension($ext){
+	/*public static function GetMimetypeFromExtension($ext){
 		// Remove the beginning '.' if there is one.
 		if($ext{0} == '.') $ext = substr($ext, 1);
 		
@@ -420,7 +390,8 @@ class File_local_backend implements File_Backend{
 				return array();
 		}
 	}
-	
+	*/
+	/*
 	public static function GetMimetypesFromExtensions($exts = array()){
 		if(!is_array($exts)) return array();
 		$ret = array();
@@ -429,7 +400,7 @@ class File_local_backend implements File_Backend{
 		}
 		return $ret;
 	}
-	
+	*/
 	
 }
 ?>
