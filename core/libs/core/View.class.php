@@ -24,6 +24,7 @@ class View {
 	/* Errors that may be occured with views */
 	const ERROR_OTHER        = 1;
 	const ERROR_NOERROR      = 200;
+	const ERROR_BADREQUEST   = 400;
 	const ERROR_ACCESSDENIED = 403;
 	const ERROR_NOTFOUND     = 404;
 	const ERROR_SERVERERROR  = 500;
