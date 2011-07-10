@@ -565,7 +565,7 @@ function get_unique_licenses($licenses){
 			$lics[$v['title']] = array($v['url']);
 		}
 		elseif(!in_array($v['url'], $lics[$v['title']])){
-			$lics[$v['email']][] = $v['url'];
+			$lics[$v['title']][] = $v['url'];
 		}
 	}
 	// $lics should be unique-ified now.
