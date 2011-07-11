@@ -802,7 +802,7 @@ function process_theme($theme, $forcerelease = false){
 	//$it = new DirectoryCAEIterator($c->getBaseDir());
 	$it = $t->getDirectoryIterator();
 	foreach($it as $file){
-		$docelements = parse_for_documentation($file->filename);
+		$docelements = parse_for_documentation($file->getFilename());
 		$licenses = array_merge($licenses, $docelements['licenses']);
 		// @todo Should I skip the authors?
 		$authors = array_merge($authors, $docelements['authors']);

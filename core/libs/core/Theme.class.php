@@ -212,6 +212,8 @@ class Theme extends InstallArchiveAPI{
 		
 		$this->_installAssets();
 		
+		$this->_parseConfigs();
+		
 		// Yay, it should be installed now.	Update the version in the database.
 		$c = new ComponentModel('theme/' . $this->_name);
 		$c->set('version', $this->_version);
@@ -231,18 +233,50 @@ class Theme extends InstallArchiveAPI{
 		
 		if($this->_installAssets()) $changed = true;
 		
+		if($this->_parseConfigs()) $changed = true;
+		
 		// @todo What else should be done?
 		
 		return $changed;
 	}
 	
 	public function upgrade(){
+		// Cannot upgrade if not currently installed.
 		if(!$this->isInstalled()) return false;
+		
+		// Cannot upgrade if no change required.
+		if($this->_versionDB == $this->_version) return false;
 			
 		// Yay, it should be installed now.	Update the version in the database.
 		DB::Execute("REPLACE INTO `" . DB_PREFIX . "component` (`name`, `version`) VALUES (?, ?)", array('theme/' . $this->_name, $this->_version));
 		$this->_versionDB = $this->_version;
 		
 		$this->_installAssets();
+		
+		$this->_parseConfigs();
+		
+		return true;
 	}
+	
+	/**
+	 * Internal function to parse and handle the configs in the component.xml file.
+	 * This is used for installations and upgrades.
+	 */
+	private function _parseConfigs(){
+		// I need to get the schema definitions first.
+		$node = $this->getElement('configs');
+		//$prefix = $node->getAttribute('prefix');
+		
+		// Now, get every table under this node.
+		foreach($node->getElementsByTagName('config') as $confignode){
+			$m = new ConfigModel($confignode->getAttribute('key'));
+			$m->set('type', $confignode->getAttribute('type'));
+			$m->set('default_value', $confignode->getAttribute('default'));
+			// Themes overwrite the settings regardless.
+			$m->set('value', $confignode->getAttribute('default'));
+			$m->set('description', $confignode->getAttribute('description'));
+			$m->save();
+		}
+		
+	} // private function _parseConfigs
 }
