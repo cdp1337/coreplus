@@ -239,13 +239,13 @@
 		<file filename="core/libs/filestore/Asset.class-DISABLED.php" md5="f3910b9cea31546dc81076a968ca79c1">
 			<provides type="class" name="Asset"/>
 		</file>
-		<file filename="core/libs/filestore/File_Backend.interface.php" md5="88e18353e9bae0a0f4038682cbbaf672">
+		<file filename="core/libs/filestore/File_Backend.interface.php" md5="eda1161f7c284ad59c5c7160e6c6f8ba">
 			<provides type="interface" name="File_Backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="2f6e846a252c24ade87e99615b326f37">
 			<provides type="class" name="File_awss3_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="db67c04fe8880cd0f836ca8d0f95672a">
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="20bb302f10790251075031c51a11550c">
 			<provides type="class" name="File_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="4821b7071b6e411f4747657bfb8fcece">
@@ -263,7 +263,7 @@
 		<file filename="core/libs/core/InstallTask.class.php" md5="0ba8495dfcb0ff5c2116e7e6556ee547">
 			<provides type="class" name="InstallTask"/>
 		</file>
-		<file filename="core/libs/core/Theme.class.php" md5="8af2584d5ce691452064ae875f52ecb3">
+		<file filename="core/libs/core/Theme.class.php" md5="3f5672fd04b731162f4898fdd6afb32e">
 			<provides type="class" name="Theme"/>
 		</file>
 		<file filename="core/libs/core/WidgetInstanceModel.class.php" md5="57915b1768f3d8252219465c2b36dff0">
@@ -272,7 +272,7 @@
 		<file filename="core/libs/core/XMLLoader.class.php" md5="703a9230eeada7b244ee85eb0e29139f">
 			<provides type="class" name="XMLLoader"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="1d54d7179982242c8d4021bb01af3fbe">
+		<file filename="core/libs/core/View.class.php" md5="37958905d8100c3fa386571f971ae0e3">
 			<provides type="class" name="View"/>
 			<provides type="class" name="ViewException"/>
 		</file>
@@ -307,7 +307,7 @@
 		<file filename="core/libs/core/Template.class.php" md5="9bbf476c17b2f4dbbca3c5cb23cbe245">
 			<provides type="class" name="Template"/>
 		</file>
-		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="f25507da2cd5eea288d9bd06ce71aae5">
+		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="724ef1a44319bdb2743d67b14daf8784">
 			<provides type="class" name="InstallArchiveAPI"/>
 		</file>
 		<file filename="core/libs/core/HookHandler.class.php" md5="fb6476475532353430b30768af80d983">
@@ -347,7 +347,7 @@
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="b1f1dbc20bc16a38a59b8a0852bf1bd0">
 			<provides type="class" name="CAEDirectoryIterator"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="153f48b75196087550a5d9b8b9b8db02">
+		<file filename="core/libs/core/Core.class.php" md5="53242134503f8d78bb6ca687cf4742b4">
 			<provides type="class" name="Core"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="e5380f06701a7c28c593af10c011c280">
@@ -703,13 +703,13 @@
 		</file>
 	</library>
 	<module>
-		<file filename="core/controllers/FileController.class.php" md5="45782639f5f8269689c5325d7a77fdbc">
+		<file filename="core/controllers/FileController.class.php" md5="adb8895e71a26634184a5cc108abb8ef">
 			<provides type="controller" name="FileController"/>
 		</file>
 		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
 			<provides type="controller" name="ErrorController"/>
 		</file>
-		<file filename="core/controllers/DirectoryController.class.php" md5="eda5fe88efacffdac32dd770b7fdfc40">
+		<file filename="core/controllers/DirectoryController.class.php" md5="e9e50405c06731773795016e8b95924e">
 			<provides type="controller" name="DirectoryController"/>
 		</file>
 		<file filename="core/controllers/AdminController.php" md5="42694134543796a0126142a29a289929">
@@ -745,8 +745,11 @@
 		<file filename="core/templates/forms/elements/formselectinput.tpl" md5="abd02a8d21de44b0c4359a0be186e5f2"/>
 		<file filename="core/templates/forms/form.foot.tpl" md5="6e6d3353848b64921070b812c7c99936"/>
 		<file filename="core/templates/forms/groups/default.tpl" md5="7a6fa4a3c2303dd4e07c98aee5d57db1"/>
+		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
 		<file filename="core/templates/pages/error/error500.tpl" md5="128c99e44e5f3aaf741d9ee9a7011b3e"/>
+		<file filename="core/templates/pages/error/error400.tpl" md5="4443f584bf4f2d0268e5af6d62338d07"/>
 		<file filename="core/templates/pages/error/error404.tpl" md5="2b6ad918a5cb9d960e5670fa16761162"/>
+		<file filename="core/templates/pages/error/error403.tpl" md5="4f9104a2bf0f6a579bda93e79252ab1d"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="037a859dad14923425e7b31ce1673f74"/>
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
 		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
@@ -777,6 +780,7 @@
 		<config key="/core/filestore/backend" type="enum" default="local" description="What type of storage should be used for assets?  This will determine the CDN that is used."/>
 		<config key="/core/filestore/assetdir" type="string" default="assets/" description=""/>
 		<config key="/core/filestore/publicdir" type="string" default="filestore/public/" description=""/>
+		<config key="/core/filestore/previews" type="boolean" default="1" description="Try to display a preview of files in thumbnails.  If set to false, only the file mimetype icon is displayed."/>
 	</configs>
 	<assets/>
 	<upgrade from="0.0.1-dev1" to="0.0.2"/>
@@ -793,7 +797,7 @@
 	<upgrade from="0.0.2" to="0.0.2-1"/>
 	<changelog version="0.0.2-1">
 		<packagemeta>
-			<date>Sat, 09 Jul 2011 22:37:11 -0400</date>
+			<date>Mon, 11 Jul 2011 20:43:05 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.2-1</packager>
 		</packagemeta>
@@ -825,7 +829,9 @@
 	<author name="David JEAN LOUIS" email="izimobil@gmail.com"/>
 	<author name="David JEAN" email="izimobil@gmail.com"/>
 	<author name="Solar Designer" email="solar at openwall.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
+	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+		See the included NOTICE.md file for more information.
+	</license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.html">
 		GNU Lesser General Public License v3
 	</license>
@@ -836,8 +842,20 @@
 	<otherfiles>
 		<file filename="index.php" md5="5a12a04aed9867fd66720cdefbb2f120"/>
 		<file filename="install/install.tpl" md5="d2b9cd0e22bdabcbdac3264111b95d5d"/>
+		<file filename="filestore/public/tmp/filepreview-490566b692bd23e2b75e54cbe5680e1d-300x300.png" md5="34572a3f473d7f1547616cfef1782087"/>
+		<file filename="filestore/public/tmp/filepreview-ed684274665ea47e42982fa7a05c851f-64x64.png" md5="d80ebc01f1bfa4d96eec854155dc6aaa"/>
+		<file filename="filestore/public/tmp/filepreview-64d74ce097072a88c225fa09d7f24bab-300x300.png" md5="381abe9ac9f8d3596dacb4ed1afb09e3"/>
+		<file filename="filestore/public/tmp/filepreview-64d74ce097072a88c225fa09d7f24bab-64x64.png" md5="381abe9ac9f8d3596dacb4ed1afb09e3"/>
+		<file filename="filestore/public/tmp/filepreview-d1e18fd317d25d2502ed042f1328e661-64x64.png" md5="68c1e13d87b5d146a34651d10d132f2e"/>
+		<file filename="filestore/public/tmp/filepreview-0f20b7d3cb3d9590c4f600c3c02aed0b-300x300.png" md5="7dacefd52d7f6852263ecaf67c70ec9a"/>
+		<file filename="filestore/public/tmp/filepreview-ed684274665ea47e42982fa7a05c851f-300x300.png" md5="d80ebc01f1bfa4d96eec854155dc6aaa"/>
+		<file filename="filestore/public/tmp/filepreview-ec0a7fe6809e4f051bb09e1c21aab52c-300x300.png" md5="7bd0c08db3dcfed8ae7fe8c81fe3d48e"/>
+		<file filename="filestore/public/tmp/filepreview-0f20b7d3cb3d9590c4f600c3c02aed0b-64x64.png" md5="7dacefd52d7f6852263ecaf67c70ec9a"/>
+		<file filename="filestore/public/tmp/filepreview-ec0a7fe6809e4f051bb09e1c21aab52c-64x64.png" md5="bb113a64399a78214d9436bdd01637c5"/>
+		<file filename="filestore/public/tmp/filepreview-490566b692bd23e2b75e54cbe5680e1d-64x64.png" md5="34572a3f473d7f1547616cfef1782087"/>
 		<file filename="filestore/public/test12/logo.png" md5="ec0a7fe6809e4f051bb09e1c21aab52c"/>
 		<file filename="filestore/public/test12/move-sm.png" md5="490566b692bd23e2b75e54cbe5680e1d"/>
+		<file filename="filestore/public/test12/IMG_0290.JPG" md5="d1e18fd317d25d2502ed042f1328e661"/>
 		<file filename="filestore/public/test12/add-sm.png" md5="64d74ce097072a88c225fa09d7f24bab"/>
 		<file filename="filestore/public/test12/delete.png" md5="ed684274665ea47e42982fa7a05c851f"/>
 		<file filename="filestore/public/test12/email-lg.png" md5="0f20b7d3cb3d9590c4f600c3c02aed0b"/>
@@ -897,6 +915,7 @@
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="9ea92ef8d9f62bc176ae199bdbd63c6b"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="800e464e8bae160ad7aba53d63ab78c8"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="5ab4be1d83a3ddac67094ca670fe721b"/>
+		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="d18339332debbe60d114a52f09bb8319"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="ee67260eea6c696b8634a593cece14bd"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="0675deafa3f09a4cbe5a4f8f35d61ab2"/>
@@ -1040,7 +1059,7 @@
 		<file filename="core/libs/aws-sdk/lib/requestcore/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
 		<file filename="core/libs/aws-sdk/README.md" md5="b290d5d6e4b4c494df4093ea05257ccf"/>
 		<file filename="COPYING.LESSER" md5="e6a600fd5e1d9cbde2d983680233ad02"/>
-		<file filename="packager.php" md5="e61effb88ea83071e6b8e37b84d9cd00"/>
+		<file filename="packager.php" md5="4d6ed0b070ea070f52a99f09be91953b"/>
 		<file filename="COPYING" md5="d32239bcb673463ab874e80d47fae504"/>
 		<file filename="htaccess.ex" md5="30fef15aa900706f3e7f51df4497053c"/>
 	</otherfiles>
