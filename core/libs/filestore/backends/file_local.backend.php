@@ -25,7 +25,66 @@ class File_local_backend implements File_Backend{
 	private static $_Root_pdir_private = null;
 	
 	public function __construct($filename){
+		$this->setFilename($filename);
+	}
+	
+	public function getFilesize($formatted = false){
+		$f = filesize($this->_filename);
+		return ($formatted)? Core::FormatSize($f, 2) : $f;
+	}
+	
+	public function getMimetype(){
+		// PEAR, you have failed me for the last time... :'(
+		//return MIME_Type::autoDetect($this->_filename);
 		
+		$finfo = finfo_open(FILEINFO_MIME);
+		$type  = finfo_file($finfo, $this->_filename);
+		finfo_close($finfo);
+		
+		// $type may have some extra crap after a semicolon.
+		if(($pos = strpos($type, ';')) !== false) $type = substr($type, 0, $pos);
+		$type = trim($type);
+		
+		// There are a few exceptions to the rule.... namely with plain text.
+		$ext = strtolower($this->getExtension());
+		if($ext == 'js' && $type == 'text/plain')                    $type = 'text/javascript';
+		elseif($ext == 'js' && $type == 'text/x-c++')                $type = 'text/javascript';
+		elseif($ext == 'css' && $type == 'text/plain')               $type = 'text/css';
+		elseif($ext == 'css' && $type == 'text/x-c')                 $type = 'text/css';
+		elseif($ext == 'html' && $type == 'text/plain')              $type = 'text/html';
+		elseif($ext == 'ttf' && $type == 'application/octet-stream') $type = 'font/ttf';
+		elseif($ext == 'otf' && $type == 'application/octet-stream') $type = 'font/otf';
+		
+		return $type;
+	}
+	
+	public function getExtension(){
+		return Core::GetExtensionFromString($this->_filename);
+		//return substr($this->_filename, strrpos($this->_filename, '.'));
+	}
+	
+	/**
+	 * Get a filename that can be retrieved from the web.
+	 * Resolves with the ROOT_DIR prefix already attached.
+	 * 
+	 * @return string | false
+	 */
+	public function getURL(){
+		if(!preg_match('/^' . str_replace('/', '\\/', ROOT_PDIR) . '/', $this->_filename)) return false;
+		
+		return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', ROOT_WDIR . '$1', $this->_filename);
+	}
+	
+	/**
+	 * Get the filename of this file resolved to a specific directory, usually ROOT_PDIR or ROOT_WDIR.
+	 */
+	public function getFilename($prefix = ROOT_PDIR){
+		if($prefix == ROOT_PDIR) return $this->_filename;
+		
+		return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', $prefix . '$1', $this->_filename);
+	}
+	
+	public function setFilename($filename){
 		// Ensure that the root_pdir directories are cached and ready.
 		if(self::$_Root_pdir_assets == null){
 			$dir = ConfigHandler::GetValue('/core/filestore/assetdir');
@@ -99,62 +158,6 @@ class File_local_backend implements File_Backend{
 		}
 
 		$this->_filename = $filename;
-	}
-	
-	public function getFilesize($formatted = false){
-		$f = filesize($this->_filename);
-		return ($formatted)? Core::FormatSize($f, 2) : $f;
-	}
-	
-	public function getMimetype(){
-		// PEAR, you have failed me for the last time... :'(
-		//return MIME_Type::autoDetect($this->_filename);
-		
-		$finfo = finfo_open(FILEINFO_MIME);
-		$type  = finfo_file($finfo, $this->_filename);
-		finfo_close($finfo);
-		
-		// $type may have some extra crap after a semicolon.
-		if(($pos = strpos($type, ';')) !== false) $type = substr($type, 0, $pos);
-		$type = trim($type);
-		
-		// There are a few exceptions to the rule.... namely with plain text.
-		$ext = strtolower($this->getExtension());
-		if($ext == 'js' && $type == 'text/plain')                    $type = 'text/javascript';
-		elseif($ext == 'js' && $type == 'text/x-c++')                $type = 'text/javascript';
-		elseif($ext == 'css' && $type == 'text/plain')               $type = 'text/css';
-		elseif($ext == 'css' && $type == 'text/x-c')                 $type = 'text/css';
-		elseif($ext == 'html' && $type == 'text/plain')              $type = 'text/html';
-		elseif($ext == 'ttf' && $type == 'application/octet-stream') $type = 'font/ttf';
-		elseif($ext == 'otf' && $type == 'application/octet-stream') $type = 'font/otf';
-		
-		return $type;
-	}
-	
-	public function getExtension(){
-		return Core::GetExtensionFromString($this->_filename);
-		//return substr($this->_filename, strrpos($this->_filename, '.'));
-	}
-	
-	/**
-	 * Get a filename that can be retrieved from the web.
-	 * Resolves with the ROOT_DIR prefix already attached.
-	 * 
-	 * @return string | false
-	 */
-	public function getURL(){
-		if(!preg_match('/^' . str_replace('/', '\\/', ROOT_PDIR) . '/', $this->_filename)) return false;
-		
-		return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', ROOT_WDIR . '$1', $this->_filename);
-	}
-	
-	/**
-	 * Get the filename of this file resolved to a specific directory, usually ROOT_PDIR or ROOT_WDIR.
-	 */
-	public function getFilename($prefix = ROOT_PDIR){
-		if($prefix == ROOT_PDIR) return $this->_filename;
-		
-		return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', $prefix . '$1', $this->_filename);
 	}
 	
 	/**
