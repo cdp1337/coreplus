@@ -283,7 +283,7 @@ class Model {
 					$idcol = $k; // Remember this for after the save.
 					continue 2;
 			}
-			
+			//var_dump($k, $i['primary']);
 			// Everything else
 			if(in_array($k, $i['primary'])){
 				// Just in case the new data changed....

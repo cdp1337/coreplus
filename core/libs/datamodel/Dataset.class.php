@@ -155,6 +155,8 @@ class Dataset implements Iterator{
 	public function setID($key, $val = null){
 		$this->_idcol = $key;
 		$this->_idval = $val;
+		
+		if($val) $this->where("$key = $val");
 	}
 	
 	public function getID(){
