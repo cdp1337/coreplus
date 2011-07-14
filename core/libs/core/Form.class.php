@@ -183,14 +183,32 @@ class FormGroup{
 }
 
 class FormElement{
-	protected $_attributes;
+	/**
+	 * Array of attributes for this form element object.
+	 * Should be in key/value pair.
+	 * 
+	 * @var array
+	 */
+	protected $_attributes = array();
 
 	protected $_error;
 
+	/**
+	 * Array of attributes to automatically return when getInputAttributes() is called.
+	 * 
+	 * @var array
+	 */
 	protected $_validattributes = array();
+	
+	/**
+	 * Boolean if this form element requires a file upload.
+	 * Only "file" type elements should require this.
+	 * 
+	 * @var boolean
+	 */
+	public $requiresupload = false;
 
 	public function __construct($atts = null){
-		$this->_attributes = array();
 
 		if($atts) $this->setFromArray ($atts);
 	}
@@ -384,6 +402,7 @@ class Form extends FormGroup{
 	 * @var array
 	 */
 	public static $Mappings = array(
+		'file' => 'FormFileInput',
 		'hidden' => 'FormHiddenInput',
 		'pageinsertables' => 'FormPageInsertables',
 		'pagemeta' => 'FormPageMeta',
@@ -428,6 +447,15 @@ class Form extends FormGroup{
 	 * @return string (valid HTML)
 	 */
 	public function  render($part = null) {
+		
+		// Check and see if there are any elements in this form that require a fileupload.
+		foreach($this->getElements() as $e){
+			if($e->requiresupload){
+				$this->set('enctype', 'multipart/form-data');
+				break;
+			}
+		}
+		
 		// Slip in the formid tracker to remember this submission.
 		if(($part === null || $part == 'body') && $this->get('callsmethod')){
 			$e = new FormHiddenInput(array('name' => '___formid', 'value' => $this->get('uniqueid')));
@@ -730,6 +758,9 @@ class Form extends FormGroup{
 			}
 			elseif($v['type'] == Model::ATT_TYPE_INT){
 				$el = FormElement::Factory('text');
+			}
+			elseif($v['type'] == Model::ATT_TYPE_TEXT){
+				$el = FormElement::Factory('textarea');
 			}
 			else{
 				die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
@@ -1040,3 +1071,90 @@ class FormPageMeta extends FormGroup{
 	}
 
 } // class FormPageInsertables
+
+
+class FormFileInput extends FormElement{
+	private static $_AutoID = 0;
+	
+	public function __construct($atts = null) {
+		// Some defaults
+		$this->_attributes = array(
+			'class' => 'formelement formfileinput',
+			'previewdimensions' => '200x100',
+			'browsable' => false,
+			'basedir' => '',
+		);
+		$this->_validattributes = array();
+		$this->requiresupload = true;
+		
+		parent::__construct($atts);
+	}
+	
+	public function render() {
+		if(!$this->get('id')){
+			// This system requires a valid id.
+			++self::$_AutoID;
+			$this->set('id', 'formfileinput-' . self::$_AutoID);
+		}
+		
+		return parent::render();
+	}
+	
+	/**
+	 * Get the respective File object for this element.
+	 * Use the Core system to ensure compatibility with CDNs.
+	 * 
+	 * @return File_Backend
+	 */
+	public function getFile(){
+		if($this->get('value')){
+			$f = Core::File($this->get('basedir') . '/' . $this->get('value'));
+		}
+		else{
+			$f = Core::File();
+		}
+		return $f;
+	}
+	
+	public function setValue($value) {
+		if($this->get('required') && !$value){
+			$this->_error = $this->get('label') . ' is required.';
+			return false;
+		}
+		
+		if($value == '_upload_'){
+			$n = $this->get('name');
+			if(!isset($_FILES[$n])){
+				$this->_error = 'No file uploaded for ' . $this->get('label');
+				return false;
+			}
+			else{
+				switch($_FILES[$n]['error']){
+					case UPLOAD_ERR_OK:
+						// Don't do anything, just avoid the default.
+						break;
+					case UPLOAD_ERR_INI_SIZE:
+						$this->_error = 'The uploaded file exceeds the upload_max_filesize directive in php.ini.';
+						return false;
+					case UPLOAD_ERR_FORM_SIZE:
+						$this->_error = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form. ';
+						return false;
+					default:
+						$this->_error = 'An error occured while trying to upload the file for ' . $this->get('label');
+						return false;
+				}
+				
+				// Source
+				$f = new File_local_backend($_FILES[$n]['tmp_name']);
+				// Destination
+				$nf = Core::File($this->get('basedir') . '/' . $_FILES[$n]['name']);
+				$f->copyTo($nf);
+				
+				$value = $nf->getBaseFilename();
+			}
+		}
+		
+		$this->_attributes['value'] = $value;
+		return true;
+	}
+}

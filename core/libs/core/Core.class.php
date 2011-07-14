@@ -654,30 +654,10 @@ class Core implements ISingleton{
 	}
 	
 	public static function GetExtensionFromString($str){
-		// I *could* use php's pathinfo function... but that doesn't handle "tar.gz" files too well...
-		$exts = explode('.', strtolower($str));
-		$s = sizeof($exts);
 		// File doesn't have any extension... easy enough!
-		if($s == 1) return '';
-
-		$ext = $exts[--$s];
-		if($s == 1) return $ext;
-
-		// Some extensions have some 'extra' logic required...
-		if($ext == 'php' && $exts[$s-1] == 'inc'){
-			// PHP files may have .inc.php for them...
-			return 'inc.php';
-		}
-		if($ext == 'gz' || $ext == 'asc'){
-			// gz can compress ANYTHING.... sadly, but gladly too.. 0.o
-			// GPG can also encrypt anything...
-			if(strlen($exts[$s-1]) > 1 && strlen($exts[$s-1]) < 5) $ext = $exts[--$s] . '.' . $ext;
-			if($s == 1) return $ext;
-			// This second one will allow for a file such as: something.tar.gz.asc or something.tar.asc.gz
-			if(strlen($exts[$s-1]) > 1 && strlen($exts[$s-1]) < 5) $ext = $exts[--$s] . '.' . $ext;
-		}
-
-		return $ext;
+		if(strpos($str, '.') === false) return '';
+		
+		return substr($str, strrpos($str, '.') + 1 );
 	}
 	
 }

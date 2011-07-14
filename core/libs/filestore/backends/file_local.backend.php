@@ -24,8 +24,8 @@ class File_local_backend implements File_Backend{
 	private static $_Root_pdir_public = null;
 	private static $_Root_pdir_private = null;
 	
-	public function __construct($filename){
-		$this->setFilename($filename);
+	public function __construct($filename = null){
+		if($filename) $this->setFilename($filename);
 	}
 	
 	public function getFilesize($formatted = false){
@@ -239,7 +239,7 @@ class File_local_backend implements File_Backend{
 			$dest = new File_local_backend($file);
 		}
 		
-		if($this->identicalTo($dest)) return $this;
+		if($this->identicalTo($dest)) return $dest;
 		
 		// GO!
 		// The receiving function's logic will handle the rest.
@@ -328,7 +328,7 @@ class File_local_backend implements File_Backend{
 	 * @return boolean
 	 */
 	public function isPreviewable(){
-		return ($this->isImage() || $this->isText());
+		return ($this->isImage());
 	}
 	
 	/**
@@ -431,6 +431,7 @@ class File_local_backend implements File_Backend{
 	
 		if(is_a($otherfile, 'File') || $otherfile instanceof File_Backend){
 			// Just compare the hashes.
+			//var_dump($this->getHash(), $this, $otherfile->getHash(), $otherfile); die();
 			return ($this->getHash() == $otherfile->getHash());
 		}
 		else{

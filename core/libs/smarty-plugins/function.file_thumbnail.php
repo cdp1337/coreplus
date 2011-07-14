@@ -13,35 +13,76 @@ function smarty_function_file_thumbnail($params, $template){
 		throw new SmartyException('Invalid parameter [file] for file_thumbnail, must be a File_Backend!');
 	}
 	
-	$size = (isset($params['size']))? strtolower($params['size']) : 'med';
-	// $size has a few limitations...
-	switch($size){
-		case 's':
-		case 'sm':
-		case 'small':
-			$size = 'sm';
-			break;
-		case 'm':
-		case 'med':
-		case 'medium':
-			$size = 'med';
-			break;
-		case 'l':
-		case 'lg':
-		case 'large':
-			$size = 'lg';
-			break;
-		case 'xl':
-		case 'x-large':
-			$size = 'xl';
-			break;
-		default:
-			throw new SmartyException('Invalid parameter [size] for file_thumbnail, must be "sm", "med" or "lg"!');
+	// Load in the theme sizes for reference.
+	$themesizes = array(
+		'sm' => ConfigHandler::GetValue('/theme/filestore/preview-size-sm'),
+		'med' => ConfigHandler::GetValue('/theme/filestore/preview-size-med'),
+		'lg' => ConfigHandler::GetValue('/theme/filestore/preview-size-lg'),
+		'xl' => ConfigHandler::GetValue('/theme/filestore/preview-size-xl'),
+	);
+	
+	if(isset($params['dimensions'])){
+		// Try to determine the approximate size of this in correlation to an icon size.
+		// Current strings supported are "##" and "##x##"
+		if(is_numeric($params['dimensions'])){
+			$width = $params['dimensions'];
+			$height = $params['dimensions'];
+		}
+		elseif(stripos($params['dimensions'], 'x') !== false){
+			$ds = explode('x', strtolower($params['dimensions']));
+			$width = trim($ds[0]);
+			$height = trim($ds[1]);
+		}
+		else{
+			throw new SmartyException('Unable to determine dimensions requested [' . $params['dimensions'] . ']');
+		}
+		
+		$d = $width . 'x' . $height;
+		
+		$smaller = min($width, $height);
+		if($smaller >= $themesizes['xl']) $size = 'xl';
+		elseif($smaller >= $themesizes['lg']) $size = 'lg';
+		elseif($smaller >= $themesizes['med']) $size = 'med';
+		else $size = 'sm';
+	}
+	elseif(isset($params['size'])){
+		switch($size){
+			case 's':
+			case 'sm':
+			case 'small':
+				$d = $themesizes['sm'] . 'x' . $themesizes['sm'];
+				$size = 'sm';
+				break;
+			case 'm':
+			case 'med':
+			case 'medium':
+				$d = $themesizes['med'] . 'x' . $themesizes['med'];
+				$size = 'med';
+				break;
+			case 'l':
+			case 'lg':
+			case 'large':
+				$d = $themesizes['lg'] . 'x' . $themesizes['lg'];
+				$size = 'lg';
+				break;
+			case 'xl':
+			case 'x-large':
+				$d = $themesizes['xl'] . 'x' . $themesizes['xl'];
+				$size = 'xl';
+				break;
+			default:
+				// Allow an explicit dimension to be sent in.
+				$d = $size;
+		}
+	}
+	else{
+		// Default.
+		$size = 'med';
+		$d = $themesizes['med'] . 'x' . $themesizes['med'];
 	}
 	
+	
 	if(ConfigHandler::GetValue('/core/filestore/previews') && $file->isPreviewable()){
-		$d = ConfigHandler::GetValue('/theme/filestore/preview-size-' . $size);
-		
 		if($file->getFilesize() < (1024*1024*4)){
 			// Files that are smaller than a certain size can probably be safely rendered on this pageload.
 			$src = $file->getPreviewURL($d);
@@ -49,11 +90,11 @@ function smarty_function_file_thumbnail($params, $template){
 		else{
 			// Larger files should be rendered independently.
 			// This causes each image to be longer, but should not cause a script timeout.
-			$src = Core::ResolveLink('/File/Preview/' . $file->getFilenameHash() . '?size=' . $size);
+			$src = Core::ResolveLink('/File/Preview/' . $file->getFilenameHash() . '?size=' . $d);
 		}
 	}
 	else{
-		$icon = Core::File('assets/mimetype_icons/' . str_replace('/', '-', $file->getMimetype()) . '-' . $size . '.png');
+		$icon = Core::File('assets/mimetype_icons/' . str_replace('/', '-', strtolower($file->getMimetype()) ) . '-' . $size . '.png');
 		if(!$icon->isReadable()) $icon = Core::File('assets/mimetype_icons/unknown-' . $size . '.png');
 		$src = $icon->getURL();
 	}

@@ -18,7 +18,7 @@
  * @author powellc
  */
 interface File_Backend {
-	public function __construct($filename);
+	public function __construct($filename = null);
 	
 	public function getFilesize($formatted = false);
 	
