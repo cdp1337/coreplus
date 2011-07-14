@@ -1124,12 +1124,30 @@ class FormFileInput extends FormElement{
 		
 		if($value == '_upload_'){
 			$n = $this->get('name');
-			if(!isset($_FILES[$n])){
+			
+			// Because PHP will have different sources depending if the name has [] in it...
+			if(strpos($n, '[') !== false){
+				$p1 = substr($n, 0, strpos($n, '['));
+				$p2 = substr($n, strpos($n, '[') + 1, -1);
+				$in = array(
+					'name' => $_FILES[$p1]['name'][$p2],
+					'type' => $_FILES[$p1]['type'][$p2],
+					'tmp_name' => $_FILES[$p1]['tmp_name'][$p2],
+					'error' => $_FILES[$p1]['error'][$p2],
+					'size' => $_FILES[$p1]['size'][$p2],
+				);
+			}
+			else{
+				$in =& $_FILES[$n];
+			}
+			
+			
+			if(!isset($in)){
 				$this->_error = 'No file uploaded for ' . $this->get('label');
 				return false;
 			}
 			else{
-				switch($_FILES[$n]['error']){
+				switch($in['error']){
 					case UPLOAD_ERR_OK:
 						// Don't do anything, just avoid the default.
 						break;
@@ -1145,9 +1163,9 @@ class FormFileInput extends FormElement{
 				}
 				
 				// Source
-				$f = new File_local_backend($_FILES[$n]['tmp_name']);
+				$f = new File_local_backend($in['tmp_name']);
 				// Destination
-				$nf = Core::File($this->get('basedir') . '/' . $_FILES[$n]['name']);
+				$nf = Core::File($this->get('basedir') . '/' . $in['name']);
 				$f->copyTo($nf);
 				
 				$value = $nf->getBaseFilename();

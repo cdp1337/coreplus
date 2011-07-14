@@ -90,6 +90,9 @@
 			$('#' + idprefix + '-actions').show();
 		}
 		else{
+			// Check the only available option.
+			$('#' + idprefix + '-selector').find('input').attr('checked', true);
+			// And show the action for it.
 			$('#' + idprefix + '-actions').show();
 		}
 			
