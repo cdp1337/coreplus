@@ -279,4 +279,49 @@ class Theme extends InstallArchiveAPI{
 		}
 		
 	} // private function _parseConfigs
+	
+	/**
+	 * Copy in all the assets for this component into the assets location.
+	 * 
+	 * @return boolean True if something changed, false if nothing changed.
+	 */
+	private function _installAssets(){
+		$assetbase = ConfigHandler::GetValue('/core/filestore/assetdir');
+		$coretheme = ConfigHandler::GetValue('/core/theme');
+		$theme = $this->getName();
+		$changed = false;
+		foreach($this->getElements('/assets/file') as $node){
+			$b = $this->getBaseDir();
+			// Local file is guaranteed to be a local file.
+			$f = new File_local_backend($b . $node->getAttribute('filename'));
+			$nf = Core::File($node->getAttribute('filename'));
+			// The new destination must be in the theme-specific directory, this is a 
+			// bit of a hack from the usual behaviour of the filestore system.
+			// Since that's designed to return the default if the theme-specific doesn't exist.
+			if(strpos($nf->getFilename(), $assetbase . $theme) === false){
+				// The only possible filename bases to be returned are the $coretheme and default.
+				// so...
+				if($theme == 'default'){
+					$nf->setFilename(str_replace($assetbase . $coretheme, $assetbase . $theme, $nf->getFilename()));
+				}
+				else{
+					$nf->setFilename(str_replace($assetbase . 'default', $assetbase . $theme, $nf->getFilename()));
+				}
+			}
+			
+			// Check if this file even needs updated. (this is primarily used for reporting reasons)
+			if($nf->exists() && $nf->identicalTo($f)) continue;
+			
+			$f->copyTo($nf, true);
+			// Something changed.
+			$changed = true;
+		}
+		
+		if(!$changed) return false;
+		
+		// Make sure the asset cache is purged!
+		Core::Cache()->delete('asset-resolveurl');
+		
+		return true;
+	}
 }
