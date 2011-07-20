@@ -53,31 +53,3 @@ function smarty_function_img($params, $template){
 	
     return $assign ? $template->assign($assign, $html) : $html;
 }
-<?php
-
-function smarty_function_img($params, $template){
-	
-	// Generally "src" is given.
-	
-	if(!isset($params['src'])){
-		throw new SmartyException('{img} tag requires a src.');
-	}
-	
-	// Some optional parameters, (and their defaults)
-	$assign = isset($params['assign'])? $params['assign'] : false;
-	$width = isset($params['width']) ? $params['width'] : false;
-	$height = isset($params['height']) ? $params['height'] : false;
-	
-	// If one is provided but not the other, just make them the same.
-	if($width && !$height) $height = $width;
-	if($height && !$width) $width = $height;
-	
-	$d = ($width && $height) ? $width . 'x' . $height : false;
-	
-	// Well...
-	$f = Core::File($params['src']);
-	$html = '<img src="' . $f->getPreviewURL($d) . '"/>';
-	
-    return $assign ? $template->assign($assign, $html) : $html;
-}
-
