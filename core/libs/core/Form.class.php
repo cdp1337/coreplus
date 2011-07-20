@@ -465,6 +465,13 @@ class Form extends FormGroup{
 			// Essentially when this form is submitted, I need to be able to know that it's the same form upon re-rendering.
 			if(!$this->get('uniqueid')){
 				$hash = '';
+				
+				if($this->get('___modelpks')){
+					foreach($this->get('___modelpks') as $k => $v){
+						$hash .= $k . ':' . $v . ';';
+					}
+				}
+
 				foreach($this->getElements() as $el){
 					$hash .= get_class($el) . ':' . $el->get('name') . ';';
 				}
@@ -734,7 +741,7 @@ class Form extends FormGroup{
 			// Save the PKs of this model in the SESSION data so they don't have to be sent to the browser.
 			$pks = array();
 			foreach($i['primary'] as $k => $v){
-				$pks[$k] = $model->get($k);
+				$pks[$v] = $model->get($v);
 			}
 			$f->set('___modelpks', $pks);
 		}
@@ -1098,6 +1105,10 @@ class FormFileInput extends FormElement{
 			// This system requires a valid id.
 			++self::$_AutoID;
 			$this->set('id', 'formfileinput-' . self::$_AutoID);
+		}
+		
+		if(!$this->get('basedir')){
+			throw new Exception('FormFileInput cannot be rendered without a basedir attribute!');
 		}
 		
 		return parent::render();
