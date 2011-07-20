@@ -316,19 +316,23 @@ class Model {
 	public function delete(){
 		if($this->exists()){
 			// Delete the data from the database.
-			$builder = new SQLBuilderDelete();
+			$dat = new Dataset();
 			
-			$builder->from($this->getTableName());
+			$dat->table(self::GetTableName());
 			
-			if(sizeof($this->_pkcolumns)){
-				foreach($this->_pkcolumns as $v){
-					$builder->where(array($v => $this->_data[$v]));
-				}
+			$i = self::GetIndexes();
+			
+			if(!isset($i['primary'])){
+				throw new Exception('Unable to delete model [ ' . get_class($this) . ' ] without any primary keys.');
+			}
+			
+			foreach($i['primary'] as $k){
+				$dat->where(array($k => $this->_data[$k]));
 			}
 
-			$builder->limit(1);
+			$dat->limit(1)->delete();
 			
-			if($builder->execute()){
+			if($dat->execute()){
 				$this->_dirty = false;
 				$this->_exists = false;
 			}

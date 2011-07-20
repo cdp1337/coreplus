@@ -299,8 +299,11 @@ class PageModel extends Model{
 			// If the page is currently Delete and there is a View... handle that instance.
 			if($this->getControllerMethod() == 'Delete' && method_exists($this->getControllerClass(), 'View')){
 				$p = new PageModel(str_replace('/Delete/', '/View/', $this->get('baseurl')));
-				// I need the array merge because getParentTree only returns << parents >>.
+				// Only try to call the script if it exists.
+				if($p->exists()){
+					// I need the array merge because getParentTree only returns << parents >>.
 				return array_merge($p->getParentTree(), array($p));
+				}
 			}
 		}
 		

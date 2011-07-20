@@ -24,26 +24,25 @@ function smarty_function_file_thumbnail($params, $template){
 	if(isset($params['dimensions'])){
 		// Try to determine the approximate size of this in correlation to an icon size.
 		// Current strings supported are "##" and "##x##"
+		
 		if(is_numeric($params['dimensions'])){
+			// It's a straight single number, use that for both dimensions.
 			$width = $params['dimensions'];
 			$height = $params['dimensions'];
 		}
 		elseif(stripos($params['dimensions'], 'x') !== false){
+			// It's a string joining both dimensions.
 			$ds = explode('x', strtolower($params['dimensions']));
 			$width = trim($ds[0]);
 			$height = trim($ds[1]);
 		}
 		else{
+			// Invalid dimension given.
 			throw new SmartyException('Unable to determine dimensions requested [' . $params['dimensions'] . ']');
 		}
 		
 		$d = $width . 'x' . $height;
-		
-		$smaller = min($width, $height);
-		if($smaller >= $themesizes['xl']) $size = 'xl';
-		elseif($smaller >= $themesizes['lg']) $size = 'lg';
-		elseif($smaller >= $themesizes['med']) $size = 'med';
-		else $size = 'sm';
+		$size = Core::TranslateDimensionToPreviewSize($width, $height);
 	}
 	elseif(isset($params['size'])){
 		switch($size){

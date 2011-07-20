@@ -131,6 +131,14 @@ class Dataset implements Iterator{
 		return $this;
 	}
 	
+	public function delete(){
+		// Just a simple function that doesn't actually delete anything,
+		// but it needs to be called to set the correct flag.
+		$this->_mode = Dataset::MODE_DELETE;
+		
+		return $this;
+	}
+	
 	private function _set(){
 		$n = func_num_args();
 		

@@ -319,6 +319,11 @@ class View {
 	public function setBreadcrumbs($array){
 		// Array should be an array of either link => title keys or pages.
 		$this->breadcrumbs = array();
+		
+		// If null is passed in, just leave them blank.
+		// This is useful for implementing completely custom breadcrumbs.
+		if(!$array) return;
+		
 		foreach($array as $k => $v){
 			if($v instanceof PageModel) $this->addBreadcrumb($v->get('title'), $v->getResolvedURL());
 			else $this->addBreadcrumb($v, $k);
@@ -334,3 +339,4 @@ class View {
 class ViewException extends Exception{
 	
 }
+

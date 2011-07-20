@@ -278,6 +278,52 @@ class Core implements ISingleton{
 		}
 	}
 	
+	/**
+	 * Translate a dimension, (or dimensions), to a "preview size"
+	 * of sm, med, lg or xl.
+	 * 
+	 * @param string $dimensions Dimensions to translate
+	 * @param [optional] int $width If second parameter is sent, assume width, height.
+	 * @return string
+	 */
+	public static function TranslateDimensionToPreviewSize($dimensions){
+		// Load in the theme sizes for reference.
+		$themesizes = array(
+			'sm' => ConfigHandler::GetValue('/theme/filestore/preview-size-sm'),
+			'med' => ConfigHandler::GetValue('/theme/filestore/preview-size-med'),
+			'lg' => ConfigHandler::GetValue('/theme/filestore/preview-size-lg'),
+			'xl' => ConfigHandler::GetValue('/theme/filestore/preview-size-xl'),
+		);
+		
+		if(sizeof(func_get_args()) == 2){
+			// Assume $width, $height.
+			$width = (int) func_get_arg(0);
+			$height = (int) func_get_arg(1);
+		}
+		elseif(is_numeric($dimensions)){
+			// It's a straight single number, use that for both dimensions.
+			$width = $dimensions;
+			$height = $dimensions;
+		}
+		elseif(stripos($dimensions, 'x') !== false){
+			// It's a string joining both dimensions.
+			$ds = explode('x', strtolower($dimensions));
+			$width = trim($ds[0]);
+			$height = trim($ds[1]);
+		}
+		else{
+			// Invalid size given.
+			return null;
+		}
+		
+		$smaller = min($width, $height);
+		
+		if($smaller >= $themesizes['xl']) return 'xl';
+		elseif($smaller >= $themesizes['lg']) return 'lg';
+		elseif($smaller >= $themesizes['med']) return 'med';
+		else return 'sm';
+	}
+	
 	
 	
 	public static function AddProfileTime($event, $microtime = null){

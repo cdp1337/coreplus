@@ -34,6 +34,7 @@ class File_local_backend implements File_Backend{
 	}
 	
 	public function getMimetype(){
+		if(!$this->exists()) return null;
 		// PEAR, you have failed me for the last time... :'(
 		//return MIME_Type::autoDetect($this->_filename);
 		
@@ -308,7 +309,6 @@ class File_local_backend implements File_Backend{
 				}
 			}
 		}
-		
 		return file_put_contents($this->_filename, $data);
 	}
 	
@@ -395,7 +395,15 @@ class File_local_backend implements File_Backend{
 			$height = (int)$vals[1];
 		}
 		
-		if($this->isPreviewable()){
+		if(!$this->exists()){
+			// Log it so the admin knows that the file is missing, otherwise nothing is shown.
+			error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
+			
+			// Return a 404 image.
+			$size = Core::TranslateDimensionToPreviewSize($width, $height);
+			return Core::ResolveAsset('mimetype_icons/notfound-' . $size . '.png');
+		}
+		elseif($this->isPreviewable()){
 			$key = 'filepreview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
 			
 			$file = Core::File('public/tmp/' . $key);

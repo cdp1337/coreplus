@@ -263,7 +263,7 @@ class FormElement{
 	public function getAsArray(){
 		$ret = array();
 		$ret['__class'] = get_class($this);
-		foreach($this->_validattributes as $k){
+		foreach($this->_attributes as $k => $v){
 			$ret[$k] = (isset($this->_attributes[$k]))? $this->_attributes[$k] : null;
 		}
 		return $ret;
@@ -1129,6 +1129,12 @@ class FormFileInput extends FormElement{
 			if(strpos($n, '[') !== false){
 				$p1 = substr($n, 0, strpos($n, '['));
 				$p2 = substr($n, strpos($n, '[') + 1, -1);
+				
+				if(!isset($_FILES[$p1])){
+					$this->_error = 'No file uploaded for ' . $this->get('label');
+					return false;
+				}
+				
 				$in = array(
 					'name' => $_FILES[$p1]['name'][$p2],
 					'type' => $_FILES[$p1]['type'][$p2],
@@ -1176,3 +1182,4 @@ class FormFileInput extends FormElement{
 		return true;
 	}
 }
+
