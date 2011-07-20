@@ -60,10 +60,14 @@
 		<file filename="assets/mimetype_icons/image-gif-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
 		<file filename="assets/mimetype_icons/image-gif-med.png" md5="953f1d26444d97955905718687815607"/>
 		<file filename="assets/mimetype_icons/image-jpeg-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
+		<file filename="assets/mimetype_icons/notfound-med.png" md5="9c1546b3770dd18d34833bb6fe736419"/>
+		<file filename="assets/mimetype_icons/notfound-lg.png" md5="393bb7f6649773e8368e6dde20a969f8"/>
+		<file filename="assets/mimetype_icons/notfound-sm.png" md5="b051ed5c35e067819e9ff8b43dec7ad8"/>
+		<file filename="assets/mimetype_icons/notfound-xl.png" md5="6a5e689f57e697606d3a8fa2eb495fdd"/>
 	</assets>
 	<changelog version="1.0.0">
 		<packagemeta>
-			<date>Mon, 11 Jul 2011 03:31:14 -0400</date>
+			<date>Sat, 16 Jul 2011 00:48:34 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.2-1</packager>
 		</packagemeta>
