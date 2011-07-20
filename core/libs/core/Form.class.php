@@ -749,7 +749,10 @@ class Form extends FormGroup{
 			$title = ucwords($k);
 			$required = (isset($v['required']))? ($v['required']) : false;
 			
-			if($v['type'] == Model::ATT_TYPE_BOOL){
+			if(isset($v['formtype'])){
+				$el = FormElement::Factory($v['formtype']);
+			}
+			elseif($v['type'] == Model::ATT_TYPE_BOOL){
 				$el = FormElement::Factory('radio');
 				$el->set('options', array('Yes', 'No'));
 			}
