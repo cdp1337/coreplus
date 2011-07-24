@@ -1,10 +1,36 @@
 <?php
+/**
+ * Smarty {script} block
+ * 
+ * @author Charlie Powell <powellc@powelltechs.com>
+ * @since 2011.05
+ */
 
 /**
  * Include a script in the main template
  * 
- * Either "name" can be passed to load a library
- * or "script" can be passed to inject a script directly.
+ * Usage:
+ * <pre>
+ * // Include jquery on this page.
+ * {script name="jquery"}{/script}
+ * 
+ * // Another way to call javascript libraries
+ * {script library="jquery"}{/script}
+ * 
+ * // Traditional "src" tags work too
+ * {script src="http://blah.tld/js/jquery.js"}{/script}
+ * 
+ * // Because it's a block-type tag... you can also do
+ * {script}
+ *   // This section is automatically plugged into a <script> tag.
+ * {/script}
+ * 
+ * // Specifying the location of the target rendering area is also allowable.
+ * // This is useful for scripts that expect to be at the end of the body tag.
+ * {script src="js/mylib/foo.js" location="head"}{/script}
+ * {script src="js/mylib/foo.js" location="foot"}{/script}
+ * </pre>
+ * 
  * 
  * @param type $params
  * @param type $template 
@@ -21,6 +47,13 @@ function smarty_block_script($params, $innercontent, $template, &$repeat){
 		if(!ComponentHandler::LoadScriptLibrary($params['library'])){
 			throw new SmartyException('Unable to load script library ' . $params['library']);
 		}
+	}
+	// Allow {script} tags to be called with the traditional src attribute.
+	// These are most common for external resources, like facebook connect or google tools.
+	elseif(isset($params['src'])){
+		$html = '<script type="text/javascript" src="' . Core::ResolveLink($params['src']) . '"></script>';
+		$loc = (isset($params['location']))? $params['location'] : 'head';
+		CurrentPage::AddScript($html, $loc);
 	}
 	// a script tag can be called with no parameters, it is after all a script tag....
 	elseif($innercontent){
