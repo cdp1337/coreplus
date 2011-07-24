@@ -104,19 +104,5 @@ function smarty_function_file_thumbnail($params, $template){
 	foreach($attributes as $k => $v) $html .= " $k=\"$v\"";
 	$html .= '/>';
 	
-	/*
-	var_dump($file, $file->getFilename(''), $file->getFilenameHash()); die();
-	if(ConfigHandler::GetValue('/core/filestore/previews')){
-		var_dump($file->getMimetype()); die();
-	}
-	else{
-		$ext = $file->getExtension();
-		$icon = Core::ResolveAsset('mimetype_icons/' . $ext . $size . '.png');
-		if(!$icon) $icon = Core::ResolveAsset('mimetype_icons/unknown' . $size . '.png');
-		
-		$html = '<img src="' . $icon . '"/>';
-	}
-	*/
-	
 	return $assign ? $template->assign($assign, $html) : $html;
 }
