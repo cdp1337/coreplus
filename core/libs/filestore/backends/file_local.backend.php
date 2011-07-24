@@ -16,13 +16,30 @@
 
 class File_local_backend implements File_Backend{
 	
+	/**
+	 * The fully resolved filename of this file.
+	 * 
+	 * @var string
+	 */
 	private $_filename = null;
 	
+	/**
+	 * The "type" of this file, be it asset, public or private.
+	 * 
+	 * @var string
+	 */
 	private $_type = null;
 	
+	/**
+	 * The fully resolved path of assets.
+	 * Used as a cache.
+	 * 
+	 * @var string
+	 */
 	private static $_Root_pdir_assets = null;
 	private static $_Root_pdir_public = null;
 	private static $_Root_pdir_private = null;
+	private static $_Root_pdir_tmp = null;
 	
 	public function __construct($filename = null){
 		if($filename) $this->setFilename($filename);
@@ -80,27 +97,47 @@ class File_local_backend implements File_Backend{
 	 * Get the filename of this file resolved to a specific directory, usually ROOT_PDIR or ROOT_WDIR.
 	 */
 	public function getFilename($prefix = ROOT_PDIR){
+		// Since the filename is stored fully resolved...
 		if($prefix == ROOT_PDIR) return $this->_filename;
+		
+		if($prefix === false){
+			// Trim off all the prefacing components from the filename.
+			if($this->_type == 'asset')
+				return 'asset/' . substr($this->_filename, strlen(self::$_Root_pdir_asset));
+			elseif($this->_type == 'public')
+				return 'public/' . substr($this->_filename, strlen(self::$_Root_pdir_public));
+			elseif($this->_type == 'private')
+				return 'private/' . substr($this->_filename, strlen(self::$_Root_pdir_private));
+			elseif($this->_type == 'tmp')
+				return 'tmp/' . substr($this->_filename, strlen(self::$_Root_pdir_tmp));
+			else 
+				return $this->_filename;
+		}
 		
 		return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', $prefix . '$1', $this->_filename);
 	}
 	
 	public function setFilename($filename){
 		// Ensure that the root_pdir directories are cached and ready.
-		if(self::$_Root_pdir_assets == null){
+		if(self::$_Root_pdir_assets === null){
 			$dir = ConfigHandler::GetValue('/core/filestore/assetdir');
 			if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 			self::$_Root_pdir_assets = $dir;
 		}
-		if(self::$_Root_pdir_public == null){
+		if(self::$_Root_pdir_public === null){
 			$dir = ConfigHandler::GetValue('/core/filestore/publicdir');
 			if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 			self::$_Root_pdir_public = $dir;
 		}
-		if(self::$_Root_pdir_private == null){
+		if(self::$_Root_pdir_private === null){
 			$dir = ConfigHandler::GetValue('/core/filestore/privatedir');
 			if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 			self::$_Root_pdir_private = $dir;
+		}
+		if(self::$_Root_pdir_tmp === null){
+			$dir = TMP_DIR;
+			if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
+			self::$_Root_pdir_tmp = $dir;
 		}
 		
 		// base64 comes first.  If the filename is encoded in that, decode it first.
@@ -154,6 +191,18 @@ class File_local_backend implements File_Backend{
 			
 			$this->_type = 'private';
 		}
+		elseif(strpos($filename, 'tmp/') === 0){
+			$filename = substr($filename, 4); // Trim off the 'tmp/' prefix.
+			$filename = self::$_Root_pdir_tmp . $filename;
+
+			$this->_type = 'tmp';
+		}
+		// Allow the fully resolved filename to be passed in
+		elseif(strpos($filename, self::$_Root_pdir_tmp) === 0){
+			// No filename resolution needed, already in full form.
+			
+			$this->_type = 'tmp';
+		}
 		else{
 			// Nothing to do on the else, just use this filename as-is.
 		}
@@ -184,6 +233,7 @@ class File_local_backend implements File_Backend{
 		if($this->_type == 'asset') $filename = 'asset/' . substr($this->_filename, strlen(self::$_Root_pdir_asset));
 		elseif($this->_type == 'public') $filename = 'public/' . substr($this->_filename, strlen(self::$_Root_pdir_public));
 		elseif($this->_type == 'private') $filename = 'private/' . substr($this->_filename, strlen(self::$_Root_pdir_private));
+		elseif($this->_type == 'tmp') $filename = 'tmp/' . substr($this->_filename, strlen(self::$_Root_pdir_tmp));
 		else $filename = $this->_filename;
 		
 		return 'base64:' . base64_encode($filename);
@@ -406,6 +456,7 @@ class File_local_backend implements File_Backend{
 		elseif($this->isPreviewable()){
 			$key = 'filepreview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
 			
+			// Yes, this must be within public because it's meant to be publically visible.
 			$file = Core::File('public/tmp/' . $key);
 			if(!$file->exists()){
 				$img2 = $this->_getResizedImage($width, $height);
@@ -465,6 +516,17 @@ class File_local_backend implements File_Backend{
 		// Amazon S3 and other CDN services.... are not.
 		
 		return true;
+	}
+	
+	/**
+	 * Get the modified time for this file as a unix timestamp.
+	 * 
+	 * @return int 
+	 */
+	public function getMTime(){
+		if(!$this->exists()) return false;
+		
+		return filemtime($this->getFilename());
 	}
 	
 	
