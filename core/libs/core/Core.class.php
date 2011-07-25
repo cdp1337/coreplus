@@ -41,6 +41,8 @@ class Core implements ISingleton{
 	 */
 	private $_profiletimes = array();
 	
+	private static $_User = null;
+	
 	
 	/*****     PUBLIC METHODS       *********/
 	
@@ -231,6 +233,25 @@ class Core implements ISingleton{
 	 */
 	public static function Cache(){
 		return Cache::GetSystemCache();
+	}
+	
+	/**
+	 * Get the current user model that is logged in.
+	 * 
+	 * @return UserModel 
+	 */
+	public static function User(){
+		if(self::$_User === null){
+			// Is the session data present?
+			if(!isset($_SESSION['user'])){
+				self::$_User = new UserModel();
+			}
+			else{
+				self::$_User = $_SESSION['user'];
+			}
+		}
+		
+		return self::$_User;
 	}
 	
 	/**
@@ -427,12 +448,18 @@ class Core implements ISingleton{
 	/**
 	 * Resolve a url or application path to a fully-resolved URL.
 	 * 
+	 * This can also be an already-resolved link.  If so, no action is taken
+	 *  and the original URL is returned unchanged.
+	 * 
 	 * @param string $url 
 	 * @return string The full url of the link, including the http://...
 	 */
 	public static function ResolveLink($url){
 		// Allow "#" to be verbatim without translation.
 		if($url == '#') return $url;
+		
+		// Allow already-resolved links to be returned verbatim.
+		if(strpos($url, '://') !== false) return $url;
 		
 		$a = PageModel::SplitBaseURL($url);
 		
