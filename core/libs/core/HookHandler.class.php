@@ -179,6 +179,7 @@ HookHandler::RegisterNewHook('libraries_loaded');
 HookHandler::RegisterNewHook('libraries_ready');
 HookHandler::RegisterNewHook('components_loaded');
 HookHandler::RegisterNewHook('components_ready');
+HookHandler::RegisterNewHook('session_ready');
 HookHandler::RegisterNewHook('install_task');
 HookHandler::RegisterNewHook('render_page');
 HookHandler::RegisterNewHook('page_error');
