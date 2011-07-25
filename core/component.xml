@@ -4,6 +4,7 @@
 	<provides type="library" name="phpass" version="0.3~cae1"/>
 	<provides type="library" name="aws-sdk" version="1.0.0"/>
 	<provides type="library" name="smarty" version="3.0.6"/>
+	<provides type="library" name="facebook-sdk" version="3.0.1"/>
 	<hook event="components_loaded" call="CurrentPage::Singleton"/>
 	<!--<hook event="components_ready" call="CurrentPage::LoadPage"/>
 	-->
@@ -236,22 +237,25 @@
 		<file filename="core/libs/filestore/Directory_Backend.interface.php" md5="4fc76ff1998699378c87f4dfa88b1719">
 			<provides type="interface" name="Directory_Backend"/>
 		</file>
-		<file filename="core/libs/filestore/Asset.class-DISABLED.php" md5="f3910b9cea31546dc81076a968ca79c1">
-			<provides type="class" name="Asset"/>
-		</file>
-		<file filename="core/libs/filestore/File_Backend.interface.php" md5="eda1161f7c284ad59c5c7160e6c6f8ba">
+		<file filename="core/libs/filestore/File_Backend.interface.php" md5="88e18353e9bae0a0f4038682cbbaf672">
 			<provides type="interface" name="File_Backend"/>
+		</file>
+		<file filename="core/libs/filestore/FileException.class.php" md5="6b0dbf09f9d2e8486d993728c47aceb7">
+			<provides type="class" name="FileException"/>
+		</file>
+		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="d5858a55a0339af4b052becf56db1f52">
+			<provides type="class" name="File_remote_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="2f6e846a252c24ade87e99615b326f37">
 			<provides type="class" name="File_awss3_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="20bb302f10790251075031c51a11550c">
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="800b6da27d572dddc959a3fcae27c7ad">
 			<provides type="class" name="File_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="4821b7071b6e411f4747657bfb8fcece">
 			<provides type="class" name="Directory_local_backend"/>
 		</file>
-		<file filename="core/libs/core/ConfigModel.class.php" md5="c4bff888acef42b2a4c1ff422a4b91e0">
+		<file filename="core/libs/core/ConfigModel.class.php" md5="aea269988f7f1ecfbafea931ec601b21">
 			<provides type="class" name="ConfigModel"/>
 		</file>
 		<file filename="core/libs/core/ISingleton.interface.php" md5="dc86d653072a1fd71966a54de680a47b">
@@ -263,7 +267,7 @@
 		<file filename="core/libs/core/InstallTask.class.php" md5="0ba8495dfcb0ff5c2116e7e6556ee547">
 			<provides type="class" name="InstallTask"/>
 		</file>
-		<file filename="core/libs/core/Theme.class.php" md5="3f5672fd04b731162f4898fdd6afb32e">
+		<file filename="core/libs/core/Theme.class.php" md5="cad29b8221c806b4ae3ea12858928010">
 			<provides type="class" name="Theme"/>
 		</file>
 		<file filename="core/libs/core/WidgetInstanceModel.class.php" md5="57915b1768f3d8252219465c2b36dff0">
@@ -272,7 +276,7 @@
 		<file filename="core/libs/core/XMLLoader.class.php" md5="703a9230eeada7b244ee85eb0e29139f">
 			<provides type="class" name="XMLLoader"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="37958905d8100c3fa386571f971ae0e3">
+		<file filename="core/libs/core/View.class.php" md5="1a9502146fe39c03f056db51814516fe">
 			<provides type="class" name="View"/>
 			<provides type="class" name="ViewException"/>
 		</file>
@@ -284,13 +288,16 @@
 			<provides type="class" name="SQLBuilderInsertUpdate"/>
 			<provides type="class" name="SQLBuilderDelete"/>
 		</file>
+		<file filename="core/libs/core/SessionModel.class.php" md5="da387ba284b9d9b97d321184e4b35f99">
+			<provides type="class" name="SessionModel"/>
+		</file>
 		<file filename="core/libs/core/Debug.class.php" md5="9b5aba47c4387e683790840abc2c98cc">
 			<provides type="class" name="Debug"/>
 		</file>
 		<file filename="core/libs/core/ThemeHandler.class.php" md5="9848293f0dd7626a328b971126dcf987">
 			<provides type="class" name="ThemeHandler"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="9f348559dc505859e5af5755551ddb18">
+		<file filename="core/libs/core/Form.class.php" md5="72f7799ba642bb55da5a0b949551ef73">
 			<provides type="class" name="FormGroup"/>
 			<provides type="class" name="FormElement"/>
 			<provides type="class" name="Form"/>
@@ -303,11 +310,12 @@
 			<provides type="class" name="FormRadioInput"/>
 			<provides type="class" name="FormPageInsertables"/>
 			<provides type="class" name="FormPageMeta"/>
+			<provides type="class" name="FormFileInput"/>
 		</file>
 		<file filename="core/libs/core/Template.class.php" md5="9bbf476c17b2f4dbbca3c5cb23cbe245">
 			<provides type="class" name="Template"/>
 		</file>
-		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="724ef1a44319bdb2743d67b14daf8784">
+		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="d1d31995edc6d12583f37d18fcbe1494">
 			<provides type="class" name="InstallArchiveAPI"/>
 		</file>
 		<file filename="core/libs/core/HookHandler.class.php" md5="fb6476475532353430b30768af80d983">
@@ -317,7 +325,7 @@
 		<file filename="core/libs/core/Controller.class.php" md5="093c67818ccd99aeceae71cf10b36257">
 			<provides type="class" name="Controller"/>
 		</file>
-		<file filename="core/libs/core/Session.class.php" md5="729bc466d7d673d0d165eec7e6191356">
+		<file filename="core/libs/core/Session.class.php" md5="06d005d1d4310fc77378bfad4c8e7303">
 			<provides type="class" name="Session"/>
 		</file>
 		<file filename="core/libs/core/InstallArchive.class.php" md5="ba27c92ce18f83c68390e65681ba8544">
@@ -329,13 +337,13 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="b6ee411d9ee9123b279f47d12eca5ab8">
 			<provides type="class" name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="9354068df75ca065ee5698b4b0cfe09c">
+		<file filename="core/libs/core/Component.class.php" md5="b02c3fdb20e82bfe44e0f8e265562984">
 			<provides type="class" name="Component"/>
 		</file>
 		<file filename="core/libs/core/ComponentModel.class.php" md5="de9a5d439d2c940e9c0eb35deab722a1">
 			<provides type="class" name="ComponentModel"/>
 		</file>
-		<file filename="core/libs/core/PageModel.class.php" md5="14937ae1969124105be65755ec3f0f16">
+		<file filename="core/libs/core/PageModel.class.php" md5="eab3fd8368a70edeb047f2f98055dfc9">
 			<provides type="class" name="PageModel"/>
 		</file>
 		<file filename="core/libs/core/Time.class.php" md5="10da1cfd18249f9056c61358c40e1f62">
@@ -347,16 +355,16 @@
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="b1f1dbc20bc16a38a59b8a0852bf1bd0">
 			<provides type="class" name="CAEDirectoryIterator"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="53242134503f8d78bb6ca687cf4742b4">
+		<file filename="core/libs/core/Core.class.php" md5="6770fbec666959c3fc046def7d586471">
 			<provides type="class" name="Core"/>
 		</file>
-		<file filename="core/libs/core/ConfigHandler.class.php" md5="e5380f06701a7c28c593af10c011c280">
+		<file filename="core/libs/core/ConfigHandler.class.php" md5="df4d34dc148e2f4f67a56a2fcb2fffaa">
 			<provides type="class" name="ConfigHandler"/>
 		</file>
 		<file filename="core/libs/core/CurrentPage.class.php" md5="c2dfd0ccc631b19b80bef684697609df">
 			<provides type="class" name="CurrentPage"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="93e72879d014216180b111db07f86fd2">
+		<file filename="core/libs/core/Model.class.php" md5="3def463eb740ae4f242c94edcb6b4a83">
 			<provides type="class" name="Model"/>
 			<provides type="class" name="ModelFactory"/>
 		</file>
@@ -369,7 +377,7 @@
 		<file filename="core/libs/datamodel/DMI_Backend.interface.php" md5="566a18589222fb68a5fc1940cbe31568">
 			<provides type="interface" name="DMI_Backend"/>
 		</file>
-		<file filename="core/libs/datamodel/Dataset.class.php" md5="ff53b66f9c3429ec5fbaadeb9ed0f546">
+		<file filename="core/libs/datamodel/Dataset.class.php" md5="c5ae549443bc003e2d87532ad36334c8">
 			<provides type="class" name="Dataset"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/uuid.php" md5="e18fff7e213a2d00ce0ee67782b7b774">
@@ -542,10 +550,13 @@
 			<provides type="class" name="DMI"/>
 			<provides type="class" name="DMI_Exception"/>
 		</file>
+		<file filename="core/libs/datamodel/backends/cache.backend.php" md5="d4d6b99230d132eff3b03d979341131c">
+			<provides type="class" name="DMI_cache_backend"/>
+		</file>
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="3bde341777f3e2d4207e8843f6ea1438">
 			<provides type="class" name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="458ec47f4b6d644d0d5124242ef93227">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="ec6ea93cf055f6bbaa94f0718eea3149">
 			<provides type="class" name="DMI_mysqli_backend"/>
 		</file>
 		<file filename="core/libs/cachecore/Cache.class.php" md5="f38463eb40f075717333f9e4ceb592b4">
@@ -575,6 +586,23 @@
 		</file>
 		<file filename="core/libs/cachecore/backends/cachexcache.class.php" md5="93538d20d1aba8fa6f4bbb92a69a43e0">
 			<provides type="class" name="CacheXCache"/>
+		</file>
+		<file filename="core/libs/facebook-php-sdk/src/base_facebook.php" md5="40382538cae1636a91ab41bbd755fdef">
+			<provides type="class" name="FacebookApiException"/>
+			<provides type="class" name="BaseFacebook"/>
+		</file>
+		<file filename="core/libs/facebook-php-sdk/src/facebook.php" md5="9ca98ec14e2f3926ba89fcb753fbc598">
+			<provides type="class" name="Facebook"/>
+		</file>
+		<file filename="core/libs/facebook-php-sdk/tests/tests.php" md5="a8455c0e1618059786d2614abd1e4321">
+			<provides type="class" name="PHPSDKTestCase"/>
+			<provides type="class" name="TransientFacebook"/>
+			<provides type="class" name="FBRecordURL"/>
+			<provides type="class" name="FBPublic"/>
+			<provides type="class" name="PersistentFBPublic"/>
+			<provides type="class" name="FBCode"/>
+			<provides type="class" name="FBAccessToken"/>
+			<provides type="class" name="FBGetCurrentURLFacebook"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/sdb.class.php" md5="7aea786b7ff0cb2d3d70166d386e399b">
 			<provides type="class" name="AmazonSDB"/>
@@ -709,6 +737,9 @@
 		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
 			<provides type="controller" name="ErrorController"/>
 		</file>
+		<file filename="core/controllers/FormController.class.php" md5="d9dc7664b0e7087f9503961fd2bebc45">
+			<provides type="controller" name="FormController"/>
+		</file>
 		<file filename="core/controllers/DirectoryController.class.php" md5="e9e50405c06731773795016e8b95924e">
 			<provides type="controller" name="DirectoryController"/>
 		</file>
@@ -730,6 +761,7 @@
 		<file filename="core/templates/forms/form.tpl" md5="2910e3a5d1cc14ff87bfea0a15c927ce"/>
 		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="b253627a7cac7c2db9c53160272e103c"/>
 		<file filename="core/templates/forms/elements/formsubmitinput.tpl" md5="bf76c8874f76293157502c0999206069"/>
+		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="91a3a7154739c76581d05a65b21d4b9b"/>
 		<file filename="core/templates/forms/elements/reset.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
 		<file filename="core/templates/forms/elements/formtextinput.tpl" md5="0f09b0b0b3e6ce316e89e312c311482e"/>
 		<file filename="core/templates/forms/elements/image.tpl" md5="dc4f74a0297b099ea7913d7582125837"/>
@@ -781,6 +813,10 @@
 		<config key="/core/filestore/assetdir" type="string" default="assets/" description=""/>
 		<config key="/core/filestore/publicdir" type="string" default="filestore/public/" description=""/>
 		<config key="/core/filestore/previews" type="boolean" default="1" description="Try to display a preview of files in thumbnails.  If set to false, only the file mimetype icon is displayed."/>
+		<config key="/core/facebook/appid" type="string" default="" description="If you want to enable facebook connectivity, you need to create an &quot;app&quot; and enter that app's appid here."/>
+		<config key="/core/facebook/secretid" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
+		<config key="/core/facebook/appsecret" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
+		<config key="/core/session/ttl" type="int" default="3600" description="Time to live for sessions.  Amount of seconds to keep an idle session active before requesting the user to log back in due to inactivity."/>
 	</configs>
 	<assets/>
 	<upgrade from="0.0.1-dev1" to="0.0.2"/>
@@ -797,7 +833,7 @@
 	<upgrade from="0.0.2" to="0.0.2-1"/>
 	<changelog version="0.0.2-1">
 		<packagemeta>
-			<date>Mon, 11 Jul 2011 20:43:05 -0400</date>
+			<date>Sun, 24 Jul 2011 13:58:57 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.2-1</packager>
 		</packagemeta>
@@ -829,9 +865,8 @@
 	<author name="David JEAN LOUIS" email="izimobil@gmail.com"/>
 	<author name="David JEAN" email="izimobil@gmail.com"/>
 	<author name="Solar Designer" email="solar at openwall.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-		See the included NOTICE.md file for more information.
-	</license>
+	<author name="Naitik Shah" email="naitik@facebook.com"/>
+	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.html">
 		GNU Lesser General Public License v3
 	</license>
@@ -840,12 +875,17 @@
 	</license>
 	<license url="http://www.opensource.org/licenses/mit-license.php">MIT</license>
 	<otherfiles>
-		<file filename="index.php" md5="5a12a04aed9867fd66720cdefbb2f120"/>
+		<file filename="index.php" md5="5da1f5e18e9ae771dcd267038b2112fe"/>
 		<file filename="install/install.tpl" md5="d2b9cd0e22bdabcbdac3264111b95d5d"/>
+		<file filename="filestore/public/user/203250_505831051_3009978_n.jpg" md5="4b025002e13f78ba5989414ec8e7cc2b"/>
 		<file filename="filestore/public/tmp/filepreview-490566b692bd23e2b75e54cbe5680e1d-300x300.png" md5="34572a3f473d7f1547616cfef1782087"/>
 		<file filename="filestore/public/tmp/filepreview-ed684274665ea47e42982fa7a05c851f-64x64.png" md5="d80ebc01f1bfa4d96eec854155dc6aaa"/>
 		<file filename="filestore/public/tmp/filepreview-64d74ce097072a88c225fa09d7f24bab-300x300.png" md5="381abe9ac9f8d3596dacb4ed1afb09e3"/>
+		<file filename="filestore/public/tmp/filepreview-d1e18fd317d25d2502ed042f1328e661-300x300.png" md5="efb3395d86f24025edfd73fe7d4c10f7"/>
+		<file filename="filestore/public/tmp/filepreview-d1e18fd317d25d2502ed042f1328e661-200x100.png" md5="d9d18bd40a0c10dafd1f0eed18295060"/>
 		<file filename="filestore/public/tmp/filepreview-64d74ce097072a88c225fa09d7f24bab-64x64.png" md5="381abe9ac9f8d3596dacb4ed1afb09e3"/>
+		<file filename="filestore/public/tmp/filepreview-047770ccecdac1459c9e6957c32bc90a-200x100.png" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="filestore/public/tmp/filepreview-b12c0af68602aad66295e7e0dd8431d7-200x100.png" md5="d55354b28cc8fbc986b67a3e5d12707a"/>
 		<file filename="filestore/public/tmp/filepreview-d1e18fd317d25d2502ed042f1328e661-64x64.png" md5="68c1e13d87b5d146a34651d10d132f2e"/>
 		<file filename="filestore/public/tmp/filepreview-0f20b7d3cb3d9590c4f600c3c02aed0b-300x300.png" md5="7dacefd52d7f6852263ecaf67c70ec9a"/>
 		<file filename="filestore/public/tmp/filepreview-ed684274665ea47e42982fa7a05c851f-300x300.png" md5="d80ebc01f1bfa4d96eec854155dc6aaa"/>
@@ -853,12 +893,18 @@
 		<file filename="filestore/public/tmp/filepreview-0f20b7d3cb3d9590c4f600c3c02aed0b-64x64.png" md5="7dacefd52d7f6852263ecaf67c70ec9a"/>
 		<file filename="filestore/public/tmp/filepreview-ec0a7fe6809e4f051bb09e1c21aab52c-64x64.png" md5="bb113a64399a78214d9436bdd01637c5"/>
 		<file filename="filestore/public/tmp/filepreview-490566b692bd23e2b75e54cbe5680e1d-64x64.png" md5="34572a3f473d7f1547616cfef1782087"/>
+		<file filename="filestore/public/test12/IMG_0250.JP." md5="b12c0af68602aad66295e7e0dd8431d7"/>
 		<file filename="filestore/public/test12/logo.png" md5="ec0a7fe6809e4f051bb09e1c21aab52c"/>
 		<file filename="filestore/public/test12/move-sm.png" md5="490566b692bd23e2b75e54cbe5680e1d"/>
 		<file filename="filestore/public/test12/IMG_0290.JPG" md5="d1e18fd317d25d2502ed042f1328e661"/>
 		<file filename="filestore/public/test12/add-sm.png" md5="64d74ce097072a88c225fa09d7f24bab"/>
+		<file filename="filestore/public/test12/IMG_0250.JP (1)." md5="b12c0af68602aad66295e7e0dd8431d7"/>
+		<file filename="filestore/public/test12/IMG_0250.JPG" md5="b12c0af68602aad66295e7e0dd8431d7"/>
 		<file filename="filestore/public/test12/delete.png" md5="ed684274665ea47e42982fa7a05c851f"/>
+		<file filename="filestore/public/test12/changes.diff" md5="047770ccecdac1459c9e6957c32bc90a"/>
 		<file filename="filestore/public/test12/email-lg.png" md5="0f20b7d3cb3d9590c4f600c3c02aed0b"/>
+		<file filename="filestore/public/test12/IMG_0250.jpg" md5="b12c0af68602aad66295e7e0dd8431d7"/>
+		<file filename="filestore/public/test12/IMG_0250 (1).jpg" md5="b12c0af68602aad66295e7e0dd8431d7"/>
 		<file filename="yuicompressor-2.4.2.jar" md5="de7f9bf5ecb82166493ba7839f62a73e"/>
 		<file filename="core/bootstrap.php" md5="1f80831dca15b31b873be8a2d1446ba4"/>
 		<file filename="core/bootstrap_preincludes.php" md5="35063652ad4eb9c5a40d90b18efd3eb7"/>
@@ -912,10 +958,11 @@
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="5df1078564ecb59c547531218c684374"/>
 		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="1621c445a086fdd03bbd44564becd9b9"/>
-		<file filename="core/libs/smarty-plugins/block.script.php" md5="9ea92ef8d9f62bc176ae199bdbd63c6b"/>
+		<file filename="core/libs/smarty-plugins/block.script.php" md5="ec633f45ca8588a1bb61f5cc104f1b58"/>
+		<file filename="core/libs/smarty-plugins/function.img.php" md5="ffaef505d20cb8133cb0df6dbf606ccc"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="800e464e8bae160ad7aba53d63ab78c8"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="5ab4be1d83a3ddac67094ca670fe721b"/>
-		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="d18339332debbe60d114a52f09bb8319"/>
+		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="15707bcdc263710f24899e4eb6907f9e"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="ee67260eea6c696b8634a593cece14bd"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="0675deafa3f09a4cbe5a4f8f35d61ab2"/>
@@ -1035,6 +1082,11 @@
 		<file filename="core/libs/cachecore/backends/_sql/mysql.sql" md5="dc8b835b3e737bfb5905a61391b6e4a6"/>
 		<file filename="core/libs/cachecore/backends/_sql/sqlite3.sql" md5="12810a853ca7e2b5dc35654fb241cee5"/>
 		<file filename="core/libs/cachecore/backends/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
+		<file filename="core/libs/facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
+		<file filename="core/libs/facebook-php-sdk/examples/example.php" md5="fd3072d44ac79f42e917e1950e5cb0ee"/>
+		<file filename="core/libs/facebook-php-sdk/readme.md" md5="587888311be616a83499678ce1c0ef8e"/>
+		<file filename="core/libs/facebook-php-sdk/src/fb_ca_chain_bundle.crt" md5="c3055d03e94bbee13c7c6cc3a76083d9"/>
+		<file filename="core/libs/facebook-php-sdk/tests/bootstrap.php" md5="b8bd1937c8d639841949a24e2fcdf983"/>
 		<file filename="core/libs/aws-sdk/package.xml" md5="f074a8d2f61e38eaaae117277b50c256"/>
 		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test_cli.php" md5="d5d30c8021dd8573eb4bbeb913baf025"/>
 		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test.php" md5="9877bcc06f33dfa16b79328474064f00"/>
@@ -1061,6 +1113,7 @@
 		<file filename="COPYING.LESSER" md5="e6a600fd5e1d9cbde2d983680233ad02"/>
 		<file filename="packager.php" md5="4d6ed0b070ea070f52a99f09be91953b"/>
 		<file filename="COPYING" md5="d32239bcb673463ab874e80d47fae504"/>
+		<file filename="DEV-NOTES" md5="0833fd2572631f9a708dc8379443ff64"/>
 		<file filename="htaccess.ex" md5="30fef15aa900706f3e7f51df4497053c"/>
 	</otherfiles>
 </component>

@@ -309,7 +309,8 @@ Core::AddProfileTime('core_ready');
 if(EXEC_MODE == 'WEB'){
 	// Sessions are always useful for web apps
 	require_once(ROOT_PDIR . 'core/libs/core/Session.class.php');
-	session_start();
+	Session::Singleton();
+	//session_start();
 }
 
 
