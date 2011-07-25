@@ -1,0 +1,7 @@
+2011.07.23 cp
+I changed the structure of the user table some.  If you're updating, please run the following sql:
+
+ALTER TABLE `CAE2_user` CHANGE `uid` `id` INT( 15 ) NOT NULL AUTO_INCREMENT;
+
+This is because the system doesn't gracefully handle renaming columns yet, let alone primary keys.
+@todo Decide if this issue merits time to solve.
