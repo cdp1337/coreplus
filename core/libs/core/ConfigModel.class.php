@@ -33,7 +33,7 @@ class ConfigModel extends Model {
 		),
 		'type' => array(
 			'type' => Model::ATT_TYPE_ENUM,
-			'options' => array('string','int','boolean','enum'),
+			'options' => array('string','int','boolean','enum','set'),
 			'default' => 'string',
 			'null' => false,
 		),

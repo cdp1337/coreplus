@@ -200,10 +200,14 @@ class ConfigHandler implements ISingleton {
 		if(!$rs) return false;
 		foreach ($rs as $row) {
 			switch ($row['type']) {
-				case 'int': $row['value'] = (int) $row['value'];
+				case 'int':
+					$row['value'] = (int) $row['value'];
 					break;
-				case 'boolean': $row['value'] = ($row['value'] == '1' || $row['value'] == 'true') ? true : false;
+				case 'boolean':
+					$row['value'] = ($row['value'] == '1' || $row['value'] == 'true') ? true : false;
 					break;
+				case 'set':
+					$row['value'] = array_map('trim', explode('|', $row['value']));
 				// Default is not needed, already comes through as a string.
 			}
 			
