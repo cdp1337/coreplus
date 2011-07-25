@@ -31,6 +31,15 @@ class Model {
 	// @see http://www.regular-expressions.info/email.html
 	const VALIDATION_EMAIL = "/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/";
 
+	/**
+	 * Which DataModelInterface should this model execute its operations with.
+	 * 99.9% of the time, it's fine to leave this as null, which will use the
+	 * system DMI.  If however you want to utilize a Model with Memcache, 
+	 * (say for session information), it can be useful.
+	 * 
+	 * @var DMI_Backend
+	 */
+	public $interface = null;
 	
 	/**
 	 * @var array Associative array of the data in this corresponding record.
@@ -125,7 +134,7 @@ class Model {
 			->select('*')
 			->table(self::GetTableName())
 			->where($keys)
-			->execute();
+			->execute($this->interface);
 		
 		if($data->num_rows){
 			$this->_data = $data->current();
@@ -244,7 +253,7 @@ class Model {
 			}
 		}
 		
-		$dat->execute();
+		$dat->execute($this->interface);
 		
 		if($idcol) $this->_data[$idcol] = $dat->getID();
 	}
@@ -300,7 +309,7 @@ class Model {
 			}
 		}
 		//var_dump($dat); die(); // DEBUG
-		$dat->execute();
+		$dat->execute($this->interface);
 		// IDs don't change in updates, else they wouldn't be the id.
 	}
 
@@ -332,7 +341,7 @@ class Model {
 
 			$dat->limit(1)->delete();
 			
-			if($dat->execute()){
+			if($dat->execute($this->interface)){
 				$this->_dirty = false;
 				$this->_exists = false;
 			}
@@ -348,7 +357,7 @@ class Model {
 			$subbuilder = new SQLBuilderDelete();
 			$subbuilder->from($model->getTableName());
 			$subbuilder->where($this->_getLinkWhereArray($k));
-			$subbuilder->execute();
+			$subbuilder->execute($this->interface);
 			
 			if(isset($this->_linked[$k]['records'])) unset($this->_linked[$k]['records']);
 		}
@@ -572,7 +581,7 @@ class Model {
 	 *
 	 * @param Array || string $where
 	 */
-	public static function Find($where, $limit = null, $order = null){
+	public static function Find($where = array(), $limit = null, $order = null){
 		$fac = new ModelFactory(get_called_class());
 		$fac->where($where);
 		$fac->limit($limit);
@@ -636,6 +645,16 @@ class Model {
 class ModelFactory{
 
 	/**
+	 * Which DataModelInterface should this model execute its operations with.
+	 * 99.9% of the time, it's fine to leave this as null, which will use the
+	 * system DMI.  If however you want to utilize a Model with Memcache, 
+	 * (say for session information), it can be useful.
+	 * 
+	 * @var DMI_Backend
+	 */
+	public $interface = null;
+	
+	/**
 	 * What model is this a factory of?
 	 * @var string 
 	 */
@@ -646,6 +665,7 @@ class ModelFactory{
 	 * @var Dataset
 	 */
 	private $_dataset;
+	
 
 	public function __construct($model){
 		
@@ -670,7 +690,7 @@ class ModelFactory{
 	}
 
 	public function get(){
-		$rs = $this->_dataset->execute();
+		$rs = $this->_dataset->execute($this->interface);
 		
 		$ret = array();
 		foreach($rs as $row){
