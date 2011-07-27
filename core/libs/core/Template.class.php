@@ -29,12 +29,13 @@ class Template extends Smarty{
 		$this->addTemplateDir(ROOT_PDIR . 'themes/' . ConfigHandler::GetValue('/core/theme') . '/');
 
 		// Tack on the search directories from the loaded components.
+		// Also handle the plugins directory search.
 		foreach(ComponentHandler::GetLoadedComponents() as $c){
 			$d = $c->getViewSearchDir();
 			$this->addTemplateDir($d);
+			
+			if( ($plugindir = $c->getSmartyPluginDirectory()) ) $this->addPluginsDir($plugindir);
 		}
-
-		$this->addPluginsDir(ROOT_PDIR . 'core/libs/smarty-plugins/');
 
 		$this->compile_dir = TMP_DIR . 'smarty_templates_c';
 		$this->cache_dir = TMP_DIR . 'smarty_cache';
