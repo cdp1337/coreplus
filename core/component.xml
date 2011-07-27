@@ -10,6 +10,9 @@
 	-->
 	<hook event="render_page" call="CurrentPage::Render"/>
 	<hook event="components_ready" call="Form::CheckSavedSessionData"/>
+	
+	<smartyplugins directory="core/libs/smarty-plugins/"/>
+	
 	<library>
 		<!-- The core system directives. -->
 		<file filename="install/index.php" md5="49c7d42b6602c69748e90dd54820cbef">
@@ -243,7 +246,7 @@
 		<file filename="core/libs/filestore/FileException.class.php" md5="6b0dbf09f9d2e8486d993728c47aceb7">
 			<provides type="class" name="FileException"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="d5858a55a0339af4b052becf56db1f52">
+		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="cae583285502288837676015176c9d3f">
 			<provides type="class" name="File_remote_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="2f6e846a252c24ade87e99615b326f37">
@@ -288,7 +291,7 @@
 			<provides type="class" name="SQLBuilderInsertUpdate"/>
 			<provides type="class" name="SQLBuilderDelete"/>
 		</file>
-		<file filename="core/libs/core/SessionModel.class.php" md5="da387ba284b9d9b97d321184e4b35f99">
+		<file filename="core/libs/core/SessionModel.class.php" md5="9388eebbc877c127a2d6100637bf3aac">
 			<provides type="class" name="SessionModel"/>
 		</file>
 		<file filename="core/libs/core/Debug.class.php" md5="9b5aba47c4387e683790840abc2c98cc">
@@ -318,14 +321,14 @@
 		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="d1d31995edc6d12583f37d18fcbe1494">
 			<provides type="class" name="InstallArchiveAPI"/>
 		</file>
-		<file filename="core/libs/core/HookHandler.class.php" md5="fb6476475532353430b30768af80d983">
+		<file filename="core/libs/core/HookHandler.class.php" md5="6f0baee27dbcfc73c65707cc4f863473">
 			<provides type="class" name="HookHandler"/>
 			<provides type="class" name="Hook"/>
 		</file>
 		<file filename="core/libs/core/Controller.class.php" md5="093c67818ccd99aeceae71cf10b36257">
 			<provides type="class" name="Controller"/>
 		</file>
-		<file filename="core/libs/core/Session.class.php" md5="06d005d1d4310fc77378bfad4c8e7303">
+		<file filename="core/libs/core/Session.class.php" md5="33f7f268090b177a4d730e27f789fd8c">
 			<provides type="class" name="Session"/>
 		</file>
 		<file filename="core/libs/core/InstallArchive.class.php" md5="ba27c92ce18f83c68390e65681ba8544">
@@ -337,7 +340,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="b6ee411d9ee9123b279f47d12eca5ab8">
 			<provides type="class" name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="b02c3fdb20e82bfe44e0f8e265562984">
+		<file filename="core/libs/core/Component.class.php" md5="9b8942b530ce0de254be52bba85e4da5">
 			<provides type="class" name="Component"/>
 		</file>
 		<file filename="core/libs/core/ComponentModel.class.php" md5="de9a5d439d2c940e9c0eb35deab722a1">
@@ -355,7 +358,7 @@
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="b1f1dbc20bc16a38a59b8a0852bf1bd0">
 			<provides type="class" name="CAEDirectoryIterator"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="6770fbec666959c3fc046def7d586471">
+		<file filename="core/libs/core/Core.class.php" md5="02137552658f2b00a32def1ba1c68459">
 			<provides type="class" name="Core"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="df4d34dc148e2f4f67a56a2fcb2fffaa">
@@ -550,7 +553,7 @@
 			<provides type="class" name="DMI"/>
 			<provides type="class" name="DMI_Exception"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/cache.backend.php" md5="d4d6b99230d132eff3b03d979341131c">
+		<file filename="core/libs/datamodel/backends/cache.backend.php" md5="1e2316d9dd42574cc4d2d2d69974bcb7">
 			<provides type="class" name="DMI_cache_backend"/>
 		</file>
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="3bde341777f3e2d4207e8843f6ea1438">
@@ -746,12 +749,16 @@
 		<file filename="core/controllers/AdminController.php" md5="42694134543796a0126142a29a289929">
 			<provides type="controller" name="AdminController"/>
 		</file>
+		<file filename="core/controllers/GettingStartedController.class.php" md5="fba1e504addf3ee47d88e8b0de20ca9a">
+			<provides type="controller" name="GettingStartedController"/>
+		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="48d30b322eed7eb689f7f4d8775c9862">
 			<provides type="controller" name="WidgetController"/>
 		</file>
 	</module>
 	<pages>
 		<page baseurl="/Admin/ReinstallAll" admin="1" widget="0" access="*" title="Reinstall All Components"/>
+		<page rewriteurl="/" baseurl="/GettingStarted" admin="1" widget="0" access="*" title="Getting Started Page"/>
 	</pages>
 	<view searchdir="core/templates">
 		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
@@ -783,6 +790,7 @@
 		<file filename="core/templates/pages/error/error404.tpl" md5="2b6ad918a5cb9d960e5670fa16761162"/>
 		<file filename="core/templates/pages/error/error403.tpl" md5="4f9104a2bf0f6a579bda93e79252ab1d"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="037a859dad14923425e7b31ce1673f74"/>
+		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="d41d8cd98f00b204e9800998ecf8427e"/>
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
 		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="645d3b7a407c513622e9f6bc2590b7c9"/>
@@ -833,7 +841,7 @@
 	<upgrade from="0.0.2" to="0.0.2-1"/>
 	<changelog version="0.0.2-1">
 		<packagemeta>
-			<date>Sun, 24 Jul 2011 13:58:57 -0400</date>
+			<date>Sun, 24 Jul 2011 21:11:35 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.2-1</packager>
 		</packagemeta>
@@ -866,7 +874,9 @@
 	<author name="David JEAN" email="izimobil@gmail.com"/>
 	<author name="Solar Designer" email="solar at openwall.com"/>
 	<author name="Naitik Shah" email="naitik@facebook.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
+	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+		See the included NOTICE.md file for more information.
+	</license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.html">
 		GNU Lesser General Public License v3
 	</license>
@@ -875,7 +885,7 @@
 	</license>
 	<license url="http://www.opensource.org/licenses/mit-license.php">MIT</license>
 	<otherfiles>
-		<file filename="index.php" md5="5da1f5e18e9ae771dcd267038b2112fe"/>
+		<file filename="index.php" md5="62f89900a9f97390fd83159df874734e"/>
 		<file filename="install/install.tpl" md5="d2b9cd0e22bdabcbdac3264111b95d5d"/>
 		<file filename="filestore/public/user/203250_505831051_3009978_n.jpg" md5="4b025002e13f78ba5989414ec8e7cc2b"/>
 		<file filename="filestore/public/tmp/filepreview-490566b692bd23e2b75e54cbe5680e1d-300x300.png" md5="34572a3f473d7f1547616cfef1782087"/>
@@ -906,7 +916,7 @@
 		<file filename="filestore/public/test12/IMG_0250.jpg" md5="b12c0af68602aad66295e7e0dd8431d7"/>
 		<file filename="filestore/public/test12/IMG_0250 (1).jpg" md5="b12c0af68602aad66295e7e0dd8431d7"/>
 		<file filename="yuicompressor-2.4.2.jar" md5="de7f9bf5ecb82166493ba7839f62a73e"/>
-		<file filename="core/bootstrap.php" md5="1f80831dca15b31b873be8a2d1446ba4"/>
+		<file filename="core/bootstrap.php" md5="649aa40983b4b4c1f12f6f464f156b82"/>
 		<file filename="core/bootstrap_preincludes.php" md5="35063652ad4eb9c5a40d90b18efd3eb7"/>
 		<file filename="core/bootstrap_predefines.php" md5="4d323a3a529c1faab172604cff40a1f1"/>
 		<file filename="core/libs/smarty/SMARTY2_BC_NOTES" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
@@ -958,7 +968,7 @@
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="5df1078564ecb59c547531218c684374"/>
 		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="1621c445a086fdd03bbd44564becd9b9"/>
-		<file filename="core/libs/smarty-plugins/block.script.php" md5="ec633f45ca8588a1bb61f5cc104f1b58"/>
+		<file filename="core/libs/smarty-plugins/block.script.php" md5="e7e1a1abb96ae658e4a630af540f74b7"/>
 		<file filename="core/libs/smarty-plugins/function.img.php" md5="ffaef505d20cb8133cb0df6dbf606ccc"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="800e464e8bae160ad7aba53d63ab78c8"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="5ab4be1d83a3ddac67094ca670fe721b"/>

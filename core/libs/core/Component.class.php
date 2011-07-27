@@ -33,10 +33,6 @@ class Component extends InstallArchiveAPI{
 	 */
 	public $_versionDB = false;
 	
-
-	// @todo What was this going to be used for again?
-	//private $files = array();
-	
 	
 	/**
 	 * 
@@ -411,6 +407,18 @@ class Component extends InstallArchiveAPI{
 		return $views;
 	}
 	
+	/**
+	 * Return the fully resolved name of the smarty plugin directory for 
+	 * this component (if there is one).
+	 * 
+	 * Not many templates will use this function, but it is there for when needed.
+	 */
+	public function getSmartyPluginDirectory(){
+		$d = $this->getElement('/smartyplugins')->getAttribute('directory');
+		if($d) return $this->getBaseDir() . $d;
+		else return false;
+	}
+	
 	public function getScriptLibraryList(){
 		$libs = array();
 		if($this->hasLibrary()){
@@ -421,17 +429,6 @@ class Component extends InstallArchiveAPI{
 		return $libs;
 	}
 
-	/* Why would there be more than 1 searchdir?
-	public function getViewSearchDirs(){
-		$dirs = array();
-		if($this->hasView()){
-			foreach($this->getElementByTagName('view')->getElementsByTagName('searchdir') as $t){
-				$dirs[] = $this->getBaseDir() . $t->getAttribute('dir') . '/';
-			}
-		}
-		return $dirs;
-	}
-	*/
 
 	public function getViewSearchDir(){
 		if($this->hasView()){
@@ -788,7 +785,10 @@ class Component extends InstallArchiveAPI{
 			// Insert/Update the defaults for an entry in the database.
 			$m = new PageModel($subnode->getAttribute('baseurl'));
 			// Do not "update" value, keep whatever the user set previously.
-			if(!$m->get('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
+			if(!$m->get('rewriteurl')){
+				if($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
+				else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
+			}
 			// Do not "update" value, keep whatever the user set previously.
 			if(!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
 			// Do not "update" value, keep whatever the user set previously.
