@@ -68,11 +68,9 @@ class Component extends InstallArchiveAPI{
 	
 	
 	public function __construct($name = null){
-		//if($name){
-			$this->_name = $name;
-			$this->_type = InstallArchiveAPI::TYPE_COMPONENT;
-		//	$this->load();
-		//}
+		$this->_name = $name;
+		$this->_type = InstallArchiveAPI::TYPE_COMPONENT;
+		$this->_rootname = 'component';
 	}
 	
 	public function load(){
@@ -765,6 +763,7 @@ class Component extends InstallArchiveAPI{
 			$m->set('default_value', $confignode->getAttribute('default'));
 			if(!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
 			$m->set('description', $confignode->getAttribute('description'));
+			$m->set('mapto', $confignode->getAttribute('mapto'));
 			$m->save();
 		}
 		
