@@ -27,6 +27,9 @@ class AdminController extends Controller {
 			$changes[] = 'Reinstalled component ' . $c->getName();
 		}
 		
+		// Flush the system cache, just in case
+		Core::Cache()->flush();
+		
 		//$page->title = 'Reinstall All Components';
 		$page->access = 'g:admin';
 		$page->assign('changes', $changes);

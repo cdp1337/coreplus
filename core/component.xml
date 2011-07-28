@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.2-1" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.2-2" name="core" execmode="both">
 	<provides type="library" name="phpass" version="0.3~cae1"/>
 	<provides type="library" name="aws-sdk" version="1.0.0"/>
 	<provides type="library" name="smarty" version="3.0.6"/>
-	<provides type="library" name="facebook-sdk" version="3.0.1"/>
 	<hook event="components_loaded" call="CurrentPage::Singleton"/>
 	<!--<hook event="components_ready" call="CurrentPage::LoadPage"/>
 	-->
 	<hook event="render_page" call="CurrentPage::Render"/>
 	<hook event="components_ready" call="Form::CheckSavedSessionData"/>
-	
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
-	
 	<library>
 		<!-- The core system directives. -->
 		<file filename="install/index.php" md5="49c7d42b6602c69748e90dd54820cbef">
@@ -279,7 +276,7 @@
 		<file filename="core/libs/core/XMLLoader.class.php" md5="703a9230eeada7b244ee85eb0e29139f">
 			<provides type="class" name="XMLLoader"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="1a9502146fe39c03f056db51814516fe">
+		<file filename="core/libs/core/View.class.php" md5="df453803f50aced3c79375ab80edd68a">
 			<provides type="class" name="View"/>
 			<provides type="class" name="ViewException"/>
 		</file>
@@ -315,7 +312,7 @@
 			<provides type="class" name="FormPageMeta"/>
 			<provides type="class" name="FormFileInput"/>
 		</file>
-		<file filename="core/libs/core/Template.class.php" md5="9bbf476c17b2f4dbbca3c5cb23cbe245">
+		<file filename="core/libs/core/Template.class.php" md5="347a508f5b9af7edfb6d8225e189c958">
 			<provides type="class" name="Template"/>
 		</file>
 		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="d1d31995edc6d12583f37d18fcbe1494">
@@ -337,10 +334,10 @@
 		<file filename="core/libs/core/WidgetModel.class.php" md5="c5c62e098b7ae44b3027bf6d39cceb93">
 			<provides type="class" name="WidgetModel"/>
 		</file>
-		<file filename="core/libs/core/ComponentHandler.class.php" md5="b6ee411d9ee9123b279f47d12eca5ab8">
+		<file filename="core/libs/core/ComponentHandler.class.php" md5="b867af3a2f2fb14bafe566175d91bb10">
 			<provides type="class" name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="9b8942b530ce0de254be52bba85e4da5">
+		<file filename="core/libs/core/Component.class.php" md5="0aae9095e5adc3f3bbf23448c8103680">
 			<provides type="class" name="Component"/>
 		</file>
 		<file filename="core/libs/core/ComponentModel.class.php" md5="de9a5d439d2c940e9c0eb35deab722a1">
@@ -358,13 +355,13 @@
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="b1f1dbc20bc16a38a59b8a0852bf1bd0">
 			<provides type="class" name="CAEDirectoryIterator"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="02137552658f2b00a32def1ba1c68459">
+		<file filename="core/libs/core/Core.class.php" md5="7e91991b3988e27324ee733e9420886d">
 			<provides type="class" name="Core"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="df4d34dc148e2f4f67a56a2fcb2fffaa">
 			<provides type="class" name="ConfigHandler"/>
 		</file>
-		<file filename="core/libs/core/CurrentPage.class.php" md5="c2dfd0ccc631b19b80bef684697609df">
+		<file filename="core/libs/core/CurrentPage.class.php" md5="dd2e96bb48c98f0eb22636acb448a51a">
 			<provides type="class" name="CurrentPage"/>
 		</file>
 		<file filename="core/libs/core/Model.class.php" md5="3def463eb740ae4f242c94edcb6b4a83">
@@ -562,50 +559,33 @@
 		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="ec6ea93cf055f6bbaa94f0718eea3149">
 			<provides type="class" name="DMI_mysqli_backend"/>
 		</file>
-		<file filename="core/libs/cachecore/Cache.class.php" md5="f38463eb40f075717333f9e4ceb592b4">
+		<file filename="core/libs/cachecore/Cache.class.php" md5="ed03b7c6b3da0592db18f0ec9e2885d5">
 			<provides type="class" name="Cache"/>
 			<provides type="class" name="Cache_Exception"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/icachecore.interface.php" md5="f69cb850a7e948a1a8fdd1243bb27bb8">
+		<file filename="core/libs/cachecore/backends/icachecore.interface.php" md5="38c793c1d311f17e7a9e7442a236e981">
 			<provides type="interface" name="ICacheCore"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/cacheapc.class.php" md5="897b56db0ebdb170c431a4370e18234f">
+		<file filename="core/libs/cachecore/backends/cacheapc.class.php" md5="e8621ab82f92c7c4beef45ba25c36bbb">
 			<provides type="class" name="CacheAPC"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/cachecore.class.php" md5="2cdb13d6cd892f9ab80dd5a09c34aead">
+		<file filename="core/libs/cachecore/backends/cachecore.class.php" md5="d0082b2918911221750e460e790e7476">
 			<provides type="class" name="CacheCore"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/cachemc.class.php" md5="b419adf0fa1bffb68d1690e236f29399">
+		<file filename="core/libs/cachecore/backends/cachemc.class.php" md5="81fdb2f1dea57e622d281631961dac5f">
 			<provides type="class" name="CacheMC"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/cachefile.class.php" md5="06a242fbc285eec69446ccd35590a8c2">
+		<file filename="core/libs/cachecore/backends/cachefile.class.php" md5="91b5081c9286e3c35b182eea57a6169c">
 			<provides type="class" name="CacheFile"/>
 		</file>
 		<file filename="core/libs/cachecore/backends/_tests/AllTests.php" md5="8971cbd66ad355fa4624e52bb79975d1">
 			<provides type="class" name="Console_CommandLine_AllTests"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/cachepdo.class.php" md5="f4062163c142e64cdadc4e067dc90107">
+		<file filename="core/libs/cachecore/backends/cachepdo.class.php" md5="f22f2c33573350bdbb5315766e0b55f4">
 			<provides type="class" name="CachePDO"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/cachexcache.class.php" md5="93538d20d1aba8fa6f4bbb92a69a43e0">
+		<file filename="core/libs/cachecore/backends/cachexcache.class.php" md5="c70fabb077c1ad1ab832a9c57781eaa1">
 			<provides type="class" name="CacheXCache"/>
-		</file>
-		<file filename="core/libs/facebook-php-sdk/src/base_facebook.php" md5="40382538cae1636a91ab41bbd755fdef">
-			<provides type="class" name="FacebookApiException"/>
-			<provides type="class" name="BaseFacebook"/>
-		</file>
-		<file filename="core/libs/facebook-php-sdk/src/facebook.php" md5="9ca98ec14e2f3926ba89fcb753fbc598">
-			<provides type="class" name="Facebook"/>
-		</file>
-		<file filename="core/libs/facebook-php-sdk/tests/tests.php" md5="a8455c0e1618059786d2614abd1e4321">
-			<provides type="class" name="PHPSDKTestCase"/>
-			<provides type="class" name="TransientFacebook"/>
-			<provides type="class" name="FBRecordURL"/>
-			<provides type="class" name="FBPublic"/>
-			<provides type="class" name="PersistentFBPublic"/>
-			<provides type="class" name="FBCode"/>
-			<provides type="class" name="FBAccessToken"/>
-			<provides type="class" name="FBGetCurrentURLFacebook"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/sdb.class.php" md5="7aea786b7ff0cb2d3d70166d386e399b">
 			<provides type="class" name="AmazonSDB"/>
@@ -746,7 +726,7 @@
 		<file filename="core/controllers/DirectoryController.class.php" md5="e9e50405c06731773795016e8b95924e">
 			<provides type="controller" name="DirectoryController"/>
 		</file>
-		<file filename="core/controllers/AdminController.php" md5="42694134543796a0126142a29a289929">
+		<file filename="core/controllers/AdminController.php" md5="fd7583236a021d2d27ae503895e72b41">
 			<provides type="controller" name="AdminController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="fba1e504addf3ee47d88e8b0de20ca9a">
@@ -790,7 +770,7 @@
 		<file filename="core/templates/pages/error/error404.tpl" md5="2b6ad918a5cb9d960e5670fa16761162"/>
 		<file filename="core/templates/pages/error/error403.tpl" md5="4f9104a2bf0f6a579bda93e79252ab1d"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="037a859dad14923425e7b31ce1673f74"/>
-		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="13d7192811f5fc31ed50ac4d932f93a5"/>
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
 		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="645d3b7a407c513622e9f6bc2590b7c9"/>
@@ -821,9 +801,6 @@
 		<config key="/core/filestore/assetdir" type="string" default="assets/" description=""/>
 		<config key="/core/filestore/publicdir" type="string" default="filestore/public/" description=""/>
 		<config key="/core/filestore/previews" type="boolean" default="1" description="Try to display a preview of files in thumbnails.  If set to false, only the file mimetype icon is displayed."/>
-		<config key="/core/facebook/appid" type="string" default="" description="If you want to enable facebook connectivity, you need to create an &quot;app&quot; and enter that app's appid here."/>
-		<config key="/core/facebook/secretid" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
-		<config key="/core/facebook/appsecret" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
 		<config key="/core/session/ttl" type="int" default="3600" description="Time to live for sessions.  Amount of seconds to keep an idle session active before requesting the user to log back in due to inactivity."/>
 	</configs>
 	<assets/>
@@ -850,6 +827,17 @@
 			Did some updates to the phpass library.
 		</notes>
 	</changelog>
+	<upgrade from="0.0.2-1" to="0.0.2-2"/>
+	<changelog version="0.0.2-2">
+		<packagemeta>
+			<date>Thu, 28 Jul 2011 19:57:04 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.2-2</packager>
+		</packagemeta>
+		<notes>
+			New cachecore method, flush().  This is useful in reinstalling all components and ensuring that there are no lingering artifacts.
+		</notes>
+	</changelog>
 	<author name="Charlie Powell" email="powellc@powelltechs.com"/>
 	<author name="Monte Ohrt" email="monte at ohrt dot com"/>
 	<author name="Uwe Tews"/>
@@ -860,6 +848,7 @@
 	<author name="Daniele Baroncelli"/>
 	<author name="Gaetano Giunta"/>
 	<author name=""/>
+	<author name="Mark J Panaghiston"/>
 	<author name="Christopher Kvarme" email="christopher.kvarme@flashjab.com"/>
 	<author name="Roberto Berto" email="roberto@berto.net"/>
 	<author name="Messju Mohr" email="messju at lammfellpuschen dot de"/>
@@ -874,9 +863,7 @@
 	<author name="David JEAN" email="izimobil@gmail.com"/>
 	<author name="Solar Designer" email="solar at openwall.com"/>
 	<author name="Naitik Shah" email="naitik@facebook.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-		See the included NOTICE.md file for more information.
-	</license>
+	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.html">
 		GNU Lesser General Public License v3
 	</license>
@@ -915,8 +902,107 @@
 		<file filename="filestore/public/test12/email-lg.png" md5="0f20b7d3cb3d9590c4f600c3c02aed0b"/>
 		<file filename="filestore/public/test12/IMG_0250.jpg" md5="b12c0af68602aad66295e7e0dd8431d7"/>
 		<file filename="filestore/public/test12/IMG_0250 (1).jpg" md5="b12c0af68602aad66295e7e0dd8431d7"/>
+		<file filename="filestore/assets/default/logo.png" md5="ec0a7fe6809e4f051bb09e1c21aab52c"/>
+		<file filename="filestore/assets/default/css/jquery-ui.css" md5="0c9633d2550c2e4ac62b4683e8c8a645"/>
+		<file filename="filestore/assets/default/css/styles.css" md5="84edd51c5dfaa0bac8ebd8847b3a08bb"/>
+		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.jpg" md5="297da0f09846c3a1e0759c2736fdef94"/>
+		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.video.play.png" md5="05faffb4ad5d76e73c0c210c9330c58b"/>
+		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.video.play.hover.png" md5="7e2080be69b0785b7585f3ae5570b255"/>
+		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.css" md5="fb5446fd5b9bec9f8f09cda98593271c"/>
+		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.png" md5="7794f92c78b543a16ef5140f0b8eff5b"/>
+		<file filename="filestore/assets/default/css/skin/pbar-ani.gif" md5="80a3586f77bcc84b16050f3804730431"/>
+		<file filename="filestore/assets/default/css/jquery.readonly.css" md5="ca07e99b858d310cd3e855abf65d9b06"/>
+		<file filename="filestore/assets/default/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_highlight-hard_100_fafaf4_1x100.png" md5="5fab734991bc927dd729e4b2c4500a34"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_spotlight_80_6f6b5d_600x600.png" md5="70e145838be2f61b981cd2ecfb1cd6ab"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_highlight-soft_25_67b021_1x100.png" md5="bdfc7094828e60a1e89799619382589a"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_ffffff_256x240.png" md5="342bc03f6264c75d3f1d7f99e34295b9"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_highlight-hard_15_459e00_1x100.png" md5="f5613fb05e1c5ae3bd9167d85d1d72a7"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_847e71_256x240.png" md5="6636d8ab6693c387d7c2770dbe8c178e"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_gloss-wave_100_ece8da_500x100.png" md5="dccd449740f6fd2a875fc72ef3586b53"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_highlight-hard_100_f5f3e5_1x100.png" md5="c3341f3735d126758336bda6f1b21ec4"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_glass_55_fcf0ba_1x400.png" md5="e8fa5df505b503a945e543c5816179ca"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_808080_256x240.png" md5="285708190686f9ee7a48a988a0eed090"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_inset-soft_95_cccccc_1x100.png" md5="df2dbcfe9af96aacfe13e53b108aaf5b"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_8dc262_256x240.png" md5="4128e64e48bfc9c6e5ab45f29bb32da7"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_highlight-soft_95_ffedad_1x100.png" md5="7103bea11984ecc1ebce02dcc10cdc75"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_eeeeee_256x240.png" md5="2e6d7e1cca1cd751a6e156feb381eb0f"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_cd0a0a_256x240.png" md5="3e450c2a2c66328d9498e7001ad7197c"/>
+		<file filename="filestore/assets/default/icons/view.png" md5="5108ec1f152e29684be1bfe393ef2fc8"/>
+		<file filename="filestore/assets/default/icons/directory.png" md5="50afe6c35c14f4174d8d2e33f5025f14"/>
+		<file filename="filestore/assets/default/icons/delete-lg.png" md5="11503d71985ef12f09c37bb7c14bf873"/>
+		<file filename="filestore/assets/default/icons/lock-sm.png" md5="fec403cfda74d62e539fd0ae50dca11c"/>
+		<file filename="filestore/assets/default/icons/move.png" md5="74932504970ad90017e3413613e9889f"/>
+		<file filename="filestore/assets/default/icons/move-sm.png" md5="490566b692bd23e2b75e54cbe5680e1d"/>
+		<file filename="filestore/assets/default/icons/edit-sm.png" md5="f75b02c22881f4d0f2c4b6e76ab7ff80"/>
+		<file filename="filestore/assets/default/icons/add-sm.png" md5="64d74ce097072a88c225fa09d7f24bab"/>
+		<file filename="filestore/assets/default/icons/view-lg.png" md5="a4c68ef8ba297f51ce01de807acc656f"/>
+		<file filename="filestore/assets/default/icons/add.png" md5="826f54d0901dd6c6d392ddf6997a76cd"/>
+		<file filename="filestore/assets/default/icons/view-sm.png" md5="31c0d2c70ac4f53e7c1b0748efa48e7a"/>
+		<file filename="filestore/assets/default/icons/edit.png" md5="1f7c0fab746187012ef137a1e4df2333"/>
+		<file filename="filestore/assets/default/icons/edit-lg.png" md5="66a1a2a05a4ab4604acec077f14ada1d"/>
+		<file filename="filestore/assets/default/icons/add-lg.png" md5="b1e2a07f1eb1a49af949b2fb251c51c3"/>
+		<file filename="filestore/assets/default/icons/lock.png" md5="3dae2bac1271b3eee81b57bf2573a5c6"/>
+		<file filename="filestore/assets/default/icons/email-sm.png" md5="2b9ecc49d4b27276e2972a6b1c850117"/>
+		<file filename="filestore/assets/default/icons/delete.png" md5="ed684274665ea47e42982fa7a05c851f"/>
+		<file filename="filestore/assets/default/icons/email-lg.png" md5="0f20b7d3cb3d9590c4f600c3c02aed0b"/>
+		<file filename="filestore/assets/default/icons/delete-sm.png" md5="ef78e3ddd8658ddbc1a708e2409328a5"/>
+		<file filename="filestore/assets/default/icons/email.png" md5="55dcda1f2bc0e54e0a34c49df62dbc08"/>
+		<file filename="filestore/assets/default/icons/lock-lg.png" md5="ea1051e469c6b759e7d915a5a1ee4415"/>
+		<file filename="filestore/assets/default/icons/move-lg.png" md5="ee2354c1e09c09db9b3c7ed98a4966e1"/>
+		<file filename="filestore/assets/default/swf/Jplayer.swf" md5="e31f31957d930e4c710445677fb335da"/>
+		<file filename="filestore/assets/default/fonts/Cousine-Bold.ttf" md5="8b6cde097069d84859cf7b24403faeca"/>
+		<file filename="filestore/assets/default/fonts/Puritan-Italic.ttf" md5="a698cb186856b0785c795e4ec8d4a392"/>
+		<file filename="filestore/assets/default/fonts/PT_Sans-Italic.ttf" md5="3c1732457ed32a353b3be70a6c5354dc"/>
+		<file filename="filestore/assets/default/fonts/Puritan-Regular.ttf" md5="02d2067f1f6151e847d06354c5de358d"/>
+		<file filename="filestore/assets/default/fonts/Cousine-Regular.ttf" md5="07f0482b1dd16541ce1cd59d92d2f46f"/>
+		<file filename="filestore/assets/default/fonts/Puritan-Bold.ttf" md5="614d9bbe1edcf99e0541a92dcb271d80"/>
+		<file filename="filestore/assets/default/fonts/PT_Sans-Regular.ttf" md5="21a8438cc80da94c65ea62ccc1233f50"/>
+		<file filename="filestore/assets/default/fonts/OFL.txt" md5="88d3f3dcbf0c2389e6a9b1c7dcdabe22"/>
+		<file filename="filestore/assets/default/fonts/Puritan-BoldItalic.ttf" md5="f6d45f1870364fe214b6e4234bb34b9b"/>
+		<file filename="filestore/assets/default/fonts/PT_Sans-BoldItalic.ttf" md5="494fff9755804cd781e4431bf134bacf"/>
+		<file filename="filestore/assets/default/fonts/PT_Sans-Bold.ttf" md5="29eba82ed387922f39f2727e5e5883e2"/>
+		<file filename="filestore/assets/default/fonts/Cousine-Italic.ttf" md5="8a0dacd2cc9ef158fff2daec2b7bc435"/>
+		<file filename="filestore/assets/default/fonts/Cousine-BoldItalic.ttf" md5="aa6b45a45a88a9547e30d6a6a9dcf75c"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-png-sm.png" md5="02709989af27569d20280bd017651195"/>
+		<file filename="filestore/assets/default/mimetype_icons/notfound-med.png" md5="9c1546b3770dd18d34833bb6fe736419"/>
+		<file filename="filestore/assets/default/mimetype_icons/unknown-lg.png" md5="e78e2e6e8d40c6a632f654561ec53e47"/>
+		<file filename="filestore/assets/default/mimetype_icons/unknown-med.png" md5="11eee3c2e6806986c5abfe920d3256a5"/>
+		<file filename="filestore/assets/default/mimetype_icons/notfound-lg.png" md5="393bb7f6649773e8368e6dde20a969f8"/>
+		<file filename="filestore/assets/default/mimetype_icons/unknown-sm.png" md5="890f6e2501cb8474fefb20b1b858e660"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-png-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-gif-sm.png" md5="02709989af27569d20280bd017651195"/>
+		<file filename="filestore/assets/default/mimetype_icons/unknown-xl.png" md5="2510d5565850a7b8d762312fc41dd8eb"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-jpg-med.png" md5="953f1d26444d97955905718687815607"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-jpg-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-gif-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-jpeg-sm.png" md5="02709989af27569d20280bd017651195"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-png-med.png" md5="953f1d26444d97955905718687815607"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-jpeg-med.png" md5="953f1d26444d97955905718687815607"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-png-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
+		<file filename="filestore/assets/default/mimetype_icons/notfound-sm.png" md5="b051ed5c35e067819e9ff8b43dec7ad8"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-jpg-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-jpeg-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-jpg-sm.png" md5="02709989af27569d20280bd017651195"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-gif-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
+		<file filename="filestore/assets/default/mimetype_icons/notfound-xl.png" md5="6a5e689f57e697606d3a8fa2eb495fdd"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-gif-med.png" md5="953f1d26444d97955905718687815607"/>
+		<file filename="filestore/assets/default/mimetype_icons/image-jpeg-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
+		<file filename="filestore/assets/default/js/json2.js" md5="74d903049683e5bbea9ccb7544a42bca"/>
+		<file filename="filestore/assets/default/js/user/login.js" md5="0f89b9a4620ccacfe03f411acaa0f775"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.json-2.2.min.js" md5="2d59ccdc20e736725bdbcb433e080ec0"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.ui.nestedSortable.js" md5="26a83ca3d4969ac3631842c9a7819991"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-ui-1.8.11.min.js" md5="bc1367d7c32e3b4fd746027d8188cc36"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.ui.nestedSortable.min.js" md5="dbd0258e25459c9dbea872c07d5eaf2f"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.5.1.js" md5="f2402f0e7b549caae013bc3c05b3a161"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.ui.readonly.js" md5="4ea22509c2c047bb24dca3b547589683"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.5.1.min.js" md5="b04a3bccd23ddeb7982143707a63ccf9"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.json-2.2.js" md5="56fdd8b6674e6d121afe11a920191429"/>
+		<file filename="filestore/assets/default/js/html5.js" md5="e919b7e0d6dc0226e3356aeb07bf63c2"/>
+		<file filename="filestore/assets/default/js/json2-min.js" md5="ba3293970e13b03a2ea92f5b6b5bf544"/>
+		<file filename="filestore/assets/default/js/jquery.jplayer.min.js" md5="09b386064fd7d0b8a785a30ff9446835"/>
 		<file filename="yuicompressor-2.4.2.jar" md5="de7f9bf5ecb82166493ba7839f62a73e"/>
-		<file filename="core/bootstrap.php" md5="649aa40983b4b4c1f12f6f464f156b82"/>
+		<file filename="core/bootstrap.php" md5="a8bbb8a047f5cacc80e7dca8874cd990"/>
 		<file filename="core/bootstrap_preincludes.php" md5="35063652ad4eb9c5a40d90b18efd3eb7"/>
 		<file filename="core/bootstrap_predefines.php" md5="4d323a3a529c1faab172604cff40a1f1"/>
 		<file filename="core/libs/smarty/SMARTY2_BC_NOTES" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
@@ -968,7 +1054,7 @@
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="5df1078564ecb59c547531218c684374"/>
 		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="1621c445a086fdd03bbd44564becd9b9"/>
-		<file filename="core/libs/smarty-plugins/block.script.php" md5="e7e1a1abb96ae658e4a630af540f74b7"/>
+		<file filename="core/libs/smarty-plugins/block.script.php" md5="37ae739c56203390844f8e405ceae44a"/>
 		<file filename="core/libs/smarty-plugins/function.img.php" md5="ffaef505d20cb8133cb0df6dbf606ccc"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="800e464e8bae160ad7aba53d63ab78c8"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="5ab4be1d83a3ddac67094ca670fe721b"/>
@@ -1092,11 +1178,6 @@
 		<file filename="core/libs/cachecore/backends/_sql/mysql.sql" md5="dc8b835b3e737bfb5905a61391b6e4a6"/>
 		<file filename="core/libs/cachecore/backends/_sql/sqlite3.sql" md5="12810a853ca7e2b5dc35654fb241cee5"/>
 		<file filename="core/libs/cachecore/backends/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
-		<file filename="core/libs/facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
-		<file filename="core/libs/facebook-php-sdk/examples/example.php" md5="fd3072d44ac79f42e917e1950e5cb0ee"/>
-		<file filename="core/libs/facebook-php-sdk/readme.md" md5="587888311be616a83499678ce1c0ef8e"/>
-		<file filename="core/libs/facebook-php-sdk/src/fb_ca_chain_bundle.crt" md5="c3055d03e94bbee13c7c6cc3a76083d9"/>
-		<file filename="core/libs/facebook-php-sdk/tests/bootstrap.php" md5="b8bd1937c8d639841949a24e2fcdf983"/>
 		<file filename="core/libs/aws-sdk/package.xml" md5="f074a8d2f61e38eaaae117277b50c256"/>
 		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test_cli.php" md5="d5d30c8021dd8573eb4bbeb913baf025"/>
 		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test.php" md5="9877bcc06f33dfa16b79328474064f00"/>

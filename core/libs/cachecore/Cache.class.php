@@ -54,6 +54,10 @@ class Cache{
 		return $this->_factory($key)->delete();
 	}
 	
+	public function flush(){
+		return $this->_factory(null)->flush();
+	}
+	
 	public function _factory($key, $expires = 7200){
 		$obj = false;
 		

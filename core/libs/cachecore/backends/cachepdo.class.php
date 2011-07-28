@@ -3,28 +3,23 @@
  * File: CachePDO
  * 	Database-based caching class using PHP Data Objects (PDO).
  *
- * Version:
- * 	2009.10.10
- *
- * Copyright:
- * 	2006-2010 Ryan Parman, Foleeo Inc., and contributors.
- *
- * License:
- * 	Simplified BSD License - http://opensource.org/licenses/bsd-license.php
- *
- * See Also:
-* 	CacheCore - http://cachecore.googlecode.com
- * 	CloudFusion - http://getcloudfusion.com
- * 	PDO - http://php.net/pdo
+ * @version 2011.07.28
+ * @copyright 2006-2010 Ryan Parman, Foleeo Inc., and contributors.
+ * @license Simplified BSD License - http://opensource.org/licenses/bsd-license.php
+ * @package CacheCore
+ * 
+ * @see AWS SDK for PHP - http://aws.amazon.com/sdkforphp/
+ * @see PDO - http://php.net/pdo
  */
 
 
-/*%******************************************************************************************%*/
+/*%**************************************************************************%*/
 // CLASS
 
 /**
  * Class: CachePDO
- * 	Container for all PDO-based cache methods. Inherits additional methods from CacheCore. Adheres to the ICacheCore interface.
+ * Container for all PDO-based cache methods. Inherits additional methods from
+ * CacheCore. Adheres to the ICacheCore interface.
  */
 class CachePDO extends CacheCore implements ICacheCore
 {
@@ -83,7 +78,7 @@ class CachePDO extends CacheCore implements ICacheCore
 	var $store_read = null;
 
 
-	/*%******************************************************************************************%*/
+	/*%**********************************************************************%*/
 	// CONSTRUCTOR
 
 	/**
@@ -96,17 +91,13 @@ class CachePDO extends CacheCore implements ICacheCore
 	 *
 	 * 	See <http://php.net/pdo> for more information.
 	 *
-	 * Access:
-	 * 	public
+	 * @access public
+	 * @param $name - _string_ (Required) A name to uniquely identify the cache object.
+	 * @param $location - _string_ (Required) The location to store the cache object in. This may vary by cache method.
+	 * @param $expires - _integer_ (Required) The number of seconds until a cache object is considered stale.
+	 * @param $gzip - _boolean_ (Optional) Whether data should be gzipped before being stored. Defaults to true.
 	 *
-	 * Parameters:
-	 * 	name - _string_ (Required) A name to uniquely identify the cache object.
-	 * 	location - _string_ (Required) The location to store the cache object in. This may vary by cache method.
-	 * 	expires - _integer_ (Required) The number of seconds until a cache object is considered stale.
-	 * 	gzip - _boolean_ (Optional) Whether data should be gzipped before being stored. Defaults to true.
-	 *
-	 * Returns:
-	 * 	_object_ Reference to the cache object.
+	 * @returns _object_ Reference to the cache object.
 	 */
 	public function __construct($name, $location, $expires, $gzip = true)
 	{
@@ -159,14 +150,9 @@ class CachePDO extends CacheCore implements ICacheCore
 	 * Method: create()
 	 * 	Creates a new cache.
 	 *
-	 * Access:
-	 * 	public
-	 *
-	 * Parameters:
-	 * 	data - _mixed_ (Required) The data to cache.
-	 *
-	 * Returns:
-	 * 	_boolean_ Whether the operation was successful.
+	 * @access public
+	 * @param $data mixed (Required) The data to cache.
+	 * @returns _boolean_ Whether the operation was successful.
 	 */
 	public function create($data)
 	{
@@ -184,11 +170,8 @@ class CachePDO extends CacheCore implements ICacheCore
 	 * Method: read()
 	 * 	Reads a cache.
 	 *
-	 * Access:
-	 * 	public
-	 *
-	 * Returns:
-	 * 	_mixed_ Either the content of the cache object, or _boolean_ false.
+	 * @access public
+	 * @returns _mixed_ Either the content of the cache object, or _boolean_ false.
 	 */
 	public function read()
 	{
@@ -214,14 +197,9 @@ class CachePDO extends CacheCore implements ICacheCore
 	 * Method: update()
 	 * 	Updates an existing cache.
 	 *
-	 * Access:
-	 * 	public
-	 *
-	 * Parameters:
-	 * 	data - _mixed_ (Required) The data to cache.
-	 *
-	 * Returns:
-	 * 	_boolean_ Whether the operation was successful.
+	 * @access public
+	 * @param $data mixed (Required) The data to cache.
+	 * @returns _boolean_ Whether the operation was successful.
 	 */
 	public function update($data)
 	{
@@ -233,11 +211,8 @@ class CachePDO extends CacheCore implements ICacheCore
 	 * Method: delete()
 	 * 	Deletes a cache.
 	 *
-	 * Access:
-	 * 	public
-	 *
-	 * Returns:
-	 * 	_boolean_ Whether the operation was successful.
+	 * @access public
+	 * @returns _boolean_ Whether the operation was successful.
 	 */
 	public function delete()
 	{
@@ -249,11 +224,8 @@ class CachePDO extends CacheCore implements ICacheCore
 	 * Method: timestamp()
 	 * 	Retrieves the timestamp of the cache.
 	 *
-	 * Access:
-	 * 	public
-	 *
-	 * Returns:
-	 * 	_mixed_ Either the Unix timestamp of the cache creation, or _boolean_ false.
+	 * @access public
+	 * @returns _mixed_ Either the Unix timestamp of the cache creation, or _boolean_ false.
 	 */
 	public function timestamp()
 	{
@@ -285,11 +257,8 @@ class CachePDO extends CacheCore implements ICacheCore
 	 * Method: reset()
 	 * 	Resets the freshness of the cache.
 	 *
-	 * Access:
-	 * 	public
-	 *
-	 * Returns:
-	 * 	_boolean_ Whether the operation was successful.
+	 * @access public
+	 * @returns _boolean_ Whether the operation was successful.
 	 */
 	public function reset()
 	{
@@ -302,11 +271,8 @@ class CachePDO extends CacheCore implements ICacheCore
 	 * Method: is_expired()
 	 * 	Checks whether the cache object is expired or not.
 	 *
-	 * Access:
-	 * 	public
-	 *
-	 * Returns:
-	 * 	_boolean_ Whether the cache is expired or not.
+	 * @access public
+	 * @returns _boolean_ Whether the cache is expired or not.
 	 */
 	public function is_expired()
 	{
@@ -322,11 +288,8 @@ class CachePDO extends CacheCore implements ICacheCore
 	 * Method: get_drivers()
 	 * 	Returns a list of supported PDO database drivers. Identical to PDO::getAvailableDrivers().
 	 *
-	 * Access:
-	 * 	public
-	 *
-	 * Returns:
-	 * 	_array_ The list of supported database drivers.
+	 * @access public
+	 * @returns _array_ The list of supported database drivers.
 	 *
 	 * See Also:
 	 * 	PHP Method - http://php.net/pdo.getavailabledrivers
@@ -335,16 +298,28 @@ class CachePDO extends CacheCore implements ICacheCore
 	{
 		return PDO::getAvailableDrivers();
 	}
+	
+	/**
+	 * Method: flush()
+	 *  Invalidate all items in the cache
+	 * 
+	 * @since 2011.07.28
+	 * @access public
+	 * @return boolean Whether the operation was successful.
+	 */
+	public function flush()
+	{
+		$delall = $this->pdo->prepare("DELETE FROM cache");
+		return (bool) $delall->execute();
+	}
 
 	/**
 	 * Method: generate_timestamp()
 	 * 	Returns a timestamp value apropriate to the current database type.
 	 *
-	 * Access:
-	 * 	private
+	 * @access private
 	 *
-	 * Returns:
-	 * 	_mixed_ Timestamp for MySQL and PostgreSQL, integer value for SQLite.
+	 * @returns _mixed_ Timestamp for MySQL and PostgreSQL, integer value for SQLite.
 	 */
 	private function generate_timestamp()
 	{
