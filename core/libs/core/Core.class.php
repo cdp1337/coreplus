@@ -420,6 +420,8 @@ class Core implements ISingleton{
 	 * @return string The full url of the asset, including the http://...
 	 */
 	public static function ResolveAsset($asset){
+		// Allow already-resolved links to be returned verbatim.
+		if(strpos($asset, '://') !== false) return $asset;
 		
 		// Since an asset is just a file, I'll use the builtin file store system.
 		// (although every file coming in should be assumed to be an asset, so
