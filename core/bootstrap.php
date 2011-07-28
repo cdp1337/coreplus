@@ -147,6 +147,7 @@ if(EXEC_MODE == 'CLI'){
 	$rooturlNOSSL = null;
 	$rooturlSSL = null;
 	$curcall = null;
+	$ssl = false;
 }
 else{
 	/**
@@ -216,6 +217,7 @@ else{
 	$rooturlNOSSL = $servernameNOSSL . ROOT_WDIR;
 	$rooturlSSL = $servername . ROOT_WDIR;
 	$curcall = $servername . $_SERVER['REQUEST_URI'];
+	$ssl = ( isset($_SERVER['HTTPS']) );
 }
 
 /**
@@ -254,8 +256,14 @@ define('ROOT_URL_SSL', $rooturlSSL);
  */
 define('CUR_CALL', $curcall);
 
+/**
+ * Simple true/false if current page call is via SSL.
+ * @var boolean 
+ */
+define('SSL', $ssl);
+
 // Cleanup!
-unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall);
+unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl);
 $maindefines_time = microtime(true);
 
 
