@@ -99,35 +99,35 @@ class ComponentHandler implements ISingleton{
 		
 		// First, build my cache of components, regardless if the component is installed or not.
 		$dh = opendir(ROOT_PDIR . 'components');
-			if(!$dh) return;
-			while($file = readdir($dh)){
-				// skip hidden directories.
-				if($file{0} == '.') continue;
-				
-				// skip non-directories
-				if(!is_dir(ROOT_PDIR . 'components/' . $file)) continue;
-				
-				// Skip directories that do not have a readable component.xml file.
-				if(!is_readable(ROOT_PDIR . 'components/' . $file . '/component.xml')) continue;
-				
-				// Finally, load the component and keep it in cache.
-				$c = new Component($file);
-				
-				// All further operations are case insensitive.
-				// The original call to Component needs to be case sensitive because it sets the filename to pull.
-				$file = strtolower($file);
-				
-				// If the component was flagged as invalid.. just skip to the next one.
-				if(!$c->isValid()){
-					if(DEVELOPMENT_MODE){
-						CAEUtils::AddMessage('Component ' . $c->getName() . ' appears to be invalid.');
-					}
-					continue;
+		if(!$dh) return;
+		while($file = readdir($dh)){
+			// skip hidden directories.
+			if($file{0} == '.') continue;
+
+			// skip non-directories
+			if(!is_dir(ROOT_PDIR . 'components/' . $file)) continue;
+
+			// Skip directories that do not have a readable component.xml file.
+			if(!is_readable(ROOT_PDIR . 'components/' . $file . '/component.xml')) continue;
+
+			// Finally, load the component and keep it in cache.
+			$c = new Component($file);
+
+			// All further operations are case insensitive.
+			// The original call to Component needs to be case sensitive because it sets the filename to pull.
+			$file = strtolower($file);
+
+			// If the component was flagged as invalid.. just skip to the next one.
+			if(!$c->isValid()){
+				if(DEVELOPMENT_MODE){
+					CAEUtils::AddMessage('Component ' . $c->getName() . ' appears to be invalid.');
 				}
-				
-				$this->_componentCache[$file] = $c;
-				unset($c);
+				continue;
 			}
+
+			$this->_componentCache[$file] = $c;
+			unset($c);
+		}
 		closedir($dh);
 	}
 	
@@ -154,16 +154,18 @@ class ComponentHandler implements ISingleton{
 		
 		// Load every component first.
 		foreach($this->_componentCache as $n => $c){
+			$c->load();
+			
 			// If the component is not in the initial dbcache, it must not be installed.
+			// Keep it in the component cache, but do not try to load it just yet.
 			if(!isset($this->_dbcache[$n])){
-				unset($this->_componentCache[$n]);
+				//unset($this->_componentCache[$n]);
 				continue;
 			}
 			
 			// Set the data from the loaded cache
 			$c->_versionDB = $this->_dbcache[$n]['version'];
 			$c->enabled = ($this->_dbcache[$n]['enabled']);
-			$c->load();
 			
 			// First check before anything else is even done.... Did the user disable it?
 			if(!$c->enabled){
@@ -219,7 +221,6 @@ class ComponentHandler implements ISingleton{
 					unset($list[$n]);
 					continue;
 				}
-				
 				
 				// Allow packages to be auto-installed if in DEV mode.
 				// this should NEVER be enabled on production, due to the GIANT
@@ -361,8 +362,10 @@ class ComponentHandler implements ISingleton{
 	
 	public static function LoadScriptLibrary($library){
 		$library = strtolower($library);
-		if(isset(ComponentHandler::Singleton()->_scriptlibraries[$library])){
-			return call_user_func(ComponentHandler::Singleton()->_scriptlibraries[$library]);
+		$obj = ComponentHandler::Singleton();
+		
+		if(isset($obj->_scriptlibraries[$library])){
+			return call_user_func($obj->_scriptlibraries[$library]);
 		}
 		else{
 			return false;
