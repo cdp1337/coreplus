@@ -49,11 +49,11 @@ function smarty_block_script($params, $innercontent, $template, &$repeat){
 		}
 	}
 	// Allow {script} tags to be called with the traditional src attribute.
-	// These are most common for external resources, like facebook connect or google tools.
+	// These are most common for external resources, like facebook connect or google tools
+	// but also useful for any standard asset.
 	elseif(isset($params['src'])){
-		$html = '<script type="text/javascript" src="' . Core::ResolveLink($params['src']) . '"></script>';
 		$loc = (isset($params['location']))? $params['location'] : 'head';
-		CurrentPage::AddScript($html, $loc);
+		CurrentPage::AddScript($params['src'], $loc);
 	}
 	// a script tag can be called with no parameters, it is after all a script tag....
 	elseif($innercontent){
