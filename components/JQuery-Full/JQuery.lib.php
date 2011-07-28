@@ -48,8 +48,9 @@ abstract class JQuery {
 		
 		CurrentPage::AddStylesheet('css/jquery.readonly.css');
 		
-		if(ConfigHandler::GetValue('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
-		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+		//if(ConfigHandler::GetValue('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
+		//else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+		CurrentPage::AddScript ('js/jquery/' . $base . '.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;

@@ -40,7 +40,7 @@
 		<scriptlibrary name="jqueryui" call="JQuery::IncludeJQueryUI"/>
 		<scriptlibrary name="jqueryui.nestedSortable" call="JQuery::Include_nestedSortable"/>
 		<scriptlibrary name="jqueryui.readonly" call="JQuery::Include_readonly"/>
-		<file filename="JQuery.lib.php" md5="c867fd6cd1ccbdf588b895c6cca5e37b">
+		<file filename="JQuery.lib.php" md5="f1b75bf2c96b7768fc3a7aef999cfc67">
 			<provides type="class" name="JQuery"/>
 		</file>
 	</library>
@@ -65,20 +65,20 @@
 	<upgrade from="1.5.1~cae2" to="1.5.1~cae3"/>
 	<changelog version="1.5.1~cae3">
 		<packagemeta>
-			<date>Thu, 23 Jun 2011 19:21:03 -0400</date>
+			<date>Thu, 28 Jul 2011 17:08:34 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.2</packager>
+			<packager>CAE2 0.0.2-1</packager>
 		</packagemeta>
 		<notes>
 			Set the included libraries to be 'library' instead of 'component'.  This allows them to be "required" by other components via &lt;require name="JQuery.plugin.desired" type="library"/&gt;
 		</notes>
 	</changelog>
-	<author name="powellc"/>
 	<description>
 		jQuery is a fast and concise JavaScript Library that simplifies HTML document traversing, event handling, animating, and Ajax interactions for rapid web development. jQuery is designed to change the way that you write JavaScript.
 		Also provides jQueryUI full package.
 		jQuery UI provides abstractions for low-level interaction and animation, advanced effects and high-level, themeable widgets, built on top of the jQuery JavaScript Library, that you can use to build highly interactive web applications.
 	</description>
+	<author name="powellc"/>
 	<otherfiles/>
 </component>
 
