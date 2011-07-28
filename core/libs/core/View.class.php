@@ -286,6 +286,9 @@ class View {
 			$template->assign('breadcrumbs', $this->breadcrumbs);
 			$template->assign('controls', $this->controls);
 			$template->assign('messages', Core::GetMessages());
+			
+			// Tack on the pre and post body variables from the current page.
+			$body = CurrentPage::GetBodyPre() . $body . CurrentPage::GetBodyPost();
 		}
 		// Widgets need some special variables too.
 		if($this->mode == View::MODE_WIDGET){
@@ -300,9 +303,12 @@ class View {
 		if($this->mode == View::MODE_PAGE && $this->contenttype == 'text/html'){
 			// Replace the </head> tag with the head data from the current page
 			// and the </body> with the foot data from the current page.
-			// This is needed to be done at this stage because some element in the template after rendering may add additional script to the head.
+			// This is needed to be done at this stage because some element in 
+			// the template after rendering may add additional script to the head.
+			// Also tack on any attributes for the <html> tag.
 			$data = str_replace('</head>', CurrentPage::GetHead() . "\n" . '</head>', $data);
 			$data = str_replace('</body>', CurrentPage::GetFoot() . "\n" . '</body>', $data);
+			$data = str_replace('<html', '<html ' . CurrentPage::GetHTMLAttributes(), $data);
 		}
 		
 		return $data;

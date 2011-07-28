@@ -38,6 +38,28 @@ class CurrentPage{
 	private $_footscripts = array();
 	
 	private $_headstylesheets = array();
+	
+	/**
+	 * Any html to prepend to the body before rendering.
+	 * Useful for plugins and widgets.
+	 * 
+	 * @var array
+	 */
+	private $_prebody = array();
+	
+	/**
+	 * Any html to append to the body before rendering.
+	 * Useful for plugins and widgets.
+	 * 
+	 * @var array
+	 */
+	private $_postbody = array();
+	
+	/**
+	 * Array of attributes to tack onto the <html> tag automatically.
+	 * @var array
+	 */
+	private $_htmlattributes = array('xmlns' => "http://www.w3.org/1999/xhtml");
 
 	/**
 	 * @var PageModel The page component currently being viewed.
@@ -143,6 +165,12 @@ class CurrentPage{
 		return self::Singleton()->_render();
 	}
 	
+	/**
+	 * Add a script to the current page.
+	 * 
+	 * @param string $script
+	 * @param string $location
+	 */
 	public static function AddScript($script, $location = 'head'){
 		if(strpos($script, '<script') === false){
 			// Resolve the script and wrap it with a script block.
@@ -160,6 +188,25 @@ class CurrentPage{
 		else $obj->_footscripts[] = $script;
 	}
 	
+	/**
+	 * Add some content to the body before rendering is complete.
+	 * This is useful to modify page content from a widget or plugin.
+	 * 
+	 * @param string $content
+	 * @param string $location 'pre' or 'post', prepend or append the regular body.
+	 */
+	public static function AddBodyContent($content, $location = 'pre'){
+		$obj = self::Singleton();
+				
+		// Only allow content to be added once.
+		if(in_array($content, $obj->_prebody)) return;
+		if(in_array($content, $obj->_postbody)) return;
+		
+		// No? alright, add it to the requested location!
+		if($location == 'pre') $obj->_prebody[] = $content;
+		else $obj->_postbody[] = $content;
+	}
+	
 	public static function AddStylesheet($link, $media="all"){
 		if(strpos($link, '<link') === false){
 			// Resolve the script and wrap it with a script block.
@@ -169,6 +216,10 @@ class CurrentPage{
 		$obj = self::Singleton();
 		// I can check to see if this script has been loaded before.
 		if(!in_array($link, $obj->_headstylesheets)) $obj->_headstylesheets[] = $link;
+	}
+	
+	public static function SetHTMLAttribute($attribute, $value){
+		self::Singleton()->_htmlattributes[$attribute] = $value;
 	}
 	
 	public static function GetHead(){
@@ -187,6 +238,27 @@ class CurrentPage{
 		$out = implode("\n", $obj->_footscripts);
 		
 		return trim($out);
+	}
+	
+	public static function GetBodyPre(){
+		return trim(implode("\n", self::Singleton()->_prebody));
+	}
+	
+	public static function GetBodyPost(){
+		return trim(implode("\n", self::Singleton()->_postbody));
+	}
+	
+	public static function GetHTMLAttributes($asarray = false){
+		$atts = self::Singleton()->_htmlattributes;
+		
+		if($asarray){
+			return $atts;
+		}
+		else{
+			$str = '';
+			foreach($atts as $k => $v) $str .= " $k=\"" . str_replace('"', '\"', $v) . "\"";
+			return trim($str);
+		}
 	}
 
 	private function _render(){
@@ -250,7 +322,7 @@ class CurrentPage{
 		
 		if($view->contenttype) header('Content-Type: ' . $view->contenttype);
 		
-		if(DEVELOPMENT_MODE) header('X-Content-Encoded-By: CAE2 ' . Core::GetComponent()->getVersion());
+		if(DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 		
 		echo $data;
 		
