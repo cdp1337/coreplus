@@ -174,13 +174,34 @@ try{
 	// Data model backend should be ready now.
 	require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
 	require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
+	
+	HookHandler::DispatchHook('db_ready');
 
 	// Get the preinstalled components in the system.
 	$csingleton = ComponentHandler::Singleton();
-	//$components = ComponentHandler::Singleton()->GetAllComponents();
-	//var_dump($components);
+	
+	// Just to make sure.
+	$changes = array();
+	
+	foreach(ComponentHandler::GetAllComponents() as $c){
+		if(!$c->isInstalled()) continue;
 
-	ComponentHandler::Load();
+		$c->reinstall();
+		$changes[] = 'Reinstalled component ' . $c->getName();
+	}
+	
+	foreach(ThemeHandler::GetAllThemes() as $t){
+		if(!$t->isInstalled()) continue;
+
+		if($t->reinstall()){
+			$changes[] = 'Reinstalled theme ' . $t->getName();
+		}
+	}
+
+	// Flush the system cache, just in case
+	Core::Cache()->flush();
+
+	//ComponentHandler::Singleton();
 
 }
 catch(Exception $e){

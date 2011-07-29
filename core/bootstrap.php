@@ -315,10 +315,24 @@ Core::AddProfileTime('core_ready');
 
 // Give me some other useful core systems.
 if(EXEC_MODE == 'WEB'){
-	// Sessions are always useful for web apps
-	require_once(ROOT_PDIR . 'core/libs/core/Session.class.php');
-	Session::Singleton();
-	//session_start();
+	try{
+		// Sessions are always useful for web apps
+		require_once(ROOT_PDIR . 'core/libs/core/Session.class.php');
+		Session::Singleton();
+		//session_start();
+	}
+	catch(DMI_Exception $e){
+		// There was a DMI exception... it may not have been installed.
+		// Reload to the install page and let that take care.
+		if(DEVELOPMENT_MODE){
+			header('Location: ' . ROOT_WDIR . 'install');
+			die();
+		}
+		else{
+			require(ROOT_PDIR . 'core/fatal_error.inc.html');
+			die();
+		}
+	}
 }
 
 
