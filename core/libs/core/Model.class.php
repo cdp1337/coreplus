@@ -523,6 +523,12 @@ class Model {
 		}
 	}
 
+	/**
+	 * Get the requested key for this object.
+	 * 
+	 * @param string $k
+	 * @return mixed 
+	 */
 	public function get($k){
 		if(array_key_exists($k, $this->_data)){
 			return $this->_data[$k];
@@ -530,6 +536,14 @@ class Model {
 		else{
 			return null;
 		}
+	}
+	
+	/**
+	 * Just return this object as an array
+	 * (essentially just the _data array... :p) 
+	 */
+	public function getAsArray(){
+		return $this->_data;
 	}
 
 	public function getColumnStructure(){
