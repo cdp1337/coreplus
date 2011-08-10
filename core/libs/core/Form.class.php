@@ -383,6 +383,13 @@ class FormElement{
 		}
 	}
 	
+	/**
+	 * Get the appropriate form element based on the incoming type.
+	 * 
+	 * @param string $type
+	 * @param array $attributes
+	 * @return FormElement 
+	 */
 	public static function Factory($type, $attributes = array()){
 		if(!isset(Form::$Mappings[$type])) $type = 'text'; // Default.
 
