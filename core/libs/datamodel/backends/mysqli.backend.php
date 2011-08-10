@@ -252,7 +252,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 					// w00t, move it to this position.
 					// ALTER TABLE `test` MODIFY COLUMN `fieldfoo` mediumint AFTER `something`
 					$q = 'ALTER TABLE _tmptable MODIFY COLUMN `' . $column . '` ' . $type . ' ';
-					$q .= ($x == 0)? 'FIRST' : 'AFTER ' . $schema['ord'][$x-1];
+					$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $schema['ord'][$x-1] . '`';
 					$this->_rawExecute($q);
 
 					// Moving the column will change the definition... reload that.
@@ -264,7 +264,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 					// ALTER TABLE `test` ADD `newfield` TEXT NOT NULL AFTER `something` 
 					$q = 'ALTER TABLE _tmptable ADD `' . $column . '` ' . $type . ' ';
 					$q .= $null . ' ';
-					$q .= ($x == 0)? 'FIRST' : 'AFTER ' . $schema['ord'][$x-1];
+					$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $schema['ord'][$x-1] . '`';
 					$this->_rawExecute($q);
 
 					// Adding the column will change the definition... reload that.
