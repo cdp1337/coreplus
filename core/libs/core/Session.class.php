@@ -120,7 +120,7 @@ class Session implements ISingleton{
 		return true;
 	}
 	
-	public static function SetUser(UserModel $u){
+	public static function SetUser(User $u){
 		$m = self::Singleton()->_getModel();
 		
 		$m->set('user_id', $u->get('id'));
