@@ -238,6 +238,9 @@ class View {
 	public function fetch(){
 		$body = $this->fetchBody();
 		
+		// If there's no template, I have nothing to even do!
+		if(!$this->mastertemplate) return $body;
+		
 		// Whee!
 		//var_dump($this->templatename, Template::ResolveFile($this->templatename));
 		// Content types take priority on controlling the master template.
@@ -264,7 +267,7 @@ class View {
 			}
 		}
 		
-		// If there's no template, I have nothing to even do!
+		// If there's *still* no template, I still have nothing to do.
 		if(!$mastertpl) return $body;
 		
 		
@@ -291,10 +294,10 @@ class View {
 			$body = CurrentPage::GetBodyPre() . $body . CurrentPage::GetBodyPost();
 		}
 		// Widgets need some special variables too.
-		if($this->mode == View::MODE_WIDGET){
-			//var_dump($this->getVariable('widget')); die();
-			$template->assign('widget', $this->getVariable('widget'));
-		}
+		//if($this->mode == View::MODE_WIDGET){
+		//	//var_dump($this->getVariable('widget')); die();
+		//	$template->assign('widget', $this->getVariable('widget'));
+		//}
 		$template->assign('title', $this->title);
 		$template->assign('body', $body);
 		
