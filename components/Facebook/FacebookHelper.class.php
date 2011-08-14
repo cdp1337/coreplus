@@ -1,7 +1,7 @@
 <?php
 
 class FacebookHelper {
-	public static function Includejs($async = false){
+	public static function Includejs($async = true){
 		$src = 'connect.facebook.net/en_US/all.js';
 		$p = (SSL)? 'https://' : 'http://';
 		$appid = FACEBOOK_APP_ID;
