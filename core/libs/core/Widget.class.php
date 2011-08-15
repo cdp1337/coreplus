@@ -15,25 +15,43 @@ class Widget {
 	protected $_view = null;
 	
 	/**
+	 * The widget model for this widget.
+	 * Will only have this if this widget is instanced from the admin.
+	 * 
+	 * @var WidgetModel
+	 */
+	protected $_model = null;
+	
+	/**
 	 * Execute this widget and return the View for it.
 	 * 
 	 * @return View 
 	 */
 	public function execute(){
+		
+		// I need to do this to actually resolve the calling widget.
+		$c = get_called_class();
+		if($this->_model === null && $c::MustBeInstanced()){
+			throw new WidgetException($c . ' must be instanced before it can be executed.');
+		}
+		
 		return $this->_getView();
 	}
 	
+	
 	/**
-	 * Simple return for if this widget must be instanced to be displayed.
-	 * If your widget requires information provided from settings before
-	 * rendering can occur, redefine this function in your class and have it
-	 * return true.
+	 * Set the corresponding model for this widget, and consequently set the
+	 * widget to be instanced.
 	 * 
-	 * @return boolean
+	 * @param WidgetModel $model 
 	 */
-	public static function MustBeInstanced(){
-		return false;
+	public function setModel(WidgetModel $model){
+		$this->_model = $model;
 	}
+	
+	
+	//// PROTECTED METHODS \\\\
+	
 	
 	/**
 	 * Get the View component for this widget.
@@ -53,4 +71,28 @@ class Widget {
 		
 		return $this->_view;
 	}
+	
+	protected function _getSettings(){
+		if($this->_model === null) return null;
+		else return json_decode($this->_model->get('settings'), true);
+	}
+	
+	//// STATIC PUBLIC METHODS \\\\
+	
+	
+	/**
+	 * Simple return for if this widget must be instanced to be displayed.
+	 * If your widget requires information provided from settings before
+	 * rendering can occur, redefine this function in your class and have it
+	 * return true.
+	 * 
+	 * @return boolean
+	 */
+	public static function MustBeInstanced(){
+		return false;
+	}
+}
+
+class WidgetException extends Exception{
+	
 }

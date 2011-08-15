@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.2-2" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.3" name="core" execmode="both">
 	<provides type="library" name="phpass" version="0.3~cae1"/>
 	<provides type="library" name="aws-sdk" version="1.0.0"/>
 	<provides type="library" name="smarty" version="3.0.6"/>
@@ -12,8 +12,29 @@
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
 	<library>
 		<!-- The core system directives. -->
-		<file filename="install/index.php" md5="49c7d42b6602c69748e90dd54820cbef">
+		<file filename="install/index.php" md5="0c5a9830e371093e2134f168fbddde93">
 			<provides type="class" name="InstallPage"/>
+		</file>
+		<file filename="core/models/ConfigModel.class.php" md5="aea269988f7f1ecfbafea931ec601b21">
+			<provides type="class" name="ConfigModel"/>
+		</file>
+		<file filename="core/models/WidgetInstanceModel.class.php" md5="1e5b1c446b7a6eb45c465a055f1e7ed7">
+			<provides type="class" name="WidgetInstanceModel"/>
+		</file>
+		<file filename="core/models/SessionModel.class.php" md5="9388eebbc877c127a2d6100637bf3aac">
+			<provides type="class" name="SessionModel"/>
+		</file>
+		<file filename="core/models/WidgetModel.class.php" md5="d1bcc05c604366f9d34cefeceffa4f28">
+			<provides type="class" name="WidgetModel"/>
+		</file>
+		<file filename="core/models/ComponentModel.class.php" md5="de9a5d439d2c940e9c0eb35deab722a1">
+			<provides type="class" name="ComponentModel"/>
+		</file>
+		<file filename="core/models/PageModel.class.php" md5="cc2326d442dab302f64eed68491084e2">
+			<provides type="class" name="PageModel"/>
+		</file>
+		<file filename="core/models/Insertable.class.php" md5="b68b134562140a21626ffc404fc7d362">
+			<provides type="class" name="InsertableModel"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_registered.php" md5="c13ec9f081c78e63725c3b3e69ec2d03">
 			<provides type="class" name="Smarty_Internal_Resource_Registered"/>
@@ -255,9 +276,6 @@
 		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="4821b7071b6e411f4747657bfb8fcece">
 			<provides type="class" name="Directory_local_backend"/>
 		</file>
-		<file filename="core/libs/core/ConfigModel.class.php" md5="aea269988f7f1ecfbafea931ec601b21">
-			<provides type="class" name="ConfigModel"/>
-		</file>
 		<file filename="core/libs/core/ISingleton.interface.php" md5="dc86d653072a1fd71966a54de680a47b">
 			<provides type="interface" name="ISingleton"/>
 		</file>
@@ -270,18 +288,12 @@
 		<file filename="core/libs/core/Theme.class.php" md5="cad29b8221c806b4ae3ea12858928010">
 			<provides type="class" name="Theme"/>
 		</file>
-		<file filename="core/libs/core/WidgetInstanceModel.class.php" md5="57915b1768f3d8252219465c2b36dff0">
-			<provides type="class" name="WidgetInstanceModel"/>
-		</file>
 		<file filename="core/libs/core/XMLLoader.class.php" md5="703a9230eeada7b244ee85eb0e29139f">
 			<provides type="class" name="XMLLoader"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="df453803f50aced3c79375ab80edd68a">
+		<file filename="core/libs/core/View.class.php" md5="c060f3e9d918aaf977cc89df223b013d">
 			<provides type="class" name="View"/>
 			<provides type="class" name="ViewException"/>
-		</file>
-		<file filename="core/libs/core/Widget.class.php">
-			<provides type="class" name="Widget"/>
 		</file>
 		<file filename="core/libs/core/SQLBuilder.class.php" md5="236f89aecc28aa3772b60dacb5a49d77">
 			<provides type="class" name="SQLBuilder"/>
@@ -291,8 +303,9 @@
 			<provides type="class" name="SQLBuilderInsertUpdate"/>
 			<provides type="class" name="SQLBuilderDelete"/>
 		</file>
-		<file filename="core/libs/core/SessionModel.class.php" md5="9388eebbc877c127a2d6100637bf3aac">
-			<provides type="class" name="SessionModel"/>
+		<file filename="core/libs/core/Widget.class.php" md5="b5fcdfc211f1b47f2a58a935caf05788">
+			<provides type="class" name="Widget"/>
+			<provides type="class" name="WidgetException"/>
 		</file>
 		<file filename="core/libs/core/Debug.class.php" md5="9b5aba47c4387e683790840abc2c98cc">
 			<provides type="class" name="Debug"/>
@@ -300,7 +313,7 @@
 		<file filename="core/libs/core/ThemeHandler.class.php" md5="9848293f0dd7626a328b971126dcf987">
 			<provides type="class" name="ThemeHandler"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="72f7799ba642bb55da5a0b949551ef73">
+		<file filename="core/libs/core/Form.class.php" md5="9d3b808220034563ee5aebc83736ec29">
 			<provides type="class" name="FormGroup"/>
 			<provides type="class" name="FormElement"/>
 			<provides type="class" name="Form"/>
@@ -328,37 +341,25 @@
 		<file filename="core/libs/core/Controller.class.php" md5="093c67818ccd99aeceae71cf10b36257">
 			<provides type="class" name="Controller"/>
 		</file>
-		<file filename="core/libs/core/Session.class.php" md5="33f7f268090b177a4d730e27f789fd8c">
+		<file filename="core/libs/core/Session.class.php" md5="d46fbb0bb657d1ea809aa54db73431c6">
 			<provides type="class" name="Session"/>
 		</file>
 		<file filename="core/libs/core/InstallArchive.class.php" md5="ba27c92ce18f83c68390e65681ba8544">
 			<provides type="class" name="InstallArchive"/>
 		</file>
-		<file filename="core/libs/core/WidgetModel.class.php" md5="c5c62e098b7ae44b3027bf6d39cceb93">
-			<provides type="class" name="WidgetModel"/>
-		</file>
-		<file filename="core/libs/core/ComponentHandler.class.php" md5="b867af3a2f2fb14bafe566175d91bb10">
+		<file filename="core/libs/core/ComponentHandler.class.php" md5="c8034b8d070260d0a699fcc3d8101e1f">
 			<provides type="class" name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="0aae9095e5adc3f3bbf23448c8103680">
+		<file filename="core/libs/core/Component.class.php" md5="e9b2589efc9b9cd48acd17de603e04b9">
 			<provides type="class" name="Component"/>
-		</file>
-		<file filename="core/libs/core/ComponentModel.class.php" md5="de9a5d439d2c940e9c0eb35deab722a1">
-			<provides type="class" name="ComponentModel"/>
-		</file>
-		<file filename="core/libs/core/PageModel.class.php" md5="eab3fd8368a70edeb047f2f98055dfc9">
-			<provides type="class" name="PageModel"/>
 		</file>
 		<file filename="core/libs/core/Time.class.php" md5="10da1cfd18249f9056c61358c40e1f62">
 			<provides type="class" name="Time"/>
 		</file>
-		<file filename="core/libs/core/Insertable.class.php" md5="b68b134562140a21626ffc404fc7d362">
-			<provides type="class" name="InsertableModel"/>
-		</file>
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="b1f1dbc20bc16a38a59b8a0852bf1bd0">
 			<provides type="class" name="CAEDirectoryIterator"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="7e91991b3988e27324ee733e9420886d">
+		<file filename="core/libs/core/Core.class.php" md5="0b239c43015df6a813fc804bb9f91213">
 			<provides type="class" name="Core"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="df4d34dc148e2f4f67a56a2fcb2fffaa">
@@ -367,7 +368,7 @@
 		<file filename="core/libs/core/CurrentPage.class.php" md5="dd2e96bb48c98f0eb22636acb448a51a">
 			<provides type="class" name="CurrentPage"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="3def463eb740ae4f242c94edcb6b4a83">
+		<file filename="core/libs/core/Model.class.php" md5="071fac43bd643521661ff1b6d8aa7031">
 			<provides type="class" name="Model"/>
 			<provides type="class" name="ModelFactory"/>
 		</file>
@@ -559,7 +560,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="3bde341777f3e2d4207e8843f6ea1438">
 			<provides type="class" name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="ec6ea93cf055f6bbaa94f0718eea3149">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="2a54de83de9dc2e875a1c0c08a324e14">
 			<provides type="class" name="DMI_mysqli_backend"/>
 		</file>
 		<file filename="core/libs/cachecore/Cache.class.php" md5="ed03b7c6b3da0592db18f0ec9e2885d5">
@@ -717,6 +718,9 @@
 		</file>
 	</library>
 	<module>
+		<file filename="core/widgets/AdminMenuWidget.php" md5="a09a37b8f8987911f02410be1f64e3ee">
+			<provides type="widget" name="AdminMenuWidget"/>
+		</file>
 		<file filename="core/controllers/FileController.class.php" md5="adb8895e71a26634184a5cc108abb8ef">
 			<provides type="controller" name="FileController"/>
 		</file>
@@ -729,7 +733,7 @@
 		<file filename="core/controllers/DirectoryController.class.php" md5="e9e50405c06731773795016e8b95924e">
 			<provides type="controller" name="DirectoryController"/>
 		</file>
-		<file filename="core/controllers/AdminController.php" md5="fd7583236a021d2d27ae503895e72b41">
+		<file filename="core/controllers/AdminController.php" md5="4663276177f620e1f8fdbe4518d3534b">
 			<provides type="controller" name="AdminController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="fba1e504addf3ee47d88e8b0de20ca9a">
@@ -745,7 +749,7 @@
 	</pages>
 	<view searchdir="core/templates">
 		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
-		<file filename="core/templates/widgets/admin/menu.tpl" md5="3bd5f6b3d939c4928842ea0f5cc6bf61"/>
+		<file filename="core/templates/widgets/adminmenu.tpl" md5="3bd5f6b3d939c4928842ea0f5cc6bf61"/>
 		<file filename="core/templates/forms/form.body.tpl" md5="8ab5bcc9f1307da533c72b3d18113a74"/>
 		<file filename="core/templates/forms/form.head.tpl" md5="efe24a11d8a7a54ad55a68fd09abb0a1"/>
 		<file filename="core/templates/forms/form.tpl" md5="2910e3a5d1cc14ff87bfea0a15c927ce"/>
@@ -773,7 +777,7 @@
 		<file filename="core/templates/pages/error/error404.tpl" md5="2b6ad918a5cb9d960e5670fa16761162"/>
 		<file filename="core/templates/pages/error/error403.tpl" md5="4f9104a2bf0f6a579bda93e79252ab1d"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="037a859dad14923425e7b31ce1673f74"/>
-		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="13d7192811f5fc31ed50ac4d932f93a5"/>
+		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="bd8176a4efed14f88f13a13fdf5ef036"/>
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
 		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="645d3b7a407c513622e9f6bc2590b7c9"/>
@@ -833,12 +837,23 @@
 	<upgrade from="0.0.2-1" to="0.0.2-2"/>
 	<changelog version="0.0.2-2">
 		<packagemeta>
-			<date>Thu, 28 Jul 2011 19:57:04 -0400</date>
+			<date>Mon, 15 Aug 2011 17:24:19 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.2-2</packager>
 		</packagemeta>
 		<notes>
 			New cachecore method, flush().  This is useful in reinstalling all components and ensuring that there are no lingering artifacts.
+		</notes>
+	</changelog>
+	<upgrade from="0.0.2-2" to="0.0.3"/>
+	<changelog version="0.0.3">
+		<packagemeta>
+			<date>Mon, 15 Aug 2011 18:44:40 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.3</packager>
+		</packagemeta>
+		<notes>
+			More work completed on the user component (not included in core), and the widget system (included).
 		</notes>
 	</changelog>
 	<author name="Charlie Powell" email="powellc@powelltechs.com"/>
@@ -875,10 +890,12 @@
 	</license>
 	<license url="http://www.opensource.org/licenses/mit-license.php">MIT</license>
 	<otherfiles>
-		<file filename="index.php" md5="62f89900a9f97390fd83159df874734e"/>
+		<file filename="index.php" md5="842b4a223c8c79357b68adeaece8d6ad"/>
 		<file filename="install/install.tpl" md5="d2b9cd0e22bdabcbdac3264111b95d5d"/>
 		<file filename="filestore/public/user/203250_505831051_3009978_n.jpg" md5="4b025002e13f78ba5989414ec8e7cc2b"/>
+		<file filename="filestore/public/user/overlord59-tux-faucheur.png" md5="9e3b05915d8f70e8993b72a8cfc324d7"/>
 		<file filename="filestore/public/tmp/filepreview-490566b692bd23e2b75e54cbe5680e1d-300x300.png" md5="34572a3f473d7f1547616cfef1782087"/>
+		<file filename="filestore/public/tmp/filepreview-9e3b05915d8f70e8993b72a8cfc324d7-200x100.png" md5="2e925c2a504fee500acea720db88e29e"/>
 		<file filename="filestore/public/tmp/filepreview-ed684274665ea47e42982fa7a05c851f-64x64.png" md5="d80ebc01f1bfa4d96eec854155dc6aaa"/>
 		<file filename="filestore/public/tmp/filepreview-64d74ce097072a88c225fa09d7f24bab-300x300.png" md5="381abe9ac9f8d3596dacb4ed1afb09e3"/>
 		<file filename="filestore/public/tmp/filepreview-d1e18fd317d25d2502ed042f1328e661-300x300.png" md5="efb3395d86f24025edfd73fe7d4c10f7"/>
@@ -992,7 +1009,7 @@
 		<file filename="filestore/assets/default/mimetype_icons/image-gif-med.png" md5="953f1d26444d97955905718687815607"/>
 		<file filename="filestore/assets/default/mimetype_icons/image-jpeg-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
 		<file filename="filestore/assets/default/js/json2.js" md5="74d903049683e5bbea9ccb7544a42bca"/>
-		<file filename="filestore/assets/default/js/user/login.js" md5="0f89b9a4620ccacfe03f411acaa0f775"/>
+		<file filename="filestore/assets/default/js/user/login.js" md5="f48e188960e94f209e89f5168b101983"/>
 		<file filename="filestore/assets/default/js/jquery/jquery.json-2.2.min.js" md5="2d59ccdc20e736725bdbcb433e080ec0"/>
 		<file filename="filestore/assets/default/js/jquery/jquery.ui.nestedSortable.js" md5="26a83ca3d4969ac3631842c9a7819991"/>
 		<file filename="filestore/assets/default/js/jquery/jquery-ui-1.8.11.min.js" md5="bc1367d7c32e3b4fd746027d8188cc36"/>
@@ -1005,8 +1022,8 @@
 		<file filename="filestore/assets/default/js/json2-min.js" md5="ba3293970e13b03a2ea92f5b6b5bf544"/>
 		<file filename="filestore/assets/default/js/jquery.jplayer.min.js" md5="09b386064fd7d0b8a785a30ff9446835"/>
 		<file filename="yuicompressor-2.4.2.jar" md5="de7f9bf5ecb82166493ba7839f62a73e"/>
-		<file filename="core/bootstrap.php" md5="a8bbb8a047f5cacc80e7dca8874cd990"/>
-		<file filename="core/bootstrap_preincludes.php" md5="35063652ad4eb9c5a40d90b18efd3eb7"/>
+		<file filename="core/bootstrap.php" md5="dbf7305ac7817354445dd93162859b15"/>
+		<file filename="core/bootstrap_preincludes.php" md5="33a4233265e1b59f50a0723d7d9c6c13"/>
 		<file filename="core/bootstrap_predefines.php" md5="4d323a3a529c1faab172604cff40a1f1"/>
 		<file filename="core/libs/smarty/SMARTY2_BC_NOTES" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
 		<file filename="core/libs/smarty/README" md5="83797fcbeab9d4f5090510a3023bc4a5"/>
@@ -1056,11 +1073,11 @@
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="5df1078564ecb59c547531218c684374"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="1621c445a086fdd03bbd44564becd9b9"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="b740631f22e1644835d49013f9a9d9a5"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="37ae739c56203390844f8e405ceae44a"/>
 		<file filename="core/libs/smarty-plugins/function.img.php" md5="ffaef505d20cb8133cb0df6dbf606ccc"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="800e464e8bae160ad7aba53d63ab78c8"/>
-		<file filename="core/libs/smarty-plugins/function.widget.php" md5="5ab4be1d83a3ddac67094ca670fe721b"/>
+		<file filename="core/libs/smarty-plugins/function.widget.php" md5="761c82293c2c1ee8610df6b11c57a245"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="15707bcdc263710f24899e4eb6907f9e"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="ee67260eea6c696b8634a593cece14bd"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>

@@ -207,6 +207,12 @@ class ComponentHandler implements ISingleton{
 				
 				// If it's loaded, register it and remove it from the list!
 				if($c->isInstalled() && $c->isLoadable() && $c->loadFiles()){
+					
+					// Allow for on-the-fly package upgrading regardless of DEV mode or not.
+					if($c->needsUpdated()){
+						$c->upgrade();
+					}
+					
 					$this->_registerComponent($c);
 					unset($list[$n]);
 					continue;

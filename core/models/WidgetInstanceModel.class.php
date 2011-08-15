@@ -30,48 +30,39 @@ class WidgetInstanceModel extends Model {
 			'required' => true,
 			'null' => false,
 		),
-		'baseurl' => array(
+		'widgetid' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'required' => true,
+		),
+		'widgetarea' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 128,
+			'maxlength' => 64,
 			'null' => false,
 		),
-		'pages' => array(
+		'page' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'default' => '*',
 			'null' => false,
+			'comment' => '* or the baseurl of the page to display on.'
 		),
-		'theme' => array(
-			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 64,
+		'weight' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'default' => '10',
 			'null' => false,
 		),
-		'template' => array(
+		'access' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 64,
+			'maxlength' => 512,
+			'default' => '*',
+			'comment' => '[cached]',
 			'null' => false,
-		),
-		'area' => array(
-			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 64,
-			'null' => false,
-		),
-		'title' => array(
-			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 128,
-			'default' => null,
-			'null' => true,
 		),
 		'container' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,
 			'default' => null,
 			'null' => true,
-		),
-		'weight' => array(
-			'type' => Model::ATT_TYPE_INT,
-			'default' => '10',
-			'null' => false,
 		),
 		'updated' => array(
 			'type' => Model::ATT_TYPE_UPDATED,
@@ -85,7 +76,7 @@ class WidgetInstanceModel extends Model {
 	
 	public static $Indexes = array(
 		'primary' => array('id'),
-		'instance' => array('baseurl'),
+		'widget' => array('widgetid'),
 	);
 
 	// @todo Put your code here.

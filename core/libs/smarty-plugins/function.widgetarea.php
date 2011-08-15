@@ -6,12 +6,17 @@ function smarty_function_widgetarea($params, $template){
 	$body = '';
 	$name = $params['name'];
 	
-	$wifac = WidgetInstanceModel::Find(array('area' => $name, 'theme' => ConfigHandler::GetValue('/core/theme')), null, 'weight');
+	// @todo Add support for per-page widgets.
+	
+	$wifac = WidgetInstanceModel::Find(array('widgetarea' => $name), null, 'weight');
 	foreach($wifac as $wi){
-		$widget = new WidgetModel($wi->get('baseurl'));
-		$body .= '<div class="widget" baseurl="' . $wi->get('baseurl') . '" ' .
+		// User cannot access this widget? Don't display it...
+		if(!Core::User()->checkAccess($wi->get('access'))) continue;
+		
+		$widget = new WidgetModel($wi->get('widgetid'));
+		$body .= '<div class="widget" widgetid="' . $wi->get('widgetid') . '" ' .
 			'instanceid="' . $wi->get('id') . '" weight="' . $wi->get('weight') . '"' .
-			'>' . $widget->execute()->fetch() . '</div>';
+			'>' . $widget->getWidget()->execute()->fetch() . '</div>';
 	}
 	
 	

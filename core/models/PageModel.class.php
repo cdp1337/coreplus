@@ -55,12 +55,14 @@ class PageModel extends Model{
 			'maxlength' => 128,
 			'default' => null,
 			'null' => true,
+			'comment' => 'Allows the page to define its own theme and widget information.'
 		),
 		'page_template' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,
 			'default' => null,
 			'null' => true,
+			'comment' => 'Allows the specific page template to be overridden.'
 		),
 		'access' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -74,11 +76,6 @@ class PageModel extends Model{
 			'comment' => '[Cached] If this url is fuzzy or an exact match',
 			'null' => false,
 			'default' => '0'
-		),
-		'widget' => array(
-			'type' => Model::ATT_TYPE_BOOL,
-			'comment' => 'If this page can be viewed as a widget',
-			'null' => false,
 		),
 		'admin' => array(
 			'type' => Model::ATT_TYPE_BOOL,
@@ -237,7 +234,7 @@ class PageModel extends Model{
 
 	/**
 	 *
-	 * @return RenderablePage
+	 * @return View
 	 */
 	public function execute(){
 
