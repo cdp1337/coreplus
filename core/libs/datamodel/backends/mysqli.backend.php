@@ -207,6 +207,35 @@ class DMI_mysqli_backend implements DMI_Backend {
 		}
 		
 		
+		// Check if there's still a column with the primary ID flag set.
+		// that will not be the same in the resulting table.
+		$oldprimaries = array();
+		foreach($schema['def'] as $d => $d2){
+			if($d2['key'] == 'PRI'){
+				$oldprimaries[] = $d;
+			}
+		}
+		if($oldprimaries != $newschema['indexes']['primary']){
+			if(sizeof($oldprimaries) == 1){
+				// Check its structure as well, it may be an auto_increment.
+				$column = $oldprimaries[0];
+				$coldef = $schema['def'][$column];
+				
+				if($coldef['extra'] == 'auto_increment'){
+					$q = "ALTER TABLE `_tmptable` CHANGE `$column` `$column` " . $coldef['type'] . ' ';
+					$q .= (($coldef['null'] == 'NO')? 'NOT NULL' : 'NULL') . ' ';
+					if($coldef['null'] == 'YES' && $coldef['default'] === null) $default = 'NULL';
+					elseif($coldef['default'] !== null) $default = "'" . $this->_conn->escape_string($coldef['default']) . "'";
+					else $default = false;
+					if($default) $q .= 'DEFAULT ' . $default . ' ';
+					$this->_rawExecute($q);
+				}
+			}
+			
+			$this->_rawExecute('ALTER TABLE _tmptable DROP PRIMARY KEY');
+		}
+		
+		
 		foreach($newschema['schema'] as $column => $coldef){
 			if(!isset($coldef['type'])) $coldef['type'] = Model::ATT_TYPE_TEXT; // Default if not present.
 			if(!isset($coldef['maxlength'])) $coldef['maxlength'] = false;

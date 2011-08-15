@@ -205,8 +205,10 @@ try{
 
 }
 catch(Exception $e){
+	//$stack = '<pre>' . $e->getTraceAsString() . '</pre>';
+	
 	InstallPage::SetVariable('error', $e->getMessage());
-	InstallPage::SetVariable('body', 'An error occured, please check and fix it.');
+	InstallPage::SetVariable('body', 'An error occured, please check and fix it.');// . $stack);
 	InstallPage::Render();
 }
 
