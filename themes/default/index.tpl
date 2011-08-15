@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 	<head>
 		<link href="{asset src='css/reset.css'}" type="text/css" rel="stylesheet"/>
 		<link href="{asset src='css/styles.css'}" type="text/css" rel="stylesheet"/>
@@ -52,7 +52,7 @@
 				</nav>
 				
 				<aside id="leftcol" class="pagecolumn">
-					{widget name="/Admin/Menu"}
+					{*widget name="/Admin/Menu"*}
 					{*widget name="/Content/View/5"*}
 					{widgetarea name="Left Column"}
 				</aside>
