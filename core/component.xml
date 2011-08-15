@@ -280,6 +280,9 @@
 			<provides type="class" name="View"/>
 			<provides type="class" name="ViewException"/>
 		</file>
+		<file filename="core/libs/core/Widget.class.php">
+			<provides type="class" name="Widget"/>
+		</file>
 		<file filename="core/libs/core/SQLBuilder.class.php" md5="236f89aecc28aa3772b60dacb5a49d77">
 			<provides type="class" name="SQLBuilder"/>
 			<provides type="class" name="SQLBuilderSelect"/>
