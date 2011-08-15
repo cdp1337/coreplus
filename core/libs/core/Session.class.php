@@ -88,6 +88,8 @@ class Session implements ISingleton{
 		// If "null" is requested, just destroy the system session.
 		if($id === null){
 			self::Singleton()->_destroy();
+			// Purge the session data
+			session_destroy();
 			// And invalidate the session id.
 			session_regenerate_id(true);
 		}
