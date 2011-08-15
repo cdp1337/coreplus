@@ -88,6 +88,8 @@ class Session implements ISingleton{
 		// If "null" is requested, just destroy the system session.
 		if($id === null){
 			self::Singleton()->_destroy();
+			// And invalidate the session id.
+			session_regenerate_id(true);
 		}
 		else{
 			// Low-level datasets are used here because they have less overhead than
@@ -97,6 +99,7 @@ class Session implements ISingleton{
 			$dataset->where('session_id = ' . $id );
 
 			$dataset->delete();
+			$dataset->execute();
 		}
 		
 		return TRUE;
