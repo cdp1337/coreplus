@@ -342,6 +342,34 @@ class View {
 	public function addControl($title, $link, $class = 'edit'){
 		$this->controls[] = array('title' => $title, 'link' => Core::ResolveLink($link), 'class' => $class);
 	}
+	
+	/**
+	 * Set the access string for this view and do the access checks against the
+	 * currently logged in user.
+	 * 
+	 * If the user does not have access to the resource, $this->error is set to 403.
+	 * 
+	 * (if you only want to set the access string, please just use $view->access = 'your_string';)
+	 * 
+	 * @since 2011.08
+	 * @param string $accessstring
+	 * @return boolean True or false based on access for current user.
+	 */
+	public function setAccess($accessstring){
+		$this->access = $accessstring;
+		
+		// And do some logic to see if the current user can access this resource.
+		// This is more of a helper function to Controllers.
+		$u = Core::User();
+		if($u->checkAccess($accessstring)){
+			// yay.
+			return true;
+		}
+		else{
+			$this->error = View::ERROR_ACCESSDENIED;
+			return false;
+		}
+	}
 }
 
 
