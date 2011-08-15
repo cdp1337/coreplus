@@ -200,7 +200,7 @@ class Component extends InstallArchiveAPI{
 						}
 						
 						preg_match_all('/^class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*widget/im', $fconts, $ret);
-						foreach($ret[2] as $foundclass){
+						foreach($ret[1] as $foundclass){
 							$this->getElementFrom('provides[@type="widget"][@name="' . $foundclass . '"]', $el);
 							// This is needed to tell the rest of the save logic to ignore the save for classes.
 							$viewclasses[] = $foundclass;
