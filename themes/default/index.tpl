@@ -52,7 +52,7 @@
 				</nav>
 				
 				<aside id="leftcol" class="pagecolumn">
-					{*widget name="/Admin/Menu"*}
+					{widget name="AdminMenu"}
 					{*widget name="/Content/View/5"*}
 					{widgetarea name="Left Column"}
 				</aside>
