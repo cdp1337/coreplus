@@ -238,13 +238,13 @@ class Core implements ISingleton{
 	/**
 	 * Get the current user model that is logged in.
 	 * 
-	 * @return UserModel 
+	 * @return User
 	 */
 	public static function User(){
 		if(self::$_User === null){
 			// Is the session data present?
 			if(!isset($_SESSION['user'])){
-				self::$_User = new User();
+				self::$_User = User::Factory();
 			}
 			else{
 				self::$_User = $_SESSION['user'];
