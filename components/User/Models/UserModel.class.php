@@ -9,16 +9,23 @@
  * @date 2011-06-09 01:14:48
  */
 class UserModel extends Model {
+	
+	
 	public static $Schema = array(
-		'uid' => array(
+		'id' => array(
 			'type' => Model::ATT_TYPE_ID,
 			'required' => true,
 			'null' => false,
 		),
-		'username' => array(
+		'email' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 32,
+			'maxlength' => 64,
 			'null' => false,
+		),
+		'backend' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'formtype' => 'hidden',
+			'default' => 'datastore'
 		),
 		'password' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -26,11 +33,6 @@ class UserModel extends Model {
 			'null' => false,
 		),
 		'apikey' => array(
-			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 64,
-			'null' => false,
-		),
-		'email' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,
 			'null' => false,
@@ -56,10 +58,8 @@ class UserModel extends Model {
 	);
 	
 	public static $Indexes = array(
-		'primary' => array('uid'),
+		'primary' => array('id'),
 		'unique:email' => array('email'),
 	);
-
-	// @todo Put your code here.
 
 } // END class UserModel extends Model
