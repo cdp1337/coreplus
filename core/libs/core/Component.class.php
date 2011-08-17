@@ -137,7 +137,7 @@ class Component extends InstallArchiveAPI{
 		foreach($it as $file){
 			$el = false;
 			$fname = substr($file->getFilename(), $strlen);
-
+			
 			if($hasview && $file->inDirectory($viewd)){
 				$el = $this->getElement('/view/file[@filename="' . $fname . '"]');
 			}
@@ -274,6 +274,9 @@ class Component extends InstallArchiveAPI{
 			$node->setAttribute('type', $row['type']);
 			$node->setAttribute('default', $row['default_value']);
 			$node->setAttribute('description', $row['description']);
+			
+			if($row['options']) $node->setAttribute('options', $row['options']);
+			else $node->removeAttribute('options');
 		}
 		
 
@@ -759,6 +762,7 @@ class Component extends InstallArchiveAPI{
 		// Now, get every table under this node.
 		foreach($node->getElementsByTagName('config') as $confignode){
 			$m = new ConfigModel($confignode->getAttribute('key'));
+			$m->set('options', $confignode->getAttribute('options'));
 			$m->set('type', $confignode->getAttribute('type'));
 			$m->set('default_value', $confignode->getAttribute('default'));
 			if(!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
