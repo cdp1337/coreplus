@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.3" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.4" name="core" execmode="both">
 	<provides type="library" name="phpass" version="0.3~cae1"/>
 	<provides type="library" name="aws-sdk" version="1.0.0"/>
 	<provides type="library" name="smarty" version="3.0.6"/>
+	<provides type="library" name="phpMailer" version="5.2.0"/>
 	<hook event="components_loaded" call="CurrentPage::Singleton"/>
 	<!--<hook event="components_ready" call="CurrentPage::LoadPage"/>
 	-->
@@ -12,7 +13,7 @@
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
 	<library>
 		<!-- The core system directives. -->
-		<file filename="install/index.php" md5="0c5a9830e371093e2134f168fbddde93">
+		<file filename="install/index.php" md5="8558941b16357efaf565533a4339582c">
 			<provides type="class" name="InstallPage"/>
 		</file>
 		<file filename="core/models/ConfigModel.class.php" md5="aea269988f7f1ecfbafea931ec601b21">
@@ -310,6 +311,10 @@
 		<file filename="core/libs/core/Debug.class.php" md5="9b5aba47c4387e683790840abc2c98cc">
 			<provides type="class" name="Debug"/>
 		</file>
+		<file filename="core/libs/core/Email.class.php" md5="35e78d85305c020ed5d45c6b8576eb6c">
+			<provides type="class" name="Email"/>
+			<provides type="class" name="AdminEmail"/>
+		</file>
 		<file filename="core/libs/core/ThemeHandler.class.php" md5="9848293f0dd7626a328b971126dcf987">
 			<provides type="class" name="ThemeHandler"/>
 		</file>
@@ -331,7 +336,7 @@
 		<file filename="core/libs/core/Template.class.php" md5="347a508f5b9af7edfb6d8225e189c958">
 			<provides type="class" name="Template"/>
 		</file>
-		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="d1d31995edc6d12583f37d18fcbe1494">
+		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="9d8e166f0675bbe9f696fa5e7fa427f7">
 			<provides type="class" name="InstallArchiveAPI"/>
 		</file>
 		<file filename="core/libs/core/HookHandler.class.php" md5="6f0baee27dbcfc73c65707cc4f863473">
@@ -350,7 +355,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="c8034b8d070260d0a699fcc3d8101e1f">
 			<provides type="class" name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="e9b2589efc9b9cd48acd17de603e04b9">
+		<file filename="core/libs/core/Component.class.php" md5="f625f72b89895a3392ea172a410a5434">
 			<provides type="class" name="Component"/>
 		</file>
 		<file filename="core/libs/core/Time.class.php" md5="10da1cfd18249f9056c61358c40e1f62">
@@ -374,6 +379,22 @@
 		</file>
 		<file filename="core/libs/core/CLI.class.php" md5="a5184ce1ee0979018ab8871538751fa3">
 			<provides type="class" name="CLI"/>
+		</file>
+		<file filename="core/libs/phpmailer/test/phpmailerTest.php" md5="43a7f0716677814343354ad307ca94cf">
+			<provides type="class" name="phpmailerTest"/>
+		</file>
+		<file filename="core/libs/phpmailer/class.smtp.php" md5="20a0a777bc59b119f2322310896af1ce">
+			<provides type="class" name="SMTP"/>
+		</file>
+		<file filename="core/libs/phpmailer/test_script/index.php" md5="45241f2ae26b817a40b0749e0ac094de">
+			<provides type="class" name="phpmailerAppException"/>
+		</file>
+		<file filename="core/libs/phpmailer/class.pop3.php" md5="59e034c4716079a89c623dec90db36d9">
+			<provides type="class" name="POP3"/>
+		</file>
+		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="4d4c02e6d43f392c9c0a8063ab06c431">
+			<provides type="class" name="PHPMailer"/>
+			<provides type="class" name="phpmailerException"/>
 		</file>
 		<file filename="core/libs/phpass/PasswordHash.php" md5="f767843472f0a498fb9c7f61966c0244">
 			<provides type="class" name="PasswordHash"/>
@@ -560,7 +581,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="3bde341777f3e2d4207e8843f6ea1438">
 			<provides type="class" name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="2a54de83de9dc2e875a1c0c08a324e14">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="e5ac8a9026b4856b6a4e6dbda8f6e57a">
 			<provides type="class" name="DMI_mysqli_backend"/>
 		</file>
 		<file filename="core/libs/cachecore/Cache.class.php" md5="ed03b7c6b3da0592db18f0ec9e2885d5">
@@ -804,13 +825,20 @@
 		<config key="/core/aws/asset_bucket" type="string" default="" description=""/>
 		<config key="/core/cache_backend" type="string" default="file" description="apc; file; memcache; xcache; BLAH"/>
 		<config key="/core/javascript/minified" type="boolean" default="true" description=""/>
-		<config key="/core/filestore/backend" type="enum" default="local" description="What type of storage should be used for assets?  This will determine the CDN that is used."/>
+		<config key="/core/filestore/backend" type="enum" options="aws|local" default="local" description="What type of storage should be used for assets?  This will determine the CDN that is used."/>
 		<config key="/core/filestore/assetdir" type="string" default="assets/" description=""/>
 		<config key="/core/filestore/publicdir" type="string" default="filestore/public/" description=""/>
 		<config key="/core/filestore/previews" type="boolean" default="1" description="Try to display a preview of files in thumbnails.  If set to false, only the file mimetype icon is displayed."/>
 		<config key="/core/session/ttl" type="int" default="3600" description="Time to live for sessions.  Amount of seconds to keep an idle session active before requesting the user to log back in due to inactivity."/>
+		<config key="/core/email/from" type="string" description="Email address emails should be sent 'from' by defualt." default=""/>
+		<config key="/core/email/from_name" type="string" description="Name emails should be sent 'from' by default." default=""/>
+		<config key="/core/email/mailer" type="enum" options="smtp|sendmail|mail" default="sendmail" description=""/>
+		<config key="/core/email/sendmail_path" type="string" default="" description=""/>
+		<config key="/core/email/smtp_host" type="string" default="" description=""/>
+		<config key="/core/email/smtp_port" type="string" default="" description=""/>
+		<config key="/core/email/smtp_user" type="string" default="" description=""/>
+		<config key="/core/email/smtp_password" type="string" default="" description=""/>
 	</configs>
-	<assets/>
 	<upgrade from="0.0.1-dev1" to="0.0.2"/>
 	<changelog version="0.0.2">
 		<packagemeta>
@@ -848,7 +876,7 @@
 	<upgrade from="0.0.2-2" to="0.0.3"/>
 	<changelog version="0.0.3">
 		<packagemeta>
-			<date>Mon, 15 Aug 2011 18:44:40 -0400</date>
+			<date>Tue, 16 Aug 2011 23:31:44 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.3</packager>
 		</packagemeta>
@@ -856,6 +884,19 @@
 			More work completed on the user component (not included in core), and the widget system (included).
 		</notes>
 	</changelog>
+	<upgrade from="0.0.3" to="0.0.4"/>
+	<changelog version="0.0.4">
+		<notes>
+			Adding phpMailer and the Email functionality back into the core.
+			Minor change to configuration options and how they're stored in the database.
+		</notes>
+		<packagemeta>
+			<date>Tue, 16 Aug 2011 23:47:36 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.4</packager>
+		</packagemeta>
+	</changelog>
+	<dbschema/>
 	<author name="Charlie Powell" email="powellc@powelltechs.com"/>
 	<author name="Monte Ohrt" email="monte at ohrt dot com"/>
 	<author name="Uwe Tews"/>
@@ -867,6 +908,8 @@
 	<author name="Gaetano Giunta"/>
 	<author name=""/>
 	<author name="Mark J Panaghiston"/>
+	<author name="Andy Prevost"/>
+	<author name="Marcus Bointon"/>
 	<author name="Christopher Kvarme" email="christopher.kvarme@flashjab.com"/>
 	<author name="Roberto Berto" email="roberto@berto.net"/>
 	<author name="Messju Mohr" email="messju at lammfellpuschen dot de"/>
@@ -881,6 +924,11 @@
 	<author name="David JEAN" email="izimobil@gmail.com"/>
 	<author name="Solar Designer" email="solar at openwall.com"/>
 	<author name="Naitik Shah" email="naitik@facebook.com"/>
+	<author name="Catalin Constantin" email="catalin@dazoot.ro"/>
+	<author name="Ilias Bartolini" email="brain79@inwind.it"/>
+	<author name="liqwei" email="liqwei@liqwei.com"/>
+	<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
+	<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
 	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.html">
 		GNU Lesser General Public License v3
@@ -891,136 +939,7 @@
 	<license url="http://www.opensource.org/licenses/mit-license.php">MIT</license>
 	<otherfiles>
 		<file filename="index.php" md5="842b4a223c8c79357b68adeaece8d6ad"/>
-		<file filename="install/install.tpl" md5="d2b9cd0e22bdabcbdac3264111b95d5d"/>
-		<file filename="filestore/public/user/203250_505831051_3009978_n.jpg" md5="4b025002e13f78ba5989414ec8e7cc2b"/>
-		<file filename="filestore/public/user/overlord59-tux-faucheur.png" md5="9e3b05915d8f70e8993b72a8cfc324d7"/>
-		<file filename="filestore/public/tmp/filepreview-490566b692bd23e2b75e54cbe5680e1d-300x300.png" md5="34572a3f473d7f1547616cfef1782087"/>
-		<file filename="filestore/public/tmp/filepreview-9e3b05915d8f70e8993b72a8cfc324d7-200x100.png" md5="2e925c2a504fee500acea720db88e29e"/>
-		<file filename="filestore/public/tmp/filepreview-ed684274665ea47e42982fa7a05c851f-64x64.png" md5="d80ebc01f1bfa4d96eec854155dc6aaa"/>
-		<file filename="filestore/public/tmp/filepreview-64d74ce097072a88c225fa09d7f24bab-300x300.png" md5="381abe9ac9f8d3596dacb4ed1afb09e3"/>
-		<file filename="filestore/public/tmp/filepreview-d1e18fd317d25d2502ed042f1328e661-300x300.png" md5="efb3395d86f24025edfd73fe7d4c10f7"/>
-		<file filename="filestore/public/tmp/filepreview-d1e18fd317d25d2502ed042f1328e661-200x100.png" md5="d9d18bd40a0c10dafd1f0eed18295060"/>
-		<file filename="filestore/public/tmp/filepreview-64d74ce097072a88c225fa09d7f24bab-64x64.png" md5="381abe9ac9f8d3596dacb4ed1afb09e3"/>
-		<file filename="filestore/public/tmp/filepreview-047770ccecdac1459c9e6957c32bc90a-200x100.png" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="filestore/public/tmp/filepreview-b12c0af68602aad66295e7e0dd8431d7-200x100.png" md5="d55354b28cc8fbc986b67a3e5d12707a"/>
-		<file filename="filestore/public/tmp/filepreview-d1e18fd317d25d2502ed042f1328e661-64x64.png" md5="68c1e13d87b5d146a34651d10d132f2e"/>
-		<file filename="filestore/public/tmp/filepreview-0f20b7d3cb3d9590c4f600c3c02aed0b-300x300.png" md5="7dacefd52d7f6852263ecaf67c70ec9a"/>
-		<file filename="filestore/public/tmp/filepreview-ed684274665ea47e42982fa7a05c851f-300x300.png" md5="d80ebc01f1bfa4d96eec854155dc6aaa"/>
-		<file filename="filestore/public/tmp/filepreview-ec0a7fe6809e4f051bb09e1c21aab52c-300x300.png" md5="7bd0c08db3dcfed8ae7fe8c81fe3d48e"/>
-		<file filename="filestore/public/tmp/filepreview-0f20b7d3cb3d9590c4f600c3c02aed0b-64x64.png" md5="7dacefd52d7f6852263ecaf67c70ec9a"/>
-		<file filename="filestore/public/tmp/filepreview-ec0a7fe6809e4f051bb09e1c21aab52c-64x64.png" md5="bb113a64399a78214d9436bdd01637c5"/>
-		<file filename="filestore/public/tmp/filepreview-490566b692bd23e2b75e54cbe5680e1d-64x64.png" md5="34572a3f473d7f1547616cfef1782087"/>
-		<file filename="filestore/public/test12/IMG_0250.JP." md5="b12c0af68602aad66295e7e0dd8431d7"/>
-		<file filename="filestore/public/test12/logo.png" md5="ec0a7fe6809e4f051bb09e1c21aab52c"/>
-		<file filename="filestore/public/test12/move-sm.png" md5="490566b692bd23e2b75e54cbe5680e1d"/>
-		<file filename="filestore/public/test12/IMG_0290.JPG" md5="d1e18fd317d25d2502ed042f1328e661"/>
-		<file filename="filestore/public/test12/add-sm.png" md5="64d74ce097072a88c225fa09d7f24bab"/>
-		<file filename="filestore/public/test12/IMG_0250.JP (1)." md5="b12c0af68602aad66295e7e0dd8431d7"/>
-		<file filename="filestore/public/test12/IMG_0250.JPG" md5="b12c0af68602aad66295e7e0dd8431d7"/>
-		<file filename="filestore/public/test12/delete.png" md5="ed684274665ea47e42982fa7a05c851f"/>
-		<file filename="filestore/public/test12/changes.diff" md5="047770ccecdac1459c9e6957c32bc90a"/>
-		<file filename="filestore/public/test12/email-lg.png" md5="0f20b7d3cb3d9590c4f600c3c02aed0b"/>
-		<file filename="filestore/public/test12/IMG_0250.jpg" md5="b12c0af68602aad66295e7e0dd8431d7"/>
-		<file filename="filestore/public/test12/IMG_0250 (1).jpg" md5="b12c0af68602aad66295e7e0dd8431d7"/>
-		<file filename="filestore/assets/default/logo.png" md5="ec0a7fe6809e4f051bb09e1c21aab52c"/>
-		<file filename="filestore/assets/default/css/jquery-ui.css" md5="0c9633d2550c2e4ac62b4683e8c8a645"/>
-		<file filename="filestore/assets/default/css/styles.css" md5="84edd51c5dfaa0bac8ebd8847b3a08bb"/>
-		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.jpg" md5="297da0f09846c3a1e0759c2736fdef94"/>
-		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.video.play.png" md5="05faffb4ad5d76e73c0c210c9330c58b"/>
-		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.video.play.hover.png" md5="7e2080be69b0785b7585f3ae5570b255"/>
-		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.css" md5="fb5446fd5b9bec9f8f09cda98593271c"/>
-		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.png" md5="7794f92c78b543a16ef5140f0b8eff5b"/>
-		<file filename="filestore/assets/default/css/skin/pbar-ani.gif" md5="80a3586f77bcc84b16050f3804730431"/>
-		<file filename="filestore/assets/default/css/jquery.readonly.css" md5="ca07e99b858d310cd3e855abf65d9b06"/>
-		<file filename="filestore/assets/default/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
-		<file filename="filestore/assets/default/css/images/ui-bg_highlight-hard_100_fafaf4_1x100.png" md5="5fab734991bc927dd729e4b2c4500a34"/>
-		<file filename="filestore/assets/default/css/images/ui-bg_spotlight_80_6f6b5d_600x600.png" md5="70e145838be2f61b981cd2ecfb1cd6ab"/>
-		<file filename="filestore/assets/default/css/images/ui-bg_highlight-soft_25_67b021_1x100.png" md5="bdfc7094828e60a1e89799619382589a"/>
-		<file filename="filestore/assets/default/css/images/ui-icons_ffffff_256x240.png" md5="342bc03f6264c75d3f1d7f99e34295b9"/>
-		<file filename="filestore/assets/default/css/images/ui-bg_highlight-hard_15_459e00_1x100.png" md5="f5613fb05e1c5ae3bd9167d85d1d72a7"/>
-		<file filename="filestore/assets/default/css/images/ui-icons_847e71_256x240.png" md5="6636d8ab6693c387d7c2770dbe8c178e"/>
-		<file filename="filestore/assets/default/css/images/ui-bg_gloss-wave_100_ece8da_500x100.png" md5="dccd449740f6fd2a875fc72ef3586b53"/>
-		<file filename="filestore/assets/default/css/images/ui-bg_highlight-hard_100_f5f3e5_1x100.png" md5="c3341f3735d126758336bda6f1b21ec4"/>
-		<file filename="filestore/assets/default/css/images/ui-bg_glass_55_fcf0ba_1x400.png" md5="e8fa5df505b503a945e543c5816179ca"/>
-		<file filename="filestore/assets/default/css/images/ui-icons_808080_256x240.png" md5="285708190686f9ee7a48a988a0eed090"/>
-		<file filename="filestore/assets/default/css/images/ui-bg_inset-soft_95_cccccc_1x100.png" md5="df2dbcfe9af96aacfe13e53b108aaf5b"/>
-		<file filename="filestore/assets/default/css/images/ui-icons_8dc262_256x240.png" md5="4128e64e48bfc9c6e5ab45f29bb32da7"/>
-		<file filename="filestore/assets/default/css/images/ui-bg_highlight-soft_95_ffedad_1x100.png" md5="7103bea11984ecc1ebce02dcc10cdc75"/>
-		<file filename="filestore/assets/default/css/images/ui-icons_eeeeee_256x240.png" md5="2e6d7e1cca1cd751a6e156feb381eb0f"/>
-		<file filename="filestore/assets/default/css/images/ui-icons_cd0a0a_256x240.png" md5="3e450c2a2c66328d9498e7001ad7197c"/>
-		<file filename="filestore/assets/default/icons/view.png" md5="5108ec1f152e29684be1bfe393ef2fc8"/>
-		<file filename="filestore/assets/default/icons/directory.png" md5="50afe6c35c14f4174d8d2e33f5025f14"/>
-		<file filename="filestore/assets/default/icons/delete-lg.png" md5="11503d71985ef12f09c37bb7c14bf873"/>
-		<file filename="filestore/assets/default/icons/lock-sm.png" md5="fec403cfda74d62e539fd0ae50dca11c"/>
-		<file filename="filestore/assets/default/icons/move.png" md5="74932504970ad90017e3413613e9889f"/>
-		<file filename="filestore/assets/default/icons/move-sm.png" md5="490566b692bd23e2b75e54cbe5680e1d"/>
-		<file filename="filestore/assets/default/icons/edit-sm.png" md5="f75b02c22881f4d0f2c4b6e76ab7ff80"/>
-		<file filename="filestore/assets/default/icons/add-sm.png" md5="64d74ce097072a88c225fa09d7f24bab"/>
-		<file filename="filestore/assets/default/icons/view-lg.png" md5="a4c68ef8ba297f51ce01de807acc656f"/>
-		<file filename="filestore/assets/default/icons/add.png" md5="826f54d0901dd6c6d392ddf6997a76cd"/>
-		<file filename="filestore/assets/default/icons/view-sm.png" md5="31c0d2c70ac4f53e7c1b0748efa48e7a"/>
-		<file filename="filestore/assets/default/icons/edit.png" md5="1f7c0fab746187012ef137a1e4df2333"/>
-		<file filename="filestore/assets/default/icons/edit-lg.png" md5="66a1a2a05a4ab4604acec077f14ada1d"/>
-		<file filename="filestore/assets/default/icons/add-lg.png" md5="b1e2a07f1eb1a49af949b2fb251c51c3"/>
-		<file filename="filestore/assets/default/icons/lock.png" md5="3dae2bac1271b3eee81b57bf2573a5c6"/>
-		<file filename="filestore/assets/default/icons/email-sm.png" md5="2b9ecc49d4b27276e2972a6b1c850117"/>
-		<file filename="filestore/assets/default/icons/delete.png" md5="ed684274665ea47e42982fa7a05c851f"/>
-		<file filename="filestore/assets/default/icons/email-lg.png" md5="0f20b7d3cb3d9590c4f600c3c02aed0b"/>
-		<file filename="filestore/assets/default/icons/delete-sm.png" md5="ef78e3ddd8658ddbc1a708e2409328a5"/>
-		<file filename="filestore/assets/default/icons/email.png" md5="55dcda1f2bc0e54e0a34c49df62dbc08"/>
-		<file filename="filestore/assets/default/icons/lock-lg.png" md5="ea1051e469c6b759e7d915a5a1ee4415"/>
-		<file filename="filestore/assets/default/icons/move-lg.png" md5="ee2354c1e09c09db9b3c7ed98a4966e1"/>
-		<file filename="filestore/assets/default/swf/Jplayer.swf" md5="e31f31957d930e4c710445677fb335da"/>
-		<file filename="filestore/assets/default/fonts/Cousine-Bold.ttf" md5="8b6cde097069d84859cf7b24403faeca"/>
-		<file filename="filestore/assets/default/fonts/Puritan-Italic.ttf" md5="a698cb186856b0785c795e4ec8d4a392"/>
-		<file filename="filestore/assets/default/fonts/PT_Sans-Italic.ttf" md5="3c1732457ed32a353b3be70a6c5354dc"/>
-		<file filename="filestore/assets/default/fonts/Puritan-Regular.ttf" md5="02d2067f1f6151e847d06354c5de358d"/>
-		<file filename="filestore/assets/default/fonts/Cousine-Regular.ttf" md5="07f0482b1dd16541ce1cd59d92d2f46f"/>
-		<file filename="filestore/assets/default/fonts/Puritan-Bold.ttf" md5="614d9bbe1edcf99e0541a92dcb271d80"/>
-		<file filename="filestore/assets/default/fonts/PT_Sans-Regular.ttf" md5="21a8438cc80da94c65ea62ccc1233f50"/>
-		<file filename="filestore/assets/default/fonts/OFL.txt" md5="88d3f3dcbf0c2389e6a9b1c7dcdabe22"/>
-		<file filename="filestore/assets/default/fonts/Puritan-BoldItalic.ttf" md5="f6d45f1870364fe214b6e4234bb34b9b"/>
-		<file filename="filestore/assets/default/fonts/PT_Sans-BoldItalic.ttf" md5="494fff9755804cd781e4431bf134bacf"/>
-		<file filename="filestore/assets/default/fonts/PT_Sans-Bold.ttf" md5="29eba82ed387922f39f2727e5e5883e2"/>
-		<file filename="filestore/assets/default/fonts/Cousine-Italic.ttf" md5="8a0dacd2cc9ef158fff2daec2b7bc435"/>
-		<file filename="filestore/assets/default/fonts/Cousine-BoldItalic.ttf" md5="aa6b45a45a88a9547e30d6a6a9dcf75c"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-png-sm.png" md5="02709989af27569d20280bd017651195"/>
-		<file filename="filestore/assets/default/mimetype_icons/notfound-med.png" md5="9c1546b3770dd18d34833bb6fe736419"/>
-		<file filename="filestore/assets/default/mimetype_icons/unknown-lg.png" md5="e78e2e6e8d40c6a632f654561ec53e47"/>
-		<file filename="filestore/assets/default/mimetype_icons/unknown-med.png" md5="11eee3c2e6806986c5abfe920d3256a5"/>
-		<file filename="filestore/assets/default/mimetype_icons/notfound-lg.png" md5="393bb7f6649773e8368e6dde20a969f8"/>
-		<file filename="filestore/assets/default/mimetype_icons/unknown-sm.png" md5="890f6e2501cb8474fefb20b1b858e660"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-png-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-gif-sm.png" md5="02709989af27569d20280bd017651195"/>
-		<file filename="filestore/assets/default/mimetype_icons/unknown-xl.png" md5="2510d5565850a7b8d762312fc41dd8eb"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-jpg-med.png" md5="953f1d26444d97955905718687815607"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-jpg-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-gif-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-jpeg-sm.png" md5="02709989af27569d20280bd017651195"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-png-med.png" md5="953f1d26444d97955905718687815607"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-jpeg-med.png" md5="953f1d26444d97955905718687815607"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-png-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
-		<file filename="filestore/assets/default/mimetype_icons/notfound-sm.png" md5="b051ed5c35e067819e9ff8b43dec7ad8"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-jpg-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-jpeg-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-jpg-sm.png" md5="02709989af27569d20280bd017651195"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-gif-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
-		<file filename="filestore/assets/default/mimetype_icons/notfound-xl.png" md5="6a5e689f57e697606d3a8fa2eb495fdd"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-gif-med.png" md5="953f1d26444d97955905718687815607"/>
-		<file filename="filestore/assets/default/mimetype_icons/image-jpeg-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
-		<file filename="filestore/assets/default/js/json2.js" md5="74d903049683e5bbea9ccb7544a42bca"/>
-		<file filename="filestore/assets/default/js/user/login.js" md5="f48e188960e94f209e89f5168b101983"/>
-		<file filename="filestore/assets/default/js/jquery/jquery.json-2.2.min.js" md5="2d59ccdc20e736725bdbcb433e080ec0"/>
-		<file filename="filestore/assets/default/js/jquery/jquery.ui.nestedSortable.js" md5="26a83ca3d4969ac3631842c9a7819991"/>
-		<file filename="filestore/assets/default/js/jquery/jquery-ui-1.8.11.min.js" md5="bc1367d7c32e3b4fd746027d8188cc36"/>
-		<file filename="filestore/assets/default/js/jquery/jquery.ui.nestedSortable.min.js" md5="dbd0258e25459c9dbea872c07d5eaf2f"/>
-		<file filename="filestore/assets/default/js/jquery/jquery-1.5.1.js" md5="f2402f0e7b549caae013bc3c05b3a161"/>
-		<file filename="filestore/assets/default/js/jquery/jquery.ui.readonly.js" md5="4ea22509c2c047bb24dca3b547589683"/>
-		<file filename="filestore/assets/default/js/jquery/jquery-1.5.1.min.js" md5="b04a3bccd23ddeb7982143707a63ccf9"/>
-		<file filename="filestore/assets/default/js/jquery/jquery.json-2.2.js" md5="56fdd8b6674e6d121afe11a920191429"/>
-		<file filename="filestore/assets/default/js/html5.js" md5="e919b7e0d6dc0226e3356aeb07bf63c2"/>
-		<file filename="filestore/assets/default/js/json2-min.js" md5="ba3293970e13b03a2ea92f5b6b5bf544"/>
-		<file filename="filestore/assets/default/js/jquery.jplayer.min.js" md5="09b386064fd7d0b8a785a30ff9446835"/>
+		<file filename="install/install.tpl" md5="1424c7d2b87887ab433afeb68e0c2bae"/>
 		<file filename="yuicompressor-2.4.2.jar" md5="de7f9bf5ecb82166493ba7839f62a73e"/>
 		<file filename="core/bootstrap.php" md5="dbf7305ac7817354445dd93162859b15"/>
 		<file filename="core/bootstrap_preincludes.php" md5="33a4233265e1b59f50a0723d7d9c6c13"/>
@@ -1082,6 +1001,106 @@
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="ee67260eea6c696b8634a593cece14bd"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="0675deafa3f09a4cbe5a4f8f35d61ab2"/>
+		<file filename="core/libs/phpmailer/README" md5="826c2fed77985c4576313e42f9fb6d02"/>
+		<file filename="core/libs/phpmailer/changelog.txt" md5="14d1b94fa3d8fdc704ac0040cad336b1"/>
+		<file filename="core/libs/phpmailer/test/test_callback.php" md5="216002d26a617ce86f4b9674e2459110"/>
+		<file filename="core/libs/phpmailer/test/test.png" md5="9afe6d1850e2a030820c5a6b209c2c6e"/>
+		<file filename="core/libs/phpmailer/test/testemail.php" md5="4e9a0bda0c26e1bb95ca26d6d7e18b77"/>
+		<file filename="core/libs/phpmailer/test/contents.html" md5="c07b19ecec950d33d9f41d45a5a71578"/>
+		<file filename="core/libs/phpmailer/docs.ini" md5="ef2330090d65f531fda92de41e1a5c3a"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_advanced_no_auth.php" md5="b810136b1e375abe314384f0baa304a6"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_basic_no_auth.php" md5="8f2fc6db3d380336195bd18123539315"/>
+		<file filename="core/libs/phpmailer/examples/test_mail_basic.php" md5="25ec2e4b7d360f5283ca384c67271c21"/>
+		<file filename="core/libs/phpmailer/examples/index.html" md5="7e62745ea47981a4db4a4105da3c3cd1"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_advanced.php" md5="3cfd486a03fbe26fa4e17396e38bb095"/>
+		<file filename="core/libs/phpmailer/examples/test_sendmail_basic.php" md5="6efbaa0767843c29f4081ebeab311c21"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_gmail_advanced.php" md5="3d93aece229be3476aabb28d69ec1e28"/>
+		<file filename="core/libs/phpmailer/examples/test_db_smtp_basic.php" md5="f541f452f13e88cf492e70a309223105"/>
+		<file filename="core/libs/phpmailer/examples/test_pop_before_smtp_advanced.php" md5="95b8e85f57ad7dd1b87695cb35ab6178"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_gmail_basic.php" md5="a8677a5c4512ee7e139c69eb1aa3d89d"/>
+		<file filename="core/libs/phpmailer/examples/images/phpmailer_mini.gif" md5="2937b668321bf6cb6fee2c334ef7ea51"/>
+		<file filename="core/libs/phpmailer/examples/images/phpmailer.gif" md5="f8f03962429653f4707dceafd283410d"/>
+		<file filename="core/libs/phpmailer/examples/test_mail_advanced.php" md5="f48e98a5ad04f0d1a9259d1464d19905"/>
+		<file filename="core/libs/phpmailer/examples/test_pop_before_smtp_basic.php" md5="7fcc18bbcfd1c229e0042b5632d25b78"/>
+		<file filename="core/libs/phpmailer/examples/test_sendmail_advanced.php" md5="70918f1ce2bb55263c49da3b6c72a5ab"/>
+		<file filename="core/libs/phpmailer/examples/contents.html" md5="905b080299c305f2a4914b2c3c097165"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_basic.php" md5="acd19dc6a21841b7ba5600c7ef3ede84"/>
+		<file filename="core/libs/phpmailer/docs/extending.html" md5="a86f35cb488235a9ddc59bbfbc3767ac"/>
+		<file filename="core/libs/phpmailer/docs/pop3_article.txt" md5="6e8b04572ccd600441b54e721aefb852"/>
+		<file filename="core/libs/phpmailer/docs/faq.html" md5="e3197d819848ed8078ebddacc1475fa1"/>
+		<file filename="core/libs/phpmailer/docs/DomainKeys_notes.txt" md5="f27cecd9b7ec1547ea24f05b4675dd81"/>
+		<file filename="core/libs/phpmailer/docs/use_gmail.txt" md5="baa2401d601d5ee6edf0864865db12a0"/>
+		<file filename="core/libs/phpmailer/docs/Note_for_SMTP_debugging.txt" md5="ac6288b69704cbb5e1eb392d5813f8a5"/>
+		<file filename="core/libs/phpmailer/docs/Callback_function_notes.txt" md5="3ca0042d6382025851f148814e2e85ff"/>
+		<file filename="core/libs/phpmailer/test_script/LGPLv3.txt" md5="79da2118f3f3f07b63c5fe46b581fba4"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shThemeEmacs.css" md5="bd8e298af55f70a28b9201cd1d308795"/>
+		<file filename="core/libs/phpmailer/test_script/styles/wrapping.png" md5="9a4ffd836c709958eff80a3260f8a1cb"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shThemeFadeToGrey.css" md5="3429ed8095fa67e45be0627bf85a4a4d"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shThemeMidnight.css" md5="5bfb6c7b625bd0582b1d9dea755d76b9"/>
+		<file filename="core/libs/phpmailer/test_script/styles/page_white_code.png" md5="c65fadae5a0fc27f401f1a00e66f518f"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shThemeRDark.css" md5="c8f6be1c0dcf82e65a9d39f8644f1053"/>
+		<file filename="core/libs/phpmailer/test_script/styles/printer.png" md5="242421c98dbd8b054fc76a036d04321c"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shCore.css" md5="526011fe5df6cf9a45ec9a49f14021fe"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shThemeDjango.css" md5="5020ba70f8cbc64ce2fad4ca38894532"/>
+		<file filename="core/libs/phpmailer/test_script/styles/page_white_copy.png" md5="38de59d96ecaa147d8b5f440b4c4b0e6"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shThemeDefault.css" md5="9837d776a094a08f2e87d661966828d6"/>
+		<file filename="core/libs/phpmailer/test_script/styles/help.png" md5="c3812c74bc524179f4ccf5d2db7b3cbf"/>
+		<file filename="core/libs/phpmailer/test_script/styles/magnifier.png" md5="a81fa78d754fae7b3a71026356e3ee27"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shCore.js" md5="08e72cd149a8a1a2075292e4e56be24c"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushPhp.js" md5="1b90265af6d7f614d53016e1b1af4f35"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/clipboard.swf" md5="e971c772b2df839298a8f8f9451f1eda"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushJava.js" md5="94dae0a912db99416f60a484eb9eca2c"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushBash.js" md5="f7f8d8f17fbe76986d8a44f326fcc03c"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushPerl.js" md5="24c3e403ba96f978c0a7af0d48071240"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushRuby.js" md5="fe223da153d4214b8187e15ff51c878d"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushSql.js" md5="8fee749a7c3aa85acd57415b25f20304"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushJScript.js" md5="d255456b13460eb3320ea857d4bc2323"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushDelphi.js" md5="aecf159e817367633d9c8fd88c46fed6"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushCpp.js" md5="e67c489e4cf2d19aa130bb3e92c434ca"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushCss.js" md5="1569d0168af1f87970cc3903696f7fef"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushScala.js" md5="d669e8db17b64d7f93e102f91d9ccad4"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushPython.js" md5="f5d15951bfa26a62a572471387f0f3db"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushPlain.js" md5="15aa2b0df2f9ff50ada671b2f60aa44b"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushXml.js" md5="00ce0f7c039104ad42b35b96d7cdd6fb"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushCSharp.js" md5="e4622a3c567553d7ed1cbb83ce19cef8"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushGroovy.js" md5="882f8a4df7576176b9db397c9fa4b2a5"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushDiff.js" md5="6a6979c89c625e21d9fab1e8feee69cc"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shLegacy.js" md5="51d187b026c8aff050b6661fdfb7b725"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushVb.js" md5="c183fd107f9489ab2ca69459284d6256"/>
+		<file filename="core/libs/phpmailer/test_script/src/shCore.js" md5="fb0628160f28d579cc6db6a6e1321f9d"/>
+		<file filename="core/libs/phpmailer/test_script/src/shLegacy.js" md5="828db5d2fcb27133ef0a0f6bac4e8896"/>
+		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
+		<file filename="core/libs/phpmailer/test_script/images/aikido.gif" md5="5533edc54d3b05d0e221b745ab84ad6e"/>
+		<file filename="core/libs/phpmailer/test_script/images/bkgrnd.gif" md5="a29009d45c0c9217ac41f2e05ad8b84a"/>
+		<file filename="core/libs/phpmailer/test_script/images/phpmailer.gif" md5="f8f03962429653f4707dceafd283410d"/>
+		<file filename="core/libs/phpmailer/test_script/contents.html" md5="74ac1c489d254ef1d4da99901f3bdc75"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ru.php" md5="b7ed33812e39d722df735dc4f11ec660"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-nl.php" md5="a31febd0f5ce0f8c9ea3a1487fb90343"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ca.php" md5="d62aa6dcbbf9922a0ff5b3157493d34f"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ro.php" md5="a87ff3c8cc2d438c0d4ca1efd3340d33"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-se.php" md5="9f8db6e50c0fcfa53ee2c810e604439b"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-no.php" md5="4bce15e32912f1b60c1d4e539e258a6d"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-br.php" md5="a1364ab381ebdf3f05999b31bada24bd"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-it.php" md5="e58eb12280851b2b634480b0eb16cfa9"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ja.php" md5="5633923d2fe9b4a4c91cdc6f645cd2e3"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-fr.php" md5="35824828ce4dee7486e2ebddc8c90b54"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-et.php" md5="59ec530db72bdf3c929cbced24d84f1f"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-fo.php" md5="081059e68c63e095c7584f250232ea2a"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ch.php" md5="68d79d6467a003fa41672a5690d9eae3"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-es.php" md5="bb915fc8e902a08d7f5de070c023c4cd"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-fi.php" md5="029e5ade41d5ae5dcc7f1869c0e85141"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-zh.php" md5="826f3a6e03f3d475065ec3b4b9f765f0"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-tr.php" md5="8706743bc477210606ddedfbd4c03af3"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-pl.php" md5="3933cfa44296e3c3e41b8fe8bf89092c"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-zh_cn.php" md5="8896e3cb067525faf5526287e7c62efe"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-dk.php" md5="b889d351c4ed834ff2566be55c7d2a40"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-cz.php" md5="2420cdfa4b0b35142d79ff02a2197520"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-de.php" md5="be8f19de5d7a12568066fb04e7feeb8c"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ar.php" md5="646c785bc6a11f13671a59ea62a8cdb1"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-hu.php" md5="06137884e974504647606c12c403ef94"/>
+		<file filename="core/libs/phpmailer/extras/htmlfilter.php" md5="4d5143899340a690d41a4959428ea674"/>
+		<file filename="core/libs/phpmailer/aboutus.html" md5="6b81ca2a68934b93499e4f6227061e31"/>
+		<file filename="core/libs/phpmailer/LICENSE" md5="278f2557e3b277b94e9a8430f6a6d0a9"/>
 		<file filename="core/libs/datamodel/drivers/phpcassa/INSTALLING" md5="045fa051387023d98e4b8f6df1e939ff"/>
 		<file filename="core/libs/datamodel/drivers/phpcassa/AUTHORS" md5="c0722ecbe902d4770f9e17b43db3d8e6"/>
 		<file filename="core/libs/datamodel/drivers/phpcassa/CHANGES" md5="13d7743013d98276f645cc884cd39912"/>
