@@ -583,7 +583,18 @@ class DMI_mysqli_backend implements DMI_Backend {
 		
 		if($dataset->_limit) $q .= ' LIMIT ' . $dataset->_limit;
 		
-		if($dataset->_order) $q .= ' ORDER BY ' . $dataset->_order;
+		if($dataset->_order){
+			// Support keys as complex as "key DESC, value ASC"
+			// and as simple as "sortnum"
+			$orders = explode(',', $dataset->_order);
+			$os = array();
+			foreach($orders as $o){
+				$o = trim($o);
+				if(strpos($o, ' ') !== false) $os[] = '`' . substr($o, 0, strpos($o, ' ')) . '` ' . substr($o, strpos($o, ' ') + 1);
+				else $os[] = '`' . $o . '`';
+			}
+			$q .= ' ORDER BY ' . implode(', ', $os);
+		}
 		
 		// Execute this and populate the dataset appropriately.
 		$res = $this->_rawExecute($q);
