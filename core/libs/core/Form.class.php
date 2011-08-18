@@ -19,6 +19,14 @@ class FormGroup{
 	protected $_attributes;
 
 	protected $_validattributes = array();
+	
+	/**
+	 * Boolean if this form element requires a file upload.
+	 * Only "file" type elements should require this.
+	 * 
+	 * @var boolean
+	 */
+	public $requiresupload = false;
 
 	public function __construct($atts = null){
 		$this->_attributes = array();
@@ -64,6 +72,11 @@ class FormGroup{
 		// them to the form object to be rendered.
 		
 		if($element instanceof FormElement || is_a($element, 'FormElement')){
+			// w00t, already in the right format!
+			if($atts) $element->setFromArray ($atts);
+			$this->_elements[] = $element;
+		}
+		elseif($element instanceof FormGroup){
 			// w00t, already in the right format!
 			if($atts) $element->setFromArray ($atts);
 			$this->_elements[] = $element;
@@ -207,6 +220,25 @@ class FormElement{
 	 * @var boolean
 	 */
 	public $requiresupload = false;
+	
+	/**
+	 * An optional validation check for this element.
+	 * This can be multiple things, such as:
+	 * 
+	 * "/blah/" - Evaluated with preg_match.
+	 * "#blah#" - Also evaluated with preg_match.
+	 * "MyFoo::Blah" - Evaluated with call_user_func.
+	 * 
+	 * @var string 
+	 */
+	public $validation = null;
+	
+	/**
+	 * An optional message to post if the validation check fails.
+	 * 
+	 * @var string 
+	 */
+	public $validationmessage = null;
 
 	public function __construct($atts = null){
 
@@ -287,7 +319,21 @@ class FormElement{
 			return false;
 		}
 
-		// @todo Yeah... do the rest of the validation here.....
+		// If there's a value, pass it through the validation check, (if available).
+		if($value && $this->validation){
+			$vmesg = $this->validationmessage ? $this->validationmessage : $this->get('label') . ' does not validate correctly, please double check it.';
+			$v = $this->validation;
+			
+			// Method-based validation.
+			if( 
+				(strpos($v, '::') !== false && !call_user_func($v, $value)) ||
+				($v{0} == '/' && preg_match($v, $value)) ||
+				($v{0} == '#' && preg_match($v, $value))
+			){
+				$this->_error = $vmesg;
+				return false;
+			}
+		}
 
 		$this->_attributes['value'] = $value;
 		return true;
