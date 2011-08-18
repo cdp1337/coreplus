@@ -5,11 +5,17 @@
 	<provides type="library" name="aws-sdk" version="1.0.0"/>
 	<provides type="library" name="smarty" version="3.0.6"/>
 	<provides type="library" name="phpMailer" version="5.2.0"/>
+	
+	<hookregister name="/core/page/render" description="Called before the page is rendered"/>
+	<hookregister name="/core/page/error-404" description="Called anytime there is a 404 error"/>
+	<hookregister name="/core/page/error-403" description="Called anytime there is a 403 error"/>
+	
 	<hook event="components_loaded" call="CurrentPage::Singleton"/>
-	<!--<hook event="components_ready" call="CurrentPage::LoadPage"/>
-	-->
-	<hook event="render_page" call="CurrentPage::Render"/>
+	<!--<hook event="components_ready" call="CurrentPage::LoadPage"/>-->
+	<hook event="/core/page/render" call="CurrentPage::Render"/>
 	<hook event="components_ready" call="Form::CheckSavedSessionData"/>
+	<hook event="/core/page/error-404" call="GettingStartedController::_HookCatch404"/>
+	
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
 	<library>
 		<!-- The core system directives. -->

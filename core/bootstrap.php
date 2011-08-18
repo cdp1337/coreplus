@@ -147,6 +147,7 @@ if(EXEC_MODE == 'CLI'){
 	$rooturlNOSSL = null;
 	$rooturlSSL = null;
 	$curcall = null;
+	$relativerequest = null;
 	$ssl = false;
 }
 else{
@@ -217,6 +218,8 @@ else{
 	$rooturlNOSSL = $servernameNOSSL . ROOT_WDIR;
 	$rooturlSSL = $servername . ROOT_WDIR;
 	$curcall = $servername . $_SERVER['REQUEST_URI'];
+	$relativerequestpath = substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
+	if(strpos($relativerequestpath, '?') !== false) $relativerequestpath = substr($relativerequestpath, 0, strpos($relativerequestpath, '?'));
 	$ssl = ( isset($_SERVER['HTTPS']) );
 }
 
@@ -224,17 +227,17 @@ else{
  * Full URL of server.
  * ie: http://www.example.com or https://127.0.0.1:8443
  */
-define ( 'SERVERNAME', $servername );
+define('SERVERNAME', $servername );
 /**
  * Full URL of the server forced non-ssl mode.
  * ie: http://www.example.com
  */
-define ( 'SERVERNAME_NOSSL', $servernameNOSSL );
+define('SERVERNAME_NOSSL', $servernameNOSSL );
 /**
  * Full URL of the server forced SSL mode.
  * ie: https://www.example.com or https://127.0.0.1:8443
  */
-define ( 'SERVERNAME_SSL', $servernameSSL );
+define('SERVERNAME_SSL', $servernameSSL );
 /**
  * URL of web root.
  * ie: http://www.example.com/foo/man/choo/
@@ -255,6 +258,12 @@ define('ROOT_URL_SSL', $rooturlSSL);
  * ie: /foo/man/choo/?somevariable=true&somethingelse=false
  */
 define('CUR_CALL', $curcall);
+
+/**
+ * Relative requested path.
+ * ie: User/Login or '' (blank) for the index.
+ */
+define('REL_REQUEST_PATH', $relativerequestpath);
 
 /**
  * Simple true/false if current page call is via SSL.

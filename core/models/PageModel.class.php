@@ -101,6 +101,10 @@ class PageModel extends Model{
 	private $_method;
 	private $_params;
 	
+	/**
+	 * The View component for this page.
+	 * @var View
+	 */
 	private $_view;
 	
 	/**
@@ -191,18 +195,24 @@ class PageModel extends Model{
 		if(!$this->_view){
 			// Create a new data container for use in the transport of the data ultimately.
 			$this->_view = new View();
-
-			// Transpose some useful data for it.
-			$this->_view->baseurl = $this->get('baseurl');
-			$this->_view->setParameters($this->getParameters());
-			$this->_view->templatename = $this->getTemplateName();
-			$this->_view->mastertemplate = ($this->get('template'))? $this->get('template') : ConfigHandler::GetValue('/core/theme/default_template');
-			
-			$this->_view->setBreadcrumbs($this->getParentTree());
-			$this->_view->addBreadcrumb($this->get('title'), $this->getResolvedURL());
+			$this->_populateView();
 		}
 		
 		return $this->_view;
+	}
+	
+	/**
+	 * Hijack an external view, (presumably from another page),
+	 * and load in my stuff over top it.
+	 * 
+	 * This is useful because a single view can be passed around multiple functions,
+	 * but it cannot be replaced entirely due to scope reasons.
+	 * 
+	 * @param View $view
+	 */
+	public function hijackView(View $view){
+		$this->_view = $view;
+		$this->_populateView();
 	}
 
 	public function getMetas(){
@@ -269,7 +279,13 @@ class PageModel extends Model{
 			$transport->error = $r;
 		}
 
-		// @todo A save in here somewhere...
+		if($transport->error == View::ERROR_NOERROR && $this->exists()){
+			// This information is cached.
+			$this->set('title', $transport->title);
+			$this->set('access', $transport->access);
+
+			$this->save();
+		}
 		
 		return $transport;
 	}
@@ -316,6 +332,18 @@ class PageModel extends Model{
 		$ret = array();
 		$p = new PageModel($this->get('parenturl'));
 		return array_merge($p->_getParentTree($antiinfiniteloopcounter), array($p));
+	}
+	
+	private function _populateView(){
+		// Transpose some useful data for it.
+		$this->_view->error = View::ERROR_NOERROR;
+		$this->_view->baseurl = $this->get('baseurl');
+		$this->_view->setParameters($this->getParameters());
+		$this->_view->templatename = $this->getTemplateName();
+		$this->_view->mastertemplate = ($this->get('template'))? $this->get('template') : ConfigHandler::GetValue('/core/theme/default_template');
+
+		$this->_view->setBreadcrumbs($this->getParentTree());
+		$this->_view->addBreadcrumb($this->get('title'), $this->getResolvedURL());
 	}
 
 

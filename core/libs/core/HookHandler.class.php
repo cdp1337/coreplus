@@ -15,17 +15,17 @@
 
 class HookHandler implements ISingleton{
 	
-	private static $registeredHooks = array();
+	private static $RegisteredHooks = array();
 	
-	private static $instance = null;
+	private static $Instance = null;
 	
 	private function __construct(){
 		
 	}
 	
 	public static function Singleton(){
-		if(is_null(self::$instance)) self::$instance = new self();
-		return self::$instance;
+		if(is_null(self::$Instance)) self::$Instance = new self();
+		return self::$Instance;
 	}
 	
 	public static function GetInstance(){ return self::singleton(); }
@@ -43,12 +43,12 @@ class HookHandler implements ISingleton{
 	public static function AttachToHook($hookName, $callFunction, $type = null){
 		$hookName = strtolower($hookName); // Case insensitive will prevent errors later on.
 		Debug::Write('Registering function ' . $callFunction . ' to hook ' . $hookName);
-		//if(!isset(HookHandler::$registeredHooks[$hookName])) HookHandler::$registeredHooks[$hookName] = array();
-		if(!isset(HookHandler::$registeredHooks[$hookName])){
+		//if(!isset(HookHandler::$RegisteredHooks[$hookName])) HookHandler::$RegisteredHooks[$hookName] = array();
+		if(!isset(HookHandler::$RegisteredHooks[$hookName])){
 			trigger_error('Tried to attach a function to undefined hook ' . $hookName, E_USER_NOTICE);
 			return false;
 		}
-		HookHandler::$registeredHooks[$hookName]->attach($callFunction, $type); 
+		HookHandler::$RegisteredHooks[$hookName]->attach($callFunction, $type); 
 	}
 	
 	/**
@@ -60,7 +60,7 @@ class HookHandler implements ISingleton{
 	 * @return void
 	 */
 	public static function RegisterHook(Hook $hook){
-		HookHandler::$registeredHooks[$hook->getName()] = $hook;
+		HookHandler::$RegisteredHooks[$hook->getName()] = $hook;
 	}
 	
 	public static function RegisterNewHook($hookName){
@@ -68,30 +68,56 @@ class HookHandler implements ISingleton{
 		HookHandler::RegisterHook($hook);
 	}
 	
-	public static function DispatchHook($hookName, $args = array()){
+	/**
+	 * Dispatch an event, optionally passing 1 or more parameters.
+	 * 
+	 * @param string $hookName
+	 * @param mixed $_
+	 * @return boolean
+	 */
+	public static function DispatchHook($hookName, $args = null){
 		$hookName = strtolower($hookName); // Case insensitive will prevent errors later on.
 		Debug::Write('Dispatching hook ' . $hookName);
 		Core::AddProfileTime('Calling hook ' . $hookName);
 		//echo "Calling hook $hookName<br>";
-		//var_dump(HookHandler::$registeredHooks[$hookName]);
-		if(!isset(HookHandler::$registeredHooks[$hookName])){
+		//var_dump(HookHandler::$RegisteredHooks[$hookName]);
+		if(!isset(HookHandler::$RegisteredHooks[$hookName])){
 			trigger_error('Tried to dispatch an undefined hook ' . $hookName, E_USER_NOTICE);
 			return;
 		}
 		
-		//$args = func_get_args();
-		//array_shift($args); // Drop the hookName off of the arguments.
-		//if(!sizeof($args)) $args[] = null;
-		//var_dump($args, $args[0]);
+		$args = func_get_args();
+		// Drop off the hook name from the arguments.
+		array_shift($args);
 		
-		$result = HookHandler::$registeredHooks[$hookName]->dispatch($args);
+		$hook = HookHandler::$RegisteredHooks[$hookName];
+		$result = call_user_func_array(array(&$hook, 'dispatch'), $args);
 		
 		Core::AddProfileTime('Called hook ' . $hookName);
 		return $result;
 	}
 
+	/**
+	 * Simple function to return all hooks currently registered on the system.
+	 * 
+	 * @return array
+	 */
 	public static function GetAllHooks(){
-		return self::$registeredHooks;
+		return self::$RegisteredHooks;
+	}
+	
+	/**
+	 * Just a simple debugging function to print out a list of the currently
+	 * registered hooks on the system. 
+	 */
+	public static function PrintHooks(){
+		echo '<dl class="xdebug-var-dump">';
+		foreach(self::$RegisteredHooks as $h){
+			echo '<dt>' . $h->name . '</dt>';
+			if($h->description) echo '<dd>' . $h->description . '</dd>';
+			echo "<br/>\n";
+		}
+		echo '</dl>';
 	}
 }
 
@@ -110,6 +136,8 @@ class Hook{
 	 * @var string
 	 */
 	public $name;
+	
+	public $description;
 	
 	/**
 	 * An array of bound function/methods to call when this event is dispatched.
@@ -134,25 +162,24 @@ class Hook{
 	
 	/**
 	 * Dispatch the event, calling any bound functions.
-	 * @param array $_
+	 * @param mixed $_
 	 * @return void
 	 */
-	public function dispatch($args = array()){
+	public function dispatch($args = null){
 		//echo "Dispatching event " . $this->getName() . "<br/>";
 		//$args = func_get_args();
 		//array_shift($args); // Drop the hookName off of the arguments.
 		//echo '<pre>'; var_dump($args); echo '</pre>';
-		if(isset($args['type'])) $type = $args['type'];
+		// @todo This is legacy and will almost definitely be dropped.
+		if($args && is_array($args) && isset($args['type'])) $type = $args['type'];
 		else $type = false;
 		
 		foreach($this->_bindings as $call){
 			// If the type is set to something and the call type is that
 			// OR
 			// The call type is not set/null.
-			//var_dump($type, $call['type']);
-			//var_dump(((!$call['type']) || ($type && $call['type'] == $type)));
 			if((!$call['type']) || ($type && $call['type'] == $type)){
-				$result = call_user_func($call['call'], $this, $args);
+				$result = call_user_func_array($call['call'], func_get_args());
 				// This will allow a hook to prevent continuation of a script.
 				if($result === false) return false;
 			}
@@ -181,5 +208,3 @@ HookHandler::RegisterNewHook('components_loaded');
 HookHandler::RegisterNewHook('components_ready');
 HookHandler::RegisterNewHook('session_ready');
 HookHandler::RegisterNewHook('install_task');
-HookHandler::RegisterNewHook('render_page');
-HookHandler::RegisterNewHook('page_error');

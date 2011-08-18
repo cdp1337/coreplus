@@ -303,6 +303,12 @@ class Component extends InstallArchiveAPI{
 			}
 		}
 		
+		// Register any hooks that may be present.
+		foreach($this->getElementsByTagName('hookregister') as $h){
+			$hook = new Hook($h->getAttribute('name'));
+			$hook->description = $h->getAttribute('description');
+			HookHandler::RegisterHook($hook);
+		}
 		
 		// Register any events that may be present.
 		foreach($this->getElementsByTagName('hook') as $h){

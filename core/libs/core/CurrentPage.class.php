@@ -272,6 +272,11 @@ class CurrentPage{
 			$view->error = View::ERROR_NOTFOUND;
 		}
 		
+		// Dispatch the hooks here if it's a 404 or 403.
+		if($view->error == View::ERROR_ACCESSDENIED || $view->error == View::ERROR_NOTFOUND){
+			// Let other things chew through it... (optionally)
+			HookHandler::DispatchHook('/core/page/error-' . $view->error, $view);
+		}
 		
 		if($view->error != View::ERROR_NOERROR){
 			// Update some information in the view.
@@ -295,20 +300,6 @@ class CurrentPage{
 			$view->mastertemplate = ConfigHandler::GetValue('/core/theme/default_template');
 			$view->assignVariable('exception', $e);
 			$data = $view->fetch();
-		}
-		
-		// Save this page back in the database if it's available.
-		if($view->error == View::ERROR_NOERROR){
-			// Save this page data too.
-			if($this->_page->exists()){
-				
-				// Make sure the database has something.
-				// (this should be pulled from the database if nothing else anyway)
-				$this->_page->set('title', $view->title);
-				$this->_page->set('access', $view->access);
-				
-				$this->_page->save();
-			} 
 		}
 		
 		// Yay, send the content type and status to the browser.

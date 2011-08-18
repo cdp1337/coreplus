@@ -147,11 +147,9 @@ class ConfigHandler implements ISingleton {
 	 * Query the database for all configuration elements that may be hiding in there.
 	 * Assemble them into a cache of variables internally to prevent having to make repeated DB calls.
 	 *
-	 * @param $hookName
-	 * @param $args
 	 * @return unknown_type
 	 */
-	public static function _DBReadyHook($hookName, $args) {
+	public static function _DBReadyHook() {
 		// No core application, no config's in the database...
 		//if(!Core::IsInstalled()) return;
 		// Any defines that may be in the dabase.
