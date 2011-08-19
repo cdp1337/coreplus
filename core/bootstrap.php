@@ -294,13 +294,20 @@ Core::AddProfileTime('maindefines_complete', $maindefines_time);
 require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
 try{
 	$dbconn = DMI::GetSystemDMI();
+	HookHandler::DispatchHook('db_ready');
 }
+// This catch statement should be hit anytime the database is not available,
+// core table doesn't exist, or the like.
 catch(Exception $e){
 	// Couldn't establish connection... do something fun!
+	// If it's in development mode, redirect back to the installer, which should hopefully
+	// get whatever problem this was fixed.
 	if(DEVELOPMENT_MODE){
 		header('Location: ' . ROOT_WDIR . 'install');
 		die();
 	}
+	// For machines in production mode, well... I'm yet to decide what to do with that specifically,
+	// but it should be something nice, like send an email or something.
 	else{
 		require(ROOT_PDIR . 'core/fatal_error.inc.html');
 		die();
@@ -308,7 +315,7 @@ catch(Exception $e){
 }
 
 
-HookHandler::DispatchHook('db_ready');
+
 unset($start_time, $predefines_time, $preincludes_time, $maindefines_time);
 /*
  * This is all done from within the component handler now.
@@ -345,40 +352,11 @@ if(EXEC_MODE == 'WEB'){
 }
 
 
-
-/*********   LIBRARY BOOTSTRAPPER CLASS, WILL INCLUDE EVERY LIBRARY AND ENSURE DEPENDENCIES, ETC  ***********/
-
-//Debug::Write('Loading library handler');
-//require_once("core/classes/LibraryHandler.class.php");
-//LibraryHandler::singleton();
-
-
-
-/* Send this hook to notify any library that every other library has been loaded
- *  into memory; This should be the instantiation event for any library that does 
- *  not need other libraries loaded.
- */
-//HookHandler::DispatchHook('libraries_loaded');
-// Some libraries may like to know when the other libraries are actually ready, send this off now.
-//HookHandler::DispatchHook('libraries_ready');
-//Core::AddProfileTime('library_load_complete');
-
-
-// Load in the ViewClass object, will help with the connection of page requests and the classes behind them.
-//require_once("core/classes/ViewClass.class.php");
-
-
-
-
-
-
 /**
  * Load all the components
  */
 require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
 ComponentHandler::Singleton();
-//var_dump(ComponentHandler::Singleton());die();
-//var_dump(LibraryHandler::singleton());
 
 // Load all the themes on the system.
 require_once(ROOT_PDIR . 'core/libs/core/ThemeHandler.class.php');

@@ -174,20 +174,20 @@ class ConfigHandler implements ISingleton {
 		*/
 
 		// Any config strings that may be set, (cache them to speed up later requests.)
-		try{
+		//try{
 			$obj = new Dataset();
 			$obj->table('config');
 			$obj->select(array('key', 'value', 'type', 'mapto'));
 			$rs = $obj->execute();
-		}
-		catch(DMI_Exception $e){
-			if(DEVELOPMENT_MODE){
-				echo 'Error retrieving configuration from database.<br/>';
-				if($e->ansicode) echo 'ERROR (' . $e->ansicode . '): ' . $e->getMessage();
-				else echo 'ERROR: ' . $e->getMessage();
-			}
-			return false;
-		}
+		//}
+		//catch(DMI_Exception $e){
+		//	if(DEVELOPMENT_MODE){
+		//		echo 'Error retrieving configuration from database.<br/>';
+		//		if($e->ansicode) echo 'ERROR (' . $e->ansicode . '): ' . $e->getMessage();
+		//		else echo 'ERROR: ' . $e->getMessage();
+		//	}
+		//	return false;
+		//}
 		/*
 		$obj = new SQLBuilderSelect();
 		$obj->from(DB_PREFIX . 'config');
@@ -214,6 +214,7 @@ class ConfigHandler implements ISingleton {
 			// Also map this value if it's set to do so.
 			if($row['mapto'] && !defined($row['mapto'])) define($row['mapto'], $row['value']);
 		}
+		
 	}
 
 	public static function var_dump_cache() {

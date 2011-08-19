@@ -135,11 +135,17 @@ class ComponentHandler implements ISingleton{
 		if($this->_loaded) return;
 		
 		// Load in all the data in the components table.
-		$res = Dataset::Init()->table('component')->select('*')->execute();
-		$this->_dbcache = array();
-		foreach($res as $r){
-			$n = strtolower($r['name']);
-			$this->_dbcache[$n] = $r;
+		try{
+			$res = Dataset::Init()->table('component')->select('*')->execute();
+			$this->_dbcache = array();
+			foreach($res as $r){
+				$n = strtolower($r['name']);
+				$this->_dbcache[$n] = $r;
+			}
+		}
+		catch(Exception $e){
+			//echo '<pre>' . $e->getTraceAsString() . '</pre>';
+			return;
 		}
 		
 		/*

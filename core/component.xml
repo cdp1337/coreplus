@@ -832,7 +832,7 @@
 		<config key="/core/cache_backend" type="string" default="file" description="apc; file; memcache; xcache; BLAH"/>
 		<config key="/core/javascript/minified" type="boolean" default="true" description=""/>
 		<config key="/core/filestore/backend" type="enum" options="aws|local" default="local" description="What type of storage should be used for assets?  This will determine the CDN that is used."/>
-		<config key="/core/filestore/assetdir" type="string" default="assets/" description=""/>
+		<config key="/core/filestore/assetdir" type="string" default="filestore/assets/" description=""/>
 		<config key="/core/filestore/publicdir" type="string" default="filestore/public/" description=""/>
 		<config key="/core/filestore/previews" type="boolean" default="1" description="Try to display a preview of files in thumbnails.  If set to false, only the file mimetype icon is displayed."/>
 		<config key="/core/session/ttl" type="int" default="3600" description="Time to live for sessions.  Amount of seconds to keep an idle session active before requesting the user to log back in due to inactivity."/>
