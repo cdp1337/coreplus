@@ -22,6 +22,6 @@
 require_once('core/bootstrap.php');
 
 // Tell the hook handler that I'm ready to begin rendering of the page.
-HookHandler::DispatchHook('render_page');
+HookHandler::DispatchHook('/core/page/render');
 
 // That's it!  If you're looking for something, chances are it'll be in the bootstrap file!
