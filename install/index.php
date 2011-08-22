@@ -170,11 +170,29 @@ EOD;
 }
 
 
+// Data model backend should be ready now.
+require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
+
+
+// Is the system not installed yet?
 try{
-	// Data model backend should be ready now.
-	require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
-	require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
+	$res = Dataset::Init()->table('component')->select('*')->limit(1)->execute();
+}
+catch(Exception $e){
+	$corecomponent = Core::GetComponent();
+	$corecomponent->load();
 	
+	if(!$corecomponent->isInstalled()){
+		// Install das core!
+		$corecomponent->install();
+		InstallPage::SetVariable('body', 'Installed the core framework, please refresh.');
+		InstallPage::Render();
+	}
+}
+
+
+try{
 	HookHandler::DispatchHook('db_ready');
 
 	// Get the preinstalled components in the system.
