@@ -590,7 +590,12 @@ class DMI_mysqli_backend implements DMI_Backend {
 			$os = array();
 			foreach($orders as $o){
 				$o = trim($o);
+				
+				// Allow for mycolumn DESC or order ASC
 				if(strpos($o, ' ') !== false) $os[] = '`' . substr($o, 0, strpos($o, ' ')) . '` ' . substr($o, strpos($o, ' ') + 1);
+				// Allow for RAND() or other functions.
+				elseif(strpos($o, '()') !== false) $os[] = $o;
+				// Everything else just gets escaped normally.
 				else $os[] = '`' . $o . '`';
 			}
 			$q .= ' ORDER BY ' . implode(', ', $os);
