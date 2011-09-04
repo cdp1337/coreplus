@@ -19,6 +19,8 @@ class HookHandler implements ISingleton{
 	
 	private static $Instance = null;
 	
+	private static $EarlyRegisteredHooks = array();
+	
 	private function __construct(){
 		
 	}
@@ -45,7 +47,12 @@ class HookHandler implements ISingleton{
 		Debug::Write('Registering function ' . $callFunction . ' to hook ' . $hookName);
 		//if(!isset(HookHandler::$RegisteredHooks[$hookName])) HookHandler::$RegisteredHooks[$hookName] = array();
 		if(!isset(HookHandler::$RegisteredHooks[$hookName])){
-			trigger_error('Tried to attach a function to undefined hook ' . $hookName, E_USER_NOTICE);
+			
+			// This hook registration may have happened before the hook is 
+			// actually registered... throw this into a stack for later.
+			if(!isset(self::$EarlyRegisteredHooks[$hookName])) self::$EarlyRegisteredHooks[$hookName] = array();
+			self::$EarlyRegisteredHooks[$hookName][] = array('call' => $callFunction, 'type' => $type);
+			
 			return false;
 		}
 		HookHandler::$RegisteredHooks[$hookName]->attach($callFunction, $type); 
@@ -60,7 +67,18 @@ class HookHandler implements ISingleton{
 	 * @return void
 	 */
 	public static function RegisterHook(Hook $hook){
-		HookHandler::$RegisteredHooks[$hook->getName()] = $hook;
+		$name = $hook->getName();
+		
+		HookHandler::$RegisteredHooks[$name] = $hook;
+		//var_dump(self::$EarlyRegisteredHooks);
+		// Attach any bindings that may have existed.
+		if(isset(self::$EarlyRegisteredHooks[$name])){
+			foreach(self::$EarlyRegisteredHooks[$name] as $b){
+				$hook->attach($b['call'], $b['type']);
+			}
+			
+			unset(self::$EarlyRegisteredHooks[$name]);
+		}
 	}
 	
 	public static function RegisterNewHook($hookName){

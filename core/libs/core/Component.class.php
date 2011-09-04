@@ -312,7 +312,7 @@ class Component extends InstallArchiveAPI{
 		
 		// Register any events that may be present.
 		foreach($this->getElementsByTagName('hook') as $h){
-			$event = $h->getAttribute('event');
+			$event = $h->getAttribute('name');
 			$call = $h->getAttribute('call');
 			$type = @$h->getAttribute('type');
 			HookHandler::AttachToHook($event, $call, $type);
