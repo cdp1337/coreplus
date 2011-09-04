@@ -7,6 +7,10 @@
  */
 class User_facebook_Backend extends User implements User_Backend{
 	
+	public function canResetPassword() {
+		return 'Please reset your password with facebook.';
+	}
+	
 	/**
 	 * Utilize the builtin datamodel systems to look for a facebook user 
 	 * that matches the requested clause.

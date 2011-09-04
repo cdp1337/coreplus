@@ -142,6 +142,42 @@ class UserController extends Controller{
 	}
 	
 	
+	public static function ForgotPassword(View $view){
+		if($_SERVER['REQUEST_METHOD'] == 'POST'){
+			
+			$u = User::Find(array('email' => $_POST['email']), 1);
+			if(!$u){
+				$view->assign('error', 'Invalid user account requested');
+				return;
+			}
+			
+			if(($str = $u->canResetPassword()) !== true){
+				$view->assign('error', $str);
+				return;
+			}
+			
+			$e = new Email();
+			$e->setSubject('Forgot Password Request');
+			$e->to($u->get('email'));
+			$e->assign('link', Core::ResolveLink('/User/ForgotPassword/Execute'));
+			$e->assign('ipaddr', IP_ADDRESS);
+			
+		}
+	}
+	
+	
+	public static function _HookHandler403(View $page){
+		if(Core::User()->exists()){
+			// User is already logged in... I can't do anything.
+			return true;
+		}
+		
+		$p = new PageModel('/User/Login');
+		$p->hijackView($page);
+		UserController::Login($page);
+	}
+	
+	
 	
 	public static function _LoginHandler(Form $form){
 		$e = $form->getElement('email');

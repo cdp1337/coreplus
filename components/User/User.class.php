@@ -292,6 +292,19 @@ class User {
 		else return ConfigHandler::GetValue('/user/displayname/authenticated');
 	}
 	
+	/**
+	 * Simple function that can be used to return either true if this backend
+	 * supports resetting the password, or a string to display as an error message
+	 * if it cannot.
+	 * 
+	 * Useful for facebook-type accounts, where an external system manages the password.
+	 * 
+	 * @return true | string
+	 */
+	public function canResetPassword(){
+		return true;
+	}
+	
 	
 	//////////  PROTECTED METHODS  \\\\\\\\\\\
 	

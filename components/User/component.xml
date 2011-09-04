@@ -4,6 +4,7 @@
 	<requires name="core" type="component"/>
 	<requires name="Facebook" type="component"/>
 	<smartyplugins directory="helpers/smarty-plugins/"/>
+	<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
 	<library>
 		<file filename="Models/UserModel.class.php" md5="d2e62c77633fd48d37d2b0b29b636b3d">
 			<provides type="class" name="UserModel"/>

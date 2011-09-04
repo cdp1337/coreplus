@@ -1,6 +1,7 @@
 <fieldset>
 	<legend> Login </legend>
 	{$form->render()}
+	{a href="/User/ForgotPassword"}Forgot Password?{/a}
 </fieldset>
 
 
