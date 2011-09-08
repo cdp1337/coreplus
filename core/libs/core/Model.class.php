@@ -604,6 +604,12 @@ class Model {
 		return $fac->get();
 	}
 	
+	public static function Count($where = array()){
+		$fac = new ModelFactory(get_called_class());
+		$fac->where($where);
+		return $fac->count();
+	}
+	
 	
 	
 	/*******************   Other Static Methods *************************/
@@ -702,7 +708,7 @@ class ModelFactory{
 	public function limit(){
 		call_user_func_array(array($this->_dataset, 'limit'), func_get_args());
 	}
-
+	
 	public function get(){
 		$rs = $this->_dataset->execute($this->interface);
 		
@@ -721,5 +727,18 @@ class ModelFactory{
 		else{
 			return $ret;
 		}
+	}
+	
+	/**
+	 * Get a count of how many records are in this factory 
+	 * (without counting the records one by one)
+	 * 
+	 * @return int
+	 */
+	public function count(){
+		$clone = clone $this->_dataset;
+		$rs = $clone->count()->execute($this->interface);
+		
+		return $rs->num_rows;
 	}
 }

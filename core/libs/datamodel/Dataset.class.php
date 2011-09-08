@@ -29,6 +29,7 @@ class Dataset implements Iterator{
 	const MODE_UPDATE = 'update';
 	const MODE_INSERTUPDATE = 'insertupdate';
 	const MODE_DELETE = 'delete';
+	const MODE_COUNT = 'count';
 	
 	
 	public $_table;
@@ -110,6 +111,9 @@ class Dataset implements Iterator{
 		return $this;
 	}
 	
+	/**
+	 * @return Dataset 
+	 */
 	public function insert(){
 		call_user_func_array(array($this, '_set'), func_get_args());
 		$this->_mode = Dataset::MODE_INSERT;
@@ -117,6 +121,9 @@ class Dataset implements Iterator{
 		return $this;
 	}
 	
+	/**
+	 * @return Dataset 
+	 */
 	public function update(){
 		call_user_func_array(array($this, '_set'), func_get_args());
 		$this->_mode = Dataset::MODE_UPDATE;
@@ -124,6 +131,9 @@ class Dataset implements Iterator{
 		return $this;
 	}
 	
+	/**
+	 * @return Dataset 
+	 */
 	public function set(){
 		call_user_func_array(array($this, '_set'), func_get_args());
 		$this->_mode = Dataset::MODE_INSERTUPDATE;
@@ -131,10 +141,22 @@ class Dataset implements Iterator{
 		return $this;
 	}
 	
+	/**
+	 * @return Dataset 
+	 */
 	public function delete(){
 		// Just a simple function that doesn't actually delete anything,
 		// but it needs to be called to set the correct flag.
 		$this->_mode = Dataset::MODE_DELETE;
+		
+		return $this;
+	}
+	
+	/**
+	 * @return Dataset 
+	 */
+	public function count(){
+		$this->_mode = Dataset::MODE_COUNT;
 		
 		return $this;
 	}
@@ -222,6 +244,9 @@ class Dataset implements Iterator{
 		return $this;
 	}
 	
+	/**
+	 * @return Dataset 
+	 */
 	public function limit(){
 		$n = func_num_args();
 		if($n == 1) $this->_limit = func_get_arg(0);
@@ -232,7 +257,9 @@ class Dataset implements Iterator{
 		return $this;
 	}
 	
-	
+	/**
+	 * @return Dataset 
+	 */
 	public function order(){
 		$n = func_num_args();
 		if($n == 1) $this->_order = func_get_arg(0);

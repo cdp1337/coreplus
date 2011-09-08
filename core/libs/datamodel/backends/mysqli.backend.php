@@ -91,6 +91,10 @@ class DMI_mysqli_backend implements DMI_Backend {
 				++$this->_writes;
 				$this->_executeDelete($dataset);
 				break;
+			case Dataset::MODE_COUNT:
+				++$this->_reads;
+				$this->_executeCount($dataset);
+				break;
 			default:
 				throw new Exception('Invalid dataset mode [' . $dataset->_mode . ']');
 				break;
@@ -685,6 +689,31 @@ class DMI_mysqli_backend implements DMI_Backend {
 		$res = $this->_rawExecute($q);
 		
 		$dataset->num_rows = $this->_conn->affected_rows;
+	}
+	
+	private function _executeCount(Dataset $dataset){
+		// Generate a query to run.
+		$q = 'SELECT';
+		// Count clauses only need a COUNT(*) for the select.
+		$q .= ' COUNT(*) c';
+		$q .= ' FROM `' . $dataset->_table . '`';
+		
+		if(sizeof($dataset->_where)){
+			$ws = array();
+			foreach($dataset->_where as $w){
+				$w['value'] = $this->_conn->real_escape_string($w['value']);
+				$ws[] = "`{$w['field']}` {$w['op']} '{$w['value']}'";
+			}
+			$q .= ' WHERE ' . implode(' AND ', $ws);
+		}
+		
+		// Execute this and populate the dataset appropriately.
+		$res = $this->_rawExecute($q);
+		
+		// Instead of using the traditional num_rows offered by mysql, I'll 
+		// return the 1 "record" returned, which contains just 'c'.
+		$row = $res->fetch_row();
+		$dataset->num_rows = $row[0];
 	}
 	
 	
