@@ -285,7 +285,7 @@ class User {
 		// Next, the first name.
 		elseif( ($n = $this->get('first_name')) && in_array('firstname', $displayopts)) return $n;
 		// Next, the email base.
-		elseif( ($e = $this->get('email')) && in_array('emailbase', $displayopts)) return substr($e, (strpos($e, '@')));
+		elseif( ($e = $this->get('email')) && in_array('emailbase', $displayopts)) return strstr($e, '@', true);
 		// Next, the email in full.
 		elseif( ($e = $this->get('email')) && in_array('emailfull', $displayopts)) return $e;
 		// Still no?!?
