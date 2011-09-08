@@ -218,7 +218,7 @@ else{
 	$rooturlNOSSL = $servernameNOSSL . ROOT_WDIR;
 	$rooturlSSL = $servername . ROOT_WDIR;
 	$curcall = $servername . $_SERVER['REQUEST_URI'];
-	$relativerequestpath = substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
+	$relativerequestpath = '/' . substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
 	if(strpos($relativerequestpath, '?') !== false) $relativerequestpath = substr($relativerequestpath, 0, strpos($relativerequestpath, '?'));
 	$ssl = ( isset($_SERVER['HTTPS']) );
 }
@@ -261,7 +261,7 @@ define('CUR_CALL', $curcall);
 
 /**
  * Relative requested path.
- * ie: User/Login or '' (blank) for the index.
+ * ie: /User/Login or '/' for the index.
  */
 define('REL_REQUEST_PATH', $relativerequestpath);
 
