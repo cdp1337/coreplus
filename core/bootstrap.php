@@ -147,7 +147,7 @@ if(EXEC_MODE == 'CLI'){
 	$rooturlNOSSL = null;
 	$rooturlSSL = null;
 	$curcall = null;
-	$relativerequest = null;
+	$relativerequestpath = null;
 	$ssl = false;
 }
 else{
