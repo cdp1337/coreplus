@@ -11,10 +11,19 @@
  * @author powellc
  */
 class UserController extends Controller{
-	public static function Login(View $page){
+	
+	public static function Index(View $view){
+		if(!$view->setAccess('g:admin')){
+			return;
+		}
+		
+		
+	}
+	
+	public static function Login(View $view){
 		
 		// Set the access permissions for this page as anonymous-only.
-		if(!$page->setAccess('g:anonymous;g:!admin')){
+		if(!$view->setAccess('g:anonymous;g:!admin')){
 			return;
 		}
 		
@@ -46,8 +55,9 @@ class UserController extends Controller{
 				try{
 					$facebook->setAccessToken($_POST['access-token']);
 					User_facebook_Backend::Login($facebook);
-					// Hmm, what do I do now?
-					Core::Redirect('/');
+					// Redirect to the home page or the page originally requested.
+					if(REL_REQUEST_PATH == '/User/Login') Core::Redirect('/');
+					else Core::Reload();
 				}
 				catch(Exception $e){
 					$error = $e->getMessage();
@@ -78,16 +88,16 @@ class UserController extends Controller{
 		
 
 		
-		$page->assign('error', $error);
-		$page->assign('facebooklink', $facebooklink);
-		$page->assign('backends', ConfigHandler::GetValue('/user/backends'));
-		$page->assign('form', $form);
+		$view->assign('error', $error);
+		$view->assign('facebooklink', $facebooklink);
+		$view->assign('backends', ConfigHandler::GetValue('/user/backends'));
+		$view->assign('form', $form);
 	}
 	
-	public static function Register(View $page){
+	public static function Register(View $view){
 		
 		// Set the access permissions for this page as anonymous-only.
-		if(!$page->setAccess('g:anonymous;g:!admin')){
+		if(!$view->setAccess('g:anonymous;g:!admin')){
 			return;
 		}
 		
@@ -128,12 +138,12 @@ class UserController extends Controller{
 		
 		// @todo Implement a hook handler here for UserPreRegisterForm
 		
-		$page->assign('form', $form);
+		$view->assign('form', $form);
 	}
 	
-	public static function Logout(View $page){
+	public static function Logout(View $view){
 		// Set the access permissions for this page as authenticated-only.
-		if(!$page->setAccess('g:authenticated;g:!admin')){
+		if(!$view->setAccess('g:authenticated;g:!admin')){
 			return;
 		}
 		
@@ -166,15 +176,15 @@ class UserController extends Controller{
 	}
 	
 	
-	public static function _HookHandler403(View $page){
+	public static function _HookHandler403(View $view){
 		if(Core::User()->exists()){
 			// User is already logged in... I can't do anything.
 			return true;
 		}
 		
 		$p = new PageModel('/User/Login');
-		$p->hijackView($page);
-		UserController::Login($page);
+		$p->hijackView($view);
+		UserController::Login($view);
 	}
 	
 	
@@ -213,7 +223,10 @@ class UserController extends Controller{
 		
 		// yay...
 		Session::SetUser($u);
-		return '/';
+		
+		// Where shall I return to?
+		if(REL_REQUEST_PATH == '/User/Login') return '/';
+		else return REL_REQUEST_PATH;
 	}
 	
 	public static function _RegisterHandler(Form $form){
@@ -288,12 +301,18 @@ class UserController extends Controller{
 			}
 		}
 		
+		// Check if there are no users already registered on the system.  If 
+		// none, register this user as an admin automatically.
+		if(UserModel::Count() == 0){
+			$attributes['admin'] = true;
+		}
+		
 		$u = User_datamodel_Backend::Register($e->get('value'), $p1val, $attributes);
 		
 		// "login" this user.
 		Session::SetUser($u);
 		
-		return true;
+		return '/';
 	}
 }
 
