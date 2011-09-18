@@ -154,11 +154,26 @@ class FormGroup{
 		return $out;
 	}
 
-	public function getElements($recursively = true){
+	/**
+	 * Get all elements in this group.
+	 * 
+	 * @param boolean $recursively Recurse into subgroups.
+	 * @param boolean $includegroups Include those subgroups (if recursive is enabled)
+	 * @return array
+	 */
+	public function getElements($recursively = true, $includegroups = false){
 		$els = array();
 		foreach($this->_elements as $e){
 			// Tack on this element, regardless of what it is.
-			$els[] = $e;
+			//$els[] = $e;
+			
+			// Only include a group if recusively is set to false or includegroups is set to true.
+			if(
+				$e instanceof FormElement ||
+				($e instanceof FormGroup && ( $includegroups || !$recursively ) )
+			){
+				$els[] = $e;
+			}
 
 			// In addition, if it is a group, delve into its children.
 			if($recursively && $e instanceof FormGroup) $els = array_merge($els, $e->getElements ($recursively));
@@ -185,7 +200,7 @@ class FormGroup{
 	 * @return FormElement
 	 */
 	public function getElementByName($name){
-		$els = $this->getElements();
+		$els = $this->getElements(true, true);
 
 		foreach($els as $el){
 			if($el->get('name') == $name) return $el;
@@ -415,7 +430,7 @@ class FormElement{
 			$base = substr($n, 0, strpos($n, '['));
 			if(!isset($src[$base])) return null;
 			$t = $src[$base];
-			preg_match_all('/\[(.*?)\]/', $n, $m);
+			preg_match_all('/\[(.+?)\]/', $n, $m);
 			foreach($m[1] as $k){
 				if(!isset($t[$k])) return null;
 				$t = $t[$k];
@@ -455,6 +470,7 @@ class Form extends FormGroup{
 	 * @var array
 	 */
 	public static $Mappings = array(
+		'checkbox' => 'FormCheckboxInput',
 		'file' => 'FormFileInput',
 		'hidden' => 'FormHiddenInput',
 		'pageinsertables' => 'FormPageInsertables',
@@ -594,9 +610,8 @@ class Form extends FormGroup{
 		}
 
 		// Now, get every "model[...]" element, as they key up 1-to-1.
-		$els = $this->getElements();
+		$els = $this->getElements(true, false);
 		foreach($els as $e){
-			if(!$e instanceof FormElement) continue;
 			if(!preg_match('/^model\[(.*?)\].*/', $e->get('name'), $matches)) continue;
 
 			$model->set($matches[1], $e->get('value'));
@@ -646,9 +661,8 @@ class Form extends FormGroup{
 	 * @param array $src 
 	 */
 	public function loadFrom($src){
-		$els = $this->getElements();
+		$els = $this->getElements(true, false);
 		foreach($els as $e){
-			if($e instanceof FormGroup) continue;
 			// Be sure to clear any errors from the previous page load....
 			$e->clearError();
 			$e->set('value', $e->lookupValueFrom($src));
@@ -916,7 +930,7 @@ class FormRadioInput extends FormElement{
 
 		// Some defaults
 		$this->_attributes['class'] = 'formelement formradioinput';
-		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style', 'value');
+		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style');
 	}
 	
 	/**
@@ -950,6 +964,50 @@ class FormRadioInput extends FormElement{
 		}
 		else{
 			return $this->_attributes['value'];
+		}
+	}
+	
+}
+
+class FormCheckboxInput extends FormElement{
+	public function  __construct($atts = null) {
+		parent::__construct($atts);
+
+		// Some defaults
+		$this->_attributes['class'] = 'formelement formcheckboxinput';
+		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style');
+	}
+	
+	public function get($key) {
+		if($key == 'value' && sizeof($this->_attributes['options']) > 1){
+			// This should return an array if there are more than 1 option.
+			if(!$this->_attributes['value']) return array();
+			else return $this->_attributes['value'];
+		}
+		else{
+			return parent::get($key);
+		}
+	}
+	
+	public function set($key, $value) {
+		if($key == 'options'){
+			// The options need to be an array, (hence the plural use)
+			if(!is_array($value)) return false;
+			
+			// if every key in this is an int, transpose the value over to the key instead.
+			// This allows for having an option with a different title and value.
+			// (and cheating, not actually checking every key)
+			if( isset($value[0]) && isset($value[sizeof($value) -1]) ){
+				foreach($value as $k => $v){
+					unset($value[$k]);
+					$value[$v] = $v;
+				}
+			}
+			
+			return parent::set($key, $value);
+		}
+		else{
+			return parent::set($key, $value);
 		}
 	}
 	
@@ -1018,9 +1076,8 @@ class FormPageInsertables extends FormGroup{
 	public function save(){
 		// This is similar to the getModel method of the Form, but is done across multiple records instead of just one.
 		$baseurl = $this->get('baseurl');
-		$els = $this->getElements();
+		$els = $this->getElements(true, false);
 		foreach($els as $e){
-			if(!$e instanceof FormElement) continue;
 			if(!preg_match('/^insertable\[(.*?)\].*/', $e->get('name'), $matches)) continue;
 
 			$i = new InsertableModel($baseurl, $matches[1]);
@@ -1114,7 +1171,6 @@ class FormPageMeta extends FormGroup{
 		if(($i = $this->getElementByName('insertables'))){
 			$els = $i->getElements();
 			foreach($els as $e){
-				if(!$e instanceof FormElement) continue;
 				if(!preg_match('/^insertable\[(.*?)\].*/', $e->get('name'), $matches)) continue;
 
 				$submodel = $page->findLink('Insertable', array('name' => $matches[1]));
