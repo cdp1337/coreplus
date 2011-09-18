@@ -205,6 +205,8 @@ class Model {
 		$this->_dirty = false;
 		$this->_dataatinit = $this->_data;
 		
+		// Indicate that something happened.
+		return true;
 		
 		/*
 		// Go through any linked tables and ensure that they're saved as well.
