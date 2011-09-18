@@ -28,14 +28,14 @@
 
 
 /* Do some useful style defines here... */
-body { text-align:center; padding:0pt; margin:0pt; background:#f5fffa; text-shadow:1px 1px 1px rgba(28, 43, 13, 0.2); font-family:Puritan, helvetica, sans-serif; font-size:11pt;}
+body { text-align:center; padding:0pt; margin:0pt; background:#D5DAFF; text-shadow:1px 1px 1px rgba(28, 43, 13, 0.2); font-family:Puritan, helvetica, sans-serif; font-size:11pt; color:#222;}
 a { color:#1C2B0D; }
 a:hover { text-shadow:0px 1px 2px rgba(28, 43, 13, 0.8);}
 img { border:0px; }
-#wrapper { width:75%; margin:0pt auto; text-align:left; background:#1C2B0d; box-shadow:0px 1px 4px black; -moz-box-shadow:0px 1px 4px black; -webkit-box-shadow:0px 1px 4px black; }
+#wrapper { width:75%; margin:0pt auto; text-align:left; background:black; box-shadow:0px 1px 4px black; -moz-box-shadow:0px 1px 4px black; -webkit-box-shadow:0px 1px 4px black; }
 #innerwrapper { background:#EDEDED; padding:1em 1em 2em; margin:0pt 2px; }
 fieldset { border:1px solid #AAA; padding:0.75em; margin:0.5em; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;}
-fieldset legend { color:#555; font-size:84%; }
+fieldset legend { color:#555; font-size:84%; padding:0pt 0.5em; }
 header { padding: 5px 2px 1px; display:block;}
 footer { height:50px; clear:both;}
 
@@ -94,11 +94,16 @@ a.button:hover { text-decoration:none; background-color:#67B021;}
 .rounded-large { border-radius:10px; -moz-border-radius:10px; -webkit-border-radius:10px; }
 .rounded { border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; }
 
-.formelement { margin-bottom:0.5em; }
+
+.formelement { margin-bottom:0.75em; }
 .formelement label { display:block; }
+.formelement input[type=text],
+.formelement input[type=password]
+{ background: #F6F6F6; border: 1px solid #222222; border-radius:1em; color:#222222; padding:0.15em 1em; }
 .formelement.formerror input,
 .formelement.formerror select,
-.formelement.formerror textarea { border:2px inset red;}
+.formelement.formerror textarea { border:1px inset red; background:#FFF0F0;}
+.formelement .formdescription { font-size:85%; color:#555; margin:0.25em 0pt 0.25em 1em; }
 
 .formfileinput-selector { float:left; width:130px; }
 
@@ -141,3 +146,8 @@ ul.sortable-listing ol { margin-left:1em; }
 .widgetarea.highlightdroptarget { padding:1em; border:2px dashed blue; }
 .widget-source { z-index:2000; border: 2px solid green; padding:0.25em; cursor:move;}
 .ui-sortable .widget { border:2px solid green; cursor:move;}
+
+
+
+/** Collapsible fieldsets **/
+fieldset.collapsed { padding:0pt; border-width: 1px 0px 0px; }
