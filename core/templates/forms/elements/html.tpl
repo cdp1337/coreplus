@@ -11,7 +11,7 @@
     <td class="input">{$element->value}</td>
   </tr>
   {if $element->description ne ''}
-    <tr class="FormDescription"><td colspan="2">{$element->description}</td></tr>
+    <tr class="formdescription"><td colspan="2">{$element->description}</td></tr>
   {/if}
 </table>
 <!-- End rendering of Form element {$element->arguments.name} -->

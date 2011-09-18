@@ -6,6 +6,10 @@
 		<label>{$element->get('title')|escape}</label>
 	{/if}
 	
+	{if $element->get('description')}
+		<p class="formdescription">{$element->get('description')}</p>
+	{/if}
+	
 	<noscript>
 		<input type="file" name="{$element->get('name')}"/><br/>
 		(Please enable javascript to get the most out of this form)
@@ -59,10 +63,6 @@
 	</div>
 	
 	<div style="clear:both;"></div>
-	
-	{if $element->get('description')}
-		<p class="formdescription">{$element->get('description')}</p>
-	{/if}
 </div>
 
 
