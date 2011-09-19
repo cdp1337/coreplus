@@ -88,9 +88,17 @@ a.button:hover { text-decoration:none; background-color:#67B021;}
 
 
 .message-note,
-.message-error { -moz-box-shadow: 3px 3px 5px #888; -webkit-box-shadow: 3px 3px 5px #888; box-shadow: 3px 3px 5px #888; padding:0.35em 2em; margin:0.05em 2em; text-align:center; }
+.message-info,
+.message-success,
+.message-error {
+	-moz-box-shadow: 3px 3px 5px #888; -webkit-box-shadow: 3px 3px 5px #888; 
+	box-shadow: 3px 3px 5px #888; padding:0.5em 2em; margin:0.05em 2em 1em; text-align:center; 
+}
 .message-note { background:#FCF0AD; border:1px solid #BCB06D;}
+.message-info { background:#FFA; border:1px solid #773; color:#551;}
+.message-success { background:#AFA; border: 1px solid #373; color: #151; }
 .message-error { background:#FCe5ed; border:1px solid #BC606D; color:#DF101D;}
+
 .rounded-large { border-radius:10px; -moz-border-radius:10px; -webkit-border-radius:10px; }
 .rounded { border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; }
 
