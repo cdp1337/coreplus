@@ -11,7 +11,7 @@ class GettingStartedController extends Controller{
 	}
 	
 	public static function _HookCatch404($view){
-		if(REL_REQUEST_PATH == ''){
+		if(REL_REQUEST_PATH == '/'){
 			// Index page was requested! ^_^
 			$p = new PageModel('/GettingStarted');
 			$p->hijackView($view);
