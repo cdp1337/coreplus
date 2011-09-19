@@ -107,7 +107,7 @@ a.button:hover { text-decoration:none; background-color:#67B021;}
 .formelement label { display:block; }
 .formelement input[type=text],
 .formelement input[type=password]
-{ background: #F6F6F6; border: 1px solid #222222; border-radius:1em; color:#222222; padding:0.15em 1em; }
+{ background: #F6F6F6; border: 1px solid #222222; border-radius:1em; color:#222222; padding:0.15em 0.5em; }
 .formelement.formerror input,
 .formelement.formerror select,
 .formelement.formerror textarea { border:1px inset red; background:#FFF0F0;}
