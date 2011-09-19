@@ -1,7 +1,12 @@
 <fieldset>
 	<legend> Login </legend>
 	{$form->render()}
-	{a href="/User/ForgotPassword"}Forgot Password?{/a}
+	<br/>
+	{a href="/User/ForgotPassword"}Forgot Password{/a}
+	{if $allowregister}
+		<br/><br/>
+		{a href="/User/Register"}Register Account{/a}
+	{/if}
 </fieldset>
 
 

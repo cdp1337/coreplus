@@ -4,6 +4,9 @@
 	{/if}
 	{if !$loggedin}
 		Welcome {$user->getDisplayName()}!  
-		Please {a href="/User/Login"}Login{/a} or {a href="/User/Register"}Register{/a}
+		Please {a href="/User/Login"}Login{/a}
+		{if $allowregister}
+			or {a href="/User/Register"}Register{/a}
+		{/if}
 	{/if}
 </div>

@@ -92,6 +92,7 @@ class UserController extends Controller{
 		$view->assign('facebooklink', $facebooklink);
 		$view->assign('backends', ConfigHandler::GetValue('/user/backends'));
 		$view->assign('form', $form);
+		$view->assign('allowregister', ConfigHandler::GetValue('/user/register/allowpublic'));
 	}
 	
 	public static function Register(View $view){
@@ -99,6 +100,11 @@ class UserController extends Controller{
 		// Set the access permissions for this page as anonymous-only.
 		if(!$view->setAccess('g:anonymous;g:!admin')){
 			return;
+		}
+		
+		// Also disallow access to this page if the configuration option is disabled.
+		if(!ConfigHandler::GetValue('/user/register/allowpublic')){
+			return View::ERROR_BADREQUEST;
 		}
 		
 		$form = new Form();
