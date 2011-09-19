@@ -258,6 +258,17 @@ class PageModel extends Model{
 			return $transport;
 		}
 		
+		// Check if this Controller has an AccessString set statically.
+		// This allows the method to be skipped entirely.
+		if($c::$AccessString !== null){
+			$transport->access = $c::$AccessString;
+			
+			if(!Core::User()->checkAccess($c::$AccessString)){
+				$transport->error = View::ERROR_ACCESSDENIED;
+				return $transport;
+			}
+		}
+		
 		// Populate the transport view object with some preliminary information
 		// if the page exists and has it.
 		// This information can get overwrote in the view method if requested.

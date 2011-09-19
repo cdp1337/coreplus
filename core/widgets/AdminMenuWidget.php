@@ -15,7 +15,13 @@ class AdminMenuWidget extends Widget {
 		$v = $this->_getView();
 		
 		$pages = PageModel::Find(array('admin' => '1'));
-		$v->assignVariable('pages', $pages);
+		$viewable = array();
+		foreach($pages as $p){
+			if(!Core::User()->checkAccess($p->get('access'))) continue;
+			
+			$viewable[] = $p;
+		}
+		$v->assignVariable('pages', $viewable);
 		
 		return $v;
 	}

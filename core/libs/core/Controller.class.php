@@ -15,7 +15,12 @@
 
 
 class Controller {
-	// @todo Do some shit here!
+	
+	/**
+	 * If this is not null, it is checked before the controller method is even called.
+	 * @var string 
+	 */
+	public static $AccessString = null;
 
 	public static function Index(){
 

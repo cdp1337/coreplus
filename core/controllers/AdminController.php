@@ -1,6 +1,9 @@
 <?php
 
 class AdminController extends Controller {
+	
+	public static $AccessString = 'g:admin';
+	
 	public static function ReinstallAll(View $page){
 		// Just run through every component currently installed and reinstall it.
 		// This will just ensure that the component is up to date and correct as per the component.xml metafile.
