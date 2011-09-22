@@ -64,8 +64,8 @@ class AdminController extends Controller {
 					break;
 				case 'int':
 					$el = FormElement::Factory('text');
-					$el->validation = '/^[0-9]$/';
-					$el->validationmessage = 'Only whole numbers with no puncuation.';
+					$el->validation = '/^[0-9]*$/';
+					$el->validationmessage = $gname . ' - ' . $title . ' expects only whole numbers with no puncuation.';
 					break;
 				case 'set':
 					$el = FormElement::Factory('checkbox');
