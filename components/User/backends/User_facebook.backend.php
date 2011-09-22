@@ -46,7 +46,7 @@ class User_facebook_Backend extends User implements User_Backend{
 			// This is because facebook logins are auto-registration.
 			$m->set('email', $user_profile['email']);
 			$m->set('backend', 'facebook');
-			$m->generateNewApiKey();
+			//$m->generateNewApiKey();
 			
 			// Save it!
 			$m->save();

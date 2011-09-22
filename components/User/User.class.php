@@ -74,7 +74,12 @@ class User {
 	public function set($k, $v) {
 		$d = $this->_getModel()->getAsArray();
 		
-		if(array_key_exists($k, $d)){
+		if($k == 'password'){
+			// Password gets set using the setPassword function due to the 
+			// additional hashing requirements.
+			$this->_getModel()->setPassword($v);
+		}
+		elseif(array_key_exists($k, $d)){
 			$this->_getModel()->set($k, $v);
 		}
 		else{
@@ -104,19 +109,6 @@ class User {
 		}
 	}
 
-	/**
-	 * Generate a new secure API key for this user.
-	 * 
-	 * This is a built-in function that can be used for automated access to
-	 * secured resources on the application/site. 
-	 * 
-	 * Will only set the config, save() still needs to be called externally.
-	 * 
-	 * @since 2011.08
-	 */
-	public function generateNewApiKey(){
-		$this->set('apikey', Core::RandomHex(64, true));
-	}
 	
 	/**
 	 * Get all user configs for this given user
@@ -261,10 +253,6 @@ class User {
 		// Not found... return the default, (which is deny by default).
 		$cache = $default;
 		return $default;
-	}
-	
-	public function setPassword($newpass){
-		die('Please extend ' . __METHOD__ . ' in ' . get_called_class() . '!');
 	}
 	
 	public function checkPassword($password){

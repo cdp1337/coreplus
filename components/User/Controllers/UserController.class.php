@@ -159,25 +159,14 @@ class UserController extends Controller{
 	
 	
 	public static function ForgotPassword(View $view){
-		if($_SERVER['REQUEST_METHOD'] == 'POST'){
-			
-			$u = User::Find(array('email' => $_POST['email']), 1);
-			if(!$u){
-				$view->assign('error', 'Invalid user account requested');
-				return;
-			}
-			
-			if(($str = $u->canResetPassword()) !== true){
-				$view->assign('error', $str);
-				return;
-			}
-			
-			$e = new Email();
-			$e->setSubject('Forgot Password Request');
-			$e->to($u->get('email'));
-			$e->assign('link', Core::ResolveLink('/User/ForgotPassword/Execute'));
-			$e->assign('ipaddr', IP_ADDRESS);
-			
+		
+		// If e and k are set as parameters... it's on step 2.
+		if($view->getParameter('e') && $view->getParameter('k')){
+			self::_ForgotPassword2($view);
+		}
+		// Else, just step 1.
+		else{
+			self::_ForgotPassword1($view);
 		}
 	}
 	
@@ -250,42 +239,35 @@ class UserController extends Controller{
 			return false;
 		}
 		
-		// Check the passwords (complexity check).
-		if(strlen($p1val) < ConfigHandler::GetValue('/user/password/minlength')){
-			$p1->setError('Please ensure that the password is at least ' . ConfigHandler::GetValue('/user/password/minlength') . ' characters long.');
-			return false;
-		}
-		
-		// Check the passwords (complexity check).
-		if(ConfigHandler::GetValue('/user/password/requiresymbols') > 0){
-			preg_match_all('/[^a-zA-Z]/', $p1val, $matches); // Count a number as a symbol.  Close enough :/
-			if(sizeof($matches[0]) < ConfigHandler::GetValue('/user/password/requiresymbols')){
-				$p1->setError('Please ensure that the password has at least ' . ConfigHandler::GetValue('/user/password/requiresymbols') . ' symbol(s) or number(s).');
-				return false;
-			}
-		}
-		
-		// Check the passwords (complexity check).
-		if(ConfigHandler::GetValue('/user/password/requirecapitals') > 0){
-			preg_match_all('/[A-Z]/', $p1val, $matches);
-			if(sizeof($matches[0]) < ConfigHandler::GetValue('/user/password/requirecapitals')){
-				$p1->setError('Please ensure that the password has at least ' . ConfigHandler::GetValue('/user/password/requirecapitals') . ' capital letter(s).');
-				return false;
-			}
-		}
-		
-		// Is this a valid email?
-		if(!Core::CheckEmailValidity($e->get('value'))){
-			$e->setError('Email does not appear to be valid.');
-			return false;
-		}
-		
-		// Do some validation on the email address (if it's taken).
-		$u = User_datamodel_Backend::Find(array('email' => $e->get('value')));
-		if($u->exists()){
+		// Try to retrieve the user data from the database based on the email.
+		// Email is a unique key, so there can only be 1 in the system.
+		if(UserModel::Find(array('email' => $e->get('value')), 1)){
 			$e->setError('Requested email is already registered.');
 			return false;
 		}
+		
+		$u = User_datamodel_Backend::Find(array('email' => $e->get('value')));
+		
+		// All other validation can be done from the model.
+		// All set calls will throw a ModelValidationException if the validation fails.
+		try{
+			$lastel = $e;
+			$u->set('email', $e->get('value'));
+			
+			$lastel = $p1;
+			$u->set('password', $p1->get('value'));
+		}
+		catch(ModelValidationException $e){
+			$lastel->setError($e->getMessage());
+			return false;
+		}
+		catch(Exception $e){
+			if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
+			else Core::SetMessage('An unknown error occured', 'error');
+			
+			return false;
+		}
+		
 		
 		///////   USER CREATION   \\\\\\\\
 		
@@ -303,22 +285,120 @@ class UserController extends Controller{
 					$v = 'public/user/' . $v;
 				}
 				
-				$attributes[$k] = $v;
+				$u->set($k, $v);
 			}
 		}
 		
 		// Check if there are no users already registered on the system.  If 
 		// none, register this user as an admin automatically.
 		if(UserModel::Count() == 0){
-			$attributes['admin'] = true;
+			$u->set('admin', true);
 		}
 		
-		$u = User_datamodel_Backend::Register($e->get('value'), $p1val, $attributes);
+		$u->save();
 		
 		// "login" this user.
 		Session::SetUser($u);
 		
 		return '/';
+	}
+	
+	private static function _ForgotPassword1($view){
+		$view->title = 'Forgot Password';
+		
+		// This is step 1
+		$view->assign('step', 1);
+		
+		// There's really nothing to do here except for check the email and send it.
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST'){
+			
+			$u = User::Find(array('email' => $_POST['email']), 1);
+			if(!$u){
+				Core::SetMessage('Invalid user account requested', 'error');
+				return;
+			}
+			
+			if(($str = $u->canResetPassword()) !== true){
+				Core::SetMessage($str, 'error');
+				return;
+			}
+			
+			// Generate the key based on the apikey and the current password.
+			$key = md5(substr($u->get('apikey'), 0, 15) . substr($u->get('password'), -10));
+			$link = '/User/ForgotPassword?e=' . urlencode(base64_encode($u->get('email'))) . '&k=' . $key;
+			
+			$e = new Email();
+			$e->setSubject('Forgot Password Request');
+			$e->to($u->get('email'));
+			$e->assign('link', Core::ResolveLink($link));
+			$e->assign('ip', REMOTE_IP);
+			$e->templatename = 'emails/user/forgotpassword.tpl';
+			try{
+				$e->send();
+			}
+			catch(Exception $e){
+				Core::SetMessage('Error sending the email, ' . $e->getMessage(), 'error');
+				return;
+			}
+			
+			// Otherwise, it must have sent, (hopefully)...
+			Core::SetMessage('Sent reset instructions via email.', 'success');
+			Core::Redirect('/');
+		}
+	}
+	
+	private static function _ForgotPassword2($view){
+		$view->title = 'Forgot Password';
+		
+		$view->assign('step', 2);
+		
+		// Lookup and validate this information first.
+		$e = base64_decode($view->getParameter('e'));
+
+		$u = User::Find(array('email' => $e), 1);
+		if(!$u){
+			Core::SetMessage('Invalid user account requested', 'error');
+			return;
+		}
+
+		$key = md5(substr($u->get('apikey'), 0, 15) . substr($u->get('password'), -10));
+		if($key != $view->getParameter('k')){
+			Core::SetMessage('Invalid user account requested', 'error');
+			return;
+		}
+
+		if(($str = $u->canResetPassword()) !== true){
+			Core::SetMessage($str, 'error');
+			return;
+		}
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST'){
+			// Validate the password.
+			if($_POST['p1'] != $_POST['p2']){
+				Core::SetMessage('Passwords do not match.', 'error');
+				return;
+			}
+			
+			// Else, try to set it... the user model will complain if it's invalid.
+			try{
+				$u->set('password', $_POST['p1']);
+				$u->save();
+				Core::SetMessage('Reset password successfully', 'success');
+				Session::SetUser($u);
+				Core::Redirect('/');
+			}
+			catch(ModelValidationException $e){
+				Core::SetMessage($e->getMessage(), 'error');
+				return;
+			}
+			catch(Exception $e){
+				if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
+				else Core::SetMessage('An unknown error occured', 'error');
+
+				return;
+			}
+		}
 	}
 }
 

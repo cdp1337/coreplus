@@ -7,16 +7,9 @@
  */
 class User_datamodel_Backend extends User implements User_Backend{
 	
-	public function setPassword($newpass){
-		// hash the password.
-		$hasher = new PasswordHash(15);
-		$password = $hasher->hashPassword($newpass);
-		$this->set('password', $password);
-	}
-	
 	public function checkPassword($password) {
 		$hasher = new PasswordHash(15);
-		return $hasher->checkPassword($password, $this->get('password'));
+		return $hasher->checkPassword($password, $this->_getModel()->get('password'));
 	}
 	
 	/**
@@ -43,9 +36,9 @@ class User_datamodel_Backend extends User implements User_Backend{
 	public static function Register($email, $password, $attributes = array()){
 		$ub = new self();
 		
-		$ub->setPassword($password);
+		$ub->set('password', $password);
 		$ub->set('email', $email);
-		$ub->generateNewApiKey();
+		//$ub->generateNewApiKey();
 		
 		// Save the extended attributes or 'UserConfig' options too!
 		foreach($attributes as $k => $v){
