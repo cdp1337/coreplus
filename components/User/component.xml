@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.2" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.3" name="User" execmode="web">
 	<requires name="core" type="component"/>
 	<requires name="Facebook" type="component"/>
 	<smartyplugins directory="helpers/smarty-plugins/"/>
 	<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
 	<library>
-		<file filename="Models/UserModel.class.php" md5="d2e62c77633fd48d37d2b0b29b636b3d">
+		<file filename="Models/UserModel.class.php" md5="5d0d13c927f3833df02a6c9c1fda31ff">
 			<provides type="class" name="UserModel"/>
 		</file>
 		<file filename="Models/UserUserConfigModel.class.php" md5="7dbdfdaa162114d3b0b7fe04ea920891">
@@ -18,19 +18,19 @@
 		<file filename="User_Backend.interface.php" md5="0a416f5652d467e4bc284c0f007da36f">
 			<provides type="interface" name="User_Backend"/>
 		</file>
-		<file filename="User.class.php" md5="88a3b28cdebdd64c254b8e3f34c0f726">
+		<file filename="User.class.php" md5="03cf100cd93e77e9570727edb8049a03">
 			<provides type="class" name="User"/>
 			<provides type="class" name="UserException"/>
 		</file>
-		<file filename="backends/User_datamodel.backend.php" md5="e46a7354e580a7ae5af55d4ac2dab4d5">
+		<file filename="backends/User_datamodel.backend.php" md5="cf9fd1b2a0b4294eb0875a47522efa78">
 			<provides type="class" name="User_datamodel_Backend"/>
 		</file>
-		<file filename="backends/User_facebook.backend.php" md5="eae8968487bfa9949511de7b3fa231d4">
+		<file filename="backends/User_facebook.backend.php" md5="1fe13307af2252b037b029a79f536c81">
 			<provides type="class" name="User_facebook_Backend"/>
 		</file>
 	</library>
 	<module>
-		<file filename="Controllers/UserController.class.php" md5="0215ec6a708d77ebf98a93bae52362ab">
+		<file filename="Controllers/UserController.class.php" md5="219aa97f369471d3f5f1aa5fc119a633">
 			<provides type="controller" name="UserController"/>
 		</file>
 		<file filename="Widgets/UserLoginWidget.class.php" md5="154480303036d9fe2e09a0537979f41f">
@@ -39,10 +39,10 @@
 	</module>
 	<view>
 		<file filename="templates/widgets/userlogin.tpl" md5="8a8d32b7f36e7ee581ece66be94b4d2d"/>
-		<file filename="templates/emails/user/forgotpassword.tpl" md5="c3e70d27085f06c6cd68c859e538667f"/>
+		<file filename="templates/emails/user/forgotpassword.tpl" md5="3cceaf071bb8cd76a9f7c15fcc1da84e"/>
 		<file filename="templates/emails/user/registration.tpl" md5="bc0af99c272dc0849608642ef56185f2"/>
 		<file filename="templates/pages/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/user/forgotpassword.tpl" md5="a36d8754b3caf3d784ac05d9f5b75f97"/>
+		<file filename="templates/pages/user/forgotpassword.tpl" md5="c2da0dced97b6b643b20c40a5046b5d1"/>
 		<file filename="templates/pages/user/login.tpl" md5="b499441b575fa4bd2e7dd9ac2e49f52b"/>
 	</view>
 	<pages>
@@ -80,6 +80,18 @@
 		</packagemeta>
 		<notes>
 			Added allow public registration config option.
+		</notes>
+	</changelog>
+	<upgrade from="0.0.2" to="0.0.3"/>
+	<changelog version="0.0.3">
+		<packagemeta>
+			<date>Thu, 22 Sep 2011 01:11:12 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.6</packager>
+		</packagemeta>
+		<notes>
+			Added some user validation to the system, (now that validation at a low level is actually possible).
+			Finished the forgot password script.
 		</notes>
 	</changelog>
 	<author name="powellc"/>
