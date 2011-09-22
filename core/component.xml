@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.5" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.6" name="core" execmode="both">
 	<provides type="library" name="phpass" version="0.3~cae1"/>
 	<provides type="library" name="aws-sdk" version="1.0.0"/>
 	<provides type="library" name="smarty" version="3.0.6"/>
@@ -35,7 +35,7 @@
 		<file filename="core/models/ComponentModel.class.php" md5="de9a5d439d2c940e9c0eb35deab722a1">
 			<provides type="class" name="ComponentModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="9f4bcbcd026abffad1baaa359b853eaa">
+		<file filename="core/models/PageModel.class.php" md5="b71d2d6ad5348283a178c08ac20daaf1">
 			<provides type="class" name="PageModel"/>
 		</file>
 		<file filename="core/models/Insertable.class.php" md5="b68b134562140a21626ffc404fc7d362">
@@ -315,13 +315,13 @@
 		<file filename="core/libs/core/Debug.class.php" md5="9b5aba47c4387e683790840abc2c98cc">
 			<provides type="class" name="Debug"/>
 		</file>
-		<file filename="core/libs/core/Email.class.php" md5="b8b79fee5c1f6aa647cb198e4dccafeb">
+		<file filename="core/libs/core/Email.class.php" md5="a0efec77d39a2d79bd9d9242ebe8b044">
 			<provides type="class" name="Email"/>
 		</file>
 		<file filename="core/libs/core/ThemeHandler.class.php" md5="9848293f0dd7626a328b971126dcf987">
 			<provides type="class" name="ThemeHandler"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="7d311fe5f3d3aca8b12f7b680de71094">
+		<file filename="core/libs/core/Form.class.php" md5="d30a9ed816585a295e241468ad4de688">
 			<provides type="class" name="FormGroup"/>
 			<provides type="class" name="FormElement"/>
 			<provides type="class" name="Form"/>
@@ -347,7 +347,7 @@
 			<provides type="class" name="HookHandler"/>
 			<provides type="class" name="Hook"/>
 		</file>
-		<file filename="core/libs/core/Controller.class.php" md5="093c67818ccd99aeceae71cf10b36257">
+		<file filename="core/libs/core/Controller.class.php" md5="4c465a352c2e536511bf57333d8433b5">
 			<provides type="class" name="Controller"/>
 		</file>
 		<file filename="core/libs/core/Session.class.php" md5="d46fbb0bb657d1ea809aa54db73431c6">
@@ -377,9 +377,11 @@
 		<file filename="core/libs/core/CurrentPage.class.php" md5="5bb8c7a5ab25ebacdbbe52f41bb33814">
 			<provides type="class" name="CurrentPage"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="ae85a3d85682b1dfa752fac0d204846e">
+		<file filename="core/libs/core/Model.class.php" md5="334362b6c772935d9100208e54afcded">
 			<provides type="class" name="Model"/>
 			<provides type="class" name="ModelFactory"/>
+			<provides type="class" name="ModelException"/>
+			<provides type="class" name="ModelValidationException"/>
 		</file>
 		<file filename="core/libs/core/CLI.class.php" md5="a5184ce1ee0979018ab8871538751fa3">
 			<provides type="class" name="CLI"/>
@@ -743,7 +745,7 @@
 		</file>
 	</library>
 	<module>
-		<file filename="core/widgets/AdminMenuWidget.php" md5="a09a37b8f8987911f02410be1f64e3ee">
+		<file filename="core/widgets/AdminMenuWidget.php" md5="c9c942afe8a6d1b5f9ae6a43a6ada413">
 			<provides type="widget" name="AdminMenuWidget"/>
 		</file>
 		<file filename="core/controllers/FileController.class.php" md5="adb8895e71a26634184a5cc108abb8ef">
@@ -758,7 +760,7 @@
 		<file filename="core/controllers/DirectoryController.class.php" md5="e9e50405c06731773795016e8b95924e">
 			<provides type="controller" name="DirectoryController"/>
 		</file>
-		<file filename="core/controllers/AdminController.php" md5="4018f9d0e7cc25a245242f930a76a099">
+		<file filename="core/controllers/AdminController.php" md5="4da3564ab61702eb159c1ef965503a8c">
 			<provides type="controller" name="AdminController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="5c1cee97fea17449fced7cfafe41a584">
@@ -916,6 +918,19 @@
 			Updates to the stylesheet and the admin config system.
 		</notes>
 	</changelog>
+	<upgrade from="0.0.5" to="0.0.6"/>
+	<changelog version="0.0.6">
+		<packagemeta>
+			<date>Thu, 22 Sep 2011 01:02:01 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.6</packager>
+		</packagemeta>
+		<notes>
+			Did some fixes to the email system, it now actually works.
+			Considerable work on improving the Model validation system.  It now actually works.
+			Minor tweak in the Form validation logic, it now just shows the validation check in the error message if the site is in development mode.
+		</notes>
+	</changelog>
 	<author name="Charlie Powell" email="powellc@powelltechs.com"/>
 	<author name="Monte Ohrt" email="monte at ohrt dot com"/>
 	<author name="Uwe Tews"/>
@@ -948,9 +963,7 @@
 	<author name="liqwei" email="liqwei@liqwei.com"/>
 	<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
 	<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-		See the included NOTICE.md file for more information.
-	</license>
+	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.html">
 		GNU Lesser General Public License v3
 	</license>
@@ -965,6 +978,7 @@
 		<file filename="core/bootstrap.php" md5="14986ac881151a13eaf9a2f5018c6895"/>
 		<file filename="core/bootstrap_preincludes.php" md5="33a4233265e1b59f50a0723d7d9c6c13"/>
 		<file filename="core/bootstrap_predefines.php" md5="4d323a3a529c1faab172604cff40a1f1"/>
+		<file filename="core/assets/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 		<file filename="core/libs/smarty/SMARTY2_BC_NOTES" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
 		<file filename="core/libs/smarty/README" md5="83797fcbeab9d4f5090510a3023bc4a5"/>
 		<file filename="core/libs/smarty/debug.tpl" md5="6c0554c7a9cdb4c26f079fa8dff98036"/>
