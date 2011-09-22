@@ -27,10 +27,15 @@ class Model {
 	
 	// Regex to match anything not blank.
 	const VALIDATION_NOTBLANK = "/^.+$/";
+	
+	const VALIDATION_EMAIL = 'Core::CheckEmailValidity';
 	// Regex to match email addresses.
 	// @see http://www.regular-expressions.info/email.html
-	const VALIDATION_EMAIL = "/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/";
+	//const VALIDATION_EMAIL = "/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/";
 
+	const LINK_HASONE = 'one';
+	const LINK_HASMANY = 'many';
+	
 	/**
 	 * Which DataModelInterface should this model execute its operations with.
 	 * 99.9% of the time, it's fine to leave this as null, which will use the
@@ -64,28 +69,18 @@ class Model {
 	 */
 	protected $_exists = false;
 
-
-	/**
-	 * @var array The columns and their structure.
-	 * @deprecated
-	 */
-	protected $_columns;
-	
-	public static $Schema = array();
-	
-	public static $Indexes = array();
-	
-	private static $_ModelDataCache = array();
-	
 	protected $_linked = array();
 	
 	protected $_cacheable = true;
 	
-	const LINK_HASONE = 'one';
-	const LINK_HASMANY = 'many';
+	/**
+	 * The schema as per defined in the extending model.
+	 * @var array 
+	 */
+	public static $Schema = array();
 	
-
-
+	public static $Indexes = array();
+	
 	
 	public function __construct($key = null){
 		
@@ -149,29 +144,6 @@ class Model {
 		}
 		
 		return;
-		
-		//if(!isset(Model::$_ModelDataCache[$this->getTableName()][$cachekey])){
-			$builder = $this->getSQLBuilder();
-
-			if(sizeof($this->_pkcolumns)){
-				foreach($this->_pkcolumns as $v){
-					if($this->_data[$v]) $builder->where(array($v => $this->_data[$v]));
-				}
-			}
-
-			$rs = $builder->execute();
-			if(!$rs) throw new Exception(DB::Error());
-
-			Model::$_ModelDataCache[$this->getTableName()][$cachekey] = $rs->fields;
-		//}
-
-
-		if(!Model::$_ModelDataCache[$this->getTableName()][$cachekey]){
-			$this->_dirty = true;
-			return;
-		}
-
-		$this->_loadFromRecord(Model::$_ModelDataCache[$this->getTableName()][$cachekey]);
 	}
 
 	public function save(){
@@ -364,10 +336,51 @@ class Model {
 			if(isset($this->_linked[$k]['records'])) unset($this->_linked[$k]['records']);
 		}
 	}
+	
+	public function validate($k, $v, $throwexception = false){
+		// Is there validation available for this key?
+		$s = self::GetSchema();
+		
+		// Default is true, since by default there is no validation.
+		$valid = true;
+		
+		if(isset($s[$k]['validation'])){
+			// Validation exists... check it.
+			$check = $s[$k]['validation'];
+			if(
+				(strpos($check, '::') !== false && !call_user_func($check, $v)) ||
+				($check{0} == '/' && !preg_match($check, $v)) ||
+				($check{0} == '#' && !preg_match($check, $v))
+			){
+				$valid = false;
+			}
+		}
+		
+		if($valid === true){
+			// Validation's good, return true!
+			return true;
+		}
+		elseif($throwexception){
+			// Validation failed and an Exception was requested.
+			throw new ModelValidationException(
+				isset($s[$k]['validationmessage']) ? $s[$k]['validationmessage'] : $k . ' fails validation'
+			);
+		}
+		else{
+			// Validation failed, but just return the message.
+			return isset($s[$k]['validationmessage']) ? $s[$k]['validationmessage'] : false;
+		}
+	}
 
 	public function set($k, $v){
+		// $this->_data will always have the schema keys at least set to null.
 		if(array_key_exists($k, $this->_data)){
+			
 			if($this->_data[$k] == $v) return false; // No change needed.
+			
+			// Is there validation for this key?
+			// That function will handle all of this logic, (including the exception throwing)
+			$this->validate($k, $v, true);
 			
 			// Set the propagation FIRST, that way I have the old key in memory to lookup.
 			$this->_setLinkKeyPropagation($k, $v);
@@ -546,10 +559,6 @@ class Model {
 	 */
 	public function getAsArray(){
 		return $this->_data;
-	}
-
-	public function getColumnStructure(){
-		return $this->_columns;
 	}
 
 	public function getSQLBuilder(){
@@ -744,3 +753,9 @@ class ModelFactory{
 		return $rs->num_rows;
 	}
 }
+
+
+
+class ModelException extends Exception{  }
+
+class ModelValidationException extends ModelException {  }

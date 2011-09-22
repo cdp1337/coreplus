@@ -26,6 +26,12 @@ class Email{
 	 */
 	public $templatename;
 	
+	
+	public function __construct(){
+		
+	}
+	
+	
 	/**
 	 * Get the template responsible for rendering this email.
 	 * 
@@ -34,7 +40,7 @@ class Email{
 	public function getTemplate(){
 		if(!$this->_template){
 			$this->_template = new Template();
-			$this->_template->setBaseURL($this->baseurl);
+			//$this->_template->setBaseURL($this->baseurl);
 		}
 
 		return $this->_template;
@@ -47,10 +53,12 @@ class Email{
 	 */
 	public function getMailer(){
 		if(!$this->_mailer){
-			$this->_mailer = new PHPMailer();
+			$this->_mailer = new PHPMailer(true);
 			
 			// Load in some default options for this email based on the configuration options.
 			$this->_mailer->From = ConfigHandler::GetValue('/core/email/from');
+			if(!$this->_mailer->From) $this->_mailer->From = 'website@' . $_SERVER['HTTP_HOST'];
+			
 			$this->_mailer->FromName = ConfigHandler::GetValue('/core/email/from_name');
 			$this->_mailer->Mailer = ConfigHandler::GetValue('/core/email/mailer');
 			$this->_mailer->Sendmail = ConfigHandler::GetValue('/core/email/sendmail_path');
@@ -88,9 +96,6 @@ class Email{
 
 
 
-	public function __construct(){
-		
-	}
 
 	/**
 	 * Assign a value to this emails' template.
@@ -182,11 +187,22 @@ class Email{
 		$this->getMailer()->Subject = $subject;
 	}
 
+	/**
+	 * Send the message
+	 * 
+	 * @throws phpmailerException
+	 * @return type 
+	 */
 	public function send(){
 		// Now, do some formatting to the body, ie: it NEEDS an alt body!
 		//if(!$this->AltBody && $this->ContentType == 'text/html'){
 		//	$this->MsgHTML($this->Body);
 		//}
+		
+		// Set the body first.
+		if($this->templatename){
+			$this->setBody($this->getTemplate()->fetch($this->templatename), true);
+		}
 
 		return $this->getMailer()->Send();
 	}

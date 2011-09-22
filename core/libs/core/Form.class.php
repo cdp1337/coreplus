@@ -342,9 +342,10 @@ class FormElement{
 			// Method-based validation.
 			if( 
 				(strpos($v, '::') !== false && !call_user_func($v, $value)) ||
-				($v{0} == '/' && preg_match($v, $value)) ||
-				($v{0} == '#' && preg_match($v, $value))
+				($v{0} == '/' && !preg_match($v, $value)) ||
+				($v{0} == '#' && !preg_match($v, $value))
 			){
+				if(DEVELOPMENT_MODE) $vmesg .= ' validation used: ' . $v;
 				$this->_error = $vmesg;
 				return false;
 			}
