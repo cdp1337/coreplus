@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    TODO define vocabulary identification
+    PUBLIC ID: -//vendor//vocabulary//EN
+    SYSTEM ID: http://server/path/component.dtd
+
+-->
+
+<!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE component SYSTEM "component.dtd">
+
+    <component>
+    ...
+    </component>
+-->
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT component (otherfiles|license|author|dbschema|upgrade|provides|hookregister|hook|smartyplugins|library|module|pages|view|install|changelog|description|configs|assets)*>
+<!ATTLIST component
+    execmode CDATA #IMPLIED
+    name CDATA #IMPLIED
+    version CDATA #IMPLIED
+    xmlns:xsi CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT provides EMPTY>
+<!ATTLIST provides
+    version CDATA #IMPLIED
+    name CDATA #IMPLIED
+    type CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT hookregister EMPTY>
+<!ATTLIST hookregister
+    description CDATA #IMPLIED
+    name CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT hook EMPTY>
+<!ATTLIST hook
+    call CDATA #IMPLIED
+    name CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT smartyplugins EMPTY>
+<!ATTLIST smartyplugins
+    directory CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT library (file)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT file (provides)*>
+<!ATTLIST file
+    md5 CDATA #IMPLIED
+    filename CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT module (file)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT pages (page)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT page EMPTY>
+<!ATTLIST page
+    title CDATA #IMPLIED
+    access CDATA #IMPLIED
+    widget CDATA #IMPLIED
+    admin CDATA #IMPLIED
+    baseurl CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT view (file)*>
+<!ATTLIST view
+    searchdir CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT install EMPTY>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT changelog (notes|packagemeta)*>
+<!ATTLIST changelog
+    version CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT packagemeta (packager|maintainer|date)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT date (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT maintainer EMPTY>
+<!ATTLIST maintainer
+    email CDATA #IMPLIED
+    name CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT packager (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT description (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT configs (config)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT config EMPTY>
+<!ATTLIST config
+    options CDATA #IMPLIED
+    description CDATA #IMPLIED
+    default CDATA #IMPLIED
+    type CDATA #IMPLIED
+    key CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT assets (file)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT upgrade EMPTY>
+<!ATTLIST upgrade
+    to CDATA #IMPLIED
+    from CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT notes (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT dbschema EMPTY>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT author EMPTY>
+<!ATTLIST author
+    email CDATA #IMPLIED
+    name CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT license (#PCDATA)>
+<!ATTLIST license
+    url CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT otherfiles (file)*>

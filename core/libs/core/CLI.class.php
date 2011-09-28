@@ -35,16 +35,22 @@ class CLI{
 		while(!$isanswered){
 			echo NL . $question . NL;
 			$hasexit = false;
+			$hassave = false;
 			
 			if(is_array($answers)){
 				$answerhash = array();
 				$x=0;
 				foreach($answers as $a => $q){
-					if(($a === 'exit') && ($x+1 == sizeof($answers))){
+					if(($a === 'exit')){// && ($x+1 == sizeof($answers))){
 						// This is a 'special' action, so it gets a special key.
 						$answerhash['x'] = $a;
 						echo TAB . " x - $q" . NL;
 						$hasexit = true;
+					}
+					elseif($a === 'save'){
+						$answerhash['s'] = $a;
+						echo TAB . " s - $q" . NL;
+						$hassave = true;
 					}
 					else{
 						$x++;
@@ -63,6 +69,7 @@ class CLI{
 				if($x == 1) echo NL . '(Enter 1 to continue';
 				else echo NL . "(Enter a number, 1-$x";
 				
+				if($hassave) echo " or 's'";
 				if($hasexit) echo " or 'x'";
 				
 				echo ") ";

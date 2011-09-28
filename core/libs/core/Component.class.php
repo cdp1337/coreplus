@@ -291,6 +291,68 @@ class Component extends InstallArchiveAPI{
 		}
 	}
 	
+	/**
+	 * Save or get the package XML for this component.  This is useful for the 
+	 * packager
+	 * 
+	 * @param boolean $minified
+	 * @param string $filename 
+	 */
+	public function savePackageXML($minified = true, $filename = false){
+		
+		// Instantiate a new XML Loader object and get it ready to use.
+		$dom = new XMLLoader();
+		$dom->setRootName('package');
+		$dom->load();
+		
+		// Populate the root attributes for this component package.
+		$dom->getRootDOM()->setAttribute('type', 'component');
+		$dom->getRootDOM()->setAttribute('name', $this->getName());
+		$dom->getRootDOM()->setAttribute('version', $this->getVersion());
+		
+		// Declare the packager
+		$dom->createElement('packager[version="' . Core::GetComponent()->getVersion() . '"]');
+		
+		// Copy over any provide directives.
+		foreach($this->getRootDOM()->getElementsByTagName('provides') as $u){
+			$newu = $dom->getDOM()->importNode($u);
+			$dom->getRootDOM()->appendChild($newu);
+		}
+		$dom->getElement('/provides[type="component"][name="' . strtolower($this->getName()) . '"][version="' . $this->getVersion() . '"]');
+		
+		// Copy over any requires directives.
+		foreach($this->getRootDOM()->getElementsByTagName('requires') as $u){
+			$newu = $dom->getDOM()->importNode($u);
+			$dom->getRootDOM()->appendChild($newu);
+		}
+		
+		// Copy over any upgrade directives.
+		// This one can be useful for an existing installation to see if this 
+		// package can provide a valid upgrade path.
+		foreach($this->getRootDOM()->getElementsByTagName('upgrade') as $u){
+			$newu = $dom->getDOM()->importNode($u);
+			$dom->getRootDOM()->appendChild($newu);
+		}
+		
+		// Tack on description
+		$desc = $this->getElement('/description', false);
+		if($desc){
+			$newd = $dom->getDOM()->importNode($desc);
+			$newd->nodeValue = $desc->nodeValue;
+			$dom->getRootDOM()->appendChild($newd);
+		}
+
+		
+		$out = ($minified) ? $dom->asMinifiedXML() : $dom->asPrettyXML();
+		
+		if($filename){
+			file_put_contents($filename, $out);
+		}
+		else{
+			return $out;
+		}
+	}
+	
 	
 	
 	public function loadFiles(){

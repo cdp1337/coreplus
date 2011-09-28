@@ -587,35 +587,8 @@ function process_component($component, $forcerelease = false){
 	
 	$ans = false;
 	
-	// If just updating a current release, no need to ask for a version number.
-	if($forcerelease){
-		// if it's a force release... don't bother asking the user what they want to do.
-		$reltype = 'release';
-	}
-	else{
-		$reltype = CLI::PromptUser('Are you releasing a new release or just updating an existing component?', array('update' => 'Update to Existing Version', 'release' => 'New Release'));
-	}
-
-
-	if($reltype == 'release'){
-
-		// Try to determine if it's an official package based on the author email.
-		$original = false;
-		foreach($c->getAuthors() as $aut){
-			if($aut['email'] == $packageremail) $original = true;
-		}
-		
-		// Try to explode the version by a ~ sign, this signifies not the original packager/source.
-		// ie: ForeignComponent 3.2.4 may be versioned 3.2.4~thisproject5
-		// if it's the 5th revision of the upstream version 3.2.4 for 'thisproject'.
-		$version = _increment_version($c->getVersion(), $original);
-		
-		$version = CLI::PromptUser('Please set the version of the new release', 'text', $version);
-		$c->setVersion($version);
-	}
-	else{
-		$version = $c->getVersion();
-	}
+	
+	$version = $c->getVersion();
 	
 	
 	// Set the packager information on this release.
@@ -638,23 +611,31 @@ function process_component($component, $forcerelease = false){
 
 	$c->setLicenses(get_unique_licenses($licenses));
 	
-	while($ans != 'finish'){
+	while($ans != 'save'){
 		$opts = array(
 			'editvers' => 'Edit Version Number',
 			'editdesc' => 'Edit Description',
 			'editchange' => 'Edit Changelog',
 			//'dbtables' => 'Manage DB Tables',
 			//'printdebug' => 'DEBUG - Print the XML',
-			'finish' => 'Finish Editing, Save it!',
+			'save' => 'Finish Editing, Save it!',
 			'exit' => 'Abort and exit without saving changes',
 		);
 		$ans = CLI::PromptUser('What do you want to edit for component ' . $c->getName() . ' ' . $version, $opts);
 		
 		switch($ans){
 			case 'editvers':
-				// Do not need to increment it, just provide the user with the ability to change it.
-				// This could be useful if the developer accidently entered the wrong version before.
-				//$version = _increment_version($c->getVersion(), $original);
+				// Try to determine if it's an official package based on the author email.
+				$original = false;
+				foreach($c->getAuthors() as $aut){
+					if($aut['email'] == $packageremail) $original = true;
+				}
+
+				// Try to explode the version by a ~ sign, this signifies not the original packager/source.
+				// ie: ForeignComponent 3.2.4 may be versioned 3.2.4~thisproject5
+				// if it's the 5th revision of the upstream version 3.2.4 for 'thisproject'.
+				$version = _increment_version($c->getVersion(), $original);
+
 				$version = CLI::PromptUser('Please set the new version or', 'text', $version);
 				$c->setVersion($version);
 				break;
@@ -677,81 +658,75 @@ function process_component($component, $forcerelease = false){
 		}
 	}
 	
-	// User must have selected 'finish'...
+	// User must have selected 'save'...
 	$c->save();
 	echo "Saved!" . NL;
 	
-	if($reltype == 'release'){
-		if($forcerelease){
-			// if force release, don't give the user an option... just do it.
-			$bundleyn = true;
-		}
-		else{
-			$bundleyn = CLI::PromptUser('Package saved, do you want to bundle the changes into a package?', 'boolean');
-		}
-		if($bundleyn){
-			// Create a temp directory to contain all these
-			// @todo Bundle up the component, add a META-INF.xml file and (ideally), sign the package.
-			$dir = '/tmp/packager-' . $c->getName() . '/';
-			
-			// The destination depends on the type.
-			switch($component){
-				case 'core':
-					$tgz = ROOT_PDIR . 'exports/core/' . $c->getName() . '-' . $c->getVersion() . '.tgz';
-					break;
-				default:
-					$tgz = ROOT_PDIR . 'exports/components/' . $c->getName() . '-' . $c->getVersion() . '.tgz';
-					break;
-			}
-		
-			// Ensure the export directory exists.
-			if(!is_dir(dirname($tgz))) exec('mkdir -p "' . dirname($tgz) . '"');
-			//mkdir(dirname($tgz));
-		
-			if(!is_dir($dir)) mkdir($dir);
-			if(!is_dir($dir . 'data/')) mkdir($dir . 'data/');
-			if(!is_dir($dir . 'META-INF/')) mkdir($dir . 'META-INF/');
-			
-			//smartCopy(ROOT_PDIR . '/components/' . $c->getName(), $dir . '/data');
-			//smartCopy($c->getBaseDir(), $dir . 'data/');
-			foreach($c->getAllFilenames() as $f){
-				$file = new File_local_backend($c->getBaseDir() . $f['file']);
-				$file->copyTo($dir . 'data/' . $f['file']);
-			}
-			// Don't forget the metafile....
-			$file = new File_local_backend($c->getXMLFilename());
-			$file->copyTo($dir . 'data/' . $c->getXMLFilename(''));
+	if($forcerelease){
+		// if force release, don't give the user an option... just do it.
+		$bundleyn = true;
+	}
+	else{
+		$bundleyn = CLI::PromptUser('Package saved, do you want to bundle the changes into a package?', 'boolean');
+	}
+	if($bundleyn){
+		// Create a temp directory to contain all these
+		// @todo Bundle up the component, add a META-INF.xml file and (ideally), sign the package.
+		$dir = '/tmp/packager-' . $c->getName() . '/';
 
-			$packager = 'CAE2 ' . ComponentHandler::GetComponent('core')->getVersion();
-			$packagename = $c->getName();
-			
-			// Different component types require a different bundle type.
-			$bundletype = ($component == 'core')? 'core' : 'component';
-		
-			// This is the data that will be added to the manifest file.
-			// That file tells the installer what the archive is, ie: component, template, etc.
-			$meta = <<<EOD
-Manifest-Version: 1.0
-Created-By: $packager
-Bundle-ContactAddress: $packageremail
-Bundle-Name: $packagename
-Bundle-Version: $version
-Bundle-Type: $bundletype
-EOD;
-			file_put_contents($dir . 'META-INF/MANIFEST.MF', $meta);
-			exec('tar -czf ' . $tgz . ' -C ' . $dir . ' --exclude=.svn --exclude=*~ --exclude=._* .');
-			$bundle = $tgz;
-		
-			if(CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
-				exec('gpg -u "' . $packageremail . '" -a --sign "' . $tgz . '"');
-				$bundle .= '.asc';
-			}
-		
-			// And remove the tmp directory.
-			exec('rm -fr "' . $dir . '"');
-		
-			echo "Created package of " . $c->getName() . ' ' . $c->getVersion() . NL . " as " . $bundle . NL;
+		// The destination depends on the type.
+		switch($component){
+			case 'core':
+				$tgz = ROOT_PDIR . 'exports/core/' . $c->getName() . '-' . $c->getVersion() . '.tgz';
+				break;
+			default:
+				$tgz = ROOT_PDIR . 'exports/components/' . $c->getName() . '-' . $c->getVersion() . '.tgz';
+				break;
 		}
+
+		// Ensure the export directory exists.
+		if(!is_dir(dirname($tgz))) exec('mkdir -p "' . dirname($tgz) . '"');
+		//mkdir(dirname($tgz));
+
+		if(!is_dir($dir)) mkdir($dir);
+		if(!is_dir($dir . 'data/')) mkdir($dir . 'data/');
+		//if(!is_dir($dir . 'META-INF/')) mkdir($dir . 'META-INF/');
+
+		//smartCopy(ROOT_PDIR . '/components/' . $c->getName(), $dir . '/data');
+		//smartCopy($c->getBaseDir(), $dir . 'data/');
+		foreach($c->getAllFilenames() as $f){
+			$file = new File_local_backend($c->getBaseDir() . $f['file']);
+			$file->copyTo($dir . 'data/' . $f['file']);
+		}
+
+		// Don't forget the metafile....
+
+		// Because the destination is relative...
+		$xmldest = 'data/' . substr($c->getXMLFilename(), strlen($c->getBaseDir()));
+		$file = new File_local_backend($c->getXMLFilename());
+		$file->copyTo($dir . $xmldest);
+
+		$packager = 'CAE2 ' . ComponentHandler::GetComponent('core')->getVersion();
+		$packagename = $c->getName();
+
+		// Different component types require a different bundle type.
+		$bundletype = ($component == 'core')? 'core' : 'component';
+		
+		// Save the package.xml file.
+		$c->savePackageXML(true, $dir . 'package.xml');
+
+		exec('tar -czf ' . $tgz . ' -C ' . $dir . ' --exclude=.svn --exclude=*~ --exclude=._* .');
+		$bundle = $tgz;
+
+		if(CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
+			exec('gpg -u "' . $packageremail . '" -a --sign "' . $tgz . '"');
+			$bundle .= '.asc';
+		}
+
+		// And remove the tmp directory.
+		exec('rm -fr "' . $dir . '"');
+
+		echo "Created package of " . $c->getName() . ' ' . $c->getVersion() . NL . " as " . $bundle . NL;
 	}
 } // function process_component($component)
 

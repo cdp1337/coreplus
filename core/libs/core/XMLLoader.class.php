@@ -88,7 +88,17 @@ class XMLLoader{
 	 * @return DOMNode
 	 */
 	protected function getRootDOM(){
-		return $this->_DOM->getElementsByTagName($this->_rootname)->item(0);
+		$root = $this->_DOM->getElementsByTagName($this->_rootname);
+		
+		if($root->item(0) === null){
+			$root = $this->_DOM->createElement($this->_rootname);
+			$this->_DOM->appendChild($root);
+			
+			return $root; // Because it's already the item.
+		}
+		else{
+			return $root->item(0);
+		}
 	}
 	/**
 	 * Get the complete DOM object.

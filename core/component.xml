@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component>
+<!DOCTYPE component SYSTEM "component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.6" name="core" execmode="both">
 	<provides type="library" name="phpass" version="0.3~cae1"/>
 	<provides type="library" name="aws-sdk" version="1.0.0"/>
 	<provides type="library" name="smarty" version="3.0.6"/>
 	<provides type="library" name="phpMailer" version="5.2.0"/>
-	<hookregister name="/core/page/render" description="Called before the page is rendered"/>
+	<hookregister name="/core/page/prerender" description="Called before the page is rendered"/>
+	<hookregister name="/core/page/render" description="Called to render the page"/>
 	<hookregister name="/core/page/error-404" description="Called anytime there is a 404 error"/>
 	<hookregister name="/core/page/error-403" description="Called anytime there is a 403 error"/>
 	<hook name="components_loaded" call="CurrentPage::Singleton"/>
