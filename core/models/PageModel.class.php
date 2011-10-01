@@ -395,7 +395,9 @@ class PageModel extends Model{
 		}
 		
 		// Logic for the Controller.
-		if(strpos($base, '/')) $controller = substr($base, 0, strpos($base, '/'));
+		$posofslash = strpos($base, '/');
+		
+		if($posofslash) $controller = substr($base, 0, $posofslash);
 		else $controller = $base;
 
 		if(class_exists($controller . 'Controller') && is_subclass_of($controller . 'Controller', 'Controller')){
@@ -407,20 +409,39 @@ class PageModel extends Model{
 		else{
 			return null;
 		}
-
+		
+		// Trim the base.
+		if($posofslash !== false) $base = substr($base, $posofslash + 1);
+		else $base = false;
 
 		// Logic for the Method.
-		if(substr_count($base, '/') >= 1){
-			$method = substr($base, strpos($base, '/')+1);
-			if(strpos($method, '/')) $method = substr($method, 0, strpos($method, '/'));
+		//if(substr_count($base, '/') >= 1){
+		if($base){
+			
+			$posofslash = strpos($base, '/');
+			
+			// The method can be extended.
+			// This means that a method can be in the format of Sites/Edit, which should resolve to Sites_Edit.
+			// This only taks effect if the method exists on the controller.
+			if($posofslash){
+				$method = str_replace('/', '_', $base);
+				while(!method_exists($controller, $method) && strpos($method, '_')){
+					$method = substr($method, 0, strrpos($method, '_'));
+				}
+			}
+			else{
+				$method = $base;
+			}
+			
+			// Now trim the base again based on the length of the method.
+			$base = substr($base, strlen($method) + 1);
 		}
 		else{
 			// The controller may have an "Index" controller.  That doesn't need to be explictly called.
-			//if(method_exists($controller, 'Index')) $method = 'Index';
-			//else return null;
 			$method = 'Index';
 		}
 
+		// One last check that the method exists, (because there's only 1 scenerio that checks above)
 		if(!method_exists($controller, $method)){
 			return null;
 		}
@@ -433,22 +454,13 @@ class PageModel extends Model{
 
 
 		// Logic for the parameters.
-		if(substr_count($base, '/') >= 2){
-			$params = substr($base, strpos($base, '/')+1);
-			$params = substr($params, strpos($params, '/')+1);
-			
-			//if(strpos($params, '/')) $params = substr($params, 0, strpos($params, '/'));
-			$params = explode('/', $params);
-		}
-		else{
-			$params = null;
-		}
+		$params = ($base !== false) ? explode('/', $base) : null;
 		
 		
 		// Build these onto a base for a standardized callable URL.
 		$baseurl = '/' . ((strpos($controller, 'Controller') == strlen($controller) - 10)? substr($controller, 0, -10) : $controller);
 		// No need to add a method if it's the index.
-		if(!($method == 'Index' && !$params)) $baseurl .= '/' . $method;
+		if(!($method == 'Index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
 		$baseurl .= ($params)? '/' . implode('/', $params) : '';
 		// Rewrite URL may be useful too!
 		$rewriteurl = self::_LookupReverseUrl($baseurl);
