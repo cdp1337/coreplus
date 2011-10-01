@@ -840,6 +840,14 @@ class Form extends FormGroup{
 			elseif($v['type'] == Model::ATT_TYPE_TEXT){
 				$el = FormElement::Factory('textarea');
 			}
+			elseif($v['type'] == Model::ATT_TYPE_CREATED){
+				// This element doesn't need to be in the form.
+				continue;
+			}
+			elseif($v['type'] == Model::ATT_TYPE_UPDATED){
+				// This element doesn't need to be in the form.
+				continue;
+			}
 			else{
 				die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
 			}
