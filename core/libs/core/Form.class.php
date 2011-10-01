@@ -411,6 +411,9 @@ class FormElement{
 	public function getInputAttributes(){
 		$out = '';
 		foreach($this->_validattributes as $k){
+			// 'Required' is skipped if it's false.
+			if($k == 'required' && !$this->get($k)) continue;
+			
 			if(($v = $this->get($k)) !== null) $out .= " $k=\"" . str_replace('"', '\\"', $v) . "\"";
 		}
 		return $out;
