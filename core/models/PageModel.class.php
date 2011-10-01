@@ -377,8 +377,8 @@ class PageModel extends Model{
 		// Resolve any rewriteurl to the base.  won't affect it if it doesn't exist.
 		$base = self::_LookupUrl($base);
 
-		// Remove the first '/'.
-		if($base{0} == '/') $base = substr($base, 1);
+		// Trim off both beginning and trailing slashes.
+		$base = trim($base, '/');
 		
 		
 		$args = null;
