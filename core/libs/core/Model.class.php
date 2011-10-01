@@ -13,7 +13,7 @@
  * and please contribute back to the community :)
  */
 
-class Model {
+class Model implements ArrayAccess{
 
 	const ATT_TYPE_STRING = 'string';
 	const ATT_TYPE_TEXT = 'text';
@@ -195,7 +195,66 @@ class Model {
 		}
 		*/
 	}
+	
+	//// A few array access functions \\\\
+	
+	/**
+	 * Whether a offset exists
+	 * 
+	 * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+	 * @param mixed $offset An offset to check for.
+	 * @return boolean Returns true on success or false on failure.
+	 */
+	public function offsetExists($offset) {
+		return (array_key_exists($offset, $this->_data));
+	}
 
+	/**
+	 * Offset to retrieve
+	 * 
+	 * Alias of Model::get()
+	 * 
+	 * @link http://php.net/manual/en/arrayaccess.offsetget.php
+	 * @param mixed $offset The offset to retrieve.
+	 * @return mixed Can return all value types.
+	 */
+	public function offsetGet($offset) {
+		return $this->get($offset);
+	}
+
+	/**
+	 * Offset to set
+	 * 
+	 * Alias of Model::set()
+	 * 
+	 * @link http://php.net/manual/en/arrayaccess.offsetset.php
+	 * @param mixed $offset The offset to assign the value to.
+	 * @param mixed $value The value to set.
+	 * @return void 
+	 */
+	public function offsetSet($offset, $value) {
+		$this->set($offset, $value);
+	}
+
+	/**
+	 * Offset to unset
+	 * 
+	 * This just sets the value to null.
+	 * 
+	 * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+	 * @param mixed $offset The offset to unset.
+	 * @return void 
+	 */
+	public function offsetUnset($offset) {
+		$this->set($offset, null);
+	}
+	
+	/*
+	public boolean offsetExists ( mixed $offset )
+	public mixed offsetGet ( mixed $offset )
+	public void offsetSet ( mixed $offset , mixed $value )
+	public void offsetUnset ( mixed $offset )
+	*/
 	private function _saveNew(){
 		$i = self::GetIndexes();
 		$s = self::GetSchema();
