@@ -4,6 +4,17 @@ class AdminController extends Controller {
 	
 	public static $AccessString = 'g:admin';
 	
+	public static function Index(View $view) {
+		$pages = PageModel::Find(array('admin' => '1'));
+		$viewable = array();
+		foreach($pages as $p){
+			if(!Core::User()->checkAccess($p->get('access'))) continue;
+			
+			$viewable[] = $p;
+		}
+		$view->assignVariable('links', $viewable);
+	}
+	
 	public static function ReinstallAll(View $page){
 		// Just run through every component currently installed and reinstall it.
 		// This will just ensure that the component is up to date and correct as per the component.xml metafile.
@@ -101,9 +112,7 @@ class AdminController extends Controller {
 		
 		$view->assign('form', $form);
 	}
-	
-	//public static function Edit()
-	
+
 	
 	public static function _ConfigSubmit(Form $form){
 		$elements = $form->getElements();
