@@ -249,6 +249,19 @@ class Model implements ArrayAccess{
 		$this->set($offset, null);
 	}
 	
+	public function getKeySchema($key){
+		$s = self::GetSchema();
+		if(!isset($s[$key])) return null;
+		
+		if(!isset($s[$key]['type'])) $s[$key]['type'] = Model::ATT_TYPE_TEXT; // Default if not present.
+		if(!isset($s[$key]['maxlength'])) $s[$key]['maxlength'] = false;
+		if(!isset($s[$key]['null'])) $s[$key]['null'] = false;
+		if(!isset($s[$key]['comment'])) $s[$key]['comment'] = false;
+		if(!isset($s[$key]['default'])) $s[$key]['default'] = false;
+		
+		return $s[$key];
+	}
+	
 	/*
 	public boolean offsetExists ( mixed $offset )
 	public mixed offsetGet ( mixed $offset )
