@@ -618,7 +618,16 @@ class Form extends FormGroup{
 		foreach($els as $e){
 			if(!preg_match('/^model\[(.*?)\].*/', $e->get('name'), $matches)) continue;
 
-			$model->set($matches[1], $e->get('value'));
+			$key = $matches[1];
+			$val = $e->get('value');
+			$schema = $model->getKeySchema($key);
+			
+			if($schema['type'] == Model::ATT_TYPE_BOOL){
+				if(strtolower($val) == 'yes') $val = 1;
+				else $val = 0;
+			}
+			
+			$model->set($key, $val);
 		}
 		
 		
