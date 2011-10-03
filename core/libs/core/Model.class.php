@@ -74,6 +74,14 @@ class Model implements ArrayAccess{
 	protected $_cacheable = true;
 	
 	/**
+	 * A cache of the schema for this object.
+	 * This is useful because the public Schema definition can have columns that are omitted.
+	 * 
+	 * @var array
+	 */
+	protected $_schemacache = null;
+	
+	/**
 	 * The schema as per defined in the extending model.
 	 * @var array 
 	 */
@@ -249,15 +257,39 @@ class Model implements ArrayAccess{
 		$this->set($offset, null);
 	}
 	
-	public function getKeySchema($key){
-		$s = self::GetSchema();
-		if(!isset($s[$key])) return null;
+	/**
+	 * Get a valid schema of all keys of this model.
+	 * 
+	 * @return array 
+	 */
+	public function getKeySchemas(){
+		if($this->_schemacache === null){
+			$this->_schemacache = self::GetSchema();
+			
+			foreach($this->_schemacache as $k => $v){
+				// These are all defaults for schemas.
+				// Setting them to the default if they're not set will ensure that 
+				// 'undefined index' notices are not incurred.
+				if(!isset($v['type'])) $this->_schemacache[$k]['type'] = Model::ATT_TYPE_TEXT; // Default if not present.
+				if(!isset($v['maxlength'])) $this->_schemacache[$k]['maxlength'] = false;
+				if(!isset($v['null'])) $this->_schemacache[$k]['null'] = false;
+				if(!isset($v['comment'])) $this->_schemacache[$k]['comment'] = false;
+				if(!isset($v['default'])) $this->_schemacache[$k]['default'] = false;
+			}
+		}
 		
-		if(!isset($s[$key]['type'])) $s[$key]['type'] = Model::ATT_TYPE_TEXT; // Default if not present.
-		if(!isset($s[$key]['maxlength'])) $s[$key]['maxlength'] = false;
-		if(!isset($s[$key]['null'])) $s[$key]['null'] = false;
-		if(!isset($s[$key]['comment'])) $s[$key]['comment'] = false;
-		if(!isset($s[$key]['default'])) $s[$key]['default'] = false;
+		return $this->_schemacache;
+	}
+	
+	/**
+	 * Get a valid schema of the requested key of this model.
+	 * @param type $key
+	 * @return boolean 
+	 */
+	public function getKeySchema($key){
+		$s = $this->getKeySchemas();
+		
+		if(!isset($s[$key])) return null;
 		
 		return $s[$key];
 	}
