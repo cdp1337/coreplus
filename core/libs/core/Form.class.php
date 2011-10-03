@@ -811,7 +811,7 @@ class Form extends FormGroup{
 
 		// Add the initial model tracker, will remember which model is attached.
 		$f->set('___modelname', get_class($model));
-		$s = $model->GetSchema();
+		$s = $model->getKeySchemas();
 		$i = $model->GetIndexes();
 		if(!isset($i['primary'])) $i['primary'] = array();
 
@@ -836,12 +836,21 @@ class Form extends FormGroup{
 			$title = ucwords($k);
 			$required = (isset($v['required']))? ($v['required']) : false;
 			
+			if($model->get($k)) $val = $model->get($k);
+			elseif(isset($v['default'])) $val = $v['default'];
+			else $val = null;
+			
 			if(isset($v['formtype'])){
 				$el = FormElement::Factory($v['formtype']);
 			}
 			elseif($v['type'] == Model::ATT_TYPE_BOOL){
 				$el = FormElement::Factory('radio');
 				$el->set('options', array('Yes', 'No'));
+				
+				if($model->get($k)) $val = 'Yes';
+				elseif($model->get($k) === null && $v['default']) $val = 'Yes';
+				elseif($model->get($k) === null && !$v['default']) $val = 'No';
+				else $val = 'No';
 			}
 			elseif($v['type'] == Model::ATT_TYPE_STRING){
 				$el = FormElement::Factory('text');
@@ -867,9 +876,7 @@ class Form extends FormGroup{
 			$el->set('name', 'model[' . $k . ']');
 			$el->set('required', $required);
 			$el->set('title', $title);
-			
-			if($model->get($k)) $el->set('value', $model->get($k));
-			elseif(isset($v['default'])) $el->set('value', $v['default']);
+			$el->set('value', $val);
 			
 			$f->addElement($el);
 		}
@@ -971,8 +978,8 @@ class FormRadioInput extends FormElement{
 			isset($this->_attributes['options']['Yes']) &&
 			isset($this->_attributes['options']['No'])
 		){
+			// Running strtolower on a boolean will result in either "1" or "".
 			switch(strtolower($this->_attributes['value'])){
-				case true:
 				case '1':
 				case 'true':
 				case 'yes':
