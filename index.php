@@ -21,6 +21,10 @@
 // This basically does everything.....
 require_once('core/bootstrap.php');
 
+// Anything that needs to fire off *before* the page is rendered.
+// This includes widgets, script addons, and anything else that needs a CurrentPage.
+HookHandler::DispatchHook('/core/page/prerender');
+
 // Tell the hook handler that I'm ready to begin rendering of the page.
 HookHandler::DispatchHook('/core/page/render');
 
