@@ -44,6 +44,8 @@ class UpdaterController extends Controller {
 				'source' => 'installed',
 				'description' => $c->getDescription(),
 				'provides' => $c->getProvides(),
+				'requires' => $c->getRequires(),
+				'location' => null,
 			);
 		}
 		
@@ -57,7 +59,7 @@ class UpdaterController extends Controller {
 			
 			$repoxml = new RepoXML();
 			$repoxml->loadFromFile($file);
-			
+			$rootpath = dirname($site->get('url')) . '/';
 			foreach($repoxml->getPackages() as $pkg){
 				// Already installed and is up to date, don't do anything.
 				//if($pkg->isCurrent()) continue;
@@ -73,6 +75,8 @@ class UpdaterController extends Controller {
 						'source' => 'repo-' . $site->get('id'),
 						'description' => $pkg->getDescription(),
 						'provides' => $pkg->getProvides(),
+						'requires' => $pkg->getRequires(),
+						'location' => $rootpath . $pkg->getFileLocation(),
 					);
 				}		
 				
@@ -80,7 +84,7 @@ class UpdaterController extends Controller {
 			}
 		}
 		
-		var_dump($components); die();
+		var_dump($components['jquery-full']); die();
 		
 	}
 	

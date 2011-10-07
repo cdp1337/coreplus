@@ -28,6 +28,15 @@ class PackageXML extends XMLLoader{
 		return '';
 	}
 	
+	public function getFileLocation(){
+		return $this->getElement('location')->nodeValue;
+	}
+	
+	public function setFileLocation($loc){
+		$node = $this->getElement('location');
+		$node->nodeValue = $loc;
+	}
+	
 	/**
 	 * Check if this package is already installed.
 	 * 

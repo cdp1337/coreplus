@@ -101,7 +101,7 @@ abstract class InstallArchiveAPI extends XMLLoader{
 			$n = $r->getAttribute('name');
 			$v = @$r->getAttribute('version');
 			$op = @$r->getAttribute('operation');
-			$value = @$r->getAttribute('value');
+			//$value = @$r->getAttribute('value');
 
 			// Defaults.
 			if($v == '') $v = false;
@@ -112,7 +112,7 @@ abstract class InstallArchiveAPI extends XMLLoader{
 				'name' => $n,
 				'version' => strtolower($v),
 				'operation' => strtolower($op),
-				'value' => $value,
+				//'value' => $value,
 			);
 		}
 		return $ret;
