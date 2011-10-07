@@ -46,6 +46,15 @@ interface File_Backend {
 	public function getBaseFilename($withoutext = false);
 	
 	/**
+	 * Get the filename for a local clone of this file.
+	 * For local files, it's the same thing, but remote files will be copied to a temporary local location first.
+	 * 
+	 * @return string
+	 */
+	public function getLocalFilename();
+		
+	
+	/**
 	 * Get the hash for this file.
 	 */
 	public function getHash();
@@ -95,6 +104,14 @@ interface File_Backend {
 	public function putContents($data);
 	
 	/**
+	 * Get the contents object that can then be manipulated in more detail,
+	 * ie: an image can be displayed, compressed files can be uncompressed, etc.
+	 * 
+	 * @return File_Contents 
+	 */
+	public function getContentsObject();
+	
+	/**
 	 * Check if this file exists on the filesystem currently.
 	 * 
 	 * @return boolean
@@ -102,4 +119,3 @@ interface File_Backend {
 	public function exists();
 }
 
-?>

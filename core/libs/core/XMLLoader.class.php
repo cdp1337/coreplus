@@ -42,6 +42,14 @@ class XMLLoader{
 	protected $_filename;
 	
 	/**
+	 * The file object of this XML Loader.
+	 * This is an option parameter for advanced usage, (ie: loading an XML file from a remote server).
+	 * 
+	 * @var File_Backend
+	 */
+	protected $_file;
+	
+	/**
 	 * The original DOM document for this object.
 	 * 
 	 * @var DOMDocument
@@ -69,9 +77,51 @@ class XMLLoader{
 		// we want a nice output
 		$this->_DOM->formatOutput = true;
 		
-		if($this->_filename){
+		if($this->_file){
+			$contents = $this->_file->getContentsObject();
+			if(is_a($contents, 'File_gz_contents')){
+				$dat = $contents->uncompress();
+			}
+			else{
+				$dat = $contents->getContents();
+			}
+			$this->_DOM->loadXML($dat);
+		}
+		elseif($this->_filename){
 			if(!@$this->_DOM->load($this->_filename)) return false;
 		}
+		else{
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Load the document from a valid File object or a filename.
+	 * 
+	 * @param File_Backend|string $file 
+	 */
+	public function loadFromFile($file){
+		if(is_a($file, 'File_Backend')){
+			$this->_file = $file;
+		}
+		else{
+			$this->_filename = $file;
+		}
+		
+		$this->load();
+	}
+	
+	public function loadFromNode(DOMNode $node){
+		// Save the DOM object so I have it in the future.
+		$this->_DOM = new DOMDocument();
+		
+		// we want a nice output
+		$this->_DOM->formatOutput = true;
+		
+		$nn = $this->_DOM->importNode($node, true);
+		$this->_DOM->appendChild($nn);
 		
 		return true;
 	}

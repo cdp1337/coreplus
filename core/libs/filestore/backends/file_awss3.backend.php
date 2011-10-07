@@ -103,6 +103,16 @@ class File_awss3_backend implements File_Backend {
 	}
 	
 	/**
+	 * Get the filename for a local clone of this file.
+	 * For local files, it's the same thing, but remote files will be copied to a temporary local location first.
+	 * 
+	 * @return string
+	 */
+	public function getLocalFilename(){
+		return $this->_getTmpLocal()->getFilename();
+	}
+	
+	/**
 	 * Get the hash for this file.
 	 */
 	public function getHash(){
@@ -227,6 +237,10 @@ class File_awss3_backend implements File_Backend {
 		);
 		return $this->_backend->create_object($this->bucket, $this->filename, $opt);
 		return file_put_contents($this->filename, $data);
+	}
+	
+	public function getContentsObject(){
+		return FileContentFactory::GetFromFile($this);
 	}
 
 	

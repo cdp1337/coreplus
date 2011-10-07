@@ -28,36 +28,6 @@ require_once('core/bootstrap.php');
 // I need a valid editor.
 CLI::RequireEditor();
 
-class RepoXML extends XMLLoader{
-	public function __construct(){
-		$this->setRootName('repo');
-		$this->load();
-	}
-	
-	public function addPackage(PackageXML $package){
-		$node = $package->getPackageDOM();
-		$newnode = $this->getDOM()->importNode($node, true);
-		$this->getRootDOM()->appendChild($newnode);
-	}
-	
-	public function write(){
-		//return $this->asPrettyXML();
-		return $this->asMinifiedXML();
-	}
-}
-
-class PackageXML extends XMLLoader{
-	public function __construct($filename){
-		$this->setFilename($filename);
-		$this->setRootName('package');
-		$this->load();
-	}
-	
-	public function getPackageDOM(){
-		return $this->getRootDOM();
-	}
-}
-
 $destdir = ROOT_PDIR . 'exports/';
 $tmpdir = ROOT_PDIR . 'exports/_tmp/';
 // Ensure the export directory exists.

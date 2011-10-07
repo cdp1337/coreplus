@@ -354,7 +354,6 @@ class PageModel extends Model{
 		$this->_view->mastertemplate = ($this->get('template'))? $this->get('template') : ConfigHandler::GetValue('/core/theme/default_template');
 
 		$this->_view->setBreadcrumbs($this->getParentTree());
-		$this->_view->addBreadcrumb($this->get('title'), $this->getResolvedURL());
 	}
 
 

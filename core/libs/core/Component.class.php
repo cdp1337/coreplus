@@ -818,6 +818,26 @@ class Component extends InstallArchiveAPI{
 		$this->_installAssets();
 	}
 	
+	public function getProvides(){
+		$ret = array();
+		// This element itself.
+		$ret[] = array(
+			'name' => strtolower($this->getName()),
+			'type' => 'component',
+			'version' => $this->getVersion()
+		);
+		foreach($this->getElements('provides') as $el){
+			// <requires name="JQuery" type="library" version="1.4" operation="ge"/>
+			$ret[] = array(
+				'name' => strtolower($el->getAttribute('name')),
+				'type' => $el->getAttribute('type'),
+				'version' => $el->getAttribute('version'),
+				'operation' => $el->getAttribute('operation'),
+			);
+		}
+		return $ret;
+	}
+	
 	/**
 	 * Internal function to parse and handle the configs in the component.xml file.
 	 * This is used for installations and upgrades.

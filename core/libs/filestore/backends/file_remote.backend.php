@@ -20,6 +20,20 @@
 class File_remote_backend implements File_Backend{
 	
 	/**
+	 * The username to use if basic authentication is required.
+	 * 
+	 * @var string
+	 */
+	public $username = null;
+	
+	/**
+	 * The password to use if basic authentication is required.
+	 * 
+	 * @var string
+	 */
+	public $password = null;
+	
+	/**
 	 * The fully resolved filename of this file.
 	 * 
 	 * @var string
@@ -78,13 +92,24 @@ class File_remote_backend implements File_Backend{
 	}
 	
 	/**
-	 * Get the URL of this url.... (kind of redundant, but...)
+	 * Get the URL of this file
 	 * 
 	 * @return string | null
 	 */
 	public function getURL(){
-		// heh...
-		return $this->_url;
+		
+		// If basic authentication is required, this must be done in the URL.
+		if($this->username && $this->password){
+			$url = str_replace('://', '://' . $this->username . ':' . $this->password . '@', $this->_url);
+		}
+		elseif($this->username){
+			$url = str_replace('://', '://' . $this->username . '@', $this->_url);
+		}
+		else{
+			$url = $this->_url;
+		}
+
+		return $url;
 	}
 	
 	/**
@@ -117,6 +142,16 @@ class File_remote_backend implements File_Backend{
 		}
 		
 		return $withoutext ? substr($f, 0, strrpos($f, '.')) : $f;
+	}
+	
+	/**
+	 * Get the filename for a local clone of this file.
+	 * For local files, it's the same thing, but remote files will be copied to a temporary local location first.
+	 * 
+	 * @return string
+	 */
+	public function getLocalFilename(){
+		return $this->_getTmpLocal()->getFilename();
 	}
 	
 	/**
@@ -196,6 +231,10 @@ class File_remote_backend implements File_Backend{
 	
 	public function putContents($data){
 		throw new FileException('Unable to write to remote files!');
+	}
+	
+	public function getContentsObject(){
+		return FileContentFactory::GetFromFile($this);
 	}
 	
 	public function isImage(){
@@ -370,7 +409,7 @@ class File_remote_backend implements File_Backend{
 	private function _getHeaders(){
 		if($this->_headers === null){
 			$this->_headers = array();
-			$h = get_headers($this->_url);
+			$h = get_headers($this->getURL());
 			
 			foreach($h as $line){
 				if(strpos($line, 'HTTP/1.') !== false){
@@ -404,7 +443,7 @@ class File_remote_backend implements File_Backend{
 			$mtime = $this->_tmplocal->getMTime();
 			if($mtime == false  || $mtime < time() - (60 * 60 * 24) ){
 				// Copy the data down to the local file.
-				$this->_tmplocal->putContents(file_get_contents($this->_url));
+				$this->_tmplocal->putContents(file_get_contents( $this->getURL() ));
 			}
 		}
 		

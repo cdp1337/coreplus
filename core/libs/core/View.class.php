@@ -277,16 +277,12 @@ class View {
 		//	$head .= '<meta name="' . $k . '" content="' . $v . '"/>' . "\n";
 		//}
 		
-		// Make sure the last element on breadcrumbs is not empty.
-		if(($n = sizeof($this->breadcrumbs)) && !$this->breadcrumbs[$n-1]['title']){
-			$this->breadcrumbs[$n-1]['title'] = $this->title;
-		}
 		
 		$template = new Template();
 		$template->setBaseURL('/');
 		// Page-level views have some special variables.
 		if($this->mode == View::MODE_PAGE){
-			$template->assign('breadcrumbs', $this->breadcrumbs);
+			$template->assign('breadcrumbs', $this->getBreadcrumbs());
 			$template->assign('controls', $this->controls);
 			$template->assign('messages', Core::GetMessages());
 			
@@ -322,6 +318,10 @@ class View {
 	}
 	
 	public function addBreadcrumb($title, $link = null){
+		
+		// Allow a non-resolved link to be passed in.
+		if($link !== null && strpos($link, '://') === false) $link = Core::ResolveLink($link);
+		
 		$this->breadcrumbs[] = array('title' => $title, 'link' => $link);
 	}
 	
@@ -337,6 +337,20 @@ class View {
 			if($v instanceof PageModel) $this->addBreadcrumb($v->get('title'), $v->getResolvedURL());
 			else $this->addBreadcrumb($v, $k);
 		}
+	}
+	
+	public function getBreadcrumbs(){
+		$crumbs = $this->breadcrumbs;
+		if($this->title) $crumbs[] = array('title' => $this->title, 'link' => null);
+		
+		return $crumbs;
+		
+		//var_dump($crumbs); die();
+		
+		// Make sure the last element on breadcrumbs is not empty.
+		/*if(($n = sizeof($this->breadcrumbs)) && !$this->breadcrumbs[$n-1]['title']){
+			$this->breadcrumbs[$n-1]['title'] = $this->title;
+		}*/
 	}
 	
 	public function addControl($title, $link, $class = 'edit'){
