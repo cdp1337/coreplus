@@ -418,9 +418,11 @@ class Component extends InstallArchiveAPI{
 			foreach($this->getElementByTagName('library')->getElementsByTagName('file') as $f){
 				$filename = $this->getBaseDir() . $f->getAttribute('filename');
 				foreach($f->getElementsByTagName('provides') as $p){
-					if(strtolower($p->getAttribute('type')) == 'class') $classes[$p->getAttribute('name')] = $filename;
+					$n = strtolower($p->getAttribute('name'));
+					
+					if(strtolower($p->getAttribute('type')) == 'class') $classes[$n] = $filename;
 					// also allow interfaces to be returned.
-					if(strtolower($p->getAttribute('type')) == 'interface') $classes[$p->getAttribute('name')] = $filename;
+					if(strtolower($p->getAttribute('type')) == 'interface') $classes[$n] = $filename;
 				}
 			}
 		}
@@ -429,11 +431,13 @@ class Component extends InstallArchiveAPI{
 			foreach($this->getElementByTagName('module')->getElementsByTagName('file') as $f){
 				$filename = $this->getBaseDir() . $f->getAttribute('filename');
 				foreach($f->getElementsByTagName('provides') as $p){
+					$n = strtolower($p->getAttribute('name'));
+					
 					switch(strtolower($p->getAttribute('type'))){
 						case 'class':
 						case 'controller':
 						case 'widget':
-							$classes[$p->getAttribute('name')] = $filename;
+							$classes[$n] = $filename;
 							break;
 					}
 				}

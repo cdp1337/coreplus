@@ -414,6 +414,12 @@ class ComponentHandler implements ISingleton{
 	 */
 	public static function CheckClass($classname){
 		if(class_exists($classname)) return;
+		
+		var_dump($classname);
+		
+		// Make sure it's case insensitive.
+		$classname = strtolower($classname);
+		
 		if(isset(ComponentHandler::Singleton()->_classes[$classname])){
 			require_once(ComponentHandler::Singleton()->_classes[$classname]);
 		}
