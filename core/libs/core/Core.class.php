@@ -262,7 +262,7 @@ class Core implements ISingleton{
 	 * @return File_Backend 
 	 */
 	public static function File($filename = null){
-		$backend = ConfigHandler::GetValue('/core/filestore/backend');
+		$backend = ConfigHandler::Get('/core/filestore/backend');
 		switch($backend){
 			case 'aws':
 				return new File_awss3_backend($filename);
@@ -285,7 +285,7 @@ class Core implements ISingleton{
 	 * @return Directory_Backend 
 	 */
 	public static function Directory($directory){
-		$backend = ConfigHandler::GetValue('/core/filestore/backend');
+		$backend = ConfigHandler::Get('/core/filestore/backend');
 		switch($backend){
 			case 'aws':
 				return new Directory_awss3_backend($directory);
@@ -310,10 +310,10 @@ class Core implements ISingleton{
 	public static function TranslateDimensionToPreviewSize($dimensions){
 		// Load in the theme sizes for reference.
 		$themesizes = array(
-			'sm' => ConfigHandler::GetValue('/theme/filestore/preview-size-sm'),
-			'med' => ConfigHandler::GetValue('/theme/filestore/preview-size-med'),
-			'lg' => ConfigHandler::GetValue('/theme/filestore/preview-size-lg'),
-			'xl' => ConfigHandler::GetValue('/theme/filestore/preview-size-xl'),
+			'sm' => ConfigHandler::Get('/theme/filestore/preview-size-sm'),
+			'med' => ConfigHandler::Get('/theme/filestore/preview-size-med'),
+			'lg' => ConfigHandler::Get('/theme/filestore/preview-size-lg'),
+			'xl' => ConfigHandler::Get('/theme/filestore/preview-size-xl'),
 		);
 		
 		if(sizeof(func_get_args()) == 2){

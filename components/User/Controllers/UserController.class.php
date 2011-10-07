@@ -39,7 +39,7 @@ class UserController extends Controller{
 		// @todo Implement a hook handler here for UserPreLoginForm
 		
 		// Provide some facebook logic if that backend is enabled.
-		if(in_array('facebook', ConfigHandler::GetValue('/user/backends'))){
+		if(in_array('facebook', ConfigHandler::Get('/user/backends'))){
 			$facebook = new Facebook(array(
 				'appId'  => FACEBOOK_APP_ID,
 				'secret' => FACEBOOK_APP_SECRET,
@@ -90,9 +90,9 @@ class UserController extends Controller{
 		
 		$view->assign('error', $error);
 		$view->assign('facebooklink', $facebooklink);
-		$view->assign('backends', ConfigHandler::GetValue('/user/backends'));
+		$view->assign('backends', ConfigHandler::Get('/user/backends'));
 		$view->assign('form', $form);
-		$view->assign('allowregister', ConfigHandler::GetValue('/user/register/allowpublic'));
+		$view->assign('allowregister', ConfigHandler::Get('/user/register/allowpublic'));
 	}
 	
 	public static function Register(View $view){
@@ -103,7 +103,7 @@ class UserController extends Controller{
 		}
 		
 		// Also disallow access to this page if the configuration option is disabled.
-		if(!ConfigHandler::GetValue('/user/register/allowpublic')){
+		if(!ConfigHandler::Get('/user/register/allowpublic')){
 			return View::ERROR_BADREQUEST;
 		}
 		

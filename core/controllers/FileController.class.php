@@ -74,8 +74,8 @@ class FileController extends Controller{
 		$preview = false; // Default to explicit.
 		
 		
-		if(ConfigHandler::GetValue('/core/filestore/previews') && $file->isPreviewable()){
-			$d = ConfigHandler::GetValue('/theme/filestore/preview-size-' . $size);
+		if(ConfigHandler::Get('/core/filestore/previews') && $file->isPreviewable()){
+			$d = ConfigHandler::Get('/theme/filestore/preview-size-' . $size);
 			$file->displayPreview($d, false);
 		}
 		else{

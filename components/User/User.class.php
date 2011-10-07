@@ -263,10 +263,10 @@ class User {
 		
 		// Anonymous users don't have all this fancy logic.
 		if(!$this->exists()){
-			return ConfigHandler::GetValue('/user/displayname/anonymous');
+			return ConfigHandler::Get('/user/displayname/anonymous');
 		}
 		
-		$displayopts = ConfigHandler::GetValue('/user/displayname/displayoptions');
+		$displayopts = ConfigHandler::Get('/user/displayname/displayoptions');
 		
 		// Simple enough.
 		if( ($u = $this->get('username')) && in_array('username', $displayopts)) return $u;
@@ -277,7 +277,7 @@ class User {
 		// Next, the email in full.
 		elseif( ($e = $this->get('email')) && in_array('emailfull', $displayopts)) return $e;
 		// Still no?!?
-		else return ConfigHandler::GetValue('/user/displayname/authenticated');
+		else return ConfigHandler::Get('/user/displayname/authenticated');
 	}
 	
 	/**

@@ -56,17 +56,17 @@ class Email{
 			$this->_mailer = new PHPMailer(true);
 			
 			// Load in some default options for this email based on the configuration options.
-			$this->_mailer->From = ConfigHandler::GetValue('/core/email/from');
+			$this->_mailer->From = ConfigHandler::Get('/core/email/from');
 			if(!$this->_mailer->From) $this->_mailer->From = 'website@' . $_SERVER['HTTP_HOST'];
 			
-			$this->_mailer->FromName = ConfigHandler::GetValue('/core/email/from_name');
-			$this->_mailer->Mailer = ConfigHandler::GetValue('/core/email/mailer');
-			$this->_mailer->Sendmail = ConfigHandler::GetValue('/core/email/sendmail_path');
+			$this->_mailer->FromName = ConfigHandler::Get('/core/email/from_name');
+			$this->_mailer->Mailer = ConfigHandler::Get('/core/email/mailer');
+			$this->_mailer->Sendmail = ConfigHandler::Get('/core/email/sendmail_path');
 			if($this->_mailer->Mailer == 'smtp'){
-				$this->_mailer->Host = ConfigHandler::GetValue('/core/email/smtp_host');
-				$this->_mailer->Port = ConfigHandler::GetValue('/core/email/smtp_port');
-				$this->_mailer->Username = ConfigHandler::GetValue('/core/email/smtp_user');
-				$this->_mailer->Password = ConfigHandler::GetValue('/core/email/smtp_password');
+				$this->_mailer->Host = ConfigHandler::Get('/core/email/smtp_host');
+				$this->_mailer->Port = ConfigHandler::Get('/core/email/smtp_port');
+				$this->_mailer->Username = ConfigHandler::Get('/core/email/smtp_user');
+				$this->_mailer->Password = ConfigHandler::Get('/core/email/smtp_password');
 				if($this->_mailer->Username != '') $this->SMTPAuth = true;
 			}
 			

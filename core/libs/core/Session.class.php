@@ -111,7 +111,7 @@ class Session implements ISingleton{
 		/**
 		 * Delete ANY session that has expired.
 		 */
-		$ttl = ConfigHandler::GetValue('/core/session/ttl');
+		$ttl = ConfigHandler::Get('/core/session/ttl');
 		
 		// Low-level datasets are used here because they have less overhead than
 		// the full-blown model system.

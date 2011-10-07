@@ -50,22 +50,22 @@ class Directory_local_backend implements Directory_Backend {
 			// private/, private.
 			
 			if(strpos($directory, 'assets/') === 0){
-				$base = ConfigHandler::GetValue('/core/filestore/assetdir');
+				$base = ConfigHandler::Get('/core/filestore/assetdir');
 				if($base{0} != '/') $base = ROOT_PDIR . $base; // Needs to be fully resolved
-				$theme = ConfigHandler::GetValue('/core/theme');
+				$theme = ConfigHandler::Get('/core/theme');
 				$directory = substr($directory, 7); // Trim off the 'asset/' prefix.
 				if(file_exists($base . $theme . '/' . $directory)) $directory = $base . $theme . '/' . $directory;
 				else $directory = $base . 'default/' . $directory;
 			}
 			elseif(strpos($directory, 'public/') === 0){
 				$directory = substr($directory, 7); // Trim off the 'public/' prefix.
-				$base = ConfigHandler::GetValue('/core/filestore/publicdir');
+				$base = ConfigHandler::Get('/core/filestore/publicdir');
 				if($base{0} != '/') $base = ROOT_PDIR . $base; // Needs to be fully resolved
 				$directory = $base . $directory;
 			}
 			elseif(strpos($directory, 'private/') === 0){
 				$directory = substr($directory, 8); // Trim off the 'private/' prefix.
-				$base = ConfigHandler::GetValue('/core/filestore/privatedir');
+				$base = ConfigHandler::Get('/core/filestore/privatedir');
 				if($base{0} != '/') $base = ROOT_PDIR . $base; // Needs to be fully resolved
 				$directory = $base . $directory;
 			}

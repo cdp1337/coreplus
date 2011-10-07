@@ -26,7 +26,7 @@ class Template extends Smarty{
 		parent::__construct();
 
 		// Tack on the current theme's directory.
-		$this->addTemplateDir(ROOT_PDIR . 'themes/' . ConfigHandler::GetValue('/core/theme') . '/');
+		$this->addTemplateDir(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/core/theme') . '/');
 
 		// Tack on the search directories from the loaded components.
 		// Also handle the plugins directory search.

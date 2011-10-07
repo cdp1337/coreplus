@@ -13,7 +13,7 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		if(ConfigHandler::GetValue('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/jquery-1.5.1.min.js');
+		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/jquery-1.5.1.min.js');
 		else CurrentPage::AddScript ('js/jquery/jquery-1.5.1.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
@@ -34,7 +34,7 @@ abstract class JQuery {
 		// I need jquery ui first.
 		self::IncludeJQueryUI();
 		
-		if(ConfigHandler::GetValue('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
+		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
 		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
@@ -48,7 +48,7 @@ abstract class JQuery {
 		
 		CurrentPage::AddStylesheet('css/jquery.readonly.css');
 		
-		//if(ConfigHandler::GetValue('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
+		//if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
 		//else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
 		CurrentPage::AddScript ('js/jquery/' . $base . '.js');
 		
@@ -62,7 +62,7 @@ abstract class JQuery {
 		// I need jquery first.
 		self::IncludeJQuery();
 		
-		if(ConfigHandler::GetValue('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
+		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
 		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!

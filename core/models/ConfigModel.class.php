@@ -76,7 +76,28 @@ class ConfigModel extends Model {
 	public static $Indexes = array(
 		'primary' => array('key'),
 	);
-
-	// @todo Put your code here.
+	
+	/**
+	 * Get either the set value or the default value if that is null.
+	 * 
+	 * This value will also be typecasted to the correct type.
+	 * 
+	 * @return mixed 
+	 */
+	public function getValue(){
+		$v = $this->get('value');
+		if($v === null) $v = $this->get('default');
+		
+		switch ($this->get('type')) {
+			case 'int':
+				return (int) $v;
+			case 'boolean':
+				return ($v == '1' || $v == 'true') ? true : false;
+			case 'set':
+				return array_map('trim', explode('|', $v));
+			default:
+				return $v;
+		}
+	}
 
 } // END class ConfigModel extends Model

@@ -519,7 +519,9 @@ class Component extends InstallArchiveAPI{
 	}
 	
 	public function getAssetDir(){
-		$d = $this->getBaseDir() . 'assets';
+		// Core has a special exception...
+		if($this->getName() == 'core') $d = $this->getBaseDir() . 'core/assets';
+		else $d = $this->getBaseDir() . 'assets';
 		
 		if(is_dir($d)) return $d;
 		else return null;
@@ -849,13 +851,14 @@ class Component extends InstallArchiveAPI{
 		
 		// Now, get every table under this node.
 		foreach($node->getElementsByTagName('config') as $confignode){
-			$m = new ConfigModel($confignode->getAttribute('key'));
+			$key = $confignode->getAttribute('key');
+			$m = ConfigHandler::GetConfig($key);
 			$m->set('options', $confignode->getAttribute('options'));
 			$m->set('type', $confignode->getAttribute('type'));
 			$m->set('default_value', $confignode->getAttribute('default'));
-			if(!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
 			$m->set('description', $confignode->getAttribute('description'));
 			$m->set('mapto', $confignode->getAttribute('mapto'));
+			if(!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
 			$m->save();
 		}
 		
@@ -938,15 +941,20 @@ class Component extends InstallArchiveAPI{
 	 * @return boolean True if something changed, false if nothing changed.
 	 */
 	private function _installAssets(){
-		$assetbase = ConfigHandler::GetValue('/core/filestore/assetdir');
-		$theme = ConfigHandler::GetValue('/core/theme');
+		$assetbase = ConfigHandler::Get('/core/filestore/assetdir');
+		$theme = ConfigHandler::Get('/core/theme');
 		$changed = false;
 		
 		foreach($this->getElements('/assets/file') as $node){
 			$b = $this->getBaseDir();
 			// Local file is guaranteed to be a local file.
 			$f = new File_local_backend($b . $node->getAttribute('filename'));
-			$nf = Core::File($node->getAttribute('filename'));
+			
+			// The new file should have a filename identical to the original, with the exception of
+			// everything before the filename.. ie: the ROOT_PDIR and the asset directory.
+			$newfilename = 'assets' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
+			$nf = Core::File($newfilename);
+			
 			// The new destination must be in the default directory, this is a 
 			// bit of a hack from the usual behaviour of the filestore system.
 			if($theme != 'default' && strpos($nf->getFilename(), $assetbase . $theme) !== false){

@@ -284,7 +284,7 @@ class CurrentPage{
 			$view->baseurl = '/Error/Error' . $view->error;
 			$view->setParameters(array());
 			$view->templatename = '/pages/error/error' . $view->error . '.tpl';
-			$view->mastertemplate = ConfigHandler::GetValue('/core/theme/default_template');
+			$view->mastertemplate = ConfigHandler::Get('/core/theme/default_template');
 		}
 		
 		
@@ -297,7 +297,7 @@ class CurrentPage{
 			$view->baseurl = '/Error/Error' . $view->error;
 			$view->setParameters(array());
 			$view->templatename = '/pages/error/error' . $view->error . '.tpl';
-			$view->mastertemplate = ConfigHandler::GetValue('/core/theme/default_template');
+			$view->mastertemplate = ConfigHandler::Get('/core/theme/default_template');
 			$view->assignVariable('exception', $e);
 			$data = $view->fetch();
 		}

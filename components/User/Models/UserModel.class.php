@@ -67,23 +67,23 @@ class UserModel extends Model {
 		if($k == 'password'){
 			$valid = true;
 			// complexity check from the config
-			if(strlen($v) < ConfigHandler::GetValue('/user/password/minlength')){
-				$valid = 'Please ensure that the password is at least ' . ConfigHandler::GetValue('/user/password/minlength') . ' characters long.';
+			if(strlen($v) < ConfigHandler::Get('/user/password/minlength')){
+				$valid = 'Please ensure that the password is at least ' . ConfigHandler::Get('/user/password/minlength') . ' characters long.';
 			}
 
 			// complexity check from the config
-			if(ConfigHandler::GetValue('/user/password/requiresymbols') > 0){
+			if(ConfigHandler::Get('/user/password/requiresymbols') > 0){
 				preg_match_all('/[^a-zA-Z]/', $v, $matches); // Count a number as a symbol.  Close enough :/
-				if(sizeof($matches[0]) < ConfigHandler::GetValue('/user/password/requiresymbols')){
-					$valid = 'Please ensure that the password has at least ' . ConfigHandler::GetValue('/user/password/requiresymbols') . ' symbol(s) or number(s).';
+				if(sizeof($matches[0]) < ConfigHandler::Get('/user/password/requiresymbols')){
+					$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requiresymbols') . ' symbol(s) or number(s).';
 				}
 			}
 
 			// complexity check from the config
-			if(ConfigHandler::GetValue('/user/password/requirecapitals') > 0){
+			if(ConfigHandler::Get('/user/password/requirecapitals') > 0){
 				preg_match_all('/[A-Z]/', $v, $matches);
-				if(sizeof($matches[0]) < ConfigHandler::GetValue('/user/password/requirecapitals')){
-					$valid = 'Please ensure that the password has at least ' . ConfigHandler::GetValue('/user/password/requirecapitals') . ' capital letter(s).';
+				if(sizeof($matches[0]) < ConfigHandler::Get('/user/password/requirecapitals')){
+					$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requirecapitals') . ' capital letter(s).';
 				}
 			}
 			

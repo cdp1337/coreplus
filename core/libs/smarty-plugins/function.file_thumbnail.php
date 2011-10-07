@@ -57,7 +57,7 @@ function smarty_function_file_thumbnail($params, $template){
 	if(isset($params['size'])){
 		$size = $params['size'];
 		// Let size override width and height.
-		$width = $height = ConfigHandler::GetValue('/theme/filestore/preview-size-' . $size);
+		$width = $height = ConfigHandler::Get('/theme/filestore/preview-size-' . $size);
 		$d = $width . 'x' . $height;
 		unset($params['size']);
 	}
@@ -77,7 +77,7 @@ function smarty_function_file_thumbnail($params, $template){
 		$icon = Core::File('assets/mimetype_icons/notfound-' . $size . '.png');
 		$attributes['src'] = $icon->getURL();
 	}
-	elseif(ConfigHandler::GetValue('/core/filestore/previews') && $file->isPreviewable()){
+	elseif(ConfigHandler::Get('/core/filestore/previews') && $file->isPreviewable()){
 		if($file->getFilesize() < (1024*1024*4)){
 			// Files that are smaller than a certain size can probably be safely rendered on this pageload.
 			$attributes['src'] = $file->getPreviewURL($d);

@@ -2,7 +2,7 @@
 
 class GoogleAnalyticsHelper {
 	public static function InstallTracking(){
-		$gacode = ConfigHandler::GetValue('/google-analytics/accountid');
+		$gacode = ConfigHandler::Get('/google-analytics/accountid');
 		$min = true;
 		
 		// If there's no code available, don't display anything.

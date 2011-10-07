@@ -252,14 +252,14 @@ class View {
 			switch($this->mode){
 				case View::MODE_PAGEORAJAX:
 					if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') $mastertpl = false;
-					else $mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::GetValue('/core/theme') . '/' . $this->mastertemplate;
+					else $mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/core/theme') . '/' . $this->mastertemplate;
 					break;
 				case View::MODE_NOOUTPUT:
 				case View::MODE_AJAX:
 					$mastertpl = false;
 					break;
 				case View::MODE_PAGE:
-					$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::GetValue('/core/theme') . '/' . $this->mastertemplate;
+					$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/core/theme') . '/' . $this->mastertemplate;
 					break;
 				case View::MODE_WIDGET:
 					$mastertpl = Template::ResolveFile('widgetcontainers/' . $this->mastertemplate);

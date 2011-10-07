@@ -286,8 +286,8 @@ class Theme extends InstallArchiveAPI{
 	 * @return boolean True if something changed, false if nothing changed.
 	 */
 	private function _installAssets(){
-		$assetbase = ConfigHandler::GetValue('/core/filestore/assetdir');
-		$coretheme = ConfigHandler::GetValue('/core/theme');
+		$assetbase = ConfigHandler::Get('/core/filestore/assetdir');
+		$coretheme = ConfigHandler::Get('/core/theme');
 		$theme = $this->getName();
 		$changed = false;
 		foreach($this->getElements('/assets/file') as $node){

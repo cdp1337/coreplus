@@ -24,7 +24,7 @@ class UserLoginWidget extends Widget{
 		
 		$v->assign('user', $u);
 		$v->assign('loggedin', $u->exists());
-		$v->assign('allowregister', ConfigHandler::GetValue('/user/register/allowpublic'));
+		$v->assign('allowregister', ConfigHandler::Get('/user/register/allowpublic'));
 		
 		return $v;
 	}

@@ -347,8 +347,8 @@ abstract class InstallArchiveAPI extends XMLLoader{
 			
 			if($this->_name == 'core'){
 				$this->_iterator->addIgnores('components/', 'config/', 'dropins/', 'exports/', 'nbproject/', 'scripts/', 'themes/', 'update_site/', 'utils/');
-				if(ConfigHandler::GetValue('/core/filestore/assetdir')) $this->_iterator->addIgnore(ConfigHandler::GetValue('/core/filestore/assetdir'));
-				if(ConfigHandler::GetValue('/core/filestore/publicdir')) $this->_iterator->addIgnore(ConfigHandler::GetValue('/core/filestore/publicdir'));
+				if(ConfigHandler::Get('/core/filestore/assetdir')) $this->_iterator->addIgnore(ConfigHandler::Get('/core/filestore/assetdir'));
+				if(ConfigHandler::Get('/core/filestore/publicdir')) $this->_iterator->addIgnore(ConfigHandler::Get('/core/filestore/publicdir'));
 			}
 			
 			// If the author set any files to be ignored.. ignore those too.

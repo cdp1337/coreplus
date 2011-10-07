@@ -120,17 +120,17 @@ class File_local_backend implements File_Backend{
 	public function setFilename($filename){
 		// Ensure that the root_pdir directories are cached and ready.
 		if(self::$_Root_pdir_assets === null){
-			$dir = ConfigHandler::GetValue('/core/filestore/assetdir');
+			$dir = ConfigHandler::Get('/core/filestore/assetdir');
 			if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 			self::$_Root_pdir_assets = $dir;
 		}
 		if(self::$_Root_pdir_public === null){
-			$dir = ConfigHandler::GetValue('/core/filestore/publicdir');
+			$dir = ConfigHandler::Get('/core/filestore/publicdir');
 			if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 			self::$_Root_pdir_public = $dir;
 		}
 		if(self::$_Root_pdir_private === null){
-			$dir = ConfigHandler::GetValue('/core/filestore/privatedir');
+			$dir = ConfigHandler::Get('/core/filestore/privatedir');
 			if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 			self::$_Root_pdir_private = $dir;
 		}
@@ -154,7 +154,7 @@ class File_local_backend implements File_Backend{
 		
 		// Allow "asset/blah" to be passed in
 		if(strpos($filename, 'assets/') === 0){
-			$theme = ConfigHandler::GetValue('/core/theme');
+			$theme = ConfigHandler::Get('/core/theme');
 			$filename = substr($filename, 7); // Trim off the 'asset/' prefix.
 			if(file_exists(self::$_Root_pdir_assets . $theme . '/' . $filename)) $filename = self::$_Root_pdir_assets . $theme . '/' . $filename;
 			else $filename = self::$_Root_pdir_assets . 'default/' . $filename;

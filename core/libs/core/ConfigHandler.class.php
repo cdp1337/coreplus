@@ -35,10 +35,10 @@ class ConfigHandler implements ISingleton {
 	private static $instance = null;
 	public static $directory;
 	/**
-	 * Cache of {configset => (key/value)} pairs so that I do not have to continuesly access the database.
+	 * Cache of datamodels of the configuration options from the database.
 	 * @var array
 	 */
-	private static $cacheFromDB = array();
+	private static $CacheFromDB = array();
 
 	/**
 	 * Private constructor class to prevent outside instantiation.
@@ -134,14 +134,60 @@ class ConfigHandler implements ISingleton {
 	 * @return string | int | boolean
 	 */
 	public static function GetValue($key) {
-		return (isset(ConfigHandler::$cacheFromDB[$key])) ? ConfigHandler::$cacheFromDB[$key] : null;
+		trigger_error('ConfigHandler::GetValue() is deprecated, please use ConfigHandler::Get() instead.', E_USER_DEPRECATED);
+		return self::Get($key);
+		
+		return (isset(ConfigHandler::$CacheFromDB[$key])) ? ConfigHandler::$CacheFromDB[$key] : null;
 	}
 
 	public static function SetValue($key, $value) {
-        ConfigHandler::$cacheFromDB[$key] = $value;
+		trigger_error('ConfigHandler::SetValue() is deprecated, please use ConfigHandler::Set() instead.', E_USER_DEPRECATED);
+		return self::Set($key, $value);
+		
+        ConfigHandler::$CacheFromDB[$key] = $value;
 		$rs = DB::Execute("UPDATE `" . DB_PREFIX . "config` SET `value` = ? WHERE `key` = ? LIMIT 1", array($value, $key));
 	}
+	
+	/**
+	 * Get the config model that is attached to the core configuration system.
+	 * 
+	 * This is the easiest way to create new config options.
+	 * 
+	 * @param string $key
+	 * @return ConfigModel
+	 */
+	public static function GetConfig($key){
+		if(!isset(ConfigHandler::$CacheFromDB[$key])){
+			ConfigHandler::$CacheFromDB[$key] = new ConfigModel($key);
+		}
+		
+		return ConfigHandler::$CacheFromDB[$key];
+	}
+	
+	public static function Get($key){
+		if(isset(ConfigHandler::$CacheFromDB[$key])) return ConfigHandler::$CacheFromDB[$key]->getValue();
+		else return null;
+	}
+	
+	public static function Set($key, $vlaue){
+		if(isset(ConfigHandler::$CacheFromDB[$key])) return ConfigHandler::$CacheFromDB[$key]->getValue();
+		else return null;
+	}
 
+	public static function _DBReadyHook(){
+		// This may be called before the componenthandler is ready.
+		require_once(ROOT_PDIR . 'core/models/ConfigModel.class.php');
+		// Clear out the cache, (if it has any...)
+		ConfigHandler::$CacheFromDB = array();
+		$fac = ConfigModel::Find();
+		foreach($fac as $model){
+			ConfigHandler::$CacheFromDB[$model->get('key')] = $model;
+			
+			// Also map this value if it's set to do so.
+			if($model->get('mapto') && !defined($model->get('mapto'))) define($model->get('mapto'), $model->getValue());
+		}
+	}
+	
 	/**
 	 * Hook listener for when the database is ready.
 	 * Query the database for all configuration elements that may be hiding in there.
@@ -149,52 +195,12 @@ class ConfigHandler implements ISingleton {
 	 *
 	 * @return unknown_type
 	 */
-	public static function _DBReadyHook() {
-		// No core application, no config's in the database...
-		//if(!Core::IsInstalled()) return;
-		// Any defines that may be in the dabase.
-		/*
-		$rs = DB::Execute("SELECT `key`, `value`, `type` FROM " . DB_PREFIX . "config WHERE `type` = 'define'");
-
-		// No configs table present?  Maybe the data is not available.
-		if(!$rs){
-			header('Location: install.php');
-			die('If your browser does not refresh, please <a href="install.php">Click Here</a>');
-		}
-		foreach ($rs as $row) {
-			switch ($row['value_type']) {
-				case 'int': $row['value'] = (int) $row['value'];
-					break;
-				case 'boolean': $row['value'] = ($row['value'] == '1' || $row['value'] == 'true') ? true : false;
-					break;
-				// Default is not needed, already comes through as a string.
-			}
-			define($row['key'], $row['value']);
-		}
-		*/
-
-		// Any config strings that may be set, (cache them to speed up later requests.)
-		//try{
-			$obj = new Dataset();
-			$obj->table('config');
-			$obj->select(array('key', 'value', 'type', 'mapto'));
-			$rs = $obj->execute();
-		//}
-		//catch(DMI_Exception $e){
-		//	if(DEVELOPMENT_MODE){
-		//		echo 'Error retrieving configuration from database.<br/>';
-		//		if($e->ansicode) echo 'ERROR (' . $e->ansicode . '): ' . $e->getMessage();
-		//		else echo 'ERROR: ' . $e->getMessage();
-		//	}
-		//	return false;
-		//}
-		/*
-		$obj = new SQLBuilderSelect();
-		$obj->from(DB_PREFIX . 'config');
+	public static function _DBReadyHookLEGACY() {
+		$obj = new Dataset();
+		$obj->table('config');
 		$obj->select(array('key', 'value', 'type', 'mapto'));
-		*/
+		$rs = $obj->execute();
 		
-		//$rs = DB::Execute("SELECT `key`, `value`, `type`, `mapto` FROM " . DB_PREFIX . "config");
 		if(!$rs) return false;
 		foreach ($rs as $row) {
 			switch ($row['type']) {

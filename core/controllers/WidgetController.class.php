@@ -70,7 +70,7 @@ class WidgetController extends Controller{
 			$wobj->set('baseurl', $w['baseurl']);
 			$wobj->set('weight', ++$x);
 			$wobj->set('area', $data['widgetarea']);
-			$wobj->set('theme', ConfigHandler::GetValue('/core/theme'));
+			$wobj->set('theme', ConfigHandler::Get('/core/theme'));
 			$wobj->save();
 			
 			$ret[] = array('instanceid' => $w['instanceid'], 'newid' => $wobj->get('id'), 'weight' => $wobj->get('weight'));
