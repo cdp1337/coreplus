@@ -403,6 +403,30 @@ class Core implements ISingleton{
 		return self::Singleton()->_componentobj;
 	}
 	
+	/**
+	 * Get the standard HTTP request headers for retrieving remote files.
+	 * 
+	 * @param bool $forcurl 
+	 * @return array | string
+	 */
+	public static function GetStandardHTTPHeaders($forcurl = false, $autoclose = false){
+		$headers = array(
+			'User-Agent: Core Plus ' . self::GetComponent()->getVersion() . ' (http://corepl.us)',
+			'Servername: ' . SERVERNAME,
+		);
+		
+		if($autoclose){
+			$headers[] = 'Connection: close';
+		}
+		
+		if($forcurl){
+			return $headers;
+		}
+		else{
+			return implode("\r\n", $headers);
+		}
+	}
+	
 	public static function Singleton(){
 		if(is_null(self::$instance)) self::$instance = new self();
 		return self::$instance;

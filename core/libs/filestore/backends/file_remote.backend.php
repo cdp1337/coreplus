@@ -407,7 +407,21 @@ class File_remote_backend implements File_Backend{
 	private function _getHeaders(){
 		if($this->_headers === null){
 			$this->_headers = array();
-			$h = get_headers($this->getURL());
+			
+			// I like curl better because it doesn't make a GET request when 
+			// all I want to do is a HEAD request.
+			// Just give me HEAD damnit!..... :p
+			
+			$curl = curl_init();
+			curl_setopt_array( $curl, array(
+				CURLOPT_HEADER => true,
+				CURLOPT_NOBODY => true,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_URL => $this->getURL(),
+				CURLOPT_HTTPHEADER => Core::GetStandardHTTPHeaders(true),
+			));
+			$h = explode( "\n", curl_exec( $curl ) );
+			curl_close( $curl );
 			
 			foreach($h as $line){
 				if(strpos($line, 'HTTP/1.') !== false){
@@ -425,6 +439,11 @@ class File_remote_backend implements File_Backend{
 		return $this->_headers;
 	}
 	
+	private function _getHeader($header){
+		$h = $this->_getHeaders();
+		return (isset($h[$header])) ? $h[$header] : null;
+	}
+	
 	/**
 	 * Get the temporary local version of the file.
 	 * This is useful for doing operations such as hash and identicalto.
@@ -434,14 +453,49 @@ class File_remote_backend implements File_Backend{
 	private function _getTmpLocal(){
 		if($this->_tmplocal === null){
 			$f = md5($this->getFilename());
+			// Gotta love obviously-named flags.
+			$needtodownload = true;
 			
 			$this->_tmplocal = new File_local_backend('tmp/remotefile-cache/' . $f);
 			
-			// If it exists and is new enough, no need to do anything.
-			$mtime = $this->_tmplocal->getMTime();
-			if($mtime == false  || $mtime < time() - (60 * 60 * 24) ){
+			// File exists already!  Check and see if it needs to be redownloaded.
+			if($this->_tmplocal->exists()){
+				// Lookup this file in the system cache.
+				$systemcachedata = Core::Cache()->get('remotefile-cache-header-' . $f);
+				if($systemcachedata){
+					// I can only look them up if the cache is available.
+					
+					// First attempt, try ETag.
+					if($this->_getHeader('ETag')){
+						$needtodownload = ($this->_getHeader('ETag') != $systemcachedata['etag']);
+					}
+					// No?  How 'bout 
+					elseif($this->_getHeader('Last-Modified')){
+						$needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['last-modified']);
+					}
+					// Still no?  The default is to download it anway.
+				}
+			}
+			
+			if($needtodownload){
+				// Create a stream
+				$opts = array(
+					'http' => array(
+						'protocol_version' => '1.1',
+						'method' => "GET",
+						'header' => Core::GetStandardHTTPHeaders(false, true)
+					)
+				);
+
+				$context = stream_context_create($opts);
 				// Copy the data down to the local file.
-				$this->_tmplocal->putContents(file_get_contents( $this->getURL() ));
+				$this->_tmplocal->putContents(file_get_contents( $this->getURL(), false, $context));
+				
+				// And remember this header data for nexttime.
+				Core::Cache()->set('remotefile-cache-header-' . $f, array(
+					'etag' => $this->_getHeader('ETag'),
+					'last-modified' => $this->_getHeader('Last-Modified'),
+				));
 			}
 		}
 		

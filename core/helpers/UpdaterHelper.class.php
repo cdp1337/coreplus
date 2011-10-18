@@ -192,39 +192,61 @@ class UpdaterHelper {
 					return array('status' => 0, 'message' => 'Invalid component ' . $component['title'] . ', does not contain a data directory.');
 				}
 				
-				$queue = $datadir->ls();
+				$queue = array($datadir);//$datadir->ls();
+				$x = 0;
+				
 				do{
+					++$x;
+					$queue = array_values($queue);
 					foreach($queue as $k => $q){
 						if($q instanceof Directory_local_backend){
+							unset($queue[$k]);
 							// Just queue directories up to be scanned.
-							$queue[] = $q;
+							// (don't do array merge, because I'm inside a foreach loop)
+							foreach($q->ls() as $subq) $queue[] = $subq;
 						}
 						else{
 							// It's a file, copy it over.
 							// To do so, resolve the directory path inside the temp data dir.
 							$dest = $destbase . substr($q->getFilename(), strlen($datadir->getPath()));
-							var_dump($dest);
+							$newfile = $q->copyTo($dest, true);
+							
+							unset($queue[$k]);
 						}
-						
-						unset($queue[$k]);
 					}
 				}
-				while(sizeof($queue) > 0);
-				//$tmpdir->ls()
+				while(sizeof($queue) > 0 && $x < 15);
 				
-				$tmpdir->remove(); die();
+				// Cleanup the temp directory
+				$tmpdir->remove();
 				
-				
-				
-				var_dump($localobj->listfiles());
-				
-				//$copy = $remotefile->copyTo(ROOT_PDIR . '')
-				var_dump($localfile, $localfile->getContentsObject(), $remotefile);
+				// and w00t, the files should be extracted.  Do the actual installation.
+				switch($component['type']){
+					case 'core':
+						$c = ComponentHandler::GetComponent('core');
+						$c->upgrade();
+						break;
+					case 'component':
+						$c = new Component($component['name']);
+						$c->load();
+						// if it's installed, switch to that version and upgrade.
+						if($c->isInstalled()){
+							$c = ComponentHandler::GetComponent($component['name']);
+							// Make sure I get the new XML
+							$c->load();
+							// And upgrade
+							$c->upgrade();
+						}
+						else{
+							// It's a new insatllation.
+							$c->install();
+						}
+				}
 			}
-			
 		}
 		
-		var_dump($pendingqueue, $checkedqueue); die();
+		// yay...
+		return array('status' => 1, 'message' => 'Performed all operations successfully');
 	}
 	
 	/**

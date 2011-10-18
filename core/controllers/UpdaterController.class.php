@@ -124,16 +124,17 @@ class UpdaterController extends Controller {
 			$view->jsondata = $status;
 			return;
 		}
-		var_dump($view);
-		var_dump($status); die();
 		
+		// Standard HTML page.
+		if($status['status']){
+			$type = 'success';
+		}
+		else{
+			$type = 'error';
+		}
 		
-		Core::SetMessage('Component ' . $name . ' does not appear to be valid.', 'error');
+		Core::SetMessage($status['message'], $type);
 		Core::Redirect('/Updater/Check');
-		
-		
-		
-		var_dump($components[$name][$version]); die();
 	}
 	
 	

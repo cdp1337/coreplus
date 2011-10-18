@@ -213,10 +213,8 @@ class Directory_local_backend implements Directory_Backend {
 		
 		$obj = $this;
 		foreach($parts as $k => $step){
-			var_dump($step);
 			$listing = $obj->ls();
 			foreach($listing as $l){
-				var_dump($l->getBasename());
 				if($l->getBasename() == $step){
 					// Found! (and the last key)
 					if($k == $lastkey) return $l;

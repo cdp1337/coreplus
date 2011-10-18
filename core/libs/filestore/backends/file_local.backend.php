@@ -341,19 +341,6 @@ class File_local_backend implements File_Backend{
 			$this->_filename = $f;
 		}
 		
-		
-		// Ensure the directory exists.
-		// This is essentially a recursive mkdir.
-		$ds = explode('/', dirname($this->_filename));
-		$d = '';
-		foreach($ds as $dir){
-			if($dir == '') continue;
-			$d .= '/' . $dir;
-			if(!is_dir($d)){
-				if(mkdir($d) === false) throw new Exception("Unable to make directory $d, please check permissions.");
-			}
-		}
-
 		// @todo Should this incorporate permissions, to prevent files being wrote as "www-data"?
 
 		// And do the actual copy!
@@ -638,7 +625,7 @@ class File_local_backend implements File_Backend{
 		else{
 			// Trim off the ROOT_PDIR since it'll be relative to the ftp root set in the config.
 			if(strpos($filename, ROOT_PDIR) === 0) $filename = substr($filename, strlen(ROOT_PDIR));
-			
+			//$filename = ConfigHandler::Get('/core/ftp/path') . $filename;
 			// FTP requires a filename, not data...
 			$tmpfile = $tmpdir . 'ftpupload-' . Core::RandomHex(4);
 			file_put_contents($tmpfile, $data);
