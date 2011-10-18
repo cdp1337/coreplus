@@ -113,16 +113,7 @@ if(!DEVELOPMENT_MODE){
 	//die('If your browser does not refresh, please <a href="install.php">Click Here</a>');
 //}
 
-// The TMP_DIR needs to be writable!
-if(!is_dir(TMP_DIR)){
-	$ds = explode('/', TMP_DIR);
-	$d = '';
-	foreach($ds as $dir){
-		if($dir == '') continue;
-		$d .= '/' . $dir;
-		if(!is_dir($d)) mkdir($d) or die("Please ensure that " . TMP_DIR . " is writable.");
-	}
-}
+
 
 
 
@@ -149,6 +140,7 @@ if(EXEC_MODE == 'CLI'){
 	$curcall = null;
 	$relativerequestpath = null;
 	$ssl = false;
+	$tmpdir = $core_settings['tmp_dir_cli'];
 }
 else{
 	/**
@@ -221,6 +213,8 @@ else{
 	$relativerequestpath = '/' . substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
 	if(strpos($relativerequestpath, '?') !== false) $relativerequestpath = substr($relativerequestpath, 0, strpos($relativerequestpath, '?'));
 	$ssl = ( isset($_SERVER['HTTPS']) );
+	
+	$tmpdir = $core_settings['tmp_dir_web'];
 }
 
 /**
@@ -270,6 +264,24 @@ define('REL_REQUEST_PATH', $relativerequestpath);
  * @var boolean 
  */
 define('SSL', $ssl);
+
+/**
+ * Temp directory 
+ * @var string
+ */
+define('TMP_DIR', $tmpdir);
+
+// The TMP_DIR needs to be writable!
+if(!is_dir(TMP_DIR)){
+	$ds = explode('/', TMP_DIR);
+	$d = '';
+	foreach($ds as $dir){
+		if($dir == '') continue;
+		$d .= '/' . $dir;
+		if(!is_dir($d)) mkdir($d) or die("Please ensure that " . TMP_DIR . " is writable.");
+	}
+}
+
 
 /**
  * The GnuPG home directory to store keys in. 
