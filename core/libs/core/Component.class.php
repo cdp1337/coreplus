@@ -582,6 +582,16 @@ class Component extends InstallArchiveAPI{
 		return $this->_versionDB;
 	}
 	
+	/**
+	 * Components are components, (unless it's the core)
+	 * 
+	 * @return string 
+	 */
+	public function getType(){
+		if($this->_name == 'core') return 'core';
+		else return 'component';
+	}
+	
 	
 	
 	

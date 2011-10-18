@@ -236,6 +236,41 @@ class Core implements ISingleton{
 	}
 	
 	/**
+	 * Get the global FTP connection.
+	 * 
+	 * Returns the FTP resource or false on failure.
+	 * 
+	 * @return resource | false
+	 */
+	public static function FTP(){
+		static $ftp = null;
+		
+		if($ftp === null){
+			// Is FTP enabled?
+			$ftpuser = ConfigHandler::Get('/core/ftp/username');
+			$ftppass = ConfigHandler::Get('/core/ftp/password');
+			
+			if(!($ftpuser && $ftppass)){
+				$ftp = false;
+				return false;
+			}
+			
+			$ftp = ftp_connect('127.0.0.1');
+			if(!$ftp){
+				$ftp = false;
+				return false;
+			}
+			ftp_login($ftp, $ftpuser, $ftppass);
+		}
+		
+		// Make sure the FTP directory is always as root whenever this is called.
+		$ftproot = ConfigHandler::Get('/core/ftp/path');
+		ftp_chdir($ftp, $ftproot);
+		
+		return $ftp;
+	}
+	
+	/**
 	 * Get the current user model that is logged in.
 	 * 
 	 * @return User
@@ -790,15 +825,33 @@ class Core implements ISingleton{
 			}
 		}
 		
-		// @todo Should these be disable-able from a config option?
-		//       possible reason for this is if the server does not have internet access.
-		if (!(checkdnsrr($domain,"MX") || checkdnsrr($domain,"A"))) {
+		// Allow the admin to skip DNS checks via config.
+		if (ConfigHandler::Get('/core/email/verify_with_dns') &&  !(checkdnsrr($domain,"MX") || checkdnsrr($domain,"A"))) {
 			// domain not found in DNS
 			return false;
 		}
 		
 		// All checks passed?
 		return true;
+	}
+	
+	/**
+	 * Function that attaches the core javascript to the page.
+	 * 
+	 * This should be called automatically from the hook /core/page/prerender.
+	 */
+	public static function _AttachCoreJavascript(){
+		
+		$script = '<script type="text/javascript">
+	var Core = {
+		ROOT_WDIR: "' . ROOT_WDIR . '",
+		ROOT_URL: "' . ROOT_URL . '",
+		ROOT_URL_SSL: "' . ROOT_URL_SSL . '",
+		ROOT_URL_NOSSL: "' . ROOT_URL_NOSSL . '"
+	};
+</script>';
+		
+		CurrentPage::AddScript($script, 'head');
 	}
 	
 }

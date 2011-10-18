@@ -19,7 +19,7 @@ class UpdaterController extends Controller {
 		
 		$sitecount = UpdateSiteModel::Count('enabled = 1');
 		
-		$view->title = 'Updater';
+		$view->title = 'System Updater';
 		$view->assign('sitecount', $sitecount);
 	}
 	
@@ -29,63 +29,27 @@ class UpdaterController extends Controller {
 	 * @param View $view 
 	 */
 	public static function Check(View $view){
+		$view->title = 'Check for Updates';
 		
-		$corevers = Core::GetComponent()->getVersion();
+		$view->addBreadcrumb('System Updater', 'Updater');
+	}
+	
+	
+	/**
+	 * Get the list of updates from remote repositories, (or session cache).
+	 * 
+	 * @param View $view 
+	 */
+	public static function Getupdates(View $view){
 		
-		// Build a list of components currently installed, this will act as a base.
-		$components = array();
-		foreach(ComponentHandler::GetAllComponents() as $c){
-			$n = strtolower($c->getName());
-			if(!isset($components[$n])) $components[$n] = array();
-			$components[$n][$c->getVersion()] = array(
-				'name' => $n,
-				'title' => $c->getName(),
-				'version' => $c->getVersion(),
-				'source' => 'installed',
-				'description' => $c->getDescription(),
-				'provides' => $c->getProvides(),
-				'requires' => $c->getRequires(),
-				'location' => null,
-			);
+		// This is an ajax/json-only page.
+		if($view->contenttype != View::CTYPE_JSON){
+			Core::Redirect('/Updater/Check');
 		}
 		
-		// Now, look up components from all the updates sites.
-		$updatesites = UpdateSiteModel::Find('enabled = 1');
-		foreach($updatesites as $site){
-			
-			$file = new File_remote_backend($site->get('url'));
-			$file->username = $site->get('username');
-			$file->password = $site->get('password');
-			
-			$repoxml = new RepoXML();
-			$repoxml->loadFromFile($file);
-			$rootpath = dirname($site->get('url')) . '/';
-			foreach($repoxml->getPackages() as $pkg){
-				// Already installed and is up to date, don't do anything.
-				//if($pkg->isCurrent()) continue;
-				
-				$n = strtolower($pkg->getName());
-				
-				// Check and see if this version is already listed in the repo.
-				if(!isset($components[$n][$pkg->getVersion()])){
-					$components[$n][$pkg->getVersion()] = array(
-						'name' => $n,
-						'title' => $pkg->getName(),
-						'version' => $pkg->getVersion(),
-						'source' => 'repo-' . $site->get('id'),
-						'description' => $pkg->getDescription(),
-						'provides' => $pkg->getProvides(),
-						'requires' => $pkg->getRequires(),
-						'location' => $rootpath . $pkg->getFileLocation(),
-					);
-				}		
-				
-				//var_dump($pkg->asPrettyXML());
-			}
-		}
+		$components = UpdaterHelper::GetUpdates();
 		
-		var_dump($components['jquery-full']); die();
-		
+		$view->jsondata = $components;
 	}
 	
 	/**
@@ -124,7 +88,7 @@ class UpdaterController extends Controller {
 		$form->addElement('submit', array('value' => 'Update Site'));
 		
 		$view->title = 'Edit Site';
-		$view->addBreadcrumb('Updater', 'Updater');
+		$view->addBreadcrumb('System Updater', 'Updater');
 		$view->addBreadcrumb('Sites', 'Updater/Sites');
 		
 		$view->addControl('Add Site', 'Updater/Sites/Add', 'add');
@@ -140,16 +104,44 @@ class UpdaterController extends Controller {
 		$form->addElement('submit', array('value' => 'Add Site'));
 		
 		$view->title = 'Add Site';
-		$view->addBreadcrumb('Updater', 'Updater');
+		$view->addBreadcrumb('System Updater', 'Updater');
 		$view->addBreadcrumb('Sites', 'Updater/Sites');
 		
 		$view->assign('form', $form);
 	}
 	
+	public static function Install(View $view){
+		$components = UpdaterHelper::GetUpdates();
+		
+		$name = $view->getParameter(0);
+		$version = $view->getParameter(1);
+		$dryrun = $view->getParameter('dryrun');
+		
+		$status = UpdaterHelper::Install($name, $version, $dryrun);
+		
+		// This is a json-enabled page.
+		if($view->contenttype == View::CTYPE_JSON){
+			$view->jsondata = $status;
+			return;
+		}
+		var_dump($view);
+		var_dump($status); die();
+		
+		
+		Core::SetMessage('Component ' . $name . ' does not appear to be valid.', 'error');
+		Core::Redirect('/Updater/Check');
+		
+		
+		
+		var_dump($components[$name][$version]); die();
+	}
 	
 	
 	public static function _Sites_Update(Form $form){
 		$form->getModel()->save();
+		
+		// Will be useful for importing new keys.
+		// gpg --homedir . --no-permission-warning --keyserver x-hkp://pool.sks-keyservers.net --recv-keys B2BEDCCB
 		
 		return 'Updater/Sites';
 	}
