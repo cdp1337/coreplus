@@ -132,16 +132,18 @@ class ConfigHandler implements ISingleton {
 	 * @param $configSet string
 	 * @param $key string
 	 * @return string | int | boolean
+	 * 
+	 * @deprecated 2011.10
 	 */
 	public static function GetValue($key) {
-		trigger_error('ConfigHandler::GetValue() is deprecated, please use ConfigHandler::Get() instead.', E_USER_DEPRECATED);
+		//trigger_error('ConfigHandler::GetValue() is deprecated, please use ConfigHandler::Get() instead.', E_USER_DEPRECATED);
 		return self::Get($key);
 		
 		return (isset(ConfigHandler::$CacheFromDB[$key])) ? ConfigHandler::$CacheFromDB[$key] : null;
 	}
 
 	public static function SetValue($key, $value) {
-		trigger_error('ConfigHandler::SetValue() is deprecated, please use ConfigHandler::Set() instead.', E_USER_DEPRECATED);
+		//trigger_error('ConfigHandler::SetValue() is deprecated, please use ConfigHandler::Set() instead.', E_USER_DEPRECATED);
 		return self::Set($key, $value);
 		
         ConfigHandler::$CacheFromDB[$key] = $value;
