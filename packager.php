@@ -672,7 +672,7 @@ function process_component($component, $forcerelease = false){
 	if($bundleyn){
 		// Create a temp directory to contain all these
 		// @todo Bundle up the component, add a META-INF.xml file and (ideally), sign the package.
-		$dir = '/tmp/packager-' . $c->getName() . '/';
+		$dir = TMP_DIR . 'packager-' . $c->getName() . '/';
 
 		// The destination depends on the type.
 		switch($component){
