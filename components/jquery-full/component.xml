@@ -97,7 +97,7 @@
 	<upgrade from="1.5.1~cae3" to="1.6.4~core1"/>
 	<changelog version="1.6.4~core1">
 		<packagemeta>
-			<date>Mon, 17 Oct 2011 21:17:57 -0400</date>
+			<date>Mon, 17 Oct 2011 23:49:06 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.7</packager>
 		</packagemeta>

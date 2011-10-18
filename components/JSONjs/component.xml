@@ -46,9 +46,9 @@
 	<upgrade from="2011.02.23~cae1" to="2011.02.23~cae2"/>
 	<changelog version="2011.02.23~cae2">
 		<packagemeta>
-			<date>Thu, 23 Jun 2011 19:31:01 -0400</date>
+			<date>Wed, 28 Sep 2011 03:34:31 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.2</packager>
+			<packager>CAE2 0.0.6</packager>
 		</packagemeta>
 		<notes>Set to require jquery 1.4</notes>
 	</changelog>

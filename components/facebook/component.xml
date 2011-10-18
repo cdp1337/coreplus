@@ -32,9 +32,9 @@
 	</library>
 	<changelog version="3.0.1~Core1">
 		<packagemeta>
-			<date>Wed, 28 Sep 2011 03:34:04 -0400</date>
+			<date>Mon, 17 Oct 2011 23:48:25 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.6</packager>
+			<packager>CAE2 0.0.7</packager>
 		</packagemeta>
 	</changelog>
 	<author name="Naitik Shah" email="naitik@facebook.com"/>

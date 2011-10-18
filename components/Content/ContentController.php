@@ -70,6 +70,9 @@ class ContentController extends Controller {
 
 		$form = Form::BuildFromModel($m);
 		$form->set('callsmethod', 'ContentController::_SaveHandler');
+		
+		// Some file upload option (a test really)
+		$form->addElement(FormElement::Factory('file', array('title' => 'File Foo', 'name' => 'fileupload', 'basedir' => 'public/test12', 'browsable' => false)));
 
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Create'));
@@ -89,9 +92,9 @@ class ContentController extends Controller {
 		// Save the model
 		$m = $form->getModel();
 		// These pages are widget-able.
-		$m->getLink('Page')->set('widget', true);
-		$m->save();
-		return $m->get('baseurl');
+		//$m->getLink('Page')->set('widget', true);
+		//$m->save();
+		//return $m->get('baseurl');
 	}
 	
 	public static function Delete(View $page){
