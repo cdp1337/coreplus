@@ -263,9 +263,12 @@ class Core implements ISingleton{
 			ftp_login($ftp, $ftpuser, $ftppass);
 		}
 		
-		// Make sure the FTP directory is always as root whenever this is called.
-		$ftproot = ConfigHandler::Get('/core/ftp/path');
-		ftp_chdir($ftp, $ftproot);
+		// if FTP is not enabled, I can't chdir...
+		if($ftp){
+			// Make sure the FTP directory is always as root whenever this is called.
+			$ftproot = ConfigHandler::Get('/core/ftp/path');
+			ftp_chdir($ftp, $ftproot);
+		}
 		
 		return $ftp;
 	}
