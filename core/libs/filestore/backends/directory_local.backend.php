@@ -36,8 +36,42 @@ class Directory_local_backend implements Directory_Backend {
 	 */
 	private $_ignores = array();
 	
+	/**
+	 * The fully resolved path of assets.
+	 * Used as a cache.
+	 * 
+	 * @var string
+	 */
+	private static $_Root_pdir_assets = null;
+	private static $_Root_pdir_public = null;
+	private static $_Root_pdir_private = null;
+	private static $_Root_pdir_tmp = null;
+	
 	public function __construct($directory) {
 		if(!is_null($directory)){
+			
+			// Ensure that the root_pdir directories are cached and ready.
+			if(self::$_Root_pdir_assets === null){
+				$dir = ConfigHandler::Get('/core/filestore/assetdir');
+				if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
+				self::$_Root_pdir_assets = $dir;
+			}
+			if(self::$_Root_pdir_public === null){
+				$dir = ConfigHandler::Get('/core/filestore/publicdir');
+				if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
+				self::$_Root_pdir_public = $dir;
+			}
+			if(self::$_Root_pdir_private === null){
+				$dir = ConfigHandler::Get('/core/filestore/privatedir');
+				if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
+				self::$_Root_pdir_private = $dir;
+			}
+			if(self::$_Root_pdir_tmp === null){
+				$dir = TMP_DIR;
+				if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
+				self::$_Root_pdir_tmp = $dir;
+			}
+			
 			// Directories should always end in a trailing slash
 			$directory = $directory . '/';
 			
@@ -50,24 +84,22 @@ class Directory_local_backend implements Directory_Backend {
 			// private/, private.
 			
 			if(strpos($directory, 'assets/') === 0){
-				$base = ConfigHandler::Get('/core/filestore/assetdir');
-				if($base{0} != '/') $base = ROOT_PDIR . $base; // Needs to be fully resolved
 				$theme = ConfigHandler::Get('/core/theme');
 				$directory = substr($directory, 7); // Trim off the 'asset/' prefix.
-				if(file_exists($base . $theme . '/' . $directory)) $directory = $base . $theme . '/' . $directory;
-				else $directory = $base . 'default/' . $directory;
+				if(file_exists(self::$_Root_pdir_assets . $theme . '/' . $directory)) $directory = self::$_Root_pdir_assets . $theme . '/' . $directory;
+				else $directory = self::$_Root_pdir_assets . 'default/' . $directory;
 			}
 			elseif(strpos($directory, 'public/') === 0){
 				$directory = substr($directory, 7); // Trim off the 'public/' prefix.
-				$base = ConfigHandler::Get('/core/filestore/publicdir');
-				if($base{0} != '/') $base = ROOT_PDIR . $base; // Needs to be fully resolved
-				$directory = $base . $directory;
+				$directory = self::$_Root_pdir_public . $directory;
 			}
 			elseif(strpos($directory, 'private/') === 0){
 				$directory = substr($directory, 8); // Trim off the 'private/' prefix.
-				$base = ConfigHandler::Get('/core/filestore/privatedir');
-				if($base{0} != '/') $base = ROOT_PDIR . $base; // Needs to be fully resolved
-				$directory = $base . $directory;
+				$directory = self::$_Root_pdir_private . $directory;
+			}
+			elseif(strpos($directory, 'tmp/') === 0){
+				$directory = substr($directory, 4); // Trim off the 'tmp/' prefix.
+				$directory = self::$_Root_pdir_tmp . $directory;
 			}
 			else{
 				// Nothing to do on the else, just use this filename as-is.
@@ -110,6 +142,96 @@ class Directory_local_backend implements Directory_Backend {
 	 */
 	public function isReadable(){
 		return is_readable($this->_path);
+	}
+	
+	/**
+	 * Create this directory, (has no effect if already exists)
+	 *  
+	 */
+	public function mkdir(){
+		mkdir($this->getPath());
+	}
+	
+	/**
+	 * Get this directory's fully resolved path
+	 * 
+	 * @return string
+	 */
+	public function getPath(){
+		return $this->_path;
+	}
+	
+	public function getBasename(){
+		$p = trim($this->_path, '/');
+		return substr($p, strrpos($p, '/')+1);
+	}
+	
+	/**
+	 * Remove a directory and recursively any file inside it. 
+	 */
+	public function remove(){
+		$dirqueue = array($this->getPath());
+		$x = 0;
+		do{
+			$x++;
+			foreach($dirqueue as $k => $d){
+				$isempty = true;
+				$dh = opendir($d);
+				if(!$dh) return false;
+				while(($file = readdir($dh)) !== false){
+					if($file == '.') continue;
+					if($file == '..') continue;
+					$isempty = false;
+					if(is_dir($d . $file)) $dirqueue[] = $d . $file . '/';
+					else unlink($d . $file);
+				}
+				closedir($dh);
+				if($isempty){
+					rmdir($d);
+					unset($dirqueue[$k]);
+				}
+			}
+			
+			$dirqueue = array_unique($dirqueue);
+			krsort($dirqueue);
+		}
+		while(sizeof($dirqueue) && $x <= 10);
+	}
+	
+	/**
+	 * Find and get a directory or file that matches the name provided.
+	 * 
+	 * Will search run down subdirectories if a tree'd path is provided.
+	 * 
+	 * @param string $name 
+	 */
+	public function get($name){
+		// Trim beginning and trailing slashes.
+		$name = trim($name, '/');
+		$parts = explode('/', $name);
+		$lastkey = sizeof($parts) - 1; // -1 because 0-indexed arrays.
+		
+		$obj = $this;
+		foreach($parts as $k => $step){
+			var_dump($step);
+			$listing = $obj->ls();
+			foreach($listing as $l){
+				var_dump($l->getBasename());
+				if($l->getBasename() == $step){
+					// Found! (and the last key)
+					if($k == $lastkey) return $l;
+					// Not the last key, it was still found!
+					$obj = $l;
+					continue 2;
+				}
+			}
+			
+			// If it got here, one of the paths failed to resolve!
+			return null;
+		}
+		
+		// Did every path fail to resolve?
+		return null;
 	}
 	
 	

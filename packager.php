@@ -699,8 +699,6 @@ function process_component($component, $forcerelease = false){
 			$file->copyTo($dir . 'data/' . $f['file']);
 		}
 
-		// Don't forget the metafile....
-
 		// Because the destination is relative...
 		$xmldest = 'data/' . substr($c->getXMLFilename(), strlen($c->getBaseDir()));
 		$file = new File_local_backend($c->getXMLFilename());
@@ -719,7 +717,7 @@ function process_component($component, $forcerelease = false){
 		$bundle = $tgz;
 
 		if(CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
-			exec('gpg -u "' . $packageremail . '" -a --sign "' . $tgz . '"');
+			exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -u "' . $packageremail . '" -a --sign "' . $tgz . '"');
 			$bundle .= '.asc';
 		}
 

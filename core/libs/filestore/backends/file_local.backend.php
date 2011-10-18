@@ -224,6 +224,15 @@ class File_local_backend implements File_Backend{
 	}
 	
 	/**
+	 * Simple basename function for this file.
+	 * 
+	 * @return string
+	 */
+	public function getBasename(){
+		return basename($this->_filename);
+	}
+	
+	/**
 	 * Get the filename for a local clone of this file.
 	 * For local files, it's the same thing, but remote files will be copied to a temporary local location first.
 	 * 
@@ -356,20 +365,16 @@ class File_local_backend implements File_Backend{
 	}
 	
 	public function putContents($data){
+		
 		// Ensure the directory exists.
 		// This is essentially a recursive mkdir.
 		if(!is_dir(dirname($this->_filename))){
-			$ds = explode('/', dirname($this->_filename));
-			$d = '';
-			foreach($ds as $dir){
-				if($dir == '') continue;
-				$d .= '/' . $dir;
-				if(!is_dir($d)){
-					if(mkdir($d) === false) throw new Exception("Unable to make directory $d, please check permissions.");
-				}
+			if(!self::_Mkdir(dirname($this->_filename), 0777, true)){
+				throw new Exception("Unable to make directory " . dirname($this->_filename) . ", please check permissions.");
 			}
 		}
-		return file_put_contents($this->_filename, $data);
+		
+		self::_PutContents($this->_filename, $data);
 	}
 	
 	public function getContentsObject(){
@@ -542,6 +547,115 @@ class File_local_backend implements File_Backend{
 		
 		return filemtime($this->getFilename());
 	}
+	
+	
+	
+	
+	/**
+	 * Makes directory
+	 * 
+	 * Advanced version of mkdir().  Will try to use ftp functions if provided by the configuration.
+	 * 
+	 * @link http://php.net/manual/en/function.mkdir.php
+	 * 
+	 * @param string $directory The directory path.
+	 * @param int $mode [optional] <p>
+	 * The mode is 0777 by default, which means the widest possible
+	 * access. For more information on modes, read the details
+	 * on the chmod page.
+	 * </p>
+	 * <p>
+	 * mode is ignored on Windows.
+	 * </p>
+	 * <p>
+	 * Note that you probably want to specify the mode as an octal number,
+	 * which means it should have a leading zero. The mode is also modified
+	 * by the current umask, which you can change using
+	 * umask.
+	 * </p>
+	 * @param bool $recursive [optional] Default to false.
+	 * @return bool Returns true on success or false on failure.
+	 */
+	public static function _Mkdir($pathname, $mode = 0777, $recursive = false){
+		$ftp = Core::FTP();
+		$tmpdir = TMP_DIR;
+		if($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
+		
+		if(!$ftp){
+			return mkdir($pathname, $mode, $recursive);
+		}
+		elseif(strpos($pathname, $tmpdir) === 0){
+			// Tmp files should be written directly.
+			return mkdir($pathname, $mode, $recursive);
+		}
+		else{
+			// Trim off the ROOT_PDIR since it'll be relative to the ftp root set in the config.
+			if(strpos($pathname, ROOT_PDIR) === 0) $pathname = substr($pathname, strlen(ROOT_PDIR));
+			if(!ftp_mkdir($ftp, $pathname)) return false;
+			if(!ftp_chmod($ftp, $mode, $pathname)) return false;
+			
+			// woot...
+			return true;
+		}
+	}
+	
+	/**
+	 * Write a string to a file
+	 * 
+	 * @link http://php.net/manual/en/function.file-put-contents.php
+	 * 
+	 * @param string $filename <p>
+	 * Path to the file where to write the data.
+	 * </p>
+	 * @param mixed $data <p>
+	 * The data to write. Can be either a string, an
+	 * array or a stream resource.
+	 * </p>
+	 * <p>
+	 * If data is a stream resource, the
+	 * remaining buffer of that stream will be copied to the specified file.
+	 * This is similar with using stream_copy_to_stream.
+	 * </p>
+	 * <p>
+	 * You can also specify the data parameter as a single
+	 * dimension array. This is equivalent to
+	 * file_put_contents($filename, implode('', $array)).
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
+	 */
+	public static function _PutContents($filename, $data){
+		$ftp = Core::FTP();
+		$tmpdir = TMP_DIR;
+		if($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
+		
+		if(!$ftp){
+			return file_put_contents($filename, $data);
+		}
+		elseif(strpos($filename, $tmpdir) === 0){
+			// Tmp files should be written directly.
+			return file_put_contents($filename, $data);
+		}
+		else{
+			// Trim off the ROOT_PDIR since it'll be relative to the ftp root set in the config.
+			if(strpos($filename, ROOT_PDIR) === 0) $filename = substr($filename, strlen(ROOT_PDIR));
+			
+			// FTP requires a filename, not data...
+			$tmpfile = $tmpdir . 'ftpupload-' . Core::RandomHex(4);
+			file_put_contents($tmpfile, $data);
+			//var_dump($filename);
+			if(!ftp_put($ftp, $filename, $tmpfile, FTP_BINARY)){
+				// Well, delete the temp file anyway...
+				unlink($tmpfile);
+				return false;
+			}
+			
+			// woot... but cleanup the trash first.
+			unlink($tmpfile);
+			return true;
+		}
+	}
+	
+	
 	
 	
 	private function _getResizedImage($width, $height){

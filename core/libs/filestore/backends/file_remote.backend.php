@@ -86,9 +86,7 @@ class File_remote_backend implements File_Backend{
 	}
 	
 	public function getExtension(){
-		die('Implement this method...');
-		//return Core::GetExtensionFromString($this->_filename);
-		//return substr($this->_filename, strrpos($this->_filename, '.'));
+		return Core::GetExtensionFromString($this->getBaseFilename());
 	}
 	
 	/**

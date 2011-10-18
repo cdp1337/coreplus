@@ -47,3 +47,4 @@ require_once(ROOT_PDIR . 'core/libs/core/Controller.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Time.class.php');
 
 require_once(ROOT_PDIR . 'core/models/ComponentModel.class.php');
+require_once(ROOT_PDIR . 'core/models/PageModel.class.php');
