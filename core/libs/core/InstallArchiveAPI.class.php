@@ -87,7 +87,7 @@ abstract class InstallArchiveAPI extends XMLLoader{
 			throw new Exception('Parsing of XML Metafile [' . $XMLFilename . '] failed, not valid XML.');
 		}
 		
-		if($this->getRootDOM()->getAttribute("name") != $this->_name){
+		if(strtolower($this->getRootDOM()->getAttribute("name")) != strtolower($this->_name)){
 			throw new Exception('Name mismatch in XML Metafile [' . $XMLFilename . '], defined name does not match expected name.');
 		}
 		
@@ -317,7 +317,7 @@ abstract class InstallArchiveAPI extends XMLLoader{
 	 */
 	public function getAllFilenames(){
 		$ret = array();
-		$list = $this->getElements('//component/library/file|//component/module/file|//component/view/file|//component/otherfiles/file');
+		$list = $this->getElements('//component/library/file|//component/module/file|//component/view/file|//component/otherfiles/file|//component/assets/file');
 		//foreach($this->getRootDOM()->getElementsByTagName('file') as $el){
 		foreach($list as $el){
 			$md5 = @$el->getAttribute('md5');
