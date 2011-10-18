@@ -271,6 +271,11 @@ define('REL_REQUEST_PATH', $relativerequestpath);
  */
 define('SSL', $ssl);
 
+/**
+ * The GnuPG home directory to store keys in. 
+ */
+if(!defined('GPG_HOMEDIR')) define('GPG_HOMEDIR', ROOT_PDIR . 'gnupg');
+
 // Cleanup!
 unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl);
 $maindefines_time = microtime(true);

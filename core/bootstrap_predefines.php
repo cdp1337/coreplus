@@ -92,10 +92,6 @@ define('TAB', "\t");
  */
 define('DS', DIRECTORY_SEPARATOR);
 
-/**
- * The GnuPG home directory to store keys in. 
- */
-if(!defined('GPG_HOMEDIR')) define('GPG_HOMEDIR', ROOT_PDIR . 'gnupg');
 
 
 // Cleanup!
