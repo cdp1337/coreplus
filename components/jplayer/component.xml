@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component>
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0~cae3" name="jPlayer" execmode="web">
+	<requires name="core" type="component"/>
+	<requires name="JQuery" type="library" version="1.4" operation="ge"/>
+	<assets>
+		<file filename="assets/css/skin/jplayer.blue.monday.css" md5="fb5446fd5b9bec9f8f09cda98593271c"/>
+		<file filename="assets/css/skin/jplayer.blue.monday.jpg" md5="297da0f09846c3a1e0759c2736fdef94"/>
+		<file filename="assets/css/skin/jplayer.blue.monday.video.play.hover.png" md5="7e2080be69b0785b7585f3ae5570b255"/>
+		<file filename="assets/css/skin/jplayer.blue.monday.video.play.png" md5="05faffb4ad5d76e73c0c210c9330c58b"/>
+		<file filename="assets/css/skin/pbar-ani.gif" md5="80a3586f77bcc84b16050f3804730431"/>
+		<file filename="assets/js/jquery.jplayer.min.js" md5="09b386064fd7d0b8a785a30ff9446835"/>
+		<file filename="assets/swf/Jplayer.swf" md5="e31f31957d930e4c710445677fb335da"/>
+		<file filename="assets/css/skin/jplayer.blue.monday.png" md5="7794f92c78b543a16ef5140f0b8eff5b"/>
+	</assets>
+	<library>
+		<scriptlibrary name="jplayer" call="jPlayer::IncludeJPlayer"/>
+		<file filename="jPlayer.class.php" md5="4b957ed3fec1a81769492a9fc0ceb3c9">
+			<provides type="class" name="jPlayer"/>
+		</file>
+	</library>
+	<changelog version="2.0.0">
+		<packagemeta>
+			<date>Sat, 18 Jun 2011 01:54:45 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.1-dev1</packager>
+		</packagemeta>
+	</changelog>
+	<upgrade from="2.0.0" to="2.0.0~cae2"/>
+	<changelog version="2.0.0~cae2">
+		<packagemeta>
+			<date>Sat, 18 Jun 2011 02:09:25 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.1-dev1</packager>
+		</packagemeta>
+	</changelog>
+	<upgrade from="2.0.0~cae2" to="2.0.0~cae3"/>
+	<changelog version="2.0.0~cae3">
+		<packagemeta>
+			<date>Wed, 28 Sep 2011 03:35:13 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.6</packager>
+		</packagemeta>
+		<notes>Set to require jquery 1.4</notes>
+	</changelog>
+	<author name="hinschn" email="hinschn@gmail.com"/>
+	<author name="Mark J Panaghiston"/>
+	<otherfiles/>
+</component>
+
