@@ -76,6 +76,7 @@ if($dh){
 		
 		// Read in that package file and append it to the repo xml.
 		$package = new PackageXML($tmpdir . 'package.xml');
+		$package->setFileLocation($relpath);
 		$repo->addPackage($package);
 		$addedpackages++;
 		
