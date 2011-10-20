@@ -141,7 +141,11 @@ if(EXEC_MODE == 'CLI'){
 	$relativerequestpath = null;
 	$ssl = false;
 	$tmpdir = $core_settings['tmp_dir_cli'];
-}
+	// Check if this user has a .gnupg directory in the home directory.
+	// This is because when the user runs a script, (ie: packager or create_repo),
+	// it should use his/her private key, (which is not accesable from the website).
+	if(isset($_SERVER['HOME']) && is_dir($_SERVER['HOME'] . '/.gnupg')) $gnupgdir = $_SERVER['HOME'] . '/.gnupg/';
+	else $gnupgdir = false;}
 else{
 	/**
 	 * Full URL of server.
@@ -215,6 +219,8 @@ else{
 	$ssl = ( isset($_SERVER['HTTPS']) );
 	
 	$tmpdir = $core_settings['tmp_dir_web'];
+	
+	$gnupgdir = false;
 }
 
 /**
@@ -286,7 +292,9 @@ if(!is_dir(TMP_DIR)){
 /**
  * The GnuPG home directory to store keys in. 
  */
-if(!defined('GPG_HOMEDIR')) define('GPG_HOMEDIR', ROOT_PDIR . 'gnupg');
+if(!defined('GPG_HOMEDIR')){
+	define('GPG_HOMEDIR', ($gnupgdir) ? $gnupgdir : ROOT_PDIR . 'gnupg');
+}
 
 // Cleanup!
 unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl);
