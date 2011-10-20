@@ -39,52 +39,70 @@ $addedpackages = 0;
 $failedpackages = 0;
 
 
+// An array of all the source directories to scan, (and their types).
+$directories = array(
+	array(
+		'directory' => $destdir . 'core/',
+		'relpath' => 'core/',
+		'type' => 'core'
+	),
+	array(
+		'directory' => $destdir . 'components/',
+		'relpath' => 'components/',
+		'type' => 'component'
+	)
+);
+
 // Load in all valid components in the exports/components directory.
-$dh = opendir($destdir . 'components');
-$output = array();
-$ret = null;
-if($dh){
-	while(($file = readdir($dh)) !== false){
-		$fullpath = $destdir . 'components/' . $file;
-		
-		// Skip hidden files
-		if($file{0} == '.') continue;
-		
-		// Only package up ASC files.
-		if(!preg_match('/\.asc$/i', $file)) continue;
-		
-		// Drop the .asc extension.
-		$basename = substr($file, 0, -4);
-		
-		echo NL . NL . "Processing component " . $file . "..." . NL;
-		
-		// decode and untar it in a temp directory to get the package.xml file.
-		exec('gpg -d "' . $fullpath . '" > "' . $tmpdir . $basename . '"', $output, $ret);
-		if($ret){
-			echo "FAILED to decrypt file!" . NL;
-			$failedpackages++;
-			continue;
-		}
-		
-		exec('tar -xzf "' . $tmpdir . $basename . '" -C "' . $tmpdir . '" ./package.xml', $output, $ret);
-		if($ret){
-			echo "FAILED to extract package.xml!" . NL;
+foreach($directories as $dir){
+	$dh = opendir($dir['directory']);
+	$output = array();
+	$ret = null;
+	if($dh){
+		while(($file = readdir($dh)) !== false){
+			$fullpath = $dir['directory'] . $file;
+			// Used in the XML file.
+			$relpath = $dir['relpath'] . $file;
+
+			// Skip hidden files
+			if($file{0} == '.') continue;
+
+			// Only package up ASC files.
+			if(!preg_match('/\.asc$/i', $file)) continue;
+
+			// Drop the .asc extension.
+			$basename = substr($file, 0, -4);
+
+			echo NL . NL . "Processing " . $dir['type'] . " " . $file . "..." . NL;
+
+			// decode and untar it in a temp directory to get the package.xml file.
+			exec('gpg -d "' . $fullpath . '" > "' . $tmpdir . $basename . '"', $output, $ret);
+			if($ret){
+				echo "FAILED to decrypt file!" . NL;
+				$failedpackages++;
+				continue;
+			}
+
+			exec('tar -xzf "' . $tmpdir . $basename . '" -C "' . $tmpdir . '" ./package.xml', $output, $ret);
+			if($ret){
+				echo "FAILED to extract package.xml!" . NL;
+				unlink($tmpdir . $basename);
+				$failedpackages++;
+				continue;
+			}
+
+			// Read in that package file and append it to the repo xml.
+			$package = new PackageXML($tmpdir . 'package.xml');
+			$package->setFileLocation($relpath);
+			$repo->addPackage($package);
+			$addedpackages++;
+
+			// Cleanup!
+			unlink($tmpdir . 'package.xml');
 			unlink($tmpdir . $basename);
-			$failedpackages++;
-			continue;
+
+			echo "Added package!" . NL;
 		}
-		
-		// Read in that package file and append it to the repo xml.
-		$package = new PackageXML($tmpdir . 'package.xml');
-		$package->setFileLocation($relpath);
-		$repo->addPackage($package);
-		$addedpackages++;
-		
-		// Cleanup!
-		unlink($tmpdir . 'package.xml');
-		unlink($tmpdir . $basename);
-		
-		echo "Added package!" . NL;
 	}
 }
 
