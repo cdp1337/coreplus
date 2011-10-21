@@ -19,8 +19,8 @@
 	</define>
 	
 	<define name="SITENAME" type="string">
-		<default_value>My KaiToo</default_value>
-		<value></value>
+		<default_value>My Core Plus Site</default_value>
+		<value>Core Plus Test Site (mobile1337ness)</value>
 		<description>The site name that can be used for emails and page titles.</description>
 	</define>
 	
@@ -44,11 +44,22 @@
 		<description>If this is a production site, it is advised to disable this.</description>
 	</define>
 	
-	<define name="TMP_DIR" type="string">
-		<default_value>/tmp/</default_value>
-		<value>/tmp/cae2/</value>
-		<description>The location of the tmp directory for cache, compile, and general temporary files.  Please ensure that this ends with a "/"</description>
-	</define>
+	<return name="tmp_dir_web" type="string">
+		<value>/tmp/cae2-git-web/</value>
+		<description>
+			The location of the tmp directory for cache, compile, and general temporary files.  
+			This directory MUST be writable by the apache user.  
+			Please ensure that this ends with a "/"
+		</description>
+	</return>
+	
+	<return name="tmp_dir_cli" type="string">
+		<value>/tmp/cae2-git-cli/</value>
+		<description>
+			The location of the tmp directory for anything on the CLI that needs temp storage.  
+			Please ensure that this ends with a "/"
+		</description>
+	</return>
 	
 	<define name="TIME_GMT_OFFSET" type="int">
 		<default_value>0</default_value>
@@ -107,4 +118,11 @@
 		<defaultValue>CAE2_</defaultValue>
 		<value>CAE2_</value>
 	</define>
+	
+	<!-- Uncomment this to change the GnuPG home directory to a more secure location. -->
+	<!--
+	<define name="GPG_HOMEDIR" type="string">
+		<value>/path/to/secure/directory/gnupg</value>
+	</define>
+	-->
 </configuration>
