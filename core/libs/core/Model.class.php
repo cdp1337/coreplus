@@ -451,8 +451,19 @@ class Model implements ArrayAccess{
 		if(isset($s[$k]['validation'])){
 			// Validation exists... check it.
 			$check = $s[$k]['validation'];
-			if(
-				(strpos($check, '::') !== false && !call_user_func($check, $v)) ||
+			
+			// Special "this" method.
+			if(is_array($check) && sizeof($check) == 2 && $check[0] == 'this'){
+				$valid = call_user_func(array($this, $check[1]), $v);
+			}
+			// Method-based validation.
+			elseif( strpos($check, '::') !== false){
+				// the method can either be true, false or a string.
+				// Only if true is returned will that be triggered as success.
+				$valid = call_user_func($check, $v);
+			}
+			// regex-based validation.  These don't have any return strings so they're easier.
+			elseif(
 				($check{0} == '/' && !preg_match($check, $v)) ||
 				($check{0} == '#' && !preg_match($check, $v))
 			){
@@ -460,19 +471,25 @@ class Model implements ArrayAccess{
 			}
 		}
 		
+		
 		if($valid === true){
 			// Validation's good, return true!
 			return true;
 		}
-		elseif($throwexception){
+		
+		
+		// Failed?  Get a good message for the user.
+		if($valid === false) $msg = isset($s[$k]['validationmessage']) ? $s[$k]['validationmessage'] : $k . ' fails validation';
+		else $msg = $valid;
+		
+		
+		if($throwexception){
 			// Validation failed and an Exception was requested.
-			throw new ModelValidationException(
-				isset($s[$k]['validationmessage']) ? $s[$k]['validationmessage'] : $k . ' fails validation'
-			);
+			throw new ModelValidationException($msg);
 		}
 		else{
 			// Validation failed, but just return the message.
-			return isset($s[$k]['validationmessage']) ? $s[$k]['validationmessage'] : false;
+			return $msg;
 		}
 	}
 

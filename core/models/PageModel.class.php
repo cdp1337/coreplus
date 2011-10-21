@@ -31,6 +31,7 @@ class PageModel extends Model{
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'null' => false,
+			'validation' => array('this', 'validateRewriteURL'),
 		),
 		'parenturl' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -167,6 +168,35 @@ class PageModel extends Model{
 	public function setParameter($key, $val){
 		$this->_params[$key] = $val;
 	}
+	
+	public function validateRewriteURL($v){
+		
+		// If it's empty, that's fine, it'll get reset to the baseurl.
+		if(!$v) return true;
+		
+		// If it's the same as the baseurl, that's fine.
+		if($v == $this->_data['baseurl']) return true;
+		
+		if($v{0} != '/') return "Rewrite URL must start with a '/'";
+		
+		// Lookup if there is a conflicting URL.
+		$ds = Dataset::Init()
+			->table('page')
+			->count()
+			->whereGroup('OR', 'baseurl = ' . $v, 'rewriteurl = ' . $v);
+		
+		// If this page exists, I don't want to include this page in the count.
+		if($this->exists()) $ds->where('baseurl != ' . $this->_data['baseurl']);
+		
+		$ds->execute();
+		
+		if($ds->num_rows > 0){
+			return 'Rewrite URL already taken';
+		}
+		
+		// All good?
+		return true;
+	}
 
 	public function getTemplateName(){
 		$t = 'pages/';
@@ -215,6 +245,11 @@ class PageModel extends Model{
 		$this->_populateView();
 	}
 
+	public function getMeta($name){
+		$m = $this->getMetas();
+		return isset($m[$name]) ? $m[$name] : null;
+	}
+	
 	public function getMetas(){
 		if(!$this->get('metas')) return array();
 
@@ -562,5 +597,5 @@ class PageModel extends Model{
 		// And here ya go!
 		return $opts;
 	}
-}
+		}
 ?>

@@ -38,6 +38,8 @@ class Dataset implements Iterator{
 	
 	public $_where = array();
 	
+	public $_wheregroups = array('AND');
+	
 	public $_mode = Dataset::MODE_GET;
 	
 	public $_sets = array();
@@ -153,6 +155,8 @@ class Dataset implements Iterator{
 	}
 	
 	/**
+	 * Set this dataset to only return the count of records.
+	 * 
 	 * @return Dataset 
 	 */
 	public function count(){
@@ -221,7 +225,7 @@ class Dataset implements Iterator{
 		
 		// Allow $k, $v to be passed in.
 		if(sizeof($args) == 2 && !is_array($args[0]) && !is_array($args[1])){
-			$this->_where[] = array('field' => $args[0], 'op' => '=', 'value' => $args[1]);
+			$this->_where[] = array('field' => $args[0], 'op' => '=', 'value' => $args[1], 'group' => 0);
 			
 			// Allow chaining.
 			return $this;
@@ -232,11 +236,44 @@ class Dataset implements Iterator{
 			if(is_array($a)){
 				foreach($a as $k => $v){
 					if(is_numeric($k)) $this->_parseWhere($v);
-					else $this->_where[] = array('field' => $k, 'op' => '=', 'value' => $v);
+					else $this->_where[] = array('field' => $k, 'op' => '=', 'value' => $v, 'group' => 0);
 				}
 			}
 			else{
 				$this->_parseWhere($a);
+			}
+		}
+		
+		// Allow chaining
+		return $this;
+	}
+	
+	/**
+	 * Allow for grouping of groups of where clauses.
+	 * 
+	 * This is useful for statements such as
+	 * WHERE (this = 1 OR that = 1) AND something = blah;
+	 * 
+	 * @param string $separator 'AND', 'OR'
+	 * @param type $wheres 
+	 */
+	public function whereGroup($separator, $wheres){
+		$args = func_get_args();
+		
+		// Because the first argument is the 'AND' or 'OR' string.
+		$sep = array_shift($args);
+		$group = sizeof($this->_wheregroups);
+		$this->_wheregroups[] = $sep;
+		
+		foreach($args as $a){
+			if(is_array($a)){
+				foreach($a as $k => $v){
+					if(is_numeric($k)) $this->_parseWhere($v, $group);
+					else $this->_where[] = array('field' => $k, 'op' => '=', 'value' => $v, 'group' => $group);
+				}
+			}
+			else{
+				$this->_parseWhere($a, $group);
 			}
 		}
 		
@@ -325,19 +362,18 @@ class Dataset implements Iterator{
 	
 	
 	
-	private function _parseWhere($statement){
+	private function _parseWhere($statement, $group = 0){
 		// The user may have sent something like "blah = mep" or "datecreated < somedate"
 		
-		// @FIXME There is a potential bug wherein if the clause contains
-		//        `somefield` = 'the equation is mxb+a=c'
-		//        the explode function will cut that into 3 pieces, not 2 like it should.
 		
 		$chars = array('=', '>', '<', '<=', '>=', ' LIKE ');
 		
 		foreach($chars as $c){
 			if(($pos = strpos($statement, $c)) !== false){
-				list($k, $v) = explode($c, $statement);
-				$this->_where[] = array('field' => trim($k), 'op' => $c, 'value' => trim($v));
+				//list($k, $v) = explode($c, $statement);
+				$k = substr($statement, 0, strpos($statement, $c));
+				$v = substr($statement, strpos($statement, $c) + 1);
+				$this->_where[] = array('field' => trim($k), 'op' => $c, 'value' => trim($v), 'group' => $group);
 				return;
 			}
 		}

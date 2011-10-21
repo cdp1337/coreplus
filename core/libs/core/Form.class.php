@@ -339,9 +339,17 @@ class FormElement{
 			$vmesg = $this->validationmessage ? $this->validationmessage : $this->get('label') . ' does not validate correctly, please double check it.';
 			$v = $this->validation;
 			
+			// @todo Add support for a variety of validation logics maybe???
+			
 			// Method-based validation.
-			if( 
-				(strpos($v, '::') !== false && !call_user_func($v, $value)) ||
+			if( strpos($v, '::') !== false && ($out = call_user_func($v, $value)) !== true ){
+				// If a string was returned from the validation logic, set the error to that string.
+				if($out !== false) $vmesg = $out;
+				$this->_error = $vmesg;
+				return false;
+			}
+			// regex-based validation.  These don't have any return strings so they're easier.
+			elseif(
 				($v{0} == '/' && !preg_match($v, $value)) ||
 				($v{0} == '#' && !preg_match($v, $value))
 			){
@@ -1137,19 +1145,58 @@ class FormPageMeta extends FormGroup{
 			parent::__construct($atts);
 			
 			// BaseURL needs to be set for this to work.
-			if(!$this->get('baseurl')) return null;
+			//if(!$this->get('baseurl')) return null;
 			
 			// Everything is based off the page.
 			$page = new PageModel($this->get('baseurl'));
 		}
 		
-
+		// Title
+		$this->addElement('text', array(
+			'name' => 'page[title]',
+			'title' => 'Title',
+			'value' => $page->get('title'),
+			'description' => 'Every page needs a title to accompany it, this should be short but meaningful.',
+			'required' => true
+		));
+		
 		// Rewrite url.
-		$this->addElement('text', array('name' => 'page[rewriteurl]', 'title' => 'Rewrite URL', 'value' => $page->get('rewriteurl'), 'description' => 'Starts with a "/", omit ' . ROOT_URL));
+		$this->addElement('text', array(
+			'name' => 'page[rewriteurl]',
+			'title' => 'Rewrite URL',
+			'value' => $page->get('rewriteurl'),
+			'description' => 'Starts with a "/", omit ' . ROOT_URL,
+			'required' => true
+		));
+		
+		
+		// Author
+		$this->addElement('text', array(
+			'name' => 'page[metaauthor]',
+			'title' => 'Author',
+			'description' => 'Completely optional, but feel free to include it if relevant',
+			'value' => $page->getMeta('author')
+		));
+		
+		// Meta Keywords
+		$this->addElement('text', array(
+			'name' => 'page[metakeywords]',
+			'title' => 'Keywords',
+			'description' => 'Helps search engines classify this page',
+			'value' => $page->getMeta('keywords')
+		));
+		
+		// Meta Description
+		$this->addElement('textarea', array(
+			'name' => 'page[metadescription]',
+			'title' => 'Description',
+			'description' => 'Text that displays on search engine and social network preview links',
+			'value' => $page->getMeta('description')
+		));
 
 		// I need to get a list of pages to offer as a dropdown for selecting the "parent" page.
 		$f = new ModelFactory('PageModel');
-		$f->where('baseurl != ?', $this->get('baseurl'));
+		if($this->get('baseurl')) $f->where('baseurl != ?', $this->get('baseurl'));
 		$opts = PageModel::GetPagesAsOptions($f, '-- No Parent Page --');
 
 		$this->addElement('select', array('name' => 'page[parenturl]', 'title' => 'Parent URL', 'value' => $page->get('parenturl'), 'options' => $opts));
@@ -1159,7 +1206,7 @@ class FormPageMeta extends FormGroup{
 		// @todo Add page template selection logic
 		
 		// Add the insertables.
-		$this->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => $this->get('baseurl')));
+		//$this->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => $this->get('baseurl')));
 	}
 
 	/**
@@ -1216,6 +1263,8 @@ class FormPageMeta extends FormGroup{
 	public function getTemplateName(){
 		return null;
 	}
+	
+//	
 
 } // class FormPageInsertables
 

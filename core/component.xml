@@ -22,7 +22,7 @@
 		<file filename="install/index.php" md5="9888e5213d73db1d339d7068afa7cf62">
 			<provides type="class" name="InstallPage"/>
 		</file>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="f1025638c09148863fc13e86cd2a3e3c">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="862559fa829e061a2e415444ededff7b">
 			<provides type="class" name="UpdaterHelper"/>
 		</file>
 		<file filename="core/models/ConfigModel.class.php" md5="4ea39a3f233f2d7fef06ff6ced75cf53">
@@ -271,20 +271,20 @@
 		<file filename="core/libs/filestore/Directory_Backend.interface.php" md5="4fc76ff1998699378c87f4dfa88b1719">
 			<provides type="interface" name="Directory_Backend"/>
 		</file>
-		<file filename="core/libs/filestore/FileContentFactory.class.php" md5="b8b048047872c8fa59c906c395f0eac0">
+		<file filename="core/libs/filestore/FileContentFactory.class.php" md5="31927dda37cf96b9a096557bb3de96c5">
 			<provides type="class" name="FileContentFactory"/>
 		</file>
 		<file filename="core/libs/filestore/File_Backend.interface.php" md5="88a3c9509d83c2fb8d3eac28308fd0b8">
 			<provides type="interface" name="File_Backend"/>
 		</file>
-		<file filename="core/libs/filestore/contents/File_gz_contents.class.php" md5="ca15262448475d926d5090cd4ae80cb8">
-			<provides type="class" name="File_gz_contents"/>
-		</file>
-		<file filename="core/libs/filestore/contents/File_tgz_contents.class.php" md5="ca15262448475d926d5090cd4ae80cb8">
+		<file filename="core/libs/filestore/contents/File_tgz_contents.class.php" md5="6b2bae2c687ab5af3224a78241df280c">
 			<provides type="class" name="File_tgz_contents"/>
 		</file>
-		<file filename="core/libs/filestore/contents/File_asc_contents.class.php" md5="ca15262448475d926d5090cd4ae80cb8">
+		<file filename="core/libs/filestore/contents/File_asc_contents.class.php" md5="5895642753525b23d4c32ba27ffd5f3a">
 			<provides type="class" name="File_asc_contents"/>
+		</file>
+		<file filename="core/libs/filestore/contents/File_gz_contents.class.php" md5="ca15262448475d926d5090cd4ae80cb8">
+			<provides type="class" name="File_gz_contents"/>
 		</file>
 		<file filename="core/libs/filestore/contents/File_unknown_contents.class.php" md5="bafda827286a6325a9f63bb0c602f44d">
 			<provides type="class" name="File_unknown_contents"/>
@@ -295,16 +295,16 @@
 		<file filename="core/libs/filestore/File_Contents.interface.php" md5="e35d0999ae55fc45c71d124eb8fcf3e4">
 			<provides type="interface" name="File_Contents"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="d8cee5dcea2ec8af017b0bf9069d0c86">
+		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="d4da1e2f77758765ffd7ee1f0f4fd2f6">
 			<provides type="class" name="File_remote_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="59d1b544007b3d95f4706e910565d2af">
 			<provides type="class" name="File_awss3_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="a82a533f94affaf7b6a5d19654346797">
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="fd0fe8e7438e3c0d826aec36c1be18bd">
 			<provides type="class" name="File_local_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="9b01df0b2b6923b6966d3c59921bd252">
+		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="b774870354569d94b7b24731a4da77ea">
 			<provides type="class" name="Directory_local_backend"/>
 		</file>
 		<file filename="core/libs/core/ISingleton.interface.php" md5="dc86d653072a1fd71966a54de680a47b">
@@ -369,7 +369,7 @@
 		<file filename="core/libs/core/Template.class.php" md5="82ac351e1a88f9442b96b4d23e9a9166">
 			<provides type="class" name="Template"/>
 		</file>
-		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="3a83289b223b89414d06957f56dbb045">
+		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="a949a39b1cf475683197da32e903c9f8">
 			<provides type="class" name="InstallArchiveAPI"/>
 		</file>
 		<file filename="core/libs/core/HookHandler.class.php" md5="a26c722b29edd65b10c0d96c90b6f347">
@@ -391,7 +391,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="6cfd442c059e7111fb6dccfbbcbdbc28">
 			<provides type="class" name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="b2928c1eee8b86fa3f9064a9225e86d5">
+		<file filename="core/libs/core/Component.class.php" md5="320dcba4e76c01520e77d6403e95d62d">
 			<provides type="class" name="Component"/>
 		</file>
 		<file filename="core/libs/core/Time.class.php" md5="10da1cfd18249f9056c61358c40e1f62">
@@ -400,7 +400,7 @@
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="b1f1dbc20bc16a38a59b8a0852bf1bd0">
 			<provides type="class" name="CAEDirectoryIterator"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="2765b2fdd2960bd249f2206c22629cbc">
+		<file filename="core/libs/core/Core.class.php" md5="d1f0f02727edc012638c7314cb8f3fe6">
 			<provides type="class" name="Core"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="981700d75d60af0d81a309a1d223b35c">
@@ -801,7 +801,7 @@
 		<file filename="core/controllers/WidgetController.class.php" md5="863bd63f637a362dd5e21302f425a817">
 			<provides type="controller" name="WidgetController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="9b59d1303f3efe58c4ce1cb5437b1467">
+		<file filename="core/controllers/UpdaterController.class.php" md5="8a238c8d4649131752a3c1aef838eca5">
 			<provides type="controller" name="UpdaterController"/>
 		</file>
 	</module>
@@ -848,7 +848,7 @@
 		<file filename="core/templates/pages/updater/index.tpl" md5="c6f559efab67486ae48fca6afab531c9"/>
 		<file filename="core/templates/pages/updater/sites.tpl" md5="a8594ccfb7bea51a8ddb18a673d1a962"/>
 		<file filename="core/templates/pages/updater/sites_add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="core/templates/pages/updater/check.tpl" md5="0945b4f397f27e8e92ec1aec4efc60f1"/>
+		<file filename="core/templates/pages/updater/check.tpl" md5="5ca9d91d05fe9f81a76dbda8b6dd096b"/>
 		<file filename="core/templates/pages/updater/sites_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="645d3b7a407c513622e9f6bc2590b7c9"/>
 	</view>
@@ -888,9 +888,9 @@
 		<config key="/core/email/smtp_user" type="string" default="" description=""/>
 		<config key="/core/email/smtp_password" type="string" default="" description=""/>
 		<config key="/core/email/verify_with_dns" type="boolean" default="0" description="Verify email domains via DNS lookups.  May slow down email validation slightly, but ensures a valid domain."/>
-		<config key="/core/ftp/username" type="string" description="FTP username to use when writing local files"/>
-		<config key="/core/ftp/password" type="string" description="FTP password to use when writing local files"/>
-		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'"/>
+		<config key="/core/ftp/username" type="string" description="FTP username to use when writing local files" default=""/>
+		<config key="/core/ftp/password" type="string" description="FTP password to use when writing local files" default=""/>
+		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'" default=""/>
 	</configs>
 	<assets>
 		<file filename="core/assets/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
@@ -977,6 +977,17 @@
 			Minor tweak in the Form validation logic, it now just shows the validation check in the error message if the site is in development mode.
 		</notes>
 	</changelog>
+	<upgrade from="0.0.6" to="0.0.7"/>
+	<changelog version="0.0.7">
+		<packagemeta>
+			<date>Mon, 17 Oct 2011 23:47:05 -0400</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.7</packager>
+		</packagemeta>
+		<notes>
+			Major work on the system updater, it now fundamentally works at least!
+		</notes>
+	</changelog>
 	<author name="Charlie Powell" email="powellc@powelltechs.com"/>
 	<author name="Monte Ohrt" email="monte at ohrt dot com"/>
 	<author name="Uwe Tews"/>
@@ -1009,7 +1020,9 @@
 	<author name="liqwei" email="liqwei@liqwei.com"/>
 	<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
 	<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
+	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+		See the included NOTICE.md file for more information.
+	</license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.html">
 		GNU Lesser General Public License v3
 	</license>
@@ -1017,17 +1030,19 @@
 		GNU Lesser General Public License v3
 	</license>
 	<license url="http://www.opensource.org/licenses/mit-license.php">MIT</license>
-	<upgrade from="0.0.6" to="0.0.7"/>
-	<changelog version="0.0.7"/>
 	<otherfiles>
 		<file filename="index.php" md5="142cd66901eabb65466540265acfbf5b"/>
 		<file filename="create_repo.php" md5="672f3b48387456078d0b12f4ab7f44f5"/>
+		<file filename="gnupg/trustdb.gpg" md5="121b5474d8ee68da348d22effd9db8cf"/>
+		<file filename="gnupg/secring.gpg" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="gnupg/pubring.gpg~" md5="44089e78b5970070a855df230fd28a57"/>
+		<file filename="gnupg/pubring.gpg" md5="44089e78b5970070a855df230fd28a57"/>
 		<file filename="install/install.tpl" md5="1424c7d2b87887ab433afeb68e0c2bae"/>
 		<file filename="yuicompressor-2.4.2.jar" md5="de7f9bf5ecb82166493ba7839f62a73e"/>
-		<file filename="core/bootstrap.php" md5="14986ac881151a13eaf9a2f5018c6895"/>
-		<file filename="core/bootstrap_preincludes.php" md5="33a4233265e1b59f50a0723d7d9c6c13"/>
+		<file filename="core/bootstrap.php" md5="162b043965e156caf51232d7792598b7"/>
+		<file filename="core/bootstrap_preincludes.php" md5="519af28fa4fc07edcf839dbf529c8c21"/>
 		<file filename="core/component.dtd" md5="7751e1f38efbcc20cd143afe5615cb57"/>
-		<file filename="core/bootstrap_predefines.php" md5="4d323a3a529c1faab172604cff40a1f1"/>
+		<file filename="core/bootstrap_predefines.php" md5="2c1c94fe7b0efd7ca48a755d427da2a8"/>
 		<file filename="core/libs/smarty/SMARTY2_BC_NOTES" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
 		<file filename="core/libs/smarty/README" md5="83797fcbeab9d4f5090510a3023bc4a5"/>
 		<file filename="core/libs/smarty/debug.tpl" md5="6c0554c7a9cdb4c26f079fa8dff98036"/>
@@ -1325,7 +1340,7 @@
 		<file filename="core/libs/aws-sdk/lib/requestcore/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
 		<file filename="core/libs/aws-sdk/README.md" md5="b290d5d6e4b4c494df4093ea05257ccf"/>
 		<file filename="COPYING.LESSER" md5="e6a600fd5e1d9cbde2d983680233ad02"/>
-		<file filename="packager.php" md5="589536755659d3bab0318d7710f16da4"/>
+		<file filename="packager.php" md5="7c1994b97a1a16dda16cb84573153ae3"/>
 		<file filename="COPYING" md5="d32239bcb673463ab874e80d47fae504"/>
 		<file filename="DEV-NOTES" md5="0833fd2572631f9a708dc8379443ff64"/>
 		<file filename="htaccess.ex" md5="30fef15aa900706f3e7f51df4497053c"/>

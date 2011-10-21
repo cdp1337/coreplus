@@ -577,11 +577,20 @@ class DMI_mysqli_backend implements DMI_Backend {
 		$q .= ' FROM `' . $dataset->_table . '`';
 		
 		if(sizeof($dataset->_where)){
+			$wsg = array();
 			$ws = array();
 			foreach($dataset->_where as $w){
 				$w['value'] = $this->_conn->real_escape_string($w['value']);
-				$ws[] = "`{$w['field']}` {$w['op']} '{$w['value']}'";
+				if(!isset($wsg[$w['group']])) $wsg[$w['group']] = array();
+				
+				$wsg[$w['group']][] = "`{$w['field']}` {$w['op']} '{$w['value']}'";
 			}
+			
+			// Combine each group member with its own seperator.
+			foreach($wsg as $k => $v){
+				$ws[] = ' ( ' . implode(' ' . $dataset->_wheregroups[$k] . ' ', $v) . ' ) ';
+			}
+			
 			$q .= ' WHERE ' . implode(' AND ', $ws);
 		}
 		
