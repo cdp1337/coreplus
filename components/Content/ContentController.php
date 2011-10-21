@@ -68,11 +68,22 @@ class ContentController extends Controller {
 	public static function Create(View $page){
 		$m = new ContentModel();
 
-		$form = Form::BuildFromModel($m);
-		$form->set('callsmethod', 'ContentController::_SaveHandler');
+		//$p = new PageModel();
+		//$p->set('rewriteurl', '/foo');
+		//var_dump($p); 
+		//die();
 		
+		$form = Form::BuildFromModel($m);
+		//$form->set('callsmethod', 'ContentController::_SaveHandler');
+		
+		$form->addElement('pagemeta', array('name' => 'page'));
+		
+		//$this->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => $this->get('baseurl')));
+		
+		//$form->addElement(new FormElementPageGroup(array('name' => 'thispage', 'baseurl' => '/Content/View/1')));
+		//var_dump($form); die();
 		// Some file upload option (a test really)
-		$form->addElement(FormElement::Factory('file', array('title' => 'File Foo', 'name' => 'fileupload', 'basedir' => 'public/test12', 'browsable' => false)));
+		//$form->addElement(FormElement::Factory('file', array('title' => 'File Foo', 'name' => 'fileupload', 'basedir' => 'public/test12', 'browsable' => false)));
 
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Create'));

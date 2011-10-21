@@ -17,25 +17,6 @@ class ContentModel extends Model{
 			'required' => true,
 			'null' => false,
 		),
-		'title' => array(
-			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 128,
-			'null' => false,
-		),
-		'description' => array(
-			'type' => Model::ATT_TYPE_TEXT,
-			'null' => false,
-		),
-		'keywords' => array(
-			'type' => Model::ATT_TYPE_TEXT,
-			'null' => false,
-		),
-		'access' => array(
-			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 512,
-			'default' => '*',
-			'null' => false,
-		),
 	);
 	
 	public static $Indexes = array(
