@@ -578,8 +578,16 @@ class File_local_backend implements File_Backend{
 		else{
 			// Trim off the ROOT_PDIR since it'll be relative to the ftp root set in the config.
 			if(strpos($pathname, ROOT_PDIR) === 0) $pathname = substr($pathname, strlen(ROOT_PDIR));
-			if(!ftp_mkdir($ftp, $pathname)) return false;
-			if(!ftp_chmod($ftp, $mode, $pathname)) return false;
+			
+			// Because ftp_mkdir doesn't like to create parent directories...
+			$paths = explode('/', $pathname);
+			
+			foreach($paths as $p){	
+				if(!@ftp_chdir($ftp, $p)){
+					if(!ftp_mkdir($ftp, $p)) return false;
+					if(!ftp_chmod($ftp, $mode, $p)) return false;
+				}
+			}
 			
 			// woot...
 			return true;
