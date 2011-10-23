@@ -1,7 +1,6 @@
-/nbproject/private/
-/nbproject/project.xml
-/nbproject/project.properties
+/nbproject
 /.htaccess
 /config/configuration.xml
 /assets/
 /.DS_Store
+/filestore/
