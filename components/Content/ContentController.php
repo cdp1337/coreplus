@@ -78,6 +78,8 @@ class ContentController extends Controller {
 		
 		$form->addElement('pagemeta', array('name' => 'page'));
 		
+		$form->addElement('pageinsertables', array('baseurl' => '/Content/View/new'));
+		
 		//$this->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => $this->get('baseurl')));
 		
 		//$form->addElement(new FormElementPageGroup(array('name' => 'thispage', 'baseurl' => '/Content/View/1')));
