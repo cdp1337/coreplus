@@ -56,7 +56,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 		if(strpos($host, ':') !== false) list($host, $port) = explode(':', $host);
 		else $port = 3306;
 		
-		if(!class_exists('mysqli')){
+		if(!class_exists('mysqli', false)){
 			throw new DMI_Exception('Unable to locate the PHP MySQLi library.  Please switch to a supported driver or see http://us3.php.net/manual/en/book.mysqli.php for more information.');
 		}
 		

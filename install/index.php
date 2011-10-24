@@ -64,6 +64,25 @@ ConfigHandler::singleton();
 $core_settings = ConfigHandler::LoadConfigFile("configuration");
 
 
+// Setup some necessary defines that are normally done in the bootstrap file.
+$tmpdir = $core_settings['tmp_dir_web'];
+/**
+ * Temp directory 
+ * @var string
+ */
+define('TMP_DIR', $tmpdir);
+
+// The TMP_DIR needs to be writable!
+if(!is_dir(TMP_DIR)){
+	$ds = explode('/', TMP_DIR);
+	$d = '';
+	foreach($ds as $dir){
+		if($dir == '') continue;
+		$d .= '/' . $dir;
+		if(!is_dir($d)) mkdir($d) or die("Please ensure that " . TMP_DIR . " is writable.");
+	}
+}
+
 //if(!DEVELOPMENT_MODE){
 //	die('Installation cannot proceed while site is NOT in Development mode.');
 //}
