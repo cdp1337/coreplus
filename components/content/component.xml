@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component>
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.1-dev1" name="Content" execmode="web">
+	<requires name="core" type="component"/>
+	<changelog version="0.0.1-dev1">
+		<packagemeta>
+			<date>Thu, 17 Feb 2011 01:57:58 -0500</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.1-dev1</packager>
+		</packagemeta>
+		<notes/>
+	</changelog>
+	<view searchdir="templates">
+		<file filename="templates/pages/content/view.tpl" md5="b149433e9927396cb65c8e2880395663"/>
+		<file filename="templates/pages/content/index.tpl" md5="f8426adda90b2261cde215172169c02a"/>
+		<file filename="templates/pages/content/delete.tpl" md5="64255b05d03ba0b58cbacb107e2b2dff"/>
+		<file filename="templates/pages/content/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/content/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+	</view>
+	<library>
+		<file filename="ContentModel.php" md5="d0c7b38bbb67711fb9fa5fe8c391abec">
+			<provides type="class" name="ContentModel"/>
+		</file>
+	</library>
+	<module>
+		<file filename="ContentController.php" md5="86ac3aca3ec6b28bc76623f5e4f4d94e">
+			<provides type="controller" name="ContentController"/>
+		</file>
+	</module>
+	<description>
+		Provides basic HTML page functionality.
+	</description>
+	<pages>
+		<page baseurl="/Content" admin="1" widget="0" access="g:admin" title="Content Page Listings"/>
+	</pages>
+	<author name="powellc"/>
+	<otherfiles/>
+</component>
+
