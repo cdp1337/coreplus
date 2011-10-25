@@ -30,7 +30,7 @@ class NavigationEntryModel extends Model {
 		),
 		'baseurl' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 256,
+			'maxlength' => 255,
 			'null' => false,
 		),
 		'title' => array(

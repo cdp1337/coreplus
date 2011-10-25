@@ -481,7 +481,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$type = "int(15)";
 				break;
 			case Model::ATT_TYPE_STRING:
-				$maxlength = ($coldef['maxlength'])? $coldef['maxlength'] : 256; // It needs something...
+				$maxlength = ($coldef['maxlength'])? $coldef['maxlength'] : 255; // It needs something...
 				$type = "varchar($maxlength)";
 				break;
 			case Model::ATT_TYPE_TEXT:

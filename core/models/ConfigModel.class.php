@@ -27,7 +27,7 @@ class ConfigModel extends Model {
 	public static $Schema = array(
 		'key' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 256,
+			'maxlength' => 255,
 			'required' => true,
 			'null' => false,
 		),
