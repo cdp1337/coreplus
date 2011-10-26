@@ -17,6 +17,19 @@ class ContentModel extends Model{
 			'required' => true,
 			'null' => false,
 		),
+		'nickname' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'description' => 'Just the name that appears in admin listings for this page',
+			'required' => true,
+		),
+		'created' => array(
+			'type' => Model::ATT_TYPE_CREATED,
+			'null' => false,
+		),
+		'updated' => array(
+			'type' => Model::ATT_TYPE_UPDATED,
+			'null' => false,
+		),
 	);
 	
 	public static $Indexes = array(

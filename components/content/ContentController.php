@@ -12,10 +12,6 @@
 class ContentController extends Controller {
 	public static function Index(View $page){
 		
-		// @todo Check page permissions
-		
-		//$f = PageModel::Find(array("baseurl LIKE '/Content/View/%'"));
-		//$f = ContentModel::Find(null, null, 'title');
 		$f = ContentModel::Find(null, null, null);
 		
 		$page->title = 'Content Page Listings';
@@ -33,11 +29,6 @@ class ContentController extends Controller {
 
 		if(!$m->exists()) return View::ERROR_NOTFOUND;
 
-
-		$page->title = $m->get('title');
-		$page->metas['description'] = $m->get('description');
-		$page->metas['keywords'] = $m->get('keywords');
-		$page->access = $m->get('access');
 		$page->assignVariable('model', $m);
 		
 		$page->addControl('Add Page', '/Content/Create', 'add');
@@ -57,7 +48,11 @@ class ContentController extends Controller {
 		
 		$form = Form::BuildFromModel($m);
 		$form->set('callsmethod', 'ContentController::_SaveHandler');
-
+		
+		$form->addElement('pagemeta', array('name' => 'page', 'baseurl' => '/Content/View/' . $m->get('id')));
+		
+		$form->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => '/Content/View/' . $m->get('id')));
+//var_dump($form->getElementByName('page'), $form->getElementByName('page')->getModel()); die();
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Update'));
 
@@ -78,11 +73,6 @@ class ContentController extends Controller {
 		}
 		
 		$m = new ContentModel();
-
-		//$p = new PageModel();
-		//$p->set('rewriteurl', '/foo');
-		//var_dump($p); 
-		//die();
 		
 		$form = Form::BuildFromModel($m);
 		$form->set('callsmethod', 'ContentController::_SaveHandler');
@@ -91,13 +81,6 @@ class ContentController extends Controller {
 		
 		$form->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => '/Content/View/new'));
 		
-		//$this->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => $this->get('baseurl')));
-		
-		//$form->addElement(new FormElementPageGroup(array('name' => 'thispage', 'baseurl' => '/Content/View/1')));
-		//var_dump($form); die();
-		// Some file upload option (a test really)
-		//$form->addElement(FormElement::Factory('file', array('title' => 'File Foo', 'name' => 'fileupload', 'basedir' => 'public/test12', 'browsable' => false)));
-
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Create'));
 
@@ -111,18 +94,20 @@ class ContentController extends Controller {
 	
 	public static function _SaveHandler(Form $form){
 		
-		$page = $form->getElementByName('page');
+		$model = $form->getModel();
+		//var_dump($model); die();
+		$model->save();
+		
+		$page = $form->getElementByName('page')->getModel();
+		$page->set('baseurl', '/Content/View/' . $model->get('id'));
+		$page->save();
+		
 		$insertables = $form->getElementByName('insertables');
+		$insertables->set('baseurl', '/Content/View/' . $model->get('id'));
+		$insertables->save();
 		
-		
-		var_dump($page, $insertables, $form); die();
-
-		// Save the model
-		$m = $form->getModel();
-		// These pages are widget-able.
-		//$m->getLink('Page')->set('widget', true);
-		//$m->save();
-		//return $m->get('baseurl');
+		// w00t
+		return $page->getResolvedURL();
 	}
 	
 	public static function Delete(View $page){
