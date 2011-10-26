@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.4.6" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.4.6~core1" name="TinyMCE" execmode="web">
 	<requires name="core" type="component"/>
 	<requires name="jquery" type="library"/>
 	<forms>
@@ -8,19 +8,19 @@
 	</forms>
 	<library>
 		<scriptlibrary name="tinymce" call="TinyMCE::IncludeTinyMCE"/>
-		<file filename="TinyMCE.lib.php" md5="51bb28443ba1c63614ecfb111db14e28">
+		<file filename="TinyMCE.lib.php" md5="94e11e9f3e3a68b1cb5759676599cbea">
 			<provides type="class" name="TinyMCE"/>
 		</file>
-		<file filename="TinyMCEFormElement.class.php" md5="89664e6c0693cfd7ca3d7939f359a37e">
+		<file filename="TinyMCEFormElement.class.php" md5="4f7d64b4df402cf30d390a4539e90fb9">
 			<provides type="class" name="TinyMCEFormElement"/>
 		</file>
 	</library>
 	<view>
-		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="7f76333dd807525afc02ec06de398019"/>
+		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="003381be6058eee80b1ff6bbd2942664"/>
 	</view>
 	<changelog version="3.4.6">
 		<packagemeta>
-			<date>Sat, 22 Oct 2011 03:27:51 -0400</date>
+			<date>Wed, 26 Oct 2011 06:46:46 +0000</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.7</packager>
 		</packagemeta>
@@ -282,6 +282,8 @@
 		<file filename="assets/js/tiny_mce/themes/advanced/about.htm" md5="ff135857e9b930d4d4658f92077e051c"/>
 	</assets>
 	<author name="powellc"/>
+	<upgrade from="3.4.6" to="3.4.6~core1"/>
+	<changelog version="3.4.6~core1"/>
 	<otherfiles/>
 </component>
 
