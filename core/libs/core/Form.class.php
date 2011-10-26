@@ -1087,7 +1087,7 @@ class FormPageInsertables extends FormGroup{
 			
 			// This insertable may already have content from the database... if so I want to pull that!
 			$i = new InsertableModel($this->get('baseurl'), $name);
-			if($i->get('value')) $content = $i->get('value');
+			if($i->get('value') !== null) $content = $i->get('value');
 
 			// Determine what the content is intelligently.  (or at least try to...)
 			if(strpos($content, "\n") === false && strpos($content, "<") === false){
@@ -1196,7 +1196,7 @@ class FormPageMeta extends FormGroup{
 
 		// I need to get a list of pages to offer as a dropdown for selecting the "parent" page.
 		$f = new ModelFactory('PageModel');
-		if($this->get('baseurl')) $f->where('baseurl != ?', $this->get('baseurl'));
+		if($this->get('baseurl')) $f->where('baseurl != ' . $this->get('baseurl'));
 		$opts = PageModel::GetPagesAsOptions($f, '-- No Parent Page --');
 
 		$this->addElement('select', array('name' => 'page[parenturl]', 'title' => 'Parent URL', 'value' => $page->get('parenturl'), 'options' => $opts));
@@ -1239,8 +1239,17 @@ class FormPageMeta extends FormGroup{
 		if(!$page) $page = new PageModel($this->get('baseurl'));
 		
 		// Set this model with all the data from the form.
+		$page->set('title', $this->getElementByName('page[title]')->get('value'));
 		$page->set('rewriteurl', $this->getElementByName('page[rewriteurl]')->get('value'));
 		$page->set('parenturl', $this->getElementByName('page[parenturl]')->get('value'));
+		$page->setMetas(array(
+			'author' => $this->getElementByName('page[metaauthor]')->get('value'),
+			'keywords' => $this->getElementByName('page[metakeywords]')->get('value'),
+			'description' => $this->getElementByName('page[metadescription]')->get('value')
+		));
+		
+		
+		return $page;
 		
 		// Add in any insertables too, if they're attached.
 		if(($i = $this->getElementByName('insertables'))){

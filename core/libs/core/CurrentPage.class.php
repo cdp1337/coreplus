@@ -225,9 +225,22 @@ class CurrentPage{
 	public static function GetHead(){
 		$obj = self::Singleton();
 		
-		$out = implode("\n", $obj->_headscripts);
-		$out .= "\n";
-		$out .= implode("\n", $obj->_headstylesheets);
+		// Combine the scripts and stylesheets that are set to go in the head.
+		$parts = array_merge($obj->_headscripts, $obj->_headstylesheets);
+		
+		// Throw in the meta information if it's present.
+		if(sizeof($obj->_page->getMetas())){
+			foreach($obj->_page->getMetas() as $k => $v){
+				$parts[] = '<meta name="' . $k . '" content="' . $v . '"/>';
+			}
+		}
+		
+		if(ConfigHandler::Get('/core/markup/minified')){
+			$out = implode('', $parts);
+		}
+		else{
+			$out = implode("\n", $parts);
+		}
 		
 		return trim($out);
 	}

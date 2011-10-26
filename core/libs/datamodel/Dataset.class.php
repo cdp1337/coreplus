@@ -225,7 +225,8 @@ class Dataset implements Iterator{
 		
 		// Allow $k, $v to be passed in.
 		if(sizeof($args) == 2 && !is_array($args[0]) && !is_array($args[1])){
-			$this->_where[] = array('field' => $args[0], 'op' => '=', 'value' => $args[1], 'group' => 0);
+			
+			$this->_parseWhere($args[0] . ' = ' . $args[1]);
 			
 			// Allow chaining.
 			return $this;
@@ -366,13 +367,13 @@ class Dataset implements Iterator{
 		// The user may have sent something like "blah = mep" or "datecreated < somedate"
 		
 		
-		$chars = array('=', '>', '<', '<=', '>=', ' LIKE ');
+		$chars = array('!=', '=', '<=', '>=', '>', '<', ' LIKE ');
 		
 		foreach($chars as $c){
 			if(($pos = strpos($statement, $c)) !== false){
 				//list($k, $v) = explode($c, $statement);
 				$k = substr($statement, 0, strpos($statement, $c));
-				$v = substr($statement, strpos($statement, $c) + 1);
+				$v = substr($statement, strpos($statement, $c) + strlen($c));
 				$this->_where[] = array('field' => trim($k), 'op' => $c, 'value' => trim($v), 'group' => $group);
 				return;
 			}

@@ -82,6 +82,7 @@ class PageModel extends Model{
 			'type' => Model::ATT_TYPE_BOOL,
 			'comment' => 'If this page is an administration page',
 			'null' => false,
+			'default' => '0',
 		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
@@ -254,14 +255,14 @@ class PageModel extends Model{
 		if(!$this->get('metas')) return array();
 
 		$m = $this->get('metas');
-		$m = unserialize($m);
+		$m = json_decode($m, true);
 
 		if(!$m) return array();
 		else return $m;
 	}
 
 	public function setMetas($metaarray){
-		$m = serialize($metaarray);
+		$m = json_encode($metaarray);
 		return $this->set('metas', $m);
 	}
 
