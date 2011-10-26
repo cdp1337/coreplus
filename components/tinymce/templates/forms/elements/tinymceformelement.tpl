@@ -8,5 +8,5 @@
 		<p class="formdescription">{$element->get('description')}</p>
 	{/if}
 	
-	<textarea{$element->getInputAttributes()} class="tinymce">{$element->get('value')}</textarea>
+	<textarea{$element->getInputAttributes()} name="{$element->get('name')}" class="tinymce">{$element->get('value')}</textarea>
 </div>
