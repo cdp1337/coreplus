@@ -1199,7 +1199,18 @@ class FormPageMeta extends FormGroup{
 		if($this->get('baseurl')) $f->where('baseurl != ' . $this->get('baseurl'));
 		$opts = PageModel::GetPagesAsOptions($f, '-- No Parent Page --');
 
-		$this->addElement('select', array('name' => 'page[parenturl]', 'title' => 'Parent URL', 'value' => $page->get('parenturl'), 'options' => $opts));
+		$this->addElement('select', array(
+			'name' => 'page[parenturl]',
+			'title' => 'Parent URL',
+			'value' => $page->get('parenturl'),
+			'options' => $opts
+		));
+		
+		$this->addElement('access', array(
+			'name' => 'page[access]',
+			'title' => 'Access Permissions',
+			'value' => $page->get('access')
+		));
 
 		// @todo Add theme template selection logic
 		
@@ -1247,6 +1258,7 @@ class FormPageMeta extends FormGroup{
 			'keywords' => $this->getElementByName('page[metakeywords]')->get('value'),
 			'description' => $this->getElementByName('page[metadescription]')->get('value')
 		));
+		$page->set('access', $this->getElementByName('page[access]')->get('value'));
 		
 		
 		return $page;
@@ -1391,4 +1403,3 @@ class FormFileInput extends FormElement{
 		return true;
 	}
 }
-
