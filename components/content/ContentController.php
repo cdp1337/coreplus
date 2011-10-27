@@ -11,6 +11,9 @@
  */
 class ContentController extends Controller {
 	public static function Index(View $page){
+		if(!$page->setAccess('g:admin')){
+			return;
+		}
 		
 		$f = ContentModel::Find(null, null, null);
 		
@@ -21,9 +24,6 @@ class ContentController extends Controller {
 	}
 	
     public static function View(View $page){
-		if(!$page->setAccess('g:admin')){
-			return;
-		}
 		
 		$m = new ContentModel($page->getParameter(0));
 
@@ -31,10 +31,12 @@ class ContentController extends Controller {
 
 		$page->assignVariable('model', $m);
 		
-		$page->addControl('Add Page', '/Content/Create', 'add');
-		$page->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
-		$page->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
-		$page->addControl('All Content Pages', '/Content', 'directory');
+		if(Core::User()->checkAccess('g:admin')){
+			$page->addControl('Add Page', '/Content/Create', 'add');
+			$page->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
+			$page->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
+			$page->addControl('All Content Pages', '/Content', 'directory');
+		}
 	}
 
 	public static function Edit(View $page){
