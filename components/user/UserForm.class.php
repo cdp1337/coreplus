@@ -9,13 +9,68 @@ class FormAccessStringInput extends FormElement{
 		$renderedcount++;
 		$this->_targetname = '_formaccessstring' . $renderedcount;
 		
+		$v = trim($this->get('value'));
+		$checked = 'advanced';
+		$advanced_groups = array();
+		$type = 'whitelist';
+		
+		if(!$v){
+			// Blank value
+			$checked = 'advanced';
+		}
+		elseif($v == 'g:anonymous'){
+			$checked = 'basic_anonymous';
+		}
+		elseif($v == 'g:authenticated'){
+			$checked = 'basic_authenticated';
+		}
+		else{
+			// Determine the sub groups checked.
+			$checked = 'advanced';
+			$parts = array_map('trim', explode(';', $v));
+			foreach($parts as $p){
+				if($p == '*'){
+					// If a wildcard is present, mark the groups as ones to blacklist.
+					$type = 'blacklist';
+					continue;
+				}
+				list($t, $tv) = explode(':', $p);
+				// Trim off the '!' in front of it, it'll be picked up by the presence of the '*' at the end.
+				if($tv{0} == '!') $tv = substr($tv, 1);
+				$advanced_groups[] = $tv;
+			}
+		}
+		
+		$groups = array();
+		
+		// Tack on the system groups.
+		$anongroup = new Model();
+		$anongroup->setFromArray(array(
+			'id' => 'anonymous',
+			'name' => 'Anonymous Users'
+		));
+		
+		$authgroup = new Model();
+		$authgroup->setFromArray(array(
+			'id' => 'authenticated',
+			'name' => 'Authenticated Users'
+		));
+		$groups[] = $anongroup;
+		$groups[] = $authgroup;
+		
 		// Find all the groups currently on the site.
-		$groups = UserGroupModel::Find(null, null, 'name');
+		$groups = array_merge($groups, UserGroupModel::Find(null, null, 'name'));
+		foreach($groups as $k => $v){
+			if(in_array($v->get('id'), $advanced_groups)) $v['checked'] = true;
+		}
+		
 		
 		$tpl = new Template();
 		$tpl->assign('element', $this);
 		$tpl->assign('groups', $groups);
 		$tpl->assign('dynname', $this->_targetname);
+		$tpl->assign('main_checked', $checked);
+		$tpl->assign('advanced_type', $type);
 
 		return $tpl->fetch($this->getTemplateName());
 	}

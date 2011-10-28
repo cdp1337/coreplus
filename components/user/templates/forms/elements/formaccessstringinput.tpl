@@ -24,15 +24,24 @@
 			<label><input type="radio" name="{$dynname}_type" value="blacklist"/>Disallow Only...</label>
 		</div>
 		<div class="formelement formcheckboxinput {$dynname}_advanced" style="display:none;">
-			<label><input type="checkbox" name="{$dynname}[]" value="anonymous"/>Anonymous Users</label>
-			<label><input type="checkbox" name="{$dynname}[]" value="authenticated"/>Authenticated Users</label>
 			{foreach from=$groups item='g'}
-				<label><input type="checkbox" name="{$dynname}[]" value="{$g->get('id')}"/>{$g->get('name')}</label>
+				<label>
+					<input type="checkbox" name="{$dynname}[]" value="{$g->get('id')}" {if $g->get('checked')}checked="checked"{/if}/>{$g->get('name')}
+				</label>
 			{/foreach}
 		</div>
 	</fieldset>
 
 	<script type="text/javascript">
+		$(function(){
+			{if $advanced_type}
+				$('input[name={$dynname}_type][value={$advanced_type}]').click();
+			{/if}
+			
+			{if $main_checked}
+				$('input.{$dynname}_main[value={$main_checked}]').click();
+			{/if}
+		});
 		$('.{$dynname}_main').click(function(){
 			if($(this).val() == 'advanced'){
 				$('.{$dynname}_advanced').show();
@@ -42,13 +51,4 @@
 			}
 		});
 	</script>
-	
-	{*
-	
-	<select {$element->getInputAttributes()}>
-		{foreach from=$element->get('options') item=title key=key}
-			<option value="{$key}" {if $key == $element->get('value')}selected{/if}>{$title}</option>
-		{/foreach}
-	</select>
-	*}
 </div>

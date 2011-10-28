@@ -18,7 +18,8 @@
 		<file filename="Models/UserGroupModel.php">
 			<provides type="class" name="UserGroupModel"/>
 		</file>
-		<file filename="Models/UserUserConfigModel.class.php" md5="7dbdfdaa162114d3b0b7fe04ea920891">
+		<file filename="Models/UserUserConfigp
+		pModel.class.php" md5="7dbdfdaa162114d3b0b7fe04ea920891">
 			<provides type="class" name="UserUserConfigModel"/>
 		</file>
 		<file filename="Models/UserConfigModel.class.php" md5="e85fe725f89604ed6f572befc82586c0">
