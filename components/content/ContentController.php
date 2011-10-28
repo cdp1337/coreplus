@@ -24,6 +24,10 @@ class ContentController extends Controller {
 	}
 	
     public static function View(View $page){
+		// I'm calling checkAcess here because the cached access string is canonical in this case.
+		if(!$page->checkAccess()){
+			return;
+		}
 		
 		$m = new ContentModel($page->getParameter(0));
 
