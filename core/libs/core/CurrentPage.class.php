@@ -229,7 +229,7 @@ class CurrentPage{
 		$parts = array_merge($obj->_headscripts, $obj->_headstylesheets);
 		
 		// Throw in the meta information if it's present.
-		if(sizeof($obj->_page->getMetas())){
+		if($obj->_page && sizeof($obj->_page->getMetas())){
 			foreach($obj->_page->getMetas() as $k => $v){
 				$parts[] = '<meta name="' . $k . '" content="' . $v . '"/>';
 			}
