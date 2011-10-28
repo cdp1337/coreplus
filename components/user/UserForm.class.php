@@ -14,7 +14,10 @@ class FormAccessStringInput extends FormElement{
 		$advanced_groups = array();
 		$type = 'whitelist';
 		
-		if(!$v){
+		if($v == '*'){
+			$checked = 'basic_anyone';
+		}
+		elseif(!$v){
 			// Blank value
 			$checked = 'advanced';
 		}
