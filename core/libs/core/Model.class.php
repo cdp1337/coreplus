@@ -57,6 +57,15 @@ class Model implements ArrayAccess{
 	 * @var array
 	 */
 	protected $_datainit = array();
+	
+	/**
+	 * Allow data to get overloaded onto models.
+	 * This is common with Controllers tacking on extra data for templates to better handle the model.
+	 * This data is not saved and does not effect the dirty flags.
+	 * 
+	 * @var array
+	 */
+	protected $_dataother = array();
 
 	/**
 	 * This is quicker than checking if $data and $datainit are the same every time.
@@ -111,6 +120,11 @@ class Model implements ArrayAccess{
 	}
 
 	public function load(){
+		
+		// If there is no associated table, do not load anything.
+		if(!self::GetTableName()){
+			return;
+		}
 
 		// I need to check the pks first.
 		// If they're not set I can't load anything from the database.
@@ -493,6 +507,18 @@ class Model implements ArrayAccess{
 		}
 	}
 
+	/**
+	 * Set a value of a specific key.
+	 * 
+	 * The data is validated automatically as per the specific Model specifications.
+	 * 
+	 * This supports data overloading.
+	 * 
+	 * @param string $k The key to set
+	 * @param mixed $v The value to set
+	 * @return boolean True on success, false on no change needed
+	 * @throws ModelValidationException
+	 */
 	public function set($k, $v){
 		// $this->_data will always have the schema keys at least set to null.
 		if(array_key_exists($k, $this->_data)){
@@ -508,6 +534,13 @@ class Model implements ArrayAccess{
 
 			$this->_data[$k] = $v;
 			$this->_dirty = true;
+			return true;
+		}
+		else{
+			// Ok, let data to get overloaded for convenience sake.
+			// This doesn't get any validation or anything however.
+			$this->_dataother[$k] = $v;
+			return true;
 		}
 	}
 	
@@ -669,6 +702,9 @@ class Model implements ArrayAccess{
 		if(array_key_exists($k, $this->_data)){
 			return $this->_data[$k];
 		}
+		elseif(array_key_exists($k, $this->_dataother)){
+			return $this->_dataother[$k];
+		}
 		else{
 			return null;
 		}
@@ -679,7 +715,7 @@ class Model implements ArrayAccess{
 	 * (essentially just the _data array... :p) 
 	 */
 	public function getAsArray(){
-		return $this->_data;
+		return array_merge($this->_data, $this->_dataother);
 	}
 
 	public function getSQLBuilder(){
@@ -750,6 +786,9 @@ class Model implements ArrayAccess{
 		// This is useful so the regex functions don't have to run more than once.
 		static $_tablenames = array();
 		$m = get_called_class();
+		
+		// Generic models cannot have tables.
+		if($m == 'Model') return null;
 		
 		if(!isset($_tablenames[$m])){
 			// Calculate the table class.

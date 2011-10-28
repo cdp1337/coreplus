@@ -372,10 +372,22 @@ class View {
 	public function setAccess($accessstring){
 		$this->access = $accessstring;
 		
+		return $this->checkAccess();
+	}
+	
+	/**
+	 * Check the access currently set on the view against the currently logged in user.
+	 * 
+	 * If the user does not have access to the resource, $this->error is set to 403.
+	 * 
+	 * @since 2011.10
+	 * @return boolean 
+	 */
+	public function checkAccess(){
 		// And do some logic to see if the current user can access this resource.
 		// This is more of a helper function to Controllers.
 		$u = Core::User();
-		if($u->checkAccess($accessstring)){
+		if($u->checkAccess($this->access)){
 			// yay.
 			return true;
 		}
@@ -384,6 +396,7 @@ class View {
 			return false;
 		}
 	}
+	
 }
 
 
