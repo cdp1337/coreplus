@@ -297,7 +297,7 @@ class CurrentPage{
 			$view->baseurl = '/Error/Error' . $view->error;
 			$view->setParameters(array());
 			$view->templatename = '/pages/error/error' . $view->error . '.tpl';
-			$view->mastertemplate = ConfigHandler::Get('/core/theme/default_template');
+			$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
 		}
 		
 		
@@ -310,7 +310,7 @@ class CurrentPage{
 			$view->baseurl = '/Error/Error' . $view->error;
 			$view->setParameters(array());
 			$view->templatename = '/pages/error/error' . $view->error . '.tpl';
-			$view->mastertemplate = ConfigHandler::Get('/core/theme/default_template');
+			$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
 			$view->assignVariable('exception', $e);
 			$data = $view->fetch();
 		}
@@ -338,7 +338,12 @@ class CurrentPage{
 			echo "Database Writes: " . Core::DB()->writeCount() . "\n";
 			//echo "Number of queries: " . DB::Singleton()->counter . "\n";
 			echo "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
-			echo "Total processing time: " . round(Core::GetProfileTimeTotal(), 3) . ' seconds';
+			echo "Total processing time: " . round(Core::GetProfileTimeTotal(), 4) * 1000 . ' ms' . "\n";
+			if(FULL_DEBUG){
+				foreach(Core::GetProfileTimes() as $t){
+					echo "[" . Core::FormatProfileTime($t['timetotal']) . "] - " . $t['event'] . "\n";
+				}
+			}
 			echo '</pre>';
 		}
 	}

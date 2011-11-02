@@ -82,7 +82,7 @@ define('REMOTE_IP', $rip);
  * @var boolean
  */
 define('FULL_DEBUG', false);
-//define('FULL_DEBUG', false);
+//define('FULL_DEBUG', true);
 
 define('NL', "\n");
 define('TAB', "\t");

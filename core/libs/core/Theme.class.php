@@ -47,6 +47,30 @@ class Theme extends InstallArchiveAPI{
 	}
 	
 	/**
+	 * Get all the templates registered for this theme.
+	 * Each template can be a different site skin, ie: 2-column, 3-column, etc.
+	 * 
+	 * @return array 
+	 */
+	public function getTemplates(){
+		$out = array();
+		$default = null;
+		// If this theme is currently selected, check the default template too.
+		if($this->getName() == ConfigHandler::Get('/theme/selected')) $default = ConfigHandler::Get('/theme/default_template');
+		
+		foreach($this->getElements('//templates/file') as $f){
+			$out[] = array(
+				'filename' => $this->getBaseDir() . $f->getAttribute('filename'),
+				'file' => $f->getAttribute('filename'),
+				'title' => $f->getAttribute('title'),
+				'default' => ($default == $f->getAttribute('filename'))
+			);
+		}
+		
+		return $out;
+	}
+	
+	/**
 	 * Save this component metadata back to its XML file.
 	 * Useful in packager scripts.
 	 */
@@ -287,7 +311,7 @@ class Theme extends InstallArchiveAPI{
 	 */
 	private function _installAssets(){
 		$assetbase = ConfigHandler::Get('/core/filestore/assetdir');
-		$coretheme = ConfigHandler::Get('/core/theme');
+		$coretheme = ConfigHandler::Get('/theme/selected');
 		$theme = $this->getName();
 		$changed = false;
 		foreach($this->getElements('/assets/file') as $node){

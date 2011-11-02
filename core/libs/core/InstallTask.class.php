@@ -21,7 +21,7 @@ class InstallTask{
 	
 	/**
 	 * The actual processing function, needs the parent node and the relative 
-	 *	directory so I konw where to run the scripts from.
+	 *	directory so I know where to run the scripts from.
 	 * 
 	 * This function will run through any node inside the <install>, <upgrade> or <uninstall> tasks
 	 * and try to execute the assigned method via sending the tag name to the event handler.
@@ -29,7 +29,7 @@ class InstallTask{
 	 */
 	public static function ParseNode(DomElement $node, $relativeDir){
 		foreach($node->getElementsByTagName('*') as $c){
-			$result = HookHandler::DispatchHook('install_task', array('type' => $c->tagName, $c, $relativeDir));
+			$result = HookHandler::DispatchHook('/install_task/' . $c->tagName, $c, $relativeDir);
 			if(!$result) return false;
 		}
 		
@@ -37,9 +37,9 @@ class InstallTask{
 		return true;
 	}
 	
-	public static function _ParseSetConfig($hook, $args){
-		$node = $args[0];
-		$relativeDir = $args[1];
+	public static function _ParseSetConfig($node, $relativeDir){
+		//$node = $args[0];
+		//$relativeDir = $args[1];
 		$set = $node->getAttribute('set');
 		$key = $node->getAttribute('key');
 		$value = $node->nodeValue;
@@ -47,9 +47,9 @@ class InstallTask{
 		DB::Execute("UPDATE `".DB_PREFIX."configs` SET `value` = ? WHERE `config_set` = ? AND `key` = ? LIMIT 1", array($value, $set, $key));
 	}
 	
-	public static function _ParseAddConfig($hook, $args){
-		$node = $args[0];
-		$relativeDir = $args[1];
+	public static function _ParseAddConfig($node, $relativeDir){
+		//$node = $args[0];
+		//$relativeDir = $args[1];
 		
 		// Just install the config manually.
 		$set = $node->getAttribute('set');
@@ -105,9 +105,9 @@ class InstallTask{
 		if($type == 'define') define($key, $value);
 	}
 	
-	public static function _ParseAddResourceDir($hook, $args){
-		$node = $args[0];
-		$relativeDir = $args[1];
+	public static function _ParseAddResourceDir($node, $relativeDir){
+		//$node = $args[0];
+		//$relativeDir = $args[1];
 		
 		$dir = $node->getAttribute('dir');
 		
@@ -118,9 +118,9 @@ class InstallTask{
 		return mkdir(ROOT_PDIR . '/resources/' . $dir, 0777, true);
 	}
 	
-	public static function _ParseSql($hook, $args){
-		$node = $args[0];
-		$relativeDir = $args[1];
+	public static function _ParseSql($node, $relativeDir){
+		//$node = $args[0];
+		//$relativeDir = $args[1];
 		
 		$file = @$node->getAttribute('file');
 		if($file){
@@ -173,7 +173,11 @@ class InstallTask{
 }
 
 // Add the system install tasks.
-HookHandler::AttachToHook('install_task', 'InstallTask::_ParseSql', 'sql');
-HookHandler::AttachToHook('install_task', 'InstallTask::_ParseAddConfig', 'addconfig');
-HookHandler::AttachToHook('install_task', 'InstallTask::_ParseSetConfig', 'setconfig');
-HookHandler::AttachToHook('install_task', 'InstallTask::_ParseAddResourceDir', 'addresourcedir');
+HookHandler::RegisterNewHook('/install_task/sql');
+HookHandler::AttachToHook('/install_task/sql', 'InstallTask::_ParseSql');
+HookHandler::RegisterNewHook('/install_task/addconfig');
+HookHandler::AttachToHook('/install_task/addconfig', 'InstallTask::_ParseAddConfig');
+HookHandler::RegisterNewHook('/install_task/setconfig');
+HookHandler::AttachToHook('/install_task/setconfig', 'InstallTask::_ParseSetConfig');
+HookHandler::RegisterNewHook('/install_task/addresourcedir');
+HookHandler::AttachToHook('/install_task/addresourcedir', 'InstallTask::_ParseAddResourceDir');

@@ -1,16 +1,17 @@
+{*
 {script library="jqueryui"}{/script}
 {script library="jquery.json"}{/script}
 {script library="jqueryui.readonly"}{/script}
-
+*}
 <ul>
 	{foreach from=$pages item=page}
 		<li>
 			{a href=$page->get('baseurl')}{$page->get('title')}{/a}
 		</li>
 	{/foreach}
-	<li><a href="#" class="admin-manage-widgets">Manage Widgets</a></li>
+	<!--<li><a href="#" class="admin-manage-widgets">Manage Widgets</a></li>-->
 </ul>
-
+{*
 {script location="foot"}
 <script type="text/javascript">
 	$('.admin-manage-widgets').click(function(){
@@ -94,19 +95,19 @@
 						});
 						jsondat = $.toJSON(dat);
 					},
-					/*update: function (e, ui){
-						console.log("UPDATE");
-						$el = $(ui.item);
-						// Run though this widgetarea and save the order!
-						data = new Array();
-						widgets = $el.closest('.widgetarea').find('.widget');
-						console.log(widgets);
-						for(i = 0; i < widgets.length; i++){
-							console.log(widgets[i]);
-						}
-							//widgets.push($this.attr('instanceid'));
-						//console.log(widgets);
-					},*/
+					//update: function (e, ui){
+					//	console.log("UPDATE");
+					//	$el = $(ui.item);
+					//	// Run though this widgetarea and save the order!
+					//	data = new Array();
+					//	widgets = $el.closest('.widgetarea').find('.widget');
+					//	console.log(widgets);
+					//	for(i = 0; i < widgets.length; i++){
+					//		console.log(widgets[i]);
+					//	}
+					//		//widgets.push($this.attr('instanceid'));
+					//	//console.log(widgets);
+					//},
 					helper: 'original',
 					//helper: function(e, $el){
 					//	return $('<div class="widget-proxy" style="width:' + $el.width() + 'px; height:' + $el.height() + 'px;"></div>');
@@ -122,3 +123,4 @@
 	});
 </script>
 {/script}
+*}

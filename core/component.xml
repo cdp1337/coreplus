@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.7" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.8" name="core" execmode="both">
 	<provides type="library" name="phpass" version="0.3~cae1"/>
 	<provides type="library" name="aws-sdk" version="1.0.0"/>
 	<provides type="library" name="smarty" version="3.0.6"/>
@@ -19,239 +19,95 @@
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
 	<library>
 		<!-- The core system directives. -->
-		<file filename="install/index.php" md5="9888e5213d73db1d339d7068afa7cf62">
+		<file filename="install/index.php" md5="63b1defef89c4cf700487ae846bf6360">
 			<provides type="class" name="InstallPage"/>
 		</file>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="862559fa829e061a2e415444ededff7b">
-			<provides type="class" name="UpdaterHelper"/>
+		<file filename="core/libs/phpmailer/test_script/index.php" md5="45241f2ae26b817a40b0749e0ac094de">
+			<provides type="class" name="phpmailerAppException"/>
 		</file>
-		<file filename="core/models/ConfigModel.class.php" md5="4ea39a3f233f2d7fef06ff6ced75cf53">
-			<provides type="class" name="ConfigModel"/>
+		<file filename="core/libs/phpmailer/test/phpmailerTest.php" md5="43a7f0716677814343354ad307ca94cf">
+			<provides type="class" name="phpmailerTest"/>
 		</file>
-		<file filename="core/models/WidgetInstanceModel.class.php" md5="1e5b1c446b7a6eb45c465a055f1e7ed7">
-			<provides type="class" name="WidgetInstanceModel"/>
+		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="4d4c02e6d43f392c9c0a8063ab06c431">
+			<provides type="class" name="PHPMailer"/>
+			<provides type="class" name="phpmailerException"/>
 		</file>
-		<file filename="core/models/UpdateSiteModel.class.php" md5="c4461db9d60cba45a42aeb947b09c5ed">
-			<provides type="class" name="UpdateSiteModel"/>
+		<file filename="core/libs/phpmailer/class.smtp.php" md5="20a0a777bc59b119f2322310896af1ce">
+			<provides type="class" name="SMTP"/>
 		</file>
-		<file filename="core/models/SessionModel.class.php" md5="9388eebbc877c127a2d6100637bf3aac">
-			<provides type="class" name="SessionModel"/>
+		<file filename="core/libs/phpmailer/class.pop3.php" md5="59e034c4716079a89c623dec90db36d9">
+			<provides type="class" name="POP3"/>
 		</file>
-		<file filename="core/models/WidgetModel.class.php" md5="d1bcc05c604366f9d34cefeceffa4f28">
-			<provides type="class" name="WidgetModel"/>
+		<file filename="core/libs/cachecore/Cache.class.php" md5="ed03b7c6b3da0592db18f0ec9e2885d5">
+			<provides type="class" name="Cache"/>
+			<provides type="class" name="Cache_Exception"/>
 		</file>
-		<file filename="core/models/ComponentModel.class.php" md5="de9a5d439d2c940e9c0eb35deab722a1">
-			<provides type="class" name="ComponentModel"/>
+		<file filename="core/libs/cachecore/backends/cachecore.class.php" md5="d0082b2918911221750e460e790e7476">
+			<provides type="class" name="CacheCore"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="0543e9768fffeee93c495d4efd38e461">
-			<provides type="class" name="PageModel"/>
+		<file filename="core/libs/cachecore/backends/cachemc.class.php" md5="81fdb2f1dea57e622d281631961dac5f">
+			<provides type="class" name="CacheMC"/>
 		</file>
-		<file filename="core/models/Insertable.class.php" md5="b68b134562140a21626ffc404fc7d362">
-			<provides type="class" name="InsertableModel"/>
+		<file filename="core/libs/cachecore/backends/icachecore.interface.php" md5="38c793c1d311f17e7a9e7442a236e981">
+			<provides type="interface" name="ICacheCore"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_registered.php" md5="c13ec9f081c78e63725c3b3e69ec2d03">
-			<provides type="class" name="Smarty_Internal_Resource_Registered"/>
+		<file filename="core/libs/cachecore/backends/cacheapc.class.php" md5="e8621ab82f92c7c4beef45ba25c36bbb">
+			<provides type="class" name="CacheAPC"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_capture.php" md5="b0c9097f63ece82498b203e198eafd62">
-			<provides type="class" name="Smarty_Internal_Compile_Capture"/>
-			<provides type="class" name="Smarty_Internal_Compile_CaptureClose"/>
+		<file filename="core/libs/cachecore/backends/_tests/AllTests.php" md5="8971cbd66ad355fa4624e52bb79975d1">
+			<provides type="class" name="Console_CommandLine_AllTests"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_include_php.php" md5="84b0b2fb715277158dd8f356ddcf109b">
-			<provides type="class" name="Smarty_Internal_Compile_Include_Php"/>
+		<file filename="core/libs/cachecore/backends/cachefile.class.php" md5="91b5081c9286e3c35b182eea57a6169c">
+			<provides type="class" name="CacheFile"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_utility.php" md5="e65158374a964a9b2eb5cbd28ce9ce74">
-			<provides type="class" name="Smarty_Internal_Utility"/>
+		<file filename="core/libs/cachecore/backends/cachexcache.class.php" md5="c70fabb077c1ad1ab832a9c57781eaa1">
+			<provides type="class" name="CacheXCache"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_string.php" md5="49f2b2674687bd86113ee85b599f9645">
-			<provides type="class" name="Smarty_Internal_Resource_String"/>
+		<file filename="core/libs/cachecore/backends/cachepdo.class.php" md5="f22f2c33573350bdbb5315766e0b55f4">
+			<provides type="class" name="CachePDO"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_rdelim.php" md5="c6ae61149576c0f84e317e57e3d06351">
-			<provides type="class" name="Smarty_Internal_Compile_Rdelim"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_ldelim.php" md5="d8e510c2b69c8b4afc3b5beb866ea814">
-			<provides type="class" name="Smarty_Internal_Compile_Ldelim"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_config_load.php" md5="5be9cfbb5a9a7bfed2f7df8c4729ec1d">
-			<provides type="class" name="Smarty_Internal_Compile_Config_Load"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_templatecompilerbase.php" md5="62e5d47e1cc4d293f3cf83b45893ae70">
-			<provides type="class" name="Smarty_Internal_TemplateCompilerBase"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_for.php" md5="e41bbe985e9cbb24e0b9584e67b574ce">
-			<provides type="class" name="Smarty_Internal_Compile_For"/>
-			<provides type="class" name="Smarty_Internal_Compile_Forelse"/>
-			<provides type="class" name="Smarty_Internal_Compile_Forclose"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_security.php" md5="058c8a7ef67c007efb6b44cdf16f3022">
-			<provides type="class" name="Smarty_Security"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_configfilelexer.php" md5="ab08ce42b8bf3180ac57b04fe7982c37">
-			<provides type="class" name="Smarty_Internal_Configfilelexer"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_debug.php" md5="8a98a411f41289681ab33d52c54e7fc3">
-			<provides type="class" name="Smarty_Internal_Compile_Debug"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_special_variable.php" md5="466ab9fc0c97426198d73d1843b66e41">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Special_Variable"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_object_function.php" md5="2452c3ea9723335e27d125f8e5bed18c">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Object_Function"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_wrapper.php" md5="1f583879be60e9bf34f20260b52f9815">
-			<provides type="class" name="Smarty_Internal_Wrapper"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_call.php" md5="f52f2e338ab118fb027af3318ac86744">
-			<provides type="class" name="Smarty_Internal_Compile_Call"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_assign.php" md5="b46585f27587cb1d2d628ad95724c133">
-			<provides type="class" name="Smarty_Internal_Compile_Assign"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_block.php" md5="aea011fc85c11beb4c947a0d36687af2">
-			<provides type="class" name="Smarty_Internal_Compile_Block"/>
-			<provides type="class" name="Smarty_Internal_Compile_Blockclose"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_filter.php" md5="099f9453a8586ddc42d5098f808e214e">
-			<provides type="class" name="Smarty_Internal_Filter"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_insert.php" md5="12a1d22789e45fce8d7d57563ecabecf">
-			<provides type="class" name="Smarty_Internal_Compile_Insert"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_if.php" md5="cbc94ee018fe9ff54cd02881d585ed13">
-			<provides type="class" name="Smarty_Internal_Compile_If"/>
-			<provides type="class" name="Smarty_Internal_Compile_Else"/>
-			<provides type="class" name="Smarty_Internal_Compile_Elseif"/>
-			<provides type="class" name="Smarty_Internal_Compile_Ifclose"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_debug.php" md5="4fd865114ab630012263e5b8ddb5549f">
-			<provides type="class" name="Smarty_Internal_Debug"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_filter_handler.php" md5="05c185e8469393216c5ad7f964a51c2d">
-			<provides type="class" name="Smarty_Internal_Filter_Handler"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_registered_block.php" md5="c11721a94a9dd389999aabf4b0f23fff">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Registered_Block"/>
+		<file filename="core/libs/smarty/Smarty.class.php" md5="4911b2e61dc704261e2d6ea48abb6bb1">
+			<provides type="class" name="Smarty"/>
+			<provides type="class" name="SmartyException"/>
+			<provides type="class" name="SmartyCompilerException"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_nocache_insert.php" md5="30ceffc1c1d6220994edca3e046c1605">
 			<provides type="class" name="Smarty_Internal_Nocache_Insert"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_eval.php" md5="9da995273145e7828086794dd41e13bf">
-			<provides type="class" name="Smarty_Internal_Compile_Eval"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_break.php" md5="c4ebe33ad0dcb9269f7d50387bf25c23">
+			<provides type="class" name="Smarty_Internal_Compile_Break"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_string.php" md5="49f2b2674687bd86113ee85b599f9645">
+			<provides type="class" name="Smarty_Internal_Resource_String"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_nocache.php" md5="70a10403bd29452e78baf17b6c17eb2e">
 			<provides type="class" name="Smarty_Internal_Compile_Nocache"/>
 			<provides type="class" name="Smarty_Internal_Compile_Nocacheclose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_continue.php" md5="f3c271c2bc57d9875735a51e28ceb76f">
-			<provides type="class" name="Smarty_Internal_Compile_Continue"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_eval.php" md5="e6c01e74d7d10198ba8400157e25ebbf">
-			<provides type="class" name="Smarty_Internal_Resource_Eval"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_template.php" md5="19b423d06073315a453587c7803589e2">
-			<provides type="class" name="Smarty_Internal_Template"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_templateparser.php" md5="8e84280d2099942ed9736fc73661ea82">
-			<provides type="class" name="TP_yyToken"/>
-			<provides type="class" name="TP_yyStackEntry"/>
-			<provides type="class" name="Smarty_Internal_Templateparser"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_extends.php" md5="3fe97fe230574923d680be541e750a47">
-			<provides type="class" name="Smarty_Internal_Resource_Extends"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_config.php" md5="43f32faf46f19f4de718a28eaad3b831">
-			<provides type="class" name="Smarty_Internal_Config"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_registered_function.php" md5="1c41d1de7f7e8a446af5dcfdde193c96">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Registered_Function"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_function_call_handler.php" md5="78a9bf5da3a0a56e971027de8f285792">
-			<provides type="class" name="Smarty_Internal_Function_Call_Handler"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_block_plugin.php" md5="7cb87b21c44aa564c2484be10a9ece9e">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Block_Plugin"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_stream.php" md5="0789b329841b0e63bbad9830c9d785b4">
-			<provides type="class" name="Smarty_Internal_Resource_Stream"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_configfileparser.php" md5="6a132d782eda920010f4d28e19301572">
-			<provides type="class" name="TPC_yyToken"/>
-			<provides type="class" name="TPC_yyStackEntry"/>
-			<provides type="class" name="Smarty_Internal_Configfileparser"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_print_expression.php" md5="6ff56866a42f0b6c3eda2028b9f8d684">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Print_Expression"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_section.php" md5="577c0cc37b8988facd7fd9f53881c00f">
-			<provides type="class" name="Smarty_Internal_Compile_Section"/>
-			<provides type="class" name="Smarty_Internal_Compile_Sectionelse"/>
-			<provides type="class" name="Smarty_Internal_Compile_Sectionclose"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_modifier.php" md5="118631689e9ab76ef188859e16bcb479">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Modifier"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_file.php" md5="a2de868bfe359233b3a78caa99610fb6">
-			<provides type="class" name="Smarty_Internal_Resource_File"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_function_plugin.php" md5="d327a9e80b1298dad705a64a56373fe8">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Function_Plugin"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_cacheresource_file.php" md5="3a0e527d87a5827fc5107b9ac4111b0b">
-			<provides type="class" name="Smarty_Internal_CacheResource_File"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_templatelexer.php" md5="8b50d07b6915a91d0797f3ab80f2fee1">
-			<provides type="class" name="Smarty_Internal_Templatelexer"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_php.php" md5="7a417908af8f2c33259ac090d9034c5c">
-			<provides type="class" name="Smarty_Internal_Resource_PHP"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_while.php" md5="a650dbe1c3ffa91b41aacd34facc2f36">
-			<provides type="class" name="Smarty_Internal_Compile_While"/>
-			<provides type="class" name="Smarty_Internal_Compile_Whileclose"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_register.php" md5="5955e3bd593dd4db5e4abc2a0d95fee2">
-			<provides type="class" name="Smarty_Internal_Register"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_config_file_compiler.php" md5="6db342a3462789ab7b8c94976a0741d9">
-			<provides type="class" name="Smarty_Internal_Config_File_Compiler"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_smartytemplatecompiler.php" md5="b7b77455dc3728115d0d70970aa145ca">
-			<provides type="class" name="Smarty_Internal_SmartyTemplateCompiler"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_extends.php" md5="82d34f5aa06dfecc6090f7160a1a3390">
-			<provides type="class" name="Smarty_Internal_Compile_Extends"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compilebase.php" md5="29da453ac62e45ea912d423805b9d978">
-			<provides type="class" name="Smarty_Internal_CompileBase"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_foreach.php" md5="96c91d745a42b44b4877e925028ae649">
-			<provides type="class" name="Smarty_Internal_Compile_Foreach"/>
-			<provides type="class" name="Smarty_Internal_Compile_Foreachelse"/>
-			<provides type="class" name="Smarty_Internal_Compile_Foreachclose"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_object_block_function.php" md5="475ddd3fec3b5f62783a4d16fb585c64">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Object_Block_Function"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_data.php" md5="344ed3682f3895073d1948e4b528bcf0">
-			<provides type="class" name="Smarty_Internal_Data"/>
-			<provides type="class" name="Smarty_Data"/>
-			<provides type="class" name="Smarty_Variable"/>
-			<provides type="class" name="Undefined_Smarty_Variable"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_append.php" md5="10db44dbab4a83128fc833a4e8b97f45">
-			<provides type="class" name="Smarty_Internal_Compile_Append"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_write_file.php" md5="0589e36bd71e00533c6571d3a5fa7e69">
-			<provides type="class" name="Smarty_Internal_Write_File"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_break.php" md5="c4ebe33ad0dcb9269f7d50387bf25c23">
-			<provides type="class" name="Smarty_Internal_Compile_Break"/>
-		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_function.php" md5="f2b7a4f783a98469ba787218633bbbe7">
 			<provides type="class" name="Smarty_Internal_Compile_Function"/>
 			<provides type="class" name="Smarty_Internal_Compile_Functionclose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_include.php" md5="856531fe3a50d6b8d0f902d1634178a1">
-			<provides type="class" name="Smarty_Internal_Compile_Include"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_template.php" md5="19b423d06073315a453587c7803589e2">
+			<provides type="class" name="Smarty_Internal_Template"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_security.php" md5="058c8a7ef67c007efb6b44cdf16f3022">
+			<provides type="class" name="Smarty_Security"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_debug.php" md5="8a98a411f41289681ab33d52c54e7fc3">
+			<provides type="class" name="Smarty_Internal_Compile_Debug"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_insert.php" md5="12a1d22789e45fce8d7d57563ecabecf">
+			<provides type="class" name="Smarty_Internal_Compile_Insert"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_php.php" md5="7a417908af8f2c33259ac090d9034c5c">
+			<provides type="class" name="Smarty_Internal_Resource_PHP"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compilebase.php" md5="29da453ac62e45ea912d423805b9d978">
+			<provides type="class" name="Smarty_Internal_CompileBase"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_call.php" md5="f52f2e338ab118fb027af3318ac86744">
+			<provides type="class" name="Smarty_Internal_Compile_Call"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_parsetree.php" md5="8a76f7f17dfefcb08737bca13485d230">
 			<provides type="class" name="_smarty_parsetree"/>
@@ -263,94 +119,196 @@
 			<provides type="class" name="_smarty_text"/>
 			<provides type="class" name="_smarty_linebreak"/>
 		</file>
-		<file filename="core/libs/smarty/Smarty.class.php" md5="4911b2e61dc704261e2d6ea48abb6bb1">
-			<provides type="class" name="Smarty"/>
-			<provides type="class" name="SmartyException"/>
-			<provides type="class" name="SmartyCompilerException"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_append.php" md5="10db44dbab4a83128fc833a4e8b97f45">
+			<provides type="class" name="Smarty_Internal_Compile_Append"/>
 		</file>
-		<file filename="core/libs/filestore/Directory_Backend.interface.php" md5="4fc76ff1998699378c87f4dfa88b1719">
-			<provides type="interface" name="Directory_Backend"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_config.php" md5="43f32faf46f19f4de718a28eaad3b831">
+			<provides type="class" name="Smarty_Internal_Config"/>
 		</file>
-		<file filename="core/libs/filestore/FileContentFactory.class.php" md5="31927dda37cf96b9a096557bb3de96c5">
-			<provides type="class" name="FileContentFactory"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_include_php.php" md5="84b0b2fb715277158dd8f356ddcf109b">
+			<provides type="class" name="Smarty_Internal_Compile_Include_Php"/>
 		</file>
-		<file filename="core/libs/filestore/File_Backend.interface.php" md5="88a3c9509d83c2fb8d3eac28308fd0b8">
-			<provides type="interface" name="File_Backend"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_for.php" md5="e41bbe985e9cbb24e0b9584e67b574ce">
+			<provides type="class" name="Smarty_Internal_Compile_For"/>
+			<provides type="class" name="Smarty_Internal_Compile_Forelse"/>
+			<provides type="class" name="Smarty_Internal_Compile_Forclose"/>
 		</file>
-		<file filename="core/libs/filestore/contents/File_tgz_contents.class.php" md5="6b2bae2c687ab5af3224a78241df280c">
-			<provides type="class" name="File_tgz_contents"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_write_file.php" md5="0589e36bd71e00533c6571d3a5fa7e69">
+			<provides type="class" name="Smarty_Internal_Write_File"/>
 		</file>
-		<file filename="core/libs/filestore/contents/File_asc_contents.class.php" md5="5895642753525b23d4c32ba27ffd5f3a">
-			<provides type="class" name="File_asc_contents"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_filter_handler.php" md5="05c185e8469393216c5ad7f964a51c2d">
+			<provides type="class" name="Smarty_Internal_Filter_Handler"/>
 		</file>
-		<file filename="core/libs/filestore/contents/File_gz_contents.class.php" md5="ca15262448475d926d5090cd4ae80cb8">
-			<provides type="class" name="File_gz_contents"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_templateparser.php" md5="8e84280d2099942ed9736fc73661ea82">
+			<provides type="class" name="TP_yyToken"/>
+			<provides type="class" name="TP_yyStackEntry"/>
+			<provides type="class" name="Smarty_Internal_Templateparser"/>
 		</file>
-		<file filename="core/libs/filestore/contents/File_unknown_contents.class.php" md5="bafda827286a6325a9f63bb0c602f44d">
-			<provides type="class" name="File_unknown_contents"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_block.php" md5="aea011fc85c11beb4c947a0d36687af2">
+			<provides type="class" name="Smarty_Internal_Compile_Block"/>
+			<provides type="class" name="Smarty_Internal_Compile_Blockclose"/>
 		</file>
-		<file filename="core/libs/filestore/FileException.class.php" md5="6b0dbf09f9d2e8486d993728c47aceb7">
-			<provides type="class" name="FileException"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_cacheresource_file.php" md5="3a0e527d87a5827fc5107b9ac4111b0b">
+			<provides type="class" name="Smarty_Internal_CacheResource_File"/>
 		</file>
-		<file filename="core/libs/filestore/File_Contents.interface.php" md5="e35d0999ae55fc45c71d124eb8fcf3e4">
-			<provides type="interface" name="File_Contents"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_config_file_compiler.php" md5="6db342a3462789ab7b8c94976a0741d9">
+			<provides type="class" name="Smarty_Internal_Config_File_Compiler"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="d4da1e2f77758765ffd7ee1f0f4fd2f6">
-			<provides type="class" name="File_remote_backend"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_object_function.php" md5="2452c3ea9723335e27d125f8e5bed18c">
+			<provides type="class" name="Smarty_Internal_Compile_Private_Object_Function"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="59d1b544007b3d95f4706e910565d2af">
-			<provides type="class" name="File_awss3_backend"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_configfilelexer.php" md5="ab08ce42b8bf3180ac57b04fe7982c37">
+			<provides type="class" name="Smarty_Internal_Configfilelexer"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="fd0fe8e7438e3c0d826aec36c1be18bd">
-			<provides type="class" name="File_local_backend"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_if.php" md5="cbc94ee018fe9ff54cd02881d585ed13">
+			<provides type="class" name="Smarty_Internal_Compile_If"/>
+			<provides type="class" name="Smarty_Internal_Compile_Else"/>
+			<provides type="class" name="Smarty_Internal_Compile_Elseif"/>
+			<provides type="class" name="Smarty_Internal_Compile_Ifclose"/>
 		</file>
-		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="b774870354569d94b7b24731a4da77ea">
-			<provides type="class" name="Directory_local_backend"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_registered.php" md5="c13ec9f081c78e63725c3b3e69ec2d03">
+			<provides type="class" name="Smarty_Internal_Resource_Registered"/>
 		</file>
-		<file filename="core/libs/core/ISingleton.interface.php" md5="dc86d653072a1fd71966a54de680a47b">
-			<provides type="interface" name="ISingleton"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_smartytemplatecompiler.php" md5="b7b77455dc3728115d0d70970aa145ca">
+			<provides type="class" name="Smarty_Internal_SmartyTemplateCompiler"/>
 		</file>
-		<file filename="core/libs/core/DB.class.php" md5="687bc69f13c4ff57ce54a30ed00b9d65">
-			<provides type="class" name="DB"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_eval.php" md5="9da995273145e7828086794dd41e13bf">
+			<provides type="class" name="Smarty_Internal_Compile_Eval"/>
 		</file>
-		<file filename="core/libs/core/InstallTask.class.php" md5="0ba8495dfcb0ff5c2116e7e6556ee547">
-			<provides type="class" name="InstallTask"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_stream.php" md5="0789b329841b0e63bbad9830c9d785b4">
+			<provides type="class" name="Smarty_Internal_Resource_Stream"/>
 		</file>
-		<file filename="core/libs/core/Theme.class.php" md5="00b60fe9aa4917c9656be22db12b0810">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_templatecompilerbase.php" md5="62e5d47e1cc4d293f3cf83b45893ae70">
+			<provides type="class" name="Smarty_Internal_TemplateCompilerBase"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_eval.php" md5="e6c01e74d7d10198ba8400157e25ebbf">
+			<provides type="class" name="Smarty_Internal_Resource_Eval"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_debug.php" md5="4fd865114ab630012263e5b8ddb5549f">
+			<provides type="class" name="Smarty_Internal_Debug"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_templatelexer.php" md5="8b50d07b6915a91d0797f3ab80f2fee1">
+			<provides type="class" name="Smarty_Internal_Templatelexer"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_configfileparser.php" md5="6a132d782eda920010f4d28e19301572">
+			<provides type="class" name="TPC_yyToken"/>
+			<provides type="class" name="TPC_yyStackEntry"/>
+			<provides type="class" name="Smarty_Internal_Configfileparser"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_print_expression.php" md5="6ff56866a42f0b6c3eda2028b9f8d684">
+			<provides type="class" name="Smarty_Internal_Compile_Private_Print_Expression"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_function_call_handler.php" md5="78a9bf5da3a0a56e971027de8f285792">
+			<provides type="class" name="Smarty_Internal_Function_Call_Handler"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_file.php" md5="a2de868bfe359233b3a78caa99610fb6">
+			<provides type="class" name="Smarty_Internal_Resource_File"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_config_load.php" md5="5be9cfbb5a9a7bfed2f7df8c4729ec1d">
+			<provides type="class" name="Smarty_Internal_Compile_Config_Load"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_ldelim.php" md5="d8e510c2b69c8b4afc3b5beb866ea814">
+			<provides type="class" name="Smarty_Internal_Compile_Ldelim"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_assign.php" md5="b46585f27587cb1d2d628ad95724c133">
+			<provides type="class" name="Smarty_Internal_Compile_Assign"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_continue.php" md5="f3c271c2bc57d9875735a51e28ceb76f">
+			<provides type="class" name="Smarty_Internal_Compile_Continue"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_data.php" md5="344ed3682f3895073d1948e4b528bcf0">
+			<provides type="class" name="Smarty_Internal_Data"/>
+			<provides type="class" name="Smarty_Data"/>
+			<provides type="class" name="Smarty_Variable"/>
+			<provides type="class" name="Undefined_Smarty_Variable"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_rdelim.php" md5="c6ae61149576c0f84e317e57e3d06351">
+			<provides type="class" name="Smarty_Internal_Compile_Rdelim"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_object_block_function.php" md5="475ddd3fec3b5f62783a4d16fb585c64">
+			<provides type="class" name="Smarty_Internal_Compile_Private_Object_Block_Function"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_wrapper.php" md5="1f583879be60e9bf34f20260b52f9815">
+			<provides type="class" name="Smarty_Internal_Wrapper"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_extends.php" md5="82d34f5aa06dfecc6090f7160a1a3390">
+			<provides type="class" name="Smarty_Internal_Compile_Extends"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_registered_function.php" md5="1c41d1de7f7e8a446af5dcfdde193c96">
+			<provides type="class" name="Smarty_Internal_Compile_Private_Registered_Function"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_modifier.php" md5="118631689e9ab76ef188859e16bcb479">
+			<provides type="class" name="Smarty_Internal_Compile_Private_Modifier"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_register.php" md5="5955e3bd593dd4db5e4abc2a0d95fee2">
+			<provides type="class" name="Smarty_Internal_Register"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_special_variable.php" md5="466ab9fc0c97426198d73d1843b66e41">
+			<provides type="class" name="Smarty_Internal_Compile_Private_Special_Variable"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_function_plugin.php" md5="d327a9e80b1298dad705a64a56373fe8">
+			<provides type="class" name="Smarty_Internal_Compile_Private_Function_Plugin"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_registered_block.php" md5="c11721a94a9dd389999aabf4b0f23fff">
+			<provides type="class" name="Smarty_Internal_Compile_Private_Registered_Block"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_utility.php" md5="e65158374a964a9b2eb5cbd28ce9ce74">
+			<provides type="class" name="Smarty_Internal_Utility"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_filter.php" md5="099f9453a8586ddc42d5098f808e214e">
+			<provides type="class" name="Smarty_Internal_Filter"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_block_plugin.php" md5="7cb87b21c44aa564c2484be10a9ece9e">
+			<provides type="class" name="Smarty_Internal_Compile_Private_Block_Plugin"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_while.php" md5="a650dbe1c3ffa91b41aacd34facc2f36">
+			<provides type="class" name="Smarty_Internal_Compile_While"/>
+			<provides type="class" name="Smarty_Internal_Compile_Whileclose"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_foreach.php" md5="96c91d745a42b44b4877e925028ae649">
+			<provides type="class" name="Smarty_Internal_Compile_Foreach"/>
+			<provides type="class" name="Smarty_Internal_Compile_Foreachelse"/>
+			<provides type="class" name="Smarty_Internal_Compile_Foreachclose"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_extends.php" md5="3fe97fe230574923d680be541e750a47">
+			<provides type="class" name="Smarty_Internal_Resource_Extends"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_include.php" md5="856531fe3a50d6b8d0f902d1634178a1">
+			<provides type="class" name="Smarty_Internal_Compile_Include"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_capture.php" md5="b0c9097f63ece82498b203e198eafd62">
+			<provides type="class" name="Smarty_Internal_Compile_Capture"/>
+			<provides type="class" name="Smarty_Internal_Compile_CaptureClose"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_section.php" md5="577c0cc37b8988facd7fd9f53881c00f">
+			<provides type="class" name="Smarty_Internal_Compile_Section"/>
+			<provides type="class" name="Smarty_Internal_Compile_Sectionelse"/>
+			<provides type="class" name="Smarty_Internal_Compile_Sectionclose"/>
+		</file>
+		<file filename="core/libs/core/Theme.class.php" md5="60a8f3f61865d026f4a67c89e32d777b">
 			<provides type="class" name="Theme"/>
 		</file>
-		<file filename="core/libs/core/XMLLoader.class.php" md5="730e66fe1c85b745122e66496e4cdaff">
-			<provides type="class" name="XMLLoader"/>
+		<file filename="core/libs/core/Debug.class.php" md5="9b5aba47c4387e683790840abc2c98cc">
+			<provides type="class" name="Debug"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="f8ffdaca35358848ee6d23bcb7e6df83">
-			<provides type="class" name="View"/>
-			<provides type="class" name="ViewException"/>
+		<file filename="core/libs/core/Session.class.php" md5="f4b224ac83049e914ff1f5f8a629f372">
+			<provides type="class" name="Session"/>
 		</file>
-		<file filename="core/libs/core/SQLBuilder.class.php" md5="236f89aecc28aa3772b60dacb5a49d77">
-			<provides type="class" name="SQLBuilder"/>
-			<provides type="class" name="SQLBuilderSelect"/>
-			<provides type="class" name="SQLBuilderUpdate"/>
-			<provides type="class" name="SQLBuilderInsert"/>
-			<provides type="class" name="SQLBuilderInsertUpdate"/>
-			<provides type="class" name="SQLBuilderDelete"/>
+		<file filename="core/libs/core/CLI.class.php" md5="d0f091ce3388109cc24202ad3561f120">
+			<provides type="class" name="CLI"/>
+		</file>
+		<file filename="core/libs/core/HookHandler.class.php" md5="a26c722b29edd65b10c0d96c90b6f347">
+			<provides type="class" name="HookHandler"/>
+			<provides type="class" name="Hook"/>
+		</file>
+		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="b1f1dbc20bc16a38a59b8a0852bf1bd0">
+			<provides type="class" name="CAEDirectoryIterator"/>
 		</file>
 		<file filename="core/libs/core/Widget.class.php" md5="b5fcdfc211f1b47f2a58a935caf05788">
 			<provides type="class" name="Widget"/>
 			<provides type="class" name="WidgetException"/>
 		</file>
-		<file filename="core/libs/core/Debug.class.php" md5="9b5aba47c4387e683790840abc2c98cc">
-			<provides type="class" name="Debug"/>
-		</file>
-		<file filename="core/libs/core/Email.class.php" md5="a63f71e02f4f11bfb9d845e5799d142f">
-			<provides type="class" name="Email"/>
-		</file>
-		<file filename="core/libs/core/ThemeHandler.class.php" md5="9848293f0dd7626a328b971126dcf987">
-			<provides type="class" name="ThemeHandler"/>
-		</file>
-		<file filename="core/libs/core/RepoXML.class.php" md5="3b02d7ab3908d348ee9498988a487fd6">
-			<provides type="class" name="RepoXML"/>
-		</file>
-		<file filename="core/libs/core/Form.class.php" md5="6cc940b4802ffb059d12a1ab39f42399">
+		<file filename="core/libs/core/Form.class.php" md5="2cdfc4a9fec21836de6999759214cf09">
 			<provides type="class" name="FormGroup"/>
 			<provides type="class" name="FormElement"/>
 			<provides type="class" name="Form"/>
@@ -366,151 +324,285 @@
 			<provides type="class" name="FormPageMeta"/>
 			<provides type="class" name="FormFileInput"/>
 		</file>
-		<file filename="core/libs/core/Template.class.php" md5="82ac351e1a88f9442b96b4d23e9a9166">
-			<provides type="class" name="Template"/>
-		</file>
-		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="a949a39b1cf475683197da32e903c9f8">
-			<provides type="class" name="InstallArchiveAPI"/>
-		</file>
-		<file filename="core/libs/core/HookHandler.class.php" md5="a26c722b29edd65b10c0d96c90b6f347">
-			<provides type="class" name="HookHandler"/>
-			<provides type="class" name="Hook"/>
+		<file filename="core/libs/core/ConfigHandler.class.php" md5="98e60687bddf79e1be8ed10eb4728ce3">
+			<provides type="class" name="ConfigHandler"/>
 		</file>
 		<file filename="core/libs/core/Controller.class.php" md5="4c465a352c2e536511bf57333d8433b5">
 			<provides type="class" name="Controller"/>
 		</file>
-		<file filename="core/libs/core/Session.class.php" md5="f4b224ac83049e914ff1f5f8a629f372">
-			<provides type="class" name="Session"/>
-		</file>
-		<file filename="core/libs/core/InstallArchive.class.php" md5="ba27c92ce18f83c68390e65681ba8544">
-			<provides type="class" name="InstallArchive"/>
+		<file filename="core/libs/core/View.class.php" md5="92a00843b9c8ad004bd0c4cc098f8739">
+			<provides type="class" name="View"/>
+			<provides type="class" name="ViewException"/>
 		</file>
 		<file filename="core/libs/core/PackageXML.class.php" md5="8ea3cbc6acb5bc3bdf4057208e5337dd">
 			<provides type="class" name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/ComponentHandler.class.php" md5="6cfd442c059e7111fb6dccfbbcbdbc28">
-			<provides type="class" name="ComponentHandler"/>
+		<file filename="core/libs/core/ISingleton.interface.php" md5="dc86d653072a1fd71966a54de680a47b">
+			<provides type="interface" name="ISingleton"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="320dcba4e76c01520e77d6403e95d62d">
-			<provides type="class" name="Component"/>
+		<file filename="core/libs/core/RepoXML.class.php" md5="3b02d7ab3908d348ee9498988a487fd6">
+			<provides type="class" name="RepoXML"/>
+		</file>
+		<file filename="core/libs/core/Core.class.php" md5="53a88297d02800fbee54d630aed7fe76">
+			<provides type="class" name="Core"/>
+		</file>
+		<file filename="core/libs/core/XMLLoader.class.php" md5="730e66fe1c85b745122e66496e4cdaff">
+			<provides type="class" name="XMLLoader"/>
+		</file>
+		<file filename="core/libs/core/Template.class.php" md5="60b6b3b4fe0cc06daccde79f6c28b24a">
+			<provides type="class" name="Template"/>
 		</file>
 		<file filename="core/libs/core/Time.class.php" md5="10da1cfd18249f9056c61358c40e1f62">
 			<provides type="class" name="Time"/>
 		</file>
-		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="b1f1dbc20bc16a38a59b8a0852bf1bd0">
-			<provides type="class" name="CAEDirectoryIterator"/>
-		</file>
-		<file filename="core/libs/core/Core.class.php" md5="d1f0f02727edc012638c7314cb8f3fe6">
-			<provides type="class" name="Core"/>
-		</file>
-		<file filename="core/libs/core/ConfigHandler.class.php" md5="981700d75d60af0d81a309a1d223b35c">
-			<provides type="class" name="ConfigHandler"/>
-		</file>
-		<file filename="core/libs/core/CurrentPage.class.php" md5="cde6f1528d7fa96bbd207c033082d031">
-			<provides type="class" name="CurrentPage"/>
-		</file>
-		<file filename="core/libs/core/Model.class.php" md5="0bac4d5705e21cf88b76f1a80cd7df6c">
+		<file filename="core/libs/core/Model.class.php" md5="16687d4246d34de01dba24de6e5f2165">
 			<provides type="class" name="Model"/>
 			<provides type="class" name="ModelFactory"/>
 			<provides type="class" name="ModelException"/>
 			<provides type="class" name="ModelValidationException"/>
 		</file>
-		<file filename="core/libs/core/CLI.class.php" md5="d0f091ce3388109cc24202ad3561f120">
-			<provides type="class" name="CLI"/>
+		<file filename="core/libs/core/SQLBuilder.class.php" md5="236f89aecc28aa3772b60dacb5a49d77">
+			<provides type="class" name="SQLBuilder"/>
+			<provides type="class" name="SQLBuilderSelect"/>
+			<provides type="class" name="SQLBuilderUpdate"/>
+			<provides type="class" name="SQLBuilderInsert"/>
+			<provides type="class" name="SQLBuilderInsertUpdate"/>
+			<provides type="class" name="SQLBuilderDelete"/>
 		</file>
-		<file filename="core/libs/phpmailer/test/phpmailerTest.php" md5="43a7f0716677814343354ad307ca94cf">
-			<provides type="class" name="phpmailerTest"/>
+		<file filename="core/libs/core/InstallArchive.class.php" md5="ba27c92ce18f83c68390e65681ba8544">
+			<provides type="class" name="InstallArchive"/>
 		</file>
-		<file filename="core/libs/phpmailer/class.smtp.php" md5="20a0a777bc59b119f2322310896af1ce">
-			<provides type="class" name="SMTP"/>
+		<file filename="core/libs/core/Component.class.php" md5="dd2fd48602830698ad4b1d3b2230a536">
+			<provides type="class" name="Component"/>
 		</file>
-		<file filename="core/libs/phpmailer/test_script/index.php" md5="45241f2ae26b817a40b0749e0ac094de">
-			<provides type="class" name="phpmailerAppException"/>
+		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="a949a39b1cf475683197da32e903c9f8">
+			<provides type="class" name="InstallArchiveAPI"/>
 		</file>
-		<file filename="core/libs/phpmailer/class.pop3.php" md5="59e034c4716079a89c623dec90db36d9">
-			<provides type="class" name="POP3"/>
+		<file filename="core/libs/core/ThemeHandler.class.php" md5="9848293f0dd7626a328b971126dcf987">
+			<provides type="class" name="ThemeHandler"/>
 		</file>
-		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="4d4c02e6d43f392c9c0a8063ab06c431">
-			<provides type="class" name="PHPMailer"/>
-			<provides type="class" name="phpmailerException"/>
+		<file filename="core/libs/core/CurrentPage.class.php" md5="8c4d01a9ef90a65934d9cf4013aae613">
+			<provides type="class" name="CurrentPage"/>
+		</file>
+		<file filename="core/libs/core/Email.class.php" md5="a63f71e02f4f11bfb9d845e5799d142f">
+			<provides type="class" name="Email"/>
+		</file>
+		<file filename="core/libs/core/InstallTask.class.php" md5="0ba8495dfcb0ff5c2116e7e6556ee547">
+			<provides type="class" name="InstallTask"/>
+		</file>
+		<file filename="core/libs/core/ComponentHandler.class.php" md5="d39bf5d4f8acfb8b99e748dbef151214">
+			<provides type="class" name="ComponentHandler"/>
+		</file>
+		<file filename="core/libs/core/DB.class.php" md5="687bc69f13c4ff57ce54a30ed00b9d65">
+			<provides type="class" name="DB"/>
+		</file>
+		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlDumper.php" md5="28196a0efdcea67d72e1eaf71e936958">
+			<provides type="class" name="sfYamlDumper"/>
+		</file>
+		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlInline.php" md5="9a63c1c4637eea3b4e208bea63e52baa">
+			<provides type="class" name="sfYamlInline"/>
+		</file>
+		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlParser.php" md5="91d3546a19262abc38275eb8f9d6dfb4">
+			<provides type="class" name="sfYamlParser"/>
+		</file>
+		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYaml.php" md5="2b7116a9f3bf6f9e8cd914c81bf79830">
+			<provides type="class" name="sfYaml"/>
+		</file>
+		<file filename="core/libs/aws-sdk/lib/requestcore/requestcore.class.php" md5="7af89f4463f4b5cab1f464c38481500c">
+			<provides type="class" name="RequestCore"/>
+			<provides type="class" name="ResponseCore"/>
+			<provides type="class" name="RequestCore_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/sdk.class.php" md5="a1781821328ceeec0abd3e1c2d27da23">
+			<provides type="class" name="CFRuntime_Exception"/>
+			<provides type="class" name="CFRuntime"/>
+			<provides type="class" name="CFLoader"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/stepconfig.class.php" md5="a38c9f3f668fa4b63647359912fe333c">
+			<provides type="class" name="CFStepConfig"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/complextype.class.php" md5="62413ec15d34a88326498eacc7cac3aa">
+			<provides type="class" name="CFComplexType"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/response.class.php" md5="128a6eff75168fbcddbb1872aa46088d">
+			<provides type="class" name="CFResponse"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/batchrequest.class.php" md5="21ce55b019eb80d01e47b8c01ecd5481">
+			<provides type="class" name="CFBatchRequest_Exception"/>
+			<provides type="class" name="CFBatchRequest"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/request.class.php" md5="efaf41d5e00e5891bc0c3df91ca74eb4">
+			<provides type="class" name="CFRequest"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/simplexml.class.php" md5="0e50c38a4681e9cb84a68ea789da3445">
+			<provides type="class" name="CFSimpleXML"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/manifest.class.php" md5="9e1cb2514d1c8d1cc54c2419d1f08ff9">
+			<provides type="class" name="CFManifest"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/hadoopstep.class.php" md5="7188a08779be549d1708e683b1930ce4">
+			<provides type="class" name="CFHadoopStep"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/mimetypes.class.php" md5="59e025e5f2909a69510f67979ff3e617">
+			<provides type="class" name="CFMimeTypes"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/info.class.php" md5="8d90241070bfcc1f1dde20e4d583624a">
+			<provides type="class" name="CFInfo"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/utilities.class.php" md5="7ef08a416322208d5d57cf5d95937512">
+			<provides type="class" name="CFUtilities"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/array.class.php" md5="c774cbca2e1bbcf93979f53d948f0e77">
+			<provides type="class" name="CFArray"/>
+		</file>
+		<file filename="core/libs/aws-sdk/utilities/policy.class.php" md5="adcb5b1de211f72a75ce450d41d7fc1c">
+			<provides type="class" name="CFPolicy"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/ses.class.php" md5="4a75d7e756a98f7a005f48ecbf843f02">
+			<provides type="class" name="AmazonSES"/>
+			<provides type="class" name="Email_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/rds.class.php" md5="d41238fbaac148a9abf67ecbee0a5a11">
+			<provides type="class" name="AmazonRDS"/>
+			<provides type="class" name="RDS_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/cloudwatch.class.php" md5="55d7e44eab912e1e0fd7ed91574c7f5b">
+			<provides type="class" name="AmazonCloudWatch"/>
+			<provides type="class" name="CloudWatch_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/s3.class.php" md5="520c240ad8a53ef5de2bd47831a66c32">
+			<provides type="class" name="S3_Exception"/>
+			<provides type="class" name="AmazonS3"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/sdb.class.php" md5="7aea786b7ff0cb2d3d70166d386e399b">
+			<provides type="class" name="AmazonSDB"/>
+			<provides type="class" name="SDB_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/as.class.php" md5="ed1cbbef4b81de0e0fffaa2bffd02cdc">
+			<provides type="class" name="AmazonAS"/>
+			<provides type="class" name="AS_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/elasticbeanstalk.class.php" md5="e38fca8d343b61c62e3d4d009cf7c2d9">
+			<provides type="class" name="AmazonElasticBeanstalk"/>
+			<provides type="class" name="ElasticBeanstalk_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/elb.class.php" md5="921b4dad03709d180e75340ada5a66fa">
+			<provides type="class" name="AmazonELB"/>
+			<provides type="class" name="ELB_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/sqs.class.php" md5="b19f73328ef483d5330d285221be0ba4">
+			<provides type="class" name="AmazonSQS"/>
+			<provides type="class" name="SQS_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/importexport.class.php" md5="e49faceaaa5763fdbc957df8cef6a23b">
+			<provides type="class" name="AmazonImportExport"/>
+			<provides type="class" name="ImportExport_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/iam.class.php" md5="413cded5ddc76100a613b99829d208f1">
+			<provides type="class" name="AmazonIAM"/>
+			<provides type="class" name="IAM_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/sns.class.php" md5="90155de1fe88a9f830b6ab620821729f">
+			<provides type="class" name="AmazonSNS"/>
+			<provides type="class" name="SNS_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/emr.class.php" md5="bbdb8c35e1c09905fc5c88ea6259abb9">
+			<provides type="class" name="AmazonEMR"/>
+			<provides type="class" name="EMR_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/ec2.class.php" md5="c6a3d737504dd7f98774b6662feeb4bc">
+			<provides type="class" name="AmazonEC2"/>
+			<provides type="class" name="EC2_Exception"/>
+		</file>
+		<file filename="core/libs/aws-sdk/services/cloudfront.class.php" md5="bfa0f3e40691337fb67191d48e9f9100">
+			<provides type="class" name="CloudFront_Exception"/>
+			<provides type="class" name="AmazonCloudFront"/>
+		</file>
+		<file filename="core/libs/filestore/File_Backend.interface.php" md5="88a3c9509d83c2fb8d3eac28308fd0b8">
+			<provides type="interface" name="File_Backend"/>
+		</file>
+		<file filename="core/libs/filestore/FileException.class.php" md5="6b0dbf09f9d2e8486d993728c47aceb7">
+			<provides type="class" name="FileException"/>
+		</file>
+		<file filename="core/libs/filestore/contents/File_asc_contents.class.php" md5="5895642753525b23d4c32ba27ffd5f3a">
+			<provides type="class" name="File_asc_contents"/>
+		</file>
+		<file filename="core/libs/filestore/contents/File_tgz_contents.class.php" md5="6b2bae2c687ab5af3224a78241df280c">
+			<provides type="class" name="File_tgz_contents"/>
+		</file>
+		<file filename="core/libs/filestore/contents/File_gz_contents.class.php" md5="ca15262448475d926d5090cd4ae80cb8">
+			<provides type="class" name="File_gz_contents"/>
+		</file>
+		<file filename="core/libs/filestore/contents/File_unknown_contents.class.php" md5="bafda827286a6325a9f63bb0c602f44d">
+			<provides type="class" name="File_unknown_contents"/>
+		</file>
+		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="d4da1e2f77758765ffd7ee1f0f4fd2f6">
+			<provides type="class" name="File_remote_backend"/>
+		</file>
+		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="99f0a6e98d320ae31391860f7bfee6b1">
+			<provides type="class" name="Directory_local_backend"/>
+		</file>
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="434b367f32b48ca3394aaad5e08ce591">
+			<provides type="class" name="File_local_backend"/>
+		</file>
+		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="59d1b544007b3d95f4706e910565d2af">
+			<provides type="class" name="File_awss3_backend"/>
+		</file>
+		<file filename="core/libs/filestore/File_Contents.interface.php" md5="e35d0999ae55fc45c71d124eb8fcf3e4">
+			<provides type="interface" name="File_Contents"/>
+		</file>
+		<file filename="core/libs/filestore/FileContentFactory.class.php" md5="31927dda37cf96b9a096557bb3de96c5">
+			<provides type="class" name="FileContentFactory"/>
+		</file>
+		<file filename="core/libs/filestore/Directory_Backend.interface.php" md5="4fc76ff1998699378c87f4dfa88b1719">
+			<provides type="interface" name="Directory_Backend"/>
 		</file>
 		<file filename="core/libs/phpass/PasswordHash.php" md5="f767843472f0a498fb9c7f61966c0244">
 			<provides type="class" name="PasswordHash"/>
 		</file>
-		<file filename="core/libs/datamodel/DMI_Backend.interface.php" md5="566a18589222fb68a5fc1940cbe31568">
-			<provides type="interface" name="DMI_Backend"/>
+		<file filename="core/libs/datamodel/DMI.class.php" md5="37dd11d004eb9e01aacf59c9733f3fa1">
+			<provides type="class" name="DMI"/>
+			<provides type="class" name="DMI_Exception"/>
 		</file>
-		<file filename="core/libs/datamodel/Dataset.class.php" md5="278671508752e5bb0a7b7deae2d012ca">
+		<file filename="core/libs/datamodel/Dataset.class.php" md5="5f1ac6ccf60f765dd46e55d803e245de">
 			<provides type="class" name="Dataset"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/uuid.php" md5="e18fff7e213a2d00ce0ee67782b7b774">
-			<provides type="class" name="UUID"/>
-			<provides type="class" name="UUIDException"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TPhpStream.php" md5="7862beac54fc21ae4d2d30ff98aca353">
+			<provides type="class" name="TPhpStream"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/columnfamily.php" md5="1737cba1a62b1c85653c9065d8c4adfe">
-			<provides type="class" name="CassandraUtil"/>
-			<provides type="class" name="ColumnFamily"/>
-			<provides type="class" name="ColumnFamilyIterator"/>
-			<provides type="class" name="RangeColumnFamilyIterator"/>
-			<provides type="class" name="IndexedColumnFamilyIterator"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TMemoryBuffer.php" md5="a7f2f9951bd965578926eab93798fdc4">
+			<provides type="class" name="TMemoryBuffer"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/connection.php" md5="8b74a4725cbaba42c1571d5e30a939c9">
-			<provides type="class" name="NoServerAvailable"/>
-			<provides type="class" name="IncompatibleAPIException"/>
-			<provides type="class" name="MaxRetriesException"/>
-			<provides type="class" name="ConnectionWrapper"/>
-			<provides type="class" name="ConnectionPool"/>
-			<provides type="class" name="Connection"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TBufferedTransport.php" md5="29ad92e05b3dd7c9dc8a41e2e8a26b62">
+			<provides type="class" name="TBufferedTransport"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/protocol/TProtocol.php" md5="946f288d0939f2f7eb8c3c2eafae5d89">
-			<provides type="class" name="TProtocolException"/>
-			<provides type="class" name="TProtocol"/>
-			<provides type="interface" name="TProtocolFactory"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TServerSocket.php" md5="79223ea1bb7225374365277202a02562">
+			<provides type="class" name="TServerSocket"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/protocol/TBinarySerializer.php" md5="32eda29932063dba4ed75bdaaf419b8e">
-			<provides type="class" name="TBinarySerializer"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TTransportFactory.php" md5="c3ddb6d18771dd873d785875ffbf9179">
+			<provides type="class" name="TTransportFactory"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/protocol/TBinaryProtocol.php" md5="96576e9e8519a6d9324b0e2f3e01f2ee">
-			<provides type="class" name="TBinaryProtocol"/>
-			<provides type="class" name="TBinaryProtocolFactory"/>
-			<provides type="class" name="TBinaryProtocolAccelerated"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TNullTransport.php" md5="34d14bc6411ff96561f4acdb1f4176ff">
+			<provides type="class" name="TNullTransport"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/Thrift.php" md5="38e4f20321bc4d07f8ddde0859949c3a">
-			<provides type="class" name="TType"/>
-			<provides type="class" name="TMessageType"/>
-			<provides type="class" name="TException"/>
-			<provides type="class" name="TBase"/>
-			<provides type="class" name="TApplicationException"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TSocket.php" md5="4ee33f2052f5e2bb380393e6e7f34b4d">
+			<provides type="class" name="TSocket"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/packages/cassandra/cassandra_types.php" md5="2447354cc84e716506374cf518a991e3">
-			<provides type="class" name="cassandra_ConsistencyLevel"/>
-			<provides type="class" name="cassandra_IndexOperator"/>
-			<provides type="class" name="cassandra_IndexType"/>
-			<provides type="class" name="cassandra_Column"/>
-			<provides type="class" name="cassandra_SuperColumn"/>
-			<provides type="class" name="cassandra_ColumnOrSuperColumn"/>
-			<provides type="class" name="cassandra_NotFoundException"/>
-			<provides type="class" name="cassandra_InvalidRequestException"/>
-			<provides type="class" name="cassandra_UnavailableException"/>
-			<provides type="class" name="cassandra_TimedOutException"/>
-			<provides type="class" name="cassandra_AuthenticationException"/>
-			<provides type="class" name="cassandra_AuthorizationException"/>
-			<provides type="class" name="cassandra_ColumnParent"/>
-			<provides type="class" name="cassandra_ColumnPath"/>
-			<provides type="class" name="cassandra_SliceRange"/>
-			<provides type="class" name="cassandra_SlicePredicate"/>
-			<provides type="class" name="cassandra_IndexExpression"/>
-			<provides type="class" name="cassandra_IndexClause"/>
-			<provides type="class" name="cassandra_KeyRange"/>
-			<provides type="class" name="cassandra_KeySlice"/>
-			<provides type="class" name="cassandra_KeyCount"/>
-			<provides type="class" name="cassandra_Deletion"/>
-			<provides type="class" name="cassandra_Mutation"/>
-			<provides type="class" name="cassandra_TokenRange"/>
-			<provides type="class" name="cassandra_AuthenticationRequest"/>
-			<provides type="class" name="cassandra_ColumnDef"/>
-			<provides type="class" name="cassandra_CfDef"/>
-			<provides type="class" name="cassandra_KsDef"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TTransport.php" md5="0ed9cae8b94cba3a76daf52de00a8d54">
+			<provides type="class" name="TTransportException"/>
+			<provides type="class" name="TTransport"/>
+		</file>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TSocketPool.php" md5="5bcc1d6dc794cc0dbecbff89fdf5571a">
+			<provides type="class" name="TSocketPool"/>
+		</file>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TFramedTransport.php" md5="a6af4768d74986b4bf512c20ff0f2ebe">
+			<provides type="class" name="TFramedTransport"/>
+		</file>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TServerTransport.php" md5="f778a85bc8fc52e752a7b88b4b9088a7">
+			<provides type="class" name="TServerTransport"/>
+		</file>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/THttpClient.php" md5="890dbc43471e9e799cec6f5dafb037a5">
+			<provides type="class" name="THttpClient"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/packages/cassandra/Cassandra.php" md5="a08814c3226458b10489530d0b0b61a3">
 			<provides type="class" name="CassandraClient"/>
@@ -572,205 +664,113 @@
 			<provides type="class" name="cassandra_Cassandra_system_update_column_family_result"/>
 			<provides type="interface" name="CassandraIf"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TSocketPool.php" md5="5bcc1d6dc794cc0dbecbff89fdf5571a">
-			<provides type="class" name="TSocketPool"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/packages/cassandra/cassandra_types.php" md5="2447354cc84e716506374cf518a991e3">
+			<provides type="class" name="cassandra_ConsistencyLevel"/>
+			<provides type="class" name="cassandra_IndexOperator"/>
+			<provides type="class" name="cassandra_IndexType"/>
+			<provides type="class" name="cassandra_Column"/>
+			<provides type="class" name="cassandra_SuperColumn"/>
+			<provides type="class" name="cassandra_ColumnOrSuperColumn"/>
+			<provides type="class" name="cassandra_NotFoundException"/>
+			<provides type="class" name="cassandra_InvalidRequestException"/>
+			<provides type="class" name="cassandra_UnavailableException"/>
+			<provides type="class" name="cassandra_TimedOutException"/>
+			<provides type="class" name="cassandra_AuthenticationException"/>
+			<provides type="class" name="cassandra_AuthorizationException"/>
+			<provides type="class" name="cassandra_ColumnParent"/>
+			<provides type="class" name="cassandra_ColumnPath"/>
+			<provides type="class" name="cassandra_SliceRange"/>
+			<provides type="class" name="cassandra_SlicePredicate"/>
+			<provides type="class" name="cassandra_IndexExpression"/>
+			<provides type="class" name="cassandra_IndexClause"/>
+			<provides type="class" name="cassandra_KeyRange"/>
+			<provides type="class" name="cassandra_KeySlice"/>
+			<provides type="class" name="cassandra_KeyCount"/>
+			<provides type="class" name="cassandra_Deletion"/>
+			<provides type="class" name="cassandra_Mutation"/>
+			<provides type="class" name="cassandra_TokenRange"/>
+			<provides type="class" name="cassandra_AuthenticationRequest"/>
+			<provides type="class" name="cassandra_ColumnDef"/>
+			<provides type="class" name="cassandra_CfDef"/>
+			<provides type="class" name="cassandra_KsDef"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TServerTransport.php" md5="f778a85bc8fc52e752a7b88b4b9088a7">
-			<provides type="class" name="TServerTransport"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/Thrift.php" md5="38e4f20321bc4d07f8ddde0859949c3a">
+			<provides type="class" name="TType"/>
+			<provides type="class" name="TMessageType"/>
+			<provides type="class" name="TException"/>
+			<provides type="class" name="TBase"/>
+			<provides type="class" name="TApplicationException"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TSocket.php" md5="4ee33f2052f5e2bb380393e6e7f34b4d">
-			<provides type="class" name="TSocket"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/protocol/TBinarySerializer.php" md5="32eda29932063dba4ed75bdaaf419b8e">
+			<provides type="class" name="TBinarySerializer"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TMemoryBuffer.php" md5="a7f2f9951bd965578926eab93798fdc4">
-			<provides type="class" name="TMemoryBuffer"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/protocol/TProtocol.php" md5="946f288d0939f2f7eb8c3c2eafae5d89">
+			<provides type="class" name="TProtocolException"/>
+			<provides type="class" name="TProtocol"/>
+			<provides type="interface" name="TProtocolFactory"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TPhpStream.php" md5="7862beac54fc21ae4d2d30ff98aca353">
-			<provides type="class" name="TPhpStream"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/protocol/TBinaryProtocol.php" md5="96576e9e8519a6d9324b0e2f3e01f2ee">
+			<provides type="class" name="TBinaryProtocol"/>
+			<provides type="class" name="TBinaryProtocolFactory"/>
+			<provides type="class" name="TBinaryProtocolAccelerated"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TNullTransport.php" md5="34d14bc6411ff96561f4acdb1f4176ff">
-			<provides type="class" name="TNullTransport"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/uuid.php" md5="e18fff7e213a2d00ce0ee67782b7b774">
+			<provides type="class" name="UUID"/>
+			<provides type="class" name="UUIDException"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/THttpClient.php" md5="890dbc43471e9e799cec6f5dafb037a5">
-			<provides type="class" name="THttpClient"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/connection.php" md5="8b74a4725cbaba42c1571d5e30a939c9">
+			<provides type="class" name="NoServerAvailable"/>
+			<provides type="class" name="IncompatibleAPIException"/>
+			<provides type="class" name="MaxRetriesException"/>
+			<provides type="class" name="ConnectionWrapper"/>
+			<provides type="class" name="ConnectionPool"/>
+			<provides type="class" name="Connection"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TServerSocket.php" md5="79223ea1bb7225374365277202a02562">
-			<provides type="class" name="TServerSocket"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/columnfamily.php" md5="1737cba1a62b1c85653c9065d8c4adfe">
+			<provides type="class" name="CassandraUtil"/>
+			<provides type="class" name="ColumnFamily"/>
+			<provides type="class" name="ColumnFamilyIterator"/>
+			<provides type="class" name="RangeColumnFamilyIterator"/>
+			<provides type="class" name="IndexedColumnFamilyIterator"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TFramedTransport.php" md5="a6af4768d74986b4bf512c20ff0f2ebe">
-			<provides type="class" name="TFramedTransport"/>
+		<file filename="core/libs/datamodel/DMI_Backend.interface.php" md5="566a18589222fb68a5fc1940cbe31568">
+			<provides type="interface" name="DMI_Backend"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TTransport.php" md5="0ed9cae8b94cba3a76daf52de00a8d54">
-			<provides type="class" name="TTransportException"/>
-			<provides type="class" name="TTransport"/>
-		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TBufferedTransport.php" md5="29ad92e05b3dd7c9dc8a41e2e8a26b62">
-			<provides type="class" name="TBufferedTransport"/>
-		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TTransportFactory.php" md5="c3ddb6d18771dd873d785875ffbf9179">
-			<provides type="class" name="TTransportFactory"/>
-		</file>
-		<file filename="core/libs/datamodel/DMI.class.php" md5="37dd11d004eb9e01aacf59c9733f3fa1">
-			<provides type="class" name="DMI"/>
-			<provides type="class" name="DMI_Exception"/>
-		</file>
-		<file filename="core/libs/datamodel/backends/cache.backend.php" md5="1e2316d9dd42574cc4d2d2d69974bcb7">
-			<provides type="class" name="DMI_cache_backend"/>
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="d48d0bb0cd398dfad30f52745461bc81">
+			<provides type="class" name="DMI_mysqli_backend"/>
 		</file>
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="3bde341777f3e2d4207e8843f6ea1438">
 			<provides type="class" name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="67dad748ac339b13472592abf4f5bf2d">
-			<provides type="class" name="DMI_mysqli_backend"/>
+		<file filename="core/libs/datamodel/backends/cache.backend.php" md5="1e2316d9dd42574cc4d2d2d69974bcb7">
+			<provides type="class" name="DMI_cache_backend"/>
 		</file>
-		<file filename="core/libs/cachecore/Cache.class.php" md5="ed03b7c6b3da0592db18f0ec9e2885d5">
-			<provides type="class" name="Cache"/>
-			<provides type="class" name="Cache_Exception"/>
+		<file filename="core/models/WidgetInstanceModel.class.php" md5="4ad4e8d38ad4b4b86e7756d80f4eb53c">
+			<provides type="class" name="WidgetInstanceModel"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/icachecore.interface.php" md5="38c793c1d311f17e7a9e7442a236e981">
-			<provides type="interface" name="ICacheCore"/>
+		<file filename="core/models/SessionModel.class.php" md5="5eb4173f28a3bafe8361ebfe18f566bd">
+			<provides type="class" name="SessionModel"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/cacheapc.class.php" md5="e8621ab82f92c7c4beef45ba25c36bbb">
-			<provides type="class" name="CacheAPC"/>
+		<file filename="core/models/PageModel.class.php" md5="9549af064211c9e3460f0d34e95e552c">
+			<provides type="class" name="PageModel"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/cachecore.class.php" md5="d0082b2918911221750e460e790e7476">
-			<provides type="class" name="CacheCore"/>
+		<file filename="core/models/ConfigModel.class.php" md5="e8a27dda29bed1afe3178e247a2b403f">
+			<provides type="class" name="ConfigModel"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/cachemc.class.php" md5="81fdb2f1dea57e622d281631961dac5f">
-			<provides type="class" name="CacheMC"/>
+		<file filename="core/models/UpdateSiteModel.class.php" md5="c4461db9d60cba45a42aeb947b09c5ed">
+			<provides type="class" name="UpdateSiteModel"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/cachefile.class.php" md5="91b5081c9286e3c35b182eea57a6169c">
-			<provides type="class" name="CacheFile"/>
+		<file filename="core/models/WidgetModel.class.php" md5="d1bcc05c604366f9d34cefeceffa4f28">
+			<provides type="class" name="WidgetModel"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/_tests/AllTests.php" md5="8971cbd66ad355fa4624e52bb79975d1">
-			<provides type="class" name="Console_CommandLine_AllTests"/>
+		<file filename="core/models/Insertable.class.php" md5="b68b134562140a21626ffc404fc7d362">
+			<provides type="class" name="InsertableModel"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/cachepdo.class.php" md5="f22f2c33573350bdbb5315766e0b55f4">
-			<provides type="class" name="CachePDO"/>
+		<file filename="core/models/ComponentModel.class.php" md5="de9a5d439d2c940e9c0eb35deab722a1">
+			<provides type="class" name="ComponentModel"/>
 		</file>
-		<file filename="core/libs/cachecore/backends/cachexcache.class.php" md5="c70fabb077c1ad1ab832a9c57781eaa1">
-			<provides type="class" name="CacheXCache"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/sdb.class.php" md5="7aea786b7ff0cb2d3d70166d386e399b">
-			<provides type="class" name="AmazonSDB"/>
-			<provides type="class" name="SDB_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/sqs.class.php" md5="b19f73328ef483d5330d285221be0ba4">
-			<provides type="class" name="AmazonSQS"/>
-			<provides type="class" name="SQS_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/cloudfront.class.php" md5="bfa0f3e40691337fb67191d48e9f9100">
-			<provides type="class" name="CloudFront_Exception"/>
-			<provides type="class" name="AmazonCloudFront"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/elb.class.php" md5="921b4dad03709d180e75340ada5a66fa">
-			<provides type="class" name="AmazonELB"/>
-			<provides type="class" name="ELB_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/emr.class.php" md5="bbdb8c35e1c09905fc5c88ea6259abb9">
-			<provides type="class" name="AmazonEMR"/>
-			<provides type="class" name="EMR_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/ec2.class.php" md5="c6a3d737504dd7f98774b6662feeb4bc">
-			<provides type="class" name="AmazonEC2"/>
-			<provides type="class" name="EC2_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/ses.class.php" md5="4a75d7e756a98f7a005f48ecbf843f02">
-			<provides type="class" name="AmazonSES"/>
-			<provides type="class" name="Email_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/rds.class.php" md5="d41238fbaac148a9abf67ecbee0a5a11">
-			<provides type="class" name="AmazonRDS"/>
-			<provides type="class" name="RDS_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/importexport.class.php" md5="e49faceaaa5763fdbc957df8cef6a23b">
-			<provides type="class" name="AmazonImportExport"/>
-			<provides type="class" name="ImportExport_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/iam.class.php" md5="413cded5ddc76100a613b99829d208f1">
-			<provides type="class" name="AmazonIAM"/>
-			<provides type="class" name="IAM_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/sns.class.php" md5="90155de1fe88a9f830b6ab620821729f">
-			<provides type="class" name="AmazonSNS"/>
-			<provides type="class" name="SNS_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/s3.class.php" md5="520c240ad8a53ef5de2bd47831a66c32">
-			<provides type="class" name="S3_Exception"/>
-			<provides type="class" name="AmazonS3"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/as.class.php" md5="ed1cbbef4b81de0e0fffaa2bffd02cdc">
-			<provides type="class" name="AmazonAS"/>
-			<provides type="class" name="AS_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/cloudwatch.class.php" md5="55d7e44eab912e1e0fd7ed91574c7f5b">
-			<provides type="class" name="AmazonCloudWatch"/>
-			<provides type="class" name="CloudWatch_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/services/elasticbeanstalk.class.php" md5="e38fca8d343b61c62e3d4d009cf7c2d9">
-			<provides type="class" name="AmazonElasticBeanstalk"/>
-			<provides type="class" name="ElasticBeanstalk_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlParser.php" md5="91d3546a19262abc38275eb8f9d6dfb4">
-			<provides type="class" name="sfYamlParser"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlDumper.php" md5="28196a0efdcea67d72e1eaf71e936958">
-			<provides type="class" name="sfYamlDumper"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYaml.php" md5="2b7116a9f3bf6f9e8cd914c81bf79830">
-			<provides type="class" name="sfYaml"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlInline.php" md5="9a63c1c4637eea3b4e208bea63e52baa">
-			<provides type="class" name="sfYamlInline"/>
-		</file>
-		<file filename="core/libs/aws-sdk/lib/requestcore/requestcore.class.php" md5="7af89f4463f4b5cab1f464c38481500c">
-			<provides type="class" name="RequestCore"/>
-			<provides type="class" name="ResponseCore"/>
-			<provides type="class" name="RequestCore_Exception"/>
-		</file>
-		<file filename="core/libs/aws-sdk/sdk.class.php" md5="a1781821328ceeec0abd3e1c2d27da23">
-			<provides type="class" name="CFRuntime_Exception"/>
-			<provides type="class" name="CFRuntime"/>
-			<provides type="class" name="CFLoader"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/utilities.class.php" md5="7ef08a416322208d5d57cf5d95937512">
-			<provides type="class" name="CFUtilities"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/mimetypes.class.php" md5="59e025e5f2909a69510f67979ff3e617">
-			<provides type="class" name="CFMimeTypes"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/stepconfig.class.php" md5="a38c9f3f668fa4b63647359912fe333c">
-			<provides type="class" name="CFStepConfig"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/array.class.php" md5="c774cbca2e1bbcf93979f53d948f0e77">
-			<provides type="class" name="CFArray"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/info.class.php" md5="8d90241070bfcc1f1dde20e4d583624a">
-			<provides type="class" name="CFInfo"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/batchrequest.class.php" md5="21ce55b019eb80d01e47b8c01ecd5481">
-			<provides type="class" name="CFBatchRequest_Exception"/>
-			<provides type="class" name="CFBatchRequest"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/complextype.class.php" md5="62413ec15d34a88326498eacc7cac3aa">
-			<provides type="class" name="CFComplexType"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/policy.class.php" md5="adcb5b1de211f72a75ce450d41d7fc1c">
-			<provides type="class" name="CFPolicy"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/hadoopstep.class.php" md5="7188a08779be549d1708e683b1930ce4">
-			<provides type="class" name="CFHadoopStep"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/simplexml.class.php" md5="0e50c38a4681e9cb84a68ea789da3445">
-			<provides type="class" name="CFSimpleXML"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/request.class.php" md5="efaf41d5e00e5891bc0c3df91ca74eb4">
-			<provides type="class" name="CFRequest"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/manifest.class.php" md5="9e1cb2514d1c8d1cc54c2419d1f08ff9">
-			<provides type="class" name="CFManifest"/>
-		</file>
-		<file filename="core/libs/aws-sdk/utilities/response.class.php" md5="128a6eff75168fbcddbb1872aa46088d">
-			<provides type="class" name="CFResponse"/>
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="862559fa829e061a2e415444ededff7b">
+			<provides type="class" name="UpdaterHelper"/>
 		</file>
 		<file filename="mysql_model_gen.php" md5="a5778813fd0a184779cf5bb6021b708e">
 			<provides type="class" name=""/>
@@ -780,76 +780,82 @@
 		<file filename="core/widgets/AdminMenuWidget.php" md5="c9c942afe8a6d1b5f9ae6a43a6ada413">
 			<provides type="widget" name="AdminMenuWidget"/>
 		</file>
-		<file filename="core/controllers/FileController.class.php" md5="be75055de065250ff36ae8eeaa893513">
-			<provides type="controller" name="FileController"/>
-		</file>
-		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
-			<provides type="controller" name="ErrorController"/>
-		</file>
 		<file filename="core/controllers/FormController.class.php" md5="d9dc7664b0e7087f9503961fd2bebc45">
 			<provides type="controller" name="FormController"/>
+		</file>
+		<file filename="core/controllers/UpdaterController.class.php" md5="8a238c8d4649131752a3c1aef838eca5">
+			<provides type="controller" name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/DirectoryController.class.php" md5="e9e50405c06731773795016e8b95924e">
 			<provides type="controller" name="DirectoryController"/>
 		</file>
-		<file filename="core/controllers/AdminController.php" md5="4151efc175600d558ee4bd01996fbdb4">
+		<file filename="core/controllers/AdminController.php" md5="2c0a03790cbe8f6de055ce1e9ed8c826">
 			<provides type="controller" name="AdminController"/>
+		</file>
+		<file filename="core/controllers/ThemeController.class.php" md5="37755bfe60672754a9c81664de65cf55">
+			<provides type="controller" name="ThemeController"/>
+		</file>
+		<file filename="core/controllers/FileController.class.php" md5="be75055de065250ff36ae8eeaa893513">
+			<provides type="controller" name="FileController"/>
+		</file>
+		<file filename="core/controllers/WidgetController.class.php" md5="696579e28d7d5907d4d88fbbffece362">
+			<provides type="controller" name="WidgetController"/>
+		</file>
+		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
+			<provides type="controller" name="ErrorController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="5c1cee97fea17449fced7cfafe41a584">
 			<provides type="controller" name="GettingStartedController"/>
-		</file>
-		<file filename="core/controllers/WidgetController.class.php" md5="863bd63f637a362dd5e21302f425a817">
-			<provides type="controller" name="WidgetController"/>
-		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="8a238c8d4649131752a3c1aef838eca5">
-			<provides type="controller" name="UpdaterController"/>
 		</file>
 	</module>
 	<pages>
 		<page baseurl="/Admin/ReinstallAll" admin="1" widget="0" access="g:admin" title="Reinstall All Components"/>
 		<page baseurl="/Admin/Config" admin="1" widget="0" access="g:admin" title="System Configuration"/>
 		<page baseurl="/Updater" admin="1" widget="0" access="g:admin" title="System Updater"/>
+		<page baseurl="/ThemeController" admin="1" access="g:admin" title="Theme Manager"/>
 	</pages>
 	<view searchdir="core/templates">
-		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
-		<file filename="core/templates/widgets/adminmenu.tpl" md5="3bd5f6b3d939c4928842ea0f5cc6bf61"/>
-		<file filename="core/templates/forms/form.body.tpl" md5="8ab5bcc9f1307da533c72b3d18113a74"/>
-		<file filename="core/templates/forms/form.head.tpl" md5="efe24a11d8a7a54ad55a68fd09abb0a1"/>
-		<file filename="core/templates/forms/form.tpl" md5="2910e3a5d1cc14ff87bfea0a15c927ce"/>
-		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="b253627a7cac7c2db9c53160272e103c"/>
-		<file filename="core/templates/forms/elements/formsubmitinput.tpl" md5="bf76c8874f76293157502c0999206069"/>
-		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="53999ba1f9507fd7cada56467b72d8c0"/>
-		<file filename="core/templates/forms/elements/reset.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
-		<file filename="core/templates/forms/elements/formtextinput.tpl" md5="0f09b0b0b3e6ce316e89e312c311482e"/>
-		<file filename="core/templates/forms/elements/image.tpl" md5="dc4f74a0297b099ea7913d7582125837"/>
-		<file filename="core/templates/forms/elements/formpasswordinput.tpl" md5="9642512379195999ea4c0a71b876d80f"/>
-		<file filename="core/templates/forms/elements/file.tpl" md5="90e30e0242238cee016d8b30571e9ac1"/>
-		<file filename="core/templates/forms/elements/button.tpl" md5="04458c32e1d992bba0255d8d1a2e8dee"/>
-		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="49ef9a550e1ff8561458bf5868315dd0"/>
-		<file filename="core/templates/forms/elements/html.tpl" md5="3d4259aa7f5615453121930abe34b031"/>
-		<file filename="core/templates/forms/elements/checkbox.tpl" md5="070475a9b15c813ca8b958afff81ff54"/>
-		<file filename="core/templates/forms/elements/formtextareainput.tpl" md5="7f76333dd807525afc02ec06de398019"/>
-		<file filename="core/templates/forms/elements/formradioinput.tpl" md5="193cab4f30633e69a91c1681deaeb3ef"/>
-		<file filename="core/templates/forms/elements/formselectinput.tpl" md5="920b22d30078ea5a1f3af41ebb6e273f"/>
-		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="ecb84edcfb88f92c62d05e88c516ad27"/>
-		<file filename="core/templates/forms/form.foot.tpl" md5="6e6d3353848b64921070b812c7c99936"/>
-		<file filename="core/templates/forms/groups/default.tpl" md5="e4da2066a82c47f36bcd8a5a7744d3c2"/>
-		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
+		<file filename="core/templates/pages/error/error404.tpl" md5="2b6ad918a5cb9d960e5670fa16761162"/>
 		<file filename="core/templates/pages/error/error500.tpl" md5="128c99e44e5f3aaf741d9ee9a7011b3e"/>
 		<file filename="core/templates/pages/error/error400.tpl" md5="4443f584bf4f2d0268e5af6d62338d07"/>
-		<file filename="core/templates/pages/error/error404.tpl" md5="2b6ad918a5cb9d960e5670fa16761162"/>
 		<file filename="core/templates/pages/error/error403.tpl" md5="4f9104a2bf0f6a579bda93e79252ab1d"/>
+		<file filename="core/templates/pages/theme/index.tpl" md5="dd140f48bdf7e14eb8fb452b4f1be846"/>
+		<file filename="core/templates/pages/theme/widgets.tpl" md5="2f92071db5d82802a774088e344d4f6b"/>
+		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
+		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
+		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="bd8176a4efed14f88f13a13fdf5ef036"/>
+		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="c6f559efab67486ae48fca6afab531c9"/>
+		<file filename="core/templates/pages/updater/sites_add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="core/templates/pages/updater/sites.tpl" md5="a8594ccfb7bea51a8ddb18a673d1a962"/>
+		<file filename="core/templates/pages/updater/sites_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="core/templates/pages/updater/check.tpl" md5="c114704923356f34cf863da7ef596f7a"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="db1411269ee527536b0163bf9e913f26"/>
 		<file filename="core/templates/pages/admin/config.tpl" md5="e5e65603b632d9a424846d9bd31557e8"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="037a859dad14923425e7b31ce1673f74"/>
-		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="bd8176a4efed14f88f13a13fdf5ef036"/>
-		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
-		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
-		<file filename="core/templates/pages/updater/index.tpl" md5="c6f559efab67486ae48fca6afab531c9"/>
-		<file filename="core/templates/pages/updater/sites.tpl" md5="a8594ccfb7bea51a8ddb18a673d1a962"/>
-		<file filename="core/templates/pages/updater/sites_add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="core/templates/pages/updater/check.tpl" md5="5ca9d91d05fe9f81a76dbda8b6dd096b"/>
-		<file filename="core/templates/pages/updater/sites_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="core/templates/widgets/adminmenu.tpl" md5="930a1b368cc9b1a952698e4850f6d257"/>
+		<file filename="core/templates/forms/form.tpl" md5="2910e3a5d1cc14ff87bfea0a15c927ce"/>
+		<file filename="core/templates/forms/form.foot.tpl" md5="6e6d3353848b64921070b812c7c99936"/>
+		<file filename="core/templates/forms/form.body.tpl" md5="8ab5bcc9f1307da533c72b3d18113a74"/>
+		<file filename="core/templates/forms/form.head.tpl" md5="efe24a11d8a7a54ad55a68fd09abb0a1"/>
+		<file filename="core/templates/forms/elements/image.tpl" md5="dc4f74a0297b099ea7913d7582125837"/>
+		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="ecb84edcfb88f92c62d05e88c516ad27"/>
+		<file filename="core/templates/forms/elements/checkbox.tpl" md5="070475a9b15c813ca8b958afff81ff54"/>
+		<file filename="core/templates/forms/elements/formtextareainput.tpl" md5="7f76333dd807525afc02ec06de398019"/>
+		<file filename="core/templates/forms/elements/button.tpl" md5="04458c32e1d992bba0255d8d1a2e8dee"/>
+		<file filename="core/templates/forms/elements/html.tpl" md5="3d4259aa7f5615453121930abe34b031"/>
+		<file filename="core/templates/forms/elements/formselectinput.tpl" md5="920b22d30078ea5a1f3af41ebb6e273f"/>
+		<file filename="core/templates/forms/elements/formradioinput.tpl" md5="193cab4f30633e69a91c1681deaeb3ef"/>
+		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="b253627a7cac7c2db9c53160272e103c"/>
+		<file filename="core/templates/forms/elements/formsubmitinput.tpl" md5="bf76c8874f76293157502c0999206069"/>
+		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="49ef9a550e1ff8561458bf5868315dd0"/>
+		<file filename="core/templates/forms/elements/reset.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
+		<file filename="core/templates/forms/elements/formpasswordinput.tpl" md5="9642512379195999ea4c0a71b876d80f"/>
+		<file filename="core/templates/forms/elements/formtextinput.tpl" md5="0f09b0b0b3e6ce316e89e312c311482e"/>
+		<file filename="core/templates/forms/elements/file.tpl" md5="90e30e0242238cee016d8b30571e9ac1"/>
+		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="53999ba1f9507fd7cada56467b72d8c0"/>
+		<file filename="core/templates/forms/groups/default.tpl" md5="e4da2066a82c47f36bcd8a5a7744d3c2"/>
+		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="645d3b7a407c513622e9f6bc2590b7c9"/>
 	</view>
 	<install/>
@@ -894,7 +900,8 @@
 		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'" default=""/>
 	</configs>
 	<assets>
-		<file filename="core/assets/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
+		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
+		<file filename="core/assets/css/theme/widgets.css" md5="5fa09fb6c6c8d36a0140833fd49e1acc"/>
 	</assets>
 	<upgrade from="0.0.1-dev1" to="0.0.2"/>
 	<changelog version="0.0.2">
@@ -981,7 +988,7 @@
 	<upgrade from="0.0.6" to="0.0.7"/>
 	<changelog version="0.0.7">
 		<packagemeta>
-			<date>Mon, 17 Oct 2011 23:47:05 -0400</date>
+			<date>Wed, 02 Nov 2011 01:21:43 -0400</date>
 			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
 			<packager>CAE2 0.0.7</packager>
 		</packagemeta>
@@ -1021,9 +1028,7 @@
 	<author name="liqwei" email="liqwei@liqwei.com"/>
 	<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
 	<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-		See the included NOTICE.md file for more information.
-	</license>
+	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.html">
 		GNU Lesser General Public License v3
 	</license>
@@ -1031,320 +1036,400 @@
 		GNU Lesser General Public License v3
 	</license>
 	<license url="http://www.opensource.org/licenses/mit-license.php">MIT</license>
+	<upgrade from="0.0.7" to="0.0.8">
+	</upgrade>
+	<changelog version="0.0.8"/>
 	<otherfiles>
-		<file filename="index.php" md5="142cd66901eabb65466540265acfbf5b"/>
-		<file filename="create_repo.php" md5="672f3b48387456078d0b12f4ab7f44f5"/>
-		<file filename="gnupg/trustdb.gpg" md5="121b5474d8ee68da348d22effd9db8cf"/>
-		<file filename="gnupg/secring.gpg" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="gnupg/pubring.gpg~" md5="44089e78b5970070a855df230fd28a57"/>
-		<file filename="gnupg/pubring.gpg" md5="44089e78b5970070a855df230fd28a57"/>
+		<file filename="DEV-NOTES" md5="0833fd2572631f9a708dc8379443ff64"/>
+		<file filename="htaccess.bak" md5="4734cf14309cda39a9e5e8977f96661f"/>
+		<file filename="COPYING.LESSER" md5="e6a600fd5e1d9cbde2d983680233ad02"/>
 		<file filename="install/install.tpl" md5="1424c7d2b87887ab433afeb68e0c2bae"/>
+		<file filename="COPYING" md5="d32239bcb673463ab874e80d47fae504"/>
 		<file filename="yuicompressor-2.4.2.jar" md5="de7f9bf5ecb82166493ba7839f62a73e"/>
-		<file filename="core/bootstrap.php" md5="162b043965e156caf51232d7792598b7"/>
 		<file filename="core/bootstrap_preincludes.php" md5="519af28fa4fc07edcf839dbf529c8c21"/>
-		<file filename="core/component.dtd" md5="7751e1f38efbcc20cd143afe5615cb57"/>
-		<file filename="core/bootstrap_predefines.php" md5="2c1c94fe7b0efd7ca48a755d427da2a8"/>
-		<file filename="core/libs/smarty/SMARTY2_BC_NOTES" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
-		<file filename="core/libs/smarty/README" md5="83797fcbeab9d4f5090510a3023bc4a5"/>
-		<file filename="core/libs/smarty/debug.tpl" md5="6c0554c7a9cdb4c26f079fa8dff98036"/>
-		<file filename="core/libs/smarty/plugins/function.math.php" md5="a875f349e9a8e87f5b6682147bf76e11"/>
-		<file filename="core/libs/smarty/plugins/function.html_options.php" md5="09121e8634418dd8659cad79740f63b0"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.count_sentences.php" md5="4f51312afd28ea6d0fb18d6238b28700"/>
-		<file filename="core/libs/smarty/plugins/function.html_radios.php" md5="3ee52cebd46f4ec763cd1a1f4e67421e"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.cat.php" md5="34f3e6a6edac6e8726db55497d5f294f"/>
-		<file filename="core/libs/smarty/plugins/function.fetch.php" md5="e10809109b026f17efbf13a48ef946b9"/>
-		<file filename="core/libs/smarty/plugins/function.html_image.php" md5="b60f74e5701f3fe7d61457cacf99fc1e"/>
-		<file filename="core/libs/smarty/plugins/function.html_select_date.php" md5="4666629080c1ed4ad8b353734c23559a"/>
-		<file filename="core/libs/smarty/plugins/function.popup.php" md5="52222036b18ff779b8dd8446a771bfeb"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.string_format.php" md5="ff4cfec7b7afbff18ff39b49186e219b"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.noprint.php" md5="9197523f0e32b65d0fdfba4c3f3144f3"/>
-		<file filename="core/libs/smarty/plugins/block.php.php" md5="1c9e67cac3c206a0101e0079a2703a9d"/>
-		<file filename="core/libs/smarty/plugins/modifier.escape.php" md5="9a63a217a2efd829910d63b83223eb69"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.count_characters.php" md5="c329b115ed7ef9bed6fc1da5aeba1991"/>
-		<file filename="core/libs/smarty/plugins/function.cycle.php" md5="3aed60eca7828872ff8158a73f39939b"/>
-		<file filename="core/libs/smarty/plugins/modifier.regex_replace.php" md5="b653d97c4d77c145de9f54231d34f169"/>
-		<file filename="core/libs/smarty/plugins/shared.escape_special_chars.php" md5="bdf83b31ad1b08a07a86e793243c091a"/>
-		<file filename="core/libs/smarty/plugins/modifier.date_format.php" md5="774823f8be73a797d725ffd263deefc8"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.default.php" md5="af7a62544fd4009fe952274d0fb6f0cd"/>
-		<file filename="core/libs/smarty/plugins/modifier.capitalize.php" md5="106dd54c9db24786990a582c117a1a5e"/>
-		<file filename="core/libs/smarty/plugins/function.mailto.php" md5="a2ee11c42200791f08176869e3731c3f"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.count_words.php" md5="bf8a26007facbb5ad9c9a1ed2459c58d"/>
-		<file filename="core/libs/smarty/plugins/outputfilter.trimwhitespace.php" md5="de5de4f6feaa040784f255e93f581b64"/>
-		<file filename="core/libs/smarty/plugins/function.html_table.php" md5="21d1c0da84832f84713ceac075522702"/>
-		<file filename="core/libs/smarty/plugins/variablefilter.htmlspecialchars.php" md5="41de646253dc1c98805575bb386a8d2a"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.lower.php" md5="6cc744ae832d8c8b7b8a86e84f2ae711"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.indent.php" md5="1bbc6a4b89dee0352afc6f7193e1d1e9"/>
-		<file filename="core/libs/smarty/plugins/function.counter.php" md5="44f45da4f4608820c6809b4df5b31a26"/>
-		<file filename="core/libs/smarty/plugins/shared.make_timestamp.php" md5="109e856f42e4882fb8e48414d3d37885"/>
-		<file filename="core/libs/smarty/plugins/modifier.debug_print_var.php" md5="7cf549b8d0bc352447083172158759c4"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.upper.php" md5="6a0c77764cf5de77a65443ddf49835be"/>
-		<file filename="core/libs/smarty/plugins/function.html_checkboxes.php" md5="1987102af1a373c52107c8afbf49ea1b"/>
-		<file filename="core/libs/smarty/plugins/modifier.replace.php" md5="ba55bfcf134690b6676061de7fcd8ba0"/>
-		<file filename="core/libs/smarty/plugins/modifier.truncate.php" md5="181754eb8f60a81c40ef54c01e541fd7"/>
-		<file filename="core/libs/smarty/plugins/function.popup_init.php" md5="aa5a044ef546a75aad30e52b1ddd3139"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.strip.php" md5="fdb9720a0bfee16ef86cbc61a107907f"/>
-		<file filename="core/libs/smarty/plugins/function.html_select_time.php" md5="5a0fb7851c9c7a13663048d711e1fe5a"/>
-		<file filename="core/libs/smarty/plugins/block.textformat.php" md5="aac643cdd456ffaa42464cc0d4bab8f5"/>
-		<file filename="core/libs/smarty/plugins/modifier.spacify.php" md5="6f38e4d3371e83a3d06d4381c881a329"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.strip_tags.php" md5="a3dad011660a8a908f25ff5c5004d443"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.wordwrap.php" md5="ee19796e5252f46905c9bb144568fdd6"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.count_paragraphs.php" md5="946217452bfde277222cee8b6bf40331"/>
-		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
-		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
-		<file filename="core/libs/smarty-plugins/block.a.php" md5="5df1078564ecb59c547531218c684374"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="b740631f22e1644835d49013f9a9d9a5"/>
-		<file filename="core/libs/smarty-plugins/block.script.php" md5="37ae739c56203390844f8e405ceae44a"/>
-		<file filename="core/libs/smarty-plugins/function.img.php" md5="ffaef505d20cb8133cb0df6dbf606ccc"/>
-		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="800e464e8bae160ad7aba53d63ab78c8"/>
-		<file filename="core/libs/smarty-plugins/function.widget.php" md5="761c82293c2c1ee8610df6b11c57a245"/>
-		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="b57ac0420e6fc0cdcf4674dd3f4677bd"/>
-		<file filename="core/libs/smarty-plugins/function.link.php" md5="ee67260eea6c696b8634a593cece14bd"/>
-		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>
-		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="0675deafa3f09a4cbe5a4f8f35d61ab2"/>
-		<file filename="core/libs/phpmailer/README" md5="826c2fed77985c4576313e42f9fb6d02"/>
-		<file filename="core/libs/phpmailer/changelog.txt" md5="14d1b94fa3d8fdc704ac0040cad336b1"/>
-		<file filename="core/libs/phpmailer/test/test_callback.php" md5="216002d26a617ce86f4b9674e2459110"/>
-		<file filename="core/libs/phpmailer/test/test.png" md5="9afe6d1850e2a030820c5a6b209c2c6e"/>
-		<file filename="core/libs/phpmailer/test/testemail.php" md5="4e9a0bda0c26e1bb95ca26d6d7e18b77"/>
-		<file filename="core/libs/phpmailer/test/contents.html" md5="c07b19ecec950d33d9f41d45a5a71578"/>
-		<file filename="core/libs/phpmailer/docs.ini" md5="ef2330090d65f531fda92de41e1a5c3a"/>
-		<file filename="core/libs/phpmailer/examples/test_smtp_advanced_no_auth.php" md5="b810136b1e375abe314384f0baa304a6"/>
-		<file filename="core/libs/phpmailer/examples/test_smtp_basic_no_auth.php" md5="8f2fc6db3d380336195bd18123539315"/>
-		<file filename="core/libs/phpmailer/examples/test_mail_basic.php" md5="25ec2e4b7d360f5283ca384c67271c21"/>
-		<file filename="core/libs/phpmailer/examples/index.html" md5="7e62745ea47981a4db4a4105da3c3cd1"/>
-		<file filename="core/libs/phpmailer/examples/test_smtp_advanced.php" md5="3cfd486a03fbe26fa4e17396e38bb095"/>
-		<file filename="core/libs/phpmailer/examples/test_sendmail_basic.php" md5="6efbaa0767843c29f4081ebeab311c21"/>
-		<file filename="core/libs/phpmailer/examples/test_smtp_gmail_advanced.php" md5="3d93aece229be3476aabb28d69ec1e28"/>
-		<file filename="core/libs/phpmailer/examples/test_db_smtp_basic.php" md5="f541f452f13e88cf492e70a309223105"/>
-		<file filename="core/libs/phpmailer/examples/test_pop_before_smtp_advanced.php" md5="95b8e85f57ad7dd1b87695cb35ab6178"/>
-		<file filename="core/libs/phpmailer/examples/test_smtp_gmail_basic.php" md5="a8677a5c4512ee7e139c69eb1aa3d89d"/>
-		<file filename="core/libs/phpmailer/examples/images/phpmailer_mini.gif" md5="2937b668321bf6cb6fee2c334ef7ea51"/>
-		<file filename="core/libs/phpmailer/examples/images/phpmailer.gif" md5="f8f03962429653f4707dceafd283410d"/>
-		<file filename="core/libs/phpmailer/examples/test_mail_advanced.php" md5="f48e98a5ad04f0d1a9259d1464d19905"/>
-		<file filename="core/libs/phpmailer/examples/test_pop_before_smtp_basic.php" md5="7fcc18bbcfd1c229e0042b5632d25b78"/>
-		<file filename="core/libs/phpmailer/examples/test_sendmail_advanced.php" md5="70918f1ce2bb55263c49da3b6c72a5ab"/>
-		<file filename="core/libs/phpmailer/examples/contents.html" md5="905b080299c305f2a4914b2c3c097165"/>
-		<file filename="core/libs/phpmailer/examples/test_smtp_basic.php" md5="acd19dc6a21841b7ba5600c7ef3ede84"/>
-		<file filename="core/libs/phpmailer/docs/extending.html" md5="a86f35cb488235a9ddc59bbfbc3767ac"/>
-		<file filename="core/libs/phpmailer/docs/pop3_article.txt" md5="6e8b04572ccd600441b54e721aefb852"/>
-		<file filename="core/libs/phpmailer/docs/faq.html" md5="e3197d819848ed8078ebddacc1475fa1"/>
-		<file filename="core/libs/phpmailer/docs/DomainKeys_notes.txt" md5="f27cecd9b7ec1547ea24f05b4675dd81"/>
-		<file filename="core/libs/phpmailer/docs/use_gmail.txt" md5="baa2401d601d5ee6edf0864865db12a0"/>
-		<file filename="core/libs/phpmailer/docs/Note_for_SMTP_debugging.txt" md5="ac6288b69704cbb5e1eb392d5813f8a5"/>
-		<file filename="core/libs/phpmailer/docs/Callback_function_notes.txt" md5="3ca0042d6382025851f148814e2e85ff"/>
-		<file filename="core/libs/phpmailer/test_script/LGPLv3.txt" md5="79da2118f3f3f07b63c5fe46b581fba4"/>
-		<file filename="core/libs/phpmailer/test_script/styles/shThemeEmacs.css" md5="bd8e298af55f70a28b9201cd1d308795"/>
-		<file filename="core/libs/phpmailer/test_script/styles/wrapping.png" md5="9a4ffd836c709958eff80a3260f8a1cb"/>
-		<file filename="core/libs/phpmailer/test_script/styles/shThemeFadeToGrey.css" md5="3429ed8095fa67e45be0627bf85a4a4d"/>
-		<file filename="core/libs/phpmailer/test_script/styles/shThemeMidnight.css" md5="5bfb6c7b625bd0582b1d9dea755d76b9"/>
-		<file filename="core/libs/phpmailer/test_script/styles/page_white_code.png" md5="c65fadae5a0fc27f401f1a00e66f518f"/>
-		<file filename="core/libs/phpmailer/test_script/styles/shThemeRDark.css" md5="c8f6be1c0dcf82e65a9d39f8644f1053"/>
-		<file filename="core/libs/phpmailer/test_script/styles/printer.png" md5="242421c98dbd8b054fc76a036d04321c"/>
-		<file filename="core/libs/phpmailer/test_script/styles/shCore.css" md5="526011fe5df6cf9a45ec9a49f14021fe"/>
-		<file filename="core/libs/phpmailer/test_script/styles/shThemeDjango.css" md5="5020ba70f8cbc64ce2fad4ca38894532"/>
-		<file filename="core/libs/phpmailer/test_script/styles/page_white_copy.png" md5="38de59d96ecaa147d8b5f440b4c4b0e6"/>
-		<file filename="core/libs/phpmailer/test_script/styles/shThemeDefault.css" md5="9837d776a094a08f2e87d661966828d6"/>
-		<file filename="core/libs/phpmailer/test_script/styles/help.png" md5="c3812c74bc524179f4ccf5d2db7b3cbf"/>
-		<file filename="core/libs/phpmailer/test_script/styles/magnifier.png" md5="a81fa78d754fae7b3a71026356e3ee27"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shCore.js" md5="08e72cd149a8a1a2075292e4e56be24c"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushPhp.js" md5="1b90265af6d7f614d53016e1b1af4f35"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/clipboard.swf" md5="e971c772b2df839298a8f8f9451f1eda"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushJava.js" md5="94dae0a912db99416f60a484eb9eca2c"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushBash.js" md5="f7f8d8f17fbe76986d8a44f326fcc03c"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushPerl.js" md5="24c3e403ba96f978c0a7af0d48071240"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushRuby.js" md5="fe223da153d4214b8187e15ff51c878d"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushSql.js" md5="8fee749a7c3aa85acd57415b25f20304"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushJScript.js" md5="d255456b13460eb3320ea857d4bc2323"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushDelphi.js" md5="aecf159e817367633d9c8fd88c46fed6"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushCpp.js" md5="e67c489e4cf2d19aa130bb3e92c434ca"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushCss.js" md5="1569d0168af1f87970cc3903696f7fef"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushScala.js" md5="d669e8db17b64d7f93e102f91d9ccad4"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushPython.js" md5="f5d15951bfa26a62a572471387f0f3db"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushPlain.js" md5="15aa2b0df2f9ff50ada671b2f60aa44b"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushXml.js" md5="00ce0f7c039104ad42b35b96d7cdd6fb"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushCSharp.js" md5="e4622a3c567553d7ed1cbb83ce19cef8"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushGroovy.js" md5="882f8a4df7576176b9db397c9fa4b2a5"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushDiff.js" md5="6a6979c89c625e21d9fab1e8feee69cc"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shLegacy.js" md5="51d187b026c8aff050b6661fdfb7b725"/>
-		<file filename="core/libs/phpmailer/test_script/scripts/shBrushVb.js" md5="c183fd107f9489ab2ca69459284d6256"/>
-		<file filename="core/libs/phpmailer/test_script/src/shCore.js" md5="fb0628160f28d579cc6db6a6e1321f9d"/>
-		<file filename="core/libs/phpmailer/test_script/src/shLegacy.js" md5="828db5d2fcb27133ef0a0f6bac4e8896"/>
+		<file filename="core/bootstrap_predefines.php" md5="94b45438fb2041c0b28898cdbb5fcc8b"/>
 		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
-		<file filename="core/libs/phpmailer/test_script/images/aikido.gif" md5="5533edc54d3b05d0e221b745ab84ad6e"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shThemeRDark.css" md5="c8f6be1c0dcf82e65a9d39f8644f1053"/>
+		<file filename="core/libs/phpmailer/test_script/styles/help.png" md5="c3812c74bc524179f4ccf5d2db7b3cbf"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shThemeDefault.css" md5="9837d776a094a08f2e87d661966828d6"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shThemeEmacs.css" md5="bd8e298af55f70a28b9201cd1d308795"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shThemeFadeToGrey.css" md5="3429ed8095fa67e45be0627bf85a4a4d"/>
+		<file filename="core/libs/phpmailer/test_script/styles/page_white_copy.png" md5="38de59d96ecaa147d8b5f440b4c4b0e6"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shThemeMidnight.css" md5="5bfb6c7b625bd0582b1d9dea755d76b9"/>
+		<file filename="core/libs/phpmailer/test_script/styles/wrapping.png" md5="9a4ffd836c709958eff80a3260f8a1cb"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shThemeDjango.css" md5="5020ba70f8cbc64ce2fad4ca38894532"/>
+		<file filename="core/libs/phpmailer/test_script/styles/shCore.css" md5="526011fe5df6cf9a45ec9a49f14021fe"/>
+		<file filename="core/libs/phpmailer/test_script/styles/page_white_code.png" md5="c65fadae5a0fc27f401f1a00e66f518f"/>
+		<file filename="core/libs/phpmailer/test_script/styles/magnifier.png" md5="a81fa78d754fae7b3a71026356e3ee27"/>
+		<file filename="core/libs/phpmailer/test_script/styles/printer.png" md5="242421c98dbd8b054fc76a036d04321c"/>
 		<file filename="core/libs/phpmailer/test_script/images/bkgrnd.gif" md5="a29009d45c0c9217ac41f2e05ad8b84a"/>
+		<file filename="core/libs/phpmailer/test_script/images/aikido.gif" md5="5533edc54d3b05d0e221b745ab84ad6e"/>
 		<file filename="core/libs/phpmailer/test_script/images/phpmailer.gif" md5="f8f03962429653f4707dceafd283410d"/>
 		<file filename="core/libs/phpmailer/test_script/contents.html" md5="74ac1c489d254ef1d4da99901f3bdc75"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ru.php" md5="b7ed33812e39d722df735dc4f11ec660"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-nl.php" md5="a31febd0f5ce0f8c9ea3a1487fb90343"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ca.php" md5="d62aa6dcbbf9922a0ff5b3157493d34f"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ro.php" md5="a87ff3c8cc2d438c0d4ca1efd3340d33"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-se.php" md5="9f8db6e50c0fcfa53ee2c810e604439b"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-no.php" md5="4bce15e32912f1b60c1d4e539e258a6d"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-br.php" md5="a1364ab381ebdf3f05999b31bada24bd"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-it.php" md5="e58eb12280851b2b634480b0eb16cfa9"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ja.php" md5="5633923d2fe9b4a4c91cdc6f645cd2e3"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-fr.php" md5="35824828ce4dee7486e2ebddc8c90b54"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-et.php" md5="59ec530db72bdf3c929cbced24d84f1f"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-fo.php" md5="081059e68c63e095c7584f250232ea2a"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ch.php" md5="68d79d6467a003fa41672a5690d9eae3"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-es.php" md5="bb915fc8e902a08d7f5de070c023c4cd"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-fi.php" md5="029e5ade41d5ae5dcc7f1869c0e85141"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-zh.php" md5="826f3a6e03f3d475065ec3b4b9f765f0"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-tr.php" md5="8706743bc477210606ddedfbd4c03af3"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-pl.php" md5="3933cfa44296e3c3e41b8fe8bf89092c"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-zh_cn.php" md5="8896e3cb067525faf5526287e7c62efe"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-dk.php" md5="b889d351c4ed834ff2566be55c7d2a40"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-cz.php" md5="2420cdfa4b0b35142d79ff02a2197520"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-de.php" md5="be8f19de5d7a12568066fb04e7feeb8c"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ar.php" md5="646c785bc6a11f13671a59ea62a8cdb1"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-hu.php" md5="06137884e974504647606c12c403ef94"/>
-		<file filename="core/libs/phpmailer/extras/htmlfilter.php" md5="4d5143899340a690d41a4959428ea674"/>
+		<file filename="core/libs/phpmailer/test_script/src/shCore.js" md5="fb0628160f28d579cc6db6a6e1321f9d"/>
+		<file filename="core/libs/phpmailer/test_script/src/shLegacy.js" md5="828db5d2fcb27133ef0a0f6bac4e8896"/>
+		<file filename="core/libs/phpmailer/test_script/LGPLv3.txt" md5="79da2118f3f3f07b63c5fe46b581fba4"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushPython.js" md5="f5d15951bfa26a62a572471387f0f3db"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushCSharp.js" md5="e4622a3c567553d7ed1cbb83ce19cef8"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/clipboard.swf" md5="e971c772b2df839298a8f8f9451f1eda"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushPlain.js" md5="15aa2b0df2f9ff50ada671b2f60aa44b"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shCore.js" md5="08e72cd149a8a1a2075292e4e56be24c"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shLegacy.js" md5="51d187b026c8aff050b6661fdfb7b725"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushScala.js" md5="d669e8db17b64d7f93e102f91d9ccad4"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushCss.js" md5="1569d0168af1f87970cc3903696f7fef"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushBash.js" md5="f7f8d8f17fbe76986d8a44f326fcc03c"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushPhp.js" md5="1b90265af6d7f614d53016e1b1af4f35"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushJScript.js" md5="d255456b13460eb3320ea857d4bc2323"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushDiff.js" md5="6a6979c89c625e21d9fab1e8feee69cc"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushSql.js" md5="8fee749a7c3aa85acd57415b25f20304"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushGroovy.js" md5="882f8a4df7576176b9db397c9fa4b2a5"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushPerl.js" md5="24c3e403ba96f978c0a7af0d48071240"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushCpp.js" md5="e67c489e4cf2d19aa130bb3e92c434ca"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushXml.js" md5="00ce0f7c039104ad42b35b96d7cdd6fb"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushVb.js" md5="c183fd107f9489ab2ca69459284d6256"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushRuby.js" md5="fe223da153d4214b8187e15ff51c878d"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushDelphi.js" md5="aecf159e817367633d9c8fd88c46fed6"/>
+		<file filename="core/libs/phpmailer/test_script/scripts/shBrushJava.js" md5="94dae0a912db99416f60a484eb9eca2c"/>
+		<file filename="core/libs/phpmailer/test/test.png" md5="9afe6d1850e2a030820c5a6b209c2c6e"/>
+		<file filename="core/libs/phpmailer/test/contents.html" md5="c07b19ecec950d33d9f41d45a5a71578"/>
+		<file filename="core/libs/phpmailer/test/testemail.php" md5="4e9a0bda0c26e1bb95ca26d6d7e18b77"/>
+		<file filename="core/libs/phpmailer/test/test_callback.php" md5="216002d26a617ce86f4b9674e2459110"/>
+		<file filename="core/libs/phpmailer/docs.ini" md5="ef2330090d65f531fda92de41e1a5c3a"/>
+		<file filename="core/libs/phpmailer/changelog.txt" md5="14d1b94fa3d8fdc704ac0040cad336b1"/>
+		<file filename="core/libs/phpmailer/docs/use_gmail.txt" md5="baa2401d601d5ee6edf0864865db12a0"/>
+		<file filename="core/libs/phpmailer/docs/pop3_article.txt" md5="6e8b04572ccd600441b54e721aefb852"/>
+		<file filename="core/libs/phpmailer/docs/Callback_function_notes.txt" md5="3ca0042d6382025851f148814e2e85ff"/>
+		<file filename="core/libs/phpmailer/docs/DomainKeys_notes.txt" md5="f27cecd9b7ec1547ea24f05b4675dd81"/>
+		<file filename="core/libs/phpmailer/docs/faq.html" md5="e3197d819848ed8078ebddacc1475fa1"/>
+		<file filename="core/libs/phpmailer/docs/Note_for_SMTP_debugging.txt" md5="ac6288b69704cbb5e1eb392d5813f8a5"/>
+		<file filename="core/libs/phpmailer/docs/extending.html" md5="a86f35cb488235a9ddc59bbfbc3767ac"/>
 		<file filename="core/libs/phpmailer/aboutus.html" md5="6b81ca2a68934b93499e4f6227061e31"/>
 		<file filename="core/libs/phpmailer/LICENSE" md5="278f2557e3b277b94e9a8430f6a6d0a9"/>
-		<file filename="core/libs/datamodel/drivers/phpcassa/INSTALLING" md5="045fa051387023d98e4b8f6df1e939ff"/>
-		<file filename="core/libs/datamodel/drivers/phpcassa/AUTHORS" md5="c0722ecbe902d4770f9e17b43db3d8e6"/>
-		<file filename="core/libs/datamodel/drivers/phpcassa/CHANGES" md5="13d7743013d98276f645cc884cd39912"/>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/packages/cassandra/cassandra_constants.php" md5="5ead52dd649285c8c8d9de14944d6e61"/>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/autoload.php" md5="7ffd1e5fb8bf906cf0d8843117ae3ac9"/>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/ext/thrift_protocol/config.m4" md5="a493ce66388c698cc2cf26ff73e1dc4d"/>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/ext/thrift_protocol/php_thrift_protocol.cpp" md5="68afba6d36b9ceb0dbf9c2a8efdb2b0c"/>
-		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/ext/thrift_protocol/php_thrift_protocol.h" md5="3972e26403d22e6c4c3235f9840b6176"/>
-		<file filename="core/libs/datamodel/drivers/phpcassa/README.mkd" md5="fc4ba805cbfbbfc9a7e87484a10c823b"/>
-		<file filename="core/libs/datamodel/drivers/phpcassa/LICENSE" md5="f7a55fbb7aaf9aa2771bb0d7a9556f54"/>
+		<file filename="core/libs/phpmailer/README" md5="826c2fed77985c4576313e42f9fb6d02"/>
+		<file filename="core/libs/phpmailer/examples/index.html" md5="7e62745ea47981a4db4a4105da3c3cd1"/>
+		<file filename="core/libs/phpmailer/examples/test_pop_before_smtp_advanced.php" md5="95b8e85f57ad7dd1b87695cb35ab6178"/>
+		<file filename="core/libs/phpmailer/examples/test_mail_advanced.php" md5="f48e98a5ad04f0d1a9259d1464d19905"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_advanced.php" md5="3cfd486a03fbe26fa4e17396e38bb095"/>
+		<file filename="core/libs/phpmailer/examples/test_sendmail_basic.php" md5="6efbaa0767843c29f4081ebeab311c21"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_advanced_no_auth.php" md5="b810136b1e375abe314384f0baa304a6"/>
+		<file filename="core/libs/phpmailer/examples/test_sendmail_advanced.php" md5="70918f1ce2bb55263c49da3b6c72a5ab"/>
+		<file filename="core/libs/phpmailer/examples/images/phpmailer.gif" md5="f8f03962429653f4707dceafd283410d"/>
+		<file filename="core/libs/phpmailer/examples/images/phpmailer_mini.gif" md5="2937b668321bf6cb6fee2c334ef7ea51"/>
+		<file filename="core/libs/phpmailer/examples/contents.html" md5="905b080299c305f2a4914b2c3c097165"/>
+		<file filename="core/libs/phpmailer/examples/test_db_smtp_basic.php" md5="f541f452f13e88cf492e70a309223105"/>
+		<file filename="core/libs/phpmailer/examples/test_mail_basic.php" md5="25ec2e4b7d360f5283ca384c67271c21"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_basic.php" md5="acd19dc6a21841b7ba5600c7ef3ede84"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_basic_no_auth.php" md5="8f2fc6db3d380336195bd18123539315"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_gmail_basic.php" md5="a8677a5c4512ee7e139c69eb1aa3d89d"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_gmail_advanced.php" md5="3d93aece229be3476aabb28d69ec1e28"/>
+		<file filename="core/libs/phpmailer/examples/test_pop_before_smtp_basic.php" md5="7fcc18bbcfd1c229e0042b5632d25b78"/>
+		<file filename="core/libs/phpmailer/extras/htmlfilter.php" md5="4d5143899340a690d41a4959428ea674"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-fi.php" md5="029e5ade41d5ae5dcc7f1869c0e85141"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-nl.php" md5="a31febd0f5ce0f8c9ea3a1487fb90343"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-cz.php" md5="2420cdfa4b0b35142d79ff02a2197520"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-pl.php" md5="3933cfa44296e3c3e41b8fe8bf89092c"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-it.php" md5="e58eb12280851b2b634480b0eb16cfa9"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ch.php" md5="68d79d6467a003fa41672a5690d9eae3"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-se.php" md5="9f8db6e50c0fcfa53ee2c810e604439b"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-zh.php" md5="826f3a6e03f3d475065ec3b4b9f765f0"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-dk.php" md5="b889d351c4ed834ff2566be55c7d2a40"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ca.php" md5="d62aa6dcbbf9922a0ff5b3157493d34f"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-tr.php" md5="8706743bc477210606ddedfbd4c03af3"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ja.php" md5="5633923d2fe9b4a4c91cdc6f645cd2e3"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-zh_cn.php" md5="8896e3cb067525faf5526287e7c62efe"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-fr.php" md5="35824828ce4dee7486e2ebddc8c90b54"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-hu.php" md5="06137884e974504647606c12c403ef94"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-fo.php" md5="081059e68c63e095c7584f250232ea2a"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-no.php" md5="4bce15e32912f1b60c1d4e539e258a6d"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-de.php" md5="be8f19de5d7a12568066fb04e7feeb8c"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-et.php" md5="59ec530db72bdf3c929cbced24d84f1f"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ro.php" md5="a87ff3c8cc2d438c0d4ca1efd3340d33"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ar.php" md5="646c785bc6a11f13671a59ea62a8cdb1"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ru.php" md5="b7ed33812e39d722df735dc4f11ec660"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-es.php" md5="bb915fc8e902a08d7f5de070c023c4cd"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-br.php" md5="a1364ab381ebdf3f05999b31bada24bd"/>
+		<file filename="core/libs/cachecore/backends/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
 		<file filename="core/libs/cachecore/backends/README" md5="69bacd091afe98a53695d99b1deca48e"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_delete_update.phpt" md5="f24878049ea8050c3dcf950f57efdb93"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_delete_false.phpt" md5="c281e57477904715495e48b206475e1d"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheAPC-class_implements.phpt" md5="4425f8cd81178d537271413e20740a2e"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_response_manager.phpt" md5="84e5ec8e31686c39efc5379732937ae4"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_expires.phpt" md5="34aa201e7d4290c86ffa67f728c1f459"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_response_manager.phpt" md5="2e5564ca14e16f5eae8dea4de7586967"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheXCache-class_implements.phpt" md5="c7799c72f115968d2b91ac868b9b72c6"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_update.phpt" md5="53b1dd7f997766861f8df3f35c357b82"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_delete_update.phpt" md5="e985d5119ad3fbf05ff6dd0ffefeac99"/>
-		<file filename="core/libs/cachecore/backends/_tests/core_prop_name.phpt" md5="6eb6f552016acc615f77cf8b31f2eb3a"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_prop_timestamp.phpt" md5="5efe8cb6c356f3b7f656231cddb6f1f1"/>
-		<file filename="core/libs/cachecore/backends/_tests/CachePDO-class_exists.phpt" md5="972c8b4878f371e8944e89048bd1b6ad"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_prop_expires.phpt" md5="72884eeb5b08c019ae66e125d0b1a05e"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_response_manager_reset.phpt" md5="100829d1c45c80f586683159fa08af00"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheFile-object_type.phpt" md5="6e1b92ed28f14a95f6c303540895e9a8"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_prop_id.phpt" md5="5b8e9ec9fdefb093f8dcce7f00ec14c3"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_delete.phpt" md5="cd753f5371608ca390815d6c6e5e6865"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_is_expired.phpt" md5="8b2644d9f2146b8b3ea13fe63b278ea5"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_read.phpt" md5="e84930ce5d0203150c07f70c8d44c39f"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_timestamp_nocreate.phpt" md5="ea5592bb4df14e0c0400eb5add3df39c"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_update.phpt" md5="c3763bda14fb49ac13711a8eabebd7f1"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheCore-class_exists.phpt" md5="ddaa215b428131a0539388538c3120c2"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_prop_timestamp.phpt" md5="bf8049a7140633c30b768e7437bde521"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_prop_location.phpt" md5="54a685fdea6dfe57a6f991deb50f379d"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheCore-object_type.phpt" md5="535c7a9a90bd7bf7930b6abf887c39af"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_prop_expires.phpt" md5="a16a9f3f7ae1534656481060dcb3a7af"/>
-		<file filename="core/libs/cachecore/backends/_tests/CachePDO-sqlite_class_implements.phpt" md5="ba30834da8360ae21cccea385a7728e5"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_read.phpt" md5="00fd0d89b75b66829021f4cb34f2a304"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_is_expired.phpt" md5="808073903d0c685edc5cc3aa396d71a8"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_delete.phpt" md5="f6e7bdb38a0d56563624fae7015ee0cc"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheFile-class_exists.phpt" md5="5cf0d1a692190646a82aafc5a9cb41ee"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_read.phpt" md5="88d6ebc86cbbc8d778c3e0d6ad19d41a"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_reset_fail.phpt" md5="3a62c819fb5605f54840405e346dcb55"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_prop_id.phpt" md5="3aa5cc75ab8a59332e3183fa02c6f5b9"/>
-		<file filename="core/libs/cachecore/backends/_tests/core_prop_location.phpt" md5="549c114b8dadcf954478076612cc86ec"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_is_expired.phpt" md5="a763ae799accfe8ff5d54ccfe6f46733"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_update_read.phpt" md5="02480b4a8515ee5e3520bc3118e1660a"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_reset.phpt" md5="af2d3e2b077b463c081325786af60d2f"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheCore-class_implements.phpt" md5="c974bf9bbb403e0d9ae319924cb16b71"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_create.phpt" md5="abc8d8c32d78fc47953620e97faef6fc"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_reset.phpt" md5="a57c25d1d5650a582cbe4a766da677e3"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_update_read.phpt" md5="c40ede4a83ea5fae3b0e0408b50e173f"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheMC-class_exists.phpt" md5="3b8835b7207dc9c14519ac4244d1ad45"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_response_manager.phpt" md5="b471d23c7fd806b291d852c9330c3aae"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_is_expired.phpt" md5="e9b2dce8030058c5641179ff7c3dcd7c"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheMC-class_implements.phpt" md5="4cc67e15c3c7835d05d23b1d143201fe"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_expires.phpt" md5="4c145f188d672fcd126fca5981290416"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_timestamp_nocreate.phpt" md5="c1d6ffdbe202ae5fb7858de8339333d7"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_response_manager_no_params.phpt" md5="f337eaa449f4c6f91f1aeedf9ceccc5c"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_location.phpt" md5="37f0e9fa40dcced9009104f3f0bb0cd6"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_update_read.phpt" md5="78c050672716cc7fe405e49bd1ddf0bf"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_timestamp.phpt" md5="7887616c485d3fac61595bf6cae8de38"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheMC-object_type.phpt" md5="9a4d669e026d1ed6a25ba9d44b5746ab"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_name.phpt" md5="0edbda82e284954a0d062a7c3d772f4c"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_delete_false.phpt" md5="e2e7af5ed7d6f63cc34a2d53d552939b"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_location.phpt" md5="c130f698e8eb8411d0a879f269792f9b"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_create_fail.phpt" md5="d33722b175776010e462fc35d360babd"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_id.phpt" md5="343abb1dcf0e0a1451006a227eb843a6"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_delete.phpt" md5="80e7a9bf46b51f21b2e2d97ae951cc99"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_update_read.phpt" md5="ceae6450417900b445b8e32935684eef"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_prop_location.phpt" md5="4791b41da5643ad2525814684b528340"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_create.phpt" md5="d0c42152bc5c352a1f9a1ebb3ca7d414"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheAPC-class_exists.phpt" md5="e2676afe7d0f226e3db8bf2702ba019a"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_response_manager_reset.phpt" md5="59400bf80b364409b290598893055596"/>
-		<file filename="core/libs/cachecore/backends/_tests/CachePDO-sqlite_object_type.phpt" md5="f51ec3d9abbed7bfb506e3d7eb3b8c7b"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_name.phpt" md5="239d3339ff0fe74ab47377b93df70ce4"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_timestamp_nocreate.phpt" md5="c1d3cf2a67508f08a7c1d3754cca11ac"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_update.phpt" md5="7764f87d9e122ce788eb87f5d9840cba"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_delete_update.phpt" md5="1ebbeb4d81d3ef43fa30632932071fb6"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_prop_name.phpt" md5="37920dda84db83afeb15fc3706940b19"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheAPC-object_type.phpt" md5="78d96f5d99ad0cc6a7e509ed76fd8fcd"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_response_manager_reset.phpt" md5="d87a02e21c67d764bca787c629c5aa33"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_id.phpt" md5="6c972fcdeacc4f2af5c4725962985176"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_delete_false.phpt" md5="afae980bf020e142b6bfa1b60ce12736"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_reset.phpt" md5="43cf63834cf00a635eb67c6c8afa0ed4"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheXCache-class_exists.phpt" md5="742bbc2cfed061359dd59b191a0fce48"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_response_manager_reset.phpt" md5="5c720eb6a4edff098d05c54fca9d758a"/>
-		<file filename="core/libs/cachecore/backends/_tests/core_prop_timestamp.phpt" md5="75811869e550615c66bb54b6b7782a36"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_update.phpt" md5="4a1b5018d2dd2ab9a90abeeef5a44253"/>
-		<file filename="core/libs/cachecore/backends/_tests/core_prop_id.phpt" md5="68b5cca87530497288768b24f2a2e052"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_timestamp.phpt" md5="e54a52650ce23415cc5868c91b3d2a63"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_delete_update.phpt" md5="433014a2defd357ccacb3f506a0235bc"/>
-		<file filename="core/libs/cachecore/backends/_tests/test_request.txt" md5="44daf28deeecb35cbe53e6af784082e9"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_timestamp.phpt" md5="7908112a183701f04b32be96cb86c1f0"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_timestamp.phpt" md5="d408d39c54afba96c2177841ede4b58b"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_delete_false.phpt" md5="4a386b005761a2ac1e68e00686c74a89"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_reset.phpt" md5="acc6f957f5b64dbf6856f35f94d604a1"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_create.phpt" md5="eeba2163c976afff2fc4a3bbf3173c05"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_timestamp.phpt" md5="ea57f7b32cbb5ae029ebe22f0af7d79a"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_read2.phpt" md5="ed76c7903e6f5f71445ee986c4b9f696"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_prop_name.phpt" md5="c4b132220c9c0cac47ca48a023b48bfb"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheFile-class_implements.phpt" md5="602b82811a51a364ce7ed990edc65474"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheXCache-object_type.phpt" md5="f092384a06025b6a44a90f78beb8692b"/>
-		<file filename="core/libs/cachecore/backends/_tests/cache/sqlite.db" md5="91b98d86b5af02ee68d22e6650f54d81"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_timestamp.phpt" md5="277ae0c33a6d2dbdc3bfef8a3ebd2024"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_read.phpt" md5="fd2fbd23360facb9f4d6b6f0365f5d9f"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_create.phpt" md5="5a10413a335e89fa010d69f3d5110b68"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_delete.phpt" md5="55932af8a5355a43e8957644893c4455"/>
-		<file filename="core/libs/cachecore/backends/_tests/core_prop_expires.phpt" md5="c5dba4c38e09a608227755359d9b5203"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_response_manager.phpt" md5="004d87d0710117e35a22d7f08513754f"/>
 		<file filename="core/libs/cachecore/backends/_sql/pgsql.sql" md5="ddc5308c119fb421b3d26eff1238229a"/>
 		<file filename="core/libs/cachecore/backends/_sql/README" md5="bb14abe0c209c9f54256975bae796c9f"/>
 		<file filename="core/libs/cachecore/backends/_sql/mysql.sql" md5="dc8b835b3e737bfb5905a61391b6e4a6"/>
 		<file filename="core/libs/cachecore/backends/_sql/sqlite3.sql" md5="12810a853ca7e2b5dc35654fb241cee5"/>
-		<file filename="core/libs/cachecore/backends/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
-		<file filename="core/libs/aws-sdk/package.xml" md5="f074a8d2f61e38eaaae117277b50c256"/>
-		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test_cli.php" md5="d5d30c8021dd8573eb4bbeb913baf025"/>
-		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test.php" md5="9877bcc06f33dfa16b79328474064f00"/>
-		<file filename="core/libs/aws-sdk/_compatibility_test/README.md" md5="4b2ad499f8315322bfc745050a2ca396"/>
-		<file filename="core/libs/aws-sdk/_docs/NOTICE.md" md5="4265f813fbcd0334f9df940ff18bd659"/>
-		<file filename="core/libs/aws-sdk/_docs/LICENSE.md" md5="c101f69c0271135eef789cd808a30eae"/>
-		<file filename="core/libs/aws-sdk/_docs/CHANGELOG.md" md5="a8a20953f58a3be68b01ef825d52b936"/>
-		<file filename="core/libs/aws-sdk/_docs/CONTRIBUTORS.md" md5="8132b78b65200261ccd239bda698cdb4"/>
-		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
-		<file filename="core/libs/aws-sdk/_samples/test_files/plain.txt" md5="c947c2eb40966243d4471eab7926961c"/>
-		<file filename="core/libs/aws-sdk/_samples/test_files/audio.wav" md5="36235fb7f88a1cec806119529058f806"/>
-		<file filename="core/libs/aws-sdk/_samples/test_files/video.mp4" md5="c784874fd5b2532e64a9ca1090e68a9b"/>
-		<file filename="core/libs/aws-sdk/_samples/test_files/word.doc" md5="1efd2ffd8cb5426e5c405b709f924b11"/>
-		<file filename="core/libs/aws-sdk/_samples/cli-s3_get_urls_for_uploads.php" md5="45bfb473c0ed4d133b0e3c4dc141b6be"/>
-		<file filename="core/libs/aws-sdk/_samples/html-sdb_create_domain_data.php" md5="bcfdf7dfa92e4c7c7066b21d280be3f6"/>
-		<file filename="core/libs/aws-sdk/_samples/cli-ec2_sorting_and_filtering.php" md5="bb569fdfbac5d6cefc245f7663b968de"/>
-		<file filename="core/libs/aws-sdk/_samples/README.md" md5="13d920a4d2473746f18573c343d31baf"/>
-		<file filename="core/libs/aws-sdk/config-sample.inc.php" md5="64903e5db2d65fd103a4b4f8c9c91d5d"/>
-		<file filename="core/libs/aws-sdk/lib/yaml/README.markdown" md5="872df9017f6485111a36d2ce9c1e8bdc"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_method_read.phpt" md5="88d6ebc86cbbc8d778c3e0d6ad19d41a"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_method_create.phpt" md5="abc8d8c32d78fc47953620e97faef6fc"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_create.phpt" md5="5a10413a335e89fa010d69f3d5110b68"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_method_delete_update.phpt" md5="e985d5119ad3fbf05ff6dd0ffefeac99"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_name.phpt" md5="239d3339ff0fe74ab47377b93df70ce4"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheAPC-class_exists.phpt" md5="e2676afe7d0f226e3db8bf2702ba019a"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_delete_update.phpt" md5="433014a2defd357ccacb3f506a0235bc"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_create.phpt" md5="eeba2163c976afff2fc4a3bbf3173c05"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_response_manager_no_params.phpt" md5="f337eaa449f4c6f91f1aeedf9ceccc5c"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheCore-class_exists.phpt" md5="ddaa215b428131a0539388538c3120c2"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_prop_location.phpt" md5="54a685fdea6dfe57a6f991deb50f379d"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_timestamp_nocreate.phpt" md5="c1d3cf2a67508f08a7c1d3754cca11ac"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_response_manager.phpt" md5="b471d23c7fd806b291d852c9330c3aae"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_response_manager_reset.phpt" md5="d87a02e21c67d764bca787c629c5aa33"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_delete_false.phpt" md5="c281e57477904715495e48b206475e1d"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_reset.phpt" md5="acc6f957f5b64dbf6856f35f94d604a1"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_method_update.phpt" md5="53b1dd7f997766861f8df3f35c357b82"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_update.phpt" md5="4a1b5018d2dd2ab9a90abeeef5a44253"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_is_expired.phpt" md5="a763ae799accfe8ff5d54ccfe6f46733"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_delete_update.phpt" md5="f24878049ea8050c3dcf950f57efdb93"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_timestamp.phpt" md5="e54a52650ce23415cc5868c91b3d2a63"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_prop_expires.phpt" md5="a16a9f3f7ae1534656481060dcb3a7af"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheAPC-object_type.phpt" md5="78d96f5d99ad0cc6a7e509ed76fd8fcd"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_prop_id.phpt" md5="5b8e9ec9fdefb093f8dcce7f00ec14c3"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheFile-object_type.phpt" md5="6e1b92ed28f14a95f6c303540895e9a8"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_read.phpt" md5="e84930ce5d0203150c07f70c8d44c39f"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_update.phpt" md5="7764f87d9e122ce788eb87f5d9840cba"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheCore-object_type.phpt" md5="535c7a9a90bd7bf7930b6abf887c39af"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_prop_name.phpt" md5="c4b132220c9c0cac47ca48a023b48bfb"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_method_response_manager_reset.phpt" md5="59400bf80b364409b290598893055596"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheXCache-class_implements.phpt" md5="c7799c72f115968d2b91ac868b9b72c6"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_name.phpt" md5="0edbda82e284954a0d062a7c3d772f4c"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_response_manager_reset.phpt" md5="100829d1c45c80f586683159fa08af00"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_timestamp.phpt" md5="7908112a183701f04b32be96cb86c1f0"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_reset.phpt" md5="af2d3e2b077b463c081325786af60d2f"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_delete_false.phpt" md5="afae980bf020e142b6bfa1b60ce12736"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_create.phpt" md5="d0c42152bc5c352a1f9a1ebb3ca7d414"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_response_manager_reset.phpt" md5="5c720eb6a4edff098d05c54fca9d758a"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheAPC-class_implements.phpt" md5="4425f8cd81178d537271413e20740a2e"/>
+		<file filename="core/libs/cachecore/backends/_tests/core_prop_expires.phpt" md5="c5dba4c38e09a608227755359d9b5203"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_prop_timestamp.phpt" md5="bf8049a7140633c30b768e7437bde521"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_method_delete_false.phpt" md5="4a386b005761a2ac1e68e00686c74a89"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheFile-class_exists.phpt" md5="5cf0d1a692190646a82aafc5a9cb41ee"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_method_is_expired.phpt" md5="8b2644d9f2146b8b3ea13fe63b278ea5"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_timestamp_nocreate.phpt" md5="ea5592bb4df14e0c0400eb5add3df39c"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_prop_expires.phpt" md5="72884eeb5b08c019ae66e125d0b1a05e"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheMC-class_implements.phpt" md5="4cc67e15c3c7835d05d23b1d143201fe"/>
+		<file filename="core/libs/cachecore/backends/_tests/CachePDO-sqlite_object_type.phpt" md5="f51ec3d9abbed7bfb506e3d7eb3b8c7b"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_location.phpt" md5="c130f698e8eb8411d0a879f269792f9b"/>
+		<file filename="core/libs/cachecore/backends/_tests/CachePDO-class_exists.phpt" md5="972c8b4878f371e8944e89048bd1b6ad"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheXCache-object_type.phpt" md5="f092384a06025b6a44a90f78beb8692b"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_update_read.phpt" md5="02480b4a8515ee5e3520bc3118e1660a"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_update.phpt" md5="c3763bda14fb49ac13711a8eabebd7f1"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_read2.phpt" md5="ed76c7903e6f5f71445ee986c4b9f696"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_delete_false.phpt" md5="e2e7af5ed7d6f63cc34a2d53d552939b"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_prop_id.phpt" md5="3aa5cc75ab8a59332e3183fa02c6f5b9"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheXCache-class_exists.phpt" md5="742bbc2cfed061359dd59b191a0fce48"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_response_manager.phpt" md5="2e5564ca14e16f5eae8dea4de7586967"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheMC-class_exists.phpt" md5="3b8835b7207dc9c14519ac4244d1ad45"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheCore-class_implements.phpt" md5="c974bf9bbb403e0d9ae319924cb16b71"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_expires.phpt" md5="4c145f188d672fcd126fca5981290416"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_timestamp.phpt" md5="277ae0c33a6d2dbdc3bfef8a3ebd2024"/>
+		<file filename="core/libs/cachecore/backends/_tests/core_prop_timestamp.phpt" md5="75811869e550615c66bb54b6b7782a36"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_method_timestamp.phpt" md5="ea57f7b32cbb5ae029ebe22f0af7d79a"/>
+		<file filename="core/libs/cachecore/backends/_tests/core_prop_id.phpt" md5="68b5cca87530497288768b24f2a2e052"/>
+		<file filename="core/libs/cachecore/backends/_tests/cache/sqlite.db" md5="91b98d86b5af02ee68d22e6650f54d81"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_update_read.phpt" md5="ceae6450417900b445b8e32935684eef"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_delete.phpt" md5="cd753f5371608ca390815d6c6e5e6865"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_is_expired.phpt" md5="e9b2dce8030058c5641179ff7c3dcd7c"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_id.phpt" md5="343abb1dcf0e0a1451006a227eb843a6"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_update_read.phpt" md5="78c050672716cc7fe405e49bd1ddf0bf"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_method_update_read.phpt" md5="c40ede4a83ea5fae3b0e0408b50e173f"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_id.phpt" md5="6c972fcdeacc4f2af5c4725962985176"/>
+		<file filename="core/libs/cachecore/backends/_tests/core_prop_location.phpt" md5="549c114b8dadcf954478076612cc86ec"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_delete.phpt" md5="55932af8a5355a43e8957644893c4455"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_method_response_manager.phpt" md5="84e5ec8e31686c39efc5379732937ae4"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_expires.phpt" md5="34aa201e7d4290c86ffa67f728c1f459"/>
+		<file filename="core/libs/cachecore/backends/_tests/xcache_method_delete.phpt" md5="f6e7bdb38a0d56563624fae7015ee0cc"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheMC-object_type.phpt" md5="9a4d669e026d1ed6a25ba9d44b5746ab"/>
+		<file filename="core/libs/cachecore/backends/_tests/core_prop_name.phpt" md5="6eb6f552016acc615f77cf8b31f2eb3a"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_read.phpt" md5="00fd0d89b75b66829021f4cb34f2a304"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_prop_name.phpt" md5="37920dda84db83afeb15fc3706940b19"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_create_fail.phpt" md5="d33722b175776010e462fc35d360babd"/>
+		<file filename="core/libs/cachecore/backends/_tests/CachePDO-sqlite_class_implements.phpt" md5="ba30834da8360ae21cccea385a7728e5"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_reset_fail.phpt" md5="3a62c819fb5605f54840405e346dcb55"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_timestamp_nocreate.phpt" md5="c1d6ffdbe202ae5fb7858de8339333d7"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_location.phpt" md5="37f0e9fa40dcced9009104f3f0bb0cd6"/>
+		<file filename="core/libs/cachecore/backends/_tests/CacheFile-class_implements.phpt" md5="602b82811a51a364ce7ed990edc65474"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_timestamp.phpt" md5="7887616c485d3fac61595bf6cae8de38"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_delete_update.phpt" md5="1ebbeb4d81d3ef43fa30632932071fb6"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_prop_location.phpt" md5="4791b41da5643ad2525814684b528340"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_method_delete.phpt" md5="80e7a9bf46b51f21b2e2d97ae951cc99"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_prop_timestamp.phpt" md5="5efe8cb6c356f3b7f656231cddb6f1f1"/>
+		<file filename="core/libs/cachecore/backends/_tests/file_method_is_expired.phpt" md5="808073903d0c685edc5cc3aa396d71a8"/>
+		<file filename="core/libs/cachecore/backends/_tests/apc_method_reset.phpt" md5="a57c25d1d5650a582cbe4a766da677e3"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_response_manager.phpt" md5="004d87d0710117e35a22d7f08513754f"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_timestamp.phpt" md5="d408d39c54afba96c2177841ede4b58b"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_reset.phpt" md5="43cf63834cf00a635eb67c6c8afa0ed4"/>
+		<file filename="core/libs/cachecore/backends/_tests/memcached_method_read.phpt" md5="fd2fbd23360facb9f4d6b6f0365f5d9f"/>
+		<file filename="core/libs/cachecore/backends/_tests/test_request.txt" md5="44daf28deeecb35cbe53e6af784082e9"/>
+		<file filename="core/libs/smarty-plugins/block.a.php" md5="5df1078564ecb59c547531218c684374"/>
+		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>
+		<file filename="core/libs/smarty-plugins/function.widget.php" md5="761c82293c2c1ee8610df6b11c57a245"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="b740631f22e1644835d49013f9a9d9a5"/>
+		<file filename="core/libs/smarty-plugins/block.script.php" md5="37ae739c56203390844f8e405ceae44a"/>
+		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="0675deafa3f09a4cbe5a4f8f35d61ab2"/>
+		<file filename="core/libs/smarty-plugins/function.link.php" md5="ee67260eea6c696b8634a593cece14bd"/>
+		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="b57ac0420e6fc0cdcf4674dd3f4677bd"/>
+		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
+		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="800e464e8bae160ad7aba53d63ab78c8"/>
+		<file filename="core/libs/smarty-plugins/function.img.php" md5="ffaef505d20cb8133cb0df6dbf606ccc"/>
+		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
+		<file filename="core/libs/smarty/README" md5="83797fcbeab9d4f5090510a3023bc4a5"/>
+		<file filename="core/libs/smarty/debug.tpl" md5="6c0554c7a9cdb4c26f079fa8dff98036"/>
+		<file filename="core/libs/smarty/SMARTY2_BC_NOTES" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
+		<file filename="core/libs/smarty/plugins/function.html_radios.php" md5="3ee52cebd46f4ec763cd1a1f4e67421e"/>
+		<file filename="core/libs/smarty/plugins/variablefilter.htmlspecialchars.php" md5="41de646253dc1c98805575bb386a8d2a"/>
+		<file filename="core/libs/smarty/plugins/function.html_select_date.php" md5="4666629080c1ed4ad8b353734c23559a"/>
+		<file filename="core/libs/smarty/plugins/function.html_select_time.php" md5="5a0fb7851c9c7a13663048d711e1fe5a"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.cat.php" md5="34f3e6a6edac6e8726db55497d5f294f"/>
+		<file filename="core/libs/smarty/plugins/function.popup_init.php" md5="aa5a044ef546a75aad30e52b1ddd3139"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.default.php" md5="af7a62544fd4009fe952274d0fb6f0cd"/>
+		<file filename="core/libs/smarty/plugins/modifier.capitalize.php" md5="106dd54c9db24786990a582c117a1a5e"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.indent.php" md5="1bbc6a4b89dee0352afc6f7193e1d1e9"/>
+		<file filename="core/libs/smarty/plugins/modifier.regex_replace.php" md5="b653d97c4d77c145de9f54231d34f169"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.strip_tags.php" md5="a3dad011660a8a908f25ff5c5004d443"/>
+		<file filename="core/libs/smarty/plugins/function.math.php" md5="a875f349e9a8e87f5b6682147bf76e11"/>
+		<file filename="core/libs/smarty/plugins/function.counter.php" md5="44f45da4f4608820c6809b4df5b31a26"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.upper.php" md5="6a0c77764cf5de77a65443ddf49835be"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.count_paragraphs.php" md5="946217452bfde277222cee8b6bf40331"/>
+		<file filename="core/libs/smarty/plugins/function.popup.php" md5="52222036b18ff779b8dd8446a771bfeb"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.count_sentences.php" md5="4f51312afd28ea6d0fb18d6238b28700"/>
+		<file filename="core/libs/smarty/plugins/modifier.spacify.php" md5="6f38e4d3371e83a3d06d4381c881a329"/>
+		<file filename="core/libs/smarty/plugins/modifier.date_format.php" md5="774823f8be73a797d725ffd263deefc8"/>
+		<file filename="core/libs/smarty/plugins/function.html_table.php" md5="21d1c0da84832f84713ceac075522702"/>
+		<file filename="core/libs/smarty/plugins/function.fetch.php" md5="e10809109b026f17efbf13a48ef946b9"/>
+		<file filename="core/libs/smarty/plugins/shared.make_timestamp.php" md5="109e856f42e4882fb8e48414d3d37885"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.count_words.php" md5="bf8a26007facbb5ad9c9a1ed2459c58d"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.noprint.php" md5="9197523f0e32b65d0fdfba4c3f3144f3"/>
+		<file filename="core/libs/smarty/plugins/function.html_options.php" md5="09121e8634418dd8659cad79740f63b0"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.strip.php" md5="fdb9720a0bfee16ef86cbc61a107907f"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.count_characters.php" md5="c329b115ed7ef9bed6fc1da5aeba1991"/>
+		<file filename="core/libs/smarty/plugins/shared.escape_special_chars.php" md5="bdf83b31ad1b08a07a86e793243c091a"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.string_format.php" md5="ff4cfec7b7afbff18ff39b49186e219b"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.lower.php" md5="6cc744ae832d8c8b7b8a86e84f2ae711"/>
+		<file filename="core/libs/smarty/plugins/modifier.replace.php" md5="ba55bfcf134690b6676061de7fcd8ba0"/>
+		<file filename="core/libs/smarty/plugins/modifier.debug_print_var.php" md5="7cf549b8d0bc352447083172158759c4"/>
+		<file filename="core/libs/smarty/plugins/function.html_checkboxes.php" md5="1987102af1a373c52107c8afbf49ea1b"/>
+		<file filename="core/libs/smarty/plugins/block.php.php" md5="1c9e67cac3c206a0101e0079a2703a9d"/>
+		<file filename="core/libs/smarty/plugins/function.mailto.php" md5="a2ee11c42200791f08176869e3731c3f"/>
+		<file filename="core/libs/smarty/plugins/modifier.truncate.php" md5="181754eb8f60a81c40ef54c01e541fd7"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.wordwrap.php" md5="ee19796e5252f46905c9bb144568fdd6"/>
+		<file filename="core/libs/smarty/plugins/outputfilter.trimwhitespace.php" md5="de5de4f6feaa040784f255e93f581b64"/>
+		<file filename="core/libs/smarty/plugins/function.html_image.php" md5="b60f74e5701f3fe7d61457cacf99fc1e"/>
+		<file filename="core/libs/smarty/plugins/function.cycle.php" md5="3aed60eca7828872ff8158a73f39939b"/>
+		<file filename="core/libs/smarty/plugins/modifier.escape.php" md5="9a63a217a2efd829910d63b83223eb69"/>
+		<file filename="core/libs/smarty/plugins/block.textformat.php" md5="aac643cdd456ffaa42464cc0d4bab8f5"/>
+		<file filename="core/libs/aws-sdk/README.md" md5="b290d5d6e4b4c494df4093ea05257ccf"/>
 		<file filename="core/libs/aws-sdk/lib/yaml/LICENSE" md5="4828aab1cb984d8a5d29e1c0df3cdcbd"/>
+		<file filename="core/libs/aws-sdk/lib/yaml/README.markdown" md5="872df9017f6485111a36d2ce9c1e8bdc"/>
 		<file filename="core/libs/aws-sdk/lib/requestcore/README.md" md5="702485f100351d8dcc1346d087d09656"/>
 		<file filename="core/libs/aws-sdk/lib/requestcore/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
-		<file filename="core/libs/aws-sdk/README.md" md5="b290d5d6e4b4c494df4093ea05257ccf"/>
-		<file filename="COPYING.LESSER" md5="e6a600fd5e1d9cbde2d983680233ad02"/>
+		<file filename="core/libs/aws-sdk/package.xml" md5="f074a8d2f61e38eaaae117277b50c256"/>
+		<file filename="core/libs/aws-sdk/_samples/README.md" md5="13d920a4d2473746f18573c343d31baf"/>
+		<file filename="core/libs/aws-sdk/_samples/test_files/plain.txt" md5="c947c2eb40966243d4471eab7926961c"/>
+		<file filename="core/libs/aws-sdk/_samples/test_files/word.doc" md5="1efd2ffd8cb5426e5c405b709f924b11"/>
+		<file filename="core/libs/aws-sdk/_samples/test_files/audio.wav" md5="36235fb7f88a1cec806119529058f806"/>
+		<file filename="core/libs/aws-sdk/_samples/test_files/video.mp4" md5="c784874fd5b2532e64a9ca1090e68a9b"/>
+		<file filename="core/libs/aws-sdk/_samples/cli-ec2_sorting_and_filtering.php" md5="bb569fdfbac5d6cefc245f7663b968de"/>
+		<file filename="core/libs/aws-sdk/_samples/html-sdb_create_domain_data.php" md5="bcfdf7dfa92e4c7c7066b21d280be3f6"/>
+		<file filename="core/libs/aws-sdk/_samples/cli-s3_get_urls_for_uploads.php" md5="45bfb473c0ed4d133b0e3c4dc141b6be"/>
+		<file filename="core/libs/aws-sdk/_compatibility_test/README.md" md5="4b2ad499f8315322bfc745050a2ca396"/>
+		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test_cli.php" md5="d5d30c8021dd8573eb4bbeb913baf025"/>
+		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test.php" md5="9877bcc06f33dfa16b79328474064f00"/>
+		<file filename="core/libs/aws-sdk/_docs/NOTICE.md" md5="4265f813fbcd0334f9df940ff18bd659"/>
+		<file filename="core/libs/aws-sdk/_docs/CONTRIBUTORS.md" md5="8132b78b65200261ccd239bda698cdb4"/>
+		<file filename="core/libs/aws-sdk/_docs/LICENSE.md" md5="c101f69c0271135eef789cd808a30eae"/>
+		<file filename="core/libs/aws-sdk/_docs/CHANGELOG.md" md5="a8a20953f58a3be68b01ef825d52b936"/>
+		<file filename="core/libs/aws-sdk/config-sample.inc.php" md5="64903e5db2d65fd103a4b4f8c9c91d5d"/>
+		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/README.mkd" md5="fc4ba805cbfbbfc9a7e87484a10c823b"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/AUTHORS" md5="c0722ecbe902d4770f9e17b43db3d8e6"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/ext/thrift_protocol/php_thrift_protocol.cpp" md5="68afba6d36b9ceb0dbf9c2a8efdb2b0c"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/ext/thrift_protocol/php_thrift_protocol.h" md5="3972e26403d22e6c4c3235f9840b6176"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/ext/thrift_protocol/config.m4" md5="a493ce66388c698cc2cf26ff73e1dc4d"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/packages/cassandra/cassandra_constants.php" md5="5ead52dd649285c8c8d9de14944d6e61"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/autoload.php" md5="7ffd1e5fb8bf906cf0d8843117ae3ac9"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/LICENSE" md5="f7a55fbb7aaf9aa2771bb0d7a9556f54"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/INSTALLING" md5="045fa051387023d98e4b8f6df1e939ff"/>
+		<file filename="core/libs/datamodel/drivers/phpcassa/CHANGES" md5="13d7743013d98276f645cc884cd39912"/>
+		<file filename="core/component.dtd" md5="7751e1f38efbcc20cd143afe5615cb57"/>
+		<file filename="core/bootstrap.php" md5="5db57863fb9eaf2c435420e230dc6588"/>
+		<file filename="htaccess.ex" md5="4cc29a97d860e9b1c75404efae560b98"/>
+		<file filename="create_repo.php" md5="552f3fd9bdd7abe91b49d4b0be8051bf"/>
 		<file filename="packager.php" md5="7c1994b97a1a16dda16cb84573153ae3"/>
-		<file filename="COPYING" md5="d32239bcb673463ab874e80d47fae504"/>
-		<file filename="DEV-NOTES" md5="0833fd2572631f9a708dc8379443ff64"/>
-		<file filename="htaccess.ex" md5="30fef15aa900706f3e7f51df4497053c"/>
+		<file filename="bench.php" md5="4570d8980dbc1a9885f08e470d1e7b05"/>
+		<file filename="assets/default/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
+		<file filename="assets/default/css/skin/jplayer.blue.monday.jpg" md5="297da0f09846c3a1e0759c2736fdef94"/>
+		<file filename="assets/default/css/skin/jplayer.blue.monday.video.play.png" md5="05faffb4ad5d76e73c0c210c9330c58b"/>
+		<file filename="assets/default/css/skin/jplayer.blue.monday.png" md5="7794f92c78b543a16ef5140f0b8eff5b"/>
+		<file filename="assets/default/css/skin/pbar-ani.gif" md5="80a3586f77bcc84b16050f3804730431"/>
+		<file filename="assets/default/css/skin/jplayer.blue.monday.css" md5="fb5446fd5b9bec9f8f09cda98593271c"/>
+		<file filename="assets/default/css/skin/jplayer.blue.monday.video.play.hover.png" md5="7e2080be69b0785b7585f3ae5570b255"/>
+		<file filename="assets/default/css/jquery.readonly.css" md5="ca07e99b858d310cd3e855abf65d9b06"/>
+		<file filename="assets/default/css/images/ui-bg_highlight-hard_15_459e00_1x100.png" md5="f5613fb05e1c5ae3bd9167d85d1d72a7"/>
+		<file filename="assets/default/css/images/ui-icons_cd0a0a_256x240.png" md5="3e450c2a2c66328d9498e7001ad7197c"/>
+		<file filename="assets/default/css/images/ui-bg_highlight-soft_95_ffedad_1x100.png" md5="7103bea11984ecc1ebce02dcc10cdc75"/>
+		<file filename="assets/default/css/images/ui-icons_808080_256x240.png" md5="285708190686f9ee7a48a988a0eed090"/>
+		<file filename="assets/default/css/images/ui-bg_spotlight_80_6f6b5d_600x600.png" md5="70e145838be2f61b981cd2ecfb1cd6ab"/>
+		<file filename="assets/default/css/images/ui-bg_glass_55_fcf0ba_1x400.png" md5="e8fa5df505b503a945e543c5816179ca"/>
+		<file filename="assets/default/css/images/ui-icons_ffffff_256x240.png" md5="342bc03f6264c75d3f1d7f99e34295b9"/>
+		<file filename="assets/default/css/images/ui-bg_highlight-hard_100_fafaf4_1x100.png" md5="5fab734991bc927dd729e4b2c4500a34"/>
+		<file filename="assets/default/css/images/ui-bg_gloss-wave_100_ece8da_500x100.png" md5="dccd449740f6fd2a875fc72ef3586b53"/>
+		<file filename="assets/default/css/images/ui-icons_8dc262_256x240.png" md5="4128e64e48bfc9c6e5ab45f29bb32da7"/>
+		<file filename="assets/default/css/images/ui-icons_eeeeee_256x240.png" md5="2e6d7e1cca1cd751a6e156feb381eb0f"/>
+		<file filename="assets/default/css/images/ui-icons_847e71_256x240.png" md5="6636d8ab6693c387d7c2770dbe8c178e"/>
+		<file filename="assets/default/css/images/ui-bg_highlight-soft_25_67b021_1x100.png" md5="bdfc7094828e60a1e89799619382589a"/>
+		<file filename="assets/default/css/images/ui-bg_inset-soft_95_cccccc_1x100.png" md5="df2dbcfe9af96aacfe13e53b108aaf5b"/>
+		<file filename="assets/default/css/images/ui-bg_highlight-hard_100_f5f3e5_1x100.png" md5="c3341f3735d126758336bda6f1b21ec4"/>
+		<file filename="assets/default/css/styles.css" md5="e7d9ba4f7399ea5460eefb6001a50cad"/>
+		<file filename="assets/default/css/jquery-ui.css" md5="0c9633d2550c2e4ac62b4683e8c8a645"/>
+		<file filename="assets/default/logo.png" md5="ec0a7fe6809e4f051bb09e1c21aab52c"/>
+		<file filename="assets/default/icons/move-sm.png" md5="490566b692bd23e2b75e54cbe5680e1d"/>
+		<file filename="assets/default/icons/email.png" md5="55dcda1f2bc0e54e0a34c49df62dbc08"/>
+		<file filename="assets/default/icons/email-lg.png" md5="0f20b7d3cb3d9590c4f600c3c02aed0b"/>
+		<file filename="assets/default/icons/view-lg.png" md5="a4c68ef8ba297f51ce01de807acc656f"/>
+		<file filename="assets/default/icons/lock-lg.png" md5="ea1051e469c6b759e7d915a5a1ee4415"/>
+		<file filename="assets/default/icons/delete-lg.png" md5="11503d71985ef12f09c37bb7c14bf873"/>
+		<file filename="assets/default/icons/move.png" md5="74932504970ad90017e3413613e9889f"/>
+		<file filename="assets/default/icons/delete-sm.png" md5="ef78e3ddd8658ddbc1a708e2409328a5"/>
+		<file filename="assets/default/icons/lock-sm.png" md5="fec403cfda74d62e539fd0ae50dca11c"/>
+		<file filename="assets/default/icons/add-sm.png" md5="64d74ce097072a88c225fa09d7f24bab"/>
+		<file filename="assets/default/icons/move-lg.png" md5="ee2354c1e09c09db9b3c7ed98a4966e1"/>
+		<file filename="assets/default/icons/view-sm.png" md5="31c0d2c70ac4f53e7c1b0748efa48e7a"/>
+		<file filename="assets/default/icons/delete.png" md5="ed684274665ea47e42982fa7a05c851f"/>
+		<file filename="assets/default/icons/add.png" md5="826f54d0901dd6c6d392ddf6997a76cd"/>
+		<file filename="assets/default/icons/edit-lg.png" md5="66a1a2a05a4ab4604acec077f14ada1d"/>
+		<file filename="assets/default/icons/view.png" md5="5108ec1f152e29684be1bfe393ef2fc8"/>
+		<file filename="assets/default/icons/add-lg.png" md5="b1e2a07f1eb1a49af949b2fb251c51c3"/>
+		<file filename="assets/default/icons/edit-sm.png" md5="f75b02c22881f4d0f2c4b6e76ab7ff80"/>
+		<file filename="assets/default/icons/lock.png" md5="3dae2bac1271b3eee81b57bf2573a5c6"/>
+		<file filename="assets/default/icons/edit.png" md5="1f7c0fab746187012ef137a1e4df2333"/>
+		<file filename="assets/default/icons/directory.png" md5="50afe6c35c14f4174d8d2e33f5025f14"/>
+		<file filename="assets/default/icons/email-sm.png" md5="2b9ecc49d4b27276e2972a6b1c850117"/>
+		<file filename="assets/default/swf/Jplayer.swf" md5="e31f31957d930e4c710445677fb335da"/>
+		<file filename="assets/default/js/json2.js" md5="74d903049683e5bbea9ccb7544a42bca"/>
+		<file filename="assets/default/js/json2-min.js" md5="ba3293970e13b03a2ea92f5b6b5bf544"/>
+		<file filename="assets/default/js/jquery/jquery-1.5.1.js" md5="f2402f0e7b549caae013bc3c05b3a161"/>
+		<file filename="assets/default/js/jquery/jquery.json-2.2.min.js" md5="2d59ccdc20e736725bdbcb433e080ec0"/>
+		<file filename="assets/default/js/jquery/jquery.ui.readonly.js" md5="4ea22509c2c047bb24dca3b547589683"/>
+		<file filename="assets/default/js/jquery/jquery-1.5.1.min.js" md5="b04a3bccd23ddeb7982143707a63ccf9"/>
+		<file filename="assets/default/js/jquery/jquery-ui-1.8.11.min.js" md5="bc1367d7c32e3b4fd746027d8188cc36"/>
+		<file filename="assets/default/js/jquery/jquery-1.5.min.js" md5="75aab072591089f5dc0007a97431b4b1"/>
+		<file filename="assets/default/js/jquery/jquery.json-2.2.js" md5="56fdd8b6674e6d121afe11a920191429"/>
+		<file filename="assets/default/js/jquery/jquery.ui.nestedSortable.js" md5="26a83ca3d4969ac3631842c9a7819991"/>
+		<file filename="assets/default/js/jquery/jquery-1.5.js" md5="847945778a448af8cd0af49c4e69a6ee"/>
+		<file filename="assets/default/js/jquery/jquery.ui.nestedSortable.min.js" md5="dbd0258e25459c9dbea872c07d5eaf2f"/>
+		<file filename="assets/default/js/html5.js" md5="e919b7e0d6dc0226e3356aeb07bf63c2"/>
+		<file filename="assets/default/js/jquery.jplayer.min.js" md5="09b386064fd7d0b8a785a30ff9446835"/>
+		<file filename="assets/default/fonts/Cousine-Regular.ttf" md5="07f0482b1dd16541ce1cd59d92d2f46f"/>
+		<file filename="assets/default/fonts/Cousine-Italic.ttf" md5="8a0dacd2cc9ef158fff2daec2b7bc435"/>
+		<file filename="assets/default/fonts/Cousine-BoldItalic.ttf" md5="aa6b45a45a88a9547e30d6a6a9dcf75c"/>
+		<file filename="assets/default/fonts/Puritan-Italic.ttf" md5="a698cb186856b0785c795e4ec8d4a392"/>
+		<file filename="assets/default/fonts/Cousine-Bold.ttf" md5="8b6cde097069d84859cf7b24403faeca"/>
+		<file filename="assets/default/fonts/PT_Sans-Bold.ttf" md5="29eba82ed387922f39f2727e5e5883e2"/>
+		<file filename="assets/default/fonts/PT_Sans-Regular.ttf" md5="21a8438cc80da94c65ea62ccc1233f50"/>
+		<file filename="assets/default/fonts/OFL.txt" md5="88d3f3dcbf0c2389e6a9b1c7dcdabe22"/>
+		<file filename="assets/default/fonts/PT_Sans-BoldItalic.ttf" md5="494fff9755804cd781e4431bf134bacf"/>
+		<file filename="assets/default/fonts/Puritan-Regular.ttf" md5="02d2067f1f6151e847d06354c5de358d"/>
+		<file filename="assets/default/fonts/PT_Sans-Italic.ttf" md5="3c1732457ed32a353b3be70a6c5354dc"/>
+		<file filename="assets/default/fonts/Puritan-BoldItalic.ttf" md5="f6d45f1870364fe214b6e4234bb34b9b"/>
+		<file filename="assets/default/fonts/Puritan-Bold.ttf" md5="614d9bbe1edcf99e0541a92dcb271d80"/>
+		<file filename="gnupg/pubring.gpg" md5="44089e78b5970070a855df230fd28a57"/>
+		<file filename="gnupg/secring.gpg" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="gnupg/trustdb.gpg" md5="121b5474d8ee68da348d22effd9db8cf"/>
+		<file filename="index.php" md5="142cd66901eabb65466540265acfbf5b"/>
 	</otherfiles>
 </component>
 

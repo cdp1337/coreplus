@@ -154,7 +154,7 @@ class File_local_backend implements File_Backend{
 		
 		// Allow "asset/blah" to be passed in
 		if(strpos($filename, 'assets/') === 0){
-			$theme = ConfigHandler::Get('/core/theme');
+			$theme = ConfigHandler::Get('/theme/selected');
 			$filename = substr($filename, 7); // Trim off the 'asset/' prefix.
 			if(file_exists(self::$_Root_pdir_assets . $theme . '/' . $filename)) $filename = self::$_Root_pdir_assets . $theme . '/' . $filename;
 			else $filename = self::$_Root_pdir_assets . 'default/' . $filename;

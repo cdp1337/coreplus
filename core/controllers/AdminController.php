@@ -32,8 +32,9 @@ class AdminController extends Controller {
 		foreach(ComponentHandler::GetAllComponents() as $c){
 			if(!$c->isInstalled()) continue;
 			
-			$c->reinstall();
-			$changes[] = 'Reinstalled component ' . $c->getName();
+			if($c->reinstall()){
+				$changes[] = 'Reinstalled component ' . $c->getName();
+			}
 		}
 		
 		// Flush the system cache, just in case

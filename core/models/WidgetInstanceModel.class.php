@@ -42,9 +42,16 @@ class WidgetInstanceModel extends Model {
 		'page' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
-			'default' => '*',
-			'null' => false,
-			'comment' => '* or the baseurl of the page to display on.'
+			'default' => null,
+			'null' => true,
+			'comment' => 'null or the baseurl of the page on which to display.'
+		),
+		'template' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'default' => null,
+			'null' => true,
+			'comment' => 'null or the template name on which to display.'
 		),
 		'weight' => array(
 			'type' => Model::ATT_TYPE_INT,

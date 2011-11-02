@@ -72,8 +72,11 @@
 			<packager>CAE2 0.0.2-1</packager>
 		</packagemeta>
 	</changelog>
+	<templates>
+		<file filename="index.tpl" title="Index Template" md5="2a760a4a7c07fe3e7c2f550d838cfe08"/>
+		<file filename="basic.tpl" title="Only one column"/>
+	</templates>
 	<view>
-		<file filename="index.tpl" md5="2a760a4a7c07fe3e7c2f550d838cfe08"/>
 		<file filename="index.xml.tpl" md5="4481a87aa93de8014d79bc17468dcce0"/>
 	</view>
 	<configs>

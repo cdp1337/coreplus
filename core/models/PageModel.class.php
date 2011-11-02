@@ -341,7 +341,7 @@ class PageModel extends Model{
 		// Ensure some helper variables are set.
 		if(!$this->get('rewriteurl')) $this->set('rewriteurl', $this->get('baseurl'));
 		
-		parent::save();
+		return parent::save();
 	}
 
 	public function getParentTree(){
@@ -387,7 +387,7 @@ class PageModel extends Model{
 		$this->_view->baseurl = $this->get('baseurl');
 		$this->_view->setParameters($this->getParameters());
 		$this->_view->templatename = $this->getTemplateName();
-		$this->_view->mastertemplate = ($this->get('template'))? $this->get('template') : ConfigHandler::Get('/core/theme/default_template');
+		$this->_view->mastertemplate = ($this->get('template'))? $this->get('template') : ConfigHandler::Get('/theme/default_template');
 
 		$this->_view->setBreadcrumbs($this->getParentTree());
 	}

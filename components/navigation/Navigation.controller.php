@@ -14,7 +14,7 @@ class NavigationController extends Controller {
 		
 		// @todo Check page permissions
 		
-		$f = NavigationModel::Find(null, null, 'title');
+		$f = NavigationModel::Find(null, null, 'name');
 		
 		$page->title = 'Navigation Listings';
 		$page->assignVariable('navs', $f);

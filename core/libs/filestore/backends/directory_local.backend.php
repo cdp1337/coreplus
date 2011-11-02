@@ -84,7 +84,7 @@ class Directory_local_backend implements Directory_Backend {
 			// private/, private.
 			
 			if(strpos($directory, 'assets/') === 0){
-				$theme = ConfigHandler::Get('/core/theme');
+				$theme = ConfigHandler::Get('/theme/selected');
 				$directory = substr($directory, 7); // Trim off the 'asset/' prefix.
 				if(file_exists(self::$_Root_pdir_assets . $theme . '/' . $directory)) $directory = self::$_Root_pdir_assets . $theme . '/' . $directory;
 				else $directory = self::$_Root_pdir_assets . 'default/' . $directory;

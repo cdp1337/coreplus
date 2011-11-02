@@ -410,6 +410,11 @@ class Component extends InstallArchiveAPI{
 		return $libs;
 	}
 	
+	/**
+	 * Get the list of classes provided in this component, (and their filenames)
+	 * 
+	 * @return array
+	 */
 	public function getClassList(){
 		// Get an array of class -> file (fully resolved)
 		$classes = array();
@@ -445,6 +450,27 @@ class Component extends InstallArchiveAPI{
 		}
 		
 		return $classes;
+	}
+	
+	/**
+	 * Get an array of widget names provided in this component.
+	 * 
+	 * @return array
+	 */
+	public function getWidgetList(){
+		$widgets = array();
+		
+		if($this->hasModule()){
+			foreach($this->getElementByTagName('module')->getElementsByTagName('file') as $f){
+				foreach($f->getElementsByTagName('provides') as $p){
+					if(strtolower($p->getAttribute('type')) == 'widget'){
+						$widgets[] = $p->getAttribute('name');
+					}
+				}
+			}
+		}
+		
+		return $widgets;
 	}
 	
 	public function getViewClassList(){
@@ -782,16 +808,14 @@ class Component extends InstallArchiveAPI{
 		
 		if($this->_parseDBSchema()) $changed = true;
 		
-		$this->_parseConfigs();
+		if($this->_parseConfigs()) $changed = true;
 		
-		$this->_parsePages();
+		if($this->_parsePages()) $changed = true;
 		
 		if($this->_installAssets()) $changed = true;
 		
 		// @todo What else should be done?
 		
-		// So I'm kind of giving up on the whole changed thing... Models 
-		// need a little bit of work to get this to be useful yet.
 		return $changed;
 	}
 	
@@ -857,8 +881,13 @@ class Component extends InstallArchiveAPI{
 	/**
 	 * Internal function to parse and handle the configs in the component.xml file.
 	 * This is used for installations and upgrades.
+	 * 
+	 * @return bool True if something changed, false if nothing changed.
 	 */
 	private function _parseConfigs(){
+		// Keep track of if this changed anything.
+		$changed = false;
+		
 		// I need to get the schema definitions first.
 		$node = $this->getElement('configs');
 		//$prefix = $node->getAttribute('prefix');
@@ -873,8 +902,10 @@ class Component extends InstallArchiveAPI{
 			$m->set('description', $confignode->getAttribute('description'));
 			$m->set('mapto', $confignode->getAttribute('mapto'));
 			if(!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
-			$m->save();
+			if($m->save()) $changed = true;
 		}
+		
+		return $changed;
 		
 	} // private function _parseConfigs
 	
@@ -883,6 +914,8 @@ class Component extends InstallArchiveAPI{
 	 * This is used for installations and upgrades.
 	 */
 	private function _parsePages(){
+		$changed = false;
+		
 		// I need to get the schema definitions first.
 		$node = $this->getElement('pages');
 		//$prefix = $node->getAttribute('prefix');
@@ -903,8 +936,10 @@ class Component extends InstallArchiveAPI{
 			if($m->get('access') == '*') $m->set('access', $subnode->getAttribute('access'));
 			$m->set('widget', $subnode->getAttribute('widget'));
 			$m->set('admin', $subnode->getAttribute('admin'));
-			$m->save();
+			if($m->save()) $changed = true;
 		}
+		
+		return $changed;
 	}
 	
 	
@@ -956,7 +991,7 @@ class Component extends InstallArchiveAPI{
 	 */
 	private function _installAssets(){
 		$assetbase = ConfigHandler::Get('/core/filestore/assetdir');
-		$theme = ConfigHandler::Get('/core/theme');
+		$theme = ConfigHandler::Get('/theme/selected');
 		$changed = false;
 		
 		foreach($this->getElements('/assets/file') as $node){

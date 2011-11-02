@@ -390,9 +390,24 @@ class Core implements ISingleton{
 	}
 	
 	public static function GetProfileTimeTotal(){
-		$microtime = microtime(true);
 		// Find the differences between the first and now.
-		return (sizeof(self::Singleton()->_profiletimes))? ($microtime - self::Singleton()->_profiletimes[0]['microtime']) : 0;
+		return (sizeof(self::Singleton()->_profiletimes))? (microtime(true) - self::Singleton()->_profiletimes[0]['microtime']) : 0;
+	}
+	
+	public static function GetProfileTimes(){
+		return self::Singleton()->_profiletimes;
+	}
+	
+	public static function FormatProfileTime($in){
+		// Because the incoming time is in whole seconds.
+		$in = round($in, 5) * 1000;
+		
+		if($in == 0) return '0000.00 ms';
+		
+		$parts = explode('.', $in);
+		$whole = str_pad($parts[0], 4, 0, STR_PAD_LEFT);
+		$dec = (isset($parts[1])) ? str_pad($parts[1], 2, 0, STR_PAD_RIGHT) : '00';
+		return $whole . '.' . $dec . ' ms';
 	}
 	
 	/**

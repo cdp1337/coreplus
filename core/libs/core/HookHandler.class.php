@@ -36,13 +36,10 @@ class HookHandler implements ISingleton{
 	 * Attach a call onto an existing hook.
 	 * @param string $hookName The name of the hook to bind to.
 	 * @param string|array $callFunction The function to call.
-	 * @param string $type An option type string for the hook, various by event.
-	 *                     If not null, only events with that type will call the function.
-	 *                     This is useful for when you have a single event that 
-	 *                     can contain different levels, such as errors.
+	 * 
 	 * @return void
 	 */
-	public static function AttachToHook($hookName, $callFunction, $type = null){
+	public static function AttachToHook($hookName, $callFunction){
 		$hookName = strtolower($hookName); // Case insensitive will prevent errors later on.
 		Debug::Write('Registering function ' . $callFunction . ' to hook ' . $hookName);
 		//if(!isset(HookHandler::$RegisteredHooks[$hookName])) HookHandler::$RegisteredHooks[$hookName] = array();
@@ -51,11 +48,11 @@ class HookHandler implements ISingleton{
 			// This hook registration may have happened before the hook is 
 			// actually registered... throw this into a stack for later.
 			if(!isset(self::$EarlyRegisteredHooks[$hookName])) self::$EarlyRegisteredHooks[$hookName] = array();
-			self::$EarlyRegisteredHooks[$hookName][] = array('call' => $callFunction, 'type' => $type);
+			self::$EarlyRegisteredHooks[$hookName][] = array('call' => $callFunction);
 			
 			return false;
 		}
-		HookHandler::$RegisteredHooks[$hookName]->attach($callFunction, $type); 
+		HookHandler::$RegisteredHooks[$hookName]->attach($callFunction); 
 	}
 	
 	/**
@@ -74,7 +71,7 @@ class HookHandler implements ISingleton{
 		// Attach any bindings that may have existed.
 		if(isset(self::$EarlyRegisteredHooks[$name])){
 			foreach(self::$EarlyRegisteredHooks[$name] as $b){
-				$hook->attach($b['call'], $b['type']);
+				$hook->attach($b['call']);
 			}
 			
 			unset(self::$EarlyRegisteredHooks[$name]);
@@ -173,9 +170,9 @@ class Hook{
 		HookHandler::RegisterHook($this);
 	}
 	
-	public function attach($function, $type = null){
+	public function attach($function){
 		//echo "Binding event " . $function . " to " . $this->getName() . "<br/>";
-		$this->_bindings[] = array('call' => $function, 'type' => $type);
+		$this->_bindings[] = array('call' => $function);
 	}
 	
 	/**
@@ -188,19 +185,14 @@ class Hook{
 		//$args = func_get_args();
 		//array_shift($args); // Drop the hookName off of the arguments.
 		//echo '<pre>'; var_dump($args); echo '</pre>';
-		// @todo This is legacy and will almost definitely be dropped.
-		if($args && is_array($args) && isset($args['type'])) $type = $args['type'];
-		else $type = false;
 		
 		foreach($this->_bindings as $call){
 			// If the type is set to something and the call type is that
 			// OR
 			// The call type is not set/null.
-			if((!$call['type']) || ($type && $call['type'] == $type)){
-				$result = call_user_func_array($call['call'], func_get_args());
-				// This will allow a hook to prevent continuation of a script.
-				if($result === false) return false;
-			}
+			$result = call_user_func_array($call['call'], func_get_args());
+			// This will allow a hook to prevent continuation of a script.
+			if($result === false) return false;
 		}
 		
 		// Either no calls made, or all returned successfully.
@@ -225,4 +217,4 @@ HookHandler::RegisterNewHook('libraries_ready');
 HookHandler::RegisterNewHook('components_loaded');
 HookHandler::RegisterNewHook('components_ready');
 HookHandler::RegisterNewHook('session_ready');
-HookHandler::RegisterNewHook('install_task');
+//HookHandler::RegisterNewHook('install_task');

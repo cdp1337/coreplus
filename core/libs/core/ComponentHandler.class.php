@@ -41,6 +41,13 @@ class ComponentHandler implements ISingleton{
 	private $_classes = array();
 	
 	/**
+	 * List of widgets available on the system.
+	 * 
+	 * @var array
+	 */
+	private $_widgets = array();
+	
+	/**
 	 * List of every installed view class and its location on the system.
 	 * @var array <<String>>
 	 */
@@ -288,6 +295,7 @@ class ComponentHandler implements ISingleton{
 		
 		$this->_classes = array_merge($this->_classes, $c->getClassList());
 		$this->_viewClasses = array_merge($this->_viewClasses, $c->getViewClassList());
+		$this->_widgets = array_merge($this->_widgets, $c->getWidgetList());
 		$this->_loadedComponents[$name] = $c;
 	}
 	
@@ -297,8 +305,16 @@ class ComponentHandler implements ISingleton{
 	 */
 	public static function Singleton(){
 		if(is_null(self::$instance)){
-			self::$instance = new self();
-			
+			//$cached = Core::Cache()->get('componenthandler');
+			$cached = false;
+			if($cached){
+				self::$instance = unserialize($cached);
+			}
+			else{
+				self::$instance = new self();
+				// And cache this instance.
+				//Core::Cache()->set('componenthandler', serialize(self::$instance), 10);
+			}
 			self::$instance->load();
 		}
 		return self::$instance;
@@ -444,8 +460,23 @@ class ComponentHandler implements ISingleton{
 		return $ret;
 	}
 
+	/**
+	 * Get an array of every loaded class in the system.
+	 * Each key is the class name (lowercase), and the value is the fully resolved path
+	 * 
+	 * @return array
+	 */
 	public static function GetLoadedClasses(){
 		return ComponentHandler::Singleton()->_classes;
+	}
+	
+	/**
+	 * Get every loaded widget in the system.
+	 * 
+	 * @return array
+	 */
+	public static function GetLoadedWidgets(){
+		return ComponentHandler::Singleton()->_widgets;
 	}
 	
 	public static function GetLoadedViewClasses(){

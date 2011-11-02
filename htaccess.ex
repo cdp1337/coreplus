@@ -3,14 +3,9 @@
 	RewriteBase /~powellc/Projects/cae2/git-master/
 
 
-	## Ignore these directories.
-	#RewriteCond  %{REQUEST_URI}       /assets       [OR]           # Ignore anything in the assets directory
-	#RewriteCond  %{REQUEST_URI}       /install                 # Ignore anything in the install directory
-	#RewriteRule  (.*)                 $1            [L]
-	#
-	#
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule (.*) index.php%{REQUEST_URI} [L]
+	RewriteCond %{SCRIPT_FILENAME} -f [OR]
+	RewriteCond %{SCRIPT_FILENAME} -d
+	RewriteRule ^(.+) - [PT,L]
+	RewriteRule ^(.*) index.php%{REQUEST_URI}
 </IfModule>
 
