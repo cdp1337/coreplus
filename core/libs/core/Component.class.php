@@ -1004,9 +1004,13 @@ class Component extends InstallArchiveAPI{
 			$newfilename = 'assets' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
 			$nf = Core::File($newfilename);
 			
+			// If it's null, don't change the path any.
+			if($theme === null){
+				// Don't do anything.
+			}
 			// The new destination must be in the default directory, this is a 
 			// bit of a hack from the usual behaviour of the filestore system.
-			if($theme != 'default' && strpos($nf->getFilename(), $assetbase . $theme) !== false){
+			elseif($theme != 'default' && strpos($nf->getFilename(), $assetbase . $theme) !== false){
 				$nf->setFilename(str_replace($assetbase . $theme, $assetbase . 'default', $nf->getFilename()));
 			}
 			
