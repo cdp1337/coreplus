@@ -12,7 +12,7 @@ if(!isset($_SERVER['SHELL'])){
 
 
 /********************* Initial system defines *********************************/
-require_once('core/bootstrap_predefines.php');
+require_once('../core/bootstrap_predefines.php');
 
 $predefines_time = microtime(true);
 
@@ -20,7 +20,7 @@ $predefines_time = microtime(true);
 
 /********************** Critical file inclusions ******************************/
 
-require_once('core/bootstrap_preincludes.php');
+require_once('../core/bootstrap_preincludes.php');
 
 
 require_once(ROOT_PDIR . "core/libs/core/HookHandler.class.php");

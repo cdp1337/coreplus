@@ -6,7 +6,7 @@
  * @since 2011.06
  * @author Charlie Powell <powellc@powelltechs.com>
  * @copyright Copyright 2011, Charlie Powell
- * @license GNU Lesser General Public License v3 <http://www.gnu.org/licenses/lgpl-3.0.html>
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
  * This system is licensed under the GNU LGPL, feel free to incorporate it into
  * custom applications, but keep all references of the original authors intact,
  * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>, 
@@ -29,7 +29,8 @@ if(PHP_VERSION < '5.3.0'){
 // In addition, there are some other things that need to be retrieved early on, such as root path and what not.
 if(isset($_SERVER['SHELL'])){
 	$em = 'CLI';
-	$rpdr = $_SERVER['PWD'] . '/';
+	// Using __DIR__ is more accurate for files including the core in other directories.
+	$rpdr = realpath(__DIR__ . '/../') . '/';
 	$rwdr = null;
 	$rip = '127.0.0.1';
 }

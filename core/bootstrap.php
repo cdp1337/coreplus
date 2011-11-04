@@ -6,7 +6,7 @@
  * @since 2011.06
  * @author Charlie Powell <powellc@powelltechs.com>
  * @copyright Copyright 2011, Charlie Powell
- * @license GNU Lesser General Public License v3 <http://www.gnu.org/licenses/lgpl-3.0.html>
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
  * This system is licensed under the GNU LGPL, feel free to incorporate it into
  * custom applications, but keep all references of the original authors intact,
  * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>, 
@@ -44,7 +44,7 @@ $start_time = microtime(true);
 
 
 /********************* Initial system defines *********************************/
-require_once('core/bootstrap_predefines.php');
+require_once(__DIR__ . '/bootstrap_predefines.php');
 
 $predefines_time = microtime(true);
 
@@ -52,7 +52,7 @@ $predefines_time = microtime(true);
 
 /********************** Critical file inclusions ******************************/
 
-require_once('core/bootstrap_preincludes.php');
+require_once(__DIR__ . '/bootstrap_preincludes.php');
 
 
 
@@ -384,8 +384,8 @@ require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
 ComponentHandler::Singleton();
 
 // Load all the themes on the system.
-require_once(ROOT_PDIR . 'core/libs/core/ThemeHandler.class.php');
-ThemeHandler::Load();
+//require_once(ROOT_PDIR . 'core/libs/core/ThemeHandler.class.php');
+//ThemeHandler::Load();
 
 HookHandler::DispatchHook('components_loaded');
 //var_dump(ComponentHandler::Singleton());
