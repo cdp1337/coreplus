@@ -79,6 +79,48 @@ class ThemeController extends Controller{
 		}
 		
 	}
+	
+	public static function Widgets_Add(View $view){
+				
+		$widgets = array();
+		foreach(ComponentHandler::GetLoadedWidgets() as $w){
+			$widgets[] = $w;
+		}
+		
+		$view->assign('widget_classes', $widgets);
+		
+		if($view->request['method'] == View::METHOD_POST){
+			$w = $_POST['widgetclass'];
+			if(!$w){
+				Core::SetMessage('No widget type requested, please select one.', 'error');
+				return;
+			}
+			if(!is_subclass_of($w, 'Widget') ){
+				Core::SetMessage('Invalid widget requested', 'error');
+				return;
+			}
+			
+			$title = $_POST['title'] ? $_POST['title'] : 'New ' . $w;
+			
+			// Save this widget into the database.
+			$m = new WidgetModel();
+			$m->set('class', $w);
+			$m->set('title', $title);
+			$m->save();
+			
+			if($w::MustBeInstanced()){
+				// This widget requires additional settings in order for it to be instantiated.
+				// Redirect to the edit page.
+				Core::SetMessage('Created widget, please configure it.', 'info');
+				Core::Redirect('/Theme/Widgets/Edit/' . $m->get('id'));
+			}
+			else{
+				// Doesn't need instantiated, can be used as is.
+				Core::SetMessage('Created widget.', 'success');
+				Core::Redirect(Core::GetNavigation('/Theme/Widgets'));
+			}
+		}
+	}
 }
 
 ?>

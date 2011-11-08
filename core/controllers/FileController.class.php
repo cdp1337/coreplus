@@ -14,7 +14,7 @@ class FileController extends Controller{
 		$filename = $page->getParameter(0);
 		
 		$page->mode = View::MODE_NOOUTPUT;
-		$page->contenttype = 'image/png';
+		$page->response['contenttype'] = 'image/png';
 		
 		// A file must have been requested to preview
 		if(!$filename){

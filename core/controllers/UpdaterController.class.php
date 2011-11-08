@@ -43,7 +43,7 @@ class UpdaterController extends Controller {
 	public static function Getupdates(View $view){
 		
 		// This is an ajax/json-only page.
-		if($view->contenttype != View::CTYPE_JSON){
+		if($view->request['contenttype'] != View::CTYPE_JSON){
 			Core::Redirect('/Updater/Check');
 		}
 		
@@ -120,7 +120,7 @@ class UpdaterController extends Controller {
 		$status = UpdaterHelper::Install($name, $version, $dryrun);
 		
 		// This is a json-enabled page.
-		if($view->contenttype == View::CTYPE_JSON){
+		if($view->request['contenttype'] == View::CTYPE_JSON){
 			$view->jsondata = $status;
 			return;
 		}

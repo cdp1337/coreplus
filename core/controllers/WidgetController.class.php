@@ -52,7 +52,7 @@ class WidgetController extends Controller{
 	
 	public static function SaveOrder(View $page){
 		// This page is exclusive ajaxie.
-		$page->contenttype = View::CTYPE_JSON;
+		$page->response['contenttype'] = View::CTYPE_JSON;
 		$page->mode = View::MODE_NOOUTPUT;
 		
 		// The widget area should have been passed in, as well as an array of each element

@@ -139,7 +139,15 @@ class CurrentPage{
 			default:     $ctype = View::CTYPE_HTML; break;
 		}
 		
-		$this->_page->getView()->contenttype = $ctype;
+		$view = $this->_page->getView();
+		$view->request['contenttype'] = $ctype;
+		$view->response['contenttype'] = $ctype; // By default, this can be the same.
+		$view->request['method'] = $_SERVER['REQUEST_METHOD'];
+		$view->request['useragent'] = $_SERVER['HTTP_USER_AGENT'];
+		$view->request['uri'] = $_SERVER['REQUEST_URI'];
+		$view->request['uriresolved'] = $uri;
+		$view->request['protocol'] = $_SERVER['SERVER_PROTOCOL'];
+		
 		
 		//$this->_page->getView();
 		//var_dump($this->_page); die();
@@ -279,6 +287,7 @@ class CurrentPage{
 		// This may or may not be the original page...
 		if($this->_page){
 			$view = $this->_page->execute();
+			Core::RecordNavigation($this->_page);
 		}
 		else{
 			$view = new View();
@@ -324,7 +333,7 @@ class CurrentPage{
 			default:                       header('Status: 500 Internal Server Error', true, $view->error); break; // I don't know WTF happened...
 		}
 		
-		if($view->contenttype) header('Content-Type: ' . $view->contenttype);
+		if($view->response['contenttype']) header('Content-Type: ' . $view->response['contenttype']);
 		
 		if(DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 		
@@ -332,7 +341,7 @@ class CurrentPage{
 		
 		
 		// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
-		if(DEVELOPMENT_MODE && $view->mode == View::MODE_PAGE && $view->contenttype == View::CTYPE_HTML){
+		if(DEVELOPMENT_MODE && $view->mode == View::MODE_PAGE && $view->response['contenttype'] == View::CTYPE_HTML){
 			echo '<pre class="xdebug-var-dump">';
 			echo "Database Reads: " . Core::DB()->readCount() . "\n";
 			echo "Database Writes: " . Core::DB()->writeCount() . "\n";

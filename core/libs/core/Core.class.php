@@ -624,20 +624,26 @@ class Core implements ISingleton{
 	/**
 	 * Return the page the user viewed x amount of pages ago based on the navigation stack.
 	 *
-	 * @param int $amount
+	 * @param string $base The base URL to lookup history for
 	 * @return string
 	 */
-	static public function GetNavigation($amount = 0){
+	static public function GetNavigation($base){
 		//var_dump($_SESSION); die();
 		// NO nav history, guess I can't do much of anything...
-		if(!isset($_SESSION['nav'])) return ROOT_URL;
-
-		if($amount > 5 || $amount < 0) $amount = 1;
-		$amount++;
-		$amount = sizeof($_SESSION['nav']) - $amount;
-
-		if(isset($_SESSION['nav'][$amount])) return $_SESSION['nav'][$amount];
-		else return ROOT_URL;
+		if(!isset($_SESSION['nav'])) return $base;
+		
+		if(!isset($_SESSION['nav'][$base])) return $base;
+		
+		// Else, it must have been found!
+		$coreparams = array();
+		$extraparams = array();
+		foreach($_SESSION['nav'][$base]['parameters'] as $k => $v){
+			if(is_numeric($k)) $coreparams[] = $v;
+			else $extraparams[] = $k . '=' . $v;
+		}
+		return $base . 
+			( sizeof($coreparams) ? '/' . implode('/', $coreparams) : '') .
+			( sizeof($extraparams) ? '?' . implode('&', $extraparams) : '');
 	}
 
 	/**
@@ -645,16 +651,23 @@ class Core implements ISingleton{
 	 *
 	 * @param string $page
 	 */
-	static public function SetNavigation($page = CUR_CALL){
+	static public function RecordNavigation(PageModel $page){
 		//echo "Setting navRecord.";
 		if(!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
-
-		// Do not record the same page twice.
-		if(sizeof($_SESSION['nav']) != 0 && $_SESSION['nav'][sizeof($_SESSION['nav'])-1] == $page) return;
-
-		if(sizeof($_SESSION['nav']) >= 5) array_shift($_SESSION['nav']);
-
-		$_SESSION['nav'][] = $page;
+		
+		// Get just the application base, this will contain the parameters for it.
+		// So example, if /App/SomeView/myparam?something=foo is the URL, 
+		// /App/SomeView will be able to be used to lookup the parameters.
+		$c = $page->getControllerClass();
+		// I don't need the 'Controller' part of it.
+		if(strpos($c, 'Controller') == strlen($c) - 10) $c = substr($c, 0, -10);
+		
+		$base = '/' . $c . '/' . $page->getControllerMethod();
+		
+		$_SESSION['nav'][$base] = array(
+			'parameters' => $page->getParameters(),
+			'time' => Time::GetCurrent(),
+		);
 	}
 
 	/**

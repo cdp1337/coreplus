@@ -58,6 +58,27 @@ class View {
 	const MODE_PAGEORAJAX = 'pageorajax';
 	//const MODE_JSON       = 'json';
 	
+	/**
+	 * Request method for standard GET request
+	 */
+	const METHOD_GET    = 'GET';
+	/**
+	 * Request method for standard form submission
+	 */
+	const METHOD_POST   = 'POST';
+	/**
+	 *  @todo Not supported
+	 */
+	const METHOD_PUT    = 'PUT';
+	/**
+	 * @todo Not supported
+	 */
+	const METHOD_HEAD   = 'HEAD';
+	/**
+	 *  @todo Not supported
+	 */
+	const METHOD_DELETE = 'DELETE';
+	
 	/* Content types for this view */
 	const CTYPE_HTML      = 'text/html';
 	const CTYPE_PLAIN     = 'text/plain';
@@ -90,6 +111,29 @@ class View {
 	public $templatename;
 	
 	/**
+	 * Associative array of request data, generally populated from the core system.
+	 * 
+	 * @var array
+	 */
+	public $request = array(
+		'contenttype' => 'text/html',
+		'method' => null,
+		'useragent' => null,
+		'uri' => null,
+		'uriresolved' => null,
+		'protocol' => null,
+	);
+	
+	/**
+	 * Associative array to use in the response of this view.
+	 * Only applicable for full pages.
+	 * @var array 
+	 */
+	public $response = array(
+		'contenttype' => 'text/html',
+	);
+	
+	/**
 	 * The master template to render this view with.
 	 * Should be just the filename, as it will be located automatically.
 	 * 
@@ -100,7 +144,6 @@ class View {
 	public $breadcrumbs = array();
 	public $controls = array();
 	public $mode;
-	public $contenttype = 'text/html';
 	
 	public $jsondata = array();
 	
@@ -182,7 +225,7 @@ class View {
 		//var_dump($this);die();
 		
 		// If the content type is set to something other that html, check if that template exists.
-		switch($this->contenttype){
+		switch($this->response['contenttype']){
 			case View::CTYPE_XML:
 				$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'xml.tpl', $this->templatename));
 				if($ctemp){
@@ -190,7 +233,7 @@ class View {
 					$this->mastertemplate = 'index.xml.tpl';
 				}
 				else{
-					$this->contenttype = View::CTYPE_HTML;
+					$this->response['contenttype'] = View::CTYPE_HTML;
 				}
 				break;
 			case View::CTYPE_JSON:
@@ -208,7 +251,7 @@ class View {
 					$this->mastertemplate = false;
 				}
 				else{
-					$this->contenttype = View::CTYPE_HTML;
+					$this->response['contenttype'] = View::CTYPE_HTML;
 				}
 				break;
 		}
@@ -244,7 +287,7 @@ class View {
 		// Whee!
 		//var_dump($this->templatename, Template::ResolveFile($this->templatename));
 		// Content types take priority on controlling the master template.
-		if($this->contenttype == View::CTYPE_JSON){
+		if($this->response['contenttype'] == View::CTYPE_JSON){
 			$mastertpl = false;
 		}
 		else{
@@ -299,7 +342,7 @@ class View {
 		
 		$data = $template->fetch($mastertpl);
 		
-		if($this->mode == View::MODE_PAGE && $this->contenttype == 'text/html'){
+		if($this->mode == View::MODE_PAGE && $this->response['contenttype'] == View::CTYPE_HTML){
 			// Replace the </head> tag with the head data from the current page
 			// and the </body> with the foot data from the current page.
 			// This is needed to be done at this stage because some element in 
