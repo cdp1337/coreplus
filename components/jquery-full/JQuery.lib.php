@@ -13,8 +13,8 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/jquery-1.6.4.min.js');
-		else CurrentPage::AddScript ('js/jquery/jquery-1.6.4.js');
+		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/jquery-1.7.0.min.js');
+		else CurrentPage::AddScript ('js/jquery/jquery-1.7.0.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -48,9 +48,8 @@ abstract class JQuery {
 		
 		CurrentPage::AddStylesheet('css/jquery.readonly.css');
 		
-		//if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
-		//else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
-		CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
+		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;

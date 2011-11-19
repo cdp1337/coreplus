@@ -1,386 +1,237 @@
-/*
+/**
  * jquery-plugin Readonly
  *
- * Version 1.0-beta1
+ * Version 2.0.1
  * 
  * http://dev.powelltechs.com/jquery.readonly
  * http://plugins.jquery.com/project/readonly
  * 
- * Known good compatibility with jQuery 1.3.2
+ * Known good compatibility with jQuery 1.6.2
  * 
- * Please read the CHANGELOG for and/or bugzilla.
- * http://dev.powelltechs.com/bugzilla/dashboard.cgi?product=jquery.readonly
- *
- * For examples, please go to http://dev.powelltechs.com/jquery.readonly
+ * This plugin has been completely rewritten to be optimized for jquery 1.6 +.
+ * 
  *
  * @todo Finish the documentation for this plugin.
  * @todo Do some half-decent comments in this javascript.
- * @todo Test this plugin with the major browsers, including
- *  IE6-8; FF3.0,3.5; Opera 9,10; Chrome/Chromium; Safari; Konqueror
  * @todo Figure out how to do automated javascript UI testing.
+ * @todo Write example docs
  *
  *
- * Copyright (c) 2009 Charlie Powell <powellc@powelltechs.com>
+ * @copyright Copyright (c) 2009 Charlie Powell <powellc@powelltechs.com>
+ * @copyright Copyright (c) 2011 Charlie Powell <cpowell@blindacre.com>
  * 
  *
  * Dual licensed under the MIT and GPL licenses:
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
- *
+ * 
+ * @license http://www.opensource.org/licenses/mit-license.php
+ * @license http://www.gnu.org/licenses/gpl.html
+ * 
+ * @changelog http://plugins.jquery.com/node/7426/release
  */
- 
- 
-; // Yes, a random semicolon IS needed here, it's a jQuery thing.
 
-
-// Define the default options for each readonly overlay object.
-// In addition to other static methods.
-window.com_powelltechs_readonly_obj = window.com_powelltechs_readonly_obj || {
+(function( $ ){
+	var settings, methods, _init, _updateposition;
 	
-	// Just the interval pointer.
-	_interval: 0,
 	
-	defaults: {
-		onClick: null,
-		onDblClick: null,
-		onFocus: null,
-		onKeyPress: function(e){ if(e.keyCode == 9) return true; else return false; },
+	settings = {
+		intervaltime: 250, // milliseconds between each "tick".  If your application never moves elements, feel free to set this to really high.
+		//keypress: function(e){if(e.keyCode == 9) return true; else return false;},
 		overlayClass: 'readonly_overlay',
 		title: '',
-		zIndex: '100',
+		zindex: 'auto', // Set this to a number to force a specific z-index.
+		formtargets: 'input,select,textarea,button,a', // Any element which can be targetted.
+		show: function(overlay){
+			overlay.show();
+		},
+		hide: function(overlay){
+			overlay.hide();
+		},
+		tick: function(overlay){
+			// Function that is fired on every "tick" of the window to ensure accurate position.
+			return;
+		},
 		
 		_dummy: false
-	},
+	};
 	
-	_elements: [],
+	// Methods are all public methods for this object, accessable via calling $('my-element').readonly('methodname');
+	// or by the several shortcuts, like $('my-element').readonly(true);
+	methods = {
+		// Activate the overlay on the given target(s).
+		activate: function(target){
+			
+			return target.each(function(){
+				var $target, data;
+					
+				$target = $(this);
+				data = $target.data('readonly');
+				if(!data){
+					data = _init($target);
+				}
+				
+				// Show the overlay.
+				data.options.show(data.overlay);
+				//console.log($target.find(data.options.formtargets));
+				// Do the necessary actions to ignore the element being hidden.
+				$target.find(data.options.formtargets)
+					.attr('tabindex', -1)
+					.attr('readonly', 'readonly')
+					.bind('click.readonly', function(){return false;})
+					.bind('focus.readonly', function(){return false;})
+					.bind('keydown.readonly', function(){return false;});
+				
+				// Remember this value.
+				data.isenabled = true;
+			});
+		},
+		deactivate: function(target){
+			
+			return target.each(function(){
+				var $target, data;
+					
+				$target = $(this);
+				data = $target.data('readonly');
+				if(!data){
+					data = _init($target);
+				}
+				
+				// Show the overlay.
+				data.options.hide(data.overlay);
+				
+				// Do the necessary actions to unignore the element from being hidden.
+				$target.find(data.options.formtargets)
+					.unbind('.readonly')
+					.removeAttr('tabindex')
+					.removeAttr('readonly');
+				
+				// Remember this value.
+				data.isenabled = false;
+			});
+		},
+		setOpts: function(target, options){
+			return target.each(function(){
+				_init($(this), options);
+			});
+		},
+		destroy : function(target) {
+			return target.each(function(){
+				var $target, data;
+				
+				$target = $(this);
+				data = $target.data('readonly');
+				if(data){
+					if(data.isenabled) methods.deactivate($target);
+					data.overlay.remove();
+					clearInterval(data.timer);
+					$target.removeData('readonly');
+				}
+			})
+		}
+	};
 	
-	handleElement: function(el, opts){
-		/*console.log('@todo do the attach logic.');
-		console.log(el);
-		console.log(opts);*/
+	// This is the actual instance of the unique object.
+	_init = function($target, opts){
+		var data, z, _el;
 		
-		var obj;
-		var actualEl;
+		if(opts == undefined) opts = {};
 		
-		if(typeof(el.jquery) == 'undefined'){
-			// el is an actual DOM node!
-			actualEl = el;
+		// This is the actual object that will be persistent.
+		$target.data('readonly', {
+			options: $.extend(opts, settings),
+			target: $target,
+			overlay: null,
+			isenabled: false,
+			timer: false,
+			overlaydimensions: false,
+			originaltabindex: null
+		});
+		
+		data = $target.data('readonly');
+		
+		// Create the initial overlay and set it up as required.
+		data.overlay = $('<div class="' + data.options.overlayClass + '" title="' + data.options.title + '"></div>');
+		data.overlay.appendTo('body');
+		
+		// Assign the z-index appropriately.
+		// If auto, it will sift through each parent until it finds an element with a zindex.
+		if(data.options.zindex == 'auto'){
+			z = false;
+			_el = $target;
+			do{
+				z = _el.css('z-index');
+				_el = _el.parent();
+			} while(z == 'auto' && !_el.is('body'));
+			
+			if(z == 'auto') z = 100;
+			else z = parseInt(z) + 1; // Increase it by 1 from the parent.
 		}
 		else{
-			actualEl = el[0];
+			z = data.options.zindex;
 		}
+		data.overlay.css('position', 'absolute').css('z-index', z);
 		
-		// Try to reuse an existing object if it is bound to the dom node.
-		if(typeof(actualEl.com_powelltechs_readonly) != 'undefined'){
-			obj = actualEl.com_powelltechs_readonly;
-		}
-		else{
-			obj = new com_powelltechs_readonly();
-			obj.attachToElement(el);
-		}
 		
-		obj.setOptions(opts);
-	},
-	
-	init: function(){
-		if(window.com_powelltechs_readonly_obj._interval != 0) return;
-		window.com_powelltechs_readonly_obj._interval = setInterval(window.com_powelltechs_readonly_obj._tick, 500);
-	},
-	
-	_tick: function(){
-		//console.log('tock'); return;
-		for(i in window.com_powelltechs_readonly_obj._elements){
-			window.com_powelltechs_readonly_obj._elements[i].updateOverlay();
-		}
-	},
-	
-	_registerObject: function(obj){
-		window.com_powelltechs_readonly_obj._elements.push(obj);
-	},
-	
-	_unregisterObject: function(obj){
-		for(i in window.com_powelltechs_readonly_obj._elements){
-			if(window.com_powelltechs_readonly_obj._elements[i] == obj){
-				window.com_powelltechs_readonly_obj._elements.splice(i, 1);
-				return;
-			}
-		}
-	},	
-	
-
-	// KEEP THIS THE LAST ELEMENT
-	//  It's a trick to prevent the final-comma error in IE.
-	_dummy: false
-};
-
-
-// Each individual readonly instance will be its own version of this object.
-// This allows for a greater amount of flexibility for defining options.
-function com_powelltechs_readonly(){
-	// First, define all the properties of this new object.
-	this.elementBound = null;
-	
-	// The overlay object.
-	this.elementOverlay = null;
-	
-	// Any options currently set for this object.
-	this.options = jQuery.extend({}, window.com_powelltechs_readonly_obj.defaults);
-	
-	this.isIEHack = false;
-	
-	this.cache = {};
-	
-	this.isActive = function(){
-		return (this.elementOverlay != null);
+		// Attach the interval timer to "tick" and keep the overlay in sync with the element.
+		data.timer = setInterval(function(){
+			// Don't do anything if the overlay is disabled.
+			if(!data.isenabled) return;
+			
+			_updateposition(data);
+		}, data.options.intervaltime);
+		
+		_updateposition(data);
+		
+		return data;
 	};
 	
-	this.setOptions = function(opts){
-
-		var toggled = false;
-		var gogo = null;
-		var forceActive = false;
+	_updateposition = function(data){
+		// Update the dimensions of the overlay.  This function is called every half-second, so it must execute QUICKLY!
+		var d, i;
 		
-		// It's not a good idea to change options on a currently active element.
-		if(this.isActive()){
-			this.unsetOverlay();
-			toggled = true;
-			forceActive = true;
+		if(!data.overlaydimensions){
+			// Defaults
+			data.overlaydimensions = {width:0, height:0, left:0, top:0};
 		}
 		
+		d = data.target.offset();
+		d.width = data.target.outerWidth();
+		d.height = data.target.outerHeight();
 		
-		if(typeof(opts) == 'object'){
-			for (i in opts){
-				if(i == 'active' || i == 'enabled')
-					gogo = opts[i];
-				else if(i == 'toggle')
-					gogo = !this.isActive();
-				else
-					this.options[i] = opts[i];
+		// Only set the dimensions on the overlay if it's not already the same.
+		for(i in d){
+			if(data.overlaydimensions[i] != d[i]){
+				data.overlay.css(i, parseInt(d[i]) + 'px');
+				data.overlaydimensions[i] = d[i];
 			}
 		}
 		
-		if(gogo === true || opts === true){
-			this.setOverlay();
-			forceActive = false;
-		}
-		else if(gogo === false || opts === false){
-			this.unsetOverlay();
-			forceActive = false;
-		}
-		else if(opts == 'toggle'){
-			// Do not toggle if it was toggled automatically!
-			if(!toggled) this.toggle();
-			forceActive = false;
-		}
-		
-		// If it was unset at the beginning of the function... reset it as active.
-		if(forceActive)
-			this.setOverlay();
+		data.options.tick(data.overlay);
 	};
 	
-	// Main function to set an overlay on an element.
-	// Will handle all the internals such as internal indexing, positioning,
-	// etc...
-	this.setOverlay = function(){
+	$.fn.readonly = function( action ) {
 		
-		if(this.isActive()){
-			return;
-		};
-		
-		this.elementOverlay = jQuery('<div class="' + this.options.overlayClass + '" title="' + this.options.title + '"></div>');
-		this.elementOverlay.appendTo('body');
-		this.elementOverlay.css('position', 'absolute').css('z-index', this.options.zIndex);
-		
-		// Update any events on this overlay, such as click, dblclick, and focus.
-		if(this.options.onClick != null)
-			this.elementOverlay.bind('click', this.options.onClick);
-		
-		if(this.options.onDblClick != null)
-			this.elementOverlay.bind('dblclick', this.options.onDblClick);
-		
-		if(this.options.onFocus != null)
-			this.elementBound.bind('focus', this.options.onFocus);
-		// Force the original object to reject focus events!
-		else
-			this.elementBound.attr('tabindex', '-1');
-		
-		if(this.options.onKeyPress != null)
-			this.elementBound.bind('keypress', this.options.onKeyPress);
-		
-		
-		//el.bind('focus', this.bindUnfocus).after(overlay);
-		//this._updateOverlay(el);
-		
-		if(this.isIEHack)
-			this.elementBound.css('visibility', 'hidden');
-		
-		// Update the overlay positioning.
-		this.updateOverlay();
-		
-		// Finally, register with the global list of overlays so they can be kept track of.
-		window.com_powelltechs_readonly_obj._registerObject(this);
-	};
+		// If no status was given, set it to true.
+		if (action == undefined) action = true;
 
-	// Main function to unset an overlay from an element.
-	// Will handle all the internals such as internal indexing, positioning,
-	// etc...
-	this.unsetOverlay = function(){
-		if(!this.isActive()){
-			return;
-		};
-		
-		this.elementOverlay.remove();
-		this.elementOverlay = null;
-		
-		//el.unbind('focus', this.bindUnfocus);
-		
-		if(this.isIEHack)
-			this.elementBound.css('visibility', 'visible');
-		
-		// Clear the cache dimensions.
-		this.cache.dimensions = {
-				width: 0,
-				height: 0,
-				left: 0,
-				top: 0
-		};
-		
-		
-		if(this.options.onFocus != null)
-			this.elementBound.unbind('focus', this.options.onFocus);
-		// I guess... if the original objects wants its focus back...
-		else
-			this.elementBound.attr('tabindex', '0');
-		
-		if(this.options.onKeyPress != null)
-			this.elementBound.unbind('keypress', this.options.onKeyPress);
-		
-		// Finally, unregister with the global list of overlays.
-		window.com_powelltechs_readonly_obj._unregisterObject(this);
-	};
-	
-	// Update a jQuery element's overlay position, useful for window resizing and
-	//  initial setting on the element.
-	this.updateOverlay = function(){
-		if(!this.isActive()) return;
-		
-		var d = this.getDimensions();
-		var c = this.cache.dimensions;
-		var doAll = (typeof(c) == 'undefined')? true : false;
-		
-		// Do these new dimensions match the cached ones?
-		if(doAll || d.width != c.width) this.elementOverlay.css('width', d.width);
-		if(doAll || d.height != c.height) this.elementOverlay.css('height', d.height);
-		if(doAll || d.top != c.top) this.elementOverlay.css('top', d.top);
-		if(doAll || d.left != c.left) this.elementOverlay.css('left', d.left);
-
-		// Cache this information for any future checks.
-		this.cache.dimensions = d;
-	};
-	
-	this.toggle = function(){
-		if(this.isActive()) this.unsetOverlay();
-		else this.setOverlay();
-	};
-	
-	this.attachToElement = function(el){
-		if(typeof(el) == 'undefined')
-			this.unbind();
-		else
-			this.bind(el);
-	};
-	
-	this.bind = function(el){
-		
-		this.elementBound = jQuery(el);
-		this.elementBound[0].com_powelltechs_readonly = this;
-		
-		
-		// IE version 6 was so wonderful.... wasn't it?.....
-		// @see http://blogs.msdn.com/ie/archive/2006/01/17/514076.aspx
-		if(this.elementBound[0].tagName == 'SELECT' && jQuery.browser.version == '6.0' && jQuery.browser.msie)
-			this.isIEHack = true;
-	};
-	
-	this.unbind = function(){
-		if(this.elementBound == null) return;
-		if(typeof(this.elementBound.com_powelltechs_readonly) != 'undefined') this.elementBound.com_powelltechs_readonly = null;
-		this.elementBound = null;
-	};
-	
-	
-	
-	
-	// Get dimensions for a jQuery element.
-	//  Internally function, but could probably be used by anything.
-	// @return object { width, height, top, left }
-	this.getDimensions = function(){
-		var ret = {
-			width: 0,
-			height: 0,
-			top: 0,
-			left: 0
-		};
-		
-		if(this.elementBound == null){
-			return ret;
+		if(action == true){
+			return methods.activate(this);
+		}
+		else if(action == false){
+			return methods.deactivate(this);
+		}
+		else if(typeof action == 'object'){
+			return methods.setOpts(this, action);
+		}
+		else if(action == 'destroy'){
+			return methods.destroy(this);
+		}
+		else {
+			$.error( action + ' is an unknown option for readonly.' );
 		}
 		
-		// The multiple acquisitions of the CSS styles are required to cover any border and padding the elements may have.
-		// The Ternary (parseInt(...) || 0) statements fix a bug in IE6 where it returns NaN,
-		//  which doesn't play nicely when adding to numbers...
-		
-		ret.width = this.elementBound.width() 
-		  + (parseInt(this.elementBound.css('borderLeftWidth')) || 0)
-		  + (parseInt(this.elementBound.css('borderRightWidth')) || 0)
-		  + (parseInt(this.elementBound.css('padding-left')) || 0)
-		  + (parseInt(this.elementBound.css('padding-right')) || 0);
-		ret.height = this.elementBound.height() 
-		  + (parseInt(this.elementBound.css('borderTopWidth')) || 0) 
-		  + (parseInt(this.elementBound.css('borderBottomWidth')) || 0)
-		  + (parseInt(this.elementBound.css('padding-bottom')) || 0)
-		  + (parseInt(this.elementBound.css('padding-bottom')) || 0);
-		var offsets = this.elementBound.offset();
-		
-		var zoom = 1;
-		/*
-		if(document.body.clientWidth){
-			var b = document.body.getBoundingClientRect();    
-			zoom = (b.right - b.left) / document.body.clientWidth;
-		}
-		*/
-		ret.left = offsets.left * zoom;
-		ret.top = offsets.top * zoom;
-		
-		return ret;
+		return this;
 	};
-	
-	
-	// Lastly, do any logic required in the constructor.
-	//this.setOptions(options);
-		
-};
 
-
-(function(jQuery) {
-
-  jQuery.extend(jQuery.fn, {
-	// jQuery wrapper around the global handler object.
-	readonly : function(options) {
-	  
-	  // Init the global object if not already, can be called multiple times.
-	  window.com_powelltechs_readonly_obj.init();
-	  
-	  // If no status was given, set it to true.
-	  if (options == undefined) options = true;
-	  
-	  // Run through each element given in by the programmer.
-	  jQuery(this).each(function(){
-		  window.com_powelltechs_readonly_obj.handleElement(this, options);
-	  });
-	  return this;
-	}
-  });
 })(jQuery);
-
-/* END OF FILE jquery.readonly */
