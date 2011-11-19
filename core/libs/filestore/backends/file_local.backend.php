@@ -55,9 +55,17 @@ class File_local_backend implements File_Backend{
 		// PEAR, you have failed me for the last time... :'(
 		//return MIME_Type::autoDetect($this->_filename);
 		
-		$finfo = finfo_open(FILEINFO_MIME);
-		$type  = finfo_file($finfo, $this->_filename);
-		finfo_close($finfo);
+		if(!function_exists('finfo_open')){
+			// This is a backwards-compatability fix for when PHP doesn't have a certain PECL extension installed.
+			$cli = exec('file -ib "' . $this->_filename . '"');
+			list($type,) = explode(';', $cli);
+			$type = trim($type);
+		}
+		else{
+			$finfo = finfo_open(FILEINFO_MIME);
+			$type  = finfo_file($finfo, $this->_filename);
+			finfo_close($finfo);
+		}
 		
 		// $type may have some extra crap after a semicolon.
 		if(($pos = strpos($type, ';')) !== false) $type = substr($type, 0, $pos);

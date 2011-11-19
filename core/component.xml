@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.9" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.1.0" name="core" execmode="both">
 	<provides type="library" name="phpass" version="0.3~cae1"/>
 	<provides type="library" name="aws-sdk" version="1.0.0"/>
 	<provides type="library" name="smarty" version="3.0.6"/>
@@ -265,7 +265,7 @@
 		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="73dac8d52b9a4f2684e848c494dc24a8">
 			<provides type="class" name="Directory_local_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="c5075a2b2de3d5942a6dfbbc181b1e6c">
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="3196e1d2178a5157b2cd0f9d64531d9d">
 			<provides type="class" name="File_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="6f2c8419844788e7316ee23be8367686">
@@ -515,7 +515,7 @@
 			<provides type="class" name="DMI"/>
 			<provides type="class" name="DMI_Exception"/>
 		</file>
-		<file filename="core/libs/core/ComponentHandler.class.php" md5="27cdd477465c6f6f29e90d29d5865a47">
+		<file filename="core/libs/core/ComponentHandler.class.php" md5="5e356493ead24a172bfe4e7e77c12c42">
 			<provides type="class" name="ComponentHandler"/>
 		</file>
 		<file filename="core/libs/core/ISingleton.interface.php" md5="b60a34b2386f41de2d4eeb6403b6431b">
@@ -524,7 +524,7 @@
 		<file filename="core/libs/core/Email.class.php" md5="a63f71e02f4f11bfb9d845e5799d142f">
 			<provides type="class" name="Email"/>
 		</file>
-		<file filename="core/libs/core/CurrentPage.class.php" md5="b92823c12cbc3198cba39980087a4fad">
+		<file filename="core/libs/core/CurrentPage.class.php" md5="cf9a6e6681dac65597324fdd54d1935e">
 			<provides type="class" name="CurrentPage"/>
 		</file>
 		<file filename="core/libs/core/Time.class.php" md5="a25f25c1dc65e8f80657f446a14ad2da">
@@ -533,7 +533,7 @@
 		<file filename="core/libs/core/Template.class.php" md5="a8c86411260fc9085ee5bbdbd24fd8b2">
 			<provides type="class" name="Template"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="2b5d9e2509be11dbc60110edb66d01c2">
+		<file filename="core/libs/core/Form.class.php" md5="d8d56cee6d9d2e7d122e80b211cd4b25">
 			<provides type="class" name="FormGroup"/>
 			<provides type="class" name="FormElement"/>
 			<provides type="class" name="Form"/>
@@ -594,7 +594,7 @@
 		<file filename="core/libs/core/CLI.class.php" md5="e8ab6e1a12a44be2b68312428b65313c">
 			<provides type="class" name="CLI"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="48d218a46c93c102333c928a1814aa24">
+		<file filename="core/libs/core/Core.class.php" md5="26017b799d8f1d1118062cc6286c3719">
 			<provides type="class" name="Core"/>
 		</file>
 		<file filename="core/libs/core/HookHandler.class.php" md5="d536017f47709d5429a514046f4791db">
@@ -604,7 +604,7 @@
 		<file filename="core/libs/core/Session.class.php" md5="19f5b912cc76c9e468058d78fa81067a">
 			<provides type="class" name="Session"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="1b1e9ba7b38b9f7cc9af8897a99039fb">
+		<file filename="core/libs/core/View.class.php" md5="1323b8fbee7e86d7fc75f27ba7c61db5">
 			<provides type="class" name="View"/>
 			<provides type="class" name="ViewException"/>
 		</file>
@@ -777,19 +777,19 @@
 		<file filename="core/controllers/DirectoryController.class.php" md5="e9e50405c06731773795016e8b95924e">
 			<provides type="controller" name="DirectoryController"/>
 		</file>
-		<file filename="core/controllers/WidgetController.class.php" md5="696579e28d7d5907d4d88fbbffece362">
+		<file filename="core/controllers/WidgetController.class.php" md5="cde863c0751aeedfaf337e8c0193d96c">
 			<provides type="controller" name="WidgetController"/>
 		</file>
 		<file filename="core/controllers/AdminController.php" md5="2c0a03790cbe8f6de055ce1e9ed8c826">
 			<provides type="controller" name="AdminController"/>
 		</file>
-		<file filename="core/controllers/FileController.class.php" md5="be75055de065250ff36ae8eeaa893513">
+		<file filename="core/controllers/FileController.class.php" md5="3e3e15099355d21ab2d896ebaac75200">
 			<provides type="controller" name="FileController"/>
 		</file>
 		<file filename="core/controllers/FormController.class.php" md5="d9dc7664b0e7087f9503961fd2bebc45">
 			<provides type="controller" name="FormController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="8a238c8d4649131752a3c1aef838eca5">
+		<file filename="core/controllers/UpdaterController.class.php" md5="bf98b9ea3a875a86828735c1b467bb62">
 			<provides type="controller" name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="5c1cee97fea17449fced7cfafe41a584">
@@ -989,6 +989,18 @@
 			<packager>CAE2 0.0.8</packager>
 		</packagemeta>
 	</changelog>
+	<upgrade from="0.0.8" to="0.0.9"/>
+	<changelog version="0.0.9">
+		<notes>
+			In the process of switching to AGPL.
+			Moved the theme systems into its own component.
+		</notes>
+		<packagemeta>
+			<date>Sat, 19 Nov 2011 03:12:23 +0000</date>
+			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<packager>CAE2 0.0.9</packager>
+		</packagemeta>
+	</changelog>
 	<author name="Charlie Powell" email="powellc@powelltechs.com"/>
 	<author name="Monte Ohrt" email="monte at ohrt dot com"/>
 	<author name="Uwe Tews"/>
@@ -1021,7 +1033,9 @@
 	<author name="liqwei" email="liqwei@liqwei.com"/>
 	<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
 	<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
+	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+		See the included NOTICE.md file for more information.
+	</license>
 	<license url="http://www.gnu.org/licenses/lgpl-3.0.html">
 		GNU Lesser General Public License v3
 	</license>
@@ -1032,11 +1046,13 @@
 	<license url="http://www.gnu.org/licenses/agpl.html">
 		GNU Affero General Public License v3
 	</license>
-	<upgrade from="0.0.8" to="0.0.9"/>
-	<changelog version="0.0.9">
+	<upgrade from="0.0.9" to="0.1.0"/>
+	<changelog version="0.1.0">
 		<notes>
-			In the process of switching to AGPL.
-			Moved the theme systems into its own component.
+			Implementing better support for Debian-style version strings.
+			new {css} smarty block.
+			CurrentPage now supports inline styles to be added to the head.
+			Other minor fixes.
 		</notes>
 	</changelog>
 	<otherfiles>
@@ -1104,6 +1120,7 @@
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="ee67260eea6c696b8634a593cece14bd"/>
 		<file filename="core/libs/smarty-plugins/function.img.php" md5="ffaef505d20cb8133cb0df6dbf606ccc"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="b57ac0420e6fc0cdcf4674dd3f4677bd"/>
+		<file filename="core/libs/smarty-plugins/block.css.php" md5="a04275dc23e43a09c58b736c263c666a"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="5df1078564ecb59c547531218c684374"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="0675deafa3f09a4cbe5a4f8f35d61ab2"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
@@ -1326,6 +1343,7 @@
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/autoload.php" md5="7ffd1e5fb8bf906cf0d8843117ae3ac9"/>
 		<file filename="core/libs/datamodel/drivers/phpcassa/INSTALLING" md5="045fa051387023d98e4b8f6df1e939ff"/>
 		<file filename="core/libs/datamodel/drivers/phpcassa/LICENSE" md5="f7a55fbb7aaf9aa2771bb0d7a9556f54"/>
+		<file filename="core/libs/core/Core.class.php~" md5="a39fa84015befca7ab8dfad9e4bd87af"/>
 		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test.php" md5="9877bcc06f33dfa16b79328474064f00"/>
 		<file filename="core/libs/aws-sdk/_compatibility_test/sdk_compatibility_test_cli.php" md5="d5d30c8021dd8573eb4bbeb913baf025"/>
 		<file filename="core/libs/aws-sdk/_compatibility_test/README.md" md5="4b2ad499f8315322bfc745050a2ca396"/>

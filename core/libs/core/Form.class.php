@@ -877,6 +877,13 @@ class Form extends FormGroup{
 				// This element doesn't need to be in the form.
 				continue;
 			}
+			elseif($v['type'] == Model::ATT_TYPE_ENUM){
+				$el = FormElement::Factory('select');
+				$opts = $v['options'];
+				if($v['null']) $opts = array_merge(array('' => '-Select One-'), $opts);
+				$el->set('options', $opts);
+				if($v['default']) $el->set('value', $v['default']);
+			}
 			else{
 				die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
 			}

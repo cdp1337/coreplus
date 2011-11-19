@@ -366,9 +366,19 @@ class ComponentHandler implements ISingleton{
 		//var_dump($ch->_libraries[$name], version_compare(str_replace('~', '-', $ch->_libraries[$name]), $version, $operation));
 		//if($name == 'DB') return true;
 		//echo "Checking library name[$name] v[$version] op[$operation]<br>";
-		if(!isset($ch->_libraries[$name])) return false;
+		if(!isset($ch->_libraries[$name])){
+			//echo "Library " . $name . " is not available!"; // DEBUG //
+			return false;
+		}
 		// There's a bit of an issue with the debian-style versions... PHP considers 1.2.3~1 < 1.2.3...
-		elseif($version !== false) return version_compare(str_replace('~', '-', $ch->_libraries[$name]), $version, $operation);
+		elseif($version !== false){
+			//var_dump($ch->_libraries[$name], $operation, $version, version_compare($ch->_libraries[$name], $version, $operation));
+			//var_dump(Core::VersionCompare($ch->_libraries[$name], $version, $operation));
+			//return version_compare(str_replace('~', '-', $ch->_libraries[$name]), $version, $operation);
+			
+			// Core provides more accurate comparison for Debian-style versions.
+			return Core::VersionCompare($ch->_libraries[$name], $version, $operation);
+		}
 		else return true;
 	}
 	
@@ -481,6 +491,15 @@ class ComponentHandler implements ISingleton{
 	
 	public static function GetLoadedViewClasses(){
 		return ComponentHandler::Singleton()->_viewClasses;
+	}
+	
+	/**
+	 * Get all the loaded libraries and their versions.
+	 * 
+	 * @return array
+	 */
+	public static function GetLoadedLibraries(){
+		return ComponentHandler::Singleton()->_libraries;
 	}
 }
 

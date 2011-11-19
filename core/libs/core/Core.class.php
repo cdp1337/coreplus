@@ -909,6 +909,135 @@ class Core implements ISingleton{
 		CurrentPage::AddScript($script, 'head');
 	}
 	
+	
+	/**
+	 * Clone of the php version_compare function, with the exception that it treats
+	 * version numbers the same that Debian treats them.
+	 * 
+	 * @param string $version1 Version to compare
+	 * @param string $version2 Version to compare against
+	 * @param string $operation Operation to use or null
+	 * @return bool | int Boolean if $operation is provided, int if omited.
+	 */
+	public static function VersionCompare($version1, $version2, $operation = null){
+		// Just to make sure they're strings at least.
+		if(!$version1) $version1 = 0;
+		if(!$version2) $version2 = 0;
+		
+		$version1 = Core::VersionSplit($version1);
+		$version2 = Core::VersionSplit($version2);
+		
+		// version1 and 2 are now standardized.
+		$keys = array('major', 'minor', 'point', 'core', 'user', 'stability');
+		
+		// @todo Support user and stability checks.
+		
+		// The standard keys I can compare pretty easily.
+		$v1 = $version1['major'] . '.' . $version1['minor'] . '.' . $version1['point'] . '.' . $version1['core'];
+		$v2 = $version2['major'] . '.' . $version2['minor'] . '.' . $version2['point'] . '.' . $version2['core'];
+		$check = version_compare($v1, $v2);
+		if($check != 0){
+			// Will preserve PHP's -1, 0, 1 nature.
+			if($operation == null) return $check;
+			
+			// Otherwise
+			switch($operation){
+				case 'lt':
+				case 'le':
+				case '<':
+				case '<=':
+					return ($check == -1);
+				default:
+					return true;
+			}
+		}
+		else{
+			// it's 0.
+			if($operation == null) return $check;
+			
+			// Otherwise
+			switch($operation){
+				case 'le':
+				case '<=':
+				case 'ge':
+				case '>=':
+				case 'eq':
+				case '=':
+					return true;
+				default:
+					return false;
+			}
+		}
+	}
+	
+	/**
+	 * Break a version string into the corresponding parts.
+	 * 
+	 * Major Version
+	 * Minor Version
+	 * Point Release
+	 * Core Version
+	 * Developer-Specific Version
+	 * Development Status
+	 * 
+	 * @param string $version 
+	 * @return array
+	 */
+	public static function VersionSplit($version){
+		$ret = array(
+			'major' => 0,
+			'minor' => 0,
+			'point' => 0,
+			'core' => 0,
+			'user' => 0,
+			'stability' => '',
+		);
+		
+		$v = array();
+		
+		// dev < alpha = a < beta = b < RC = rc < # < pl = p
+		$lengthall = strlen($version);
+		$pos = 0;
+		$x = 0;
+		//while(($pos = strpos($version, '.')) !== false){
+		while($pos < $lengthall && $x < 10){
+			$nextpos = strpos($version, '.', $pos) - $pos;
+			
+			$part = ($nextpos > 0) ? substr($version, $pos, $nextpos) : substr($version, $pos);
+			
+			if(($subpos = strpos($part, '-')) !== false){
+				$subpart = strtolower(substr($part, $subpos + 1));
+				if(is_numeric($subpart)){
+					$ret['core'] = $subpart;
+				}
+				elseif($subpart == 'a'){
+					$ret['stability'] = 'alpha';
+				}
+				elseif($subpart == 'b'){
+					$ret['stability'] = 'beta';
+				}
+				else{
+					$ret['stability'] = $subpart;
+				}
+				
+				$part = substr($part, 0, $subpos);
+			}
+			
+			$v[] = (int)$part;
+			$pos = ($nextpos > 0) ? $pos + $nextpos + 1 : $lengthall;
+			$x++; // Just in case something really bad happens here...
+		}
+		
+		for($i = 0; $i < 3; $i++){
+			if(!isset($v[$i])) $v[$i] = 0;
+		}
+		
+		$ret['major'] = $v[0];
+		$ret['minor'] = $v[1];
+		$ret['point'] = $v[2];
+		return $ret;
+	}
+	
 }
 
 // Listen for when the database becomes available.

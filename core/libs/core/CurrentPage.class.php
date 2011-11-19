@@ -215,6 +215,12 @@ class CurrentPage{
 		else $obj->_postbody[] = $content;
 	}
 	
+	/**
+	 * Add a linked stylesheet file to the current page.
+	 * 
+	 * @param string $link The link of the stylesheet
+	 * @param type $media Media to display the stylesheet with.
+	 */
 	public static function AddStylesheet($link, $media="all"){
 		if(strpos($link, '<link') === false){
 			// Resolve the script and wrap it with a script block.
@@ -224,6 +230,21 @@ class CurrentPage{
 		$obj = self::Singleton();
 		// I can check to see if this script has been loaded before.
 		if(!in_array($link, $obj->_headstylesheets)) $obj->_headstylesheets[] = $link;
+	}
+	
+	/**
+	 * Add an inline style to the current page.
+	 * 
+	 * @param string $style The contents of the <style> tag.
+	 */
+	public static function AddStyle($style){
+		if(strpos($style, '<style') === false){
+			$style = '<style>' . $style . '</style>';
+		}
+		
+		$obj = self::Singleton();
+		// I can check to see if this script has been loaded before.
+		if(!in_array($style, $obj->_headstylesheets)) $obj->_headstylesheets[] = $style;
 	}
 	
 	public static function SetHTMLAttribute($attribute, $value){
@@ -352,6 +373,11 @@ class CurrentPage{
 				foreach(Core::GetProfileTimes() as $t){
 					echo "[" . Core::FormatProfileTime($t['timetotal']) . "] - " . $t['event'] . "\n";
 				}
+			}
+			// Tack on what components are currently installed.
+			echo '<b>Available Libraries</b>' . "\n";
+			foreach(ComponentHandler::GetLoadedLibraries() as $l => $v){
+				echo "$l $v\n";
 			}
 			echo '</pre>';
 		}
