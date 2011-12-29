@@ -197,6 +197,17 @@ class CurrentPage{
 	}
 	
 	/**
+	 * Get all scripts registered to be displayed on this page.
+	 * 
+	 * @return array
+	 */
+	public static function GetScripts(){
+		$obj = self::Singleton();
+		$s = array_merge($obj->_headscripts, $obj->footscripts);
+		return $s;
+	}
+	
+	/**
 	 * Add some content to the body before rendering is complete.
 	 * This is useful to modify page content from a widget or plugin.
 	 * 

@@ -66,6 +66,8 @@ class ThemeController extends Controller{
 		
 		$view->assign('widget_areas', $areas);
 		$view->assign('widgets', $widgets);
+		$view->assign('theme', $t);
+		$view->assign('template', $template);
 		
 		return;
 		
@@ -120,6 +122,11 @@ class ThemeController extends Controller{
 				Core::Redirect(Core::GetNavigation('/Theme/Widgets'));
 			}
 		}
+	}
+	
+	public static function Widgets_Save(View $view){
+	var_dump(CurrentPage::Singleton());
+		var_dump($view); die();
 	}
 }
 

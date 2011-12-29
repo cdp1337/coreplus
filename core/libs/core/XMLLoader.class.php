@@ -4,13 +4,22 @@
  * 
  * @package Core
  * @since 2011.06
+ * @version 2.1
  * @author Charlie Powell <powellc@powelltechs.com>
  * @copyright Copyright 2011, Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
- * This system is licensed under the GNU LGPL, feel free to incorporate it into
- * custom applications, but keep all references of the original authors intact,
- * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>, 
- * and please contribute back to the community :)
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -110,7 +119,7 @@ class XMLLoader{
 			$this->_filename = $file;
 		}
 		
-		$this->load();
+		return $this->load();
 	}
 	
 	public function loadFromNode(DOMNode $node){
@@ -137,7 +146,7 @@ class XMLLoader{
 	 * 
 	 * @return DOMNode
 	 */
-	protected function getRootDOM(){
+	public function getRootDOM(){
 		$root = $this->_DOM->getElementsByTagName($this->_rootname);
 		
 		if($root->item(0) === null){
@@ -155,7 +164,7 @@ class XMLLoader{
 	 * 
 	 * @return DOMDocument
 	 */
-	protected function getDOM(){
+	public function getDOM(){
 		return $this->_DOM;
 	}
 	/**
@@ -164,7 +173,7 @@ class XMLLoader{
 	 * @param string $name
 	 * @return DOMNodeList
 	 */
-	protected function getElementsByTagName($name){
+	public function getElementsByTagName($name){
 		return $this->_DOM->getElementsByTagName($name);
 	}
 	/**
@@ -173,7 +182,7 @@ class XMLLoader{
 	 * @param string $name
 	 * @return DOMNode
 	 */
-	protected function getElementByTagName($name){
+	public function getElementByTagName($name){
 		return $this->_DOM->getElementsByTagName($name)->item(0);
 	} 
 	
@@ -208,7 +217,7 @@ class XMLLoader{
 	 * @param boolean $autocreate Automatically create the element if it does not exist.
 	 * @return DOMElement
 	 */
-	protected function getElement($path, $autocreate = true){
+	public function getElement($path, $autocreate = true){
 		return $this->getElementFrom($path, false, $autocreate);
 	}
 	/*
@@ -225,7 +234,7 @@ class XMLLoader{
 	 * @param boolean $autocreate Automatically create the element if it does not exist.
 	 * @return DOMElement
 	 */
-	protected function getElementFrom($path, $el = false, $autocreate = true){
+	public function getElementFrom($path, $el = false, $autocreate = true){
 		// I need something to start from...
 		if(!$el) $el = $this->getRootDOM();
 		
@@ -255,7 +264,7 @@ class XMLLoader{
 	}
 
 
-	protected function createElement($path, $el = false){
+	public function createElement($path, $el = false){
 		// @todo This function requires some major refactoring.......
 		// I need something to start from...
 		if(!$el) $el = $this->getRootDOM();
@@ -366,11 +375,11 @@ class XMLLoader{
 		return $el;
 	}
 	
-	protected function getElements($path){
+	public function getElements($path){
 		return $this->getElementsFrom($path, $this->getRootDOM());
 	}
 	
-	protected function getElementsFrom($path, $el = false){
+	public function getElementsFrom($path, $el = false){
 		if(!$el) $el = $this->getRootDOM();
 
 		$path = $this->_translatePath($path);
@@ -385,11 +394,11 @@ class XMLLoader{
 		
 	}
 
-	protected function removeElements($path){
+	public function removeElements($path){
 		return $this->removeElementsFrom($path, $this->getRootDOM());
 	}
 
-	protected function removeElementsFrom($path, $el){
+	public function removeElementsFrom($path, $el){
 		$path = $this->_translatePath($path);
 		
 		// Starting element, can be the root node or the current element it's at.
@@ -406,7 +415,7 @@ class XMLLoader{
 	 * Converts a given element and its children into an associative array
 	 * Much like the simplexml function.
 	 */
-	protected function elementToArray($el, $nesting = true){
+	public function elementToArray($el, $nesting = true){
 		$ret = array();
 		foreach($this->getElementsFrom('*', $el, false) as $node){
 			$c = $node->childNodes->item(0);

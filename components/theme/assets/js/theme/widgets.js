@@ -3,7 +3,7 @@ $(function(){
 	// Widget sources are draggable, but only to the droppable widgetareas.
 	$('.widget-dragsource').draggable({
 		helper: 'clone',
-		connectToSortable: '.widgetarea',
+		connectToSortable: '.widget-dragtarget',
 		opacity: 0.5,
 		revert: 'invalid',
 		appendTo: 'body',
@@ -15,8 +15,9 @@ $(function(){
 		}
 	});
 
-	$('.widgetarea').sortable({
+	$('.widget-dragtarget').sortable({
 		stop: function(e, ui){
+			return true;
 			// Does this item already exist as an instanced widget?
 			// If no, retrieve its contents and replace with that, then save the addition.
 			$el = $(ui.item);

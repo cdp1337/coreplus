@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.1.0" name="core" execmode="both">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.0" name="core" execmode="both">
 	<provides type="library" name="phpass" version="0.3~cae1"/>
 	<provides type="library" name="aws-sdk" version="1.0.0"/>
 	<provides type="library" name="smarty" version="3.0.6"/>
@@ -13,11 +13,17 @@
 	<!--<hook event="components_ready" call="CurrentPage::LoadPage"/>
 	-->
 	<hook name="/core/page/prerender" call="Core::_AttachCoreJavascript"/>
-	<hook name="/core/page/render" call="CurrentPage::Render"/>
+	<!--<hook name="/core/page/render" call="CurrentPage::Render"/>-->
+	<hook name="/core/page/render" call="\Core\Render"/>
 	<hook name="components_ready" call="Form::CheckSavedSessionData"/>
 	<hook name="/core/page/error-404" call="GettingStartedController::_HookCatch404"/>
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
-	<library>
+	
+	<includes>
+		<include filename="core/functions/Core.functions.php"/>
+	</includes>
+	
+	<files>
 		<!-- The core system directives. -->
 		<file filename="utilities/mysql_model_gen.php" md5="a35e6d6ca75215415cdc6c1d8335728b">
 			<provides type="class" name=""/>
@@ -769,8 +775,6 @@
 		<file filename="core/models/SessionModel.class.php" md5="5dccca1f7b78eb934c6f96d521396675">
 			<provides type="class" name="SessionModel"/>
 		</file>
-	</library>
-	<module>
 		<file filename="core/widgets/AdminMenuWidget.php" md5="c9c942afe8a6d1b5f9ae6a43a6ada413">
 			<provides type="widget" name="AdminMenuWidget"/>
 		</file>
@@ -798,7 +802,10 @@
 		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
 			<provides type="controller" name="ErrorController"/>
 		</file>
-	</module>
+		<file filename="core/controllers/CoreController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
+			<provides type="controller" name="CoreController"/>
+		</file>
+	</files>
 	<pages>
 		<page baseurl="/Admin/ReinstallAll" admin="1" widget="0" access="g:admin" title="Reinstall All Components"/>
 		<page baseurl="/Admin/Config" admin="1" widget="0" access="g:admin" title="System Configuration"/>
@@ -847,16 +854,11 @@
 		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
 	</view>
 	<install/>
-	<changelog version="0.0.1-dev1">
-		<packagemeta>
-			<date>Sun, 22 May 2011 02:00:52 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.1-dev1</packager>
-		</packagemeta>
-	</changelog>
+	
 	<description>
 		The core application, including all libraries required for a base application.
 	</description>
+	
 	<configs>
 		<config key="/core/aws/key" type="string" default="" description="Amazon Web Services Key. Found in the AWS Security Credentials."/>
 		<config key="/core/aws/secretkey" type="string" default="" description="Amazon Web Services Secret Key. Found in the AWS Security Credentials."/>
@@ -885,176 +887,78 @@
 		<config key="/core/ftp/password" type="string" description="FTP password to use when writing local files" default=""/>
 		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'" default=""/>
 	</configs>
+	
 	<assets>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 	</assets>
-	<upgrade from="0.0.1-dev1" to="0.0.2"/>
-	<changelog version="0.0.2">
-		<packagemeta>
-			<date>Tue, 21 Jun 2011 23:02:02 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.2</packager>
-		</packagemeta>
-		<notes>
-			MAJOR changes, first re-release since the system switched from DAO to AR.  Includes a lot of other fixes too.
-		</notes>
-	</changelog>
-	<upgrade from="0.0.2" to="0.0.2-1"/>
-	<changelog version="0.0.2-1">
-		<packagemeta>
-			<date>Sun, 24 Jul 2011 21:11:35 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.2-1</packager>
-		</packagemeta>
-		<notes>
-			Removing some unnecessary components, namely the adodb5 library and the old version of the Form system.
-			Did some updates to the phpass library.
-		</notes>
-	</changelog>
-	<upgrade from="0.0.2-1" to="0.0.2-2"/>
-	<changelog version="0.0.2-2">
-		<packagemeta>
-			<date>Mon, 15 Aug 2011 17:24:19 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.2-2</packager>
-		</packagemeta>
-		<notes>
-			New cachecore method, flush().  This is useful in reinstalling all components and ensuring that there are no lingering artifacts.
-		</notes>
-	</changelog>
-	<upgrade from="0.0.2-2" to="0.0.3"/>
-	<changelog version="0.0.3">
-		<packagemeta>
-			<date>Tue, 16 Aug 2011 23:31:44 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.3</packager>
-		</packagemeta>
-		<notes>
-			More work completed on the user component (not included in core), and the widget system (included).
-		</notes>
-	</changelog>
-	<upgrade from="0.0.3" to="0.0.4"/>
-	<changelog version="0.0.4">
-		<notes>
-			Adding phpMailer and the Email functionality back into the core.
-			Minor change to configuration options and how they're stored in the database.
-		</notes>
-		<packagemeta>
-			<date>Tue, 16 Aug 2011 23:47:36 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.4</packager>
-		</packagemeta>
-	</changelog>
-	<dbschema/>
-	<upgrade from="0.0.4" to="0.0.5"/>
-	<changelog version="0.0.5">
-		<packagemeta>
-			<date>Sun, 18 Sep 2011 22:19:37 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.5</packager>
-		</packagemeta>
-		<notes>
-			Updates to the stylesheet and the admin config system.
-		</notes>
-	</changelog>
-	<upgrade from="0.0.5" to="0.0.6"/>
-	<changelog version="0.0.6">
-		<packagemeta>
-			<date>Tue, 11 Oct 2011 19:47:58 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.6</packager>
-		</packagemeta>
-		<notes>
-			Did some fixes to the email system, it now actually works.
-			Considerable work on improving the Model validation system.  It now actually works.
-			Minor tweak in the Form validation logic, it now just shows the validation check in the error message if the site is in development mode.
-		</notes>
-	</changelog>
-	<upgrade from="0.0.6" to="0.0.7"/>
-	<changelog version="0.0.7">
-		<packagemeta>
-			<date>Wed, 02 Nov 2011 01:21:43 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.7</packager>
-		</packagemeta>
-		<notes>
-			Major work on the system updater, it now fundamentally works at least!
-		</notes>
-	</changelog>
-	<upgrade from="0.0.7" to="0.0.8"/>
-	<changelog version="0.0.8">
-		<packagemeta>
-			<date>Fri, 04 Nov 2011 05:51:11 +0000</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.8</packager>
-		</packagemeta>
-	</changelog>
-	<upgrade from="0.0.8" to="0.0.9"/>
-	<changelog version="0.0.9">
-		<notes>
-			In the process of switching to AGPL.
-			Moved the theme systems into its own component.
-		</notes>
-		<packagemeta>
-			<date>Sat, 19 Nov 2011 03:12:23 +0000</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
-			<packager>CAE2 0.0.9</packager>
-		</packagemeta>
-	</changelog>
-	<author name="Charlie Powell" email="powellc@powelltechs.com"/>
-	<author name="Monte Ohrt" email="monte at ohrt dot com"/>
-	<author name="Uwe Tews"/>
-	<author name="Thue Kristensen"/>
-	<author name="Andrei Zmievski"/>
-	<author name="Jason Sweat (added cc, bcc and subject functionality)"/>
-	<author name="Richard Tango-Lowy &amp; Dan Cech"/>
-	<author name="Daniele Baroncelli"/>
-	<author name="Gaetano Giunta"/>
-	<author name=""/>
-	<author name="Mark J Panaghiston"/>
-	<author name="Andy Prevost"/>
-	<author name="Marcus Bointon"/>
-	<author name="Christopher Kvarme" email="christopher.kvarme@flashjab.com"/>
-	<author name="Roberto Berto" email="roberto@berto.net"/>
-	<author name="Messju Mohr" email="messju at lammfellpuschen dot de"/>
-	<author name="boots" email="boots dot smarty at yahoo dot com"/>
-	<author name="Lars Noschinski" email="lars@usenet.noschinski.de"/>
-	<author name="Duda" email="duda@big.hu"/>
-	<author name="Mark Priatel" email="mpriatel@rogers.com"/>
-	<author name="Gerard" email="gerard@interfold.com"/>
-	<author name="Jason Sweat" email="jsweat_php@yahoo.com"/>
-	<author name="Fabien Potencier" email="fabien.potencier@symfony-project.com"/>
-	<author name="David JEAN LOUIS" email="izimobil@gmail.com"/>
-	<author name="David JEAN" email="izimobil@gmail.com"/>
-	<author name="Solar Designer" email="solar at openwall.com"/>
-	<author name="Naitik Shah" email="naitik@facebook.com"/>
-	<author name="Catalin Constantin" email="catalin@dazoot.ro"/>
-	<author name="Ilias Bartolini" email="brain79@inwind.it"/>
-	<author name="liqwei" email="liqwei@liqwei.com"/>
-	<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
-	<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-		See the included NOTICE.md file for more information.
-	</license>
-	<license url="http://www.gnu.org/licenses/lgpl-3.0.html">
-		GNU Lesser General Public License v3
-	</license>
-	<license url="http://www.gnu.org/licenses/lgpl-3.0.txt">
-		GNU Lesser General Public License v3
-	</license>
-	<license url="http://www.opensource.org/licenses/mit-license.php">MIT</license>
-	<license url="http://www.gnu.org/licenses/agpl.html">
-		GNU Affero General Public License v3
-	</license>
-	<upgrade from="0.0.9" to="0.1.0"/>
-	<changelog version="0.1.0">
-		<notes>
-			Implementing better support for Debian-style version strings.
-			new {css} smarty block.
-			CurrentPage now supports inline styles to be added to the head.
-			Other minor fixes.
-		</notes>
-	</changelog>
+	
+	<upgrades>
+		<upgrade from="0.0.1-dev1" to="0.0.2"/>
+		<upgrade from="0.0.2" to="0.0.2-1"/>
+		<upgrade from="0.0.2-1" to="0.0.2-2"/>
+		<upgrade from="0.0.2-2" to="0.0.3"/>
+		<upgrade from="0.0.3" to="0.0.4"/>
+		<upgrade from="0.0.4" to="0.0.5"/>
+		<upgrade from="0.0.5" to="0.0.6"/>
+		<upgrade from="0.0.6" to="0.0.7"/>
+		<upgrade from="0.0.7" to="0.0.8"/>
+		<upgrade from="0.0.8" to="0.0.9"/>
+		<upgrade from="0.0.9" to="0.1.0"/>
+		<upgrade from="0.1.0" to="1.9.0"/>
+	</upgrades>
+	
+	<authors>
+		<author name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<author name="Monte Ohrt" email="monte at ohrt dot com"/>
+		<author name="Uwe Tews"/>
+		<author name="Thue Kristensen"/>
+		<author name="Andrei Zmievski"/>
+		<author name="Jason Sweat (added cc, bcc and subject functionality)"/>
+		<author name="Richard Tango-Lowy &amp; Dan Cech"/>
+		<author name="Daniele Baroncelli"/>
+		<author name="Gaetano Giunta"/>
+		<author name=""/>
+		<author name="Mark J Panaghiston"/>
+		<author name="Andy Prevost"/>
+		<author name="Marcus Bointon"/>
+		<author name="Christopher Kvarme" email="christopher.kvarme@flashjab.com"/>
+		<author name="Roberto Berto" email="roberto@berto.net"/>
+		<author name="Messju Mohr" email="messju at lammfellpuschen dot de"/>
+		<author name="boots" email="boots dot smarty at yahoo dot com"/>
+		<author name="Lars Noschinski" email="lars@usenet.noschinski.de"/>
+		<author name="Duda" email="duda@big.hu"/>
+		<author name="Mark Priatel" email="mpriatel@rogers.com"/>
+		<author name="Gerard" email="gerard@interfold.com"/>
+		<author name="Jason Sweat" email="jsweat_php@yahoo.com"/>
+		<author name="Fabien Potencier" email="fabien.potencier@symfony-project.com"/>
+		<author name="David JEAN LOUIS" email="izimobil@gmail.com"/>
+		<author name="David JEAN" email="izimobil@gmail.com"/>
+		<author name="Solar Designer" email="solar at openwall.com"/>
+		<author name="Naitik Shah" email="naitik@facebook.com"/>
+		<author name="Catalin Constantin" email="catalin@dazoot.ro"/>
+		<author name="Ilias Bartolini" email="brain79@inwind.it"/>
+		<author name="liqwei" email="liqwei@liqwei.com"/>
+		<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
+		<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
+	</authors>
+	
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			See the included NOTICE.md file for more information.
+		</license>
+		<license url="http://www.gnu.org/licenses/lgpl-3.0.html">
+			GNU Lesser General Public License v3
+		</license>
+		<license url="http://www.gnu.org/licenses/lgpl-3.0.txt">
+			GNU Lesser General Public License v3
+		</license>
+		<license url="http://www.opensource.org/licenses/mit-license.php">MIT</license>
+		<license url="http://www.gnu.org/licenses/agpl.html">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+	
+	
 	<otherfiles>
 		<file filename="utilities/scaffolding.php" md5="6143456dad39c25429a2be70c5797a45"/>
 		<file filename="utilities/packager.php" md5="f5843828f61792f3e3211e6d18001bd2"/>

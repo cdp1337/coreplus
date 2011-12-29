@@ -4,18 +4,24 @@
  * 
  * @package Core
  * @since 2011.06
+ * @version 0.1
  * @author Charlie Powell <powellc@powelltechs.com>
  * @copyright Copyright 2011, Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
- * This system is licensed under the GNU LGPL, feel free to incorporate it into
- * custom applications, but keep all references of the original authors intact,
- * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>, 
- * and please contribute back to the community :)
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(ROOT_PDIR . 'core/libs/core/Component.class.php');
-//require_once(ROOT_PDIR . 'core/libs/core/FileAWSS3.class.php');
-//require_once(ROOT_PDIR . 'core/libs/core/Asset.class.php');
 
 
 /**
@@ -53,11 +59,6 @@ class ComponentHandler implements ISingleton{
 	 */
 	private $_viewClasses = array();
 	
-	/**
-	 * List of every installed library and its version.
-	 * @var array <<String>>
-	 */
-	private $_libraries = array();
 	
 	/**
 	 * List of every available jslibrary and its call..
@@ -65,11 +66,6 @@ class ComponentHandler implements ISingleton{
 	 */
 	private $_scriptlibraries = array();
 	
-	/**
-	 * List of every installed module and its version.
-	 * @var array <<String>>
-	 */
-	private $_modules = array();
 	
 	/**
 	 * Internal check variable to know if this handler has been loaded.
@@ -100,7 +96,7 @@ class ComponentHandler implements ISingleton{
 	 */
 	private function __construct(){
 		// Add in the core component for the first element.
-		$this->_componentCache['core'] = $c = Core::GetComponent();
+		$this->_componentCache['core'] = ComponentHandler::_Factory(ROOT_PDIR . 'core/component.xml');
 		
 		// Run through the libraries directory and look for, well... components.
 		
@@ -116,10 +112,9 @@ class ComponentHandler implements ISingleton{
 
 			// Skip directories that do not have a readable component.xml file.
 			if(!is_readable(ROOT_PDIR . 'components/' . $file . '/component.xml')) continue;
-
-			// Finally, load the component and keep it in cache.
-			$c = new Component($file);
-
+			
+			$c = ComponentHandler::_Factory(ROOT_PDIR . 'components/' . $file . '/component.xml');
+			
 			// All further operations are case insensitive.
 			// The original call to Component needs to be case sensitive because it sets the filename to pull.
 			$file = strtolower($file);
@@ -506,5 +501,8 @@ class ComponentHandler implements ISingleton{
 /**
  * Register a function to fire whenever a class is instantiated.	Will
  * automatically look up the class and include the appropriate file.
+ * 
+ * @deprecated 2011.12
+ *             Disabling due to the port to API version 2.1
  */ 
-spl_autoload_register('ComponentHandler::CheckClass');
+//spl_autoload_register('ComponentHandler::CheckClass');

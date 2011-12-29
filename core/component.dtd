@@ -3,7 +3,7 @@
 <!--
     TODO define vocabulary identification
     PUBLIC ID: -//vendor//vocabulary//EN
-    SYSTEM ID: http://server/path/component.dtd
+    SYSTEM ID: http://core.pl/api/2_1/component.dtd
 
 -->
 
@@ -20,7 +20,7 @@
 -->
 
 <!--- Put your DTDDoc comment here. -->
-<!ELEMENT component (otherfiles|license|author|dbschema|upgrade|provides|hookregister|hook|smartyplugins|library|module|pages|view|install|changelog|description|configs|assets)*>
+<!ELEMENT component (otherfiles|licenses|authors|provides|hookregister|hook|smartyplugins|includes|files|pages|view|install|description|configs|assets|upgrades)*>
 <!ATTLIST component
     execmode CDATA #IMPLIED
     name CDATA #IMPLIED
@@ -57,7 +57,16 @@
   >
 
 <!--- Put your DTDDoc comment here. -->
-<!ELEMENT library (file)*>
+<!ELEMENT includes (include)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT include EMPTY>
+<!ATTLIST include
+    filename CDATA #IMPLIED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT files (file)*>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT file (provides)*>
@@ -65,9 +74,6 @@
     md5 CDATA #IMPLIED
     filename CDATA #IMPLIED
   >
-
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT module (file)*>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT pages (page)*>
@@ -92,28 +98,6 @@
 <!ELEMENT install EMPTY>
 
 <!--- Put your DTDDoc comment here. -->
-<!ELEMENT changelog (notes|packagemeta)*>
-<!ATTLIST changelog
-    version CDATA #IMPLIED
-  >
-
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT packagemeta (packager|maintainer|date)*>
-
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT date (#PCDATA)>
-
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT maintainer EMPTY>
-<!ATTLIST maintainer
-    email CDATA #IMPLIED
-    name CDATA #IMPLIED
-  >
-
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT packager (#PCDATA)>
-
-<!--- Put your DTDDoc comment here. -->
 <!ELEMENT description (#PCDATA)>
 
 <!--- Put your DTDDoc comment here. -->
@@ -133,6 +117,9 @@
 <!ELEMENT assets (file)*>
 
 <!--- Put your DTDDoc comment here. -->
+<!ELEMENT upgrades (upgrade)*>
+
+<!--- Put your DTDDoc comment here. -->
 <!ELEMENT upgrade EMPTY>
 <!ATTLIST upgrade
     to CDATA #IMPLIED
@@ -140,10 +127,7 @@
   >
 
 <!--- Put your DTDDoc comment here. -->
-<!ELEMENT notes (#PCDATA)>
-
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT dbschema EMPTY>
+<!ELEMENT authors (author)*>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT author EMPTY>
@@ -151,6 +135,9 @@
     email CDATA #IMPLIED
     name CDATA #IMPLIED
   >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT licenses (license)*>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT license (#PCDATA)>

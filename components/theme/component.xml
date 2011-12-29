@@ -2,6 +2,7 @@
 <!DOCTYPE component>
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.1" name="Theme" execmode="web">
 	<requires name="core" type="component"/>
+	<requires name="jquery" type="library" version="1.7.0" operations="ge"/>
 	<hook name="components_loaded" call="ThemeHandler::Load"/>
 	<library>
 		<file filename="libs/Theme.class.php" md5="11a6b9c249d428c920dedb02d0443070">

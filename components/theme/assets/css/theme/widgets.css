@@ -1,4 +1,5 @@
 /*** Widget and Widgetareas ***/
-.widget-dragtarget.highlightdroptarget { padding:1em; border:2px dashed blue; }
+.widget-dragtarget { padding:10px; }
+.widget-dragtarget.highlightdroptarget { padding:8px; border:2px dashed blue; }
 .widget-source { z-index:2000; border: 2px solid green; padding:0.25em; cursor:move;}
 .widget-dragsource.ui-sortable { border:2px solid green; cursor:move;}
