@@ -457,6 +457,16 @@ class Component_2_1{
 	
 	
 	public function loadFiles(){
+		// Include any includes requested.
+		// This adds support for namespaced functions.
+		// <includes>
+		//     <include filename="core/functions/Core.functions.php"/>
+		// </includes>
+		foreach($this->_xmlloader->getElements('/includes/include') as $f){
+			require_once($this->getBaseDir() . $f->getAttribute('filename'));
+		}
+		
+
 		// Load any autoload files for this component.
 		if($this->hasLibrary()){
 			foreach($this->_xmlloader->getElementByTagName('library')->getElementsByTagName('file') as $f){
@@ -712,6 +722,15 @@ class Component_2_1{
 	 */
 	public function getName(){
 		return $this->_name;
+	}
+	
+	/**
+	 * Get this component's version
+	 *
+	 * @return string
+	 */
+	public function getVersion(){
+		return $this->_version;
 	}
 	
 	
@@ -1130,6 +1149,13 @@ class Component_2_1{
 		return true;
 	}
 	
+	/**
+	 * Get the base directory of this component
+	 * 
+	 * Generally /home/foo/public_html/components/componentname/
+	 * 
+	 * @return string
+	 */
 	public function getBaseDir($prefix = ROOT_PDIR){
 		if($this->_name == 'core') return $prefix;
 		else return $prefix . 'components/' . $this->_name . '/';

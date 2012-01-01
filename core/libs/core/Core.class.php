@@ -327,8 +327,9 @@ class Core implements ISingleton{
 		
 		
 		// The core component at a minimum needs to be loaded and registered.
-		$this->_registerComponent($list['core']);
-		unset($list['core']);
+//		$this->_registerComponent($list['core']);
+//		$this->_components['core']->loadFiles();
+//		unset($list['core']);
 		
 		// Now that I have a list of components available, copy them into a list of 
 		//	components that are installed.
@@ -601,8 +602,16 @@ class Core implements ISingleton{
 	 * @return Component
 	 */
 	public static function GetComponent(){
-		return self::Singleton()->_componentobj;
+		return self::Singleton()->_components['core'];
 	}
+    
+    /**
+     * Get all components
+     * @return array 
+     */
+    public static function GetComponents(){
+        return self::Singleton()->_components;
+    }
 	
 	/**
 	 * Get the standard HTTP request headers for retrieving remote files.
@@ -1177,7 +1186,7 @@ class Core implements ISingleton{
 		
 		CurrentPage::AddScript($script, 'head');
 	}
-	
+		
 	
 	/**
 	 * Clone of the php version_compare function, with the exception that it treats

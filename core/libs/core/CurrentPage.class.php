@@ -386,10 +386,13 @@ class CurrentPage{
 				}
 			}
 			// Tack on what components are currently installed.
-			echo '<b>Available Libraries</b>' . "\n";
-			foreach(ComponentHandler::GetLoadedLibraries() as $l => $v){
-				echo "$l $v\n";
+			echo '<b>Available Components</b>' . "\n";
+			foreach(Core::GetComponents() as $l => $v){
+				echo $v->getName() . ' ' . $v->getVersion() . "\n";
 			}
+			
+			echo '<b>Query Log</b>' . "\n";
+			var_dump(Core::DB()->queryLog());
 			echo '</pre>';
 		}
 	}

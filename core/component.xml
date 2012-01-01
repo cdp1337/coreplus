@@ -13,8 +13,8 @@
 	<!--<hook event="components_ready" call="CurrentPage::LoadPage"/>
 	-->
 	<hook name="/core/page/prerender" call="Core::_AttachCoreJavascript"/>
-	<!--<hook name="/core/page/render" call="CurrentPage::Render"/>-->
-	<hook name="/core/page/render" call="\Core\Render"/>
+	<hook name="/core/page/render" call="CurrentPage::Render"/>
+	<!--<hook name="/core/page/render" call="\Core\Render"/>-->
 	<hook name="components_ready" call="Form::CheckSavedSessionData"/>
 	<hook name="/core/page/error-404" call="GettingStartedController::_HookCatch404"/>
 	<smartyplugins directory="core/libs/smarty-plugins/"/>

@@ -1,8 +1,8 @@
 <?php
 /**
- * // enter a good description here
  * 
- * @package Core
+ * 
+ * @package Theme
  * @since 2011.06
  * @author Charlie Powell <powellc@powelltechs.com>
  * @copyright Copyright 2011, Charlie Powell
@@ -18,7 +18,38 @@
  * 
  * Themes consist just of the template files and corresponding assets.
  */
-class Theme extends InstallArchiveAPI{
+class Theme{
+
+	/**
+	 * Underlying XML Loader object of the component.xml file.
+	 * 
+	 * Responsible for retrieving most information about this component.
+	 * 
+	 * @var XMLLoader
+	 */
+	private $_xmlloader = null;
+	
+	/**
+	 * The name of the component.
+	 * Has to be unique, (because the name is a directory in /components)
+	 * 
+	 * @var string
+	 */
+	protected $_name;
+	
+	/**
+	 * Version of the component, (propagates to libraries and modules).
+	 *
+	 * @var string
+	 */
+	protected $_version;
+	
+	/**
+	 * Is this component explictly disabled?
+	 * 
+	 * @var boolean
+	 */
+	protected $_enabled;
 
 	/**
 	 * Version of the component, as per the database (installed version).
@@ -27,23 +58,37 @@ class Theme extends InstallArchiveAPI{
 	 */
 	private $_versionDB = false;
 	
+	/**
+	 * This object only needs to be loaded once
+	 * @var boolean
+	 */
+	private $_loaded = false;
+	
 	
 	public function __construct($name = null){
-		$this->_name = $name;
-		$this->_type = InstallArchiveAPI::TYPE_THEME;
-		$this->load();
+		$this->_xmlloader = new XMLLoader();
+		$this->_xmlloader->setRootName('theme');
+		
+		$filename = ROOT_PDIR . 'themes/' . $name . '/theme.xml';
+		
+		if(!$this->_xmlloader->loadFromFile($filename)){
+			throw new Exception('Parsing of XML Metafile [' . $filename . '] failed, not valid XML.');
+		}
 	}
 	
 	public function load(){
-		parent::load();
+		if($this->_loaded) return;
 		
-		// Lookup this theme data in the component handler cache.
-		$c = ComponentHandler::Singleton()->_dbcache;
-		if(!isset($c['theme/' . $this->_name])) return false;
+		$this->_name = $this->_xmlloader->getRootDOM()->getAttribute('name');
+		$this->_version = $this->_xmlloader->getRootDOM()->getAttribute("version");
 		
-		$this->_versionDB = $c['theme/' . $this->_name]['version'];
+		// Load the database information, if there is any.
+		$dat = ComponentFactory::_LookupComponentData($this->_name);
+		if(!$dat) return;
 		
-		return true;
+		$this->_versionDB = $dat['version'];
+		$this->_enabled = ($dat['enabled']) ? true : false;
+		$this->_loaded = true;
 	}
 	
 	/**
@@ -58,7 +103,7 @@ class Theme extends InstallArchiveAPI{
 		// If this theme is currently selected, check the default template too.
 		if($this->getName() == ConfigHandler::Get('/theme/selected')) $default = ConfigHandler::Get('/theme/default_template');
 		
-		foreach($this->getElements('//templates/file') as $f){
+		foreach($this->_xmlloader->getElements('//templates/file') as $f){
 			$out[] = array(
 				'filename' => $this->getBaseDir() . $f->getAttribute('filename'),
 				'file' => $f->getAttribute('filename'),
@@ -68,6 +113,26 @@ class Theme extends InstallArchiveAPI{
 		}
 		
 		return $out;
+	}
+	
+	/**
+	 * Get this theme's name
+	 * 
+	 * @return string
+	 */
+	public function getName(){
+		return $this->_name;
+	}
+	
+	/**
+	 * Get the base directory of this component
+	 * 
+	 * Generally /home/foo/public_html/themes/componentname/
+	 * 
+	 * @return string
+	 */
+	public function getBaseDir($prefix = ROOT_PDIR){
+		return $prefix . 'themes/' . $this->_name . '/';
 	}
 	
 	/**
@@ -83,10 +148,10 @@ class Theme extends InstallArchiveAPI{
 
 		// Purge the 'otherfiles' section.
 		$this->removeElements('//otherfiles');
-		//if($this->getElement('/otherfiles', false)){
-		//	$this->getRootDOM()->removeChild($this->getElement('/otherfiles'));
+		//if($this->_xmlloader->getElement('/otherfiles', false)){
+		//	$this->getRootDOM()->removeChild($this->_xmlloader->getElement('/otherfiles'));
 		//}
-		$otherfilesnode = $this->getElement('//otherfiles');
+		$otherfilesnode = $this->_xmlloader->getElement('//otherfiles');
 		
 		$it = $this->getDirectoryIterator();
 		$hasview = $this->hasView();
@@ -100,14 +165,14 @@ class Theme extends InstallArchiveAPI{
 			
 			if($file->inDirectory($assetd)){
 				// It's an asset!
-				$el = $this->getElement('/assets/file[@filename="' . $fname . '"]');
+				$el = $this->_xmlloader->getElement('/assets/file[@filename="' . $fname . '"]');
 			}
 			elseif($hasview && $file->inDirectory($viewd)){
-				$el = $this->getElement('/view/file[@filename="' . $fname . '"]');
+				$el = $this->_xmlloader->getElement('/view/file[@filename="' . $fname . '"]');
 			}
 			else{
 				// Only add it if the file doesn't exist already.
-				$el = $this->getElement('//library/file[@filename="' . $fname . '"]|//module/file[@filename="' . $fname . '"]|//view/file[@filename="' . $fname . '"]', false);
+				$el = $this->_xmlloader->getElement('//library/file[@filename="' . $fname . '"]|//module/file[@filename="' . $fname . '"]|//view/file[@filename="' . $fname . '"]', false);
 				// Scan through this file and file any classes that are provided.
 				if(preg_match('/\.php$/i', $fname)){
 					$fconts = file_get_contents($file->getFilename());
@@ -118,20 +183,20 @@ class Theme extends InstallArchiveAPI{
 					else{
 						// Does this file contain something that extends Controller?
 						if(preg_match('/^(abstract ){0,1}class[ ]*[a-z0-9_\-]*[ ]*extends controller/im', $fconts)){
-							$el = $this->getElement('/module/file[@filename="' . $fname . '"]');
+							$el = $this->_xmlloader->getElement('/module/file[@filename="' . $fname . '"]');
 							$getnames = true;
 						}
 						// WidgetControllers also go in the module section.
 						elseif(preg_match('/^(abstract ){0,1}class[ ]*[a-z0-9_\-]*[ ]*extends widgetcontroller/im', $fconts)){
-							$el = $this->getElement('/module/file[@filename="' . $fname . '"]');
+							$el = $this->_xmlloader->getElement('/module/file[@filename="' . $fname . '"]');
 							$getnames = true;
 						}
 						elseif(preg_match('/^(abstract |final ){0,1}class[ ]*[a-z0-9_\-]*/im', $fconts)){
-							$el = $this->getElement('/library/file[@filename="' . $fname . '"]');
+							$el = $this->_xmlloader->getElement('/library/file[@filename="' . $fname . '"]');
 							$getnames = true;
 						}
 						else{
-							$el = $this->getElement('/otherfiles/file[@filename="' . $fname . '"]');
+							$el = $this->_xmlloader->getElement('/otherfiles/file[@filename="' . $fname . '"]');
 							$getnames = false;
 						}
 					}
@@ -143,14 +208,14 @@ class Theme extends InstallArchiveAPI{
 						$viewclasses = array();
 						preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller/im', $fconts, $ret);
 						foreach($ret[2] as $foundclass){
-							$this->getElementFrom('provides[@type="controller"][@name="' . $foundclass . '"]', $el);
+							$this->_xmlloader->getElementFrom('provides[@type="controller"][@name="' . $foundclass . '"]', $el);
 							// This is needed to tell the rest of the save logic to ignore the save for classes.
 							$viewclasses[] = $foundclass;
 						}
 						
 						preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*widgetcontroller/im', $fconts, $ret);
 						foreach($ret[2] as $foundclass){
-							$this->getElementFrom('provides[@type="widgetcontroller"][@name="' . $foundclass . '"]', $el);
+							$this->_xmlloader->getElementFrom('provides[@type="widgetcontroller"][@name="' . $foundclass . '"]', $el);
 							// This is needed to tell the rest of the save logic to ignore the save for classes.
 							$viewclasses[] = $foundclass;
 						}
@@ -158,14 +223,14 @@ class Theme extends InstallArchiveAPI{
 						preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
 						foreach($ret[2] as $foundclass){
 							if(in_array($foundclass, $viewclasses)) continue;
-							$this->getElementFrom('provides[@type="class"][@name="' . $foundclass . '"]', $el);
+							$this->_xmlloader->getElementFrom('provides[@type="class"][@name="' . $foundclass . '"]', $el);
 						}
 					}
 				}
 								
-				//$el = $this->getElement('file[@filename="' . $fname . '"]', false);
+				//$el = $this->_xmlloader->getElement('file[@filename="' . $fname . '"]', false);
 				if(!$el){
-					$el = $this->getElement('/otherfiles/file[@filename="' . $fname . '"]');
+					$el = $this->_xmlloader->getElement('/otherfiles/file[@filename="' . $fname . '"]');
 				}
 			}
 
@@ -288,7 +353,7 @@ class Theme extends InstallArchiveAPI{
 	 */
 	private function _parseConfigs(){
 		// I need to get the schema definitions first.
-		$node = $this->getElement('configs');
+		$node = $this->_xmlloader->getElement('configs');
 		//$prefix = $node->getAttribute('prefix');
 		
 		// Now, get every table under this node.
@@ -314,7 +379,7 @@ class Theme extends InstallArchiveAPI{
 		$coretheme = ConfigHandler::Get('/theme/selected');
 		$theme = $this->getName();
 		$changed = false;
-		foreach($this->getElements('/assets/file') as $node){
+		foreach($this->_xmlloader->getElements('/assets/file') as $node){
 			$b = $this->getBaseDir();
 			// Local file is guaranteed to be a local file.
 			$f = new File_local_backend($b . $node->getAttribute('filename'));

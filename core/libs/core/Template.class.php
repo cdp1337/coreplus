@@ -30,7 +30,7 @@ class Template extends Smarty{
 
 		// Tack on the search directories from the loaded components.
 		// Also handle the plugins directory search.
-		foreach(ComponentHandler::GetLoadedComponents() as $c){
+		foreach(Core::GetComponents() as $c){
 			$d = $c->getViewSearchDir();
 			$this->addTemplateDir($d);
 			

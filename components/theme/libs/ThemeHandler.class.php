@@ -79,6 +79,10 @@ class ThemeHandler implements ISingleton{
 	public static function Load(){
 		// Run through all the installed themes and just make sure they're updated.
 		foreach(self::GetAllThemes() as $t){
+			// Make sure the theme is loaded first.
+			// This sets up the internal data from the XML file.
+			$t->load();
+		
 			if($t->isInstalled() && $t->needsUpdated()){
 				$t->upgrade();
 			}

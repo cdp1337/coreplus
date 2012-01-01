@@ -39,6 +39,13 @@ class DMI_mysqli_backend implements DMI_Backend {
 	 * @var mysqli
 	 */
 	private $_conn = null;
+    
+    /**
+     * A log of every query ran on this page.  Useful for debugging.
+     * 
+     * @var array
+     */
+    private $_querylog = array();
 	
 	
 	/**
@@ -446,6 +453,15 @@ class DMI_mysqli_backend implements DMI_Backend {
 		return $this->_writes;
 	}
 	
+	/**
+	 * Get the query log for this backend.
+	 * 
+	 * @return array
+	 */
+	public function queryLog(){
+		return $this->_querylog;
+	}
+	
 	
 	/**
 	 * Translate the database-independent types into mysql-specific ones.
@@ -756,8 +772,19 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$offset = $pos + strlen($sanitizedk);
 			}
 		}
+        
+		$start = microtime(true) * 1000;
 		//echo $string . '<br/>'; // DEBUGGING //
 		$res = $this->_conn->query($string);
+		
+		// Record this query!
+		$this->_querylog[] = array(
+			'query' => $string,
+			'time' => round( (microtime(true) * 1000 - $start), 3),
+			'errno' => $this->_conn->errno,
+			'error' => $this->_conn->error
+		);
+		
 		if($this->_conn->errno){
 			// @todo Should this be implemented in the DMI_Exception?
 			if(DEVELOPMENT_MODE) echo '<pre class="cae2_debug">' . $string . '</pre>';

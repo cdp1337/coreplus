@@ -155,6 +155,12 @@ class Component extends XMLLoader{
 			}
 
 			$this->_version = $this->getRootDOM()->getAttribute("version");
+            // Load the database information, if there is any.
+            $dat = ComponentFactory::_LookupComponentData($this->_name);
+            if(!$dat) return;
+
+            $this->_versionDB = $dat['version'];
+            $this->_enabled = ($dat['enabled']) ? true : false;
 		}
 		catch(Exception $e){
 			echo '<pre>' . $e->__toString() . '</pre>';
