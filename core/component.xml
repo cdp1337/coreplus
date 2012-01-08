@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.0" name="core" execmode="both">
-	<provides type="library" name="phpass" version="0.3~cae1"/>
-	<provides type="library" name="aws-sdk" version="1.0.0"/>
-	<provides type="library" name="smarty" version="3.0.6"/>
-	<provides type="library" name="phpMailer" version="5.2.0"/>
-	<hookregister name="/core/page/prerender" description="Called before the page is rendered"/>
-	<hookregister name="/core/page/render" description="Called to render the page"/>
-	<hookregister name="/core/page/error-404" description="Called anytime there is a 404 error"/>
-	<hookregister name="/core/page/error-403" description="Called anytime there is a 403 error"/>
-	<hook name="components_loaded" call="CurrentPage::Singleton"/>
-	<!--<hook event="components_ready" call="CurrentPage::LoadPage"/>
-	-->
-	<hook name="/core/page/prerender" call="Core::_AttachCoreJavascript"/>
-	<hook name="/core/page/render" call="CurrentPage::Render"/>
-	<!--<hook name="/core/page/render" call="\Core\Render"/>-->
-	<hook name="components_ready" call="Form::CheckSavedSessionData"/>
-	<hook name="/core/page/error-404" call="GettingStartedController::_HookCatch404"/>
+	
+	<provides>
+		<provide type="library" name="phpass" version="0.3~cae1"/>
+		<provide type="library" name="aws-sdk" version="1.0.0"/>
+		<provide type="library" name="smarty" version="3.0.6"/>
+		<provide type="library" name="phpMailer" version="5.2.0"/>
+	</provides>
+	
+	<hooks>
+		<hookregister name="/core/page/prerender" description="Called before the page is rendered"/>
+		<hookregister name="/core/page/render" description="Called to render the page"/>
+		<hookregister name="/core/page/error-404" description="Called anytime there is a 404 error"/>
+		<hookregister name="/core/page/error-403" description="Called anytime there is a 403 error"/>
+		<hook name="components_loaded" call="CurrentPage::Singleton"/>
+		<!--<hook event="components_ready" call="CurrentPage::LoadPage"/>-->
+		<hook name="/core/page/prerender" call="Core::_AttachCoreJavascript"/>
+		<hook name="/core/page/render" call="CurrentPage::Render"/>
+		<!--<hook name="/core/page/render" call="\Core\Render"/>-->
+		<hook name="components_ready" call="Form::CheckSavedSessionData"/>
+		<hook name="/core/page/error-404" call="GettingStartedController::_HookCatch404"/>
+	</hooks>
+	
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
 	
 	<includes>
@@ -24,786 +30,791 @@
 	</includes>
 	
 	<files>
-		<!-- The core system directives. -->
+		<file filename="core/libs/core/Controller_2_1.class.php">
+			<class name="Controller_2_1"/>
+		</file>
+		<file filename="core/libs/core/PageRequest.class.php">
+			<class name="PageRequest"/>
+		</file>
 		<file filename="utilities/mysql_model_gen.php" md5="a35e6d6ca75215415cdc6c1d8335728b">
-			<provides type="class" name=""/>
+			<class name=""/>
 		</file>
 		<file filename="install/index.php" md5="63b1defef89c4cf700487ae846bf6360">
-			<provides type="class" name="InstallPage"/>
+			<class name="InstallPage"/>
 		</file>
 		<file filename="core/libs/phpass/PasswordHash.php" md5="f767843472f0a498fb9c7f61966c0244">
-			<provides type="class" name="PasswordHash"/>
+			<class name="PasswordHash"/>
 		</file>
 		<file filename="core/libs/smarty/Smarty.class.php" md5="4911b2e61dc704261e2d6ea48abb6bb1">
-			<provides type="class" name="Smarty"/>
-			<provides type="class" name="SmartyException"/>
-			<provides type="class" name="SmartyCompilerException"/>
+			<class name="Smarty"/>
+			<class name="SmartyException"/>
+			<class name="SmartyCompilerException"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_object_function.php" md5="2452c3ea9723335e27d125f8e5bed18c">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Object_Function"/>
+			<class name="Smarty_Internal_Compile_Private_Object_Function"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_configfilelexer.php" md5="ab08ce42b8bf3180ac57b04fe7982c37">
-			<provides type="class" name="Smarty_Internal_Configfilelexer"/>
+			<class name="Smarty_Internal_Configfilelexer"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_append.php" md5="10db44dbab4a83128fc833a4e8b97f45">
-			<provides type="class" name="Smarty_Internal_Compile_Append"/>
+			<class name="Smarty_Internal_Compile_Append"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_register.php" md5="5955e3bd593dd4db5e4abc2a0d95fee2">
-			<provides type="class" name="Smarty_Internal_Register"/>
+			<class name="Smarty_Internal_Register"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_registered_function.php" md5="1c41d1de7f7e8a446af5dcfdde193c96">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Registered_Function"/>
+			<class name="Smarty_Internal_Compile_Private_Registered_Function"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_smartytemplatecompiler.php" md5="b7b77455dc3728115d0d70970aa145ca">
-			<provides type="class" name="Smarty_Internal_SmartyTemplateCompiler"/>
+			<class name="Smarty_Internal_SmartyTemplateCompiler"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_templatecompilerbase.php" md5="62e5d47e1cc4d293f3cf83b45893ae70">
-			<provides type="class" name="Smarty_Internal_TemplateCompilerBase"/>
+			<class name="Smarty_Internal_TemplateCompilerBase"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_security.php" md5="058c8a7ef67c007efb6b44cdf16f3022">
-			<provides type="class" name="Smarty_Security"/>
+			<class name="Smarty_Security"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_configfileparser.php" md5="6a132d782eda920010f4d28e19301572">
-			<provides type="class" name="TPC_yyToken"/>
-			<provides type="class" name="TPC_yyStackEntry"/>
-			<provides type="class" name="Smarty_Internal_Configfileparser"/>
+			<class name="TPC_yyToken"/>
+			<class name="TPC_yyStackEntry"/>
+			<class name="Smarty_Internal_Configfileparser"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_eval.php" md5="e6c01e74d7d10198ba8400157e25ebbf">
-			<provides type="class" name="Smarty_Internal_Resource_Eval"/>
+			<class name="Smarty_Internal_Resource_Eval"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_nocache_insert.php" md5="30ceffc1c1d6220994edca3e046c1605">
-			<provides type="class" name="Smarty_Internal_Nocache_Insert"/>
+			<class name="Smarty_Internal_Nocache_Insert"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_include_php.php" md5="84b0b2fb715277158dd8f356ddcf109b">
-			<provides type="class" name="Smarty_Internal_Compile_Include_Php"/>
+			<class name="Smarty_Internal_Compile_Include_Php"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_extends.php" md5="82d34f5aa06dfecc6090f7160a1a3390">
-			<provides type="class" name="Smarty_Internal_Compile_Extends"/>
+			<class name="Smarty_Internal_Compile_Extends"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_cacheresource_file.php" md5="3a0e527d87a5827fc5107b9ac4111b0b">
-			<provides type="class" name="Smarty_Internal_CacheResource_File"/>
+			<class name="Smarty_Internal_CacheResource_File"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_debug.php" md5="8a98a411f41289681ab33d52c54e7fc3">
-			<provides type="class" name="Smarty_Internal_Compile_Debug"/>
+			<class name="Smarty_Internal_Compile_Debug"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_function_plugin.php" md5="d327a9e80b1298dad705a64a56373fe8">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Function_Plugin"/>
+			<class name="Smarty_Internal_Compile_Private_Function_Plugin"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_insert.php" md5="12a1d22789e45fce8d7d57563ecabecf">
-			<provides type="class" name="Smarty_Internal_Compile_Insert"/>
+			<class name="Smarty_Internal_Compile_Insert"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_capture.php" md5="b0c9097f63ece82498b203e198eafd62">
-			<provides type="class" name="Smarty_Internal_Compile_Capture"/>
-			<provides type="class" name="Smarty_Internal_Compile_CaptureClose"/>
+			<class name="Smarty_Internal_Compile_Capture"/>
+			<class name="Smarty_Internal_Compile_CaptureClose"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_data.php" md5="344ed3682f3895073d1948e4b528bcf0">
-			<provides type="class" name="Smarty_Internal_Data"/>
-			<provides type="class" name="Smarty_Data"/>
-			<provides type="class" name="Smarty_Variable"/>
-			<provides type="class" name="Undefined_Smarty_Variable"/>
+			<class name="Smarty_Internal_Data"/>
+			<class name="Smarty_Data"/>
+			<class name="Smarty_Variable"/>
+			<class name="Undefined_Smarty_Variable"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_php.php" md5="7a417908af8f2c33259ac090d9034c5c">
-			<provides type="class" name="Smarty_Internal_Resource_PHP"/>
+			<class name="Smarty_Internal_Resource_PHP"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_extends.php" md5="3fe97fe230574923d680be541e750a47">
-			<provides type="class" name="Smarty_Internal_Resource_Extends"/>
+			<class name="Smarty_Internal_Resource_Extends"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_templatelexer.php" md5="8b50d07b6915a91d0797f3ab80f2fee1">
-			<provides type="class" name="Smarty_Internal_Templatelexer"/>
+			<class name="Smarty_Internal_Templatelexer"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_while.php" md5="a650dbe1c3ffa91b41aacd34facc2f36">
-			<provides type="class" name="Smarty_Internal_Compile_While"/>
-			<provides type="class" name="Smarty_Internal_Compile_Whileclose"/>
+			<class name="Smarty_Internal_Compile_While"/>
+			<class name="Smarty_Internal_Compile_Whileclose"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_function.php" md5="f2b7a4f783a98469ba787218633bbbe7">
-			<provides type="class" name="Smarty_Internal_Compile_Function"/>
-			<provides type="class" name="Smarty_Internal_Compile_Functionclose"/>
+			<class name="Smarty_Internal_Compile_Function"/>
+			<class name="Smarty_Internal_Compile_Functionclose"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_object_block_function.php" md5="475ddd3fec3b5f62783a4d16fb585c64">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Object_Block_Function"/>
+			<class name="Smarty_Internal_Compile_Private_Object_Block_Function"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_continue.php" md5="f3c271c2bc57d9875735a51e28ceb76f">
-			<provides type="class" name="Smarty_Internal_Compile_Continue"/>
+			<class name="Smarty_Internal_Compile_Continue"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_filter.php" md5="099f9453a8586ddc42d5098f808e214e">
-			<provides type="class" name="Smarty_Internal_Filter"/>
+			<class name="Smarty_Internal_Filter"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_section.php" md5="577c0cc37b8988facd7fd9f53881c00f">
-			<provides type="class" name="Smarty_Internal_Compile_Section"/>
-			<provides type="class" name="Smarty_Internal_Compile_Sectionelse"/>
-			<provides type="class" name="Smarty_Internal_Compile_Sectionclose"/>
+			<class name="Smarty_Internal_Compile_Section"/>
+			<class name="Smarty_Internal_Compile_Sectionelse"/>
+			<class name="Smarty_Internal_Compile_Sectionclose"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_templateparser.php" md5="8e84280d2099942ed9736fc73661ea82">
-			<provides type="class" name="TP_yyToken"/>
-			<provides type="class" name="TP_yyStackEntry"/>
-			<provides type="class" name="Smarty_Internal_Templateparser"/>
+			<class name="TP_yyToken"/>
+			<class name="TP_yyStackEntry"/>
+			<class name="Smarty_Internal_Templateparser"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_template.php" md5="19b423d06073315a453587c7803589e2">
-			<provides type="class" name="Smarty_Internal_Template"/>
+			<class name="Smarty_Internal_Template"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_nocache.php" md5="70a10403bd29452e78baf17b6c17eb2e">
-			<provides type="class" name="Smarty_Internal_Compile_Nocache"/>
-			<provides type="class" name="Smarty_Internal_Compile_Nocacheclose"/>
+			<class name="Smarty_Internal_Compile_Nocache"/>
+			<class name="Smarty_Internal_Compile_Nocacheclose"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_utility.php" md5="e65158374a964a9b2eb5cbd28ce9ce74">
-			<provides type="class" name="Smarty_Internal_Utility"/>
+			<class name="Smarty_Internal_Utility"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_write_file.php" md5="0589e36bd71e00533c6571d3a5fa7e69">
-			<provides type="class" name="Smarty_Internal_Write_File"/>
+			<class name="Smarty_Internal_Write_File"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_include.php" md5="856531fe3a50d6b8d0f902d1634178a1">
-			<provides type="class" name="Smarty_Internal_Compile_Include"/>
+			<class name="Smarty_Internal_Compile_Include"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_modifier.php" md5="118631689e9ab76ef188859e16bcb479">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Modifier"/>
+			<class name="Smarty_Internal_Compile_Private_Modifier"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_wrapper.php" md5="1f583879be60e9bf34f20260b52f9815">
-			<provides type="class" name="Smarty_Internal_Wrapper"/>
+			<class name="Smarty_Internal_Wrapper"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_for.php" md5="e41bbe985e9cbb24e0b9584e67b574ce">
-			<provides type="class" name="Smarty_Internal_Compile_For"/>
-			<provides type="class" name="Smarty_Internal_Compile_Forelse"/>
-			<provides type="class" name="Smarty_Internal_Compile_Forclose"/>
+			<class name="Smarty_Internal_Compile_For"/>
+			<class name="Smarty_Internal_Compile_Forelse"/>
+			<class name="Smarty_Internal_Compile_Forclose"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_debug.php" md5="4fd865114ab630012263e5b8ddb5549f">
-			<provides type="class" name="Smarty_Internal_Debug"/>
+			<class name="Smarty_Internal_Debug"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_parsetree.php" md5="8a76f7f17dfefcb08737bca13485d230">
-			<provides type="class" name="_smarty_parsetree"/>
-			<provides type="class" name="_smarty_tag"/>
-			<provides type="class" name="_smarty_code"/>
-			<provides type="class" name="_smarty_doublequoted"/>
-			<provides type="class" name="_smarty_dq_content"/>
-			<provides type="class" name="_smarty_template_buffer"/>
-			<provides type="class" name="_smarty_text"/>
-			<provides type="class" name="_smarty_linebreak"/>
+			<class name="_smarty_parsetree"/>
+			<class name="_smarty_tag"/>
+			<class name="_smarty_code"/>
+			<class name="_smarty_doublequoted"/>
+			<class name="_smarty_dq_content"/>
+			<class name="_smarty_template_buffer"/>
+			<class name="_smarty_text"/>
+			<class name="_smarty_linebreak"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_config_load.php" md5="5be9cfbb5a9a7bfed2f7df8c4729ec1d">
-			<provides type="class" name="Smarty_Internal_Compile_Config_Load"/>
+			<class name="Smarty_Internal_Compile_Config_Load"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_foreach.php" md5="96c91d745a42b44b4877e925028ae649">
-			<provides type="class" name="Smarty_Internal_Compile_Foreach"/>
-			<provides type="class" name="Smarty_Internal_Compile_Foreachelse"/>
-			<provides type="class" name="Smarty_Internal_Compile_Foreachclose"/>
+			<class name="Smarty_Internal_Compile_Foreach"/>
+			<class name="Smarty_Internal_Compile_Foreachelse"/>
+			<class name="Smarty_Internal_Compile_Foreachclose"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_filter_handler.php" md5="05c185e8469393216c5ad7f964a51c2d">
-			<provides type="class" name="Smarty_Internal_Filter_Handler"/>
+			<class name="Smarty_Internal_Filter_Handler"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_rdelim.php" md5="c6ae61149576c0f84e317e57e3d06351">
-			<provides type="class" name="Smarty_Internal_Compile_Rdelim"/>
+			<class name="Smarty_Internal_Compile_Rdelim"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_registered_block.php" md5="c11721a94a9dd389999aabf4b0f23fff">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Registered_Block"/>
+			<class name="Smarty_Internal_Compile_Private_Registered_Block"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_call.php" md5="f52f2e338ab118fb027af3318ac86744">
-			<provides type="class" name="Smarty_Internal_Compile_Call"/>
+			<class name="Smarty_Internal_Compile_Call"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_print_expression.php" md5="6ff56866a42f0b6c3eda2028b9f8d684">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Print_Expression"/>
+			<class name="Smarty_Internal_Compile_Private_Print_Expression"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_file.php" md5="a2de868bfe359233b3a78caa99610fb6">
-			<provides type="class" name="Smarty_Internal_Resource_File"/>
+			<class name="Smarty_Internal_Resource_File"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_if.php" md5="cbc94ee018fe9ff54cd02881d585ed13">
-			<provides type="class" name="Smarty_Internal_Compile_If"/>
-			<provides type="class" name="Smarty_Internal_Compile_Else"/>
-			<provides type="class" name="Smarty_Internal_Compile_Elseif"/>
-			<provides type="class" name="Smarty_Internal_Compile_Ifclose"/>
+			<class name="Smarty_Internal_Compile_If"/>
+			<class name="Smarty_Internal_Compile_Else"/>
+			<class name="Smarty_Internal_Compile_Elseif"/>
+			<class name="Smarty_Internal_Compile_Ifclose"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_stream.php" md5="0789b329841b0e63bbad9830c9d785b4">
-			<provides type="class" name="Smarty_Internal_Resource_Stream"/>
+			<class name="Smarty_Internal_Resource_Stream"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_eval.php" md5="9da995273145e7828086794dd41e13bf">
-			<provides type="class" name="Smarty_Internal_Compile_Eval"/>
+			<class name="Smarty_Internal_Compile_Eval"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_registered.php" md5="c13ec9f081c78e63725c3b3e69ec2d03">
-			<provides type="class" name="Smarty_Internal_Resource_Registered"/>
+			<class name="Smarty_Internal_Resource_Registered"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_break.php" md5="c4ebe33ad0dcb9269f7d50387bf25c23">
-			<provides type="class" name="Smarty_Internal_Compile_Break"/>
+			<class name="Smarty_Internal_Compile_Break"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_config.php" md5="43f32faf46f19f4de718a28eaad3b831">
-			<provides type="class" name="Smarty_Internal_Config"/>
+			<class name="Smarty_Internal_Config"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_string.php" md5="49f2b2674687bd86113ee85b599f9645">
-			<provides type="class" name="Smarty_Internal_Resource_String"/>
+			<class name="Smarty_Internal_Resource_String"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_ldelim.php" md5="d8e510c2b69c8b4afc3b5beb866ea814">
-			<provides type="class" name="Smarty_Internal_Compile_Ldelim"/>
+			<class name="Smarty_Internal_Compile_Ldelim"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_special_variable.php" md5="466ab9fc0c97426198d73d1843b66e41">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Special_Variable"/>
+			<class name="Smarty_Internal_Compile_Private_Special_Variable"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_function_call_handler.php" md5="78a9bf5da3a0a56e971027de8f285792">
-			<provides type="class" name="Smarty_Internal_Function_Call_Handler"/>
+			<class name="Smarty_Internal_Function_Call_Handler"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_block_plugin.php" md5="7cb87b21c44aa564c2484be10a9ece9e">
-			<provides type="class" name="Smarty_Internal_Compile_Private_Block_Plugin"/>
+			<class name="Smarty_Internal_Compile_Private_Block_Plugin"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compilebase.php" md5="29da453ac62e45ea912d423805b9d978">
-			<provides type="class" name="Smarty_Internal_CompileBase"/>
+			<class name="Smarty_Internal_CompileBase"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_assign.php" md5="b46585f27587cb1d2d628ad95724c133">
-			<provides type="class" name="Smarty_Internal_Compile_Assign"/>
+			<class name="Smarty_Internal_Compile_Assign"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_block.php" md5="aea011fc85c11beb4c947a0d36687af2">
-			<provides type="class" name="Smarty_Internal_Compile_Block"/>
-			<provides type="class" name="Smarty_Internal_Compile_Blockclose"/>
+			<class name="Smarty_Internal_Compile_Block"/>
+			<class name="Smarty_Internal_Compile_Blockclose"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_config_file_compiler.php" md5="6db342a3462789ab7b8c94976a0741d9">
-			<provides type="class" name="Smarty_Internal_Config_File_Compiler"/>
+			<class name="Smarty_Internal_Config_File_Compiler"/>
 		</file>
 		<file filename="core/libs/filestore/File_Backend.interface.php" md5="c79afc3141e5e99ed996f9819d8d3fb6">
-			<provides type="interface" name="File_Backend"/>
+			<interface name="File_Backend"/>
 		</file>
 		<file filename="core/libs/filestore/FileContentFactory.class.php" md5="31927dda37cf96b9a096557bb3de96c5">
-			<provides type="class" name="FileContentFactory"/>
+			<class name="FileContentFactory"/>
 		</file>
 		<file filename="core/libs/filestore/FileException.class.php" md5="6b0dbf09f9d2e8486d993728c47aceb7">
-			<provides type="class" name="FileException"/>
+			<class name="FileException"/>
 		</file>
 		<file filename="core/libs/filestore/File_Contents.interface.php" md5="e35d0999ae55fc45c71d124eb8fcf3e4">
-			<provides type="interface" name="File_Contents"/>
+			<interface name="File_Contents"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="633ca7accc78f19b6190c6a15373a5ae">
-			<provides type="class" name="File_awss3_backend"/>
+			<class name="File_awss3_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="73dac8d52b9a4f2684e848c494dc24a8">
-			<provides type="class" name="Directory_local_backend"/>
+			<class name="Directory_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="3196e1d2178a5157b2cd0f9d64531d9d">
-			<provides type="class" name="File_local_backend"/>
+			<class name="File_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="6f2c8419844788e7316ee23be8367686">
-			<provides type="class" name="File_remote_backend"/>
+			<class name="File_remote_backend"/>
 		</file>
 		<file filename="core/libs/filestore/Directory_Backend.interface.php" md5="bc59635a5907b22eef6762ebf1e827ae">
-			<provides type="interface" name="Directory_Backend"/>
+			<interface name="Directory_Backend"/>
 		</file>
 		<file filename="core/libs/filestore/contents/File_unknown_contents.class.php" md5="bafda827286a6325a9f63bb0c602f44d">
-			<provides type="class" name="File_unknown_contents"/>
+			<class name="File_unknown_contents"/>
 		</file>
 		<file filename="core/libs/filestore/contents/File_gz_contents.class.php" md5="ca15262448475d926d5090cd4ae80cb8">
-			<provides type="class" name="File_gz_contents"/>
+			<class name="File_gz_contents"/>
 		</file>
 		<file filename="core/libs/filestore/contents/File_tgz_contents.class.php" md5="6b2bae2c687ab5af3224a78241df280c">
-			<provides type="class" name="File_tgz_contents"/>
+			<class name="File_tgz_contents"/>
 		</file>
 		<file filename="core/libs/filestore/contents/File_asc_contents.class.php" md5="5895642753525b23d4c32ba27ffd5f3a">
-			<provides type="class" name="File_asc_contents"/>
+			<class name="File_asc_contents"/>
 		</file>
 		<file filename="core/libs/cachecore/Cache.class.php" md5="ed03b7c6b3da0592db18f0ec9e2885d5">
-			<provides type="class" name="Cache"/>
-			<provides type="class" name="Cache_Exception"/>
+			<class name="Cache"/>
+			<class name="Cache_Exception"/>
 		</file>
 		<file filename="core/libs/cachecore/backends/cachefile.class.php" md5="91b5081c9286e3c35b182eea57a6169c">
-			<provides type="class" name="CacheFile"/>
+			<class name="CacheFile"/>
 		</file>
 		<file filename="core/libs/cachecore/backends/cacheapc.class.php" md5="e8621ab82f92c7c4beef45ba25c36bbb">
-			<provides type="class" name="CacheAPC"/>
+			<class name="CacheAPC"/>
 		</file>
 		<file filename="core/libs/cachecore/backends/cachepdo.class.php" md5="f22f2c33573350bdbb5315766e0b55f4">
-			<provides type="class" name="CachePDO"/>
+			<class name="CachePDO"/>
 		</file>
 		<file filename="core/libs/cachecore/backends/cachecore.class.php" md5="d0082b2918911221750e460e790e7476">
-			<provides type="class" name="CacheCore"/>
+			<class name="CacheCore"/>
 		</file>
 		<file filename="core/libs/cachecore/backends/icachecore.interface.php" md5="38c793c1d311f17e7a9e7442a236e981">
-			<provides type="interface" name="ICacheCore"/>
+			<interface name="ICacheCore"/>
 		</file>
 		<file filename="core/libs/cachecore/backends/cachexcache.class.php" md5="c70fabb077c1ad1ab832a9c57781eaa1">
-			<provides type="class" name="CacheXCache"/>
+			<class name="CacheXCache"/>
 		</file>
 		<file filename="core/libs/cachecore/backends/_tests/AllTests.php" md5="8971cbd66ad355fa4624e52bb79975d1">
-			<provides type="class" name="Console_CommandLine_AllTests"/>
+			<class name="Console_CommandLine_AllTests"/>
 		</file>
 		<file filename="core/libs/cachecore/backends/cachemc.class.php" md5="81fdb2f1dea57e622d281631961dac5f">
-			<provides type="class" name="CacheMC"/>
+			<class name="CacheMC"/>
 		</file>
 		<file filename="core/libs/phpmailer/test_script/index.php" md5="45241f2ae26b817a40b0749e0ac094de">
-			<provides type="class" name="phpmailerAppException"/>
+			<class name="phpmailerAppException"/>
 		</file>
 		<file filename="core/libs/phpmailer/test/phpmailerTest.php" md5="43a7f0716677814343354ad307ca94cf">
-			<provides type="class" name="phpmailerTest"/>
+			<class name="phpmailerTest"/>
 		</file>
 		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="4d4c02e6d43f392c9c0a8063ab06c431">
-			<provides type="class" name="PHPMailer"/>
-			<provides type="class" name="phpmailerException"/>
+			<class name="PHPMailer"/>
+			<class name="phpmailerException"/>
 		</file>
 		<file filename="core/libs/phpmailer/class.pop3.php" md5="59e034c4716079a89c623dec90db36d9">
-			<provides type="class" name="POP3"/>
+			<class name="POP3"/>
 		</file>
 		<file filename="core/libs/phpmailer/class.smtp.php" md5="20a0a777bc59b119f2322310896af1ce">
-			<provides type="class" name="SMTP"/>
+			<class name="SMTP"/>
 		</file>
 		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="56c381d3906f71748e805bca226a0552">
-			<provides type="class" name="DMI_mysqli_backend"/>
+			<class name="DMI_mysqli_backend"/>
 		</file>
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="bef826e821c8e9aee1fd7ddbc246bd4e">
-			<provides type="class" name="DMI_cassandra_backend"/>
+			<class name="DMI_cassandra_backend"/>
 		</file>
 		<file filename="core/libs/datamodel/backends/cache.backend.php" md5="49e515dbe415e8916df958f47c6f7e33">
-			<provides type="class" name="DMI_cache_backend"/>
+			<class name="DMI_cache_backend"/>
 		</file>
 		<file filename="core/libs/datamodel/Dataset.class.php" md5="9f7c4e7f2b64704881fc5326ba61c0f1">
-			<provides type="class" name="Dataset"/>
+			<class name="Dataset"/>
 		</file>
 		<file filename="core/libs/datamodel/DMI_Backend.interface.php" md5="32cad30e1366748f760d3a08ac86419a">
-			<provides type="interface" name="DMI_Backend"/>
+			<interface name="DMI_Backend"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/columnfamily.php" md5="1737cba1a62b1c85653c9065d8c4adfe">
-			<provides type="class" name="CassandraUtil"/>
-			<provides type="class" name="ColumnFamily"/>
-			<provides type="class" name="ColumnFamilyIterator"/>
-			<provides type="class" name="RangeColumnFamilyIterator"/>
-			<provides type="class" name="IndexedColumnFamilyIterator"/>
+			<class name="CassandraUtil"/>
+			<class name="ColumnFamily"/>
+			<class name="ColumnFamilyIterator"/>
+			<class name="RangeColumnFamilyIterator"/>
+			<class name="IndexedColumnFamilyIterator"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/connection.php" md5="8b74a4725cbaba42c1571d5e30a939c9">
-			<provides type="class" name="NoServerAvailable"/>
-			<provides type="class" name="IncompatibleAPIException"/>
-			<provides type="class" name="MaxRetriesException"/>
-			<provides type="class" name="ConnectionWrapper"/>
-			<provides type="class" name="ConnectionPool"/>
-			<provides type="class" name="Connection"/>
+			<class name="NoServerAvailable"/>
+			<class name="IncompatibleAPIException"/>
+			<class name="MaxRetriesException"/>
+			<class name="ConnectionWrapper"/>
+			<class name="ConnectionPool"/>
+			<class name="Connection"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TServerSocket.php" md5="79223ea1bb7225374365277202a02562">
-			<provides type="class" name="TServerSocket"/>
+			<class name="TServerSocket"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/THttpClient.php" md5="890dbc43471e9e799cec6f5dafb037a5">
-			<provides type="class" name="THttpClient"/>
+			<class name="THttpClient"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TBufferedTransport.php" md5="29ad92e05b3dd7c9dc8a41e2e8a26b62">
-			<provides type="class" name="TBufferedTransport"/>
+			<class name="TBufferedTransport"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TNullTransport.php" md5="34d14bc6411ff96561f4acdb1f4176ff">
-			<provides type="class" name="TNullTransport"/>
+			<class name="TNullTransport"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TMemoryBuffer.php" md5="a7f2f9951bd965578926eab93798fdc4">
-			<provides type="class" name="TMemoryBuffer"/>
+			<class name="TMemoryBuffer"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TPhpStream.php" md5="7862beac54fc21ae4d2d30ff98aca353">
-			<provides type="class" name="TPhpStream"/>
+			<class name="TPhpStream"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TSocketPool.php" md5="5bcc1d6dc794cc0dbecbff89fdf5571a">
-			<provides type="class" name="TSocketPool"/>
+			<class name="TSocketPool"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TServerTransport.php" md5="f778a85bc8fc52e752a7b88b4b9088a7">
-			<provides type="class" name="TServerTransport"/>
+			<class name="TServerTransport"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TSocket.php" md5="4ee33f2052f5e2bb380393e6e7f34b4d">
-			<provides type="class" name="TSocket"/>
+			<class name="TSocket"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TTransportFactory.php" md5="c3ddb6d18771dd873d785875ffbf9179">
-			<provides type="class" name="TTransportFactory"/>
+			<class name="TTransportFactory"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TFramedTransport.php" md5="a6af4768d74986b4bf512c20ff0f2ebe">
-			<provides type="class" name="TFramedTransport"/>
+			<class name="TFramedTransport"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TTransport.php" md5="0ed9cae8b94cba3a76daf52de00a8d54">
-			<provides type="class" name="TTransportException"/>
-			<provides type="class" name="TTransport"/>
+			<class name="TTransportException"/>
+			<class name="TTransport"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/packages/cassandra/cassandra_types.php" md5="2447354cc84e716506374cf518a991e3">
-			<provides type="class" name="cassandra_ConsistencyLevel"/>
-			<provides type="class" name="cassandra_IndexOperator"/>
-			<provides type="class" name="cassandra_IndexType"/>
-			<provides type="class" name="cassandra_Column"/>
-			<provides type="class" name="cassandra_SuperColumn"/>
-			<provides type="class" name="cassandra_ColumnOrSuperColumn"/>
-			<provides type="class" name="cassandra_NotFoundException"/>
-			<provides type="class" name="cassandra_InvalidRequestException"/>
-			<provides type="class" name="cassandra_UnavailableException"/>
-			<provides type="class" name="cassandra_TimedOutException"/>
-			<provides type="class" name="cassandra_AuthenticationException"/>
-			<provides type="class" name="cassandra_AuthorizationException"/>
-			<provides type="class" name="cassandra_ColumnParent"/>
-			<provides type="class" name="cassandra_ColumnPath"/>
-			<provides type="class" name="cassandra_SliceRange"/>
-			<provides type="class" name="cassandra_SlicePredicate"/>
-			<provides type="class" name="cassandra_IndexExpression"/>
-			<provides type="class" name="cassandra_IndexClause"/>
-			<provides type="class" name="cassandra_KeyRange"/>
-			<provides type="class" name="cassandra_KeySlice"/>
-			<provides type="class" name="cassandra_KeyCount"/>
-			<provides type="class" name="cassandra_Deletion"/>
-			<provides type="class" name="cassandra_Mutation"/>
-			<provides type="class" name="cassandra_TokenRange"/>
-			<provides type="class" name="cassandra_AuthenticationRequest"/>
-			<provides type="class" name="cassandra_ColumnDef"/>
-			<provides type="class" name="cassandra_CfDef"/>
-			<provides type="class" name="cassandra_KsDef"/>
+			<class name="cassandra_ConsistencyLevel"/>
+			<class name="cassandra_IndexOperator"/>
+			<class name="cassandra_IndexType"/>
+			<class name="cassandra_Column"/>
+			<class name="cassandra_SuperColumn"/>
+			<class name="cassandra_ColumnOrSuperColumn"/>
+			<class name="cassandra_NotFoundException"/>
+			<class name="cassandra_InvalidRequestException"/>
+			<class name="cassandra_UnavailableException"/>
+			<class name="cassandra_TimedOutException"/>
+			<class name="cassandra_AuthenticationException"/>
+			<class name="cassandra_AuthorizationException"/>
+			<class name="cassandra_ColumnParent"/>
+			<class name="cassandra_ColumnPath"/>
+			<class name="cassandra_SliceRange"/>
+			<class name="cassandra_SlicePredicate"/>
+			<class name="cassandra_IndexExpression"/>
+			<class name="cassandra_IndexClause"/>
+			<class name="cassandra_KeyRange"/>
+			<class name="cassandra_KeySlice"/>
+			<class name="cassandra_KeyCount"/>
+			<class name="cassandra_Deletion"/>
+			<class name="cassandra_Mutation"/>
+			<class name="cassandra_TokenRange"/>
+			<class name="cassandra_AuthenticationRequest"/>
+			<class name="cassandra_ColumnDef"/>
+			<class name="cassandra_CfDef"/>
+			<class name="cassandra_KsDef"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/packages/cassandra/Cassandra.php" md5="a08814c3226458b10489530d0b0b61a3">
-			<provides type="class" name="CassandraClient"/>
-			<provides type="class" name="cassandra_Cassandra_login_args"/>
-			<provides type="class" name="cassandra_Cassandra_login_result"/>
-			<provides type="class" name="cassandra_Cassandra_set_keyspace_args"/>
-			<provides type="class" name="cassandra_Cassandra_set_keyspace_result"/>
-			<provides type="class" name="cassandra_Cassandra_get_args"/>
-			<provides type="class" name="cassandra_Cassandra_get_result"/>
-			<provides type="class" name="cassandra_Cassandra_get_slice_args"/>
-			<provides type="class" name="cassandra_Cassandra_get_slice_result"/>
-			<provides type="class" name="cassandra_Cassandra_get_count_args"/>
-			<provides type="class" name="cassandra_Cassandra_get_count_result"/>
-			<provides type="class" name="cassandra_Cassandra_multiget_slice_args"/>
-			<provides type="class" name="cassandra_Cassandra_multiget_slice_result"/>
-			<provides type="class" name="cassandra_Cassandra_multiget_count_args"/>
-			<provides type="class" name="cassandra_Cassandra_multiget_count_result"/>
-			<provides type="class" name="cassandra_Cassandra_get_range_slices_args"/>
-			<provides type="class" name="cassandra_Cassandra_get_range_slices_result"/>
-			<provides type="class" name="cassandra_Cassandra_get_indexed_slices_args"/>
-			<provides type="class" name="cassandra_Cassandra_get_indexed_slices_result"/>
-			<provides type="class" name="cassandra_Cassandra_insert_args"/>
-			<provides type="class" name="cassandra_Cassandra_insert_result"/>
-			<provides type="class" name="cassandra_Cassandra_remove_args"/>
-			<provides type="class" name="cassandra_Cassandra_remove_result"/>
-			<provides type="class" name="cassandra_Cassandra_batch_mutate_args"/>
-			<provides type="class" name="cassandra_Cassandra_batch_mutate_result"/>
-			<provides type="class" name="cassandra_Cassandra_truncate_args"/>
-			<provides type="class" name="cassandra_Cassandra_truncate_result"/>
-			<provides type="class" name="cassandra_Cassandra_describe_schema_versions_args"/>
-			<provides type="class" name="cassandra_Cassandra_describe_schema_versions_result"/>
-			<provides type="class" name="cassandra_Cassandra_describe_keyspaces_args"/>
-			<provides type="class" name="cassandra_Cassandra_describe_keyspaces_result"/>
-			<provides type="class" name="cassandra_Cassandra_describe_cluster_name_args"/>
-			<provides type="class" name="cassandra_Cassandra_describe_cluster_name_result"/>
-			<provides type="class" name="cassandra_Cassandra_describe_version_args"/>
-			<provides type="class" name="cassandra_Cassandra_describe_version_result"/>
-			<provides type="class" name="cassandra_Cassandra_describe_ring_args"/>
-			<provides type="class" name="cassandra_Cassandra_describe_ring_result"/>
-			<provides type="class" name="cassandra_Cassandra_describe_partitioner_args"/>
-			<provides type="class" name="cassandra_Cassandra_describe_partitioner_result"/>
-			<provides type="class" name="cassandra_Cassandra_describe_snitch_args"/>
-			<provides type="class" name="cassandra_Cassandra_describe_snitch_result"/>
-			<provides type="class" name="cassandra_Cassandra_describe_keyspace_args"/>
-			<provides type="class" name="cassandra_Cassandra_describe_keyspace_result"/>
-			<provides type="class" name="cassandra_Cassandra_describe_splits_args"/>
-			<provides type="class" name="cassandra_Cassandra_describe_splits_result"/>
-			<provides type="class" name="cassandra_Cassandra_system_add_column_family_args"/>
-			<provides type="class" name="cassandra_Cassandra_system_add_column_family_result"/>
-			<provides type="class" name="cassandra_Cassandra_system_drop_column_family_args"/>
-			<provides type="class" name="cassandra_Cassandra_system_drop_column_family_result"/>
-			<provides type="class" name="cassandra_Cassandra_system_add_keyspace_args"/>
-			<provides type="class" name="cassandra_Cassandra_system_add_keyspace_result"/>
-			<provides type="class" name="cassandra_Cassandra_system_drop_keyspace_args"/>
-			<provides type="class" name="cassandra_Cassandra_system_drop_keyspace_result"/>
-			<provides type="class" name="cassandra_Cassandra_system_update_keyspace_args"/>
-			<provides type="class" name="cassandra_Cassandra_system_update_keyspace_result"/>
-			<provides type="class" name="cassandra_Cassandra_system_update_column_family_args"/>
-			<provides type="class" name="cassandra_Cassandra_system_update_column_family_result"/>
-			<provides type="interface" name="CassandraIf"/>
+			<class name="CassandraClient"/>
+			<class name="cassandra_Cassandra_login_args"/>
+			<class name="cassandra_Cassandra_login_result"/>
+			<class name="cassandra_Cassandra_set_keyspace_args"/>
+			<class name="cassandra_Cassandra_set_keyspace_result"/>
+			<class name="cassandra_Cassandra_get_args"/>
+			<class name="cassandra_Cassandra_get_result"/>
+			<class name="cassandra_Cassandra_get_slice_args"/>
+			<class name="cassandra_Cassandra_get_slice_result"/>
+			<class name="cassandra_Cassandra_get_count_args"/>
+			<class name="cassandra_Cassandra_get_count_result"/>
+			<class name="cassandra_Cassandra_multiget_slice_args"/>
+			<class name="cassandra_Cassandra_multiget_slice_result"/>
+			<class name="cassandra_Cassandra_multiget_count_args"/>
+			<class name="cassandra_Cassandra_multiget_count_result"/>
+			<class name="cassandra_Cassandra_get_range_slices_args"/>
+			<class name="cassandra_Cassandra_get_range_slices_result"/>
+			<class name="cassandra_Cassandra_get_indexed_slices_args"/>
+			<class name="cassandra_Cassandra_get_indexed_slices_result"/>
+			<class name="cassandra_Cassandra_insert_args"/>
+			<class name="cassandra_Cassandra_insert_result"/>
+			<class name="cassandra_Cassandra_remove_args"/>
+			<class name="cassandra_Cassandra_remove_result"/>
+			<class name="cassandra_Cassandra_batch_mutate_args"/>
+			<class name="cassandra_Cassandra_batch_mutate_result"/>
+			<class name="cassandra_Cassandra_truncate_args"/>
+			<class name="cassandra_Cassandra_truncate_result"/>
+			<class name="cassandra_Cassandra_describe_schema_versions_args"/>
+			<class name="cassandra_Cassandra_describe_schema_versions_result"/>
+			<class name="cassandra_Cassandra_describe_keyspaces_args"/>
+			<class name="cassandra_Cassandra_describe_keyspaces_result"/>
+			<class name="cassandra_Cassandra_describe_cluster_name_args"/>
+			<class name="cassandra_Cassandra_describe_cluster_name_result"/>
+			<class name="cassandra_Cassandra_describe_version_args"/>
+			<class name="cassandra_Cassandra_describe_version_result"/>
+			<class name="cassandra_Cassandra_describe_ring_args"/>
+			<class name="cassandra_Cassandra_describe_ring_result"/>
+			<class name="cassandra_Cassandra_describe_partitioner_args"/>
+			<class name="cassandra_Cassandra_describe_partitioner_result"/>
+			<class name="cassandra_Cassandra_describe_snitch_args"/>
+			<class name="cassandra_Cassandra_describe_snitch_result"/>
+			<class name="cassandra_Cassandra_describe_keyspace_args"/>
+			<class name="cassandra_Cassandra_describe_keyspace_result"/>
+			<class name="cassandra_Cassandra_describe_splits_args"/>
+			<class name="cassandra_Cassandra_describe_splits_result"/>
+			<class name="cassandra_Cassandra_system_add_column_family_args"/>
+			<class name="cassandra_Cassandra_system_add_column_family_result"/>
+			<class name="cassandra_Cassandra_system_drop_column_family_args"/>
+			<class name="cassandra_Cassandra_system_drop_column_family_result"/>
+			<class name="cassandra_Cassandra_system_add_keyspace_args"/>
+			<class name="cassandra_Cassandra_system_add_keyspace_result"/>
+			<class name="cassandra_Cassandra_system_drop_keyspace_args"/>
+			<class name="cassandra_Cassandra_system_drop_keyspace_result"/>
+			<class name="cassandra_Cassandra_system_update_keyspace_args"/>
+			<class name="cassandra_Cassandra_system_update_keyspace_result"/>
+			<class name="cassandra_Cassandra_system_update_column_family_args"/>
+			<class name="cassandra_Cassandra_system_update_column_family_result"/>
+			<interface name="CassandraIf"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/Thrift.php" md5="38e4f20321bc4d07f8ddde0859949c3a">
-			<provides type="class" name="TType"/>
-			<provides type="class" name="TMessageType"/>
-			<provides type="class" name="TException"/>
-			<provides type="class" name="TBase"/>
-			<provides type="class" name="TApplicationException"/>
+			<class name="TType"/>
+			<class name="TMessageType"/>
+			<class name="TException"/>
+			<class name="TBase"/>
+			<class name="TApplicationException"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/protocol/TProtocol.php" md5="946f288d0939f2f7eb8c3c2eafae5d89">
-			<provides type="class" name="TProtocolException"/>
-			<provides type="class" name="TProtocol"/>
-			<provides type="interface" name="TProtocolFactory"/>
+			<class name="TProtocolException"/>
+			<class name="TProtocol"/>
+			<interface name="TProtocolFactory"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/protocol/TBinarySerializer.php" md5="32eda29932063dba4ed75bdaaf419b8e">
-			<provides type="class" name="TBinarySerializer"/>
+			<class name="TBinarySerializer"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/protocol/TBinaryProtocol.php" md5="96576e9e8519a6d9324b0e2f3e01f2ee">
-			<provides type="class" name="TBinaryProtocol"/>
-			<provides type="class" name="TBinaryProtocolFactory"/>
-			<provides type="class" name="TBinaryProtocolAccelerated"/>
+			<class name="TBinaryProtocol"/>
+			<class name="TBinaryProtocolFactory"/>
+			<class name="TBinaryProtocolAccelerated"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/uuid.php" md5="e18fff7e213a2d00ce0ee67782b7b774">
-			<provides type="class" name="UUID"/>
-			<provides type="class" name="UUIDException"/>
+			<class name="UUID"/>
+			<class name="UUIDException"/>
 		</file>
 		<file filename="core/libs/datamodel/DMI.class.php" md5="164c5705996c8140e3bc4f790bf18ed8">
-			<provides type="class" name="DMI"/>
-			<provides type="class" name="DMI_Exception"/>
+			<class name="DMI"/>
+			<class name="DMI_Exception"/>
 		</file>
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="5e356493ead24a172bfe4e7e77c12c42">
-			<provides type="class" name="ComponentHandler"/>
+			<class name="ComponentHandler"/>
 		</file>
 		<file filename="core/libs/core/ISingleton.interface.php" md5="b60a34b2386f41de2d4eeb6403b6431b">
-			<provides type="interface" name="ISingleton"/>
+			<interface name="ISingleton"/>
 		</file>
 		<file filename="core/libs/core/Email.class.php" md5="a63f71e02f4f11bfb9d845e5799d142f">
-			<provides type="class" name="Email"/>
+			<class name="Email"/>
 		</file>
 		<file filename="core/libs/core/CurrentPage.class.php" md5="cf9a6e6681dac65597324fdd54d1935e">
-			<provides type="class" name="CurrentPage"/>
+			<class name="CurrentPage"/>
 		</file>
 		<file filename="core/libs/core/Time.class.php" md5="a25f25c1dc65e8f80657f446a14ad2da">
-			<provides type="class" name="Time"/>
+			<class name="Time"/>
 		</file>
 		<file filename="core/libs/core/Template.class.php" md5="a8c86411260fc9085ee5bbdbd24fd8b2">
-			<provides type="class" name="Template"/>
+			<class name="Template"/>
 		</file>
 		<file filename="core/libs/core/Form.class.php" md5="d8d56cee6d9d2e7d122e80b211cd4b25">
-			<provides type="class" name="FormGroup"/>
-			<provides type="class" name="FormElement"/>
-			<provides type="class" name="Form"/>
-			<provides type="class" name="FormTextInput"/>
-			<provides type="class" name="FormPasswordInput"/>
-			<provides type="class" name="FormSubmitInput"/>
-			<provides type="class" name="FormTextareaInput"/>
-			<provides type="class" name="FormHiddenInput"/>
-			<provides type="class" name="FormSelectInput"/>
-			<provides type="class" name="FormRadioInput"/>
-			<provides type="class" name="FormCheckboxInput"/>
-			<provides type="class" name="FormPageInsertables"/>
-			<provides type="class" name="FormPageMeta"/>
-			<provides type="class" name="FormFileInput"/>
+			<class name="FormGroup"/>
+			<class name="FormElement"/>
+			<class name="Form"/>
+			<class name="FormTextInput"/>
+			<class name="FormPasswordInput"/>
+			<class name="FormSubmitInput"/>
+			<class name="FormTextareaInput"/>
+			<class name="FormHiddenInput"/>
+			<class name="FormSelectInput"/>
+			<class name="FormRadioInput"/>
+			<class name="FormCheckboxInput"/>
+			<class name="FormPageInsertables"/>
+			<class name="FormPageMeta"/>
+			<class name="FormFileInput"/>
 		</file>
 		<file filename="core/libs/core/PackageXML.class.php" md5="8ea3cbc6acb5bc3bdf4057208e5337dd">
-			<provides type="class" name="PackageXML"/>
+			<class name="PackageXML"/>
 		</file>
 		<file filename="core/libs/core/Widget.class.php" md5="b5fcdfc211f1b47f2a58a935caf05788">
-			<provides type="class" name="Widget"/>
-			<provides type="class" name="WidgetException"/>
+			<class name="Widget"/>
+			<class name="WidgetException"/>
 		</file>
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="7260b76de6e32c9274dc1742aaea27fe">
-			<provides type="class" name="CAEDirectoryIterator"/>
+			<class name="CAEDirectoryIterator"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="0e23224c5cc2d7b6449772b934a583af">
-			<provides type="class" name="ConfigHandler"/>
+			<class name="ConfigHandler"/>
 		</file>
 		<file filename="core/libs/core/InstallArchive.class.php" md5="8ed41939490453ecd44446c8aae507a3">
-			<provides type="class" name="InstallArchive"/>
+			<class name="InstallArchive"/>
 		</file>
 		<file filename="core/libs/core/DB.class.php" md5="cfdba84bb7a05cdb7ee2663d6a571a84">
-			<provides type="class" name="DB"/>
+			<class name="DB"/>
 		</file>
 		<file filename="core/libs/core/Debug.class.php" md5="dcebd2756120b69c50e7b5dc82e8346b">
-			<provides type="class" name="Debug"/>
+			<class name="Debug"/>
 		</file>
 		<file filename="core/libs/core/Model.class.php" md5="ae8ac199605fa642f426709bba01547f">
-			<provides type="class" name="Model"/>
-			<provides type="class" name="ModelFactory"/>
-			<provides type="class" name="ModelException"/>
-			<provides type="class" name="ModelValidationException"/>
+			<class name="Model"/>
+			<class name="ModelFactory"/>
+			<class name="ModelException"/>
+			<class name="ModelValidationException"/>
 		</file>
 		<file filename="core/libs/core/Component.class.php" md5="5c6f121baa5d55a0fa667a0d30621eb7">
-			<provides type="class" name="Component"/>
+			<class name="Component"/>
 		</file>
 		<file filename="core/libs/core/SQLBuilder.class.php" md5="dc0e12fa960d4107163a8baae154c6c6">
-			<provides type="class" name="SQLBuilder"/>
-			<provides type="class" name="SQLBuilderSelect"/>
-			<provides type="class" name="SQLBuilderUpdate"/>
-			<provides type="class" name="SQLBuilderInsert"/>
-			<provides type="class" name="SQLBuilderInsertUpdate"/>
-			<provides type="class" name="SQLBuilderDelete"/>
+			<class name="SQLBuilder"/>
+			<class name="SQLBuilderSelect"/>
+			<class name="SQLBuilderUpdate"/>
+			<class name="SQLBuilderInsert"/>
+			<class name="SQLBuilderInsertUpdate"/>
+			<class name="SQLBuilderDelete"/>
 		</file>
 		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="0f4a5d9abb03778757f19db5150100b8">
-			<provides type="class" name="InstallArchiveAPI"/>
+			<class name="InstallArchiveAPI"/>
 		</file>
 		<file filename="core/libs/core/CLI.class.php" md5="e8ab6e1a12a44be2b68312428b65313c">
-			<provides type="class" name="CLI"/>
+			<class name="CLI"/>
 		</file>
 		<file filename="core/libs/core/Core.class.php" md5="26017b799d8f1d1118062cc6286c3719">
-			<provides type="class" name="Core"/>
+			<class name="Core"/>
 		</file>
 		<file filename="core/libs/core/HookHandler.class.php" md5="d536017f47709d5429a514046f4791db">
-			<provides type="class" name="HookHandler"/>
-			<provides type="class" name="Hook"/>
+			<class name="HookHandler"/>
+			<class name="Hook"/>
 		</file>
 		<file filename="core/libs/core/Session.class.php" md5="19f5b912cc76c9e468058d78fa81067a">
-			<provides type="class" name="Session"/>
+			<class name="Session"/>
 		</file>
 		<file filename="core/libs/core/View.class.php" md5="1323b8fbee7e86d7fc75f27ba7c61db5">
-			<provides type="class" name="View"/>
-			<provides type="class" name="ViewException"/>
+			<class name="View"/>
+			<class name="ViewException"/>
 		</file>
 		<file filename="core/libs/core/Controller.class.php" md5="19e30075afe0467270dd017293a0fc86">
-			<provides type="class" name="Controller"/>
+			<class name="Controller"/>
 		</file>
 		<file filename="core/libs/core/InstallTask.class.php" md5="c91003e892043625affc1a3832d57e98">
-			<provides type="class" name="InstallTask"/>
+			<class name="InstallTask"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="3b02d7ab3908d348ee9498988a487fd6">
-			<provides type="class" name="RepoXML"/>
+			<class name="RepoXML"/>
 		</file>
 		<file filename="core/libs/core/XMLLoader.class.php" md5="9682f4ae28259da56c54a53acf1ec378">
-			<provides type="class" name="XMLLoader"/>
+			<class name="XMLLoader"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/simplexml.class.php" md5="0e50c38a4681e9cb84a68ea789da3445">
-			<provides type="class" name="CFSimpleXML"/>
+			<class name="CFSimpleXML"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/stepconfig.class.php" md5="a38c9f3f668fa4b63647359912fe333c">
-			<provides type="class" name="CFStepConfig"/>
+			<class name="CFStepConfig"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/hadoopstep.class.php" md5="7188a08779be549d1708e683b1930ce4">
-			<provides type="class" name="CFHadoopStep"/>
+			<class name="CFHadoopStep"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/complextype.class.php" md5="62413ec15d34a88326498eacc7cac3aa">
-			<provides type="class" name="CFComplexType"/>
+			<class name="CFComplexType"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/array.class.php" md5="c774cbca2e1bbcf93979f53d948f0e77">
-			<provides type="class" name="CFArray"/>
+			<class name="CFArray"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/manifest.class.php" md5="9e1cb2514d1c8d1cc54c2419d1f08ff9">
-			<provides type="class" name="CFManifest"/>
+			<class name="CFManifest"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/mimetypes.class.php" md5="59e025e5f2909a69510f67979ff3e617">
-			<provides type="class" name="CFMimeTypes"/>
+			<class name="CFMimeTypes"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/response.class.php" md5="128a6eff75168fbcddbb1872aa46088d">
-			<provides type="class" name="CFResponse"/>
+			<class name="CFResponse"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/batchrequest.class.php" md5="21ce55b019eb80d01e47b8c01ecd5481">
-			<provides type="class" name="CFBatchRequest_Exception"/>
-			<provides type="class" name="CFBatchRequest"/>
+			<class name="CFBatchRequest_Exception"/>
+			<class name="CFBatchRequest"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/info.class.php" md5="8d90241070bfcc1f1dde20e4d583624a">
-			<provides type="class" name="CFInfo"/>
+			<class name="CFInfo"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/request.class.php" md5="efaf41d5e00e5891bc0c3df91ca74eb4">
-			<provides type="class" name="CFRequest"/>
+			<class name="CFRequest"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/policy.class.php" md5="adcb5b1de211f72a75ce450d41d7fc1c">
-			<provides type="class" name="CFPolicy"/>
+			<class name="CFPolicy"/>
 		</file>
 		<file filename="core/libs/aws-sdk/utilities/utilities.class.php" md5="7ef08a416322208d5d57cf5d95937512">
-			<provides type="class" name="CFUtilities"/>
+			<class name="CFUtilities"/>
 		</file>
 		<file filename="core/libs/aws-sdk/lib/requestcore/requestcore.class.php" md5="7af89f4463f4b5cab1f464c38481500c">
-			<provides type="class" name="RequestCore"/>
-			<provides type="class" name="ResponseCore"/>
-			<provides type="class" name="RequestCore_Exception"/>
+			<class name="RequestCore"/>
+			<class name="ResponseCore"/>
+			<class name="RequestCore_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYaml.php" md5="2b7116a9f3bf6f9e8cd914c81bf79830">
-			<provides type="class" name="sfYaml"/>
+			<class name="sfYaml"/>
 		</file>
 		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlParser.php" md5="91d3546a19262abc38275eb8f9d6dfb4">
-			<provides type="class" name="sfYamlParser"/>
+			<class name="sfYamlParser"/>
 		</file>
 		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlDumper.php" md5="28196a0efdcea67d72e1eaf71e936958">
-			<provides type="class" name="sfYamlDumper"/>
+			<class name="sfYamlDumper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/lib/yaml/lib/sfYamlInline.php" md5="9a63c1c4637eea3b4e208bea63e52baa">
-			<provides type="class" name="sfYamlInline"/>
+			<class name="sfYamlInline"/>
 		</file>
 		<file filename="core/libs/aws-sdk/sdk.class.php" md5="a1781821328ceeec0abd3e1c2d27da23">
-			<provides type="class" name="CFRuntime_Exception"/>
-			<provides type="class" name="CFRuntime"/>
-			<provides type="class" name="CFLoader"/>
+			<class name="CFRuntime_Exception"/>
+			<class name="CFRuntime"/>
+			<class name="CFLoader"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/ses.class.php" md5="4a75d7e756a98f7a005f48ecbf843f02">
-			<provides type="class" name="AmazonSES"/>
-			<provides type="class" name="Email_Exception"/>
+			<class name="AmazonSES"/>
+			<class name="Email_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/as.class.php" md5="ed1cbbef4b81de0e0fffaa2bffd02cdc">
-			<provides type="class" name="AmazonAS"/>
-			<provides type="class" name="AS_Exception"/>
+			<class name="AmazonAS"/>
+			<class name="AS_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/cloudfront.class.php" md5="bfa0f3e40691337fb67191d48e9f9100">
-			<provides type="class" name="CloudFront_Exception"/>
-			<provides type="class" name="AmazonCloudFront"/>
+			<class name="CloudFront_Exception"/>
+			<class name="AmazonCloudFront"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/iam.class.php" md5="413cded5ddc76100a613b99829d208f1">
-			<provides type="class" name="AmazonIAM"/>
-			<provides type="class" name="IAM_Exception"/>
+			<class name="AmazonIAM"/>
+			<class name="IAM_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/cloudwatch.class.php" md5="55d7e44eab912e1e0fd7ed91574c7f5b">
-			<provides type="class" name="AmazonCloudWatch"/>
-			<provides type="class" name="CloudWatch_Exception"/>
+			<class name="AmazonCloudWatch"/>
+			<class name="CloudWatch_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/sqs.class.php" md5="b19f73328ef483d5330d285221be0ba4">
-			<provides type="class" name="AmazonSQS"/>
-			<provides type="class" name="SQS_Exception"/>
+			<class name="AmazonSQS"/>
+			<class name="SQS_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/sdb.class.php" md5="7aea786b7ff0cb2d3d70166d386e399b">
-			<provides type="class" name="AmazonSDB"/>
-			<provides type="class" name="SDB_Exception"/>
+			<class name="AmazonSDB"/>
+			<class name="SDB_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/sns.class.php" md5="90155de1fe88a9f830b6ab620821729f">
-			<provides type="class" name="AmazonSNS"/>
-			<provides type="class" name="SNS_Exception"/>
+			<class name="AmazonSNS"/>
+			<class name="SNS_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/elasticbeanstalk.class.php" md5="e38fca8d343b61c62e3d4d009cf7c2d9">
-			<provides type="class" name="AmazonElasticBeanstalk"/>
-			<provides type="class" name="ElasticBeanstalk_Exception"/>
+			<class name="AmazonElasticBeanstalk"/>
+			<class name="ElasticBeanstalk_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/rds.class.php" md5="d41238fbaac148a9abf67ecbee0a5a11">
-			<provides type="class" name="AmazonRDS"/>
-			<provides type="class" name="RDS_Exception"/>
+			<class name="AmazonRDS"/>
+			<class name="RDS_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/emr.class.php" md5="bbdb8c35e1c09905fc5c88ea6259abb9">
-			<provides type="class" name="AmazonEMR"/>
-			<provides type="class" name="EMR_Exception"/>
+			<class name="AmazonEMR"/>
+			<class name="EMR_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/s3.class.php" md5="520c240ad8a53ef5de2bd47831a66c32">
-			<provides type="class" name="S3_Exception"/>
-			<provides type="class" name="AmazonS3"/>
+			<class name="S3_Exception"/>
+			<class name="AmazonS3"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/elb.class.php" md5="921b4dad03709d180e75340ada5a66fa">
-			<provides type="class" name="AmazonELB"/>
-			<provides type="class" name="ELB_Exception"/>
+			<class name="AmazonELB"/>
+			<class name="ELB_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/ec2.class.php" md5="c6a3d737504dd7f98774b6662feeb4bc">
-			<provides type="class" name="AmazonEC2"/>
-			<provides type="class" name="EC2_Exception"/>
+			<class name="AmazonEC2"/>
+			<class name="EC2_Exception"/>
 		</file>
 		<file filename="core/libs/aws-sdk/services/importexport.class.php" md5="e49faceaaa5763fdbc957df8cef6a23b">
-			<provides type="class" name="AmazonImportExport"/>
-			<provides type="class" name="ImportExport_Exception"/>
+			<class name="AmazonImportExport"/>
+			<class name="ImportExport_Exception"/>
 		</file>
 		<file filename="core/helpers/UpdaterHelper.class.php" md5="862559fa829e061a2e415444ededff7b">
-			<provides type="class" name="UpdaterHelper"/>
+			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/models/WidgetModel.class.php" md5="226a38dbed8595cf477607bb69b5f787">
-			<provides type="class" name="WidgetModel"/>
+			<class name="WidgetModel"/>
 		</file>
 		<file filename="core/models/Insertable.class.php" md5="47a8363e21c4220060e9f002958b15d1">
-			<provides type="class" name="InsertableModel"/>
+			<class name="InsertableModel"/>
 		</file>
 		<file filename="core/models/ComponentModel.class.php" md5="74e1805802ee6f0a19cedf52edf11057">
-			<provides type="class" name="ComponentModel"/>
+			<class name="ComponentModel"/>
 		</file>
 		<file filename="core/models/WidgetInstanceModel.class.php" md5="debb0ee0d9c7e227b8d7761548bf8ce5">
-			<provides type="class" name="WidgetInstanceModel"/>
+			<class name="WidgetInstanceModel"/>
 		</file>
 		<file filename="core/models/UpdateSiteModel.class.php" md5="c4461db9d60cba45a42aeb947b09c5ed">
-			<provides type="class" name="UpdateSiteModel"/>
+			<class name="UpdateSiteModel"/>
 		</file>
 		<file filename="core/models/PageModel.class.php" md5="ffc54505352a88088adce79ef17edc1a">
-			<provides type="class" name="PageModel"/>
+			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/ConfigModel.class.php" md5="84824cd393cbf2a8c60e543e02fbde91">
-			<provides type="class" name="ConfigModel"/>
+			<class name="ConfigModel"/>
 		</file>
 		<file filename="core/models/SessionModel.class.php" md5="5dccca1f7b78eb934c6f96d521396675">
-			<provides type="class" name="SessionModel"/>
+			<class name="SessionModel"/>
 		</file>
 		<file filename="core/widgets/AdminMenuWidget.php" md5="c9c942afe8a6d1b5f9ae6a43a6ada413">
-			<provides type="widget" name="AdminMenuWidget"/>
+			<widget name="AdminMenuWidget"/>
 		</file>
 		<file filename="core/controllers/DirectoryController.class.php" md5="e9e50405c06731773795016e8b95924e">
-			<provides type="controller" name="DirectoryController"/>
+			<controller name="DirectoryController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="cde863c0751aeedfaf337e8c0193d96c">
-			<provides type="controller" name="WidgetController"/>
+			<controller name="WidgetController"/>
 		</file>
 		<file filename="core/controllers/AdminController.php" md5="2c0a03790cbe8f6de055ce1e9ed8c826">
-			<provides type="controller" name="AdminController"/>
+			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/FileController.class.php" md5="3e3e15099355d21ab2d896ebaac75200">
-			<provides type="controller" name="FileController"/>
+			<controller name="FileController"/>
 		</file>
 		<file filename="core/controllers/FormController.class.php" md5="d9dc7664b0e7087f9503961fd2bebc45">
-			<provides type="controller" name="FormController"/>
+			<controller name="FormController"/>
 		</file>
 		<file filename="core/controllers/UpdaterController.class.php" md5="bf98b9ea3a875a86828735c1b467bb62">
-			<provides type="controller" name="UpdaterController"/>
+			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="5c1cee97fea17449fced7cfafe41a584">
-			<provides type="controller" name="GettingStartedController"/>
+			<controller name="GettingStartedController"/>
 		</file>
 		<file filename="core/controllers/ErrorController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
-			<provides type="controller" name="ErrorController"/>
+			<controller name="ErrorController"/>
 		</file>
 		<file filename="core/controllers/CoreController.php" md5="8ffb0cc67befaf90de21cce4bd9f4639">
-			<provides type="controller" name="CoreController"/>
+			<controller name="CoreController"/>
 		</file>
 	</files>
 	<pages>

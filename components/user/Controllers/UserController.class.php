@@ -10,21 +10,26 @@
  *
  * @author powellc
  */
-class UserController extends Controller{
+class UserController extends Controller_2_1{
 	
-	public static function Index(View $view){
+	public function index(){
+		$view = $this->getView();
+		
 		if(!$view->setAccess('g:admin')){
-			return;
+			return View::ERROR_ACCESSDENIED;
 		}
 		
-		
+		$this->setTemplate('/pages/user/index.tpl');
 	}
 	
-	public static function Login(View $view){
+	public function login(){
+		$view = $this->getView();
+		
+		$this->setTemplate('/pages/user/login.tpl');
 		
 		// Set the access permissions for this page as anonymous-only.
-		if(!$view->setAccess('g:anonymous;g:!admin')){
-			return;
+		if(!$this->setAccess('g:anonymous;g:!admin')){
+			return View::ERROR_ACCESSDENIED;
 		}
 		
 		$form = new Form();
@@ -93,6 +98,9 @@ class UserController extends Controller{
 		$view->assign('backends', ConfigHandler::Get('/user/backends'));
 		$view->assign('form', $form);
 		$view->assign('allowregister', ConfigHandler::Get('/user/register/allowpublic'));
+		
+		
+		return $view;
 	}
 	
 	public static function Register(View $view){
@@ -172,14 +180,16 @@ class UserController extends Controller{
 	
 	
 	public static function _HookHandler403(View $view){
-		if(Core::User()->exists()){
+		if(\Core\user()->exists()){
+		//if(Core::User()->exists()){
 			// User is already logged in... I can't do anything.
 			return true;
 		}
 		
-		$p = new PageModel('/User/Login');
-		$p->hijackView($view);
-		UserController::Login($view);
+		$newcontroller = new self();
+		$newcontroller->overwriteView($view);
+		$view->baseurl = '/User/Login';
+		$newcontroller->login();
 	}
 	
 	

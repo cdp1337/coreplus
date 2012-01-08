@@ -530,19 +530,28 @@ class Component_2_1{
 		// Get an array of class -> file (fully resolved)
 		$classes = array();
 		
-		foreach($this->_xmlloader->getElementByTagName('files')->getElementsByTagName('file') as $f){
+		//foreach($this->_xmlloader->getElementByTagName('files')->getElementsByTagName('file') as $f){
+		foreach($this->_xmlloader->getElements('/files/file') as $f){
 			$filename = $this->getBaseDir() . $f->getAttribute('filename');
-			foreach($f->getElementsByTagName('provides') as $p){
+			//foreach($f->getElementsByTagName('provides') as $p){
+			foreach($f->getElementsByTagName('class') as $p){
 				$n = strtolower($p->getAttribute('name'));
-				
-				switch(strtolower($p->getAttribute('type'))){
-					case 'class':
-					case 'controller':
-					case 'interface':
-					case 'widget':
-						$classes[$n] = $filename;
-						break;
-				}
+				$classes[$n] = $filename;
+			}
+			
+			foreach($f->getElementsByTagName('interface') as $p){
+				$n = strtolower($p->getAttribute('name'));
+				$classes[$n] = $filename;
+			}
+			
+			foreach($f->getElementsByTagName('controller') as $p){
+				$n = strtolower($p->getAttribute('name'));
+				$classes[$n] = $filename;
+			}
+			
+			foreach($f->getElementsByTagName('widget') as $p){
+				$n = strtolower($p->getAttribute('name'));
+				$classes[$n] = $filename;
 			}
 		}
 		
@@ -557,6 +566,13 @@ class Component_2_1{
 	public function getWidgetList(){
 		$widgets = array();
 		
+		foreach($this->_xmlloader->getElements('/files/file') as $f){
+			$filename = $this->getBaseDir() . $f->getAttribute('filename');
+			foreach($f->getElementsByTagName('widget') as $p){
+				$widgets[] = $p->getAttribute('name');
+			}
+		}
+		/*
 		if($this->hasModule()){
 			foreach($this->_xmlloader->getElementByTagName('module')->getElementsByTagName('file') as $f){
 				foreach($f->getElementsByTagName('provides') as $p){
@@ -566,7 +582,7 @@ class Component_2_1{
 				}
 			}
 		}
-		
+		*/
 		return $widgets;
 	}
 	
@@ -601,6 +617,29 @@ class Component_2_1{
 			}
 		}
 		return $views;
+	}
+	
+	/**
+	 * Get the list of controllers in this component.
+	 * 
+	 * @return array
+	 */
+	public function getControllerList(){
+		// Get an array of class -> file (fully resolved)
+		$classes = array();
+		
+		//foreach($this->_xmlloader->getElementByTagName('files')->getElementsByTagName('file') as $f){
+		foreach($this->_xmlloader->getElements('/files/file') as $f){
+			$filename = $this->getBaseDir() . $f->getAttribute('filename');
+			//foreach($f->getElementsByTagName('provides') as $p){
+			
+			foreach($f->getElementsByTagName('controller') as $p){
+				$n = strtolower($p->getAttribute('name'));
+				$classes[$n] = $filename;
+			}
+		}
+		
+		return $classes;
 	}
 	
 	/**

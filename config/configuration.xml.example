@@ -1,74 +1,65 @@
 <?xml version="1.0"?>
 <configuration>
 	<define name="PORT_NUMBER" type="int">
-		<default_value>80</default_value>
 		<value>80</value>
 		<description>Port number server is listening on for normal connections.</description>
 	</define>
-	
+
 	<define name="PORT_NUMBER_SSL" type="int">
-		<default_value>443</default_value>
 		<value>443</value>
 		<description>Port number server is listening on for secured connections.</description>
 	</define>
-	
+
 	<define name="ENABLE_SSL" type="Boolean">
-		<default_value>false</default_value>
 		<value>false</value>
 		<description>Enable or disable secured communication to this server.	It is suggested to enable this if possible.</description>
 	</define>
-	
+
 	<define name="SITENAME" type="string">
-		<default_value>My Core Plus Site</default_value>
 		<value>Core Plus Test Site (mobile1337ness)</value>
 		<description>The site name that can be used for emails and page titles.</description>
 	</define>
-	
+
 	<return name="site_url" type="string">
-		<default_value/>
 		<value></value>
 		<description>If a site url is provided and not blank, force the servername 
 		to match it.	Useful for restricting access to www.domain.com.
 		Please note, if you set this to an invalid location, you or anyone else will
 		NOT be able to access the site.</description>
 	</return>
-	
+
 	<define name="SITE_CONFIGURED" type="boolean" display="no">
-		<default_value>false</default_value>
 		<value>true</value>
 	</define>
-	
+
 	<define name="DEVELOPMENT_MODE" type="boolean">
-		<default_value>false</default_value>
 		<value>true</value>
 		<description>If this is a production site, it is advised to disable this.</description>
 	</define>
-	
+
 	<return name="tmp_dir_web" type="string">
 		<value>/tmp/cae2-git-web/</value>
 		<description>
-			The location of the tmp directory for cache, compile, and general temporary files.  
-			This directory MUST be writable by the apache user.  
-			Please ensure that this ends with a "/"
+		The location of the tmp directory for cache, compile, and general temporary files.  
+		This directory MUST be writable by the apache user.  
+		Please ensure that this ends with a "/"
 		</description>
 	</return>
-	
+
 	<return name="tmp_dir_cli" type="string">
 		<value>/tmp/cae2-git-cli/</value>
 		<description>
-			The location of the tmp directory for anything on the CLI that needs temp storage.  
-			Please ensure that this ends with a "/"
+		The location of the tmp directory for anything on the CLI that needs temp storage.  
+		Please ensure that this ends with a "/"
 		</description>
 	</return>
-	
+
 	<define name="TIME_GMT_OFFSET" type="int">
-		<default_value>0</default_value>
 		<value>0</value>
 		<description>The number of seconds this machine is off from the current GMT time.</description>
 	</define>
-	
+
 	<define name="TIME_DEFAULT_TIMEZONE" type="int">
-		<default_value>0</default_value>
 		<value>-4</value>
 		<description>The default timezone to display times in.</description>
 	</define>
@@ -76,49 +67,42 @@
 	<return name="cache_type" type="enum">
 		<option>apc</option>
 		<option>file</option>
-		<defaultValue>file</defaultValue>
 		<value>file</value>
 	</return>
 
 	<return name="database_server" type="string">
-		<defaultValue>localhost</defaultValue>
 		<value>localhost</value>
 		<description>The server that will be hosting the database, usually leaving this localhost will suffice.</description>
 	</return>
-	
+
 	<return name="database_port" type="int">
-		<defaultValue>3306</defaultValue>
 		<value>3306</value>
 	</return>
-	
+
 	<return name="database_type" type="enum">
 		<option>mysql</option>
 		<option>mysqli</option>
 		<option>cassandra</option>
-		<defaultValue>mysqli</defaultValue>
 		<value>mysqli</value>
 	</return>
-	
+
 	<return name="database_name" type="string">
-		<defaultValue>db_name</defaultValue>
-		<value>db_name_build20110608</value>
+		<!--<value>db_name_buildv21</value>-->
+		<value>db_name_build201110</value>
 	</return>
-	
+
 	<return name="database_user" type="string">
-		<defaultValue>user</defaultValue>
 		<value>db_user</value>
 	</return>
-	
+
 	<return name="database_pass" type="string">
-		<defaultValue/>
 		<value>db_pass</value>
 	</return>
-	
+
 	<define name="DB_PREFIX" type="string">
-		<defaultValue>CAE2_</defaultValue>
 		<value>CAE2_</value>
 	</define>
-	
+
 	<!-- Uncomment this to change the GnuPG home directory to a more secure location. -->
 	<!--
 	<define name="GPG_HOMEDIR" type="string">

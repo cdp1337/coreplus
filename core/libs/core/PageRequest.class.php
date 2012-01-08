@@ -1,16 +1,50 @@
 <?php
 
 class PageRequest{
-	public $contentType = 'text/html';
+	
+	// NOT supported
+	// const METHOD_OPTIONS = 'OPTIONS';
+	
+	// NOT supported
+	// const METHOD_TRACE  = 'TRACE';
+	const METHOD_HEAD   = 'HEAD';
+	const METHOD_GET    = 'GET';
+	const METHOD_POST   = 'POST';
+	const METHOD_PUT    = 'PUT';
+	const METHOD_PUSH   = 'PUSH';
+	const METHOD_DELETE = 'DELETE';
+	
+	/**
+	 * Array of content types accepted by the browser.
+	 * 
+	 * @var array
+	 */
+	public $contentTypes = array();
+	
+	/**
+	 * Array of languages accepted by the browser.
+	 * 
+	 * @var array
+	 */
+	// @todo Complete this
+	//public $acceptLanguages = array();
+	
 	public $method = null;
 	public $useragent = null;
 	public $uri = null;
 	public $uriresolved = null;
 	public $protocol = null;
 	
-	public function __construct(){
-		$uri = $_SERVER['REQUEST_URI'];
-
+	public $parameters = array();
+	
+	public $ctype = View::CTYPE_HTML;
+	
+	public function __construct($uri = ''){
+		
+		$this->uri = $uri;
+		
+		// Resolve the URI, this will ensure a usable, valid path.
+		
 		// If blank, default to '/' (should be root url)
 		if(!$uri) $uri = ROOT_WDIR;
 		
@@ -32,6 +66,27 @@ class PageRequest{
 			$ctype = 'html';
 		}
 		
+		$this->uriresolved = $uri;
+		$this->protocol = $_SERVER['SERVER_PROTOCOL'];
+		// Specified with prepending ".xml|.json,etc" to the resource.
+		switch($ctype){
+			case 'xml':  $this->ctype = View::CTYPE_XML;  break;
+			case 'json': $this->ctype = View::CTYPE_JSON; break;
+			default:     $this->ctype = View::CTYPE_HTML; break;
+		}
+		
+		$this->_resolveMethod();
+		$this->_resolveAcceptHeader();
+		$this->_resolveUSHeader();
+		
+		if(is_array($_GET)){
+			foreach($_GET as $k => $v){
+				if(is_numeric($k)) continue;
+				$this->parameters[$k] = $v;
+			}
+		}
+		
+		return;
 		
 		// Trim off anything after the first & if present.
 		//if(strpos($uri, '&') !== false) $uri = substr($uri, 0, strpos($uri, '&'));
@@ -39,11 +94,16 @@ class PageRequest{
 		$p = PageModel::Find(array('rewriteurl' => $uri, 'fuzzy' => 0), 1);
 		
 		// Split this URL, it'll be used somewhere.
+		
+		
+		// The core information can be retrieved from the PageModel's logic.
 		$pagedat = PageModel::SplitBaseURL($uri);
+		var_dump($pagedat, $_GET); die();
+		
 		
 		if($p){
 			// :) Found it
-			$this->_page = $p;
+			$this->pagemodel = $p;
 		}
 		elseif($pagedat){
 			// Is this even a valid controller?
@@ -51,7 +111,7 @@ class PageRequest{
 			$p = new PageModel();
 			$p->set('baseurl', $uri);
 			$p->set('rewriteurl', $uri);
-			$this->_page = $p;
+			$this->pagemodel = $p;
 		}
 		else{
 			// No page in the database and no valid controller... sigh
@@ -63,13 +123,13 @@ class PageRequest{
 		// Make sure all the parameters from both standard GET and core parameters are tacked on.
 		if($pagedat && $pagedat['parameters']){
 			foreach($pagedat['parameters'] as $k => $v){
-				$this->_page->setParameter($k, $v);
+				$this->pagemodel->setParameter($k, $v);
 			}
 		}
 		if(is_array($_GET)){
 			foreach($_GET as $k => $v){
 				if(is_numeric($k)) continue;
-				$this->_page->setParameter($k, $v);
+				$this->pagemodel->setParameter($k, $v);
 			}
 		}
 		
@@ -80,18 +140,171 @@ class PageRequest{
 			case 'json': $ctype = View::CTYPE_JSON; break;
 			default:     $ctype = View::CTYPE_HTML; break;
 		}
+	}
+	
+	/**
+	 * Get an array of all the parts of this request, including:
+	 * 'controller', 'method', 'parameters', 'baseurl', 'rewriteurl'
+	 * 
+	 * @return array
+	 */
+	public function splitParts(){
+		$ret = PageModel::SplitBaseURL($this->uriresolved);
 		
-		$view = $this->_page->getView();
-		$view->request['contenttype'] = $ctype;
-		$view->response['contenttype'] = $ctype; // By default, this can be the same.
-		$view->request['method'] = $_SERVER['REQUEST_METHOD'];
-		$view->request['useragent'] = $_SERVER['HTTP_USER_AGENT'];
-		$view->request['uri'] = $_SERVER['REQUEST_URI'];
-		$view->request['uriresolved'] = $uri;
-		$view->request['protocol'] = $_SERVER['SERVER_PROTOCOL'];
+		// No?
+		if(!$ret){
+			$ret = array(
+				'controller' => null, 'method' => null, 'parameters' => null, 'baseurl' => null, 'rewriteurl' => null
+			);
+		}
 		
+		// Tack on the parameters
+		if($ret['parameters'] === null) $ret['parameters'] = array();
+		$ret['parameters'] = array_merge($ret['parameters'], $this->parameters);
 		
-		//$this->_page->getView();
-		//var_dump($this->_page); die();
+		return $ret;
+	}
+	
+	/**
+	 * Shortcut function to return just the base url
+	 * 
+	 * Utilizes the SplitBaseURL method.
+	 * 
+	 * @return string 
+	 */
+	public function getBaseURL(){
+		$parts = $this->splitParts();
+		return $parts['baseurl'];
+	}
+	
+	/**
+	 * Execute the controller and method this page request points to.
+	 * 
+	 * @return View
+	 */
+	public function execute(){
+		$pagedat = $this->splitParts();
+		
+		/// A few sanity/security checks for the controller's sake.
+		
+		// The controller must exist first!
+		// (note, the SplitParts logic already takes care of the "Is this a valid controller" logic)
+		if(!$pagedat['controller']){
+			return $this->_viewNotFound();
+		}
+		
+		// Any method that starts with a "_" is an internal-only method!
+		if($pagedat['method']{0} == '_'){
+			return $this->_viewNotFound();
+		}
+		
+		// It also must be a part of the class... obviously
+		if(!method_exists($pagedat['controller'], $pagedat['method'])){
+			return $this->_viewNotFound();
+		}
+		
+		// This will be a Controller object.
+		$c = Controller_2_1::Factory($pagedat['controller']);
+		$return = call_user_func(array($c, $pagedat['method']));
+		if(is_int($return)){
+			// A generic error code was returned.  Create a View with that code and return that instead.
+			$view = new View();
+			$view->error = $return;
+			return $view;
+		}
+		elseif($return === null){
+			// Hopefully it's setup!
+			return $c->getView();
+		}
+		else{
+			return $return;
+		}
+	}
+	
+	/**
+	 * Create a generic "not found" view.
+	 * 
+	 * @return View 
+	 */
+	private function _viewNotFound(){
+		$view = new View();
+		$view->error = View::ERROR_NOTFOUND;
+		return $view;
+	}
+	
+	private function _resolveMethod(){
+		// Make sure it's a valid METHOD... don't know what else it could be, but...
+		switch($_SERVER['REQUEST_METHOD']){
+			case self::METHOD_DELETE:
+			case self::METHOD_GET:
+			case self::METHOD_HEAD:
+			case self::METHOD_POST:
+			case self::METHOD_PUSH:
+			case self::METHOD_PUT:
+				$this->method = $_SERVER['REQUEST_METHOD'];
+				break;
+			default:
+				$this->method = self::METHOD_GET;
+		}
+	}
+	
+	private function _resolveAcceptHeader(){
+		// I need to ensure there's at least a default.
+		$header = (isset($_SERVER['HTTP_ACCEPT'])) ? $_SERVER['HTTP_ACCEPT'] : 'text/html';
+		
+		// As per the Accept HTTP 1.1 spec, all accepts MUST be separated with a comma.
+		$header = explode(',', $header);
+		
+		// Clear the array
+		$this->contentTypes = array();
+		
+		// There are a couple special-case exceptions that must go first.
+		if($this->ctype == View::CTYPE_JSON){
+			// JSON is dependent on either the config being true or an appropriate header.
+			if(ALLOW_NONXHR_JSON || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') ){
+				$this->contentTypes[] = array('type' => View::CTYPE_JSON, 'weight' => 1.0);
+			}
+			else{
+				// DENIED :p
+				$this->ctype = View::CTYPE_HTML;
+			}
+		}
+		
+		// And set each one.
+		foreach($header as $h){
+			if(strpos($h, ';') === false){
+				$weight = 1.0; // Do 1.0 to ensure it's parsed as a float and not an int.
+				$content = $h;
+			}
+			else{
+				list($content, $weight) = explode(';', $h);
+				// Trim off the "q=" bit.
+				$weight = floatval( substr($weight, 3) );
+			}
+			
+			$this->contentTypes[] = array(
+				'type' => $content,
+				'weight' => $weight
+			);
+		}
+	}
+	
+	private function _resolveUSHeader(){
+		$ua = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';
+		$this->useragent = $ua;
+	}
+	
+	
+	/**
+	 * The core page request instantiated from the browser.
+	 * 
+	 * @return PageRequest
+	 */
+	public static function GetSystemRequest(){
+		static $instance = null;
+		if($instance === null){
+			$instance = new PageRequest($_SERVER['REQUEST_URI']);
+		}
+		return $instance;
 	}
 }

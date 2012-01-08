@@ -95,8 +95,6 @@ class Core implements ISingleton{
 	private $_profiletimes = array();
 	
 	
-	private static $_User = null;
-	
 	
 	/*****     PUBLIC METHODS       *********/
 	
@@ -473,8 +471,7 @@ class Core implements ISingleton{
 	 * @return Cache
 	 */
 	public static function Cache(){
-		return \Core\cache();
-		//return Cache::GetSystemCache();
+		return Cache::GetSystemCache();
 	}
 	
 	/**
@@ -612,6 +609,25 @@ class Core implements ISingleton{
     public static function GetComponents(){
         return self::Singleton()->_components;
     }
+	
+	/**
+	 * Lookup a component by a controller.
+	 * Useful for figuring out what API version a given controller needs to be handled as.
+	 * 
+	 * @param string $controller 
+	 */
+	public static function GetComponentByController($controller){
+		$controller = strtolower($controller);
+		
+		$self = self::Singleton();
+		foreach($self->_components as $c){
+			$controllers = $c->getControllerList();
+			if(isset($controllers[$controller])) return $c;
+		}
+		
+		// No?
+		return null;
+	}
 	
 	/**
 	 * Get the standard HTTP request headers for retrieving remote files.

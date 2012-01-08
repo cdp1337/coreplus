@@ -592,6 +592,35 @@ class Component extends XMLLoader{
 	}
 	
 	/**
+	 * Get the list of controllers in this component.
+	 * 
+	 * @return array
+	 */
+	public function getControllerList(){
+		// Get an array of class -> file (fully resolved)
+		$classes = array();
+		
+		if($this->hasModule()){
+			foreach($this->getElementByTagName('module')->getElementsByTagName('file') as $f){
+				$filename = $this->getBaseDir() . $f->getAttribute('filename');
+				//foreach($f->getElementsByTagName('provides') as $p){
+
+				foreach($f->getElementsByTagName('provides') as $p){
+					$n = strtolower($p->getAttribute('name'));
+
+					switch(strtolower($p->getAttribute('type'))){
+						case 'controller':
+							$classes[$n] = $filename;
+							break;
+					}
+				}
+			}
+		}
+		
+		return $classes;
+	}
+	
+	/**
 	 * Return the fully resolved name of the smarty plugin directory for 
 	 * this component (if there is one).
 	 * 

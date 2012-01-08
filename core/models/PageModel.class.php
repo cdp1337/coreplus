@@ -435,15 +435,39 @@ class PageModel extends Model{
 		if($posofslash) $controller = substr($base, 0, $posofslash);
 		else $controller = $base;
 
-		if(class_exists($controller . 'Controller') && is_subclass_of($controller . 'Controller', 'Controller')){
-			$controller = $controller . 'Controller';
+		// Preferred way of handling controller names.
+		if(class_exists($controller . 'Controller')){
+			switch(true){
+				// 2.1 API
+				case is_subclass_of($controller . 'Controller', 'Controller_2_1'):
+				// 1.0 API
+				case is_subclass_of($controller . 'Controller', 'Controller'):
+					$controller = $controller . 'Controller';
+					break;
+				default:
+					// Not a valid controller
+					return null;
+			}
 		}
-		elseif(class_exists($controller) && is_subclass_of($controller, 'Controller')){
-			$controller = $controller;
+		// Not quite preferred way, but still works.
+		elseif(class_exists($controller)){
+			switch(true){
+				// 2.1 API
+				case is_subclass_of($controller, 'Controller_2_1'):
+				// 1.0 API
+				case is_subclass_of($controller, 'Controller'):
+					$controller = $controller;
+					break;
+				default:
+					// Not a valid controller
+					return null;
+			}
 		}
 		else{
+			// Not even found!
 			return null;
 		}
+		
 		
 		// Trim the base.
 		if($posofslash !== false) $base = substr($base, $posofslash + 1);

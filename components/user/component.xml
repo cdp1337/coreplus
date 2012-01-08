@@ -1,51 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.3" name="User" execmode="web">
-	<requires name="core" type="component"/>
-	<requires name="Facebook" type="component"/>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.3" name="user" execmode="web">
+	
+	<requires>
+		<require name="core" type="component"/>
+		<require name="Facebook" type="component"/>
+	</requires>
+	
 	<smartyplugins directory="helpers/smarty-plugins/"/>
-	<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
+	
+	<hooks>
+		<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
+	</hooks>
+	
 	<forms>
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
-	<library>
+	
+	<files>
 		<file filename="Models/UserModel.class.php" md5="5d0d13c927f3833df02a6c9c1fda31ff">
-			<provides type="class" name="UserModel"/>
+			<class name="UserModel"/>
 		</file>
 		<file filename="UserForm.class.php">
-			<provides type="class" name="FormAccessStringInput"/>
+			<class name="FormAccessStringInput"/>
 		</file>
 		<file filename="Models/UserGroupModel.php">
-			<provides type="class" name="UserGroupModel"/>
+			<class name="UserGroupModel"/>
 		</file>
 		<file filename="Models/UserUserConfigModel.class.php" md5="7dbdfdaa162114d3b0b7fe04ea920891">
-			<provides type="class" name="UserUserConfigModel"/>
+			<class name="UserUserConfigModel"/>
 		</file>
 		<file filename="Models/UserConfigModel.class.php" md5="e85fe725f89604ed6f572befc82586c0">
-			<provides type="class" name="UserConfigModel"/>
+			<class name="UserConfigModel"/>
 		</file>
 		<file filename="User_Backend.interface.php" md5="0a416f5652d467e4bc284c0f007da36f">
-			<provides type="interface" name="User_Backend"/>
+			<interface name="User_Backend"/>
 		</file>
 		<file filename="User.class.php" md5="03cf100cd93e77e9570727edb8049a03">
-			<provides type="class" name="User"/>
-			<provides type="class" name="UserException"/>
+			<class name="User"/>
+			<class name="UserException"/>
 		</file>
 		<file filename="backends/User_datamodel.backend.php" md5="cf9fd1b2a0b4294eb0875a47522efa78">
-			<provides type="class" name="User_datamodel_Backend"/>
+			<class name="User_datamodel_Backend"/>
 		</file>
 		<file filename="backends/User_facebook.backend.php" md5="1fe13307af2252b037b029a79f536c81">
-			<provides type="class" name="User_facebook_Backend"/>
+			<class name="User_facebook_Backend"/>
 		</file>
-	</library>
-	<module>
 		<file filename="Controllers/UserController.class.php" md5="219aa97f369471d3f5f1aa5fc119a633">
-			<provides type="controller" name="UserController"/>
+			<controller name="UserController"/>
 		</file>
 		<file filename="Widgets/UserLoginWidget.class.php" md5="154480303036d9fe2e09a0537979f41f">
 			<provides type="widget" name="UserLoginWidget"/>
 		</file>
-	</module>
+	</files>
 	<view>
 		<file filename="templates/widgets/userlogin.tpl" md5="8a8d32b7f36e7ee581ece66be94b4d2d"/>
 		<file filename="templates/emails/user/forgotpassword.tpl" md5="3cceaf071bb8cd76a9f7c15fcc1da84e"/>

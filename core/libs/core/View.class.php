@@ -91,6 +91,11 @@ class View {
 
 	private $_params;
 
+	/**
+	 * The base URL of this view.  Used to resolve the template filename.
+	 * 
+	 * @var string
+	 */
 	public $baseurl;
 	public $title;
 	public $metas = array();
@@ -111,27 +116,15 @@ class View {
 	public $templatename;
 	
 	/**
-	 * Associative array of request data, generally populated from the core system.
+	 * The content type of this view.
+	 * Generally set from the controller.
 	 * 
-	 * @var array
+	 * This IS sent to the browser if it's a page-type view!
+	 * 
+	 * @var string
 	 */
-	public $request = array(
-		'contenttype' => 'text/html',
-		'method' => null,
-		'useragent' => null,
-		'uri' => null,
-		'uriresolved' => null,
-		'protocol' => null,
-	);
+	public $contenttype = View::CTYPE_HTML;
 	
-	/**
-	 * Associative array to use in the response of this view.
-	 * Only applicable for full pages.
-	 * @var array 
-	 */
-	public $response = array(
-		'contenttype' => 'text/html',
-	);
 	
 	/**
 	 * The master template to render this view with.
@@ -222,18 +215,31 @@ class View {
 		if($this->mode == View::MODE_NOOUTPUT){
 			return null;
 		}
-		//var_dump($this);die();
+		
+		// Resolve the template based on the error code. (if present)
+		if($this->error != View::ERROR_NOERROR){
+			// Update some information in the view.
+			// Transpose some useful data for it.
+			//$view->baseurl = '/Error/Error' . $view->error;
+			//$view->setParameters(array());
+			$tmpl = '/pages/error/error' . $this->error . '.tpl';
+			//$mastertmpl = ConfigHandler::Get('/theme/default_template');
+		}
+		else{
+			$tmpl = $this->templatename;
+			//$mastertmpl = 
+		}
 		
 		// If the content type is set to something other that html, check if that template exists.
-		switch($this->response['contenttype']){
+		switch($this->contenttype){
 			case View::CTYPE_XML:
-				$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'xml.tpl', $this->templatename));
+				$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'xml.tpl', $tmpl));
 				if($ctemp){
-					$this->templatename = $ctemp;
-					$this->mastertemplate = 'index.xml.tpl';
+					$tmpl = $ctemp;
+					//$this->mastertemplate = 'index.xml.tpl';
 				}
 				else{
-					$this->response['contenttype'] = View::CTYPE_HTML;
+					$this->contenttype = View::CTYPE_HTML;
 				}
 				break;
 			case View::CTYPE_JSON:
@@ -241,34 +247,32 @@ class View {
 				// (because JSON supports raw data ^_^ )
 				if(sizeof($this->jsondata)){
 					$this->mastertemplate = false;
-					$this->templatename = false;
+					$tmpl = false;
 					return json_encode($this->jsondata);
 				}
-				$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'json.tpl', $this->templatename));
+				$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'json.tpl', $tmpl));
 				if($ctemp){
-					$this->templatename = $ctemp;
+					$tmpl = $ctemp;
 					//$this->mastertemplate = 'index.json.tpl';
 					$this->mastertemplate = false;
 				}
 				else{
-					$this->response['contenttype'] = View::CTYPE_HTML;
+					$this->contenttype = View::CTYPE_HTML;
 				}
 				break;
 		}
-		//var_dump($this->templatename, $this->contenttype);
-		
 		
 		switch($this->mode){
 			case View::MODE_PAGE:
 			case View::MODE_AJAX:
 			case View::MODE_PAGEORAJAX:
 				$t = $this->getTemplate();
-				return $t->fetch($this->templatename);
+				return $t->fetch($tmpl);
 				break;
 			case View::MODE_WIDGET:
 				// This template can be a couple things.
-				$tn = Template::ResolveFile(preg_replace('/^pages\//', 'widgets/', $this->templatename));
-				if(!$tn) $tn = $this->templatename;
+				$tn = Template::ResolveFile(preg_replace('/^pages\//', 'widgets/', $tmpl));
+				if(!$tn) $tn = $tmpl;
 				//var_dump($tn);
 				$t = $this->getTemplate();
 				//var_dump($t);
@@ -282,12 +286,18 @@ class View {
 		$body = $this->fetchBody();
 		
 		// If there's no template, I have nothing to even do!
-		if(!$this->mastertemplate) return $body;
+		if($this->mastertemplate === false){
+			return $body;
+		}
+		// Else if it's null, it's just not set yet :p
+		elseif($this->mastertemplate === null){
+			$this->mastertemplate = ConfigHandler::Get('/theme/default_template');
+		}
 		
 		// Whee!
 		//var_dump($this->templatename, Template::ResolveFile($this->templatename));
 		// Content types take priority on controlling the master template.
-		if($this->response['contenttype'] == View::CTYPE_JSON){
+		if($this->contenttype == View::CTYPE_JSON){
 			$mastertpl = false;
 		}
 		else{
@@ -330,7 +340,7 @@ class View {
 			$template->assign('messages', Core::GetMessages());
 			
 			// Tack on the pre and post body variables from the current page.
-			$body = CurrentPage::GetBodyPre() . $body . CurrentPage::GetBodyPost();
+			//$body = CurrentPage::GetBodyPre() . $body . CurrentPage::GetBodyPost();
 		}
 		// Widgets need some special variables too.
 		//if($this->mode == View::MODE_WIDGET){
@@ -342,22 +352,73 @@ class View {
 		
 		$data = $template->fetch($mastertpl);
 		
-		if($this->mode == View::MODE_PAGE && $this->response['contenttype'] == View::CTYPE_HTML){
+		if($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML){
 			// Replace the </head> tag with the head data from the current page
 			// and the </body> with the foot data from the current page.
 			// This is needed to be done at this stage because some element in 
 			// the template after rendering may add additional script to the head.
 			// Also tack on any attributes for the <html> tag.
-			$data = str_replace('</head>', CurrentPage::GetHead() . "\n" . '</head>', $data);
-			$data = str_replace('</body>', CurrentPage::GetFoot() . "\n" . '</body>', $data);
-			$data = str_replace('<html', '<html ' . CurrentPage::GetHTMLAttributes(), $data);
+			//$data = str_replace('</head>', CurrentPage::GetHead() . "\n" . '</head>', $data);
+			//$data = str_replace('</body>', CurrentPage::GetFoot() . "\n" . '</body>', $data);
+			//$data = str_replace('<html', '<html ' . CurrentPage::GetHTMLAttributes(), $data);
+			
+			// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
+			if(DEVELOPMENT_MODE){
+				$debug = '';
+				$debug .= '<pre class="xdebug-var-dump">';
+				$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
+				$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
+				//$debug .= "Number of queries: " . DB::Singleton()->counter . "\n";
+				$debug .= "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
+				$debug .= "Total processing time: " . round(Core::GetProfileTimeTotal(), 4) * 1000 . ' ms' . "\n";
+				if(FULL_DEBUG){
+					foreach(Core::GetProfileTimes() as $t){
+						$debug .= "[" . Core::FormatProfileTime($t['timetotal']) . "] - " . $t['event'] . "\n";
+					}
+				}
+				// Tack on what components are currently installed.
+				$debug .= '<b>Available Components</b>' . "\n";
+				foreach(Core::GetComponents() as $l => $v){
+					$debug .= $v->getName() . ' ' . $v->getVersion() . "\n";
+				}
+
+				$debug .= '<b>Query Log</b>' . "\n";
+				$debug .= print_r(Core::DB()->queryLog(), true);
+				$debug .= '</pre>';
+				
+				// And append!
+				$data = str_replace('</body>', $debug . "\n" . '</body>', $data);
+			}
 		}
 		
 		return $data;
 	}
 	
+	/**
+	 * Render this view and send all appropriate headers to the browser, (if applicable)
+	 * 
+	 * @return void 
+	 */
 	public function render(){
-		echo $this->fetch();
+		
+		$data = $this->fetch();
+		
+		// Be sure to send the content type and status to the browser, (if it's a page)
+		if($this->mode == View::MODE_PAGE){
+			switch($this->error){
+				case View::ERROR_NOERROR:      header('Status: 200 OK', true, $this->error); break;
+				case View::ERROR_ACCESSDENIED: header('Status: 403 Forbidden', true, $this->error); break;
+				case View::ERROR_NOTFOUND:     header('Status: 404 Not Found', true, $this->error); break;
+				case View::ERROR_SERVERERROR:  header('Status: 500 Internal Server Error', true, $this->error); break;
+				default:                       header('Status: 500 Internal Server Error', true, $this->error); break; // I don't know WTF happened...
+			}
+
+			if($this->contenttype) header('Content-Type: ' . $this->contenttype);
+
+			if(DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
+		}
+		
+		echo $data;
 	}
 	
 	public function addBreadcrumb($title, $link = null){
