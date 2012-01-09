@@ -49,7 +49,8 @@ if(PHP_VERSION < '5.3.0'){
 // This will be saved into the Core once that's available.
 $start_time = microtime(true);
 
-
+// gogo i18n!
+mb_internal_encoding( 'UTF-8' );
 
 /********************* Initial system defines *********************************/
 require_once(__DIR__ . '/bootstrap_predefines.php');

@@ -350,7 +350,7 @@ class File_local_backend implements File_Backend{
 		}
 		
 		// @todo Should this incorporate permissions, to prevent files being wrote as "www-data"?
-
+		
 		// And do the actual copy!
 		$this->putContents($src->getContents());
 	}

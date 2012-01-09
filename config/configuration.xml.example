@@ -59,8 +59,8 @@
 		<description>The number of seconds this machine is off from the current GMT time.</description>
 	</define>
 
-	<define name="TIME_DEFAULT_TIMEZONE" type="int">
-		<value>-4</value>
+	<define name="TIME_DEFAULT_TIMEZONE" type="string">
+		<value>America/New_York</value>
 		<description>The default timezone to display times in.</description>
 	</define>
 

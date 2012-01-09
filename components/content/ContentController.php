@@ -9,43 +9,54 @@
  *
  * @author powellc
  */
-class ContentController extends Controller {
-	public static function Index(View $page){
-		if(!$page->setAccess('g:admin')){
-			return;
+class ContentController extends Controller_2_1 {
+	public function index(){
+		
+		$view = $this->getView();
+		
+		if(!$this->setAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
 		}
 		
 		$f = ContentModel::Find(null, null, null);
 		
-		$page->title = 'Content Page Listings';
-		$page->assignVariable('pages', $f);
-		
-		$page->addControl('Add Page', '/Content/Create', 'add');
+		$view->templatename = '/pages/content/index.tpl';
+		$view->title = 'Content Page Listings';
+		$view->assignVariable('pages', $f);
+		$view->addControl('Add Page', '/Content/Create', 'add');
 	}
 	
-    public static function View(View $page){
+    public function view(){
 		// I'm calling checkAcess here because the cached access string is canonical in this case.
-		if(!$page->checkAccess()){
-			return;
+		$page = $this->getPageModel();
+		$view = $this->getView();
+		
+		if(!$this->setAccess($page->get('access'))){
+			return View::ERROR_ACCESSDENIED;
 		}
 		
 		$m = new ContentModel($page->getParameter(0));
 
 		if(!$m->exists()) return View::ERROR_NOTFOUND;
 
-		$page->assignVariable('model', $m);
+		$view->assignVariable('model', $m);
+		$view->templatename = '/pages/content/view.tpl';
+		View::AddMeta('<meta http-equiv="last-modified" content="' . Time::FormatGMT($m->get('updated'), Time::TIMEZONE_GMT, Time::FORMAT_FULLDATETIME) . '" />');
 		
-		if(Core::User()->checkAccess('g:admin')){
-			$page->addControl('Add Page', '/Content/Create', 'add');
-			$page->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
-			$page->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
-			$page->addControl('All Content Pages', '/Content', 'directory');
+		if(\Core\user()->checkAccess('g:admin')){
+			$view->addControl('Add Page', '/Content/Create', 'add');
+			$view->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
+			$view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
+			$view->addControl('All Content Pages', '/Content', 'directory');
 		}
 	}
 
-	public static function Edit(View $page){
-		if(!$page->setAccess('g:admin')){
-			return;
+	public function edit(){
+		$view = $this->getView();
+		$page = $this->getPageRequest();
+		
+		if(!$this->setAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
 		}
 		
 		$m = new ContentModel($page->getParameter(0));
@@ -62,20 +73,23 @@ class ContentController extends Controller {
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Update'));
 
-		$page->title = 'Edit ' . $m->get('title');
-		$page->assignVariable('model', $m);
-		$page->assignVariable('form', $form);
+		$view->templatename = '/pages/content/edit.tpl';
+		$view->title = 'Edit ' . $m->get('title');
+		$view->assignVariable('model', $m);
+		$view->assignVariable('form', $form);
 		
-		$page->addControl('Add Page', '/Content/Create', 'add');
-		$page->addControl('View Page', '/Content/View/' . $m->get('id'), 'view');
-		$page->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
-		$page->addControl('All Content Pages', '/Content', 'directory');
+		$view->addControl('Add Page', '/Content/Create', 'add');
+		$view->addControl('View Page', '/Content/View/' . $m->get('id'), 'view');
+		$view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
+		$view->addControl('All Content Pages', '/Content', 'directory');
 	}
 
-	public static function Create(View $page){
+	public function create(){
 		
-		if(!$page->setAccess('g:admin')){
-			return;
+		$view = $this->getView();
+		
+		if(!$this->setAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
 		}
 		
 		$m = new ContentModel();
@@ -91,21 +105,25 @@ class ContentController extends Controller {
 		$form->addElement('submit', array('value' => 'Create'));
 
 		
-		$page->title = 'New Content Page';
-		$page->assignVariable('model', $m);
-		$page->assignVariable('form', $form);
+		$view->templatename = '/pages/content/create.tpl';
+		$view->title = 'New Content Page';
+		$view->assignVariable('model', $m);
+		$view->assignVariable('form', $form);
 		
-		$page->addControl('All Content Pages', '/Content', 'directory');
+		$view->addControl('All Content Pages', '/Content', 'directory');
 	}
 	
 	public static function _SaveHandler(Form $form){
 		
 		$model = $form->getModel();
+		// Ensure that everything is marked as updated...
+		$model->set('updated', Time::GetCurrent());
 		//var_dump($model); die();
 		$model->save();
 		
 		$page = $form->getElementByName('page')->getModel();
 		$page->set('baseurl', '/Content/View/' . $model->get('id'));
+		$page->set('updated', Time::GetCurrent());
 		$page->save();
 		
 		$insertables = $form->getElementByName('insertables');
@@ -116,23 +134,27 @@ class ContentController extends Controller {
 		return $page->getResolvedURL();
 	}
 	
-	public static function Delete(View $page){
+	public function delete(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+		
 		$m = new ContentModel($page->getParameter(0));
 
 		if(!$m->exists()) return View::ERROR_NOTFOUND;
 		
-		if($page->getParameter(1) == 'confirm'){
+		if($request->getParameter(1) == 'confirm'){
 			$m->delete();
 			Core::Redirect('/Content');
 		}
 		
-		$page->title = 'Confirm Delete ' . $m->get('title');
-		$page->assignVariable('model', $m);
+		$view->templatename = '/pages/content/delete.tpl';
+		$view->title = 'Confirm Delete ' . $m->get('title');
+		$view->assignVariable('model', $m);
 		
-		$page->addControl('Add Page', '/Content/Create', 'add');
-		$page->addControl('View Page', '/Content/View/' . $m->get('id'), 'view');
-		$page->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
-		$page->addControl('All Content Pages', '/Content', 'directory');
+		$view->addControl('Add Page', '/Content/Create', 'add');
+		$view->addControl('View Page', '/Content/View/' . $m->get('id'), 'view');
+		$view->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
+		$view->addControl('All Content Pages', '/Content', 'directory');
 	}
 }
 ?>

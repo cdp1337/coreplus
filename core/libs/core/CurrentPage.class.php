@@ -180,20 +180,7 @@ class CurrentPage{
 	 * @param string $location
 	 */
 	public static function AddScript($script, $location = 'head'){
-		if(strpos($script, '<script') === false){
-			// Resolve the script and wrap it with a script block.
-			$script = '<script type="text/javascript" src="' . Core::ResolveAsset($script) . '"></script>';
-		}
-		
-		$obj = self::Singleton();
-		
-		// I can check to see if this script has been loaded before.
-		if(in_array($script, $obj->_headscripts)) return;
-		if(in_array($script, $obj->_footscripts)) return;
-		
-		// No? alright, add it to the requested location!
-		if($location == 'head') $obj->_headscripts[] = $script;
-		else $obj->_footscripts[] = $script;
+		View::AddScript($script, $location);
 	}
 	
 	/**
@@ -233,14 +220,7 @@ class CurrentPage{
 	 * @param type $media Media to display the stylesheet with.
 	 */
 	public static function AddStylesheet($link, $media="all"){
-		if(strpos($link, '<link') === false){
-			// Resolve the script and wrap it with a script block.
-			$link = '<link type="text/css" href="' . Core::ResolveAsset($link) . '" media="' . $media . '" rel="stylesheet"/>';
-		}
-		
-		$obj = self::Singleton();
-		// I can check to see if this script has been loaded before.
-		if(!in_array($link, $obj->_headstylesheets)) $obj->_headstylesheets[] = $link;
+		View::AddStylesheet($link, $media);
 	}
 	
 	/**
@@ -249,48 +229,19 @@ class CurrentPage{
 	 * @param string $style The contents of the <style> tag.
 	 */
 	public static function AddStyle($style){
-		if(strpos($style, '<style') === false){
-			$style = '<style>' . $style . '</style>';
-		}
-		
-		$obj = self::Singleton();
-		// I can check to see if this script has been loaded before.
-		if(!in_array($style, $obj->_headstylesheets)) $obj->_headstylesheets[] = $style;
+		View::AddStyle($style);
 	}
 	
 	public static function SetHTMLAttribute($attribute, $value){
-		self::Singleton()->_htmlattributes[$attribute] = $value;
+		View::SetHTMLAttribute($attribute, $value);
 	}
 	
 	public static function GetHead(){
-		$obj = self::Singleton();
-		
-		// Combine the scripts and stylesheets that are set to go in the head.
-		$parts = array_merge($obj->_headscripts, $obj->_headstylesheets);
-		
-		// Throw in the meta information if it's present.
-		if($obj->_page && sizeof($obj->_page->getMetas())){
-			foreach($obj->_page->getMetas() as $k => $v){
-				$parts[] = '<meta name="' . $k . '" content="' . $v . '"/>';
-			}
-		}
-		
-		if(ConfigHandler::Get('/core/markup/minified')){
-			$out = implode('', $parts);
-		}
-		else{
-			$out = implode("\n", $parts);
-		}
-		
-		return trim($out);
+		return View::GetHead();
 	}
 	
 	public static function GetFoot(){
-		$obj = self::Singleton();
-		
-		$out = implode("\n", $obj->_footscripts);
-		
-		return trim($out);
+		return View::GetFoot();
 	}
 	
 	public static function GetBodyPre(){
@@ -302,16 +253,7 @@ class CurrentPage{
 	}
 	
 	public static function GetHTMLAttributes($asarray = false){
-		$atts = self::Singleton()->_htmlattributes;
-		
-		if($asarray){
-			return $atts;
-		}
-		else{
-			$str = '';
-			foreach($atts as $k => $v) $str .= " $k=\"" . str_replace('"', '\"', $v) . "\"";
-			return trim($str);
-		}
+		return View::GetHTMLAttributes($asarray);
 	}
 
 	private function _render(){

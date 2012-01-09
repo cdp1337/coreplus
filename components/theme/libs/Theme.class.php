@@ -381,9 +381,15 @@ class Theme{
 		$changed = false;
 		foreach($this->_xmlloader->getElements('/assets/file') as $node){
 			$b = $this->getBaseDir();
+			// The base filename with the directory.
+			$filename = $node->getAttribute('filename');
 			// Local file is guaranteed to be a local file.
-			$f = new File_local_backend($b . $node->getAttribute('filename'));
-			$nf = Core::File($node->getAttribute('filename'));
+			$f = new File_local_backend($b . $filename);
+			// The new theme asset will be installed into the same directory as its theme.
+			// This differs from usual components because they just follow whatever theme is currently running.
+			$nf = Core::File($assetbase . $theme . '/' . $filename);
+			
+			/*
 			// The new destination must be in the theme-specific directory, this is a 
 			// bit of a hack from the usual behaviour of the filestore system.
 			// Since that's designed to return the default if the theme-specific doesn't exist.
@@ -391,12 +397,15 @@ class Theme{
 				// The only possible filename bases to be returned are the $coretheme and default.
 				// so...
 				if($theme == 'default'){
+					
 					$nf->setFilename(str_replace($assetbase . $coretheme, $assetbase . $theme, $nf->getFilename()));
 				}
 				else{
+					var_dump($nf->getFilename());
 					$nf->setFilename(str_replace($assetbase . 'default', $assetbase . $theme, $nf->getFilename()));
 				}
 			}
+			*/
 			
 			// Check if this file even needs updated. (this is primarily used for reporting reasons)
 			if($nf->exists() && $nf->identicalTo($f)) continue;

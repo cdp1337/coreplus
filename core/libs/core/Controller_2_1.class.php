@@ -38,9 +38,26 @@ class Controller_2_1 {
 	 */
 	private $_view = null;
 	
-	public function __construct(){
-		// Ensure that some certain data are available from the start.
-		//$this->getView();
+	/**
+	 * Shared access string for this controller.
+	 * 
+	 * Optional, if set to non-null, it will be checked before any method is called.
+	 * 
+	 * @var string
+	 */
+	public $accessstring = null;
+	
+	
+	/**
+	 * Check permissions for this controller as a whole.
+	 * 
+	 * Useful for admin systems that have methods sharing the same permission set.
+	 * To make use of this CorePlus-magic method, just extend it and do your necessary logic.
+	 * 
+	 * @return boolean 
+	 */
+	public function __checkPermissions(){
+		return true;
 	}
 	
 	/**
@@ -89,49 +106,8 @@ class Controller_2_1 {
 	 * 
 	 * @return PageModel
 	 */
-	protected function getPageModel(){
-		if($this->_model === null){
-			$uri = $this->getPageRequest()->uriresolved;
-		
-			$p = PageModel::Find(array('rewriteurl' => $uri, 'fuzzy' => 0), 1);
-		
-			// Split this URL, it'll be used somewhere.
-			$pagedat = $this->getPageRequest()->splitParts();
-		
-			if($p){
-				// :) Found it
-				$this->_model = $p;
-			}
-			elseif($pagedat){
-				// Is this even a valid controller?
-				// This will allow a page to be called with it being in the pages database.
-				$p = new PageModel();
-				$p->set('baseurl', $uri);
-				$p->set('rewriteurl', $uri);
-				$this->_model = $p;
-			}
-			else{
-				// No page in the database and no valid controller... sigh
-				return false;
-			}
-		
-			//var_dump($p); die();
-		
-			// Make sure all the parameters from both standard GET and core parameters are tacked on.
-			if($pagedat && $pagedat['parameters']){
-				foreach($pagedat['parameters'] as $k => $v){
-					$this->_model->setParameter($k, $v);
-				}
-			}
-			if(is_array($_GET)){
-				foreach($_GET as $k => $v){
-					if(is_numeric($k)) continue;
-					$this->_model->setParameter($k, $v);
-				}
-			}
-		}
-		
-		return $this->_model;
+	public function getPageModel(){
+		return $this->getPageRequest()->getPageModel();
 	}
 	
 	

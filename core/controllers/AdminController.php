@@ -1,23 +1,30 @@
 <?php
 
-class AdminController extends Controller {
+class AdminController extends Controller_2_1 {
 	
-	public static $AccessString = 'g:admin';
+	public function __construct() {
+		$this->accessstring = 'g:admin';
+	}
 	
-	public static function Index(View $view) {
+	public function index() {
+		$view = $this->getView();
+		
 		$pages = PageModel::Find(array('admin' => '1'));
 		$viewable = array();
 		foreach($pages as $p){
-			if(!Core::User()->checkAccess($p->get('access'))) continue;
+			if(!\Core\user()->checkAccess($p->get('access'))) continue;
 			
 			$viewable[] = $p;
 		}
+		
+		$this->setTemplate('/pages/admin/index.tpl');
 		$view->assignVariable('links', $viewable);
 	}
 	
-	public static function ReinstallAll(View $page){
+	public function reinstallAll(){
 		// Just run through every component currently installed and reinstall it.
 		// This will just ensure that the component is up to date and correct as per the component.xml metafile.
+		$view = $this->getView();
 		
 		$changes = array();
 		
@@ -29,7 +36,7 @@ class AdminController extends Controller {
 			}
 		}
 		
-		foreach(ComponentHandler::GetAllComponents() as $c){
+		foreach(Core::GetComponents() as $c){
 			if(!$c->isInstalled()) continue;
 			
 			if($c->reinstall()){
@@ -41,11 +48,13 @@ class AdminController extends Controller {
 		Core::Cache()->flush();
 		
 		//$page->title = 'Reinstall All Components';
-		$page->access = 'g:admin';
-		$page->assign('changes', $changes);
+		$this->setTemplate('/pages/admin/reinstallall.tpl');
+		$view->assign('changes', $changes);
 	}
 	
-	public static function Config(View $view){
+	public function config(){
+		$view = $this->getView();
+		
 		$configs = ConfigModel::Find(array(), null, 'key');
 		$groups = array();
 		foreach($configs as $c){
@@ -111,6 +120,7 @@ class AdminController extends Controller {
 		
 		$form->addElement('submit', array('value' => 'Save'));
 		
+		$this->setTemplate('/pages/admin/config.tpl');
 		$view->assign('form', $form);
 	}
 

@@ -17,8 +17,61 @@
 class Time{
 	
 	const TIMEZONE_GMT = 0;
-	const TIMEZONE_SERVER = 100;
+	const TIMEZONE_DEFAULT = 100;
 	const TIMEZONE_USER = 101;
+	
+	const FORMAT_ISO8601 = 'c';
+	const FORMAT_RFC2822 = 'r';
+	
+	const FORMAT_FULLDATETIME = self::FORMAT_ISO8601;
+	
+	private static $_Instance = null;
+	
+	private $timezones = array();
+	
+	private function __construct(){
+		// This is required because of a change to the Time system in API 2.1
+		if(is_numeric(TIME_DEFAULT_TIMEZONE)){
+			throw new Exception('Please ensure that the constant TIME_DEFAULT_TIMEZONE is set to a valid timezone string.');
+		}
+		$this->timezones[0] = new DateTimeZone('GMT');
+		$this->timezones[100] = new DateTimeZone(TIME_DEFAULT_TIMEZONE);
+	}
+	
+	/**
+	 * Get a valid DateTimeZone from the intiger of it.
+	 * 
+	 * Note, these will all be the generic GMT-5 timezones.
+	 * 
+	 * @param string $timezone
+	 * @return DateTimeZone
+	 */
+	private function _getTimezone($timezone){
+		if($timezone == Time::TIMEZONE_USER){
+			// Conver this to the user's timezone.
+			$timezone = \Core\user()->getPreference('timezone')->value;
+			
+			// Users must have valid timezone strings too!
+			if(is_numeric($timezone)) $timezone = Time::TIMEZONE_DEFAULT;
+		}
+		
+		if(!isset($this->timezones[$timezone])){
+			$this->timezones[$timezone] = new DateTimeZone($timezone);
+		}
+		
+		return $this->timezones[$timezone];
+	}
+	
+	/**
+	 *
+	 * @return Time
+	 */
+	private static function _Singleton(){
+		if(self::$_Instance === null){
+			self::$_Instance = new self();
+		}
+		return self::$_Instance;
+	}
 	
 	/**
 	 * Will return the current GMT time corrected via the server GMT_OFFSET config setting.
@@ -27,8 +80,8 @@ class Time{
 	 * @return string
 	 */
 	public static function GetCurrentGMT($format = 'U'){
-		//$dt = new DateTime('now', 0);
-		return date($format, time() + TIME_GMT_OFFSET);
+		$date = new DateTime(null, self::_Singleton()->_getTimezone(0));
+		return $date->format($format);
 	}
 	
 	/**
@@ -43,13 +96,8 @@ class Time{
    * @return string
    */
 	public static function GetCurrent($timezone = Time::TIMEZONE_GMT, $format = 'U'){
-		// @todo Bug found...
-		//       If the format requested is 'r', the timezone is included.
-		//       This will default to the timezone the server is set to use.
-		//       Since the user can request other timezones, this poses a bit of a problem...
-		//       A solution for this can be derived from use of the new DateTime system in PHP5.2...
-		// @see http://us3.php.net/manual/en/datetime.settimezone.php
-		return date($format, Time::ConvertGMT(Time::GetCurrentGMT(), $timezone));
+		$date = new DateTime(null, self::_Singleton()->_getTimezone($timezone));
+		return $date->format($format);
 	}
 	
 	/**
@@ -97,29 +145,15 @@ class Time{
 	 * @return string
 	 */
 	public static function FormatGMT($timeInGMT, $timezone = Time::TIMEZONE_GMT, $format = 'U'){
-		return date($format, Time::ConvertGMT($timeInGMT, $timezone));
+		// Allow null to be sent for those of us who are lazy.
+		if($timezone === null) $timezone = self::TIMEZONE_GMT;
+		
+		// DateTime is a little finicky with unix times for some reason...
+		if(is_numeric($timeInGMT)) $timeInGMT = '@' . $timeInGMT;
+		
+		$date = new DateTime($timeInGMT, self::_Singleton()->_getTimezone(0));
+		// Apply the new timezone.
+		if($timezone != Time::TIMEZONE_GMT) $date->setTimezone (self::_Singleton ()->_getTimezone ($timezone));
+		return $date->format($format);
 	}
-	
-	/**
-	 * Convert a given GMT time to another timezone.
-	 * 
-	 * (assumes a corrected GMT value)
-	 * 
-	 * @param $time int
-	 * @param $timezone int
-	 * @return int
-	 * @access private
-	 */
-	private static function ConvertGMT($timeInGMT, $timezone){
-		switch($timezone){
-			case Time::TIMEZONE_SERVER:
-				return $timeInGMT + (TIME_DEFAULT_TIMEZONE * 3600);
-			case Time::TIMEZONE_USER:
-				// Obviously has to be called after the system is fully available.
-				return $timeInGMT + (CurrentUser::GetUser()->getPreference('timezone')->value * 3600);
-			default:
-				return $timeInGMT + ($timezone * 3600);
-		}
-	}
-	
 }

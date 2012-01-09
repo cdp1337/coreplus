@@ -39,6 +39,12 @@ class PageRequest{
 	
 	public $ctype = View::CTYPE_HTML;
 	
+	/**
+	 * The cached pagemodel for this request.
+	 * @var PageModel
+	 */
+	private $_pagemodel = null;
+	
 	public function __construct($uri = ''){
 		
 		$this->uri = $uri;
@@ -190,21 +196,35 @@ class PageRequest{
 		// The controller must exist first!
 		// (note, the SplitParts logic already takes care of the "Is this a valid controller" logic)
 		if(!$pagedat['controller']){
-			return $this->_viewNotFound();
+			$view = new View();
+			$view->error = View::ERROR_NOTFOUND;
+			return $view;
 		}
 		
 		// Any method that starts with a "_" is an internal-only method!
 		if($pagedat['method']{0} == '_'){
-			return $this->_viewNotFound();
+			$view = new View();
+			$view->error = View::ERROR_NOTFOUND;
+			return $view;
 		}
 		
 		// It also must be a part of the class... obviously
 		if(!method_exists($pagedat['controller'], $pagedat['method'])){
-			return $this->_viewNotFound();
+			$view = new View();
+			$view->error = View::ERROR_NOTFOUND;
+			return $view;
 		}
 		
 		// This will be a Controller object.
 		$c = Controller_2_1::Factory($pagedat['controller']);
+		
+		// Check the access string first, (if there is one)
+		if($c->accessstring !== null && !\Core\user()->checkAccess($c->accessstring)){
+			$view = new View();
+			$view->error = View::ERROR_ACCESSDENIED;
+			return $view;
+		}
+		
 		$return = call_user_func(array($c, $pagedat['method']));
 		if(is_int($return)){
 			// A generic error code was returned.  Create a View with that code and return that instead.
@@ -214,24 +234,102 @@ class PageRequest{
 		}
 		elseif($return === null){
 			// Hopefully it's setup!
-			return $c->getView();
+			$return = $c->getView();
 		}
-		else{
-			return $return;
+		// No else needed, else it's a valid object.
+		
+		// Load some of the page information into the view now!
+		$page = $this->getPageModel();
+		foreach($page->getMetas() as $key => $val){
+			if($val){
+				View::AddMetaName($key, $val);
+			}
 		}
+		$return->title = $page->get('title');
+		
+		$parents = array();
+		foreach($page->getParentTree() as $parent){
+			$parents[] = array(
+				'title' => $parent->get('title'),
+				'link' => $parent->getResolvedURL()
+			);
+		}
+		$return->breadcrumbs = array_merge($parents, $return->breadcrumbs);
+		
+		
+		// Make sure I update any existing page now that the controller has ran.
+		if($page->exists() && $return->error == View::ERROR_NOERROR){
+			$page->save();
+		}
+		
+		return $return;
+	}
+	
+	public function setParameters($params){
+		$this->parameters = $params;
+	}
+
+	public function getParameters(){
+		$data = $this->splitParts();
+		return $data['parameters'];
+	}
+
+	public function getParameter($key){
+		$data = $this->splitParts();
+		return (array_key_exists($key, $data['parameters']))? $data['parameters'][$key] : null;
 	}
 	
 	/**
-	 * Create a generic "not found" view.
+	 * Get the page model for the current page.
 	 * 
-	 * @return View 
+	 * @return PageModel
 	 */
-	private function _viewNotFound(){
-		$view = new View();
-		$view->error = View::ERROR_NOTFOUND;
-		return $view;
+	public function getPageModel(){
+		if($this->_pagemodel === null){
+			$uri = $this->uriresolved;
+		
+			$p = PageModel::Find(array('rewriteurl' => $uri, 'fuzzy' => 0), 1);
+		
+			// Split this URL, it'll be used somewhere.
+			$pagedat = $this->splitParts();
+		
+			if($p){
+				// :) Found it
+				$this->_pagemodel = $p;
+			}
+			elseif($pagedat){
+				// Is this even a valid controller?
+				// This will allow a page to be called with it being in the pages database.
+				$p = new PageModel();
+				$p->set('baseurl', $uri);
+				$p->set('rewriteurl', $uri);
+				$this->_pagemodel = $p;
+			}
+			else{
+				// No page in the database and no valid controller... sigh
+				return false;
+			}
+		
+			//var_dump($p); die();
+		
+			// Make sure all the parameters from both standard GET and core parameters are tacked on.
+			if($pagedat && $pagedat['parameters']){
+				foreach($pagedat['parameters'] as $k => $v){
+					$this->_pagemodel->setParameter($k, $v);
+				}
+			}
+			if(is_array($_GET)){
+				foreach($_GET as $k => $v){
+					if(is_numeric($k)) continue;
+					$this->_pagemodel->setParameter($k, $v);
+				}
+			}
+		}
+		
+		return $this->_pagemodel;
 	}
 	
+		
 	private function _resolveMethod(){
 		// Make sure it's a valid METHOD... don't know what else it could be, but...
 		switch($_SERVER['REQUEST_METHOD']){

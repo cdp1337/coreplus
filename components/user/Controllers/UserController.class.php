@@ -103,11 +103,12 @@ class UserController extends Controller_2_1{
 		return $view;
 	}
 	
-	public static function Register(View $view){
+	public function register(){
+		$view = $this->getView();
 		
 		// Set the access permissions for this page as anonymous-only.
 		if(!$view->setAccess('g:anonymous;g:!admin')){
-			return;
+			return View::ERROR_ACCESSDENIED;
 		}
 		
 		// Also disallow access to this page if the configuration option is disabled.
@@ -155,10 +156,12 @@ class UserController extends Controller_2_1{
 		$view->assign('form', $form);
 	}
 	
-	public static function Logout(View $view){
+	public function logout(){
+		$view = $this->getView();
+		
 		// Set the access permissions for this page as authenticated-only.
 		if(!$view->setAccess('g:authenticated;g:!admin')){
-			return;
+			return View::ERROR_ACCESSDENIED;
 		}
 		
 		Session::Destroy();
@@ -166,7 +169,8 @@ class UserController extends Controller_2_1{
 	}
 	
 	
-	public static function ForgotPassword(View $view){
+	public function forgotPassword(){
+		$view = $this->getView();
 		
 		// If e and k are set as parameters... it's on step 2.
 		if($view->getParameter('e') && $view->getParameter('k')){

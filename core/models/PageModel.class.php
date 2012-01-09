@@ -246,11 +246,21 @@ class PageModel extends Model{
 		$this->_populateView();
 	}
 
+	/**
+	 * Get a specific meta tag, or null if it doesn't exist.
+	 * 
+	 * @param string $name
+	 * @return string | null
+	 */
 	public function getMeta($name){
 		$m = $this->getMetas();
 		return isset($m[$name]) ? $m[$name] : null;
 	}
 	
+	/**
+	 * Get all meta names present on this page.
+	 * @return array
+	 */
 	public function getMetas(){
 		if(!$this->get('metas')) return array();
 

@@ -38,13 +38,13 @@
 function smarty_block_script($params, $innercontent, $template, &$repeat){
 	// A script library name is provided.
 	if(isset($params['name'])){
-		if(!ComponentHandler::LoadScriptLibrary($params['name'])){
+		if(!Core::LoadScriptLibrary($params['name'])){
 			throw new SmartyException('Unable to load script library ' . $params['name']);
 		}
 	}
 	// I guess using "library" to indicate the desired library would make sense too....
 	elseif(isset($params['library'])){
-		if(!ComponentHandler::LoadScriptLibrary($params['library'])){
+		if(!Core::LoadScriptLibrary($params['library'])){
 			throw new SmartyException('Unable to load script library ' . $params['library']);
 		}
 	}

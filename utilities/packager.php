@@ -1007,7 +1007,7 @@ function process_bundle(){
 	// @todo Which compression algorithm should be used?
 	// Create the bundle version based on the current core version.
 	$coreversion = get_exported_component('core');
-	$bundleversion = $coreversion['version'] . '-' . Time::GetCurrent(Time::TIMEZONE_SERVER, 'Y-m-d');
+	$bundleversion = $coreversion['version'] . '-' . Time::GetCurrent(Time::TIMEZONE_DEFAULT, 'Y-m-d');
 	$tgz = ROOT_PDIR . 'exports/bundles/bundle-' . $bundleversion . '.tgz';
 	exec('tar -czf ' . $tgz . ' -C ' . $dir . ' --exclude=.svn --exclude=*~ --exclude=._* .');
 	$bundle = $tgz;

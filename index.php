@@ -77,6 +77,7 @@ catch(Exception $e){
 }
 
 
+
 // Tell the hook handler that I'm ready to begin rendering of the page.
 //HookHandler::DispatchHook('/core/page/render');
 

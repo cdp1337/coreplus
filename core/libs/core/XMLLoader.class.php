@@ -65,12 +65,6 @@ class XMLLoader{
 	 */
 	protected $_DOM;
 	
-	/**
-	 * Instantiate a new iteration of the XMLLoader
-	 */
-	/*public function __construct(){
-		
-	}*/ // NEIN!
 	
 	public function load(){
 		// I need a filename.

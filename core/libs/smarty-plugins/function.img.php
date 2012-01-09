@@ -38,7 +38,13 @@ function smarty_function_img($params, $template){
 	
 	// Well... 
 	$f = Core::File($params['src']);
-	$attributes['src'] = $f->getPreviewURL($d);
+	if($d){
+		$attributes['src'] = $f->getPreviewURL($d);
+	}
+	else{
+		$attributes['src'] = $f->getURL();
+	}
+	
 	unset($params['src']);
 	
 	// Do the rest of the attributes that the user sent in (if there are any)

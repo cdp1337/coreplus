@@ -50,7 +50,7 @@
 			<controller name="UserController"/>
 		</file>
 		<file filename="Widgets/UserLoginWidget.class.php" md5="154480303036d9fe2e09a0537979f41f">
-			<provides type="widget" name="UserLoginWidget"/>
+			<widget name="UserLoginWidget"/>
 		</file>
 	</files>
 	<view>

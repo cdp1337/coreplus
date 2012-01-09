@@ -394,6 +394,8 @@ class ComponentHandler implements ISingleton{
 	}
 	
 	public static function LoadScriptLibrary($library){
+		return Core::LoadScriptLibrary($library);
+		
 		$library = strtolower($library);
 		$obj = ComponentHandler::Singleton();
 		
