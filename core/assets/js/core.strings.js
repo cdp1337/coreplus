@@ -92,7 +92,7 @@
 			var i;
 
 			for(i in internationalmappings){
-				string = string.replace(i, internationalmappings[i]);
+				string = string.replace(new RegExp(i, 'g'), internationalmappings[i]);
 			}
 			return string;
 		},
