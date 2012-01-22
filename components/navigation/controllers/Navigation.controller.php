@@ -139,6 +139,7 @@ class NavigationController extends Controller_2_1 {
 		
 		// Save the widget too
 		$widget = $m->getLink('Widget');
+		$widget->set('title', $m->get('name'));
 		$widget->save();
 		
 		// Save all the entries
