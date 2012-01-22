@@ -20,11 +20,6 @@ class NavigationModel extends Model {
 			'maxlength' => 128,
 			'null' => false,
 		),
-		'access' => array(
-			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 512,
-			'null' => false,
-		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
@@ -40,7 +35,7 @@ class NavigationModel extends Model {
 		'unique:name' => array('name'),
 	);
 	
-		/*
+	
     public function __construct($key = null) {
 		$this->_linked = array(
 			'Widget' => array(
@@ -55,7 +50,7 @@ class NavigationModel extends Model {
 		
 		parent::__construct($key);
 	}
-	*/
+	
 	
 	public function get($k) {
 		$k = strtolower($k);

@@ -9,7 +9,6 @@
 			
 			<td>
 				<ul class="controls">
-					<li class="view">{a href=$nav->getLink('Widget')->get('rewriteurl')}View{/a}</li>
 					<li class="edit">{a href="/Navigation/Edit/`$nav->get('id')`"}Edit{/a}</li>
 					<li class="delete">{a href="/Content/Delete/`$nav->get('id')`"}Delete{/a}</li>
 				</ul>

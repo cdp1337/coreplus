@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.1-dev1" name="Navigation" execmode="web">
-	<requires name="core" type="component"/>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.0" name="Navigation" execmode="web">
+	<requires>
+		<require name="core" type="component"/>
+	</requires>
+	
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
 			<date>Sat, 26 Mar 2011 01:17:38 -0400</date>
@@ -9,19 +12,20 @@
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
 	</changelog>
-	<library>
-		<file filename="NavigationEntry.model.php" md5="9f3e7d0e5d525f4a95a432c84579467e">
-			<provides type="class" name="NavigationEntryModel"/>
+	<files>
+		<file filename="models/NavigationEntry.model.php" md5="9f3e7d0e5d525f4a95a432c84579467e">
+			<class name="NavigationEntryModel"/>
 		</file>
-		<file filename="Navigation.model.php" md5="8e0620f21e0dd3c102f4286bbacfca3f">
-			<provides type="class" name="NavigationModel"/>
+		<file filename="models/Navigation.model.php" md5="8e0620f21e0dd3c102f4286bbacfca3f">
+			<class name="NavigationModel"/>
 		</file>
-	</library>
-	<module>
-		<file filename="Navigation.controller.php" md5="d5db3861c0e7ff3eb181e4702b3b7095">
-			<provides type="controller" name="NavigationController"/>
+		<file filename="controllers/Navigation.controller.php" md5="d5db3861c0e7ff3eb181e4702b3b7095">
+			<controller name="NavigationController"/>
 		</file>
-	</module>
+		<file filename="controllers/Navigation.widget.php">
+			<widget name="NavigationWidget"/>
+		</file>
+	</files>
 	<view>
 		<file filename="templates/pages/navigation/index.tpl" md5="3b93dd42e0f3540bbd6721bbe5bc1f6c"/>
 		<file filename="templates/pages/navigation/view.tpl" md5="b149433e9927396cb65c8e2880395663"/>
@@ -33,6 +37,8 @@
 	<pages>
 		<page baseurl="/Navigation" admin="1" widget="0" access="" title="Navigation Listings"/>
 	</pages>
+	
+	<upgrade from="0.0.1-dev1" to="1.9.0"/>
 	<author name="powellc"/>
 	<otherfiles/>
 </component>
