@@ -21,12 +21,7 @@
 class WidgetModel extends Model{
 	
 	public static $Schema = array(
-		'id' => array(
-			'type' => Model::ATT_TYPE_ID,
-			'required' => true,
-			'null' => false,
-		),
-		'class' => array(
+		'baseurl' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'required' => true,
@@ -35,12 +30,8 @@ class WidgetModel extends Model{
 		'title' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
-			'comment' => 'Just the title that is displayed to administrators.',
-			'null' => false,
-			'required' => false,
-		),
-		'settings' => array(
-			'type' => Model::ATT_TYPE_TEXT,
+			'default' => null,
+			'comment' => '[Cached] Title of the page',
 			'null' => true,
 		),
 		'created' => array(
@@ -54,18 +45,7 @@ class WidgetModel extends Model{
 	);
 	
 	public static $Indexes = array(
-		'primary' => array('id'),
+		'primary' => array('baseurl'),
 	);
 	
-	/**
-	 * Get the corresponding widget for this model.
-	 * 
-	 * @return Widget 
-	 */
-	public function getWidget(){
-		$c = $this->get('class');
-		$w = new $c();
-		$w->setModel($this);
-		return $w;
-	}
 }

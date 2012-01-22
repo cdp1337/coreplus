@@ -5,6 +5,7 @@
     PUBLIC ID: -//vendor//vocabulary//EN
     SYSTEM ID: http://corepl.us/api/2_1/component.dtd
 
+	Last revision date: 2012.01.14
 -->
 
 <!--
@@ -39,13 +40,18 @@
 	Provides element is a list of provide statements indicating what this component has.
 	A <provides> block MUST have one or more <provide> statement within.
 -->
-<!ELEMENT provides (provide)+>
+<!ELEMENT provides (provide|scriptlibrary)+>
 
 <!ELEMENT provide EMPTY>
 <!ATTLIST provide
 	version CDATA #REQUIRED
 	name CDATA #REQUIRED
 	type CDATA #IMPLIED
+>
+<!ELEMENT scriptlibrary EMPTY>
+<!ATTLIST scriptlibrary
+	name CDATA #REQUIRED
+	call CDATA #IMPLIED
 >
 
 <!ELEMENT requires (require)+>

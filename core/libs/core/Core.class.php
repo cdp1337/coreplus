@@ -404,9 +404,10 @@ class Core implements ISingleton{
 			foreach($c->getIncludePaths() as $path){
 				set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 			}
-			
-			$this->_scriptlibraries = array_merge($this->_scriptlibraries, $c->getScriptLibraryList());
 		}
+		
+		$this->_scriptlibraries = array_merge($this->_scriptlibraries, $c->getScriptLibraryList());
+		
 		if($c->hasModule()) $this->_modules[$name] = $c->getVersionInstalled();
 		
 		$this->_classes = array_merge($this->_classes, $c->getClassList());
@@ -1200,7 +1201,13 @@ class Core implements ISingleton{
 	};
 </script>';
 		
-		CurrentPage::AddScript($script, 'head');
+		View::AddScript($script, 'head');
+	}
+	
+	public static function _AttachCoreStrings(){
+		View::AddScript('js/core.strings.js');
+		
+		return true;
 	}
 		
 	

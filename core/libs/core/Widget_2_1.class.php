@@ -14,8 +14,12 @@
  * and please contribute back to the community :)
  */
 
-
-class Controller_2_1 {
+/**
+ * Description of Widget
+ *
+ * @author powellc
+ */
+class Widget_2_1 {
 	
 	/**
 	 * The request object for the current page.
@@ -23,14 +27,7 @@ class Controller_2_1 {
 	 * @var PageRequest
 	 */
 	private $_request = null;
-	
-	/**
-	 * The page model for the current page.
-	 * 
-	 * @var PageModel
-	 */
-	private $_model = null;
-	
+		
 	/**
 	 * The view that gets returned when pages are executed.
 	 * 
@@ -75,19 +72,6 @@ class Controller_2_1 {
 		return $this->_view;
 	}
 	
-	/**
-	 * Replace this controller's view with a different one.
-	 * 
-	 * This is useful for controllers that intercept a page request and replace their own content.
-	 * 
-	 * @param View $newview 
-	 */
-	protected function overwriteView($newview){
-		// Reset some of the new view's information.
-		$newview->error = View::ERROR_NOERROR;
-		
-		$this->_view = $newview;
-	}
 	
 	/**
 	 * Get the page model for the current page.
@@ -116,18 +100,7 @@ class Controller_2_1 {
 		
 		return(\Core\user()->checkAccess($accessstring));
 	}
-	
-	/**
-	 * Set the content of the view being returned.
-	 * 
-	 * Important for JSON, XML, and other types.
-	 * 
-	 * @param string $ctype 
-	 */
-	protected function setContentType($ctype){
-		$this->getView()->contenttype = $ctype;
-	}
-	
+		
 	protected function setTemplate($template){
 		$this->getView()->templatename = $template;
 	}

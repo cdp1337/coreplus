@@ -372,9 +372,9 @@ class Dataset implements Iterator{
 		foreach($chars as $c){
 			if(($pos = strpos($statement, $c)) !== false){
 				//list($k, $v) = explode($c, $statement);
-				$k = substr($statement, 0, strpos($statement, $c));
-				$v = substr($statement, strpos($statement, $c) + strlen($c));
-				$this->_where[] = array('field' => trim($k), 'op' => $c, 'value' => trim($v), 'group' => $group);
+				$k = trim(substr($statement, 0, strpos($statement, $c)));
+				$v = trim(substr($statement, strpos($statement, $c) + strlen($c)));
+				$this->_where[] = array('field' => $k, 'op' => $c, 'value' => $v, 'group' => $group);
 				return;
 			}
 		}

@@ -7,6 +7,7 @@
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
 		<provide type="library" name="smarty" version="3.0.6"/>
 		<provide type="library" name="phpMailer" version="5.2.0"/>
+		<scriptlibrary name="Core.Strings" call="Core::_AttachCoreStrings"/>
 	</provides>
 	
 	<hooks>
@@ -901,6 +902,7 @@
 	
 	<assets>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
+		<file filename="core/assets/js/core.strings.js"/>
 	</assets>
 	
 	<upgrades>

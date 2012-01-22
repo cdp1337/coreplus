@@ -218,11 +218,20 @@ class PageRequest{
 		// This will be a Controller object.
 		$c = Controller_2_1::Factory($pagedat['controller']);
 		
+		// The main page object.
+		$page = $this->getPageModel();
+		
 		// Check the access string first, (if there is one)
-		if($c->accessstring !== null && !\Core\user()->checkAccess($c->accessstring)){
-			$view = new View();
-			$view->error = View::ERROR_ACCESSDENIED;
-			return $view;
+		if($c->accessstring !== null){
+			// Update the page's access string, (just in case it's saved at the end of execution)
+			$page->set('access', $c->accessstring);
+			
+			// And if the user doesn't have access to it...
+			if(!\Core\user()->checkAccess($c->accessstring)){
+				$view = new View();
+				$view->error = View::ERROR_ACCESSDENIED;
+				return $view;
+			}
 		}
 		
 		$return = call_user_func(array($c, $pagedat['method']));
@@ -239,7 +248,7 @@ class PageRequest{
 		// No else needed, else it's a valid object.
 		
 		// Load some of the page information into the view now!
-		$page = $this->getPageModel();
+		
 		foreach($page->getMetas() as $key => $val){
 			if($val){
 				View::AddMetaName($key, $val);

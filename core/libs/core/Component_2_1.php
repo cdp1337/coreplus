@@ -466,15 +466,6 @@ class Component_2_1{
 			require_once($this->getBaseDir() . $f->getAttribute('filename'));
 		}
 		
-
-		// Load any autoload files for this component.
-		if($this->hasLibrary()){
-			foreach($this->_xmlloader->getElementByTagName('library')->getElementsByTagName('file') as $f){
-				$type = strtolower(@$f->getAttribute('type'));
-				//var_dump($this->_name, $f->getAttribute('filename'), $type);
-				if($type == 'autoload') require_once($this->getBaseDir() . $f->getAttribute('filename'));
-			}
-		}
 		
 		// Register any hooks that may be present.
 		foreach($this->_xmlloader->getElementsByTagName('hookregister') as $h){
@@ -505,12 +496,10 @@ class Component_2_1{
 		// Get an array of library -> version
 		$libs = array();
 		
-		if($this->hasLibrary()){
-			$libs[strtolower($this->_name)] = $this->_versionDB;
-		}
+		// Every component is a library
+		$libs[strtolower($this->_name)] = $this->_versionDB;
 		
-		
-		foreach($this->_xmlloader->getElements('//provides') as $p){
+		foreach($this->_xmlloader->getElements('provides/provide') as $p){
 			if(strtolower($p->getAttribute('type')) == 'library'){
 				$v = @$p->getAttribute('version');
 				if(!$v) $v = $this->_versionDB;
@@ -656,10 +645,8 @@ class Component_2_1{
 	
 	public function getScriptLibraryList(){
 		$libs = array();
-		if($this->hasLibrary()){
-			foreach($this->_xmlloader->getElementByTagName('library')->getElementsByTagName('scriptlibrary') as $s){
-				$libs[strtolower($s->getAttribute('name'))] = $s->getAttribute('call');
-			}
+		foreach($this->_xmlloader->getElements('/provides/scriptlibrary') as $s){
+			$libs[strtolower($s->getAttribute('name'))] = $s->getAttribute('call');
 		}
 		return $libs;
 	}
@@ -693,16 +680,12 @@ class Component_2_1{
 		else return null;
 	}
 	
+	/**
+	 * @deprecated 2012.01
+	 * @return array
+	 */
 	public function getIncludePaths(){
-		$dirs = array();
-		if($this->hasLibrary()){
-			foreach($this->_xmlloader->getElementByTagName('library')->getElementsByTagName('includepath') as $t){
-				$dir = $t->getAttribute('dir');
-				if($dir == '.') $dirs[] = $this->getBaseDir();
-				else $dirs[] = $this->getBaseDir() . $t->getAttribute('dir') . '/';
-			}
-		}
-		return $dirs;
+		return array();
 	}
 	
 	
@@ -899,7 +882,8 @@ class Component_2_1{
 	
 	
 	public function hasLibrary(){
-		return ($this->_xmlloader->getRootDOM()->getElementsByTagName('library')->length)? true : false;
+		// Every component is a library now.
+		return true;
 	}
 	
 	public function hasJSLibrary(){
@@ -1024,13 +1008,12 @@ class Component_2_1{
 			'type' => 'component',
 			'version' => $this->getVersion()
 		);
-		foreach($this->_xmlloader->getElements('provides') as $el){
-			// <requires name="JQuery" type="library" version="1.4" operation="ge"/>
+		foreach($this->_xmlloader->getElements('provides/provide') as $el){
+			// <provide name="JQuery" type="library" version="1.4"/>
 			$ret[] = array(
 				'name' => strtolower($el->getAttribute('name')),
 				'type' => $el->getAttribute('type'),
 				'version' => $el->getAttribute('version'),
-				'operation' => $el->getAttribute('operation'),
 			);
 		}
 		return $ret;
@@ -1196,8 +1179,12 @@ class Component_2_1{
 	 * @return string
 	 */
 	public function getBaseDir($prefix = ROOT_PDIR){
-		if($this->_name == 'core') return $prefix;
-		else return $prefix . 'components/' . $this->_name . '/';
+		if($this->_name == 'core'){
+			return $prefix;
+		}
+		else{
+			return $prefix . 'components/' . strtolower($this->_name) . '/';
+		}
 	}
 	
 	

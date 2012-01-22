@@ -265,6 +265,10 @@ class View {
 				break;
 		}
 		
+		if(!$tmpl && $this->templatename == ''){
+			throw new Exception('Please set the variable "templatename" on the page view.');
+		}
+		
 		switch($this->mode){
 			case View::MODE_PAGE:
 			case View::MODE_AJAX:
