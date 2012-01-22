@@ -34,6 +34,9 @@
 		<file filename="core/libs/core/Controller_2_1.class.php">
 			<class name="Controller_2_1"/>
 		</file>
+		<file filename="core/libs/core/Widget_2_1.class.php">
+			<class name="Widget_2_1"/>
+		</file>
 		<file filename="core/libs/core/PageRequest.class.php">
 			<class name="PageRequest"/>
 		</file>

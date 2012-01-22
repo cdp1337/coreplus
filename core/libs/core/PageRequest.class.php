@@ -29,7 +29,18 @@ class PageRequest{
 	// @todo Complete this
 	//public $acceptLanguages = array();
 	
+	/**
+	 * Request method, one of the PageRequest::METHOD_* strings.
+	 * 
+	 * @var string
+	 */
 	public $method = null;
+	
+	/**
+	 * Full string of the incoming user agent.
+	 * 
+	 * @var string
+	 */
 	public $useragent = null;
 	public $uri = null;
 	public $uriresolved = null;
@@ -37,6 +48,11 @@ class PageRequest{
 	
 	public $parameters = array();
 	
+	/**
+	 * Content type requested
+	 * 
+	 * @var string
+	 */
 	public $ctype = View::CTYPE_HTML;
 	
 	/**
@@ -265,6 +281,12 @@ class PageRequest{
 		}
 		$return->breadcrumbs = array_merge($parents, $return->breadcrumbs);
 		
+		// Try to guess the templatename if it wasn't set.
+		if($return->error == View::ERROR_NOERROR && $return->contenttype == View::CTYPE_HTML && $return->templatename === null){
+			$cnameshort = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
+			$return->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
+		}
+		
 		
 		// Make sure I update any existing page now that the controller has ran.
 		if($page->exists() && $return->error == View::ERROR_NOERROR){
@@ -336,6 +358,10 @@ class PageRequest{
 		}
 		
 		return $this->_pagemodel;
+	}
+	
+	public function isPost(){
+		return ($this->method == PageRequest::METHOD_POST);
 	}
 	
 		

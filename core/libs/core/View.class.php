@@ -135,6 +135,15 @@ class View {
 	public $mastertemplate;
 	public $breadcrumbs = array();
 	public $controls = array();
+	
+	/**
+	 * The mode of this View.
+	 * Greatly affects the rendering result, since this can be a full page or a single widget.
+	 * 
+	 * MUST be one of the valid View::MODE_* strings!
+	 * 
+	 * @var string
+	 */
 	public $mode;
 	
 	public $jsondata = array();
@@ -278,9 +287,9 @@ class View {
 				break;
 			case View::MODE_WIDGET:
 				// This template can be a couple things.
-				$tn = Template::ResolveFile(preg_replace('/^pages\//', 'widgets/', $tmpl));
+				$tn = Template::ResolveFile(preg_replace(':^[/]{0,1}pages/:', '/widgets/', $tmpl));
 				if(!$tn) $tn = $tmpl;
-				//var_dump($tn);
+				
 				$t = $this->getTemplate();
 				//var_dump($t);
 				return $t->fetch($tn);

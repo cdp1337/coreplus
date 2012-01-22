@@ -20,13 +20,6 @@
  * @author powellc
  */
 class Widget_2_1 {
-	
-	/**
-	 * The request object for the current page.
-	 * 
-	 * @var PageRequest
-	 */
-	private $_request = null;
 		
 	/**
 	 * The view that gets returned when pages are executed.
@@ -36,26 +29,12 @@ class Widget_2_1 {
 	private $_view = null;
 	
 	/**
-	 * Shared access string for this controller.
+	 * The WidgetInstance for this request.  Every widget MUST be instanced on some widgetarea.
 	 * 
-	 * Optional, if set to non-null, it will be checked before any method is called.
-	 * 
-	 * @var string
+	 * @var WidgetInstanceModel
 	 */
-	public $accessstring = null;
+	public $_model = null;
 	
-	
-	/**
-	 * Get the page request for the current page.
-	 * 
-	 * @return PageRequest
-	 */
-	protected function getPageRequest(){
-		if($this->_request === null){
-			$this->_request = PageRequest::GetSystemRequest();
-		}
-		return $this->_request;
-	}
 	
 	/**
 	 * Get the view for this controller.
@@ -66,7 +45,9 @@ class Widget_2_1 {
 	public function getView(){
 		if($this->_view === null){
 			$this->_view = new View();
-			$this->_view->baseurl = $this->getPageRequest()->getBaseURL();
+			$this->_view->baseurl = $this->getWidgetModel()->get('baseurl');
+			$this->_view->contenttype = View::CTYPE_HTML;
+			$this->_view->mode = View::MODE_WIDGET;
 		}
 		
 		return $this->_view;
@@ -76,10 +57,10 @@ class Widget_2_1 {
 	/**
 	 * Get the page model for the current page.
 	 * 
-	 * @return PageModel
+	 * @return WidgetInstanceModel
 	 */
-	public function getPageModel(){
-		return $this->getPageRequest()->getPageModel();
+	public function getWidgetModel(){
+		return $this->_model;
 	}
 	
 	
@@ -96,7 +77,7 @@ class Widget_2_1 {
 	 */
 	protected function setAccess($accessstring){
 		// Update the model
-		$this->getPageModel()->set('access', $accessstring);
+		$this->getWidgetModel()->set('access', $accessstring);
 		
 		return(\Core\user()->checkAccess($accessstring));
 	}
@@ -105,15 +86,20 @@ class Widget_2_1 {
 		$this->getView()->templatename = $template;
 	}
 	
+	protected function getParameter($param){
+		$dat = $this->getWidgetModel()->splitParts();
+		return (isset($dat['parameters'][$param])) ? $dat['parameters'][$param] : null;
+	}
+	
 	
 	
 	/**
-	 * Return a valid Controller.
+	 * Return a valid Widget.
 	 * 
 	 * This is used because new $pagedat['controller'](); cannot provide typecasting :p
 	 * 
 	 * @param string $name
-	 * @return Controller_2_1
+	 * @return Widget_2_1
 	 */
 	public static function Factory($name){
 		return new $name();
