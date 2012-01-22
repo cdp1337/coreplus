@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.1" name="Theme" execmode="web">
-	<requires name="core" type="component"/>
-	<requires name="jquery" type="library" version="1.7.0" operations="ge"/>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.0" name="Theme" execmode="web">
+	<requires>
+		<require name="core" type="component" version="1.9.0"/>
+		<require name="jquery" type="library" version="1.7.0" operations="ge"/>
+		<require name="jqueryui" type="library" version="1.8.0" operations="ge"/>
+	</requires>
+	
 	<hook name="components_loaded" call="ThemeHandler::Load"/>
-	<library>
+	<files>
 		<file filename="libs/Theme.class.php" md5="11a6b9c249d428c920dedb02d0443070">
-			<provides type="class" name="Theme"/>
+			<class name="Theme"/>
 		</file>
 		<file filename="libs/ThemeHandler.class.php" md5="8933583345cfd5ed9c6390384d669e78">
-			<provides type="class" name="ThemeHandler"/>
+			<class name="ThemeHandler"/>
 		</file>
-	</library>
-	<module>
 		<file filename="controllers/ThemeController.class.php" md5="37755bfe60672754a9c81664de65cf55">
-			<provides type="controller" name="ThemeController"/>
+			<controller name="ThemeController"/>
 		</file>
-	</module>
+	</files>
 	<view>
 		<file filename="templates/pages/theme/widgets.tpl" md5="2f92071db5d82802a774088e344d4f6b"/>
 		<file filename="templates/pages/theme/index.tpl" md5="dd140f48bdf7e14eb8fb452b4f1be846"/>
@@ -53,5 +55,6 @@
 		GNU Affero General Public License v3
 	</license>
 	<otherfiles/>
+	<upgrade from="0.0.1" to="1.9.0"/>
 </component>
 

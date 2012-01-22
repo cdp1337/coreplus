@@ -1,10 +1,13 @@
 <?php
 
-class ThemeController extends Controller{
+class ThemeController extends Controller_2_1{
 	
-	public static $AccessString = 'g:admin';
+	public function __construct() {
+		$this->accessstring = 'g:admin';
+	}
 	
-	public static function Index(View $view){
+	public function index(){
+		$view = $this->getView();
 		$default = ConfigHandler::Get('/theme/selected');
 		
 		$themes = array();
@@ -33,14 +36,16 @@ class ThemeController extends Controller{
 	}
 	
 	
-	public static function Widgets(View $view){
-		$t = $view->getParameter(0);
+	public function widgets(){
+		$view = $this->getView();
+		
+		$t = $this->getPageRequest()->getParameter(0);
 		if(!$t || $t{0} == '.' || strpos($t, '..') !== false || !is_dir(ROOT_PDIR . 'themes/' . $t)){
 			Core::SetMessage('Invalid theme requested', 'error');
 			Core::Redirect('/Theme');
 		}
 		
-		$template = $view->getParameter('template');
+		$template = $this->getPageRequest()->getParameter('template');
 		// @todo Add support for page-specific configuration.
 		
 		$filename = ROOT_PDIR . 'themes/' . $t . '/' . $template;
@@ -50,6 +55,23 @@ class ThemeController extends Controller{
 			Core::Redirect('/Theme');
 		}
 		
+		if($this->getPageRequest()->isPost()){
+			
+			$counter = 0;
+			foreach($_POST['widgetarea'] as $id => $dat){
+				
+				// Merge in the global information for this request
+				$dat['theme'] = $t;
+				$dat['template'] = $template;
+				$dat['weight'] = ++$counter;
+				
+				if(strpos($id, 'new') !== false) $w = new WidgetInstanceModel();
+				else $w = new WidgetInstanceModel($id);
+				
+				$w->setFromArray($dat);
+				$w->save();
+			}
+		}
 		
 		// Get a list of the widgetareas on the theme.
 		// These are going to be {widgetarea} tags.
@@ -82,7 +104,8 @@ class ThemeController extends Controller{
 		
 	}
 	
-	public static function Widgets_Add(View $view){
+	public function widgets_Add(){
+		$view = $this->getView();
 				
 		$widgets = array();
 		foreach(ComponentHandler::GetLoadedWidgets() as $w){

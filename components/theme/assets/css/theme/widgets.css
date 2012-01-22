@@ -1,5 +1,21 @@
 /*** Widget and Widgetareas ***/
-.widget-dragtarget { padding:10px; }
-.widget-dragtarget.highlightdroptarget { padding:8px; border:2px dashed blue; }
+.widget-dragtarget { padding:15px 0px; border:2px dashed #9A9; }
+.widget-dragtarget.highlightdroptarget { padding:15px 0px; border:2px dashed blue; }
 .widget-source { z-index:2000; border: 2px solid green; padding:0.25em; cursor:move;}
 .widget-dragsource.ui-sortable { border:2px solid green; cursor:move;}
+
+.widget-dragsource {
+	height: 20px;
+	border: 1px solid #999;
+	padding-top: 5px;
+	padding-left: 10px;
+	cursor: move;
+	margin-bottom:5px;
+	width: 400px;
+}
+
+.widget-bucket-source { float:left; width:50%; }
+.widget-bucket-source a.control { display:none; }
+
+.widget-bucket-destination { float:left; width:50%; }
+
