@@ -42,7 +42,7 @@ footer { height:50px; clear:both;}
 
 
 /*** Navigation breadcrumbs and other sub-nav elements ***/
-nav#breadcrumbs { font-size:80%; margin-bottom:0.5em; margin-left:1em; color:#555; padding-bottom:0.5em; border-bottom:1px solid #888; }
+nav#breadcrumbs { font-size:80%; margin-bottom:0.5em; margin-left:1em; color:#555; padding-bottom:0.5em; border-bottom:1px solid #888; height:10px; }
 nav#breadcrumbs a { color:#555; }
 nav#breadcrumbs ul.controls { float:right; margin-top:-4px; }
 
@@ -56,12 +56,26 @@ nav#breadcrumbs ul.controls { float:right; margin-top:-4px; }
 /*** Controls that can be implemented throughout the site ***/
 ul.controls { height:20px; }
 ul.controls li { float:left; margin-right:0.5em; list-style:none;}
-/* And their images */
-ul.controls li.add a       { text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/add.png'); }
-ul.controls li.directory a { text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/directory.png'); }
-ul.controls li.delete a    { text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/delete.png'); }
-ul.controls li.edit a      { text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/edit.png'); }
-ul.controls li.view a      { text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/view.png'); }
+/* And their images.  Stand-alone "control" buttons also get the same styling. */
+ul.controls li.add a,
+a.control.control-add
+{ text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/add.png'); }
+
+ul.controls li.directory a,
+a.control.control-directory
+{ text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/directory.png'); }
+
+ul.controls li.delete a,
+a.control.control-delete
+{ text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/delete.png'); }
+
+ul.controls li.edit a,
+a.control.control-edit
+{ text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/edit.png'); }
+
+ul.controls li.view a,
+a.control.control-view
+{ text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/view.png'); }
 
 
 /*** Buttons and their respective images that can be used throughout ***/
