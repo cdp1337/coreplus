@@ -13,8 +13,8 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/jquery-1.7.0.min.js');
-		else CurrentPage::AddScript ('js/jquery/jquery-1.7.0.js');
+		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/jquery-1.7.1.min.js');
+		else CurrentPage::AddScript ('js/jquery/jquery-1.7.1.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;

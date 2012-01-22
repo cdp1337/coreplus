@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7.0-1" name="JQuery-Full" execmode="web">
-	<requires name="core" type="component" version="0.0.7" operation="ge"/>
-	<provides name="JQuery" version="1.7.0-1" type="library"/>
-	<provides name="JQueryUI" version="1.8.16-1" type="library"/>
-	<provides name="JQueryUI.NestedSortable" version="1.2.2-1" type="library"/>
-	<provides name="JQueryUI.readonly" version="2.0.1-1" type="library"/>
-	<provides name="JQuery.json" version="2.2" type="library"/>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="JQuery-Full" execmode="web">
+	<requires>
+		<require name="core" type="component" version="1.9.0" operation="ge"/>
+	</requires>
+	
+	<provides>
+		<provide name="JQuery" version="1.7.1" type="library"/>
+		<provide name="JQueryUI" version="1.8.16" type="library"/>
+		<provide name="JQueryUI.NestedSortable" version="1.4.0" type="library"/>
+		<provide name="JQueryUI.readonly" version="2.0.1" type="library"/>
+		<provide name="JQuery.json" version="2.2" type="library"/>
+		
+		<scriptlibrary name="jquery" call="JQuery::IncludeJQuery"/>
+		<scriptlibrary name="jquery.json" call="JQuery::Include_json"/>
+		<scriptlibrary name="jqueryui" call="JQuery::IncludeJQueryUI"/>
+		<scriptlibrary name="jqueryui.nestedSortable" call="JQuery::Include_nestedSortable"/>
+		<scriptlibrary name="jqueryui.readonly" call="JQuery::Include_readonly"/>
+	</provides>
+	
 	<assets>
 		<file filename="assets/css/jquery-ui.css" md5="781469e00ca1ccd7cacff5cfceb7e7e9"/>
 		<file filename="assets/css/images/ui-bg_highlight-hard_100_fafaf4_1x100.png" md5="5fab734991bc927dd729e4b2c4500a34"/>
@@ -51,20 +63,17 @@
 		<file filename="assets/js/jquery/jquery-1.6.4.min.js" md5="9118381924c51c89d9414a311ec9c97f"/>
 		<file filename="assets/js/jquery/jquery-1.7.0.js" md5="abefdb960c5c589e6ab3d32219a3a68c"/>
 		<file filename="assets/js/jquery/jquery-1.7.0.min.js" md5="a3a0fdb8b89bc8bb2665d260a3079aed"/>
-		<file filename="assets/js/jquery/jquery-1.7.0.min.js~" md5="d41d8cd98f00b204e9800998ecf8427e"/>
 		<file filename="assets/js/jquery/jquery.ui.readonly.min.js" md5="ae62f410564d47cfec4593a0d5e1ffda"/>
-		<file filename="assets/js/jquery/jquery-1.7.0.js~" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="assets/js/jquery/jquery-1.7.1.js"/>
+		<file filename="assets/js/jquery/jquery-1.7.1.min.js"/>
 	</assets>
-	<library>
-		<scriptlibrary name="jquery" call="JQuery::IncludeJQuery"/>
-		<scriptlibrary name="jquery.json" call="JQuery::Include_json"/>
-		<scriptlibrary name="jqueryui" call="JQuery::IncludeJQueryUI"/>
-		<scriptlibrary name="jqueryui.nestedSortable" call="JQuery::Include_nestedSortable"/>
-		<scriptlibrary name="jqueryui.readonly" call="JQuery::Include_readonly"/>
+	
+	<files>
 		<file filename="JQuery.lib.php" md5="cab1801b4798b6edeaf4f06fb66cb1f3">
-			<provides type="class" name="JQuery"/>
+			<class name="JQuery"/>
 		</file>
-	</library>
+	</files>
+	
 	<changelog version="1.5.1~cae1">
 		<packagemeta>
 			<date>Sat, 18 Jun 2011 02:11:08 -0400</date>
@@ -108,6 +117,7 @@
 		</packagemeta>
 	</changelog>
 	<upgrade from="1.6.4~core1" to="1.7.0-1"/>
+	<upgrade from="1.7.0-1" to="2.0.0"/>
 	<changelog version="1.7.0-1">
 		<notes>
 			New upstream release.
