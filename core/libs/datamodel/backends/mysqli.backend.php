@@ -103,7 +103,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$this->_executeCount($dataset);
 				break;
 			default:
-				throw new Exception('Invalid dataset mode [' . $dataset->_mode . ']');
+				throw new DMI_Exception('Invalid dataset mode [' . $dataset->_mode . ']');
 				break;
 		}
 	}
@@ -591,25 +591,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 		$q .= ' ' . implode(', ', $ss);
 		
 		$q .= ' FROM `' . $dataset->_table . '`';
-		
-		if(sizeof($dataset->_where)){
-			$wsg = array();
-			$ws = array();
-			foreach($dataset->_where as $w){
-				$w['value'] = $this->_conn->real_escape_string($w['value']);
-				if(!isset($wsg[$w['group']])) $wsg[$w['group']] = array();
-				
-				$wsg[$w['group']][] = "`{$w['field']}` {$w['op']} '{$w['value']}'";
-			}
-			
-			// Combine each group member with its own seperator.
-			foreach($wsg as $k => $v){
-				$ws[] = ' ( ' . implode(' ' . $dataset->_wheregroups[$k] . ' ', $v) . ' ) ';
-			}
-			
-			$q .= ' WHERE ' . implode(' AND ', $ws);
-		}
-		
+		$q .= $this->_parseWhere($dataset);
 		if($dataset->_limit) $q .= ' LIMIT ' . $dataset->_limit;
 		
 		if($dataset->_order){
@@ -673,17 +655,9 @@ class DMI_mysqli_backend implements DMI_Backend {
 		foreach($dataset->_sets as $k => $v){
 			$sets[] = "`$k` = '" . $this->_conn->real_escape_string($v) . "'";
 		}
-		
 		$q .= ' SET ' . implode(', ', $sets);
 		
-		if(sizeof($dataset->_where)){
-			$ws = array();
-			foreach($dataset->_where as $w){
-				$w['value'] = $this->_conn->real_escape_string($w['value']);
-				$ws[] = "`{$w['field']}` {$w['op']} '{$w['value']}'";
-			}
-			$q .= ' WHERE ' . implode(' AND ', $ws);
-		}
+		$q .= $this->_parseWhere($dataset);
 		
 		if($dataset->_limit) $q .= ' LIMIT ' . $dataset->_limit;
 		
@@ -698,15 +672,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 	
 	private function _executeDelete(Dataset $dataset){
 		$q = 'DELETE FROM `' . $dataset->_table . '`';
-		
-		if(sizeof($dataset->_where)){
-			$ws = array();
-			foreach($dataset->_where as $w){
-				$w['value'] = $this->_conn->real_escape_string($w['value']);
-				$ws[] = "`{$w['field']}` {$w['op']} '{$w['value']}'";
-			}
-			$q .= ' WHERE ' . implode(' AND ', $ws);
-		}
+		$q .= $this->_parseWhere($dataset);
 		
 		if($dataset->_limit) $q .= ' LIMIT ' . $dataset->_limit;
 		
@@ -722,15 +688,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 		// Count clauses only need a COUNT(*) for the select.
 		$q .= ' COUNT(*) c';
 		$q .= ' FROM `' . $dataset->_table . '`';
-		
-		if(sizeof($dataset->_where)){
-			$ws = array();
-			foreach($dataset->_where as $w){
-				$w['value'] = $this->_conn->real_escape_string($w['value']);
-				$ws[] = "`{$w['field']}` {$w['op']} '{$w['value']}'";
-			}
-			$q .= ' WHERE ' . implode(' AND ', $ws);
-		}
+		$q .= $this->_parseWhere($dataset);
 		
 		// Execute this and populate the dataset appropriately.
 		$res = $this->_rawExecute($q);
@@ -743,6 +701,41 @@ class DMI_mysqli_backend implements DMI_Backend {
 	
 	
 	/**
+	 * Parse the where clause of a given dataset.
+	 * This is abstracted away because it's common functionality between SELECT, UPDATE and DELETE.
+	 * 
+	 * This method ONLY parses the WHERE clause and returns a valid SQL snippet.
+	 * If no where clauses are found, a blank string is returned.
+	 * 
+	 * @param Dataset $dataset
+	 * @return string
+	 */
+	private function _parseWhere(Dataset $dataset){
+		$q = '';
+		
+		if(sizeof($dataset->_where)){
+			$wsg = array();
+			$ws = array();
+			foreach($dataset->_where as $w){
+				$w['value'] = $this->_conn->real_escape_string($w['value']);
+				if(!isset($wsg[$w['group']])) $wsg[$w['group']] = array();
+				
+				$wsg[$w['group']][] = "`{$w['field']}` {$w['op']} '{$w['value']}'";
+			}
+			
+			// Combine each group member with its own seperator.
+			foreach($wsg as $k => $v){
+				$ws[] = ' ( ' . implode(' ' . $dataset->_wheregroups[$k] . ' ', $v) . ' ) ';
+			}
+			
+			$q .= ' WHERE ' . implode(' AND ', $ws);
+		}
+		
+		return $q;
+	}
+	
+	
+	/**
 	 * Execute a raw query
 	 * 
 	 * Returns FALSE on failure. For successful SELECT, SHOW, DESCRIBE or 
@@ -751,6 +744,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 	 * 
 	 * @param string $string 
 	 * @return mixed
+	 * @throws DMI_Query_Exception
 	 */
 	private function _rawExecute($string){
 		// If there are additional arguments and a placeholder in the query.... sanitize and parse it.
@@ -786,12 +780,10 @@ class DMI_mysqli_backend implements DMI_Backend {
 		);
 		
 		if($this->_conn->errno){
-			// @todo Should this be implemented in the DMI_Exception?
-			if(DEVELOPMENT_MODE) echo '<pre class="cae2_debug">' . $string . '</pre>';
-			throw new DMI_Exception($this->_conn->error, $this->_conn->errno);
+			$e = new DMI_Query_Exception($this->_conn->error, $this->_conn->errno);
+			$e->query = $string;
+			throw $e;
 		}
 		return $res;
 	}
 }
-
-?>
