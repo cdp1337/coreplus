@@ -150,7 +150,13 @@ class Component_2_1{
 		}
 	}
 	
-	
+	/**
+	 * Load this component's metadata from the XML file.
+	 * 
+	 * Will setup the name, version, installed version (if available), and enabled flag (if available).
+	 * 
+	 * @return void
+	 */
 	public function load(){
 		if($this->_loaded) return;
 		
@@ -1061,7 +1067,7 @@ class Component_2_1{
 	 */
 	private function _parseConfigs(){
 		// Keep track of if this changed anything.
-		$changes = 0;
+		$changes = array();
 		
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('configs');
@@ -1077,10 +1083,10 @@ class Component_2_1{
 			$m->set('description', $confignode->getAttribute('description'));
 			$m->set('mapto', $confignode->getAttribute('mapto'));
 			if(!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
-			if($m->save()) $changed++;
+			if($m->save()) $changes[] = 'Set configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
 		}
 		
-		return ($changes > 0) ? $changes : false;
+		return (sizeof($changes)) ? $changes : false;
 		
 	} // private function _parseConfigs
 	
