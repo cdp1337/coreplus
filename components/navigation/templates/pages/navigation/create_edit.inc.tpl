@@ -15,7 +15,7 @@
 	<a class="button add add-entry-none-btn" href="#" title="Add Text Label">Add Text Label</a>
 
 	<!-- Create new entry heading -->
-	<ul class="sortable-listing" id="entry-listings"></ul>
+	<ol class="sortable-listing" id="entry-listings"></ol>
 	
 </fieldset>
 
