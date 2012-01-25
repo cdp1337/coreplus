@@ -195,14 +195,32 @@ require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
 
 
 // Is the system not installed yet?
+if(!\Core\DB()->tableExists('component')){
+	
+	// I need some core settings before I can do anything!
+	
+	
+	$core = ComponentFactory::Create(ROOT_PDIR . 'core/component.xml');
+	$core->load();
+	//var_dump($core, $core->getBaseDir());
+	
+	$changes = $core->install();
+	var_dump($core, $changes);
+	die();
+}
+
+
 try{
 	$res = Dataset::Init()->table('component')->select('*')->limit(1)->execute();
 }
 catch(Exception $e){
-	$corecomponent = Core::GetComponent();
-	$corecomponent->load();
+	Core::LoadComponents();
 	
-	if(!$corecomponent->isInstalled()){
+	//$corecomponent = Core::GetComponent();
+	//$corecomponent->load();
+	
+	//if(!$corecomponent->isInstalled()){
+	if(!Core::GetComponent('core')->isInstalled()){
 		// Install das core!
 		$corecomponent->install();
 		InstallPage::SetVariable('body', 'Installed the core framework, please refresh.');
