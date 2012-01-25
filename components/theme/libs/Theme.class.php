@@ -83,7 +83,7 @@ class Theme{
 		$this->_version = $this->_xmlloader->getRootDOM()->getAttribute("version");
 		
 		// Load the database information, if there is any.
-		$dat = ComponentFactory::_LookupComponentData($this->_name);
+		$dat = ComponentFactory::_LookupComponentData('theme/' . $this->_name);
 		if(!$dat) return;
 		
 		$this->_versionDB = $dat['version'];
@@ -258,8 +258,9 @@ class Theme{
 	public function getAssetDir(){
 		$d = $this->getBaseDir() . 'assets';
 		
+		// If there is no "asset" directory, just return the base directory.
 		if(is_dir($d)) return $d;
-		else return null;
+		else return rtrim($this->getBaseDir(), '/');
 	}
 	
 	public function isLoadable(){
@@ -293,65 +294,88 @@ class Theme{
 	}
 	
 	
+	/**
+	 * Install this theme
+	 * 
+	 * Returns false if nothing changed, else will return an array containing all changes.
+	 * 
+	 * @return false | array
+	 * @throws InstallerException
+	 */
 	public function install(){
 		// @todo I need actual error checking here.
 		if($this->isInstalled()) return false;
 		
-		if(!$this->isLoadable()) return false;
-		
-		$this->_installAssets();
-		
-		$this->_parseConfigs();
-		
-		// Yay, it should be installed now.	Update the version in the database.
-		$c = new ComponentModel('theme/' . $this->_name);
-		$c->set('version', $this->_version);
-		$c->save();
-		
-		$this->_versionDB = $this->_version;
-		
-		
-		return true;
+		return $this->_performInstall();
 	}
 	
+	/**
+	 * Reinstall this theme.
+	 * 
+	 * Returns false if nothing changed, else will return an array containing all changes.
+	 * 
+	 * @return false | array
+	 * @throws InstallerException
+	 */
 	public function reinstall(){
 		// @todo I need actual error checking here.
 		if(!$this->isInstalled()) return false;
 		
-		$changed = false;
-		
-		if($this->_installAssets()) $changed = true;
-		
-		if($this->_parseConfigs()) $changed = true;
-		
-		// @todo What else should be done?
-		
-		return $changed;
+		return $this->_performInstall();
 	}
 	
+	/**
+	 * Upgrade the theme and reinstall all components.
+	 * 
+	 * This is actually an alias for reinstall, as there is no difference!
+	 * Returns false if nothing changed, else will return an array containing all changes.
+	 * 
+	 * @return false | array
+	 * @throws InstallerException
+	 */
 	public function upgrade(){
-		// Cannot upgrade if not currently installed.
 		if(!$this->isInstalled()) return false;
 		
-		// Cannot upgrade if no change required.
-		if($this->_versionDB == $this->_version) return false;
-			
-		// Yay, it should be installed now.	Update the version in the database.
-		DB::Execute("REPLACE INTO `" . DB_PREFIX . "component` (`name`, `version`) VALUES (?, ?)", array('theme/' . $this->_name, $this->_version));
-		$this->_versionDB = $this->_version;
+		return $this->_performInstall();
+	}
+	
+	/**
+	 * Because install, upgrade and remove all are actually the exact same logic for themes.
+	 * 
+	 * Returns false if nothing changed, else will return an array containing all changes.
+	 * 
+	 * @return false | array
+	 * @throws InstallerException
+	 */
+	private function _performInstall(){
+		$changed = array();
 		
-		$this->_installAssets();
+		$change = $this->_installAssets();
+		if($change !== false) $changed = array_merge($changed, $change);
 		
-		$this->_parseConfigs();
+		$change = $this->_parseConfigs();
+		if($change !== false) $changed = array_merge($changed, $change);
 		
-		return true;
+		// Make sure the version is correct in the database.
+		$c = new ComponentModel('theme/' . $this->_name);
+		$c->set('version', $this->_version);
+		$c->save();
+		
+		return (sizeof($changed)) ? $changed : false;
 	}
 	
 	/**
 	 * Internal function to parse and handle the configs in the component.xml file.
 	 * This is used for installations and upgrades.
+	 * 
+	 * Returns false if nothing changed, else will return the configuration options changed.
+	 * 
+	 * @return false | array
+	 * @throws InstallerException
 	 */
 	private function _parseConfigs(){
+		$changes = array();
+		
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('configs');
 		//$prefix = $node->getAttribute('prefix');
@@ -364,21 +388,27 @@ class Theme{
 			// Themes overwrite the settings regardless.
 			$m->set('value', $confignode->getAttribute('default'));
 			$m->set('description', $confignode->getAttribute('description'));
-			$m->save();
+			if($m->save()) $changes[] = 'Set configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
 		}
 		
+		// Are there changes?
+		return (sizeof($changes)) ? $changes : false;
 	} // private function _parseConfigs
 	
 	/**
 	 * Copy in all the assets for this component into the assets location.
 	 * 
-	 * @return boolean True if something changed, false if nothing changed.
+	 * Returns false if nothing changed, else will return an array of all the changes that occured.
+	 * 
+	 * @return false | array
+	 * @throws InstallerException
 	 */
 	private function _installAssets(){
 		$assetbase = ConfigHandler::Get('/core/filestore/assetdir');
 		$coretheme = ConfigHandler::Get('/theme/selected');
 		$theme = $this->getName();
-		$changed = false;
+		$changes = array();
+		
 		foreach($this->_xmlloader->getElements('/assets/file') as $node){
 			$b = $this->getBaseDir();
 			// The base filename with the directory.
@@ -387,39 +417,54 @@ class Theme{
 			$f = new File_local_backend($b . $filename);
 			// The new theme asset will be installed into the same directory as its theme.
 			// This differs from usual components because they just follow whatever theme is currently running.
-			$nf = Core::File($assetbase . $theme . '/' . $filename);
+			//$nf = Core::File($assetbase . $theme . '/' . $filename);
+			$newfilename = 'assets' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
 			
-			/*
+			$nf = Core::File($newfilename);
+			
 			// The new destination must be in the theme-specific directory, this is a 
 			// bit of a hack from the usual behaviour of the filestore system.
 			// Since that's designed to return the default if the theme-specific doesn't exist.
-			if(strpos($nf->getFilename(), $assetbase . $theme) === false){
+			if($theme != 'default' && strpos($nf->getFilename(), $assetbase . $theme) === false){
 				// The only possible filename bases to be returned are the $coretheme and default.
 				// so...
-				if($theme == 'default'){
-					
+				if($theme == 'default'){	
 					$nf->setFilename(str_replace($assetbase . $coretheme, $assetbase . $theme, $nf->getFilename()));
 				}
 				else{
-					var_dump($nf->getFilename());
 					$nf->setFilename(str_replace($assetbase . 'default', $assetbase . $theme, $nf->getFilename()));
 				}
 			}
-			*/
 			
 			// Check if this file even needs updated. (this is primarily used for reporting reasons)
-			if($nf->exists() && $nf->identicalTo($f)) continue;
+			if($nf->exists() && $nf->identicalTo($f)){
+				//echo "Skipping file, it's identical.<br/>";
+				continue;
+			}
+			// Otherwise if it exists, I want to be able to inform the user that it was replaced and not just installed.
+			elseif($nf->exists()){
+				$action = 'Replaced';
+			}
+			// Otherwise otherwise, it's a new file.
+			else{
+				$action = 'Installed';
+			}
 			
-			$f->copyTo($nf, true);
-			// Something changed.
-			$changed = true;
+			try{
+				$f->copyTo($nf, true);
+			}
+			catch(Exception $e){
+				throw new InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
+			}
+			
+			$changes[] = $action . ' ' . $nf->getFilename();
 		}
 		
-		if(!$changed) return false;
+		if(!sizeof($changes)) return false;
 		
 		// Make sure the asset cache is purged!
 		Core::Cache()->delete('asset-resolveurl');
 		
-		return true;
+		return $changes;
 	}
 }

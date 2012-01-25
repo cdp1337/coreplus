@@ -898,21 +898,21 @@ class Component_2_1{
 		return ($this->_xmlloader->getRootDOM()->getElementsByTagName('view')->length)? true : false;
 	}
 	
-	
+	/**
+	 * Install this component.
+	 * 
+	 * Returns false if nothing changed, else will return an array containing all changes.
+	 * 
+	 * @return false | array
+	 * @throws InstallerException
+	 */
 	public function install(){
 		
-		// @todo I need actual error checking here.
 		if($this->isInstalled()) return false;
 		
 		if(!$this->isLoadable()) return false;
 		
-		$this->_parseDBSchema();
-		
-		$this->_parseConfigs();
-		
-		$this->_parsePages();
-		
-		$this->_installAssets();
+		$changes = $this->_performInstall();
 		
 		// Run through each task under <install> and execute it.
 		/*
@@ -929,7 +929,6 @@ class Component_2_1{
 		$c = new ComponentModel($this->_name);
 		$c->set('version', $this->_version);
 		$c->save();
-		//DB::Execute("REPLACE INTO `" . DB_PREFIX . "component` (`name`, `version`) VALUES (?, ?)", array($this->_name, $this->_version));
 		$this->_versionDB = $this->_version;
 		
 		// And load this component into the system so anything else can access it immediately.
@@ -939,30 +938,37 @@ class Component_2_1{
 			$ch->_registerComponent($this);
 		}
 		
-		return true;
+		return $changes;
 	}
 	
+	/**
+	 * Reinstall a component with its same version.
+	 * Useful for replacing corrupt assets or what not.
+	 * 
+	 * Returns false if nothing changed, else will return an array containing all changes.
+	 * 
+	 * @return false | array
+	 * @throws InstallerException
+	 */
 	public function reinstall(){
 		// @todo I need actual error checking here.
 		if(!$this->isInstalled()) return false;
 		
-		$changed = false;
-		
-		if($this->_parseDBSchema()) $changed = true;
-		
-		if($this->_parseConfigs()) $changed = true;
-		
-		if($this->_parsePages()) $changed = true;
-		
-		if($this->_installAssets()) $changed = true;
-		
-		// @todo What else should be done?
-		
-		return $changed;
+		return $this->_performInstall();
 	}
 	
+	/**
+	 * Upgrade this component to the newer version, if possible.
+	 * 
+	 * Returns false if nothing changed, else will return an array containing all changes.
+	 * 
+	 * @return false | array
+	 * @throws InstallerException
+	 */
 	public function upgrade(){
 		if(!$this->isInstalled()) return false;
+		
+		$changes = array();
 		
 		$canBeUpgraded = true;
 		while($canBeUpgraded){
@@ -976,28 +982,53 @@ class Component_2_1{
 					
 					$result = InstallTask::ParseNode($u,  $this->getBaseDir());
 					if(!$result){
-						if(DEVELOPMENT_MODE){
-							trigger_error('Upgrade of Component ' . $this->_name . ' failed.', E_USER_NOTICE);
-						}
-						return;
+						throw new InstallerException('Upgrade of Component ' . $this->_name . ' failed.');
 					}
+					
+					// Record this change.
+					$changes[] = 'Upgraded from [' . $this->_versionDB . '] to [' . $u->getAttribute('to') . ']';
 					
 					$this->_versionDB = @$u->getAttribute('to');
 					$c = new ComponentModel($this->_name);
 					$c->set('version', $this->_versionDB);
 					$c->save();
-					//DB::Execute("REPLACE INTO `" . DB_PREFIX . "component` (`name`, `version`) VALUES (?, ?)", array($this->_name, $this->_versionDB));
 				}
 			}
 		}
 		
-		$this->_parseDBSchema();
+		// I can now do everything else.
+		$otherchanges = $this->_performInstall();
 		
-		$this->_parseConfigs();
+		// After they're merged in of course.
+		if($otherchanges !== false) $changes = array_merge($changes, $otherchanges);
 		
-		$this->_parsePages();
+		return (sizeof($changes)) ? $changes : false;
+	}
+	
+	/**
+	 * Component installation operations all share common actions, (mostly).
+	 * 
+	 * Returns false if nothing changed, else will return an array containing all changes.
+	 * 
+	 * @return false | array
+	 * @throws InstallerException
+	 */
+	private function _performInstall(){
+		$changed = array();
 		
-		$this->_installAssets();
+		$change = $this->_parseDBSchema();
+		if($change !== false) $changed = array_merge($changed, $change);
+		
+		$change = $this->_parseConfigs();
+		if($change !== false) $changed = array_merge($changed, $change);
+		
+		$change = $this->_parsePages();
+		if($change !== false) $changed = array_merge($changed, $change);
+		
+		$change = $this->_installAssets();
+		if($change !== false) $changed = array_merge($changed, $change);
+		
+		return (sizeof($changed)) ? $changed : false;
 	}
 	
 	public function getProvides(){
@@ -1023,11 +1054,14 @@ class Component_2_1{
 	 * Internal function to parse and handle the configs in the component.xml file.
 	 * This is used for installations and upgrades.
 	 * 
-	 * @return bool True if something changed, false if nothing changed.
+	 * Returns false if nothing changed, else will return an int of the number of configuration options changed.
+	 * 
+	 * @return false | int
+	 * @throws InstallerException
 	 */
 	private function _parseConfigs(){
 		// Keep track of if this changed anything.
-		$changed = false;
+		$changes = 0;
 		
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('configs');
@@ -1043,19 +1077,21 @@ class Component_2_1{
 			$m->set('description', $confignode->getAttribute('description'));
 			$m->set('mapto', $confignode->getAttribute('mapto'));
 			if(!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
-			if($m->save()) $changed = true;
+			if($m->save()) $changed++;
 		}
 		
-		return $changed;
+		return ($changes > 0) ? $changes : false;
 		
 	} // private function _parseConfigs
 	
 	/**
 	 * Internal function to parse and handle the configs in the component.xml file.
 	 * This is used for installations and upgrades.
+	 * 
+	 * @throws InstallerException
 	 */
 	private function _parsePages(){
-		$changed = false;
+		$changes = array();
 		
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('pages');
@@ -1077,16 +1113,18 @@ class Component_2_1{
 			if($m->get('access') == '*') $m->set('access', $subnode->getAttribute('access'));
 			$m->set('widget', $subnode->getAttribute('widget'));
 			$m->set('admin', $subnode->getAttribute('admin'));
-			if($m->save()) $changed = true;
+			if($m->save()) $changes[] = 'Updated page [' . $m->get('baseurl') . ']';
 		}
 		
-		return $changed;
+		return ($changes > 0) ? $changes : false;
 	}
 	
 	
 	/**
 	 * Internal function to parse and handle the DBSchema in the component.xml file.
 	 * This is used for installations and upgrades.
+	 * 
+	 * @throws InstallerException
 	 */
 	private function _parseDBSchema(){
 		// I need to get the schema definitions first.
@@ -1128,12 +1166,15 @@ class Component_2_1{
 	/**
 	 * Copy in all the assets for this component into the assets location.
 	 * 
-	 * @return boolean True if something changed, false if nothing changed.
+	 * Returns false if nothing changed, else will return an array of all the changes that occured.
+	 * 
+	 * @return false | array
+	 * @throws InstallerException
 	 */
 	private function _installAssets(){
 		$assetbase = ConfigHandler::Get('/core/filestore/assetdir');
 		$theme = ConfigHandler::Get('/theme/selected');
-		$changed = false;
+		$changes = array();
 		
 		foreach($this->_xmlloader->getElements('/assets/file') as $node){
 			$b = $this->getBaseDir();
@@ -1156,19 +1197,34 @@ class Component_2_1{
 			}
 			
 			// Check if this file even needs updated. (this is primarily used for reporting reasons)
-			if($nf->exists() && $nf->identicalTo($f)) continue;
+			if($nf->exists() && $nf->identicalTo($f)){
+				continue;
+			}
+			// Otherwise if it exists, I want to be able to inform the user that it was replaced and not just installed.
+			elseif($nf->exists()){
+				$action = 'Replaced';
+			}
+			// Otherwise otherwise, it's a new file.
+			else{
+				$action = 'Installed';
+			}
 			
-			$f->copyTo($nf, true);
-			// Something changed.
-			$changed = true;
+			try{
+				$f->copyTo($nf, true);
+			}
+			catch(Exception $e){
+				throw new InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
+			}
+			
+			$changes[] = $action . ' ' . $nf->getFilename();
 		}
 		
-		if(!$changed) return false;
+		if(!sizeof($changes)) return false;
 		
 		// Make sure the asset cache is purged!
 		Core::Cache()->delete('asset-resolveurl');
 		
-		return true;
+		return $changes;
 	}
 	
 	/**

@@ -168,6 +168,15 @@ class Model implements ArrayAccess{
 		return;
 	}
 
+	/**
+	 * Save this Model into the datastore.
+	 * 
+	 * Return true if saved successfully, false if no change required,
+	 * and will throw a DMI_Exception if there was an error.
+	 * 
+	 * @return boolean
+	 * @throws DMI_Exception 
+	 */
 	public function save(){
 		
 		// Only do the same operation if it's been changed.

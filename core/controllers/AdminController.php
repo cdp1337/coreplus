@@ -29,19 +29,30 @@ class AdminController extends Controller_2_1 {
 		$changes = array();
 		
 		foreach(ThemeHandler::GetAllThemes() as $t){
+		
 			if(!$t->isInstalled()) continue;
 			
-			if($t->reinstall()){
-				$changes[] = 'Reinstalled theme ' . $t->getName();
+			if(($change = $t->reinstall()) !== false){
+				$changes[] = '<b>Changes to theme [' . $t->getName() . ']:</b><br/>' . "\n" . implode("<br/>\n", $change) . "<br/>\n<br/>\n";
 			}
 		}
 		
 		foreach(Core::GetComponents() as $c){
 			if(!$c->isInstalled()) continue;
 			
-			if($c->reinstall()){
-				$changes[] = 'Reinstalled component ' . $c->getName();
+			// Request the reinstallation
+			$change = $c->reinstall();
+			
+			// 1.0 version components don't support verbose changes :(
+			if($change === true){
+				$changes[] = '<b>Changes to component [' . $c->getName() . ']:</b><br/>' . "\n(list of changes not supported with this component!)<br/>\n<br/>\n";
 			}
+			// 2.1 components support an array of changes, yay!
+			elseif($change !== false){
+				$changes[] = '<b>Changes to component [' . $c->getName() . ']:</b><br/>' . "\n" . implode("<br/>\n", $change) . "<br/>\n<br/>\n";
+			}
+			// I don't care about "else", nothing changed if it was false.
+			
 		}
 		
 		// Flush the system cache, just in case
