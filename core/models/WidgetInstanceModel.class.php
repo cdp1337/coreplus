@@ -86,7 +86,6 @@ class WidgetInstanceModel extends Model {
 	
 	public static $Indexes = array(
 		'primary' => array('id'),
-		'widget' => array('widgetid'),
 	);
 
 	
