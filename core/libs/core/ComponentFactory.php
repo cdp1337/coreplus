@@ -21,7 +21,15 @@ abstract class ComponentFactory{
 		if(self::$_DBCache === null){
 			self::$_DBCache = array();
 			
-			$res = Dataset::Init()->table('component')->select('*')->execute();
+			// Try to load the components
+			try{
+				$res = Dataset::Init()->table('component')->select('*')->execute();
+			}
+			// But since this function is called during the installer, it might fail... that's acceptable.
+			catch(DMI_Exception $e){
+				return false;
+			}
+			
 			foreach($res as $r){
 				$n = strtolower($r['name']);
 				self::$_DBCache[$n] = $r;
