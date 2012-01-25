@@ -98,6 +98,9 @@ class DMI {
 	
 }
 
+
+// @TODO Break these out into their own file at some point in time.
+
 class DMI_Exception extends Exception{
 	const ERRNO_NODATASET = '42S02';
 	const ERRNO_UNKNOWN = '07000';
@@ -110,4 +113,10 @@ class DMI_Exception extends Exception{
 	}
 }
 
-?>
+class DMI_Query_Exception extends DMI_Exception{
+	/**
+	 * The query that caused the exception.
+	 * @var string
+	 */
+	public $query = null;	
+}
