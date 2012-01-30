@@ -109,8 +109,18 @@ class DMI_Exception extends Exception{
 	
 	public function __construct($message, $code = null, $previous = null, $ansicode = null) {
 		parent::__construct($message, $code, $previous);
+		
 		if($ansicode) $this->ansicode = $ansicode;
+		elseif($code) $this->ansicode = $code;
 	}
+}
+
+class DMI_Authentication_Exception extends DMI_Exception{
+	
+}
+
+class DMI_ServerNotFound_Exception extends DMI_Exception{
+	
 }
 
 class DMI_Query_Exception extends DMI_Exception{

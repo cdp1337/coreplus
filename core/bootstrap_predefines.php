@@ -76,7 +76,7 @@ if(!defined('ROOT_PDIR')) define('ROOT_PDIR', $rpdr);
  * Example: /~someone/myinstall/
  * @var string
  */
-define('ROOT_WDIR', $rwdr);
+if(!defined('ROOT_WDIR')) define('ROOT_WDIR', $rwdr);
 /**
  * The remote IP of the connecting computer.
  * Based dynamically off the $_SERVER variable.

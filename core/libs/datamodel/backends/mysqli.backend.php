@@ -71,11 +71,22 @@ class DMI_mysqli_backend implements DMI_Backend {
 		
 		// Errors, SHHH!  I'll handle them manually!
 		@$this->_conn->real_connect($host, $user, $pass, $database, $port);
-		
-		if($this->_conn->errno){
-			throw new DMI_Exception($this->_conn->error, null, null, $this->_conn->errno);
+			
+		// Setting the correct exception would be useful!
+		switch($this->_conn->errno){
+			// Server not found
+			case 2002:
+				throw new DMI_ServerNotFound_Exception($this->_conn->error, $this->_conn->errno);
+			// User not allowed
+			case 1045:
+				throw new DMI_Authentication_Exception($this->_conn->error, $this->_conn->errno);
+			// No error, just break;
+			case 0:
+				break;
+			// Everything else gets a generic error.
+			default:
+				throw new DMI_Exception($this->_conn->error, $this->_conn->errno);
 		}
-		
 		
 		return ($this->_conn);
 	}

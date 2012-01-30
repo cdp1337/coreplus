@@ -97,7 +97,10 @@ ConfigHandler::Singleton();
 $core_settings = ConfigHandler::LoadConfigFile("configuration");
 
 if(!$core_settings){
-	die("Please ensure that you copy /config/configuration.xml.example to /config/configuration.xml and edit the appropriate values.");
+	$newURL = 'install/';
+	header("Location:" . $newURL);
+    die("If your browser does not refresh, please <a href=\"{$newURL}\">Click Here</a>");
+	//die("Please ensure that you copy /config/configuration.xml.example to /config/configuration.xml and edit the appropriate values.");
 }
 
 
