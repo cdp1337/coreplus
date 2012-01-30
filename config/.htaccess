@@ -3,6 +3,6 @@
 #  by anyone at any time.
 
 <Files *>
-Order deny,allow
-Deny from All
+	Order deny,allow
+	Deny from All
 </Files>
