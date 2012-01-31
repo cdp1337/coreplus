@@ -49,7 +49,7 @@ class Core implements ISingleton{
 	 * 
 	 * @var array
 	 */
-	private $_libraries = null;
+	private $_libraries = array();
 	
 	/**
 	 * List of every installed class and its location on the system.

@@ -32,6 +32,12 @@ interface DMI_Backend {
 	
 	public function execute(Dataset $dataset);
 	
+	/**
+	 * Check to see if a given table exists without causing an error.
+	 * 
+	 * @param string $tablename
+	 * @return boolean 
+	 */
 	public function tableExists($tablename);
 	
 	public function createTable($tablename, $schema);

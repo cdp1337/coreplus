@@ -883,7 +883,7 @@
 		<config key="/core/aws/accountid" type="string" default="" description="Amazon Account ID without dashes. Used for identification with Amazon EC2. Found in the AWS Security Credentials."/>
 		<config key="/core/aws/canonicalid" type="string" default="" description="Your CanonicalUser ID. Used for setting access control settings in AmazonS3. Found in the AWS Security Credentials."/>
 		<config key="/core/aws/canonicalname" type="string" default="" description="Your CanonicalUser DisplayName. Used for setting access control settings in AmazonS3. Found in the AWS Security Credentials (i.e. &quot;Welcome, AWS_CANONICAL_NAME&quot;)."/>
-		<config key="/core/aws/asset_bucket" type="string" default="" description=""/>
+		<!--<config key="/core/aws/asset_bucket" type="string" default="" description=""/>-->
 		<config key="/core/cache_backend" type="string" default="file" description="apc; file; memcache; xcache; BLAH"/>
 		<config key="/core/javascript/minified" type="boolean" default="true" description="Try to use minified javascript files whenever possible."/>
 		<config key="/core/markup/minified" type="boolean" default="true" description="Try to collapse rendered markup whenever possible."/>

@@ -142,13 +142,6 @@ class ConfigHandler implements ISingleton {
 		return (isset(ConfigHandler::$CacheFromDB[$key])) ? ConfigHandler::$CacheFromDB[$key] : null;
 	}
 
-	public static function SetValue($key, $value) {
-		//trigger_error('ConfigHandler::SetValue() is deprecated, please use ConfigHandler::Set() instead.', E_USER_DEPRECATED);
-		return self::Set($key, $value);
-		
-        ConfigHandler::$CacheFromDB[$key] = $value;
-		$rs = DB::Execute("UPDATE `" . DB_PREFIX . "config` SET `value` = ? WHERE `key` = ? LIMIT 1", array($value, $key));
-	}
 	
 	/**
 	 * Get the config model that is attached to the core configuration system.
@@ -167,14 +160,18 @@ class ConfigHandler implements ISingleton {
 	}
 	
 	public static function Get($key){
+		// Retrieve it from cache first of all.
 		if(isset(ConfigHandler::$CacheFromDB[$key])) return ConfigHandler::$CacheFromDB[$key]->getValue();
+		// Not set there?  Allow the SESSION to contain config variables.  This is critical for installation.
+		elseif(isset($_SESSION) && isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])) return $_SESSION['configs'][$key];
+		// Else, just return null.
 		else return null;
 	}
 	
-	public static function Set($key, $vlaue){
-		if(isset(ConfigHandler::$CacheFromDB[$key])) return ConfigHandler::$CacheFromDB[$key]->getValue();
-		else return null;
+	public static function _Set(ConfigModel $config){
+		ConfigHandler::$CacheFromDB[$config->get('key')] = $config;
 	}
+	
 
 	public static function _DBReadyHook(){
 		// This may be called before the componenthandler is ready.

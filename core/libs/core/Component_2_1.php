@@ -1082,8 +1082,15 @@ class Component_2_1{
 			$m->set('default_value', $confignode->getAttribute('default'));
 			$m->set('description', $confignode->getAttribute('description'));
 			$m->set('mapto', $confignode->getAttribute('mapto'));
+			// Default from the xml, only if it's not already set.
 			if(!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
+			// Allow configurations to overwrite any value.  This is useful on the initial installation.
+			if(isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])) $m->set('value', $_SESSION['configs'][$key]);
+			
 			if($m->save()) $changes[] = 'Set configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
+			
+			// Make it available immediately
+			ConfigHandler::_Set($m);
 		}
 		
 		return (sizeof($changes)) ? $changes : false;
@@ -1190,6 +1197,7 @@ class Component_2_1{
 			// The new file should have a filename identical to the original, with the exception of
 			// everything before the filename.. ie: the ROOT_PDIR and the asset directory.
 			$newfilename = 'assets' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
+			
 			$nf = Core::File($newfilename);
 			
 			// If it's null, don't change the path any.

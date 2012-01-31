@@ -52,7 +52,8 @@ function FTP(){
 	if($ftp){
 		// Make sure the FTP directory is always as root whenever this is called.
 		$ftproot = \ConfigHandler::Get('/core/ftp/path');
-		ftp_chdir($ftp, $ftproot);
+		
+		if(!ftp_chdir($ftp, $ftproot)) return false;
 	}
 
 	return $ftp;

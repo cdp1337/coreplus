@@ -130,21 +130,25 @@ class File_local_backend implements File_Backend{
 		if(self::$_Root_pdir_assets === null){
 			$dir = ConfigHandler::Get('/core/filestore/assetdir');
 			if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
+			if(substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
 			self::$_Root_pdir_assets = $dir;
 		}
 		if(self::$_Root_pdir_public === null){
 			$dir = ConfigHandler::Get('/core/filestore/publicdir');
 			if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
+			if(substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
 			self::$_Root_pdir_public = $dir;
 		}
 		if(self::$_Root_pdir_private === null){
 			$dir = ConfigHandler::Get('/core/filestore/privatedir');
 			if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
+			if(substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
 			self::$_Root_pdir_private = $dir;
 		}
 		if(self::$_Root_pdir_tmp === null){
 			$dir = TMP_DIR;
 			if($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
+			if(substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
 			self::$_Root_pdir_tmp = $dir;
 		}
 		
@@ -572,7 +576,7 @@ class File_local_backend implements File_Backend{
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public static function _Mkdir($pathname, $mode = 0777, $recursive = false){
-		$ftp = Core::FTP();
+		$ftp = \Core\FTP();
 		$tmpdir = TMP_DIR;
 		if($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 		
@@ -590,10 +594,11 @@ class File_local_backend implements File_Backend{
 			// Because ftp_mkdir doesn't like to create parent directories...
 			$paths = explode('/', $pathname);
 			
-			foreach($paths as $p){	
+			foreach($paths as $p){
 				if(!@ftp_chdir($ftp, $p)){
 					if(!ftp_mkdir($ftp, $p)) return false;
 					if(!ftp_chmod($ftp, $mode, $p)) return false;
+					ftp_chdir($ftp, $p);
 				}
 			}
 			
@@ -627,7 +632,7 @@ class File_local_backend implements File_Backend{
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public static function _PutContents($filename, $data){
-		$ftp = Core::FTP();
+		$ftp = \Core\FTP();
 		$tmpdir = TMP_DIR;
 		if($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 		
@@ -645,12 +650,14 @@ class File_local_backend implements File_Backend{
 			// FTP requires a filename, not data...
 			$tmpfile = $tmpdir . 'ftpupload-' . Core::RandomHex(4);
 			file_put_contents($tmpfile, $data);
-			//var_dump($filename);
+			
 			if(!ftp_put($ftp, $filename, $tmpfile, FTP_BINARY)){
 				// Well, delete the temp file anyway...
 				unlink($tmpfile);
 				return false;
 			}
+			
+			if(!ftp_chmod($ftp, 0644, $filename)) return false;
 			
 			// woot... but cleanup the trash first.
 			unlink($tmpfile);
