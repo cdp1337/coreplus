@@ -34,6 +34,7 @@ session_start();
 // I need to override some defines here...
 $rpdr = pathinfo(dirname($_SERVER['SCRIPT_FILENAME' ]), PATHINFO_DIRNAME );
 define('ROOT_PDIR', $rpdr . '/');
+define('ROOT_WDIR', dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/');
 
 
 // Start a timer for performance tuning purposes.
@@ -41,17 +42,70 @@ define('ROOT_PDIR', $rpdr . '/');
 $start_time = microtime(true);
 
 
-
-/********************* Initial system defines *********************************/
+// Initial system defines
 require_once('../core/bootstrap_predefines.php');
-
 $predefines_time = microtime(true);
 
-
-
-/********************** Critical file inclusions ******************************/
-
+// Critical file inclusions
 require_once('../core/bootstrap_preincludes.php');
+require_once('../core/libs/core/InstallerException.php');
+
+// This is the entire templating system for the installer.
+require_once('InstallPage.class.php');
+
+
+// The configuration file needs to be modified!
+if(!file_exists(ROOT_PDIR . 'config/configuration.xml')){
+	$page = new InstallPage();
+	$page->assign('error', 'No such file [' . ROOT_PDIR . 'config/configuration.xml]');
+	$page->template = 'templates/preflight_config.tpl';
+	$page->render();
+}
+
+
+// If it exists and is not readable.... that's an error too!
+if(!is_readable(ROOT_PDIR . 'config/configuration.xml')){
+	$page = new InstallPage();
+	$page->assign('error', 'Unable to read file [' . ROOT_PDIR . 'config/configuration.xml], please check its permissions');
+	$page->template = 'templates/preflight_config.tpl';
+	$page->render();
+}
+
+
+// Some more preflight checks, such as htaccess presence and permissions.
+// See https://bugs.powelltechs.com/redmine/issues/29 for more info.
+
+// Writable configuration file, (it should NOT be)
+if(is_writable(ROOT_PDIR . 'config/configuration.xml')){
+	$page = new InstallPage();
+	$page->assign('error', 'The webserver can write to the file [' . ROOT_PDIR . 'config/configuration.xml], this can be considered a security risk.  Please chmod og-wx the file.');
+	$page->template = 'templates/preflight_requirements.tpl';
+	$page->render();
+}
+
+// Check if mod_rewrite is available
+if(!in_array('mod_rewrite', apache_get_modules())){
+	$page = new InstallPage();
+	$page->assign('error', 'mod_rewrite is not available.  This is a requirement of the system!');
+	$page->template = 'templates/preflight_requirements.tpl';
+	$page->render();
+}
+
+
+// The configuration file should absolutely not be accessable from the outside world, this includes php fopen'ing the file!
+$fp = fsockopen((isset($_SERVER['HTTPS']) ? 'ssl://' : '') . $_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']);
+if($fp) {
+    fwrite($fp, "GET " . ROOT_WDIR . "config/configuration.xml HTTP/1.0\r\n\r\n");
+    stream_set_timeout($fp, 2);
+    $line = trim(fgets($fp, 512));
+    if(strpos($line, '200 OK') !== false){
+    	// OH NOES!
+    	$page = new InstallPage();
+		$page->assign('error', 'Your configuration.xml file is publically accessable!  This is a huge security hole and must be rectified before installation can continue.  Please ensure that there is a .htaccess file in that directory and it denies all access to all files.');
+		$page->template = 'templates/preflight_requirements.tpl';
+		$page->render();
+    }
+}
 
 
 require_once(ROOT_PDIR . "core/libs/core/HookHandler.class.php");
@@ -89,55 +143,23 @@ if(!is_dir(TMP_DIR)){
 
 
 
-// Create a stupid-simple template system that's as minimalistic as possible.
-class InstallPage {
-	public static $TEMPLATE = 'install.tpl';
-	
-	private static $_VARS = array();
-
-	private function __construct(){
-		// Nothing to do here
-	}
-
-	public static function SetVariable($var, $value){
-		self::$_VARS[$var] = $value;
-	}
-
-	public static function Render(){
-		$in = file_get_contents(self::$TEMPLATE);
-
-		// Replace the varaibles in the appropriate places.
-		foreach(self::$_VARS as $k => $v){
-			$in = str_replace('%' . $k . '%', $v, $in);
-		}
-
-		// Allow for basic logic in the template.
-		//preg_replace('/%if\(([^\)]*)\)%(.*)%\/if%/emU', 'return ($1)? $2 : "";', $in);
-		//preg_replace('/%if\((.*)\)%(.*)%fi%/eU', '(str_replace(\'\"\', \'"\', $1))? "$2" : "";', $in);
-		$in = preg_replace('/\{if\((.*)\)\}(.*)\{\/if\}/eis', '(eval("return ($1);"))? "$2" : "";', $in);
-
-		echo $in;
-
-		// Once the page is rendered stop execution.
-		die();
-	}
-}
-
-// Default variables
-InstallPage::SetVariable('head', '');
-InstallPage::SetVariable('title', 'Installation of CAE2');
-InstallPage::SetVariable('error', '');
-
 
 // Datamodel, GOGO!
 require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
 try{
 	$dbconn = DMI::GetSystemDMI();
 }
-catch(Exception $e){
-	// Couldn't establish connection... do something fun!
-
-	InstallPage::SetVariable('error', $e->getMessage());
+catch(DMI_ServerNotFound_Exception $e){
+	$page = new InstallPage();
+	$page->template = 'templates/setup_database_host.tpl';
+	$page->assign('error', $e->getMessage());
+	$page->assign('dbhost', $core_settings['database_server']);
+	$page->render();
+}
+// This is specific to user denied.
+catch(DMI_Authentication_Exception $e){
+	$page = new InstallPage();
+	$page->assign('error', $e->getMessage());
 	//$dbinfo = ConfigHandler::LoadConfigFile('db');
 	$dbuser = $core_settings['database_user'];
 	$dbname = $core_settings['database_name'];
@@ -146,46 +168,51 @@ catch(Exception $e){
 	// Different connection backends will have different instructions.
 	switch($core_settings['database_type']){
 		case 'cassandra':
-			$body = <<<EOD
-<h2>Cassandra Installation Instructions</h2>
-<p class="message-note">You currently have the "type" variable in 
-config/db.xml set to "cassandra".  This will use the Apache Cassandra data 
-storage engine for the default site datamodel store.  If this is incorrect, please
-correct this <em>before</em> proceeding.  Otherwise... please verify that the 
-settings in config/core.xml and config/db.xml are as desired and continue.</p>
-
-<p>Please execute the following commands with cassandra-cli or another interface.</p>
-<pre>create keyspace $dbname;</pre>
-<p>Refresh the page when this has been done.</p>
-EOD;
+			$page->template = 'templates/setup_cassandra.tpl';
+			$page->assign('dbname', $dbname);
 			break;
 		case 'mysql':
 		case 'mysqli':
-			$body = <<<EOD
-<h2>MySQL/MySQLi Installation Instructions</h2>
-<p class="message-note">You currently have the "type" variable in 
-config/db.xml set to "mysql" or "mysqli".  This will use the 
-<strike>MySQL</strike> <strike>Sun</strike> Oracle MySQL backend storage engine 
-for the default site datamodel store.  If this is incorrect, please correct this 
-<em>before</em> proceeding.  Otherwise... please verify that the settings in 
-config/core.xml and config/db.xml are as desired and continue.</p>
-
-<p>Please execute the following commands with mysql or another interface, (like phpMyAdmin or toad).</p>
-<pre>CREATE USER '$dbuser' IDENTIFIED BY '$dbpass';
-CREATE DATABASE IF NOT EXISTS $dbname;
-GRANT ALL ON $dbname.* TO '$dbuser';
-FLUSH PRIVILEGES;
-</pre>
-<p>Refresh the page when this has been done.</p>
-EOD;
+			$page->template = 'templates/setup_mysqli_user.tpl';
+			$page->assign('dbuser', $dbuser);
+			$page->assign('dbpass', $dbpass);
+			$page->assign('dbname', $dbname);
 			break;
 		default:
-			$body = "<p class='error-message'>I don't know what datamodel store you're trying to use, but I don't support it...</p>";
+			die("<p class='error-message'>I don't know what datamodel store you're trying to use, but I don't support it...</p>");
 			break;
 	}
+	$page->render();
+}
+// Any other error.
+catch(Exception $e){
+	// Couldn't establish connection... do something fun!
+	
+	$page = new InstallPage();
+	$page->assign('error', $e->getMessage());
+	//$dbinfo = ConfigHandler::LoadConfigFile('db');
+	$dbuser = $core_settings['database_user'];
+	$dbname = $core_settings['database_name'];
+	$dbpass = $core_settings['database_pass'];
 
-	InstallPage::SetVariable('body', $body);
-	InstallPage::Render();
+	// Different connection backends will have different instructions.
+	switch($core_settings['database_type']){
+		case 'cassandra':
+			$page->template = 'templates/setup_cassandra.tpl';
+			$page->assign('dbname', $dbname);
+			break;
+		case 'mysql':
+		case 'mysqli':
+			$page->template = 'templates/setup_mysqli.tpl';
+			$page->assign('dbuser', $dbuser);
+			$page->assign('dbpass', $dbpass);
+			$page->assign('dbname', $dbname);
+			break;
+		default:
+			die("<p class='error-message'>I don't know what datamodel store you're trying to use, but I don't support it...</p>");
+			break;
+	}
+	$page->render();
 }
 
 
@@ -193,79 +220,168 @@ EOD;
 require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
 
-
 // Is the system not installed yet?
-if(!\Core\DB()->tableExists('component')){
+if(!\Core\DB()->tableExists(DB_PREFIX . 'component')){
 	
 	// I need some core settings before I can do anything!
+	if(!isset($_SESSION['configs'])) $_SESSION['configs'] = array();
 	
 	
+	if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['mode']) && $_POST['mode'] == 'configs'){
+		unset($_POST['mode']);
+		
+		// Directories must end with a trailing slash
+		if($_POST['/core/filestore/assetdir'] && substr($_POST['/core/filestore/assetdir'], -1) != '/'){
+			$_POST['/core/filestore/assetdir'] = $_POST['/core/filestore/assetdir'] . '/';
+		}
+		if($_POST['/core/filestore/publicdir'] && substr($_POST['/core/filestore/publicdir'], -1) != '/'){
+			$_POST['/core/filestore/publicdir'] = $_POST['/core/filestore/publicdir'] . '/';
+		}
+		
+		$_SESSION['configs'] = $_POST;
+	}
+	
+	// The page can be reinitialized after this logic ends if necessary.
+	$p = new InstallPage();
+	$p->template = 'templates/configs.tpl';
+	
+	// Set all the options from the configuration that may be used.
+	$p->assign('/core/filestore/backend', ConfigHandler::Get('/core/filestore/backend'));
+	$p->assign('/core/ftp/username', ConfigHandler::Get('/core/ftp/username'));
+	$p->assign('/core/ftp/password', ConfigHandler::Get('/core/ftp/password'));
+	$p->assign('/core/ftp/path', ConfigHandler::Get('/core/ftp/path'));
+	$p->assign('/core/aws/key', ConfigHandler::Get('/core/aws/key'));
+	$p->assign('/core/aws/secretkey', ConfigHandler::Get('/core/aws/secretkey'));
+	$p->assign('/core/aws/accountid', ConfigHandler::Get('/core/aws/accountid'));
+	$p->assign('/core/aws/canonicalid', ConfigHandler::Get('/core/aws/canonicalid'));
+	$p->assign('/core/aws/canonicalname', ConfigHandler::Get('/core/aws/canonicalname'));
+	$p->assign('/core/filestore/assetdir', ConfigHandler::Get('/core/filestore/assetdir'));
+	$p->assign('/core/filestore/publicdir', ConfigHandler::Get('/core/filestore/publicdir'));
+	
+	// Look up the settings now.
+	$backend = ConfigHandler::Get('/core/filestore/backend');
+	
+	// Backend isn't set... so set it!
+	if($backend === null){
+		$p->render();
+	}
+	elseif($backend == 'local' && ConfigHandler::Get('/core/ftp/username')){
+		$ftp = \Core\FTP();
+		if(!$ftp){
+			$p->assign('error', 'Unable to connect with provided FTP credentials');
+			$p->render();
+		}
+		
+		// Check the FTP directory for a presence of an index.php file.
+		if(!in_array('index.php', ftp_nlist($ftp, '.'))){
+			$p->assign('error', 'Unable to locate index.php inside the FTP relative path, please ensure that it points to the root path of the application.');
+			$p->render();
+		}
+		
+		// Make sure it's writable by the current user.
+		// This also ensures that the directory points to the correct location.
+		// by reading some random data, writing it to the web root, and re-reading it.. it ensures that
+		// it's the directory I want it to be.
+		$randfh = fopen('/dev/urandom', 'r');
+		$randomdat = fread($randfh, 32);
+		fclose($randfh);
+		$fh = fopen('php://memory', 'r+');
+		fputs($fh, $randomdat);
+		rewind($fh);
+		if(!ftp_fput($ftp, 'random-test-file', $fh, FTP_BINARY, 0)){
+			fclose($fh);
+			$p->assign('error', 'Unable to write to FTP relative path, please ensure it is correct');
+			$p->render();
+		}
+		
+		ftp_chmod($ftp, 0644, 'random-test-file');
+		
+		$fp = fsockopen((isset($_SERVER['HTTPS']) ? 'ssl://' : '') . $_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']);
+		if($fp) {
+			fwrite($fp, "GET " . ROOT_WDIR . "random-test-file HTTP/1.0\r\n\r\n");
+			stream_set_timeout($fp, 2);
+			if(substr(fread($fp, 2018), -32) != $randomdat){
+				ftp_delete($ftp, 'random-test-file');
+				fclose($fh);
+				$p->assign('error', 'Unable to read temporary file uploaded via FTP, please ensure that it points to the root path of the applicaiton.');
+				$p->render();
+			}
+		}
+		// And cleanup
+		fclose($fh);
+		ftp_delete($ftp, 'random-test-file');
+	}
+	elseif($backend == 'local'){
+		// Regular backend with no FTP use, make sure the directories are writable.
+		if(!is_writable(ROOT_PDIR . ConfigHandler::Get('/core/filestore/assetdir'))){
+			$p->assign('error', 'Unable to write to asset directory [' . ROOT_PDIR . ConfigHandler::Get('/core/filestore/assetdir') . '], please check permissions.');
+			$p->render();
+		}
+		if(!is_writable(ROOT_PDIR . ConfigHandler::Get('/core/filestore/publicdir'))){
+			$p->assign('error', 'Unable to write to public directory [' . ROOT_PDIR . ConfigHandler::Get('/core/filestore/publicdir') . '], please check permissions.');
+			$p->render();
+		}
+	}
+	
+	
+	
+	// Everything above must have completed alright.... install the core finally!
+	$p = new InstallPage();
+	$p->template = 'templates/install.tpl';
+	$p->assign('component', 'Core');
 	$core = ComponentFactory::Create(ROOT_PDIR . 'core/component.xml');
 	$core->load();
-	//var_dump($core, $core->getBaseDir());
-	
 	$changes = $core->install();
-	var_dump($core, $changes);
-	die();
-}
-
-
-try{
-	$res = Dataset::Init()->table('component')->select('*')->limit(1)->execute();
-}
-catch(Exception $e){
-	Core::LoadComponents();
-	
-	//$corecomponent = Core::GetComponent();
-	//$corecomponent->load();
-	
-	//if(!$corecomponent->isInstalled()){
-	if(!Core::GetComponent('core')->isInstalled()){
-		// Install das core!
-		$corecomponent->install();
-		InstallPage::SetVariable('body', 'Installed the core framework, please refresh.');
-		InstallPage::Render();
-	}
+	if($changes) $p->assign('log', implode("\n", $changes));
+	else $p->assign('log', 'erm... nothing changed :?');
+	$p->render();
 }
 
 
 try{
 	HookHandler::DispatchHook('db_ready');
-
-	// Get the preinstalled components in the system.
-	$csingleton = ComponentHandler::Singleton();
 	
 	// Just to make sure.
 	$changes = array();
+	Core::Singleton();
+	Core::LoadComponents();
 	
-	foreach(ComponentHandler::GetAllComponents() as $c){
+	foreach(Core::GetComponents() as $c){
 		if(!$c->isInstalled()) continue;
 
-		$c->reinstall();
-		$changes[] = 'Reinstalled component ' . $c->getName();
+		$changes[] = 'Component ' . $c->getName() . '...';
+		$change = $c->install();
+		if($change === false) $changes[] = 'No change needed.';
+		else $changes = array_merge($changes, $change);
 	}
 	
 	foreach(ThemeHandler::GetAllThemes() as $t){
 		if(!$t->isInstalled()) continue;
 
-		if($t->reinstall()){
-			$changes[] = 'Reinstalled theme ' . $t->getName();
-		}
+		$changes[] = 'Theme ' . $t->getName() . '...';
+		$change = $t->install();
+		if($change === false) $changes[] = 'No change needed.';
+		else $changes = array_merge($changes, $change);
 	}
-
+	
 	// Flush the system cache, just in case
 	Core::Cache()->flush();
-
-	//ComponentHandler::Singleton();
-
+	
+	// In theory, everything should be installed now.
+	header('Location:../');
+	die();
+	
+	$p = new InstallPage();
+	$p->template = 'templates/install.tpl';
+	$p->assign('component', 'Everything else');
+	$p->assign('log', implode("\n", $changes));
+	
+	$p->render();
 }
 catch(Exception $e){
 	//$stack = '<pre>' . $e->getTraceAsString() . '</pre>';
 	
-	InstallPage::SetVariable('error', $e->getMessage());
-	InstallPage::SetVariable('body', 'An error occured, please check and fix it.');// . $stack);
-	InstallPage::Render();
+	die($e->getMessage() . "\n<br/>\n<br/>" . 'something broke, please fix it.');
 }
 
-// In theory, everything should be installed now.
-header('Location:../');
+
