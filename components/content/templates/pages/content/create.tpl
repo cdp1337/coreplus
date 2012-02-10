@@ -1,6 +1,7 @@
 {$form->render()}
 
 {script library="jquery"}{/script}
+{script library="Core.Strings"}{/script}
 {script}
 $(function(){
 	$('input[name="page[title]"]').blur(function(){
