@@ -4,4 +4,4 @@
 %log%
 </pre>
 
-<p>Refresh the page to continue!</p>
+<p><a href="">Click here to continue!</a></p>

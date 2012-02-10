@@ -11,7 +11,7 @@
 	<fieldset id="local-options">
 		<legend> Local Options </legend>
 		
-		<p class="message-note">If you provide an FTP username and password, it will ensure that files are created with your user's permission.</p>
+		<p class="message-note">If you provide an FTP username and password, it will ensure that files are created with your user's permission. (optional)</p>
 		
 		<label for="ftp_username">FTP username</label>
 		<input type="text" id="ftp_username" name="/core/ftp/username" value="%/core/ftp/username%"/>
@@ -60,11 +60,11 @@
 		
 		<label for="asset_dir">Asset Directory</label>
 		<input type="text" id="asset_dir" name="/core/filestore/assetdir" value="%/core/filestore/assetdir%"/>
-		<p class="formhelp">The directory, (or bucket), to use for asset files such as stylesheets, javascript and images.  This should just be the directory relative to the installation directory.</p>
+		<p class="formhelp">The directory, (or bucket), to use for asset files such as stylesheets, javascript and images.  This should just be the directory relative to the installation directory.  Probably filestore/assets/</p>
 		
 		<label for="public_dir">Public Directory</label>
 		<input type="text" id="public_dir" name="/core/filestore/publicdir" value="%/core/filestore/publicdir%"/>
-		<p class="formhelp">The directory, (or bucket), to use user-supplied uploads.  This should just be the directory relative to the installation directory.</p>
+		<p class="formhelp">The directory, (or bucket), to use user-supplied uploads.  This should just be the directory relative to the installation directory.  Probably filestore/public/</p>
 	</fieldset>
 	
 	<input type="hidden" name="mode" value="configs"/>

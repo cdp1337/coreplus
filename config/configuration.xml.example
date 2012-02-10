@@ -87,7 +87,6 @@
 	</return>
 
 	<return name="database_name" type="string">
-		<!--<value>db_name_buildv21</value>-->
 		<value>db_name_build201110</value>
 	</return>
 

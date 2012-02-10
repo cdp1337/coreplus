@@ -1,6 +1,6 @@
 /nbproject
 /.htaccess
 /config/configuration.xml
-/assets/
 /.DS_Store
 /filestore/
+*~

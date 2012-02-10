@@ -3,7 +3,7 @@ body {
 	text-shadow:1px 1px 4px rgba(28, 43, 13, 0.3); font-size:11pt;
 }
 #wrapper {
-	width:75%; margin:0pt auto; text-align:left; background:#DDE4DD; padding:10px; border-radius: 0 0 10px 10px;
+	width:75%; margin:0pt auto; text-align:left; background:#DFE4E6; padding:10px; border-radius: 0 0 10px 10px;
 	box-shadow:0px 1px 10px rgba(3,3,3,0.5); -moz-box-shadow:0px 1px 10px rgba(3,3,3,0.5); -webkit-box-shadow:0px 1px 10px rgba(3,3,3,0.5); 
 }
 #header, #footer { 
