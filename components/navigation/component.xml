@@ -38,6 +38,10 @@
 		<page baseurl="/Navigation" admin="1" widget="0" access="" title="Navigation Listings"/>
 	</pages>
 	
+	<assets>
+		<file filename="assets/js/navigation/manager.js"/>
+	</assets>
+	
 	<upgrade from="0.0.1-dev1" to="1.9.0"/>
 	<author name="powellc"/>
 	<otherfiles/>
