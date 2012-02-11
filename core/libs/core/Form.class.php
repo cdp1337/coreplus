@@ -483,6 +483,7 @@ class Form extends FormGroup{
 	 */
 	public static $Mappings = array(
 		'checkbox' => 'FormCheckboxInput',
+		'checkboxes' => 'FormCheckboxesInput',
 		'file' => 'FormFileInput',
 		'hidden' => 'FormHiddenInput',
 		'pageinsertables' => 'FormPageInsertables',
@@ -841,13 +842,23 @@ class Form extends FormGroup{
 			// These are already taken care above in the SESSION data.
 			if(!$new && in_array($k, $i['primary'])) continue; 
 
-			$title = ucwords($k);
+			// Set the title from either the explicit formtitle or the key itself.
+			if(isset($v['formtitle'])) $title = $v['formtitle'];
+			else $title = ucwords($k);
+			
 			$required = (isset($v['required']))? ($v['required']) : false;
 			
 			if($model->get($k)) $val = $model->get($k);
 			elseif(isset($v['default'])) $val = $v['default'];
 			else $val = null;
 			
+			
+			// Boolean checkboxes can have special options.
+			//if(isset($v['formtype']) && $v['formtype'] == 'checkbox' && $v['type'] == Model::ATT_TYPE_BOOL){
+			//	$el = FormElement::Factory($v['formtype']);
+			//	$el->set('options', array('1'));
+			//}
+			// Standard form types.
 			if(isset($v['formtype'])){
 				$el = FormElement::Factory($v['formtype']);
 			}
@@ -1012,7 +1023,7 @@ class FormRadioInput extends FormElement{
 	
 }
 
-class FormCheckboxInput extends FormElement{
+class FormCheckboxesInput extends FormElement{
 	public function  __construct($atts = null) {
 		parent::__construct($atts);
 
@@ -1053,6 +1064,38 @@ class FormCheckboxInput extends FormElement{
 			return parent::set($key, $value);
 		}
 	}
+	
+}
+
+class FormCheckboxInput extends FormElement{
+	public function  __construct($atts = null) {
+		parent::__construct($atts);
+
+		// Some defaults
+		$this->_attributes['class'] = 'formelement formcheckboxinput';
+		$this->_validattributes = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style');
+	}
+	
+	/*public function get($key) {
+		if($key == 'value' && sizeof($this->_attributes['options']) > 1){
+			// This should return an array if there are more than 1 option.
+			if(!$this->_attributes['value']) return array();
+			else return $this->_attributes['value'];
+		}
+		else{
+			return parent::get($key);
+		}
+	}*/
+	
+	/*public function set($key, $value) {
+		if($key == 'value'){
+			if($value) $this->_attributes['value'] = true;
+			else $this->_attributes['value'] = false;
+		}
+		else{
+			return parent::set($key, $value);
+		}
+	}*/
 	
 }
 
