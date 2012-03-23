@@ -99,7 +99,7 @@ class PageRequest{
 		
 		$this->_resolveMethod();
 		$this->_resolveAcceptHeader();
-		$this->_resolveUSHeader();
+		$this->_resolveUAHeader();
 		
 		if(is_array($_GET)){
 			foreach($_GET as $k => $v){
@@ -162,6 +162,36 @@ class PageRequest{
 			case 'json': $ctype = View::CTYPE_JSON; break;
 			default:     $ctype = View::CTYPE_HTML; break;
 		}
+	}
+	
+	/**
+	 * Check to see if the page request prefers a particular type of content type request.
+	 * This is useful for allowing JSON requests on a per-case basis in the controller.
+	 * 
+	 * @param string $type 
+	 * @return bool
+	 */
+	public function prefersContentType($type){
+		// First, find the current.
+		$current = 0;
+		$currentmain = substr($this->ctype, 0, strpos($this->ctype, '/'));
+		foreach($this->contentTypes as $t){
+			if($t['type'] == $this->ctype || ($t['type'] == $t['group'] . '/*' && $t['group'] == $currentmain)){
+				$current = max($current, $t['weight']);
+			}
+		}
+		
+		// Now that I have the current weight...
+		$typeweight = 0;
+		$typemain = substr($type, 0, strpos($type, '/'));
+		foreach($this->contentTypes as $t){
+			if($t['type'] == $type || ($t['type'] == $t['group'] . '/*' && $t['group'] == $typemain)){
+				$typeweight = max($typeweight, $t['weight']);
+			}
+		}
+		
+		// Now I have the weight values, (if any), of both current and requested.
+		return ($typeweight > $current);
 	}
 	
 	/**
@@ -360,6 +390,13 @@ class PageRequest{
 		return $this->_pagemodel;
 	}
 	
+	/**
+	 * Simple check to see if the page request is a POST method.
+	 * 
+	 * Returns true if it is POST, false if anything else.
+	 * 
+	 * @return bool
+	 */
 	public function isPost(){
 		return ($this->method == PageRequest::METHOD_POST);
 	}
@@ -420,9 +457,14 @@ class PageRequest{
 				'weight' => $weight
 			);
 		}
+		
+		// And finally, run through all the content types and make them a little easier to parse.
+		foreach($this->contentTypes as $k => $v){
+			$this->contentTypes[$k]['group'] = substr($v['type'], 0, strpos($v['type'], '/'));
+		}
 	}
 	
-	private function _resolveUSHeader(){
+	private function _resolveUAHeader(){
 		$ua = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';
 		$this->useragent = $ua;
 	}

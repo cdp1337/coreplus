@@ -159,6 +159,12 @@ class ConfigHandler implements ISingleton {
 		return ConfigHandler::$CacheFromDB[$key];
 	}
 	
+	/**
+	 * Get a configuration value.
+	 * 
+	 * @param string $key
+	 * @return mixed
+	 */
 	public static function Get($key){
 		// Retrieve it from cache first of all.
 		if(isset(ConfigHandler::$CacheFromDB[$key])) return ConfigHandler::$CacheFromDB[$key]->getValue();
@@ -166,6 +172,23 @@ class ConfigHandler implements ISingleton {
 		elseif(isset($_SESSION) && isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])) return $_SESSION['configs'][$key];
 		// Else, just return null.
 		else return null;
+	}
+	
+	/**
+	 * Set a configuration value.
+	 * 
+	 * This CANNOT create new configuration keys!
+	 * Please use GetConfig() for that.
+	 * 
+	 * @param string $key
+	 * @param fixed $value 
+	 */
+	public static function Set($key, $value){
+		if(!isset(ConfigHandler::$CacheFromDB[$key])) return false;
+		ConfigHandler::$CacheFromDB[$key]->set('value', $value);
+		ConfigHandler::$CacheFromDB[$key]->save();
+		
+		return true;
 	}
 	
 	public static function _Set(ConfigModel $config){
