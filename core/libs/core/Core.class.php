@@ -885,11 +885,13 @@ class Core implements ISingleton{
 		// Do nothing if the page is the current page.... that is Reload()'s job.
 		if($page == CUR_CALL) return false;
 
+		if(DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 		header("Location:" . $page);
 		die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
 	}
 
 	static public function Reload(){
+		if(DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 		header('Location:' . CUR_CALL);
 		die("If your browser does not refresh, please <a href=\"" . CUR_CALL . "\">Click Here</a>");
 	}
