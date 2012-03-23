@@ -1,4 +1,4 @@
-<h2>MySQL/MySQLi Installation Instructions</h2>
+<h2>MySQL/MySQLi User Access</h2>
 
 <p class="message-note">
 	You currently have the "type" variable in 
@@ -16,6 +16,8 @@
 CREATE USER '%dbuser%' IDENTIFIED BY '%dbpass%';
 FLUSH PRIVILEGES;
 </pre>
+
+<p class="message-note">IF... doing the above still results in an access denied for user error, remove your anonymous localhost user!  Alternatively, just change the USER directive to '%dbuser%'@'localhost'</p>
 
 
 <p>Refresh the page when this has been done.</p>

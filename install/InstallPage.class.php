@@ -42,7 +42,7 @@ class _InstallSkin extends _InstallTemplate{
 		$this->_vars = array(
 			'head' => '',
 			'title' => 'Installation of Core Plus',
-			'error' => '',
+			'error' => ''
 		);
 		
 		$this->template = 'templates/skin.tpl';

@@ -414,8 +414,16 @@ class Model implements ArrayAccess{
 		// IDs don't change in updates, else they wouldn't be the id.
 	}
 
+	/**
+	 * Load this model from an associative array, or record.
+	 * This is meant to be called from the Factory system, and the data passed in
+	 * MUST be sanitized and valid!
+	 * 
+	 * @param array $record 
+	 */
 	public function _loadFromRecord($record){
-		$this->setFromArray($record);
+		
+		$this->_data = $record;
 
 		// And since this is supposed to be the initial load method... toggle the appropriate flags.
 		$this->_datainit = $this->_data;

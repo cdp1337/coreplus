@@ -100,7 +100,7 @@ class AdminController extends Controller_2_1 {
 					$el->validationmessage = $gname . ' - ' . $title . ' expects only whole numbers with no puncuation.';
 					break;
 				case 'set':
-					$el = FormElement::Factory('checkbox');
+					$el = FormElement::Factory('checkboxes');
 					$el->set('options', array_map('trim', explode('|', $c->get('options'))));
 					$val = array_map('trim', explode('|', $val));
 					$name = 'config[' . $c->get('key') . '][]';

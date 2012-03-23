@@ -64,6 +64,8 @@ if(!file_exists(ROOT_PDIR . 'config/configuration.xml')){
 
 
 // If it exists and is not readable.... that's an error too!
+// I could try to copy the example version over automatically, but I want the user to have to
+// edit that file somehow.  Since there's no GUI to do so.... manually editing will have to do.
 if(!is_readable(ROOT_PDIR . 'config/configuration.xml')){
 	$page = new InstallPage();
 	$page->assign('error', 'Unable to read file [' . ROOT_PDIR . 'config/configuration.xml], please check its permissions');
@@ -75,13 +77,6 @@ if(!is_readable(ROOT_PDIR . 'config/configuration.xml')){
 // Some more preflight checks, such as htaccess presence and permissions.
 // See https://bugs.powelltechs.com/redmine/issues/29 for more info.
 
-// Writable configuration file, (it should NOT be)
-if(is_writable(ROOT_PDIR . 'config/configuration.xml')){
-	$page = new InstallPage();
-	$page->assign('error', 'The webserver can write to the file [' . ROOT_PDIR . 'config/configuration.xml], this can be considered a security risk.  Please chmod og-wx the file.');
-	$page->template = 'templates/preflight_requirements.tpl';
-	$page->render();
-}
 
 // Check if mod_rewrite is available
 if(!in_array('mod_rewrite', apache_get_modules())){
@@ -105,6 +100,25 @@ if($fp) {
 		$page->template = 'templates/preflight_requirements.tpl';
 		$page->render();
     }
+}
+
+
+// Check the for the presence of the .htaccess file.  I always forget that bastard otherwise.
+if(!file_exists(ROOT_PDIR . '.htaccess')){
+	if(is_writable(ROOT_PDIR)){
+		// Just automatically copy it over, (with the necessary tranformations).
+		$fdata = file_get_contents(ROOT_PDIR . 'htaccess.ex');
+		$fdata = preg_replace('/^([\s]*RewriteBase).*$/m', '$1 ' . ROOT_WDIR, $fdata);
+		file_put_contents(ROOT_PDIR . '.htaccess', $fdata);
+		// :)
+	}
+	else{
+		$page = new InstallPage();
+		$page->assign('error', 'No .htaccess file!');
+		$page->assign('wdir', ROOT_WDIR);
+		$page->template = 'templates/preflight_htaccess.tpl';
+		$page->render();
+	}
 }
 
 
@@ -313,11 +327,13 @@ if(!\Core\DB()->tableExists(DB_PREFIX . 'component')){
 	}
 	elseif($backend == 'local'){
 		// Regular backend with no FTP use, make sure the directories are writable.
-		if(!is_writable(ROOT_PDIR . ConfigHandler::Get('/core/filestore/assetdir'))){
+		$dir = \Core\directory(ROOT_PDIR . ConfigHandler::Get('/core/filestore/assetdir'));
+		if($dir->mkdir() === false){
 			$p->assign('error', 'Unable to write to asset directory [' . ROOT_PDIR . ConfigHandler::Get('/core/filestore/assetdir') . '], please check permissions.');
 			$p->render();
 		}
-		if(!is_writable(ROOT_PDIR . ConfigHandler::Get('/core/filestore/publicdir'))){
+		$dir = \Core\directory(ROOT_PDIR . ConfigHandler::Get('/core/filestore/publicdir'));
+		if($dir->mkdir() === false){
 			$p->assign('error', 'Unable to write to public directory [' . ROOT_PDIR . ConfigHandler::Get('/core/filestore/publicdir') . '], please check permissions.');
 			$p->render();
 		}

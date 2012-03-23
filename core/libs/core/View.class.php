@@ -378,6 +378,10 @@ class View {
 			$data = str_replace('</body>', self::GetFoot() . "\n" . '</body>', $data);
 			$data = str_replace('<html', '<html ' . self::GetHTMLAttributes(), $data);
 			
+			// Provide a way for stylesheets to target this page specifically.
+			$url = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
+			$data = str_replace('<body', '<body class="page-' . $url . '"', $data);
+			
 			// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
 			if(DEVELOPMENT_MODE){
 				$debug = '';

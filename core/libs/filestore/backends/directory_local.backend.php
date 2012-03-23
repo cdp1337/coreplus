@@ -146,10 +146,13 @@ class Directory_local_backend implements Directory_Backend {
 	
 	/**
 	 * Create this directory, (has no effect if already exists)
-	 *  
+	 * Returns true if successful, null if exists, and false if failure
+	 * 
+	 * @return boolean | null
 	 */
 	public function mkdir(){
-		mkdir($this->getPath());
+		if(is_dir($this->getPath())) return null;
+		else return File_local_backend::_Mkdir($this->getPath(), 0777, true);
 	}
 	
 	/**

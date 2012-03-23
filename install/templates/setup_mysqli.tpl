@@ -1,4 +1,4 @@
-<h2>MySQL/MySQLi Installation Instructions</h2>
+<h2>MySQL/MySQLi Database Setup</h2>
 
 <p class="message-note">
 	You currently have the "type" variable in 
