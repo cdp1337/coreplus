@@ -204,7 +204,7 @@ class Dataset implements Iterator{
 	 */
 	public function table($tablename){
 		// Is this name prefixed by the DB_PREFIX variable?
-		if(strpos($tablename, DB_PREFIX) === false) $tablename = DB_PREFIX . $tablename;
+		if(DB_PREFIX && strpos($tablename, DB_PREFIX) === false) $tablename = DB_PREFIX . $tablename;
 		
 		$this->_table = $tablename;
 		
