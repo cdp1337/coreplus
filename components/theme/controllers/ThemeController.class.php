@@ -1,11 +1,24 @@
 <?php
 
+require_once(ROOT_PDIR . 'components/theme/functions/common.php');
+
+/**
+ * The main theme administration controller.
+ * 
+ * This is reponsible for all administrative tasks associated with the theme. 
+ */
 class ThemeController extends Controller_2_1{
 	
 	public function __construct() {
 		$this->accessstring = 'g:admin';
 	}
 	
+	/**
+	 * View to display a list of currently installed themes, their templates, and be able to manage
+	 * their templates and set them as default.
+	 * 
+	 * @todo Implement an Add/Upload Theme link on this page.
+	 */
 	public function index(){
 		$view = $this->getView();
 		$default = ConfigHandler::Get('/theme/selected');
@@ -35,12 +48,55 @@ class ThemeController extends Controller_2_1{
 		$view->assign('themes', $themes);
 	}
 	
+	/**
+	 * Set a requested theme and template as default for the site.
+	 */
+	public function setdefault(){
+		$request = $this->getPageRequest();
+		$view = $this->getView();
+		
+		$theme = $this->getPageRequest()->getParameter(0);
+		$template = $this->getPageRequest()->getParameter('template');
+		
+		// Validate
+		if(!\Theme\validate_theme_name($theme)){
+			Core::SetMessage('Invalid theme requested', 'error');
+			Core::Redirect('/Theme');
+		}
+		
+		if(!\Theme\validate_template_name($theme, $template)){
+			Core::SetMessage('Invalid template requested', 'error');
+			Core::Redirect('/Theme');
+		}
+		
+		if($request->isPost()){
+			
+			ConfigHandler::Set('/theme/default_template', $template);
+			ConfigHandler::Set('/theme/selected', $theme);
+			
+			Core::SetMessage('Updated default theme', 'success');
+			
+			// If the browser prefers JSON data, send that.
+			if($request->prefersContentType(View::CTYPE_JSON)){
+				$view->contenttype = View::CTYPE_JSON;
+				$view->jsondata = array('message' => 'Updated default theme', 'status' => 1);
+			}
+			else{
+				Core::Redirect('/Theme');
+			}
+		}
+		
+		$view->assign('theme', $theme);
+		$view->assign('template', $template);
+	}
 	
 	public function widgets(){
 		$view = $this->getView();
 		
 		$t = $this->getPageRequest()->getParameter(0);
-		if(!$t || $t{0} == '.' || strpos($t, '..') !== false || !is_dir(ROOT_PDIR . 'themes/' . $t)){
+		
+		// Validate
+		if(!\Theme\validate_theme_name($t)){
 			Core::SetMessage('Invalid theme requested', 'error');
 			Core::Redirect('/Theme');
 		}
@@ -50,7 +106,7 @@ class ThemeController extends Controller_2_1{
 		
 		$filename = ROOT_PDIR . 'themes/' . $t . '/' . $template;
 		
-		if($template{0} == '.' || !$template || !is_readable($filename)){
+		if(!\Theme\validate_template_name($t, $template)){
 			Core::SetMessage('Invalid template requested', 'error');
 			Core::Redirect('/Theme');
 		}
@@ -90,18 +146,6 @@ class ThemeController extends Controller_2_1{
 		$view->assign('widgets', $widgets);
 		$view->assign('theme', $t);
 		$view->assign('template', $template);
-		
-		return;
-		
-		var_dump($widgets);
-		die('Yet to be completed...');
-		$widgets = array();
-		foreach(ComponentHandler::GetLoadedWidgets() as $w){
-			var_dump($w);
-			//if()
-			//var_dump($w::MustBeInstanced());
-		}
-		
 	}
 	
 	public function widgets_Add(){

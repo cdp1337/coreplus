@@ -25,11 +25,39 @@
 				<td>{$template.file}</td>
 				<td>{$template.title}</td>
 				<td>
-					{if $template.default} Site Default{/if}
-					{if !$template.default} [set as default] {/if}
+					{if $template.default} Site Default{/if}  
+					{if !$template.default}
+						{a href="/Theme/setdefault/`$theme.name`?template=`$template.file`" class="set-default"}[set default]{/a}
+					{/if}
 					{a href="/Theme/Widgets/`$theme.name`?template=`$template.file`"}[widgets]{/a}
 				</td>
 			</tr>
 		{/foreach}
 	{/foreach}
 </table>
+
+{script library="jquery"}{/script}
+{script location="foot"}
+	$(function(){ 
+		$('.set-default').click(function(){
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: $(this).attr('href'),
+				success: function(dat){
+					if(dat && dat.status){
+						window.location.reload();
+					}
+					else if(dat && dat.message){
+						alert(dat.message);
+					}
+					else {
+						alert('An unknown error occurred.');
+						console.log(dat);
+					}
+				}
+			});
+			return false;
+		});
+	});
+{/script}
