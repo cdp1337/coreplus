@@ -651,7 +651,10 @@ class Form extends FormGroup{
 			$schema = $model->getKeySchema($key);
 			
 			if($schema['type'] == Model::ATT_TYPE_BOOL){
+				// This is used... somewhere :/
 				if(strtolower($val) == 'yes') $val = 1;
+				// Default checkbox have the value of "on"
+				elseif(strtolower($val) == 'on') $val = 1;
 				else $val = 0;
 			}
 			
