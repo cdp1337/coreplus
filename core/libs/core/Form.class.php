@@ -298,6 +298,10 @@ class FormElement{
 				if(!empty($this->_attributes['title'])) return $this->_attributes['title'];
 				else return $this->get('name');
 				break;
+			case 'id': // ID is also a special case, it casn use the name if not defined otherwise.
+				if(!empty($this->_attributes['id'])) return $this->_attributes['id'];
+				else return $this->get('name');
+				break;
 			default:
 				return (isset($this->_attributes[$key]))? $this->_attributes[$key] : null;
 		}
@@ -385,7 +389,7 @@ class FormElement{
 	}
 
 	public function render(){
-
+		
 		// If multiple is set, but the name does not have a [] at the end.... add it.
 		if($this->get('multiple') && ! preg_match('/.*\[.*\]/', $this->get('name'))) $this->_attributes['name'] .= '[]';
 
@@ -538,6 +542,9 @@ class Form extends FormGroup{
 			}
 		}
 		
+		// Will be used to know if the errors in elements should be removed prior to rendering.
+		$ignoreerrors = false;
+		
 		// Slip in the formid tracker to remember this submission.
 		if(($part === null || $part == 'body') && $this->get('callsmethod')){
 			$e = new FormHiddenInput(array('name' => '___formid', 'value' => $this->get('uniqueid')));
@@ -569,6 +576,18 @@ class Form extends FormGroup{
 				if(($savedform = unserialize($_SESSION['FormData'][$this->get('uniqueid')]))){
 					$this->_elements = $savedform->_elements;
 				}
+				else{
+					$ignoreerrors = true;
+				}
+			}
+			else{
+				$ignoreerrors = true;
+			}
+		}
+		
+		if($ignoreerrors){
+			foreach($this->getElements(true) as $el){
+				$el->setError(false);
 			}
 		}
 		
