@@ -317,6 +317,11 @@ class PageRequest{
 			$return->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
 		}
 		
+		// Master template set in the database?
+		if($page->get('theme_template')){
+			$return->mastertemplate = $page->get('theme_template');
+		}
+		
 		
 		// Make sure I update any existing page now that the controller has ran.
 		if($page->exists() && $return->error == View::ERROR_NOERROR){
