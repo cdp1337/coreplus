@@ -381,14 +381,40 @@ class PageModel extends Model{
 	}
 
 	private function _getParentTree($antiinfiniteloopcounter = 5){
+		if($antiinfiniteloopcounter <= 0) return array();
+		
+		if(!$this->exists()){
+			// See if this page is maybe a child of another page... ie: /Blah/view/this
+			// might be a child page of /Blah
+			// This section will run up the stack of GET parameters until it either finds
+			// something or nothing.
+			// Yes, I know this can be time consuming, but if you have a better way, please optimize it.
+			
+			// Lookup something, just to ensure it's in the cache.
+			self::_LookupUrl('/');
+			
+			$url = $this->get('baseurl');
+			do{
+				$url = substr($url, 0, strrpos($url, '/'));
+				
+				// To optimize this part, use the built-in cache of this object
+				// instead of querying the database.
+				// This works because the above statement self::_LookupUrl('/'); will
+				// load in every valid baseurl in the database into an array.
+				// therefore, obviously if a key exists in that array, the page exists! :)
+				if(isset(self::$_RewriteCache[$url])){
+					$p = new PageModel($url);
+					return array_merge($p->_getParentTree(--$antiinfiniteloopcounter), array($p));
+				}
+				$pagedat = self::_LookupReverseUrl($url);
+			}
+			while($url);
+		}
 		if(!$this->get('parenturl')) return array();
 
-		if($antiinfiniteloopcounter <= 0) return array();
-
-		$antiinfiniteloopcounter--;
 		$ret = array();
 		$p = new PageModel($this->get('parenturl'));
-		return array_merge($p->_getParentTree($antiinfiniteloopcounter), array($p));
+		return array_merge($p->_getParentTree(--$antiinfiniteloopcounter), array($p));
 	}
 	
 	private function _populateView(){
