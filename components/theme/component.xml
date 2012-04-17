@@ -23,9 +23,11 @@
 		<file filename="templates/pages/theme/widgets.tpl" md5="2f92071db5d82802a774088e344d4f6b"/>
 		<file filename="templates/pages/theme/index.tpl" md5="dd140f48bdf7e14eb8fb452b4f1be846"/>
 	</view>
+	
 	<pages>
-		<page baseurl="/ThemeController" admin="1" access="g:admin" title="Theme Manager"/>
+		<page baseurl="/Theme" parenturl="/Admin" admin="1" access="g:admin" title="Theme Manager"/>
 	</pages>
+	
 	<configs>
 		<config key="/theme/filestore/preview-size-lg" type="int" default="64" description=""/>
 		<config key="/theme/filestore/preview-size-med" type="int" default="32" description=""/>
@@ -34,11 +36,14 @@
 		<config key="/theme/default_template" type="string" default="index.tpl" description=""/>
 		<config key="/theme/selected" type="string" default="default" description=""/>
 	</configs>
+	
 	<assets>
 		<file filename="assets/js/theme/widgets.js" md5="26dead1b1f33be52d767bc74546e104d"/>
 		<file filename="assets/css/theme/widgets.css" md5="5fa09fb6c6c8d36a0140833fd49e1acc"/>
 	</assets>
+	
 	<description/>
+	
 	<changelog version="0.0.1">
 		<packagemeta>
 			<date>Fri, 04 Nov 2011 05:49:23 +0000</date>
