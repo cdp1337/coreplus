@@ -72,7 +72,7 @@ class NavigationEntryModel extends Model {
 				return Core::ResolveLink($this->get('baseurl'));
 				break;
 			case 'ext':
-				if(strpos(substr($this->get('baseurl'), 0, 6), '://') !== false) return $this->get('baseurl');
+				if(strpos(substr($this->get('baseurl'), 0, 8), '://') !== false) return $this->get('baseurl');
 				else return 'http://' . $this->get('baseurl');
 				break;
 		}
