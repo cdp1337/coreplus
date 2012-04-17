@@ -825,9 +825,10 @@
 		</file>
 	</files>
 	<pages>
-		<page baseurl="/Admin/ReinstallAll" admin="1" widget="0" access="g:admin" title="Reinstall All Components"/>
-		<page baseurl="/Admin/Config" admin="1" widget="0" access="g:admin" title="System Configuration"/>
-		<page baseurl="/Updater" admin="1" widget="0" access="g:admin" title="System Updater"/>
+		<page baseurl="/Admin" admin="1" widget="0" access="g:admin" title="Administration"/>
+		<page baseurl="/Admin/ReinstallAll" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="Reinstall All Components"/>
+		<page baseurl="/Admin/Config" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="System Configuration"/>
+		<page baseurl="/Updater" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="System Updater"/>
 	</pages>
 	<view searchdir="core/templates">
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="645d3b7a407c513622e9f6bc2590b7c9"/>
