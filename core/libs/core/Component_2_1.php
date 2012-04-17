@@ -1124,6 +1124,7 @@ class Component_2_1{
 			if(!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
 			// Do not "update" value, keep whatever the user set previously.
 			if($m->get('access') == '*') $m->set('access', $subnode->getAttribute('access'));
+			$m->set('parenturl', $subnode->getAttribute('parenturl'));
 			$m->set('widget', $subnode->getAttribute('widget'));
 			$m->set('admin', $subnode->getAttribute('admin'));
 			if($m->save()) $changes[] = 'Updated page [' . $m->get('baseurl') . ']';
