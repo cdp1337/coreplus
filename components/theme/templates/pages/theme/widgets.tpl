@@ -5,6 +5,9 @@
 
 <div id="widgetcanvas" attr:theme="{$theme}" attr:template="{$template}">
 	<div class="widget-bucket-source">
+		{if !count($widgets)}
+			<p>There are no widgets currently installed on the site.</p>
+		{/if}
 		{foreach from=$widgets item='widget'}
 			<div class="widget-dragsource">
 				<input type="hidden" class="baseurl" name="widgets[0][baseurl]" value="{$widget->get('baseurl')}"/>
@@ -25,9 +28,21 @@
 
 		<div class="widget-bucket-destination">
 			{foreach from=$widget_areas item='area'}
-				<div class="widgetarea" attr:area="{$area}">
-					{$area}
-					<div class="widget-dragtarget"></div>
+				<div class="widgetarea" attr:area="{$area.name}">
+					{$area.name}
+					<div class="widget-dragtarget">
+						{foreach from=$area.instances item='widget'}
+							<div class="widget-dragdropped" attr:instanceid="{$widget.id}">
+								<input type="hidden" class="baseurl" name="widgetarea[{$widget.id}][baseurl]" value="{$widget.baseurl}"/>
+								<input type="hidden" class="widgetarea" name="widgetarea[{$widget.id}][widgetarea]" value="{$area.name}"/>
+
+								{$widget.title} [{$widget.baseurl}]
+
+								<a href="#" class="control control-delete" style="float:right;">Delete</a>
+								<a href="#" class="control control-edit" style="float:right;">Edit</a>
+							</div>
+						{/foreach}
+					</div>
 				</div>
 			{/foreach}
 		</div>

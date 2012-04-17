@@ -4,15 +4,19 @@
 .widget-source { z-index:2000; border: 2px solid green; padding:0.25em; cursor:move;}
 .widget-dragsource.ui-sortable { border:2px solid green; cursor:move;}
 
-.widget-dragsource {
+
+.widget-dragsource,
+.widget-dragdropped {
 	height: 20px;
-	border: 1px solid #999;
 	padding-top: 5px;
 	padding-left: 10px;
 	cursor: move;
 	margin-bottom:5px;
 	width: 400px;
 }
+
+.widget-dragsource { border: 1px solid #999; }
+.widget-dragdropped { border: 1px solid #9C9; }
 
 .widget-bucket-source { float:left; width:50%; }
 .widget-bucket-source a.control { display:none; }

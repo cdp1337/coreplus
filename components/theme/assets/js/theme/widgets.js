@@ -35,6 +35,9 @@ $(function(){
 				
 				$el.attr('attr:instanceid', instanceid);
 			}
+			
+			// Update the classes anyhow.
+			$el.removeClass('widget-dragsource').addClass('widget-dragdropped');
 		},
 		helper: 'original',
 		revert: true
@@ -43,14 +46,21 @@ $(function(){
 	// All deletes over here need to do something.
 	$('.widget-bucket-destination').delegate('a.control-delete', 'click', function(){
 		var $this = $(this),
-			$el = $this.closest('div.widget-dragsource');
-		console.log($el.find('.instanceid'));
+			$el = $this.closest('div.widget-dragdropped'),
+			instance = $el.attr('attr:instanceid');
+			
+		console.log(instance);
 		// It didn't exist in the first place, feel free to delete it.
-		if($el.find('.instanceid').val() == 0){
+		if(instance.indexOf('new-') === 0){
 			$el.remove();
 		}
 		else{
-			// @todo
+			$el.attr('attr:instanceid', 'del-' + instance).hide();
+			$el.find(':input').each(function(){
+				var $this = $(this),
+					n = $this.attr('name');
+				$this.attr('name', n.replace('widgetarea[' + instance + ']', 'widgetarea[del-' + instance + ']'));
+			});
 		}
 		
 		return false;

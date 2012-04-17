@@ -46,6 +46,7 @@ class ThemeController extends Controller_2_1{
 		
 		
 		$view->assign('themes', $themes);
+		$view->title = 'Theme Manager';
 	}
 	
 	/**
@@ -121,31 +122,66 @@ class ThemeController extends Controller_2_1{
 				$dat['template'] = $template;
 				$dat['weight'] = ++$counter;
 				
-				if(strpos($id, 'new') !== false) $w = new WidgetInstanceModel();
-				else $w = new WidgetInstanceModel($id);
-				
-				$w->setFromArray($dat);
-				$w->save();
-			}
-		}
+				if(strpos($id, 'new') !== false){
+					$w = new WidgetInstanceModel();
+					$w->setFromArray($dat);
+					$w->save();
+				}
+				elseif(strpos($id, 'del-') !== false){
+					$w = new WidgetInstanceModel(substr($id, 4));
+					$w->delete();
+					// Reset the counter back down one notch since this was a deletion request.
+					--$counter;
+				}
+				else{
+					$w = new WidgetInstanceModel($id);
+					$w->setFromArray($dat);
+					$w->save();
+				}
+			} // foreach($_POST['widgetarea'] as $id => $dat)
+		} // if($this->getPageRequest()->isPost())
 		
 		// Get a list of the widgetareas on the theme.
 		// These are going to be {widgetarea} tags.
 		// @todo It might make sense to move this into Theme classs at some point.
 		$tplcontents = file_get_contents($filename);
 		preg_match_all("/\{widgetarea.*name=[\"'](.*)[\"'].*\}/isU", $tplcontents, $matches);
+		
+		
+		// These are all the available widgets on the site otherwise.
+		$widgets = WidgetModel::Find(null, null, 'title');
+		
+		// This is a lookup of widget titles to URL, since the title is derived from the widget's controller and
+		// saved in the widget table separate from the instances.
+		$widgetnames = array();
+		foreach($widgets as $widget){
+			$widgetnames[$widget->get('baseurl')] = $widget->get('title');
+		}
 
 		$areas = array();
 		foreach($matches[1] as $v){
-			$areas[] = $v;
+			$instancewidgets = array();
+			$wifac = WidgetInstanceModel::Find(array('theme' => $t, 'template' => $template, 'widgetarea' => $v), null, 'weight');
+			foreach($wifac as $wi){
+				// All I need is the name and metadata, TYVM.
+				$instancewidgets[] = array(
+					'title' => $widgetnames[$wi->get('baseurl')],
+					'baseurl' => $wi->get('baseurl'),
+					'id' => $wi->get('id')
+				);
+			}
+			
+			$areas[] = array('name' => $v, 'instances' => $instancewidgets);
 		}
 		
-		$widgets = WidgetModel::Find(null, null, 'title');
+		
 		
 		$view->assign('widget_areas', $areas);
 		$view->assign('widgets', $widgets);
 		$view->assign('theme', $t);
 		$view->assign('template', $template);
+		$view->title = 'Widgets on ' . $t . '-' . $template;
+		//$view->addBreadcrumb($view->title);
 	}
 	
 	public function widgets_Add(){
