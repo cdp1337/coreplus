@@ -300,7 +300,8 @@ class PageRequest{
 				View::AddMetaName($key, $val);
 			}
 		}
-		$return->title = $page->get('title');
+		
+		if($page->get('title') !== null) $return->title = $page->get('title');
 		
 		$parents = array();
 		foreach($page->getParentTree() as $parent){
