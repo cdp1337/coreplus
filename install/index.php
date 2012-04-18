@@ -37,18 +37,36 @@ define('ROOT_PDIR', $rpdr . '/');
 define('ROOT_WDIR', dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/');
 
 
+// Useful in setting certain directories as globally forbidden via htaccess.
+$htaccessdeny = <<<EOD
+# This is specifically created to prevent access to ANYTHING in this directory.
+#  Under no situation should anything in this directory be world-readable!
 
-// Create the root filestore as world-browsable, as if the user picks defaults,
-// it will need to be!
-if(!file_exists(ROOT_PDIR . 'filestore')){
-	mkdir(ROOT_PDIR . 'filestore', 0755, true);
+<Files *>
+	Order deny,allow
+	Deny from All
+</Files>
+EOD;
+
+
+
+// These are some CGI-based hacks, so native PHP doesn't need them.
+if(!function_exists('apache_get_modules')){
+	// Create the root filestore as world-browsable, as if the user picks defaults,
+	// it will need to be!
+	if(!file_exists(ROOT_PDIR . 'filestore')){
+		mkdir(ROOT_PDIR . 'filestore', 0755, true);
+	}
+
+	// Start a traditional session.
+	if(!file_exists(ROOT_PDIR . 'filestore/tmp/sessions')){	
+		mkdir(ROOT_PDIR . 'filestore/tmp/sessions', 0700, true);
+		file_put_contents(ROOT_PDIR . 'filestore/tmp', $htaccessdeny);
+		file_put_contents(ROOT_PDIR . 'filestore/tmp/sessions', $htaccessdeny);
+	}
+	session_save_path(ROOT_PDIR . 'filestore/tmp/sessions');
 }
 
-// Start a traditional session.
-if(!file_exists(ROOT_PDIR . 'filestore/tmp/sessions')){	
-	mkdir(ROOT_PDIR . 'filestore/tmp/sessions', 0700, true);
-}
-session_save_path(ROOT_PDIR . 'filestore/tmp/sessions');
 session_start();
 
 
@@ -184,8 +202,16 @@ if(!is_dir(TMP_DIR)){
 	foreach($ds as $dir){
 		if($dir == '') continue;
 		$d .= '/' . $dir;
-		if(!is_dir($d)) mkdir($d) or die("Please ensure that " . TMP_DIR . " is writable.");
+		if(!is_dir($d) && !mkdir($d)){
+			$page = new InstallPage();
+			$page->assign('error', TMP_DIR . ' is not writable.<br/>You can fix this by executing the following in the terminal:<br/><br/><code>mkdir -p &quot;' . TMP_DIR . '&quot;;<br/>chmod a+w &quot;' . TMP_DIR . '&quot;;</code>');
+			$page->template = 'templates/preflight_requirements.tpl';
+			$page->render();
+		}
 	}
+}
+if(!file_exists(TMP_DIR . '.htaccess')){
+	file_put_contents(TMP_DIR . '.htaccess', $htaccessdeny);
 }
 
 //if(!DEVELOPMENT_MODE){

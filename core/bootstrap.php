@@ -292,6 +292,9 @@ define('SSL', $ssl);
  */
 define('TMP_DIR', $tmpdir);
 
+
+// (handled by the installer now)
+/*
 // The TMP_DIR needs to be writable!
 if(!is_dir(TMP_DIR)){
 	$ds = explode('/', TMP_DIR);
@@ -302,7 +305,7 @@ if(!is_dir(TMP_DIR)){
 		if(!is_dir($d)) mkdir($d) or die("Please ensure that " . TMP_DIR . " is writable.");
 	}
 }
-
+*/
 
 /**
  * The GnuPG home directory to store keys in. 

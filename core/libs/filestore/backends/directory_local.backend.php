@@ -152,7 +152,7 @@ class Directory_local_backend implements Directory_Backend {
 	 */
 	public function mkdir(){
 		if(is_dir($this->getPath())) return null;
-		else return File_local_backend::_Mkdir($this->getPath(), 0777, true);
+		else return File_local_backend::_Mkdir($this->getPath(), null, true);
 	}
 	
 	/**

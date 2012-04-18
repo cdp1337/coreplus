@@ -368,7 +368,7 @@ class File_local_backend implements File_Backend{
 		// Ensure the directory exists.
 		// This is essentially a recursive mkdir.
 		if(!is_dir(dirname($this->_filename))){
-			if(!self::_Mkdir(dirname($this->_filename), 0777, true)){
+			if(!self::_Mkdir(dirname($this->_filename), null, true)){
 				throw new Exception("Unable to make directory " . dirname($this->_filename) . ", please check permissions.");
 			}
 		}
@@ -575,10 +575,16 @@ class File_local_backend implements File_Backend{
 	 * @param bool $recursive [optional] Default to false.
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public static function _Mkdir($pathname, $mode = 0777, $recursive = false){
+	public static function _Mkdir($pathname, $mode = null, $recursive = false){
 		$ftp = \Core\FTP();
 		$tmpdir = TMP_DIR;
 		if($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
+		
+		// Resolve it from its default.
+		// This is provided from a config define, (probably).
+		if($mode === null){
+			$mode = (defined('DEFAULT_DIRECTORY_PERMS') ? DEFAULT_DIRECTORY_PERMS : 0777);
+		}
 		
 		if(!$ftp){
 			return mkdir($pathname, $mode, $recursive);
@@ -636,12 +642,22 @@ class File_local_backend implements File_Backend{
 		$tmpdir = TMP_DIR;
 		if($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 		
+		// Resolve it from its default.
+		// This is provided from a config define, (probably).
+		$mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
+		
 		if(!$ftp){
-			return file_put_contents($filename, $data);
+			$ret = file_put_contents($filename, $data);
+			if($ret === false) return $ret;
+			chmod($filename, $mode);
+			return $ret;
 		}
 		elseif(strpos($filename, $tmpdir) === 0){
 			// Tmp files should be written directly.
-			return file_put_contents($filename, $data);
+			$ret = file_put_contents($filename, $data);
+			if($ret === false) return $ret;
+			chmod($filename, $mode);
+			return $ret;
 		}
 		else{
 			// Trim off the ROOT_PDIR since it'll be relative to the ftp root set in the config.
@@ -657,7 +673,7 @@ class File_local_backend implements File_Backend{
 				return false;
 			}
 			
-			if(!ftp_chmod($ftp, 0644, $filename)) return false;
+			if(!ftp_chmod($ftp, $mode, $filename)) return false;
 			
 			// woot... but cleanup the trash first.
 			unlink($tmpfile);

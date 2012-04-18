@@ -108,4 +108,21 @@
 		<value>/path/to/secure/directory/gnupg</value>
 	</define>
 	-->
+	
+	<!--
+		Default directory permissions to use for the system.
+		If security oriented, set as 0755.
+		If convenience is more important, set to 0777.
+	-->
+	<define name="DEFAULT_DIRECTORY_PERMS" type="octal">
+		<value>0755</value>
+	</define>
+	<!--
+		Default file permissions to use for the system.
+		If security oriented, set as 0644.
+		If convenience is more important, set to 0666.
+	-->
+	<define name="DEFAULT_FILE_PERMS" type="octal">
+		<value>0644</value>
+	</define>
 </configuration>
