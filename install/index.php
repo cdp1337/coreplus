@@ -27,14 +27,29 @@ if(PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')){
 	die('This application cannot run with magic_quotes_gpc enabled, please disable them now!');
 }
 
+// Damn suPHP, I can handle my own permissions, TYVM
+umask(0);
 
-// Start a traditional session.
-session_start();
 
 // I need to override some defines here...
 $rpdr = pathinfo(dirname($_SERVER['SCRIPT_FILENAME' ]), PATHINFO_DIRNAME );
 define('ROOT_PDIR', $rpdr . '/');
 define('ROOT_WDIR', dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/');
+
+
+
+// Create the root filestore as world-browsable, as if the user picks defaults,
+// it will need to be!
+if(!file_exists(ROOT_PDIR . 'filestore')){
+	mkdir(ROOT_PDIR . 'filestore', 0755, true);
+}
+
+// Start a traditional session.
+if(!file_exists(ROOT_PDIR . 'filestore/tmp/sessions')){	
+	mkdir(ROOT_PDIR . 'filestore/tmp/sessions', 0700, true);
+}
+session_save_path(ROOT_PDIR . 'filestore/tmp/sessions');
+session_start();
 
 
 // Start a timer for performance tuning purposes.
@@ -79,11 +94,29 @@ if(!is_readable(ROOT_PDIR . 'config/configuration.xml')){
 
 
 // Check if mod_rewrite is available
-if(!in_array('mod_rewrite', apache_get_modules())){
-	$page = new InstallPage();
-	$page->assign('error', 'mod_rewrite is not available.  This is a requirement of the system!');
-	$page->template = 'templates/preflight_requirements.tpl';
-	$page->render();
+if(function_exists('apache_get_modules')){
+	if(!in_array('mod_rewrite', apache_get_modules())){
+		$page = new InstallPage();
+		$page->assign('error', 'mod_rewrite is not available.  This is a requirement of the system!');
+		$page->template = 'templates/preflight_requirements.tpl';
+		$page->render();
+	}
+}
+else{
+	// PHP is running as CGI.... guess I have to do this the long way :/
+	$fp = fsockopen((isset($_SERVER['HTTPS']) ? 'ssl://' : '') . $_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']);
+	if($fp) {
+		fwrite($fp, "GET " . ROOT_WDIR . "install/test_rewrite/ HTTP/1.0\r\n\r\n");
+		stream_set_timeout($fp, 2);
+		$line = trim(fgets($fp, 512));
+		if(strpos($line, '300 Multiple Choices') === false){
+			// OH NOES!
+			$page = new InstallPage();
+			$page->assign('error', 'mod_rewrite is not available.  This is a requirement of the system!');
+			$page->template = 'templates/preflight_requirements.tpl';
+			$page->render();
+		}
+	}
 }
 
 
@@ -100,6 +133,10 @@ if($fp) {
 		$page->template = 'templates/preflight_requirements.tpl';
 		$page->render();
     }
+	else{
+		// Because otherwise the admin will get "Access to blah blah was denied, OH NOEZ"
+		error_log('Access to config/configuration.xml was denied, (that is a GOOD thing!)');
+	}
 }
 
 
