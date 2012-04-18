@@ -99,9 +99,14 @@ class ConfigHandler implements ISingleton {
 			$type = $xmlEl->getAttribute("type");
 			$value = $xmlEl->getElementsByTagName("value")->item(0)->nodeValue;
 			switch (strtolower($type)) {
-				case 'int': $value = (int) $value;
+				case 'int':
+					$value = (int) $value;
 					break;
-				case 'boolean': $value = (($value == 'true' || $value == '1' || $value == 'yes') ? true : false);
+				case 'octal':
+					$value = octdec($value);
+					break;
+				case 'boolean':
+					$value = (($value == 'true' || $value == '1' || $value == 'yes') ? true : false);
 					break;
 			}
 			if (!defined($name))
@@ -113,9 +118,13 @@ class ConfigHandler implements ISingleton {
 			$type = $xmlEl->getAttribute("type");
 			$value = $xmlEl->getElementsByTagName("value")->item(0)->nodeValue;
 			switch (strtolower($type)) {
-				case 'int': $value = (int) $value;
+				case 'int':
+					$value = (int) $value;
 					break;
-				case 'boolean': $value = (($value == 'true' || $value == '1' || $value == 'yes') ? true : false);
+				case 'octal':
+					$value = octdec($value);
+				case 'boolean':
+					$value = (($value == 'true' || $value == '1' || $value == 'yes') ? true : false);
 					break;
 			}
 			$return[$name] = $value;
