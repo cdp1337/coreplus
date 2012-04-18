@@ -45,6 +45,9 @@ if(PHP_VERSION < '5.3.0'){
 	die('This application requires at least PHP 5.3 to run!');
 }
 
+// Damn suPHP, I can handle my own permissions, TYVM
+umask(0);
+
 // Start a timer for performance tuning purposes.
 // This will be saved into the Core once that's available.
 $start_time = microtime(true);
