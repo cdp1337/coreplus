@@ -19,7 +19,8 @@ class NavigationController extends Controller_2_1 {
 		$f = NavigationModel::Find(null, null, 'name');
 		
 		$view->title = 'Navigation Listings';
-		$view->assignVariable('navs', $f);
+		$view->assign('navs', $f);
+		$view->assign('current_theme', ConfigHandler::Get('/theme/selected') . '?template=' . ConfigHandler::Get('/theme/default_template'));
 		$view->templatename = '/pages/navigation/index.tpl';
 		$view->addControl('New Navigation Menu', '/Navigation/Create', 'add');
 	}

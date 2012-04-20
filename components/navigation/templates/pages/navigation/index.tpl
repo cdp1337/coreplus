@@ -1,3 +1,7 @@
+{if !count($navs)}
+	<p class="message-info">There are no navigation menus, {a href="/Navigation/Create"}Create One{/a}?</p>
+{/if}
+
 <table class="listing">
 	<tr>
 		<th>Navigation Menu</th>	
@@ -16,3 +20,9 @@
 		</tr>
 	{/foreach}
 </table>
+
+{if count($navs)}
+	<p>
+		To install a navigation menu into the theme, use the {a href="/Theme/Widgets/`$current_theme`"}Theme Manager{/a}.
+	</p>
+{/if}
