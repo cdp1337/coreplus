@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.0.3" name="user" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.0" name="user" execmode="web">
 	
 	<requires>
 		<require name="core" type="component"/>
@@ -66,6 +66,9 @@
 		<page baseurl="/User/Register" admin="0" widget="0" access="!g:authenticated" title="Register"/>
 		<page baseurl="/User/Logout" admin="0" widget="0" access="g:authenticated" title="Logout"/>
 	</pages>
+	<widgets>
+		<widget baseurl="/UserLoginWidget/execute"/>
+	</widgets>
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
 			<date>Sun, 07 Aug 2011 17:42:39 -0400</date>
@@ -99,6 +102,7 @@
 		</notes>
 	</changelog>
 	<upgrade from="0.0.2" to="0.0.3"/>
+	<upgrade from="0.0.3" to="1.9.0"/>
 	<changelog version="0.0.3">
 		<packagemeta>
 			<date>Wed, 28 Sep 2011 02:27:06 -0400</date>

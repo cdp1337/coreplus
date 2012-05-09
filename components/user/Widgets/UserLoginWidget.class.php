@@ -10,23 +10,16 @@
  *
  * @author powellc
  */
-class UserLoginWidget extends Widget{
-	
-	public function __construct() {
-		//$this->_getView();
-		
-	}
+class UserLoginWidget extends Widget_2_1{
 	
 	public function execute() {
-		$v = $this->_getView();
+		$v = $this->getView();
 		
 		$u = Core::User();
 		
 		$v->assign('user', $u);
 		$v->assign('loggedin', $u->exists());
 		$v->assign('allowregister', ConfigHandler::Get('/user/register/allowpublic'));
-		
-		return $v;
 	}
 	
 }

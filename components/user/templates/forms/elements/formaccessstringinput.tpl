@@ -10,14 +10,30 @@
 	{/if}
 	
 	<div class="formelement formradioinput">
-		<label><input type="radio" name="{$element->get('name')}" class="{$dynname}_main" value="basic_anyone"/>Allow Anyone</label>
-		<label><input type="radio" name="{$element->get('name')}" class="{$dynname}_main" value="basic_anonymous"/>Only Anonymous</label>
-		<label><input type="radio" name="{$element->get('name')}" class="{$dynname}_main" value="basic_authenticated"/>Only Authenticated</label>
-		
+		<label>
+			<input type="radio" name="{$element->get('name')}" class="{$dynname}_main" 
+				value="basic_anyone" {if $main_checked == 'basic_anyone'}checked="checked"{/if}/>
+			Allow Anyone
+		</label>
+		<label>
+			<input type="radio" name="{$element->get('name')}" class="{$dynname}_main" 
+				value="basic_anonymous" {if $main_checked == 'basic_anonymous'}checked="checked"{/if}/>
+			Only Anonymous
+		</label>
+		<label>
+			<input type="radio" name="{$element->get('name')}" class="{$dynname}_main" 
+				value="basic_authenticated" {if $main_checked == 'basic_authenticated'}checked="checked"{/if}/>
+			Only Authenticated
+		</label>
 	</div>
-	<fieldset>
+	<!-- This fieldset is hidden from browsers that may not have JS enabled. -->
+	<fieldset style="display:none;">
 		<legend>
-			<label><input type="radio"name="{$element->get('name')}" class="{$dynname}_main" value="advanced"/>Advanced...</label>
+			<label>
+				<input type="radio"name="{$element->get('name')}" class="{$dynname}_main" 
+					value="advanced" {if $advanced_type == 'advanced'}checked="checked"{/if}/>
+				Advanced...
+			</label>
 		</legend>
 		<div class="formelement formradioinput {$dynname}_advanced" style="display:none;">
 			<label><input type="radio" name="{$dynname}_type" value="whitelist"/>Allow Only...</label>
@@ -31,9 +47,11 @@
 			{/foreach}
 		</div>
 	</fieldset>
+		
 
 	<script type="text/javascript">
 		$(function(){
+			$('input[name="{$element->get('name')}"][value="advanced"]').closest('fieldset').show();
 			{if $advanced_type}
 				$('input[name={$dynname}_type][value={$advanced_type}]').click();
 			{/if}
