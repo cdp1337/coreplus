@@ -38,8 +38,9 @@ p { padding:0.5em 0pt; }
 fieldset { border:1px solid #AAA; padding:0.75em; margin:0.5em; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;}
 fieldset legend { color:#555; font-size:84%; padding:0pt 0.5em; }
 header { padding: 5px 2px 1px; display:block;}
-footer { height:50px; clear:both;}
-
+footer { min-height: 50px; clear:both; color: #888; font-size: 90%; padding: 0.25em 1em; }
+footer a { color: #999; }
+footer p { clear: both; }
 
 /*** Navigation breadcrumbs and other sub-nav elements ***/
 nav#breadcrumbs { font-size:80%; margin-bottom:0.5em; margin-left:1em; color:#555; padding-bottom:0.5em; border-bottom:1px solid #888; height:10px; }
@@ -195,6 +196,10 @@ ol.sortable-listing ol { margin-left:1em; }
 #primary-nav li ul span{ padding-left:20px; width:155px; }
 /* And any sub sub menu */
 #primary-nav li ul li ul { top:-2px; left:180px; display:none; position:absolute; background:#1C2B0D; border:1px solid black; border-left:0px none; width:190px; -moz-box-shadow: 0px 3px 6px #000; -webkit-box-shadow: 0px 3px 6px #000; box-shadow: 0px 3px 6px #000;}
+
+/*** Footer Navigation ***/
+footer ul.navigation-menu li { list-style-type: none; float: left; padding: 0 0.5em; }
+footer ul.navigation-menu li li { float: none;}
 
 
 /** Collapsible fieldsets **/

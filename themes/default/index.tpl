@@ -40,7 +40,7 @@
 						<ul class="controls">
 							{foreach from=$controls item=control}
 								<li class="{$control.class}">
-									{if $control.link}
+										{if $control.link}
 										<a href="{$control.link}" title="{$control.title}">{$control.title}</a>
 									{else}
 										{$control.title}
@@ -75,6 +75,11 @@
 			</div>
 			<footer>
 				{widgetarea name="Footer"}
+				<p class="legal-notice">
+					This software is distributed under the <a href="http://www.gnu.org/licenses/agpl-3.0.html" target="_BLANK">AGPL v3 License</a>, this means that as a user of this
+					service, you are allowed to, (and encouraged to), look at the <a href="https://github.com/nicholasryan/CAE2" target="
+_BLANK">complete unobfuscated source code of Core Plus</a>.
+				</p>
 			</footer>
 		</div>
 	</body>
