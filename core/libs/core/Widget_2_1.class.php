@@ -44,10 +44,22 @@ class Widget_2_1 {
 	 */
 	public function getView(){
 		if($this->_view === null){
+			
 			$this->_view = new View();
-			$this->_view->baseurl = $this->getWidgetModel()->get('baseurl');
 			$this->_view->contenttype = View::CTYPE_HTML;
 			$this->_view->mode = View::MODE_WIDGET;
+			if($this->getWidgetModel()){
+				// easy way
+				$this->_view->baseurl = $this->getWidgetModel()->get('baseurl');
+			}
+			else{
+				// difficult way
+				$back = debug_backtrace();
+				$cls = $back[1]['class'];
+				if(strpos($cls, 'Widget') !== false) $cls = substr($cls, 0, -6);
+				$mth = $back[1]['function'];
+				$this->_view->baseurl = $cls . '/' . $mth;
+			}
 		}
 		
 		return $this->_view;

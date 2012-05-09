@@ -1031,6 +1031,9 @@ class Component_2_1{
 		$change = $this->_parsePages();
 		if($change !== false) $changed = array_merge($changed, $change);
 		
+		$change = $this->_parseWidgets();
+		if($change !== false) $changed = array_merge($changed, $change);
+		
 		$change = $this->_installAssets();
 		if($change !== false) $changed = array_merge($changed, $change);
 		
@@ -1112,9 +1115,12 @@ class Component_2_1{
 		
 		// Now, get every table under this node.
 		foreach($node->getElementsByTagName('page') as $subnode){
-			// <config key="/core/theme" type="string" default="default" description="The theme of the site"/>
 			// Insert/Update the defaults for an entry in the database.
 			$m = new PageModel($subnode->getAttribute('baseurl'));
+			
+			// Just something to help the log.
+			$action = ($m->exists()) ? 'Updated' : 'Added';
+			
 			// Do not "update" value, keep whatever the user set previously.
 			if(!$m->get('rewriteurl')){
 				if($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
@@ -1127,7 +1133,37 @@ class Component_2_1{
 			$m->set('parenturl', $subnode->getAttribute('parenturl'));
 			$m->set('widget', $subnode->getAttribute('widget'));
 			$m->set('admin', $subnode->getAttribute('admin'));
-			if($m->save()) $changes[] = 'Updated page [' . $m->get('baseurl') . ']';
+			if($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';
+		}
+		
+		return ($changes > 0) ? $changes : false;
+	}
+	
+	/**
+	 * Internal function to parse and handle the configs in the component.xml file.
+	 * This is used for installations and upgrades.
+	 * 
+	 * @throws InstallerException
+	 */
+	private function _parseWidgets(){
+		$changes = array();
+		
+		// I need to get the schema definitions first.
+		$node = $this->_xmlloader->getElement('widgets');
+		//$prefix = $node->getAttribute('prefix');
+		
+		// Now, get every table under this node.
+		foreach($node->getElementsByTagName('widget') as $subnode){
+			// Insert/Update the defaults for an entry in the database.
+			$m = new WidgetModel($subnode->getAttribute('baseurl'));
+			
+			// Just something to help the log.
+			$action = ($m->exists()) ? 'Updated' : 'Added';
+			
+			// Do not "update" value, keep whatever the user set previously.
+			if(!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
+			
+			if($m->save()) $changes[] = $action . ' widget [' . $m->get('baseurl') . ']';
 		}
 		
 		return ($changes > 0) ? $changes : false;
