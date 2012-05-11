@@ -125,4 +125,16 @@
 	<define name="DEFAULT_FILE_PERMS" type="octal">
 		<value>0644</value>
 	</define>
+	
+	<!--
+		Debug variable, set this to true to allow calling *.json pages explicitly.
+		By default this is set to false, so that json requests cannot proceed without at least the 
+		HTTP_X_REQUESTED_WITH header being set correctly.
+		
+		This by far is not an acceptable security measure to protect these assets, more of just a
+		quick patch to keep the common passer-byer away from json data.
+	-->
+	<define name="ALLOW_NONXHR_JSON" type="boolean">
+		<value>false</value>
+	</define>
 </configuration>
