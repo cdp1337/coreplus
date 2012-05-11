@@ -97,6 +97,7 @@ a.button,
 
 a.button.delete { background-image:url('../icons/delete-lg.png'); padding-left:2.25em;}
 a.button.add { background-image:url('../icons/add-lg.png'); padding-left:2.25em;}
+a.button.ok { background-image:url('../icons/button_ok-lg.png'); padding-left:2.25em;}
 
 a.button:hover { text-decoration:none; background-color:#67B021;}
 

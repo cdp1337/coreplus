@@ -21,6 +21,9 @@
 		<file filename="assets/icons/lock.png" md5="3dae2bac1271b3eee81b57bf2573a5c6"/>
 		<file filename="assets/icons/email-sm.png" md5="2b9ecc49d4b27276e2972a6b1c850117"/>
 		<file filename="assets/icons/delete.png" md5="ed684274665ea47e42982fa7a05c851f"/>
+        <file filename="assets/icons/button_ok.png"/>
+        <file filename="assets/icons/button_ok-sm.png"/>
+        <file filename="assets/icons/button_ok-lg.png"/>
 		<file filename="assets/icons/email-lg.png" md5="0f20b7d3cb3d9590c4f600c3c02aed0b"/>
 		<file filename="assets/icons/delete-sm.png" md5="ef78e3ddd8658ddbc1a708e2409328a5"/>
 		<file filename="assets/icons/email.png" md5="55dcda1f2bc0e54e0a34c49df62dbc08"/>
