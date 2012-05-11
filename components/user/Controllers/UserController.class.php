@@ -182,6 +182,55 @@ class UserController extends Controller_2_1{
 		}
 	}
 	
+	/**
+	 * This is a helper controller to expose server-side data to javascript.
+	 * 
+	 * It's useful for currently logged in user and what not.
+	 * Obviously nothing critical is exposed here, since it'll be sent to the useragent.
+	 */
+	public function jshelper(){
+		$request = $this->getPageRequest();
+		
+		// This is a json-only page.
+		if($request->ctype != View::CTYPE_JSON){
+			Core::Redirect('/');
+		}
+		
+		// The data that will be returned.
+		$data = array();
+		
+		$cu = Core::User();
+		
+		if(!$cu->exists()){
+			$data['user'] = array(
+				'id' => null,
+				'displayname' => ConfigHandler::Get('/user/displayname/anonymous'),
+				//'email' => null,
+			);
+			$data['accessstringtemplate'] = null;
+		}
+		else{
+			$data['user'] = array(
+				'id' => $cu->get('id'),
+				'displayname' => $cu->getDisplayName(),
+				//'email' => $cu->get('email'),
+			);
+			
+			// Templated version of the access string form system, useful for dynamic permissions on the page.
+			$templateel = new FormAccessStringInput(array(
+				'title' => '##TITLE##',
+				'name' => '##NAME##',
+				'description' => '##DESCRIPTION##',
+				'class' => '##CLASS##',
+                'value' => 'none'
+			));
+			$data['accessstringtemplate'] = $templateel->render();
+		}
+		
+		$this->getView()->jsondata = $data;
+		$this->getView()->contenttype = View::CTYPE_JSON;
+	}
+	
 	
 	public static function _HookHandler403(View $view){
 		if(\Core\user()->exists()){
@@ -415,5 +464,3 @@ class UserController extends Controller_2_1{
 		}
 	}
 }
-
-?>

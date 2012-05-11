@@ -7,7 +7,7 @@ class FormAccessStringInput extends FormElement{
 		static $renderedcount = 0;
 		
 		$renderedcount++;
-		$this->_targetname = '_formaccessstring' . $renderedcount;
+		$this->_targetname = '_formaccessstring' . $renderedcount . \Core\RandomHex(8);
 		
 		$v = trim($this->get('value'));
 		$checked = 'advanced';
@@ -27,6 +27,11 @@ class FormAccessStringInput extends FormElement{
 		elseif($v == 'g:authenticated'){
 			$checked = 'basic_authenticated';
 		}
+        elseif($v == 'none'){
+            // Allow for a blank value.
+            $checked = null;
+            $type = null;
+        }
 		else{
 			// Determine the sub groups checked.
 			$checked = 'advanced';

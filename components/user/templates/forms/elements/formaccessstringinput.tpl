@@ -61,7 +61,9 @@
 			{/if}
 		});
 		$('.{$dynname}_main').click(function(){
-			if($(this).val() == 'advanced'){
+			var $this = $(this),
+				v = $this.val();
+			if(v == 'advanced'){
 				$('.{$dynname}_advanced').show();
 			}
 			else{

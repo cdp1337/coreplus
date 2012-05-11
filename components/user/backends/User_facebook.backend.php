@@ -87,5 +87,3 @@ class User_facebook_Backend extends User implements User_Backend{
 		return true;
 	}
 }
-
-?>

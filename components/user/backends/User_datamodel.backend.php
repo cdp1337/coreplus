@@ -51,5 +51,3 @@ class User_datamodel_Backend extends User implements User_Backend{
 		return $ub;
 	}
 }
-
-?>

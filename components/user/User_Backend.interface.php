@@ -7,5 +7,3 @@
 interface User_Backend {
 	
 }
-
-?>

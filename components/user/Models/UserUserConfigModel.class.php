@@ -36,5 +36,3 @@ class UserUserConfigModel extends Model{
 		'primary' => array('user_id', 'key'),
 	);
 }
-
-?>

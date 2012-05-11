@@ -50,7 +50,7 @@
 			<controller name="UserController"/>
 		</file>
 		<file filename="Widgets/UserLoginWidget.class.php" md5="154480303036d9fe2e09a0537979f41f">
-			<widget name="UserLoginWidget"/>
+			<class name="UserLoginWidget"/>
 		</file>
 	</files>
 	<view>
@@ -89,6 +89,7 @@
 	</configs>
 	<assets>
 		<file filename="assets/js/user/login.js" md5="f48e188960e94f209e89f5168b101983"/>
+        <file filename="assets/js/user/user.js"/>
 	</assets>
 	<upgrade from="0.0.1-dev1" to="0.0.2"/>
 	<changelog version="0.0.2">
