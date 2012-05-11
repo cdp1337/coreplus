@@ -121,6 +121,7 @@ class ThemeController extends Controller_2_1{
 				$dat['theme'] = $t;
 				$dat['template'] = $template;
 				$dat['weight'] = ++$counter;
+                $dat['access'] = $dat['widgetaccess'];
 				
 				if(strpos($id, 'new') !== false){
 					$w = new WidgetInstanceModel();
@@ -167,7 +168,8 @@ class ThemeController extends Controller_2_1{
 				$instancewidgets[] = array(
 					'title' => $widgetnames[$wi->get('baseurl')],
 					'baseurl' => $wi->get('baseurl'),
-					'id' => $wi->get('id')
+					'id' => $wi->get('id'),
+					'access' => $wi->get('access')
 				);
 			}
 			

@@ -66,4 +66,47 @@ $(function(){
 		return false;
 	});
 
+	$('.widget-bucket-destination').delegate('a.control-edit', 'click', function(){
+		var $this = $(this),
+			$par = $this.closest('.widget-dragdropped'),
+			$widgetaccess = $par.find('.widgetaccess'),
+			accessstring = $widgetaccess.val(),
+			out = '',
+			$dialog = null;
+
+		out = Core.User.AccessStrings.render({
+			value: accessstring
+		});
+
+		// Append a SAVE button.
+		out += '<div><a class="button ok saveaccessstring">Set Access Settings</a></div>';
+
+		// Now that I have the data... show it in a popover!
+		$dialog = $('<div/>');
+		$dialog.appendTo('body');
+		$dialog.html(out);
+
+		$dialog.show().dialog({
+			modal: true,
+			autoOpen: false,
+			title: 'Access Permissions',
+			width: '500px',
+			close: function(e, ui){
+				$(this).remove();
+			}
+		}).dialog('open');
+
+		$dialog.find('.saveaccessstring').click(function(){
+			$widgetaccess.val(Core.User.AccessStrings.parsedom($dialog));
+			$dialog.dialog('close');
+
+			return false;
+		});
+
+		return false;
+	});
+
+	// Required here.
+	Core.User.init();
+
 });

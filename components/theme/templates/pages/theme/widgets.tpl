@@ -1,5 +1,6 @@
 {script library="jqueryui"}{/script}
 {script library="jquery.json"}{/script}
+{script src="js/user/user.js"}{/script}
 {script src="js/theme/widgets.js"}{/script}
 {css href="css/theme/widgets.css"}{/css}
 
@@ -12,6 +13,7 @@
 			<div class="widget-dragsource">
 				<input type="hidden" class="baseurl" name="widgets[0][baseurl]" value="{$widget->get('baseurl')}"/>
 				<input type="hidden" class="widgetarea" name="widgets[0][widgetarea]" value=""/>
+				<input type="hidden" class="widgetaccess" name="widgets[0][widgetaccess]" value="*"/>
 				
 				{$widget->get('title')} [{$widget->get('baseurl')}]
 				
@@ -19,9 +21,6 @@
 				<a href="#" class="control control-edit" style="float:right;">Edit</a>
 			</div>
 		{/foreach}
-		{*
-		{a href="/Theme/Widgets/Add" class="button add"}Add Widget{/a}
-		*}
 	</div>
 	
 	<form action="" method="POST">
@@ -35,6 +34,7 @@
 							<div class="widget-dragdropped" attr:instanceid="{$widget.id}">
 								<input type="hidden" class="baseurl" name="widgetarea[{$widget.id}][baseurl]" value="{$widget.baseurl}"/>
 								<input type="hidden" class="widgetarea" name="widgetarea[{$widget.id}][widgetarea]" value="{$area.name}"/>
+								<input type="hidden" class="widgetaccess" name="widgetarea[{$widget.id}][widgetaccess]" value="{$widget.access}"/>
 
 								{$widget.title} [{$widget.baseurl}]
 
