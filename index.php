@@ -1,8 +1,14 @@
 <?php
 /**
+ * Index file for the entire system.
+ *
+ * This file receives all requests for any dynamic
+ * script in the application and starts the bootstrap process.
+ *
+ * @package Core Plus\Core
+ * @author Charlie Powell <powellc@powelltechs.com>
+ * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
- * 
- * Copyright (C) 2009  Charlie Powell <powellc@powelltechs.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,8 +23,10 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-// Include the system bootstrap.
-// This basically does everything.....
+/**
+ * Include the system bootstrap.
+ * This basically does everything.....
+ */
 require_once('core/bootstrap.php');
 
 // Anything that needs to fire off *before* the page is rendered.

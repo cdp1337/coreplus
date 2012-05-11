@@ -3,9 +3,9 @@
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.0" name="core" execmode="both">
 	
 	<provides>
-		<provide type="library" name="phpass" version="0.3~cae1"/>
+		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
-		<provide type="library" name="smarty" version="3.0.6"/>
+		<provide type="library" name="smarty" version="3.1.8"/>
 		<provide type="library" name="phpMailer" version="5.2.0"/>
 		<scriptlibrary name="Core.Strings" call="Core::_AttachCoreStrings"/>
 	</provides>

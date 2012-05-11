@@ -1,5 +1,7 @@
 <?php
 
+// @todo 2012.05.11 cpowell - Revisit this page for the 2.1 api
+
 /**
  * Description of UpdaterHelper
  *

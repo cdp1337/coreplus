@@ -1,16 +1,24 @@
 <?php
 /**
- * // enter a good description here
- * 
- * @package Core
- * @since 2011.06
+ * [PAGE DESCRIPTION HERE]
+ *
+ * @package Core Plus\Core
+ * @since 0.1
  * @author Charlie Powell <powellc@powelltechs.com>
- * @copyright Copyright 2011, Charlie Powell
- * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
- * This system is licensed under the GNU AGPL, feel free to incorporate it into
- * custom applications, but keep all references of the original authors intact,
- * read the full license terms at <http://www.gnu.org/licenses/agpl.html>, 
- * and please contribute back to the community :)
+ * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
 
