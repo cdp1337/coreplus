@@ -290,7 +290,7 @@ class View {
 			case View::MODE_AJAX:
 			case View::MODE_PAGEORAJAX:
 				$t = $this->getTemplate();
-				$tmpl = Template::ResolveFile($tmpl);
+				//$tmpl = Template::ResolveFile($tmpl);
 				//var_dump(Template::ResolveFile($tmpl)); die();
 				return $t->fetch($tmpl);
 				break;
@@ -436,7 +436,7 @@ class View {
 		}
 		
 		$data = $this->fetch();
-		
+
 		// Be sure to send the content type and status to the browser, (if it's a page)
 		if($this->mode == View::MODE_PAGE){
 			switch($this->error){

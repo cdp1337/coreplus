@@ -39,9 +39,11 @@ class Template extends Smarty{
 		// Also handle the plugins directory search.
 		foreach(Core::GetComponents() as $c){
 			$d = $c->getViewSearchDir();
-			$this->addTemplateDir($d);
-			
-			if( ($plugindir = $c->getSmartyPluginDirectory()) ) $this->addPluginsDir($plugindir);
+			// Add the template directory if it exists.
+			if($d) $this->addTemplateDir($d);
+
+			$plugindir = $c->getSmartyPluginDirectory();
+			if($plugindir) $this->addPluginsDir($plugindir);
 		}
 
 		$this->compile_dir = TMP_DIR . 'smarty_templates_c';
@@ -53,6 +55,27 @@ class Template extends Smarty{
 	}
 	public function getBaseURL(){
 		return $this->_baseurl;
+	}
+
+	/**
+	 * fetches a rendered Smarty template
+	 *
+	 * @param string $template          the resource handle of the template file or template object
+	 * @param mixed  $cache_id          cache id to be used with this template
+	 * @param mixed  $compile_id        compile id to be used with this template
+	 * @param object $parent            next higher level of Smarty variables
+	 * @param bool   $display           true: display, false: fetch
+	 * @param bool   $merge_tpl_vars    if true parent template variables merged in to local scope
+	 * @param bool   $no_output_filter  if true do not run output filter
+	 * @return string rendered template output
+	 */
+    public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false){
+
+		// Templates don't need a beginning '/'.  They'll be resolved automatically
+		// UNLESS they're already resolved fully.....
+		if(strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
+
+		return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
 	}
 
 	/**

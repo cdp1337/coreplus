@@ -288,6 +288,11 @@ define('SSL', $ssl);
 define('TMP_DIR', $tmpdir);
 
 
+// The TMP_DIR needs to be writable!
+if(!is_dir(TMP_DIR)){
+	mkdir(TMP_DIR, 0777, true);
+}
+
 // (handled by the installer now)
 /*
 // The TMP_DIR needs to be writable!
