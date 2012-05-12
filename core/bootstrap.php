@@ -114,19 +114,6 @@ if(!DEVELOPMENT_MODE){
 }
 
 
-
-// Site not configured yet?
-// This config-based constant will be set automatically after an installation to mark it's done.
-//if(!SITE_CONFIGURED){
-//	die('This site has not been configured yet.  If you are the administrator, please edit the XML files in "config" and be sure to set "SITE_CONFIGURED" to true when done.');
-	//header('Location: install/');
-	//die('If your browser does not refresh, please <a href="install.php">Click Here</a>');
-//}
-
-
-
-
-
 /*******   CALCULATE SEVERAL REQUIRED CONSTANTS, MAINLY ONES FOR PATH AND URL INFORMATION  ********/
 
 /**

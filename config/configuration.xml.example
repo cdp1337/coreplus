@@ -28,10 +28,6 @@
 		NOT be able to access the site.</description>
 	</return>
 
-	<define name="SITE_CONFIGURED" type="boolean" display="no">
-		<value>true</value>
-	</define>
-
 	<define name="DEVELOPMENT_MODE" type="boolean">
 		<value>true</value>
 		<description>If this is a production site, it is advised to disable this.</description>
