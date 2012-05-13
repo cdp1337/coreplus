@@ -421,20 +421,23 @@ class Theme{
 			$newfilename = 'assets' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
 			
 			$nf = Core::File($newfilename);
-			
-			// The new destination must be in the theme-specific directory, this is a 
+
+			// The new destination must be in the theme-specific directory, this is a
 			// bit of a hack from the usual behaviour of the filestore system.
 			// Since that's designed to return the default if the theme-specific doesn't exist.
+			$nf->setFilename(str_replace($assetbase . $coretheme, $assetbase . $theme, $nf->getFilename()));
+
+			/*
 			if($theme != 'default' && strpos($nf->getFilename(), $assetbase . $theme) === false){
 				// The only possible filename bases to be returned are the $coretheme and default.
 				// so...
-				if($theme == 'default'){	
+				if($theme == 'default'){
 					$nf->setFilename(str_replace($assetbase . $coretheme, $assetbase . $theme, $nf->getFilename()));
 				}
 				else{
 					$nf->setFilename(str_replace($assetbase . 'default', $assetbase . $theme, $nf->getFilename()));
 				}
-			}
+			}*/
 			
 			// Check if this file even needs updated. (this is primarily used for reporting reasons)
 			if($nf->exists() && $nf->identicalTo($f)){
