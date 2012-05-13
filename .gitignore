@@ -1,6 +1,32 @@
+# This is the public and asset files directory.  It is changeable in the installer, so
+# if you set the root directory as something else, please _add_ the directory to this list.
+# Please do not remove the directories that are listed, as someone else is probably expecting that directory exclusion.
+/filestore
+/files
+
+# Skip the netbeans project directory, this is developer centric
 /nbproject
+
+# Skip the htaccess file, this is server centric
 /.htaccess
+
+# Skip the configuration file, this is developer and server centric
 /config/configuration.xml
-/.DS_Store
-/filestore/
+
+# Skip the Apple .DS_Store directory, this is machine centric
+.DS_Store
+
+# Temp files created by gedit, (or something...)
 *~
+
+# Skip some additional PhpStorm metafiles.  These are all project centric
+# I need to explicitly list the files to ignore in this directory because ONE needs to be included,
+# codeStyleSettings.xml is extremely useful for ensuring that additional installations of phpStorm play nicely.
+/.idea/.*
+/.idea/*.iml
+/.idea/*/
+/.idea/encodings.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
