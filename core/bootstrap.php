@@ -6,6 +6,7 @@
  *  all the necessary paths, settings and includes.
  *
  * @package Core Plus\Core
+ * @since 0.1
  * @author Charlie Powell <powellc@powelltechs.com>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -22,7 +23,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
-
 
 
 /********************* Pre-instantiation system checks ************************/
@@ -97,7 +97,7 @@ $core_settings = ConfigHandler::LoadConfigFile("configuration");
 if(!$core_settings){
 	$newURL = 'install/';
 	header("Location:" . $newURL);
-    die("If your browser does not refresh, please <a href=\"{$newURL}\">Click Here</a>");
+	die("If your browser does not refresh, please <a href=\"{$newURL}\">Click Here</a>");
 	//die("Please ensure that you copy /config/configuration.xml.example to /config/configuration.xml and edit the appropriate values.");
 }
 
@@ -105,9 +105,9 @@ if(!$core_settings){
 /**
  * If the site is not in "development mode", force errors to be hidden.
  * This is useful to override any common server settings.
- * 
+ *
  * (php default is to display them after all...)
- */ 
+ */
 if(!DEVELOPMENT_MODE){
 	error_reporting(0);
 	ini_set('display_errors', 0);
@@ -138,6 +138,7 @@ if(EXEC_MODE == 'CLI'){
 	$relativerequestpath = null;
 	$ssl = false;
 	$tmpdir = $core_settings['tmp_dir_cli'];
+	$host = 'localhost';
 	// Check if this user has a .gnupg directory in the home directory.
 	// This is because when the user runs a script, (ie: packager or create_repo),
 	// it should use his/her private key, (which is not accesable from the website).
@@ -150,19 +151,21 @@ else{
 	 */
 	if (isset ( $_SERVER [ 'HTTPS' ] )) $servername = "https://" ;
 	else $servername = "http://" ;
-	
+
 	if($core_settings['site_url'] != '') $servername .= $core_settings['site_url'];
 	else $servername .= $_SERVER [ 'HTTP_HOST' ];
-	
+
 	// First things are first... if site_url is set, it's expected that THAT should
 	//  be the only valid URL to use.  If I wait until post-rendering, bad things
 	//  can happen.
 	if($core_settings['site_url'] != '' && $_SERVER['HTTP_HOST'] != $core_settings['site_url']){
-	    $newURL = (isset($_SERVER['HTTPS'])? 'https://' : 'http://') . $core_settings['site_url'] . $_SERVER['REQUEST_URI'];
-	    header("Location:" . $newURL);
-	    die("If your browser does not refresh, please <a href=\"{$newURL}\">Click Here</a>");
+		$newURL = (isset($_SERVER['HTTPS'])? 'https://' : 'http://') . $core_settings['site_url'] . $_SERVER['REQUEST_URI'];
+		header("Location:" . $newURL);
+		die("If your browser does not refresh, please <a href=\"{$newURL}\">Click Here</a>");
 	}
-	
+
+	$host = $_SERVER['HTTP_HOST'];
+
 	/**
 	 * Full URL of server in non-SSL mode.
 	 * ie: http://www.example.com:80 or http://localhost:880
@@ -180,12 +183,12 @@ else{
 	if(PORT_NUMBER == 80){
 		$servernameNOSSL = str_replace(':80', '', $servernameNOSSL);
 	}
-	
-	
+
+
 	/**
 	 * Full URL of server in SSL mode.
 	 * ie: https://www.example.com:443 or https://localhost:8443
-	 * 
+	 *
 	 * (defaults back to SERVERNAME_NOSSL if ENABLE_SSL is disabled).
 	 */
 	if(ENABLE_SSL){
@@ -206,7 +209,7 @@ else{
 	else{
 		$servernameSSL = $servernameNOSSL;
 	}
-	
+
 	$rooturl = $servername . ROOT_WDIR;
 	$rooturlNOSSL = $servernameNOSSL . ROOT_WDIR;
 	$rooturlSSL = $servername . ROOT_WDIR;
@@ -214,9 +217,9 @@ else{
 	$relativerequestpath = '/' . substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
 	if(strpos($relativerequestpath, '?') !== false) $relativerequestpath = substr($relativerequestpath, 0, strpos($relativerequestpath, '?'));
 	$ssl = ( isset($_SERVER['HTTPS']) );
-	
+
 	$tmpdir = $core_settings['tmp_dir_web'];
-	
+
 	$gnupgdir = false;
 }
 
@@ -264,16 +267,22 @@ define('REL_REQUEST_PATH', $relativerequestpath);
 
 /**
  * Simple true/false if current page call is via SSL.
- * @var boolean 
+ * @var boolean
  */
 define('SSL', $ssl);
 
 /**
- * Temp directory 
+ * Temp directory
  * @var string
  */
 define('TMP_DIR', $tmpdir);
 
+/**
+ * Host is a more human-friendly version of SERVERNAME.
+ * It does not include port number or protocol, but just the hostname itself.
+ * @var string
+ */
+define('HOST', $host);
 
 // The TMP_DIR needs to be writable!
 if(!is_dir(TMP_DIR)){
@@ -295,7 +304,7 @@ if(!is_dir(TMP_DIR)){
 */
 
 /**
- * The GnuPG home directory to store keys in. 
+ * The GnuPG home directory to store keys in.
  */
 if(!defined('GPG_HOMEDIR')){
 	define('GPG_HOMEDIR', ($gnupgdir) ? $gnupgdir : ROOT_PDIR . 'gnupg');
