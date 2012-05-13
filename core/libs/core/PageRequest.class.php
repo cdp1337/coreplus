@@ -338,6 +338,10 @@ class PageRequest{
 			$cnameshort = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
 			$return->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
 		}
+		elseif($return->error == View::ERROR_NOERROR && $return->contenttype == View::CTYPE_XML && $return->templatename === null){
+			$cnameshort = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
+			$return->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
+		}
 		
 		// Master template set in the database?
 		if($page->get('theme_template')){
