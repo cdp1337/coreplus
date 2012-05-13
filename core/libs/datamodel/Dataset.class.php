@@ -360,23 +360,39 @@ class Dataset implements Iterator{
 		
 		return isset($this->_data[key($this->_data)]);
 	}
-	
-	
-	
+
+	/**
+	 * Parse a single where statement for the key, operation, and value.
+	 *
+	 * @param string $statement The where statement to parse and evaluate
+	 * @param int $group The group to associate this statement to
+	 * @return void
+	 */
 	private function _parseWhere($statement, $group = 0){
 		// The user may have sent something like "blah = mep" or "datecreated < somedate"
-		
-		
-		$chars = array('!=', '=', '<=', '>=', '>', '<', ' LIKE ');
-		
-		foreach($chars as $c){
-			if(($pos = strpos($statement, $c)) !== false){
-				//list($k, $v) = explode($c, $statement);
-				$k = trim(substr($statement, 0, strpos($statement, $c)));
-				$v = trim(substr($statement, strpos($statement, $c) + strlen($c)));
-				$this->_where[] = array('field' => $k, 'op' => $c, 'value' => $v, 'group' => $group);
-				return;
+		$valid = false;
+		$operations = array('!=', '<=', '>=', '=', '>', '<', ' LIKE ');
+
+		// First, extract out the key.  This is the simplest thing to look for.
+		$k = preg_replace('/^([^ !=<>]*).*/', '$1', $statement);
+
+		// and the rest of the query...
+		$statement = trim(substr($statement, strlen($k)));
+
+
+		// Now I can sift through each operation and find the one that this query is.
+		foreach($operations as $c){
+			// The match MUST be the first character.
+			if(($pos = strpos($statement, $c)) === 0){
+				$op = $c;
+				$statement = trim(substr($statement, strlen($op)));
+				$valid = true;
+				break;
 			}
+		}
+
+		if($valid){
+			$this->_where[] = array('field' => $k, 'op' => $op, 'value' => $statement, 'group' => $group);
 		}
 	}
 	
