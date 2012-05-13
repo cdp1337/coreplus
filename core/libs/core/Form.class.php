@@ -1343,10 +1343,12 @@ class FormPageMeta extends FormGroup{
 		return $page;
 		
 		// Add in any insertables too, if they're attached.
+		// DISABLING 2012.05 cpowell
+		/*
 		if(($i = $this->getElementByName('insertables'))){
 			$els = $i->getElements();
 			foreach($els as $e){
-				if(!preg_match('/^insertable\[(.*?)\].*/', $e->get('name'), $matches)) continue;
+				if(!preg_match('#^insertable\[(.*?)\].*#', $e->get('name'), $matches)) continue;
 
 				$submodel = $page->findLink('Insertable', array('name' => $matches[1]));
 				$submodel->set('value', $e->get('value'));
@@ -1354,6 +1356,7 @@ class FormPageMeta extends FormGroup{
 		}
 		
 		return $page;
+		*/
 	}
 
 	/**
