@@ -13,8 +13,9 @@
 # Skip the configuration file, this is developer and server centric
 /config/configuration.xml
 
-# Skip the Apple .DS_Store directory, this is machine centric
+# Skip some Apple directories, these is machine centric
 .DS_Store
+._*
 
 # Temp files created by gedit, (or something...)
 *~
