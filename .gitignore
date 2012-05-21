@@ -18,6 +18,7 @@
 
 # Temp files created by gedit, (or something...)
 *~
+*.swp
 
 # Skip some additional PhpStorm metafiles.  These are all project centric
 # I need to explicitly list the files to ignore in this directory because ONE needs to be included,
