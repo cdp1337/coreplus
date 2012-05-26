@@ -25,11 +25,11 @@
  *
  * @author powellc
  */
-class Template extends Smarty{
+class Template extends Smarty {
 
 	private $_baseurl;
 
-    public function  __construct() {
+	public function  __construct() {
 		parent::__construct();
 
 		// Tack on the current theme's directory.
@@ -37,23 +37,24 @@ class Template extends Smarty{
 
 		// Tack on the search directories from the loaded components.
 		// Also handle the plugins directory search.
-		foreach(Core::GetComponents() as $c){
+		foreach (Core::GetComponents() as $c) {
 			$d = $c->getViewSearchDir();
 			// Add the template directory if it exists.
-			if($d) $this->addTemplateDir($d);
+			if ($d) $this->addTemplateDir($d);
 
 			$plugindir = $c->getSmartyPluginDirectory();
-			if($plugindir) $this->addPluginsDir($plugindir);
+			if ($plugindir) $this->addPluginsDir($plugindir);
 		}
 
 		$this->compile_dir = TMP_DIR . 'smarty_templates_c';
-		$this->cache_dir = TMP_DIR . 'smarty_cache';
+		$this->cache_dir   = TMP_DIR . 'smarty_cache';
 	}
 
-	public function setBaseURL($url){
+	public function setBaseURL($url) {
 		$this->_baseurl = $url;
 	}
-	public function getBaseURL(){
+
+	public function getBaseURL() {
 		return $this->_baseurl;
 	}
 
@@ -67,13 +68,14 @@ class Template extends Smarty{
 	 * @param bool   $display           true: display, false: fetch
 	 * @param bool   $merge_tpl_vars    if true parent template variables merged in to local scope
 	 * @param bool   $no_output_filter  if true do not run output filter
+	 *
 	 * @return string rendered template output
 	 */
-    public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false){
+	public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false) {
 
 		// Templates don't need a beginning '/'.  They'll be resolved automatically
 		// UNLESS they're already resolved fully.....
-		if(strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
+		if (strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
 
 		return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
 	}
@@ -83,17 +85,17 @@ class Template extends Smarty{
 	 *
 	 * @param string $filename Filename to resolve
 	 */
-	public static function ResolveFile($filename){
+	public static function ResolveFile($filename) {
 		// I need a new template so I can retrieve all the paths.
 		$t = new Template();
 
 		$dirs = $t->getTemplateDir();
 
 		// Trim off the beginning '/' if there is one;  All directories end with a '/'.
-		if($filename{0} == '/') $filename = substr($filename, 1);
+		if ($filename{0} == '/') $filename = substr($filename, 1);
 
-		foreach($dirs as $d){
-			if(file_exists($d . $filename)) return $d . $filename;
+		foreach ($dirs as $d) {
+			if (file_exists($d . $filename)) return $d . $filename;
 		}
 
 		// Nope?

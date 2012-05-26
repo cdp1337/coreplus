@@ -21,8 +21,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
-class CAEDirectoryIterator implements Iterator{
-	
+class CAEDirectoryIterator implements Iterator {
+
 	/**
 	 * The directory to iterate through.
 	 * @var string
@@ -38,10 +38,10 @@ class CAEDirectoryIterator implements Iterator{
 	 * @var array
 	 */
 	private $_ignores = array();
-	
-	
-	public function __construct($path = null){
-		if($path){
+
+
+	public function __construct($path = null) {
+		if ($path) {
 			$this->scan($path);
 		}
 	}
@@ -52,10 +52,10 @@ class CAEDirectoryIterator implements Iterator{
 	 *
 	 * @param string $path
 	 */
-	public function addIgnore($path){
+	public function addIgnore($path) {
 		// If the path is already precursed with the ROOT_PDIR, no need to prepend it.
-		if(strpos($path, ROOT_PDIR) === false) $path = ROOT_PDIR . $path;
-		
+		if (strpos($path, ROOT_PDIR) === false) $path = ROOT_PDIR . $path;
+
 		$this->_ignores[] = $path;
 	}
 
@@ -66,112 +66,116 @@ class CAEDirectoryIterator implements Iterator{
 	 * @param array|string $list
 	 * @param ...
 	 */
-	public function addIgnores($list){
+	public function addIgnores($list) {
 		$args = func_get_args();
-		if(sizeof($args)){
-			foreach($args as $a){
-				if(is_array($a)) foreach($a as $innera) $this->addIgnore($innera);
+		if (sizeof($args)) {
+			foreach ($args as $a) {
+				if (is_array($a)) foreach ($a as $innera) $this->addIgnore($innera);
 				else $this->addIgnore($a);
 			}
 		}
-		else{
-			if(is_array($list)) foreach($list as $innera) $this->addIgnore($innera);
+		else {
+			if (is_array($list)) foreach ($list as $innera) $this->addIgnore($innera);
 			else $this->addIgnore($list);
 		}
 	}
 
-	public function setPath($path){
+	public function setPath($path) {
 		// Clear the list if it's present.
 		$this->_files = array();
 		// If the path is already precursed with the ROOT_PDIR, no need to prepend it.
-		if(strpos($path, ROOT_PDIR) === false) $path = ROOT_PDIR . $path;
+		if (strpos($path, ROOT_PDIR) === false) $path = ROOT_PDIR . $path;
 		// And remember it.
 		$this->_path = $path;
 	}
 
 	/**
 	 * Manually run a scan.  This is called automatically if a filename is given in the constructor.
+	 *
 	 * @param string $path
 	 */
-	public function scan($path = null){
-		if($path){
+	public function scan($path = null) {
+		if ($path) {
 			$this->setPath($path);
 		}
 		// Open the directory and "sift" through it.
 		$this->sift($this->_path);
 	}
-	
+
 	/**
 	 * Sift through a directory and get the files in it.
+	 *
 	 * @param unknown_type $dir
+	 *
 	 * @return unknown_type
 	 */
-	protected function sift($dir){
-		if(!(is_dir($dir) && is_readable($dir))){
+	protected function sift($dir) {
+		if (!(is_dir($dir) && is_readable($dir))) {
 			// @todo probably should do an error or something here.
 			return;
 		}
 		// Make sure the directory ends in a slash.
-		if(strrpos($dir, '/') + 1 != strlen($dir)) $dir .= '/';
+		if (strrpos($dir, '/') + 1 != strlen($dir)) $dir .= '/';
 		//echo "Checking directory or file [[ $dir ]]\n"; // DEBUG //
 		// Skip the file if it's in the array of ignore files.
-		if(sizeof($this->_ignores) && in_array($dir, $this->_ignores)) return;
+		if (sizeof($this->_ignores) && in_array($dir, $this->_ignores)) return;
 
 		$dh = opendir($dir);
 
 		//echo "Reading directory $dir<br/>\n"; // DEBUG //
-		while($sub = readdir($dh)){
+		while ($sub = readdir($dh)) {
 			// Skip hidden files/directories.
-			if($sub{0} == '.') continue;
+			if ($sub{0} == '.') continue;
 
 			// Skip the file if it's in the array of ignore files.
-			if(sizeof($this->_ignores) && in_array($dir . $sub, $this->_ignores)) continue;
+			if (sizeof($this->_ignores) && in_array($dir . $sub, $this->_ignores)) continue;
 
 			//echo "GOGO $dir$sub<br/>\n"; // DEBUG //
 
-			if(is_dir($dir . $sub)){
+			if (is_dir($dir . $sub)) {
 				// Recurse.
 				$this->sift($dir . $sub);
 			}
-			else{
+			else {
 				// @todo have intelligent file matching to return the appropriate object.
 				$this->_files[] = new File_local_backend($dir . $sub);
 			}
 		}
-		
+
 		closedir($dh);
 	}
-	
-	public function rewind(){
+
+	public function rewind() {
 		reset($this->_files);
 	}
 
-	public function current(){
+	public function current() {
 		$var = current($this->_files);
 		return $var;
 	}
 
-	public function key(){
+	public function key() {
 		$var = key($this->_files);
 		return $var;
 	}
 
-	public function next(){
+	public function next() {
 		$var = next($this->_files);
 		return $var;
 	}
 
-	public function valid(){
+	public function valid() {
 		$var = $this->current() !== false;
 		return $var;
 	}
-	
+
 	/**
 	 * @return int
 	 */
-	public function getATime(){
+	public function getATime() {
 		// @todo Implement this method.
 	}
+
 	/**
 	 * @return string
 	 */
@@ -183,7 +187,7 @@ class CAEDirectoryIterator implements Iterator{
 	/**
 	 * @return string
 	 */
-	public function getFilename($prefix = ROOT_PDIR){
+	public function getFilename($prefix = ROOT_PDIR) {
 		return $this->current()->getFilename($prefix);
 	}
 	/**

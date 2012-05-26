@@ -28,15 +28,15 @@
 /********************* Pre-instantiation system checks ************************/
 
 // The bootstrap cannot be called directly.
-if(basename($_SERVER['SCRIPT_NAME']) == 'bootstrap.php') die('You cannot call that file directly.');
+if (basename($_SERVER['SCRIPT_NAME']) == 'bootstrap.php') die('You cannot call that file directly.');
 
 
 // I expect some configuration options....
-if(PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')){
+if (PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')) {
 	die('This application cannot run with magic_quotes_gpc enabled, please disable them now!');
 }
 
-if(PHP_VERSION < '5.3.0'){
+if (PHP_VERSION < '5.3.0') {
 	die('This application requires at least PHP 5.3 to run!');
 }
 
@@ -48,7 +48,7 @@ umask(0);
 $start_time = microtime(true);
 
 // gogo i18n!
-mb_internal_encoding( 'UTF-8' );
+mb_internal_encoding('UTF-8');
 
 /********************* Initial system defines *********************************/
 require_once(__DIR__ . '/bootstrap_predefines.php');
@@ -56,11 +56,9 @@ require_once(__DIR__ . '/bootstrap_predefines.php');
 $predefines_time = microtime(true);
 
 
-
 /********************** Critical file inclusions ******************************/
 
 require_once(__DIR__ . '/bootstrap_preincludes.php');
-
 
 
 // __TODO__ Make this errorHandler accept 'hooks' to be fired when a critical error is occured.
@@ -94,7 +92,7 @@ ConfigHandler::Singleton();
 // This will do the defines for the site, and provide any core variables to get started.
 $core_settings = ConfigHandler::LoadConfigFile("configuration");
 
-if(!$core_settings){
+if (!$core_settings) {
 	$newURL = 'install/';
 	header("Location:" . $newURL);
 	die("If your browser does not refresh, please <a href=\"{$newURL}\">Click Here</a>");
@@ -108,7 +106,7 @@ if(!$core_settings){
  *
  * (php default is to display them after all...)
  */
-if(!DEVELOPMENT_MODE){
+if (!DEVELOPMENT_MODE) {
 	error_reporting(0);
 	ini_set('display_errors', 0);
 }
@@ -127,39 +125,40 @@ if(!DEVELOPMENT_MODE){
  * ROOT_URL_SSL
  * CUR_CALL
  */
-if(EXEC_MODE == 'CLI'){
-	$servername = null;
-	$servernameSSL = null;
-	$servernameNOSSL = null;
-	$rooturl = null;
-	$rooturlNOSSL = null;
-	$rooturlSSL = null;
-	$curcall = null;
+if (EXEC_MODE == 'CLI') {
+	$servername          = null;
+	$servernameSSL       = null;
+	$servernameNOSSL     = null;
+	$rooturl             = null;
+	$rooturlNOSSL        = null;
+	$rooturlSSL          = null;
+	$curcall             = null;
 	$relativerequestpath = null;
-	$ssl = false;
-	$tmpdir = $core_settings['tmp_dir_cli'];
-	$host = 'localhost';
+	$ssl                 = false;
+	$tmpdir              = $core_settings['tmp_dir_cli'];
+	$host                = 'localhost';
 	// Check if this user has a .gnupg directory in the home directory.
 	// This is because when the user runs a script, (ie: packager or create_repo),
 	// it should use his/her private key, (which is not accesable from the website).
-	if(isset($_SERVER['HOME']) && is_dir($_SERVER['HOME'] . '/.gnupg')) $gnupgdir = $_SERVER['HOME'] . '/.gnupg/';
-	else $gnupgdir = false;}
-else{
+	if (isset($_SERVER['HOME']) && is_dir($_SERVER['HOME'] . '/.gnupg')) $gnupgdir = $_SERVER['HOME'] . '/.gnupg/';
+	else $gnupgdir = false;
+}
+else {
 	/**
 	 * Full URL of server.
 	 * ie: http://www.example.com or https://127.0.0.1:8443
 	 */
-	if (isset ( $_SERVER [ 'HTTPS' ] )) $servername = "https://" ;
-	else $servername = "http://" ;
+	if (isset ($_SERVER ['HTTPS'])) $servername = "https://";
+	else $servername = "http://";
 
-	if($core_settings['site_url'] != '') $servername .= $core_settings['site_url'];
-	else $servername .= $_SERVER [ 'HTTP_HOST' ];
+	if ($core_settings['site_url'] != '') $servername .= $core_settings['site_url'];
+	else $servername .= $_SERVER ['HTTP_HOST'];
 
 	// First things are first... if site_url is set, it's expected that THAT should
 	//  be the only valid URL to use.  If I wait until post-rendering, bad things
 	//  can happen.
-	if($core_settings['site_url'] != '' && $_SERVER['HTTP_HOST'] != $core_settings['site_url']){
-		$newURL = (isset($_SERVER['HTTPS'])? 'https://' : 'http://') . $core_settings['site_url'] . $_SERVER['REQUEST_URI'];
+	if ($core_settings['site_url'] != '' && $_SERVER['HTTP_HOST'] != $core_settings['site_url']) {
+		$newURL = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $core_settings['site_url'] . $_SERVER['REQUEST_URI'];
 		header("Location:" . $newURL);
 		die("If your browser does not refresh, please <a href=\"{$newURL}\">Click Here</a>");
 	}
@@ -173,14 +172,14 @@ else{
 	// Create the server name with no SSL.  This can be used to go from an SSL page to a regular page.
 	$servernameNOSSL = str_replace('https://', 'http://', $servername);
 	// Check the last several digits of the serverName to see if there's a port number.
-	if(preg_match('/\:\d+$/', substr($servernameNOSSL, -6))){
+	if (preg_match('/\:\d+$/', substr($servernameNOSSL, -6))) {
 		$servernameNOSSL = preg_replace('/\:\d+$/', ':' . PORT_NUMBER, $servernameNOSSL);
 	}
-	else{
+	else {
 		$servernameNOSSL .= ':' . PORT_NUMBER;
 	}
 	// Default port number?
-	if(PORT_NUMBER == 80){
+	if (PORT_NUMBER == 80) {
 		$servernameNOSSL = str_replace(':80', '', $servernameNOSSL);
 	}
 
@@ -191,32 +190,32 @@ else{
 	 *
 	 * (defaults back to SERVERNAME_NOSSL if ENABLE_SSL is disabled).
 	 */
-	if(ENABLE_SSL){
+	if (ENABLE_SSL) {
 		// Create the server name for SSL connections.  This should override any previous port number.
 		$servernameSSL = str_replace('http://', 'https://', SERVERNAME);
 		// Check the last several digits of the serverName to see if there's a port number.
-		if(preg_match('/\:\d+$/', substr($servernameSSL, -6))){
+		if (preg_match('/\:\d+$/', substr($servernameSSL, -6))) {
 			$servernameSSL = preg_replace('/\:\d+$/', ':' . PORT_NUMBER_SSL, $servernameSSL);
 		}
-		else{
+		else {
 			$servernameSSL .= ':' . PORT_NUMBER_SSL;
 		}
 		// Default port number?
-		if(PORT_NUMBER_SSL == 443){
+		if (PORT_NUMBER_SSL == 443) {
 			$servernameSSL = str_replace(':443', '', $servernameSSL);
 		}
 	}
-	else{
+	else {
 		$servernameSSL = $servernameNOSSL;
 	}
 
-	$rooturl = $servername . ROOT_WDIR;
-	$rooturlNOSSL = $servernameNOSSL . ROOT_WDIR;
-	$rooturlSSL = $servername . ROOT_WDIR;
-	$curcall = $servername . $_SERVER['REQUEST_URI'];
+	$rooturl             = $servername . ROOT_WDIR;
+	$rooturlNOSSL        = $servernameNOSSL . ROOT_WDIR;
+	$rooturlSSL          = $servername . ROOT_WDIR;
+	$curcall             = $servername . $_SERVER['REQUEST_URI'];
 	$relativerequestpath = '/' . substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
-	if(strpos($relativerequestpath, '?') !== false) $relativerequestpath = substr($relativerequestpath, 0, strpos($relativerequestpath, '?'));
-	$ssl = ( isset($_SERVER['HTTPS']) );
+	if (strpos($relativerequestpath, '?') !== false) $relativerequestpath = substr($relativerequestpath, 0, strpos($relativerequestpath, '?'));
+	$ssl = (isset($_SERVER['HTTPS']));
 
 	$tmpdir = $core_settings['tmp_dir_web'];
 
@@ -227,17 +226,17 @@ else{
  * Full URL of server.
  * ie: http://www.example.com or https://127.0.0.1:8443
  */
-define('SERVERNAME', $servername );
+define('SERVERNAME', $servername);
 /**
  * Full URL of the server forced non-ssl mode.
  * ie: http://www.example.com
  */
-define('SERVERNAME_NOSSL', $servernameNOSSL );
+define('SERVERNAME_NOSSL', $servernameNOSSL);
 /**
  * Full URL of the server forced SSL mode.
  * ie: https://www.example.com or https://127.0.0.1:8443
  */
-define('SERVERNAME_SSL', $servernameSSL );
+define('SERVERNAME_SSL', $servernameSSL);
 /**
  * URL of web root.
  * ie: http://www.example.com/foo/man/choo/
@@ -299,7 +298,7 @@ define('TMP_DIR_CLI', $core_settings['tmp_dir_cli']);
 define('HOST', $host);
 
 // The TMP_DIR needs to be writable!
-if(!is_dir(TMP_DIR)){
+if (!is_dir(TMP_DIR)) {
 	mkdir(TMP_DIR, 0777, true);
 }
 
@@ -320,7 +319,7 @@ if(!is_dir(TMP_DIR)){
 /**
  * The GnuPG home directory to store keys in.
  */
-if(!defined('GPG_HOMEDIR')){
+if (!defined('GPG_HOMEDIR')) {
 	define('GPG_HOMEDIR', ($gnupgdir) ? $gnupgdir : ROOT_PDIR . 'gnupg');
 }
 
@@ -329,10 +328,8 @@ unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $r
 $maindefines_time = microtime(true);
 
 
-
 // Now the core of the application, config handler, and all necessary core
 //  settings should be available.
-
 
 
 /**************************  START EXECUTION *****************************/
@@ -345,28 +342,27 @@ Core::AddProfileTime('maindefines_complete', $maindefines_time);
 
 // Datamodel, GOGO!
 require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
-try{
+try {
 	$dbconn = DMI::GetSystemDMI();
 	HookHandler::DispatchHook('db_ready');
 }
 // This catch statement should be hit anytime the database is not available,
 // core table doesn't exist, or the like.
-catch(Exception $e){
+catch (Exception $e) {
 	// Couldn't establish connection... do something fun!
 	// If it's in development mode, redirect back to the installer, which should hopefully
 	// get whatever problem this was fixed.
-	if(DEVELOPMENT_MODE){
+	if (DEVELOPMENT_MODE) {
 		header('Location: ' . ROOT_WDIR . 'install');
 		die();
 	}
 	// For machines in production mode, well... I'm yet to decide what to do with that specifically,
 	// but it should be something nice, like send an email or something.
-	else{
+	else {
 		require(ROOT_PDIR . 'core/fatal_error.inc.html');
 		die();
 	}
 }
-
 
 
 unset($start_time, $predefines_time, $preincludes_time, $maindefines_time);
@@ -389,27 +385,26 @@ Core::AddProfileTime('core_ready');
 Core::LoadComponents();
 
 // Give me some other useful core systems.
-if(EXEC_MODE == 'WEB'){
-	try{
+if (EXEC_MODE == 'WEB') {
+	try {
 		// Sessions are always useful for web apps
 		require_once(ROOT_PDIR . 'core/libs/core/Session.class.php');
 		Session::Singleton();
 		//session_start();
 	}
-	catch(DMI_Exception $e){
+	catch (DMI_Exception $e) {
 		// There was a DMI exception... it may not have been installed.
 		// Reload to the install page and let that take care.
-		if(DEVELOPMENT_MODE){
+		if (DEVELOPMENT_MODE) {
 			header('Location: ' . ROOT_WDIR . 'install');
 			die();
 		}
-		else{
+		else {
 			require(ROOT_PDIR . 'core/fatal_error.inc.html');
 			die();
 		}
 	}
 }
-
 
 
 //require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');

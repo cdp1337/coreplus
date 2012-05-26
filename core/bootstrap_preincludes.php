@@ -37,7 +37,7 @@ require_once(ROOT_PDIR . 'core/libs/core/InstallArchiveAPI.class.php');
 /** @deprecated 2011.11 */
 require_once(ROOT_PDIR . 'core/libs/core/Component.class.php');
 /**
- * The Component system written for API 2.1 
+ * The Component system written for API 2.1
  */
 require_once(ROOT_PDIR . 'core/libs/core/Component_2_1.php');
 require_once(ROOT_PDIR . 'core/functions/Core.functions.php');

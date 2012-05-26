@@ -24,38 +24,38 @@
 register_shutdown_function("session_write_close");
 
 
-class Session implements ISingleton{
-	
+class Session implements ISingleton {
+
 	/**
 	 * The amodel for this given session.
-	 * 
+	 *
 	 * @var SessionModel
 	 */
 	private $_model = null;
-  
+
 	private static $_Instance = null;
-  
+
 	/**
 	 * Get the global instance for the session.
-	 * 
+	 *
 	 * @return Session
 	 */
-	public static function Singleton(){
-		if(self::$_Instance === null){
+	public static function Singleton() {
+		if (self::$_Instance === null) {
 			self::$_Instance = new Session();
-			
+
 			// Now I can session_start everything.
 			session_start();
-			
+
 			// And start a new session.
 			$m = self::$_Instance->_getModel();
 			// The "updated" flag is explictly required to be set because it also
 			// indicates when the last page activity for the user was.
 			// This is the main tracking variable for inactivity.
 			$m->set('updated', Time::GetCurrentGMT());
-			
+
 			// From this point on, the $_SESSION variable is available.
-			
+
 			// Anything waiting for the session?
 			HookHandler::DispatchHook('session_ready');
 		}
@@ -63,7 +63,7 @@ class Session implements ISingleton{
 		return Session::$_Instance;
 	}
 
-	public static function GetInstance(){
+	public static function GetInstance() {
 		return Session::Singleton();
 	}
 
@@ -77,40 +77,40 @@ class Session implements ISingleton{
 		// since we used persistent connection.
 	}
 
-	public static function Read( $id ) {
+	public static function Read($id) {
 		return self::Singleton()->_getModel()->get('data');
 	}
 
-	public static function Write( $id, $data ) {
-		
+	public static function Write($id, $data) {
+
 		$m = self::Singleton()->_getModel();
 		$m->set('data', $data);
 		$m->save();
-		
+
 		return TRUE;
 	}
 
-	public static function Destroy( $id = null) {
+	public static function Destroy($id = null) {
 
 		// If "null" is requested, just destroy the system session.
-		if($id === null){
+		if ($id === null) {
 			self::Singleton()->_destroy();
 			// Purge the session data
 			session_destroy();
 			// And invalidate the session id.
 			session_regenerate_id(true);
 		}
-		else{
+		else {
 			// Low-level datasets are used here because they have less overhead than
 			// the full-blown model system.
 			$dataset = new Dataset();
 			$dataset->table('session');
-			$dataset->where('session_id = ' . $id );
+			$dataset->where('session_id = ' . $id);
 
 			$dataset->delete();
 			$dataset->execute();
 		}
-		
+
 		return TRUE;
 	}
 
@@ -119,27 +119,27 @@ class Session implements ISingleton{
 		 * Delete ANY session that has expired.
 		 */
 		$ttl = ConfigHandler::Get('/core/session/ttl');
-		
+
 		// Low-level datasets are used here because they have less overhead than
 		// the full-blown model system.
 		$dataset = new Dataset();
 		$dataset->table('session');
-		$dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl) );
-		
+		$dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl));
+
 		$dataset->delete();
-		
+
 		// Always return TRUE
 		return true;
 	}
-	
-	public static function SetUser(User $u){
+
+	public static function SetUser(User $u) {
 		$m = self::Singleton()->_getModel();
-		
+
 		$m->set('user_id', $u->get('id'));
 		$_SESSION['user'] = $u;
 	}
-  
-	private function __construct(){
+
+	private function __construct() {
 
 		// Set the save handlers
 		session_set_save_handler(
@@ -150,25 +150,25 @@ class Session implements ISingleton{
 			array('Session', "Destroy"),
 			array('Session', "GC")
 		);
-		
+
 		// Ensure garbage collection is done at some point.
 		Session::GC();
 	}
-	
-	private function _getModel(){
-		if($this->_model === null){
+
+	private function _getModel() {
+		if ($this->_model === null) {
 			$this->_model = new SessionModel(session_id());
-			
+
 			// Ensure the data is matched up.
 			$this->_model->set('ip_addr', REMOTE_IP);
 		}
-		
+
 		return $this->_model;
 	}
-	
-	private function _destroy(){
+
+	private function _destroy() {
 		// Delete the information from the database and purge the cached information.
-		if($this->_model){
+		if ($this->_model) {
 			$this->_model->delete();
 			$this->_model = null;
 		}

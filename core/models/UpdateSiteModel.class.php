@@ -25,44 +25,44 @@
  *
  * @author powellc
  */
-class UpdateSiteModel extends Model{
-	
+class UpdateSiteModel extends Model {
+
 	public static $Schema = array(
-		'id' => array(
-			'type' => Model::ATT_TYPE_ID,
+		'id'       => array(
+			'type'     => Model::ATT_TYPE_ID,
 			'required' => true,
-			'null' => false,
+			'null'     => false,
 		),
-		'url' => array(
-			'type' => Model::ATT_TYPE_STRING,
+		'url'      => array(
+			'type'     => Model::ATT_TYPE_STRING,
 			'required' => true,
-			'null' => false
+			'null'     => false
 		),
-		'enabled' => array(
-			'type' => Model::ATT_TYPE_BOOL,
-			'null' => false,
+		'enabled'  => array(
+			'type'    => Model::ATT_TYPE_BOOL,
+			'null'    => false,
 			'default' => true
 		),
 		'username' => array(
-			'type' => Model::ATT_TYPE_STRING,
+			'type'     => Model::ATT_TYPE_STRING,
 			'required' => false,
-			'null' => true
+			'null'     => true
 		),
 		'password' => array(
-			'type' => Model::ATT_TYPE_STRING,
+			'type'     => Model::ATT_TYPE_STRING,
 			'required' => false,
-			'null' => true
+			'null'     => true
 		),
-		'created' => array(
+		'created'  => array(
 			'type' => Model::ATT_TYPE_CREATED
 		),
-		'updated' => array(
+		'updated'  => array(
 			'type' => Model::ATT_TYPE_UPDATED
 		)
 	);
-	
+
 	public static $Indexes = array(
-		'primary' => array('id'),
+		'primary'    => array('id'),
 		'unique:url' => array('url'),
 	);
 
@@ -72,18 +72,18 @@ class UpdateSiteModel extends Model{
 	 *
 	 * @return boolean
 	 */
-	public function isValid(){
-		$remote = new File_remote_backend();
+	public function isValid() {
+		$remote           = new File_remote_backend();
 		$remote->password = $this->get('password');
 		$remote->username = $this->get('username');
 		$remote->setFilename($this->get('url') . '/repo.xml.gz');
 
-		if(!$remote->exists()){
+		if (!$remote->exists()) {
 			return false;
 		}
 
 		// I should probably do additional checks here, but eh.....
 		return true;
 	}
-	
+
 }

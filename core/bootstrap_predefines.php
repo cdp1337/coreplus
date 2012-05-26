@@ -24,11 +24,11 @@
  */
 
 
-if(PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')){
+if (PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')) {
 	die('This application cannot run with magic_quotes_gpc enabled, please disable them now!' . "\n");
 }
 
-if(PHP_VERSION < '5.3.0'){
+if (PHP_VERSION < '5.3.0') {
 	die('This application requires at least PHP 5.3 to run!' . "\n");
 }
 
@@ -37,21 +37,21 @@ if(PHP_VERSION < '5.3.0'){
 
 // Right off the bat, I need to decide which mode I'm running in, either as a CLI script or regular.
 // In addition, there are some other things that need to be retrieved early on, such as root path and what not.
-if(isset($_SERVER['SHELL'])){
+if (isset($_SERVER['SHELL'])) {
 	$em = 'CLI';
 	// Using __DIR__ is more accurate for files including the core in other directories.
 	$rpdr = realpath(__DIR__ . '/../') . '/';
 	$rwdr = null;
-	$rip = '127.0.0.1';
+	$rip  = '127.0.0.1';
 }
-else{
-	$em = 'WEB';
+else {
+	$em  = 'WEB';
 	$rip = '127.0.0.1';
 	// Set the constants for the root directory (relative) and root directory (full path).
-	$rpdr = pathinfo($_SERVER['SCRIPT_FILENAME' ], PATHINFO_DIRNAME );
-	if($rpdr != '/') $rpdr .= '/'; // Append a slash if it's not the root dir itself.
-	$rwdr = pathinfo($_SERVER['SCRIPT_NAME' ],     PATHINFO_DIRNAME );
-	if($rwdr != '/') $rwdr .= '/'; // Append a slash if it's not the root dir itself.
+	$rpdr = pathinfo($_SERVER['SCRIPT_FILENAME'], PATHINFO_DIRNAME);
+	if ($rpdr != '/') $rpdr .= '/'; // Append a slash if it's not the root dir itself.
+	$rwdr = pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME);
+	if ($rwdr != '/') $rwdr .= '/'; // Append a slash if it's not the root dir itself.
 	$rip = $_SERVER['REMOTE_ADDR'];
 }
 
@@ -70,7 +70,7 @@ define('EXEC_MODE', $em);
  * Example: /home/someone/public_html/myinstall/
  * @var string
  */
-if(!defined('ROOT_PDIR')) define('ROOT_PDIR', $rpdr);
+if (!defined('ROOT_PDIR')) define('ROOT_PDIR', $rpdr);
 /**
  * The location of the root installation based on the browser get string.
  * DOES have a trailing slash.
@@ -78,7 +78,7 @@ if(!defined('ROOT_PDIR')) define('ROOT_PDIR', $rpdr);
  * Example: /~someone/myinstall/
  * @var string
  */
-if(!defined('ROOT_WDIR')) define('ROOT_WDIR', $rwdr);
+if (!defined('ROOT_WDIR')) define('ROOT_WDIR', $rwdr);
 /**
  * The remote IP of the connecting computer.
  * Based dynamically off the $_SERVER variable.
@@ -102,7 +102,6 @@ define('TAB', "\t");
  * define shorthand directory separator constant
  */
 define('DS', DIRECTORY_SEPARATOR);
-
 
 
 // Cleanup!

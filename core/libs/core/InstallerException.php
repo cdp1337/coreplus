@@ -25,7 +25,7 @@
  *
  * @author powellc
  */
-class InstallerException extends Exception{
-	
+class InstallerException extends Exception {
+
 }
 

@@ -2,127 +2,127 @@
 // @todo 2012.05.11 cpowell - Can I kill this file?  It doesn't seem to be doing anything.
 
 /**
- * This object will cover the various xml tasks for installing, upgrading and 
- *	removing components and the core system.
+ * This object will cover the various xml tasks for installing, upgrading and
+ *    removing components and the core system.
  */
-class InstallTask{
-	
+class InstallTask {
+
 	/**
-	 * The actual processing function, needs the parent node and the relative 
-	 *	directory so I know where to run the scripts from.
-	 * 
+	 * The actual processing function, needs the parent node and the relative
+	 *    directory so I know where to run the scripts from.
+	 *
 	 * This function will run through any node inside the <install>, <upgrade> or <uninstall> tasks
 	 * and try to execute the assigned method via sending the tag name to the event handler.
 	 * If a method is attached to that tag via a hook, the hook handler will call it.
 	 */
-	public static function ParseNode(DomElement $node, $relativeDir){
-		foreach($node->getElementsByTagName('*') as $c){
+	public static function ParseNode(DomElement $node, $relativeDir) {
+		foreach ($node->getElementsByTagName('*') as $c) {
 			$result = HookHandler::DispatchHook('/install_task/' . $c->tagName, $c, $relativeDir);
-			if(!$result) return false;
+			if (!$result) return false;
 		}
-		
+
 		// Either no calls made, or all calls were successful.
 		return true;
 	}
-	
-	public static function _ParseSetConfig($node, $relativeDir){
+
+	public static function _ParseSetConfig($node, $relativeDir) {
 		//$node = $args[0];
 		//$relativeDir = $args[1];
-		$set = $node->getAttribute('set');
-		$key = $node->getAttribute('key');
+		$set   = $node->getAttribute('set');
+		$key   = $node->getAttribute('key');
 		$value = $node->nodeValue;
-		
-		DB::Execute("UPDATE `".DB_PREFIX."configs` SET `value` = ? WHERE `config_set` = ? AND `key` = ? LIMIT 1", array($value, $set, $key));
+
+		DB::Execute("UPDATE `" . DB_PREFIX . "configs` SET `value` = ? WHERE `config_set` = ? AND `key` = ? LIMIT 1", array($value, $set, $key));
 	}
-	
-	public static function _ParseAddConfig($node, $relativeDir){
+
+	public static function _ParseAddConfig($node, $relativeDir) {
 		//$node = $args[0];
 		//$relativeDir = $args[1];
-		
+
 		// Just install the config manually.
-		$set = $node->getAttribute('set');
-		$key = $node->getAttribute('key');
-		$type = @$node->getAttribute('type');
-		$valueType = @$node->getAttribute('valuetype');
-		$default = @$node->getAttribute('default');
-		$value = @$node->getAttribute('value');
-		$options = @$node->getAttribute('options');
+		$set         = $node->getAttribute('set');
+		$key         = $node->getAttribute('key');
+		$type        = @$node->getAttribute('type');
+		$valueType   = @$node->getAttribute('valuetype');
+		$default     = @$node->getAttribute('default');
+		$value       = @$node->getAttribute('value');
+		$options     = @$node->getAttribute('options');
 		$description = @$node->getAttribute('description');
-		
+
 		// Defaults
-		if(!$type) $type = 'setting';
-		if(!$valueType) $valueType = 'string';
-		if(!$default) $default = $value;
-		if(!$value) $value = $default;
+		if (!$type) $type = 'setting';
+		if (!$valueType) $valueType = 'string';
+		if (!$default) $default = $value;
+		if (!$value) $value = $default;
 		//if(!$options) $options = null;
-		if(!$description) $description = "";
-		
+		if (!$description) $description = "";
+
 		$options = null;
-		
+
 		// If the type is enum... look for options.
-		if($valueType == 'enum'){
+		if ($valueType == 'enum') {
 			$options = '';
-			foreach($node->getElementsByTagName('option') as $opt){
+			foreach ($node->getElementsByTagName('option') as $opt) {
 				$value = @$opt->getAttribute('value');
 				$title = $opt->nodeValue;
-				if(!$value) $value = $title;
+				if (!$value) $value = $title;
 				// Neither can have a colon or semicolon.
 				$title = str_replace(array(':', ';'), array('/:', '/;'), $title);
 				$value = str_replace(array(':', ';'), array('/:', '/;'), $value);
-				$options .= (($options == '')? '' : ";\n") . (($title == $value)? '' : $value . ':') . $title;
+				$options .= (($options == '') ? '' : ";\n") . (($title == $value) ? '' : $value . ':') . $title;
 			}
 		}
-		
+
 		$pkeys = array(
 			'config_set' => $set,
-			'key' => $key
+			'key'        => $key
 		);
-		$keys = array(
-			'type' => $type,
-			'value_type' => $valueType,
+		$keys  = array(
+			'type'          => $type,
+			'value_type'    => $valueType,
 			'default_value' => $default,
-			'value' => $value,
-			'options' => $options,
-			'description' => $description
+			'value'         => $value,
+			'options'       => $options,
+			'description'   => $description
 		);
-		
+
 		$q = DB::CreateSQLFromHash(DB_PREFIX . 'configs', 'auto', $keys, $pkeys);
 		DB::Execute($q);
-		
+
 		// We can make this available immediately... why not?
-		if($type == 'define') define($key, $value);
+		if ($type == 'define') define($key, $value);
 	}
-	
-	public static function _ParseAddResourceDir($node, $relativeDir){
+
+	public static function _ParseAddResourceDir($node, $relativeDir) {
 		//$node = $args[0];
 		//$relativeDir = $args[1];
-		
+
 		$dir = $node->getAttribute('dir');
-		
+
 		// If it already exists, awesome...
-		if(is_dir(ROOT_PDIR . '/resources/' . $dir)) return true;
-		
+		if (is_dir(ROOT_PDIR . '/resources/' . $dir)) return true;
+
 		// And create the directory in the resources directory.
 		return mkdir(ROOT_PDIR . '/resources/' . $dir, 0777, true);
 	}
-	
-	public static function _ParseSql($node, $relativeDir){
+
+	public static function _ParseSql($node, $relativeDir) {
 		//$node = $args[0];
 		//$relativeDir = $args[1];
-		
+
 		$file = @$node->getAttribute('file');
-		if($file){
+		if ($file) {
 			$file = $relativeDir . $file;
-			$sql = file_get_contents($file);
+			$sql  = file_get_contents($file);
 		}
-		else{
+		else {
 			$sql = $node->nodeValue;
 		}
-		if(!$sql) return false;
-		
+		if (!$sql) return false;
+
 		// Allow the use of an attribute "failonerror".  Self explainatory, defaults to true.
 		$foe = @$node->getAttribute('failonerror');
-		switch($foe){
+		switch ($foe) {
 			case null:
 			case 'true':
 			case 'yes':
@@ -133,29 +133,29 @@ class InstallTask{
 				$foe = false;
 				break;
 		}
-		
+
 		// No replace the prefix, (as another site may use a different one).
 		$prefix = $node->getAttribute('prefix');
-		$sql = str_replace($prefix, DB_PREFIX, $sql);
-		
+		$sql    = str_replace($prefix, DB_PREFIX, $sql);
+
 		// Replace any windows or mac style newlines with unix-style.
 		$sql = str_replace(array('\r\n', '\r'), '\n', $sql);
 		// Try to break apart the sql, (as there may be multiple queries in here).
 		$sqls = preg_split('/;[ ]*\n/', $sql);
-		
-		foreach($sqls as $sqlline){
-			if(trim($sqlline) == '') continue;
-			
-			if($foe){
+
+		foreach ($sqls as $sqlline) {
+			if (trim($sqlline) == '') continue;
+
+			if ($foe) {
 				DB::Execute($sqlline);
 			}
-			else{
+			else {
 				$saveErrHandlers = DB::GetConnection()->IgnoreErrors();
 				DB::Execute($sqlline);
 				DB::GetConnection()->IgnoreErrors($saveErrHandlers);
 			}
 		}
-		
+
 		return true;
 	}
 }

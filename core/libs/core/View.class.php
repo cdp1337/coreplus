@@ -36,22 +36,22 @@ class View {
 	/**
 	 * Standard page inside the master page template
 	 */
-	const MODE_PAGE       = 'page';
+	const MODE_PAGE = 'page';
 	/**
 	 * Widget page inside a given widget container
 	 */
-	const MODE_WIDGET     = 'widget';
+	const MODE_WIDGET = 'widget';
 	/**
 	 * No automatic output whatsoever
 	 * Useful for file downloads and completely custom views.
 	 */
-	const MODE_NOOUTPUT   = 'nooutput';
+	const MODE_NOOUTPUT = 'nooutput';
 	/**
 	 * Render a template, but do not wrap in a master page template
 	 * This is useful if you want the power of a template, but for an
 	 * ajax or otherwise custom response.
 	 */
-	const MODE_AJAX       = 'ajax';
+	const MODE_AJAX = 'ajax';
 	/**
 	 * Detect if the page request is a standard or ajax, toggle between respectively
 	 * If the page is loaded via an ajax request, no master template is used.
@@ -63,29 +63,29 @@ class View {
 	/**
 	 * Request method for standard GET request
 	 */
-	const METHOD_GET    = 'GET';
+	const METHOD_GET = 'GET';
 	/**
 	 * Request method for standard form submission
 	 */
-	const METHOD_POST   = 'POST';
-	/**
-	 *  @todo Not supported
-	 */
-	const METHOD_PUT    = 'PUT';
+	const METHOD_POST = 'POST';
 	/**
 	 * @todo Not supported
 	 */
-	const METHOD_HEAD   = 'HEAD';
+	const METHOD_PUT = 'PUT';
 	/**
-	 *  @todo Not supported
+	 * @todo Not supported
+	 */
+	const METHOD_HEAD = 'HEAD';
+	/**
+	 * @todo Not supported
 	 */
 	const METHOD_DELETE = 'DELETE';
 
 	/* Content types for this view */
-	const CTYPE_HTML      = 'text/html';
-	const CTYPE_PLAIN     = 'text/plain';
-	const CTYPE_JSON      = 'application/json';
-	const CTYPE_XML       = 'application/xml';
+	const CTYPE_HTML  = 'text/html';
+	const CTYPE_PLAIN = 'text/plain';
+	const CTYPE_JSON  = 'application/json';
+	const CTYPE_XML   = 'application/xml';
 
 
 	public $error;
@@ -157,34 +157,34 @@ class View {
 	public static $HTMLAttributes = array();
 	public static $HeadData = array();
 
-	public function __construct(){
+	public function __construct() {
 		$this->error = View::ERROR_NOERROR;
-		$this->mode = View::MODE_PAGE;
+		$this->mode  = View::MODE_PAGE;
 	}
 
-	public function setParameters($params){
+	public function setParameters($params) {
 		$this->_params = $params;
 	}
 
-	public function getParameters(){
-		if(!$this->_params){
+	public function getParameters() {
+		if (!$this->_params) {
 			$this->_params = array();
 		}
 
 		return $this->_params;
 	}
 
-	public function getParameter($key){
+	public function getParameter($key) {
 		$p = $this->getParameters();
-		return (array_key_exists($key, $p))? $p[$key] : null;
+		return (array_key_exists($key, $p)) ? $p[$key] : null;
 	}
 
 	/**
 	 *
 	 * @return Template
 	 */
-	public function getTemplate(){
-		if(!$this->_template){
+	public function getTemplate() {
+		if (!$this->_template) {
 			$this->_template = new Template();
 			$this->_template->setBaseURL($this->baseurl);
 		}
@@ -198,7 +198,7 @@ class View {
 	 * @param $key string
 	 * @param $val mixed
 	 */
-	public function assign($key, $val){
+	public function assign($key, $val) {
 		$this->getTemplate()->assign($key, $val);
 	}
 
@@ -208,7 +208,7 @@ class View {
 	 * @param $key string
 	 * @param $val mixed
 	 */
-	public function assignVariable($key, $val){
+	public function assignVariable($key, $val) {
 		$this->assign($key, $val);
 	}
 
@@ -216,22 +216,23 @@ class View {
 	 * Get a variable that was set with "assign()"
 	 *
 	 * @param string $key
+	 *
 	 * @return mixed
 	 */
-	public function getVariable($key){
+	public function getVariable($key) {
 		// Damn smarty and its being more difficult...
 		$v = $this->getTemplate()->getVariable($key);
-		return ($v)? $v->value : null;
+		return ($v) ? $v->value : null;
 	}
 
-	public function fetchBody(){
+	public function fetchBody() {
 		// If there is set to be no system content, don't even bother with anything here!
-		if($this->mode == View::MODE_NOOUTPUT){
+		if ($this->mode == View::MODE_NOOUTPUT) {
 			return null;
 		}
 
 		// Resolve the template based on the error code. (if present)
-		if($this->error != View::ERROR_NOERROR){
+		if ($this->error != View::ERROR_NOERROR) {
 			// Update some information in the view.
 			// Transpose some useful data for it.
 			//$view->baseurl = '/Error/Error' . $view->error;
@@ -239,25 +240,25 @@ class View {
 			$tmpl = '/pages/error/error' . $this->error . '.tpl';
 			//$mastertmpl = ConfigHandler::Get('/theme/default_template');
 		}
-		else{
+		else {
 			$tmpl = $this->templatename;
 			//$mastertmpl = 
 		}
 
 		// If the content type is set to something other that html, check if that template exists.
-		switch($this->contenttype){
+		switch ($this->contenttype) {
 			case View::CTYPE_XML:
 				// Already resolved?
-				if(strpos($tmpl, ROOT_PDIR) === 0 && strpos($tmpl, '.xml.tpl') !== false){
+				if (strpos($tmpl, ROOT_PDIR) === 0 && strpos($tmpl, '.xml.tpl') !== false) {
 					$this->mastertemplate = false;
 				}
-				else{
+				else {
 					$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'xml.tpl', $tmpl));
-					if($ctemp){
-						$tmpl = $ctemp;
+					if ($ctemp) {
+						$tmpl                 = $ctemp;
 						$this->mastertemplate = false;
 					}
-					else{
+					else {
 						$this->contenttype = View::CTYPE_HTML;
 					}
 				}
@@ -265,27 +266,27 @@ class View {
 			case View::CTYPE_JSON:
 				// Did the controller send data to this view directly?
 				// (because JSON supports raw data ^_^ )
-				if(sizeof($this->jsondata)){
+				if (sizeof($this->jsondata)) {
 					$this->mastertemplate = false;
-					$tmpl = false;
+					$tmpl                 = false;
 					return json_encode($this->jsondata);
 				}
 				$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'json.tpl', $tmpl));
-				if($ctemp){
-					$tmpl = $ctemp;
+				if ($ctemp) {
+					$tmpl                 = $ctemp;
 					$this->mastertemplate = false;
 				}
-				else{
+				else {
 					$this->contenttype = View::CTYPE_HTML;
 				}
 				break;
 		}
 
-		if(!$tmpl && $this->templatename == ''){
+		if (!$tmpl && $this->templatename == '') {
 			throw new Exception('Please set the variable "templatename" on the page view.');
 		}
 
-		switch($this->mode){
+		switch ($this->mode) {
 			case View::MODE_PAGE:
 			case View::MODE_AJAX:
 			case View::MODE_PAGEORAJAX:
@@ -295,7 +296,7 @@ class View {
 			case View::MODE_WIDGET:
 				// This template can be a couple things.
 				$tn = Template::ResolveFile(preg_replace(':^[/]{0,1}pages/:', '/widgets/', $tmpl));
-				if(!$tn) $tn = $tmpl;
+				if (!$tn) $tn = $tmpl;
 
 				$t = $this->getTemplate();
 				//var_dump($t);
@@ -305,29 +306,29 @@ class View {
 
 	}
 
-	public function fetch(){
+	public function fetch() {
 		$body = $this->fetchBody();
 
 		// If there's no template, I have nothing to even do!
-		if($this->mastertemplate === false){
+		if ($this->mastertemplate === false) {
 			return $body;
 		}
 		// Else if it's null, it's just not set yet :p
-		elseif($this->mastertemplate === null){
+		elseif ($this->mastertemplate === null) {
 			$this->mastertemplate = ConfigHandler::Get('/theme/default_template');
 		}
 
 		// Whee!
 		//var_dump($this->templatename, Template::ResolveFile($this->templatename));
 		// Content types take priority on controlling the master template.
-		if($this->contenttype == View::CTYPE_JSON){
+		if ($this->contenttype == View::CTYPE_JSON) {
 			$mastertpl = false;
 		}
-		else{
+		else {
 			// Master template depends on the render mode.
-			switch($this->mode){
+			switch ($this->mode) {
 				case View::MODE_PAGEORAJAX:
-					if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') $mastertpl = false;
+					if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') $mastertpl = false;
 					else $mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $this->mastertemplate;
 					break;
 				case View::MODE_NOOUTPUT:
@@ -344,7 +345,7 @@ class View {
 		}
 
 		// If there's *still* no template, I still have nothing to do.
-		if(!$mastertpl) return $body;
+		if (!$mastertpl) return $body;
 
 
 		// @todo Handle the metadata.
@@ -357,7 +358,7 @@ class View {
 		$template = new Template();
 		$template->setBaseURL('/');
 		// Page-level views have some special variables.
-		if($this->mode == View::MODE_PAGE){
+		if ($this->mode == View::MODE_PAGE) {
 			$template->assign('breadcrumbs', $this->getBreadcrumbs());
 			$template->assign('controls', $this->controls);
 			$template->assign('messages', Core::GetMessages());
@@ -375,7 +376,7 @@ class View {
 
 		$data = $template->fetch($mastertpl);
 
-		if($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML){
+		if ($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML) {
 			// Replace the </head> tag with the head data from the current page
 			// and the </body> with the foot data from the current page.
 			// This is needed to be done at this stage because some element in 
@@ -386,11 +387,11 @@ class View {
 			$data = str_replace('<html', '<html ' . self::GetHTMLAttributes(), $data);
 
 			// Provide a way for stylesheets to target this page specifically.
-			$url = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
+			$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
 			$data = str_replace('<body', '<body class="page-' . $url . '"', $data);
 
 			// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
-			if(DEVELOPMENT_MODE){
+			if (DEVELOPMENT_MODE) {
 				$debug = '';
 				$debug .= '<pre class="xdebug-var-dump">';
 				$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
@@ -398,14 +399,14 @@ class View {
 				//$debug .= "Number of queries: " . DB::Singleton()->counter . "\n";
 				$debug .= "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
 				$debug .= "Total processing time: " . round(Core::GetProfileTimeTotal(), 4) * 1000 . ' ms' . "\n";
-				if(FULL_DEBUG){
-					foreach(Core::GetProfileTimes() as $t){
+				if (FULL_DEBUG) {
+					foreach (Core::GetProfileTimes() as $t) {
 						$debug .= "[" . Core::FormatProfileTime($t['timetotal']) . "] - " . $t['event'] . "\n";
 					}
 				}
 				// Tack on what components are currently installed.
 				$debug .= '<b>Available Components</b>' . "\n";
-				foreach(Core::GetComponents() as $l => $v){
+				foreach (Core::GetComponents() as $l => $v) {
 					$debug .= $v->getName() . ' ' . $v->getVersion() . "\n";
 				}
 
@@ -426,61 +427,73 @@ class View {
 	 *
 	 * @return void
 	 */
-	public function render(){
+	public function render() {
 
 		// Before I go about rendering anything, enable UTF-8 to ensure proper i18n!
-		if($this->contenttype && $this->contenttype == View::CTYPE_HTML){
+		if ($this->contenttype && $this->contenttype == View::CTYPE_HTML) {
 			View::AddMeta('http-equiv="Content-Type" content="text/html;charset=UTF-8"');
 		}
 
 		$data = $this->fetch();
 
 		// Be sure to send the content type and status to the browser, (if it's a page)
-		if($this->mode == View::MODE_PAGE){
-			switch($this->error){
-				case View::ERROR_NOERROR:      header('Status: 200 OK', true, $this->error); break;
-				case View::ERROR_ACCESSDENIED: header('Status: 403 Forbidden', true, $this->error); break;
-				case View::ERROR_NOTFOUND:     header('Status: 404 Not Found', true, $this->error); break;
-				case View::ERROR_SERVERERROR:  header('Status: 500 Internal Server Error', true, $this->error); break;
-				default:                       header('Status: 500 Internal Server Error', true, $this->error); break; // I don't know WTF happened...
+		if ($this->mode == View::MODE_PAGE) {
+			switch ($this->error) {
+				case View::ERROR_NOERROR:
+					header('Status: 200 OK', true, $this->error);
+					break;
+				case View::ERROR_ACCESSDENIED:
+					header('Status: 403 Forbidden', true, $this->error);
+					break;
+				case View::ERROR_NOTFOUND:
+					header('Status: 404 Not Found', true, $this->error);
+					break;
+				case View::ERROR_SERVERERROR:
+					header('Status: 500 Internal Server Error', true, $this->error);
+					break;
+				default:
+					header('Status: 500 Internal Server Error', true, $this->error);
+					break; // I don't know WTF happened...
 			}
 
-			if($this->contenttype){
-				if($this->contenttype == View::CTYPE_HTML) header( 'Content-Type: text/html; charset=UTF-8' );
+			if ($this->contenttype) {
+				if ($this->contenttype == View::CTYPE_HTML) header('Content-Type: text/html; charset=UTF-8');
 				else header('Content-Type: ' . $this->contenttype);
 			}
 
-			if(DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
+			if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 		}
 
 		echo $data;
 	}
 
-	public function addBreadcrumb($title, $link = null){
+	public function addBreadcrumb($title, $link = null) {
 
 		// Allow a non-resolved link to be passed in.
-		if($link !== null && strpos($link, '://') === false) $link = Core::ResolveLink($link);
+		if ($link !== null && strpos($link, '://') === false) $link = Core::ResolveLink($link);
 
-		$this->breadcrumbs[] = array('title' => $title, 'link' => $link);
+		$this->breadcrumbs[] = array('title' => $title,
+		                             'link'  => $link);
 	}
 
-	public function setBreadcrumbs($array){
+	public function setBreadcrumbs($array) {
 		// Array should be an array of either link => title keys or pages.
 		$this->breadcrumbs = array();
 
 		// If null is passed in, just leave them blank.
 		// This is useful for implementing completely custom breadcrumbs.
-		if(!$array) return;
+		if (!$array) return;
 
-		foreach($array as $k => $v){
-			if($v instanceof PageModel) $this->addBreadcrumb($v->get('title'), $v->getResolvedURL());
+		foreach ($array as $k => $v) {
+			if ($v instanceof PageModel) $this->addBreadcrumb($v->get('title'), $v->getResolvedURL());
 			else $this->addBreadcrumb($v, $k);
 		}
 	}
 
-	public function getBreadcrumbs(){
+	public function getBreadcrumbs() {
 		$crumbs = $this->breadcrumbs;
-		if($this->title) $crumbs[] = array('title' => $this->title, 'link' => null);
+		if ($this->title) $crumbs[] = array('title' => $this->title,
+		                                    'link'  => null);
 
 		return $crumbs;
 
@@ -492,8 +505,10 @@ class View {
 		}*/
 	}
 
-	public function addControl($title, $link, $class = 'edit'){
-		$this->controls[] = array('title' => $title, 'link' => Core::ResolveLink($link), 'class' => $class);
+	public function addControl($title, $link, $class = 'edit') {
+		$this->controls[] = array('title' => $title,
+		                          'link'  => Core::ResolveLink($link),
+		                          'class' => $class);
 	}
 
 	/**
@@ -505,10 +520,12 @@ class View {
 	 * (if you only want to set the access string, please just use $view->access = 'your_string';)
 	 *
 	 * @since 2011.08
+	 *
 	 * @param string $accessstring
+	 *
 	 * @return boolean True or false based on access for current user.
 	 */
-	public function setAccess($accessstring){
+	public function setAccess($accessstring) {
 		$this->access = $accessstring;
 
 		return $this->checkAccess();
@@ -522,15 +539,15 @@ class View {
 	 * @since 2011.10
 	 * @return boolean
 	 */
-	public function checkAccess(){
+	public function checkAccess() {
 		// And do some logic to see if the current user can access this resource.
 		// This is more of a helper function to Controllers.
 		$u = Core::User();
-		if($u->checkAccess($this->access)){
+		if ($u->checkAccess($this->access)) {
 			// yay.
 			return true;
 		}
-		else{
+		else {
 			$this->error = View::ERROR_ACCESSDENIED;
 			return false;
 		}
@@ -545,19 +562,19 @@ class View {
 	 * @param string $script
 	 * @param string $location
 	 */
-	public static function AddScript($script, $location = 'head'){
-		if(strpos($script, '<script') === false){
+	public static function AddScript($script, $location = 'head') {
+		if (strpos($script, '<script') === false) {
 			// Resolve the script and wrap it with a script block.
 			$script = '<script type="text/javascript" src="' . Core::ResolveAsset($script) . '"></script>';
 		}
 
 
 		// I can check to see if this script has been loaded before.
-		if(in_array($script, self::$HeadScripts)) return;
-		if(in_array($script, self::$FootScripts)) return;
+		if (in_array($script, self::$HeadScripts)) return;
+		if (in_array($script, self::$FootScripts)) return;
 
 		// No? alright, add it to the requested location!
-		if($location == 'head') self::$HeadScripts[] = $script;
+		if ($location == 'head') self::$HeadScripts[] = $script;
 		else self::$FootScripts[] = $script;
 	}
 
@@ -565,16 +582,16 @@ class View {
 	 * Add a linked stylesheet file to the global View object.
 	 *
 	 * @param string $link The link of the stylesheet
-	 * @param type $media Media to display the stylesheet with.
+	 * @param type   $media Media to display the stylesheet with.
 	 */
-	public static function AddStylesheet($link, $media="all"){
-		if(strpos($link, '<link') === false){
+	public static function AddStylesheet($link, $media = "all") {
+		if (strpos($link, '<link') === false) {
 			// Resolve the script and wrap it with a script block.
 			$link = '<link type="text/css" href="' . Core::ResolveAsset($link) . '" media="' . $media . '" rel="stylesheet"/>';
 		}
 
 		// I can check to see if this script has been loaded before.
-		if(!in_array($link, self::$Stylesheets)) self::$Stylesheets[] = $link;
+		if (!in_array($link, self::$Stylesheets)) self::$Stylesheets[] = $link;
 	}
 
 	/**
@@ -582,77 +599,77 @@ class View {
 	 *
 	 * @param string $style The contents of the <style> tag.
 	 */
-	public static function AddStyle($style){
-		if(strpos($style, '<style') === false){
+	public static function AddStyle($style) {
+		if (strpos($style, '<style') === false) {
 			$style = '<style>' . $style . '</style>';
 		}
 
 		// I can check to see if this script has been loaded before.
-		if(!in_array($style, self::$Stylesheets)) self::$Stylesheets[] = $style;
+		if (!in_array($style, self::$Stylesheets)) self::$Stylesheets[] = $style;
 	}
 
-	public static function SetHTMLAttribute($attribute, $value){
+	public static function SetHTMLAttribute($attribute, $value) {
 		self::$HTMLAttributes[$attribute] = $value;
 	}
 
-	public static function GetHTMLAttributes($asarray = false){
+	public static function GetHTMLAttributes($asarray = false) {
 		$atts = self::$HTMLAttributes;
 
-		if($asarray){
+		if ($asarray) {
 			return $atts;
 		}
-		else{
+		else {
 			$str = '';
-			foreach($atts as $k => $v) $str .= " $k=\"" . str_replace('"', '\"', $v) . "\"";
+			foreach ($atts as $k => $v) $str .= " $k=\"" . str_replace('"', '\"', $v) . "\"";
 			return trim($str);
 		}
 	}
 
-	public static function GetHead(){
+	public static function GetHead() {
 		// Combine the scripts and stylesheets that are set to go in the head.
 		$data = array_merge(self::$HeadData, self::$HeadScripts, self::$Stylesheets);
 
 		// Throw in the meta information if it's present.
-		foreach(self::$MetaData as $k => $v){
+		foreach (self::$MetaData as $k => $v) {
 			$data[] = '<meta name="' . $k . '" content="' . $v . '"/>';
 		}
 
-		if(ConfigHandler::Get('/core/markup/minified')){
+		if (ConfigHandler::Get('/core/markup/minified')) {
 			$out = implode('', $data);
 		}
-		else{
+		else {
 			$out = implode("\n", $data);
 		}
 
 		return trim($out);
 	}
 
-	public static function GetFoot(){
+	public static function GetFoot() {
 		$data = self::$FootScripts;
 
-		if(ConfigHandler::Get('/core/markup/minified')){
+		if (ConfigHandler::Get('/core/markup/minified')) {
 			$out = implode('', $data);
 		}
-		else{
+		else {
 			$out = implode("\n", $data);
 		}
 
 		return trim($out);
 	}
 
-	public static function AddMetaName($key, $value){
+	public static function AddMetaName($key, $value) {
 		self::$MetaData[$key] = $value;
 	}
 
-	public static function AddMeta($string){
-		if(strpos($string, '<meta') === false) $string = '<meta ' . $string . '/>';
+	public static function AddMeta($string) {
+		if (strpos($string, '<meta') === false) $string = '<meta ' . $string . '/>';
 		self::$HeadData[] = $string;
 	}
 
 }
 
 
-class ViewException extends Exception{
+class ViewException extends Exception {
 
 }
 

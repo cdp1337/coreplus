@@ -23,15 +23,15 @@
 
 
 class Controller {
-	
+
 	/**
 	 * If this is not null, it is checked before the controller method is even called.
-	 * @var string 
+	 * @var string
 	 */
 	public static $AccessString = null;
-	
-	public function __construct(){
-		
+
+	public function __construct() {
+
 	}
 
 }

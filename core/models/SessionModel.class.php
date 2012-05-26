@@ -23,42 +23,42 @@
 
 /**
  * Model for SessionModel
- * 
+ *
  * Generated automatically from the mysql_model_gen script.
  * Please update result to your preferences and copy to the final location.
- * 
+ *
  * @author Charlie Powell <powellc@powelltechs.com>
  * @date 2011-07-24
  */
 class SessionModel extends Model {
 	public static $Schema = array(
 		'session_id' => array(
-			'type' => Model::ATT_TYPE_STRING,
+			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 255,
-			'required' => true,
-			'null' => false,
+			'required'  => true,
+			'null'      => false,
 		),
-		'user_id' => array(
-			'type' => Model::ATT_TYPE_INT,
+		'user_id'    => array(
+			'type'    => Model::ATT_TYPE_INT,
 			'default' => 0,
 		),
-		'ip_addr' => array(
-			'type' => Model::ATT_TYPE_STRING,
+		'ip_addr'    => array(
+			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 39,
 		),
-		'data' => array(
-			'type' => Model::ATT_TYPE_TEXT,
+		'data'       => array(
+			'type'    => Model::ATT_TYPE_TEXT,
 			'default' => null,
-			'null' => true,
+			'null'    => true,
 		),
-		'created' => array(
+		'created'    => array(
 			'type' => Model::ATT_TYPE_CREATED
 		),
-		'updated' => array(
+		'updated'    => array(
 			'type' => Model::ATT_TYPE_UPDATED
 		)
 	);
-	
+
 	public static $Indexes = array(
 		'primary' => array('session_id'),
 	);

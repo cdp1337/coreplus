@@ -13,14 +13,15 @@ class SQLBuilder {
 
 	protected $_limit = false;
 
-    public function __construct(){
+	public function __construct() {
 
 	}
 
-	public function query($engine = null){
-		/*if(!$engine) */$engine = DB::GetConn()->databaseType;
-		
-		switch($engine){
+	public function query($engine = null) {
+		/*if(!$engine) */
+		$engine = DB::GetConn()->databaseType;
+
+		switch ($engine) {
 			case 'cassandra':
 				return $this->_query_cassandra();
 				break;
@@ -29,18 +30,19 @@ class SQLBuilder {
 		}
 	}
 
-	public function execute(){
+	public function execute() {
 		return DB::Execute($this->query());
 	}
 
-	public function limit($limit){
+	public function limit($limit) {
 		$this->_limit = $limit;
 	}
-	public function getLimit(){
+
+	public function getLimit() {
 		return $this->_limit;
 	}
 
-	public function from($table){
+	public function from($table) {
 		$this->_tables[] = $table;
 
 		// Ensure no duplicate entries.
@@ -49,33 +51,33 @@ class SQLBuilder {
 		// Allow chaining
 		return $this;
 	}
-	
+
 	// Alias of from
-	public function table($table){
+	public function table($table) {
 		return $this->from($table);
 	}
 
-	public function where($where){
-		if($where === null || $where === false){
+	public function where($where) {
+		if ($where === null || $where === false) {
 			// Clear out the wheres.
 			$this->_wheres = array();
 			return;
 		}
-		if(is_array($where)){
+		if (is_array($where)) {
 			// Iterate over each one and see if they key is numeric or not.
 			// If numeric, assume a structure of array('something = this', 'something = that');
 			// else assume a structure of array('something' => 'this', 'something' => 'that');
 			// The latter is sanitized automatically.
-			foreach($where as $k => $v){
-				if(is_numeric($k)) $this->_wheres[] = $v;
-				else $this->_wheres[] = "`$k` = " . DB::qstr ($v);
+			foreach ($where as $k => $v) {
+				if (is_numeric($k)) $this->_wheres[] = $v;
+				else $this->_wheres[] = "`$k` = " . DB::qstr($v);
 			}
 		}
-		else{
+		else {
 			// It's not an array, but still add support for strings such as "something = ?" (where the ? is sanitized automatically)
-			if(func_num_args() > 1 && strpos($where, '?')){
-				foreach(func_get_args() as $k => $a){
-					if($k == 0) continue; // First argument already taken care of.
+			if (func_num_args() > 1 && strpos($where, '?')) {
+				foreach (func_get_args() as $k => $a) {
+					if ($k == 0) continue; // First argument already taken care of.
 					$str = DB::qstr($a);
 					// I only want to replace one ?, but don't want to use the overhead of regex's.
 					$where = substr_replace($where, $str, strpos($where, '?'), 1);
@@ -93,38 +95,39 @@ class SQLBuilder {
 }
 
 
-class SQLBuilderSelect extends SQLBuilder{
+class SQLBuilderSelect extends SQLBuilder {
 
 	protected $_selects = array();
 
 	protected $_order = array();
-	
-	protected $_joins = array();
-	
 
-	protected function _query_mysql(){
+	protected $_joins = array();
+
+
+	protected function _query_mysql() {
 		$q = "SELECT " . implode(', ', $this->_selects);
 		$q .= " FROM " . implode(', ', $this->_tables);
-		if(!empty($this->_wheres)) $q .= ' WHERE ' . implode(' AND ', $this->_wheres);
-		if(!empty($this->_joins)){
-			foreach($this->_joins as $j){
-				$q .= ' ' . $j['type'] . ' ' . $j['table'] . ' ON ' . ((is_array($j['on']))? implode(' AND ', $j['on']) : $j['on']);
+		if (!empty($this->_wheres)) $q .= ' WHERE ' . implode(' AND ', $this->_wheres);
+		if (!empty($this->_joins)) {
+			foreach ($this->_joins as $j) {
+				$q .= ' ' . $j['type'] . ' ' . $j['table'] . ' ON ' . ((is_array($j['on'])) ? implode(' AND ', $j['on']) : $j['on']);
 			}
 		}
-		if(!empty($this->_order)) $q .= ' ORDER BY ' . implode(', ', $this->_order);
-		if($this->_limit) $q .= ' LIMIT ' . $this->_limit;
+		if (!empty($this->_order)) $q .= ' ORDER BY ' . implode(', ', $this->_order);
+		if ($this->_limit) $q .= ' LIMIT ' . $this->_limit;
 		return $q;
 	}
-	
-	protected function _query_cassandra(){
-		if(sizeof($this->_tables) > 1) throw new Exception('Cassandra does not support joins.  Please either change your code or use an RDBMS.');
-		
+
+	protected function _query_cassandra() {
+		if (sizeof($this->_tables) > 1) throw new Exception('Cassandra does not support joins.  Please either change your code or use an RDBMS.');
+
 		$dat = new ColumnFamily(DB::GetConn()->getBackend());
-		var_dump($this, $this->_query_mysql()); die();
+		var_dump($this, $this->_query_mysql());
+		die();
 	}
 
-	public function select($select){
-		if(is_array($select)) $this->_selects = array_merge($this->_selects, $select);
+	public function select($select) {
+		if (is_array($select)) $this->_selects = array_merge($this->_selects, $select);
 		else $this->_selects[] = $select;
 
 		// Ensure no duplicate entries.
@@ -133,19 +136,19 @@ class SQLBuilderSelect extends SQLBuilder{
 		// Allow chaining
 		return $this;
 	}
-	
-	public function order($order){
-		if(strpos($order, ',') !== false) $order = explode(',', $order);
-		if(!is_array($order)) $order = array($order);
-		
+
+	public function order($order) {
+		if (strpos($order, ',') !== false) $order = explode(',', $order);
+		if (!is_array($order)) $order = array($order);
+
 		$this->_order = array_merge($this->_order, $order);
 	}
-	
-	public function join($direction, $table, $on){
-		$j = array();
-		$j['type'] = strtoupper($direction) . ' JOIN';
+
+	public function join($direction, $table, $on) {
+		$j          = array();
+		$j['type']  = strtoupper($direction) . ' JOIN';
 		$j['table'] = $table;
-		if(is_array($on)){
+		if (is_array($on)) {
 			// @todo Finish this if needed.
 			/*
 			$j['on'] = array();
@@ -164,39 +167,39 @@ class SQLBuilderSelect extends SQLBuilder{
 			}
 			*/
 		}
-		else{
+		else {
 			$j['on'] = $on;
 		}
-		
+
 		$this->_joins[] = $j;
 	}
-	
-	public function leftJoin($table, $on){
+
+	public function leftJoin($table, $on) {
 		$this->join('left', $table, $on);
 	}
 
 }
 
-class SQLBuilderUpdate extends SQLBuilder{
+class SQLBuilderUpdate extends SQLBuilder {
 	protected $_sets = array();
 
-	public function query(){
+	public function query() {
 		$q = "UPDATE " . implode(', ', $this->_tables);
 		$q .= " SET " . implode(', ', $this->_sets);
-		if(!empty($this->_wheres)) $q .= ' WHERE ' . implode(' AND ', $this->_wheres);
-		if($this->_limit) $q .= ' LIMIT ' . $this->_limit;
+		if (!empty($this->_wheres)) $q .= ' WHERE ' . implode(' AND ', $this->_wheres);
+		if ($this->_limit) $q .= ' LIMIT ' . $this->_limit;
 		return $q;
 	}
 
-	public function set($column, $value){
+	public function set($column, $value) {
 		$this->_sets[] = "`$column` = " . DB::qstr($value);
 	}
 }
 
-class SQLBuilderInsert extends SQLBuilder{
+class SQLBuilderInsert extends SQLBuilder {
 	protected $_sets = array();
 
-	public function query(){
+	public function query() {
 		$q = "INSERT INTO " . implode(', ', $this->_tables);
 		$q .= " ( " . implode(', ', array_keys($this->_sets)) . " )";
 		$q .= " VALUES ";
@@ -204,38 +207,38 @@ class SQLBuilderInsert extends SQLBuilder{
 		return $q;
 	}
 
-	public function set($column, $value){
+	public function set($column, $value) {
 		$this->_sets["`$column`"] = DB::qstr($value);
 	}
 }
 
-class SQLBuilderInsertUpdate extends SQLBuilder{
+class SQLBuilderInsertUpdate extends SQLBuilder {
 	protected $_sets = array();
 	protected $_updates = array();
 
-	public function query(){
+	public function query() {
 		$q = "INSERT INTO " . implode(', ', $this->_tables);
 		$q .= " ( " . implode(', ', array_keys($this->_sets)) . " )";
 		$q .= " VALUES ";
 		$q .= " ( " . implode(', ', array_values($this->_sets)) . " )";
-		
+
 		// And the 'ON DUPLICATE' part
 		$q .= " ON DUPLICATE KEY UPDATE " . implode(', ', $this->_updates);
 		return $q;
 	}
 
-	public function set($column, $value, $onupdate = false){
+	public function set($column, $value, $onupdate = false) {
 		$this->_sets["`$column`"] = DB::qstr($value);
-		if($onupdate) $this->_updates[] = "`$column` = " . DB::qstr($value);
+		if ($onupdate) $this->_updates[] = "`$column` = " . DB::qstr($value);
 	}
 }
 
-class SQLBuilderDelete extends SQLBuilder{
-	public function query(){
+class SQLBuilderDelete extends SQLBuilder {
+	public function query() {
 		$q = "DELETE FROM " . implode(', ', $this->_tables);
-		if(!empty($this->_wheres)) $q .= ' WHERE ' . implode(' AND ', $this->_wheres);
-		if($this->_limit) $q .= ' LIMIT ' . $this->_limit;
-		
+		if (!empty($this->_wheres)) $q .= ' WHERE ' . implode(' AND ', $this->_wheres);
+		if ($this->_limit) $q .= ' LIMIT ' . $this->_limit;
+
 		return $q;
 	}
 }

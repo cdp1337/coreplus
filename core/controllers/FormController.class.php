@@ -6,10 +6,10 @@
  *
  * @author powellc
  */
-class FormController extends Controller{
-	public static function BrowseFile(View $page){
+class FormController extends Controller {
+	public static function BrowseFile(View $page) {
 		$page->mode = View::MODE_AJAX;
-		
+
 		//$base 
 	}
 }

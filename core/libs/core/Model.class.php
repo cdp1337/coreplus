@@ -869,7 +869,9 @@ class Model implements ArrayAccess {
 	 * Get a count of records that match a given where criteria
 	 *
 	 * @static
+	 *
 	 * @param array $where
+	 *
 	 * @return int
 	 */
 	public static function Count($where = array()) {
@@ -977,7 +979,7 @@ class ModelFactory {
 		call_user_func_array(array($this->_dataset, 'where'), func_get_args());
 	}
 
-	public function whereGroup(){
+	public function whereGroup() {
 		call_user_func_array(array($this->_dataset, 'whereGroup'), func_get_args());
 	}
 
