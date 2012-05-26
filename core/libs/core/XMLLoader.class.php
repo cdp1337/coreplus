@@ -1,9 +1,15 @@
 <?php
 /**
- * [PAGE DESCRIPTION HERE]
+ * The XMLLoader object, capable of easily loading and saving XML data documents.
+ *
+ * This class is slightly more complex than the SimpleXML system in PHP5, but simplier than direct DOM manipulation.
+ *
+ * @todo Make use of some form of caching.
+ *       Ideally each file set can have a cache TTL, and the contents of the XML
+ *       file or the DOM itself is contained in memory for that set amount of time.
  *
  * @package Core Plus\Core
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
@@ -20,17 +26,6 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-/**
- * The XMLLoader object, capable of easily loading and saving XML data documents.
- *
- * This class is slightly more complex than the SimpleXML system in PHP5, but simplier than direct DOM manipulation.
- *
- * @todo Make use of some form of caching.
- *       Ideally each file set can have a cache TTL, and the contents of the XML
- *       file or the DOM itself is contained in memory for that set amount of time.
- *
- * @author powellc
- */
 class XMLLoader {
 	/**
 	 * The name of the root node.

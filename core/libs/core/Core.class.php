@@ -3,7 +3,7 @@
  * Core class of this entire system.
  *
  * @package Core Plus\Core
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
@@ -1072,7 +1072,7 @@ class Core implements ISingleton {
 	 * @return string
 	 *
 	 * @version 2008.06.05
-	 * @author Charlie Powell <powellc@powelltechs.com>
+	 * @author Charlie Powell <charlie@eval.bz>
 	 */
 	static public function ImplodeKey($glue, &$array) {
 		$arrayKeys = array();

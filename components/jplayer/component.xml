@@ -22,7 +22,7 @@
 	<changelog version="2.0.0">
 		<packagemeta>
 			<date>Sat, 18 Jun 2011 01:54:45 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
 	</changelog>
@@ -30,7 +30,7 @@
 	<changelog version="2.0.0~cae2">
 		<packagemeta>
 			<date>Sat, 18 Jun 2011 02:09:25 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
 	</changelog>
@@ -38,7 +38,7 @@
 	<changelog version="2.0.0~cae3">
 		<packagemeta>
 			<date>Mon, 17 Oct 2011 23:48:54 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 			<packager>CAE2 0.0.7</packager>
 		</packagemeta>
 		<notes>Set to require jquery 1.4</notes>

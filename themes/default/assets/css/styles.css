@@ -1,11 +1,3 @@
-/* 
-    Document   : styles
-    Created on : Jan 30, 2011, 4:15:39 AM
-    Author     : powellc
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
 
 /*** Give me some fonts ***/
 @font-face { font-family: 'Cousine'; font-style: normal; font-weight: normal; src: local('Cousine'), url('../fonts/Cousine-Regular.ttf') format('truetype'); }

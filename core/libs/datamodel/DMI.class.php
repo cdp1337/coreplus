@@ -2,16 +2,23 @@
 /**
  * Provides the main interface system for the DMI subsystem.
  * 
- * @package Core
- * @subpackage Datamodel
- * @since 2011.06
- * @author Charlie Powell <powellc@powelltechs.com>
- * @copyright Copyright 2011, Charlie Powell
- * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
- * This system is licensed under the GNU LGPL, feel free to incorporate it into
- * custom applications, but keep all references of the original authors intact,
- * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>, 
- * and please contribute back to the community :)
+ * @package Core Plus\Datamodel
+ * @since 0.1
+ * @author Charlie Powell <charlie@eval.bz>
+ * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
 
@@ -26,7 +33,6 @@ require_once(__DMI_PDIR . 'Dataset.class.php');
  * A top level interface class for the datamodel system.  Provides abstraction 
  * for different backends
  *
- * @author powellc
  */
 class DMI {
 	

@@ -1,15 +1,14 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of SimpleCaptchaController
+ * DESCRIPTION
  *
- * @author powellc
+ * @package CoolPHPCaptcha
+ * @since 0.1
+ * @author Charlie Powell <charlie@eval.bz>
+ * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @license GPLv3
  */
+
 class SimpleCaptchaController extends Controller{
 	public static function Index(View $page){
 		// This will tell the system not to actually output anything.

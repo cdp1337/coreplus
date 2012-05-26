@@ -1,14 +1,14 @@
 <changelog version="0.0.1-dev1">
 	<packagemeta>
 		<date>Sun, 22 May 2011 02:00:52 -0400</date>
-		<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 		<packager>CAE2 0.0.1-dev1</packager>
 	</packagemeta>
 </changelog>
 <changelog version="0.0.2">
 	<packagemeta>
 		<date>Tue, 21 Jun 2011 23:02:02 -0400</date>
-		<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 		<packager>CAE2 0.0.2</packager>
 	</packagemeta>
 	<notes>
@@ -19,7 +19,7 @@
 <changelog version="0.0.2-1">
 	<packagemeta>
 		<date>Sun, 24 Jul 2011 21:11:35 -0400</date>
-		<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 		<packager>CAE2 0.0.2-1</packager>
 	</packagemeta>
 	<notes>
@@ -31,7 +31,7 @@
 <changelog version="0.0.2-2">
 	<packagemeta>
 		<date>Mon, 15 Aug 2011 17:24:19 -0400</date>
-		<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 		<packager>CAE2 0.0.2-2</packager>
 	</packagemeta>
 	<notes>
@@ -42,7 +42,7 @@
 <changelog version="0.0.3">
 	<packagemeta>
 		<date>Tue, 16 Aug 2011 23:31:44 -0400</date>
-		<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 		<packager>CAE2 0.0.3</packager>
 	</packagemeta>
 	<notes>
@@ -57,7 +57,7 @@
 	</notes>
 	<packagemeta>
 		<date>Tue, 16 Aug 2011 23:47:36 -0400</date>
-		<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 		<packager>CAE2 0.0.4</packager>
 	</packagemeta>
 </changelog>
@@ -66,7 +66,7 @@
 <changelog version="0.0.5">
 	<packagemeta>
 		<date>Sun, 18 Sep 2011 22:19:37 -0400</date>
-		<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 		<packager>CAE2 0.0.5</packager>
 	</packagemeta>
 	<notes>
@@ -77,7 +77,7 @@
 <changelog version="0.0.6">
 	<packagemeta>
 		<date>Tue, 11 Oct 2011 19:47:58 -0400</date>
-		<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 		<packager>CAE2 0.0.6</packager>
 	</packagemeta>
 	<notes>
@@ -90,7 +90,7 @@
 <changelog version="0.0.7">
 	<packagemeta>
 		<date>Wed, 02 Nov 2011 01:21:43 -0400</date>
-		<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 		<packager>CAE2 0.0.7</packager>
 	</packagemeta>
 	<notes>
@@ -101,7 +101,7 @@
 <changelog version="0.0.8">
 	<packagemeta>
 		<date>Fri, 04 Nov 2011 05:51:11 +0000</date>
-		<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 		<packager>CAE2 0.0.8</packager>
 	</packagemeta>
 </changelog>
@@ -113,7 +113,7 @@
 	</notes>
 	<packagemeta>
 		<date>Sat, 19 Nov 2011 03:12:23 +0000</date>
-		<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 		<packager>CAE2 0.0.9</packager>
 	</packagemeta>
 </changelog>

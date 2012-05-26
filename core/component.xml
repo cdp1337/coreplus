@@ -1310,7 +1310,7 @@
 		<upgrade from="0.1.0" to="1.9.0"/>
 	</upgrades>
 	<authors>
-		<author name="Charlie Powell" email="powellc@powelltechs.com"/>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
 		<author name="Uwe Tews"/>
 		<author name="Rodney Rehm"/>
 		<author name="Thue Kristensen"/>

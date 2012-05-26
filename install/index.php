@@ -3,7 +3,7 @@
 /**
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * Copyright (C) 2010  Charlie Powell <powellc@powelltechs.com>
+ * Copyright (C) 2010  Charlie Powell <charlie@eval.bz>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,7 +18,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  *
  * @package [packagename]
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @date [date]
  */
 

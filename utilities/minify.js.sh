@@ -4,7 +4,7 @@
 # and prepend the file header and file version.
 # This is basic information to help the developer keep the file insync.
 # 
-# @author Charlie Powell <powellc@powelltechs.com>
+# @author Charlie Powell <charlie@eval.bz>
 
 YUICOMPRESSOR="$(dirname $0)/yuicompressor-2.4.7.jar"
 

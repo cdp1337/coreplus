@@ -3,7 +3,7 @@
  * Defines the schema for the UpdateSite table
  *
  * @package Core Plus\Core
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
@@ -20,11 +20,6 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-/**
- * Description of UpdateSiteModel
- *
- * @author powellc
- */
 class UpdateSiteModel extends Model {
 
 	public static $Schema = array(

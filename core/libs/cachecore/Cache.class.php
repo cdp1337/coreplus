@@ -2,7 +2,7 @@
 /**
  * Main loading file for the Caching system.
  * 
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @package Core
  * @subpackage Cachecore
  * @since 20110610

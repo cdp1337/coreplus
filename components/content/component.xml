@@ -25,7 +25,7 @@
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
 			<date>Thu, 17 Feb 2011 01:57:58 -0500</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
 		<notes/>

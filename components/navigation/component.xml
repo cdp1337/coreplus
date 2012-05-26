@@ -8,7 +8,7 @@
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
 			<date>Sat, 26 Mar 2011 01:17:38 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 			<packager>CAE2 0.0.1-dev1</packager>
 		</packagemeta>
 	</changelog>

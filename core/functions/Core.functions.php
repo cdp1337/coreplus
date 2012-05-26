@@ -3,7 +3,7 @@
  * Collection of useful utilities that don't quite fit into any class.
  *
  * @package Core Plus\Core
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
@@ -442,7 +442,7 @@ function SortByKey($named_recs, $order_by, $rev=false, $flags=0){
  * @return string
  *
  * @version 2008.06.05
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  */
 function ImplodeKey($glue, &$array){
 	$arrayKeys = array();

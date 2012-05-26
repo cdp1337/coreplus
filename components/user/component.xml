@@ -72,7 +72,7 @@
 	<changelog version="0.0.1-dev1">
 		<packagemeta>
 			<date>Sun, 07 Aug 2011 17:42:39 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 			<packager>CAE2 0.0.2-2</packager>
 		</packagemeta>
 	</changelog>
@@ -95,7 +95,7 @@
 	<changelog version="0.0.2">
 		<packagemeta>
 			<date>Mon, 19 Sep 2011 01:28:48 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 			<packager>CAE2 0.0.5</packager>
 		</packagemeta>
 		<notes>
@@ -107,7 +107,7 @@
 	<changelog version="0.0.3">
 		<packagemeta>
 			<date>Wed, 28 Sep 2011 02:27:06 -0400</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 			<packager>CAE2 0.0.6</packager>
 		</packagemeta>
 		<notes>
@@ -119,7 +119,7 @@
 		The user component provides core user functionality, including registration, login, forgot password and access controls.
 	</description>
 	<author name="powellc"/>
-	<author name="Charlie Powell" email="powellc@powelltechs.com"/>
+	<author name="Charlie Powell" email="charlie@eval.bz"/>
 	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
 		GNU Affero General Public License v3
 	</license>

@@ -3,7 +3,7 @@
  * [PAGE DESCRIPTION HERE]
  *
  * @package Core Plus\Core
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @since 1.9
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>

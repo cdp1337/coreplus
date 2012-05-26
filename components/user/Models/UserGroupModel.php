@@ -2,7 +2,7 @@
 /**
  * Model for UserGroupModel
  * 
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  */
 class UserGroupModel extends Model {
 	

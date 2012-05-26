@@ -7,7 +7,7 @@
  *
  * @package Core
  * @since 2011.07
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright 2011, Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
  * This system is licensed under the GNU LGPL, feel free to incorporate it into

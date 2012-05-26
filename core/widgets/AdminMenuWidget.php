@@ -5,7 +5,7 @@
  * Displays every "admin" level page in the system, (if the user has access)
  *
  * @package Core Plus\Core
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
@@ -24,11 +24,6 @@
 
 // @todo 2012.05.11 cpowell - Revisit this page for the 2.1 api
 
-/**
- * Description of AdminMenuWidget
- *
- * @author powellc
- */
 class AdminMenuWidget extends Widget {
 	public function execute(){
 		$v = $this->_getView();

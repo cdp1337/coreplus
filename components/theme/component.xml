@@ -47,12 +47,12 @@
 	<changelog version="0.0.1">
 		<packagemeta>
 			<date>Fri, 04 Nov 2011 05:49:23 +0000</date>
-			<maintainer name="Charlie Powell" email="powellc@powelltechs.com"/>
+			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
 			<packager>CAE2 0.0.8</packager>
 		</packagemeta>
 	</changelog>
 	<author name="powellc"/>
-	<author name="Charlie Powell" email="powellc@powelltechs.com"/>
+	<author name="Charlie Powell" email="charlie@eval.bz"/>
 	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
 		GNU Affero General Public License v3
 	</license>

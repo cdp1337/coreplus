@@ -5,7 +5,7 @@
  * Generated automatically from the mysql_model_gen script.
  * Please update result to your preferences and copy to the final location.
  * 
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @date 2011-06-09 01:14:48
  */
 class UserModel extends Model {

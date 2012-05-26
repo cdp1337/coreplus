@@ -1,9 +1,15 @@
 <?php
 /**
- * [PAGE DESCRIPTION HERE]
+ * Core / ConfigHandler class
+ *
+ * Core configuration handling class;
+ *  handles getting and setting config values from the database and XML config files.
+ *
+ * The class that handles all configuration getting and setting.
+ * Can handle calls to XML config files and DB configuration `configs` table.
  *
  * @package Core Plus\Core
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
@@ -20,23 +26,6 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-/**
- * Core / ConfigHandler class
- *
- * Core configuration handling class;
- *  handles getting and setting config values from the database and XML config files.
- *
- * @author powellc <powellc@powelltechs.com>
- * @package CAE Core
- * @version 1.0.0-dev
- */
-
-/**
- * The class that handles all configuration getting and setting.
- * Can handle calls to XML config files and DB configuration `configs` table.
- *
- * @package CAE Core
- */
 class ConfigHandler implements ISingleton {
 
 	private static $instance = null;

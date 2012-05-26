@@ -2,7 +2,7 @@
 /**
  * Smarty {script} block
  * 
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @since 2011.05
  */
 

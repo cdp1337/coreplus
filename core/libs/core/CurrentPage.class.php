@@ -1,9 +1,9 @@
 <?php
 /**
- * [PAGE DESCRIPTION HERE]
+ * Singleton class for the currently viewing page.
  *
  * @package Core Plus\Core
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
@@ -20,13 +20,6 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-
-/**
- * Singleton class for the currently viewing page.
- *
- * @author powellc
- *
- */
 class CurrentPage {
 	private static $_instance = null;
 

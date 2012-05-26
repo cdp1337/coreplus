@@ -7,10 +7,9 @@
  * ## EXPERIMENTAL! ##
  * This is an experimental system that is not finished, use of it is highly discouraged.
  * 
- * @package Core
- * @subpackage Datamodel
- * @since 2011.07
- * @author Charlie Powell <powellc@powelltechs.com>
+ * @package Core Plus\Datamodel
+ * @since 0.1
+ * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright 2011, Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
  * This program is free software: you can redistribute it and/or modify
@@ -27,11 +26,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Description of mysql
- *
- * @author powellc
- */
 class DMI_cache_backend implements DMI_Backend {
 	
 	/**
