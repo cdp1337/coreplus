@@ -278,6 +278,20 @@ define('SSL', $ssl);
 define('TMP_DIR', $tmpdir);
 
 /**
+ * Temporary directory for web only
+ * (useful in the packager)
+ * @var string
+ */
+define('TMP_DIR_WEB', $core_settings['tmp_dir_web']);
+
+/**
+ * Temporary directory for cli only
+ * (useful in the packager)
+ * @var string
+ */
+define('TMP_DIR_CLI', $core_settings['tmp_dir_cli']);
+
+/**
  * Host is a more human-friendly version of SERVERNAME.
  * It does not include port number or protocol, but just the hostname itself.
  * @var string

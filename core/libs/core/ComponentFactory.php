@@ -62,11 +62,14 @@ abstract class ComponentFactory{
 	}
 	
 	/**
-	 * Create a Component of the appropriate version based on the XML file.
+	 * Load a Component of the appropriate version based on the XML file.
 	 * 
 	 * Will return either a Component if API 0.1, or a Component_2_1 if API 2.1
+	 *
+	 * @param string $filename
+	 * @return Component_2_1 || Component
 	 */
-	public static function Create($filename){
+	public static function Load($filename){
 		//$filename = ROOT_PDIR . 'components/' . $file . '/component.xml';
 		
 		// Check this version of the file.
@@ -87,5 +90,21 @@ abstract class ComponentFactory{
 			$name = substr($name, strrpos($name, '/') + 1);
 			return new Component($name);
 		}
+	}
+
+	/**
+	 * Resolve a component's name to its XML file, NOT fully resolved.
+	 *
+	 * @static
+	 * @param string $name
+	 * @return string
+	 */
+	public static function ResolveNameToFile($name){
+		// Makes lookups easier.
+		$name = strtolower($name);
+
+		if($name == 'core') return 'core/component.xml';
+		elseif(file_exists(ROOT_PDIR . 'components/' . $name . '/component.xml')) return 'components/' . $name . '/component.xml';
+		else return false;
 	}
 }

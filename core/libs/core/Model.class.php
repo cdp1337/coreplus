@@ -596,7 +596,7 @@ class Model implements ArrayAccess {
 			$this->validate($k, $v, true);
 
 			// Set the propagation FIRST, that way I have the old key in memory to lookup.
-			$this->_setLinkKeyPropagation($k, $v);
+			//$this->_setLinkKeyPropagation($k, $v);
 
 			$this->_data[$k] = $v;
 			$this->_dirty    = true;
@@ -975,6 +975,10 @@ class ModelFactory {
 
 	public function where() {
 		call_user_func_array(array($this->_dataset, 'where'), func_get_args());
+	}
+
+	public function whereGroup(){
+		call_user_func_array(array($this->_dataset, 'whereGroup'), func_get_args());
 	}
 
 	public function order() {

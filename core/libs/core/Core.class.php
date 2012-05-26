@@ -271,7 +271,7 @@ class Core implements ISingleton{
 		$this->_libraries = array();
 		
 		// Core is first, (obviously)
-		$this->_components['core'] = ComponentFactory::Create(ROOT_PDIR . 'core/component.xml');
+		$this->_components['core'] = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
 		
 		// First, build my cache of components, regardless if the component is installed or not.
 		$dh = opendir(ROOT_PDIR . 'components');
@@ -289,7 +289,7 @@ class Core implements ISingleton{
 			// Skip directories that do not have a readable component.xml file.
 			if(!is_readable(ROOT_PDIR . 'components/' . $file . '/component.xml')) continue;
 			
-			$c = ComponentFactory::Create(ROOT_PDIR . 'components/' . $file . '/component.xml');
+			$c = ComponentFactory::Load(ROOT_PDIR . 'components/' . $file . '/component.xml');
 			
 			// All further operations are case insensitive.
 			// The original call to Component needs to be case sensitive because it sets the filename to pull.

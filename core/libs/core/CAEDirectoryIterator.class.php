@@ -1,6 +1,7 @@
 <?php
 /**
- * [PAGE DESCRIPTION HERE]
+ * Class that closely mimics PHP's DirectoryIterator object, only with CAE specifics,
+ * ie: a File object is returned for each file instead of just the filename.
  *
  * @package Core Plus\Core
  * @since 0.1
@@ -19,13 +20,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
- */
-
-// @todo 2012.05.11 cpowell - Revisit this page for the 2.1 api
-
-/**
- * Class that closely mimics PHP's DirectoryIterator object, only with CAE specifics,
- * ie: a File object is returned for each file instead of just the filename.
  */
 class CAEDirectoryIterator implements Iterator{
 	

@@ -3,16 +3,24 @@
 /**
  * The purpose of this file is to archive up the core, components, and bundles.
  * and to set all the appropriate information.
- * 
- * @package Core
- * @since 2011.06
+ *
+ * @package Core Plus\CLI Utilities
+ * @since 1.9
  * @author Charlie Powell <powellc@powelltechs.com>
- * @copyright Copyright 2011, Charlie Powell
- * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
- * This system is licensed under the GNU LGPL, feel free to incorporate it into
- * custom applications, but keep all references of the original authors intact,
- * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>, 
- * and please contribute back to the community :)
+ * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
 
@@ -20,9 +28,48 @@ if(!isset($_SERVER['SHELL'])){
 	die("Please run this script from the command line.");
 }
 
+// This is required to establish the root path of the system, (since it's always one directory up from "here"
+$dir = realpath(dirname($_SERVER['PWD'] . '/' . $_SERVER['SCRIPT_FILENAME']) . '/..') . '/';
 
 // Inlude the core bootstrap, this will get the system functional.
-require_once('../core/bootstrap.php');
+require_once($dir . 'core/bootstrap.php');
+
+
+/**
+ * Just a simple usage tutorial.
+ */
+function print_help(){
+	echo "This utility will compile the component.xml metafile for any component," . NL;
+	echo "and optionally allow you to create a deployable package of the component.";
+	echo NL . NL;
+	echo "Usage: simply run it without any arguments and follow the prompts." . NL;
+}
+
+
+// Allow for inline arguments.
+if($argc > 1){
+	$arguments = $argv;
+	// Drop the first, that is the filename.
+	array_shift($arguments);
+
+	// I'm using a for here instead of a foreach so I can increment $i artifically if an argument is two part,
+	// ie: --option value_for_option --option2 value_for_option2
+	for($i = 0; $i < sizeof($arguments); $i++){
+		switch($arguments[$i]){
+			case '-h':
+			case '--help':
+			case '-?':
+				print_help();
+				exit;
+				break;
+			default:
+				echo "ERROR: unknown argument [" . $arguments[$i] . "]" . NL;
+				print_help();
+				exit;
+		}
+	}
+}
+
 
 
 // I need a valid editor.
@@ -581,75 +628,221 @@ function get_unique_licenses($licenses){
 
 function process_component($component, $forcerelease = false){
 	global $packagername, $packageremail;
-	
+
 	// Get that component, should be available via the component handler.
-	$c = ComponentHandler::GetComponent($component);
-	
-	$ans = false;
-	
-	
-	$version = $c->getVersion();
-	
-	
-	// Set the packager information on this release.
-	$c->setPackageMaintainer($packagername, $packageremail);
-	
-	// Grep through the files and pull out the documentation... this will populate the licenses and authors.
-	$licenses = $c->getLicenses();
-	$authors = $c->getAuthors();
-	//$it = new DirectoryCAEIterator($c->getBaseDir());
-	$it = $c->getDirectoryIterator();
+	$cfile = ComponentFactory::ResolveNameToFile($component);
+	if(!$cfile){
+		throw new Exception('Unable to locate component.xml file for component ' . $component);
+	}
+
+	// Get the XMLLoader object for this file.  This will allow me to have more fine-tune control over the file.
+	$xml = new XMLLoader();
+	$xml->setRootName('component');
+	if(!$xml->loadFromFile(ROOT_PDIR . $cfile)){
+		throw new Exception('Unable to load XML file ' . $cfile);
+	}
+
+	// Get the current version, this will be used to autocomplete for the next version.
+	$version = $xml->getRootDOM()->getAttribute("version");
+
+	// Not a 2.1 component version?... well it needs to be!
+	if($xml->getDOM()->doctype->systemId != 'http://corepl.us/api/2_1/component.dtd'){
+		throw new Exception('Unable to package 0.1 based components, please manually upgrade the schema to the newest version.');
+	}
+
+	// Now I can load the component itself, now that I know that the metafile is a 2.1 compatible version.
+	$comp = new Component_2_1($cfile);
+	$comp->load();
+
+	// @TODO Add support for a changelog.
+
+	// Get the licenses currently set.  (maybe there's one that's not in the code)
+	$licenses = array();
+	if(CLI::PromptUser('Retrieve current list of licenses and merge in from code?', 'boolean', true)){
+		foreach($xml->getRootDOM()->getElementsByTagName('license') as $el){
+			$url = @$el->getAttribute('url');
+			$licenses[] = array(
+				'title' => $el->nodeValue,
+				'url' => $url
+			);
+		}
+	}
+
+
+	// Get the authors currently set. (maybe there's one that's not in the code)
+	$authors = array();
+	if(CLI::PromptUser('Retrieve current list of authors and merge in from code?', 'boolean', true)){
+		foreach($xml->getRootDOM()->getElementsByTagName('author') as $el){
+			$ret[] = array(
+				'name' => $el->getAttribute('name'),
+				'email' => @$el->getAttribute('email'),
+			);
+		}
+	}
+
+	$it = new CAEDirectoryIterator();
+	// Ignore the component metaxml, this will get added automatically via the installer.
+	$it->addIgnore($cfile);
+
+	// The core has a "few" extra ignores to it...
+	if($component == 'core'){
+		$it->addIgnores('components/', 'config/configuration.xml', 'dropins/', 'exports/', 'nbproject/', 'themes/', 'update_site/', 'utilities/', '.htaccess');
+		if(ConfigHandler::Get('/core/filestore/assetdir')) $it->addIgnore(ConfigHandler::Get('/core/filestore/assetdir'));
+		if(ConfigHandler::Get('/core/filestore/publicdir')) $it->addIgnore(ConfigHandler::Get('/core/filestore/publicdir'));
+		if(strpos(TMP_DIR_WEB, ROOT_PDIR) === 0) $it->addIgnore(TMP_DIR_WEB);
+	}
+
+	// @todo Should I support ignored files in the component.xml file?
+	// advantage, developers can have tools in their directories that are not meant to be packaged.
+	// disadvantage, currently no component other than core requires this.....
+	/*$list = $this->getElements('/ignorefiles/file');
+	foreach($list as $el){
+		$it->addIgnores($this->getBaseDir() . $el->getAttribute('filename'));
+	}*/
+
+	if($component == 'core'){
+		$it->setPath(ROOT_PDIR);
+	}
+	else{
+		$it->setPath(dirname($cfile));
+	}
+
+	echo "Loading root path...";
+	$it->scan();
+	echo "OK" . NL;
+
+	$viewdir    = $comp->getViewSearchDir();
+	$assetdir   = $comp->getAssetDir();
+	$basestrlen = strlen($comp->getBaseDir());
+	$assetfiles = array();
+	$viewfiles  = array();
+	$otherfiles = array();
+
+
+	echo "Scanning files for documentation and metacode...";
 	foreach($it as $file){
+		// This will get an array of all licenses and authors in the file's phpdoc.
 		$docelements = parse_for_documentation($file->getFilename());
 		$licenses = array_merge($licenses, $docelements['licenses']);
-		// @todo Should I skip the authors?
 		$authors = array_merge($authors, $docelements['authors']);
+
+		// And then, scan this file for code, ie: classes, controllers, etc.
+		$fname = substr($file->getFilename(), $basestrlen);
+
+		if($viewdir && $file->inDirectory($viewdir)){
+			// It's a template! (view)
+			$viewfiles[] = array('file' => $fname, 'md5' => $file->getHash());
+		}
+		elseif($assetdir && $file->inDirectory($assetdir)){
+			// It's an asset!
+			$assetfiles[] = array('file' => $fname, 'md5' => $file->getHash());
+		}
+		else{
+			// It's a something..... it goes in the "files" array!
+			// This will be slightly different though, as it needs to also check for classes.
+			$filedat = array(
+				'file' => $fname,
+				'md5' => $file->getHash(),
+				'controllers' => array(),
+				'classes' => array(),
+				'interfaces' => array()
+			);
+
+			// PHP files get checked.
+			if(preg_match('/\.php$/i', $fname)){
+				$fconts = file_get_contents($file->getFilename());
+
+				// Trim out the comments to prevent false readings.
+
+				// Will remove /* ... */ multi-line comments.
+				$fconts = preg_replace(':/\*.*\*/:Us', '', $fconts);
+				// Will remove // single-line comments.
+				$fconts = preg_replace('://.*$:', '', $fconts);
+
+
+				// Well... get the classes!
+				preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller_2_1/im', $fconts, $ret);
+				foreach($ret[2] as $foundclass){
+					$filedat['controllers'][] = $foundclass;
+				}
+
+				// Add any class found in this file. (skipping the ones I already found)
+				preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
+				foreach($ret[2] as $foundclass){
+					if(in_array($foundclass, $filedat['controllers'])) continue;
+					$filedat['classes'][] = $foundclass;
+				}
+
+				// Allow interfaces to be associated as a provided element too.
+				preg_match_all('/^(interface)[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
+				foreach($ret[2] as $foundclass){
+					$filedat['interfaces'][] = $foundclass;
+				}
+			}
+
+
+			// Empty classes?
+			if(!sizeof($filedat['controllers'])) unset($filedat['controllers']);
+			if(!sizeof($filedat['classes'])) unset($filedat['classes']);
+			if(!sizeof($filedat['interfaces'])) unset($filedat['interfaces']);
+
+			$otherfiles[] = $filedat;
+		}
+		echo ".";
 	}
-	
-	$c->setAuthors(get_unique_authors($authors));
+	echo "OK" . NL;
+
+	// Remove dupes
+	$authors = get_unique_authors($authors);
+	$licenses = get_unique_licenses($licenses);
+
+	$comp->setAuthors($authors);
+	$comp->setLicenses($licenses);
+	$comp->setFiles($otherfiles);
+	$comp->setViewFiles($viewfiles);
+	$comp->setAssetFiles($assetfiles);
 
 
-	$c->setLicenses(get_unique_licenses($licenses));
-	
+	$ans = false;
 	while($ans != 'save'){
 		$opts = array(
 			'editvers' => 'Edit Version Number',
 			'editdesc' => 'Edit Description',
-			'editchange' => 'Edit Changelog',
+			//'editchange' => 'Edit Changelog',
 			//'dbtables' => 'Manage DB Tables',
-			//'printdebug' => 'DEBUG - Print the XML',
+			'printdebug' => 'DEBUG - Print the XML',
 			'save' => 'Finish Editing, Save it!',
 			'exit' => 'Abort and exit without saving changes',
 		);
-		$ans = CLI::PromptUser('What do you want to edit for component ' . $c->getName() . ' ' . $version, $opts);
-		
+		$ans = CLI::PromptUser('What do you want to edit for component ' . $component . ' ' . $version, $opts);
+
 		switch($ans){
 			case 'editvers':
 				// Try to determine if it's an official package based on the author email.
 				$original = false;
-				foreach($c->getAuthors() as $aut){
-					if($aut['email'] == $packageremail) $original = true;
+				foreach($authors as $aut){
+					if(isset($aut['email']) && $aut['email'] == $packageremail) $original = true;
 				}
 
 				// Try to explode the version by a ~ sign, this signifies not the original packager/source.
-				// ie: ForeignComponent 3.2.4 may be versioned 3.2.4~thisproject5
+				// ie: ForeignComponent 3.2.4 may be versioned 3.2.4.thisproject5
 				// if it's the 5th revision of the upstream version 3.2.4 for 'thisproject'.
-				$version = _increment_version($c->getVersion(), $original);
+				$version = _increment_version($version, $original);
 
 				$version = CLI::PromptUser('Please set the new version or', 'text', $version);
-				$c->setVersion($version);
+				$comp->setVersion($version);
 				break;
 			case 'editdesc':
-				$c->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $c->getDescription()));
+				$comp->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $comp->getDescription()));
 				break;
-			case 'editchange':
-				$c->setChangelog(CLI::PromptUser('Enter the changelog.', 'textarea', $c->getChangelog()));
-				break;
-			case 'dbtables':
-				$c->setDBSchemaTableNames(explode("\n", CLI::PromptUser('Enter the tables that are included in this component', 'textarea', implode("\n", $c->getDBSchemaTableNames()))));
-				break;
+			//case 'editchange':
+			//	$comp->setChangelog(CLI::PromptUser('Enter the changelog.', 'textarea', $comp->getChangelog()));
+			//	break;
+			//case 'dbtables':
+			//	$comp->setDBSchemaTableNames(explode("\n", CLI::PromptUser('Enter the tables that are included in this component', 'textarea', implode("\n", $comp->getDBSchemaTableNames()))));
+			//	break;
 			case 'printdebug':
-				echo $c->getRawXML() . NL;
+				echo $comp->getRawXML() . NL;
 				break;
 			case 'exit':
 				echo "Aborting build" . NL;
@@ -659,7 +852,15 @@ function process_component($component, $forcerelease = false){
 	}
 	
 	// User must have selected 'save'...
-	$c->save();
+	$comp->save();
+
+	// Reload the XML file, since it probably changed.
+	$xml = new XMLLoader();
+	$xml->setRootName('component');
+	if(!$xml->loadFromFile(ROOT_PDIR . $cfile)){
+		//@todo The XML file didn't load.... would this be a good time to revert a saved state?
+		throw new Exception('Unable to load XML file ' . $cfile);
+	}
 	echo "Saved!" . NL;
 	
 	if($forcerelease){
@@ -671,16 +872,15 @@ function process_component($component, $forcerelease = false){
 	}
 	if($bundleyn){
 		// Create a temp directory to contain all these
-		// @todo Bundle up the component, add a META-INF.xml file and (ideally), sign the package.
-		$dir = TMP_DIR . 'packager-' . $c->getName() . '/';
+		$dir = TMP_DIR . 'packager-' . $component . '/';
 
 		// The destination depends on the type.
 		switch($component){
 			case 'core':
-				$tgz = ROOT_PDIR . 'exports/core/' . $c->getName() . '-' . $c->getVersion() . '.tgz';
+				$tgz = ROOT_PDIR . 'exports/core/' . $component . '-' . $version . '.tgz';
 				break;
 			default:
-				$tgz = ROOT_PDIR . 'exports/components/' . $c->getName() . '-' . $c->getVersion() . '.tgz';
+				$tgz = ROOT_PDIR . 'exports/components/' . $component . '-' . $version . '.tgz';
 				break;
 		}
 
@@ -690,30 +890,30 @@ function process_component($component, $forcerelease = false){
 
 		if(!is_dir($dir)) mkdir($dir);
 		if(!is_dir($dir . 'data/')) mkdir($dir . 'data/');
-		//if(!is_dir($dir . 'META-INF/')) mkdir($dir . 'META-INF/');
 
-		//smartCopy(ROOT_PDIR . '/components/' . $c->getName(), $dir . '/data');
-		//smartCopy($c->getBaseDir(), $dir . 'data/');
-		foreach($c->getAllFilenames() as $f){
-			$file = new File_local_backend($c->getBaseDir() . $f['file']);
-			$file->copyTo($dir . 'data/' . $f['file']);
+		// I already have a good iterator...just reuse it.
+		$it->rewind();
+
+		foreach($it as $file){
+			$fname = substr($file->getFilename(), $basestrlen);
+			$file->copyTo($dir . 'data/' . $fname);
 		}
 
 		// Because the destination is relative...
-		$xmldest = 'data/' . substr($c->getXMLFilename(), strlen($c->getBaseDir()));
-		$file = new File_local_backend($c->getXMLFilename());
-		$file->copyTo($dir . $xmldest);
+		$xmldest = 'data/' . substr(ROOT_PDIR . $cfile, $basestrlen);
+		$xmloutput = new File_local_backend($dir . $xmldest);
+		$xmloutput->putContents($xml->asMinifiedXML());
 
-		$packager = 'CAE2 ' . ComponentHandler::GetComponent('core')->getVersion();
-		$packagename = $c->getName();
+		//$packager = 'Core Plus ' . ComponentHandler::GetComponent('core')->getVersion() . ' (http://corepl.us)';
+		//$packagename = $c->getName();
 
 		// Different component types require a different bundle type.
-		$bundletype = ($component == 'core')? 'core' : 'component';
+		//$bundletype = ($component == 'core')? 'core' : 'component';
 		
 		// Save the package.xml file.
-		$c->savePackageXML(true, $dir . 'package.xml');
+		$comp->savePackageXML(true, $dir . 'package.xml');
 
-		exec('tar -czf ' . $tgz . ' -C ' . $dir . ' --exclude=.svn --exclude=*~ --exclude=._* .');
+		exec('tar -czf ' . $tgz . ' -C ' . $dir . ' --exclude-vcs --exclude=*~ --exclude=._* .');
 		$bundle = $tgz;
 
 		if(CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
@@ -724,7 +924,7 @@ function process_component($component, $forcerelease = false){
 		// And remove the tmp directory.
 		exec('rm -fr "' . $dir . '"');
 
-		echo "Created package of " . $c->getName() . ' ' . $c->getVersion() . NL . " as " . $bundle . NL;
+		echo "Created package of " . $component . ' ' . $version . NL . " as " . $bundle . NL;
 	}
 } // function process_component($component)
 

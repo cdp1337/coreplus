@@ -24,6 +24,9 @@
         <file filename="assets/icons/button_ok.png"/>
         <file filename="assets/icons/button_ok-sm.png"/>
         <file filename="assets/icons/button_ok-lg.png"/>
+		<file filename="assets/icons/settings.png"/>
+		<file filename="assets/icons/settings-sm.png"/>
+		<file filename="assets/icons/settings-lg.png"/>
 		<file filename="assets/icons/email-lg.png" md5="0f20b7d3cb3d9590c4f600c3c02aed0b"/>
 		<file filename="assets/icons/delete-sm.png" md5="ef78e3ddd8658ddbc1a708e2409328a5"/>
 		<file filename="assets/icons/email.png" md5="55dcda1f2bc0e54e0a34c49df62dbc08"/>

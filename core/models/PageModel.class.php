@@ -122,12 +122,9 @@ class PageModel extends Model{
 	 */
 	private static $_RewriteCache = null;
 
+	// DISABLING 2012.05.13 cpowell
+	/*
 	public function  __construct($key = null) {
-
-		// Set some defaults first.
-		// @todo Make these automatic somehow.
-		$this->_updatedcolumn = 'updated';
-		$this->_createdcolumn = 'created';
 		
 		$this->_linked = array(
 			'Insertable' => array(
@@ -138,6 +135,7 @@ class PageModel extends Model{
 
 		parent::__construct($key);
 	}
+	*/
 	
 	
 
@@ -365,21 +363,24 @@ class PageModel extends Model{
 		// Allow pages that do not exist to have a bit of "extended" logic for determining the breadcrumbs.
 		if(!$this->exists()){
 			// Do a bit of custom logic here.
+
+			$m = strtolower($this->getControllerMethod());
+			$b = strtolower($this->get('baseurl'));
 			
 			// If the page is currently Edit and there is a View... handle that instance.
-			if($this->getControllerMethod() == 'Edit' && method_exists($this->getControllerClass(), 'View')){
-				$p = new PageModel(str_replace('/Edit/', '/View/', $this->get('baseurl')));
+			if($m == 'edit' && method_exists($this->getControllerClass(), 'view')){
+				$p = new PageModel(str_replace('/edit/', '/view/', $b));
 				// I need the array merge because getParentTree only returns << parents >>.
 				return array_merge($p->getParentTree(), array($p));
 			}
 			
 			// If the page is currently Delete and there is a View... handle that instance.
-			if($this->getControllerMethod() == 'Delete' && method_exists($this->getControllerClass(), 'View')){
-				$p = new PageModel(str_replace('/Delete/', '/View/', $this->get('baseurl')));
+			if($m == 'delete' && method_exists($this->getControllerClass(), 'view')){
+				$p = new PageModel(str_replace('/delete/', '/view/', $b));
 				// Only try to call the script if it exists.
 				if($p->exists()){
 					// I need the array merge because getParentTree only returns << parents >>.
-				return array_merge($p->getParentTree(), array($p));
+					return array_merge($p->getParentTree(), array($p));
 				}
 			}
 		}
@@ -400,7 +401,7 @@ class PageModel extends Model{
 			// Lookup something, just to ensure it's in the cache.
 			self::_LookupUrl('/');
 			
-			$url = $this->get('baseurl');
+			$url = strtolower($this->get('baseurl'));
 			do{
 				$url = substr($url, 0, strrpos($url, '/'));
 				
@@ -591,7 +592,7 @@ class PageModel extends Model{
 			$rs = $s->execute();
 			self::$_RewriteCache = array();
 			foreach($rs as $row){
-				self::$_RewriteCache[$row['rewriteurl']] = $row['baseurl'];
+				self::$_RewriteCache[strtolower($row['rewriteurl'])] = $row['baseurl'];
 			}
 		}
 		
@@ -605,6 +606,8 @@ class PageModel extends Model{
 	private static function _LookupReverseUrl($url){
 		// Lookup something, just to ensure it's in the cache.
 		self::_LookupUrl('/');
+
+		$url = strtolower($url);
 		
 		return (($key = array_search($url, self::$_RewriteCache)) !== false)? $key : $url;
 	}

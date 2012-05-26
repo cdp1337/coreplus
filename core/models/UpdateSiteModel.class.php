@@ -65,5 +65,25 @@ class UpdateSiteModel extends Model{
 		'primary' => array('id'),
 		'unique:url' => array('url'),
 	);
+
+
+	/**
+	 * Test function to see if this update site can be connected to and contains a valid repo.xml.gz file.
+	 *
+	 * @return boolean
+	 */
+	public function isValid(){
+		$remote = new File_remote_backend();
+		$remote->password = $this->get('password');
+		$remote->username = $this->get('username');
+		$remote->setFilename($this->get('url') . '/repo.xml.gz');
+
+		if(!$remote->exists()){
+			return false;
+		}
+
+		// I should probably do additional checks here, but eh.....
+		return true;
+	}
 	
 }

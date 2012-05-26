@@ -12,7 +12,7 @@
 				{if !$site.enabled}No{/if}
 			</td>
 			<td>
-				{a href="Updater/Sites/Edit/`$site.id`"}edit{/a}
+				{a href="Updater/repos/Edit/`$site.id`"}edit{/a}
 			</td>
 		</tr>
 	{/foreach}

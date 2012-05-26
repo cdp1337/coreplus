@@ -505,6 +505,7 @@ class Form extends FormGroup{
 		'submit' => 'FormSubmitInput',
 		'text' => 'FormTextInput',
 		'textarea' => 'FormTextareaInput',
+		'time' => 'FormTimeInput',
 		'wysiwyg' => 'FormTextareaInput',
 	);
 
@@ -658,10 +659,12 @@ class Form extends FormGroup{
 			$schema = $model->getKeySchema($key);
 			
 			if($schema['type'] == Model::ATT_TYPE_BOOL){
-				// This is used... somewhere :/
+				// This is used by checkboxes
 				if(strtolower($val) == 'yes') $val = 1;
-				// Default checkbox have the value of "on"
+				// A single checkbox will have the value of "on" if checked
 				elseif(strtolower($val) == 'on') $val = 1;
+				// Hidden inputs will have the value of "1"
+				elseif($val == 1) $val = 1;
 				else $val = 0;
 			}
 			
@@ -834,7 +837,9 @@ class Form extends FormGroup{
 		// Cleanup
 		unset($_SESSION['FormData'][$formid]);
 
-		if($status === true) Core::Reload();
+		// If it's set to die, simply exit the script without outputting anything.
+		if($status == 'die') exit;
+		elseif($status === true) Core::Reload();
 		else Core::Redirect($status);
 	}
 
@@ -1483,5 +1488,42 @@ class FormFileInput extends FormElement{
 		
 		$this->_attributes['value'] = $value;
 		return true;
+	}
+}
+
+class FormTimeInput extends FormSelectInput{
+	public function  __construct($atts = null) {
+		parent::__construct($atts);
+
+		// Set the options for this input as the times in 15-minute intervals
+		// @todo Implement a config option to allow this to be changed to different intervals.
+		// @todo also, allow for switching the time view based on a configuration preference.
+		$times = array();
+
+		// Default (blank)
+		$times[''] = '---';
+
+		for($x=0; $x<24; $x++){
+			$hk = $hd = $x;
+			if(strlen($hk) == 1) $hk = '0' . $hk;
+			if($hd > 12){
+				$hd -= 12;
+				$ap = 'pm';
+			}
+			elseif($hd == 0){
+				$hd = 12;
+				$ap = 'am';
+			}
+			else{
+				$ap = 'am';
+			}
+
+			$times["$hk:00"] = "$hd:00 $ap";
+			$times["$hk:15"] = "$hd:15 $ap";
+			$times["$hk:30"] = "$hd:30 $ap";
+			$times["$hk:45"] = "$hd:45 $ap";
+		}
+
+		$this->set('options', $times);
 	}
 }

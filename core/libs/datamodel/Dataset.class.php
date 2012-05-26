@@ -371,7 +371,7 @@ class Dataset implements Iterator{
 	private function _parseWhere($statement, $group = 0){
 		// The user may have sent something like "blah = mep" or "datecreated < somedate"
 		$valid = false;
-		$operations = array('!=', '<=', '>=', '=', '>', '<', ' LIKE ');
+		$operations = array('!=', '<=', '>=', '=', '>', '<', 'LIKE ');
 
 		// First, extract out the key.  This is the simplest thing to look for.
 		$k = preg_replace('/^([^ !=<>]*).*/', '$1', $statement);

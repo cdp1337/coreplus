@@ -37,7 +37,7 @@ class CLI{
 	 *                 "text-required"	- Open-ended text input, user can type in anything (non-blank), and that value is returned.
 	 * @param $default string The default answer if the user simply presses "enter". [optional]
 	 */
-	static function PromptUser($question, $answers, $default = false){
+	public static function PromptUser($question, $answers, $default = false){
 		$isanswered = false;
 		while(!$isanswered){
 			echo NL . $question . NL;
@@ -108,10 +108,10 @@ class CLI{
 						if($line == '' && $default !== false){
 							return $default;
 						}
-						elseif($line == 'y'){
+						elseif($line == 'y' || $line == 'yes'){
 							return true;
 						}
-						elseif($line == 'n'){
+						elseif($line == 'n' || $line == 'no'){
 							return false;
 						}
 						else{
@@ -180,6 +180,13 @@ class CLI{
 	 * If they didn't, ask the user for their choice.
 	 */
 	public static function RequireEditor(){
+		global $previous_editor;
+
+		// First, check the editor in the "session" file.
+		CLI::LoadSettingsFile('editor');
+		if(isset($previous_editor)) $_SERVER['EDITOR'] = $previous_editor;
+
+
 		if(!isset($_SERVER['EDITOR']) || $_SERVER['EDITOR'] == ''){
 			// I need to assemble a list of editors currently on the system.
 			$opts = array();
@@ -197,6 +204,10 @@ class CLI{
 				$opts,
 				$default
 			);
+
+			// And remember this option.
+			$previous_editor = $_SERVER['EDITOR'];
+			CLI::SaveSettingsFile('editor', array('previous_editor'));
 		}
 	}
 	

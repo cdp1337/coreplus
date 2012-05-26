@@ -408,7 +408,7 @@ if(!\Core\DB()->tableExists(DB_PREFIX . 'component')){
 	$p = new InstallPage();
 	$p->template = 'templates/install.tpl';
 	$p->assign('component', 'Core');
-	$core = ComponentFactory::Create(ROOT_PDIR . 'core/component.xml');
+	$core = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
 	$core->load();
 	$changes = $core->install();
 	if($changes) $p->assign('log', implode("\n", $changes));

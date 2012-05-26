@@ -111,6 +111,11 @@ class Component_2_1{
 	 * @var string
 	 */
 	private $_execMode = 'WEB';
+
+	/**
+	 * @var File_Backend
+	 */
+	private $_file;
 	
 	// A set of error codes components may encounter.
 	const ERROR_NOERROR = 0;           // 0000
@@ -184,127 +189,7 @@ class Component_2_1{
 		// Ensure there's a required namespace on the root node.
 		$this->_xmlloader->getRootDOM()->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 
-
-		/////////////   Handle the file sections and their hashes \\\\\\\\\\\\\\
-
-		// Purge the 'otherfiles' section.
-		$this->removeElements('//otherfiles');
-		// Also purge any module/library/view files, as these are built automatically.
-		$this->removeElements('//library/file');
-		$this->removeElements('//module/file');
-		$this->removeElements('//view/file');
-		//if($this->_xmlloader->getElement('/otherfiles', false)){
-		//	$this->_xmlloader->getRootDOM()->removeChild($this->_xmlloader->getElement('/otherfiles'));
-		//}
-		$otherfilesnode = $this->_xmlloader->getElement('//otherfiles');
-		
-		$it = $this->getDirectoryIterator();
-		$hasview = $this->hasView();
-		$viewd = ($hasview)? $this->getViewSearchDir() : null;
-		$assetd = $this->getAssetDir();
-		$strlen = strlen($this->getBaseDir());
-		foreach($it as $file){
-			$el = false;
-			$fname = substr($file->getFilename(), $strlen);
-			
-			if($hasview && $file->inDirectory($viewd)){
-				$el = $this->_xmlloader->getElement('/view/file[@filename="' . $fname . '"]');
-			}
-			elseif($assetd && $file->inDirectory($assetd)){
-				// It's an asset!
-				$el = $this->_xmlloader->getElement('/assets/file[@filename="' . $fname . '"]');
-			}
-			else{
-				// Only add it if the file doesn't exist already.
-				$el = $this->_xmlloader->getElement('//library/file[@filename="' . $fname . '"]|//module/file[@filename="' . $fname . '"]|//view/file[@filename="' . $fname . '"]', false);
-				// Scan through this file and file any classes that are provided.
-				if(preg_match('/\.php$/i', $fname)){
-					$fconts = file_get_contents($file->getFilename());
-					
-					// Trim out the comments to prevent false readings.
-					
-					// Will remove /* ... */ multi-line comments.
-					$fconts = preg_replace(':/\*.*\*/:Us', '', $fconts);
-					// Will remove // single-line comments.
-					$fconts = preg_replace('://.*$:', '', $fconts);
-					
-					if($el){
-						$getnames = ($el->parentNode->nodeName == 'library' || $el->parentNode->nodeName == 'module');
-					}
-					else{
-						// Does this file contain something that extends Controller?
-						if(preg_match('/^(abstract ){0,1}class[ ]*[a-z0-9_\-]*[ ]*extends controller/im', $fconts)){
-							$el = $this->_xmlloader->getElement('/module/file[@filename="' . $fname . '"]');
-							$getnames = true;
-						}
-						// Widgets also go in the module section.
-						elseif(preg_match('/^class[ ]*[a-z0-9_\-]*[ ]*extends widget/im', $fconts)){
-							$el = $this->_xmlloader->getElement('/module/file[@filename="' . $fname . '"]');
-							$getnames = true;
-						}
-						elseif(preg_match('/^(abstract |final ){0,1}class[ ]*[a-z0-9_\-]*/im', $fconts)){
-							$el = $this->_xmlloader->getElement('/library/file[@filename="' . $fname . '"]');
-							$getnames = true;
-						}
-						elseif(preg_match('/^interface[ ]*[a-z0-9_\-]*/im', $fconts)){
-							$el = $this->_xmlloader->getElement('/library/file[@filename="' . $fname . '"]');
-							$getnames = true;
-						}
-						else{
-							$el = $this->_xmlloader->getElement('/otherfiles/file[@filename="' . $fname . '"]');
-							$getnames = false;
-						}
-					}
-					
-					// $el will now be set in the correct location!
-					
-					if($getnames){
-						// Well... get the classes!
-						$viewclasses = array();
-						preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller/im', $fconts, $ret);
-						foreach($ret[2] as $foundclass){
-							$this->_xmlloader->getElementFrom('provides[@type="controller"][@name="' . $foundclass . '"]', $el);
-							// This is needed to tell the rest of the save logic to ignore the save for classes.
-							$viewclasses[] = $foundclass;
-						}
-						
-						preg_match_all('/^class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*widget/im', $fconts, $ret);
-						foreach($ret[1] as $foundclass){
-							$this->_xmlloader->getElementFrom('provides[@type="widget"][@name="' . $foundclass . '"]', $el);
-							// This is needed to tell the rest of the save logic to ignore the save for classes.
-							$viewclasses[] = $foundclass;
-						}
-						
-						// Add any class found in this file.
-						preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
-						foreach($ret[2] as $foundclass){
-							if(in_array($foundclass, $viewclasses)) continue;
-							$this->_xmlloader->getElementFrom('provides[@type="class"][@name="' . $foundclass . '"]', $el);
-						}
-						
-						// Allow interfaces to be associated as a provided element too.
-						preg_match_all('/^(interface)[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
-						foreach($ret[2] as $foundclass){
-							if(in_array($foundclass, $viewclasses)) continue;
-							$this->_xmlloader->getElementFrom('provides[@type="interface"][@name="' . $foundclass . '"]', $el);
-						}
-					}
-				}
-								
-				//$el = $this->_xmlloader->getElement('file[@filename="' . $fname . '"]', false);
-				if(!$el){
-					$el = $this->_xmlloader->getElement('/otherfiles/file[@filename="' . $fname . '"]');
-				}
-			}
-
-			// This really shouldn't NOT hit since the file is created under /otherfiles if it didn't exist before.... but who knows.
-			if($el){
-				// Tack on the hash of the file.
-				$el->setAttribute('md5', $file->getHash());
-			}
-		}
-		
-		
+		/*
 		///////////////  Handle the hard-set pages, ie: admin ones \\\\\\\\\\\\\
 		if(!isset($viewclasses)) $viewclasses = array();
 		foreach($viewclasses as $c){
@@ -332,9 +217,9 @@ class Component_2_1{
 				$node->setAttribute('title', $row['title']);
 			}
 		}
+		*/
 		
-		
-		
+		/*
 		///////////////////////  Handle the config options \\\\\\\\\\\\\\\\\\\\\
 		$data = Dataset::Init()->table('config')->select('*')->where('key LIKE /' . $this->getName() . '/%')->execute();
 		//$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "config WHERE `key` LIKE '/" . $this->getName() . "/%'");
@@ -347,16 +232,16 @@ class Component_2_1{
 			if($row['options']) $node->setAttribute('options', $row['options']);
 			else $node->removeAttribute('options');
 		}
-		
+		*/
 
 		// This needs to be the final step... write the XML doc back to the file.
-		$XMLFilename = $this->getXMLFilename();
+		$XMLFilename = $this->_file->getFilename();
 		//echo $this->asPrettyXML(); // DEBUG //
 		if($minified){
-			file_put_contents($XMLFilename, $this->asMinifiedXML());
+			file_put_contents($XMLFilename, $this->_xmlloader->asMinifiedXML());
 		}
 		else{
-			file_put_contents($XMLFilename, $this->asPrettyXML());
+			file_put_contents($XMLFilename, $this->_xmlloader->asPrettyXML());
 		}
 	}
 	
@@ -447,7 +332,9 @@ class Component_2_1{
 	}
 	
 	public function getDescription(){
-		if(is_null($this->_description)) $this->_description = $this->_xmlloader->getElement('//description')->nodeValue;
+		if(is_null($this->_description)){
+			$this->_description = trim($this->_xmlloader->getElement('//description')->nodeValue);
+		}
 		
 		return $this->_description;
 	}
@@ -458,6 +345,45 @@ class Component_2_1{
 		// And set the data in the original DOM.
 		$this->_xmlloader->getElement('//description')->nodeValue = $desc;
 	}
+
+	/**
+	 * Set and override the list of authors for this component.
+	 *
+	 * @param $authors array Array of authors to set
+	 */
+	public function setAuthors($authors){
+		// First, remove any authors currently in the XML.
+		$this->_xmlloader->removeElements('/authors');
+
+		// Now I can add the ones in the authors array.
+		foreach($authors as $a){
+			if(isset($a['email']) && $a['email']){
+				$this->_xmlloader->getElement('//component/authors/author[@name="' . $a['name'] . '"][@email="' . $a['email'] . '"]');
+			}
+			else{
+				$this->_xmlloader->getElement('//component/authors/author[@name="' . $a['name'] . '"]');
+			}
+		}
+	}
+
+	/**
+	 * Set and override the list of licenses for this component.
+	 *
+	 * @param $licenses array Array of licenses to set
+	 */
+	public function setLicenses($licenses){
+		// First, remove any licenses currently in the XML.
+		$this->_xmlloader->removeElements('/licenses');
+
+		// Now I can add the ones in the licenses array.
+		foreach($licenses as $lic){
+			$str = '//component/licenses/license' . ((isset($lic['url']) && $lic['url'])? '[@url="' . $lic['url'] . '"]' : '');
+			$l = $this->_xmlloader->getElement($str);
+			if($lic['title']) $l->nodeValue = $lic['title'];
+		}
+	}
+
+
 	
 	
 	
@@ -759,10 +685,140 @@ class Component_2_1{
 	public function getVersion(){
 		return $this->_version;
 	}
-	
-	
-	
-	
+
+	/**
+	 * Set the version of this component
+	 *
+	 * This affects the component.xml metafile of the package.
+	 *
+	 * @param $vers
+	 * @return void
+	 */
+	public function setVersion($vers){
+		if($vers == $this->_version) return;
+
+		// Switch over any unversioned upgrade directives to this version.
+		// First, check just a plain <upgrade> directive.
+		if(($upg = $this->_xmlloader->getElement('/upgrades/upgrade[@from=""][@to=""]', false))){
+			// Add the current and dest. attribute to it.
+			$upg->setAttribute('from', $this->_version);
+			$upg->setAttribute('to', $vers);
+		}
+		elseif(($upg = $this->_xmlloader->getElement('/upgrades/upgrade[@from="' . $this->_version . '"][@to=""]', false))){
+			$upg->setAttribute('to', $vers);
+		}
+		else{
+			// No node found... just create a new one.
+			$this->_xmlloader->getElement('/upgrades/upgrade[@from="' . $this->_version . '"][@to="' . $vers . '"]');
+		}
+
+/*
+		// Also switch over any unversioned changelog information to this version.
+		$newchangelog = $this->_xmlloader->getElement('/changelog[@version="' . $vers . '"]');
+		foreach($this->_xmlloader->getElementsByTagName('changelog') as $el){
+			if(!@$el->getAttribute('version')){
+				$newchangelog->nodeValue .= "\n" . $el->nodeValue;
+				$el->nodeValue = '';
+				break;
+			}
+		}
+*/
+		$this->_version = $vers;
+		$this->_xmlloader->getRootDOM()->setAttribute('version', $vers);
+	}
+
+	/**
+	 * Set all files in this component.  Only really usable in the installer.
+	 *
+	 * @param $files array Array of files to set.
+	 */
+	public function setFiles($files){
+		// Clear out the array first.
+		$this->_xmlloader->removeElements('//component/files/file');
+
+		// It would be nice to have them alphabetical.
+		$newarray = array();
+		foreach($files as $f){
+			$newarray[$f['file']] = $f;
+		}
+		ksort($newarray);
+
+		// And recreate them all.
+		foreach($newarray as $f){
+			$el = $this->_xmlloader->createElement('//component/files/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+
+			if(isset($f['controllers'])){
+				foreach($f['controllers'] as $c){
+					$this->_xmlloader->createElement('controller[@name="' . $c . '"]', $el);
+				}
+			}
+			if(isset($f['classes'])){
+				foreach($f['classes'] as $c){
+					$this->_xmlloader->createElement('class[@name="' . $c . '"]', $el);
+				}
+			}
+			if(isset($f['interfaces'])){
+				foreach($f['interfaces'] as $i){
+					$this->_xmlloader->createElement('interface[@name="' . $i . '"]', $el);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Set all asset files in this component.  Only really usable in the installer.
+	 *
+	 * @param $files array Array of files to set.
+	 */
+	public function setAssetFiles($files){
+		// Clear out the array first.
+		$this->_xmlloader->removeElements('//component/assets/file');
+
+		// It would be nice to have them alphabetical.
+		$newarray = array();
+		foreach($files as $f){
+			$newarray[$f['file']] = $f;
+		}
+		ksort($newarray);
+
+		// And recreate them all.
+		foreach($newarray as $f){
+			$el = $this->_xmlloader->createElement('//component/assets/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+		}
+	}
+
+	/**
+	 * Set all asset files in this component.  Only really usable in the installer.
+	 *
+	 * @param $files array Array of files to set.
+	 */
+	public function setViewFiles($files){
+		// Clear out the array first.
+		$this->_xmlloader->removeElements('//component/view/files');
+
+		// It would be nice to have them alphabetical.
+		$newarray = array();
+		foreach($files as $f){
+			$newarray[$f['file']] = $f;
+		}
+		ksort($newarray);
+
+		// And recreate them all.
+		foreach($newarray as $f){
+			$el = $this->_xmlloader->createElement('//component/view/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+		}
+	}
+
+
+	/**
+	 * Get the raw XML of this component, useful for debugging.
+	 *
+	 * @return string (XML)
+	 */
+	public function getRawXML(){
+		return $this->_xmlloader->asPrettyXML();
+	}
+
 	
 	public function isValid(){
 		return (!$this->error & Component::ERROR_INVALID);

@@ -97,8 +97,8 @@ class File_local_backend implements File_Backend{
 	 */
 	public function getURL(){
 		if(!preg_match('/^' . str_replace('/', '\\/', ROOT_PDIR) . '/', $this->_filename)) return false;
-		
-		return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', ROOT_WDIR . '$1', $this->_filename);
+
+		return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', ROOT_URL . '$1', $this->_filename);
 	}
 	
 	/**

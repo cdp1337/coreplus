@@ -597,7 +597,6 @@ class DMI_mysqli_backend implements DMI_Backend {
 
 		$q .= ' FROM `' . $dataset->_table . '`';
 		$q .= $this->_parseWhere($dataset);
-		if($dataset->_limit) $q .= ' LIMIT ' . $dataset->_limit;
 
 		if($dataset->_order){
 			// Support keys as complex as "key DESC, value ASC"
@@ -616,6 +615,8 @@ class DMI_mysqli_backend implements DMI_Backend {
 			}
 			$q .= ' ORDER BY ' . implode(', ', $os);
 		}
+
+		if($dataset->_limit) $q .= ' LIMIT ' . $dataset->_limit;
 
 		// Execute this and populate the dataset appropriately.
 		$res = $this->_rawExecute('read', $q);

@@ -58,25 +58,30 @@ nav#breadcrumbs ul.controls { float:right; margin-top:-4px; }
 ul.controls { height:20px; }
 ul.controls li { float:left; margin-right:0.5em; list-style:none;}
 /* And their images.  Stand-alone "control" buttons also get the same styling. */
-ul.controls li.add a,
-a.control.control-add
-{ text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/add.png'); }
 
-ul.controls li.directory a,
-a.control.control-directory
-{ text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/directory.png'); }
+/* First, the common styles for all icon'd controls. */
+ul.controls li.add a, a.control.control-add,
+ul.controls li.directory a, a.control.control-directory,
+ul.controls li.delete a, a.control.control-delete,
+ul.controls li.edit a, a.control.control-edit,
+ul.controls li.settings a, a.control.control-settings,
+ul.controls li.view a, a.control.control-view
+{
+	text-indent:-9999px;
+	width:20px;
+	height:20px;
+	display:block;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
 
-ul.controls li.delete a,
-a.control.control-delete
-{ text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/delete.png'); }
-
-ul.controls li.edit a,
-a.control.control-edit
-{ text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/edit.png'); }
-
-ul.controls li.view a,
-a.control.control-view
-{ text-indent:-9999px; width:20px; height:20px; display:block; background: no-repeat left top url('../icons/view.png'); }
+/* And the specific images. */
+ul.controls li.add a, a.control.control-add { background-image: url('../icons/add.png'); }
+ul.controls li.directory a, a.control.control-directory { background-image: url('../icons/directory.png'); }
+ul.controls li.delete a, a.control.control-delete { background-image: url('../icons/delete.png'); }
+ul.controls li.edit a, a.control.control-edit { background-image: url('../icons/edit.png'); }
+ul.controls li.settings a, a.control.control-settings { background-image: url('../icons/settings.png'); }
+ul.controls li.view a, a.control.control-view { background-image: url('../icons/view.png'); }
 
 
 /*** Buttons and their respective images that can be used throughout ***/
