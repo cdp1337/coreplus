@@ -105,7 +105,7 @@ class ThemeController extends Controller_2_1{
 		$template = $this->getPageRequest()->getParameter('template');
 		// @todo Add support for page-specific configuration.
 		
-		$filename = ROOT_PDIR . 'themes/' . $t . '/' . $template;
+		$filename = ROOT_PDIR . 'themes/' . $t . '/skins/' . $template;
 		
 		if(!\Theme\validate_template_name($t, $template)){
 			Core::SetMessage('Invalid template requested', 'error');
