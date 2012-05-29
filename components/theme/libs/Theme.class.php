@@ -280,6 +280,8 @@ class Theme{
 		// It would be nice to have them alphabetical.
 		$newarray = array();
 		foreach ($files as $f) {
+			// Make sure that the file does not start with 'skins/'...
+			if(strpos($f['file'], 'skins/') === 0) $f['file'] = substr($f['file'], 6);
 			$newarray[$f['file']] = $f;
 		}
 		ksort($newarray);
