@@ -154,19 +154,12 @@ class ContentController extends Controller_2_1 {
 		if(!$request->isPost()){
 			return View::ERROR_BADREQUEST;
 		}
-		
+
 		$m = new ContentModel($request->getParameter(0));
 
 		if(!$m->exists()) return View::ERROR_NOTFOUND;
-
-		$view->templatename = '/pages/content/delete.tpl';
-		$view->title = 'Confirm Delete ' . $m->get('title');
-		$view->assignVariable('model', $m);
-		
-		$view->addControl('Add Page', '/Content/Create', 'add');
-		$view->addControl('View Page', '/Content/View/' . $m->get('id'), 'view');
-		$view->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
-		$view->addControl('All Content Pages', '/Content', 'directory');
+		$m->delete();
+		Core::Redirect('/content');
 	}
 }
 ?>

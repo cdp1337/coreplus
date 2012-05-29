@@ -1,12 +1,18 @@
 // Core should already be defined.
 
-// Will do a standard POST request with the provided, (via data), as the payload.
-/*Core.JSONPost = function(o){
-	//var data = $.JSON
-}*/
+/**
+ * Create a POST request in the browser without ajax.
+ * Allows for a traditional page load, only via POST.
+ *
+ * @param u URL to request via POST
+ * @constructor
+ */
+Core.PostURL = function(u){
+	var doc = window.document,
+		form = doc.createElement('form');
 
-/*
-Core.LoadLibrary = function(library){
-	
+	window.document.body.appendChild(form);
+	form.action = u;
+	form.method = 'POST';
+	form.submit();
 }
-*/

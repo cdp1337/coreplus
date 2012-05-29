@@ -1222,6 +1222,9 @@ class Core implements ISingleton {
 </script>';
 
 		View::AddScript($script, 'head');
+
+		// And the static functions.
+		View::AddScript('js/core.js', 'head');
 	}
 
 	public static function _AttachCoreStrings() {

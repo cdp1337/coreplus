@@ -30,7 +30,7 @@ function smarty_block_a($params, $innercontent, $template, &$repeat){
 	
 	// Allow "confirm" text to override the href and onClick functions.
 	if(isset($params['confirm'])){
-		$params['onClick'] = "if(confirm('" . str_replace("'", "\\'", $params['confirm']) . "')){ window.location.href = '" . str_replace("'", "\\'", Core::ResolveLink($params['href'])) . "'; } return false;";
+		$params['onClick'] = "if(confirm('" . str_replace("'", "\\'", $params['confirm']) . "')){ Core.PostURL('" . str_replace("'", "\\'", Core::ResolveLink($params['href'])) . "'); } return false;";
 		$params['href'] = '#';
 	}
 	

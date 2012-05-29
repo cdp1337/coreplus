@@ -555,6 +555,10 @@ class Theme{
 		$changes = array();
 		
 		foreach($this->_xmlloader->getElements('/assets/file') as $node){
+			// Cannot install assets if the directory is not setup!
+			if(!$this->getAssetDir()){
+				continue;
+			}
 			$b = $this->getBaseDir();
 			// The base filename with the directory.
 			$filename = $node->getAttribute('filename');
@@ -563,8 +567,8 @@ class Theme{
 			// The new theme asset will be installed into the same directory as its theme.
 			// This differs from usual components because they just follow whatever theme is currently running.
 			//$nf = Core::File($assetbase . $theme . '/' . $filename);
-			$newfilename = 'assets' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
-			
+			$newfilename = 'assets/' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
+
 			$nf = Core::File($newfilename);
 
 			// The new destination must be in the theme-specific directory, this is a
