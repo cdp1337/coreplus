@@ -73,8 +73,8 @@
 		<file filename="assets/mimetype_icons/unknown-xl.png" md5="2510d5565850a7b8d762312fc41dd8eb"/>
 	</assets>
 	<skins>
-		<file filename="skins/index.tpl" title="Index Template" md5="f40bb0c041e5bace5b319485dcd7d1c4"/>
-		<file filename="skins/basic.tpl" title="Only one column" md5="01d25c25c4731f803dc6457107bb166e"/>
+		<file filename="index.tpl" title="Index Template" md5="f40bb0c041e5bace5b319485dcd7d1c4"/>
+		<file filename="basic.tpl" title="Only one column" md5="01d25c25c4731f803dc6457107bb166e"/>
 	</skins>
 	<view/>
 	<configs>
