@@ -22,6 +22,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+// @todo Implement arrayaccess system.
 class Component_2_1 {
 
 	/**
@@ -309,12 +310,11 @@ class Component_2_1 {
 
 	public function getRequires() {
 		$ret = array();
-		foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('requires') as $r) {
+		foreach ($this->_xmlloader->getElements('//component/requires/require') as $r) {
 			$t  = $r->getAttribute('type');
 			$n  = $r->getAttribute('name');
 			$v  = @$r->getAttribute('version');
 			$op = @$r->getAttribute('operation');
-			//$value = @$r->getAttribute('value');
 
 			// Defaults.
 			if ($v == '') $v = false;
@@ -331,14 +331,22 @@ class Component_2_1 {
 		return $ret;
 	}
 
+	/**
+	 * Get the description for this component
+	 * @return string
+	 */
 	public function getDescription() {
-		if (is_null($this->_description)) {
+		if ($this->_description === null) {
 			$this->_description = trim($this->_xmlloader->getElement('//description')->nodeValue);
 		}
 
 		return $this->_description;
 	}
 
+	/**
+	 * Set the description for this component
+	 * @param $desc string
+	 */
 	public function setDescription($desc) {
 		// Set the cache first.
 		$this->_description = $desc;
@@ -687,7 +695,7 @@ class Component_2_1 {
 	 *
 	 * This affects the component.xml metafile of the package.
 	 *
-	 * @param $vers
+	 * @param $vers string
 	 *
 	 * @return void
 	 */
@@ -709,17 +717,6 @@ class Component_2_1 {
 			$this->_xmlloader->getElement('/upgrades/upgrade[@from="' . $this->_version . '"][@to="' . $vers . '"]');
 		}
 
-		/*
-		  // Also switch over any unversioned changelog information to this version.
-		  $newchangelog = $this->_xmlloader->getElement('/changelog[@version="' . $vers . '"]');
-		  foreach($this->_xmlloader->getElementsByTagName('changelog') as $el){
-			  if(!@$el->getAttribute('version')){
-				  $newchangelog->nodeValue .= "\n" . $el->nodeValue;
-				  $el->nodeValue = '';
-				  break;
-			  }
-		  }
-  */
 		$this->_version = $vers;
 		$this->_xmlloader->getRootDOM()->setAttribute('version', $vers);
 	}

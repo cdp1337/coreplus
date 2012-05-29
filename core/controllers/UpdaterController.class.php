@@ -33,44 +33,70 @@ class UpdaterController extends Controller_2_1 {
 	 *
 	 */
 	public function index() {
-		// @todo Display update statistics here, ie: "An update is available!"
-		// or at very least a link to check for updates.
-
 		$view = $this->getView();
 
 		$sitecount = UpdateSiteModel::Count('enabled = 1');
+		$components = array();
+		foreach(Core::GetComponents() as $k => $c){
+			// Skip the core.
+			if($k == 'core') continue;
+
+			$components[$k] = $c;
+		}
+
+		$themes = ThemeHandler::GetAllThemes();
 
 		$view->title = 'System Updater';
 		$view->addControl('Manage Repos', '/updater/repos', 'settings');
 		$view->assign('sitecount', $sitecount);
+		$view->assign('components', $components);
+		$view->assign('themes', $themes);
 	}
 
 	/**
 	 * Check for updates controller
 	 *
-	 * @param View $view
+	 * This is just a very simple json function to return true or false on if there are updates for currently installed components.
+	 *
+	 * This is so simple because its sole purpose is to just notify the user if there is an update available.
+	 * For more full-featured update scripts, look at the getupdates page; that actually returns the updates.
 	 */
 	public function check() {
 		$view = $this->getView();
 
-		$view->title = 'Check for Updates';
+		$view->contenttype = View::CTYPE_JSON;
 
-		$view->addBreadcrumb('System Updater', 'Updater');
+		$updates = UpdaterHelper::GetUpdates();
+		$updatesavailable = false;
+
+		// Since I'm not sure which version of core is going to be returned...
+		foreach($updates['core'] as $up){
+			if($up['status'] == 'update') $updatesavailable = true;
+		}
+
+		// Same for components and themes, (only a little more depth)
+		foreach($updates['components'] as $c){
+			foreach($c as $up){
+				if($up['status'] == 'update') $updatesavailable = true;
+			}
+		}
+		foreach($updates['themes'] as $c){
+			foreach($c as $up){
+				if($up['status'] == 'update') $updatesavailable = true;
+			}
+		}
+
+		$view->jsondata = $updatesavailable;
 	}
 
 
 	/**
 	 * Get the list of updates from remote repositories, (or session cache).
-	 *
-	 * @param View $view
 	 */
 	public function getupdates() {
 		$view = $this->getView();
 
-		// This is an ajax/json-only page.
-		if ($view->request['contenttype'] != View::CTYPE_JSON) {
-			Core::Redirect('/Updater/Check');
-		}
+		$view->contenttype = View::CTYPE_JSON;
 
 		$components = UpdaterHelper::GetUpdates();
 
@@ -138,14 +164,15 @@ class UpdaterController extends Controller_2_1 {
 		$view->assign('form', $form);
 	}
 
-	public function install() {
+	public function component_install() {
 		$view = $this->getView();
+		$req = $this->getPageRequest();
 
 		$components = UpdaterHelper::GetUpdates();
 
-		$name    = $view->getParameter(0);
-		$version = $view->getParameter(1);
-		$dryrun  = $view->getParameter('dryrun');
+		$name    = $req->getParameter(0);
+		$version = $req->getParameter(1);
+		$dryrun  = $req->getParameter('dryrun');
 
 		$status = UpdaterHelper::Install($name, $version, $dryrun);
 
@@ -165,6 +192,55 @@ class UpdaterController extends Controller_2_1 {
 
 		Core::SetMessage($status['message'], $type);
 		Core::Redirect('/Updater/Check');
+	}
+
+	public function component_disable() {
+		$view = $this->getView();
+		$req = $this->getPageRequest();
+
+		// This is a post-only page!
+		/*if(!$req->isPost()){
+			$view->error = View::ERROR_BADREQUEST;
+			return;
+		}*/
+
+		$name    = $req->getParameter(0);
+		$dryrun  = $req->getParameter('dryrun');
+		$c = Core::GetComponent($name);
+
+		if(!$c){
+			$view->error = View::ERROR_NOTFOUND;
+			return;
+		}
+
+		// Create a reverse map of what components are the basis of which components, this will make it easier
+		// to do the necessary mapping.
+		$reverse_requirements = array();
+
+		foreach(Core::GetComponents() as $k => $ccheck){
+			$requires = $ccheck->getRequires();
+			if(!sizeof($requires)){
+				unset($tocheck[$k]);
+				continue;
+			}
+			var_dump($ccheck->getName(), $ccheck->getRequires());
+		}
+
+		// Run through every component and see if there's a conflicting requirement.
+		// These must be disabled too!
+		$provides = $c->getProvides();
+
+		$tocheck = Core::GetComponents();
+
+		foreach($tocheck as $k => $ccheck){
+			$requires = $ccheck->getRequires();
+			if(!sizeof($requires)){
+				unset($tocheck[$k]);
+				continue;
+			}
+			var_dump($ccheck->getName(), $ccheck->getRequires());
+		}
+		var_dump($provides); die();
 	}
 
 

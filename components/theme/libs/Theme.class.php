@@ -43,6 +43,14 @@ class Theme{
 	 * @var string
 	 */
 	protected $_version;
+
+	/**
+	 * Description of this library.
+	 * As set from the XML file.
+	 *
+	 * @var string
+	 */
+	protected $_description;
 	
 	/**
 	 * Is this component explictly disabled?
@@ -97,13 +105,13 @@ class Theme{
 	 * 
 	 * @return array 
 	 */
-	public function getTemplates(){
+	public function getSkins(){
 		$out = array();
 		$default = null;
 		// If this theme is currently selected, check the default template too.
 		if($this->getName() == ConfigHandler::Get('/theme/selected')) $default = ConfigHandler::Get('/theme/default_template');
 		
-		foreach($this->_xmlloader->getElements('//templates/file') as $f){
+		foreach($this->_xmlloader->getElements('//skins/file') as $f){
 			$out[] = array(
 				'filename' => $this->getBaseDir() . $f->getAttribute('filename'),
 				'file' => $f->getAttribute('filename'),
@@ -113,6 +121,14 @@ class Theme{
 		}
 		
 		return $out;
+	}
+
+	/**
+	 * Alias of getSkins()
+	 * @return mixed
+	 */
+	public function getTemplates(){
+		return $this->getSkins();
 	}
 	
 	/**
@@ -139,128 +155,257 @@ class Theme{
 	 * Save this component metadata back to its XML file.
 	 * Useful in packager scripts.
 	 */
-	public function save(){
+	public function save($minified = false){
 		// Ensure there's a required namespace on the root node.
-		$this->getRootDOM()->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
+		$this->_xmlloader->getRootDOM()->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
+
+		// This needs to be the final step... write the XML doc back to the file.
+		$XMLFilename = $this->getBaseDir() . 'theme.xml';
+
+		if ($minified) {
+			file_put_contents($XMLFilename, $this->_xmlloader->asMinifiedXML());
+		}
+		else {
+			file_put_contents($XMLFilename, $this->_xmlloader->asPrettyXML());
+		}
+	}
+
+	/**
+	 * Save or get the package XML for this component.  This is useful for the
+	 * packager
+	 *
+	 * @param boolean $minified
+	 * @param string  $filename
+	 */
+	public function savePackageXML($minified = true, $filename = false) {
+
+		// Instantiate a new XML Loader object and get it ready to use.
+		$dom = new XMLLoader();
+		$dom->setRootName('package');
+		$dom->load();
+
+		// Populate the root attributes for this component package.
+		$dom->getRootDOM()->setAttribute('type', 'theme');
+		$dom->getRootDOM()->setAttribute('name', $this->getName());
+		$dom->getRootDOM()->setAttribute('version', $this->getVersion());
+
+		// Declare the packager
+		$dom->createElement('packager[version="' . Core::GetComponent()->getVersion() . '"]');
+
+		/* // Themes don't have any provide directives.
+		// Copy over any provide directives.
+		foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('provides') as $u) {
+			$newu = $dom->getDOM()->importNode($u);
+			$dom->getRootDOM()->appendChild($newu);
+		}
+		$dom->getElement('/provides[type="component"][name="' . strtolower($this->getName()) . '"][version="' . $this->getVersion() . '"]');
+		*/
+
+		/* // Themes don't have any requrie directives.
+		// Copy over any requires directives.
+		foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('requires') as $u) {
+			$newu = $dom->getDOM()->importNode($u);
+			$dom->getRootDOM()->appendChild($newu);
+		}
+		*/
+
+		// Copy over any upgrade directives.
+		// This one can be useful for an existing installation to see if this
+		// package can provide a valid upgrade path.
+		foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('upgrade') as $u) {
+			$newu = $dom->getDOM()->importNode($u);
+			$dom->getRootDOM()->appendChild($newu);
+		}
+
+		// Tack on description
+		$desc = $this->_xmlloader->getElement('/description', false);
+		if ($desc) {
+			$newd            = $dom->getDOM()->importNode($desc);
+			$newd->nodeValue = $desc->nodeValue;
+			$dom->getRootDOM()->appendChild($newd);
+		}
 
 
-		/////////////   Handle the file sections and their hashes \\\\\\\\\\\\\\
+		$out = ($minified) ? $dom->asMinifiedXML() : $dom->asPrettyXML();
 
-		// Purge the 'otherfiles' section.
-		$this->removeElements('//otherfiles');
-		//if($this->_xmlloader->getElement('/otherfiles', false)){
-		//	$this->getRootDOM()->removeChild($this->_xmlloader->getElement('/otherfiles'));
-		//}
-		$otherfilesnode = $this->_xmlloader->getElement('//otherfiles');
-		
-		$it = $this->getDirectoryIterator();
-		$hasview = $this->hasView();
-		$viewd = ($hasview)? $this->getViewSearchDir() : null;
-		$assetd = $this->getAssetDir();
-		$strlen = strlen($this->getBaseDir());
-		
-		foreach($it as $file){
-			$el = false;
-			$fname = substr($file->getFilename(), $strlen);
-			
-			if($file->inDirectory($assetd)){
-				// It's an asset!
-				$el = $this->_xmlloader->getElement('/assets/file[@filename="' . $fname . '"]');
-			}
-			elseif($hasview && $file->inDirectory($viewd)){
-				$el = $this->_xmlloader->getElement('/view/file[@filename="' . $fname . '"]');
+		if ($filename) {
+			file_put_contents($filename, $out);
+		}
+		else {
+			return $out;
+		}
+	}
+
+	/**
+	 * Get the raw XML of this component, useful for debugging.
+	 *
+	 * @return string (XML)
+	 */
+	public function getRawXML($minified = false) {
+		return ($minified) ? $this->_xmlloader->asMinifiedXML() : $this->_xmlloader->asPrettyXML();
+	}
+
+	/**
+	 * Set all asset files in this component.  Only really usable in the installer.
+	 *
+	 * @param $files array Array of files to set.
+	 */
+	public function setAssetFiles($files) {
+		// Clear out the array first.
+		$this->_xmlloader->removeElements('//theme/assets/file');
+
+		// It would be nice to have them alphabetical.
+		$newarray = array();
+		foreach ($files as $f) {
+			$newarray[$f['file']] = $f;
+		}
+		ksort($newarray);
+
+		// And recreate them all.
+		foreach ($newarray as $f) {
+			$this->_xmlloader->createElement('//theme/assets/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+		}
+	}
+
+	/**
+	 * Set all skin files in this component.  Only really usable in the installer.
+	 *
+	 * @param $files array Array of files to set.
+	 */
+	public function setSkinFiles($files) {
+
+		// This behaves slightly differently than the other ones, since this can include metadata for the skin.
+		// As such, they are not simply deleted to begin with.
+
+		// It would be nice to have them alphabetical.
+		$newarray = array();
+		foreach ($files as $f) {
+			$newarray[$f['file']] = $f;
+		}
+		ksort($newarray);
+
+		$used = array();
+		// Instead, I'm checking each existing one.
+		foreach($this->_xmlloader->getElements('//theme/skins/file') as $el){
+			$att_file = $el->getAttribute('filename');
+			if(isset($newarray[$att_file])){
+				$used[] = $att_file;
+				$el->setAttribute('md5', $newarray[$att_file]['md5']);
 			}
 			else{
-				// Only add it if the file doesn't exist already.
-				$el = $this->_xmlloader->getElement('//library/file[@filename="' . $fname . '"]|//module/file[@filename="' . $fname . '"]|//view/file[@filename="' . $fname . '"]', false);
-				// Scan through this file and file any classes that are provided.
-				if(preg_match('/\.php$/i', $fname)){
-					$fconts = file_get_contents($file->getFilename());
-					
-					if($el){
-						$getnames = ($el->parentNode->nodeName == 'library' || $el->parentNode->nodeName == 'module');
-					}
-					else{
-						// Does this file contain something that extends Controller?
-						if(preg_match('/^(abstract ){0,1}class[ ]*[a-z0-9_\-]*[ ]*extends controller/im', $fconts)){
-							$el = $this->_xmlloader->getElement('/module/file[@filename="' . $fname . '"]');
-							$getnames = true;
-						}
-						// WidgetControllers also go in the module section.
-						elseif(preg_match('/^(abstract ){0,1}class[ ]*[a-z0-9_\-]*[ ]*extends widgetcontroller/im', $fconts)){
-							$el = $this->_xmlloader->getElement('/module/file[@filename="' . $fname . '"]');
-							$getnames = true;
-						}
-						elseif(preg_match('/^(abstract |final ){0,1}class[ ]*[a-z0-9_\-]*/im', $fconts)){
-							$el = $this->_xmlloader->getElement('/library/file[@filename="' . $fname . '"]');
-							$getnames = true;
-						}
-						else{
-							$el = $this->_xmlloader->getElement('/otherfiles/file[@filename="' . $fname . '"]');
-							$getnames = false;
-						}
-					}
-					
-					// $el will now be set in the correct location!
-					
-					if($getnames){
-						// Well... get the classes!
-						$viewclasses = array();
-						preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller/im', $fconts, $ret);
-						foreach($ret[2] as $foundclass){
-							$this->_xmlloader->getElementFrom('provides[@type="controller"][@name="' . $foundclass . '"]', $el);
-							// This is needed to tell the rest of the save logic to ignore the save for classes.
-							$viewclasses[] = $foundclass;
-						}
-						
-						preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*widgetcontroller/im', $fconts, $ret);
-						foreach($ret[2] as $foundclass){
-							$this->_xmlloader->getElementFrom('provides[@type="widgetcontroller"][@name="' . $foundclass . '"]', $el);
-							// This is needed to tell the rest of the save logic to ignore the save for classes.
-							$viewclasses[] = $foundclass;
-						}
-						
-						preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
-						foreach($ret[2] as $foundclass){
-							if(in_array($foundclass, $viewclasses)) continue;
-							$this->_xmlloader->getElementFrom('provides[@type="class"][@name="' . $foundclass . '"]', $el);
-						}
-					}
-				}
-								
-				//$el = $this->_xmlloader->getElement('file[@filename="' . $fname . '"]', false);
-				if(!$el){
-					$el = $this->_xmlloader->getElement('/otherfiles/file[@filename="' . $fname . '"]');
-				}
-			}
-
-			// This really shouldn't NOT hit since the file is created under /otherfiles if it didn't exist before.... but who knows.
-			if($el){
-				// Tack on the hash of the file.
-				$el->setAttribute('md5', $file->getHash());
+				// Remove it!
+				$this->_xmlloader->getElement('//theme/skins', false)->removeChild($el);
 			}
 		}
-		
-		
-		// This needs to be the final step... write the XML doc back to the file.
-		$XMLFilename = $this->getXMLFilename();
-		//echo $this->asPrettyXML(); // DEBUG //
-		file_put_contents($XMLFilename, $this->asPrettyXML());
-		// and this would be a minimized version
-		//file_put_contents(substr($XMLFilename, 0, -4) . '-min.xml', $this->asMinifiedXML());
+
+		// And make sure that I didn't miss any new ones.
+		foreach($newarray as $f){
+			if(!in_array($f['file'], $used)){
+				// Make the title something generic.
+				$title = substr($f['file'], 6, -4);
+				$this->_xmlloader->createElement('//theme/skins/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"][@title="' . $title . '"]');
+			}
+		}
+	}
+
+	/**
+	 * Set all view files in this component.  Only really usable in the installer.
+	 *
+	 * @param $files array Array of files to set.
+	 */
+	public function setViewFiles($files) {
+		// Clear out the array first.
+		$this->_xmlloader->removeElements('//theme/view/file');
+
+		// It would be nice to have them alphabetical.
+		$newarray = array();
+		foreach ($files as $f) {
+			$newarray[$f['file']] = $f;
+		}
+		ksort($newarray);
+
+		// And recreate them all.
+		foreach ($newarray as $f) {
+			$this->_xmlloader->createElement('//theme/view/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+		}
+	}
+
+	/**
+	 * Get this component's version
+	 *
+	 * @return string
+	 */
+	public function getVersion() {
+		return $this->_version;
+	}
+
+	/**
+	 * Set the version of this component
+	 *
+	 * This affects the component.xml metafile of the package.
+	 *
+	 * @param $vers string
+	 *
+	 * @return void
+	 */
+	public function setVersion($vers) {
+		if ($vers == $this->_version) return;
+
+		// Switch over any unversioned upgrade directives to this version.
+		// First, check just a plain <upgrade> directive.
+		if (($upg = $this->_xmlloader->getElement('/upgrades/upgrade[@from=""][@to=""]', false))) {
+			// Add the current and dest. attribute to it.
+			$upg->setAttribute('from', $this->_version);
+			$upg->setAttribute('to', $vers);
+		}
+		elseif (($upg = $this->_xmlloader->getElement('/upgrades/upgrade[@from="' . $this->_version . '"][@to=""]', false))) {
+			$upg->setAttribute('to', $vers);
+		}
+		else {
+			// No node found... just create a new one.
+			$this->_xmlloader->getElement('/upgrades/upgrade[@from="' . $this->_version . '"][@to="' . $vers . '"]');
+		}
+
+		$this->_version = $vers;
+		$this->_xmlloader->getRootDOM()->setAttribute('version', $vers);
+	}
+
+	/**
+	 * Get the description for this component
+	 * @return string
+	 */
+	public function getDescription() {
+		if ($this->_description === null) {
+			$this->_description = trim($this->_xmlloader->getElement('//description')->nodeValue);
+		}
+
+		return $this->_description;
+	}
+
+	/**
+	 * Set the description for this component
+	 * @param $desc string
+	 */
+	public function setDescription($desc) {
+		// Set the cache first.
+		$this->_description = $desc;
+		// And set the data in the original DOM.
+		$this->_xmlloader->getElement('//description')->nodeValue = $desc;
 	}
 	
-	
 	public function getViewSearchDir(){
-		return $this->getBaseDir();
+		$d = $this->getBaseDir() . 'templates/';
+		return (is_dir($d)) ? $d : null;;
 	}
 	
 	public function getAssetDir(){
-		$d = $this->getBaseDir() . 'assets';
-		
-		// If there is no "asset" directory, just return the base directory.
-		if(is_dir($d)) return $d;
-		else return rtrim($this->getBaseDir(), '/');
+		$d = $this->getBaseDir() . 'assets/';
+		return (is_dir($d)) ? $d : null;;
+	}
+
+	public function getSkinDir(){
+		$d = $this->getBaseDir() . 'skins/';
+		return (is_dir($d)) ? $d : null;;
 	}
 	
 	public function isLoadable(){

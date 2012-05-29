@@ -40,18 +40,48 @@ class UpdaterHelper {
 		
 		// Build a list of components currently installed, this will act as a base.
 		$components = array();
-		foreach(ComponentHandler::GetAllComponents() as $c){
+		$core       = array();
+		$themes     = array();
+
+		foreach(Core::GetComponents() as $c){
 			$n = strtolower($c->getName());
-			if(!isset($components[$n])) $components[$n] = array();
-			$components[$n][$c->getVersion()] = array(
+			if($n == 'core'){
+				$core[$c->getVersion()] = array(
+					'name' => $n,
+					'title' => $c->getName(),
+					'version' => $c->getVersion(),
+					'source' => 'installed',
+					'description' => $c->getDescription(),
+					'provides' => $c->getProvides(),
+					'requires' => $c->getRequires(),
+					'location' => null,
+					'status' => 'installed',
+				);
+			}
+			else{
+				if(!isset($components[$n])) $components[$n] = array();
+				$components[$n][$c->getVersion()] = array(
+					'name' => $n,
+					'title' => $c->getName(),
+					'version' => $c->getVersion(),
+					'source' => 'installed',
+					'description' => $c->getDescription(),
+					'provides' => $c->getProvides(),
+					'requires' => $c->getRequires(),
+					'location' => null,
+					'status' => 'installed',
+				);
+			}
+		}
+
+		foreach(ThemeHandler::GetAllThemes() as $t){
+			$n = strtolower($t->getName());
+			if(!isset($themes[$n])) $themes[$n] = array();
+			$themes[$n][$t->getVersion()] = array(
 				'name' => $n,
-				'title' => $c->getName(),
 				'version' => $c->getVersion(),
-				'type' => $c->getType(),
 				'source' => 'installed',
 				'description' => $c->getDescription(),
-				'provides' => $c->getProvides(),
-				'requires' => $c->getRequires(),
 				'location' => null,
 				'status' => 'installed',
 			);
@@ -60,10 +90,9 @@ class UpdaterHelper {
 		// Now, look up components from all the updates sites.
 		$updatesites = UpdateSiteModel::Find('enabled = 1');
 		foreach($updatesites as $site){
-			
-			$file = new File_remote_backend($site->get('url'));
-			$file->username = $site->get('username');
-			$file->password = $site->get('password');
+
+			if(!$site->isValid()) continue;
+			$file = $site->getFile();
 			
 			$repoxml = new RepoXML();
 			$repoxml->loadFromFile($file);
@@ -71,31 +100,58 @@ class UpdaterHelper {
 			foreach($repoxml->getPackages() as $pkg){
 				// Already installed and is up to date, don't do anything.
 				if($pkg->isCurrent()) continue;
-				
+
 				$n = strtolower($pkg->getName());
-				
-				if(!ComponentHandler::GetComponent($n)){
-					$status = 'new';
+
+				switch($pkg->getType()){
+					case 'core':
+						// Check and see if this version is already listed in the repo.
+						if(!isset($core[$pkg->getVersion()])){
+							$core[$pkg->getVersion()] = array(
+								'name' => $n,
+								'title' => $pkg->getName(),
+								'version' => $pkg->getVersion(),
+								'source' => 'repo-' . $site->get('id'),
+								'description' => $pkg->getDescription(),
+								'provides' => $pkg->getProvides(),
+								'requires' => $pkg->getRequires(),
+								'location' => $rootpath . $pkg->getFileLocation(),
+								'status' =>'update',
+							);
+						}
+						break;
+					case 'component':
+						$status = (Core::GetComponent($n)) ? 'update' : 'new';
+
+						// Check and see if this version is already listed in the repo.
+						if(!isset($components[$n][$pkg->getVersion()])){
+							$components[$n][$pkg->getVersion()] = array(
+								'name' => $n,
+								'title' => $pkg->getName(),
+								'version' => $pkg->getVersion(),
+								'source' => 'repo-' . $site->get('id'),
+								'description' => $pkg->getDescription(),
+								'provides' => $pkg->getProvides(),
+								'requires' => $pkg->getRequires(),
+								'location' => $rootpath . $pkg->getFileLocation(),
+								'status' => $status,
+							);
+						}
+					case 'theme':
+						$status = (ThemeHandler::GetTheme($n)) ? 'update' : 'new';
+
+						// Check and see if this version is already listed in the repo.
+						if(!isset($themes[$n][$pkg->getVersion()])){
+							$themes[$n][$pkg->getVersion()] = array(
+								'name' => $n,
+								'version' => $pkg->getVersion(),
+								'source' => 'repo-' . $site->get('id'),
+								'description' => $pkg->getDescription(),
+								'location' => $rootpath . $pkg->getFileLocation(),
+								'status' => $status,
+							);
+						}
 				}
-				else{
-					$status = 'update';
-				}
-				
-				// Check and see if this version is already listed in the repo.
-				if(!isset($components[$n][$pkg->getVersion()])){
-					$components[$n][$pkg->getVersion()] = array(
-						'name' => $n,
-						'title' => $pkg->getName(),
-						'version' => $pkg->getVersion(),
-						'type' => $c->getType(),
-						'source' => 'repo-' . $site->get('id'),
-						'description' => $pkg->getDescription(),
-						'provides' => $pkg->getProvides(),
-						'requires' => $pkg->getRequires(),
-						'location' => $rootpath . $pkg->getFileLocation(),
-						'status' => $status,
-					);
-				}		
 				
 				//var_dump($pkg->asPrettyXML()); die();
 			}
@@ -103,21 +159,25 @@ class UpdaterHelper {
 		
 		// Give me the components in alphabetical order.
 		ksort($components);
+		ksort($themes);
 		
 		// And sort the versions.
 		foreach($components as $k => $v){
 			ksort($components[$k]);
 		}
+		foreach($themes as $k => $v){
+			ksort($themes[$k]);
+		}
 		
 		// Cache this for next pass.
 		$_SESSION['updaterhelper_getupdates'] = array();
-		$_SESSION['updaterhelper_getupdates']['data'] = $components;
-		$_SESSION['updaterhelper_getupdates']['expire'] = time() + 60;
+		$_SESSION['updaterhelper_getupdates']['data'] = array('core' => $core, 'components' => $components, 'themes' => $themes);
+		$_SESSION['updaterhelper_getupdates']['expire'] = time() + 6;
 		
-		return $components;
+		return array('core' => $core, 'components' => $components, 'themes' => $themes);
 	}
 	
-	public static function Install($name, $version, $dryrun = false){
+	public static function InstallComponent($name, $version, $dryrun = false){
 		$components = UpdaterHelper::GetUpdates();
 		
 		// Make sure the name and version exist in the updates list.

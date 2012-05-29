@@ -60,6 +60,11 @@ $directories = array(
 		'directory' => $destdir . 'components/',
 		'relpath' => 'components/',
 		'type' => 'component'
+	),
+	array(
+		'directory' => $destdir . 'themes/',
+		'relpath' => 'themes/',
+		'type' => 'theme'
 	)
 );
 

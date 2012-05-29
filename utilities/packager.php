@@ -930,152 +930,151 @@ function process_component($component, $forcerelease = false){
 
 
 function process_theme($theme, $forcerelease = false){
+
+	// Since "Themes" are not enabled for CLI by default, I need to manually include that file.
+	require_once(ROOT_PDIR . 'components/theme/libs/Theme.class.php');
+
 	global $packagername, $packageremail;
 	
 	$t = new Theme($theme);
+	$t->load();
+
+	$version = $t->getVersion();
+
+	echo "Loading root path...";
+	$it = new CAEDirectoryIterator();
+	$it->setPath($t->getBaseDir());
+	$it->addIgnore($t->getBaseDir() . 'theme.xml');
+	$it->scan();
+	echo "OK" . NL;
+
+	$assetdir   = $t->getAssetDir();
+	$skindir    = $t->getSkinDir();
+	$viewdir    = $t->getViewSearchDir();
+	$basestrlen = strlen($t->getBaseDir());
+	$assetfiles = array();
+	$skinfiles  = array();
+	$viewfiles  = array();
+
+	echo "Scanning files for metacode...";
+	foreach($it as $file){
+		// And then, scan this file for code, ie: classes, controllers, etc.
+		$fname = substr($file->getFilename(), $basestrlen);
+
+		if($assetdir && $file->inDirectory($assetdir)){
+			// It's an asset!
+			$assetfiles[] = array('file' => $fname, 'md5' => $file->getHash());
+		}
+		if($skindir && $file->inDirectory($skindir)){
+			// It's a skin!
+			$skinfiles[] = array('file' => $fname, 'md5' => $file->getHash());
+		}
+		elseif($viewdir && $file->inDirectory($viewdir)){
+			// It's a template! (view)
+			$viewfiles[] = array('file' => $fname, 'md5' => $file->getHash());
+		}
+		else{
+			// It's a something..... I don't care.
+			//$otherfiles[] = array('file' => $fname, 'md5' => $file->getHash());
+		}
+		echo ".";
+	}
+	echo "OK" . NL;
+
+	$t->setAssetFiles($assetfiles);
+	$t->setSkinFiles($skinfiles);
+	$t->setViewFiles($viewfiles);
 	
 	$ans = false;
-	
-	// If just updating a current release, no need to ask for a version number.
-	if($forcerelease){
-		// if it's a force release... don't bother asking the user what they want to do.
-		$reltype = 'release';
-	}
-	else{
-		$reltype = CLI::PromptUser('Are you releasing a new release or just updating an existing theme?', array('update' => 'Update to Existing Version', 'release' => 'New Release'));
-	}
 
-
-	if($reltype == 'release'){
-		// Try to determine if it's an official package based on the author email.
-		$original = false;
-		foreach($t->getAuthors() as $aut){
-			if($aut['email'] == $packageremail) $original = true;
-		}
-		
-		// Try to explode the version by a ~ sign, this signifies not the original packager/source.
-		// ie: ForeignComponent 3.2.4 may be versioned 3.2.4~thisproject5
-		// if it's the 5th revision of the upstream version 3.2.4 for 'thisproject'.
-		$version = _increment_version($t->getVersion(), $original);
-		
-		$version = CLI::PromptUser('Please set the version of the new release', 'text', $version);
-		$c->setVersion($version);
-	}
-	else{
-		$version = $t->getVersion();
-	}
-	
-	
-	// Set the packager information on this release.
-	$t->setPackageMaintainer($packagername, $packageremail);
-	
-	// Grep through the files and pull out the documentation... this will populate the licenses and authors.
-	$licenses = $t->getLicenses();
-	$authors = $t->getAuthors();
-	//$it = new DirectoryCAEIterator($c->getBaseDir());
-	$it = $t->getDirectoryIterator();
-	foreach($it as $file){
-		$docelements = parse_for_documentation($file->getFilename());
-		$licenses = array_merge($licenses, $docelements['licenses']);
-		// @todo Should I skip the authors?
-		$authors = array_merge($authors, $docelements['authors']);
-	}
-	
-	$t->setAuthors(get_unique_authors($authors));
-
-
-	$t->setLicenses(get_unique_licenses($licenses));
-	
-	while($ans != 'finish'){
+	while($ans != 'save'){
 		$opts = array(
-			'editdesc' => 'Edit Description',
-			'editchange' => 'Edit Changelog',
-			'finish' => 'Finish Editing, Save it!',
+			'editvers'   => 'Edit Version',
+			'editdesc'   => 'Edit Description',
+			//'editchange' => 'Edit Changelog',
+			'printdebug' => 'DEBUG - Print the XML',
+			'save' => 'Finish Editing, Save it!',
+			'exit' => 'Abort and exit without saving changes',
 		);
-		$ans = CLI::PromptUser('What do you want to edit for theme ' . $t->getName() . ' ' . $version, $opts);
+		$ans = CLI::PromptUser('What do you want to edit for theme ' . $theme . ' ' . $version, $opts);
 		
 		switch($ans){
+			case 'editvers':
+				$version = _increment_version($t->getVersion(), true);
+				$version = CLI::PromptUser('Please set the version of the new release', 'text', $version);
+				$t->setVersion($version);
+				break;
 			case 'editdesc':
-				$t->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $c->getDescription()));
+				$t->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $t->getDescription()));
 				break;
 			case 'editchange':
-				$t->setChangelog(CLI::PromptUser('Enter the changelog.', 'textarea', $c->getChangelog()));
+				$t->setChangelog(CLI::PromptUser('Enter the changelog.', 'textarea', $t->getChangelog()));
+				break;
+			case 'printdebug':
+				echo $t->getRawXML() . NL;
 				break;
 		}
 	}
-	
-	
-	// @todo Add SVN integration using libraries from the websvn project.
+
 	
 	
 	// User must have selected 'finish'...
 	$t->save();
 	echo "Saved!" . NL;
-	
-	if($reltype == 'release'){
-		if($forcerelease){
-			// if force release, don't give the user an option... just do it.
-			$bundleyn = true;
-		}
-		else{
-			$bundleyn = CLI::PromptUser('Package saved, do you want to bundle the changes into a package?', 'boolean');
-		}
-		
-		
-		if($bundleyn){
-			// Create a temp directory to contain all these
-			// @todo Bundle up the component, add a META-INF.xml file and (ideally), sign the package.
-			$dir = '/tmp/packager-' . $t->getName() . '/';
-			$tgz = ROOT_PDIR . 'exports/themes/' . $t->getName() . '-' . $t->getVersion() . '.tgz';
-		
-			// Ensure the export directory exists.
-			if(!is_dir(dirname($tgz))) exec('mkdir -p "' . dirname($tgz) . '"');
-			//mkdir(dirname($tgz));
-		
-			if(!is_dir($dir)) mkdir($dir);
-			if(!is_dir($dir . 'data/')) mkdir($dir . 'data/');
-			if(!is_dir($dir . 'META-INF/')) mkdir($dir . 'META-INF/');
-			
-			//smartCopy(ROOT_PDIR . '/components/' . $c->getName(), $dir . '/data');
-			//smartCopy($c->getBaseDir(), $dir . 'data/');
-			foreach($t->getAllFilenames() as $f){
-				$file = new File_local_backend($t->getBaseDir() . $f['file']);
-				$file->copyTo($dir . 'data/' . $f['file']);
-			}
-			// Don't forget the metafile....
-			$file = new File_local_backend($t->getXMLFilename());
-			$file->copyTo($dir . 'data/' . $t->getXMLFilename(''));
 
-			$packager = 'CAE2 ' . ComponentHandler::GetComponent('core')->getVersion();
-			$packagename = $t->getName();
-			
-			// Different component types require a different bundle type.
-			$bundletype = 'theme';
-		
-			// This is the data that will be added to the manifest file.
-			// That file tells the installer what the archive is, ie: component, template, etc.
-			$meta = <<<EOD
-Manifest-Version: 1.0
-Created-By: $packager
-Bundle-ContactAddress: $packageremail
-Bundle-Name: $packagename
-Bundle-Version: $version
-Bundle-Type: $bundletype
-EOD;
-			file_put_contents($dir . 'META-INF/MANIFEST.MF', $meta);
-			exec('tar -czf ' . $tgz . ' -C ' . $dir . ' --exclude=.svn --exclude=*~ --exclude=._* .');
-			$bundle = $tgz;
-		
-			if(CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
-				exec('gpg -u "' . $packageremail . '" -a --sign "' . $tgz . '"');
-				$bundle .= '.asc';
-			}
-		
-			// And remove the tmp directory.
-			exec('rm -fr "' . $dir . '"');
-		
-			echo "Created package of " . $t->getName() . ' ' . $t->getVersion() . NL . " as " . $bundle . NL;
+	if($forcerelease){
+		// if force release, don't give the user an option... just do it.
+		$bundleyn = true;
+	}
+	else{
+		$bundleyn = CLI::PromptUser('Theme saved, do you want to bundle the changes into a package?', 'boolean');
+	}
+
+
+	if($bundleyn){
+
+
+		// Create a temp directory to contain all these
+		$dir = TMP_DIR . 'packager-' . $theme . '/';
+
+		// Destination tarball
+		$tgz = ROOT_PDIR . 'exports/themes/' . $theme . '-' . $version . '.tgz';
+
+		// Ensure the export directory exists.
+		if(!is_dir(dirname($tgz))) exec('mkdir -p "' . dirname($tgz) . '"');
+		//mkdir(dirname($tgz));
+
+		if(!is_dir($dir)) mkdir($dir);
+		if(!is_dir($dir . 'data/')) mkdir($dir . 'data/');
+
+		// I already have a good iterator...just reuse it.
+		$it->rewind();
+
+		foreach($it as $file){
+			$fname = substr($file->getFilename(), $basestrlen);
+			$file->copyTo($dir . 'data/' . $fname);
 		}
+
+		// Because the destination is relative...
+		$xmldest = 'data/theme.xml' ;
+		$xmloutput = new File_local_backend($dir . $xmldest);
+		$xmloutput->putContents($t->getRawXML(true));
+
+		// Save the package.xml file.
+		$t->savePackageXML(true, $dir . 'package.xml');
+
+		exec('tar -czf ' . $tgz . ' -C ' . $dir . ' --exclude-vcs --exclude=*~ --exclude=._* .');
+		$bundle = $tgz;
+
+		if(CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
+			exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -u "' . $packageremail . '" -a --sign "' . $tgz . '"');
+			$bundle .= '.asc';
+		}
+
+		// And remove the tmp directory.
+		exec('rm -fr "' . $dir . '"');
+
+		echo "Created package of " . $theme . ' ' . $version . NL . " as " . $bundle . NL;
 	}
 } // function process_theme($theme)
 

@@ -1,57 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.0" name="user" execmode="web">
-	
 	<requires>
 		<require name="core" type="component"/>
 		<require name="Facebook" type="component"/>
 	</requires>
-	
 	<smartyplugins directory="helpers/smarty-plugins/"/>
-	
 	<hooks>
 		<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
 	</hooks>
-	
 	<forms>
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
-	
 	<files>
-		<file filename="Models/UserModel.class.php" md5="5d0d13c927f3833df02a6c9c1fda31ff">
-			<class name="UserModel"/>
+		<file filename="Controllers/UserController.class.php" md5="63e0ff32f97d889b39b2f2d2ee347ff0">
+			<controller name="UserController"/>
 		</file>
-		<file filename="UserForm.class.php">
-			<class name="FormAccessStringInput"/>
-		</file>
-		<file filename="Models/UserGroupModel.php">
-			<class name="UserGroupModel"/>
-		</file>
-		<file filename="Models/UserUserConfigModel.class.php" md5="7dbdfdaa162114d3b0b7fe04ea920891">
-			<class name="UserUserConfigModel"/>
-		</file>
-		<file filename="Models/UserConfigModel.class.php" md5="e85fe725f89604ed6f572befc82586c0">
+		<file filename="Models/UserConfigModel.class.php" md5="67df933a187aa3af0d26d7f68905c9ad">
 			<class name="UserConfigModel"/>
 		</file>
-		<file filename="User_Backend.interface.php" md5="0a416f5652d467e4bc284c0f007da36f">
-			<interface name="User_Backend"/>
+		<file filename="Models/UserGroupModel.php" md5="a67f05b3d495144a1c7aa5ffa23c9ac0">
+			<class name="UserGroupModel"/>
 		</file>
-		<file filename="User.class.php" md5="03cf100cd93e77e9570727edb8049a03">
+		<file filename="Models/UserModel.class.php" md5="e3ce255a768590faa4ee63eada5552e0">
+			<class name="UserModel"/>
+		</file>
+		<file filename="Models/UserUserConfigModel.class.php" md5="ac7d5b5265af960f10ca9dba4f99c6d9">
+			<class name="UserUserConfigModel"/>
+		</file>
+		<file filename="User.class.php" md5="9a6c86cd52149648915a86017fcff218">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
-		<file filename="backends/User_datamodel.backend.php" md5="cf9fd1b2a0b4294eb0875a47522efa78">
-			<class name="User_datamodel_Backend"/>
+		<file filename="UserForm.class.php" md5="ad1623218cc4db10c46c6f82c0c7cb76">
+			<class name="FormAccessStringInput"/>
 		</file>
-		<file filename="backends/User_facebook.backend.php" md5="1fe13307af2252b037b029a79f536c81">
-			<class name="User_facebook_Backend"/>
+		<file filename="User_Backend.interface.php" md5="ad7d3dee5bcb407e01e7426b15785c2b">
+			<interface name="User_Backend"/>
 		</file>
-		<file filename="Controllers/UserController.class.php" md5="219aa97f369471d3f5f1aa5fc119a633">
-			<controller name="UserController"/>
-		</file>
-		<file filename="Widgets/UserLoginWidget.class.php" md5="154480303036d9fe2e09a0537979f41f">
+		<file filename="Widgets/UserLoginWidget.class.php" md5="4b05356cd989a51270550b6ad91c4cd9">
 			<class name="UserLoginWidget"/>
 		</file>
+		<file filename="backends/User_datamodel.backend.php" md5="12aac6994c8b680641ea98828fff6891">
+			<class name="User_datamodel_Backend"/>
+		</file>
+		<file filename="backends/User_facebook.backend.php" md5="c9c4568e92e2b2d8917dd5f6c8e640c9">
+			<class name="User_facebook_Backend"/>
+		</file>
+		<file filename="helpers/smarty-plugins/block.permission.php" md5="7b63104b6e541136797f28cf22005178"/>
 	</files>
 	<view>
 		<file filename="templates/widgets/userlogin.tpl" md5="8a8d32b7f36e7ee581ece66be94b4d2d"/>
@@ -60,6 +56,8 @@
 		<file filename="templates/pages/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/user/forgotpassword.tpl" md5="c2da0dced97b6b643b20c40a5046b5d1"/>
 		<file filename="templates/pages/user/login.tpl" md5="b499441b575fa4bd2e7dd9ac2e49f52b"/>
+		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="f230fcddefd98780d34bb7a9b3a38ac5"/>
+		<file filename="templates/widgets/userlogin/execute.tpl" md5="8a8d32b7f36e7ee581ece66be94b4d2d"/>
 	</view>
 	<pages>
 		<page baseurl="/User/Login" admin="0" widget="0" access="!g:authenticated" title="Login"/>
@@ -89,9 +87,8 @@
 	</configs>
 	<assets>
 		<file filename="assets/js/user/login.js" md5="f48e188960e94f209e89f5168b101983"/>
-        <file filename="assets/js/user/user.js"/>
+		<file filename="assets/js/user/user.js" md5="b8793bfd7cd6ebeb3a9889905b300f7a"/>
 	</assets>
-	<upgrade from="0.0.1-dev1" to="0.0.2"/>
 	<changelog version="0.0.2">
 		<packagemeta>
 			<date>Mon, 19 Sep 2011 01:28:48 -0400</date>
@@ -102,8 +99,6 @@
 			Added allow public registration config option.
 		</notes>
 	</changelog>
-	<upgrade from="0.0.2" to="0.0.3"/>
-	<upgrade from="0.0.3" to="1.9.0"/>
 	<changelog version="0.0.3">
 		<packagemeta>
 			<date>Wed, 28 Sep 2011 02:27:06 -0400</date>
@@ -118,13 +113,21 @@
 	<description>
 		The user component provides core user functionality, including registration, login, forgot password and access controls.
 	</description>
-	<author name="powellc"/>
-	<author name="Charlie Powell" email="charlie@eval.bz"/>
-	<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-		GNU Affero General Public License v3
-	</license>
 	<otherfiles>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="f909ae6c68833e4dc221594f3472d94d"/>
 	</otherfiles>
+	<upgrades>
+		<upgrade from="0.0.1-dev1" to="0.0.2"/>
+		<upgrade from="0.0.2" to="0.0.3"/>
+		<upgrade from="0.0.3" to="1.9.0"/>
+	</upgrades>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
 </component>
 

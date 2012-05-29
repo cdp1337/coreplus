@@ -22,6 +22,12 @@
 
 class UpdateSiteModel extends Model {
 
+	/**
+	 * Remote file.
+	 * @var null|File_remote_backend
+	 */
+	private $_remotefile = null;
+
 	public static $Schema = array(
 		'id'       => array(
 			'type'     => Model::ATT_TYPE_ID,
@@ -68,10 +74,7 @@ class UpdateSiteModel extends Model {
 	 * @return boolean
 	 */
 	public function isValid() {
-		$remote           = new File_remote_backend();
-		$remote->password = $this->get('password');
-		$remote->username = $this->get('username');
-		$remote->setFilename($this->get('url') . '/repo.xml.gz');
+		$remote = $this->getFile();
 
 		if (!$remote->exists()) {
 			return false;
@@ -79,6 +82,22 @@ class UpdateSiteModel extends Model {
 
 		// I should probably do additional checks here, but eh.....
 		return true;
+	}
+
+	/**
+	 * Get the remote file for this update site
+	 *
+	 * @return File_remote_backend
+	 */
+	public function getFile(){
+		if($this->_remotefile === null){
+			$this->_remotefile           = new File_remote_backend();
+			$this->_remotefile->password = $this->get('password');
+			$this->_remotefile->username = $this->get('username');
+			$this->_remotefile->setFilename($this->get('url') . '/repo.xml.gz');
+		}
+
+		return $this->_remotefile;
 	}
 
 }

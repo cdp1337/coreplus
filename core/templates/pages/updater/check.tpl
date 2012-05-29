@@ -1,6 +1,8 @@
 {script library="jquery"}{/script}
 
 <script type="text/javascript">
+$(function(){
+
 	
 	// This will contain the full data persistently. (required for continuous checking of requirements and provides).
 	var components;
@@ -86,6 +88,8 @@
 		// Submission will be handled with javascript.
 		return false;
 	});
+
+});
 </script>
 
 <table id="output">

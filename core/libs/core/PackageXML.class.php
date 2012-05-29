@@ -63,8 +63,17 @@ class PackageXML extends XMLLoader {
 	 * @return boolean
 	 */
 	public function isInstalled() {
+		switch($this->getType()){
+			case 'core':
+			case 'component':
+				$c = Core::GetComponent($this->getName());
+				return ($c && $c->isInstalled());
+			case 'theme':
+				$t = ThemeHandler::GetTheme($this->getName());
+				return ($t && $t->isInstalled());
+		}
 		//$n = strtolower($this->getName());
-		return (ComponentHandler::GetComponent($this->getName()));
+
 	}
 
 	/**
@@ -73,11 +82,17 @@ class PackageXML extends XMLLoader {
 	 * @return boolean
 	 */
 	public function isCurrent() {
-		$c = ComponentHandler::GetComponent($this->getName());
-
-		if (!$c) return false; // Not installed?  Not current.
-
-		return version_compare($c->getVersion(), $this->getVersion(), 'ge');
+		switch($this->getType()){
+			case 'core':
+			case 'component':
+				$c = Core::GetComponent($this->getName());
+				if (!$c) return false; // Not installed?  Not current.
+				return version_compare($c->getVersion(), $this->getVersion(), 'ge');
+			case 'theme':
+				$t = ThemeHandler::GetTheme($this->getName());
+				if (!$t) return false; // Not installed?  Not current.
+				return version_compare($t->getVersion(), $this->getVersion(), 'ge');
+		}
 	}
 
 	public function getRequires() {

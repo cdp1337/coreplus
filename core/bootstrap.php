@@ -213,7 +213,7 @@ else {
 	$rooturlNOSSL        = $servernameNOSSL . ROOT_WDIR;
 	$rooturlSSL          = $servername . ROOT_WDIR;
 	$curcall             = $servername . $_SERVER['REQUEST_URI'];
-	$relativerequestpath = '/' . substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
+	$relativerequestpath = strtolower('/' . substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR)));
 	if (strpos($relativerequestpath, '?') !== false) $relativerequestpath = substr($relativerequestpath, 0, strpos($relativerequestpath, '?'));
 	$ssl = (isset($_SERVER['HTTPS']));
 

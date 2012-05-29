@@ -602,11 +602,11 @@ class Core implements ISingleton {
 	}
 
 	/**
-	 * Get the component object for the core.
-	 * @return Component
+	 * Get the component object.
+	 * @return Component_2_1
 	 */
-	public static function GetComponent() {
-		return self::Singleton()->_components['core'];
+	public static function GetComponent($name = 'core') {
+		return isset(self::Singleton()->_components[$name]) ? self::Singleton()->_components[$name] : null;
 	}
 
 	/**
