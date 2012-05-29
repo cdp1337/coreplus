@@ -45,7 +45,7 @@ function validate_theme_name($theme){
 function validate_template_name($theme, $template){
 	if(!validate_theme_name($theme)) return false;
 	
-	$filename = \ROOT_PDIR . 'themes/' . $theme . '/' . $template;
+	$filename = \ROOT_PDIR . 'themes/' . $theme . '/skins/' . $template;
 		
 	if($template{0} == '.' || !$template || !is_readable($filename)){
 		return false;
