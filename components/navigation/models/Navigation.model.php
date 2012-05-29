@@ -35,23 +35,7 @@ class NavigationModel extends Model {
 		'unique:name' => array('name'),
 	);
 	
-	
-    public function __construct($key = null) {
-		$this->_linked = array(
-			'Widget' => array(
-				'link' => Model::LINK_HASONE,
-				'on' => 'baseurl',
-			),
-			'NavigationEntry' => array(
-				'link' => Model::LINK_HASMANY,
-				'on' => array('navigationid' => 'id'),
-			),
-		);
-		
-		parent::__construct($key);
-	}
-	
-	
+
 	public function get($k) {
 		$k = strtolower($k);
 		switch($k){

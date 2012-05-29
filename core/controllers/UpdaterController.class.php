@@ -198,6 +198,9 @@ class UpdaterController extends Controller_2_1 {
 		$view = $this->getView();
 		$req = $this->getPageRequest();
 
+		// This is a json-only page.
+		$view->contenttype = View::CTYPE_JSON;
+
 		// This is a post-only page!
 		/*if(!$req->isPost()){
 			$view->error = View::ERROR_BADREQUEST;
@@ -219,17 +222,44 @@ class UpdaterController extends Controller_2_1 {
 
 		foreach(Core::GetComponents() as $k => $ccheck){
 			$requires = $ccheck->getRequires();
-			if(!sizeof($requires)){
-				unset($tocheck[$k]);
-				continue;
+			foreach($requires as $r){
+				$n = strtolower($r['name']);
+
+				// This is a dependency of everything, I know....
+				if($n == 'core') continue;
+
+				if(!isset($reverse_requirements[$n])) $reverse_requirements[$n] = array();
+				$reverse_requirements[$n][] = $ccheck->getName();
 			}
-			var_dump($ccheck->getName(), $ccheck->getRequires());
+			//var_dump($ccheck->getName(), $ccheck->getRequires());
 		}
 
-		// Run through every component and see if there's a conflicting requirement.
+		// Now I can quickly see if any of the "provides" of this component will conflict with other systems.
 		// These must be disabled too!
 		$provides = $c->getProvides();
 
+		$todisable = array($name);
+
+		foreach($provides as $p){
+			if(isset($reverse_requirements[$p['name']])){
+				$todisable = array_merge($todisable, $reverse_requirements[$p['name']]);
+			}
+		}
+		// And again!
+		// (I could just use a simple recursive function here, but a level of two should be adequate)
+		foreach($todisable as $n){
+			if(isset($reverse_requirements[$n])){
+				$todisable = array_merge($todisable, $reverse_requirements[$n]);
+			}
+		}
+
+		$todisable = array_unique($todisable);
+
+		if($dryrun){
+
+		}
+
+		var_dump($todisable); die();
 		$tocheck = Core::GetComponents();
 
 		foreach($tocheck as $k => $ccheck){

@@ -149,16 +149,16 @@ class ContentController extends Controller_2_1 {
 	public function delete(){
 		$view = $this->getView();
 		$request = $this->getPageRequest();
-		
-		$m = new ContentModel($page->getParameter(0));
 
-		if(!$m->exists()) return View::ERROR_NOTFOUND;
-		
-		if($request->getParameter(1) == 'confirm'){
-			$m->delete();
-			Core::Redirect('/Content');
+		// This is a POST-only page.
+		if(!$request->isPost()){
+			return View::ERROR_BADREQUEST;
 		}
 		
+		$m = new ContentModel($request->getParameter(0));
+
+		if(!$m->exists()) return View::ERROR_NOTFOUND;
+
 		$view->templatename = '/pages/content/delete.tpl';
 		$view->title = 'Confirm Delete ' . $m->get('title');
 		$view->assignVariable('model', $m);
