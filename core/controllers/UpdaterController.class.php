@@ -44,7 +44,14 @@ class UpdaterController extends Controller_2_1 {
 			$components[$k] = $c;
 		}
 
-		$themes = ThemeHandler::GetAllThemes();
+		// If the theme is disabled, this won't be available.
+		if(class_exists('ThemeHandler')){
+			$themes = ThemeHandler::GetAllThemes();
+		}
+		else{
+			$themes = array();
+		}
+
 
 		$view->title = 'System Updater';
 		$view->addControl('Manage Repos', '/updater/repos', 'settings');
@@ -101,6 +108,10 @@ class UpdaterController extends Controller_2_1 {
 		$components = UpdaterHelper::GetUpdates();
 
 		$view->jsondata = $components;
+	}
+
+	public function update(){
+
 	}
 
 	/**
@@ -202,17 +213,24 @@ class UpdaterController extends Controller_2_1 {
 		$view->contenttype = View::CTYPE_JSON;
 
 		// This is a post-only page!
-		/*if(!$req->isPost()){
+		if(!$req->isPost()){
 			$view->error = View::ERROR_BADREQUEST;
 			return;
-		}*/
+		}
 
-		$name    = $req->getParameter(0);
+		$name    = strtolower($req->getParameter(0));
 		$dryrun  = $req->getParameter('dryrun');
 		$c = Core::GetComponent($name);
 
 		if(!$c){
-			$view->error = View::ERROR_NOTFOUND;
+			$view->jsondata = array('message' => 'Requested component not found');
+			//$view->error = View::ERROR_NOTFOUND;
+			return;
+		}
+
+		if($c instanceof Component){
+			//$view->error = View::ERROR_SERVERERROR;
+			$view->jsondata = array('message' => 'Requested component is not a valid 2.1-based component, please upgrade manually ' . $name);
 			return;
 		}
 
@@ -221,6 +239,10 @@ class UpdaterController extends Controller_2_1 {
 		$reverse_requirements = array();
 
 		foreach(Core::GetComponents() as $k => $ccheck){
+
+			// I only want to look at enabled components.
+			if(!$ccheck->isEnabled()) continue;
+
 			$requires = $ccheck->getRequires();
 			foreach($requires as $r){
 				$n = strtolower($r['name']);
@@ -255,22 +277,76 @@ class UpdaterController extends Controller_2_1 {
 
 		$todisable = array_unique($todisable);
 
-		if($dryrun){
-
-		}
-
-		var_dump($todisable); die();
-		$tocheck = Core::GetComponents();
-
-		foreach($tocheck as $k => $ccheck){
-			$requires = $ccheck->getRequires();
-			if(!sizeof($requires)){
-				unset($tocheck[$k]);
-				continue;
+		if(!$dryrun){
+			foreach($todisable as $c){
+				Core::GetComponent($c)->disable();
 			}
-			var_dump($ccheck->getName(), $ccheck->getRequires());
 		}
-		var_dump($provides); die();
+
+		$view->jsondata = array('changes' => $todisable, 'dryrun' => $dryrun);
+	}
+
+	public function component_enable() {
+		$view = $this->getView();
+		$req = $this->getPageRequest();
+
+		// This is a json-only page.
+		$view->contenttype = View::CTYPE_JSON;
+
+		// This is a post-only page!
+		/*if(!$req->isPost()){
+			$view->error = View::ERROR_BADREQUEST;
+			return;
+		}*/
+
+		$name    = strtolower($req->getParameter(0));
+		$dryrun  = $req->getParameter('dryrun');
+		$c = Core::GetComponent($name);
+
+		if(!$c){
+			$view->error = View::ERROR_NOTFOUND;
+			return;
+		}
+
+		if($c instanceof Component){
+			$view->error = View::ERROR_SERVERERROR;
+			$view->jsondata = array('message' => 'Requested component is not a valid 2.1 version component, please upgrade ' . $name);
+			return;
+		}
+
+		// Create a reverse map of what components are the basis of which components, this will make it easier
+		// to do the necessary mapping.
+		$provides = array('library' => array(), 'component' => array());
+		foreach(Core::GetComponents() as $ccheck){
+			// I only want to look at enabled components.
+			if(!$ccheck->isEnabled()) continue;
+
+			foreach($ccheck->getProvides() as $p){
+				$provides[$p['type']][$p['name']] = $p['version'];
+			}
+		}
+
+		// And check this component's requirements.
+		$requires = $c->getRequires();
+		foreach($requires as $r){
+			if(!isset($provides[$r['type']][$r['name']])){
+				$view->jsondata = array('message' => 'Unable to locate requirement ' . $r['type'] . ' ' . $r['name']);
+				return;
+			}
+
+			$op = ($r['operation']) ? $r['operation'] : 'ge';
+
+			if(!Core::VersionCompare($provides[$r['type']][$r['name']], $r['version'], $op)){
+				$view->jsondata = array('message' => 'Dependency version for ' . $r['type'] . ' ' . $r['name'] . ' ' . $op . ' ' . $r['version'] . ' not met');
+				return;
+			}
+		}
+
+		if(!$dryrun){
+			$c->enable();
+		}
+
+		$view->jsondata = array('changes' => array($name), 'dryrun' => $dryrun);
 	}
 
 

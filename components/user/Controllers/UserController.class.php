@@ -294,7 +294,7 @@ class UserController extends Controller_2_1{
 		Session::SetUser($u);
 		
 		// Where shall I return to?
-		if(REL_REQUEST_PATH == '/User/Login') return '/';
+		if(REL_REQUEST_PATH == '/user/login') return '/';
 		else return REL_REQUEST_PATH;
 	}
 	

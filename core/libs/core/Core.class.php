@@ -340,6 +340,12 @@ class Core implements ISingleton {
 			$size = sizeof($list);
 			foreach ($list as $n => $c) {
 
+				// Disabled components don't get recognized.
+				if($c->isInstalled() && !$c->isEnabled()){
+					unset($list[$n]);
+					continue;
+				}
+
 				// If it's loaded, register it and remove it from the list!
 				if ($c->isInstalled() && $c->isLoadable() && $c->loadFiles()) {
 

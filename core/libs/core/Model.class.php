@@ -67,9 +67,8 @@ class Model implements ArrayAccess {
 	// @see http://www.regular-expressions.info/email.html
 	//const VALIDATION_EMAIL = "/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/";
 
-	// DISABLING 2012.05 cpowell
-	//const LINK_HASONE  = 'one';
-	//const LINK_HASMANY = 'many';
+	const LINK_HASONE  = 'one';
+	const LINK_HASMANY = 'many';
 
 	/**
 	 * Which DataModelInterface should this model execute its operations with.

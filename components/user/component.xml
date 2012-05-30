@@ -13,7 +13,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="Controllers/UserController.class.php" md5="63e0ff32f97d889b39b2f2d2ee347ff0">
+		<file filename="Controllers/UserController.class.php" md5="23553ce3e5e067b1fa08b15af1e13e2c">
 			<controller name="UserController"/>
 		</file>
 		<file filename="Models/UserConfigModel.class.php" md5="67df933a187aa3af0d26d7f68905c9ad">

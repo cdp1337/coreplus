@@ -78,9 +78,7 @@ abstract class ComponentFactory {
 		$fh = fopen($filename, 'r');
 		if (!$fh) return null;
 
-		$line = fgets($fh, 256);
-		$line = fgets($fh, 256);
-		// I need the second line.
+		$line = fread($fh, 512);
 		fclose($fh);
 
 		if (strpos($line, 'http://corepl.us/api/2_1/component.dtd') !== false) {

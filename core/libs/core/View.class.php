@@ -407,7 +407,8 @@ class View {
 				// Tack on what components are currently installed.
 				$debug .= '<b>Available Components</b>' . "\n";
 				foreach (Core::GetComponents() as $l => $v) {
-					$debug .= $v->getName() . ' ' . $v->getVersion() . "\n";
+					$debug .= ($v->isEnabled() ? '[<span style="color:green;">Enabled</span>]' : '[<span style="color:red;">Disabled</span>]').
+						$v->getName() . ' ' . $v->getVersion() . "\n";
 				}
 
 				$debug .= '<b>Query Log</b>' . "\n";

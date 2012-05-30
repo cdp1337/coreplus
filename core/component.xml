@@ -36,7 +36,7 @@
 		<file filename="README.md" md5="c96dd6a283209da70091b42936b0449d"/>
 		<file filename="config/configuration.xml.example" md5="d58ec4634ef605eb6512b1fadc798f85"/>
 		<file filename="core/CHANGELOG" md5="4dc4c3af39d71d260fdb73b4fcbb2665"/>
-		<file filename="core/bootstrap.php" md5="9596a12d1746aa469aac25615c424dcc"/>
+		<file filename="core/bootstrap.php" md5="f3bb9fc97ca158f5b092d24be2f70001"/>
 		<file filename="core/bootstrap_predefines.php" md5="a75579b94642f0f4fb7b7540f9909288"/>
 		<file filename="core/bootstrap_preincludes.php" md5="f1971ce53f1a6c0f0d29a4434114cdb7"/>
 		<file filename="core/controllers/AdminController.php" md5="224fdec0630a697051eead4cb87623a8">
@@ -60,14 +60,14 @@
 		<file filename="core/controllers/GettingStartedController.class.php" md5="449677fa9a0617ea705ce232509b730f">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="68c995a1d4ae789f793fdec3452c951d">
+		<file filename="core/controllers/UpdaterController.class.php" md5="dbb64bd9888a1394fdc738d49c263141">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
 			<class name="WidgetController"/>
 		</file>
 		<file filename="core/functions/Core.functions.php" md5="1cb673f58d397e7a63a26eaa3e7c0ebd"/>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="5c2afc92627fc913e8191525363f98f6">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="310ecb4d1fc806364cc3c61e188a9e5c">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
@@ -364,7 +364,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="3094b6a6e78286851f3ce7bf6b2dfb57">
+		<file filename="core/libs/core/Component_2_1.php" md5="8512889790f3bbfadb604fdc354fa926">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="5ff824df4ce7e6628e1b10dc82158f44">
@@ -376,7 +376,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="31db6369f8e13be5bc790518ab8566c6">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="d5e0b6b5e951bafa1cd50ec86762811c">
+		<file filename="core/libs/core/Core.class.php" md5="431cca97c779a82273d98a59e9836248">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -429,13 +429,13 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="357a6d69c0b5125f1f3d8f8eda98509c">
+		<file filename="core/libs/core/Model.class.php" md5="f9e89a0c05a8c4ca80c93053c59bb0e5">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
 			<class name="ModelValidationException"/>
 		</file>
-		<file filename="core/libs/core/PackageXML.class.php" md5="69d6d1939cb455105f9baf97e9b2bdcc">
+		<file filename="core/libs/core/PackageXML.class.php" md5="8b31747638dc19051e896b5776ec51e8">
 			<class name="PackageXML"/>
 		</file>
 		<file filename="core/libs/core/PageRequest.class.php" md5="951c9245f8950f1c147232285639cd2a">
@@ -461,7 +461,7 @@
 		<file filename="core/libs/core/Time.class.php" md5="b91dce7fdff8ee72333cfa39efece40f">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="d984d63b353ab58e137d36ddcdca570e">
+		<file filename="core/libs/core/View.class.php" md5="894df2566239823b2d8f268fc92d127b">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -831,7 +831,7 @@
 		<file filename="core/libs/phpmailer/test_script/styles/shThemeRDark.css" md5="c8f6be1c0dcf82e65a9d39f8644f1053"/>
 		<file filename="core/libs/phpmailer/test_script/styles/wrapping.png" md5="9a4ffd836c709958eff80a3260f8a1cb"/>
 		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
-		<file filename="core/libs/smarty-plugins/block.a.php" md5="3a361e5b5da46a1b302d9f4b8d6e095a"/>
+		<file filename="core/libs/smarty-plugins/block.a.php" md5="d37538757533592c95c0fac2211758d8"/>
 		<file filename="core/libs/smarty-plugins/block.css.php" md5="185b36d524db8c14698ba7d1c56d284d"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="7351878095949fc2ad7c45aa3b399e18"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="bfc46cd9b23fc26c28616323017a33dc"/>
@@ -1162,7 +1162,7 @@
 		<file filename="core/models/SessionModel.class.php" md5="08c4a259678e264f89c943b1b7a4d329">
 			<class name="SessionModel"/>
 		</file>
-		<file filename="core/models/UpdateSiteModel.class.php" md5="96dc14af846ed36e4ec28c84c9cb88b3">
+		<file filename="core/models/UpdateSiteModel.class.php" md5="90a7e717dbef4709b4405082482f47e9">
 			<class name="UpdateSiteModel"/>
 		</file>
 		<file filename="core/models/WidgetInstanceModel.class.php" md5="bdc9033f9a983bce5f9b770cf6478b42">
@@ -1256,6 +1256,8 @@
 		<file filename="core/templates/pages/updater/repos_add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/updater/repos_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/updater/repos.tpl" md5="6c8c2a68f54eebbcd7fd705dfe5e5021"/>
+		<file filename="core/templates/pages/updater/check.tpl" md5="dda6c77aed0d5d36ff520c02f1f9c4f9"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="78a4347c202c2fe43fdcffe98a7c3f93"/>
 	</view>
 	<install/>
 	<description>
@@ -1293,7 +1295,7 @@
 	<assets>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
-		<file filename="core/assets/js/core.js" md5="85fb8d1482045b7cb6298f69dac27a0a"/>
+		<file filename="core/assets/js/core.js" md5="e266282187d6730905137049f7c9d70b"/>
 		<file filename="core/assets/js/core.strings.js" md5="e704b77bfcc5ca29b28934ab4d454c70"/>
 	</assets>
 	<upgrades>

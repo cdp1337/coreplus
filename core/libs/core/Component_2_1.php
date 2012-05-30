@@ -385,7 +385,7 @@ class Component_2_1 {
 
 		// Now I can add the ones in the licenses array.
 		foreach ($licenses as $lic) {
-			$str = '//component/licenses/license' . ((isset($lic['url']) && $lic['url']) ? '[@url="' . $lic['url'] . '"]' : '');
+			$str = '/licenses/license' . ((isset($lic['url']) && $lic['url']) ? '[@url="' . $lic['url'] . '"]' : '');
 			$l   = $this->_xmlloader->getElement($str);
 			if ($lic['title']) $l->nodeValue = $lic['title'];
 		}
@@ -393,6 +393,11 @@ class Component_2_1 {
 
 
 	public function loadFiles() {
+
+		// First of all, this cannot be called on disabled or uninstalled components.
+		if(!$this->isInstalled()) return false;
+		if(!$this->isEnabled()) return false;
+
 		// Include any includes requested.
 		// This adds support for namespaced functions.
 		// <includes>
@@ -1056,6 +1061,37 @@ class Component_2_1 {
 		if ($otherchanges !== false) $changes = array_merge($changes, $otherchanges);
 
 		return (sizeof($changes)) ? $changes : false;
+	}
+
+	/**
+	 * Set this component as disabled in the database.
+	 *
+	 * Hopefully it won't break anything else :p
+	 */
+	public function disable(){
+		// If it's not installed already, it can't be disabled!
+		if(!$this->isInstalled()) return false;
+
+		$c = new ComponentModel($this->_name);
+		$c->set('enabled', false);
+		$c->save();
+		$this->_versionDB = null;
+
+		return true;
+	}
+
+	/**
+	 * Set this component as enabled in the database.
+	 */
+	public function enable(){
+		// If it's not installed already, it can't be disabled!
+		if($this->isEnabled()) return false;
+
+		$c = new ComponentModel($this->_name);
+		$c->set('enabled', true);
+		$c->save();
+
+		return true;
 	}
 
 	/**

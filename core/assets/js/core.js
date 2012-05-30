@@ -16,3 +16,12 @@ Core.PostURL = function(u){
 	form.method = 'POST';
 	form.submit();
 }
+
+/**
+ * Just a simple function to reload the current page.
+ *
+ * @constructor
+ */
+Core.Reload = function(){
+	window.location.reload();
+}

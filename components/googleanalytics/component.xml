@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="GoogleAnalytics" execmode="web">
-	<requires name="core" type="component"/>
-	<hook name="/core/page/prerender" call="GoogleAnalyticsHelper::InstallTracking"/>
-	<library>
-		<file filename="GoogleAnalyticsHelper.class.php" md5="7cdf43871f4a71cf2cf8d9d4a2299d22">
-			<provides type="class" name="GoogleAnalyticsHelper"/>
-		</file>
-	</library>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="GoogleAnalytics" execmode="web">
+	<requires>
+		<require name="core" type="component"/>
+	</requires>
+	<hooks>
+		<hook name="/core/page/prerender" call="GoogleAnalyticsHelper::InstallTracking"/>
+	</hooks>
 	<description>
 		Provides google analytics integration.
 	</description>
 	<configs>
 		<config key="/google-analytics/accountid" type="string" default="" description="This is the Account ID (sometimes called 'Web Property ID') listed for this account in google analytics."/>
 	</configs>
-	<changelog version="1.0.0">
-		<packagemeta>
-			<date>Mon, 17 Oct 2011 23:48:42 -0400</date>
-			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-			<packager>CAE2 0.0.7</packager>
-		</packagemeta>
-		<notes>Initial version</notes>
-	</changelog>
-	<otherfiles/>
+	<files>
+		<file filename="GoogleAnalyticsHelper.class.php" md5="7cdf43871f4a71cf2cf8d9d4a2299d22">
+			<class name="GoogleAnalyticsHelper"/>
+		</file>
+	</files>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
 </component>
 

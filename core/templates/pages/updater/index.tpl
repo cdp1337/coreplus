@@ -11,7 +11,11 @@
 		There is {$sitecount} update repository currently enabled.  {a href='updater/repos'}Manage Them{/a}
 	</p>
 
-	<p id="updates"></p>
+	<p>
+		<span id="updates"></span>
+		<span>Browse Packages</span>
+	</p>
+
 	<script>$(function(){ perform_check($('#updates')); });</script>
 {/if}
 
@@ -20,12 +24,15 @@
 		There are {$sitecount} update repositories currently enabled.  {a href='updater/repos'}Manage Them{/a}
 	</p>
 
-	<p id="updates"></p>
+	<p>
+		<span id="updates"></span>
+		<span>Browse Packages</span>
+	</p>
 	<script>$(function(){ perform_check($('#updates')); });</script>
 {/if}
 
 
-<table>
+<table class="listing">
 	<tr>
 		<th>Component</th>
 		<th>Version</th>
@@ -34,13 +41,17 @@
 		<th>&nbsp;</th>
 	</tr>
 	{foreach from=$components item=c}
-		<tr>
+		<tr componentname="{$c->getName()}">
 			<td>{$c->getName()}</td>
 			<td>{$c->getVersion()}</td>
-			<td>{if $c->isInstalled()}yes{/if}</td>
-			<td>{if $c->isEnabled()}yes{/if}</td>
+			<td>{if $c->isInstalled()}yes{else}---{/if}</td>
+			<td>{if $c->isEnabled()}yes{else}---{/if}</td>
 			<td>
-				Disable
+				{if $c->isEnabled()}
+					<a href="#" class="disable-link">Disable</a>
+				{else}
+					<a href="#" class="enable-link">Enable</a>
+				{/if}
 			</td>
 		</tr>
 	{/foreach}
@@ -69,4 +80,57 @@
 			}
 		});
 	}
+
+	$(function(){
+		var xhr = null;
+
+		// This function is the exact same for enable or disable, just the verbiage is changed slightly.
+		$('.disable-link, .enable-link').click(function(){
+			var $this = $(this),
+				$tr = $this.closest('tr'),
+				name = $tr.attr('componentname'),
+				action = ($this.text() == 'Enable') ? 'enable' : 'disable';
+
+			// Cancel the last request.
+			if(xhr !== null) xhr.abort();
+
+			// Do a dry run
+			xhr = $.ajax({
+				url: Core.ROOT_WDIR + 'updater/component/' + action + '/' + name + '?dryrun=1',
+				type: 'POST',
+				dataType: 'json',
+				success: function(r){
+					// If there was an error, "message" will be populated.
+					if(r.message){
+						alert(r.message);
+						return;
+					}
+
+					// If the length is more than one and the user accepts that more than one component will be disabled,
+					// or if there's only one.
+					if(
+						(r.changes.length > 1 && confirm('The following components will be ' + action + 'd: \n' + r.changes.join('\n')) ) ||
+						(r.changes.length == 1)
+					){
+						xhr = $.ajax({
+							url: Core.ROOT_WDIR + 'updater/component/' + action + '/' + name + '?dryrun=0',
+							type: 'POST',
+							dataType: 'json',
+							success: function(r){
+								// Done, just reload the page!
+								Core.Reload();
+							},
+							error: function(jqxhr, data, error){
+								alert(error);
+							}
+						});
+					}
+				},
+				error: function(jqxhr, data, error){
+					alert(error);
+				}
+			});
+			return false;
+		});
+	});
 </script>
