@@ -9,6 +9,8 @@
 </ul>
 
 <p>
-	<div style="float:left; width:50%; text-align:center;">{a href=$model->getLink('Page')->get('rewriteurl') title="No" class="button"}No!{/a}</div>
-	<div style="text-align:center;">{a href="/Content/Delete/`$model->get('id')`/confirm" class="button delete"}Yes, Delete!{/a}</div>
+<div style = "float:left; width:50%; text-align:center;">{a href=$model->getLink('Page')->get('rewriteurl') title="No" class="button"}
+	No!{/a}</div>
+<div style = "text-align:center;">{a href="/Content/Delete/`$model->get('id')`/confirm" class="button delete"}Yes,
+	Delete!{/a}</div>
 </p>
