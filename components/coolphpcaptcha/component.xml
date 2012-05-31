@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.3~core1" name="CoolPHPCaptcha" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.3~core3" name="CoolPHPCaptcha" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 	</requires>
@@ -17,18 +17,19 @@
 		Original project site: http://code.google.com/p/cool-php-captcha/
 	</description>
 	<files>
+		<file filename="CHANGELOG.md" md5="4072e3a89b3bf1cc9826e4c3b24db003"/>
 		<file filename="FormCaptchaInput.class.php" md5="1ed277c3608ac3556bdbfc2ff4d67e79">
 			<class name="FormCaptchaInput"/>
 		</file>
-		<file filename="SimpleCaptchaController.class.php" md5="4e3d2e2ba9193ddd552221b00e469b85">
-			<class name="SimpleCaptchaController"/>
+		<file filename="SimpleCaptchaController.class.php" md5="1334e6b64acce2841d9f8a294ad3b0fb">
+			<controller name="SimpleCaptchaController"/>
 		</file>
 		<file filename="libs/cool-php-captcha/LICENSE.txt" md5="d32239bcb673463ab874e80d47fae504"/>
 		<file filename="libs/cool-php-captcha/SimpleCaptcha.class.php" md5="dba8cfdb5e06954b3fa6b5347a0e4859">
 			<class name="SimpleCaptcha"/>
 		</file>
-		<file filename="libs/cool-php-captcha/captcha.php" md5="f2ea9d7c13aced346a609eb62df83f1e"/>
-		<file filename="libs/cool-php-captcha/example-form.php" md5="c369d88d4d696de0685b7b42ca7875ac"/>
+		<file filename="libs/cool-php-captcha/captcha.php" md5="b5bdd51b42073d3d50a8fc260547c177"/>
+		<file filename="libs/cool-php-captcha/example-form.php" md5="12e2cc13f2eb805423236db5d42c3063"/>
 		<file filename="libs/cool-php-captcha/example.jpg" md5="c43a4ccb03c2ab8d5daaad15e0c93192"/>
 		<file filename="libs/cool-php-captcha/resources/fonts/AntykwaBold.ttf" md5="b9106ffe9631b4ab2e28f3d7accc48a3"/>
 		<file filename="libs/cool-php-captcha/resources/fonts/Candice.ttf" md5="9c7bc61ece0a61a85b6e8a59bebef3d2"/>
@@ -39,23 +40,29 @@
 		<file filename="libs/cool-php-captcha/resources/fonts/StayPuft.ttf" md5="59299d5b871590f70b455395c244e8d6"/>
 		<file filename="libs/cool-php-captcha/resources/fonts/TimesNewRomanBold.ttf" md5="ed6e29caf3843142d739232aa8642158"/>
 		<file filename="libs/cool-php-captcha/resources/fonts/VeraSansBold.ttf" md5="4ebf664c986099acf6d151c62bdb24eb"/>
-		<file filename="libs/cool-php-captcha/resources/tools/dictionary-import/README.txt" md5="8dfa4a2001f3a1934eac8c5634eaf7d7"/>
-		<file filename="libs/cool-php-captcha/resources/tools/dictionary-import/importwords.php" md5="cf033b2ade2006a71fc63b0b65c1d9d0"/>
+		<file filename="libs/cool-php-captcha/resources/tools/dictionary-import/README.txt" md5="62eed72b08dd2c38251bd2fda88f5f16"/>
+		<file filename="libs/cool-php-captcha/resources/tools/dictionary-import/importwords.php" md5="9e4ba5a658267f7e2058f34d7eced1c8"/>
 		<file filename="libs/cool-php-captcha/resources/tools/dictionary-import/sample-words-en.txt" md5="d750dbbc0ffd664f8393f31ceb521e42"/>
 		<file filename="libs/cool-php-captcha/resources/tools/dictionary-import/sample-words-es.txt" md5="86e831ec736bb57f624a8cb1462d8c86"/>
 		<file filename="libs/cool-php-captcha/resources/words/en.php" md5="ef0f1910e5c269184433ae7a00e41a36"/>
 		<file filename="libs/cool-php-captcha/resources/words/es.php" md5="6af474ca4c1918801c3f86b88b30eacb"/>
-		<file filename="templates/forms/elements/formcaptchainput.tpl" md5="a102ec3c4e85257e2ba3146ff28437b8"/>
 	</files>
 	<upgrades>
 		<upgrade from="0.3~cae1" to="0.3~core1"/>
+		<upgrade from="0.3~core1" to="0.3~core2"/>
+		<upgrade from="0.3~core2" to="0.3~core3"/>
 	</upgrades>
+	<view>
+		<file filename="templates/forms/elements/formcaptchainput.tpl" md5="a102ec3c4e85257e2ba3146ff28437b8"/>
+	</view>
+	<component>
+		<licenses>
+			<license>GPLv3</license>
+		</licenses>
+	</component>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 		<author name="Jose Rodriguez" email="jose.rodriguez@exec.cl"/>
 	</authors>
-	<licenses>
-		<license>GPLv3</license>
-	</licenses>
 </component>
 

@@ -9,10 +9,10 @@
  * @license GPLv3
  */
 
-class SimpleCaptchaController extends Controller{
-	public static function Index(View $page){
+class SimpleCaptchaController extends Controller_2_1{
+	public function index(){
 		// This will tell the system not to actually output anything.
-		$page->mode = View::MODE_NOOUTPUT;
+		$this->getView()->mode = View::MODE_NOOUTPUT;
 		
 		$captcha = new SimpleCaptcha();
 		
@@ -29,4 +29,3 @@ class SimpleCaptchaController extends Controller{
 	}
 }
 
-?>
