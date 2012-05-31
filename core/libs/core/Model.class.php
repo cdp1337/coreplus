@@ -242,10 +242,7 @@ class Model implements ArrayAccess {
 		$this->_dirty      = false;
 		$this->_dataatinit = $this->_data;
 
-		// Indicate that something happened.
-		return true;
 
-		/*
 		// Go through any linked tables and ensure that they're saved as well.
 		foreach($this->_linked as $k => $l){
 			if(!(isset($l['records']) || $this->_dirty)) continue; // No need to save if it was never loaded.
@@ -258,7 +255,9 @@ class Model implements ArrayAccess {
 				$model->save();
 			}
 		}
-		*/
+
+		// Indicate that something happened.
+		return true;
 	}
 
 	//// A few array access functions \\\\
@@ -500,8 +499,6 @@ class Model implements ArrayAccess {
 			}
 		}
 
-		// DISABLING 2012.05 cpowell
-		/*
 		// Blank out any dependent records based on links.
 		foreach ($this->_linked as $k => $l) {
 
@@ -509,14 +506,14 @@ class Model implements ArrayAccess {
 			$c     = $this->_getLinkClassName($k);
 			$model = new $c();
 
-			$subbuilder = new SQLBuilderDelete();
-			$subbuilder->from($model->getTableName());
-			$subbuilder->where($this->_getLinkWhereArray($k));
-			$subbuilder->execute($this->interface);
+			Dataset::Init()
+				->table($model->getTableName())
+				->where($this->_getLinkWhereArray($k))
+				->delete()
+				->execute($this->interface);
 
 			if (isset($this->_linked[$k]['records'])) unset($this->_linked[$k]['records']);
 		}
-		*/
 	}
 
 	public function validate($k, $v, $throwexception = false) {
@@ -614,8 +611,6 @@ class Model implements ArrayAccess {
 	 *
 	 * @param type $key
 	 */
-	// DISABLING 2012.05 cpowell
-	/*
 	protected function _setLinkKeyPropagation($key, $newval) {
 		foreach ($this->_linked as $lk => $l) {
 			$dolink = false;
@@ -646,10 +641,7 @@ class Model implements ArrayAccess {
 			}
 		}
 	}
-	*/
 
-	// DISABLING 2012.05 cpowell
-	/*
 	protected function _getLinkClassName($linkname) {
 		// Determine the class.
 		$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname . 'Model';
@@ -658,10 +650,16 @@ class Model implements ArrayAccess {
 
 		return $c;
 	}
-	*/
 
-	// DISABLING 2012.05 cpowell
-	/*
+
+	/**
+	 * Get the where array of criteria for a given link.
+	 * Useful for manually tweaking the clause.
+	 *
+	 * @param $linkname
+	 *
+	 * @return array|null
+	 */
 	protected function _getLinkWhereArray($linkname) {
 		if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
 
@@ -684,10 +682,16 @@ class Model implements ArrayAccess {
 
 		return $wheres;
 	}
-	*/
 
-	// DISABLING 2012.05 cpowell
-	/*
+
+	/**
+	 * Get linked models to this model based on a link name
+	 *
+	 * @param      $linkname
+	 * @param null $order
+	 *
+	 * @return null
+	 */
 	public function getLink($linkname, $order = null) {
 		if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
 
@@ -715,7 +719,6 @@ class Model implements ArrayAccess {
 
 		return $this->_linked[$linkname]['records'];
 	}
-	*/
 
 	/*
 	 * In 1-to-1 mode, this returns either the single record matched or nothing at all.
@@ -724,8 +727,6 @@ class Model implements ArrayAccess {
 	 * @param type $linkname
 	 * @param type $searchkeys
 	 */
-	// DISABLING 2012.05 cpowell
-	/*
 	public function findLink($linkname, $searchkeys = array()) {
 		$l = $this->getLink($linkname);
 		if ($l === null) return null;
@@ -766,7 +767,6 @@ class Model implements ArrayAccess {
 		}
 		// Search through each of these and find a matching 
 	}
-	*/
 
 	public function setFromArray($array) {
 		foreach ($array as $k => $v) {
