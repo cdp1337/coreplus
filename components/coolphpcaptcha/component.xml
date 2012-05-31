@@ -17,11 +17,11 @@
 		Original project site: http://code.google.com/p/cool-php-captcha/
 	</description>
 	<files>
-		<file filename="CHANGELOG.md" md5="4072e3a89b3bf1cc9826e4c3b24db003"/>
+		<file filename="CHANGELOG.md" md5="44f335f7de11fb3ecdc5208b1df501e7"/>
 		<file filename="FormCaptchaInput.class.php" md5="1ed277c3608ac3556bdbfc2ff4d67e79">
 			<class name="FormCaptchaInput"/>
 		</file>
-		<file filename="SimpleCaptchaController.class.php" md5="1334e6b64acce2841d9f8a294ad3b0fb">
+		<file filename="SimpleCaptchaController.class.php" md5="904ce68124ff03d633c36240592ac8cc">
 			<controller name="SimpleCaptchaController"/>
 		</file>
 		<file filename="libs/cool-php-captcha/LICENSE.txt" md5="d32239bcb673463ab874e80d47fae504"/>

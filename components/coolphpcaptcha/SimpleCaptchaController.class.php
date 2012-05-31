@@ -23,7 +23,8 @@ class SimpleCaptchaController extends Controller_2_1{
 		$captcha->blur = true;
 		
 		// Ensure it knows where to look for the "resources"...
-		$captcha->resourcesPath = ROOT_PDIR . "components/CoolPHPCaptcha/libs/cool-php-captcha/resources";
+
+		$captcha->resourcesPath = Core::GetComponent('coolphpcaptcha')->getBaseDir() . "libs/cool-php-captcha/resources";
 		
 		$captcha->CreateImage();
 	}
