@@ -11,6 +11,8 @@
  * @param type $template 
  */
 function smarty_block_css($params, $innercontent, $template, &$repeat){
+	// This only needs to be called once.
+	if($repeat) return;
 	
 	// media type is the first parameter to check for.
 	$media = (isset($params['media'])) ? $params['media'] : 'all';

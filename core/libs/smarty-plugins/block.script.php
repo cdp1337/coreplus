@@ -36,6 +36,9 @@
  * @param type $template 
  */
 function smarty_block_script($params, $innercontent, $template, &$repeat){
+	// This only needs to be called once.
+	if($repeat) return;
+
 	// A script library name is provided.
 	if(isset($params['name'])){
 		if(!Core::LoadScriptLibrary($params['name'])){

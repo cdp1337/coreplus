@@ -22,6 +22,10 @@
  */
 
 function smarty_block_insertable($params, $content, $template, &$repeat){
+
+	// This only needs to be called once.
+	if($repeat) return;
+
 	// I need to use the parent to lookup the current base url.
 	$baseurl = $template->parent->getBaseURL();
 

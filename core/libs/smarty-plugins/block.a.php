@@ -22,7 +22,9 @@
  */
 
 function smarty_block_a($params, $innercontent, $template, &$repeat){
-	
+	// This only needs to be called once.
+	if($repeat) return;
+
 	$assign= false;
 	
 	// Start the A tag
