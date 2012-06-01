@@ -86,7 +86,7 @@ class Email {
 				$this->_mailer->Port     = ConfigHandler::Get('/core/email/smtp_port');
 				$this->_mailer->Username = ConfigHandler::Get('/core/email/smtp_user');
 				$this->_mailer->Password = ConfigHandler::Get('/core/email/smtp_password');
-				if ($this->_mailer->Username != '') $this->SMTPAuth = true;
+				if ($this->_mailer->Username != '') $this->_mailer->SMTPAuth = true;
 			}
 
 			// Tack on some anti-abuse headers.
