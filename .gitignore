@@ -32,3 +32,6 @@
 /.idea/modules.xml
 /.idea/vcs.xml
 /.idea/workspace.xml
+
+# Skip the GPG keys.
+/gnupg/*.gpg
