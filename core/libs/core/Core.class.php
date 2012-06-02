@@ -1259,41 +1259,67 @@ class Core implements ISingleton {
 		$version2 = Core::VersionSplit($version2);
 
 		// version1 and 2 are now standardized.
-		$keys = array('major', 'minor', 'point', 'core', 'user', 'stability');
+		//$keys = array('major', 'minor', 'point', 'core', 'user', 'stability');
 
 		// @todo Support user and stability checks.
 
 		// The standard keys I can compare pretty easily.
-		$v1    = $version1['major'] . '.' . $version1['minor'] . '.' . $version1['point'] . '.' . $version1['core'];
-		$v2    = $version2['major'] . '.' . $version2['minor'] . '.' . $version2['point'] . '.' . $version2['core'];
+		$v1    = $version1['major'] . '.' . $version1['minor'] . '.' . $version1['point'];
+		$v2    = $version2['major'] . '.' . $version2['minor'] . '.' . $version2['point'];
 		$check = version_compare($v1, $v2);
-		if ($check != 0) {
-			// Will preserve PHP's -1, 0, 1 nature.
-			if ($operation == null) return $check;
 
-			// Otherwise
-			switch ($operation) {
+		// If both upstream versions are identical, drop into the "user" version, (or core-specific).
+		// This is used as both user and core versions because both essentially indicate the same thing;
+		// that the original package maintainer of the project is *not* the one creating the core plus package.
+
+		// If the check is the same and one or the other version doesn't care about the user string....
+		// don't even run the check, they're close enough.
+		// If both strings request the user string, then check it too.
+		// This is done so that maintainer X can say a package requires AcmeABC version 1.2, without
+		// distinguishing if maintainer Y or maintainer Z did the actual package creation.
+		// HOWEVER if versions 1.2.0~core3 and 1.2.0~core5 are compared, it'll use the user version.
+		if($check == 0 && $version1['user'] && $version2['user']){
+			$check = version_compare($version1['user'], $version2['user']);
+		}
+
+		// Will preserve PHP's -1, 0, 1 nature.
+		if ($operation === null){
+			return $check;
+		}
+		elseif($check == -1){
+			// v1 is less than v2...
+			switch($operation){
 				case 'lt':
-				case 'le':
 				case '<':
+				case 'le':
 				case '<=':
-					return ($check == -1);
-				default:
 					return true;
+				default:
+					return false;
 			}
 		}
-		else {
-			// it's 0.
-			if ($operation == null) return $check;
-
-			// Otherwise
-			switch ($operation) {
+		elseif($check == 0){
+			// v1 is identical to v2...
+			switch($operation){
 				case 'le':
 				case '<=':
-				case 'ge':
-				case '>=':
 				case 'eq':
 				case '=':
+				case '==':
+				case 'ge':
+				case '>=':
+					return true;
+				default:
+					return false;
+			}
+		}
+		else{
+			// v1 is greater than v2...
+			switch($operation){
+				case 'ge':
+				case '>=':
+				case 'gt':
+				case '>':
 					return true;
 				default:
 					return false;
@@ -1320,7 +1346,7 @@ class Core implements ISingleton {
 			'major'     => 0,
 			'minor'     => 0,
 			'point'     => 0,
-			'core'      => 0,
+			//'core'      => 0,
 			'user'      => 0,
 			'stability' => '',
 		);
@@ -1339,10 +1365,11 @@ class Core implements ISingleton {
 
 			if (($subpos = strpos($part, '-')) !== false) {
 				$subpart = strtolower(substr($part, $subpos + 1));
-				if (is_numeric($subpart)) {
+				/*if (is_numeric($subpart)) {
 					$ret['core'] = $subpart;
 				}
-				elseif ($subpart == 'a') {
+				else*/
+				if ($subpart == 'a') {
 					$ret['stability'] = 'alpha';
 				}
 				elseif ($subpart == 'b') {
@@ -1353,6 +1380,10 @@ class Core implements ISingleton {
 				}
 
 				$part = substr($part, 0, $subpos);
+			}
+			elseif(($subpos = strpos($part, '~')) !== false){
+				$subpart = strtolower(substr($part, $subpos + 1));
+				$ret['user'] = $subpart;
 			}
 
 			$v[] = (int)$part;

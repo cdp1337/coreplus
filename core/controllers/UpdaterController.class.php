@@ -102,16 +102,43 @@ class UpdaterController extends Controller_2_1 {
 	 */
 	public function getupdates() {
 		$view = $this->getView();
+		$req  = $this->getPageRequest();
 
 		$view->contenttype = View::CTYPE_JSON;
 
 		$components = UpdaterHelper::GetUpdates();
 
+		// Allow filters to be set.
+		if($req->getParameter('onlyupdates')){
+			foreach($components['core'] as $v => $dat){
+				if($dat['status'] != 'update') unset($components['core'][$v]);
+			}
+
+			foreach($components['components'] as $c => $arr){
+				foreach($arr as $v => $dat){
+					if($dat['status'] != 'update') unset($components['components'][$c][$v]);
+				}
+				if(!sizeof($components['components'][$c])) unset($components['components'][$c]);
+			}
+
+			foreach($components['themes'] as $c => $arr){
+				foreach($arr as $v => $dat){
+					if($dat['status'] != 'update') unset($components['themes'][$c][$v]);
+				}
+				if(!sizeof($components['themes'][$c])) unset($components['themes'][$c]);
+			}
+		}
+
+		if($req->getParameter('onlycore')){
+			unset($components['components']);
+			unset($components['themes']);
+		}
+		elseif($req->getParameter('onlycomponents')){
+			unset($components['core']);
+			unset($components['themes']);
+		}
+
 		$view->jsondata = $components;
-	}
-
-	public function update(){
-
 	}
 
 	/**
@@ -173,6 +200,15 @@ class UpdaterController extends Controller_2_1 {
 		$view->addBreadcrumb('Repositories', 'updater/repos');
 
 		$view->assign('form', $form);
+	}
+
+	/**
+	 * Browse the repositories for a component, be it new or update.
+	 *
+	 * This is designed to give a syndicated list of ALL components in all enabled repos.
+	 */
+	public function browse() {
+
 	}
 
 	public function component_install() {

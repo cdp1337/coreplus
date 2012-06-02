@@ -60,14 +60,14 @@
 		<file filename="core/controllers/GettingStartedController.class.php" md5="449677fa9a0617ea705ce232509b730f">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="dbb64bd9888a1394fdc738d49c263141">
+		<file filename="core/controllers/UpdaterController.class.php" md5="17e6d81bc02a6ac5a2a6a6fd973747a6">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
 			<class name="WidgetController"/>
 		</file>
 		<file filename="core/functions/Core.functions.php" md5="1cb673f58d397e7a63a26eaa3e7c0ebd"/>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="310ecb4d1fc806364cc3c61e188a9e5c">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="9f167193201b849abf56d6ff7a8e7c03">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
@@ -358,7 +358,7 @@
 		<file filename="core/libs/core/Component.class.php" md5="f5f2c97457648f1b92231a1dd5ca69a7">
 			<class name="Component"/>
 		</file>
-		<file filename="core/libs/core/ComponentFactory.php" md5="d1d8569f76569d80dc24cfaac0be68f3">
+		<file filename="core/libs/core/ComponentFactory.php" md5="23f28b035988036b313c7ff1009055a5">
 			<class name="ComponentFactory"/>
 		</file>
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
@@ -376,7 +376,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="31db6369f8e13be5bc790518ab8566c6">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="431cca97c779a82273d98a59e9836248">
+		<file filename="core/libs/core/Core.class.php" md5="c513515f5d6a0a646ce9d2333b333e52">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -429,7 +429,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="f9e89a0c05a8c4ca80c93053c59bb0e5">
+		<file filename="core/libs/core/Model.class.php" md5="32995c0c3d76597a12c46a1d0cbda31c">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -1258,6 +1258,8 @@
 		<file filename="core/templates/pages/updater/repos.tpl" md5="6c8c2a68f54eebbcd7fd705dfe5e5021"/>
 		<file filename="core/templates/pages/updater/check.tpl" md5="dda6c77aed0d5d36ff520c02f1f9c4f9"/>
 		<file filename="core/templates/pages/updater/index.tpl" md5="78a4347c202c2fe43fdcffe98a7c3f93"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="680b3e0d760c974b7be381757ef56f11"/>
+		<file filename="core/templates/pages/updater/update.tpl" md5="dda6c77aed0d5d36ff520c02f1f9c4f9"/>
 	</view>
 	<install/>
 	<description>
@@ -1297,6 +1299,7 @@
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.js" md5="e266282187d6730905137049f7c9d70b"/>
 		<file filename="core/assets/js/core.strings.js" md5="e704b77bfcc5ca29b28934ab4d454c70"/>
+		<file filename="core/assets/js/updater/index.js" md5="7feb6f0939b28db49e545c29fa3ef7a3"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="0.0.2"/>
@@ -1344,9 +1347,7 @@
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			See the included NOTICE.md file for more information.
-		</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3
 		</license>

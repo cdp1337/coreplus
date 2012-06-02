@@ -105,6 +105,7 @@ class UpdaterHelper {
 
 				switch($pkg->getType()){
 					case 'core':
+						$vers = $pkg->getVersion();
 						// Check and see if this version is already listed in the repo.
 						if(!isset($core[$pkg->getVersion()])){
 							$core[$pkg->getVersion()] = array(
@@ -112,6 +113,7 @@ class UpdaterHelper {
 								'title' => $pkg->getName(),
 								'version' => $pkg->getVersion(),
 								'source' => 'repo-' . $site->get('id'),
+								'sourceurl' => $site->get('url'),
 								'description' => $pkg->getDescription(),
 								'provides' => $pkg->getProvides(),
 								'requires' => $pkg->getRequires(),
@@ -121,15 +123,21 @@ class UpdaterHelper {
 						}
 						break;
 					case 'component':
-						$status = (Core::GetComponent($n)) ? 'update' : 'new';
+						$vers  = $pkg->getVersion();
+						$status = 'new';
+						if(Core::GetComponent($n)){
+							if(Core::VersionCompare($vers, Core::GetComponent($n)->getVersion(), 'gt')) $status = 'update';
+							else $status = 'downgrade';
+						}
 
 						// Check and see if this version is already listed in the repo.
-						if(!isset($components[$n][$pkg->getVersion()])){
-							$components[$n][$pkg->getVersion()] = array(
+						if(!isset($components[$n][$vers])){
+							$components[$n][$vers] = array(
 								'name' => $n,
 								'title' => $pkg->getName(),
-								'version' => $pkg->getVersion(),
+								'version' => $vers,
 								'source' => 'repo-' . $site->get('id'),
+								'sourceurl' => $site->get('url'),
 								'description' => $pkg->getDescription(),
 								'provides' => $pkg->getProvides(),
 								'requires' => $pkg->getRequires(),
@@ -137,15 +145,22 @@ class UpdaterHelper {
 								'status' => $status,
 							);
 						}
+						break;
 					case 'theme':
-						$status = (ThemeHandler::GetTheme($n)) ? 'update' : 'new';
+						$vers = $pkg->getVersion();
+						$status = 'new';
+						if(ThemeHandler::GetTheme($n)){
+							if(Core::VersionCompare($vers, ThemeHandler::GetTheme($n)->getVersion(), '>')) $status = 'update';
+							else $status = 'downgrade';
+						}
 
 						// Check and see if this version is already listed in the repo.
-						if(!isset($themes[$n][$pkg->getVersion()])){
-							$themes[$n][$pkg->getVersion()] = array(
+						if(!isset($themes[$n][$vers])){
+							$themes[$n][$vers] = array(
 								'name' => $n,
-								'version' => $pkg->getVersion(),
+								'version' => $vers,
 								'source' => 'repo-' . $site->get('id'),
+								'sourceurl' => $site->get('url'),
 								'description' => $pkg->getDescription(),
 								'location' => $rootpath . $pkg->getFileLocation(),
 								'status' => $status,
