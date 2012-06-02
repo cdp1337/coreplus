@@ -21,7 +21,6 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-// @todo 2012.05.11 cpowell - Revisit this page for the 2.1 api
 
 class UpdaterHelper {
 	
@@ -96,7 +95,7 @@ class UpdaterHelper {
 			
 			$repoxml = new RepoXML();
 			$repoxml->loadFromFile($file);
-			$rootpath = dirname($site->get('url')) . '/';
+			$rootpath = dirname($file->getFilename()) . '/';
 			foreach($repoxml->getPackages() as $pkg){
 				// Already installed and is up to date, don't do anything.
 				if($pkg->isCurrent()) continue;
@@ -193,7 +192,10 @@ class UpdaterHelper {
 	}
 	
 	public static function InstallComponent($name, $version, $dryrun = false){
-		$components = UpdaterHelper::GetUpdates();
+		$updates = UpdaterHelper::GetUpdates();
+
+		// I just need the component array itself.
+		$components = $updates['components'];
 		
 		// Make sure the name and version exist in the updates list.
 		if(!isset($components[$name])){
@@ -213,6 +215,10 @@ class UpdaterHelper {
 			foreach($pendingqueue as $k => $c){
 				$good = true;
 				foreach($c['requires'] as $r){
+
+					// Sometimes there will be blank requirements in the metafile.
+					if(!$r['name']) continue;
+
 					$result = UpdaterHelper::CheckRequirement($r);
 					if($result === false){
 						return array('status' => 0, 'message' => 'Component ' . $name . ' requires ' . $r['name'] . ' ' . $r['version']);
@@ -235,30 +241,56 @@ class UpdaterHelper {
 			$lastsizeofqueue = sizeof($pendingqueue);
 		}
 		while(sizeof($pendingqueue) && sizeof($pendingqueue) != $lastsizeofqueue);
-		
-		
-		// If dryrun only was requested, just return the status here.
-		if($dryrun){
-			return array('status' => 1, 'message' => 'All dependencies are met, ok to install', 'data' => $checkedqueue);
-		}
-		
+
+
 		$repos = array();
-		
+		$remotefiles = array();
+		$names = array();
+		// Check the signatures for the packages first.
 		foreach($checkedqueue as $component){
 			if(strpos($component['source'], 'repo-') !== false){
 				// Look up that repo's connection information, since username and password may be required.
 				if(!isset($repos[$component['source']])){
 					$repos[$component['source']] = new UpdateSiteModel(substr($component['source'], 5));
 				}
-				$remotefile = new File_remote_backend($component['location']);
-				$remotefile->username = $repos[$component['source']]->get('username');
-				$remotefile->password = $repos[$component['source']]->get('password');
-				
-				$obj = $remotefile->getContentsObject();
+				$remotefiles[$component['name']] = new File_remote_backend($component['location']);
+				$remotefiles[$component['name']]->username = $repos[$component['source']]->get('username');
+				$remotefiles[$component['name']]->password = $repos[$component['source']]->get('password');
+
+				if(!$remotefiles[$component['name']]->exists()){
+					return array('status' => 0, 'message' => $component['location'] . ' does not seem to exist!');
+				}
+
+				$obj = $remotefiles[$component['name']]->getContentsObject();
 				if(!$obj->verify()){
+					// Maybe it can at least get the key....
+					if($key = $obj->getKey()){
+						return array('status' => 0, 'message' => 'Unable to locate public key for ' . $key);
+					}
 					return array('status' => 0, 'message' => 'Invalid GPG signature for ' . $component['title']);
 				}
-				
+
+				if(!is_writable(ROOT_PDIR . 'components/' . $component['name'] . '/')){
+					return array('status' => 0, 'message' => ROOT_PDIR . 'components/' . $component['name'] . '/ is not writable!');
+				}
+			}
+
+			$names[] = $component['name'];
+		}
+		
+		
+		// If dryrun only was requested, just return the status here.
+		if($dryrun){
+			return array('status' => 1, 'message' => 'All dependencies are met, ok to install', 'changes' => $names);
+		}
+		
+		// and do the actual installation.
+		foreach($checkedqueue as $component){
+			if(strpos($component['source'], 'repo-') !== false){
+
+				// Don't need to verify this again, was done above.
+				$obj = $remotefiles[$component['name']]->getContentsObject();
+
 				// Decrypt the signed file.
 				$localfile = $obj->decrypt('tmp/updater/');
 				$localobj = $localfile->getContentsObject();
@@ -267,17 +299,7 @@ class UpdaterHelper {
 				$tmpdir = $localobj->extract('tmp/installer-' . Core::RandomHex(4));
 				
 				// Destination directory it will be installed to.
-				switch($component['type']){
-					case 'core':
-						$destbase = ROOT_PDIR;
-						break;
-					case 'component':
-						$destbase = ROOT_PDIR . 'components/' . $component['name'] . '/';
-						break;
-					default:
-						return array('status' => 0, 'message' => 'Invalid component type [' . $component['type'] . ']' . ' for ' . $component['title']);
-						break;
-				}
+				$destbase = ROOT_PDIR . 'components/' . $component['name'] . '/';
 				
 				// Now that the data is extracted in a temporary directory, extract every file in the destination.
 				$datadir = $tmpdir->get('data/');
@@ -314,27 +336,29 @@ class UpdaterHelper {
 				$tmpdir->remove();
 				
 				// and w00t, the files should be extracted.  Do the actual installation.
+				$c = new Component($component['name']);
+				$c->load();
+				// if it's installed, switch to that version and upgrade.
+				if($c->isInstalled()){
+					$c = Core::GetComponent($component['name']);
+					// Make sure I get the new XML
+					$c->load();
+					// And upgrade
+					$c->upgrade();
+				}
+				else{
+					// It's a new installation.
+					$c->install();
+				}
+				/*
 				switch($component['type']){
 					case 'core':
-						$c = ComponentHandler::GetComponent('core');
+						$c = Core::GetComponent('core');
 						$c->upgrade();
 						break;
 					case 'component':
-						$c = new Component($component['name']);
-						$c->load();
-						// if it's installed, switch to that version and upgrade.
-						if($c->isInstalled()){
-							$c = ComponentHandler::GetComponent($component['name']);
-							// Make sure I get the new XML
-							$c->load();
-							// And upgrade
-							$c->upgrade();
-						}
-						else{
-							// It's a new insatllation.
-							$c->install();
-						}
-				}
+
+				}*/
 			}
 		}
 		

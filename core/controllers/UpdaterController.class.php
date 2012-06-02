@@ -55,6 +55,7 @@ class UpdaterController extends Controller_2_1 {
 
 		$view->title = 'System Updater';
 		$view->addControl('Manage Repos', '/updater/repos', 'settings');
+		$view->addCOntrol('Manage GPG Keys', '/updater/keys', 'keys');
 		$view->assign('sitecount', $sitecount);
 		$view->assign('components', $components);
 		$view->assign('themes', $themes);
@@ -211,34 +212,123 @@ class UpdaterController extends Controller_2_1 {
 
 	}
 
+	public function keys() {
+		$view = $this->getView();
+
+		// Get the existing keys.
+		exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --list-public-keys', $output, $result);
+		$keys = array();
+
+		if(sizeof($output) > 3){
+			// Drop the first two lines, these are useless headers.
+			array_shift($output);
+			array_shift($output);
+			$k = null;
+			foreach($output as $line){
+				if(strpos($line, 'pub') === 0){
+					// This is a new key.
+					if($k !== null){
+						// Save the previous one.
+						$keys[] = $k;
+					}
+
+					// And start the new key.
+					$k = array(
+						'key' => preg_replace('#^pub[ ]*[0-9]{4}[A-Z]/([A-Z0-9]*) .*#', '$1', $line),
+						'date' => preg_replace('#^pub[ ]*[0-9]{4}[A-Z]/[A-Z0-9]* ([0-9\-]*).*#', '$1', $line),
+						'names' => array()
+					);
+				}
+				elseif(strpos($line, 'uid') === 0){
+					// No key started yet?... hmm
+					if($k === null) continue;
+
+					$k['names'][] = preg_replace('#^uid[ ]*(.*)$#', '$1', $line);
+				}
+			}
+			// Save the last one.
+			$keys[] = $k;
+		}
+
+
+		$view->title = "GPG Keys";
+		$view->addControl('Import Key', '/updater/keys/import', 'add');
+		$view->assign('directory', GPG_HOMEDIR);
+		$view->assign('keys', $keys);
+	}
+
+	public function keys_import() {
+		$view  = $this->getView();
+		$req   = $this->getPageRequest();
+		$error = null;
+
+		if(!is_writable(GPG_HOMEDIR)){
+			$error = 'Please ensure that ' . GPG_HOMEDIR . ' is writable!';
+		}
+
+		if($req->isPost()){
+			// Receive public key from a keyserver.
+			if($_POST['pubkeyid']){
+				$id = strtoupper(preg_replace('/[^a-zA-Z0-9]*/', '', $_POST['pubkeyid']));
+				exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --keyserver "hkp://pool.sks-keyservers.net" --recv-keys "' . $id . '"', $output, $result);
+				if($result != 0){
+					$error = 'Unable to lookup ' . $id . ' from keyserver.';
+				}
+				else{
+					Core::Redirect('/updater/keys');
+				}
+			}
+			elseif($_POST['pubkey']){
+				$tmp = new File_local_backend('tmp/importkey-' . Core::RandomHex(2) . '.gpg');
+				$tmp->putContents($_POST['pubkey']);
+				exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --import "' . $tmp->getFilename() . '"', $output, $result);
+				$tmp->delete();
+				if($result != 0){
+					$error = 'Unable to import requested key.';
+				}
+				else{
+					Core::Redirect('/updater/keys');
+				}
+			}
+			elseif($_FILES['pubkeyfile']){
+				$tmp = new File_local_backend($_FILES['pubkeyfile']['tmp_name']);
+				$tmp->putContents($_POST['pubkey']);
+				exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --import "' . $tmp->getFilename() . '"', $output, $result);
+				$tmp->delete();
+				if($result != 0){
+					$error = 'Unable to import requested key.';
+				}
+				else{
+					Core::Redirect('/updater/keys');
+				}
+			}
+		}
+
+		$view->addBreadcrumb('GPG Keys', 'updater/keys');
+		$view->title = 'Import Key';
+		$view->assign('error', $error);
+	}
+
 	public function component_install() {
 		$view = $this->getView();
 		$req = $this->getPageRequest();
 
-		$components = UpdaterHelper::GetUpdates();
+		// This is a json-only page.
+		$view->contenttype = View::CTYPE_JSON;
 
-		$name    = $req->getParameter(0);
-		$version = $req->getParameter(1);
-		$dryrun  = $req->getParameter('dryrun');
-
-		$status = UpdaterHelper::Install($name, $version, $dryrun);
-
-		// This is a json-enabled page.
-		if ($view->request['contenttype'] == View::CTYPE_JSON) {
-			$view->jsondata = $status;
+		// This is a post-only page!
+		if(!$req->isPost()){
+			$view->error = View::ERROR_BADREQUEST;
 			return;
 		}
 
-		// Standard HTML page.
-		if ($status['status']) {
-			$type = 'success';
-		}
-		else {
-			$type = 'error';
-		}
+		$name    = strtolower($req->getParameter(0));
+		$version = $req->getParameter(1);
+		$dryrun  = $req->getParameter('dryrun');
 
-		Core::SetMessage($status['message'], $type);
-		Core::Redirect('/Updater/Check');
+		$status = UpdaterHelper::InstallComponent($name, $version, $dryrun);
+
+		$view->jsondata = $status;
 	}
 
 	public function component_disable() {

@@ -160,7 +160,11 @@ Updater = {};
 
 			html = '<dl>';
 			for(i in packages[type][name]){
-				html += '<dt><a href="#" class="perform-update">' + packages[type][name][i].title + ' ' + i + '</a></dt>';
+				html += '<dt>' +
+					'<a href="#" class="perform-update-' + type + '" name="' + name + '" version="' + i + '">' +
+					packages[type][name][i].title + ' ' + i +
+					'</a>' +
+					'</dt>';
 				html += '<dd title="' + packages[type][name][i].location + '">From: ' + packages[type][name][i].sourceurl + '</dd>';
 			}
 			html += '</dl>';
@@ -174,6 +178,55 @@ Updater = {};
 
 			return false;
 		});
-	})
+
+		$('body').delegate('.perform-update-components', 'click', function(){
+			var $this = $(this),
+				name = $this.attr('name'),
+				version = $this.attr('version');
+
+			// Cancel the last request.
+			if(xhr !== null) xhr.abort();
+
+			// Do a dry run
+			xhr = $.ajax({
+				url: Core.ROOT_WDIR + 'updater/component/install/' + name + '/' + version + '?dryrun=1',
+				type: 'POST',
+				dataType: 'json',
+				success: function(r){
+
+					// This system returns a "status" field.
+					if(!r.status){
+						// and a message.
+						alert(r.message);
+						return;
+					}
+
+					// If the length is more than one and the user accepts that more than one component will be disabled,
+					// or if there's only one.
+					if(
+						(r.changes.length > 1 && confirm('The following components will be installed or updated: \n' + r.changes.join('\n')) ) ||
+							(r.changes.length == 1)
+						){
+						xhr = $.ajax({
+							url: Core.ROOT_WDIR + 'updater/component/install/' + name + '/' + version + '?dryrun=0',
+							type: 'POST',
+							dataType: 'json',
+							success: function(r){
+								// Done, just reload the page!
+								Core.Reload();
+							},
+							error: function(jqxhr, data, error){
+								alert(error);
+							}
+						});
+					}
+				},
+				error: function(jqxhr, data, error){
+					alert(error);
+				}
+			});
+			return false;
+		});
+	});
 
 })(jQuery);

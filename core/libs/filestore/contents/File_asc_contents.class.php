@@ -56,6 +56,19 @@ class File_asc_contents implements File_Contents {
 	}
 
 	/**
+	 * Get the public key that was used to sign this file.
+	 *
+	 * @return string
+	 */
+	public function getKey() {
+		$output = array();
+		$result = 1;
+		exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --verify "' . $this->_file->getLocalFilename() . '" 2>&1 | grep "key ID" | sed \'s:.*key ID \([A-Z0-9]*\)$:\1:\'', $output, $result);
+
+		return $output[0];
+	}
+
+	/**
 	 * Decrypt the encrypted/signed file and return a valid File_Backend object
 	 *
 	 * @return mixed
