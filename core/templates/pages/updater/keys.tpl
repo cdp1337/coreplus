@@ -6,6 +6,7 @@
 			<th>Key</th>
 			<th>Date Created</th>
 			<th>Names</th>
+			<th>&nbsp;</th>
 		</tr>
 		{foreach from=$keys item=k}
 			<tr>
@@ -15,6 +16,9 @@
 					{foreach from=$k.names item='e'}
 						{$e|escape}<br/>
 					{/foreach}
+				</td>
+				<td>
+					{a href="/updater/keys/delete/`$k.key`" confirm="Really delete key `$k.key`?" class="control-delete"}Delete{/a}
 				</td>
 			</tr>
 		{/foreach}

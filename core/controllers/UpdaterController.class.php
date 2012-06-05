@@ -321,6 +321,31 @@ class UpdaterController extends Controller_2_1 {
 		$view->assign('error', $error);
 	}
 
+	public function keys_delete() {
+		$view = $this->getView();
+		$req = $this->getPageRequest();
+
+		// This is a post-only page!
+		if(!$req->isPost()){
+			$view->error = View::ERROR_BADREQUEST;
+			return;
+		}
+
+		$key = $req->getParameter(0);
+		if(!$key){
+			$view->error = View::ERROR_BADREQUEST;
+			return;
+		}
+
+		$key = strtoupper(preg_replace('/[^a-zA-Z0-9]*/', '', $key));
+
+		exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --batch --yes --delete-key "' . $key . '"', $output, $result);
+		if($result != 0){
+			Core::SetMessage('Unable to remove key ' . $key, 'error');
+		}
+		Core::Redirect('/updater/keys');
+	}
+
 	public function component_install() {
 		$view = $this->getView();
 		$req = $this->getPageRequest();
