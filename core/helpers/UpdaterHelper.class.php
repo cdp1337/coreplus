@@ -270,7 +270,8 @@ class UpdaterHelper {
 					return array('status' => 0, 'message' => 'Invalid GPG signature for ' . $component['title']);
 				}
 
-				if(!is_writable(ROOT_PDIR . 'components/' . $component['name'] . '/')){
+				$dir = Core::Directory('components/' . $component['name']);
+				if(!$dir->isWritable()){
 					return array('status' => 0, 'message' => ROOT_PDIR . 'components/' . $component['name'] . '/ is not writable!');
 				}
 			}
@@ -378,17 +379,17 @@ class UpdaterHelper {
 		// This will check if the requirement is already met.
 		switch($requirement['type']){
 			case 'library':
-				if(ComponentHandler::IsLibraryAvailable($requirement['name'], $requirement['version'], $requirement['operation'])){
+				if(Core::IsLibraryAvailable($requirement['name'], $requirement['version'], $requirement['operation'])){
 					return true;
 				}
 				break;
 			case 'jslibrary':
-				if(ComponentHandler::IsJSLibraryAvailable($requirement['name'], $requirement['version'], $requirement['operation'])){
+				if(Core::IsJSLibraryAvailable($requirement['name'], $requirement['version'], $requirement['operation'])){
 					return true;
 				}
 				break;
 			case 'component':
-				if(ComponentHandler::IsComponentAvailable($requirement['name'], $requirement['version'], $requirement['operation'])){
+				if(Core::IsComponentAvailable($requirement['name'], $requirement['version'], $requirement['operation'])){
 					return true;
 				}
 				break;
@@ -400,5 +401,3 @@ class UpdaterHelper {
 		return false;
 	}
 }
-
-?>

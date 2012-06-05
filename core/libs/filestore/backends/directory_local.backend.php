@@ -146,6 +146,25 @@ class Directory_local_backend implements Directory_Backend {
 		return is_readable($this->_path);
 	}
 
+	public function isWritable() {
+		$ftp    = \Core\FTP();
+		$tmpdir = TMP_DIR;
+		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
+
+
+		if (!$ftp) {
+			return is_writable($this->_path);
+		}
+		elseif (strpos($this->_path, $tmpdir) === 0) {
+			// Tmp files should be written directly.
+			return is_writable($this->_path);
+		}
+		else {
+			// There is no easy way to know if an FTP directory is writable....
+			return true;
+		}
+	}
+
 	/**
 	 * Create this directory, (has no effect if already exists)
 	 * Returns true if successful, null if exists, and false if failure

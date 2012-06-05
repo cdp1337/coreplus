@@ -54,8 +54,9 @@ class UpdaterController extends Controller_2_1 {
 
 
 		$view->title = 'System Updater';
-		$view->addControl('Manage Repos', '/updater/repos', 'settings');
-		$view->addCOntrol('Manage GPG Keys', '/updater/keys', 'keys');
+		$view->addControl('Manage Repos', '/updater/repos', 'repos');
+		$view->addControl('Manage GPG Keys', '/updater/keys', 'keys');
+		$view->addControl('Browse Packages', '/updater/browse', 'browse');
 		$view->assign('sitecount', $sitecount);
 		$view->assign('components', $components);
 		$view->assign('themes', $themes);
@@ -154,6 +155,9 @@ class UpdaterController extends Controller_2_1 {
 
 		$view->title = 'Repositories';
 		$view->addControl('Add Repo', 'updater/repos/add', 'add');
+		//$view->addControl('Manage Repos', '/updater/repos', 'repos');
+		$view->addControl('Manage GPG Keys', '/updater/keys', 'keys');
+		$view->addControl('Browse Packages', '/updater/browse', 'browse');
 
 		$view->assign('sites', $sites);
 
@@ -209,7 +213,12 @@ class UpdaterController extends Controller_2_1 {
 	 * This is designed to give a syndicated list of ALL components in all enabled repos.
 	 */
 	public function browse() {
+		$view = $this->getView();
 
+		$view->title = 'Browse Packages';
+		$view->addControl('Manage Repos', '/updater/repos', 'repos');
+		$view->addControl('Manage GPG Keys', '/updater/keys', 'keys');
+		//$view->addControl('Browse Packages', '/updater/browse', 'browse');
 	}
 
 	public function keys() {
@@ -253,6 +262,9 @@ class UpdaterController extends Controller_2_1 {
 
 		$view->title = "GPG Keys";
 		$view->addControl('Import Key', '/updater/keys/import', 'add');
+		$view->addControl('Manage Repos', '/updater/repos', 'repos');
+		//$view->addControl('Manage GPG Keys', '/updater/keys', 'keys');
+		$view->addControl('Browse Packages', '/updater/browse', 'browse');
 		$view->assign('directory', GPG_HOMEDIR);
 		$view->assign('keys', $keys);
 	}

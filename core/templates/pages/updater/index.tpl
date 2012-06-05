@@ -15,7 +15,6 @@
 
 	<p>
 		<span id="updates"></span>
-		<span>Browse Packages</span>
 	</p>
 
 	<script>$(function(){ Updater.PerformCheck($('#updates')); });</script>

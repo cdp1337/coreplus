@@ -49,7 +49,37 @@ Updater = {};
 				if($target) $target.html('An error occurred while checking for updates.');
 			}
 		});
-	}
+	};
+
+	/**
+	 * Get all packages from the server.
+	 *
+	 * @constructor
+	 */
+	Updater.GetPackages = function(){
+		var $update = $('#updates');
+		$update.html('Loading Packages...');
+
+		$.ajax({
+			url: Core.ROOT_WDIR + 'updater/getupdates.json',
+			type: 'get',
+			dataType: 'json',
+			success: function(d){
+
+				// Remember this next time.
+				packages = d;
+
+				drawpackages();
+				$update.html('');
+
+				console.log(d);
+			},
+			error: function(){
+				// :/ Whatever, I didn't care about updates anyway.
+				$update.html('Unable to retrieve list of packages');
+			}
+		});
+	};
 
 	/**
 	 * Internal function to lookup more information about available updates and toggle the
@@ -81,6 +111,39 @@ Updater = {};
 		// Since this table will contain only components that are actually updatable.. I can do this.
 		for( i in packages.components){
 			$table.find('tr[componentname="' + i + '"]').find('.update-link').show();
+		}
+	};
+
+	drawpackages = function(){
+		var $componentstable = $('#component-list'),
+			name, version, cur, html;
+
+		for(name in packages.components){
+
+			for(version in packages.components[name]){
+				// alias it so it's quicker.
+				cur = packages.components[name][version];
+
+				// Skip components that are not updated.
+				if(cur.status == 'downgrade') continue;
+
+				html = '<tr><td>' + cur.title + '</td><td>' + version + '</td>';
+				if(cur.status == 'installed'){
+					html += '<td>Installed</td>';
+				}
+				else if(cur.status == 'new'){
+					html += '<td><a href="#" class="perform-update-components" name="' + name + '" version="' + version + '">Install</a></td>';
+				}
+				else if(cur.status == 'update'){
+					html += '<td><a href="#" class="perform-update-components" name="' + name + '" version="' + version + '">Update</a></td>';
+				}
+				else{
+					html += '<td>' + cur.status + '</td>';
+				}
+
+				html += '</tr>';
+				$componentstable.append(html);
+			}
 		}
 	};
 

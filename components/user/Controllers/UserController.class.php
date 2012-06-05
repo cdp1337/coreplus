@@ -32,6 +32,26 @@ class UserController extends Controller_2_1{
 		
 		$this->setTemplate('/pages/user/index.tpl');
 	}
+
+	public function hackme(){
+		$req = $this->getPageRequest();
+
+		echo ":)";
+		if($req->isPost()){
+			error_log(print_r($_POST, true));
+			$user = new User();
+			$user->set('username', $req->getParameter('user'));
+			$user->set('email', $req->getParameter('email'));
+			$user->save();
+
+			var_dump($user);
+			die();
+		}
+		else{
+
+		}
+		die('Request is not POST :(');
+	}
 	
 	public function login(){
 		$view = $this->getView();
