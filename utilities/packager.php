@@ -287,7 +287,7 @@ function parse_for_documentation($file){
 	$counter = 0;
 	$inphpdoc = false;
 	$incomment = false;
-	
+
 	while(!feof($fh) && $counter <= 10){
 		// I want to limit the number of lines read so this doesn't continue on reading the entire file.
 		
@@ -659,7 +659,7 @@ function process_component($component, $forcerelease = false){
 	// Get the licenses currently set.  (maybe there's one that's not in the code)
 	$licenses = array();
 	if(CLI::PromptUser('Retrieve current list of licenses and merge in from code?', 'boolean', true)){
-		foreach($xml->getRootDOM()->getElementsByTagName('license') as $el){
+		foreach($xml->getElements('//component/licenses/license') as $el){
 			$url = @$el->getAttribute('url');
 			$licenses[] = array(
 				'title' => $el->nodeValue,
@@ -672,8 +672,8 @@ function process_component($component, $forcerelease = false){
 	// Get the authors currently set. (maybe there's one that's not in the code)
 	$authors = array();
 	if(CLI::PromptUser('Retrieve current list of authors and merge in from code?', 'boolean', true)){
-		foreach($xml->getRootDOM()->getElementsByTagName('author') as $el){
-			$ret[] = array(
+		foreach($xml->getElements('//component/authors/author') as $el){
+			$authors[] = array(
 				'name' => $el->getAttribute('name'),
 				'email' => @$el->getAttribute('email'),
 			);

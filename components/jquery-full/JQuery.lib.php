@@ -23,8 +23,8 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/jquery-1.7.1.min.js');
-		else CurrentPage::AddScript ('js/jquery/jquery-1.7.1.js');
+		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/jquery-1.7.2.min.js');
+		else CurrentPage::AddScript ('js/jquery/jquery-1.7.2.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -32,7 +32,7 @@ abstract class JQuery {
 	
 	public static function IncludeJQueryUI(){
 		self::IncludeJQuery();
-		CurrentPage::AddScript ('js/jquery/jquery-ui-1.8.16.min.js');
+		CurrentPage::AddScript ('js/jquery/jquery-ui-1.8.20.min.js');
 		CurrentPage::AddStylesheet('css/jquery-ui.css');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!

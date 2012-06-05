@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="JSONjs" execmode="web" version="2011.11.18~core1">
+	<requires>
+		<require name="JQuery" type="library" version="1.4"/>
+	</requires>
+	<upgrades>
+		<upgrade from="" to="2011.02.23~cae1"/>
+		<upgrade from="2011.02.23~cae1" to="2011.02.23~cae2"/>
+		<upgrade from="2011.02.23~cae2" to="2011.11.18~core1"/>
+	</upgrades>
+	<description>
+		JSON in JavaScript
+		Douglas Crockford
+		douglas@crockford.com
+		2010-11-18
+		JSON is a light-weight, language independent, data interchange format.
+		See http://www.JSON.org/
+		The files in this collection implement JSON encoders/decoders in JavaScript.
+		JSON became a built-in feature of JavaScript when the ECMAScript Programming
+		Language Standard - Fifth Edition was adopted by the ECMA General Assembly
+		in December 2009. Most of the files in this collection are for applications
+		that are expected to run in obsolete web browsers. For most purposes, json2.js
+		is the best choice.
+		json2.js: This file creates a JSON property in the global object, if there
+		isn't already one, setting its value to an object containing a stringify
+		method and a parse method. The parse method uses the eval method to do the
+		parsing, guarding it with several regular expressions to defend against
+		accidental code execution hazards. On current browsers, this file does nothing,
+		prefering the built-in JSON object.
+	</description>
+	<files>
+		<file filename="JSONjs.lib.php" md5="70a6b8d70100305edab0eb65bf96c900">
+			<class name="JSONjs"/>
+		</file>
+	</files>
+	<assets>
+		<file filename="assets/js/json2.js" md5="5399befc473475e04c6fefde05ec5e49"/>
+		<file filename="assets/js/json2.min.js" md5="ba3293970e13b03a2ea92f5b6b5bf544"/>
+	</assets>
+	<authors>
+		<author name="Douglas Crockford"/>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+</component>
+
