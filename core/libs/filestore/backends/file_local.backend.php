@@ -227,12 +227,15 @@ class File_local_backend implements File_Backend {
 	 */
 	public function getBaseFilename($withoutext = false) {
 		$b = basename($this->_filename);
+
 		if ($withoutext) {
-			return substr($b, 0, (-1 - strlen($this->getExtension())));
+			$ext = $this->getExtension();
+			if($ext != '') {
+				return substr($b, 0, (-1 - strlen($ext)));
+			}
 		}
-		else {
-			return $b;
-		}
+
+		return $b;
 	}
 
 	/**
@@ -346,9 +349,9 @@ class File_local_backend implements File_Backend {
 			$base = $this->getBaseFilename(true);
 			$dir  = dirname($this->_filename);
 
-			$f = $dir . '/' . $base . '.' . $ext;
+			$f = $dir . '/' . $base . (($ext == '') ? '' : '.' . $ext);
 			while (file_exists($f)) {
-				$f = $dir . '/' . $base . ' (' . ++$c . ')' . '.' . $ext;
+				$f = $dir . '/' . $base . ' (' . ++$c . ')' . (($ext == '') ? '' : '.' . $ext);
 			}
 
 			$this->_filename = $f;

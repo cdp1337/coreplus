@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.0" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.1" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -60,14 +60,14 @@
 		<file filename="core/controllers/GettingStartedController.class.php" md5="449677fa9a0617ea705ce232509b730f">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="17e6d81bc02a6ac5a2a6a6fd973747a6">
+		<file filename="core/controllers/UpdaterController.class.php" md5="966c65e0ff10e5ed73f9159cbdcad2a8">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
 			<class name="WidgetController"/>
 		</file>
 		<file filename="core/functions/Core.functions.php" md5="1cb673f58d397e7a63a26eaa3e7c0ebd"/>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="9f167193201b849abf56d6ff7a8e7c03">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="6d2c21c68fcd83d973bb52e9a57247da">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
@@ -376,7 +376,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="31db6369f8e13be5bc790518ab8566c6">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="c513515f5d6a0a646ce9d2333b333e52">
+		<file filename="core/libs/core/Core.class.php" md5="95df867658161f9e7c63175190832159">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -389,7 +389,7 @@
 		<file filename="core/libs/core/Debug.class.php" md5="2f799131f3eb9465395a2d3d1c667b72">
 			<class name="Debug"/>
 		</file>
-		<file filename="core/libs/core/Email.class.php" md5="2f7f8fe62ec47f7973edb7a223ef02ec">
+		<file filename="core/libs/core/Email.class.php" md5="11c5da28c252b0d1f6af703e4b561704">
 			<class name="Email"/>
 		</file>
 		<file filename="core/libs/core/Form.class.php" md5="10e70ae789a7a17bad241893449c189f">
@@ -688,19 +688,19 @@
 		<file filename="core/libs/filestore/File_Contents.interface.php" md5="74e9a61ff8a58f95da1a8e114235b019">
 			<interface name="File_Contents"/>
 		</file>
-		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="01170e40e41fafd43530ab1a247af900">
+		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="7c717ab32ab2974cd2e54a4d437cca29">
 			<class name="Directory_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="6c35d718dbc1679fd89be37fab6965c2">
 			<class name="File_awss3_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="62209de6d8ad017a4960f9a508cb86ae">
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="2a6778167efd87cff2e7f7ec96064c5a">
 			<class name="File_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="e1a7592b2f324bfea9dc13d3ea7aa337">
 			<class name="File_remote_backend"/>
 		</file>
-		<file filename="core/libs/filestore/contents/File_asc_contents.class.php" md5="65f5ea77c6a8a40eaaae254e34b75014">
+		<file filename="core/libs/filestore/contents/File_asc_contents.class.php" md5="1ab9f64e240b30abc32826e0a2ace694">
 			<class name="File_asc_contents"/>
 		</file>
 		<file filename="core/libs/filestore/contents/File_gz_contents.class.php" md5="7ef740022073139493b45478161f0a41">
@@ -831,10 +831,10 @@
 		<file filename="core/libs/phpmailer/test_script/styles/shThemeRDark.css" md5="c8f6be1c0dcf82e65a9d39f8644f1053"/>
 		<file filename="core/libs/phpmailer/test_script/styles/wrapping.png" md5="9a4ffd836c709958eff80a3260f8a1cb"/>
 		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
-		<file filename="core/libs/smarty-plugins/block.a.php" md5="d37538757533592c95c0fac2211758d8"/>
-		<file filename="core/libs/smarty-plugins/block.css.php" md5="185b36d524db8c14698ba7d1c56d284d"/>
-		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="7351878095949fc2ad7c45aa3b399e18"/>
-		<file filename="core/libs/smarty-plugins/block.script.php" md5="bfc46cd9b23fc26c28616323017a33dc"/>
+		<file filename="core/libs/smarty-plugins/block.a.php" md5="3039f2bc0568de9c360e7ceb0e532745"/>
+		<file filename="core/libs/smarty-plugins/block.css.php" md5="9fc2a9d0a1f29987a64eb435e4c19e39"/>
+		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="0efd2ea623964b5baf19a1908d7e929a"/>
+		<file filename="core/libs/smarty-plugins/block.script.php" md5="d35ae77c1f1b0fce8315fde68223f074"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="b57ac0420e6fc0cdcf4674dd3f4677bd"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>
@@ -1174,9 +1174,6 @@
 		<file filename="core/widgets/AdminMenuWidget.php" md5="491bf62ead677d92dcf0d12874af3dfe">
 			<class name="AdminMenuWidget"/>
 		</file>
-		<file filename="gnupg/pubring.gpg" md5="44089e78b5970070a855df230fd28a57"/>
-		<file filename="gnupg/secring.gpg" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="gnupg/trustdb.gpg" md5="121b5474d8ee68da348d22effd9db8cf"/>
 		<file filename="htaccess.ex" md5="a9753494f79d3cfa1526c3ccfd19f1cc"/>
 		<file filename="index.php" md5="006c996a7e99b954bd75da97ea1f2782"/>
 		<file filename="install/InstallPage.class.php" md5="4f34783e9e3b4c2878afa6aa3aa0eb07">
@@ -1199,6 +1196,7 @@
 		<file filename="install/templates/skin.tpl" md5="3989070107399bafb7770d157c125ce3"/>
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
+		<file filename="zxy" md5="d41d8cd98f00b204e9800998ecf8427e"/>
 	</files>
 	<pages>
 		<page baseurl="/Admin" admin="1" widget="0" access="g:admin" title="Administration"/>
@@ -1260,6 +1258,10 @@
 		<file filename="core/templates/pages/updater/index.tpl" md5="78a4347c202c2fe43fdcffe98a7c3f93"/>
 		<file filename="core/templates/pages/updater/index.tpl" md5="680b3e0d760c974b7be381757ef56f11"/>
 		<file filename="core/templates/pages/updater/update.tpl" md5="dda6c77aed0d5d36ff520c02f1f9c4f9"/>
+		<file filename="core/templates/pages/updater/browse.tpl" md5="12e76e8e6fcae6b6e562d2095ddfc3ed"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="c28a49c3bbafc501fd8cfa741b113eb3"/>
+		<file filename="core/templates/pages/updater/keys.tpl" md5="bfb0932912bea760984f0629cd2e3082"/>
+		<file filename="core/templates/pages/updater/keys_import.tpl" md5="1872117c9db9e7242cdd0485a11ddc4a"/>
 	</view>
 	<install/>
 	<description>
@@ -1299,7 +1301,7 @@
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.js" md5="e266282187d6730905137049f7c9d70b"/>
 		<file filename="core/assets/js/core.strings.js" md5="e704b77bfcc5ca29b28934ab4d454c70"/>
-		<file filename="core/assets/js/updater/index.js" md5="7feb6f0939b28db49e545c29fa3ef7a3"/>
+		<file filename="core/assets/js/updater/index.js" md5="9c7105d45bfb9cf6d823273c2daa2a45"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="0.0.2"/>
@@ -1314,6 +1316,7 @@
 		<upgrade from="0.0.8" to="0.0.9"/>
 		<upgrade from="0.0.9" to="0.1.0"/>
 		<upgrade from="0.1.0" to="1.9.0"/>
+		<upgrade from="1.9.0" to="1.9.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
@@ -1347,7 +1350,9 @@
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			See the included NOTICE.md file for more information.
+		</license>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3
 		</license>

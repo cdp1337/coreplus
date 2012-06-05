@@ -85,7 +85,7 @@ $_cversions = null;
  * Situtaions :
  * - Src:/home/test/file.txt ,Dst:/home/test/b ,Result:/home/test/b -> If source was file copy file.txt name with b as name to destination
  * - Src:/home/test/file.txt ,Dst:/home/test/b/ ,Result:/home/test/b/file.txt -> If source was file Creates b directory if does not exsits and copy file.txt into it
- * - Src:/home/test ,Dst:/home/ ,Result:/home/test/** -> If source was directory copy test directory and all of its content into dest     
+ * - Src:/home/test ,Dst:/home/ ,Result:/home/test/** -> If source was directory copy test directory and all of its content into dest
  * - Src:/home/test/ ,Dst:/home/ ,Result:/home/**-> if source was direcotry copy its content to dest
  * - Src:/home/test ,Dst:/home/test2 ,Result:/home/test2/** -> if source was directoy copy it and its content to dest with test2 as name
  * - Src:/home/test/ ,Dst:/home/test2 ,Result:->/home/test2/** if source was directoy copy it and its content to dest with test2 as name
@@ -94,7 +94,7 @@ $_cversions = null;
  *  - Auto destination technique should be possible to turn off
  *  - Supporting callback function
  *  - May prevent some issues on shared enviroments : http://us3.php.net/umask
- * @author http://sina.salek.ws/en/contact 
+ * @author http://sina.salek.ws/en/contact
  * @param $source //file or folder
  * @param $dest ///file or folder
  * @param $options //folderPermission,filePermission
@@ -102,7 +102,7 @@ $_cversions = null;
  */
 function smartCopy($source, $dest, $options=array('folderPermission'=>0755,'filePermission'=>0755)){
     $result=false;
-   
+
     if (is_file($source)) {
         if ($dest[strlen($dest)-1]=='/') {
             if (!file_exists($dest)) {
@@ -114,7 +114,7 @@ function smartCopy($source, $dest, $options=array('folderPermission'=>0755,'file
         }
         $result=copy($source, $__dest);
         chmod($__dest,$options['filePermission']);
-       
+
     } elseif(is_dir($source)) {
         if ($dest[strlen($dest)-1]=='/') {
             if ($source[strlen($source)-1]=='/') {
@@ -152,7 +152,7 @@ function smartCopy($source, $dest, $options=array('folderPermission'=>0755,'file
             }
         }
         closedir($dirHandle);
-       
+
     } else {
         $result=false;
     }
@@ -189,27 +189,27 @@ function arrayUnique($array, $preserveKeys = false){
     }
     return $arrayRewrite;
 }
-    
+
 
 /**
  * Simple function to get any license from a file context.
- * 
+ *
  * @todo This may move to the CLI system if found useful enough...
  * @param string $file
  * @return array
  */
 function get_file_licenses($file){
 	$ret = array();
-	
+
 	$fh = fopen($file, 'r');
 	// ** sigh... counldn't open the file... oh well, skip to the next.
 	if(!$fh) return $ret;
 	// This will make filetype be the extension of the file... useful for expanding to JS, HTML and CSS files.
 	$filetype = strtolower(substr($file, strrpos($file, '.') + 1));
-	
+
 	$counter = 0;
 	$inphpdoc = false;
-	
+
 	while(!feof($fh)){
 		$counter++;
 		$line = trim(fgets($fh, 1024));
@@ -230,7 +230,7 @@ function get_file_licenses($file){
 				// At line 5 and no phpDoc yet?!?  wtf?
 				if($counter == 5 && !$inphpdoc){
 					break(2);
-				} 
+				}
 				// Recognize PHPDoc syntax... basically just [space]*[space]@license...
 				if($inphpdoc && stripos($line, '@license') !== false){
 					$lic = preg_replace('/\*[ ]*@license[ ]*/i', '', $line);
@@ -264,9 +264,9 @@ function get_file_licenses($file){
  * Slightly more advanced function to parse for specific information from file headers.
  *
  * @todo Support additional filetypes other than just PHP.
- * 
+ *
  * Will return an array containing any author, license
- * 
+ *
  * @todo This may move to the CLI system if found useful enough...
  * @param string $file
  * @return array
@@ -276,13 +276,20 @@ function parse_for_documentation($file){
 		'authors' => array(),
 		'licenses' => array()
 	);
-	
+
 	$fh = fopen($file, 'r');
 	// ** sigh... counldn't open the file... oh well, skip to the next.
 	if(!$fh) return $ret;
+
 	// This will make filetype be the extension of the file... useful for expanding to JS, HTML and CSS files.
-	$filetype = strtolower(substr($file, strrpos($file, '.') + 1));
-	
+	if(strpos(basename($file), '.') !== false){
+		$filetype = strtolower(substr($file, strrpos($file, '.') + 1));
+	}
+	else{
+		$filetype = null;
+	}
+
+
 	// This is the counter for non valid doc lines.
 	$counter = 0;
 	$inphpdoc = false;
@@ -290,7 +297,7 @@ function parse_for_documentation($file){
 
 	while(!feof($fh) && $counter <= 10){
 		// I want to limit the number of lines read so this doesn't continue on reading the entire file.
-		
+
 		// Remove any extra whitespace.
 		$line = trim(fgets($fh, 1024));
 		switch($filetype){
@@ -311,7 +318,7 @@ function parse_for_documentation($file){
 					$counter++;
 					break;
 				}
-				
+
 				// Recognize PHPDoc syntax... basically just [space]*[space]@license...
 				if($inphpdoc){
 					// Is this an @license line?
@@ -382,7 +389,7 @@ function parse_for_documentation($file){
 					$counter++;
 					break;
 				}
-				
+
 				// Recognize "* Author: Person Blah" syntax... basically just [space]*[space]license...
 				if($incomment){
 					// Is this line Author: ?
@@ -420,7 +427,7 @@ function parse_for_documentation($file){
 		}
 	}
 	fclose($fh);
-	
+
 	// I don't want 5 million duplicates... so remove all the duplicate results.
 	// I need to use arrayUnique because the arrays are multi-dimensional.
 	$ret['licenses'] = arrayUnique($ret['licenses']);
@@ -431,21 +438,21 @@ function parse_for_documentation($file){
 /**
  * Simple function to intelligently "up" the version number.
  * Supports Ubuntu-style versioning for non-original maintainers (~extraversionnum)
- * 
+ *
  * Will try to utilize the versioning names, ie: dev to alpha to beta, etc.
- * 
+ *
  * @param string $version
  * @param boolean $original
- * @return string 
+ * @return string
  */
 function _increment_version($version, $original){
 	if($original){
-		
+
 		// It's an official package, increment the regular number and drop anything after the ~...
 		if(strpos($version, '~') !== false){
 			$version = substr($version, 0, strpos($version, '~'));
 		}
-		
+
 		// if there's a -dev, -b, -rc[0-9], -beta, -a, -alpha, etc... just step up to the next one.
 		// dev < alpha = a < beta = b < RC = rc < # <  pl = p
 		if(preg_match('/\-(dev|a|alpha|b|beta|rc[0-9]|p|pl)$/i', $version, $match)){
@@ -468,18 +475,18 @@ function _increment_version($version, $original){
 			if(preg_match('/rc([0-9]*)/i', $match[1], $rcnum)){
 				return $basev . '-rc' . ($rcnum[1] + 1);
 			}
-			
+
 			// still no?  I give up...
 			$version = $basev;
 		}
-		
+
 		// Increment the version number by 0.0.1.
 		@list($vmaj, $vmin, $vrev) = explode('.', $version);
 		// They need to at least be 0....
 		if(is_null($vmaj)) $vmaj = 1;
 		if(is_null($vmin)) $vmin = 0;
 		if(is_null($vrev)) $vrev = 0;
-	
+
 		$vrev++;
 		$version = "$vmaj.$vmin.$vrev";
 	}
@@ -498,7 +505,7 @@ function _increment_version($version, $original){
 			$version .= '~' . $vname . $vnum;
 		}
 	}
-	
+
 	return $version;
 }
 
@@ -542,7 +549,7 @@ function get_unique_authors($authors){
 		// If there are no more unset names, no need to keep this array laying about.
 		if(!sizeof($ea[''])) unset($ea['']);
 	}
-	
+
 
 	$authors = array();
 	// Now handle every email.
@@ -552,8 +559,8 @@ function get_unique_authors($authors){
 			foreach($na as $name) $authors[] = array('name' => $name);
 			continue;
 		}
-		
-		
+
+
 		// Match differences such as Tomas V.V.Cox and Tomas V. V. Cox
 		$simsearch = array();
 		foreach($na as $k => $name){
@@ -561,7 +568,7 @@ function get_unique_authors($authors){
 			if(in_array($key, $simsearch)) unset($na[$k]);
 			else $simsearch[] = $key;
 		}
-		
+
 
 		// There may be a pattern in the names, ie: Charlie Powell == cpowell == powellc == charlie.powell
 		$aliases = array();
@@ -620,7 +627,7 @@ function get_unique_licenses($licenses){
 	foreach($lics as $l => $urls){
 		foreach($urls as $url) $licenses[] = array('title' => $l, 'url' => $url);
 	}
-	
+
 	return $licenses;
 }
 
@@ -686,10 +693,11 @@ function process_component($component, $forcerelease = false){
 
 	// The core has a "few" extra ignores to it...
 	if($component == 'core'){
-		$it->addIgnores('components/', 'config/configuration.xml', 'dropins/', 'exports/', 'nbproject/', 'themes/', 'update_site/', 'utilities/', '.htaccess');
+		$it->addIgnores('components/', 'config/configuration.xml', 'dropins/', 'exports/', 'nbproject/', 'themes/', 'utilities/', '.htaccess', 'gnupg');
 		if(ConfigHandler::Get('/core/filestore/assetdir')) $it->addIgnore(ConfigHandler::Get('/core/filestore/assetdir'));
 		if(ConfigHandler::Get('/core/filestore/publicdir')) $it->addIgnore(ConfigHandler::Get('/core/filestore/publicdir'));
 		if(strpos(TMP_DIR_WEB, ROOT_PDIR) === 0) $it->addIgnore(TMP_DIR_WEB);
+		if(strpos(TMP_DIR_CLI, ROOT_PDIR) === 0) $it->addIgnore(TMP_DIR_CLI);
 	}
 
 	// @todo Should I support ignored files in the component.xml file?
@@ -850,19 +858,18 @@ function process_component($component, $forcerelease = false){
 				break;
 		}
 	}
-	
+
 	// User must have selected 'save'...
 	$comp->save();
 
 	// Reload the XML file, since it probably changed.
-	$xml = new XMLLoader();
 	$xml->setRootName('component');
 	if(!$xml->loadFromFile(ROOT_PDIR . $cfile)){
 		//@todo The XML file didn't load.... would this be a good time to revert a saved state?
 		throw new Exception('Unable to load XML file ' . $cfile);
 	}
 	echo "Saved!" . NL;
-	
+
 	if($forcerelease){
 		// if force release, don't give the user an option... just do it.
 		$bundleyn = true;
@@ -899,6 +906,32 @@ function process_component($component, $forcerelease = false){
 			$file->copyTo($dir . 'data/' . $fname);
 		}
 
+		// The core will have some additional files required to be created.
+		if($component == 'core'){
+			$denytext = <<<EOD
+# This is specifically created to prevent access to ANYTHING in this directory.
+#  Under no situation should anything in this directory be readable
+#  by anyone at any time.
+
+<Files *>
+	Order deny,allow
+	Deny from All
+</Files>
+EOD;
+			$corecreates = array(
+				'components', 'gnupg',
+			);
+			$coresecures = array(
+				'components', 'config', 'gnupg', 'core'
+			);
+			foreach($corecreates as $createdir){
+				mkdir($dir . 'data/' . $createdir);
+			}
+			foreach($coresecures as $securedir){
+				file_put_contents($dir . 'data/' . $securedir . '/.htaccess', $denytext);
+			}
+		}
+
 		// Because the destination is relative...
 		$xmldest = 'data/' . substr(ROOT_PDIR . $cfile, $basestrlen);
 		$xmloutput = new File_local_backend($dir . $xmldest);
@@ -909,7 +942,7 @@ function process_component($component, $forcerelease = false){
 
 		// Different component types require a different bundle type.
 		//$bundletype = ($component == 'core')? 'core' : 'component';
-		
+
 		// Save the package.xml file.
 		$comp->savePackageXML(true, $dir . 'package.xml');
 
@@ -935,7 +968,7 @@ function process_theme($theme, $forcerelease = false){
 	require_once(ROOT_PDIR . 'components/theme/libs/Theme.class.php');
 
 	global $packagername, $packageremail;
-	
+
 	$t = new Theme($theme);
 	$t->load();
 
@@ -984,7 +1017,7 @@ function process_theme($theme, $forcerelease = false){
 	$t->setAssetFiles($assetfiles);
 	$t->setSkinFiles($skinfiles);
 	$t->setViewFiles($viewfiles);
-	
+
 	$ans = false;
 
 	while($ans != 'save'){
@@ -997,7 +1030,7 @@ function process_theme($theme, $forcerelease = false){
 			'exit' => 'Abort and exit without saving changes',
 		);
 		$ans = CLI::PromptUser('What do you want to edit for theme ' . $theme . ' ' . $version, $opts);
-		
+
 		switch($ans){
 			case 'editvers':
 				$version = _increment_version($t->getVersion(), true);
@@ -1016,8 +1049,8 @@ function process_theme($theme, $forcerelease = false){
 		}
 	}
 
-	
-	
+
+
 	// User must have selected 'finish'...
 	$t->save();
 	echo "Saved!" . NL;
@@ -1084,7 +1117,7 @@ function process_bundle(){
 	// Create a default list of components to bundle.
 	$components = array('CoreIcons', 'Email', 'File', 'HTML', 'jquery', 'Menu', 'Page', 'PEAR', 'Session', 'Template', 'Time', 'tinyMCE', 'User');
 	$required = array('File', 'Time', 'PEAR');
-	
+
 	// I need a list of components, libraries and themes that need bundled together to create an installation package.
 	$files = array();
 	$dir = ROOT_PDIR . 'components';
@@ -1093,14 +1126,14 @@ function process_bundle(){
 		if($file{0} == '.') continue;
 		if(!is_dir($dir . '/' . $file)) continue;
 		if(!is_readable($dir . '/' . $file . '/' . 'component.xml')) continue;
-		
+
 		$files[] = $file;
 	}
 	closedir($dh);
-	
+
 	// They should be in alphabetical order...
 	sort($files);
-	
+
 	// Ask the user what components should be added/removed to the array.
 	$q = "[+] Denotes a package set to be added, enter its number to remove it." . NL;
 	$q .= "[-] Denotes a package set to be ingored, enter its number to add it." . NL;
@@ -1119,25 +1152,25 @@ function process_bundle(){
 			$components[] = $ans;
 			echo "\033[1;34mAdded " . $ans . "\033[0m" . NL;
 		}
-		
+
 		$a = array();
 		foreach($files as $f){
 			if(in_array($f, $required)) $a[$f] = '[*] ' . $f;
 			elseif(in_array($f, $components)) $a[$f] = '[+] ' . $f;
 			else $a[$f] = '[-] ' . $f;
 		}
-		
+
 		// Tack on the 'next/quit loop' option.
 		$a['exit'] = 'Next, Select Versions';
 		$ans = CLI::PromptUser($q, $a);
 	}
-	
+
 	// Tack on the core.
 	$components[] = 'core';
-	
+
 	// I have a list of components to bundle, $components.  Ask the user what versions to do.
 	//CLI::PromptUser('Press enter to select, (or create), the package versions.', 'text');
-	
+
 	$versions = array();
 	$ans = null;
 	while($ans != 'exit'){
@@ -1145,7 +1178,7 @@ function process_bundle(){
 		//foreach($components as $c){
 		//	$versions[$c] = get_exported_component($c);
 		//}
-		
+
 		$q = 'Select the component to edit its version, or continue to the next step.';
 		$a = array();
 		foreach($components as $c){
@@ -1164,36 +1197,36 @@ function process_bundle(){
 		}
 		// Tack on the exit/next option.
 		$a['exit'] = 'Next, something else';
-		
+
 		$ans = CLI::PromptUser($q, $a);
 		if($ans != 'exit'){
 			// Reset the cache.
 			$_cversions = null;
 		}
 	}
-	
+
 	// @todo Handle the libraries.
-	
+
 	// @todo Handle the themes.
-	
-	
+
+
 	// Set a temp directory to export everything to.
 	$dir = '/tmp/packager-bundle/';
 	if(!is_dir($dir)) mkdir($dir);
 	if(!is_dir($dir . 'dropins/')) mkdir($dir . 'dropins/');
 	if(!is_dir($dir . 'install/')) mkdir($dir . 'install/');
-	
+
 	if(!is_dir(ROOT_PDIR . 'exports/bundles')) mkdir(ROOT_PDIR . 'exports/bundles');
-	
+
 	// Copy the components to the new directory.
 	foreach($components as $c){
 		$vers = get_exported_component($c);
 		copy($vers['filename'], $dir . 'dropins/' . basename($vers['filename']));
 	}
 	// @todo Copy libraries
-	
+
 	// @todo Copy themes
-	
+
 	// Copy the bare files required for installation.
 	copy(ROOT_PDIR . 'index.php', $dir . 'index.php');
 	//copy(ROOT_PDIR . '.htaccess', $dir . '.htaccess');
@@ -1202,7 +1235,7 @@ function process_bundle(){
 	copy(ROOT_PDIR . 'license.txt', $dir . 'license.txt');
 	copy(ROOT_PDIR . 'core/InstallArchive.class.php', $dir . 'install/InstallArchive.class.php');
 	copy(ROOT_PDIR . 'components/File/File.class.php', $dir . 'install/File.class.php');
-	
+
 	// @todo Which compression algorithm should be used?
 	// Create the bundle version based on the current core version.
 	$coreversion = get_exported_component('core');
@@ -1210,12 +1243,12 @@ function process_bundle(){
 	$tgz = ROOT_PDIR . 'exports/bundles/bundle-' . $bundleversion . '.tgz';
 	exec('tar -czf ' . $tgz . ' -C ' . $dir . ' --exclude=.svn --exclude=*~ --exclude=._* .');
 	$bundle = $tgz;
-	
+
 	echo "Created bundle " . $bundleversion . NL . " as " . $bundle . NL;
-	
+
 	// And remove the tmp directory.
 	exec('rm -fr "' . $dir . '"');
-	
+
 } // function process_bundle
 
 
@@ -1230,7 +1263,7 @@ function get_exported_components(){
 		if($file{0} == '.') continue;
 		if(is_dir($dir . '/' . $file)) continue;
 		// Get the extension type.
-		
+
 		if(preg_match('/\.tgz$/', $file)){
 			$signed = false;
 			$fbase = substr($file, 0, -4);
@@ -1242,12 +1275,12 @@ function get_exported_components(){
 		else{
 			continue;
 		}
-		
+
 		// Split up the name and the version.
 		preg_match('/([^-]*)\-(.*)/', $fbase, $matches);
 		$n = $matches[1];
 		$v = $matches[2];
-		
+
 		// Tack it on.
 		if(!isset($c[$n])){
 			$c[$n] = array('version' => $v, 'signed' => $signed, 'filename' => $dir . '/' . $file);
@@ -1268,7 +1301,7 @@ function get_exported_components(){
 		}
 	}
 	closedir($dh);
-	
+
 	return $c;
 } // function get_exported_components()
 
@@ -1283,7 +1316,7 @@ function get_exported_core(){
 		if($file{0} == '.') continue;
 		if(is_dir($dir . '/' . $file)) continue;
 		// Get the extension type.
-		
+
 		if(preg_match('/\.tgz$/', $file)){
 			$signed = false;
 			$fbase = substr($file, 0, -4);
@@ -1295,12 +1328,12 @@ function get_exported_core(){
 		else{
 			continue;
 		}
-		
+
 		// Split up the name and the version.
 		preg_match('/([^-]*)\-(.*)/', $fbase, $matches);
 		$n = $matches[1];
 		$v = $matches[2];
-		
+
 		// Tack it on.
 		if(!isset($c[$n])){
 			$c[$n] = array('version' => $v, 'signed' => $signed, 'filename' => $dir . '/' . $file);
@@ -1321,9 +1354,9 @@ function get_exported_core(){
 		}
 	}
 	closedir($dh);
-	
+
 	if(!isset($c['core'])) $c['core'] = array('version' => null, 'signed' => false);
-	
+
 	return $c['core'];
 } // function get_exported_core()
 
@@ -1335,7 +1368,7 @@ function get_exported_component($component){
 		// Tack on the core.
 		$_cversions['core'] = get_exported_core();
 	}
-	
+
 	if(!isset($_cversions[$component])) return array('version' => null, 'signed' => false);
 	else return $_cversions[$component];
 }
@@ -1358,7 +1391,7 @@ CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 
 
 $ans = CLI::PromptUser(
-	"What operation do you want to do?", 
+	"What operation do you want to do?",
 	array(
 		'component' => 'Manage a Component',
 		'theme' => 'Manage a Theme',
@@ -1380,7 +1413,7 @@ switch($ans){
 			if($file{0} == '.') continue;
 			if(!is_dir($dir . '/' . $file)) continue;
 			if(!is_readable($dir . '/' . $file . '/' . 'component.xml')) continue;
-			
+
 			$files[] = $file;
 		}
 		closedir($dh);
@@ -1398,7 +1431,7 @@ switch($ans){
 			if($file{0} == '.') continue;
 			if(!is_dir($dir . '/' . $file)) continue;
 			if(!is_readable($dir . '/' . $file . '/' . 'theme.xml')) continue;
-			
+
 			$files[] = $file;
 		}
 		closedir($dh);
