@@ -1022,6 +1022,15 @@ class ModelFactory {
 
 		return $rs->num_rows;
 	}
+	
+	/**
+	 * @return Dataset
+	 */
+	public function getDataset(){
+
+		return $this->_dataset;
+
+	}
 }
 
 
