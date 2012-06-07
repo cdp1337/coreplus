@@ -59,6 +59,7 @@ class UpdaterController extends Controller_2_1 {
 		$view->addControl('Browse Packages', '/updater/browse', 'browse');
 		$view->assign('sitecount', $sitecount);
 		$view->assign('components', $components);
+		$view->assign('core', Core::GetComponent('core'));
 		$view->assign('themes', $themes);
 	}
 

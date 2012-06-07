@@ -5,6 +5,9 @@
 		<require name="core" type="component"/>
 		<require name="jquery" type="library"/>
 	</requires>
+	<provides>
+		<scriptlibrary name="tinymce" call="TinyMCE::IncludeTinyMCE"/>
+	</provides>
 	<forms>
 		<formelement name="wysiwyg" class="TinyMCEFormElement"/>
 	</forms>

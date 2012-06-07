@@ -71,8 +71,6 @@ Updater = {};
 
 				drawpackages();
 				$update.html('');
-
-				console.log(d);
 			},
 			error: function(){
 				// :/ Whatever, I didn't care about updates anyway.
@@ -106,11 +104,15 @@ Updater = {};
 	};
 
 	showupdates = function(){
-		var $table = $('#component-list'), i;
+		var $ctable = $('#component-list'), $ttable = $('#theme-list'), i;
 
 		// Since this table will contain only components that are actually updatable.. I can do this.
 		for( i in packages.components){
-			$table.find('tr[componentname="' + i + '"]').find('.update-link').show();
+			$ctable.find('tr[componentname="' + i + '"]').find('.update-link').show();
+		}
+
+		for( i in packages.themes){
+			$ttable.find('tr[themename="' + i + '"]').find('.update-link').show();
 		}
 	};
 
@@ -203,8 +205,8 @@ Updater = {};
 			var $tr = $(this).closest('tr'),
 				$overlay, html,
 				type = $tr.attr('type'),
-				name = ((type == 'components') ? $tr.attr('componentname') : $tr.attr('themename') ),
-				i;
+				name = null,
+				i, package;
 
 			// packages need to be downloaded first!
 			if(packages === null){
@@ -213,7 +215,22 @@ Updater = {};
 				return false;
 			}
 
-			if(!packages[type][name]){
+			switch(type){
+				case 'components':
+					name = $tr.attr('componentname');
+					package = packages[type][name];
+					break;
+				case 'themes':
+					name = $tr.attr('themename');
+					package = packages[type][name];
+					break;
+				case 'core':
+					name = 'core';
+					package = packages[type];
+					break;
+			}
+
+			if(!package){
 				// How is this specific button enabled?!?  WTF's going on here?
 				alert(type + ' ' + name + ' has no available updates.');
 				return false;
@@ -222,13 +239,13 @@ Updater = {};
 			$overlay = $('<div/>').appendTo('body');
 
 			html = '<dl>';
-			for(i in packages[type][name]){
+			for(i in package){
 				html += '<dt>' +
 					'<a href="#" class="perform-update-' + type + '" name="' + name + '" version="' + i + '">' +
-					packages[type][name][i].title + ' ' + i +
+					package[i].title + ' ' + i +
 					'</a>' +
 					'</dt>';
-				html += '<dd title="' + packages[type][name][i].location + '">From: ' + packages[type][name][i].sourceurl + '</dd>';
+				html += '<dd title="' + package[i].location + '">From: ' + package[i].sourceurl + '</dd>';
 			}
 			html += '</dl>';
 			$overlay.html(html).dialog({

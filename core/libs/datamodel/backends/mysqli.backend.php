@@ -736,7 +736,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$ws[] = ' ( ' . implode(' ' . $dataset->_wheregroups[$k] . ' ', $v) . ' ) ';
 			}
 
-			$q .= ' WHERE ' . implode(' AND ', $ws);
+			$q .= ' WHERE ' . implode(' ' . $dataset->_wheregroups[0] . ' ', $ws);
 		}
 
 		return $q;

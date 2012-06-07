@@ -1022,6 +1022,17 @@ class ModelFactory {
 
 		return $rs->num_rows;
 	}
+
+	/**
+	 * Get the raw dataset object for this factory.
+	 * This can sometimes be useful for advanced manipulations of the low-level object.
+	 *
+	 * @since 2.1
+	 * @return Dataset
+	 */
+	public function getDataset(){
+		return $this->_dataset;
+	}
 }
 
 

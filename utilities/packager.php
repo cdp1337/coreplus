@@ -919,7 +919,7 @@ function process_component($component, $forcerelease = false){
 </Files>
 EOD;
 			$corecreates = array(
-				'components', 'gnupg',
+				'components', 'gnupg', 'themes'
 			);
 			$coresecures = array(
 				'components', 'config', 'gnupg', 'core'

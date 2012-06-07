@@ -60,7 +60,7 @@
 		<file filename="core/controllers/GettingStartedController.class.php" md5="449677fa9a0617ea705ce232509b730f">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="966c65e0ff10e5ed73f9159cbdcad2a8">
+		<file filename="core/controllers/UpdaterController.class.php" md5="83ee157b78c93f398f6c82313199b97d">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
@@ -429,7 +429,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="32995c0c3d76597a12c46a1d0cbda31c">
+		<file filename="core/libs/core/Model.class.php" md5="8c7c5531836c032ddb90d60a47d5ebf2">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -494,7 +494,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="e02b68f59cf50bf21f1bb533a2e59ea1">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="b920dac45fc5237743a10c2540d218ab">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="dbb68c791708616d99b2164194cc915f">
 			<class name="DMI_mysqli_backend"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/AUTHORS" md5="c0722ecbe902d4770f9e17b43db3d8e6"/>
@@ -1196,7 +1196,6 @@
 		<file filename="install/templates/skin.tpl" md5="3989070107399bafb7770d157c125ce3"/>
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
-		<file filename="zxy" md5="d41d8cd98f00b204e9800998ecf8427e"/>
 	</files>
 	<pages>
 		<page baseurl="/Admin" admin="1" widget="0" access="g:admin" title="Administration"/>
@@ -1262,6 +1261,7 @@
 		<file filename="core/templates/pages/updater/index.tpl" md5="c28a49c3bbafc501fd8cfa741b113eb3"/>
 		<file filename="core/templates/pages/updater/keys.tpl" md5="bfb0932912bea760984f0629cd2e3082"/>
 		<file filename="core/templates/pages/updater/keys_import.tpl" md5="1872117c9db9e7242cdd0485a11ddc4a"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="7dfa3741e24a6d43537dc743315511f4"/>
 	</view>
 	<install/>
 	<description>
@@ -1301,7 +1301,7 @@
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.js" md5="e266282187d6730905137049f7c9d70b"/>
 		<file filename="core/assets/js/core.strings.js" md5="e704b77bfcc5ca29b28934ab4d454c70"/>
-		<file filename="core/assets/js/updater/index.js" md5="9c7105d45bfb9cf6d823273c2daa2a45"/>
+		<file filename="core/assets/js/updater/index.js" md5="19478c4aba5735aa4efdad3fd7a98f70"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="0.0.2"/>
@@ -1350,9 +1350,7 @@
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			See the included NOTICE.md file for more information.
-		</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3
 		</license>

@@ -20,6 +20,15 @@
 	<script>$(function(){ Updater.PerformCheck($('#updates')); });</script>
 {/if}
 
+<table class="listing" id="core-list">
+	<tr type="core">
+		<td>Core {$core->getVersion()}</td>
+		<td>
+			<a href="#" class="update-link" style="display:none;">Update</a>
+		</td>
+	</tr>
+</table>
+<br/>
 
 <table class="listing" id="component-list">
 	<tr>
@@ -42,6 +51,24 @@
 				{else}
 					<a href="#" class="enable-link">Enable</a>
 				{/if}
+			</td>
+		</tr>
+	{/foreach}
+</table>
+<br/>
+
+<table class="listing" id="theme-list">
+	<tr>
+		<th>Theme</th>
+		<th>Version</th>
+		<th>&nbsp;</th>
+	</tr>
+	{foreach from=$themes item=t}
+		<tr themename="{$t->getName()|lower}" type="themes">
+			<td>{$t->getName()}</td>
+			<td>{$t->getVersion()}</td>
+			<td>
+				<a href="#" class="update-link" style="display:none;">Update</a>
 			</td>
 		</tr>
 	{/foreach}
