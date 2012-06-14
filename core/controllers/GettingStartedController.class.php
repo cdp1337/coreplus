@@ -22,13 +22,17 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-// @todo Finish this system! -- Feature #27
-
 
 class GettingStartedController extends Controller_2_1 {
 	public function index() {
 		$this->setTemplate('/pages/gettingstarted/index.tpl');
-		return $this->getView();
+		$view = $this->getView();
+
+		// Check and see if there are no users in the system. If so, provide a prompt for creating admin.
+		$view->assign('showusercreate', (UserModel::Count() == 0));
+		$view->assign('isadmin', Core::User()->checkAccess('g:admin'));
+
+		return $view;
 	}
 
 	public static function _HookCatch404(View $view) {

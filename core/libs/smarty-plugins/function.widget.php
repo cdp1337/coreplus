@@ -26,8 +26,8 @@ function smarty_function_widget($params, $template){
 		// Try to look up this requested widget.
 		$name .= 'Widget';
 	}
-	
-	
+
+
 	if(!class_exists($name)){
 		throw new SmartyException('Unable to locate class [' . $name . '] for requested widget', null, null);
 	}

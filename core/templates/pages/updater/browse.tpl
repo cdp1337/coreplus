@@ -11,7 +11,15 @@
 		<th>Component</th>
 		<th>Version</th>
 		<th>Status</th>
-		<th>&nbsp;</th>
+	</tr>
+</table>
+<br/>
+
+<table class="listing" id="theme-list">
+	<tr>
+		<th>Theme</th>
+		<th>Version</th>
+		<th>Status</th>
 	</tr>
 </table>
 

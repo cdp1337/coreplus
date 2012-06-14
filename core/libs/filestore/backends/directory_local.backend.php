@@ -153,7 +153,12 @@ class Directory_local_backend implements Directory_Backend {
 
 
 		if (!$ftp) {
-			return is_writable($this->_path);
+			// If the directory doesn't exist, maybe the parent is still writable...
+			$testpath = $this->_path;
+			while($testpath && !is_dir($testpath)){
+				$testpath = substr($testpath, 0, strrpos($testpath, '/'));
+			}
+			return is_writable($testpath);
 		}
 		elseif (strpos($this->_path, $tmpdir) === 0) {
 			// Tmp files should be written directly.

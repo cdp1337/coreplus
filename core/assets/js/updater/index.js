@@ -118,6 +118,7 @@ Updater = {};
 
 	drawpackages = function(){
 		var $componentstable = $('#component-list'),
+			$themestable = $('#theme-list'),
 			name, version, cur, html;
 
 		for(name in packages.components){
@@ -145,6 +146,34 @@ Updater = {};
 
 				html += '</tr>';
 				$componentstable.append(html);
+			}
+		}
+
+		for(name in packages.themes){
+
+			for(version in packages.themes[name]){
+				// alias it so it's quicker.
+				cur = packages.themes[name][version];
+
+				// Skip components that are not updated.
+				if(cur.status == 'downgrade') continue;
+
+				html = '<tr><td>' + cur.title + '</td><td>' + version + '</td>';
+				if(cur.status == 'installed'){
+					html += '<td>Installed</td>';
+				}
+				else if(cur.status == 'new'){
+					html += '<td><a href="#" class="perform-update" type="themes" name="' + name + '" version="' + version + '">Install</a></td>';
+				}
+				else if(cur.status == 'update'){
+					html += '<td><a href="#" class="perform-update" type="themes" name="' + name + '" version="' + version + '">Update</a></td>';
+				}
+				else{
+					html += '<td>' + cur.status + '</td>';
+				}
+
+				html += '</tr>';
+				$themestable.append(html);
 			}
 		}
 	};
@@ -228,6 +257,9 @@ Updater = {};
 					name = 'core';
 					package = packages[type];
 					break;
+				default:
+					alert('Invalid type, ' + type);
+					return false;
 			}
 
 			if(!package){
@@ -241,7 +273,7 @@ Updater = {};
 			html = '<dl>';
 			for(i in package){
 				html += '<dt>' +
-					'<a href="#" class="perform-update-' + type + '" name="' + name + '" version="' + i + '">' +
+					'<a href="#" class="perform-update" type="' + type + '" name="' + name + '" version="' + i + '">' +
 					package[i].title + ' ' + i +
 					'</a>' +
 					'</dt>';
@@ -259,17 +291,34 @@ Updater = {};
 			return false;
 		});
 
-		$('body').delegate('.perform-update-components', 'click', function(){
-			var $this = $(this),
-				name = $this.attr('name'),
-				version = $this.attr('version');
+		$('body').delegate('.perform-update', 'click', function(){
+			var $this   = $(this),
+				name    = $this.attr('name'),
+				version = $this.attr('version'),
+				type    = $this.attr('type'),
+				url     = null;
 
 			// Cancel the last request.
 			if(xhr !== null) xhr.abort();
 
+			switch(type){
+				case 'components':
+					url = Core.ROOT_WDIR + 'updater/component/install/' + name + '/' + version;
+					break;
+				case 'themes':
+					url = Core.ROOT_WDIR + 'updater/theme/install/' + name + '/' + version;
+					break;
+				case 'core':
+					url = Core.ROOT_WDIR + 'updater/core/install/' + name + '/' + version;
+					break;
+				default:
+					alert('Invalid type, ' + type);
+					return false;
+			}
+
 			// Do a dry run
 			xhr = $.ajax({
-				url: Core.ROOT_WDIR + 'updater/component/install/' + name + '/' + version + '?dryrun=1',
+				url: url + '?dryrun=1',
 				type: 'POST',
 				dataType: 'json',
 				success: function(r){
@@ -284,11 +333,11 @@ Updater = {};
 					// If the length is more than one and the user accepts that more than one component will be disabled,
 					// or if there's only one.
 					if(
-						(r.changes.length > 1 && confirm('The following components will be installed or updated: \n' + r.changes.join('\n')) ) ||
+						(r.changes.length > 1 && confirm('The following ' + type + ' will be installed or updated: \n' + r.changes.join('\n')) ) ||
 							(r.changes.length == 1)
 						){
 						xhr = $.ajax({
-							url: Core.ROOT_WDIR + 'updater/component/install/' + name + '/' + version + '?dryrun=0',
+							url: url + '?dryrun=0',
 							type: 'POST',
 							dataType: 'json',
 							success: function(r){

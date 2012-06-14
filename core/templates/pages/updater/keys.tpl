@@ -24,5 +24,5 @@
 		{/foreach}
 	</table>
 {else}
-
+	<p class="message-info">No keys are installed on the system, go {a href="updater/keys/import"}add one{/a}</p>
 {/if}

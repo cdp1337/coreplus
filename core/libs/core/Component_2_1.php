@@ -1038,10 +1038,22 @@ class Component_2_1 {
 					// w00t, found one...
 					$canBeUpgraded = true;
 
-					$result = InstallTask::ParseNode($u, $this->getBaseDir());
+					// The various upgrade tasks that can happen
+					foreach($u->getElementsByTagName('dataset') as $datasetel){
+						$datachanges = $this->_parseDatasetNode($datasetel);
+						if($datachanges !== false) $changes = array_merge($changes, $datachanges);
+					}
+
+					/*
+					foreach ($node->getElementsByTagName('*') as $c) {
+						$result = HookHandler::DispatchHook('/install_task/' . $c->tagName, $c, $relativeDir);
+						if (!$result) return false;
+					}
+					*/
+					/*$result = InstallTask::ParseNode($u, $this->getBaseDir());
 					if (!$result) {
 						throw new InstallerException('Upgrade of Component ' . $this->_name . ' failed.');
-					}
+					}*/
 
 					// Record this change.
 					$changes[] = 'Upgraded from [' . $this->_versionDB . '] to [' . $u->getAttribute('to') . ']';
@@ -1119,6 +1131,12 @@ class Component_2_1 {
 
 		$change = $this->_installAssets();
 		if ($change !== false) $changed = array_merge($changed, $change);
+
+		// Allow datasets to be in here too.
+		foreach($this->_xmlloader->getElements('install/dataset') as $datasetel){
+			$datachanges = $this->_parseDatasetNode($datasetel);
+			if($datachanges !== false) $changes = array_merge($changes, $datachanges);
+		}
 
 		return (sizeof($changed)) ? $changed : false;
 	}
@@ -1296,6 +1314,66 @@ class Component_2_1 {
 
 		return $changed;
 	} // private function _parseDBSchema()
+
+
+	/**
+	 * Internal function to parse and handle the dataset in the <upgrade> and <install> tasks.
+	 * This is used for installations and upgrades.
+	 *
+	 * Unlike the other parse functions, this handles a single node at a time.
+	 *
+	 * @param $node DOMElement
+	 * @throws InstallerException
+	 */
+	private function _parseDatasetNode(DOMElement $node){
+		$action   = $node->getAttribute('action');
+		$table    = $node->getAttribute('table');
+		$haswhere = false;
+		$sets     = array();
+		$ds       = new Dataset();
+
+
+		$ds->table($table);
+
+		foreach($node->getElementsByTagName('datasetset') as $el){
+			$sets[$el->getAttribute('key')] = $el->nodeValue;
+		}
+
+		foreach($node->getElementsByTagName('datasetwhere') as $el){
+			$haswhere = true;
+			$ds->where(trim($el->nodeValue));
+		}
+
+		switch($action){
+			case 'update':
+				foreach($sets as $k => $v){
+					$ds->update($k, $v);
+				}
+				break;
+			case 'insert':
+				foreach($sets as $k => $v){
+					$ds->insert($k, $v);
+				}
+				break;
+			case 'delete':
+				if(sizeof($sets)) throw new InstallerException('Invalid mix of arguments on ' . $action . ' dataset request');
+				if(!$haswhere) throw new InstallerException('Cowardly refusing to delete with no where statement');
+				$ds->delete();
+				break;
+			default:
+				throw new InstallerException('Invalid action type, '. $action);
+		}
+
+		// and GO!
+		$ds->execute();
+		if($ds->num_rows){
+			return $action . ' on table ' . $table . ' affected ' . $ds->num_rows . ' records.';
+		}
+		else{
+			return false;
+		}
+	}
+
 
 	/**
 	 * Copy in all the assets for this component into the assets location.

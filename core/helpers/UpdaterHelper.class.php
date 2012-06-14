@@ -78,6 +78,7 @@ class UpdaterHelper {
 			if(!isset($themes[$n])) $themes[$n] = array();
 			$themes[$n][$t->getVersion()] = array(
 				'name' => $n,
+				'title' => $n,
 				'version' => $c->getVersion(),
 				'source' => 'installed',
 				'description' => $c->getDescription(),
@@ -157,6 +158,7 @@ class UpdaterHelper {
 						if(!isset($themes[$n][$vers])){
 							$themes[$n][$vers] = array(
 								'name' => $n,
+								'title' => $n,
 								'version' => $vers,
 								'source' => 'repo-' . $site->get('id'),
 								'sourceurl' => $site->get('url'),
@@ -366,6 +368,139 @@ class UpdaterHelper {
 		// yay...
 		return array('status' => 1, 'message' => 'Performed all operations successfully');
 	}
+
+
+	public static function InstallTheme($name, $version, $dryrun = false){
+		$updates = UpdaterHelper::GetUpdates();
+
+		// I just need the component array itself.
+		$themes = $updates['themes'];
+
+		// Make sure the name and version exist in the updates list.
+		if(!isset($themes[$name])){
+			return array('status' => 0, 'message' => 'Theme ' . $name . ' does not appear to be valid.');
+		}
+		if(!isset($themes[$name][$version])){
+			return array('status' => 0, 'message' => 'Theme ' . $name . ' does not appear to have requested version.');
+		}
+
+		// This is the theme that will be installed.
+		// Since themes don't (currently) have dependencies, the logic is much simplier.
+		$theme = $themes[$name][$version];
+
+
+		$repos = array();
+		$remotefiles = array();
+		$names = array();
+		// Check the signatures for the package first.
+		if(strpos($theme['source'], 'repo-') !== false){
+			// Look up that repo's connection information, since username and password may be required.
+			if(!isset($repos[$theme['source']])){
+				$repos[$theme['source']] = new UpdateSiteModel(substr($theme['source'], 5));
+			}
+			$remotefiles[$theme['name']] = new File_remote_backend($theme['location']);
+			$remotefiles[$theme['name']]->username = $repos[$theme['source']]->get('username');
+			$remotefiles[$theme['name']]->password = $repos[$theme['source']]->get('password');
+
+			if(!$remotefiles[$theme['name']]->exists()){
+				return array('status' => 0, 'message' => $theme['location'] . ' does not seem to exist!');
+			}
+
+			$obj = $remotefiles[$theme['name']]->getContentsObject();
+			if(!$obj->verify()){
+				// Maybe it can at least get the key....
+				if($key = $obj->getKey()){
+					return array('status' => 0, 'message' => 'Unable to locate public key for ' . $key);
+				}
+				return array('status' => 0, 'message' => 'Invalid GPG signature for ' . $theme['title']);
+			}
+
+			$dir = Core::Directory('themes/' . $theme['name']);
+			if(!$dir->isWritable()){
+				return array('status' => 0, 'message' => ROOT_PDIR . 'themes/' . $theme['name'] . '/ is not writable!');
+			}
+		}
+
+		$names[] = $theme['name'];
+
+
+		// If dryrun only was requested, just return the status here.
+		if($dryrun){
+			return array('status' => 1, 'message' => 'All dependencies are met, ok to install', 'changes' => $names);
+		}
+
+		// and do the actual installation.
+		if(strpos($theme['source'], 'repo-') !== false){
+
+			// Don't need to verify this again, was done above.
+			$obj = $remotefiles[$theme['name']]->getContentsObject();
+
+			// Decrypt the signed file.
+			$localfile = $obj->decrypt('tmp/updater/');
+			$localobj = $localfile->getContentsObject();
+
+			// This tarball will be extracted to a temporary directory, then copied from there.
+			$tmpdir = $localobj->extract('tmp/installer-' . Core::RandomHex(4));
+
+			// Destination directory it will be installed to.
+			$destbase = ROOT_PDIR . 'themes/' . $theme['name'] . '/';
+
+			// Now that the data is extracted in a temporary directory, extract every file in the destination.
+			$datadir = $tmpdir->get('data/');
+			if(!$datadir){
+				return array('status' => 0, 'message' => 'Invalid theme ' . $theme['title'] . ', does not contain a data directory.');
+			}
+
+			$queue = array($datadir);//$datadir->ls();
+			$x = 0;
+
+			do{
+				++$x;
+				$queue = array_values($queue);
+				foreach($queue as $k => $q){
+					if($q instanceof Directory_local_backend){
+						unset($queue[$k]);
+						// Just queue directories up to be scanned.
+						// (don't do array merge, because I'm inside a foreach loop)
+						foreach($q->ls() as $subq) $queue[] = $subq;
+					}
+					else{
+						// It's a file, copy it over.
+						// To do so, resolve the directory path inside the temp data dir.
+						$dest = $destbase . substr($q->getFilename(), strlen($datadir->getPath()));
+						$newfile = $q->copyTo($dest, true);
+
+						unset($queue[$k]);
+					}
+				}
+			}
+			while(sizeof($queue) > 0 && $x < 15);
+
+			// Cleanup the temp directory
+			$tmpdir->remove();
+
+			// and w00t, the files should be extracted.  Do the actual installation.
+			$t = new Theme($theme['name']);
+			$t->load();
+			// if it's installed, switch to that version and upgrade.
+			if($t->isInstalled()){
+				if(($t = ThemeHandler::GetTheme($theme['name'])) !== false){
+					// Make sure I get the new XML
+					$t->load();
+					// And upgrade
+					$t->upgrade();
+				}
+			}
+			else{
+				// It's a new installation.
+				$t->install();
+			}
+		}
+
+		// yay...
+		return array('status' => 1, 'message' => 'Performed all operations successfully');
+	}
+
 	
 	/**
 	 * Simple function to scan through the components provided for one that

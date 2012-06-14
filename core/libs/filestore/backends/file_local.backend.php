@@ -332,15 +332,18 @@ class File_local_backend implements File_Backend {
 		$dest->copyFrom($this, $overwrite);
 
 		return $dest;
-
-
-		// Now I can ensure that $dest is an absolutely positioned filename of an actual file.
-		if (!is_dir(dirname($dest))) {
-			// PHP doesn't support the '-p' argument... :(
-			exec('mkdir -p "' . dirname($dest) . '"');
-		}
 	}
 
+	/**
+	 * Make a copy of a source File into this File.
+	 *
+	 * (Generally only useful internally)
+	 *
+	 * @param      $src Source file backend
+	 * @param bool $overwrite true to overwrite existing file
+	 *
+	 * @return bool True or False if succeeded.
+	 */
 	public function copyFrom($src, $overwrite = false) {
 		// Don't overwrite existing files unless told otherwise...
 		if (!$overwrite) {
@@ -357,10 +360,8 @@ class File_local_backend implements File_Backend {
 			$this->_filename = $f;
 		}
 
-		// @todo Should this incorporate permissions, to prevent files being wrote as "www-data"?
-
 		// And do the actual copy!
-		$this->putContents($src->getContents());
+		return $this->putContents($src->getContents());
 	}
 
 	public function getContents() {
@@ -377,7 +378,7 @@ class File_local_backend implements File_Backend {
 			}
 		}
 
-		self::_PutContents($this->_filename, $data);
+		return self::_PutContents($this->_filename, $data);
 	}
 
 	public function getContentsObject() {
