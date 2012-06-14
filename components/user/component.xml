@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.0" name="user" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.1" name="user" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 		<require name="Facebook" type="component"/>
@@ -13,7 +13,8 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="Controllers/UserController.class.php" md5="23553ce3e5e067b1fa08b15af1e13e2c">
+		<file filename="CHANGELOG" md5="db582f5a38f5ebe7253037ee8181b59b"/>
+		<file filename="Controllers/UserController.class.php" md5="1bc2c198dca300b9fce07ed098faad66">
 			<controller name="UserController"/>
 		</file>
 		<file filename="Models/UserConfigModel.class.php" md5="67df933a187aa3af0d26d7f68905c9ad">
@@ -38,8 +39,11 @@
 		<file filename="User_Backend.interface.php" md5="ad7d3dee5bcb407e01e7426b15785c2b">
 			<interface name="User_Backend"/>
 		</file>
-		<file filename="Widgets/UserLoginWidget.class.php" md5="4b05356cd989a51270550b6ad91c4cd9">
+		<file filename="Widgets/UserLoginWidget.class.php" md5="bb643372ae006dba7eaabf7fe23dc6e5">
 			<class name="UserLoginWidget"/>
+		</file>
+		<file filename="Widgets/UserWidget.class.php" md5="d1b60d2deb311e7e56353d0276e408ef">
+			<class name="UserWidget"/>
 		</file>
 		<file filename="backends/User_datamodel.backend.php" md5="12aac6994c8b680641ea98828fff6891">
 			<class name="User_datamodel_Backend"/>
@@ -47,6 +51,7 @@
 		<file filename="backends/User_facebook.backend.php" md5="c9c4568e92e2b2d8917dd5f6c8e640c9">
 			<class name="User_facebook_Backend"/>
 		</file>
+		<file filename="helpers/UserFunctions.php" md5="762cb59ed66933af4f286aba135073f6"/>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="7b63104b6e541136797f28cf22005178"/>
 	</files>
 	<view>
@@ -58,6 +63,9 @@
 		<file filename="templates/pages/user/login.tpl" md5="b499441b575fa4bd2e7dd9ac2e49f52b"/>
 		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="f230fcddefd98780d34bb7a9b3a38ac5"/>
 		<file filename="templates/widgets/userlogin/execute.tpl" md5="8a8d32b7f36e7ee581ece66be94b4d2d"/>
+		<file filename="templates/widgets/user/login.tpl" md5="74b44e98b27d05efd66ba03a377a8816"/>
+		<file filename="templates/widgets/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/widgets/userlogin/execute.tpl" md5="8b33f6adb9fdadf3a6f4e10f6722de2e"/>
 	</view>
 	<pages>
 		<page baseurl="/User/Login" admin="0" widget="0" access="!g:authenticated" title="Login"/>
@@ -65,15 +73,9 @@
 		<page baseurl="/User/Logout" admin="0" widget="0" access="g:authenticated" title="Logout"/>
 	</pages>
 	<widgets>
-		<widget baseurl="/UserLoginWidget/execute"/>
+		<widget baseurl="/UserWidget/Login"/>
+		<widget baseurl="/UserWidget/Register"/>
 	</widgets>
-	<changelog version="0.0.1-dev1">
-		<packagemeta>
-			<date>Sun, 07 Aug 2011 17:42:39 -0400</date>
-			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-			<packager>CAE2 0.0.2-2</packager>
-		</packagemeta>
-	</changelog>
 	<configs>
 		<config key="/user/register/requirecaptcha" type="boolean" default="0" description=""/>
 		<config key="/user/backends" type="set" default="datamodel" description="" options="datamodel| facebook| ldap"/>
@@ -89,27 +91,6 @@
 		<file filename="assets/js/user/login.js" md5="f48e188960e94f209e89f5168b101983"/>
 		<file filename="assets/js/user/user.js" md5="b8793bfd7cd6ebeb3a9889905b300f7a"/>
 	</assets>
-	<changelog version="0.0.2">
-		<packagemeta>
-			<date>Mon, 19 Sep 2011 01:28:48 -0400</date>
-			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-			<packager>CAE2 0.0.5</packager>
-		</packagemeta>
-		<notes>
-			Added allow public registration config option.
-		</notes>
-	</changelog>
-	<changelog version="0.0.3">
-		<packagemeta>
-			<date>Wed, 28 Sep 2011 02:27:06 -0400</date>
-			<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-			<packager>CAE2 0.0.6</packager>
-		</packagemeta>
-		<notes>
-			Added some user validation to the system, (now that validation at a low level is actually possible).
-			Finished the forgot password script.
-		</notes>
-	</changelog>
 	<description>
 		The user component provides core user functionality, including registration, login, forgot password and access controls.
 	</description>
@@ -120,6 +101,14 @@
 		<upgrade from="0.0.1-dev1" to="0.0.2"/>
 		<upgrade from="0.0.2" to="0.0.3"/>
 		<upgrade from="0.0.3" to="1.9.0"/>
+		<upgrade from="1.9.0" to="1.9.1">
+			<dataset action="update" table="widget">
+				<datasetset key="baseurl">/userwidget/login</datasetset>
+				<datasetwhere>
+					baseurl = /UserLoginWidget/execute
+				</datasetwhere>
+			</dataset>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -32,26 +32,6 @@ class UserController extends Controller_2_1{
 		
 		$this->setTemplate('/pages/user/index.tpl');
 	}
-
-	public function hackme(){
-		$req = $this->getPageRequest();
-
-		echo ":)";
-		if($req->isPost()){
-			error_log(print_r($_POST, true));
-			$user = new User();
-			$user->set('username', $req->getParameter('user'));
-			$user->set('email', $req->getParameter('email'));
-			$user->save();
-
-			var_dump($user);
-			die();
-		}
-		else{
-
-		}
-		die('Request is not POST :(');
-	}
 	
 	public function login(){
 		$view = $this->getView();
@@ -135,6 +115,8 @@ class UserController extends Controller_2_1{
 	}
 	
 	public function register(){
+		require_once(ROOT_PDIR . 'components/user/helpers/UserFunctions.php');
+
 		$view = $this->getView();
 		
 		// Set the access permissions for this page as anonymous-only.
@@ -146,43 +128,8 @@ class UserController extends Controller_2_1{
 		if(!ConfigHandler::Get('/user/register/allowpublic')){
 			return View::ERROR_BADREQUEST;
 		}
-		
-		$form = new Form();
-		$form->set('callsMethod', 'UserController::_RegisterHandler');
-		// Because the user system may not use a traditional Model for the backend, (think LDAP),
-		// I cannot simply do a setModel() call here.
-		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
-		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => true));
-		$form->addElement('password', array('name' => 'pass2', 'title' => 'Confirm', 'required' => true));
-		
-		$fac = UserConfigModel::Find(array('onregistration' => 1));
-		foreach($fac as $f){
-			$el = FormElement::Factory($f->get('formtype'));
-			$el->set('name', 'option[' . $f->get('key') . ']');
-			$el->set('title', $f->get('name'));
-			$el->set('value', $f->get('default_value'));
-			
-			switch($f->get('formtype')){
-				case 'file':
-					$el->set('basedir', 'public/user/');
-					break;
-				case 'select':
-					$opts = array_map('trim', explode('|', $f->get('options')));
-					$el->set('options', $opts);
-					break;
-			}
-			
-			$form->addElement($el);
-			//var_dump($f);
-		}
-		
-		$form->addElement('submit', array('value' => 'Register'));
-		
-		
-		
-		// Do something with /user/register/requirecaptcha
-		
-		// @todo Implement a hook handler here for UserPreRegisterForm
+
+		$form = \User\get_registration_form();
 		
 		$view->assign('form', $form);
 	}
@@ -388,7 +335,7 @@ class UserController extends Controller_2_1{
 		if(UserModel::Count() == 0){
 			$u->set('admin', true);
 		}
-		
+
 		$u->save();
 		
 		// "login" this user.

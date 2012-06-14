@@ -1,3 +1,8 @@
+{*
+ * This template and the widget that uses it is deprecated as of 2012.06.13.
+ * Please use widgets/user/login.tpl instead.
+ *}
+
 <div class="userloginwidget">
 	{if $loggedin}
 		Welcome {$user->getDisplayName()}!  {a href="/User/Logout"}Logout{/a}?
