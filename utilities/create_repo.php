@@ -123,6 +123,9 @@ foreach($directories as $dir){
 
 file_put_contents($destdir . 'repo.xml', $repo->write());
 // And gzip!
+
+if(file_exists($destdir . 'repo.xml.gz')) unlink($destdir . 'repo.xml.gz');
+
 exec('gzip "' . $destdir . 'repo.xml' . '"');
 
 rmdir($tmpdir);
