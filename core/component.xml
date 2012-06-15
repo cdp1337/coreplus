@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.1" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.2" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -57,17 +57,17 @@
 		<file filename="core/controllers/FormController.class.php" md5="f6b2be2af321ecf76ea2cdc54a25b804">
 			<class name="FormController"/>
 		</file>
-		<file filename="core/controllers/GettingStartedController.class.php" md5="449677fa9a0617ea705ce232509b730f">
+		<file filename="core/controllers/GettingStartedController.class.php" md5="c32e15834efbdd387f37f8c72fc24fea">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="83ee157b78c93f398f6c82313199b97d">
+		<file filename="core/controllers/UpdaterController.class.php" md5="22028f198e5149d9a0eaf502cf9c7aa2">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
 			<class name="WidgetController"/>
 		</file>
 		<file filename="core/functions/Core.functions.php" md5="1cb673f58d397e7a63a26eaa3e7c0ebd"/>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="6d2c21c68fcd83d973bb52e9a57247da">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="364e97e0149139104c235237e3c5ae5e">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
@@ -364,7 +364,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="8512889790f3bbfadb604fdc354fa926">
+		<file filename="core/libs/core/Component_2_1.php" md5="620b9bb334f7254ef57b5e716ef22d40">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="5ff824df4ce7e6628e1b10dc82158f44">
@@ -688,13 +688,13 @@
 		<file filename="core/libs/filestore/File_Contents.interface.php" md5="74e9a61ff8a58f95da1a8e114235b019">
 			<interface name="File_Contents"/>
 		</file>
-		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="7c717ab32ab2974cd2e54a4d437cca29">
+		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="3ac2595e2931663193ca26319b69ff6b">
 			<class name="Directory_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="6c35d718dbc1679fd89be37fab6965c2">
 			<class name="File_awss3_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="2a6778167efd87cff2e7f7ec96064c5a">
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="45777191198682dde5c75065256d617e">
 			<class name="File_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="e1a7592b2f324bfea9dc13d3ea7aa337">
@@ -841,7 +841,7 @@
 		<file filename="core/libs/smarty-plugins/function.img.php" md5="bd8af4898e373bb064ed4ea6b50a40be"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="0675deafa3f09a4cbe5a4f8f35d61ab2"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="ee67260eea6c696b8634a593cece14bd"/>
-		<file filename="core/libs/smarty-plugins/function.widget.php" md5="f07be8ee62ecf484f151fdfdf3bf6c6c"/>
+		<file filename="core/libs/smarty-plugins/function.widget.php" md5="83cca9fdd432d331f1b7f38f1da98fe4"/>
 		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="d49949f0d2cc83b772d3f7f9d8a58b07"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/smarty/README" md5="2280709acce0bf54217c12eff7932997"/>
@@ -1262,6 +1262,9 @@
 		<file filename="core/templates/pages/updater/keys.tpl" md5="bfb0932912bea760984f0629cd2e3082"/>
 		<file filename="core/templates/pages/updater/keys_import.tpl" md5="1872117c9db9e7242cdd0485a11ddc4a"/>
 		<file filename="core/templates/pages/updater/index.tpl" md5="7dfa3741e24a6d43537dc743315511f4"/>
+		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="e044e6869eb5a1a5c97976b18362fefc"/>
+		<file filename="core/templates/pages/updater/browse.tpl" md5="6f98a757e57dc19569d2f9a859751cb5"/>
+		<file filename="core/templates/pages/updater/keys.tpl" md5="4ff939a015c21167bda5a5a8d47f3f37"/>
 	</view>
 	<install/>
 	<description>
@@ -1301,7 +1304,7 @@
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.js" md5="e266282187d6730905137049f7c9d70b"/>
 		<file filename="core/assets/js/core.strings.js" md5="e704b77bfcc5ca29b28934ab4d454c70"/>
-		<file filename="core/assets/js/updater/index.js" md5="19478c4aba5735aa4efdad3fd7a98f70"/>
+		<file filename="core/assets/js/updater/index.js" md5="9b429e1320badd964b2e0913e8f336cb"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="0.0.2"/>
@@ -1317,6 +1320,7 @@
 		<upgrade from="0.0.9" to="0.1.0"/>
 		<upgrade from="0.1.0" to="1.9.0"/>
 		<upgrade from="1.9.0" to="1.9.1"/>
+		<upgrade from="1.9.1" to="1.9.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
@@ -1350,7 +1354,9 @@
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			See the included NOTICE.md file for more information.
+		</license>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3
 		</license>

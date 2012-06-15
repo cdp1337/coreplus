@@ -536,6 +536,32 @@ class UpdaterController extends Controller_2_1 {
 		$view->jsondata = $status;
 	}
 
+	public function core_install() {
+		$view = $this->getView();
+		$req  = $this->getPageRequest();
+
+		// This is a json-only page.
+		$view->contenttype = View::CTYPE_JSON;
+
+		// This is a post-only page!
+		if(!$req->isPost()){
+			$view->error = View::ERROR_BADREQUEST;
+			return;
+		}
+
+		$version = $req->getParameter(0);
+		$dryrun  = $req->getParameter('dryrun');
+
+		$status = UpdaterHelper::InstallCore($version, $dryrun);
+
+		// This page cannot continue execution with the core, as it was extracted.  Simply return raw json.
+		if($status['status'] == 1){
+			die('{"status":1,"message":"Performed all operations successfully"}');
+		}
+
+		$view->jsondata = $status;
+	}
+
 
 	public function _Sites_Update(Form $form) {
 

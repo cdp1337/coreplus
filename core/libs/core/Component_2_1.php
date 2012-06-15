@@ -1367,7 +1367,7 @@ class Component_2_1 {
 		// and GO!
 		$ds->execute();
 		if($ds->num_rows){
-			return $action . ' on table ' . $table . ' affected ' . $ds->num_rows . ' records.';
+			return array($action . ' on table ' . $table . ' affected ' . $ds->num_rows . ' records.');
 		}
 		else{
 			return false;

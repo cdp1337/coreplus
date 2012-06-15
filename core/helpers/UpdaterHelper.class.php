@@ -102,16 +102,18 @@ class UpdaterHelper {
 				if($pkg->isCurrent()) continue;
 
 				$n = strtolower($pkg->getName());
+				$type = $pkg->getType();
+				if($n == 'core') $type = 'core'; // Override the core, even though it is a component...
 
-				switch($pkg->getType()){
+				switch($type){
 					case 'core':
 						$vers = $pkg->getVersion();
 						// Check and see if this version is already listed in the repo.
-						if(!isset($core[$pkg->getVersion()])){
-							$core[$pkg->getVersion()] = array(
+						if(!isset($core[$vers])){
+							$core[$vers] = array(
 								'name' => $n,
 								'title' => $pkg->getName(),
-								'version' => $pkg->getVersion(),
+								'version' => $vers,
 								'source' => 'repo-' . $site->get('id'),
 								'sourceurl' => $site->get('url'),
 								'description' => $pkg->getDescription(),
@@ -485,6 +487,134 @@ class UpdaterHelper {
 			// if it's installed, switch to that version and upgrade.
 			if($t->isInstalled()){
 				if(($t = ThemeHandler::GetTheme($theme['name'])) !== false){
+					// Make sure I get the new XML
+					$t->load();
+					// And upgrade
+					$t->upgrade();
+				}
+			}
+			else{
+				// It's a new installation.
+				$t->install();
+			}
+		}
+
+		// yay...
+		return array('status' => 1, 'message' => 'Performed all operations successfully');
+	}
+
+	public static function InstallCore($version, $dryrun = false){
+		$updates = UpdaterHelper::GetUpdates();
+
+		// I just need the component array itself.
+		$cores = $updates['core'];
+
+		// Make sure the name and version exist in the updates list.
+		if(!isset($cores[$version])){
+			return array('status' => 0, 'message' => 'Core does not appear to have requested version.');
+		}
+
+		// This is the theme that will be installed.
+		// Since themes don't (currently) have dependencies, the logic is much simplier.
+		$core = $cores[$version];
+
+
+		$repos = array();
+		$remotefiles = array();
+		$names = array();
+		// Check the signatures for the package first.
+		if(strpos($core['source'], 'repo-') !== false){
+			// Look up that repo's connection information, since username and password may be required.
+			if(!isset($repos[$core['source']])){
+				$repos[$core['source']] = new UpdateSiteModel(substr($core['source'], 5));
+			}
+			$remotefiles['core'] = new File_remote_backend($core['location']);
+			$remotefiles['core']->username = $repos[$core['source']]->get('username');
+			$remotefiles['core']->password = $repos[$core['source']]->get('password');
+
+			if(!$remotefiles['core']->exists()){
+				return array('status' => 0, 'message' => $core['location'] . ' does not seem to exist!');
+			}
+
+			$obj = $remotefiles['core']->getContentsObject();
+			if(!$obj->verify()){
+				// Maybe it can at least get the key....
+				if($key = $obj->getKey()){
+					return array('status' => 0, 'message' => 'Unable to locate public key for ' . $key);
+				}
+				return array('status' => 0, 'message' => 'Invalid GPG signature for Core');
+			}
+
+			$dir = Core::Directory(ROOT_PDIR);
+			if(!$dir->isWritable()){
+				return array('status' => 0, 'message' => ROOT_PDIR . ' is not writable!');
+			}
+		}
+
+		$names[] = 'core';
+
+
+		// If dryrun only was requested, just return the status here.
+		if($dryrun){
+			return array('status' => 1, 'message' => 'All dependencies are met, ok to install', 'changes' => $names);
+		}
+
+		// and do the actual installation.
+		if(strpos($core['source'], 'repo-') !== false){
+
+			// Don't need to verify this again, was done above.
+			$obj = $remotefiles['core']->getContentsObject();
+
+			// Decrypt the signed file.
+			$localfile = $obj->decrypt('tmp/updater/');
+			$localobj = $localfile->getContentsObject();
+
+			// This tarball will be extracted to a temporary directory, then copied from there.
+			$tmpdir = $localobj->extract('tmp/installer-' . Core::RandomHex(4));
+
+			// Destination directory it will be installed to.
+			$destbase = ROOT_PDIR;
+
+			// Now that the data is extracted in a temporary directory, extract every file in the destination.
+			$datadir = $tmpdir->get('data/');
+			if(!$datadir){
+				return array('status' => 0, 'message' => 'Invalid theme ' . $core['title'] . ', does not contain a data directory.');
+			}
+
+			$queue = array($datadir);//$datadir->ls();
+			$x = 0;
+
+			do{
+				++$x;
+				$queue = array_values($queue);
+				foreach($queue as $k => $q){
+					if($q instanceof Directory_local_backend){
+						unset($queue[$k]);
+						// Just queue directories up to be scanned.
+						// (don't do array merge, because I'm inside a foreach loop)
+						foreach($q->ls() as $subq) $queue[] = $subq;
+					}
+					else{
+						// It's a file, copy it over.
+						// To do so, resolve the directory path inside the temp data dir.
+						$dest = $destbase . substr($q->getFilename(), strlen($datadir->getPath()));
+						$newfile = $q->copyTo($dest, true);
+
+						unset($queue[$k]);
+					}
+				}
+			}
+			while(sizeof($queue) > 0 && $x < 15);
+
+			// Cleanup the temp directory
+			$tmpdir->remove();
+
+			// and w00t, the files should be extracted.  Do the actual installation.
+			$t = new Theme('core');
+			$t->load();
+			// if it's installed, switch to that version and upgrade.
+			if($t->isInstalled()){
+				if(($t = ThemeHandler::GetTheme('core')) !== false){
 					// Make sure I get the new XML
 					$t->load();
 					// And upgrade

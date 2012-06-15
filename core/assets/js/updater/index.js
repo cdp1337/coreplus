@@ -104,7 +104,7 @@ Updater = {};
 	};
 
 	showupdates = function(){
-		var $ctable = $('#component-list'), $ttable = $('#theme-list'), i;
+		var $ctable = $('#component-list'), $ttable = $('#theme-list'), $coretable = $('#core-list'), i;
 
 		// Since this table will contain only components that are actually updatable.. I can do this.
 		for( i in packages.components){
@@ -114,11 +114,17 @@ Updater = {};
 		for( i in packages.themes){
 			$ttable.find('tr[themename="' + i + '"]').find('.update-link').show();
 		}
+
+		for( i in packages.core){
+			$coretable.find('.update-link').show();
+			break; // I only need to run this once.
+		}
 	};
 
 	drawpackages = function(){
 		var $componentstable = $('#component-list'),
 			$themestable = $('#theme-list'),
+			$coretable = $('#core-list'),
 			name, version, cur, html;
 
 		for(name in packages.components){
@@ -175,6 +181,31 @@ Updater = {};
 				html += '</tr>';
 				$themestable.append(html);
 			}
+		}
+
+		for(version in packages.core){
+			// alias it so it's quicker.
+			cur = packages.core[version];
+
+			// Skip components that are not updated.
+			if(cur.status == 'downgrade') continue;
+
+			html = '<tr><td>' + cur.title + '</td><td>' + version + '</td>';
+			if(cur.status == 'installed'){
+				html += '<td>Installed</td>';
+			}
+			else if(cur.status == 'new'){
+				html += '<td><a href="#" class="perform-update" type="core" name="core" version="' + version + '">Install</a></td>';
+			}
+			else if(cur.status == 'update'){
+				html += '<td><a href="#" class="perform-update" type="core" name="core" version="' + version + '">Update</a></td>';
+			}
+			else{
+				html += '<td>' + cur.status + '</td>';
+			}
+
+			html += '</tr>';
+			$coretable.append(html);
 		}
 	};
 
@@ -309,7 +340,7 @@ Updater = {};
 					url = Core.ROOT_WDIR + 'updater/theme/install/' + name + '/' + version;
 					break;
 				case 'core':
-					url = Core.ROOT_WDIR + 'updater/core/install/' + name + '/' + version;
+					url = Core.ROOT_WDIR + 'updater/core/install/' + version;
 					break;
 				default:
 					alert('Invalid type, ' + type);
