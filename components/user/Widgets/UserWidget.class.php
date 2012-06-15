@@ -2,7 +2,7 @@
 /**
  * Provides the main widgets for user functions.
  *
- * @package
+ * @package User
  * @since 2.0
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell

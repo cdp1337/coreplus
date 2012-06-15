@@ -1,9 +1,9 @@
 <?php
 /**
- * DESCRIPTION
+ * Facebook-based user backend
  *
- * @package
- * @since 0.1
+ * @package User
+ * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -21,6 +21,10 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+/**
+ * Facebook-based user backend
+ * Provides the core functionality with facebook logins and registrations.
+ */
 class User_facebook_Backend extends User implements User_Backend{
 	
 	public function canResetPassword() {

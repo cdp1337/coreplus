@@ -3,7 +3,7 @@
  * Provides common user functionality, such as registration form generation and any logic required by
  * both widget and controller.
  *
- * @package
+ * @package User
  * @since 2.0
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell

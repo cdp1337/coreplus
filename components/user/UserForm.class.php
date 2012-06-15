@@ -1,8 +1,41 @@
 <?php
+/**
+ * The user access string form element, used in both the traditional form system and the ajax version.
+ *
+ * @package User
+ * @since 1.9
+ * @author Charlie Powell <charlie@eval.bz>
+ * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+ */
 
+/**
+ * Handles the form element for access strings.
+ */
 class FormAccessStringInput extends FormElement{
+	/**
+	 * Holds the base name of this form group
+	 * @var string
+	 */
 	private $_targetname = null;
-	
+
+	/**
+	 * Standard render function for this form element
+	 *
+	 * @return string
+	 */
 	public function render() {
 		static $renderedcount = 0;
 		
@@ -82,7 +115,15 @@ class FormAccessStringInput extends FormElement{
 
 		return $tpl->fetch($this->getTemplateName());
 	}
-	
+
+	/**
+	 * Get the rendered value directly from the POST value
+	 * Returns the access string as a single string value.
+	 *
+	 * @param array $src
+	 *
+	 * @return string
+	 */
 	public function lookupValueFrom(&$src) {
 		// I'll let the parent do all the work.
 		$val = parent::lookupValueFrom($src);
