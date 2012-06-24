@@ -413,9 +413,21 @@ class PageModel extends Model {
 			}
 			while ($url);
 		}
+
+		// If this page does not have a parent, BUT is marked as an admin page..
+		// /admin is automatically prefixed.
+		// (unless the current page *is* /admin.... then it can be skipped.
+		if(!$this->get('parenturl') && $this->get('admin') && strtolower($this->get('baseurl')) != '/admin'){
+			$url = '/admin';
+			if (isset(self::$_RewriteCache[$url])) {
+				$p = new PageModel($url);
+			}
+			return array($p);
+		}
+
+		// If this page does not have a parent, simply return a blank array.
 		if (!$this->get('parenturl')) return array();
 
-		$ret = array();
 		$p   = new PageModel($this->get('parenturl'));
 		return array_merge($p->_getParentTree(--$antiinfiniteloopcounter), array($p));
 	}
@@ -590,7 +602,7 @@ class PageModel extends Model {
 			$rs                  = $s->execute();
 			self::$_RewriteCache = array();
 			foreach ($rs as $row) {
-				self::$_RewriteCache[strtolower($row['rewriteurl'])] = $row['baseurl'];
+				self::$_RewriteCache[strtolower($row['rewriteurl'])] = strtolower($row['baseurl']);
 			}
 		}
 

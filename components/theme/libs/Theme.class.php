@@ -54,10 +54,11 @@ class Theme{
 	
 	/**
 	 * Is this component explictly disabled?
+	 * (themes cannot be disabled...)
 	 * 
 	 * @var boolean
 	 */
-	protected $_enabled;
+	protected $_enabled = true;
 
 	/**
 	 * Version of the component, as per the database (installed version).

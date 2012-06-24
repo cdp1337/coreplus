@@ -416,9 +416,10 @@ class PageRequest {
 			elseif ($pagedat) {
 				// Is this even a valid controller?
 				// This will allow a page to be called with it being in the pages database.
-				$p = new PageModel();
-				$p->set('baseurl', $uri);
-				$p->set('rewriteurl', $uri);
+				$p = new PageModel($pagedat['baseurl']);
+				if(!$p->exists()){
+					$p->set('rewriteurl', $pagedat['rewriteurl']);
+				}
 				$this->_pagemodel = $p;
 			}
 			else {

@@ -1,9 +1,8 @@
 <?php
 /**
- * WIP....
  *
  * @package User
- * @since 1.9
+ * @since 2.1.0
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -20,47 +19,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  *
- * @todo Finish this....
  */
 
 function smarty_block_permission($params, $innercontent, $template, &$repeat){
+
+	if($repeat) return;
 	
 	// Evaluate this block only if the permission checks through.
-	
-	
-	$assign= false;
-	
-	// Start the A tag
-	$content = '<a';
-	
-	// Allow "confirm" text to override the href and onClick functions.
-	if(isset($params['confirm'])){
-		$params['onClick'] = "if(confirm('" . str_replace("'", "\\'", $params['confirm']) . "')){ window.location.href = '" . str_replace("'", "\\'", Core::ResolveLink($params['href'])) . "'; } return false;";
-		$params['href'] = '#';
-	}
-	
-	// Add in any attributes.
+	$accessstring = false;
 	foreach($params as $k => $v){
-		$k = strtolower($k);
 		switch($k){
-			case 'href':
-				$content .= ' href="' . Core::ResolveLink ($v) . '"';
-				break;
-			case 'assign':
-				$assign = $v;
-				break;
-			default:
-				$content .= " $k=\"$v\"";
+			case 'permission':
+			case 'p':
+			case 'perm':
+			case 'string':
+			case 'accessstring':
+				$accessstring = $v;
+				break 2;
 		}
 	}
-	// Close the starting tag.
-	$content .= '>';
-	
-	// Add any content inside.
-	$content .= $innercontent;
-	
-	// Close the set.
-	$content .= '</a>';
 
-    return $assign ? $template->assign($assign, $content) : $content;
+	if($accessstring === false){
+		if(DEVELOPMENT_MODE) echo "Alert, no access string requested, using '*' as default";
+		$accessstring = '*';
+	}
+
+	if($accessstring == '*'){
+		// allow all.... easy!
+		return $innercontent;
+	}
+	elseif(Core::User()->checkAccess($accessstring)){
+		return $innercontent;
+	}
 }

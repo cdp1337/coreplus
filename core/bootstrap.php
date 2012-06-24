@@ -107,8 +107,9 @@ if (!$core_settings) {
  * (php default is to display them after all...)
  */
 if (!DEVELOPMENT_MODE) {
-	error_reporting(0);
+	//error_reporting(0);
 	ini_set('display_errors', 0);
+    ini_set('html_errors', 0);
 }
 
 
@@ -356,11 +357,10 @@ catch (Exception $e) {
 		header('Location: ' . ROOT_WDIR . 'install');
 		die();
 	}
-	// For machines in production mode, well... I'm yet to decide what to do with that specifically,
-	// but it should be something nice, like send an email or something.
+
 	else {
-		require(ROOT_PDIR . 'core/fatal_error.inc.html');
-		die();
+        require(ROOT_PDIR . 'core/libs/fatal_errors/database.php');
+        die();
 	}
 }
 
@@ -400,7 +400,7 @@ if (EXEC_MODE == 'WEB') {
 			die();
 		}
 		else {
-			require(ROOT_PDIR . 'core/fatal_error.inc.html');
+            require(ROOT_PDIR . 'core/libs/fatal_errors/database.php');
 			die();
 		}
 	}

@@ -388,7 +388,36 @@ class View {
 
 			// Provide a way for stylesheets to target this page specifically.
 			$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
-			$data = str_replace('<body', '<body class="page-' . $url . '"', $data);
+			$bodyclass = 'page-' . $url;
+			// Merge them.
+			if(preg_match('/<body[^>]*>/', $data, $matches)){
+				// body is $matches[0].
+				$fullbody = $matches[0];
+				if($fullbody == '<body>'){
+					// Easy match
+					$data = str_replace($fullbody, '<body class="' . $bodyclass . '">', $data);
+				}
+				elseif(strpos($fullbody, 'class=') === false){
+					// Almost as easy, other elements but no class.
+					$data = str_replace($fullbody, substr($fullbody, 0, -1) . ' class="' . $bodyclass . '">', $data);
+				}
+				else{
+					// parsing HTML is far easier with XML objects.
+					$node = new SimpleXMLElement($fullbody . '</body>');
+					$newnode = '<body';
+					foreach($node->attributes() as $k => $v){
+						if($k == 'class'){
+							$newnode .= ' ' . $k . '="' . $bodyclass . ' ' . $v . '"';
+						}
+						else{
+							$newnode .= ' ' . $k . '="' . $v . '"';
+						}
+					}
+					$newnode .= '>';
+
+					$data = str_replace($fullbody, $newnode, $data);
+				}
+			}
 
 			// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
 			if (DEVELOPMENT_MODE) {

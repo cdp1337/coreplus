@@ -103,10 +103,14 @@ class ThemeHandler implements ISingleton{
 	/**
 	 * Get the theme object of a requested theme.
 	 * 
-	 * @param string $themeName
+	 * @param string|null $themeName Theme name to return, null for current default
 	 * @return Theme
 	 */
-	public static function GetTheme($themeName){
+	public static function GetTheme($themeName = null){
+		if($themeName === null){
+			$themeName = ConfigHandler::Get('/theme/selected');
+		}
+
 		if(isset(self::Singleton()->_themeCache[$themeName])) return self::Singleton()->_themeCache[$themeName];
 		else return false;
 	}

@@ -4,4 +4,4 @@
 %log%
 </pre>
 
-<p><a href="">Click here to continue!</a></p>
+<p><a href="%location%">Click here to continue!</a></p>

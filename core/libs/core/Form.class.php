@@ -1333,12 +1333,25 @@ class FormPageMeta extends FormGroup {
 			        )
 		);
 
-		// @todo Add theme template selection logic
+		// Give me all the skins available on the current theme.
+		$skins = array('' => '-- Site Default Skin --');
+		foreach(ThemeHandler::GetTheme(null)->getSkins() as $s){
+			$n = ($s['title']) ? $s['title'] : $s['file'];
+			if($s['default']) $n .= ' (default)';
+			$skins[$s['file']] = $n;
+		}
+		if(sizeof($skins) > 2){
+			$this->addElement(
+				'select', array(
+					'name'    => 'page[theme_template]',
+					'title'   => 'Theme Skin',
+					'value'   => $page->get('theme_template'),
+					'options' => $skins
+				)
+			);
+		}
 
 		// @todo Add page template selection logic
-
-		// Add the insertables.
-		//$this->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => $this->get('baseurl')));
 	}
 
 	/**
@@ -1382,6 +1395,11 @@ class FormPageMeta extends FormGroup {
 			)
 		);
 		$page->set('access', $this->getElementByName('page[access]')->get('value'));
+
+		$skin = $this->getElement('page[theme_template]');
+		if($skin){
+			$page->set('theme_template', $skin->get('value'));
+		}
 
 
 		return $page;
