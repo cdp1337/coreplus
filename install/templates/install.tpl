@@ -1,6 +1,6 @@
 <h2>Installing %component%...</h2>
 
-<pre>
+<pre class="install-log">
 %log%
 </pre>
 
