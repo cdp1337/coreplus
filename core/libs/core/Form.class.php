@@ -655,6 +655,18 @@ class Form extends FormGroup {
 
 		if (!$model instanceof Model) return null; // It needs to be a model... :/
 
+		// Page models have special functionality.
+		// This is because they are almost always embedded in forms, so they have their own getModel logic,
+		// allowing them to be singled out and that model extracted along side the main form's model.
+		if($model instanceof PageModel){
+			// Find the page and return its model.
+			foreach($this->getElements(false, false) as $el){
+				if($el instanceof FormPageMeta){
+					return $el->getModel();
+				}
+			}
+		}
+
 		// Set the PK's...
 		if (is_array($this->get('___modelpks'))) {
 			foreach ($this->get('___modelpks') as $k => $v) {
@@ -885,6 +897,12 @@ class Form extends FormGroup {
 				$pks[$v] = $model->get($v);
 			}
 			$f->set('___modelpks', $pks);
+		}
+
+		// Some objects require special attention.
+		if($model instanceof PageModel){
+			$f->addElement('pagemeta', array('name' => 'model'));
+			return $f;
 		}
 
 		foreach ($s as $k => $v) {
@@ -1240,13 +1258,14 @@ class FormPageInsertables extends FormGroup {
 class FormPageMeta extends FormGroup {
 
 	public function  __construct($atts = null) {
+		// Defaults
+		$this->_attributes['name']    = 'page';
 
 		if ($atts instanceof PageModel) {
 			parent::__construct();
 
 			$page                         = $atts;
 			$this->_attributes['baseurl'] = $page->get('baseurl');
-			$this->_attributes['name']    = 'page';
 		}
 		else {
 			parent::__construct($atts);
@@ -1258,57 +1277,59 @@ class FormPageMeta extends FormGroup {
 			$page = new PageModel($this->get('baseurl'));
 		}
 
+		$name = $this->_attributes['name'];
+
 		// Title
 		$this->addElement(
 			'text', array(
-				      'name'        => 'page[title]',
-				      'title'       => 'Title',
-				      'value'       => $page->get('title'),
-				      'description' => 'Every page needs a title to accompany it, this should be short but meaningful.',
-				      'required'    => true
-			      )
+				'name'        => $name . "[title]",
+				'title'       => 'Title',
+				'value'       => $page->get('title'),
+				'description' => 'Every page needs a title to accompany it, this should be short but meaningful.',
+				'required'    => true
+			)
 		);
 
 		// Rewrite url.
 		$this->addElement(
 			'text', array(
-				      'name'        => 'page[rewriteurl]',
-				      'title'       => 'Rewrite URL',
-				      'value'       => $page->get('rewriteurl'),
-				      'description' => 'Starts with a "/", omit ' . ROOT_URL,
-				      'required'    => true
-			      )
+				'name'        => $name . "[rewriteurl]",
+				'title'       => 'Rewrite URL',
+				'value'       => $page->get('rewriteurl'),
+				'description' => 'Starts with a "/", omit ' . ROOT_URL,
+				'required'    => true
+			)
 		);
 
 
 		// Author
 		$this->addElement(
 			'text', array(
-				      'name'        => 'page[metaauthor]',
-				      'title'       => 'Author',
-				      'description' => 'Completely optional, but feel free to include it if relevant',
-				      'value'       => $page->getMeta('author')
-			      )
+				'name'        => $name . "_meta[author]",
+				'title'       => 'Author',
+				'description' => 'Completely optional, but feel free to include it if relevant',
+				'value'       => $page->getMeta('author')
+			)
 		);
 
 		// Meta Keywords
 		$this->addElement(
 			'text', array(
-				      'name'        => 'page[metakeywords]',
-				      'title'       => 'Keywords',
-				      'description' => 'Helps search engines classify this page',
-				      'value'       => $page->getMeta('keywords')
-			      )
+				'name'        => $name . "_meta[keywords]",
+				'title'       => 'Keywords',
+				'description' => 'Helps search engines classify this page',
+				'value'       => $page->getMeta('keywords')
+			)
 		);
 
 		// Meta Description
 		$this->addElement(
 			'textarea', array(
-				          'name'        => 'page[metadescription]',
-				          'title'       => 'Description',
-				          'description' => 'Text that displays on search engine and social network preview links',
-				          'value'       => $page->getMeta('description')
-			          )
+				'name'        => $name . "_meta[description]",
+				'title'       => 'Description',
+				'description' => 'Text that displays on search engine and social network preview links',
+				'value'       => $page->getMeta('description')
+			)
 		);
 
 		// I need to get a list of pages to offer as a dropdown for selecting the "parent" page.
@@ -1318,19 +1339,19 @@ class FormPageMeta extends FormGroup {
 
 		$this->addElement(
 			'select', array(
-				        'name'    => 'page[parenturl]',
-				        'title'   => 'Parent URL',
-				        'value'   => $page->get('parenturl'),
-				        'options' => $opts
-			        )
+		        'name'    => $name . "[parenturl]",
+		        'title'   => 'Parent URL',
+		        'value'   => $page->get('parenturl'),
+		        'options' => $opts
+	        )
 		);
 
 		$this->addElement(
 			'access', array(
-				        'name'  => 'page[access]',
-				        'title' => 'Access Permissions',
-				        'value' => $page->get('access')
-			        )
+		        'name'  => $name . "[access]",
+		        'title' => 'Access Permissions',
+		        'value' => $page->get('access')
+	        )
 		);
 
 		// Give me all the skins available on the current theme.
@@ -1343,7 +1364,7 @@ class FormPageMeta extends FormGroup {
 		if(sizeof($skins) > 2){
 			$this->addElement(
 				'select', array(
-					'name'    => 'page[theme_template]',
+					'name'    => $name . "[theme_template]",
 					'title'   => 'Theme Skin',
 					'value'   => $page->get('theme_template'),
 					'options' => $skins
@@ -1363,7 +1384,7 @@ class FormPageMeta extends FormGroup {
 
 		//if($this->get('cachedaccess')) $page->set('access', $this->get('cachedaccess'));
 		//if($this->get('cachedtitle')) $page->set('title', $this->get('cachedtitle'));
-		$page->save();
+		return $page->save();
 
 		// Ensure the children have the right baseurl if that changed.
 		$els = $this->getElements();
@@ -1379,28 +1400,40 @@ class FormPageMeta extends FormGroup {
 		return true;
 	}
 
+	/**
+	 * Get the model for the page subform.
+	 * This is on the group because a page object can be set embedded in another form.
+	 *
+	 * @param null $page
+	 *
+	 * @return null|PageModel
+	 */
 	public function getModel($page = null) {
 		// Allow linked models.
 		if (!$page) $page = new PageModel($this->get('baseurl'));
 
-		// Set this model with all the data from the form.
-		$page->set('title', $this->getElementByName('page[title]')->get('value'));
-		$page->set('rewriteurl', $this->getElementByName('page[rewriteurl]')->get('value'));
-		$page->set('parenturl', $this->getElementByName('page[parenturl]')->get('value'));
-		$page->setMetas(
-			array(
-				'author'      => $this->getElementByName('page[metaauthor]')->get('value'),
-				'keywords'    => $this->getElementByName('page[metakeywords]')->get('value'),
-				'description' => $this->getElementByName('page[metadescription]')->get('value')
-			)
-		);
-		$page->set('access', $this->getElementByName('page[access]')->get('value'));
+		// Because name can be changed.
+		$name = $this->_attributes['name'];
 
-		$skin = $this->getElement('page[theme_template]');
-		if($skin){
-			$page->set('theme_template', $skin->get('value'));
+		$els = $this->getElements(true, false);
+		foreach ($els as $e) {
+
+			if (!preg_match('/^[a-z_]*\[(.*?)\].*/', $e->get('name'), $matches)) continue;
+
+			$key = $matches[1];
+			$val = $e->get('value');
+
+			// Meta attributes
+			if(strpos($e->get('name'), $name . '_meta') === 0){
+				$page->setMeta($key, $val);
+			}
+			elseif(strpos($e->get('name'), $name) === 0){
+				$page->set($key, $val);
+			}
+			else{
+				continue;
+			}
 		}
-
 
 		return $page;
 
@@ -1563,7 +1596,10 @@ class FormTimeInput extends FormSelectInput {
 		for ($x = 0; $x < 24; $x++) {
 			$hk = $hd = $x;
 			if (strlen($hk) == 1) $hk = '0' . $hk;
-			if ($hd > 12) {
+			if($hd == 12){
+				$ap = 'pm';
+			}
+			elseif ($hd > 12) {
 				$hd -= 12;
 				$ap = 'pm';
 			}

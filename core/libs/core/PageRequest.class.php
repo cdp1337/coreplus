@@ -1,6 +1,6 @@
 <?php
 /**
- * [PAGE DESCRIPTION HERE]
+ * The main object responsible for setting up the page request and getting the data corresponding to it.
  *
  * @package Core Plus\Core
  * @author Charlie Powell <charlie@eval.bz>
@@ -81,6 +81,14 @@ class PageRequest {
 	 * @var PageModel
 	 */
 	private $_pagemodel = null;
+
+	/**
+	 * The view that will be used to render the page.
+	 * *IMPORTANT*, this may change throughout the page execution, should a component "hijack" the view.
+	 *
+	 * @var View
+	 */
+	private $_pageview = null;
 
 	public function __construct($uri = '') {
 
@@ -272,6 +280,19 @@ class PageRequest {
 	}
 
 	/**
+	 * Get the view component for this page request.
+	 *
+	 * @return View
+	 */
+	public function getView(){
+		if($this->_pageview === null){
+			$this->_pageview = new View();
+		}
+
+		return $this->_pageview;
+	}
+
+	/**
 	 * Execute the controller and method this page request points to.
 	 *
 	 * @return View
@@ -279,32 +300,34 @@ class PageRequest {
 	public function execute() {
 		$pagedat = $this->splitParts();
 
+		$view = $this->getView();
+
 		/// A few sanity/security checks for the controller's sake.
 
 		// The controller must exist first!
 		// (note, the SplitParts logic already takes care of the "Is this a valid controller" logic)
 		if (!$pagedat['controller']) {
-			$view        = new View();
 			$view->error = View::ERROR_NOTFOUND;
 			return $view;
 		}
 
 		// Any method that starts with a "_" is an internal-only method!
 		if ($pagedat['method']{0} == '_') {
-			$view        = new View();
 			$view->error = View::ERROR_NOTFOUND;
 			return $view;
 		}
 
 		// It also must be a part of the class... obviously
 		if (!method_exists($pagedat['controller'], $pagedat['method'])) {
-			$view        = new View();
 			$view->error = View::ERROR_NOTFOUND;
 			return $view;
 		}
 
 		// This will be a Controller object.
 		$c = Controller_2_1::Factory($pagedat['controller']);
+
+		$view->baseurl = $this->getBaseURL();
+		$c->setView($view);
 
 		// The main page object.
 		$page = $this->getPageModel();
@@ -316,7 +339,6 @@ class PageRequest {
 
 			// And if the user doesn't have access to it...
 			if (!\Core\user()->checkAccess($c->accessstring)) {
-				$view        = new View();
 				$view->error = View::ERROR_ACCESSDENIED;
 				return $view;
 			}
@@ -325,7 +347,6 @@ class PageRequest {
 		$return = call_user_func(array($c, $pagedat['method']));
 		if (is_int($return)) {
 			// A generic error code was returned.  Create a View with that code and return that instead.
-			$view        = new View();
 			$view->error = $return;
 			return $view;
 		}

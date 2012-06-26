@@ -68,6 +68,17 @@ class Controller_2_1 {
 	}
 
 	/**
+	 * Internal function for setting the view object for this controller initially.
+	 *
+	 * Really only useful internally and in the PageRequest object.  Everything else can probably safely ignore this.
+	 *
+	 * @param View $view
+	 */
+	public function setView(View $view){
+		$this->_view = $view;
+	}
+
+	/**
 	 * Get the view for this controller.
 	 * Up to the extending Controller to use this object is it wishes.
 	 *

@@ -171,6 +171,15 @@ class Directory_local_backend implements Directory_Backend {
 	}
 
 	/**
+	 * Check and see if this exists and is in-fact a directory.
+	 *
+	 * @return bool
+	 */
+	public function exists(){
+		return (is_dir($this->getPath()));
+	}
+
+	/**
 	 * Create this directory, (has no effect if already exists)
 	 * Returns true if successful, null if exists, and false if failure
 	 *
@@ -190,6 +199,12 @@ class Directory_local_backend implements Directory_Backend {
 		return $this->_path;
 	}
 
+
+	/**
+	 * Get just the basename of this directory
+	 *
+	 * @return string
+	 */
 	public function getBasename() {
 		$p = trim($this->_path, '/');
 		return substr($p, strrpos($p, '/') + 1);

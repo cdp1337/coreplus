@@ -150,11 +150,67 @@ class View {
 
 	public $jsondata = array();
 
+	/**
+	 * Set this to a non-null value to set the http-equiv="last-modified" metatag.
+	 *
+	 * @var null|int
+	 */
+	public $updated = null;
+
+	/**
+	 * Any "other" string to put into the head.  This can include <link> tags, or any other tag not defined otherwise.
+	 *
+	 * @var array
+	 */
+	public $head = array();
+
+	/**
+	 * Associative array of meta data for this view.
+	 *
+	 * @var array
+	 */
+	public $meta = array();
+
+	/**
+	 * Array of scripts to load in the head and foot of the document, respectively.
+	 *
+	 * @var array
+	 */
+	public $scripts = array('head' => array(), 'foot' => array());
+
+	/**
+	 * Array of stylesheets to load in the head of the document.
+	 *
+	 * @var array
+	 */
+	public $stylesheets = array();
+
+	/**
+	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
+	 * @var array
+	 */
 	public static $MetaData = array();
+	/**
+	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
+	 * @var array
+	 */
 	public static $HeadScripts = array();
+	/**
+	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
+	 * @var array
+	 */
 	public static $FootScripts = array();
+	/**
+	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
+	 * @var array
+	 */
 	public static $Stylesheets = array();
 	public static $HTMLAttributes = array();
+
+	/**
+	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
+	 * @var array
+	 */
 	public static $HeadData = array();
 
 	public function __construct() {
@@ -348,13 +404,6 @@ class View {
 		if (!$mastertpl) return $body;
 
 
-		// @todo Handle the metadata.
-		// Tack on the meta data.
-		//foreach($this->metas as $k => $v){
-		//	$head .= '<meta name="' . $k . '" content="' . $v . '"/>' . "\n";
-		//}
-
-
 		$template = new Template();
 		$template->setBaseURL('/');
 		// Page-level views have some special variables.
@@ -377,13 +426,15 @@ class View {
 		$data = $template->fetch($mastertpl);
 
 		if ($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML) {
+			// Metadata!  w00t
+
 			// Replace the </head> tag with the head data from the current page
 			// and the </body> with the foot data from the current page.
 			// This is needed to be done at this stage because some element in 
 			// the template after rendering may add additional script to the head.
 			// Also tack on any attributes for the <html> tag.
-			$data = str_replace('</head>', self::GetHead() . "\n" . '</head>', $data);
-			$data = str_replace('</body>', self::GetFoot() . "\n" . '</body>', $data);
+			$data = str_replace('</head>', $this->getHeadContent() . "\n" . '</head>', $data);
+			$data = str_replace('</body>', $this->getFootContent() . "\n" . '</body>', $data);
 			$data = str_replace('<html', '<html ' . self::GetHTMLAttributes(), $data);
 
 			// Provide a way for stylesheets to target this page specifically.
@@ -585,6 +636,75 @@ class View {
 
 
 	/**
+	 * Get the content to be inserted into the <head> tag for this view.
+	 *
+	 * @return string
+	 */
+	public function getHeadContent(){
+		// First, the basic ones.
+		$data = array_merge($this->head, $this->scripts['head'], $this->stylesheets);
+
+		// Custom meta tag :: http-equiv="last-modified"
+		if($this->updated !== null){
+			$data[] = '<meta http-equiv="last-modified" content="' . Time::FormatGMT($this->updated, Time::TIMEZONE_GMT, Time::FORMAT_FULLDATETIME) . '" />';
+		}
+
+		// All the standard meta names and properties now.
+		foreach($this->meta as $k => $v){
+			if(!$v) continue; // Skip blank values.
+
+			switch($k){
+				case 'name':
+				case 'keywords':
+				case 'description':
+					$key = 'name';
+					break;
+				default:
+					$key = 'property';
+			}
+
+			// Also support arrays for these.
+			if(is_array($v)){
+				foreach($v as $sv){
+					$data[] = '<meta ' . $key . '="' . $k . '" content="' . str_replace('"', '\\"', $sv) . '"/>';
+				}
+			}
+			else{
+				$data[] = '<meta ' . $key . '="' . $k . '" content="' . str_replace('"', '\\"', $v) . '"/>';
+			}
+		}
+
+		if (ConfigHandler::Get('/core/markup/minified')) {
+			$out = implode('', $data);
+		}
+		else {
+			$out = implode("\n", $data);
+		}
+
+		return trim($out);
+	}
+
+	/**
+	 * Get the content to be inserted just before the </body> tag for this view.
+	 *
+	 * @return string
+	 */
+	public function getFootContent(){
+		// This section only contains scripts right now.
+		$data = $this->scripts['foot'];
+
+		if (ConfigHandler::Get('/core/markup/minified')) {
+			$out = implode('', $data);
+		}
+		else {
+			$out = implode("\n", $data);
+		}
+
+		return trim($out);
+	}
+
+
+	/**
 	 * Add a script to the global View object.
 	 *
 	 * This will be rendered when a page-level view is rendered.
@@ -598,14 +718,15 @@ class View {
 			$script = '<script type="text/javascript" src="' . Core::ResolveAsset($script) . '"></script>';
 		}
 
+		$scripts =& PageRequest::GetSystemRequest()->getView()->scripts;
 
 		// I can check to see if this script has been loaded before.
-		if (in_array($script, self::$HeadScripts)) return;
-		if (in_array($script, self::$FootScripts)) return;
+		if (in_array($script, $scripts['head'])) return;
+		if (in_array($script, $scripts['foot'])) return;
 
 		// No? alright, add it to the requested location!
-		if ($location == 'head') self::$HeadScripts[] = $script;
-		else self::$FootScripts[] = $script;
+		if ($location == 'head') $scripts['head'][] = $script;
+		else $scripts['foot'][] = $script;
 	}
 
 	/**
@@ -620,8 +741,10 @@ class View {
 			$link = '<link type="text/css" href="' . Core::ResolveAsset($link) . '" media="' . $media . '" rel="stylesheet"/>';
 		}
 
+		$styles =& PageRequest::GetSystemRequest()->getView()->stylesheets;
+
 		// I can check to see if this script has been loaded before.
-		if (!in_array($link, self::$Stylesheets)) self::$Stylesheets[] = $link;
+		if (!in_array($link, $styles)) $styles[] = $link;
 	}
 
 	/**
@@ -634,8 +757,10 @@ class View {
 			$style = '<style>' . $style . '</style>';
 		}
 
+		$styles =& PageRequest::GetSystemRequest()->getView()->stylesheets;
+
 		// I can check to see if this script has been loaded before.
-		if (!in_array($style, self::$Stylesheets)) self::$Stylesheets[] = $style;
+		if (!in_array($style, $styles)) $styles[] = $style;
 	}
 
 	public static function SetHTMLAttribute($attribute, $value) {
@@ -655,45 +780,28 @@ class View {
 		}
 	}
 
+
+	/**
+	 * Get the head data for the system view.
+	 *
+	 * @static
+	 * @return string
+	 */
 	public static function GetHead() {
-		// Combine the scripts and stylesheets that are set to go in the head.
-		$data = array_merge(self::$HeadData, self::$HeadScripts, self::$Stylesheets);
-
-		// Throw in the meta information if it's present.
-		foreach (self::$MetaData as $k => $v) {
-			$data[] = '<meta name="' . $k . '" content="' . $v . '"/>';
-		}
-
-		if (ConfigHandler::Get('/core/markup/minified')) {
-			$out = implode('', $data);
-		}
-		else {
-			$out = implode("\n", $data);
-		}
-
-		return trim($out);
+		return PageRequest::GetSystemRequest()->getView()->getHeadContent();
 	}
 
 	public static function GetFoot() {
-		$data = self::$FootScripts;
-
-		if (ConfigHandler::Get('/core/markup/minified')) {
-			$out = implode('', $data);
-		}
-		else {
-			$out = implode("\n", $data);
-		}
-
-		return trim($out);
+		return PageRequest::GetSystemRequest()->getView()->getFootContent();
 	}
 
 	public static function AddMetaName($key, $value) {
-		self::$MetaData[$key] = $value;
+		PageRequest::GetSystemRequest()->getView()->meta[$key] = $value;
 	}
 
 	public static function AddMeta($string) {
 		if (strpos($string, '<meta') === false) $string = '<meta ' . $string . '/>';
-		self::$HeadData[] = $string;
+		PageRequest::GetSystemRequest()->getView()->head[] = $string;
 	}
 
 }
