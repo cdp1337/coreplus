@@ -94,8 +94,9 @@
 		<value>db_pass</value>
 	</return>
 
+	<!-- Set this to something non-blank if you are running this system on the same database as other software. -->
 	<define name="DB_PREFIX" type="string">
-		<value>CAE2_</value>
+		<value></value>
 	</define>
 
 	<!-- Uncomment this to change the GnuPG home directory to a more secure location. -->
