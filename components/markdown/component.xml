@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.5~core1" name="markdown" execmode="both">
+	<requires>
+		<require name="core" type="component"/>
+	</requires>
+	<includes>
+		<!-- This is required because the typical way of using this markdown library is via the function. -->
+		<include filename="markdown.php"/>
+	</includes>
+	<description>
+		PHP Markdown is a port to PHP of the Markdown program written by John Gruber.  This package simply provides the
+		interface for working with markdown files.
+	</description>
+	<files>
+		<file filename="LICENSE.txt" md5="27d1c9b0b49de30aeb6956a4ed537094"/>
+		<file filename="README.txt" md5="c7aaca561076de22243c51bc4d72d096"/>
+		<file filename="markdown.php" md5="373dd06adb9b47f79a80628dc38632d3">
+			<class name="Markdown_Parser"/>
+			<class name="MarkdownExtra_Parser"/>
+		</file>
+	</files>
+</component>
+
