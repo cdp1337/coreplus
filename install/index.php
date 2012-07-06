@@ -137,6 +137,14 @@ else{
 	}
 }
 
+// Test the presence of DOMDocument, this is provided by php-xml
+if(!class_exists('DOMDocument')){
+    $page = new InstallPage();
+    $page->assign('error', 'php-xml is not available.  This is a requirement of the system!');
+    $page->template = 'templates/preflight_requirements.tpl';
+    $page->render();
+}
+
 
 // The configuration file should absolutely not be accessable from the outside world, this includes php fopen'ing the file!
 $fp = fsockopen((isset($_SERVER['HTTPS']) ? 'ssl://' : '') . $_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']);
@@ -413,6 +421,7 @@ if(!\Core\DB()->tableExists(DB_PREFIX . 'component')){
 	$changes = $core->install();
 	if($changes) $p->assign('log', implode("\n", $changes));
 	else $p->assign('log', 'erm... nothing changed :?');
+	$p->assign('location', '');
 	$p->render();
 }
 
@@ -424,18 +433,39 @@ try{
 	$changes = array();
 	Core::Singleton();
 	Core::LoadComponents();
-	
-	foreach(Core::GetComponents() as $c){
-		if(!$c->isInstalled()) continue;
 
-		$changes[] = 'Component ' . $c->getName() . '...';
-		$change = $c->install();
-		if($change === false) $changes[] = 'No change needed.';
-		else $changes = array_merge($changes, $change);
-	}
-	
+    // This advanced logic is required because some components may not be loaded in the order that they are available.
+    $list = Core::GetComponents();
+    do {
+        $size = sizeof($list);
+        foreach ($list as $n => $c) {
+
+            // Installed components are ignored
+            if($c->isInstalled()){
+                unset($list[$n]);
+                continue;
+            }
+
+            if ($c->isLoadable()) {
+                // w00t
+                $changes[] = 'Component ' . $c->getName() . '...';
+                $change = $c->install();
+                $c->loadFiles();
+
+                if($change === false) $changes[] = 'Installed with no changes needed';
+                else $changes = array_merge($changes, $change);
+
+                unset($list[$n]);
+                continue;
+            }
+        }
+    }
+    while ($size > 0 && ($size != sizeof($list)));
+
 	foreach(ThemeHandler::GetAllThemes() as $t){
-		if(!$t->isInstalled()) continue;
+		$t->load();
+
+		if($t->isInstalled()) continue;
 
 		$changes[] = 'Theme ' . $t->getName() . '...';
 		$change = $t->install();
@@ -447,13 +477,14 @@ try{
 	Core::Cache()->flush();
 	
 	// In theory, everything should be installed now.
-	header('Location:../');
-	die();
+	//header('Location:../');
+	//die();
 	
 	$p = new InstallPage();
 	$p->template = 'templates/install.tpl';
 	$p->assign('component', 'Everything else');
 	$p->assign('log', implode("\n", $changes));
+	$p->assign('location', '../');
 	
 	$p->render();
 }

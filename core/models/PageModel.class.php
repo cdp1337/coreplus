@@ -113,9 +113,17 @@ class PageModel extends Model {
 
 	/**
 	 * A cache of rewrite to baseurls to serve as a quick lookup.
+	 *
 	 * @var array
 	 */
 	private static $_RewriteCache = null;
+
+	/**
+	 * A cache of fuzzy pages, (and their rewrite URLs), to serve as a quick lookup.
+	 *
+	 * @var array
+	 */
+	private static $_FuzzyCache = null;
 
 	// DISABLING 2012.05.13 cpowell
 	/*
@@ -272,9 +280,38 @@ class PageModel extends Model {
 		else return $m;
 	}
 
+	/**
+	 * Set all meta data for this page
+	 *
+	 * @param $metaarray array Associated key/value paired array of data to set.
+	 *
+	 * @return bool
+	 */
 	public function setMetas($metaarray) {
-		$m = json_encode($metaarray);
+		if(is_array($metaarray) && count($metaarray)) $m = json_encode($metaarray);
+		else $m = '';
+
 		return $this->set('metas', $m);
+	}
+
+	/**
+	 * Set a specific meta property or name for this page.
+	 *
+	 * @param $name string
+	 * @param $value string|array
+	 */
+	public function setMeta($name, $value){
+		// Get,
+		$metas = $this->getMetas();
+		// Update, (or delete)
+		if($value === '' || $value === null){
+			if(isset($metas[$name])) unset($metas[$name]);
+		}
+		else{
+			$metas[$name] = $value;
+		}
+		// And set.
+		$this->setMetas($metas);
 	}
 
 	public function getResolvedURL() {
@@ -413,9 +450,21 @@ class PageModel extends Model {
 			}
 			while ($url);
 		}
+
+		// If this page does not have a parent, BUT is marked as an admin page..
+		// /admin is automatically prefixed.
+		// (unless the current page *is* /admin.... then it can be skipped.
+		if(!$this->get('parenturl') && $this->get('admin') && strtolower($this->get('baseurl')) != '/admin'){
+			$url = '/admin';
+			if (isset(self::$_RewriteCache[$url])) {
+				$p = new PageModel($url);
+			}
+			return array($p);
+		}
+
+		// If this page does not have a parent, simply return a blank array.
 		if (!$this->get('parenturl')) return array();
 
-		$ret = array();
 		$p   = new PageModel($this->get('parenturl'));
 		return array_merge($p->_getParentTree(--$antiinfiniteloopcounter), array($p));
 	}
@@ -446,8 +495,30 @@ class PageModel extends Model {
 
 		if (!$base) return null;
 
-		// Resolve any rewriteurl to the base.  won't affect it if it doesn't exist.
-		$base = self::_LookupUrl($base);
+		// Update the cache!
+		self::_LookupUrl(null);
+
+		// so now I can translate that rewriteurl to the baseurl.
+		if(isset(self::$_RewriteCache[$base])){
+			$base = self::$_RewriteCache[$base];
+		}
+		// or find a fuzzy page if there is one.
+		// remember, fuzzy pages are meant to act as a sort of directory placeholder.
+		else{
+			$try = $base;
+			while($try != '' && $try != '/'){
+				if(isset(self::$_FuzzyCache[$try])){
+					// The fuzzy page must have the requested arguments, they just need to be tacked onto the end of the base.
+					$base = self::$_FuzzyCache[$try] . substr($base, strlen($try));
+					break;
+				}
+				elseif(in_array($try, self::$_FuzzyCache)){
+					$base = self::$_FuzzyCache[array_search($try, self::$_FuzzyCache)] . substr($base, strlen($try));
+					break;
+				}
+				$try = substr($try, 0, strrpos($try, '/'));
+			}
+		}
 
 		// Trim off both beginning and trailing slashes.
 		$base = trim($base, '/');
@@ -537,7 +608,7 @@ class PageModel extends Model {
 			$method = 'Index';
 		}
 
-		// One last check that the method exists, (because there's only 1 scenerio that checks above)
+		// One last check that the method exists, (because there's only 1 scenario that checks above)
 		if (!method_exists($controller, $method)) {
 			return null;
 		}
@@ -582,18 +653,23 @@ class PageModel extends Model {
 	 *
 	 * @param type $url
 	 */
-	private static function _LookupUrl($url) {
-		if (!self::$_RewriteCache) {
+	private static function _LookupUrl($url = null) {
+		if (self::$_RewriteCache === null) {
 			$s = new Dataset();
-			$s->select('rewriteurl, baseurl');
+			$s->select('rewriteurl, baseurl, fuzzy');
 			$s->table(DB_PREFIX . 'page');
+
 			$rs                  = $s->execute();
 			self::$_RewriteCache = array();
+			self::$_FuzzyCache   = array();
+
 			foreach ($rs as $row) {
-				self::$_RewriteCache[strtolower($row['rewriteurl'])] = $row['baseurl'];
+				self::$_RewriteCache[strtolower($row['rewriteurl'])] = strtolower($row['baseurl']);
+				if($row['fuzzy']) self::$_FuzzyCache[strtolower($row['rewriteurl'])] = strtolower($row['baseurl']);
 			}
 		}
 
+		if($url === null) return; // maybe this was just called to update the local rewrite and fuzzy caches.
 		return (isset(self::$_RewriteCache[$url])) ? self::$_RewriteCache[$url] : $url;
 	}
 
@@ -604,11 +680,27 @@ class PageModel extends Model {
 	 */
 	private static function _LookupReverseUrl($url) {
 		// Lookup something, just to ensure it's in the cache.
-		self::_LookupUrl('/');
+		self::_LookupUrl(null);
 
 		$url = strtolower($url);
 
-		return (($key = array_search($url, self::$_RewriteCache)) !== false) ? $key : $url;
+		// See if it directly matches a cached page
+		if(($key = array_search($url, self::$_RewriteCache)) !== false){
+			return $key;
+		}
+
+		// Else try to look it up in the fuzzy pages.
+		$try = $url;
+		while($try != '' && $try != '/'){
+			if(in_array($try, self::$_FuzzyCache)){
+				$url = array_search($try, self::$_FuzzyCache) . substr($url, strlen($try));
+				return $url;
+			}
+			$try = substr($try, 0, strrpos($try, '/'));
+		}
+
+		// Nope, just return the URL then :/
+		return $url;
 	}
 
 	/**

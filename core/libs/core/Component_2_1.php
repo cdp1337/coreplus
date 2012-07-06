@@ -988,6 +988,7 @@ class Component_2_1 {
 		$c->set('version', $this->_version);
 		$c->save();
 		$this->_versionDB = $this->_version;
+		$this->_enabled = ($c->get('enabled'));
 
 		// And load this component into the system so anything else can access it immediately.
 		$this->loadFiles();
@@ -1102,6 +1103,7 @@ class Component_2_1 {
 		$c = new ComponentModel($this->_name);
 		$c->set('enabled', true);
 		$c->save();
+		$this->_enabled = true;
 
 		return true;
 	}

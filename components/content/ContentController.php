@@ -53,7 +53,9 @@ class ContentController extends Controller_2_1 {
 
 		$view->assignVariable('model', $m);
 		$view->templatename = '/pages/content/view.tpl';
-		View::AddMeta('<meta http-equiv="last-modified" content="' . Time::FormatGMT($m->get('updated'), Time::TIMEZONE_GMT, Time::FORMAT_FULLDATETIME) . '" />');
+	    $view->updated = $m->get('updated');
+		//View::AddMeta('<meta http-equiv="last-modified" content="' . Time::FormatGMT($m->get('updated'), Time::TIMEZONE_GMT, Time::FORMAT_FULLDATETIME) . '" />');
+		View::$HeadData[] = '<link rel="canonical" href="' . ROOT_URL . substr($page->get('rewriteurl'), 1) . '" />';
 		
 		if(\Core\user()->checkAccess('g:admin')){
 			$view->addControl('Add Page', '/Content/Create', 'add');

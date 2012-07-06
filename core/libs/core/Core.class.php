@@ -768,21 +768,24 @@ class Core implements ISingleton {
 		$self = self::Singleton();
 
 		$name = strtolower($name);
-		// The DB object is specifically a library, and MUST remain as such.
-		//if($name == 'DB') return Core::IsLibraryAvailable($name, $version, $operation);
 
 		//echo "Checking component name[$name] v[$version] op[$operation]<br>";
-		if (!isset($self->_components[$name])) return false;
+		if (!isset($self->_components[$name])){
+            return false;
+        }
 
 		// Only included enabled components.
-		elseif (!$self->_components[$name]->isEnabled()) return false;
+		elseif (!$self->_components[$name]->isEnabled()){
+            return false;
+        }
 
-		elseif ($version) return Core::VersionCompare($self->_components[$name]->getVersionInstalled(), $version, $operation);
+		elseif ($version){
+            return Core::VersionCompare($self->_components[$name]->getVersionInstalled(), $version, $operation);
+        }
 
-		// There's a bit of an issue with the debian-style versions... PHP considers 1.2.3~1 < 1.2.3...
-
-		//elseif($version) return version_compare(str_replace('~', '-', $ch->_loadedComponents[$name]->getVersionInstalled()), $version, $operation);
-		else return true;
+		else{
+            return true;
+        }
 	}
 
 
