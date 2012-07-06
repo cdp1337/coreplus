@@ -10,9 +10,6 @@
 		<config key="/facebook/secretid" mapto="FACEBOOK_SECRET_ID" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
 		<config key="/facebook/appsecret" mapto="FACEBOOK_APP_SECRET" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
 	</configs>
-	<authors>
-		<author name="Naitik Shah" email="naitik@facebook.com"/>
-	</authors>
 	<files>
 		<file filename="FacebookHelper.class.php" md5="356f91d5381d021c46049b8b0e4f693f">
 			<class name="FacebookHelper"/>
@@ -40,5 +37,8 @@
 			<class name="FBGetCurrentURLFacebook"/>
 		</file>
 	</files>
+	<authors>
+		<author name="Naitik Shah" email="naitik@facebook.com"/>
+	</authors>
 </component>
 

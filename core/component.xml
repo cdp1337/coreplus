@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.2" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.0" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -60,14 +60,14 @@
 		<file filename="core/controllers/GettingStartedController.class.php" md5="c32e15834efbdd387f37f8c72fc24fea">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="22028f198e5149d9a0eaf502cf9c7aa2">
+		<file filename="core/controllers/UpdaterController.class.php" md5="6a1038919f7f1c94229ee0fe95333696">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
 			<class name="WidgetController"/>
 		</file>
 		<file filename="core/functions/Core.functions.php" md5="1cb673f58d397e7a63a26eaa3e7c0ebd"/>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="364e97e0149139104c235237e3c5ae5e">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="cc579022147a9723f98a828e4024ec4e">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
@@ -215,7 +215,7 @@
 		<file filename="core/libs/aws-sdk/utilities/utilities.class.php" md5="7ef08a416322208d5d57cf5d95937512">
 			<class name="CFUtilities"/>
 		</file>
-		<file filename="core/libs/cachecore/Cache.class.php" md5="6379f9cb47091ddd7c14507bae8263be">
+		<file filename="core/libs/cachecore/Cache.class.php" md5="8a0cea8122d34435ef1c729788a04e28">
 			<class name="Cache"/>
 			<class name="Cache_Exception"/>
 		</file>
@@ -364,7 +364,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="620b9bb334f7254ef57b5e716ef22d40">
+		<file filename="core/libs/core/Component_2_1.php" md5="94cfe2c7f70eab08e9dc0521b4de0179">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="5ff824df4ce7e6628e1b10dc82158f44">
@@ -831,18 +831,18 @@
 		<file filename="core/libs/phpmailer/test_script/styles/shThemeRDark.css" md5="c8f6be1c0dcf82e65a9d39f8644f1053"/>
 		<file filename="core/libs/phpmailer/test_script/styles/wrapping.png" md5="9a4ffd836c709958eff80a3260f8a1cb"/>
 		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
-		<file filename="core/libs/smarty-plugins/block.a.php" md5="3039f2bc0568de9c360e7ceb0e532745"/>
-		<file filename="core/libs/smarty-plugins/block.css.php" md5="9fc2a9d0a1f29987a64eb435e4c19e39"/>
-		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="0efd2ea623964b5baf19a1908d7e929a"/>
-		<file filename="core/libs/smarty-plugins/block.script.php" md5="d35ae77c1f1b0fce8315fde68223f074"/>
-		<file filename="core/libs/smarty-plugins/function.asset.php" md5="7ee59d07ec3c4497447c298b4cec69b0"/>
-		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="b57ac0420e6fc0cdcf4674dd3f4677bd"/>
-		<file filename="core/libs/smarty-plugins/function.head.php" md5="847f54ac570b9839b9baa17c5ac4cd64"/>
-		<file filename="core/libs/smarty-plugins/function.img.php" md5="bd8af4898e373bb064ed4ea6b50a40be"/>
-		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="0675deafa3f09a4cbe5a4f8f35d61ab2"/>
-		<file filename="core/libs/smarty-plugins/function.link.php" md5="ee67260eea6c696b8634a593cece14bd"/>
-		<file filename="core/libs/smarty-plugins/function.widget.php" md5="83cca9fdd432d331f1b7f38f1da98fe4"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="d49949f0d2cc83b772d3f7f9d8a58b07"/>
+		<file filename="core/libs/smarty-plugins/block.a.php" md5="18b24a0c97912c629162bc9722b3afc5"/>
+		<file filename="core/libs/smarty-plugins/block.css.php" md5="e7d3b0a41a6c9fe3c6657354266bfc73"/>
+		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="2ca3be568e074f654d5657a5e20ac1b0"/>
+		<file filename="core/libs/smarty-plugins/block.script.php" md5="84d16e1ba8fb38b5c8be6a1ca960ab43"/>
+		<file filename="core/libs/smarty-plugins/function.asset.php" md5="85f908c0a9fa616aca30a0b94afeae18"/>
+		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="b90dc10b7caf30b01b9a487b5653c9ce"/>
+		<file filename="core/libs/smarty-plugins/function.head.php" md5="4ccc817b64cccb0c9455d3fe1a28ddf2"/>
+		<file filename="core/libs/smarty-plugins/function.img.php" md5="161e0c79e337cd61b066876d2e7bcdab"/>
+		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="d8daf3f492d0c8a71e7b8ccf0cd70cc9"/>
+		<file filename="core/libs/smarty-plugins/function.link.php" md5="9ff0428278228b374379b3f08b84db52"/>
+		<file filename="core/libs/smarty-plugins/function.widget.php" md5="91afcea7988b41cd1e5745b6bd34e8bc"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="e36f2792ff9a1350d6980b5ed01a93f9"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/smarty/README" md5="2280709acce0bf54217c12eff7932997"/>
 		<file filename="core/libs/smarty/SMARTY_2_BC_NOTES.txt" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
@@ -1304,7 +1304,7 @@
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.js" md5="e266282187d6730905137049f7c9d70b"/>
 		<file filename="core/assets/js/core.strings.js" md5="e704b77bfcc5ca29b28934ab4d454c70"/>
-		<file filename="core/assets/js/updater/index.js" md5="9b429e1320badd964b2e0913e8f336cb"/>
+		<file filename="core/assets/js/updater/index.js" md5="03eefea3d7b39e86f4c5abce4cc382de"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="0.0.2"/>
@@ -1321,6 +1321,7 @@
 		<upgrade from="0.1.0" to="1.9.0"/>
 		<upgrade from="1.9.0" to="1.9.1"/>
 		<upgrade from="1.9.1" to="1.9.2"/>
+		<upgrade from="1.9.2" to="2.1.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
@@ -1354,9 +1355,7 @@
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			See the included NOTICE.md file for more information.
-		</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3
 		</license>

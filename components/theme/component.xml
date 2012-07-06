@@ -46,7 +46,6 @@
 	<upgrades>
 		<upgrade from="0.0.1" to="1.9.0"/>
 	</upgrades>
-
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>

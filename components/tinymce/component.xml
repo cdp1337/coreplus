@@ -14,14 +14,6 @@
 	<view>
 		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="003381be6058eee80b1ff6bbd2942664"/>
 	</view>
-	<authors>
-		<author name="Charlie Powell" email="charlie@eval.bz"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			GNU Affero General Public License v3
-		</license>
-	</licenses>
 	<files>
 		<file filename="TinyMCE.lib.php" md5="bcd3edbf097221e3cd9bd09662439729">
 			<class name="TinyMCE"/>
@@ -290,5 +282,13 @@
 		<upgrade from="3.4.6" to="3.4.6~core1"/>
 		<upgrade from="3.4.6~core1" to="3.4.6~core2"/>
 	</upgrades>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
 </component>
 

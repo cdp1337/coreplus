@@ -72,7 +72,7 @@
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
 		<file filename="CHANGELOG.md" md5="cff8fb582254ebada2d644e6eecbfed7"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="272b76ec6ac348dc59526119fb05fd05">
+		<file filename="JQuery.lib.php" md5="4518d646ffc508e2f49aca3c04e3349a">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>

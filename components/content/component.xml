@@ -30,6 +30,9 @@
 		<file filename="templates/pages/content/view.json.tpl" md5="c529f628b707099da2f6eff1a64ba31a"/>
 		<file filename="templates/pages/content/view.xml.tpl" md5="24bbe5dba74cfbbf65c80b4e802bc6db"/>
 	</view>
+	<upgrades>
+		<upgrade from="0.0.1-dev1" to="1.9.0"/>
+	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
@@ -38,8 +41,5 @@
 			GNU Affero General Public License v3
 		</license>
 	</licenses>
-	<upgrades>
-		<upgrade from="0.0.1-dev1" to="1.9.0"/>
-	</upgrades>
 </component>
 

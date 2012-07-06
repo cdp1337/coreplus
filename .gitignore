@@ -35,3 +35,6 @@
 
 # Skip the GPG keys.
 /gnupg/*.gpg
+
+# These are used in development environments.
+/exports

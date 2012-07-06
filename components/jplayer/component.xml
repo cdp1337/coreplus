@@ -10,35 +10,35 @@
 		<upgrade from="2.0.0~cae2" to="2.0.0~cae3"/>
 		<upgrade from="2.0.0~cae3" to="2.1.0~core1"/>
 	</upgrades>
-	<authors>
-		<author name="Mark J Panaghiston"/>
-	</authors>
 	<files>
 		<file filename="CHANGELOG.md" md5="056f3690f80ada85e1917675e19813f5"/>
 		<file filename="jPlayer.class.php" md5="4b957ed3fec1a81769492a9fc0ceb3c9">
 			<class name="jPlayer"/>
 		</file>
-		<file filename="source/Jplayer.as" md5="d51d3921fe47cc741c9a50a8903d51b7"/>
+		<file filename="source/Jplayer.as" md5="23d49380b77459bf3ac71dcb08c6bc68"/>
 		<file filename="source/Jplayer.fla" md5="c6c6cda92c97d94640b62b75b5de3044"/>
-		<file filename="source/add-on/jplayer.playlist.js" md5="35e1dca8183a37a71d012414f5ece128"/>
-		<file filename="source/add-on/jquery.jplayer.inspector.js" md5="efdcfd5a92b8aa45743788331113d7eb"/>
-		<file filename="source/happyworm/jPlayer/JplayerEvent.as" md5="2a8479f453bf307a4286721621c50153"/>
-		<file filename="source/happyworm/jPlayer/JplayerMp3.as" md5="4999f6e150938eff5689d7f9d64f2288"/>
-		<file filename="source/happyworm/jPlayer/JplayerMp4.as" md5="98558b41cc56beed01054d48e2333180"/>
-		<file filename="source/happyworm/jPlayer/JplayerStatus.as" md5="a15551a4546499d92ef282e77f198db3"/>
-		<file filename="source/jquery.jplayer.js" md5="f366fbaced16ffa8370d594d51c0b98d"/>
+		<file filename="source/add-on/jplayer.playlist.js" md5="db507525d94792ed399ce529b11f7475"/>
+		<file filename="source/add-on/jquery.jplayer.inspector.js" md5="c009339d6136287c282eca94144f12c7"/>
+		<file filename="source/happyworm/jPlayer/JplayerEvent.as" md5="469d26829c45403ac7317f3a9425b305"/>
+		<file filename="source/happyworm/jPlayer/JplayerMp3.as" md5="c2f436e4a9ffde1f40022c3c1b49c36c"/>
+		<file filename="source/happyworm/jPlayer/JplayerMp4.as" md5="870b1a69bee5fbca99e204d1c506df26"/>
+		<file filename="source/happyworm/jPlayer/JplayerStatus.as" md5="9864cf02a6d737ce2e4bfdb3271f2309"/>
+		<file filename="source/jquery.jplayer.js" md5="48350ca54c1c6dc29c1fc531826fab0b"/>
 	</files>
 	<assets>
 		<file filename="assets/css/skin/jPlayer_blue.monday_extd.psd" md5="dfdf38678f1037f9dfee8539eda4bb4a"/>
-		<file filename="assets/css/skin/jplayer.blue.monday.css" md5="6bef8aacb388fdf6a70fec955ed2f863"/>
+		<file filename="assets/css/skin/jplayer.blue.monday.css" md5="26d558f35be8dcc3a6a302746c44f463"/>
 		<file filename="assets/css/skin/jplayer.blue.monday.jpg" md5="0e0fdecc749a3e48cba25ae991154029"/>
 		<file filename="assets/css/skin/jplayer.blue.monday.seeking.gif" md5="6459e146ed61caa28e8ede05beb520b8"/>
 		<file filename="assets/css/skin/jplayer.blue.monday.video.play.png" md5="d736613748cb6f59e1ce86db5e58bee0"/>
 		<file filename="assets/css/skin/spirites_blue.monday_2011.psd" md5="0afab271084584b60d4f642bd9d60d4f"/>
 		<file filename="assets/js/jplayer.playlist.min.js" md5="58f29924f2e0951ab6cbeb7e502d350e"/>
-		<file filename="assets/js/jquery.jplayer.inspector.js" md5="efdcfd5a92b8aa45743788331113d7eb"/>
+		<file filename="assets/js/jquery.jplayer.inspector.js" md5="c009339d6136287c282eca94144f12c7"/>
 		<file filename="assets/js/jquery.jplayer.min.js" md5="9943a0116135df27a921020e2193f5c1"/>
 		<file filename="assets/swf/Jplayer.swf" md5="769d053b03973d380da80be5a91c59c2"/>
 	</assets>
+	<authors>
+		<author name="Mark J Panaghiston"/>
+	</authors>
 </component>
 
