@@ -34,9 +34,9 @@
 		<file filename="LICENSES/lgpl.txt" md5="e6a600fd5e1d9cbde2d983680233ad02"/>
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="c96dd6a283209da70091b42936b0449d"/>
-		<file filename="config/configuration.xml.example" md5="d58ec4634ef605eb6512b1fadc798f85"/>
+		<file filename="config/configuration.xml.example" md5="e6bcccfe5d780d28d13a8e2dbbe17016"/>
 		<file filename="core/CHANGELOG" md5="4dc4c3af39d71d260fdb73b4fcbb2665"/>
-		<file filename="core/bootstrap.php" md5="f3bb9fc97ca158f5b092d24be2f70001"/>
+		<file filename="core/bootstrap.php" md5="7496376cccf066b43482f0d33c731637"/>
 		<file filename="core/bootstrap_predefines.php" md5="a75579b94642f0f4fb7b7540f9909288"/>
 		<file filename="core/bootstrap_preincludes.php" md5="f1971ce53f1a6c0f0d29a4434114cdb7"/>
 		<file filename="core/controllers/AdminController.php" md5="224fdec0630a697051eead4cb87623a8">
@@ -65,6 +65,77 @@
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
 			<class name="WidgetController"/>
+		</file>
+		<file filename="core/forms/FormCheckboxInput.class.php" md5="1a3bc85e283d6e2ff9f2e9bcaa264ba6">
+			<class name="FormCheckboxInput"/>
+		</file>
+		<file filename="core/forms/FormCheckboxInput.php" md5="c957985143a2991d3cadcc5e5a2d0bad">
+			<class name="FormCheckboxInput"/>
+		</file>
+		<file filename="core/forms/FormCheckboxesInput.class.php" md5="288f136064f2afe5760c6c0b22df8e49">
+			<class name="FormCheckboxesInput"/>
+		</file>
+		<file filename="core/forms/FormCheckboxesInput.php" md5="485eb18d60ff2767966d5e90fd869d6b">
+			<class name="FormCheckboxesInput"/>
+		</file>
+		<file filename="core/forms/FormFileInput.class.php" md5="dbade7d7b5dea759fae777f9881fabce">
+			<class name="FormFileInput"/>
+		</file>
+		<file filename="core/forms/FormFileInput.php" md5="91c8934d6b16f92f75e986e66c3b3ee8">
+			<class name="FormFileInput"/>
+		</file>
+		<file filename="core/forms/FormHiddenInput.class.php" md5="b165e1679347782c30492bb4b320ee5c">
+			<class name="FormHiddenInput"/>
+		</file>
+		<file filename="core/forms/FormHiddenInput.php" md5="3fb57197f3db70943ddd911c35b30c03">
+			<class name="FormHiddenInput"/>
+		</file>
+		<file filename="core/forms/FormPages.php" md5="057699d1e8314eae7cd3b2f67752d6fe">
+			<class name="FormPageMetasInput"/>
+			<class name="FormPageThemeSelectInput"/>
+			<class name="FormPageParentSelectInput"/>
+		</file>
+		<file filename="core/forms/FormPasswordInput.class.php" md5="948596510dac1aca25422f5d408d4b21">
+			<class name="FormPasswordInput"/>
+		</file>
+		<file filename="core/forms/FormPasswordInput.php" md5="f0455db429934749aeeabd4fbcdc4603">
+			<class name="FormPasswordInput"/>
+		</file>
+		<file filename="core/forms/FormRadioInput.class.php" md5="79bd0049d599f08044933166082dfc05">
+			<class name="FormRadioInput"/>
+		</file>
+		<file filename="core/forms/FormRadioInput.php" md5="8e2511cbe22bb6ba379fd0140a2676e9">
+			<class name="FormRadioInput"/>
+		</file>
+		<file filename="core/forms/FormSelectInput.class.php" md5="e539843aa341e69f26fae865407de997">
+			<class name="FormSelectInput"/>
+		</file>
+		<file filename="core/forms/FormSelectInput.php" md5="bde6fca9ec22964de7acbc91c463b987">
+			<class name="FormSelectInput"/>
+		</file>
+		<file filename="core/forms/FormSubmitInput.class.php" md5="a8c7075479f162010671026ee798c19a">
+			<class name="FormSubmitInput"/>
+		</file>
+		<file filename="core/forms/FormSubmitInput.php" md5="afa883f878535913f11d711f08b2cf4b">
+			<class name="FormSubmitInput"/>
+		</file>
+		<file filename="core/forms/FormSystemInput.php" md5="5c1b38d610d70d8a89e9ed29bf0c8ca1">
+			<class name="FormSystemInput"/>
+		</file>
+		<file filename="core/forms/FormTextInput.class.php" md5="4c642cd636562bf2e77059cb4e2ceb2d">
+			<class name="FormTextInput"/>
+		</file>
+		<file filename="core/forms/FormTextInput.php" md5="2f2298fafeb4edd273de90ff6b9a7215">
+			<class name="FormTextInput"/>
+		</file>
+		<file filename="core/forms/FormTextareaInput.class.php" md5="1aae79e574354999d76b63b8bf50b18c">
+			<class name="FormTextareaInput"/>
+		</file>
+		<file filename="core/forms/FormTextareaInput.php" md5="6ddcb709b1e383daf99f56534e112b8c">
+			<class name="FormTextareaInput"/>
+		</file>
+		<file filename="core/forms/FormTimeInput.class.php" md5="080383e4dade461c3c7ac1d9e504ed28">
+			<class name="FormTimeInput"/>
 		</file>
 		<file filename="core/functions/Core.functions.php" md5="1cb673f58d397e7a63a26eaa3e7c0ebd"/>
 		<file filename="core/helpers/UpdaterHelper.class.php" md5="cc579022147a9723f98a828e4024ec4e">
@@ -364,7 +435,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="94cfe2c7f70eab08e9dc0521b4de0179">
+		<file filename="core/libs/core/Component_2_1.php" md5="3d5e9652b64125a5aef5adf527c6b488">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="5ff824df4ce7e6628e1b10dc82158f44">
@@ -373,10 +444,10 @@
 		<file filename="core/libs/core/Controller.class.php" md5="f584112515b7c712911a1583ffe23fea">
 			<class name="Controller"/>
 		</file>
-		<file filename="core/libs/core/Controller_2_1.class.php" md5="31db6369f8e13be5bc790518ab8566c6">
+		<file filename="core/libs/core/Controller_2_1.class.php" md5="da23111d3817635fd7fcad14583bde1a">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="95df867658161f9e7c63175190832159">
+		<file filename="core/libs/core/Core.class.php" md5="45a0182d2eb025d87d594bf43033e6ff">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -392,23 +463,12 @@
 		<file filename="core/libs/core/Email.class.php" md5="11c5da28c252b0d1f6af703e4b561704">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="10e70ae789a7a17bad241893449c189f">
+		<file filename="core/libs/core/Form.class.php" md5="cefcc1bb7dd0a8bbd2a7209441073719">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
-			<class name="FormTextInput"/>
-			<class name="FormPasswordInput"/>
-			<class name="FormSubmitInput"/>
-			<class name="FormTextareaInput"/>
-			<class name="FormHiddenInput"/>
-			<class name="FormSelectInput"/>
-			<class name="FormRadioInput"/>
-			<class name="FormCheckboxesInput"/>
-			<class name="FormCheckboxInput"/>
 			<class name="FormPageInsertables"/>
 			<class name="FormPageMeta"/>
-			<class name="FormFileInput"/>
-			<class name="FormTimeInput"/>
 		</file>
 		<file filename="core/libs/core/HookHandler.class.php" md5="604adeaf611ac0866885fe74457e2e36">
 			<class name="HookHandler"/>
@@ -438,7 +498,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="8b31747638dc19051e896b5776ec51e8">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="951c9245f8950f1c147232285639cd2a">
+		<file filename="core/libs/core/PageRequest.class.php" md5="21df152ef39f4f40a41b727290987c2e">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="0528150b9145ee4d1dd243e8348c71a6">
@@ -461,7 +521,7 @@
 		<file filename="core/libs/core/Time.class.php" md5="b91dce7fdff8ee72333cfa39efece40f">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="894df2566239823b2d8f268fc92d127b">
+		<file filename="core/libs/core/View.class.php" md5="3b83ea2ab67587be0d36842f41cb8d33">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -673,7 +733,7 @@
 			<class name="UUID"/>
 			<class name="UUIDException"/>
 		</file>
-		<file filename="core/libs/filestore/Directory_Backend.interface.php" md5="7a2421fa7aa5df29fd4c720407bf737e">
+		<file filename="core/libs/filestore/Directory_Backend.interface.php" md5="d47bd0edb4833f38e714a2242e8ed937">
 			<interface name="Directory_Backend"/>
 		</file>
 		<file filename="core/libs/filestore/FileContentFactory.class.php" md5="a1ef54df240fe5d8ec0113d41619c99c">
@@ -688,7 +748,7 @@
 		<file filename="core/libs/filestore/File_Contents.interface.php" md5="74e9a61ff8a58f95da1a8e114235b019">
 			<interface name="File_Contents"/>
 		</file>
-		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="3ac2595e2931663193ca26319b69ff6b">
+		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="62f44f6d86d7d45e87c32ab62a228b85">
 			<class name="Directory_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="6c35d718dbc1679fd89be37fab6965c2">
@@ -1156,7 +1216,7 @@
 		<file filename="core/models/Insertable.class.php" md5="9fcff9abc48a6750a219ee3df35b48af">
 			<class name="InsertableModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="f3ca30e91334c347caa3ea728ef1f95a">
+		<file filename="core/models/PageModel.class.php" md5="773fc79f0da9f8e8947f5aa42e34ada5">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/SessionModel.class.php" md5="08c4a259678e264f89c943b1b7a4d329">
@@ -1182,10 +1242,10 @@
 			<class name="InstallPage"/>
 		</file>
 		<file filename="install/assets/jquery-1.7.1.min.js" md5="ddb84c1587287b2df08966081ef063bf"/>
-		<file filename="install/assets/style.css" md5="646d1935706371d19459dbcaf49062f0"/>
-		<file filename="install/index.php" md5="c37573237bf6efc66724bba015c365a2"/>
+		<file filename="install/assets/style.css" md5="d8173f5c97cd9ca198cc2987e16ed519"/>
+		<file filename="install/index.php" md5="5ad5af30bf5752c893bb2b3571d006d3"/>
 		<file filename="install/templates/configs.tpl" md5="46fa1ad5d0ee122196b9b9b40f0e6e94"/>
-		<file filename="install/templates/install.tpl" md5="9d17da4b3a1fa42df7bedf3e8b481b4f"/>
+		<file filename="install/templates/install.tpl" md5="6b466824ffb7cecedfbae5d3ed8189e2"/>
 		<file filename="install/templates/preflight_config.tpl" md5="ed6b08acc6c3224a0527f88d0ac49804"/>
 		<file filename="install/templates/preflight_htaccess.tpl" md5="f15e6c3078b09f5dbc929aa7a046467c"/>
 		<file filename="install/templates/preflight_requirements.tpl" md5="b098146e5c21a95fc00c62e0eadadb2c"/>
@@ -1265,6 +1325,10 @@
 		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="e044e6869eb5a1a5c97976b18362fefc"/>
 		<file filename="core/templates/pages/updater/browse.tpl" md5="6f98a757e57dc19569d2f9a859751cb5"/>
 		<file filename="core/templates/pages/updater/keys.tpl" md5="4ff939a015c21167bda5a5a8d47f3f37"/>
+		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="c3856d7798a76f98caf744dcc381c9d3"/>
+		<file filename="core/templates/forms/elements/formpagemetasinput.tpl" md5="04851f883c681032c2fd96c80714b434"/>
+		<file filename="core/templates/forms/elements/formpageparentselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
+		<file filename="core/templates/forms/elements/formpagethemeselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 	</view>
 	<install/>
 	<description>

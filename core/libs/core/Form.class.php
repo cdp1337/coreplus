@@ -498,20 +498,24 @@ class Form extends FormGroup {
 	 * @var array
 	 */
 	public static $Mappings = array(
-		'checkbox'        => 'FormCheckboxInput',
-		'checkboxes'      => 'FormCheckboxesInput',
-		'file'            => 'FormFileInput',
-		'hidden'          => 'FormHiddenInput',
-		'pageinsertables' => 'FormPageInsertables',
-		'pagemeta'        => 'FormPageMeta',
-		'password'        => 'FormPasswordInput',
-		'radio'           => 'FormRadioInput',
-		'select'          => 'FormSelectInput',
-		'submit'          => 'FormSubmitInput',
-		'text'            => 'FormTextInput',
-		'textarea'        => 'FormTextareaInput',
-		'time'            => 'FormTimeInput',
-		'wysiwyg'         => 'FormTextareaInput',
+		'checkbox'         => 'FormCheckboxInput',
+		'checkboxes'       => 'FormCheckboxesInput',
+		'file'             => 'FormFileInput',
+		'hidden'           => 'FormHiddenInput',
+		'pageinsertables'  => 'FormPageInsertables',
+		'pagemeta'         => 'FormPageMeta',
+		'pagemetas'        => 'FormPageMetasInput',
+		'pageparentselect' => 'FormPageParentSelectInput',
+		'pagethemeselect'  => 'FormPageThemeSelectInput',
+		'password'         => 'FormPasswordInput',
+		'radio'            => 'FormRadioInput',
+		'select'           => 'FormSelectInput',
+		'submit'           => 'FormSubmitInput',
+		'system'           => 'FormSystemInput',
+		'text'             => 'FormTextInput',
+		'textarea'         => 'FormTextareaInput',
+		'time'             => 'FormTimeInput',
+		'wysiwyg'          => 'FormTextareaInput',
 	);
 
 	/**
@@ -898,13 +902,13 @@ class Form extends FormGroup {
 			}
 			$f->set('___modelpks', $pks);
 		}
-
+/*
 		// Some objects require special attention.
 		if($model instanceof PageModel){
-			$f->addElement('pagemeta', array('name' => 'model'));
+			$f->addElement('pagemeta', array('name' => 'model', 'model' => $model));
 			return $f;
 		}
-
+*/
 		foreach ($s as $k => $v) {
 			// Skip the AI column if it doesn't exist.
 			if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
@@ -922,13 +926,17 @@ class Form extends FormGroup {
 			elseif (isset($v['default'])) $val = $v['default'];
 			else $val = null;
 
+			$description = (isset($v['formdescription'])) ? $v['formdescription'] : null;
+
 
 			// Boolean checkboxes can have special options.
 			//if(isset($v['formtype']) && $v['formtype'] == 'checkbox' && $v['type'] == Model::ATT_TYPE_BOOL){
 			//	$el = FormElement::Factory($v['formtype']);
 			//	$el->set('options', array('1'));
 			//}
+
 			// Standard form types.
+			// These are based off of the formtype declaration in Model.
 			if (isset($v['formtype'])) {
 				$el = FormElement::Factory($v['formtype']);
 			}
@@ -969,6 +977,7 @@ class Form extends FormGroup {
 				die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
 			}
 
+			$el->set('description', $description);
 			$el->set('name', 'model[' . $k . ']');
 			$el->set('required', $required);
 			$el->set('title', $title);
@@ -986,187 +995,6 @@ class Form extends FormGroup {
 		*/
 		return $f;
 	}
-}
-
-class FormTextInput extends FormElement {
-	public function  __construct($atts = null) {
-		parent::__construct($atts);
-
-		// Some defaults
-		$this->_attributes['class'] = 'formelement formtextinput';
-		$this->_validattributes     = array('accesskey', 'autocomplete', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'size', 'tabindex', 'width', 'height', 'value', 'style');
-	}
-}
-
-class FormPasswordInput extends FormElement {
-	public function  __construct($atts = null) {
-		parent::__construct($atts);
-
-		// Some defaults
-		$this->_attributes['class'] = 'formelement formpasswordinput';
-		$this->_validattributes     = array('accesskey', 'autocomplete', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'size', 'tabindex', 'width', 'height', 'value', 'style');
-	}
-}
-
-class FormSubmitInput extends FormElement {
-	public function  __construct($atts = null) {
-		parent::__construct($atts);
-
-		// Some defaults
-		$this->_attributes['class'] = 'formelement formsubmitinput';
-		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'size', 'tabindex', 'width', 'height', 'value', 'style');
-	}
-}
-
-class FormTextareaInput extends FormElement {
-	public function  __construct($atts = null) {
-		parent::__construct($atts);
-
-		// Some defaults
-		$this->_attributes['class'] = 'formelement formtextareainput';
-		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'rows', 'cols', 'style', 'class');
-	}
-}
-
-class FormHiddenInput extends FormElement {
-	public function  __construct($atts = null) {
-		parent::__construct($atts);
-
-		// Some defaults
-		$this->_validattributes = array('id', 'lang', 'name', 'value');
-	}
-}
-
-class FormSelectInput extends FormElement {
-	public function  __construct($atts = null) {
-		parent::__construct($atts);
-
-		// Some defaults
-		$this->_attributes['class'] = 'formelement formselect';
-		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'rows', 'cols');
-	}
-}
-
-
-class FormRadioInput extends FormElement {
-	public function  __construct($atts = null) {
-		parent::__construct($atts);
-
-		// Some defaults
-		$this->_attributes['class'] = 'formelement formradioinput';
-		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style');
-	}
-
-	/**
-	 * Return the key of the currently checked value.
-	 * This will intelligently scan for Yes/No values.
-	 */
-	public function getChecked() {
-		// If this is a boolean (yes/no) radio option and a true or false
-		// is set to the value, it should correctly propagate to "Yes" or "No"
-		if (!isset($this->_attributes['value'])) {
-			return null;
-		}
-		elseif (
-			isset($this->_attributes['options']) &&
-			is_array($this->_attributes['options']) &&
-			sizeof($this->_attributes['options']) == 2 &&
-			isset($this->_attributes['options']['Yes']) &&
-			isset($this->_attributes['options']['No'])
-		) {
-			// Running strtolower on a boolean will result in either "1" or "".
-			switch (strtolower($this->_attributes['value'])) {
-				case '1':
-				case 'true':
-				case 'yes':
-					return 'Yes';
-					break;
-				default:
-					return 'No';
-					break;
-			}
-		}
-		else {
-			return $this->_attributes['value'];
-		}
-	}
-
-}
-
-class FormCheckboxesInput extends FormElement {
-	public function  __construct($atts = null) {
-		parent::__construct($atts);
-
-		// Some defaults
-		$this->_attributes['class'] = 'formelement formcheckboxinput';
-		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style');
-	}
-
-	public function get($key) {
-		if ($key == 'value' && sizeof($this->_attributes['options']) > 1) {
-			// This should return an array if there are more than 1 option.
-			if (!$this->_attributes['value']) return array();
-			else return $this->_attributes['value'];
-		}
-		else {
-			return parent::get($key);
-		}
-	}
-
-	public function set($key, $value) {
-		if ($key == 'options') {
-			// The options need to be an array, (hence the plural use)
-			if (!is_array($value)) return false;
-
-			// if every key in this is an int, transpose the value over to the key instead.
-			// This allows for having an option with a different title and value.
-			// (and cheating, not actually checking every key)
-			if (isset($value[0]) && isset($value[sizeof($value) - 1])) {
-				foreach ($value as $k => $v) {
-					unset($value[$k]);
-					$value[$v] = $v;
-				}
-			}
-
-			return parent::set($key, $value);
-		}
-		else {
-			return parent::set($key, $value);
-		}
-	}
-
-}
-
-class FormCheckboxInput extends FormElement {
-	public function  __construct($atts = null) {
-		parent::__construct($atts);
-
-		// Some defaults
-		$this->_attributes['class'] = 'formelement formcheckboxinput';
-		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style');
-	}
-
-	/*public function get($key) {
-		if($key == 'value' && sizeof($this->_attributes['options']) > 1){
-			// This should return an array if there are more than 1 option.
-			if(!$this->_attributes['value']) return array();
-			else return $this->_attributes['value'];
-		}
-		else{
-			return parent::get($key);
-		}
-	}*/
-
-	/*public function set($key, $value) {
-		if($key == 'value'){
-			if($value) $this->_attributes['value'] = true;
-			else $this->_attributes['value'] = false;
-		}
-		else{
-			return parent::set($key, $value);
-		}
-	}*/
-
 }
 
 
@@ -1268,13 +1096,22 @@ class FormPageMeta extends FormGroup {
 			$this->_attributes['baseurl'] = $page->get('baseurl');
 		}
 		else {
-			parent::__construct($atts);
+			if(isset($atts['model']) && $atts['model'] instanceof PageModel){
+				// Everything is based off the page.
+				$page = $atts['model'];
+				unset($atts['model']);
 
-			// BaseURL needs to be set for this to work.
-			//if(!$this->get('baseurl')) return null;
+				parent::__construct($atts);
+			}
+			else{
+				parent::__construct($atts);
 
-			// Everything is based off the page.
-			$page = new PageModel($this->get('baseurl'));
+				// BaseURL needs to be set for this to work.
+				//if(!$this->get('baseurl')) return null;
+
+				// Everything is based off the page.
+				$page = new PageModel($this->get('baseurl'));
+			}
 		}
 
 		$name = $this->_attributes['name'];
@@ -1466,157 +1303,3 @@ class FormPageMeta extends FormGroup {
 
 } // class FormPageInsertables
 
-
-class FormFileInput extends FormElement {
-	private static $_AutoID = 0;
-
-	public function __construct($atts = null) {
-		// Some defaults
-		$this->_attributes      = array(
-			'class'             => 'formelement formfileinput',
-			'previewdimensions' => '200x100',
-			'browsable'         => false,
-			'basedir'           => '',
-		);
-		$this->_validattributes = array();
-		$this->requiresupload   = true;
-
-		parent::__construct($atts);
-	}
-
-	public function render() {
-		if (!$this->get('id')) {
-			// This system requires a valid id.
-			++self::$_AutoID;
-			$this->set('id', 'formfileinput-' . self::$_AutoID);
-		}
-
-		if (!$this->get('basedir')) {
-			throw new Exception('FormFileInput cannot be rendered without a basedir attribute!');
-		}
-
-		return parent::render();
-	}
-
-	/**
-	 * Get the respective File object for this element.
-	 * Use the Core system to ensure compatibility with CDNs.
-	 *
-	 * @return File_Backend
-	 */
-	public function getFile() {
-		if ($this->get('value')) {
-			$f = Core::File($this->get('basedir') . '/' . $this->get('value'));
-		}
-		else {
-			$f = Core::File();
-		}
-		return $f;
-	}
-
-	public function setValue($value) {
-		if ($this->get('required') && !$value) {
-			$this->_error = $this->get('label') . ' is required.';
-			return false;
-		}
-
-		if ($value == '_upload_') {
-			$n = $this->get('name');
-
-			// Because PHP will have different sources depending if the name has [] in it...
-			if (strpos($n, '[') !== false) {
-				$p1 = substr($n, 0, strpos($n, '['));
-				$p2 = substr($n, strpos($n, '[') + 1, -1);
-
-				if (!isset($_FILES[$p1])) {
-					$this->_error = 'No file uploaded for ' . $this->get('label');
-					return false;
-				}
-
-				$in = array(
-					'name'     => $_FILES[$p1]['name'][$p2],
-					'type'     => $_FILES[$p1]['type'][$p2],
-					'tmp_name' => $_FILES[$p1]['tmp_name'][$p2],
-					'error'    => $_FILES[$p1]['error'][$p2],
-					'size'     => $_FILES[$p1]['size'][$p2],
-				);
-			}
-			else {
-				$in =& $_FILES[$n];
-			}
-
-
-			if (!isset($in)) {
-				$this->_error = 'No file uploaded for ' . $this->get('label');
-				return false;
-			}
-			else {
-				switch ($in['error']) {
-					case UPLOAD_ERR_OK:
-						// Don't do anything, just avoid the default.
-						break;
-					case UPLOAD_ERR_INI_SIZE:
-						$this->_error = 'The uploaded file exceeds the upload_max_filesize directive in php.ini.';
-						return false;
-					case UPLOAD_ERR_FORM_SIZE:
-						$this->_error = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form. ';
-						return false;
-					default:
-						$this->_error = 'An error occured while trying to upload the file for ' . $this->get('label');
-						return false;
-				}
-
-				// Source
-				$f = new File_local_backend($in['tmp_name']);
-				// Destination
-				$nf = Core::File($this->get('basedir') . '/' . $in['name']);
-				$f->copyTo($nf);
-
-				$value = $nf->getBaseFilename();
-			}
-		}
-
-		$this->_attributes['value'] = $value;
-		return true;
-	}
-}
-
-class FormTimeInput extends FormSelectInput {
-	public function  __construct($atts = null) {
-		parent::__construct($atts);
-
-		// Set the options for this input as the times in 15-minute intervals
-		// @todo Implement a config option to allow this to be changed to different intervals.
-		// @todo also, allow for switching the time view based on a configuration preference.
-		$times = array();
-
-		// Default (blank)
-		$times[''] = '---';
-
-		for ($x = 0; $x < 24; $x++) {
-			$hk = $hd = $x;
-			if (strlen($hk) == 1) $hk = '0' . $hk;
-			if($hd == 12){
-				$ap = 'pm';
-			}
-			elseif ($hd > 12) {
-				$hd -= 12;
-				$ap = 'pm';
-			}
-			elseif ($hd == 0) {
-				$hd = 12;
-				$ap = 'am';
-			}
-			else {
-				$ap = 'am';
-			}
-
-			$times["$hk:00"] = "$hd:00 $ap";
-			$times["$hk:15"] = "$hd:15 $ap";
-			$times["$hk:30"] = "$hd:30 $ap";
-			$times["$hk:45"] = "$hd:45 $ap";
-		}
-
-		$this->set('options', $times);
-	}
-}
