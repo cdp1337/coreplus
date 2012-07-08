@@ -69,25 +69,13 @@
 		<file filename="core/forms/FormCheckboxInput.class.php" md5="1a3bc85e283d6e2ff9f2e9bcaa264ba6">
 			<class name="FormCheckboxInput"/>
 		</file>
-		<file filename="core/forms/FormCheckboxInput.php" md5="c957985143a2991d3cadcc5e5a2d0bad">
-			<class name="FormCheckboxInput"/>
-		</file>
 		<file filename="core/forms/FormCheckboxesInput.class.php" md5="288f136064f2afe5760c6c0b22df8e49">
-			<class name="FormCheckboxesInput"/>
-		</file>
-		<file filename="core/forms/FormCheckboxesInput.php" md5="485eb18d60ff2767966d5e90fd869d6b">
 			<class name="FormCheckboxesInput"/>
 		</file>
 		<file filename="core/forms/FormFileInput.class.php" md5="dbade7d7b5dea759fae777f9881fabce">
 			<class name="FormFileInput"/>
 		</file>
-		<file filename="core/forms/FormFileInput.php" md5="91c8934d6b16f92f75e986e66c3b3ee8">
-			<class name="FormFileInput"/>
-		</file>
 		<file filename="core/forms/FormHiddenInput.class.php" md5="b165e1679347782c30492bb4b320ee5c">
-			<class name="FormHiddenInput"/>
-		</file>
-		<file filename="core/forms/FormHiddenInput.php" md5="3fb57197f3db70943ddd911c35b30c03">
 			<class name="FormHiddenInput"/>
 		</file>
 		<file filename="core/forms/FormPages.php" md5="057699d1e8314eae7cd3b2f67752d6fe">
@@ -98,40 +86,22 @@
 		<file filename="core/forms/FormPasswordInput.class.php" md5="948596510dac1aca25422f5d408d4b21">
 			<class name="FormPasswordInput"/>
 		</file>
-		<file filename="core/forms/FormPasswordInput.php" md5="f0455db429934749aeeabd4fbcdc4603">
-			<class name="FormPasswordInput"/>
-		</file>
 		<file filename="core/forms/FormRadioInput.class.php" md5="79bd0049d599f08044933166082dfc05">
-			<class name="FormRadioInput"/>
-		</file>
-		<file filename="core/forms/FormRadioInput.php" md5="8e2511cbe22bb6ba379fd0140a2676e9">
 			<class name="FormRadioInput"/>
 		</file>
 		<file filename="core/forms/FormSelectInput.class.php" md5="e539843aa341e69f26fae865407de997">
 			<class name="FormSelectInput"/>
 		</file>
-		<file filename="core/forms/FormSelectInput.php" md5="bde6fca9ec22964de7acbc91c463b987">
-			<class name="FormSelectInput"/>
-		</file>
 		<file filename="core/forms/FormSubmitInput.class.php" md5="a8c7075479f162010671026ee798c19a">
 			<class name="FormSubmitInput"/>
 		</file>
-		<file filename="core/forms/FormSubmitInput.php" md5="afa883f878535913f11d711f08b2cf4b">
-			<class name="FormSubmitInput"/>
-		</file>
-		<file filename="core/forms/FormSystemInput.php" md5="5c1b38d610d70d8a89e9ed29bf0c8ca1">
+		<file filename="core/forms/FormSystemInput.class.php" md5="5c1b38d610d70d8a89e9ed29bf0c8ca1">
 			<class name="FormSystemInput"/>
 		</file>
 		<file filename="core/forms/FormTextInput.class.php" md5="4c642cd636562bf2e77059cb4e2ceb2d">
 			<class name="FormTextInput"/>
 		</file>
-		<file filename="core/forms/FormTextInput.php" md5="2f2298fafeb4edd273de90ff6b9a7215">
-			<class name="FormTextInput"/>
-		</file>
 		<file filename="core/forms/FormTextareaInput.class.php" md5="1aae79e574354999d76b63b8bf50b18c">
-			<class name="FormTextareaInput"/>
-		</file>
-		<file filename="core/forms/FormTextareaInput.php" md5="6ddcb709b1e383daf99f56534e112b8c">
 			<class name="FormTextareaInput"/>
 		</file>
 		<file filename="core/forms/FormTimeInput.class.php" md5="080383e4dade461c3c7ac1d9e504ed28">
@@ -1419,7 +1389,9 @@
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			See the included NOTICE.md file for more information.
+		</license>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3
 		</license>

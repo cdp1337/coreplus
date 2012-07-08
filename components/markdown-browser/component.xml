@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="markdown-browser" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="markdown-browser" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 		<require name="markdown" type="component" version="1.2.5" operation="ge"/>
@@ -9,7 +9,7 @@
 		Provides an inline browser experience for markdown files.
 	</description>
 	<files>
-		<file filename="controllers/MarkdownBrowserController.php" md5="ac2d177b8d27caf005ebb9047c779ab0">
+		<file filename="controllers/MarkdownBrowserController.php" md5="7c0eb6ef5bc079af1f4f46a50532f992">
 			<controller name="MarkdownBrowserController"/>
 		</file>
 	</files>
@@ -23,6 +23,9 @@
 	<pages>
 		<page baseurl="/markdownbrowser" admin="1" widget="0" access="g:admin" title="Markdown Directory Listings"/>
 	</pages>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>

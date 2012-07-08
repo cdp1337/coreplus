@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.0" name="Theme" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.1" name="Theme" execmode="web">
 	<requires>
 		<require name="core" type="component" version="1.9.0"/>
 		<require name="jquery" type="library" version="1.7.0" operations="ge"/>
@@ -12,10 +12,10 @@
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
-		<file filename="libs/Theme.class.php" md5="f3f1204f0b2a02e03d9521fb561a3f28">
+		<file filename="libs/Theme.class.php" md5="32bacb03fce341cfd55af1b10a656e27">
 			<class name="Theme"/>
 		</file>
-		<file filename="libs/ThemeHandler.class.php" md5="0ba367b908b72a23560773ac22b986f7">
+		<file filename="libs/ThemeHandler.class.php" md5="2aa86ad81445e12bdd46cb06d450723b">
 			<class name="ThemeHandler"/>
 		</file>
 	</files>
@@ -40,11 +40,12 @@
 	</configs>
 	<assets>
 		<file filename="assets/css/theme/widgets.css" md5="decffde6ddc0d30b7cffa9bdcde16989"/>
-		<file filename="assets/js/theme/widgets.js" md5="4fda0ecc2cad666a1dfe5628e9975a6a"/>
+		<file filename="assets/js/theme/widgets.js" md5="0ac5f62b8fb3bddc6c918379a01ed36f"/>
 	</assets>
 	<description/>
 	<upgrades>
 		<upgrade from="0.0.1" to="1.9.0"/>
+		<upgrade from="1.9.0" to="1.9.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

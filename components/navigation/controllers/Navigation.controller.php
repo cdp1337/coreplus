@@ -49,7 +49,8 @@ class NavigationController extends Controller_2_1 {
 		$form->set('callsmethod', 'NavigationController::_SaveHandler');
 
 		// I only want non-fuzzy pages to display.
-		$views = PageModel::GetPagesAsOptions("fuzzy = 0");
+		//$views = PageModel::GetPagesAsOptions("fuzzy = 0");
+		$views = PageModel::GetPagesAsOptions();
 
 		// Get the entries for this model as well.
 		$entries = $m->getLink('NavigationEntry', 'weight ASC');
@@ -73,7 +74,8 @@ class NavigationController extends Controller_2_1 {
 		$form->set('callsmethod', 'NavigationController::_SaveHandler');
 
 		// I only want non-fuzzy pages to display.
-		$views = PageModel::GetPagesAsOptions("fuzzy = 0");
+		//$views = PageModel::GetPagesAsOptions("fuzzy = 0");
+		$views = PageModel::GetPagesAsOptions();
 
 		$view->title        = 'New Navigation Menu';
 		$view->templatename = '/pages/navigation/create.tpl';

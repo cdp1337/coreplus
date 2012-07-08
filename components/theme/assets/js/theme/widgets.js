@@ -30,9 +30,10 @@ $(function(){
 				parent = $parent.attr('attr:area');
 				
 				$el.find('input.baseurl').attr('name', 'widgetarea[' + instanceid + '][baseurl]');
+				$el.find('input.widgetaccess').attr('name', 'widgetarea[' + instanceid + '][widgetaccess]');
 				// Update the widget's widgetarea.  This is critical to know where it should be rendered at.
 				$el.find('input.widgetarea').attr('name', 'widgetarea[' + instanceid + '][widgetarea]').val(parent);
-				
+
 				$el.attr('attr:instanceid', instanceid);
 			}
 			
