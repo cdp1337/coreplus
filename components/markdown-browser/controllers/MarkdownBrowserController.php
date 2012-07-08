@@ -56,12 +56,12 @@ class MarkdownBrowserController extends Controller_2_1{
 		foreach($pfac as $page){
 			// Directory will be the last part after the url.
 			$dir = substr($page->get('baseurl'), 22);
-			if(!in_array($directories, $dir)){
+			if(!in_array($dir, $directories)){
 				$orphaned[] = $dir;
 			}
 			else{
 				$pages[] = $dir;
-				unset($directories[array_search($directories, $dir)]);
+				unset($directories[array_search($dir, $directories)]);
 			}
 		}
 
@@ -107,7 +107,7 @@ class MarkdownBrowserController extends Controller_2_1{
 		$form->addElement('submit', array('value' => ($exists ? 'Update' : 'Create')));
 
 		$view->templatename = '/pages/markdownbrowser/update.tpl';
-		$view->addBreadcrumb('Markdown Directory Listings', '/markdownbrowser');
+		//$view->addBreadcrumb('Markdown Directory Listings', '/markdownbrowser');
 		$view->title = ($exists ? 'Update' : 'New') . ' Markdown Page Directory';
 		$view->assignVariable('page', $page);
 		$view->assignVariable('form', $form);
@@ -140,6 +140,7 @@ class MarkdownBrowserController extends Controller_2_1{
 
 		$dirset = 'public/markdown-browser';
 		$path   = '/markdownbrowser/view';
+		//$path   = $top->getResolvedURL();
 		$atfile = false;
 		$last   = null;
 		$dir    = null;
@@ -179,8 +180,26 @@ class MarkdownBrowserController extends Controller_2_1{
 		$view->title = $last['title'];
 
 		if($atfile){
+			$parent = Core::Directory(dirname($dirset));
+			$filereq = strtolower($dirset); // The filename itself, to lowercase.
+			$filereglen = strlen($filereq);
+			$found = false;
+			foreach($parent->ls() as $file){
+				// Scan through each file in the parent listing.
+				// If the filename matches the end of the parent's file, (case insensitive),
+				// that must be the file!
+				if(stripos($file->getFilename(), $filereq) == $filereglen){
+					$found = true;
+					break;
+				}
+			}
+
+			if(!$found){
+				return View::ERROR_NOTFOUND;
+			}
+
 			$view->templatename = 'pages/markdownbrowser/view-file.tpl';
-			$file = Core::File($dirset);
+			//$file = Core::File($dirset);
 			if(!$file->exists()){
 				return View::ERROR_NOTFOUND;
 			}
@@ -196,7 +215,10 @@ class MarkdownBrowserController extends Controller_2_1{
 			foreach($dir->ls() as $f){
 				// Because I need to make the title "pretty"...
 				if($f instanceof File_Backend){
-					$files[$f->getBaseFilename()] = array('title' => self::DirToName($f->getBaseFilename()), 'href' => $path . '/' . $f->getBaseFilename(false));
+					$files[$f->getBaseFilename()] = array(
+						'title' => self::DirToName($f->getBaseFilename()),
+						'href' => $path . '/' . $f->getBaseFilename(false)
+					);
 				}
 				else{
 					$directories[$f->getBasename()] = array('title' => self::DirToName($f->getBasename()), 'href' => $path . '/' . $f->getBasename());
@@ -224,7 +246,7 @@ class MarkdownBrowserController extends Controller_2_1{
 
 		$model = $form->getModel();
 		$model->set('baseurl', '/markdownbrowser/view/' . $form->get('directory'));
-
+		$model->set('fuzzy', true);
 		$model->save();
 
 		// w00t
