@@ -23,6 +23,15 @@
 class PageModel extends Model {
 
 	public static $Schema = array(
+		'title'          => array(
+			'type'      => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'default'   => null,
+			'comment'   => '[Cached] Title of the page',
+			'null'      => true,
+			'formtype'  => 'text',
+			'formdescription' => 'Every page needs a title to accompany it, this should be short but meaningful.'
+		),
 		'baseurl'        => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
@@ -34,57 +43,61 @@ class PageModel extends Model {
 			'maxlength'  => 128,
 			'null'       => false,
 			'validation' => array('this', 'validateRewriteURL'),
+			'formtitle'  => 'Rewrite URL',
+			'formdescription' => 'Starts with a "/", omit the root web dir.',
 		),
 		'parenturl'      => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'null'      => true,
-		),
-		'title'          => array(
-			'type'      => Model::ATT_TYPE_STRING,
-			'maxlength' => 128,
-			'default'   => null,
-			'comment'   => '[Cached] Title of the page',
-			'null'      => true,
+			'formtype' => 'pageparentselect',
+			'formtitle' => 'Parent URL'
 		),
 		'metas'          => array(
-			'type'    => Model::ATT_TYPE_TEXT,
-			'comment' => '[Cached] Serialized array of metainformation',
-			'null'    => false,
-			'default' => ''
+			'type'     => Model::ATT_TYPE_TEXT,
+			'comment'  => '[Cached] Serialized array of metainformation',
+			'null'     => false,
+			'default'  => '',
+			'formtype' => 'pagemetas'
 		),
 		'theme_template' => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'default'   => null,
 			'null'      => true,
-			'comment'   => 'Allows the page to define its own theme and widget information.'
+			'comment'   => 'Allows the page to define its own theme and widget information.',
+			'formtype'  => 'pagethemeselect'
 		),
 		'page_template'  => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,
 			'default'   => null,
 			'null'      => true,
-			'comment'   => 'Allows the specific page template to be overridden.'
+			'comment'   => 'Allows the specific page template to be overridden.',
+			'formtype'  => 'hidden'
 		),
 		'access'         => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 512,
-			'comment'   => '[Cached] Access string of the page',
+			'comment'   => 'Access string of the page',
 			'null'      => false,
-			'default'   => '*'
+			'default'   => '*',
+			'formtype' => 'access',
+			'formtitle' => 'Access Permissions',
 		),
 		'fuzzy'          => array(
 			'type'    => Model::ATT_TYPE_BOOL,
-			'comment' => '[Cached] If this url is fuzzy or an exact match',
+			'comment' => 'If this url is fuzzy or an exact match',
 			'null'    => false,
-			'default' => '0'
+			'default' => '0',
+			'formtype' => 'system'
 		),
 		'admin'          => array(
 			'type'    => Model::ATT_TYPE_BOOL,
 			'comment' => 'If this page is an administration page',
 			'null'    => false,
 			'default' => '0',
+			'formtype' => 'system'
 		),
 		'created'        => array(
 			'type' => Model::ATT_TYPE_CREATED,
@@ -422,7 +435,8 @@ class PageModel extends Model {
 
 	private function _getParentTree($antiinfiniteloopcounter = 5) {
 		if ($antiinfiniteloopcounter <= 0) return array();
-
+//echo "Running _getParentTree for " . $this->get('baseurl') . '<br/>';
+//echo '<pre>'; debug_print_backtrace();
 		if (!$this->exists()) {
 			// See if this page is maybe a child of another page... ie: /Blah/view/this
 			// might be a child page of /Blah
@@ -436,21 +450,32 @@ class PageModel extends Model {
 			$url = strtolower($this->get('baseurl'));
 			do {
 				$url = substr($url, 0, strrpos($url, '/'));
-
+//var_dump($url, self::$_RewriteCache[$url]);
 				// To optimize this part, use the built-in cache of this object
 				// instead of querying the database.
 				// This works because the above statement self::_LookupUrl('/'); will
 				// load in every valid baseurl in the database into an array.
 				// therefore, obviously if a key exists in that array, the page exists! :)
 				if (isset(self::$_RewriteCache[$url])) {
-					$p = new PageModel($url);
+					$url = self::$_RewriteCache[$url];
+				}
+
+				$p = new PageModel($url);
+				// Fuzzy pages that do not have a parent url specifically set should not propagate up.
+				if($p->get('fuzzy') && !$p->get('parenturl')){
+					//echo "returning from #1<hr/>";
+					//return array($p);
+					return array();
+				}
+				else{
+					//echo "returning from #2<hr/>";
 					return array_merge($p->_getParentTree(--$antiinfiniteloopcounter), array($p));
 				}
-				$pagedat = self::_LookupReverseUrl($url);
+				//$pagedat = self::_LookupReverseUrl($url);
 			}
 			while ($url);
 		}
-
+//echo '<pre>'; debug_print_backtrace(); var_dump($this); die();
 		// If this page does not have a parent, BUT is marked as an admin page..
 		// /admin is automatically prefixed.
 		// (unless the current page *is* /admin.... then it can be skipped.
