@@ -1,0 +1,11 @@
+/* This icon should have the same as the "plus" icon */
+.icon-add:before                  { content: "\f067"; }
+
+/* This icon should have the same as the "remove" icon */
+.icon-delete:before               { content: "\f00d"; }
+
+/* This icon should have the same as the "eye-open" icon */
+.icon-view:before                 { content: "\f06e"; }
+
+/* This icon should have the same as the "folder-close" icon */
+.icon-directory:before            { content: "\f07b"; }
