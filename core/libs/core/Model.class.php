@@ -516,6 +516,19 @@ class Model implements ArrayAccess {
 		}
 	}
 
+	/**
+	 * Function to handle data validation for keys.
+	 *
+	 * This will lookup if any "validation" is set on the schema, and check it if it exists.
+	 * This will not actually do any setting, simply return true or throw an exception, (if requested).
+	 *
+	 * @param string $k The key to validate
+	 * @param mixed  $v The value to validate with
+	 * @param bool   $throwexception Set to true if you would like this function to throw errors.
+	 *
+	 * @return bool|mixed|string
+	 * @throws ModelValidationException
+	 */
 	public function validate($k, $v, $throwexception = false) {
 		// Is there validation available for this key?
 		$s = self::GetSchema();
@@ -569,6 +582,43 @@ class Model implements ArrayAccess {
 	}
 
 	/**
+	 * Translate a key to the strict version of it.
+	 * ie: if a given key is a "Boolean" and the string "true" is given, that should be resolved to 1.
+	 *
+	 * @param string $k The key to lookup
+	 * @param mixed $v  The value to check
+	 *
+	 * @return mixed The translated value
+	 */
+	public function translateKey($k, $v){
+		$s = self::GetSchema();
+
+		// Not in the schema.... just return the value unmodified.
+		if(!isset($s[$k])) return $v;
+
+		$type = $s[$k]['type']; // Type is one of the required properties.
+
+		if ($type == Model::ATT_TYPE_BOOL) {
+			switch(strtolower($v)){
+				// This is used by checkboxes
+				case 'yes':
+				// A single checkbox will have the value of "on" if checked
+				case 'on':
+				// Hidden inputs will have the value of "1"
+				case 1:
+				// sometimes the string "true" is sent.
+				case 'true':
+					$v = 1;
+					break;
+				default:
+					$v = 0;
+			}
+		}
+
+		return $v;
+	}
+
+	/**
 	 * Set a value of a specific key.
 	 *
 	 * The data is validated automatically as per the specific Model specifications.
@@ -591,8 +641,12 @@ class Model implements ArrayAccess {
 			// That function will handle all of this logic, (including the exception throwing)
 			$this->validate($k, $v, true);
 
+			// Some model types get special treatment with the translation function... ie: booleans.
+			// everything else will simply return the unmodified value.
+			$v = $this->translateKey($k, $v);
+
 			// Set the propagation FIRST, that way I have the old key in memory to lookup.
-			//$this->_setLinkKeyPropagation($k, $v);
+			$this->_setLinkKeyPropagation($k, $v);
 
 			$this->_data[$k] = $v;
 			$this->_dirty    = true;
@@ -687,10 +741,13 @@ class Model implements ArrayAccess {
 	/**
 	 * Get linked models to this model based on a link name
 	 *
+	 * If the link type is a one-to-one or many-to-one, (HASONE), a single Model is returned.
+	 * else this behaves as the Find function, where an array of models is returned.
+	 *
 	 * @param      $linkname
 	 * @param null $order
 	 *
-	 * @return null
+	 * @return Model|array
 	 */
 	public function getLink($linkname, $order = null) {
 		if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
