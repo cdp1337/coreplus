@@ -1,6 +1,6 @@
 <?php
 /**
- * DESCRIPTION
+ * The controller that handles generating the captcha image
  *
  * @package CoolPHPCaptcha
  * @since 0.1
@@ -11,8 +11,10 @@
 
 class SimpleCaptchaController extends Controller_2_1{
 	public function index(){
+		$view = $this->getView();
+		$req  = $this->getPageRequest();
 		// This will tell the system not to actually output anything.
-		$this->getView()->mode = View::MODE_NOOUTPUT;
+		$view->mode = View::MODE_NOOUTPUT;
 		
 		$captcha = new SimpleCaptcha();
 		
@@ -21,6 +23,12 @@ class SimpleCaptchaController extends Controller_2_1{
 		
 		// And make'em a bit blurry.
 		$captcha->blur = true;
+
+		$captcha->minWordLength = 6;
+		$captcha->maxWordLength = 9;
+		$captcha->wordsFile = '';
+		$captcha->scale = 1;
+		$captcha->lineWidth = rand(1, 3);
 		
 		// Ensure it knows where to look for the "resources"...
 

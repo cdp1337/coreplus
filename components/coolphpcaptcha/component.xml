@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.3~core3" name="CoolPHPCaptcha" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.3~core4" name="CoolPHPCaptcha" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 	</requires>
@@ -17,11 +17,11 @@
 		Original project site: http://code.google.com/p/cool-php-captcha/
 	</description>
 	<files>
-		<file filename="CHANGELOG.md" md5="44f335f7de11fb3ecdc5208b1df501e7"/>
-		<file filename="FormCaptchaInput.class.php" md5="1ed277c3608ac3556bdbfc2ff4d67e79">
+		<file filename="CHANGELOG.md" md5="32032fe2f1f70a0e24285b54f0f1640c"/>
+		<file filename="FormCaptchaInput.class.php" md5="88567b1a36c7e0dbf6c42de32313d74f">
 			<class name="FormCaptchaInput"/>
 		</file>
-		<file filename="SimpleCaptchaController.class.php" md5="904ce68124ff03d633c36240592ac8cc">
+		<file filename="SimpleCaptchaController.class.php" md5="8df5664d0ff80f49d1fcde716ca289a4">
 			<controller name="SimpleCaptchaController"/>
 		</file>
 		<file filename="libs/cool-php-captcha/LICENSE.txt" md5="d32239bcb673463ab874e80d47fae504"/>
@@ -47,14 +47,15 @@
 		<file filename="libs/cool-php-captcha/resources/words/en.php" md5="ef0f1910e5c269184433ae7a00e41a36"/>
 		<file filename="libs/cool-php-captcha/resources/words/es.php" md5="6af474ca4c1918801c3f86b88b30eacb"/>
 	</files>
+	<view>
+		<file filename="templates/forms/elements/formcaptchainput.tpl" md5="266dee08cef5d48db18ddd2d35b33bd1"/>
+	</view>
 	<upgrades>
 		<upgrade from="0.3~cae1" to="0.3~core1"/>
 		<upgrade from="0.3~core1" to="0.3~core2"/>
 		<upgrade from="0.3~core2" to="0.3~core3"/>
+		<upgrade from="0.3~core3" to="0.3~core4"/>
 	</upgrades>
-	<view>
-		<file filename="templates/forms/elements/formcaptchainput.tpl" md5="a102ec3c4e85257e2ba3146ff28437b8"/>
-	</view>
 	<component>
 		<licenses>
 			<license>GPLv3</license>

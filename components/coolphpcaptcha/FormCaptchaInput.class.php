@@ -5,7 +5,7 @@ class FormCaptchaInput extends FormElement{
 		parent::__construct($atts);
 
 		// Some defaults
-		$this->_attributes['class'] = 'formelement formtextareainput';
+		$this->_attributes['class'] = 'formelement formcaptchainput';
 		$this->_validattributes = array('id', 'name', 'required', 'tabindex', 'style');
 	}
 	
