@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.5~core1" name="JQuery-lightbox" execmode="web">
+	<requires>
+		<require name="core" type="component" version="2.1.0" operation="ge"/>
+		<require name="jquery" type="library" version="1.4" operation="ge"/>
+	</requires>
+	<provides>
+		<library name="JQuery.lightbox"/>
+		<scriptlibrary name="jquery.lightbox" call="JQueryLightbox::Load"/>
+	</provides>
+	<assets>
+		<file filename="assets/css/images/lightbox-blank.gif" md5="fc94fb0c3ed8a8f909dbc7630a0987ff"/>
+		<file filename="assets/css/images/lightbox-btn-close.gif" md5="2c38ae5be85141bf8867c9523f4bc357"/>
+		<file filename="assets/css/images/lightbox-btn-next.gif" md5="23414965ebe526012e473c1d4d65d4e7"/>
+		<file filename="assets/css/images/lightbox-btn-prev.gif" md5="5a9118de4ef6226473190d6e82f6d80d"/>
+		<file filename="assets/css/images/lightbox-ico-loading.gif" md5="b5fe8df97005341f898e2cf84e68de01"/>
+		<file filename="assets/css/jquery.lightbox-0.5.css" md5="79ec543bbe42f8852aac14381b9ffff8"/>
+		<file filename="assets/js/jquery.lightbox-0.5.js" md5="2f6bedebc6fde0a3f34626cc8815b344"/>
+		<file filename="assets/js/jquery.lightbox-0.5.min.js" md5="21c9812998af15acf69da2f91bb02363"/>
+	</assets>
+	<files>
+		<file filename="JQueryLightbox.lib.php" md5="f1602a583d6329c4120bf592148bab5e">
+			<class name="JQueryLightbox"/>
+		</file>
+	</files>
+	<description>
+		Query lightBox plugin is simple, elegant, unobtrusive, no need extra markup and is used to overlay images on the current page through the power and flexibility of jQuery´s selector.
+		lightBox is a plugin for jQuery. It was inspired in Lightbox JS by Lokesh Dhakar.
+		Visit http://leandrovieira.com/projects/jquery/lightbox/ for more informations about this jQuery plugin
+	</description>
+	<authors>
+		<author name="Leandro Vieira Pinho"/>
+	</authors>
+	<licenses>
+		<license url="http://creativecommons.org/licenses/by-sa/2.5/br/deed.en_US">
+			CCAttribution-ShareAlike 2.5 Brazil
+		</license>
+	</licenses>
+</component>
+
