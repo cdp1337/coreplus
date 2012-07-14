@@ -118,6 +118,13 @@ class Component_2_1 {
 	 */
 	private $_file;
 
+	/**
+	 * The permissions along with their description that are registered for this component.
+	 *
+	 * @var null|array
+	 */
+	private $_permissions = null;
+
 	// A set of error codes components may encounter.
 	const ERROR_NOERROR = 0; // 0000
 	const ERROR_INVALID = 1; // 0001
@@ -179,6 +186,12 @@ class Component_2_1 {
 		$this->_versionDB = $dat['version'];
 		$this->_enabled   = ($dat['enabled']) ? true : false;
 		$this->_loaded    = true;
+
+		// Set the permissions
+		$this->_permissions = array();
+		foreach($this->_xmlloader->getElements('/permissions/permission') as $el){
+			$this->_permissions[$el->getAttribute('key')] = $el->getAttribute('description');
+		}
 	}
 
 
@@ -352,6 +365,15 @@ class Component_2_1 {
 		$this->_description = $desc;
 		// And set the data in the original DOM.
 		$this->_xmlloader->getElement('//description')->nodeValue = $desc;
+	}
+
+	/**
+	 * Get the registered permissions for this component.
+	 *
+	 * @return array
+	 */
+	public function getPermissions(){
+		return $this->_permissions;
 	}
 
 	/**

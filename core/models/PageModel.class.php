@@ -415,8 +415,10 @@ class PageModel extends Model {
 			// If the page is currently Edit and there is a View... handle that instance.
 			if ($m == 'edit' && method_exists($this->getControllerClass(), 'view')) {
 				$p = new PageModel(str_replace('/edit/', '/view/', $b));
-				// I need the array merge because getParentTree only returns << parents >>.
-				return array_merge($p->getParentTree(), array($p));
+				if($p->exists()){
+					// I need the array merge because getParentTree only returns << parents >>.
+					return array_merge($p->getParentTree(), array($p));
+				}
 			}
 
 			// If the page is currently Delete and there is a View... handle that instance.

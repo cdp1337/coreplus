@@ -12,7 +12,7 @@ class FormCheckboxInput extends FormElement {
 
 		// Some defaults
 		$this->_attributes['class'] = 'formelement formcheckboxinput';
-		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style');
+		$this->_validattributes     = array('accesskey', 'checked', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style', 'value');
 	}
 
 	/*public function get($key) {

@@ -186,6 +186,16 @@ class View {
 	public $stylesheets = array();
 
 	/**
+	 * If you wish to override the canonical URL for this page, it can be done so with this variable.
+	 * If left null, it will be populated automatically with the URL resolution system.
+	 *
+	 * This variable is used to set the appropriate meta data, ie: link type="canonical" and meta key="og:url".
+	 *
+	 * @var null|string
+	 */
+	public $canonicalurl = null;
+
+	/**
 	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
 	 * @var array
 	 */
@@ -644,9 +654,29 @@ class View {
 		// First, the basic ones.
 		$data = array_merge($this->head, $this->scripts['head'], $this->stylesheets);
 
-		// Custom meta tag :: http-equiv="last-modified"
-		if($this->updated !== null){
-			$data[] = '<meta http-equiv="last-modified" content="' . Time::FormatGMT($this->updated, Time::TIMEZONE_GMT, Time::FORMAT_FULLDATETIME) . '" />';
+		// Some of the automatic settings only get set if no errors.
+		if($this->error == View::ERROR_NOERROR){
+
+			// Custom meta tag :: http-equiv="last-modified"
+			if($this->updated !== null){
+				$data[] = '<meta http-equiv="last-modified" content="' . Time::FormatGMT($this->updated, Time::TIMEZONE_GMT, Time::FORMAT_FULLDATETIME) . '" />';
+			}
+
+			// Some standard tags that also have og equivalents.
+			if(!isset($this->meta['og:title'])){
+				$this->meta['og:title'] = $this->title;
+			}
+
+			// Set the canonical url if not set.
+			if($this->canonicalurl === null){
+				$this->canonicalurl = Core::ResolveLink($this->baseurl);
+			}
+
+			// Set the canonical URL in the necessary spots (if it's not in error)
+			$data[] = '<link rel="canonical" href="' . $this->canonicalurl . '" />';
+			$this->meta['og:url'] = $this->canonicalurl;
+
+			$this->meta['og:site_name'] = SITENAME;
 		}
 
 		// All the standard meta names and properties now.

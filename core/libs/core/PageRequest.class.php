@@ -403,14 +403,45 @@ class PageRequest {
 		$this->parameters = $params;
 	}
 
+	/**
+	 * Get all parameters from the GET variables.
+	 *
+	 * "Core" parameters are returned on a 0-based index, whereas named GET variables are returned with their respective name.
+	 *
+	 * @param $key string|int The parameter to request
+	 *
+	 * @return array
+	 */
 	public function getParameters() {
 		$data = $this->splitParts();
 		return $data['parameters'];
 	}
 
+	/**
+	 * Get a single parameter from the GET variables.
+	 *
+	 * @param $key string|int The parameter to request
+	 *
+	 * @return null|string
+	 */
 	public function getParameter($key) {
 		$data = $this->splitParts();
 		return (array_key_exists($key, $data['parameters'])) ? $data['parameters'][$key] : null;
+	}
+
+	/**
+	 * Just a shortcut function to make things consistent; returns a given POST variable.
+	 * If the parameter does not exist, null is simply returned.
+	 *
+	 * It is still better to use the form system, as that has data sanitization and everything built in,
+	 * but this allows a lower-level of access to the variables without resorting to raw access.
+	 *
+	 * @param $key string The POST variable to get
+	 * @return null|string
+	 */
+	public function getPost($key){
+		return (isset($_POST[$key])) ? $_POST[$key] : null;
+		// Yup, that's it... like I said, shortcut function.
 	}
 
 	/**
@@ -476,6 +507,15 @@ class PageRequest {
 	 */
 	public function isPost() {
 		return ($this->method == PageRequest::METHOD_POST);
+	}
+
+	/**
+	 * Simple check to see if the page request is a json content type.
+	 *
+	 * @return bool
+	 */
+	public function isJSON(){
+		return ($this->ctype == View::CTYPE_JSON);
 	}
 
 

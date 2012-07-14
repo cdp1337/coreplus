@@ -31,10 +31,19 @@ function smarty_block_css($params, $innercontent, $template, &$repeat){
 	
 	// media type is the first parameter to check for.
 	$media = (isset($params['media'])) ? $params['media'] : 'all';
-	
+
 	// See if there's a "href" set.  If so, that's probably an asset.
-	if(isset($params['href'])){
-		CurrentPage::AddStylesheet($params['href'], $media);
+	// I have a tendency of calling this different things, since things in the head all have
+	// different names for this crap!
+	// as such, support a bunch of different properties....
+	$href = null;
+	if(isset($params['href'])) $href = $params['href'];
+	elseif(isset($params['link'])) $href = $params['link'];
+	elseif(isset($params['src'])) $href = $params['src'];
+
+	// Standard include from an external file.
+	if($href !== null){
+		CurrentPage::AddStylesheet($href, $media);
 	}
 	// Styles defined inline, fine as well.  The styles will be displayed in the head.
 	elseif($innercontent){

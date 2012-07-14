@@ -720,3 +720,111 @@ function VersionSplit($version){
 	$ret['point'] = $v[2];
 	return $ret;
 }
+
+function str_to_latin($string){
+	
+	$internationalmappings = array(
+		'À' => 'A',
+		'Á' => 'A',
+		'Â' => 'A',
+		'Ã' => 'A',
+		'Ä' => 'A',
+		'Å' => 'AA',
+		'Æ' => 'AE',
+		'Ç' => 'C',
+		'È' => 'E',
+		'É' => 'E',
+		'Ê' => 'E',
+		'Ë' => 'E',
+		'Ì' => 'I',
+		'Í' => 'I',
+		'Î' => 'I',
+		'Ï' => 'I',
+		'Ð' => 'D',
+		'Ł' => 'L',
+		'Ñ' => 'N',
+		'Ò' => 'O',
+		'Ó' => 'O',
+		'Ô' => 'O',
+		'Õ' => 'O',
+		'Ö' => 'O',
+		'Ø' => 'OE',
+		'Ù' => 'U',
+		'Ú' => 'U',
+		'Ü' => 'U',
+		'Û' => 'U',
+		'Ý' => 'Y',
+		'Þ' => 'Th',
+		'ß' => 'ss',
+		'à' => 'a',
+		'á' => 'a',
+		'â' => 'a',
+		'ã' => 'a',
+		'ä' => 'a',
+		'å' => 'aa',
+		'æ' => 'ae',
+		'ç' => 'c',
+		'è' => 'e',
+		'é' => 'e',
+		'ê' => 'e',
+		'ë' => 'e',
+		'ì' => 'i',
+		'í' => 'i',
+		'î' => 'i',
+		'ï' => 'i',
+		'ð' => 'd',
+		'ł' => 'l',
+		'ñ' => 'n',
+		'ń' => 'n',
+		'ò' => 'o',
+		'ó' => 'o',
+		'ô' => 'o',
+		'õ' => 'o',
+		'ō' => 'o',
+		'ö' => 'o',
+		'ø' => 'oe',
+		'ś' => 's',
+		'ù' => 'u',
+		'ú' => 'u',
+		'û' => 'u',
+		'ū' => 'u',
+		'ü' => 'u',
+		'ý' => 'y',
+		'þ' => 'th',
+		'ÿ' => 'y',
+		'ż' => 'z',
+		'Œ' => 'OE',
+		'œ' => 'oe',
+		'&' => 'and'
+	);
+
+	// This is slightly more simple than the javascript version.
+	return str_replace(array_keys($internationalmappings), array_values($internationalmappings), $string);
+}
+
+/**
+ * Cleanup a string and ensure it can make a valid URL.
+ *
+ * @param string
+ * @return string
+ */
+function str_to_url($string){
+	// URLs should only be in latin.
+	$string = str_to_latin($string);
+
+	// Spaces get replaced with a separator
+	$string = str_replace(' ', '-', $string);
+
+	// Anything else I missed?  Get rid of it!
+	$string = preg_replace('/[^a-z0-9\-]/i', '', $string);
+
+	// Multiple separators should get truncated, along with beginning and trailing ones.
+	$string = preg_replace('/[-]+/', '-', $string);
+	$string = preg_replace('/^-/', '', $string);
+	$string = preg_replace('/-$/', '', $string);
+
+	// And lowercase it.
+	$string = strtolower($string);
+
+	return $string;
+}

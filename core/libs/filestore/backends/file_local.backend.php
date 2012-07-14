@@ -477,7 +477,13 @@ class File_local_backend implements File_Backend {
 			return Core::ResolveAsset('mimetype_icons/notfound-' . $size . '.png');
 		}
 		elseif ($this->isPreviewable()) {
-			$key = 'filepreview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
+			// The basename is for SEO purposes, that way even resized images still contain the filename.
+			// The -preview- is just because I feel like it; completely optional.
+			// The hash is just to ensure that no two files conflict, ie: /public/a/file1.png and /public/b/file1.png
+			//  might conflict without this hash.
+			// Finally, the width and height dimensions are there just because as well; it gives more of a human
+			//  touch to the file. :p
+			$key = $this->getBaseFilename(true) . '-preview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
 
 			// Yes, this must be within public because it's meant to be publically visible.
 			$file = Core::File('public/tmp/' . $key);

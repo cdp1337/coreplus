@@ -12,6 +12,7 @@ class FormCheckboxesInput extends FormElement {
 
 		// Some defaults
 		$this->_attributes['class'] = 'formelement formcheckboxinput';
+		$this->_attributes['multiple'] = true;
 		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style');
 	}
 
@@ -41,7 +42,12 @@ class FormCheckboxesInput extends FormElement {
 				}
 			}
 
-			return parent::set($key, $value);
+			// Please note, this system CANNOT call the parent function, because its default behaviour is to
+			// remap any int-based array to value/value pairs.  Since that logic is already handled here, there
+			// is no need to perform it again, (of which it performs incorrectly)...
+			$this->_attributes[$key] = $value;
+			return true;
+			//return parent::set($key, $value);
 		}
 		else {
 			return parent::set($key, $value);

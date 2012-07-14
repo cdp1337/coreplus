@@ -1,5 +1,6 @@
 {* This input type actually requires jquery to function *}
 {script library="jquery"}{/script}
+{script src="js/core.fileupload.js"}{/script}
 
 <div class="{$element->getClass()}">
 	{if $element->get('title')}
@@ -67,69 +68,5 @@
 
 
 <script type="text/javascript">
-	Core = (window.Core)? window.Core : { version:'1.0.0' };
-	
-	Core.fileupload = function(idprefix, current){
-		// Because "this" gets overwritten frequently by events and calls...
-		var fileupload = this;
-		
-		// The respective elements for this system are:
-		// -action-upload, -action-current, -action-browse, -action-none
-		
-		this.$selector = $('#' + idprefix + '-selector');
-		
-		this.hasUpload = ($('#' + idprefix + '-selector-upload').length > 0);
-		this.hasCurrent = ($('#' + idprefix + '-selector-current').length > 0);
-		this.hasBrowse = ($('#' + idprefix + '-selector-browse').length > 0);
-		this.hasNone = ($('#' + idprefix + '-selector-none').length > 0);
-
-		// Only show the selector if there is more than 1 label to select...
-		if(this.$selector.find('label').length > 1){
-			this.$selector.show();
-			$('#' + idprefix + '-actions').children('div').hide();
-			$('#' + idprefix + '-actions').show();
-		}
-		else{
-			// Check the only available option.
-			$('#' + idprefix + '-selector').find('input').attr('checked', true);
-			// And show the action for it.
-			$('#' + idprefix + '-actions').show();
-		}
-			
-		if(this.hasUpload){
-			$('#' + idprefix + '-selector-upload').change(function(){
-				$('#' + idprefix + '-actions').children('div').hide();
-				$('#' + idprefix + '-action-upload').show();
-			});
-		}
-		
-		if(this.hasCurrent){
-			$('#' + idprefix + '-selector-current').change(function(){
-				$('#' + idprefix + '-actions').children('div').hide();
-				$('#' + idprefix + '-action-current').show();
-			});
-		}
-		
-		if(this.hasNone){
-			$('#' + idprefix + '-selector-none').change(function(){
-				$('#' + idprefix + '-actions').children('div').hide();
-				$('#' + idprefix + '-action-none').show();
-			});
-		}
-		
-		if(this.hasBrowse){
-			$('#' + idprefix + '-selector-browse').change(function(){
-				$('#' + idprefix + '-actions').children('div').hide();
-				$('#' + idprefix + '-action-browse').show();
-			});
-		}
-		
-		if(current){
-			// There is currently an image selected, enable that option.
-			$('#' + idprefix + '-selector-current').attr('checked', 'true').change();
-		}
-	}
-	$(function(){
-		var fileobj = new Core.fileupload("{$element->get('id')}", "{$element->get('value')}");
-	});
+	$(function(){ Core.fileupload("{$element->get('id')}", "{$element->get('value')}"); });
 </script>

@@ -436,6 +436,9 @@ class FormElement {
 			// 'Required' is skipped if it's false.
 			if ($k == 'required' && !$this->get($k)) continue;
 
+			// 'checked' is skipped if false also.
+			if($k == 'checked' && !$this->get($k)) continue;
+
 			if (($v = $this->get($k)) !== null) $out .= " $k=\"" . str_replace('"', '\\"', $v) . "\"";
 		}
 		return $out;
@@ -582,7 +585,14 @@ class Form extends FormGroup {
 				}
 
 				foreach ($this->getElements() as $el) {
-					$hash .= get_class($el) . ':' . $el->get('name') . ';';
+					// System inputs require the value as well, since they're set by the controller; they're not
+					// meant to be changed.
+					if($el instanceof FormSystemInput){
+						$hash .= get_class($el) . ':' . $el->get('name') . ':' . $el->get('value') . ';';
+					}
+					else{
+						$hash .= get_class($el) . ':' . $el->get('name') . ';';
+					}
 				}
 				// Hash it!
 				$hash = md5($hash);
@@ -916,18 +926,27 @@ class Form extends FormGroup {
 			// These are already taken care above in the SESSION data.
 			if (!$new && in_array($k, $i['primary'])) continue;
 
-			// Set the title from either the explicit formtitle or the key itself.
-			if (isset($v['formtitle'])) $title = $v['formtitle'];
-			else $title = ucwords($k);
+			// Form attribute defaults
+			$formatts = array(
+				'type' => null,
+				'title' => ucwords($k),
+				'description' => null,
+				'required' => false,
+				'value' => $model->get($k),
+				'name' => 'model[' . $k . ']',
+			);
+			if(!$formatts['value'] && isset($v['default'])) $formatts['value'] = $v['default'];
 
-			$required = (isset($v['required'])) ? ($v['required']) : false;
+			// Merge the defaults with the form array if it's present.
+			if(isset($v['form'])){
+				$formatts = array_merge($formatts, $v['form']);
+			}
 
-			if ($model->get($k)) $val = $model->get($k);
-			elseif (isset($v['default'])) $val = $v['default'];
-			else $val = null;
-
-			$description = (isset($v['formdescription'])) ? $v['formdescription'] : null;
-
+			// Support the standard attributes too.
+			if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
+			if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
+			if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
+			if(isset($v['required']))        $formatts['required'] = $v['required'];
 
 			// Boolean checkboxes can have special options.
 			//if(isset($v['formtype']) && $v['formtype'] == 'checkbox' && $v['type'] == Model::ATT_TYPE_BOOL){
@@ -936,18 +955,23 @@ class Form extends FormGroup {
 			//}
 
 			// Standard form types.
+
+			// "disabled" form types are ignored completely.
+			if($formatts['type'] == 'disabled'){
+				continue;
+			}
 			// These are based off of the formtype declaration in Model.
-			if (isset($v['formtype'])) {
-				$el = FormElement::Factory($v['formtype']);
+			elseif ($formatts['type'] !== null) {
+				$el = FormElement::Factory($formatts['type']);
 			}
 			elseif ($v['type'] == Model::ATT_TYPE_BOOL) {
 				$el = FormElement::Factory('radio');
 				$el->set('options', array('Yes', 'No'));
 
-				if ($model->get($k)) $val = 'Yes';
-				elseif ($model->get($k) === null && $v['default']) $val = 'Yes';
-				elseif ($model->get($k) === null && !$v['default']) $val = 'No';
-				else $val = 'No';
+				if ($formatts['value']) $formatts['value'] = 'Yes';
+				elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'Yes';
+				elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'No';
+				else $formatts['value'] = 'No';
 			}
 			elseif ($v['type'] == Model::ATT_TYPE_STRING) {
 				$el = FormElement::Factory('text');
@@ -977,11 +1001,11 @@ class Form extends FormGroup {
 				die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
 			}
 
-			$el->set('description', $description);
-			$el->set('name', 'model[' . $k . ']');
-			$el->set('required', $required);
-			$el->set('title', $title);
-			$el->set('value', $val);
+			// I no longer need the type attribute.
+			unset($formatts['type']);
+
+			// And set everything else.
+			$el->setFromArray($formatts);
 
 			$f->addElement($el);
 		}
@@ -1092,8 +1116,7 @@ class FormPageMeta extends FormGroup {
 		if ($atts instanceof PageModel) {
 			parent::__construct();
 
-			$page                         = $atts;
-			$this->_attributes['baseurl'] = $page->get('baseurl');
+			$page = $atts;
 		}
 		else {
 			if(isset($atts['model']) && $atts['model'] instanceof PageModel){
@@ -1114,6 +1137,7 @@ class FormPageMeta extends FormGroup {
 			}
 		}
 
+		$this->_attributes['baseurl'] = $page->get('baseurl');
 		$name = $this->_attributes['name'];
 
 		// Title

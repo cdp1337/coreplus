@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.0" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.1" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -33,7 +33,7 @@
 		<file filename="LICENSES/gpl.txt" md5="d32239bcb673463ab874e80d47fae504"/>
 		<file filename="LICENSES/lgpl.txt" md5="e6a600fd5e1d9cbde2d983680233ad02"/>
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
-		<file filename="README.md" md5="c96dd6a283209da70091b42936b0449d"/>
+		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="e6bcccfe5d780d28d13a8e2dbbe17016"/>
 		<file filename="core/CHANGELOG" md5="4dc4c3af39d71d260fdb73b4fcbb2665"/>
 		<file filename="core/bootstrap.php" md5="7496376cccf066b43482f0d33c731637"/>
@@ -433,7 +433,7 @@
 		<file filename="core/libs/core/Email.class.php" md5="11c5da28c252b0d1f6af703e4b561704">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="cefcc1bb7dd0a8bbd2a7209441073719">
+		<file filename="core/libs/core/Form.class.php" md5="683a0064c332d384a6cc48c311f6b15c">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -459,7 +459,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="8c7c5531836c032ddb90d60a47d5ebf2">
+		<file filename="core/libs/core/Model.class.php" md5="8443ef24967262333d1a2e2280d33f08">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -1299,6 +1299,7 @@
 		<file filename="core/templates/forms/elements/formpagemetasinput.tpl" md5="04851f883c681032c2fd96c80714b434"/>
 		<file filename="core/templates/forms/elements/formpageparentselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formpagethemeselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
+		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="d25e50f892dd4ce3f53057793fd17240"/>
 	</view>
 	<install/>
 	<description>
@@ -1336,6 +1337,7 @@
 	<assets>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
+		<file filename="core/assets/js/core.fileupload.js" md5="6af175f77ebccd39e84df91eabf4a384"/>
 		<file filename="core/assets/js/core.js" md5="e266282187d6730905137049f7c9d70b"/>
 		<file filename="core/assets/js/core.strings.js" md5="e704b77bfcc5ca29b28934ab4d454c70"/>
 		<file filename="core/assets/js/updater/index.js" md5="03eefea3d7b39e86f4c5abce4cc382de"/>
@@ -1356,6 +1358,7 @@
 		<upgrade from="1.9.0" to="1.9.1"/>
 		<upgrade from="1.9.1" to="1.9.2"/>
 		<upgrade from="1.9.2" to="2.1.0"/>
+		<upgrade from="2.1.0" to="2.1.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -92,6 +92,13 @@ class Core implements ISingleton {
 	 */
 	private $_profiletimes = array();
 
+	/**
+	 * All permissions that are registered from components.
+	 *
+	 * @var array
+	 */
+	private $_permissions = array();
+
 
 	/*****     PUBLIC METHODS       *********/
 
@@ -425,6 +432,8 @@ class Core implements ISingleton {
 		$this->_viewClasses       = array_merge($this->_viewClasses, $c->getViewClassList());
 		$this->_widgets           = array_merge($this->_widgets, $c->getWidgetList());
 		$this->_components[$name] = $c;
+		$this->_permissions       = array_merge($this->_permissions, $c->getPermissions());
+		ksort($this->_permissions);
 	}
 
 
@@ -605,6 +614,16 @@ class Core implements ISingleton {
 		$whole = str_pad($parts[0], 4, 0, STR_PAD_LEFT);
 		$dec   = (isset($parts[1])) ? str_pad($parts[1], 2, 0, STR_PAD_RIGHT) : '00';
 		return $whole . '.' . $dec . ' ms';
+	}
+
+	/**
+	 * Get all registered permissions for all loaded components.
+	 *
+	 * @static
+	 * @return array
+	 */
+	public static function GetPermissions(){
+		return self::Singleton()->_permissions;
 	}
 
 	/**
