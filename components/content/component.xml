@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.0" name="content" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.1" name="content" execmode="web">
 	<requires>
-		<require name="core" type="component"/>
+		<require name="core" type="component" version="2.1.0" operation="ge"/>
 	</requires>
 	<files>
-		<file filename="ContentController.php" md5="6ef1f375a3d5f93f79a4819e2d4399a6">
+		<file filename="ContentController.php" md5="2b91660abf29f469bda7cd40d15c866b">
 			<controller name="ContentController"/>
 		</file>
 		<file filename="ContentModel.php" md5="b86c47925fa66a0907556b0e79b9a586">
@@ -32,6 +32,7 @@
 	</view>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>
+		<upgrade from="1.9.0" to="1.9.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
