@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="gallery" execmode="web">
+	<requires>
+		<require name="core" type="component" version="2.1.1" operation="ge"/>
+	</requires>
+	<pages>
+		<page baseurl="/gallery" admin="0" widget="0" access="*" title="Gallery Listings"/>
+		<page baseurl="/galleryadmin" admin="1" widget="0" access="g:admin" title="Gallery Administration"/>
+	</pages>
+	<description>
+		Gallery browsing system for core+
+	</description>
+	<view searchdir="templates">
+		<file filename="templates/pages/gallery/view.tpl" md5="ef782e2a6b2ad43f7ae88ae39e68b97d"/>
+		<file filename="templates/pages/galleryadmin/index.tpl" md5="d6c36a14a84aba6b7cdf798385a20d50"/>
+		<file filename="templates/pages/galleryadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/galleryadmin/images.tpl" md5="84906ba21bf6a5c5d1f853ca3f20779e"/>
+		<file filename="templates/pages/galleryadmin/index.tpl" md5="febf82fd34317bf6a39ebac551165dff"/>
+		<file filename="templates/pages/galleryadmin/update.tpl" md5="5db5bf97680ec52e8ee5b5580af17daa"/>
+		<file filename="templates/pages/gallery/images_update.tpl" md5="bba1532b36d2154dfb7f5f4065dad389"/>
+		<file filename="templates/pages/gallery/index.tpl" md5="0a628017e0f6133d27f0c57ac2cf542f"/>
+		<file filename="templates/pages/gallery/update.tpl" md5="5db5bf97680ec52e8ee5b5580af17daa"/>
+		<file filename="templates/pages/gallery/view-image.tpl" md5="e80e955a167f0126d1793482f5d303e4"/>
+		<file filename="templates/pages/gallery/view.tpl" md5="0abe5d4dc397e3991db5f93f61511103"/>
+		<file filename="templates/pages/galleryadmin/images.tpl" md5="3eabcaf67ce559f286c8cb1c00340072"/>
+		<file filename="templates/pages/galleryadmin/index.tpl" md5="93aca2ab7228f28683172bf10dd85bb2"/>
+	</view>
+	<files>
+		<file filename="controllers/GalleryAdminController.php" md5="a361c67337926084d99da37710b8989b">
+			<controller name="GalleryAdminController"/>
+		</file>
+		<file filename="controllers/GalleryController.php" md5="33c356f2d55659fc34bae0ad9a7b26e5">
+			<controller name="GalleryController"/>
+		</file>
+		<file filename="models/GalleryAlbumModel.php" md5="74a3e201f63a7797e478271ff710e09e">
+			<class name="GalleryAlbumModel"/>
+		</file>
+		<file filename="models/GalleryImageModel.php" md5="c0a6702a0111aaee5882557c11f9b413">
+			<class name="GalleryImageModel"/>
+		</file>
+	</files>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+	<assets>
+		<file filename="assets/css/gallery.css" md5="6f0f8f0088c31e977bc722408027bad3"/>
+	</assets>
+</component>
+

@@ -1,0 +1,13 @@
+.gallery-listing-entry{
+	border: 1px solid #999;
+	margin-bottom:0.75em;
+}
+.gallery-listng-title{
+	float: left;
+}
+.gallery-listing-preview{
+	float: left;
+}
+.gallery-listing-viewall{
+	float: left;
+}
