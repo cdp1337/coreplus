@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.1" name="user" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="user" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.1"/>
 		<require name="Facebook" type="component"/>
@@ -13,27 +13,15 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="db582f5a38f5ebe7253037ee8181b59b"/>
-		<file filename="models/UserConfigModel.php" md5="3f9ec960d49d5a547038ddf3d91aeff2">
-			<class name="UserConfigModel"/>
-		</file>
-		<file filename="models/UserGroupModel.php" md5="4ad86ff7b1be60e1713195c4be07315d">
-			<class name="UserGroupModel"/>
-		</file>
-		<file filename="models/UserModel.php" md5="a99db3b236a330ddf9a1bb91d71e824d">
-			<class name="UserModel"/>
-		</file>
-		<file filename="models/UserUserConfigModel.php" md5="4bfc5564e1c98099374adf6de3bed563">
-			<class name="UserUserConfigModel"/>
-		</file>
-		<file filename="User.class.php" md5="855a529712007bea2639958ee2b1d999">
+		<file filename="CHANGELOG" md5="420cf0765d1f30ed331337541a53b552"/>
+		<file filename="User.class.php" md5="255d419b8f1e77941e798249b6fe1f66">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
 		<file filename="UserForm.class.php" md5="82dbfbb7871e415dfcc41fb7ff8bb1ad">
 			<class name="FormAccessStringInput"/>
 		</file>
-		<file filename="User_Backend.interface.php" md5="699b8df9f6b8af73de189bdb0b0b1057">
+		<file filename="User_Backend.interface.php" md5="f683736b302e6375401cd99670117eb1">
 			<interface name="User_Backend"/>
 		</file>
 		<file filename="Widgets/UserLoginWidget.class.php" md5="04d3602121f6cb231473284124dfa88f">
@@ -42,23 +30,35 @@
 		<file filename="Widgets/UserWidget.class.php" md5="85affeee8ce7c56dad1e2ff6582bcb09">
 			<class name="UserWidget"/>
 		</file>
-		<file filename="backends/User_datamodel.backend.php" md5="52e3a06ab605f547a984793281865793">
+		<file filename="backends/User_datamodel.backend.php" md5="f583942c5b1f3bc1b7ef78808eefe322">
 			<class name="User_datamodel_Backend"/>
 		</file>
 		<file filename="backends/User_facebook.backend.php" md5="9b56ef72aac8afdeaf37f303c26f1005">
 			<class name="User_facebook_Backend"/>
 		</file>
-		<file filename="controllers/UserAdminController.php" md5="2aecd9c32f74ae76d43ae5f8d7cf2c0a">
+		<file filename="controllers/UserAdminController.php" md5="975438ad9dfea0ec6b3fd6e28bbd92fc">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserGroupAdminController.php">
-			<controller name="UserGroupAdminController"/>
-		</file>
-		<file filename="controllers/UserController.php" md5="fabc6777ac5a4e077f614497f5e41c2f">
+		<file filename="controllers/UserController.php" md5="9a6af72acdedde4576d21684a0b146b4">
 			<controller name="UserController"/>
 		</file>
-		<file filename="helpers/UserFunctions.php" md5="e1d98eef6534affb7bbaabbd682996cb"/>
+		<file filename="controllers/UserGroupAdminController.php" md5="87720df274ed8438582743843c8f466f">
+			<controller name="UserGroupAdminController"/>
+		</file>
+		<file filename="helpers/UserFunctions.php" md5="c2aa71f98a460d4b924af9856ef9bb9f"/>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
+		<file filename="models/UserConfigModel.php" md5="3f9ec960d49d5a547038ddf3d91aeff2">
+			<class name="UserConfigModel"/>
+		</file>
+		<file filename="models/UserGroupModel.php" md5="06dbdd1ed32b3a5bfe6b2d8903fe6759">
+			<class name="UserGroupModel"/>
+		</file>
+		<file filename="models/UserModel.php" md5="1d6cca531a143f07b2605c1d2f91c870">
+			<class name="UserModel"/>
+		</file>
+		<file filename="models/UserUserConfigModel.php" md5="4bfc5564e1c98099374adf6de3bed563">
+			<class name="UserUserConfigModel"/>
+		</file>
 	</files>
 	<view>
 		<file filename="templates/widgets/userlogin.tpl" md5="8a8d32b7f36e7ee581ece66be94b4d2d"/>
@@ -72,6 +72,11 @@
 		<file filename="templates/widgets/user/login.tpl" md5="74b44e98b27d05efd66ba03a377a8816"/>
 		<file filename="templates/widgets/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/userlogin/execute.tpl" md5="8b33f6adb9fdadf3a6f4e10f6722de2e"/>
+		<file filename="templates/pages/user/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/useradmin/index.tpl" md5="bbcb1c063224c4c8fe53a03a467f1e33"/>
+		<file filename="templates/pages/usergroupadmin/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/usergroupadmin/index.tpl" md5="737ee67c775c5cb219d040015dbcb496"/>
+		<file filename="templates/pages/usergroupadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 	</view>
 	<pages>
 		<page baseurl="/User/Login" admin="0" widget="0" access="!g:authenticated" title="Login"/>
@@ -121,6 +126,7 @@
 				</datasetwhere>
 			</dataset>
 		</upgrade>
+		<upgrade from="1.9.1" to="2.0.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
