@@ -44,19 +44,24 @@ require_once($dir . 'core/bootstrap.php');
 // Get the bundler metafiles
 $bundlefiles = array();
 $dir = ROOT_PDIR . 'exports/bundles';
-$dh = opendir($dir);
-while(($file = readdir($dh)) !== false){
-	// Skip hidden files
-	if($file{0} == '.') continue;
-	// Skip directories
-	if(is_dir($dir . '/' . $file)) continue;
+if(is_dir($dir)){
+	$dh = opendir($dir);
+	if($dh){
+		while(($file = readdir($dh)) !== false){
+			// Skip hidden files
+			if($file{0} == '.') continue;
+			// Skip directories
+			if(is_dir($dir . '/' . $file)) continue;
 
-	// Skip non-xml files
-	if(!preg_match('/\.xml$/i', $file)) continue;
+			// Skip non-xml files
+			if(!preg_match('/\.xml$/i', $file)) continue;
 
-	$bundlefiles[] = $file;
+			$bundlefiles[] = $file;
+		}
+		closedir($dh);
+	}
 }
-closedir($dh);
+
 // They should be in alphabetical order...
 sort($bundlefiles);
 
