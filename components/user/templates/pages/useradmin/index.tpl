@@ -40,6 +40,13 @@
 							<span>Edit</span>
 						{/a}
 					</li>
+					</li>
+					<li class="delete">
+						{a href="/useradmin/delete/`$user.id`" confirm="Delete `$user.email`?"}
+							<i class="icon-remove"></i>
+							<span>Delete</span>
+						{/a}
+					</li>
 				</ul>
 			</td>
 		</tr>

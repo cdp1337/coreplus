@@ -354,8 +354,9 @@ class UserController extends Controller_2_1{
 		// For that, I need to assemble clean data to send to the appropriate backend, (in this case datamodel).
 		$attributes = array();
 		foreach($form->getElements() as $el){
+			$name = $el->get('name');
 			// Is this element a config option?
-			if(strpos($el->get('name'), 'option[') === 0){
+			if(strpos($name, 'option[') === 0){
 				$k = substr($el->get('name'), 7, -1);
 				$v = $el->get('value');
 
@@ -367,8 +368,12 @@ class UserController extends Controller_2_1{
 				$user->set($k, $v);
 			}
 
-			elseif($el->get('name') == 'active'){
+			elseif($name == 'active'){
 				$user->set('active', $el->get('value'));
+			}
+
+			elseif($name == 'admin'){
+				$user->set('admin', $el->get('value'));
 			}
 		}
 
@@ -458,6 +463,10 @@ class UserController extends Controller_2_1{
 
 				elseif($name == 'active'){
 					$user->set('active', $el->get('value'));
+				}
+
+				elseif($name == 'admin'){
+					$user->set('admin', $el->get('value'));
 				}
 
 				else{

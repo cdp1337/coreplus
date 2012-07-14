@@ -63,6 +63,10 @@ class User_datamodel_Backend extends User implements User_Backend{
 			$this->_getModel()->set('groups', json_encode($groups));
 		}
 	}
+
+	public function delete(){
+		$this->_getModel()->delete();
+	}
 	
 	/**
 	 * Utilize the builtin datamodel systems to look for a facebook user 

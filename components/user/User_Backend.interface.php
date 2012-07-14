@@ -22,5 +22,13 @@
  */
 
 interface User_Backend {
-	
+	/**
+	 * Get the group IDs this user is a member of.
+	 *
+	 * @return array
+	 */
+	public function getGroups();
+	public function setGroups($groups);
+
+	public function delete();
 }

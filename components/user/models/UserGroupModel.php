@@ -34,6 +34,7 @@ class UserGroupModel extends Model {
 			'maxlength' => 48,
 			'null' => false,
 			'required' => true,
+			'validation' => array('this', '_validateName')
 		),
 		'permissions' => array(
 			'type' => Model::ATT_TYPE_TEXT,
@@ -72,6 +73,18 @@ class UserGroupModel extends Model {
 		}
 		else{
 			$this->set('permissions', json_encode($permissions));
+		}
+	}
+
+	public function _validateName($key){
+		// there are a few reserved keywords for the name.
+		switch(strtolower($key)){
+			case 'admin':
+			case 'anonymous':
+			case 'authenticated':
+				return false;
+			default:
+				return true;
 		}
 	}
 	

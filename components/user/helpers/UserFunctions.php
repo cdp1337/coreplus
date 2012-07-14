@@ -112,6 +112,17 @@ function get_form($user = null){
 		//var_dump($f);
 	}
 
+	if(\Core\user()->checkAccess('g:admin')){
+		$form->addElement(
+			'checkbox',
+			array(
+				'name' => 'admin',
+				'title' => 'Admin Account',
+				'checked' => $user->get('admin'),
+			)
+		);
+	}
+
 	// Tack on the group registration if the current user is an admin.
 	if(\Core\user()->checkAccess('p:user_manage')){
 		// Find all the groups currently on the site.

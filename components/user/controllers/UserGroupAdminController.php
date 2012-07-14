@@ -93,9 +93,9 @@ class UserGroupAdminController extends Controller_2_1{
 	}
 
 	public static function _UpdateFormHandler(Form $form){
-		$model = $form->getModel();
 
 		try{
+			$model = $form->getModel();
 			$model->setPermissions($form->getElement('permissions[]')->get('value'));
 			$model->save();
 		}

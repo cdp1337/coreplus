@@ -61,4 +61,19 @@ class UserAdminController extends Controller_2_1{
 			'active' => $user->get('active'),
 		);
 	}
+
+	public function delete(){
+		$view  = $this->getView();
+		$req   = $this->getPageRequest();
+		$id    = $req->getParameter(0);
+		$model = User::Find(array('id' => $id));
+
+		if(!$req->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		$model->delete();
+		Core::SetMessage('Removed user successfully', 'success');
+		Core::Redirect('/useradmin');
+	}
 }
