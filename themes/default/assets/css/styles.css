@@ -33,6 +33,7 @@ header { padding: 5px 2px 1px; display:block;}
 footer { min-height: 50px; clear:both; color: #888; font-size: 90%; padding: 0.25em 1em; }
 footer a { color: #999; }
 footer p { clear: both; }
+.clear { clear: both; }
 
 /*** Navigation breadcrumbs and other sub-nav elements ***/
 nav#breadcrumbs { font-size:80%; margin-bottom:0.5em; margin-left:1em; color:#555; padding-bottom:0.5em; border-bottom:1px solid #888; height:10px; }
@@ -43,37 +44,36 @@ nav#breadcrumbs ul.controls { float:right; margin-top:-4px; }
 /*** Left-column ***/
 .pagecolumn { width:170px; }
 .column1 #leftcol { float:left; }
-.column1 section.pagecontent { margin-left:175px; }
+.column1 section.pagecontent { margin-left:175px; overflow: hidden; }
 
 
 /*** Controls that can be implemented throughout the site ***/
 ul.controls { height:20px; }
-ul.controls li { float:left; margin-right:0.5em; list-style:none;}
-/* And their images.  Stand-alone "control" buttons also get the same styling. */
+ul.controls li { float:left; margin-right:0.1em; list-style:none;}
+/*
+And their images.  Stand-alone "control" buttons also get the same styling.
+Since the icons are now being handled by font-awesome, the bulk of this logic will have been removed.
+*/
+
 
 /* First, the common styles for all icon'd controls. */
-ul.controls li.add a, a.control.control-add,
-ul.controls li.directory a, a.control.control-directory,
-ul.controls li.delete a, a.control.control-delete,
-ul.controls li.edit a, a.control.control-edit,
-ul.controls li.settings a, a.control.control-settings,
-ul.controls li.view a, a.control.control-view
-{
-	text-indent:-9999px;
-	width:20px;
-	height:20px;
-	display:block;
-	background-repeat: no-repeat;
-	background-position: left top;
+ul.controls li a { text-decoration: none; font-size: 14px; padding: 2px; }
+ul.controls li a:hover { text-shadow: none; font-size: 18px; padding: 0px; }
+
+ul.controls li a span {
+	display: none;
 }
 
-/* And the specific images. */
-ul.controls li.add a, a.control.control-add { background-image: url('../icons/add.png'); }
-ul.controls li.directory a, a.control.control-directory { background-image: url('../icons/directory.png'); }
-ul.controls li.delete a, a.control.control-delete { background-image: url('../icons/delete.png'); }
-ul.controls li.edit a, a.control.control-edit { background-image: url('../icons/edit.png'); }
-ul.controls li.settings a, a.control.control-settings { background-image: url('../icons/settings.png'); }
-ul.controls li.view a, a.control.control-view { background-image: url('../icons/view.png'); }
+ul.controls li a i {
+
+}
+
+/** Spruce up FA with some color :) **/
+ul.controls li a i.icon-remove,
+ul.controls li a i.icon-delete { color: #7a0200; }
+ul.controls li a i.icon-edit { color: blue; }
+ul.controls li a i.icon-plus,
+ul.controls li a i.icon-add { color: green; }
 
 
 /*** Buttons and their respective images that can be used throughout ***/
@@ -88,7 +88,24 @@ ul.controls li.view a, a.control.control-view { background-image: url('../icons/
  * http://docs.jquery.com/UI/Button#theming
  */
 a.button,
-.ui-widget-content a.button { display: inline-block; position: relative; padding:0 1.5em; margin-right:.1em; text-decoration: none !important; cursor: pointer; text-align: center; zoom: 1; overflow: visible;  line-height: 1.4;  background-repeat:no-repeat; background-color:#459E00;  border:1px solid #327E04; color: #FFF; font-weight:bold; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;} /* the overflow property removes extra width in IE */
+.ui-widget-content a.button {
+	display: inline-block;
+	position: relative;
+	padding:0 1em;
+	margin-right:.1em;
+	text-decoration: none !important;
+	cursor: pointer;
+	text-align: center;
+	zoom: 1;
+	overflow: visible;
+	line-height: 1.4;
+	background-repeat:no-repeat;
+	background-color: rgba(62, 126, 128, 0.99);
+	border:2px outset #183c3e;
+	color: #FFF;
+	font-weight:bold;
+	border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;
+} /* the overflow property removes extra width in IE */
 
 /*a.button { color: #225522; background-repeat:no-repeat; background-position:6px 1px; line-height: 2em;  text-decoration:none; border: 2px ridge #1C2B0D; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; background-color:#DDEDDD; background-color:-moz-linear-gradient(top, #AA8AAA 0%, #BBB 90%, #DDEDDD 100%);}*/
 
@@ -96,7 +113,7 @@ a.button.delete { background-image:url('../icons/delete-lg.png'); padding-left:2
 a.button.add { background-image:url('../icons/add-lg.png'); padding-left:2.25em;}
 a.button.ok { background-image:url('../icons/button_ok-lg.png'); padding-left:2.25em;}
 
-a.button:hover { text-decoration:none; background-color:#67B021;}
+a.button:hover { text-decoration:none; background-color: #50a3a5;}
 
 
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html prefix="og: http://ogp.me/ns#">
 	<head>
 		<link href="{asset src='css/reset.css'}" type="text/css" rel="stylesheet"/>
 		<link href="{asset src='css/styles.css'}" type="text/css" rel="stylesheet"/>

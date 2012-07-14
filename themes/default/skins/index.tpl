@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html prefix="og: http://ogp.me/ns#">
 	<head>
 		<link href="{asset src='css/reset.css'}" type="text/css" rel="stylesheet"/>
 		<link href="{asset src='css/styles.css'}" type="text/css" rel="stylesheet"/>
 		<!--[if lt IE 9]>
 			<script type="text/javascript" src="{asset src='js/html5.js'}"></script>
 		<![endif]-->
+		{script library="fontawesome"}{/script}
 		<title>{$title}</title>
 	</head>
 
@@ -40,9 +41,13 @@
 						<ul class="controls">
 							{foreach from=$controls item=control}
 								<li class="{$control.class}">
-										{if $control.link}
-										<a href="{$control.link}" title="{$control.title}">{$control.title}</a>
+									{if $control.link}
+										<a href="{$control.link}" title="{$control.title}">
+											<i class="icon-{$control.class}"></i>
+											<span>{$control.title}</span>
+										</a>
 									{else}
+										<i class="icon-{$control.class}"></i>
 										{$control.title}
 									{/if}
 								</li>
