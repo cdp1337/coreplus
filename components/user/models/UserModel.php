@@ -60,6 +60,11 @@ class UserModel extends Model {
 			'default' => '0',
 			'null' => false,
 		),
+		'groups' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'formtype' => 'system',
+			'comment' => 'json-encoded array of all groups this user belongs to'
+		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,

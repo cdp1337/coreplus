@@ -22,10 +22,46 @@
  */
 
 class User_datamodel_Backend extends User implements User_Backend{
+
+	/**
+	 * Cache of groups for this user.
+	 *
+	 * @var null|array
+	 */
+	private $_groups = null;
 	
 	public function checkPassword($password) {
 		$hasher = new PasswordHash(15);
 		return $hasher->checkPassword($password, $this->_getModel()->get('password'));
+	}
+
+	/**
+	 * Get the group IDs this user is a member of.
+	 *
+	 * @return array
+	 */
+	public function getGroups(){
+		if($this->_groups === null){
+			// datamodel backed users have the groups listed in their column "groups".
+			$g = json_decode($this->_getModel()->get('groups'), true);
+			if(!$g) $g = array();
+
+			$this->_groups = $g;
+		}
+
+		return $this->_groups;
+	}
+
+	public function setGroups($groups){
+		// First, blank out the cache just as a precaution.
+		$this->_groups = null;
+
+		if(sizeof($groups) == 0){
+			$this->_getModel()->set('groups', '');
+		}
+		else{
+			$this->_getModel()->set('groups', json_encode($groups));
+		}
 	}
 	
 	/**

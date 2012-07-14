@@ -44,6 +44,13 @@ class User {
 	 * @var array
 	 */
 	protected $_accessstringchecks = array();
+
+	/**
+	 * Cache of the resolved permissions for this user.
+	 *
+	 * @var null|array
+	 */
+	protected $_resolvedpermissions = null;
 	
 	
 	/**
@@ -171,7 +178,7 @@ class User {
 		//  it might be best to disable the return here!...
 		if(isset($this->_accessstringchecks[$accessstring])){
 			// :)
-			return $this->_accessstringchecks[$accessstring];
+			//return $this->_accessstringchecks[$accessstring];
 		}
 		
 		// Default behaviour (also set from * or !* flags).
@@ -254,8 +261,10 @@ class User {
 				die('@todo Finish the group lookup logic in User::checkAccess()');
 			}
 			elseif($type == 'p'){
-				var_dump($type, $dat, $ret);
-				die('@todo Finish the permission lookup logic in User::checkAccess()');
+				if(in_array($dat, $this->_getResolvedPermissions())){
+					$cache = $ret;
+					return $ret;
+				}
 			}
 			elseif($type == 'u'){
 				var_dump($type, $dat, $ret);
@@ -274,6 +283,10 @@ class User {
 	
 	public function checkPassword($password){
 		die('Please extend ' . __METHOD__ . ' in ' . get_called_class() . '!');
+	}
+
+	public function getGroups(){
+		throw new Exception('getGroups must be extended in the specific backend.');
 	}
 	
 	public function getDisplayName(){
@@ -309,10 +322,17 @@ class User {
 	public function canResetPassword(){
 		return true;
 	}
-	
+
+
+
+	//////////  PRIVATE METHODS \\\\\\\\\\\\\
+
 	
 	//////////  PROTECTED METHODS  \\\\\\\\\\\
-	
+
+	protected function __construct(){
+		// This cannot be called directly, it should be extended with the appropriate backend.
+	}
 	
 	/**
 	 * Get the bound user model.
@@ -338,6 +358,24 @@ class User {
 	protected function _find($where = array()){
 		$this->_model = UserModel::Find($where, 1);
 	}
+
+	/**
+	 * Get an array of resolved permissions for this user using the group membership.
+	 *
+	 * @return array
+	 */
+	protected function _getResolvedPermissions(){
+		if($this->_resolvedpermissions === null){
+			$this->_resolvedpermissions = array();
+
+			foreach($this->getGroups() as $groupid){
+				$group = new UserGroupModel($groupid);
+				$this->_resolvedpermissions = array_merge($this->_resolvedpermissions, $group->getPermissions());
+			}
+		}
+
+		return $this->_resolvedpermissions;
+	}
 	
 	/////////  PUBLIC STATIC FUNCTIONS  \\\\\\\\\
 	
@@ -358,7 +396,7 @@ class User {
 	
 	/**
 	 * The externally usable method to find and return the appropriate user backend.
-	 * 
+	 *
 	 * @param array $where
 	 * @param int $limit 
 	 * @return mixed Array, User, or null.

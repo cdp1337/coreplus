@@ -2,7 +2,7 @@
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.1" name="user" execmode="web">
 	<requires>
-		<require name="core" type="component"/>
+		<require name="core" type="component" version="2.1.1"/>
 		<require name="Facebook" type="component"/>
 	</requires>
 	<smartyplugins directory="helpers/smarty-plugins/"/>
@@ -14,19 +14,16 @@
 	</forms>
 	<files>
 		<file filename="CHANGELOG" md5="db582f5a38f5ebe7253037ee8181b59b"/>
-		<file filename="Controllers/UserController.class.php" md5="fabc6777ac5a4e077f614497f5e41c2f">
-			<controller name="UserController"/>
-		</file>
-		<file filename="Models/UserConfigModel.class.php" md5="3f9ec960d49d5a547038ddf3d91aeff2">
+		<file filename="models/UserConfigModel.php" md5="3f9ec960d49d5a547038ddf3d91aeff2">
 			<class name="UserConfigModel"/>
 		</file>
-		<file filename="Models/UserGroupModel.php" md5="4ad86ff7b1be60e1713195c4be07315d">
+		<file filename="models/UserGroupModel.php" md5="4ad86ff7b1be60e1713195c4be07315d">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="Models/UserModel.class.php" md5="a99db3b236a330ddf9a1bb91d71e824d">
+		<file filename="models/UserModel.php" md5="a99db3b236a330ddf9a1bb91d71e824d">
 			<class name="UserModel"/>
 		</file>
-		<file filename="Models/UserUserConfigModel.class.php" md5="4bfc5564e1c98099374adf6de3bed563">
+		<file filename="models/UserUserConfigModel.php" md5="4bfc5564e1c98099374adf6de3bed563">
 			<class name="UserUserConfigModel"/>
 		</file>
 		<file filename="User.class.php" md5="855a529712007bea2639958ee2b1d999">
@@ -51,8 +48,17 @@
 		<file filename="backends/User_facebook.backend.php" md5="9b56ef72aac8afdeaf37f303c26f1005">
 			<class name="User_facebook_Backend"/>
 		</file>
+		<file filename="controllers/UserAdminController.php" md5="2aecd9c32f74ae76d43ae5f8d7cf2c0a">
+			<controller name="UserAdminController"/>
+		</file>
+		<file filename="controllers/UserGroupAdminController.php">
+			<controller name="UserGroupAdminController"/>
+		</file>
+		<file filename="controllers/UserController.php" md5="fabc6777ac5a4e077f614497f5e41c2f">
+			<controller name="UserController"/>
+		</file>
 		<file filename="helpers/UserFunctions.php" md5="e1d98eef6534affb7bbaabbd682996cb"/>
-		<file filename="helpers/smarty-plugins/block.permission.php" md5="d0bc40bbf5a9e48ee2331fcfb10bf408"/>
+		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
 	</files>
 	<view>
 		<file filename="templates/widgets/userlogin.tpl" md5="8a8d32b7f36e7ee581ece66be94b4d2d"/>
@@ -71,6 +77,8 @@
 		<page baseurl="/User/Login" admin="0" widget="0" access="!g:authenticated" title="Login"/>
 		<page baseurl="/User/Register" admin="0" widget="0" access="!g:authenticated" title="Register"/>
 		<page baseurl="/User/Logout" admin="0" widget="0" access="g:authenticated" title="Logout"/>
+		<page baseurl="/useradmin" admin="1" access="g:admin" title="User Administration"/>
+		<page baseurl="/usergroupadmin" admin="1" access="g:admin" title="User Group Administration"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/UserWidget/Login"/>
@@ -86,7 +94,11 @@
 		<config key="/user/displayname/anonymous" type="string" default="Guest" description=""/>
 		<config key="/user/displayname/authenticated" type="string" default="Member" description=""/>
 		<config key="/user/register/allowpublic" type="boolean" default="true" description="Allow public registrations"/>
+		<config key="/user/register/requireapproval" type="boolean" default="false" description="Require administrative approvals on new accounts"/>
 	</configs>
+	<permissions>
+		<permission key="user_manage" description="Manage users and permissions"/>
+	</permissions>
 	<assets>
 		<file filename="assets/js/user/login.js" md5="f48e188960e94f209e89f5168b101983"/>
 		<file filename="assets/js/user/user.js" md5="b8793bfd7cd6ebeb3a9889905b300f7a"/>

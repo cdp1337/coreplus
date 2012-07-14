@@ -35,6 +35,11 @@ class UserGroupModel extends Model {
 			'null' => false,
 			'required' => true,
 		),
+		'permissions' => array(
+			'type' => Model::ATT_TYPE_TEXT,
+			'formtype' => 'disabled',
+			'comment' => 'json-encoded array of permissions this group has'
+		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
@@ -49,5 +54,25 @@ class UserGroupModel extends Model {
 		'primary' => array('id'),
 		'unique:name' => array('name'),
 	);
+
+	/**
+	 * Get all the permissions this group as assigned to it.
+	 *
+	 * @return array
+	 */
+	public function getPermissions(){
+		$p = json_decode($this->get('permissions'), true);
+
+		return $p ? $p : array();
+	}
+
+	public function setPermissions($permissions){
+		if(sizeof($permissions) == 0){
+			$this->set('permissions', '');
+		}
+		else{
+			$this->set('permissions', json_encode($permissions));
+		}
+	}
 	
 } // END class UserGroupModel extends Model

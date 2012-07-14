@@ -31,15 +31,67 @@ namespace User;
  * @return Form
  */
 function get_registration_form(){
+	return get_form(null);
+}
+
+/**
+ * Get the form object for editing users.
+ *
+ * @return Form
+ */
+function get_edit_form(\User_Backend $user){
+	return get_form($user);
+}
+
+function get_form($user = null){
 	$form = new \Form();
-	$form->set('callsMethod', 'UserController::_RegisterHandler');
+	if($user === null) $user = \User::Factory();
+
+	$type = ($user->exists()) ? 'edit' : 'registration';
+
+	if($type == 'registration'){
+		$form->set('callsMethod', 'UserController::_RegisterHandler');
+	}
+	else{
+		$form->set('callsMethod', 'UserController::_UpdateHandler');
+		$form->addElement('system', array('name' => 'id', 'value' => $user->get('id')));
+	}
+
 	// Because the user system may not use a traditional Model for the backend, (think LDAP),
 	// I cannot simply do a setModel() call here.
-	$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
-	$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => true));
-	$form->addElement('password', array('name' => 'pass2', 'title' => 'Confirm', 'required' => true));
 
-	$fac = \UserConfigModel::Find(array('onregistration' => 1));
+	// Only enable email changes if the current user is an admin or it's new.
+	if($type == 'registration' || \Core\user()->checkAccess('p:user_manage')){
+		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true, 'value' => $user->get('email')));
+	}
+
+	// Tack on the active option if the current user is an admin.
+	if(\Core\user()->checkAccess('p:user_manage')){
+		$form->addElement(
+			'checkbox',
+			array(
+				'name' => 'active',
+				'title' => 'Active',
+				'checked' => $user->get('active'),
+			)
+		);
+
+	}
+
+	// Passwords are for registrations only, at least here.
+	if($type == 'registration'){
+		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => true));
+		$form->addElement('password', array('name' => 'pass2', 'title' => 'Confirm', 'required' => true));
+	}
+
+	// The factory depends on the registration type as well.
+	if($type == 'registration'){
+		$fac = \UserConfigModel::Find(array('onregistration' => 1));
+	}
+	else{
+		$fac = \UserConfigModel::Find();
+	}
+
 	foreach($fac as $f){
 		$el = \FormElement::Factory($f->get('formtype'));
 		$el->set('name', 'option[' . $f->get('key') . ']');
@@ -60,9 +112,39 @@ function get_registration_form(){
 		//var_dump($f);
 	}
 
-	$form->addElement('submit', array('value' => 'Register'));
+	// Tack on the group registration if the current user is an admin.
+	if(\Core\user()->checkAccess('p:user_manage')){
+		// Find all the groups currently on the site.
+		$groups = \UserGroupModel::Find(null, null, 'name');
 
-	// Do something with /user/register/requirecaptcha
+		if(sizeof($groups)){
+			$groupopts = array();
+			foreach($groups as $g){
+				$groupopts[$g->get('id')] = $g->get('name');
+			}
+
+			$form->addElement(
+				'checkboxes',
+				array(
+					'name' => 'groups[]',
+					'title' => 'Group Memebership',
+					'options' => $groupopts,
+					'value' => $user->getGroups()
+				)
+			);
+		}
+
+	}
+
+	// If the config is enabled and the current user is guest...
+	if($type == 'registration' && \ConfigHandler::Get('/user/register/requirecaptcha') && !\Core\user()->exists()){
+		$form->addElement('captcha');
+	}
+
+	$form->addElement(
+		'submit',
+		array('value' => (($type == 'registration') ? 'Register' : 'Update'))
+	);
 
 	// @todo Implement a hook handler here for UserPreRegisterForm
 
