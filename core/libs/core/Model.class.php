@@ -263,7 +263,7 @@ class Model implements ArrayAccess {
 	//// A few array access functions \\\\
 
 	/**
-	 * Whether a offset exists
+	 * Whether an offset exists
 	 *
 	 * @link http://php.net/manual/en/arrayaccess.offsetexists.php
 	 *
