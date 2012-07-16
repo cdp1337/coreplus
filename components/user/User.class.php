@@ -257,8 +257,11 @@ class User {
 				}
 			}
 			elseif($type == 'g'){
-				var_dump($type, $dat, $ret);
-				die('@todo Finish the group lookup logic in User::checkAccess()');
+				// All the other groups will be ID based, yayz!
+				if(in_array($dat, $this->getGroups())){
+					$cache = $ret;
+					return $ret;
+				}
 			}
 			elseif($type == 'p'){
 				if(in_array($dat, $this->_getResolvedPermissions())){

@@ -25,6 +25,11 @@
 				value="basic_authenticated" {if $main_checked == 'basic_authenticated'}checked="checked"{/if}/>
 			Only Authenticated
 		</label>
+		<label>
+			<input type="radio" name="{$element->get('name')}" class="{$dynname}_main"
+			       value="basic_admin" {if $main_checked == 'basic_admin'}checked="checked"{/if}/>
+			Only Administrators
+		</label>
 	</div>
 	<!-- This fieldset is hidden from browsers that may not have JS enabled. -->
 	<fieldset style="display:none;">

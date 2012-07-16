@@ -50,6 +50,9 @@ class FormAccessStringInput extends FormElement{
 		if($v == '*'){
 			$checked = 'basic_anyone';
 		}
+		elseif($v == '!*'){
+			$checked = 'basic_admin';
+		}
 		elseif(!$v){
 			// Blank value
 			$checked = 'advanced';
@@ -132,6 +135,8 @@ class FormAccessStringInput extends FormElement{
 		switch($val){
 			case 'basic_anyone':
 				return '*';
+			case 'basic_admin':
+				return '!*';
 			case 'basic_anonymous':
 				return 'g:anonymous';
 			case 'basic_authenticated':
