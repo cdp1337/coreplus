@@ -596,10 +596,57 @@ class View {
 		}*/
 	}
 
-	public function addControl($title, $link, $class = 'edit') {
-		$this->controls[] = array('title' => $title,
-		                          'link'  => Core::ResolveLink($link),
-		                          'class' => $class);
+	/**
+	 * Add a control into the page template.
+	 *
+	 * Useful for embedding functions and administrative utilities inline without having to adjust the
+	 * application template.
+	 *
+	 * @param string|array $title       The title to set for this control
+	 * @param string $link        The link to set for this control
+	 * @param string|array $class The class name or array of attributes to set on this control
+	 *                            If this is an array, it should be an associative array for the advanced parameters
+	 */
+	public function addControl($title, $link = null, $class = 'edit') {
+		$control = new ViewControl();
+
+		// Completely associative-array based version!
+		if(func_num_args() == 1 && is_array($title)){
+			foreach($title as $k => $v){
+				$control->set($k, $v);
+			}
+		}
+		else{
+			// Advanced method, allow for associative arrays.
+			if(is_array($class)){
+				foreach($class as $k => $v){
+					$control->set($k, $v);
+				}
+			}
+			// Default method; just a string for the class name.
+			else{
+				$control->class = $class;
+			}
+
+			$control->title = $title;
+			$control->link = Core::ResolveLink($link);
+		}
+
+		// Some legacy updates for the icon.
+		if(!$control->icon){
+			switch($control->class){
+				case 'add':
+				case 'edit':
+				case 'directory':
+					$control->icon = $control->class;
+					break;
+				case 'delete':
+					$control->icon = 'remove';
+					break;
+			}
+		}
+
+		$this->controls[] = $control;
 	}
 
 	/**
