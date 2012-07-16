@@ -13,7 +13,8 @@ var NavigationManager = null;
 		extractpagename,
 		$renderarea,
 		Dialog,
-		sorttimeout;
+		sorttimeout,
+		controlshtml;
 
 	extractpagename = function ($select) {
 		// Find the active option and retrieve the pagename from its label.
@@ -25,6 +26,15 @@ var NavigationManager = null;
 
 		return s.replace(/ \(.*\)$/, '').replace(/.*» (.*)$/, '$1')
 	};
+
+	controlshtml = '<ul class="controls" style="float:right;">' +
+		'<li>' +
+		'<a href="#" class="edit-entry-link control control-edit"><i class="icon-edit"></i><span>edit entry</span></a>' +
+		'</li>' +
+		'<li>' +
+		'<a href="#" class="delete-entry-link control control-delete"><i class="icon-remove"></i><span>delete entry</span></a>' +
+		'</li>' +
+		'</ul>';
 
 	Dialog = function (type, typetitle) {
 		var self = this;
@@ -117,6 +127,8 @@ var NavigationManager = null;
 		// Save button of course
 		this.$dialog.find('.submit-btn').click(function () {
 			self.save();
+
+			return false;
 		});
 	};
 
@@ -160,10 +172,33 @@ var NavigationManager = null;
 
 			// Edit links, should edit!
 			$renderarea.delegate('a.edit-entry-link', 'click', function () {
-				var $li = $(this).closest('li'),
+				var $li = $(this).closest('li[entryid]'),
 					type = $li.find('.entry-type').val();
 
 				dialogs[type].open($(this));
+
+				return false;
+			});
+
+			// And delete links should delete.
+			$renderarea.delegate('a.delete-entry-link', 'click', function () {
+				var $li = $(this).closest('li[entryid]'),
+					id = $li.attr('entryid'),
+					type = $li.find('.entry-type').val(),
+					title = $li.find('.entry-title').val();
+
+				if(confirm('Delete ' + type + ' link ' + title + '?')){
+					if(id.match(/^new-/) == null){
+						// Existing record, I actually have to record the deletion.
+						$li.find(':input').remove();
+						$li.append('<input type="hidden" name="entries[del-' + id + '][name]" value="does not matter ;)"/>');
+						$li.hide();
+					}
+					else{
+						// New record, I can just delete it! ^_^
+						$li.remove();
+					}
+				}
 
 				return false;
 			});
@@ -205,7 +240,7 @@ var NavigationManager = null;
 				+ '<input type="hidden" class="entry-title" name="entries[' + id + '][title]" value="' + title + '"/>'
 				+ '<input type="hidden" class="entry-parent" name="entries[' + id + '][parent]" value="' + parent + '"/>'
 				+ title
-				+ '<a href="#" class="edit-entry-link control control-edit" style="float:right;">edit entry</a>'
+				+ controlshtml
 				+ '</div>'
 				+ '</li>';
 
@@ -254,7 +289,7 @@ var NavigationManager = null;
 				+ '<input type="hidden" class="entry-title" name="entries[' + id + '][title]" value="' + title + '"/>'
 				+ '<input type="hidden" class="entry-parent" name="entries[' + id + '][parent]" value="' + parent + '"/>'
 				+ title
-				+ '<a href="#" class="edit-entry-link control control-edit" style="float:right;">edit entry</a>';
+				+ controlshtml;
 
 			$target.html(payload);
 		}

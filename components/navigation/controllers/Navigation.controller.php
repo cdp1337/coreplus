@@ -1,8 +1,8 @@
 <?php
 /**
- * DESCRIPTION
+ * Navigation controller, handles the administrative functions for this component.
  *
- * @package
+ * @package Core Plus\Navigation
  * @since 0.1
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
@@ -117,11 +117,26 @@ class NavigationController extends Controller_2_1 {
 
 		// Save all the entries
 		$counter = 0;
-		foreach ($_POST['entries'] as $id => $dat) {
-			++$counter;
+		if(!isset($_POST['entries'])) $_POST['entries'] = array();
 
-			if (strpos($id, 'new') !== false) $entry = new NavigationEntryModel();
-			else $entry = new NavigationEntryModel($id);
+		foreach ($_POST['entries'] as $id => $dat) {
+
+			// New entries get an incremented counter and a new model.
+			if (strpos($id, 'new') !== false){
+				++$counter;
+				$entry = new NavigationEntryModel();
+			}
+			// Deleted entries just get the model deleted.
+			elseif(strpos($id, 'del-') !== false){
+				$entry = new NavigationEntryModel(substr($id, 4));
+				$entry->delete();
+				continue;
+			}
+			// Existing entries also get an incremented counter and the existing model.
+			else{
+				++$counter;
+				$entry = new NavigationEntryModel($id);
+			}
 
 			// Set the weight, based on the counter...
 			$entry->set('weight', $counter);

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.1" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Navigation" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 	</requires>
 	<files>
-		<file filename="controllers/Navigation.controller.php" md5="a5a50c129aefa6ddc7dff752cd169b1c">
+		<file filename="controllers/Navigation.controller.php" md5="499cb65356c5af347f6c83ee7c1d6140">
 			<controller name="NavigationController"/>
 		</file>
-		<file filename="controllers/Navigation.widget.php" md5="b2e45fca2d3faf1fb99ca4ce9fd4076e">
+		<file filename="controllers/Navigation.widget.php" md5="8cfbef42a7081afb2ea48aa4d634d364">
 			<class name="NavigationWidget"/>
 		</file>
-		<file filename="models/Navigation.model.php" md5="f3bbd1cb2f25f73da27cc8f53e031c8e">
+		<file filename="models/Navigation.model.php" md5="a47682fe688d7cd8389504fbbe05bde1">
 			<class name="NavigationModel"/>
 		</file>
-		<file filename="models/NavigationEntry.model.php" md5="4b1ce743c502fdd8aaa97b4c495a0145">
+		<file filename="models/NavigationEntry.model.php" md5="d143d8b99e34338ec178ee9282001044">
 			<class name="NavigationEntryModel"/>
 		</file>
 	</files>
@@ -31,16 +31,19 @@
 		<file filename="templates/pages/navigation/view.tpl" md5="44b506f0e3ca0a1bfef9d5f4b992a8c0"/>
 		<file filename="templates/widgets/navigation/_menu.inc.tpl" md5="bfb71b60e009439c85c520df6f496d79"/>
 		<file filename="templates/widgets/navigation/view.tpl" md5="6fb708355f550ba2945b81ad359957fa"/>
+		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="4031fb3dc83afb83f716a6150a479a55"/>
+		<file filename="templates/pages/navigation/index.tpl" md5="8fbbccd35a3cbc609cc8845b6a3a45ee"/>
 	</view>
 	<pages>
 		<page baseurl="/Navigation" admin="1" widget="0" access="" title="Navigation Listings"/>
 	</pages>
 	<assets>
-		<file filename="assets/js/navigation/manager.js" md5="034eaf02f6cfbeff0565713aa24a7627"/>
+		<file filename="assets/js/navigation/manager.js" md5="c39bacf67ec7a690834eb04340385115"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>
 		<upgrade from="1.9.0" to="1.9.1"/>
+		<upgrade from="1.9.1" to="2.0.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
