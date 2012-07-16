@@ -114,6 +114,31 @@ class FormGroup {
 		return false;
 	}
 
+	/**
+	 * Remove an element from the form by name.
+	 * Useful for automatically generated forms and workin backwards instead of forward, (sometimes you only
+	 * want to remove one or two fields instead of creating twenty).
+	 *
+	 * @param strign $name The name of the element to remove.
+	 */
+	public function removeElement($name){
+		foreach ($this->_elements as $k => $el) {
+			// A match found?  Replace it!
+			if($el->get('name') == $name){
+				unset($this->_elements[$k]);
+				return true;
+			}
+
+			// If the element was another group, tell that group to scan too!
+			if ($el instanceof FormGroup) {
+				// Scan this object too!
+				if ($el->removeElement($name)) return true;
+			}
+		}
+
+		return false;
+	}
+
 	public function getTemplateName() {
 		return 'forms/groups/default.tpl';
 	}
