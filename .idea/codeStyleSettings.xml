@@ -16,7 +16,6 @@
           </value>
         </option>
         <option name="HTML_ATTRIBUTE_WRAP" value="0" />
-        <option name="HTML_SPACE_AROUND_EQUALITY_IN_ATTRINUTE" value="true" />
         <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="thead,tbody,tfoot" />
         <option name="HTML_DONT_ADD_BREAKS_IF_INLINE_CONTENT" value="" />
         <CssCodeStyleSettings>
