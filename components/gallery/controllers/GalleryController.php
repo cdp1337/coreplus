@@ -1,23 +1,25 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: powellc
- * Date: 7/9/12
- * Time: 4:46 PM
- * To change this template use File | Settings | File Templates.
+ * Gallery listing page, the main interface for all gallery frontend and most backend functions.
  *
- * @todo implement better access permissions for everything, such as...
+ * @package Gallery
+ * @author Charlie Powell <charlie@eval.bz>
+ * @copyright Copyright (C) 2012  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * ## global
- * Create Gallery Albums
- * Update Gallery Albums
- * Delete Gallery Albums
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
  *
- * ## per-album
- * Manage Images
- * Manage Gallery
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
+
 class GalleryController extends Controller_2_1 {
 	/**
 	 * Listing page that displays all gallery albums
@@ -36,6 +38,11 @@ class GalleryController extends Controller_2_1 {
 
 	}
 
+	/**
+	 * View a gallery album or an individual image.
+	 *
+	 * @return int
+	 */
 	public function view(){
 		$req  = $this->getPageRequest();
 		$page = $this->getPageModel();
@@ -48,6 +55,9 @@ class GalleryController extends Controller_2_1 {
 		$album = new GalleryAlbumModel($req->getParameter(0));
 
 		if(!$album->exists()) return View::ERROR_NOTFOUND;
+
+		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || \Core\user()->checkAccess('p:gallery_manage'));
+		$manager = \Core\user()->checkAccess('p:gallery_manage');
 
 		// image view, (there are two parameters)
 		if($req->getParameter(1)){
@@ -68,6 +78,8 @@ class GalleryController extends Controller_2_1 {
 			$view->assign('image', $image);
 			$view->assign('album', $album);
 			$view->assign('lightbox_available', Core::IsComponentAvailable('jquery-lightbox'));
+			$view->assign('editor', $editor);
+			$view->assign('manager', $manager);
 			$view->updated = $image->get('updated');
 			$view->canonicalurl = Core::ResolveLink($album->get('rewriteurl') . '/' . $link);
 			$view->meta['keywords'] = $image->get('keywords');
@@ -75,6 +87,25 @@ class GalleryController extends Controller_2_1 {
 			$view->meta['og:image'] = $image->getFile()->getPreviewURL('200x200');
 			$view->addBreadcrumb($album->get('title'), $album->get('rewriteurl'));
 			$view->title = ($image->get('title') ? $image->get('title') : 'Image Details');
+			$view->addControl(
+				array(
+					'title' => 'Edit Image',
+				    'link' => '#',
+					'class' => 'update-link',
+					'icon' => 'edit',
+					'image' => $image->get('id'),
+				)
+			);
+			$view->addControl(
+				array(
+					'title' => 'Remove Image',
+					'link' => 'gallery/images/delete/' . $album->get('id') . '?image=' . $image->get('id'),
+					'confirm' => 'Confirm deleting image?',
+					'icon' => 'remove',
+				)
+			);
+			// @todo control-rotate-ccw
+			// @todo control-rotate-cw
 		}
 		// album view, (only one parameter)
 		else{
@@ -101,15 +132,18 @@ class GalleryController extends Controller_2_1 {
 			$view->templatename = '/pages/gallery/view.tpl';
 			$view->assign('album', $album);
 			$view->assign('images', $images);
-			$view->assign('can_manage_images', Core::User()->checkAccess('g:admin'));
+			$view->assign('editor', $editor);
+			$view->assign('manager', $manager);
 			$view->updated = $lastupdated;
+
+			// @todo Implement a move link here.
 
 			// If there are images in this gallery, grab the first one to show as a preview!
 			if(count($images)){
 				$view->meta['og:image'] = $images[0]->getFile()->getPreviewURL('200x200');
 			}
 
-			$view->addControl('Edit Gallery Album', '/gallery/edit/' . $album->get('id'), 'edit');
+			if($editor)  $view->addControl('Edit Gallery Album', '/gallery/edit/' . $album->get('id'), 'edit');
 		}
 /*
 		if(\Core\user()->checkAccess('g:admin')){
@@ -124,13 +158,14 @@ class GalleryController extends Controller_2_1 {
 	/**
 	 * Create a new gallery album
 	 *
+	 * This is an administrative-only function, ie: p:gallery_manage.
+	 *
 	 * @return int
 	 */
 	public function create(){
 		$view = $this->getView();
 
-		// @todo Implement more fine-grain access restrictions
-		if(!$this->setAccess('g:admin')){
+		if(!$this->setAccess('p:gallery_manage')){
 			return View::ERROR_ACCESSDENIED;
 		}
 
@@ -158,20 +193,24 @@ class GalleryController extends Controller_2_1 {
 	/**
 	 * Edit an existing gallery album
 	 *
+	 * This should be either an administrative, (p:gallery_manage) or editpermission.
+	 *
 	 * @return int
 	 */
 	public function edit(){
 		$view = $this->getView();
 		$req = $this->getPageRequest();
 
-		// @todo Implement more fine-grain access restrictions
-		if(!$this->setAccess('g:admin')){
-			return View::ERROR_ACCESSDENIED;
-		}
-
 		$album = new GalleryAlbumModel($req->getParameter(0));
 
 		if(!$album->exists()) return View::ERROR_NOTFOUND;
+
+		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || \Core\user()->checkAccess('p:gallery_manage'));
+		$manager = \Core\user()->checkAccess('p:gallery_manage');
+
+		if(!($editor || $manager)){
+			return View::ERROR_ACCESSDENIED;
+		}
 
 		$form = Form::BuildFromModel($album);
 		$form->set('callsmethod', 'GalleryController::_SaveHandler');
@@ -183,6 +222,13 @@ class GalleryController extends Controller_2_1 {
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Update'));
 
+		// Editors have certain permissions here, namely limited.
+		if($editor && !$manager){
+			$form->removeElement('model[nickname]');
+			$form->removeElement('model[editpermissions]');
+			$form->removeElement('page[rewriteurl]');
+			$form->removeElement('page[parenturl]');
+		}
 
 		$view->templatename = '/pages/gallery/update.tpl';
 		$view->title = 'Edit Gallery Album';
@@ -203,6 +249,13 @@ class GalleryController extends Controller_2_1 {
 		$album   = new GalleryAlbumModel($albumid);
 		$type    = $album->get('store_type');
 		$image   = new GalleryImageModel($request->getParameter('image'));
+
+		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || \Core\user()->checkAccess('p:gallery_manage'));
+		$manager = \Core\user()->checkAccess('p:gallery_manage');
+
+		if(!($editor || $manager)){
+			return View::ERROR_ACCESSDENIED;
+		}
 
 
 		if($request->isPost()){

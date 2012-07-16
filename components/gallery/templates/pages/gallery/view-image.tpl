@@ -1,3 +1,5 @@
+{script library="jqueryui"}{/script}
+{script src="js/core.fileupload.js"}{/script}
 
 {$image.title}<br/>
 
@@ -15,4 +17,35 @@
 	<script>
 		$('.lightbox').lightBox({ fixedNavigation:true });
 	</script>
+{/if}
+
+
+{if $editor}
+
+<script>
+	$(function(){
+
+		$('.update-link').click(function(){
+			var $dialog = $('<div>Loading...</div>'),
+					$this = $(this),
+					image = $this.attr('image'),
+					windowtitle = $this.attr('title');
+
+			$('body').append($dialog);
+
+			$dialog.show().dialog({
+				modal:   true,
+				autoOpen:false,
+				title:   windowtitle,
+				width:   '500px',
+				close: function(){ $(this).dialog('destroy').remove(); }
+			}).dialog('open');
+
+			$dialog.load(Core.ROOT_WDIR + 'gallery/images/update/{$album.id}?image=' + image);
+
+			return false;
+		});
+	});
+</script>
+
 {/if}

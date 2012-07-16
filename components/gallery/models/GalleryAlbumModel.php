@@ -1,10 +1,23 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: powellc
- * Date: 7/9/12
- * Time: 4:51 PM
- * To change this template use File | Settings | File Templates.
+ * Model for gallery albums
+ *
+ * @package Gallery
+ * @author Charlie Powell <charlie@eval.bz>
+ * @copyright Copyright (C) 2012  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 class GalleryAlbumModel extends Model {
 	public static $Schema = array(
@@ -20,12 +33,12 @@ class GalleryAlbumModel extends Model {
 			'formtitle' => 'Per-Page Count',
 			'formdescription' => 'The number of results per page, set to 0 to disable pagination.'
 		),
-		'enabled' => array(
+		/*'enabled' => array(
 			'type' => Model::ATT_TYPE_BOOL,
 			'required' => true,
 			'default' => true,
 			'formdescription' => 'Disable this album to hide from the public listings.'
-		),
+		),*/
 		'store_type' => array(
 			'type' => Model::ATT_TYPE_ENUM,
 			'options' => array('public', 'private'),
@@ -34,6 +47,15 @@ class GalleryAlbumModel extends Model {
 				Public means that images are accessible directly and can be served very quickly.
 				Private means that images are only available through the framework and thus more secure, but are slower to be served.',
 			'formtype' => 'hidden', // Set this to hidden right now, support for private galleries will be added in the future.
+		),
+		'editpermissions' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'description' => 'Permissions for who is allowed to edit this album',
+			'default' => '!*',
+			'form' => array(
+				'type' => 'access',
+				'title' => 'Edit Permissions',
+			)
 		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,

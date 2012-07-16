@@ -2,8 +2,11 @@
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="gallery" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.1.1" operation="ge"/>
+		<require name="core" type="component" version="2.1.2" operation="ge"/>
 	</requires>
+	<permissions>
+		<permission key="gallery_manage" description="Manage Galleries"/>
+	</permissions>
 	<pages>
 		<page baseurl="/gallery" admin="0" widget="0" access="*" title="Gallery Listings"/>
 		<page baseurl="/galleryadmin" admin="1" widget="0" access="g:admin" title="Gallery Administration"/>
@@ -25,21 +28,28 @@
 		<file filename="templates/pages/gallery/view.tpl" md5="0abe5d4dc397e3991db5f93f61511103"/>
 		<file filename="templates/pages/galleryadmin/images.tpl" md5="3eabcaf67ce559f286c8cb1c00340072"/>
 		<file filename="templates/pages/galleryadmin/index.tpl" md5="93aca2ab7228f28683172bf10dd85bb2"/>
+		<file filename="templates/pages/gallery/images_update.tpl" md5="56ff63a97831c8c2baa20218c6357d31"/>
+		<file filename="templates/pages/gallery/index.tpl" md5="09cb981c604175516ab2a5344ec489ef"/>
+		<file filename="templates/pages/gallery/view-image.tpl" md5="13b693647939fe9b61b9358e01399386"/>
+		<file filename="templates/pages/gallery/view.tpl" md5="90ccfcdf7956ee30d89c85c9ff5f7132"/>
 	</view>
 	<files>
-		<file filename="controllers/GalleryAdminController.php" md5="a361c67337926084d99da37710b8989b">
+		<file filename="controllers/GalleryAdminController.php" md5="8b2bab2ebb852d970d753529bcc371a9">
 			<controller name="GalleryAdminController"/>
 		</file>
-		<file filename="controllers/GalleryController.php" md5="33c356f2d55659fc34bae0ad9a7b26e5">
+		<file filename="controllers/GalleryController.php" md5="e945b31aba30be45aacedd903bf2688e">
 			<controller name="GalleryController"/>
 		</file>
-		<file filename="models/GalleryAlbumModel.php" md5="74a3e201f63a7797e478271ff710e09e">
+		<file filename="models/GalleryAlbumModel.php" md5="71646df16b59d87830b16bc9a2de1ed0">
 			<class name="GalleryAlbumModel"/>
 		</file>
-		<file filename="models/GalleryImageModel.php" md5="c0a6702a0111aaee5882557c11f9b413">
+		<file filename="models/GalleryImageModel.php" md5="fefccb39cec5ca4b7e608be0628ad7d2">
 			<class name="GalleryImageModel"/>
 		</file>
 	</files>
+	<assets>
+		<file filename="assets/css/gallery.css" md5="6f0f8f0088c31e977bc722408027bad3"/>
+	</assets>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
@@ -48,8 +58,5 @@
 			GNU Affero General Public License v3
 		</license>
 	</licenses>
-	<assets>
-		<file filename="assets/css/gallery.css" md5="6f0f8f0088c31e977bc722408027bad3"/>
-	</assets>
 </component>
 

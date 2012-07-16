@@ -1,7 +1,7 @@
 {script library="jqueryui"}{/script}
 {script src="js/core.fileupload.js"}{/script}
 
-{if $can_manage_images}
+{if $editor}
 	<a class="button update-link" title="Upload New Image">
 		<i class="icon-upload"></i>
 		<span>Upload New Image</span>
@@ -27,7 +27,7 @@
 			{$i.title}
 		</div>
 
-		{if $can_manage_images}
+		{if $editor}
 			<ul class="gallery-admin-image-utils controls">
 			{*
 				  <li class="control-move">
@@ -71,7 +71,7 @@
 {/foreach}
 
 
-{if $can_manage_images}
+{if $editor}
 
 	<script>
 		$(function(){

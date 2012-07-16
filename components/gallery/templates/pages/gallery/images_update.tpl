@@ -25,7 +25,7 @@
 
 		$uploadsource.submit(function(){
 			// Don't try to upload another if it's already uploading.
-			if($sub.val() != 'Upload') return false;
+			if($sub.val() != '{$savetext}') return false;
 
 			$sub.val('Loading...');
 		});
@@ -36,7 +36,7 @@
 				$url = $body.find('#url'),
 				$id = $body.find('#imageid');
 
-			$sub.val('Upload');
+			$sub.val('{$savetext}');
 			$inp.val('');
 
 			if($error.length){
