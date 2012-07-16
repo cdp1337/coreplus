@@ -1,6 +1,6 @@
 <?php
 /**
- * DESCRIPTION
+ * Main content controller; handles both frontend and administrative utilities.
  *
  * @package Content
  * @since 0.1
@@ -26,7 +26,7 @@ class ContentController extends Controller_2_1 {
 		
 		$view = $this->getView();
 		
-		if(!$this->setAccess('g:admin')){
+		if(!$this->setAccess('p:content_manage')){
 			return View::ERROR_ACCESSDENIED;
 		}
 		
@@ -40,8 +40,8 @@ class ContentController extends Controller_2_1 {
 	
     public function view(){
 		// I'm calling checkAcess here because the cached access string is canonical in this case.
-		$page = $this->getPageModel();
-		$view = $this->getView();
+		$page    = $this->getPageModel();
+		$view    = $this->getView();
 		
 		if(!$this->setAccess($page->get('access'))){
 			return View::ERROR_ACCESSDENIED;
@@ -51,31 +51,32 @@ class ContentController extends Controller_2_1 {
 
 		if(!$m->exists()) return View::ERROR_NOTFOUND;
 
+	    $editor  = (\Core\user()->checkAccess($m->get('editpermissions')) || \Core\user()->checkAccess('p:content_manage'));
+	    $manager = \Core\user()->checkAccess('p:content_manage');
+
 		$view->assignVariable('model', $m);
 		$view->templatename = '/pages/content/view.tpl';
 	    $view->updated = $m->get('updated');
-		//View::AddMeta('<meta http-equiv="last-modified" content="' . Time::FormatGMT($m->get('updated'), Time::TIMEZONE_GMT, Time::FORMAT_FULLDATETIME) . '" />');
-		View::$HeadData[] = '<link rel="canonical" href="' . ROOT_URL . substr($page->get('rewriteurl'), 1) . '" />';
-		
-		if(\Core\user()->checkAccess('g:admin')){
-			$view->addControl('Add Page', '/Content/Create', 'add');
-			$view->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
-			$view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
-			$view->addControl('All Content Pages', '/Content', 'directory');
-		}
+
+		if($manager) $view->addControl('Add Page', '/Content/Create', 'add');
+		if($editor)  $view->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
+	    if($manager) $view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
+	    if($manager) $view->addControl('All Content Pages', '/Content', 'directory');
 	}
 
 	public function edit(){
 		$view = $this->getView();
 		$page = $this->getPageRequest();
-		
-		if(!$this->setAccess('g:admin')){
-			return View::ERROR_ACCESSDENIED;
-		}
-		
-		$m = new ContentModel($page->getParameter(0));
+		$m    = new ContentModel($page->getParameter(0));
 
 		if(!$m->exists()) return View::ERROR_NOTFOUND;
+
+		$editor  = (\Core\user()->checkAccess($m->get('editpermissions')) || \Core\user()->checkAccess('p:content_manage'));
+		$manager = \Core\user()->checkAccess('p:content_manage');
+
+		if(!($editor || $manager)){
+			return View::ERROR_ACCESSDENIED;
+		}
 		
 		$form = Form::BuildFromModel($m);
 		$form->set('callsmethod', 'ContentController::_SaveHandler');
@@ -83,26 +84,34 @@ class ContentController extends Controller_2_1 {
 		$form->addElement('pagemeta', array('name' => 'page', 'baseurl' => '/Content/View/' . $m->get('id')));
 		
 		$form->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => '/Content/View/' . $m->get('id')));
-//var_dump($form->getElementByName('page'), $form->getElementByName('page')->getModel()); die();
+
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Update'));
+
+		// Editors have certain permissions here, namely limited.
+		if($editor && !$manager){
+			$form->removeElement('model[nickname]');
+			$form->removeElement('model[editpermissions]');
+			$form->removeElement('page[rewriteurl]');
+			$form->removeElement('page[parenturl]');
+		}
 
 		$view->templatename = '/pages/content/edit.tpl';
 		$view->title = 'Edit ' . $m->get('title');
 		$view->assignVariable('model', $m);
 		$view->assignVariable('form', $form);
 		
-		$view->addControl('Add Page', '/Content/Create', 'add');
+		if($manager) $view->addControl('Add Page', '/Content/Create', 'add');
 		$view->addControl('View Page', '/Content/View/' . $m->get('id'), 'view');
-		$view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
-		$view->addControl('All Content Pages', '/Content', 'directory');
+		if($manager) $view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
+		if($manager) $view->addControl('All Content Pages', '/Content', 'directory');
 	}
 
 	public function create(){
 		
 		$view = $this->getView();
 		
-		if(!$this->setAccess('g:admin')){
+		if(!$this->setAccess('p:content_manage')){
 			return View::ERROR_ACCESSDENIED;
 		}
 		
@@ -155,6 +164,10 @@ class ContentController extends Controller_2_1 {
 		// This is a POST-only page.
 		if(!$request->isPost()){
 			return View::ERROR_BADREQUEST;
+		}
+
+		if(!$this->setAccess('p:content_manage')){
+			return View::ERROR_ACCESSDENIED;
 		}
 
 		$m = new ContentModel($request->getParameter(0));

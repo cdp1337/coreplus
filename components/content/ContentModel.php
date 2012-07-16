@@ -33,6 +33,15 @@ class ContentModel extends Model{
 			'description' => 'Just the name that appears in admin listings for this page',
 			'required' => true,
 		),
+		'editpermissions' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'description' => 'Permissions for who is allowed to edit this page',
+			'default' => '!*',
+			'form' => array(
+				'type' => 'access',
+				'title' => 'Edit Permissions',
+			)
+		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
