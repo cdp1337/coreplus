@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="default">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="default">
 	<assets>
 		<file filename="assets/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
-		<file filename="assets/css/styles.css" md5="bd1d8ba11cf74619c88c93f012c05c03"/>
+		<file filename="assets/css/styles.css" md5="27de8f7233b4fc78e74a3b1db5cb0ca3"/>
 		<file filename="assets/fonts/Cousine-Bold.ttf" md5="8b6cde097069d84859cf7b24403faeca"/>
 		<file filename="assets/fonts/Cousine-BoldItalic.ttf" md5="aa6b45a45a88a9547e30d6a6a9dcf75c"/>
 		<file filename="assets/fonts/Cousine-Italic.ttf" md5="8a0dacd2cc9ef158fff2daec2b7bc435"/>
@@ -70,8 +70,8 @@
 		<file filename="assets/mimetype_icons/unknown-xl.png" md5="2510d5565850a7b8d762312fc41dd8eb"/>
 	</assets>
 	<skins>
-		<file filename="index.tpl" title="Index Template" md5="f40bb0c041e5bace5b319485dcd7d1c4"/>
-		<file filename="basic.tpl" title="Only one column" md5="01d25c25c4731f803dc6457107bb166e"/>
+		<file filename="index.tpl" title="Index Template" md5="74033487b30c31031ab16d03a40b9205"/>
+		<file filename="basic.tpl" title="Only one column" md5="d207f4ecec8811c8a1b738825f906f48"/>
 	</skins>
 	<view/>
 	<configs>
@@ -83,6 +83,7 @@
 	<otherfiles/>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.2"/>
 	</upgrades>
 </theme>
 

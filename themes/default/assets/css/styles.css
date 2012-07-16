@@ -101,7 +101,7 @@ a.button,
 	line-height: 1.4;
 	background-repeat:no-repeat;
 	background-color: rgba(62, 126, 128, 0.99);
-	border:2px outset #183c3e;
+	border:2px outset rgba(29, 84, 87, 0.52);
 	color: #FFF;
 	font-weight:bold;
 	border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;
@@ -163,6 +163,7 @@ a.button:hover { text-decoration:none; background-color: #50a3a5;}
     color: #222222;
     cursor: pointer;
     display: inline;
+	display: inline-block;
     line-height: 1.7em;
     margin-right: 0.5em;
     padding: 0.25em 0.5em 0.25em 0;

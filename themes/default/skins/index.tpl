@@ -40,17 +40,22 @@
 					{if isset($controls) && sizeof($controls)}
 						<ul class="controls">
 							{foreach from=$controls item=control}
-								<li class="{$control.class}">
-									{if $control.link}
-										<a href="{$control.link}" title="{$control.title}">
+								{if $control instanceof ViewControl}
+									{$control->fetch()}
+								{else}
+									<!-- Deprecated version of control -->
+									<li class="{$control.class}">
+										{if $control.link}
+											<a href="{$control.link}" title="{$control.title}">
+												<i class="icon-{$control.class}"></i>
+												<span>{$control.title}</span>
+											</a>
+											{else}
 											<i class="icon-{$control.class}"></i>
-											<span>{$control.title}</span>
-										</a>
-									{else}
-										<i class="icon-{$control.class}"></i>
-										{$control.title}
-									{/if}
-								</li>
+											{$control.title}
+										{/if}
+									</li>
+								{/if}
 							{/foreach}
 						</ul>
 					{/if}
