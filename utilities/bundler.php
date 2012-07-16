@@ -67,6 +67,7 @@ sort($bundlefiles);
 
 if(count($bundlefiles) == 1){
 	$ans = 0;
+	echo "Using bundle " . $bundlefiles[0] . NL;
 }
 else{
 	$ans = CLI::PromptUser("Process which bundle?", $bundlefiles);
@@ -80,7 +81,7 @@ $xml->setRootName('bundler');
 $xml->loadFromFile($dir . '/' . $b);
 
 $name  = $xml->getRootDOM()->getAttribute('name');
-$sname = preg_replace('/[^a-z0-9-\.]*/i', '', str_replace(' ', '-', $name));
+$sname = preg_replace('/[^a-z0-9-\.\+]*/i', '', str_replace(' ', '-', $name));
 
 $destdir = $dir . '/' . $sname;
 
