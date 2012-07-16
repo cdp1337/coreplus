@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.1" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.2" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -60,19 +60,19 @@
 		<file filename="core/controllers/GettingStartedController.class.php" md5="c32e15834efbdd387f37f8c72fc24fea">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="6a1038919f7f1c94229ee0fe95333696">
+		<file filename="core/controllers/UpdaterController.class.php" md5="7cbe49a9fe66485b4f64d2c10fd46307">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
 			<class name="WidgetController"/>
 		</file>
-		<file filename="core/forms/FormCheckboxInput.class.php" md5="1a3bc85e283d6e2ff9f2e9bcaa264ba6">
+		<file filename="core/forms/FormCheckboxInput.class.php" md5="d7dcf76c91d94d46ad55f9ce4551564e">
 			<class name="FormCheckboxInput"/>
 		</file>
-		<file filename="core/forms/FormCheckboxesInput.class.php" md5="288f136064f2afe5760c6c0b22df8e49">
+		<file filename="core/forms/FormCheckboxesInput.class.php" md5="315b06c6c29bd63401cc8612a50f7bcd">
 			<class name="FormCheckboxesInput"/>
 		</file>
-		<file filename="core/forms/FormFileInput.class.php" md5="dbade7d7b5dea759fae777f9881fabce">
+		<file filename="core/forms/FormFileInput.class.php" md5="a715edba0ff3918abd73c59ae632868c">
 			<class name="FormFileInput"/>
 		</file>
 		<file filename="core/forms/FormHiddenInput.class.php" md5="b165e1679347782c30492bb4b320ee5c">
@@ -95,7 +95,7 @@
 		<file filename="core/forms/FormSubmitInput.class.php" md5="a8c7075479f162010671026ee798c19a">
 			<class name="FormSubmitInput"/>
 		</file>
-		<file filename="core/forms/FormSystemInput.class.php" md5="5c1b38d610d70d8a89e9ed29bf0c8ca1">
+		<file filename="core/forms/FormSystemInput.class.php" md5="036c123ead865f9f95188382496661e5">
 			<class name="FormSystemInput"/>
 		</file>
 		<file filename="core/forms/FormTextInput.class.php" md5="4c642cd636562bf2e77059cb4e2ceb2d">
@@ -107,8 +107,8 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="080383e4dade461c3c7ac1d9e504ed28">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="1cb673f58d397e7a63a26eaa3e7c0ebd"/>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="cc579022147a9723f98a828e4024ec4e">
+		<file filename="core/functions/Core.functions.php" md5="0168723c3c53a2df700de93c5492ef62"/>
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="43e81abc255a12e94ecac01b3c900117">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
@@ -405,7 +405,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="3d5e9652b64125a5aef5adf527c6b488">
+		<file filename="core/libs/core/Component_2_1.php" md5="55a3b6895d740c0be20f8557c212c897">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="5ff824df4ce7e6628e1b10dc82158f44">
@@ -417,7 +417,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="da23111d3817635fd7fcad14583bde1a">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="45a0182d2eb025d87d594bf43033e6ff">
+		<file filename="core/libs/core/Core.class.php" md5="d31523ef904fcddbbd04abbb4684553e">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -433,7 +433,7 @@
 		<file filename="core/libs/core/Email.class.php" md5="11c5da28c252b0d1f6af703e4b561704">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="683a0064c332d384a6cc48c311f6b15c">
+		<file filename="core/libs/core/Form.class.php" md5="3701d06e67b84812b0a1c5d8798cc619">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -459,7 +459,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="8443ef24967262333d1a2e2280d33f08">
+		<file filename="core/libs/core/Model.class.php" md5="0051b8d9055defa77e4ba2843ce9a31e">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -468,7 +468,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="8b31747638dc19051e896b5776ec51e8">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="21df152ef39f4f40a41b727290987c2e">
+		<file filename="core/libs/core/PageRequest.class.php" md5="708539fe542d9e0473bfbe65628caa0a">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="0528150b9145ee4d1dd243e8348c71a6">
@@ -491,9 +491,12 @@
 		<file filename="core/libs/core/Time.class.php" md5="b91dce7fdff8ee72333cfa39efece40f">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="3b83ea2ab67587be0d36842f41cb8d33">
+		<file filename="core/libs/core/View.class.php" md5="80ff89b2a713686fe2536ae9967e9679">
 			<class name="View"/>
 			<class name="ViewException"/>
+		</file>
+		<file filename="core/libs/core/ViewControl.class.php" md5="17dabb2cff6afc71e42ccd1af1f7559c">
+			<class name="ViewControl"/>
 		</file>
 		<file filename="core/libs/core/Widget.class.php" md5="11f834e973a04aa4ae270128e9f71de2">
 			<class name="Widget"/>
@@ -706,7 +709,7 @@
 		<file filename="core/libs/filestore/Directory_Backend.interface.php" md5="d47bd0edb4833f38e714a2242e8ed937">
 			<interface name="Directory_Backend"/>
 		</file>
-		<file filename="core/libs/filestore/FileContentFactory.class.php" md5="a1ef54df240fe5d8ec0113d41619c99c">
+		<file filename="core/libs/filestore/FileContentFactory.class.php" md5="39f95be4d8a2220cb3ed8fbfae64b2e8">
 			<class name="FileContentFactory"/>
 		</file>
 		<file filename="core/libs/filestore/FileException.class.php" md5="83509b5cf8786acacc265c203f5d70d8">
@@ -724,7 +727,7 @@
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="6c35d718dbc1679fd89be37fab6965c2">
 			<class name="File_awss3_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="45777191198682dde5c75065256d617e">
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="812399ab5351be6b3b110e9629f0d44b">
 			<class name="File_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="e1a7592b2f324bfea9dc13d3ea7aa337">
@@ -861,8 +864,8 @@
 		<file filename="core/libs/phpmailer/test_script/styles/shThemeRDark.css" md5="c8f6be1c0dcf82e65a9d39f8644f1053"/>
 		<file filename="core/libs/phpmailer/test_script/styles/wrapping.png" md5="9a4ffd836c709958eff80a3260f8a1cb"/>
 		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
-		<file filename="core/libs/smarty-plugins/block.a.php" md5="18b24a0c97912c629162bc9722b3afc5"/>
-		<file filename="core/libs/smarty-plugins/block.css.php" md5="e7d3b0a41a6c9fe3c6657354266bfc73"/>
+		<file filename="core/libs/smarty-plugins/block.a.php" md5="dea09daf71c23d3e7ccc04d04cf8b809"/>
+		<file filename="core/libs/smarty-plugins/block.css.php" md5="3cfb719a5e00da3d10626d270fd8aa88"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="2ca3be568e074f654d5657a5e20ac1b0"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="84d16e1ba8fb38b5c8be6a1ca960ab43"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="85f908c0a9fa616aca30a0b94afeae18"/>
@@ -1186,7 +1189,7 @@
 		<file filename="core/models/Insertable.class.php" md5="9fcff9abc48a6750a219ee3df35b48af">
 			<class name="InsertableModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="773fc79f0da9f8e8947f5aa42e34ada5">
+		<file filename="core/models/PageModel.class.php" md5="2297e7a12be83ffc6c90b2ccc806a2b1">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/SessionModel.class.php" md5="08c4a259678e264f89c943b1b7a4d329">
@@ -1300,6 +1303,8 @@
 		<file filename="core/templates/forms/elements/formpageparentselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formpagethemeselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="d25e50f892dd4ce3f53057793fd17240"/>
+		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="7811f6cb8ef1754ce9111764927b91bf"/>
+		<file filename="core/templates/pages/error/error403.tpl" md5="9223242be43703fc7f3e6d2633626f3b"/>
 	</view>
 	<install/>
 	<description>
@@ -1336,11 +1341,12 @@
 	</configs>
 	<assets>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
+		<file filename="core/assets/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.fileupload.js" md5="6af175f77ebccd39e84df91eabf4a384"/>
-		<file filename="core/assets/js/core.js" md5="e266282187d6730905137049f7c9d70b"/>
+		<file filename="core/assets/js/core.js" md5="9724278779f8bc69b0a51370dc5bac15"/>
 		<file filename="core/assets/js/core.strings.js" md5="e704b77bfcc5ca29b28934ab4d454c70"/>
-		<file filename="core/assets/js/updater/index.js" md5="03eefea3d7b39e86f4c5abce4cc382de"/>
+		<file filename="core/assets/js/updater/index.js" md5="8bc98840b6292bdf9b98074ee92c7615"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="0.0.2"/>
@@ -1359,6 +1365,7 @@
 		<upgrade from="1.9.1" to="1.9.2"/>
 		<upgrade from="1.9.2" to="2.1.0"/>
 		<upgrade from="2.1.0" to="2.1.1"/>
+		<upgrade from="2.1.1" to="2.1.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

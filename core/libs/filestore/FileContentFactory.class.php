@@ -2,7 +2,7 @@
 /**
  * DESCRIPTION
  *
- * @package
+ * @package Core Plus\Core
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
@@ -30,11 +30,20 @@ class FileContentFactory {
 				// Some of them even have their own content functions.
 				if (strtolower($file->getExtension()) == 'tgz') return new File_tgz_contents($file);
 				else return new File_gz_contents($file);
+				break;
+
 			case 'text/plain':
 				// Sometimes these are actually other files based on the extension.
 				if (strtolower($file->getExtension()) == 'asc') return new File_asc_contents($file);
 				else return new File_unknown_contents($file);
+				break;
+
+			case 'application/pgp-signature':
+				return new File_asc_contents($file);
+				break;
+
 			default:
+				error_log('@fixme Unknown file mimetype [' . $file->getMimetype() . '] with extension [' . $file->getExtension() . ']');
 				return new File_unknown_contents($file);
 		}
 	}

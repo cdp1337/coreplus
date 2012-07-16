@@ -432,8 +432,12 @@ class Core implements ISingleton {
 		$this->_viewClasses       = array_merge($this->_viewClasses, $c->getViewClassList());
 		$this->_widgets           = array_merge($this->_widgets, $c->getWidgetList());
 		$this->_components[$name] = $c;
-		$this->_permissions       = array_merge($this->_permissions, $c->getPermissions());
-		ksort($this->_permissions);
+
+		// Permissions were not enabled prior to 2.1, so the legacy components do not have the function.
+		if($c instanceof Component_2_1){
+			$this->_permissions       = array_merge($this->_permissions, $c->getPermissions());
+			ksort($this->_permissions);
+		}
 	}
 
 

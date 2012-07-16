@@ -141,10 +141,10 @@ Updater = {};
 					html += '<td>Installed</td>';
 				}
 				else if(cur.status == 'new'){
-					html += '<td><a href="#" class="perform-update-components" name="' + name + '" version="' + version + '">Install</a></td>';
+					html += '<td><a href="#" class="perform-update" type="components" name="' + name + '" version="' + version + '">Install</a></td>';
 				}
 				else if(cur.status == 'update'){
-					html += '<td><a href="#" class="perform-update-components" name="' + name + '" version="' + version + '">Update</a></td>';
+					html += '<td><a href="#" class="perform-update" type="components" name="' + name + '" version="' + version + '">Update</a></td>';
 				}
 				else{
 					html += '<td>' + cur.status + '</td>';

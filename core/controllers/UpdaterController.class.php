@@ -556,7 +556,7 @@ class UpdaterController extends Controller_2_1 {
 
 		// This page cannot continue execution with the core, as it was extracted.  Simply return raw json.
 		if($status['status'] == 1){
-			die('{"status":1,"message":"Performed all operations successfully"}');
+			die(json_encode($status));
 		}
 
 		$view->jsondata = $status;

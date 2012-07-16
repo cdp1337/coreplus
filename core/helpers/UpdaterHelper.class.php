@@ -181,16 +181,16 @@ class UpdaterHelper {
 		
 		// And sort the versions.
 		foreach($components as $k => $v){
-			ksort($components[$k]);
+			ksort($components[$k], SORT_NUMERIC);
 		}
 		foreach($themes as $k => $v){
-			ksort($themes[$k]);
+			ksort($themes[$k], SORT_NUMERIC);
 		}
 		
 		// Cache this for next pass.
 		$_SESSION['updaterhelper_getupdates'] = array();
 		$_SESSION['updaterhelper_getupdates']['data'] = array('core' => $core, 'components' => $components, 'themes' => $themes);
-		$_SESSION['updaterhelper_getupdates']['expire'] = time() + 6;
+		$_SESSION['updaterhelper_getupdates']['expire'] = time() + 3600;
 		
 		return array('core' => $core, 'components' => $components, 'themes' => $themes);
 	}
@@ -537,6 +537,14 @@ class UpdaterHelper {
 			}
 
 			$obj = $remotefiles['core']->getContentsObject();
+
+			if(!($obj instanceof File_asc_contents)){
+				return array(
+					'status' => 0,
+					'message' => $remotefiles['core']->getFilename() . ' does not appear to be a valid GPG signed archive'
+				);
+			}
+
 			if(!$obj->verify()){
 				// Maybe it can at least get the key....
 				if($key = $obj->getKey()){
