@@ -15,7 +15,7 @@ Core.PostURL = function(u){
 	form.action = u;
 	form.method = 'POST';
 	form.submit();
-}
+};
 
 /**
  * Just a simple function to reload the current page.
@@ -24,4 +24,4 @@ Core.PostURL = function(u){
  */
 Core.Reload = function(){
 	window.location.reload();
-}
+};

@@ -1253,6 +1253,7 @@ class Core implements ISingleton {
 
 		// And the static functions.
 		View::AddScript('js/core.js', 'head');
+		View::AddScript('js/core-foot.js', 'foot');
 	}
 
 	public static function _AttachCoreStrings() {
