@@ -67,8 +67,27 @@ class Model implements ArrayAccess {
 	// @see http://www.regular-expressions.info/email.html
 	//const VALIDATION_EMAIL = "/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/";
 
+	/**
+	 * Definition for a model that has exactly one child table as a dependency.
+	 *
+	 * !WARNING! This gets deleted automatically if the parent is deleted!
+	 */
+
 	const LINK_HASONE  = 'one';
+	/**
+	 * Definition for a model that has several records from a child table for dependencies.
+	 *
+	 *  !WARNING! These get deleted automatically if the parent is deleted!
+	 */
 	const LINK_HASMANY = 'many';
+
+	/**
+	 * Definition for a model that *BELONGS* to one table.
+	 *
+	 * This is important because changes do not propagate up to the parent, as deleting the child
+	 * should have no effect on the parent!
+	 */
+	const LINK_BELONGSTOONE = 'belongs_one';
 
 	/**
 	 * Which DataModelInterface should this model execute its operations with.
@@ -246,13 +265,19 @@ class Model implements ArrayAccess {
 		// Go through any linked tables and ensure that they're saved as well.
 		foreach($this->_linked as $k => $l){
 			if(!(isset($l['records']) || $this->_dirty)) continue; // No need to save if it was never loaded.
-			
-			$models = (is_array($l['records']))? $l['records'] : array($l['records']);
-			
-			foreach($models as $model){
-				// Ensure all linked fields still match up.  Something may have been changed in the parent.
-				$model->setFromArray($this->_getLinkWhereArray($k));
-				$model->save();
+
+			switch($l['link']){
+				case Model::LINK_HASONE:
+				case Model::LINK_HASMANY:
+					$models = (is_array($l['records']))? $l['records'] : array($l['records']);
+
+					foreach($models as $model){
+						// Ensure all linked fields still match up.  Something may have been changed in the parent.
+						$model->setFromArray($this->_getLinkWhereArray($k));
+						$model->save();
+					}
+					break;
+				// There is no default behaviour... other than to ignore it.
 			}
 		}
 
@@ -502,15 +527,21 @@ class Model implements ArrayAccess {
 		// Blank out any dependent records based on links.
 		foreach ($this->_linked as $k => $l) {
 
-			// I can do this without actually calling them.
-			$c     = $this->_getLinkClassName($k);
-			$model = new $c();
+			switch($l['link']){
+				case Model::LINK_HASONE:
+				case Model::LINK_HASMANY:
+					// I can do this without actually calling them.
+					$c     = $this->_getLinkClassName($k);
+					$model = new $c();
 
-			Dataset::Init()
-				->table($model->getTableName())
-				->where($this->_getLinkWhereArray($k))
-				->delete()
-				->execute($this->interface);
+					Dataset::Init()
+						->table($model->getTableName())
+						->where($this->_getLinkWhereArray($k))
+						->delete()
+						->execute($this->interface);
+					break;
+				// There is no default behaviour... other than to ignore it.
+			}
 
 			if (isset($this->_linked[$k]['records'])) unset($this->_linked[$k]['records']);
 		}
@@ -757,7 +788,12 @@ class Model implements ArrayAccess {
 			$c = $this->_getLinkClassName($linkname);
 
 			$f = new ModelFactory($c);
-			if ($this->_linked[$linkname]['link'] == Model::LINK_HASONE) $f->limit(1);
+			switch($this->_linked[$linkname]['link']){
+				case Model::LINK_HASONE:
+				case Model::LINK_BELONGSTOONE:
+					$f->limit(1);
+					break;
+			}
 
 			$wheres = $this->_getLinkWhereArray($linkname);
 			$f->where($wheres);

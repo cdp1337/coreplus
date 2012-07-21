@@ -484,6 +484,10 @@ class View {
 			if (DEVELOPMENT_MODE) {
 				$debug = '';
 				$debug .= '<pre class="xdebug-var-dump">';
+				$debug .= '<b>Template Information</b>' . "\n";
+				$debug .= 'Base URL: ' . $this->baseurl . "\n";
+				$debug .= 'Template Used: ' . $this->templatename . "\n";
+				$debug .= "\n" . '<b>Performance Information</b>' . "\n";
 				$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
 				$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
 				//$debug .= "Number of queries: " . DB::Singleton()->counter . "\n";
@@ -495,13 +499,13 @@ class View {
 					}
 				}
 				// Tack on what components are currently installed.
-				$debug .= '<b>Available Components</b>' . "\n";
+				$debug .= "\n" . '<b>Available Components</b>' . "\n";
 				foreach (Core::GetComponents() as $l => $v) {
 					$debug .= ($v->isEnabled() ? '[<span style="color:green;">Enabled</span>]' : '[<span style="color:red;">Disabled</span>]').
 						$v->getName() . ' ' . $v->getVersion() . "\n";
 				}
 
-				$debug .= '<b>Query Log</b>' . "\n";
+				$debug .= "\n" . '<b>Query Log</b>' . "\n";
 				$debug .= print_r(Core::DB()->queryLog(), true);
 				$debug .= '</pre>';
 
@@ -642,6 +646,9 @@ class View {
 					break;
 				case 'delete':
 					$control->icon = 'remove';
+					break;
+				case 'view':
+					$control->icon = 'eye-open';
 					break;
 			}
 		}

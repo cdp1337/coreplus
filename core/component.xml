@@ -36,7 +36,7 @@
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="e6bcccfe5d780d28d13a8e2dbbe17016"/>
 		<file filename="core/CHANGELOG" md5="4dc4c3af39d71d260fdb73b4fcbb2665"/>
-		<file filename="core/bootstrap.php" md5="7496376cccf066b43482f0d33c731637"/>
+		<file filename="core/bootstrap.php" md5="7ef6db136017658c68fc9f2ac1310cef"/>
 		<file filename="core/bootstrap_predefines.php" md5="a75579b94642f0f4fb7b7540f9909288"/>
 		<file filename="core/bootstrap_preincludes.php" md5="f1971ce53f1a6c0f0d29a4434114cdb7"/>
 		<file filename="core/controllers/AdminController.php" md5="224fdec0630a697051eead4cb87623a8">
@@ -60,7 +60,7 @@
 		<file filename="core/controllers/GettingStartedController.class.php" md5="c32e15834efbdd387f37f8c72fc24fea">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="7cbe49a9fe66485b4f64d2c10fd46307">
+		<file filename="core/controllers/UpdaterController.class.php" md5="3c27d8db84cc2740bcec66a8e543f2b5">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
@@ -405,7 +405,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="55a3b6895d740c0be20f8557c212c897">
+		<file filename="core/libs/core/Component_2_1.php" md5="baeda608b0d4cd0377fffa998cecdac9">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="5ff824df4ce7e6628e1b10dc82158f44">
@@ -433,7 +433,7 @@
 		<file filename="core/libs/core/Email.class.php" md5="11c5da28c252b0d1f6af703e4b561704">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="3701d06e67b84812b0a1c5d8798cc619">
+		<file filename="core/libs/core/Form.class.php" md5="75c6378acad4636ca5687e4624c6f1fd">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -491,11 +491,11 @@
 		<file filename="core/libs/core/Time.class.php" md5="b91dce7fdff8ee72333cfa39efece40f">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="80ff89b2a713686fe2536ae9967e9679">
+		<file filename="core/libs/core/View.class.php" md5="c10282e72c5e9e566744f57769332439">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
-		<file filename="core/libs/core/ViewControl.class.php" md5="17dabb2cff6afc71e42ccd1af1f7559c">
+		<file filename="core/libs/core/ViewControl.class.php" md5="590385b6189e2aced5f59c379a1d1cbb">
 			<class name="ViewControl"/>
 		</file>
 		<file filename="core/libs/core/Widget.class.php" md5="11f834e973a04aa4ae270128e9f71de2">
@@ -1305,6 +1305,7 @@
 		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="d25e50f892dd4ce3f53057793fd17240"/>
 		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="7811f6cb8ef1754ce9111764927b91bf"/>
 		<file filename="core/templates/pages/error/error403.tpl" md5="9223242be43703fc7f3e6d2633626f3b"/>
+		<file filename="core/templates/widgets/adminmenu.tpl" md5="bd00786bf22e5178fc3632d28211561a"/>
 	</view>
 	<install/>
 	<description>
@@ -1340,6 +1341,7 @@
 		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'" default=""/>
 	</configs>
 	<assets>
+		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="5f0f2cdc614db1822a80a65fc0e69b80"/>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 		<file filename="core/assets/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
@@ -1399,9 +1401,7 @@
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			See the included NOTICE.md file for more information.
-		</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3
 		</license>

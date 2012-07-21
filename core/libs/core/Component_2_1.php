@@ -121,9 +121,9 @@ class Component_2_1 {
 	/**
 	 * The permissions along with their description that are registered for this component.
 	 *
-	 * @var null|array
+	 * @var array
 	 */
-	private $_permissions = null;
+	private $_permissions = array();
 
 	// A set of error codes components may encounter.
 	const ERROR_NOERROR = 0; // 0000

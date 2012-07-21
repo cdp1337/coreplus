@@ -93,7 +93,7 @@ ConfigHandler::Singleton();
 $core_settings = ConfigHandler::LoadConfigFile("configuration");
 
 if (!$core_settings) {
-	if(EXEC_MODE == 'web'){
+	if(EXEC_MODE == 'WEB'){
 		$newURL = 'install/';
 		header("Location:" . $newURL);
 		die("If your browser does not refresh, please <a href=\"{$newURL}\">Click Here</a>");

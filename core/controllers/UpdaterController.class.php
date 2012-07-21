@@ -54,9 +54,9 @@ class UpdaterController extends Controller_2_1 {
 
 
 		$view->title = 'System Updater';
-		$view->addControl('Manage Repos', '/updater/repos', 'repos');
-		$view->addControl('Manage GPG Keys', '/updater/keys', 'keys');
-		$view->addControl('Browse Packages', '/updater/browse', 'browse');
+		$view->addControl(array('title' => 'Manage Repos', 'link' => '/updater/repos', 'icon' => 'cloud'));
+		$view->addControl(array('title' => 'Manage GPG Keys', 'link' => '/updater/keys', 'icon' => 'key'));
+		$view->addControl(array('title' => 'Browse Packages', 'link' => '/updater/browse', 'icon' => 'search'));
 		$view->assign('sitecount', $sitecount);
 		$view->assign('components', $components);
 		$view->assign('core', Core::GetComponent('core'));
@@ -156,9 +156,9 @@ class UpdaterController extends Controller_2_1 {
 
 		$view->title = 'Repositories';
 		$view->addControl('Add Repo', 'updater/repos/add', 'add');
-		//$view->addControl('Manage Repos', '/updater/repos', 'repos');
-		$view->addControl('Manage GPG Keys', '/updater/keys', 'keys');
-		$view->addControl('Browse Packages', '/updater/browse', 'browse');
+		//$view->addControl(array('title' => 'Manage Repos', 'link' => '/updater/repos', 'icon' => 'cloud'));
+		$view->addControl(array('title' => 'Manage GPG Keys', 'link' => '/updater/keys', 'icon' => 'key'));
+		$view->addControl(array('title' => 'Browse Packages', 'link' => '/updater/browse', 'icon' => 'search'));
 
 		$view->assign('sites', $sites);
 
@@ -217,9 +217,9 @@ class UpdaterController extends Controller_2_1 {
 		$view = $this->getView();
 
 		$view->title = 'Browse Packages';
-		$view->addControl('Manage Repos', '/updater/repos', 'repos');
-		$view->addControl('Manage GPG Keys', '/updater/keys', 'keys');
-		//$view->addControl('Browse Packages', '/updater/browse', 'browse');
+		$view->addControl(array('title' => 'Manage Repos', 'link' => '/updater/repos', 'icon' => 'cloud'));
+		$view->addControl(array('title' => 'Manage GPG Keys', 'link' => '/updater/keys', 'icon' => 'key'));
+		//$view->addControl(array('title' => 'Browse Packages', 'link' => '/updater/browse', 'icon' => 'search'));
 	}
 
 	public function keys() {
@@ -263,9 +263,9 @@ class UpdaterController extends Controller_2_1 {
 
 		$view->title = "GPG Keys";
 		$view->addControl('Import Key', '/updater/keys/import', 'add');
-		$view->addControl('Manage Repos', '/updater/repos', 'repos');
-		//$view->addControl('Manage GPG Keys', '/updater/keys', 'keys');
-		$view->addControl('Browse Packages', '/updater/browse', 'browse');
+		$view->addControl(array('title' => 'Manage Repos', 'link' => '/updater/repos', 'icon' => 'cloud'));
+		//$view->addControl(array('title' => 'Manage GPG Keys', 'link' => '/updater/keys', 'icon' => 'key'));
+		$view->addControl(array('title' => 'Browse Packages', 'link' => '/updater/browse', 'icon' => 'search'));
 		$view->assign('directory', GPG_HOMEDIR);
 		$view->assign('keys', $keys);
 	}

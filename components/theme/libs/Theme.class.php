@@ -577,7 +577,17 @@ class Theme{
 			// The new destination must be in the theme-specific directory, this is a
 			// bit of a hack from the usual behaviour of the filestore system.
 			// Since that's designed to return the default if the theme-specific doesn't exist.
-			$nf->setFilename(str_replace($assetbase . $coretheme, $assetbase . $theme, $nf->getFilename()));
+
+			// If the theme is not the installed theme, I need to replace any matches from the current theme back to the
+			// currenlty working theme so that it installs in its own directory.
+			if($theme != $coretheme){
+				$nf->setFilename(str_replace($assetbase . $coretheme, $assetbase . $theme, $nf->getFilename()));
+			}
+			// Otherwise if it's the currently installed, just make sure that it doesn't match default.
+			// Unless it does, then it would replace 'default' to 'default', so no issues should be seen.
+			else{
+				$nf->setFilename(str_replace($assetbase . 'default', $assetbase . $theme, $nf->getFilename()));
+			}
 
 			/*
 			if($theme != 'default' && strpos($nf->getFilename(), $assetbase . $theme) === false){

@@ -147,7 +147,7 @@ class ViewControl implements ArrayAccess {
 				break;
 			case 'link':
 			case 'href': // Just for an alias of the link.
-				$this->link = $value;
+				$this->link = Core::ResolveLink($value);
 				break;
 			case 'title':
 				$this->title = $value;

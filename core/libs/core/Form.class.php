@@ -1076,6 +1076,7 @@ class FormPageInsertables extends FormGroup {
 		foreach ($matches[0] as $k => $v) {
 			$tag     = trim($matches[1][$k]);
 			$content = trim($matches[2][$k]);
+			$default = $content;
 
 			// Pull out the name and label of this insertable.
 			$name  = preg_replace('/.*name=["\'](.*?)["\'].*/i', '$1', $tag);
@@ -1086,14 +1087,14 @@ class FormPageInsertables extends FormGroup {
 			if ($i->get('value') !== null) $content = $i->get('value');
 
 			// Determine what the content is intelligently.  (or at least try to...)
-			if (strpos($content, "\n") === false && strpos($content, "<") === false) {
+			if (strpos($default, "\n") === false && strpos($default, "<") === false) {
 				// Regular text insert.
 				$this->addElement('text', array('name'  => "insertable[$name]",
 				                                'title' => $title,
 				                                'value' => $content)
 				);
 			}
-			elseif (preg_match('/<img(.*?)src=["\'](.*?)["\'](.*?)>/i', $content)) {
+			elseif (preg_match('/<img(.*?)src=["\'](.*?)["\'](.*?)>/i', $default)) {
 				// It's an image.
 				// @todo Image Upload form element
 				//$el = new FormIm

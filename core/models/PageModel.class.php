@@ -432,7 +432,17 @@ class PageModel extends Model {
 			}
 		}
 
-		return $this->_getParentTree();
+		// _getParentTree will go the long way about returning results, and may return blank / invalid ones.
+		// If so, clean those results.
+		$ret = array();
+		foreach($this->_getParentTree() as $p){
+			if($p->exists() || $p->get('title')){
+				$ret[] = $p;
+			}
+		}
+
+		return $ret;
+		//return $this->_getParentTree();
 	}
 
 	private function _getParentTree($antiinfiniteloopcounter = 5) {

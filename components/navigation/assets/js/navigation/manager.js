@@ -162,7 +162,7 @@ var NavigationManager = null;
 				forcePlaceholderSize:true,
 				handle:              'div.entry',
 				helper:              'clone',
-				items:               'li',
+				items:               'li.entry',
 				opacity:             .6,
 				placeholder:         'placeholder',
 				tabSize:             25,
@@ -232,7 +232,7 @@ var NavigationManager = null;
 			if (!id) id = 'new-' + (++addcounter);
 
 			// Create the payload first, this is just basic HTML.
-			payload = '<li id="entry-' + id + '" entryid="' + id + '">'
+			payload = '<li class="entry" id="entry-' + id + '" entryid="' + id + '">'
 				+ '<div class="entry">'
 				+ '<input type="hidden" class="entry-type" name="entries[' + id + '][type]" value="' + type + '"/>'
 				+ '<input type="hidden" class="entry-url" name="entries[' + id + '][url]" value="' + url + '"/>'
