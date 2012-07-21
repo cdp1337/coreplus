@@ -11,6 +11,7 @@
 	</head>
 
 	<body>
+	{widget name="AdminMenu"}
 		<div id="wrapper" class="column1">
 			<header>
 				<a href="{$smarty.const.ROOT_URL}" title="Home"><img src="{asset src='logo.png'}" alt="Home"/></a>
@@ -62,7 +63,7 @@
 				</nav>
 				
 				<aside id="leftcol" class="pagecolumn">
-					{widget name="AdminMenu"}
+
 					{*widget name="/Content/View/5"*}
 					{widgetarea name="Left Column"}
 				</aside>
