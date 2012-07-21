@@ -9,7 +9,7 @@
 	</permissions>
 	<pages>
 		<page baseurl="/gallery" admin="0" widget="0" access="*" title="Gallery Listings"/>
-		<page baseurl="/galleryadmin" admin="1" widget="0" access="g:admin" title="Gallery Administration"/>
+		<page baseurl="/galleryadmin" admin="1" widget="0" access="p:gallery_manage" title="Gallery Administration"/>
 	</pages>
 	<description>
 		Gallery browsing system for core+

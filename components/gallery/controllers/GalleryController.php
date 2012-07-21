@@ -32,7 +32,7 @@ class GalleryController extends Controller_2_1 {
 		$view->title = 'Gallery Listings';
 		$view->assignVariable('albums', $albums);
 
-		if(Core::User()->checkAccess('g:admin')){
+		if(Core::User()->checkAccess('p:gallery_manage')){
 			$view->addControl('Add Album', '/gallery/create', 'add');
 		}
 
@@ -90,7 +90,7 @@ class GalleryController extends Controller_2_1 {
 			$view->addControl(
 				array(
 					'title' => 'Edit Image',
-				    'link' => '#',
+					'link' => '#',
 					'class' => 'update-link',
 					'icon' => 'edit',
 					'image' => $image->get('id'),
@@ -145,14 +145,14 @@ class GalleryController extends Controller_2_1 {
 
 			if($editor)  $view->addControl('Edit Gallery Album', '/gallery/edit/' . $album->get('id'), 'edit');
 		}
-/*
-		if(\Core\user()->checkAccess('g:admin')){
-			$view->addControl('Add Page', '/Content/Create', 'add');
-			$view->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
-			$view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
-			$view->addControl('All Content Pages', '/Content', 'directory');
-		}
-*/
+		/*
+		  if(\Core\user()->checkAccess('g:admin')){
+			  $view->addControl('Add Page', '/Content/Create', 'add');
+			  $view->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
+			  $view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
+			  $view->addControl('All Content Pages', '/Content', 'directory');
+		  }
+  */
 	}
 
 	/**

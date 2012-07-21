@@ -22,15 +22,13 @@
 
 class GalleryAdminController extends Controller_2_1{
 	public function __construct(){
-		// Generic admin permission for this system.
-		// @todo Expand this to include more fine-grain control over permissions of individual galleries.
-		$this->accessstring = 'g:admin';
+		$this->accessstring = 'p:gallery_manage';
 	}
 
 	public function index(){
 		$view = $this->getView();
 
-		if(!$this->setAccess('g:admin')){
+		if(!$this->setAccess('p:gallery_manage')){
 			return View::ERROR_ACCESSDENIED;
 		}
 
