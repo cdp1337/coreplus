@@ -15,12 +15,12 @@
 		<file filename="assets/css/images/lightbox-btn-next.gif" md5="23414965ebe526012e473c1d4d65d4e7"/>
 		<file filename="assets/css/images/lightbox-btn-prev.gif" md5="5a9118de4ef6226473190d6e82f6d80d"/>
 		<file filename="assets/css/images/lightbox-ico-loading.gif" md5="b5fe8df97005341f898e2cf84e68de01"/>
-		<file filename="assets/css/jquery.lightbox-0.5.css" md5="79ec543bbe42f8852aac14381b9ffff8"/>
-		<file filename="assets/js/jquery.lightbox-0.5.js" md5="2f6bedebc6fde0a3f34626cc8815b344"/>
-		<file filename="assets/js/jquery.lightbox-0.5.min.js" md5="21c9812998af15acf69da2f91bb02363"/>
+		<file filename="assets/css/jquery.lightbox-0.5.css" md5="96ffc5ef3f274ad20bc77e293a8b0722"/>
+		<file filename="assets/js/jquery.lightbox-0.5.js" md5="f82a95292da1810815fe8521aa03a0c1"/>
+		<file filename="assets/js/jquery.lightbox-0.5.min.js" md5="89a2ef0f8dc320697d03148604fd5526"/>
 	</assets>
 	<files>
-		<file filename="JQueryLightbox.lib.php" md5="f1602a583d6329c4120bf592148bab5e">
+		<file filename="JQueryLightbox.lib.php" md5="458e6cfd5aec29aff515bda9eef56944">
 			<class name="JQueryLightbox"/>
 		</file>
 	</files>
