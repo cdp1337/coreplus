@@ -78,4 +78,17 @@ abstract class JQuery {
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
+
+	public static function Include_cookie(){
+		$base = 'jquery.cookie';
+
+		// I need jquery first.
+		self::IncludeJQuery();
+
+		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
+		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+
+		// IMPORTANT!  Tells the script that the include succeeded!
+		return true;
+	}
 }

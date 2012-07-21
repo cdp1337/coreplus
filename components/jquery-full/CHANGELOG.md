@@ -1,3 +1,7 @@
+1.7.1~core2
+2012.07.20
+Added jquery.cookie plugin.
+
 <changelog version="1.7.0-1">
 	<notes>
 		New upstream release.

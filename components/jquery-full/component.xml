@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7.2~core1" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7.2~core2" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="1.9.0" operation="ge"/>
 	</requires>
@@ -10,8 +10,10 @@
 		<provide name="JQueryUI.NestedSortable" version="1.4.0" type="library"/>
 		<provide name="JQueryUI.readonly" version="2.0.1" type="library"/>
 		<provide name="JQuery.json" version="2.2" type="library"/>
+		<provide name="JQuery.cookie" version="1.1" type="library"/>
 		<scriptlibrary name="jquery" call="JQuery::IncludeJQuery"/>
 		<scriptlibrary name="jquery.json" call="JQuery::Include_json"/>
+		<scriptlibrary name="jquery.cookie" call="JQuery::Include_cookie"/>
 		<scriptlibrary name="jqueryui" call="JQuery::IncludeJQueryUI"/>
 		<scriptlibrary name="jqueryui.nestedSortable" call="JQuery::Include_nestedSortable"/>
 		<scriptlibrary name="jqueryui.readonly" call="JQuery::Include_readonly"/>
@@ -60,6 +62,8 @@
 		<file filename="assets/js/jquery/jquery-ui-1.8.11.min.js" md5="bc1367d7c32e3b4fd746027d8188cc36"/>
 		<file filename="assets/js/jquery/jquery-ui-1.8.16.min.js" md5="65c7c707dddea0c7861714df250d54c4"/>
 		<file filename="assets/js/jquery/jquery-ui-1.8.20.min.js" md5="925ce969efd834fd7be9e35d0007904c"/>
+		<file filename="assets/js/jquery/jquery.cookie.js" md5="20adaea8ed610b1b08abf532beba6659"/>
+		<file filename="assets/js/jquery/jquery.cookie.min.js" md5="b2b5da3ba885603b0097b9a6bd6b032c"/>
 		<file filename="assets/js/jquery/jquery.json-2.2.js" md5="56fdd8b6674e6d121afe11a920191429"/>
 		<file filename="assets/js/jquery/jquery.json-2.2.min.js" md5="2d59ccdc20e736725bdbcb433e080ec0"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.js" md5="78f9086993a0701fda4f09c271d30adb"/>
@@ -69,9 +73,9 @@
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG.md" md5="cff8fb582254ebada2d644e6eecbfed7"/>
+		<file filename="CHANGELOG.md" md5="4392f799ae10b6d8338f9f9a9d4f693f"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="4518d646ffc508e2f49aca3c04e3349a">
+		<file filename="JQuery.lib.php" md5="a6b6ef765f3e74679fb9d4fbb0b4e01c">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
@@ -88,6 +92,7 @@
 		<upgrade from="1.6.4~core1" to="1.7.0-1"/>
 		<upgrade from="1.7.0-1" to="1.7.1"/>
 		<upgrade from="1.7.1" to="1.7.2~core1"/>
+		<upgrade from="1.7.2~core1" to="1.7.2~core2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
