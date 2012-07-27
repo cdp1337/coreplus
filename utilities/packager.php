@@ -1277,16 +1277,24 @@ function get_exported_components(){
 		}
 
 		// Split up the name and the version.
-		preg_match('/([^-]*)\-(.*)/', $fbase, $matches);
-		$n = $matches[1];
-		$v = $matches[2];
+		// This is a little touchy because a dash in the package name is perfectly valid.
+		// instead, grab the last dash in the string.
+
+		$dash = strrpos($fbase, '-');
+		$n = substr($fbase, 0, $dash);
+		$v = substr($fbase, ($dash+1));
+		// instead, I need to look for a dash followed by a number.  This should indicate the version number.
+		//preg_match('/^(.*)\-([0-9]+.*)$/', $fbase, $matches);
+
+		//$n = $matches[1];
+		//$v = $matches[2];
 
 		// Tack it on.
 		if(!isset($c[$n])){
 			$c[$n] = array('version' => $v, 'signed' => $signed, 'filename' => $dir . '/' . $file);
 		}
 		else{
-			switch(version_compare($c[$n]['version'], $v)){
+			switch(Core::VersionCompare($c[$n]['version'], $v)){
 				case -1:
 					// Existing older, overwrite!
 					$c[$n] = array('version' => $v, 'signed' => $signed, 'filename' => $dir . '/' . $file);
@@ -1395,7 +1403,7 @@ $ans = CLI::PromptUser(
 	array(
 		'component' => 'Manage a Component',
 		'theme' => 'Manage a Theme',
-		'bundle' => 'Installation Bundle',
+	//	'bundle' => 'Installation Bundle',
 		'exit' => 'Exit the script',
 	),
 	'component'
@@ -1403,8 +1411,11 @@ $ans = CLI::PromptUser(
 
 switch($ans){
 	case 'component':
+		echo "Scanning existing components...\n";
+
 		// Open the "component" directory and look for anything with a valid component.xml file.
 		$files = array();
+		$longestname = 4;
 		// Tack on the core component.
 		$files[] = 'core';
 		$dir = ROOT_PDIR . 'components';
@@ -1414,12 +1425,41 @@ switch($ans){
 			if(!is_dir($dir . '/' . $file)) continue;
 			if(!is_readable($dir . '/' . $file . '/' . 'component.xml')) continue;
 
+			$longestname = max($longestname, strlen($file));
 			$files[] = $file;
 		}
 		closedir($dh);
 		// They should be in alphabetical order...
 		sort($files);
-		$ans = CLI::PromptUser("Which component do you want to package/manage?", $files);
+
+
+		// Before prompting the user which one to choose, tack on the exported versions.
+		$versionedfiles = array();
+		foreach($files as $k => $f){
+			$dir = ROOT_PDIR . (($f == 'core') ? 'core/' : 'components/' . $f . '/');
+
+			// What's this file's version?
+			$xml = new XMLLoader();
+			$xml->setRootName('component');
+			if(!$xml->loadFromFile($dir . 'component.xml')){
+				throw new Exception('Unable to load XML file ' . $cfile);
+			}
+
+			// Get the current version, this will be used to autocomplete for the next version.
+			$version = $xml->getRootDOM()->getAttribute("version");
+
+			// Now give me the exported version.
+			$lookup = get_exported_component($f);
+
+			if($lookup['version'] != $version){
+				$versionedfiles[$k] = sprintf('%-' . ($longestname+1) . 's %s', $f, '** needs exported **');
+			}
+			else{
+				$versionedfiles[$k] = $f;
+			}
+		}
+
+		$ans = CLI::PromptUser("Which component do you want to package/manage?", $versionedfiles);
 		process_component($files[$ans]);
 		break; // case 'component'
 	case 'theme':
