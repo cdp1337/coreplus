@@ -1,10 +1,7 @@
 <?php
 /**
- * Admin menu widget
- *
- * Displays every "admin" level page in the system, (if the user has access)
- *
  * @package Core Plus\Core
+ * @since 2.1.3
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -22,27 +19,27 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class AdminMenuWidget extends Widget_2_1 {
-	public function execute(){
-		$v = $this->getView();
-		
-		$pages = PageModel::Find(array('admin' => '1'));
-		$viewable = array();
-		foreach($pages as $p){
-			if(!Core::User()->checkAccess($p->get('access'))) continue;
-			if($p->get('title') == "Administration") {
-				$p->set('title', trim(str_replace("Administration", "Admin", $p->get('title'))) );
-			} else {
-				$p->set('title', trim(str_replace("Admin","", str_replace("Administration", "", $p->get('title'))) ) );
-			}
-			$viewable[] = $p;
-		}
+/**
+ * Take a GMT date and return the formatted string.
+ *
+ * @param $params
+ * @param $template
+ *
+ * @return string
+ */
+function smarty_function_date($params, $template){
 
-		$v->templatename = 'widgets/adminmenu.tpl';
-		$v->assignVariable('pages', $viewable);
-		
-		return $v;
+	if(!isset($params['date'])){
+		throw new SmartyException('Missing required parameter, date');
+	}
+
+	$date = $params['date'];
+	$format = isset($params['format']) ? $params['format'] : 'RELATIVE';
+
+	if($format == 'RELATIVE'){
+		return Time::GetRelativeAsString($date, Time::TIMEZONE_USER);
+	}
+	else{
+		return Time::FormatGMT($date, Time::TIMEZONE_USER, $format);
 	}
 }
-
-?>

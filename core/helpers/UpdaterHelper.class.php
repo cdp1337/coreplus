@@ -279,6 +279,7 @@ class UpdaterHelper {
 					return array('status' => 0, 'message' => ROOT_PDIR . 'components/' . $component['name'] . '/ is not writable!');
 				}
 			}
+			// else, it is already locally installed.
 
 			$names[] = $component['name'];
 		}
@@ -339,34 +340,28 @@ class UpdaterHelper {
 				
 				// Cleanup the temp directory
 				$tmpdir->remove();
-				
-				// and w00t, the files should be extracted.  Do the actual installation.
-				$c = new Component($component['name']);
-				$c->load();
-				// if it's installed, switch to that version and upgrade.
-				if($c->isInstalled()){
-					$c = Core::GetComponent($component['name']);
-					// Make sure I get the new XML
-					$c->load();
-					// And upgrade
-					$c->upgrade();
-				}
-				else{
-					// It's a new installation.
-					$c->install();
-				}
-				/*
-				switch($component['type']){
-					case 'core':
-						$c = Core::GetComponent('core');
-						$c->upgrade();
-						break;
-					case 'component':
+			}
+			// else, it must be locally installed already, just not set to be installed.
+			// This happens if a component was copied in manually and the site is not in development mode.
+			// If this is the case... there's nothing to do extraction-wise.
 
-				}*/
+			// and w00t, the files should be extracted.  Do the actual installation.
+			$c = new Component($component['name']);
+			$c->load();
+			// if it's installed, switch to that version and upgrade.
+			if($c->isInstalled()){
+				$c = Core::GetComponent($component['name']);
+				// Make sure I get the new XML
+				$c->load();
+				// And upgrade
+				$c->upgrade();
+			}
+			else{
+				// It's a new installation.
+				$c->install();
 			}
 		}
-		
+
 		// yay...
 		return array('status' => 1, 'message' => 'Performed all operations successfully');
 	}

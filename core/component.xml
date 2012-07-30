@@ -27,6 +27,10 @@
 	<includes>
 		<include filename="core/functions/Core.functions.php"/>
 	</includes>
+	<widgets>
+		<widget baseurl="/page/siblingsnavigation" title="Page Siblings Nav"/>
+		<widget baseurl="/page/siblingsandchildrennavigation" title="Page Siblings w/Children Nav"/>
+	</widgets>
 	<files>
 		<file filename="LICENSES/agpl-3.0.txt" md5="08657324f94cfae679f345f428c68f9b"/>
 		<file filename="LICENSES/apache-2.0.txt" md5="3b83ef96387f14655fc854ddc3c6bd57"/>
@@ -36,7 +40,7 @@
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="e6bcccfe5d780d28d13a8e2dbbe17016"/>
 		<file filename="core/CHANGELOG" md5="4dc4c3af39d71d260fdb73b4fcbb2665"/>
-		<file filename="core/bootstrap.php" md5="7ef6db136017658c68fc9f2ac1310cef"/>
+		<file filename="core/bootstrap.php" md5="c60c5590ed82123aa744853f6d9a9439"/>
 		<file filename="core/bootstrap_predefines.php" md5="a75579b94642f0f4fb7b7540f9909288"/>
 		<file filename="core/bootstrap_preincludes.php" md5="f1971ce53f1a6c0f0d29a4434114cdb7"/>
 		<file filename="core/controllers/AdminController.php" md5="224fdec0630a697051eead4cb87623a8">
@@ -78,7 +82,8 @@
 		<file filename="core/forms/FormHiddenInput.class.php" md5="b165e1679347782c30492bb4b320ee5c">
 			<class name="FormHiddenInput"/>
 		</file>
-		<file filename="core/forms/FormPages.php" md5="057699d1e8314eae7cd3b2f67752d6fe">
+		<file filename="core/forms/FormPages.php" md5="419a5c6652fbe7c5278f0939e278962f">
+			<class name="FormPageRewriteURLInput"/>
 			<class name="FormPageMetasInput"/>
 			<class name="FormPageThemeSelectInput"/>
 			<class name="FormPageParentSelectInput"/>
@@ -91,6 +96,9 @@
 		</file>
 		<file filename="core/forms/FormSelectInput.class.php" md5="e539843aa341e69f26fae865407de997">
 			<class name="FormSelectInput"/>
+		</file>
+		<file filename="core/forms/FormStateInput.class.php" md5="ccf9f13c7031b4d0dace212d44151d1c">
+			<class name="FormStateInput"/>
 		</file>
 		<file filename="core/forms/FormSubmitInput.class.php" md5="a8c7075479f162010671026ee798c19a">
 			<class name="FormSubmitInput"/>
@@ -405,7 +413,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="baeda608b0d4cd0377fffa998cecdac9">
+		<file filename="core/libs/core/Component_2_1.php" md5="78b8a4ee4581f5072bd024328a573397">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="5ff824df4ce7e6628e1b10dc82158f44">
@@ -417,7 +425,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="da23111d3817635fd7fcad14583bde1a">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="d31523ef904fcddbbd04abbb4684553e">
+		<file filename="core/libs/core/Core.class.php" md5="4130a7da54d8ca893f7ff8a75f33ba68">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -430,10 +438,10 @@
 		<file filename="core/libs/core/Debug.class.php" md5="2f799131f3eb9465395a2d3d1c667b72">
 			<class name="Debug"/>
 		</file>
-		<file filename="core/libs/core/Email.class.php" md5="11c5da28c252b0d1f6af703e4b561704">
+		<file filename="core/libs/core/Email.class.php" md5="112cc428b37f51539a1d29b501988009">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="75c6378acad4636ca5687e4624c6f1fd">
+		<file filename="core/libs/core/Form.class.php" md5="b726855fe2d03dd6481969ecbd17c8ca">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -459,7 +467,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="0051b8d9055defa77e4ba2843ce9a31e">
+		<file filename="core/libs/core/Model.class.php" md5="f09608b8c08cf7ca1a783d430dee5872">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -488,10 +496,10 @@
 		<file filename="core/libs/core/Template.class.php" md5="b2bc620cd1960402e0b8d02aa6185104">
 			<class name="Template"/>
 		</file>
-		<file filename="core/libs/core/Time.class.php" md5="b91dce7fdff8ee72333cfa39efece40f">
+		<file filename="core/libs/core/Time.class.php" md5="f61bfc481eea40bacfc39cd9b9ce2c5c">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="c10282e72c5e9e566744f57769332439">
+		<file filename="core/libs/core/View.class.php" md5="d6e9513d631e25358f850de531b2362e">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -527,7 +535,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="e02b68f59cf50bf21f1bb533a2e59ea1">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="dbb68c791708616d99b2164194cc915f">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="9987e197fd9b6a704c02d23851fb7de2">
 			<class name="DMI_mysqli_backend"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/AUTHORS" md5="c0722ecbe902d4770f9e17b43db3d8e6"/>
@@ -869,13 +877,15 @@
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="2ca3be568e074f654d5657a5e20ac1b0"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="84d16e1ba8fb38b5c8be6a1ca960ab43"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="85f908c0a9fa616aca30a0b94afeae18"/>
+		<file filename="core/libs/smarty-plugins/function.date.php" md5="c55f53fa7f3c67f92e3c329a9ebb549b"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="b90dc10b7caf30b01b9a487b5653c9ce"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="4ccc817b64cccb0c9455d3fe1a28ddf2"/>
-		<file filename="core/libs/smarty-plugins/function.img.php" md5="161e0c79e337cd61b066876d2e7bcdab"/>
+		<file filename="core/libs/smarty-plugins/function.img.php" md5="0bc797e9a58263543eda1695905c7933"/>
+		<file filename="core/libs/smarty-plugins/function.img.php.orig" md5="161e0c79e337cd61b066876d2e7bcdab"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="d8daf3f492d0c8a71e7b8ccf0cd70cc9"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="9ff0428278228b374379b3f08b84db52"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="91afcea7988b41cd1e5745b6bd34e8bc"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="e36f2792ff9a1350d6980b5ed01a93f9"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="7a891464b0f05becef312e30f925da1d"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/smarty/README" md5="2280709acce0bf54217c12eff7932997"/>
 		<file filename="core/libs/smarty/SMARTY_2_BC_NOTES.txt" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
@@ -1189,23 +1199,27 @@
 		<file filename="core/models/Insertable.class.php" md5="9fcff9abc48a6750a219ee3df35b48af">
 			<class name="InsertableModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="2297e7a12be83ffc6c90b2ccc806a2b1">
+		<file filename="core/models/PageModel.class.php" md5="9aa360f593ee460493375bedc59b73cc">
 			<class name="PageModel"/>
 		</file>
+		<file filename="core/models/PageModel.class.php.orig" md5="0263425bbb0fee0417ca1bd82623411d"/>
 		<file filename="core/models/SessionModel.class.php" md5="08c4a259678e264f89c943b1b7a4d329">
 			<class name="SessionModel"/>
 		</file>
 		<file filename="core/models/UpdateSiteModel.class.php" md5="90a7e717dbef4709b4405082482f47e9">
 			<class name="UpdateSiteModel"/>
 		</file>
-		<file filename="core/models/WidgetInstanceModel.class.php" md5="bdc9033f9a983bce5f9b770cf6478b42">
+		<file filename="core/models/WidgetInstanceModel.class.php" md5="710c9bf56153169cac00e9d647971060">
 			<class name="WidgetInstanceModel"/>
 		</file>
 		<file filename="core/models/WidgetModel.class.php" md5="5acf2e568237b58b976078143681b1e3">
 			<class name="WidgetModel"/>
 		</file>
-		<file filename="core/widgets/AdminMenuWidget.php" md5="491bf62ead677d92dcf0d12874af3dfe">
+		<file filename="core/widgets/AdminMenuWidget.php" md5="57acd013252cf8ca4403f73d8690741d">
 			<class name="AdminMenuWidget"/>
+		</file>
+		<file filename="core/widgets/PageWidget.php" md5="8957d20934299448e213b12a4746135b">
+			<class name="PageWidget"/>
 		</file>
 		<file filename="htaccess.ex" md5="a9753494f79d3cfa1526c3ccfd19f1cc"/>
 		<file filename="index.php" md5="006c996a7e99b954bd75da97ea1f2782"/>
@@ -1306,6 +1320,12 @@
 		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="7811f6cb8ef1754ce9111764927b91bf"/>
 		<file filename="core/templates/pages/error/error403.tpl" md5="9223242be43703fc7f3e6d2633626f3b"/>
 		<file filename="core/templates/widgets/adminmenu.tpl" md5="bd00786bf22e5178fc3632d28211561a"/>
+		<file filename="core/templates/forms/elements/formstateinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
+		<file filename="core/templates/pages/error/error500.tpl" md5="e641e6a353fb4fdb65b271553bb51763"/>
+		<file filename="core/templates/widgets/page/siblingsnavigation.tpl" md5="e02e7719cfb212e4d9f5637b396e5f10"/>
+		<file filename="core/templates/widgets/adminmenu.tpl" md5="c048a1fd0da26060e3436a415c477d64"/>
+		<file filename="core/templates/forms/elements/formpagerewriteurlinput.tpl" md5="3a1951a5ed1249a71ffda60e802a76e1"/>
+		<file filename="core/templates/widgets/adminmenu.tpl" md5="b941453dae4d6bb7f5e088667279788f"/>
 	</view>
 	<install/>
 	<description>
@@ -1332,6 +1352,7 @@
 		<config key="/core/email/mailer" type="enum" options="smtp|sendmail|mail" default="sendmail" description=""/>
 		<config key="/core/email/sendmail_path" type="string" default="" description=""/>
 		<config key="/core/email/smtp_host" type="string" default="" description=""/>
+		<config key="/core/email/smtp_security" type="enum" options="none|ssl|tls" default="none" description="Security mode for connecting to the SMTP server"/>
 		<config key="/core/email/smtp_port" type="string" default="" description=""/>
 		<config key="/core/email/smtp_user" type="string" default="" description=""/>
 		<config key="/core/email/smtp_password" type="string" default="" description=""/>
@@ -1341,6 +1362,7 @@
 		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'" default=""/>
 	</configs>
 	<assets>
+		<file filename="core/assets/css/admin/adminbar.css" md5="b2f4c492c8d5deece8f24cb1786173a5"/>
 		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="5f0f2cdc614db1822a80a65fc0e69b80"/>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 		<file filename="core/assets/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
@@ -1401,7 +1423,9 @@
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			See the included NOTICE.md file for more information.
+		</license>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3
 		</license>

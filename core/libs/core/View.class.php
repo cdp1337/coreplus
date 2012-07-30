@@ -189,11 +189,26 @@ class View {
 	 * If you wish to override the canonical URL for this page, it can be done so with this variable.
 	 * If left null, it will be populated automatically with the URL resolution system.
 	 *
+	 * By setting this variable to false, the canonical link is ignored and not rendered to the browser.
+	 *
 	 * This variable is used to set the appropriate meta data, ie: link type="canonical" and meta key="og:url".
 	 *
-	 * @var null|string
+	 * @var null|false|string
 	 */
 	public $canonicalurl = null;
+
+	/**
+	 * Set to true to allow the page template to run with errors.
+	 *
+	 * By default, all errors are caught and the system template overrides the page template. This is
+	 * a security precaution to prevent the template from being rendered when access is denied.
+	 *
+	 * If HOWEVER that is the preferred behaviour, ie: user logins, set this to true to allow the page template
+	 * to be used in rendering.
+	 *
+	 * @var bool
+	 */
+	public $allowerrors = false;
 
 	/**
 	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
@@ -298,7 +313,7 @@ class View {
 		}
 
 		// Resolve the template based on the error code. (if present)
-		if ($this->error != View::ERROR_NOERROR) {
+		if ($this->error != View::ERROR_NOERROR && !$this->allowerrors) {
 			// Update some information in the view.
 			// Transpose some useful data for it.
 			//$view->baseurl = '/Error/Error' . $view->error;
@@ -394,8 +409,14 @@ class View {
 			// Master template depends on the render mode.
 			switch ($this->mode) {
 				case View::MODE_PAGEORAJAX:
-					if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') $mastertpl = false;
-					else $mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/skins/' . $this->mastertemplate;
+					if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
+						$mastertpl = false;
+						$this->mode = View::MODE_AJAX;
+					}
+					else{
+						$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/skins/' . $this->mastertemplate;
+						$this->mode = View::MODE_PAGE;
+					}
 					break;
 				case View::MODE_NOOUTPUT:
 				case View::MODE_AJAX:
@@ -433,14 +454,22 @@ class View {
 		$template->assign('title', $this->title);
 		$template->assign('body', $body);
 
-		$data = $template->fetch($mastertpl);
+		try{
+			$data = $template->fetch($mastertpl);
+		}
+		catch(SmartyException $e){
+			$this->error = View::ERROR_SERVERERROR;
+			error_log($e->getMessage());
+			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+			die();
+		}
 
 		if ($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML) {
 			// Metadata!  w00t
 
 			// Replace the </head> tag with the head data from the current page
 			// and the </body> with the foot data from the current page.
-			// This is needed to be done at this stage because some element in 
+			// This is needed to be done at this stage because some element in
 			// the template after rendering may add additional script to the head.
 			// Also tack on any attributes for the <html> tag.
 			$data = str_replace('</head>', $this->getHeadContent() . "\n" . '</head>', $data);
@@ -532,7 +561,7 @@ class View {
 		$data = $this->fetch();
 
 		// Be sure to send the content type and status to the browser, (if it's a page)
-		if ($this->mode == View::MODE_PAGE) {
+		if ($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX) {
 			switch ($this->error) {
 				case View::ERROR_NOERROR:
 					header('Status: 200 OK', true, $this->error);
@@ -555,10 +584,13 @@ class View {
 				if ($this->contenttype == View::CTYPE_HTML) header('Content-Type: text/html; charset=UTF-8');
 				else header('Content-Type: ' . $this->contenttype);
 			}
+			//mb_internal_encoding('utf-8');
 
 			if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 		}
 
+		//echo mb_convert_encoding($data, 'UTF-8', 'auto');
+		//echo mb_convert_encoding($data, 'HTML-ENTITIES', 'auto');
 		echo $data;
 	}
 
@@ -727,8 +759,10 @@ class View {
 			}
 
 			// Set the canonical URL in the necessary spots (if it's not in error)
-			$data[] = '<link rel="canonical" href="' . $this->canonicalurl . '" />';
-			$this->meta['og:url'] = $this->canonicalurl;
+			if($this->canonicalurl !== false){
+				$data[] = '<link rel="canonical" href="' . $this->canonicalurl . '" />';
+				$this->meta['og:url'] = $this->canonicalurl;
+			}
 
 			$this->meta['og:site_name'] = SITENAME;
 		}

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * This needs to be a standard text input, but it needs to extend it due to some javascript that gets added.
+ */
+class FormPageRewriteURLInput extends FormTextInput{
+
+}
+
 class FormPageMetasInput extends FormElement{
 
 	/**

@@ -363,8 +363,8 @@ catch (Exception $e) {
 	}
 
 	else {
-        require(ROOT_PDIR . 'core/libs/fatal_errors/database.php');
-        die();
+		require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+		die();
 	}
 }
 

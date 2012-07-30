@@ -534,10 +534,12 @@ class Form extends FormGroup {
 		'pagemeta'         => 'FormPageMeta',
 		'pagemetas'        => 'FormPageMetasInput',
 		'pageparentselect' => 'FormPageParentSelectInput',
+		'pagerewriteurl'   => 'FormPageRewriteURLInput',
 		'pagethemeselect'  => 'FormPageThemeSelectInput',
 		'password'         => 'FormPasswordInput',
 		'radio'            => 'FormRadioInput',
 		'select'           => 'FormSelectInput',
+		'state'            => 'FormStateInput',
 		'submit'           => 'FormSubmitInput',
 		'system'           => 'FormSystemInput',
 		'text'             => 'FormTextInput',
@@ -887,9 +889,19 @@ class Form extends FormGroup {
 
 		$form->loadFrom($src);
 
-		// Still good?
-		if (!$form->hasError()) $status = call_user_func($form->get('callsmethod'), $form);
-		else $status = false;
+		// Try to load the form from that form.  That will call all of the model's validation logic
+		// and will throw exceptions if it doesn't.
+		try{
+			$form->getModel();
+
+			// Still good?
+			if (!$form->hasError()) $status = call_user_func($form->get('callsmethod'), $form);
+			else $status = false;
+		}
+		catch(ModelValidationException $e){
+			Core::SetMessage($e->getMessage(), 'error');
+			$status = false;
+		}
 
 		// Regardless, bundle this form back into the session so the controller can use it if needed.
 		$_SESSION['FormData'][$formid] = serialize($form);
@@ -920,6 +932,11 @@ class Form extends FormGroup {
 	 */
 	public static function BuildFromModel(Model $model) {
 		$f = new Form();
+
+		// Adding support for grouped items directly from the model :)
+		// This will contain the links to the group names if there are any grouped elements.
+		// Will make lookups quicker.
+		$groups = array();
 
 		// Add the initial model tracker, will remember which model is attached.
 		$f->set('___modelname', get_class($model));
@@ -1029,10 +1046,29 @@ class Form extends FormGroup {
 			// I no longer need the type attribute.
 			unset($formatts['type']);
 
-			// And set everything else.
-			$el->setFromArray($formatts);
+			// Group support! :)
+			if(isset($formatts['group'])){
 
-			$f->addElement($el);
+				$groupname = $formatts['group'];
+				if(!isset($groups[$groupname])){
+					$groups[$groupname] = new FormGroup(array('title' => $groupname));
+					$f->addElement($groups[$groupname]);
+				}
+
+				unset($formatts['group']);
+
+				// And set everything else.
+				$el->setFromArray($formatts);
+
+				$groups[$groupname]->addElement($el);
+			}
+			else{
+				// And set everything else.
+				$el->setFromArray($formatts);
+
+				$f->addElement($el);
+			}
+
 		}
 		/*
 		// If this model supports Pages, add that too!
@@ -1140,7 +1176,7 @@ class FormPageMeta extends FormGroup {
 		$this->_attributes['name']    = 'page';
 
 		if ($atts instanceof PageModel) {
-			parent::__construct();
+			parent::__construct(array('name' => 'page'));
 
 			$page = $atts;
 		}

@@ -843,6 +843,13 @@ class Core implements ISingleton {
 
 		if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
 
+		// Skip the cache while I decide on if it's needed or not.
+		// the issue was that if clientA went to the site on ie: localhost, and clientB went to the site
+		// on 192.168.1.20, all assets would be resolving to "localhost", potentially producing invalid links.
+		$f = self::File($asset);
+		return $f->getURL();
+
+
 		// Maybe it's cached :)
 		$keyname    = 'asset-resolveurl';
 		$cachevalue = self::Cache()->get($keyname, (3600 * 24));

@@ -23,94 +23,100 @@
 class PageModel extends Model {
 
 	public static $Schema = array(
-		'title'          => array(
+		'title' => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'default'   => null,
 			'comment'   => '[Cached] Title of the page',
 			'null'      => true,
-			'formtype'  => 'text',
-			'formdescription' => 'Every page needs a title to accompany it, this should be short but meaningful.'
+			'form'      => array(
+				'type' => 'text',
+				'description' => 'Every page needs a title to accompany it, this should be short but meaningful.'
+			),
 		),
-		'baseurl'        => array(
-			'type'      => Model::ATT_TYPE_STRING,
+		'baseurl' => array(
+			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
-			'required'  => true,
-			'null'      => false,
+			'required' => true,
+			'null' => false,
+			'form' => array('type' => 'system'),
 		),
-		'rewriteurl'     => array(
-			'type'       => Model::ATT_TYPE_STRING,
-			'maxlength'  => 128,
-			'null'       => false,
+		'rewriteurl' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'null' => false,
 			'validation' => array('this', 'validateRewriteURL'),
-			'formtitle'  => 'Rewrite URL',
-			'formdescription' => 'Starts with a "/", omit the root web dir.',
+			'form' => array(
+				'title' => 'Rewrite URL',
+				'type' => 'pagerewriteurl',
+				'description' => 'Starts with a "/", omit the root web dir.',
+			),
 		),
-		'parenturl'      => array(
-			'type'      => Model::ATT_TYPE_STRING,
+		'parenturl' => array(
+			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
-			'null'      => true,
+			'null' => true,
 			'formtype' => 'pageparentselect',
 			'formtitle' => 'Parent URL'
 		),
-		'metas'          => array(
-			'type'     => Model::ATT_TYPE_TEXT,
-			'comment'  => '[Cached] Serialized array of metainformation',
-			'null'     => false,
-			'default'  => '',
+		'metas' => array(
+			'type' => Model::ATT_TYPE_TEXT,
+			'comment' => '[Cached] Serialized array of metainformation',
+			'null' => false,
+			'default' => '',
 			'formtype' => 'pagemetas'
 		),
 		'theme_template' => array(
-			'type'      => Model::ATT_TYPE_STRING,
+			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
-			'default'   => null,
-			'null'      => true,
-			'comment'   => 'Allows the page to define its own theme and widget information.',
-			'formtype'  => 'pagethemeselect'
+			'default' => null,
+			'null' => true,
+			'comment' => 'Allows the page to define its own theme and widget information.',
+			'formtype' => 'pagethemeselect'
 		),
-		'page_template'  => array(
-			'type'      => Model::ATT_TYPE_STRING,
+		'page_template' => array(
+			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,
-			'default'   => null,
-			'null'      => true,
-			'comment'   => 'Allows the specific page template to be overridden.',
-			'formtype'  => 'hidden'
+			'default' => null,
+			'null' => true,
+			'comment' => 'Allows the specific page template to be overridden.',
+			'formtype' => 'hidden'
 		),
-		'access'         => array(
-			'type'      => Model::ATT_TYPE_STRING,
+		'access' => array(
+			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 512,
-			'comment'   => 'Access string of the page',
-			'null'      => false,
-			'default'   => '*',
+			'comment' => 'Access string of the page',
+			'null' => false,
+			'default' => '*',
 			'formtype' => 'access',
 			'formtitle' => 'Access Permissions',
 		),
-		'fuzzy'          => array(
-			'type'    => Model::ATT_TYPE_BOOL,
+		'fuzzy' => array(
+			'type' => Model::ATT_TYPE_BOOL,
 			'comment' => 'If this url is fuzzy or an exact match',
-			'null'    => false,
+			'null' => false,
 			'default' => '0',
 			'formtype' => 'system'
 		),
-		'admin'          => array(
-			'type'    => Model::ATT_TYPE_BOOL,
+		'admin' => array(
+			'type' => Model::ATT_TYPE_BOOL,
 			'comment' => 'If this page is an administration page',
-			'null'    => false,
+			'null' => false,
 			'default' => '0',
 			'formtype' => 'system'
 		),
-		'created'        => array(
+		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
 		),
-		'updated'        => array(
+		'updated' => array(
 			'type' => Model::ATT_TYPE_UPDATED,
 			'null' => false,
 		),
 	);
 
 	public static $Indexes = array(
-		'primary'            => array('baseurl'),
+		'primary' => array('baseurl'),
 		'unique:rewrite_url' => array('rewriteurl'),
 	);
 
@@ -138,10 +144,8 @@ class PageModel extends Model {
 	 */
 	private static $_FuzzyCache = null;
 
-	// DISABLING 2012.05.13 cpowell
-	/*
+
 	public function  __construct($key = null) {
-		
 		$this->_linked = array(
 			'Insertable' => array(
 				'link' => Model::LINK_HASMANY,
@@ -151,7 +155,6 @@ class PageModel extends Model {
 
 		parent::__construct($key);
 	}
-	*/
 
 
 	/**
@@ -160,7 +163,7 @@ class PageModel extends Model {
 	 */
 	public function getControllerClass() {
 		if (!$this->_class) {
-			$a            = PageModel::SplitBaseURL($this->get('baseurl'));
+			$a = PageModel::SplitBaseURL($this->get('baseurl'));
 			$this->_class = ($a) ? $a['controller'] : null;
 		}
 		return $this->_class;
@@ -168,7 +171,7 @@ class PageModel extends Model {
 
 	public function getControllerMethod() {
 		if (!$this->_method) {
-			$a             = PageModel::SplitBaseURL($this->get('baseurl'));
+			$a = PageModel::SplitBaseURL($this->get('baseurl'));
 			$this->_method = ($a) ? $a['method'] : null;
 		}
 		return $this->_method;
@@ -176,7 +179,7 @@ class PageModel extends Model {
 
 	public function getParameters() {
 		if (!$this->_params) {
-			$a             = PageModel::SplitBaseURL($this->get('baseurl'));
+			$a = PageModel::SplitBaseURL($this->get('baseurl'));
 			$this->_params = ($a) ? $a['parameters'] : array();
 		}
 		return $this->_params;
@@ -301,7 +304,7 @@ class PageModel extends Model {
 	 * @return bool
 	 */
 	public function setMetas($metaarray) {
-		if(is_array($metaarray) && count($metaarray)) $m = json_encode($metaarray);
+		if (is_array($metaarray) && count($metaarray)) $m = json_encode($metaarray);
 		else $m = '';
 
 		return $this->set('metas', $m);
@@ -313,14 +316,14 @@ class PageModel extends Model {
 	 * @param $name string
 	 * @param $value string|array
 	 */
-	public function setMeta($name, $value){
+	public function setMeta($name, $value) {
 		// Get,
 		$metas = $this->getMetas();
 		// Update, (or delete)
-		if($value === '' || $value === null){
-			if(isset($metas[$name])) unset($metas[$name]);
+		if ($value === '' || $value === null) {
+			if (isset($metas[$name])) unset($metas[$name]);
 		}
-		else{
+		else {
 			$metas[$name] = $value;
 		}
 		// And set.
@@ -401,6 +404,13 @@ class PageModel extends Model {
 		// Ensure some helper variables are set.
 		if (!$this->get('rewriteurl')) $this->set('rewriteurl', $this->get('baseurl'));
 
+		// If the rewrite URL was changed, I need to invalidate the cache.
+		// This is because many components that may change the url, will immediately want to reload to that new url.
+		if($this->_data['rewriteurl'] != $this->_datainit['rewriteurl']){
+			self::$_FuzzyCache = null;
+			self::$_RewriteCache = null;
+		}
+
 		return parent::save();
 	}
 
@@ -415,7 +425,7 @@ class PageModel extends Model {
 			// If the page is currently Edit and there is a View... handle that instance.
 			if ($m == 'edit' && method_exists($this->getControllerClass(), 'view')) {
 				$p = new PageModel(str_replace('/edit/', '/view/', $b));
-				if($p->exists()){
+				if ($p->exists()) {
 					// I need the array merge because getParentTree only returns << parents >>.
 					return array_merge($p->getParentTree(), array($p));
 				}
@@ -435,8 +445,8 @@ class PageModel extends Model {
 		// _getParentTree will go the long way about returning results, and may return blank / invalid ones.
 		// If so, clean those results.
 		$ret = array();
-		foreach($this->_getParentTree() as $p){
-			if($p->exists() || $p->get('title')){
+		foreach ($this->_getParentTree() as $p) {
+			if ($p->exists() || $p->get('title')) {
 				$ret[] = $p;
 			}
 		}
@@ -474,12 +484,12 @@ class PageModel extends Model {
 
 				$p = new PageModel($url);
 				// Fuzzy pages that do not have a parent url specifically set should not propagate up.
-				if($p->get('fuzzy') && !$p->get('parenturl')){
+				if ($p->get('fuzzy') && !$p->get('parenturl')) {
 					//echo "returning from #1<hr/>";
 					//return array($p);
 					return array();
 				}
-				else{
+				else {
 					//echo "returning from #2<hr/>";
 					return array_merge($p->_getParentTree(--$antiinfiniteloopcounter), array($p));
 				}
@@ -491,7 +501,7 @@ class PageModel extends Model {
 		// If this page does not have a parent, BUT is marked as an admin page..
 		// /admin is automatically prefixed.
 		// (unless the current page *is* /admin.... then it can be skipped.
-		if(!$this->get('parenturl') && $this->get('admin') && strtolower($this->get('baseurl')) != '/admin'){
+		if (!$this->get('parenturl') && $this->get('admin') && strtolower($this->get('baseurl')) != '/admin') {
 			$url = '/admin';
 			if (isset(self::$_RewriteCache[$url])) {
 				$p = new PageModel($url);
@@ -502,16 +512,16 @@ class PageModel extends Model {
 		// If this page does not have a parent, simply return a blank array.
 		if (!$this->get('parenturl')) return array();
 
-		$p   = new PageModel($this->get('parenturl'));
+		$p = new PageModel($this->get('parenturl'));
 		return array_merge($p->_getParentTree(--$antiinfiniteloopcounter), array($p));
 	}
 
 	private function _populateView() {
 		// Transpose some useful data for it.
-		$this->_view->error   = View::ERROR_NOERROR;
+		$this->_view->error = View::ERROR_NOERROR;
 		$this->_view->baseurl = $this->get('baseurl');
 		$this->_view->setParameters($this->getParameters());
-		$this->_view->templatename   = $this->getTemplateName();
+		$this->_view->templatename = $this->getTemplateName();
 		$this->_view->mastertemplate = ($this->get('template')) ? $this->get('template') : ConfigHandler::Get('/theme/default_template');
 
 		$this->_view->setBreadcrumbs($this->getParentTree());
@@ -536,20 +546,19 @@ class PageModel extends Model {
 		self::_LookupUrl(null);
 
 		// so now I can translate that rewriteurl to the baseurl.
-		if(isset(self::$_RewriteCache[$base])){
+		if (isset(self::$_RewriteCache[$base])) {
 			$base = self::$_RewriteCache[$base];
-		}
-		// or find a fuzzy page if there is one.
+		} // or find a fuzzy page if there is one.
 		// remember, fuzzy pages are meant to act as a sort of directory placeholder.
-		else{
+		else {
 			$try = $base;
-			while($try != '' && $try != '/'){
-				if(isset(self::$_FuzzyCache[$try])){
+			while($try != '' && $try != '/') {
+				if(isset(self::$_FuzzyCache[$try])) {
 					// The fuzzy page must have the requested arguments, they just need to be tacked onto the end of the base.
 					$base = self::$_FuzzyCache[$try] . substr($base, strlen($try));
 					break;
 				}
-				elseif(in_array($try, self::$_FuzzyCache)){
+				elseif(in_array($try, self::$_FuzzyCache)) {
 					$base = self::$_FuzzyCache[array_search($try, self::$_FuzzyCache)] . substr($base, strlen($try));
 					break;
 				}
@@ -679,10 +688,10 @@ class PageModel extends Model {
 		// Tack on the "arguments" too, these are 
 
 		return array('controller' => $controller,
-		             'method'     => $method,
-		             'parameters' => $params,
-		             'baseurl'    => $baseurl,
-		             'rewriteurl' => $rewriteurl);
+			'method' => $method,
+			'parameters' => $params,
+			'baseurl' => $baseurl,
+			'rewriteurl' => $rewriteurl);
 	}
 
 	/**
@@ -696,17 +705,17 @@ class PageModel extends Model {
 			$s->select('rewriteurl, baseurl, fuzzy');
 			$s->table(DB_PREFIX . 'page');
 
-			$rs                  = $s->execute();
+			$rs = $s->execute();
 			self::$_RewriteCache = array();
-			self::$_FuzzyCache   = array();
+			self::$_FuzzyCache = array();
 
 			foreach ($rs as $row) {
 				self::$_RewriteCache[strtolower($row['rewriteurl'])] = strtolower($row['baseurl']);
-				if($row['fuzzy']) self::$_FuzzyCache[strtolower($row['rewriteurl'])] = strtolower($row['baseurl']);
+				if ($row['fuzzy']) self::$_FuzzyCache[strtolower($row['rewriteurl'])] = strtolower($row['baseurl']);
 			}
 		}
 
-		if($url === null) return; // maybe this was just called to update the local rewrite and fuzzy caches.
+		if ($url === null) return; // maybe this was just called to update the local rewrite and fuzzy caches.
 		return (isset(self::$_RewriteCache[$url])) ? self::$_RewriteCache[$url] : $url;
 	}
 
@@ -722,14 +731,14 @@ class PageModel extends Model {
 		$url = strtolower($url);
 
 		// See if it directly matches a cached page
-		if(($key = array_search($url, self::$_RewriteCache)) !== false){
+		if (($key = array_search($url, self::$_RewriteCache)) !== false) {
 			return $key;
 		}
 
 		// Else try to look it up in the fuzzy pages.
 		$try = $url;
-		while($try != '' && $try != '/'){
-			if(in_array($try, self::$_FuzzyCache)){
+		while ($try != '' && $try != '/') {
+			if (in_array($try, self::$_FuzzyCache)) {
 				$url = array_search($try, self::$_FuzzyCache) . substr($url, strlen($try));
 				return $url;
 			}

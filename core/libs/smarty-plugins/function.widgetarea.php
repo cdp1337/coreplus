@@ -43,9 +43,12 @@ function smarty_function_widgetarea($params, $template){
 	foreach($wifac as $wi){
 		// User cannot access this widget? Don't display it...
 		if(!\Core\user()->checkAccess($wi->get('access'))) continue;
-		
+
 		$view = $wi->execute();
-		
+
+		// Some widgets may return simply a blank string.  Those should just be ignored.
+		if($view == '') continue;
+
 		$contents = ($view->error == View::ERROR_NOERROR) ? $view->fetch() : ('Error displaying widget: [' . $view->error . ']');
 		
 		$body .= '<div class="widget">' . $contents . '</div>';

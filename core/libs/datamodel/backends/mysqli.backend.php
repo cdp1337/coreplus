@@ -782,17 +782,44 @@ class DMI_mysqli_backend implements DMI_Backend {
 			}
 		}
 
+		$debug = debug_backtrace();
+		$callinglocation = array();
+		$count = 0;
+		$totalcount = 0;
+		foreach($debug as $d){
+			$class = (isset($d['class'])) ? $d['class'] : null;
+			++$totalcount;
+
+			if($class == 'DMI_mysqli_backend') continue;
+			if($class == 'Dataset') continue;
+			if($class == 'Model') continue;
+
+			$file = (isset($d['file'])) ? (substr($d['file'], strlen(ROOT_PDIR)+2)) : 'anonymous';
+			$line = (isset($d['line'])) ? (':' . $d['line']) : '';
+			$func = ($class !== null) ? ($d['class'] . $d['type'] . $d['function']) : $d['function'];
+
+			$callinglocation[] = $file . $line . ', [' . $func . '()]';
+			++$count;
+			if($count >= 3 && sizeof($debug) >= $totalcount + 2){
+				$callinglocation[] = '...';
+				break;
+			}
+		}
+
 		$start = microtime(true) * 1000;
 		//echo $string . '<br/>'; // DEBUGGING //
 		$res = $this->_conn->query($string);
 
 		// Record this query!
+		// This needs to include the query itself, what type it was, how long it took to execute,
+		// any errors it produced, and where in the code it was called.
 		$this->_querylog[] = array(
 			'query' => $string,
 			'type' => $type,
 			'time' => round( (microtime(true) * 1000 - $start), 3),
 			'errno' => $this->_conn->errno,
-			'error' => $this->_conn->error
+			'error' => $this->_conn->error,
+			'caller' => $callinglocation,
 		);
 
 		// And increase the count.

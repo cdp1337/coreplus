@@ -49,7 +49,11 @@
 					<a href="#" class="disable-link">Disable</a>
 					<a href="#" class="update-link" style="display:none;">Update</a>
 				{else}
-					<a href="#" class="enable-link">Enable</a>
+					{if $c->isInstalled()}
+						<a href="#" class="enable-link">Enable</a>
+					{else}
+						<a href="#" class="perform-update" type="components" name="{$c->getName()}" version="{$c->getVersion()}">Install</a>
+					{/if}
 				{/if}
 			</td>
 		</tr>

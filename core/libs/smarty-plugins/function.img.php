@@ -30,11 +30,20 @@ function smarty_function_img($params, $template){
 	
 	// Key/value array of attributes for the resulting HTML.
 	$attributes = array();
-	
-	// Generally "src" is given.
-	
-	if(!isset($params['src'])){
-		throw new SmartyException('{img} tag requires a src.');
+
+	if(isset($params['file'])){
+		$f = $params['file'];
+		if(!$f instanceof File_Backend){
+			throw new SmartyException('{img} tag expects a File object for the "file" parameter.');
+		}
+		unset($params['file']);
+	}
+	elseif(isset($params['src'])){
+		$f = Core::File($params['src']);
+		unset($params['src']);
+	}
+	else{
+		throw new SmartyException('{img} tag requires either a "src" or "file" parameter.');
 	}
 	
 	// Some optional parameters, (and their defaults)
@@ -62,16 +71,13 @@ function smarty_function_img($params, $template){
 	
 	$d = ($width && $height) ? $width . 'x' . $height : false;
 	
-	// Well... 
-	$f = Core::File($params['src']);
+	// Well...
 	if($d){
 		$attributes['src'] = $f->getPreviewURL($d);
 	}
 	else{
 		$attributes['src'] = $f->getURL();
 	}
-	
-	unset($params['src']);
 	
 	// Do the rest of the attributes that the user sent in (if there are any)
 	foreach($params as $k => $v){

@@ -2,7 +2,7 @@
 
 <p>Actually I guess we did, a server error was encountered and the administrator notified.</p>
 
-{if $smarty.const.DEVELOPMENT_MODE}
+{if $smarty.const.DEVELOPMENT_MODE && isset($exception)}
 	<pre class="xdebug-var-dump">
 	Error Code: {$exception->getCode()}
 	Error Message: {$exception->getMessage()}

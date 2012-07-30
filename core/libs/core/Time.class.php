@@ -56,8 +56,10 @@ class Time {
 	 */
 	private function _getTimezone($timezone) {
 		if ($timezone == Time::TIMEZONE_USER) {
-			// Conver this to the user's timezone.
-			$timezone = \Core\user()->getPreference('timezone')->value;
+			// Convert this to the user's timezone.
+			$timezone = \Core\user()->get('timezone');
+
+			if($timezone === null) $timezone = date_default_timezone_get();
 
 			// Users must have valid timezone strings too!
 			if (is_numeric($timezone)) $timezone = Time::TIMEZONE_DEFAULT;

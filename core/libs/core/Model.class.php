@@ -90,6 +90,14 @@ class Model implements ArrayAccess {
 	const LINK_BELONGSTOONE = 'belongs_one';
 
 	/**
+	 * Definition for a model that *BELONGS* to many tables.
+	 *
+	 * A good example of this would be a linking table, that contains a Many-to-Many relationship
+	 * between two models.
+	 */
+	const LINK_BELONGSTOMANY = 'belongs_many';
+
+	/**
 	 * Which DataModelInterface should this model execute its operations with.
 	 * 99.9% of the time, it's fine to leave this as null, which will use the
 	 * system DMI.  If however you want to utilize a Model with Memcache,
@@ -233,8 +241,30 @@ class Model implements ArrayAccess {
 	public function save() {
 
 		// Only do the same operation if it's been changed.
-		if (!$this->_dirty) return false;
+		// This is actually a little more in depth than simply seeing if it's been modified, as I also
+		// have to look into the linked classes and see if it exists
+		$save = false;
+		// new models always get saved.
+		if(!$this->_exists){
+			$save = true;
+		}
+		// Models that have changed content always get saved.
+		elseif($this->_dirty){
+			$save = true;
+		}
+		else{
+			foreach($this->_linked as $k => $l){
+				if(isset($l['records'])){
+					$save = true;
+					break;
+				}
+			}
+		}
 
+		if(!$save){
+			return false;
+		}
+/*
 		// Do the key validation first of all.
 		if (get_class($this) == 'PageModel') {
 			$s = self::GetSchema();
@@ -253,17 +283,16 @@ class Model implements ArrayAccess {
 				}
 			}
 		}
-
+*/
 		if ($this->_exists) $this->_saveExisting();
 		else $this->_saveNew();
-
-		$this->_exists     = true;
-		$this->_dirty      = false;
-		$this->_dataatinit = $this->_data;
 
 
 		// Go through any linked tables and ensure that they're saved as well.
 		foreach($this->_linked as $k => $l){
+			// No need to save if it was never loaded.
+			if(!(isset($l['records']))) continue;
+
 			if(!(isset($l['records']) || $this->_dirty)) continue; // No need to save if it was never loaded.
 
 			switch($l['link']){
@@ -280,6 +309,10 @@ class Model implements ArrayAccess {
 				// There is no default behaviour... other than to ignore it.
 			}
 		}
+
+		$this->_exists     = true;
+		$this->_dirty      = false;
+		$this->_dataatinit = $this->_data;
 
 		// Indicate that something happened.
 		return true;
@@ -477,7 +510,12 @@ class Model implements ArrayAccess {
 				$dat->update($k, $v);
 			}
 		}
-		//var_dump($dat); die(); // DEBUG
+
+		// No data.. nothing to change I guess!
+		if(!sizeof($dat->_sets)){
+			return false;
+		}
+		//var_dump($dat); die('mep'); // DEBUG
 		$dat->execute($this->interface);
 		// IDs don't change in updates, else they wouldn't be the id.
 	}

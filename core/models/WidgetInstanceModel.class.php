@@ -169,6 +169,9 @@ class WidgetInstanceModel extends Model {
 			// Hopefully it's setup!
 			$return = $c->getView();
 		}
+		elseif($return == ''){
+			return '';
+		}
 		// No else needed, else it's a valid object.
 
 

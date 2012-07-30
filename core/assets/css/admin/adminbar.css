@@ -1,0 +1,64 @@
+/** Admin Bar **/
+#admin-bar {
+	position: fixed;
+	background: #222;
+	font-size: 80%;
+	width: 26px;
+	border-bottom: 1px solid #ddd;
+	z-index: 9999;
+	padding:5px 0;
+	overflow:hidden;
+	height:26px;
+}
+
+#admin-bar ul {position:relative;top:8px;}
+
+.icon-chevron-right,
+.icon-chevron-left {color:#fff;}
+
+#admin-bar a,
+#admin-bar a:visited {
+	color:#aaa;
+	text-decoration:none;
+}
+
+#admin-bar.admin-bar-collapsed{
+	border-right: 1px solid black;
+	width: 26px;
+}
+
+#admin-bar ul li {
+	float: left;
+	list-style: none;
+	margin-right:17px;
+	height:30px;
+}
+
+#admin-bar ul li:hover a {border-bottom:2px solid #aaa}
+
+#admin-bar ul li:last-child {margin-right:0;}
+
+#admin-bar .admin-bar-toggle{
+	color: black;
+	font-size: 150%;
+	line-height: 1.5em;
+	padding-left: 4px;
+	text-decoration: none;
+	letter-spacing: -0.2em;
+	display: block;
+	float: left;
+	width: 22px;
+}
+
+/** When the admin bar is collapsed **/
+.admin-bar-collapsed .admin-bar-toggle i.icon-chevron-left {
+	display: none;
+}
+.admin-bar-collapsed ul {}
+
+
+/** When the admin bar is expanded **/
+.admin-bar-expanded .admin-bar-toggle i.icon-chevron-right {
+	display: none;
+}
+/** End Admin Bar **/

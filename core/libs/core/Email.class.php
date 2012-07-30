@@ -70,7 +70,7 @@ class Email {
 	 *
 	 * @return PHPMailer
 	 */
-	public function getMailer() {
+	public function getMailer()	{
 		if (!$this->_mailer) {
 			$this->_mailer = new PHPMailer(true);
 
@@ -82,10 +82,13 @@ class Email {
 			$this->_mailer->Mailer   = ConfigHandler::Get('/core/email/mailer');
 			$this->_mailer->Sendmail = ConfigHandler::Get('/core/email/sendmail_path');
 			if ($this->_mailer->Mailer == 'smtp') {
-				$this->_mailer->Host     = ConfigHandler::Get('/core/email/smtp_host');
-				$this->_mailer->Port     = ConfigHandler::Get('/core/email/smtp_port');
-				$this->_mailer->Username = ConfigHandler::Get('/core/email/smtp_user');
-				$this->_mailer->Password = ConfigHandler::Get('/core/email/smtp_password');
+				$this->_mailer->Host       = ConfigHandler::Get('/core/email/smtp_host');
+				$this->_mailer->Port       = ConfigHandler::Get('/core/email/smtp_port');
+				$this->_mailer->Username   = ConfigHandler::Get('/core/email/smtp_user');
+				$this->_mailer->Password   = ConfigHandler::Get('/core/email/smtp_password');
+				$this->_mailer->SMTPSecure =
+					(ConfigHandler::Get('/core/email/smtp_security') == 'none') ?
+						'' : ConfigHandler::Get('/core/email/smtp_security');
 				if ($this->_mailer->Username != '') $this->_mailer->SMTPAuth = true;
 			}
 
@@ -170,6 +173,16 @@ class Email {
 	}
 
 	/**
+	 * Set the Reply To address for this email.
+	 *
+	 * @param $address
+	 * @param string $name
+	 */
+	public function setReplyTo($address, $name = '') {
+		$this->getMailer()->AddReplyTo($address, $name);
+	}
+
+	/**
 	 * Set the body for this email.
 	 *
 	 * This is typically not used, as the Template system should be used whenever possible,
@@ -218,7 +231,13 @@ class Email {
 
 		// Set the body first.
 		if ($this->templatename) {
-			$this->setBody($this->getTemplate()->fetch($this->templatename), true);
+			$html = $this->getTemplate()->fetch($this->templatename);
+			if (strpos($html, '<html>') === false) {
+				// Ensuring that the body is wrapped with <html> tags helps with spam checks with spamassassin.
+				$html = '<html>' . $html . '</html>';
+			}
+			//$this->setBody($html, true);
+			$this->getMailer()->MsgHTML($html);
 		}
 
 		return $this->getMailer()->Send();
