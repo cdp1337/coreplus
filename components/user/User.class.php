@@ -178,7 +178,7 @@ class User {
 		//  it might be best to disable the return here!...
 		if(isset($this->_accessstringchecks[$accessstring])){
 			// :)
-			//return $this->_accessstringchecks[$accessstring];
+			return $this->_accessstringchecks[$accessstring];
 		}
 		
 		// Default behaviour (also set from * or !* flags).
@@ -218,19 +218,22 @@ class User {
 			else{
 				list($type, $dat) = array_map('trim', explode(':', $p));
 			}
-			
+
 			// Each check can either be an 'ALLOW' or 'DENY'.
 			// This is toggled by the presence of a '!'
 			if($dat{0} == '!'){
 				$ret = false;
 				$dat = substr($dat, 1);
 			}
+			// Sometimes the type has the '!'... this is acceptable too.
+			elseif($type{0} == '!'){
+				$ret = false;
+				$type = substr($type, 1);
+			}
 			else{
 				$ret = true;
 				// No trim is needed.
 			}
-			
-			
 			
 			// A few "special" checks.
 			if($type == '*'){

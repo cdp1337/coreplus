@@ -258,6 +258,8 @@ class UserController extends Controller_2_1{
 		$newcontroller = new self();
 		$newcontroller->overwriteView($view);
 		$view->baseurl = '/User/Login';
+		$view->error = View::ERROR_ACCESSDENIED;
+		$view->allowerrors = true;
 		$newcontroller->login();
 	}
 
