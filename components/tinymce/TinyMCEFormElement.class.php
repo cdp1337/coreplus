@@ -21,8 +21,12 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class TinyMCEFormElement extends FormElement{
+class TinyMCEFormElement extends FormElement {
+	public function __construct($atts = null) {
+		parent::__construct($atts);
 
+		// Some defaults
+		$this->_attributes['class'] = 'formelement formwysiwyginput';
+	}
 }
 
-?>
