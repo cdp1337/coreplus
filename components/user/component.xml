@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="user" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" name="user" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.2"/>
 		<require name="Facebook" type="component"/>
@@ -14,11 +14,11 @@
 	</forms>
 	<files>
 		<file filename="CHANGELOG" md5="420cf0765d1f30ed331337541a53b552"/>
-		<file filename="User.class.php" md5="171853e054d96f5eb9c64d64df04ffdc">
+		<file filename="User.class.php" md5="d6d9154a2217241354385858580a2185">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
-		<file filename="UserForm.class.php" md5="fb98aaea0f91e102523aedafb2bba7f2">
+		<file filename="UserForm.class.php" md5="d5a273d86587170b59590f67ff32a74c">
 			<class name="FormAccessStringInput"/>
 		</file>
 		<file filename="User_Backend.interface.php" md5="f683736b302e6375401cd99670117eb1">
@@ -39,7 +39,7 @@
 		<file filename="controllers/UserAdminController.php" md5="975438ad9dfea0ec6b3fd6e28bbd92fc">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="9a6af72acdedde4576d21684a0b146b4">
+		<file filename="controllers/UserController.php" md5="76bf4b2f383fe0472d42c77dd17ff752">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="87720df274ed8438582743843c8f466f">
@@ -78,6 +78,8 @@
 		<file filename="templates/pages/usergroupadmin/index.tpl" md5="737ee67c775c5cb219d040015dbcb496"/>
 		<file filename="templates/pages/usergroupadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="b5b16731d34c802a15dc3fb7734b3abc"/>
+		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="f24f2069b4c49a7887c9e66f7cf0d73a"/>
+		<file filename="templates/pages/user/login.tpl" md5="d7351c35f9ff638acdd90a59f47ee5a2"/>
 	</view>
 	<pages>
 		<page baseurl="/User/Login" admin="0" widget="0" access="!g:authenticated" title="Login"/>
@@ -129,6 +131,7 @@
 		</upgrade>
 		<upgrade from="1.9.1" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.0.1"/>
+		<upgrade from="2.0.1" to="2.0.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
