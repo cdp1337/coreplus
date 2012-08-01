@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="r6~core1" name="JQuery-hoverIntent" execmode="web">
+	<requires>
+		<require name="core" type="component" version="2.1.0" operation="ge"/>
+		<require name="jquery" type="library" version="1.7.2" operation="ge"/>
+	</requires>
+	<provides>
+		<provide version="r6" name="JQuery.hoverIntent" type="library"/>
+		<scriptlibrary name="jquery.hoverIntent" call="JQueryHoverIntent::Load"/>
+	</provides>
+	<assets>
+		<file filename="assets/js/jquery.hoverIntent.min.js" md5="3e36c5ccb99b2d56265b877e8e00980e"/>
+	</assets>
+	<files>
+		<file filename="JQueryHoverIntent.lib.php" md5="aee32463fa0e30a75179e374e21ca641">
+			<class name="JQueryHoverIntent"/>
+		</file>
+	</files>
+	<description>
+		hoverIntent is a plug-in that attempts to determine the user's intent...
+		like a crystal ball, only with mouse movement! It works like (and was derived from)
+		jQuery's built-in hover. However, instead of immediately calling the onMouseOver function,
+		it waits until the user's mouse slows down enough before making the call.
+	</description>
+	<authors>
+		<author name="Brian Cherne"/>
+	</authors>
+	<licenses>
+		<license url="http://opensource.org/licenses/MIT">MIT and GPL licenses</license>
+	</licenses>
+</component>
+
