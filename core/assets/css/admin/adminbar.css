@@ -8,7 +8,6 @@
 	z-index: 9999;
 	padding:5px 0;
 	overflow:hidden;
-	height:26px;
 }
 
 #admin-bar ul {position:relative;top:8px;}
@@ -25,6 +24,7 @@
 #admin-bar.admin-bar-collapsed{
 	border-right: 1px solid black;
 	width: 26px;
+	height: 26px;
 }
 
 #admin-bar ul li {

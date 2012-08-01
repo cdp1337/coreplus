@@ -356,15 +356,39 @@ class PageRequest {
 		}
 		// No else needed, else it's a valid object.
 
-		// Load some of the page information into the view now!
-
-		foreach ($page->getMetas() as $key => $val) {
-			if ($val) {
-				View::AddMetaName($key, $val);
+		// For some of the options, there may be some that can be used for a fuzzy page, ie: a page's non-fuzzy template,
+		// title, or meta information.
+		if ($page->exists()) {
+			$defaultpage = $page;
+		} else {
+			$defaultpage = null;
+			$url         = $view->baseurl;
+			while ($url != '') {
+				$url = substr($url, 0, strrpos($url, '/'));
+				$p   = PageModel::Find(array('baseurl' => $url, 'fuzzy' => 1), 1);
+				if ($p === null) continue;
+				if ($p->exists()) {
+					$defaultpage = $p;
+					break;
+				}
+			}
+			if ($defaultpage === null) {
+				// Fine....
+				$defaultpage = $page;
 			}
 		}
 
-		if ($page->get('title') !== null) $return->title = $page->get('title');
+		// Load some of the page information into the view now!
+		foreach ($defaultpage->getMetas() as $key => $val) {
+			// again, allow the executed controller have the final say on meta information.
+			if ($val && !isset($return->meta[$key])) {
+				$return->meta[$key] = $val;
+				//View::AddMetaName($key, $val);
+			}
+		}
+
+		// Since the controller already ran, do not overwrite the title.
+		if ($return->title === null) $return->title = $defaultpage->get('title');
 
 		$parents = array();
 		foreach ($page->getParentTree() as $parent) {
@@ -386,8 +410,8 @@ class PageRequest {
 		}
 
 		// Master template set in the database?
-		if ($page->get('theme_template')) {
-			$return->mastertemplate = $page->get('theme_template');
+		if ($defaultpage->get('theme_template')) {
+			$return->mastertemplate = $defaultpage->get('theme_template');
 		}
 
 
