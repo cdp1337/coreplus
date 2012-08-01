@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.9999.5~core1" name="JQuery-cycle" execmode="web">
+	<requires>
+		<require name="core" type="component" version="2.1.0" operation="ge"/>
+		<require name="jquery" type="library" version="1.7.2" operation="ge"/>
+	</requires>
+	<provides>
+		<provide version="2.9999.5" name="JQuery.cycle" type="library"/>
+		<scriptlibrary name="jquery.cycle" call="JQueryCycle::Load"/>
+	</provides>
+	<assets>
+		<file filename="assets/js/jquery.cycle.all.js" md5="1afbc5e61bf421dd381c7e76496db89c"/>
+	</assets>
+	<files>
+		<file filename="JQueryCycle.lib.php" md5="340b9137fc227982032836ae2cecbc2c">
+			<class name="JQueryCycle"/>
+		</file>
+	</files>
+	<description>
+		The jQuery Cycle Plugin is a slideshow plugin that supports many different types of transition effects.
+		It supports pause-on-hover, auto-stop, auto-fit, before/after callbacks, click triggers and much more.
+	</description>
+	<authors>
+		<author name="M. Alsup"/>
+	</authors>
+	<licenses>
+		<license url="http://opensource.org/licenses/MIT">MIT and GPL licenses</license>
+	</licenses>
+</component>
+
