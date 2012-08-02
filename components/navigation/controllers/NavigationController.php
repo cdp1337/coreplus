@@ -117,23 +117,22 @@ class NavigationController extends Controller_2_1 {
 
 		// Save all the entries
 		$counter = 0;
-		if(!isset($_POST['entries'])) $_POST['entries'] = array();
+		if (!isset($_POST['entries'])) $_POST['entries'] = array();
 
 		foreach ($_POST['entries'] as $id => $dat) {
 
 			// New entries get an incremented counter and a new model.
-			if (strpos($id, 'new') !== false){
+			if (strpos($id, 'new') !== false) {
 				++$counter;
 				$entry = new NavigationEntryModel();
-			}
-			// Deleted entries just get the model deleted.
-			elseif(strpos($id, 'del-') !== false){
+			} // Deleted entries just get the model deleted.
+			elseif (strpos($id, 'del-') !== false) {
 				$entry = new NavigationEntryModel(substr($id, 4));
 				$entry->delete();
 				continue;
 			}
 			// Existing entries also get an incremented counter and the existing model.
-			else{
+			else {
 				++$counter;
 				$entry = new NavigationEntryModel($id);
 			}

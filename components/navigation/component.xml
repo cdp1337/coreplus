@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.0" name="Navigation" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 	</requires>
 	<files>
-		<file filename="controllers/Navigation.controller.php" md5="499cb65356c5af347f6c83ee7c1d6140">
+		<file filename="controllers/NavigationController.php" md5="f609072de0e71e7ba8e0b07c4959847a">
 			<controller name="NavigationController"/>
-		</file>
-		<file filename="controllers/Navigation.widget.php" md5="8cfbef42a7081afb2ea48aa4d634d364">
-			<class name="NavigationWidget"/>
 		</file>
 		<file filename="models/Navigation.model.php" md5="a47682fe688d7cd8389504fbbe05bde1">
 			<class name="NavigationModel"/>
 		</file>
 		<file filename="models/NavigationEntry.model.php" md5="d143d8b99e34338ec178ee9282001044">
 			<class name="NavigationEntryModel"/>
+		</file>
+		<file filename="widgets/NavigationWidget.php" md5="c08fc9d387e1306b1c42ac1ea55c488e">
+			<class name="NavigationWidget"/>
 		</file>
 	</files>
 	<view>
@@ -33,17 +33,26 @@
 		<file filename="templates/widgets/navigation/view.tpl" md5="6fb708355f550ba2945b81ad359957fa"/>
 		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="4031fb3dc83afb83f716a6150a479a55"/>
 		<file filename="templates/pages/navigation/index.tpl" md5="8fbbccd35a3cbc609cc8845b6a3a45ee"/>
+		<file filename="templates/widgets/navigation/_menu.inc.tpl" md5="90dbd8a3b4b2a96a44136ed7a39e9dda"/>
+		<file filename="templates/widgets/navigation/siblings.tpl" md5="15e80b7f0ae2230cc8ff57d316ff6124"/>
+		<file filename="templates/widgets/navigation/siblingsandchildren.tpl" md5="2a5a80e0fdd98d02f7695367a89e9015"/>
+		<file filename="templates/widgets/navigation/view.tpl" md5="629c5fcb1cd7f3ecddff0451bc1eee7a"/>
 	</view>
 	<pages>
 		<page baseurl="/Navigation" admin="1" widget="0" access="" title="Navigation Listings"/>
 	</pages>
+	<widgets>
+		<widget baseurl="/navigation/siblings" title="Page Siblings Nav"/>
+		<widget baseurl="/navigation/siblingsandchildren" title="Page Siblings w/Children Nav"/>
+	</widgets>
 	<assets>
-		<file filename="assets/js/navigation/manager.js" md5="c39bacf67ec7a690834eb04340385115"/>
+		<file filename="assets/js/navigation/manager.js" md5="f3df8f2c0b3e640b1153fdcbb9a5decb"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>
 		<upgrade from="1.9.0" to="1.9.1"/>
 		<upgrade from="1.9.1" to="2.0.0"/>
+		<upgrade from="2.0.0" to="2.1.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

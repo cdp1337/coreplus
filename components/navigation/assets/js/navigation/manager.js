@@ -187,14 +187,14 @@ var NavigationManager = null;
 					type = $li.find('.entry-type').val(),
 					title = $li.find('.entry-title').val();
 
-				if(confirm('Delete ' + type + ' link ' + title + '?')){
-					if(id.match(/^new-/) == null){
+				if (confirm('Delete ' + type + ' link ' + title + '?')) {
+					if (id.match(/^new-/) == null) {
 						// Existing record, I actually have to record the deletion.
 						$li.find(':input').remove();
 						$li.append('<input type="hidden" name="entries[del-' + id + '][name]" value="does not matter ;)"/>');
 						$li.hide();
 					}
-					else{
+					else {
 						// New record, I can just delete it! ^_^
 						$li.remove();
 					}
