@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Sitemap" execmode="web">
+	<requires>
+		<require name="core" type="component" version="2.1.2"/>
+	</requires>
+	<files>
+		<file filename="controllers/SitemapController.php" md5="ba28464ece7d3284aeaa81327e51599e">
+			<controller name="SitemapController"/>
+		</file>
+	</files>
+	<view>
+		<file filename="templates/sitemap/index.tpl" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="templates/sitemap/index.xml.tpl" md5="19e6d7b547de01a2a1d5e66ecf1a9370"/>
+		<file filename="templates/pages/sitemap/index.tpl" md5="ee04aea2710bd45bcd4a8d0e11bcb96f"/>
+		<file filename="templates/pages/sitemap/index.xml.tpl" md5="19e6d7b547de01a2a1d5e66ecf1a9370"/>
+	</view>
+	<pages/>
+	<assets/>
+	<upgrades/>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+</component>
+
