@@ -15,10 +15,10 @@
 				<input type="hidden" class="widgetarea" name="widgets[0][widgetarea]" value=""/>
 				<input type="hidden" class="widgetaccess" name="widgets[0][widgetaccess]" value="*"/>
 				
-				{$widget->get('title')} [{$widget->get('baseurl')}]
-				
-				<a href="#" class="control control-delete" style="float:right;">Delete</a>
-				<a href="#" class="control control-edit" style="float:right;">Edit</a>
+				<span class="widget-title">{$widget->get('title')} [{$widget->get('baseurl')}]</span>
+
+				<a href="#" class="control control-delete" style="float:right;"><i class="icon-remove"></i><span>Delete</span></a>
+				<a href="#" class="control control-edit" style="float:right;"><i class="icon-edit"></i><span>Edit</span></a>
 			</div>
 		{/foreach}
 	</div>
@@ -36,10 +36,10 @@
 								<input type="hidden" class="widgetarea" name="widgetarea[{$widget.id}][widgetarea]" value="{$area.name}"/>
 								<input type="hidden" class="widgetaccess" name="widgetarea[{$widget.id}][widgetaccess]" value="{$widget.access}"/>
 
-								{$widget.title} [{$widget.baseurl}]
+								<span class="widget-title">{$widget.title} [{$widget.baseurl}]</span>
 
-								<a href="#" class="control control-delete" style="float:right;">Delete</a>
-								<a href="#" class="control control-edit" style="float:right;">Edit</a>
+								<a href="#" class="control control-delete" style="float:right;"><i class="icon-remove"></i><span>Delete</span></a>
+								<a href="#" class="control control-edit" style="float:right;"><i class="icon-edit"></i><span>Edit</span></a>
 							</div>
 						{/foreach}
 					</div>
