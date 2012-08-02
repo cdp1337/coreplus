@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Blog" execmode="web">
+	<requires>
+		<require name="core" type="component" version="2.1.2" operation="ge"/>
+	</requires>
+	<permissions>
+		<permission key="blog_manage" description="Manage Blogs"/>
+	</permissions>
+	<files>
+		<file filename="controllers/BlogController.php" md5="d00acc60726d19dd1dd4069a0ddd06a0">
+			<controller name="BlogController"/>
+		</file>
+		<file filename="helpers/BlogHelper.php" md5="b2de84078304cd846fc3db2a57c33663">
+			<class name="BlogHelper"/>
+		</file>
+		<file filename="models/BlogArticleModel.php" md5="2a6ec440e4c3cef3eb199babc8b261b8">
+			<class name="BlogArticleModel"/>
+		</file>
+		<file filename="models/BlogArticleTagModel.php" md5="19113d6a799ff3b6012c99e22558720c">
+			<class name="BlogArticleTagModel"/>
+		</file>
+		<file filename="models/BlogModel.php" md5="ea5583b821de87b3bc16443d3c14c7be">
+			<class name="BlogModel"/>
+		</file>
+	</files>
+	<pages>
+		<page baseurl="/blog/admin" admin="1" widget="0" access="p:blog_manage" title="Blog Administration"/>
+	</pages>
+	<description>Blog system.</description>
+	<view searchdir="templates">
+		<file filename="templates/pages/blog/admin.tpl" md5="e386dce438d80ecc4ca165b559a378c5"/>
+		<file filename="templates/pages/blog/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/blog/article_create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/blog/view-blog.tpl" md5="0698ab600d19cb72d769160265e998ce"/>
+		<file filename="templates/pages/blog/admin.tpl" md5="207445c551f7c2169d951b0a7b501e7c"/>
+		<file filename="templates/pages/blog/article_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/blog/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/blog/view-blog-article.tpl" md5="e09cac9ce99d924a84fe252223191d3e"/>
+		<file filename="templates/pages/blog/view-blog.tpl" md5="8b5cb8a375ff5c91d20ff476342a00ee"/>
+	</view>
+	<upgrades/>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+</component>
+
