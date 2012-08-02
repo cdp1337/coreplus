@@ -45,6 +45,8 @@ class Session implements ISingleton {
 			self::$_Instance = new Session();
 
 			// Now I can session_start everything.
+			ini_set('session.hash_bits_per_character', 5);
+			ini_set('session.hash_function', 1);
 			session_start();
 
 			// And start a new session.
@@ -78,6 +80,9 @@ class Session implements ISingleton {
 	}
 
 	public static function Read($id) {
+		//$m = self::Singleton()->_getModel();
+		//var_dump($m->get('data'));
+
 		return self::Singleton()->_getModel()->get('data');
 	}
 
@@ -99,8 +104,7 @@ class Session implements ISingleton {
 			session_destroy();
 			// And invalidate the session id.
 			session_regenerate_id(true);
-		}
-		else {
+		} else {
 			// Low-level datasets are used here because they have less overhead than
 			// the full-blown model system.
 			$dataset = new Dataset();

@@ -31,6 +31,10 @@ class Model implements ArrayAccess {
 	 */
 	const ATT_TYPE_TEXT = 'text';
 	/**
+	 * Any binary-safe data.
+	 */
+	const ATT_TYPE_DATA = 'data';
+	/**
 	 * Integer only, no precision
 	 */
 	const ATT_TYPE_INT = 'int';

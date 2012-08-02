@@ -486,7 +486,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				break;
 			case Model::ATT_TYPE_ENUM:
 				if(!(isset($coldef['options']) && is_array($coldef['options']) && sizeof($coldef['options']))){
-					throw new DMI_Exception('Invalid column definition for ' . $table . '.' . $column . ', type ENUM must include at least one option.');
+					throw new DMI_Exception('Invalid column definition for, type ENUM must include at least one option.');
 				}
 				foreach($coldef['options'] as $k => $opt){
 					// Ensure that any single quotes are escaped out.
@@ -510,12 +510,15 @@ class DMI_mysqli_backend implements DMI_Backend {
 			case Model::ATT_TYPE_TEXT:
 				$type = "text";
 				break;
+			case Model::ATT_TYPE_DATA:
+				$type = 'mediumblob';
+				break;
 			case Model::ATT_TYPE_CREATED:
 			case Model::ATT_TYPE_UPDATED:
 				$type = 'int(11)';
 				break;
 			default:
-				throw new DMI_Exception('Unsupported model type for ' . $table . '.' . $column . ' [' . $coldef['type'] . ']');
+				throw new DMI_Exception('Unsupported model type for [' . $coldef['type'] . ']');
 				break;
 		}
 

@@ -164,13 +164,15 @@ class WidgetInstanceModel extends Model {
 			$view        = new View();
 			$view->error = $return;
 			return $view;
-		}
-		elseif ($return === null) {
+		} elseif ($return === null) {
 			// Hopefully it's setup!
 			$return = $c->getView();
 		}
-		elseif($return == ''){
+		elseif ($return == '') {
 			return '';
+		}
+		elseif (is_string($return)) {
+			return $return;
 		}
 		// No else needed, else it's a valid object.
 

@@ -34,7 +34,7 @@ class SessionModel extends Model {
 	public static $Schema = array(
 		'session_id' => array(
 			'type'      => Model::ATT_TYPE_STRING,
-			'maxlength' => 255,
+			'maxlength' => 160,
 			'required'  => true,
 			'null'      => false,
 		),
@@ -47,7 +47,7 @@ class SessionModel extends Model {
 			'maxlength' => 39,
 		),
 		'data'       => array(
-			'type'    => Model::ATT_TYPE_TEXT,
+			'type'    => Model::ATT_TYPE_DATA,
 			'default' => null,
 			'null'    => true,
 		),
@@ -63,6 +63,43 @@ class SessionModel extends Model {
 		'primary' => array('session_id'),
 	);
 
-	// @todo Put your code here.
+	public function get($k) {
+		if ($k == 'data') {
+			return $this->getData();
+		} else {
+			return parent::get($k);
+		}
+	}
+
+	public function set($k, $v) {
+		if ($k == 'data') {
+			return $this->setData($v);
+		} else {
+			parent::set($k, $v);
+		}
+	}
+
+	/**
+	 * Get the data for this session.  Useful for compression :p
+	 */
+	public function getData() {
+		$data     = $this->_data['data'];
+		$unzipped = @gzuncompress($data);
+		if ($unzipped === false) {
+			return $data;
+		} else {
+			return $unzipped;
+		}
+	}
+
+	/**
+	 * Set the data for this session.  This will automatically compress the contents.
+	 *
+	 * @param $data Uncompressed data
+	 */
+	public function setData($data) {
+		$zipped              = gzcompress($data);
+		$this->_data['data'] = $zipped;
+	}
 
 } // END class ConfigModel extends Model
