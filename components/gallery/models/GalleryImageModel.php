@@ -56,6 +56,11 @@ class GalleryImageModel extends Model {
 		'description' => array(
 			'type' => Model::ATT_TYPE_TEXT,
 		),
+		'rotation' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'formtype' => 'hidden',
+			'default' => 0
+		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
@@ -85,9 +90,61 @@ class GalleryImageModel extends Model {
 	/**
 	 * Get the file associated to this image.
 	 *
+	 * This has an interesting function; it will return the original filename or the rotated version.
+	 * This rotated version is stored in a different directory to prevent name conflicts.
+	 *
 	 * @return File_Backend
 	 */
 	public function getFile(){
+		if($this->get('rotation') == 0){
+			// Simple enough :p
+			return $this->getOriginalFile();
+		}
+		else{
+			$filename = $this->get('file');
+			$ext = substr($filename, strrpos($filename, '.'));
+			$base = substr($filename, 0, 0 -strlen($ext));
+			$rotatedfilename = $base . '-deg' . $this->get('rotation') . $ext;
+
+			// Since rotated files are all temporary...
+			$tmpfile = Core::File('tmp/galleryalbum/' . $rotatedfilename);
+
+			if(!$tmpfile->exists()){
+				$tmpfile->putContents('');
+				// Rotate it!
+				$originallocal = $this->getOriginalFile()->getLocalFilename();
+
+				switch(strtolower($ext)){
+					case '.jpg':
+					case '.jpeg':
+						$imagedat   = imagecreatefromjpeg($originallocal);
+						$rotateddat = imagerotate($imagedat, $this->get('rotation'), 0);
+						imagejpeg($rotateddat, $tmpfile->getFilename());
+						break;
+				}
+			}
+
+			return $tmpfile;
+			var_dump($tmpfile, $tmpfile->exists());
+
+			var_dump($ext, $base); die();
+		}
+		//$dir = ( ? 'galleryalbum'
 		return Core::File('public/galleryalbum/' . $this->get('file'));
+	}
+
+	/**
+	 * Get the original file associated to this image.
+	 *
+	 * This is critical because the getFile may return the *rotated* image!
+	 *
+	 * @return File_Backend
+	 */
+	public function getOriginalFile(){
+		return Core::File('public/galleryalbum/' . $this->get('file'));
+	}
+
+	public function rotate($degrees){
+
 	}
 }

@@ -28,14 +28,38 @@ class GalleryController extends Controller_2_1 {
 		$view = $this->getView();
 
 		$albums = GalleryAlbumModel::Find(null, null, null);
+		$manager = \Core\user()->checkAccess('p:gallery_manage');
 
 		$view->title = 'Gallery Listings';
 		$view->assignVariable('albums', $albums);
 
-		if(Core::User()->checkAccess('p:gallery_manage')){
+		if($manager){
 			$view->addControl('Add Album', '/gallery/create', 'add');
+			$view->addControl('Edit Album Listing Page', '/gallery/updatelisting', 'edit');
 		}
 
+	}
+
+	/**
+	 * Controller method to allow the page metadata to be edited.
+	 *
+	 * @return int
+	 */
+	public function updatelisting(){
+		$view = $this->getView();
+		$manager = \Core\user()->checkAccess('p:gallery_manage');
+
+		if(!$manager){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$page = new PageModel('/gallery');
+		$form = Form::BuildFromModel($page);
+		$form->set('callsmethod', 'GalleryFormHandler::SaveListing');
+		$form->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => '/gallery'));
+		$form->addElement('submit', array('value' => 'Update Listing'));
+
+		$view->assign('form', $form);
 	}
 
 	/**
@@ -85,15 +109,34 @@ class GalleryController extends Controller_2_1 {
 			$view->meta['keywords'] = $image->get('keywords');
 			$view->meta['description'] = $image->get('description');
 			$view->meta['og:image'] = $image->getFile()->getPreviewURL('200x200');
-			$view->addBreadcrumb($album->get('title'), $album->get('rewriteurl'));
 			$view->title = ($image->get('title') ? $image->get('title') : 'Image Details');
 			$view->addControl(
 				array(
 					'title' => 'Edit Image',
-					'link' => '#',
+				    'link' => '#',
 					'class' => 'update-link',
 					'icon' => 'edit',
 					'image' => $image->get('id'),
+				)
+			);
+			$view->addControl(
+				array(
+					'title' => 'Rotate CCW',
+					'link' => '#',
+					'class' => 'rotate-link',
+					'icon' => 'undo',
+					'image' => $image->get('id'),
+					'rotate' => 'ccw',
+				)
+			);
+			$view->addControl(
+				array(
+					'title' => 'Rotate CW',
+					'link' => '#',
+					'class' => 'rotate-link',
+					'icon' => 'repeat',
+					'image' => $image->get('id'),
+					'rotate' => 'cw',
 				)
 			);
 			$view->addControl(
@@ -104,8 +147,6 @@ class GalleryController extends Controller_2_1 {
 					'icon' => 'remove',
 				)
 			);
-			// @todo control-rotate-ccw
-			// @todo control-rotate-cw
 		}
 		// album view, (only one parameter)
 		else{
@@ -145,14 +186,14 @@ class GalleryController extends Controller_2_1 {
 
 			if($editor)  $view->addControl('Edit Gallery Album', '/gallery/edit/' . $album->get('id'), 'edit');
 		}
-		/*
-		  if(\Core\user()->checkAccess('g:admin')){
-			  $view->addControl('Add Page', '/Content/Create', 'add');
-			  $view->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
-			  $view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
-			  $view->addControl('All Content Pages', '/Content', 'directory');
-		  }
-  */
+/*
+		if(\Core\user()->checkAccess('g:admin')){
+			$view->addControl('Add Page', '/Content/Create', 'add');
+			$view->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
+			$view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
+			$view->addControl('All Content Pages', '/Content', 'directory');
+		}
+*/
 	}
 
 	/**
@@ -172,7 +213,7 @@ class GalleryController extends Controller_2_1 {
 		$m = new GalleryAlbumModel();
 
 		$form = Form::BuildFromModel($m);
-		$form->set('callsmethod', 'GalleryController::_SaveHandler');
+		$form->set('callsmethod', 'GalleryFormHandler::SaveAlbum');
 
 		$form->addElement('pagemeta', array('name' => 'page'));
 
@@ -213,7 +254,7 @@ class GalleryController extends Controller_2_1 {
 		}
 
 		$form = Form::BuildFromModel($album);
-		$form->set('callsmethod', 'GalleryController::_SaveHandler');
+		$form->set('callsmethod', 'GalleryFormHandler::SaveAlbum');
 
 		$form->addElement('pagemeta', array('name' => 'page', 'model' => $album->getLink('Page')));
 
@@ -383,32 +424,62 @@ class GalleryController extends Controller_2_1 {
 		Core::Redirect($album->get('rewriteurl'));
 	}
 
+	public function images_rotate(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
 
+		if(!$request->isJSON()){
+			return View::ERROR_BADREQUEST;
+		}
 
+		$albumid = $request->getParameter(0);
+		$album   = new GalleryAlbumModel($albumid);
+		$image   = new GalleryImageModel($request->getParameter('image'));
+		$rotate  = $request->getParameter('rotate');
+		$view->contenttype = View::CTYPE_JSON;
 
+		if(!$albumid){
+			return View::ERROR_BADREQUEST;
+		}
 
+		if(!$album->exists()){
+			return View::ERROR_NOTFOUND;
+		}
 
-	/// Static methods, ie: form handlers
+		if(!$image->exists()){
+			return View::ERROR_NOTFOUND;
+		}
 
-	public static function _SaveHandler(Form $form){
+		if($image->get('albumid') != $album->get('id')){
+			return View::ERROR_BADREQUEST;
+		}
 
-		$model = $form->getModel();
-		// Ensure that everything is marked as updated...
-		$model->set('updated', Time::GetCurrent());
-		//var_dump($model); die();
-		$model->save();
+		// According to GD:
+		//       0
+		//  90       270
+		//      180
 
-		$page = $form->getElementByName('page')->getModel();
-		$page->set('fuzzy', 1);
-		$page->set('baseurl', '/gallery/view/' . $model->get('id'));
-		$page->set('updated', Time::GetCurrent());
-		$page->save();
+		// The new rotation is based on the previous and the direction.
+		$current = $image->get('rotation');
+		$new = null;
+		if($rotate == 'cw'){
+			if($current == 0)      $new = 270;
+			elseif($current > 270) $new = 270;
+			elseif($current > 180) $new = 180;
+			elseif($current > 90)  $new = 90;
+			else                   $new = 0;
+		}
+		else{
+			if($current == 0)      $new = 90;
+			elseif($current < 90)  $new = 90;
+			elseif($current < 180) $new = 180;
+			elseif($current < 270) $new = 270;
+			else                   $new = 0;
+		}
 
-		$insertables = $form->getElementByName('insertables');
-		$insertables->set('baseurl', '/gallery/view/' . $model->get('id'));
-		$insertables->save();
+		$image->set('rotation', $new);
+		$image->save();
 
-		// w00t
-		return $page->getResolvedURL();
+		$view->jsondata = array('status' => '1', 'message' => 'Rotated image');
 	}
 }

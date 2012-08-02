@@ -1,13 +1,33 @@
-.gallery-listing-entry{
-	border: 1px solid #999;
-	margin-bottom:0.75em;
+.gallery-listing-entry {
+	border-width: 2px 0 0 0;
+	border-color: #0a2b70;
+	border-style: solid;
+	border-collapse: collapse;
+	padding: 20px 0;
 }
-.gallery-listng-title{
+
+.gallery-listing-title {
+}
+
+.gallery-listing-title a { color: #000; font-weight: 600; text-decoration: none; font-style: italic; }
+
+.gallery-listing-preview {
 	float: left;
+	width: 175px;
+	height: 80px;
+	margin-right: 10px;
+	text-decoration: none;
 }
-.gallery-listing-preview{
-	float: left;
+
+.gallery-listing-viewall {
+	margin-top: 10px;
 }
-.gallery-listing-viewall{
-	float: left;
+
+.gallery-listing-viewall a {
+	color: #000;
+	text-decoration: none;
 }
+
+.gallery-listing-viewall img { position: relative; top: 10px; }
+
+.gallery-image-details { text-align: center; }
