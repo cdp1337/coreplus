@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" name="user" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.3" name="user" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.2"/>
 		<require name="Facebook" type="component"/>
@@ -8,6 +8,7 @@
 	<smartyplugins directory="helpers/smarty-plugins/"/>
 	<hooks>
 		<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
+		<hook call="UserHelper::RecordActivity" name="/core/page/postrender"/>
 	</hooks>
 	<forms>
 		<formelement name="access" class="FormAccessStringInput"/>
@@ -39,14 +40,20 @@
 		<file filename="controllers/UserAdminController.php" md5="975438ad9dfea0ec6b3fd6e28bbd92fc">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="76bf4b2f383fe0472d42c77dd17ff752">
+		<file filename="controllers/UserController.php" md5="790ee4184a7d9456d6af8da584955745">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="87720df274ed8438582743843c8f466f">
 			<controller name="UserGroupAdminController"/>
 		</file>
-		<file filename="helpers/UserFunctions.php" md5="c2aa71f98a460d4b924af9856ef9bb9f"/>
+		<file filename="helpers/UserFunctions.php" md5="a32b2358b5a1f5f5482076752ce97066"/>
+		<file filename="helpers/UserHelper.class.php" md5="064af4a1cabbb4b9b1915e2969d78ae4">
+			<class name="UserHelper"/>
+		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
+		<file filename="models/UserActivityModel.php" md5="0dc125b42e0f65cb5396f30884f2761e">
+			<class name="UserActivityModel"/>
+		</file>
 		<file filename="models/UserConfigModel.php" md5="3f9ec960d49d5a547038ddf3d91aeff2">
 			<class name="UserConfigModel"/>
 		</file>
@@ -80,6 +87,9 @@
 		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="b5b16731d34c802a15dc3fb7734b3abc"/>
 		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="f24f2069b4c49a7887c9e66f7cf0d73a"/>
 		<file filename="templates/pages/user/login.tpl" md5="d7351c35f9ff638acdd90a59f47ee5a2"/>
+		<file filename="templates/pages/user/me.tpl" md5="b7b4264ad2a54852f1a53d084144b57f"/>
+		<file filename="templates/pages/user/password.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/widgets/user/login.tpl" md5="054c8c86b99b890e6490b96d3ff0c634"/>
 	</view>
 	<pages>
 		<page baseurl="/User/Login" admin="0" widget="0" access="!g:authenticated" title="Login"/>
@@ -132,6 +142,7 @@
 		<upgrade from="1.9.1" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.0.1"/>
 		<upgrade from="2.0.1" to="2.0.2"/>
+		<upgrade from="2.0.2" to="2.0.3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

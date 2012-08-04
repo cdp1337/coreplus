@@ -35,6 +35,102 @@ class UserController extends Controller_2_1{
 		}
 	}
 
+	/**
+	 * Show the current user's profile.
+	 */
+	public function me(){
+		// I could put this in the component xml, but it's not needed everywhere
+		require_once(ROOT_PDIR . 'components/user/helpers/UserFunctions.php');
+
+		$view    = $this->getView();
+		$req     = $this->getPageRequest();
+		$user    = \Core\user();
+
+		if(!$user->exists()){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$form = \User\get_edit_form($user);
+
+		$view->assign('user', $user);
+		$view->assign('form', $form);
+		$view->title = 'My Profile';
+	}
+
+	public function password(){
+		// I could put this in the component xml, but it's not needed everywhere
+		require_once(ROOT_PDIR . 'components/user/helpers/UserFunctions.php');
+
+		$view    = $this->getView();
+		$req     = $this->getPageRequest();
+		$userid  = $req->getParameter(0);
+		$manager = \Core\user()->checkAccess('p:user_manage'); // Current user an admin?
+
+		// Default to current user.
+		if($userid === null){
+			$ownpassword = true;
+			$userid = \Core\user()->get('id');
+		}
+		else{
+			$ownpassword = false;
+		}
+
+		// Only allow this if the user is either the same user or has the user manage permission.
+		if(!($userid == \Core\user()->get('id') || $manager)){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$user = User::Find(array('id' => $userid));
+
+		if($req->isPost()){
+			try{
+				$p1val = $_POST['pass'];
+				$p2val = $_POST['pass2'];
+				// Check the passwords, (that they match).
+				if($p1val != $p2val){
+					throw new ModelValidationException('Passwords do not match');
+				}
+
+				$user->set('password', $p1val);
+				$user->save();
+				Core::SetMessage('Updated Password Successfully', 'success');
+				if($ownpassword){
+					Core::Redirect('/user/me');
+				}
+				else{
+					Core::Redirect('/useradmin');
+				}
+			}
+			catch(ModelValidationException $e){
+				Core::SetMessage($e->getMessage(), 'error');
+			}
+			catch(Exception $e){
+				if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
+				else Core::SetMessage('An unknown error occured', 'error');
+				error_log($e->getMessage());
+			}
+		}
+
+		$form = new Form();
+
+		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => true));
+		$form->addElement('password', array('name' => 'pass2', 'title' => 'Confirm', 'required' => true));
+
+		$form->addElement('submit', array('value' => 'Update Password'));
+
+		$view->assign('form', $form);
+		$view->title = 'Password Management ';
+
+		// Breadcrumbs! (based on access permissions)
+		if(!$ownpassword){
+			$view->addBreadcrumb('User Administration', '/useradmin');
+			$view->addBreadcrumb($user->getDisplayName(), '/user/edit/' . $user->get('id'));
+		}
+		else{
+			$view->addBreadcrumb('My Profile', '/user/me');
+		}
+	}
+
 	public function edit(){
 		// I could put this in the component xml, but it's not needed everywhere
 		require_once(ROOT_PDIR . 'components/user/helpers/UserFunctions.php');
@@ -75,7 +171,7 @@ class UserController extends Controller_2_1{
 		}
 
 		$form = new Form();
-		$form->set('callsMethod', 'UserController::_LoginHandler');
+		$form->set('callsMethod', 'UserHelper::LoginHandler');
 
 		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
 		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => true));
@@ -265,233 +361,7 @@ class UserController extends Controller_2_1{
 
 
 
-	public static function _LoginHandler(Form $form){
-		$e = $form->getElement('email');
-		$p = $form->getElement('pass');
 
-
-		$u = User::Find(array('email' => $e->get('value')));
-		if(!$u){
-			$e->setError('Requested email is not registered.');
-			return false;
-		}
-
-		// A few exceptions for backends.
-		if($u instanceof User_facebook_Backend){
-			$e->setError('That is a Facebook account, please use the Facebook connect button to login.');
-			return false;
-		}
-
-		if(!$u->checkPassword($p->get('value'))){
-
-			if(!isset($_SESSION['invalidpasswordattempts'])) $_SESSION['invalidpasswordattempts'] = 1;
-			else $_SESSION['invalidpasswordattempts']++;
-
-			if($_SESSION['invalidpasswordattempts'] > 4){
-				// Start slowing down the response.  This should help deter brute force attempts.
-				sleep( ($_SESSION['invalidpasswordattempts'] - 4) ^ 1.5 );
-			}
-
-			$p->setError('Invalid password');
-			$p->set('value', '');
-			return false;
-		}
-
-		// yay...
-		Session::SetUser($u);
-
-		// Where shall I return to?
-		if(REL_REQUEST_PATH == '/user/login') return '/';
-		else return REL_REQUEST_PATH;
-	}
-
-	public static function _RegisterHandler(Form $form){
-		$e = $form->getElement('email');
-		$p1 = $form->getElement('pass');
-		$p1val = $p1->get('value');
-		$p2 = $form->getElement('pass2');
-		$p2val = $p2->get('value');
-
-		///////       VALIDATION     \\\\\\\\
-
-		// Check the passwords, (that they match).
-		if($p1val != $p2val){
-			$p1->setError('Passwords do not match.');
-			return false;
-		}
-
-		// Try to retrieve the user data from the database based on the email.
-		// Email is a unique key, so there can only be 1 in the system.
-		if(UserModel::Find(array('email' => $e->get('value')), 1)){
-			$e->setError('Requested email is already registered.');
-			return false;
-		}
-
-		$user = User_datamodel_Backend::Find(array('email' => $e->get('value')));
-
-		// All other validation can be done from the model.
-		// All set calls will throw a ModelValidationException if the validation fails.
-		try{
-			$lastel = $e;
-			$user->set('email', $e->get('value'));
-
-			$lastel = $p1;
-			$user->set('password', $p1->get('value'));
-		}
-		catch(ModelValidationException $e){
-			$lastel->setError($e->getMessage());
-			return false;
-		}
-		catch(Exception $e){
-			if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
-			else Core::SetMessage('An unknown error occured', 'error');
-
-			return false;
-		}
-
-
-		///////   USER CREATION   \\\\\\\\
-
-		// Sanity checks and validation passed, (right?...), now create the actual account.
-		// For that, I need to assemble clean data to send to the appropriate backend, (in this case datamodel).
-		$attributes = array();
-		foreach($form->getElements() as $el){
-			$name = $el->get('name');
-			// Is this element a config option?
-			if(strpos($name, 'option[') === 0){
-				$k = substr($el->get('name'), 7, -1);
-				$v = $el->get('value');
-
-				// Some attributes require some modifications.
-				if($el instanceof FormFileInput){
-					$v = 'public/user/' . $v;
-				}
-
-				$user->set($k, $v);
-			}
-
-			elseif($name == 'active'){
-				$user->set('active', $el->get('value'));
-			}
-
-			elseif($name == 'admin'){
-				$user->set('admin', $el->get('value'));
-			}
-		}
-
-		// Check if there are no users already registered on the system.  If
-		// none, register this user as an admin automatically.
-		if(UserModel::Count() == 0){
-			$user->set('admin', true);
-		}
-		else{
-			if(\ConfigHandler::Get('/user/register/requireapproval')){
-				$user->set('active', false);
-			}
-		}
-
-		$user->save();
-
-		// "login" this user if not already logged in.
-		if(!\Core\user()->exists()){
-			Session::SetUser($user);
-			return '/';
-		}
-		// It was created administratively; redirect there instead.
-		else{
-			Core::SetMessage('Created user successfully', 'success');
-			return '/useradmin';
-		}
-
-	}
-
-	public static function _UpdateHandler(Form $form){
-
-		$userid = $form->getElement('id')->get('value');
-
-		// Only allow this if the user is either the same user or has the user manage permission.
-		if(!($userid == \Core\user()->get('id') || \Core\user()->checkAccess('p:user_manage'))){
-			Core::SetMessage('Insufficient Permissions', 'error');
-			return false;
-		}
-
-		$user = User::Find(array('id' => $userid));
-
-		if(!$user->exists()){
-			Core::SetMessage('User not found', 'error');
-			return false;
-		}
-
-
-		try{
-			foreach($form->getElements() as $el){
-				$name = $el->get('name');
-
-				// Email?
-				if($name == 'email'){
-					$v = $el->get('value');
-
-					if($v != $user->get('email')){
-						// Try to retrieve the user data from the database based on the email.
-						// Email is a unique key, so there can only be 1 in the system.
-						if(UserModel::Find(array('email' => $v), 1)){
-							$el->setError('Requested email is already registered.');
-							return false;
-						}
-
-						$user->set('email', $v);
-					}
-				}
-
-				// Is this element a config option?
-				elseif(strpos($name, 'option[') === 0){
-					$k = substr($el->get('name'), 7, -1);
-					$v = $el->get('value');
-
-					// Some attributes require some modifications.
-					if($el instanceof FormFileInput){
-						$v = 'public/user/' . $v;
-					}
-
-					$user->set($k, $v);
-				}
-
-				// Is this element the group definition?
-				elseif($name == 'groups[]'){
-					$v = $el->get('value');
-
-					$user->setGroups($v);
-				}
-
-				elseif($name == 'active'){
-					$user->set('active', $el->get('value'));
-				}
-
-				elseif($name == 'admin'){
-					$user->set('admin', $el->get('value'));
-				}
-
-				else{
-					// I don't care.
-				}
-			}
-		}
-		catch(ModelValidationException $e){
-			$el->setError($e->getMessage());
-			return false;
-		}
-		catch(Exception $e){
-			if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
-			else Core::SetMessage('An unknown error occured', 'error');
-
-			return false;
-		}
-
-		$user->save();
-
-		Core::SetMessage('Updated user successfully', 'success');
-		return '/useradmin';
-	}
 
 	private static function _ForgotPassword1($view){
 		$view->title = 'Forgot Password';

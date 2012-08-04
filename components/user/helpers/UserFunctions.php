@@ -50,10 +50,10 @@ function get_form($user = null){
 	$type = ($user->exists()) ? 'edit' : 'registration';
 
 	if($type == 'registration'){
-		$form->set('callsMethod', 'UserController::_RegisterHandler');
+		$form->set('callsMethod', 'UserHelper::RegisterHandler');
 	}
 	else{
-		$form->set('callsMethod', 'UserController::_UpdateHandler');
+		$form->set('callsMethod', 'UserHelper::UpdateHandler');
 		$form->addElement('system', array('name' => 'id', 'value' => $user->get('id')));
 	}
 
