@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.2" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.4" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -11,6 +11,7 @@
 	<hooks>
 		<hookregister name="/core/page/prerender" description="Called before the page is rendered"/>
 		<hookregister name="/core/page/render" description="Called to render the page"/>
+		<hookregister name="/core/page/postrender" description="Called after all the rendering has been completed on the page."/>
 		<hookregister name="/core/page/error-404" description="Called anytime there is a 404 error"/>
 		<hookregister name="/core/page/error-403" description="Called anytime there is a 403 error"/>
 		<hook name="components_loaded" call="CurrentPage::Singleton"/>
@@ -116,7 +117,7 @@
 			<class name="FormTimeInput"/>
 		</file>
 		<file filename="core/functions/Core.functions.php" md5="0168723c3c53a2df700de93c5492ef62"/>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="43e81abc255a12e94ecac01b3c900117">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="16b8645e48e2090c014c4a0e85be5a07">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
@@ -425,7 +426,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="da23111d3817635fd7fcad14583bde1a">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="4130a7da54d8ca893f7ff8a75f33ba68">
+		<file filename="core/libs/core/Core.class.php" md5="55f4c0839211a90b15fcd13130bcb211">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -467,7 +468,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="f09608b8c08cf7ca1a783d430dee5872">
+		<file filename="core/libs/core/Model.class.php" md5="8a6d53d227249d4d70caf8c4f72d9dd3">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -476,7 +477,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="8b31747638dc19051e896b5776ec51e8">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="708539fe542d9e0473bfbe65628caa0a">
+		<file filename="core/libs/core/PageRequest.class.php" md5="822663f4a620d26a1b3133f94a31113f">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="0528150b9145ee4d1dd243e8348c71a6">
@@ -490,7 +491,7 @@
 			<class name="SQLBuilderInsertUpdate"/>
 			<class name="SQLBuilderDelete"/>
 		</file>
-		<file filename="core/libs/core/Session.class.php" md5="81ff986e81fd439caef3ec7633bca918">
+		<file filename="core/libs/core/Session.class.php" md5="5ba706ec71b7db97386904b0392fe244">
 			<class name="Session"/>
 		</file>
 		<file filename="core/libs/core/Template.class.php" md5="b2bc620cd1960402e0b8d02aa6185104">
@@ -499,7 +500,7 @@
 		<file filename="core/libs/core/Time.class.php" md5="f61bfc481eea40bacfc39cd9b9ce2c5c">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="d6e9513d631e25358f850de531b2362e">
+		<file filename="core/libs/core/View.class.php" md5="8a67ffab5f5eb5dcb17172f90d025e3c">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -535,7 +536,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="e02b68f59cf50bf21f1bb533a2e59ea1">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="9987e197fd9b6a704c02d23851fb7de2">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="724c89dfc193fe4f39ee02b4631112fd">
 			<class name="DMI_mysqli_backend"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/AUTHORS" md5="c0722ecbe902d4770f9e17b43db3d8e6"/>
@@ -881,11 +882,10 @@
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="b90dc10b7caf30b01b9a487b5653c9ce"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="4ccc817b64cccb0c9455d3fe1a28ddf2"/>
 		<file filename="core/libs/smarty-plugins/function.img.php" md5="0bc797e9a58263543eda1695905c7933"/>
-		<file filename="core/libs/smarty-plugins/function.img.php.orig" md5="161e0c79e337cd61b066876d2e7bcdab"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="d8daf3f492d0c8a71e7b8ccf0cd70cc9"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="9ff0428278228b374379b3f08b84db52"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="91afcea7988b41cd1e5745b6bd34e8bc"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="7a891464b0f05becef312e30f925da1d"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="eebe1f73654d264f294a47b825a5ebd5"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/smarty/README" md5="2280709acce0bf54217c12eff7932997"/>
 		<file filename="core/libs/smarty/SMARTY_2_BC_NOTES.txt" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
@@ -1199,30 +1199,29 @@
 		<file filename="core/models/Insertable.class.php" md5="9fcff9abc48a6750a219ee3df35b48af">
 			<class name="InsertableModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="9aa360f593ee460493375bedc59b73cc">
+		<file filename="core/models/PageModel.class.php" md5="b0d855f251a51859869832c8a563400e">
 			<class name="PageModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php.orig" md5="0263425bbb0fee0417ca1bd82623411d"/>
-		<file filename="core/models/SessionModel.class.php" md5="08c4a259678e264f89c943b1b7a4d329">
+		<file filename="core/models/SessionModel.class.php" md5="c3fae7f98e556e850cd82374a5d2ed16">
 			<class name="SessionModel"/>
 		</file>
 		<file filename="core/models/UpdateSiteModel.class.php" md5="90a7e717dbef4709b4405082482f47e9">
 			<class name="UpdateSiteModel"/>
 		</file>
-		<file filename="core/models/WidgetInstanceModel.class.php" md5="710c9bf56153169cac00e9d647971060">
+		<file filename="core/models/WidgetInstanceModel.class.php" md5="202c768c7e43cb43910ac449cca15d96">
 			<class name="WidgetInstanceModel"/>
 		</file>
 		<file filename="core/models/WidgetModel.class.php" md5="5acf2e568237b58b976078143681b1e3">
 			<class name="WidgetModel"/>
 		</file>
-		<file filename="core/widgets/AdminMenuWidget.php" md5="57acd013252cf8ca4403f73d8690741d">
+		<file filename="core/widgets/AdminMenuWidget.php" md5="7598650a9a00c2c1d25f8c0b865935dc">
 			<class name="AdminMenuWidget"/>
 		</file>
-		<file filename="core/widgets/PageWidget.php" md5="8957d20934299448e213b12a4746135b">
+		<file filename="core/widgets/PageWidget.php" md5="612cd59aef22cda09804b489cb64f327">
 			<class name="PageWidget"/>
 		</file>
 		<file filename="htaccess.ex" md5="a9753494f79d3cfa1526c3ccfd19f1cc"/>
-		<file filename="index.php" md5="006c996a7e99b954bd75da97ea1f2782"/>
+		<file filename="index.php" md5="343b40e15ad50bf952ce546e3b182e38"/>
 		<file filename="install/InstallPage.class.php" md5="4f34783e9e3b4c2878afa6aa3aa0eb07">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1326,6 +1325,8 @@
 		<file filename="core/templates/widgets/adminmenu.tpl" md5="c048a1fd0da26060e3436a415c477d64"/>
 		<file filename="core/templates/forms/elements/formpagerewriteurlinput.tpl" md5="3a1951a5ed1249a71ffda60e802a76e1"/>
 		<file filename="core/templates/widgets/adminmenu.tpl" md5="b941453dae4d6bb7f5e088667279788f"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="297a55fba80dff41e860cd7f441de94f"/>
+		<file filename="core/templates/widgets/adminmenu.tpl" md5="96c5da325fdf9eb7c6a82ca2ed2abf16"/>
 	</view>
 	<install/>
 	<description>
@@ -1362,8 +1363,8 @@
 		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'" default=""/>
 	</configs>
 	<assets>
-		<file filename="core/assets/css/admin/adminbar.css" md5="b2f4c492c8d5deece8f24cb1786173a5"/>
-		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="5f0f2cdc614db1822a80a65fc0e69b80"/>
+		<file filename="core/assets/css/admin/adminbar.css" md5="0d0ad0b987c25e69e7ea45729272ae21"/>
+		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="f3803eda09da8ae790ccded988043e59"/>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 		<file filename="core/assets/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
@@ -1390,6 +1391,8 @@
 		<upgrade from="1.9.2" to="2.1.0"/>
 		<upgrade from="2.1.0" to="2.1.1"/>
 		<upgrade from="2.1.1" to="2.1.2"/>
+		<upgrade from="2.1.2" to="2.1.3"/>
+		<upgrade from="2.1.3" to="2.1.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

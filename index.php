@@ -44,7 +44,7 @@ $component = Core::GetComponentByController($pagedat['controller']);
 //////////////////////////////////////////////////////////////////////////////
 if (!$component) {
 	// Not found
-	$view        = new View();
+	$view        = $request->getView();
 	$view->error = View::ERROR_NOTFOUND;
 }
 elseif (is_a($component, 'Component')) {
@@ -84,9 +84,5 @@ catch (Exception $e) {
 	$view->render();
 }
 
-
-
-// Tell the hook handler that I'm ready to begin rendering of the page.
-//HookHandler::DispatchHook('/core/page/render');
-
-// That's it!  If you're looking for something, chances are it'll be in the bootstrap file!
+// Just before the page stops execution...
+HookHandler::DispatchHook('/core/page/postrender');

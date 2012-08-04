@@ -251,7 +251,9 @@ class DMI_mysqli_backend implements DMI_Backend {
 				}
 			}
 
-			$this->_rawExecute('write', 'ALTER TABLE _tmptable DROP PRIMARY KEY');
+			if(sizeof($oldprimaries)){
+				$this->_rawExecute('write', 'ALTER TABLE _tmptable DROP PRIMARY KEY');
+			}
 		}
 
 

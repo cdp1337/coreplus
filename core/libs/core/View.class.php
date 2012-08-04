@@ -745,8 +745,12 @@ class View {
 
 			// Custom meta tag :: http-equiv="last-modified"
 			if($this->updated !== null){
-				$data[] = '<meta http-equiv="last-modified" content="' . Time::FormatGMT($this->updated, Time::TIMEZONE_GMT, Time::FORMAT_FULLDATETIME) . '" />';
+				// last-modified is no longer a valid attribute in HTML5
+				//$data[] = '<meta http-equiv="last-modified" content="' . Time::FormatGMT($this->updated, Time::TIMEZONE_GMT, Time::FORMAT_RFC2822) . '" />';
+				$this->meta['article:modified_time'] = Time::FormatGMT($this->updated, Time::TIMEZONE_GMT, Time::FORMAT_ISO8601);
 			}
+
+			$data[] = '<meta name="generator" content="Core Plus ' . Core::GetComponent()->getVersion() . '"/>';
 
 			// Some standard tags that also have og equivalents.
 			if(!isset($this->meta['og:title'])){

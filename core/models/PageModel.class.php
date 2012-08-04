@@ -406,6 +406,7 @@ class PageModel extends Model {
 
 		// If the rewrite URL was changed, I need to invalidate the cache.
 		// This is because many components that may change the url, will immediately want to reload to that new url.
+		if(!isset($this->_datainit['rewriteurl'])) $this->_datainit['rewriteurl'] = null;
 		if($this->_data['rewriteurl'] != $this->_datainit['rewriteurl']){
 			self::$_FuzzyCache = null;
 			self::$_RewriteCache = null;

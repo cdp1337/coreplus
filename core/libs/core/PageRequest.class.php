@@ -354,6 +354,16 @@ class PageRequest {
 			// Hopefully it's setup!
 			$return = $c->getView();
 		}
+		elseif(!is_a($return, 'View')){
+			if(DEVELOPMENT_MODE){
+				var_dump('Controller method returned', $return);
+				die('Sorry, but this controller did not return a valid object.  Please ensure that your method returns either an integer, null, or a View object!');
+			}
+			else{
+				$view->error = View::ERROR_SERVERERROR;
+				return $view;
+			}
+		}
 		// No else needed, else it's a valid object.
 
 		// For some of the options, there may be some that can be used for a fuzzy page, ie: a page's non-fuzzy template,

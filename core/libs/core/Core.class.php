@@ -398,8 +398,9 @@ class Core implements ISingleton {
 				// Ignore anything with the execmode different, those should be minor notices for debugging if anything.
 				if ($l->error & Component::ERROR_WRONGEXECMODE) continue;
 
-				$msg = 'Could not load installed component ' . $l->getName() . ' due to requirement failed.<br/>' . $l->getErrors();
-				echo $msg . '<br/>';
+
+				$msg = 'Could not load installed component ' . $l->getName() . ' due to requirement failed.' . "\n" . $l->getErrors();
+				error_log($msg);
 				//Core::AddMessage($msg);
 			}
 		}
@@ -938,12 +939,20 @@ class Core implements ISingleton {
 
 		if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 		header("Location:" . $page);
+
+		// Just before the page stops execution...
+		HookHandler::DispatchHook('/core/page/postrender');
+
 		die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
 	}
 
 	static public function Reload() {
 		if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 		header('Location:' . CUR_CALL);
+
+		// Just before the page stops execution...
+		HookHandler::DispatchHook('/core/page/postrender');
+
 		die("If your browser does not refresh, please <a href=\"" . CUR_CALL . "\">Click Here</a>");
 	}
 
@@ -964,6 +973,10 @@ class Core implements ISingleton {
 			//$page = ROOT_URL_SSL . $_SERVER['REQUEST_URI'];
 
 			header("Location:" . $page);
+
+			// Just before the page stops execution...
+			HookHandler::DispatchHook('/core/page/postrender');
+
 			die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
 		}
 	}
