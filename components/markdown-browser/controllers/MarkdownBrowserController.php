@@ -153,7 +153,7 @@ class MarkdownBrowserController extends Controller_2_1{
 			}
 
 			// Because I need to act on the *previous* item to ensure that the last one is the current page for breadcrumbs...
-			if($last !== null){
+			if($last !== null && $k > 1){
 				$view->addBreadcrumb($last['title'], $last['path']);
 			}
 
@@ -188,7 +188,7 @@ class MarkdownBrowserController extends Controller_2_1{
 				// Scan through each file in the parent listing.
 				// If the filename matches the end of the parent's file, (case insensitive),
 				// that must be the file!
-				if(stripos($file->getFilename(), $filereq) == $filereglen){
+				if(stripos($file->getFilename(), $filereq) == strlen($file->getFilename()) - $filereglen){
 					$found = true;
 					break;
 				}
