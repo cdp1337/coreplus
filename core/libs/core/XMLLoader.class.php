@@ -26,7 +26,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class XMLLoader {
+class XMLLoader implements Serializable {
 	/**
 	 * The name of the root node.
 	 * This IS required for loading the xml file, as every file MUST have exactly one root node.
@@ -57,6 +57,47 @@ class XMLLoader {
 	 * @var DOMDocument
 	 */
 	protected $_DOM;
+
+	/**
+	 * Root node cache, used to make the getRootDOM faster by bypassing the lookup.
+	 * @var null|DOMElement
+	 */
+	private $_rootnode = null;
+
+
+	/************ SERIALIZE and UNSERIALIZE METHODS **********/
+
+	/**
+	 * Serialize this object, preserving the underlying DOMDocument, (which otherwise wouldn't be perserved).
+	 *
+	 * @return string
+	 */
+	public function serialize(){
+		$dat = array(
+			'rootname' => $this->_rootname,
+			'filename' => $this->_filename,
+			'file' => $this->_file,
+			'dom' => $this->getDOM()->saveXML()
+		);
+
+		// Compress the dom XML, since they may get rather large.
+		// This function expects alphanumeric output, so gzip is out of the question.
+		// HOWEVER, I can base64 the gzip'd data, and since gzip compression offers about 400% compression for text and
+		// b64 inflates data by about 30%, I'm still left with data that is about 33% smaller total :)
+		$dat['dom'] = base64_encode(gzcompress($dat['dom']));
+		return serialize($dat);
+	}
+
+	public function unserialize($serialized){
+		$dat = unserialize($serialized);
+		$this->_rootname = $dat['rootname'];
+		$this->_filenme = $dat['filename'];
+		$this->_file = $dat['file'];
+		$this->_rootnode = null;
+		$this->_DOM = new DOMDocument();
+		$this->_DOM->formatOutput = true;
+		$this->_DOM->loadXML(gzuncompress(base64_decode($dat['dom'])));
+	}
 
 
 	public function load() {
@@ -136,17 +177,20 @@ class XMLLoader {
 	 * @return DOMNode
 	 */
 	public function getRootDOM() {
-		$root = $this->_DOM->getElementsByTagName($this->_rootname);
+		if($this->_rootnode === null){
+			$root = $this->_DOM->getElementsByTagName($this->_rootname);
+			if ($root->item(0) === null) {
+				$root = $this->_DOM->createElement($this->_rootname);
+				$this->_DOM->appendChild($root);
 
-		if ($root->item(0) === null) {
-			$root = $this->_DOM->createElement($this->_rootname);
-			$this->_DOM->appendChild($root);
+				$this->_rootnode = $root; // Because it's already the item.
+			}
+			else {
+				$this->_rootnode = $root->item(0);
+			}
+		}
 
-			return $root; // Because it's already the item.
-		}
-		else {
-			return $root->item(0);
-		}
+		return $this->_rootnode;
 	}
 
 	/**

@@ -156,7 +156,7 @@ a.button:hover { text-decoration:none; background-color: #50a3a5;}
     padding: 0.25em 0.5em 0.25em 0;
 	white-space: nowrap;
 }
-.formelement.formcheckboxinput label {
+.formelement.formcheckboxesinput label {
     background: none repeat scroll 0 0 #F6F6F6;
     border: 1px solid #777;
     border-radius: 0 1em 1em 0;

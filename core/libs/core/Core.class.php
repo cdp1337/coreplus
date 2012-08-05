@@ -282,54 +282,85 @@ class Core implements ISingleton {
 		$this->_components = array();
 		$this->_libraries  = array();
 
-		// Core is first, (obviously)
-		$this->_components['core'] = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
-
-		// First, build my cache of components, regardless if the component is installed or not.
-		$dh = opendir(ROOT_PDIR . 'components');
-		if (!$dh) throw new CoreException('Unable to open directory [' . ROOT_PDIR . 'components/] for reading.');
-
-		// This will read through every directory in 'components', which is 
-		// where all components in the system are installed to.
-		while (($file = readdir($dh)) !== false) {
-			// skip hidden directories.
-			if ($file{0} == '.') continue;
-
-			// skip non-directories
-			if (!is_dir(ROOT_PDIR . 'components/' . $file)) continue;
-
-			// Skip directories that do not have a readable component.xml file.
-			if (!is_readable(ROOT_PDIR . 'components/' . $file . '/component.xml')) continue;
-
-			$c = ComponentFactory::Load(ROOT_PDIR . 'components/' . $file . '/component.xml');
-
-			// All further operations are case insensitive.
-			// The original call to Component needs to be case sensitive because it sets the filename to pull.
-			$file = strtolower($file);
-
-			// If the component was flagged as invalid.. just skip to the next one.
-			if (!$c->isValid()) {
-				if (DEVELOPMENT_MODE) {
-					CAEUtils::AddMessage('Component ' . $c->getName() . ' appears to be invalid.');
-				}
-				continue;
-			}
-
-			$this->_components[$file] = $c;
-			unset($c);
+		// If the site is in DEVELOPMENT mode, component caching would probably be a bad idea; ie: the developer probably wants
+		// those component files loaded everytime.
+		if(DEVELOPMENT_MODE){
+			$enablecache = false;
 		}
-		closedir($dh);
+		else{
+			$enablecache = true;
+		}
 
-		// Now I probably could actually load the components!
+		// Is there a cache of elements available?  This is a primary system cache that greatly increases performance,
+		// since it will no longer have to run through each component.xml file to register each one.
+		if(!$enablecache || ($cachedcomponents = Cache::GetSystemCache()->get('core-components', (3600 * 24))) === false){
+			// Core is first, (obviously)
+			$this->_components['core'] = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
 
-		foreach ($this->_components as $c) {
-			try {
-				$c->load();
+			// First, build my cache of components, regardless if the component is installed or not.
+			$dh = opendir(ROOT_PDIR . 'components');
+			if (!$dh) throw new CoreException('Unable to open directory [' . ROOT_PDIR . 'components/] for reading.');
+
+			// This will read through every directory in 'components', which is
+			// where all components in the system are installed to.
+			while (($file = readdir($dh)) !== false) {
+				// skip hidden directories.
+				if ($file{0} == '.') continue;
+
+				// skip non-directories
+				if (!is_dir(ROOT_PDIR . 'components/' . $file)) continue;
+
+				// Skip directories that do not have a readable component.xml file.
+				if (!is_readable(ROOT_PDIR . 'components/' . $file . '/component.xml')) continue;
+
+				$c = ComponentFactory::Load(ROOT_PDIR . 'components/' . $file . '/component.xml');
+
+				// All further operations are case insensitive.
+				// The original call to Component needs to be case sensitive because it sets the filename to pull.
+				$file = strtolower($file);
+
+				// If the component was flagged as invalid.. just skip to the next one.
+				if (!$c->isValid()) {
+					if (DEVELOPMENT_MODE) {
+						CAEUtils::AddMessage('Component ' . $c->getName() . ' appears to be invalid.');
+					}
+					continue;
+				}
+
+
+				$this->_components[$file] = $c;
+				unset($c);
 			}
-			catch (Exception $e) {
-				var_dump($e);
-				die();
+			closedir($dh);
+
+			// Now I probably could actually load the components!
+
+			foreach ($this->_components as $c) {
+				try {
+					// Load some of the data in the class so that it's available in the cached version.
+					// This is because the component 2.1 has built-in caching for many of the XML requests.
+					// by calling them once, that lookup data is cached in that component, which in turn gets
+					// copied to the cache version here!
+					$c->load();
+					$c->getClassList();
+					$c->getViewSearchDir();
+					$c->getSmartyPluginDirectory();
+					$c->getWidgetList();
+				}
+				catch (Exception $e) {
+					var_dump($e);
+					die();
+				}
 			}
+
+			// Cache this list!
+			if($enablecache){
+				Cache::GetSystemCache()->set('core-components', $this->_components);
+			}
+		}
+		else{
+			// Yay, cache is available.
+			$this->_components = $cachedcomponents;
 		}
 
 		$list = $this->_components;
@@ -692,7 +723,10 @@ class Core implements ISingleton {
 	}
 
 	public static function Singleton() {
-		if (is_null(self::$instance)) self::$instance = new self();
+		if(self::$instance === null){
+			self::$instance = new self();
+		}
+
 		return self::$instance;
 	}
 

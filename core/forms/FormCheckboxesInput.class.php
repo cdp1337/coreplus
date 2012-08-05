@@ -11,7 +11,7 @@ class FormCheckboxesInput extends FormElement {
 		parent::__construct($atts);
 
 		// Some defaults
-		$this->_attributes['class'] = 'formelement formcheckboxinput';
+		$this->_attributes['class'] = 'formelement formcheckboxesinput';
 		$this->_attributes['multiple'] = true;
 		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'style');
 	}

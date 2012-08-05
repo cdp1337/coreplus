@@ -150,6 +150,33 @@ class Component_2_1 {
 	 */
 	private $_loaded = false;
 
+	/**
+	 * The smarty plugin directory cache.  This is to reduce the number of lookups required.
+	 *
+	 * @var null|false|string
+	 */
+	private $_smartyPluginDirectory = null;
+
+	/**
+	 * View search directory cache.  This is to reduce the number of lookups required.
+	 *
+	 * @var null|false|string
+	 */
+	private $_viewSearchDirectory = null;
+
+	/**
+	 * Array of classes in this component.  This is to reduce the number of lookups required.
+	 *
+	 * @var null|array
+	 */
+	private $_classlist = null;
+
+	/**
+	 * Array of widgets in this component.  This is to reduce the number of lookups required.
+	 * @var null|array
+	 */
+	private $_widgetlist = null;
+
 
 	public function __construct($filename = null) {
 		$this->_file = \Core\file($filename);
@@ -479,35 +506,36 @@ class Component_2_1 {
 	 * @return array
 	 */
 	public function getClassList() {
-		// Get an array of class -> file (fully resolved)
-		$classes = array();
+		if($this->_classlist === null){
+			// Get an array of class -> file (fully resolved)
+			$this->_classlist = array();
 
-		//foreach($this->_xmlloader->getElementByTagName('files')->getElementsByTagName('file') as $f){
-		foreach ($this->_xmlloader->getElements('/files/file') as $f) {
-			$filename = $this->getBaseDir() . $f->getAttribute('filename');
-			//foreach($f->getElementsByTagName('provides') as $p){
-			foreach ($f->getElementsByTagName('class') as $p) {
-				$n           = strtolower($p->getAttribute('name'));
-				$classes[$n] = $filename;
-			}
+			foreach ($this->_xmlloader->getElements('/files/file') as $f) {
+				$filename = $this->getBaseDir() . $f->getAttribute('filename');
+				//foreach($f->getElementsByTagName('provides') as $p){
+				foreach ($f->getElementsByTagName('class') as $p) {
+					$n           = strtolower($p->getAttribute('name'));
+					$this->_classlist[$n] = $filename;
+				}
 
-			foreach ($f->getElementsByTagName('interface') as $p) {
-				$n           = strtolower($p->getAttribute('name'));
-				$classes[$n] = $filename;
-			}
+				foreach ($f->getElementsByTagName('interface') as $p) {
+					$n           = strtolower($p->getAttribute('name'));
+					$this->_classlist[$n] = $filename;
+				}
 
-			foreach ($f->getElementsByTagName('controller') as $p) {
-				$n           = strtolower($p->getAttribute('name'));
-				$classes[$n] = $filename;
-			}
+				foreach ($f->getElementsByTagName('controller') as $p) {
+					$n           = strtolower($p->getAttribute('name'));
+					$this->_classlist[$n] = $filename;
+				}
 
-			foreach ($f->getElementsByTagName('widget') as $p) {
-				$n           = strtolower($p->getAttribute('name'));
-				$classes[$n] = $filename;
+				foreach ($f->getElementsByTagName('widget') as $p) {
+					$n           = strtolower($p->getAttribute('name'));
+					$this->_classlist[$n] = $filename;
+				}
 			}
 		}
 
-		return $classes;
+		return $this->_classlist;
 	}
 
 	/**
@@ -516,26 +544,18 @@ class Component_2_1 {
 	 * @return array
 	 */
 	public function getWidgetList() {
-		$widgets = array();
+		if($this->_widgetlist === null){
+			$this->_widgetlist = array();
 
-		foreach ($this->_xmlloader->getElements('/files/file') as $f) {
-			$filename = $this->getBaseDir() . $f->getAttribute('filename');
-			foreach ($f->getElementsByTagName('widget') as $p) {
-				$widgets[] = $p->getAttribute('name');
-			}
-		}
-		/*
-		if($this->hasModule()){
-			foreach($this->_xmlloader->getElementByTagName('module')->getElementsByTagName('file') as $f){
-				foreach($f->getElementsByTagName('provides') as $p){
-					if(strtolower($p->getAttribute('type')) == 'widget'){
-						$widgets[] = $p->getAttribute('name');
-					}
+			foreach ($this->_xmlloader->getElements('/files/file') as $f) {
+				$filename = $this->getBaseDir() . $f->getAttribute('filename');
+				foreach ($f->getElementsByTagName('widget') as $p) {
+					$this->_widgetlist[] = $p->getAttribute('name');
 				}
 			}
 		}
-		*/
-		return $widgets;
+
+		return $this->_widgetlist;
 	}
 
 	public function getViewClassList() {
@@ -601,9 +621,13 @@ class Component_2_1 {
 	 * Not many templates will use this function, but it is there for when needed.
 	 */
 	public function getSmartyPluginDirectory() {
-		$d = $this->_xmlloader->getElement('/smartyplugins')->getAttribute('directory');
-		if ($d) return $this->getBaseDir() . $d;
-		else return false;
+		if($this->_smartyPluginDirectory === null){
+			$d = $this->_xmlloader->getElement('/smartyplugins')->getAttribute('directory');
+			if ($d) $this->_smartyPluginDirectory = $this->getBaseDir() . $d;
+			else $this->_smartyPluginDirectory = false;
+		}
+
+		return $this->_smartyPluginDirectory;
 	}
 
 	public function getScriptLibraryList() {
@@ -617,20 +641,26 @@ class Component_2_1 {
 
 	public function getViewSearchDir() {
 		if ($this->hasView()) {
-			// Using the searchdir attribute is the preferred method.
-			$att = @$this->_xmlloader->getElement('/view')->getAttribute('searchdir');
-			if ($att) {
-				return $this->getBaseDir() . $att . '/';
+			if($this->_viewSearchDirectory === null){
+				// Using the searchdir attribute is the preferred method.
+				$att = @$this->_xmlloader->getElement('/view')->getAttribute('searchdir');
+				if ($att) {
+					$this->_viewSearchDirectory = $this->getBaseDir() . $att . '/';
+				}
+				elseif (($att = $this->_xmlloader->getElements('/view/searchdir')->item(0))) {
+					// Try the 'searchdir' element instead.
+					$this->_viewSearchDirectory = $this->getBaseDir() . $att->getAttribute('dir') . '/';
+				}
+				elseif (is_dir($this->getBaseDir() . 'templates')) {
+					// Still no?!?  Try just a filesystem check instead...
+					$this->_viewSearchDirectory = $this->getBaseDir() . 'templates';
+				}
+				else{
+					$this->_viewSearchDirectory = false;
+				}
 			}
-			elseif (($att = $this->_xmlloader->getElements('/view/searchdir')->item(0))) {
-				// Try the 'searchdir' element instead.
-				return $this->getBaseDir() . $att->getAttribute('dir') . '/';
-			}
-			elseif (is_dir($this->getBaseDir() . 'templates')) {
-				// Still no?!?  Try just a filesystem check instead...
-				return $this->getBaseDir() . 'templates';
-			}
-			else return false;
+
+			return $this->_viewSearchDirectory;
 		}
 	}
 
