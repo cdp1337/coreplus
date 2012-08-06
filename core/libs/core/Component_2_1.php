@@ -847,7 +847,7 @@ class Component_2_1 {
 	 */
 	public function setViewFiles($files) {
 		// Clear out the array first.
-		$this->_xmlloader->removeElements('//component/view/files');
+		$this->_xmlloader->removeElements('//component/view/file');
 
 		// It would be nice to have them alphabetical.
 		$newarray = array();
