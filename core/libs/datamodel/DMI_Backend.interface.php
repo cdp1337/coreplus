@@ -49,5 +49,3 @@ interface DMI_Backend {
 	
 	public function writeCount();
 }
-
-?>

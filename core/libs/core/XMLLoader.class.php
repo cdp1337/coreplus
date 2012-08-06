@@ -329,7 +329,7 @@ class XMLLoader implements Serializable {
 			$patharray = explode('/', $path);
 		}
 		else {
-			$prevchar;
+			//$prevchar;
 			$len    = strlen($path);
 			$inatt  = false;
 			$curstr = '';

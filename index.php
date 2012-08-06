@@ -27,7 +27,9 @@
  * Include the system bootstrap.
  * This basically does everything.....
  */
-require_once('core/bootstrap.php');
+
+//require_once('core/bootstrap.php');
+require_once('core/bootstrap.compiled.php');
 
 // Anything that needs to fire off *before* the page is rendered.
 // This includes widgets, script addons, and anything else that needs a CurrentPage.

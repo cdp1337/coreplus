@@ -26,6 +26,8 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+require_once(ROOT_PDIR . 'core/models/ConfigModel.class.php');
+
 class ConfigHandler implements ISingleton {
 
 	private static $instance = null;
@@ -47,7 +49,7 @@ class ConfigHandler implements ISingleton {
 		ConfigHandler::$directory = ROOT_PDIR . "config/";
 
 		if (!is_readable(ConfigHandler::$directory)) {
-			throw new Exception("Could not open config directory [ConfigHandler::$directory] for reading.");
+			throw new Exception("Could not open config directory [" . ConfigHandler::$directory . "] for reading.");
 		}
 	}
 
@@ -207,7 +209,7 @@ class ConfigHandler implements ISingleton {
 
 	public static function _DBReadyHook() {
 		// This may be called before the componenthandler is ready.
-		require_once(ROOT_PDIR . 'core/models/ConfigModel.class.php');
+
 		// Clear out the cache, (if it has any...)
 		ConfigHandler::$CacheFromDB = array();
 		$fac                        = ConfigModel::Find();

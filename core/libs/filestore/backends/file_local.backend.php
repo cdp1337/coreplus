@@ -787,5 +787,3 @@ class File_local_backend implements File_Backend {
 	*/
 
 }
-
-?>

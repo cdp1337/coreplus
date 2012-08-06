@@ -304,5 +304,3 @@ class File_awss3_backend implements File_Backend {
 		return ($this->_getMetadata());
 	}
 }
-
-?>

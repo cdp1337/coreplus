@@ -808,5 +808,3 @@ class PageModel extends Model {
 		return $opts;
 	}
 }
-
-?>

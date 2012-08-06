@@ -354,6 +354,7 @@ try {
 // This catch statement should be hit anytime the database is not available,
 // core table doesn't exist, or the like.
 catch (Exception $e) {
+	error_log($e->getMessage());
 	// Couldn't establish connection... do something fun!
 	// If it's in development mode, redirect back to the installer, which should hopefully
 	// get whatever problem this was fixed.

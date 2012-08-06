@@ -16,7 +16,7 @@
 // CORE DEPENDENCIES
 
 // Include the ICacheCore interface.
-if (file_exists(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'icachecore.interface.php'))
+if (file_exists(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'icachecore.interface.php')  && !interface_exists('ICacheCore'))
 {
 	include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'icachecore.interface.php';
 }

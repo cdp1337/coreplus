@@ -25,5 +25,3 @@
 class FileException extends Exception {
 
 }
-
-?>

@@ -99,13 +99,6 @@ class Component_2_1 {
 	 */
 	private $_versionDB = false;
 
-
-	/**
-	 *
-	 * @var array
-	 */
-	private $_requires = array();
-
 	/**
 	 * Each component can have an execution mode, by default it's "web".
 	 * This is used because some components will bomb out in CLI mode, and vice versa.
@@ -176,6 +169,12 @@ class Component_2_1 {
 	 * @var null|array
 	 */
 	private $_widgetlist = null;
+
+	/**
+	 * Array of require defintions in this component.  This is to reduce the number of lookups required.
+	 * @var null|array
+	 */
+	private $_requires = null;
 
 
 	public function __construct($filename = null) {
@@ -349,26 +348,29 @@ class Component_2_1 {
 	}
 
 	public function getRequires() {
-		$ret = array();
-		foreach ($this->_xmlloader->getElements('//component/requires/require') as $r) {
-			$t  = $r->getAttribute('type');
-			$n  = $r->getAttribute('name');
-			$v  = @$r->getAttribute('version');
-			$op = @$r->getAttribute('operation');
+		if($this->_requires === null){
+			$this->_requires = array();
+			foreach ($this->_xmlloader->getElements('//component/requires/require') as $r) {
+				$t  = $r->getAttribute('type');
+				$n  = $r->getAttribute('name');
+				$v  = @$r->getAttribute('version');
+				$op = @$r->getAttribute('operation');
 
-			// Defaults.
-			if ($v == '') $v = false;
-			if ($op == '') $op = 'ge';
+				// Defaults.
+				if ($v == '') $v = false;
+				if ($op == '') $op = 'ge';
 
-			$ret[] = array(
-				'type'      => strtolower($t),
-				'name'      => $n,
-				'version'   => strtolower($v),
-				'operation' => strtolower($op),
-				//'value' => $value,
-			);
+				$this->_requires[] = array(
+					'type'      => strtolower($t),
+					'name'      => $n,
+					'version'   => strtolower($v),
+					'operation' => strtolower($op),
+					//'value' => $value,
+				);
+			}
 		}
-		return $ret;
+
+		return $this->_requires;
 	}
 
 	/**

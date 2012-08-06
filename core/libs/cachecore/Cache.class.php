@@ -23,8 +23,12 @@
 
 
 // I has some dependencies...
-define('__CACHE_PDIR', dirname(__FILE__) . '/');
-require_once(__CACHE_PDIR . 'backends/cachecore.class.php');
+//define('__CACHE_PDIR', dirname(__FILE__) . '/');
+define('__CACHE_PDIR', ROOT_PDIR . 'core/libs/cachecore/');
+if(!class_exists('CacheCore')){
+	require_once(__CACHE_PDIR . 'backends/cachecore.class.php');
+}
+
 
 class Cache{
 	
@@ -76,12 +80,12 @@ class Cache{
 		
 		switch($this->_backend){
 			case 'apc':
-				require_once(__CACHE_PDIR . 'backends/cacheapc.class.php');
+				if(!class_exists('CacheAPC')) require_once(__CACHE_PDIR . 'backends/cacheapc.class.php');
 				$obj = new CacheAPC($key, null, $expires);
 				break;
 			case 'file':
 			default:
-				require_once(__CACHE_PDIR . 'backends/cachefile.class.php');
+			if(!class_exists('CacheFile')) require_once(__CACHE_PDIR . 'backends/cachefile.class.php');
 				if(!is_dir(TMP_DIR . 'cache')) mkdir(TMP_DIR . 'cache');
 				$obj = new CacheFile($key, TMP_DIR . 'cache', $expires);
 				break;

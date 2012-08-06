@@ -78,5 +78,3 @@ interface Directory_Backend {
 	 */
 	public function get($name);
 }
-
-?>

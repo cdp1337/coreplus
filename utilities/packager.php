@@ -31,7 +31,7 @@ if(!isset($_SERVER['SHELL'])){
 // This is required to establish the root path of the system, (since it's always one directory up from "here"
 $dir = realpath(dirname($_SERVER['PWD'] . '/' . $_SERVER['SCRIPT_FILENAME']) . '/..') . '/';
 
-// Inlude the core bootstrap, this will get the system functional.
+// Include the core bootstrap, this will get the system functional.
 require_once($dir . 'core/bootstrap.php');
 
 

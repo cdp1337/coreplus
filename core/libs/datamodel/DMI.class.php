@@ -24,9 +24,13 @@
 
 
 // I has some dependencies...
-define('__DMI_PDIR', dirname(__FILE__) . '/');
-require_once(__DMI_PDIR . 'DMI_Backend.interface.php');
-require_once(__DMI_PDIR . 'Dataset.class.php');
+//define('__DMI_PDIR', dirname(__FILE__) . '/');
+//require_once(__DMI_PDIR . 'DMI_Backend.interface.php');
+//require_once(__DMI_PDIR . 'Dataset.class.php');
+
+define('__DMI_PDIR', ROOT_PDIR . 'core/libs/datamodel/');
+require_once(ROOT_PDIR . 'core/libs/datamodel/' . 'DMI_Backend.interface.php');
+require_once(ROOT_PDIR . 'core/libs/datamodel/' . 'Dataset.class.php');
 
 
 /**
