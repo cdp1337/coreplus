@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 06 Aug 2012 17:12:38 -0400
+ * @compiled Mon, 06 Aug 2012 19:35:28 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -2286,7 +2286,7 @@ $el = $this->_xmlloader->createElement('//component/assets/file[@filename="' . $
 }
 }
 public function setViewFiles($files) {
-$this->_xmlloader->removeElements('//component/view/files');
+$this->_xmlloader->removeElements('//component/view/file');
 $newarray = array();
 ## Component_2_1.php:390
 foreach ($files as $f) {
@@ -5906,8 +5906,11 @@ die('There was a server error, please notify the administrator of this.');
 return;
 }
 public static function IsClassAvailable($classname) {
-return (isset(self::Singleton()->_classes[$classname]));
+if(self::$instance == null){
 ## Core.class.php:350
+self::Singleton();
+}
+return (isset(self::$instance->_classes[$classname]));
 }
 public static function IsLibraryAvailable($name, $version = false, $operation = 'ge') {
 $ch   = self::Singleton();
@@ -5915,10 +5918,10 @@ $name = strtolower($name);
 if (!isset($ch->_libraries[$name])) {
 return false;
 }
+## Core.class.php:360
 elseif ($version !== false) {
 return Core::VersionCompare($ch->_libraries[$name], $version, $operation);
 }
-## Core.class.php:360
 else return true;
 }
 public static function IsJSLibraryAvailable($name, $version = false, $operation = 'ge') {
@@ -5926,10 +5929,10 @@ $ch   = self::Singleton();
 $name = strtolower($name);
 if (!isset($ch->_jslibraries[$name])) return false;
 elseif ($version) return version_compare(str_replace('~', '-', $ch->_jslibraries[$name]->version), $version, $operation);
+## Core.class.php:370
 else return true;
 }
 public static function GetJSLibrary($library) {
-## Core.class.php:370
 $library = strtolower($library);
 return self::Singleton()->_jslibraries[$library];
 }
@@ -5937,10 +5940,10 @@ public static function LoadScriptLibrary($library) {
 $library = strtolower($library);
 $obj     = self::Singleton();
 if (isset($obj->_scriptlibraries[$library])) {
+## Core.class.php:380
 return call_user_func($obj->_scriptlibraries[$library]);
 }
 else {
-## Core.class.php:380
 return false;
 }
 }
@@ -5948,10 +5951,10 @@ public static function IsComponentAvailable($name, $version = false, $operation 
 $self = self::Singleton();
 $name = strtolower($name);
 if (!isset($self->_components[$name])){
+## Core.class.php:390
 return false;
 }
 elseif (!$self->_components[$name]->isEnabled()){
-## Core.class.php:390
 return false;
 }
 elseif ($version){
@@ -5959,10 +5962,10 @@ return Core::VersionCompare($self->_components[$name]->getVersionInstalled(), $v
 }
 else{
 return true;
+## Core.class.php:400
 }
 }
 public static function IsInstalled() {
-## Core.class.php:400
 return Core::Singleton()->_isInstalled();
 }
 public static function NeedsUpdated() {
@@ -5970,10 +5973,10 @@ return Core::Singleton()->_needsUpdated();
 }
 public static function GetVersion() {
 return Core::GetComponent()->getVersionInstalled();
+## Core.class.php:410
 }
 public static function ResolveAsset($asset) {
 if (strpos($asset, '://') !== false) return $asset;
-## Core.class.php:410
 if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
 $f = self::File($asset);
 return $f->getURL();
@@ -5981,10 +5984,10 @@ $keyname    = 'asset-resolveurl';
 $cachevalue = self::Cache()->get($keyname, (3600 * 24));
 if (!$cachevalue) $cachevalue = array();
 if (!isset($cachevalue[$asset])) {
+## Core.class.php:420
 $f = self::File($asset);
 $cachevalue[$asset] = $f->getURL();
 self::Cache()->set($keyname, $cachevalue, (3600 * 24));
-## Core.class.php:420
 }
 return $cachevalue[$asset];
 }
@@ -5992,10 +5995,10 @@ public static function ResolveLink($url) {
 if ($url == '#') return $url;
 if (strpos($url, '://') !== false) return $url;
 $a = PageModel::SplitBaseURL($url);
+## Core.class.php:430
 return ROOT_URL . substr($a['rewriteurl'], 1);
 $p = new PageModel($url);
 return $p->getResolvedURL();
-## Core.class.php:430
 }
 public static function ResolveFilenameTo($filename, $base = ROOT_URL) {
 $file = preg_replace('/^(' . str_replace('/', '\\/', ROOT_PDIR . '|' . ROOT_URL) . ')/', '', $filename);
@@ -6003,10 +6006,10 @@ return $base . $file;
 }
 static public function Redirect($page) {
 $page = self::ResolveLink($page);
+## Core.class.php:440
 if ($page == CUR_CALL) return false;
 if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 header("Location:" . $page);
-## Core.class.php:440
 HookHandler::DispatchHook('/core/page/postrender');
 die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
 }
@@ -6014,10 +6017,10 @@ static public function Reload() {
 if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 header('Location:' . CUR_CALL);
 HookHandler::DispatchHook('/core/page/postrender');
+## Core.class.php:450
 die("If your browser does not refresh, please <a href=\"" . CUR_CALL . "\">Click Here</a>");
 }
 static public function GoBack() {
-## Core.class.php:450
 CAEUtils::redirect(CAEUtils::GetNavigation());
 }
 static public function RequireSSL() {
@@ -6025,10 +6028,10 @@ if (!ENABLE_SSL) return;
 if (!isset($_SERVER['HTTPS'])) {
 $page = ViewClass::ResolveURL($_SERVER['REQUEST_URI'], true);
 header("Location:" . $page);
+## Core.class.php:460
 HookHandler::DispatchHook('/core/page/postrender');
 die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
 }
-## Core.class.php:460
 }
 static public function GetNavigation($base) {
 if (!isset($_SESSION['nav'])) return $base;
@@ -6036,10 +6039,10 @@ if (!isset($_SESSION['nav'][$base])) return $base;
 $coreparams  = array();
 $extraparams = array();
 foreach ($_SESSION['nav'][$base]['parameters'] as $k => $v) {
+## Core.class.php:470
 if (is_numeric($k)) $coreparams[] = $v;
 else $extraparams[] = $k . '=' . $v;
 }
-## Core.class.php:470
 return $base .
 (sizeof($coreparams) ? '/' . implode('/', $coreparams) : '') .
 (sizeof($extraparams) ? '?' . implode('&', $extraparams) : '');
@@ -6047,10 +6050,10 @@ return $base .
 static public function RecordNavigation(PageModel $page) {
 if (!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
 $c = $page->getControllerClass();
+## Core.class.php:480
 if (strpos($c, 'Controller') == strlen($c) - 10) $c = substr($c, 0, -10);
 $base = '/' . $c . '/' . $page->getControllerMethod();
 $_SESSION['nav'][$base] = array(
-## Core.class.php:480
 'parameters' => $page->getParameters(),
 'time'       => Time::GetCurrent(),
 );
@@ -6058,10 +6061,10 @@ $_SESSION['nav'][$base] = array(
 static public function SetMessage($messageText, $messageType = 'info') {
 if (trim($messageText) == '') return;
 $messageType = strtolower($messageType);
+## Core.class.php:490
 if (EXEC_MODE == 'CLI') {
 $messageText = preg_replace('/<br[^>]*>/i', "\n", $messageText);
 echo "[" . $messageType . "] - " . $messageText . "\n";
-## Core.class.php:490
 }
 else {
 if (!isset($_SESSION['message_stack'])) $_SESSION['message_stack'] = array();
@@ -6069,10 +6072,10 @@ $_SESSION['message_stack'][] = array(
 'mtext' => $messageText,
 'mtype' => $messageType,
 );
+## Core.class.php:500
 }
 }
 static public function AddMessage($messageText, $messageType = 'info') {
-## Core.class.php:500
 Core::SetMessage($messageText, $messageType);
 }
 static public function GetMessages($returnSorted = FALSE, $clearStack = TRUE) {
@@ -6080,10 +6083,10 @@ if (!isset($_SESSION['message_stack'])) return array();
 $return = $_SESSION['message_stack'];
 if ($returnSorted) $return = Core::SortByKey($return, 'mtype');
 if ($clearStack) unset($_SESSION['message_stack']);
+## Core.class.php:510
 return $return;
 }
 static public function SortByKey($named_recs, $order_by, $rev = false, $flags = 0) {
-## Core.class.php:510
 $named_hash = array();
 foreach ($named_recs as $key=> $fields) $named_hash["$key"] = $fields[$order_by];
 if ($rev) arsort($named_hash, $flags);
@@ -6091,10 +6094,10 @@ else asort($named_hash, $flags);
 $sorted_records = array();
 foreach ($named_hash as $key=> $val) $sorted_records["$key"] = $named_recs[$key];
 return $sorted_records;
+## Core.class.php:520
 }
 static public function ImplodeKey($glue, &$array) {
 $arrayKeys = array();
-## Core.class.php:520
 foreach ($array as $key => $value) {
 $arrayKeys[] = $key;
 }
@@ -6102,10 +6105,10 @@ return implode($glue, $arrayKeys);
 }
 static public function RandomHex($length = 1, $casesensitive = false) {
 $output = '';
+## Core.class.php:530
 if ($casesensitive) {
 $chars   = '0123456789ABCDEFabcdef';
 $charlen = 21; // (needs to be -1 of the actual length)
-## Core.class.php:530
 }
 else {
 $chars   = '0123456789ABCDEF';
@@ -6113,10 +6116,10 @@ $charlen = 15; // (needs to be -1 of the actual length)
 }
 $output = '';
 for ($i = 0; $i < $length; $i++) {
+## Core.class.php:540
 $pos = rand(0, $charlen);
 $output .= $chars{$pos};
 }
-## Core.class.php:540
 return $output;
 }
 public static function FormatSize($filesize, $round = 2) {
@@ -6124,10 +6127,10 @@ $suf = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
 $c   = 0;
 while ($filesize >= 1024) {
 $c++;
+## Core.class.php:550
 $filesize = $filesize / 1024;
 }
 return (round($filesize, $round) . ' ' . $suf[$c]);
-## Core.class.php:550
 }
 public static function GetExtensionFromString($str) {
 if (strpos($str, '.') === false) return '';
@@ -6135,10 +6138,10 @@ return substr($str, strrpos($str, '.') + 1);
 }
 public static function CheckEmailValidity($email) {
 $atIndex = strrpos($email, "@");
+## Core.class.php:560
 if (is_bool($atIndex) && !$atIndex) return false;
 $domain    = substr($email, $atIndex + 1);
 $local     = substr($email, 0, $atIndex);
-## Core.class.php:560
 $localLen  = strlen($local);
 $domainLen = strlen($domain);
 if ($localLen < 1 || $localLen > 64) {
@@ -6146,10 +6149,10 @@ return false;
 }
 if ($domainLen < 1 || $domainLen > 255) {
 return false;
+## Core.class.php:570
 }
 if ($local[0] == '.' || $local[$localLen - 1] == '.') {
 return false;
-## Core.class.php:570
 }
 if (preg_match('/\\.\\./', $local)) {
 return false;
@@ -6157,10 +6160,10 @@ return false;
 if (!preg_match('/^[A-Za-z0-9\\-\\.]+$/', $domain)) {
 return false;
 }
+## Core.class.php:580
 if (preg_match('/\\.\\./', $domain)) {
 return false;
 }
-## Core.class.php:580
 if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\", "", $local))) {
 if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\", "", $local))) {
 return false;
@@ -6168,10 +6171,10 @@ return false;
 }
 if (ConfigHandler::Get('/core/email/verify_with_dns') && !(checkdnsrr($domain, "MX") || checkdnsrr($domain, "A"))) {
 return false;
+## Core.class.php:590
 }
 return true;
 }
-## Core.class.php:590
 public static function _AttachCoreJavascript() {
 $script = '<script type="text/javascript">
 var Core = {
@@ -6179,10 +6182,10 @@ Version: "' . self::GetComponent()->getVersion() . '",
 ROOT_WDIR: "' . ROOT_WDIR . '",
 ROOT_URL: "' . ROOT_URL . '",
 ROOT_URL_SSL: "' . ROOT_URL_SSL . '",
+## Core.class.php:600
 ROOT_URL_NOSSL: "' . ROOT_URL_NOSSL . '"
 };
 </script>';
-## Core.class.php:600
 View::AddScript($script, 'head');
 View::AddScript('js/core.js', 'head');
 View::AddScript('js/core-foot.js', 'foot');
@@ -6190,10 +6193,10 @@ View::AddScript('js/core-foot.js', 'foot');
 public static function _AttachCoreStrings() {
 View::AddScript('js/core.strings.js');
 return true;
+## Core.class.php:610
 }
 public static function VersionCompare($version1, $version2, $operation = null) {
 if (!$version1) $version1 = 0;
-## Core.class.php:610
 if (!$version2) $version2 = 0;
 $version1 = Core::VersionSplit($version1);
 $version2 = Core::VersionSplit($version2);
@@ -6201,10 +6204,10 @@ $v1    = $version1['major'] . '.' . $version1['minor'] . '.' . $version1['point'
 $v2    = $version2['major'] . '.' . $version2['minor'] . '.' . $version2['point'];
 $check = version_compare($v1, $v2);
 if($check == 0 && $version1['user'] && $version2['user']){
+## Core.class.php:620
 $check = version_compare($version1['user'], $version2['user']);
 }
 if ($operation === null){
-## Core.class.php:620
 return $check;
 }
 elseif($check == -1){
@@ -6212,10 +6215,10 @@ switch($operation){
 case 'lt':
 case '<':
 case 'le':
+## Core.class.php:630
 case '<=':
 return true;
 default:
-## Core.class.php:630
 return false;
 }
 }
@@ -6223,10 +6226,10 @@ elseif($check == 0){
 switch($operation){
 case 'le':
 case '<=':
+## Core.class.php:640
 case 'eq':
 case '=':
 case '==':
-## Core.class.php:640
 case 'ge':
 case '>=':
 return true;
@@ -6234,10 +6237,10 @@ default:
 return false;
 }
 }
+## Core.class.php:650
 else{
 switch($operation){
 case 'ge':
-## Core.class.php:650
 case '>=':
 case 'gt':
 case '>':
@@ -6245,10 +6248,10 @@ return true;
 default:
 return false;
 }
+## Core.class.php:660
 }
 }
 public static function VersionSplit($version) {
-## Core.class.php:660
 $ret = array(
 'major'     => 0,
 'minor'     => 0,
@@ -6256,10 +6259,10 @@ $ret = array(
 'user'      => 0,
 'stability' => '',
 );
+## Core.class.php:670
 $v = array();
 $lengthall = strlen($version);
 $pos       = 0;
-## Core.class.php:670
 $x         = 0;
 while ($pos < $lengthall && $x < 10) {
 $nextpos = strpos($version, '.', $pos) - $pos;
@@ -6267,10 +6270,10 @@ $part = ($nextpos > 0) ? substr($version, $pos, $nextpos) : substr($version, $po
 if (($subpos = strpos($part, '-')) !== false) {
 $subpart = strtolower(substr($part, $subpos + 1));
 if ($subpart == 'a') {
+## Core.class.php:680
 $ret['stability'] = 'alpha';
 }
 elseif ($subpart == 'b') {
-## Core.class.php:680
 $ret['stability'] = 'beta';
 }
 else {
@@ -6278,10 +6281,10 @@ $ret['stability'] = $subpart;
 }
 $part = substr($part, 0, $subpos);
 }
+## Core.class.php:690
 elseif(($subpos = strpos($part, '~')) !== false){
 $subpart = strtolower(substr($part, $subpos + 1));
 $ret['user'] = $subpart;
-## Core.class.php:690
 }
 $v[] = (int)$part;
 $pos = ($nextpos > 0) ? $pos + $nextpos + 1 : $lengthall;
@@ -6289,10 +6292,10 @@ $x++; // Just in case something really bad happens here...
 }
 for ($i = 0; $i < 3; $i++) {
 if (!isset($v[$i])) $v[$i] = 0;
+## Core.class.php:700
 }
 $ret['major'] = $v[0];
 $ret['minor'] = $v[1];
-## Core.class.php:700
 $ret['point'] = $v[2];
 return $ret;
 }

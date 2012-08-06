@@ -768,7 +768,12 @@ class Core implements ISingleton {
 	 * @return boolean
 	 */
 	public static function IsClassAvailable($classname) {
-		return (isset(self::Singleton()->_classes[$classname]));
+		// let's see if I can't speed this function up a little...
+		if(self::$instance == null){
+			self::Singleton();
+		}
+
+		return (isset(self::$instance->_classes[$classname]));
 	}
 
 	public static function IsLibraryAvailable($name, $version = false, $operation = 'ge') {
