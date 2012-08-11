@@ -196,6 +196,17 @@ class DMI_mysqli_backend implements DMI_Backend {
 		// @todo should AUTO_INCREMENT be available here?
 	}
 
+	/**
+	 * Modify a table to match a new schema.
+	 *
+	 * This is used to keep the database in sync with the code upon upgrades, installations and reinstalls.
+	 *
+	 * @param $table string
+	 * @param $newschema array
+	 *
+	 * @return bool
+	 * @throws DMI_Exception
+	 */
 	public function modifyTable($table, $newschema){
 		$changed = false;
 

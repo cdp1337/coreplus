@@ -1333,13 +1333,14 @@ class Component_2_1 {
 	 * This is used for installations and upgrades.
 	 *
 	 * @throws InstallerException
+	 * @returns array|false
 	 */
 	private function _parseDBSchema() {
 		// I need to get the schema definitions first.
 		$node   = $this->_xmlloader->getElement('dbschema');
 		$prefix = $node->getAttribute('prefix');
 
-		$changed = false;
+		$changes = array();
 
 
 		// Get the table structure as it exists in the database first, this will be the comparison point.
@@ -1361,15 +1362,18 @@ class Component_2_1 {
 
 			if (Core::DB()->tableExists($tablename)) {
 				// Exists, ensure that it's up to date instead.
-				Core::DB()->modifyTable($tablename, $schema);
+				if(Core::DB()->modifyTable($tablename, $schema)){
+					$changes[] = 'Modified table ' . $tablename;
+				}
 			}
 			else {
 				// Pass this schema into the DMI processor for create table.
 				Core::DB()->createTable($tablename, $schema);
+				$changes[] = 'Created table ' . $tablename;
 			}
 		}
 
-		return $changed;
+		return sizeof($changes) ? $changes : false;
 	} // private function _parseDBSchema()
 
 
