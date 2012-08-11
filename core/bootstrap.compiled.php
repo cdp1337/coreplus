@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 11 Aug 2012 01:15:39 -0400
+ * @compiled Sat, 11 Aug 2012 02:50:41 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3476,7 +3476,7 @@ return ($changes > 0) ? $changes : false;
 private function _parseDBSchema() {
 $node   = $this->_xmlloader->getElement('dbschema');
 $prefix = $node->getAttribute('prefix');
-$changed = false;
+$changes = array();
 $classes = $this->getClassList();
 foreach ($classes as $k => $v) {
 if ($k == 'model' || strpos($k, 'model') !== strlen($k) - 5) unset($classes[$k]);
@@ -3489,13 +3489,16 @@ $tablename = $m::GetTableName();
 $schema = array('schema'  => $s,
 'indexes' => $i);
 if (Core::DB()->tableExists($tablename)) {
-Core::DB()->modifyTable($tablename, $schema);
+if(Core::DB()->modifyTable($tablename, $schema)){
+$changes[] = 'Modified table ' . $tablename;
+}
 }
 else {
 Core::DB()->createTable($tablename, $schema);
+$changes[] = 'Created table ' . $tablename;
 }
 }
-return $changed;
+return sizeof($changes) ? $changes : false;
 } // private function _parseDBSchema()
 private function _parseDatasetNode(DOMElement $node){
 $action   = $node->getAttribute('action');
