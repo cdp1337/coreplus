@@ -60,7 +60,7 @@ class HookHandler implements ISingleton {
 			if (!isset(self::$EarlyRegisteredHooks[$hookName])) self::$EarlyRegisteredHooks[$hookName] = array();
 			self::$EarlyRegisteredHooks[$hookName][] = array('call' => $callFunction);
 
-			return false;
+			return;
 		}
 		HookHandler::$RegisteredHooks[$hookName]->attach($callFunction);
 	}

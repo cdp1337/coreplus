@@ -34,6 +34,18 @@ require_once(ROOT_PDIR . 'core/libs/core/XMLLoader.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/InstallArchive.class.php');
 /** @deprecated 2011.11 */
 require_once(ROOT_PDIR . 'core/libs/core/InstallArchiveAPI.class.php');
+
+
+// The PHP elements of the MVC framework.
+require_once(ROOT_PDIR . 'core/libs/core/Model.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/Controller.class.php');
+
+// Time is a useful component.
+require_once(ROOT_PDIR . 'core/libs/core/Time.class.php');
+
+require_once(ROOT_PDIR . 'core/models/ComponentModel.class.php');
+require_once(ROOT_PDIR . 'core/models/PageModel.class.php');
+
 /** @deprecated 2011.11 */
 require_once(ROOT_PDIR . 'core/libs/core/Component.class.php');
 /**
@@ -58,13 +70,3 @@ require_once(ROOT_PDIR . 'core/libs/cachecore/backends/icachecore.interface.php'
 require_once(ROOT_PDIR . 'core/libs/cachecore/backends/cachecore.class.php');
 require_once(ROOT_PDIR . 'core/libs/cachecore/backends/cachefile.class.php');
 require_once(ROOT_PDIR . 'core/libs/cachecore/Cache.class.php');
-
-// The PHP elements of the MVC framework.
-require_once(ROOT_PDIR . 'core/libs/core/Model.class.php');
-require_once(ROOT_PDIR . 'core/libs/core/Controller.class.php');
-
-// Time is a useful component.
-require_once(ROOT_PDIR . 'core/libs/core/Time.class.php');
-
-require_once(ROOT_PDIR . 'core/models/ComponentModel.class.php');
-require_once(ROOT_PDIR . 'core/models/PageModel.class.php');

@@ -28,6 +28,7 @@
  * This basically does everything.....
  */
 
+// When working on the core, it's best to switch this back to core/bootstrap.php!
 //require_once('core/bootstrap.php');
 require_once('core/bootstrap.compiled.php');
 

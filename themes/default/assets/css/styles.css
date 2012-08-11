@@ -115,6 +115,11 @@ a.button.ok { background-image:url('../icons/button_ok-lg.png'); padding-left:2.
 
 a.button:hover { text-decoration:none; background-color: #50a3a5;}
 
+a.button[disabled=disabled]{
+	background-color: rgba(62, 126, 128, 0.49);
+	border:2px outset rgba(29, 84, 87, 0.32);
+	cursor: no-drop;
+}
 
 
 

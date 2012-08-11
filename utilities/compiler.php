@@ -126,7 +126,7 @@ function compile_file($filename, $recursivelevel = 0){
 		}
 
 		++$codenumber;
-		if($codenumber % 10 == 0) $line = '## ' . basename($filename) . ':' . $codenumber . "\n" . $line;
+		//if($codenumber % 10 == 0) $line = '## ' . basename($filename) . ':' . $linenumber . "\n" . $line;
 
 		$contents .= $line . "\n";
 	}

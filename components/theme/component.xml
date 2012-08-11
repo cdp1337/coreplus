@@ -6,7 +6,10 @@
 		<require name="jquery" type="library" version="1.7.0" operations="ge"/>
 		<require name="jqueryui" type="library" version="1.8.0" operations="ge"/>
 	</requires>
-	<hook name="components_loaded" call="ThemeHandler::Load"/>
+	<hooks>
+		<hook name="components_loaded" call="ThemeHandler::Load"/>
+	</hooks>
+
 	<files>
 		<file filename="controllers/ThemeController.class.php" md5="c6be8bd33ac57f4d815cb4291631018e">
 			<controller name="ThemeController"/>

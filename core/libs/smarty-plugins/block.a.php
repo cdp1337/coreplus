@@ -19,9 +19,19 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+/**
+ * Return a valid resolved a tag, with whatever inner content preserved.
+ *
+ * @param $params array
+ * @param $innercontent string
+ * @param $template Smarty
+ * @param $repeat boolean
+ *
+ * @return string
+ */
 function smarty_block_a($params, $innercontent, $template, &$repeat){
 	// This only needs to be called once.
-	if($repeat) return;
+	if($repeat) return '';
 
 	$assign= false;
 	

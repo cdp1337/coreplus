@@ -483,7 +483,10 @@ class PageModel extends Model {
 					$url = self::$_RewriteCache[$url];
 				}
 
-				$p = new PageModel($url);
+				//$p = new PageModel($url);
+				// The new static Construct offers caching :)
+				$p = PageModel::Construct($url);
+
 				// Fuzzy pages that do not have a parent url specifically set should not propagate up.
 				if ($p->get('fuzzy') && !$p->get('parenturl')) {
 					//echo "returning from #1<hr/>";
@@ -505,7 +508,9 @@ class PageModel extends Model {
 		if (!$this->get('parenturl') && $this->get('admin') && strtolower($this->get('baseurl')) != '/admin') {
 			$url = '/admin';
 			if (isset(self::$_RewriteCache[$url])) {
-				$p = new PageModel($url);
+				//$p = new PageModel($url);
+				// The new static Construct offers caching :)
+				$p = PageModel::Construct($url);
 			}
 			return array($p);
 		}
@@ -513,7 +518,10 @@ class PageModel extends Model {
 		// If this page does not have a parent, simply return a blank array.
 		if (!$this->get('parenturl')) return array();
 
-		$p = new PageModel($this->get('parenturl'));
+		//$p = new PageModel($this->get('parenturl'));
+		// The new static Construct offers caching :)
+		$p = PageModel::Construct($this->get('parenturl'));
+
 		return array_merge($p->_getParentTree(--$antiinfiniteloopcounter), array($p));
 	}
 
@@ -757,7 +765,6 @@ class PageModel extends Model {
 	 * that is directly pluggable into the Form system or a manual foreach loop.
 	 *
 	 * @param mixed $where Either a ModelFactory (usually with custom-crafted where clauses),
-	 *                     or an array of valid SQLBuilder where clauses
 	 *                     or a string of the where clause
 	 *                     or false to omit the where clause.
 	 * @param mixed $blanktext The text to include with the blank entry

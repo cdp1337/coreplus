@@ -1,5 +1,8 @@
-<h1>And... you broke it!</h1>
+<h1>This is not the building you are searching for</h1>
+{img src="assets/images/404.jpg" alt="Page Not Found"}
 
-<p>Good job, now the internets will be broken for everyone!</p>
-
-<p>Actually the page you requested just isn't available.</p>
+<p>
+	Oh, you were looking for a page and not a building?<br/>
+	...<br/>
+	Seems that I can't find that either, sorry.
+</p>

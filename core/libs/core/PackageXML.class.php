@@ -74,6 +74,9 @@ class PackageXML extends XMLLoader {
 		}
 		//$n = strtolower($this->getName());
 
+		//default, ie: it didn't find it.
+		return false;
+
 	}
 
 	/**

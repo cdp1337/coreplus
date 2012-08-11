@@ -552,6 +552,15 @@ class PageRequest {
 		return ($this->ctype == View::CTYPE_JSON);
 	}
 
+	/**
+	 * Get the user agent for this request.
+	 *
+	 * @return UserAgent
+	 */
+	public function getUserAgent(){
+		return new UserAgent($this->useragent);
+	}
+
 
 	private function _resolveMethod() {
 		// Make sure it's a valid METHOD... don't know what else it could be, but...

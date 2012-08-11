@@ -131,6 +131,45 @@
 		 */
 		trim: function(string){
 			return string.replace(/^[\s]*/gm, '').replace(/[\s]*$/gm, '');
+		},
+
+		/**
+		 * Very simple templating system that takes a string and replaces %1, %2, etc with that parameter.
+		 * This system also supports an Object for the second parameter.  This will perform named replaces.
+		 *
+		 * Example:
+		 * simple_template('Something %1 goes %2', 'red', 'over there');
+		 * // returns 'Something red goes over there'
+		 *
+		 * Example:
+		 * simple_template('something %color% goes %location%', { color: 'blue', location: 'up here' });
+		 * // returns 'something blue goes up here'
+		 *
+		 * @return string
+		 */
+		template: function(){
+			var template, args = [], i = 0;
+
+			if(arguments.length < 2){
+				throw 'Please provide at least two arguments to simple_format!';
+			}
+
+			template = arguments[0];
+
+			// If an object is sent in for the second argument and there are exactly two, then a name replace should be used.
+			if(arguments.length == 2 && arguments[1] instanceof Object){
+				for(i in arguments[1]){
+					template = template.replace('%' + i + '%', arguments[1][i]);
+				}
+				return template;
+			}
+
+			for(i=0; i<arguments.length; i++){
+				if(i == 0) continue;
+				template = template.replace('%' + i, arguments[i]);
+			}
+
+			return template;
 		}
 	};
 	
@@ -147,5 +186,9 @@
 		String.prototype.trim = function(){
 			return Core.Strings.trim(this.toString());
 		}
+	}
+
+	String.prototype.template = function(replacements){
+		return Core.Strings.template(this.toString(), replacements);
 	}
 })();

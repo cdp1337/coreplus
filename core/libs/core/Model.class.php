@@ -1,6 +1,14 @@
 <?php
 /**
- * [PAGE DESCRIPTION HERE]
+ * Core model systems, including Model, ModelException, ModelFactory, and ModelValidationException.
+ *
+ * This file makes up a major component of the underlying datastore system of Core+.  It offers rather high
+ * level of accessing and manipulating data in the datastore, essentially providing as the entirity of the
+ * "M" part in MVC.
+ *
+ * In order to build custom models in this system, they must all extend the Model class.  By doing such,
+ * they inherit this class's core abilities and functionality essential for operation, not to mention
+ * they are picked up as valid Models in the core.
  *
  * @package Core Plus\Core
  * @author Charlie Powell <charlie@eval.bz>
@@ -20,6 +28,12 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+/**
+ * Core Model object, main class responsible for the "M" component in MVC.
+ *
+ * Every Model in the system be it core models or user-created components, MUST extend this
+ * class in order for proper functioning.
+ */
 class Model implements ArrayAccess {
 
 	/**
@@ -163,7 +177,13 @@ class Model implements ArrayAccess {
 
 	public static $Indexes = array();
 
+	public static $_ModelCache = array();
 
+
+	/**
+	 * Create a new instance of the requested model.
+	 * @param null $key
+	 */
 	public function __construct($key = null) {
 
 		// Update the _data array based on the schema.
@@ -938,21 +958,6 @@ class Model implements ArrayAccess {
 		return array_merge($this->_data, $this->_dataother);
 	}
 
-	// DISABLING 2012.05 cpowell
-	/*
-	public function getSQLBuilder() {
-		if (!$this->_sqlbuilder) {
-			$this->_sqlbuilder = new SQLBuilderSelect();
-			$this->_sqlbuilder
-				->from($this->getTableName())
-				->select('*')
-				->limit(1);
-		}
-
-		return $this->_sqlbuilder;
-	}
-	*/
-
 	public function exists() {
 		return $this->_exists;
 	}
@@ -979,6 +984,50 @@ class Model implements ArrayAccess {
 
 
 	///////////////////    Factory-Related Static Methods
+
+	/**
+	 * Constructor alternative that utilizes caching to save on database lookups.
+	 *
+	 * @static
+	 *
+	 * @param $keys
+	 * @return Model
+	 */
+	public static function Construct($keys = null){
+		$class = get_called_class();
+
+		// New ones do not get cached.
+		if($keys === null){
+			return new $class();
+		}
+
+		$cache = '';
+		foreach(func_get_args() as $a){
+			$cache .= $a . '-';
+		}
+		$cache = substr($cache, 0, -1);
+
+		if(!isset(self::$_ModelCache[$class])){
+			self::$_ModelCache[$class] = array();
+		}
+		if(!isset(self::$_ModelCache[$class][$cache])){
+			/** @var $obj Model */
+			$obj = new $class();
+
+			$i = $obj::GetIndexes();
+
+			if (isset($i['primary']) && func_num_args() == sizeof($i['primary'])) {
+				foreach ($i['primary'] as $k => $v) {
+					$obj->_data[$v] = func_get_arg($k);
+				}
+			}
+			$obj->load();
+			self::$_ModelCache[$class][$cache] = $obj;
+		}
+
+		//var_dump($cache);
+		return self::$_ModelCache[$class][$cache];
+	}
 
 	/*
 	 * Factory shortcut function to do a search for the specific records.
@@ -1093,6 +1142,7 @@ class ModelFactory {
 	private $_model;
 
 	/**
+	 * Contains the dataset object for this search.
 	 *
 	 * @var Dataset
 	 */

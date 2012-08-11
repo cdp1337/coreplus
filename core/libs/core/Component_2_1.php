@@ -1350,7 +1350,7 @@ class Component_2_1 {
 
 		// Do the actual processing of every Model.
 		foreach ($classes as $m => $file) {
-			require_once($file);
+			if(!class_exists($m)) require_once($file);
 
 			$s         = $m::GetSchema();
 			$i         = $m::GetIndexes();

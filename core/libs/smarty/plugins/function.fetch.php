@@ -24,7 +24,7 @@ function smarty_function_fetch($params, $template)
 {
     if (empty($params['file'])) {
         trigger_error("[plugin] fetch parameter 'file' cannot be empty",E_USER_NOTICE);
-        return;
+        return '';
     }
     
     // strip file protocol

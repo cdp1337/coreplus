@@ -82,7 +82,7 @@ function FTP(){
 /**
  * Get the current user model that is logged in.
  * 
- * @return User
+ * @return \User
  */
 function user(){
 	static $user = null;
@@ -108,6 +108,12 @@ function user(){
  * @return File_Backend 
  */
 function file($filename = null){
+
+	// Allow remote files to be requested here too!
+	if(strpos($filename, '://') !== false){
+		return new \File_remote_backend($filename);
+	}
+
 	$backend = \ConfigHandler::Get('/core/filestore/backend');
 	switch($backend){
 		case 'aws':
