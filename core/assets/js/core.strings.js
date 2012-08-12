@@ -189,6 +189,11 @@
 	}
 
 	String.prototype.template = function(replacements){
-		return Core.Strings.template(this.toString(), replacements);
+		var args = [this.toString()], i;
+		for(i in arguments){
+			args.push(arguments[i]);
+		}
+
+		return Core.Strings.template.apply(this, args);
 	}
 })();

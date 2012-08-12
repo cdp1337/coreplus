@@ -28,6 +28,15 @@ class UserAgent {
 	 */
 	private static $_Cache = array();
 
+	/**
+	 * The data from the ini file.
+	 *
+	 * This should not be called directly, but via the LoadData function instead.
+	 *
+	 * @var null|array
+	 */
+	private static $_Data = null;
+
 	// initialize the return value
 	public $type             = 'unknown';
 	public $ua_family        = 'unknown';
@@ -45,6 +54,10 @@ class UserAgent {
 	public $os_company_url   = 'unknown';
 	public $os_icon          = 'unknown.png';
 
+	public static function Test(){
+		var_dump(self::$_Cache);
+	}
+
 	/**
 	 * Constructor with an user agent string.
 	 *
@@ -54,7 +67,7 @@ class UserAgent {
 	 */
 	public function __construct($useragent = null) {
 		if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
-
+//var_dump($useragent);
 		// if we haven't loaded the data yet, do it now
 		$_data = $this->_loadData();
 
@@ -62,7 +75,7 @@ class UserAgent {
 		if(!$_data || !isset($useragent)) {
 			return;
 		}
-
+//var_dump(self::$_Cache);
 		if(isset(self::$_Cache[$useragent])){
 			$this->fromArray(self::$_Cache[$useragent]);
 			return;
@@ -151,6 +164,24 @@ class UserAgent {
 			if ($os_data[4]) $this->os_company_url  = $os_data[4];
 			if ($os_data[5]) $this->os_icon         = $os_data[5];
 		}
+
+		self::$_Cache[$useragent] = $this->asArray();
+	}
+
+	/**
+	 * Function that guesses if this user request was a bot.
+	 *
+	 * @return boolean
+	 */
+	public function isBot(){
+		switch($this->type){
+			case 'Robot':
+			case 'Offline Browser':
+			case 'Other':
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	/**
@@ -218,34 +249,38 @@ class UserAgent {
 	/**
 	 *  Load the data from the files
 	 */
-	private function _loadData() {
+	private static function _LoadData() {
 
-		$data = Cache::GetSystemCache()->get('useragent-cache-ini', 3600);
-		if($data){
-			// It's already ready! :)
-			return $data;
-		}
-		else{
-			// I have to open the file for the data... this of course involves downloading it if necessary.
-			$file = Core::File('tmp/useragent.cache.ini');
-
-			// Doesn't exist? download it!
-			if(!$file->exists()){
-				$remote = Core::File(self::$_ini_url);
-				$remote->copyTo($file);
+		if(self::$_Data === null){
+			self::$_Data = Cache::GetSystemCache()->get('useragent-cache-ini', 3600);
+			if(self::$_Data){
+				// It's already ready! :)
+				return self::$_Data;
 			}
+			else{
+				// I have to open the file for the data... this of course involves downloading it if necessary.
+				$file = Core::File('tmp/useragent.cache.ini');
 
-			// Too old? download it!
-			if($file->getMTime() < (Time::GetCurrent() - self::$updateInterval)){
-				$remote = Core::File(self::$_ini_url);
-				$remote->copyTo($file);
+				// Doesn't exist? download it!
+				if(!$file->exists()){
+					$remote = Core::File(self::$_ini_url);
+					$remote->copyTo($file);
+				}
+
+				// Too old? download it!
+				if($file->getMTime() < (Time::GetCurrent() - self::$updateInterval)){
+					$remote = Core::File(self::$_ini_url);
+					$remote->copyTo($file);
+				}
+
+				self::$_Data = parse_ini_file($file->getFilename(), true);
+
+				// Cache it and return it!
+				Cache::GetSystemCache()->set('useragent-cache-ini', self::$_Data);
+				return self::$_Data;
 			}
-
-			$data = parse_ini_file($file->getFilename(), true);
-
-			// Cache it and return it!
-			Cache::GetSystemCache()->set('useragent-cache-ini', $data);
-			return $data;
 		}
+
+		return self::$_Data;
 	}
 }

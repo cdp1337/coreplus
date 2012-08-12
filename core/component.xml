@@ -41,7 +41,7 @@
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="e6bcccfe5d780d28d13a8e2dbbe17016"/>
 		<file filename="core/CHANGELOG" md5="4dc4c3af39d71d260fdb73b4fcbb2665"/>
-		<file filename="core/bootstrap.compiled.php" md5="28cc9750a0b062c0ea407f35410cf1b4">
+		<file filename="core/bootstrap.compiled.php" md5="df97cc1cacae1abd0065f8758415d730">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -310,7 +310,7 @@
 		<file filename="core/libs/aws-sdk/utilities/utilities.class.php" md5="7ef08a416322208d5d57cf5d95937512">
 			<class name="CFUtilities"/>
 		</file>
-		<file filename="core/libs/cachecore/Cache.class.php" md5="5be31c92d46c11fb9558b8c68fd814f0">
+		<file filename="core/libs/cachecore/Cache.class.php" md5="da2be9d6154b8e0b1ebe04b7d5ec1643">
 			<class name="Cache"/>
 			<class name="Cache_Exception"/>
 		</file>
@@ -459,7 +459,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="d199ea709377873af2fcf0f11728f9ba">
+		<file filename="core/libs/core/Component_2_1.php" md5="a867a8b1af5f4d49ed6270a1fbaddfa0">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="94fdacc5d802f86bab96b573b142bc78">
@@ -513,7 +513,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="0fc1df9c0b009e93a918d5ca97d0484d">
+		<file filename="core/libs/core/Model.class.php" md5="f32211e6da2afdab82ecb95be6602b69">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -538,7 +538,7 @@
 		<file filename="core/libs/core/Time.class.php" md5="f61bfc481eea40bacfc39cd9b9ce2c5c">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/UserAgent.php" md5="3e4aa2d270c438ef4998a35c8fd2a431">
+		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
 		<file filename="core/libs/core/View.class.php" md5="8a67ffab5f5eb5dcb17172f90d025e3c">
@@ -577,7 +577,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="e02b68f59cf50bf21f1bb533a2e59ea1">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="724c89dfc193fe4f39ee02b4631112fd">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="0ea97422f18cf43349a4ead39d9c3809">
 			<class name="DMI_mysqli_backend"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/AUTHORS" md5="c0722ecbe902d4770f9e17b43db3d8e6"/>
@@ -1384,7 +1384,7 @@
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.fileupload.js" md5="6af175f77ebccd39e84df91eabf4a384"/>
 		<file filename="core/assets/js/core.js" md5="9724278779f8bc69b0a51370dc5bac15"/>
-		<file filename="core/assets/js/core.strings.js" md5="a5418ccc46c37dacdf791a234f834f5f"/>
+		<file filename="core/assets/js/core.strings.js" md5="e32af02257c867efd01730b2c8a436de"/>
 		<file filename="core/assets/js/updater/index.js" md5="8bc98840b6292bdf9b98074ee92c7615"/>
 	</assets>
 	<upgrades>
@@ -1442,9 +1442,7 @@
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			See the included NOTICE.md file for more information.
-		</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3
 		</license>

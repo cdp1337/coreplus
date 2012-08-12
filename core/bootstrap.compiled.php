@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 11 Aug 2012 02:50:41 -0400
+ * @compiled Sun, 12 Aug 2012 04:10:31 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -913,7 +913,9 @@ foreach ($i['primary'] as $k => $v) {
 $this->_data[$v] = func_get_arg($k);
 }
 }
+if($key !== null){
 $this->load();
+}
 }
 public function load() {
 if (!self::GetTableName()) {
@@ -1357,6 +1359,13 @@ $fac->limit($limit);
 $fac->order($order);
 return $fac->get();
 }
+public static function FindRaw($where = array(), $limit = null, $order = null) {
+$fac = new ModelFactory(get_called_class());
+$fac->where($where);
+$fac->limit($limit);
+$fac->order($order);
+return $fac->getRaw();
+}
 public static function Count($where = array()) {
 $fac = new ModelFactory(get_called_class());
 $fac->where($where);
@@ -1422,6 +1431,10 @@ return (sizeof($ret)) ? $ret[0] : null;
 else {
 return $ret;
 }
+}
+public function getRaw(){
+$rs = $this->_dataset->execute($this->interface);
+return $rs->_data;
 }
 public function count() {
 $clone = clone $this->_dataset;
@@ -4803,6 +4816,7 @@ class Cache{
 private static $_cachecache;
 static protected $_Interface = null;
 private $_backend = null;
+private static $_KeyCache = array();
 public function __construct($backend = null){
 if(!$backend){
 $cs = ConfigHandler::LoadConfigFile("configuration");
@@ -4811,12 +4825,18 @@ $backend = $cs['cache_type'];
 $this->_backend = $backend;
 }
 public function get($key, $expires = 7200){
-if(!isset($this)) throw new Exception('Cannot call Cache::get() statically, please use Core::Cache()->get() instead.');
-return $this->_factory($key, $expires)->read();
+if(!isset($this)){
+throw new Exception('Cannot call Cache::get() statically, please use Core::Cache()->get() instead.');
+}
+if(!isset(self::$_KeyCache[$key])){
+self::$_KeyCache[$key] = $this->_factory($key, $expires)->read();
+}
+return self::$_KeyCache[$key];
 }
 public function set($key, $value, $expires = 7200){
 if(!isset($this)) throw new Exception('Cannot call Cache::set() statically, please use Core::Cache()->set() instead.');
 $c = $this->_factory($key, $expires);
+self::$_KeyCache[$key] = $value;
 if($c->create($value)) return true;
 elseif($c->update($value)) return true;
 else return false;
@@ -4825,6 +4845,7 @@ public function delete($key){
 return $this->_factory($key)->delete();
 }
 public function flush(){
+self::$_KeyCache = array();
 return $this->_factory(null)->flush();
 }
 public function _factory($key, $expires = 7200){

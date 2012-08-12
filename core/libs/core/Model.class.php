@@ -201,7 +201,9 @@ class Model implements ArrayAccess {
 			}
 		}
 
-		$this->load();
+		if($key !== null){
+			$this->load();
+		}
 	}
 
 	public function load() {
@@ -1029,7 +1031,7 @@ class Model implements ArrayAccess {
 		return self::$_ModelCache[$class][$cache];
 	}
 
-	/*
+	/**
 	 * Factory shortcut function to do a search for the specific records.
 	 *
 	 * @static
@@ -1037,7 +1039,7 @@ class Model implements ArrayAccess {
 	 * @param string $limit Limit clause
 	 * @param string $order Order clause
 	 *
-	 * @return array
+	 * @return array|null|Model
 	 */
 	public static function Find($where = array(), $limit = null, $order = null) {
 		$fac = new ModelFactory(get_called_class());
@@ -1046,6 +1048,26 @@ class Model implements ArrayAccess {
 		$fac->order($order);
 		//var_dump($fac);
 		return $fac->get();
+	}
+
+	/**
+	 * Factory shortcut function to do a search for the specific records and return them as a raw array.
+	 *
+	 * @static
+	 *
+	 * @param array $where
+	 * @param null  $limit
+	 * @param null  $order
+	 *
+	 * @return array
+	 */
+	public static function FindRaw($where = array(), $limit = null, $order = null) {
+		$fac = new ModelFactory(get_called_class());
+		$fac->where($where);
+		$fac->limit($limit);
+		$fac->order($order);
+		//var_dump($fac);
+		return $fac->getRaw();
 	}
 
 	/**
@@ -1122,7 +1144,12 @@ class Model implements ArrayAccess {
 	}
 }
 
-
+/**
+ * Factory utility for models.
+ *
+ * This class provides an interface for searching for and counting models.  Generally, there are shortcut functions
+ * available on the Model class that utilize this class, namely Count, Find, and FindRaw.
+ */
 class ModelFactory {
 
 	/**
@@ -1159,6 +1186,9 @@ class ModelFactory {
 		$this->_dataset->select('*');
 	}
 
+	/**
+	 * Where clause for the search, passed directly to the dataset object.
+	 */
 	public function where() {
 		call_user_func_array(array($this->_dataset, 'where'), func_get_args());
 	}
@@ -1175,6 +1205,14 @@ class ModelFactory {
 		call_user_func_array(array($this->_dataset, 'limit'), func_get_args());
 	}
 
+	/**
+	 * Get the result or results from this factory.
+	 *
+	 * If limit is set to 1, either a Model or null is returned.
+	 * Else, an array of Models is returned, be it populated or empty.
+	 *
+	 * @return array|null|Model
+	 */
 	public function get() {
 		$rs = $this->_dataset->execute($this->interface);
 
@@ -1193,6 +1231,17 @@ class ModelFactory {
 		else {
 			return $ret;
 		}
+	}
+
+	/**
+	 * Get the results from this factory as a raw associative array.
+	 *
+	 * @return array
+	 */
+	public function getRaw(){
+		$rs = $this->_dataset->execute($this->interface);
+
+		return $rs->_data;
 	}
 
 	/**

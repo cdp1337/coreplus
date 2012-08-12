@@ -42,6 +42,16 @@ class Cache{
 	static protected $_Interface = null;
 	
 	private $_backend = null;
+
+	/**
+	 * Cache of keyed data used for get/set.
+	 *
+	 * Instead of calling a new cache object every time and loading its data.... every time
+	 * this will contain a cache of the key's data.
+	 *
+	 * @var array
+	 */
+	private static $_KeyCache = array();
 	
 	public function __construct($backend = null){
 		if(!$backend){
@@ -51,15 +61,32 @@ class Cache{
 		
 		$this->_backend = $backend;
 	}
-	
+
+	/**
+	 * Get a cached key
+	 *
+	 * @param     $key
+	 * @param int $expires
+	 *
+	 * @return bool|mixed|string
+	 * @throws Exception
+	 */
 	public function get($key, $expires = 7200){
-		if(!isset($this)) throw new Exception('Cannot call Cache::get() statically, please use Core::Cache()->get() instead.');
-		return $this->_factory($key, $expires)->read();
+		if(!isset($this)){
+			throw new Exception('Cannot call Cache::get() statically, please use Core::Cache()->get() instead.');
+		}
+
+		if(!isset(self::$_KeyCache[$key])){
+			self::$_KeyCache[$key] = $this->_factory($key, $expires)->read();
+		}
+		return self::$_KeyCache[$key];
 	}
 	
 	public function set($key, $value, $expires = 7200){
 		if(!isset($this)) throw new Exception('Cannot call Cache::set() statically, please use Core::Cache()->set() instead.');
 		$c = $this->_factory($key, $expires);
+
+		self::$_KeyCache[$key] = $value;
 		
 		// Try to create and if that fails try an update.
 		if($c->create($value)) return true;
@@ -72,6 +99,7 @@ class Cache{
 	}
 	
 	public function flush(){
+		self::$_KeyCache = array();
 		return $this->_factory(null)->flush();
 	}
 	
