@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.3" name="user" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.0" name="user" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.2"/>
 		<require name="Facebook" type="component"/>
@@ -37,6 +37,9 @@
 		<file filename="backends/User_facebook.backend.php" md5="9b56ef72aac8afdeaf37f303c26f1005">
 			<class name="User_facebook_Backend"/>
 		</file>
+		<file filename="controllers/UserActivityController.php" md5="0f890921ba4952efb94fb0f8c9124f45">
+			<controller name="UserActivityController"/>
+		</file>
 		<file filename="controllers/UserAdminController.php" md5="975438ad9dfea0ec6b3fd6e28bbd92fc">
 			<controller name="UserAdminController"/>
 		</file>
@@ -47,11 +50,11 @@
 			<controller name="UserGroupAdminController"/>
 		</file>
 		<file filename="helpers/UserFunctions.php" md5="a32b2358b5a1f5f5482076752ce97066"/>
-		<file filename="helpers/UserHelper.class.php" md5="064af4a1cabbb4b9b1915e2969d78ae4">
+		<file filename="helpers/UserHelper.class.php" md5="a4e6f77ff49374a7366af3f335027bd4">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
-		<file filename="models/UserActivityModel.php" md5="0dc125b42e0f65cb5396f30884f2761e">
+		<file filename="models/UserActivityModel.php" md5="5f5bb7b6580bcc7c64bfc2f3c7f82dbd">
 			<class name="UserActivityModel"/>
 		</file>
 		<file filename="models/UserConfigModel.php" md5="3f9ec960d49d5a547038ddf3d91aeff2">
@@ -68,28 +71,23 @@
 		</file>
 	</files>
 	<view>
-		<file filename="templates/widgets/userlogin.tpl" md5="8a8d32b7f36e7ee581ece66be94b4d2d"/>
 		<file filename="templates/emails/user/forgotpassword.tpl" md5="3cceaf071bb8cd76a9f7c15fcc1da84e"/>
 		<file filename="templates/emails/user/registration.tpl" md5="bc0af99c272dc0849608642ef56185f2"/>
-		<file filename="templates/pages/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/user/forgotpassword.tpl" md5="c2da0dced97b6b643b20c40a5046b5d1"/>
-		<file filename="templates/pages/user/login.tpl" md5="b499441b575fa4bd2e7dd9ac2e49f52b"/>
-		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="f230fcddefd98780d34bb7a9b3a38ac5"/>
-		<file filename="templates/widgets/userlogin/execute.tpl" md5="8a8d32b7f36e7ee581ece66be94b4d2d"/>
-		<file filename="templates/widgets/user/login.tpl" md5="74b44e98b27d05efd66ba03a377a8816"/>
-		<file filename="templates/widgets/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/widgets/userlogin/execute.tpl" md5="8b33f6adb9fdadf3a6f4e10f6722de2e"/>
+		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="f24f2069b4c49a7887c9e66f7cf0d73a"/>
 		<file filename="templates/pages/user/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/user/forgotpassword.tpl" md5="c2da0dced97b6b643b20c40a5046b5d1"/>
+		<file filename="templates/pages/user/login.tpl" md5="d7351c35f9ff638acdd90a59f47ee5a2"/>
+		<file filename="templates/pages/user/me.tpl" md5="b7b4264ad2a54852f1a53d084144b57f"/>
+		<file filename="templates/pages/user/password.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/useractivity/index.tpl" md5="f1463c6f2df95ad634013491b867ba53"/>
 		<file filename="templates/pages/useradmin/index.tpl" md5="bbcb1c063224c4c8fe53a03a467f1e33"/>
 		<file filename="templates/pages/usergroupadmin/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/usergroupadmin/index.tpl" md5="737ee67c775c5cb219d040015dbcb496"/>
 		<file filename="templates/pages/usergroupadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="b5b16731d34c802a15dc3fb7734b3abc"/>
-		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="f24f2069b4c49a7887c9e66f7cf0d73a"/>
-		<file filename="templates/pages/user/login.tpl" md5="d7351c35f9ff638acdd90a59f47ee5a2"/>
-		<file filename="templates/pages/user/me.tpl" md5="b7b4264ad2a54852f1a53d084144b57f"/>
-		<file filename="templates/pages/user/password.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/user/login.tpl" md5="054c8c86b99b890e6490b96d3ff0c634"/>
+		<file filename="templates/widgets/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/widgets/userlogin/execute.tpl" md5="8b33f6adb9fdadf3a6f4e10f6722de2e"/>
 	</view>
 	<pages>
 		<page baseurl="/User/Login" admin="0" widget="0" access="!g:authenticated" title="Login"/>
@@ -97,6 +95,7 @@
 		<page baseurl="/User/Logout" admin="0" widget="0" access="g:authenticated" title="Logout"/>
 		<page baseurl="/useradmin" admin="1" access="g:admin" title="User Administration"/>
 		<page baseurl="/usergroupadmin" admin="1" access="g:admin" title="User Group Administration"/>
+		<page baseurl="/useractivity" admin="1" access="p:user_activity_list" title="User Activity"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/UserWidget/Login"/>
@@ -116,6 +115,7 @@
 	</configs>
 	<permissions>
 		<permission key="user_manage" description="Manage users and permissions"/>
+		<permission key="user_activity_list" description="List user activity and analytics"/>
 	</permissions>
 	<assets>
 		<file filename="assets/js/user/login.js" md5="f48e188960e94f209e89f5168b101983"/>
@@ -143,6 +143,7 @@
 		<upgrade from="2.0.0" to="2.0.1"/>
 		<upgrade from="2.0.1" to="2.0.2"/>
 		<upgrade from="2.0.2" to="2.0.3"/>
+		<upgrade from="2.0.3" to="2.1.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

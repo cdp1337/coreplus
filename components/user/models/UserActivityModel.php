@@ -7,6 +7,13 @@
  * To change this template use File | Settings | File Templates.
  */
 class UserActivityModel extends Model{
+	/**
+	 * The UserAgent object for this log.
+	 *
+	 * @var null|UserAgent
+	 */
+	private $_ua = null;
+
 	public static $Schema = array(
 		'datetime' => array(
 			'type' => Model::ATT_TYPE_CREATED
@@ -62,4 +69,32 @@ class UserActivityModel extends Model{
 		'datetime' => array('datetime'),
 		'user' => array('user_id')
 	);
+
+	/**
+	 * Function that guesses if this user request was a bot.
+	 *
+	 * @return boolean
+	 */
+	public function isBot(){
+		switch($this->getUserAgent()->type){
+			case 'Robot':
+			case 'Offline Browser':
+			case 'Other':
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	/**
+	 * Get the matching user agent for this model.
+	 *
+	 * @return UserAgent
+	 */
+	public function getUserAgent(){
+		if($this->_ua === null){
+			$this->_ua = new UserAgent($this->get('useragent'));
+		}
+		return $this->_ua;
+	}
 }

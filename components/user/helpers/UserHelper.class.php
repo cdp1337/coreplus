@@ -26,7 +26,14 @@ abstract class UserHelper{
 				'processing_time' => (round(Core::GetProfileTimeTotal(), 4) * 1000)
 			)
 		);
-		$log->save();
+		try{
+			$log->save();
+		}
+		catch(Exception $e){
+			// I don't actually care if it couldn't save.
+			// This could happen if the user refreshes the page twice with in a second.
+			// (and with a system that responds in about 100ms, it's very possible).
+		}
 	}
 
 
