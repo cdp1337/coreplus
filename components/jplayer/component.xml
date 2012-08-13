@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.0~core1" name="jPlayer" execmode="web">
-	<requries>
+	<requires>
 		<require name="core" type="component"/>
 		<require name="JQuery" type="library" version="1.4" operation="ge"/>
-	</requries>
+	</requires>
 	<upgrades>
 		<upgrade from="2.0.0" to="2.0.0~cae2"/>
 		<upgrade from="2.0.0~cae2" to="2.0.0~cae3"/>
