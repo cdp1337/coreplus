@@ -503,6 +503,12 @@ class Model implements ArrayAccess {
 
 		$idcol = false;
 		foreach ($this->_data as $k => $v) {
+			if(!isset($s[$k])){
+				// This key was not in the schema.  Probable reasons for this would be a column that was
+				// removed from the schema in an upgrade, but was never removed from the database.
+				// This is typical because the installer tries to be non-destructive when it comes to data.
+				continue;
+			}
 			$keyschema = $s[$k];
 			// Certain key types have certain functions.
 			switch ($keyschema['type']) {
