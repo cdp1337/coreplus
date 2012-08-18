@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 12 Aug 2012 04:10:31 -0400
+ * @compiled Fri, 17 Aug 2012 23:44:36 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1056,6 +1056,9 @@ $dat = new Dataset();
 $dat->table(self::GetTableName());
 $idcol = false;
 foreach ($this->_data as $k => $v) {
+if(!isset($s[$k])){
+continue;
+}
 $keyschema = $s[$k];
 switch ($keyschema['type']) {
 case Model::ATT_TYPE_CREATED:
@@ -3607,6 +3610,7 @@ public function getFilesize($formatted = false);
 public function getMimetype();
 public function getExtension();
 public function getURL();
+public function getPreviewURL($dimensions = "300x300");
 public function getFilename($prefix = ROOT_PDIR);
 public function getBaseFilename($withoutext = false);
 public function getLocalFilename();
@@ -3695,6 +3699,9 @@ return File::GetExtensionFromString($this->filename);
 }
 public function getURL() {
 return $this->_backend->get_object_url($this->bucket, $this->filename);
+}
+public function getPreviewURL($dimensions = "300x300"){
+return $this->getURL();
 }
 public function getFilename($prefix = ROOT_PDIR) {
 if ($prefix == ROOT_PDIR) return $this->filename;
@@ -6388,9 +6395,6 @@ private static $_Instance = null;
 public static function Singleton() {
 if (self::$_Instance === null) {
 self::$_Instance = new Session();
-ini_set('session.hash_bits_per_character', 5);
-ini_set('session.hash_function', 1);
-session_start();
 $m = self::$_Instance->_getModel();
 $m->set('updated', Time::GetCurrentGMT());
 HookHandler::DispatchHook('session_ready');
@@ -6398,20 +6402,22 @@ HookHandler::DispatchHook('session_ready');
 return Session::$_Instance;
 }
 public static function GetInstance() {
-return Session::Singleton();
+return self::Singleton();
 }
 public static function Start($save_path, $session_name) {
 self::Singleton();
 }
 public static function End() {
+$m = self::Singleton()->_getModel();
+$m->save();
 }
 public static function Read($id) {
-return self::Singleton()->_getModel()->get('data');
+$m = self::Singleton()->_getModel();
+return $m->get('data');
 }
 public static function Write($id, $data) {
 $m = self::Singleton()->_getModel();
 $m->set('data', $data);
-$m->save();
 return TRUE;
 }
 public static function Destroy($id = null) {
@@ -6442,14 +6448,6 @@ $m->set('user_id', $u->get('id'));
 $_SESSION['user'] = $u;
 }
 private function __construct() {
-session_set_save_handler(
-array('Session', "Start"),
-array('Session', "End"),
-array('Session', "Read"),
-array('Session', "Write"),
-array('Session', "Destroy"),
-array('Session', "GC")
-);
 Session::GC();
 }
 private function _getModel() {
@@ -6466,6 +6464,17 @@ $this->_model = null;
 }
 }
 }
+session_set_save_handler(
+array('Session', "Start"),
+array('Session', "End"),
+array('Session', "Read"),
+array('Session', "Write"),
+array('Session', "Destroy"),
+array('Session', "GC")
+);
+ini_set('session.hash_bits_per_character', 5);
+ini_set('session.hash_function', 1);
+session_start();
 
 Session::Singleton();
 }

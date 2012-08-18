@@ -10,7 +10,6 @@
 	</provides>
 	<hooks>
 		<hookregister name="/core/page/prerender" description="Called before the page is rendered"/>
-		<hookregister name="/core/page/render" description="Called to render the page"/>
 		<hookregister name="/core/page/postrender" description="Called after all the rendering has been completed on the page."/>
 		<hookregister name="/core/page/error-404" description="Called anytime there is a 404 error"/>
 		<hookregister name="/core/page/error-403" description="Called anytime there is a 403 error"/>
@@ -18,9 +17,6 @@
 		<!--<hook event="components_ready" call="CurrentPage::LoadPage"/>
 		-->
 		<hook name="/core/page/prerender" call="Core::_AttachCoreJavascript"/>
-		<hook name="/core/page/render" call="CurrentPage::Render"/>
-		<!--<hook name="/core/page/render" call="\Core\Render"/>
-		-->
 		<hook name="components_ready" call="Form::CheckSavedSessionData"/>
 		<hook name="/core/page/error-404" call="GettingStartedController::_HookCatch404"/>
 	</hooks>
@@ -28,10 +24,11 @@
 	<includes>
 		<include filename="core/functions/Core.functions.php"/>
 	</includes>
-	<widgets>
+	<!-- @todo Delete these widgets in the upgrade. -->
+	<!--<widgets>
 		<widget baseurl="/page/siblingsnavigation" title="Page Siblings Nav"/>
 		<widget baseurl="/page/siblingsandchildrennavigation" title="Page Siblings w/Children Nav"/>
-	</widgets>
+	</widgets>-->
 	<files>
 		<file filename="LICENSES/agpl-3.0.txt" md5="08657324f94cfae679f345f428c68f9b"/>
 		<file filename="LICENSES/apache-2.0.txt" md5="3b83ef96387f14655fc854ddc3c6bd57"/>
