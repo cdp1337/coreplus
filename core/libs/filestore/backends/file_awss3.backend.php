@@ -84,6 +84,20 @@ class File_awss3_backend implements File_Backend {
 	}
 
 	/**
+	 * Get a serverside-resized thumbnail url for this file.
+	 *
+	 * @abstract
+	 *
+	 * @param string $dimensions
+	 *
+	 * @return mixed
+	 */
+	public function getPreviewURL($dimensions = "300x300"){
+		// @todo Implement this...
+		return $this->getURL();
+	}
+
+	/**
 	 * Get the filename of this file resolved to a specific directory, usually ROOT_PDIR or ROOT_WDIR.
 	 */
 	public function getFilename($prefix = ROOT_PDIR) {

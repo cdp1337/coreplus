@@ -38,6 +38,17 @@ interface File_Backend {
 	 */
 	public function getURL();
 
+	/**
+	 * Get a serverside-resized thumbnail url for this file.
+	 *
+	 * @abstract
+	 *
+	 * @param string $dimensions
+	 *
+	 * @return mixed
+	 */
+	public function getPreviewURL($dimensions = "300x300");
+
 
 	/**
 	 * Get the filename of this file resolved to a specific directory, usually ROOT_PDIR or ROOT_WDIR.

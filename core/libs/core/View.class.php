@@ -148,7 +148,12 @@ class View {
 	 */
 	public $mode;
 
-	public $jsondata = array();
+	/**
+	 * An array, object, string, or other data that is sent to the browser via json_encode if content type is set to JSON.
+	 *
+	 * @var mixed
+	 */
+	public $jsondata = null;
 
 	/**
 	 * Set this to a non-null value to set the http-equiv="last-modified" metatag.
@@ -347,7 +352,7 @@ class View {
 			case View::CTYPE_JSON:
 				// Did the controller send data to this view directly?
 				// (because JSON supports raw data ^_^ )
-				if (sizeof($this->jsondata)) {
+				if ($this->jsondata !== null) {
 					$this->mastertemplate = false;
 					$tmpl                 = false;
 					return json_encode($this->jsondata);
@@ -561,7 +566,7 @@ class View {
 		$data = $this->fetch();
 
 		// Be sure to send the content type and status to the browser, (if it's a page)
-		if ($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX) {
+		if ($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX) {
 			switch ($this->error) {
 				case View::ERROR_NOERROR:
 					header('Status: 200 OK', true, $this->error);

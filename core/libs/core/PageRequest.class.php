@@ -553,6 +553,15 @@ class PageRequest {
 	}
 
 	/**
+	 * Simple check to guess if the page request was an ajax-based request.
+	 *
+	 * @return bool
+	 */
+	public function isAjax(){
+		return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+	}
+
+	/**
 	 * Get the user agent for this request.
 	 *
 	 * @return UserAgent
@@ -591,9 +600,11 @@ class PageRequest {
 		// There are a couple special-case exceptions that must go first.
 		if ($this->ctype == View::CTYPE_JSON) {
 			// JSON is dependent on either the config being true or an appropriate header.
-			if (ALLOW_NONXHR_JSON || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) {
-				$this->contentTypes[] = array('type'   => View::CTYPE_JSON,
-				                              'weight' => 1.0);
+			if (ALLOW_NONXHR_JSON || $this->isAjax()) {
+				$this->contentTypes[] = array(
+					'type'   => View::CTYPE_JSON,
+					'weight' => 1.0
+				);
 			}
 			else {
 				// DENIED :p
