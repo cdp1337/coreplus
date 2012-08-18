@@ -63,6 +63,10 @@ class SessionModel extends Model {
 		'primary' => array('session_id'),
 	);
 
+	public function __construct($key = null){
+		return parent::__construct($key);
+	}
+
 	public function get($k) {
 		if ($k == 'data') {
 			return $this->getData();
@@ -84,10 +88,11 @@ class SessionModel extends Model {
 	 */
 	public function getData() {
 		$data     = $this->_data['data'];
-		$unzipped = @gzuncompress($data);
+		$unzipped = gzuncompress($data);
 		if ($unzipped === false) {
 			return $data;
-		} else {
+		}
+		else {
 			return $unzipped;
 		}
 	}
@@ -100,6 +105,12 @@ class SessionModel extends Model {
 	public function setData($data) {
 		$zipped              = gzcompress($data);
 		$this->_data['data'] = $zipped;
+		// Always cause this to set the dirty flag.
+		$this->_dirty = true;
 	}
 
-} // END class ConfigModel extends Model
+	public function save(){
+		return parent::save();
+	}
+
+}

@@ -1,6 +1,6 @@
 <?php
 /**
- * [PAGE DESCRIPTION HERE]
+ * Session system, responsible for saving and retrieving all data to and from the database.
  *
  * @package Core Plus\Core
  * @author Charlie Powell <charlie@eval.bz>
@@ -27,12 +27,15 @@ register_shutdown_function("session_write_close");
 class Session implements ISingleton {
 
 	/**
-	 * The amodel for this given session.
+	 * The model for this given session.
 	 *
 	 * @var SessionModel
 	 */
 	private $_model = null;
 
+	/**
+	 * @var Session
+	 */
 	private static $_Instance = null;
 
 	/**
@@ -43,11 +46,6 @@ class Session implements ISingleton {
 	public static function Singleton() {
 		if (self::$_Instance === null) {
 			self::$_Instance = new Session();
-
-			// Now I can session_start everything.
-			ini_set('session.hash_bits_per_character', 5);
-			ini_set('session.hash_function', 1);
-			session_start();
 
 			// And start a new session.
 			$m = self::$_Instance->_getModel();
@@ -66,31 +64,32 @@ class Session implements ISingleton {
 	}
 
 	public static function GetInstance() {
-		return Session::Singleton();
+		return self::Singleton();
 	}
 
 	public static function Start($save_path, $session_name) {
-		// Singleton will handle starting a new session!
 		self::Singleton();
 	}
 
 	public static function End() {
 		// Nothing needs to be done in this function
 		// since we used persistent connection.
+
+		$m = self::Singleton()->_getModel();
+		$m->save();
 	}
 
 	public static function Read($id) {
-		//$m = self::Singleton()->_getModel();
+		$m = self::Singleton()->_getModel();
 		//var_dump($m->get('data'));
 
-		return self::Singleton()->_getModel()->get('data');
+		return $m->get('data');
 	}
 
 	public static function Write($id, $data) {
 
 		$m = self::Singleton()->_getModel();
 		$m->set('data', $data);
-		$m->save();
 
 		return TRUE;
 	}
@@ -144,21 +143,14 @@ class Session implements ISingleton {
 	}
 
 	private function __construct() {
-
-		// Set the save handlers
-		session_set_save_handler(
-			array('Session', "Start"),
-			array('Session', "End"),
-			array('Session', "Read"),
-			array('Session', "Write"),
-			array('Session', "Destroy"),
-			array('Session', "GC")
-		);
-
 		// Ensure garbage collection is done at some point.
 		Session::GC();
 	}
 
+	/**
+	 * Get the Model for this current session.
+	 * @return SessionModel
+	 */
 	private function _getModel() {
 		if ($this->_model === null) {
 			$this->_model = new SessionModel(session_id());
@@ -178,3 +170,19 @@ class Session implements ISingleton {
 		}
 	}
 }
+
+// Set the save handlers
+session_set_save_handler(
+	array('Session', "Start"),
+	array('Session', "End"),
+	array('Session', "Read"),
+	array('Session', "Write"),
+	array('Session', "Destroy"),
+	array('Session', "GC")
+);
+
+// and GO
+// Now I can session_start everything.
+ini_set('session.hash_bits_per_character', 5);
+ini_set('session.hash_function', 1);
+session_start();
