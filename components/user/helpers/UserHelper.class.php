@@ -151,6 +151,13 @@ abstract class UserHelper{
 				$user->set($k, $v);
 			}
 
+			// Is this element the group definition?
+			elseif($name == 'groups[]'){
+				$v = $el->get('value');
+
+				$user->setGroups($v);
+			}
+
 			elseif($name == 'active'){
 				$user->set('active', $el->get('value'));
 			}
@@ -267,6 +274,8 @@ abstract class UserHelper{
 
 			return false;
 		}
+
+		var_dump($user); die();
 
 		$user->save();
 

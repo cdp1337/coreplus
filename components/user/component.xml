@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.0" name="user" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.1" name="user" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.2"/>
 		<require name="Facebook" type="component"/>
@@ -50,7 +50,7 @@
 			<controller name="UserGroupAdminController"/>
 		</file>
 		<file filename="helpers/UserFunctions.php" md5="a32b2358b5a1f5f5482076752ce97066"/>
-		<file filename="helpers/UserHelper.class.php" md5="a4e6f77ff49374a7366af3f335027bd4">
+		<file filename="helpers/UserHelper.class.php" md5="6a9f19d2dcc5c785b5a4f123c24b8f0f">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
@@ -144,6 +144,7 @@
 		<upgrade from="2.0.1" to="2.0.2"/>
 		<upgrade from="2.0.2" to="2.0.3"/>
 		<upgrade from="2.0.3" to="2.1.0"/>
+		<upgrade from="2.1.0" to="2.1.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
