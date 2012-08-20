@@ -88,7 +88,8 @@ ul.controls li a i.icon-add { color: green; }
  * http://docs.jquery.com/UI/Button#theming
  */
 a.button,
-.ui-widget-content a.button {
+.ui-widget-content a.button,
+span.button {
 	display: inline-block;
 	position: relative;
 	padding:0 1em;
@@ -100,7 +101,26 @@ a.button,
 	overflow: visible;
 	line-height: 1.4;
 	background-repeat:no-repeat;
-	background-color: rgba(62, 126, 128, 0.99);
+
+	background-image: linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(91,114,115) 73%, rgb(173,199,193) 100%);
+	background-image: -o-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(91,114,115) 73%, rgb(173,199,193) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(91,114,115) 73%, rgb(173,199,193) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(91,114,115) 73%, rgb(173,199,193) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(91,114,115) 73%, rgb(173,199,193) 100%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.19, rgb(148,148,148)),
+		color-stop(0.42, rgb(112,111,112)),
+		color-stop(0.73, rgb(91,114,115)),
+		color-stop(1, rgb(173,199,193))
+	);
+
+		/*
+	 background-color: rgba(62, 126, 128, 0.99);
+	 */
 	border:2px outset rgba(29, 84, 87, 0.52);
 	color: #FFF;
 	font-weight:bold;

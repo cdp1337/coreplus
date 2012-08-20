@@ -88,6 +88,10 @@ class SessionModel extends Model {
 	 */
 	public function getData() {
 		$data     = $this->_data['data'];
+
+		// If the session did not exist before, simply return an empty array.
+		if(!$data) return array();
+
 		$unzipped = gzuncompress($data);
 		if ($unzipped === false) {
 			return $data;

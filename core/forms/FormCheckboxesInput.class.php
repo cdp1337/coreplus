@@ -19,7 +19,8 @@ class FormCheckboxesInput extends FormElement {
 	public function get($key) {
 		if ($key == 'value' && sizeof($this->_attributes['options']) > 1) {
 			// This should return an array if there are more than 1 option.
-			if (!$this->_attributes['value']) return array();
+			if(!isset($this->_attributes['value'])) return array();
+			elseif (!$this->_attributes['value']) return array();
 			else return $this->_attributes['value'];
 		}
 		else {
