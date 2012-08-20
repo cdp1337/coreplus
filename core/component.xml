@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.5" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.6" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -28,7 +28,8 @@
 	<!--<widgets>
 		<widget baseurl="/page/siblingsnavigation" title="Page Siblings Nav"/>
 		<widget baseurl="/page/siblingsandchildrennavigation" title="Page Siblings w/Children Nav"/>
-	</widgets>-->
+		</widgets>
+	-->
 	<files>
 		<file filename="LICENSES/agpl-3.0.txt" md5="08657324f94cfae679f345f428c68f9b"/>
 		<file filename="LICENSES/apache-2.0.txt" md5="3b83ef96387f14655fc854ddc3c6bd57"/>
@@ -38,7 +39,7 @@
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="e6bcccfe5d780d28d13a8e2dbbe17016"/>
 		<file filename="core/CHANGELOG" md5="4dc4c3af39d71d260fdb73b4fcbb2665"/>
-		<file filename="core/bootstrap.compiled.php" md5="df97cc1cacae1abd0065f8758415d730">
+		<file filename="core/bootstrap.compiled.php" md5="520930e9185eb1fc71ea599b782dd876">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -116,10 +117,10 @@
 		<file filename="core/forms/FormCheckboxInput.class.php" md5="d7dcf76c91d94d46ad55f9ce4551564e">
 			<class name="FormCheckboxInput"/>
 		</file>
-		<file filename="core/forms/FormCheckboxesInput.class.php" md5="a39a221ff8529f12343ba8f2b87dfbe5">
+		<file filename="core/forms/FormCheckboxesInput.class.php" md5="7b11d9b50cb06a03d4d4109b9bc02f08">
 			<class name="FormCheckboxesInput"/>
 		</file>
-		<file filename="core/forms/FormFileInput.class.php" md5="a715edba0ff3918abd73c59ae632868c">
+		<file filename="core/forms/FormFileInput.class.php" md5="b0a0001d2db34d3fe21f46aea2210691">
 			<class name="FormFileInput"/>
 		</file>
 		<file filename="core/forms/FormHiddenInput.class.php" md5="b165e1679347782c30492bb4b320ee5c">
@@ -158,7 +159,7 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="080383e4dade461c3c7ac1d9e504ed28">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="aa9433c25b9c75c4503b6d08ea109be6"/>
+		<file filename="core/functions/Core.functions.php" md5="fcb4610cde85c415dc529215cd3d13f7"/>
 		<file filename="core/helpers/UpdaterHelper.class.php" md5="16b8645e48e2090c014c4a0e85be5a07">
 			<class name="UpdaterHelper"/>
 		</file>
@@ -510,7 +511,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="f32211e6da2afdab82ecb95be6602b69">
+		<file filename="core/libs/core/Model.class.php" md5="5516a4361713178680e45cca3e70e95b">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -519,14 +520,14 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="c33121e2c1f075babe730a4cc252ebba">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="4c26885fb43763971c5dbb56f248bfe3">
+		<file filename="core/libs/core/PageRequest.class.php" md5="451bba0ef77e08aa4b55692f9da47016">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="0528150b9145ee4d1dd243e8348c71a6">
 			<class name="RepoXML"/>
 		</file>
 		<file filename="core/libs/core/SQLBuilder.class.php.DISABLED" md5="47925681d58280bff9c130f449c9ba90"/>
-		<file filename="core/libs/core/Session.class.php" md5="5ba706ec71b7db97386904b0392fe244">
+		<file filename="core/libs/core/Session.class.php" md5="27e248543e9a5fc7355542180f1c9baf">
 			<class name="Session"/>
 		</file>
 		<file filename="core/libs/core/Template.class.php" md5="b2bc620cd1960402e0b8d02aa6185104">
@@ -538,7 +539,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="8a67ffab5f5eb5dcb17172f90d025e3c">
+		<file filename="core/libs/core/View.class.php" md5="4b8a5e6d21d81bbcc9870374ccd8eab5">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -762,7 +763,7 @@
 		<file filename="core/libs/filestore/FileException.class.php" md5="657f6356182a91efb492fcdece04c008">
 			<class name="FileException"/>
 		</file>
-		<file filename="core/libs/filestore/File_Backend.interface.php" md5="b3d7d0c194a14f7bece24ab6795babf0">
+		<file filename="core/libs/filestore/File_Backend.interface.php" md5="689a27590b970a585eed928b167b2192">
 			<interface name="File_Backend"/>
 		</file>
 		<file filename="core/libs/filestore/File_Contents.interface.php" md5="74e9a61ff8a58f95da1a8e114235b019">
@@ -771,7 +772,7 @@
 		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="62f44f6d86d7d45e87c32ab62a228b85">
 			<class name="Directory_local_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="7c6d2dd510cfc6a1a2aa60f48561543c">
+		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="86f58054362b62b0a0bc760d8f403048">
 			<class name="File_awss3_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="c7164d543ff0d6fb26052578db579454">
@@ -1240,7 +1241,7 @@
 		<file filename="core/models/PageModel.class.php" md5="d5608740caad0ca7d4032cbd6c39108d">
 			<class name="PageModel"/>
 		</file>
-		<file filename="core/models/SessionModel.class.php" md5="c3fae7f98e556e850cd82374a5d2ed16">
+		<file filename="core/models/SessionModel.class.php" md5="7e5409686e6d110839bd07e09eada796">
 			<class name="SessionModel"/>
 		</file>
 		<file filename="core/models/UpdateSiteModel.class.php" md5="90a7e717dbef4709b4405082482f47e9">
@@ -1405,6 +1406,7 @@
 		<upgrade from="2.1.2" to="2.1.3"/>
 		<upgrade from="2.1.3" to="2.1.4"/>
 		<upgrade from="2.1.4" to="2.1.5"/>
+		<upgrade from="2.1.5" to="2.1.6"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
@@ -1439,7 +1441,9 @@
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			See the included NOTICE.md file for more information.
+		</license>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3
 		</license>
