@@ -24,8 +24,10 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/jquery-1.7.2.min.js');
-		else CurrentPage::AddScript ('js/jquery/jquery-1.7.2.js');
+		$base = 'jquery-1.8.0';
+
+		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
+		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -33,8 +35,8 @@ abstract class JQuery {
 	
 	public static function IncludeJQueryUI(){
 		self::IncludeJQuery();
-		CurrentPage::AddScript ('js/jquery/jquery-ui-1.8.20.min.js');
-		CurrentPage::AddStylesheet('css/jquery-ui.css');
+		CurrentPage::AddScript ('js/jquery/jquery-ui-1.8.22.min.js');
+		CurrentPage::AddStylesheet('css/jquery-ui-1.8.22.css');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -48,6 +50,18 @@ abstract class JQuery {
 		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
 		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
 		
+		// IMPORTANT!  Tells the script that the include succeeded!
+		return true;
+	}
+
+	public static function Include_tmpl(){
+		$base = 'tmpl';
+		// I need jquery ui first.
+		self::IncludeJQueryUI();
+
+		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
+		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
@@ -87,6 +101,15 @@ abstract class JQuery {
 
 		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
 		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+
+		// IMPORTANT!  Tells the script that the include succeeded!
+		return true;
+	}
+
+	public static function Include_masonry(){
+		// I need jquery first.
+		self::IncludeJQuery();
+		CurrentPage::AddScript('js/jquery/jquery.masonry.min.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;

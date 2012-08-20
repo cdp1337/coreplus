@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7.2~core2" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8.0~core1" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="1.9.0" operation="ge"/>
 	</requires>
 	<provides>
-		<provide name="JQuery" version="1.7.2" type="library"/>
-		<provide name="JQueryUI" version="1.8.20" type="library"/>
+		<provide name="JQuery" version="1.8.0" type="library"/>
+		<provide name="JQueryUI" version="1.8.22" type="library"/>
 		<provide name="JQueryUI.NestedSortable" version="1.4.0" type="library"/>
 		<provide name="JQueryUI.readonly" version="2.0.1" type="library"/>
 		<provide name="JQuery.json" version="2.2" type="library"/>
 		<provide name="JQuery.cookie" version="1.1" type="library"/>
+		<provide name="JQuery.tmpl" version="2.1.0" type="library"/>
+		<provide name="jquery.masonry" version="2.1.05" type="library"/>
 		<scriptlibrary name="jquery" call="JQuery::IncludeJQuery"/>
 		<scriptlibrary name="jquery.json" call="JQuery::Include_json"/>
 		<scriptlibrary name="jquery.cookie" call="JQuery::Include_cookie"/>
 		<scriptlibrary name="jqueryui" call="JQuery::IncludeJQueryUI"/>
 		<scriptlibrary name="jqueryui.nestedSortable" call="JQuery::Include_nestedSortable"/>
 		<scriptlibrary name="jqueryui.readonly" call="JQuery::Include_readonly"/>
+		<scriptlibrary name="jquery.tmpl" call="JQuery::Include_tmpl"/>
+		<scriptlibrary name="jquery.masonry" call="JQuery::Include_masonry"/>
 	</provides>
 	<assets>
 		<file filename="assets/css/images/ui-bg_flat_0_aaaaaa_40x100.png" md5="2a44fbdb7360c60122bcf6dcef0387d8"/>
@@ -46,6 +50,7 @@
 		<file filename="assets/css/images/ui-icons_cd0a0a_256x240.png" md5="3e450c2a2c66328d9498e7001ad7197c"/>
 		<file filename="assets/css/images/ui-icons_eeeeee_256x240.png" md5="2e6d7e1cca1cd751a6e156feb381eb0f"/>
 		<file filename="assets/css/images/ui-icons_ffffff_256x240.png" md5="342bc03f6264c75d3f1d7f99e34295b9"/>
+		<file filename="assets/css/jquery-ui-1.8.22.css" md5="37aee7c9e30bde3f8d1adc765619b767"/>
 		<file filename="assets/css/jquery-ui.css" md5="9814a94835a5507fbc5d2903f9e41c16"/>
 		<file filename="assets/css/jquery.readonly.css" md5="ca07e99b858d310cd3e855abf65d9b06"/>
 		<file filename="assets/js/jquery/jquery-1.5.1.js" md5="f2402f0e7b549caae013bc3c05b3a161"/>
@@ -59,23 +64,29 @@
 		<file filename="assets/js/jquery/jquery-1.7.1.min.js" md5="ddb84c1587287b2df08966081ef063bf"/>
 		<file filename="assets/js/jquery/jquery-1.7.2.js" md5="af693f9aea7dae36fb3bef4c9b6e56fb"/>
 		<file filename="assets/js/jquery/jquery-1.7.2.min.js" md5="b8d64d0bc142b3f670cc0611b0aebcae"/>
+		<file filename="assets/js/jquery/jquery-1.8.0.js" md5="884c9efc99aca3e82b497beb16d5f246"/>
+		<file filename="assets/js/jquery/jquery-1.8.0.min.js" md5="cd8b0bffc85bb5614385ee4ce3596d07"/>
 		<file filename="assets/js/jquery/jquery-ui-1.8.11.min.js" md5="bc1367d7c32e3b4fd746027d8188cc36"/>
 		<file filename="assets/js/jquery/jquery-ui-1.8.16.min.js" md5="65c7c707dddea0c7861714df250d54c4"/>
 		<file filename="assets/js/jquery/jquery-ui-1.8.20.min.js" md5="925ce969efd834fd7be9e35d0007904c"/>
+		<file filename="assets/js/jquery/jquery-ui-1.8.22.min.js" md5="c2d89098cb69e8b4fa5c46e7303d8d98"/>
 		<file filename="assets/js/jquery/jquery.cookie.js" md5="20adaea8ed610b1b08abf532beba6659"/>
 		<file filename="assets/js/jquery/jquery.cookie.min.js" md5="b2b5da3ba885603b0097b9a6bd6b032c"/>
 		<file filename="assets/js/jquery/jquery.json-2.2.js" md5="56fdd8b6674e6d121afe11a920191429"/>
 		<file filename="assets/js/jquery/jquery.json-2.2.min.js" md5="2d59ccdc20e736725bdbcb433e080ec0"/>
-		<file filename="assets/js/jquery/jquery.ui.nestedSortable.js" md5="78f9086993a0701fda4f09c271d30adb"/>
+		<file filename="assets/js/jquery/jquery.masonry.min.js" md5="fc2d7669d58e909815f1994047bf671c"/>
+		<file filename="assets/js/jquery/jquery.ui.nestedSortable.js" md5="fbd3ec46c4cb84a8433f3b5c468e98cf"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.min.js" md5="28fb224b45d2fdb5e5eef85d2dfc8458"/>
 		<file filename="assets/js/jquery/jquery.ui.readonly.js" md5="3de4b84a6cdbc15e6e42514d80bd743b"/>
 		<file filename="assets/js/jquery/jquery.ui.readonly.min.js" md5="ae62f410564d47cfec4593a0d5e1ffda"/>
+		<file filename="assets/js/jquery/tmpl.js" md5="5e2855f4f4a4fd07ac343c9f0823d67f"/>
+		<file filename="assets/js/jquery/tmpl.min.js" md5="411df7e2bc659d35015f7fdb7432b331"/>
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
 		<file filename="CHANGELOG.md" md5="4392f799ae10b6d8338f9f9a9d4f693f"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="a6b6ef765f3e74679fb9d4fbb0b4e01c">
+		<file filename="JQuery.lib.php" md5="361a891346813026b91628ea86493b6e">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
@@ -93,6 +104,7 @@
 		<upgrade from="1.7.0-1" to="1.7.1"/>
 		<upgrade from="1.7.1" to="1.7.2~core1"/>
 		<upgrade from="1.7.2~core1" to="1.7.2~core2"/>
+		<upgrade from="1.7.2~core2" to="1.8.0~core1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
