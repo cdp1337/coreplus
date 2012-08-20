@@ -1,0 +1,29 @@
+.multifileinput {
+	background: none repeat scroll 0 0 rgba(90, 150, 90, 0.1);
+	border: 1px solid #CCCCCC;
+	padding: 2px;
+	position: relative;
+}
+
+.multifileinput:hover {
+	background: none repeat scroll 0 0 rgba(90, 150, 90, 0.2);
+	border: 1px solid #aaa;
+}
+
+
+
+.multiupload-drag-notice {
+	color: rgba(90, 150, 90, 0.4);
+	display: none;
+	font-size: 33px;
+	margin-top: -6px;
+	padding-top: 0;
+	position: absolute;
+	text-align: center;
+	width: 100%;
+	z-index: 3;
+}
+
+.multifileinput:hover .multiupload-drag-notice {
+	display: block;
+}

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.9.1~core1" name="jQuery-File-Upload" execmode="web">
+	<requires>
+		<require name="JQuery" type="library" version="1.6" operation="ge"/>
+		<require name="jqueryui" type="library" version="1.8" operation="ge"/>
+	</requires>
+	<upgrades/>
+	<description>
+		File Upload widget with multiple file selection, drag and drop support, progress bars and preview images for jQuery.
+		Supports cross-domain, chunked and resumable file uploads and client-side image resizing.
+		This package has been minimized to include support for only PHP based server platforms, since that's all that Core+ runs on.
+	</description>
+	<forms>
+		<formelement name="multifile" class="MultiFileInput"/>
+	</forms>
+	<files>
+		<file filename="README.md" md5="cb22a03a2f5fc8aaf6dcf5a9c2180a66"/>
+		<file filename="classes/MultiFileInput.class.php" md5="cbf33dcfa27832339ca1b1e992eb77e8">
+			<class name="MultiFileInput"/>
+		</file>
+		<file filename="controllers/JQueryFileUploadController.php" md5="8df9ebfad218d56b3fdd690245652962">
+			<controller name="JQueryFileUploadController"/>
+		</file>
+		<file filename="misc/cors/postmessage.html" md5="a44b950eba47719cfd9775e16ffdef70"/>
+		<file filename="misc/cors/result.html" md5="e07ff3e2fa24130baf5a11c1aa0ba7c0"/>
+		<file filename="misc/css/jquery.fileupload-ui.css" md5="a0d23e0880ef82a17d4c3d8fc1490acc"/>
+		<file filename="misc/css/style.css" md5="4b836e70afc92c31b62983187ae0b7bc"/>
+		<file filename="misc/img/loading.gif" md5="05992d3434d3589b38a3a5431842d38f"/>
+		<file filename="misc/img/progressbar.gif" md5="2165b99c89c8431e7165530ccb5f89fb"/>
+		<file filename="misc/index.html" md5="e7234e2b7d2a70a2bff02ec2398f8165"/>
+		<file filename="misc/package.json" md5="6afd4c268864d5045edd0f161032dfe4"/>
+		<file filename="misc/server/gae-go/app.yaml" md5="62779923186fce0d4f8126b14f94daf2"/>
+		<file filename="misc/server/gae-go/app/main.go" md5="eb8a167171e69c426b8072a4ae056e0e"/>
+		<file filename="misc/server/gae-go/resize/resize.go" md5="8c553454cde68dccb7a342c1881c658b"/>
+		<file filename="misc/server/gae-go/static/favicon.ico" md5="9c0ded6158793bdab415f17a7f1ba98d"/>
+		<file filename="misc/server/gae-go/static/robots.txt" md5="b6216d61c03e6ce0c9aea6ca7808f7ca"/>
+		<file filename="misc/server/gae-python/app.yaml" md5="96d2461ea0e89ac8bb56f11e9b869732"/>
+		<file filename="misc/server/gae-python/main.py" md5="e6da5ad137fea8eb68f152c89129254a"/>
+		<file filename="misc/server/gae-python/static/favicon.ico" md5="9c0ded6158793bdab415f17a7f1ba98d"/>
+		<file filename="misc/server/gae-python/static/robots.txt" md5="b6216d61c03e6ce0c9aea6ca7808f7ca"/>
+		<file filename="misc/server/node/package.json" md5="d9760348266ce78a36f8fd77e0e11dca"/>
+		<file filename="misc/server/node/server.js" md5="49c115909bb3533d64f77febe2f31206"/>
+		<file filename="misc/server/php/index.php" md5="1a2c3909a406faf12c1ff3e68df94a0c"/>
+		<file filename="misc/server/php/upload.class.php" md5="d111aea5b9c664d75dc1db6f7f6ba842">
+			<class name="UploadHandler"/>
+		</file>
+		<file filename="misc/test/index.html" md5="f9854e0a6ca74cb493ea70a6bc4e521a"/>
+		<file filename="misc/test/test.js" md5="2f21c6e24f3d0623f4cf14d212543ef8"/>
+	</files>
+	<assets>
+		<file filename="assets/css/jquery-file-upload.css" md5="9d21d52cbf25b66bfd3a14becae6dbc9"/>
+		<file filename="assets/js/cors/jquery.postmessage-transport.js" md5="11fe256b13a09546f7280198d8e98239"/>
+		<file filename="assets/js/cors/jquery.xdr-transport.js" md5="0927262e8bbd59ec33eda07237e6f19a"/>
+		<file filename="assets/js/jquery.fileupload-fp.js" md5="b26df0946db6d77ffcae7d02b7fdfff3"/>
+		<file filename="assets/js/jquery.fileupload-ui.js" md5="f594ca00dff11b09c2340d56c7be2766"/>
+		<file filename="assets/js/jquery.fileupload.js" md5="5554a67234029282d81603f3b810f02b"/>
+		<file filename="assets/js/jquery.iframe-transport.js" md5="64c4919f8d8d06d25f1174f11d7a14e4"/>
+		<file filename="assets/js/locale.js" md5="a3e000456648ad121c8aadf7d918a4e7"/>
+		<file filename="assets/js/main.js" md5="107bdfd43c84dc9cc817d9e8b3e821e5"/>
+		<file filename="assets/js/vendor/jquery.ui.widget.js" md5="34af0fa43f73d5db9d7ff94d218ccdd9"/>
+	</assets>
+	<view searchdir="templates">
+		<file filename="templates/forms/elements/multifileinput.tpl" md5="7afa965ea1f3695e47d2c30db3e6a562"/>
+	</view>
+	<authors>
+		<author name="Sebastian Tschan"/>
+	</authors>
+</component>
+
