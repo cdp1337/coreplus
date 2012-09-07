@@ -134,4 +134,18 @@
 	<define name="ALLOW_NONXHR_JSON" type="boolean">
 		<value>false</value>
 	</define>
+
+	<!--
+        The encryption key used for sensitive information that must be saved in the database and retrieved as plain text.
+        Storing the passphrase with the code is required beccause the encrypted data must be visible via the application.
+
+        This does provide one level of security however, that is if the database is leaked, it would be difficult to
+        decrypt those bits of information without the correct pass phrase.
+
+        !!! IMPORTANT !!!  Once you set this and start using the site, DO NOT CHANGE IT!
+        Doing so will make the encrypted data unusable!
+    -->
+    <define name="SECRET_ENCRYPTION_PASSPHRASE">
+        <value>This should be some random string that is really really hard to guess.</value>
+    </define>
 </configuration>
