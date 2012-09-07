@@ -5,48 +5,24 @@
  * and to set all the appropriate information.
  */
 
-
 if(!isset($_SERVER['SHELL'])){
 	die("Please run this script from the command line.");
 }
 
+// This is required to establish the root path of the system, (since it's always one directory up from "here"
+$dir = realpath(dirname($_SERVER['PWD'] . '/' . $_SERVER['SCRIPT_FILENAME']) . '/..') . '/';
 
-/********************* Initial system defines *********************************/
-require_once('../core/bootstrap_predefines.php');
-
-$predefines_time = microtime(true);
-
-
-
-/********************** Critical file inclusions ******************************/
-
-require_once('../core/bootstrap_preincludes.php');
-
-
-require_once(ROOT_PDIR . "core/libs/core/HookHandler.class.php");
-HookHandler::singleton();
-require_once(ROOT_PDIR . "core/libs/core/ConfigHandler.class.php");
-ConfigHandler::singleton();
-
-
-// Give me core settings!
-// This will do the defines for the site, and provide any core variables to get started.
-$core_settings = ConfigHandler::LoadConfigFile("core");
+// Include the core bootstrap, this will get the system functional.
+require_once($dir . 'core/bootstrap.php');
 
 
 if(!DEVELOPMENT_MODE){
 	die('Installation cannot proceed while site is NOT in Development mode.');
 }
 
-
-// Datamodel, GOGO!
-require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
-
-
-$backend = DMI::GetSystemDMI()->connection();
-if(!$backend instanceof DMI_mysqli_backend) die("This script only works with MySQL or MySQLi based datamodels!");
-
-
+// I need a few variables first about the user...
+$packagername = '';
+$packageremail = '';
 
 CLI::LoadSettingsFile('packager');
 
@@ -57,18 +33,27 @@ if(!$packageremail){
 	$packageremail = CLI::Promptuser('Please provide your email you wish to use for packaging.', 'text-required');
 }
 
+CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 
 
+if(!is_dir(ROOT_PDIR . '_gen/')) mkdir(ROOT_PDIR . '_gen/');
+
+$backend = Core::DB();
 
 foreach($backend->_getTables() as $name){
-	
-	$classname = explode('_', substr($name, 4));
-	
-	foreach($classname as $k => $v){
-		$classname[$k] = ucwords($v);
+
+	if(strpos($name, '_') === false){
+		$classname = ucwords($name);
 	}
-	$classname = implode('', $classname);
-	
+	else{
+		//$classname = explode('_', substr($name, 4));
+		$classname = explode('_', $name);
+		foreach($classname as $k => $v){
+			$classname[$k] = ucwords($v);
+		}
+		$classname = implode('', $classname);
+	}
+
 	$classname .= 'Model';
 	
 	$schema = $backend->_describeTableSchema($name);
@@ -95,18 +80,39 @@ foreach($backend->_getTables() as $name){
 		elseif(strpos($row['type'], 'int(') !== false && $c['name'] == 'created'){
 			$c['type'] = 'Model::ATT_TYPE_CREATED';
 		}
-		elseif(strpos($row['type'], 'int(') !== false && isset($index['PRIMARY']) && in_array($c['name'], $index['PRIMARY']['columns'])){
+		elseif(
+			strpos($row['type'], 'int(') !== false &&
+			isset($index['PRIMARY']) &&
+			in_array($c['name'], $index['PRIMARY']['columns']) &&
+			sizeof($index['PRIMARY']) == 1
+		){
 			$c['type'] = 'Model::ATT_TYPE_ID';
 		}
 		elseif(strpos($row['type'], 'int(') !== false){
 			$c['type'] = 'Model::ATT_TYPE_INT';
 		}
-		elseif($row['type'] == 'text'){
+		elseif($row['type'] == 'text' || $row['type'] == 'longtext'){
 			$c['type'] = 'Model::ATT_TYPE_TEXT';
 		}
 		elseif(strpos($row['type'], 'varchar(') !== false){
 			$c['type'] = 'Model::ATT_TYPE_STRING';
 			$c['maxlength'] = substr($row['type'], 8, -1);
+		}
+		elseif($row['type'] == 'datetime'){
+			$c['type'] = 'Model::ATT_TYPE_ISO_8601_DATETIME';
+		}
+		elseif($row['type'] == 'timestamp'){
+			$c['type'] = 'Model::ATT_TYPE_MYSQL_TIMESTAMP';
+		}
+		elseif($row['type'] == 'date'){
+			$c['type'] = 'Model::ATT_TYPE_ISO_8601_DATE';
+		}
+		elseif($row['type'] == 'blob' || $row['type'] == 'longblob' || $row['type'] == 'mediumblob'){
+			$c['type'] = 'Model::ATT_TYPE_DATA';
+		}
+		elseif(strpos($row['type'], 'decimal(') !== false){
+			$c['type'] = 'Model::ATT_TYPE_FLOAT';
+			$c['precision'] = substr($row['type'], 8, -1);
 		}
 		else{
 			die('Unsupported column type [' . $row['type'] . '] from table ' . $name . "\n");
@@ -162,12 +168,13 @@ class $classname extends Model {
 foreach($cols as $k => $col){
 	$code .= "\n\t\t'{$col['name']}' => array("
 		. "\n\t\t\t'type' => {$col['type']},"
-		. (isset($col['maxlength'])? "\n\t\t\t'maxlength' => {$col['maxlength']}," : '')
-		. (isset($col['options'])? "\n\t\t\t'options' => {$col['options']}," : '')
-		. (isset($col['default'])? "\n\t\t\t'default' => {$col['default']}," : '')
-		. (isset($col['required'])? "\n\t\t\t'required' => {$col['required']}," : '')
-		. (isset($col['comment'])? "\n\t\t\t'comment' => '{$col['comment']}'," : '')
-		. (isset($col['null'])? "\n\t\t\t'null' => {$col['null']}," : '')
+		. (isset($col['maxlength'])? "\n\t\t\t'maxlength' => {$col['maxlength']},"   : '')
+		. (isset($col['precision'])? "\n\t\t\t'precision' => '{$col['precision']}'," : '')
+		. (isset($col['options'])?   "\n\t\t\t'options' => {$col['options']},"       : '')
+		. (isset($col['default'])?   "\n\t\t\t'default' => {$col['default']},"       : '')
+		. (isset($col['required'])?  "\n\t\t\t'required' => {$col['required']},"     : '')
+		. (isset($col['comment'])?   "\n\t\t\t'comment' => '{$col['comment']}',"     : '')
+		. (isset($col['null'])?      "\n\t\t\t'null' => {$col['null']},"             : '')
 		. "\n\t\t),";
 }
 $code .= "\n\t);
@@ -184,7 +191,7 @@ $code .= "\n\t);
 ";
 	
 	echo "Writing $classname.class.php...\n";
-	file_put_contents('_gen/' . $classname . '.class.php', $code);
+	file_put_contents(ROOT_PDIR . '_gen/' . $classname . '.class.php', $code);
 	//var_dump($cols, $indexes); die();
 
 }
