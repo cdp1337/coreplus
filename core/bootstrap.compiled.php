@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 20 Aug 2012 16:43:19 -0400
+ * @compiled Fri, 07 Sep 2012 00:21:45 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -884,8 +884,13 @@ const ATT_TYPE_ENUM = 'enum';
 const ATT_TYPE_ID = '__id';
 const ATT_TYPE_UPDATED = '__updated';
 const ATT_TYPE_CREATED = '__created';
+const ATT_TYPE_ISO_8601_DATETIME = 'ISO_8601_datetime';
+const ATT_TYPE_MYSQL_TIMESTAMP = 'mysql_timestamp';
+const ATT_TYPE_ISO_8601_DATE = 'ISO_8601_date';
 const VALIDATION_NOTBLANK = "/^.+$/";
 const VALIDATION_EMAIL = 'Core::CheckEmailValidity';
+const VALIDATION_URL = '#^[a-zA-Z]+://.+$#';
+const VALIDATION_URL_WEB = '#^[hH][tT][tT][pP][sS]{,1}://.+$#';
 const LINK_HASONE  = 'one';
 const LINK_HASMANY = 'many';
 const LINK_BELONGSTOONE = 'belongs_one';
@@ -893,6 +898,7 @@ const LINK_BELONGSTOMANY = 'belongs_many';
 public $interface = null;
 protected $_data = array();
 protected $_datainit = array();
+protected $_datadecrypted = null;
 protected $_dataother = array();
 protected $_dirty = false;
 protected $_exists = false;
@@ -1006,11 +1012,12 @@ public function getKeySchemas() {
 if ($this->_schemacache === null) {
 $this->_schemacache = self::GetSchema();
 foreach ($this->_schemacache as $k => $v) {
-if (!isset($v['type'])) $this->_schemacache[$k]['type'] = Model::ATT_TYPE_TEXT; // Default if not present.
+if (!isset($v['type']))      $this->_schemacache[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
 if (!isset($v['maxlength'])) $this->_schemacache[$k]['maxlength'] = false;
-if (!isset($v['null'])) $this->_schemacache[$k]['null'] = false;
-if (!isset($v['comment'])) $this->_schemacache[$k]['comment'] = false;
-if (!isset($v['default'])) $this->_schemacache[$k]['default'] = false;
+if (!isset($v['null']))      $this->_schemacache[$k]['null']      = false;
+if (!isset($v['comment']))   $this->_schemacache[$k]['comment']   = false;
+if (!isset($v['default']))   $this->_schemacache[$k]['default']   = false;
+if (!isset($v['encrypted'])) $this->_schemacache[$k]['encrypted'] = false;
 }
 }
 return $this->_schemacache;
@@ -1181,7 +1188,15 @@ if ($this->_data[$k] == $v) return false; // No change needed.
 $this->validate($k, $v, true);
 $v = $this->translateKey($k, $v);
 $this->_setLinkKeyPropagation($k, $v);
+$keydat = $this->getKeySchema($k);
+if($keydat['encrypted']){
+$this->decryptData();
+$this->_datadecrypted[$k] = $v;
+$this->_data[$k] = $this->encryptValue($v);
+}
+else{
 $this->_data[$k] = $v;
+}
 $this->_dirty    = true;
 return true;
 }
@@ -1298,7 +1313,10 @@ $this->set($k, $v);
 }
 }
 public function get($k) {
-if (array_key_exists($k, $this->_data)) {
+if($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
+return $this->_datadecrypted[$k];
+}
+elseif (array_key_exists($k, $this->_data)) {
 return $this->_data[$k];
 }
 elseif (array_key_exists($k, $this->_dataother)) {
@@ -1309,13 +1327,54 @@ return null;
 }
 }
 public function getAsArray() {
+if($this->_datadecrypted !== null){
+return array_merge($this->_data, $this->_dataother, $this->_datadecrypted);
+}
+else{
 return array_merge($this->_data, $this->_dataother);
+}
 }
 public function exists() {
 return $this->_exists;
 }
 public function isnew() {
 return !$this->_exists;
+}
+public function decryptData(){
+if($this->_datadecrypted === null){
+$this->_datadecrypted = array();
+foreach($this->getKeySchemas() as $k => $v){
+if($v['encrypted']){
+$payload = $this->_data[$k];
+if($payload === null || $payload === ''){
+$this->_datadecrypted[$k] = null;
+continue;
+}
+preg_match('/^\$([^$]*)\$([0-9]*)\$(.*)$/m', $payload, $matches);
+$cipher = $matches[1];
+$passes = $matches[2];
+$size = openssl_cipher_iv_length($cipher);
+$dec = substr($payload, strlen($cipher) + 5, 0-$size);
+$iv = substr($payload, 0-$size);
+for($i=0; $i<$passes; $i++){
+$dec = openssl_decrypt($dec, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+}
+$this->_datadecrypted[$k] = $dec;
+}
+}
+}
+}
+protected function encryptValue($value){
+$cipher = 'AES-256-CBC';
+$passes = 10;
+$size = openssl_cipher_iv_length($cipher);
+$iv = mcrypt_create_iv($size, MCRYPT_RAND);
+$enc = $value;
+for($i=0; $i<$passes; $i++){
+$enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+}
+$payload = '$' . $cipher . '$' . str_pad($passes, 2, '0', STR_PAD_LEFT) . '$' . $enc . $iv;
+return $payload;
 }
 protected function _getCacheKey() {
 if (!$this->_cacheable) return false;
@@ -1828,6 +1887,7 @@ return $ret;
 }
 private function _getParentTree($antiinfiniteloopcounter = 5) {
 if ($antiinfiniteloopcounter <= 0) return array();
+$p = false;
 if (!$this->exists()) {
 self::_LookupUrl('/');
 $url = strtolower($this->get('baseurl'));
@@ -1851,7 +1911,7 @@ $url = '/admin';
 if (isset(self::$_RewriteCache[$url])) {
 $p = PageModel::Construct($url);
 }
-return array($p);
+return $p ? array($p) : array();
 }
 if (!$this->get('parenturl')) return array();
 $p = PageModel::Construct($this->get('parenturl'));
@@ -3413,6 +3473,8 @@ $change = $this->_parseDBSchema();
 if ($change !== false) $changed = array_merge($changed, $change);
 $change = $this->_parseConfigs();
 if ($change !== false) $changed = array_merge($changed, $change);
+$change = $this->_parseUserConfigs();
+if ($change !== false) $changed = array_merge($changed, $change);
 $change = $this->_parsePages();
 if ($change !== false) $changed = array_merge($changed, $change);
 $change = $this->_parseWidgets();
@@ -3459,6 +3521,26 @@ ConfigHandler::_Set($m);
 }
 return (sizeof($changes)) ? $changes : false;
 } // private function _parseConfigs
+private function _parseUserConfigs() {
+$changes = array();
+$node = $this->_xmlloader->getElement('userconfigs');
+foreach ($node->getElementsByTagName('userconfig') as $confignode) {
+$key      = $confignode->getAttribute('key');
+$name     = $confignode->getAttribute('name');
+$default  = $confignode->getAttribute('default');
+$formtype = $confignode->getAttribute('formtype');
+$onreg    = $confignode->getAttribute('onregistration');
+$options  = $confignode->getAttribute('options');
+$model = UserConfigModel::Construct($key);
+$model->set('name', $name);
+if($default)  $model->set('default_value', $default);
+if($formtype) $model->set('formtype', $formtype);
+if($onreg)    $model->set('onregistration', $onreg);
+if($options)  $model->set('options', $options);
+if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
+}
+return (sizeof($changes)) ? $changes : false;
+} // private function _parseUserConfigs
 private function _parsePages() {
 $changes = array();
 $node = $this->_xmlloader->getElement('pages');
@@ -3504,6 +3586,7 @@ $i         = $m::GetIndexes();
 $tablename = $m::GetTableName();
 $schema = array('schema'  => $s,
 'indexes' => $i);
+try{
 if (Core::DB()->tableExists($tablename)) {
 if(Core::DB()->modifyTable($tablename, $schema)){
 $changes[] = 'Modified table ' . $tablename;
@@ -3512,6 +3595,12 @@ $changes[] = 'Modified table ' . $tablename;
 else {
 Core::DB()->createTable($tablename, $schema);
 $changes[] = 'Created table ' . $tablename;
+}
+}
+catch(DMI_Query_Exception $e){
+$e->query = $e->query . "\n<br/>(original table " . $tablename . ")";
+echo '<pre>' . $e->getTraceAsString() . '</pre>';
+throw $e;
 }
 }
 return sizeof($changes) ? $changes : false;
@@ -5815,6 +5904,10 @@ public static $Schema = array(
 'maxlength' => 255,
 'required'  => true,
 'null'      => false,
+),
+'NAME'          => array(
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => 50,
 ),
 'type'          => array(
 'type'    => Model::ATT_TYPE_ENUM,
