@@ -1259,6 +1259,10 @@ function get_exported_components(){
 	$c = array();
 	$dir = ROOT_PDIR . 'exports/components';
 	$dh = opendir($dir);
+	if(!$dh){
+		// Easy enough, just return a blank array!
+		return $c;
+	}
 	while(($file = readdir($dh)) !== false){
 		if($file{0} == '.') continue;
 		if(is_dir($dir . '/' . $file)) continue;
@@ -1320,6 +1324,10 @@ function get_exported_core(){
 	$c = array();
 	$dir = ROOT_PDIR . 'exports/core';
 	$dh = opendir($dir);
+	if(!$dh){
+		// Easy enough, just return a blank array!
+		return $c;
+	}
 	while(($file = readdir($dh)) !== false){
 		if($file{0} == '.') continue;
 		if(is_dir($dir . '/' . $file)) continue;
