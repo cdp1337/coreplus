@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8.0~core1" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8.0~core2" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="1.9.0" operation="ge"/>
 	</requires>
@@ -21,6 +21,7 @@
 		<scriptlibrary name="jqueryui.readonly" call="JQuery::Include_readonly"/>
 		<scriptlibrary name="jquery.tmpl" call="JQuery::Include_tmpl"/>
 		<scriptlibrary name="jquery.masonry" call="JQuery::Include_masonry"/>
+		<scriptlibrary name="jquery.form" call="JQuery::Include_form"/>
 	</provides>
 	<assets>
 		<file filename="assets/css/images/ui-bg_flat_0_aaaaaa_40x100.png" md5="2a44fbdb7360c60122bcf6dcef0387d8"/>
@@ -72,6 +73,8 @@
 		<file filename="assets/js/jquery/jquery-ui-1.8.22.min.js" md5="c2d89098cb69e8b4fa5c46e7303d8d98"/>
 		<file filename="assets/js/jquery/jquery.cookie.js" md5="20adaea8ed610b1b08abf532beba6659"/>
 		<file filename="assets/js/jquery/jquery.cookie.min.js" md5="b2b5da3ba885603b0097b9a6bd6b032c"/>
+		<file filename="assets/js/jquery/jquery.form.js" md5="60c0735ed5ae6ccdcd941fbb3fe28163"/>
+		<file filename="assets/js/jquery/jquery.form.min.js" md5="fd24f01f140287e7a3c3a16a1eb69412"/>
 		<file filename="assets/js/jquery/jquery.json-2.2.js" md5="56fdd8b6674e6d121afe11a920191429"/>
 		<file filename="assets/js/jquery/jquery.json-2.2.min.js" md5="2d59ccdc20e736725bdbcb433e080ec0"/>
 		<file filename="assets/js/jquery/jquery.masonry.min.js" md5="fc2d7669d58e909815f1994047bf671c"/>
@@ -86,7 +89,7 @@
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
 		<file filename="CHANGELOG.md" md5="4392f799ae10b6d8338f9f9a9d4f693f"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="361a891346813026b91628ea86493b6e">
+		<file filename="JQuery.lib.php" md5="f60a321d1e61bfae6a061b0290c29f79">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
@@ -105,6 +108,7 @@
 		<upgrade from="1.7.1" to="1.7.2~core1"/>
 		<upgrade from="1.7.2~core1" to="1.7.2~core2"/>
 		<upgrade from="1.7.2~core2" to="1.8.0~core1"/>
+		<upgrade from="1.8.0~core1" to="1.8.0~core2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

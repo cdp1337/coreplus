@@ -114,4 +114,13 @@ abstract class JQuery {
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
+
+	public static function Include_form(){
+		// I need jquery first.
+		self::IncludeJQuery();
+		CurrentPage::AddScript('js/jquery/jquery.form.js');
+
+		// IMPORTANT!  Tells the script that the include succeeded!
+		return true;
+	}
 }
