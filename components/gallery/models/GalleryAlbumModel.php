@@ -26,13 +26,13 @@ class GalleryAlbumModel extends Model {
 			'required' => true,
 			'null' => false,
 		),
-		'paginate' => array(
+		/*'paginate' => array(
 			'type' => Model::ATT_TYPE_INT,
 			'required' => true,
 			'default' => 15,
 			'formtitle' => 'Per-Page Count',
 			'formdescription' => 'The number of results per page, set to 0 to disable pagination.'
-		),
+		),*/
 		/*'enabled' => array(
 			'type' => Model::ATT_TYPE_BOOL,
 			'required' => true,
@@ -55,6 +55,15 @@ class GalleryAlbumModel extends Model {
 			'form' => array(
 				'type' => 'access',
 				'title' => 'Edit Permissions',
+			)
+		),
+		'uploadpermissions' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'description' => 'Permissions for who is allowed to upload new images to this album',
+			'default' => '!*',
+			'form' => array(
+				'type' => 'access',
+				'title' => 'Upload Permissions',
 			)
 		),
 		'created' => array(

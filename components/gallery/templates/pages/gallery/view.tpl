@@ -1,74 +1,83 @@
 {script library="jqueryui"}{/script}
+{script library="jquery.masonry"}{/script}
 {script src="js/core.fileupload.js"}{/script}
+{css src="css/gallery.css"}{/css}
 
-{if $editor}
-	<a class="button update-link" title="Upload New Image">
-		<i class="icon-upload"></i>
-		<span>Upload New Image</span>
-	</a>
+{if $uploader}
+	{if Core::IsComponentAvailable('jQuery-File-Upload')}
+		{$uploadform->render()}
+	{else}
+		<a class="button update-link" title="Upload New Image">
+			<i class="icon-upload"></i>
+			<span>Upload New Image</span>
+		</a>
+	{/if}
 	<br/><br/>
 {/if}
 
+<div class="gallery-description">
+	{insertable name="description" title="Description"}
+		<p>Description for this gallery!</p>
+	{/insertable}
+</div>
 
-{foreach from=$images item=i}
-	<div class="gallery-image-wrapper">
-		<div class="gallery-image">
-			{a href="`$i.link`"}
-				{img file=$i->getFile() width="292" height="300" title="`$i.title`"}
-			{/a}
+<div id="gallery-images">
+	{foreach from=$images item=i}
+		<div class="gallery-image-wrapper">
+			<div class="gallery-image">
+				{a href="`$i.link`"}
+					{img file=$i->getFile() width="180" height="180" title="`$i.title`"}
+				{/a}
+			</div>
+			<div class="gallery-image-title">
+				{$i.title}
+			</div>
+
+			{if $editor || $userid == $i.uploaderid}
+				<ul class="gallery-admin-image-utils controls">
+				{*
+					  <li class="control-move">
+						  <a href="#" title="Drag to rearrange image">
+							  <i class="icon-move"></i>
+							  <span>Rearrange Image</span>
+						  </a>
+					  </li>
+					  *}
+
+					<li class="control-edit">
+						<a href="#" title="Edit Image" class="update-link" image="{$i.id}">
+							<i class="icon-edit"></i>
+							<span>Edit Image</span>
+						</a>
+					</li>
+				   <li class="control-rotate-ccw">
+					   <a href="#" title="Rotate Image CCW" class="rotate-link" image="{$i.id}" rotate="ccw">
+						   <i class="icon-undo"></i>
+						   <span>Rotate Image CCW</span>
+					   </a>
+				   </li>
+
+				   <li class="control-rotate-cw">
+					   <a href="#" title="Rotate Image CW" class="rotate-link" image="{$i.id}" rotate="cw">
+						   <i class="icon-repeat"></i>
+						   <span>Rotate Image CW</span>
+					   </a>
+				   </li>
+					<li class="control-remove">
+						{a href="gallery/images/delete/`$album.id`?image=`$i.id`" title="Remove Image" confirm="Confirm deleting image?"}
+							<i class="icon-remove"></i>
+							<span>Remove Image</span>
+						{/a}
+					</li>
+				</ul>
+			{/if}
 		</div>
-		<div class="gallery-image-title">
-			{$i.title}
-		</div>
-
-		{if $editor}
-			<ul class="gallery-admin-image-utils controls">
-			{*
-				  <li class="control-move">
-					  <a href="#" title="Drag to rearrange image">
-						  <i class="icon-move"></i>
-						  <span>Rearrange Image</span>
-					  </a>
-				  </li>
-				  *}
-
-				<li class="control-edit">
-					<a href="#" title="Edit Image" class="update-link" image="{$i.id}">
-						<i class="icon-edit"></i>
-						<span>Edit Image</span>
-					</a>
-				</li>
-			   <li class="control-rotate-ccw">
-				   <a href="#" title="Rotate Image CCW" class="rotate-link" image="{$i.id}" rotate="ccw">
-					   <i class="icon-undo"></i>
-					   <span>Rotate Image CCW</span>
-				   </a>
-			   </li>
-
-			   <li class="control-rotate-cw">
-				   <a href="#" title="Rotate Image CW" class="rotate-link" image="{$i.id}" rotate="cw">
-					   <i class="icon-repeat"></i>
-					   <span>Rotate Image CW</span>
-				   </a>
-			   </li>
-				<li class="control-remove">
-					{a href="gallery/images/delete/`$album.id`?image=`$i.id`" title="Remove Image" confirm="Confirm deleting image?"}
-						<i class="icon-remove"></i>
-						<span>Remove Image</span>
-					{/a}
-				</li>
-			</ul>
-		{/if}
-	</div>
-{/foreach}
+	{/foreach}
+</div>
 
 <div class="clear"></div>
 
-<div class="gallery-description">
-{insertable name="description" title="Description"}
-    <p>Description for this gallery!</p>
-{/insertable}
-</div>
+
 
 {if $editor}
 
@@ -136,3 +145,14 @@
 	</script>
 
 {/if}
+
+<script>
+	var $container = $('#gallery-images');
+
+	$container.imagesLoaded( function(){
+		$container.masonry({
+			itemSelector : '.gallery-image-wrapper'
+		});
+	});
+
+</script>

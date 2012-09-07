@@ -80,12 +80,15 @@ class GalleryController extends Controller_2_1 {
 
 		if(!$album->exists()) return View::ERROR_NOTFOUND;
 
-		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || \Core\user()->checkAccess('p:gallery_manage'));
 		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
+		$uploader = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
 
 		// image view, (there are two parameters)
 		if($req->getParameter(1)){
 			$image = new GalleryImageModel($req->getParameter(1));
+			// I still need all the other images to know where this image lies in the stack!
+			$images = $album->getLink('GalleryImage', 'weight');
 
 			if(!$image->exists()){
 				return View::ERROR_NOTFOUND;
@@ -95,20 +98,53 @@ class GalleryController extends Controller_2_1 {
 				return View::ERROR_NOTFOUND;
 			}
 
-			$link = $image->get('id');
-			if($image->get('title')) $link .= '-' . \Core\str_to_url($image->get('title'));
+			$id = $image->get('id');
+			$link = $image->getRewriteURL();
+			$exif = $image->getExif();
+			var_dump($exif);
+			$next = null;
+			$prev = null;
+			$lastnum = sizeof($images) - 1;
+			// Determine the next/prev array.
+			foreach($images as $k => $img){
+				if($img->get('id') == $id){
+					// Found it! is it first or last?
+					if($k == 0 && $k == $lastnum){
+						// both are blank.... well how 'bout that :/
+					}
+					elseif($k == 0){
+						// It's the first image.
+						$next = $images[$k + 1];
+					}
+					elseif($k == $lastnum){
+						// It's the last image.
+						$prev = $images[$k - 1];
+					}
+					else{
+						// It's somewhere in between :)
+						$next = $images[$k + 1];
+						$prev = $images[$k - 1];
+					}
+				}
+			}
 
+			$view->mode = View::MODE_PAGEORAJAX;
 			$view->templatename = '/pages/gallery/view-image.tpl';
 			$view->assign('image', $image);
 			$view->assign('album', $album);
 			$view->assign('lightbox_available', Core::IsComponentAvailable('jquery-lightbox'));
 			$view->assign('editor', $editor);
 			$view->assign('manager', $manager);
+			$view->assign('uploader', $uploader);
+			$view->assign('prev', $prev);
+			$view->assign('next', $next);
+			$view->assign('exif', $exif);
 			$view->updated = $image->get('updated');
-			$view->canonicalurl = Core::ResolveLink($album->get('rewriteurl') . '/' . $link);
+			$view->canonicalurl = Core::ResolveLink($link);
 			$view->meta['keywords'] = $image->get('keywords');
 			$view->meta['description'] = $image->get('description');
 			$view->meta['og:image'] = $image->getFile()->getPreviewURL('200x200');
+			$view->addBreadcrumb($album->get('title'), $album->get('baseurl'));
 			$view->title = ($image->get('title') ? $image->get('title') : 'Image Details');
 			$view->addControl(
 				array(
@@ -154,6 +190,24 @@ class GalleryController extends Controller_2_1 {
 			$images = $album->getLink('GalleryImage', 'weight');
 			$lastupdated = $album->get('updated');
 
+			if($uploader){
+				$uploadform = new Form();
+				$uploadform->set('action', Core::ResolveLink('/gallery/images_update/' . $album->get('id')));
+				$uploadform->addElement(
+					'multifile',
+					array(
+						'basedir' => 'public/galleryalbum',
+						'title' => 'Bulk Upload Images',
+						'name' => 'images',
+						'accept' => 'image/*'
+					)
+				);
+				$uploadform->addElement('submit', array('value' => 'Bulk Upload'));
+			}
+			else{
+				$uploadform = false;
+			}
+
 			// I need to attach a friendly URL for each image.
 			// This gets a little tricky since each image doesn't have a unique title necessarily.
 			foreach($images as $i){
@@ -175,6 +229,9 @@ class GalleryController extends Controller_2_1 {
 			$view->assign('images', $images);
 			$view->assign('editor', $editor);
 			$view->assign('manager', $manager);
+			$view->assign('uploader', $uploader);
+			$view->assign('uploadform', $uploadform);
+			$view->assign('userid', \Core\user()->get('id'));
 			$view->updated = $lastupdated;
 
 			// @todo Implement a move link here.
@@ -291,10 +348,16 @@ class GalleryController extends Controller_2_1 {
 		$type    = $album->get('store_type');
 		$image   = new GalleryImageModel($request->getParameter('image'));
 
-		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || \Core\user()->checkAccess('p:gallery_manage'));
 		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
+		$uploader  = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
 
-		if(!($editor || $manager)){
+		if(!$uploader){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		// Uploaders only can only edit their own image!
+		if(!$editor && $image->get('uploaderid') != \Core\user()->get('id')){
 			return View::ERROR_ACCESSDENIED;
 		}
 
@@ -318,50 +381,97 @@ class GalleryController extends Controller_2_1 {
 				return View::ERROR_BADREQUEST;
 			}
 
-			// These are the standard updateable fields.
-			$image->setFromArray(
-				array(
-					'title' => $_POST['model']['title'],
-					'keywords' => $_POST['model']['keywords'],
-					'description' => $_POST['model']['description'],
-				)
-			);
+			// Multiple images were uploaded, (probably via one of the multi uploaders).
+			// In this case, minimal data is available, but enough to save the image.
+			if(isset($_POST['images']) && is_array($_POST['images'])){
+				$savecount = 0;
+				foreach($_POST['images'] as $img){
+					// instead of just blindly saving this image...
+					$image = GalleryImageModel::Find(array('albumid' => $album->get('id'), 'file' => $img));
+					if($image) continue; // NO fun....
 
-			// The fields that need to be set on new images
-			if(!$image->exists()){
+					// Generate a moderately meaningful title
+					$title = substr($img, 0, strrpos($img, '.'));
+					$title = preg_replace('/[^a-zA-Z0-9 ]/', ' ', $title);
+					$title = trim(preg_replace('/[ ]+/', ' ', $title));
+					$title = ucwords($title);
+
+					$image = new GalleryImageModel();
+					$image->setFromArray(
+						array(
+							'albumid' => $album->get('id'),
+							'file' => $img,
+							'weight' => sizeof($album->getLink('GalleryImage')) + 1,
+							'title' => $title,
+						)
+					);
+					$image->save();
+					$savecount++;
+				}
+				if($savecount == 0){
+					$action = 'No images uploaded';
+					$actiontype = 'info';
+				}
+				else{
+					$action = 'Added ' . $savecount . ' Images!';
+					$actiontype = 'success';
+				}
+				$imageid = '';
+			}
+			// Traditional image update, just one image, so it has all the information.
+			else{
+				// These are the standard updateable fields.
 				$image->setFromArray(
 					array(
-						'albumid' => $album->get('id'),
-						'weight' => sizeof($album->getLink('GalleryImage')) + 1,
+						'title' => $_POST['model']['title'],
+						'keywords' => $_POST['model']['keywords'],
+						'description' => $_POST['model']['description'],
 					)
 				);
-			}
 
-			// Make sure it uploaded successfully.
-			// I'm using the form system because it already has support for file errors builtin.
-			// Also, this is only required for new images.  Existing ones can skip this if _upload_ is not chosen.
-			if(!$image->exists() || ($image->exists() && $_POST['model']['file'] == '_upload_')){
-				$el = new FormFileInput(array('name' => 'model[file]', 'basedir' => $type . '/galleryalbum', 'accept' => 'image/*'));
-				$el->setValue('_upload_');
-				if($el->hasError()){
-					echo '<div id="error">' . $el->getError() . '</div>';
-					return;
+				// The fields that need to be set on new images
+				if(!$image->exists()){
+					$image->setFromArray(
+						array(
+							'albumid' => $album->get('id'),
+							'weight' => sizeof($album->getLink('GalleryImage')) + 1,
+						)
+					);
 				}
 
-				$f = $el->getFile();
-				$image->set('file', $f->getBaseFilename());
+				// Make sure it uploaded successfully.
+				// I'm using the form system because it already has support for file errors builtin.
+				// Also, this is only required for new images.  Existing ones can skip this if _upload_ is not chosen.
+				if(!$image->exists() || ($image->exists() && $_POST['model']['file'] == '_upload_')){
+					$el = new FormFileInput(array('name' => 'model[file]', 'basedir' => $type . '/galleryalbum', 'accept' => 'image/*'));
+					$el->setValue('_upload_');
+					if($el->hasError()){
+						echo '<div id="error">' . $el->getError() . '</div>';
+						return;
+					}
+
+					$f = $el->getFile();
+					$image->set('file', $f->getBaseFilename());
+				}
+
+				// I need to know what to say...
+				$action = (($image->exists()) ? 'Updated' : 'Added') . ' Image!';
+				$actiontype = 'success';
+				$imageid = $image->get('id');
+
+				$image->save();
 			}
 
-			// I need to know what to say...
-			$action = ($image->exists()) ? 'Updated' : 'Added';
-
-			$image->save();
-
-			// This will be rendered with jquery, so it'll be data-esque.
-			echo '<div id="success">' . $action . ' Image!</div>' .
-				'<div id="imageid">' . $image->get('id') . '</div>';
-			Core::SetMessage($action . ' image successfully', 'success');
-			return;
+			if($request->isAjax()){
+				// This will be rendered with jquery, so it'll be data-esque.
+				echo '<div id="success">' . $action . '</div>' . '<div id="imageid">' . $imageid . '</div>';
+				Core::SetMessage($action, $actiontype);
+				return;
+			}
+			else{
+				Core::SetMessage($action, $actiontype);
+				Core::Redirect($album->get('rewriteurl'));
+			}
 		}
 		else{
 
