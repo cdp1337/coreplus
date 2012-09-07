@@ -37,6 +37,7 @@ function smarty_function_widget($params, $template){
 		$parts = WidgetModel::SplitBaseURL($params['baseurl']);
 		$name = $parts['controller'];
 		$method = $parts['method'];
+		$parameters = $parts['parameters'];
 	}
 	// Version 1.0 uses name.
 	elseif(isset($params['name'])){
@@ -44,6 +45,7 @@ function smarty_function_widget($params, $template){
 		$name = $params['name'];
 		// Try to look up this requested widget.
 		$name .= 'Widget';
+		$parameters = null;
 	}
 
 
@@ -52,7 +54,7 @@ function smarty_function_widget($params, $template){
 	}
 	// @todo Add support for requiring instancing.
 	
-	
+
 	$w = new $name();
 	// Version 1.0 API
 	if($api == 1.0){
@@ -60,7 +62,10 @@ function smarty_function_widget($params, $template){
 	}
 	// Version 2.0 API
 	elseif($api == 2.0){
+		$w->_params = $parameters;
 		$return = call_user_func(array($w, $method));
+		$dat = null;
+
 		if(is_int($return)){
 			throw new SmartyException("widget $name/$method returned error code $return.", null, null);
 		}
@@ -68,16 +73,22 @@ function smarty_function_widget($params, $template){
 			// Hopefully it's setup!
 			$return = $w->getView();
 		}
-		// No else needed, else it's a valid object.
-		
-		
-		// Try to guess the templatename if it wasn't set.
-		if($return->error == View::ERROR_NOERROR && $return->contenttype == View::CTYPE_HTML && $return->templatename === null){
-			$cnameshort = (strpos($name, 'Widget') == strlen($name) - 6) ? substr($name, 0, -6) : $name;
-			$return->templatename = strtolower('/widgets/' . $cnameshort . '/' . $method . '.tpl');
+		// If it's just a string, return that.
+		elseif(is_string($return)) {
+			$dat = $return;
 		}
-		
-		$dat = $return->fetch();
+
+
+		// If dat is still null, (it probably is still null btw), then render the template!
+		if($dat === null){
+			// Try to guess the templatename if it wasn't set.
+			if($return->error == View::ERROR_NOERROR && $return->contenttype == View::CTYPE_HTML && $return->templatename === null){
+				$cnameshort = (strpos($name, 'Widget') == strlen($name) - 6) ? substr($name, 0, -6) : $name;
+				$return->templatename = strtolower('/widgets/' . $cnameshort . '/' . $method . '.tpl');
+			}
+
+			$dat = $return->fetch();
+		}
 	}
 	
 	

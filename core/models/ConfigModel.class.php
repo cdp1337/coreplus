@@ -38,6 +38,10 @@ class ConfigModel extends Model {
 			'required'  => true,
 			'null'      => false,
 		),
+		'NAME'          => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 50,
+		),
 		'type'          => array(
 			'type'    => Model::ATT_TYPE_ENUM,
 			'options' => array('string', 'int', 'boolean', 'enum', 'set'),

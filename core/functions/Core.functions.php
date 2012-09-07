@@ -25,7 +25,7 @@ namespace Core;
 /**
  * Shortcut function to get the current system database/datamodel interface.
  * 
- * @return DMI_Interface
+ * @return DMI_Backend
  */
 function DB(){
 	return \DMI::GetSystemDMI()->connection();
@@ -931,4 +931,30 @@ function check_file_mimetype($acceptlist, $mimetype, $extension = null){
 	else{
 		return '';
 	}
+}
+
+/**
+ * Check if an array is a plain numerically indexed array, or not.
+ *
+ * It's useful for checking if an array's keys are meant to be used, or simply ignored.
+ * This is important because sometimes a selectbox will have options set like array('foo', 'bar', 'baz')
+ * and other times it's set as array(id => blah, id => foo, id => mep), where the id is important.
+ *
+ * @param $array array
+ */
+function is_numeric_array($array){
+	if(!is_array($array)) return false;
+
+	reset($array);
+
+	// First check.. if the first index a 0?  If not... it's not a numeric array!
+	if(key($array) !== 0) return false;
+
+	// Numerically indexed arrays will have a size == to the final key.
+	$c = count($array) - 1;
+	end($array);
+	if(key($array) !== $c) return false;
+
+	// Hopefully.... checking the first and last keys.
+	return true;
 }

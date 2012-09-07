@@ -310,13 +310,16 @@ class FormElement {
 				if (!is_array($value)) {
 					$this->_attributes[$key] = $value;
 				}
-				else {
+				elseif(\Core\is_numeric_array($value)) {
 					$o = array();
-					foreach ($value as $k => $v) {
-						if (is_numeric($k)) $o[$v] = $v;
-						else $o[$k] = $v;
+					foreach ($value as $v) {
+						$o[$v] = $v;
 					}
 					$this->_attributes[$key] = $o;
+				}
+				else{
+					// It's an associative or other array, the keys are important!
+					$this->_attributes[$key] = $value;
 				}
 				break;
 			default:
@@ -1019,6 +1022,9 @@ class Form extends FormGroup {
 				$el = FormElement::Factory('text');
 			}
 			elseif ($v['type'] == Model::ATT_TYPE_INT) {
+				$el = FormElement::Factory('text');
+			}
+			elseif ($v['type'] == Model::ATT_TYPE_FLOAT) {
 				$el = FormElement::Factory('text');
 			}
 			elseif ($v['type'] == Model::ATT_TYPE_TEXT) {

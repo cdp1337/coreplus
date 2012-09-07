@@ -458,6 +458,7 @@ class PageModel extends Model {
 
 	private function _getParentTree($antiinfiniteloopcounter = 5) {
 		if ($antiinfiniteloopcounter <= 0) return array();
+		$p = false;
 //echo "Running _getParentTree for " . $this->get('baseurl') . '<br/>';
 //echo '<pre>'; debug_print_backtrace();
 		if (!$this->exists()) {
@@ -512,7 +513,7 @@ class PageModel extends Model {
 				// The new static Construct offers caching :)
 				$p = PageModel::Construct($url);
 			}
-			return array($p);
+			return $p ? array($p) : array();
 		}
 
 		// If this page does not have a parent, simply return a blank array.

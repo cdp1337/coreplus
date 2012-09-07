@@ -215,6 +215,11 @@ class DMI_mysqli_backend implements DMI_Backend {
 			throw new DMI_Exception('Cannot modify table [' . $table . '] as it does not exist');
 		}
 
+		if($this->tableExists('_tmptable')){
+			// It's supposed to have been dropped by now....
+			$this->_rawExecute('write', 'DROP TABLE _tmptable');
+		}
+
 		// Table does exist... I need to do a merge of the data schemas.
 		// Create a temp table to do the operations on.
 		$this->_rawExecute('write', 'CREATE TEMPORARY TABLE _tmptable LIKE ' . $table);
@@ -245,10 +250,12 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$oldprimaries[] = $d;
 			}
 		}
+
+
+
 		if($oldprimaries != $newschema['indexes']['primary']){
-			if(sizeof($oldprimaries) == 1){
-				// Check its structure as well, it may be an auto_increment.
-				$column = $oldprimaries[0];
+			// Check its structure as well, it may be an auto_increment.
+			foreach($oldprimaries as $column){
 				$coldef = $schema['def'][$column];
 
 				if($coldef['extra'] == 'auto_increment'){
@@ -355,6 +362,24 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$schema = $this->_describeTableSchema('_tmptable');
 			}
 
+			// If the column is already set as a PRIMARY key in the table, but is not set as auto increment... I need to update that too.
+			if(
+				$coldef['type'] == Model::ATT_TYPE_ID && ($newschema['indexes']['primary'] && in_array($column, $newschema['indexes']['primary'])) &&
+				(!isset($schema['def'][$column]) || ($schema['def'][$column]['extra'] == '' && $schema['def'][$column]['key'] == 'PRI'))
+			){
+				$changed = true;
+				// In this block, the column is already set as the primary key, it just needs the auto inc flag.
+				//$q = 'ALTER TABLE _tmptable ADD PRIMARY KEY (`' . $column . '`)';
+				//$this->_rawExecute('write', $q);
+				$q = 'ALTER TABLE _tmptable CHANGE `' . $column . '` `' . $column . '` ' . $type . ' ';
+				$q .= $null . ' ';
+				$q .= 'AUTO_INCREMENT';
+				$this->_rawExecute('write', $q);
+
+				// And reload the schema.
+				$schema = $this->_describeTableSchema('_tmptable');
+			}
+
 			// Now, check everything else.
 			if(
 				$type != $schema['def'][$column]['type'] ||
@@ -392,7 +417,9 @@ class DMI_mysqli_backend implements DMI_Backend {
 			$nonunique = (!(strpos($idx, 'unique:') === 0 || $idx == 'primary'));
 
 			// Ensure that idxdef['column'] is an array if it's not.
-			if(!is_array($columns)) $columns = array($columns);
+			// unless $columns is false...
+			// If it's false, that's simply a signifier that it doesn't have any indexes currently.
+			if(!is_array($columns) && $columns !== false) $columns = array($columns);
 
 			// Figure out the names for this so I only have to have the logic executed once.
 			if($idx == 'primary'){
@@ -413,7 +440,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 
 
 			// These are the index creates/modifies.
-			if(!isset($indexes[$idxkey])){
+			if(!isset($indexes[$idxkey]) && $columns){
 				$changed = true;
 				// Doesn't exist, create it.
 				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` ADD ' . $idxname . ' (`' . implode('`, `', $columns) . '`)');
@@ -421,8 +448,10 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$indexes = $this->_describeTableIndexes('_tmptable');
 			}
 			elseif(
-				$indexes[$idxkey]['columns'] != $columns ||
-				$nonunique != ($indexes[$idxkey]['nonunique'])
+				isset($indexes[$idxkey]) && (
+					$indexes[$idxkey]['columns'] != $columns ||
+					$nonunique != ($indexes[$idxkey]['nonunique'])
+				)
 			){
 				$changed = true;
 				// Rebuild it.
@@ -445,6 +474,8 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` DROP INDEX `' . $idx . '`');
 			}
 		}
+
+
 
 		if(!$changed){
 			// Drop the table so it's ready for the next table.
@@ -508,7 +539,14 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$type = "enum('" . implode("','", $coldef['options']) . "')";
 				break;
 			case Model::ATT_TYPE_FLOAT:
-				$type = "float";
+				if(!isset($coldef['precision'])){
+					// No precision requested, just a standard float works here.
+					$type = "float";
+				}
+				else{
+					// DB-level precision requested.  This is not recommended in Core+, but still supported.
+					$type = "decimal(" . $coldef['precision'] . ")";
+				}
 				break;
 			case Model::ATT_TYPE_ID:
 				$type = "int(15)";
@@ -529,6 +567,15 @@ class DMI_mysqli_backend implements DMI_Backend {
 			case Model::ATT_TYPE_CREATED:
 			case Model::ATT_TYPE_UPDATED:
 				$type = 'int(11)';
+				break;
+			case Model::ATT_TYPE_ISO_8601_DATETIME:
+				$type = 'datetime';
+				break;
+			case Model::ATT_TYPE_MYSQL_TIMESTAMP:
+				$type = 'timestamp';
+				break;
+			case Model::ATT_TYPE_ISO_8601_DATE:
+				$type = 'date';
 				break;
 			default:
 				throw new DMI_Exception('Unsupported model type for [' . $coldef['type'] . ']');

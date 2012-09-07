@@ -424,9 +424,25 @@ class File_remote_backend implements File_Backend {
 					     CURLOPT_HTTPHEADER     => Core::GetStandardHTTPHeaders(true),
 				     )
 			);
-			$h = explode("\n", curl_exec($curl));
+
+			$result = curl_exec($curl);
+			if($result === false){
+				switch(curl_errno($curl)){
+					case CURLE_COULDNT_CONNECT:
+					case CURLE_COULDNT_RESOLVE_HOST:
+					case CURLE_COULDNT_RESOLVE_PROXY:
+						$this->_response = 404;
+						break;
+					default:
+						$this->_response = 500;
+						break;
+				}
+			}
+
+			$h = explode("\n", $result);
 			curl_close($curl);
 
+			// Will read all the headers
 			foreach ($h as $line) {
 				if (strpos($line, 'HTTP/1.') !== false) {
 					$this->_response = substr($line, 9, 3);

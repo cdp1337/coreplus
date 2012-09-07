@@ -1179,6 +1179,9 @@ class Component_2_1 {
 		$change = $this->_parseConfigs();
 		if ($change !== false) $changed = array_merge($changed, $change);
 
+		$change = $this->_parseUserConfigs();
+		if ($change !== false) $changed = array_merge($changed, $change);
+
 		$change = $this->_parsePages();
 		if ($change !== false) $changed = array_merge($changed, $change);
 
@@ -1256,6 +1259,49 @@ class Component_2_1 {
 		return (sizeof($changes)) ? $changes : false;
 
 	} // private function _parseConfigs
+
+	/**
+	 * Internal function to parse and handle the user configs in the component.xml file.
+	 * This is used for installations and upgrades.
+	 *
+	 * Returns false if nothing changed, else will return an int of the number of configuration options changed.
+	 *
+	 * @return false | int
+	 * @throws InstallerException
+	 */
+	private function _parseUserConfigs() {
+		// Keep track of if this changed anything.
+		$changes = array();
+
+		// I need to get the schema definitions first.
+		$node = $this->_xmlloader->getElement('userconfigs');
+
+		// Now, get every table under this node.
+		foreach ($node->getElementsByTagName('userconfig') as $confignode) {
+
+			//<userconfig key="first_name" name="First Name"/>
+			//<userconfig key="last_name" name="Last Name" default="" formtype="" onregistration="" options=""/>
+
+			$key      = $confignode->getAttribute('key');
+			$name     = $confignode->getAttribute('name');
+			$default  = $confignode->getAttribute('default');
+			$formtype = $confignode->getAttribute('formtype');
+			$onreg    = $confignode->getAttribute('onregistration');
+			$options  = $confignode->getAttribute('options');
+
+			$model = UserConfigModel::Construct($key);
+			$model->set('name', $name);
+			if($default)  $model->set('default_value', $default);
+			if($formtype) $model->set('formtype', $formtype);
+			if($onreg)    $model->set('onregistration', $onreg);
+			if($options)  $model->set('options', $options);
+
+			if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
+		}
+
+		return (sizeof($changes)) ? $changes : false;
+
+	} // private function _parseUserConfigs
 
 	/**
 	 * Internal function to parse and handle the configs in the component.xml file.
@@ -1360,16 +1406,24 @@ class Component_2_1 {
 			$schema = array('schema'  => $s,
 			                'indexes' => $i);
 
-			if (Core::DB()->tableExists($tablename)) {
-				// Exists, ensure that it's up to date instead.
-				if(Core::DB()->modifyTable($tablename, $schema)){
-					$changes[] = 'Modified table ' . $tablename;
+			try{
+				if (Core::DB()->tableExists($tablename)) {
+					// Exists, ensure that it's up to date instead.
+					if(Core::DB()->modifyTable($tablename, $schema)){
+						$changes[] = 'Modified table ' . $tablename;
+					}
+				}
+				else {
+					// Pass this schema into the DMI processor for create table.
+					Core::DB()->createTable($tablename, $schema);
+					$changes[] = 'Created table ' . $tablename;
 				}
 			}
-			else {
-				// Pass this schema into the DMI processor for create table.
-				Core::DB()->createTable($tablename, $schema);
-				$changes[] = 'Created table ' . $tablename;
+			catch(DMI_Query_Exception $e){
+				// Append the table name since otherwise it may be "_tmptable"... which does not provide any useful information!
+				$e->query = $e->query . "\n<br/>(original table " . $tablename . ")";
+				echo '<pre>' . $e->getTraceAsString() . '</pre>';
+				throw $e;
 			}
 		}
 

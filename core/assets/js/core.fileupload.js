@@ -16,10 +16,11 @@ Core.fileupload = function(idprefix, current){
 
 	self.$selector = $('#' + idprefix + '-selector');
 
-	self.hasUpload = ($('#' + idprefix + '-selector-upload').length > 0);
+	self.hasUpload  = ($('#' + idprefix + '-selector-upload').length > 0);
 	self.hasCurrent = ($('#' + idprefix + '-selector-current').length > 0);
-	self.hasBrowse = ($('#' + idprefix + '-selector-browse').length > 0);
-	self.hasNone = ($('#' + idprefix + '-selector-none').length > 0);
+	self.hasLink    = ($('#' + idprefix + '-selector-link').length > 0);
+	self.hasBrowse  = ($('#' + idprefix + '-selector-browse').length > 0);
+	self.hasNone    = ($('#' + idprefix + '-selector-none').length > 0);
 
 	// Only show the selector if there is more than 1 label to select...
 	if(self.$selector.find('label').length > 1){
@@ -38,12 +39,14 @@ Core.fileupload = function(idprefix, current){
 		$('#' + idprefix + '-selector-upload').change(function(){
 			$('#' + idprefix + '-actions').children('div').hide();
 			$('#' + idprefix + '-action-upload').show();
+			$('#' + idprefix + '-action-upload').find('input').removeAttr('disabled');
 		});
 	}
 
 	if(self.hasCurrent){
 		$('#' + idprefix + '-selector-current').change(function(){
 			$('#' + idprefix + '-actions').children('div').hide();
+			if(self.hasUpload) $('#' + idprefix + '-action-upload').find('input').attr('disabled', 'disabled');
 			$('#' + idprefix + '-action-current').show();
 		});
 	}
@@ -51,13 +54,27 @@ Core.fileupload = function(idprefix, current){
 	if(self.hasNone){
 		$('#' + idprefix + '-selector-none').change(function(){
 			$('#' + idprefix + '-actions').children('div').hide();
+			if(self.hasUpload) $('#' + idprefix + '-action-upload').find('input').attr('disabled', 'disabled');
 			$('#' + idprefix + '-action-none').show();
+		});
+	}
+
+	if(self.hasLink){
+		$('#' + idprefix + '-selector-link').change(function(){
+			$('#' + idprefix + '-actions').children('div').hide();
+			if(self.hasUpload) $('#' + idprefix + '-action-upload').find('input').attr('disabled', 'disabled');
+			$('#' + idprefix + '-action-link').show();
+		});
+
+		$('#' + idprefix + '-link-entry').change(function(){
+			$('#' + idprefix + '-selector-link').val('_link_://' + this.value);
 		});
 	}
 
 	if(self.hasBrowse){
 		$('#' + idprefix + '-selector-browse').change(function(){
 			$('#' + idprefix + '-actions').children('div').hide();
+			if(self.hasUpload) $('#' + idprefix + '-action-upload').find('input').attr('disabled', 'disabled');
 			$('#' + idprefix + '-action-browse').show();
 		});
 	}

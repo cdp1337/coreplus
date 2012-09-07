@@ -173,6 +173,11 @@ class WidgetModel extends Model {
 		if (!($method == 'index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
 		$baseurl .= ($params) ? '/' . implode('/', $params) : '';
 
+		// Merge in the named parameters that were extracted from above.
+		if($args){
+			$params = ($params) ? array_merge($params, $args) : $args;
+		}
+
 		return array('controller' => $controller,
 		             'method'     => $method,
 		             'parameters' => $params,

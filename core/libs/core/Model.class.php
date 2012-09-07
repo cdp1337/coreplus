@@ -77,13 +77,56 @@ class Model implements ArrayAccess {
 	 */
 	const ATT_TYPE_CREATED = '__created';
 
-	// Regex to match anything not blank.
+	/**
+	 * Mysql datetime and ISO 8601 formatted datetime field.
+	 * This format is discouraged in Core+, but allowed.
+	 *
+	 * This stores the data as 'YYYY-mm-dd HH:ii:ss'.
+	 */
+	const ATT_TYPE_ISO_8601_DATETIME = 'ISO_8601_datetime';
+
+	/**
+	 * Mysql-specific timestamp field.
+	 * This stores the data as 'YYYY-mm-dd HH:ii:ss'.
+	 */
+	const ATT_TYPE_MYSQL_TIMESTAMP = 'mysql_timestamp';
+
+	/**
+	 * Mysql date and ISO 8601 formatted date field.
+	 * This format is discouraged in Core+, but allowed.
+	 *
+	 * This stores the data as 'YYYY-mm-dd'.
+	 */
+	const ATT_TYPE_ISO_8601_DATE = 'ISO_8601_date';
+
+	/**
+	 * Validation for any non-blank value.
+	 */
 	const VALIDATION_NOTBLANK = "/^.+$/";
 
+	/**
+	 * Validation for a valid email address.
+	 *
+	 * Optionally can use DNS lookups to perform a more indepth validation of the domain.
+	 */
 	const VALIDATION_EMAIL = 'Core::CheckEmailValidity';
 	// Regex to match email addresses.
 	// @see http://www.regular-expressions.info/email.html
 	//const VALIDATION_EMAIL = "/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/";
+
+	/**
+	 * Validation for a valid protocol-based URL.
+	 *
+	 * This includes http, https, ftp, ssh, and any other protocol.
+	 */
+	const VALIDATION_URL = '#^[a-zA-Z]+://.+$#';
+
+	/**
+	 * Validation for a valid web URL.
+	 *
+	 * This will only match http:// or https://.
+	 */
+	const VALIDATION_URL_WEB = '#^[hH][tT][tT][pP][sS]{,1}://.+$#';
 
 	/**
 	 * Definition for a model that has exactly one child table as a dependency.
@@ -136,6 +179,12 @@ class Model implements ArrayAccess {
 	 * @var array
 	 */
 	protected $_datainit = array();
+
+	/**
+	 * Some models have encrypted fields.  This will store the decrypted data for the application to access.
+	 * @var array
+	 */
+	protected $_datadecrypted = null;
 
 	/**
 	 * Allow data to get overloaded onto models.
@@ -418,11 +467,12 @@ class Model implements ArrayAccess {
 				// These are all defaults for schemas.
 				// Setting them to the default if they're not set will ensure that 
 				// 'undefined index' notices are not incurred.
-				if (!isset($v['type'])) $this->_schemacache[$k]['type'] = Model::ATT_TYPE_TEXT; // Default if not present.
+				if (!isset($v['type']))      $this->_schemacache[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
 				if (!isset($v['maxlength'])) $this->_schemacache[$k]['maxlength'] = false;
-				if (!isset($v['null'])) $this->_schemacache[$k]['null'] = false;
-				if (!isset($v['comment'])) $this->_schemacache[$k]['comment'] = false;
-				if (!isset($v['default'])) $this->_schemacache[$k]['default'] = false;
+				if (!isset($v['null']))      $this->_schemacache[$k]['null']      = false;
+				if (!isset($v['comment']))   $this->_schemacache[$k]['comment']   = false;
+				if (!isset($v['default']))   $this->_schemacache[$k]['default']   = false;
+				if (!isset($v['encrypted'])) $this->_schemacache[$k]['encrypted'] = false;
 			}
 		}
 
@@ -749,7 +799,16 @@ class Model implements ArrayAccess {
 			// Set the propagation FIRST, that way I have the old key in memory to lookup.
 			$this->_setLinkKeyPropagation($k, $v);
 
-			$this->_data[$k] = $v;
+			// See if this is an encrypted field first.  If it is... set the decrypted version and encrypt it.
+			$keydat = $this->getKeySchema($k);
+			if($keydat['encrypted']){
+				$this->decryptData();
+				$this->_datadecrypted[$k] = $v;
+				$this->_data[$k] = $this->encryptValue($v);
+			}
+			else{
+				$this->_data[$k] = $v;
+			}
 			$this->_dirty    = true;
 			return true;
 		}
@@ -945,7 +1004,10 @@ class Model implements ArrayAccess {
 	 * @return mixed
 	 */
 	public function get($k) {
-		if (array_key_exists($k, $this->_data)) {
+		if($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
+			return $this->_datadecrypted[$k];
+		}
+		elseif (array_key_exists($k, $this->_data)) {
 			return $this->_data[$k];
 		}
 		elseif (array_key_exists($k, $this->_dataother)) {
@@ -963,7 +1025,13 @@ class Model implements ArrayAccess {
 	 * @return array
 	 */
 	public function getAsArray() {
-		return array_merge($this->_data, $this->_dataother);
+		// Has there been data that has been decrypted?
+		if($this->_datadecrypted !== null){
+			return array_merge($this->_data, $this->_dataother, $this->_datadecrypted);
+		}
+		else{
+			return array_merge($this->_data, $this->_dataother);
+		}
 	}
 
 	public function exists() {
@@ -972,6 +1040,67 @@ class Model implements ArrayAccess {
 
 	public function isnew() {
 		return !$this->_exists;
+	}
+
+	/**
+	 * Function to call to decrypt data from this model.
+	 *
+	 * NOTE, to increase performance, data is NOT automatically decrypted upon loading data from the datastore!
+	 */
+	public function decryptData(){
+		if($this->_datadecrypted === null){
+			$this->_datadecrypted = array();
+
+			foreach($this->getKeySchemas() as $k => $v){
+				// Since certain keys in a model may be encrypted.
+				if($v['encrypted']){
+					$payload = $this->_data[$k];
+					if($payload === null || $payload === ''){
+						$this->_datadecrypted[$k] = null;
+						continue;
+					}
+
+					preg_match('/^\$([^$]*)\$([0-9]*)\$(.*)$/m', $payload, $matches);
+
+					$cipher = $matches[1];
+					$passes = $matches[2];
+					$size = openssl_cipher_iv_length($cipher);
+					// Now I can trim off the beginning crap from the encrypted string.
+					$dec = substr($payload, strlen($cipher) + 5, 0-$size);
+					$iv = substr($payload, 0-$size);
+
+					for($i=0; $i<$passes; $i++){
+						$dec = openssl_decrypt($dec, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+					}
+
+					$this->_datadecrypted[$k] = $dec;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Method to encrypt a specific key for storage.
+	 *
+	 * Called internally by the set function.
+	 * Will return the encrypted data.
+	 *
+	 * @param $key string
+	 * @return string Encrypted data
+	 */
+	protected function encryptValue($value){
+		$cipher = 'AES-256-CBC';
+		$passes = 10;
+		$size = openssl_cipher_iv_length($cipher);
+		$iv = mcrypt_create_iv($size, MCRYPT_RAND);
+
+		$enc = $value;
+		for($i=0; $i<$passes; $i++){
+			$enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+		}
+
+		$payload = '$' . $cipher . '$' . str_pad($passes, 2, '0', STR_PAD_LEFT) . '$' . $enc . $iv;
+		return $payload;
 	}
 
 

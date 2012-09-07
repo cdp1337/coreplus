@@ -511,7 +511,7 @@ class Core implements ISingleton {
 	 * Shortcut function to get the current system database/datamodel interface.
 	 *
 	 * @deprecated 2011.11
-	 * @return DMI_Interface
+	 * @return DMI_Backend
 	 */
 	public static function DB() {
 		return \Core\DB();

@@ -107,7 +107,7 @@ interface File_Backend {
 	 * @param string  $dest
 	 * @param boolean $overwrite
 	 *
-	 * @return File
+	 * @return File_Backend
 	 */
 	public function copyTo($dest, $overwrite = false);
 

@@ -48,6 +48,7 @@ class AdminController extends Controller_2_1 {
 		$view = $this->getView();
 
 		$changes = array();
+		$errors = array();
 
 		foreach (ThemeHandler::GetAllThemes() as $t) {
 
@@ -61,19 +62,38 @@ class AdminController extends Controller_2_1 {
 		foreach (Core::GetComponents() as $c) {
 			if (!$c->isInstalled()) continue;
 
-			// Request the reinstallation
-			$change = $c->reinstall();
+			try{
+				// Request the reinstallation
+				$change = $c->reinstall();
 
-			// 1.0 version components don't support verbose changes :(
-			if ($change === true) {
-				$changes[] = '<b>Changes to component [' . $c->getName() . ']:</b><br/>' . "\n(list of changes not supported with this component!)<br/>\n<br/>\n";
+				// 1.0 version components don't support verbose changes :(
+				if ($change === true) {
+					$changes[] = '<b>Changes to component [' . $c->getName() . ']:</b><br/>' . "\n(list of changes not supported with this component!)<br/>\n<br/>\n";
+				}
+				// 2.1 components support an array of changes, yay!
+				elseif ($change !== false) {
+					$changes[] = '<b>Changes to component [' . $c->getName() . ']:</b><br/>' . "\n" . implode("<br/>\n", $change) . "<br/>\n<br/>\n";
+				}
+				// I don't care about "else", nothing changed if it was false.
 			}
-			// 2.1 components support an array of changes, yay!
-			elseif ($change !== false) {
-				$changes[] = '<b>Changes to component [' . $c->getName() . ']:</b><br/>' . "\n" . implode("<br/>\n", $change) . "<br/>\n<br/>\n";
+			catch(DMI_Query_Exception $e){
+				$changes[] = 'Attempted database changes to component [' . $c->getName() . '], but failed!<br/>';
+				//var_dump($e); die();
+				$errors[] = array(
+					'type' => 'component',
+					'name' => $c->getName(),
+					'message' => $e->getMessage() . '<br/>' . $e->query,
+				);
 			}
-			// I don't care about "else", nothing changed if it was false.
-
+			catch(Exception $e){
+				$changes[] = 'Attempted changes to component [' . $c->getName() . '], but failed!<br/>';
+				//var_dump($e); die();
+				$errors[] = array(
+					'type' => 'component',
+					'name' => $c->getName(),
+					'message' => $e->getMessage(),
+				);
+			}
 		}
 
 		// Flush the system cache, just in case
@@ -82,6 +102,7 @@ class AdminController extends Controller_2_1 {
 		//$page->title = 'Reinstall All Components';
 		$this->setTemplate('/pages/admin/reinstallall.tpl');
 		$view->assign('changes', $changes);
+		$view->assign('errors', $errors);
 	}
 
 	public function config() {

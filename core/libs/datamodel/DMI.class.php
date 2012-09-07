@@ -138,5 +138,5 @@ class DMI_Query_Exception extends DMI_Exception{
 	 * The query that caused the exception.
 	 * @var string
 	 */
-	public $query = null;	
+	public $query = null;
 }

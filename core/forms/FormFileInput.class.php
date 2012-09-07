@@ -17,6 +17,7 @@ class FormFileInput extends FormElement {
 			'previewdimensions' => '200x100',
 			'browsable'         => false,
 			'basedir'           => '',
+			'allowlink'         => true,
 		);
 		$this->_validattributes = array();
 		$this->requiresupload   = true;
@@ -60,7 +61,46 @@ class FormFileInput extends FormElement {
 			return false;
 		}
 
-		if ($value == '_upload_') {
+		// _link_ allows users to paste in a URL for a given file.  This is then copied locally as normal.
+		// In order to detect this, I need to look for the presence of a protocol indicator and this element needs
+		// to have allowlink set.
+		if($this->get('allowlink') && strpos($value, '_link_://') === 0){
+			$n = $this->get('name');
+			$value = substr($value, 9);
+
+			// Source
+			$f = new File_remote_backend($value);
+
+			if(!$f->exists()){
+				$this->_error = 'Remote file does not seem to exist';
+				return false;
+			}
+
+			// Destination
+			$nf = Core::File($this->get('basedir') . '/' . $f->getBaseFilename());
+
+			// do NOT copy the contents over until the accept check has been ran!
+
+			// Now that I have a file object, (in the temp filesystem still), I should validate the filetype
+			// to see if the developer wanted a strict "accept" type to be requested.
+			// If present, I'll have something to run through and see if the file matches.
+			// I need the destination now because I need to full filename if an extension is requested in the accept.
+			if($this->get('accept')){
+				$acceptcheck = \Core\check_file_mimetype($this->get('accept'), $f->getMimetype(), $nf->getExtension());
+
+				// Now that all the mimetypes have run through, I can see if one matched.
+				if($acceptcheck != ''){
+					$this->_error = $acceptcheck;
+					return false;
+				}
+			}
+
+			// Now all the checks should be completed and I can safely copy the file away from the temporary filesystem.
+			$f->copyTo($nf);
+
+			$value = $nf->getBaseFilename();
+		}
+		elseif ($value == '_upload_') {
 			$n = $this->get('name');
 
 			// Because PHP will have different sources depending if the name has [] in it...

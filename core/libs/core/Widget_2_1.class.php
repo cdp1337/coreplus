@@ -37,6 +37,16 @@ class Widget_2_1 {
 	 */
 	public $_model = null;
 
+	/**
+	 * Widgets that are manually called do not have instances attached to them,
+	 * so parameters are not retrievable via that.
+	 *
+	 * This instead houses parameters for manually-called widgets. (ie: {widget ...} in the template)
+	 *
+	 * @var null|array
+	 */
+	public $_params = null;
+
 
 	/**
 	 * Get the view for this controller.
@@ -103,8 +113,15 @@ class Widget_2_1 {
 	}
 
 	protected function getParameter($param) {
-		$dat = $this->getWidgetModel()->splitParts();
-		return (isset($dat['parameters'][$param])) ? $dat['parameters'][$param] : null;
+		if($this->_params !== null){
+			$parameters = $this->_params;
+		}
+		else{
+			$dat = $this->getWidgetModel()->splitParts();
+			$parameters = $dat['parameters'];
+		}
+
+		return (isset($parameters[$param])) ? $parameters[$param] : null;
 	}
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.6" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -37,9 +37,9 @@
 		<file filename="LICENSES/lgpl.txt" md5="e6a600fd5e1d9cbde2d983680233ad02"/>
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
-		<file filename="config/configuration.xml.example" md5="e6bcccfe5d780d28d13a8e2dbbe17016"/>
+		<file filename="config/configuration.xml.example" md5="19577829265d48925469963ef39f2e1c"/>
 		<file filename="core/CHANGELOG" md5="4dc4c3af39d71d260fdb73b4fcbb2665"/>
-		<file filename="core/bootstrap.compiled.php" md5="520930e9185eb1fc71ea599b782dd876">
+		<file filename="core/bootstrap.compiled.php" md5="4db58caaddc1a10819ea6207e6de6557">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -87,7 +87,7 @@
 		<file filename="core/bootstrap.php" md5="05c59633c5b6f4bb54326947d02db0e5"/>
 		<file filename="core/bootstrap_predefines.php" md5="a75579b94642f0f4fb7b7540f9909288"/>
 		<file filename="core/bootstrap_preincludes.php" md5="3d7c330e8fc1f68f184d7829b3a546f3"/>
-		<file filename="core/controllers/AdminController.php" md5="224fdec0630a697051eead4cb87623a8">
+		<file filename="core/controllers/AdminController.php" md5="80078d6070f8ab566cb6073f8d713ff3">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/CoreController.php" md5="5036876e64219490e1451347ad063d63">
@@ -120,7 +120,7 @@
 		<file filename="core/forms/FormCheckboxesInput.class.php" md5="7b11d9b50cb06a03d4d4109b9bc02f08">
 			<class name="FormCheckboxesInput"/>
 		</file>
-		<file filename="core/forms/FormFileInput.class.php" md5="b0a0001d2db34d3fe21f46aea2210691">
+		<file filename="core/forms/FormFileInput.class.php" md5="1c3aa3a37d31e90c67a482c565bbb5e6">
 			<class name="FormFileInput"/>
 		</file>
 		<file filename="core/forms/FormHiddenInput.class.php" md5="b165e1679347782c30492bb4b320ee5c">
@@ -159,7 +159,7 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="080383e4dade461c3c7ac1d9e504ed28">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="fcb4610cde85c415dc529215cd3d13f7"/>
+		<file filename="core/functions/Core.functions.php" md5="da70d9b079997556ada99300decd5090"/>
 		<file filename="core/helpers/UpdaterHelper.class.php" md5="16b8645e48e2090c014c4a0e85be5a07">
 			<class name="UpdaterHelper"/>
 		</file>
@@ -457,7 +457,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="a867a8b1af5f4d49ed6270a1fbaddfa0">
+		<file filename="core/libs/core/Component_2_1.php" md5="5525a85fb26c123a888a04b3206e1257">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="94fdacc5d802f86bab96b573b142bc78">
@@ -469,7 +469,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="da23111d3817635fd7fcad14583bde1a">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="7110d85960f0980192231e6d4c144df9">
+		<file filename="core/libs/core/Core.class.php" md5="6aa37843fde6d5e758fa37a114f6c115">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -485,7 +485,7 @@
 		<file filename="core/libs/core/Email.class.php" md5="112cc428b37f51539a1d29b501988009">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="b726855fe2d03dd6481969ecbd17c8ca">
+		<file filename="core/libs/core/Form.class.php" md5="fb47174bf5b77b50d8ff3359cc449d9c">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -511,7 +511,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="5516a4361713178680e45cca3e70e95b">
+		<file filename="core/libs/core/Model.class.php" md5="ad308926eb0bd4c26156a74217ea4c74">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -556,7 +556,7 @@
 		<file filename="core/libs/core/XMLLoader.class.php" md5="7ea9e9b22ab6b24f081b9f8ff7971bc3">
 			<class name="XMLLoader"/>
 		</file>
-		<file filename="core/libs/datamodel/DMI.class.php" md5="8601c1ee0630c4bf81fc6b8f8a39a84e">
+		<file filename="core/libs/datamodel/DMI.class.php" md5="a44f9e1d47c34bebc6dde258b6df1f20">
 			<class name="DMI"/>
 			<class name="DMI_Exception"/>
 			<class name="DMI_Authentication_Exception"/>
@@ -575,7 +575,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="e02b68f59cf50bf21f1bb533a2e59ea1">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="0ea97422f18cf43349a4ead39d9c3809">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="274b0d52e185b00c5015476936a4eefd">
 			<class name="DMI_mysqli_backend"/>
 		</file>
 		<file filename="core/libs/datamodel/drivers/phpcassa/AUTHORS" md5="c0722ecbe902d4770f9e17b43db3d8e6"/>
@@ -763,7 +763,7 @@
 		<file filename="core/libs/filestore/FileException.class.php" md5="657f6356182a91efb492fcdece04c008">
 			<class name="FileException"/>
 		</file>
-		<file filename="core/libs/filestore/File_Backend.interface.php" md5="689a27590b970a585eed928b167b2192">
+		<file filename="core/libs/filestore/File_Backend.interface.php" md5="9e60c243646c05d9a0325ea2540bf38a">
 			<interface name="File_Backend"/>
 		</file>
 		<file filename="core/libs/filestore/File_Contents.interface.php" md5="74e9a61ff8a58f95da1a8e114235b019">
@@ -778,7 +778,7 @@
 		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="c7164d543ff0d6fb26052578db579454">
 			<class name="File_local_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="e1a7592b2f324bfea9dc13d3ea7aa337">
+		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="e0df04535e036103a04cf2efc2ddbe9f">
 			<class name="File_remote_backend"/>
 		</file>
 		<file filename="core/libs/filestore/contents/File_asc_contents.class.php" md5="1ab9f64e240b30abc32826e0a2ace694">
@@ -1232,7 +1232,7 @@
 		<file filename="core/models/ComponentModel.class.php" md5="35536a3f009e4fe46bafcd7b5924f421">
 			<class name="ComponentModel"/>
 		</file>
-		<file filename="core/models/ConfigModel.class.php" md5="4f81c87b70262bbf2c9b004d3633ea2d">
+		<file filename="core/models/ConfigModel.class.php" md5="b3ff39d1d759cf23f0f4f92a338f732b">
 			<class name="ConfigModel"/>
 		</file>
 		<file filename="core/models/Insertable.class.php" md5="9fcff9abc48a6750a219ee3df35b48af">
@@ -1259,8 +1259,97 @@
 		<file filename="core/widgets/PageWidget.php" md5="612cd59aef22cda09804b489cb64f327">
 			<class name="PageWidget"/>
 		</file>
+		<file filename="filestore/assets/default/css/admin/adminbar.css" md5="0d0ad0b987c25e69e7ea45729272ae21"/>
+		<file filename="filestore/assets/default/css/gallery.css" md5="cfd9daed4c47880339e053de6ab32217"/>
+		<file filename="filestore/assets/default/css/images/lightbox-blank.gif" md5="fc94fb0c3ed8a8f909dbc7630a0987ff"/>
+		<file filename="filestore/assets/default/css/images/lightbox-btn-close.gif" md5="2c38ae5be85141bf8867c9523f4bc357"/>
+		<file filename="filestore/assets/default/css/images/lightbox-btn-next.gif" md5="23414965ebe526012e473c1d4d65d4e7"/>
+		<file filename="filestore/assets/default/css/images/lightbox-btn-prev.gif" md5="5a9118de4ef6226473190d6e82f6d80d"/>
+		<file filename="filestore/assets/default/css/images/lightbox-ico-loading.gif" md5="b5fe8df97005341f898e2cf84e68de01"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_flat_0_aaaaaa_40x100.png" md5="2a44fbdb7360c60122bcf6dcef0387d8"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_flat_75_ffffff_40x100.png" md5="8692e6efddf882acbff144c38ea7dfdf"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_glass_55_fbf9ee_1x400.png" md5="f8f4558e0b92ff2cd6136781533902ec"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_glass_55_fcf0ba_1x400.png" md5="e8fa5df505b503a945e543c5816179ca"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_glass_65_ffffff_1x400.png" md5="e5a8f32e28fd5c27bf0fed33c8a8b9b5"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_glass_75_dadada_1x400.png" md5="c12c6510dad3ebfa64c8a30e959a2469"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_glass_75_e6e6e6_1x400.png" md5="f4254356c2a8c9a383205ef2c4de22c4"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_glass_95_fef1ec_1x400.png" md5="5a3be2d8fff8324d59aec3df7b0a0c83"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_gloss-wave_100_ece8da_500x100.png" md5="dccd449740f6fd2a875fc72ef3586b53"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_highlight-hard_100_f5f3e5_1x100.png" md5="c3341f3735d126758336bda6f1b21ec4"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_highlight-hard_100_fafaf4_1x100.png" md5="5fab734991bc927dd729e4b2c4500a34"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_highlight-hard_15_459e00_1x100.png" md5="f5613fb05e1c5ae3bd9167d85d1d72a7"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_highlight-soft_25_67b021_1x100.png" md5="bdfc7094828e60a1e89799619382589a"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png" md5="72c593d16e998952cd8d798fee33c6f3"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_highlight-soft_95_ffedad_1x100.png" md5="7103bea11984ecc1ebce02dcc10cdc75"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_inset-soft_95_cccccc_1x100.png" md5="df2dbcfe9af96aacfe13e53b108aaf5b"/>
+		<file filename="filestore/assets/default/css/images/ui-bg_spotlight_80_6f6b5d_600x600.png" md5="70e145838be2f61b981cd2ecfb1cd6ab"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_222222_256x240.png" md5="ebe6b6902a408fbf9cac6379a1477525"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_2e83ff_256x240.png" md5="2b99a5e48d3c3957d03027d36a25e8bb"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_454545_256x240.png" md5="119dd0c2e94ad689de873ef39fd43e6e"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_808080_256x240.png" md5="285708190686f9ee7a48a988a0eed090"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_847e71_256x240.png" md5="6636d8ab6693c387d7c2770dbe8c178e"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_888888_256x240.png" md5="9c46d7cab43e22a14bad26d2d4806d80"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_8dc262_256x240.png" md5="4128e64e48bfc9c6e5ab45f29bb32da7"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_cd0a0a_256x240.png" md5="3e450c2a2c66328d9498e7001ad7197c"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_eeeeee_256x240.png" md5="2e6d7e1cca1cd751a6e156feb381eb0f"/>
+		<file filename="filestore/assets/default/css/images/ui-icons_ffffff_256x240.png" md5="342bc03f6264c75d3f1d7f99e34295b9"/>
+		<file filename="filestore/assets/default/css/jquery-ui-1.8.22.css" md5="37aee7c9e30bde3f8d1adc765619b767"/>
+		<file filename="filestore/assets/default/css/jquery-ui.css" md5="9814a94835a5507fbc5d2903f9e41c16"/>
+		<file filename="filestore/assets/default/css/jquery.lightbox-0.5.css" md5="96ffc5ef3f274ad20bc77e293a8b0722"/>
+		<file filename="filestore/assets/default/css/jquery.readonly.css" md5="ca07e99b858d310cd3e855abf65d9b06"/>
+		<file filename="filestore/assets/default/css/skin/jPlayer_blue.monday_extd.psd" md5="dfdf38678f1037f9dfee8539eda4bb4a"/>
+		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.css" md5="26d558f35be8dcc3a6a302746c44f463"/>
+		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.jpg" md5="0e0fdecc749a3e48cba25ae991154029"/>
+		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.seeking.gif" md5="6459e146ed61caa28e8ede05beb520b8"/>
+		<file filename="filestore/assets/default/css/skin/jplayer.blue.monday.video.play.png" md5="d736613748cb6f59e1ce86db5e58bee0"/>
+		<file filename="filestore/assets/default/css/skin/spirites_blue.monday_2011.psd" md5="0afab271084584b60d4f642bd9d60d4f"/>
+		<file filename="filestore/assets/default/css/theme/widgets.css" md5="106f0992df1585bb9c94b77ee6f9bdcb"/>
+		<file filename="filestore/assets/default/gallery-arrow.png" md5="16bc541d24d9c8d5a124369eb51a4f8e"/>
+		<file filename="filestore/assets/default/js/admin/adminmenu-widget.js" md5="f3803eda09da8ae790ccded988043e59"/>
+		<file filename="filestore/assets/default/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
+		<file filename="filestore/assets/default/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
+		<file filename="filestore/assets/default/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
+		<file filename="filestore/assets/default/js/core.fileupload.js" md5="6af175f77ebccd39e84df91eabf4a384"/>
+		<file filename="filestore/assets/default/js/core.js" md5="9724278779f8bc69b0a51370dc5bac15"/>
+		<file filename="filestore/assets/default/js/core.strings.js" md5="e32af02257c867efd01730b2c8a436de"/>
+		<file filename="filestore/assets/default/js/jplayer.playlist.min.js" md5="58f29924f2e0951ab6cbeb7e502d350e"/>
+		<file filename="filestore/assets/default/js/jquery.jplayer.inspector.js" md5="c009339d6136287c282eca94144f12c7"/>
+		<file filename="filestore/assets/default/js/jquery.jplayer.min.js" md5="9943a0116135df27a921020e2193f5c1"/>
+		<file filename="filestore/assets/default/js/jquery.lightbox-0.5.js" md5="f82a95292da1810815fe8521aa03a0c1"/>
+		<file filename="filestore/assets/default/js/jquery.lightbox-0.5.min.js" md5="89a2ef0f8dc320697d03148604fd5526"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.5.1.js" md5="f2402f0e7b549caae013bc3c05b3a161"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.5.1.min.js" md5="b04a3bccd23ddeb7982143707a63ccf9"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.6.2.min.js" md5="a1a8cb16a060f6280a767187fd22e037"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.6.4.js" md5="c677462551f4cc0f2af192497b50f3f5"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.6.4.min.js" md5="9118381924c51c89d9414a311ec9c97f"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.7.0.js" md5="abefdb960c5c589e6ab3d32219a3a68c"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.7.0.min.js" md5="a3a0fdb8b89bc8bb2665d260a3079aed"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.7.1.js" md5="273e017fd0bef143258516bdee173a1e"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.7.1.min.js" md5="ddb84c1587287b2df08966081ef063bf"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.7.2.js" md5="af693f9aea7dae36fb3bef4c9b6e56fb"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.7.2.min.js" md5="b8d64d0bc142b3f670cc0611b0aebcae"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.8.0.js" md5="884c9efc99aca3e82b497beb16d5f246"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-1.8.0.min.js" md5="cd8b0bffc85bb5614385ee4ce3596d07"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-ui-1.8.11.min.js" md5="bc1367d7c32e3b4fd746027d8188cc36"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-ui-1.8.16.min.js" md5="65c7c707dddea0c7861714df250d54c4"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-ui-1.8.20.min.js" md5="925ce969efd834fd7be9e35d0007904c"/>
+		<file filename="filestore/assets/default/js/jquery/jquery-ui-1.8.22.min.js" md5="c2d89098cb69e8b4fa5c46e7303d8d98"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.cookie.js" md5="20adaea8ed610b1b08abf532beba6659"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.cookie.min.js" md5="b2b5da3ba885603b0097b9a6bd6b032c"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.json-2.2.js" md5="56fdd8b6674e6d121afe11a920191429"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.json-2.2.min.js" md5="2d59ccdc20e736725bdbcb433e080ec0"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.masonry.min.js" md5="fc2d7669d58e909815f1994047bf671c"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.ui.nestedSortable.js" md5="fbd3ec46c4cb84a8433f3b5c468e98cf"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.ui.nestedSortable.min.js" md5="28fb224b45d2fdb5e5eef85d2dfc8458"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.ui.readonly.js" md5="3de4b84a6cdbc15e6e42514d80bd743b"/>
+		<file filename="filestore/assets/default/js/jquery/jquery.ui.readonly.min.js" md5="ae62f410564d47cfec4593a0d5e1ffda"/>
+		<file filename="filestore/assets/default/js/jquery/tmpl.js" md5="5e2855f4f4a4fd07ac343c9f0823d67f"/>
+		<file filename="filestore/assets/default/js/jquery/tmpl.min.js" md5="411df7e2bc659d35015f7fdb7432b331"/>
+		<file filename="filestore/assets/default/js/theme/widgets.js" md5="0ac5f62b8fb3bddc6c918379a01ed36f"/>
+		<file filename="filestore/assets/default/js/updater/index.js" md5="8bc98840b6292bdf9b98074ee92c7615"/>
+		<file filename="filestore/assets/default/swf/Jplayer.swf" md5="769d053b03973d380da80be5a91c59c2"/>
 		<file filename="htaccess.ex" md5="a9753494f79d3cfa1526c3ccfd19f1cc"/>
-		<file filename="index.php" md5="053e9ae9295e2c1ab0e0eb5b74373f21"/>
+		<file filename="index.php" md5="d01a25c25c5fb9fa77e98da5e4e58f37"/>
 		<file filename="install/InstallPage.class.php" md5="4f34783e9e3b4c2878afa6aa3aa0eb07">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1281,6 +1370,7 @@
 		<file filename="install/templates/skin.tpl" md5="3989070107399bafb7770d157c125ce3"/>
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
+		<file filename="public/person/224911_10150174611201052_3069625_n.jpg" md5="3632e9215e5b98f7fc0e2f35fff8987f"/>
 	</files>
 	<pages>
 		<page baseurl="/Admin" admin="1" widget="0" access="g:admin" title="Administration"/>
@@ -1294,7 +1384,7 @@
 		<file filename="core/templates/forms/elements/file.tpl" md5="90e30e0242238cee016d8b30571e9ac1"/>
 		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="ecb84edcfb88f92c62d05e88c516ad27"/>
 		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="070475a9b15c813ca8b958afff81ff54"/>
-		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="7811f6cb8ef1754ce9111764927b91bf"/>
+		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="d40c7d73bfbe72357aaf4ec0aebd3686"/>
 		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="b253627a7cac7c2db9c53160272e103c"/>
 		<file filename="core/templates/forms/elements/formpagemetasinput.tpl" md5="04851f883c681032c2fd96c80714b434"/>
 		<file filename="core/templates/forms/elements/formpageparentselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
@@ -1319,7 +1409,7 @@
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="645d3b7a407c513622e9f6bc2590b7c9"/>
 		<file filename="core/templates/pages/admin/config.tpl" md5="e5e65603b632d9a424846d9bd31557e8"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="db1411269ee527536b0163bf9e913f26"/>
-		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="037a859dad14923425e7b31ce1673f74"/>
+		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="ec73503565c3b1987c0419bbe5815aaa"/>
 		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
 		<file filename="core/templates/pages/error/error400.tpl" md5="4443f584bf4f2d0268e5af6d62338d07"/>
 		<file filename="core/templates/pages/error/error403.tpl" md5="9223242be43703fc7f3e6d2633626f3b"/>
@@ -1356,8 +1446,9 @@
 		<config key="/core/javascript/minified" type="boolean" default="true" description="Try to use minified javascript files whenever possible."/>
 		<config key="/core/markup/minified" type="boolean" default="true" description="Try to collapse rendered markup whenever possible."/>
 		<config key="/core/filestore/backend" type="enum" options="aws|local" default="local" description="What type of storage should be used for assets?  This will determine the CDN that is used."/>
-		<config key="/core/filestore/assetdir" type="string" default="filestore/assets/" description=""/>
-		<config key="/core/filestore/publicdir" type="string" default="filestore/public/" description=""/>
+		<config key="/core/filestore/assetdir" type="string" default="files/assets/" description="Directory for assets, must be directly accessable via the web."/>
+		<config key="/core/filestore/publicdir" type="string" default="files/public/" description="Directory for public files (uploads), must be directly accessable via the web."/>
+		<config key="/core/filestore/privatedir" type="string" default="files/private/" description="Directory for private files (uploads), should not be directly accessable via the web."/>
 		<config key="/core/filestore/previews" type="boolean" default="1" description="Try to display a preview of files in thumbnails.  If set to false, only the file mimetype icon is displayed."/>
 		<config key="/core/session/ttl" type="int" default="3600" description="Time to live for sessions.  Amount of seconds to keep an idle session active before requesting the user to log back in due to inactivity."/>
 		<config key="/core/email/from" type="string" description="Email address emails should be sent 'from' by defualt." default=""/>
@@ -1380,7 +1471,7 @@
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 		<file filename="core/assets/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
-		<file filename="core/assets/js/core.fileupload.js" md5="6af175f77ebccd39e84df91eabf4a384"/>
+		<file filename="core/assets/js/core.fileupload.js" md5="c7660b5b3f0d6977ee538b71ac954a07"/>
 		<file filename="core/assets/js/core.js" md5="9724278779f8bc69b0a51370dc5bac15"/>
 		<file filename="core/assets/js/core.strings.js" md5="e32af02257c867efd01730b2c8a436de"/>
 		<file filename="core/assets/js/updater/index.js" md5="8bc98840b6292bdf9b98074ee92c7615"/>
@@ -1407,6 +1498,7 @@
 		<upgrade from="2.1.3" to="2.1.4"/>
 		<upgrade from="2.1.4" to="2.1.5"/>
 		<upgrade from="2.1.5" to="2.1.6"/>
+		<upgrade from="2.1.6" to="2.2.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
@@ -1418,6 +1510,7 @@
 		<author name="Andy Prevost"/>
 		<author name="Marcus Bointon"/>
 		<author name="Jaroslav Mallat (http://mallat.cz/)"/>
+		<author name="Mark J Panaghiston"/>
 		<author name="Monte Ohrt" email="monte at ohrt dot com"/>
 		<author name="Mark Priatel" email="mpriatel@rogers.com"/>
 		<author name="Gerard" email="gerard@interfold.com"/>
@@ -1441,9 +1534,7 @@
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			See the included NOTICE.md file for more information.
-		</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3
 		</license>
