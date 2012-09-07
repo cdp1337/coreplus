@@ -131,6 +131,9 @@ class User {
 				$c->save();
 			}
 		}
+
+		// Fire off the hook!
+		HookHandler::DispatchHook('/user/postsave', $this);
 	}
 
 	
@@ -405,7 +408,7 @@ class User {
 	 *
 	 * @param array $where
 	 * @param int $limit 
-	 * @return mixed Array, User, or null.
+	 * @return array|UserBackend|null
 	 *         if $limit of 1 is given, a single User object or null is returned
 	 *         else an array of User objects is returned, or an array with null.
 	 */

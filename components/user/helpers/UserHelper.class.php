@@ -259,6 +259,10 @@ abstract class UserHelper{
 					$user->set('admin', $el->get('value'));
 				}
 
+				elseif($name == 'avatar'){
+					$user->set('avatar', $el->get('value'));
+				}
+
 				else{
 					// I don't care.
 				}
@@ -274,8 +278,6 @@ abstract class UserHelper{
 
 			return false;
 		}
-
-		var_dump($user); die();
 
 		$user->save();
 

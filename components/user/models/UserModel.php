@@ -65,6 +65,15 @@ class UserModel extends Model {
 			'formtype' => 'system',
 			'comment' => 'json-encoded array of all groups this user belongs to'
 		),
+		'avatar' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => '64',
+			'form' => array(
+				'type' => 'file',
+				'accept' => 'image/*',
+				'basedir' => 'public/user/avatar',
+			),
+		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,

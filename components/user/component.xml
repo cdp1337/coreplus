@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.1" name="user" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="user" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.2"/>
 		<require name="Facebook" type="component"/>
@@ -9,16 +9,18 @@
 	<hooks>
 		<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
 		<hook call="UserHelper::RecordActivity" name="/core/page/postrender"/>
+		<hookregister name="/user/postsave" description="Hook that is called after the user object is saved"/>
 	</hooks>
 	<forms>
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
 		<file filename="CHANGELOG" md5="420cf0765d1f30ed331337541a53b552"/>
-		<file filename="User.class.php" md5="d6d9154a2217241354385858580a2185">
+		<file filename="User.class.php" md5="73befbf81ea0608299da95fab038e85a">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
+		<file filename="User.class.php.orig" md5="d6d9154a2217241354385858580a2185"/>
 		<file filename="UserForm.class.php" md5="d5a273d86587170b59590f67ff32a74c">
 			<class name="FormAccessStringInput"/>
 		</file>
@@ -49,10 +51,12 @@
 		<file filename="controllers/UserGroupAdminController.php" md5="87720df274ed8438582743843c8f466f">
 			<controller name="UserGroupAdminController"/>
 		</file>
-		<file filename="helpers/UserFunctions.php" md5="a32b2358b5a1f5f5482076752ce97066"/>
-		<file filename="helpers/UserHelper.class.php" md5="6a9f19d2dcc5c785b5a4f123c24b8f0f">
+		<file filename="helpers/UserFunctions.php" md5="64c1f464dfa3754b7c802c56213a956f"/>
+		<file filename="helpers/UserFunctions.php.orig" md5="a32b2358b5a1f5f5482076752ce97066"/>
+		<file filename="helpers/UserHelper.class.php" md5="e7dd5a743bf4dbf2c77111a9930375b1">
 			<class name="UserHelper"/>
 		</file>
+		<file filename="helpers/UserHelper.class.php.orig" md5="6a9f19d2dcc5c785b5a4f123c24b8f0f"/>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
 		<file filename="models/UserActivityModel.php" md5="5f5bb7b6580bcc7c64bfc2f3c7f82dbd">
 			<class name="UserActivityModel"/>
@@ -63,7 +67,7 @@
 		<file filename="models/UserGroupModel.php" md5="06dbdd1ed32b3a5bfe6b2d8903fe6759">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="models/UserModel.php" md5="1d6cca531a143f07b2605c1d2f91c870">
+		<file filename="models/UserModel.php" md5="16ed839e801f789cf3e5dafd7c2537ca">
 			<class name="UserModel"/>
 		</file>
 		<file filename="models/UserUserConfigModel.php" md5="4bfc5564e1c98099374adf6de3bed563">
@@ -145,6 +149,7 @@
 		<upgrade from="2.0.2" to="2.0.3"/>
 		<upgrade from="2.0.3" to="2.1.0"/>
 		<upgrade from="2.1.0" to="2.1.1"/>
+		<upgrade from="2.1.1" to="2.2.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

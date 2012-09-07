@@ -84,6 +84,11 @@ function get_form($user = null){
 		$form->addElement('password', array('name' => 'pass2', 'title' => 'Confirm', 'required' => true));
 	}
 
+	// Avatar is for existing accounts or admins.
+	if($type == 'edit' || \Core\user()->checkAccess('p:user_manage')){
+		$form->addElement('file', array('name' => 'avatar', 'title' => 'Avatar Image', 'basedir' => 'public/user/avatar', 'accept' => 'image/*', 'value' => $user->get('avatar')));
+	}
+
 	// The factory depends on the registration type as well.
 	if($type == 'registration'){
 		$fac = \UserConfigModel::Find(array('onregistration' => 1));
@@ -96,7 +101,7 @@ function get_form($user = null){
 		$el = \FormElement::Factory($f->get('formtype'));
 		$el->set('name', 'option[' . $f->get('key') . ']');
 		$el->set('title', $f->get('name'));
-		$el->set('value', $f->get('default_value'));
+		$el->set('value', (($type == 'registration') ? $f->get('default_value') : $user->get($f->get('key'))) );
 
 		switch($f->get('formtype')){
 			case 'file':
