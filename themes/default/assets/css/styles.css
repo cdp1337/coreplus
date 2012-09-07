@@ -20,15 +20,15 @@
 
 
 /* Do some useful style defines here... */
-body { text-align:center; padding:0pt; margin:0pt; background:#D5DAFF; font-family:Puritan, helvetica, sans-serif; font-size:11pt; color:#222;}
+body { text-align:center; padding:0; margin:0; background:#D5DAFF; font-family:Puritan, helvetica, sans-serif; font-size:11pt; color:#222;}
 a { color:#1C2B0D; }
-a:hover { text-shadow:0px 1px 2px rgba(28, 43, 13, 0.8);}
-img { border:0px; }
+a:hover { text-shadow:0 1px 2px rgba(28, 43, 13, 0.8);}
+img { border:0; }
 p { padding:0.5em 0pt; }
-#wrapper { width:75%; margin:0pt auto; text-align:left; background:black; box-shadow:0px 1px 4px black; -moz-box-shadow:0px 1px 4px black; -webkit-box-shadow:0px 1px 4px black; }
-#innerwrapper { background:#EDEDED; padding:1em 1em 2em; margin:0pt 2px; }
+#wrapper { width:75%; margin:0 auto; text-align:left; background:black; box-shadow:0 1px 4px black; -moz-box-shadow:0 1px 4px black; -webkit-box-shadow:0 1px 4px black; }
+#innerwrapper { background:#EDEDED; padding:1em 1em 2em; margin:0 2px; }
 fieldset { border:1px solid #AAA; padding:0.75em; margin:0.5em; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;}
-fieldset legend { color:#555; font-size:84%; padding:0pt 0.5em; }
+fieldset legend { color:#555; font-size:84%; padding:0 0.5em; }
 header { padding: 5px 2px 1px; display:block;}
 footer { min-height: 50px; clear:both; color: #888; font-size: 90%; padding: 0.25em 1em; }
 footer a { color: #999; }
@@ -58,7 +58,7 @@ Since the icons are now being handled by font-awesome, the bulk of this logic wi
 
 /* First, the common styles for all icon'd controls. */
 ul.controls li a { text-decoration: none; font-size: 14px; padding: 2px; }
-ul.controls li a:hover { text-shadow: none; font-size: 18px; padding: 0px; }
+ul.controls li a:hover { text-shadow: none; font-size: 18px; padding: 0; }
 
 ul.controls li a span {
 	display: none;
@@ -139,6 +139,22 @@ a.button[disabled=disabled]{
 	background-color: rgba(62, 126, 128, 0.49);
 	border:2px outset rgba(29, 84, 87, 0.32);
 	cursor: no-drop;
+	color: #CCC;
+
+	background-image: linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
+	background-image: -o-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.19, rgb(148,148,148)),
+		color-stop(0.42, rgb(112,111,112)),
+		color-stop(1, rgb(148,148,148))
+	);
 }
 
 
@@ -194,14 +210,16 @@ a.button[disabled=disabled]{
     padding: 0.25em 0.5em 0.25em 0;
 	white-space: nowrap;
 }
-.formelement.formradioinput label input { margin-top:0pt; }
+.formelement.formradioinput label input { margin-top:0; }
 
 .formelement.formerror input,
 .formelement.formerror select,
 .formelement.formerror textarea { border:1px inset red; background:#FFF0F0;}
 .formelement .formdescription { font-size:85%; color:#555; margin:0.25em 0pt 0.25em 1em; }
 
-.formfileinput-selector { float:left; width:130px; }
+.formfileinput .formfileinput-selector { float:left; width:130px; }
+.formfileinput .file-input-innercontainer { border: 1px solid #aaa; border-radius: 15px; padding: 4px; }
+.formfileinput .file-input-actions { margin-left: 150px; }
 
 table.listing { width:100%; border:1px solid #AAA; border-collapse:collapse;}
 table.listing tr:nth-child(odd) { background-color:#DDEDDD; }
@@ -231,12 +249,12 @@ ol.sortable-listing ol { margin-left:1em; }
 /* Enable the mouse over menu */
 #primary-nav li.navigation-menu-over>ul { display:block; }
 /* And the sub menu */
-#primary-nav li ul { display:none; position:absolute; background:black; border:1px solid black; border-top:0px none; width:190px; -moz-box-shadow: 0px 3px 6px #000; -webkit-box-shadow: 0px 3px 6px #000; box-shadow: 0px 3px 6px #000;}
+#primary-nav li ul { display:none; position:absolute; background:black; border:1px solid black; border-top:0 none; width:190px; -moz-box-shadow: 0 3px 6px #000; -webkit-box-shadow: 0 3px 6px #000; box-shadow: 0 3px 6px #000;}
 #primary-nav li ul li { width:190px; text-align:left; }
 #primary-nav li ul a,
 #primary-nav li ul span{ padding-left:20px; width:155px; }
 /* And any sub sub menu */
-#primary-nav li ul li ul { top:-2px; left:180px; display:none; position:absolute; background:#1C2B0D; border:1px solid black; border-left:0px none; width:190px; -moz-box-shadow: 0px 3px 6px #000; -webkit-box-shadow: 0px 3px 6px #000; box-shadow: 0px 3px 6px #000;}
+#primary-nav li ul li ul { top:-2px; left:180px; display:none; position:absolute; background:#1C2B0D; border:1px solid black; border-left:0 none; width:190px; -moz-box-shadow: 0 3px 6px #000; -webkit-box-shadow: 0 3px 6px #000; box-shadow: 0 3px 6px #000;}
 
 /*** Footer Navigation ***/
 footer ul.navigation-menu li { list-style-type: none; float: left; padding: 0 0.5em; }
@@ -244,4 +262,4 @@ footer ul.navigation-menu li li { float: none;}
 
 
 /** Collapsible fieldsets **/
-fieldset.collapsed { padding:0pt; border-width: 1px 0px 0px; }
+fieldset.collapsed { padding:0; border-width: 1px 0px 0px; }
