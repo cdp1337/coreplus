@@ -1447,7 +1447,9 @@
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">Public Domain</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			See the included NOTICE.md file for more information.
+		</license>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3
 		</license>
