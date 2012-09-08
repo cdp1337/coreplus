@@ -197,7 +197,7 @@ else {
 	 */
 	if (ENABLE_SSL) {
 		// Create the server name for SSL connections.  This should override any previous port number.
-		$servernameSSL = str_replace('http://', 'https://', SERVERNAME);
+		$servernameSSL = str_replace('http://', 'https://', $servername);
 		// Check the last several digits of the serverName to see if there's a port number.
 		if (preg_match('/\:\d+$/', substr($servernameSSL, -6))) {
 			$servernameSSL = preg_replace('/\:\d+$/', ':' . PORT_NUMBER_SSL, $servernameSSL);
