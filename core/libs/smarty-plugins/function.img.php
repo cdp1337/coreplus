@@ -48,6 +48,7 @@ function smarty_function_img($params, $template){
 	
 	// Some optional parameters, (and their defaults)
 	$assign = $width = $height = false;
+	$placeholder = null;
 	
 	if(isset($params['assign'])){
 		$assign = $params['assign'];
@@ -63,6 +64,11 @@ function smarty_function_img($params, $template){
 		$height = $params['height'];
 		unset($params['height']);
 	}
+
+	if(isset($params['placeholder'])){
+		$placeholder = $params['placeholder'];
+		unset($params['placeholder']);
+	}
 	
 	
 	// If one is provided but not the other, just make them the same.
@@ -70,7 +76,14 @@ function smarty_function_img($params, $template){
 	if($height && !$width) $width = $height;
 	
 	$d = ($width && $height) ? $width . 'x' . $height : false;
-	
+
+
+	// If the file doesn't exist and a placeholder was provided, use the appropriate placeholder image!
+	if(!$f->exists() && $placeholder){
+		// Try that!
+		$f = new File_local_backend('assets/images/placeholders/' . $placeholder . '.png');
+	}
+
 	// Well...
 	if($d){
 		$attributes['src'] = $f->getPreviewURL($d);
