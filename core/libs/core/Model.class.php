@@ -126,7 +126,7 @@ class Model implements ArrayAccess {
 	 *
 	 * This will only match http:// or https://.
 	 */
-	const VALIDATION_URL_WEB = '#^[hH][tT][tT][pP][sS]{,1}://.+$#';
+	const VALIDATION_URL_WEB = '#^[hH][tT][tT][pP][sS]{0,1}://.+$#';
 
 	/**
 	 * Definition for a model that has exactly one child table as a dependency.
@@ -339,26 +339,26 @@ class Model implements ArrayAccess {
 		if(!$save){
 			return false;
 		}
-/*
-		// Do the key validation first of all.
-		if (get_class($this) == 'PageModel') {
-			$s = self::GetSchema();
-			foreach ($this->_data as $k => $v) {
-				// Date created and updated have their own validations.
-				if (
-					$s[$k]['type'] == Model::ATT_TYPE_CREATED ||
-					$s[$k]['type'] == Model::ATT_TYPE_UPDATED
-				) {
-					if (!(is_numeric($v) || !$v)) throw new DMI_Exception('Unable to save ' . self::GetTableName() . '.' . $k . ' has an invalid value.');
-					continue;
-				}
-				// This key null?
-				if ($v === null && !(isset($s[$k]['null']) && $s[$k]['null'])) {
-					if (!isset($s[$k]['default'])) throw new DMI_Exception('Unable to save ' . self::GetTableName() . '.' . $k . ', null is not allowed and there is no default value set.');
-				}
-			}
-		}
-*/
+		/*
+		  // Do the key validation first of all.
+		  if (get_class($this) == 'PageModel') {
+			  $s = self::GetSchema();
+			  foreach ($this->_data as $k => $v) {
+				  // Date created and updated have their own validations.
+				  if (
+					  $s[$k]['type'] == Model::ATT_TYPE_CREATED ||
+					  $s[$k]['type'] == Model::ATT_TYPE_UPDATED
+				  ) {
+					  if (!(is_numeric($v) || !$v)) throw new DMI_Exception('Unable to save ' . self::GetTableName() . '.' . $k . ' has an invalid value.');
+					  continue;
+				  }
+				  // This key null?
+				  if ($v === null && !(isset($s[$k]['null']) && $s[$k]['null'])) {
+					  if (!isset($s[$k]['default'])) throw new DMI_Exception('Unable to save ' . self::GetTableName() . '.' . $k . ', null is not allowed and there is no default value set.');
+				  }
+			  }
+		  }
+  */
 		if ($this->_exists) $this->_saveExisting();
 		else $this->_saveNew();
 
@@ -753,11 +753,11 @@ class Model implements ArrayAccess {
 			switch(strtolower($v)){
 				// This is used by checkboxes
 				case 'yes':
-				// A single checkbox will have the value of "on" if checked
+					// A single checkbox will have the value of "on" if checked
 				case 'on':
-				// Hidden inputs will have the value of "1"
+					// Hidden inputs will have the value of "1"
 				case 1:
-				// sometimes the string "true" is sent.
+					// sometimes the string "true" is sent.
 				case 'true':
 					$v = 1;
 					break;
@@ -823,9 +823,14 @@ class Model implements ArrayAccess {
 	/*
 	 * Go through any linked tables and update them if the linking key has been changed.
 	 *
+	 * This needs to actually go through the database and update the saved keys if necessary.
+	 *
 	 * @param type $key
 	 */
 	protected function _setLinkKeyPropagation($key, $newval) {
+		// If this model does not exist yet, there will be no information linked in the database.
+		$exists = $this->exists();
+
 		foreach ($this->_linked as $lk => $l) {
 			$dolink = false;
 			// I can't use the getLinkWhereArray function, because that will resolve the key.
@@ -846,12 +851,22 @@ class Model implements ArrayAccess {
 			// $dolink should now be true/false.  If true I need to load that linked table and set the new key.
 			if (!$dolink) continue;
 
-			// Get the data and update it!
-			$links = $this->getLink($lk);
-			if (!is_array($links)) $links = array($links);
+			if($exists){
+				// Get the data and update it!
+				$links = $this->getLink($lk);
+				if (!is_array($links)) $links = array($links);
 
-			foreach ($links as $model) {
-				$model->set($key, $newval);
+				foreach ($links as $model) {
+					$model->set($key, $newval);
+				}
+			}
+			else{
+				// Only update the cached data, as nothing has been saved, so the database doesn't have anything.
+				if(!isset($this->_linked[$lk]['records'])) continue;
+
+				foreach($this->_linked[$lk]['records'] as $model){
+					$model->set($key, $newval);
+				}
 			}
 		}
 	}

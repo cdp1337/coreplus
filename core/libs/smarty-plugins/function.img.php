@@ -79,7 +79,7 @@ function smarty_function_img($params, $template){
 
 
 	// If the file doesn't exist and a placeholder was provided, use the appropriate placeholder image!
-	if(!$f->exists() && $placeholder){
+	if(!($f->exists() && $f->isImage()) && $placeholder){
 		// Try that!
 		$f = new File_local_backend('assets/images/placeholders/' . $placeholder . '.png');
 	}
