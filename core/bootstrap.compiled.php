@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 07 Sep 2012 00:21:45 -0400
+ * @compiled Mon, 10 Sep 2012 22:43:42 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -6149,7 +6149,7 @@ if (PORT_NUMBER == 80) {
 $servernameNOSSL = str_replace(':80', '', $servernameNOSSL);
 }
 if (ENABLE_SSL) {
-$servernameSSL = str_replace('http://', 'https://', SERVERNAME);
+$servernameSSL = str_replace('http://', 'https://', $servername);
 if (preg_match('/\:\d+$/', substr($servernameSSL, -6))) {
 $servernameSSL = preg_replace('/\:\d+$/', ':' . PORT_NUMBER_SSL, $servernameSSL);
 }
