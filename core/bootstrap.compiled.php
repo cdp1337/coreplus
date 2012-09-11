@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 10 Sep 2012 22:43:42 -0400
+ * @compiled Tue, 11 Sep 2012 15:38:13 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -890,7 +890,7 @@ const ATT_TYPE_ISO_8601_DATE = 'ISO_8601_date';
 const VALIDATION_NOTBLANK = "/^.+$/";
 const VALIDATION_EMAIL = 'Core::CheckEmailValidity';
 const VALIDATION_URL = '#^[a-zA-Z]+://.+$#';
-const VALIDATION_URL_WEB = '#^[hH][tT][tT][pP][sS]{,1}://.+$#';
+const VALIDATION_URL_WEB = '#^[hH][tT][tT][pP][sS]{0,1}://.+$#';
 const LINK_HASONE  = 'one';
 const LINK_HASMANY = 'many';
 const LINK_BELONGSTOONE = 'belongs_one';
@@ -1206,6 +1206,7 @@ return true;
 }
 }
 protected function _setLinkKeyPropagation($key, $newval) {
+$exists = $this->exists();
 foreach ($this->_linked as $lk => $l) {
 $dolink = false;
 if (!isset($l['on'])) {
@@ -1220,10 +1221,18 @@ else {
 if ($l['on'] == $key) $dolink = true;
 }
 if (!$dolink) continue;
+if($exists){
 $links = $this->getLink($lk);
 if (!is_array($links)) $links = array($links);
 foreach ($links as $model) {
 $model->set($key, $newval);
+}
+}
+else{
+if(!isset($this->_linked[$lk]['records'])) continue;
+foreach($this->_linked[$lk]['records'] as $model){
+$model->set($key, $newval);
+}
 }
 }
 }
