@@ -279,7 +279,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 			if(!isset($coldef['type'])) $coldef['type'] = Model::ATT_TYPE_TEXT; // Default if not present.
 			if(!isset($coldef['maxlength'])) $coldef['maxlength'] = false;
 			if(!isset($coldef['null'])) $coldef['null'] = false;
-			if(!isset($coldef['comment'])) $coldef['comment'] = false;
+			if(!isset($coldef['comment'])) $coldef['comment'] = '';
 			if(!isset($coldef['default'])) $coldef['default'] = false;
 
 			$type = $this->_getSchemaFromType($coldef);
@@ -290,7 +290,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 			elseif($coldef['default'] !== false) $default = "'" . $this->_conn->escape_string($coldef['default']) . "'";
 			else $default = false;
 			//(($coldef['default'])? "'" . $this->_conn->escape_string($coldef['default']) . "'" : (($coldef['null'])? 'NULL' : "''"));
-			$checkdefault = (($coldef['default'])? $coldef['default'] : (($coldef['null'])? 'NULL' : ''));
+			$checkdefault = (($coldef['default'] !== false)? $coldef['default'] : (($coldef['null'])? null : ''));
 
 
 			//'type' => string 'string' (length=6)
@@ -388,6 +388,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				//$coldef['collation'] != $schema['def'][$coldef['field']]['collation'] || 
 				$coldef['comment'] != $schema['def'][$column]['comment']
 			){
+				//var_dump($schema['def'][$column], $type, $checknull, $checkdefault, $coldef); die();
 				$changed = true;
 				$q = 'ALTER TABLE _tmptable CHANGE `' . $column . '` `' . $column . '` ';
 				$q .= $type . ' ';
@@ -526,7 +527,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 
 		switch($coldef['type']){
 			case Model::ATT_TYPE_BOOL:
-				$type = " enum('0','1')";
+				$type = "enum('0','1')";
 				break;
 			case Model::ATT_TYPE_ENUM:
 				if(!(isset($coldef['options']) && is_array($coldef['options']) && sizeof($coldef['options']))){
