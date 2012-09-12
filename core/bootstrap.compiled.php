@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 11 Sep 2012 15:38:13 -0400
+ * @compiled Wed, 12 Sep 2012 11:59:31 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3492,8 +3492,9 @@ $change = $this->_installAssets();
 if ($change !== false) $changed = array_merge($changed, $change);
 foreach($this->_xmlloader->getElements('install/dataset') as $datasetel){
 $datachanges = $this->_parseDatasetNode($datasetel);
-if($datachanges !== false) $changes = array_merge($changes, $datachanges);
+if($datachanges !== false) $changed = array_merge($changed, $datachanges);
 }
+Core::Cache()->delete('core-components');
 return (sizeof($changed)) ? $changed : false;
 }
 public function getProvides() {

@@ -1194,8 +1194,11 @@ class Component_2_1 {
 		// Allow datasets to be in here too.
 		foreach($this->_xmlloader->getElements('install/dataset') as $datasetel){
 			$datachanges = $this->_parseDatasetNode($datasetel);
-			if($datachanges !== false) $changes = array_merge($changes, $datachanges);
+			if($datachanges !== false) $changed = array_merge($changed, $datachanges);
 		}
+
+		// Ensure that the core component cache is purged too!
+		Core::Cache()->delete('core-components');
 
 		return (sizeof($changed)) ? $changed : false;
 	}
