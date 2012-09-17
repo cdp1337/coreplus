@@ -38,7 +38,7 @@ abstract class TinyMCE {
 
 			// General options
 			theme : "advanced",
-			plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,advlist",
+			plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlinkcoreplus,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,advlist",
 
 			// Theme options
 			theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontselect,fontsizeselect,|,forecolor,backcolor",
@@ -49,6 +49,9 @@ abstract class TinyMCE {
 			theme_advanced_toolbar_align : "left",
 			theme_advanced_statusbar_location : "bottom",
 			theme_advanced_resizing : true,
+
+			// Required to not mungle links.
+			convert_urls: false,
 
 			// Example content CSS (should be your site CSS)
 			//content_css : "css/content.css",
@@ -77,5 +80,3 @@ EOD;
 		return true;
 	}
 }
-
-?>

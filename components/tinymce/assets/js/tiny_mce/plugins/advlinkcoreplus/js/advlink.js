@@ -69,11 +69,26 @@ function init() {
 	setPopupControlsDisabled(true);
 
 	if (action == "update") {
-		var href = inst.dom.getAttrib(elm, 'href');
-		var onclick = inst.dom.getAttrib(elm, 'onclick');
+		var href = inst.dom.getAttrib(elm, 'href'),
+			onclick = inst.dom.getAttrib(elm, 'onclick'),
+			hrefignore = false, select, i;
+
+		// The href target is based on if the URL is in the dropdown list.  If it is, select that instead of
+		// entering the value in the text field.
+		select = document.forms[0].elements.hrefselect;
+		for (i=0; i<select.options.length; i++){
+			if(select.options[i].value == href){
+				hrefignore = true;
+				select.options[i].selected = 'selected';
+				break;
+			}
+		}
+		if(!hrefignore){
+			// Ok, set it to the input instead.
+			setFormValue('href', href);
+		}
 
 		// Setup form data
-		setFormValue('href', href);
 		setFormValue('title', inst.dom.getAttrib(elm, 'title'));
 		setFormValue('id', inst.dom.getAttrib(elm, 'id'));
 		setFormValue('style', inst.dom.getAttrib(elm, "style"));
@@ -393,16 +408,25 @@ function getAnchorListHTML(id, target) {
 }
 
 function insertAction() {
-	var inst = tinyMCEPopup.editor;
-	var elm, elementArray, i;
+	var inst = tinyMCEPopup.editor,
+		elm, elementArray, i,
+		href;
 
 	elm = inst.selection.getNode();
 	checkPrefix(document.forms[0].href);
 
+	// Which is selected?
+	if(document.forms[0].hrefselect.value){
+		href = document.forms[0].hrefselect.value;
+	}
+	else{
+		href = document.forms[0].href.value;
+	}
+
 	elm = inst.dom.getParent(elm, "A");
 
 	// Remove element if there is no href
-	if (!document.forms[0].href.value) {
+	if (!href) {
 		i = inst.selection.getBookmark();
 		inst.dom.remove(elm, 1);
 		inst.selection.moveToBookmark(i);
@@ -435,9 +459,19 @@ function insertAction() {
 }
 
 function setAllAttribs(elm) {
-	var formObj = document.forms[0];
-	var href = formObj.href.value.replace(/ /g, '%20');
-	var target = getSelectValue(formObj, 'targetlist');
+	var formObj = document.forms[0],
+		href,
+		target = getSelectValue(formObj, 'targetlist');
+
+	// Which is selected?
+	if(formObj.hrefselect.value){
+		href = formObj.hrefselect.value;
+	}
+	else{
+		href = formObj.href.value;
+	}
+
+	href = href.replace(/ /g, '%20');
 
 	setAttrib(elm, 'href', href);
 	setAttrib(elm, 'title');

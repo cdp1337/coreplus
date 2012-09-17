@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.5.5~core2" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.5.6~core1" name="TinyMCE" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 		<require name="jquery" type="library"/>
@@ -8,19 +8,31 @@
 	<provides>
 		<scriptlibrary name="tinymce" call="TinyMCE::IncludeTinyMCE"/>
 	</provides>
+	<permissions>
+		<permission key="/tinymce/imagebrowser/access" description="TinyMCE - Access the image browser"/>
+		<permission key="/tinymce/imagebrowser/upload" description="TinyMCE - Upload images in the image browser"/>
+	</permissions>
+	<configs>
+		<config key="/tinymce/imagebrowser/sandbox-user-uploads" description="Sandbox user uploads in TinyMCE.  Setting this to true will restrict each user to his/her own directory for uploads and browsing." type="boolean" default="0"/>
+	</configs>
 	<forms>
 		<formelement name="wysiwyg" class="TinyMCEFormElement"/>
 	</forms>
 	<view>
 		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="003381be6058eee80b1ff6bbd2942664"/>
+		<file filename="templates/pages/tinymce/link.phtml" md5="524d952e87774b2bafd2324e7c15274b"/>
 	</view>
 	<files>
 		<file filename="CHANGELOG.md" md5="f840f477d4b82eacdfbbc300241f881e"/>
-		<file filename="TinyMCE.lib.php" md5="3f75a80e40da7d365731632a3a183566">
+		<file filename="TinyMCE.lib.php" md5="299af7d3375295c954d6c514a22baae5">
 			<class name="TinyMCE"/>
 		</file>
 		<file filename="TinyMCEFormElement.class.php" md5="58cab895018bf6f02f884c1a767aa60e">
 			<class name="TinyMCEFormElement"/>
+		</file>
+		<file filename="changelog.txt" md5="2c4cc5de57ffd55f39c2cfcac0e73179"/>
+		<file filename="controllers/TinyMCEController.php" md5="e8df17270d70a1eaa9752c98e615dd67">
+			<controller name="TinyMCEController"/>
 		</file>
 	</files>
 	<assets>
@@ -38,14 +50,19 @@
 		<file filename="assets/js/tiny_mce/plugins/advimage/editor_plugin_src.js" md5="958a409150fba5532d27e862d52015e9"/>
 		<file filename="assets/js/tiny_mce/plugins/advimage/image.htm" md5="0d204c8f7651c3080ab542fb36957881"/>
 		<file filename="assets/js/tiny_mce/plugins/advimage/img/sample.gif" md5="b9c7057c46716340e8967340ad11766e"/>
-		<file filename="assets/js/tiny_mce/plugins/advimage/js/image.js" md5="21aa1a61e3199c01b679a2708ac9e4de"/>
+		<file filename="assets/js/tiny_mce/plugins/advimage/js/image.js" md5="d071360a06b4f8590b4b18a7eca039aa"/>
 		<file filename="assets/js/tiny_mce/plugins/advimage/langs/en_dlg.js" md5="6f80f834e2209e6a95957403bb4842f0"/>
 		<file filename="assets/js/tiny_mce/plugins/advlink/css/advlink.css" md5="aaf226732a7b4ae80ee680700f488a1e"/>
-		<file filename="assets/js/tiny_mce/plugins/advlink/editor_plugin.js" md5="5e440c6bcb7fd94e7fd597f8a183e16f"/>
+		<file filename="assets/js/tiny_mce/plugins/advlink/editor_plugin.js" md5="8b9aa45ee34c12d2cabe74b8e8799091"/>
 		<file filename="assets/js/tiny_mce/plugins/advlink/editor_plugin_src.js" md5="4104cd66aea546becf5d8fca66cf7951"/>
-		<file filename="assets/js/tiny_mce/plugins/advlink/js/advlink.js" md5="24477ae423c4eb9ca715b2394dc4493a"/>
+		<file filename="assets/js/tiny_mce/plugins/advlink/js/advlink.js" md5="7f22bdf7f1ece110359ebd1c34b2c9f3"/>
 		<file filename="assets/js/tiny_mce/plugins/advlink/langs/en_dlg.js" md5="8da3a95d6886837c0bca18670f57ae1c"/>
 		<file filename="assets/js/tiny_mce/plugins/advlink/link.htm" md5="206ef7aba261ac4bc14e7c6fdbdcc8c5"/>
+		<file filename="assets/js/tiny_mce/plugins/advlinkcoreplus/css/advlink.css" md5="aaf226732a7b4ae80ee680700f488a1e"/>
+		<file filename="assets/js/tiny_mce/plugins/advlinkcoreplus/editor_plugin.js" md5="5cb02a450489e9392c5bf29a83c720c4"/>
+		<file filename="assets/js/tiny_mce/plugins/advlinkcoreplus/editor_plugin_src.js" md5="de21df03f7da52c7e89c401ab28222a5"/>
+		<file filename="assets/js/tiny_mce/plugins/advlinkcoreplus/js/advlink.js" md5="467d47357dc58436069d0c04c6e0be9a"/>
+		<file filename="assets/js/tiny_mce/plugins/advlinkcoreplus/langs/en_dlg.js" md5="8da3a95d6886837c0bca18670f57ae1c"/>
 		<file filename="assets/js/tiny_mce/plugins/advlist/editor_plugin.js" md5="5f1c8625c04a6b0f4567c1c8d5e28ff9"/>
 		<file filename="assets/js/tiny_mce/plugins/advlist/editor_plugin_src.js" md5="d451908bf1e060ecd49356787f33fc7c"/>
 		<file filename="assets/js/tiny_mce/plugins/autolink/editor_plugin.js" md5="1ace3ba8a83926db12da9e2553ef8958"/>
@@ -53,17 +70,17 @@
 		<file filename="assets/js/tiny_mce/plugins/autoresize/editor_plugin.js" md5="adf5cbe96119e3ed9ab4a86ba26405e7"/>
 		<file filename="assets/js/tiny_mce/plugins/autoresize/editor_plugin_src.js" md5="4d1cdbe307f73b4d36d1bf9b3bc2d0a9"/>
 		<file filename="assets/js/tiny_mce/plugins/autosave/editor_plugin.js" md5="ae4c2aba85a22da66e3655f55d1c89fd"/>
-		<file filename="assets/js/tiny_mce/plugins/autosave/editor_plugin_src.js" md5="2754c8caac9bbc6c1b3ddda162c82cda"/>
+		<file filename="assets/js/tiny_mce/plugins/autosave/editor_plugin_src.js" md5="6177147324865c00736c242b8ccb2de6"/>
 		<file filename="assets/js/tiny_mce/plugins/autosave/langs/en.js" md5="a33b0322c949a6d74bde7fa164396984"/>
 		<file filename="assets/js/tiny_mce/plugins/bbcode/editor_plugin.js" md5="31748a6cc57a13da54a0243c3301f3e6"/>
 		<file filename="assets/js/tiny_mce/plugins/bbcode/editor_plugin_src.js" md5="842450703b915245adb53df7d478ea5a"/>
 		<file filename="assets/js/tiny_mce/plugins/contextmenu/editor_plugin.js" md5="5a0fc9ce2ba71bf2b6f54eb94838619f"/>
-		<file filename="assets/js/tiny_mce/plugins/contextmenu/editor_plugin_src.js" md5="0ae3f8f11f0ff1fbeda4eeff539e3d3a"/>
-		<file filename="assets/js/tiny_mce/plugins/directionality/editor_plugin.js" md5="653c3a89058b610fd12242faf4f01cdf"/>
-		<file filename="assets/js/tiny_mce/plugins/directionality/editor_plugin_src.js" md5="f55b4200e9f8ffb2ffb7c7c17e19b30a"/>
+		<file filename="assets/js/tiny_mce/plugins/contextmenu/editor_plugin_src.js" md5="b923e4315f2d98703bbe9699465f84f0"/>
+		<file filename="assets/js/tiny_mce/plugins/directionality/editor_plugin.js" md5="e2d925fe1e778dbcade06d55164fc276"/>
+		<file filename="assets/js/tiny_mce/plugins/directionality/editor_plugin_src.js" md5="14b7a5b69fdc4f235b654436e4fe3081"/>
 		<file filename="assets/js/tiny_mce/plugins/emotions/editor_plugin.js" md5="98cba02e33fc108024f3e993be0b0b62"/>
 		<file filename="assets/js/tiny_mce/plugins/emotions/editor_plugin_src.js" md5="4cbc6e9b083a810ab0d3768af8f8f864"/>
-		<file filename="assets/js/tiny_mce/plugins/emotions/emotions.htm" md5="1b75a6957c6e18e9d81499f4ca4418d5"/>
+		<file filename="assets/js/tiny_mce/plugins/emotions/emotions.htm" md5="9378bfd04b56a828318f7798f5696f67"/>
 		<file filename="assets/js/tiny_mce/plugins/emotions/img/smiley-cool.gif" md5="e26e97a318f82ec144b0818e5a8f8edb"/>
 		<file filename="assets/js/tiny_mce/plugins/emotions/img/smiley-cry.gif" md5="e72bf995ceca9230273ed9909c5db9c8"/>
 		<file filename="assets/js/tiny_mce/plugins/emotions/img/smiley-embarassed.gif" md5="d59171236e6b0b96091eeda1f7b57ce3"/>
@@ -80,7 +97,7 @@
 		<file filename="assets/js/tiny_mce/plugins/emotions/img/smiley-undecided.gif" md5="3c0c011d16b1a2331385ed97e160a42a"/>
 		<file filename="assets/js/tiny_mce/plugins/emotions/img/smiley-wink.gif" md5="897275ac7d07032b4d93fb83a0d2a41b"/>
 		<file filename="assets/js/tiny_mce/plugins/emotions/img/smiley-yell.gif" md5="19bb8ebfe3c2f5ef3ffb9aa4a027900d"/>
-		<file filename="assets/js/tiny_mce/plugins/emotions/js/emotions.js" md5="4e3883c58196bee66a6a5f27b62ffb5e"/>
+		<file filename="assets/js/tiny_mce/plugins/emotions/js/emotions.js" md5="85efe828d29037950412fec963b6f950"/>
 		<file filename="assets/js/tiny_mce/plugins/emotions/langs/en_dlg.js" md5="62c052504a77e4f4cec6d90ece0d76c4"/>
 		<file filename="assets/js/tiny_mce/plugins/example/dialog.htm" md5="e6170a190a4d44ea5e6af089d2728d7e"/>
 		<file filename="assets/js/tiny_mce/plugins/example/editor_plugin.js" md5="e0a175dca3d5e437657ccd5d548ff409"/>
@@ -98,7 +115,7 @@
 		<file filename="assets/js/tiny_mce/plugins/fullpage/js/fullpage.js" md5="a7913b6b1a1ae634a509c3db9faf381a"/>
 		<file filename="assets/js/tiny_mce/plugins/fullpage/langs/en_dlg.js" md5="963f370d56f19c2f94de09b10a306187"/>
 		<file filename="assets/js/tiny_mce/plugins/fullscreen/editor_plugin.js" md5="10a81b39a4bc07a7e804ae1ef9f66956"/>
-		<file filename="assets/js/tiny_mce/plugins/fullscreen/editor_plugin_src.js" md5="bab6098141b6550727394f2a52fb0aba"/>
+		<file filename="assets/js/tiny_mce/plugins/fullscreen/editor_plugin_src.js" md5="aa975a453aec49d9adedb1765bc4f2b3"/>
 		<file filename="assets/js/tiny_mce/plugins/fullscreen/fullscreen.htm" md5="cbcaf5717e464f248dc44eb0c3bc201a"/>
 		<file filename="assets/js/tiny_mce/plugins/iespell/editor_plugin.js" md5="22526393cacb6447a0e3bfff2fb47773"/>
 		<file filename="assets/js/tiny_mce/plugins/iespell/editor_plugin_src.js" md5="311e13bcc85c06da43decc37dc1b4f83"/>
@@ -118,25 +135,25 @@
 		<file filename="assets/js/tiny_mce/plugins/layer/editor_plugin.js" md5="4e5fc1b467c19d79dcf6246ba3a63cd8"/>
 		<file filename="assets/js/tiny_mce/plugins/layer/editor_plugin_src.js" md5="3754eb57b08539e459509caa74acecc6"/>
 		<file filename="assets/js/tiny_mce/plugins/legacyoutput/editor_plugin.js" md5="b732a86187723cd9cc32853d67730061"/>
-		<file filename="assets/js/tiny_mce/plugins/legacyoutput/editor_plugin_src.js" md5="27afe8aa979578c824f9797560222ef5"/>
-		<file filename="assets/js/tiny_mce/plugins/lists/editor_plugin.js" md5="512559edc3576f17d806bf3aa6ca5cba"/>
-		<file filename="assets/js/tiny_mce/plugins/lists/editor_plugin_src.js" md5="efa26cd7784c5ff963d585aa0c0c9f45"/>
+		<file filename="assets/js/tiny_mce/plugins/legacyoutput/editor_plugin_src.js" md5="8a0a69cbe8d447d722aaef7d4ed7dcc1"/>
+		<file filename="assets/js/tiny_mce/plugins/lists/editor_plugin.js" md5="46ba57884d8fe05d92cd9d98d3bb00af"/>
+		<file filename="assets/js/tiny_mce/plugins/lists/editor_plugin_src.js" md5="04e1f245c19d6dc9454dae57faec9b6f"/>
 		<file filename="assets/js/tiny_mce/plugins/media/css/media.css" md5="f211293a697a2c83da00effd67f535a2"/>
 		<file filename="assets/js/tiny_mce/plugins/media/editor_plugin.js" md5="5ad7db86c5008f98ec135595db4a4973"/>
-		<file filename="assets/js/tiny_mce/plugins/media/editor_plugin_src.js" md5="f2c2b337b27d91ef8a39d804b31f54a7"/>
+		<file filename="assets/js/tiny_mce/plugins/media/editor_plugin_src.js" md5="1d03ec1ec36745041db26132b07b0491"/>
 		<file filename="assets/js/tiny_mce/plugins/media/js/embed.js" md5="39ebc57f44e1cc683724e1c1ff761894"/>
-		<file filename="assets/js/tiny_mce/plugins/media/js/media.js" md5="70886b47e5deba47d2a3fa1e146c9877"/>
+		<file filename="assets/js/tiny_mce/plugins/media/js/media.js" md5="667a52a9c763c5e5d296cca78a7e5ab6"/>
 		<file filename="assets/js/tiny_mce/plugins/media/langs/en_dlg.js" md5="9523fc123c577642000fd409bd862c3f"/>
 		<file filename="assets/js/tiny_mce/plugins/media/media.htm" md5="be58b1edf9a4a4dbf3a1993e3d897e1a"/>
 		<file filename="assets/js/tiny_mce/plugins/media/moxieplayer.swf" md5="9217cea72c76c361fa5033526712284e"/>
 		<file filename="assets/js/tiny_mce/plugins/nonbreaking/editor_plugin.js" md5="232f23a586f10bd8ddabf38d767113d4"/>
 		<file filename="assets/js/tiny_mce/plugins/nonbreaking/editor_plugin_src.js" md5="fefbda5243d10652038ccf40801b8893"/>
 		<file filename="assets/js/tiny_mce/plugins/noneditable/editor_plugin.js" md5="b332a5f8767506024a0f50aa4204b1fe"/>
-		<file filename="assets/js/tiny_mce/plugins/noneditable/editor_plugin_src.js" md5="9815444881a68d4b7a215d239e9894cc"/>
+		<file filename="assets/js/tiny_mce/plugins/noneditable/editor_plugin_src.js" md5="273d35e2221889e75f33fd545f77d44e"/>
 		<file filename="assets/js/tiny_mce/plugins/pagebreak/editor_plugin.js" md5="8be3376740c886fa2842d2f4eb282bbc"/>
 		<file filename="assets/js/tiny_mce/plugins/pagebreak/editor_plugin_src.js" md5="c2d432a5914f0095a859ff443700a5e9"/>
 		<file filename="assets/js/tiny_mce/plugins/paste/editor_plugin.js" md5="8bdfc1afb9ffa699ef3529845de3364c"/>
-		<file filename="assets/js/tiny_mce/plugins/paste/editor_plugin_src.js" md5="5b778d43158fb7205339c10b1d484d26"/>
+		<file filename="assets/js/tiny_mce/plugins/paste/editor_plugin_src.js" md5="d3d9dc229de5fa2c35685da2796ffc62"/>
 		<file filename="assets/js/tiny_mce/plugins/paste/js/pastetext.js" md5="d6e4b39f19b89118b34b0d21491494b7"/>
 		<file filename="assets/js/tiny_mce/plugins/paste/js/pasteword.js" md5="112504d12e971e4d32f17a59c5616c36"/>
 		<file filename="assets/js/tiny_mce/plugins/paste/langs/en_dlg.js" md5="6ea2189562f65287be8e5e3185c405b7"/>
@@ -156,15 +173,15 @@
 		<file filename="assets/js/tiny_mce/plugins/searchreplace/editor_plugin_src.js" md5="7292198991a0fda1b9c7b28c921c6521"/>
 		<file filename="assets/js/tiny_mce/plugins/searchreplace/js/searchreplace.js" md5="9adfb80d483679251678e420536152be"/>
 		<file filename="assets/js/tiny_mce/plugins/searchreplace/langs/en_dlg.js" md5="fbd47078679d87b541479000589ef4c9"/>
-		<file filename="assets/js/tiny_mce/plugins/searchreplace/searchreplace.htm" md5="fe3f6184dc7d52e21d49e43ec68df3cb"/>
+		<file filename="assets/js/tiny_mce/plugins/searchreplace/searchreplace.htm" md5="4d01ee3be4045a600778fca1e11cee61"/>
 		<file filename="assets/js/tiny_mce/plugins/spellchecker/css/content.css" md5="ac0c7dbbbe44022d29d63b7b05123e3d"/>
 		<file filename="assets/js/tiny_mce/plugins/spellchecker/editor_plugin.js" md5="750c7ce89a12d3feb9581048b191b306"/>
-		<file filename="assets/js/tiny_mce/plugins/spellchecker/editor_plugin_src.js" md5="61621b7ba965de6ccab99372c1458032"/>
+		<file filename="assets/js/tiny_mce/plugins/spellchecker/editor_plugin_src.js" md5="05bf1f7a3b7edb0a2e23215133a1ffb1"/>
 		<file filename="assets/js/tiny_mce/plugins/spellchecker/img/wline.gif" md5="c136c9f8e00718a98947a21d8adbcc56"/>
-		<file filename="assets/js/tiny_mce/plugins/style/css/props.css" md5="70222cda12492a3f594d03b7d514bfa7"/>
+		<file filename="assets/js/tiny_mce/plugins/style/css/props.css" md5="c2d2adc78609ea65760dae2dab058395"/>
 		<file filename="assets/js/tiny_mce/plugins/style/editor_plugin.js" md5="f9bcd692d63dfef1fe5c586d27ecd91b"/>
-		<file filename="assets/js/tiny_mce/plugins/style/editor_plugin_src.js" md5="8bf42b67d87cd5bf4bbee11739ce46c6"/>
-		<file filename="assets/js/tiny_mce/plugins/style/js/props.js" md5="4da426952fc1a2ae1e1c4b30089e0db8"/>
+		<file filename="assets/js/tiny_mce/plugins/style/editor_plugin_src.js" md5="2ec50d9d37ce1e732380a746fabceefc"/>
+		<file filename="assets/js/tiny_mce/plugins/style/js/props.js" md5="f3614bf040f29057162e423822b89e11"/>
 		<file filename="assets/js/tiny_mce/plugins/style/langs/en_dlg.js" md5="62a82106cfd480a6da4442b4763a2f2d"/>
 		<file filename="assets/js/tiny_mce/plugins/style/props.htm" md5="32f3f16194be9170386419c9dcc5b99a"/>
 		<file filename="assets/js/tiny_mce/plugins/style/readme.txt" md5="ced5c8e014184a33da5507dbcd96b91f"/>
@@ -176,14 +193,14 @@
 		<file filename="assets/js/tiny_mce/plugins/table/css/table.css" md5="f5e651f5a32284f1c4e0faa1d7cd5ff4"/>
 		<file filename="assets/js/tiny_mce/plugins/table/editor_plugin.js" md5="af8607bbecdc46e2f5a293ce3405e67e"/>
 		<file filename="assets/js/tiny_mce/plugins/table/editor_plugin_src.js" md5="2c47d46d1e8c038e32d4025356cf2147"/>
-		<file filename="assets/js/tiny_mce/plugins/table/js/cell.js" md5="f4fdcd630b6f0c0a64a95f87f35477a3"/>
+		<file filename="assets/js/tiny_mce/plugins/table/js/cell.js" md5="8b0d4a7fe48c2f92c8b9b79dbb12cca1"/>
 		<file filename="assets/js/tiny_mce/plugins/table/js/merge_cells.js" md5="3650484c93d6c9a197d03a5c3c3d2e80"/>
 		<file filename="assets/js/tiny_mce/plugins/table/js/row.js" md5="9c06d9dec390ebf1a36fb3452a21b1f8"/>
-		<file filename="assets/js/tiny_mce/plugins/table/js/table.js" md5="05123bc0eb36d0843584371934830550"/>
+		<file filename="assets/js/tiny_mce/plugins/table/js/table.js" md5="b4dcba68f2be1193980274d389643953"/>
 		<file filename="assets/js/tiny_mce/plugins/table/langs/en_dlg.js" md5="ee3484503050cdae74d2cafa7d2e9999"/>
 		<file filename="assets/js/tiny_mce/plugins/table/merge_cells.htm" md5="f939ddd56826c0ec3c9e6e9a478346bf"/>
 		<file filename="assets/js/tiny_mce/plugins/table/row.htm" md5="fdfc261a10c0ff0fb3c250295d4f4c35"/>
-		<file filename="assets/js/tiny_mce/plugins/table/table.htm" md5="acd901edbdf5560afb0b562fe2436acd"/>
+		<file filename="assets/js/tiny_mce/plugins/table/table.htm" md5="88fb36057ec1cb1681fed2dcb0b44693"/>
 		<file filename="assets/js/tiny_mce/plugins/template/blank.htm" md5="9553e76581d74579d23bea5c7ea8a807"/>
 		<file filename="assets/js/tiny_mce/plugins/template/css/template.css" md5="5b2c159120cbef004c9b0804c292820b"/>
 		<file filename="assets/js/tiny_mce/plugins/template/editor_plugin.js" md5="70cb20c4e287110ae8aeed999893c532"/>
@@ -191,13 +208,13 @@
 		<file filename="assets/js/tiny_mce/plugins/template/js/template.js" md5="75abfd82a90ae648fb18c5517dfd925b"/>
 		<file filename="assets/js/tiny_mce/plugins/template/langs/en_dlg.js" md5="1ce03c0fcf0f1aa74c132459abe30f39"/>
 		<file filename="assets/js/tiny_mce/plugins/template/template.htm" md5="b55e174e239e5c4b3a52d6ad60eb991d"/>
-		<file filename="assets/js/tiny_mce/plugins/visualblocks/css/visualblocks.css" md5="a4dd400bae0d0bb825d3219cca8a6829"/>
+		<file filename="assets/js/tiny_mce/plugins/visualblocks/css/visualblocks.css" md5="1fe4f62cc93864784b9b2d6b11b050b7"/>
 		<file filename="assets/js/tiny_mce/plugins/visualblocks/editor_plugin.js" md5="592e70a44aeb7c974eb9c5ff05c107a7"/>
-		<file filename="assets/js/tiny_mce/plugins/visualblocks/editor_plugin_src.js" md5="c9d3a08eee80f319aaa1eaef1599d7a3"/>
+		<file filename="assets/js/tiny_mce/plugins/visualblocks/editor_plugin_src.js" md5="6d1a4ea64bfedf8797260792e33f4c17"/>
 		<file filename="assets/js/tiny_mce/plugins/visualchars/editor_plugin.js" md5="e494d07c71e24040a407b20017ca63e3"/>
 		<file filename="assets/js/tiny_mce/plugins/visualchars/editor_plugin_src.js" md5="f285c8f2ffac745325e86687b8cf0fb5"/>
 		<file filename="assets/js/tiny_mce/plugins/wordcount/editor_plugin.js" md5="4d94e1bddda93b8bb07923b08fe7c4e8"/>
-		<file filename="assets/js/tiny_mce/plugins/wordcount/editor_plugin_src.js" md5="f216da12e4b8f4021c5ea0310a5c1650"/>
+		<file filename="assets/js/tiny_mce/plugins/wordcount/editor_plugin_src.js" md5="1a065e5f6e79b72327842c15bc62bf47"/>
 		<file filename="assets/js/tiny_mce/plugins/xhtmlxtras/abbr.htm" md5="e514d143e00e4b121cab8fe8dfae48d2"/>
 		<file filename="assets/js/tiny_mce/plugins/xhtmlxtras/acronym.htm" md5="ec632b3d4b6afb189c055afa234e6291"/>
 		<file filename="assets/js/tiny_mce/plugins/xhtmlxtras/attributes.htm" md5="cf540b962f752babf53faa7a47bde108"/>
@@ -218,10 +235,10 @@
 		<file filename="assets/js/tiny_mce/plugins/xhtmlxtras/langs/en_dlg.js" md5="45db1586e7debc385f63092a13a9f43c"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/about.htm" md5="ff135857e9b930d4d4658f92077e051c"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/anchor.htm" md5="79d46a2b007b5cb08a3920e922a5da7f"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/charmap.htm" md5="ab5639e66c5354f3083080046e1c5386"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/color_picker.htm" md5="595ce17caa69a6a79d6b98d0b6576b46"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/editor_template.js" md5="990c5d2b41d26933b5351a91e6e68dec"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/editor_template_src.js" md5="1bfdbe0fc816adc490e43ab0cd6f91ea"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/charmap.htm" md5="be712e4cf08670a1212e9eed2f452693"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/color_picker.htm" md5="8db4d59dec910525149039f006a2bb9e"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/editor_template.js" md5="40bd8c37a6240440219c17638b01c4f3"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/editor_template_src.js" md5="6e3ca4673ddbf8904b7e2579bacb0f49"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/image.htm" md5="2cb986c0cad7efd0592a4d8c35e41f0a"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/img/colorpicker.jpg" md5="9bcc36292defe94bca5a013a1736c7d7"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/img/flash.gif" md5="33adee48d32bbbba3e6412cc54ecf335"/>
@@ -235,37 +252,37 @@
 		<file filename="assets/js/tiny_mce/themes/advanced/img/video.gif" md5="f85c56813ea016a75e496bba50d66ab4"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/img/windowsmedia.gif" md5="c327cd167b3a7bc263d908b0d0154ead"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/js/about.js" md5="606c16492a17240ebded6e9fce75a555"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/js/anchor.js" md5="f69b824ff2b94f22713614c2dc5992e0"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/js/charmap.js" md5="23e6f0fdded2c9fd69ba1fd7d69f559a"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/js/anchor.js" md5="da6a28397899bec3570216b2d2106684"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/js/charmap.js" md5="02f40a38033ef8a0abeac870e5f4eda8"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/js/color_picker.js" md5="cfc0f59a846661e748cae1c0adca77dc"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/js/image.js" md5="8d2c4871c2b431d003267d1ecebfecde"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/js/link.js" md5="316da7ee59e094228df2a4fb7e39cfa6"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/js/source_editor.js" md5="2a9abbfa6e2ade2906839928c6728d0a"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/js/image.js" md5="75df8142a91f0245367e4121a2da7065"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/js/link.js" md5="71949506dce04e923bbbc2ecc8ab5f1f"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/js/source_editor.js" md5="4cbdfdf929a0949070f4d7ab4818b0f2"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/langs/en.js" md5="58c814313230f1dec07fe45ad5f304e5"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/langs/en_dlg.js" md5="3a2c8aed5b7579ae45be6bd2b34ef06b"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/link.htm" md5="65c56f5a6d714fdbdc47c68ec9422976"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/shortcuts.htm" md5="2bae05c8667b54b9ec019b529e743327"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/default/content.css" md5="1779499935490440d7a2423157756bc5"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/skins/default/dialog.css" md5="0ceb1bc740c467971507606441d36d7c"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/skins/default/dialog.css" md5="ab94126c11ff9c79445cc4ad537b2823"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/default/img/buttons.png" md5="33b2f2e08cc3ade5254fec64c4183558"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/default/img/items.gif" md5="d201498a710fc8aac6e117820b9814b7"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/default/img/menu_arrow.gif" md5="e21752451a9d80e276fef7b602bdbdba"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/default/img/menu_check.gif" md5="c7d003885737f94768eecae49dcbca63"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/default/img/progress.gif" md5="50c5e3e79b276c92df6cc52caeb464f0"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/default/img/tabs.gif" md5="6473bbcd0a011e9fcdd9f777ef437410"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/skins/default/ui.css" md5="03ae09e5c5f80f0ed0fc1ebb9c2053f0"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/skins/default/ui.css" md5="823d750bb9c2bde55084d322f44b17c1"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/highcontrast/content.css" md5="8294a1222d0ab5fa7520879cc9073e85"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/skins/highcontrast/dialog.css" md5="b66af30667a23ece1521fe354331c534"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/skins/highcontrast/ui.css" md5="8beb8f4a330b1294c488f435873328ef"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/skins/highcontrast/dialog.css" md5="f6e95a7450471eb7473f8dbc3e6b6581"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/skins/highcontrast/ui.css" md5="1bdbee2f94594ca00c65b4d6a930bbf6"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/o2k7/content.css" md5="c696812903368f41cd65616574c81484"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/skins/o2k7/dialog.css" md5="084f7ce623cd2965a01f65c763f88eab"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/skins/o2k7/dialog.css" md5="661f54aa4a283b67c0acd25f91f2f213"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/o2k7/img/button_bg.png" md5="36fd9fbd748860f515df259443367163"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/o2k7/img/button_bg_black.png" md5="9645f90b37102a3618a52be18b74b02b"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/o2k7/img/button_bg_silver.png" md5="15fbf2b4a20dbaa86205af6764f4fee4"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/skins/o2k7/ui.css" md5="af38b0cc9a19f25f95f8776568549442"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/skins/o2k7/ui.css" md5="a108668128c143e61bc44990dff89fe6"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/o2k7/ui_black.css" md5="ba8d82d9bff6e2854b29b1f97ead05fe"/>
 		<file filename="assets/js/tiny_mce/themes/advanced/skins/o2k7/ui_silver.css" md5="b42c7d51247d02ddca437a1661e748e5"/>
-		<file filename="assets/js/tiny_mce/themes/advanced/source_editor.htm" md5="7d10c6747e0057b1e9c2a222012240cc"/>
+		<file filename="assets/js/tiny_mce/themes/advanced/source_editor.htm" md5="42f3a13b55ffcf7c2d3ab768012abfcc"/>
 		<file filename="assets/js/tiny_mce/themes/simple/editor_template.js" md5="3ac3fd3129ee9605052b8470f8d58538"/>
 		<file filename="assets/js/tiny_mce/themes/simple/editor_template_src.js" md5="409e0cce50eb6c62463d6dd9c6120859"/>
 		<file filename="assets/js/tiny_mce/themes/simple/img/icons.gif" md5="273dad62be4d114c5d52210b50a5838f"/>
@@ -275,9 +292,9 @@
 		<file filename="assets/js/tiny_mce/themes/simple/skins/o2k7/content.css" md5="eb7a087c67578b6e3b5e0987caa4ba64"/>
 		<file filename="assets/js/tiny_mce/themes/simple/skins/o2k7/img/button_bg.png" md5="405ca3d63b48667ef485553192507f59"/>
 		<file filename="assets/js/tiny_mce/themes/simple/skins/o2k7/ui.css" md5="f0ec0273462e01b81e1dfd292f64451e"/>
-		<file filename="assets/js/tiny_mce/tiny_mce.js" md5="542e3f7248125386808eff533baf65c4"/>
+		<file filename="assets/js/tiny_mce/tiny_mce.js" md5="31a210ad9de5c033f85166f44f6647fe"/>
 		<file filename="assets/js/tiny_mce/tiny_mce_popup.js" md5="554bc76c70351187f4ce05ddc012aaed"/>
-		<file filename="assets/js/tiny_mce/tiny_mce_src.js" md5="0048202ebb58fe4223c147549350828f"/>
+		<file filename="assets/js/tiny_mce/tiny_mce_src.js" md5="c3cfe1b1290a04cc7bc9021aeea7b20d"/>
 		<file filename="assets/js/tiny_mce/utils/editable_selects.js" md5="e760eb21f60892a1ef2298da7df313e5"/>
 		<file filename="assets/js/tiny_mce/utils/form_utils.js" md5="579b2803ffca7953c50f53dcbef5df7e"/>
 		<file filename="assets/js/tiny_mce/utils/mctabs.js" md5="51b9bfe349fe76204ac5b65254bbef6f"/>
@@ -288,6 +305,7 @@
 		<upgrade from="3.4.6~core1" to="3.4.6~core2"/>
 		<upgrade from="3.4.6~core2" to="3.5.5~core1"/>
 		<upgrade from="3.5.5~core1" to="3.5.5~core2"/>
+		<upgrade from="3.5.5~core2" to="3.5.6~core1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
