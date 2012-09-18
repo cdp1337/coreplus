@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="default">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" name="default">
 	<assets>
 		<file filename="assets/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
 		<file filename="assets/css/styles.css" md5="a0caa4f7b27b0b7b1a461fb9d3a303bc"/>
@@ -52,34 +52,46 @@
 		<file filename="assets/images/placeholders/template.xcf" md5="11e1a3508035c4fbea97e078a74048af"/>
 		<file filename="assets/js/html5.js" md5="e919b7e0d6dc0226e3356aeb07bf63c2"/>
 		<file filename="assets/logo.png" md5="ec0a7fe6809e4f051bb09e1c21aab52c"/>
+		<file filename="assets/mimetype_icons/directory-lg.png" md5="38c77704953cbfa8a8c98edf927bb510"/>
+		<file filename="assets/mimetype_icons/directory-med.png" md5="4b17d3b3dfbdfa53101a1a4a70f90cd2"/>
+		<file filename="assets/mimetype_icons/directory-sm.png" md5="c553918733b425d1536a84cf15d9907c"/>
+		<file filename="assets/mimetype_icons/directory-xl.png" md5="94f572aabe4d6efe74356cfdc5abe331"/>
+		<file filename="assets/mimetype_icons/directory.png" md5="94f572aabe4d6efe74356cfdc5abe331"/>
 		<file filename="assets/mimetype_icons/image-gif-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
 		<file filename="assets/mimetype_icons/image-gif-med.png" md5="953f1d26444d97955905718687815607"/>
 		<file filename="assets/mimetype_icons/image-gif-sm.png" md5="02709989af27569d20280bd017651195"/>
 		<file filename="assets/mimetype_icons/image-gif-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
+		<file filename="assets/mimetype_icons/image-gif.png" md5="b446319a1da8794602efa5972a658c6a"/>
 		<file filename="assets/mimetype_icons/image-jpeg-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
 		<file filename="assets/mimetype_icons/image-jpeg-med.png" md5="953f1d26444d97955905718687815607"/>
 		<file filename="assets/mimetype_icons/image-jpeg-sm.png" md5="02709989af27569d20280bd017651195"/>
 		<file filename="assets/mimetype_icons/image-jpeg-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
+		<file filename="assets/mimetype_icons/image-jpeg.png" md5="b446319a1da8794602efa5972a658c6a"/>
 		<file filename="assets/mimetype_icons/image-jpg-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
 		<file filename="assets/mimetype_icons/image-jpg-med.png" md5="953f1d26444d97955905718687815607"/>
 		<file filename="assets/mimetype_icons/image-jpg-sm.png" md5="02709989af27569d20280bd017651195"/>
 		<file filename="assets/mimetype_icons/image-jpg-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
+		<file filename="assets/mimetype_icons/image-jpg.png" md5="b446319a1da8794602efa5972a658c6a"/>
 		<file filename="assets/mimetype_icons/image-png-lg.png" md5="db7fd4c21c81eb96682c11b7f5ef48b1"/>
 		<file filename="assets/mimetype_icons/image-png-med.png" md5="953f1d26444d97955905718687815607"/>
 		<file filename="assets/mimetype_icons/image-png-sm.png" md5="02709989af27569d20280bd017651195"/>
 		<file filename="assets/mimetype_icons/image-png-xl.png" md5="be27f2eebf650197dde4b8d202caf5a5"/>
+		<file filename="assets/mimetype_icons/image-png.png" md5="b446319a1da8794602efa5972a658c6a"/>
 		<file filename="assets/mimetype_icons/notfound-lg.png" md5="393bb7f6649773e8368e6dde20a969f8"/>
 		<file filename="assets/mimetype_icons/notfound-med.png" md5="9c1546b3770dd18d34833bb6fe736419"/>
 		<file filename="assets/mimetype_icons/notfound-sm.png" md5="b051ed5c35e067819e9ff8b43dec7ad8"/>
 		<file filename="assets/mimetype_icons/notfound-xl.png" md5="6a5e689f57e697606d3a8fa2eb495fdd"/>
+		<file filename="assets/mimetype_icons/notfound.png" md5="6a5e689f57e697606d3a8fa2eb495fdd"/>
 		<file filename="assets/mimetype_icons/unknown-lg.png" md5="e78e2e6e8d40c6a632f654561ec53e47"/>
 		<file filename="assets/mimetype_icons/unknown-med.png" md5="11eee3c2e6806986c5abfe920d3256a5"/>
 		<file filename="assets/mimetype_icons/unknown-sm.png" md5="890f6e2501cb8474fefb20b1b858e660"/>
 		<file filename="assets/mimetype_icons/unknown-xl.png" md5="2510d5565850a7b8d762312fc41dd8eb"/>
+		<file filename="assets/mimetype_icons/unknown.png" md5="2510d5565850a7b8d762312fc41dd8eb"/>
 	</assets>
 	<skins>
 		<file filename="index.tpl" title="Index Template" md5="d6bb4d97db16376ededc5af62e141445"/>
 		<file filename="basic.tpl" title="Only one column" md5="d207f4ecec8811c8a1b738825f906f48"/>
+		<file filename="blank.tpl" title="Blank template, do not use" md5="2777bae999daf32a687fc81401ebd31c"/>
 	</skins>
 	<view/>
 	<configs>
@@ -92,6 +104,7 @@
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
+		<upgrade from="1.0.2" to="1.1.0"/>
 	</upgrades>
 </theme>
 
