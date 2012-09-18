@@ -38,6 +38,10 @@ class FileContentFactory {
 				else return new File_unknown_contents($file);
 				break;
 
+			case 'text/xml':
+				return new File_xml_contents($file);
+				break;
+
 			case 'application/pgp-signature':
 				return new File_asc_contents($file);
 				break;
