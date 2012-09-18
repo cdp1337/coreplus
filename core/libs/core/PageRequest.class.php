@@ -127,6 +127,9 @@ class PageRequest {
 			case 'json':
 				$this->ctype = View::CTYPE_JSON;
 				break;
+			case 'ics':
+				$this->ctype = View::CTYPE_ICS;
+				break;
 			default:
 				$this->ctype = View::CTYPE_HTML;
 				break;
@@ -655,3 +658,4 @@ class PageRequest {
 		return $instance;
 	}
 }
+

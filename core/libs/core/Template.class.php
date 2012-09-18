@@ -20,7 +20,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class Template extends Smarty {
+class Template extends Smarty implements TemplateInterface {
 
 	private $_baseurl;
 
@@ -54,26 +54,63 @@ class Template extends Smarty {
 	}
 
 	/**
-	 * fetches a rendered Smarty template
+	 * Fetch the HTML from this template
 	 *
 	 * @param string $template          the resource handle of the template file or template object
-	 * @param mixed  $cache_id          cache id to be used with this template
-	 * @param mixed  $compile_id        compile id to be used with this template
-	 * @param object $parent            next higher level of Smarty variables
-	 * @param bool   $display           true: display, false: fetch
-	 * @param bool   $merge_tpl_vars    if true parent template variables merged in to local scope
-	 * @param bool   $no_output_filter  if true do not run output filter
-	 *
 	 * @return string rendered template output
+	 *
+	 * @throws TemplateException
 	 */
-	public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false) {
+	public function fetch($template) {
+		// Defaults for smarty.
+		$cache_id = null;
+		$compile_id = null;
+		$parent = null;
+		$display = false;
+		$merge_tpl_vars = true;
+		$no_output_filter = false;
 
 		// Templates don't need a beginning '/'.  They'll be resolved automatically
 		// UNLESS they're already resolved fully.....
 		if (strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
 
-		return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+		try{
+			return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+		}
+		catch(SmartyException $e){
+			throw new TemplateException($e->getMessage(), $e->getCode(), $e->getPrevious());
+		}
 	}
+
+	/**
+	 * Display the HTML from this template
+	 *
+	 * @param string $template
+	 * @return string|void
+	 *
+	 * @throws TemplateException
+	 */
+	public function render($template){
+		// Defaults for smarty.
+		$cache_id = null;
+		$compile_id = null;
+		$parent = null;
+		$display = true;
+		$merge_tpl_vars = true;
+		$no_output_filter = false;
+
+		// Templates don't need a beginning '/'.  They'll be resolved automatically
+		// UNLESS they're already resolved fully.....
+		if (strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
+
+		try{
+			return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+		}
+		catch(SmartyException $e){
+			throw new TemplateException($e->getMessage(), $e->getCode(), $e->getPrevious());
+		}
+	}
+
 
 	/**
 	 * Resolve a filename stub to a fully resolved path.

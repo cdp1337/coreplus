@@ -86,6 +86,7 @@ class View {
 	const CTYPE_PLAIN = 'text/plain';
 	const CTYPE_JSON  = 'application/json';
 	const CTYPE_XML   = 'application/xml';
+	const CTYPE_ICS       = 'text/calendar';
 
 
 	public $error;
@@ -279,6 +280,29 @@ class View {
 	}
 
 	/**
+	 * Override a template, useful for forcing a different template type for this view.
+	 *
+	 * @param $template TemplateInterface
+	 */
+	public function overrideTemplate($template){
+		if(!is_a($template, 'TemplateInterface')){
+			return false;
+		}
+
+		if($template == $this->_template){
+			return false;
+		}
+
+		if($this->_template !== null){
+			foreach($this->_template->getTemplateVars() as $k => $v){
+				$template->assign($k, $v);
+			}
+		}
+
+		$this->_template = $template;
+	}
+
+	/**
 	 * Assign a variable to this view
 	 *
 	 * @param $key string
@@ -348,6 +372,25 @@ class View {
 						$this->contenttype = View::CTYPE_HTML;
 					}
 				}
+				break;
+			case View::CTYPE_ICS:
+				// Already resolved?
+				if(strpos($tmpl, ROOT_PDIR) === 0 && strpos($tmpl, '.ics.tpl') !== false){
+					$this->mastertemplate = false;
+				}
+				else{
+					$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'ics.tpl', $tmpl));
+					if($ctemp){
+						$tmpl = $ctemp;
+						$this->mastertemplate = false;
+					}
+					else{
+						$this->contenttype = View::CTYPE_HTML;
+					}
+				}
+
+				// TESTING
+				//$this->contenttype = View::CTYPE_HTML;
 				break;
 			case View::CTYPE_JSON:
 				// Did the controller send data to this view directly?
@@ -937,4 +980,5 @@ class View {
 class ViewException extends Exception {
 
 }
+
 
