@@ -451,6 +451,11 @@ class File_remote_backend implements File_Backend {
 				if (strpos($line, ':') !== false) {
 					$k                  = substr($line, 0, strpos($line, ':'));
 					$v                  = trim(substr($line, strpos($line, ':') + 1));
+					// Content-Type can have an embedded charset request.
+					if($k == 'Content-Type' && strpos($v, 'charset=') !== false){
+						$this->_headers['Charset'] = substr($v, strpos($v, 'charset=') + 8);
+						$v = substr($v, 0, strpos($v, 'charset=') - 2);
+					}
 					$this->_headers[$k] = $v;
 				}
 			}
@@ -524,3 +529,4 @@ class File_remote_backend implements File_Backend {
 		return $this->_tmplocal;
 	}
 }
+
