@@ -248,6 +248,17 @@ class File_local_backend implements File_Backend {
 	}
 
 	/**
+	 * Get the directory name of this file
+	 *
+	 * Will return the parent directory name, ending with a trailing slash.
+	 *
+	 * @return string
+	 */
+	public function getDirectoryName(){
+		return dirname($this->_filename) . '/';
+	}
+
+	/**
 	 * Get the filename for a local clone of this file.
 	 * For local files, it's the same thing, but remote files will be copied to a temporary local location first.
 	 *
@@ -283,9 +294,32 @@ class File_local_backend implements File_Backend {
 	}
 
 	public function delete() {
-		if (!@unlink($this->getFilename())) return false;
-		$this->_filename = null;
-		return true;
+		$ftp    = \Core\FTP();
+
+		if(!$ftp){
+			if (!@unlink($this->getFilename())) return false;
+			$this->_filename = null;
+			return true;
+		}
+		else{
+			if(!ftp_delete($ftp, $this->getFilename())) return false;
+			$this->_filename = null;
+			return true;
+		}
+	}
+
+	public function rename($newname){
+		// If the new name is not fully resolved, translate it to the same as the current directory.
+		if($newname{0} != '/'){
+			$newname = substr($this->getFilename(), 0, 0 - strlen($this->getBaseFilename())) . $newname;
+		}
+
+		if(self::_Rename($this->getFilename(), $newname)){
+			$this->_filename = $newname;
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -370,12 +404,10 @@ class File_local_backend implements File_Backend {
 
 	public function putContents($data) {
 
-		// Ensure the directory exists.
-		// This is essentially a recursive mkdir.
-		if (!is_dir(dirname($this->_filename))) {
-			if (!self::_Mkdir(dirname($this->_filename), null, true)) {
-				throw new Exception("Unable to make directory " . dirname($this->_filename) . ", please check permissions.");
-			}
+		// Ensure the directory exists.  The internal logic will handle if it already exists.
+		self::_Mkdir(dirname($this->_filename), null, true);
+		if(!is_dir(dirname($this->_filename))){
+			throw new Exception("Unable to make directory " . dirname($this->_filename) . ", please check permissions.");
 		}
 
 		return self::_PutContents($this->_filename, $data);
@@ -598,11 +630,13 @@ class File_local_backend implements File_Backend {
 		}
 
 		if (!$ftp) {
-			return mkdir($pathname, $mode, $recursive);
+			if(is_dir($pathname)) return false;
+			else return mkdir($pathname, $mode, $recursive);
 		}
 		elseif (strpos($pathname, $tmpdir) === 0) {
 			// Tmp files should be written directly.
-			return mkdir($pathname, $mode, $recursive);
+			if(is_dir($pathname)) return false;
+			else return mkdir($pathname, $mode, $recursive);
 		}
 		else {
 			// Trim off the ROOT_PDIR since it'll be relative to the ftp root set in the config.
@@ -612,6 +646,8 @@ class File_local_backend implements File_Backend {
 			$paths = explode('/', $pathname);
 
 			foreach ($paths as $p) {
+				if(trim($p) == '') continue;
+
 				if (!@ftp_chdir($ftp, $p)) {
 					if (!ftp_mkdir($ftp, $p)) return false;
 					if (!ftp_chmod($ftp, $mode, $p)) return false;
@@ -621,6 +657,22 @@ class File_local_backend implements File_Backend {
 
 			// woot...
 			return true;
+		}
+	}
+
+	public static function _Rename($oldpath, $newpath){
+		$ftp    = \Core\FTP();
+
+		if(!$ftp){
+			// Traditional FTP
+			return rename($oldpath, $newpath);
+		}
+		else{
+			// Trim off the ROOT_PDIR since it'll be relative to the ftp root set in the config.
+			if (strpos($oldpath, ROOT_PDIR) === 0) $oldpath = substr($oldpath, strlen(ROOT_PDIR));
+			if (strpos($newpath, ROOT_PDIR) === 0) $newpath = substr($newpath, strlen(ROOT_PDIR));
+
+			return ftp_rename($ftp, $oldpath, $newpath);
 		}
 	}
 
