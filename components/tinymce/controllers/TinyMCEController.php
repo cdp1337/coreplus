@@ -32,26 +32,4 @@ class TinyMCEController extends Controller_2_1 {
 		$view->templatename = $tplname;
 		$view->assign('pages', $pagesresolved);
 	}
-
-	/**
-	 * Popup for displaying images on the server.
-	 */
-	public function image(){
-		$view = $this->getView();
-
-		if(!\Core\user()->checkAccess('p:/tinymce/imagebrowser/access')) return View::ERROR_ACCESSDENIED;
-
-		// Get a listing of files in the appropriate directory.
-		if(ConfigHandler::Get('/tinymce/imagebrowser/sandbox-user-uploads')){
-			$dirname = 'public/tinymce/' . \Core\user()->get('id') . '/';
-		}
-		else{
-			$dirname = 'public/tinymce/';
-		}
-
-		$dir = new Directory_local_backend($dirname);
-		var_dump($dir);
-
-		die();
-	}
 }

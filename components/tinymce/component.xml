@@ -8,13 +8,6 @@
 	<provides>
 		<scriptlibrary name="tinymce" call="TinyMCE::IncludeTinyMCE"/>
 	</provides>
-	<permissions>
-		<permission key="/tinymce/imagebrowser/access" description="TinyMCE - Access the image browser"/>
-		<permission key="/tinymce/imagebrowser/upload" description="TinyMCE - Upload images in the image browser"/>
-	</permissions>
-	<configs>
-		<config key="/tinymce/imagebrowser/sandbox-user-uploads" description="Sandbox user uploads in TinyMCE.  Setting this to true will restrict each user to his/her own directory for uploads and browsing." type="boolean" default="0"/>
-	</configs>
 	<forms>
 		<formelement name="wysiwyg" class="TinyMCEFormElement"/>
 	</forms>
@@ -31,7 +24,7 @@
 			<class name="TinyMCEFormElement"/>
 		</file>
 		<file filename="changelog.txt" md5="2c4cc5de57ffd55f39c2cfcac0e73179"/>
-		<file filename="controllers/TinyMCEController.php" md5="e8df17270d70a1eaa9752c98e615dd67">
+		<file filename="controllers/TinyMCEController.php" md5="5bf55247a453f047cf28b3e51f0170a9">
 			<controller name="TinyMCEController"/>
 		</file>
 	</files>
