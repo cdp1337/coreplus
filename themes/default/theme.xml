@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" name="default">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.0" name="default">
 	<assets>
 		<file filename="assets/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
 		<file filename="assets/css/styles.css" md5="a0caa4f7b27b0b7b1a461fb9d3a303bc"/>
@@ -52,6 +52,51 @@
 		<file filename="assets/images/placeholders/template.xcf" md5="11e1a3508035c4fbea97e078a74048af"/>
 		<file filename="assets/js/html5.js" md5="e919b7e0d6dc0226e3356aeb07bf63c2"/>
 		<file filename="assets/logo.png" md5="ec0a7fe6809e4f051bb09e1c21aab52c"/>
+		<file filename="assets/mimetype_icons/application-illustrator.png" md5="6e1d334fe31f7d28c8ed1c49b1d3fb6e"/>
+		<file filename="assets/mimetype_icons/application-javascript.png" md5="43bd833595a47e5a0737b6af9f3f71d5"/>
+		<file filename="assets/mimetype_icons/application-msword.png" md5="9dedb8dd79217a6afa02f2e3fd41ca4e"/>
+		<file filename="assets/mimetype_icons/application-octet-stream.png" md5="b2eaa6a788d775504bf87515fb27a5bf"/>
+		<file filename="assets/mimetype_icons/application-ogg.png" md5="2038248c06ce371fb438f7e84303670d"/>
+		<file filename="assets/mimetype_icons/application-pdf.png" md5="4ead9007e0f7715a91d74029988646d0"/>
+		<file filename="assets/mimetype_icons/application-pgp-encrypted.png" md5="abc96ab3c424266978bbfc59db9fcda0"/>
+		<file filename="assets/mimetype_icons/application-pgp-keys.png" md5="e1a435c873ceb042e72e1a447bf4cd24"/>
+		<file filename="assets/mimetype_icons/application-pkcs7-mime.png" md5="625e4a395958d10e121a1f5a2fec5c96"/>
+		<file filename="assets/mimetype_icons/application-postscript.png" md5="a941a925691f8386264852e971f389d8"/>
+		<file filename="assets/mimetype_icons/application-rss+xml.png" md5="61508c7b0f945a5f43daefd7cb9a01ab"/>
+		<file filename="assets/mimetype_icons/application-rtf.png" md5="e7b4d7775db5f40317eea9abfe206134"/>
+		<file filename="assets/mimetype_icons/application-sxw.png" md5="cfbbcc8b81404d485425cafdf52cf4f0"/>
+		<file filename="assets/mimetype_icons/application-vnd.iccprofile.png" md5="b36dbbd8c9b09a1e915e95006f28059c"/>
+		<file filename="assets/mimetype_icons/application-vnd.ms-access.png" md5="b78fdbb0968f972571c2c175abb30429"/>
+		<file filename="assets/mimetype_icons/application-vnd.ms-excel.png" md5="fbd33531d43858a4a99f6b517209fdf3"/>
+		<file filename="assets/mimetype_icons/application-vnd.ms-powerpoint.png" md5="ca1516edc9fe27310c2b619f4ceb1bc4"/>
+		<file filename="assets/mimetype_icons/application-vnd.oasis.opendocument.chart.png" md5="4bb244102149dad0318f562ebb6c2963"/>
+		<file filename="assets/mimetype_icons/application-vnd.oasis.opendocument.database.png" md5="78ce48d877ca51e12cb944673273d1d4"/>
+		<file filename="assets/mimetype_icons/application-vnd.oasis.opendocument.formula-template.png" md5="85b3208640896877d0e01986980630e5"/>
+		<file filename="assets/mimetype_icons/application-vnd.oasis.opendocument.formula.png" md5="159f428770d47f89693ae312b318b97a"/>
+		<file filename="assets/mimetype_icons/application-vnd.oasis.opendocument.graphics.png" md5="28e85ca3c57c018b94712670daf1bf14"/>
+		<file filename="assets/mimetype_icons/application-vnd.oasis.opendocument.image.png" md5="e2463da4dd4d3f430d17b45a1429d55e"/>
+		<file filename="assets/mimetype_icons/application-vnd.oasis.opendocument.presentation-template.png" md5="4165ec349c4f7af73f44e5671d075715"/>
+		<file filename="assets/mimetype_icons/application-vnd.oasis.opendocument.presentation.png" md5="555540c9b65557ea0daa97c13a55f535"/>
+		<file filename="assets/mimetype_icons/application-vnd.oasis.opendocument.text-master.png" md5="cc015471267d3f53b6a96b1333a1d0af"/>
+		<file filename="assets/mimetype_icons/application-vnd.scribus.png" md5="b25c02fe1e5b00ccf547faf1c56d07d3"/>
+		<file filename="assets/mimetype_icons/application-x-executable.png" md5="f0a065ec56c35121741f72dced5eccc0"/>
+		<file filename="assets/mimetype_icons/application-x-font-otf.png" md5="0cb9917ba9f9ec37259eae53314a8ea5"/>
+		<file filename="assets/mimetype_icons/application-x-font-pcf.png" md5="cf44fa1eb433aa83e7dfa20246f59a4c"/>
+		<file filename="assets/mimetype_icons/application-x-font-snf.png" md5="cf44fa1eb433aa83e7dfa20246f59a4c"/>
+		<file filename="assets/mimetype_icons/application-x-font-ttf.png" md5="27a91c3c260460807d82be93e006cd34"/>
+		<file filename="assets/mimetype_icons/application-x-font-type1.png" md5="f41d9575d0d1271fa8f9c766ae46cb13"/>
+		<file filename="assets/mimetype_icons/application-x-gnumeric.png" md5="f0a2e399885bd41344f309a0e36c98ce"/>
+		<file filename="assets/mimetype_icons/application-x-gzdvi.png" md5="131c32c17a61f4d7481837acfda5e14c"/>
+		<file filename="assets/mimetype_icons/application-x-gzip.png" md5="12eca721f53d2b482ade67716e0a0173"/>
+		<file filename="assets/mimetype_icons/application-x-gzpostscript.png" md5="166197e401fb254117895cc9af32d25d"/>
+		<file filename="assets/mimetype_icons/application-x-java-applet.png" md5="8469a770a09ab496678bf60e400891bb"/>
+		<file filename="assets/mimetype_icons/application-x-java-archive.png" md5="de5efedc99d5436d18fc11ad88c65ae6"/>
+		<file filename="assets/mimetype_icons/application-zip.png" md5="8c5b62105e1e69393d397ca2bff09d4d"/>
+		<file filename="assets/mimetype_icons/audio-ac3.png" md5="2038248c06ce371fb438f7e84303670d"/>
+		<file filename="assets/mimetype_icons/audio-midi.png" md5="2582cd54e71e4c1cdefd8e1fa1c8766d"/>
+		<file filename="assets/mimetype_icons/audio-mpeg.png" md5="2038248c06ce371fb438f7e84303670d"/>
+		<file filename="assets/mimetype_icons/audio-wav.png" md5="d4281964e14a0e5604334c115f92acf3"/>
+		<file filename="assets/mimetype_icons/audio-x-flac.png" md5="2038248c06ce371fb438f7e84303670d"/>
 		<file filename="assets/mimetype_icons/directory-lg.png" md5="38c77704953cbfa8a8c98edf927bb510"/>
 		<file filename="assets/mimetype_icons/directory-med.png" md5="4b17d3b3dfbdfa53101a1a4a70f90cd2"/>
 		<file filename="assets/mimetype_icons/directory-sm.png" md5="c553918733b425d1536a84cf15d9907c"/>
@@ -82,6 +127,24 @@
 		<file filename="assets/mimetype_icons/notfound-sm.png" md5="b051ed5c35e067819e9ff8b43dec7ad8"/>
 		<file filename="assets/mimetype_icons/notfound-xl.png" md5="6a5e689f57e697606d3a8fa2eb495fdd"/>
 		<file filename="assets/mimetype_icons/notfound.png" md5="6a5e689f57e697606d3a8fa2eb495fdd"/>
+		<file filename="assets/mimetype_icons/text-css.png" md5="6d8c54559af97ae88e1d10414bbc6790"/>
+		<file filename="assets/mimetype_icons/text-html.png" md5="028f3c934f333d9cfdd150d25242275e"/>
+		<file filename="assets/mimetype_icons/text-plain.png" md5="fa72d9363818efd2b2bb56ad07d82679"/>
+		<file filename="assets/mimetype_icons/text-x-objcsrc.png" md5="828a138b6921ce160c5ec60af8e6fc77"/>
+		<file filename="assets/mimetype_icons/text-x-pascal.png" md5="e7c05339ab8f05111d5df93bd6676a1c"/>
+		<file filename="assets/mimetype_icons/text-x-patch.png" md5="3bd1324108cd6de098bae11f3284f973"/>
+		<file filename="assets/mimetype_icons/text-x-po.png" md5="26add87951fd366ff97c9a301d4f2549"/>
+		<file filename="assets/mimetype_icons/text-x-python.png" md5="a82b5920bbb66be79f27dcfd7034a8e6"/>
+		<file filename="assets/mimetype_icons/text-x-qml.png" md5="9addfcaaf10599a6b39679ab8ca2ab6b"/>
+		<file filename="assets/mimetype_icons/text-x-readme.png" md5="c5e9660e380854da6020492f5fc8e5f4"/>
+		<file filename="assets/mimetype_icons/text-x-rpm-spec.png" md5="3c1ab479668e6a62f3fa80f058ca5f38"/>
+		<file filename="assets/mimetype_icons/text-x-script.png" md5="e428135c6a09424e56e8fc2d66f562fd"/>
+		<file filename="assets/mimetype_icons/text-x-shellscript.png" md5="e428135c6a09424e56e8fc2d66f562fd"/>
+		<file filename="assets/mimetype_icons/text-x-sql.png" md5="265602943f55e62b09f65ffda3e9c600"/>
+		<file filename="assets/mimetype_icons/text-x-tcl.png" md5="ffaeb1a3b53369635cdd5d9e6eb58321"/>
+		<file filename="assets/mimetype_icons/text-x-tex.png" md5="bf4e3a0bb3ab0b34a099a0eae623309a"/>
+		<file filename="assets/mimetype_icons/text-x-texinfo.png" md5="0253dce6d36467b7abe227b9b97a44e1"/>
+		<file filename="assets/mimetype_icons/text-x-vcard.png" md5="b96eb1a2e2f4a31d0ad23db55596014b"/>
 		<file filename="assets/mimetype_icons/unknown-lg.png" md5="e78e2e6e8d40c6a632f654561ec53e47"/>
 		<file filename="assets/mimetype_icons/unknown-med.png" md5="11eee3c2e6806986c5abfe920d3256a5"/>
 		<file filename="assets/mimetype_icons/unknown-sm.png" md5="890f6e2501cb8474fefb20b1b858e660"/>
@@ -105,6 +168,7 @@
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="1.1.0"/>
+		<upgrade from="1.1.0" to="1.2.0"/>
 	</upgrades>
 </theme>
 
