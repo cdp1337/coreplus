@@ -377,6 +377,7 @@ class Core implements ISingleton {
 		do {
 			$size = sizeof($list);
 			foreach ($list as $n => $c) {
+				/** @var $c Component_2_1 */
 
 				// Disabled components don't get recognized.
 				if($c->isInstalled() && !$c->isEnabled()){
@@ -408,14 +409,17 @@ class Core implements ISingleton {
 				}
 
 				// Allow packages to be auto-installed if in DEV mode.
-				// this should NEVER be enabled on production, due to the GIANT
-				// security risk that it could potentially cause if someone manages
-				// to get a rogue component.xml file on the filesystem. (in theory at least)
-				if (!$c->isInstalled() && DEVELOPMENT_MODE && $c->isLoadable()) {
+				// If DEV mode is not enabled, just install the new component, do not enable it.
+				if (!$c->isInstalled() && $c->isLoadable()) {
 					// w00t
 					$c->install();
-					$c->loadFiles();
-					$this->_registerComponent($c);
+					if(!DEVELOPMENT_MODE){
+						$c->disable();
+					}
+					else{
+						$c->loadFiles();
+						$this->_registerComponent($c);
+					}
 					unset($list[$n]);
 					continue;
 				}

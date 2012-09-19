@@ -432,12 +432,13 @@ class Component_2_1 {
 	 */
 	public function setLicenses($licenses) {
 		// First, remove any licenses currently in the XML.
-		$this->_xmlloader->removeElements('/licenses');
+		$this->_xmlloader->removeElements('//component/licenses');
 
 		// Now I can add the ones in the licenses array.
+		$path = '//component/licenses/';
 		foreach ($licenses as $lic) {
-			$str = '/licenses/license' . ((isset($lic['url']) && $lic['url']) ? '[@url="' . $lic['url'] . '"]' : '');
-			$l   = $this->_xmlloader->getElement($str);
+			$el = 'license' . ((isset($lic['url']) && $lic['url']) ? '[@url="' . $lic['url'] . '"]' : '');
+			$l  = $this->_xmlloader->createElement($path . $el, false, 1);
 			if ($lic['title']) $l->nodeValue = $lic['title'];
 		}
 	}
@@ -1144,6 +1145,9 @@ class Component_2_1 {
 		$c->save();
 		$this->_versionDB = null;
 
+		// Ensure that the core component cache is purged too!
+		Core::Cache()->delete('core-components');
+
 		return true;
 	}
 
@@ -1158,6 +1162,9 @@ class Component_2_1 {
 		$c->set('enabled', true);
 		$c->save();
 		$this->_enabled = true;
+
+		// Ensure that the core component cache is purged too!
+		Core::Cache()->delete('core-components');
 
 		return true;
 	}
