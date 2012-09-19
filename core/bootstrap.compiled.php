@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 19 Sep 2012 02:06:34 -0400
+ * @compiled Wed, 19 Sep 2012 04:27:15 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1657,6 +1657,13 @@ public static $Indexes = array(
 ### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/models/PageModel.class.php
 class PageModel extends Model {
 public static $Schema = array(
+'parenturl' => array(
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => 128,
+'null' => true,
+'formtype' => 'pageparentselect',
+'formtitle' => 'Parent Page'
+),
 'title' => array(
 'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => 128,
@@ -1681,17 +1688,10 @@ public static $Schema = array(
 'null' => false,
 'validation' => array('this', 'validateRewriteURL'),
 'form' => array(
-'title' => 'Rewrite URL',
+'title' => 'Page URL',
 'type' => 'pagerewriteurl',
 'description' => 'Starts with a "/", omit the root web dir.',
 ),
-),
-'parenturl' => array(
-'type' => Model::ATT_TYPE_STRING,
-'maxlength' => 128,
-'null' => true,
-'formtype' => 'pageparentselect',
-'formtitle' => 'Parent URL'
 ),
 'metas' => array(
 'type' => Model::ATT_TYPE_TEXT,
