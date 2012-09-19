@@ -28,11 +28,11 @@ class ContentModel extends Model{
 			'required' => true,
 			'null' => false,
 		),
-		'nickname' => array(
+		/*'nickname' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'description' => 'Just the name that appears in admin listings for this page',
 			'required' => true,
-		),
+		),*/
 		'editpermissions' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'description' => 'Permissions for who is allowed to edit this page',
@@ -57,12 +57,12 @@ class ContentModel extends Model{
 	);
 	
     public function __construct($key = null) {
-		/*$this->_linked = array(
+		$this->_linked = array(
 			'Page' => array(
 				'link' => Model::LINK_HASONE,
 				'on' => 'baseurl',
 			),
-		);*/
+		);
 		
 		parent::__construct($key);
 	}

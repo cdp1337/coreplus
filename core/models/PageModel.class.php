@@ -23,6 +23,13 @@
 class PageModel extends Model {
 
 	public static $Schema = array(
+		'parenturl' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'null' => true,
+			'formtype' => 'pageparentselect',
+			'formtitle' => 'Parent Page'
+		),
 		'title' => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
@@ -47,17 +54,10 @@ class PageModel extends Model {
 			'null' => false,
 			'validation' => array('this', 'validateRewriteURL'),
 			'form' => array(
-				'title' => 'Rewrite URL',
+				'title' => 'Page URL',
 				'type' => 'pagerewriteurl',
 				'description' => 'Starts with a "/", omit the root web dir.',
 			),
-		),
-		'parenturl' => array(
-			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 128,
-			'null' => true,
-			'formtype' => 'pageparentselect',
-			'formtitle' => 'Parent URL'
 		),
 		'metas' => array(
 			'type' => Model::ATT_TYPE_TEXT,

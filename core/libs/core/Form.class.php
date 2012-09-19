@@ -1208,6 +1208,20 @@ class FormPageMeta extends FormGroup {
 		$this->_attributes['baseurl'] = $page->get('baseurl');
 		$name = $this->_attributes['name'];
 
+		// I need to get a list of pages to offer as a dropdown for selecting the "parent" page.
+		$f = new ModelFactory('PageModel');
+		if ($this->get('baseurl')) $f->where('baseurl != ' . $this->get('baseurl'));
+		$opts = PageModel::GetPagesAsOptions($f, '-- No Parent Page --');
+
+		$this->addElement(
+			'pageparentselect', array(
+		        'name'    => $name . "[parenturl]",
+		        'title'   => 'Parent Page',
+		        'value'   => $page->get('parenturl'),
+		        'options' => $opts
+	        )
+		);
+
 		// Title
 		$this->addElement(
 			'text', array(
@@ -1221,9 +1235,9 @@ class FormPageMeta extends FormGroup {
 
 		// Rewrite url.
 		$this->addElement(
-			'text', array(
+			'pagerewriteurl', array(
 				'name'        => $name . "[rewriteurl]",
-				'title'       => 'Rewrite URL',
+				'title'       => 'Page URL',
 				'value'       => $page->get('rewriteurl'),
 				'description' => 'Starts with a "/", omit ' . ROOT_URL,
 				'required'    => true
@@ -1261,19 +1275,6 @@ class FormPageMeta extends FormGroup {
 			)
 		);
 
-		// I need to get a list of pages to offer as a dropdown for selecting the "parent" page.
-		$f = new ModelFactory('PageModel');
-		if ($this->get('baseurl')) $f->where('baseurl != ' . $this->get('baseurl'));
-		$opts = PageModel::GetPagesAsOptions($f, '-- No Parent Page --');
-
-		$this->addElement(
-			'select', array(
-		        'name'    => $name . "[parenturl]",
-		        'title'   => 'Parent URL',
-		        'value'   => $page->get('parenturl'),
-		        'options' => $opts
-	        )
-		);
 
 		$this->addElement(
 			'access', array(
