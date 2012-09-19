@@ -190,6 +190,22 @@ class Directory_local_backend implements Directory_Backend {
 		else return File_local_backend::_Mkdir($this->getPath(), null, true);
 	}
 
+	public function rename($newname) {
+		// If the new name is not fully resolved, translate it to the same as the current directory.
+		if($newname{0} != '/'){
+			$newname = substr($this->getPath(), 0, -1 - strlen($this->getBasename())) . $newname;
+		}
+
+		if(File_local_backend::_Rename($this->getPath(), $newname)){
+			$this->_path = $newname;
+			$this->_files = null;
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
 	/**
 	 * Get this directory's fully resolved path
 	 *
@@ -214,32 +230,54 @@ class Directory_local_backend implements Directory_Backend {
 	 * Remove a directory and recursively any file inside it.
 	 */
 	public function remove() {
-		$dirqueue = array($this->getPath());
-		$x        = 0;
-		do {
-			$x++;
-			foreach ($dirqueue as $k => $d) {
-				$isempty = true;
-				$dh      = opendir($d);
-				if (!$dh) return false;
-				while (($file = readdir($dh)) !== false) {
-					if ($file == '.') continue;
-					if ($file == '..') continue;
-					$isempty = false;
-					if (is_dir($d . $file)) $dirqueue[] = $d . $file . '/';
-					else unlink($d . $file);
-				}
-				closedir($dh);
-				if ($isempty) {
-					rmdir($d);
-					unset($dirqueue[$k]);
-				}
-			}
+		$ftp    = \Core\FTP();
 
-			$dirqueue = array_unique($dirqueue);
-			krsort($dirqueue);
+		if(!$ftp){
+			$dirqueue = array($this->getPath());
+			$x        = 0;
+			do {
+				$x++;
+				foreach ($dirqueue as $k => $d) {
+					$isempty = true;
+					$dh      = opendir($d);
+					if (!$dh) return false;
+					while (($file = readdir($dh)) !== false) {
+						if ($file == '.') continue;
+						if ($file == '..') continue;
+						$isempty = false;
+						if (is_dir($d . $file)) $dirqueue[] = $d . $file . '/';
+						else unlink($d . $file);
+					}
+					closedir($dh);
+					if ($isempty) {
+						rmdir($d);
+						unset($dirqueue[$k]);
+					}
+				}
+
+				$dirqueue = array_unique($dirqueue);
+				krsort($dirqueue);
+			}
+			while (sizeof($dirqueue) && $x <= 10);
+			return true;
 		}
-		while (sizeof($dirqueue) && $x <= 10);
+		else{
+			// If there are children, drop into them and remove those too.
+			// This is because directories need to be empty.
+			foreach($this->ls() as $sub){
+				if($sub instanceof File_local_backend) $sub->delete();
+				else $sub->remove();
+			}
+			$path = $this->getPath();
+
+			// Trim off the ROOT_PDIR since it'll be relative to the ftp root set in the config.
+			if (strpos($path, ROOT_PDIR) === 0) $path = substr($path, strlen(ROOT_PDIR));
+
+			// Prepend the ftp directory
+			//$path = \ConfigHandler::Get('/core/ftp/path') . $path;
+
+			return ftp_rmdir($ftp, $path);
+		}
 	}
 
 	/**

@@ -51,6 +51,15 @@ interface Directory_Backend {
 	public function mkdir();
 
 	/**
+	 * Rename this directory
+	 *
+	 * @param $newname
+	 *
+	 * @return boolean
+	 */
+	public function rename($newname);
+
+	/**
 	 * Get this directory's fully resolved path
 	 *
 	 * @return string
