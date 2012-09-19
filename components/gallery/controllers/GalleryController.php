@@ -146,43 +146,45 @@ class GalleryController extends Controller_2_1 {
 			$view->meta['og:image'] = $image->getFile()->getPreviewURL('200x200');
 			$view->addBreadcrumb($album->get('title'), $album->get('baseurl'));
 			$view->title = ($image->get('title') ? $image->get('title') : 'Image Details');
-			$view->addControl(
-				array(
-					'title' => 'Edit Image',
-				    'link' => '#',
-					'class' => 'update-link',
-					'icon' => 'edit',
-					'image' => $image->get('id'),
-				)
-			);
-			$view->addControl(
-				array(
-					'title' => 'Rotate CCW',
-					'link' => '#',
-					'class' => 'rotate-link',
-					'icon' => 'undo',
-					'image' => $image->get('id'),
-					'rotate' => 'ccw',
-				)
-			);
-			$view->addControl(
-				array(
-					'title' => 'Rotate CW',
-					'link' => '#',
-					'class' => 'rotate-link',
-					'icon' => 'repeat',
-					'image' => $image->get('id'),
-					'rotate' => 'cw',
-				)
-			);
-			$view->addControl(
-				array(
-					'title' => 'Remove Image',
-					'link' => 'gallery/images/delete/' . $album->get('id') . '?image=' . $image->get('id'),
-					'confirm' => 'Confirm deleting image?',
-					'icon' => 'remove',
-				)
-			);
+			if($editor){
+				$view->addControl(
+					array(
+						'title' => 'Edit Image',
+					    'link' => '#',
+						'class' => 'update-link',
+						'icon' => 'edit',
+						'image' => $image->get('id'),
+					)
+				);
+				$view->addControl(
+					array(
+						'title' => 'Rotate CCW',
+						'link' => '#',
+						'class' => 'rotate-link',
+						'icon' => 'undo',
+						'image' => $image->get('id'),
+						'rotate' => 'ccw',
+					)
+				);
+				$view->addControl(
+					array(
+						'title' => 'Rotate CW',
+						'link' => '#',
+						'class' => 'rotate-link',
+						'icon' => 'repeat',
+						'image' => $image->get('id'),
+						'rotate' => 'cw',
+					)
+				);
+				$view->addControl(
+					array(
+						'title' => 'Remove Image',
+						'link' => 'gallery/images/delete/' . $album->get('id') . '?image=' . $image->get('id'),
+						'confirm' => 'Confirm deleting image?',
+						'icon' => 'remove',
+					)
+				);
+			}
 		}
 		// album view, (only one parameter)
 		else{
