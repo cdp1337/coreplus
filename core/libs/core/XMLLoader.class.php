@@ -297,20 +297,84 @@ class XMLLoader implements Serializable {
 	 * @param <type> $path
 	 */
 	private function _translatePath($path) {
+
 		// Translate a single prepending slash to double slash, (means root path).
 		if (preg_match(':^/[^/]:', $path)) {
-			$path = '//' . $this->getRootDOM()->tagName . $path;
+			if(strpos($path,  '/' . $this->getRootDOM()->tagName) === 0){
+				// Path already has the root node before it, do not add another, (it just needs another slash).
+				$path = '/' . $path;
+			}
+			else{
+				$path = '//' . $this->getRootDOM()->tagName . $path;
+			}
 		}
 		return $path;
 	}
 
 
-	public function createElement($path, $el = false) {
-		// @todo This function requires some major refactoring.......
+	/**
+	 * Create an XML node based on the given path.
+	 *
+	 * This will by default not create duplicate nodes of the same name, but can be forced to by using the $forcecreate option.
+	 *
+	 * @param string $path        Pathname to create, should be absolutely resolved if no $el is provided, otherwise relative is preferred.
+	 * @param bool   $el          Element to create this node as a child of, set to false to just use root node.
+	 * @param int    $forcecreate Instructions on how to handle duplicate nodes.
+	 *                            0 - do not create any duplicate nodes, ie: unique attributes have to exist to create a different node
+	 *                            1 - create duplicate a node at the final tree level, (useful for nodes with no attributes)
+	 *                            2 - create all duplicate nodes from the root level on up, useful for creating completely different trees
+	 *
+	 * @return bool|DOMElement|DOMNode
+	 * @throws Exception
+	 */
+	public function createElement($path, $el = false, $forcecreate = 0) {
 		// I need something to start from...
-		if (!$el) $el = $this->getRootDOM();
+		if (!$el){
+			// No element, piece of cake!  Just grab the root node and drop off that node from the translated path.
+			$el = $this->getRootDOM();
+			$path = $this->_translatePath($path);
 
-		$path = $this->_translatePath($path);
+			// The path should be absolutely resolved, but not necessarily required.
+			if(strpos($path, '//' . $this->getRootDOM()->nodeName) === 0){
+				// I can safely trim that part off.
+				$path = substr($path, strlen($this->getRootDOM()->nodeName) + 3);
+			}
+		}
+		else{
+			// I need to verify that the two are compatible.
+			$path = $this->_translatePath($path);
+
+			// In this case, (an element was requested), it cannot be fully resolved!
+			// Unless of course it was the root node to begin with.
+			if($el == $this->getRootDOM()){
+				// The path should be absolutely resolved, but not necessarily required.
+				if(strpos($path, '//' . $this->getRootDOM()->nodeName) === 0){
+					// I can safely trim that part off.
+					$path = substr($path, strlen($this->getRootDOM()->nodeName) + 3);
+				}
+			}
+			elseif($path{0} == '/'){
+				throw new Exception('Unable to append path ' . $path . ' onto an element from an absolute url!');
+			}
+		}
+
+
+		if($forcecreate == 0){
+			$createlast = false;
+			$createall  = false;
+		}
+		elseif($forcecreate == 1){
+			$createlast = true;
+			$createall  = false;
+		}
+		elseif($forcecreate == 2){
+			$createlast = true;
+			$createall  = true;
+		}
+		else{
+			throw new Exception('Unknown value provided for $forcecreate, please ensure it is one of the following [0, 1, 2]');
+		}
+
 
 		// Starting element, can be the root node or the current element it's at.
 		//$el = $this->getRootDOM();
@@ -363,19 +427,25 @@ class XMLLoader implements Serializable {
 		//var_dump($patharray); // DEBUG //
 
 
-		foreach ($patharray as $s) {
+		foreach ($patharray as $k => $s) {
 			//echo "Querying for element " . $s . "\n";
 			//if($s == '*') return $el->childNodes;
 
 			// Skip blanks.
 			if ($s == '') continue;
 
+			//var_dump($s); // DEBUG //
+
 			$entries = $xpath->query($s, $el);
 			if (!$entries) {
 				trigger_error("Invalid query - " . $s, E_USER_WARNING);
 				return false;
 			}
-			if ($entries->item(0) == null) {
+			if (
+				$entries->item(0) == null ||
+				$createall ||
+				($createlast && $k == sizeof($patharray) - 1)
+			) {
 
 				// :( it doesn't exist.... guess we'll have to create it!
 				// Did the user request attributes on this element?
