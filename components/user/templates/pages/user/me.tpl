@@ -1,4 +1,11 @@
 <div id="user-edit-listing">
+	<table>
+		<tr>
+			<td>
+				{img src="`$user->get('avatar')`" placeholder="person" width="150" height="300"}
+			</td>
+		</tr>
+	</table>
 	[ @todo show some useful information here. ]
 	<br/><br/>
 	<a href="#" class="edit-user-toggle">Edit Account</a>

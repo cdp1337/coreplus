@@ -165,6 +165,11 @@ class UserController extends Controller_2_1{
 
 		$this->setTemplate('/pages/user/login.tpl');
 
+		// Is the user already logged in?
+		if(\Core\user()->exists()){
+			Core::Redirect('/user/me');
+		}
+
 		// Set the access permissions for this page as anonymous-only.
 		if(!$this->setAccess('g:anonymous;g:!admin')){
 			return View::ERROR_ACCESSDENIED;
