@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 12 Sep 2012 11:59:31 -0400
+ * @compiled Wed, 19 Sep 2012 02:06:34 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -194,13 +194,49 @@ return $this->createElement($path, $el);
 }
 private function _translatePath($path) {
 if (preg_match(':^/[^/]:', $path)) {
+if(strpos($path,  '/' . $this->getRootDOM()->tagName) === 0){
+$path = '/' . $path;
+}
+else{
 $path = '//' . $this->getRootDOM()->tagName . $path;
+}
 }
 return $path;
 }
-public function createElement($path, $el = false) {
-if (!$el) $el = $this->getRootDOM();
+public function createElement($path, $el = false, $forcecreate = 0) {
+if (!$el){
+$el = $this->getRootDOM();
 $path = $this->_translatePath($path);
+if(strpos($path, '//' . $this->getRootDOM()->nodeName) === 0){
+$path = substr($path, strlen($this->getRootDOM()->nodeName) + 3);
+}
+}
+else{
+$path = $this->_translatePath($path);
+if($el == $this->getRootDOM()){
+if(strpos($path, '//' . $this->getRootDOM()->nodeName) === 0){
+$path = substr($path, strlen($this->getRootDOM()->nodeName) + 3);
+}
+}
+elseif($path{0} == '/'){
+throw new Exception('Unable to append path ' . $path . ' onto an element from an absolute url!');
+}
+}
+if($forcecreate == 0){
+$createlast = false;
+$createall  = false;
+}
+elseif($forcecreate == 1){
+$createlast = true;
+$createall  = false;
+}
+elseif($forcecreate == 2){
+$createlast = true;
+$createall  = true;
+}
+else{
+throw new Exception('Unknown value provided for $forcecreate, please ensure it is one of the following [0, 1, 2]');
+}
 $xpath = new DOMXPath($this->_DOM);
 $patharray = array();
 if (strpos($path, '/') === false) {
@@ -236,14 +272,18 @@ $patharray[] = $curstr;
 $curstr      = '';
 }
 }
-foreach ($patharray as $s) {
+foreach ($patharray as $k => $s) {
 if ($s == '') continue;
 $entries = $xpath->query($s, $el);
 if (!$entries) {
 trigger_error("Invalid query - " . $s, E_USER_WARNING);
 return false;
 }
-if ($entries->item(0) == null) {
+if (
+$entries->item(0) == null ||
+$createall ||
+($createlast && $k == sizeof($patharray) - 1)
+) {
 if (strpos($s, '[') !== false) {
 $tag = trim(substr($s, 0, strpos($s, '[')));
 $node = $this->_DOM->createElement($tag);
@@ -3058,10 +3098,11 @@ $this->_xmlloader->getElement('//component/authors/author[@name="' . $a['name'] 
 }
 }
 public function setLicenses($licenses) {
-$this->_xmlloader->removeElements('/licenses');
+$this->_xmlloader->removeElements('//component/licenses');
+$path = '//component/licenses/';
 foreach ($licenses as $lic) {
-$str = '/licenses/license' . ((isset($lic['url']) && $lic['url']) ? '[@url="' . $lic['url'] . '"]' : '');
-$l   = $this->_xmlloader->getElement($str);
+$el = 'license' . ((isset($lic['url']) && $lic['url']) ? '[@url="' . $lic['url'] . '"]' : '');
+$l  = $this->_xmlloader->createElement($path . $el, false, 1);
 if ($lic['title']) $l->nodeValue = $lic['title'];
 }
 }
@@ -3466,6 +3507,7 @@ $c = new ComponentModel($this->_name);
 $c->set('enabled', false);
 $c->save();
 $this->_versionDB = null;
+Core::Cache()->delete('core-components');
 return true;
 }
 public function enable(){
@@ -3474,6 +3516,7 @@ $c = new ComponentModel($this->_name);
 $c->set('enabled', true);
 $c->save();
 $this->_enabled = true;
+Core::Cache()->delete('core-components');
 return true;
 }
 private function _performInstall() {
@@ -3735,6 +3778,7 @@ public function ls();
 public function isReadable();
 public function isWritable();
 public function mkdir();
+public function rename($newname);
 public function getPath();
 public function getBasename();
 public function remove();
@@ -3752,6 +3796,9 @@ break;
 case 'text/plain':
 if (strtolower($file->getExtension()) == 'asc') return new File_asc_contents($file);
 else return new File_unknown_contents($file);
+break;
+case 'text/xml':
+return new File_xml_contents($file);
 break;
 case 'application/pgp-signature':
 return new File_asc_contents($file);
@@ -4062,6 +4109,9 @@ return $b;
 public function getBasename() {
 return basename($this->_filename);
 }
+public function getDirectoryName(){
+return dirname($this->_filename) . '/';
+}
 public function getLocalFilename() {
 return $this->getFilename();
 }
@@ -4078,9 +4128,27 @@ if (!file_exists($this->_filename)) return null;
 return md5_file($this->_filename);
 }
 public function delete() {
+$ftp    = \Core\FTP();
+if(!$ftp){
 if (!@unlink($this->getFilename())) return false;
 $this->_filename = null;
 return true;
+}
+else{
+if(!ftp_delete($ftp, $this->getFilename())) return false;
+$this->_filename = null;
+return true;
+}
+}
+public function rename($newname){
+if($newname{0} != '/'){
+$newname = substr($this->getFilename(), 0, 0 - strlen($this->getBaseFilename())) . $newname;
+}
+if(self::_Rename($this->getFilename(), $newname)){
+$this->_filename = $newname;
+return true;
+}
+return false;
 }
 public function copyTo($dest, $overwrite = false) {
 if (is_a($dest, 'File') || $dest instanceof File_Backend) {
@@ -4117,10 +4185,9 @@ public function getContents() {
 return file_get_contents($this->_filename);
 }
 public function putContents($data) {
-if (!is_dir(dirname($this->_filename))) {
-if (!self::_Mkdir(dirname($this->_filename), null, true)) {
+self::_Mkdir(dirname($this->_filename), null, true);
+if(!is_dir(dirname($this->_filename))){
 throw new Exception("Unable to make directory " . dirname($this->_filename) . ", please check permissions.");
-}
 }
 return self::_PutContents($this->_filename, $data);
 }
@@ -4233,15 +4300,18 @@ if ($mode === null) {
 $mode = (defined('DEFAULT_DIRECTORY_PERMS') ? DEFAULT_DIRECTORY_PERMS : 0777);
 }
 if (!$ftp) {
-return mkdir($pathname, $mode, $recursive);
+if(is_dir($pathname)) return false;
+else return mkdir($pathname, $mode, $recursive);
 }
 elseif (strpos($pathname, $tmpdir) === 0) {
-return mkdir($pathname, $mode, $recursive);
+if(is_dir($pathname)) return false;
+else return mkdir($pathname, $mode, $recursive);
 }
 else {
 if (strpos($pathname, ROOT_PDIR) === 0) $pathname = substr($pathname, strlen(ROOT_PDIR));
 $paths = explode('/', $pathname);
 foreach ($paths as $p) {
+if(trim($p) == '') continue;
 if (!@ftp_chdir($ftp, $p)) {
 if (!ftp_mkdir($ftp, $p)) return false;
 if (!ftp_chmod($ftp, $mode, $p)) return false;
@@ -4249,6 +4319,17 @@ ftp_chdir($ftp, $p);
 }
 }
 return true;
+}
+}
+public static function _Rename($oldpath, $newpath){
+$ftp    = \Core\FTP();
+if(!$ftp){
+return rename($oldpath, $newpath);
+}
+else{
+if (strpos($oldpath, ROOT_PDIR) === 0) $oldpath = substr($oldpath, strlen(ROOT_PDIR));
+if (strpos($newpath, ROOT_PDIR) === 0) $newpath = substr($newpath, strlen(ROOT_PDIR));
+return ftp_rename($ftp, $oldpath, $newpath);
 }
 }
 public static function _PutContents($filename, $data) {
@@ -4414,6 +4495,19 @@ public function mkdir() {
 if (is_dir($this->getPath())) return null;
 else return File_local_backend::_Mkdir($this->getPath(), null, true);
 }
+public function rename($newname) {
+if($newname{0} != '/'){
+$newname = substr($this->getPath(), 0, -1 - strlen($this->getBasename())) . $newname;
+}
+if(File_local_backend::_Rename($this->getPath(), $newname)){
+$this->_path = $newname;
+$this->_files = null;
+return true;
+}
+else{
+return false;
+}
+}
 public function getPath() {
 return $this->_path;
 }
@@ -4422,6 +4516,8 @@ $p = trim($this->_path, '/');
 return substr($p, strrpos($p, '/') + 1);
 }
 public function remove() {
+$ftp    = \Core\FTP();
+if(!$ftp){
 $dirqueue = array($this->getPath());
 $x        = 0;
 do {
@@ -4447,6 +4543,17 @@ $dirqueue = array_unique($dirqueue);
 krsort($dirqueue);
 }
 while (sizeof($dirqueue) && $x <= 10);
+return true;
+}
+else{
+foreach($this->ls() as $sub){
+if($sub instanceof File_local_backend) $sub->delete();
+else $sub->remove();
+}
+$path = $this->getPath();
+if (strpos($path, ROOT_PDIR) === 0) $path = substr($path, strlen(ROOT_PDIR));
+return ftp_rmdir($ftp, $path);
+}
 }
 public function get($name) {
 $name    = trim($name, '/');
@@ -5372,10 +5479,15 @@ $this->_registerComponent($c);
 unset($list[$n]);
 continue;
 }
-if (!$c->isInstalled() && DEVELOPMENT_MODE && $c->isLoadable()) {
+if (!$c->isInstalled() && $c->isLoadable()) {
 $c->install();
+if(!DEVELOPMENT_MODE){
+$c->disable();
+}
+else{
 $c->loadFiles();
 $this->_registerComponent($c);
+}
 unset($list[$n]);
 continue;
 }
