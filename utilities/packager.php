@@ -891,12 +891,9 @@ function process_component($component, $forcerelease = false){
 				break;
 		}
 
-		// Ensure the export directory exists.
-		if(!is_dir(dirname($tgz))) exec('mkdir -p "' . dirname($tgz) . '"');
-		//mkdir(dirname($tgz));
-
-		if(!is_dir($dir)) mkdir($dir);
-		if(!is_dir($dir . 'data/')) mkdir($dir . 'data/');
+		File_local_backend::_Mkdir(dirname($tgz));
+		File_local_backend::_Mkdir($dir);
+		File_local_backend::_Mkdir($dir . 'data/');
 
 		// I already have a good iterator...just reuse it.
 		$it->rewind();
