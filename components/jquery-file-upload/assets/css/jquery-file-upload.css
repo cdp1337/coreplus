@@ -16,7 +16,7 @@
 	color: rgba(90, 150, 90, 0.4);
 	display: none;
 	font-size: 33px;
-	margin-top: -6px;
+	margin-top: 20px;
 	padding-top: 0;
 	position: absolute;
 	text-align: center;
@@ -26,4 +26,8 @@
 
 .multifileinput:hover .multiupload-drag-notice {
 	display: block;
+}
+
+.multifileinput table.listing {
+	margin-top:45px;
 }

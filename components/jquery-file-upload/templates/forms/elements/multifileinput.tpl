@@ -25,6 +25,13 @@
 		<p class="formdescription">{$element->get('description')}</p>
 	{/if}
 
+
+	<!-- The loading indicator is shown during file processing -->
+	<div class="fileupload-loading"></div>
+	<br>
+	<!-- The table listing the files available for upload/download -->
+	<table role="presentation" class="table table-striped listing"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+	<br>
 	<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
 	<div class="row fileupload-buttonbar">
 		<div class="span7">
@@ -47,18 +54,12 @@
 		<div class="span5 fileupload-progress fade">
 			<!-- The global progress bar -->
 			<div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-			<div class="bar" style="width:0%;"></div>
+				<div class="bar" style="width:0%;"></div>
 			</div>
 			<!-- The extended global progress information -->
 			<div class="progress-extended">&nbsp;</div>
 		</div>
 	</div>
-	<!-- The loading indicator is shown during file processing -->
-	<div class="fileupload-loading"></div>
-	<br>
-	<!-- The table listing the files available for upload/download -->
-	<table role="presentation" class="table table-striped listing"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
-	<br>
 </div>
 
 
@@ -158,9 +159,12 @@
 			url: Core.ROOT_URL + 'jqueryfileupload',
 			formData: { key: '{$element->get('id')}' },
 			previewSourceFileTypes: /^.*$/, // Core+ handles previews of all files ;)
-			// autoUpload: true, // By default, files added to the UI widget are uploaded as soon as the user clicks on the start buttons. To enable automatic uploads, set this option to true.
+			autoUpload: true, // By default, files added to the UI widget are uploaded as soon as the user clicks on the start buttons. To enable automatic uploads, set this option to true.
 			_last: null
 		});
+
+
+
 
 		// Hijack the submit function too, just to provide some user tips.
 		$form.submit(function(){
