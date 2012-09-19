@@ -493,12 +493,25 @@ class File_local_backend implements File_Backend {
 			$width  = 300;
 			$height = 300;
 		}
+		elseif($dimensions === false){
+			$width = false;
+			$height = false;
+		}
 		else {
 			// New method. Split on the "x" and that should give me the width/height.
 			$vals   = explode('x', strtolower($dimensions));
 			$width  = (int)$vals[0];
 			$height = (int)$vals[1];
 		}
+
+
+		// The basename is for SEO purposes, that way even resized images still contain the filename.
+		// The -preview- is just because I feel like it; completely optional.
+		// The hash is just to ensure that no two files conflict, ie: /public/a/file1.png and /public/b/file1.png
+		//  might conflict without this hash.
+		// Finally, the width and height dimensions are there just because as well; it gives more of a human
+		//  touch to the file. :p
+		$key = $this->getBaseFilename(true) . '-preview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
 
 		if (!$this->exists()) {
 			// Log it so the admin knows that the file is missing, otherwise nothing is shown.
@@ -509,13 +522,8 @@ class File_local_backend implements File_Backend {
 			return Core::ResolveAsset('mimetype_icons/notfound-' . $size . '.png');
 		}
 		elseif ($this->isPreviewable()) {
-			// The basename is for SEO purposes, that way even resized images still contain the filename.
-			// The -preview- is just because I feel like it; completely optional.
-			// The hash is just to ensure that no two files conflict, ie: /public/a/file1.png and /public/b/file1.png
-			//  might conflict without this hash.
-			// Finally, the width and height dimensions are there just because as well; it gives more of a human
-			//  touch to the file. :p
-			$key = $this->getBaseFilename(true) . '-preview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
+			// If no resize was requested, simply return the full size image.
+			if($width === false) return $this->getURL();
 
 			// Yes, this must be within public because it's meant to be publically visible.
 			$file = Core::File('public/tmp/' . $key);
@@ -529,7 +537,16 @@ class File_local_backend implements File_Backend {
 			return $file->getURL();
 		}
 		else {
-			return false;
+			// Try and get the mime icon for this file.
+			$filemime = str_replace('/', '-', $this->getMimetype());
+
+			$file = Core::File('assets/mimetype_icons/' . $filemime . '.png');
+			if(!$file->exists()){
+				$file = Core::File('assets/mimetype_icons/unknown.png');
+			}
+
+			if($width === false) return $file->getURL();
+			else return $file->getPreviewURL($dimensions);
 		}
 	}
 
