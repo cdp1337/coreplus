@@ -1,27 +1,50 @@
-2.0.0
-14 July 2012
-Implemented the administration system for users and user groups.
+User 2.2.0
 
-1.9.1
-13 June 2012
-Rearranged the widgets a little.
-Added registration as its own widget.
+	* Added a javascript login form to provide some animation for the user to wait for slow server processors,
+	(the hashing algorithm takes a few seconds to calculate).
+	* Set the controller to redirect to the profile page if a logged in user goes to /user/login.
+	* Added avatars.
+	* Fixed several bugs with administration.
+	* Added new hook, /user/postsave.
+	* Minor fixes in the user system.
+	* Standardized the CHANGELOG format.
+	-- Charlie Powell <charlie@eval.bz>  20 Sep 2012
 
-1.9.0
-30 May 2012
-Updated system to work on 2.1 codebase.
+User 2.1.1
 
-0.0.3
-<date>Wed, 28 Sep 2011 02:27:06 -0400</date>
-<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-Added some user validation to the system, (now that validation at a low level is actually possible).
-Finished the forgot password script.
+	-- Charlie Powell <charlie@eval.bz>  20 Aug 2012
 
-0.0.2
-<date>Mon, 19 Sep 2011 01:28:48 -0400</date>
-<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-Added allow public registration config option.
+User 2.1.0
 
-0.0.1-dev1
-<date>Sun, 07 Aug 2011 17:42:39 -0400</date>
-<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
+	-- Charlie Powell <charlie@eval.bz>  12 Aug 2012
+
+User 2.0.0
+
+	* Implemented the administration system for users and user groups.
+	-- Charlie Powell <charlie@eval.bz>  14 July 2012
+
+User 1.9.1
+
+	* Rearranged the widgets a little.
+	* Added registration as its own widget.
+	-- Charlie Powell <charlie@eval.bz>  13 June 2012
+
+User 1.9.0
+
+	* Updated system to work on 2.1 codebase.
+	-- Charlie Powell <charlie@eval.bz>  30 May 2012
+
+User 0.0.3
+
+	* Added some user validation to the system, (now that validation at a low level is actually possible).
+	* Finished the forgot password script.
+	-- Charlie Powell <charlie@eval.bz>  28 Sep 2011 02:27:06 -0400
+
+User 0.0.2
+
+	* Added allow public registration config option.
+	-- Charlie Powell <charlie@eval.bz>  19 Sep 2011 01:28:48 -0400
+
+User 0.0.1-dev1
+
+	-- Charlie Powell <charlie@eval.bz>  07 Aug 2011 17:42:39 -0400
