@@ -28,11 +28,12 @@ class ContentModel extends Model{
 			'required' => true,
 			'null' => false,
 		),
-		/*'nickname' => array(
+		'nickname' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'description' => 'Just the name that appears in admin listings for this page',
-			'required' => true,
-		),*/
+			'comment' => 'Cache of the linked page title',
+			'required' => false,
+			'formtype' => 'disabled',
+		),
 		'editpermissions' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'description' => 'Permissions for who is allowed to edit this page',

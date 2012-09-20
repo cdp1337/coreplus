@@ -1,6 +1,6 @@
 <table class="listing">
 	<tr>
-		<th>Nickname</th>
+		<th>Title</th>
 		<th>Link</th>
 		<th width="100">&nbsp;</th>
 	</tr>

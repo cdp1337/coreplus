@@ -1,0 +1,15 @@
+Content 1.9.4
+
+	* Sort content pages by nickname.
+	* Page rewrite updates. - Made the page creation / management system a little easier to user, (hopefully).
+	* Removed the nickname field, this is now automatically set from the title of the linked page.
+	* Started the formal changelog for this component
+	-- Charlie Powell <charlie@eval.bz>  20 Sep 2012
+
+Content 1.9.3
+
+	-- Charlie Powell <charlie@eval.bz>  01 Aug 2012
+
+Content 1.9.2
+
+	-- Charlie Powell <charlie@eval.bz>  2012-07-16 15:33:01

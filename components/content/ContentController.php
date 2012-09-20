@@ -139,6 +139,7 @@ class ContentController extends Controller_2_1 {
 	public static function _SaveHandler(Form $form) {
 
 		$model = $form->getModel();
+
 		// Ensure that everything is marked as updated...
 		$model->set('updated', Time::GetCurrent());
 		//var_dump($model); die();
@@ -148,6 +149,9 @@ class ContentController extends Controller_2_1 {
 		$page->set('baseurl', '/Content/View/' . $model->get('id'));
 		$page->set('updated', Time::GetCurrent());
 		$page->save();
+
+		$model->set('nickname', $page->get('title'));
+		$model->save();
 
 		$insertables = $form->getElementByName('insertables');
 		$insertables->set('baseurl', '/Content/View/' . $model->get('id'));
