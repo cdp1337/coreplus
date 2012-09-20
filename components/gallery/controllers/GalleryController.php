@@ -204,7 +204,7 @@ class GalleryController extends Controller_2_1 {
 						'accept' => 'image/*'
 					)
 				);
-				$uploadform->addElement('submit', array('value' => 'Bulk Upload'));
+				$uploadform->addElement('submit', array('value' => 'Save Gallery Changes'));
 			}
 			else{
 				$uploadform = false;

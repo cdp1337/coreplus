@@ -41,10 +41,10 @@
 				<span>Add files...</span>
 				<input id="{$element->get('id')}" type="file" name="{$element->get('name')}[]" multiple="multiple" style="position:absolute; left:0pt; top:0pt; opacity:0;">
 			</span>
-			<button type="submit" class="button btn-primary start">
+			<!--<button type="submit" class="button btn-primary start">
 				<i class="icon-upload icon-white"></i>
 				<span>Start uploads</span>
-			</button>
+			</button>-->
 			<button type="reset" class="button btn-warning cancel">
 				<i class="icon-ban-circle icon-white"></i>
 				<span>Cancel uploads</span>
