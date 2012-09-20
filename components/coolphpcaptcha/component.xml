@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.3~core4" name="CoolPHPCaptcha" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.3~core5" name="CoolPHPCaptcha" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 	</requires>
@@ -17,7 +17,7 @@
 		Original project site: http://code.google.com/p/cool-php-captcha/
 	</description>
 	<files>
-		<file filename="CHANGELOG.md" md5="32032fe2f1f70a0e24285b54f0f1640c"/>
+		<file filename="CHANGELOG" md5="c2e471d3003f78b9add51a2634b76000"/>
 		<file filename="FormCaptchaInput.class.php" md5="88567b1a36c7e0dbf6c42de32313d74f">
 			<class name="FormCaptchaInput"/>
 		</file>
@@ -55,15 +55,15 @@
 		<upgrade from="0.3~core1" to="0.3~core2"/>
 		<upgrade from="0.3~core2" to="0.3~core3"/>
 		<upgrade from="0.3~core3" to="0.3~core4"/>
+		<upgrade from="0.3~core4" to="0.3~core5"/>
 	</upgrades>
-	<component>
-		<licenses>
-			<license>GPLv3</license>
-		</licenses>
-	</component>
+	<component></component>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 		<author name="Jose Rodriguez" email="jose.rodriguez@exec.cl"/>
 	</authors>
+	<licenses>
+		<license>GPLv3</license>
+	</licenses>
 </component>
 
