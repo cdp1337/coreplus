@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.3" name="content" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.4" name="content" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.2" operation="ge"/>
 	</requires>
@@ -8,37 +8,35 @@
 		<permission key="content_manage" description="Manage Site Content"/>
 	</permissions>
 	<files>
-		<file filename="ContentController.php" md5="6c7a4041d48b35df90f555875648568c">
+		<file filename="CHANGELOG" md5="c0cff22b7a4821a4c777616911cd3af0"/>
+		<file filename="ContentController.php" md5="015a444f94a1dfe2f1b8d3de3cdeff8a">
 			<controller name="ContentController"/>
 		</file>
-		<file filename="ContentModel.php" md5="77abe45e9a847187241058eb804a2add">
+		<file filename="ContentModel.php" md5="ed1b6dc3c288f0342d899c1f113e3774">
 			<class name="ContentModel"/>
 		</file>
 	</files>
 	<pages>
-		<page baseurl="/Content" admin="1" widget="0" access="g:admin" title="Content Page Listings"/>
+		<page baseurl="/content" admin="1" widget="0" access="g:admin" title="Content Page Listings"/>
 	</pages>
 	<description>
 		Provides basic HTML page functionality.
 	</description>
 	<view searchdir="templates">
-		<file filename="templates/pages/content/view.tpl" md5="b149433e9927396cb65c8e2880395663"/>
-		<file filename="templates/pages/content/index.tpl" md5="f8426adda90b2261cde215172169c02a"/>
-		<file filename="templates/pages/content/delete.tpl" md5="64255b05d03ba0b58cbacb107e2b2dff"/>
-		<file filename="templates/pages/content/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/content/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/content/create.tpl" md5="1f45af7838e6eb4421220a6dd5a8428d"/>
+		<file filename="templates/pages/content/delete.tpl" md5="64255b05d03ba0b58cbacb107e2b2dff"/>
 		<file filename="templates/pages/content/edit.tpl" md5="1f45af7838e6eb4421220a6dd5a8428d"/>
-		<file filename="templates/pages/content/index.tpl" md5="4c765e91630e751260be6afe95e30c8a"/>
+		<file filename="templates/pages/content/index.tpl" md5="9f35bc9ec83575bec0135d3a65865f29"/>
 		<file filename="templates/pages/content/view.json.tpl" md5="c529f628b707099da2f6eff1a64ba31a"/>
+		<file filename="templates/pages/content/view.tpl" md5="b149433e9927396cb65c8e2880395663"/>
 		<file filename="templates/pages/content/view.xml.tpl" md5="24bbe5dba74cfbbf65c80b4e802bc6db"/>
-		<file filename="templates/pages/content/index.tpl" md5="ca23b51b2ba9b592075ec49651954395"/>
 	</view>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>
 		<upgrade from="1.9.0" to="1.9.1"/>
 		<upgrade from="1.9.1" to="1.9.2"/>
 		<upgrade from="1.9.2" to="1.9.3"/>
+		<upgrade from="1.9.3" to="1.9.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
