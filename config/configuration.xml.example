@@ -10,10 +10,19 @@
 		<description>Port number server is listening on for secured connections.</description>
 	</define>
 
-	<define name="ENABLE_SSL" type="Boolean">
-		<value>false</value>
-		<description>Enable or disable secured communication to this server.	It is suggested to enable this if possible.</description>
-	</define>
+	<define name="SSL_MODE" type="enum">
+    		<value>ondemand</value>
+    		<description>
+    			disabled - SSL is disabled completely
+    			ondemand - SSL is allowed on pages that require it only, (standard pages redirect to non-ssl)
+    			allowed  - SSL is allowed on any page throughout the site
+    			required - SSL is always required for all pages
+    		</description>
+    		<option>disabled</option>
+    		<option>ondemand</option>
+    		<option>allowed</option>
+    		<option>required</option>
+    	</define>
 
 	<define name="SITENAME" type="string">
 		<value>Core Plus Test Site (mobile1337ness)</value>
