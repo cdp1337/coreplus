@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 19 Sep 2012 04:27:15 -0400
+ * @compiled Fri, 21 Sep 2012 01:15:55 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4240,18 +4240,23 @@ elseif ($dimensions === null) {
 $width  = 300;
 $height = 300;
 }
+elseif($dimensions === false){
+$width = false;
+$height = false;
+}
 else {
 $vals   = explode('x', strtolower($dimensions));
 $width  = (int)$vals[0];
 $height = (int)$vals[1];
 }
+$key = $this->getBaseFilename(true) . '-preview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
 if (!$this->exists()) {
 error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
 $size = Core::TranslateDimensionToPreviewSize($width, $height);
 return Core::ResolveAsset('mimetype_icons/notfound-' . $size . '.png');
 }
 elseif ($this->isPreviewable()) {
-$key = $this->getBaseFilename(true) . '-preview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
+if($width === false) return $this->getURL();
 $file = Core::File('public/tmp/' . $key);
 if (!$file->exists()) {
 $img2 = $this->_getResizedImage($width, $height);
@@ -4261,7 +4266,13 @@ $file->putContents(file_get_contents(TMP_DIR . $key));
 return $file->getURL();
 }
 else {
-return false;
+$filemime = str_replace('/', '-', $this->getMimetype());
+$file = Core::File('assets/mimetype_icons/' . $filemime . '.png');
+if(!$file->exists()){
+$file = Core::File('assets/mimetype_icons/unknown.png');
+}
+if($width === false) return $file->getURL();
+else return $file->getPreviewURL($dimensions);
 }
 }
 public function inDirectory($path) {
@@ -5905,7 +5916,9 @@ Version: "' . self::GetComponent()->getVersion() . '",
 ROOT_WDIR: "' . ROOT_WDIR . '",
 ROOT_URL: "' . ROOT_URL . '",
 ROOT_URL_SSL: "' . ROOT_URL_SSL . '",
-ROOT_URL_NOSSL: "' . ROOT_URL_NOSSL . '"
+ROOT_URL_NOSSL: "' . ROOT_URL_NOSSL . '",
+SSL: ' . (SSL ? 'true' : 'false') . ',
+SSL_MODE: "' . SSL_MODE . '",
 };
 </script>';
 View::AddScript($script, 'head');
@@ -6244,6 +6257,7 @@ $rooturlSSL          = null;
 $curcall             = null;
 $relativerequestpath = null;
 $ssl                 = false;
+$sslmode             = 'disabled';
 $tmpdir              = $core_settings['tmp_dir_cli'];
 $host                = 'localhost';
 if (isset($_SERVER['HOME']) && is_dir($_SERVER['HOME'] . '/.gnupg')) $gnupgdir = $_SERVER['HOME'] . '/.gnupg/';
@@ -6270,6 +6284,24 @@ $servernameNOSSL .= ':' . PORT_NUMBER;
 if (PORT_NUMBER == 80) {
 $servernameNOSSL = str_replace(':80', '', $servernameNOSSL);
 }
+if(defined('ENABLE_SSL')){
+if(ENABLE_SSL){
+$sslmode = 'ondemand';
+}
+else{
+$sslmode = 'disabled';
+}
+define('SSL_MODE', $sslmode);
+}
+elseif(defined('SSL_MODE')){
+if(SSL_MODE == 'disabled') $enablessl = false;
+else $enablessl = true;
+define('ENABLE_SSL', $enablessl);
+}
+else{
+define('SSL_MODE', 'disabled');
+define('ENABLE_SSL', false);
+}
 if (ENABLE_SSL) {
 $servernameSSL = str_replace('http://', 'https://', $servername);
 if (preg_match('/\:\d+$/', substr($servernameSSL, -6))) {
@@ -6287,7 +6319,7 @@ $servernameSSL = $servernameNOSSL;
 }
 $rooturl             = $servername . ROOT_WDIR;
 $rooturlNOSSL        = $servernameNOSSL . ROOT_WDIR;
-$rooturlSSL          = $servername . ROOT_WDIR;
+$rooturlSSL          = $servernameSSL . ROOT_WDIR;
 $curcall             = $servername . $_SERVER['REQUEST_URI'];
 $relativerequestpath = strtolower('/' . substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR)));
 if (strpos($relativerequestpath, '?') !== false) $relativerequestpath = substr($relativerequestpath, 0, strpos($relativerequestpath, '?'));
@@ -6304,12 +6336,21 @@ define('ROOT_URL_SSL', $rooturlSSL);
 define('CUR_CALL', $curcall);
 define('REL_REQUEST_PATH', $relativerequestpath);
 define('SSL', $ssl);
+define('SSL_MODE_DISABLED', 'disabled');
+define('SSL_MODE_ONDEMAND', 'ondemand');
+define('SSL_MODE_ALLOWED',  'allowed');
+define('SSL_MODE_REQUIRED', 'required');
 define('TMP_DIR', $tmpdir);
 define('TMP_DIR_WEB', $core_settings['tmp_dir_web']);
 define('TMP_DIR_CLI', $core_settings['tmp_dir_cli']);
 define('HOST', $host);
 if (!is_dir(TMP_DIR)) {
 mkdir(TMP_DIR, 0777, true);
+}
+if(SSL_MODE == SSL_MODE_REQUIRED && !SSL){
+if(!DEVELOPMENT_MODE) header("HTTP/1.1 301 Moved Permanently");
+header('Location: ' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1));
+die('This site requires SSL, if it does not redirect you automatically, please <a href="' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
 }
 if (!defined('GPG_HOMEDIR')) {
 define('GPG_HOMEDIR', ($gnupgdir) ? $gnupgdir : ROOT_PDIR . 'gnupg');

@@ -140,6 +140,7 @@ if (EXEC_MODE == 'CLI') {
 	$curcall             = null;
 	$relativerequestpath = null;
 	$ssl                 = false;
+	$sslmode             = 'disabled';
 	$tmpdir              = $core_settings['tmp_dir_cli'];
 	$host                = 'localhost';
 	// Check if this user has a .gnupg directory in the home directory.
@@ -188,6 +189,39 @@ else {
 		$servernameNOSSL = str_replace(':80', '', $servernameNOSSL);
 	}
 
+	/**
+	 * Determine how to handle the SSL settings.  This is required because pre 2.2.1, this was a simple boolean.
+	 * After, it has mutliple options.
+	 */
+	if(defined('ENABLE_SSL')){
+		// < 2.2.1 configuration
+
+		if(ENABLE_SSL){
+			$sslmode = 'ondemand';
+		}
+		else{
+			$sslmode = 'disabled';
+		}
+
+		// Now define the constant.
+		define('SSL_MODE', $sslmode);
+	}
+	elseif(defined('SSL_MODE')){
+		// >= 2.2.1 configuration
+
+		if(SSL_MODE == 'disabled') $enablessl = false;
+		else $enablessl = true;
+
+		// Now define the constant
+		define('ENABLE_SSL', $enablessl);
+	}
+	else{
+		// Umm.... what?
+
+		define('SSL_MODE', 'disabled');
+		define('ENABLE_SSL', false);
+	}
+
 
 	/**
 	 * Full URL of server in SSL mode.
@@ -205,7 +239,8 @@ else {
 		else {
 			$servernameSSL .= ':' . PORT_NUMBER_SSL;
 		}
-		// Default port number?
+
+		// Default port number?  If so I can just drop that part.
 		if (PORT_NUMBER_SSL == 443) {
 			$servernameSSL = str_replace(':443', '', $servernameSSL);
 		}
@@ -216,7 +251,7 @@ else {
 
 	$rooturl             = $servername . ROOT_WDIR;
 	$rooturlNOSSL        = $servernameNOSSL . ROOT_WDIR;
-	$rooturlSSL          = $servername . ROOT_WDIR;
+	$rooturlSSL          = $servernameSSL . ROOT_WDIR;
 	$curcall             = $servername . $_SERVER['REQUEST_URI'];
 	$relativerequestpath = strtolower('/' . substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR)));
 	if (strpos($relativerequestpath, '?') !== false) $relativerequestpath = substr($relativerequestpath, 0, strpos($relativerequestpath, '?'));
@@ -276,6 +311,27 @@ define('REL_REQUEST_PATH', $relativerequestpath);
 define('SSL', $ssl);
 
 /**
+ * SSL Mode for SSL being disabled completely
+ * @var string
+ */
+define('SSL_MODE_DISABLED', 'disabled');
+/**
+ * SSL is allowed on pages that require it only, (standard pages redirect to non-ssl)
+ * @var string
+ */
+define('SSL_MODE_ONDEMAND', 'ondemand');
+/**
+ * SSL is allowed on any page throughout the site
+ * @var string
+ */
+define('SSL_MODE_ALLOWED',  'allowed');
+/**
+ * SSL is always required for all pages
+ * @var string
+ */
+define('SSL_MODE_REQUIRED', 'required');
+
+/**
  * Temp directory
  * @var string
  */
@@ -306,6 +362,17 @@ define('HOST', $host);
 if (!is_dir(TMP_DIR)) {
 	mkdir(TMP_DIR, 0777, true);
 }
+//var_dump(ENABLE_SSL, SSL_MODE, SSL, ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1)); die();
+
+// Is this site configured to require SSL mode?  If so, might as well require that here.
+if(SSL_MODE == SSL_MODE_REQUIRED && !SSL){
+	// Skip the 301 when not in production because it makes things rather annoying to debug at times...
+	// ie: the browser remembers it was a permanent redirect and doesn't even try the nonSSL version.
+	if(!DEVELOPMENT_MODE) header("HTTP/1.1 301 Moved Permanently");
+	header('Location: ' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1));
+	die('This site requires SSL, if it does not redirect you automatically, please <a href="' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
+}
+
 
 // (handled by the installer now)
 /*

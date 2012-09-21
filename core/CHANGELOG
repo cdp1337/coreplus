@@ -1,127 +1,75 @@
-<changelog version="0.0.1-dev1">
-	<packagemeta>
-		<date>Sun, 22 May 2011 02:00:52 -0400</date>
-		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-		<packager>CAE2 0.0.1-dev1</packager>
-	</packagemeta>
-</changelog>
-<changelog version="0.0.2">
-	<packagemeta>
-		<date>Tue, 21 Jun 2011 23:02:02 -0400</date>
-		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-		<packager>CAE2 0.0.2</packager>
-	</packagemeta>
-	<notes>
-		MAJOR changes, first re-release since the system switched from DAO to AR.  Includes a lot of other fixes too.
-	</notes>
-</changelog>
+Core Plus 2.2.1
 
-<changelog version="0.0.2-1">
-	<packagemeta>
-		<date>Sun, 24 Jul 2011 21:11:35 -0400</date>
-		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-		<packager>CAE2 0.0.2-1</packager>
-	</packagemeta>
-	<notes>
-		Removing some unnecessary components, namely the adodb5 library and the old version of the Form system.
-		Did some updates to the phpass library.
-	</notes>
-</changelog>
+	* Fixed the SSL implementation
+	* Added javascript library for base64 operations
+	* Styling tweaks
+	* Fixed the file upload input if only one option is present
+	* Switched the changelog to the new standard format
 
-<changelog version="0.0.2-2">
-	<packagemeta>
-		<date>Mon, 15 Aug 2011 17:24:19 -0400</date>
-		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-		<packager>CAE2 0.0.2-2</packager>
-	</packagemeta>
-	<notes>
-		New cachecore method, flush().  This is useful in reinstalling all components and ensuring that there are no lingering artifacts.
-	</notes>
-</changelog>
+Core Plus 2.2.0
 
-<changelog version="0.0.3">
-	<packagemeta>
-		<date>Tue, 16 Aug 2011 23:31:44 -0400</date>
-		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-		<packager>CAE2 0.0.3</packager>
-	</packagemeta>
-	<notes>
-		More work completed on the user component (not included in core), and the widget system (included).
-	</notes>
-</changelog>
+	-- Charlie Powell <charlie@eval.bz>  20 Sep 2012
 
-<changelog version="0.0.4">
-	<notes>
-		Adding phpMailer and the Email functionality back into the core.
-		Minor change to configuration options and how they're stored in the database.
-	</notes>
-	<packagemeta>
-		<date>Tue, 16 Aug 2011 23:47:36 -0400</date>
-		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-		<packager>CAE2 0.0.4</packager>
-	</packagemeta>
-</changelog>
-<dbschema/>
+Core Plus 0.1.0
+	* Implementing better support for Debian-style version strings.
+	* new {css} smarty block.
+	* CurrentPage now supports inline styles to be added to the head.
+	* Other minor fixes.
+	-- Charlie Powell <charlie@eval.bz>
 
-<changelog version="0.0.5">
-	<packagemeta>
-		<date>Sun, 18 Sep 2011 22:19:37 -0400</date>
-		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-		<packager>CAE2 0.0.5</packager>
-	</packagemeta>
-	<notes>
-		Updates to the stylesheet and the admin config system.
-	</notes>
-</changelog>
+Core Plus 0.0.9
 
-<changelog version="0.0.6">
-	<packagemeta>
-		<date>Tue, 11 Oct 2011 19:47:58 -0400</date>
-		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-		<packager>CAE2 0.0.6</packager>
-	</packagemeta>
-	<notes>
-		Did some fixes to the email system, it now actually works.
-		Considerable work on improving the Model validation system.  It now actually works.
-		Minor tweak in the Form validation logic, it now just shows the validation check in the error message if the site is in development mode.
-	</notes>
-</changelog>
+	* In the process of switching to AGPL.
+	* Moved the theme systems into its own component.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 19 Nov 2011 03:12:23 +0000
 
-<changelog version="0.0.7">
-	<packagemeta>
-		<date>Wed, 02 Nov 2011 01:21:43 -0400</date>
-		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-		<packager>CAE2 0.0.7</packager>
-	</packagemeta>
-	<notes>
-		Major work on the system updater, it now fundamentally works at least!
-	</notes>
-</changelog>
+Core Plus 0.0.8
 
-<changelog version="0.0.8">
-	<packagemeta>
-		<date>Fri, 04 Nov 2011 05:51:11 +0000</date>
-		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-		<packager>CAE2 0.0.8</packager>
-	</packagemeta>
-</changelog>
+	-- Charlie Powell <charlie@eval.bz>  Fri, 04 Nov 2011 05:51:11 +0000
 
-<changelog version="0.0.9">
-	<notes>
-		In the process of switching to AGPL.
-		Moved the theme systems into its own component.
-	</notes>
-	<packagemeta>
-		<date>Sat, 19 Nov 2011 03:12:23 +0000</date>
-		<maintainer name="Charlie Powell" email="charlie@eval.bz"/>
-		<packager>CAE2 0.0.9</packager>
-	</packagemeta>
-</changelog>
-<changelog version="0.1.0">
-	<notes>
-		Implementing better support for Debian-style version strings.
-		new {css} smarty block.
-		CurrentPage now supports inline styles to be added to the head.
-		Other minor fixes.
-	</notes>
-</changelog>
+Core Plus 0.0.7
+
+	* Major work on the system updater, it now fundamentally works at least!
+	-- Charlie Powell <charlie@eval.bz>  Wed, 02 Nov 2011 01:21:43 -0400
+
+Core Plus 0.0.6
+
+	* Did some fixes to the email system, it now actually works.
+	* Considerable work on improving the Model validation system.  It now actually works.
+	* Minor tweak in the Form validation logic, it now just shows the validation check in the error message if the site is in development mode.
+	-- Charlie Powell <charlie@eval.bz>  Tue, 11 Oct 2011 19:47:58 -0400
+
+Core Plus 0.0.5
+
+	* Updates to the stylesheet and the admin config system.
+	-- Charlie Powell <charlie@eval.bz>  Sun, 18 Sep 2011 22:19:37 -0400
+
+Core Plus 0.0.4
+	* Adding phpMailer and the Email functionality back into the core.
+	* Minor change to configuration options and how they're stored in the database.
+	-- Charlie Powell <charlie@eval.bz>  Tue, 16 Aug 2011 23:47:36 -0400
+
+Core Plus 0.0.3
+
+	* More work completed on the user component (not included in core), and the widget system (included).
+	-- Charlie Powell <charlie@eval.bz>  Tue, 16 Aug 2011 23:31:44 -0400
+
+Core Plus 0.0.2-2
+
+	* New cachecore method, flush().  This is useful in reinstalling all components and ensuring that there are no lingering artifacts.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 15 Aug 2011 17:24:19 -0400
+
+Core Plus 0.0.2-1
+
+	* Removing some unnecessary components, namely the adodb5 library and the old version of the Form system.
+	* Did some updates to the phpass library.
+	-- Charlie Powell <charlie@eval.bz>  Sun, 24 Jul 2011 21:11:35 -0400
+
+Core Plus 0.0.2
+
+	* MAJOR changes, first re-release since the system switched from DAO to AR.  Includes a lot of other fixes too.
+	-- Charlie Powell <charlie@eval.bz>  Tue, 21 Jun 2011 23:02:02 -0400
+
+Core Plus 0.0.1-dev1
+
+	-- Charlie Powell <charlie@eval.bz>  Sun, 22 May 2011 02:00:52 -0400

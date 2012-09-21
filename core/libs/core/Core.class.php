@@ -1312,7 +1312,9 @@ class Core implements ISingleton {
 		ROOT_WDIR: "' . ROOT_WDIR . '",
 		ROOT_URL: "' . ROOT_URL . '",
 		ROOT_URL_SSL: "' . ROOT_URL_SSL . '",
-		ROOT_URL_NOSSL: "' . ROOT_URL_NOSSL . '"
+		ROOT_URL_NOSSL: "' . ROOT_URL_NOSSL . '",
+		SSL: ' . (SSL ? 'true' : 'false') . ',
+		SSL_MODE: "' . SSL_MODE . '",
 	};
 </script>';
 

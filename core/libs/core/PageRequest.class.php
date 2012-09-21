@@ -368,6 +368,8 @@ class PageRequest {
 			}
 		}
 		// No else needed, else it's a valid object.
+		/** @var View $view The valid view object for this page */
+
 
 		// For some of the options, there may be some that can be used for a fuzzy page, ie: a page's non-fuzzy template,
 		// title, or meta information.

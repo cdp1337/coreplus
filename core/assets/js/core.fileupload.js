@@ -33,6 +33,8 @@ Core.fileupload = function(idprefix, current){
 		$('#' + idprefix + '-selector').find('input').attr('checked', true);
 		// And show the action for it.
 		$('#' + idprefix + '-actions').show();
+		$('#' + idprefix + '-action-upload').find('input').removeAttr('disabled');
+		return;
 	}
 
 	if(self.hasUpload){

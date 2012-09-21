@@ -9,6 +9,7 @@
 	padding:5px 0;
 	overflow:hidden;
 	top: 0pt;
+	opacity: 0.9;
 }
 
 #admin-bar ul {position:relative;top:8px;}

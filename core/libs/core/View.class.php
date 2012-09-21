@@ -86,7 +86,7 @@ class View {
 	const CTYPE_PLAIN = 'text/plain';
 	const CTYPE_JSON  = 'application/json';
 	const CTYPE_XML   = 'application/xml';
-	const CTYPE_ICS       = 'text/calendar';
+	const CTYPE_ICS   = 'text/calendar';
 
 
 	public $error;
@@ -215,6 +215,14 @@ class View {
 	 * @var bool
 	 */
 	public $allowerrors = false;
+
+	/**
+	 * Set to true to require this page to be viewed as SSL.
+	 * Obviously if SSL is not enabled on this site, this has no effect.
+	 *
+	 * @var bool
+	 */
+	public $ssl = false;
 
 	/**
 	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
@@ -634,7 +642,22 @@ class View {
 			}
 			//mb_internal_encoding('utf-8');
 
-			if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
+			header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? Core::GetComponent()->getVersion() : ''));
+		}
+
+		// No SSL, skip all this!
+		if(SSL_MODE != SSL_MODE_DISABLED){
+			// If SSL is required by the controller and it's available, redirect there!
+			if($this->ssl && !SSL){
+				header('Location: ' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1));
+				die('This page requires SSL, if it does not redirect you automatically, please <a href="' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
+			}
+			// If SSL is set to be ondemand and the page does not have it set but it's enabled, redirect to the non-SSL version.
+			elseif(!$this->ssl && SSL && SSL_MODE == SSL_MODE_ONDEMAND){
+				header('Location: ' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1));
+				die('This page does not require SSL, if it does not redirect you automatically, please <a href="' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
+			}
+			// Else, SSL_MODE_ALLOWED doesn't care if SSL is enabled or not!
 		}
 
 		//echo mb_convert_encoding($data, 'UTF-8', 'auto');
