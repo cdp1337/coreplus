@@ -12,13 +12,14 @@
 
 {if $smarty.const.FACEBOOK_APP_ID && in_array('facebook', $backends)}
 	<p>OR</p>
+	<div id="fb-root"></div>
 	<fieldset>
 		<legend> Connect from Facebook</legend>
 
 		<div id="facebook-connecting-section" style="display:none;"></div>
-		<fb:login-button scope="email" style="display:none" id="facebook-login-button">
+		<a href="#" scope="email" style="display:none" id="facebook-login-button">
 			Login with Facebook
-		</fb:login-button>
+		</a>
 
 		<noscript>
 			<a href="{$facebooklink}">Login with Facebook</a>
@@ -84,4 +85,4 @@
 	</script>
 {/if}
 
-{script location="foot"} document.getElementById('email').focus(); {/script}
+{script location="foot"} document.getElementById('formtextinput-email').focus(); {/script}

@@ -1,3 +1,10 @@
+User 2.2.1
+
+	* Fixed some facebook issues with the newest api version.
+	* Updated the login script to provide some user feedback
+	* Fixed a minor bug with the avatar
+	-- Charlie Powell <charlie@eval.bz>  3 Oct 2012s
+
 User 2.2.0
 
 	* Added a javascript login form to provide some animation for the user to wait for slow server processors,

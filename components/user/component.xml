@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="user" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.1" name="user" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.2"/>
 		<require name="Facebook" type="component"/>
@@ -15,7 +15,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="6cad31c6ea2bec38eb54cafcbd909892"/>
+		<file filename="CHANGELOG" md5="1afa0d48846ec6cf012ec6de25ddf2b1"/>
 		<file filename="User.class.php" md5="73befbf81ea0608299da95fab038e85a">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -35,7 +35,7 @@
 		<file filename="backends/User_datamodel.backend.php" md5="f583942c5b1f3bc1b7ef78808eefe322">
 			<class name="User_datamodel_Backend"/>
 		</file>
-		<file filename="backends/User_facebook.backend.php" md5="9b56ef72aac8afdeaf37f303c26f1005">
+		<file filename="backends/User_facebook.backend.php" md5="4e0682dfc42961ed543eb723b4feea76">
 			<class name="User_facebook_Backend"/>
 		</file>
 		<file filename="controllers/UserActivityController.php" md5="0f890921ba4952efb94fb0f8c9124f45">
@@ -44,14 +44,14 @@
 		<file filename="controllers/UserAdminController.php" md5="975438ad9dfea0ec6b3fd6e28bbd92fc">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="5d4239615165b7014ea948502733f0aa">
+		<file filename="controllers/UserController.php" md5="b8308057ea4bfaef036320bca020b6ec">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="87720df274ed8438582743843c8f466f">
 			<controller name="UserGroupAdminController"/>
 		</file>
-		<file filename="helpers/UserFunctions.php" md5="64c1f464dfa3754b7c802c56213a956f"/>
-		<file filename="helpers/UserHelper.class.php" md5="e7dd5a743bf4dbf2c77111a9930375b1">
+		<file filename="helpers/UserFunctions.php" md5="8f81bd809a796ccb0e8826a245a7b222"/>
+		<file filename="helpers/UserHelper.class.php" md5="8dc4822427a68f2d97852392903c8037">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
@@ -77,8 +77,8 @@
 		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="f24f2069b4c49a7887c9e66f7cf0d73a"/>
 		<file filename="templates/pages/user/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/user/forgotpassword.tpl" md5="c2da0dced97b6b643b20c40a5046b5d1"/>
-		<file filename="templates/pages/user/login.tpl" md5="8c691f0acfb41753cda0015889967c5a"/>
-		<file filename="templates/pages/user/me.tpl" md5="69fd3fd38bd1d8ef846f123b2099fb4c"/>
+		<file filename="templates/pages/user/login.tpl" md5="40e0d2e1bec09679c42b6cdfa9e7552b"/>
+		<file filename="templates/pages/user/me.tpl" md5="fb7f9d4e42f671607a67e5d33e9a7863"/>
 		<file filename="templates/pages/user/password.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/useractivity/index.tpl" md5="f1463c6f2df95ad634013491b867ba53"/>
@@ -119,7 +119,7 @@
 		<permission key="user_activity_list" description="List user activity and analytics"/>
 	</permissions>
 	<assets>
-		<file filename="assets/js/user/login.js" md5="f48e188960e94f209e89f5168b101983"/>
+		<file filename="assets/js/user/login.js" md5="0a3852f3140eb2e24d66109eb628e6f0"/>
 		<file filename="assets/js/user/user.js" md5="b8793bfd7cd6ebeb3a9889905b300f7a"/>
 	</assets>
 	<description>
@@ -147,6 +147,7 @@
 		<upgrade from="2.0.3" to="2.1.0"/>
 		<upgrade from="2.1.0" to="2.1.1"/>
 		<upgrade from="2.1.1" to="2.2.0"/>
+		<upgrade from="2.2.0" to="2.2.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -86,7 +86,7 @@ function get_form($user = null){
 
 	// Avatar is for existing accounts or admins.
 	if($type == 'edit' || \Core\user()->checkAccess('p:user_manage')){
-		$form->addElement('file', array('name' => 'avatar', 'title' => 'Avatar Image', 'basedir' => 'public/user/avatar', 'accept' => 'image/*', 'value' => $user->get('avatar')));
+		$form->addElement('file', array('name' => 'avatar', 'title' => 'Avatar Image', 'basedir' => 'public/user', 'accept' => 'image/*', 'value' => $user->get('avatar')));
 	}
 
 	// The factory depends on the registration type as well.

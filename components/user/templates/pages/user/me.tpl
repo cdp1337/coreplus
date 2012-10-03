@@ -2,7 +2,7 @@
 	<table>
 		<tr>
 			<td>
-				{img src="`$user->get('avatar')`" placeholder="person" width="150" height="300"}
+				{img src="public/user/`$user->get('avatar')`" placeholder="person" width="150" height="300"}
 			</td>
 		</tr>
 	</table>

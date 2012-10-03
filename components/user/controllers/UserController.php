@@ -203,9 +203,26 @@ class UserController extends Controller_2_1{
 				try{
 					$facebook->setAccessToken($_POST['access-token']);
 					User_facebook_Backend::Login($facebook);
+
+
 					// Redirect to the home page or the page originally requested.
-					if(REL_REQUEST_PATH == '/user/login') Core::Redirect('/');
-					else Core::Reload();
+					// The exception to this is if the user went straight to the user login page.
+					if(REL_REQUEST_PATH == '/user/login'){
+						$redirect = (isset($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : '/user/me';
+					}
+					elseif(strpos($_SERVER['HTTP_REFERER'], '/user/login') !== false){
+						$redirect = '/';
+					}
+					else{
+						$redirect = null;
+					}
+
+					if($redirect){
+						Core::Redirect($redirect);
+					}
+					else{
+						Core::Reload();
+					}
 				}
 				catch(Exception $e){
 					$error = $e->getMessage();

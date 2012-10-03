@@ -10,55 +10,67 @@ facebook_login = function(access_token){
 $(function(){
 	// Because the facebook link is a javascript-powered widget... only
 	// show it if javascript is enabled.
-	$('#facebook-connecting-section').html('Connecting to Facebook.').show();
+	$('#facebook-connecting-section').html('Connecting...').show();
 	
-	var waitforfbcounter = 0;
-	var waitforfb = setInterval(function(){
+	var waitforfbcounter = 0,
+		waitforfb;
+
+	waitforfb = setInterval(function(){
 		waitforfbcounter++;
 		
-		if(typeof FB != 'undefined' && FB._userStatus != 'unknown'){
+		if(Core.FB.ready){
 			clearInterval(waitforfb);
 			
 			$('#facebook-connecting-section').hide();
-			$('#facebook-login-button').show();
-			
-			FB.Event.subscribe('auth.login', function(response) {
-				//console.log(response);
 
-				if(response.status == 'connected'){
+			// User already logged in?  That's all then!
+			if(Core.User.authenticated) return;
+
+			$('#facebook-login-button').show().click(function(){
+				console.log('clicked the facebook login button.  here we GO!');
+
+				var scope = $(this).attr('scope');
+				if(!scope) scope = 'email'; // Default.
+
+				FB.login(function(response) {
+					if (response.authResponse) {
+						console.log('Welcome!  Fetching your information.... ');
+						facebook_login(response.authResponse.accessToken);
+					}
+					else {
+						console.log('User cancelled login or did not fully authorize.');
+					}
+				},  {scope: scope});
+
+				return false;
+			});
+
+			/*
+			FB.Event.subscribe('auth.authResponseChange', function(response){
+				console.log('auth.authResponseChange', response);
+console.log(clickedbutton);
+				// Only log the user in if they actually clicked the button!
+				if(!clickedbutton) return;
+
+				if(response.authResponse){
 					facebook_login(response.authResponse.accessToken);
 					return;
 				}
-			});
 
-			// Is the user already logged in?
-			FB.getLoginStatus(function(response){
-				if(response.status == 'connected'){
-					// Override the login button.
-					$('#facebook-login-button').click({ accessToken:response.authResponse.accessToken }, function(e){
-						facebook_login(e.data.accessToken);
-						return false;
-					});
-				}
 			});
-			
+			*/
 			return;
 		}
-		
+
 		// only wait for so long.
 		// 30 iterations will be about 3 seconds at 100ms each.
 		// This shouldn't be too low, because it also includes the actual FB 
 		// connection in the javascript API.
-		if(waitforfbcounter > 30){
-			$('#facebook-connecting-section').html('Unable to contact Facebook.');
+		if(waitforfbcounter > 32){
+			$('#facebook-connecting-section').html('Unable to connect to Facebook.');
 			clearInterval(waitforfb);
 			return;
 		}
-		
-		// Show some minimal amount of user feedback.
-		if(waitforfbcounter % 5 == 0){
-			$('#facebook-connecting-section').append('.');
-		}
-	}, 100);
+	}, 250);
 	
 });

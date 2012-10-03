@@ -282,6 +282,6 @@ abstract class UserHelper{
 		$user->save();
 
 		Core::SetMessage('Updated user successfully', 'success');
-		return '/useradmin';
+		return true;
 	}
 }
