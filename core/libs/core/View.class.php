@@ -568,7 +568,7 @@ class View {
 			// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
 			if (DEVELOPMENT_MODE) {
 				$debug = '';
-				$debug .= '<pre class="xdebug-var-dump">';
+				$debug .= '<pre class="xdebug-var-dump screen">';
 				$debug .= '<b>Template Information</b>' . "\n";
 				$debug .= 'Base URL: ' . $this->baseurl . "\n";
 				$debug .= 'Template Used: ' . $this->templatename . "\n";

@@ -503,11 +503,12 @@ class Model implements ArrayAccess {
 	private function _saveNew() {
 		$i = self::GetIndexes();
 		$s = self::GetSchema();
+		$n = $this->_getTableName();
 
 		if (!isset($i['primary'])) $i['primary'] = array(); // No primary schema defined... just don't make the in_array bail out.
 
 		$dat = new Dataset();
-		$dat->table(self::GetTableName());
+		$dat->table($n);
 
 		$idcol = false;
 		foreach ($this->_data as $k => $v) {
@@ -543,13 +544,14 @@ class Model implements ArrayAccess {
 	private function _saveExisting() {
 		$i = self::GetIndexes();
 		$s = self::GetSchema();
+		$n = $this->_getTableName();
 
 		// No primary schema defined... just don't make the in_array bail out.
 		if (!isset($i['primary'])) $i['primary'] = array();
 
 		// This is the dataset object that will be integral in this function.
 		$dat = new Dataset();
-		$dat->table(self::GetTableName());
+		$dat->table($n);
 
 		$idcol = false;
 		foreach ($this->_data as $k => $v) {
@@ -587,7 +589,7 @@ class Model implements ArrayAccess {
 				$this->_data[$k] = $v;
 			}
 			else {
-				if ($this->_datainit[$k] == $v) continue; // Skip non-changed columns
+				if (isset($this->_datainit[$k]) && $this->_datainit[$k] == $v) continue; // Skip non-changed columns
 				//echo "Setting [$k] = [$v]<br/>"; // DEBUG
 				$dat->update($k, $v);
 			}
@@ -621,12 +623,12 @@ class Model implements ArrayAccess {
 
 	public function delete() {
 		if ($this->exists()) {
+			$n = $this->_getTableName();
+			$i = self::GetIndexes();
 			// Delete the data from the database.
 			$dat = new Dataset();
 
-			$dat->table(self::GetTableName());
-
-			$i = self::GetIndexes();
+			$dat->table($n);
 
 			if (!isset($i['primary'])) {
 				throw new Exception('Unable to delete model [ ' . get_class($this) . ' ] without any primary keys.');
@@ -1092,6 +1094,15 @@ class Model implements ArrayAccess {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Get the table name for this class
+	 *
+	 * @return null|string
+	 */
+	public function _getTableName(){
+		return self::GetTableName();
 	}
 
 	/**

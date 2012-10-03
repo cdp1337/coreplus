@@ -77,6 +77,7 @@ class Email {
 			// Load in some default options for this email based on the configuration options.
 			$this->_mailer->From = ConfigHandler::Get('/core/email/from');
 			if (!$this->_mailer->From) $this->_mailer->From = 'website@' . $_SERVER['HTTP_HOST'];
+			$this->_mailer->Sender = $this->_mailer->From;
 
 			$this->_mailer->FromName = ConfigHandler::Get('/core/email/from_name');
 			$this->_mailer->Mailer   = ConfigHandler::Get('/core/email/mailer');
@@ -105,9 +106,7 @@ class Email {
 			$this->_mailer->AddCustomHeader('X-AntiAbuse: Original Domain - ' . SERVERNAME);
 			$this->_mailer->AddCustomHeader('X-AntiAbuse: Sitename - ' . SITENAME);
 			$this->_mailer->AddCustomHeader('MimeOLE: Core Plus');
-
-			// Application version stamp.  For security reasons only attach when in DEV mode.
-			if (DEVELOPMENT_MODE) $this->_mailer->AddCustomHeader('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
+			$this->_mailer->AddCustomHeader('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 
 			// Default to set the formatting to HTML.
 			//$this->_mailer->isHTML(true);
@@ -159,6 +158,16 @@ class Email {
 		$m->AddAddress($address, $name);
 	}
 
+	public function from($address, $name = ''){
+		// Will only affect the from, not the sender!
+		$this->getMailer()->From = $address;
+		if($name) $this->getMailer()->FromName = $name;
+	}
+
+	public function addBCC($address, $name = ''){
+		$this->getMailer()->AddBCC($address, $name);
+	}
+
 	/**
 	 * Add a "to" address for this email.
 	 *
@@ -196,9 +205,15 @@ class Email {
 
 		// Is the body HTML and there's already a non-HTML body?
 		if ($ishtml) {
-			if ($m->ContentType == 'text/plain' && $m->Body) $m->AltBody = $m->Body; // Switch it!
-			$m->IsHTML(true);
-			$m->Body = $body;
+			if ($m->ContentType == 'text/plain' && $m->Body){
+				// Switch it!
+				$m->AltBody = $m->Body;
+				$m->IsHTML(true);
+				$m->Body = $body;
+			}
+			else{
+				$m->MsgHTML($body);
+			}
 		}
 		else {
 			// If the mailer is already an HTML email, set this on the ALT body.

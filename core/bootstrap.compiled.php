@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 21 Sep 2012 01:15:55 -0400
+ * @compiled Wed, 03 Oct 2012 14:14:30 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1070,9 +1070,10 @@ return $s[$key];
 private function _saveNew() {
 $i = self::GetIndexes();
 $s = self::GetSchema();
+$n = $this->_getTableName();
 if (!isset($i['primary'])) $i['primary'] = array(); // No primary schema defined... just don't make the in_array bail out.
 $dat = new Dataset();
-$dat->table(self::GetTableName());
+$dat->table($n);
 $idcol = false;
 foreach ($this->_data as $k => $v) {
 $keyschema = $s[$k];
@@ -1098,9 +1099,10 @@ if ($idcol) $this->_data[$idcol] = $dat->getID();
 private function _saveExisting() {
 $i = self::GetIndexes();
 $s = self::GetSchema();
+$n = $this->_getTableName();
 if (!isset($i['primary'])) $i['primary'] = array();
 $dat = new Dataset();
-$dat->table(self::GetTableName());
+$dat->table($n);
 $idcol = false;
 foreach ($this->_data as $k => $v) {
 if(!isset($s[$k])){
@@ -1126,7 +1128,7 @@ $dat->where($k, $this->_datainit[$k]);
 $this->_data[$k] = $v;
 }
 else {
-if ($this->_datainit[$k] == $v) continue; // Skip non-changed columns
+if (isset($this->_datainit[$k]) && $this->_datainit[$k] == $v) continue; // Skip non-changed columns
 $dat->update($k, $v);
 }
 }
@@ -1143,9 +1145,10 @@ $this->_exists   = true;
 }
 public function delete() {
 if ($this->exists()) {
-$dat = new Dataset();
-$dat->table(self::GetTableName());
+$n = $this->_getTableName();
 $i = self::GetIndexes();
+$dat = new Dataset();
+$dat->table($n);
 if (!isset($i['primary'])) {
 throw new Exception('Unable to delete model [ ' . get_class($this) . ' ] without any primary keys.');
 }
@@ -1412,6 +1415,9 @@ $this->_datadecrypted[$k] = $dec;
 }
 }
 }
+}
+public function _getTableName(){
+return self::GetTableName();
 }
 protected function encryptValue($value){
 $cipher = 'AES-256-CBC';
@@ -5919,6 +5925,10 @@ ROOT_URL_SSL: "' . ROOT_URL_SSL . '",
 ROOT_URL_NOSSL: "' . ROOT_URL_NOSSL . '",
 SSL: ' . (SSL ? 'true' : 'false') . ',
 SSL_MODE: "' . SSL_MODE . '",
+User: {
+id: ' . (\Core\user()->get('id') ? \Core\user()->get('id') : 0) . ',
+authenticated: ' . (\Core\user()->exists() ? 'true' : 'false') . '
+}
 };
 </script>';
 View::AddScript($script, 'head');

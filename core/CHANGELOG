@@ -5,6 +5,15 @@ Core Plus 2.2.1
 	* Styling tweaks
 	* Fixed the file upload input if only one option is present
 	* Switched the changelog to the new standard format
+	* Added a new utility, create_component.  This will create the skeleton structure of a new component.
+	* Added html5shiv, the successor to the html5ie project.
+	* Added element IDs as a class name of the containing wrapper, allows for easier styling.
+	* Fixes in the {img} tag for when the src is set but not available.
+	* Added a User object in the javascript api to make some basic user information visible in javascript applications.
+	* Updated the email system a little, it now sets the "Sender" and "X-Content-Encoded-By" headers.
+	* Fix in the form system, added the autocomplete argument to parse correctly and a new getID method.
+	* Fix in the model system to add support for models that are extended by other classes.
+	* Set the debug info to be hidden in print views.
 
 Core Plus 2.2.0
 

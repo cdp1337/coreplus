@@ -43,7 +43,7 @@ function smarty_function_img($params, $template){
 		unset($params['src']);
 	}
 	else{
-		throw new SmartyException('{img} tag requires either a "src" or "file" parameter.');
+		$f = null;
 	}
 	
 	// Some optional parameters, (and their defaults)
@@ -79,9 +79,18 @@ function smarty_function_img($params, $template){
 
 
 	// If the file doesn't exist and a placeholder was provided, use the appropriate placeholder image!
-	if(!($f->exists() && $f->isImage()) && $placeholder){
+	if(!($f && $f->exists() && $f->isImage()) && $placeholder){
 		// Try that!
 		$f = new File_local_backend('assets/images/placeholders/' . $placeholder . '.png');
+	}
+
+	if(!$f){
+		throw new SmartyException('{img} tag requires either "src", "file", or a "placeholder" parameter.');
+	}
+
+	// Do the rest of the attributes that the user sent in (if there are any)
+	foreach($params as $k => $v){
+		$attributes[$k] = $v;
 	}
 
 	// Well...
@@ -90,11 +99,6 @@ function smarty_function_img($params, $template){
 	}
 	else{
 		$attributes['src'] = $f->getURL();
-	}
-	
-	// Do the rest of the attributes that the user sent in (if there are any)
-	foreach($params as $k => $v){
-		$attributes[$k] = $v;
 	}
 	
 	// Merge them back together in one string.

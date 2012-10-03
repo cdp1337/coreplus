@@ -322,6 +322,14 @@ class FormElement {
 					$this->_attributes[$key] = $value;
 				}
 				break;
+			case 'autocomplete':
+				if(!$value){
+					$this->_attributes[$key] = 'off';
+				}
+				else{
+					$this->_attributes[$key] = 'on';
+				}
+				break;
 			default:
 				$this->_attributes[$key] = $value;
 				break;
@@ -337,8 +345,7 @@ class FormElement {
 				else return $this->get('name');
 				break;
 			case 'id': // ID is also a special case, it casn use the name if not defined otherwise.
-				if (!empty($this->_attributes['id'])) return $this->_attributes['id'];
-				else return $this->get('name');
+				return $this->getID();
 				break;
 			default:
 				return (isset($this->_attributes[$key])) ? $this->_attributes[$key] : null;
@@ -364,11 +371,13 @@ class FormElement {
 		}
 	}
 
+
 	/**
 	 * This set explicitly handles the value, and has the extended logic required
 	 *  for error checking and validation.
 	 *
-	 * @param mixed $value
+	 * @param mixed $value The value to set
+	 * @return boolean
 	 */
 	public function setValue($value) {
 		if ($this->get('required') && !$value) {
@@ -451,6 +460,31 @@ class FormElement {
 		$e = $this->hasError();
 
 		return $c . (($r) ? ' formrequired' : '') . (($e) ? ' formerror' : '');
+	}
+
+	/**
+	 * Get the ID for this element, will either return the user-set ID, or an automatically generated one.
+	 *
+	 * @return string
+	 */
+	public function getID(){
+		// If the ID is already set, return that.
+		if (!empty($this->_attributes['id'])){
+			return $this->_attributes['id'];
+		}
+		// I need to generate a javascript and UA friendly version from the name.
+		else{
+			$n = $this->get('name');
+			$c = strtolower(get_class($this));
+			// Prepend the form type to the name.
+			$id = $c . '-' . $n;
+			// Remove empty parantheses, (there shouldn't be any)
+			$id = str_replace('[]', '', $id);
+			// And replace brackets with dashes appropriatetly
+			$id = preg_replace('/\[([^\]]*)\]/', '-$1', $id);
+
+			return $id;
+		}
 	}
 
 	/**
@@ -921,7 +955,7 @@ class Form extends FormGroup {
 		unset($_SESSION['FormData'][$formid]);
 
 		// If it's set to die, simply exit the script without outputting anything.
-		if ($status == 'die') exit;
+		if ($status === 'die') exit;
 		elseif ($status === true) Core::Reload();
 		else Core::Redirect($status);
 	}
@@ -957,13 +991,13 @@ class Form extends FormGroup {
 			}
 			$f->set('___modelpks', $pks);
 		}
-/*
-		// Some objects require special attention.
-		if($model instanceof PageModel){
-			$f->addElement('pagemeta', array('name' => 'model', 'model' => $model));
-			return $f;
-		}
-*/
+		/*
+		  // Some objects require special attention.
+		  if($model instanceof PageModel){
+			  $f->addElement('pagemeta', array('name' => 'model', 'model' => $model));
+			  return $f;
+		  }
+  */
 		foreach ($s as $k => $v) {
 			// Skip the AI column if it doesn't exist.
 			if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
@@ -1215,73 +1249,73 @@ class FormPageMeta extends FormGroup {
 
 		$this->addElement(
 			'pageparentselect', array(
-		        'name'    => $name . "[parenturl]",
-		        'title'   => 'Parent Page',
-		        'value'   => $page->get('parenturl'),
-		        'options' => $opts
-	        )
+				                  'name'    => $name . "[parenturl]",
+				                  'title'   => 'Parent Page',
+				                  'value'   => $page->get('parenturl'),
+				                  'options' => $opts
+			                  )
 		);
 
 		// Title
 		$this->addElement(
 			'text', array(
-				'name'        => $name . "[title]",
-				'title'       => 'Title',
-				'value'       => $page->get('title'),
-				'description' => 'Every page needs a title to accompany it, this should be short but meaningful.',
-				'required'    => true
-			)
+				      'name'        => $name . "[title]",
+				      'title'       => 'Title',
+				      'value'       => $page->get('title'),
+				      'description' => 'Every page needs a title to accompany it, this should be short but meaningful.',
+				      'required'    => true
+			      )
 		);
 
 		// Rewrite url.
 		$this->addElement(
 			'pagerewriteurl', array(
-				'name'        => $name . "[rewriteurl]",
-				'title'       => 'Page URL',
-				'value'       => $page->get('rewriteurl'),
-				'description' => 'Starts with a "/", omit ' . ROOT_URL,
-				'required'    => true
-			)
+				                'name'        => $name . "[rewriteurl]",
+				                'title'       => 'Page URL',
+				                'value'       => $page->get('rewriteurl'),
+				                'description' => 'Starts with a "/", omit ' . ROOT_URL,
+				                'required'    => true
+			                )
 		);
 
 
 		// Author
 		$this->addElement(
 			'text', array(
-				'name'        => $name . "_meta[author]",
-				'title'       => 'Author',
-				'description' => 'Completely optional, but feel free to include it if relevant',
-				'value'       => $page->getMeta('author')
-			)
+				      'name'        => $name . "_meta[author]",
+				      'title'       => 'Author',
+				      'description' => 'Completely optional, but feel free to include it if relevant',
+				      'value'       => $page->getMeta('author')
+			      )
 		);
 
 		// Meta Keywords
 		$this->addElement(
 			'text', array(
-				'name'        => $name . "_meta[keywords]",
-				'title'       => 'Keywords',
-				'description' => 'Helps search engines classify this page',
-				'value'       => $page->getMeta('keywords')
-			)
+				      'name'        => $name . "_meta[keywords]",
+				      'title'       => 'Keywords',
+				      'description' => 'Helps search engines classify this page',
+				      'value'       => $page->getMeta('keywords')
+			      )
 		);
 
 		// Meta Description
 		$this->addElement(
 			'textarea', array(
-				'name'        => $name . "_meta[description]",
-				'title'       => 'Description',
-				'description' => 'Text that displays on search engine and social network preview links',
-				'value'       => $page->getMeta('description')
-			)
+				          'name'        => $name . "_meta[description]",
+				          'title'       => 'Description',
+				          'description' => 'Text that displays on search engine and social network preview links',
+				          'value'       => $page->getMeta('description')
+			          )
 		);
 
 
 		$this->addElement(
 			'access', array(
-		        'name'  => $name . "[access]",
-		        'title' => 'Access Permissions',
-		        'value' => $page->get('access')
-	        )
+				        'name'  => $name . "[access]",
+				        'title' => 'Access Permissions',
+				        'value' => $page->get('access')
+			        )
 		);
 
 		// Give me all the skins available on the current theme.
@@ -1294,11 +1328,11 @@ class FormPageMeta extends FormGroup {
 		if(sizeof($skins) > 2){
 			$this->addElement(
 				'select', array(
-					'name'    => $name . "[theme_template]",
-					'title'   => 'Theme Skin',
-					'value'   => $page->get('theme_template'),
-					'options' => $skins
-				)
+					        'name'    => $name . "[theme_template]",
+					        'title'   => 'Theme Skin',
+					        'value'   => $page->get('theme_template'),
+					        'options' => $skins
+				        )
 			);
 		}
 

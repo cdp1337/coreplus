@@ -25,3 +25,10 @@ Core.PostURL = function(u){
 Core.Reload = function(){
 	window.location.reload();
 };
+
+if(typeof console == 'undefined'){
+	console = {};
+}
+if(typeof console.log == 'undefined'){
+	console.log = function(){ /* This page purposefully left blank :p */ }
+}

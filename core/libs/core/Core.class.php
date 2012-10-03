@@ -1315,6 +1315,10 @@ class Core implements ISingleton {
 		ROOT_URL_NOSSL: "' . ROOT_URL_NOSSL . '",
 		SSL: ' . (SSL ? 'true' : 'false') . ',
 		SSL_MODE: "' . SSL_MODE . '",
+		User: {
+			id: ' . (\Core\user()->get('id') ? \Core\user()->get('id') : 0) . ',
+			authenticated: ' . (\Core\user()->exists() ? 'true' : 'false') . '
+		}
 	};
 </script>';
 
