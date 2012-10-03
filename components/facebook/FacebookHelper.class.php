@@ -13,6 +13,7 @@ class FacebookHelper {
 			// This script does the init and the include in one go.
 			$script = <<<EOD
 <script type="text/javascript">
+Core.FB = {status: "loading", ready: false};
 window.fbAsyncInit = function() {
 	FB.init({
 		appId: '$appid',
@@ -21,6 +22,8 @@ window.fbAsyncInit = function() {
 		xfbml: true,
 		oauth: true
 	});
+	Core.FB.ready = true;
+	Core.FB.status = 'loaded';
 };
 
 (function() {

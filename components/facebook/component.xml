@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.1~Core1" name="Facebook" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0~core1" name="Facebook" execmode="web">
 	<provides>
-		<provide type="library" name="facebook-sdk" version="3.0.1"/>
+		<provide type="library" name="facebook-sdk" version="3.2.0"/>
 		<scriptlibrary name="facebook" call="FacebookHelper::Includejs"/>
 	</provides>
 	<configs>
@@ -10,33 +10,47 @@
 		<config key="/facebook/secretid" mapto="FACEBOOK_SECRET_ID" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
 		<config key="/facebook/appsecret" mapto="FACEBOOK_APP_SECRET" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
 	</configs>
+	<userconfigs>
+		<userconfig key="facebook_id" name="Facebook ID" onregistration="0" onedit="0"/>
+		<userconfig key="facebook_link" name="Facebook Link" onregistration="0" onedit="0"/>
+		<userconfig key="gender" name="Gender" onregistration="0" onedit="0"/>
+	</userconfigs>
 	<files>
-		<file filename="FacebookHelper.class.php" md5="356f91d5381d021c46049b8b0e4f693f">
+		<file filename="FacebookHelper.class.php" md5="bdd9c50ac066b27b3640ba04203ac008">
 			<class name="FacebookHelper"/>
 		</file>
 		<file filename="facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
-		<file filename="facebook-php-sdk/examples/example.php" md5="fd3072d44ac79f42e917e1950e5cb0ee"/>
-		<file filename="facebook-php-sdk/readme.md" md5="587888311be616a83499678ce1c0ef8e"/>
-		<file filename="facebook-php-sdk/src/base_facebook.php" md5="40382538cae1636a91ab41bbd755fdef">
+		<file filename="facebook-php-sdk/composer.json" md5="a833b32e03c4ed5375861eefad65933e"/>
+		<file filename="facebook-php-sdk/examples/example.php" md5="c16b4247b4a2506a44166fb37bb1efe2"/>
+		<file filename="facebook-php-sdk/examples/with_js_sdk.php" md5="555e738cb8c6b42834a5c5a2083bd3e6"/>
+		<file filename="facebook-php-sdk/readme.md" md5="56068d6612b394b281ccec38128db81e"/>
+		<file filename="facebook-php-sdk/src/base_facebook.php" md5="8693ab3003ce703c3c3b1be4aebea2a5">
 			<class name="FacebookApiException"/>
 			<class name="BaseFacebook"/>
 		</file>
-		<file filename="facebook-php-sdk/src/facebook.php" md5="9ca98ec14e2f3926ba89fcb753fbc598">
+		<file filename="facebook-php-sdk/src/facebook.php" md5="dcb23268876023d6fa7e1d3349d13819">
 			<class name="Facebook"/>
 		</file>
 		<file filename="facebook-php-sdk/src/fb_ca_chain_bundle.crt" md5="c3055d03e94bbee13c7c6cc3a76083d9"/>
 		<file filename="facebook-php-sdk/tests/bootstrap.php" md5="b8bd1937c8d639841949a24e2fcdf983"/>
-		<file filename="facebook-php-sdk/tests/tests.php" md5="a8455c0e1618059786d2614abd1e4321">
+		<file filename="facebook-php-sdk/tests/tests.php" md5="5523ebf26f9102805b9c96d5e2861b9f">
 			<class name="PHPSDKTestCase"/>
 			<class name="TransientFacebook"/>
 			<class name="FBRecordURL"/>
+			<class name="FBRecordMakeRequest"/>
 			<class name="FBPublic"/>
 			<class name="PersistentFBPublic"/>
 			<class name="FBCode"/>
 			<class name="FBAccessToken"/>
 			<class name="FBGetCurrentURLFacebook"/>
+			<class name="FBPublicCookie"/>
+			<class name="FBPublicGetAccessTokenFromCode"/>
+			<class name="FBPublicState"/>
 		</file>
 	</files>
+	<upgrades>
+		<upgrade from="3.0.1~Core1" to="3.2.0~core1"/>
+	</upgrades>
 	<authors>
 		<author name="Naitik Shah" email="naitik@facebook.com"/>
 	</authors>
