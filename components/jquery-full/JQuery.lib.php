@@ -123,4 +123,13 @@ abstract class JQuery {
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
+
+	public static function Include_timepicker(){
+		// I need jquery ui first.
+		self::IncludeJQueryUI();
+		CurrentPage::AddScript('js/jquery/jqueryui.timepicker.js');
+
+		// IMPORTANT!  Tells the script that the include succeeded!
+		return true;
+	}
 }

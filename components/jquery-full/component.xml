@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8.0~core2" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8.0~core3" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="1.9.0" operation="ge"/>
 	</requires>
@@ -19,6 +19,7 @@
 		<scriptlibrary name="jqueryui" call="JQuery::IncludeJQueryUI"/>
 		<scriptlibrary name="jqueryui.nestedSortable" call="JQuery::Include_nestedSortable"/>
 		<scriptlibrary name="jqueryui.readonly" call="JQuery::Include_readonly"/>
+		<scriptlibrary name="jqueryui.timepicker" call="JQuery::Include_timepicker"/>
 		<scriptlibrary name="jquery.tmpl" call="JQuery::Include_tmpl"/>
 		<scriptlibrary name="jquery.masonry" call="JQuery::Include_masonry"/>
 		<scriptlibrary name="jquery.form" call="JQuery::Include_form"/>
@@ -82,14 +83,15 @@
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.min.js" md5="28fb224b45d2fdb5e5eef85d2dfc8458"/>
 		<file filename="assets/js/jquery/jquery.ui.readonly.js" md5="3de4b84a6cdbc15e6e42514d80bd743b"/>
 		<file filename="assets/js/jquery/jquery.ui.readonly.min.js" md5="ae62f410564d47cfec4593a0d5e1ffda"/>
+		<file filename="assets/js/jquery/jqueryui.timepicker.js" md5="cc5adcc0e1e6b0a1cd2a26daf6b52903"/>
 		<file filename="assets/js/jquery/tmpl.js" md5="5e2855f4f4a4fd07ac343c9f0823d67f"/>
 		<file filename="assets/js/jquery/tmpl.min.js" md5="411df7e2bc659d35015f7fdb7432b331"/>
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG.md" md5="4392f799ae10b6d8338f9f9a9d4f693f"/>
+		<file filename="CHANGELOG" md5="bf863f8c0513b71ee3e082afb30f9195"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="f60a321d1e61bfae6a061b0290c29f79">
+		<file filename="JQuery.lib.php" md5="46bcee1f82b886821cb40f72840db838">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
@@ -109,6 +111,7 @@
 		<upgrade from="1.7.2~core1" to="1.7.2~core2"/>
 		<upgrade from="1.7.2~core2" to="1.8.0~core1"/>
 		<upgrade from="1.8.0~core1" to="1.8.0~core2"/>
+		<upgrade from="1.8.0~core2" to="1.8.0~core3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
