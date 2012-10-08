@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.1" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.2" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -38,8 +38,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="d5445375de6b60b97832389afad0f3be"/>
-		<file filename="core/CHANGELOG" md5="ab5a3f6e04e8617f1b958c788d768121"/>
-		<file filename="core/bootstrap.compiled.php" md5="2dd576f032a6f97905f7c63c6d52d76e">
+		<file filename="core/CHANGELOG" md5="be0aeded63bce2a6c88b80980212c116"/>
+		<file filename="core/bootstrap.compiled.php" md5="63ae7b3b6bf54dd3a1738a8c7f926875">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -457,7 +457,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="e6c882d3d888a7021ddaa836c660d069">
+		<file filename="core/libs/core/Component_2_1.php" md5="a4f4e0c61352d58dfc34de7e66c2ca6f">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="94fdacc5d802f86bab96b573b142bc78">
@@ -511,7 +511,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="82971d3d5d9f5a7cd5b16de0063833de">
+		<file filename="core/libs/core/Model.class.php" md5="1e8316c68096cee780293a84e496b886">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -1280,7 +1280,7 @@
 		</file>
 		<file filename="install/assets/jquery-1.7.1.min.js" md5="ddb84c1587287b2df08966081ef063bf"/>
 		<file filename="install/assets/style.css" md5="d8173f5c97cd9ca198cc2987e16ed519"/>
-		<file filename="install/index.php" md5="5ad5af30bf5752c893bb2b3571d006d3"/>
+		<file filename="install/index.php" md5="52733895b81bbb35adb63821dc1d98bd"/>
 		<file filename="install/templates/configs.tpl" md5="46fa1ad5d0ee122196b9b9b40f0e6e94"/>
 		<file filename="install/templates/install.tpl" md5="6b466824ffb7cecedfbae5d3ed8189e2"/>
 		<file filename="install/templates/preflight_config.tpl" md5="ed6b08acc6c3224a0527f88d0ac49804"/>
@@ -1295,10 +1295,10 @@
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 	</files>
 	<pages>
-		<page baseurl="/Admin" admin="1" widget="0" access="g:admin" title="Administration"/>
-		<page baseurl="/Admin/ReinstallAll" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="Reinstall All Components"/>
-		<page baseurl="/Admin/Config" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="System Configuration"/>
-		<page baseurl="/Updater" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="System Updater"/>
+		<page baseurl="/admin" admin="1" widget="0" access="g:admin" title="Administration"/>
+		<page baseurl="/admin/reinstallall" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="Reinstall All Components"/>
+		<page baseurl="/admin/config" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="System Configuration"/>
+		<page baseurl="/updater" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="System Updater"/>
 	</pages>
 	<view searchdir="core/templates">
 		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="22be07f06646c5669bd0f7bca445647f"/>
@@ -1423,6 +1423,7 @@
 		<upgrade from="2.1.5" to="2.1.6"/>
 		<upgrade from="2.1.6" to="2.2.0"/>
 		<upgrade from="2.2.0" to="2.2.1"/>
+		<upgrade from="2.2.1" to="2.2.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

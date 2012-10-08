@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 03 Oct 2012 14:14:30 -0400
+ * @compiled Mon, 08 Oct 2012 18:59:40 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1033,7 +1033,7 @@ break;
 }
 $this->_exists     = true;
 $this->_dirty      = false;
-$this->_dataatinit = $this->_data;
+$this->_datainit = $this->_data;
 return true;
 }
 public function offsetExists($offset) {
@@ -2966,12 +2966,11 @@ class Component_2_1 {
 private $_xmlloader = null;
 protected $_name;
 protected $_version;
-protected $_enabled;
+protected $_enabled = false;
 protected $_description;
 protected $_updateSites = array();
 protected $_authors = array();
 protected $_iterator;
-protected $enabled = true;
 private $_versionDB = false;
 private $_execMode = 'WEB';
 private $_file;
@@ -3381,7 +3380,7 @@ return $this->errors;
 }
 }
 public function isEnabled() {
-return $this->_enabled;
+return ($this->_enabled === true);
 }
 public function isLoadable() {
 if ($this->error & Component::ERROR_INVALID) {
@@ -3470,7 +3469,7 @@ $c = new ComponentModel($this->_name);
 $c->set('version', $this->_version);
 $c->save();
 $this->_versionDB = $this->_version;
-$this->_enabled = ($c->get('enabled'));
+$this->_enabled = ($c->get('enabled') == '1');
 $this->loadFiles();
 if (class_exists('Core')) {
 $ch = Core::Singleton();
@@ -3522,6 +3521,8 @@ $c = new ComponentModel($this->_name);
 $c->set('enabled', true);
 $c->save();
 $this->_enabled = true;
+echo 'ENABLING!<br/>';
+var_dump($c);
 Core::Cache()->delete('core-components');
 return true;
 }
@@ -3589,12 +3590,14 @@ $name     = $confignode->getAttribute('name');
 $default  = $confignode->getAttribute('default');
 $formtype = $confignode->getAttribute('formtype');
 $onreg    = $confignode->getAttribute('onregistration');
+$onedit   = $confignode->getAttribute('onedit');
 $options  = $confignode->getAttribute('options');
 $model = UserConfigModel::Construct($key);
 $model->set('name', $name);
 if($default)  $model->set('default_value', $default);
 if($formtype) $model->set('formtype', $formtype);
-if($onreg)    $model->set('onregistration', $onreg);
+$model->set('onregistration', $onreg);
+$model->set('onedit', $onedit);
 if($options)  $model->set('options', $options);
 if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
 }

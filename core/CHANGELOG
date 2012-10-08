@@ -1,3 +1,9 @@
+Core Plus 2.2.2
+
+	* Fixed the installer, it now handles enabling packages correctly.
+	* Fixed some other little bugs.
+	-- Charlie Powell <charlie@eval.bz>  8 Oct 2012
+
 Core Plus 2.2.1
 
 	* Fixed the SSL implementation

@@ -387,7 +387,7 @@ class Model implements ArrayAccess {
 
 		$this->_exists     = true;
 		$this->_dirty      = false;
-		$this->_dataatinit = $this->_data;
+		$this->_datainit = $this->_data;
 
 		// Indicate that something happened.
 		return true;

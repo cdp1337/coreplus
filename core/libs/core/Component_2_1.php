@@ -54,7 +54,7 @@ class Component_2_1 {
 	 *
 	 * @var boolean
 	 */
-	protected $_enabled;
+	protected $_enabled = false;
 
 	/**
 	 * Description of this library.
@@ -84,13 +84,6 @@ class Component_2_1 {
 	 * @var CAEDirectoryIterator
 	 */
 	protected $_iterator;
-
-	/**
-	 * User can disable a component in the admin, if not enabled don't load the component at all.
-	 *
-	 * @var boolean
-	 */
-	protected $enabled = true;
 
 	/**
 	 * Version of the component, as per the database (installed version).
@@ -896,7 +889,7 @@ class Component_2_1 {
 	}
 
 	public function isEnabled() {
-		return $this->_enabled;
+		return ($this->_enabled === true);
 	}
 
 	/**
@@ -1037,13 +1030,12 @@ class Component_2_1 {
 		}
 		*/
 
-
 		// Yay, it should be installed now.	Update the version in the database.
 		$c = new ComponentModel($this->_name);
 		$c->set('version', $this->_version);
 		$c->save();
 		$this->_versionDB = $this->_version;
-		$this->_enabled = ($c->get('enabled'));
+		$this->_enabled = ($c->get('enabled') == '1');
 
 		// And load this component into the system so anything else can access it immediately.
 		$this->loadFiles();
@@ -1162,6 +1154,8 @@ class Component_2_1 {
 		$c->set('enabled', true);
 		$c->save();
 		$this->_enabled = true;
+		echo 'ENABLING!<br/>';
+		var_dump($c);
 
 		// Ensure that the core component cache is purged too!
 		Core::Cache()->delete('core-components');
@@ -1297,13 +1291,15 @@ class Component_2_1 {
 			$default  = $confignode->getAttribute('default');
 			$formtype = $confignode->getAttribute('formtype');
 			$onreg    = $confignode->getAttribute('onregistration');
+			$onedit   = $confignode->getAttribute('onedit');
 			$options  = $confignode->getAttribute('options');
 
 			$model = UserConfigModel::Construct($key);
 			$model->set('name', $name);
 			if($default)  $model->set('default_value', $default);
 			if($formtype) $model->set('formtype', $formtype);
-			if($onreg)    $model->set('onregistration', $onreg);
+			$model->set('onregistration', $onreg);
+			$model->set('onedit', $onedit);
 			if($options)  $model->set('options', $options);
 
 			if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';

@@ -30,6 +30,11 @@ if(PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')){
 // Damn suPHP, I can handle my own permissions, TYVM
 umask(0);
 
+// Override development mode here
+// This is necessary to override the more strict restrictions that come inherit with production mode.s
+// ie: installed packages in production do not get automatically enabled.
+define('DEVELOPMENT_MODE', true);
+
 
 // I need to override some defines here...
 $rpdr = pathinfo(dirname($_SERVER['SCRIPT_FILENAME' ]), PATHINFO_DIRNAME );
@@ -121,6 +126,8 @@ if(function_exists('apache_get_modules')){
 	}
 }
 else{
+	// This is not working again.... gah
+	/*
 	// PHP is running as CGI.... guess I have to do this the long way :/
 	$fp = fsockopen((isset($_SERVER['HTTPS']) ? 'ssl://' : '') . $_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']);
 	if($fp) {
@@ -135,30 +142,31 @@ else{
 			$page->render();
 		}
 	}
+	*/
 }
 
 // Test the presence of DOMDocument, this is provided by php-xml
 if(!class_exists('DOMDocument')){
-    $page = new InstallPage();
-    $page->assign('error', 'php-xml is not available.  This is a requirement of the system!');
-    $page->template = 'templates/preflight_requirements.tpl';
-    $page->render();
+	$page = new InstallPage();
+	$page->assign('error', 'php-xml is not available.  This is a requirement of the system!');
+	$page->template = 'templates/preflight_requirements.tpl';
+	$page->render();
 }
 
 
 // The configuration file should absolutely not be accessable from the outside world, this includes php fopen'ing the file!
 $fp = fsockopen((isset($_SERVER['HTTPS']) ? 'ssl://' : '') . $_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']);
 if($fp) {
-    fwrite($fp, "GET " . ROOT_WDIR . "config/configuration.xml HTTP/1.0\r\n\r\n");
-    stream_set_timeout($fp, 2);
-    $line = trim(fgets($fp, 512));
-    if(strpos($line, '200 OK') !== false){
-    	// OH NOES!
-    	$page = new InstallPage();
+	fwrite($fp, "GET " . ROOT_WDIR . "config/configuration.xml HTTP/1.0\r\n\r\n");
+	stream_set_timeout($fp, 2);
+	$line = trim(fgets($fp, 512));
+	if(strpos($line, '200 OK') !== false){
+		// OH NOES!
+		$page = new InstallPage();
 		$page->assign('error', 'Your configuration.xml file is publically accessable!  This is a huge security hole and must be rectified before installation can continue.  Please ensure that there is a .htaccess file in that directory and it denies all access to all files.');
 		$page->template = 'templates/preflight_requirements.tpl';
 		$page->render();
-    }
+	}
 	else{
 		// Because otherwise the admin will get "Access to blah blah was denied, OH NOEZ"
 		error_log('Access to config/configuration.xml was denied, (that is a GOOD thing!)');
@@ -410,7 +418,7 @@ if(!\Core\DB()->tableExists(DB_PREFIX . 'component')){
 		}
 	}
 	
-	
+
 	
 	// Everything above must have completed alright.... install the core finally!
 	$p = new InstallPage();
@@ -421,6 +429,8 @@ if(!\Core\DB()->tableExists(DB_PREFIX . 'component')){
 	$changes = $core->install();
 	if($changes) $p->assign('log', implode("\n", $changes));
 	else $p->assign('log', 'erm... nothing changed :?');
+	// Don't forget to enable the component, (remember, components are not auto-enabled if not in development mode)
+	$core->enable();
 	$p->assign('location', '');
 	$p->render();
 }
@@ -428,39 +438,65 @@ if(!\Core\DB()->tableExists(DB_PREFIX . 'component')){
 
 try{
 	HookHandler::DispatchHook('db_ready');
+
+	// Ensure that the core component cache is purged too!
+	Core::Cache()->delete('core-components');
 	
 	// Just to make sure.
 	$changes = array();
 	Core::Singleton();
 	Core::LoadComponents();
 
-    // This advanced logic is required because some components may not be loaded in the order that they are available.
-    $list = Core::GetComponents();
-    do {
-        $size = sizeof($list);
-        foreach ($list as $n => $c) {
+	// This advanced logic is required because some components may not be loaded in the order that they are available.
+	$list = Core::GetComponents();
+	do {
+		$size = sizeof($list);
+		foreach ($list as $n => $c) {
+			/** @var $c Component_2_1 */
 
-            // Installed components are ignored
-            if($c->isInstalled()){
-                unset($list[$n]);
-                continue;
-            }
+			// If the component is installed but disabled, just enable it.
+			// This can happen because the act of loading the core will install whatever it can find.
+			if($c->isInstalled() && !$c->isEnabled()){
+				$c->enable();
 
-            if ($c->isLoadable()) {
-                // w00t
-                $changes[] = 'Component ' . $c->getName() . '...';
-                $change = $c->install();
-                $c->loadFiles();
+				$changes[] = 'Component ' . $c->getName() . '...';
+				$changes[] = 'Enabled component, already installed.';
 
-                if($change === false) $changes[] = 'Installed with no changes needed';
-                else $changes = array_merge($changes, $change);
+				unset($list[$n]);
+				continue;
+			}
 
-                unset($list[$n]);
-                continue;
-            }
-        }
-    }
-    while ($size > 0 && ($size != sizeof($list)));
+			// Installed components are ignored
+			if($c->isInstalled()){
+				// Enable it anyway, (just in case)
+				$c->enable();
+
+				unset($list[$n]);
+				continue;
+			}
+
+			if ($c->isLoadable()) {
+				// w00t
+				$changes[] = 'Component ' . $c->getName() . '...';
+				$change = $c->install();
+				$c->loadFiles();
+
+				if($change === false) $changes[] = 'Installed with no changes needed';
+				else $changes = array_merge($changes, $change);
+
+				// Don't forget to enable the component, (remember, components are not auto-enabled if not in development mode)
+				$c->enable();
+
+				unset($list[$n]);
+				continue;
+			}
+			else{
+				echo $c->getName() . ' is not loadable :(<br/>';
+			}
+		}
+	}
+	while ($size > 0 && ($size != sizeof($list)));
+
 
 	foreach(ThemeHandler::GetAllThemes() as $t){
 		$t->load();
@@ -493,5 +529,3 @@ catch(Exception $e){
 	
 	die($e->getMessage() . "\n<br/>\n<br/>" . 'something broke, please fix it.');
 }
-
-
