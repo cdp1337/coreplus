@@ -155,7 +155,7 @@ class UserModel extends Model {
 		$this->validate('password', $v, true);
 		
 		// hash the password.
-		$hasher = new PasswordHash(15);
+		$hasher = new PasswordHash(User::HASH_ITERATIONS);
 		$password = $hasher->hashPassword($v);
 
 		// Same?

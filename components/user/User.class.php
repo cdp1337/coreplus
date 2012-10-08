@@ -23,6 +23,15 @@
  */
 
 class User {
+
+	/**
+	 * Default number of iterations to hash the password with.
+	 * *WARNING* Setting this to 15 will take about 3 seconds on an 8-core system and 10 seconds on a 2-core system!
+	 *
+	 * @var int
+	 */
+	const HASH_ITERATIONS = 11;
+
 	/**
 	 * The user model attached to this user.
 	 * @var UserModel

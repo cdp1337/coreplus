@@ -94,7 +94,7 @@ function get_form($user = null){
 		$fac = \UserConfigModel::Find(array('onregistration' => 1));
 	}
 	else{
-		$fac = \UserConfigModel::Find();
+		$fac = \UserConfigModel::Find(array('onedit' => 1));
 	}
 
 	foreach($fac as $f){

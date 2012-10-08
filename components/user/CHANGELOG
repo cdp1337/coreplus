@@ -1,3 +1,10 @@
+User 2.2.2
+
+	* Fixed the onregistration and onedit keys
+	* Changed default hashing count from 15 iterations to 11 iterations.  This should drastically decrease login times on production.
+	-- Charlie Powell <charlie@eval.bz>  8 Oct 2012
+
+
 User 2.2.1
 
 	* Fixed some facebook issues with the newest api version.

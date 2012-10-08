@@ -49,6 +49,10 @@ class UserConfigModel extends Model{
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => true
 		),
+		'onedit' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'default' => true
+		),
 		/*'system' => array(
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => false
