@@ -1,0 +1,13 @@
+Facebook 3.2.0~core2
+
+	* Fix the requirement set for this package.
+	-- Charlie Powell <charlie@eval.bz>  8 Oct 2012
+
+Facebook 3.2.0~core1
+
+	* Upgraded facebook api to newest upstream version, (3.2.0)
+	-- Nicholas Hinsch <nicholas@eval.bz>  3 Oct 2012
+
+Facebook 3.0.1~core1
+
+	-- Charlie Powell <charlie@eval.bz>  15 Jun 2012
