@@ -9,7 +9,7 @@
 		<require name="user" type="component" version="2.2.1"/>
 	</requires>
 	<configs>
-		<config key="/facebook/appid" mapto="FACEBOOK_APP_ID" type="string" default="" description="If you want to enable facebook connectivity, you need to create an &quot;app&quot; and enter that app's appid here."/>
+		<config key="/facebook/appid" mapto="FACEBOOK_APP_ID" type="string" default="" description="If you want to enable facebook connectivity, you need to create an &quot;app&quot; and enter that app's appid here."></config>
 		<config key="/facebook/secretid" mapto="FACEBOOK_SECRET_ID" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
 		<config key="/facebook/appsecret" mapto="FACEBOOK_APP_SECRET" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
 	</configs>
