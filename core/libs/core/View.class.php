@@ -590,6 +590,11 @@ class View {
 						$v->getName() . ' ' . $v->getVersion() . "\n";
 				}
 
+				// I want to see how many files were included.
+				$debug .= "\n" . '<b>Included Files</b>' . "\n";
+				$debug .= 'Number: ' . sizeof(get_included_files()) . "\n";
+				$debug .= implode("\n", get_included_files()) . "\n";
+
 				$debug .= "\n" . '<b>Query Log</b>' . "\n";
 				$debug .= print_r(Core::DB()->queryLog(), true);
 				$debug .= '</pre>';

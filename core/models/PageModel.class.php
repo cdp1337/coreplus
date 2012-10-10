@@ -204,6 +204,15 @@ class PageModel extends Model {
 
 		if ($v{0} != '/') return "Rewrite URL must start with a '/'";
 
+		// See if the controller segment matches an existing controller.  This cannot happen because
+		// that controller would no longer be accessible, example:
+		// Blog::View, Blog::Create, etc and /blog.
+
+		$controller = substr($v, 1, ( (strpos($v, '/', 1) !== false) ? strpos($v, '/', 1) : strlen($v)) );
+		if(class_exists($controller . 'Controller')){
+			return 'Invalid Rewrite URL, "' . $controller . '" is a reserved system name!';
+		}
+
 		// Lookup if there is a conflicting URL.
 		$ds = Dataset::Init()
 			->table('page')
@@ -488,6 +497,9 @@ class PageModel extends Model {
 				// The new static Construct offers caching :)
 				$p = PageModel::Construct($url);
 
+				return array_merge($p->_getParentTree(--$antiinfiniteloopcounter), array($p));
+
+				/* Remind me why this was ever enabled...
 				// Fuzzy pages that do not have a parent url specifically set should not propagate up.
 				if ($p->get('fuzzy') && !$p->get('parenturl')) {
 					//echo "returning from #1<hr/>";
@@ -498,6 +510,7 @@ class PageModel extends Model {
 					//echo "returning from #2<hr/>";
 					return array_merge($p->_getParentTree(--$antiinfiniteloopcounter), array($p));
 				}
+				*/
 				//$pagedat = self::_LookupReverseUrl($url);
 			}
 			while ($url);

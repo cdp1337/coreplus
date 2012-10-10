@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 08 Oct 2012 18:59:40 -0400
+ * @compiled Tue, 09 Oct 2012 23:39:38 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1805,6 +1805,10 @@ public function validateRewriteURL($v) {
 if (!$v) return true;
 if ($v == $this->_data['baseurl']) return true;
 if ($v{0} != '/') return "Rewrite URL must start with a '/'";
+$controller = substr($v, 1, ( (strpos($v, '/', 1) !== false) ? strpos($v, '/', 1) : strlen($v)) );
+if(class_exists($controller . 'Controller')){
+return 'Invalid Rewrite URL, "' . $controller . '" is a reserved system name!';
+}
 $ds = Dataset::Init()
 ->table('page')
 ->count()
@@ -1952,12 +1956,7 @@ if (isset(self::$_RewriteCache[$url])) {
 $url = self::$_RewriteCache[$url];
 }
 $p = PageModel::Construct($url);
-if ($p->get('fuzzy') && !$p->get('parenturl')) {
-return array();
-}
-else {
 return array_merge($p->_getParentTree(--$antiinfiniteloopcounter), array($p));
-}
 }
 while ($url);
 }
@@ -5043,7 +5042,7 @@ return false;
 ### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/cachecore/Cache.class.php
 define('__CACHE_PDIR', ROOT_PDIR . 'core/libs/cachecore/');
 if(!class_exists('CacheCore')){
-require_once(__CACHE_PDIR . 'backends/cachecore.class.php');
+require_once(__CACHE_PDIR . 'backends/cachecore.class.php'); #SKIPCOMPILER
 }
 class Cache{
 private static $_cachecache;
@@ -5505,6 +5504,7 @@ if(!DEVELOPMENT_MODE){
 $c->disable();
 }
 else{
+$c->enable();
 $c->loadFiles();
 $this->_registerComponent($c);
 }
@@ -6761,3 +6761,3048 @@ die();
 HookHandler::DispatchHook('components_loaded');
 HookHandler::DispatchHook('components_ready');
 Core::AddProfileTime('components_load_complete');
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/bootstrap_postincludes.php
+define('SMARTY_DIR', ROOT_PDIR . 'core/libs/smarty/');
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/smarty/Smarty.class.php
+if (!defined('DS')) {
+define('DS', DIRECTORY_SEPARATOR);
+}
+if (!defined('SMARTY_DIR')) {
+define('SMARTY_DIR', dirname(__FILE__) . DS);
+}
+if (!defined('SMARTY_SYSPLUGINS_DIR')) {
+define('SMARTY_SYSPLUGINS_DIR', SMARTY_DIR . 'sysplugins' . DS);
+}
+if (!defined('SMARTY_PLUGINS_DIR')) {
+define('SMARTY_PLUGINS_DIR', SMARTY_DIR . 'plugins' . DS);
+}
+if (!defined('SMARTY_MBSTRING')) {
+define('SMARTY_MBSTRING', function_exists('mb_strlen'));
+}
+if (!defined('SMARTY_RESOURCE_CHAR_SET')) {
+define('SMARTY_RESOURCE_CHAR_SET', SMARTY_MBSTRING ? 'UTF-8' : 'ISO-8859-1');
+}
+if (!defined('SMARTY_RESOURCE_DATE_FORMAT')) {
+define('SMARTY_RESOURCE_DATE_FORMAT', '%b %e, %Y');
+}
+if (!defined('SMARTY_SPL_AUTOLOAD')) {
+define('SMARTY_SPL_AUTOLOAD', 0);
+}
+if (SMARTY_SPL_AUTOLOAD && set_include_path(get_include_path() . PATH_SEPARATOR . SMARTY_SYSPLUGINS_DIR) !== false) {
+$registeredAutoLoadFunctions = spl_autoload_functions();
+if (!isset($registeredAutoLoadFunctions['spl_autoload'])) {
+spl_autoload_register();
+}
+} else {
+spl_autoload_register('smartyAutoload');
+}
+include_once SMARTY_SYSPLUGINS_DIR.'smarty_internal_data.php';
+include_once SMARTY_SYSPLUGINS_DIR.'smarty_internal_templatebase.php';
+include_once SMARTY_SYSPLUGINS_DIR.'smarty_internal_template.php';
+include_once SMARTY_SYSPLUGINS_DIR.'smarty_resource.php';
+include_once SMARTY_SYSPLUGINS_DIR.'smarty_internal_resource_file.php';
+include_once SMARTY_SYSPLUGINS_DIR.'smarty_cacheresource.php';
+include_once SMARTY_SYSPLUGINS_DIR.'smarty_internal_cacheresource_file.php';
+class Smarty extends Smarty_Internal_TemplateBase {
+const SMARTY_VERSION = 'Smarty-3.1.8';
+const SCOPE_LOCAL = 0;
+const SCOPE_PARENT = 1;
+const SCOPE_ROOT = 2;
+const SCOPE_GLOBAL = 3;
+const CACHING_OFF = 0;
+const CACHING_LIFETIME_CURRENT = 1;
+const CACHING_LIFETIME_SAVED = 2;
+const COMPILECHECK_OFF = 0;
+const COMPILECHECK_ON = 1;
+const COMPILECHECK_CACHEMISS = 2;
+const PHP_PASSTHRU = 0; //-> print tags as plain text
+const PHP_QUOTE = 1; //-> escape tags as entities
+const PHP_REMOVE = 2; //-> escape tags as entities
+const PHP_ALLOW = 3; //-> escape tags as entities
+const FILTER_POST = 'post';
+const FILTER_PRE = 'pre';
+const FILTER_OUTPUT = 'output';
+const FILTER_VARIABLE = 'variable';
+const PLUGIN_FUNCTION = 'function';
+const PLUGIN_BLOCK = 'block';
+const PLUGIN_COMPILER = 'compiler';
+const PLUGIN_MODIFIER = 'modifier';
+const PLUGIN_MODIFIERCOMPILER = 'modifiercompiler';
+public static $global_tpl_vars = array();
+public static $_previous_error_handler = null;
+public static $_muted_directories = array();
+public static $_MBSTRING = SMARTY_MBSTRING;
+public static $_CHARSET = SMARTY_RESOURCE_CHAR_SET;
+public static $_DATE_FORMAT = SMARTY_RESOURCE_DATE_FORMAT;
+public static $_UTF8_MODIFIER = 'u';
+public $auto_literal = true;
+public $error_unassigned = false;
+public $use_include_path = false;
+private $template_dir = array();
+public $joined_template_dir = null;
+public $joined_config_dir = null;
+public $default_template_handler_func = null;
+public $default_config_handler_func = null;
+public $default_plugin_handler_func = null;
+private $compile_dir = null;
+private $plugins_dir = array();
+private $cache_dir = null;
+private $config_dir = array();
+public $force_compile = false;
+public $compile_check = true;
+public $use_sub_dirs = false;
+public $allow_ambiguous_resources = false;
+public $caching = false;
+public $merge_compiled_includes = false;
+public $cache_lifetime = 3600;
+public $force_cache = false;
+public $cache_id = null;
+public $compile_id = null;
+public $left_delimiter = "{";
+public $right_delimiter = "}";
+public $security_class = 'Smarty_Security';
+public $security_policy = null;
+public $php_handling = self::PHP_PASSTHRU;
+public $allow_php_templates = false;
+public $direct_access_security = true;
+public $debugging = false;
+public $debugging_ctrl = 'NONE';
+public $smarty_debug_id = 'SMARTY_DEBUG';
+public $debug_tpl = null;
+public $error_reporting = null;
+public $get_used_tags = false;
+public $config_overwrite = true;
+public $config_booleanize = true;
+public $config_read_hidden = false;
+public $compile_locking = true;
+public $cache_locking = false;
+public $locking_timeout = 10;
+public $template_functions = array();
+public $default_resource_type = 'file';
+public $caching_type = 'file';
+public $properties = array();
+public $default_config_type = 'file';
+public $template_objects = array();
+public $cache_modified_check = false;
+public $registered_plugins = array();
+public $plugin_search_order = array('function', 'block', 'compiler', 'class');
+public $registered_objects = array();
+public $registered_classes = array();
+public $registered_filters = array();
+public $registered_resources = array();
+public $_resource_handlers = array();
+public $registered_cache_resources = array();
+public $_cacheresource_handlers = array();
+public $autoload_filters = array();
+public $default_modifiers = array();
+public $escape_html = false;
+public static $_smarty_vars = array();
+public $start_time = 0;
+public $_file_perms = 0644;
+public $_dir_perms = 0771;
+public $_tag_stack = array();
+public $smarty;
+public $_current_file = null;
+public $_parserdebug = false;
+public $merged_templates_func = array();
+public function __construct()
+{
+$this->smarty = $this;
+if (is_callable('mb_internal_encoding')) {
+mb_internal_encoding(Smarty::$_CHARSET);
+}
+$this->start_time = microtime(true);
+$this->setTemplateDir('.' . DS . 'templates' . DS)
+->setCompileDir('.' . DS . 'templates_c' . DS)
+->setPluginsDir(SMARTY_PLUGINS_DIR)
+->setCacheDir('.' . DS . 'cache' . DS)
+->setConfigDir('.' . DS . 'configs' . DS);
+$this->debug_tpl = 'file:' . dirname(__FILE__) . '/debug.tpl';
+if (isset($_SERVER['SCRIPT_NAME'])) {
+$this->assignGlobal('SCRIPT_NAME', $_SERVER['SCRIPT_NAME']);
+}
+}
+public function __destruct()
+{
+}
+public function __clone()
+{
+$this->smarty = $this;
+}
+public function __get($name)
+{
+$allowed = array(
+'template_dir' => 'getTemplateDir',
+'config_dir' => 'getConfigDir',
+'plugins_dir' => 'getPluginsDir',
+'compile_dir' => 'getCompileDir',
+'cache_dir' => 'getCacheDir',
+);
+if (isset($allowed[$name])) {
+return $this->{$allowed[$name]}();
+} else {
+trigger_error('Undefined property: '. get_class($this) .'::$'. $name, E_USER_NOTICE);
+}
+}
+public function __set($name, $value)
+{
+$allowed = array(
+'template_dir' => 'setTemplateDir',
+'config_dir' => 'setConfigDir',
+'plugins_dir' => 'setPluginsDir',
+'compile_dir' => 'setCompileDir',
+'cache_dir' => 'setCacheDir',
+);
+if (isset($allowed[$name])) {
+$this->{$allowed[$name]}($value);
+} else {
+trigger_error('Undefined property: ' . get_class($this) . '::$' . $name, E_USER_NOTICE);
+}
+}
+public function templateExists($resource_name)
+{
+$save = $this->template_objects;
+$tpl = new $this->template_class($resource_name, $this);
+$result = $tpl->source->exists;
+$this->template_objects = $save;
+return $result;
+}
+public function getGlobal($varname = null)
+{
+if (isset($varname)) {
+if (isset(self::$global_tpl_vars[$varname])) {
+return self::$global_tpl_vars[$varname]->value;
+} else {
+return '';
+}
+} else {
+$_result = array();
+foreach (self::$global_tpl_vars AS $key => $var) {
+$_result[$key] = $var->value;
+}
+return $_result;
+}
+}
+function clearAllCache($exp_time = null, $type = null)
+{
+$_cache_resource = Smarty_CacheResource::load($this, $type);
+Smarty_CacheResource::invalidLoadedCache($this);
+return $_cache_resource->clearAll($this, $exp_time);
+}
+public function clearCache($template_name, $cache_id = null, $compile_id = null, $exp_time = null, $type = null)
+{
+$_cache_resource = Smarty_CacheResource::load($this, $type);
+Smarty_CacheResource::invalidLoadedCache($this);
+return $_cache_resource->clear($this, $template_name, $cache_id, $compile_id, $exp_time);
+}
+public function enableSecurity($security_class = null)
+{
+if ($security_class instanceof Smarty_Security) {
+$this->security_policy = $security_class;
+return $this;
+} elseif (is_object($security_class)) {
+throw new SmartyException("Class '" . get_class($security_class) . "' must extend Smarty_Security.");
+}
+if ($security_class == null) {
+$security_class = $this->security_class;
+}
+if (!class_exists($security_class)) {
+throw new SmartyException("Security class '$security_class' is not defined");
+} elseif ($security_class !== 'Smarty_Security' && !is_subclass_of($security_class, 'Smarty_Security')) {
+throw new SmartyException("Class '$security_class' must extend Smarty_Security.");
+} else {
+$this->security_policy = new $security_class($this);
+}
+return $this;
+}
+public function disableSecurity()
+{
+$this->security_policy = null;
+return $this;
+}
+public function setTemplateDir($template_dir)
+{
+$this->template_dir = array();
+foreach ((array) $template_dir as $k => $v) {
+$this->template_dir[$k] = rtrim($v, '/\\') . DS;
+}
+$this->joined_template_dir = join(DIRECTORY_SEPARATOR, $this->template_dir);
+return $this;
+}
+public function addTemplateDir($template_dir, $key=null)
+{
+$this->template_dir = (array) $this->template_dir;
+if (is_array($template_dir)) {
+foreach ($template_dir as $k => $v) {
+if (is_int($k)) {
+$this->template_dir[] = rtrim($v, '/\\') . DS;
+} else {
+$this->template_dir[$k] = rtrim($v, '/\\') . DS;
+}
+}
+} elseif ($key !== null) {
+$this->template_dir[$key] = rtrim($template_dir, '/\\') . DS;
+} else {
+$this->template_dir[] = rtrim($template_dir, '/\\') . DS;
+}
+$this->joined_template_dir = join(DIRECTORY_SEPARATOR, $this->template_dir);
+return $this;
+}
+public function getTemplateDir($index=null)
+{
+if ($index !== null) {
+return isset($this->template_dir[$index]) ? $this->template_dir[$index] : null;
+}
+return (array)$this->template_dir;
+}
+public function setConfigDir($config_dir)
+{
+$this->config_dir = array();
+foreach ((array) $config_dir as $k => $v) {
+$this->config_dir[$k] = rtrim($v, '/\\') . DS;
+}
+$this->joined_config_dir = join(DIRECTORY_SEPARATOR, $this->config_dir);
+return $this;
+}
+public function addConfigDir($config_dir, $key=null)
+{
+$this->config_dir = (array) $this->config_dir;
+if (is_array($config_dir)) {
+foreach ($config_dir as $k => $v) {
+if (is_int($k)) {
+$this->config_dir[] = rtrim($v, '/\\') . DS;
+} else {
+$this->config_dir[$k] = rtrim($v, '/\\') . DS;
+}
+}
+} elseif( $key !== null ) {
+$this->config_dir[$key] = rtrim($config_dir, '/\\') . DS;
+} else {
+$this->config_dir[] = rtrim($config_dir, '/\\') . DS;
+}
+$this->joined_config_dir = join(DIRECTORY_SEPARATOR, $this->config_dir);
+return $this;
+}
+public function getConfigDir($index=null)
+{
+if ($index !== null) {
+return isset($this->config_dir[$index]) ? $this->config_dir[$index] : null;
+}
+return (array)$this->config_dir;
+}
+public function setPluginsDir($plugins_dir)
+{
+$this->plugins_dir = array();
+foreach ((array)$plugins_dir as $k => $v) {
+$this->plugins_dir[$k] = rtrim($v, '/\\') . DS;
+}
+return $this;
+}
+public function addPluginsDir($plugins_dir)
+{
+$this->plugins_dir = (array) $this->plugins_dir;
+if (is_array($plugins_dir)) {
+foreach ($plugins_dir as $k => $v) {
+if (is_int($k)) {
+$this->plugins_dir[] = rtrim($v, '/\\') . DS;
+} else {
+$this->plugins_dir[$k] = rtrim($v, '/\\') . DS;
+}
+}
+} else {
+$this->plugins_dir[] = rtrim($plugins_dir, '/\\') . DS;
+}
+$this->plugins_dir = array_unique($this->plugins_dir);
+return $this;
+}
+public function getPluginsDir()
+{
+return (array)$this->plugins_dir;
+}
+public function setCompileDir($compile_dir)
+{
+$this->compile_dir = rtrim($compile_dir, '/\\') . DS;
+if (!isset(Smarty::$_muted_directories[$this->compile_dir])) {
+Smarty::$_muted_directories[$this->compile_dir] = null;
+}
+return $this;
+}
+public function getCompileDir()
+{
+return $this->compile_dir;
+}
+public function setCacheDir($cache_dir)
+{
+$this->cache_dir = rtrim($cache_dir, '/\\') . DS;
+if (!isset(Smarty::$_muted_directories[$this->cache_dir])) {
+Smarty::$_muted_directories[$this->cache_dir] = null;
+}
+return $this;
+}
+public function getCacheDir()
+{
+return $this->cache_dir;
+}
+public function setDefaultModifiers($modifiers)
+{
+$this->default_modifiers = (array) $modifiers;
+return $this;
+}
+public function addDefaultModifiers($modifiers)
+{
+if (is_array($modifiers)) {
+$this->default_modifiers = array_merge($this->default_modifiers, $modifiers);
+} else {
+$this->default_modifiers[] = $modifiers;
+}
+return $this;
+}
+public function getDefaultModifiers()
+{
+return $this->default_modifiers;
+}
+public function setAutoloadFilters($filters, $type=null)
+{
+if ($type !== null) {
+$this->autoload_filters[$type] = (array) $filters;
+} else {
+$this->autoload_filters = (array) $filters;
+}
+return $this;
+}
+public function addAutoloadFilters($filters, $type=null)
+{
+if ($type !== null) {
+if (!empty($this->autoload_filters[$type])) {
+$this->autoload_filters[$type] = array_merge($this->autoload_filters[$type], (array) $filters);
+} else {
+$this->autoload_filters[$type] = (array) $filters;
+}
+} else {
+foreach ((array) $filters as $key => $value) {
+if (!empty($this->autoload_filters[$key])) {
+$this->autoload_filters[$key] = array_merge($this->autoload_filters[$key], (array) $value);
+} else {
+$this->autoload_filters[$key] = (array) $value;
+}
+}
+}
+return $this;
+}
+public function getAutoloadFilters($type=null)
+{
+if ($type !== null) {
+return isset($this->autoload_filters[$type]) ? $this->autoload_filters[$type] : array();
+}
+return $this->autoload_filters;
+}
+public function getDebugTemplate()
+{
+return $this->debug_tpl;
+}
+public function setDebugTemplate($tpl_name)
+{
+if (!is_readable($tpl_name)) {
+throw new SmartyException("Unknown file '{$tpl_name}'");
+}
+$this->debug_tpl = $tpl_name;
+return $this;
+}
+public function createTemplate($template, $cache_id = null, $compile_id = null, $parent = null, $do_clone = true)
+{
+if (!empty($cache_id) && (is_object($cache_id) || is_array($cache_id))) {
+$parent = $cache_id;
+$cache_id = null;
+}
+if (!empty($parent) && is_array($parent)) {
+$data = $parent;
+$parent = null;
+} else {
+$data = null;
+}
+$cache_id = $cache_id === null ? $this->cache_id : $cache_id;
+$compile_id = $compile_id === null ? $this->compile_id : $compile_id;
+if ($this->allow_ambiguous_resources) {
+$_templateId = Smarty_Resource::getUniqueTemplateName($this, $template) . $cache_id . $compile_id;
+} else {
+$_templateId = $this->joined_template_dir . '#' . $template . $cache_id . $compile_id;
+}
+if (isset($_templateId[150])) {
+$_templateId = sha1($_templateId);
+}
+if ($do_clone) {
+if (isset($this->template_objects[$_templateId])) {
+$tpl = clone $this->template_objects[$_templateId];
+$tpl->smarty = clone $tpl->smarty;
+$tpl->parent = $parent;
+$tpl->tpl_vars = array();
+$tpl->config_vars = array();
+} else {
+$tpl = new $this->template_class($template, clone $this, $parent, $cache_id, $compile_id);
+}
+} else {
+if (isset($this->template_objects[$_templateId])) {
+$tpl = $this->template_objects[$_templateId];
+$tpl->parent = $parent;
+$tpl->tpl_vars = array();
+$tpl->config_vars = array();
+} else {
+$tpl = new $this->template_class($template, $this, $parent, $cache_id, $compile_id);
+}
+}
+if (!empty($data) && is_array($data)) {
+foreach ($data as $_key => $_val) {
+$tpl->tpl_vars[$_key] = new Smarty_variable($_val);
+}
+}
+return $tpl;
+}
+public function loadPlugin($plugin_name, $check = true)
+{
+if ($check && (is_callable($plugin_name) || class_exists($plugin_name, false))) {
+return true;
+}
+$_name_parts = explode('_', $plugin_name, 3);
+if (!isset($_name_parts[2]) || strtolower($_name_parts[0]) !== 'smarty') {
+throw new SmartyException("plugin {$plugin_name} is not a valid name format");
+return false;
+}
+if (strtolower($_name_parts[1]) == 'internal') {
+$file = SMARTY_SYSPLUGINS_DIR . strtolower($plugin_name) . '.php';
+if (file_exists($file)) {
+require_once($file);
+return $file;
+} else {
+return false;
+}
+}
+$_plugin_filename = "{$_name_parts[1]}.{$_name_parts[2]}.php";
+$_stream_resolve_include_path = function_exists('stream_resolve_include_path');
+foreach($this->getPluginsDir() as $_plugin_dir) {
+$names = array(
+$_plugin_dir . $_plugin_filename,
+$_plugin_dir . strtolower($_plugin_filename),
+);
+foreach ($names as $file) {
+if (file_exists($file)) {
+require_once($file);
+return $file;
+}
+if ($this->use_include_path && !preg_match('/^([\/\\\\]|[a-zA-Z]:[\/\\\\])/', $_plugin_dir)) {
+if ($_stream_resolve_include_path) {
+$file = stream_resolve_include_path($file);
+} else {
+$file = Smarty_Internal_Get_Include_Path::getIncludePath($file);
+}
+if ($file !== false) {
+require_once($file);
+return $file;
+}
+}
+}
+}
+return false;
+}
+public function compileAllTemplates($extention = '.tpl', $force_compile = false, $time_limit = 0, $max_errors = null)
+{
+return Smarty_Internal_Utility::compileAllTemplates($extention, $force_compile, $time_limit, $max_errors, $this);
+}
+public function compileAllConfig($extention = '.conf', $force_compile = false, $time_limit = 0, $max_errors = null)
+{
+return Smarty_Internal_Utility::compileAllConfig($extention, $force_compile, $time_limit, $max_errors, $this);
+}
+public function clearCompiledTemplate($resource_name = null, $compile_id = null, $exp_time = null)
+{
+return Smarty_Internal_Utility::clearCompiledTemplate($resource_name, $compile_id, $exp_time, $this);
+}
+public function getTags(Smarty_Internal_Template $template)
+{
+return Smarty_Internal_Utility::getTags($template);
+}
+public function testInstall(&$errors=null)
+{
+return Smarty_Internal_Utility::testInstall($this, $errors);
+}
+public static function mutingErrorHandler($errno, $errstr, $errfile, $errline, $errcontext)
+{
+$_is_muted_directory = false;
+if (!isset(Smarty::$_muted_directories[SMARTY_DIR])) {
+$smarty_dir = realpath(SMARTY_DIR);
+Smarty::$_muted_directories[SMARTY_DIR] = array(
+'file' => $smarty_dir,
+'length' => strlen($smarty_dir),
+);
+}
+foreach (Smarty::$_muted_directories as $key => &$dir) {
+if (!$dir) {
+$file = realpath($key);
+$dir = array(
+'file' => $file,
+'length' => strlen($file),
+);
+}
+if (!strncmp($errfile, $dir['file'], $dir['length'])) {
+$_is_muted_directory = true;
+break;
+}
+}
+if (!$_is_muted_directory || ($errno && $errno & error_reporting())) {
+if (Smarty::$_previous_error_handler) {
+return call_user_func(Smarty::$_previous_error_handler, $errno, $errstr, $errfile, $errline, $errcontext);
+} else {
+return false;
+}
+}
+}
+public static function muteExpectedErrors()
+{
+$error_handler = array('Smarty', 'mutingErrorHandler');
+$previous = set_error_handler($error_handler);
+if ($previous !== $error_handler) {
+Smarty::$_previous_error_handler = $previous;
+}
+}
+public static function unmuteExpectedErrors()
+{
+restore_error_handler();
+}
+}
+if (Smarty::$_CHARSET !== 'UTF-8') {
+Smarty::$_UTF8_MODIFIER = '';
+}
+class SmartyException extends Exception {
+}
+class SmartyCompilerException extends SmartyException  {
+}
+function smartyAutoload($class)
+{
+$_class = strtolower($class);
+$_classes = array(
+'smarty_config_source' => true,
+'smarty_config_compiled' => true,
+'smarty_security' => true,
+'smarty_cacheresource' => true,
+'smarty_cacheresource_custom' => true,
+'smarty_cacheresource_keyvaluestore' => true,
+'smarty_resource' => true,
+'smarty_resource_custom' => true,
+'smarty_resource_uncompiled' => true,
+'smarty_resource_recompiled' => true,
+);
+if (!strncmp($_class, 'smarty_internal_', 16) || isset($_classes[$_class])) {
+include SMARTY_SYSPLUGINS_DIR . $_class . '.php';
+}
+}
+
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/CurrentPage.class.php
+class CurrentPage {
+private static $_instance = null;
+private $_headscripts = array();
+private $_footscripts = array();
+private $_headstylesheets = array();
+private $_prebody = array();
+private $_postbody = array();
+private $_htmlattributes = array('xmlns' => "http://www.w3.org/1999/xhtml");
+private $_page;
+private function __construct() {
+$uri = $_SERVER['REQUEST_URI'];
+if (!$uri) $uri = ROOT_WDIR;
+$uri = substr($uri, strlen(ROOT_WDIR));
+if (($_qpos = strpos($uri, '?')) !== false) $uri = substr($uri, 0, $_qpos);
+if ($uri{0} != '/') $uri = '/' . $uri;
+if (preg_match('/\.[a-z]{3,4}$/i', $uri)) {
+$ctype = strtolower(preg_replace('/^.*\.([a-z]{3,4})$/i', '\1', $uri));
+$uri   = substr($uri, 0, -1 - strlen($ctype));
+}
+else {
+$ctype = 'html';
+}
+$p = PageModel::Find(
+array('rewriteurl' => $uri,
+'fuzzy'      => 0), 1
+);
+$pagedat = PageModel::SplitBaseURL($uri);
+if ($p) {
+$this->_page = $p;
+}
+elseif ($pagedat) {
+$p = new PageModel();
+$p->set('baseurl', $uri);
+$p->set('rewriteurl', $uri);
+$this->_page = $p;
+}
+else {
+return false;
+}
+if ($pagedat && $pagedat['parameters']) {
+foreach ($pagedat['parameters'] as $k => $v) {
+$this->_page->setParameter($k, $v);
+}
+}
+if (is_array($_GET)) {
+foreach ($_GET as $k => $v) {
+if (is_numeric($k)) continue;
+$this->_page->setParameter($k, $v);
+}
+}
+switch ($ctype) {
+case 'xml':
+$ctype = View::CTYPE_XML;
+break;
+case 'json':
+$ctype = View::CTYPE_JSON;
+break;
+default:
+$ctype = View::CTYPE_HTML;
+break;
+}
+$view                          = $this->_page->getView();
+$view->request['contenttype']  = $ctype;
+$view->response['contenttype'] = $ctype; // By default, this can be the same.
+$view->request['method']       = $_SERVER['REQUEST_METHOD'];
+$view->request['useragent']    = $_SERVER['HTTP_USER_AGENT'];
+$view->request['uri']          = $_SERVER['REQUEST_URI'];
+$view->request['uriresolved']  = $uri;
+$view->request['protocol']     = $_SERVER['SERVER_PROTOCOL'];
+}
+public static function Singleton() {
+if (EXEC_MODE != 'WEB') return null;
+if (!self::$_instance) {
+self::$_instance = new self();
+}
+return self::$_instance;
+}
+public static function Render() {
+return self::Singleton()->_render();
+}
+public static function AddScript($script, $location = 'head') {
+View::AddScript($script, $location);
+}
+public static function GetScripts() {
+$obj = self::Singleton();
+$s   = array_merge($obj->_headscripts, $obj->footscripts);
+return $s;
+}
+public static function AddBodyContent($content, $location = 'pre') {
+$obj = self::Singleton();
+if (in_array($content, $obj->_prebody)) return;
+if (in_array($content, $obj->_postbody)) return;
+if ($location == 'pre') $obj->_prebody[] = $content;
+else $obj->_postbody[] = $content;
+}
+public static function AddStylesheet($link, $media = "all") {
+View::AddStylesheet($link, $media);
+}
+public static function AddStyle($style) {
+View::AddStyle($style);
+}
+public static function SetHTMLAttribute($attribute, $value) {
+View::SetHTMLAttribute($attribute, $value);
+}
+public static function GetHead() {
+return View::GetHead();
+}
+public static function GetFoot() {
+return View::GetFoot();
+}
+public static function GetBodyPre() {
+return trim(implode("\n", self::Singleton()->_prebody));
+}
+public static function GetBodyPost() {
+return trim(implode("\n", self::Singleton()->_postbody));
+}
+public static function GetHTMLAttributes($asarray = false) {
+return View::GetHTMLAttributes($asarray);
+}
+private function _render() {
+if ($this->_page) {
+$view = $this->_page->execute();
+Core::RecordNavigation($this->_page);
+}
+else {
+$view        = new View();
+$view->error = View::ERROR_NOTFOUND;
+}
+if ($view->error == View::ERROR_ACCESSDENIED || $view->error == View::ERROR_NOTFOUND) {
+HookHandler::DispatchHook('/core/page/error-' . $view->error, $view);
+}
+if ($view->error != View::ERROR_NOERROR) {
+$view->baseurl = '/Error/Error' . $view->error;
+$view->setParameters(array());
+$view->templatename   = '/pages/error/error' . $view->error . '.tpl';
+$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
+}
+try {
+$data = $view->fetch();
+}
+catch (Exception $e) {
+$view->error   = View::ERROR_SERVERERROR;
+$view->baseurl = '/Error/Error' . $view->error;
+$view->setParameters(array());
+$view->templatename   = '/pages/error/error' . $view->error . '.tpl';
+$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
+$view->assignVariable('exception', $e);
+$data = $view->fetch();
+}
+switch ($view->error) {
+case View::ERROR_NOERROR:
+header('Status: 200 OK', true, $view->error);
+break;
+case View::ERROR_ACCESSDENIED:
+header('Status: 403 Forbidden', true, $view->error);
+break;
+case View::ERROR_NOTFOUND:
+header('Status: 404 Not Found', true, $view->error);
+break;
+case View::ERROR_SERVERERROR:
+header('Status: 500 Internal Server Error', true, $view->error);
+break;
+default:
+header('Status: 500 Internal Server Error', true, $view->error);
+break; // I don't know WTF happened...
+}
+if ($view->response['contenttype']) header('Content-Type: ' . $view->response['contenttype']);
+if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
+echo $data;
+if (DEVELOPMENT_MODE && $view->mode == View::MODE_PAGE && $view->response['contenttype'] == View::CTYPE_HTML) {
+echo '<pre class="xdebug-var-dump">';
+echo "Database Reads: " . Core::DB()->readCount() . "\n";
+echo "Database Writes: " . Core::DB()->writeCount() . "\n";
+echo "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
+echo "Total processing time: " . round(Core::GetProfileTimeTotal(), 4) * 1000 . ' ms' . "\n";
+if (FULL_DEBUG) {
+foreach (Core::GetProfileTimes() as $t) {
+echo "[" . Core::FormatProfileTime($t['timetotal']) . "] - " . $t['event'] . "\n";
+}
+}
+echo '<b>Available Components</b>' . "\n";
+foreach (Core::GetComponents() as $l => $v) {
+echo $v->getName() . ' ' . $v->getVersion() . "\n";
+}
+echo '<b>Query Log</b>' . "\n";
+var_dump(Core::DB()->queryLog());
+echo '</pre>';
+}
+}
+}
+
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/TemplateException.php
+class TemplateException extends Exception{
+}
+
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/TemplateInterface.php
+interface TemplateInterface {
+public function fetch($template);
+public function render($template);
+public function getTemplateVars($varname = null);
+public function assign($tpl_var, $value = null);
+}
+
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Template.class.php
+class Template extends Smarty implements TemplateInterface {
+private $_baseurl;
+public function  __construct() {
+parent::__construct();
+$this->addTemplateDir(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/');
+foreach (Core::GetComponents() as $c) {
+$d = $c->getViewSearchDir();
+if ($d) $this->addTemplateDir($d);
+$plugindir = $c->getSmartyPluginDirectory();
+if ($plugindir) $this->addPluginsDir($plugindir);
+}
+$this->compile_dir = TMP_DIR . 'smarty_templates_c';
+$this->cache_dir   = TMP_DIR . 'smarty_cache';
+}
+public function setBaseURL($url) {
+$this->_baseurl = $url;
+}
+public function getBaseURL() {
+return $this->_baseurl;
+}
+public function fetch($template) {
+$cache_id = null;
+$compile_id = null;
+$parent = null;
+$display = false;
+$merge_tpl_vars = true;
+$no_output_filter = false;
+if (strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
+try{
+return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+}
+catch(SmartyException $e){
+throw new TemplateException($e->getMessage(), $e->getCode(), $e->getPrevious());
+}
+}
+public function render($template){
+$cache_id = null;
+$compile_id = null;
+$parent = null;
+$display = true;
+$merge_tpl_vars = true;
+$no_output_filter = false;
+if (strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
+try{
+return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+}
+catch(SmartyException $e){
+throw new TemplateException($e->getMessage(), $e->getCode(), $e->getPrevious());
+}
+}
+public static function ResolveFile($filename) {
+$t = new Template();
+$dirs = $t->getTemplateDir();
+if ($filename{0} == '/') $filename = substr($filename, 1);
+foreach ($dirs as $d) {
+if (file_exists($d . $filename)) return $d . $filename;
+}
+return null;
+}
+}
+
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/UserAgent.php
+class UserAgent {
+private static $updateInterval =   604800; // 1 week
+private static $_ini_url    =   'http://user-agent-string.info/rpc/get_data.php?key=free&format=ini';
+private static $_ver_url    =   'http://user-agent-string.info/rpc/get_data.php?key=free&format=ini&ver=y';
+private static $_md5_url    =   'http://user-agent-string.info/rpc/get_data.php?format=ini&md5=y';
+private static $_info_url   =   'http://user-agent-string.info';
+private static $_Cache = array();
+private static $_Data = null;
+public $type             = 'unknown';
+public $ua_family        = 'unknown';
+public $ua_name          = 'unknown';
+public $ua_version       = 'unknown';
+public $ua_url           = 'unknown';
+public $ua_company       = 'unknown';
+public $ua_company_url   = 'unknown';
+public $ua_icon          = 'unknown.png';
+public $ua_info_url      = 'unknown';
+public $os_family        = 'unknown';
+public $os_name          = 'unknown';
+public $os_url           = 'unknown';
+public $os_company       = 'unknown';
+public $os_company_url   = 'unknown';
+public $os_icon          = 'unknown.png';
+public static function Test(){
+var_dump(self::$_Cache);
+}
+public function __construct($useragent = null) {
+if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
+$_data = $this->_loadData();
+if(!$_data || !isset($useragent)) {
+return;
+}
+if(isset(self::$_Cache[$useragent])){
+$this->fromArray(self::$_Cache[$useragent]);
+return;
+}
+$os_id = false;
+$browser_id = false;
+foreach ($_data['robots'] as $test) {
+if ($test[0] == $useragent) {
+$this->type                            = 'Robot';
+if ($test[1]) $this->ua_family        = $test[1];
+if ($test[2]) $this->ua_name          = $test[2];
+if ($test[3]) $this->ua_url           = $test[3];
+if ($test[4]) $this->ua_company       = $test[4];
+if ($test[5]) $this->ua_company_url   = $test[5];
+if ($test[6]) $this->ua_icon          = $test[6];
+if ($test[7]) { // OS set
+$os_data = $_data['os'][$test[7]];
+if ($os_data[0]) $this->os_family       =   $os_data[0];
+if ($os_data[1]) $this->os_name         =   $os_data[1];
+if ($os_data[2]) $this->os_url          =   $os_data[2];
+if ($os_data[3]) $this->os_company      =   $os_data[3];
+if ($os_data[4]) $this->os_company_url  =   $os_data[4];
+if ($os_data[5]) $this->os_icon         =   $os_data[5];
+}
+if ($test[8]) $this->ua_info_url      = self::$_info_url.$test[8];
+self::$_Cache[$useragent] = $this->asArray();
+return;
+}
+}
+foreach ($_data['browser_reg'] as $test) {
+if (@preg_match($test[0],$useragent,$info)) { // $info may contain version
+$browser_id = $test[1];
+break;
+}
+}
+if ($browser_id) { // browser detail
+$browser_data = $_data['browser'][$browser_id];
+if ($_data['browser_type'][$browser_data[0]][0]) $this->type    = $_data['browser_type'][$browser_data[0]][0];
+if (isset($info[1]))    $this->ua_version     = $info[1];
+if ($browser_data[1])   $this->ua_family      = $browser_data[1];
+if ($browser_data[1])   $this->ua_name        = $browser_data[1].(isset($info[1]) ? ' '.$info[1] : '');
+if ($browser_data[2])   $this->ua_url         = $browser_data[2];
+if ($browser_data[3])   $this->ua_company     = $browser_data[3];
+if ($browser_data[4])   $this->ua_company_url = $browser_data[4];
+if ($browser_data[5])   $this->ua_icon        = $browser_data[5];
+if ($browser_data[6])   $this->ua_info_url    = self::$_info_url.$browser_data[6];
+}
+if (isset($_data['browser_os'][$browser_id])) { // os detail
+$os_id = $_data['browser_os'][$browser_id][0]; // Get the os id
+$os_data = $_data['os'][$os_id];
+if ($os_data[0])    $this->os_family      = $os_data[0];
+if ($os_data[1])    $this->os_name        = $os_data[1];
+if ($os_data[2])    $this->os_url         = $os_data[2];
+if ($os_data[3])    $this->os_company     = $os_data[3];
+if ($os_data[4])    $this->os_company_url = $os_data[4];
+if ($os_data[5])    $this->os_icon        = $os_data[5];
+self::$_Cache[$useragent] = $this->asArray();
+return;
+}
+foreach ($_data['os_reg'] as $test) {
+if (@preg_match($test[0],$useragent)) {
+$os_id = $test[1];
+break;
+}
+}
+if ($os_id) { // os detail
+$os_data = $_data['os'][$os_id];
+if ($os_data[0]) $this->os_family       = $os_data[0];
+if ($os_data[1]) $this->os_name         = $os_data[1];
+if ($os_data[2]) $this->os_url          = $os_data[2];
+if ($os_data[3]) $this->os_company      = $os_data[3];
+if ($os_data[4]) $this->os_company_url  = $os_data[4];
+if ($os_data[5]) $this->os_icon         = $os_data[5];
+}
+self::$_Cache[$useragent] = $this->asArray();
+}
+public function isBot(){
+switch($this->type){
+case 'Robot':
+case 'Offline Browser':
+case 'Other':
+return true;
+default:
+return false;
+}
+}
+public function asArray(){
+return array(
+'type' => $this->type,
+'ua_family'      =>	$this->ua_family,
+'ua_name'        =>	$this->ua_name,
+'ua_version'     =>	$this->ua_version,
+'ua_url'         =>	$this->ua_url,
+'ua_company'     =>	$this->ua_company,
+'ua_company_url' =>	$this->ua_company_url,
+'ua_icon'        =>	$this->ua_icon,
+'ua_info_url'    =>	$this->ua_info_url,
+'os_family'      =>	$this->os_family,
+'os_name'        =>	$this->os_name,
+'os_url'         =>	$this->os_url,
+'os_company'     =>	$this->os_company,
+'os_company_url' =>	$this->os_company_url,
+'os_icon'        =>	$this->os_icon,
+);
+return array(
+$this->type,
+$this->ua_family,
+$this->ua_name,
+$this->ua_version,
+$this->ua_url,
+$this->ua_company,
+$this->ua_company_url,
+$this->ua_icon,
+$this->ua_info_url,
+$this->os_family,
+$this->os_name,
+$this->os_url,
+$this->os_company,
+$this->os_company_url,
+$this->os_icon,
+);
+}
+private function fromArray($dat){
+$this->type           = $dat['type'];
+$this->ua_family      = $dat['ua_family'];
+$this->ua_name        = $dat['ua_name'];
+$this->ua_version     = $dat['ua_version'];
+$this->ua_url         = $dat['ua_url'];
+$this->ua_company     = $dat['ua_company'];
+$this->ua_company_url = $dat['ua_company_url'];
+$this->ua_icon        = $dat['ua_icon'];
+$this->ua_info_url    = $dat['ua_info_url'];
+$this->os_family      = $dat['os_family'];
+$this->os_name        = $dat['os_name'];
+$this->os_url         = $dat['os_url'];
+$this->os_company     = $dat['os_company'];
+$this->os_company_url = $dat['os_company_url'];
+$this->os_icon        = $dat['os_icon'];
+}
+private static function _LoadData() {
+if(self::$_Data === null){
+self::$_Data = Cache::GetSystemCache()->get('useragent-cache-ini', 3600);
+if(self::$_Data){
+return self::$_Data;
+}
+else{
+$file = Core::File('tmp/useragent.cache.ini');
+if(!$file->exists()){
+$remote = Core::File(self::$_ini_url);
+$remote->copyTo($file);
+}
+if($file->getMTime() < (Time::GetCurrent() - self::$updateInterval)){
+$remote = Core::File(self::$_ini_url);
+$remote->copyTo($file);
+}
+self::$_Data = parse_ini_file($file->getFilename(), true);
+Cache::GetSystemCache()->set('useragent-cache-ini', self::$_Data);
+return self::$_Data;
+}
+}
+return self::$_Data;
+}
+}
+
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/View.class.php
+class View {
+const ERROR_OTHER        = 1;
+const ERROR_NOERROR      = 200;
+const ERROR_BADREQUEST   = 400;
+const ERROR_ACCESSDENIED = 403;
+const ERROR_NOTFOUND     = 404;
+const ERROR_SERVERERROR  = 500;
+const MODE_PAGE = 'page';
+const MODE_WIDGET = 'widget';
+const MODE_NOOUTPUT = 'nooutput';
+const MODE_AJAX = 'ajax';
+const MODE_PAGEORAJAX = 'pageorajax';
+const METHOD_GET = 'GET';
+const METHOD_POST = 'POST';
+const METHOD_PUT = 'PUT';
+const METHOD_HEAD = 'HEAD';
+const METHOD_DELETE = 'DELETE';
+const CTYPE_HTML  = 'text/html';
+const CTYPE_PLAIN = 'text/plain';
+const CTYPE_JSON  = 'application/json';
+const CTYPE_XML   = 'application/xml';
+const CTYPE_ICS   = 'text/calendar';
+public $error;
+private $_template;
+private $_params;
+public $baseurl;
+public $title;
+public $access;
+public $templatename;
+public $contenttype = View::CTYPE_HTML;
+public $mastertemplate;
+public $breadcrumbs = array();
+public $controls = array();
+public $mode;
+public $jsondata = null;
+public $updated = null;
+public $head = array();
+public $meta = array();
+public $scripts = array('head' => array(), 'foot' => array());
+public $stylesheets = array();
+public $canonicalurl = null;
+public $allowerrors = false;
+public $ssl = false;
+public static $MetaData = array();
+public static $HeadScripts = array();
+public static $FootScripts = array();
+public static $Stylesheets = array();
+public static $HTMLAttributes = array();
+public static $HeadData = array();
+public function __construct() {
+$this->error = View::ERROR_NOERROR;
+$this->mode  = View::MODE_PAGE;
+}
+public function setParameters($params) {
+$this->_params = $params;
+}
+public function getParameters() {
+if (!$this->_params) {
+$this->_params = array();
+}
+return $this->_params;
+}
+public function getParameter($key) {
+$p = $this->getParameters();
+return (array_key_exists($key, $p)) ? $p[$key] : null;
+}
+public function getTemplate() {
+if (!$this->_template) {
+$this->_template = new Template();
+$this->_template->setBaseURL($this->baseurl);
+}
+return $this->_template;
+}
+public function overrideTemplate($template){
+if(!is_a($template, 'TemplateInterface')){
+return false;
+}
+if($template == $this->_template){
+return false;
+}
+if($this->_template !== null){
+foreach($this->_template->getTemplateVars() as $k => $v){
+$template->assign($k, $v);
+}
+}
+$this->_template = $template;
+}
+public function assign($key, $val) {
+$this->getTemplate()->assign($key, $val);
+}
+public function assignVariable($key, $val) {
+$this->assign($key, $val);
+}
+public function getVariable($key) {
+$v = $this->getTemplate()->getVariable($key);
+return ($v) ? $v->value : null;
+}
+public function fetchBody() {
+if ($this->mode == View::MODE_NOOUTPUT) {
+return null;
+}
+if ($this->error != View::ERROR_NOERROR && !$this->allowerrors) {
+$tmpl = '/pages/error/error' . $this->error . '.tpl';
+}
+else {
+$tmpl = $this->templatename;
+}
+switch ($this->contenttype) {
+case View::CTYPE_XML:
+if (strpos($tmpl, ROOT_PDIR) === 0 && strpos($tmpl, '.xml.tpl') !== false) {
+$this->mastertemplate = false;
+}
+else {
+$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'xml.tpl', $tmpl));
+if ($ctemp) {
+$tmpl                 = $ctemp;
+$this->mastertemplate = false;
+}
+else {
+$this->contenttype = View::CTYPE_HTML;
+}
+}
+break;
+case View::CTYPE_ICS:
+if(strpos($tmpl, ROOT_PDIR) === 0 && strpos($tmpl, '.ics.tpl') !== false){
+$this->mastertemplate = false;
+}
+else{
+$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'ics.tpl', $tmpl));
+if($ctemp){
+$tmpl = $ctemp;
+$this->mastertemplate = false;
+}
+else{
+$this->contenttype = View::CTYPE_HTML;
+}
+}
+break;
+case View::CTYPE_JSON:
+if ($this->jsondata !== null) {
+$this->mastertemplate = false;
+$tmpl                 = false;
+return json_encode($this->jsondata);
+}
+$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'json.tpl', $tmpl));
+if ($ctemp) {
+$tmpl                 = $ctemp;
+$this->mastertemplate = false;
+}
+else {
+$this->contenttype = View::CTYPE_HTML;
+}
+break;
+}
+if (!$tmpl && $this->templatename == '') {
+throw new Exception('Please set the variable "templatename" on the page view.');
+}
+switch ($this->mode) {
+case View::MODE_PAGE:
+case View::MODE_AJAX:
+case View::MODE_PAGEORAJAX:
+$t = $this->getTemplate();
+return $t->fetch($tmpl);
+break;
+case View::MODE_WIDGET:
+$tn = Template::ResolveFile(preg_replace(':^[/]{0,1}pages/:', '/widgets/', $tmpl));
+if (!$tn) $tn = $tmpl;
+$t = $this->getTemplate();
+return $t->fetch($tn);
+break;
+}
+}
+public function fetch() {
+$body = $this->fetchBody();
+if ($this->mastertemplate === false) {
+return $body;
+}
+elseif ($this->mastertemplate === null) {
+$this->mastertemplate = ConfigHandler::Get('/theme/default_template');
+}
+if ($this->contenttype == View::CTYPE_JSON) {
+$mastertpl = false;
+}
+else {
+switch ($this->mode) {
+case View::MODE_PAGEORAJAX:
+if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
+$mastertpl = false;
+$this->mode = View::MODE_AJAX;
+}
+else{
+$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/skins/' . $this->mastertemplate;
+$this->mode = View::MODE_PAGE;
+}
+break;
+case View::MODE_NOOUTPUT:
+case View::MODE_AJAX:
+$mastertpl = false;
+break;
+case View::MODE_PAGE:
+$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/skins/' . $this->mastertemplate;
+break;
+case View::MODE_WIDGET:
+$mastertpl = Template::ResolveFile('widgetcontainers/' . $this->mastertemplate);
+break;
+}
+}
+if (!$mastertpl) return $body;
+$template = new Template();
+$template->setBaseURL('/');
+if ($this->mode == View::MODE_PAGE) {
+$template->assign('breadcrumbs', $this->getBreadcrumbs());
+$template->assign('controls', $this->controls);
+$template->assign('messages', Core::GetMessages());
+}
+$template->assign('title', $this->title);
+$template->assign('body', $body);
+try{
+$data = $template->fetch($mastertpl);
+}
+catch(SmartyException $e){
+$this->error = View::ERROR_SERVERERROR;
+error_log($e->getMessage());
+require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+die();
+}
+if ($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML) {
+$data = str_replace('</head>', $this->getHeadContent() . "\n" . '</head>', $data);
+$data = str_replace('</body>', $this->getFootContent() . "\n" . '</body>', $data);
+$data = str_replace('<html', '<html ' . self::GetHTMLAttributes(), $data);
+$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
+$bodyclass = 'page-' . $url;
+if(preg_match('/<body[^>]*>/', $data, $matches)){
+$fullbody = $matches[0];
+if($fullbody == '<body>'){
+$data = str_replace($fullbody, '<body class="' . $bodyclass . '">', $data);
+}
+elseif(strpos($fullbody, 'class=') === false){
+$data = str_replace($fullbody, substr($fullbody, 0, -1) . ' class="' . $bodyclass . '">', $data);
+}
+else{
+$node = new SimpleXMLElement($fullbody . '</body>');
+$newnode = '<body';
+foreach($node->attributes() as $k => $v){
+if($k == 'class'){
+$newnode .= ' ' . $k . '="' . $bodyclass . ' ' . $v . '"';
+}
+else{
+$newnode .= ' ' . $k . '="' . $v . '"';
+}
+}
+$newnode .= '>';
+$data = str_replace($fullbody, $newnode, $data);
+}
+}
+if (DEVELOPMENT_MODE) {
+$debug = '';
+$debug .= '<pre class="xdebug-var-dump screen">';
+$debug .= '<b>Template Information</b>' . "\n";
+$debug .= 'Base URL: ' . $this->baseurl . "\n";
+$debug .= 'Template Used: ' . $this->templatename . "\n";
+$debug .= "\n" . '<b>Performance Information</b>' . "\n";
+$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
+$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
+$debug .= "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
+$debug .= "Total processing time: " . round(Core::GetProfileTimeTotal(), 4) * 1000 . ' ms' . "\n";
+if (FULL_DEBUG) {
+foreach (Core::GetProfileTimes() as $t) {
+$debug .= "[" . Core::FormatProfileTime($t['timetotal']) . "] - " . $t['event'] . "\n";
+}
+}
+$debug .= "\n" . '<b>Available Components</b>' . "\n";
+foreach (Core::GetComponents() as $l => $v) {
+$debug .= ($v->isEnabled() ? '[<span style="color:green;">Enabled</span>]' : '[<span style="color:red;">Disabled</span>]').
+$v->getName() . ' ' . $v->getVersion() . "\n";
+}
+$debug .= "\n" . '<b>Included Files</b>' . "\n";
+$debug .= 'Number: ' . sizeof(get_included_files()) . "\n";
+$debug .= implode("\n", get_included_files()) . "\n";
+$debug .= "\n" . '<b>Query Log</b>' . "\n";
+$debug .= print_r(Core::DB()->queryLog(), true);
+$debug .= '</pre>';
+$data = str_replace('</body>', $debug . "\n" . '</body>', $data);
+}
+}
+return $data;
+}
+public function render() {
+if ($this->contenttype && $this->contenttype == View::CTYPE_HTML) {
+View::AddMeta('http-equiv="Content-Type" content="text/html;charset=UTF-8"');
+}
+$data = $this->fetch();
+if ($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX) {
+switch ($this->error) {
+case View::ERROR_NOERROR:
+header('Status: 200 OK', true, $this->error);
+break;
+case View::ERROR_ACCESSDENIED:
+header('Status: 403 Forbidden', true, $this->error);
+break;
+case View::ERROR_NOTFOUND:
+header('Status: 404 Not Found', true, $this->error);
+break;
+case View::ERROR_SERVERERROR:
+header('Status: 500 Internal Server Error', true, $this->error);
+break;
+default:
+header('Status: 500 Internal Server Error', true, $this->error);
+break; // I don't know WTF happened...
+}
+if ($this->contenttype) {
+if ($this->contenttype == View::CTYPE_HTML) header('Content-Type: text/html; charset=UTF-8');
+else header('Content-Type: ' . $this->contenttype);
+}
+header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? Core::GetComponent()->getVersion() : ''));
+}
+if(SSL_MODE != SSL_MODE_DISABLED){
+if($this->ssl && !SSL){
+header('Location: ' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1));
+die('This page requires SSL, if it does not redirect you automatically, please <a href="' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
+}
+elseif(!$this->ssl && SSL && SSL_MODE == SSL_MODE_ONDEMAND){
+header('Location: ' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1));
+die('This page does not require SSL, if it does not redirect you automatically, please <a href="' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
+}
+}
+echo $data;
+}
+public function addBreadcrumb($title, $link = null) {
+if ($link !== null && strpos($link, '://') === false) $link = Core::ResolveLink($link);
+$this->breadcrumbs[] = array('title' => $title,
+'link'  => $link);
+}
+public function setBreadcrumbs($array) {
+$this->breadcrumbs = array();
+if (!$array) return;
+foreach ($array as $k => $v) {
+if ($v instanceof PageModel) $this->addBreadcrumb($v->get('title'), $v->getResolvedURL());
+else $this->addBreadcrumb($v, $k);
+}
+}
+public function getBreadcrumbs() {
+$crumbs = $this->breadcrumbs;
+if ($this->title) $crumbs[] = array('title' => $this->title,
+'link'  => null);
+return $crumbs;
+}
+public function addControl($title, $link = null, $class = 'edit') {
+$control = new ViewControl();
+if(func_num_args() == 1 && is_array($title)){
+foreach($title as $k => $v){
+$control->set($k, $v);
+}
+}
+else{
+if(is_array($class)){
+foreach($class as $k => $v){
+$control->set($k, $v);
+}
+}
+else{
+$control->class = $class;
+}
+$control->title = $title;
+$control->link = Core::ResolveLink($link);
+}
+if(!$control->icon){
+switch($control->class){
+case 'add':
+case 'edit':
+case 'directory':
+$control->icon = $control->class;
+break;
+case 'delete':
+$control->icon = 'remove';
+break;
+case 'view':
+$control->icon = 'eye-open';
+break;
+}
+}
+$this->controls[] = $control;
+}
+public function setAccess($accessstring) {
+$this->access = $accessstring;
+return $this->checkAccess();
+}
+public function checkAccess() {
+$u = Core::User();
+if ($u->checkAccess($this->access)) {
+return true;
+}
+else {
+$this->error = View::ERROR_ACCESSDENIED;
+return false;
+}
+}
+public function getHeadContent(){
+$data = array_merge($this->head, $this->scripts['head'], $this->stylesheets);
+if($this->error == View::ERROR_NOERROR){
+if($this->updated !== null){
+$this->meta['article:modified_time'] = Time::FormatGMT($this->updated, Time::TIMEZONE_GMT, Time::FORMAT_ISO8601);
+}
+$data[] = '<meta name="generator" content="Core Plus ' . Core::GetComponent()->getVersion() . '"/>';
+if(!isset($this->meta['og:title'])){
+$this->meta['og:title'] = $this->title;
+}
+if($this->canonicalurl === null){
+$this->canonicalurl = Core::ResolveLink($this->baseurl);
+}
+if($this->canonicalurl !== false){
+$data[] = '<link rel="canonical" href="' . $this->canonicalurl . '" />';
+$this->meta['og:url'] = $this->canonicalurl;
+}
+$this->meta['og:site_name'] = SITENAME;
+}
+foreach($this->meta as $k => $v){
+if(!$v) continue; // Skip blank values.
+switch($k){
+case 'name':
+case 'keywords':
+case 'description':
+$key = 'name';
+break;
+default:
+$key = 'property';
+}
+if(is_array($v)){
+foreach($v as $sv){
+$data[] = '<meta ' . $key . '="' . $k . '" content="' . str_replace('"', '\\"', $sv) . '"/>';
+}
+}
+else{
+$data[] = '<meta ' . $key . '="' . $k . '" content="' . str_replace('"', '\\"', $v) . '"/>';
+}
+}
+if (ConfigHandler::Get('/core/markup/minified')) {
+$out = implode('', $data);
+}
+else {
+$out = implode("\n", $data);
+}
+return trim($out);
+}
+public function getFootContent(){
+$data = $this->scripts['foot'];
+if (ConfigHandler::Get('/core/markup/minified')) {
+$out = implode('', $data);
+}
+else {
+$out = implode("\n", $data);
+}
+return trim($out);
+}
+public static function AddScript($script, $location = 'head') {
+if (strpos($script, '<script') === false) {
+$script = '<script type="text/javascript" src="' . Core::ResolveAsset($script) . '"></script>';
+}
+$scripts =& PageRequest::GetSystemRequest()->getView()->scripts;
+if (in_array($script, $scripts['head'])) return;
+if (in_array($script, $scripts['foot'])) return;
+if ($location == 'head') $scripts['head'][] = $script;
+else $scripts['foot'][] = $script;
+}
+public static function AddStylesheet($link, $media = "all") {
+if (strpos($link, '<link') === false) {
+$link = '<link type="text/css" href="' . Core::ResolveAsset($link) . '" media="' . $media . '" rel="stylesheet"/>';
+}
+$styles =& PageRequest::GetSystemRequest()->getView()->stylesheets;
+if (!in_array($link, $styles)) $styles[] = $link;
+}
+public static function AddStyle($style) {
+if (strpos($style, '<style') === false) {
+$style = '<style>' . $style . '</style>';
+}
+$styles =& PageRequest::GetSystemRequest()->getView()->stylesheets;
+if (!in_array($style, $styles)) $styles[] = $style;
+}
+public static function SetHTMLAttribute($attribute, $value) {
+self::$HTMLAttributes[$attribute] = $value;
+}
+public static function GetHTMLAttributes($asarray = false) {
+$atts = self::$HTMLAttributes;
+if ($asarray) {
+return $atts;
+}
+else {
+$str = '';
+foreach ($atts as $k => $v) $str .= " $k=\"" . str_replace('"', '\"', $v) . "\"";
+return trim($str);
+}
+}
+public static function GetHead() {
+return PageRequest::GetSystemRequest()->getView()->getHeadContent();
+}
+public static function GetFoot() {
+return PageRequest::GetSystemRequest()->getView()->getFootContent();
+}
+public static function AddMetaName($key, $value) {
+PageRequest::GetSystemRequest()->getView()->meta[$key] = $value;
+}
+public static function AddMeta($string) {
+if (strpos($string, '<meta') === false) $string = '<meta ' . $string . '/>';
+PageRequest::GetSystemRequest()->getView()->head[] = $string;
+}
+}
+class ViewException extends Exception {
+}
+
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/ViewControl.class.php
+class ViewControl implements ArrayAccess {
+public $link = '#';
+public $title = '';
+public $class = '';
+public $icon = '';
+public $confirm = '';
+public $otherattributes = array();
+public function fetch(){
+$html = '';
+$html .= '<li' . ($this->class ? (' class="' . $this->class . '"') : '') . '>';
+if($this->link){
+$html .= $this->_fetchA();
+}
+if($this->icon){
+$html .= '<i class="icon-' . $this->icon . '"></i>';
+}
+$html .= '<span>' . $this->title . '</span>';
+if($this->link){
+$html .= '</a>';
+}
+$html .= '</li>';
+return $html;
+}
+private function _fetchA(){
+if(!$this->link) return null;
+$dat = $this->otherattributes;
+if($this->confirm){
+$dat['onclick'] = "if(confirm('" . str_replace("'", "\\'", $this->confirm) . "')){" .
+"Core.PostURL('" . str_replace("'", "\\'", Core::ResolveLink($this->link)) . "');" .
+"} return false; ";
+$dat['href'] = '#';
+}
+else{
+$dat['href'] = $this->link;
+}
+$dat['title'] = $this->title;
+if($this->class) $dat['class'] = $this->class;
+$html = '<a ';
+foreach($dat as $k => $v){
+$html .= " $k=\"$v\"";
+}
+$html .= '>';
+return $html;
+}
+public function set($key, $value){
+switch($key){
+case 'class':
+$this->class = $value;
+break;
+case 'confirm':
+$this->confirm = $value;
+break;
+case 'icon':
+$this->icon = $value;
+break;
+case 'link':
+case 'href': // Just for an alias of the link.
+$this->link = Core::ResolveLink($value);
+break;
+case 'title':
+$this->title = $value;
+break;
+default:
+$this->otherattributes[$key] = $value;
+break;
+}
+}
+public function offsetExists($offset) {
+return(property_exists($this, $offset));
+}
+public function offsetGet($offset) {
+$dat = get_object_vars($this);
+if(isset($dat[$offset])){
+return $dat[$offset];
+}
+elseif(isset($this->otherattributes[$offset])){
+return $this->otherattributes[$offset];
+}
+else{
+return null;
+}
+}
+public function offsetSet($offset, $value) {
+$this->set($offset, $value);
+}
+public function offsetUnset($offset) {
+return void;
+}
+}
+
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Widget_2_1.class.php
+class Widget_2_1 {
+private $_view = null;
+public $_model = null;
+public $_params = null;
+public function getView() {
+if ($this->_view === null) {
+$this->_view              = new View();
+$this->_view->contenttype = View::CTYPE_HTML;
+$this->_view->mode        = View::MODE_WIDGET;
+if ($this->getWidgetModel()) {
+$this->_view->baseurl = $this->getWidgetModel()->get('baseurl');
+}
+else {
+$back = debug_backtrace();
+$cls  = $back[1]['class'];
+if (strpos($cls, 'Widget') !== false) $cls = substr($cls, 0, -6);
+$mth                  = $back[1]['function'];
+$this->_view->baseurl = $cls . '/' . $mth;
+}
+}
+return $this->_view;
+}
+public function getWidgetModel() {
+return $this->_model;
+}
+protected function setAccess($accessstring) {
+$this->getWidgetModel()->set('access', $accessstring);
+return (\Core\user()->checkAccess($accessstring));
+}
+protected function setTemplate($template) {
+$this->getView()->templatename = $template;
+}
+protected function getParameter($param) {
+if($this->_params !== null){
+$parameters = $this->_params;
+}
+else{
+$dat = $this->getWidgetModel()->splitParts();
+$parameters = $dat['parameters'];
+}
+return (isset($parameters[$param])) ? $parameters[$param] : null;
+}
+public static function Factory($name) {
+return new $name();
+}
+}
+
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Form.class.php
+class FormGroup {
+protected $_elements;
+protected $_attributes;
+protected $_validattributes = array();
+public $requiresupload = false;
+public function __construct($atts = null) {
+$this->_attributes = array();
+$this->_elements   = array();
+if ($atts) $this->setFromArray($atts);
+}
+public function set($key, $value) {
+$this->_attributes[strtolower($key)] = $value;
+}
+public function get($key) {
+$key = strtolower($key);
+return (isset($this->_attributes[$key])) ? $this->_attributes[$key] : null;
+}
+public function setFromArray($array) {
+foreach ($array as $k => $v) {
+$this->set($k, $v);
+}
+}
+public function hasError() {
+foreach ($this->_elements as $e) {
+if ($e->hasError()) return true;
+}
+return false;
+}
+public function getErrors() {
+$err = array();
+foreach ($this->_elements as $e) {
+if ($e instanceof FormGroup) $err = array_merge($err, $e->getErrors());
+elseif ($e->hasError()) $err[] = $e->getError();
+}
+return $err;
+}
+public function addElement($element, $atts = null) {
+if ($element instanceof FormElement || is_a($element, 'FormElement')) {
+if ($atts) $element->setFromArray($atts);
+$this->_elements[] = $element;
+}
+elseif ($element instanceof FormGroup) {
+if ($atts) $element->setFromArray($atts);
+$this->_elements[] = $element;
+}
+else {
+if (!isset(Form::$Mappings[$element])) $element = 'text'; // Default.
+$this->_elements[] = new Form::$Mappings[$element]($atts);
+}
+}
+public function switchElement(FormElement $oldelement, FormElement $newelement) {
+foreach ($this->_elements as $k => $el) {
+if ($el == $oldelement) {
+$this->_elements[$k] = $newelement;
+return true;
+}
+if ($el instanceof FormGroup) {
+if ($el->switchElement($oldelement, $newelement)) return true;
+}
+}
+return false;
+}
+public function removeElement($name){
+foreach ($this->_elements as $k => $el) {
+if($el->get('name') == $name){
+unset($this->_elements[$k]);
+return true;
+}
+if ($el instanceof FormGroup) {
+if ($el->removeElement($name)) return true;
+}
+}
+return false;
+}
+public function getTemplateName() {
+return 'forms/groups/default.tpl';
+}
+public function render() {
+$out = '';
+foreach ($this->_elements as $e) {
+$out .= $e->render();
+}
+$file = $this->getTemplateName();
+if (!$file) return $out;
+$tpl = new Template();
+$tpl->assign('group', $this);
+$tpl->assign('elements', $out);
+return $tpl->fetch($file);
+}
+public function getClass() {
+$c = $this->get('class');
+$r = $this->get('required');
+$e = $this->hasError();
+return $c . (($r) ? ' formrequired' : '') . (($e) ? ' formerror' : '');
+}
+public function getGroupAttributes() {
+$out = '';
+foreach ($this->_validattributes as $k) {
+if (($v = $this->get($k))) $out .= " $k=\"" . str_replace('"', '\\"', $v) . "\"";
+}
+return $out;
+}
+public function getElements($recursively = true, $includegroups = false) {
+$els = array();
+foreach ($this->_elements as $e) {
+if (
+$e instanceof FormElement ||
+($e instanceof FormGroup && ($includegroups || !$recursively))
+) {
+$els[] = $e;
+}
+if ($recursively && $e instanceof FormGroup) $els = array_merge($els, $e->getElements($recursively));
+}
+return $els;
+}
+public function getElement($name) {
+return $this->getElementByName($name);
+}
+public function getElementByName($name) {
+$els = $this->getElements(true, true);
+foreach ($els as $el) {
+if ($el->get('name') == $name) return $el;
+}
+return false;
+}
+}
+class FormElement {
+protected $_attributes = array();
+protected $_error;
+protected $_validattributes = array();
+public $requiresupload = false;
+public $validation = null;
+public $validationmessage = null;
+public function __construct($atts = null) {
+if ($atts) $this->setFromArray($atts);
+}
+public function set($key, $value) {
+$key = strtolower($key);
+switch ($key) {
+case 'value': // Drop into special logic.
+$this->setValue($value);
+break;
+case 'label': // This is an alias for title.
+$this->_attributes['title'] = $value;
+case 'options':
+if (!is_array($value)) {
+$this->_attributes[$key] = $value;
+}
+elseif(\Core\is_numeric_array($value)) {
+$o = array();
+foreach ($value as $v) {
+$o[$v] = $v;
+}
+$this->_attributes[$key] = $o;
+}
+else{
+$this->_attributes[$key] = $value;
+}
+break;
+case 'autocomplete':
+if(!$value){
+$this->_attributes[$key] = 'off';
+}
+else{
+$this->_attributes[$key] = 'on';
+}
+break;
+default:
+$this->_attributes[$key] = $value;
+break;
+}
+}
+public function get($key) {
+$key = strtolower($key);
+switch ($key) {
+case 'label': // Special case, returns either title or name, whichever is set.
+if (!empty($this->_attributes['title'])) return $this->_attributes['title'];
+else return $this->get('name');
+break;
+case 'id': // ID is also a special case, it casn use the name if not defined otherwise.
+return $this->getID();
+break;
+default:
+return (isset($this->_attributes[$key])) ? $this->_attributes[$key] : null;
+}
+}
+public function getAsArray() {
+$ret            = array();
+$ret['__class'] = get_class($this);
+foreach ($this->_attributes as $k => $v) {
+$ret[$k] = (isset($this->_attributes[$k])) ? $this->_attributes[$k] : null;
+}
+return $ret;
+}
+public function setFromArray($array) {
+foreach ($array as $k => $v) {
+$this->set($k, $v);
+}
+}
+public function setValue($value) {
+if ($this->get('required') && !$value) {
+$this->_error = $this->get('label') . ' is required.';
+return false;
+}
+if ($value && $this->validation) {
+$vmesg = $this->validationmessage ? $this->validationmessage : $this->get('label') . ' does not validate correctly, please double check it.';
+$v     = $this->validation;
+if (strpos($v, '::') !== false && ($out = call_user_func($v, $value)) !== true) {
+if ($out !== false) $vmesg = $out;
+$this->_error = $vmesg;
+return false;
+}
+elseif (
+($v{0} == '/' && !preg_match($v, $value)) ||
+($v{0} == '#' && !preg_match($v, $value))
+) {
+if (DEVELOPMENT_MODE) $vmesg .= ' validation used: ' . $v;
+$this->_error = $vmesg;
+return false;
+}
+}
+$this->_attributes['value'] = $value;
+return true;
+}
+public function hasError() {
+return ($this->_error);
+}
+public function getError() {
+return $this->_error;
+}
+public function setError($err, $displayMessage = true) {
+$this->_error = $err;
+if ($err && $displayMessage) Core::SetMessage($err, 'error');
+}
+public function clearError() {
+$this->setError(false);
+}
+public function getTemplateName() {
+return 'forms/elements/' . strtolower(get_class($this)) . '.tpl';
+}
+public function render() {
+if ($this->get('multiple') && !preg_match('/.*\[.*\]/', $this->get('name'))) $this->_attributes['name'] .= '[]';
+$file = $this->getTemplateName();
+$tpl = new Template();
+$tpl->assign('element', $this);
+return $tpl->fetch($file);
+}
+public function getClass() {
+$c = $this->get('class');
+$r = $this->get('required');
+$e = $this->hasError();
+return $c . (($r) ? ' formrequired' : '') . (($e) ? ' formerror' : '');
+}
+public function getID(){
+if (!empty($this->_attributes['id'])){
+return $this->_attributes['id'];
+}
+else{
+$n = $this->get('name');
+$c = strtolower(get_class($this));
+$id = $c . '-' . $n;
+$id = str_replace('[]', '', $id);
+$id = preg_replace('/\[([^\]]*)\]/', '-$1', $id);
+return $id;
+}
+}
+public function getInputAttributes() {
+$out = '';
+foreach ($this->_validattributes as $k) {
+if ($k == 'required' && !$this->get($k)) continue;
+if($k == 'checked' && !$this->get($k)) continue;
+if (($v = $this->get($k)) !== null) $out .= " $k=\"" . str_replace('"', '\\"', $v) . "\"";
+}
+return $out;
+}
+public function lookupValueFrom(&$src) {
+$n = $this->get('name');
+if (strpos($n, '[') !== false) {
+$base = substr($n, 0, strpos($n, '['));
+if (!isset($src[$base])) return null;
+$t = $src[$base];
+preg_match_all('/\[(.+?)\]/', $n, $m);
+foreach ($m[1] as $k) {
+if (!isset($t[$k])) return null;
+$t = $t[$k];
+}
+return $t;
+}
+else {
+if (!isset($src[$n])) return null;
+else return $src[$n];
+}
+}
+public static function Factory($type, $attributes = array()) {
+if (!isset(Form::$Mappings[$type])) $type = 'text'; // Default.
+return new Form::$Mappings[$type]($attributes);
+}
+}
+class Form extends FormGroup {
+public static $Mappings = array(
+'checkbox'         => 'FormCheckboxInput',
+'checkboxes'       => 'FormCheckboxesInput',
+'file'             => 'FormFileInput',
+'hidden'           => 'FormHiddenInput',
+'pageinsertables'  => 'FormPageInsertables',
+'pagemeta'         => 'FormPageMeta',
+'pagemetas'        => 'FormPageMetasInput',
+'pageparentselect' => 'FormPageParentSelectInput',
+'pagerewriteurl'   => 'FormPageRewriteURLInput',
+'pagethemeselect'  => 'FormPageThemeSelectInput',
+'password'         => 'FormPasswordInput',
+'radio'            => 'FormRadioInput',
+'select'           => 'FormSelectInput',
+'state'            => 'FormStateInput',
+'submit'           => 'FormSubmitInput',
+'system'           => 'FormSystemInput',
+'text'             => 'FormTextInput',
+'textarea'         => 'FormTextareaInput',
+'time'             => 'FormTimeInput',
+'wysiwyg'          => 'FormTextareaInput',
+);
+public function  __construct($atts = null) {
+parent::__construct($atts);
+$this->_validattributes = array('accept', 'accept-charset', 'action', 'enctype', 'id', 'method', 'name', 'target', 'style');
+$this->_attributes['method'] = 'POST';
+}
+public function getTemplateName() {
+return 'forms/form.tpl';
+}
+public function  render($part = null) {
+foreach ($this->getElements() as $e) {
+if ($e->requiresupload) {
+$this->set('enctype', 'multipart/form-data');
+break;
+}
+}
+$ignoreerrors = false;
+if (($part === null || $part == 'body') && $this->get('callsmethod')) {
+$e               = new FormHiddenInput(array('name'  => '___formid',
+'value' => $this->get('uniqueid')));
+$this->_elements = array_merge(array($e), $this->_elements);
+if (!$this->get('uniqueid')) {
+$hash = '';
+if ($this->get('___modelpks')) {
+foreach ($this->get('___modelpks') as $k => $v) {
+$hash .= $k . ':' . $v . ';';
+}
+}
+foreach ($this->getElements() as $el) {
+if($el instanceof FormSystemInput){
+$hash .= get_class($el) . ':' . $el->get('name') . ':' . $el->get('value') . ';';
+}
+else{
+$hash .= get_class($el) . ':' . $el->get('name') . ';';
+}
+}
+$hash = md5($hash);
+$this->set('uniqueid', $hash);
+$this->getElementByName('___formid')->set('value', $hash);
+}
+if (isset($_SESSION['FormData'][$this->get('uniqueid')])) {
+if (($savedform = unserialize($_SESSION['FormData'][$this->get('uniqueid')]))) {
+$this->_elements = $savedform->_elements;
+}
+else {
+$ignoreerrors = true;
+}
+}
+else {
+$ignoreerrors = true;
+}
+}
+if ($ignoreerrors) {
+foreach ($this->getElements(true) as $el) {
+$el->setError(false);
+}
+}
+$tpl = new Template();
+$tpl->assign('group', $this);
+if ($part === null || $part == 'body') {
+$els = '';
+foreach ($this->_elements as $e) {
+$els .= $e->render();
+}
+$tpl->assign('elements', $els);
+}
+switch ($part) {
+case null:
+$out = $tpl->fetch('forms/form.tpl');
+break;
+case 'head':
+$out = $tpl->fetch('forms/form.head.tpl');
+break;
+case 'body':
+$out = $tpl->fetch('forms/form.body.tpl');
+break;
+case 'foot':
+$out = $tpl->fetch('forms/form.foot.tpl');
+break;
+}
+if (($part === null || $part == 'foot') && $this->get('callsmethod')) {
+$this->saveToSession();
+}
+return $out;
+}
+public function getModel() {
+$m = $this->get('___modelname');
+if (!$m) return null; // A model needs to be defined first of all...
+$model = new $m();
+if (!$model instanceof Model) return null; // It needs to be a model... :/
+if($model instanceof PageModel){
+foreach($this->getElements(false, false) as $el){
+if($el instanceof FormPageMeta){
+return $el->getModel();
+}
+}
+}
+if (is_array($this->get('___modelpks'))) {
+foreach ($this->get('___modelpks') as $k => $v) {
+$model->set($k, $v);
+}
+$model->load();
+}
+$els = $this->getElements(true, false);
+foreach ($els as $e) {
+if (!preg_match('/^model\[(.*?)\].*/', $e->get('name'), $matches)) continue;
+$key    = $matches[1];
+$val    = $e->get('value');
+$schema = $model->getKeySchema($key);
+if ($schema['type'] == Model::ATT_TYPE_BOOL) {
+if (strtolower($val) == 'yes') $val = 1;
+elseif (strtolower($val) == 'on') $val = 1;
+elseif ($val == 1) $val = 1;
+else $val = 0;
+}
+$model->set($key, $val);
+}
+return $model;
+if ($model->get('baseurl') && $model->getLink('Page') instanceof PageModel && $this->getElementByName('page')) {
+$page = $model->getLink('Page');
+if ($model->get('title') !== null) $page->set('title', $model->get('title'));
+if ($model->get('access') !== null) $page->set('access', $model->get('access'));
+$this->getElementByName('page')->getModel($page);
+}
+if ($model->get('baseurl') && $model->getLink('Widget') instanceof WidgetModel) {
+$widget = $model->getLink('Widget');
+if ($model->get('title') !== null) $widget->set('title', $model->get('title'));
+if ($model->get('access') !== null) $widget->set('access', $model->get('access'));
+}
+return $model;
+}
+public function loadFrom($src) {
+$els = $this->getElements(true, false);
+foreach ($els as $e) {
+$e->clearError();
+$e->set('value', $e->lookupValueFrom($src));
+if ($e->hasError()) Core::SetMessage($e->getError(), 'error');
+}
+}
+public function switchElementType($elementname, $newtype) {
+$el = $this->getElement($elementname);
+if (!$el) return false;
+if (!isset(self::$Mappings[$newtype])) $newtype = 'text';
+$cls = self::$Mappings[$newtype];
+if (get_class($el) == $cls) return false;
+$atts = $el->getAsArray();
+unset($atts['__class']);
+$newel = new $cls();
+$newel->setFromArray($atts);
+$this->switchElement($el, $newel);
+return true;
+}
+private function saveToSession() {
+if (!$this->get('callsmethod')) return; // Don't save anything if there's no method to call.
+$this->set('expires', Time::GetCurrent() + 1800); // 30 minutes
+$_SESSION['FormData'][$this->get('uniqueid')] = serialize($this);
+}
+public static function CheckSavedSessionData() {
+if (!(isset($_SESSION['FormData']) && is_array($_SESSION['FormData']))) return;
+$formid = (isset($_REQUEST['___formid'])) ? $_REQUEST['___formid'] : false;
+$form   = false;
+foreach ($_SESSION['FormData'] as $k => $v) {
+if (!($el = unserialize($v))) {
+unset($_SESSION['FormData'][$k]);
+continue;
+}
+if ($el->get('expires') <= Time::GetCurrent()) {
+unset($_SESSION['FormData'][$k]);
+continue;
+}
+if ($k == $formid) {
+$form = $el;
+}
+}
+if (!$form) return;
+if (strtoupper($form->get('method')) != $_SERVER['REQUEST_METHOD']) {
+Core::SetMessage('Form submission type does not match', 'error');
+return;
+}
+if (strtoupper($form->get('method')) == 'POST') $src =& $_POST;
+else $src =& $_GET;
+$form->loadFrom($src);
+try{
+$form->getModel();
+if (!$form->hasError()) $status = call_user_func($form->get('callsmethod'), $form);
+else $status = false;
+}
+catch(ModelValidationException $e){
+Core::SetMessage($e->getMessage(), 'error');
+$status = false;
+}
+$_SESSION['FormData'][$formid] = serialize($form);
+if ($status === false) return;
+if ($status === null) return;
+unset($_SESSION['FormData'][$formid]);
+if ($status === 'die') exit;
+elseif ($status === true) Core::Reload();
+else Core::Redirect($status);
+}
+public static function BuildFromModel(Model $model) {
+$f = new Form();
+$groups = array();
+$f->set('___modelname', get_class($model));
+$s = $model->getKeySchemas();
+$i = $model->GetIndexes();
+if (!isset($i['primary'])) $i['primary'] = array();
+$new = $model->isnew();
+if (!$new) {
+$pks = array();
+foreach ($i['primary'] as $k => $v) {
+$pks[$v] = $model->get($v);
+}
+$f->set('___modelpks', $pks);
+}
+foreach ($s as $k => $v) {
+if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
+if (!$new && in_array($k, $i['primary'])) continue;
+$formatts = array(
+'type' => null,
+'title' => ucwords($k),
+'description' => null,
+'required' => false,
+'value' => $model->get($k),
+'name' => 'model[' . $k . ']',
+);
+if(!$formatts['value'] && isset($v['default'])) $formatts['value'] = $v['default'];
+if(isset($v['form'])){
+$formatts = array_merge($formatts, $v['form']);
+}
+if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
+if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
+if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
+if(isset($v['required']))        $formatts['required'] = $v['required'];
+if($formatts['type'] == 'disabled'){
+continue;
+}
+elseif ($formatts['type'] !== null) {
+$el = FormElement::Factory($formatts['type']);
+}
+elseif ($v['type'] == Model::ATT_TYPE_BOOL) {
+$el = FormElement::Factory('radio');
+$el->set('options', array('Yes', 'No'));
+if ($formatts['value']) $formatts['value'] = 'Yes';
+elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'Yes';
+elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'No';
+else $formatts['value'] = 'No';
+}
+elseif ($v['type'] == Model::ATT_TYPE_STRING) {
+$el = FormElement::Factory('text');
+}
+elseif ($v['type'] == Model::ATT_TYPE_INT) {
+$el = FormElement::Factory('text');
+}
+elseif ($v['type'] == Model::ATT_TYPE_FLOAT) {
+$el = FormElement::Factory('text');
+}
+elseif ($v['type'] == Model::ATT_TYPE_TEXT) {
+$el = FormElement::Factory('textarea');
+}
+elseif ($v['type'] == Model::ATT_TYPE_CREATED) {
+continue;
+}
+elseif ($v['type'] == Model::ATT_TYPE_UPDATED) {
+continue;
+}
+elseif ($v['type'] == Model::ATT_TYPE_ENUM) {
+$el   = FormElement::Factory('select');
+$opts = $v['options'];
+if ($v['null']) $opts = array_merge(array('' => '-Select One-'), $opts);
+$el->set('options', $opts);
+if ($v['default']) $el->set('value', $v['default']);
+}
+else {
+die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
+}
+unset($formatts['type']);
+if(isset($formatts['group'])){
+$groupname = $formatts['group'];
+if(!isset($groups[$groupname])){
+$groups[$groupname] = new FormGroup(array('title' => $groupname));
+$f->addElement($groups[$groupname]);
+}
+unset($formatts['group']);
+$el->setFromArray($formatts);
+$groups[$groupname]->addElement($el);
+}
+else{
+$el->setFromArray($formatts);
+$f->addElement($el);
+}
+}
+return $f;
+}
+}
+class FormPageInsertables extends FormGroup {
+public function  __construct($atts = null) {
+parent::__construct($atts);
+if (!$this->get('title')) $this->set('title', 'Page Content');
+if (!$this->get('baseurl')) return null;
+$p = new PageModel($this->get('baseurl'));
+$tpl = $p->getTemplateName();
+if (!$tpl) return null;
+$tpl = Template::ResolveFile($tpl);
+if (!$tpl) return null;
+$tplcontents = file_get_contents($tpl);
+preg_match_all('/\{insertable(.*)\}(.*)\{\/insertable\}/isU', $tplcontents, $matches);
+if (!sizeof($matches[0])) return null;
+foreach ($matches[0] as $k => $v) {
+$tag     = trim($matches[1][$k]);
+$content = trim($matches[2][$k]);
+$default = $content;
+$name  = preg_replace('/.*name=["\'](.*?)["\'].*/i', '$1', $tag);
+$title = preg_replace('/.*title=["\'](.*?)["\'].*/i', '$1', $tag);
+$i = new InsertableModel($this->get('baseurl'), $name);
+if ($i->get('value') !== null) $content = $i->get('value');
+if (strpos($default, "\n") === false && strpos($default, "<") === false) {
+$this->addElement('text', array('name'  => "insertable[$name]",
+'title' => $title,
+'value' => $content)
+);
+}
+elseif (preg_match('/<img(.*?)src=["\'](.*?)["\'](.*?)>/i', $default)) {
+}
+else {
+$this->addElement('wysiwyg', array('name'  => "insertable[$name]",
+'title' => $title,
+'value' => $content)
+);
+}
+}
+}
+public function save() {
+$baseurl = $this->get('baseurl');
+$els     = $this->getElements(true, false);
+foreach ($els as $e) {
+if (!preg_match('/^insertable\[(.*?)\].*/', $e->get('name'), $matches)) continue;
+$i = new InsertableModel($baseurl, $matches[1]);
+$i->set('value', $e->get('value'));
+$i->save();
+}
+}
+} // class FormPageInsertables
+class FormPageMeta extends FormGroup {
+public function  __construct($atts = null) {
+$this->_attributes['name']    = 'page';
+if ($atts instanceof PageModel) {
+parent::__construct(array('name' => 'page'));
+$page = $atts;
+}
+else {
+if(isset($atts['model']) && $atts['model'] instanceof PageModel){
+$page = $atts['model'];
+unset($atts['model']);
+parent::__construct($atts);
+}
+else{
+parent::__construct($atts);
+$page = new PageModel($this->get('baseurl'));
+}
+}
+$this->_attributes['baseurl'] = $page->get('baseurl');
+$name = $this->_attributes['name'];
+$f = new ModelFactory('PageModel');
+if ($this->get('baseurl')) $f->where('baseurl != ' . $this->get('baseurl'));
+$opts = PageModel::GetPagesAsOptions($f, '-- No Parent Page --');
+$this->addElement(
+'pageparentselect', array(
+'name'    => $name . "[parenturl]",
+'title'   => 'Parent Page',
+'value'   => $page->get('parenturl'),
+'options' => $opts
+)
+);
+$this->addElement(
+'text', array(
+'name'        => $name . "[title]",
+'title'       => 'Title',
+'value'       => $page->get('title'),
+'description' => 'Every page needs a title to accompany it, this should be short but meaningful.',
+'required'    => true
+)
+);
+$this->addElement(
+'pagerewriteurl', array(
+'name'        => $name . "[rewriteurl]",
+'title'       => 'Page URL',
+'value'       => $page->get('rewriteurl'),
+'description' => 'Starts with a "/", omit ' . ROOT_URL,
+'required'    => true
+)
+);
+$this->addElement(
+'text', array(
+'name'        => $name . "_meta[author]",
+'title'       => 'Author',
+'description' => 'Completely optional, but feel free to include it if relevant',
+'value'       => $page->getMeta('author')
+)
+);
+$this->addElement(
+'text', array(
+'name'        => $name . "_meta[keywords]",
+'title'       => 'Keywords',
+'description' => 'Helps search engines classify this page',
+'value'       => $page->getMeta('keywords')
+)
+);
+$this->addElement(
+'textarea', array(
+'name'        => $name . "_meta[description]",
+'title'       => 'Description',
+'description' => 'Text that displays on search engine and social network preview links',
+'value'       => $page->getMeta('description')
+)
+);
+$this->addElement(
+'access', array(
+'name'  => $name . "[access]",
+'title' => 'Access Permissions',
+'value' => $page->get('access')
+)
+);
+$skins = array('' => '-- Site Default Skin --');
+foreach(ThemeHandler::GetTheme(null)->getSkins() as $s){
+$n = ($s['title']) ? $s['title'] : $s['file'];
+if($s['default']) $n .= ' (default)';
+$skins[$s['file']] = $n;
+}
+if(sizeof($skins) > 2){
+$this->addElement(
+'select', array(
+'name'    => $name . "[theme_template]",
+'title'   => 'Theme Skin',
+'value'   => $page->get('theme_template'),
+'options' => $skins
+)
+);
+}
+}
+public function save() {
+$page = $this->getModel();
+return $page->save();
+$els = $this->getElements();
+foreach ($els as $e) {
+if (!preg_match('/^insertable\[(.*?)\].*/', $e->get('name'), $matches)) continue;
+$e->set('baseurl', $this->get('baseurl'));
+}
+$i = $this->getElementByName('insertables');
+$i->save();
+return true;
+}
+public function getModel($page = null) {
+if (!$page) $page = new PageModel($this->get('baseurl'));
+$name = $this->_attributes['name'];
+$els = $this->getElements(true, false);
+foreach ($els as $e) {
+if (!preg_match('/^[a-z_]*\[(.*?)\].*/', $e->get('name'), $matches)) continue;
+$key = $matches[1];
+$val = $e->get('value');
+if(strpos($e->get('name'), $name . '_meta') === 0){
+$page->setMeta($key, $val);
+}
+elseif(strpos($e->get('name'), $name) === 0){
+$page->set($key, $val);
+}
+else{
+continue;
+}
+}
+return $page;
+}
+public function getTemplateName() {
+return null;
+}
+} // class FormPageInsertables
+
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/PageRequest.class.php
+class PageRequest {
+const METHOD_HEAD   = 'HEAD';
+const METHOD_GET    = 'GET';
+const METHOD_POST   = 'POST';
+const METHOD_PUT    = 'PUT';
+const METHOD_PUSH   = 'PUSH';
+const METHOD_DELETE = 'DELETE';
+public $contentTypes = array();
+public $method = null;
+public $useragent = null;
+public $uri = null;
+public $uriresolved = null;
+public $protocol = null;
+public $parameters = array();
+public $ctype = View::CTYPE_HTML;
+private $_pagemodel = null;
+private $_pageview = null;
+public function __construct($uri = '') {
+$this->uri = $uri;
+if (!$uri) $uri = ROOT_WDIR;
+$uri = substr($uri, strlen(ROOT_WDIR));
+if (($_qpos = strpos($uri, '?')) !== false) $uri = substr($uri, 0, $_qpos);
+if ($uri{0} != '/') $uri = '/' . $uri;
+if (preg_match('/\.[a-z]{3,4}$/i', $uri)) {
+$ctype = strtolower(preg_replace('/^.*\.([a-z]{3,4})$/i', '\1', $uri));
+$uri   = substr($uri, 0, -1 - strlen($ctype));
+}
+else {
+$ctype = 'html';
+}
+$this->uriresolved = $uri;
+$this->protocol    = $_SERVER['SERVER_PROTOCOL'];
+switch ($ctype) {
+case 'xml':
+$this->ctype = View::CTYPE_XML;
+break;
+case 'json':
+$this->ctype = View::CTYPE_JSON;
+break;
+case 'ics':
+$this->ctype = View::CTYPE_ICS;
+break;
+default:
+$this->ctype = View::CTYPE_HTML;
+break;
+}
+$this->_resolveMethod();
+$this->_resolveAcceptHeader();
+$this->_resolveUAHeader();
+if (is_array($_GET)) {
+foreach ($_GET as $k => $v) {
+if (is_numeric($k)) continue;
+$this->parameters[$k] = $v;
+}
+}
+return;
+$p = PageModel::Find(
+array('rewriteurl' => $uri,
+'fuzzy'      => 0), 1
+);
+$pagedat = PageModel::SplitBaseURL($uri);
+var_dump($pagedat, $_GET);
+die();
+if ($p) {
+$this->pagemodel = $p;
+}
+elseif ($pagedat) {
+$p = new PageModel();
+$p->set('baseurl', $uri);
+$p->set('rewriteurl', $uri);
+$this->pagemodel = $p;
+}
+else {
+return false;
+}
+if ($pagedat && $pagedat['parameters']) {
+foreach ($pagedat['parameters'] as $k => $v) {
+$this->pagemodel->setParameter($k, $v);
+}
+}
+if (is_array($_GET)) {
+foreach ($_GET as $k => $v) {
+if (is_numeric($k)) continue;
+$this->pagemodel->setParameter($k, $v);
+}
+}
+switch ($ctype) {
+case 'xml':
+$ctype = View::CTYPE_XML;
+break;
+case 'json':
+$ctype = View::CTYPE_JSON;
+break;
+default:
+$ctype = View::CTYPE_HTML;
+break;
+}
+}
+public function prefersContentType($type) {
+$current     = 0;
+$currentmain = substr($this->ctype, 0, strpos($this->ctype, '/'));
+foreach ($this->contentTypes as $t) {
+if ($t['type'] == $this->ctype || ($t['type'] == $t['group'] . '/*' && $t['group'] == $currentmain)) {
+$current = max($current, $t['weight']);
+}
+}
+$typeweight = 0;
+$typemain   = substr($type, 0, strpos($type, '/'));
+foreach ($this->contentTypes as $t) {
+if ($t['type'] == $type || ($t['type'] == $t['group'] . '/*' && $t['group'] == $typemain)) {
+$typeweight = max($typeweight, $t['weight']);
+}
+}
+return ($typeweight > $current);
+}
+public function splitParts() {
+$ret = PageModel::SplitBaseURL($this->uriresolved);
+if (!$ret) {
+$ret = array(
+'controller' => null,
+'method'     => null,
+'parameters' => null,
+'baseurl'    => null,
+'rewriteurl' => null
+);
+}
+if ($ret['parameters'] === null) $ret['parameters'] = array();
+$ret['parameters'] = array_merge($ret['parameters'], $this->parameters);
+return $ret;
+}
+public function getBaseURL() {
+$parts = $this->splitParts();
+return $parts['baseurl'];
+}
+public function getView(){
+if($this->_pageview === null){
+$this->_pageview = new View();
+}
+return $this->_pageview;
+}
+public function execute() {
+$pagedat = $this->splitParts();
+$view = $this->getView();
+if (!$pagedat['controller']) {
+$view->error = View::ERROR_NOTFOUND;
+return $view;
+}
+if ($pagedat['method']{0} == '_') {
+$view->error = View::ERROR_NOTFOUND;
+return $view;
+}
+if (!method_exists($pagedat['controller'], $pagedat['method'])) {
+$view->error = View::ERROR_NOTFOUND;
+return $view;
+}
+$c = Controller_2_1::Factory($pagedat['controller']);
+$view->baseurl = $this->getBaseURL();
+$c->setView($view);
+$page = $this->getPageModel();
+if ($c->accessstring !== null) {
+$page->set('access', $c->accessstring);
+if (!\Core\user()->checkAccess($c->accessstring)) {
+$view->error = View::ERROR_ACCESSDENIED;
+return $view;
+}
+}
+$return = call_user_func(array($c, $pagedat['method']));
+if (is_int($return)) {
+$view->error = $return;
+return $view;
+}
+elseif ($return === null) {
+$return = $c->getView();
+}
+elseif(!is_a($return, 'View')){
+if(DEVELOPMENT_MODE){
+var_dump('Controller method returned', $return);
+die('Sorry, but this controller did not return a valid object.  Please ensure that your method returns either an integer, null, or a View object!');
+}
+else{
+$view->error = View::ERROR_SERVERERROR;
+return $view;
+}
+}
+if ($page->exists()) {
+$defaultpage = $page;
+} else {
+$defaultpage = null;
+$url         = $view->baseurl;
+while ($url != '') {
+$url = substr($url, 0, strrpos($url, '/'));
+$p   = PageModel::Find(array('baseurl' => $url, 'fuzzy' => 1), 1);
+if ($p === null) continue;
+if ($p->exists()) {
+$defaultpage = $p;
+break;
+}
+}
+if ($defaultpage === null) {
+$defaultpage = $page;
+}
+}
+foreach ($defaultpage->getMetas() as $key => $val) {
+if ($val && !isset($return->meta[$key])) {
+$return->meta[$key] = $val;
+}
+}
+if ($return->title === null) $return->title = $defaultpage->get('title');
+$parents = array();
+foreach ($page->getParentTree() as $parent) {
+$parents[] = array(
+'title' => $parent->get('title'),
+'link'  => $parent->getResolvedURL()
+);
+}
+$return->breadcrumbs = array_merge($parents, $return->breadcrumbs);
+if ($return->error == View::ERROR_NOERROR && $return->contenttype == View::CTYPE_HTML && $return->templatename === null) {
+$cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
+$return->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
+}
+elseif ($return->error == View::ERROR_NOERROR && $return->contenttype == View::CTYPE_XML && $return->templatename === null) {
+$cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
+$return->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
+}
+if ($defaultpage->get('theme_template')) {
+$return->mastertemplate = $defaultpage->get('theme_template');
+}
+if ($page->exists() && $return->error == View::ERROR_NOERROR) {
+$page->save();
+}
+return $return;
+}
+public function setParameters($params) {
+$this->parameters = $params;
+}
+public function getParameters() {
+$data = $this->splitParts();
+return $data['parameters'];
+}
+public function getParameter($key) {
+$data = $this->splitParts();
+return (array_key_exists($key, $data['parameters'])) ? $data['parameters'][$key] : null;
+}
+public function getPost($key){
+return (isset($_POST[$key])) ? $_POST[$key] : null;
+}
+public function getPageModel() {
+if ($this->_pagemodel === null) {
+$uri = $this->uriresolved;
+$p = PageModel::Find(
+array('rewriteurl' => $uri,
+'fuzzy'      => 0), 1
+);
+$pagedat = $this->splitParts();
+if ($p) {
+$this->_pagemodel = $p;
+}
+elseif ($pagedat) {
+$p = new PageModel($pagedat['baseurl']);
+if(!$p->exists()){
+$p->set('rewriteurl', $pagedat['rewriteurl']);
+}
+$this->_pagemodel = $p;
+}
+else {
+return false;
+}
+if ($pagedat && $pagedat['parameters']) {
+foreach ($pagedat['parameters'] as $k => $v) {
+$this->_pagemodel->setParameter($k, $v);
+}
+}
+if (is_array($_GET)) {
+foreach ($_GET as $k => $v) {
+if (is_numeric($k)) continue;
+$this->_pagemodel->setParameter($k, $v);
+}
+}
+}
+return $this->_pagemodel;
+}
+public function isPost() {
+return ($this->method == PageRequest::METHOD_POST);
+}
+public function isJSON(){
+return ($this->ctype == View::CTYPE_JSON);
+}
+public function isAjax(){
+return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+}
+public function getUserAgent(){
+return new UserAgent($this->useragent);
+}
+private function _resolveMethod() {
+switch ($_SERVER['REQUEST_METHOD']) {
+case self::METHOD_DELETE:
+case self::METHOD_GET:
+case self::METHOD_HEAD:
+case self::METHOD_POST:
+case self::METHOD_PUSH:
+case self::METHOD_PUT:
+$this->method = $_SERVER['REQUEST_METHOD'];
+break;
+default:
+$this->method = self::METHOD_GET;
+}
+}
+private function _resolveAcceptHeader() {
+$header = (isset($_SERVER['HTTP_ACCEPT'])) ? $_SERVER['HTTP_ACCEPT'] : 'text/html';
+$header = explode(',', $header);
+$this->contentTypes = array();
+if ($this->ctype == View::CTYPE_JSON) {
+if (ALLOW_NONXHR_JSON || $this->isAjax()) {
+$this->contentTypes[] = array(
+'type'   => View::CTYPE_JSON,
+'weight' => 1.0
+);
+}
+else {
+$this->ctype = View::CTYPE_HTML;
+}
+}
+foreach ($header as $h) {
+if (strpos($h, ';') === false) {
+$weight  = 1.0; // Do 1.0 to ensure it's parsed as a float and not an int.
+$content = $h;
+}
+else {
+list($content, $weight) = explode(';', $h);
+$weight = floatval(substr($weight, 3));
+}
+$this->contentTypes[] = array(
+'type'   => $content,
+'weight' => $weight
+);
+}
+foreach ($this->contentTypes as $k => $v) {
+$this->contentTypes[$k]['group'] = substr($v['type'], 0, strpos($v['type'], '/'));
+}
+}
+private function _resolveUAHeader() {
+$ua              = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';
+$this->useragent = $ua;
+}
+public static function GetSystemRequest() {
+static $instance = null;
+if ($instance === null) {
+$instance = new PageRequest($_SERVER['REQUEST_URI']);
+}
+return $instance;
+}
+}
+
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Controller_2_1.class.php
+class Controller_2_1 {
+private $_request = null;
+private $_model = null;
+private $_view = null;
+public $accessstring = null;
+protected function getPageRequest() {
+if ($this->_request === null) {
+$this->_request = PageRequest::GetSystemRequest();
+}
+return $this->_request;
+}
+public function setView(View $view){
+$this->_view = $view;
+}
+public function getView() {
+if ($this->_view === null) {
+$this->_view          = new View();
+$this->_view->baseurl = $this->getPageRequest()->getBaseURL();
+}
+return $this->_view;
+}
+protected function overwriteView($newview) {
+$newview->error = View::ERROR_NOERROR;
+$this->_view = $newview;
+}
+public function getPageModel() {
+return $this->getPageRequest()->getPageModel();
+}
+protected function setAccess($accessstring) {
+$this->getPageModel()->set('access', $accessstring);
+return (\Core\user()->checkAccess($accessstring));
+}
+protected function setContentType($ctype) {
+$this->getView()->contenttype = $ctype;
+}
+protected function setTemplate($template) {
+$this->getView()->templatename = $template;
+}
+public static function Factory($name) {
+return new $name();
+}
+}
+
+### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/models/WidgetModel.class.php
+class WidgetModel extends Model {
+public static $Schema = array(
+'baseurl' => array(
+'type'      => Model::ATT_TYPE_STRING,
+'maxlength' => 128,
+'required'  => true,
+'null'      => false,
+),
+'title'   => array(
+'type'      => Model::ATT_TYPE_STRING,
+'maxlength' => 128,
+'default'   => null,
+'comment'   => '[Cached] Title of the page',
+'null'      => true,
+),
+'created' => array(
+'type' => Model::ATT_TYPE_CREATED,
+'null' => false,
+),
+'updated' => array(
+'type' => Model::ATT_TYPE_UPDATED,
+'null' => false,
+),
+);
+public static $Indexes = array(
+'primary' => array('baseurl'),
+);
+public static function SplitBaseURL($base) {
+if (!$base) return null;
+$base = trim($base, '/');
+$args = null;
+if (($qpos = strpos($base, '?')) !== false) {
+$argstring = substr($base, $qpos + 1);
+preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
+$args = array();
+foreach ($matches[1] as $k => $v) {
+if (!$v) continue;
+$args[$v] = $matches[2][$k];
+}
+$base = substr($base, 0, $qpos);
+}
+$posofslash = strpos($base, '/');
+if ($posofslash) $controller = substr($base, 0, $posofslash);
+else $controller = $base;
+if (class_exists($controller . 'Widget')) {
+switch (true) {
+case is_subclass_of($controller . 'Widget', 'Widget_2_1'):
+case is_subclass_of($controller . 'Widget', 'Widget'):
+$controller = $controller . 'Widget';
+break;
+default:
+return null;
+}
+}
+elseif (class_exists($controller)) {
+switch (true) {
+case is_subclass_of($controller, 'Widget_2_1'):
+case is_subclass_of($controller, 'Widget'):
+$controller = $controller;
+break;
+default:
+return null;
+}
+}
+else {
+return null;
+}
+if ($posofslash !== false) $base = substr($base, $posofslash + 1);
+else $base = false;
+if ($base) {
+$posofslash = strpos($base, '/');
+if ($posofslash) {
+$method = str_replace('/', '_', $base);
+while (!method_exists($controller, $method) && strpos($method, '_')) {
+$method = substr($method, 0, strrpos($method, '_'));
+}
+}
+else {
+$method = $base;
+}
+$base = substr($base, strlen($method) + 1);
+}
+else {
+$method = 'index';
+}
+if (!method_exists($controller, $method)) {
+return null;
+}
+if ($method{0} == '_') return null;
+$params = ($base !== false) ? explode('/', $base) : null;
+$baseurl = '/' . ((strpos($controller, 'Widget') == strlen($controller) - 6) ? substr($controller, 0, -6) : $controller);
+if (!($method == 'index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
+$baseurl .= ($params) ? '/' . implode('/', $params) : '';
+if($args){
+$params = ($params) ? array_merge($params, $args) : $args;
+}
+return array('controller' => $controller,
+'method'     => $method,
+'parameters' => $params,
+'baseurl'    => $baseurl);
+}
+}
+
+

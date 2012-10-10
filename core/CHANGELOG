@@ -1,3 +1,10 @@
+Core Plus 2.2.3
+
+	* Added more files into the compiled bootstrap
+	* Added an included files section in the debug info
+	* Fixed Bug #146: URL conflicts
+	* Fixed Bug #156: Installer does not complete in non-development mode
+
 Core Plus 2.2.2
 
 	* Fixed the installer, it now handles enabling packages correctly.

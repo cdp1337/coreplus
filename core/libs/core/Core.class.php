@@ -400,6 +400,7 @@ class Core implements ISingleton {
 
 
 				// Allow for on-the-fly package upgrading regardless of DEV mode or not.
+				// Guess this is needed for the loadFiles part...
 				if ($c->isInstalled() && $c->needsUpdated() && $c->isLoadable()) {
 					$c->upgrade();
 					$c->loadFiles();
@@ -417,6 +418,7 @@ class Core implements ISingleton {
 						$c->disable();
 					}
 					else{
+						$c->enable();
 						$c->loadFiles();
 						$this->_registerComponent($c);
 					}

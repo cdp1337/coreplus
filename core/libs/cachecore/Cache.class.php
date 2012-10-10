@@ -26,7 +26,7 @@
 //define('__CACHE_PDIR', dirname(__FILE__) . '/');
 define('__CACHE_PDIR', ROOT_PDIR . 'core/libs/cachecore/');
 if(!class_exists('CacheCore')){
-	require_once(__CACHE_PDIR . 'backends/cachecore.class.php');
+	require_once(__CACHE_PDIR . 'backends/cachecore.class.php'); #SKIPCOMPILER
 }
 
 

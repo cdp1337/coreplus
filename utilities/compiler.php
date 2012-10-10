@@ -58,12 +58,20 @@ function compile_file($filename, $recursivelevel = 0){
 	$linenumber = 0;
 	$codenumber = 0;
 	$incomment = false;
+	$lastwasending = false;
 	while(!feof($fh)){
 		$line = trim(fgets($fh, 1024));
 		++$linenumber;
 
 		// Skip blank lines.
 		if($line == '') continue;
+
+		// If the last line was an ending block and it's continuing on... then the script actually does need it.
+		if($lastwasending){
+			++$codenumber;
+			$contents .= '?>' . "\n";
+			$lastwasending = false;
+		}
 
 		// Skip the opening <?php line.
 		if($line == '<?php' && $codenumber == 0) continue;
@@ -109,6 +117,9 @@ function compile_file($filename, $recursivelevel = 0){
 			elseif(strpos($subfile, '::') !== false){
 				// Skip
 			}
+			elseif(strpos($subfile, '#SKIPCOMPILER') !== false){
+				// Skip
+			}
 			else{
 				// I'm using eval here because the line otherwise is a valid PHP string, just split into parts.
 				// it's the easiest way to take a string such as '/somewhere/blah' . '/' . 'foo mep.php'
@@ -125,6 +136,12 @@ function compile_file($filename, $recursivelevel = 0){
 			}
 		}
 
+		// Is this line an ending block?
+		if($line == '?>'){
+			$lastwasending = true;
+			continue;
+		}
+
 		++$codenumber;
 		//if($codenumber % 10 == 0) $line = '## ' . basename($filename) . ':' . $linenumber . "\n" . $line;
 
@@ -133,7 +150,7 @@ function compile_file($filename, $recursivelevel = 0){
 	return $contents;
 }
 
-$contents = compile_file(ROOT_PDIR . 'core/bootstrap.php', 2);
+$contents = compile_file(ROOT_PDIR . 'core/bootstrap.php', 4);
 
 // The compiled file will have a header stating some useful information.
 $date = Time::GetCurrent(Time::TIMEZONE_DEFAULT, Time::FORMAT_RFC2822);

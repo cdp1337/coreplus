@@ -491,3 +491,9 @@ HookHandler::DispatchHook('components_loaded');
 HookHandler::DispatchHook('components_ready');
 
 Core::AddProfileTime('components_load_complete');
+
+
+/**
+ * All the post includes, these are here for performance reasons, (they can get compiled into the compiled bootstrap)
+ */
+require_once(__DIR__ . '/bootstrap_postincludes.php');
