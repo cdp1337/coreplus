@@ -521,6 +521,9 @@ class View {
 		}
 
 		if ($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML) {
+			// Inform other elements that the page is just about to be rendered.
+			HookHandler::DispatchHook('/core/page/rendering', $this);
+
 			// Metadata!  w00t
 
 			// Replace the </head> tag with the head data from the current page
@@ -925,6 +928,15 @@ class View {
 		// No? alright, add it to the requested location!
 		if ($location == 'head') $scripts['head'][] = $script;
 		else $scripts['foot'][] = $script;
+	}
+
+	public static function AppendBodyContent($content){
+		// Yeah I know script is a weird one to use, but it works damnit!
+		$scripts =& PageRequest::GetSystemRequest()->getView()->scripts;
+
+		if (in_array($content, $scripts['foot'])) return;
+
+		$scripts['foot'][] = $content;
 	}
 
 	/**

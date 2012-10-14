@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 09 Oct 2012 23:39:38 -0400
+ * @compiled Sun, 14 Oct 2012 05:44:30 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -8085,6 +8085,7 @@ require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 die();
 }
 if ($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML) {
+HookHandler::DispatchHook('/core/page/rendering', $this);
 $data = str_replace('</head>', $this->getHeadContent() . "\n" . '</head>', $data);
 $data = str_replace('</body>', $this->getFootContent() . "\n" . '</body>', $data);
 $data = str_replace('<html', '<html ' . self::GetHTMLAttributes(), $data);
@@ -8321,6 +8322,11 @@ if (in_array($script, $scripts['head'])) return;
 if (in_array($script, $scripts['foot'])) return;
 if ($location == 'head') $scripts['head'][] = $script;
 else $scripts['foot'][] = $script;
+}
+public static function AppendBodyContent($content){
+$scripts =& PageRequest::GetSystemRequest()->getView()->scripts;
+if (in_array($content, $scripts['foot'])) return;
+$scripts['foot'][] = $content;
 }
 public static function AddStylesheet($link, $media = "all") {
 if (strpos($link, '<link') === false) {

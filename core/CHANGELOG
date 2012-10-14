@@ -2,8 +2,11 @@ Core Plus 2.2.3
 
 	* Added more files into the compiled bootstrap
 	* Added an included files section in the debug info
+	* Added new core hook, "/core/page/rendering"
 	* Fixed Bug #146: URL conflicts
 	* Fixed Bug #156: Installer does not complete in non-development mode
+	* Fixed Bug #115: Auto-installer does not handle models
+	-- Charlie Powell <charlie@eval.bz>  14 Oct 2012
 
 Core Plus 2.2.2
 

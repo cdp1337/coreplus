@@ -27,7 +27,18 @@ class Time {
 	const TIMEZONE_DEFAULT = 100;
 	const TIMEZONE_USER    = 101;
 
+	/**
+	 * Datetime format based on the ISO 8601 standard
+	 *
+	 * @example 2012-10-09T12:59Z
+	 */
 	const FORMAT_ISO8601 = 'c';
+
+	/**
+	 * Datetime format based on the RFC 2822 standard, most widely used in RSS parsers and blogs.
+	 *
+	 * @example Mon, 08 Oct 2012 19:09:34 -0400
+	 */
 	const FORMAT_RFC2822 = 'r';
 
 	const FORMAT_FULLDATETIME = self::FORMAT_ISO8601;
