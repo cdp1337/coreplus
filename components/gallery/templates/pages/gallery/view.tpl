@@ -1,6 +1,7 @@
 {script library="jqueryui"}{/script}
 {script library="jquery.masonry"}{/script}
 {script src="js/core.fileupload.js"}{/script}
+{script library="jqueryui.timepicker"}{/script}
 {css src="css/gallery.css"}{/css}
 
 {if $uploader}
@@ -97,10 +98,15 @@
 					autoOpen:false,
 					title:   windowtitle,
 					width:   '500px',
-					close: function(){ $(this).dialog('destroy').remove(); }
+					close: function(){ $(this).remove(); }
 				}).dialog('open');
 
-				$dialog.load(Core.ROOT_WDIR + 'gallery/images/update/{$album.id}?image=' + image);
+				$dialog.load(
+					Core.ROOT_WDIR + 'gallery/images/update/{$album.id}?image=' + image,
+					function(){
+						$dialog.dialog('option', 'position', 'center');
+					}
+				);
 
 				return false;
 			});
@@ -136,7 +142,7 @@
 					autoOpen:false,
 					title:   windowtitle,
 					width:   '500px',
-					close: function(){ $xhr.abort(); $(this).dialog('destroy').remove(); }
+					close: function(){ $xhr.abort(); $(this).remove(); }
 				}).dialog('open');
 
 				return false;
@@ -154,5 +160,13 @@
 			itemSelector : '.gallery-image-wrapper'
 		});
 	});
+
+	$('.gallery-image-wrapper')
+		.mouseover(function(){
+			$(this).addClass('hover');
+		})
+		.mouseout(function(){
+			$(this).removeClass('hover');
+		});
 
 </script>

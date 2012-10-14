@@ -72,7 +72,8 @@ class GalleryImageModel extends Model {
 			'formtype' => 'hidden'
 		),
 		'datetaken' => array(
-			'type' => Model::ATT_TYPE_INT,
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => '64',
 			'form' => array(
 				'title' => 'Date taken',
 				'description' => 'When was this taken?'
@@ -116,7 +117,7 @@ class GalleryImageModel extends Model {
 				'on' => 'baseurl',
 			),
 			'GalleryAlbum' => array(
-				'link' => Model::LINK_HASONE,
+				'link' => Model::LINK_BELONGSTOONE,
 				'on' => array('id' => 'albumid'),
 			)
 		);
@@ -238,131 +239,230 @@ class GalleryImageModel extends Model {
 		$exif = $this->get('exifdata');
 		if(!$exif) return false;
 
-		$standardmappings = array(
-			'Make', 'Model', 'Orientation', 'Software', 'DateTime', 'ExposureTime',
-			// 	33437 (hex 0x829D)
-			'FNumber',
-			// 34850 (hex 0x8822)
-			// The class of the program used by the camera to set exposure when the picture is taken.
-			'ExposureProgram',
-			'ISOSpeedRatings',
-			// the Shutter Speed
-			// The unit is the APEX (Additive System of Photographic Exposure) setting.
-			'ShutterSpeedValue',
-			// The lens aperture.
-			// The unit is the APEX (Additive System of Photographic Exposure) setting.
-			'ApertureValue',
-			// The exposure bias.
-			// Ordinarily it is given in the range of -99.99 to 99.99.
-			'ExposureBiasValue',
-			// The smallest F number of the lens.
-			// Ordinarily it is given in the range of 00.00 to 99.99, but it is not limited to this range.
-			'MaxApertureValue', 'MeteringMode', 'LightSource', 'Flash', 'FocalLength'
-		);
+		// If there are no sections found, what's the point?
+		if($exif['SectionsFound'] == '') return false;
+
+		// If there was only a comment found... I don't care either.
+		if($exif['SectionsFound'] == 'COMMENT') return false;
 
 		$dat = array(
-			'FileSize' => Core::FormatSize($exif['FileSize']),
-			'Height' => $exif['COMPUTED']['Height'],
-			'Width' => $exif['COMPUTED']['Width'],
-			'dimensions' => null,
-			'ApertureFNumber' => $exif['COMPUTED']['ApertureFNumber'],
+			'FileSize' => null, 'FileSizeFormatted' => null, 'Height' => null, 'Width' => null, 'Dimensions' => null,
+			'DateTimeOriginal' => null,
+			'FNumber' => null,
+			'Make' => null, 'Model' => null, 'Orientation' => null, 'Software' => null, 'DateTime' => null, 'ExposureTime' => null,
+			// 	33437 (hex 0x829D)
+			'FNumber' => null,
+			// 34850 (hex 0x8822)
+			// The class of the program used by the camera to set exposure when the picture is taken.
+			'ExposureProgram' => null, 'ExposureProgramDesc' => null,
+			'ISOSpeedRatings' => null,
+			// the Shutter Speed
+			// The unit is the APEX (Additive System of Photographic Exposure) setting.
+			'ShutterSpeedValue' => null,
+			// The lens aperture.
+			// The unit is the APEX (Additive System of Photographic Exposure) setting.
+			'ApertureValue' => null,
+			// The exposure bias.
+			// Ordinarily it is given in the range of -99.99 to 99.99.
+			'ExposureBiasValue' => null,
+			// The smallest F number of the lens.
+			// Ordinarily it is given in the range of 00.00 to 99.99, but it is not limited to this range.
+			'MaxApertureValue' => null, 'MeteringMode' => null, 'MeteringModeDesc' => null,
+			'LightSource' => null, 'LightSourceDesc' => null,
+			'Flash' => null, 'FlashDesc' => '',
+			'FocalLength' => null,
+			'XResolution' => null, 'YResolution' => null,
+			'ResolutionUnit' => null, 'ResolutionUnitDesc' => null,
+			'Artist' => null, 'Copyright' => null,
+			'GPS' => false,
 		);
 
-		foreach($standardmappings as $k){
-			$dat[$k] = (isset($exif[$k])) ? $exif[$k] : null;
+		// Try to load the data as-is, (most keys will map one-to-one)
+		foreach($dat as $k => $v){
+			if(isset($exif[$k])) $dat[$k] = $exif[$k];
 		}
 
-		$dat['dimensions'] = $dat['Width'] . ' x ' . $dat['Height'];
-		
-		switch($dat['ExposureProgram']){
-			case 0: $dat['ExposureProgram'] = "Not defined"; break;
-			case 1: $dat['ExposureProgram'] = "Manual"; break;
-			case 2: $dat['ExposureProgram'] = "Normal program"; break;
-			case 3: $dat['ExposureProgram'] = "Aperture priority"; break;
-			case 4: $dat['ExposureProgram'] = "Shutter priority"; break;
-			case 5: $dat['ExposureProgram'] = "Creative program (biased toward depth of field)"; break;
-			case 6: $dat['ExposureProgram'] = "Action program (biased toward fast shutter speed)"; break;
-			case 7: $dat['ExposureProgram'] = "Portrait mode (for closeup photos with the background out of focus)"; break;
-			case 8: $dat['ExposureProgram'] = "Landscape mode (for landscape photos with the background in focus)"; break;
+		// These are pulled from the COMPUTED section.
+		if(isset($exif['COMPUTED'])){
+			if(isset($exif['COMPUTED']['Height'])) $dat['Height'] = $exif['COMPUTED']['Height'];
+			if(isset($exif['COMPUTED']['Width'])) $dat['Width'] = $exif['COMPUTED']['Width'];
 		}
-		
+
+		// Filesize supports formatting.
+		if($dat['FileSize']) $dat['FileSizeFormatted'] = Core::FormatSize($dat['FileSize'], 2);
+
+		// Don't know why some of them are in fractions... but they are.
+		foreach(array('FNumber', 'ShutterSpeedValue', 'ApertureValue', 'FocalLength', 'MaxApertureValue', 'XResolution', 'YResolution') as $k){
+			if($dat[$k] && strpos($dat[$k], '/')){
+				$dat[$k] = eval('return (' . preg_replace('#[^0-9/]#', '', $dat[$k]) . ');');
+			}
+		}
+
+		$dat['Dimensions'] = $dat['Width'] . ' x ' . $dat['Height'];
+
+		switch($dat['ExposureProgram']){
+			case 0: $dat['ExposureProgramDesc'] = "Not defined"; break;
+			case 1: $dat['ExposureProgramDesc'] = "Manual"; break;
+			case 2: $dat['ExposureProgramDesc'] = "Normal program"; break;
+			case 3: $dat['ExposureProgramDesc'] = "Aperture priority"; break;
+			case 4: $dat['ExposureProgramDesc'] = "Shutter priority"; break;
+			case 5: $dat['ExposureProgramDesc'] = "Creative program (biased toward depth of field)"; break;
+			case 6: $dat['ExposureProgramDesc'] = "Action program (biased toward fast shutter speed)"; break;
+			case 7: $dat['ExposureProgramDesc'] = "Portrait mode (for closeup photos with the background out of focus)"; break;
+			case 8: $dat['ExposureProgramDesc'] = "Landscape mode (for landscape photos with the background in focus)"; break;
+		}
+
 		switch($dat['MeteringMode']){
-			case 0:   $dat['MeteringMode'] = "Unknown"; break;
-			case 1:   $dat['MeteringMode'] = "Average"; break;
-			case 2:   $dat['MeteringMode'] = "CenterWeightedAverage"; break;
-			case 3:   $dat['MeteringMode'] = "Spot"; break;
-			case 4:   $dat['MeteringMode'] = "MultiSpot"; break;
-			case 5:   $dat['MeteringMode'] = "Pattern"; break;
-			case 6:   $dat['MeteringMode'] = "Partial"; break;
-			case 255: $dat['MeteringMode'] = "other"; break;
+			case 0:   $dat['MeteringModeDesc'] = "Unknown"; break;
+			case 1:   $dat['MeteringModeDesc'] = "Average"; break;
+			case 2:   $dat['MeteringModeDesc'] = "CenterWeightedAverage"; break;
+			case 3:   $dat['MeteringModeDesc'] = "Spot"; break;
+			case 4:   $dat['MeteringModeDesc'] = "MultiSpot"; break;
+			case 5:   $dat['MeteringModeDesc'] = "Pattern"; break;
+			case 6:   $dat['MeteringModeDesc'] = "Partial"; break;
+			case 255: $dat['MeteringModeDesc'] = "other"; break;
+		}
+
+		switch($dat['ResolutionUnit']){
+			case 2: $dat['ResolutionUnitDesc'] = 'in'; break;
+			case 3: $dat['ResolutionUnitDesc'] = 'cm'; break;
 		}
 
 		switch($dat['LightSource']){
-			case 0:   $dat['LightSource'] = "Unknown"; break;
-			case 1:   $dat['LightSource'] = "Daylight"; break;
-			case 2:   $dat['LightSource'] = "Fluorescent"; break;
-			case 3:   $dat['LightSource'] = "Tungsten (incandescent light)"; break;
-			case 4:   $dat['LightSource'] = "Flash"; break;
-			case 9:   $dat['LightSource'] = "Fine weather"; break;
-			case 10:  $dat['LightSource'] = "Cloudy weather"; break;
-			case 11:  $dat['LightSource'] = "Shade"; break;
-			case 12:  $dat['LightSource'] = "Daylight fluorescent (D 5700 - 7100K)"; break;
-			case 13:  $dat['LightSource'] = "Day white fluorescent (N 4600 - 5400K)"; break;
-			case 14:  $dat['LightSource'] = "Cool white fluorescent (W 3900 - 4500K)"; break;
-			case 15:  $dat['LightSource'] = "White fluorescent (WW 3200 - 3700K)"; break;
-			case 17:  $dat['LightSource'] = "Standard light A"; break;
-			case 18:  $dat['LightSource'] = "Standard light B"; break;
-			case 19:  $dat['LightSource'] = "Standard light C"; break;
-			case 20:  $dat['LightSource'] = "D55"; break;
-			case 21:  $dat['LightSource'] = "D65"; break;
-			case 22:  $dat['LightSource'] = "D75"; break;
-			case 23:  $dat['LightSource'] = "D50"; break;
-			case 24:  $dat['LightSource'] = "ISO studio tungsten"; break;
-			case 255: $dat['LightSource'] = "Other light source"; break;
+			case 0:   $dat['LightSourceDesc'] = "Unknown"; break;
+			case 1:   $dat['LightSourceDesc'] = "Daylight"; break;
+			case 2:   $dat['LightSourceDesc'] = "Fluorescent"; break;
+			case 3:   $dat['LightSourceDesc'] = "Tungsten (incandescent light)"; break;
+			case 4:   $dat['LightSourceDesc'] = "Flash"; break;
+			case 9:   $dat['LightSourceDesc'] = "Fine weather"; break;
+			case 10:  $dat['LightSourceDesc'] = "Cloudy weather"; break;
+			case 11:  $dat['LightSourceDesc'] = "Shade"; break;
+			case 12:  $dat['LightSourceDesc'] = "Daylight fluorescent (D 5700 - 7100K)"; break;
+			case 13:  $dat['LightSourceDesc'] = "Day white fluorescent (N 4600 - 5400K)"; break;
+			case 14:  $dat['LightSourceDesc'] = "Cool white fluorescent (W 3900 - 4500K)"; break;
+			case 15:  $dat['LightSourceDesc'] = "White fluorescent (WW 3200 - 3700K)"; break;
+			case 17:  $dat['LightSourceDesc'] = "Standard light A"; break;
+			case 18:  $dat['LightSourceDesc'] = "Standard light B"; break;
+			case 19:  $dat['LightSourceDesc'] = "Standard light C"; break;
+			case 20:  $dat['LightSourceDesc'] = "D55"; break;
+			case 21:  $dat['LightSourceDesc'] = "D65"; break;
+			case 22:  $dat['LightSourceDesc'] = "D75"; break;
+			case 23:  $dat['LightSourceDesc'] = "D50"; break;
+			case 24:  $dat['LightSourceDesc'] = "ISO studio tungsten"; break;
+			case 255: $dat['LightSourceDesc'] = "Other light source"; break;
 		}
+
+		/*
+1 = The 0th row is at the visual top of the image, and the 0th column is the visual left-hand side.
+2 = The 0th row is at the visual top of the image, and the 0th column is the visual right-hand side.
+3 = The 0th row is at the visual bottom of the image, and the 0th column is the visual right-hand side.
+4 = The 0th row is at the visual bottom of the image, and the 0th column is the visual left-hand side.
+5 = The 0th row is the visual left-hand side of the image, and the 0th column is the visual top.
+6 = The 0th row is the visual right-hand side of the image, and the 0th column is the visual top.
+7 = The 0th row is the visual right-hand side of the image, and the 0th column is the visual bottom.
+8 = The 0th row is the visual left-hand side of the image, and the 0th column is the visual bottom.
+		 */
+
+		/*
+		Flash:
+
+		bits: 7   6   5   4   3   2   1   0
+		dec:  128,64, 32, 16, 8,  4,  2,  1
+
+		 */
+		$flashes = array();
+
 		/*
 		Values for bit 0 indicating whether the flash fired.
 		0 = Flash did not fire
 		1 = Flash fired
+		 */
+		if(($dat['Flash'] & 1) == 0){
+			$flashes[] = 'Flash did not fire';
+		}
+		else{
+			$flashes[] = 'Flash fired';
+		}
 
+		/*
 		Values for bits 1 and 2 indicating the status of returned light.
 		00 = No strobe return detection function
 		01 = reserved
 		10 = Strobe return light not detected
 		11 = Strobe return light detected
+		 */
+		switch(($dat['Flash'] & 6)){
+			case 4:
+				$flashes[] = 'Strobe return light not detected';
+				break;
+			case 6:
+				$flashes[] = 'Strobe return light detected';
+				break;
+		}
 
+		/*
 		Values for bits 3 and 4 indicating the camera's flash mode.
 		00 = unknown
 		01 = Compulsory flash firing
 		10 = Compulsory flash suppression
 		11 = Auto mode
+		 */
+		switch(($dat['Flash'] & 24)){
+			case 8:
+				$flashes[] = 'Compulsory flash mode';
+				break;
+			case 16:
+				$flashes[] = 'Compulsory flash suppression';
+				break;
+			case 24:
+				$flashes[] = 'Auto mode';
+				break;
+		}
 
+		/*
 		Values for bit 5 indicating the presence of a flash function.
 		0 = Flash function present
 		1 = No flash function
+		 */
+		if(($dat['Flash'] & 32) == 32){
+			// No flash supported on this device, wipe out all previous information!
+			$flashes = array('No flash supported');
+		}
 
+		/*
 		Values for bit 6 indicating the camera's red-eye mode.
 		0 = No red-eye reduction mode or unknown
 		1 = Red-eye reduction supported
-		*/
+		 */
+		if(($dat['Flash'] & 64) == 64){
+			$flashes[] = 'Red eye reduction mode';
+		}
+
+		// I can now merge them back together.
+		$dat['FlashDesc'] = implode(', ', $flashes);
+
 
 		/*
-		'ColorSpace' => int 1
-		'ExifImageWidth' => int 2816
-		'ExifImageLength' => int 2112
-		'InteroperabilityOffset' => int 1204
-		'SensingMethod' => int 2
-		'FileSource' => string '' (length=1)
-		'SceneType' => string '' (length=1)
-		'ExposureMode' => int 0
-		'WhiteBalance' => int 0
-		'DigitalZoomRatio' => string '100/100' (length=7)
-		'FocalLengthIn35mmFilm' => int 31
-		'SceneCaptureType' => int 0
-		'Sharpness' => int 0
-		'InterOperabilityIndex' => string 'R98' (length=3)
-		'InterOperabilityVersion' => string '0100' (length=4)
-		*/
+		Indicates the latitude. The latitude is expressed as three RATIONAL values giving the degrees, minutes, and
+seconds, respectively. If latitude is expressed as degrees, minutes and seconds, a typical format would be
+dd/1,mm/1,ss/1. When degrees and minutes are used and, for example, fractions of minutes are given up to two
+decimal places, the format would be dd/1,mmmm/100,0/1.
+		 */
+		if(isset($exif['GPSVersion'])){
+			$dat['GPS'] = array('lat' => null, 'lng' => null, 'alt' => null);
+			$dat['GPS']['lat'] = '(' . $exif['GPSLatitude'][0] . ') + ( ((' . $exif['GPSLatitude'][1] . ') * 60) + (' . $exif['GPSLatitude'][2] . ') ) / 3600';
+			$dat['GPS']['lng'] = '(' . $exif['GPSLongitude'][0] . ') + ( ((' . $exif['GPSLongitude'][1] . ') * 60) + (' . $exif['GPSLongitude'][2] . ') ) / 3600';
+			$dat['GPS']['alt'] = $exif['GPSAltitude'];
+
+			foreach(array('lat', 'lng', 'alt') as $k){
+				if($dat['GPS'][$k]){
+					$dat['GPS'][$k] = eval('return (' . preg_replace('#[^0-9/\+ \*\(\)]#', '', $dat['GPS'][$k]) . ');');
+				}
+			}
+
+			if($exif['GPSLatitudeRef'] == 'S') $dat['GPS']['lat'] = (0 - $dat['GPS']['lat']);
+			if($exif['GPSLatitudeRef'] == 'W') $dat['GPS']['lng'] = (0 - $dat['GPS']['lng']);
+		}
 
 		return $dat;
 	}

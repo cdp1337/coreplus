@@ -70,189 +70,24 @@ class GalleryController extends Controller_2_1 {
 	public function view(){
 		$req  = $this->getPageRequest();
 		$page = $this->getPageModel();
-		$view = $this->getView();
 
 		if(!$this->setAccess($page->get('access'))){
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$album = new GalleryAlbumModel($req->getParameter(0));
+		$album = GalleryAlbumModel::Construct($req->getParameter(0));
+		$image = GalleryImageModel::Construct($req->getParameter(1));
 
 		if(!$album->exists()) return View::ERROR_NOTFOUND;
 
-		$manager = \Core\user()->checkAccess('p:gallery_manage');
-		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
-		$uploader = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
-
 		// image view, (there are two parameters)
 		if($req->getParameter(1)){
-			$image = new GalleryImageModel($req->getParameter(1));
-			// I still need all the other images to know where this image lies in the stack!
-			$images = $album->getLink('GalleryImage', 'weight');
-
-			if(!$image->exists()){
-				return View::ERROR_NOTFOUND;
-			}
-
-			if($image->get('albumid') != $album->get('id')){
-				return View::ERROR_NOTFOUND;
-			}
-
-			$id = $image->get('id');
-			$link = $image->getRewriteURL();
-			$exif = $image->getExif();
-			var_dump($exif);
-			$next = null;
-			$prev = null;
-			$lastnum = sizeof($images) - 1;
-			// Determine the next/prev array.
-			foreach($images as $k => $img){
-				if($img->get('id') == $id){
-					// Found it! is it first or last?
-					if($k == 0 && $k == $lastnum){
-						// both are blank.... well how 'bout that :/
-					}
-					elseif($k == 0){
-						// It's the first image.
-						$next = $images[$k + 1];
-					}
-					elseif($k == $lastnum){
-						// It's the last image.
-						$prev = $images[$k - 1];
-					}
-					else{
-						// It's somewhere in between :)
-						$next = $images[$k + 1];
-						$prev = $images[$k - 1];
-					}
-				}
-			}
-
-			$view->mode = View::MODE_PAGEORAJAX;
-			$view->templatename = '/pages/gallery/view-image.tpl';
-			$view->assign('image', $image);
-			$view->assign('album', $album);
-			$view->assign('lightbox_available', Core::IsComponentAvailable('jquery-lightbox'));
-			$view->assign('editor', $editor);
-			$view->assign('manager', $manager);
-			$view->assign('uploader', $uploader);
-			$view->assign('prev', $prev);
-			$view->assign('next', $next);
-			$view->assign('exif', $exif);
-			$view->updated = $image->get('updated');
-			$view->canonicalurl = Core::ResolveLink($link);
-			$view->meta['keywords'] = $image->get('keywords');
-			$view->meta['description'] = $image->get('description');
-			$view->meta['og:image'] = $image->getFile()->getPreviewURL('200x200');
-			$view->addBreadcrumb($album->get('title'), $album->get('baseurl'));
-			$view->title = ($image->get('title') ? $image->get('title') : 'Image Details');
-			if($editor){
-				$view->addControl(
-					array(
-						'title' => 'Edit Image',
-					    'link' => '#',
-						'class' => 'update-link',
-						'icon' => 'edit',
-						'image' => $image->get('id'),
-					)
-				);
-				$view->addControl(
-					array(
-						'title' => 'Rotate CCW',
-						'link' => '#',
-						'class' => 'rotate-link',
-						'icon' => 'undo',
-						'image' => $image->get('id'),
-						'rotate' => 'ccw',
-					)
-				);
-				$view->addControl(
-					array(
-						'title' => 'Rotate CW',
-						'link' => '#',
-						'class' => 'rotate-link',
-						'icon' => 'repeat',
-						'image' => $image->get('id'),
-						'rotate' => 'cw',
-					)
-				);
-				$view->addControl(
-					array(
-						'title' => 'Remove Image',
-						'link' => 'gallery/images/delete/' . $album->get('id') . '?image=' . $image->get('id'),
-						'confirm' => 'Confirm deleting image?',
-						'icon' => 'remove',
-					)
-				);
-			}
+			$this->_viewImage($image);
 		}
 		// album view, (only one parameter)
 		else{
-			$url = $album->get('rewriteurl');
-			$images = $album->getLink('GalleryImage', 'weight');
-			$lastupdated = $album->get('updated');
-
-			if($uploader){
-				$uploadform = new Form();
-				$uploadform->set('action', Core::ResolveLink('/gallery/images_update/' . $album->get('id')));
-				$uploadform->addElement(
-					'multifile',
-					array(
-						'basedir' => 'public/galleryalbum',
-						'title' => 'Bulk Upload Images',
-						'name' => 'images',
-						'accept' => 'image/*'
-					)
-				);
-				$uploadform->addElement('submit', array('value' => 'Save Gallery Changes'));
-			}
-			else{
-				$uploadform = false;
-			}
-
-			// I need to attach a friendly URL for each image.
-			// This gets a little tricky since each image doesn't have a unique title necessarily.
-			foreach($images as $i){
-				// This will be the core part; the ID.
-				// This is what actually provides a useful lookup for the image.
-				$link = $i->get('id');
-				if($i->get('title')) $link .= '-' . \Core\str_to_url($i->get('title'));
-
-				// Prepend the album URL.
-				$link = $url . '/' . $link;
-				$i->set('link', $link);
-
-				// I would like to know when the last change overall was, not just for the gallery.
-				$lastupdated = max($lastupdated, $i->get('updated'));
-			}
-
-			$view->templatename = '/pages/gallery/view.tpl';
-			$view->assign('album', $album);
-			$view->assign('images', $images);
-			$view->assign('editor', $editor);
-			$view->assign('manager', $manager);
-			$view->assign('uploader', $uploader);
-			$view->assign('uploadform', $uploadform);
-			$view->assign('userid', \Core\user()->get('id'));
-			$view->updated = $lastupdated;
-
-			// @todo Implement a move link here.
-
-			// If there are images in this gallery, grab the first one to show as a preview!
-			if(count($images)){
-				$view->meta['og:image'] = $images[0]->getFile()->getPreviewURL('200x200');
-			}
-
-			if($editor)  $view->addControl('Edit Gallery Album', '/gallery/edit/' . $album->get('id'), 'edit');
+			$this->_viewAlbum($album);
 		}
-/*
-		if(\Core\user()->checkAccess('g:admin')){
-			$view->addControl('Add Page', '/Content/Create', 'add');
-			$view->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
-			$view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
-			$view->addControl('All Content Pages', '/Content', 'directory');
-		}
-*/
 	}
 
 	/**
@@ -338,6 +173,53 @@ class GalleryController extends Controller_2_1 {
 		//$view->addControl('All Content Pages', '/Content', 'directory');
 	}
 
+	/**
+	 * View to rearrange the images in this gallery.
+	 *
+	 */
+	public function order(){
+		$view    = $this->getView();
+		$request = $this->getPageRequest();
+		$albumid = $request->getParameter(0);
+		$album   = GalleryAlbumModel::Construct($albumid);
+		$images  = $album->getLink('GalleryImage', 'weight');
+		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
+		$uploader  = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
+
+		// Uploading permission is required at least.
+		if(!$uploader) return View::ERROR_ACCESSDENIED;
+		// The album must exist first!
+		if(!$album->exists()) return View::ERROR_NOTFOUND;
+
+		if($request->isPost()){
+			// For sanity reasons, make an array of the current images in this album.
+			$imgs = array();
+			foreach($images as $i){
+				$imgs[] = $i->get('id');
+			}
+			$weight = 0;
+
+			foreach($_POST['images'] as $i){
+				if(!in_array($i, $imgs)) continue;
+
+				$image = GalleryImageModel::Construct($i);
+				$image->set('weight', ++$weight);
+				$image->save();
+			}
+
+			Core::Redirect($album->get('rewriteurl'));
+		}
+
+		$view->addBreadcrumb($album->get('title'), $album->get('rewriteurl'));
+		$view->title = 'Image Order';
+		$view->assign('album', $album);
+		$view->assign('images', $images);
+		$view->assign('editor', $editor);
+		$view->assign('manager', $manager);
+		$view->assign('uploader', $uploader);
+	}
+
 
 	/**
 	 * Handles the upload of new and existing images.  Not meant to be called directly, but is used by the images page.
@@ -383,6 +265,11 @@ class GalleryController extends Controller_2_1 {
 				return View::ERROR_BADREQUEST;
 			}
 
+			// Figure out the largest weight of this album.
+			// Note, this is NOT the size of the images, as one or more may have been deleted after uploading.
+			$last = GalleryImageModel::Find(array('albumid' => $album->get('id')), 1, 'weight DESC');
+			$weight = ($last) ? $last->get('weight') : 0;
+
 			// Multiple images were uploaded, (probably via one of the multi uploaders).
 			// In this case, minimal data is available, but enough to save the image.
 			if(isset($_POST['images']) && is_array($_POST['images'])){
@@ -403,7 +290,7 @@ class GalleryController extends Controller_2_1 {
 						array(
 							'albumid' => $album->get('id'),
 							'file' => $img,
-							'weight' => sizeof($album->getLink('GalleryImage')) + 1,
+							'weight' => ++$weight,
 							'title' => $title,
 						)
 					);
@@ -428,6 +315,8 @@ class GalleryController extends Controller_2_1 {
 						'title' => $_POST['model']['title'],
 						'keywords' => $_POST['model']['keywords'],
 						'description' => $_POST['model']['description'],
+						'location' => $_POST['model']['location'],
+						'datetaken' => $_POST['model']['datetaken'],
 					)
 				);
 
@@ -436,7 +325,7 @@ class GalleryController extends Controller_2_1 {
 					$image->setFromArray(
 						array(
 							'albumid' => $album->get('id'),
-							'weight' => sizeof($album->getLink('GalleryImage')) + 1,
+							'weight' => ++$weight,
 						)
 					);
 				}
@@ -472,7 +361,7 @@ class GalleryController extends Controller_2_1 {
 			}
 			else{
 				Core::SetMessage($action, $actiontype);
-				Core::Redirect($album->get('rewriteurl'));
+				Core::Redirect((isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $album->get('rewriteurl')));
 			}
 		}
 		else{
@@ -593,5 +482,198 @@ class GalleryController extends Controller_2_1 {
 		$image->save();
 
 		$view->jsondata = array('status' => '1', 'message' => 'Rotated image');
+	}
+
+	private function _viewImage(GalleryImageModel $image){
+
+		$album = $image->getLink('GalleryAlbum');
+		$view = $this->getView();
+
+		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
+		$uploader = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
+
+		// I still need all the other images to know where this image lies in the stack!
+		$images = $album->getLink('GalleryImage', 'weight');
+
+		if(!$image->exists()){
+			return View::ERROR_NOTFOUND;
+		}
+
+		if($image->get('albumid') != $album->get('id')){
+			return View::ERROR_NOTFOUND;
+		}
+
+		$id = $image->get('id');
+		$link = $image->getRewriteURL();
+		$exif = $image->getExif();
+
+		/*
+
+		foreach($exif as $k => $v){
+			echo $k . ': {$exif.' . $k . '}&lt;br/>' . '//' . $v . "<br/>\n";
+		}
+		var_dump($exif); die();
+		*/
+		$next = null;
+		$prev = null;
+		$lastnum = sizeof($images) - 1;
+		// Determine the next/prev array.
+		foreach($images as $k => $img){
+			if($img->get('id') == $id){
+				// Found it! is it first or last?
+				if($k == 0 && $k == $lastnum){
+					// both are blank.... well how 'bout that :/
+				}
+				elseif($k == 0){
+					// It's the first image.
+					$next = $images[$k + 1];
+				}
+				elseif($k == $lastnum){
+					// It's the last image.
+					$prev = $images[$k - 1];
+				}
+				else{
+					// It's somewhere in between :)
+					$next = $images[$k + 1];
+					$prev = $images[$k - 1];
+				}
+			}
+		}
+
+		$view->mode = View::MODE_PAGEORAJAX;
+		$view->templatename = '/pages/gallery/view-image.tpl';
+		$view->assign('image', $image);
+		$view->assign('album', $album);
+		$view->assign('lightbox_available', Core::IsComponentAvailable('jquery-lightbox'));
+		$view->assign('editor', $editor);
+		$view->assign('manager', $manager);
+		$view->assign('uploader', $uploader);
+		$view->assign('prev', $prev);
+		$view->assign('next', $next);
+		$view->assign('exif', $exif);
+		$view->updated = $image->get('updated');
+		$view->canonicalurl = Core::ResolveLink($link);
+		$view->meta['keywords'] = $image->get('keywords');
+		$view->meta['description'] = $image->get('description');
+		$view->meta['og:image'] = $image->getFile()->getPreviewURL('200x200');
+		//$view->addBreadcrumb($album->get('title'), $album->get('baseurl'));
+		$view->title = ($image->get('title') ? $image->get('title') : 'Image Details');
+		if($editor){
+			$view->addControl(
+				array(
+					'title' => 'Edit Image',
+					'link' => '#',
+					'class' => 'update-link',
+					'icon' => 'edit',
+					'image' => $image->get('id'),
+				)
+			);
+			$view->addControl(
+				array(
+					'title' => 'Rotate CCW',
+					'link' => '#',
+					'class' => 'rotate-link',
+					'icon' => 'undo',
+					'image' => $image->get('id'),
+					'rotate' => 'ccw',
+				)
+			);
+			$view->addControl(
+				array(
+					'title' => 'Rotate CW',
+					'link' => '#',
+					'class' => 'rotate-link',
+					'icon' => 'repeat',
+					'image' => $image->get('id'),
+					'rotate' => 'cw',
+				)
+			);
+			$view->addControl(
+				array(
+					'title' => 'Remove Image',
+					'link' => 'gallery/images/delete/' . $album->get('id') . '?image=' . $image->get('id'),
+					'confirm' => 'Confirm deleting image?',
+					'icon' => 'remove',
+				)
+			);
+		}
+	}
+
+	private function _viewAlbum(GalleryAlbumModel $album){
+
+		$view = $this->getView();
+
+		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
+		$uploader = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
+
+
+		$url = $album->get('rewriteurl');
+		$images = $album->getLink('GalleryImage', 'weight');
+		$lastupdated = $album->get('updated');
+
+		if($uploader){
+			$uploadform = new Form();
+			$uploadform->set('action', Core::ResolveLink('/gallery/images_update/' . $album->get('id')));
+			$uploadform->addElement(
+				'multifile',
+				array(
+					'basedir' => 'public/galleryalbum',
+					'title' => 'Bulk Upload Images',
+					'name' => 'images',
+					'accept' => 'image/*'
+				)
+			);
+			$uploadform->addElement('submit', array('value' => 'Save Gallery Changes'));
+		}
+		else{
+			$uploadform = false;
+		}
+
+		// I need to attach a friendly URL for each image.
+		// This gets a little tricky since each image doesn't have a unique title necessarily.
+		foreach($images as $i){
+			// This will be the core part; the ID.
+			// This is what actually provides a useful lookup for the image.
+			$link = $i->get('id');
+			if($i->get('title')) $link .= '-' . \Core\str_to_url($i->get('title'));
+
+			// Prepend the album URL.
+			$link = $url . '/' . $link;
+			$i->set('link', $link);
+
+			// I would like to know when the last change overall was, not just for the gallery.
+			$lastupdated = max($lastupdated, $i->get('updated'));
+		}
+
+		$view->templatename = '/pages/gallery/view.tpl';
+		$view->assign('album', $album);
+		$view->assign('images', $images);
+		$view->assign('editor', $editor);
+		$view->assign('manager', $manager);
+		$view->assign('uploader', $uploader);
+		$view->assign('uploadform', $uploadform);
+		$view->assign('userid', \Core\user()->get('id'));
+		$view->updated = $lastupdated;
+
+		// If there are images in this gallery, grab the first one to show as a preview!
+		if(count($images)){
+			$view->meta['og:image'] = $images[0]->getFile()->getPreviewURL('200x200');
+		}
+
+		if($editor){
+			$view->addControl('Edit Gallery Album', '/gallery/edit/' . $album->get('id'), 'edit');
+		}
+		if($uploader){
+			// If they can upload images, they can rearrange them!
+			$view->addControl(
+				array(
+					'title' => 'Rearrange Images',
+					'link' => '/gallery/order/' . $album->get('id'),
+					'icon' => 'move',
+				)
+			);
+		}
 	}
 }

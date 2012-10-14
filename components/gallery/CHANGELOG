@@ -1,0 +1,27 @@
+Gallery 1.3.0
+
+	* Added image sorting to the album
+	* Added exif data display on image views
+	* Added a changelog
+	* Fixed some of the javascript used on the view and view-image page
+	* Completely retooled the view image template
+	* Reorganized the controller a little bit
+	-- Charlie Powell <charlie@eval.bz>  14 Oct 2012
+
+
+Gallery 1.2.0
+
+	* Added loading of exif data from images into the datastore.
+	-- Charlie Powell <charlie@eval.bz>  07 Sep 2012
+
+
+Gallery 1.1.1
+	-- Charlie Powell <charlie@eval.bz>  02 Aug 2012
+
+
+Gallery 1.1.0
+	-- Charlie Powell <charlie@eval.bz>  27 Jul 2012
+
+
+Gallery 1.0.0
+	-- Charlie Powell <charlie@eval.bz>  16 Jul 2012

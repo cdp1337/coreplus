@@ -1,64 +1,203 @@
 {script library="jqueryui"}{/script}
 {script src="js/core.fileupload.js"}{/script}
+{script library="jqueryui.timepicker"}{/script}
 {css src="css/gallery.css"}{/css}
 
 
+{if $prev}
+	<div class="gallery-previous-image">
+		{a href="`$prev->getRewriteURL()`" title="`$prev.title`"}
+			{img file=$prev->getFile() width="75" height="75" title="`$prev.title`"}
+			<i class="icon-chevron-left"></i>
+		{/a}
+	</div>
+{/if}
+
+{if $next}
+	<div class="gallery-next-image">
+		{a href="`$next->getRewriteURL()`" title="`$next.title`"}
+			{img file=$next->getFile() width="75" height="75" title="`$next.title`"}
+			<i class="icon-chevron-right"></i>
+		{/a}
+	</div>
+{/if}
+
+<div class="clear"></div>
+
+
 <div class="gallery-image-details">
+	{* To change the size the "large" version opens at, simply change the resolution here. *}
+	{a href="`$image->getFile()->getPreviewURL('1020x800')`" class="lightbox"}
+		{img file=$image->getFile() width="620" height="700" title="`$image.title`"}
+	{/a}
 
-	{$image.title}<br/>
+	<div class="gallery-image-detailspaneouter">
+		<div class="gallery-image-detailspane">
+			<div class="gallery-image-detailspane-title">
+				{$image.title}
+			</div>
 
-	<table><tr>
-		<td class="gallery-previous-image">
-			{if $prev}
-				{a href="`$prev->getRewriteURL()`" title="`$prev.title`"}
-					{img file=$prev->getFile() width="50" height="50" title="`$prev.title`"}
-				{/a}
+			{if !$exif && ($image.location || $image.datetaken)}
+				<div class="gallery-image-detailspane-datetakenlocation">
+					{if $image.location}
+						<span class="gallery-image-detailspane-location">{$image.location}</span>
+					{/if}
+					{if $image.location && $image.datetaken}
+						<span class="gallery-image-detailspane-location-date-separator">-</span>
+					{/if}
+					{if $image.datetaken}
+						{date date="`$image.datetaken`"}
+					{/if}
+				</div>
 			{/if}
-		</td>
-		<td>
-			{* To change the size the "large" version opens at, simply change the resolution here. *}
-			{a href="`$image->getFile()->getPreviewURL('1020x800')`" class="lightbox"}
-				{img file=$image->getFile() width="620" height="700" title="`$image.title`"}
-			{/a}
-		</td>
-		<td class="gallery-next-image">
-			{if $next}
-				{a href="`$next->getRewriteURL()`" title="`$next.title`"}
-					{img file=$next->getFile() width="50" height="50" title="`$next.title`"}
-				{/a}
+
+			{if $exif}
+				<div class="gallery-image-detailspane-datetakenlocation">
+					<span class="gallery-image-detailspane-location" style="display:none;"></span>
+					<span class="gallery-image-detailspane-location-date-separator" style="display:none;">-</span>
+					{if $image.datetaken}
+						{date date="`$image.datetaken`"}
+					{else}
+						{date date="`$exif.DateTime`"}
+					{/if}
+				</div>
+				<div class="gallery-image-detailspane-showhideextra">
+					<span class="show">more info [+]</span>
+					<span class="hide" style="display:none;">less info [-]</span>
+				</div>
+				<div class="gallery-image-detailspane-exposureaperture">
+					<span title="Exposure of {$exif.ExposureTime}th of a second">
+						{$exif.ExposureTime}th
+					</span>
+					@
+					<span title="Aperture of f/{$exif.FNumber}">
+						f/{$exif.FNumber}
+					</span>
+				</div>
+
+				<div class="gallery-image-detailspane-focallength" title="Focal Length of {$exif.FocalLength}mm">
+					{$exif.FocalLength}mm
+				</div>
+
+				<div class="gallery-image-detailspane-iso" title="ISO of {$exif.ISOSpeedRatings}">
+					ISO {$exif.ISOSpeedRatings}
+				</div>
+
+				<div class="gallery-image-detailspane-makemodel">
+					{$exif.Make} - {$exif.Model}
+				</div>
+
+				<div class="gallery-image-detailspane-extrainformation">
+					<span class="extralabel">Original Dimensions:</span>
+					{$exif.Width}px X {$exif.Height}px<br/>
+
+					<span class="extralabel">Original Filesize:</span>
+					{$exif.FileSizeFormatted}<br/>
+
+					<span class="extralabel">Original Resolution:</span>
+					{$exif.XResolution} X {$exif.YResolution}<br/>
+
+					{if $exif.Software}<span class="extralabel">Software:</span> {$exif.Software}<br/>{/if}
+
+					<span class="extralabel">Flash:</span>
+					{$exif.FlashDesc}<br/>
+
+					<span class="extralabel">Metering Mode:</span>
+					{$exif.MeteringModeDesc}<br/>
+
+					<span class="extralabel">Exposure Program:</span>
+					{$exif.ExposureProgramDesc}<br/>
+
+					<span class="extralabel">Shutter Speed:</span>
+					{$exif.ShutterSpeedValue}<br/>
+
+					<span class="extralabel">Aperture Value:</span>
+					{$exif.ApertureValue}<br/>
+
+					<span class="extralabel">Max Aperture:</span>
+					{$exif.MaxApertureValue}<br/>
+
+					<span class="extralabel">Exposure Bias Value:</span>
+					{$exif.ExposureBiasValue}<br/>
+
+					<span class="extralabel">Light Source:</span>
+					{$exif.LightSourceDesc}<br/>
+
+					{if $exif.Artist && $exif.Artist != 'unknown'}<span class="extralabel">Artist:</span> {$exif.Artist}<br/>{/if}
+
+					<span class="extralabel">Copyright:</span>
+					{$exif.Copyright}<br/>
+				</div>
 			{/if}
-		</td>
-	</tr></table>
-
-	{$image.keywords}
-
-	{$image.description}
-
-	{if $exif}
-		Make: {$exif.Make}<br/>
-		Model: {$exif.Model}<br/>
-		Aperture: {$exif.ApertureFNumber}<br/>
-		Original Resolution: {$exif.dimensions}<br/>
-		Original Filesize: {$exif.FileSize}<br/>
-		Software: {$exif.Software}<br/>
-		DateTime: {$exif.DateTime}<br/>
-		ExposureTime: {$exif.ExposureTime}<br/>
-		ISO: {$exif.ISOSpeedRatings}<br/>
-		{if $exif.Flash}Flash Used{else}No Flash Used{/if}<br/>
-		Metering: {$exif.MeteringMode}<br/>
-	{/if}
-
-	{*
-		I also want to display...
-		Make
-		Model
-		Software
-		DateTime
-		Artist
-		HostComputer
-		ColorMap
-	*}
+			<div class="clear"></div>
+		</div>
+	</div>
 </div>
+
+<div class="gallery-image-description">
+	{$image.description}
+</div>
+
+<div class="gallery-image-keywords">
+	{$image.keywords}
+</div>
+
+
+{if $exif && $exif.GPS}
+	{script src="https://maps.googleapis.com/maps/api/js?sensor=false"}{/script}
+	{script location="foot"}<script type="text/javascript">
+		(function(){
+
+			{if $image.location}
+				$('.gallery-image-detailspane-location').html("{$image.location}").show();
+				$('.gallery-image-detailspane-location-date-separator').show();
+			{else}
+				var geo = new google.maps.Geocoder(),
+					loc = new google.maps.LatLng({$exif.GPS.lat}, {$exif.GPS.lng});
+
+				//console.log(loc);
+
+				geo.geocode(
+					{
+						location: loc
+						//address: address,
+						//region: $formels.country.val()
+						//region: 'us'
+					}, function(result, status){
+						//console.log(result);
+
+						if(status == 'OK'){
+							$('.gallery-image-detailspane-location').html(result[0].formatted_address).show();
+							$('.gallery-image-detailspane-location-date-separator').show();
+						}
+					}
+				);
+			{/if}
+		})();
+
+	</script>{/script}
+{/if}
+
+{if $exif}
+{script location="foot"}<script type="text/javascript">
+	$('.gallery-image-detailspane-showhideextra').click(function(){
+		if($(this).find('.show').is(':visible')){
+			// So show it!
+			$(this).find('.show').hide();
+			$(this).find('.hide').show();
+			$('.gallery-image-detailspane-extrainformation').show();
+		}
+		else{
+			// So hide it!
+			$(this).find('.show').show();
+			$(this).find('.hide').hide();
+			$('.gallery-image-detailspane-extrainformation').hide();
+		}
+	});
+</script>{/script}
+
+{/if}
+
 
 {if $lightbox_available}
 	{script library="jquery.lightbox"}{/script}
@@ -87,11 +226,16 @@
 				title:   windowtitle,
 				width:   '500px',
 				close:   function () {
-					$(this).dialog('destroy').remove();
+					$(this).remove();
 				}
 			}).dialog('open');
 
-			$dialog.load(Core.ROOT_WDIR + 'gallery/images/update/{$album.id}?image=' + image);
+			$dialog.load(
+				Core.ROOT_WDIR + 'gallery/images/update/{$album.id}?image=' + image,
+				function(){
+					$dialog.dialog('option', 'position', 'center');
+				}
+			);
 
 			return false;
 		});
@@ -129,7 +273,7 @@
 				width:   '500px',
 				close:   function () {
 					$xhr.abort();
-					$(this).dialog('destroy').remove();
+					$(this).remove();
 				}
 			}).dialog('open');
 
@@ -139,3 +283,13 @@
 </script>
 
 {/if}
+
+<script type="text/javascript">
+	$('.gallery-image-detailspane')
+		.mouseover(function(){
+			$(this).addClass('hover');
+		})
+		.mouseout(function(){
+			$(this).removeClass('hover');
+		});
+</script>
