@@ -23,9 +23,6 @@
 		<userconfig key="gender" name="Gender" onregistration="0" onedit="0"/>
 		<userconfig key="facebook_access_token" name="Facebook Access Token (set on login)" onregistration="0" onedit="0"/>
 	</userconfigs>
-	<pages>
-		<page baseurl="/facebook/admin" admin="1" title="Facebook Administration" access="g:admin"/>
-	</pages>
 	<view searchdir="templates"/>
 	<files>
 		<file filename="CHANGELOG" md5="9641280866870d21d8e90dfd31c87985"/>
