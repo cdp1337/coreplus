@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0~core2" name="Facebook" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0~core3" name="Facebook" execmode="web">
+	<hooks>
+		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
+	</hooks>
 	<provides>
 		<provide type="library" name="facebook-sdk" version="3.2.0"/>
 		<scriptlibrary name="facebook" call="FacebookHelper::Includejs"/>
@@ -9,18 +12,24 @@
 		<require name="user" type="component" version="2.2.1"/>
 	</requires>
 	<configs>
-		<config key="/facebook/appid" mapto="FACEBOOK_APP_ID" type="string" default="" description="If you want to enable facebook connectivity, you need to create an &quot;app&quot; and enter that app's appid here."></config>
-		<config key="/facebook/secretid" mapto="FACEBOOK_SECRET_ID" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
+		<config key="/facebook/appid" mapto="FACEBOOK_APP_ID" type="string" default="" description="If you want to enable facebook connectivity, you need to create an &quot;app&quot; and enter that app's appid here."/>
+		<!--<config key="/facebook/secretid" mapto="FACEBOOK_SECRET_ID" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
+		-->
 		<config key="/facebook/appsecret" mapto="FACEBOOK_APP_SECRET" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
 	</configs>
 	<userconfigs>
 		<userconfig key="facebook_id" name="Facebook ID" onregistration="0" onedit="0"/>
 		<userconfig key="facebook_link" name="Facebook Link" onregistration="0" onedit="0"/>
 		<userconfig key="gender" name="Gender" onregistration="0" onedit="0"/>
+		<userconfig key="facebook_access_token" name="Facebook Access Token (set on login)" onregistration="0" onedit="0"/>
 	</userconfigs>
+	<pages>
+		<page baseurl="/facebook/admin" admin="1" title="Facebook Administration" access="g:admin"/>
+	</pages>
+	<view searchdir="templates"/>
 	<files>
-		<file filename="CHANGELOG" md5="d7f55c14cd4560d171b841bb6b7dbeef"/>
-		<file filename="FacebookHelper.class.php" md5="bdd9c50ac066b27b3640ba04203ac008">
+		<file filename="CHANGELOG" md5="9641280866870d21d8e90dfd31c87985"/>
+		<file filename="FacebookHelper.class.php" md5="113e7ab017a0e132e1ba46133762f841">
 			<class name="FacebookHelper"/>
 		</file>
 		<file filename="facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
@@ -55,6 +64,7 @@
 	<upgrades>
 		<upgrade from="3.0.1~Core1" to="3.2.0~core1"/>
 		<upgrade from="3.2.0~core1" to="3.2.0~core2"/>
+		<upgrade from="3.2.0~core2" to="3.2.0~core3"/>
 	</upgrades>
 	<authors>
 		<author name="Naitik Shah" email="naitik@facebook.com"/>

@@ -1,3 +1,8 @@
+Facebook 3.2.0~core3
+	* Updated some of the javascript integrators
+	* Added open graph utilities as part of a new core hook.
+	-- Charlie Powell <charlie@eval.bz>  14 Oct 2012
+
 Facebook 3.2.0~core2
 
 	* Fix the requirement set for this package.
