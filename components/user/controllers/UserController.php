@@ -57,6 +57,10 @@ class UserController extends Controller_2_1{
 		$view->title = 'My Profile';
 	}
 
+	public function view(){
+		// @todo Finish this!
+	}
+
 	public function password(){
 		// I could put this in the component xml, but it's not needed everywhere
 		require_once(ROOT_PDIR . 'components/user/helpers/UserFunctions.php');
@@ -261,6 +265,41 @@ class UserController extends Controller_2_1{
 
 
 		return $view;
+	}
+
+	/**
+	 * Ajax page to allow for quickly linking the current user to a facebook account from a strictly javascript interface.
+	 *
+	 */
+	public function linkfacebook(){
+		$request = $this->getPageRequest();
+		$view    = $this->getView();
+
+		$view->mode = View::MODE_AJAX;
+		$view->contenttype = View::CTYPE_JSON;
+
+		if(!$request->isAjax()){
+			return View::ERROR_BADREQUEST;
+		}
+		if(!$request->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		$user = \Core\user();
+		if(!$user->exists()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		// Necessary fields are id and token.
+		$user->set('facebook_access_token', $_POST['token']);
+		$user->set('facebook_id', $_POST['id']);
+		$user->save();
+
+		$view->jsondata = array(
+			'id' => $user->get('id'),
+			'access_token' => $user->get('facebook_access_token'),
+			'facebook_id' => $user->get('facebook_id'),
+		);
 	}
 
 	public function register(){

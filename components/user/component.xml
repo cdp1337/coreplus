@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.2" name="user" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.3" name="user" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.2"/>
 	</requires>
@@ -14,7 +14,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="2d53856924c075f6db4c339172a1347e"/>
+		<file filename="CHANGELOG" md5="5920dd5a5d723e5981f2e4fbd82192d8"/>
 		<file filename="User.class.php" md5="1aad23d6ab14269adfdbddaaf9dca236">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -34,7 +34,7 @@
 		<file filename="backends/User_datamodel.backend.php" md5="e882b38776460e817c37413d42216029">
 			<class name="User_datamodel_Backend"/>
 		</file>
-		<file filename="backends/User_facebook.backend.php" md5="4e0682dfc42961ed543eb723b4feea76">
+		<file filename="backends/User_facebook.backend.php" md5="27371946adaf1cf235d2e72b7866b45e">
 			<class name="User_facebook_Backend"/>
 		</file>
 		<file filename="controllers/UserActivityController.php" md5="0f890921ba4952efb94fb0f8c9124f45">
@@ -43,7 +43,7 @@
 		<file filename="controllers/UserAdminController.php" md5="975438ad9dfea0ec6b3fd6e28bbd92fc">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="b8308057ea4bfaef036320bca020b6ec">
+		<file filename="controllers/UserController.php" md5="d60609716e08f73eb4e6dbf5de0adfef">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="87720df274ed8438582743843c8f466f">
@@ -148,6 +148,7 @@
 		<upgrade from="2.1.1" to="2.2.0"/>
 		<upgrade from="2.2.0" to="2.2.1"/>
 		<upgrade from="2.2.1" to="2.2.2"/>
+		<upgrade from="2.2.2" to="2.2.3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

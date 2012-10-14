@@ -1,3 +1,8 @@
+User 2.2.3
+
+	* Minor fix to support facebook access tokens.
+	-- Charlie Powell <charlie@eval.bz>  14 Oct 2012
+
 User 2.2.2
 
 	* Fixed the onregistration and onedit keys

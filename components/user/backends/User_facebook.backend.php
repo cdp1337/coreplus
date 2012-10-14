@@ -102,6 +102,9 @@ class User_facebook_Backend extends User implements User_Backend{
 				case 'facebook_link':
 					$m->set($k, $user_profile['link']);
 					break;
+				case 'facebook_access_token':
+					$m->set($k, $facebook->getAccessToken());
+					break;
 			}
 		}
 		
