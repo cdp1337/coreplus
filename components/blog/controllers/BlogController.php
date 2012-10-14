@@ -167,7 +167,7 @@ class BlogController extends Controller_2_1 {
 		$article->set('blogid', $blog->get('id'));
 		$form = Form::BuildFromModel($article);
 		$form->set('callsmethod', 'BlogHelper::BlogArticleFormHandler');
-		$form->addElement('submit', array('value' => 'Create Article'));
+		//$form->addElement('submit', array('value' => 'Create Article'));
 
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->title = 'Create Blog Article';
@@ -202,12 +202,13 @@ class BlogController extends Controller_2_1 {
 
 		$form = Form::BuildFromModel($article);
 		$form->set('callsmethod', 'BlogHelper::BlogArticleFormHandler');
-		$form->addElement('submit', array('value' => 'Update Article'));
+		//$form->addElement('submit', array('value' => 'Update Article'));
 
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->addBreadcrumb($article->get('title'), $article->get('rewriteurl'));
 		$view->title = 'Update Blog Article';
-		$view->assignVariable('form', $form);
+		$view->assign('form', $form);
+		$view->assign('article', $article);
 	}
 
 	/**
@@ -247,12 +248,13 @@ class BlogController extends Controller_2_1 {
 	private function _viewBlog(BlogModel $blog) {
 		$view     = $this->getView();
 		$page     = $blog->getLink('Page');
-		$articles = $blog->getLink('BlogArticle');
+		$articles = $blog->getLink('BlogArticle', 'created DESC');
 		$manager  = \Core\user()->checkAccess('p:blog_manage');
 		$editor   = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 
 		$view->templatename = '/pages/blog/view-blog.tpl';
 		$view->assign('articles', $articles);
+		$view->assign('page', $page);
 		if ($editor) {
 			$view->addControl('Add Blog Article', '/blog/article/create/' . $blog->get('id'), 'add');
 		}
@@ -267,16 +269,24 @@ class BlogController extends Controller_2_1 {
 		//$articles = $blog->getLink('BlogArticle');
 		$manager = \Core\user()->checkAccess('p:blog_manage');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
+		$author = User::Find(array('id' => $article->get('authorid')));
 
 		$view->templatename = '/pages/blog/view-blog-article.tpl';
 		//$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->title        = $article->get('title');
 		$view->updated      = $article->get('updated');
 		$view->canonicalurl = Core::ResolveLink($article->get('rewriteurl'));
+		$view->meta['og:type'] = 'article';
 		if ($article->get('image')) {
 			$image                  = Core::File('public/blog/' . $article->get('image'));
 			$view->meta['og:image'] = $image->getPreviewURL('200x200');
 		}
+		if($author){
+			/** @var $author User */
+			$view->meta['author'] = $author->getDisplayName();
+		}
+		$view->meta['description'] = $article->getTeaser();
+		$view->assign('author', $author);
 		$view->assign('article', $article);
 		if ($editor) {
 			$view->addControl('Edit Blog Article', '/blog/article/update/' . $blog->get('id') . '/' . $article->get('id'), 'edit');

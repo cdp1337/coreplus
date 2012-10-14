@@ -57,6 +57,14 @@ class BlogArticleModel extends Model {
 			'options' => array('published', 'draft'),
 			'default' => 'published'
 		),
+		'fb_account_id' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'formtype' => 'hidden',
+		),
+		'fb_post_id' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'formtype' => 'hidden',
+		),
 		'created'     => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
@@ -99,6 +107,40 @@ class BlogArticleModel extends Model {
 				return $this->getLink('Blog')->get('rewriteurl') . '/' . $this->_data['id'] . '-' . \Core\str_to_url($this->_data['title']);
 			default:
 				return parent::get($k);
+		}
+	}
+
+	/**
+	 * Get a teaser or snippet of this article.
+	 * This will return at most 500 characters of the body or the description.
+	 */
+	public function getTeaser(){
+		$text = $this->get('description') ? $this->get('description') : $this->get('body');
+
+		// Remove HTML
+		$text = strip_tags($text);
+
+		// And whitespace
+		$text = trim($text);
+
+		// And if it's more than so many characters...
+		$text = substr($text, 0, 500);
+
+		return $text;
+	}
+
+	/**
+	 * Get the image object or null
+	 *
+	 * @return File_local_backend|null
+	 */
+	public function getImage(){
+		if($this->get('image')){
+			$f = new File_local_backend('public/blog/' . $this->get('image'));
+			return $f;
+		}
+		else{
+			return null;
 		}
 	}
 }
