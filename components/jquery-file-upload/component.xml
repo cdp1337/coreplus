@@ -64,7 +64,7 @@
 		<file filename="assets/js/vendor/jquery.ui.widget.js" md5="34af0fa43f73d5db9d7ff94d218ccdd9"/>
 	</assets>
 	<view searchdir="templates">
-		<file filename="templates/forms/elements/multifileinput.tpl" md5="354c4c6a02bc08d8612757183a9d63aa"/>
+		<file filename="templates/forms/elements/multifileinput.tpl" md5="e0bc14bfc00e74b6979e834a32299510"/>
 	</view>
 	<authors>
 		<author name="Sebastian Tschan"/>
