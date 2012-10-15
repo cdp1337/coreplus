@@ -80,13 +80,18 @@ class GalleryController extends Controller_2_1 {
 
 		if(!$album->exists()) return View::ERROR_NOTFOUND;
 
+		// Since the image view page will have its own page that doesn't inherit the parent's permissions....
+		if(!\Core\user()->checkAccess($album->getLink('Page')->get('access'))){
+			return View::ERROR_ACCESSDENIED;
+		};
+
 		// image view, (there are two parameters)
 		if($req->getParameter(1)){
-			$this->_viewImage($image);
+			return $this->_viewImage($image);
 		}
 		// album view, (only one parameter)
 		else{
-			$this->_viewAlbum($album);
+			return $this->_viewAlbum($album);
 		}
 	}
 
@@ -455,6 +460,19 @@ class GalleryController extends Controller_2_1 {
 			return View::ERROR_BADREQUEST;
 		}
 
+		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
+		$uploader  = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
+
+		if(!$uploader){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		// Uploaders only can only edit their own image!
+		if(!$editor && $image->get('uploaderid') != \Core\user()->get('id')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
 		// According to GD:
 		//       0
 		//  90       270
@@ -607,7 +625,6 @@ class GalleryController extends Controller_2_1 {
 		$manager = \Core\user()->checkAccess('p:gallery_manage');
 		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
 		$uploader = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
-
 
 		$url = $album->get('rewriteurl');
 		$images = $album->getLink('GalleryImage', 'weight');

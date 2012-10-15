@@ -144,20 +144,25 @@
 
 
 .gallery-previous-image {
-	padding-right:5px;
 	float: left;
+}
+.gallery-next-image {
+	float: right;
+}
+.gallery-previous-image, .gallery-next-image {
 	position: relative;
 	text-decoration: none;
-}
-.gallery-previous-image a {
-	cursor: w-resize;
+	background: black;
+	height: 75px;
+	width: 75px;
+	position: relative;
+	text-align: center;
 	text-decoration: none;
+	margin-bottom: 5px;
 }
 
-.gallery-next-image {
-	padding-left: 5px;
-	float: right;
-	position: relative;
+.gallery-previous-image a {
+	cursor: w-resize;
 	text-decoration: none;
 }
 .gallery-next-image a {
@@ -166,7 +171,7 @@
 }
 
 .gallery-previous-image i {
-	bottom: 0;
+	bottom: 5px;
 	color: rgba(255, 255, 255, 0.4);
 	display: block;
 	font-size: 50px;
@@ -175,7 +180,7 @@
 	text-decoration: none;
 }
 .gallery-next-image i {
-	bottom: 0;
+	bottom: 5px;
 	color: rgba(255, 255, 255, 0.4);
 	display: block;
 	font-size: 50px;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.0" name="gallery" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.1" name="gallery" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.2" operation="ge"/>
 	</requires>
@@ -26,11 +26,11 @@
 		<file filename="templates/pages/galleryadmin/index.tpl" md5="93aca2ab7228f28683172bf10dd85bb2"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="9a730f63d3bc93c179f93b2a0247caba"/>
+		<file filename="CHANGELOG" md5="6b5ca75636596505c1d17f342fe7ed71"/>
 		<file filename="controllers/GalleryAdminController.php" md5="df6e78a9ee0780077a89d30797aa487b">
 			<controller name="GalleryAdminController"/>
 		</file>
-		<file filename="controllers/GalleryController.php" md5="34c7e32e207a14ada9cac7eae81e2df7">
+		<file filename="controllers/GalleryController.php" md5="834e81ea15a379b8615293211407e2d4">
 			<controller name="GalleryController"/>
 		</file>
 		<file filename="helpers/GalleryFormHandler.class.php" md5="aec801292e3bb60260c4960e19cb490b">
@@ -44,7 +44,7 @@
 		</file>
 	</files>
 	<assets>
-		<file filename="assets/css/gallery.css" md5="30b4400c2b9bfa5222875ffa6780e9ba"/>
+		<file filename="assets/css/gallery.css" md5="ee8d7dac930188cbee14a508491552e8"/>
 		<file filename="assets/gallery-arrow.png" md5="16bc541d24d9c8d5a124369eb51a4f8e"/>
 	</assets>
 	<upgrades>
@@ -52,6 +52,7 @@
 		<upgrade from="1.1.0" to="1.1.1"/>
 		<upgrade from="1.1.1" to="1.2.0"/>
 		<upgrade from="1.2.0" to="1.3.0"/>
+		<upgrade from="1.3.0" to="1.3.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
