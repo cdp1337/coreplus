@@ -98,40 +98,53 @@ span.button {
 	cursor: pointer;
 	text-align: center;
 	zoom: 1;
+	/* the overflow property removes extra width in IE */
 	overflow: visible;
 	line-height: 1.4;
 	background-repeat:no-repeat;
 
-	background-image: linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(91,114,115) 73%, rgb(173,199,193) 100%);
-	background-image: -o-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(91,114,115) 73%, rgb(173,199,193) 100%);
-	background-image: -moz-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(91,114,115) 73%, rgb(173,199,193) 100%);
-	background-image: -webkit-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(91,114,115) 73%, rgb(173,199,193) 100%);
-	background-image: -ms-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(91,114,115) 73%, rgb(173,199,193) 100%);
 
-	background-image: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0.19, rgb(148,148,148)),
-		color-stop(0.42, rgb(112,111,112)),
-		color-stop(0.73, rgb(91,114,115)),
-		color-stop(1, rgb(173,199,193))
-	);
+	background: #f6f8f9; /* Old browsers */
+	background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 49%, #d7dee3 51%, #f5f7f9 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f8f9), color-stop(49%,#e5ebee), color-stop(51%,#d7dee3), color-stop(100%,#f5f7f9)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-9 */
 
-		/*
-	 background-color: rgba(62, 126, 128, 0.99);
-	 */
-	border:2px outset rgba(29, 84, 87, 0.52);
-	color: #FFF;
-	font-weight:bold;
+	border:2px outset rgba(80, 84, 87, 0.52);
+	color: #444;
+	font-weight:normal;
 	border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;
-} /* the overflow property removes extra width in IE */
+}
 
-/*a.button { color: #225522; background-repeat:no-repeat; background-position:6px 1px; line-height: 2em;  text-decoration:none; border: 2px ridge #1C2B0D; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; background-color:#DDEDDD; background-color:-moz-linear-gradient(top, #AA8AAA 0%, #BBB 90%, #DDEDDD 100%);}*/
+input[type="submit"], button {
+	padding:0 1em;
+	margin-right:.1em;
+	cursor: pointer;
+	text-align: center;
+	zoom: 1;
+	/* the overflow property removes extra width in IE */
+	overflow: visible;
+	line-height: 1.4;
+	background-repeat:no-repeat;
 
-a.button.delete { background-image:url('../icons/delete-lg.png'); padding-left:2.25em;}
-a.button.add { background-image:url('../icons/add-lg.png'); padding-left:2.25em;}
-a.button.ok { background-image:url('../icons/button_ok-lg.png'); padding-left:2.25em;}
+
+	background: #f6f8f9; /* Old browsers */
+	background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 49%, #d7dee3 51%, #f5f7f9 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f8f9), color-stop(49%,#e5ebee), color-stop(51%,#d7dee3), color-stop(100%,#f5f7f9)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-9 */
+
+	border:2px outset rgba(80, 84, 87, 0.52);
+	color: #444;
+	font-weight:normal;
+	border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;
+}
 
 a.button:hover { text-decoration:none; background-color: #50a3a5;}
 
@@ -263,3 +276,24 @@ footer ul.navigation-menu li li { float: none;}
 
 /** Collapsible fieldsets **/
 fieldset.collapsed { padding:0; border-width: 1px 0px 0px; }
+
+
+.progress-container {
+	position: relative;
+}
+.progress-success {
+	background: none repeat scroll 0 0 #992222;
+	border: 2px solid green;
+	height: 20px;
+	margin-bottom: 5px;
+}
+.progress-success .bar {
+	background: none repeat scroll 0 0 green;
+	height: 20px;
+}
+.progress-container .progress-extended {
+	color: white;
+	left: 46px;
+	position: absolute;
+	top: 6px;
+}
