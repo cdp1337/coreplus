@@ -13,10 +13,8 @@
 <link rel="stylesheet" href="css/jquery.fileupload-ui.css">
 *}
 
-<div class="container {$element->getClass()}">
-	<div class="multiupload-drag-notice">
-		<i class="icon-upload"></i>Drop files here to upload
-	</div>
+<div class="container {$element->getClass()} {$element->get('id')}">
+
 	{if $element->get('title')}
 		<label for="{$element->get('name')}">{$element->get('title')|escape}</label>
 	{/if}
@@ -25,22 +23,17 @@
 		<p class="formdescription">{$element->get('description')}</p>
 	{/if}
 
-
-	<!-- The loading indicator is shown during file processing -->
-	<div class="fileupload-loading"></div>
-	<br>
-	<!-- The table listing the files available for upload/download -->
-	<table role="presentation" class="table table-striped listing"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
-	<br>
 	<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
 	<div class="row fileupload-buttonbar">
 		<div class="span7">
 			<!-- The fileinput-button span is used to style the file input field as button -->
-			<span class="button btn-success fileinput-button" style="position:relative; overflow:hidden; width: 100px;">
-				<i class="icon-plus icon-white"></i>
-				<span>Add files...</span>
-				<input id="{$element->get('id')}" type="file" name="{$element->get('name')}[]" multiple="multiple" style="position:absolute; left:0pt; top:0pt; opacity:0;">
-			</span>
+			<label style="display:block; float:left; position:relative; overflow:hidden; width:120px; margin-right:10px;">
+				<span class="button btn-success fileinput-button" style="width:87px;">
+					<i class="icon-plus icon-white"></i>
+					<span>Add files...</span>
+					<input id="{$element->get('id')}" type="file" name="{$element->get('name')}[]" multiple="multiple" style="position:absolute; left:0pt; top:0pt; opacity:0;">
+				</span>
+			</label>
 			<!--<button type="submit" class="button btn-primary start">
 				<i class="icon-upload icon-white"></i>
 				<span>Start uploads</span>
@@ -51,7 +44,7 @@
 			</button>
 		</div>
 		<!-- The global progress information -->
-		<div class="span5 fileupload-progress fade">
+		<div class="progress-container span5 fileupload-progress fade" style="display:none;">
 			<!-- The global progress bar -->
 			<div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
 				<div class="bar" style="width:0%;"></div>
@@ -60,6 +53,18 @@
 			<div class="progress-extended">&nbsp;</div>
 		</div>
 	</div>
+
+	<div class="multiupload-drag-notice">
+		<i class="icon-upload"></i>Drop files here to upload
+	</div>
+
+	<!-- The loading indicator is shown during file processing -->
+	<div class="fileupload-loading"></div>
+	<br>
+	<!-- The table listing the files available for upload/download -->
+	<table role="presentation" class="table table-striped listing"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+	<br>
+
 </div>
 
 
@@ -152,7 +157,9 @@
 
 <script>
 	$(function () {
-		var $form = $('#{$element->get('id')}').closest('form');
+		var $form = $('#{$element->get('id')}').closest('form'),
+			$progressbar = $('.' + '{$element->get('id')}').find('.fileupload-progress'),
+			$bargraphinner = $progressbar.find('.bar');
 
 		// Initialize the jQuery File Upload widget:
 		$form.fileupload({
@@ -160,6 +167,26 @@
 			formData: { key: '{$element->get('id')}' },
 			previewSourceFileTypes: /^.*$/, // Core+ handles previews of all files ;)
 			autoUpload: true, // By default, files added to the UI widget are uploaded as soon as the user clicks on the start buttons. To enable automatic uploads, set this option to true.
+			start: function(e, data){
+				$progressbar.show();
+				$bargraphinner.width('1%');
+			},
+			fail: function(e, data){
+				$bargraphinner.width('0px');
+				$progressbar.hide();
+				alert(data.errorThrown);
+			},
+			progressall: function (e, data) {
+				var progress = parseInt(data.loaded / data.total * 100, 10);
+				console.log(progress);
+				if(progress >= 99){
+					$bargraphinner.width('0px');
+					$progressbar.hide();
+				}
+				else{
+					$bargraphinner.width(progress + '%');
+				}
+			},
 			_last: null
 		});
 

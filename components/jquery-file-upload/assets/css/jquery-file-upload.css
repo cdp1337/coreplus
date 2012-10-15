@@ -10,18 +10,20 @@
 	border: 1px solid #aaa;
 }
 
-
+.fileupload-buttonbar {
+	z-index: 4;
+}
 
 .multiupload-drag-notice {
 	color: rgba(90, 150, 90, 0.4);
 	display: none;
 	font-size: 33px;
-	margin-top: 20px;
+	margin-top: 10px;
 	padding-top: 0;
 	position: absolute;
 	text-align: center;
 	width: 100%;
-	z-index: 3;
+	z-index: 1;
 }
 
 .multifileinput:hover .multiupload-drag-notice {

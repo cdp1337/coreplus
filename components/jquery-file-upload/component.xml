@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.9.1~core1" name="jQuery-File-Upload" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.9.1~core2" name="jQuery-File-Upload" execmode="web">
 	<requires>
 		<require name="JQuery" type="library" version="1.6" operation="ge"/>
 		<require name="jqueryui" type="library" version="1.8" operation="ge"/>
 	</requires>
-	<upgrades/>
+	<upgrades>
+		<upgrade from="6.9.1~core1" to="6.9.1~core2"/>
+	</upgrades>
 	<description>
 		File Upload widget with multiple file selection, drag and drop support, progress bars and preview images for jQuery.
 		Supports cross-domain, chunked and resumable file uploads and client-side image resizing.
@@ -15,6 +17,7 @@
 		<formelement name="multifile" class="MultiFileInput"/>
 	</forms>
 	<files>
+		<file filename="CHANGELOG" md5="a34226cdcfd196980367b31119e67de7"/>
 		<file filename="README.md" md5="cb22a03a2f5fc8aaf6dcf5a9c2180a66"/>
 		<file filename="classes/MultiFileInput.class.php" md5="cbf33dcfa27832339ca1b1e992eb77e8">
 			<class name="MultiFileInput"/>
@@ -49,7 +52,7 @@
 		<file filename="misc/test/test.js" md5="2f21c6e24f3d0623f4cf14d212543ef8"/>
 	</files>
 	<assets>
-		<file filename="assets/css/jquery-file-upload.css" md5="9d21d52cbf25b66bfd3a14becae6dbc9"/>
+		<file filename="assets/css/jquery-file-upload.css" md5="be2f8ac827a0623b2241d3c07263c4b7"/>
 		<file filename="assets/js/cors/jquery.postmessage-transport.js" md5="11fe256b13a09546f7280198d8e98239"/>
 		<file filename="assets/js/cors/jquery.xdr-transport.js" md5="0927262e8bbd59ec33eda07237e6f19a"/>
 		<file filename="assets/js/jquery.fileupload-fp.js" md5="b26df0946db6d77ffcae7d02b7fdfff3"/>
@@ -61,7 +64,7 @@
 		<file filename="assets/js/vendor/jquery.ui.widget.js" md5="34af0fa43f73d5db9d7ff94d218ccdd9"/>
 	</assets>
 	<view searchdir="templates">
-		<file filename="templates/forms/elements/multifileinput.tpl" md5="7afa965ea1f3695e47d2c30db3e6a562"/>
+		<file filename="templates/forms/elements/multifileinput.tpl" md5="354c4c6a02bc08d8612757183a9d63aa"/>
 	</view>
 	<authors>
 		<author name="Sebastian Tschan"/>

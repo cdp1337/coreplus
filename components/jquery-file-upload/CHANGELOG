@@ -1,3 +1,10 @@
+jQuery-File-Upload 6.9.1~core2
+
+	* Set files to be auto uploaded by default
+	* Rearranged the UI slightly
+	* Updated the progress bar
+	-- Charlie Powell <charlie@eval.bz>  15 Oct 2012
+
 jQuery-File-Upload 6.9.1~core1
 
 	* Initial version
