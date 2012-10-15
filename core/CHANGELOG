@@ -1,3 +1,11 @@
+Core Plus 2.2.4
+
+	* Fixed a bug on the page URL validation for the home page
+	* Fixed the file local backend to better handle duplicate filenames.  It will now check the hash of each (#) file it
+	finds instead of just skipping to the end of the line.
+	* Removed an unnecessary directory from the root.
+	-- Charlie Powell <charlie@eval.bz>  15 Oct 2012
+
 Core Plus 2.2.3
 
 	* Added more files into the compiled bootstrap

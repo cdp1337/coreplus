@@ -209,7 +209,7 @@ class PageModel extends Model {
 		// Blog::View, Blog::Create, etc and /blog.
 
 		$controller = substr($v, 1, ( (strpos($v, '/', 1) !== false) ? strpos($v, '/', 1) : strlen($v)) );
-		if(class_exists($controller . 'Controller')){
+		if($controller && class_exists($controller . 'Controller')){
 			return 'Invalid Rewrite URL, "' . $controller . '" is a reserved system name!';
 		}
 

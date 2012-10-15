@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.3" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.4" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -38,68 +38,8 @@
 		<file filename="LICENSES/lgpl.txt" md5="e6a600fd5e1d9cbde2d983680233ad02"/>
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
-		<file filename="_facebook-wp-version/facebook.php" md5="f865af933e51fc2e1c16de40e9accf96"/>
-		<file filename="_facebook-wp-version/fb-admin-menu.php" md5="acdede0fd5c60fe6c1d213a7b5f6dde4"/>
-		<file filename="_facebook-wp-version/fb-core.php" md5="60293eda60b972a6158b5a141341b7ca"/>
-		<file filename="_facebook-wp-version/fb-login.php" md5="5a542a15565238e36267c2aa2f28b7da"/>
-		<file filename="_facebook-wp-version/fb-open-graph.php" md5="633fba4540a56fefbc2244b969247ec4"/>
-		<file filename="_facebook-wp-version/fb-social-publisher-mentioning.php" md5="9c32d03b6ce2217f35a16ccf3e6a3b25"/>
-		<file filename="_facebook-wp-version/fb-social-publisher.php" md5="d0b0440a5465bc6cc06ee2e0e57c0c60"/>
-		<file filename="_facebook-wp-version/fb-wp-helpers.php" md5="f9052b77901d2cd1e774f8371ae7c51d"/>
-		<file filename="_facebook-wp-version/images/icon-bw.png" md5="3afc9852748d70e313496f7b57236fbf"/>
-		<file filename="_facebook-wp-version/images/icon.png" md5="3bb1f77f50310c05f150d8c8856dded3"/>
-		<file filename="_facebook-wp-version/images/logo.png" md5="29c384864d2945c74afc91acbdaf81f0"/>
-		<file filename="_facebook-wp-version/images/nux_app_settings.png" md5="790984bf0e6147008d31fd32f8dd1662"/>
-		<file filename="_facebook-wp-version/images/nux_create_app.png" md5="fe47c9aa7f1a4946d02c8f8b360c7ef6"/>
-		<file filename="_facebook-wp-version/images/settings_comments.png" md5="fd25e42e908ece9a9c55115f1ff92893"/>
-		<file filename="_facebook-wp-version/images/settings_like_button.png" md5="7e58d455fc959795181fe5da8a5799a7"/>
-		<file filename="_facebook-wp-version/images/settings_recommendations_bar.png" md5="b5121795f916c81be99dd5fbc90f4f02"/>
-		<file filename="_facebook-wp-version/images/settings_send_button.png" md5="260218545bd76f7cbf34dfb6f8e2770a"/>
-		<file filename="_facebook-wp-version/images/settings_social_publisher.png" md5="7681cba0bb3e2cde8c26d1b14ca11d5a"/>
-		<file filename="_facebook-wp-version/images/settings_subscribe_button.png" md5="04bde2cfe6f1f03d0c63fc1239dfa463"/>
-		<file filename="_facebook-wp-version/includes/facebook-php-sdk/base_facebook.php" md5="91c3c304dc51c1be0f827081e2a7e735">
-			<class name="WP_FacebookApiException"/>
-			<class name="WP_BaseFacebook"/>
-		</file>
-		<file filename="_facebook-wp-version/includes/facebook-php-sdk/class-facebook-wp.php" md5="1b2cc796e7b5e83a95238ab38455b9f9">
-			<class name="Facebook_WP_Extend"/>
-		</file>
-		<file filename="_facebook-wp-version/includes/facebook-php-sdk/facebook.php" md5="513fa7cbb0dedd97d50bec04168e5fd5">
-			<class name="WP_Facebook"/>
-		</file>
-		<file filename="_facebook-wp-version/includes/facebook-php-sdk/fb_ca_chain_bundle.crt" md5="c3055d03e94bbee13c7c6cc3a76083d9"/>
-		<file filename="_facebook-wp-version/lang/index.php" md5="ea7a1bf7a63d76b0f68acc5df7d3e356"/>
-		<file filename="_facebook-wp-version/license.txt" md5="4641e94ec96f98fabc56ff9cc48be14b"/>
-		<file filename="_facebook-wp-version/readme.txt" md5="445b488d514acd0df2fd486eac097491"/>
-		<file filename="_facebook-wp-version/scripts/fb-admin.dev.js" md5="70ddfc0aef71c12d9345fbf8d1962676"/>
-		<file filename="_facebook-wp-version/scripts/fb-admin.js" md5="70ddfc0aef71c12d9345fbf8d1962676"/>
-		<file filename="_facebook-wp-version/scripts/loopj-jquery-tokeninput/jquery.tokeninput.js" md5="8c4cda89f4466040184e6ce9161a540b"/>
-		<file filename="_facebook-wp-version/scripts/loopj-jquery-tokeninput/styles/token-input-facebook.css" md5="746f1dd4569762a3a852af9dd54fa40f"/>
-		<file filename="_facebook-wp-version/scripts/loopj-jquery-tokeninput/styles/token-input-mac.css" md5="1c02d676cea727ac008e571eff4a51d9"/>
-		<file filename="_facebook-wp-version/scripts/loopj-jquery-tokeninput/styles/token-input.css" md5="061fd251519550ffb75af25dfa4da6bb"/>
-		<file filename="_facebook-wp-version/social-plugins/fb-activity-feed.php" md5="1662af4186ed869ec9f0765020e655cc">
-			<class name="Facebook_Activity_Feed"/>
-		</file>
-		<file filename="_facebook-wp-version/social-plugins/fb-comments.php" md5="6ec21d8081d75c19bb3c34d2899edaa1"/>
-		<file filename="_facebook-wp-version/social-plugins/fb-like.php" md5="701e2b2d924da1cc31f449c02343314f">
-			<class name="Facebook_Like_Button"/>
-		</file>
-		<file filename="_facebook-wp-version/social-plugins/fb-recommendations-bar.php" md5="5bf44c94c8cb5a87e26573b7e7480380"/>
-		<file filename="_facebook-wp-version/social-plugins/fb-recommendations.php" md5="c47aa56fcd791adb5acf38049bde1b8d">
-			<class name="Facebook_Recommendations"/>
-		</file>
-		<file filename="_facebook-wp-version/social-plugins/fb-send.php" md5="27af3ad4d507e71c22baef2c291f87c0">
-			<class name="Facebook_Send_Button"/>
-		</file>
-		<file filename="_facebook-wp-version/social-plugins/fb-social-plugins.php" md5="49be45cd0ae2d690a887ffdc4e967fc9"/>
-		<file filename="_facebook-wp-version/social-plugins/fb-subscribe.php" md5="2b8c999150578084f3c8a4c0269ca9de">
-			<class name="Facebook_Subscribe_Button"/>
-		</file>
-		<file filename="_facebook-wp-version/style/hide-wp-comments.css" md5="b7713d29f581d5886cee57501fd7b538"/>
-		<file filename="_facebook-wp-version/style/style-admin.css" md5="3834a986e44dc03d9892eb52f012e144"/>
-		<file filename="_facebook-wp-version/style/style.css" md5="7bcb0f0249b4cbe4ce17f6782f5066e3"/>
 		<file filename="config/configuration.xml.example" md5="fdfc347a814b7eecd64eb15982c0c4a3"/>
-		<file filename="core/CHANGELOG" md5="8ed8a47179fe50e0dd89e35fb9cc4d78"/>
+		<file filename="core/CHANGELOG" md5="195a3757489a84cc27d2e2a5af20f7c0"/>
 		<file filename="core/bootstrap.compiled.php" md5="b1532f0191e3995043ef16588d2d0cc3">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
@@ -866,7 +806,7 @@
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="86f58054362b62b0a0bc760d8f403048">
 			<class name="File_awss3_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="64acaab1b8918ce52853327017a29c4f">
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="22194683157455d907957bca3e56c89d">
 			<class name="File_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="86f975be65d52fef58406c99ff64a459">
@@ -1332,7 +1272,7 @@
 		<file filename="core/models/Insertable.class.php" md5="9fcff9abc48a6750a219ee3df35b48af">
 			<class name="InsertableModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="2374b883962f7b451172bb2f1069d294">
+		<file filename="core/models/PageModel.class.php" md5="c9e7aa9e1be98ca97aada48d28a98f7a">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/SessionModel.class.php" md5="7e5409686e6d110839bd07e09eada796">
@@ -1507,6 +1447,7 @@
 		<upgrade from="2.2.0" to="2.2.1"/>
 		<upgrade from="2.2.1" to="2.2.2"/>
 		<upgrade from="2.2.2" to="2.2.3"/>
+		<upgrade from="2.2.3" to="2.2.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -385,10 +385,13 @@ class File_local_backend implements File_Backend {
 			$ext  = $this->getExtension();
 			$base = $this->getBaseFilename(true);
 			$dir  = dirname($this->_filename);
+			$prefix = $dir . '/' . $base;
+			$suffix = (($ext == '') ? '' : '.' . $ext);
+			$thathash = $src->getHash();
 
-			$f = $dir . '/' . $base . (($ext == '') ? '' : '.' . $ext);
-			while (file_exists($f)) {
-				$f = $dir . '/' . $base . ' (' . ++$c . ')' . (($ext == '') ? '' : '.' . $ext);
+			$f = $prefix . $suffix;
+			while(file_exists($f) && md5_file($f) != $thathash){
+				$f = $prefix . ' (' . ++$c . ')' . $suffix;
 			}
 
 			$this->_filename = $f;
