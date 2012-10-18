@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.5.6~core1" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.5.6~core2" name="TinyMCE" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 		<require name="jquery" type="library"/>
@@ -12,15 +12,15 @@
 		<formelement name="wysiwyg" class="TinyMCEFormElement"/>
 	</forms>
 	<view>
-		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="003381be6058eee80b1ff6bbd2942664"/>
+		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="2d1d9893d6d2e518eaa953eb460df23d"/>
 		<file filename="templates/pages/tinymce/link.phtml" md5="524d952e87774b2bafd2324e7c15274b"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG.md" md5="f840f477d4b82eacdfbbc300241f881e"/>
+		<file filename="CHANGELOG" md5="7472cb9d7c602ff597f251860a24f4cb"/>
 		<file filename="TinyMCE.lib.php" md5="299af7d3375295c954d6c514a22baae5">
 			<class name="TinyMCE"/>
 		</file>
-		<file filename="TinyMCEFormElement.class.php" md5="58cab895018bf6f02f884c1a767aa60e">
+		<file filename="TinyMCEFormElement.class.php" md5="7dd474f90c845e5ae1bcfdb5cfc2ec39">
 			<class name="TinyMCEFormElement"/>
 		</file>
 		<file filename="changelog.txt" md5="2c4cc5de57ffd55f39c2cfcac0e73179"/>
@@ -299,6 +299,7 @@
 		<upgrade from="3.4.6~core2" to="3.5.5~core1"/>
 		<upgrade from="3.5.5~core1" to="3.5.5~core2"/>
 		<upgrade from="3.5.5~core2" to="3.5.6~core1"/>
+		<upgrade from="3.5.6~core1" to="3.5.6~core2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

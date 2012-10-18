@@ -1,5 +1,5 @@
 {script library="tinymce"}{/script}
-<div class="{$element->getClass()}">
+<div class="{$element->getClass()} {$element->get('id')}">
 	{if $element->get('title')}
 		<label for="{$element->get('name')}">{$element->get('title')|escape}</label>
 	{/if}
@@ -8,5 +8,5 @@
 		<p class="formdescription">{$element->get('description')}</p>
 	{/if}
 	
-	<textarea{$element->getInputAttributes()} name="{$element->get('name')}" class="tinymce">{$element->get('value')}</textarea>
+	<textarea{$element->getInputAttributes()} name="{$element->get('name')}" >{$element->get('value')}</textarea>
 </div>
