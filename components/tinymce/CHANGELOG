@@ -2,6 +2,7 @@ TinyMCE 3.5.6~core2
 
 	* Fixed some template logic with the wysiwyg editor.
 	* Set the default height to 25 rows, provides more space for viewing the workspace.
+	-- Charlie Powell <charlie@eval.bz>  17 Oct 2012
 
 TinyMCE 3.5.6~core1
 
@@ -12,4 +13,4 @@ TinyMCE 3.5.5-core1
 
 	* Upgraded TinyMCE to newest upstream version.
 	* Removed several plugin icons, such as print and help.
-	-- Charlie Powell <charlie@eval.bz>  21 Jul, 2012
+	-- Charlie Powell <charlie@eval.bz>  21 Jul 2012
