@@ -298,6 +298,19 @@ class GalleryImageModel extends Model {
 			}
 		}
 
+		// This one is just all sorts of difficult...
+		if(preg_match('#/1$#', $dat['ExposureTime'])){
+			// This is a whole number.... simple enough!
+			$dat['ExposureTime'] = substr($dat['ExposureTime'], 0, strpos($dat['ExposureTime'], '/'));
+		}
+		elseif(strpos($dat['ExposureTime'], '1/') === false){
+			// Well, it should have damnit!  It's in a weird format like 833/10000 or 3/25....
+			$n = substr($dat['ExposureTime'], 0, strpos($dat['ExposureTime'], '/'));
+			$d = substr($dat['ExposureTime'], strpos($dat['ExposureTime'], '/') + 1);
+			$dat['ExposureTime'] = '1/' . round($d / $n);
+		}
+
+
 		$dat['Dimensions'] = $dat['Width'] . ' x ' . $dat['Height'];
 
 		switch($dat['ExposureProgram']){
@@ -315,7 +328,7 @@ class GalleryImageModel extends Model {
 		switch($dat['MeteringMode']){
 			case 0:   $dat['MeteringModeDesc'] = "Unknown"; break;
 			case 1:   $dat['MeteringModeDesc'] = "Average"; break;
-			case 2:   $dat['MeteringModeDesc'] = "CenterWeightedAverage"; break;
+			case 2:   $dat['MeteringModeDesc'] = "Center-Weighted Average"; break;
 			case 3:   $dat['MeteringModeDesc'] = "Spot"; break;
 			case 4:   $dat['MeteringModeDesc'] = "MultiSpot"; break;
 			case 5:   $dat['MeteringModeDesc'] = "Pattern"; break;
@@ -448,7 +461,7 @@ seconds, respectively. If latitude is expressed as degrees, minutes and seconds,
 dd/1,mm/1,ss/1. When degrees and minutes are used and, for example, fractions of minutes are given up to two
 decimal places, the format would be dd/1,mmmm/100,0/1.
 		 */
-		if(isset($exif['GPSVersion'])){
+		if(isset($exif['GPSVersion']) && isset($exif['GPSLatitude'])){
 			$dat['GPS'] = array('lat' => null, 'lng' => null, 'alt' => null);
 			$dat['GPS']['lat'] = '(' . $exif['GPSLatitude'][0] . ') + ( ((' . $exif['GPSLatitude'][1] . ') * 60) + (' . $exif['GPSLatitude'][2] . ') ) / 3600';
 			$dat['GPS']['lng'] = '(' . $exif['GPSLongitude'][0] . ') + ( ((' . $exif['GPSLongitude'][1] . ') * 60) + (' . $exif['GPSLongitude'][2] . ') ) / 3600';
@@ -461,7 +474,7 @@ decimal places, the format would be dd/1,mmmm/100,0/1.
 			}
 
 			if($exif['GPSLatitudeRef'] == 'S') $dat['GPS']['lat'] = (0 - $dat['GPS']['lat']);
-			if($exif['GPSLatitudeRef'] == 'W') $dat['GPS']['lng'] = (0 - $dat['GPS']['lng']);
+			if($exif['GPSLongitudeRef'] == 'W') $dat['GPS']['lng'] = (0 - $dat['GPS']['lng']);
 		}
 
 		return $dat;

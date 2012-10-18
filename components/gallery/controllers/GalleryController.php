@@ -511,6 +511,11 @@ class GalleryController extends Controller_2_1 {
 		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
 		$uploader = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
 
+		// Uploaders only can only edit their own image!
+		if(!$editor && $image->get('uploaderid') != \Core\user()->get('id')){
+			$uploader = false;
+		}
+
 		// I still need all the other images to know where this image lies in the stack!
 		$images = $album->getLink('GalleryImage', 'weight');
 
@@ -526,6 +531,7 @@ class GalleryController extends Controller_2_1 {
 		$link = $image->getRewriteURL();
 		$exif = $image->getExif();
 
+		//var_dump($exif); die();
 		/*
 
 		foreach($exif as $k => $v){

@@ -66,9 +66,16 @@
 					<span class="hide" style="display:none;">less info [-]</span>
 				</div>
 				<div class="gallery-image-detailspane-exposureaperture">
-					<span title="Exposure of {$exif.ExposureTime}th of a second">
-						{$exif.ExposureTime}th
-					</span>
+					{if is_numeric($exif.ExposureTime) && $exif.ExposureTime >= 1}
+						<span title="{$exif.ExposureTime} second exposure time">
+							{$exif.ExposureTime} second{if $exif.ExposureTime > 1}s{/if}
+						</span>
+					{else}
+						<span title="{$exif.ExposureTime}th of a second exposure time">
+							{$exif.ExposureTime}th
+						</span>
+					{/if}
+
 					@
 					<span title="Aperture of f/{$exif.FNumber}">
 						f/{$exif.FNumber}
@@ -108,11 +115,15 @@
 					<span class="extralabel">Exposure Program:</span>
 					{$exif.ExposureProgramDesc}<br/>
 
-					<span class="extralabel">Shutter Speed:</span>
-					{$exif.ShutterSpeedValue}<br/>
+					{if $exif.ShutterSpeedValue}
+						<span class="extralabel">Shutter Speed:</span>
+						{$exif.ShutterSpeedValue} EV<br/>
+					{/if}
 
-					<span class="extralabel">Aperture Value:</span>
-					{$exif.ApertureValue}<br/>
+					{if $exif.ApertureValue}
+						<span class="extralabel">Aperture Value:</span>
+						{$exif.ApertureValue}<br/>
+					{/if}
 
 					<span class="extralabel">Max Aperture:</span>
 					{$exif.MaxApertureValue}<br/>
@@ -123,10 +134,15 @@
 					<span class="extralabel">Light Source:</span>
 					{$exif.LightSourceDesc}<br/>
 
-					{if $exif.Artist && $exif.Artist != 'unknown'}<span class="extralabel">Artist:</span> {$exif.Artist}<br/>{/if}
+					{if $exif.Artist && $exif.Artist != 'unknown'}
+						<span class="extralabel">Artist:</span>
+						{$exif.Artist}<br/>
+					{/if}
 
-					<span class="extralabel">Copyright:</span>
-					{$exif.Copyright}<br/>
+					{if $exif.Copyright}
+						<span class="extralabel">Copyright:</span>
+						{$exif.Copyright}<br/>
+					{/if}
 				</div>
 			{/if}
 			<div class="clear"></div>
@@ -164,10 +180,19 @@
 						//region: $formels.country.val()
 						//region: 'us'
 					}, function(result, status){
-						//console.log(result);
+						//console.log(result[0]);
+						//console.log(result[0].address_components[3].long_name + ', ' + result[0].address_components[5].long_name);
 
 						if(status == 'OK'){
-							$('.gallery-image-detailspane-location').html(result[0].formatted_address).show();
+							{if $uploader}
+								$('.gallery-image-detailspane-location').html(result[0].formatted_address).show();
+							{else}
+								$('.gallery-image-detailspane-location').html(
+									result[0].address_components[3].long_name + ', ' + result[0].address_components[5].long_name
+								).show();
+
+							{/if}
+
 							$('.gallery-image-detailspane-location-date-separator').show();
 						}
 					}
