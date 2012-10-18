@@ -279,7 +279,7 @@ var NavigationManager = null;
 				$target = $renderarea.find('li[entryid=' + id + ']').find('div.entry');
 
 			// Lookup the current parent.
-			if (parent === null) parent = $target.find(':input[name="entries[' + id + '][parent]').val();
+			if (parent === null) parent = $target.find(':input[name="entries[' + id + '][parent]"]').val();
 
 			// Create the payload first, this is just basic HTML.
 			// This is because it's quicker than updating the inputs and trying to find the specific title.

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.0" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.1" name="Navigation" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 	</requires>
 	<files>
+		<file filename="CHANGELOG" md5="8f9469d9de084f2e359d0e665df40e2b"/>
 		<file filename="controllers/NavigationController.php" md5="f609072de0e71e7ba8e0b07c4959847a">
 			<controller name="NavigationController"/>
 		</file>
@@ -19,20 +20,12 @@
 		</file>
 	</files>
 	<view>
-		<file filename="templates/pages/navigation/index.tpl" md5="3b93dd42e0f3540bbd6721bbe5bc1f6c"/>
-		<file filename="templates/pages/navigation/view.tpl" md5="b149433e9927396cb65c8e2880395663"/>
 		<file filename="templates/pages/navigation/create.tpl" md5="75c1c4157d0b64b0f5e05fa3a0ee9846"/>
-		<file filename="templates/pages/navigation/edit.tpl" md5="a6eda39bbc1a33dac2888ffe43ab7868"/>
-		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="bbebd462f42a257770490bf9d27eb3ce"/>
-		<file filename="templates/pages/navigation/delete.tpl" md5="64255b05d03ba0b58cbacb107e2b2dff"/>
-		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="f8b6126ab183b1de32f441d0428dc8cb"/>
-		<file filename="templates/pages/navigation/delete.tpl" md5="76e1949488cb9acaaf83eb1a95c9abd5"/>
-		<file filename="templates/pages/navigation/index.tpl" md5="51899b04fee941b09977465f79515993"/>
-		<file filename="templates/pages/navigation/view.tpl" md5="44b506f0e3ca0a1bfef9d5f4b992a8c0"/>
-		<file filename="templates/widgets/navigation/_menu.inc.tpl" md5="bfb71b60e009439c85c520df6f496d79"/>
-		<file filename="templates/widgets/navigation/view.tpl" md5="6fb708355f550ba2945b81ad359957fa"/>
 		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="4031fb3dc83afb83f716a6150a479a55"/>
+		<file filename="templates/pages/navigation/delete.tpl" md5="76e1949488cb9acaaf83eb1a95c9abd5"/>
+		<file filename="templates/pages/navigation/edit.tpl" md5="a6eda39bbc1a33dac2888ffe43ab7868"/>
 		<file filename="templates/pages/navigation/index.tpl" md5="8fbbccd35a3cbc609cc8845b6a3a45ee"/>
+		<file filename="templates/pages/navigation/view.tpl" md5="44b506f0e3ca0a1bfef9d5f4b992a8c0"/>
 		<file filename="templates/widgets/navigation/_menu.inc.tpl" md5="90dbd8a3b4b2a96a44136ed7a39e9dda"/>
 		<file filename="templates/widgets/navigation/siblings.tpl" md5="15e80b7f0ae2230cc8ff57d316ff6124"/>
 		<file filename="templates/widgets/navigation/siblingsandchildren.tpl" md5="2a5a80e0fdd98d02f7695367a89e9015"/>
@@ -46,13 +39,14 @@
 		<widget baseurl="/navigation/siblingsandchildren" title="Page Siblings w/Children Nav"/>
 	</widgets>
 	<assets>
-		<file filename="assets/js/navigation/manager.js" md5="f3df8f2c0b3e640b1153fdcbb9a5decb"/>
+		<file filename="assets/js/navigation/manager.js" md5="e7852b3c06f5b208e35b1cb5ad08f84f"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>
 		<upgrade from="1.9.0" to="1.9.1"/>
 		<upgrade from="1.9.1" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.1.0"/>
+		<upgrade from="2.1.0" to="2.1.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
