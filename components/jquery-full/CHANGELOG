@@ -1,3 +1,9 @@
+JQuery-Full 1.8.2~core1
+
+	* Updated jQuery to version 1.8.2
+	* Updated jQueryUI to version 1.9.0
+	-- Nicholas Hinsch <nicholas@eval.bz>  18 Oct 2012
+
 JQuery-Full 1.8.0~core3
 
 	* Added jquery.timepicker plugin
