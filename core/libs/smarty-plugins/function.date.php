@@ -35,11 +35,8 @@ function smarty_function_date($params, $template){
 
 	$date = $params['date'];
 	$format = isset($params['format']) ? $params['format'] : 'RELATIVE';
+	//$timezone = isset($params['timezone']) ? $params['timezone'] : Time::TIMEZONE_GMT;
 
-	if($format == 'RELATIVE'){
-		return Time::GetRelativeAsString($date, Time::TIMEZONE_USER);
-	}
-	else{
-		return Time::FormatGMT($date, Time::TIMEZONE_USER, $format);
-	}
+	$coredate = new CoreDateTime($date);
+	return $coredate->getFormatted($format);
 }

@@ -1286,13 +1286,18 @@ class Component_2_1 {
 			//<userconfig key="first_name" name="First Name"/>
 			//<userconfig key="last_name" name="Last Name" default="" formtype="" onregistration="" options=""/>
 
-			$key      = $confignode->getAttribute('key');
-			$name     = $confignode->getAttribute('name');
-			$default  = $confignode->getAttribute('default');
-			$formtype = $confignode->getAttribute('formtype');
-			$onreg    = $confignode->getAttribute('onregistration');
-			$onedit   = $confignode->getAttribute('onedit');
-			$options  = $confignode->getAttribute('options');
+			$key        = $confignode->getAttribute('key');
+			$name       = $confignode->getAttribute('name');
+			$default    = $confignode->getAttribute('default');
+			$formtype   = $confignode->getAttribute('formtype');
+			$onreg      = $confignode->getAttribute('onregistration');
+			$onedit     = $confignode->getAttribute('onedit');
+			$options    = $confignode->getAttribute('options');
+			$validation = $confignode->getAttribute('validation');
+
+			// Defaults
+			if($onreg === null) $onreg = 1;
+			if($onedit === null) $onedit = 1;
 
 			$model = UserConfigModel::Construct($key);
 			$model->set('name', $name);
@@ -1301,6 +1306,7 @@ class Component_2_1 {
 			$model->set('onregistration', $onreg);
 			$model->set('onedit', $onedit);
 			if($options)  $model->set('options', $options);
+			$model->set('validation', $validation);
 
 			if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
 		}

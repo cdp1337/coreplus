@@ -447,8 +447,6 @@ class PageRequest {
 	 *
 	 * "Core" parameters are returned on a 0-based index, whereas named GET variables are returned with their respective name.
 	 *
-	 * @param $key string|int The parameter to request
-	 *
 	 * @return array
 	 */
 	public function getParameters() {

@@ -1,3 +1,18 @@
+Core Plus 2.2.5
+
+	* Added logic to prevent URLs with a '#' in them.
+	* Added a new class to handle datetimes, CoreDateTime.  This has better support for non-GMT unix timestamps by using
+	the DateTime object more directly.  (Legacy Time class was based on php < 5.2 logic.)
+	* Minor tweak in the file preview system to strip spaces from the filenames.
+	* Fixed a major bug in the core component loader.  Installed components were being listed as being loaded and activated
+	before they were technically available.
+	* Added support for custom user config validation.
+	* Added "Registered Hooks" in the debug information at the bottom of the page.
+	* Added support for resizing images with different rules, ie: fill mode or ignore aspect ratio.
+	* Updated how widget parameters can be passed in.  Now smarty-style parameters are supports with the {widget} function.
+	* Added a getRequest function for widgets.  Useful for getting the calling parameters.
+	-- Charlie Powell <charlie@eval.bz>  21 Oct 2012
+
 Core Plus 2.2.4
 
 	* Fixed a bug on the page URL validation for the home page

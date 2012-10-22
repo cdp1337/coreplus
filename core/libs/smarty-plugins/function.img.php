@@ -47,7 +47,7 @@ function smarty_function_img($params, $template){
 	}
 	
 	// Some optional parameters, (and their defaults)
-	$assign = $width = $height = false;
+	$assign = $width = $height = $dimensions = false;
 	$placeholder = null;
 	
 	if(isset($params['assign'])){
@@ -65,17 +65,29 @@ function smarty_function_img($params, $template){
 		unset($params['height']);
 	}
 
+	if(isset($params['dimensions'])){
+		$dimensions = $params['dimensions'];
+		unset($params['dimensions']);
+	}
+
 	if(isset($params['placeholder'])){
 		$placeholder = $params['placeholder'];
 		unset($params['placeholder']);
 	}
 	
-	
-	// If one is provided but not the other, just make them the same.
-	if($width && !$height) $height = $width;
-	if($height && !$width) $width = $height;
-	
-	$d = ($width && $height) ? $width . 'x' . $height : false;
+
+	if($dimensions){
+		// Passing in dimensions raw will allow the user more control over the size of the images.
+		$d = $dimensions;
+	}
+	else{
+		// If one is provided but not the other, just make them the same.
+		if($width && !$height) $height = $width;
+		if($height && !$width) $width = $height;
+
+		$d = ($width && $height) ? $width . 'x' . $height : false;
+	}
+
 
 
 	// If the file doesn't exist and a placeholder was provided, use the appropriate placeholder image!

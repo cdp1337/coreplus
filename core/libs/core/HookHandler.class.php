@@ -190,7 +190,7 @@ class Hook {
 	 *
 	 * @param mixed $_
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public function dispatch($args = null) {
 		//echo "Dispatching event " . $this->getName() . "<br/>";
@@ -217,6 +217,10 @@ class Hook {
 
 	public function getName() {
 		return strtolower($this->name);
+	}
+
+	public function getBindingCount(){
+		return sizeof($this->_bindings);
 	}
 }
 

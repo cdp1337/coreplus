@@ -31,6 +31,13 @@ class Widget_2_1 {
 	private $_view = null;
 
 	/**
+	 * The widget request object for this call.
+	 *
+	 * @var WidgetRequest
+	 */
+	private $_request = null;
+
+	/**
 	 * The WidgetInstance for this request.  Every widget MUST be instanced on some widgetarea.
 	 *
 	 * @var WidgetInstanceModel
@@ -75,6 +82,14 @@ class Widget_2_1 {
 		}
 
 		return $this->_view;
+	}
+
+	public function getRequest(){
+		if($this->_request === null){
+			$this->_request = new WidgetRequest();
+		}
+
+		return $this->_request;
 	}
 
 
@@ -138,4 +153,30 @@ class Widget_2_1 {
 		return new $name();
 	}
 
+}
+
+class WidgetRequest{
+	public $parameters = array();
+
+	/**
+	 * Get all parameters from the GET or inline variables.
+	 *
+	 * "Core" parameters are returned on a 0-based index, whereas named GET variables are returned with their respective name.
+	 *
+	 * @return array
+	 */
+	public function getParameters() {
+		return $this->parameters;
+	}
+
+	/**
+	 * Get a single parameter from the GET or inline variables.
+	 *
+	 * @param $key string|int The parameter to request
+	 *
+	 * @return null|string
+	 */
+	public function getParameter($key) {
+		return (array_key_exists($key, $this->parameters)) ? $this->parameters[$key] : null;
+	}
 }

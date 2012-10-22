@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 14 Oct 2012 05:44:30 -0400
+ * @compiled Tue, 16 Oct 2012 14:53:51 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1805,8 +1805,11 @@ public function validateRewriteURL($v) {
 if (!$v) return true;
 if ($v == $this->_data['baseurl']) return true;
 if ($v{0} != '/') return "Rewrite URL must start with a '/'";
+if(strpos($v, '#') !== false){
+return 'Invalid Rewrite URL, cannot contain a pound sign (#).';
+}
 $controller = substr($v, 1, ( (strpos($v, '/', 1) !== false) ? strpos($v, '/', 1) : strlen($v)) );
-if(class_exists($controller . 'Controller')){
+if($controller && class_exists($controller . 'Controller')){
 return 'Invalid Rewrite URL, "' . $controller . '" is a reserved system name!';
 }
 $ds = Dataset::Init()
@@ -4181,9 +4184,12 @@ $c    = 0;
 $ext  = $this->getExtension();
 $base = $this->getBaseFilename(true);
 $dir  = dirname($this->_filename);
-$f = $dir . '/' . $base . (($ext == '') ? '' : '.' . $ext);
-while (file_exists($f)) {
-$f = $dir . '/' . $base . ' (' . ++$c . ')' . (($ext == '') ? '' : '.' . $ext);
+$prefix = $dir . '/' . $base;
+$suffix = (($ext == '') ? '' : '.' . $ext);
+$thathash = $src->getHash();
+$f = $prefix . $suffix;
+while(file_exists($f) && md5_file($f) != $thathash){
+$f = $prefix . ' (' . ++$c . ')' . $suffix;
 }
 $this->_filename = $f;
 }

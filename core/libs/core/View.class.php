@@ -593,6 +593,15 @@ class View {
 						$v->getName() . ' ' . $v->getVersion() . "\n";
 				}
 
+				// I wanna see what hooks are registered too!
+				$debug .= "\n" . '<b>Registered Hooks</b>' . "\n";
+				foreach(HookHandler::GetAllHooks() as $hook){
+					/** @var $hook Hook */
+					$debug .= $hook->name;
+					if($hook->description) $debug .= ' <i> - ' . $hook->description . '</i>';
+					$debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
+				}
+
 				// I want to see how many files were included.
 				$debug .= "\n" . '<b>Included Files</b>' . "\n";
 				$debug .= 'Number: ' . sizeof(get_included_files()) . "\n";
@@ -1011,6 +1020,10 @@ class View {
 
 	public static function AddMeta($string) {
 		if (strpos($string, '<meta') === false) $string = '<meta ' . $string . '/>';
+		PageRequest::GetSystemRequest()->getView()->head[] = $string;
+	}
+
+	public static function AddHead($string){
 		PageRequest::GetSystemRequest()->getView()->head[] = $string;
 	}
 

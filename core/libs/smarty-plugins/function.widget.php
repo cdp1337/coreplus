@@ -54,7 +54,7 @@ function smarty_function_widget($params, $template){
 	}
 	// @todo Add support for requiring instancing.
 	
-
+	/** @var $w Widget_2_1 */
 	$w = new $name();
 	// Version 1.0 API
 	if($api == 1.0){
@@ -63,6 +63,14 @@ function smarty_function_widget($params, $template){
 	// Version 2.0 API
 	elseif($api == 2.0){
 		$w->_params = $parameters;
+
+		// Populate the request with the inbound data too.
+		$request = $w->getRequest();
+		if(isset($params['baseurl'])) unset($params['baseurl']);
+
+		if($parameters) $request->parameters = array_merge($params, $parameters);
+		else $request->parameters = $params;
+
 		$return = call_user_func(array($w, $method));
 		$dat = null;
 

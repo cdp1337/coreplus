@@ -204,6 +204,10 @@ class PageModel extends Model {
 
 		if ($v{0} != '/') return "Rewrite URL must start with a '/'";
 
+		if(strpos($v, '#') !== false){
+			return 'Invalid Rewrite URL, cannot contain a pound sign (#).';
+		}
+
 		// See if the controller segment matches an existing controller.  This cannot happen because
 		// that controller would no longer be accessible, example:
 		// Blog::View, Blog::Create, etc and /blog.

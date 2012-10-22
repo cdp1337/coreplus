@@ -491,16 +491,44 @@ class File_local_backend implements File_Backend {
 		if (is_numeric($dimensions)) {
 			$width  = $dimensions;
 			$height = $dimensions;
+			$mode = '';
 		}
 		elseif ($dimensions === null) {
 			$width  = 300;
 			$height = 300;
+			$mode = '';
 		}
 		elseif($dimensions === false){
 			$width = false;
 			$height = false;
+			$mode = '';
 		}
 		else {
+			// Allow some special modifiers.
+			if(strpos($dimensions, '^') !== false){
+				// Fit the smallest dimension instead of the largest, (useful for overflow tricks)
+				$mode = '^';
+				$dimensions = str_replace('^', '', $dimensions);
+			}
+			elseif(strpos($dimensions, '!') !== false){
+				// Absolutely resize, regardless of aspect ratio
+				$mode = '!';
+				$dimensions = str_replace('!', '', $dimensions);
+			}
+			elseif(strpos($dimensions, '>') !== false){
+				// Only increase images.
+				$mode = '>';
+				$dimensions = str_replace('>', '', $dimensions);
+			}
+			elseif(strpos($dimensions, '<') !== false){
+				// Only decrease images.
+				$mode = '<';
+				$dimensions = str_replace('<', '', $dimensions);
+			}
+			else{
+				// Default mode
+				$mode = '';
+			}
 			// New method. Split on the "x" and that should give me the width/height.
 			$vals   = explode('x', strtolower($dimensions));
 			$width  = (int)$vals[0];
@@ -514,15 +542,19 @@ class File_local_backend implements File_Backend {
 		//  might conflict without this hash.
 		// Finally, the width and height dimensions are there just because as well; it gives more of a human
 		//  touch to the file. :p
-		$key = $this->getBaseFilename(true) . '-preview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
+		$key = str_replace(' ', '-', $this->getBaseFilename(true)) . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.png';
 
 		if (!$this->exists()) {
 			// Log it so the admin knows that the file is missing, otherwise nothing is shown.
 			error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
 
 			// Return a 404 image.
-			$size = Core::TranslateDimensionToPreviewSize($width, $height);
-			return Core::ResolveAsset('mimetype_icons/notfound-' . $size . '.png');
+			$file = Core::File('assets/mimetype_icons/notfound.png');
+			if($width === false) return $file->getURL();
+			else return $file->getPreviewURL($dimensions);
+
+			//$size = Core::TranslateDimensionToPreviewSize($width, $height);
+			//return Core::ResolveAsset('mimetype_icons/notfound-' . $size . '.png');
 		}
 		elseif ($this->isPreviewable()) {
 			// If no resize was requested, simply return the full size image.
@@ -531,7 +563,7 @@ class File_local_backend implements File_Backend {
 			// Yes, this must be within public because it's meant to be publically visible.
 			$file = Core::File('public/tmp/' . $key);
 			if (!$file->exists()) {
-				$img2 = $this->_getResizedImage($width, $height);
+				$img2 = $this->_getResizedImage($width, $height, $mode);
 				// Save this image to cache.
 				imagepng($img2, TMP_DIR . $key);
 				$file->putContents(file_get_contents(TMP_DIR . $key));
@@ -766,7 +798,7 @@ class File_local_backend implements File_Backend {
 	}
 
 
-	private function _getResizedImage($width, $height) {
+	private function _getResizedImage($width, $height, $mode = '') {
 		$m = $this->getMimetype();
 
 		if ($this->isImage()) {
@@ -788,15 +820,51 @@ class File_local_backend implements File_Backend {
 				$nW = $sW;
 				$nH = $sH;
 
-				if ($nW > $width) {
-					$nH = $width * $sH / $sW;
-					$nW = $width;
+
+				switch($mode){
+					// Standard mode, images are scaled down (only) while preserving aspect ratio
+					case '':
+					case '<':
+						if ($nW > $width) {
+							$nH = $width * $sH / $sW;
+							$nW = $width;
+						}
+
+						if ($nH > $height) {
+							$nW = $height * $sW / $sH;
+							$nH = $height;
+						}
+						break;
+					// Only resize up
+					case '>':
+						if ($nW < $width) {
+							$nH = $width * $sH / $sW;
+							$nW = $width;
+						}
+
+						if ($nH < $height) {
+							$nW = $height * $sW / $sH;
+							$nH = $height;
+						}
+						break;
+					// Resize to new size, regardless about aspect ratio
+					case '!':
+						$nW = $width;
+						$nH = $height;
+						break;
+					// Resize image based on smallest dimension
+					case '^':
+						if(($width * $sH / $sW) > ($height * $sW / $sH)){
+							$nH = $width * $sH / $sW;
+							$nW = $width;
+						}
+						else{
+							$nH = $height;
+							$nW = $height * $sW / $sH;
+						}
+						break;
 				}
 
-				if ($nH > $height) {
-					$nW = $height * $sW / $sH;
-					$nH = $height;
-				}
 
 				$img2 = imagecreatetruecolor($nW, $nH);
 				imagealphablending($img2, false);

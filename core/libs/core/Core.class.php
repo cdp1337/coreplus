@@ -281,6 +281,7 @@ class Core implements ISingleton {
 
 		$this->_components = array();
 		$this->_libraries  = array();
+		$tempcomponents    = array();
 
 		// If the site is in DEVELOPMENT mode, component caching would probably be a bad idea; ie: the developer probably wants
 		// those component files loaded everytime.
@@ -295,7 +296,7 @@ class Core implements ISingleton {
 		// since it will no longer have to run through each component.xml file to register each one.
 		if(!$enablecache || ($cachedcomponents = Cache::GetSystemCache()->get('core-components', (3600 * 24))) === false){
 			// Core is first, (obviously)
-			$this->_components['core'] = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
+			$tempcomponents['core'] = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
 
 			// First, build my cache of components, regardless if the component is installed or not.
 			$dh = opendir(ROOT_PDIR . 'components');
@@ -328,14 +329,14 @@ class Core implements ISingleton {
 				}
 
 
-				$this->_components[$file] = $c;
+				$tempcomponents[$file] = $c;
 				unset($c);
 			}
 			closedir($dh);
 
 			// Now I probably could actually load the components!
 
-			foreach ($this->_components as $c) {
+			foreach ($tempcomponents as $c) {
 				try {
 					// Load some of the data in the class so that it's available in the cached version.
 					// This is because the component 2.1 has built-in caching for many of the XML requests.
@@ -355,15 +356,15 @@ class Core implements ISingleton {
 
 			// Cache this list!
 			if($enablecache){
-				Cache::GetSystemCache()->set('core-components', $this->_components);
+				Cache::GetSystemCache()->set('core-components', $tempcomponents);
 			}
 		}
 		else{
 			// Yay, cache is available.
-			$this->_components = $cachedcomponents;
+			$tempcomponents = $cachedcomponents;
 		}
 
-		$list = $this->_components;
+		$list = $tempcomponents;
 
 
 		// The core component at a minimum needs to be loaded and registered.
@@ -393,6 +394,7 @@ class Core implements ISingleton {
 						$c->upgrade();
 					}
 
+					$this->_components[$n] = $c;
 					$this->_registerComponent($c);
 					unset($list[$n]);
 					continue;
@@ -404,6 +406,7 @@ class Core implements ISingleton {
 				if ($c->isInstalled() && $c->needsUpdated() && $c->isLoadable()) {
 					$c->upgrade();
 					$c->loadFiles();
+					$this->_components[$n] = $c;
 					$this->_registerComponent($c);
 					unset($list[$n]);
 					continue;
@@ -412,6 +415,7 @@ class Core implements ISingleton {
 				// Allow packages to be auto-installed if in DEV mode.
 				// If DEV mode is not enabled, just install the new component, do not enable it.
 				if (!$c->isInstalled() && $c->isLoadable()) {
+					var_dump($c, $this);
 					// w00t
 					$c->install();
 					if(!DEVELOPMENT_MODE){
@@ -420,6 +424,7 @@ class Core implements ISingleton {
 					else{
 						$c->enable();
 						$c->loadFiles();
+						$this->_components[$n] = $c;
 						$this->_registerComponent($c);
 					}
 					unset($list[$n]);
