@@ -1,8 +1,9 @@
 {if count($articles) == 0}
-<p class="message-info">This blog has no articles created yet, please try back later.</p>
+	<p class="message-info">This blog has no articles created yet, please try back later.</p>
 {/if}
 
 <div itemscope itemtype="http://schema.org/Blog">
+	<h1>{$page.title}</h1>
 	{if $page.description}
 		<div itemprop="description" style="display:none;">{$page.description}</div>
 	{/if}

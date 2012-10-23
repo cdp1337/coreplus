@@ -1,14 +1,10 @@
 <div itemscope itemtype="http://schema.org/BlogPosting" class="blog-article" xmlns="http://www.w3.org/1999/html">
+
+	<h1>{$article.title}</h1>
+
 	<div class="blog-article-posting-stats">
-		{if $author}
-			<div class="blog-article-author">
-					{if $author->get('avatar')}
-						{img src="public/user/`$author->get('avatar')`" width="64" height="64" itemprop="image"}
-					{/if}
-					By {a href="/user/view/`$author->get('id')`" rel="author"}
-						{$author->getDisplayName()}
-					{/a}
-			</div>
+		{if $author && Core::IsComponentAvailable('user-social')}
+			{widget baseurl="/userprofile/badge" user="$author" title="Posted By" orientation="right"}
 		{/if}
 		<div class="blog-article-date" itemprop="dateCreated" datetime='{date format='c' date="`$article.created`"}'>Posted {date date="`$article.created`"}</div>
 	</div>
