@@ -24,7 +24,7 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		$base = 'jquery-1.8.0';
+		$base = 'jquery-1.8.2';
 
 		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
 		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
@@ -35,8 +35,8 @@ abstract class JQuery {
 	
 	public static function IncludeJQueryUI(){
 		self::IncludeJQuery();
-		CurrentPage::AddScript ('js/jquery/jquery-ui-1.8.22.min.js');
-		CurrentPage::AddStylesheet('css/jquery-ui-1.8.22.css');
+		CurrentPage::AddScript ('js/jquery/jquery-ui-1.9.0.min.js');
+		CurrentPage::AddStylesheet('css/jquery-ui-1.9.0.css');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
