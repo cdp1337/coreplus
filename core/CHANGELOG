@@ -1,3 +1,12 @@
+Core Plus 2.2.6
+
+	* Fixed the navigation history in Core+.  Now saves the last 5 GET requests in history.
+	* Fixed the "GoBack" function of Core.
+	* Updated some documentation.
+	* Added a "isGet" method on the current page request.
+	* Added a "record" property onto the View.  Useful for indicating that certain pages shouldn't be recorded by analytical tools.
+	-- Charlie Powell <charlie@eval.bz>  22 Oct 2012
+
 Core Plus 2.2.5
 
 	* Added logic to prevent URLs with a '#' in them.

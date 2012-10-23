@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.5" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.6" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -20,6 +20,7 @@
 		<hook name="/core/page/prerender" call="Core::_AttachCoreJavascript"/>
 		<hook name="components_ready" call="Form::CheckSavedSessionData"/>
 		<hook name="/core/page/error-404" call="GettingStartedController::_HookCatch404"/>
+		<hook name="/core/page/postrender" call="Core::_RecordNavigation"/>
 	</hooks>
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
 	<includes>
@@ -39,8 +40,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="fdfc347a814b7eecd64eb15982c0c4a3"/>
-		<file filename="core/CHANGELOG" md5="d93d23e06f763dd47e49574297815ede"/>
-		<file filename="core/bootstrap.compiled.php" md5="54636a9e1a49186c041eb050e3e41bb3">
+		<file filename="core/CHANGELOG" md5="01c82a369bb5272e2b3bce45d0577fd9"/>
+		<file filename="core/bootstrap.compiled.php" md5="b8b3d9037a02725ddad14917afb7a7de">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -90,6 +91,7 @@
 			<class name="ViewException"/>
 			<class name="ViewControl"/>
 			<class name="Widget_2_1"/>
+			<class name="WidgetRequest"/>
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -491,7 +493,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="da23111d3817635fd7fcad14583bde1a">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="138b63f7a08ea73feec914c50dfcc04c">
+		<file filename="core/libs/core/Core.class.php" md5="56f9f2f76519041630f9a3e41a40c1a7">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -545,7 +547,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="c33121e2c1f075babe730a4cc252ebba">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="b44ffb0357e466c8619e8073899208bf">
+		<file filename="core/libs/core/PageRequest.class.php" md5="291706aace0ec5c28b875489c110779e">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="0528150b9145ee4d1dd243e8348c71a6">
@@ -573,7 +575,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="6193f84ed50e4d96c989b9ef51b15a84">
+		<file filename="core/libs/core/View.class.php" md5="aad149eb83fde42d716bea35ad0051f5">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -1453,6 +1455,7 @@
 		<upgrade from="2.2.2" to="2.2.3"/>
 		<upgrade from="2.2.3" to="2.2.4"/>
 		<upgrade from="2.2.4" to="2.2.5"/>
+		<upgrade from="2.2.5" to="2.2.6"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

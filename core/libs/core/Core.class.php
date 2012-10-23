@@ -1006,8 +1006,34 @@ class Core implements ISingleton {
 		die("If your browser does not refresh, please <a href=\"" . CUR_CALL . "\">Click Here</a>");
 	}
 
-	static public function GoBack() {
-		CAEUtils::redirect(CAEUtils::GetNavigation());
+	/**
+	 * Helper function to just go back to a page before this one.
+	 *
+	 * @param int $depth The amount of pages back to go
+	 */
+	static public function GoBack($depth=2) {
+		if(!isset($_SESSION['nav'])){
+			// No navigation available?  Just go back to the home page!
+			Core::Redirect(ROOT_WDIR);
+		}
+
+		$s = sizeof($_SESSION['nav']);
+		if($depth > $s){
+			// Requested depth greater than the amount of data saved?  HOME PAGE!
+			Core::Redirect(ROOT_WDIR);
+		}
+
+		if($depth <= 0){
+			Core::Redirect(ROOT_WDIR);
+		}
+		//var_dump($_SESSION['nav'], $depth, $_SESSION['nav'][$s - $depth]); die();
+		// I now have the total size of the array and the requested depth of it.
+		// Since the depth will be a One-Index base and the array itself is Zero-Index based,
+		// this will work perfectly to take the sizeof (one-index base) and subtract the requested depth to get the actual key!
+
+		// If the array is 3 keys deep and a depth of 1 was requested (last element),
+		// it'll be 3 - 1, or 2, the last key in a zero-base array!
+		Core::Redirect($_SESSION['nav'][$s - $depth]['uri']);
 	}
 
 	/**
@@ -1060,35 +1086,53 @@ class Core implements ISingleton {
 	/**
 	 * Record this page into the navigation history.
 	 *
-	 * @param string $page
+	 * This will hook into the "/core/page/postrender" hook.
+	 *
 	 */
-	static public function RecordNavigation(PageModel $page) {
-		//echo "Setting navRecord.";
+	static public function _RecordNavigation() {
+		$request = PageRequest::GetSystemRequest();
+		$view = $request->getView();
+
+		// If the page is set to be ignored, do not record it.
+		if(!$view->record) return;
+
+		// Also do not record anything other than a GET request.
+		if(!$request->isGet()) return;
+
 		if (!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
 
-		// Get just the application base, this will contain the parameters for it.
-		// So example, if /App/SomeView/myparam?something=foo is the URL, 
-		// /App/SomeView will be able to be used to lookup the parameters.
-		$c = $page->getControllerClass();
-		// I don't need the 'Controller' part of it.
-		if (strpos($c, 'Controller') == strlen($c) - 10) $c = substr($c, 0, -10);
+		// I can record the base URI here because it's easier to record the actual inbound string than to parse the request afterwards.
+		// (it's just going to get put back into the useragent request to be re-parsed anyway)
+		$rel = substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
+		if($rel === false) $rel = '';
 
-		$base = '/' . $c . '/' . $page->getControllerMethod();
-
-		$_SESSION['nav'][$base] = array(
-			'parameters' => $page->getParameters(),
-			'time'       => Time::GetCurrent(),
+		$dat = array(
+			'uri' => ROOT_URL . $rel,
+			'title' => $view->title,
 		);
+
+		// Skip duplicate requests
+		$s = sizeof($_SESSION['nav']);
+		if($s && $_SESSION['nav'][$s-1]['uri'] == $dat['uri']) return;
+
+		// Otherwise, YAY!
+		// But keep it neatly trimmed at 5 entries.
+		if($s >= 5){
+			array_shift($_SESSION['nav']);
+			$_SESSION['nav'] = array_values($_SESSION['nav']);
+		}
+		$_SESSION['nav'][] = $dat;
+		return;
 	}
 
 	/**
 	 * Add a message to the user's stack.
 	 *    It will be displayed the next time the user (or session) renders the page.
 	 *
-	 * @param string $message_text
-	 * @param string $message_type
+	 * @param string $messageText The message to send to the user
+	 * @param string $messageType The type of message, "success", "info", or "error"
 	 *
-	 * @return boolean (on success)
+	 * @return void
 	 */
 	static public function SetMessage($messageText, $messageType = 'info') {
 

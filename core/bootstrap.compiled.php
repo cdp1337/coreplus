@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 16 Oct 2012 14:53:51 -0400
+ * @compiled Mon, 22 Oct 2012 22:46:46 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3587,13 +3587,16 @@ private function _parseUserConfigs() {
 $changes = array();
 $node = $this->_xmlloader->getElement('userconfigs');
 foreach ($node->getElementsByTagName('userconfig') as $confignode) {
-$key      = $confignode->getAttribute('key');
-$name     = $confignode->getAttribute('name');
-$default  = $confignode->getAttribute('default');
-$formtype = $confignode->getAttribute('formtype');
-$onreg    = $confignode->getAttribute('onregistration');
-$onedit   = $confignode->getAttribute('onedit');
-$options  = $confignode->getAttribute('options');
+$key        = $confignode->getAttribute('key');
+$name       = $confignode->getAttribute('name');
+$default    = $confignode->getAttribute('default');
+$formtype   = $confignode->getAttribute('formtype');
+$onreg      = $confignode->getAttribute('onregistration');
+$onedit     = $confignode->getAttribute('onedit');
+$options    = $confignode->getAttribute('options');
+$validation = $confignode->getAttribute('validation');
+if($onreg === null) $onreg = 1;
+if($onedit === null) $onedit = 1;
 $model = UserConfigModel::Construct($key);
 $model->set('name', $name);
 if($default)  $model->set('default_value', $default);
@@ -3601,6 +3604,7 @@ if($formtype) $model->set('formtype', $formtype);
 $model->set('onregistration', $onreg);
 $model->set('onedit', $onedit);
 if($options)  $model->set('options', $options);
+$model->set('validation', $validation);
 if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
 }
 return (sizeof($changes)) ? $changes : false;
@@ -4249,31 +4253,54 @@ public function getPreviewURL($dimensions = "300x300") {
 if (is_numeric($dimensions)) {
 $width  = $dimensions;
 $height = $dimensions;
+$mode = '';
 }
 elseif ($dimensions === null) {
 $width  = 300;
 $height = 300;
+$mode = '';
 }
 elseif($dimensions === false){
 $width = false;
 $height = false;
+$mode = '';
 }
 else {
+if(strpos($dimensions, '^') !== false){
+$mode = '^';
+$dimensions = str_replace('^', '', $dimensions);
+}
+elseif(strpos($dimensions, '!') !== false){
+$mode = '!';
+$dimensions = str_replace('!', '', $dimensions);
+}
+elseif(strpos($dimensions, '>') !== false){
+$mode = '>';
+$dimensions = str_replace('>', '', $dimensions);
+}
+elseif(strpos($dimensions, '<') !== false){
+$mode = '<';
+$dimensions = str_replace('<', '', $dimensions);
+}
+else{
+$mode = '';
+}
 $vals   = explode('x', strtolower($dimensions));
 $width  = (int)$vals[0];
 $height = (int)$vals[1];
 }
-$key = $this->getBaseFilename(true) . '-preview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
+$key = str_replace(' ', '-', $this->getBaseFilename(true)) . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.png';
 if (!$this->exists()) {
 error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
-$size = Core::TranslateDimensionToPreviewSize($width, $height);
-return Core::ResolveAsset('mimetype_icons/notfound-' . $size . '.png');
+$file = Core::File('assets/mimetype_icons/notfound.png');
+if($width === false) return $file->getURL();
+else return $file->getPreviewURL($dimensions);
 }
 elseif ($this->isPreviewable()) {
 if($width === false) return $this->getURL();
 $file = Core::File('public/tmp/' . $key);
 if (!$file->exists()) {
-$img2 = $this->_getResizedImage($width, $height);
+$img2 = $this->_getResizedImage($width, $height, $mode);
 imagepng($img2, TMP_DIR . $key);
 $file->putContents(file_get_contents(TMP_DIR . $key));
 }
@@ -4387,7 +4414,7 @@ unlink($tmpfile);
 return true;
 }
 }
-private function _getResizedImage($width, $height) {
+private function _getResizedImage($width, $height, $mode = '') {
 $m = $this->getMimetype();
 if ($this->isImage()) {
 switch ($m) {
@@ -4406,6 +4433,9 @@ $sW = imagesx($img);
 $sH = imagesy($img);
 $nW = $sW;
 $nH = $sH;
+switch($mode){
+case '':
+case '<':
 if ($nW > $width) {
 $nH = $width * $sH / $sW;
 $nW = $width;
@@ -4413,6 +4443,32 @@ $nW = $width;
 if ($nH > $height) {
 $nW = $height * $sW / $sH;
 $nH = $height;
+}
+break;
+case '>':
+if ($nW < $width) {
+$nH = $width * $sH / $sW;
+$nW = $width;
+}
+if ($nH < $height) {
+$nW = $height * $sW / $sH;
+$nH = $height;
+}
+break;
+case '!':
+$nW = $width;
+$nH = $height;
+break;
+case '^':
+if(($width * $sH / $sW) > ($height * $sW / $sH)){
+$nH = $width * $sH / $sW;
+$nW = $width;
+}
+else{
+$nH = $height;
+$nW = $height * $sW / $sH;
+}
+break;
 }
 $img2 = imagecreatetruecolor($nW, $nH);
 imagealphablending($img2, false);
@@ -5203,6 +5259,9 @@ return $this->getName();
 public function getName() {
 return strtolower($this->name);
 }
+public function getBindingCount(){
+return sizeof($this->_bindings);
+}
 }
 HookHandler::singleton();
 HookHandler::RegisterNewHook('db_ready');
@@ -5435,6 +5494,7 @@ private function _loadComponents() {
 if ($this->_components) return null;
 $this->_components = array();
 $this->_libraries  = array();
+$tempcomponents    = array();
 if(DEVELOPMENT_MODE){
 $enablecache = false;
 }
@@ -5442,7 +5502,7 @@ else{
 $enablecache = true;
 }
 if(!$enablecache || ($cachedcomponents = Cache::GetSystemCache()->get('core-components', (3600 * 24))) === false){
-$this->_components['core'] = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
+$tempcomponents['core'] = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
 $dh = opendir(ROOT_PDIR . 'components');
 if (!$dh) throw new CoreException('Unable to open directory [' . ROOT_PDIR . 'components/] for reading.');
 while (($file = readdir($dh)) !== false) {
@@ -5457,11 +5517,11 @@ CAEUtils::AddMessage('Component ' . $c->getName() . ' appears to be invalid.');
 }
 continue;
 }
-$this->_components[$file] = $c;
+$tempcomponents[$file] = $c;
 unset($c);
 }
 closedir($dh);
-foreach ($this->_components as $c) {
+foreach ($tempcomponents as $c) {
 try {
 $c->load();
 $c->getClassList();
@@ -5475,13 +5535,13 @@ die();
 }
 }
 if($enablecache){
-Cache::GetSystemCache()->set('core-components', $this->_components);
+Cache::GetSystemCache()->set('core-components', $tempcomponents);
 }
 }
 else{
-$this->_components = $cachedcomponents;
+$tempcomponents = $cachedcomponents;
 }
-$list = $this->_components;
+$list = $tempcomponents;
 do {
 $size = sizeof($list);
 foreach ($list as $n => $c) {
@@ -5493,6 +5553,7 @@ if ($c->isInstalled() && $c->isLoadable() && $c->loadFiles()) {
 if ($c->needsUpdated()) {
 $c->upgrade();
 }
+$this->_components[$n] = $c;
 $this->_registerComponent($c);
 unset($list[$n]);
 continue;
@@ -5500,11 +5561,13 @@ continue;
 if ($c->isInstalled() && $c->needsUpdated() && $c->isLoadable()) {
 $c->upgrade();
 $c->loadFiles();
+$this->_components[$n] = $c;
 $this->_registerComponent($c);
 unset($list[$n]);
 continue;
 }
 if (!$c->isInstalled() && $c->isLoadable()) {
+var_dump($c, $this);
 $c->install();
 if(!DEVELOPMENT_MODE){
 $c->disable();
@@ -5512,6 +5575,7 @@ $c->disable();
 else{
 $c->enable();
 $c->loadFiles();
+$this->_components[$n] = $c;
 $this->_registerComponent($c);
 }
 unset($list[$n]);
@@ -5783,8 +5847,18 @@ header('Location:' . CUR_CALL);
 HookHandler::DispatchHook('/core/page/postrender');
 die("If your browser does not refresh, please <a href=\"" . CUR_CALL . "\">Click Here</a>");
 }
-static public function GoBack() {
-CAEUtils::redirect(CAEUtils::GetNavigation());
+static public function GoBack($depth=2) {
+if(!isset($_SESSION['nav'])){
+Core::Redirect(ROOT_WDIR);
+}
+$s = sizeof($_SESSION['nav']);
+if($depth > $s){
+Core::Redirect(ROOT_WDIR);
+}
+if($depth <= 0){
+Core::Redirect(ROOT_WDIR);
+}
+Core::Redirect($_SESSION['nav'][$s - $depth]['uri']);
 }
 static public function RequireSSL() {
 if (!ENABLE_SSL) return;
@@ -5808,15 +5882,26 @@ return $base .
 (sizeof($coreparams) ? '/' . implode('/', $coreparams) : '') .
 (sizeof($extraparams) ? '?' . implode('&', $extraparams) : '');
 }
-static public function RecordNavigation(PageModel $page) {
+static public function _RecordNavigation() {
+$request = PageRequest::GetSystemRequest();
+$view = $request->getView();
+if(!$view->record) return;
+if(!$request->isGet()) return;
 if (!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
-$c = $page->getControllerClass();
-if (strpos($c, 'Controller') == strlen($c) - 10) $c = substr($c, 0, -10);
-$base = '/' . $c . '/' . $page->getControllerMethod();
-$_SESSION['nav'][$base] = array(
-'parameters' => $page->getParameters(),
-'time'       => Time::GetCurrent(),
+$rel = substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
+if($rel === false) $rel = '';
+$dat = array(
+'uri' => ROOT_URL . $rel,
+'title' => $view->title,
 );
+$s = sizeof($_SESSION['nav']);
+if($s && $_SESSION['nav'][$s-1]['uri'] == $dat['uri']) return;
+if($s >= 5){
+array_shift($_SESSION['nav']);
+$_SESSION['nav'] = array_values($_SESSION['nav']);
+}
+$_SESSION['nav'][] = $dat;
+return;
 }
 static public function SetMessage($messageText, $messageType = 'info') {
 if (trim($messageText) == '') return;
@@ -7907,6 +7992,7 @@ public $stylesheets = array();
 public $canonicalurl = null;
 public $allowerrors = false;
 public $ssl = false;
+public $record = true;
 public static $MetaData = array();
 public static $HeadScripts = array();
 public static $FootScripts = array();
@@ -8140,6 +8226,12 @@ $debug .= "\n" . '<b>Available Components</b>' . "\n";
 foreach (Core::GetComponents() as $l => $v) {
 $debug .= ($v->isEnabled() ? '[<span style="color:green;">Enabled</span>]' : '[<span style="color:red;">Disabled</span>]').
 $v->getName() . ' ' . $v->getVersion() . "\n";
+}
+$debug .= "\n" . '<b>Registered Hooks</b>' . "\n";
+foreach(HookHandler::GetAllHooks() as $hook){
+$debug .= $hook->name;
+if($hook->description) $debug .= ' <i> - ' . $hook->description . '</i>';
+$debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
 }
 $debug .= "\n" . '<b>Included Files</b>' . "\n";
 $debug .= 'Number: ' . sizeof(get_included_files()) . "\n";
@@ -8375,6 +8467,9 @@ public static function AddMeta($string) {
 if (strpos($string, '<meta') === false) $string = '<meta ' . $string . '/>';
 PageRequest::GetSystemRequest()->getView()->head[] = $string;
 }
+public static function AddHead($string){
+PageRequest::GetSystemRequest()->getView()->head[] = $string;
+}
 }
 class ViewException extends Exception {
 }
@@ -8473,6 +8568,7 @@ return void;
 ### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Widget_2_1.class.php
 class Widget_2_1 {
 private $_view = null;
+private $_request = null;
 public $_model = null;
 public $_params = null;
 public function getView() {
@@ -8492,6 +8588,12 @@ $this->_view->baseurl = $cls . '/' . $mth;
 }
 }
 return $this->_view;
+}
+public function getRequest(){
+if($this->_request === null){
+$this->_request = new WidgetRequest();
+}
+return $this->_request;
 }
 public function getWidgetModel() {
 return $this->_model;
@@ -8515,6 +8617,15 @@ return (isset($parameters[$param])) ? $parameters[$param] : null;
 }
 public static function Factory($name) {
 return new $name();
+}
+}
+class WidgetRequest{
+public $parameters = array();
+public function getParameters() {
+return $this->parameters;
+}
+public function getParameter($key) {
+return (array_key_exists($key, $this->parameters)) ? $this->parameters[$key] : null;
 }
 }
 
@@ -9599,6 +9710,9 @@ return $this->_pagemodel;
 }
 public function isPost() {
 return ($this->method == PageRequest::METHOD_POST);
+}
+public function isGet() {
+return ($this->method == PageRequest::METHOD_GET);
 }
 public function isJSON(){
 return ($this->ctype == View::CTYPE_JSON);

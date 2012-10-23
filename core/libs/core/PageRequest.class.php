@@ -547,6 +547,17 @@ class PageRequest {
 	}
 
 	/**
+	 * Simple check to see if the page request is a GET method.
+	 *
+	 * Returns true if it is GET, false if anything else.
+	 *
+	 * @return bool
+	 */
+	public function isGet() {
+		return ($this->method == PageRequest::METHOD_GET);
+	}
+
+	/**
 	 * Simple check to see if the page request is a json content type.
 	 *
 	 * @return bool

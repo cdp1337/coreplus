@@ -225,6 +225,13 @@ class View {
 	public $ssl = false;
 
 	/**
+	 * Set to false to skip this View from being recorded in analytical tools and navigation.  Useful for JSON or POST pages.
+	 *
+	 * @var bool
+	 */
+	public $record = true;
+
+	/**
 	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
 	 * @var array
 	 */
