@@ -18,7 +18,7 @@
 		<footer>
 			<p class="legal-notice">
 				This software is distributed under the <a href="http://www.gnu.org/licenses/agpl-3.0.html" target="_BLANK">AGPL v3 License</a>, this means that as a user of this
-				service, you are allowed to, (and encouraged to), look at the <a href="https://github.com/nicholasryan/CAE2" target="
+				service, you are allowed to, (and encouraged to), look at the <a href="http://corepl.us" target="
 _BLANK">complete unobfuscated source code of Core Plus</a>.
 			</p>
 		</footer>

@@ -1,30 +1,43 @@
-
-/*** Give me some fonts ***/
-@font-face { font-family: 'Cousine'; font-style: normal; font-weight: normal; src: local('Cousine'), url('../fonts/Cousine-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Cousine'; font-style: normal; font-weight: bold; src: local('Cousine Bold'), local('Cousine-Bold'), url('../fonts/Cousine-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'Cousine'; font-style: italic; font-weight: normal; src: local('Cousine Italic'), local('Cousine-Italic'), url('../fonts/Cousine-Italic.ttf') format('truetype'); }
-@font-face { font-family: 'Cousine'; font-style: italic; font-weight: bold; src: local('Cousine Bold Italic'), local('Cousine-Bold-Italic'), url('../fonts/Cousine-BoldItalic.ttf') format('truetype'); }
-
-@font-face { font-family: 'PT Sans'; font-style: normal; font-weight: normal; src: local('PT Sans'), url('../fonts/PT_Sans-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'PT Sans'; font-style: normal; font-weight: bold; src: local('PT Sans Bold'), local('PT_Sans-Bold'), url('../fonts/PT_Sans-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'PT Sans'; font-style: italic; font-weight: normal; src: local('PT Sans Italic'), local('PT_Sans-Italic'), url('../fonts/PT_Sans-Italic.ttf') format('truetype'); }
-@font-face { font-family: 'PT Sans'; font-style: italic; font-weight: bold; src: local('PT Sans Bold Italic'), local('PT_Sans-Bold-Italic'), url('../fonts/PT_Sans-BoldItalic.ttf') format('truetype'); }
-
-@font-face { font-family: 'Puritan'; font-style: normal; font-weight: normal; src: local('Puritan'), url('../fonts/Puritan-Regular.ttf') format('truetype'); }
-@font-face { font-family: 'Puritan'; font-style: normal; font-weight: bold; src: local('Puritan Bold'), local('Puritan-Bold'), url('../fonts/Puritan-Bold.ttf') format('truetype'); }
-@font-face { font-family: 'Puritan'; font-style: italic; font-weight: normal; src: local('Puritan Italic'), local('Puritan-Italic'), url('../fonts/Puritan-Italic.ttf') format('truetype'); }
-@font-face { font-family: 'Puritan'; font-style: italic; font-weight: bold; src: local('Puritan Bold Italic'), local('Puritan-Bold-Italic'), url('../fonts/Puritan-BoldItalic.ttf') format('truetype'); }
-
-
-
-
-
 /* Do some useful style defines here... */
-body { text-align:center; padding:0; margin:0; background:#D5DAFF; font-family:Puritan, helvetica, sans-serif; font-size:11pt; color:#222;}
-a { color:#1C2B0D; }
-a:hover { text-shadow:0 1px 2px rgba(28, 43, 13, 0.8);}
-img { border:0; }
-p { padding:0.5em 0pt; }
+body {
+	text-align:center;
+	padding:0;
+	margin:0;
+	background:#D5DAFF;
+	font-family:Helvetica, sans-serif;
+	font-size:11pt;
+	color:#222;
+}
+a {
+	color:#1C2B0D;
+}
+a:hover {
+	text-shadow:0 1px 2px rgba(28, 43, 13, 0.8);
+}
+img {
+	border:0;
+}
+p {
+	padding:0.5em 0pt;
+}
+h1 {
+	border-bottom: 1px solid rgba(90, 90, 90, 0.7);
+	font-size: 150%;
+	font-weight: bold;
+	margin-bottom: 0.3em;
+	padding-bottom: 0.2em;
+}
+h2 {
+	font-weight: bold;
+	font-size: 125%;
+}
+h3 {
+	font-weight: bold;
+	font-size: 110%;
+}
+h4 {
+	font-weight: bold;
+}
 #wrapper { width:75%; margin:0 auto; text-align:left; background:black; box-shadow:0 1px 4px black; -moz-box-shadow:0 1px 4px black; -webkit-box-shadow:0 1px 4px black; }
 #innerwrapper { background:#EDEDED; padding:1em 1em 2em; margin:0 2px; }
 fieldset { border:1px solid #AAA; padding:0.75em; margin:0.5em; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;}
