@@ -1,0 +1,36 @@
+{css src="assets/css/usersocial.css"}{/css}
+{View::AddHead('<link rel="profile" href="http://microformats.org/profile/hcard"/>')}
+
+
+<div class="user-badge user-badge-{$direction} user-badge-{$orientation} vcard" itemscope itemtype="http://schema.org/Person">
+	<div class="user-badge-photo-wrapper">
+		<div class="user-badge-photo-inner">
+			<a href="{$link}" class="user-badge-name url" rel="author">
+				{img src="public/user/`$user->get('avatar')`" placeholder="person" dimensions="64x64^" itemprop="image" class="user-badge-photo photo"}
+			</a>
+		</div>
+	</div>
+
+	<div class="user-badge-content">
+		{if $title}
+			<h4>{$title}</h4>
+		{/if}
+
+		{* I can do a traditional a tag here because the link is already resolved from the widget. *}
+		<a href="{$link}" class="user-badge-name url" rel="author">
+			<span class="user-badge-displayname fn nickname" itemprop="name">
+				{$user->getDisplayName()}
+			</span>
+		</a>
+
+		{if $profiles}
+			<div class="user-badge-profiles">
+				{foreach $profiles as $profile}
+					<a href="{$profile.url}" rel="me" title="{if $profile.title}{$profile.title}{else}{$profile.url}{/if}">
+						<i class="icon-{$profile.type}"></i>
+					</a>
+				{/foreach}
+			</div>
+		{/if}
+	</div>
+</div>

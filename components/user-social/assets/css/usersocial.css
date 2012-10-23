@@ -1,0 +1,64 @@
+.user-full-profile .user-full-profile-imagewrapper {
+	background-color: #FFFFFF;
+	border: 1px solid #CCCCCC;
+	border-radius: 3px 3px 3px 3px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	padding: 5px;
+	float: right;
+	width: 250px;
+}
+
+/**** The badge for users ****/
+
+/* Standard horizontal badges */
+.user-badge-horizontal {
+	background: white;
+	border: 1px solid #AAA;
+	margin-top: 5px;
+	height: 60px;
+	width: 250px;
+	float: left;
+	position: relative;
+}
+.user-badge-horizontal .user-badge-photo-wrapper {
+	background: white;
+	border: 1px solid #AAAAAA;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	float: left;
+	height: 64px;
+	padding: 3px;
+	width: 64px;
+	margin: -5px 7px 0pt;
+}
+
+.user-badge-horizontal .user-badge-photo-inner {
+	width: 64px;
+	height: 64px;
+	overflow: hidden;
+}
+
+.user-badge-horizontal .user-badge-content {
+	padding: 5px;
+}
+.user-badge-horizontal .user-badge-profiles {
+	bottom: 1px;
+	position: absolute;
+	left: 88px;
+	right: auto;
+}
+.user-badge-horizontal .user-badge-profiles a{
+	text-decoration: none;
+}
+
+/* The right variation of the badge */
+.user-badge-horizontal.user-badge-right {
+	text-align: right;
+	float: right;
+}
+.user-badge-horizontal.user-badge-right .user-badge-photo-wrapper {
+	float: right;
+}
+.user-badge-horizontal.user-badge-right .user-badge-profiles {
+	left: auto;
+	right: 85px;
+}
