@@ -5,7 +5,7 @@
 		<th width="40"></th>
 		<th>Email</th>
 		<th>Active</th>
-		<th width="80">&nbsp;</th>
+		<th width="100">&nbsp;</th>
 	</tr>
 	{foreach $users as $user}
 		<tr userid="{$user.id}" class="user-entry">
@@ -34,6 +34,20 @@
 			</td>
 			<td>
 				<ul class="controls">
+					{if Core::IsComponentAvailable('User-Social')}
+						<li class="public-user">
+							<a href="{UserSocialHelper::ResolveProfileLinkById($user.id)}">
+								<i class="icon-user"></i>
+								<span>Public Profile</span>
+							</a>
+						</li>
+						<li class="link">
+							{a href="/userprofile/connectedprofiles/`$user.id`"}
+								<i class="icon-link"></i>
+								<span>Public Profile</span>
+							{/a}
+						</li>
+					{/if}
 					<li class="edit">
 						{a href="/user/edit/`$user.id`"}
 							<i class="icon-edit"></i>

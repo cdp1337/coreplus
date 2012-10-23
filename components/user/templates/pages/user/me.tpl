@@ -1,4 +1,4 @@
-<div id="user-edit-listing">
+<div id="user-edit-listing" style="display:none;">
 	<table>
 		<tr>
 			<td>
@@ -13,9 +13,9 @@
 </div>
 
 
-<div id="user-edit-form" style="display:none;">
+<div id="user-edit-form">
 	{$form->render()}
-	<a href="#" class="edit-user-toggle">Cancel</a>
+	<!--<a href="#" class="edit-user-toggle">Cancel</a>-->
 </div>
 
 

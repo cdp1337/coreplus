@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.3" name="user" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3.0" name="user" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.1.2"/>
+		<require name="core" type="component" version="2.2.6"/>
 	</requires>
 	<smartyplugins directory="helpers/smarty-plugins/"/>
 	<hooks>
@@ -14,15 +14,15 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="5920dd5a5d723e5981f2e4fbd82192d8"/>
-		<file filename="User.class.php" md5="1aad23d6ab14269adfdbddaaf9dca236">
+		<file filename="CHANGELOG" md5="e168ff045d197bc49986bfc4a8be878b"/>
+		<file filename="User.class.php" md5="0584baefe7de8012bae8e8a8c1eb0890">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
 		<file filename="UserForm.class.php" md5="d5a273d86587170b59590f67ff32a74c">
 			<class name="FormAccessStringInput"/>
 		</file>
-		<file filename="User_Backend.interface.php" md5="f683736b302e6375401cd99670117eb1">
+		<file filename="User_Backend.interface.php" md5="338a174c0a903e9bf637e30f2e0a9c75">
 			<interface name="User_Backend"/>
 		</file>
 		<file filename="Widgets/UserLoginWidget.class.php" md5="04d3602121f6cb231473284124dfa88f">
@@ -37,36 +37,36 @@
 		<file filename="backends/User_facebook.backend.php" md5="27371946adaf1cf235d2e72b7866b45e">
 			<class name="User_facebook_Backend"/>
 		</file>
-		<file filename="controllers/UserActivityController.php" md5="0f890921ba4952efb94fb0f8c9124f45">
+		<file filename="controllers/UserActivityController.php" md5="faf8aec4cfe30f2f7d075ee0b8e2f18c">
 			<controller name="UserActivityController"/>
 		</file>
 		<file filename="controllers/UserAdminController.php" md5="975438ad9dfea0ec6b3fd6e28bbd92fc">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="d60609716e08f73eb4e6dbf5de0adfef">
+		<file filename="controllers/UserController.php" md5="cc9decc2c83ba0535f7f87ad13f0e406">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="87720df274ed8438582743843c8f466f">
 			<controller name="UserGroupAdminController"/>
 		</file>
 		<file filename="helpers/UserFunctions.php" md5="0fe2b3a6993419c7519c099a7214f98c"/>
-		<file filename="helpers/UserHelper.class.php" md5="8dc4822427a68f2d97852392903c8037">
+		<file filename="helpers/UserHelper.class.php" md5="76d9d23df12b360db95ffb30b24dca1d">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
 		<file filename="models/UserActivityModel.php" md5="5f5bb7b6580bcc7c64bfc2f3c7f82dbd">
 			<class name="UserActivityModel"/>
 		</file>
-		<file filename="models/UserConfigModel.php" md5="ed772f5208e65e551655e8754c6c8106">
+		<file filename="models/UserConfigModel.php" md5="565d4f4dbcd73c9cd78c8b4a8dad5a93">
 			<class name="UserConfigModel"/>
 		</file>
 		<file filename="models/UserGroupModel.php" md5="06dbdd1ed32b3a5bfe6b2d8903fe6759">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="models/UserModel.php" md5="8ad2111809b649c294b2a4039bbc90d4">
+		<file filename="models/UserModel.php" md5="495879755a62c716d7e46cc835db893b">
 			<class name="UserModel"/>
 		</file>
-		<file filename="models/UserUserConfigModel.php" md5="4bfc5564e1c98099374adf6de3bed563">
+		<file filename="models/UserUserConfigModel.php" md5="ce9afd069250444bf94dc414c5b23208">
 			<class name="UserUserConfigModel"/>
 		</file>
 	</files>
@@ -77,11 +77,11 @@
 		<file filename="templates/pages/user/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/user/forgotpassword.tpl" md5="c2da0dced97b6b643b20c40a5046b5d1"/>
 		<file filename="templates/pages/user/login.tpl" md5="40e0d2e1bec09679c42b6cdfa9e7552b"/>
-		<file filename="templates/pages/user/me.tpl" md5="fb7f9d4e42f671607a67e5d33e9a7863"/>
+		<file filename="templates/pages/user/me.tpl" md5="64c2eff0a2b7c9e401946c8ec950a25b"/>
 		<file filename="templates/pages/user/password.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/useractivity/index.tpl" md5="f1463c6f2df95ad634013491b867ba53"/>
-		<file filename="templates/pages/useradmin/index.tpl" md5="bbcb1c063224c4c8fe53a03a467f1e33"/>
+		<file filename="templates/pages/useradmin/index.tpl" md5="c4d1a7833bbfccb2ae1e8d81db0af07f"/>
 		<file filename="templates/pages/usergroupadmin/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/usergroupadmin/index.tpl" md5="737ee67c775c5cb219d040015dbcb496"/>
 		<file filename="templates/pages/usergroupadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -149,6 +149,7 @@
 		<upgrade from="2.2.0" to="2.2.1"/>
 		<upgrade from="2.2.1" to="2.2.2"/>
 		<upgrade from="2.2.2" to="2.2.3"/>
+		<upgrade from="2.2.3" to="2.3.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

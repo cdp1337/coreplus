@@ -57,6 +57,11 @@ class UserConfigModel extends Model{
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => false
 		),*/
+		'validation' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'formtype' => 'disabled',
+			'comment' => 'Class or function to call on validation',
+		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,

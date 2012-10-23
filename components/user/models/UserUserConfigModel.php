@@ -51,4 +51,43 @@ class UserUserConfigModel extends Model{
 	public static $Indexes = array(
 		'primary' => array('user_id', 'key'),
 	);
+
+	public function set($k, $v){
+		if($k == 'value'){
+			// I need a custom function here because of the unique validation for this model.
+			// components can request custom validation in their component.xml files.
+
+			$config = UserConfigModel::Construct($this->_data['key']);
+			if(!$config->get('validation')){
+				// Ok, simple enough.
+				return parent::set($k, $v);
+			}
+			else{
+				$check = $config->get('validation');
+				$valid = true;
+				if (strpos($check, '::') !== false) {
+					// the method can either be true, false or a string.
+					// Only if true is returned will that be triggered as success.
+					$valid = call_user_func($check, $v, $this);
+				}
+				// regex-based validation.  These don't have any return strings so they're easier.
+				elseif (
+					($check{0} == '/' && !preg_match($check, $v)) ||
+					($check{0} == '#' && !preg_match($check, $v))
+				) {
+					$valid = false;
+				}
+
+				if($valid === true){
+					return parent::set($k, $v);
+				}
+				else{
+					throw new ModelValidationException(($valid === false) ? $this->_data['key'] . ' fails validation!' : $valid);
+				}
+			}
+		}
+		else{
+			return parent::set($k, $v);
+		}
+	}
 }

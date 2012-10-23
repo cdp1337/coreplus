@@ -39,6 +39,7 @@ class UserActivityController extends Controller_2_1 {
 		if(!$request->isJSON()) return View::ERROR_BADREQUEST;
 		$view->contenttype = View::CTYPE_JSON;
 		$view->mode = View::MODE_AJAX;
+		$view->record = false;
 
 		$limit = $this->_getQueryLimit();
 		$duration = 30;
@@ -126,6 +127,7 @@ class UserActivityController extends Controller_2_1 {
 		if(!$request->isJSON()) return View::ERROR_BADREQUEST;
 		$view->contenttype = View::CTYPE_JSON;
 		$view->mode = View::MODE_AJAX;
+		$view->record = false;
 
 		$limit  = $this->_getQueryLimit();
 		$dstart = $request->getParameter('dstart');

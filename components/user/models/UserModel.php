@@ -113,7 +113,7 @@ class UserModel extends Model {
 					$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requirecapitals') . ' capital letter(s).';
 				}
 			}
-			
+
 			// Validation's good, return true!
 			if($valid === true) return true;
 			// Validation failed and an Exception was requested.

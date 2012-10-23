@@ -118,7 +118,9 @@ class User {
 		else{
 			// Check the user config options.
 			$c = $this->getConfigs();
-			if(array_key_exists($k, $c)) $this->_configs[$k]->set('value', $v);
+			if(array_key_exists($k, $c)){
+				$this->_configs[$k]->set('value', $v);
+			}
 		}
 	}
 	
@@ -181,7 +183,8 @@ class User {
 	 * The access string is the core component to Core+ authentication.
 	 * 
 	 * @since 2011.08
-	 * @param type $accessstring 
+	 * @param type $accessstring
+	 * @return bool
 	 */
 	public function checkAccess($accessstring){
 		
@@ -306,7 +309,12 @@ class User {
 	public function getGroups(){
 		throw new Exception('getGroups must be extended in the specific backend.');
 	}
-	
+
+	/**
+	 * Get the display name for this user, based on the configuration settings.
+	 *
+	 * @return string
+	 */
 	public function getDisplayName(){
 		
 		// Anonymous users don't have all this fancy logic.

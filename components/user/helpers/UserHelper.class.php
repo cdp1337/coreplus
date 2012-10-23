@@ -9,6 +9,12 @@ abstract class UserHelper{
 	 *
 	 */
 	public static function RecordActivity(){
+
+		$request = PageRequest::GetSystemRequest();
+		$view = $request->getView();
+
+		if(!$view->record) return;
+
 		$log = new UserActivityModel();
 		$log->setFromArray(
 			array(
@@ -19,8 +25,8 @@ abstract class UserHelper{
 				'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''),
 				'type' => $_SERVER['REQUEST_METHOD'],
 				'request' => $_SERVER['REQUEST_URI'],
-				'baseurl' => PageRequest::GetSystemRequest()->getBaseURL(),
-				'status' => PageRequest::GetSystemRequest()->getView()->error,
+				'baseurl' => $request->getBaseURL(),
+				'status' => $view->error,
 				'db_reads' => Core::DB()->readCount(),
 				'db_writes' => (Core::DB()->writeCount() + 1),
 				'processing_time' => (round(Core::GetProfileTimeTotal(), 4) * 1000)
@@ -165,6 +171,16 @@ abstract class UserHelper{
 			elseif($name == 'admin'){
 				$user->set('admin', $el->get('value'));
 			}
+			else{
+				// Check the configs!
+				$configs = $user->getConfigs();
+				if(array_key_exists($name, $configs)){
+					$user->set($name, $el->get('value'));
+				}
+				else{
+					// I don't care.
+				}
+			}
 		}
 
 		// Check if there are no users already registered on the system.  If
@@ -203,6 +219,7 @@ abstract class UserHelper{
 			return false;
 		}
 
+		/** @var $user User_Backend */
 		$user = User::Find(array('id' => $userid));
 
 		if(!$user->exists()){
@@ -264,7 +281,14 @@ abstract class UserHelper{
 				}
 
 				else{
-					// I don't care.
+					// Check the configs!
+					$configs = $user->getConfigs();
+					if(array_key_exists($name, $configs)){
+						$user->set($name, $el->get('value'));
+					}
+					else{
+						// I don't care.
+					}
 				}
 			}
 		}
@@ -280,6 +304,11 @@ abstract class UserHelper{
 		}
 
 		$user->save();
+
+		// If this is the currently logged in user, update that information too!
+		if($_SESSION['user']->get('id') == $user->get('id')){
+			$_SESSION['user'] = $user;
+		}
 
 		Core::SetMessage('Updated user successfully', 'success');
 		return true;

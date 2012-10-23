@@ -52,13 +52,35 @@ class UserController extends Controller_2_1{
 
 		$form = \User\get_edit_form($user);
 
+		$view->addControl(
+			array(
+				'title' => 'Change Password',
+				'link' => '/user/password',
+				'icon' => 'key',
+			)
+		);
+
+		if(Core::IsComponentAvailable('User-Social')){
+			$view->addControl(
+				array(
+					'title' => 'Public Profile',
+					'link' => UserSocialHelper::ResolveProfileLink($user),
+					'icon' => 'user',
+				)
+			);
+
+			$view->addControl(
+				array(
+					'title' => 'Connected Profiles',
+					'link' => '/userprofile/connectedprofiles',
+					'icon' => 'link',
+				)
+			);
+		}
+
 		$view->assign('user', $user);
 		$view->assign('form', $form);
 		$view->title = 'My Profile';
-	}
-
-	public function view(){
-		// @todo Finish this!
 	}
 
 	public function password(){

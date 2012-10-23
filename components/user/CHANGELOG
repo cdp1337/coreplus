@@ -1,3 +1,11 @@
+User 2.3.0
+
+	* Added support for the new user social component.
+	* Fixed the user configurations not saving on edit and registration.
+	* Added user config validation.
+	* Updated the /me template, no longer displays the view information (edit only).
+	-- Charlie Powell <charlie@eval.bz>  20 Oct 2012
+
 User 2.2.3
 
 	* Minor fix to support facebook access tokens.
