@@ -851,13 +851,15 @@ class PageModel extends Model {
 		// Now I can assemble the list of options with useful labels
 		$opts = array();
 		foreach ($pages as $p) {
+			$baseurl = strtolower($p->get('baseurl'));
+
 			$t = '';
 			foreach ($p->getParentTree() as $subp) {
 				$t .= $subp->get('title') . ' &raquo; ';
 			}
 			$t .= $p->get('title');
 			$t .= ' ( ' . $p->get('rewriteurl') . ' )';
-			$opts[$p->get('baseurl')] = $t;
+			$opts[$baseurl] = $t;
 		}
 
 		// Sort'em

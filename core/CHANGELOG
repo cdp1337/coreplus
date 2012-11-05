@@ -1,3 +1,9 @@
+Core Plus 2.3.1
+
+	* Fixed a bug with the parent page selection not selecting the correct parent page.
+	* Updated the core.strings.js a little to prevent URLs from being crafted with two slashes next to each other.
+	-- Charlie Powell <charlie@eval.bz>  5 Nov 2012
+
 Core Plus 2.3.0
 
 	* Major change in the dataset WHERE structure.  Where statements now support nested clauses, each with their own
@@ -16,7 +22,7 @@ Core Plus 2.3.0
 	* Reorganized the page edit form a little and wrapped the SEO options in a common fieldset.
 	* Optimized some system performance a little.
 	* Started to implement the new page_template system (partial support in place).
-	-- Charlie Powell <charlie@eval.bz>  5 November 2012
+	-- Charlie Powell <charlie@eval.bz>  5 Nov 2012
 
 Core Plus 2.2.6
 

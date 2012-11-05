@@ -1238,12 +1238,13 @@ class FormPageMeta extends FormGroup {
 		$opts = PageModel::GetPagesAsOptions($f, '-- No Parent Page --');
 
 		$this->addElement(
-			'pageparentselect', array(
-				                  'name'    => $name . "[parenturl]",
-				                  'title'   => 'Parent Page',
-				                  'value'   => $page->get('parenturl'),
-				                  'options' => $opts
-			                  )
+			'pageparentselect',
+			array(
+				'name'    => $name . "[parenturl]",
+				'title'   => 'Parent Page',
+				'value'   => strtolower($page->get('parenturl')),
+				'options' => $opts
+			)
 		);
 
 		// Title

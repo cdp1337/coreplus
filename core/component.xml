@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3.0" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3.1" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -40,8 +40,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="59985b92f2eb219b0f84a98bda5a8d6c"/>
-		<file filename="core/CHANGELOG" md5="6a4a555b1ac63938d3d12344cf5f2c38"/>
-		<file filename="core/bootstrap.compiled.php" md5="c6380e741679263787dca0a76da929fb">
+		<file filename="core/CHANGELOG" md5="f7fd82b0e9bd544f4c21035fa8695f0f"/>
+		<file filename="core/bootstrap.compiled.php" md5="f357c5dfa5c83ab475176206729ee892">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -517,7 +517,7 @@
 		<file filename="core/libs/core/Email.class.php" md5="2f0608c1f1aa4bfcb35a0affa35dacb8">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="7201abbd49eb420a2e07bfd9595e1b16">
+		<file filename="core/libs/core/Form.class.php" md5="a1cd26e0c1fa37acc53c58b7ff4da550">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -1285,7 +1285,7 @@
 		<file filename="core/models/Insertable.class.php" md5="9fcff9abc48a6750a219ee3df35b48af">
 			<class name="InsertableModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="145f57112190cd1438f27a0b16c1534e">
+		<file filename="core/models/PageModel.class.php" md5="55afdc8e50f98b199797400e55f2cfb5">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/SessionModel.class.php" md5="7e5409686e6d110839bd07e09eada796">
@@ -1432,7 +1432,7 @@
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.fileupload.js" md5="499451d7c6a0e4266eb703f26e25cf33"/>
 		<file filename="core/assets/js/core.js" md5="3a070b379c2833223e9d89b386c75844"/>
-		<file filename="core/assets/js/core.strings.js" md5="e32af02257c867efd01730b2c8a436de"/>
+		<file filename="core/assets/js/core.strings.js" md5="7ba2a6d21dc4529332298404b7df17ff"/>
 		<file filename="core/assets/js/updater/index.js" md5="8bc98840b6292bdf9b98074ee92c7615"/>
 	</assets>
 	<upgrades>
@@ -1465,6 +1465,7 @@
 		<upgrade from="2.2.4" to="2.2.5"/>
 		<upgrade from="2.2.5" to="2.2.6"/>
 		<upgrade from="2.2.6" to="2.3.0"/>
+		<upgrade from="2.3.0" to="2.3.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

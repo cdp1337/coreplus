@@ -116,6 +116,9 @@
 			// Multiple separators should get truncated, along with beginning and trailing ones.
 			string = string.replace(/[-]+/g, '-').replace(/^-/, '').replace(/-$/, '');
 
+			// Multiple empty slashes should be truncated to a single one.
+			string = string.replace(/\/[\/]*/g, '/');
+
 			// And lowercase it.
 			string = string.toLowerCase();
 

@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 05 Nov 2012 04:02:36 -0500
+ * @compiled Mon, 05 Nov 2012 12:18:52 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -2171,13 +2171,14 @@ $f->where($where);
 $pages = $f->get();
 $opts = array();
 foreach ($pages as $p) {
+$baseurl = strtolower($p->get('baseurl'));
 $t = '';
 foreach ($p->getParentTree() as $subp) {
 $t .= $subp->get('title') . ' &raquo; ';
 }
 $t .= $p->get('title');
 $t .= ' ( ' . $p->get('rewriteurl') . ' )';
-$opts[$p->get('baseurl')] = $t;
+$opts[$baseurl] = $t;
 }
 asort($opts);
 if ($blanktext) $opts = array_merge(array("" => $blanktext), $opts);
@@ -9198,20 +9199,6 @@ $model->set($k, $v);
 $model->load();
 }
 $model->setFromForm($this, 'model');
-$els = $this->getElements(true, false);
-foreach ($els as $e) {
-if (!preg_match('/^model\[(.*?)\].*/', $e->get('name'), $matches)) continue;
-$key    = $matches[1];
-$val    = $e->get('value');
-$schema = $model->getKeySchema($key);
-if ($schema['type'] == Model::ATT_TYPE_BOOL) {
-if (strtolower($val) == 'yes') $val = 1;
-elseif (strtolower($val) == 'on') $val = 1;
-elseif ($val == 1) $val = 1;
-else $val = 0;
-}
-$model->set($key, $val);
-}
 return $model;
 if ($model->get('baseurl') && $model->getLink('Page') instanceof PageModel && $this->getElementByName('page')) {
 $page = $model->getLink('Page');
@@ -9471,10 +9458,11 @@ $f = new ModelFactory('PageModel');
 if ($this->get('baseurl')) $f->where('baseurl != ' . $this->get('baseurl'));
 $opts = PageModel::GetPagesAsOptions($f, '-- No Parent Page --');
 $this->addElement(
-'pageparentselect', array(
+'pageparentselect',
+array(
 'name'    => $name . "[parenturl]",
 'title'   => 'Parent Page',
-'value'   => $page->get('parenturl'),
+'value'   => strtolower($page->get('parenturl')),
 'options' => $opts
 )
 );
