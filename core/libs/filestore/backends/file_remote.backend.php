@@ -166,7 +166,9 @@ class File_remote_backend implements File_Backend {
 	 * Get the hash for this file.
 	 */
 	public function getHash() {
-		die('Implement this method...');
+		// In order for this to work, I need to apply the operation on a local copy.
+		$local = $this->_getTmpLocal();
+		return $local->getHash();
 	}
 
 	public function delete() {

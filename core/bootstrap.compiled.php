@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 22 Oct 2012 22:46:46 -0400
+ * @compiled Sun, 04 Nov 2012 21:26:37 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1357,6 +1357,20 @@ $model->setFromArray($searchkeys);
 $model->load();
 $this->_linked[$linkname]['records'][] = $model;
 return $model;
+}
+}
+public function setLink($linkname, Model $model) {
+if (!isset($this->_linked[$linkname])) return; // @todo Error Handling
+switch($this->_linked[$linkname]['link']){
+case Model::LINK_HASONE:
+case Model::LINK_BELONGSTOONE:
+$this->_linked[$linkname]['records'] = $model;
+break;
+case Model::LINK_HASMANY:
+case Model::LINK_BELONGSTOMANY:
+if(!isset($this->_linked[$linkname]['records'])) $this->_linked[$linkname]['records'] = array();
+$this->_linked[$linkname]['records'][] = $model;
+break;
 }
 }
 public function setFromArray($array) {
@@ -3523,8 +3537,6 @@ $c = new ComponentModel($this->_name);
 $c->set('enabled', true);
 $c->save();
 $this->_enabled = true;
-echo 'ENABLING!<br/>';
-var_dump($c);
 Core::Cache()->delete('core-components');
 return true;
 }
@@ -4294,7 +4306,8 @@ if (!$this->exists()) {
 error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
 $file = Core::File('assets/mimetype_icons/notfound.png');
 if($width === false) return $file->getURL();
-else return $file->getPreviewURL($dimensions);
+elseif($file->exists()) return $file->getPreviewURL($dimensions);
+else return null;
 }
 elseif ($this->isPreviewable()) {
 if($width === false) return $this->getURL();
@@ -5567,7 +5580,6 @@ unset($list[$n]);
 continue;
 }
 if (!$c->isInstalled() && $c->isLoadable()) {
-var_dump($c, $this);
 $c->install();
 if(!DEVELOPMENT_MODE){
 $c->disable();
@@ -6487,8 +6499,7 @@ const MODE_DELETE = 'delete';
 const MODE_COUNT = 'count';
 public $_table;
 public $_selects = array();
-public $_where = array();
-public $_wheregroups = array('AND');
+public $_where = null;
 public $_mode = Dataset::MODE_GET;
 public $_sets = array();
 public $_idcol = null;
@@ -6579,41 +6590,24 @@ if(DB_PREFIX && strpos($tablename, DB_PREFIX) === false) $tablename = DB_PREFIX 
 $this->_table = $tablename;
 return $this;
 }
+public function getWhereClause(){
+if($this->_where === null){
+$this->_where = new DatasetWhereClause('root');
+}
+return $this->_where;
+}
 public function where(){
 $args = func_get_args();
-if(sizeof($args) == 2 && !is_array($args[0]) && !is_array($args[1])){
-$this->_parseWhere($args[0] . ' = ' . $args[1]);
-return $this;
-}
-foreach($args as $a){
-if(is_array($a)){
-foreach($a as $k => $v){
-if(is_numeric($k)) $this->_parseWhere($v);
-else $this->_where[] = array('field' => $k, 'op' => '=', 'value' => $v, 'group' => 0);
-}
-}
-else{
-$this->_parseWhere($a);
-}
-}
+$this->getWhereClause()->addWhere($args);
 return $this;
 }
 public function whereGroup($separator, $wheres){
 $args = func_get_args();
 $sep = array_shift($args);
-$group = sizeof($this->_wheregroups);
-$this->_wheregroups[] = $sep;
-foreach($args as $a){
-if(is_array($a)){
-foreach($a as $k => $v){
-if(is_numeric($k)) $this->_parseWhere($v, $group);
-else $this->_where[] = array('field' => $k, 'op' => '=', 'value' => $v, 'group' => $group);
-}
-}
-else{
-$this->_parseWhere($a, $group);
-}
-}
+$clause = new DatasetWhereClause();
+$clause->setSeparator($sep);
+$clause->addWhere($args);
+$this->getWhereClause()->addWhere($clause);
 return $this;
 }
 public function limit(){
@@ -6655,9 +6649,94 @@ function valid() {
 if($this->_data === null) $this->execute();
 return isset($this->_data[key($this->_data)]);
 }
-private function _parseWhere($statement, $group = 0){
+public static function Init(){
+return new self();
+}
+}
+class DatasetWhereClause{
+private $_separator = 'AND';
+private $_statements = array();
+private $_name;
+public function __construct($name = '_unnamed_'){
+$this->_name = $name;
+}
+public function addWhere($arguments){
+if($arguments instanceof DatasetWhereClause){
+$this->_statements[] = $arguments;
+return true;
+}
+if(is_string($arguments)){
+$this->_statements[] = new DatasetWhere($arguments);
+return true;
+}
+foreach($arguments as $a){
+if(is_array($a)){
+foreach($a as $k => $v){
+if(is_numeric($k)){
+$this->_statements[] = new DatasetWhere($v);
+}
+else{
+$this->_statements[] = new DatasetWhere($k . ' = ' . $v);
+}
+}
+}
+elseif($a instanceof DatasetWhereClause){
+$this->_statements[] = $a;
+}
+elseif($a instanceof DatasetWhere){
+$this->_statements[] = $a;
+}
+else{
+$this->_statements[] = new DatasetWhere($a);
+}
+}
+}
+public function addWhereSub($sep, $arguments){
+$subgroup = new DatasetWhereClause();
+$subgroup->setSeparator($sep);
+$subgroup->addWhere($arguments);
+$this->addWhere($subgroup);
+}
+public function getStatements(){
+return $this->_statements;
+}
+public function setSeparator($sep){
+$sep = trim(strtoupper($sep));
+switch($sep){
+case 'AND':
+case 'OR':
+$this->_separator = $sep;
+break;
+default:
+throw new DMI_Exception('Invalid separator, [' . $sep . ']');
+}
+}
+public function getSeparator(){
+return $this->_separator;
+}
+public function getAsArray(){
+$children = array();
+foreach($this->_statements as $s){
+if($s instanceof DatasetWhereClause){
+$children[] = $s->getAsArray();
+}
+elseif($s instanceof DatasetWhere){
+$children[] = $s->field . ' ' . $s->op . ' ' . $s->value;
+}
+}
+return array('sep' => $this->_separator, 'children' => $children);
+}
+}
+class DatasetWhere{
+public $field;
+public $op;
+public $value;
+public function __construct($arguments){
+$this->_parseWhere($arguments);
+}
+private function _parseWhere($statement){
 $valid = false;
-$operations = array('!=', '<=', '>=', '=', '>', '<', 'LIKE ');
+$operations = array('!=', '<=', '>=', '=', '>', '<', 'LIKE ', 'NOT LIKE');
 $k = preg_replace('/^([^ !=<>]*).*/', '$1', $statement);
 $statement = trim(substr($statement, strlen($k)));
 foreach($operations as $c){
@@ -6669,11 +6748,10 @@ break;
 }
 }
 if($valid){
-$this->_where[] = array('field' => $k, 'op' => $op, 'value' => $statement, 'group' => $group);
+$this->field = $k;
+$this->op = $op;
+$this->value = $statement;
 }
-}
-public static function Init(){
-return new self();
 }
 }
 
@@ -8942,6 +9020,7 @@ public static $Mappings = array(
 'pagethemeselect'  => 'FormPageThemeSelectInput',
 'password'         => 'FormPasswordInput',
 'radio'            => 'FormRadioInput',
+'reset'            => 'FormResetInput',
 'select'           => 'FormSelectInput',
 'state'            => 'FormStateInput',
 'submit'           => 'FormSubmitInput',

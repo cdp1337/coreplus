@@ -785,25 +785,56 @@ class DMI_mysqli_backend implements DMI_Backend {
 	private function _parseWhere(Dataset $dataset){
 		$q = '';
 
-		if(sizeof($dataset->_where)){
-			$wsg = array();
-			$ws = array();
-			foreach($dataset->_where as $w){
-				$w['value'] = $this->_conn->real_escape_string($w['value']);
-				if(!isset($wsg[$w['group']])) $wsg[$w['group']] = array();
+		// If this dataset never initiated a where clause, there won't be any!
+		if($dataset->_where === null) return '';
 
-				$wsg[$w['group']][] = "`{$w['field']}` {$w['op']} '{$w['value']}'";
+		/** @var $root DatasetWhereClause */
+		$root = $dataset->_where;
+
+		// If the root node doesn't have any WHERE statements... also easy enough!
+		if(!sizeof($root->getStatements())) return '';
+
+		// Well, I don't want to mess with that!  See if someone else does!
+		$str = $this->_parseWhereClause($root);
+
+		// No statements afterall? GREAT!
+		if(!trim($str)) return '';
+
+		// Ok ok....
+		return ' WHERE ' . $str;
+	}
+
+	/**
+	 * The recursive function that will return the actual SQL string from a group.
+	 * @param DatasetWhereClause $group
+	 */
+	private function _parseWhereClause(DatasetWhereClause $group){
+		$statements = $group->getStatements();
+
+		$ws = array();
+		foreach($statements as $w){
+			if($w instanceof DatasetWhereClause){
+				// Recursively recurring recursion, RECURSE!
+				$ws[] = '( ' . $this->_parseWhereClause($w) . ' )';
 			}
+			elseif($w instanceof DatasetWhere){
+				// No field, what can I do?
+				if(!$w->field) continue;
 
-			// Combine each group member with its own seperator.
-			foreach($wsg as $k => $v){
-				$ws[] = ' ( ' . implode(' ' . $dataset->_wheregroups[$k] . ' ', $v) . ' ) ';
+				if($w->value === null){
+					$v = 'NULL';
+				}
+				elseif(is_int($w->value)){
+					$v = $w->value;
+				}
+				else{
+					$v = "'" . $this->_conn->real_escape_string($w->value) . "'";
+				}
+				$ws[] = '`' . $w->field . '` ' . $w->op . ' ' . $v;
 			}
-
-			$q .= ' WHERE ' . implode(' ' . $dataset->_wheregroups[0] . ' ', $ws);
 		}
 
-		return $q;
+		return implode(' ' . $group->getSeparator() . ' ', $ws);
 	}
 
 

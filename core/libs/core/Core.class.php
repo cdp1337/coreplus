@@ -415,7 +415,6 @@ class Core implements ISingleton {
 				// Allow packages to be auto-installed if in DEV mode.
 				// If DEV mode is not enabled, just install the new component, do not enable it.
 				if (!$c->isInstalled() && $c->isLoadable()) {
-					var_dump($c, $this);
 					// w00t
 					$c->install();
 					if(!DEVELOPMENT_MODE){

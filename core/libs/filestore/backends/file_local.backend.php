@@ -551,7 +551,8 @@ class File_local_backend implements File_Backend {
 			// Return a 404 image.
 			$file = Core::File('assets/mimetype_icons/notfound.png');
 			if($width === false) return $file->getURL();
-			else return $file->getPreviewURL($dimensions);
+			elseif($file->exists()) return $file->getPreviewURL($dimensions);
+			else return null;
 
 			//$size = Core::TranslateDimensionToPreviewSize($width, $height);
 			//return Core::ResolveAsset('mimetype_icons/notfound-' . $size . '.png');

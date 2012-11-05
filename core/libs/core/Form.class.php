@@ -575,6 +575,7 @@ class Form extends FormGroup {
 		'pagethemeselect'  => 'FormPageThemeSelectInput',
 		'password'         => 'FormPasswordInput',
 		'radio'            => 'FormRadioInput',
+		'reset'            => 'FormResetInput',
 		'select'           => 'FormSelectInput',
 		'state'            => 'FormStateInput',
 		'submit'           => 'FormSubmitInput',

@@ -340,25 +340,25 @@ class Model implements ArrayAccess {
 			return false;
 		}
 		/*
-		  // Do the key validation first of all.
-		  if (get_class($this) == 'PageModel') {
-			  $s = self::GetSchema();
-			  foreach ($this->_data as $k => $v) {
-				  // Date created and updated have their own validations.
-				  if (
-					  $s[$k]['type'] == Model::ATT_TYPE_CREATED ||
-					  $s[$k]['type'] == Model::ATT_TYPE_UPDATED
-				  ) {
-					  if (!(is_numeric($v) || !$v)) throw new DMI_Exception('Unable to save ' . self::GetTableName() . '.' . $k . ' has an invalid value.');
-					  continue;
-				  }
-				  // This key null?
-				  if ($v === null && !(isset($s[$k]['null']) && $s[$k]['null'])) {
-					  if (!isset($s[$k]['default'])) throw new DMI_Exception('Unable to save ' . self::GetTableName() . '.' . $k . ', null is not allowed and there is no default value set.');
-				  }
-			  }
-		  }
-  */
+		// Do the key validation first of all.
+		if (get_class($this) == 'PageModel') {
+			$s = self::GetSchema();
+			foreach ($this->_data as $k => $v) {
+				// Date created and updated have their own validations.
+				if (
+					$s[$k]['type'] == Model::ATT_TYPE_CREATED ||
+					$s[$k]['type'] == Model::ATT_TYPE_UPDATED
+				) {
+					if (!(is_numeric($v) || !$v)) throw new DMI_Exception('Unable to save ' . self::GetTableName() . '.' . $k . ' has an invalid value.');
+					continue;
+				}
+				// This key null?
+				if ($v === null && !(isset($s[$k]['null']) && $s[$k]['null'])) {
+					if (!isset($s[$k]['default'])) throw new DMI_Exception('Unable to save ' . self::GetTableName() . '.' . $k . ', null is not allowed and there is no default value set.');
+				}
+			}
+		}
+		*/
 		if ($this->_exists) $this->_saveExisting();
 		else $this->_saveNew();
 
@@ -1007,6 +1007,32 @@ class Model implements ArrayAccess {
 		// Search through each of these and find a matching 
 	}
 
+	/**
+	 * Administrative method used internally by some systems.  This allows a link to be overwritten externally.
+	 *
+	 * Particularly useful for BELONGSTOONE models being updated by their parent.
+	 *
+	 * @param       $linkname
+	 * @param Model $model
+	 *
+	 * @return void
+	 */
+	public function setLink($linkname, Model $model) {
+		if (!isset($this->_linked[$linkname])) return; // @todo Error Handling
+
+		// Update the cached model.
+		switch($this->_linked[$linkname]['link']){
+			case Model::LINK_HASONE:
+			case Model::LINK_BELONGSTOONE:
+				$this->_linked[$linkname]['records'] = $model;
+				break;
+			case Model::LINK_HASMANY:
+			case Model::LINK_BELONGSTOMANY:
+				if(!isset($this->_linked[$linkname]['records'])) $this->_linked[$linkname]['records'] = array();
+				$this->_linked[$linkname]['records'][] = $model;
+				break;
+		}
+	}
 	public function setFromArray($array) {
 		foreach ($array as $k => $v) {
 			$this->set($k, $v);

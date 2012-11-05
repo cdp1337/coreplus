@@ -1154,8 +1154,8 @@ class Component_2_1 {
 		$c->set('enabled', true);
 		$c->save();
 		$this->_enabled = true;
-		echo 'ENABLING!<br/>';
-		var_dump($c);
+		//echo 'ENABLING!<br/>';
+		//var_dump($c);
 
 		// Ensure that the core component cache is purged too!
 		Core::Cache()->delete('core-components');

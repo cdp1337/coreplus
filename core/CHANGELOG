@@ -1,3 +1,16 @@
+Core Plus 2.3.0
+
+	* Major change in the dataset WHERE structure.  Where statements now support nested clauses, each with their own
+	separator and children.
+	* Fixed a recursion bug with local files for if the file and mimetype icon are both unavailable.
+	* Added a reset input element to the form system.
+	* Added a "setLink" method to models, useful for HAS../BELONGSTO relationships.
+	* Removed some debug content in the core.
+	* Implemented the "getHash" method on remote files.
+	* Improved logic in the smarty date function for invalid data being passed in.  Now an error is only thrown if the site
+	is in development mode, otherwise simply a blank string is returned.
+	* Switched default SSL mode from ONDEMAND to DISABLED in the configuration example file.
+
 Core Plus 2.2.6
 
 	* Fixed the navigation history in Core+.  Now saves the last 5 GET requests in history.
