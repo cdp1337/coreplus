@@ -40,8 +40,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="59985b92f2eb219b0f84a98bda5a8d6c"/>
-		<file filename="core/CHANGELOG" md5="f7fd82b0e9bd544f4c21035fa8695f0f"/>
-		<file filename="core/bootstrap.compiled.php" md5="f357c5dfa5c83ab475176206729ee892">
+		<file filename="core/CHANGELOG" md5="51c4640ee3bf7f52c86d19632307f85c"/>
+		<file filename="core/bootstrap.compiled.php" md5="7e0ef5e0df4914318a90c25fca197a5f">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -959,7 +959,7 @@
 		<file filename="core/libs/phpmailer/test_script/styles/shThemeRDark.css" md5="c8f6be1c0dcf82e65a9d39f8644f1053"/>
 		<file filename="core/libs/phpmailer/test_script/styles/wrapping.png" md5="9a4ffd836c709958eff80a3260f8a1cb"/>
 		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
-		<file filename="core/libs/smarty-plugins/block.a.php" md5="9107aa43ff6e9e21c34e540ae0d77f97"/>
+		<file filename="core/libs/smarty-plugins/block.a.php" md5="5e3e19afb2a649beece4b2eeea62ac48"/>
 		<file filename="core/libs/smarty-plugins/block.css.php" md5="3cfb719a5e00da3d10626d270fd8aa88"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="9d55b612bb00bde0db9ff625e3f3a795"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="84d16e1ba8fb38b5c8be6a1ca960ab43"/>
