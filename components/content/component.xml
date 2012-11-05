@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.4" name="content" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.5" name="content" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.1.2" operation="ge"/>
+		<require name="core" type="component" version="2.3.0" operation="ge"/>
 	</requires>
 	<permissions>
 		<permission key="content_manage" description="Manage Site Content"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="c0cff22b7a4821a4c777616911cd3af0"/>
-		<file filename="ContentController.php" md5="015a444f94a1dfe2f1b8d3de3cdeff8a">
+		<file filename="CHANGELOG" md5="ce9d4062ebe80af7caaf953f0745ff4c"/>
+		<file filename="ContentController.php" md5="ba3af67a63c82874a3a614c6f7374028">
 			<controller name="ContentController"/>
 		</file>
-		<file filename="ContentModel.php" md5="ed1b6dc3c288f0342d899c1f113e3774">
+		<file filename="ContentModel.php" md5="44e9294892698749b0eda3fe1d47b1f4">
 			<class name="ContentModel"/>
 		</file>
 	</files>
@@ -27,9 +27,8 @@
 		<file filename="templates/pages/content/delete.tpl" md5="64255b05d03ba0b58cbacb107e2b2dff"/>
 		<file filename="templates/pages/content/edit.tpl" md5="1f45af7838e6eb4421220a6dd5a8428d"/>
 		<file filename="templates/pages/content/index.tpl" md5="9f35bc9ec83575bec0135d3a65865f29"/>
-		<file filename="templates/pages/content/view.json.tpl" md5="c529f628b707099da2f6eff1a64ba31a"/>
 		<file filename="templates/pages/content/view.tpl" md5="b149433e9927396cb65c8e2880395663"/>
-		<file filename="templates/pages/content/view.xml.tpl" md5="24bbe5dba74cfbbf65c80b4e802bc6db"/>
+		<file filename="templates/pages/content/view/option1.tpl" md5="85a0fbb1b3d747c44b71b6ea84567a52"/>
 	</view>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>
@@ -37,6 +36,7 @@
 		<upgrade from="1.9.1" to="1.9.2"/>
 		<upgrade from="1.9.2" to="1.9.3"/>
 		<upgrade from="1.9.3" to="1.9.4"/>
+		<upgrade from="1.9.4" to="1.9.5"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

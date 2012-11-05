@@ -39,29 +39,33 @@ class ContentController extends Controller_2_1 {
 	}
 	
     public function view(){
-		// I'm calling checkAcess here because the cached access string is canonical in this case.
+		// I'm calling check access here because the cached access string is canonical in this case.
 		$page    = $this->getPageModel();
 		$view    = $this->getView();
-		
+
 		if(!$this->setAccess($page->get('access'))){
 			return View::ERROR_ACCESSDENIED;
 		}
-		
-		$m = new ContentModel($page->getParameter(0));
+
+		/** @var $m ContentModel */
+		$m = ContentModel::Construct($page->getParameter(0));
 
 		if(!$m->exists()) return View::ERROR_NOTFOUND;
 
-	    $editor  = (\Core\user()->checkAccess($m->get('editpermissions')) || \Core\user()->checkAccess('p:content_manage'));
-	    $manager = \Core\user()->checkAccess('p:content_manage');
+		$editor  = (\Core\user()->checkAccess($m->get('editpermissions')) || \Core\user()->checkAccess('p:content_manage'));
+		$manager = \Core\user()->checkAccess('p:content_manage');
+
+		$page = $m->getLink('Page');
+		//$template = ($page->get('page_template')) ? 'view/' . $page->get('page_template') : 'view.tpl';
 
 		$view->assignVariable('model', $m);
-		$view->templatename = '/pages/content/view.tpl';
-	    $view->updated = $m->get('updated');
+		//$view->templatename = '/pages/content/' . $template;
+		$view->updated = $m->get('updated');
 
 		if($manager) $view->addControl('Add Page', '/Content/Create', 'add');
 		if($editor)  $view->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
-	    if($manager) $view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
-	    if($manager) $view->addControl('All Content Pages', '/Content', 'directory');
+		if($manager) $view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
+		if($manager) $view->addControl('All Content Pages', '/Content', 'directory');
 	}
 
 	public function edit(){
@@ -81,9 +85,9 @@ class ContentController extends Controller_2_1 {
 		$form = Form::BuildFromModel($m);
 		$form->set('callsmethod', 'ContentController::_SaveHandler');
 		
-		$form->addElement('pagemeta', array('name' => 'page', 'baseurl' => '/Content/View/' . $m->get('id')));
+		$form->addElement('pagemeta', array('name' => 'page', 'baseurl' => '/content/view/' . $m->get('id')));
 		
-		$form->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => '/Content/View/' . $m->get('id')));
+		$form->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => '/content/view/' . $m->get('id')));
 
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Update'));
@@ -133,7 +137,7 @@ class ContentController extends Controller_2_1 {
 		$view->assignVariable('model', $m);
 		$view->assignVariable('form', $form);
 
-		$view->addControl('All Content Pages', '/Content', 'directory');
+		$view->addControl('All Content Pages', '/content', 'directory');
 	}
 
 	public static function _SaveHandler(Form $form) {
@@ -142,11 +146,15 @@ class ContentController extends Controller_2_1 {
 
 		// Ensure that everything is marked as updated...
 		$model->set('updated', Time::GetCurrent());
-		//var_dump($model); die();
+
 		$model->save();
 
+		/** @var $page PageModel */
 		$page = $form->getElementByName('page')->getModel();
-		$page->set('baseurl', '/Content/View/' . $model->get('id'));
+		$page->setFromForm($form, 'page');
+
+		$page->set('baseurl', '/content/view/' . $model->get('id'));
+		//var_dump($page, $page->exists()); die();
 		$page->set('updated', Time::GetCurrent());
 		$page->save();
 
@@ -154,7 +162,7 @@ class ContentController extends Controller_2_1 {
 		$model->save();
 
 		$insertables = $form->getElementByName('insertables');
-		$insertables->set('baseurl', '/Content/View/' . $model->get('id'));
+		$insertables->set('baseurl', '/content/view/' . $model->get('id'));
 		$insertables->save();
 
 		// w00t

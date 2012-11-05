@@ -72,7 +72,7 @@ class ContentModel extends Model{
 		$k = strtolower($k);
 		switch($k){
 			case 'baseurl':
-				return '/Content/View/' . $this->_data['id'];
+				return '/content/view/' . $this->_data['id'];
 				break;
 			default:
 				return parent::get($k);
