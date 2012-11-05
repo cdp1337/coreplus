@@ -101,17 +101,8 @@ class NavigationWidget extends Widget_2_1 {
 			}
 		}
 
-		function transposeClass(&$el){
-			$el['class'] = implode(' ', array_unique($el['classes']));
-			if(sizeof($el['children'])){
-				foreach($el['children'] as $k => $subel){
-					transposeClass($el['children'][$k]);
-				}
-			}
-		}
-
 		foreach($sortedentries as $k => $el){
-			transposeClass($sortedentries[$k]);
+			$this->_transposeClass($sortedentries[$k]);
 		}
 
 
@@ -197,5 +188,15 @@ class NavigationWidget extends Widget_2_1 {
 		}
 
 		$view->assign('entries', $entries);
+	}
+
+
+	private function _transposeClass(&$el){
+		$el['class'] = implode(' ', array_unique($el['classes']));
+		if(sizeof($el['children'])){
+			foreach($el['children'] as $k => $subel){
+				$this->_transposeClass($el['children'][$k]);
+			}
+		}
 	}
 }
