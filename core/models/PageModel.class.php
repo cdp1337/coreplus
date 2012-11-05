@@ -236,7 +236,12 @@ class PageModel extends Model {
 		return true;
 	}
 
-	public function getTemplateName() {
+	/**
+	 * Get the base template name for this page based strictly on its baseurl.
+	 *
+	 * @return string
+	 */
+	public function getBaseTemplateName(){
 		$t = 'pages/';
 
 		$c = $this->getControllerClass();
@@ -246,11 +251,25 @@ class PageModel extends Model {
 			// Trim that bit off.
 			$c = substr($c, 0, -10);
 		}
-		$t .= strtolower($c) . '/';
+		$t .= $c . '/';
+
+		$t .= $this->getControllerMethod() . '.tpl';
+
+		return strtolower($t);
+	}
+
+	/**
+	 * Get the template name, taking the page_template into consideration.
+	 *
+	 * @return string
+	 */
+	public function getTemplateName() {
+		$t = $this->getBaseTemplateName();
 
 		// Allow the specific template to be overridden.
-		if (($override = $this->get('page_template'))) $t .= $override;
-		else $t .= strtolower($this->getControllerMethod()) . '.tpl';
+		if (($override = $this->get('page_template'))){
+			$t = substr($t, 0, -4) . '/' . $override;
+		}
 
 		return $t;
 	}
@@ -341,6 +360,24 @@ class PageModel extends Model {
 		}
 		// And set.
 		$this->setMetas($metas);
+	}
+
+	/**
+	 * Set properties on this model from a form object, optionally with a specific prefix.
+	 *
+	 * @param Form        $form   Form object to pull data from
+	 * @param string|null $prefix Prefix that all keys should be matched to, (optional)
+	 */
+	public function setFromForm(Form $form, $prefix = null){
+
+		// Carry on like usual.
+		parent::setFromForm($form, $prefix);
+
+		// And in addition, I want to get the meta data from the form too.  It'll share the same prefix, with the alteration of an _meta.
+		$meta = $form->getElementByName($prefix . '_meta');
+
+		// The form element will have already converted this to a json array for me :)
+		$this->set('metas', $meta->get('value'));
 	}
 
 	public function getResolvedURL() {

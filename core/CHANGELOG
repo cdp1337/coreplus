@@ -5,11 +5,18 @@ Core Plus 2.3.0
 	* Fixed a recursion bug with local files for if the file and mimetype icon are both unavailable.
 	* Added a reset input element to the form system.
 	* Added a "setLink" method to models, useful for HAS../BELONGSTO relationships.
+	* Added a new "setFromForm" method on models.  Allows for more fine-tune control over the form/model interaction in controllers.
+	* Added some inline documentation to the Dataset system.
 	* Removed some debug content in the core.
+	* Implemented Feature #194, SEO friendly title tag system.
 	* Implemented the "getHash" method on remote files.
 	* Improved logic in the smarty date function for invalid data being passed in.  Now an error is only thrown if the site
 	is in development mode, otherwise simply a blank string is returned.
 	* Switched default SSL mode from ONDEMAND to DISABLED in the configuration example file.
+	* Reorganized the page edit form a little and wrapped the SEO options in a common fieldset.
+	* Optimized some system performance a little.
+	* Started to implement the new page_template system (partial support in place).
+	-- Charlie Powell <charlie@eval.bz>  5 November 2012
 
 Core Plus 2.2.6
 

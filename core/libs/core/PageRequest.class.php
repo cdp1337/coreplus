@@ -403,7 +403,9 @@ class PageRequest {
 		}
 
 		// Since the controller already ran, do not overwrite the title.
-		if ($return->title === null) $return->title = $defaultpage->get('title');
+		if ($return->title === null){
+			$return->title = $defaultpage->get('title');
+		}
 
 		$parents = array();
 		foreach ($page->getParentTree() as $parent) {
@@ -423,6 +425,14 @@ class PageRequest {
 			$cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
 			$return->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
 		}
+
+		// In addition to the autogeneration, also support the page_template from the datastore.
+		if($defaultpage->get('page_template')){
+			// Switch the template over to that custom one.
+			$return->templatename = substr($return->templatename, 0, -4) . '/' . $defaultpage->get('page_template');
+		}
+
+		//var_dump($defaultpage->get('page_template'), $return->templatename); die();
 
 		// Master template set in the database?
 		if ($defaultpage->get('theme_template')) {

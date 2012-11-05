@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 04 Nov 2012 21:26:37 -0500
+ * @compiled Mon, 05 Nov 2012 04:02:36 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1378,6 +1378,28 @@ foreach ($array as $k => $v) {
 $this->set($k, $v);
 }
 }
+public function setFromForm(Form $form, $prefix = null){
+$els = $form->getElements(true, false);
+foreach ($els as $e) {
+if ($prefix){
+if(!preg_match('/^' . $prefix . '\[(.*?)\].*/', $e->get('name'), $matches)) continue;
+$key = $matches[1];
+}
+else{
+$key = $e->get('name');
+}
+$val    = $e->get('value');
+$schema = $this->getKeySchema($key);
+if(!$schema) continue;
+if ($schema['type'] == Model::ATT_TYPE_BOOL) {
+if (strtolower($val) == 'yes') $val = 1;
+elseif (strtolower($val) == 'on') $val = 1;
+elseif ($val == 1) $val = 1;
+else $val = 0;
+}
+$this->set($key, $val);
+}
+}
 public function get($k) {
 if($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
 return $this->_datadecrypted[$k];
@@ -1837,15 +1859,21 @@ return 'Rewrite URL already taken';
 }
 return true;
 }
-public function getTemplateName() {
+public function getBaseTemplateName(){
 $t = 'pages/';
 $c = $this->getControllerClass();
 if (strlen($c) - strrpos($c, 'Controller') == 10) {
 $c = substr($c, 0, -10);
 }
-$t .= strtolower($c) . '/';
-if (($override = $this->get('page_template'))) $t .= $override;
-else $t .= strtolower($this->getControllerMethod()) . '.tpl';
+$t .= $c . '/';
+$t .= $this->getControllerMethod() . '.tpl';
+return strtolower($t);
+}
+public function getTemplateName() {
+$t = $this->getBaseTemplateName();
+if (($override = $this->get('page_template'))){
+$t = substr($t, 0, -4) . '/' . $override;
+}
 return $t;
 }
 public function getView() {
@@ -1884,6 +1912,11 @@ else {
 $metas[$name] = $value;
 }
 $this->setMetas($metas);
+}
+public function setFromForm(Form $form, $prefix = null){
+parent::setFromForm($form, $prefix);
+$meta = $form->getElementByName($prefix . '_meta');
+$this->set('metas', $meta->get('value'));
 }
 public function getResolvedURL() {
 if ($this->exists()) {
@@ -3130,8 +3163,9 @@ if ($lic['title']) $l->nodeValue = $lic['title'];
 public function loadFiles() {
 if(!$this->isInstalled()) return false;
 if(!$this->isEnabled()) return false;
+$dir = $this->getBaseDir();
 foreach ($this->_xmlloader->getElements('/includes/include') as $f) {
-require_once($this->getBaseDir() . $f->getAttribute('filename'));
+require_once($dir . $f->getAttribute('filename'));
 }
 foreach ($this->_xmlloader->getElementsByTagName('hookregister') as $h) {
 $hook              = new Hook($h->getAttribute('name'));
@@ -3162,10 +3196,11 @@ $libs[strtolower($p->getAttribute('name'))] = $v;
 return $libs;
 }
 public function getClassList() {
+$dir = $this->getBaseDir();
 if($this->_classlist === null){
 $this->_classlist = array();
 foreach ($this->_xmlloader->getElements('/files/file') as $f) {
-$filename = $this->getBaseDir() . $f->getAttribute('filename');
+$filename = $dir . $f->getAttribute('filename');
 foreach ($f->getElementsByTagName('class') as $p) {
 $n           = strtolower($p->getAttribute('name'));
 $this->_classlist[$n] = $filename;
@@ -3187,10 +3222,11 @@ $this->_classlist[$n] = $filename;
 return $this->_classlist;
 }
 public function getWidgetList() {
+$dir = $this->getBaseDir();
 if($this->_widgetlist === null){
 $this->_widgetlist = array();
 foreach ($this->_xmlloader->getElements('/files/file') as $f) {
-$filename = $this->getBaseDir() . $f->getAttribute('filename');
+$filename = $dir . $f->getAttribute('filename');
 foreach ($f->getElementsByTagName('widget') as $p) {
 $this->_widgetlist[] = $p->getAttribute('name');
 }
@@ -3217,9 +3253,10 @@ return $classes;
 }
 public function getViewList() {
 $views = array();
+$dir = $this->getBaseDir();
 if ($this->hasView()) {
 foreach ($this->_xmlloader->getElementByTagName('view')->getElementsByTagName('tpl') as $t) {
-$filename     = $this->getBaseDir() . $t->getAttribute('filename');
+$filename     = $dir . $t->getAttribute('filename');
 $name         = $t->getAttribute('name');
 $views[$name] = $filename;
 }
@@ -3228,8 +3265,9 @@ return $views;
 }
 public function getControllerList() {
 $classes = array();
+$dir = $this->getBaseDir();
 foreach ($this->_xmlloader->getElements('/files/file') as $f) {
-$filename = $this->getBaseDir() . $f->getAttribute('filename');
+$filename = $dir . $f->getAttribute('filename');
 foreach ($f->getElementsByTagName('controller') as $p) {
 $n           = strtolower($p->getAttribute('name'));
 $classes[$n] = $filename;
@@ -6598,7 +6636,12 @@ return $this->_where;
 }
 public function where(){
 $args = func_get_args();
+if(sizeof($args) == 2 && is_string($args[0]) && is_string($args[1])){
+$this->getWhereClause()->addWhere($args[0] . ' = ' . $args[1]);
+}
+else{
 $this->getWhereClause()->addWhere($args);
+}
 return $this;
 }
 public function whereGroup($separator, $wheres){
@@ -8185,20 +8228,37 @@ break;
 if (!$tmpl && $this->templatename == '') {
 throw new Exception('Please set the variable "templatename" on the page view.');
 }
+if(false && $this->error == View::ERROR_NOERROR && !\Core\user()->exists() && $this->updated){
+$cacheable = true;
+$key = 'page-body' . str_replace('/', '-', $this->baseurl);
+$cache = Cache::GetSystemCache()->get($key, (60*30));
+if($cache){
+if($this->updated == $cache['updated']){
+return $cache['html'];
+}
+}
+}
+else{
+$cacheable = false;
+}
 switch ($this->mode) {
 case View::MODE_PAGE:
 case View::MODE_AJAX:
 case View::MODE_PAGEORAJAX:
 $t = $this->getTemplate();
-return $t->fetch($tmpl);
+$html = $t->fetch($tmpl);
 break;
 case View::MODE_WIDGET:
 $tn = Template::ResolveFile(preg_replace(':^[/]{0,1}pages/:', '/widgets/', $tmpl));
 if (!$tn) $tn = $tmpl;
 $t = $this->getTemplate();
-return $t->fetch($tn);
+$html = $t->fetch($tn);
 break;
 }
+if($cacheable){
+Cache::GetSystemCache()->set($key, array('updated' => $this->updated, 'html' => $html), (60 * 30));
+}
+return $html;
 }
 public function fetch() {
 $body = $this->fetchBody();
@@ -8243,7 +8303,12 @@ $template->assign('breadcrumbs', $this->getBreadcrumbs());
 $template->assign('controls', $this->controls);
 $template->assign('messages', Core::GetMessages());
 }
+if(isset($this->meta['title']) && $this->meta['title']){
+$template->assign('title', $this->meta['title']);
+}
+else{
 $template->assign('title', $this->title);
+}
 $template->assign('body', $body);
 try{
 $data = $template->fetch($mastertpl);
@@ -9132,6 +9197,7 @@ $model->set($k, $v);
 }
 $model->load();
 }
+$model->setFromForm($this, 'model');
 $els = $this->getElements(true, false);
 foreach ($els as $e) {
 if (!preg_match('/^model\[(.*?)\].*/', $e->get('name'), $matches)) continue;
@@ -9342,6 +9408,7 @@ $content = trim($matches[2][$k]);
 $default = $content;
 $name  = preg_replace('/.*name=["\'](.*?)["\'].*/i', '$1', $tag);
 $title = preg_replace('/.*title=["\'](.*?)["\'].*/i', '$1', $tag);
+if($title == $tag) $title = $name;
 $i = new InsertableModel($this->get('baseurl'), $name);
 if ($i->get('value') !== null) $content = $i->get('value');
 if (strpos($default, "\n") === false && strpos($default, "<") === false) {
@@ -9350,7 +9417,16 @@ $this->addElement('text', array('name'  => "insertable[$name]",
 'value' => $content)
 );
 }
-elseif (preg_match('/<img(.*?)src=["\'](.*?)["\'](.*?)>/i', $default)) {
+elseif (preg_match('/<img(.*?)>/i', $default)) {
+$this->addElement(
+'file',
+array(
+'name' => 'insertable[' . $name . ']',
+'title' => $title,
+'accept' => 'image/*',
+'basedir' => 'public/insertable',
+)
+);
 }
 else {
 $this->addElement('wysiwyg', array('name'  => "insertable[$name]",
@@ -9421,34 +9497,17 @@ $this->addElement(
 )
 );
 $this->addElement(
-'text', array(
-'name'        => $name . "_meta[author]",
-'title'       => 'Author',
-'description' => 'Completely optional, but feel free to include it if relevant',
-'value'       => $page->getMeta('author')
-)
-);
-$this->addElement(
-'text', array(
-'name'        => $name . "_meta[keywords]",
-'title'       => 'Keywords',
-'description' => 'Helps search engines classify this page',
-'value'       => $page->getMeta('keywords')
-)
-);
-$this->addElement(
-'textarea', array(
-'name'        => $name . "_meta[description]",
-'title'       => 'Description',
-'description' => 'Text that displays on search engine and social network preview links',
-'value'       => $page->getMeta('description')
-)
-);
-$this->addElement(
 'access', array(
 'name'  => $name . "[access]",
 'title' => 'Access Permissions',
 'value' => $page->get('access')
+)
+);
+$this->addElement(
+'pagemetas',
+array(
+'value' => $page->getMetas(),
+'name' => $name . '_meta',
 )
 );
 $skins = array('' => '-- Site Default Skin --');
@@ -9464,6 +9523,34 @@ $this->addElement(
 'title'   => 'Theme Skin',
 'value'   => $page->get('theme_template'),
 'options' => $skins
+)
+);
+}
+$tmpname = substr($page->getBaseTemplateName(), 0, -4) . '/';
+$matches = array();
+$t = new Template();
+foreach($t->getTemplateDir() as $d){
+if(is_dir($d . $tmpname)){
+$dir = new Directory_local_backend($d . $tmpname);
+foreach($dir->ls() as $file){
+if($file->getExtension() != 'tpl') continue;
+$matches[] = $file->getBaseFilename();
+}
+}
+}
+if(sizeof($matches)){
+$pages = array('' => '-- Default Page Template --');
+foreach($matches as $m){
+$pages[$m] = ucwords(str_replace('-', ' ', substr($m, 0, -4))) . ' Template';
+}
+$this->addElement(
+'select',
+array(
+'name'    => $name . '[page_template]',
+'title'   => 'Page Template',
+'value'   => $page->get('page_template'),
+'options' => $pages,
+'class' => 'page-template-selector',
 )
 );
 }
@@ -9713,7 +9800,9 @@ if ($val && !isset($return->meta[$key])) {
 $return->meta[$key] = $val;
 }
 }
-if ($return->title === null) $return->title = $defaultpage->get('title');
+if ($return->title === null){
+$return->title = $defaultpage->get('title');
+}
 $parents = array();
 foreach ($page->getParentTree() as $parent) {
 $parents[] = array(
@@ -9729,6 +9818,9 @@ $return->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['met
 elseif ($return->error == View::ERROR_NOERROR && $return->contenttype == View::CTYPE_XML && $return->templatename === null) {
 $cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
 $return->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
+}
+if($defaultpage->get('page_template')){
+$return->templatename = substr($return->templatename, 0, -4) . '/' . $defaultpage->get('page_template');
 }
 if ($defaultpage->get('theme_template')) {
 $return->mastertemplate = $defaultpage->get('theme_template');

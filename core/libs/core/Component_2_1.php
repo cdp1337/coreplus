@@ -443,13 +443,15 @@ class Component_2_1 {
 		if(!$this->isInstalled()) return false;
 		if(!$this->isEnabled()) return false;
 
+		$dir = $this->getBaseDir();
+
 		// Include any includes requested.
 		// This adds support for namespaced functions.
 		// <includes>
 		//     <include filename="core/functions/Core.functions.php"/>
 		// </includes>
 		foreach ($this->_xmlloader->getElements('/includes/include') as $f) {
-			require_once($this->getBaseDir() . $f->getAttribute('filename'));
+			require_once($dir . $f->getAttribute('filename'));
 		}
 
 
@@ -502,12 +504,14 @@ class Component_2_1 {
 	 * @return array
 	 */
 	public function getClassList() {
+		$dir = $this->getBaseDir();
+
 		if($this->_classlist === null){
 			// Get an array of class -> file (fully resolved)
 			$this->_classlist = array();
 
 			foreach ($this->_xmlloader->getElements('/files/file') as $f) {
-				$filename = $this->getBaseDir() . $f->getAttribute('filename');
+				$filename = $dir . $f->getAttribute('filename');
 				//foreach($f->getElementsByTagName('provides') as $p){
 				foreach ($f->getElementsByTagName('class') as $p) {
 					$n           = strtolower($p->getAttribute('name'));
@@ -540,11 +544,13 @@ class Component_2_1 {
 	 * @return array
 	 */
 	public function getWidgetList() {
+		$dir = $this->getBaseDir();
+
 		if($this->_widgetlist === null){
 			$this->_widgetlist = array();
 
 			foreach ($this->_xmlloader->getElements('/files/file') as $f) {
-				$filename = $this->getBaseDir() . $f->getAttribute('filename');
+				$filename = $dir . $f->getAttribute('filename');
 				foreach ($f->getElementsByTagName('widget') as $p) {
 					$this->_widgetlist[] = $p->getAttribute('name');
 				}
@@ -577,9 +583,11 @@ class Component_2_1 {
 	 */
 	public function getViewList() {
 		$views = array();
+		$dir = $this->getBaseDir();
+
 		if ($this->hasView()) {
 			foreach ($this->_xmlloader->getElementByTagName('view')->getElementsByTagName('tpl') as $t) {
-				$filename     = $this->getBaseDir() . $t->getAttribute('filename');
+				$filename     = $dir . $t->getAttribute('filename');
 				$name         = $t->getAttribute('name');
 				$views[$name] = $filename;
 			}
@@ -595,10 +603,11 @@ class Component_2_1 {
 	public function getControllerList() {
 		// Get an array of class -> file (fully resolved)
 		$classes = array();
+		$dir = $this->getBaseDir();
 
 		//foreach($this->_xmlloader->getElementByTagName('files')->getElementsByTagName('file') as $f){
 		foreach ($this->_xmlloader->getElements('/files/file') as $f) {
-			$filename = $this->getBaseDir() . $f->getAttribute('filename');
+			$filename = $dir . $f->getAttribute('filename');
 			//foreach($f->getElementsByTagName('provides') as $p){
 
 			foreach ($f->getElementsByTagName('controller') as $p) {

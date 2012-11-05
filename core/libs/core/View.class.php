@@ -430,12 +430,34 @@ class View {
 			throw new Exception('Please set the variable "templatename" on the page view.');
 		}
 
+
+		// Allow pages requested by anonymous users to be cached if there are no errors.
+		// @todo Implement caching like this.... only that works :/
+		if(false && $this->error == View::ERROR_NOERROR && !\Core\user()->exists() && $this->updated){
+			// Yay, see if there's a cached version available!
+			$cacheable = true;
+			$key = 'page-body' . str_replace('/', '-', $this->baseurl);
+			$cache = Cache::GetSystemCache()->get($key, (60*30));
+			if($cache){
+				//var_dump($cache, $key); die();
+				// Check the updated timestamp.
+				if($this->updated == $cache['updated']){
+					return $cache['html'];
+				}
+			}
+		}
+		else{
+			$cacheable = false;
+		}
+
+
+
 		switch ($this->mode) {
 			case View::MODE_PAGE:
 			case View::MODE_AJAX:
 			case View::MODE_PAGEORAJAX:
 				$t = $this->getTemplate();
-				return $t->fetch($tmpl);
+				$html = $t->fetch($tmpl);
 				break;
 			case View::MODE_WIDGET:
 				// This template can be a couple things.
@@ -444,10 +466,15 @@ class View {
 
 				$t = $this->getTemplate();
 				//var_dump($t);
-				return $t->fetch($tn);
+				$html = $t->fetch($tn);
 				break;
 		}
 
+		// Is it cacheable?
+		if($cacheable){
+			Cache::GetSystemCache()->set($key, array('updated' => $this->updated, 'html' => $html), (60 * 30));
+		}
+		return $html;
 	}
 
 	public function fetch() {
@@ -514,7 +541,15 @@ class View {
 		//	//var_dump($this->getVariable('widget')); die();
 		//	$template->assign('widget', $this->getVariable('widget'));
 		//}
-		$template->assign('title', $this->title);
+
+
+		// This logic is needed for the SEO title, since that's usually completely human unfriendly.
+		if(isset($this->meta['title']) && $this->meta['title']){
+			$template->assign('title', $this->meta['title']);
+		}
+		else{
+			$template->assign('title', $this->title);
+		}
 		$template->assign('body', $body);
 
 		try{

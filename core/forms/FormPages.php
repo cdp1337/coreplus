@@ -20,6 +20,12 @@ class FormPageMetasInput extends FormElement{
 		if(!$metas) $metas = array();
 
 		$fullmetas = array(
+			// The SEO title.  This isn't quite a meta tag, but part of that system regardless, so might as well.
+			'title' => array(
+				'title'       => 'Search-Optimized Title',
+				'description' => 'If a value is entered here, the &lt;title&gt; tag of the page will be replaced with this value.  Useful for making the page more indexable by search bots.',
+				'type'        => 'text',
+			),
 			// Author
 			'author' => array(
 				'title'       => 'Author',
@@ -46,10 +52,22 @@ class FormPageMetasInput extends FormElement{
 	}
 
 	public function render(){
-		$out = '';
+		//$out = '';
 		$prefix = $this->get('name');
 
+		$group = new FormGroup(array('title' => 'Meta Information (SEO)'));
+
 		foreach($this->_getMetas() as $name => $dat){
+			$group->addElement(
+				$dat['type'],
+				array(
+					'name'        => ($prefix . '[' . $name . ']'),
+					'title'       => $dat['title'],
+					'description' => $dat['description'],
+					'value'       => $dat['value']
+				)
+			);
+			/*
 			$el = FormElement::Factory($dat['type'], array(
 				'name'        => ($prefix . '[' . $name . ']'),
 				'title'       => $dat['title'],
@@ -57,8 +75,9 @@ class FormPageMetasInput extends FormElement{
 				'value'       => $dat['value']
 			));
 			$out .= $el->render();
+			*/
 		}
-		return $out;
+		return $group->render();
 	}
 
 	public function setValue($value){

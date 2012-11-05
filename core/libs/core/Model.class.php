@@ -1033,11 +1033,58 @@ class Model implements ArrayAccess {
 				break;
 		}
 	}
+
+	/**
+	 * Set properties on this model from an associative array of key/value pairs.
+	 *
+	 * @param $array
+	 */
 	public function setFromArray($array) {
 		foreach ($array as $k => $v) {
 			$this->set($k, $v);
 		}
 	}
+
+	/**
+	 * Set properties on this model from a form object, optionally with a specific prefix.
+	 *
+	 * @param Form        $form   Form object to pull data from
+	 * @param string|null $prefix Prefix that all keys should be matched to, (optional)
+	 */
+	public function setFromForm(Form $form, $prefix = null){
+
+		// Get every "prefix[...]" element, as they key up 1-to-1.
+		$els = $form->getElements(true, false);
+		foreach ($els as $e) {
+			// If a specific prefix was requested and this element does not match up, skip it!
+			if ($prefix){
+				if(!preg_match('/^' . $prefix . '\[(.*?)\].*/', $e->get('name'), $matches)) continue;
+				$key = $matches[1];
+			}
+			else{
+				$key = $e->get('name');
+			}
+
+			$val    = $e->get('value');
+			$schema = $this->getKeySchema($key);
+
+			// If there is no schema entry for this key, no reason to try to set it as it doesn't exist in the Model.
+			if(!$schema) continue;
+
+			if ($schema['type'] == Model::ATT_TYPE_BOOL) {
+				// This is used by checkboxes
+				if (strtolower($val) == 'yes') $val = 1;
+				// A single checkbox will have the value of "on" if checked
+				elseif (strtolower($val) == 'on') $val = 1;
+				// Hidden inputs will have the value of "1"
+				elseif ($val == 1) $val = 1;
+				else $val = 0;
+			}
+
+			$this->set($key, $val);
+		}
+	}
+
 
 	/**
 	 * Get the requested key for this object.

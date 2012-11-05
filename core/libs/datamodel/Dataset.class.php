@@ -232,14 +232,45 @@ class Dataset implements Iterator{
 	 * Argument passed in can be a multitude of options:
 	 * key/value paired array:
 	 *
+	 *
+	 * Supported formats:
+	 *
+	 * The most simple method, set the where clause to look where one specific key is a value.
+	 * <pre>
+	 * where("key", "value");
+	 * </pre>
+	 *
+	 * Just a regular string for the where statement
+	 * <pre>
+	 * where('key = some value');
+	 * where('key > 123');
+	 * where('key LIKE something%foo');
+	 * </pre>
+	 *
+	 * Associative array of simple equal wheres.  This method is limiting in that it only supports '=' checks.
+	 * <pre>
+	 * where(array('key' => 'value1', 'key2' => 'value2'));
+	 * </pre>
+	 *
+	 * Indexed array of multiple where statements, allow any value check.
+	 * <pre>
+	 * where(array('key = value1', 'key2 > 123'));
+	 * </pre>
+	 *
 	 * @return Dataset
 	 */
 	public function where(){
 		$args = func_get_args();
 
-		// Ya'know, I really don't care what the arguments that are passed in are!
-		// But I bet the WhereClause object will! :p
-		$this->getWhereClause()->addWhere($args);
+		// The new addwhere doesn't support setting a string, string, but the legacy system does!
+		if(sizeof($args) == 2 && is_string($args[0]) && is_string($args[1])){
+			$this->getWhereClause()->addWhere($args[0] . ' = ' . $args[1]);
+		}
+		else{
+			// Ya'know, I really don't care what the arguments that are passed in are!
+			// But I bet the WhereClause object will! :p
+			$this->getWhereClause()->addWhere($args);
+		}
 
 		// Allow chaining
 		return $this;
@@ -399,9 +430,21 @@ class DatasetWhereClause{
 		$this->_name = $name;
 	}
 
+	/**
+	 * Add a where statement to this clause.
+	 *
+	 * DOES NOT SUPPORT addWhere('key', 'value'); format!!!
+	 *
+	 * @param $arguments
+	 *
+	 * @return bool
+	 */
 	public function addWhere($arguments){
 
-		// Allow $k, $v to be passed in.
+		// <strike>Allow $k, $v to be passed in.</strike>
+		//
+		// This format is no longer supported at the low level!  DON'T DO IT!
+		//
 //		if(sizeof($arguments) == 2 && !is_array($arguments[0]) && !is_array($arguments[1])){
 //
 //			$this->_statements[] = new DatasetWhere($arguments[0] . ' = ' . $arguments[1]);

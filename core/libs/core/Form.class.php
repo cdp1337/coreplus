@@ -756,28 +756,7 @@ class Form extends FormGroup {
 			$model->load();
 		}
 
-		// Now, get every "model[...]" element, as they key up 1-to-1.
-		$els = $this->getElements(true, false);
-		foreach ($els as $e) {
-			if (!preg_match('/^model\[(.*?)\].*/', $e->get('name'), $matches)) continue;
-
-			$key    = $matches[1];
-			$val    = $e->get('value');
-			$schema = $model->getKeySchema($key);
-
-			if ($schema['type'] == Model::ATT_TYPE_BOOL) {
-				// This is used by checkboxes
-				if (strtolower($val) == 'yes') $val = 1;
-				// A single checkbox will have the value of "on" if checked
-				elseif (strtolower($val) == 'on') $val = 1;
-				// Hidden inputs will have the value of "1"
-				elseif ($val == 1) $val = 1;
-				else $val = 0;
-			}
-
-			$model->set($key, $val);
-		}
-
+		$model->setFromForm($this, 'model');
 
 		return $model;
 
@@ -1159,6 +1138,9 @@ class FormPageInsertables extends FormGroup {
 			$name  = preg_replace('/.*name=["\'](.*?)["\'].*/i', '$1', $tag);
 			$title = preg_replace('/.*title=["\'](.*?)["\'].*/i', '$1', $tag);
 
+			// No title given?
+			if($title == $tag) $title = $name;
+
 			// This insertable may already have content from the database... if so I want to pull that!
 			$i = new InsertableModel($this->get('baseurl'), $name);
 			if ($i->get('value') !== null) $content = $i->get('value');
@@ -1171,10 +1153,17 @@ class FormPageInsertables extends FormGroup {
 				                                'value' => $content)
 				);
 			}
-			elseif (preg_match('/<img(.*?)src=["\'](.*?)["\'](.*?)>/i', $default)) {
+			elseif (preg_match('/<img(.*?)>/i', $default)) {
 				// It's an image.
-				// @todo Image Upload form element
-				//$el = new FormIm
+				$this->addElement(
+					'file',
+					array(
+						'name' => 'insertable[' . $name . ']',
+						'title' => $title,
+						'accept' => 'image/*',
+						'basedir' => 'public/insertable',
+					)
+				);
 			}
 			else {
 				// Just default back to a WYSIWYG.
@@ -1279,44 +1268,20 @@ class FormPageMeta extends FormGroup {
 			                )
 		);
 
-
-		// Author
-		$this->addElement(
-			'text', array(
-				      'name'        => $name . "_meta[author]",
-				      'title'       => 'Author',
-				      'description' => 'Completely optional, but feel free to include it if relevant',
-				      'value'       => $page->getMeta('author')
-			      )
-		);
-
-		// Meta Keywords
-		$this->addElement(
-			'text', array(
-				      'name'        => $name . "_meta[keywords]",
-				      'title'       => 'Keywords',
-				      'description' => 'Helps search engines classify this page',
-				      'value'       => $page->getMeta('keywords')
-			      )
-		);
-
-		// Meta Description
-		$this->addElement(
-			'textarea', array(
-				          'name'        => $name . "_meta[description]",
-				          'title'       => 'Description',
-				          'description' => 'Text that displays on search engine and social network preview links',
-				          'value'       => $page->getMeta('description')
-			          )
-		);
-
-
 		$this->addElement(
 			'access', array(
 				        'name'  => $name . "[access]",
 				        'title' => 'Access Permissions',
 				        'value' => $page->get('access')
 			        )
+		);
+
+		$this->addElement(
+			'pagemetas',
+			array(
+				'value' => $page->getMetas(),
+				'name' => $name . '_meta',
+			)
 		);
 
 		// Give me all the skins available on the current theme.
@@ -1337,7 +1302,44 @@ class FormPageMeta extends FormGroup {
 			);
 		}
 
-		// @todo Add page template selection logic
+		// Figure out the template directory for custom pages, (if it exists)
+		// In order to get the types, I need to sift through all the potential template directories and look for a directory
+		// with the matching name.
+		$tmpname = substr($page->getBaseTemplateName(), 0, -4) . '/';
+
+		$matches = array();
+
+		$t = new Template();
+		foreach($t->getTemplateDir() as $d){
+			if(is_dir($d . $tmpname)){
+				// Yay, sift through that and get the files!
+				$dir = new Directory_local_backend($d . $tmpname);
+				foreach($dir->ls() as $file){
+					/** @var $file File_local_backend */
+					if($file->getExtension() != 'tpl') continue;
+					$matches[] = $file->getBaseFilename();
+				}
+			}
+		}
+
+		// Are there matches?
+		if(sizeof($matches)){
+			$pages = array('' => '-- Default Page Template --');
+			foreach($matches as $m){
+				$pages[$m] = ucwords(str_replace('-', ' ', substr($m, 0, -4))) . ' Template';
+			}
+
+			$this->addElement(
+				'select',
+				array(
+					'name'    => $name . '[page_template]',
+					'title'   => 'Page Template',
+					'value'   => $page->get('page_template'),
+					'options' => $pages,
+					'class' => 'page-template-selector',
+				)
+			);
+		}
 	}
 
 	/**

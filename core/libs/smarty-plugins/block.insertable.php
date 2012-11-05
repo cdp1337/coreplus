@@ -30,7 +30,7 @@ function smarty_block_insertable($params, $content, $template, &$repeat){
 	if(!isset($params['name'])) return '';
 	$assign = (isset($params['assign']))? $params['assign'] : false;
 
-	$i = new InsertableModel($baseurl, $params['name']);
+	$i = InsertableModel::Construct($baseurl, $params['name']);
 
 	if($i->exists()){
 		$content = $i->get('value');
