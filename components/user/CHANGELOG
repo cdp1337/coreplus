@@ -1,3 +1,12 @@
+User 2.3.1
+
+	* Added checkboxes and radio options as valid userconfig types.
+	* Added a "GetControlLinks" method on the UserHelper class.  This will act as authoritative source of the administrative
+	actions possible for a given user or user id that the currently logged in user can perform.
+	* Implemented user caching via the Construct method.
+	* Minor NOTICE fix in the admin form for when no groups are available.
+	-- Charlie Powell <charlie@eval.bz>  5 Nov 2012
+
 User 2.3.0
 
 	* Added support for the new user social component.

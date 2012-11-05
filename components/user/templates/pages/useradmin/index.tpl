@@ -48,19 +48,20 @@
 							{/a}
 						</li>
 					{/if}
-					<li class="edit">
-						{a href="/user/edit/`$user.id`"}
-							<i class="icon-edit"></i>
-							<span>Edit</span>
-						{/a}
-					</li>
-					</li>
-					<li class="delete">
-						{a href="/useradmin/delete/`$user.id`" confirm="Delete `$user.email`?"}
-							<i class="icon-remove"></i>
-							<span>Delete</span>
-						{/a}
-					</li>
+
+					{foreach UserHelper::GetControlLinks($user) as $link}
+						<li class="{$link.class}">
+							{a href="`$link.link`" title="`$link.title|escape`" confirm="`$link.confirm`"}
+								{if $link.icon}
+									<i class="icon-{$link.icon}"></i>
+									<span>{$link.title}</span>
+								{else}
+									{$link.title}
+								{/if}
+							{/a}
+						</li>
+					{/foreach}
+
 				</ul>
 			</td>
 		</tr>

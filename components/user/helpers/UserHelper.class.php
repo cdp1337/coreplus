@@ -313,4 +313,67 @@ abstract class UserHelper{
 		Core::SetMessage('Updated user successfully', 'success');
 		return true;
 	}
+
+	/**
+	 * Get the control links for a given user based on the current user's access permissions.
+	 *
+	 * @param UserBackend|int $user
+	 * @return array
+	 */
+	public static function GetControlLinks($user){
+		$a = array();
+
+		if(is_int($user)){
+			// Transpose the ID to a user backend object.
+			$user = User::Construct($user);
+		}
+		elseif($user instanceof UserModel){
+			// Transpose the model to a user backend object.
+			$user = User::Construct($user->get('id'));
+		}
+		elseif(is_subclass_of($user, 'UserBackend')){
+			// NO change needed :)
+		}
+		else{
+			// Umm, wtf was it?
+			return array();
+		}
+
+		// still nothing?
+		if(!$user) return array();
+
+		if(\Core\user()->checkAccess('p:user_manage')){
+			$a[] = array(
+				'title' => 'Edit',
+				'icon' => 'edit',
+				'link' => '/user/edit/' . $user->get('id'),
+			);
+
+			$a[] = array(
+				'title' => 'Change Password',
+				'icon' => 'key',
+				'link' => '/user/password/' . $user->get('id'),
+			);
+
+			// Even though this user has admin access, he/she cannot remove his/her own account!
+			if(\Core\user()->get('id') != $user->get('id')){
+				$a[] = array(
+					'title' => 'Delete',
+					'icon' => 'remove',
+					'link' => '/useradmin/delete/' . $user->get('id'),
+					'confirm' => 'Really delete user ' . $user->getDisplayName(),
+				);
+			}
+		}
+
+		// @todo Implement a hook here.
+
+		// Now that I have them all, I need to go through and make sure that they have the appropriate data at least.
+		foreach($a as $k => $dat){
+			if(!isset($dat['class'])) $a[$k]['class'] = '';
+			if(!isset($dat['confirm'])) $a[$k]['confirm'] = false;
+			if(!isset($dat['icon'])) $a[$k]['icon'] = false;
+		}
+		return $a;
+	}
 }

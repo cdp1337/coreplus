@@ -138,6 +138,7 @@ class FormAccessStringInput extends FormElement {
 	 * @return string
 	 */
 	public function lookupValueFrom(&$src) {
+
 		// I'll let the parent do all the work.
 		$val = parent::lookupValueFrom($src);
 
@@ -160,9 +161,12 @@ class FormAccessStringInput extends FormElement {
 
 		$bool   = ($src[$this->_targetname . '_type'] == 'whitelist') ? '' : '!';
 		$groups = array();
-		// Get each group selected
-		foreach ($src[$this->_targetname] as $g) {
-			$groups[] = 'g:' . $bool . $g;
+
+		// Get each group selected, (if the user selected any)
+		if(isset($src[$this->_targetname]) && is_array($src[$this->_targetname])){
+			foreach ($src[$this->_targetname] as $g) {
+				$groups[] = 'g:' . $bool . $g;
+			}
 		}
 		// And the white/black list itself.
 		if ($src[$this->_targetname . '_type'] != 'whitelist') $groups[] = '*';

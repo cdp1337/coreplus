@@ -60,7 +60,12 @@ class User {
 	 * @var null|array
 	 */
 	protected $_resolvedpermissions = null;
-	
+
+	/**
+	 * Cache of user objects, used to minimize lookups of users.
+	 * @var array
+	 */
+	private static $_Cache = array();
 	
 	/**
 	 * Simple check if this user exists in the database.
@@ -423,6 +428,8 @@ class User {
 	/**
 	 * The externally usable method to find and return the appropriate user backend.
 	 *
+	 * DOES NOT make use of the system cache!
+	 *
 	 * @param array $where
 	 * @param int $limit 
 	 * @return array|UserBackend|null
@@ -448,6 +455,22 @@ class User {
 		}
 		
 		return ($limit == 1)? $return[0] : $return;
+	}
+
+	/**
+	 * Get a user object from is id, or null if that user does not exist.
+	 *
+	 * This method DOES make use of the system cache for data!
+	 *
+	 * @param $userid
+	 * @return UserBackend|null
+	 */
+	public static function Construct($userid){
+		if(!array_key_exists($userid, self::$_Cache)){
+			self::$_Cache[$userid] = self::Find(array('id' => $userid), 1);
+		}
+
+		return self::$_Cache[$userid];
 	}
 }
 

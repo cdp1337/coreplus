@@ -107,7 +107,9 @@ function get_form($user = null){
 			case 'file':
 				$el->set('basedir', 'public/user/');
 				break;
+			case 'checkboxes':
 			case 'select':
+			case 'radio':
 				$opts = array_map('trim', explode('|', $f->get('options')));
 				$el->set('options', $opts);
 				break;
