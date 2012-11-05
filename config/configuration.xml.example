@@ -11,7 +11,7 @@
 	</define>
 
 	<define name="SSL_MODE" type="enum">
-		<value>ondemand</value>
+		<value>disabled</value>
 		<description>
 			disabled - SSL is disabled completely
 			ondemand - SSL is allowed on pages that require it only, (standard pages redirect to non-ssl)
