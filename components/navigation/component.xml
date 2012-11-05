@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.1" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.2" name="Navigation" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="8f9469d9de084f2e359d0e665df40e2b"/>
+		<file filename="CHANGELOG" md5="4818f2ff0e4ae9986cfafb80238c2b11"/>
 		<file filename="controllers/NavigationController.php" md5="f609072de0e71e7ba8e0b07c4959847a">
 			<controller name="NavigationController"/>
 		</file>
@@ -15,7 +15,7 @@
 		<file filename="models/NavigationEntry.model.php" md5="d143d8b99e34338ec178ee9282001044">
 			<class name="NavigationEntryModel"/>
 		</file>
-		<file filename="widgets/NavigationWidget.php" md5="c08fc9d387e1306b1c42ac1ea55c488e">
+		<file filename="widgets/NavigationWidget.php" md5="b56e8ad11248f9f972887db2cb9e7047">
 			<class name="NavigationWidget"/>
 		</file>
 	</files>
@@ -47,6 +47,7 @@
 		<upgrade from="1.9.1" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.1.0"/>
 		<upgrade from="2.1.0" to="2.1.1"/>
+		<upgrade from="2.1.1" to="2.1.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

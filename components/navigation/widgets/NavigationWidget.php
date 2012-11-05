@@ -23,8 +23,10 @@
 
 class NavigationWidget extends Widget_2_1 {
 	public function view() {
-		$view = $this->getView();
-		$m    = new NavigationModel($this->getParameter(0));
+		$view       = $this->getView();
+		$m          = NavigationModel::Construct($this->getParameter(0));
+		$current    = PageRequest::GetSystemRequest();
+		$currenturl = $current->getBaseURL(); // Used to indicate the "active" link.
 
 		if (!$m->exists()) return View::ERROR_NOTFOUND;
 
@@ -37,23 +39,42 @@ class NavigationWidget extends Widget_2_1 {
 		// First level children
 		foreach ($entries as $k => $e) {
 			if (!$e->get('parentid')) {
-				$sortedentries[] = array('obj' => $e, 'children' => array(), 'class' => '');
+
+				$classes = array();
+				if($e->get('baseurl') == $currenturl) $classes[] = 'active';
+
+				$sortedentries[] = array(
+					'obj' => $e,
+					'children' => array(),
+					'classes' => $classes
+				);
 				unset($entries[$k]);
 			}
 		}
+
 		// One level deep
 		if (sizeof($entries)) {
 			foreach ($sortedentries as $sk => $se) {
 				foreach ($entries as $k => $e) {
 					if ($e->get('parentid') == $se['obj']->get('id')) {
+
+						$classes = array();
+						if($e->get('baseurl') == $currenturl) $classes[] = 'active';
+
 						// Add the "more" class to the parent.
-						$sortedentries[$sk]['class'] .= ' more';
-						$sortedentries[$sk]['children'][] = array('obj' => $e, 'children' => array(), 'class' => '');
+						$sortedentries[$sk]['classes'][] = 'more';
+
+						$sortedentries[$sk]['children'][] = array(
+							'obj' => $e,
+							'children' => array(),
+							'classes' => $classes
+						);
 						unset($entries[$k]);
 					}
 				}
 			}
 		}
+
 		// Two levels deep
 		// this would be so much simpler if the menu was in DOM format... :/
 		if (sizeof($entries)) {
@@ -61,15 +82,36 @@ class NavigationWidget extends Widget_2_1 {
 				foreach ($se['children'] as $subsk => $subse) {
 					foreach ($entries as $k => $e) {
 						if ($e->get('parentid') == $subse['obj']->get('id')) {
-							// Add the "more" class to the parent.
-							$sortedentries[$sk]['children'][$subsk]['class'] .= ' more';
 
-							$sortedentries[$sk]['children'][$subsk]['children'][] = array('obj' => $e, 'children' => array(), 'class' => '');
+							$classes = array();
+							if($e->get('baseurl') == $currenturl) $classes[] = 'active';
+
+							// Add the "more" class to the parent.
+							$sortedentries[$sk]['children'][$subsk]['class'][] = 'more';
+
+							$sortedentries[$sk]['children'][$subsk]['children'][] = array(
+								'obj' => $e,
+								'children' => array(),
+								'classes' => $classes
+							);
 							unset($entries[$k]);
 						}
 					}
 				}
 			}
+		}
+
+		function transposeClass(&$el){
+			$el['class'] = implode(' ', array_unique($el['classes']));
+			if(sizeof($el['children'])){
+				foreach($el['children'] as $k => $subel){
+					transposeClass($el['children'][$k]);
+				}
+			}
+		}
+
+		foreach($sortedentries as $k => $el){
+			transposeClass($sortedentries[$k]);
 		}
 
 

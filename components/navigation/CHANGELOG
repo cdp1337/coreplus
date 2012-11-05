@@ -1,3 +1,9 @@
+Navigation 2.1.2
+
+	* Added an "active" class on the active navigation entry.
+	* Fixed the multiple "more" class that was showing for navigation entries with more than one child.
+	-- Charlie Powell <charlie@eval.bz>  5 Nov 2012
+
 Navigation 2.1.1
 
 	* Fixed minor js bug with editing entries.
