@@ -36,7 +36,9 @@ abstract class GalleryFormHandler{
 		//var_dump($model); die();
 		$model->save();
 
+		/** @var $page PageModel */
 		$page = $form->getElementByName('page')->getModel();
+		$page->setFromForm($form, 'page');
 		$page->set('fuzzy', 1);
 		$page->set('baseurl', '/gallery/view/' . $model->get('id'));
 		$page->set('updated', Time::GetCurrent());

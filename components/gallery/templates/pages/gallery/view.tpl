@@ -4,6 +4,8 @@
 {script library="jqueryui.timepicker"}{/script}
 {css src="css/gallery.css"}{/css}
 
+<h1>{$album.title}</h1>
+
 {if $uploader}
 	{if Core::IsComponentAvailable('jQuery-File-Upload')}
 		{$uploadform->render()}
