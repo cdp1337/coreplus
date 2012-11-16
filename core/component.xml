@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3.1" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3.2" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -40,8 +40,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="59985b92f2eb219b0f84a98bda5a8d6c"/>
-		<file filename="core/CHANGELOG" md5="51c4640ee3bf7f52c86d19632307f85c"/>
-		<file filename="core/bootstrap.compiled.php" md5="7e0ef5e0df4914318a90c25fca197a5f">
+		<file filename="core/CHANGELOG" md5="fc3c35fd871d1402adf8cf30b6dbb334"/>
+		<file filename="core/bootstrap.compiled.php" md5="e030bf16360c6b9212581c0d9cc6607a">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -152,7 +152,7 @@
 		<file filename="core/forms/FormHiddenInput.class.php" md5="b165e1679347782c30492bb4b320ee5c">
 			<class name="FormHiddenInput"/>
 		</file>
-		<file filename="core/forms/FormPages.php" md5="72997fb370a1e77c68e3aa103a8f6e8f">
+		<file filename="core/forms/FormPages.php" md5="ee704e20b290f596320ede4c42ff6732">
 			<class name="FormPageRewriteURLInput"/>
 			<class name="FormPageMetasInput"/>
 			<class name="FormPageThemeSelectInput"/>
@@ -189,7 +189,7 @@
 			<class name="FormTimeInput"/>
 		</file>
 		<file filename="core/functions/Core.functions.php" md5="da70d9b079997556ada99300decd5090"/>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="16b8645e48e2090c014c4a0e85be5a07">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="99d2612dc12ec4964485710c44f8193c">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
@@ -517,7 +517,10 @@
 		<file filename="core/libs/core/Email.class.php" md5="2f0608c1f1aa4bfcb35a0affa35dacb8">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="a1cd26e0c1fa37acc53c58b7ff4da550">
+		<file filename="core/libs/core/FilterForm.class.php" md5="227bc4c1599e04b73d1389cde0350882">
+			<class name="FilterForm"/>
+		</file>
+		<file filename="core/libs/core/Form.class.php" md5="449bfc023b54afae6480abff17746d1b">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -543,7 +546,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="8bfd623bceb74c21474077b5726f9e58">
+		<file filename="core/libs/core/Model.class.php" md5="35d7d9f7701eeb4dcb17fff0aa56fdad">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -580,7 +583,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="2b245dba261552fe003d5f706d41dec4">
+		<file filename="core/libs/core/View.class.php" md5="89e9d5ab64dcc58208697acf2c918b34">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -1285,7 +1288,7 @@
 		<file filename="core/models/Insertable.class.php" md5="9fcff9abc48a6750a219ee3df35b48af">
 			<class name="InsertableModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="55afdc8e50f98b199797400e55f2cfb5">
+		<file filename="core/models/PageModel.class.php" md5="ce920b5301b8bb10704c61844738fe0f">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/SessionModel.class.php" md5="7e5409686e6d110839bd07e09eada796">
@@ -1339,7 +1342,7 @@
 		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="22be07f06646c5669bd0f7bca445647f"/>
 		<file filename="core/templates/forms/elements/button.tpl" md5="04458c32e1d992bba0255d8d1a2e8dee"/>
 		<file filename="core/templates/forms/elements/file.tpl" md5="90e30e0242238cee016d8b30571e9ac1"/>
-		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="ecb84edcfb88f92c62d05e88c516ad27"/>
+		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="aa4a10162c0e78aa5fa7bd3c532506da"/>
 		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="070475a9b15c813ca8b958afff81ff54"/>
 		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="a31d0d69eac1e98ecead81b522a6441f"/>
 		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="b253627a7cac7c2db9c53160272e103c"/>
@@ -1359,6 +1362,7 @@
 		<file filename="core/templates/forms/elements/html.tpl" md5="3d4259aa7f5615453121930abe34b031"/>
 		<file filename="core/templates/forms/elements/image.tpl" md5="dc4f74a0297b099ea7913d7582125837"/>
 		<file filename="core/templates/forms/elements/reset.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
+		<file filename="core/templates/forms/filters.tpl" md5="f3b9794062891871e4d8460eda849d70"/>
 		<file filename="core/templates/forms/form.body.tpl" md5="8ab5bcc9f1307da533c72b3d18113a74"/>
 		<file filename="core/templates/forms/form.foot.tpl" md5="6e6d3353848b64921070b812c7c99936"/>
 		<file filename="core/templates/forms/form.head.tpl" md5="efe24a11d8a7a54ad55a68fd09abb0a1"/>
@@ -1466,6 +1470,7 @@
 		<upgrade from="2.2.5" to="2.2.6"/>
 		<upgrade from="2.2.6" to="2.3.0"/>
 		<upgrade from="2.3.0" to="2.3.1"/>
+		<upgrade from="2.3.1" to="2.3.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
