@@ -9,7 +9,7 @@
 			<script type="text/javascript" src="{asset src='js/html5.js'}"></script>
 		<![endif]-->
 		{script library="fontawesome"}{/script}
-		<title>{$title}</title>
+		<title>{$seotitle}</title>
 	</head>
 
 	<body>

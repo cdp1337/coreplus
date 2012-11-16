@@ -6,7 +6,7 @@
 		<!--[if lt IE 9]>
 			<script type="text/javascript" src="{asset src='js/html5.js'}"></script>
 		<![endif]-->
-		<title>{$title}</title>
+		<title>{$seotitle}</title>
 	</head>
 
 	<body>
