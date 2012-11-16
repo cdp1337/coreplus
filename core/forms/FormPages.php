@@ -124,6 +124,12 @@ class FormPageThemeSelectInput extends FormSelectInput{
 }
 
 class FormPageParentSelectInput extends FormSelectInput{
+
+	public function setValue($value){
+		// This strtoloweris required here because base baseurls are case insensitive, but the form system is case sensitive.
+		return parent::setValue(strtolower($value));
+	}
+
 	public function render(){
 		$f = new ModelFactory('PageModel');
 		if ($this->get('baseurl')) $f->where('baseurl != ' . $this->get('baseurl'));

@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 05 Nov 2012 12:40:06 -0500
+ * @compiled Fri, 16 Nov 2012 17:27:34 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -39,7 +39,7 @@ die('This application requires at least PHP 5.3 to run!');
 umask(0);
 $start_time = microtime(true);
 mb_internal_encoding('UTF-8');
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/bootstrap_predefines.php
+### REQUIRE_ONCE FROM core/bootstrap_predefines.php
 if (PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')) {
 die('This application cannot run with magic_quotes_gpc enabled, please disable them now!' . "\n");
 }
@@ -72,8 +72,8 @@ define('DS', DIRECTORY_SEPARATOR);
 unset($em, $rpdr, $rwdr, $rip);
 
 $predefines_time = microtime(true);
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/bootstrap_preincludes.php
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Debug.class.php
+### REQUIRE_ONCE FROM core/bootstrap_preincludes.php
+### REQUIRE_ONCE FROM core/libs/core/Debug.class.php
 class Debug {
 public static function Write($text) {
 if (!FULL_DEBUG) return;
@@ -82,12 +82,12 @@ else echo "<div class='cae2_debug'>" . $text . "</div>";
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/ISingleton.interface.php
+### REQUIRE_ONCE FROM core/libs/core/ISingleton.interface.php
 Interface ISingleton {
 public static function Singleton();
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/XMLLoader.class.php
+### REQUIRE_ONCE FROM core/libs/core/XMLLoader.class.php
 class XMLLoader implements Serializable {
 protected $_rootname;
 protected $_filename;
@@ -490,7 +490,7 @@ return $string;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/InstallArchive.class.php
+### REQUIRE_ONCE FROM core/libs/core/InstallArchive.class.php
 class InstallArchive {
 const SIGNATURE_NONE    = 0;
 const SIGNATURE_VALID   = 1;
@@ -704,7 +704,7 @@ return $ret;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/InstallArchiveAPI.class.php
+### REQUIRE_ONCE FROM core/libs/core/InstallArchiveAPI.class.php
 abstract class InstallArchiveAPI extends XMLLoader {
 const TYPE_COMPONENT = 'component';
 const TYPE_LIBRARY   = 'library';
@@ -912,7 +912,7 @@ return clone $this->_iterator;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Model.class.php
+### REQUIRE_ONCE FROM core/libs/core/Model.class.php
 class Model implements ArrayAccess {
 const ATT_TYPE_STRING = 'string';
 const ATT_TYPE_TEXT = 'text';
@@ -1373,6 +1373,10 @@ $this->_linked[$linkname]['records'][] = $model;
 break;
 }
 }
+public function resetLink($linkname){
+if (!isset($this->_linked[$linkname])) return; // @todo Error Handling
+$this->_linked[$linkname]['records'] = null;
+}
 public function setFromArray($array) {
 foreach ($array as $k => $v) {
 $this->set($k, $v);
@@ -1603,14 +1607,14 @@ class ModelException extends Exception {
 class ModelValidationException extends ModelException {
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Controller.class.php
+### REQUIRE_ONCE FROM core/libs/core/Controller.class.php
 class Controller {
 public static $AccessString = null;
 public function __construct() {
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Time.class.php
+### REQUIRE_ONCE FROM core/libs/core/Time.class.php
 class Time {
 const TIMEZONE_GMT     = 0;
 const TIMEZONE_DEFAULT = 100;
@@ -1671,7 +1675,7 @@ return $date->format($format);
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/models/ComponentModel.class.php
+### REQUIRE_ONCE FROM core/models/ComponentModel.class.php
 class ComponentModel extends Model {
 public static $Schema = array(
 'name'    => array(
@@ -1696,7 +1700,7 @@ public static $Indexes = array(
 );
 } // END class ComponentModel extends Model
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/models/PageModel.class.php
+### REQUIRE_ONCE FROM core/models/PageModel.class.php
 class PageModel extends Model {
 public static $Schema = array(
 'parenturl' => array(
@@ -1916,6 +1920,13 @@ $this->setMetas($metas);
 public function setFromForm(Form $form, $prefix = null){
 parent::setFromForm($form, $prefix);
 $meta = $form->getElementByName($prefix . '_meta');
+if(!$meta){
+$meta = $form->getElementByName($prefix . '[metas]');
+}
+if(!$meta){
+error_log('Unable to locate meta tags from form.  This is probably alright.');
+return;
+}
 $this->set('metas', $meta->get('value'));
 }
 public function getResolvedURL() {
@@ -2186,7 +2197,7 @@ return $opts;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Component.class.php
+### REQUIRE_ONCE FROM core/libs/core/Component.class.php
 class Component extends XMLLoader {
 protected $_name;
 protected $_version;
@@ -3011,7 +3022,7 @@ return ($this->_versionDB !== false);
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Component_2_1.php
+### REQUIRE_ONCE FROM core/libs/core/Component_2_1.php
 class Component_2_1 {
 private $_xmlloader = null;
 protected $_name;
@@ -3811,7 +3822,7 @@ return $prefix . 'components/' . strtolower($this->_name) . '/';
 }
 
 require_once(ROOT_PDIR . 'core/functions/Core.functions.php');
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/filestore/File_Backend.interface.php
+### REQUIRE_ONCE FROM core/libs/filestore/File_Backend.interface.php
 interface File_Backend {
 public function __construct($filename = null);
 public function getFilesize($formatted = false);
@@ -3837,7 +3848,7 @@ public function getContentsObject();
 public function exists();
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/filestore/Directory_Backend.interface.php
+### REQUIRE_ONCE FROM core/libs/filestore/Directory_Backend.interface.php
 interface Directory_Backend {
 public function __construct($directory);
 public function ls();
@@ -3851,7 +3862,7 @@ public function remove();
 public function get($name);
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/filestore/FileContentFactory.class.php
+### REQUIRE_ONCE FROM core/libs/filestore/FileContentFactory.class.php
 class FileContentFactory {
 public static function GetFromFile(File_Backend $file) {
 switch ($file->getMimetype()) {
@@ -3876,7 +3887,7 @@ return new File_unknown_contents($file);
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/filestore/backends/file_awss3.backend.php
+### REQUIRE_ONCE FROM core/libs/filestore/backends/file_awss3.backend.php
 class File_awss3_backend implements File_Backend {
 private $_backend;
 public $filename;
@@ -4035,7 +4046,7 @@ return ($this->_getMetadata());
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/filestore/backends/file_local.backend.php
+### REQUIRE_ONCE FROM core/libs/filestore/backends/file_local.backend.php
 class File_local_backend implements File_Backend {
 private $_filename = null;
 private $_type = null;
@@ -4534,7 +4545,7 @@ return $img2;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/filestore/backends/directory_local.backend.php
+### REQUIRE_ONCE FROM core/libs/filestore/backends/directory_local.backend.php
 class Directory_local_backend implements Directory_Backend {
 private $_path;
 private $_files = null;
@@ -4723,7 +4734,7 @@ closedir($dh);
 } // private function _sift()
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/ComponentFactory.php
+### REQUIRE_ONCE FROM core/libs/core/ComponentFactory.php
 abstract class ComponentFactory {
 private static $_DBCache = null;
 public static function _LookupComponentData($componentname) {
@@ -4765,7 +4776,7 @@ else return false;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/ComponentHandler.class.php
+### REQUIRE_ONCE FROM core/libs/core/ComponentHandler.class.php
 class ComponentHandler implements ISingleton {
 private static $instance = null;
 private $_componentCache = array();
@@ -4989,7 +5000,7 @@ return ComponentHandler::Singleton()->_libraries;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/cachecore/backends/icachecore.interface.php
+### REQUIRE_ONCE FROM core/libs/cachecore/backends/icachecore.interface.php
 interface ICacheCore
 {
 public function create($data);
@@ -5002,7 +5013,7 @@ public function reset();
 public function flush();
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/cachecore/backends/cachecore.class.php
+### REQUIRE_ONCE FROM core/libs/cachecore/backends/cachecore.class.php
 if (file_exists(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'icachecore.interface.php')  && !interface_exists('ICacheCore'))
 {
 include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'icachecore.interface.php';
@@ -5065,7 +5076,7 @@ return $data;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/cachecore/backends/cachefile.class.php
+### REQUIRE_ONCE FROM core/libs/cachecore/backends/cachefile.class.php
 class CacheFile extends CacheCore implements ICacheCore
 {
 public function __construct($name, $location, $expires, $gzip = true)
@@ -5153,7 +5164,7 @@ return false;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/cachecore/Cache.class.php
+### REQUIRE_ONCE FROM core/libs/cachecore/Cache.class.php
 define('__CACHE_PDIR', ROOT_PDIR . 'core/libs/cachecore/');
 if(!class_exists('CacheCore')){
 require_once(__CACHE_PDIR . 'backends/cachecore.class.php'); #SKIPCOMPILER
@@ -5221,7 +5232,7 @@ class Cache_Exception extends Exception{
 
 
 Debug::Write('Loading hook handler');
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/HookHandler.class.php
+### REQUIRE_ONCE FROM core/libs/core/HookHandler.class.php
 class HookHandler implements ISingleton {
 private static $RegisteredHooks = array();
 private static $Instance = null;
@@ -5325,7 +5336,7 @@ HookHandler::RegisterNewHook('session_ready');
 
 $preincludes_time = microtime(true);
 Debug::Write('Loading core system');
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/InstallTask.class.php
+### REQUIRE_ONCE FROM core/libs/core/InstallTask.class.php
 class InstallTask {
 public static function ParseNode(DomElement $node, $relativeDir) {
 foreach ($node->getElementsByTagName('*') as $c) {
@@ -5436,7 +5447,7 @@ HookHandler::AttachToHook('/install_task/setconfig', 'InstallTask::_ParseSetConf
 HookHandler::RegisterNewHook('/install_task/addresourcedir');
 HookHandler::AttachToHook('/install_task/addresourcedir', 'InstallTask::_ParseAddResourceDir');
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Core.class.php
+### REQUIRE_ONCE FROM core/libs/core/Core.class.php
 class Core implements ISingleton {
 private static $instance;
 private static $_LoadedComponents = false;
@@ -6185,8 +6196,8 @@ class CoreException extends Exception {
 spl_autoload_register('Core::CheckClass');
 
 Debug::Write('Loading configs');
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/ConfigHandler.class.php
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/models/ConfigModel.class.php
+### REQUIRE_ONCE FROM core/libs/core/ConfigHandler.class.php
+### REQUIRE_ONCE FROM core/models/ConfigModel.class.php
 class ConfigModel extends Model {
 public static $Schema = array(
 'key'           => array(
@@ -6516,9 +6527,9 @@ Core::AddProfileTime('application_start', $start_time);
 Core::AddProfileTime('predefines_complete', $predefines_time);
 Core::AddProfileTime('preincludes_complete', $preincludes_time);
 Core::AddProfileTime('maindefines_complete', $maindefines_time);
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/datamodel/DMI.class.php
+### REQUIRE_ONCE FROM core/libs/datamodel/DMI.class.php
 define('__DMI_PDIR', ROOT_PDIR . 'core/libs/datamodel/');
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/datamodel/DMI_Backend.interface.php
+### REQUIRE_ONCE FROM core/libs/datamodel/DMI_Backend.interface.php
 interface DMI_Backend {
 public function connect($host, $user, $pass, $database);
 public function execute(Dataset $dataset);
@@ -6528,7 +6539,7 @@ public function readCount();
 public function writeCount();
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/datamodel/Dataset.class.php
+### REQUIRE_ONCE FROM core/libs/datamodel/Dataset.class.php
 class Dataset implements Iterator{
 const MODE_GET = 'get';
 const MODE_INSERT = 'insert';
@@ -6869,7 +6880,7 @@ unset($start_time, $predefines_time, $preincludes_time, $maindefines_time);
 Core::LoadComponents();
 if (EXEC_MODE == 'WEB') {
 try {
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Session.class.php
+### REQUIRE_ONCE FROM core/libs/core/Session.class.php
 register_shutdown_function("session_write_close");
 class Session implements ISingleton {
 private $_model = null;
@@ -6974,9 +6985,9 @@ die();
 HookHandler::DispatchHook('components_loaded');
 HookHandler::DispatchHook('components_ready');
 Core::AddProfileTime('components_load_complete');
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/bootstrap_postincludes.php
+### REQUIRE_ONCE FROM core/bootstrap_postincludes.php
 define('SMARTY_DIR', ROOT_PDIR . 'core/libs/smarty/');
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/smarty/Smarty.class.php
+### REQUIRE_ONCE FROM core/libs/smarty/Smarty.class.php
 if (!defined('DS')) {
 define('DS', DIRECTORY_SEPARATOR);
 }
@@ -7607,7 +7618,7 @@ include SMARTY_SYSPLUGINS_DIR . $_class . '.php';
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/CurrentPage.class.php
+### REQUIRE_ONCE FROM core/libs/core/CurrentPage.class.php
 class CurrentPage {
 private static $_instance = null;
 private $_headscripts = array();
@@ -7799,11 +7810,11 @@ echo '</pre>';
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/TemplateException.php
+### REQUIRE_ONCE FROM core/libs/core/TemplateException.php
 class TemplateException extends Exception{
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/TemplateInterface.php
+### REQUIRE_ONCE FROM core/libs/core/TemplateInterface.php
 interface TemplateInterface {
 public function fetch($template);
 public function render($template);
@@ -7811,7 +7822,7 @@ public function getTemplateVars($varname = null);
 public function assign($tpl_var, $value = null);
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Template.class.php
+### REQUIRE_ONCE FROM core/libs/core/Template.class.php
 class Template extends Smarty implements TemplateInterface {
 private $_baseurl;
 public function  __construct() {
@@ -7873,7 +7884,7 @@ return null;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/UserAgent.php
+### REQUIRE_ONCE FROM core/libs/core/UserAgent.php
 class UserAgent {
 private static $updateInterval =   604800; // 1 week
 private static $_ini_url    =   'http://user-agent-string.info/rpc/get_data.php?key=free&format=ini';
@@ -8070,7 +8081,7 @@ return self::$_Data;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/View.class.php
+### REQUIRE_ONCE FROM core/libs/core/View.class.php
 class View {
 const ERROR_OTHER        = 1;
 const ERROR_NOERROR      = 200;
@@ -8305,11 +8316,12 @@ $template->assign('controls', $this->controls);
 $template->assign('messages', Core::GetMessages());
 }
 if(isset($this->meta['title']) && $this->meta['title']){
-$template->assign('title', $this->meta['title']);
+$template->assign('seotitle', $this->meta['title']);
 }
 else{
-$template->assign('title', $this->title);
+$template->assign('seotitle', $this->title);
 }
+$template->assign('title', $this->title);
 $template->assign('body', $body);
 try{
 $data = $template->fetch($mastertpl);
@@ -8618,7 +8630,7 @@ PageRequest::GetSystemRequest()->getView()->head[] = $string;
 class ViewException extends Exception {
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/ViewControl.class.php
+### REQUIRE_ONCE FROM core/libs/core/ViewControl.class.php
 class ViewControl implements ArrayAccess {
 public $link = '#';
 public $title = '';
@@ -8709,7 +8721,7 @@ return void;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Widget_2_1.class.php
+### REQUIRE_ONCE FROM core/libs/core/Widget_2_1.class.php
 class Widget_2_1 {
 private $_view = null;
 private $_request = null;
@@ -8773,7 +8785,7 @@ return (array_key_exists($key, $this->parameters)) ? $this->parameters[$key] : n
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Form.class.php
+### REQUIRE_ONCE FROM core/libs/core/Form.class.php
 class FormGroup {
 protected $_elements;
 protected $_attributes;
@@ -9521,6 +9533,7 @@ foreach($t->getTemplateDir() as $d){
 if(is_dir($d . $tmpname)){
 $dir = new Directory_local_backend($d . $tmpname);
 foreach($dir->ls() as $file){
+if($file instanceof Directory_local_backend) continue;
 if($file->getExtension() != 'tpl') continue;
 $matches[] = $file->getBaseFilename();
 }
@@ -9580,7 +9593,7 @@ return null;
 }
 } // class FormPageInsertables
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/PageRequest.class.php
+### REQUIRE_ONCE FROM core/libs/core/PageRequest.class.php
 class PageRequest {
 const METHOD_HEAD   = 'HEAD';
 const METHOD_GET    = 'GET';
@@ -9942,7 +9955,7 @@ return $instance;
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/libs/core/Controller_2_1.class.php
+### REQUIRE_ONCE FROM core/libs/core/Controller_2_1.class.php
 class Controller_2_1 {
 private $_request = null;
 private $_model = null;
@@ -9986,7 +9999,7 @@ return new $name();
 }
 }
 
-### REQUIRE_ONCE FROM /home/powellc/Projects/CorePlus/site/core/models/WidgetModel.class.php
+### REQUIRE_ONCE FROM core/models/WidgetModel.class.php
 class WidgetModel extends Model {
 public static $Schema = array(
 'baseurl' => array(

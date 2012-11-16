@@ -1035,6 +1035,17 @@ class Model implements ArrayAccess {
 	}
 
 	/**
+	 * Reset the linked models in this model.  Useful for deleting a child and not wanting them to come back as linked.
+	 *
+	 * @param $linkname
+	 */
+	public function resetLink($linkname){
+		if (!isset($this->_linked[$linkname])) return; // @todo Error Handling
+
+		$this->_linked[$linkname]['records'] = null;
+	}
+
+	/**
 	 * Set properties on this model from an associative array of key/value pairs.
 	 *
 	 * @param $array

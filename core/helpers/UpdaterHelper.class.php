@@ -178,13 +178,14 @@ class UpdaterHelper {
 		// Give me the components in alphabetical order.
 		ksort($components);
 		ksort($themes);
-		
+
 		// And sort the versions.
+		krsort($core, SORT_NATURAL);
 		foreach($components as $k => $v){
-			ksort($components[$k], SORT_NUMERIC);
+			krsort($components[$k], SORT_NATURAL);
 		}
 		foreach($themes as $k => $v){
-			ksort($themes[$k], SORT_NUMERIC);
+			krsort($themes[$k], SORT_NATURAL);
 		}
 		
 		// Cache this for next pass.

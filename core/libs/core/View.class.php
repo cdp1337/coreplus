@@ -545,11 +545,12 @@ class View {
 
 		// This logic is needed for the SEO title, since that's usually completely human unfriendly.
 		if(isset($this->meta['title']) && $this->meta['title']){
-			$template->assign('title', $this->meta['title']);
+			$template->assign('seotitle', $this->meta['title']);
 		}
 		else{
-			$template->assign('title', $this->title);
+			$template->assign('seotitle', $this->title);
 		}
+		$template->assign('title', $this->title);
 		$template->assign('body', $body);
 
 		try{

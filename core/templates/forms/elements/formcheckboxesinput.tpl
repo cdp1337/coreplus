@@ -1,4 +1,4 @@
-<div class="{$element->getClass()}">
+<div class="{$element->getClass()} {$element->get('id')}">
 	{if $element->get('title')}
 		<span>{$element->get('title')|escape}</span>
 	{/if}

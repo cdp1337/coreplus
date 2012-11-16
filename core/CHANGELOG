@@ -1,3 +1,15 @@
+Core Plus 2.3.2
+	* Set the FormPageParentSelectInput value to be strtolower all the time.  Should fix many of the baseurl and parenturl issues.
+	* Added FilterForm system; allows for filters to be created and utilized.
+	* Fixed the FormPageMeta form for page template lookup.  It was trying to use directories as files.
+	* Added a resetLink method in the Model.  Useful for deleting a child and not wanting them to come back as linked.
+	* Updated the title/seotitle feature (Feature #194) to make use of a dedicated variable.
+	* Fixed the PageModel being set from a pageMetas object.  The meta tags were not coming over correctly because the name
+	was changed slightly.
+	* Added the input ID as the containing div's class name on formcheckboxesinput.
+	* Updated the compiler to set only the relative path for the comments instead of the full path.
+	* Switched the updater listing from NUMERIC sort to NATURAL sort.  This fixes the order of versions.
+
 Core Plus 2.3.1
 
 	* Fixed a bug with the parent page selection not selecting the correct parent page.

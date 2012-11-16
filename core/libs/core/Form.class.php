@@ -1316,6 +1316,9 @@ class FormPageMeta extends FormGroup {
 				// Yay, sift through that and get the files!
 				$dir = new Directory_local_backend($d . $tmpname);
 				foreach($dir->ls() as $file){
+					// Skip directories
+					if($file instanceof Directory_local_backend) continue;
+
 					/** @var $file File_local_backend */
 					if($file->getExtension() != 'tpl') continue;
 					$matches[] = $file->getBaseFilename();

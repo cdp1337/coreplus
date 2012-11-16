@@ -375,6 +375,15 @@ class PageModel extends Model {
 
 		// And in addition, I want to get the meta data from the form too.  It'll share the same prefix, with the alteration of an _meta.
 		$meta = $form->getElementByName($prefix . '_meta');
+		if(!$meta){
+			// ERM?  If the page model is created directly, it may be called something different.
+			$meta = $form->getElementByName($prefix . '[metas]');
+		}
+
+		if(!$meta){
+			error_log('Unable to locate meta tags from form.  This is probably alright.');
+			return;
+		}
 
 		// The form element will have already converted this to a json array for me :)
 		$this->set('metas', $meta->get('value'));

@@ -129,9 +129,12 @@ function compile_file($filename, $recursivelevel = 0){
 
 				$filecontents = compile_file($subfile, ($recursivelevel-1));
 
+				// Trim the root directory and put a location-independent one instead.
+				$subfilerelative = substr($subfile, strlen(ROOT_PDIR));
+
 				// If this file could not be minified, false will be returned.
 				if($filecontents !== false){
-					$line = '### REQUIRE_ONCE FROM ' . $subfile . "\n" . $filecontents;
+					$line = '### REQUIRE_ONCE FROM ' . $subfilerelative . "\n" . $filecontents;
 				}
 			}
 		}
