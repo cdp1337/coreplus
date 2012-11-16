@@ -95,7 +95,7 @@ class UserActivityController extends Controller_2_1 {
 						'session'   => $log['session_id'],
 						'ip'        => $log['ip_addr'],
 						'user_id'   => $log['user_id'],
-						'username'  => \Core\user($log['user_id'])->getDisplayName(),
+						'username'  => User::Construct($log['user_id'])->getDisplayName(),
 						'useragent' => $log['useragent'],
 						'lastpage'  => $log['request'],
 						'type'      => $ua->type,

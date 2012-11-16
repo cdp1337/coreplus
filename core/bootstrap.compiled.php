@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 16 Nov 2012 17:27:34 -0500
+ * @compiled Fri, 16 Nov 2012 17:45:27 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -9057,7 +9057,9 @@ $out = '';
 foreach ($this->_validattributes as $k) {
 if ($k == 'required' && !$this->get($k)) continue;
 if($k == 'checked' && !$this->get($k)) continue;
-if (($v = $this->get($k)) !== null) $out .= " $k=\"" . str_replace('"', '\\"', $v) . "\"";
+if (($v = $this->get($k)) !== null){
+$out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
+}
 }
 return $out;
 }

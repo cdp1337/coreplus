@@ -9,6 +9,8 @@ Core Plus 2.3.2
 	* Added the input ID as the containing div's class name on formcheckboxesinput.
 	* Updated the compiler to set only the relative path for the comments instead of the full path.
 	* Switched the updater listing from NUMERIC sort to NATURAL sort.  This fixes the order of versions.
+	* Fixed the input value being terminated after double quotes.  Resolution was replace the '/"' with '&quot;'.
+	-- Charlie Powell <charlie@eval.bz>  16 Nov 2012
 
 Core Plus 2.3.1
 

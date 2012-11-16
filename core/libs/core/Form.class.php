@@ -501,7 +501,9 @@ class FormElement {
 			// 'checked' is skipped if false also.
 			if($k == 'checked' && !$this->get($k)) continue;
 
-			if (($v = $this->get($k)) !== null) $out .= " $k=\"" . str_replace('"', '\\"', $v) . "\"";
+			if (($v = $this->get($k)) !== null){
+				$out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
+			}
 		}
 		return $out;
 	}

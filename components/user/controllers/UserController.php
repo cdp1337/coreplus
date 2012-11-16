@@ -106,7 +106,12 @@ class UserController extends Controller_2_1{
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$user = User::Find(array('id' => $userid));
+		$user = User::Construct($userid);
+
+		if(!$user->exists()){
+			Core::SetMessage('Unable to locate requested user', 'error');
+			Core::GoBack(1);
+		}
 
 		if($req->isPost()){
 			try{
