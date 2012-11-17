@@ -21,6 +21,7 @@
 
 <script>
 	$(function(){
+		$('#formfileinput-avatar-action-upload input').attr('size','5');
 		$('.edit-user-toggle').click(function(){
 			$('#user-edit-form').toggle();
 			$('#user-edit-listing').toggle();

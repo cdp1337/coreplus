@@ -18,7 +18,7 @@
 				{widgetarea name="Primary Navigation"}
 			</nav>
 			<div style="clear:both;"></div>
-			<div id="innerwrapper" class="rounded-large">
+			<div id="innerwrapper">
 				
 				<nav id="breadcrumbs">
 					{if isset($breadcrumbs)}

@@ -3,7 +3,7 @@
 	position: fixed;
 	background: #222;
 	font-size: 80%;
-	width: 26px;
+	width: 30px;
 	border-bottom: 1px solid #ddd;
 	z-index: 9999;
 	padding:5px 0;
@@ -25,8 +25,8 @@
 
 #admin-bar.admin-bar-collapsed{
 	border-right: 1px solid black;
-	width: 26px;
-	height: 26px;
+	width: 30px;
+	height: 30px;
 }
 
 #admin-bar ul li {
