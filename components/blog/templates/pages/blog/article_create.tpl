@@ -5,7 +5,7 @@
 	{script library="facebook"}{/script}
 	{script library="jquery"}{/script}
 
-	<fieldset>
+	<fieldset class="facebook-integration">
 		<legend> Facebook Integration </legend>
 		<div class="facebook-connect">
 			<a href="#" class="button" onclick="authFacebook(); return false;">Authorize Facebook</a>
@@ -87,6 +87,8 @@
 				}
 			}, { scope: 'manage_pages, publish_actions, publish_stream' });
 		}
+
+		$('#formfileinput-model-image-action-upload input').attr('size','5');
 
 	</script>{/script}
 {/if}

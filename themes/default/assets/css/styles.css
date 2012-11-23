@@ -3,7 +3,7 @@ body {
 	text-align:center;
 	padding:0;
 	margin:0;
-	background:#D5DAFF;
+	background:#505050;
 	font-family:Helvetica, sans-serif;
 	font-size:11pt;
 	color:#222;
@@ -12,7 +12,7 @@ a {
 	color:#1C2B0D;
 }
 a:hover {
-	text-shadow:0 1px 2px rgba(28, 43, 13, 0.8);
+	text-shadow:0px 1px 1px rgba(150, 150, 150, 0.8)
 }
 img {
 	border:0;
@@ -38,8 +38,8 @@ h3 {
 h4 {
 	font-weight: bold;
 }
-#wrapper { width:75%; margin:0 auto; text-align:left; background:black; box-shadow:0 1px 4px black; -moz-box-shadow:0 1px 4px black; -webkit-box-shadow:0 1px 4px black; }
-#innerwrapper { background:#EDEDED; padding:1em 1em 2em; margin:0 2px; }
+#wrapper { width:75%; margin:0 auto; text-align:left; background:#dfdfdf; box-shadow:0 0 5px #111111; -moz-box-shadow:0 1px 4px black; -webkit-box-shadow:0 1px 4px black; }
+#innerwrapper { background:#EDEDED; padding:1em 1em 2em; margin:0 2px; min-height: 400px; }
 fieldset { border:1px solid #AAA; padding:0.75em; margin:0.5em; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;}
 fieldset legend { color:#555; font-size:84%; padding:0 0.5em; }
 header { padding: 5px 2px 1px; display:block;}
@@ -189,63 +189,194 @@ a.button[disabled=disabled]{
 .message-info,
 .message-success,
 .message-error {
-	-moz-box-shadow: 3px 3px 5px #888; -webkit-box-shadow: 3px 3px 5px #888; 
-	box-shadow: 3px 3px 5px #888; padding:0.5em 2em; margin:0.05em 2em 1em; text-align:center; 
+	-moz-box-shadow: 3px 3px 5px rgba(162, 162, 162, 0.4);
+	-webkit-box-shadow: 3px 3px 5px rgba(162, 162, 162, 0.4);
+	box-shadow: 3px 3px 5px rgba(162, 162, 162, 0.4);
+	padding:0.5em 2em;
+	margin:0.05em 2em 1em;
+	text-align:center;
+	border-radius: 0.4em;
 }
-.message-note { background:#FCF0AD; border:1px solid #BCB06D;}
-.message-info { background:#FFA; border:1px solid #773; color:#551;}
-.message-success { background:#AFA; border: 1px solid #373; color: #151; }
-.message-error { background:#FCe5ed; border:1px solid #BC606D; color:#DF101D;}
+.message-note { background:#FCF0AD; border:1px solid #DED38C; color:#B87B02;}
+.message-info { background:#FFA; border:1px solid #D9D866; color:#B8B102;}
+.message-success { background:#AFA; border: 1px solid #85CC85; color: #0F9F42; }
+.message-error { background:#FCe5ed; border:1px solid #E0ADB4; color:#DF101D;}
 
 .rounded-large { border-radius:10px; -moz-border-radius:10px; -webkit-border-radius:10px; }
 .rounded { border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; }
 
+.formcheckboxinput {
+	display:inline-block;
+	clear:both;
+	background:#F6F6F6;
+	border: 1px solid #CBCBCB;
+	border-radius: 0.4em;
+	color: #3C3C3C;
+	padding: 0.3em 0.8em;
+}
 
-.formelement { margin-bottom:0.75em; }
-.formelement label { display:block; }
+.formelement { margin-bottom:0.75em; position:relative; }
+.formelement label {
+	display:block;
+	position:absolute;
+	top: 8px;
+	left: 9px;
+	color: #888;
+	padding:0;
+}
 .formelement input[type=text],
 .formelement input[type=password],
 .formelement textarea
-{ background:#F6F6F6; border:1px solid #777; border-radius:1em; color:#222222; padding:0.35em 0.8em; width:96%;}
-.formelement select
-{ background:#F6F6F6; border:1px solid #777; border-radius:1em 0 0 0; color:#222222; padding:0.35em 0 0.35em 0.8em; width:98%; cursor:pointer;}
+{ background:#F6F6F6; border:1px solid #CBCBCB; border-radius:.4em; color:#3C3C3C; padding:0.35em 0.8em 0.35em 110px;; min-width:100px;}
 
-.formelement.formradioinput span { display:block; }
+.formelement.formselect label { position:relative; top:0; margin-bottom:5px; }
+.formelement select
+{ background:#F6F6F6; border:1px solid #CBCBCB; border-radius:0.4em 0.4em 0 0; color:#3C3C3C; padding:0.35em 0 0.35em 0.8em; min-width:100px; cursor:pointer;}
+
+
+.formelement.formradioinput span { display:block;margin-bottom:5px; }
 .formelement.formradioinput label {
-    background: none repeat scroll 0 0 #F6F6F6;
-    border: 1px solid #777;
-    border-radius: 1em 1em 1em 1em;
-    color: #222222;
+    border: none;
+    color: #3C3C3C;
     cursor: pointer;
-    display: inline;
+    display: block;
     line-height: 1.7em;
     margin-right: 0.5em;
-    padding: 0.25em 0.5em 0.25em 0;
+    padding: 0.25em 0.5em;
 	white-space: nowrap;
+	position: relative;
+	top: 7px;
+	left: 6px;
 }
+.formelement.formcheckboxinput label,
 .formelement.formcheckboxesinput label {
-    background: none repeat scroll 0 0 #F6F6F6;
-    border: 1px solid #777;
-    border-radius: 0 1em 1em 0;
-    color: #222222;
-    cursor: pointer;
-    display: inline;
-	display: inline-block;
-    line-height: 1.7em;
-    margin-right: 0.5em;
-    padding: 0.25em 0.5em 0.25em 0;
+    padding: 0.25em 0;
 	white-space: nowrap;
+	top:4px;
 }
+
+.formelement.formcheckboxinput input,
+.formelement.formcheckboxesinput input {
+	color: #3C3C3C;
+	min-width: 120px;
+	padding: 0.35em 0;
+	margin-left: 98px;
+}
+
+.formelement.formcheckboxesinput label {position:relative;}
+.formelement.formcheckboxesinput input {margin-left:0;}
+
+.formelement.formcheckboxesinput {
+	background: #F6F6F6;
+	border: 1px solid #CBCBCB;
+	border-radius: 0.4em;
+	max-width: 415px;
+	padding: 0.5em;
+}
+
+.formelement.formtextareainput label {
+	margin-bottom: 5px;
+	position: relative;
+	top: 0;
+}
+
+.formelement.formtextareainput {
+	margin-bottom:0;
+}
+
+.formelement.formtextareainput textarea {
+	padding:0.35em 0.8em;
+	min-width: 331px;
+}
+
+#formtextinput-page_meta-title {
+	padding: 0.35em 0.8em 0.35em 165px;
+	width: 173px;
+}
+
 .formelement.formradioinput label input { margin-top:0; }
+.formelement.formradioinput {
+	background: none repeat scroll 0 0 #F6F6F6;
+	border: 1px solid #CCCCCC;
+	border-radius: 0.4em 0.4em 0.4em 0.4em;
+	max-width: 415px;
+	padding: 0.5em;
+}
 
 .formelement.formerror input,
 .formelement.formerror select,
 .formelement.formerror textarea { border:1px inset red; background:#FFF0F0;}
 .formelement .formdescription { font-size:85%; color:#555; margin:0.25em 0pt 0.25em 1em; }
 
+.formfileinput { width: 352px; clear:both; }
 .formfileinput .formfileinput-selector { float:left; width:130px; }
-.formfileinput .file-input-innercontainer { border: 1px solid #aaa; border-radius: 15px; padding: 4px; }
+
+.formfileinput label {position:relative; top:0; margin-bottom: 5px;}
+
+.formfileinput .file-input-innercontainer {
+	border: 1px solid #cbcbcb;
+	padding: 4px;
+	background: #F6F6F6;
+	border-radius: 0.4em;
+}
 .formfileinput .file-input-actions { margin-left: 150px; }
+
+.file-input-innercontainer input {
+
+}
+
+#formfileinput-avatar-action-link input,
+#formfileinput-model-image-action-link input {
+	background: none repeat scroll 0 0 #EAEAEA;
+	padding: 0.35em;
+	width: 175px;
+	margin-top: 13px;
+}
+
+.facebook-integration {
+	margin-left: 0;
+	max-width: 515px;
+}
+
+.ui-dialog .formelement label {
+	position:relative;
+	top:0;
+	margin-bottom:5px;
+	text-align:left;
+}
+.ui-dialog .formelement input {
+	padding: 0.35em 0.8em;
+	display: block;
+}
+
+.ui-dialog .formelement select {
+	display: block;
+	max-width: 100%;
+}
+
+.tinymce label {
+	position:relative;
+	top:0;
+	margin-bottom: 5px;
+}
+
+#formtextinput-option-phone {
+	padding: 0.35em 12px 0.35em 120px;
+	width: 218px;
+}
+#formtextinput-option-username {
+	padding-left: 160px;
+	padding-right: 12px;
+	width: 178px;
+}
+
+.page-admin-config input[type="text"] {
+	padding: 0.35em 0.8em 0.35em 190px;
+}
+#formtextinput-page-metas-title {
+	max-width: 168px;
+	padding: 0.35em 0.8em 0.35em 170px;
+}
 
 table.listing { width:100%; border:1px solid #AAA; border-collapse:collapse;}
 table.listing tr:nth-child(odd) { background-color:#DDEDDD; }
@@ -254,7 +385,7 @@ table.listing td{ padding:0.15em 0.5em; border:1px solid #AAA; vertical-align:to
 
 
 /*** Debugging Classes ***/
-pre.xdebug-var-dump { background: none repeat scroll 0 0 white; border: 1px solid #FFE5C0; padding: 0.5em; text-align: left; }
+pre.xdebug-var-dump { background: none repeat scroll 0 0 #F1F1F1; border-top: 2px solid #C5C5C5; padding: 0.5em; text-align: left; }
 
 
 /*** Sortables and Nested Sortables ***/
@@ -269,9 +400,9 @@ ol.sortable-listing ol { margin-left:1em; }
 
 /*** Primary Navigation ***/
 #primary-nav li { float:left; position:relative; text-align:center;}
-#primary-nav li.navigation-menu-over a:hover { background: #1C1D4B; }
+#primary-nav li.navigation-menu-over a:hover { background: #333; }
 #primary-nav a,
-#primary-nav span { color: #DDDDDD; font-weight: bold; text-decoration: none; text-transform: uppercase; display:inline-block; padding:0.5em 1em; width:160px;}
+#primary-nav span { color: #777; font-weight: bold; text-decoration: none; text-transform: uppercase; display:inline-block; padding:0.5em 1em; width:160px;}
 /* Enable the mouse over menu */
 #primary-nav li.navigation-menu-over>ul { display:block; }
 /* And the sub menu */
@@ -281,6 +412,7 @@ ol.sortable-listing ol { margin-left:1em; }
 #primary-nav li ul span{ padding-left:20px; width:155px; }
 /* And any sub sub menu */
 #primary-nav li ul li ul { top:-2px; left:180px; display:none; position:absolute; background:#1C2B0D; border:1px solid black; border-left:0 none; width:190px; -moz-box-shadow: 0 3px 6px #000; -webkit-box-shadow: 0 3px 6px #000; box-shadow: 0 3px 6px #000;}
+#primary-nav a:hover {text-shadow:none;}
 
 /*** Footer Navigation ***/
 footer ul.navigation-menu li { list-style-type: none; float: left; padding: 0 0.5em; }

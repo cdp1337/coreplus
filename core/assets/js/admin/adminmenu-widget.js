@@ -6,19 +6,20 @@ if($.cookie('admin-bar-status') == 'expanded'){
 }
 
 //calculate initial width and height for #admin-bar
-$adminBarW = $('.admin-bar-toggle').width() + 4;
+//$adminBarW = $('.admin-bar-toggle').width() + 4;
+$adminBarW = $('#admin-bar').width();
 
 $adminBarH = $('.admin-bar-toggle').height();
 
-if($adminBarW !== 26){
-	$('#admin-bar').width($adminBarW).height($adminBarH);
-}
 
 $('.admin-bar-toggle').click(function(){
 	var $this = $(this),
 		$bar = $this.closest('#admin-bar');
 	if($bar.hasClass('admin-bar-collapsed')) {
-		$bar.animate({width: "100%"},350, 'linear', function(){
+		$bar.animate({ width: '100%'}, 1400);
+
+		$bar.find('ul').animate({ left: '+='+$adminBarW }, 1800, function(){
+
 			$bar.removeClass('admin-bar-collapsed')
 				.addClass('admin-bar-expanded');
 		});
@@ -26,10 +27,12 @@ $('.admin-bar-toggle').click(function(){
 		$.cookie('admin-bar-status', 'expanded');
 	}
 	else{
-		$bar.animate({width: $adminBarW},250, 'linear', function(){
+		$bar.find('ul').animate({ left: '-='+$adminBarW }, 500, function(){
 			$bar.addClass('admin-bar-collapsed')
 				.removeClass('admin-bar-expanded');
 		});
+
+		$bar.delay(400).animate({ width: '30'}, 1000);
 
 		$.cookie('admin-bar-status', 'collapsed');
 
