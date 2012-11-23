@@ -64,7 +64,6 @@ require_once(ROOT_PDIR . 'core/libs/core/TemplateInterface.php');
 require_once(ROOT_PDIR . 'core/libs/core/Template.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/UserAgent.php');
 require_once(ROOT_PDIR . 'core/libs/core/View.class.php');
-require_once(ROOT_PDIR . 'core/libs/core/ViewControl.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Widget_2_1.class.php');
 //require_once(ROOT_PDIR . 'core/functions/Core.functions.php');
 //require_once(ROOT_PDIR . 'core/libs/datamodel/backends/mysqli.backend.php');

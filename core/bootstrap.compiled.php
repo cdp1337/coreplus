@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 16 Nov 2012 17:45:27 -0500
+ * @compiled Thu, 22 Nov 2012 21:41:12 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3182,6 +3182,9 @@ require_once($dir . $f->getAttribute('filename'));
 foreach ($this->_xmlloader->getElementsByTagName('hookregister') as $h) {
 $hook              = new Hook($h->getAttribute('name'));
 $hook->description = $h->getAttribute('description');
+if($h->getAttribute('return')){
+$hook->returnType = $h->getAttribute('return');
+}
 HookHandler::RegisterHook($hook);
 }
 foreach ($this->_xmlloader->getElementsByTagName('hook') as $h) {
@@ -5230,6 +5233,186 @@ return self::$_Interface;
 class Cache_Exception extends Exception{
 }
 
+### REQUIRE_ONCE FROM core/libs/core/ViewControl.class.php
+class ViewControls implements Iterator, ArrayAccess {
+private $_links = array();
+private $_pos = 0;
+public function current() {
+return $this->_links[$this->_pos];
+}
+public function next() {
+++$this->_pos;
+}
+public function key() {
+return $this->_pos;
+}
+public function valid() {
+return isset($this->_links[$this->_pos]);
+}
+public function rewind() {
+$this->_pos = 0;
+}
+public function offsetExists($offset) {
+return array_key_exists($offset, $this->_links);
+}
+public function offsetGet($offset) {
+return $this->_links[$offset];
+}
+public function offsetSet($offset, $value) {
+if($offset === null){
+if($this->valid()){
+$this->next();
+}
+$offset = $this->key();
+}
+if($value instanceof ViewControl){
+$this->_links[$offset] = $value;
+}
+elseif(is_array($value)){
+$control = new ViewControl();
+foreach($value as $k => $v){
+$control->set($k, $v);
+}
+if(!$control->icon){
+switch($control->class){
+case 'add':
+case 'edit':
+case 'directory':
+$control->icon = $control->class;
+break;
+case 'delete':
+$control->icon = 'remove';
+break;
+case 'view':
+$control->icon = 'eye-open';
+break;
+}
+}
+$this->_links[] = $control;
+}
+else{
+throw new Exception('Invalid offset type for ViewControls::offsetSet, please only set a ViewControl or an associative array');
+}
+}
+public function offsetUnset($offset) {
+unset($this->_links[$offset]);
+}
+public function addLinks(array $links){
+foreach($links as $l){
+$this[] = $l;
+}
+}
+public function fetch(){
+$html = '<ul class="controls">';
+foreach($this->_links as $l){
+$html .= $l->fetch();
+}
+$html .= '</ul>';
+return $html;
+}
+public static function Dispatch($baseurl, $subject){
+$links = HookHandler::DispatchHook('/core/controllinks' . $baseurl, $subject);
+$controls = new ViewControls();
+$controls->addLinks($links);
+return $controls;
+}
+public static function DispatchAndFetch($baseurl, $subject){
+$links = HookHandler::DispatchHook('/core/controllinks' . $baseurl, $subject);
+$controls = new ViewControls();
+$controls->addLinks($links);
+return $controls->fetch();
+}
+}
+class ViewControl implements ArrayAccess {
+public $link = '#';
+public $title = '';
+public $class = '';
+public $icon = '';
+public $confirm = '';
+public $otherattributes = array();
+public function fetch(){
+$html = '';
+$html .= '<li' . ($this->class ? (' class="' . $this->class . '"') : '') . '>';
+if($this->link){
+$html .= $this->_fetchA();
+}
+if($this->icon){
+$html .= '<i class="icon-' . $this->icon . '"></i>';
+}
+$html .= '<span>' . $this->title . '</span>';
+if($this->link){
+$html .= '</a>';
+}
+$html .= '</li>';
+return $html;
+}
+private function _fetchA(){
+if(!$this->link) return null;
+$dat = $this->otherattributes;
+if($this->confirm){
+$dat['onclick'] = "if(confirm('" . str_replace("'", "\\'", $this->confirm) . "')){" .
+"Core.PostURL('" . str_replace("'", "\\'", Core::ResolveLink($this->link)) . "');" .
+"} return false; ";
+$dat['href'] = '#';
+}
+else{
+$dat['href'] = $this->link;
+}
+$dat['title'] = $this->title;
+if($this->class) $dat['class'] = $this->class;
+$html = '<a ';
+foreach($dat as $k => $v){
+$html .= " $k=\"$v\"";
+}
+$html .= '>';
+return $html;
+}
+public function set($key, $value){
+switch($key){
+case 'class':
+$this->class = $value;
+break;
+case 'confirm':
+$this->confirm = $value;
+break;
+case 'icon':
+$this->icon = $value;
+break;
+case 'link':
+case 'href': // Just for an alias of the link.
+$this->link = Core::ResolveLink($value);
+break;
+case 'title':
+$this->title = $value;
+break;
+default:
+$this->otherattributes[$key] = $value;
+break;
+}
+}
+public function offsetExists($offset) {
+return(property_exists($this, $offset));
+}
+public function offsetGet($offset) {
+$dat = get_object_vars($this);
+if(isset($dat[$offset])){
+return $dat[$offset];
+}
+elseif(isset($this->otherattributes[$offset])){
+return $this->otherattributes[$offset];
+}
+else{
+return null;
+}
+}
+public function offsetSet($offset, $value) {
+$this->set($offset, $value);
+}
+public function offsetUnset($offset) {
+return void;
+}
+}
+
 
 Debug::Write('Loading hook handler');
 ### REQUIRE_ONCE FROM core/libs/core/HookHandler.class.php
@@ -5299,8 +5482,12 @@ echo '</dl>';
 }
 }
 class Hook {
+const RETURN_TYPE_BOOL = 'bool';
+const RETURN_TYPE_VOID = 'void';
+const RETURN_TYPE_ARRAY = 'array';
 public $name;
 public $description;
+public $returnType = self::RETURN_TYPE_BOOL;
 private $_bindings = array();
 public function __construct($name) {
 $this->name = $name;
@@ -5310,11 +5497,34 @@ public function attach($function) {
 $this->_bindings[] = array('call' => $function);
 }
 public function dispatch($args = null) {
+switch($this->returnType){
+case self::RETURN_TYPE_BOOL:
+$return = true;
+break;
+case self::RETURN_TYPE_ARRAY:
+$return = array();
+break;
+case self::RETURN_TYPE_VOID:
+$return = null;
+}
 foreach ($this->_bindings as $call) {
 $result = call_user_func_array($call['call'], func_get_args());
-if ($result === false) return false;
+switch($this->returnType){
+case self::RETURN_TYPE_BOOL:
+if ($result === false){
+return false;
 }
-return true;
+break;
+case self::RETURN_TYPE_ARRAY:
+if(is_array($result)){
+$return = array_merge($return, $result);
+}
+break;
+case self::RETURN_TYPE_VOID:
+break;
+}
+}
+return $return;
 }
 public function __toString() {
 return $this->getName();
@@ -8114,7 +8324,7 @@ public $templatename;
 public $contenttype = View::CTYPE_HTML;
 public $mastertemplate;
 public $breadcrumbs = array();
-public $controls = array();
+public $controls;
 public $mode;
 public $jsondata = null;
 public $updated = null;
@@ -8135,6 +8345,7 @@ public static $HeadData = array();
 public function __construct() {
 $this->error = View::ERROR_NOERROR;
 $this->mode  = View::MODE_PAGE;
+$this->controls = new ViewControls();
 }
 public function setParameters($params) {
 $this->_params = $params;
@@ -8387,6 +8598,7 @@ $debug .= "\n" . '<b>Registered Hooks</b>' . "\n";
 foreach(HookHandler::GetAllHooks() as $hook){
 $debug .= $hook->name;
 if($hook->description) $debug .= ' <i> - ' . $hook->description . '</i>';
+$debug .= "\n" . '<span style="color:#999;">Return expected: ' . $hook->returnType . '</span>';
 $debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
 }
 $debug .= "\n" . '<b>Included Files</b>' . "\n";
@@ -8628,97 +8840,6 @@ PageRequest::GetSystemRequest()->getView()->head[] = $string;
 }
 }
 class ViewException extends Exception {
-}
-
-### REQUIRE_ONCE FROM core/libs/core/ViewControl.class.php
-class ViewControl implements ArrayAccess {
-public $link = '#';
-public $title = '';
-public $class = '';
-public $icon = '';
-public $confirm = '';
-public $otherattributes = array();
-public function fetch(){
-$html = '';
-$html .= '<li' . ($this->class ? (' class="' . $this->class . '"') : '') . '>';
-if($this->link){
-$html .= $this->_fetchA();
-}
-if($this->icon){
-$html .= '<i class="icon-' . $this->icon . '"></i>';
-}
-$html .= '<span>' . $this->title . '</span>';
-if($this->link){
-$html .= '</a>';
-}
-$html .= '</li>';
-return $html;
-}
-private function _fetchA(){
-if(!$this->link) return null;
-$dat = $this->otherattributes;
-if($this->confirm){
-$dat['onclick'] = "if(confirm('" . str_replace("'", "\\'", $this->confirm) . "')){" .
-"Core.PostURL('" . str_replace("'", "\\'", Core::ResolveLink($this->link)) . "');" .
-"} return false; ";
-$dat['href'] = '#';
-}
-else{
-$dat['href'] = $this->link;
-}
-$dat['title'] = $this->title;
-if($this->class) $dat['class'] = $this->class;
-$html = '<a ';
-foreach($dat as $k => $v){
-$html .= " $k=\"$v\"";
-}
-$html .= '>';
-return $html;
-}
-public function set($key, $value){
-switch($key){
-case 'class':
-$this->class = $value;
-break;
-case 'confirm':
-$this->confirm = $value;
-break;
-case 'icon':
-$this->icon = $value;
-break;
-case 'link':
-case 'href': // Just for an alias of the link.
-$this->link = Core::ResolveLink($value);
-break;
-case 'title':
-$this->title = $value;
-break;
-default:
-$this->otherattributes[$key] = $value;
-break;
-}
-}
-public function offsetExists($offset) {
-return(property_exists($this, $offset));
-}
-public function offsetGet($offset) {
-$dat = get_object_vars($this);
-if(isset($dat[$offset])){
-return $dat[$offset];
-}
-elseif(isset($this->otherattributes[$offset])){
-return $this->otherattributes[$offset];
-}
-else{
-return null;
-}
-}
-public function offsetSet($offset, $value) {
-$this->set($offset, $value);
-}
-public function offsetUnset($offset) {
-return void;
-}
 }
 
 ### REQUIRE_ONCE FROM core/libs/core/Widget_2_1.class.php

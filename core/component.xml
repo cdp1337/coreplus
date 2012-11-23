@@ -40,8 +40,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="59985b92f2eb219b0f84a98bda5a8d6c"/>
-		<file filename="core/CHANGELOG" md5="fc3c35fd871d1402adf8cf30b6dbb334"/>
-		<file filename="core/bootstrap.compiled.php" md5="e030bf16360c6b9212581c0d9cc6607a">
+		<file filename="core/CHANGELOG" md5="cbec0bfb3c6575d3cab5dcffdf6c9113"/>
+		<file filename="core/bootstrap.compiled.php" md5="592e6dbcd35ec9bedd346878b6b0e320">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -91,6 +91,7 @@
 			<class name="UserAgent"/>
 			<class name="View"/>
 			<class name="ViewException"/>
+			<class name="ViewControls"/>
 			<class name="ViewControl"/>
 			<class name="Widget_2_1"/>
 			<class name="WidgetRequest"/>
@@ -486,9 +487,10 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="4f5ca980907f5ecafa204e3bfad3a07c">
+		<file filename="core/libs/core/Component_2_1.php" md5="63e27b96a241adeefe60366f9ccbe3c8">
 			<class name="Component_2_1"/>
 		</file>
+		<file filename="core/libs/core/Component_2_1.php~" md5="4f5ca980907f5ecafa204e3bfad3a07c"/>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="94fdacc5d802f86bab96b573b142bc78">
 			<class name="ConfigHandler"/>
 		</file>
@@ -527,10 +529,11 @@
 			<class name="FormPageInsertables"/>
 			<class name="FormPageMeta"/>
 		</file>
-		<file filename="core/libs/core/HookHandler.class.php" md5="96680c11f8367a7df64963a74cf6d195">
+		<file filename="core/libs/core/HookHandler.class.php" md5="c46031b7155befd51ba137fcafe671c3">
 			<class name="HookHandler"/>
 			<class name="Hook"/>
 		</file>
+		<file filename="core/libs/core/HookHandler.class.php~" md5="96680c11f8367a7df64963a74cf6d195"/>
 		<file filename="core/libs/core/ISingleton.interface.php" md5="c2a97e7692c5bc8a985487f9ffbeac25">
 			<interface name="ISingleton"/>
 		</file>
@@ -583,13 +586,16 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="89e9d5ab64dcc58208697acf2c918b34">
+		<file filename="core/libs/core/View.class.php" md5="457825ef67951829fccc033c30a59bde">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
-		<file filename="core/libs/core/ViewControl.class.php" md5="590385b6189e2aced5f59c379a1d1cbb">
+		<file filename="core/libs/core/View.class.php~" md5="59ef58afcec744246fd983d97930d627"/>
+		<file filename="core/libs/core/ViewControl.class.php" md5="2ae2de0f8fafcb50b434551792fd767e">
+			<class name="ViewControls"/>
 			<class name="ViewControl"/>
 		</file>
+		<file filename="core/libs/core/ViewControl.class.php~" md5="590385b6189e2aced5f59c379a1d1cbb"/>
 		<file filename="core/libs/core/Widget.class.php" md5="11f834e973a04aa4ae270128e9f71de2">
 			<class name="Widget"/>
 			<class name="WidgetException"/>
@@ -967,6 +973,7 @@
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="9d55b612bb00bde0db9ff625e3f3a795"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="84d16e1ba8fb38b5c8be6a1ca960ab43"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="85f908c0a9fa616aca30a0b94afeae18"/>
+		<file filename="core/libs/smarty-plugins/function.controls.php" md5="844784f6dd5f7483bbc9c73026070e5c"/>
 		<file filename="core/libs/smarty-plugins/function.date.php" md5="2b700cd93e47d5b92ebcc0a24533d467"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="b90dc10b7caf30b01b9a487b5653c9ce"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="4ccc817b64cccb0c9455d3fe1a28ddf2"/>
@@ -1309,6 +1316,11 @@
 		<file filename="core/widgets/PageWidget.php" md5="612cd59aef22cda09804b489cb64f327">
 			<class name="PageWidget"/>
 		</file>
+		<file filename="docs/component-xml.md" md5="c9d026dd0479a87381d9f868fed434e4"/>
+		<file filename="docs/models.md" md5="f8e6c6e34027ac2e608127af0c0a185f"/>
+		<file filename="docs/schemas/component.dtd" md5="ce9b8ea2859e6a9a6ed000e8f273ca99"/>
+		<file filename="docs/smarty-functions/img.md" md5="a7a19f13d1c7e2e4c08217ae915c7e1e"/>
+		<file filename="docs/user-permissions.md" md5="53e3322a56a1b537a43f8520394b56ae"/>
 		<file filename="htaccess.ex" md5="a9753494f79d3cfa1526c3ccfd19f1cc"/>
 		<file filename="index.php" md5="053e9ae9295e2c1ab0e0eb5b74373f21"/>
 		<file filename="install/InstallPage.class.php" md5="4f34783e9e3b4c2878afa6aa3aa0eb07">
@@ -1339,10 +1351,10 @@
 		<page baseurl="/updater" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="System Updater"/>
 	</pages>
 	<view searchdir="core/templates">
-		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="22be07f06646c5669bd0f7bca445647f"/>
+		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="ede12587d120115436546283239ea0ea"/>
 		<file filename="core/templates/forms/elements/button.tpl" md5="04458c32e1d992bba0255d8d1a2e8dee"/>
 		<file filename="core/templates/forms/elements/file.tpl" md5="90e30e0242238cee016d8b30571e9ac1"/>
-		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="aa4a10162c0e78aa5fa7bd3c532506da"/>
+		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="477737eb6570722f17ddc152b75f4ce0"/>
 		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="070475a9b15c813ca8b958afff81ff54"/>
 		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="a31d0d69eac1e98ecead81b522a6441f"/>
 		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="b253627a7cac7c2db9c53160272e103c"/>
@@ -1356,7 +1368,7 @@
 		<file filename="core/templates/forms/elements/formselectinput.tpl" md5="b8307fcfbe2face50497ab154c483b18"/>
 		<file filename="core/templates/forms/elements/formstateinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formsubmitinput.tpl" md5="bf76c8874f76293157502c0999206069"/>
-		<file filename="core/templates/forms/elements/formtextareainput.tpl" md5="7f76333dd807525afc02ec06de398019"/>
+		<file filename="core/templates/forms/elements/formtextareainput.tpl" md5="7fe543087daaa7f347a74d2b8f63232b"/>
 		<file filename="core/templates/forms/elements/formtextinput.tpl" md5="0f09b0b0b3e6ce316e89e312c311482e"/>
 		<file filename="core/templates/forms/elements/formtimeinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/html.tpl" md5="3d4259aa7f5615453121930abe34b031"/>
@@ -1428,8 +1440,8 @@
 		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'" default=""/>
 	</configs>
 	<assets>
-		<file filename="core/assets/css/admin/adminbar.css" md5="1f91cd8c391d4a75366d870f51b682b6"/>
-		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="f3803eda09da8ae790ccded988043e59"/>
+		<file filename="core/assets/css/admin/adminbar.css" md5="c9be9f23523adca836440c7f862ed938"/>
+		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="306b7baee9b250a9da2b378f5047ff30"/>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 		<file filename="core/assets/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
 		<file filename="core/assets/js/core.base64.js" md5="d5858756a4cf8012eb25157105718dfa"/>

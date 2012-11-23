@@ -70,3 +70,4 @@ require_once(ROOT_PDIR . 'core/libs/cachecore/backends/icachecore.interface.php'
 require_once(ROOT_PDIR . 'core/libs/cachecore/backends/cachecore.class.php');
 require_once(ROOT_PDIR . 'core/libs/cachecore/backends/cachefile.class.php');
 require_once(ROOT_PDIR . 'core/libs/cachecore/Cache.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/ViewControl.class.php');

@@ -21,6 +21,9 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+//echo '<pre>';
+//debug_print_backtrace();
+//die();
 
 /**
  * The main controller for a set of controls, can be instantiated with either page level or inline operations,
