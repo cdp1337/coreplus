@@ -1,0 +1,250 @@
+<!--
+    PUBLIC ID: -//coreplus//vocabulary//EN
+    SYSTEM ID: http://corepl.us/api/2_4/component.dtd
+
+	Last revision date: 2012.11.22
+-->
+
+<!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+	<!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
+
+    <component>
+    ...
+    </component>
+-->
+
+<!--
+	Component is the main container for everything for a given... well, component.
+	It's the root node, and each component can only contain one component.xml, which contains only one component directive.
+
+	The component directive MUST have a name and version attribute.  
+	The name MUST match the component's directory, (capitalization is optional).
+	The version SHOULD start with a number, and ideally have minor and point revisions, optionally with a third party flag at the end.
+-->
+<!ELEMENT component ((otherfiles)?|licenses|authors|(requires)?|(provides)?|(hooks)?|(smartyplugins)?|(includes)?|files|(pages)?|(view)?|install|(description)?|(configs)?|(userconfigs)?|(assets)?|(upgrades)?|(forms)?|(widgets)?|(permissions)?)>
+<!ATTLIST component
+	execmode (web|cli|both) "web"
+	name CDATA #REQUIRED
+	version CDATA #REQUIRED
+	xmlns:xsi CDATA #FIXED "http://www.w3.org/2001/XMLSchema-instance"
+>
+
+<!--
+	Provides element is a list of provide statements indicating what this component has.
+	A <provides> block MUST have one or more <provide> statement within.
+-->
+<!ELEMENT provides (provide|scriptlibrary)+>
+
+<!ELEMENT provide EMPTY>
+<!ATTLIST provide
+	version CDATA #REQUIRED
+	name CDATA #REQUIRED
+	type CDATA #IMPLIED
+>
+<!ELEMENT scriptlibrary EMPTY>
+<!ATTLIST scriptlibrary
+	name CDATA #REQUIRED
+	call CDATA #IMPLIED
+>
+
+<!ELEMENT forms (formelement)>
+<!ELEMENT formelement EMPTY>
+<!ATTLIST formelement name CDATA #REQUIRED class CDATA #REQUIRED>
+
+<!ELEMENT requires (require)+>
+
+<!ELEMENT require EMPTY>
+<!ATTLIST require
+	name CDATA #REQUIRED
+	type CDATA #REQUIRED
+	version CDATA #IMPLIED
+	operation (lt|le|eq|ge|gt) ""
+>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT hooks (hookregister|hook)*>
+
+<!ELEMENT hookregister EMPTY>
+<!ATTLIST hookregister
+	name CDATA #REQUIRED
+	description CDATA #IMPLIED
+>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT hook EMPTY>
+<!ATTLIST hook
+	name CDATA #REQUIRED
+	call CDATA #REQUIRED
+>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT smartyplugins EMPTY>
+<!ATTLIST smartyplugins
+	directory CDATA #REQUIRED
+>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT includes (include)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT include EMPTY>
+<!ATTLIST include
+	filename CDATA #REQUIRED
+>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT files (file)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT file (class|interface|widget|controller)*>
+<!ATTLIST file
+	md5 CDATA #IMPLIED
+	filename CDATA #REQUIRED
+>
+
+<!ELEMENT class EMPTY>
+<!ATTLIST class
+	name CDATA #REQUIRED
+>
+
+<!ELEMENT interface EMPTY>
+<!ATTLIST interface
+	name CDATA #REQUIRED
+>
+
+<!ELEMENT controller EMPTY>
+<!ATTLIST controller
+	name CDATA #REQUIRED
+>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT pages (page)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT page EMPTY>
+<!ATTLIST page
+	title CDATA #IMPLIED
+	access CDATA #IMPLIED
+	widget CDATA #IMPLIED
+	admin CDATA #IMPLIED
+	baseurl CDATA #IMPLIED
+>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT widgets (widget)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT widget EMPTY>
+<!ATTLIST widget
+	baseurl CDATA #IMPLIED
+	title CDATA #IMPLIED
+>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT view (file)*>
+<!ATTLIST view
+searchdir CDATA #IMPLIED
+>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT install (dataset)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT description (#PCDATA)>
+
+<!--- Set of site configuration options -->
+<!ELEMENT configs (config)*>
+
+<!--- Each configuration option, editable from within system configuration -->
+<!ELEMENT config EMPTY>
+<!ATTLIST config
+	key CDATA #REQUIRED
+	type CDATA #IMPLIED
+	options CDATA #IMPLIED
+	description CDATA #IMPLIED
+	default CDATA #IMPLIED
+>
+
+<!--- User config options, since they're usually defined by the components. -->
+<!ELEMENT userconfigs (userconfig)*>
+
+<!--- The actual user configuration option, contained within uesrconfigs -->
+<!ELEMENT userconfig EMPTY>
+<!ATTLIST userconfig
+	key CDATA #REQUIRED
+	name CDATA #REQUIRED
+	formtype CDATA #IMPLIED
+	default CDATA #IMPLIED
+	options CDATA #IMPLIED
+	onregistration (0|1) "1"
+	onedit (0|1) "1"
+>
+
+<!--- Permissions contain all permissions used in this component -->
+<!ELEMENT permissions (permission)*>
+
+<!--- Each permission that is used throughout the component, useful for displaying the names in the group admin -->
+<!ELEMENT permission EMPTY>
+<!ATTLIST permission key CDATA #REQUIRED description CDATA #IMPLIED>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT assets (file)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT upgrades (upgrade)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT upgrade (dataset)*>
+<!ATTLIST upgrade
+	to CDATA #IMPLIED
+	from CDATA #IMPLIED
+>
+
+<!--
+	Execute a low-level dataset operation on the installation or upgrade.
+-->
+<!ELEMENT dataset (datasetset|datasetwhere)*>
+<!ATTLIST dataset
+	action (update|insert|delete) #REQUIRED
+	table CDATA #REQUIRED
+>
+
+<!--
+	The "SET" clause for datasets.  Useful for UPDATE and INSERT statements.
+	The only attribute (which is required), is "key" and the nodeValue is the value that is set for that key.
+-->
+<!ELEMENT datasetset (#PCDATA)>
+<!ATTLIST datasetset
+	key CDATA #REQUIRED
+>
+
+<!--
+	The "WHERE" clause for datasets.  Useful for all types of statements.
+	The nodeValue here is the where statement, which is parsed via the dataset system.
+-->
+<!ELEMENT datasetwhere (#PCDATA)>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT authors (author)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT author EMPTY>
+<!ATTLIST author
+	email CDATA #IMPLIED
+	name CDATA #IMPLIED
+>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT licenses (license)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT license (#PCDATA)>
+<!ATTLIST license
+	url CDATA #IMPLIED
+>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT otherfiles (file)*>

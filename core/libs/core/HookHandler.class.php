@@ -157,12 +157,39 @@ class HookHandler implements ISingleton {
 class Hook {
 
 	/**
+	 * Only a false return will trigger a failed hook deployment.
+	 */
+	const RETURN_TYPE_BOOL = 'bool';
+
+	/**
+	 * No return types are given any concern, and no feedback is available.
+	 */
+	const RETURN_TYPE_VOID = 'void';
+
+	/**
+	 * The return statuses from hooks are expected to be an array,
+	 *
+	 * Multiple calls are merged together in the overall result.
+	 */
+	const RETURN_TYPE_ARRAY = 'array';
+
+	/**
 	 * The name of this hook.  MUST be system unique.
 	 * @var string
 	 */
 	public $name;
 
+	/*
+	 * Description of this hook, provides some human-friendly information about what it does and how it's used.
+	 * @var string
+	 */
 	public $description;
+
+	/**
+	 * The return type of this hook, MUST be one of the RETURN_TYPE_* strings.
+	 * @var string
+	 */
+	public $returnType = self::RETURN_TYPE_BOOL;
 
 	/**
 	 * An array of bound function/methods to call when this event is dispatched.
@@ -198,17 +225,44 @@ class Hook {
 		//array_shift($args); // Drop the hookName off of the arguments.
 		//echo '<pre>'; var_dump($args); echo '</pre>';
 
+		switch($this->returnType){
+			case self::RETURN_TYPE_BOOL:
+				// Default status for void, either no calls made or all returned successfully.
+				$return = true;
+				break;
+			case self::RETURN_TYPE_ARRAY:
+				$return = array();
+				break;
+			case self::RETURN_TYPE_VOID:
+				$return = null;
+		}
+
 		foreach ($this->_bindings as $call) {
 			// If the type is set to something and the call type is that
 			// OR
 			// The call type is not set/null.
 			$result = call_user_func_array($call['call'], func_get_args());
-			// This will allow a hook to prevent continuation of a script.
-			if ($result === false) return false;
+
+			switch($this->returnType){
+				case self::RETURN_TYPE_BOOL:
+					// This will allow a hook to prevent continuation of a script.
+					if ($result === false){
+						return false;
+					}
+					break;
+				case self::RETURN_TYPE_ARRAY:
+					if(is_array($result)){
+						$return = array_merge($return, $result);
+					}
+					break;
+				case self::RETURN_TYPE_VOID:
+					// I DON'T CARE!  :p
+					break;
+			}
+
 		}
 
-		// Either no calls made, or all returned successfully.
-		return true;
+		return $return;
 	}
 
 	public function __toString() {
@@ -236,3 +290,4 @@ HookHandler::RegisterNewHook('components_loaded');
 HookHandler::RegisterNewHook('components_ready');
 HookHandler::RegisterNewHook('session_ready');
 //HookHandler::RegisterNewHook('install_task');
+

@@ -137,7 +137,13 @@ class View {
 	 */
 	public $mastertemplate;
 	public $breadcrumbs = array();
-	public $controls = array();
+
+	/**
+	 * The controls for ths view
+	 *
+	 * @var ViewControls
+	 */
+	public $controls;
 
 	/**
 	 * The mode of this View.
@@ -262,6 +268,7 @@ class View {
 	public function __construct() {
 		$this->error = View::ERROR_NOERROR;
 		$this->mode  = View::MODE_PAGE;
+		$this->controls = new ViewControls();
 	}
 
 	public function setParameters($params) {
@@ -642,6 +649,7 @@ class View {
 					/** @var $hook Hook */
 					$debug .= $hook->name;
 					if($hook->description) $debug .= ' <i> - ' . $hook->description . '</i>';
+					$debug .= "\n" . '<span style="color:#999;">Return expected: ' . $hook->returnType . '</span>';
 					$debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
 				}
 

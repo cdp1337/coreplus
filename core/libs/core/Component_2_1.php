@@ -459,6 +459,9 @@ class Component_2_1 {
 		foreach ($this->_xmlloader->getElementsByTagName('hookregister') as $h) {
 			$hook              = new Hook($h->getAttribute('name'));
 			$hook->description = $h->getAttribute('description');
+			if($h->getAttribute('return')){
+				$hook->returnType = $h->getAttribute('return');
+			}
 			HookHandler::RegisterHook($hook);
 		}
 

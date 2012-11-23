@@ -1,3 +1,9 @@
+Core Plus 2.4.0
+	* Added support for hooks to have a return type attached to them.  This allows different hooks to return arrays or return statuses.
+	* Added a ViewControls object, which is responsible for handling the <ul/> group of control links for a given object.
+	* Added the docs into the upstream codebase for easier maintenance.
+	* Added a smarty "controls" function meant for displaying the control links of a given subject.
+
 Core Plus 2.3.2
 	* Set the FormPageParentSelectInput value to be strtolower all the time.  Should fix many of the baseurl and parenturl issues.
 	* Added FilterForm system; allows for filters to be created and utilized.
