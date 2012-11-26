@@ -1423,12 +1423,8 @@ class Component_2_1 {
 		foreach ($classes as $m => $file) {
 			if(!class_exists($m)) require_once($file);
 
-			$s         = $m::GetSchema();
-			$i         = $m::GetIndexes();
+			$schema = ModelFactory::GetSchema($m);
 			$tablename = $m::GetTableName();
-
-			$schema = array('schema'  => $s,
-			                'indexes' => $i);
 
 			try{
 				if (Core::DB()->tableExists($tablename)) {
@@ -1446,7 +1442,7 @@ class Component_2_1 {
 			catch(DMI_Query_Exception $e){
 				// Append the table name since otherwise it may be "_tmptable"... which does not provide any useful information!
 				$e->query = $e->query . "\n<br/>(original table " . $tablename . ")";
-				echo '<pre>' . $e->getTraceAsString() . '</pre>';
+				//echo '<pre>' . $e->getTraceAsString() . '</pre>'; // DEBUG //
 				throw $e;
 			}
 		}
@@ -1469,6 +1465,7 @@ class Component_2_1 {
 		$table    = $node->getAttribute('table');
 		$haswhere = false;
 		$sets     = array();
+		$renames  = array();
 		$ds       = new Dataset();
 
 
@@ -1478,12 +1475,26 @@ class Component_2_1 {
 			$sets[$el->getAttribute('key')] = $el->nodeValue;
 		}
 
+		foreach($node->getElementsByTagName('datasetrenamecolumn') as $el){
+			// <datasetrenamecolumn oldname="ID" newname="id"/>
+			$renames[$el->getAttribute('oldname')] = $el->getAttribute('newname');
+		}
+
 		foreach($node->getElementsByTagName('datasetwhere') as $el){
 			$haswhere = true;
 			$ds->where(trim($el->nodeValue));
 		}
 
 		switch($action){
+			case 'alter':
+				if(sizeof($sets)) throw new InstallerException('Invalid mix of arguments on ' . $action . ' dataset request, datasetset is not supported!');
+				if($haswhere) throw new InstallerException('Invalid mix of arguments on ' . $action . ' dataset request, datasetwhere is not supported!');
+
+				foreach($renames as $k => $v){
+					// ALTER TABLE `controllers` CHANGE `ID` `id` INT( 11 ) NOT NULL AUTO_INCREMENT
+					$ds->renameColumn($k, $v);
+				}
+				break;
 			case 'update':
 				foreach($sets as $k => $v){
 					$ds->update($k, $v);

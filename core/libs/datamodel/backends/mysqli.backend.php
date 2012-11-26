@@ -110,10 +110,21 @@ class DMI_mysqli_backend implements DMI_Backend {
 			case Dataset::MODE_COUNT:
 				$this->_executeCount($dataset);
 				break;
+			case Dataset::MODE_ALTER:
+				$this->_executeAlter($dataset);
+				break;
 			default:
 				throw new DMI_Exception('Invalid dataset mode [' . $dataset->_mode . ']');
 				break;
 		}
+	}
+
+	/**
+	 * @since 2.4.0
+	 * @return mysqli|null
+	 */
+	public function getConnection(){
+		return $this->_conn;
 	}
 
 
@@ -123,59 +134,45 @@ class DMI_mysqli_backend implements DMI_Backend {
 		return ($rs->num_rows);
 	}
 
-	public function createTable($table, $schema){
+	public function createTable($table, $newschema){
 		// Check if the table exists to begin with.
-		if($this->tableExists($table)){
-			throw new DMI_Exception('Cannot create table [' . $table . '] as it already exists');
+		// To increase performance, skip this check.  It's expected to be checked from the calling logic.
+		//if($this->tableExists($table)){
+		//	throw new DMI_Exception('Cannot create table [' . $table . '] as it already exists');
+		//}
+
+		if($newschema instanceof ModelSchema){
+			$newmodelschema = $newschema;
+			$newschema = new MySQLi_Schema($this, null);
+			$newschema->fromModelSchema($newmodelschema);
 		}
+		elseif($newschema instanceof MySQLi_Schema){
+			$newmodelschema = $newschema->toModelSchema();
+		}
+		else{
+			throw new DMI_Exception('Unsupported object sent in for modifyTable: [' . get_class($newschema) . ']');
+		}
+
 		// Table doesn't exist, just do a simple create
 		$q = 'CREATE TABLE `' . $table . '` ';
 		$directives = array();
-		foreach($schema['schema'] as $column => $coldef){
-			$d = '`' . $column . '`';
-
-			if(!isset($coldef['type'])) $coldef['type'] = Model::ATT_TYPE_TEXT; // Default if not present.
-			if(!isset($coldef['maxlength'])) $coldef['maxlength'] = false;
-
-			// Will provide valid mysql string for the data type.
-			$d .= ' ' . $this->_getSchemaFromType($coldef);
-
-			if(!isset($coldef['null'])) $coldef['null'] = false;
-			$d .= ' ' . (($coldef['null'])? 'NULL' : 'NOT NULL');
-
-			if(!isset($coldef['default'])) $coldef['default'] = false;
-			if($coldef['default']) $d .= ' DEFAULT ' . "'" . $coldef['default'] . "'";
-
-			if(!isset($coldef['comment'])) $coldef['comment'] = false;
-			if($coldef['comment']) $d .= ' COMMENT \'' . $coldef['comment'] . '\' ';
-
-			if($coldef['type'] == Model::ATT_TYPE_ID) $d .= ' AUTO_INCREMENT';
-
-			$directives[] = $d;
+		foreach($newschema->definitions as $column){
+			/** @var $column MySQLi_Schema_Column */
+			$directives[] = '`' . $column->field . '` ' . $column->getColumnString();
 		}
 
 
-		foreach($schema['indexes'] as $key => $idxdef){
+		foreach($newschema->indexes as $idx){
 			$d = '';
-			if($key == 'primary'){
-				$d .= 'PRIMARY KEY ';
+			if($idx['name'] == 'PRIMARY'){
+				$d .= 'PRIMARY KEY (`' . implode('`, `', $idx['columns']) . '`)';
 			}
-			elseif(strpos($key, 'unique:') !== false){
-				// Unique keys should all have "unique:something" as the key to differentiate them from regular indexes.
-				$d .= 'UNIQUE KEY `' . substr($key, 7) . '` ';
-			}
-			else{
-				$d .= 'KEY `' . $key . '` ';
-			}
-
-			// Tack on the columns that are in this index.
-			if(is_array($idxdef)){
-				$d .= '(`' . implode('`, `', $idxdef) . '`)';
+			elseif($idx['nonunique'] == 0){
+				$d .= 'UNIQUE KEY `' . $idx['name'] . '` (`' . implode('`, `', $idx['columns']) . '`)';
 			}
 			else{
-				$d .= '(`' . $idxdef . '`)';
+				$d .= 'KEY `' . $idx['name'] . '` (`' . implode('`, `', $idx['columns']) . '`)';
 			}
-
 			$directives[] = $d;
 		}
 
@@ -188,12 +185,6 @@ class DMI_mysqli_backend implements DMI_Backend {
 		//echo $q . '<br/>';
 		// and GO!
 		return ($this->_rawExecute('write', $q));
-
-
-		//$q .= 'ENGINE=' . $tblnode->getAttribute('engine') . ' ';
-		//$q .= 'DEFAULT CHARSET=' . $tblnode->getAttribute('charset') . ' ';
-		//if($tblnode->getAttribute('comment')) $q .= 'COMMENT=\'' . $tblnode->getAttribute('comment') . '\' ';
-		// @todo should AUTO_INCREMENT be available here?
 	}
 
 	/**
@@ -201,300 +192,164 @@ class DMI_mysqli_backend implements DMI_Backend {
 	 *
 	 * This is used to keep the database in sync with the code upon upgrades, installations and reinstalls.
 	 *
-	 * @param $table string
-	 * @param $newschema array
+	 * @param string $table
+	 * @param ModelSchema|MySQLi_Schema $newschema
 	 *
 	 * @return bool
 	 * @throws DMI_Exception
+	 * @throws DMI_Query_Exception
 	 */
 	public function modifyTable($table, $newschema){
-		$changed = false;
+		$changed    = false;
 
 		// Check if the table exists to begin with.
-		if(!$this->tableExists($table)){
-			throw new DMI_Exception('Cannot modify table [' . $table . '] as it does not exist');
-		}
+		// To speed up the system, ignore this check.
+		// External scripts should check for the presence anyway.
+		//if(!$this->tableExists($table)){
+		//	throw new DMI_Exception('Cannot modify table [' . $table . '] as it does not exist');
+		//}
 
-		if($this->tableExists('_tmptable')){
-			// It's supposed to have been dropped by now....
-			$this->_rawExecute('write', 'DROP TABLE _tmptable');
+		// Also ignore this check, it should have been deleted at the end of the previous process.
+		//if($this->tableExists('_tmptable')){
+		//	// It's supposed to have been dropped by now....
+		//	$this->_rawExecute('write', 'DROP TABLE _tmptable');
+		//}
+
+
+		// BEFORE I do all the exhaustive work of sifting through the table and what not, do a quick check to see if this table is unchanged.
+		$oldschema = $this->_describeTableSchema($table);
+		$oldmodelschema = $oldschema->toModelSchema();
+		if($newschema instanceof ModelSchema){
+			$newmodelschema = $newschema;
+			$newschema = new MySQLi_Schema($this, null);
+			$newschema->fromModelSchema($newmodelschema);
 		}
+		elseif($newschema instanceof MySQLi_Schema){
+			$newmodelschema = $newschema->toModelSchema();
+		}
+		else{
+			throw new DMI_Exception('Unsupported object sent in for modifyTable: [' . get_class($newschema) . ']');
+		}
+		// At this stage, (Just to recap)
+		/** @var $oldschema MySQLi_Schema */
+		/** @var $newschema MySQLi_Schema */
+		/** @var $oldmodelschema ModelSchema */
+		/** @var $newmodelschema ModelSchema */
+
+		if($oldmodelschema->isDataIdentical($newmodelschema)) return false;
+
+		// var_dump($table, $oldmodelschema->getDiff($newmodelschema)); // DEBUG //
 
 		// Table does exist... I need to do a merge of the data schemas.
 		// Create a temp table to do the operations on.
 		$this->_rawExecute('write', 'CREATE TEMPORARY TABLE _tmptable LIKE ' . $table);
 		$this->_rawExecute('write', 'INSERT INTO _tmptable SELECT * FROM ' . $table);
 
-		// My simple counter.  Helps keep track of column order.
-		$x = 0;
-		// This will contain the current table schema of the tmptable.
-		// It will get reloaded after any change.
-		$schema = $this->_describeTableSchema('_tmptable');
+		// The oldschema from above will get reloaded after each change.
 
 		// To make the indexing logic a little easier...
-		foreach($newschema['indexes'] as $k => $v){
-			if(!is_array($v)) $newschema['indexes'][$k] = array($v);
+		foreach($newmodelschema->indexes as $k => $v){
+			if(!is_array($v)) $newmodelschema->indexes[$k] = array($v);
 		}
-		if(!isset($newschema['indexes']['primary'])) $newschema['indexes']['primary'] = false; // No primary key on this table.
+		if(!isset($newmodelschema->indexes['primary'])) $newmodelschema->indexes['primary'] = false; // No primary key on this table.
 
-		if(!sizeof($newschema['schema'])){
+		if(!sizeof($newmodelschema->definitions)){
 			throw new DMI_Exception('No schema provided for table ' . $table);
 		}
 
+		// The simpliest way to handle this is to strip the auto_increment setting (if set),
+		// any/all primary keys and indexes, do the operations, then reset the ai and indexes afterwards.
 
-		// Check if there's still a column with the primary ID flag set.
-		// that will not be the same in the resulting table.
-		$oldprimaries = array();
-		foreach($schema['def'] as $d => $d2){
-			if($d2['key'] == 'PRI'){
-				$oldprimaries[] = $d;
+		// This will search for and strip the AI attribute.
+		foreach($oldschema->definitions as $column){
+			/** @var $column MySQLi_Schema_Column */
+			if($column->extra == 'auto_increment'){
+				$columndef = str_replace(' AUTO_INCREMENT', '', $column->getColumnString());
+				// This statement will perform the alter statement, removing the AUTO INCREMENT attribute.
+				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` CHANGE `' . $column->field . '` `' . $column->field . '` ' . $columndef);
 			}
 		}
 
-
-
-		if($oldprimaries != $newschema['indexes']['primary']){
-			// Check its structure as well, it may be an auto_increment.
-			foreach($oldprimaries as $column){
-				$coldef = $schema['def'][$column];
-
-				if($coldef['extra'] == 'auto_increment'){
-					$q = "ALTER TABLE `_tmptable` CHANGE `$column` `$column` " . $coldef['type'] . ' ';
-					$q .= (($coldef['null'] == 'NO')? 'NOT NULL' : 'NULL') . ' ';
-					if($coldef['null'] == 'YES' && $coldef['default'] === null) $default = 'NULL';
-					elseif($coldef['default'] !== null) $default = "'" . $this->_conn->escape_string($coldef['default']) . "'";
-					else $default = false;
-					if($default) $q .= 'DEFAULT ' . $default . ' ';
-					$this->_rawExecute('write', $q);
-				}
-			}
-
-			if(sizeof($oldprimaries)){
+		// Now remove the indexes
+		foreach($oldschema->indexes as $idx){
+			if($idx['name'] == 'PRIMARY'){
 				$this->_rawExecute('write', 'ALTER TABLE _tmptable DROP PRIMARY KEY');
 			}
+			else{
+				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` DROP INDEX ' . $idx['name'] . '');
+			}
 		}
 
+		// My simple counter.  Helps keep track of column order.
+		$x = 0;
+		// Now I can start running through the new schema and create/move the columns as necessary.
+		foreach($newschema->definitions as $column){
+			/** @var $column MySQLi_Schema_Column */
 
-		foreach($newschema['schema'] as $column => $coldef){
-			if(!isset($coldef['type'])) $coldef['type'] = Model::ATT_TYPE_TEXT; // Default if not present.
-			if(!isset($coldef['maxlength'])) $coldef['maxlength'] = false;
-			if(!isset($coldef['null'])) $coldef['null'] = false;
-			if(!isset($coldef['comment'])) $coldef['comment'] = '';
-			if(!isset($coldef['default'])) $coldef['default'] = false;
+			// This is the column definition, (without the AI attribute, I'll get to that in a second).
+			$columndef = str_replace(' AUTO_INCREMENT', '', $column->getColumnString());
 
-			$type = $this->_getSchemaFromType($coldef);
-			$null = ($coldef['null'])? 'NULL' : 'NOT NULL'; // Required for the query.
-			$checknull = ($coldef['null'])? 'YES' : 'NO'; // Required for the schema check.
-
-			if($coldef['null'] && $coldef['default'] === null) $default = 'NULL';
-			elseif($coldef['default'] !== false) $default = "'" . $this->_conn->escape_string($coldef['default']) . "'";
-			else $default = false;
-			//(($coldef['default'])? "'" . $this->_conn->escape_string($coldef['default']) . "'" : (($coldef['null'])? 'NULL' : "''"));
-			$checkdefault = (($coldef['default'] !== false)? $coldef['default'] : (($coldef['null'])? null : ''));
-
-
-			//'type' => string 'string' (length=6)
-			//'maxlength' => int 256
-			//'required' => boolean true
-			//'options' => array()
-			//'comment' => string 'The define constant to map the value to on system load.'
-
-
-			// coldef should now contain:
-			// array(
-			//   'field' => 'name_of_field',
-			//   'type' => 'type definition, ie: int(11), varchar(32), etc',
-			//   'null' => 'NO|YES',
-			//   'key' => 'PRI|MUL|UNI|[blank]'
-			//   'default' => default value
-			//   'extra' => 'auto_increment|[blank]',
-			//   'collation' => 'some collation type',
-			//   'comment' => 'some comment',
-			// );
-
-			// Check that the current column is in the same location as in the database.
-			if(!(isset($schema['ord'][$x]) && $schema['ord'][$x] == $column)){
-				// Is it even present?
-				if(isset($schema['def'][$column])){
-					$changed = true;
-					// w00t, move it to this position.
-					// ALTER TABLE `test` MODIFY COLUMN `fieldfoo` mediumint AFTER `something`
-					$q = 'ALTER TABLE _tmptable MODIFY COLUMN `' . $column . '` ' . $type . ' ';
-					$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $schema['ord'][$x-1] . '`';
-					$this->_rawExecute('write', $q);
-
-					// Moving the column will change the definition... reload that.
-					$schema = $this->_describeTableSchema('_tmptable');
-				}
-				// No? Ok, create it.
-				else{
-					$changed = true;
-					// ALTER TABLE `test` ADD `newfield` TEXT NOT NULL AFTER `something` 
-					$q = 'ALTER TABLE _tmptable ADD `' . $column . '` ' . $type . ' ';
-					$q .= $null . ' ';
-					$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $schema['ord'][$x-1] . '`';
-					$this->_rawExecute('write', $q);
-
-					// Adding the column will change the definition... reload that.
-					$schema = $this->_describeTableSchema('_tmptable');
-				}
+			if(isset($oldschema->order[$x]) && $oldschema->order[$x] == $column->field){
+				// Yay, the column is in the same order in the new schema as the old schema!
+				// All I need to do here is just ensure the structure is appropriate.
+				$q = 'ALTER TABLE _tmptable MODIFY COLUMN `' . $column->field . '` ' . $column->getColumnString();
+				$neednewschema = false;
+			}
+			elseif(isset($oldschema->definitions[$column->field])){
+				// Well, it's in the old schema, just not necessarily in the same order.
+				// Move it along with the updated attributes.
+				$q = 'ALTER TABLE _tmptable MODIFY COLUMN `' . $column->field . '` ' . $columndef . ' ';
+				$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $oldschema->order[$x-1] . '`';
+				$neednewschema = true;
+			}
+			else{
+				// It's a new column altogether!  ADD IT!
+				$q = 'ALTER TABLE _tmptable ADD `' . $column->field . '` ' . $columndef . ' ';
+				$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $oldschema->order[$x-1] . '`';
+				$neednewschema = true;
 			}
 
-			// Now the column should exist and be in the correct location.  Check its structure.
-			// ALTER TABLE `test` CHANGE `newfield` `newfield` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL 
-			// Check its AI and primary states first.
-			if(
-				$coldef['type'] == Model::ATT_TYPE_ID && ($newschema['indexes']['primary'] && in_array($column, $newschema['indexes']['primary'])) &&
-				(!isset($schema['def'][$column]) || ($schema['def'][$column]['extra'] == '' && $schema['def'][$column]['key'] == ''))
-			){
-				$changed = true;
-				// An AI value was added to the table.  I need to add that column as the primary key first, then
-				// tack on the AI property.
-				// ALTER TABLE `test` ADD PRIMARY KEY(`id`)
-				$q = 'ALTER TABLE _tmptable ADD PRIMARY KEY (`' . $column . '`)';
-				$this->_rawExecute('write', $q);
-				$q = 'ALTER TABLE _tmptable CHANGE `' . $column . '` `' . $column . '` ' . $type . ' ';
-				$q .= $null . ' ';
-				$q .= 'AUTO_INCREMENT';
-				$this->_rawExecute('write', $q);
-
-				// And reload the schema.
-				$schema = $this->_describeTableSchema('_tmptable');
-			}
-
-			// If the column is already set as a PRIMARY key in the table, but is not set as auto increment... I need to update that too.
-			if(
-				$coldef['type'] == Model::ATT_TYPE_ID && ($newschema['indexes']['primary'] && in_array($column, $newschema['indexes']['primary'])) &&
-				(!isset($schema['def'][$column]) || ($schema['def'][$column]['extra'] == '' && $schema['def'][$column]['key'] == 'PRI'))
-			){
-				$changed = true;
-				// In this block, the column is already set as the primary key, it just needs the auto inc flag.
-				//$q = 'ALTER TABLE _tmptable ADD PRIMARY KEY (`' . $column . '`)';
-				//$this->_rawExecute('write', $q);
-				$q = 'ALTER TABLE _tmptable CHANGE `' . $column . '` `' . $column . '` ' . $type . ' ';
-				$q .= $null . ' ';
-				$q .= 'AUTO_INCREMENT';
-				$this->_rawExecute('write', $q);
-
-				// And reload the schema.
-				$schema = $this->_describeTableSchema('_tmptable');
-			}
-
-			// Now, check everything else.
-			if(
-				$type != $schema['def'][$column]['type'] ||
-				$checknull != $schema['def'][$column]['null'] ||
-				$checkdefault != $schema['def'][$column]['default'] ||
-				//$coldef['collation'] != $schema['def'][$coldef['field']]['collation'] || 
-				$coldef['comment'] != $schema['def'][$column]['comment']
-			){
-				//var_dump($schema['def'][$column], $type, $checknull, $checkdefault, $coldef); die();
-				$changed = true;
-				$q = 'ALTER TABLE _tmptable CHANGE `' . $column . '` `' . $column . '` ';
-				$q .= $type . ' ';
-				//if($coldef['collation']) $q .= 'COLLATE ' . $coldef['collation'] . ' ';
-				$q .= $null . ' ';
-				if($default !== false) $q .= 'DEFAULT ' . $default . ' ';
-				if($coldef['comment']) $q .= 'COMMENT \'' . $coldef['comment'] . '\' ';
-				//echo $q . '<br/>';
-				$this->_rawExecute('write', $q);
-
-				// And reload the schema.
-				$schema = $this->_describeTableSchema('_tmptable');
-			}
-
+			// Execute this query, increment X, and re-read the "old" structure.
+			$this->_rawExecute('write', $q);
 			$x++;
-		} // foreach($this->getElementFrom('column', $tblnode, false) as $colnode)
-
-//var_dump($column, $type, $coldef, $schema); die();
-		// The columns should be done; onto the indexes.
-		$indexes = $this->_describeTableIndexes('_tmptable');
-
-		//var_dump($newschema['indexes'], $schema); die();
-		$keysgood = array(); // Used to know what keys have been validated and conformed.
-		foreach($newschema['indexes'] as $idx => $columns){
-
-			// Damn negatives for variables.... 1 means that it's NOT unique, ie: a standard key.
-			$nonunique = (!(strpos($idx, 'unique:') === 0 || $idx == 'primary'));
-
-			// Ensure that idxdef['column'] is an array if it's not.
-			// unless $columns is false...
-			// If it's false, that's simply a signifier that it doesn't have any indexes currently.
-			if(!is_array($columns) && $columns !== false) $columns = array($columns);
-
-			// Figure out the names for this so I only have to have the logic executed once.
-			if($idx == 'primary'){
-				$idxkey = 'PRIMARY';
-				$idxname = 'PRIMARY KEY';
-				$idxdropname = 'PRIMARY KEY';
+			if($neednewschema){
+				// Only update the schema if the column order changed.
+				// This is to increase performance a little.
+				$oldschema = $this->_describeTableSchema('_tmptable');
 			}
-			elseif($nonunique){
-				$idxkey = $idx;
-				$idxname = 'KEY ' . $idxkey;
-				$idxdropname = 'INDEX ' . $idxkey;
+		}
+
+		// Columns have been setup; now to (re)create the indexes.
+		foreach($newschema->indexes as $idx){
+			if($idx['name'] == 'PRIMARY'){
+				$q = 'ALTER TABLE `_tmptable` ADD PRIMARY KEY (`' . implode('`, `', $idx['columns']) . '`)';
+			}
+			elseif($idx['nonunique'] == 0){
+				$q = 'ALTER TABLE `_tmptable` ADD UNIQUE KEY ' . $idx['name'] . ' (`' . implode('`, `', $idx['columns']) . '`)';
 			}
 			else{
-				$idxkey = substr($idx, 7);
-				$idxname = 'UNIQUE KEY ' . $idxkey; // Create requires the UNIQUE flag, but
-				$idxdropname = 'INDEX ' . $idxkey; // Drop does not require it.
+				$q = 'ALTER TABLE `_tmptable` ADD INDEX ' . $idx['name'] . ' (`' . implode('`, `', $idx['columns']) . '`)';
 			}
 
+			$this->_rawExecute('write', $q);
+		}
 
-			// These are the index creates/modifies.
-			if(!isset($indexes[$idxkey]) && $columns){
-				$changed = true;
-				// Doesn't exist, create it.
-				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` ADD ' . $idxname . ' (`' . implode('`, `', $columns) . '`)');
-				$keysgood[] = $idxkey;
-				$indexes = $this->_describeTableIndexes('_tmptable');
-			}
-			elseif(
-				isset($indexes[$idxkey]) && (
-					$indexes[$idxkey]['columns'] != $columns ||
-					$nonunique != ($indexes[$idxkey]['nonunique'])
-				)
-			){
-				$changed = true;
-				// Rebuild it.
-				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` DROP ' . $idxdropname . '');
-				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` ADD ' . $idxname . ' (`' . implode('`, `', $columns) . '`)');
-				$keysgood[] = $idxkey;
-				$indexes = $this->_describeTableIndexes('_tmptable');
-			}
-			else{
-				// PK Matches, nothing needs to be done.
-				$keysgood[] = $idxkey;
-			}
-		} // foreach($this->getElementFrom('index', $tblnode, false) as $idxnode)
-
-		// And the key deletions.
-		foreach($indexes as $idx => $val){
-			if(!in_array($idx, $keysgood)){
-				$changed = true;
-				// DROP IT!
-				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` DROP INDEX `' . $idx . '`');
+		// And lastly, search and re-add the AI attribute!
+		// This has to be done last because it requires the PRIMARY KEY to already be set.
+		foreach($newschema->definitions as $column){
+			/** @var $column MySQLi_Schema_Column */
+			if($column->extra == 'auto_increment'){
+				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` CHANGE `' . $column->field . '` `' . $column->field . '` ' . $column->getColumnString());
 			}
 		}
 
+		$this->_rawExecute('write', 'DROP TABLE `' . $table . '`');
+		$this->_rawExecute('write', 'CREATE TABLE `' . $table . '` LIKE _tmptable');
+		$this->_rawExecute('write', 'INSERT INTO `' . $table . '` SELECT * FROM _tmptable');
 
-
-		if(!$changed){
-			// Drop the table so it's ready for the next table.
-			$this->_rawExecute('write', 'DROP TABLE _tmptable');
-
-			return false;
-		}
-		else{
-			// All operations should be completed now; move the temp table back to the original one.
-			$this->_rawExecute('write', 'DROP TABLE `' . $table . '`');
-			$this->_rawExecute('write', 'CREATE TABLE `' . $table . '` LIKE _tmptable');
-			$this->_rawExecute('write', 'INSERT INTO `' . $table . '` SELECT * FROM _tmptable');
-
-			// Drop the table so it's ready for the next table.
-			$this->_rawExecute('write', 'DROP TABLE _tmptable');
-
-			return true;
-		}
+		// Drop the table so it's ready for the next table.
+		$this->_rawExecute('write', 'DROP TABLE _tmptable');
+		return true;
 	}
 
 	public function readCount() {
@@ -514,77 +369,6 @@ class DMI_mysqli_backend implements DMI_Backend {
 		return $this->_querylog;
 	}
 
-
-	/**
-	 * Translate the database-independent types into mysql-specific ones.
-	 *
-	 * Used internally for some schema operations.
-	 *
-	 * @param array $coldef
-	 * @return string
-	 */
-	public function _getSchemaFromType($coldef){
-
-		switch($coldef['type']){
-			case Model::ATT_TYPE_BOOL:
-				$type = "enum('0','1')";
-				break;
-			case Model::ATT_TYPE_ENUM:
-				if(!(isset($coldef['options']) && is_array($coldef['options']) && sizeof($coldef['options']))){
-					throw new DMI_Exception('Invalid column definition for, type ENUM must include at least one option.');
-				}
-				foreach($coldef['options'] as $k => $opt){
-					// Ensure that any single quotes are escaped out.
-					$coldef['options'][$k] = str_replace("'", "\\'", $opt);
-				}
-				$type = "enum('" . implode("','", $coldef['options']) . "')";
-				break;
-			case Model::ATT_TYPE_FLOAT:
-				if(!isset($coldef['precision'])){
-					// No precision requested, just a standard float works here.
-					$type = "float";
-				}
-				else{
-					// DB-level precision requested.  This is not recommended in Core+, but still supported.
-					$type = "decimal(" . $coldef['precision'] . ")";
-				}
-				break;
-			case Model::ATT_TYPE_ID:
-				$type = "int(15)";
-				break;
-			case Model::ATT_TYPE_INT:
-				$type = "int(15)";
-				break;
-			case Model::ATT_TYPE_STRING:
-				$maxlength = ($coldef['maxlength'])? $coldef['maxlength'] : 255; // It needs something...
-				$type = "varchar($maxlength)";
-				break;
-			case Model::ATT_TYPE_TEXT:
-				$type = "text";
-				break;
-			case Model::ATT_TYPE_DATA:
-				$type = 'mediumblob';
-				break;
-			case Model::ATT_TYPE_CREATED:
-			case Model::ATT_TYPE_UPDATED:
-				$type = 'int(11)';
-				break;
-			case Model::ATT_TYPE_ISO_8601_DATETIME:
-				$type = 'datetime';
-				break;
-			case Model::ATT_TYPE_MYSQL_TIMESTAMP:
-				$type = 'timestamp';
-				break;
-			case Model::ATT_TYPE_ISO_8601_DATE:
-				$type = 'date';
-				break;
-			default:
-				throw new DMI_Exception('Unsupported model type for [' . $coldef['type'] . ']');
-				break;
-		}
-
-		return $type;
-	}
 
 	/**
 	 * Reverse of getSchemaFromType.  Will return valid code and values for a database schema.
@@ -608,41 +392,30 @@ class DMI_mysqli_backend implements DMI_Backend {
 		return $ret;
 	}
 
+	/**
+	 * Get the schema for a given table.
+	 *
+	 * @param string $table
+	 *
+	 * @return MySQLi_Schema
+	 */
 	public function _describeTableSchema($table){
-		$rs = $this->_rawExecute('read', 'SHOW FULL COLUMNS FROM `' . $table . '`');
-		$tabledef = array();
-		$tableord = array();
-
-		while($row = $rs->fetch_assoc()){
-			$tabledef[$row['Field']] = array();
-			foreach($row as $k => $v){
-				$tabledef[$row['Field']][strtolower($k)] = $v;
-			}
-			$tableord[] = $row['Field'];
-		}
-		return array('def' => $tabledef, 'ord' => $tableord);
+		$s = new MySQLi_Schema($this, $table);
+		return $s;
 	}
 
+	/**
+	 * Alias of _describeTableSchema
+	 *
+	 * Now that they're combined, there's no need to keep them separate.
+	 *
+	 * @param $table
+	 *
+	 * @return MySQLi_Schema
+	 */
 	public function _describeTableIndexes($table){
-		$rs = $this->_rawExecute('read', 'SHOW INDEXES FROM `' . $table . '`');
-		$def = array();
-
-		while($row = $rs->fetch_assoc()){
-			// Non_unique | Key_name | Column_name | Comment
-			if(isset($def[$row['Key_name']])){
-				// Add a column.
-				$def[$row['Key_name']]['columns'][] = $row['Column_name'];
-			}
-			else{
-				$def[$row['Key_name']] = array(
-					'name' => $row['Key_name'],
-					'nonunique' => $row['Non_unique'],
-					'comment' => $row['Comment'],
-					'columns' => array($row['Column_name']),
-				);
-			}
-		}
-		return $def;
+		$s = new MySQLi_Schema($this, $table);
+		return $s;
 	}
 
 
@@ -771,6 +544,64 @@ class DMI_mysqli_backend implements DMI_Backend {
 		$dataset->num_rows = $row[0];
 	}
 
+	private function _executeAlter(Dataset $dataset){
+		$table = $dataset->_table;
+
+		// Create a temp table to do the operations on.
+		// This is a safety mechanism in case something goes horribly wrong with the query, (which tends to happen a lot).
+		// If something blows up half way through, the temporary table will be hosed, but the original data and table
+		// will be left intact unharmed.
+		$this->_rawExecute('write', 'CREATE TEMPORARY TABLE _tmptable LIKE ' . $table);
+		$this->_rawExecute('write', 'INSERT INTO _tmptable SELECT * FROM ' . $table);
+
+		// Alter statements do not have where or set clauses, just structural changes!
+		// I do however need the current schema so I know what changes there are to make.
+		$schema = $this->_describeTableSchema('_tmptable');
+
+		//var_dump($schema); die();
+
+		// This is an alter statement, used primarily on installs and updates.
+		// ALTER TABLE `controllers` CHANGE `ID` `id` INT( 11 ) NOT NULL AUTO_INCREMENT
+		$q = 'ALTER TABLE `_tmptable`';
+
+		// Set to true if there is something to do.
+		$dosomething = false;
+
+		foreach($dataset->_renames as $old => $new){
+			// Renames are just simple renames, preserving all the previous attributes.
+			// So, see if the old column is in the schema.
+			$col = $schema->getColumn($old);
+			if($col){
+				$q .= ' CHANGE `' . $old . '` `' . $new . '` ' . $col->getColumnString();
+				$dosomething = true;
+			}
+			else{
+				$col = $schema->getColumn($new);
+				if($col){
+					// No change needed, the column was already renamed.
+					error_log('Column ' . $old . ' already renamed to ' . $new . ' in table ' . $table);
+				}
+				else{
+					// Wait, it was never there to begin with, SO CONFUSED!
+					throw new DMI_Exception('Column [' . $old . '] does not exist in table [' . $table . '], unable to rename to [' . $new . ']');
+				}
+			}
+		}
+
+		//var_dump($q); die();
+
+		if($dosomething){
+			$this->_rawExecute('write', $q);
+			$this->_rawExecute('write', 'DROP TABLE `' . $table . '`');
+			$this->_rawExecute('write', 'CREATE TABLE `' . $table . '` LIKE _tmptable');
+			$this->_rawExecute('write', 'INSERT INTO `' . $table . '` SELECT * FROM _tmptable');
+			$this->_rawExecute('write', 'DROP TABLE `_tmptable`');
+		}
+		else{
+			$this->_rawExecute('write', 'DROP TABLE `_tmptable`');
+		}
+	}
+
 
 	/**
 	 * Parse the where clause of a given dataset.
@@ -846,11 +677,11 @@ class DMI_mysqli_backend implements DMI_Backend {
 	 * successful queries mysqli_query() will return TRUE.
 	 *
 	 * @param string type Either read or write.
-	 * @param string $string
+	 * @param string $string The string to execute
 	 * @return mixed
 	 * @throws DMI_Query_Exception
 	 */
-	private function _rawExecute($type, $string){
+	public function _rawExecute($type, $string){
 
 		$arguments = func_get_args();
 
@@ -927,5 +758,413 @@ class DMI_mysqli_backend implements DMI_Backend {
 			throw $e;
 		}
 		return $res;
+	}
+}
+
+
+class MySQLi_Schema {
+
+
+	/**
+	 * An associative array of MySQLi_Schema_Column objects.
+	 *
+	 * @var array
+	 */
+	public $definitions = array();
+
+	/**
+	 * An indexed array of the names of the columns in this schema.
+	 *
+	 * @var array
+	 */
+	public $order = array();
+
+	public $indexes = array();
+
+	private $_backend;
+
+	public function __construct(DMI_mysqli_backend $backend, $table = null){
+		$this->_backend = $backend;
+
+		if($table !== null){
+			$this->readTable($table);
+		}
+	}
+
+	/**
+	 * Read a table and populate this schema's column definitions.
+	 *
+	 * Generally called automatically from the constructor.
+	 *
+	 * @param $table
+	 */
+	public function readTable($table){
+		$rs = $this->_backend->_rawExecute('read', 'SHOW FULL COLUMNS FROM `' . $table . '`');
+
+		while($row = $rs->fetch_assoc()){
+			$column = new MySQLi_Schema_Column($this->_backend, $this);
+
+			foreach($row as $k => $v){
+				$lowkey = strtolower($k);
+				$column->{$lowkey} = $v;
+			}
+
+			$this->definitions[$row['Field']] = $column;
+			$this->order[] = $row['Field'];
+		}
+
+		// And now get the indexes.
+		$rs = $this->_backend->_rawExecute('read', 'SHOW INDEXES FROM `' . $table . '`');
+
+		while($row = $rs->fetch_assoc()){
+			// Non_unique | Key_name | Column_name | Comment
+			if(isset($this->indexes[$row['Key_name']])){
+				// Just add a column.
+				$this->indexes[$row['Key_name']]['columns'][] = $row['Column_name'];
+			}
+			else{
+				$this->indexes[$row['Key_name']] = array(
+					'name' => $row['Key_name'],
+					'nonunique' => $row['Non_unique'],
+					'comment' => $row['Comment'],
+					'columns' => array($row['Column_name']),
+				);
+			}
+		}
+	}
+
+	/**
+	 * Get a column by order (int) or name
+	 *
+	 * @param string|int $column
+	 * @return MySQLi_Schema_Column|null
+	 */
+	public function getColumn($column){
+		// This will resolve an int to the column name.
+		if(is_int($column)){
+			if(isset($this->order[$column])) $column = $this->order[$column];
+			else return null;
+		}
+
+		if(isset($this->definitions[$column])) return $this->definitions[$column];
+		else return null;
+	}
+
+	/**
+	 * Convert this mysqli-based schema to a backend agnostic version.
+	 *
+	 * @return ModelSchema
+	 */
+	public function toModelSchema(){
+		$schema = new ModelSchema();
+
+		foreach($this->definitions as $column){
+			/** @var $column MySQLi_Schema_Column */
+			$schema->definitions[$column->field] = $column->toModelSchemaColumn();
+		}
+
+		// The order is the easy part :)
+		$schema->order = $this->order;
+
+		$schema->indexes = array();
+		foreach($this->indexes as $dat){
+			if($dat['name'] == 'PRIMARY'){
+				$schema->indexes['primary'] = $dat['columns'];
+			}
+			elseif($dat['nonunique'] == '0'){
+				$schema->indexes['unique:' . $dat['name']] = $dat['columns'];
+			}
+			else{
+				$schema->indexes[$dat['name']] = $dat['columns'];
+			}
+		}
+
+		return $schema;
+	}
+
+	/**
+	 * Convert a model schema to a mysqli-specifc version.
+	 * @param ModelSchema $schema
+	 */
+	public function fromModelSchema(ModelSchema $schema){
+		foreach($schema->indexes as $key => $dat){
+			if($key == 'primary'){
+				$this->indexes['PRIMARY'] = array(
+					'name' => 'PRIMARY',
+					'nonunique' => 0,
+					'columns' => $dat,
+				);
+			}
+			elseif(strpos($key, 'unique:') === 0){
+				$n = substr($key, 7);
+				$this->indexes[$n] = array(
+					'name' => $n,
+					'nonunique' => 0,
+					'columns' => $dat,
+				);
+			}
+			else{
+				$this->indexes[$key] = array(
+					'name' => $key,
+					'nonunique' => 1,
+					'columns' => $dat,
+				);
+			}
+		}
+
+		// The order is the easy part :)
+		$this->order = $schema->order;
+
+		foreach($schema->definitions as $column){
+			/** @var $column ModelSchemaColumn */
+			$newcol = new MySQLi_Schema_Column($this->_backend, $this);
+			$newcol->fromModelSchemaColumn($column);
+
+			$this->definitions[$column->field] = $newcol;
+		}
+	}
+}
+
+class MySQLi_Schema_Column {
+
+	public $field; // 'field' => string 'VERSION'
+	public $type; // 'type' => string 'varchar(255)'
+	public $collation; // 'collation' => string 'latin1_swedish_ci'
+	public $null; // 'null' => string 'YES'
+	public $key; // 'key' => string ''
+	public $default; // 'default' => null
+	public $extra; // 'extra' => string ''
+	public $privileges; // 'privileges' => string 'select,insert,update,references'
+	public $comment; // 'comment' => string ''
+
+	private $_backend;
+
+	private $_parent;
+
+	public function __construct(DMI_mysqli_backend $backend, MySQLi_Schema $parent){
+		$this->_backend = $backend;
+		$this->_parent = $parent;
+	}
+
+	/**
+	 * Build the column string (for ALTER and CREATE statements) for this schema definition.
+	 *
+	 * @return string
+	 */
+	public function getColumnString(){
+
+		$type = $this->type;
+		$null = ($this->null == 'YES') ? 'NULL' : 'NOT NULL';
+
+		if($this->null == 'YES' && $this->default === null) $default = 'NULL';
+		elseif($this->default !== null) $default = "'" . $this->_backend->getConnection()->escape_string($this->default) . "'";
+		else $default = false;
+
+		$ai = ($this->extra == 'auto_increment');
+
+		// INT(11) or ENUM('blah', 'foo').  Has maxlength with it.
+		$q = $type;
+		// NULL or NOT NULL, either way it's needed.
+		$q .= ' ' . $null;
+		// If there is a default option, tack that on.
+		if($default !== false) $q .= ' DEFAULT ' . $default;
+		// Is there an AUTO_INCREMENT value here?
+		if($ai) $q .= ' AUTO_INCREMENT';
+		// Don't forget the comments!
+		if($this->comment) $q .= ' COMMENT \'' . str_replace("'", "\\'", $this->comment) . '\'';
+
+		// Yay, all done.
+		return $q;
+	}
+
+	/**
+	 * Convert this column to a database-agnostic version.
+	 *
+	 * @return ModelSchemaColumn
+	 */
+	public function toModelSchemaColumn(){
+		$column = new ModelSchemaColumn();
+
+		// Make a link to this just for reference.
+		$index = $this->_parent->indexes;
+
+		// The simple ones, these are 1-to-1 translations.
+		$column->field = $this->field;
+		$column->comment = $this->comment;
+		$column->type = null; // This will get reset below.
+
+		switch($this->type){
+			case "enum('0','1')":
+			case "enum('1','0')":
+				$column->type = Model::ATT_TYPE_BOOL;
+				break;
+			case 'text':
+			case 'longtext':
+				$column->type = Model::ATT_TYPE_TEXT;
+				break;
+			case 'datetime':
+				$column->type = Model::ATT_TYPE_ISO_8601_DATETIME;
+				break;
+			case 'timestamp':
+				$column->type = Model::ATT_TYPE_MYSQL_TIMESTAMP;
+				break;
+			case 'date':
+				$column->type = Model::ATT_TYPE_ISO_8601_DATE;
+				break;
+			case 'blob':
+			case 'mediumblob':
+			case 'longblob':
+				$column->type = Model::ATT_TYPE_DATA;
+				break;
+		}
+
+		// None of the above cases matched?  Maybe it's a more complex if statement.
+		if($column->type === null){
+			if(strpos($this->type, 'varchar(') !== false){
+				$column->type = Model::ATT_TYPE_STRING;
+				$column->maxlength = (int)substr($this->type, 8, -1);
+			}
+			elseif(strpos($this->type, 'enum(') !== false){
+				$column->type = Model::ATT_TYPE_ENUM;
+				$column->options = eval('return array(' . substr($this->type, 5, -1) . ');');
+			}
+			elseif(strpos($this->type, 'int(') !== false && $column->field == 'updated'){
+				$column->type = Model::ATT_TYPE_UPDATED;
+				$column->maxlength = (int)substr($this->type, 4, -1);
+			}
+			elseif(strpos($this->type, 'int(') !== false && $column->field == 'created'){
+				$column->type = Model::ATT_TYPE_CREATED;
+				$column->maxlength = (int)substr($this->type, 4, -1);
+			}
+			elseif(
+				strpos($this->type, 'int(') !== false &&
+				isset($index['PRIMARY']) &&
+				in_array($column->field, $index['PRIMARY']['columns']) &&
+				sizeof($index['PRIMARY']['columns']) == 1
+			){
+				$column->type = Model::ATT_TYPE_ID;
+				$column->maxlength = (int)substr($this->type, 4, -1);
+			}
+			elseif(strpos($this->type, 'int(') !== false){
+				$column->type = Model::ATT_TYPE_INT;
+				$column->maxlength = (int)substr($this->type, 4, -1);
+			}
+
+			elseif(strpos($this->type, 'decimal(') !== false){
+				$column->type = Model::ATT_TYPE_FLOAT;
+				$column->precision = substr($this->type, 8, -1);
+			}
+			else{
+				// Well huhm...
+				$column->type = 'text';
+			}
+		}
+
+		// Check if this is a key.
+		if($this->key == 'PRI'){
+			$column->required = true;
+		}
+		elseif($this->null == 'NO' && $this->key == 'UNI'){
+			$column->required = true;
+		}
+
+		// Default
+		if($this->default === null && $this->null == 'YES') $column->default = null;
+		elseif($this->default) $column->default = $this->default;
+
+		// Null?
+		if($this->null == 'YES') $column->null = true;
+		else $column->null = false;
+
+		return $column;
+	}
+
+	public function fromModelSchemaColumn(ModelSchemaColumn $column){
+		// The simple ones, these are 1-to-1 translations.
+		$this->field = $column->field;
+		$this->comment = $column->comment;
+
+		switch($column->type){
+			case Model::ATT_TYPE_BOOL:
+				$this->type = "enum('0','1')";
+				break;
+			case Model::ATT_TYPE_ENUM:
+				if(!sizeof($column->options)){
+					throw new DMI_Exception('Invalid column definition for, type ENUM must include at least one option.');
+				}
+
+				$opts = array();
+				foreach($column->options as $k => $opt){
+					// Ensure that any single quotes are escaped out.
+					$opts[] = str_replace("'", "\\'", $opt);
+				}
+				$this->type = "enum('" . implode("','", $opts) . "')";
+				break;
+			case Model::ATT_TYPE_FLOAT:
+				if(!$column->precision){
+					// No precision requested, just a standard float works here.
+					$this->type = "float";
+				}
+				else{
+					// DB-level precision requested.  This is not recommended in Core+, but still supported.
+					$this->type = "decimal(" . $column->precision . ")";
+				}
+				break;
+			case Model::ATT_TYPE_ID:
+				$this->type = 'int(' . $column->maxlength . ')';
+				break;
+			case Model::ATT_TYPE_INT:
+				$this->type = 'int(' . $column->maxlength . ')';
+				break;
+			case Model::ATT_TYPE_STRING:
+				$maxlength = ($column->maxlength)? $column->maxlength : 255; // It needs something...
+				$this->type = "varchar($maxlength)";
+				break;
+			case Model::ATT_TYPE_TEXT:
+				$this->type = "text";
+				break;
+			case Model::ATT_TYPE_DATA:
+				$this->type = 'mediumblob';
+				break;
+			case Model::ATT_TYPE_CREATED:
+			case Model::ATT_TYPE_UPDATED:
+				$this->type = 'int(' . $column->maxlength . ')';
+				break;
+			case Model::ATT_TYPE_ISO_8601_DATETIME:
+				$this->type = 'datetime';
+				break;
+			case Model::ATT_TYPE_MYSQL_TIMESTAMP:
+				$this->type = 'timestamp';
+				break;
+			case Model::ATT_TYPE_ISO_8601_DATE:
+				$this->type = 'date';
+				break;
+			default:
+				throw new DMI_Exception('Unsupported model type for [' . $column->type . ']');
+				break;
+		}
+
+		// Null?
+		if($column->null) $this->null = 'YES';
+		else $this->null = 'NO';
+
+		// Default
+		if($column->default === null && $this->null == 'YES') $this->default = null;
+		elseif($column->default) $this->default = $column->default;
+
+		// Lookup the indexes too.
+		$index = $this->_parent->indexes;
+		if(isset($index['PRIMARY']) && in_array($this->field, $index['PRIMARY']['columns'])){
+			$this->key = 'PRI';
+		}
+		else{
+			foreach($index as $key => $dat){
+				if(in_array($this->field, $dat['columns'])){
+					// Match found!  Is it unique?
+					if(!$dat['nonunique']) $this->key = 'UNI';
+				}
+			}
+		}
+
 	}
 }

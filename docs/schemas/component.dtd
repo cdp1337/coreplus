@@ -206,9 +206,9 @@ searchdir CDATA #IMPLIED
 <!--
 	Execute a low-level dataset operation on the installation or upgrade.
 -->
-<!ELEMENT dataset (datasetset|datasetwhere)*>
+<!ELEMENT dataset (datasetset|datasetwhere|datasetrenamecolumn)*>
 <!ATTLIST dataset
-	action (update|insert|delete) #REQUIRED
+	action (update|insert|delete|alter) #REQUIRED
 	table CDATA #REQUIRED
 >
 
@@ -226,6 +226,18 @@ searchdir CDATA #IMPLIED
 	The nodeValue here is the where statement, which is parsed via the dataset system.
 -->
 <!ELEMENT datasetwhere (#PCDATA)>
+
+<!--
+	The system cannot handle renames natively, as a renamed column in the schema is seen as a new column.
+	This will allow you to rename a column in the schema during an upgrade.
+
+	Please note, this is ONLY applicable with the "alter" action in the dataset.
+-->
+<!ELEMENT datasetrenamecolumn (EMPTY)>
+<!ATTLIST datasetrenamecolumn
+	oldname CDATA #REQUIRED
+	newname CDATA #REQUIRED
+>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT authors (author)*>

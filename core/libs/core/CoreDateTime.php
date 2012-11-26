@@ -16,6 +16,10 @@ class CoreDateTime {
 		if($datetime){
 			$this->setDate($datetime);
 		}
+		else{
+			// Just load right now.
+			$this->_dt = new DateTime();
+		}
 	}
 
 	/**

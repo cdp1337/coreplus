@@ -23,12 +23,33 @@
 
 class Dataset implements Iterator{
 
-
+	/**
+	 * Mode for altering the structure of the datastore
+	 */
+	const MODE_ALTER = 'alter';
+	/**
+	 * Mode for getting data from the datastore
+	 */
 	const MODE_GET = 'get';
+	/**
+	 * Mode for inserting data into the datastore
+	 */
 	const MODE_INSERT = 'insert';
+	/**
+	 * Mode for updating data in the datastore
+	 */
 	const MODE_UPDATE = 'update';
+	/**
+	 * Mode for either updating or inserting data in the datastore
+	 */
 	const MODE_INSERTUPDATE = 'insertupdate';
+	/**
+	 * Mode for deleting data from the datastore
+	 */
 	const MODE_DELETE = 'delete';
+	/**
+	 * Mode for counting records in the datastore
+	 */
 	const MODE_COUNT = 'count';
 
 
@@ -57,6 +78,12 @@ class Dataset implements Iterator{
 	public $_data = null;
 
 	public $num_rows = null;
+
+	/**
+	 * Column renames used in the alter mode
+	 * @var array
+	 */
+	public $_renames = array();
 
 	public function __construct(){
 
@@ -146,6 +173,17 @@ class Dataset implements Iterator{
 	}
 
 	/**
+	 * Rename a column in this dataset, primarlly an administrative / installer function.
+	 * @return Dataset
+	 */
+	public function renameColumn(){
+		call_user_func_array(array($this, '_renameColumn'), func_get_args());
+		$this->_mode = Dataset::MODE_ALTER;
+
+		return $this;
+	}
+
+	/**
 	 * @return Dataset
 	 */
 	public function delete(){
@@ -186,6 +224,19 @@ class Dataset implements Iterator{
 			$v = func_get_arg(1);
 			$this->_sets[$k] = $v;
 		}
+	}
+
+	private function _renameColumn(){
+		$n = func_num_args();
+
+		if($n != 2){
+			throw new DMI_Exception ('Invalid amount of parameters requested for Dataset::renameColumn(), ' . $n . ' provided, exactly 2 expected');
+		}
+
+		$oldname = func_get_arg(0);
+		$newname = func_get_arg(1);
+
+		$this->_renames[$oldname] = $newname;
 	}
 
 	public function setID($key, $val = null){

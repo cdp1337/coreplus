@@ -88,6 +88,13 @@ class XMLLoader implements Serializable {
 		return serialize($dat);
 	}
 
+	/**
+	 * Magic method called to convert a serialized object back to a valid XMLLoader object.
+	 *
+	 * @param string $serialized
+	 *
+	 * @return mixed|void
+	 */
 	public function unserialize($serialized){
 		$dat = unserialize($serialized);
 		$this->_rootname = $dat['rootname'];
@@ -100,6 +107,13 @@ class XMLLoader implements Serializable {
 	}
 
 
+	/**
+	 * Setup the internal DOMDocument for usage.
+	 *
+	 * This MUST be called before any operations are applied to this object!
+	 *
+	 * @return bool
+	 */
 	public function load() {
 		// I need a filename.
 		// Actually I don't........ creating a DOM on-the-fly is a possible use of this class too...... 0.o
@@ -138,6 +152,7 @@ class XMLLoader implements Serializable {
 	 * Load the document from a valid File object or a filename.
 	 *
 	 * @param File_Backend|string $file
+	 * @return bool
 	 */
 	public function loadFromFile($file) {
 		if (is_a($file, 'File_Backend')) {
@@ -150,6 +165,13 @@ class XMLLoader implements Serializable {
 		return $this->load();
 	}
 
+	/**
+	 * Load from a DOMNode
+	 *
+	 * @param DOMNode $node
+	 *
+	 * @return bool
+	 */
 	public function loadFromNode(DOMNode $node) {
 		// Save the DOM object so I have it in the future.
 		$this->_DOM = new DOMDocument();
@@ -163,10 +185,41 @@ class XMLLoader implements Serializable {
 		return true;
 	}
 
+	/**
+	 * Load from an XML string
+	 *
+	 * @param $string
+	 *  @return bool
+	 */
+	public function loadFromString($string){
+		// I need a root node name.
+		if (!$this->_rootname) return false;
+
+		// Save the DOM object so I have it in the future.
+		$this->_DOM = new DOMDocument();
+
+		// we want a nice output
+		$this->_DOM->formatOutput = true;
+
+		$this->_DOM->loadXML($string);
+
+		return true;
+	}
+
+	/**
+	 * Set the filename for this XML document
+	 *
+	 * @param string $file
+	 */
 	public function setFilename($file) {
 		$this->_filename = $file;
 	}
 
+	/**
+	 * Set the root name for this XML document
+	 *
+	 * @param string $name
+	 */
 	public function setRootName($name) {
 		$this->_rootname = $name;
 	}
@@ -292,9 +345,10 @@ class XMLLoader implements Serializable {
 	}
 
 	/**
-	 * Ensure a path is a vaild one and absolute to the root node or relative.
+	 * Ensure a path is a valid one and absolute to the root node or relative.
 	 *
-	 * @param <type> $path
+	 * @param string $path
+	 * @return string
 	 */
 	private function _translatePath($path) {
 
@@ -486,10 +540,21 @@ class XMLLoader implements Serializable {
 		return $el;
 	}
 
+	/**
+	 * @param $path
+	 *
+	 * @return DOMNodeList
+	 */
 	public function getElements($path) {
 		return $this->getElementsFrom($path, $this->getRootDOM());
 	}
 
+	/**
+	 * @param string       $path The path to search for.
+	 * @param bool|DomNode $el   The element to start the search in, defaults to the root node.
+	 *
+	 * @return DOMNodeList
+	 */
 	public function getElementsFrom($path, $el = false) {
 		if (!$el) $el = $this->getRootDOM();
 
@@ -505,10 +570,27 @@ class XMLLoader implements Serializable {
 
 	}
 
+	/**
+	 * Remove elements that match the requested path from the XML object.
+	 *
+	 * Shortcut of removeElementsFrom
+	 *
+	 * @param $path
+	 *
+	 * @return bool
+	 */
 	public function removeElements($path) {
 		return $this->removeElementsFrom($path, $this->getRootDOM());
 	}
 
+	/**
+	 * Remove elements that match the requested path from the XML object.
+	 *
+	 * @param string  $path
+	 * @param DOMNode $el
+	 *
+	 * @return bool
+	 */
 	public function removeElementsFrom($path, $el) {
 		$path = $this->_translatePath($path);
 
@@ -525,6 +607,11 @@ class XMLLoader implements Serializable {
 	/**
 	 * Converts a given element and its children into an associative array
 	 * Much like the simplexml function.
+	 *
+	 * @param string $el
+	 * @param bool   $nesting
+	 *
+	 * @return array
 	 */
 	public function elementToArray($el, $nesting = true) {
 		$ret = array();
@@ -558,6 +645,11 @@ class XMLLoader implements Serializable {
 		return $ret;
 	}
 
+	/**
+	 * Get this XML object as a minified string
+	 *
+	 * @return string
+	 */
 	public function asMinifiedXML() {
 		// Get the XML output as a string.
 		$string = $this->getDOM()->saveXML();
@@ -588,6 +680,8 @@ class XMLLoader implements Serializable {
 	 * Prettifies an XML string into a human-readable and indented work of art
 	 *
 	 * @param boolean $html_output True if the output should be escaped (for use in HTML)
+	 *
+	 * @return string
 	 */
 	public function asPrettyXML($html_output = false) {
 		// Get the XML output as a string.
@@ -726,63 +820,5 @@ class XMLLoader implements Serializable {
 
 		$xml = join("\n", $new_xml_lines);
 		return ($html_output) ? '<pre>' . htmlentities($xml) . '</pre>' : $xml;
-	}
-
-	public function _blahasPrettyXML() {
-		$string = $this->getDOM()->saveXML();
-		/**
-		 * put each element on it's own line
-		 */
-		$string = preg_replace("/>\s*</", ">\n<", $string);
-
-		/**
-		 * each element to own array
-		 */
-		$xmlArray = explode("\n", $string);
-
-		/**
-		 * holds indentation
-		 */
-		$currIndent = 0;
-
-		/**
-		 * set xml element first by shifting of initial element
-		 */
-		$string = array_shift($xmlArray) . "\n";
-
-		foreach ($xmlArray as $element) {
-			$element = trim($element);
-			/**
-			 * Start and close tag on one line.
-			 */
-			if (preg_match('/^<([\w])+[^>]*\/>$/U', $element)) {
-				$string .= str_repeat("\t", $currIndent) . $element . "\n";
-			}
-			/** find open only tags... add name to stack, and print to string
-			 * increment currIndent
-			 */
-			elseif (preg_match('/^<([\w])+[^>]*>$/U', $element)) {
-				$string .= str_repeat("\t", $currIndent) . $element . "\n";
-				//$currIndent += self::indent;
-				$currIndent++;
-			}
-
-			/**
-			 * find standalone closures, decrement currindent, print to string
-			 */
-			elseif (preg_match('/^<\/.+>$/', $element)) {
-				//$currIndent -= self::indent;
-				$currIndent--;
-				$string .= str_repeat("\t", $currIndent) . $element . "\n";
-			}
-			/**
-			 * find open/closed tags on the same line print to string
-			 */
-			else {
-				$string .= str_repeat("\t", $currIndent) . $element . "\n";
-			}
-		}
-
-		return $string;
 	}
 }

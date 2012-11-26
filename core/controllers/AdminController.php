@@ -59,13 +59,14 @@ class AdminController extends Controller_2_1 {
 			}
 		}
 
-		foreach (Core::GetComponents() as $c) {
-			/** @var $c Component_2_1 */
+		try{
+			foreach (Core::GetComponents() as $c) {
+				/** @var $c Component_2_1 */
 
-			if (!$c->isInstalled()) continue;
-			if(!$c->isEnabled()) continue;
+				if (!$c->isInstalled()) continue;
+				if(!$c->isEnabled()) continue;
 
-			try{
+
 				// Request the reinstallation
 				$change = $c->reinstall();
 
@@ -78,25 +79,26 @@ class AdminController extends Controller_2_1 {
 					$changes[] = '<b>Changes to component [' . $c->getName() . ']:</b><br/>' . "\n" . implode("<br/>\n", $change) . "<br/>\n<br/>\n";
 				}
 				// I don't care about "else", nothing changed if it was false.
+
 			}
-			catch(DMI_Query_Exception $e){
-				$changes[] = 'Attempted database changes to component [' . $c->getName() . '], but failed!<br/>';
-				//var_dump($e); die();
-				$errors[] = array(
-					'type' => 'component',
-					'name' => $c->getName(),
-					'message' => $e->getMessage() . '<br/>' . $e->query,
-				);
-			}
-			catch(Exception $e){
-				$changes[] = 'Attempted changes to component [' . $c->getName() . '], but failed!<br/>';
-				//var_dump($e); die();
-				$errors[] = array(
-					'type' => 'component',
-					'name' => $c->getName(),
-					'message' => $e->getMessage(),
-				);
-			}
+		}
+		catch(DMI_Query_Exception $e){
+			$changes[] = 'Attempted database changes to component [' . $c->getName() . '], but failed!<br/>';
+			//var_dump($e); die();
+			$errors[] = array(
+				'type' => 'component',
+				'name' => $c->getName(),
+				'message' => $e->getMessage() . '<br/>' . $e->query,
+			);
+		}
+		catch(Exception $e){
+			$changes[] = 'Attempted changes to component [' . $c->getName() . '], but failed!<br/>';
+			//var_dump($e); die();
+			$errors[] = array(
+				'type' => 'component',
+				'name' => $c->getName(),
+				'message' => $e->getMessage(),
+			);
 		}
 
 		// Flush the system cache, just in case

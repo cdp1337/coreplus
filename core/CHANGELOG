@@ -3,6 +3,16 @@ Core Plus 2.4.0
 	* Added a ViewControls object, which is responsible for handling the <ul/> group of control links for a given object.
 	* Added the docs into the upstream codebase for easier maintenance.
 	* Added a smarty "controls" function meant for displaying the control links of a given subject.
+	* Added the Dataset mode "Alter".  Useful for structural changes to the datastore.
+	* Added the alter command "rename" to the dataset.  This allows for columns to be renamed pragmatically.
+	* Added ModelSchema, ModelSchemaColumn, MySQLi_Schema, and MySQLi_Schema_Column objects.  These help break apart the
+	different components of the mysqli backend and greatly simplified some of its logic.
+	* Rewrote the createTable and modifyTable methods of the mysqli backend to make use of the new ModelSchema system.
+	This has optimized the reinstall logic by scanning the tables before attempting modifications, the number of write
+	statements is drastically lower.
+	* Set the CoreDateTime object to default to "now" if no date is given on construction.
+	* Added an XMLLoader::loadFromString method, allows XML data to be loaded from a string representation of it.
+	* Cleaned up the XMLLoader a little and added inline documentation on the rest of its methods.
 
 Core Plus 2.3.2
 	* Set the FormPageParentSelectInput value to be strtolower all the time.  Should fix many of the baseurl and parenturl issues.
