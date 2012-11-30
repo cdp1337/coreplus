@@ -398,7 +398,62 @@ class File_local_backend implements File_Backend {
 		}
 
 		// And do the actual copy!
-		return $this->putContents($src->getContents());
+		// To save memory, try to use as low-level functions as possible.
+		$localfilename = $src->getLocalFilename();
+
+		$ftp    = \Core\FTP();
+		$tmpdir = TMP_DIR;
+		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
+
+		// Resolve it from its default.
+		// This is provided from a config define, (probably).
+		$mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
+
+		if (
+			!$ftp // FTP is not enabled
+			||
+			(strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
+		) {
+			// Read in only so much data at a time.  This is to prevent
+			// PHP from trying to read a full 2GB file into memory at once :S
+			$maxbuffer = (1024 * 1024 * 10);
+			$handlein  = fopen($localfilename, 'r');
+			$handleout = fopen($this->_filename, 'w');
+
+			// Couldn't get a lock on both input and output files.
+			if(!($handlein && $handleout)) return false;
+
+			while(!feof($handlein)){
+				fwrite($handleout, fread($handlein, $maxbuffer));
+			}
+
+			// yayz
+			fclose($handlein);
+			fclose($handleout);
+			chmod($this->_filename, $mode);
+			return true;
+		}
+		else {
+			// Trim off the ROOT_PDIR since it'll be relative to the ftp root set in the config.
+			if (strpos($this->_filename, ROOT_PDIR) === 0){
+				$filename = substr($this->_filename, strlen(ROOT_PDIR));
+			}
+			else{
+				$filename = $this->_filename;
+			}
+
+			// FTP requires a filename, not data...
+			// WELL how bout that!  I happen to have a local filename ;)
+
+			if (!ftp_put($ftp, $filename, $localfilename, FTP_BINARY)) {
+				return false;
+			}
+
+			if (!ftp_chmod($ftp, $mode, $filename)) return false;
+
+			// woot...
+			return true;
+		}
 	}
 
 	public function getContents() {
@@ -578,6 +633,10 @@ class File_local_backend implements File_Backend {
 
 			$file = Core::File('assets/mimetype_icons/' . $filemime . '.png');
 			if(!$file->exists()){
+				if(DEVELOPMENT_MODE){
+					// Inform the developer, otherwise it's not a huge issue.
+					error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown"');
+				}
 				$file = Core::File('assets/mimetype_icons/unknown.png');
 			}
 

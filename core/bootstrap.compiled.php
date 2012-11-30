@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 22 Nov 2012 21:41:12 -0500
+ * @compiled Fri, 30 Nov 2012 04:57:28 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -150,6 +150,13 @@ $this->_DOM = new DOMDocument();
 $this->_DOM->formatOutput = true;
 $nn = $this->_DOM->importNode($node, true);
 $this->_DOM->appendChild($nn);
+return true;
+}
+public function loadFromString($string){
+if (!$this->_rootname) return false;
+$this->_DOM = new DOMDocument();
+$this->_DOM->formatOutput = true;
+$this->_DOM->loadXML($string);
 return true;
 }
 public function setFilename($file) {
@@ -462,31 +469,6 @@ $new_xml_lines[] = $new_line;
 }
 $xml = join("\n", $new_xml_lines);
 return ($html_output) ? '<pre>' . htmlentities($xml) . '</pre>' : $xml;
-}
-public function _blahasPrettyXML() {
-$string = $this->getDOM()->saveXML();
-$string = preg_replace("/>\s*</", ">\n<", $string);
-$xmlArray = explode("\n", $string);
-$currIndent = 0;
-$string = array_shift($xmlArray) . "\n";
-foreach ($xmlArray as $element) {
-$element = trim($element);
-if (preg_match('/^<([\w])+[^>]*\/>$/U', $element)) {
-$string .= str_repeat("\t", $currIndent) . $element . "\n";
-}
-elseif (preg_match('/^<([\w])+[^>]*>$/U', $element)) {
-$string .= str_repeat("\t", $currIndent) . $element . "\n";
-$currIndent++;
-}
-elseif (preg_match('/^<\/.+>$/', $element)) {
-$currIndent--;
-$string .= str_repeat("\t", $currIndent) . $element . "\n";
-}
-else {
-$string .= str_repeat("\t", $currIndent) . $element . "\n";
-}
-}
-return $string;
 }
 }
 
@@ -1601,10 +1583,145 @@ return $rs->num_rows;
 public function getDataset(){
 return $this->_dataset;
 }
+public static function GetSchema($model){
+$s = new ModelSchema($model);
+return $s;
+}
 }
 class ModelException extends Exception {
 }
 class ModelValidationException extends ModelException {
+}
+class ModelSchema {
+public $definitions = array();
+public $order = array();
+public $indexes = array();
+public function __construct($model = null){
+if($model !== null){
+$this->readModel($model);
+}
+}
+public function readModel($model){
+$vars = get_class_vars($model);
+$schema = $vars['Schema'];
+foreach($schema as $name => $def){
+$column = new ModelSchemaColumn();
+$column->field = $name;
+foreach($def as $k => $v){
+$column->{$k} = $v;
+}
+if($column->type == Model::ATT_TYPE_STRING && !$column->maxlength){
+$column->maxlength = 255;
+}
+if($column->type == Model::ATT_TYPE_ID && !$column->maxlength){
+$column->maxlength = 15;
+}
+if($column->type == Model::ATT_TYPE_INT && !$column->maxlength){
+$column->maxlength = 15;
+}
+if($column->type == Model::ATT_TYPE_CREATED && !$column->maxlength){
+$column->maxlength = 15;
+}
+if($column->type == Model::ATT_TYPE_UPDATED && !$column->maxlength){
+$column->maxlength = 15;
+}
+$this->definitions[$name] = $column;
+$this->order[] = $name;
+}
+$this->indexes = $vars['Indexes'];
+foreach($this->indexes as $key => $dat){
+if(!is_array($dat)){
+$this->indexes[$key] = array($dat);
+}
+}
+}
+public function getColumn($column){
+if(is_int($column)){
+if(isset($this->order[$column])) $column = $this->order[$column];
+else return null;
+}
+if(isset($this->definitions[$column])) return $this->definitions[$column];
+else return null;
+}
+public function getDiff(ModelSchema $schema){
+$diffs = array();
+foreach($schema->definitions as $name => $dat){
+$thiscol = $this->getColumn($name);
+if(!$thiscol){
+$diffs[] = array(
+'title' => 'A does not have column ' . $name,
+'type' => 'column',
+);
+continue;
+}
+if(!$thiscol->isDataIdentical($dat)){
+$diffs[] = array(
+'title' => 'Column ' . $name . ' does not match up',
+'type' => 'column',
+);
+}
+}
+$a_order = $this->order;
+foreach($this->definitions as $name => $dat){
+if(!$schema->getColumn($name)) unset($a_order[array_search($name, $a_order)]);
+}
+if(implode(',', $a_order) != implode(',', $schema->order)){
+$diffs[] = array(
+'title' => 'Order of columns is different',
+'type' => 'order',
+);
+}
+$thisidx = '';
+foreach($this->indexes as $name => $cols) $thisidx .= ';' . $name . '-' . implode(',', $cols);
+$thatidx = '';
+foreach($this->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
+if($thisidx != $thatidx){
+$diffs[] = array(
+'title' => 'Indexes do not match up',
+'type' => 'index'
+);
+}
+return $diffs;
+}
+public function isDataIdentical(ModelSchema $schema){
+$diff = $this->getDiff($schema);
+return !sizeof($diff);
+}
+}
+class ModelSchemaColumn {
+public $field;
+public $type = Model::ATT_TYPE_TEXT;
+public $required = false;
+public $maxlength = false;
+public $validation = null;
+public $options = null;
+public $default = false;
+public $null = false;
+public $formtype = 'text';
+public $form = array();
+public $comment = '';
+public $precision = null;
+public $encrypted = false;
+public function isDataIdentical(ModelSchemaColumn $col){
+if($this->field != $col->field)       return false;
+if($this->maxlength != $col->maxlength) return false;
+if($this->default != $col->default) return false;
+if($this->null != $col->null) return false;
+if($this->comment != $col->comment) return false;
+if($this->precision != $col->precision) return false;
+if(is_array($this->options) != is_array($col->options)) return false;
+if(is_array($this->options) && is_array($col->options)){
+if(implode(',', $this->options) != implode(',', $col->options)) return false;
+}
+if(
+($this->type == '__updated' || $this->type == '__created' || $this->type == 'int')
+&&
+($col->type == '__updated' || $col->type == '__created' || $col->type == 'int')
+){
+}
+elseif($this->type != $col->type)         return false;
+return true;
+}
 }
 
 ### REQUIRE_ONCE FROM core/libs/core/Controller.class.php
@@ -3714,11 +3831,8 @@ if ($k == 'model' || strpos($k, 'model') !== strlen($k) - 5) unset($classes[$k])
 }
 foreach ($classes as $m => $file) {
 if(!class_exists($m)) require_once($file);
-$s         = $m::GetSchema();
-$i         = $m::GetIndexes();
+$schema = ModelFactory::GetSchema($m);
 $tablename = $m::GetTableName();
-$schema = array('schema'  => $s,
-'indexes' => $i);
 try{
 if (Core::DB()->tableExists($tablename)) {
 if(Core::DB()->modifyTable($tablename, $schema)){
@@ -3732,7 +3846,6 @@ $changes[] = 'Created table ' . $tablename;
 }
 catch(DMI_Query_Exception $e){
 $e->query = $e->query . "\n<br/>(original table " . $tablename . ")";
-echo '<pre>' . $e->getTraceAsString() . '</pre>';
 throw $e;
 }
 }
@@ -3743,16 +3856,27 @@ $action   = $node->getAttribute('action');
 $table    = $node->getAttribute('table');
 $haswhere = false;
 $sets     = array();
+$renames  = array();
 $ds       = new Dataset();
 $ds->table($table);
 foreach($node->getElementsByTagName('datasetset') as $el){
 $sets[$el->getAttribute('key')] = $el->nodeValue;
+}
+foreach($node->getElementsByTagName('datasetrenamecolumn') as $el){
+$renames[$el->getAttribute('oldname')] = $el->getAttribute('newname');
 }
 foreach($node->getElementsByTagName('datasetwhere') as $el){
 $haswhere = true;
 $ds->where(trim($el->nodeValue));
 }
 switch($action){
+case 'alter':
+if(sizeof($sets)) throw new InstallerException('Invalid mix of arguments on ' . $action . ' dataset request, datasetset is not supported!');
+if($haswhere) throw new InstallerException('Invalid mix of arguments on ' . $action . ' dataset request, datasetwhere is not supported!');
+foreach($renames as $k => $v){
+$ds->renameColumn($k, $v);
+}
+break;
 case 'update':
 foreach($sets as $k => $v){
 $ds->update($k, $v);
@@ -4262,7 +4386,41 @@ $f = $prefix . ' (' . ++$c . ')' . $suffix;
 }
 $this->_filename = $f;
 }
-return $this->putContents($src->getContents());
+$localfilename = $src->getLocalFilename();
+$ftp    = \Core\FTP();
+$tmpdir = TMP_DIR;
+if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
+$mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
+if (
+!$ftp // FTP is not enabled
+||
+(strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
+) {
+$maxbuffer = (1024 * 1024 * 10);
+$handlein  = fopen($localfilename, 'r');
+$handleout = fopen($this->_filename, 'w');
+if(!($handlein && $handleout)) return false;
+while(!feof($handlein)){
+fwrite($handleout, fread($handlein, $maxbuffer));
+}
+fclose($handlein);
+fclose($handleout);
+chmod($this->_filename, $mode);
+return true;
+}
+else {
+if (strpos($this->_filename, ROOT_PDIR) === 0){
+$filename = substr($this->_filename, strlen(ROOT_PDIR));
+}
+else{
+$filename = $this->_filename;
+}
+if (!ftp_put($ftp, $filename, $localfilename, FTP_BINARY)) {
+return false;
+}
+if (!ftp_chmod($ftp, $mode, $filename)) return false;
+return true;
+}
 }
 public function getContents() {
 return file_get_contents($this->_filename);
@@ -4376,6 +4534,9 @@ else {
 $filemime = str_replace('/', '-', $this->getMimetype());
 $file = Core::File('assets/mimetype_icons/' . $filemime . '.png');
 if(!$file->exists()){
+if(DEVELOPMENT_MODE){
+error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown"');
+}
 $file = Core::File('assets/mimetype_icons/unknown.png');
 }
 if($width === false) return $file->getURL();
@@ -4718,6 +4879,9 @@ continue 2;
 }
 return null;
 }
+return null;
+}
+public function getExtension(){
 return null;
 }
 private function _sift() {
@@ -6751,6 +6915,7 @@ public function writeCount();
 
 ### REQUIRE_ONCE FROM core/libs/datamodel/Dataset.class.php
 class Dataset implements Iterator{
+const MODE_ALTER = 'alter';
 const MODE_GET = 'get';
 const MODE_INSERT = 'insert';
 const MODE_UPDATE = 'update';
@@ -6768,6 +6933,7 @@ public $_limit = false;
 public $_order = false;
 public $_data = null;
 public $num_rows = null;
+public $_renames = array();
 public function __construct(){
 }
 public function select(){
@@ -6811,6 +6977,11 @@ call_user_func_array(array($this, '_set'), func_get_args());
 $this->_mode = Dataset::MODE_INSERTUPDATE;
 return $this;
 }
+public function renameColumn(){
+call_user_func_array(array($this, '_renameColumn'), func_get_args());
+$this->_mode = Dataset::MODE_ALTER;
+return $this;
+}
 public function delete(){
 $this->_mode = Dataset::MODE_DELETE;
 return $this;
@@ -6836,6 +7007,15 @@ $k = func_get_arg(0);
 $v = func_get_arg(1);
 $this->_sets[$k] = $v;
 }
+}
+private function _renameColumn(){
+$n = func_num_args();
+if($n != 2){
+throw new DMI_Exception ('Invalid amount of parameters requested for Dataset::renameColumn(), ' . $n . ' provided, exactly 2 expected');
+}
+$oldname = func_get_arg(0);
+$newname = func_get_arg(1);
+$this->_renames[$oldname] = $newname;
 }
 public function setID($key, $val = null){
 $this->_idcol = $key;

@@ -314,6 +314,15 @@ class Directory_local_backend implements Directory_Backend {
 		return null;
 	}
 
+	/**
+	 * To ensure compatibility with the File system.
+	 *
+	 * @return null
+	 */
+	public function getExtension(){
+		return null;
+	}
+
 
 	/**
 	 * Sift through a directory and get the files in it.

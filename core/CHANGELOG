@@ -13,6 +13,10 @@ Core Plus 2.4.0
 	* Set the CoreDateTime object to default to "now" if no date is given on construction.
 	* Added an XMLLoader::loadFromString method, allows XML data to be loaded from a string representation of it.
 	* Cleaned up the XMLLoader a little and added inline documentation on the rest of its methods.
+	* Added "getExtension" method in Directory_local_backend to provide better compatibility with the File backend.
+	* Added logging for mimetype icons that don't exist on the system yet, (for DEVELOPMENT_MODE only).
+	* Greatly optimized the copyFrom logic on local files.  Now instead of reading the entire file in memory, only up
+	to 10MB of a file is read/written at a time.
 
 Core Plus 2.3.2
 	* Set the FormPageParentSelectInput value to be strtolower all the time.  Should fix many of the baseurl and parenturl issues.
