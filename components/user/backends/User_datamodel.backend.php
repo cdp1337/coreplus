@@ -29,7 +29,11 @@ class User_datamodel_Backend extends User implements User_Backend{
 	 * @var null|array
 	 */
 	private $_groups = null;
-	
+
+	public function __construct(){
+
+	}
+
 	public function checkPassword($password) {
 		$hasher = new PasswordHash(User::HASH_ITERATIONS);
 		return $hasher->checkPassword($password, $this->_getModel()->get('password'));

@@ -92,41 +92,30 @@ abstract class UserHelper{
 		else return REL_REQUEST_PATH;
 	}
 
+	/**
+	 * Form handler for a basic datastore backend user.
+	 *
+	 * @param Form $form
+	 *
+	 * @return bool|string
+	 */
 	public static function RegisterHandler(Form $form){
-		$e = $form->getElement('email');
 		$p1 = $form->getElement('pass');
-		$p1val = $p1->get('value');
 		$p2 = $form->getElement('pass2');
-		$p2val = $p2->get('value');
 
 		///////       VALIDATION     \\\\\\\\
-
-		// Check the passwords, (that they match).
-		if($p1val != $p2val){
-			$p1->setError('Passwords do not match.');
-			return false;
-		}
-
-		// Try to retrieve the user data from the database based on the email.
-		// Email is a unique key, so there can only be 1 in the system.
-		if(UserModel::Find(array('email' => $e->get('value')), 1)){
-			$e->setError('Requested email is already registered.');
-			return false;
-		}
-
-		$user = User_datamodel_Backend::Find(array('email' => $e->get('value')));
 
 		// All other validation can be done from the model.
 		// All set calls will throw a ModelValidationException if the validation fails.
 		try{
-			$lastel = $e;
-			$user->set('email', $e->get('value'));
+			$user = new User_datamodel_Backend();
 
-			$lastel = $p1;
-			$user->set('password', $p1->get('value'));
+			// setFromForm will handle all attributes and custom values.
+			$user->setFromForm($form);
+			$user->setPassword($p1->get('value'), $p2->get('value'));
 		}
 		catch(ModelValidationException $e){
-			$lastel->setError($e->getMessage());
+			Core::SetMessage($e->getMessage(), 'error');
 			return false;
 		}
 		catch(Exception $e){
@@ -134,53 +123,6 @@ abstract class UserHelper{
 			else Core::SetMessage('An unknown error occured', 'error');
 
 			return false;
-		}
-
-
-		///////   USER CREATION   \\\\\\\\
-
-		// Sanity checks and validation passed, (right?...), now create the actual account.
-		// For that, I need to assemble clean data to send to the appropriate backend, (in this case datamodel).
-		$attributes = array();
-		foreach($form->getElements() as $el){
-			$name = $el->get('name');
-			// Is this element a config option?
-			if(strpos($name, 'option[') === 0){
-				$k = substr($el->get('name'), 7, -1);
-				$v = $el->get('value');
-
-				// Some attributes require some modifications.
-				if($el instanceof FormFileInput){
-					$v = 'public/user/' . $v;
-				}
-
-				$user->set($k, $v);
-			}
-
-			// Is this element the group definition?
-			elseif($name == 'groups[]'){
-				$v = $el->get('value');
-
-				$user->setGroups($v);
-			}
-
-			elseif($name == 'active'){
-				$user->set('active', $el->get('value'));
-			}
-
-			elseif($name == 'admin'){
-				$user->set('admin', $el->get('value'));
-			}
-			else{
-				// Check the configs!
-				$configs = $user->getConfigs();
-				if(array_key_exists($name, $configs)){
-					$user->set($name, $el->get('value'));
-				}
-				else{
-					// I don't care.
-				}
-			}
 		}
 
 		// Check if there are no users already registered on the system.  If
@@ -219,7 +161,7 @@ abstract class UserHelper{
 			return false;
 		}
 
-		/** @var $user User_Backend */
+		/** @var $user User */
 		$user = User::Find(array('id' => $userid));
 
 		if(!$user->exists()){
@@ -229,71 +171,10 @@ abstract class UserHelper{
 
 
 		try{
-			foreach($form->getElements() as $el){
-				$name = $el->get('name');
-
-				// Email?
-				if($name == 'email'){
-					$v = $el->get('value');
-
-					if($v != $user->get('email')){
-						// Try to retrieve the user data from the database based on the email.
-						// Email is a unique key, so there can only be 1 in the system.
-						if(UserModel::Find(array('email' => $v), 1)){
-							$el->setError('Requested email is already registered.');
-							return false;
-						}
-
-						$user->set('email', $v);
-					}
-				}
-
-				// Is this element a config option?
-				elseif(strpos($name, 'option[') === 0){
-					$k = substr($el->get('name'), 7, -1);
-					$v = $el->get('value');
-
-					// Some attributes require some modifications.
-					if($el instanceof FormFileInput){
-						$v = 'public/user/' . $v;
-					}
-
-					$user->set($k, $v);
-				}
-
-				// Is this element the group definition?
-				elseif($name == 'groups[]'){
-					$v = $el->get('value');
-
-					$user->setGroups($v);
-				}
-
-				elseif($name == 'active'){
-					$user->set('active', $el->get('value'));
-				}
-
-				elseif($name == 'admin'){
-					$user->set('admin', $el->get('value'));
-				}
-
-				elseif($name == 'avatar'){
-					$user->set('avatar', $el->get('value'));
-				}
-
-				else{
-					// Check the configs!
-					$configs = $user->getConfigs();
-					if(array_key_exists($name, $configs)){
-						$user->set($name, $el->get('value'));
-					}
-					else{
-						// I don't care.
-					}
-				}
-			}
+			$user->setFromForm($form);
 		}
 		catch(ModelValidationException $e){
-			$el->setError($e->getMessage());
+			Core::SetMessage($e->getMessage());
 			return false;
 		}
 		catch(Exception $e){
@@ -305,12 +186,16 @@ abstract class UserHelper{
 
 		$user->save();
 
-		// If this is the currently logged in user, update that information too!
-		if($_SESSION['user']->get('id') == $user->get('id')){
+		// If this was the current user, update the session data too!
+		if($user->get('id') == \core\user()->get('id')){
 			$_SESSION['user'] = $user;
+			Core::SetMessage('Updated your account successfully', 'success');
+		}
+		else{
+			Core::SetMessage('Updated user successfully', 'success');
 		}
 
-		Core::SetMessage('Updated user successfully', 'success');
+
 		return true;
 	}
 

@@ -37,19 +37,19 @@ class User {
 	 * @var UserModel
 	 */
 	protected $_model = null;
-	
+
 	private $_configs = null;
-	
+
 	/**
 	 * Cache of the results of checkAccess.
-	 * 
+	 *
 	 * This is just an internal convenience thing to increase performance slightly on
 	 * repeated checks.
-	 * 
+	 *
 	 * ie: First time checkAccess('p:blah;p:blah2') is called, the result is cached,
 	 *     so if a second call is requested with the same data, the lookup array
 	 *     will contain the result of the last run.
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $_accessstringchecks = array();
@@ -66,24 +66,24 @@ class User {
 	 * @var array
 	 */
 	private static $_Cache = array();
-	
+
 	/**
 	 * Simple check if this user exists in the database.
-	 * 
+	 *
 	 * @since 2011.08
 	 * @return boolean
 	 */
 	public function exists(){
 		return $this->_getModel()->exists();
 	}
-	
+
 	/**
 	 * Get a key from this current user either from the core
 	 * user table or from the config options.
-	 * 
+	 *
 	 * Will try the core table first, then check for a config key name
 	 * that matches.
-	 * 
+	 *
 	 * @since 2011.08
 	 * @param string $key
 	 * @return mixed String, boolean, int or float if exists, null if otherwise.
@@ -99,19 +99,19 @@ class User {
 			else return null;
 		}
 	}
-	
+
 	/**
 	 * Set a key on either the core user table or its config options.
-	 * 
+	 *
 	 * Will try the core table first, then the config key.
-	 * 
+	 *
 	 * @since 2011.08
 	 * @param string $k
-	 * @param mixed $v 
+	 * @param mixed $v
 	 */
 	public function set($k, $v) {
 		$d = $this->_getModel()->getAsArray();
-		
+
 		if($k == 'password'){
 			// Password gets set using the setPassword function due to the 
 			// additional hashing requirements.
@@ -128,18 +128,131 @@ class User {
 			}
 		}
 	}
-	
+
+	/**
+	 * Populate this user object from a form
+	 *
+	 * @param Form $form
+	 * @param null $prefix
+	 *
+	 * @return bool
+	 * @throws ModelValidationException
+	 */
+	public function setFromForm(Form $form, $prefix = null){
+		// Sanity checks and validation passed, (right?...), now create the actual account.
+		// For that, I need to assemble clean data to send to the appropriate backend, (in this case datamodel).
+		$attributes = array();
+		foreach($form->getElements() as $el){
+			/** @var $el FormElement */
+
+			$name = $el->get('name');
+
+			// If a prefix was requested and it doesn't match, skip this element.
+			if($prefix && strpos($name, $prefix . '[') !== 0) continue;
+
+			// Otherwise if there is a prefix, trim it off from the name.
+			if($prefix){
+				// Some of the options may be nested arrays, they'll need to be treated differently since the format is different,
+				// prefix[option][phone] vs prefix[email]
+				if(strpos($name, '][')){
+					$name = str_replace('][', '[', substr($name, strlen($prefix) + 1));
+				}
+				else{
+					$name = substr($name, strlen($prefix) + 1, -1);
+				}
+			}
+
+
+			// Email?
+			if($name == 'email'){
+				$v = $el->get('value');
+
+				if($v != $this->get('email')){
+					// Try to retrieve the user data from the database based on the email.
+					// Email is a unique key, so there can only be 1 in the system.
+					if(UserModel::Find(array('email' => $v), 1)){
+						$el->setError(true, false);
+						throw new ModelValidationException('Requested email is already registered');
+						return false;
+					}
+
+					$this->set('email', $v);
+				}
+			}
+
+			// Is this element a config option?
+			elseif(strpos($name, 'option[') === 0){
+				$k = substr($el->get('name'), 7, -1);
+				$v = $el->get('value');
+
+				// Some attributes require some modifications.
+				if($el instanceof FormFileInput){
+					$v = 'public/user/' . $v;
+				}
+
+				$this->set($k, $v);
+			}
+
+			// Is this element the group definition?
+			elseif($name == 'groups[]'){
+				$v = $el->get('value');
+
+				$this->setGroups($v);
+			}
+
+			elseif($name == 'active'){
+				$this->set('active', $el->get('value'));
+			}
+
+			elseif($name == 'admin'){
+				$this->set('admin', $el->get('value'));
+			}
+
+			elseif($name == 'avatar'){
+				$this->set('avatar', $el->get('value'));
+			}
+
+			else{
+				// I don't care.
+			}
+		} // foreach(elements)
+
+	}
+
+	/**
+	 * Update the password for this user.
+	 *
+	 * This will make use of the underlying model setPassword function.
+	 *
+	 * @param $password
+	 * @param $confirm
+	 *
+	 * @throws ModelException
+	 * @throws ModelValidationException
+	 *
+	 * @return bool
+	 */
+	public function setPassword($password, $confirm){
+		if($password != $confirm){
+			throw new ModelValidationException('Passwords do not match');
+			return false;
+		}
+
+		$this->_getModel()->setPassword($password);
+		return true;
+	}
+
 	/**
 	 * Save this user and all of its metadata, including configs and groups.
-	 * 
+	 *
 	 * @return void (TODO - return something meaningful)
 	 */
 	public function save() {
 		// No user object, no need to do anything.
 		if($this->_model === null) return false;
-		
+
 		$this->_getModel()->save();
-		
+
 		// also update any/all config options.
 		if($this->_configs){
 			foreach($this->_configs as $c){
@@ -152,12 +265,12 @@ class User {
 		HookHandler::DispatchHook('/user/postsave', $this);
 	}
 
-	
+
 	/**
 	 * Get all user configs for this given user
-	 * 
+	 *
 	 * @since 2011.08
-	 * @return array Key/value pair fo the configs. 
+	 * @return array Key/value pair fo the configs.
 	 */
 	public function getConfigs(){
 		if($this->_configs === null){
@@ -165,7 +278,7 @@ class User {
 			$fac = UserConfigModel::Find();
 			foreach($fac as $f){
 				$uucm = new UserUserConfigModel($this->get('id'), $f->get('key'));
-				
+
 				// Handle the default value for the userconfig.
 				if(!$uucm->exists()){
 					$uucm->set('value', $f->get('default_value'));
@@ -173,7 +286,7 @@ class User {
 				$this->_configs[$f->get('key')] = $uucm;
 			}
 		}
-		
+
 		// Iterate over each set and just return a simple array.
 		$ret = array();
 		foreach($this->_configs as $k => $obj){
@@ -181,18 +294,18 @@ class User {
 		}
 		return $ret;
 	}
-	
+
 	/**
 	 * Check access for a given access string against this user.
-	 * 
+	 *
 	 * The access string is the core component to Core+ authentication.
-	 * 
+	 *
 	 * @since 2011.08
 	 * @param type $accessstring
 	 * @return bool
 	 */
 	public function checkAccess($accessstring){
-		
+
 		// And gogo caching lookups!
 		// DEVELOPMENT NOTE -- If you're working on this function,
 		//  it might be best to disable the return here!...
@@ -200,35 +313,35 @@ class User {
 			// :)
 			return $this->_accessstringchecks[$accessstring];
 		}
-		
+
 		// Default behaviour (also set from * or !* flags).
 		$default = false;
-		
+
 		// Lookup some common variables first.
 		$loggedin = $this->exists();
 		$isadmin = $this->get('admin');
 		$cache =& $this->_accessstringchecks[$accessstring];
-		
+
 		// Case insensitive
 		$accessstring = strtolower($accessstring);
-		
-		
+
+
 		// Check if the current user is an admin... if so and there is no 
 		// "g:!admin" flag, automatically set it to true.
 		if($isadmin && strpos($accessstring, 'g:!admin') === false){
 			$cache = true;
 			return true;
 		}
-		
+
 		// Default action is to be explicit.
 		$default = false;
-		
+
 		// Explode on a semicolon(;), with string trimming.
 		$parts = array_map('trim', explode(';', $accessstring));
 		foreach($parts as $p){
 			// This can happen if there is an access string such as 'g:authenticated;'.
 			if($p == '') continue;
-			
+
 			// Wildcard is the exception, as it does not require a type:dat set.
 			if($p == '*' || $p == '!*'){
 				$type = '*';
@@ -254,7 +367,7 @@ class User {
 				$ret = true;
 				// No trim is needed.
 			}
-			
+
 			// A few "special" checks.
 			if($type == '*'){
 				// This sets the default instead of returning immediately.
@@ -301,12 +414,12 @@ class User {
 				die('Implement that access string check!');
 			}
 		}
-		
+
 		// Not found... return the default, (which is deny by default).
 		$cache = $default;
 		return $default;
 	}
-	
+
 	public function checkPassword($password){
 		die('Please extend ' . __METHOD__ . ' in ' . get_called_class() . '!');
 	}
@@ -321,14 +434,14 @@ class User {
 	 * @return string
 	 */
 	public function getDisplayName(){
-		
+
 		// Anonymous users don't have all this fancy logic.
 		if(!$this->exists()){
 			return ConfigHandler::Get('/user/displayname/anonymous');
 		}
-		
+
 		$displayopts = ConfigHandler::Get('/user/displayname/displayoptions');
-		
+
 		// Simple enough.
 		if( ($u = $this->get('username')) && in_array('username', $displayopts)) return $u;
 		// Next, the first name.
@@ -340,14 +453,14 @@ class User {
 		// Still no?!?
 		else return ConfigHandler::Get('/user/displayname/authenticated');
 	}
-	
+
 	/**
 	 * Simple function that can be used to return either true if this backend
 	 * supports resetting the password, or a string to display as an error message
 	 * if it cannot.
-	 * 
+	 *
 	 * Useful for facebook-type accounts, where an external system manages the password.
-	 * 
+	 *
 	 * @return true | string
 	 */
 	public function canResetPassword(){
@@ -358,16 +471,16 @@ class User {
 
 	//////////  PRIVATE METHODS \\\\\\\\\\\\\
 
-	
+
 	//////////  PROTECTED METHODS  \\\\\\\\\\\
 
 	protected function __construct(){
 		// This cannot be called directly, it should be extended with the appropriate backend.
 	}
-	
+
 	/**
 	 * Get the bound user model.
-	 * 
+	 *
 	 * @since 2011.07
 	 * @return UserModel
 	 */
@@ -375,14 +488,14 @@ class User {
 		if($this->_model === null){
 			$this->_model = new UserModel();
 		}
-		
+
 		return $this->_model;
 	}
-	
+
 	/**
 	 * Find the user for this object based on given criteria.
 	 * This is open for the extending backends to utilize.
-	 * 
+	 *
 	 * @since 2011.07
 	 * @param array $where
 	 */
@@ -407,12 +520,12 @@ class User {
 
 		return $this->_resolvedpermissions;
 	}
-	
+
 	/////////  PUBLIC STATIC FUNCTIONS  \\\\\\\\\
-	
+
 	/**
 	 * Create a User object of the appropriate backend.
-	 * 
+	 *
 	 * @param string $backend
 	 * @return User
 	 */
@@ -420,18 +533,18 @@ class User {
 		// Default to the Datamodel user object.
 		if(!$backend) $backend = 'datamodel';
 		if(!class_exists('User_' . $backend . '_Backend')) $backend = 'datamodel';
-		
+
 		$c = 'User_' . $backend . '_Backend';
 		return new $c();
 	}
-	
+
 	/**
 	 * The externally usable method to find and return the appropriate user backend.
 	 *
 	 * DOES NOT make use of the system cache!
 	 *
 	 * @param array $where
-	 * @param int $limit 
+	 * @param int $limit
 	 * @return array|UserBackend|null
 	 *         if $limit of 1 is given, a single User object or null is returned
 	 *         else an array of User objects is returned, or an array with null.
@@ -439,9 +552,9 @@ class User {
 	public static function Find($where = array(), $limit = 1){
 		// Will return the core of the user object, but I still need the appropriate container.
 		$res = UserModel::Find($where, $limit);
-		
+
 		if(!is_array($res)) $res = array($res);
-		
+
 		$return = array();
 		foreach($res as $model){
 			if($model){
@@ -453,7 +566,7 @@ class User {
 			}
 			$return[] = $o;
 		}
-		
+
 		return ($limit == 1)? $return[0] : $return;
 	}
 
@@ -475,5 +588,5 @@ class User {
 }
 
 class UserException extends Exception{
-	
+
 }

@@ -1,3 +1,9 @@
+User 2.next
+
+	* Added setFromForm method on the User object.
+	* Added setPassword method on the User object.
+	* Improvements in the user creation logic to make use of the new user::setFromForm logic.
+
 User 2.3.1
 
 	* Added checkboxes and radio options as valid userconfig types.
