@@ -1,3 +1,9 @@
+jQuery-File-Upload 6.9.1~core3
+
+	* Switched default upload method from POST to stream.  This allows for much larger files
+	to be uploaded at a time, (tested with a couple 1.7GB videos).  The browser will chunk up to
+	"ini_get('upload_max_filesize')" bytes at a time and upload pieces.
+
 jQuery-File-Upload 6.9.1~core2
 
 	* Set files to be auto uploaded by default

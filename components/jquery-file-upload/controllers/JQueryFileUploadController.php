@@ -38,10 +38,16 @@ class JQueryFileUploadController extends Controller_2_1 {
 
 		// Whatever the method, it should have a matching key that identifies which form it came from,
 		// (since that form element has the metadata attached to it)
-		if(!isset($_POST['key'])){
+		// This can either be in the POST (for full uploads), or in the headers.
+		$key = false;
+		if(isset($_POST['key'])) $key = $_POST['key'];
+		if(isset($_SERVER['HTTP_X_KEY'])) $key = $_SERVER['HTTP_X_KEY'];
+		if(!$key){
 			return View::ERROR_BADREQUEST;
 		}
-		$key = $_POST['key'];
+
+
+		// The key also must exist!
 		if(!isset($_SESSION['multifileinputobjects'][$key])){
 			return View::ERROR_BADREQUEST;
 		}
@@ -55,10 +61,103 @@ class JQueryFileUploadController extends Controller_2_1 {
 				$view->jsondata = $this->_doDelete();
 			}
 
-			$view->jsondata = $this->_doPost();
+			// Standard POST upload
+			elseif(sizeof($_FILES)){
+				$view->jsondata = $this->_doPost();
+			}
+
+			// A streaming request
+			elseif($_SERVER['CONTENT_TYPE'] == 'application/octet-stream' && isset($_SERVER['HTTP_X_FILE_NAME'])){
+				$view->jsondata = $this->_doStream();
+			}
 		}
 	}
 
+	/**
+	 * Handle the upload as a series of binary streams.
+	 * @return array
+	 */
+	private function _doStream(){
+		// Read INPUT and write it directly to a temporary file based on the requested filename.
+
+		$file = array(
+			'name' => $_SERVER['HTTP_X_FILE_NAME'],
+			'size' => 0,
+			'remaining' => 0,
+			'type' => null,
+			'url' => '', // to be populated later
+			'thumbnail_url' => '', // to be populated later
+			'error' => '', // also may be populated later.
+		);
+
+		$finalsize = $_SERVER['HTTP_X_FILE_SIZE'];
+		$incomingsize = $_SERVER['CONTENT_LENGTH'];
+		// Just used to prevent multiple pageloads from appending to the same file should something happen.
+		$datestamp = (isset($_SERVER['HTTP_X_UPLOAD_TIME'])) ? $_SERVER['HTTP_X_UPLOAD_TIME'] : 0;
+		$tmpfile = TMP_DIR . md5($this->_formelement->get('key') . $file['name'] . $datestamp) . '.part.dat';
+
+		// Record the filesize before and after so I can confirm I got all the data the client sent.
+		if(file_exists($tmpfile)) $file['size'] = filesize($tmpfile);
+		else $file['size'] = 0;
+
+		file_put_contents($tmpfile, file_get_contents('php://input'), FILE_APPEND);
+
+		// And update the size.
+		clearstatcache();
+		$newsize = filesize($tmpfile);
+
+		if($newsize - $file['size'] != $incomingsize){
+			$file['error'] = 'Did not receive all data, unable to process upload';
+			unlink($tmpfile);
+			return array($file);
+		}
+
+		$file['size'] = $newsize;
+		$file['remaining'] = $finalsize - $file['size'];
+
+		// Is the file upload complete?
+		if($file['size'] == $finalsize){
+			// Source
+			$f = new File_local_backend($tmpfile);
+			// Destination
+			$nf = Core::File($this->_formelement->get('basedir') . '/' . $file['name']);
+
+			$file['type'] = $f->getMimetype();
+
+			// do NOT copy the contents over until the accept check has been ran!
+
+			// Now that I have a file object, (in the temp filesystem still), I should validate the filetype
+			// to see if the developer wanted a strict "accept" type to be requested.
+			// If present, I'll have something to run through and see if the file matches.
+			// I need the destination now because I need to full filename if an extension is requested in the accept.
+			if($this->_formelement->get('accept')){
+				$acceptcheck = \Core\check_file_mimetype($this->_formelement->get('accept'), $f->getMimetype(), $nf->getExtension());
+
+				// Now that all the mimetypes have run through, I can see if one matched.
+				if($acceptcheck != ''){
+					$file['error'] = $acceptcheck;
+					unlink($tmpfile);
+					return array($file);
+				}
+			}
+
+			// Now all the checks should be completed and I can safely copy the file away from the temporary filesystem.
+			$f->copyTo($nf);
+			unlink($tmpfile);
+
+			// And now all the file's attributes will be visible.
+			$file['name'] = $nf->getBaseFilename();
+			$file['url'] = $nf->getURL();
+			$file['thumbnail_url'] = $nf->getPreviewURL('50x50');
+		}
+
+		return array($file);
+	}
+
+	/**
+	 * Handle the entire upload as a standard multitype POST
+	 * @return array
+	 */
 	private function _doPost(){
 
 		$info = array();

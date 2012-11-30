@@ -36,7 +36,8 @@ class MultiFileInput extends FormElement {
 			$_SESSION['multifileinputobjects'] = array();
 		}
 
-		$key = serialize($this->_attributes); // Big key, I know... but it works!
+		// I don't need this key to be cryptographically secure, just generally unique.
+		$key = md5(serialize($this->_attributes));
 		foreach($_SESSION['multifileinputobjects'] as $obj){
 			if(!isset($obj['key'])) continue;
 			if($obj['key'] == $key){
@@ -44,12 +45,30 @@ class MultiFileInput extends FormElement {
 			}
 		}
 
+		$this->set('key', $key);
+
 		if (!isset($this->_attributes['id'])) {
 			// This system requires a valid id.
 			$this->set('id', 'multifileinput-' . Core::RandomHex('2'));
 		}
 
-		$_SESSION['multifileinputobjects'][$this->get('id')] = array(
+		// Convert the string representation of a filesize to the raw bytes.
+		$size = strtoupper(str_replace(' ', '', ini_get('upload_max_filesize')));
+		if(strpos($size, 'G') !== false){
+			$size = preg_replace('/[^0-9]/', '', $size);
+			$size = $size * (1024*1024*1024);
+		}
+		elseif(strpos($size, 'M') !== false){
+			$size = preg_replace('/[^0-9]/', '', $size);
+			$size = $size * (1024*1024);
+		}
+		elseif(strpos($size, 'K') !== false){
+			$size = preg_replace('/[^0-9]/', '', $size);
+			$size = $size * (1024);
+		}
+		$this->set('maxsize', $size);
+
+		$_SESSION['multifileinputobjects'][$key] = array(
 			//'expire' => (Time::GetCurrent() + 3600),
 			'obj' => serialize($this),
 			'key' => $key,
