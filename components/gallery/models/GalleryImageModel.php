@@ -47,8 +47,8 @@ class GalleryImageModel extends Model {
 			'required' => true,
 			'form' => array(
 				'type' => 'file',
-				'basedir' => 'public/galleryalbum',
-				'accept' => 'image/*',
+				'basedir' => 'public/galleryalbum', // Defaults, but may be changed in the controller.
+				'accept' => 'image/*', // Defaults, but may be changed in the controller.
 			),
 		),
 		'title' => array(
@@ -110,6 +110,14 @@ class GalleryImageModel extends Model {
 		'unique:albumid_file' => array('albumid', 'file'), // Each image should be in each album at most once.
 	);
 
+	/**
+	 * Cache of the file object, so consecutive calls to getFile will not re-request the entire file.
+	 *
+	 * @var null|File_Backend
+	 */
+	private $_file = null;
+
+
 	public function __construct($key = null) {
 		$this->_linked = array(
 			'Page' => array(
@@ -129,9 +137,17 @@ class GalleryImageModel extends Model {
 		switch($k){
 			case 'file':
 				$ret = parent::set($k, $v);
+				// Clear out the cache
+				$this->_file = null;
 				// File was updated... load the exif data too!
-				$file = $this->getOriginalFile()->getFilename();
-				$this->_data['exifdata'] = json_encode( exif_read_data($file) );
+				// Note, only do this if it was an image!
+				$file = $this->getOriginalFile();
+				if($file->isImage()){
+					$this->_data['exifdata'] = json_encode( exif_read_data($file->getFilename()) );
+				}
+				else{
+					$this->_data['exifdata'] = null;
+				}
 
 				// Also if the file is new and it didn't exist... set the uploader id.
 				if(!$this->_exists) $this->_data['uploaderid'] = \Core\user()->get('id');
@@ -165,9 +181,11 @@ class GalleryImageModel extends Model {
 	 * @return File_Backend
 	 */
 	public function getFile(){
+		if($this->_file !== null) return $this->_file;
+
 		if($this->get('rotation') == 0){
 			// Simple enough :p
-			return $this->getOriginalFile();
+			$this->_file = $this->getOriginalFile();
 		}
 		else{
 			$filename = $this->get('file');
@@ -205,8 +223,10 @@ class GalleryImageModel extends Model {
 				}
 			}
 
-			return $tmpfile;
+			$this->_file = $tmpfile;
 		}
+
+		return $this->_file;
 	}
 
 	/**
@@ -478,5 +498,30 @@ decimal places, the format would be dd/1,mmmm/100,0/1.
 		}
 
 		return $dat;
+	}
+
+	/**
+	 * Get an english description for the type of this file.
+	 *
+	 * @return string image|video|audio|file
+	 */
+	public function getFileType(){
+		$m = $this->getOriginalFile()->getMimetype();
+//var_dump($m, $this->getOriginalFile()); die();
+		// I just want the beginning part
+		$prefix = substr($m, 0, strpos($m, '/'));
+
+		switch($prefix){
+			case 'audio':
+			case 'image':
+			case 'video':
+				return $prefix;
+			default:
+				return 'file';
+		}
+	}
+
+	public function getFileExtension(){
+		return $this->getOriginalFile()->getExtension();
 	}
 }

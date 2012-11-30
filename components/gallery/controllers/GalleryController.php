@@ -280,8 +280,11 @@ class GalleryController extends Controller_2_1 {
 			if(isset($_POST['images']) && is_array($_POST['images'])){
 				$savecount = 0;
 				foreach($_POST['images'] as $img){
+					// The uploader doesn't prepend the destination directory :/
+					$file = $album->getUploadDirectory() . $img;
+
 					// instead of just blindly saving this image...
-					$image = GalleryImageModel::Find(array('albumid' => $album->get('id'), 'file' => $img));
+					$image = GalleryImageModel::Find(array('albumid' => $album->get('id'), 'file' => $file));
 					if($image) continue; // NO fun....
 
 					// Generate a moderately meaningful title
@@ -294,7 +297,7 @@ class GalleryController extends Controller_2_1 {
 					$image->setFromArray(
 						array(
 							'albumid' => $album->get('id'),
-							'file' => $img,
+							'file' => $file,
 							'weight' => ++$weight,
 							'title' => $title,
 						)
@@ -303,11 +306,11 @@ class GalleryController extends Controller_2_1 {
 					$savecount++;
 				}
 				if($savecount == 0){
-					$action = 'No images uploaded';
+					$action = 'No files uploaded';
 					$actiontype = 'info';
 				}
 				else{
-					$action = 'Added ' . $savecount . ' Images!';
+					$action = 'Added ' . $savecount . ' Files!';
 					$actiontype = 'success';
 				}
 				$imageid = '';
@@ -339,7 +342,13 @@ class GalleryController extends Controller_2_1 {
 				// I'm using the form system because it already has support for file errors builtin.
 				// Also, this is only required for new images.  Existing ones can skip this if _upload_ is not chosen.
 				if(!$image->exists() || ($image->exists() && $_POST['model']['file'] == '_upload_')){
-					$el = new FormFileInput(array('name' => 'model[file]', 'basedir' => $type . '/galleryalbum', 'accept' => 'image/*'));
+					$el = new FormFileInput(
+						array(
+							'name' => 'model[file]',
+							'basedir' => $album->getFullUploadDirectory(),
+							'accept' => $album->get('accepttypes'),
+						)
+					);
 					$el->setValue('_upload_');
 					if($el->hasError()){
 						echo '<div id="error">' . $el->getError() . '</div>';
@@ -347,7 +356,7 @@ class GalleryController extends Controller_2_1 {
 					}
 
 					$f = $el->getFile();
-					$image->set('file', $f->getBaseFilename());
+					$image->set('file', $album->getUploadDirectory() . $f->getBaseFilename());
 				}
 
 				// I need to know what to say...
@@ -566,7 +575,7 @@ class GalleryController extends Controller_2_1 {
 		}
 
 		$view->mode = View::MODE_PAGEORAJAX;
-		$view->templatename = '/pages/gallery/view-image.tpl';
+		$view->templatename = '/pages/gallery/view-' . $image->getFileType() . '.tpl';
 		$view->assign('image', $image);
 		$view->assign('album', $album);
 		$view->assign('lightbox_available', Core::IsComponentAvailable('jquery-lightbox'));
@@ -636,16 +645,17 @@ class GalleryController extends Controller_2_1 {
 		$images = $album->getLink('GalleryImage', 'weight');
 		$lastupdated = $album->get('updated');
 
+
 		if($uploader){
 			$uploadform = new Form();
 			$uploadform->set('action', Core::ResolveLink('/gallery/images_update/' . $album->get('id')));
 			$uploadform->addElement(
 				'multifile',
 				array(
-					'basedir' => 'public/galleryalbum',
-					'title' => 'Bulk Upload Images',
+					'basedir' => $album->getFullUploadDirectory(),
+					'title' => 'Bulk Upload Files',
 					'name' => 'images',
-					'accept' => 'image/*'
+					'accept' => $album->get('accepttypes'),
 				)
 			);
 			$uploadform->addElement('submit', array('value' => 'Save Gallery Changes'));

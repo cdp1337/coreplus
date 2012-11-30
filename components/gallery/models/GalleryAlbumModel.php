@@ -66,6 +66,23 @@ class GalleryAlbumModel extends Model {
 				'title' => 'Upload Permissions',
 			)
 		),
+		'accepttypes' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'default' => 'image/*',
+			'form' => array(
+				'title' => 'Accept File Types',
+				'type' => 'select',
+				'options' => array(
+					'image/*' => 'Only Images',
+					'video/*' => 'Only Videos',
+					'audio/*' => 'Only Audio',
+					'image/*,video/*' => 'Images or Videos',
+					'video/*,audio/*' => 'Audio or Video',
+					'*' => 'Accept Anything',
+				),
+				'description' => 'What types of files are intended to be uploaded to this gallery?',
+			),
+		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
@@ -110,5 +127,31 @@ class GalleryAlbumModel extends Model {
 			default:
 				return parent::get($k);
 		}
+	}
+
+	/**
+	 * Get the directory to upload images to, excluding the public/private component.
+	 *
+	 * @return mixed
+	 */
+	public function getUploadDirectory(){
+		// Determine the directory to upload to.  This is just a nit-picky backend thing.
+		// This will keep the files organized into their own individual directories (for each album)
+		$dir = $this->getLink('Page')->get('title');
+		// Trim off any invalid characters
+		$dir = \Core\str_to_url($dir);
+		// And the directory character.
+		$dir = str_replace('/', '', $dir);
+
+		return $dir . '/';
+	}
+
+	/**
+	 * Get the directory to upload images to, including the public/private component.
+	 *
+	 * @return mixed
+	 */
+	public function getFullUploadDirectory(){
+		return 'public/galleryalbum/' . $this->getUploadDirectory();
 	}
 }
