@@ -17,6 +17,3 @@ abstract class jPlayer {
 	}
 	
 }
-
-
-?>
