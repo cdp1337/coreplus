@@ -67,7 +67,7 @@ class JQueryFileUploadController extends Controller_2_1 {
 			}
 
 			// A streaming request
-			elseif($_SERVER['CONTENT_TYPE'] == 'application/octet-stream' && isset($_SERVER['HTTP_X_FILE_NAME'])){
+			elseif(isset($_SERVER['HTTP_X_FILE_NAME'])){
 				$view->jsondata = $this->_doStream();
 			}
 		}
