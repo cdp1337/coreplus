@@ -70,6 +70,15 @@ class JQueryFileUploadController extends Controller_2_1 {
 			elseif(isset($_SERVER['HTTP_X_FILE_NAME'])){
 				$view->jsondata = $this->_doStream();
 			}
+
+			else{
+				// NO COOKIE FOR YOU!
+				return View::ERROR_BADREQUEST;
+			}
+		}
+		else{
+			// What, it's not a post even?
+			return View::ERROR_BADREQUEST;
 		}
 	}
 
