@@ -238,7 +238,9 @@ class DMI_mysqli_backend implements DMI_Backend {
 
 		if($oldmodelschema->isDataIdentical($newmodelschema)) return false;
 
-		// var_dump($table, $oldmodelschema->getDiff($newmodelschema)); // DEBUG //
+		//var_dump($table, $oldmodelschema->getDiff($newmodelschema)); // DEBUG //
+		//var_dump($newmodelschema); // DEBUG //
+		//var_dump($oldmodelschema); // DEBUG //
 
 		// Table does exist... I need to do a merge of the data schemas.
 		// Create a temp table to do the operations on.
@@ -292,7 +294,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 			if(isset($oldschema->order[$x]) && $oldschema->order[$x] == $column->field){
 				// Yay, the column is in the same order in the new schema as the old schema!
 				// All I need to do here is just ensure the structure is appropriate.
-				$q = 'ALTER TABLE _tmptable MODIFY COLUMN `' . $column->field . '` ' . $column->getColumnString();
+				$q = 'ALTER TABLE _tmptable MODIFY COLUMN `' . $column->field . '` ' . $columndef;
 				$neednewschema = false;
 			}
 			elseif(isset($oldschema->definitions[$column->field])){
@@ -1016,6 +1018,9 @@ class MySQLi_Schema_Column {
 			case 'longblob':
 				$column->type = Model::ATT_TYPE_DATA;
 				break;
+			case 'float':
+				$column->type = Model::ATT_TYPE_FLOAT;
+				break;
 		}
 
 		// None of the above cases matched?  Maybe it's a more complex if statement.
@@ -1112,6 +1117,8 @@ class MySQLi_Schema_Column {
 				break;
 			case Model::ATT_TYPE_ID:
 				$this->type = 'int(' . $column->maxlength . ')';
+				// IDs are also auto_increment!
+				$this->extra = 'auto_increment';
 				break;
 			case Model::ATT_TYPE_INT:
 				$this->type = 'int(' . $column->maxlength . ')';
