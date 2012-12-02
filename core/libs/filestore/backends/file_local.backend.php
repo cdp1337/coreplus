@@ -414,6 +414,10 @@ class File_local_backend implements File_Backend {
 			||
 			(strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
 		) {
+
+			// Make sure the directory exists first!
+			self::_Mkdir(dirname($this->_filename));
+
 			// Read in only so much data at a time.  This is to prevent
 			// PHP from trying to read a full 2GB file into memory at once :S
 			$maxbuffer = (1024 * 1024 * 10);

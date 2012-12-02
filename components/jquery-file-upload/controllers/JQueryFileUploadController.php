@@ -129,8 +129,7 @@ class JQueryFileUploadController extends Controller_2_1 {
 			// Source
 			$f = new File_local_backend($tmpfile);
 			// Destination
-			$nf = Core::File($this->_formelement->get('basedir') . '/' . $file['name']);
-
+			$nf = Core::File($this->_formelement->get('basedir') . $file['name']);
 			$file['type'] = $f->getMimetype();
 
 			// do NOT copy the contents over until the accept check has been ran!

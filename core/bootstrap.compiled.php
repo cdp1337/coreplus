@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 01 Dec 2012 03:38:38 -0500
+ * @compiled Sun, 02 Dec 2012 01:58:45 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4396,6 +4396,7 @@ if (
 ||
 (strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
 ) {
+self::_Mkdir(dirname($this->_filename));
 $maxbuffer = (1024 * 1024 * 10);
 $handlein  = fopen($localfilename, 'r');
 $handleout = fopen($this->_filename, 'w');
