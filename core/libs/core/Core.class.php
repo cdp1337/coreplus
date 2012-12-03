@@ -641,6 +641,10 @@ class Core implements ISingleton {
 		self::Singleton()->_addProfileTime($event, $microtime);
 	}
 
+	/**
+	 * Get the number of seconds that have passed between the start of the page execution and now.
+	 * @return int|mixed
+	 */
 	public static function GetProfileTimeTotal() {
 		// Find the differences between the first and now.
 		return (sizeof(self::Singleton()->_profiletimes)) ? (microtime(true) - self::Singleton()->_profiletimes[0]['microtime']) : 0;

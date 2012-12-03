@@ -5,27 +5,36 @@ The {img} smarty function is the recommended way to load images in templates fro
 ## Parameters
 
 * file
-    * File_Backend
-    * File object passed in to display
-    * Either "file" or "src" is required.
+	* File_Backend
+	* File object passed in to display
+	* Either "file" or "src" is required.
 
 * src
-    * string
-    * Source filename to display.  This can start with "assets" for an asset, or "public" for a public file.
-    * Either "file" or "src" is required.
+	* string
+	* Source filename to display.  This can start with "assets" for an asset, or "public" for a public file.
+	* Either "file" or "src" is required.
 
 * width
-    * int
-    * Maximum image width (in pixels).  If both width and height are provided, the image will be constrained to both without any distortion.
+	* int
+	* Maximum image width (in pixels).  If both width and height are provided, the image will be constrained to both without any distortion.
 
 * height
-    * int
-    * Maximum image height (in pixels).  If both width and height are provided, the image will be constrained to both without any distortion.
+	* int
+	* Maximum image height (in pixels).  If both width and height are provided, the image will be constrained to both without any distortion.
+
+* dimensions
+	* Provide both width and height in pixels, along with special instructions
+	* Structure is "widthxheight" with no spaces between the "x" and the two integers.
+	* Special modes available are:
+		* Carat "^" at the beginning of the string fits the smallest dimension instead of the largest.
+		* Exclamation mark "!" at the beginning forces size regardless of aspect ratio.
+		* Greater than ">" at the beginning will only increase image sizes.
+		* Less than "<" at the beginning will only decrease image sizes.
 
 * placeholder
-    * string
-    * placeholder image if the requested image is blank or not found.  Useful for optional fields that should still display something.
-    * Current possibilities: "generic", "person", "person-tall", "person-wide", "photo"
+	* string
+	* placeholder image if the requested image is blank or not found.  Useful for optional fields that should still display something.
+	* Current possibilities: "generic", "person", "person-tall", "person-wide", "photo"
 
 Any other parameter is transparently sent to the resulting `<img/>` tag.
 

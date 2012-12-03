@@ -17,6 +17,8 @@ Core Plus 2.4.0
 	* Added logging for mimetype icons that don't exist on the system yet, (for DEVELOPMENT_MODE only).
 	* Greatly optimized the copyFrom logic on local files.  Now instead of reading the entire file in memory, only up
 	to 10MB of a file is read/written at a time.
+	* Set the getPreviewURL method to skip processing if the execution time is within 5 seconds of timeout.
+	* Updated some documentation.
 
 Core Plus 2.3.2
 	* Set the FormPageParentSelectInput value to be strtolower all the time.  Should fix many of the baseurl and parenturl issues.
