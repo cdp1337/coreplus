@@ -105,6 +105,13 @@
 
 	{else}
 
+		{img file=$image->getFile() width="48" height="48" title="`$image.title`"}
+		<a href="{$image->getFile()->getURL()}">
+			{$image.title}
+		</a><br/>
+		Filesize: {Core::FormatSize($image->getFile()->getFilesize())}<br/>
+		Filetype: {$image->getFile()->getMimetype()}
+
 	{/if}
 
 </div>

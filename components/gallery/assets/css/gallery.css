@@ -1,23 +1,25 @@
 /*** Gallery Listings Page (displays all albums) ***/
 .gallery-listing-entry {
-	border-width: 2px 0 0 0;
-	border-color: #0a2b70;
+	border-width: 0 0 2px 0;
+	border-color: #AAAAAA;
 	border-style: solid;
 	border-collapse: collapse;
 	padding: 20px 0;
 }
 
-.gallery-listing-title {
-}
-
-.gallery-listing-title a { color: #000; font-weight: 600; text-decoration: none; font-style: italic; }
 
 .gallery-listing-preview {
 	float: left;
-	width: 175px;
-	height: 80px;
-	margin-right: 10px;
+	margin-right: 9px;
 	text-decoration: none;
+	padding: 6px;
+	border: 1px solid #AAAAAA;
+	background: white;
+}
+.gallery-listing-preview-inner {
+	width: 150px;
+	height: 150px;
+	overflow: hidden;
 }
 
 .gallery-listing-viewall {
@@ -38,7 +40,7 @@
 	border: 1px solid #AAAAAA;
 	float: left;
 	margin-right: 9px;
-	padding: 3px;
+	padding: 6px;
 	text-align: center;
 	width: 190px;
 	margin-bottom: 9px;
