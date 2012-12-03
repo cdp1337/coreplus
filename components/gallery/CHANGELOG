@@ -2,6 +2,8 @@ Gallery 1.4.0
 
 	* Added support for videos, music, and any arbitrary file.
 	* Added integration with jPlayer to provide an inline video player.
+	* Set the gallery listing page to respect access permissions.
+	* Fixed some of the exif data, (if the image has exif data, but it's blank).
 
 Gallery 1.3.3
 
