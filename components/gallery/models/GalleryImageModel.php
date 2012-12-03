@@ -319,7 +319,10 @@ class GalleryImageModel extends Model {
 		}
 
 		// This one is just all sorts of difficult...
-		if(preg_match('#/1$#', $dat['ExposureTime'])){
+		if(!$dat['ExposureTime']){
+			// Well, it's not set.. not much I can do.
+		}
+		elseif(preg_match('#/1$#', $dat['ExposureTime'])){
 			// This is a whole number.... simple enough!
 			$dat['ExposureTime'] = substr($dat['ExposureTime'], 0, strpos($dat['ExposureTime'], '/'));
 		}

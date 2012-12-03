@@ -70,25 +70,34 @@
 						<span title="{$exif.ExposureTime} second exposure time">
 							{$exif.ExposureTime} second{if $exif.ExposureTime > 1}s{/if}
 						</span>
-					{else}
+					{elseif $exif.ExposureTime}
 						<span title="{$exif.ExposureTime}th of a second exposure time">
 							{$exif.ExposureTime}th
 						</span>
 					{/if}
 
-					@
-					<span title="Aperture of f/{$exif.FNumber}">
-						f/{$exif.FNumber}
-					</span>
+					{if $exif.ExposureTime && $exif.FNumber}
+						@
+					{/if}
+
+					{if $exif.FNumber}
+						<span title="Aperture of f/{$exif.FNumber}">
+							f/{$exif.FNumber}
+						</span>
+					{/if}
 				</div>
 
-				<div class="gallery-image-detailspane-focallength" title="Focal Length of {$exif.FocalLength}mm">
-					{$exif.FocalLength}mm
-				</div>
+				{if $exif.FocalLength}
+					<div class="gallery-image-detailspane-focallength" title="Focal Length of {$exif.FocalLength}mm">
+						{$exif.FocalLength}mm
+					</div>
+				{/if}
 
-				<div class="gallery-image-detailspane-iso" title="ISO of {$exif.ISOSpeedRatings}">
-					ISO {$exif.ISOSpeedRatings}
-				</div>
+				{if $exif.ISOSpeedRatings}
+					<div class="gallery-image-detailspane-iso" title="ISO of {$exif.ISOSpeedRatings}">
+						ISO {$exif.ISOSpeedRatings}
+					</div>
+				{/if}
 
 				<div class="gallery-image-detailspane-makemodel">
 					{$exif.Make} - {$exif.Model}
@@ -125,11 +134,15 @@
 						{$exif.ApertureValue}<br/>
 					{/if}
 
-					<span class="extralabel">Max Aperture:</span>
-					{$exif.MaxApertureValue}<br/>
+					{if $exif.MaxApertureValue}
+						<span class="extralabel">Max Aperture:</span>
+						{$exif.MaxApertureValue}<br/>
+					{/if}
 
-					<span class="extralabel">Exposure Bias Value:</span>
-					{$exif.ExposureBiasValue}<br/>
+					{if $exif.ExposureBiasValue}
+						<span class="extralabel">Exposure Bias Value:</span>
+						{$exif.ExposureBiasValue}<br/>
+					{/if}
 
 					<span class="extralabel">Light Source:</span>
 					{$exif.LightSourceDesc}<br/>

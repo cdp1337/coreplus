@@ -594,6 +594,18 @@ class File_local_backend implements File_Backend {
 			$height = (int)$vals[1];
 		}
 
+		// If the system is getting too close to the max_execution_time variable, just return the mimetype!
+		if(Core::GetProfileTimeTotal() + 5 >= ini_get('max_execution_time')){
+			// Try and get the mime icon for this file.
+			$filemime = str_replace('/', '-', $this->getMimetype());
+
+			$file = Core::File('assets/mimetype_icons/' . $filemime . '.png');
+			if(!$file->exists()){
+				$file = Core::File('assets/mimetype_icons/unknown.png');
+			}
+			return $file->getURL();
+		}
+
 
 		// The basename is for SEO purposes, that way even resized images still contain the filename.
 		// The -preview- is just because I feel like it; completely optional.

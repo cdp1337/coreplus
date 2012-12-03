@@ -29,7 +29,7 @@
 		<div class="gallery-image-wrapper">
 			<div class="gallery-image">
 				{a href="`$i.link`"}
-					{img file=$i->getFile() width="180" height="180" title="`$i.title`"}
+					{img file=$i->getFile() dimensions="190x190" title="`$i.title`"}
 				{/a}
 			</div>
 			<div class="gallery-image-title">

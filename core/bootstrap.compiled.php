@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 02 Dec 2012 01:58:45 -0500
+ * @compiled Mon, 03 Dec 2012 03:51:59 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4512,6 +4512,14 @@ $mode = '';
 $vals   = explode('x', strtolower($dimensions));
 $width  = (int)$vals[0];
 $height = (int)$vals[1];
+}
+if(Core::GetProfileTimeTotal() + 5 >= ini_get('max_execution_time')){
+$filemime = str_replace('/', '-', $this->getMimetype());
+$file = Core::File('assets/mimetype_icons/' . $filemime . '.png');
+if(!$file->exists()){
+$file = Core::File('assets/mimetype_icons/unknown.png');
+}
+return $file->getURL();
 }
 $key = str_replace(' ', '-', $this->getBaseFilename(true)) . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.png';
 if (!$this->exists()) {

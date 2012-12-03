@@ -7,31 +7,37 @@
 </div>
 
 {foreach from=$albums item=album}
-<div class="gallery-listing-entry">
+	<div class="gallery-listing-entry">
 
-
-	{foreach $album->getLink('GalleryImage') as $image}
-		{if $image@index < 4}
-			<div class="gallery-listing-preview">
-				{a href="`$album.rewriteurl`/`$image.id`"}
-						{img file=$image->getFile() width="175" height="80" title="`$image.title`"}
-					{/a}
-			</div>
-		{/if}
-	{/foreach}
-
-	<div class="gallery-listing-title">
-		{a href="`$album.rewriteurl`"}
+		<h3>
+			{a href="`$album.rewriteurl`"}
 				{$album->get('title')}
 			{/a}
-	</div>
+		</h3>
 
-	<div class="gallery-listing-viewall">
-		{a href="`$album.rewriteurl`"}
-			View All Images {img src="assets/gallery-arrow.png"}
-		{/a}
-	</div>
+		{foreach $album->getLink('GalleryImage') as $image}
+			{if $image@index < 4}
+				<div class="gallery-listing-preview">
+					<div class="gallery-listing-preview-inner">
+						{a href="`$album.rewriteurl`/`$image.id`"}
+							{img file=$image->getFile() dimensions="^150x150" title="`$image.title`"}
+						{/a}
+					</div>
+				</div>
+			{/if}
+		{/foreach}
 
-	<div class="clear"></div>
-</div>
+		<div class="clear"></div>
+		<div class="gallery-listing-viewall">
+			{a href="`$album.rewriteurl`"}
+				View All
+			{/a}
+			({sizeof($album->getLink('GalleryImage'))}) total
+		</div>
+		<div class="gallery-listing-creationdate">
+			Created {date date="`$album.created`"}
+		</div>
+
+		<div class="clear"></div>
+	</div>
 {/foreach}

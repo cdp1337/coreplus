@@ -27,7 +27,15 @@ class GalleryController extends Controller_2_1 {
 	public function index(){
 		$view = $this->getView();
 
-		$albums = GalleryAlbumModel::Find(null, null, null);
+		$albums = GalleryAlbumModel::Find(null, null, 'created');
+		// Make sure the current user has access to each one.
+		foreach($albums as $k => $album){
+			/** @var $album GalleryAlbumModels */
+			if(!\Core\user()->checkAccess($album->getLink('Page')->get('access'))){
+				unset($albums[$k]);
+			}
+		}
+
 		$manager = \Core\user()->checkAccess('p:gallery_manage');
 
 		$view->title = 'Gallery Listings';
