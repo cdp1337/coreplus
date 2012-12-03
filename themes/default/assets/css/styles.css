@@ -385,7 +385,7 @@ table.listing td{ padding:0.15em 0.5em; border:1px solid #AAA; vertical-align:to
 
 
 /*** Debugging Classes ***/
-pre.xdebug-var-dump { background: none repeat scroll 0 0 #F1F1F1; border-top: 2px solid #C5C5C5; padding: 0.5em; text-align: left; }
+pre.xdebug-var-dump { border: 1px solid #FFE5C0; padding: 0.5em; text-align: left; font-size:0.8em; background: #f5f5f5;color:#555; }
 
 
 /*** Sortables and Nested Sortables ***/
