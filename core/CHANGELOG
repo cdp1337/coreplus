@@ -19,6 +19,9 @@ Core Plus 2.4.0
 	to 10MB of a file is read/written at a time.
 	* Set the getPreviewURL method to skip processing if the execution time is within 5 seconds of timeout.
 	* Updated some documentation.
+	* Feature #223 - Historical Permalink lookup.  URLs can now be changed onthefly, and any requests to the old
+	url will automatically be redirected to the new page with a 301.
+	* Added redirect status option to Core::Redirect.  It defaults to a 302, but can be set to a permanent redirect instead.
 
 Core Plus 2.3.2
 	* Set the FormPageParentSelectInput value to be strtolower all the time.  Should fix many of the baseurl and parenturl issues.
@@ -75,7 +78,7 @@ Core Plus 2.2.5
 	* Added logic to prevent URLs with a '#' in them.
 	* Added a new class to handle datetimes, CoreDateTime.  This has better support for non-GMT unix timestamps by using
 	the DateTime object more directly.  (Legacy Time class was based on php < 5.2 logic.)
-	* Minor tweak in the file preview system to strip spaces from the filenames.
+	* Bug #173 - Minor tweak in the file preview system to strip spaces from the filenames.
 	* Fixed a major bug in the core component loader.  Installed components were being listed as being loaded and activated
 	before they were technically available.
 	* Added support for custom user config validation.

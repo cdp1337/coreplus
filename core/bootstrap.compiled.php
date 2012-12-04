@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 03 Dec 2012 03:51:59 -0500
+ * @compiled Mon, 03 Dec 2012 21:27:13 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -2094,6 +2094,12 @@ if(!isset($this->_datainit['rewriteurl'])) $this->_datainit['rewriteurl'] = null
 if($this->_data['rewriteurl'] != $this->_datainit['rewriteurl']){
 self::$_FuzzyCache = null;
 self::$_RewriteCache = null;
+}
+if($this->exists() && $this->_data['rewriteurl'] != $this->_datainit['rewriteurl']){
+$map = new RewriteMapModel($this->_datainit['rewriteurl']);
+$map->set('baseurl', $this->_data['baseurl']);
+$map->set('fuzzy', $this->_data['fuzzy']);
+$map->save();
 }
 return parent::save();
 }
@@ -6014,15 +6020,10 @@ continue;
 }
 if (!$c->isInstalled() && $c->isLoadable()) {
 $c->install();
-if(!DEVELOPMENT_MODE){
-$c->disable();
-}
-else{
 $c->enable();
 $c->loadFiles();
 $this->_components[$n] = $c;
 $this->_registerComponent($c);
-}
 unset($list[$n]);
 continue;
 }
@@ -6278,11 +6279,23 @@ public static function ResolveFilenameTo($filename, $base = ROOT_URL) {
 $file = preg_replace('/^(' . str_replace('/', '\\/', ROOT_PDIR . '|' . ROOT_URL) . ')/', '', $filename);
 return $base . $file;
 }
-static public function Redirect($page) {
+static public function Redirect($page, $code = 302) {
+if(!($code == 301 || $code == 302)){
+throw new CoreException('Invalid response code requested for redirect, [' . $code . '].  Please ensure it is either a 301 (permanent), or 302 (temporary) redirect!');
+}
 $page = self::ResolveLink($page);
 if ($page == CUR_CALL) return false;
-if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
-header("Location:" . $page);
+switch($code){
+case 301:
+$movetext = '301 Moved Permanently';
+break;
+case 302:
+$movetext = '302 Moved Temporarily';
+break;
+}
+header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
+header('HTTP/1.1 ' . $movetext);
+header('Location: ' . $page);
 HookHandler::DispatchHook('/core/page/postrender');
 die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
 }

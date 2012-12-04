@@ -20,6 +20,7 @@
 		<hook name="/core/page/prerender" call="Core::_AttachCoreJavascript"/>
 		<hook name="components_ready" call="Form::CheckSavedSessionData"/>
 		<hook name="/core/page/error-404" call="GettingStartedController::_HookCatch404"/>
+		<hook name="/core/page/error-404" call="RewriteMapHelper::Catch404Hook"/>
 		<hook name="/core/page/prerender" call="Core::_RecordNavigation"/>
 	</hooks>
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
@@ -40,8 +41,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="59985b92f2eb219b0f84a98bda5a8d6c"/>
-		<file filename="core/CHANGELOG" md5="73c1148e6a15a51ddadad2c369031f80"/>
-		<file filename="core/bootstrap.compiled.php" md5="4739c6242375779d13939ef5c5ca55db">
+		<file filename="core/CHANGELOG" md5="83bbf60f847add02a3d767a9e6a050d2"/>
+		<file filename="core/bootstrap.compiled.php" md5="686041343ad48b558a46d4b27d51e387">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -192,6 +193,9 @@
 			<class name="FormTimeInput"/>
 		</file>
 		<file filename="core/functions/Core.functions.php" md5="da70d9b079997556ada99300decd5090"/>
+		<file filename="core/helpers/RewriteMapHelper.class.php" md5="54052493beb1477deb02ccb0c6dc7395">
+			<class name="RewriteMapHelper"/>
+		</file>
 		<file filename="core/helpers/UpdaterHelper.class.php" md5="99d2612dc12ec4964485710c44f8193c">
 			<class name="UpdaterHelper"/>
 		</file>
@@ -502,7 +506,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="da23111d3817635fd7fcad14583bde1a">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="18f705106a704e2c4494bde72333e660">
+		<file filename="core/libs/core/Core.class.php" md5="16e2f8bcf2cd4652a27743f5cd76f75b">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -632,7 +636,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="e02b68f59cf50bf21f1bb533a2e59ea1">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="0c2a62e88ca167eaced4c091502506ef">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="d7dc398807a95263d2cf79d957f9a9b0">
 			<class name="DMI_mysqli_backend"/>
 			<class name="MySQLi_Schema"/>
 			<class name="MySQLi_Schema_Column"/>
@@ -834,7 +838,7 @@
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="86f58054362b62b0a0bc760d8f403048">
 			<class name="File_awss3_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="45589a6603e4c530c9f408b31a20d811">
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="e3d4f89fa4b422f5f0604340bda9c658">
 			<class name="File_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="7ccc345697d095d4040e927e26da1030">
@@ -1301,8 +1305,11 @@
 		<file filename="core/models/Insertable.class.php" md5="9fcff9abc48a6750a219ee3df35b48af">
 			<class name="InsertableModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="ce920b5301b8bb10704c61844738fe0f">
+		<file filename="core/models/PageModel.class.php" md5="a92afdd12ad014e07779231e9554cfa1">
 			<class name="PageModel"/>
+		</file>
+		<file filename="core/models/RewriteMapModel.php" md5="65431677b7c5200fdfa04e3122b22724">
+			<class name="RewriteMapModel"/>
 		</file>
 		<file filename="core/models/SessionModel.class.php" md5="7e5409686e6d110839bd07e09eada796">
 			<class name="SessionModel"/>
@@ -1325,11 +1332,11 @@
 		<file filename="docs/component-xml.md" md5="c9d026dd0479a87381d9f868fed434e4"/>
 		<file filename="docs/models.md" md5="f8e6c6e34027ac2e608127af0c0a185f"/>
 		<file filename="docs/schemas/component.dtd" md5="e420ec63fbbb33d3ac9b2ff73dcad1c7"/>
-		<file filename="docs/smarty-functions/img.md" md5="a7a19f13d1c7e2e4c08217ae915c7e1e"/>
+		<file filename="docs/smarty-functions/img.md" md5="96808e22a392b247ba36aefd923b1c6e"/>
 		<file filename="docs/user-permissions.md" md5="53e3322a56a1b537a43f8520394b56ae"/>
 		<file filename="docs/utilities/compiler.md" md5="acfb5b28bfe613bca48ac52f30894899"/>
 		<file filename="htaccess.ex" md5="a9753494f79d3cfa1526c3ccfd19f1cc"/>
-		<file filename="index.php" md5="053e9ae9295e2c1ab0e0eb5b74373f21"/>
+		<file filename="index.php" md5="d01a25c25c5fb9fa77e98da5e4e58f37"/>
 		<file filename="install/InstallPage.class.php" md5="4f34783e9e3b4c2878afa6aa3aa0eb07">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>

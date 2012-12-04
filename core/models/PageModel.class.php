@@ -471,6 +471,18 @@ class PageModel extends Model {
 			self::$_RewriteCache = null;
 		}
 
+		// If this model existed before and the URL has changed, update the lookup table!
+		// This will act as a basis of rewrite rules for changed URLs, allowing users to change
+		// their pages rewriteurls without adversely affecting inbounding links.
+		if($this->exists() && $this->_data['rewriteurl'] != $this->_datainit['rewriteurl']){
+			// I don't care if the map existed, or was linked to something else...
+			// All I need to do is ensure that it will redirect to the new URL.
+			$map = new RewriteMapModel($this->_datainit['rewriteurl']);
+			$map->set('baseurl', $this->_data['baseurl']);
+			$map->set('fuzzy', $this->_data['fuzzy']);
+			$map->save();
+		}
+
 		return parent::save();
 	}
 

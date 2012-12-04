@@ -417,6 +417,13 @@ class Core implements ISingleton {
 				if (!$c->isInstalled() && $c->isLoadable()) {
 					// w00t
 					$c->install();
+					// BLAH, until I fix the disabled-packages-not-viewable bug...
+					$c->enable();
+					$c->loadFiles();
+					$this->_components[$n] = $c;
+					$this->_registerComponent($c);
+
+					/*
 					if(!DEVELOPMENT_MODE){
 						$c->disable();
 					}
@@ -426,6 +433,7 @@ class Core implements ISingleton {
 						$this->_components[$n] = $c;
 						$this->_registerComponent($c);
 					}
+					*/
 					unset($list[$n]);
 					continue;
 				}
@@ -972,9 +980,17 @@ class Core implements ISingleton {
 	 * Redirect the user to another page via sending the Location header.
 	 *    Prevents any POST data from being reloaded.
 	 *
-	 * @param string $page_to_redirect_to
+	 * @param  string $page The page URL to redirect to
+	 * @param  int    $code  The HTTP status code to send to the browser, MUST be 301 or 302.
+	 *
+	 * @throws CoreException
+	 *
+	 * @return false|null False on failure, success will halt the script.
 	 */
-	static public function Redirect($page) {
+	static public function Redirect($page, $code = 302) {
+		if(!($code == 301 || $code == 302)){
+			throw new CoreException('Invalid response code requested for redirect, [' . $code . '].  Please ensure it is either a 301 (permanent), or 302 (temporary) redirect!');
+		}
 		//This is NOT designed to refresh the current page.	If the pageto redirect to IS
 		// this current page, simply do nothing.
 
@@ -990,8 +1006,19 @@ class Core implements ISingleton {
 		// Do nothing if the page is the current page.... that is Reload()'s job.
 		if ($page == CUR_CALL) return false;
 
-		if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
-		header("Location:" . $page);
+		// Determine the string to send with the code.
+		switch($code){
+			case 301:
+				$movetext = '301 Moved Permanently';
+				break;
+			case 302:
+				$movetext = '302 Moved Temporarily';
+				break;
+		}
+
+		header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
+		header('HTTP/1.1 ' . $movetext);
+		header('Location: ' . $page);
 
 		// Just before the page stops execution...
 		HookHandler::DispatchHook('/core/page/postrender');
