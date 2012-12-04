@@ -514,6 +514,9 @@ decimal places, the format would be dd/1,mmmm/100,0/1.
 		// I just want the beginning part
 		$prefix = substr($m, 0, strpos($m, '/'));
 
+		// There are a few exceptions.
+		if($m == 'application/ogg') return 'audio';
+
 		switch($prefix){
 			case 'audio':
 			case 'image':
