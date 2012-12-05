@@ -33,6 +33,7 @@ class UserSocialHelper {
 	 * Get the resolved profile link for a given user
 	 *
 	 * @param User $user
+	 * @return string
 	 */
 	public static function ResolveProfileLink(User $user){
 		if($user->get('username')){
