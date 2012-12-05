@@ -273,9 +273,10 @@ class BlogController extends Controller_2_1 {
 
 		$view->templatename = '/pages/blog/view-blog-article.tpl';
 		//$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
-		$view->title        = $article->get('title');
-		$view->updated      = $article->get('updated');
-		$view->canonicalurl = Core::ResolveLink($article->get('rewriteurl'));
+		$view->title         = $article->get('title');
+		$view->meta['title'] = $article->get('title');
+		$view->updated       = $article->get('updated');
+		$view->canonicalurl  = Core::ResolveLink($article->get('rewriteurl'));
 		$view->meta['og:type'] = 'article';
 		if ($article->get('image')) {
 			$image                  = Core::File('public/blog/' . $article->get('image'));
@@ -283,7 +284,8 @@ class BlogController extends Controller_2_1 {
 		}
 		if($author){
 			/** @var $author User */
-			$view->meta['author'] = $author->getDisplayName();
+			//$view->meta['author'] = $author->getDisplayName();
+			$view->meta['author'] = $author;
 		}
 		$view->meta['description'] = $article->getTeaser();
 		$view->assign('author', $author);

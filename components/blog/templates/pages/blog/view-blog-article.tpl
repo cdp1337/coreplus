@@ -11,7 +11,7 @@
 
 
 	{if $article.image}
-		{img class="blog-article-img" src="public/blog/`$article.image`" width='620' height='400' itemprop="thumbnailUrl"}
+		{img class="blog-article-img" src="public/blog/`$article.image`" width='620' height='400' itemprop="thumbnailUrl" alt="`$article.title|escape`"}
 	{/if}
 
 	<div class="blog-article-body" itemprop="articleBody">
