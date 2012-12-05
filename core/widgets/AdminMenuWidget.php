@@ -25,7 +25,7 @@
 class AdminMenuWidget extends Widget_2_1 {
 	public function execute(){
 		$v = $this->getView();
-		
+
 		$pages = PageModel::Find(array('admin' => '1'));
 		$viewable = array();
 		foreach($pages as $p){
@@ -35,12 +35,22 @@ class AdminMenuWidget extends Widget_2_1 {
 			} else {
 				$p->set('title', trim(str_replace("Admin","", str_replace("Administration", "", $p->get('title'))) ) );
 			}
+			if($p->get('title') == "System Configuration") {
+				$p->set('title', "System Config");
+			}
+			if($p->get('title') == "Navigation Listings") {
+				$p->set('title', "Navigation");
+			}
+			if($p->get('title') == "Content Page Listings") {
+				$p->set('title', "Content Pages");
+			}
+
 			$viewable[] = $p;
 		}
 
 		$v->templatename = 'widgets/adminmenu.tpl';
 		$v->assignVariable('pages', $viewable);
-		
+
 		return $v;
 	}
 }
