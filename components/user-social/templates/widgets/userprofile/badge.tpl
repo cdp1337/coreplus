@@ -6,7 +6,7 @@
 	<div class="user-badge-photo-wrapper">
 		<div class="user-badge-photo-inner">
 			<a href="{$link}" class="user-badge-name url" rel="author">
-				{img src="public/user/`$user->get('avatar')`" placeholder="person" dimensions="64x64^" itemprop="image" class="user-badge-photo photo"}
+				{img src="public/user/`$user->get('avatar')`" placeholder="person" dimensions="64x64^" itemprop="image" class="user-badge-photo photo" alt="`$user->getDisplayName()|escape`"}
 			</a>
 		</div>
 	</div>
