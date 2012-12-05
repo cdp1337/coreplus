@@ -269,6 +269,7 @@ class View {
 		$this->error = View::ERROR_NOERROR;
 		$this->mode  = View::MODE_PAGE;
 		$this->controls = new ViewControls();
+		$this->meta = new ViewMetas();
 	}
 
 	public function setParameters($params) {
@@ -889,7 +890,8 @@ class View {
 				$this->meta['article:modified_time'] = Time::FormatGMT($this->updated, Time::TIMEZONE_GMT, Time::FORMAT_ISO8601);
 			}
 
-			$data[] = '<meta name="generator" content="Core Plus ' . Core::GetComponent()->getVersion() . '"/>';
+			// Set the generator metatag, (this is handled internally within the tag)
+			$this->meta['generator'] = true;
 
 			// Some standard tags that also have og equivalents.
 			if(!isset($this->meta['og:title'])){
@@ -903,43 +905,21 @@ class View {
 
 			// Set the canonical URL in the necessary spots (if it's not in error)
 			if($this->canonicalurl !== false){
-				$data[] = '<link rel="canonical" href="' . $this->canonicalurl . '" />';
-				$this->meta['og:url'] = $this->canonicalurl;
+				$this->meta['canonical'] = $this->canonicalurl;
 			}
 
 			$this->meta['og:site_name'] = SITENAME;
 		}
 
-		// All the standard meta names and properties now.
-		foreach($this->meta as $k => $v){
-			if(!$v) continue; // Skip blank values.
+		// Merge in the standard meta names and properties now.
+		$data = array_merge($data, $this->meta->fetch());
 
-			switch($k){
-				case 'name':
-				case 'keywords':
-				case 'description':
-					$key = 'name';
-					break;
-				default:
-					$key = 'property';
-			}
-
-			// Also support arrays for these.
-			if(is_array($v)){
-				foreach($v as $sv){
-					$data[] = '<meta ' . $key . '="' . $k . '" content="' . str_replace('"', '\\"', $sv) . '"/>';
-				}
-			}
-			else{
-				$data[] = '<meta ' . $key . '="' . $k . '" content="' . str_replace('"', '\\"', $v) . '"/>';
-			}
-		}
 
 		if (ConfigHandler::Get('/core/markup/minified')) {
 			$out = implode('', $data);
 		}
 		else {
-			$out = implode("\n", $data);
+			$out = '<!-- BEGIN Automatic meta tag generation -->' . "\n" . implode("\n", $data) . "\n" . '<!-- END Automatic meta tag generation -->';
 		}
 
 		return trim($out);

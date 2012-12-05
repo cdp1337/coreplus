@@ -495,13 +495,25 @@ class FormElement {
 	public function getInputAttributes() {
 		$out = '';
 		foreach ($this->_validattributes as $k) {
-			// 'Required' is skipped if it's false.
-			if ($k == 'required' && !$this->get($k)) continue;
-
-			// 'checked' is skipped if false also.
-			if($k == 'checked' && !$this->get($k)) continue;
-
-			if (($v = $this->get($k)) !== null){
+			if ($k == 'required'){
+				// 'Required' is skipped if it's false.
+				if(!$this->get($k)){
+					continue;
+				}
+				else{
+					$out .= ' required="required"';
+				}
+			}
+			elseif($k == 'checked'){
+				// 'checked' is skipped if false also.
+				if(!$this->get($k)){
+					continue;
+				}
+				else{
+					$out .= ' checked="checked"';
+				}
+			}
+			elseif (($v = $this->get($k)) !== null){
 				$out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
 			}
 		}

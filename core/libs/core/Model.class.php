@@ -1574,6 +1574,7 @@ class ModelSchema {
 
 			if($column->type == Model::ATT_TYPE_ID && !$column->maxlength){
 				$column->maxlength = 15;
+				$column->autoinc = true;
 			}
 
 			if($column->type == Model::ATT_TYPE_INT && !$column->maxlength){
@@ -1775,6 +1776,12 @@ class ModelSchemaColumn {
 	public $encrypted = false;
 
 	/**
+	 * Indicator if this column needs to be auto incremented from the datamodel.
+	 * @var bool
+	 */
+	public $autoinc = false;
+
+	/**
 	 * Check to see if this column is datastore identical to another column.
 	 *
 	 * @param ModelSchemaColumn $col
@@ -1790,6 +1797,7 @@ class ModelSchemaColumn {
 		if($this->null != $col->null) return false;
 		if($this->comment != $col->comment) return false;
 		if($this->precision != $col->precision) return false;
+		if($this->autoinc !== $col->autoinc) return false;
 
 		// If one is an array but not the other....
 		if(is_array($this->options) != is_array($col->options)) return false;

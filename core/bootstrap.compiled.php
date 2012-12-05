@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 03 Dec 2012 21:27:13 -0500
+ * @compiled Tue, 04 Dec 2012 20:29:24 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1615,6 +1615,7 @@ $column->maxlength = 255;
 }
 if($column->type == Model::ATT_TYPE_ID && !$column->maxlength){
 $column->maxlength = 15;
+$column->autoinc = true;
 }
 if($column->type == Model::ATT_TYPE_INT && !$column->maxlength){
 $column->maxlength = 15;
@@ -1702,6 +1703,7 @@ public $form = array();
 public $comment = '';
 public $precision = null;
 public $encrypted = false;
+public $autoinc = false;
 public function isDataIdentical(ModelSchemaColumn $col){
 if($this->field != $col->field)       return false;
 if($this->maxlength != $col->maxlength) return false;
@@ -1709,6 +1711,7 @@ if($this->default != $col->default) return false;
 if($this->null != $col->null) return false;
 if($this->comment != $col->comment) return false;
 if($this->precision != $col->precision) return false;
+if($this->autoinc !== $col->autoinc) return false;
 if(is_array($this->options) != is_array($col->options)) return false;
 if(is_array($this->options) && is_array($col->options)){
 if(implode(',', $this->options) != implode(',', $col->options)) return false;
@@ -8548,6 +8551,7 @@ public function __construct() {
 $this->error = View::ERROR_NOERROR;
 $this->mode  = View::MODE_PAGE;
 $this->controls = new ViewControls();
+$this->meta = new ViewMetas();
 }
 public function setParameters($params) {
 $this->_params = $params;
@@ -8930,7 +8934,7 @@ if($this->error == View::ERROR_NOERROR){
 if($this->updated !== null){
 $this->meta['article:modified_time'] = Time::FormatGMT($this->updated, Time::TIMEZONE_GMT, Time::FORMAT_ISO8601);
 }
-$data[] = '<meta name="generator" content="Core Plus ' . Core::GetComponent()->getVersion() . '"/>';
+$this->meta['generator'] = true;
 if(!isset($this->meta['og:title'])){
 $this->meta['og:title'] = $this->title;
 }
@@ -8938,36 +8942,16 @@ if($this->canonicalurl === null){
 $this->canonicalurl = Core::ResolveLink($this->baseurl);
 }
 if($this->canonicalurl !== false){
-$data[] = '<link rel="canonical" href="' . $this->canonicalurl . '" />';
-$this->meta['og:url'] = $this->canonicalurl;
+$this->meta['canonical'] = $this->canonicalurl;
 }
 $this->meta['og:site_name'] = SITENAME;
 }
-foreach($this->meta as $k => $v){
-if(!$v) continue; // Skip blank values.
-switch($k){
-case 'name':
-case 'keywords':
-case 'description':
-$key = 'name';
-break;
-default:
-$key = 'property';
-}
-if(is_array($v)){
-foreach($v as $sv){
-$data[] = '<meta ' . $key . '="' . $k . '" content="' . str_replace('"', '\\"', $sv) . '"/>';
-}
-}
-else{
-$data[] = '<meta ' . $key . '="' . $k . '" content="' . str_replace('"', '\\"', $v) . '"/>';
-}
-}
+$data = array_merge($data, $this->meta->fetch());
 if (ConfigHandler::Get('/core/markup/minified')) {
 $out = implode('', $data);
 }
 else {
-$out = implode("\n", $data);
+$out = '<!-- BEGIN Automatic meta tag generation -->' . "\n" . implode("\n", $data) . "\n" . '<!-- END Automatic meta tag generation -->';
 }
 return trim($out);
 }
@@ -9378,9 +9362,23 @@ return $id;
 public function getInputAttributes() {
 $out = '';
 foreach ($this->_validattributes as $k) {
-if ($k == 'required' && !$this->get($k)) continue;
-if($k == 'checked' && !$this->get($k)) continue;
-if (($v = $this->get($k)) !== null){
+if ($k == 'required'){
+if(!$this->get($k)){
+continue;
+}
+else{
+$out .= ' required="required"';
+}
+}
+elseif($k == 'checked'){
+if(!$this->get($k)){
+continue;
+}
+else{
+$out .= ' checked="checked"';
+}
+}
+elseif (($v = $this->get($k)) !== null){
 $out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
 }
 }

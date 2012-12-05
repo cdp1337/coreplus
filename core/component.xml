@@ -41,8 +41,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="59985b92f2eb219b0f84a98bda5a8d6c"/>
-		<file filename="core/CHANGELOG" md5="83bbf60f847add02a3d767a9e6a050d2"/>
-		<file filename="core/bootstrap.compiled.php" md5="686041343ad48b558a46d4b27d51e387">
+		<file filename="core/CHANGELOG" md5="b0fadd5205c0af2ee38bee02c5ebd6ce"/>
+		<file filename="core/bootstrap.compiled.php" md5="0879523fad8fb0dc7efa346694f16e6d">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -193,7 +193,7 @@
 			<class name="FormTimeInput"/>
 		</file>
 		<file filename="core/functions/Core.functions.php" md5="da70d9b079997556ada99300decd5090"/>
-		<file filename="core/helpers/RewriteMapHelper.class.php" md5="54052493beb1477deb02ccb0c6dc7395">
+		<file filename="core/helpers/RewriteMapHelper.class.php" md5="da6e337a8305534398cad21c53dcae54">
 			<class name="RewriteMapHelper"/>
 		</file>
 		<file filename="core/helpers/UpdaterHelper.class.php" md5="99d2612dc12ec4964485710c44f8193c">
@@ -506,7 +506,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="da23111d3817635fd7fcad14583bde1a">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="16e2f8bcf2cd4652a27743f5cd76f75b">
+		<file filename="core/libs/core/Core.class.php" md5="7d1d0801cee01a6b0ebb4103e7a03016">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -594,7 +594,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="457825ef67951829fccc033c30a59bde">
+		<file filename="core/libs/core/View.class.php" md5="85cfda1424ae57c735f3853847ea554a">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -604,6 +604,14 @@
 			<class name="ViewControl"/>
 		</file>
 		<file filename="core/libs/core/ViewControl.class.php~" md5="590385b6189e2aced5f59c379a1d1cbb"/>
+		<file filename="core/libs/core/ViewMeta.class.php" md5="ef4f0bfdab3c35d8d54f62f34731a947">
+			<class name="ViewMetas"/>
+			<class name="ViewMeta"/>
+			<class name="ViewMeta_description"/>
+			<class name="ViewMeta_keywords"/>
+			<class name="ViewMeta_name"/>
+			<class name="ViewMeta_author"/>
+		</file>
 		<file filename="core/libs/core/Widget.class.php" md5="11f834e973a04aa4ae270128e9f71de2">
 			<class name="Widget"/>
 			<class name="WidgetException"/>

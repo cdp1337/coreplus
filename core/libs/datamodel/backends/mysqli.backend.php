@@ -1063,6 +1063,9 @@ class MySQLi_Schema_Column {
 				// Well huhm...
 				$column->type = 'text';
 			}
+
+			// AI could be attached to the Primary key, but mysql has its own declaration for that.
+			if($this->extra == 'auto_increment') $column->autoinc = true;
 		}
 
 		// Check if this is a key.
