@@ -1,3 +1,8 @@
+TinyMCE 3.5.6~core3
+
+	* Minor fix - removed the "required" attribute for tinymce elements.  It wasn't playing nicely with FF or Chrome.
+	-- Charlie Powell <charlie@eval.bz>  4 Dec 2012
+
 TinyMCE 3.5.6~core2
 
 	* Fixed some template logic with the wysiwyg editor.

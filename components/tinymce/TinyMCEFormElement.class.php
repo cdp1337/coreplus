@@ -29,7 +29,8 @@ class TinyMCEFormElement extends FormElement {
 		$this->_attributes['class'] = 'formelement formwysiwyginput tinymce';
 		$this->_attributes['rows']  = '25';
 
-		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'readonly', 'required', 'tabindex', 'rows', 'cols', 'style', 'class');
+		// Note, I'm taking the required flag out from here; tinymce doesn't support it.
+		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'readonly', 'tabindex', 'rows', 'cols', 'style', 'class');
 	}
 }
 
