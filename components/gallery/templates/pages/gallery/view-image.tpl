@@ -99,9 +99,11 @@
 					</div>
 				{/if}
 
-				<div class="gallery-image-detailspane-makemodel">
-					{$exif.Make} - {$exif.Model}
-				</div>
+				{if $exif.Make || $exif.Model}
+					<div class="gallery-image-detailspane-makemodel">
+						{$exif.Make} - {$exif.Model}
+					</div>
+				{/if}
 
 				<div class="gallery-image-detailspane-extrainformation">
 					<span class="extralabel">Original Dimensions:</span>

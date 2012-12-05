@@ -39,11 +39,20 @@
 	background: none repeat scroll 0 0 white;
 	border: 1px solid #AAAAAA;
 	float: left;
-	margin-right: 9px;
-	padding: 6px;
+	margin-right: 0px;
+	padding: 2px;
 	text-align: center;
-	width: 190px;
 	margin-bottom: 9px;
+}
+
+#gallery-images .gallery-image-wrapper-sm {
+	width: 200px;
+}
+#gallery-images .gallery-image-wrapper-med {
+	width: 408px;
+}
+#gallery-images .gallery-image-wrapper-lg {
+	width: 824px;
 }
 
 #gallery-images .gallery-image-wrapper .gallery-image-title {

@@ -79,6 +79,11 @@ class GalleryImageModel extends Model {
 				'description' => 'When was this taken?'
 			)
 		),
+		'previewsize' => array(
+			'type' => Model::ATT_TYPE_ENUM,
+			'options' => array('sm', 'med', 'lg'),
+			'default' => 'sm',
+		),
 		'keywords' => array(
 			'type' => Model::ATT_TYPE_TEXT,
 		),

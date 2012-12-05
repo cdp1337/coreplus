@@ -301,6 +301,7 @@ class GalleryController extends Controller_2_1 {
 					$title = trim(preg_replace('/[ ]+/', ' ', $title));
 					$title = ucwords($title);
 
+
 					$image = new GalleryImageModel();
 					$image->setFromArray(
 						array(
@@ -333,6 +334,7 @@ class GalleryController extends Controller_2_1 {
 						'description' => $_POST['model']['description'],
 						'location' => $_POST['model']['location'],
 						'datetaken' => $_POST['model']['datetaken'],
+						'previewsize' => $_POST['model']['previewsize'],
 					)
 				);
 

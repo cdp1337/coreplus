@@ -4,6 +4,8 @@ Gallery 1.4.0
 	* Added integration with jPlayer to provide an inline video player.
 	* Set the gallery listing page to respect access permissions.
 	* Fixed some of the exif data, (if the image has exif data, but it's blank).
+	* Radically redisigned the main view page to make more use of jquery masonry.
+	* Added sm, med, and lg options for individual photo previews.
 
 Gallery 1.3.3
 

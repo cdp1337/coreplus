@@ -26,10 +26,22 @@
 
 <div id="gallery-images">
 	{foreach from=$images item=i}
-		<div class="gallery-image-wrapper">
+
+		{* Calculate the image size based on sm/med/lg *}
+		{if $i.previewsize == 'sm'}
+			{assign var="dimensions" value="200x200"}
+		{elseif $i.previewsize == 'med'}
+			{assign var="dimensions" value="400x400"}
+		{elseif $i.previewsize == 'lg'}
+			{assign var="dimensions" value="800x800"}
+		{else}
+			{assign var="dimensions" value="200x200"}
+		{/if}
+
+		<div class="gallery-image-wrapper gallery-image-wrapper-{$i.previewsize}">
 			<div class="gallery-image">
 				{a href="`$i.link`"}
-					{img file=$i->getFile() dimensions="190x190" title="`$i.title`"}
+					{img file=$i->getFile() dimensions="`$dimensions`" title="`$i.title`"}
 				{/a}
 			</div>
 			<div class="gallery-image-title">
@@ -152,7 +164,9 @@
 
 	$container.imagesLoaded( function(){
 		$container.masonry({
-			itemSelector : '.gallery-image-wrapper'
+			itemSelector : '.gallery-image-wrapper',
+			isAnimated: true,
+			columnWidth: 208
 		});
 	});
 
