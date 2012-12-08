@@ -1020,6 +1020,7 @@ class Form extends FormGroup {
 			if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
 			if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
 			if(isset($v['required']))        $formatts['required'] = $v['required'];
+			if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
 
 			// Boolean checkboxes can have special options.
 			//if(isset($v['formtype']) && $v['formtype'] == 'checkbox' && $v['type'] == Model::ATT_TYPE_BOOL){

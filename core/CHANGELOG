@@ -23,7 +23,12 @@ Core Plus 2.4.0
 	url will automatically be redirected to the new page with a 301.
 	* Added redirect status option to Core::Redirect.  It defaults to a 302, but can be set to a permanent redirect instead.
 	* Form elements now get 'required="required"' or 'checked="checked"' regardless if the value is set to true or "1".
-	* Reimplmented the meta tags.  They're now more expandable by external components.
+	* Reimplemented the meta tags.  They're now more expandable by external components.
+	* Set maxlength as a valid attribute on text inputs.
+	* Set maxlength as one of the attributes passed from the Model to the Form on BuildFromModel.
+	* Added support for page resolution requests to start with a '?'.
+	* Changed the Template object to no longer extend Smarty.  This allows for a more specialized control of it and
+	cleared up a STRICT warning in php 5.4.
 
 
 Core Plus 2.3.2

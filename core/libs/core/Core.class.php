@@ -944,6 +944,11 @@ class Core implements ISingleton {
 		// Allow "#" to be verbatim without translation.
 		if ($url == '#') return $url;
 
+		// Allow links starting with ? to be read as the current page.
+		if($url{0} == '?'){
+			$url = REL_REQUEST_PATH . $url;
+		}
+
 		// Allow already-resolved links to be returned verbatim.
 		if (strpos($url, '://') !== false) return $url;
 
@@ -954,13 +959,7 @@ class Core implements ISingleton {
 
 		$p = new PageModel($url);
 
-		// @todo Add support for already-resolved links.
-
 		return $p->getResolvedURL();
-
-		//if($p->exists()) return $p->getResolvedURL();
-		//else return ROOT_URL . substr($url, 1);
-
 	}
 
 	/**

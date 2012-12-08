@@ -12,6 +12,6 @@ class FormTextInput extends FormElement {
 
 		// Some defaults
 		$this->_attributes['class'] = 'formelement formtextinput';
-		$this->_validattributes     = array('accesskey', 'autocomplete', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'size', 'tabindex', 'width', 'height', 'value', 'style');
+		$this->_validattributes     = array('accesskey', 'autocomplete', 'dir', 'disabled', 'id', 'lang', 'maxlength', 'name', 'required', 'size', 'tabindex', 'width', 'height', 'value', 'style');
 	}
 }
