@@ -370,15 +370,123 @@ class UserController extends Controller_2_1{
 
 
 	public function forgotPassword(){
-		$view = $this->getView();
+		$request = $this->getPageRequest();
 
 		// If e and k are set as parameters... it's on step 2.
-		if($view->getParameter('e') && $view->getParameter('k')){
-			self::_ForgotPassword2($view);
+		if($request->getParameter('e') && $request->getParameter('k')){
+			return $this->_forgotPassword2();
 		}
 		// Else, just step 1.
 		else{
-			self::_ForgotPassword1($view);
+			return $this->_forgotPassword1();
+		}
+	}
+
+	private function _forgotPassword1(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+
+		$view->title = 'Forgot Password';
+
+		// This is step 1
+		$view->assign('step', 1);
+
+		// There's really nothing to do here except for check the email and send it.
+
+		if($request->isPost()){
+
+			$u = User::Find(array('email' => $_POST['email']), 1);
+			if(!$u){
+				Core::SetMessage('Invalid user account requested', 'error');
+				return;
+			}
+
+			if(($str = $u->canResetPassword()) !== true){
+				Core::SetMessage($str, 'error');
+				return;
+			}
+
+			// Generate the key based on the apikey and the current password.
+			$key = md5(substr($u->get('apikey'), 0, 15) . substr($u->get('password'), -10));
+			$link = '/user/forgotpassword?e=' . urlencode(base64_encode($u->get('email'))) . '&k=' . $key;
+
+			$e = new Email();
+			$e->setSubject('Forgot Password Request');
+			$e->to($u->get('email'));
+			$e->assign('link', Core::ResolveLink($link));
+			$e->assign('ip', REMOTE_IP);
+			$e->templatename = 'emails/user/forgotpassword.tpl';
+			try{
+				$e->send();
+			}
+			catch(Exception $e){
+				Core::SetMessage('Error sending the email, ' . $e->getMessage(), 'error');
+				return;
+			}
+
+			// Otherwise, it must have sent, (hopefully)...
+			Core::SetMessage('Sent reset instructions via email.', 'success');
+			Core::Redirect('/');
+		}
+	}
+
+	private function _forgotPassword2(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		$view->title = 'Forgot Password';
+
+		$view->assign('step', 2);
+
+		// Lookup and validate this information first.
+		$e = base64_decode($request->getParameter('e'));
+
+		$u = User::Find(array('email' => $e), 1);
+		if(!$u){
+			Core::SetMessage('Invalid user account requested', 'error');
+			Core::Redirect('/');
+			return;
+		}
+
+		$key = md5(substr($u->get('apikey'), 0, 15) . substr($u->get('password'), -10));
+		if($key != $request->getParameter('k')){
+			Core::SetMessage('Invalid user account requested', 'error');
+			Core::Redirect('/');
+			return;
+		}
+
+		if(($str = $u->canResetPassword()) !== true){
+			Core::SetMessage($str, 'error');
+			Core::Redirect('/');
+			return;
+		}
+
+		if($request->isPost()){
+			// Validate the password.
+			if($_POST['p1'] != $_POST['p2']){
+				Core::SetMessage('Passwords do not match.', 'error');
+				return;
+			}
+
+			// Else, try to set it... the user model will complain if it's invalid.
+			try{
+				$u->set('password', $_POST['p1']);
+				$u->save();
+				Core::SetMessage('Reset password successfully', 'success');
+				Session::SetUser($u);
+				Core::Redirect('/');
+			}
+			catch(ModelValidationException $e){
+				Core::SetMessage($e->getMessage(), 'error');
+				return;
+			}
+			catch(Exception $e){
+				if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
+				else Core::SetMessage('An unknown error occured', 'error');
+
+				return;
+			}
 		}
 	}
 
@@ -447,105 +555,4 @@ class UserController extends Controller_2_1{
 		$newcontroller->login();
 	}
 
-
-
-
-
-	private static function _ForgotPassword1($view){
-		$view->title = 'Forgot Password';
-
-		// This is step 1
-		$view->assign('step', 1);
-
-		// There's really nothing to do here except for check the email and send it.
-
-		if($_SERVER['REQUEST_METHOD'] == 'POST'){
-
-			$u = User::Find(array('email' => $_POST['email']), 1);
-			if(!$u){
-				Core::SetMessage('Invalid user account requested', 'error');
-				return;
-			}
-
-			if(($str = $u->canResetPassword()) !== true){
-				Core::SetMessage($str, 'error');
-				return;
-			}
-
-			// Generate the key based on the apikey and the current password.
-			$key = md5(substr($u->get('apikey'), 0, 15) . substr($u->get('password'), -10));
-			$link = '/User/ForgotPassword?e=' . urlencode(base64_encode($u->get('email'))) . '&k=' . $key;
-
-			$e = new Email();
-			$e->setSubject('Forgot Password Request');
-			$e->to($u->get('email'));
-			$e->assign('link', Core::ResolveLink($link));
-			$e->assign('ip', REMOTE_IP);
-			$e->templatename = 'emails/user/forgotpassword.tpl';
-			try{
-				$e->send();
-			}
-			catch(Exception $e){
-				Core::SetMessage('Error sending the email, ' . $e->getMessage(), 'error');
-				return;
-			}
-
-			// Otherwise, it must have sent, (hopefully)...
-			Core::SetMessage('Sent reset instructions via email.', 'success');
-			Core::Redirect('/');
-		}
-	}
-
-	private static function _ForgotPassword2($view){
-		$view->title = 'Forgot Password';
-
-		$view->assign('step', 2);
-
-		// Lookup and validate this information first.
-		$e = base64_decode($view->getParameter('e'));
-
-		$u = User::Find(array('email' => $e), 1);
-		if(!$u){
-			Core::SetMessage('Invalid user account requested', 'error');
-			return;
-		}
-
-		$key = md5(substr($u->get('apikey'), 0, 15) . substr($u->get('password'), -10));
-		if($key != $view->getParameter('k')){
-			Core::SetMessage('Invalid user account requested', 'error');
-			return;
-		}
-
-		if(($str = $u->canResetPassword()) !== true){
-			Core::SetMessage($str, 'error');
-			return;
-		}
-
-		if($_SERVER['REQUEST_METHOD'] == 'POST'){
-			// Validate the password.
-			if($_POST['p1'] != $_POST['p2']){
-				Core::SetMessage('Passwords do not match.', 'error');
-				return;
-			}
-
-			// Else, try to set it... the user model will complain if it's invalid.
-			try{
-				$u->set('password', $_POST['p1']);
-				$u->save();
-				Core::SetMessage('Reset password successfully', 'success');
-				Session::SetUser($u);
-				Core::Redirect('/');
-			}
-			catch(ModelValidationException $e){
-				Core::SetMessage($e->getMessage(), 'error');
-				return;
-			}
-			catch(Exception $e){
-				if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
-				else Core::SetMessage('An unknown error occured', 'error');
-
-				return;
-			}
-		}
-	}
 }

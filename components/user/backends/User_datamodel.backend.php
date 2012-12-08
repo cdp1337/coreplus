@@ -76,18 +76,18 @@ class User_datamodel_Backend extends User implements User_Backend{
 	 * Utilize the builtin datamodel systems to look for a facebook user 
 	 * that matches the requested clause.
 	 * 
-	 * @param type $where
-	 * @param type $limit
-	 * @param type $order
+	 * @param array|string $where Where clause
+	 * @param int          $limit Limit clause
+	 * @param string|null  $order Order clause
 	 * 
-	 * @return User_datamodel_Backend 
+	 * @return User_datamodel_Backend|array
 	 */
-	public static function Find($where = array()){
+	public static function Find($where = array(), $limit = 1, $order = null){
 		// Tack on the facebook backend requirement.
 		$where['backend'] = 'datamodel';
 		
 		$res = new self();
-		$res->_find($where);
+		$res->_find($where, $limit, $order);
 		
 		return $res;
 	}

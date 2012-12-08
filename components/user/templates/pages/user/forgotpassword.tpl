@@ -1,8 +1,9 @@
 {if $step == 1}
-	<p>Enter your email to be sent a link which will allow you to reset the password.</p>
+	<p>Please enter your email address that is registered.  You will be sent an email containing instructions to reset your password.</p>
 	<form action="" method="POST">
 		<div class="formelement formtextinput">
-			<input type="text" name="email"/>
+			<label for="email-to-reset">Email</label>
+			<input type="text" name="email" id="email-to-reset"/>
 		</div>
 		<div class="formelement formsubmitinput">
 			<input type="submit" value="Send Reset Instructions"/>
