@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="JSONjs" execmode="web" version="2011.11.18~core1">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="JSONjs" execmode="web" version="2011.11.18~core2">
 	<requires>
 		<require name="JQuery" type="library" version="1.4"/>
 	</requires>
+	<provides>
+		<scriptlibrary name="JSONjs" call="JSONjs::IncludeJS"/>
+	</provides>
 	<upgrades>
 		<upgrade from="" to="2011.02.23~cae1"/>
 		<upgrade from="2011.02.23~cae1" to="2011.02.23~cae2"/>
 		<upgrade from="2011.02.23~cae2" to="2011.11.18~core1"/>
+		<upgrade from="2011.11.18~core1" to="2011.11.18~core2"/>
 	</upgrades>
 	<description>
 		JSON in JavaScript
