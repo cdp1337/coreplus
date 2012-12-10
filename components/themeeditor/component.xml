@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_1/component.dtd">
+<component name="themeeditor" version="1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<authors>
+		<author name="Nick Hinsch" email="nicholas@eval.bz"/>
+	</authors>
+	<files>
+		<file filename="CHANGELOG" md5="98c2b74758c36dbdbf671daaa62190ee"/>
+		<file filename="README.md" md5="68c52d6b2bf88f7bc2111701385c772a"/>
+		<file filename="controllers/ThemeEditorController.php" md5="f8d8cce4db100ca9236926748e0c05a4">
+			<controller name="ThemeEditorController"/>
+		</file>
+		<file filename="models/ThemeEditorItemModel.php" md5="fd6fbfa9743419a93e5d27b565e09cd9">
+			<class name="ThemeEditorItemModel"/>
+		</file>
+	</files>
+	<assets>
+		<file filename="assets/css/codemirror.css"/>
+		<file filename="assets/js/codemirror.js"/>
+		<file filename="assets/mode/css/css.js"/>
+		<file filename="assets/mode/diff/diff.js"/>
+		<file filename="assets/mode/htmlembedded/htmlembedded.js"/>
+		<file filename="assets/mode/htmlmixed/htmlmixed.js"/>
+		<file filename="assets/mode/javascript/javascript.js"/>
+		<file filename="assets/mode/less/less.js"/>
+		<file filename="assets/mode/markdown/markdown.js"/>
+		<file filename="assets/mode/mysql/mysql.js"/>
+		<file filename="assets/mode/perl/perl.js"/>
+		<file filename="assets/mode/php/php.js"/>
+		<file filename="assets/mode/properties/properties.js"/>
+		<file filename="assets/mode/python/python.js"/>
+		<file filename="assets/mode/smarty/smarty.js"/>
+		<file filename="assets/mode/xml/xml.js"/>
+	</assets>
+	<view searchdir="templates"/>
+</component>
+

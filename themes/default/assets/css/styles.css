@@ -442,3 +442,41 @@ fieldset.collapsed { padding:0; border-width: 1px 0px 0px; }
 	position: absolute;
 	top: 6px;
 }
+
+/** Theme Editor **/
+
+.page-themeeditor .column1 section.pagecontent {
+	margin-left:12px;
+}
+#theme-editor-wysiwyg {
+	float:left;
+}
+
+#code {
+	min-width:590px;
+}
+
+#theme-editor-browser {
+	float:right;
+	width:180px;
+}
+#theme-editor-browser h2 {color:#666;margin-bottom:3px;}
+
+#theme-editor-browser ul {
+	margin-bottom:9px;
+	padding-bottom:3px;
+	border-bottom: 1px solid #e1e1e1;
+}
+
+#theme-editor-browser li {
+	list-style-type: none;
+	margin-bottom:3px;
+}
+
+#theme-editor-browser h2 {
+	cursor:pointer;
+}
+
+.theme-editor {
+	display:none;
+}
