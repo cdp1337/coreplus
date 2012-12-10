@@ -25,7 +25,7 @@ function smarty_block_insertable($params, $content, $template, &$repeat){
 	if($repeat) return '';
 
 	// I need to use the parent to lookup the current base url.
-	$baseurl = $template->parent->getBaseURL();
+	$baseurl = PageRequest::GetSystemRequest()->getBaseURL();
 
 	if(!isset($params['name'])) return '';
 	$assign = (isset($params['assign']))? $params['assign'] : false;

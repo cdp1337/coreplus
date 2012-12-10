@@ -20,29 +20,30 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class Template extends Smarty implements TemplateInterface {
+class Template implements TemplateInterface {
 
 	private $_baseurl;
 
-	public function  __construct() {
-		parent::__construct();
+	/**
+	 * Smarty internal object that handles the rendering.
+	 * @var Smarty
+	 */
+	private $_smarty;
 
+	public function  __construct() {
 		// Tack on the current theme's directory.
-		$this->addTemplateDir(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/');
+		$this->getSmarty()->addTemplateDir(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/');
 
 		// Tack on the search directories from the loaded components.
 		// Also handle the plugins directory search.
 		foreach (Core::GetComponents() as $c) {
 			$d = $c->getViewSearchDir();
 			// Add the template directory if it exists.
-			if ($d) $this->addTemplateDir($d);
+			if ($d) $this->getSmarty()->addTemplateDir($d);
 
 			$plugindir = $c->getSmartyPluginDirectory();
-			if ($plugindir) $this->addPluginsDir($plugindir);
+			if ($plugindir) $this->getSmarty()->addPluginsDir($plugindir);
 		}
-
-		$this->compile_dir = TMP_DIR . 'smarty_templates_c';
-		$this->cache_dir   = TMP_DIR . 'smarty_cache';
 	}
 
 	public function setBaseURL($url) {
@@ -56,8 +57,8 @@ class Template extends Smarty implements TemplateInterface {
 	/**
 	 * Fetch the HTML from this template
 	 *
-	 * @param string $template          the resource handle of the template file or template object
-	 * @return string rendered template output
+	 * @param string $template the filename to render this template with
+	 * @return string          rendered template output
 	 *
 	 * @throws TemplateException
 	 */
@@ -75,7 +76,7 @@ class Template extends Smarty implements TemplateInterface {
 		if (strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
 
 		try{
-			return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+			return $this->getSmarty()->fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
 		}
 		catch(SmartyException $e){
 			throw new TemplateException($e->getMessage(), $e->getCode(), $e->getPrevious());
@@ -104,7 +105,7 @@ class Template extends Smarty implements TemplateInterface {
 		if (strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
 
 		try{
-			return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+			return $this->getSmarty()->fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
 		}
 		catch(SmartyException $e){
 			throw new TemplateException($e->getMessage(), $e->getCode(), $e->getPrevious());
@@ -112,16 +113,52 @@ class Template extends Smarty implements TemplateInterface {
 	}
 
 
+	public function getSmarty(){
+		if($this->_smarty === null){
+			$this->_smarty = new Smarty();
+			$this->_smarty->compile_dir = TMP_DIR . 'smarty_templates_c';
+			$this->_smarty->cache_dir   = TMP_DIR . 'smarty_cache';
+		}
+		return $this->_smarty;
+	}
+
+	/**
+	 * Returns a single or all template variables
+	 *
+	 * @param string|null  $varname        variable name or null
+	 *
+	 * @return string|array|null variable value or or array of variables
+	 */
+	public function getTemplateVars($varname = null) {
+		return $this->getSmarty()->getTemplateVars($varname);
+	}
+
+	/**
+	 * Assign a variable into the template
+	 *
+	 * This is required because templates are sandboxed from the rest of the application.
+	 *
+	 * @param array|string $tpl_var the template variable name(s)
+	 * @param mixed        $value   the value to assign
+	 */
+	public function assign($tpl_var, $value = null) {
+		$this->getSmarty()->assign($tpl_var, $value);
+	}
+
+
+
 	/**
 	 * Resolve a filename stub to a fully resolved path.
 	 *
 	 * @param string $filename Filename to resolve
+	 *
+	 * @return null|string
 	 */
 	public static function ResolveFile($filename) {
 		// I need a new template so I can retrieve all the paths.
 		$t = new Template();
 
-		$dirs = $t->getTemplateDir();
+		$dirs = $t->getSmarty()->getTemplateDir();
 
 		// Trim off the beginning '/' if there is one;  All directories end with a '/'.
 		if ($filename{0} == '/') $filename = substr($filename, 1);
@@ -133,4 +170,5 @@ class Template extends Smarty implements TemplateInterface {
 		// Nope?
 		return null;
 	}
+
 }

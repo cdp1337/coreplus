@@ -416,7 +416,7 @@ class File_local_backend implements File_Backend {
 		) {
 
 			// Make sure the directory exists first!
-			self::_Mkdir(dirname($this->_filename));
+			self::_Mkdir(dirname($this->_filename), null, true);
 
 			// Read in only so much data at a time.  This is to prevent
 			// PHP from trying to read a full 2GB file into memory at once :S

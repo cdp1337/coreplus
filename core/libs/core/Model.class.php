@@ -1280,9 +1280,9 @@ class Model implements ArrayAccess {
 	 * Factory shortcut function to do a search for the specific records.
 	 *
 	 * @static
-	 * @param Array || string $where Where clause
-	 * @param string $limit Limit clause
-	 * @param string $order Order clause
+	 * @param array|string    $where Where clause
+	 * @param int|string|null $limit Limit clause
+	 * @param string|null     $order Order clause
 	 *
 	 * @return array|null|Model
 	 */

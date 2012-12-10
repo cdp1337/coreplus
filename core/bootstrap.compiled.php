@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 04 Dec 2012 20:29:24 -0500
+ * @compiled Sat, 08 Dec 2012 01:35:32 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4405,7 +4405,7 @@ if (
 ||
 (strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
 ) {
-self::_Mkdir(dirname($this->_filename));
+self::_Mkdir(dirname($this->_filename), null, true);
 $maxbuffer = (1024 * 1024 * 10);
 $handlein  = fopen($localfilename, 'r');
 $handleout = fopen($this->_filename, 'w');
@@ -6272,6 +6272,9 @@ return $cachevalue[$asset];
 }
 public static function ResolveLink($url) {
 if ($url == '#') return $url;
+if($url{0} == '?'){
+$url = REL_REQUEST_PATH . $url;
+}
 if (strpos($url, '://') !== false) return $url;
 $a = PageModel::SplitBaseURL($url);
 return ROOT_URL . substr($a['rewriteurl'], 1);
@@ -8238,19 +8241,17 @@ public function assign($tpl_var, $value = null);
 }
 
 ### REQUIRE_ONCE FROM core/libs/core/Template.class.php
-class Template extends Smarty implements TemplateInterface {
+class Template implements TemplateInterface {
 private $_baseurl;
+private $_smarty;
 public function  __construct() {
-parent::__construct();
-$this->addTemplateDir(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/');
+$this->getSmarty()->addTemplateDir(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/');
 foreach (Core::GetComponents() as $c) {
 $d = $c->getViewSearchDir();
-if ($d) $this->addTemplateDir($d);
+if ($d) $this->getSmarty()->addTemplateDir($d);
 $plugindir = $c->getSmartyPluginDirectory();
-if ($plugindir) $this->addPluginsDir($plugindir);
+if ($plugindir) $this->getSmarty()->addPluginsDir($plugindir);
 }
-$this->compile_dir = TMP_DIR . 'smarty_templates_c';
-$this->cache_dir   = TMP_DIR . 'smarty_cache';
 }
 public function setBaseURL($url) {
 $this->_baseurl = $url;
@@ -8267,7 +8268,7 @@ $merge_tpl_vars = true;
 $no_output_filter = false;
 if (strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
 try{
-return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+return $this->getSmarty()->fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
 }
 catch(SmartyException $e){
 throw new TemplateException($e->getMessage(), $e->getCode(), $e->getPrevious());
@@ -8282,15 +8283,29 @@ $merge_tpl_vars = true;
 $no_output_filter = false;
 if (strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
 try{
-return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+return $this->getSmarty()->fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
 }
 catch(SmartyException $e){
 throw new TemplateException($e->getMessage(), $e->getCode(), $e->getPrevious());
 }
 }
+public function getSmarty(){
+if($this->_smarty === null){
+$this->_smarty = new Smarty();
+$this->_smarty->compile_dir = TMP_DIR . 'smarty_templates_c';
+$this->_smarty->cache_dir   = TMP_DIR . 'smarty_cache';
+}
+return $this->_smarty;
+}
+public function getTemplateVars($varname = null) {
+return $this->getSmarty()->getTemplateVars($varname);
+}
+public function assign($tpl_var, $value = null) {
+$this->getSmarty()->assign($tpl_var, $value);
+}
 public static function ResolveFile($filename) {
 $t = new Template();
-$dirs = $t->getTemplateDir();
+$dirs = $t->getSmarty()->getTemplateDir();
 if ($filename{0} == '/') $filename = substr($filename, 1);
 foreach ($dirs as $d) {
 if (file_exists($d . $filename)) return $d . $filename;
@@ -9650,6 +9665,7 @@ if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
 if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
 if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
 if(isset($v['required']))        $formatts['required'] = $v['required'];
+if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
 if($formatts['type'] == 'disabled'){
 continue;
 }

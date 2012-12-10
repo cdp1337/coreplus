@@ -497,10 +497,13 @@ class User {
 	 * This is open for the extending backends to utilize.
 	 *
 	 * @since 2011.07
-	 * @param array $where
+	 *
+	 * @param array       $where
+	 * @param int         $limit
+	 * @param string|null $order
 	 */
-	protected function _find($where = array()){
-		$this->_model = UserModel::Find($where, 1);
+	protected function _find($where = array(), $limit = 1, $order = null){
+		$this->_model = UserModel::Find($where, $limit, $order);
 	}
 
 	/**
@@ -545,13 +548,15 @@ class User {
 	 *
 	 * @param array $where
 	 * @param int $limit
+	 * @param type $order
+	 *
 	 * @return array|UserBackend|null
 	 *         if $limit of 1 is given, a single User object or null is returned
 	 *         else an array of User objects is returned, or an array with null.
 	 */
-	public static function Find($where = array(), $limit = 1){
+	public static function Find($where = array(), $limit = 1, $order = null){
 		// Will return the core of the user object, but I still need the appropriate container.
-		$res = UserModel::Find($where, $limit);
+		$res = UserModel::Find($where, $limit, $order);
 
 		if(!is_array($res)) $res = array($res);
 

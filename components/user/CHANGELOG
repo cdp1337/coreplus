@@ -3,6 +3,8 @@ User 2.next
 	* Added setFromForm method on the User object.
 	* Added setPassword method on the User object.
 	* Improvements in the user creation logic to make use of the new user::setFromForm logic.
+	* Fixed Bug #203 - Forgot Password Not Allowing Reset.
+	* Cleaned up some STRICT warnings in the user system.
 
 User 2.3.1
 
