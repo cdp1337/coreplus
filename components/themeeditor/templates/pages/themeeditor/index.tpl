@@ -30,7 +30,6 @@
 
 {if $image}
 	{img src="`$image`"}
-	<img src="{$image}"/>
 {/if}
 
 <div id="theme-editor-browser">
