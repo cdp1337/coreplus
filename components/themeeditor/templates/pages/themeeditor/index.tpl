@@ -51,6 +51,7 @@
 
 				{foreach $styles as $f}
 					{if $f instanceof 'Directory_local_backend'}
+						{if $f->getBasename() != "images" && $f->getBasename() != "skin"}
 						<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
 							<ul class="sub">
 								{foreach $f->ls() as $s}
@@ -58,7 +59,7 @@
 								{/foreach}
 							</ul>
 						</li>
-
+						{/if}
 					{/if}
 				{/foreach}
 				</ul>
@@ -73,7 +74,7 @@
 					{/if}
 				{/foreach}
 
-				{foreach $styles as $f}
+				{foreach $skins as $f}
 					{if $f instanceof 'Directory_local_backend'}
 						<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
 							<ul class="sub">
@@ -97,7 +98,7 @@
 					{/if}
 				{/foreach}
 
-				{foreach $styles as $f}
+				{foreach $images as $f}
 					{if $f instanceof 'Directory_local_backend'}
 						<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
 							<ul class="sub">
