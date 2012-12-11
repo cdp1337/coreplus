@@ -19,10 +19,8 @@
 <div class="editor-container">
 	<div id="theme-editor-wysiwyg">
 
-		<h2>{$filename}</h2>
-
-
 			{if $content}
+				<h2>{$filename}</h2>
 				<form>
 					<textarea id="code" name="code">
 					{$content}
@@ -33,7 +31,10 @@
 			{/if}
 
 			{if $image}
-				{img src="`$image`"}
+				<div class="image-editor">
+					<h2>{$filename}</h2>
+					{img src="`$image`"}
+				</div>
 			{/if}
 
 	</div>
