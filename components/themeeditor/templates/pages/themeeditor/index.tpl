@@ -16,126 +16,138 @@
 {script src="mode/smarty/smarty.js"}{/script}
 {script src="mode/xml/xml.js"}{/script}
 
-{if $content}
+<div class="editor-container">
 	<div id="theme-editor-wysiwyg">
-		<form>
-			<textarea id="code" name="code">
-			{$content}
-			</textarea>
-			<br/>
-			<input type="submit" name="submit" value="Update"/>
-		</form>
-	</div>
-{/if}
 
-{if $image}
-	{img src="`$image`"}
-{/if}
+		<h2>{$filename}</h2>
 
-<div id="theme-editor-browser">
-	<div class="browser-container {if $activefile eq 'style'}current-file{/if}">
-		<h2>Stylesheets <i class="icon icon-plus-sign"></i></h2>
-		<ul class="theme-editor styles">
-		{foreach $styles as $f}
-			{if $f instanceof 'File_local_backend'}
-				<li>{a href="/themeeditor?css={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()|truncate:31}{/a}</li>
+
+			{if $content}
+				<form>
+					<textarea id="code" name="code">
+					{$content}
+					</textarea>
+					<br/>
+					<input type="submit" name="submit" value="Update"/>
+				</form>
 			{/if}
-		{/foreach}
 
-		{foreach $styles as $f}
-			{if $f instanceof 'Directory_local_backend'}
-				<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
-					<ul class="sub">
-						{foreach $f->ls() as $s}
-							<li>{a href="/themeeditor?css={$s->getFilename()}" alt="{$f->getBasename()}"}{$s->getBasename()|truncate:29}{/a}</li>
-						{/foreach}
-					</ul>
-				</li>
-
+			{if $image}
+				{img src="`$image`"}
 			{/if}
-		{/foreach}
-		</ul>
+
 	</div>
 
-	<div class="browser-container {if $activefile eq 'template'}current-file{/if}">
-		<h2>Page Templates <i class="icon icon-plus-sign"></i></h2>
-		<ul class="theme-editor skins">
-		{foreach $skins as $f}
-			{if $f instanceof 'File_local_backend'}
-				<li>{a href="/themeeditor?tpl={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()}{/a}</li>
-			{/if}
-		{/foreach}
+	<div id="theme-editor-browser">
+		<div class="left">
+			<div class="browser-container {if $activefile eq 'style'}current-file{/if}">
+				<h2>Stylesheets <i class="icon icon-plus-sign"></i></h2>
+				<ul class="theme-editor styles">
+				{foreach $styles as $f}
+					{if $f instanceof 'File_local_backend'}
+						<li>{a href="/themeeditor?css={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()|truncate:31}{/a}</li>
+					{/if}
+				{/foreach}
 
-		{foreach $styles as $f}
-			{if $f instanceof 'Directory_local_backend'}
-				<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
-					<ul class="sub">
-						{foreach $f->ls() as $s}
-							<li>{a href="/themeeditor?tpl={$s->getFilename()}" alt="{$f->getBasename()}"}{$s->getBasename()}{/a}</li>
-						{/foreach}
-					</ul>
-				</li>
+				{foreach $styles as $f}
+					{if $f instanceof 'Directory_local_backend'}
+						<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
+							<ul class="sub">
+								{foreach $f->ls() as $s}
+									<li>{a href="/themeeditor?css={$s->getFilename()}" alt="{$f->getBasename()}"}{$s->getBasename()|truncate:26}{/a}</li>
+								{/foreach}
+							</ul>
+						</li>
 
-			{/if}
-		{/foreach}
-		</ul>
-	</div>
+					{/if}
+				{/foreach}
+				</ul>
+			</div>
 
-	<div class="browser-container {if $activefile eq 'image'}current-file{/if}">
-		<h2>Images <i class="icon icon-plus-sign"></i></h2>
-		<ul class="theme-editor images">
-		{foreach $images as $f}
-			{if $f instanceof 'File_local_backend'}
-				<li>{a href="/themeeditor?img={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()}{/a}</li>
-			{/if}
-		{/foreach}
+			<div class="browser-container {if $activefile eq 'template'}current-file{/if}">
+				<h2>Page Templates <i class="icon icon-plus-sign"></i></h2>
+				<ul class="theme-editor skins">
+				{foreach $skins as $f}
+					{if $f instanceof 'File_local_backend'}
+						<li>{a href="/themeeditor?tpl={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()}{/a}</li>
+					{/if}
+				{/foreach}
 
-		{foreach $styles as $f}
-			{if $f instanceof 'Directory_local_backend'}
-				<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
-					<ul class="sub">
-						{foreach $f->ls() as $s}
-							<li>{a href="/themeeditor?img={$s->getFilename()}" alt="{$f->getBasename()}"}{$s->getBasename()}{/a}</li>
-						{/foreach}
-					</ul>
-				</li>
+				{foreach $styles as $f}
+					{if $f instanceof 'Directory_local_backend'}
+						<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
+							<ul class="sub">
+								{foreach $f->ls() as $s}
+									<li>{a href="/themeeditor?tpl={$s->getFilename()}" alt="{$f->getBasename()}"}{$s->getBasename()|truncate:26}{/a}</li>
+								{/foreach}
+							</ul>
+						</li>
 
-			{/if}
-		{/foreach}
-		</ul>
-	</div>
+					{/if}
+				{/foreach}
+				</ul>
+			</div>
 
-	<div class="browser-container {if $activefile eq 'icon'}current-file{/if}">
-		<h2>Icons <i class="icon icon-plus-sign"></i></h2>
-		<ul class="theme-editor icons">
-		{foreach $icons as $f}
-			{if $f instanceof 'File_local_backend'}
-				<li>{a href="/themeeditor?icon={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()}{/a}</li>
-			{/if}
-		{/foreach}
+			<div class="browser-container {if $activefile eq 'image'}current-file{/if}">
+				<h2>Images <i class="icon icon-plus-sign"></i></h2>
+				<ul class="theme-editor images">
+				{foreach $images as $f}
+					{if $f instanceof 'File_local_backend'}
+						<li>{a href="/themeeditor?img={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()}{/a}</li>
+					{/if}
+				{/foreach}
 
-		{foreach $icons as $f}
-			{if $f instanceof 'Directory_local_backend'}
-				<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
-					<ul class="sub">
-						{foreach $f->ls() as $s}
-							<li>{a href="/themeeditor?icon={$s->getFilename()}" alt="{$f->getBasename()}"}{$s->getBasename()}{/a}</li>
-						{/foreach}
-					</ul>
-				</li>
+				{foreach $styles as $f}
+					{if $f instanceof 'Directory_local_backend'}
+						<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
+							<ul class="sub">
+								{foreach $f->ls() as $s}
+									<li>{a href="/themeeditor?img={$s->getFilename()}" alt="{$f->getBasename()}"}{$s->getBasename()|truncate:26}{/a}</li>
+								{/foreach}
+							</ul>
+						</li>
 
-			{/if}
-		{/foreach}
-		</ul>
-	</div>
+					{/if}
+				{/foreach}
+				</ul>
+			</div>
 
-	<div class="browser-container {if $activefile eq 'font'}current-file{/if}">
-		<h2>Fonts <i class="icon icon-plus-sign"></i></h2>
-		<ul class="theme-editor fonts">
-		{foreach $fonts as $f}
-			<li>{a href="/themeeditor?font={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()}{/a}</li>
-		{/foreach}
-		</ul>
+			<div class="browser-container {if $activefile eq 'icon'}current-file{/if}">
+				<h2>Icons <i class="icon icon-plus-sign"></i></h2>
+				<ul class="theme-editor icons">
+				{foreach $icons as $f}
+					{if $f instanceof 'File_local_backend'}
+						<li>{a href="/themeeditor?icon={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()}{/a}</li>
+					{/if}
+				{/foreach}
+
+				{foreach $icons as $f}
+					{if $f instanceof 'Directory_local_backend'}
+						<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
+							<ul class="sub">
+								{foreach $f->ls() as $s}
+									<li>{a href="/themeeditor?icon={$s->getFilename()}" alt="{$f->getBasename()}"}{$s->getBasename()|truncate:26}{/a}</li>
+								{/foreach}
+							</ul>
+						</li>
+
+					{/if}
+				{/foreach}
+				</ul>
+			</div>
+
+			<div class="browser-container {if $activefile eq 'font'}current-file{/if}">
+				<h2>Fonts <i class="icon icon-plus-sign"></i></h2>
+				<ul class="theme-editor fonts">
+				{foreach $fonts as $f}
+					<li>{a href="/themeeditor?font={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()}{/a}</li>
+				{/foreach}
+				</ul>
+			</div>
+		</div>
+		<div class="right">
+			<i class="icon-backward"></i>
+		</div>
 	</div>
 </div>
 
@@ -172,6 +184,21 @@ $(function(){
 				.toggleClass('icon-minus-sign');
 		}
 	});
+
+	$('#theme-editor-browser .right').toggle(
+		function(){
+			$(this).find('i')
+				.toggleClass('icon-backward')
+				.toggleClass('icon-forward');
+			$(this).parent().animate({ left: '-=214' }, 500);
+		},
+		function(){
+			$(this).find('i')
+				.toggleClass('icon-backward')
+				.toggleClass('icon-forward');
+			$(this).parent().animate({ left: '0' }, 500);
+		}
+	);
 
 	$('.browser-container h2').click(function(){
 		$(this).parent().find('h2 .icon')
