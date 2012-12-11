@@ -11,62 +11,67 @@ class ThemeEditorController extends Controller_2_1 {
 
 		$view = $this->getView();
 
-		if(!$this->setAccess('p:content_manage')){
+		if(!$this->setAccess('g:admin')){
 			return View::ERROR_ACCESSDENIED;
 		}
-
-		//$theme = ( Theme::getName() == null ? 'default' : Theme::getName() );
-		//is get name not working as expected? it returns null for the default theme... :/
 
 		//figure out the current theme absolute path
 		$theme = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected');
 
-		//grab all the relevant resources from the theme folder
-		$styles = self::dirToArray($theme . '/assets/css', true, false, true);
-		$skins  = self::dirToArray($theme . '/skins', true, false, true);
+		$css = new Directory_local_backend('assets/css');
+		$styles = $css->ls();
 
+		$templates = new Directory_local_backend(ROOT_PDIR . '/themes/' . ConfigHandler::Get('/theme/selected') . '/skins/');
+		$skins = $templates->ls();
 
+		$imgDir = new Directory_local_backend('assets/images');
+		$images = $imgDir->ls();
 
-		//there's gotta be a better way
-		$images = self::dirToArray($theme . '/assets/images', true, false, true);
+		$iconDir = new Directory_local_backend('assets/icons');
+		$icons = $iconDir->ls();
 
-		foreach($images as $img){
-			$resultImg[] = str_replace($theme . "/", "", $img);
-		}
-		$images = $resultImg;
+		$fontDir = new Directory_local_backend('assets/fonts');
+		$fonts = $fontDir->ls();
 
-
-
-		//there's gotta be a better way
-		$icons  = self::dirToArray($theme . '/assets/icons', true, false, true);
-
-		foreach($icons as $icon){
-			$resultIcon[] = str_replace($theme . "/", "", $icon);
-		}
-		$icons = $resultIcon;
-
-
-
-		$fonts  = self::dirToArray($theme . '/assets/fonts', true, false, true);
-
-		//see if we should load a different file instead of the default stylesheet
-		$loadTextItem = $_GET['txt'];
+		$loadStyleItem = $_GET['css'];
+		$loadTemplateItem = $_GET['tpl'];
 		$loadImageItem = $_GET['img'];
+		$loadIconItem = $_GET['icon'];
+		$loadFontItem = $_GET['font'];
 
-		//set the content to display in the textarea
-		//$content = (empty($loadItem) ? self::getFileContents($styles[0]) : self::getFileContents($loadItem) );
-
-		if(empty($loadTextItem) && empty($loadImageItem)){
+		if(empty($_GET)){
 			//default to editing main stylesheet
-			$content = self::getFileContents($styles[0]);
+			$content = $css->get('styles.css')->getContents();
 		}
-		elseif(!empty($loadTextItem)){
-			//load requested text resource
-			$content = self::getFileContents($loadTextItem);
+		elseif(!empty($loadStyleItem)){
+			//load requested css resource
+			$fh = new File_local_backend($loadStyleItem);
+			$content = $fh->getContents();
+			$view->assignVariable('activefile', 'style');
+		}
+		elseif(!empty($loadTemplateItem)){
+			//load requested smarty resource
+			$fh = new File_local_backend($loadTemplateItem);
+			$content = $fh->getContents();
+			$view->assignVariable('activefile', 'template');
 		}
 		elseif(!empty($loadImageItem)){
 			//load image file types
-			$image = $loadImageItem;
+			$fh = new File_local_backend($loadImageItem);
+			$image = $fh->getFilename();
+			$view->assignVariable('activefile', 'image');
+		}
+		elseif(!empty($loadIconItem)){
+			//load requested text resource
+			$fh = new File_local_backend($loadIconItem);
+			$image = $fh->getFilename();
+			$view->assignVariable('activefile', 'icon');
+		}
+		elseif(!empty($loadFontItem)){
+			//load requested font resource
+			$fh = new File_local_backend($loadFontItem);
+			$font = $fh->getFilename();
+			$view->assignVariable('activefile', 'font');
 		}
 
 
@@ -84,45 +89,8 @@ class ThemeEditorController extends Controller_2_1 {
 
 	}
 
-
-	public static function dirToArray($directory, $recursive = true, $listDirs = false, $listFiles = true, $exclude = '') {
-		$arrayItems = array();
-		$skipByExclude = false;
-		$handle = opendir($directory);
-		if ($handle) {
-			while (false !== ($file = readdir($handle))) {
-				preg_match("/(^(([\.]){1,2})$|(\.(svn|git|md))|(Thumbs\.db|\.DS_STORE))$/iu", $file, $skip);
-				if($exclude){
-					preg_match($exclude, $file, $skipByExclude);
-				}
-				if (!$skip && !$skipByExclude) {
-					if (is_dir($directory. DIRECTORY_SEPARATOR . $file)) {
-						if($recursive) {
-							$arrayItems = array_merge($arrayItems, self::dirToArray($directory. DIRECTORY_SEPARATOR . $file, $recursive, $listDirs, $listFiles, $exclude));
-						}
-						if($listDirs){
-							$file = $directory . DIRECTORY_SEPARATOR . $file;
-							$arrayItems[] = $file;
-						}
-					} else {
-						if($listFiles){
-							$file = $directory . DIRECTORY_SEPARATOR . $file;
-							$arrayItems[] = $file;
-						}
-					}
-				}
-			}
-			closedir($handle);
-		}
-		return $arrayItems;
-	}
-
-	public static function getFileContents($file){
-		//made this it's own function so i can debug why xdebug keeps injecting itself in the smarty templates
-		return file_get_contents($file);
-	}
-
 	public static function update(){
 		$file = $_GET['file'];
+		//finish this :)
 	}
 }

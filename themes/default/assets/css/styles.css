@@ -458,8 +458,16 @@ fieldset.collapsed { padding:0; border-width: 1px 0px 0px; }
 
 #theme-editor-browser {
 	float:right;
-	width:180px;
+	width:230px;
 }
+
+#theme-editor-browser .icon {
+	float:right;
+	margin-right:2px;
+}
+
+#theme-editor-browser li .icon {margin-right:0;}
+
 #theme-editor-browser h2 {color:#666;margin-bottom:3px;}
 
 #theme-editor-browser ul {
@@ -468,10 +476,16 @@ fieldset.collapsed { padding:0; border-width: 1px 0px 0px; }
 	border-bottom: 1px solid #e1e1e1;
 }
 
+#theme-editor-browser .sub {display:none;}
+
+#theme-editor-browser li .icon {cursor:pointer;}
+
 #theme-editor-browser li {
 	list-style-type: none;
 	margin-bottom:3px;
 }
+
+#theme-editor-browser ul ul {margin-left:10px;}
 
 #theme-editor-browser h2 {
 	cursor:pointer;
