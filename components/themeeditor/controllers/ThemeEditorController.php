@@ -89,8 +89,7 @@ class ThemeEditorController extends Controller_2_1 {
 		$form->set('callsmethod', 'ThemeEditorController::_SaveHandler');
 		$form->addElement('submit', array('value' => 'Update'));
 
-		$revisions = ThemeEditorItemModel::Find( array('filename' => $fh->getFilename()), 5, 'updated');
-		//var_dump($revisions); die();
+		$revisions = ThemeEditorItemModel::Find( array('filename' => $fh->getFilename()), 5, 'updated DESC');
 
 		$view->assignVariable('activefile', $activefile);
 		$view->assignVariable('form', $form);
