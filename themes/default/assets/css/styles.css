@@ -463,9 +463,9 @@ fieldset.collapsed { padding:0; border-width: 1px 0px 0px; }
 #theme-editor-browser {
 	background: transparent;
 	position: absolute;
-	width: 250px;
+	width: 350px;
 	z-index: 100;
-	top: 32px;
+	top: 52px;
 }
 
 #theme-editor-browser a {
@@ -474,11 +474,11 @@ fieldset.collapsed { padding:0; border-width: 1px 0px 0px; }
 
 #theme-editor-browser .left {
 	float:left;
-	width:200px;
+	width:300px;
 	background:#dddddd;
 	padding: 10px;
 	box-shadow: 3px 4px 15px 6px #090909;
-	max-height: 750px;
+	max-height: 650px;
 	opacity: 0.8;
 	overflow-y: auto;
 }

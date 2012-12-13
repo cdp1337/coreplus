@@ -7,97 +7,102 @@
  */
 class ThemeEditorController extends Controller_2_1 {
 
+	private function _lookfor($fileext, &$mergearray, Directory_local_backend $directory, $assetdir){
+		foreach($directory->ls() as $file){
+			if($file instanceof Directory_local_backend){
+				$this->_lookfor($fileext, $mergearray, $file, $assetdir);
+			}
+			elseif($file instanceof File_local_backend){
+
+				// Only add if matches the fileext.
+				if($file->getExtension() == $fileext){
+					$filename = $file->getFilename();
+					$shortStr = substr($filename, strlen($assetdir)+1);
+					$mergearray[$shortStr] = $file;
+				}
+			}
+		}
+	}
+
 	public function index(){
 
 		$view = $this->getView();
+		$request = $this->getPageRequest();
 
 		if(!$this->setAccess('g:admin')){
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		//figure out the current theme absolute path
-		$theme = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected');
+		$components = Core::GetComponents();
+		$styles = array();
+		$skins = array();
 
-		$css = new Directory_local_backend('assets/css');
-		$styles = $css->ls();
+		$assetdir = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/assets';
+		$css = new Directory_local_backend($assetdir);
+		$this->_lookfor('css', $styles, $css, $assetdir);
 
-		$templates = new Directory_local_backend(ROOT_PDIR . '/themes/' . ConfigHandler::Get('/theme/selected') . '/skins/');
-		$skins = $templates->ls();
+		$templatedir = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/skins';
+		$templates = new Directory_local_backend($templatedir);
+		$this->_lookfor('tpl', $skins, $templates, $templatedir);
 
-		$imgDir = new Directory_local_backend('assets/images');
-		$images = $imgDir->ls();
-
-		$iconDir = new Directory_local_backend('assets/icons');
-		$icons = $iconDir->ls();
-
-		$fontDir = new Directory_local_backend('assets/fonts');
-		$fonts = $fontDir->ls();
-
-		$loadStyleItem = $_GET['css'];
-		$loadTemplateItem = $_GET['tpl'];
-		$loadImageItem = $_GET['img'];
-		$loadIconItem = $_GET['icon'];
-		$loadFontItem = $_GET['font'];
-
-		if(empty($_GET)){
-			//default to editing main stylesheet
-			$content = $css->get('styles.css')->getContents();
-			$filename = "styles.css";
+		foreach($components as $c) {
+			/** @var $c Component_2_1 */
+			if($c->getAssetDir()){
+				$dir = $c->getAssetDir();
+				$dh = new Directory_local_backend($c->getAssetDir());
+				$this->_lookfor('css', $styles, $dh, $dir);
+				$this->_lookfor('tpl', $skins, $dh, $dir);
+			}
 		}
-		elseif(!empty($loadStyleItem)){
-			//load requested css resource
-			$fh = new File_local_backend($loadStyleItem);
+
+		ksort($styles);
+		ksort($skins);
+
+		if($request->getParameter('css')){
+			$file = $request->getParameter('css');
+			$activefile = 'style';
+		}
+		elseif($request->getParameter('tpl')) {
+			$file = $request->getParameter('tpl');
+			$activefile = 'template';
+		}
+		else {
+			//no special gets...
+			$file = false; // I'm already defining it all here!
+			$fh = $css->get('css/styles.css');
+			$content= $fh->getContents();
+			$filename = $fh->getBasename();
+			$activefile = 'style';
+		}
+
+		if($file) {
+			$fh = new File_local_backend($file);
 			$content = $fh->getContents();
-			$view->assignVariable('activefile', 'style');
-			$filename = $fh->getBasename($loadStyleItem);
-		}
-		elseif(!empty($loadTemplateItem)){
-			//load requested smarty resource
-			$fh = new File_local_backend($loadTemplateItem);
-			$content = $fh->getContents();
-			$view->assignVariable('activefile', 'template');
-			$filename = $fh->getBasename($loadTemplateItem);
-		}
-		elseif(!empty($loadImageItem)){
-			//load image file types
-			$fh = new File_local_backend($loadImageItem);
-			$image = $fh->getFilename();
-			$view->assignVariable('activefile', 'image');
-			$filename = $fh->getBasename($loadImageItem);
-		}
-		elseif(!empty($loadIconItem)){
-			//load requested text resource
-			$fh = new File_local_backend($loadIconItem);
-			$image = $fh->getFilename();
-			$view->assignVariable('activefile', 'icon');
-			$filename = $fh->getBasename($loadIconItem);
-		}
-		elseif(!empty($loadFontItem)){
-			//load requested font resource
-			$fh = new File_local_backend($loadFontItem);
-			$font = $fh->getFilename();
-			$view->assignVariable('activefile', 'font');
-			$filename = $fh->getBasename($loadFontItem);
+			$filename = $fh->getBasename();
 		}
 
+		$m = new ThemeEditorItemModel();
+		$m->set('content', $content);
+		$m->set('filename', $filename);
 
+		$form = Form::BuildFromModel($m);
+		$form->set('callsmethod', 'ThemeEditorController::_SaveHandler');
+		$form->addElement('submit', array('value' => 'Update'));
+
+		$view->assignVariable('activefile', $activefile);
+		$view->assignVariable('form', $form);
 		$view->assignVariable('styles', $styles);
 		$view->assignVariable('skins', $skins);
-		$view->assignVariable('images', $images);
-		$view->assignVariable('icons', $icons);
-		$view->assignVariable('fonts', $fonts);
-
 		$view->assignVariable('content', $content);
 		$view->assignVariable('filename', $filename);
-		$view->assignVariable('image', $image);
-		$view->assignVariable('font', $font);
 
 		$view->title = 'Theme Editor';
 
 	}
 
-	public static function update(){
-		$file = $_GET['file'];
-		//finish this :)
+	public static function _SaveHandler(Form $form) {
+		$model = $form->getModel();
+		$model->set('updated', Time::GetCurrent());
+		$model->save();
 	}
 }

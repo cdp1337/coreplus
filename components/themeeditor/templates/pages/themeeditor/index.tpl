@@ -21,22 +21,10 @@
 
 			{if $content}
 				<h2>{$filename}</h2>
-				<form>
-					<textarea id="code" name="code">
-					{$content}
-					</textarea>
-					<br/>
-					<input type="submit" name="submit" value="Update"/>
-				</form>
-			{/if}
 
-			{if $image}
-				<div class="image-editor">
-					<h2>{$filename}</h2>
-					{img src="`$image`"}
-				</div>
-			{/if}
+				{$form->render()}
 
+			{/if}
 	</div>
 
 	<div id="theme-editor-browser">
@@ -44,9 +32,9 @@
 			<div class="browser-container {if $activefile eq 'style'}current-file{/if}">
 				<h2>Stylesheets <i class="icon icon-plus-sign"></i></h2>
 				<ul class="theme-editor styles">
-				{foreach $styles as $f}
+				{foreach $styles as $k => $f}
 					{if $f instanceof 'File_local_backend'}
-						<li>{a href="/themeeditor?css={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()|truncate:31}{/a}</li>
+						<li>{a href="/themeeditor?css={$f->getFilename()}" alt="{$f->getBasename()}"}{$k}{/a}</li>
 					{/if}
 				{/foreach}
 
@@ -67,7 +55,7 @@
 			</div>
 
 			<div class="browser-container {if $activefile eq 'template'}current-file{/if}">
-				<h2>Page Templates <i class="icon icon-plus-sign"></i></h2>
+				<h2>Theme Skins <i class="icon icon-plus-sign"></i></h2>
 				<ul class="theme-editor skins">
 				{foreach $skins as $f}
 					{if $f instanceof 'File_local_backend'}
@@ -90,62 +78,6 @@
 				</ul>
 			</div>
 
-			<div class="browser-container {if $activefile eq 'image'}current-file{/if}">
-				<h2>Images <i class="icon icon-plus-sign"></i></h2>
-				<ul class="theme-editor images">
-				{foreach $images as $f}
-					{if $f instanceof 'File_local_backend'}
-						<li>{a href="/themeeditor?img={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()}{/a}</li>
-					{/if}
-				{/foreach}
-
-				{foreach $images as $f}
-					{if $f instanceof 'Directory_local_backend'}
-						<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
-							<ul class="sub">
-								{foreach $f->ls() as $s}
-									<li>{a href="/themeeditor?img={$s->getFilename()}" alt="{$f->getBasename()}"}{$s->getBasename()|truncate:26}{/a}</li>
-								{/foreach}
-							</ul>
-						</li>
-
-					{/if}
-				{/foreach}
-				</ul>
-			</div>
-
-			<div class="browser-container {if $activefile eq 'icon'}current-file{/if}">
-				<h2>Icons <i class="icon icon-plus-sign"></i></h2>
-				<ul class="theme-editor icons">
-				{foreach $icons as $f}
-					{if $f instanceof 'File_local_backend'}
-						<li>{a href="/themeeditor?icon={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()}{/a}</li>
-					{/if}
-				{/foreach}
-
-				{foreach $icons as $f}
-					{if $f instanceof 'Directory_local_backend'}
-						<li>{$f->getBasename()} <i class="icon icon-plus-sign"></i>
-							<ul class="sub">
-								{foreach $f->ls() as $s}
-									<li>{a href="/themeeditor?icon={$s->getFilename()}" alt="{$f->getBasename()}"}{$s->getBasename()|truncate:26}{/a}</li>
-								{/foreach}
-							</ul>
-						</li>
-
-					{/if}
-				{/foreach}
-				</ul>
-			</div>
-
-			<div class="browser-container {if $activefile eq 'font'}current-file{/if}">
-				<h2>Fonts <i class="icon icon-plus-sign"></i></h2>
-				<ul class="theme-editor fonts">
-				{foreach $fonts as $f}
-					<li>{a href="/themeeditor?font={$f->getFilename()}" alt="{$f->getBasename()}"}{$f->getBasename()}{/a}</li>
-				{/foreach}
-				</ul>
-			</div>
 		</div>
 		<div class="right">
 			<i class="icon-backward"></i>
@@ -158,7 +90,7 @@
 {if $content}<script>
 $(function(){
 
-	var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+	var editor = CodeMirror.fromTextArea(document.getElementById("formtextareainput-model-content"), {
 		//mode: "application/css",
 		theme: 'ambiance',
 		lineNumbers: true,
@@ -192,7 +124,7 @@ $(function(){
 			$(this).find('i')
 				.toggleClass('icon-backward')
 				.toggleClass('icon-forward');
-			$(this).parent().animate({ left: '-=214' }, 500);
+			$(this).parent().animate({ left: '-=314' }, 500);
 		},
 		function(){
 			$(this).find('i')
