@@ -97,7 +97,6 @@ class ThemeEditorController extends Controller_2_1 {
 		$view->assignVariable('skins', $skins);
 		$view->assignVariable('content', $content);
 		$view->assignVariable('filename', $filename);
-
 		$view->assignVariable('revisions', $revisions);
 
 		$view->title = 'Theme Editor';
