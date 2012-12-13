@@ -544,3 +544,16 @@ fieldset.collapsed { padding:0; border-width: 1px 0px 0px; }
 }
 
 .image-editor h2 {margin-bottom:5px;}
+
+#revert {
+	cursor:pointer;
+	font-weight:bold;
+	text-decoration:underline;
+}
+
+#revisions li.revision {margin-bottom:3px;}
+
+#revisions .revision-title {cursor:pointer;}
+#revisions .revision-date {color:#888;}
+
+.page-themeeditor #dialog-confirm {display:none;}

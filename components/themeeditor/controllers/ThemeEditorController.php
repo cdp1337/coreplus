@@ -83,11 +83,14 @@ class ThemeEditorController extends Controller_2_1 {
 
 		$m = new ThemeEditorItemModel();
 		$m->set('content', $content);
-		$m->set('filename', $filename);
+		$m->set('filename', $fh->getFilename());
 
 		$form = Form::BuildFromModel($m);
 		$form->set('callsmethod', 'ThemeEditorController::_SaveHandler');
 		$form->addElement('submit', array('value' => 'Update'));
+
+		$revisions = ThemeEditorItemModel::Find( array('filename' => $fh->getFilename()), 5, 'updated');
+		//var_dump($revisions); die();
 
 		$view->assignVariable('activefile', $activefile);
 		$view->assignVariable('form', $form);
@@ -95,6 +98,8 @@ class ThemeEditorController extends Controller_2_1 {
 		$view->assignVariable('skins', $skins);
 		$view->assignVariable('content', $content);
 		$view->assignVariable('filename', $filename);
+
+		$view->assignVariable('revisions', $revisions);
 
 		$view->title = 'Theme Editor';
 
