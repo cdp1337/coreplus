@@ -114,6 +114,18 @@ class CoreDateTime {
 		return $this->getFormatted('l \a\t ' . $timeformat, $timezone);
 	}
 
+	/**
+	 * Alter the timestamp of a DateTime object by incrementing or decrementing
+	 * in a format accepted by strtotime().
+	 *
+	 * @param string $modify A date/time string. Valid formats are explained in <a href="http://www.php.net/manual/en/datetime.formats.php">Date and Time Formats</a>.
+	 * @return boolean true on success, false on failure.
+	 * @link http://php.net/manual/en/datetime.modify.php
+	 */
+	public function modify($modify){
+		return ($this->_dt->modify($modify));
+	}
+
 
 
 

@@ -89,8 +89,9 @@ class HookHandler implements ISingleton {
 		}
 	}
 
-	public static function RegisterNewHook($hookName) {
+	public static function RegisterNewHook($hookName, $description = null) {
 		$hook = new Hook($hookName);
+		if($description) $hook->description = $description;
 		HookHandler::RegisterHook($hook);
 	}
 
@@ -282,12 +283,5 @@ class Hook {
 HookHandler::singleton();
 
 
-// Create some system-global hooks that will be used throughout.
-HookHandler::RegisterNewHook('db_ready');
-HookHandler::RegisterNewHook('libraries_loaded');
-HookHandler::RegisterNewHook('libraries_ready');
-HookHandler::RegisterNewHook('components_loaded');
-HookHandler::RegisterNewHook('components_ready');
-HookHandler::RegisterNewHook('session_ready');
-//HookHandler::RegisterNewHook('install_task');
-
+// Create some pre-system hooks that are used before the component system is functional.
+HookHandler::RegisterNewHook('/core/db/ready', 'Called immediately after the database is available, but before any component is registered.');;

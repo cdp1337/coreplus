@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 15 Dec 2012 09:16:00 -0500
+ * @compiled Sat, 15 Dec 2012 18:29:54 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1798,6 +1798,7 @@ const TIMEZONE_USER    = 101;
 const FORMAT_ISO8601 = 'c';
 const FORMAT_RFC2822 = 'r';
 const FORMAT_FULLDATETIME = self::FORMAT_ISO8601;
+const FORMAT_EPOCH = 'U';
 private static $_Instance = null;
 private $timezones = array();
 private function __construct() {
@@ -4139,17 +4140,15 @@ switch ($file->getMimetype()) {
 case 'application/x-gzip':
 if (strtolower($file->getExtension()) == 'tgz') return new File_tgz_contents($file);
 else return new File_gz_contents($file);
-break;
 case 'text/plain':
 if (strtolower($file->getExtension()) == 'asc') return new File_asc_contents($file);
 else return new File_unknown_contents($file);
-break;
 case 'text/xml':
 return new File_xml_contents($file);
-break;
 case 'application/pgp-signature':
 return new File_asc_contents($file);
-break;
+case 'application/zip':
+return new File_zip_contents($file);
 default:
 error_log('@fixme Unknown file mimetype [' . $file->getMimetype() . '] with extension [' . $file->getExtension() . ']');
 return new File_unknown_contents($file);
@@ -4534,12 +4533,12 @@ $ftp    = \Core\FTP();
 $tmpdir = TMP_DIR;
 if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 $mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
+self::_Mkdir(dirname($this->_filename), null, true);
 if (
 !$ftp // FTP is not enabled
 ||
 (strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
 ) {
-self::_Mkdir(dirname($this->_filename), null, true);
 $maxbuffer = (1024 * 1024 * 10);
 $handlein  = fopen($localfilename, 'r');
 $handleout = fopen($this->_filename, 'w');
@@ -4559,6 +4558,7 @@ $filename = substr($this->_filename, strlen(ROOT_PDIR));
 else{
 $filename = $this->_filename;
 }
+$ftp = \Core\FTP();
 if (!ftp_put($ftp, $filename, $localfilename, FTP_BINARY)) {
 return false;
 }
@@ -5765,8 +5765,9 @@ $hook->attach($b['call']);
 unset(self::$EarlyRegisteredHooks[$name]);
 }
 }
-public static function RegisterNewHook($hookName) {
+public static function RegisterNewHook($hookName, $description = null) {
 $hook = new Hook($hookName);
+if($description) $hook->description = $description;
 HookHandler::RegisterHook($hook);
 }
 public static function DispatchHook($hookName, $args = null) {
@@ -5853,12 +5854,7 @@ return sizeof($this->_bindings);
 }
 }
 HookHandler::singleton();
-HookHandler::RegisterNewHook('db_ready');
-HookHandler::RegisterNewHook('libraries_loaded');
-HookHandler::RegisterNewHook('libraries_ready');
-HookHandler::RegisterNewHook('components_loaded');
-HookHandler::RegisterNewHook('components_ready');
-HookHandler::RegisterNewHook('session_ready');
+HookHandler::RegisterNewHook('/core/db/ready', 'Called immediately after the database is available, but before any component is registered.');;
 
 $preincludes_time = microtime(true);
 Debug::Write('Loading core system');
@@ -6905,7 +6901,7 @@ define($config->get('mapto'), $val);
 public static function Singleton() {
 if (self::$Instance === null) {
 self::$Instance = new self();
-HookHandler::AttachToHook('db_ready', 'ConfigHandler::_DBReadyHook');
+HookHandler::AttachToHook('/core/db/ready', 'ConfigHandler::_DBReadyHook');
 }
 return self::$Instance;
 }
@@ -7462,7 +7458,7 @@ public $query = null;
 
 try {
 $dbconn = DMI::GetSystemDMI();
-HookHandler::DispatchHook('db_ready');
+HookHandler::DispatchHook('/core/db/ready');
 }
 catch (Exception $e) {
 error_log($e->getMessage());
@@ -7489,7 +7485,7 @@ if (self::$_Instance === null) {
 self::$_Instance = new Session();
 $m = self::$_Instance->_getModel();
 $m->set('updated', Time::GetCurrentGMT());
-HookHandler::DispatchHook('session_ready');
+HookHandler::DispatchHook('/core/session/ready');
 }
 return Session::$_Instance;
 }
@@ -7585,8 +7581,8 @@ die();
 }
 }
 }
-HookHandler::DispatchHook('components_loaded');
-HookHandler::DispatchHook('components_ready');
+HookHandler::DispatchHook('/core/components/loaded');
+HookHandler::DispatchHook('/core/components/ready');
 Core::AddProfileTime('components_load_complete');
 ### REQUIRE_ONCE FROM core/bootstrap_postincludes.php
 define('SMARTY_DIR', ROOT_PDIR . 'core/libs/smarty/');

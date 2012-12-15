@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Security-Suite" execmode="web">
+	<requires>
+		<require name="core" type="component" version="2.4.0"/>
+	</requires>
+	<configs></configs>
+	<hooks>
+		<hook name="/core/components/loaded" call="StopForumSpam::CheckIP"/>
+		<hook name="/cron/daily" call="StopForumSpam::HookDaily"/>
+	</hooks>
+	<description>
+		Collection of security suites for sites, including anti-spam.
+	</description>
+	<files>
+		<file filename="classes/StopForumSpam.class.php" md5="f50aaa4e737571dac07780d301fc9328">
+			<class name="StopForumSpam"/>
+		</file>
+		<file filename="listed_ip_1.zip" md5="9e6a0866ba2c7b797b0bbe39af7a6736"/>
+		<file filename="models/SecurityLogModel.php" md5="e94c0c930142ba6df3ac961ead1643b9">
+			<class name="SecurityLogModel"/>
+		</file>
+		<file filename="models/sfsBlacklistModel.php" md5="f23807f51bec4a8d271ad8735f8e237b">
+			<class name="sfsBlacklistModel"/>
+		</file>
+	</files>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+</component>
+

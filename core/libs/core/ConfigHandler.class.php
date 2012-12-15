@@ -198,7 +198,7 @@ class ConfigHandler implements ISingleton {
 	public static function Singleton() {
 		if (self::$Instance === null) {
 			self::$Instance = new self();
-			HookHandler::AttachToHook('db_ready', 'ConfigHandler::_DBReadyHook');
+			HookHandler::AttachToHook('/core/db/ready', 'ConfigHandler::_DBReadyHook');
 		}
 		return self::$Instance;
 	}

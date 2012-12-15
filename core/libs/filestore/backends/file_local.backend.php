@@ -409,15 +409,15 @@ class File_local_backend implements File_Backend {
 		// This is provided from a config define, (probably).
 		$mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
 
+		// Make sure the directory exists first!
+		// This has to be done regardless of FTP mode or not.
+		self::_Mkdir(dirname($this->_filename), null, true);
+
 		if (
 			!$ftp // FTP is not enabled
 			||
 			(strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
 		) {
-
-			// Make sure the directory exists first!
-			self::_Mkdir(dirname($this->_filename), null, true);
-
 			// Read in only so much data at a time.  This is to prevent
 			// PHP from trying to read a full 2GB file into memory at once :S
 			$maxbuffer = (1024 * 1024 * 10);
@@ -446,9 +446,11 @@ class File_local_backend implements File_Backend {
 				$filename = $this->_filename;
 			}
 
+			// Re-acquire the FTP connection.  Core will reset the cwd back to root upon doing this.
+			// This is required because mkdir may change directories.
+			$ftp = \Core\FTP();
 			// FTP requires a filename, not data...
 			// WELL how bout that!  I happen to have a local filename ;)
-
 			if (!ftp_put($ftp, $filename, $localfilename, FTP_BINARY)) {
 				return false;
 			}

@@ -3,6 +3,7 @@
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.0" name="user" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.3.1"/>
+		<require name="security-suite" type="component" operation="ge" version="1.0.0"/>
 	</requires>
 	<smartyplugins directory="helpers/smarty-plugins/"/>
 	<hooks>

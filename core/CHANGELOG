@@ -38,6 +38,10 @@ Core Plus 2.4.0
 	* Added a "SESSION_COOKIE_DOMAIN" configuration define, allows the site domain to be set for cookies.
 	* Added a "findByField" method on the DatasetWhere object.  Allows for searching of a specific key in the where clause.
 	* Reorganized the config.xml example to make it easier to set initially.
+	* Reorganized some of the core hook names.
+	* Removed some legacy code.
+	* Added a modify method on the CoreDateTime object.
+	* Added a zip contents object.
 
 
 Core Plus 2.3.2

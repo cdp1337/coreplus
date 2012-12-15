@@ -416,7 +416,7 @@ Core::AddProfileTime('maindefines_complete', $maindefines_time);
 require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
 try {
 	$dbconn = DMI::GetSystemDMI();
-	HookHandler::DispatchHook('db_ready');
+	HookHandler::DispatchHook('/core/db/ready');
 }
 // This catch statement should be hit anytime the database is not available,
 // core table doesn't exist, or the like.
@@ -486,9 +486,9 @@ if (EXEC_MODE == 'WEB') {
 //require_once(ROOT_PDIR . 'core/libs/core/ThemeHandler.class.php');
 //ThemeHandler::Load();
 
-HookHandler::DispatchHook('components_loaded');
+HookHandler::DispatchHook('/core/components/loaded');
 //var_dump(ComponentHandler::Singleton());
-HookHandler::DispatchHook('components_ready');
+HookHandler::DispatchHook('/core/components/ready');
 
 Core::AddProfileTime('components_load_complete');
 

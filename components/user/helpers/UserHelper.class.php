@@ -59,30 +59,60 @@ abstract class UserHelper{
 
 		$u = User::Find(array('email' => $e->get('value')));
 		if(!$u){
+			// Log this as a login attempt!
+			$logmsg = 'Email not registered' . "\n" . 'Email: ' . $e->get('value') . "\n";
+			SecurityLogModel::Log('/user/login', 'fail', null, $logmsg);
 			$e->setError('Requested email is not registered.');
 			return false;
 		}
 
 		// A few exceptions for backends.
 		if($u instanceof User_facebook_Backend){
+			// This isn't a log-worthy event (at least yet)
 			$e->setError('That is a Facebook account, please use the Facebook connect button to login.');
 			return false;
 		}
 
 		if(!$u->checkPassword($p->get('value'))){
 
-			if(!isset($_SESSION['invalidpasswordattempts'])) $_SESSION['invalidpasswordattempts'] = 1;
-			else $_SESSION['invalidpasswordattempts']++;
+			// Log this as a login attempt!
+			$logmsg = 'Invalid password' . "\n" . 'Email: ' . $e->get('value') . "\n";
+			SecurityLogModel::Log('/user/login', 'fail', $u->get('id'), $logmsg);
 
-			if($_SESSION['invalidpasswordattempts'] > 4){
+			// Also, I want to look up and see how many login attempts there have been in the past couple minutes.
+			// If there are too many, I need to start slowing the attempts.
+			$time = new CoreDateTime();
+			$time->modify('-5 minutes');
+
+			$securityfactory = new ModelFactory('SecurityLogModel');
+			$securityfactory->where('action = /user/login');
+			$securityfactory->where('status = fail');
+			$securityfactory->where('datetime > ' . $time->getFormatted(Time::FORMAT_EPOCH, Time::TIMEZONE_GMT));
+			$securityfactory->where('ip_addr = ' . REMOTE_IP);
+
+			$attempts = $securityfactory->count();
+			if($attempts > 4){
 				// Start slowing down the response.  This should help deter brute force attempts.
-				sleep( ($_SESSION['invalidpasswordattempts'] - 4) ^ 1.5 );
+				// (x+((x-7)/4)^3)-4
+				sleep( ($attempts+(($attempts-7)/4)^3)-4 );
+				// This makes a nice little curve with the following delays:
+				// 5th  attempt: 0.85
+				// 6th  attempt: 2.05
+				// 7th  attempt: 3.02
+				// 8th  attempt: 4.05
+				// 9th  attempt: 5.15
+				// 10th attempt: 6.52
+				// 11th attempt: 8.10
+				// 12th attempt: 10.05
 			}
 
 			$p->setError('Invalid password');
 			$p->set('value', '');
 			return false;
 		}
+
+		// Well, record this too!
+		SecurityLogModel::Log('/user/login', 'success', $u->get('id'));
 
 		// yay...
 		Session::SetUser($u);
@@ -115,10 +145,16 @@ abstract class UserHelper{
 			$user->setPassword($p1->get('value'), $p2->get('value'));
 		}
 		catch(ModelValidationException $e){
+			// Make a note of this!
+			SecurityLogModel::Log('/user/register', 'fail', null, $e->getMessage());
+
 			Core::SetMessage($e->getMessage(), 'error');
 			return false;
 		}
 		catch(Exception $e){
+			// Make a note of this!
+			SecurityLogModel::Log('/user/register', 'fail', null, $e->getMessage());
+
 			if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
 			else Core::SetMessage('An unknown error occured', 'error');
 
@@ -137,6 +173,9 @@ abstract class UserHelper{
 		}
 
 		$user->save();
+
+		// User created... make a log of this!
+		SecurityLogModel::Log('/user/register', 'success', $user->get('id'));
 
 		// "login" this user if not already logged in.
 		if(!\Core\user()->exists()){

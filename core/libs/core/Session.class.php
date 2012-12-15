@@ -57,7 +57,7 @@ class Session implements ISingleton {
 			// From this point on, the $_SESSION variable is available.
 
 			// Anything waiting for the session?
-			HookHandler::DispatchHook('session_ready');
+			HookHandler::DispatchHook('/core/session/ready');
 		}
 
 		return Session::$_Instance;

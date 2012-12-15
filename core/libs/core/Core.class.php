@@ -1579,10 +1579,6 @@ class Core implements ISingleton {
 
 }
 
-// Listen for when the database becomes available.
-//HookHandler::AttachToHook('db_ready', 'Core::_LoadFromDatabase');
-
-
 class CoreException extends Exception {
 
 }

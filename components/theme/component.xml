@@ -7,7 +7,7 @@
 		<require name="jqueryui" type="library" version="1.8.0" operation="ge"/>
 	</requires>
 	<hooks>
-		<hook name="components_loaded" call="ThemeHandler::Load"/>
+		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
 		<file filename="CHANGELOG" md5="c944d382a72dbbde5871755f7f84c2d0"/>

@@ -43,6 +43,13 @@ class Time {
 
 	const FORMAT_FULLDATETIME = self::FORMAT_ISO8601;
 
+	/**
+	 * Datetime format for seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)
+	 *
+	 * @example 1355592396
+	 */
+	const FORMAT_EPOCH = 'U';
+
 	private static $_Instance = null;
 
 	private $timezones = array();
