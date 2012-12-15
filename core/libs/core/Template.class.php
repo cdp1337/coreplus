@@ -145,6 +145,10 @@ class Template implements TemplateInterface {
 		$this->getSmarty()->assign($tpl_var, $value);
 	}
 
+	public function getTemplateDir(){
+		return $this->getSmarty()->getTemplateDir();
+	}
+
 
 
 	/**

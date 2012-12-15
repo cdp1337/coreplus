@@ -31,6 +31,10 @@
  */
 class InsertableModel extends Model {
 	public static $Schema = array(
+		'site' => array(
+			'type' => Model::ATT_TYPE_SITE,
+			'formtype' => 'system',
+		),
 		'baseurl' => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
@@ -50,9 +54,32 @@ class InsertableModel extends Model {
 	);
 
 	public static $Indexes = array(
-		'primary' => array('baseurl', 'name'),
+		'primary' => array('site', 'baseurl', 'name'),
 	);
 
-	// @todo Put your code here.
-
+	public function __construct(){
+		// This system now has a combined primary key.
+		// HOWEVER, construction of the model should still be allowed to be performed with simply the baseurl.
+		// The first part of the key can be assumed.
+		if(func_num_args() == 2){
+			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+				$site = MultiSiteHelper::GetCurrentSiteID();
+			}
+			else{
+				$site = 0;
+			}
+			$baseurl = func_get_arg(0);
+			$name = func_get_arg(1);
+			parent::__construct($site, $baseurl, $name);
+		}
+		elseif(func_num_args() == 3){
+			$site = func_get_arg(0);
+			$baseurl = func_get_arg(1);
+			$name  = func_get_arg(2);
+			parent::__construct($site, $baseurl, $name);
+		}
+		else{
+			parent::__construct();
+		}
+	}
 } // END class InsertableModel extends Model

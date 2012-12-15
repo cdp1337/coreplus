@@ -1123,9 +1123,6 @@ class MySQLi_Schema_Column {
 				// IDs are also auto_increment!
 				$this->extra = 'auto_increment';
 				break;
-			case Model::ATT_TYPE_INT:
-				$this->type = 'int(' . $column->maxlength . ')';
-				break;
 			case Model::ATT_TYPE_STRING:
 				$maxlength = ($column->maxlength)? $column->maxlength : 255; // It needs something...
 				$this->type = "varchar($maxlength)";
@@ -1136,8 +1133,10 @@ class MySQLi_Schema_Column {
 			case Model::ATT_TYPE_DATA:
 				$this->type = 'mediumblob';
 				break;
+			case Model::ATT_TYPE_INT:
 			case Model::ATT_TYPE_CREATED:
 			case Model::ATT_TYPE_UPDATED:
+			case Model::ATT_TYPE_SITE:
 				$this->type = 'int(' . $column->maxlength . ')';
 				break;
 			case Model::ATT_TYPE_ISO_8601_DATETIME:

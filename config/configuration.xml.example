@@ -1,14 +1,43 @@
 <?xml version="1.0"?>
 <configuration>
-	<define name="PORT_NUMBER" type="int">
-		<value>80</value>
-		<description>Port number server is listening on for normal connections.</description>
-	</define>
+	<!--
+	  -- Important options, database and such
+	  -->
 
-	<define name="PORT_NUMBER_SSL" type="int">
-		<value>443</value>
-		<description>Port number server is listening on for secured connections.</description>
-	</define>
+	<return name="database_server" type="string">
+		<value>localhost</value>
+		<description>
+			The server that will be hosting the database,
+			usually leaving this localhost will suffice.
+		</description>
+	</return>
+
+	<return name="database_port" type="int">
+		<value>3306</value>
+	</return>
+
+	<return name="database_type" type="enum">
+		<option>mysql</option>
+		<option>mysqli</option>
+		<option>cassandra</option>
+		<value>mysqli</value>
+	</return>
+
+	<return name="database_name" type="string">
+		<value>db_name</value>
+	</return>
+
+	<return name="database_user" type="string">
+		<value>db_user</value>
+	</return>
+
+	<return name="database_pass" type="string">
+		<value>db_pass</value>
+	</return>
+
+	<!--
+	  -- SSL mode, site name, url, and other general options
+	  -->
 
 	<define name="SSL_MODE" type="enum">
 		<value>disabled</value>
@@ -25,7 +54,7 @@
 	</define>
 
 	<define name="SITENAME" type="string">
-		<value>Core Plus Test Site (mobile1337ness)</value>
+		<value>Core Plus Site</value>
 		<description>The site name that can be used for emails and page titles.</description>
 	</define>
 
@@ -38,12 +67,27 @@
 	</return>
 
 	<define name="DEVELOPMENT_MODE" type="boolean">
-		<value>true</value>
-		<description>If this is a production site, it is advised to disable this.</description>
-	</define>
+    		<value>true</value>
+    		<description>If this is a production site, it is advised to disable this.</description>
+    	</define>
+
+	<define name="SESSION_COOKIE_DOMAIN" type="string">
+        <value></value>
+        <description>
+            If you would like to enforce a domain to be used for your cookies, set that here.
+            For example, if you have sites on example1.domain.com, example2.domain.com, and
+            www.domain.com, setting this value to ".domain.com" is recommended to have the sessions shared.
+        </description>
+    </define>
+
+    <!--
+      -- Technical things you probably don't need to worry about,
+      -- but feel free to if you so choose
+      -->
+
 
 	<return name="tmp_dir_web" type="string">
-		<value>/tmp/cae2-git-web/</value>
+		<value>/tmp/coreplus-web/</value>
 		<description>
 		The location of the tmp directory for cache, compile, and general temporary files.  
 		This directory MUST be writable by the apache user.  
@@ -52,7 +96,7 @@
 	</return>
 
 	<return name="tmp_dir_cli" type="string">
-		<value>/tmp/cae2-git-cli/</value>
+		<value>/tmp/coreplus-cli/</value>
 		<description>
 		The location of the tmp directory for anything on the CLI that needs temp storage.  
 		Please ensure that this ends with a "/"
@@ -69,38 +113,20 @@
 		<description>The default timezone to display times in.</description>
 	</define>
 
+	<define name="PORT_NUMBER" type="int">
+    		<value>80</value>
+    		<description>Port number server is listening on for normal connections.</description>
+    	</define>
+
+    	<define name="PORT_NUMBER_SSL" type="int">
+    		<value>443</value>
+    		<description>Port number server is listening on for secured connections.</description>
+    	</define>
+
 	<return name="cache_type" type="enum">
 		<option>apc</option>
 		<option>file</option>
 		<value>file</value>
-	</return>
-
-	<return name="database_server" type="string">
-		<value>localhost</value>
-		<description>The server that will be hosting the database, usually leaving this localhost will suffice.</description>
-	</return>
-
-	<return name="database_port" type="int">
-		<value>3306</value>
-	</return>
-
-	<return name="database_type" type="enum">
-		<option>mysql</option>
-		<option>mysqli</option>
-		<option>cassandra</option>
-		<value>mysqli</value>
-	</return>
-
-	<return name="database_name" type="string">
-		<value>db_name_build201110</value>
-	</return>
-
-	<return name="database_user" type="string">
-		<value>db_user</value>
-	</return>
-
-	<return name="database_pass" type="string">
-		<value>db_pass</value>
 	</return>
 
 	<!-- Set this to something non-blank if you are running this system on the same database as other software. -->

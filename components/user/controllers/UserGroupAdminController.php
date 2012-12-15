@@ -14,7 +14,12 @@ class UserGroupAdminController extends Controller_2_1{
 	public function index(){
 		$view = $this->getView();
 
-		$groups = UserGroupModel::Find(null, null, 'name');
+		$where = array();
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			$where['site'] = MultiSiteHelper::GetCurrentSiteID();
+		}
+
+		$groups = UserGroupModel::Find($where, null, 'name');
 
 		$view->title = 'User Group Administration';
 		$view->assignVariable('groups', $groups);
@@ -25,6 +30,11 @@ class UserGroupAdminController extends Controller_2_1{
 		$view  = $this->getView();
 		$req   = $this->getPageRequest();
 		$model = new UserGroupModel();
+
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			$model->set('site', MultiSiteHelper::GetCurrentSiteID());
+		}
+
 		$form  = Form::BuildFromModel($model);
 
 		$form->set('callsmethod', 'UserGroupAdminController::_UpdateFormHandler');
@@ -87,6 +97,10 @@ class UserGroupAdminController extends Controller_2_1{
 			return View::ERROR_BADREQUEST;
 		}
 
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			$where['site'] = MultiSiteHelper::GetCurrentSiteID();
+		}
+
 		$model->delete();
 		Core::SetMessage('Removed group successfully', 'success');
 		Core::Redirect('/usergroupadmin');
@@ -96,6 +110,14 @@ class UserGroupAdminController extends Controller_2_1{
 
 		try{
 			$model = $form->getModel();
+
+			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+				if($model->exists() && $model->get('site') != MultiSiteHelper::GetCurrentSiteID()){
+					Core::SetMessage('Invalid group specified', 'error');
+					return false;
+				}
+			}
+
 			$model->setPermissions($form->getElement('permissions[]')->get('value'));
 			$model->save();
 		}

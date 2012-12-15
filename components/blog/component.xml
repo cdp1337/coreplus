@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.0" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.1" name="Blog" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.2.6" operation="ge"/>
+		<require name="core" type="component" version="2.4.0" operation="ge"/>
 	</requires>
 	<permissions>
 		<permission key="blog_manage" description="Manage Blogs"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="b576994ddf19378a7d625098b3db8999"/>
-		<file filename="controllers/BlogController.php" md5="cd5091afcdac35f31d1f4afbe22f527c">
+		<file filename="CHANGELOG" md5="20e3cc02635e39972f288dafdf85d813"/>
+		<file filename="controllers/BlogController.php" md5="976709b96b3c9a55ad5d36ba6744a94e">
 			<controller name="BlogController"/>
 		</file>
 		<file filename="helpers/BlogHelper.php" md5="283487940f0c2b3aeb1bf590752e997c">
@@ -21,7 +21,7 @@
 		<file filename="models/BlogArticleTagModel.php" md5="19113d6a799ff3b6012c99e22558720c">
 			<class name="BlogArticleTagModel"/>
 		</file>
-		<file filename="models/BlogModel.php" md5="ea5583b821de87b3bc16443d3c14c7be">
+		<file filename="models/BlogModel.php" md5="c759fe5447d3c8ea9b48f4d8e2031502">
 			<class name="BlogModel"/>
 		</file>
 	</files>
@@ -31,16 +31,17 @@
 	<description>Blog system.</description>
 	<view searchdir="templates">
 		<file filename="templates/pages/blog/admin.tpl" md5="207445c551f7c2169d951b0a7b501e7c"/>
-		<file filename="templates/pages/blog/article_create.tpl" md5="a6195cc78d3992aed8c907894ef8d9f2"/>
+		<file filename="templates/pages/blog/article_create.tpl" md5="37a42bd1bbcd4168f1ca2137ec70e597"/>
 		<file filename="templates/pages/blog/article_update.tpl" md5="7188695d360bad19187f63c7da3fc2f8"/>
 		<file filename="templates/pages/blog/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/blog/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/blog/view-blog-article.tpl" md5="ec2fbe1590f2e07dc0b2e0e4048d0bc4"/>
+		<file filename="templates/pages/blog/view-blog-article.tpl" md5="018d40b76323051707c61edf0374d7bb"/>
 		<file filename="templates/pages/blog/view-blog.tpl" md5="d84fb641feb4f4e5bc6c1d8c88511713"/>
 	</view>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.1.0"/>
 		<upgrade from="1.1.0" to="1.2.0"/>
+		<upgrade from="1.2.0" to="1.2.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

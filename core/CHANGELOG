@@ -29,6 +29,15 @@ Core Plus 2.4.0
 	* Added support for page resolution requests to start with a '?'.
 	* Changed the Template object to no longer extend Smarty.  This allows for a more specialized control of it and
 	cleared up a STRICT warning in php 5.4.
+	* Updated the config controller a little.
+	* Added scaffolding support for multisite mode.
+	* Added logic to check for a valid upgrade path in components prior to executing any of its upgrade logic.
+	* Rewrote the ConfigHandler internal logic.  This is now a little easier to follow what it's doing.
+	* Added support for the model to be "loaded" without all primary keys set.
+	* Updated the ModelFactory to make use of the native ReflectionClass class.  Allows for more control over instantiating of objects.
+	* Added a "SESSION_COOKIE_DOMAIN" configuration define, allows the site domain to be set for cookies.
+	* Added a "findByField" method on the DatasetWhere object.  Allows for searching of a specific key in the where clause.
+	* Reorganized the config.xml example to make it easier to set initially.
 
 
 Core Plus 2.3.2

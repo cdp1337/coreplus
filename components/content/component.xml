@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.5" name="content" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.6" name="content" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.3.0" operation="ge"/>
 	</requires>
@@ -8,11 +8,11 @@
 		<permission key="content_manage" description="Manage Site Content"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="ce9d4062ebe80af7caaf953f0745ff4c"/>
+		<file filename="CHANGELOG" md5="8b6809ed916a2868d9ba6944ac88a6f6"/>
 		<file filename="ContentController.php" md5="ba3af67a63c82874a3a614c6f7374028">
 			<controller name="ContentController"/>
 		</file>
-		<file filename="ContentModel.php" md5="44e9294892698749b0eda3fe1d47b1f4">
+		<file filename="ContentModel.php" md5="cac0a022c2e373a35876f9d43478c26a">
 			<class name="ContentModel"/>
 		</file>
 	</files>
@@ -37,6 +37,7 @@
 		<upgrade from="1.9.2" to="1.9.3"/>
 		<upgrade from="1.9.3" to="1.9.4"/>
 		<upgrade from="1.9.4" to="1.9.5"/>
+		<upgrade from="1.9.5" to="1.9.6"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

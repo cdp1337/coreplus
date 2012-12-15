@@ -39,7 +39,13 @@ function smarty_function_widgetarea($params, $template) {
 
 	$theme = ConfigHandler::Get('/theme/selected');
 
-	$wifac = WidgetInstanceModel::Find(array('theme' => $theme, 'template' => $template, 'widgetarea' => $name), null, 'weight');
+	$criteria = array('theme' => $theme, 'template' => $template, 'widgetarea' => $name);
+
+	if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+		$criteria['site'] = MultiSiteHelper::GetCurrentSiteID();
+	}
+
+	$wifac = WidgetInstanceModel::Find($criteria, null, 'weight');
 	foreach ($wifac as $wi) {
 		// User cannot access this widget? Don't display it...
 		if (!\Core\user()->checkAccess($wi->get('access'))) continue;

@@ -500,10 +500,16 @@ class PageRequest {
 		if ($this->_pagemodel === null) {
 			$uri = $this->uriresolved;
 
-			$p = PageModel::Find(
-				array('rewriteurl' => $uri,
-				      'fuzzy'      => 0), 1
-			);
+
+			$pagefac = new ModelFactory('PageModel');
+			$pagefac->where('rewriteurl = ' . $uri);
+			$pagefac->where('fuzzy = 0');
+			$pagefac->limit(1);
+			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+				$pagefac->whereGroup('OR', array('site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID()));
+			}
+
+			$p = $pagefac->get();
 
 			// Split this URL, it'll be used somewhere.
 			$pagedat = $this->splitParts();

@@ -1,3 +1,7 @@
+Navigation 2.1.3
+
+	* Added multisite support.
+
 Navigation 2.1.2
 
 	* Added an "active" class on the active navigation entry.

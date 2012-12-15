@@ -29,6 +29,12 @@ class UserGroupModel extends Model {
 			'required' => true,
 			'null' => false,
 		),
+		'site' => array(
+			'type' => Model::ATT_TYPE_SITE,
+			'default' => 0,
+			'formtype' => 'system',
+			'comment' => 'The site id in multisite mode, (or 0 otherwise)',
+		),
 		'name' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 48,
@@ -53,7 +59,7 @@ class UserGroupModel extends Model {
 	
 	public static $Indexes = array(
 		'primary' => array('id'),
-		'unique:name' => array('name'),
+		'unique:name' => array('site', 'name'),
 	);
 
 	/**

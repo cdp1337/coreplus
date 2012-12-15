@@ -133,7 +133,13 @@ function get_form($user = null){
 	// Tack on the group registration if the current user is an admin.
 	if(\Core\user()->checkAccess('p:user_manage')){
 		// Find all the groups currently on the site.
-		$groups = \UserGroupModel::Find(null, null, 'name');
+
+		$where = array();
+		if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
+			$where['site'] = \MultiSiteHelper::GetCurrentSiteID();
+		}
+
+		$groups = \UserGroupModel::Find($where, null, 'name');
 
 		if(sizeof($groups)){
 			$groupopts = array();

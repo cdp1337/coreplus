@@ -28,6 +28,10 @@ class ContentModel extends Model{
 			'required' => true,
 			'null' => false,
 		),
+		'site' => array(
+			'type' => Model::ATT_TYPE_SITE,
+			'formtype' => 'system',
+		),
 		'nickname' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'comment' => 'Cache of the linked page title',
@@ -36,11 +40,11 @@ class ContentModel extends Model{
 		),
 		'editpermissions' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'description' => 'Permissions for who is allowed to edit this page',
 			'default' => '!*',
 			'form' => array(
 				'type' => 'access',
 				'title' => 'Edit Permissions',
+				'description' => 'Permissions for who is allowed to edit this page',
 			)
 		),
 		'created' => array(

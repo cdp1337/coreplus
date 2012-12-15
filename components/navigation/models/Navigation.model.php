@@ -27,6 +27,10 @@ class NavigationModel extends Model {
 			'required' => true,
 			'null'     => false,
 		),
+		'site' => array(
+			'type' => Model::ATT_TYPE_SITE,
+			'formtype' => 'system',
+		),
 		'name'    => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,

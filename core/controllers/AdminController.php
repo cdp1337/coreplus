@@ -113,7 +113,14 @@ class AdminController extends Controller_2_1 {
 	public function config() {
 		$view = $this->getView();
 
-		$configs = ConfigModel::Find(array(), null, 'key');
+		$where = array();
+		// If the enterprise component is installed and multisite is enabled, configurations have another layer of complexity.
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
+			$where['overrideable'] = '1';
+		}
+
+		$configs = ConfigModel::Find($where, null, 'key');
+
 		$groups  = array();
 		foreach ($configs as $c) {
 			// Export out the group for this config option.
@@ -148,7 +155,7 @@ class AdminController extends Controller_2_1 {
 				case 'int':
 					$el                    = FormElement::Factory('text');
 					$el->validation        = '/^[0-9]*$/';
-					$el->validationmessage = $gname . ' - ' . $title . ' expects only whole numbers with no puncuation.';
+					$el->validationmessage = $gname . ' - ' . $title . ' expects only whole numbers with no punctuation.';
 					break;
 				case 'set':
 					$el = FormElement::Factory('checkboxes');
@@ -184,6 +191,7 @@ class AdminController extends Controller_2_1 {
 
 		$this->setTemplate('/pages/admin/config.tpl');
 		$view->assign('form', $form);
+		$view->assign('config_count', sizeof($configs));
 	}
 
 
@@ -203,25 +211,34 @@ class AdminController extends Controller_2_1 {
 
 			// And get the config object
 			$c = new ConfigModel($n);
+			$val = null;
 
 			switch ($c->get('type')) {
 				case 'string':
 				case 'enum':
 				case 'boolean':
 				case 'int':
-					$c->set('value', $e->get('value'));
+					$val = $e->get('value');
 					break;
 				case 'set':
-					$c->set('value', implode('|', $e->get('value')));
+					$val = implode('|', $e->get('value'));
 					break;
 				default:
 					throw new Exception('Supported configuration type for ' . $c->get('key') . ', [' . $c->get('type') . ']');
 					break;
 			}
 
-			if ($c->save()) {
-				$updatedcount++;
+			// This is required because enterprise multisite mode has a different location for site configs.
+			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
+				$siteconfig = MultiSiteConfigModel::Construct($c->get('key'), MultiSiteHelper::GetCurrentSiteID());
+				$siteconfig->set('value', $val);
+				if($siteconfig->save()) ++$updatedcount;
 			}
+			else{
+				$c->set('value', $val);
+				if ($c->save()) ++$updatedcount;
+			}
+
 		}
 
 		if ($updatedcount == 0) {

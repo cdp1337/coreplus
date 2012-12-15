@@ -30,39 +30,44 @@ require_once(ROOT_PDIR . 'core/models/ConfigModel.class.php');
 
 class ConfigHandler implements ISingleton {
 
-	private static $instance = null;
-	public static $directory;
+	/**
+	 * The main instance of the config handler.  Used as the backend of all static calls.
+	 * @var null|ConfigHandler
+	 */
+	private static $Instance = null;
+
+	/**
+	 * The directory of the configuration options, set from the constructor
+	 * @var string
+	 */
+	private $_directory;
+
 	/**
 	 * Cache of datamodels of the configuration options from the database.
 	 * @var array
 	 */
-	private static $CacheFromDB = array();
+	private $_cacheFromDB = array();
+
+	/**
+	 * Cache of overrides set from other components.  These are available in memory ONLY.
+	 * @var array
+	 */
+	private $_overrides = array();
 
 	/**
 	 * Private constructor class to prevent outside instantiation.
 	 *
-	 * @return void
+	 * @throws Exception
+	 * @return \ConfigHandler
 	 */
 	private function __construct() {
 		// Run through the config directory, looking for XML files.
 
-		ConfigHandler::$directory = ROOT_PDIR . "config/";
+		$this->_directory = ROOT_PDIR . "config/";
 
-		if (!is_readable(ConfigHandler::$directory)) {
-			throw new Exception("Could not open config directory [" . ConfigHandler::$directory . "] for reading.");
+		if (!is_readable($this->_directory)) {
+			throw new Exception("Could not open config directory [" . $this->_directory . "] for reading.");
 		}
-	}
-
-	public static function Singleton() {
-		if (is_null(self::$instance)) {
-			self::$instance = new self();
-			HookHandler::AttachToHook('db_ready', 'ConfigHandler::_DBReadyHook');
-		}
-		return self::$instance;
-	}
-
-	public static function getInstance() {
-		return self::singleton();
 	}
 
 	/**
@@ -72,15 +77,15 @@ class ConfigHandler implements ISingleton {
 	 *
 	 * @return boolean | array
 	 */
-	public static function LoadConfigFile($config) {
+	private function _loadConfigFile($config) {
 
 		// Return array (if the XML provides 'return' elements).
 		$return = array();
 
-		$file = ConfigHandler::$directory . $config . '.xml';
+		$file = $this->_directory . $config . '.xml';
 
 		if (!file_exists($file)) {
-			trigger_error("Requested config file $config.xml not located within " . ConfigHandler::$directory, E_USER_NOTICE);
+			trigger_error("Requested config file $config.xml not located within " . $this->_directory, E_USER_NOTICE);
 			return false;
 		}
 		if (!is_readable($file)) {
@@ -132,23 +137,101 @@ class ConfigHandler implements ISingleton {
 		return (!count($return) ? true : $return);
 	}
 
+	private function _clearCache(){
+		$this->_cacheFromDB = array();
+		$this->_overrides = array();
+	}
+
 	/**
-	 * Retrieve a value for a requested configSet and key.
+	 * Get the value for a given configuration key
 	 *
-	 * <b>**Note, currently ONLY supports DB**</b>
+	 * @param string $key
+	 * @return mixed
+	 */
+	private function _get($key){
+
+		// If it's a standard config, pull the value from config.
+		if(isset($this->_cacheFromDB[$key])){
+			// Is it already overridden?
+			if(isset($this->_overrides[$key])){
+				return ConfigModel::TranslateValue($this->_cacheFromDB[$key]->get('type'), $this->_overrides[$key]);
+			}
+			else{
+				return $this->_cacheFromDB[$key]->getValue();
+			}
+		}
+		// Not there either?  Allow the SESSION to contain config variables.  This is critical for installation.
+		elseif(isset($_SESSION) && isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])){
+			return $_SESSION['configs'][$key];
+		}
+		// Else, just return null.
+		else{
+			return null;
+		}
+	}
+
+	private function _loadDB(){
+		// Clear out the cache, (if it has any)
+		$this->_clearCache();
+
+		// Get a list of config models in the system.
+		// These will be the root configuration options needed for any other system.
+		$fac = ConfigModel::Find();
+
+		foreach ($fac as $config) {
+			/** @var $config ConfigModel */
+			$key = $config->get('key');
+			$this->_cacheFromDB[$key] = $config;
+			$val = $config->getValue();
+
+			// Set the defines on any that need to be defined, (via the "mapto" attribute)
+			if($config->get('mapto') && !defined($config->get('mapto'))){
+				define($config->get('mapto'), $val);
+			}
+
+		}
+	}
+
+	/**
+	 * @return ConfigHandler
+	 */
+	public static function Singleton() {
+		if (self::$Instance === null) {
+			self::$Instance = new self();
+			HookHandler::AttachToHook('db_ready', 'ConfigHandler::_DBReadyHook');
+		}
+		return self::$Instance;
+	}
+
+	/**
+	 * @return ConfigHandler
+	 */
+	public static function GetInstance() {
+		return self::Singleton();
+	}
+
+	/**
+	 * Load the configuration variables from a requested config file, located inside of the config directory.
 	 *
-	 * @param $configSet string
-	 * @param $key string
+	 * @param $config string
 	 *
-	 * @return string | int | boolean
+	 * @return boolean | array
+	 */
+	public static function LoadConfigFile($config) {
+		return self::Singleton()->_loadConfigFile($config);
+	}
+
+	/**
+	 * Retrieve a value for a requested key.
 	 *
-	 * @deprecated 2011.10
+	 * Alias of ConfigHandler::Get()
+	 *
+	 * @param string $key
+	 *
+	 * @return string|int|boolean
 	 */
 	public static function GetValue($key) {
-		//trigger_error('ConfigHandler::GetValue() is deprecated, please use ConfigHandler::Get() instead.', E_USER_DEPRECATED);
-		return self::Get($key);
-
-		return (isset(ConfigHandler::$CacheFromDB[$key])) ? ConfigHandler::$CacheFromDB[$key] : null;
+		return self::Singleton()->_get($key);
 	}
 
 
@@ -157,16 +240,25 @@ class ConfigHandler implements ISingleton {
 	 *
 	 * This is the easiest way to create new config options.
 	 *
-	 * @param string $key
+	 * If $autocreate is set to false and the key does not exist, the corresponding model will NOT be created.
 	 *
-	 * @return ConfigModel
+	 * @param string  $key        The configuration key to get
+	 * @param boolean $autocreate Whether or not to create a model if not found
+	 *
+	 * @return ConfigModel|null
 	 */
-	public static function GetConfig($key) {
-		if (!isset(ConfigHandler::$CacheFromDB[$key])) {
-			ConfigHandler::$CacheFromDB[$key] = new ConfigModel($key);
+	public static function GetConfig($key, $autocreate = true) {
+		$instance = self::GetInstance();
+
+		if(!isset($instance->_cacheFromDB[$key])){
+			// Is autocreate set to false?
+			if(!$autocreate) return null;
+
+			// Otherwise, go ahead and create it.  This is used by the component system.
+			$instance->_cacheFromDB[$key] = new ConfigModel($key);
 		}
 
-		return ConfigHandler::$CacheFromDB[$key];
+		return $instance->_cacheFromDB[$key];
 	}
 
 	/**
@@ -174,15 +266,10 @@ class ConfigHandler implements ISingleton {
 	 *
 	 * @param string $key
 	 *
-	 * @return mixed
+	 * @return string|int|boolean
 	 */
 	public static function Get($key) {
-		// Retrieve it from cache first of all.
-		if (isset(ConfigHandler::$CacheFromDB[$key])) return ConfigHandler::$CacheFromDB[$key]->getValue();
-		// Not set there?  Allow the SESSION to contain config variables.  This is critical for installation.
-		elseif (isset($_SESSION) && isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])) return $_SESSION['configs'][$key];
-		// Else, just return null.
-		else return null;
+		return self::Singleton()->_get($key);
 	}
 
 	/**
@@ -191,69 +278,70 @@ class ConfigHandler implements ISingleton {
 	 * This CANNOT create new configuration keys!
 	 * Please use GetConfig() for that.
 	 *
-	 * @param string $key
-	 * @param fixed  $value
+	 * @param string $key   The key to set
+	 * @param string $value The value to set
+	 * @return bool True/False on success or failure.
 	 */
 	public static function Set($key, $value) {
-		if (!isset(ConfigHandler::$CacheFromDB[$key])) return false;
-		ConfigHandler::$CacheFromDB[$key]->set('value', $value);
-		ConfigHandler::$CacheFromDB[$key]->save();
+		$instance = self::GetInstance();
+
+		if(!isset($instance->_cacheFromDB[$key])){
+			return false;
+		}
+
+		/** @var $config ConfigModel */
+		$config = $instance->_cacheFromDB[$key];
+
+		// This is required because enterprise multisite mode has a different location for site configs.
+		// Instead of having this outside the code, it's here for now at least.
+		// This is a trade-off between standard procedure and convenience.
+		if(
+			$config->get('overrideable') == 1 &&
+			Core::IsComponentAvailable('enterprise') &&
+			MultiSiteHelper::GetCurrentSiteID()
+		){
+			$siteconfig = MultiSiteConfigModel::Construct($key, MultiSiteHelper::GetCurrentSiteID());
+			$siteconfig->set('value', $value);
+			$siteconfig->save();
+			$instance->_overrides[$key] = $value;
+		}
+		else{
+			$config->set('value', $value);
+			$config->save();
+		}
 
 		return true;
 	}
 
-	public static function _Set(ConfigModel $config) {
-		ConfigHandler::$CacheFromDB[$config->get('key')] = $config;
+	/**
+	 * Set a configuration override value.  This is NOT saved in the database or anything, simply available in memory.
+	 *
+	 * @param $key
+	 * @param $value
+	 */
+	public static function SetOverride($key, $value){
+		self::Singleton()->_overrides[$key] = $value;
+	}
+
+	/**
+	 * Add a config model to the system cache.
+	 *
+	 * @param ConfigModel $config
+	 */
+	public static function CacheConfig(ConfigModel $config) {
+		$instance = self::GetInstance();
+
+		$instance->_cacheFromDB[$config->get('key')] = $config;
 	}
 
 
 	public static function _DBReadyHook() {
 		// This may be called before the componenthandler is ready.
 
-		// Clear out the cache, (if it has any...)
-		ConfigHandler::$CacheFromDB = array();
-		$fac                        = ConfigModel::Find();
-		foreach ($fac as $model) {
-			ConfigHandler::$CacheFromDB[$model->get('key')] = $model;
+		/** @var $singleton Confighandler */
+		$singleton = self::Singleton();
 
-			// Also map this value if it's set to do so.
-			if ($model->get('mapto') && !defined($model->get('mapto'))) define($model->get('mapto'), $model->getValue());
-		}
-	}
-
-	/**
-	 * Hook listener for when the database is ready.
-	 * Query the database for all configuration elements that may be hiding in there.
-	 * Assemble them into a cache of variables internally to prevent having to make repeated DB calls.
-	 *
-	 * @return unknown_type
-	 */
-	public static function _DBReadyHookLEGACY() {
-		$obj = new Dataset();
-		$obj->table('config');
-		$obj->select(array('key', 'value', 'type', 'mapto'));
-		$rs = $obj->execute();
-
-		if (!$rs) return false;
-		foreach ($rs as $row) {
-			switch ($row['type']) {
-				case 'int':
-					$row['value'] = (int)$row['value'];
-					break;
-				case 'boolean':
-					$row['value'] = ($row['value'] == '1' || $row['value'] == 'true') ? true : false;
-					break;
-				case 'set':
-					$row['value'] = array_map('trim', explode('|', $row['value']));
-				// Default is not needed, already comes through as a string.
-			}
-
-			ConfigHandler::$cacheFromDB[$row['key']] = $row['value'];
-
-			// Also map this value if it's set to do so.
-			if ($row['mapto'] && !defined($row['mapto'])) define($row['mapto'], $row['value']);
-		}
-
+		$singleton->_loadDB();
 	}
 
 	public static function var_dump_cache() {

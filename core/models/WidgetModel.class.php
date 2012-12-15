@@ -23,6 +23,12 @@
 class WidgetModel extends Model {
 
 	public static $Schema = array(
+		'site' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'default' => -1,
+			'formtype' => 'system',
+			'comment' => 'The site id in multisite mode, (or -1 if global)',
+		),
 		'baseurl' => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,

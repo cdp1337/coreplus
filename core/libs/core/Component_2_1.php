@@ -976,6 +976,12 @@ class Component_2_1 {
 			}
 		}
 
+		// Check that if the version installed is not what's in the component file, that there is a valid upgrade path.
+		if(!$this->_checkUpgradePath()){
+			$this->error = $this->error | Component::ERROR_UPGRADEPATH;
+			$this->errstrs[] = 'No upgrade path found';
+		}
+
 		// I should have a good idea of any errors by now...
 		return (!$this->error) ? true : false;
 	}
@@ -1269,7 +1275,7 @@ class Component_2_1 {
 			if ($m->save()) $changes[] = 'Set configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
 
 			// Make it available immediately
-			ConfigHandler::_Set($m);
+			ConfigHandler::CacheConfig($m);
 		}
 
 		return (sizeof($changes)) ? $changes : false;
@@ -1343,7 +1349,8 @@ class Component_2_1 {
 		// Now, get every table under this node.
 		foreach ($node->getElementsByTagName('page') as $subnode) {
 			// Insert/Update the defaults for an entry in the database.
-			$m = new PageModel($subnode->getAttribute('baseurl'));
+			// These are always global pages.
+			$m = new PageModel(-1, $subnode->getAttribute('baseurl'));
 
 			// Just something to help the log.
 			$action = ($m->exists()) ? 'Updated' : 'Added';
@@ -1588,6 +1595,58 @@ class Component_2_1 {
 		Core::Cache()->delete('asset-resolveurl');
 
 		return $changes;
+	}
+
+	/**
+	 * Helper function to see if there is a valid upgrade path from the current version installed
+	 * to the version of the code available.
+	 *
+	 * @return bool
+	 */
+	private function _checkUpgradePath(){
+		// Check that if the version installed is not what's in the component file, that there is a valid upgrade path.
+		if($this->_versionDB && $this->_version != $this->_versionDB){
+
+			// Assemble an array of upgrade paths, with the key/pairs being from//to versions.
+			$paths = array();
+
+			foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('upgrade') as $u) {
+				$from = $u->getAttribute('from');
+				$to   = $u->getAttribute('to');
+				if(!isset($paths[$from])) $paths[$from] = array();
+
+				$paths[$from][] = $to;
+			}
+
+			if(!sizeof($paths)){
+				// No upgrade paths even defined!
+				return false;
+			}
+
+			// Sort them version descending, makes finding the highest version number easier
+			foreach($paths as $k => $vs){
+				rsort($paths[$k], SORT_NATURAL);
+			}
+			$current = $this->_versionDB;
+			$x = 0; // My anti-infinite-loop counter.
+			while($current != $this->_version && $x < 20){
+				++$x;
+				if(isset($paths[$current])){
+					$current = $paths[$current][0];
+				}
+				else{
+					return false;
+				}
+			}
+
+			// Yay, if it's gotten here, that means that there was a valid upgrade path!
+			return true;
+		}
+		else{
+			// Easy enough :)
+			// The else is that it's installed and up to date.
+			return true;
+		}
 	}
 
 	/**

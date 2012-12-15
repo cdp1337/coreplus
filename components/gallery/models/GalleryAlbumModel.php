@@ -26,6 +26,10 @@ class GalleryAlbumModel extends Model {
 			'required' => true,
 			'null' => false,
 		),
+		'site' => array(
+			'type' => Model::ATT_TYPE_SITE,
+			'formtype' => 'system',
+		),
 		/*'paginate' => array(
 			'type' => Model::ATT_TYPE_INT,
 			'required' => true,
@@ -50,20 +54,20 @@ class GalleryAlbumModel extends Model {
 		),
 		'editpermissions' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'description' => 'Permissions for who is allowed to edit this album',
 			'default' => '!*',
 			'form' => array(
 				'type' => 'access',
 				'title' => 'Edit Permissions',
+				'description' => 'Permissions for who is allowed to edit this album',
 			)
 		),
 		'uploadpermissions' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'description' => 'Permissions for who is allowed to upload new images to this album',
 			'default' => '!*',
 			'form' => array(
 				'type' => 'access',
 				'title' => 'Upload Permissions',
+				'description' => 'Permissions for who is allowed to upload new images to this album',
 			)
 		),
 		'accepttypes' => array(

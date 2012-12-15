@@ -76,6 +76,11 @@ class Model implements ArrayAccess {
 	 * Date this record was originally created, set automatically
 	 */
 	const ATT_TYPE_CREATED = '__created';
+	/**
+	 * Site ID for the current site.
+	 * Has no function outside of enterprise/multisite mode.
+	 */
+	const ATT_TYPE_SITE = '__site';
 
 	/**
 	 * Mysql datetime and ISO 8601 formatted datetime field.
@@ -265,11 +270,17 @@ class Model implements ArrayAccess {
 		// I need to check the pks first.
 		// If they're not set I can't load anything from the database.
 		$i = self::GetIndexes();
+		$s = self::GetSchema();
 
 		$keys = array();
 		if (isset($i['primary']) && sizeof($i['primary'])) {
 			foreach ($i['primary'] as $k) {
-				if (($v = $this->get($k)) === null) return;
+				$v = $this->get($k);
+
+				// 2012.12.15 cp - I am changing this from return to continue to support enterprise data in non-enterprise mode.
+				// specifically, the page model.  Pages can be -1 for global or a specific ID for that site.
+				// in non-multisite mode, there are no other sites, so -1 and 0 are synonymous even though it's a primary key.
+				if ($v === null) continue;
 
 				// Remember the PK's for the query lookup later on.
 				$keys[$k] = $v;
@@ -282,6 +293,19 @@ class Model implements ArrayAccess {
 
 			// do something if cache succeeds....
 		}
+
+		// If the enterprise/multimode is set and enabled and there's a site column here,
+		// that should be enforced at a low level.
+		if(
+			isset($s['site']) &&
+			$s['site']['type'] == Model::ATT_TYPE_SITE &&
+			Core::IsComponentAvailable('enterprise') &&
+			MultiSiteHelper::IsEnabled() &&
+			$this->get('site') === null
+		){
+			$keys['site'] = MultiSiteHelper::GetCurrentSiteID();
+		}
+
 
 		$data = Dataset::Init()
 			->select('*')
@@ -526,6 +550,22 @@ class Model implements ArrayAccess {
 					$dat->setID($k, $this->_data[$k]);
 					$idcol = $k; // Remember this for after the save.
 					break;
+
+				case Model::ATT_TYPE_SITE:
+					if(
+						Core::IsComponentAvailable('enterprise') &&
+						MultiSiteHelper::IsEnabled() &&
+						$v === null
+					){
+						$site = MultiSiteHelper::GetCurrentSiteID();
+						$dat->insert('site', $site);
+						$this->_data[$k] = $site;
+					}
+					else{
+						$dat->insert($k, $v);
+					}
+					break;
+
 				default:
 					$dat->insert($k, $v);
 					break;
@@ -911,6 +951,17 @@ class Model implements ArrayAccess {
 			$wheres[$k] = $this->get($k);
 		}
 
+
+		// Pages have a special extra here.  If it's enterprise/multisite mode, enforce that relationship.
+		if($linkname == 'Page' && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			// See if there's a site column on this schema.  If there is, enforce that binding too!
+			$schema = self::GetSchema();
+			if(isset($schema['site']) && $schema['site']['type'] == Model::ATT_TYPE_SITE){
+				$wheres['site'] = $this->get('site');
+			}
+		}
+
+
 		return $wheres;
 	}
 
@@ -1258,17 +1309,10 @@ class Model implements ArrayAccess {
 			self::$_ModelCache[$class] = array();
 		}
 		if(!isset(self::$_ModelCache[$class][$cache])){
+			$reflection = new ReflectionClass($class);
 			/** @var $obj Model */
-			$obj = new $class();
+			$obj = $reflection->newInstanceArgs(func_get_args());
 
-			$i = $obj::GetIndexes();
-
-			if (isset($i['primary']) && func_num_args() == sizeof($i['primary'])) {
-				foreach ($i['primary'] as $k => $v) {
-					$obj->_data[$v] = func_get_arg($k);
-				}
-			}
-			$obj->load();
 			self::$_ModelCache[$class][$cache] = $obj;
 		}
 
@@ -1459,6 +1503,7 @@ class ModelFactory {
 	 * @return array|null|Model
 	 */
 	public function get() {
+		$this->_performMultisiteCheck();
 		$rs = $this->_dataset->execute($this->interface);
 
 		$ret = array();
@@ -1511,6 +1556,31 @@ class ModelFactory {
 	 */
 	public function getDataset(){
 		return $this->_dataset;
+	}
+
+	/**
+	 * Internal function to do the multisite check on the model.
+	 * If the model supports a site attribute and none requested, then set it to the current site.
+	 */
+	private function _performMultisiteCheck(){
+
+		$m = $this->_model;
+		$schema = $m::GetSchema();
+
+		// Is there a site property?  If not I don't even care.
+		if(
+			isset($schema['site']) &&
+			$schema['site']['type'] == Model::ATT_TYPE_SITE &&
+			Core::IsComponentAvailable('enterprise') &&
+			MultiSiteHelper::IsEnabled()
+		){
+			// I want to look it up because if the script actually set the site, then
+			// it evidently wants it for a reason.
+			$matches = $this->_dataset->getWhereClause()->findByField('site');
+			if(!sizeof($matches)){
+				$this->_dataset->where('site = ' . MultiSiteHelper::GetCurrentSiteID());
+			}
+		}
 	}
 
 
@@ -1586,6 +1656,12 @@ class ModelSchema {
 			}
 
 			if($column->type == Model::ATT_TYPE_UPDATED && !$column->maxlength){
+				$column->maxlength = 15;
+			}
+
+			if($column->type == Model::ATT_TYPE_SITE){
+				$column->default = 0;
+				$column->comment = 'The site id in multisite mode, (or 0 otherwise)';
 				$column->maxlength = 15;
 			}
 
@@ -1808,15 +1884,27 @@ class ModelSchemaColumn {
 		}
 
 		// Type needs to allow for a few special cases.
-		if(
-			($this->type == '__updated' || $this->type == '__created' || $this->type == 'int')
-			&&
-			($col->type == '__updated' || $col->type == '__created' || $col->type == 'int')
-		){
-			// These are all identical from a data perspective.
-			// Simply continue.
+		// Here, there are several columns that are all identical.
+		$typematches = array(
+			array(
+				Model::ATT_TYPE_INT,
+				Model::ATT_TYPE_CREATED,
+				Model::ATT_TYPE_UPDATED,
+				Model::ATT_TYPE_SITE,
+			)
+		);
+
+		$typesidentical = false;
+		foreach($typematches as $types){
+			if(in_array($this->type, $types) && in_array($col->type, $types)){
+				// Found an identical pair!  break out to continue;
+				$typesidentical = true;
+				break;
+			}
 		}
-		elseif($this->type != $col->type)         return false;
+
+		// If the types aren't found to be identical from above, then they have to actually be identical!
+		if(!$typesidentical && $this->type != $col->type) return false;
 
 		// Otherwise....
 		return true;

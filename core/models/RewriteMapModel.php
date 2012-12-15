@@ -13,6 +13,10 @@
  */
 class RewriteMapModel extends Model {
 	public static $Schema = array(
+		'site' => array(
+			'type' => Model::ATT_TYPE_SITE,
+			'formtype' => 'system',
+		),
 		'rewriteurl' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,

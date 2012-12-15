@@ -17,7 +17,7 @@ class FormSystemInput extends FormElement{
 		return '';
 	}
 
-	public function lookupValueFrom($src){
+	public function lookupValueFrom(&$src){
 		// Since system inputs don't actually change based on user input... just return this value.
 		return $this->get('value');
 	}

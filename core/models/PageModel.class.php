@@ -41,6 +41,12 @@ class PageModel extends Model {
 				'description' => 'Every page needs a title to accompany it, this should be short but meaningful.'
 			),
 		),
+		'site' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'default' => -1,
+			'formtype' => 'system',
+			'comment' => 'The site id in multisite mode, (or -1 if global)',
+		),
 		'baseurl' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
@@ -116,8 +122,8 @@ class PageModel extends Model {
 	);
 
 	public static $Indexes = array(
-		'primary' => array('baseurl'),
-		'unique:rewrite_url' => array('rewriteurl'),
+		'primary' => array('site', 'baseurl'),
+		'unique:rewrite_url' => array('site', 'rewriteurl'),
 	);
 
 	private $_class;
@@ -145,7 +151,7 @@ class PageModel extends Model {
 	private static $_FuzzyCache = null;
 
 
-	public function  __construct($key = null) {
+	public function  __construct() {
 		$this->_linked = array(
 			'Insertable' => array(
 				'link' => Model::LINK_HASMANY,
@@ -153,7 +159,28 @@ class PageModel extends Model {
 			),
 		);
 
-		parent::__construct($key);
+		// This system now has a combined primary key.
+		// HOWEVER, construction of the model should still be allowed to be performed with simply the baseurl.
+		// The first part of the key can be assumed.
+		if(func_num_args() == 1){
+			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+				$site = MultiSiteHelper::GetCurrentSiteID();
+			}
+			else{
+				$site = null;
+			}
+			$key = func_get_arg(0);
+			parent::__construct($site, $key);
+			$this->load();
+		}
+		elseif(func_num_args() == 2){
+			$site = func_get_arg(0);
+			$key  = func_get_arg(1);
+			parent::__construct($site, $key);
+		}
+		else{
+			parent::__construct();
+		}
 	}
 
 
@@ -225,6 +252,11 @@ class PageModel extends Model {
 
 		// If this page exists, I don't want to include this page in the count.
 		if ($this->exists()) $ds->where('baseurl != ' . $this->_data['baseurl']);
+
+		// Enterprise/multisite mode anyone?
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			$ds->whereGroup('OR', 'site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID());
+		}
 
 		$ds->execute();
 
@@ -790,6 +822,14 @@ class PageModel extends Model {
 			$s->select('rewriteurl, baseurl, fuzzy');
 			$s->table(DB_PREFIX . 'page');
 
+			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+				$g = new DatasetWhereClause();
+				$g->setSeparator('OR');
+				$g->addWhere('site = -1');
+				$g->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
+				$s->where($g);
+			}
+
 			$rs = $s->execute();
 			self::$_RewriteCache = array();
 			self::$_FuzzyCache = array();
@@ -858,6 +898,14 @@ class PageModel extends Model {
 		else {
 			$f = new ModelFactory('PageModel');
 			$f->where($where);
+		}
+
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			$g = new DatasetWhereClause();
+			$g->setSeparator('OR');
+			$g->addWhere('site = -1');
+			$g->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
+			$f->where($g);
 		}
 
 		// Get the pages

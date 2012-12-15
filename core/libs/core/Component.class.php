@@ -106,11 +106,12 @@ class Component extends XMLLoader {
 	private $_execMode = 'WEB';
 
 	// A set of error codes components may encounter.
-	const ERROR_NOERROR = 0; // 0000
-	const ERROR_INVALID = 1; // 0001
-	const ERROR_WRONGEXECMODE = 2; // 0010
-	const ERROR_MISSINGDEPENDENCY = 4; // 0100
-	const ERROR_CONFLICT = 8; // 1000
+	const ERROR_NOERROR = 0;           // 000000
+	const ERROR_INVALID = 1;           // 000001
+	const ERROR_WRONGEXECMODE = 2;     // 000010
+	const ERROR_MISSINGDEPENDENCY = 4; // 000100
+	const ERROR_CONFLICT = 8;          // 001000
+	const ERROR_UPGRADEPATH = 16;      // 010000
 
 	/**
 	 * This is the error code of any errors encountered.

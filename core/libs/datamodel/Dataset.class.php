@@ -584,10 +584,33 @@ class DatasetWhereClause{
 				$children[] = $s->getAsArray();
 			}
 			elseif($s instanceof DatasetWhere){
+				if($s->field === null) continue;
 				$children[] = $s->field . ' ' . $s->op . ' ' . $s->value;
 			}
 		}
 		return array('sep' => $this->_separator, 'children' => $children);
+	}
+
+	/**
+	 * Get any/all statements that have a field set to that which is requested.
+	 *
+	 * Useful for looking up to see if a specific column has been set in a where statement.
+	 *
+	 * @param string $fieldname The field to search for
+	 * @return array
+	 */
+	public function findByField($fieldname){
+		$matches = array();
+		foreach($this->_statements as $s){
+			if($s instanceof DatasetWhereClause){
+				$matches = array_merge($matches, $s->findByField($fieldname));
+			}
+			elseif($s instanceof DatasetWhere){
+				if($s->field == $fieldname) $matches[] = $s;
+			}
+		}
+
+		return $matches;
 	}
 
 }

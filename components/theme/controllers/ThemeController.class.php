@@ -58,18 +58,39 @@ class ThemeController extends Controller_2_1{
 		
 		$theme = $this->getPageRequest()->getParameter(0);
 		$template = $this->getPageRequest()->getParameter('template');
-		
+
+		// If the browser prefers JSON data, send that.
+		if($request->prefersContentType(View::CTYPE_JSON)){
+			$view->contenttype = View::CTYPE_JSON;
+		}
+
 		// Validate
 		if(!\Theme\validate_theme_name($theme)){
-			Core::SetMessage('Invalid theme requested', 'error');
-			Core::Redirect('/Theme');
+			$this->_sendError('Invalid theme requested');
+			return;
 		}
 		
 		if(!\Theme\validate_template_name($theme, $template)){
-			Core::SetMessage('Invalid template requested', 'error');
-			Core::Redirect('/Theme');
+			$this->_sendError('Invalid template requested');
+			return;
 		}
-		
+
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
+			$config_default  = ConfigHandler::GetConfig('/theme/default_template');
+			$config_selected = ConfigHandler::GetConfig('/theme/selected');
+
+			if($config_default->get('overrideable') == 0){
+				// It's a child site and the admin never gave them permission to change default themes!
+				$this->_sendError('Unable to set the default template on a child site, please ensure that the "/theme/default_template" config is set to be overrideable!');
+				return;
+			}
+			if($config_selected->get('overrideable') == 0){
+				// It's a child site and the admin never gave them permission to change default themes!
+				$this->_sendError('Unable to set the selected theme on a child site, please ensure that the "/theme/selected" config is set to be overrideable!');
+				return;
+			}
+		}
+
 		if($request->isPost()){
 			
 			ConfigHandler::Set('/theme/default_template', $template);
@@ -150,7 +171,16 @@ class ThemeController extends Controller_2_1{
 		
 		
 		// These are all the available widgets on the site otherwise.
-		$widgets = WidgetModel::Find(null, null, 'title');
+		$widgetfactory = new ModelFactory('WidgetModel');
+		$widgetfactory->order('title');
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			$where = new DatasetWhereClause();
+			$where->setSeparator('OR');
+			$where->addWhere('site = -1');
+			$where->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
+			$widgetfactory->where($where);
+		}
+		$widgets = $widgetfactory->get();
 		
 		// This is a lookup of widget titles to URL, since the title is derived from the widget's controller and
 		// saved in the widget table separate from the instances.
@@ -228,11 +258,26 @@ class ThemeController extends Controller_2_1{
 			}
 		}
 	}
+
+	/**
+	 * Helper function for the setdefault method.
+	 * @param $message
+	 */
+	private function _sendError($message){
+		$request = $this->getPageRequest();
+		$view = $this->getView();
+
+		if($request->prefersContentType(View::CTYPE_JSON)){
+			$view->jsondata = array('message' => $message, 'status' => 0);
+		}
+		else{
+			Core::SetMessage($message, 'error');
+			Core::Redirect('/theme');
+		}
+	}
 	
 	public static function Widgets_Save(View $view){
 	var_dump(CurrentPage::Singleton());
 		var_dump($view); die();
 	}
 }
-
-?>

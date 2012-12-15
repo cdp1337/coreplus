@@ -50,21 +50,50 @@ class User_datamodel_Backend extends User implements User_Backend{
 			$g = json_decode($this->_getModel()->get('groups'), true);
 			if(!$g) $g = array();
 
+			// Failover, if the user's group is a flat array of integers and multisite mode is enabled,
+			// convert that to an array of sites, 0 being the first (root), with that list of groups.
+			// This is useful for a site that has existing users that then converts to multisite.
+			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+				if(isset($g[0]) && !is_array($g[0])){
+
+					$g = array(0 => $g);
+					$this->_getModel()->set('groups', json_encode($g));
+					// It'll get saved on save() (if called).
+				}
+			}
+
 			$this->_groups = $g;
 		}
 
-		return $this->_groups;
+		// Only return this site's groups if in multisite mode
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			$site = MultiSiteHelper::GetCurrentSiteID();
+			return (isset($this->_groups[$site])) ? $this->_groups[$site] : array();
+		}
+		else{
+			return $this->_groups;
+		}
 	}
 
 	public function setGroups($groups){
-		// First, blank out the cache just as a precaution.
-		$this->_groups = null;
+		// If multimode is enabled, this will have to be a list of groups JUST for that site.
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			// In this case, I need to be sure that the groups are loaded correctly.  getGroups will take care of that.
+			$this->getGroups();
+			// Now....
+			$site = MultiSiteHelper::GetCurrentSiteID();
+			// This subset will be blanked out.
+			$this->_groups[$site] = $groups;
+		}
+		else{
+			$this->_groups = $groups;
+		}
 
-		if(sizeof($groups) == 0){
+		if(sizeof($this->_groups) == 0){
 			$this->_getModel()->set('groups', '');
 		}
 		else{
-			$this->_getModel()->set('groups', json_encode($groups));
+			$this->_getModel()->set('groups', json_encode($this->_groups));
 		}
 	}
 

@@ -38,10 +38,6 @@ class ConfigModel extends Model {
 			'required'  => true,
 			'null'      => false,
 		),
-		'NAME'          => array(
-			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 50,
-		),
 		'type'          => array(
 			'type'    => Model::ATT_TYPE_ENUM,
 			'options' => array('string', 'int', 'boolean', 'enum', 'set'),
@@ -76,6 +72,11 @@ class ConfigModel extends Model {
 			'comment'   => 'The define constant to map the value to on system load.',
 			'null'      => true,
 		),
+		'overrideable' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'default' => false,
+			'comment' => 'If children sites can override this configuration option',
+		),
 		'created'       => array(
 			'type' => Model::ATT_TYPE_CREATED
 		),
@@ -99,15 +100,28 @@ class ConfigModel extends Model {
 		$v = $this->get('value');
 		if ($v === null) $v = $this->get('default');
 
-		switch ($this->get('type')) {
+		return self::TranslateValue($this->get('type'), $v);
+	}
+
+	/**
+	 * Translate the database value to a strict datatype.
+	 * This will ensure that a "boolean" config with value of "0" actually returns (===) false.
+	 *
+	 * @param $type
+	 * @param $value
+	 *
+	 * @return array|bool|int
+	 */
+	public static function TranslateValue($type, $value){
+		switch ($type) {
 			case 'int':
-				return (int)$v;
+				return (int)$value;
 			case 'boolean':
-				return ($v == '1' || $v == 'true') ? true : false;
+				return ($value == '1' || $value == 'true') ? true : false;
 			case 'set':
-				return array_map('trim', explode('|', $v));
+				return array_map('trim', explode('|', $value));
 			default:
-				return $v;
+				return $value;
 		}
 	}
 
