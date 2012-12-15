@@ -7,122 +7,105 @@
  */
 class ThemeEditorController extends Controller_2_1 {
 
+	private function _lookfor($fileext, &$mergearray, Directory_local_backend $directory, $assetdir){
+		foreach($directory->ls() as $file){
+			if($file instanceof Directory_local_backend){
+				$this->_lookfor($fileext, $mergearray, $file, $assetdir);
+			}
+			elseif($file instanceof File_local_backend){
+
+				// Only add if matches the fileext.
+				if($file->getExtension() == $fileext){
+					$filename = $file->getFilename();
+					$shortStr = substr($filename, strlen($assetdir)+1);
+					$mergearray[$shortStr] = $file;
+				}
+			}
+		}
+	}
+
 	public function index(){
 
 		$view = $this->getView();
+		$request = $this->getPageRequest();
 
-		if(!$this->setAccess('p:content_manage')){
+		if(!$this->setAccess('g:admin')){
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		//$theme = ( Theme::getName() == null ? 'default' : Theme::getName() );
-		//is get name not working as expected? it returns null for the default theme... :/
+		$components = Core::GetComponents();
+		$styles = array();
+		$skins = array();
 
-		//figure out the current theme absolute path
-		$theme = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected');
+		$assetdir = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/assets';
+		$css = new Directory_local_backend($assetdir);
+		$this->_lookfor('css', $styles, $css, $assetdir);
 
-		//grab all the relevant resources from the theme folder
-		$styles = self::dirToArray($theme . '/assets/css', true, false, true);
-		$skins  = self::dirToArray($theme . '/skins', true, false, true);
+		$templatedir = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/skins';
+		$templates = new Directory_local_backend($templatedir);
+		$this->_lookfor('tpl', $skins, $templates, $templatedir);
 
-
-
-		//there's gotta be a better way
-		$images = self::dirToArray($theme . '/assets/images', true, false, true);
-
-		foreach($images as $img){
-			$resultImg[] = str_replace($theme . "/", "", $img);
-		}
-		$images = $resultImg;
-
-
-
-		//there's gotta be a better way
-		$icons  = self::dirToArray($theme . '/assets/icons', true, false, true);
-
-		foreach($icons as $icon){
-			$resultIcon[] = str_replace($theme . "/", "", $icon);
-		}
-		$icons = $resultIcon;
-
-
-
-		$fonts  = self::dirToArray($theme . '/assets/fonts', true, false, true);
-
-		//see if we should load a different file instead of the default stylesheet
-		$loadTextItem = $_GET['txt'];
-		$loadImageItem = $_GET['img'];
-
-		//set the content to display in the textarea
-		//$content = (empty($loadItem) ? self::getFileContents($styles[0]) : self::getFileContents($loadItem) );
-
-		if(empty($loadTextItem) && empty($loadImageItem)){
-			//default to editing main stylesheet
-			$content = self::getFileContents($styles[0]);
-		}
-		elseif(!empty($loadTextItem)){
-			//load requested text resource
-			$content = self::getFileContents($loadTextItem);
-		}
-		elseif(!empty($loadImageItem)){
-			//load image file types
-			$image = $loadImageItem;
+		foreach($components as $c) {
+			/** @var $c Component_2_1 */
+			if($c->getAssetDir()){
+				$dir = $c->getAssetDir();
+				$dh = new Directory_local_backend($c->getAssetDir());
+				$this->_lookfor('css', $styles, $dh, $dir);
+				$this->_lookfor('tpl', $skins, $dh, $dir);
+			}
 		}
 
+		ksort($styles);
+		ksort($skins);
 
+		if($request->getParameter('css')){
+			$file = $request->getParameter('css');
+			$activefile = 'style';
+		}
+		elseif($request->getParameter('tpl')) {
+			$file = $request->getParameter('tpl');
+			$activefile = 'template';
+		}
+		else {
+			//no special gets...
+			$file = false; // I'm already defining it all here!
+			$fh = $css->get('css/styles.css');
+			$content= $fh->getContents();
+			$filename = $fh->getBasename();
+			$activefile = 'style';
+		}
+
+		if($file) {
+			$fh = new File_local_backend($file);
+			$content = $fh->getContents();
+			$filename = $fh->getBasename();
+		}
+
+		$m = new ThemeEditorItemModel();
+		$m->set('content', $content);
+		$m->set('filename', $fh->getFilename());
+
+		$form = Form::BuildFromModel($m);
+		$form->set('callsmethod', 'ThemeEditorController::_SaveHandler');
+		$form->addElement('submit', array('value' => 'Update'));
+
+		$revisions = ThemeEditorItemModel::Find( array('filename' => $fh->getFilename()), 5, 'updated DESC');
+
+		$view->assignVariable('activefile', $activefile);
+		$view->assignVariable('form', $form);
 		$view->assignVariable('styles', $styles);
 		$view->assignVariable('skins', $skins);
-		$view->assignVariable('images', $images);
-		$view->assignVariable('icons', $icons);
-		$view->assignVariable('fonts', $fonts);
-
 		$view->assignVariable('content', $content);
-		$view->assignVariable('image', $image);
-		$view->assignVariable('font', $font);
+		$view->assignVariable('filename', $filename);
+		$view->assignVariable('revisions', $revisions);
 
 		$view->title = 'Theme Editor';
 
 	}
 
-
-	public static function dirToArray($directory, $recursive = true, $listDirs = false, $listFiles = true, $exclude = '') {
-		$arrayItems = array();
-		$skipByExclude = false;
-		$handle = opendir($directory);
-		if ($handle) {
-			while (false !== ($file = readdir($handle))) {
-				preg_match("/(^(([\.]){1,2})$|(\.(svn|git|md))|(Thumbs\.db|\.DS_STORE))$/iu", $file, $skip);
-				if($exclude){
-					preg_match($exclude, $file, $skipByExclude);
-				}
-				if (!$skip && !$skipByExclude) {
-					if (is_dir($directory. DIRECTORY_SEPARATOR . $file)) {
-						if($recursive) {
-							$arrayItems = array_merge($arrayItems, self::dirToArray($directory. DIRECTORY_SEPARATOR . $file, $recursive, $listDirs, $listFiles, $exclude));
-						}
-						if($listDirs){
-							$file = $directory . DIRECTORY_SEPARATOR . $file;
-							$arrayItems[] = $file;
-						}
-					} else {
-						if($listFiles){
-							$file = $directory . DIRECTORY_SEPARATOR . $file;
-							$arrayItems[] = $file;
-						}
-					}
-				}
-			}
-			closedir($handle);
-		}
-		return $arrayItems;
-	}
-
-	public static function getFileContents($file){
-		//made this it's own function so i can debug why xdebug keeps injecting itself in the smarty templates
-		return file_get_contents($file);
-	}
-
-	public static function update(){
-		$file = $_GET['file'];
+	public static function _SaveHandler(Form $form) {
+		$model = $form->getModel();
+		$model->set('updated', Time::GetCurrent());
+		$model->save();
 	}
 }

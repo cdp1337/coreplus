@@ -19,10 +19,15 @@ class ThemeEditorItemModel extends Model {
 		'filename' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'required' => true,
+			'formtype' => 'system',
 		),
 		'content' => array(
-			'type' => Model::ATT_TYPE_STRING,
+			'type' => Model::ATT_TYPE_TEXT,
 			'required' => true,
+			'form' => array(
+				'type' => 'textarea',
+			),
+
 		),
 		'updated' => array(
 			'type' => Model::ATT_TYPE_UPDATED,
