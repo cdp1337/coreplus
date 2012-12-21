@@ -47,3 +47,55 @@
         });
     });
 </script>{/script}
+
+{if $hassort}
+	{css}<style>
+		.column-sortable th { cursor: pointer; }
+		.column-sortable th i { float: right; }
+		.column-sortable th i.other { visibility: hidden; }
+		.column-sortable th:hover i.other { visibility: visible; }
+		.column-sortable th:hover i.current { visibility: hidden; }
+	</style>{/css}
+
+	{script location="foot"}<script type="text/javascript">
+		var $columnsortabletable = $('.column-sortable'),
+			sortkey = "{$sortkey}",
+			sortdir ="{$sortdir}",
+			sortother = (sortdir == 'up' ? 'down' : 'up');
+
+		$('.column-sortable th[sortkey]').each(function(){
+			var $th = $(this);
+
+			// Make sure it has a useful title.
+			if(!$th.attr('title')) $th.attr('title', 'Sort by ' + $th.html());
+
+			if($th.attr('sortkey') == sortkey){
+				$th.append('<i class="icon-sort-' + sortdir + ' current"></i>');
+				$th.append('<i class="icon-sort-' + sortother + ' other"></i>');
+			}
+			else{
+				$th.append('<i class="icon-sort other"></i>');
+			}
+		});
+
+		$('.column-sortable th[sortkey]').click(function(){
+			var $th = $(this), newkey, newdir, req;
+
+			if($th.attr('sortkey') == sortkey){
+				// Set the dir
+				newkey = sortkey;
+
+				if(sortdir == 'up') newdir = 'down';
+				else newdir = 'up';
+			}
+			else{
+				newkey = $th.attr('sortkey');
+				newdir = sortdir;
+			}
+
+			req = 'sortkey=' + newkey + '&sortdir=' + newdir;
+
+			window.location.search = '?' + req;
+		});
+	</script>{/script}
+{/if}

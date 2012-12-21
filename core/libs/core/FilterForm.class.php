@@ -1,18 +1,115 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: powellc
- * Date: 10/28/12
- * Time: 10:28 PM
- * To change this template use File | Settings | File Templates.
+ * Filter system
+ *
+ * @package Core Plus
+ * @since 2.3.2
  */
 class FilterForm {
+
+	/**
+	 * Set to true to look for (and remember), sortkey and sortdir as well.
+	 *
+	 * @var bool
+	 */
+	public $hassort = false;
+
+	/**
+	 * Set to true to look for (and remember), the pagination values.
+	 *
+	 * @var bool
+	 */
+	public $haspagination = false;
 
 	private $_name = null;
 
 	private $_elements = array();
 
 	private $_elementindexes = array();
+
+	/**
+	 * null or an array of valid sort keys, the first being the default.
+	 *
+	 * @var null|array
+	 */
+	private $_sortkeys = null;
+
+	/**
+	 * null or the sort key of the current view.
+	 *
+	 * @var null
+	 */
+	private $_sortkey = null;
+
+	/**
+	 * Sorting direction, think ascending or descending.
+	 *
+	 * @var string "up" or "down"
+	 */
+	private $_sortdir = 'down';
+
+	/**
+	 * The limit for this filterset, only takes effect if $haspagination is set to true.
+	 *
+	 * @var int
+	 */
+	private $_limit = 50;
+
+	/**
+	 * The total number of entries for this filterset.  Set automatically from applyToFactory and callable externally.
+	 *
+	 * @var null|int
+	 */
+	private $_total = null;
+
+	/**
+	 * The current page, only takes effect if $haspagination is set to true.
+	 *
+	 * @var int
+	 */
+	private $_currentpage = 1;
+
+	/**
+	 * Standard link type for a given model factory and its filter.
+	 *
+	 * format: key = value
+	 */
+	const LINK_TYPE_STANDARD = ' = ';
+
+	/**
+	 * Greater than link type for a given model factory and its filter.
+	 *
+	 * format: key > value
+	 */
+	const LINK_TYPE_GT = ' > ';
+
+	/**
+	 * Greater than or equal-to link type for a given model factory and its filter.
+	 *
+	 * format: key >= value
+	 */
+	const LINK_TYPE_GE = ' >= ';
+
+	/**
+	 * Less than link type for a given model factory and its filter.
+	 *
+	 * format: key < value
+	 */
+	const LINK_TYPE_LT = ' < ';
+
+	/**
+	 * Less than or equal-to link type for a given model factory and its filter.
+	 *
+	 * format: key <= value
+	 */
+	const LINK_TYPE_LE = ' <= ';
+
+	/**
+	 * Use the LIKE connector to find anything that starts with the value.
+	 *
+	 * format: key LIKE value%
+	 */
+	const LINK_TYPE_STARTSWITH = '_startswith_';
 
 	/**
 	 * Create a new filter form object
@@ -24,7 +121,7 @@ class FilterForm {
 	/**
 	 * Set the name for this filter, required for any session saving/lookup.
 	 *
-	 * @param $filtername
+	 * @param string $filtername
 	 */
 	public function setName($filtername){
 		$this->_name = $filtername;
@@ -35,8 +132,8 @@ class FilterForm {
 	 *
 	 * This is the exact same as the native Form system.
 	 *
-	 * @param string     $element Type of element, (or the form element itself)
-	 * @param null|array $atts [optional] An associative array of parameters for this form element
+	 * @param string|FormElement $element Type of element, (or the form element itself)
+	 * @param null|array         $atts [optional] An associative array of parameters for this form element
 	 */
 	public function addElement($element, $atts = null) {
 		// Since this allows for just plain names to be submitted, translate
@@ -79,14 +176,37 @@ class FilterForm {
 		$this->loadSession();
 
 		$a = array();
+		$s = array();
+		$p = array();
+
+		// Check the sort keys?
+		if($this->hassort){
+			if($request->getParameter('sortkey')){
+				$this->setSortKey($request->getParameter('sortkey'));
+				$s['sortkey'] = $this->_sortkey;
+			}
+			if($request->getParameter('sortdir')){
+				$this->setSortDirection($request->getParameter('sortdir'));
+				$s['sortdir'] = $this->_sortdir;
+			}
+		}
+
+		// Check the page key?
+		if($this->haspagination){
+			if($request->getParameter('page')){
+				$this->setPage($request->getParameter('page'));
+				$p['page'] = $this->_currentpage;
+			}
+		}
+
 
 		if($request->getParameter('filter')){
 			$filters = $request->getParameter('filter');
 		}
 		else{
-			// Ok
-			return;
+			$filters = array();
 		}
+
 
 		foreach($filters as $f => $v){
 			if(!isset($this->_elementindexes['filter[' . $f . ']'])) continue;
@@ -98,7 +218,16 @@ class FilterForm {
 			$a[$f] = $v;
 		}
 
-		$_SESSION['filters'][$this->_name] = $a;
+
+		if(sizeof($a)){
+			$_SESSION['filters'][$this->_name] = $a;
+		}
+		if(sizeof($s)){
+			$_SESSION['filtersort'][$this->_name] = $s;
+		}
+		if(sizeof($p)){
+			$_SESSION['filterpage'][$this->_name] = $p;
+		}
 	}
 
 	/**
@@ -107,22 +236,28 @@ class FilterForm {
 	 * This is automatically called by the load function.
 	 */
 	public function loadSession(){
-		if($this->_name && isset($_SESSION['filters'][$this->_name])){
-			$filters = $_SESSION['filters'][$this->_name];
-		}
-		else{
-			// Ok
+		if(!$this->_name){
+			// Ok, no name.. no loading.
 			return;
 		}
-
-		foreach($filters as $f => $v){
-			if(!isset($this->_elementindexes['filter[' . $f . ']'])) continue;
-			/** @var $el FormElement */
-			$el = $this->_elementindexes['filter[' . $f . ']'];
-			$el->setValue($v);
+		if(isset($_SESSION['filters'][$this->_name])){
+			$filters = $_SESSION['filters'][$this->_name];
+			foreach($filters as $f => $v){
+				if(!isset($this->_elementindexes['filter[' . $f . ']'])) continue;
+				/** @var $el FormElement */
+				$el = $this->_elementindexes['filter[' . $f . ']'];
+				$el->setValue($v);
+			}
 		}
 
-		// No need to save it back to the session, it just came from there!
+		if(isset($_SESSION['filtersort'][$this->_name])){
+			$this->_sortkey = $_SESSION['filtersort'][$this->_name]['sortkey'];
+			$this->_sortdir = $_SESSION['filtersort'][$this->_name]['sortdir'];
+		}
+
+		if(isset($_SESSION['filterpage'][$this->_name])){
+			$this->_currentpage = $_SESSION['filterpage'][$this->_name]['page'];
+		}
 	}
 
 	/**
@@ -136,16 +271,79 @@ class FilterForm {
 		$filterset = false;
 		foreach($this->_elements as $element){
 			/** @var $element FormElement */
-			if($element->get('value') !== ''){
-				$filterset = true;
-				break;
+			if($element->get('value') === ''){
+				continue;
 			}
+
+			if($element->get('value') === null){
+				continue;
+			}
+
+			// Haven't continued yet?
+			$filterset = true;
+			break;
 		}
 
 		$tpl = new Template();
 		$tpl->assign('filtersset', $filterset);
 		$tpl->assign('elements', $this->_elements);
+		$tpl->assign('hassort', $this->hassort);
+		$tpl->assign('sortkey', $this->getSortKey());
+		$tpl->assign('sortdir', $this->getSortDirection());
 		return $tpl->fetch('forms/filters.tpl');
+	}
+
+	/**
+	 * Fet this filter set's pagination options as a string.
+	 *
+	 * @return string
+	 */
+	public function pagination(){
+		if(!$this->haspagination) return null;
+
+		// Give me the total number of pages given the current criteria.
+		$maxpages = ceil($this->_total / $this->_limit);
+
+		// If there are no more pages beyond the first, just return null, no pagination available!
+		if($maxpages <= 1) return null;
+
+		// The current page can't exceed past the maxpages.
+		$currentpage = min($maxpages, $this->_currentpage);
+		// nor can it be < 0
+		if($currentpage < 1) $currentpage = 1;
+
+		//$currentpage = 22;
+
+		// The number of results on either side of the current.
+		$offset = 4;
+
+		// If there are more than so many pages, only display a subset of them.
+		if($maxpages > 10){
+			if($currentpage > $maxpages - (($offset)*2-1)){
+				$displaymin = $maxpages - (($offset)*2+1);
+				$displaymax = $maxpages;
+			}
+			elseif($currentpage < (($offset)*2)){
+				$displaymin = 1;
+				$displaymax = ($offset*2+1);
+			}
+			else{
+				$displaymin = $currentpage - ($offset);
+				$displaymax = $currentpage + ($offset);
+			}
+		}
+		else{
+			$displaymin = 1;
+			$displaymax = $maxpages;
+		}
+
+
+		$tpl = new Template();
+		$tpl->assign('page_current', $currentpage);
+		$tpl->assign('page_max', $maxpages);
+		$tpl->assign('display_min', $displaymin);
+		$tpl->assign('display_max', $displaymax);
+		return $tpl->fetch('forms/filters-pagination.tpl');
 	}
 
 	/**
@@ -161,5 +359,193 @@ class FilterForm {
 
 		if(!isset($this->_elementindexes[$name])) return null;
 		return $this->_elementindexes[$name]->get('value');
+	}
+
+	/**
+	 * Set the sort direction for this filterset.
+	 *
+	 * @since 2.4.0
+	 * @param $dir "up" or "down".  It must be up or down because fontawesome has those keys instead of "asc" and "desc" :p
+	 *
+	 * @return bool true/false on success or failure.
+	 */
+	public function setSortDirection($dir){
+		$dir = strtolower($dir);
+		switch($dir){
+			case 'down':
+			case 'up':
+				$this->_sortdir = $dir;
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	/**
+	 * Get the sort direction, either up or down.
+	 *
+	 * @since 2.4.0
+	 * @return string|null
+	 */
+	public function getSortDirection(){
+		if(!$this->hassort) return null;
+		else return $this->_sortdir;
+	}
+
+	/**
+	 * Get the sort key.
+	 *
+	 * @return null|string
+	 */
+	public function getSortKey(){
+		if(!$this->hassort) return null;
+		elseif($this->_sortkey) return $this->_sortkey;
+		elseif(is_array($this->_sortkeys) && sizeof($this->_sortkeys)) return $this->_sortkeys[0];
+		else return null;
+	}
+
+	/**
+	 * Set the valid sort keys for this filterset.
+	 *
+	 * @since 2.4.0
+	 * @param array $arr
+	 *
+	 * @return bool true/false on success or failure.
+	 */
+	public function setSortkeys($arr){
+		if(!$this->hassort) return false;
+		if(!is_array($arr)) return false;
+
+		$this->_sortkeys = $arr;
+		return true;
+	}
+
+	/**
+	 * Set the active sort key currently.
+	 * If sotkeys is populated, it MUST be one of the keys in that array!
+	 *
+	 * @since 2.4.0
+	 * @param string $key
+	 *
+	 * @return bool true/false on success or failure.
+	 */
+	public function setSortKey($key){
+		if(is_array($this->_sortkeys) && sizeof($this->_sortkeys)){
+			// It's set, enforce type!
+			if(in_array($key, $this->_sortkeys)){
+				$this->_sortkey = $key;
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		else{
+			// Ok, just proceed blindly.
+			$this->_sortkey = $key;
+			return true;
+		}
+	}
+
+	/**
+	 * Set the limit for pagination, will default to 50.
+	 *
+	 * @since 2.4.0
+	 * @param int $limit
+	 */
+	public function setLimit($limit){
+		$this->_limit = (int) $limit;
+	}
+
+	public function setPage($page){
+		$this->_currentpage = (int) $page;
+	}
+
+	/**
+	 * Get the sort keys as an order clause, passable into the dataset system.
+	 *
+	 * @since 2.4.0
+	 */
+	public function getOrder(){
+		$key = $this->getSortKey();
+		$dir = $this->getSortDirection();
+
+		if(!$key) return null;
+
+		return $key . ' ' . ($dir == 'up' ? 'ASC' : 'DESC');
+	}
+
+	/**
+	 * Set the total count for the number of records.
+	 * This is externally available in case the factory is modified externally, which is perfectly allowed.
+	 *
+	 * @param int $count
+	 */
+	public function setTotalCount($count){
+		$this->_total = (int) $count;
+	}
+
+	/**
+	 * Given all the user defined filter, sort, and what not, apply those values to the ModelFactory if possible.
+	 *
+	 * @since 2.4.0
+	 * @param ModelFactory $factory
+	 */
+	public function applyToFactory(ModelFactory $factory){
+		if($this->hassort){
+			$factory->order($this->getOrder());
+		}
+
+		if($this->haspagination){
+			// Determine the starting count if the page is requested.
+			if($this->_currentpage > 1){
+				$startat = $this->_limit * ($this->_currentpage - 1);
+				$factory->limit($startat . ', ' . $this->_limit);
+			}
+			else{
+				$factory->limit($this->_limit);
+			}
+		}
+
+		foreach($this->_elements as $el){
+			/** @var $el FormElement */
+			$name = $el->get('name');
+			$idxname = $name;
+
+			if(strpos($name, 'filter[') === 0){
+				$name = substr($name, 7, -1);
+			}
+
+			// If this element is not in the index of elements, skip to the next element.
+			if(!isset($this->_elementindexes[$idxname])){
+				continue;
+			}
+
+			// If this doesn't have a link attribute, just skip.
+			if(!$el->get('link')){
+				continue;
+			}
+
+			// No value, just skip.
+			if(!$el->get('value')){
+				continue;
+			}
+
+			switch($el->get('link')){
+				case FilterForm::LINK_TYPE_STANDARD:
+				case FilterForm::LINK_TYPE_GT:
+				case FilterForm::LINK_TYPE_GE:
+				case FilterForm::LINK_TYPE_LT:
+				case FilterForm::LINK_TYPE_LE:
+					$factory->where($name . $el->get('link') . $el->get('value'));
+					break;
+				case FilterForm::LINK_TYPE_STARTSWITH:
+					$factory->where($name . ' LIKE ' . $el->get('value') . '%');
+					break;
+			}
+		}
+
+		// Might as well update the count now, it can always be updated later.
+		$this->setTotalCount($factory->count());
 	}
 }

@@ -42,6 +42,9 @@ Core Plus 2.4.0
 	* Removed some legacy code.
 	* Added a modify method on the CoreDateTime object.
 	* Added a zip contents object.
+	* Added an ajaxlink javascript method.  Allows any "ajax-link" classed link to open in a jquery window.
+	* Added a Core.Request javascript object to help with manipulation of the GET parameters.
+	* Added sort and pagination ability to the Filter system.
 
 
 Core Plus 2.3.2

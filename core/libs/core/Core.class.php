@@ -1415,6 +1415,13 @@ class Core implements ISingleton {
 		return true;
 	}
 
+	public static function _AttachAjaxLinks(){
+		JQuery::IncludeJQueryUI();
+		View::AddScript('js/core.ajaxlinks.js', 'foot');
+
+		return true;
+	}
+
 
 	/**
 	 * Clone of the php version_compare function, with the exception that it treats

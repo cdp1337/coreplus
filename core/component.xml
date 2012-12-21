@@ -7,6 +7,7 @@
 		<provide type="library" name="smarty" version="3.1.8"/>
 		<provide type="library" name="phpMailer" version="5.2.0"/>
 		<scriptlibrary name="Core.Strings" call="Core::_AttachCoreStrings"/>
+		<scriptlibrary name="Core.AjaxLinks" call="Core::_AttachAjaxLinks"/>
 	</provides>
 	<hooks>
 		<hookregister name="/core/components/loaded" description="Called immediately after all components have been loaded into memory."/>
@@ -42,8 +43,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="8cda9f6b7acfd7c60d770df647eeb3e0"/>
-		<file filename="core/CHANGELOG" md5="536743575b2c43699673d09a21f9a8be"/>
-		<file filename="core/bootstrap.compiled.php" md5="a81ba829ef5b8b3adbc91f5dc98c4504">
+		<file filename="core/CHANGELOG" md5="24e9ee6ba14a290ae7141108af102538"/>
+		<file filename="core/bootstrap.compiled.php" md5="d2410fbd428f58beeef0339c12c38906">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -114,7 +115,7 @@
 			<interface name="DMI_Backend"/>
 			<interface name="TemplateInterface"/>
 		</file>
-		<file filename="core/bootstrap.php" md5="60b390eddd7022b539a60708db2d43ad"/>
+		<file filename="core/bootstrap.php" md5="7eaaecfc28f9ab37f449a1bac3bca3e1"/>
 		<file filename="core/bootstrap_postincludes.php" md5="66f9826e95d4764cb63ff94033b66e33"/>
 		<file filename="core/bootstrap_predefines.php" md5="a75579b94642f0f4fb7b7540f9909288"/>
 		<file filename="core/bootstrap_preincludes.php" md5="dcfb10510205563d42e2d02c8979cc42"/>
@@ -498,7 +499,7 @@
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/Component_2_1.php~" md5="4f5ca980907f5ecafa204e3bfad3a07c"/>
-		<file filename="core/libs/core/ConfigHandler.class.php" md5="0ca972354438c10c65953ad0bcd7a2a4">
+		<file filename="core/libs/core/ConfigHandler.class.php" md5="3e12e2b14dc478de82982586fa4feeb0">
 			<class name="ConfigHandler"/>
 		</file>
 		<file filename="core/libs/core/Controller.class.php" md5="f584112515b7c712911a1583ffe23fea">
@@ -507,7 +508,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="da23111d3817635fd7fcad14583bde1a">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="16f7e2d48a5cd7e98a61db4e6c86c557">
+		<file filename="core/libs/core/Core.class.php" md5="1b3c4d7b640f2c6ee2e1317081d67dbe">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -526,7 +527,7 @@
 		<file filename="core/libs/core/Email.class.php" md5="2f0608c1f1aa4bfcb35a0affa35dacb8">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/FilterForm.class.php" md5="227bc4c1599e04b73d1389cde0350882">
+		<file filename="core/libs/core/FilterForm.class.php" md5="13373b9dad2e8861e946d5aa05d864eb">
 			<class name="FilterForm"/>
 		</file>
 		<file filename="core/libs/core/Form.class.php" md5="c06dcad4fe4ce80fb8fbd7f62e604072">
@@ -536,7 +537,7 @@
 			<class name="FormPageInsertables"/>
 			<class name="FormPageMeta"/>
 		</file>
-		<file filename="core/libs/core/HookHandler.class.php" md5="c46031b7155befd51ba137fcafe671c3">
+		<file filename="core/libs/core/HookHandler.class.php" md5="58ea42454371697c717de9fa01a9f956">
 			<class name="HookHandler"/>
 			<class name="Hook"/>
 		</file>
@@ -574,7 +575,7 @@
 			<class name="RepoXML"/>
 		</file>
 		<file filename="core/libs/core/SQLBuilder.class.php.DISABLED" md5="47925681d58280bff9c130f449c9ba90"/>
-		<file filename="core/libs/core/Session.class.php" md5="0df5f7ae6fa39bb90d114d05077ccb00">
+		<file filename="core/libs/core/Session.class.php" md5="6f9be46408540e4f288b0644f77f79fb">
 			<class name="Session"/>
 		</file>
 		<file filename="core/libs/core/Template.class.php" md5="16c1f0947679327d11f42bf48bf5b183">
@@ -870,7 +871,7 @@
 		<file filename="core/libs/filestore/contents/File_xml_contents.class.php" md5="4d15ad6321a2eae9fbe8543687616348">
 			<class name="File_xml_contents"/>
 		</file>
-		<file filename="core/libs/filestore/contents/File_zip_contents.class.php" md5="2541809d78670778aa4a66c8a3955056">
+		<file filename="core/libs/filestore/contents/File_zip_contents.class.php" md5="52514af6ada193b37c8195a270f89967">
 			<class name="File_zip_contents"/>
 		</file>
 		<file filename="core/libs/phpass/PasswordHash.php" md5="f767843472f0a498fb9c7f61966c0244">
@@ -1344,6 +1345,7 @@
 			<class name="PageWidget"/>
 		</file>
 		<file filename="docs/component-xml.md" md5="c9d026dd0479a87381d9f868fed434e4"/>
+		<file filename="docs/core/filters.md" md5="602d3daa7302e02e56adfc8eeaa9d707"/>
 		<file filename="docs/core/resolvelink.md" md5="85817c90723a34bf7ec6be9f1d554f29"/>
 		<file filename="docs/models.md" md5="f8e6c6e34027ac2e608127af0c0a185f"/>
 		<file filename="docs/schemas/component.dtd" md5="e420ec63fbbb33d3ac9b2ff73dcad1c7"/>
@@ -1351,7 +1353,7 @@
 		<file filename="docs/user-permissions.md" md5="53e3322a56a1b537a43f8520394b56ae"/>
 		<file filename="docs/utilities/compiler.md" md5="acfb5b28bfe613bca48ac52f30894899"/>
 		<file filename="htaccess.ex" md5="a9753494f79d3cfa1526c3ccfd19f1cc"/>
-		<file filename="index.php" md5="b687b91909b0393cd0b2640d9441e4a3"/>
+		<file filename="index.php" md5="9e2d44b1e5ebe54f1a30b4640a1e5a4c"/>
 		<file filename="install/InstallPage.class.php" md5="4f34783e9e3b4c2878afa6aa3aa0eb07">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1403,7 +1405,7 @@
 		<file filename="core/templates/forms/elements/html.tpl" md5="3d4259aa7f5615453121930abe34b031"/>
 		<file filename="core/templates/forms/elements/image.tpl" md5="dc4f74a0297b099ea7913d7582125837"/>
 		<file filename="core/templates/forms/elements/reset.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
-		<file filename="core/templates/forms/filters.tpl" md5="f3b9794062891871e4d8460eda849d70"/>
+		<file filename="core/templates/forms/filters.tpl" md5="40bdea372567b321e9747bb6f930d374"/>
 		<file filename="core/templates/forms/form.body.tpl" md5="8ab5bcc9f1307da533c72b3d18113a74"/>
 		<file filename="core/templates/forms/form.foot.tpl" md5="6e6d3353848b64921070b812c7c99936"/>
 		<file filename="core/templates/forms/form.head.tpl" md5="efe24a11d8a7a54ad55a68fd09abb0a1"/>
@@ -1473,10 +1475,11 @@
 		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="306b7baee9b250a9da2b378f5047ff30"/>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 		<file filename="core/assets/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
+		<file filename="core/assets/js/core.ajaxlinks.js" md5="825d6b6362db8cc63bde1cb1b22525ce"/>
 		<file filename="core/assets/js/core.base64.js" md5="d5858756a4cf8012eb25157105718dfa"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.fileupload.js" md5="499451d7c6a0e4266eb703f26e25cf33"/>
-		<file filename="core/assets/js/core.js" md5="3a070b379c2833223e9d89b386c75844"/>
+		<file filename="core/assets/js/core.js" md5="8c4724ce896c231d0c42c56d2201e33a"/>
 		<file filename="core/assets/js/core.strings.js" md5="7ba2a6d21dc4529332298404b7df17ff"/>
 		<file filename="core/assets/js/updater/index.js" md5="8bc98840b6292bdf9b98074ee92c7615"/>
 	</assets>
