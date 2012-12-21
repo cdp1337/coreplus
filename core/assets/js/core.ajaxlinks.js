@@ -9,7 +9,7 @@ $('.ajax-link').click(function(){
 
 	$window.dialog({
 		modal: true,
-		title: true,
+		title: title,
 		width: '850px',
 		position: 'center',
 		close: function(){ $(this).remove(); }
