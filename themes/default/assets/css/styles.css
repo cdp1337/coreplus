@@ -70,7 +70,7 @@ Since the icons are now being handled by font-awesome, the bulk of this logic wi
 
 
 /* First, the common styles for all icon'd controls. */
-ul.controls li a { text-decoration: none; font-size: 14px; padding: 2px; }
+ul.controls li a { text-decoration: none; font-size: 14px; padding: 2px; line-height: 18px; }
 ul.controls li a:hover { text-shadow: none; font-size: 18px; padding: 0; }
 
 ul.controls li a span {
@@ -557,3 +557,27 @@ fieldset.collapsed { padding:0; border-width: 1px 0px 0px; }
 #revisions .revision-date {color:#888;}
 
 .page-themeeditor #dialog-confirm {display:none;}
+
+
+/** Pagination styles **/
+.pagination {
+	color: #555555;
+	font-size: 84%;
+	padding: 0 0.5em;
+	margin: 0.5em 0;
+}
+.pagination a {
+	text-decoration: none;
+	color: #555555;
+}
+.pagination .disabled {
+	color: #999;
+}
+
+.pagination-pager {
+	float: left;
+}
+
+.pagination-list {
+	float: right;
+}
