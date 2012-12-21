@@ -52,31 +52,8 @@ class UserController extends Controller_2_1{
 
 		$form = \User\get_edit_form($user);
 
-		$view->addControl(
-			array(
-				'title' => 'Change Password',
-				'link' => '/user/password',
-				'icon' => 'key',
-			)
-		);
 
-		if(Core::IsComponentAvailable('User-Social')){
-			$view->addControl(
-				array(
-					'title' => 'Public Profile',
-					'link' => UserSocialHelper::ResolveProfileLink($user),
-					'icon' => 'user',
-				)
-			);
-
-			$view->addControl(
-				array(
-					'title' => 'Connected Profiles',
-					'link' => '/userprofile/connectedprofiles',
-					'icon' => 'link',
-				)
-			);
-		}
+		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
 
 		$view->assign('user', $user);
 		$view->assign('form', $form);
@@ -182,6 +159,7 @@ class UserController extends Controller_2_1{
 		$user = User::Find(array('id' => $userid));
 		$form = \User\get_edit_form($user);
 
+		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
 		$view->assign('form', $form);
 		$view->title = 'Editing ' . $user->getDisplayName();
 

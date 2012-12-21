@@ -1,10 +1,16 @@
 {script library="jquery"}{/script}
 
-<table class="listing">
+{$filters->render()}
+
+
+{$filters->pagination()}
+<table class="listing column-sortable">
 	<tr>
 		<th width="40"></th>
-		<th>Email</th>
-		<th>Active</th>
+		<th>Avatar</th>
+		<th sortkey="email">Email</th>
+		<th sortkey="active" title="Sort By Active"><abbr title="Active">A</abbr></th>
+		<th sortkey="created">Date Created</th>
 		<th width="100">&nbsp;</th>
 	</tr>
 	{foreach $users as $user}
@@ -21,6 +27,10 @@
 				{/if}
 			</td>
 
+			<td>
+				{img src="public/user/`$user.avatar`" placeholder="person" dimensions="50x60"}
+			</td>
+
 			<td>{$user->get('email')}</td>
 
 			<td class="active-status" useractive="{$user.active}">
@@ -32,41 +42,18 @@
 					{/if}
 				</noscript>
 			</td>
+
+			<td>{date date="`$user.created`"}</td>
+
 			<td>
-				<ul class="controls">
-					{if Core::IsComponentAvailable('User-Social')}
-						<li class="public-user">
-							<a href="{UserSocialHelper::ResolveProfileLinkById($user.id)}">
-								<i class="icon-user"></i>
-								<span>Public Profile</span>
-							</a>
-						</li>
-						<li class="link">
-							{a href="/userprofile/connectedprofiles/`$user.id`"}
-								<i class="icon-link"></i>
-								<span>Public Profile</span>
-							{/a}
-						</li>
-					{/if}
 
-					{foreach UserHelper::GetControlLinks($user) as $link}
-						<li class="{$link.class}">
-							{a href="`$link.link`" title="`$link.title|escape`" confirm="`$link.confirm`"}
-								{if $link.icon}
-									<i class="icon-{$link.icon}"></i>
-									<span>{$link.title}</span>
-								{else}
-									{$link.title}
-								{/if}
-							{/a}
-						</li>
-					{/foreach}
+				{controls baseurl="/user/view" subject="`$user.id`"}
 
-				</ul>
 			</td>
 		</tr>
 	{/foreach}
 </table>
+{$filters->pagination()}
 
 <script>
 

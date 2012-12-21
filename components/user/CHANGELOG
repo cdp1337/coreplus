@@ -7,6 +7,7 @@ User 2.4.0
 	* Cleaned up some STRICT warnings in the user system.
 	* Added multisite support.
 	* Cleaned up the access string input template by switching the checkboxes to a single select box.
+	* Switched to user the hook-based controls throughout the user system and user administration.
 
 User 2.3.1
 

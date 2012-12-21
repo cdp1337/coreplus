@@ -10,6 +10,8 @@
 		<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
 		<hook call="UserHelper::RecordActivity" name="/core/page/postrender"/>
 		<hookregister name="/user/postsave" description="Hook that is called after the user object is saved"/>
+		<hookregister name="/core/controllinks/user/view" description="Control links when viewing a specific user" return="array"/>
+		<hook name="/core/controllinks/user/view" call="UserHelper::GetControlLinks"/>
 	</hooks>
 	<forms>
 		<formelement name="access" class="FormAccessStringInput"/>

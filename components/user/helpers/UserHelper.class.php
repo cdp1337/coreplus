@@ -247,7 +247,7 @@ abstract class UserHelper{
 	public static function GetControlLinks($user){
 		$a = array();
 
-		if(is_int($user)){
+		if(is_numeric($user)){
 			// Transpose the ID to a user backend object.
 			$user = User::Construct($user);
 		}
@@ -290,14 +290,6 @@ abstract class UserHelper{
 			}
 		}
 
-		// @todo Implement a hook here.
-
-		// Now that I have them all, I need to go through and make sure that they have the appropriate data at least.
-		foreach($a as $k => $dat){
-			if(!isset($dat['class'])) $a[$k]['class'] = '';
-			if(!isset($dat['confirm'])) $a[$k]['confirm'] = false;
-			if(!isset($dat['icon'])) $a[$k]['icon'] = false;
-		}
 		return $a;
 	}
 }

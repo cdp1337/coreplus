@@ -13,11 +13,41 @@ class UserAdminController extends Controller_2_1{
 
 	public function index(){
 		$view = $this->getView();
+		$request = $this->getPageRequest();
 
-		$users = UserModel::Find(null, null, 'email');
+		$filters = new FilterForm();
+		$filters->setName('user-admin');
+		$filters->haspagination = true;
+		$filters->hassort = true;
+		$filters->setSortkeys(array('email', 'active'));
+		$filters->addElement(
+			'text',
+			array(
+				'title' => 'Email',
+				'name' => 'email',
+				'link' => FilterForm::LINK_TYPE_STARTSWITH
+			)
+		);
+		$filters->addElement(
+			'select',
+			array(
+				'title' => 'Active',
+				'name' => 'active',
+				'options' => array('' => '-- All --', '0' => 'Inactive', '1' => 'Active'),
+				'link' => FilterForm::LINK_TYPE_STANDARD,
+			)
+		);
+
+		$filters->load($request);
+		$factory = new ModelFactory('UserModel');
+		$filters->applyToFactory($factory);
+
+		$users = $factory->get();
+		//$users = UserModel::Find(null, null, 'email');
 
 		$view->title = 'User Administration';
-		$view->assignVariable('users', $users);
+		$view->assign('users', $users);
+		$view->assign('filters', $filters);
 		$view->addControl('Add User', '/user/register', 'add');
 	}
 
