@@ -1,3 +1,7 @@
+User-Social 1.1.0
+
+	* Switched to user the hook-based controls throughout the user system and user administration.
+
 User-Social 1.0.0
 
 	* Initial version

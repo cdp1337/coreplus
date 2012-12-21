@@ -47,15 +47,7 @@ class UserProfileController extends Controller_2_1 {
 			$editor = false;
 		}
 
-		if($editor){
-			$view->addControl(
-				array(
-					'title' => 'Connected Profiles',
-					'link' => '/userprofile/connectedprofiles/' . $user->get('id'),
-					'icon' => 'link',
-				)
-			);
-		}
+		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
 
 		$view->title = $user->getDisplayName();
 		$view->assign('user', $user);

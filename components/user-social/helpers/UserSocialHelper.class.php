@@ -50,4 +50,43 @@ class UserSocialHelper {
 
 		return self::ResolveProfileLink($user);
 	}
+
+	public static function GetUserLinks($user){
+		$a = array();
+
+		if(is_numeric($user)){
+			// Transpose the ID to a user backend object.
+			$user = User::Construct($user);
+		}
+		elseif($user instanceof UserModel){
+			// Transpose the model to a user backend object.
+			$user = User::Construct($user->get('id'));
+		}
+		elseif(is_subclass_of($user, 'UserBackend')){
+			// NO change needed :)
+		}
+		else{
+			// Umm, wtf was it?
+			return array();
+		}
+
+		// still nothing?
+		if(!$user) return array();
+
+		$a[] = array(
+			'title' => 'Public Profile',
+			'icon' => 'user',
+			'link' => self::ResolveProfileLink($user),
+		);
+
+		if(\Core\user()->checkAccess('p:user_manage')){
+			$a[] = array(
+				'title' => 'Public Profiles',
+				'icon' => 'link',
+				'link' => '/userprofile/connectedprofiles/' . $user->get('id'),
+			);
+		}
+
+		return $a;
+	}
 }

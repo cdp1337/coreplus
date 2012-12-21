@@ -13,6 +13,9 @@
 		<userconfig key="username" name="Username (nick name)" onedit="1" onregistration="1" validation="UserSocialHelper::ValidateUsername"/>
 		<userconfig key="json:profiles" name="Connected Profiles (json encoded)" onedit="0" onregistration="0" formtype="disabled"/>
 	</userconfigs>
+	<hooks>
+		<hook name="/core/controllinks/user/view" call="UserSocialHelper::GetUserLinks"/>
+	</hooks>
 	<files>
 		<file filename="CHANGELOG" md5="50f0433e14f03d079f6007aad3690725"/>
 		<file filename="README.md" md5="97aac508b463a1040b383a0f0654d113"/>
@@ -36,7 +39,6 @@
 	</view>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
-		<author name="Charlie Powell &lt;charlie@eval.bz"/>
 	</authors>
 </component>
 
