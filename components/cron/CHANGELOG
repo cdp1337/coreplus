@@ -1,3 +1,7 @@
+Cron 1.1.0
+
+	* Added a controller and templates for viewing and searching for executed cron passes.
+
 Cron 1.0.0
 
 	* Initial version

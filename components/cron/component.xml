@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_1/component.dtd">
-<component name="Cron" version="1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<authors>
-		<author name="Charlie Powell" email="charlie@eval.bz"/>
-	</authors>
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.0.0">
 	<hooks>
 		<hookregister name="/cron/hourly" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/daily" description="Daily hook called from the cron system"/>
 		<hookregister name="/cron/weekly" description="Weekly hook called from the cron system"/>
 		<hookregister name="/cron/monthly" description="Monthly hook called from the cron system"/>
 	</hooks>
+	<permissions>
+		<permission key="/cron/viewlog" description="View log of cron jobs that have run"/>
+	</permissions>
+	<pages>
+		<page access="p:/cron/viewlog" admin="1" baseurl="/cron/admin" title="Cron Results"/>
+	</pages>
+	<view searchdir="templates"></view>
 	<files>
 		<file filename="CHANGELOG" md5="e250dd06d91462497e79838d1e67bf53"/>
 		<file filename="README.md" md5="d03dd621fdcc3aab5a50b9e88b361409"/>
-		<file filename="controllers/CronController.php" md5="0f4645d190dfc779b29064393f9485eb">
+		<file filename="controllers/CronController.php" md5="12dbb435473ee2308047456d2ef6a502">
 			<controller name="CronController"/>
 		</file>
-		<file filename="models/CronLogModel.php" md5="44c516acc54d7f1f3f976b9b901e1ca2">
+		<file filename="models/CronLogModel.php" md5="72c89926879485ae78343c36b5330c84">
 			<class name="CronLogModel"/>
 		</file>
 	</files>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
 </component>
 

@@ -96,7 +96,7 @@ class CronController extends Controller_2_1 {
 	}
 
 	/**
-	 * Execute the daily cron
+	 * Execute the monthly cron
 	 */
 	public function monthly(){
 		$request = $this->getPageRequest();
@@ -183,5 +183,89 @@ class CronController extends Controller_2_1 {
 
 		// Just to notify the calling function.
 		return $log;
+	}
+
+	/**
+	 * Display a list of cron jobs that have ran.
+	 * @return int
+	 */
+	public function admin(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/cron/viewlog')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$filters = new FilterForm();
+		$filters->setName('cron-admin');
+		$filters->hassort = true;
+		$filters->haspagination = true;
+		$filters->addElement(
+			'select',
+			array(
+				'title' => 'Cron',
+				'name' => 'cron',
+				'options' => array(
+					'' => '-- All --',
+					'hourly' => 'hourly',
+					'daily' => 'daily',
+					'weekly' => 'weekly',
+					'monthly' => 'monthly'
+				),
+				'link' => FilterForm::LINK_TYPE_STANDARD,
+			)
+		);
+		$filters->addElement(
+			'select',
+			array(
+				'title' => 'Status',
+				'name' => 'status',
+				'options' => array(
+					'' => '-- All --',
+					'pass' => 'pass',
+					'fail' => 'fail'
+				),
+				'link' => FilterForm::LINK_TYPE_STANDARD,
+			)
+		);
+		$filters->setSortkeys(array('cron', 'created', 'duration', 'status'));
+		$filters->load($request);
+
+
+		$cronfac = new ModelFactory('CronLogModel');
+		$filters->applyToFactory($cronfac);
+		$listings = $cronfac->get();
+
+		$view->title = 'Cron Results';
+		$view->assign('filters', $filters);
+		$view->assign('listings', $listings);
+		$view->assign('sortkey', $filters->getSortKey());
+		$view->assign('sortdir', $filters->getSortDirection());
+
+		//var_dump($listings); die();
+	}
+
+	/**
+	 * View a specific cron execution and its details.
+	 */
+	public function view(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+		$view->mode = View::MODE_PAGEORAJAX;
+
+		if(!\Core\user()->checkAccess('p:/cron/viewlog')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$logid = $request->getParameter(0);
+		$log = CronLogModel::Construct($logid);
+		if(!$log->exists()){
+			return View::ERROR_NOTFOUND;
+		}
+
+		$view->addBreadcrumb('Cron Results', '/cron/admin');
+		$view->title = 'Log Execution Details';
+		$view->assign('entry', $log);
 	}
 }
