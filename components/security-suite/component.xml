@@ -4,23 +4,38 @@
 	<requires>
 		<require name="core" type="component" version="2.4.0"/>
 	</requires>
-	<configs></configs>
+	<configs/>
 	<hooks>
 		<hook name="/core/components/loaded" call="StopForumSpam::CheckIP"/>
 		<hook name="/cron/daily" call="StopForumSpam::HookDaily"/>
 	</hooks>
+	<pages>
+		<page access="p:/security/viewlog" admin="1" baseurl="/security/log" title="Security Log"/>
+	</pages>
+	<permissions>
+		<permission key="/security/viewlog" description="View Security Log"/>
+	</permissions>
+	<view searchdir="templates">
+		<file filename="templates/pages/security/log.tpl" md5="01d8c56a1b9f25d93362ee9f0b624b0c"/>
+		<file filename="templates/pages/security/view.tpl" md5="ff23af3634c04a9a1d46076d6b5fadf2"/>
+	</view>
 	<description>
 		Collection of security suites for sites, including anti-spam.
 	</description>
 	<files>
-		<file filename="classes/StopForumSpam.class.php" md5="f50aaa4e737571dac07780d301fc9328">
+		<file filename="CHANGELOG" md5="7e321f3e90c7975239d74249f431f5e8"/>
+		<file filename="classes/StopForumSpam.class.php" md5="f7bda2a479f9f9cb65c4a63f85dc5288">
 			<class name="StopForumSpam"/>
 		</file>
+		<file filename="controllers/SecurityController.php" md5="de682b251c1fe80a17254088dce80d1f">
+			<controller name="SecurityController"/>
+		</file>
 		<file filename="listed_ip_1.zip" md5="9e6a0866ba2c7b797b0bbe39af7a6736"/>
+		<file filename="listed_ip_1_all.zip" md5="aabf67226a6d5d2bebcf6cc4e6a8c187"/>
 		<file filename="models/SecurityLogModel.php" md5="e94c0c930142ba6df3ac961ead1643b9">
 			<class name="SecurityLogModel"/>
 		</file>
-		<file filename="models/sfsBlacklistModel.php" md5="f23807f51bec4a8d271ad8735f8e237b">
+		<file filename="models/sfsBlacklistModel.php" md5="4d6d7c012a546ea0f6b54215961af3fa">
 			<class name="sfsBlacklistModel"/>
 		</file>
 	</files>
