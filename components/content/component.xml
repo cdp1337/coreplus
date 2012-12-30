@@ -8,7 +8,7 @@
 		<permission key="content_manage" description="Manage Site Content"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="8b6809ed916a2868d9ba6944ac88a6f6"/>
+		<file filename="CHANGELOG" md5="833a7493907f9bfee1edb40aa1131cda"/>
 		<file filename="ContentController.php" md5="ba3af67a63c82874a3a614c6f7374028">
 			<controller name="ContentController"/>
 		</file>
