@@ -57,7 +57,12 @@ nav#breadcrumbs ul.controls { float:right; margin-top:-4px; }
 /*** Left-column ***/
 .pagecolumn { width:170px; }
 .column1 #leftcol { float:left; }
-.column1 section.pagecontent { margin-left:175px; overflow: hidden; }
+.column1 section.pagecontent {
+	margin-left:175px;
+	/* Re-enabling the body overflow to allow for context menus.
+	overflow: hidden;
+	*/
+}
 
 
 /*** Controls that can be implemented throughout the site ***/
@@ -87,6 +92,35 @@ ul.controls li a i.icon-delete { color: #7a0200; }
 ul.controls li a i.icon-edit { color: blue; }
 ul.controls li a i.icon-plus,
 ul.controls li a i.icon-add { color: green; }
+
+/**
+ * Contextual controls are similar, but slightly different.
+ * Instead of being inline, they're in a context menu.
+ */
+ul.controls.context-menu {
+	position: absolute;
+	border: 1px solid #999;
+	height: auto;
+	background: #eee;
+	top: 0pt;
+	z-index: 999;
+}
+ul.controls.context-menu li {
+	float: none;
+	padding: 3px;
+	white-space: nowrap;
+}
+ul.controls.context-menu li a {
+	display: block;
+}
+ul.controls.context-menu li a:hover {
+	font-size: 14px;
+	padding: 2px;
+	background: white;
+}
+ul.controls.context-menu a span {
+	display: inline;
+}
 
 
 /*** Buttons and their respective images that can be used throughout ***/

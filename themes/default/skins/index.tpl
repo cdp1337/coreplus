@@ -9,6 +9,9 @@
 			<script type="text/javascript" src="{asset src='js/html5.js'}"></script>
 		<![endif]-->
 		{script library="fontawesome"}{/script}
+		<!-- This will enable the Core Plus context menus new in 2.4.0 -->
+		{script library="jquery"}{/script}
+		{script src="js/core.context-controls.js"}{/script}
 		<title>{$seotitle}</title>
 	</head>
 
