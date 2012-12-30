@@ -5,7 +5,7 @@
 		<require name="core" type="component" operation="ge" version="2.4.0"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="cfc2f7efb88887f0d9d92102cd4447bb"/>
+		<file filename="CHANGELOG" md5="fff0a0bcf12970d16016e3ce977eefa7"/>
 		<file filename="controllers/NavigationController.php" md5="f609072de0e71e7ba8e0b07c4959847a">
 			<controller name="NavigationController"/>
 		</file>
