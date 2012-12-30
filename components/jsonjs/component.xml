@@ -34,6 +34,7 @@
 		prefering the built-in JSON object.
 	</description>
 	<files>
+		<file filename="CHANGELOG" md5="0fc718e48fb6d0754ae169606c5766ce"/>
 		<file filename="JSONjs.lib.php" md5="70a6b8d70100305edab0eb65bf96c900">
 			<class name="JSONjs"/>
 		</file>

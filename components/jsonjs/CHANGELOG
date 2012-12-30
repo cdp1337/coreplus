@@ -1,0 +1,4 @@
+JSONjs 2011.11.18~core2
+
+	* Added the "JSONjs" script library tag.  This allows the library to be called via {script library="jsonjs"}{/script}
+	-- Charlie Powell <charlie@eval.bz>  30 Dec 2012
