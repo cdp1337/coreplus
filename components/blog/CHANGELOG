@@ -3,6 +3,7 @@ Blog 1.2.1
 	* Assigned the page author as the user object, this allows the extended functionality in 2.4.0 to be used and the profile linked in the head.
 	* Minor optimizations for machines, (alt tags).
 	* Added multisite support.
+	-- Charlie Powell <charlie@eval.bz>  30 Dec 2012
 
 Blog 1.2.0
 

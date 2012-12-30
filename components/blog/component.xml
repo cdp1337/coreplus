@@ -8,7 +8,7 @@
 		<permission key="blog_manage" description="Manage Blogs"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="20e3cc02635e39972f288dafdf85d813"/>
+		<file filename="CHANGELOG" md5="6bc293f7293cc2fae13726c6661c34af"/>
 		<file filename="controllers/BlogController.php" md5="976709b96b3c9a55ad5d36ba6744a94e">
 			<controller name="BlogController"/>
 		</file>
