@@ -55,6 +55,7 @@ Core Plus 2.4.0
 	* Expanded the Directory ls command to allow searching for specific extensions.
 	* Updated the SessionModel save logic to perform an INSERT_OR_UPDATE on save.  Should fix the race condition.
 	* Starting to add support for specific target widgets.  These will be targetable for areas such as /admin and user profiles.
+	-- Charlie Powell <charlie@eval.bz>  30 Dec 2012
 
 
 Core Plus 2.3.2
