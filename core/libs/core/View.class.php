@@ -582,9 +582,66 @@ class View {
 			// This is needed to be done at this stage because some element in
 			// the template after rendering may add additional script to the head.
 			// Also tack on any attributes for the <html> tag.
-			$data = str_replace('</head>', $this->getHeadContent() . "\n" . '</head>', $data);
-			$data = str_replace('</body>', $this->getFootContent() . "\n" . '</body>', $data);
-			$data = str_replace('<html', '<html ' . self::GetHTMLAttributes(), $data);
+			if(preg_match('#</head>#i', $data)){
+				// I need to do preg_replace because I only want to replace the FIRST instance of </head>
+				$data = preg_replace('#</head>#i', $this->getHeadContent() . "\n" . '</head>', $data, 1);
+			}
+			if(preg_match('#</body>#i', $data)){
+				// I need to use strrpos because I only want the LAST instance of </body>
+				$match = strrpos($data, '</body>');
+
+				$foot = $this->getFootContent();
+
+				// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
+				if (DEVELOPMENT_MODE) {
+					$debug = '';
+					$debug .= '<pre class="xdebug-var-dump screen">';
+					$debug .= '<b>Template Information</b>' . "\n";
+					$debug .= 'Base URL: ' . $this->baseurl . "\n";
+					$debug .= 'Template Used: ' . $this->templatename . "\n";
+					$debug .= "\n" . '<b>Performance Information</b>' . "\n";
+					$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
+					$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
+					//$debug .= "Number of queries: " . DB::Singleton()->counter . "\n";
+					$debug .= "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
+					$debug .= "Total processing time: " . round(Core::GetProfileTimeTotal(), 4) * 1000 . ' ms' . "\n";
+					if (FULL_DEBUG) {
+						foreach (Core::GetProfileTimes() as $t) {
+							$debug .= "[" . Core::FormatProfileTime($t['timetotal']) . "] - " . $t['event'] . "\n";
+						}
+					}
+					// Tack on what components are currently installed.
+					$debug .= "\n" . '<b>Available Components</b>' . "\n";
+					foreach (Core::GetComponents() as $l => $v) {
+						$debug .= ($v->isEnabled() ? '[<span style="color:green;">Enabled</span>]' : '[<span style="color:red;">Disabled</span>]').
+							$v->getName() . ' ' . $v->getVersion() . "\n";
+					}
+
+					// I wanna see what hooks are registered too!
+					$debug .= "\n" . '<b>Registered Hooks</b>' . "\n";
+					foreach(HookHandler::GetAllHooks() as $hook){
+						/** @var $hook Hook */
+						$debug .= $hook->name;
+						if($hook->description) $debug .= ' <i> - ' . $hook->description . '</i>';
+						$debug .= "\n" . '<span style="color:#999;">Return expected: ' . $hook->returnType . '</span>';
+						$debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
+					}
+
+					// I want to see how many files were included.
+					$debug .= "\n" . '<b>Included Files</b>' . "\n";
+					$debug .= 'Number: ' . sizeof(get_included_files()) . "\n";
+					$debug .= implode("\n", get_included_files()) . "\n";
+
+					$debug .= "\n" . '<b>Query Log</b>' . "\n";
+					$debug .= print_r(Core::DB()->queryLog(), true);
+					$debug .= '</pre>';
+
+					// And append!
+					$foot .= "\n" . $debug;
+				}
+				$data = substr_replace($data, $foot . "\n" . '</body>', $match, 7);
+			}
+			$data = preg_replace('#<html#', '<html ' . self::GetHTMLAttributes(), $data, 1);
 
 			// Provide a way for stylesheets to target this page specifically.
 			$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
@@ -594,77 +651,29 @@ class View {
 				// body is $matches[0].
 				$fullbody = $matches[0];
 				if($fullbody == '<body>'){
-					// Easy match
-					$data = str_replace($fullbody, '<body class="' . $bodyclass . '">', $data);
+					$body = '<body class="' . $bodyclass . '">';
 				}
 				elseif(strpos($fullbody, 'class=') === false){
 					// Almost as easy, other elements but no class.
-					$data = str_replace($fullbody, substr($fullbody, 0, -1) . ' class="' . $bodyclass . '">', $data);
+					$body = substr($fullbody, 0, -1) . ' class="' . $bodyclass . '">';
 				}
 				else{
 					// parsing HTML is far easier with XML objects.
 					$node = new SimpleXMLElement($fullbody . '</body>');
-					$newnode = '<body';
+					$body = '<body';
 					foreach($node->attributes() as $k => $v){
 						if($k == 'class'){
-							$newnode .= ' ' . $k . '="' . $bodyclass . ' ' . $v . '"';
+							$body .= ' ' . $k . '="' . $bodyclass . ' ' . $v . '"';
 						}
 						else{
-							$newnode .= ' ' . $k . '="' . $v . '"';
+							$body .= ' ' . $k . '="' . $v . '"';
 						}
 					}
-					$newnode .= '>';
-
-					$data = str_replace($fullbody, $newnode, $data);
-				}
-			}
-
-			// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
-			if (DEVELOPMENT_MODE) {
-				$debug = '';
-				$debug .= '<pre class="xdebug-var-dump screen">';
-				$debug .= '<b>Template Information</b>' . "\n";
-				$debug .= 'Base URL: ' . $this->baseurl . "\n";
-				$debug .= 'Template Used: ' . $this->templatename . "\n";
-				$debug .= "\n" . '<b>Performance Information</b>' . "\n";
-				$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
-				$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
-				//$debug .= "Number of queries: " . DB::Singleton()->counter . "\n";
-				$debug .= "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
-				$debug .= "Total processing time: " . round(Core::GetProfileTimeTotal(), 4) * 1000 . ' ms' . "\n";
-				if (FULL_DEBUG) {
-					foreach (Core::GetProfileTimes() as $t) {
-						$debug .= "[" . Core::FormatProfileTime($t['timetotal']) . "] - " . $t['event'] . "\n";
-					}
-				}
-				// Tack on what components are currently installed.
-				$debug .= "\n" . '<b>Available Components</b>' . "\n";
-				foreach (Core::GetComponents() as $l => $v) {
-					$debug .= ($v->isEnabled() ? '[<span style="color:green;">Enabled</span>]' : '[<span style="color:red;">Disabled</span>]').
-						$v->getName() . ' ' . $v->getVersion() . "\n";
+					$body .= '>';
 				}
 
-				// I wanna see what hooks are registered too!
-				$debug .= "\n" . '<b>Registered Hooks</b>' . "\n";
-				foreach(HookHandler::GetAllHooks() as $hook){
-					/** @var $hook Hook */
-					$debug .= $hook->name;
-					if($hook->description) $debug .= ' <i> - ' . $hook->description . '</i>';
-					$debug .= "\n" . '<span style="color:#999;">Return expected: ' . $hook->returnType . '</span>';
-					$debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
-				}
-
-				// I want to see how many files were included.
-				$debug .= "\n" . '<b>Included Files</b>' . "\n";
-				$debug .= 'Number: ' . sizeof(get_included_files()) . "\n";
-				$debug .= implode("\n", get_included_files()) . "\n";
-
-				$debug .= "\n" . '<b>Query Log</b>' . "\n";
-				$debug .= print_r(Core::DB()->queryLog(), true);
-				$debug .= '</pre>';
-
-				// And append!
-				$data = str_replace('</body>', $debug . "\n" . '</body>', $data);
+				// And replace!
+				$data = preg_replace('#<body[^>]*>#', $body, $data, 1);
 			}
 		}
 

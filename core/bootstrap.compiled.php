@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 15 Dec 2012 18:29:54 -0500
+ * @compiled Sun, 30 Dec 2012 16:48:51 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1104,7 +1104,7 @@ break;
 $dat->execute($this->interface);
 if ($idcol) $this->_data[$idcol] = $dat->getID();
 }
-private function _saveExisting() {
+protected function _saveExisting($useset = false) {
 $i = self::GetIndexes();
 $s = self::GetSchema();
 $n = $this->_getTableName();
@@ -1131,13 +1131,25 @@ $idcol = $k; // Remember this for after the save.
 continue 2;
 }
 if (in_array($k, $i['primary'])) {
-if ($this->_datainit[$k] != $v) $dat->update($k, $v);
+if ($this->_datainit[$k] != $v){
+if($useset){
+$dat->set($k, $v);
+}
+else{
+$dat->update($k, $v);
+}
+}
 $dat->where($k, $this->_datainit[$k]);
 $this->_data[$k] = $v;
 }
 else {
 if (isset($this->_datainit[$k]) && $this->_datainit[$k] == $v) continue; // Skip non-changed columns
+if($useset){
+$dat->set($k, $v);
+}
+else{
 $dat->update($k, $v);
+}
 }
 }
 if(!sizeof($dat->_sets)){
@@ -4917,13 +4929,31 @@ else {
 $this->_path = $directory;
 }
 }
-public function ls() {
+public function ls($extension = null, $recursive = false) {
 if (!$this->isReadable()) return array();
 if ($this->_files === null) $this->_sift();
 $ret = array();
 foreach ($this->_files as $file => $obj) {
 if (sizeof($this->_ignores) && in_array($file, $this->_ignores)) continue;
+if($extension){
+if($obj instanceof Directory_local_backend && $recursive){
+$ret = array_merge($ret, $obj->ls($extension, $recursive));
+}
+elseif($obj instanceof File_local_backend){
+if($obj->getExtension() == $extension){
 $ret[] = $obj;
+}
+}
+}
+elseif($recursive){
+$ret[] = $obj;
+if($obj instanceof Directory_local_backend && $recursive){
+$ret = array_merge($ret, $obj->ls($extension, $recursive));
+}
+}
+else{
+$ret[] = $obj;
+}
 }
 return $ret;
 }
@@ -5551,6 +5581,7 @@ class Cache_Exception extends Exception{
 
 ### REQUIRE_ONCE FROM core/libs/core/ViewControl.class.php
 class ViewControls implements Iterator, ArrayAccess {
+public $hovercontext = false;
 private $_links = array();
 private $_pos = 0;
 public function current() {
@@ -5619,7 +5650,9 @@ $this[] = $l;
 }
 }
 public function fetch(){
-$html = '<ul class="controls">';
+$ulclass = array('controls');
+if($this->hovercontext) $ulclass[] = 'controls-hover';
+$html = '<ul class="' . implode(' ', $ulclass) . '">';
 foreach($this->_links as $l){
 $html .= $l->fetch();
 }
@@ -5653,7 +5686,7 @@ if($this->link){
 $html .= $this->_fetchA();
 }
 if($this->icon){
-$html .= '<i class="icon-' . $this->icon . '"></i>';
+$html .= '<i class="icon-' . $this->icon . '"></i> ';
 }
 $html .= '<span>' . $this->title . '</span>';
 if($this->link){
@@ -6627,6 +6660,11 @@ public static function _AttachCoreStrings() {
 View::AddScript('js/core.strings.js');
 return true;
 }
+public static function _AttachAjaxLinks(){
+JQuery::IncludeJQueryUI();
+View::AddScript('js/core.ajaxlinks.js', 'foot');
+return true;
+}
 public static function VersionCompare($version1, $version2, $operation = null) {
 if (!$version1) $version1 = 0;
 if (!$version2) $version2 = 0;
@@ -7297,6 +7335,13 @@ private $_name;
 public function __construct($name = '_unnamed_'){
 $this->_name = $name;
 }
+public function addWhereParts($field, $operation, $value){
+$c = new DatasetWhere();
+$c->field = $field;
+$c->op = $operation;
+$c->value = $value;
+$this->_statements[] = $c;
+}
 public function addWhere($arguments){
 if($arguments instanceof DatasetWhereClause){
 $this->_statements[] = $arguments;
@@ -7381,8 +7426,8 @@ class DatasetWhere{
 public $field;
 public $op;
 public $value;
-public function __construct($arguments){
-$this->_parseWhere($arguments);
+public function __construct($arguments = null){
+if($arguments) $this->_parseWhere($arguments);
 }
 private function _parseWhere($statement){
 $valid = false;
@@ -8950,34 +8995,12 @@ die();
 }
 if ($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML) {
 HookHandler::DispatchHook('/core/page/rendering', $this);
-$data = str_replace('</head>', $this->getHeadContent() . "\n" . '</head>', $data);
-$data = str_replace('</body>', $this->getFootContent() . "\n" . '</body>', $data);
-$data = str_replace('<html', '<html ' . self::GetHTMLAttributes(), $data);
-$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
-$bodyclass = 'page-' . $url;
-if(preg_match('/<body[^>]*>/', $data, $matches)){
-$fullbody = $matches[0];
-if($fullbody == '<body>'){
-$data = str_replace($fullbody, '<body class="' . $bodyclass . '">', $data);
+if(preg_match('#</head>#i', $data)){
+$data = preg_replace('#</head>#i', $this->getHeadContent() . "\n" . '</head>', $data, 1);
 }
-elseif(strpos($fullbody, 'class=') === false){
-$data = str_replace($fullbody, substr($fullbody, 0, -1) . ' class="' . $bodyclass . '">', $data);
-}
-else{
-$node = new SimpleXMLElement($fullbody . '</body>');
-$newnode = '<body';
-foreach($node->attributes() as $k => $v){
-if($k == 'class'){
-$newnode .= ' ' . $k . '="' . $bodyclass . ' ' . $v . '"';
-}
-else{
-$newnode .= ' ' . $k . '="' . $v . '"';
-}
-}
-$newnode .= '>';
-$data = str_replace($fullbody, $newnode, $data);
-}
-}
+if(preg_match('#</body>#i', $data)){
+$match = strrpos($data, '</body>');
+$foot = $this->getFootContent();
 if (DEVELOPMENT_MODE) {
 $debug = '';
 $debug .= '<pre class="xdebug-var-dump screen">';
@@ -9012,7 +9035,35 @@ $debug .= implode("\n", get_included_files()) . "\n";
 $debug .= "\n" . '<b>Query Log</b>' . "\n";
 $debug .= print_r(Core::DB()->queryLog(), true);
 $debug .= '</pre>';
-$data = str_replace('</body>', $debug . "\n" . '</body>', $data);
+$foot .= "\n" . $debug;
+}
+$data = substr_replace($data, $foot . "\n" . '</body>', $match, 7);
+}
+$data = preg_replace('#<html#', '<html ' . self::GetHTMLAttributes(), $data, 1);
+$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
+$bodyclass = 'page-' . $url;
+if(preg_match('/<body[^>]*>/', $data, $matches)){
+$fullbody = $matches[0];
+if($fullbody == '<body>'){
+$body = '<body class="' . $bodyclass . '">';
+}
+elseif(strpos($fullbody, 'class=') === false){
+$body = substr($fullbody, 0, -1) . ' class="' . $bodyclass . '">';
+}
+else{
+$node = new SimpleXMLElement($fullbody . '</body>');
+$body = '<body';
+foreach($node->attributes() as $k => $v){
+if($k == 'class'){
+$body .= ' ' . $k . '="' . $bodyclass . ' ' . $v . '"';
+}
+else{
+$body .= ' ' . $k . '="' . $v . '"';
+}
+}
+$body .= '>';
+}
+$data = preg_replace('#<body[^>]*>#', $body, $data, 1);
 }
 }
 return $data;
@@ -10540,6 +10591,12 @@ public static $Schema = array(
 'maxlength' => 128,
 'required'  => true,
 'null'      => false,
+),
+'installable' => array(
+'type'    => Model::ATT_TYPE_STRING,
+'null'    => true,
+'default' => null,
+'comment' => 'Baseurl that this widget "plugs" into, if any.',
 ),
 'title'   => array(
 'type'      => Model::ATT_TYPE_STRING,

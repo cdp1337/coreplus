@@ -116,9 +116,12 @@ class Directory_local_backend implements Directory_Backend {
 	 * List the files and directories in this directory and return the
 	 * respective file identifier for each file/directory
 	 *
+	 * @param null|string $extension The extension to look for, (optional)
+	 * @param bool        $recursive Set to true to recurse into sub directories and perform the same search.
+	 *
 	 * @return array
 	 */
-	public function ls() {
+	public function ls($extension = null, $recursive = false) {
 		// Not readable, then it can't be read...
 		if (!$this->isReadable()) return array();
 
@@ -130,7 +133,32 @@ class Directory_local_backend implements Directory_Backend {
 			// Skip the file if it's in the array of ignore files.
 			if (sizeof($this->_ignores) && in_array($file, $this->_ignores)) continue;
 
-			$ret[] = $obj;
+			// Is there an extension requested?
+			if($extension){
+				if($obj instanceof Directory_local_backend && $recursive){
+					$ret = array_merge($ret, $obj->ls($extension, $recursive));
+				}
+				elseif($obj instanceof File_local_backend){
+					//echo $obj->getExtension() . ' vs ' . $extension . '<br/>';
+					// Is it a match?
+					if($obj->getExtension() == $extension){
+						$ret[] = $obj;
+					}
+				}
+			}
+			elseif($recursive){
+				// Tack on the parent itself regardless.
+				$ret[] = $obj;
+
+				// And recurse into directories for its children.
+				if($obj instanceof Directory_local_backend && $recursive){
+					$ret = array_merge($ret, $obj->ls($extension, $recursive));
+				}
+			}
+			else{
+				// Just default old behaviour.
+				$ret[] = $obj;
+			}
 		}
 		return $ret;
 	}

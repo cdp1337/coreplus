@@ -31,6 +31,9 @@ function smarty_function_controls($params, $template){
 	$links = HookHandler::DispatchHook('/core/controllinks' . $baseurl, $subject);
 
 	$controls = new ViewControls();
+	if(isset($params['hover'])){
+		$controls->hovercontext = true;
+	}
 	$controls->addLinks($links);
 
 	echo $controls->fetch();

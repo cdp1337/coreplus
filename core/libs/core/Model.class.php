@@ -580,8 +580,11 @@ class Model implements ArrayAccess {
 	/**
 	 * Save an existing Model object into the database.
 	 * Will create, set and execute a dataset object as appropriately internally.
+	 *
+	 * @param boolean @useset Set to true to have this model use an INSERT_UPDATE statement instead of just UPDATE.
+	 * @return bool
 	 */
-	private function _saveExisting() {
+	protected function _saveExisting($useset = false) {
 		$i = self::GetIndexes();
 		$s = self::GetSchema();
 		$n = $this->_getTableName();
@@ -622,7 +625,14 @@ class Model implements ArrayAccess {
 			// Everything else
 			if (in_array($k, $i['primary'])) {
 				// Just in case the new data changed....
-				if ($this->_datainit[$k] != $v) $dat->update($k, $v);
+				if ($this->_datainit[$k] != $v){
+					if($useset){
+						$dat->set($k, $v);
+					}
+					else{
+						$dat->update($k, $v);
+					}
+				}
 
 				$dat->where($k, $this->_datainit[$k]);
 
@@ -631,7 +641,12 @@ class Model implements ArrayAccess {
 			else {
 				if (isset($this->_datainit[$k]) && $this->_datainit[$k] == $v) continue; // Skip non-changed columns
 				//echo "Setting [$k] = [$v]<br/>"; // DEBUG
-				$dat->update($k, $v);
+				if($useset){
+					$dat->set($k, $v);
+				}
+				else{
+					$dat->update($k, $v);
+				}
 			}
 		}
 

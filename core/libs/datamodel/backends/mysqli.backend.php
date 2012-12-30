@@ -639,7 +639,9 @@ class DMI_mysqli_backend implements DMI_Backend {
 
 	/**
 	 * The recursive function that will return the actual SQL string from a group.
+	 *
 	 * @param DatasetWhereClause $group
+	 * @return string
 	 */
 	private function _parseWhereClause(DatasetWhereClause $group){
 		$statements = $group->getStatements();
@@ -654,8 +656,14 @@ class DMI_mysqli_backend implements DMI_Backend {
 				// No field, what can I do?
 				if(!$w->field) continue;
 
+				$op = $w->op;
+
 				if($w->value === null){
 					$v = 'NULL';
+					// NULL also has a fun trick with mysql.... = and != doesn't work :/
+					if($op == '=') $op = 'IS';
+					elseif($op == '!=') $op = 'IS NOT';
+
 				}
 				elseif(is_int($w->value)){
 					$v = $w->value;
@@ -663,7 +671,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				else{
 					$v = "'" . $this->_conn->real_escape_string($w->value) . "'";
 				}
-				$ws[] = '`' . $w->field . '` ' . $w->op . ' ' . $v;
+				$ws[] = '`' . $w->field . '` ' . $op . ' ' . $v;
 			}
 		}
 

@@ -35,6 +35,17 @@ class WidgetModel extends Model {
 			'required'  => true,
 			'null'      => false,
 		),
+		// This indicates which type of widgetarea it's installable to.
+		// ie: {widgetarea baseurl="/admin"} and {widgetarea baseurl="/user-social/view/###"}
+		// Anything installable in / is acceptable in any of them,
+		// null is a regular one not applicable to page level templates.
+		// A public user widget for ie: Recent Blog Posts
+		'installable' => array(
+			'type'    => Model::ATT_TYPE_STRING,
+			'null'    => true,
+			'default' => null,
+			'comment' => 'Baseurl that this widget "plugs" into, if any.',
+		),
 		'title'   => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,

@@ -114,7 +114,9 @@ class SessionModel extends Model {
 	}
 
 	public function save(){
-		return parent::save();
+		// I need to do this here because sessions have a tendency of getting overwritten very quickly.
+		// This will sometimes cause "Primary key already exists" errors in the error log
+		return parent::_saveExisting(true);
 	}
 
 }

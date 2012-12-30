@@ -45,6 +45,16 @@ Core Plus 2.4.0
 	* Added an ajaxlink javascript method.  Allows any "ajax-link" classed link to open in a jquery window.
 	* Added a Core.Request javascript object to help with manipulation of the GET parameters.
 	* Added sort and pagination ability to the Filter system.
+	* Added context menus for controls.  These by default are hover based via the class "controls-hover".
+	* Model _saveExisting can now be called from extending Models.  This is useful for those models that need to have
+	more control over the save procedure.
+	* Fixed some View logic to properly replace tags in the rendering now instead of duplicating the replacements.
+	* Added hovercontext support to the ViewControl object.
+	* Fixed `key` = NULL and `key` != NULL statements in the mysqli backend.  These are now replaced with IS and IS NOT.
+	* Added a addWhereParts method to the DatasetWhereClause object.  Allows for adding of single where statements.
+	* Expanded the Directory ls command to allow searching for specific extensions.
+	* Updated the SessionModel save logic to perform an INSERT_OR_UPDATE on save.  Should fix the race condition.
+	* Starting to add support for specific target widgets.  These will be targetable for areas such as /admin and user profiles.
 
 
 Core Plus 2.3.2

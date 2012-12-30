@@ -31,6 +31,13 @@
  */
 class ViewControls implements Iterator, ArrayAccess {
 
+	/**
+	 * Set to true to set this control to be a hover context menu, (if available in the theme).
+	 *
+	 * @var bool
+	 */
+	public $hovercontext = false;
+
 	private $_links = array();
 
 	private $_pos = 0;
@@ -207,7 +214,10 @@ class ViewControls implements Iterator, ArrayAccess {
 	 * @return string HTML
 	 */
 	public function fetch(){
-		$html = '<ul class="controls">';
+		$ulclass = array('controls');
+		if($this->hovercontext) $ulclass[] = 'controls-hover';
+
+		$html = '<ul class="' . implode(' ', $ulclass) . '">';
 
 		foreach($this->_links as $l){
 			$html .= $l->fetch();
@@ -338,7 +348,7 @@ class ViewControl implements ArrayAccess {
 		}
 
 		if($this->icon){
-			$html .= '<i class="icon-' . $this->icon . '"></i>';
+			$html .= '<i class="icon-' . $this->icon . '"></i> ';
 		}
 
 		$html .= '<span>' . $this->title . '</span>';

@@ -482,6 +482,25 @@ class DatasetWhereClause{
 	}
 
 	/**
+	 * Add a where statement by the three components.
+	 * Only supports one where at a time, but useful for some of the tricky statements.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param $field
+	 * @param $operation
+	 * @param $value
+	 */
+	public function addWhereParts($field, $operation, $value){
+		$c = new DatasetWhere();
+		$c->field = $field;
+		$c->op = $operation;
+		$c->value = $value;
+		$this->_statements[] = $c;
+
+	}
+
+	/**
 	 * Add a where statement to this clause.
 	 *
 	 * DOES NOT SUPPORT addWhere('key', 'value'); format!!!
@@ -620,15 +639,14 @@ class DatasetWhere{
 	public $op;
 	public $value;
 
-	public function __construct($arguments){
-		$this->_parseWhere($arguments);
+	public function __construct($arguments = null){
+		if($arguments) $this->_parseWhere($arguments);
 	}
 
 	/**
 	 * Parse a single where statement for the key, operation, and value.
 	 *
 	 * @param string $statement The where statement to parse and evaluate
-	 * @param int $group The group to associate this statement to
 	 * @return void
 	 */
 	private function _parseWhere($statement){
