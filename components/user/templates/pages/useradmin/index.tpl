@@ -47,7 +47,7 @@
 
 			<td>
 
-				{controls baseurl="/user/view" subject="`$user.id`"}
+				{controls baseurl="/user/view" subject="`$user.id`" hover="true"}
 
 			</td>
 		</tr>

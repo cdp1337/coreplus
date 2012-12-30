@@ -17,7 +17,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="bbba90c230f29db22f6bd5918d779014"/>
+		<file filename="CHANGELOG" md5="617f73f0b8fed6519d5557c9bbbbbe1a"/>
 		<file filename="User.class.php" md5="a14f72dcd932467aaa81fc00fd394ced">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -43,17 +43,17 @@
 		<file filename="controllers/UserActivityController.php" md5="3a5257288e3e0d807f153ded60f0fc6b">
 			<controller name="UserActivityController"/>
 		</file>
-		<file filename="controllers/UserAdminController.php" md5="975438ad9dfea0ec6b3fd6e28bbd92fc">
+		<file filename="controllers/UserAdminController.php" md5="6af5fc87967ea54b3fb36d1ccc04dbe8">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="c303e87a0ab2dd9e420cd73e034a9f78">
+		<file filename="controllers/UserController.php" md5="7d71a1a29d38fb630c3bbb7dbe210b0c">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="1e26a36d85fc0065cec33b198b27f475">
 			<controller name="UserGroupAdminController"/>
 		</file>
 		<file filename="helpers/UserFunctions.php" md5="5e421da19e3891e9e2dfa681407aa388"/>
-		<file filename="helpers/UserHelper.class.php" md5="13f219f5b1c3f944035b39bd5a100c1e">
+		<file filename="helpers/UserHelper.class.php" md5="9a96572bf0b7fde2ba856eed38460e58">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
@@ -84,7 +84,7 @@
 		<file filename="templates/pages/user/password.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/useractivity/index.tpl" md5="f1463c6f2df95ad634013491b867ba53"/>
-		<file filename="templates/pages/useradmin/index.tpl" md5="3958ec8704ed7c124040786ed818219f"/>
+		<file filename="templates/pages/useradmin/index.tpl" md5="e63a99eec27337bb51a61328eb572556"/>
 		<file filename="templates/pages/usergroupadmin/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/usergroupadmin/index.tpl" md5="737ee67c775c5cb219d040015dbcb496"/>
 		<file filename="templates/pages/usergroupadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -122,7 +122,7 @@
 	</permissions>
 	<assets>
 		<file filename="assets/js/user/login.js" md5="0a3852f3140eb2e24d66109eb628e6f0"/>
-		<file filename="assets/js/user/user.js" md5="b8793bfd7cd6ebeb3a9889905b300f7a"/>
+		<file filename="assets/js/user/user.js" md5="e5e4dc7f8ff932ce7acd330031dbeec2"/>
 	</assets>
 	<description>
 		The user component provides core user functionality, including registration, login, forgot password and access controls.
