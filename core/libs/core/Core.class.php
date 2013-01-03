@@ -454,6 +454,14 @@ class Core implements ISingleton {
 			}
 		}
 
+		// Don't forget to load the themes too!
+		if(class_exists('ThemeHandler')){
+			foreach(ThemeHandler::GetAllThemes() as $theme){
+				/** @var $theme Theme */
+				$theme->load();
+			}
+		}
+
 	}
 
 	/**

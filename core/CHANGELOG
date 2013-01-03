@@ -1,3 +1,10 @@
+Core Plus 2.4.1
+
+	* Fixed bug with themes not reinstalling as expected.
+	* Moved the description field to above the input on standard form elements.
+	* Better error reporting on the View.
+
+
 Core Plus 2.4.0
 	* Added support for hooks to have a return type attached to them.  This allows different hooks to return arrays or return statuses.
 	* Added a ViewControls object, which is responsible for handling the <ul/> group of control links for a given object.

@@ -112,11 +112,17 @@ class SessionModel extends Model {
 		// Always cause this to set the dirty flag.
 		$this->_dirty = true;
 	}
-
+/*
 	public function save(){
 		// I need to do this here because sessions have a tendency of getting overwritten very quickly.
 		// This will sometimes cause "Primary key already exists" errors in the error log
-		return parent::_saveExisting(true);
+		if($this->exists()){
+			return parent::_saveExisting(true);
+		}
+		else{
+			return parent::_saveNew();
+		}
 	}
+*/
 
 }

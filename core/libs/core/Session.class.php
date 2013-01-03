@@ -53,6 +53,7 @@ class Session implements ISingleton {
 			// indicates when the last page activity for the user was.
 			// This is the main tracking variable for inactivity.
 			$m->set('updated', Time::GetCurrentGMT());
+			$m->save();
 
 			// From this point on, the $_SESSION variable is available.
 
