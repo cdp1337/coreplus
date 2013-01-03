@@ -485,6 +485,10 @@ class View {
 		return $html;
 	}
 
+	/**
+	 * Fetch this view as an HTML string.
+	 * @return mixed|null|string
+	 */
 	public function fetch() {
 		$body = $this->fetchBody();
 
@@ -566,6 +570,16 @@ class View {
 		}
 		catch(SmartyException $e){
 			$this->error = View::ERROR_SERVERERROR;
+			error_log('[view error]');
+			error_log('Template name: [' . $mastertpl . ']');
+			error_log($e->getMessage());
+			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+			die();
+		}
+		catch(TemplateException $e){
+			$this->error = View::ERROR_SERVERERROR;
+			error_log('[view error]');
+			error_log('Template name: [' . $mastertpl . ']');
 			error_log($e->getMessage());
 			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 			die();
