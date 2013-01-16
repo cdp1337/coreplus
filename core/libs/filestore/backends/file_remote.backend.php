@@ -34,6 +34,12 @@ class File_remote_backend implements File_Backend {
 	public $password = null;
 
 	/**
+	 * Set to false to require the remote file to be downloaded every request.
+	 * @var bool
+	 */
+	public $cacheable = true;
+
+	/**
 	 * The fully resolved filename of this file.
 	 *
 	 * @var string
@@ -392,6 +398,12 @@ class File_remote_backend implements File_Backend {
 		return ($this->_response != 404);
 	}
 
+	public function isOK(){
+		$this->_getHeaders();
+
+		return ($this->_response == 200);
+	}
+
 	public function isLocal() {
 		// Simple function that indicates if the file is on a local filesystem
 		// Please note, even mounted filesystems are considered local for this matter.
@@ -486,7 +498,7 @@ class File_remote_backend implements File_Backend {
 			$this->_tmplocal = new File_local_backend('tmp/remotefile-cache/' . $f);
 
 			// File exists already!  Check and see if it needs to be redownloaded.
-			if ($this->_tmplocal->exists()) {
+			if ($this->cacheable && $this->_tmplocal->exists()) {
 				// Lookup this file in the system cache.
 				$systemcachedata = Core::Cache()->get('remotefile-cache-header-' . $f);
 				if ($systemcachedata) {
@@ -504,7 +516,7 @@ class File_remote_backend implements File_Backend {
 				}
 			}
 
-			if ($needtodownload) {
+			if ($needtodownload || !$this->cacheable) {
 				// Create a stream
 				$opts = array(
 					'http' => array(

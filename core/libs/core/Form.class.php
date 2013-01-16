@@ -1008,7 +1008,7 @@ class Form extends FormGroup {
 				'value' => $model->get($k),
 				'name' => 'model[' . $k . ']',
 			);
-			if(!$formatts['value'] && isset($v['default'])) $formatts['value'] = $v['default'];
+			if($formatts['value'] === null && isset($v['default'])) $formatts['value'] = $v['default'];
 
 			// Merge the defaults with the form array if it's present.
 			if(isset($v['form'])){
@@ -1046,6 +1046,9 @@ class Form extends FormGroup {
 				elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'Yes';
 				elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'No';
 				else $formatts['value'] = 'No';
+			}
+			elseif ($v['type'] == Model::ATT_TYPE_SITE) {
+				$el = FormElement::Factory('system');
 			}
 			elseif ($v['type'] == Model::ATT_TYPE_STRING) {
 				$el = FormElement::Factory('text');

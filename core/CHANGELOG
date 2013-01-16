@@ -3,6 +3,9 @@ Core Plus 2.4.1
 	* Fixed bug with themes not reinstalling as expected.
 	* Moved the description field to above the input on standard form elements.
 	* Better error reporting on the View.
+	* Load blank meta data from the page object if provided in FormPageMetas.
+	* New method, Core::CompareValues.  Provides more useful variable comparisons in forms.
+	* New Filter option, linkname.  Allows the model key to be defined separately from the element name.
 
 
 Core Plus 2.4.0

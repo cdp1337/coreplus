@@ -9,7 +9,7 @@
 	
 	<select {$element->getInputAttributes()}>
 		{foreach from=$element->get('options') item=title key=key}
-			<option value="{$key}" {if $key === $element->get('value')}selected{/if}>{$title}</option>
+			<option value="{$key}" {if Core::CompareValues($key, $element->get('value'))}selected{/if}>{$title}</option>
 		{/foreach}
 	</select>
 </div>

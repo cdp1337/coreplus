@@ -1,5 +1,5 @@
 
-<div class="pagination">
+<div class="pagination screen">
 	<div class="pagination-pager">
 
 		{if $page_current > 1}
