@@ -16,7 +16,13 @@ class FormPageMetasInput extends FormElement{
 		$metas = $this->get('value');
 		// Try to decode these values if possible.
 		$metas = json_decode($metas, true);
-		// Else, a blank array works well enough.
+		// Else, check the presence of a model attribute.
+		if(!$metas && $this->get('model')){
+			$m = $this->get('model');
+			if($m instanceof PageModel){
+				$metas = $m->getMetas();
+			}
+		}
 		if(!$metas) $metas = array();
 
 		$fullmetas = array(
