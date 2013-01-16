@@ -15,7 +15,10 @@
 
 # Skip some Apple directories, these is machine centric
 .DS_Store
+.DS_Store?
 ._*
+.Spotlight-V100
+.Trashes
 
 # Temp files created by gedit, (or something...)
 *~
