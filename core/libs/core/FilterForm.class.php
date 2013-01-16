@@ -531,6 +531,10 @@ class FilterForm {
 				continue;
 			}
 
+			if($el->get('linkname')){
+				$name = $el->get('linkname');
+			}
+
 			switch($el->get('link')){
 				case FilterForm::LINK_TYPE_STANDARD:
 				case FilterForm::LINK_TYPE_GT:
