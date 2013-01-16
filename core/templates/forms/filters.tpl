@@ -1,25 +1,27 @@
-<fieldset class="listing-filters collapsible screen {if !$filtersset}collapsed{/if}">
-	<legend> Filters </legend>
-	<form action="" method="GET">
-		<div class="collapsible-contents">
+{if sizeof($elements)}
+	<fieldset class="listing-filters collapsible screen {if !$filtersset}collapsed{/if}">
+		<legend> Filters </legend>
+		<form action="" method="GET">
+			<div class="collapsible-contents">
 
-			{foreach $elements as $element}
-				{$element->render()}
-			{/foreach}
+				{foreach $elements as $element}
+					{$element->render()}
+				{/foreach}
 
-			<div class="clear"></div>
-			<a href="#" class="button reset-filters">
-				<i class="icon-remove"></i>
-				<span>Reset Filters</span>
-			</a>
-			<a href="#" class="button apply-filters" style="float:right;">
-				<i class="icon-ok"></i>
-				<span>Apply Filters</span>
-			</a>
+				<div class="clear"></div>
+				<a href="#" class="button reset-filters">
+					<i class="icon-remove"></i>
+					<span>Reset Filters</span>
+				</a>
+				<a href="#" class="button apply-filters" style="float:right;">
+					<i class="icon-ok"></i>
+					<span>Apply Filters</span>
+				</a>
 
-		</div>
-	</form>
-</fieldset>
+			</div>
+		</form>
+	</fieldset>
+{/if}
 
 {script library="jqueryui"}{/script}
 {script location="foot"}<script>
