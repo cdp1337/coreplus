@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8.2~core1" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8.3~core1" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="1.9.0" operation="ge"/>
 	</requires>
 	<provides>
-		<provide name="JQuery" version="1.8.2" type="library"/>
-		<provide name="JQueryUI" version="1.9.0" type="library"/>
+		<provide name="JQuery" version="1.8.3" type="library"/>
+		<provide name="JQueryUI" version="1.8.22" type="library"/>
 		<provide name="JQueryUI.NestedSortable" version="1.4.0" type="library"/>
 		<provide name="JQueryUI.readonly" version="2.0.1" type="library"/>
 		<provide name="JQuery.json" version="2.2" type="library"/>
@@ -82,6 +82,8 @@
 		<file filename="assets/js/jquery/jquery-1.8.0.min.js" md5="cd8b0bffc85bb5614385ee4ce3596d07"/>
 		<file filename="assets/js/jquery/jquery-1.8.2.js" md5="d486715f3fd46f80c84b2436ffa713db"/>
 		<file filename="assets/js/jquery/jquery-1.8.2.min.js" md5="cfa9051cc0b05eb519f1e16b2a6645d7"/>
+		<file filename="assets/js/jquery/jquery-1.8.3.js" md5="b25b0460d7ddea993dad32005f56d255"/>
+		<file filename="assets/js/jquery/jquery-1.8.3.min.js" md5="e1288116312e4728f98923c79b034b67"/>
 		<file filename="assets/js/jquery/jquery-ui-1.8.11.min.js" md5="bc1367d7c32e3b4fd746027d8188cc36"/>
 		<file filename="assets/js/jquery/jquery-ui-1.8.16.min.js" md5="65c7c707dddea0c7861714df250d54c4"/>
 		<file filename="assets/js/jquery/jquery-ui-1.8.20.min.js" md5="925ce969efd834fd7be9e35d0007904c"/>
@@ -105,9 +107,9 @@
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="86a64c25e542ec77f8297825609aa029"/>
+		<file filename="CHANGELOG" md5="622c3b7bff6c7c97a6b8fee74632599d"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="7cd0ab8b3fe669eab5a40745434072af">
+		<file filename="JQuery.lib.php" md5="bd4fe9744941a053173a7faad66b8e4a">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
@@ -129,6 +131,7 @@
 		<upgrade from="1.8.0~core1" to="1.8.0~core2"/>
 		<upgrade from="1.8.0~core2" to="1.8.0~core3"/>
 		<upgrade from="1.8.0~core3" to="1.8.2~core1"/>
+		<upgrade from="1.8.2~core1" to="1.8.3~core1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
