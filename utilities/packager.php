@@ -661,8 +661,6 @@ function process_component($component, $forcerelease = false){
 	$comp = new Component_2_1($cfile);
 	$comp->load();
 
-	// @TODO Add support for a changelog.
-
 	// Get the licenses currently set.  (maybe there's one that's not in the code)
 	$licenses = array();
 	if(CLI::PromptUser('Retrieve current list of licenses and merge in from code?', 'boolean', true)){
@@ -816,7 +814,7 @@ function process_component($component, $forcerelease = false){
 		$opts = array(
 			'editvers' => 'Edit Version Number',
 			'editdesc' => 'Edit Description',
-			//'editchange' => 'Edit Changelog',
+			'editchange' => 'Edit Changelog (for version ' . $version . ')',
 			//'dbtables' => 'Manage DB Tables',
 			'printdebug' => 'DEBUG - Print the XML',
 			'save' => 'Finish Editing, Save it!',
@@ -843,9 +841,94 @@ function process_component($component, $forcerelease = false){
 			case 'editdesc':
 				$comp->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $comp->getDescription()));
 				break;
-			//case 'editchange':
-			//	$comp->setChangelog(CLI::PromptUser('Enter the changelog.', 'textarea', $comp->getChangelog()));
-			//	break;
+			case 'editchange':
+				// Lookup the changelog text of this current version.
+				$file = $comp->getBaseDir();
+				// Core's changelog is located in the core directory.
+				if($comp->getName() == 'core') $file .= 'core/';
+				$file .= 'CHANGELOG'; // Nope, no extension.
+
+				// The header line will be exactly [name] [version].
+				$header = $comp->getName() . ' ' . $version . "\n";
+				$changelog = '';
+				// I also need to remember what's before and after the changelog, (before is the more likely case).
+				$beforechangelog = '';
+				$afterchangelog = '';
+
+				// Start reading the file contents until I find the header, (probably on line 1, but you never know).
+				$fh = fopen($file, 'r');
+				if(!$fh){
+					// Hmm, create it?...
+					touch($file);
+					$fh = fopen($file, 'r');
+				}
+				// Still no?
+				if(!$fh){
+					die('Unable to create file ' . $file . ' for reading or writing!');
+				}
+				$inchange = false;
+				while(!feof($fh)){
+					$line = fgets($fh, 512);
+
+					// Does this line look like the exact header?
+					if($line == $header){
+						$inchange = true;
+						continue;
+					}
+
+					// Does this line look like the beginning of another header?...
+					if($inchange && preg_match('/^' . $comp->getName() . ' .+$/', $line)){
+						$inchange = false;
+					}
+
+					if($inchange){
+						$line = trim($line); // trim whitespace and newlines.
+						if(strpos($line, '* ') === 0){
+							// line starts with *[space], it's a comment!
+							$line = substr($line, 2);
+							$changelog .= $line . "\n";
+						}
+						elseif(strpos($line, '--') === 0){
+							$inchange = false;
+						}
+					}
+					elseif($changelog){
+						// After!
+						$afterchangelog .= $line;
+					}
+					else{
+						// Before!
+						$beforechangelog .= $line;
+					}
+				}
+				fclose($fh);
+
+				// Is there even any changelog text here?  If not switch the "before" content to after.
+				// This will ensure that new version entries are always at the top of the file!
+				if(!$changelog && $beforechangelog){
+					$afterchangelog = $beforechangelog;
+					$beforechangelog = '';
+				}
+
+				// Put a note in the header.
+				$changelog = 'Enter the changelog items below, each item separated by a newline.' . "\n" . ';--- ENTER CHANGELOG BELOW ---;' . "\n\n" . $changelog;
+
+				$changelog = CLI::PromptUser('Enter the changelog.', 'textarea', $changelog);
+
+				// I need to transpose the text only changelog back to a regular format.
+				$changeloglines = '';
+				$x = 0;
+				foreach(explode("\n", $changelog) as $line){
+					++$x;
+					if($x <= 2) continue;
+					$line = trim($line);
+					if(!$line) continue;
+					$changeloglines .= "\t* " . $line . "\n";
+				}
+
+				// Write this back out to that file :)
+				file_put_contents($file, $beforechangelog . $header . "\n" . $changeloglines . "\n" . $afterchangelog);
+				break;
 			//case 'dbtables':
 			//	$comp->setDBSchemaTableNames(explode("\n", CLI::PromptUser('Enter the tables that are included in this component', 'textarea', implode("\n", $comp->getDBSchemaTableNames()))));
 			//	break;
@@ -878,6 +961,92 @@ function process_component($component, $forcerelease = false){
 		$bundleyn = CLI::PromptUser('Package saved, do you want to bundle the changes into a package?', 'boolean');
 	}
 	if($bundleyn){
+
+
+		// Update the changelog version first!
+		// This is done here to signify that the version has actually been bundled up.
+		// Lookup the changelog text of this current version.
+		$file = $comp->getBaseDir();
+		// Core's changelog is located in the core directory.
+		if($comp->getName() == 'core') $file .= 'core/';
+		$file .= 'CHANGELOG'; // Nope, no extension.
+
+		// The header line will be exactly [name] [version].
+		$header = $comp->getName() . ' ' . $version . "\n";
+		$timestamp = "\t--$packagername <$packageremail>  " . Time::GetCurrent(Time::TIMEZONE_DEFAULT, Time::FORMAT_RFC2822) . "\n\n";
+		$changelog = '';
+
+		// Start reading the file contents until I find the header, (probably on line 1, but you never know).
+		$fh = fopen($file, 'r');
+		if(!$fh){
+			// Hmm, create it?...
+			touch($file);
+			$fh = fopen($file, 'r');
+		}
+		// Still no?
+		if(!$fh){
+			die('Unable to create file ' . $file . ' for reading or writing!');
+		}
+		$wrotetimestamp = false;
+		$inchange = false;
+		$previous = null;
+		while(!feof($fh)){
+			$line = fgets($fh, 512);
+
+			// Does this line look like the exact header?
+			if($line == $header){
+				$inchange = true;
+				$changelog .= $line;
+				$previous = $line;
+				continue;
+			}
+
+			if($inchange){
+				// It's in the current change version,
+				// previous line was a comment,
+				// and current line is blank...
+				// EXCELLENT!  Insert the timestamp here!
+				if(strpos($previous, "\t* ") === 0 && trim($line) == ''){
+					// line starts with [tab]*[space], it's a comment!
+					$changelog .= $timestamp;
+					$wrotetimestamp = true;
+					$inchange = false;
+				}
+				elseif(strpos($previous, "\t* ") === 0 && strpos($line, '--') === 0){
+					// Oh, this line already has a timestamp.... DON'T CARE! :p
+					$changelog .= $timestamp;
+					$wrotetimestamp = true;
+					$inchange = false;
+				}
+				elseif(strpos($line, $comp->getName()) === 0){
+					// Wait, I found another header, but I haven't written the timestamp yet!
+					// :/
+					$changelog .= $timestamp . $line;
+					$wrotetimestamp = true;
+					$inchange = false;
+				}
+				else{
+					// eh...
+					$changelog .= $line;
+				}
+			}
+			else{
+				// Ok, I don't care anyway
+				$changelog .= $line;
+			}
+
+			$previous = $line;
+		}
+		fclose($fh);
+
+		// Did it never even write the timestamp?
+		if(!$wrotetimestamp){
+			$changelog = $header . "\n" . $timestamp . $changelog;
+		}
+
+		// Write this back out to that file :)
+		file_put_contents($file, $changelog);
+
 		// Create a temp directory to contain all these
 		$dir = TMP_DIR . 'packager-' . $component . '/';
 
