@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.6" name="content" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="content" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.3.0" operation="ge"/>
+		<require name="core" type="component" version="2.4.1" operation="ge"/>
 	</requires>
 	<permissions>
 		<permission key="content_manage" description="Manage Site Content"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="833a7493907f9bfee1edb40aa1131cda"/>
-		<file filename="ContentController.php" md5="ba3af67a63c82874a3a614c6f7374028">
+		<file filename="CHANGELOG" md5="e8d097af1c9f298b0d17896b98f5e659"/>
+		<file filename="ContentController.php" md5="87577d8e49c83839b08b39ae8a2976d7">
 			<controller name="ContentController"/>
 		</file>
 		<file filename="ContentModel.php" md5="cac0a022c2e373a35876f9d43478c26a">
@@ -28,7 +28,7 @@
 		<file filename="templates/pages/content/edit.tpl" md5="1f45af7838e6eb4421220a6dd5a8428d"/>
 		<file filename="templates/pages/content/index.tpl" md5="9f35bc9ec83575bec0135d3a65865f29"/>
 		<file filename="templates/pages/content/view.tpl" md5="b149433e9927396cb65c8e2880395663"/>
-		<file filename="templates/pages/content/view/option1.tpl" md5="85a0fbb1b3d747c44b71b6ea84567a52"/>
+		<file filename="templates/pages/content/view/option1.tpl" md5="b1bcf1077464b7ada87976b907863470"/>
 	</view>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>
@@ -38,6 +38,7 @@
 		<upgrade from="1.9.3" to="1.9.4"/>
 		<upgrade from="1.9.4" to="1.9.5"/>
 		<upgrade from="1.9.5" to="1.9.6"/>
+		<upgrade from="1.9.6" to="2.0.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

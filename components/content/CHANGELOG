@@ -1,3 +1,9 @@
+Content 2.0.0
+
+	* Updated content to work with the enhancements in 2.4.1.
+	* Updaed content to ensure that the alternate page templates work.
+	-- Charlie Powell <charlie@eval.bz>  23 Jan 2013
+
 Content 1.9.6
 
 	* Added multisite support.

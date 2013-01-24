@@ -69,25 +69,27 @@ class ContentController extends Controller_2_1 {
 	}
 
 	public function edit(){
-		$view = $this->getView();
-		$page = $this->getPageRequest();
-		$m    = new ContentModel($page->getParameter(0));
+		$view     = $this->getView();
+		$request  = $this->getPageRequest();
+		$model    = new ContentModel($request->getParameter(0));
 
-		if(!$m->exists()) return View::ERROR_NOTFOUND;
+		if(!$model->exists()) return View::ERROR_NOTFOUND;
 
-		$editor  = (\Core\user()->checkAccess($m->get('editpermissions')) || \Core\user()->checkAccess('p:content_manage'));
+		$editor  = (\Core\user()->checkAccess($model->get('editpermissions')) || \Core\user()->checkAccess('p:content_manage'));
 		$manager = \Core\user()->checkAccess('p:content_manage');
 
 		if(!($editor || $manager)){
 			return View::ERROR_ACCESSDENIED;
 		}
-		
-		$form = Form::BuildFromModel($m);
+
+		$page = $model->getLink('Page');
+
+		$form = new Form();
 		$form->set('callsmethod', 'ContentController::_SaveHandler');
-		
-		$form->addElement('pagemeta', array('name' => 'page', 'baseurl' => '/content/view/' . $m->get('id')));
-		
-		$form->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => '/content/view/' . $m->get('id')));
+
+		$form->addModel($page, 'page');
+		$form->addModel($model, 'model');
+		$form->addElement('pageinsertables', array('name' => 'insertables', 'model' => $page));
 
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Update'));
@@ -101,13 +103,13 @@ class ContentController extends Controller_2_1 {
 		}
 
 		$view->templatename = '/pages/content/edit.tpl';
-		$view->title        = 'Edit ' . $m->get('title');
-		$view->assignVariable('model', $m);
+		$view->title        = 'Edit ' . $model->get('title');
+		$view->assignVariable('model', $model);
 		$view->assignVariable('form', $form);
 
 		if ($manager) $view->addControl('Add Page', '/Content/Create', 'add');
-		$view->addControl('View Page', '/Content/View/' . $m->get('id'), 'view');
-		if ($manager) $view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
+		$view->addControl('View Page', '/Content/View/' . $model->get('id'), 'view');
+		if ($manager) $view->addControl('Delete Page', '/Content/Delete/' . $model->get('id'), 'delete');
 		if ($manager) $view->addControl('All Content Pages', '/Content', 'directory');
 	}
 
@@ -119,14 +121,15 @@ class ContentController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$m = new ContentModel();
+		$model = new ContentModel();
+		$page = new PageModel('/content/view/new');
 
-		$form = Form::BuildFromModel($m);
+		$form = new Form();
 		$form->set('callsmethod', 'ContentController::_SaveHandler');
 
-		$form->addElement('pagemeta', array('name' => 'page'));
-
-		$form->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => '/Content/View/new'));
+		$form->addModel($page, 'page');
+		$form->addModel($model, 'model');
+		$form->addElement('pageinsertables', array('name' => 'insertables', 'model' => $page));
 
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Create'));
@@ -134,7 +137,7 @@ class ContentController extends Controller_2_1 {
 
 		$view->templatename = '/pages/content/create.tpl';
 		$view->title        = 'New Content Page';
-		$view->assignVariable('model', $m);
+		$view->assignVariable('model', $model);
 		$view->assignVariable('form', $form);
 
 		$view->addControl('All Content Pages', '/content', 'directory');
@@ -150,20 +153,20 @@ class ContentController extends Controller_2_1 {
 		$model->save();
 
 		/** @var $page PageModel */
-		$page = $form->getElementByName('page')->getModel();
-		$page->setFromForm($form, 'page');
+		$page = $form->getModel('page');
 
 		$page->set('baseurl', '/content/view/' . $model->get('id'));
 		//var_dump($page, $page->exists()); die();
 		$page->set('updated', Time::GetCurrent());
-		$page->save();
 
 		$model->set('nickname', $page->get('title'));
 		$model->save();
 
 		$insertables = $form->getElementByName('insertables');
 		$insertables->set('baseurl', '/content/view/' . $model->get('id'));
+		$page->set('page_template', $insertables->getElement('insertables_page_template')->get('value'));
 		$insertables->save();
+		$page->save();
 
 		// w00t
 		return $page->getResolvedURL();
