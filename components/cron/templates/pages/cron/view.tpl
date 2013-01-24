@@ -19,6 +19,12 @@
 			</td>
 		</tr>
 		<tr>
+			<th>Memory Used</th>
+			<td>
+				{Core::FormatSize($entry.memory)}
+			</td>
+		</tr>
+		<tr>
 			<th>Status</th>
 			<td>
 				<span class="cron-status-{$entry.status}">{$entry.status}</span>

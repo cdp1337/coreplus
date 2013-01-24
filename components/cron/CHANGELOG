@@ -1,6 +1,10 @@
+
 Cron 1.1.0
 
 	* Added a controller and templates for viewing and searching for executed cron passes.
+	* Added memory usage to the cron system and reports.
+	* Using the new CHANGELOG handler in the package :P
+	--Charlie Powell <charlie@eval.bz>  Thu, 24 Jan 2013 04:51:15 -0500
 
 Cron 1.0.0
 

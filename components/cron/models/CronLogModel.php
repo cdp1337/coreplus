@@ -44,6 +44,10 @@ class CronLogModel extends Model {
 			'precision' => '18,12',
 			'comment' => 'Duration (in milliseconds) of the script execution'
 		),
+		'memory' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'comment' => 'Amount of memory (in bytes) used by script',
+		),
 		'ip' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,

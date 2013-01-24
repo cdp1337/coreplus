@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.0.0">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.1.0">
 	<hooks>
 		<hookregister name="/cron/hourly" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/daily" description="Daily hook called from the cron system"/>
@@ -13,17 +13,23 @@
 	<pages>
 		<page access="p:/cron/viewlog" admin="1" baseurl="/cron/admin" title="Cron Results"/>
 	</pages>
-	<view searchdir="templates"></view>
+	<view searchdir="templates">
+		<file filename="templates/pages/cron/admin.tpl" md5="fc1cfde77bb2b0f48a20df0d2d288b46"/>
+		<file filename="templates/pages/cron/view.tpl" md5="4e93bef263ac86bc743a60abc9923dc0"/>
+	</view>
 	<files>
-		<file filename="CHANGELOG" md5="e250dd06d91462497e79838d1e67bf53"/>
+		<file filename="CHANGELOG" md5="bbfefa6614e68bc0928a9bb43520ab5a"/>
 		<file filename="README.md" md5="d03dd621fdcc3aab5a50b9e88b361409"/>
-		<file filename="controllers/CronController.php" md5="12dbb435473ee2308047456d2ef6a502">
+		<file filename="controllers/CronController.php" md5="1dd1dfe6cb894bcdc750c9a0d7bd8bfe">
 			<controller name="CronController"/>
 		</file>
-		<file filename="models/CronLogModel.php" md5="72c89926879485ae78343c36b5330c84">
+		<file filename="models/CronLogModel.php" md5="07887d6bf0d2c4942fc0df3de9573da3">
 			<class name="CronLogModel"/>
 		</file>
 	</files>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.1.0"/>
+	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>

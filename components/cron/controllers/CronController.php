@@ -159,6 +159,7 @@ class CronController extends Controller_2_1 {
 		$log = new CronLogModel();
 		$log->set('cron', $cron);
 		$log->set('status', 'running');
+		$log->set('memory', memory_get_usage());
 		$log->set('ip', REMOTE_IP);
 		$log->save();
 //var_dump($log); die();
