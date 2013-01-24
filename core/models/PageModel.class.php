@@ -65,20 +65,17 @@ class PageModel extends Model {
 				'description' => 'Starts with a "/", omit the root web dir.',
 			),
 		),
-		'metas' => array(
-			'type' => Model::ATT_TYPE_TEXT,
-			'comment' => '[Cached] Serialized array of metainformation',
-			'null' => false,
-			'default' => '',
-			'formtype' => 'pagemetas'
-		),
 		'theme_template' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'default' => null,
 			'null' => true,
 			'comment' => 'Allows the page to define its own theme and widget information.',
-			'formtype' => 'pagethemeselect'
+			'form' => array(
+				'type' => 'pagethemeselect',
+				'title' => 'Theme Skin',
+				'description' => 'This defines the master theme skin that will be used on this page.'
+			)
 		),
 		'page_template' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -86,7 +83,10 @@ class PageModel extends Model {
 			'default' => null,
 			'null' => true,
 			'comment' => 'Allows the specific page template to be overridden.',
-			'formtype' => 'hidden'
+			'form' => array(
+				'type' => 'disabled',
+				'title' => 'Alternative Page Template',
+			)
 		),
 		'access' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -126,6 +126,12 @@ class PageModel extends Model {
 		'unique:rewrite_url' => array('site', 'rewriteurl'),
 	);
 
+	/**
+	 * Set this to the full templatename path to enable resolution of the template and any optional subtemplates.
+	 * @var null|string
+	 */
+	public $templatename = null;
+
 	private $_class;
 	private $_method;
 	private $_params;
@@ -156,6 +162,10 @@ class PageModel extends Model {
 			'Insertable' => array(
 				'link' => Model::LINK_HASMANY,
 				'on' => 'baseurl'
+			),
+			'PageMeta' => array(
+				'link' => Model::LINK_HASMANY,
+				'on' => array('site' => 'site', 'baseurl' => 'baseurl'),
 			),
 		);
 
@@ -301,7 +311,7 @@ class PageModel extends Model {
 		// Allow the specific template to be overridden.
 		if (($override = $this->get('page_template'))){
 			$t = substr($t, 0, -4) . '/' . $override;
-		}
+	}
 
 		return $t;
 	}
@@ -339,25 +349,16 @@ class PageModel extends Model {
 	 *
 	 * @param string $name
 	 *
-	 * @return string | null
+	 * @return PageMetaModel | null
 	 */
 	public function getMeta($name) {
-		$m = $this->getMetas();
-		return isset($m[$name]) ? $m[$name] : null;
-	}
+		$metas = $this->getLink('PageMeta');
+		foreach($metas as $meta){
+			/** @var $meta PageMetaModel */
+			if($meta->get('meta_key') == $name) return $meta;
+		}
 
-	/**
-	 * Get all meta names present on this page.
-	 * @return array
-	 */
-	public function getMetas() {
-		if (!$this->get('metas')) return array();
-
-		$m = $this->get('metas');
-		$m = json_decode($m, true);
-
-		if (!$m) return array();
-		else return $m;
+		return null;
 	}
 
 	/**
@@ -368,10 +369,14 @@ class PageModel extends Model {
 	 * @return bool
 	 */
 	public function setMetas($metaarray) {
-		if (is_array($metaarray) && count($metaarray)) $m = json_encode($metaarray);
-		else $m = '';
+		if (is_array($metaarray) && count($metaarray)){
+			foreach($metaarray as $k => $v){
+				$this->setMeta($k, $v);
+				return true;
+			}
+		}
 
-		return $this->set('metas', $m);
+		return false;
 	}
 
 	/**
@@ -381,17 +386,103 @@ class PageModel extends Model {
 	 * @param $value string|array
 	 */
 	public function setMeta($name, $value) {
-		// Get,
-		$metas = $this->getMetas();
-		// Update, (or delete)
-		if ($value === '' || $value === null) {
-			if (isset($metas[$name])) unset($metas[$name]);
+		// Get, all of the metas for this model!
+		$metas = $this->getLink('PageMeta');
+
+		// keywords behave slightly differently here.
+		if($name == 'keywords'){
+			if(!is_array($value)) $value = array($value => $value);
+
+			// I need to make sure that each value is a key/value pair.
+			foreach($value as $valueidx => $valueval){
+				if(is_numeric($valueidx)){
+					// This will replace any numeric based key with the url version of the value.
+					// This may have an odd side effect of transposing numeric values like 2013,
+					// but since the url version of a number is just the number itself, it should be ok.
+					unset($value[$valueidx]);
+					$value[ \Core\str_to_url($valueval) ] = $valueval;
+				}
+			}
+
+			foreach($metas as $idx => $meta){
+				/** @var $meta PageMetaModel */
+
+				// I'm only interested in these!
+				if($meta->get('meta_key') != 'keyword') continue;
+
+				if(isset($value[ $meta->get('meta_value') ])){
+					// Yay, update the value title
+					$meta->set('meta_value_title', $value[ $meta->get('meta_value') ]);
+					unset($value[ $meta->get('meta_value') ]);
+				}
+				else{
+					// Nope?  Delete it!
+					$meta->delete();
+					unset($this->_linked['PageMeta']['records'][$idx]);
+				}
+			}
+
+			// Any new incoming keywords left?
+			foreach($value as $metavalue => $metavaluetitle){
+				if(!$metavaluetitle) continue;
+
+				$meta = new PageMetaModel($this->get('site'), $this->get('baseurl'), 'keyword', $metavalue);
+				$meta->set('meta_value_title', $metavaluetitle);
+
+				// And append it so it'll get saved on save!
+				$this->_linked['PageMeta']['records'][] = $meta;
+			}
 		}
-		else {
-			$metas[$name] = $value;
+		elseif($name == 'authorid'){
+			// This affects the author tag instead, look for that!
+			foreach($metas as $idx => $meta){
+				/** @var $meta PageMetaModel */
+
+				// I'm only interested in this one!
+				if($meta->get('meta_key') != 'author') continue;
+
+				// It must be the one I'm looking for.
+				$meta->set('meta_value', $value);
+				return; // :)
+			}
+
+			// Doesn't exist?
+			$meta = new PageMetaModel($this->get('baseurl'), 'author', $value);
+
+			// And append it so it'll get saved on save!
+			$this->_linked['PageMeta']['records'][] = $meta;
 		}
-		// And set.
-		$this->setMetas($metas);
+		// Default action, one to one!
+		else{
+			// Look for this key to see if it exists.
+			foreach($metas as $idx => $meta){
+				/** @var $meta PageMetaModel */
+
+				// I'm only interested in this one!
+				if($meta->get('meta_key') != $name) continue;
+
+				// It must be the one I'm looking for.
+				if($value){
+					// Does it have a value?
+					$meta->set('meta_value_title', $value);
+				}
+				else{
+					// It's blank but exists... I can fix that :p
+					$meta->delete();
+					unset($this->_linked['PageMeta']['records'][$idx]);
+				}
+				return; // :)
+			}
+
+			// Doesn't exist?
+			if($value){
+				$meta = new PageMetaModel($this->get('baseurl'), $name, '');
+				$meta->set('meta_value_title', $value);
+
+				// And append it so it'll get saved on save!
+				$this->_linked['PageMeta']['records'][] = $meta;
+			}
+		}
 	}
 
 	/**
@@ -402,23 +493,48 @@ class PageModel extends Model {
 	 */
 	public function setFromForm(Form $form, $prefix = null){
 
-		// Carry on like usual.
+		// This will take care of all the standard elements.
 		parent::setFromForm($form, $prefix);
 
-		// And in addition, I want to get the meta data from the form too.  It'll share the same prefix, with the alteration of an _meta.
-		$meta = $form->getElementByName($prefix . '_meta');
-		if(!$meta){
-			// ERM?  If the page model is created directly, it may be called something different.
-			$meta = $form->getElementByName($prefix . '[metas]');
-		}
+		// And this will take care of the meta elements.
+		$metagroup = $form->getElement($prefix . '[metas]');
+		if($metagroup){
+			/** @var $metagroup FormGroup */
+			$base = $prefix . '[metas]';
 
-		if(!$meta){
-			error_log('Unable to locate meta tags from form.  This is probably alright.');
-			return;
-		}
+			foreach($metagroup->getElements() as $element){
+				/** @var $element FormElement */
+				$key = substr($element->get('name'), strlen($base)+1, -1);
 
-		// The form element will have already converted this to a json array for me :)
-		$this->set('metas', $meta->get('value'));
+				$this->setMeta($key, $element->get('value'));
+			}
+		}
+	}
+
+	public function setToFormElement($key, $element){
+		if($key == 'page_template'){
+			// Make sure to set the element's templatename.
+			$element->set('templatename', $this->getBaseTemplateName());
+		}
+	}
+
+	/**
+	 * Method that is called on the model after "addModel" is called on a form.
+	 *
+	 * Any special logic such as adding custom elements from the model can be done here, simply extend this method and add logic as necessary.
+	 *
+	 * @param Form $form
+	 */
+	public function addToFormPost(Form $form, $prefix){
+		// YES!
+		// I need to add the pagemetas!
+		$form->addElement(
+			'pagemetas',
+			array(
+				'model' => $this,
+				'name' => $prefix . '[metas]',
+			)
+		);
 	}
 
 	public function getResolvedURL() {
@@ -661,6 +777,9 @@ class PageModel extends Model {
 
 		// Update the cache!
 		self::_LookupUrl(null);
+
+		// In order to do the match, the incoming url needs to be all lowercase!
+		$base = strtolower($base);
 
 		// so now I can translate that rewriteurl to the baseurl.
 		if (isset(self::$_RewriteCache[$base])) {
@@ -928,6 +1047,11 @@ class PageModel extends Model {
 			}
 			$t .= $p->get('title');
 			$t .= ' ( ' . $p->get('rewriteurl') . ' )';
+			$tlen = strlen(html_entity_decode($t));
+			if($tlen > 80){
+				// This needs to take into account for the html characters.
+				$t = substr($t, 0, (77 + (strlen($t) - $tlen)) ) . '&hellip;';
+			}
 			$opts[$baseurl] = $t;
 		}
 

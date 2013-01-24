@@ -332,6 +332,9 @@ class PageRequest {
 		$view->baseurl = $this->getBaseURL();
 		$c->setView($view);
 
+		// Make sure that the controller can access this object.
+		$c->setPageRequest($this);
+
 		// The main page object.
 		$page = $this->getPageModel();
 
@@ -393,14 +396,28 @@ class PageRequest {
 			}
 		}
 
+		$defaultmetas = $defaultpage->getLink('PageMeta');
+
+		// Make a list of the existing ones so I know which ones not to overwrite!
+		// Just the key will suffice quite nicely.
+		$currentmetas = array();
+		foreach($return->meta as $k => $meta){
+			$currentmetas[] = $k;
+		}
+
 		// Load some of the page information into the view now!
-		foreach ($defaultpage->getMetas() as $key => $val) {
+		foreach($defaultmetas as $meta){
+			/** @var $meta PageMetaModel */
+			$key = $meta->get('meta_key');
+
+			$viewmeta = $meta->getViewMetaObject();
+
 			// again, allow the executed controller have the final say on meta information.
-			if ($val && !isset($return->meta[$key])) {
-				$return->meta[$key] = $val;
-				//View::AddMetaName($key, $val);
+			if ($meta->get('meta_value_title') && !in_array($key, $currentmetas)) {
+				$return->meta[$key] = $viewmeta;
 			}
 		}
+
 
 		// Since the controller already ran, do not overwrite the title.
 		if ($return->title === null){

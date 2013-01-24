@@ -21,20 +21,44 @@
 
 function smarty_block_insertable($params, $content, $template, &$repeat){
 
+	$assign = (isset($params['assign']))? $params['assign'] : false;
+
 	// This only needs to be called once.
-	if($repeat) return '';
+	// If a value is being assigned, then it's on the first pass so the value will be assigned by the time the content is hit.
+	if($assign){
+		if($repeat){
+			// Running the first time with an assign variable, OK!
+		}
+		else{
+			return $content;
+		}
+	}
+	else{
+		// No assign requested, run on the second only.
+		if($repeat){
+			return '';
+		}
+		else{
+			// Continue!
+		}
+	}
 
 	// I need to use the parent to lookup the current base url.
 	$baseurl = PageRequest::GetSystemRequest()->getBaseURL();
 
 	if(!isset($params['name'])) return '';
-	$assign = (isset($params['assign']))? $params['assign'] : false;
+
 
 	$i = InsertableModel::Construct($baseurl, $params['name']);
 
 	if($i->exists()){
-		$content = $i->get('value');
+		$value = $i->get('value');
 	}
 
-    return $assign ? $template->assign($assign, $content) : $content;
+	if($assign){
+		$template->assign($assign, $value);
+	}
+	else{
+		return $value;
+	}
 }

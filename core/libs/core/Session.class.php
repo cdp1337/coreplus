@@ -21,104 +21,138 @@
  */
 
 //This is a hack to allow classes to still be available after the page has been rendered.
-register_shutdown_function("session_write_close");
+//register_shutdown_function("session_write_close");
 
 
-class Session implements ISingleton {
+class Session implements SessionHandlerInterface {
 
-	/**
-	 * The model for this given session.
-	 *
-	 * @var SessionModel
-	 */
-	private $_model = null;
+	public static $Instance;
 
-	/**
-	 * @var Session
-	 */
-	private static $_Instance = null;
-
-	/**
-	 * Get the global instance for the session.
-	 *
-	 * @return Session
-	 */
-	public static function Singleton() {
-		if (self::$_Instance === null) {
-			self::$_Instance = new Session();
-
-			// And start a new session.
-			$m = self::$_Instance->_getModel();
-			// The "updated" flag is explictly required to be set because it also
-			// indicates when the last page activity for the user was.
-			// This is the main tracking variable for inactivity.
-			$m->set('updated', Time::GetCurrentGMT());
-			$m->save();
-
-			// From this point on, the $_SESSION variable is available.
-
-			// Anything waiting for the session?
-			HookHandler::DispatchHook('/core/session/ready');
+	public function __construct(){
+		if(self::$Instance === null){
+			self::$Instance = $this;
 		}
-
-		return Session::$_Instance;
 	}
 
-	public static function GetInstance() {
-		return self::Singleton();
+	/**
+	 * PHP >= 5.4.0<br/>
+	 * Close the session
+	 * @link http://php.net/manual/en/sessionhandlerinterafce.close.php
+	 * @return bool <p>
+	 * The return value (usually TRUE on success, FALSE on failure).
+	 * Note this value is returned internally to PHP for processing.
+	 * </p>
+	 */
+	public function close() {
+		// Sessions are persistent!
+		return true;
 	}
 
-	public static function Start($save_path, $session_name) {
-		self::Singleton();
+	/**
+	 * PHP >= 5.4.0<br/>
+	 * Initialize session
+	 * @link http://php.net/manual/en/sessionhandlerinterafce.open.php
+	 *
+	 * @param string $save_path The path where to store/retrieve the session.
+	 * @param string $session_id The session id.
+	 *
+	 * @return bool <p>
+	 * The return value (usually TRUE on success, FALSE on failure).
+	 * Note this value is returned internally to PHP for processing.
+	 * </p>
+	 */
+	public function open($save_path, $session_id) {
+		// Anything waiting for the session?
+		HookHandler::DispatchHook('/core/session/ready');
+
+		// Open really doesn't need to do anything, everything that will be controlling the session will be built into Core Plus.
+		return true;
 	}
 
-	public static function End() {
-		// Nothing needs to be done in this function
-		// since we used persistent connection.
+	/**
+	 * PHP >= 5.4.0<br/>
+	 * Destroy a session
+	 * @link http://php.net/manual/en/sessionhandlerinterafce.destroy.php
+	 *
+	 * @param int $session_id The session ID being destroyed.
+	 *
+	 * @return bool <p>
+	 * The return value (usually TRUE on success, FALSE on failure).
+	 * Note this value is returned internally to PHP for processing.
+	 * </p>
+	 */
+	public function destroy($session_id) {
+		// Low-level datasets are used here because they have less overhead than
+		// the full-blown model system.
+		$dataset = new Dataset();
+		$dataset->table('session');
+		$dataset->where('session_id = ' . $session_id);
+		$dataset->where('ip_addr = ' . REMOTE_IP);
 
-		$m = self::Singleton()->_getModel();
-		$m->save();
+		$dataset->delete();
+		$dataset->execute();
+
+		// Blow away the current session data too!
+		$_SESSION = null;
+
+		return true;
 	}
 
-	public static function Read($id) {
-		$m = self::Singleton()->_getModel();
-		//var_dump($m->get('data'));
-
-		return $m->get('data');
+	/**
+	 * PHP >= 5.4.0<br/>
+	 * Read session data
+	 * @link http://php.net/manual/en/sessionhandlerinterafce.read.php
+	 * @param string $session_id The session id to read data for.
+	 * @return string <p>
+	 * Returns an encoded string of the read data.
+	 * If nothing was read, it must return an empty string.
+	 * Note this value is returned internally to PHP for processing.
+	 * </p>
+	 */
+	public function read($session_id) {
+		$model = self::_GetModel($session_id);
+		return $model->getData();
 	}
 
-	public static function Write($id, $data) {
-
-		$m = self::Singleton()->_getModel();
-		$m->set('data', $data);
-
-		return TRUE;
+	/**
+	 * PHP >= 5.4.0<br/>
+	 * Write session data
+	 * @link http://php.net/manual/en/sessionhandlerinterafce.write.php
+	 * @param string $session_id The session id.
+	 * @param string $session_data <p>
+	 * The encoded session data. This data is the
+	 * result of the PHP internally encoding
+	 * the $_SESSION superglobal to a serialized
+	 * string and passing it as this parameter.
+	 * Please note sessions use an alternative serialization method.
+	 * </p>
+	 * @return bool <p>
+	 * The return value (usually TRUE on success, FALSE on failure).
+	 * Note this value is returned internally to PHP for processing.
+	 * </p>
+	 */
+	public function write($session_id, $session_data) {
+		$model = self::_GetModel($session_id);
+		$model->setData($session_data);
+		return $model->save();
 	}
 
-	public static function Destroy($id = null) {
-
-		// If "null" is requested, just destroy the system session.
-		if ($id === null) {
-			self::Singleton()->_destroy();
-			// Purge the session data
-			session_destroy();
-			// And invalidate the session id.
-			session_regenerate_id(true);
-		} else {
-			// Low-level datasets are used here because they have less overhead than
-			// the full-blown model system.
-			$dataset = new Dataset();
-			$dataset->table('session');
-			$dataset->where('session_id = ' . $id);
-
-			$dataset->delete();
-			$dataset->execute();
-		}
-
-		return TRUE;
-	}
-
-	public static function GC() {
+	/**
+	 * PHP >= 5.4.0<br/>
+	 * Cleanup old sessions
+	 * @link http://php.net/manual/en/sessionhandlerinterafce.gc.php
+	 *
+	 * @param int $maxlifetime <p>
+	 * Sessions that have not updated for
+	 * the last maxlifetime seconds will be removed.
+	 * </p>
+	 *
+	 * @return bool <p>
+	 * The return value (usually TRUE on success, FALSE on failure).
+	 * Note this value is returned internally to PHP for processing.
+	 * </p>
+	 */
+	public function gc($maxlifetime) {
 		/**
 		 * Delete ANY session that has expired.
 		 */
@@ -129,58 +163,48 @@ class Session implements ISingleton {
 		$dataset = new Dataset();
 		$dataset->table('session');
 		$dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl));
-
-		$dataset->delete();
+		$dataset->delete()->execute();
 
 		// Always return TRUE
 		return true;
 	}
 
 	public static function SetUser(User $u) {
-		$m = self::Singleton()->_getModel();
+		$model = self::_GetModel(session_id());
 
-		$m->set('user_id', $u->get('id'));
+		$model->set('user_id', $u->get('id'));
+		$model->save();
 		$_SESSION['user'] = $u;
 	}
 
-	private function __construct() {
-		// Ensure garbage collection is done at some point.
-		Session::GC();
+	/**
+	 * Shortcut static function to call that will destroy the current session and logout the user.
+	 *
+	 */
+	public static function DestroySession(){
+		if(self::$Instance !== null){
+			self::$Instance->destroy(session_id());
+		}
 	}
+
 
 	/**
 	 * Get the Model for this current session.
+	 * This method will NOT cache the results of the model.  This is due to race conditions at some point...
+	 *
+	 * @param string $session_id The session id to read the model for.
 	 * @return SessionModel
 	 */
-	private function _getModel() {
-		if ($this->_model === null) {
-			$this->_model = new SessionModel(session_id());
+	private static function _GetModel($session_id) {
+		$model = new SessionModel($session_id);
 
-			// Ensure the data is matched up.
-			$this->_model->set('ip_addr', REMOTE_IP);
-		}
+		// Ensure the data is matched up.
+		$model->set('ip_addr', REMOTE_IP);
 
-		return $this->_model;
-	}
-
-	private function _destroy() {
-		// Delete the information from the database and purge the cached information.
-		if ($this->_model) {
-			$this->_model->delete();
-			$this->_model = null;
-		}
+		return $model;
 	}
 }
 
-// Set the save handlers
-session_set_save_handler(
-	array('Session', "Start"),
-	array('Session', "End"),
-	array('Session', "Read"),
-	array('Session', "Write"),
-	array('Session', "Destroy"),
-	array('Session', "GC")
-);
 
 // and GO
 // Now I can session_start everything.
@@ -192,4 +216,6 @@ if(defined('SESSION_COOKIE_DOMAIN') && SESSION_COOKIE_DOMAIN){
 	session_name('CorePlusSession');
 	session_set_cookie_params(0, '/', SESSION_COOKIE_DOMAIN);
 }
+$session = new Session();
+session_set_save_handler($session, true);
 session_start();

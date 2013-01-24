@@ -424,6 +424,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 	private function _executeGet(Dataset $dataset){
 		// Generate a query to run.
 		$q = 'SELECT';
+		if($dataset->uniquerecords) $q .= ' DISTINCT';
 		$ss = array();
 		foreach($dataset->_selects as $s){
 			// Check the escaping for this column.

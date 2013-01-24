@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 30 Dec 2012 16:48:51 -0500
+ * @compiled Wed, 23 Jan 2013 22:22:25 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -33,8 +33,8 @@ if (basename($_SERVER['SCRIPT_NAME']) == 'bootstrap.php') die('You cannot call t
 if (PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')) {
 die('This application cannot run with magic_quotes_gpc enabled, please disable them now!');
 }
-if (PHP_VERSION < '5.3.0') {
-die('This application requires at least PHP 5.3 to run!');
+if (PHP_VERSION < '5.4.0') {
+die('This application requires at least PHP 5.4 to run!');
 }
 umask(0);
 $start_time = microtime(true);
@@ -923,7 +923,6 @@ protected $_data = array();
 protected $_datainit = array();
 protected $_datadecrypted = null;
 protected $_dataother = array();
-protected $_dirty = false;
 protected $_exists = false;
 protected $_linked = array();
 protected $_cacheable = true;
@@ -981,11 +980,9 @@ $data = Dataset::Init()
 if ($data->num_rows) {
 $this->_data     = $data->current();
 $this->_datainit = $data->current();
-$this->_dirty  = false;
 $this->_exists = true;
 }
 else {
-$this->_dirty  = true;
 $this->_exists = false;
 }
 return;
@@ -995,7 +992,7 @@ $save = false;
 if(!$this->_exists){
 $save = true;
 }
-elseif($this->_dirty){
+elseif($this->changed()){
 $save = true;
 }
 else{
@@ -1013,7 +1010,7 @@ if ($this->_exists) $this->_saveExisting();
 else $this->_saveNew();
 foreach($this->_linked as $k => $l){
 if(!(isset($l['records']))) continue;
-if(!(isset($l['records']) || $this->_dirty)) continue; // No need to save if it was never loaded.
+if(!(isset($l['records']) || $this->changed())) continue; // No need to save if it was never loaded.
 switch($l['link']){
 case Model::LINK_HASONE:
 case Model::LINK_HASMANY:
@@ -1026,7 +1023,6 @@ break;
 }
 }
 $this->_exists     = true;
-$this->_dirty      = false;
 $this->_datainit = $this->_data;
 return true;
 }
@@ -1105,6 +1101,7 @@ $dat->execute($this->interface);
 if ($idcol) $this->_data[$idcol] = $dat->getID();
 }
 protected function _saveExisting($useset = false) {
+if(!$this->changed()) return false;
 $i = self::GetIndexes();
 $s = self::GetSchema();
 $n = $this->_getTableName();
@@ -1160,7 +1157,6 @@ $dat->execute($this->interface);
 public function _loadFromRecord($record) {
 $this->_data = $record;
 $this->_datainit = $this->_data;
-$this->_dirty    = false;
 $this->_exists   = true;
 }
 public function delete() {
@@ -1177,7 +1173,6 @@ $dat->where(array($k => $this->_data[$k]));
 }
 $dat->limit(1)->delete();
 if ($dat->execute($this->interface)) {
-$this->_dirty  = false;
 $this->_exists = false;
 }
 }
@@ -1260,7 +1255,6 @@ $this->_data[$k] = $this->encryptValue($v);
 else{
 $this->_data[$k] = $v;
 }
-$this->_dirty    = true;
 return true;
 }
 else {
@@ -1328,9 +1322,8 @@ $wheres['site'] = $this->get('site');
 }
 return $wheres;
 }
-public function getLink($linkname, $order = null) {
+public function getLinkFactory($linkname){
 if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
-if (!isset($this->_linked[$linkname]['records'])) {
 $c = $this->_getLinkClassName($linkname);
 $f = new ModelFactory($c);
 switch($this->_linked[$linkname]['link']){
@@ -1341,6 +1334,14 @@ break;
 }
 $wheres = $this->_getLinkWhereArray($linkname);
 $f->where($wheres);
+return $f;
+}
+public function getLink($linkname, $order = null) {
+if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
+if (!isset($this->_linked[$linkname]['records'])) {
+$f = $this->getLinkFactory($linkname);
+$c = $this->_getLinkClassName($linkname);
+$wheres = $this->_getLinkWhereArray($linkname);
 if ($order) $f->order($order);
 $this->_linked[$linkname]['records'] = $f->get();
 if ($this->_linked[$linkname]['records'] === null) {
@@ -1430,6 +1431,10 @@ else $val = 0;
 $this->set($key, $val);
 }
 }
+public function setToFormElement($key, FormElement $element){
+}
+public function addToFormPost(Form $form, $prefix){
+}
 public function get($k) {
 if($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
 return $this->_datadecrypted[$k];
@@ -1457,6 +1462,27 @@ return $this->_exists;
 }
 public function isnew() {
 return !$this->_exists;
+}
+public function changed(){
+$s = self::GetSchema();
+foreach ($this->_data as $k => $v) {
+if(!isset($s[$k])){
+continue;
+}
+$keyschema = $s[$k];
+switch ($keyschema['type']) {
+case Model::ATT_TYPE_CREATED:
+case Model::ATT_TYPE_UPDATED:
+continue 2;
+}
+if(!isset($this->_datainit[$k])){
+return true;
+}
+if($this->_datainit[$k] != $this->_data[$k]){
+return true;
+}
+}
+return false;
 }
 public function decryptData(){
 if($this->_datadecrypted === null){
@@ -1934,20 +1960,17 @@ public static $Schema = array(
 'description' => 'Starts with a "/", omit the root web dir.',
 ),
 ),
-'metas' => array(
-'type' => Model::ATT_TYPE_TEXT,
-'comment' => '[Cached] Serialized array of metainformation',
-'null' => false,
-'default' => '',
-'formtype' => 'pagemetas'
-),
 'theme_template' => array(
 'type' => Model::ATT_TYPE_STRING,
 'maxlength' => 128,
 'default' => null,
 'null' => true,
 'comment' => 'Allows the page to define its own theme and widget information.',
-'formtype' => 'pagethemeselect'
+'form' => array(
+'type' => 'pagethemeselect',
+'title' => 'Theme Skin',
+'description' => 'This defines the master theme skin that will be used on this page.'
+)
 ),
 'page_template' => array(
 'type' => Model::ATT_TYPE_STRING,
@@ -1955,7 +1978,10 @@ public static $Schema = array(
 'default' => null,
 'null' => true,
 'comment' => 'Allows the specific page template to be overridden.',
-'formtype' => 'hidden'
+'form' => array(
+'type' => 'disabled',
+'title' => 'Alternative Page Template',
+)
 ),
 'access' => array(
 'type' => Model::ATT_TYPE_STRING,
@@ -1993,6 +2019,7 @@ public static $Indexes = array(
 'primary' => array('site', 'baseurl'),
 'unique:rewrite_url' => array('site', 'rewriteurl'),
 );
+public $templatename = null;
 private $_class;
 private $_method;
 private $_params;
@@ -2004,6 +2031,10 @@ $this->_linked = array(
 'Insertable' => array(
 'link' => Model::LINK_HASMANY,
 'on' => 'baseurl'
+),
+'PageMeta' => array(
+'link' => Model::LINK_HASMANY,
+'on' => array('site' => 'site', 'baseurl' => 'baseurl'),
 ),
 );
 if(func_num_args() == 1){
@@ -2108,42 +2139,101 @@ $this->_view = $view;
 $this->_populateView();
 }
 public function getMeta($name) {
-$m = $this->getMetas();
-return isset($m[$name]) ? $m[$name] : null;
+$metas = $this->getLink('PageMeta');
+foreach($metas as $meta){
+if($meta->get('meta_key') == $name) return $meta;
 }
-public function getMetas() {
-if (!$this->get('metas')) return array();
-$m = $this->get('metas');
-$m = json_decode($m, true);
-if (!$m) return array();
-else return $m;
+return null;
 }
 public function setMetas($metaarray) {
-if (is_array($metaarray) && count($metaarray)) $m = json_encode($metaarray);
-else $m = '';
-return $this->set('metas', $m);
+if (is_array($metaarray) && count($metaarray)){
+foreach($metaarray as $k => $v){
+$this->setMeta($k, $v);
+return true;
+}
+}
+return false;
 }
 public function setMeta($name, $value) {
-$metas = $this->getMetas();
-if ($value === '' || $value === null) {
-if (isset($metas[$name])) unset($metas[$name]);
+$metas = $this->getLink('PageMeta');
+if($name == 'keywords'){
+if(!is_array($value)) $value = array($value => $value);
+foreach($value as $valueidx => $valueval){
+if(is_numeric($valueidx)){
+unset($value[$valueidx]);
+$value[ \Core\str_to_url($valueval) ] = $valueval;
 }
-else {
-$metas[$name] = $value;
 }
-$this->setMetas($metas);
+foreach($metas as $idx => $meta){
+if($meta->get('meta_key') != 'keyword') continue;
+if(isset($value[ $meta->get('meta_value') ])){
+$meta->set('meta_value_title', $value[ $meta->get('meta_value') ]);
+unset($value[ $meta->get('meta_value') ]);
+}
+else{
+$meta->delete();
+unset($this->_linked['PageMeta']['records'][$idx]);
+}
+}
+foreach($value as $metavalue => $metavaluetitle){
+if(!$metavaluetitle) continue;
+$meta = new PageMetaModel($this->get('site'), $this->get('baseurl'), 'keyword', $metavalue);
+$meta->set('meta_value_title', $metavaluetitle);
+$this->_linked['PageMeta']['records'][] = $meta;
+}
+}
+elseif($name == 'authorid'){
+foreach($metas as $idx => $meta){
+if($meta->get('meta_key') != 'author') continue;
+$meta->set('meta_value', $value);
+return; // :)
+}
+$meta = new PageMetaModel($this->get('baseurl'), 'author', $value);
+$this->_linked['PageMeta']['records'][] = $meta;
+}
+else{
+foreach($metas as $idx => $meta){
+if($meta->get('meta_key') != $name) continue;
+if($value){
+$meta->set('meta_value_title', $value);
+}
+else{
+$meta->delete();
+unset($this->_linked['PageMeta']['records'][$idx]);
+}
+return; // :)
+}
+if($value){
+$meta = new PageMetaModel($this->get('baseurl'), $name, '');
+$meta->set('meta_value_title', $value);
+$this->_linked['PageMeta']['records'][] = $meta;
+}
+}
 }
 public function setFromForm(Form $form, $prefix = null){
 parent::setFromForm($form, $prefix);
-$meta = $form->getElementByName($prefix . '_meta');
-if(!$meta){
-$meta = $form->getElementByName($prefix . '[metas]');
+$metagroup = $form->getElement($prefix . '[metas]');
+if($metagroup){
+$base = $prefix . '[metas]';
+foreach($metagroup->getElements() as $element){
+$key = substr($element->get('name'), strlen($base)+1, -1);
+$this->setMeta($key, $element->get('value'));
 }
-if(!$meta){
-error_log('Unable to locate meta tags from form.  This is probably alright.');
-return;
 }
-$this->set('metas', $meta->get('value'));
+}
+public function setToFormElement($key, $element){
+if($key == 'page_template'){
+$element->set('templatename', $this->getBaseTemplateName());
+}
+}
+public function addToFormPost(Form $form, $prefix){
+$form->addElement(
+'pagemetas',
+array(
+'model' => $this,
+'name' => $prefix . '[metas]',
+)
+);
 }
 public function getResolvedURL() {
 if ($this->exists()) {
@@ -2265,6 +2355,7 @@ $this->_view->setBreadcrumbs($this->getParentTree());
 public static function SplitBaseURL($base) {
 if (!$base) return null;
 self::_LookupUrl(null);
+$base = strtolower($base);
 if (isset(self::$_RewriteCache[$base])) {
 $base = self::$_RewriteCache[$base];
 } // or find a fuzzy page if there is one.
@@ -2425,6 +2516,10 @@ $t .= $subp->get('title') . ' &raquo; ';
 }
 $t .= $p->get('title');
 $t .= ' ( ' . $p->get('rewriteurl') . ' )';
+$tlen = strlen(html_entity_decode($t));
+if($tlen > 80){
+$t = substr($t, 0, (77 + (strlen($t) - $tlen)) ) . '&hellip;';
+}
 $opts[$baseurl] = $t;
 }
 asort($opts);
@@ -3800,9 +3895,20 @@ $canBeUpgraded = false;
 foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('upgrade') as $u) {
 if ($this->_versionDB == @$u->getAttribute('from')) {
 $canBeUpgraded = true;
-foreach($u->getElementsByTagName('dataset') as $datasetel){
-$datachanges = $this->_parseDatasetNode($datasetel);
+$children = $u->childNodes;
+foreach($children as $child){
+switch($child->nodeName){
+case 'dataset':
+$datachanges = $this->_parseDatasetNode($child);
 if($datachanges !== false) $changes = array_merge($changes, $datachanges);
+break;
+case 'phpfileinclude':
+include(ROOT_PDIR . trim($child->nodeValue));
+$changes[] = 'Included custom php file ' . basename($child->nodeValue);
+break;
+default:
+$changes[] = 'Ignoring unsupported upgrade directive: [' . $child->nodeName . ']';
+}
 }
 $changes[] = 'Upgraded from [' . $this->_versionDB . '] to [' . $u->getAttribute('to') . ']';
 $this->_versionDB = @$u->getAttribute('to');
@@ -3900,15 +4006,18 @@ $formtype   = $confignode->getAttribute('formtype');
 $onreg      = $confignode->getAttribute('onregistration');
 $onedit     = $confignode->getAttribute('onedit');
 $options    = $confignode->getAttribute('options');
+$searchable = $confignode->getAttribute('searchable');
 $validation = $confignode->getAttribute('validation');
-if($onreg === null) $onreg = 1;
-if($onedit === null) $onedit = 1;
+if($onreg === null)      $onreg = 1;
+if($onedit === null)     $onedit = 1;
+if($searchable === null) $searchable = 0;
 $model = UserConfigModel::Construct($key);
 $model->set('name', $name);
 if($default)  $model->set('default_value', $default);
 if($formtype) $model->set('formtype', $formtype);
 $model->set('onregistration', $onreg);
 $model->set('onedit', $onedit);
+$model->set('searchable', $searchable);
 if($options)  $model->set('options', $options);
 $model->set('validation', $validation);
 if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
@@ -6203,6 +6312,11 @@ $msg = 'Could not load installed component ' . $l->getName() . ' due to requirem
 error_log($msg);
 }
 }
+if(class_exists('ThemeHandler')){
+foreach(ThemeHandler::GetAllThemes() as $theme){
+$theme->load();
+}
+}
 }
 public function _registerComponent($c) {
 $name = strtolower($c->getName());
@@ -6760,6 +6874,18 @@ $ret['minor'] = $v[1];
 $ret['point'] = $v[2];
 return $ret;
 }
+public static function CompareValues($val1, $val2){
+if($val1 === $val2){
+return true;
+}
+if(is_numeric($val1) && is_numeric($val2) && $val1 == $val2){
+return true;
+}
+if(strlen($val1) == strlen($val2) && $val1 == $val2){
+return true;
+}
+return false;
+}
 }
 class CoreException extends Exception {
 }
@@ -7164,6 +7290,7 @@ public $_order = false;
 public $_data = null;
 public $num_rows = null;
 public $_renames = array();
+public $uniquerecords = false;
 public function __construct(){
 }
 public function select(){
@@ -7449,6 +7576,29 @@ $this->value = $statement;
 }
 }
 }
+class DatasetStream{
+private $_dataset;
+private $_totalcount;
+private $_counter = -1;
+private $_startlimit = 0;
+public $bufferlimit = 100;
+public function __construct(Dataset $ds){
+$this->_dataset = $ds;
+$mode = $this->_dataset->_mode;
+$this->_totalcount = $this->_dataset->count()->execute()->num_rows;
+$this->_dataset->_mode = $mode;
+}
+public function getRecord(){
+++$this->_counter;
+if($this->_dataset->_data === null || $this->_counter >= $this->bufferlimit){
+$this->_dataset->limit($this->_startlimit, $this->bufferlimit);
+$this->_dataset->execute();
+$this->_startlimit += $this->bufferlimit;
+$this->_counter = 0;
+}
+return isset($this->_dataset->_data[$this->_counter]) ? $this->_dataset->_data[$this->_counter] : null;
+}
+}
 
 class DMI {
 protected $_backend = null;
@@ -7521,99 +7671,74 @@ Core::LoadComponents();
 if (EXEC_MODE == 'WEB') {
 try {
 ### REQUIRE_ONCE FROM core/libs/core/Session.class.php
-register_shutdown_function("session_write_close");
-class Session implements ISingleton {
-private $_model = null;
-private static $_Instance = null;
-public static function Singleton() {
-if (self::$_Instance === null) {
-self::$_Instance = new Session();
-$m = self::$_Instance->_getModel();
-$m->set('updated', Time::GetCurrentGMT());
+class Session implements SessionHandlerInterface {
+public static $Instance;
+public function __construct(){
+if(self::$Instance === null){
+self::$Instance = $this;
+}
+}
+public function close() {
+return true;
+}
+public function open($save_path, $session_id) {
 HookHandler::DispatchHook('/core/session/ready');
+return true;
 }
-return Session::$_Instance;
-}
-public static function GetInstance() {
-return self::Singleton();
-}
-public static function Start($save_path, $session_name) {
-self::Singleton();
-}
-public static function End() {
-$m = self::Singleton()->_getModel();
-$m->save();
-}
-public static function Read($id) {
-$m = self::Singleton()->_getModel();
-return $m->get('data');
-}
-public static function Write($id, $data) {
-$m = self::Singleton()->_getModel();
-$m->set('data', $data);
-return TRUE;
-}
-public static function Destroy($id = null) {
-if ($id === null) {
-self::Singleton()->_destroy();
-session_destroy();
-session_regenerate_id(true);
-} else {
+public function destroy($session_id) {
 $dataset = new Dataset();
 $dataset->table('session');
-$dataset->where('session_id = ' . $id);
+$dataset->where('session_id = ' . $session_id);
+$dataset->where('ip_addr = ' . REMOTE_IP);
 $dataset->delete();
 $dataset->execute();
+$_SESSION = null;
+return true;
 }
-return TRUE;
+public function read($session_id) {
+$model = self::_GetModel($session_id);
+return $model->getData();
 }
-public static function GC() {
+public function write($session_id, $session_data) {
+$model = self::_GetModel($session_id);
+$model->setData($session_data);
+return $model->save();
+}
+public function gc($maxlifetime) {
 $ttl = ConfigHandler::Get('/core/session/ttl');
 $dataset = new Dataset();
 $dataset->table('session');
 $dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl));
-$dataset->delete();
+$dataset->delete()->execute();
 return true;
 }
 public static function SetUser(User $u) {
-$m = self::Singleton()->_getModel();
-$m->set('user_id', $u->get('id'));
+$model = self::_GetModel(session_id());
+$model->set('user_id', $u->get('id'));
+$model->save();
 $_SESSION['user'] = $u;
 }
-private function __construct() {
-Session::GC();
-}
-private function _getModel() {
-if ($this->_model === null) {
-$this->_model = new SessionModel(session_id());
-$this->_model->set('ip_addr', REMOTE_IP);
-}
-return $this->_model;
-}
-private function _destroy() {
-if ($this->_model) {
-$this->_model->delete();
-$this->_model = null;
+public static function DestroySession(){
+if(self::$Instance !== null){
+self::$Instance->destroy(session_id());
 }
 }
+private static function _GetModel($session_id) {
+$model = new SessionModel($session_id);
+$model->set('ip_addr', REMOTE_IP);
+return $model;
 }
-session_set_save_handler(
-array('Session', "Start"),
-array('Session', "End"),
-array('Session', "Read"),
-array('Session', "Write"),
-array('Session', "Destroy"),
-array('Session', "GC")
-);
+}
 ini_set('session.hash_bits_per_character', 5);
 ini_set('session.hash_function', 1);
 if(defined('SESSION_COOKIE_DOMAIN') && SESSION_COOKIE_DOMAIN){
 session_name('CorePlusSession');
 session_set_cookie_params(0, '/', SESSION_COOKIE_DOMAIN);
 }
+$session = new Session();
+session_set_save_handler($session, true);
 session_start();
 
-Session::Singleton();
 }
 catch (DMI_Exception $e) {
 if (DEVELOPMENT_MODE) {
@@ -8463,6 +8588,7 @@ interface TemplateInterface {
 public function fetch($template);
 public function render($template);
 public function getTemplateVars($varname = null);
+public function getVariable($varname);
 public function assign($tpl_var, $value = null);
 }
 
@@ -8540,6 +8666,9 @@ foreach ($dirs as $d) {
 if (file_exists($d . $filename)) return $d . $filename;
 }
 return null;
+}
+public function getVariable($varname) {
+return $this->getSmarty()->getVariable($varname);
 }
 }
 
@@ -8989,6 +9118,16 @@ $data = $template->fetch($mastertpl);
 }
 catch(SmartyException $e){
 $this->error = View::ERROR_SERVERERROR;
+error_log('[view error]');
+error_log('Template name: [' . $mastertpl . ']');
+error_log($e->getMessage());
+require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+die();
+}
+catch(TemplateException $e){
+$this->error = View::ERROR_SERVERERROR;
+error_log('[view error]');
+error_log('Template name: [' . $mastertpl . ']');
 error_log($e->getMessage());
 require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 die();
@@ -9438,6 +9577,19 @@ $r = $this->get('required');
 $e = $this->hasError();
 return $c . (($r) ? ' formrequired' : '') . (($e) ? ' formerror' : '');
 }
+public function getID(){
+if (!empty($this->_attributes['id'])){
+return $this->_attributes['id'];
+}
+else{
+$n = $this->get('name');
+$c = strtolower(get_class($this));
+$id = $c . '-' . $n;
+$id = str_replace('[]', '', $id);
+$id = preg_replace('/\[([^\]]*)\]/', '-$1', $id);
+return $id;
+}
+}
 public function getGroupAttributes() {
 $out = '';
 foreach ($this->_validattributes as $k) {
@@ -9567,6 +9719,12 @@ return false;
 $this->_attributes['value'] = $value;
 return true;
 }
+public function getValueTitle(){
+$v = $this->get('value');
+if($v === '' || $v === null) return null;
+if($this->get('options') && isset($this->_attributes['options'][$v])) return $this->_attributes['options'][$v];
+else return $v;
+}
 public function hasError() {
 return ($this->_error);
 }
@@ -9666,9 +9824,11 @@ public static $Mappings = array(
 'pageinsertables'  => 'FormPageInsertables',
 'pagemeta'         => 'FormPageMeta',
 'pagemetas'        => 'FormPageMetasInput',
+'pagemetakeywords' => 'FormPageMetaKeywordsInput',
 'pageparentselect' => 'FormPageParentSelectInput',
 'pagerewriteurl'   => 'FormPageRewriteURLInput',
 'pagethemeselect'  => 'FormPageThemeSelectInput',
+'pagepageselect'   => 'FOrmPagePageSelectInput',
 'password'         => 'FormPasswordInput',
 'radio'            => 'FormRadioInput',
 'reset'            => 'FormResetInput',
@@ -9765,8 +9925,8 @@ $this->saveToSession();
 }
 return $out;
 }
-public function getModel() {
-$m = $this->get('___modelname');
+public function getModel($prefix = 'model') {
+$m = $this->get('___' . $prefix . 'name');
 if (!$m) return null; // A model needs to be defined first of all...
 $model = new $m();
 if (!$model instanceof Model) return null; // It needs to be a model... :/
@@ -9777,25 +9937,13 @@ return $el->getModel();
 }
 }
 }
-if (is_array($this->get('___modelpks'))) {
-foreach ($this->get('___modelpks') as $k => $v) {
+if (is_array($this->get('___' . $prefix . 'pks'))) {
+foreach ($this->get('___' . $prefix . 'pks') as $k => $v) {
 $model->set($k, $v);
 }
 $model->load();
 }
-$model->setFromForm($this, 'model');
-return $model;
-if ($model->get('baseurl') && $model->getLink('Page') instanceof PageModel && $this->getElementByName('page')) {
-$page = $model->getLink('Page');
-if ($model->get('title') !== null) $page->set('title', $model->get('title'));
-if ($model->get('access') !== null) $page->set('access', $model->get('access'));
-$this->getElementByName('page')->getModel($page);
-}
-if ($model->get('baseurl') && $model->getLink('Widget') instanceof WidgetModel) {
-$widget = $model->getLink('Widget');
-if ($model->get('title') !== null) $widget->set('title', $model->get('title'));
-if ($model->get('access') !== null) $widget->set('access', $model->get('access'));
-}
+$model->setFromForm($this, $prefix);
 return $model;
 }
 public function loadFrom($src) {
@@ -9805,6 +9953,103 @@ $e->clearError();
 $e->set('value', $e->lookupValueFrom($src));
 if ($e->hasError()) Core::SetMessage($e->getError(), 'error');
 }
+}
+public function addModel(Model $model, $prefix = 'model'){
+$groups = array();
+$this->set('___' . $prefix . 'name', get_class($model));
+$s = $model->getKeySchemas();
+$i = $model->GetIndexes();
+if (!isset($i['primary'])) $i['primary'] = array();
+$new = $model->isnew();
+if (!$new) {
+$pks = array();
+foreach ($i['primary'] as $k => $v) {
+$pks[$v] = $model->get($v);
+}
+$this->set('___' . $prefix . 'pks', $pks);
+}
+foreach ($s as $k => $v) {
+if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
+if (!$new && in_array($k, $i['primary'])) continue;
+$formatts = array(
+'type' => null,
+'title' => ucwords($k),
+'description' => null,
+'required' => false,
+'value' => $model->get($k),
+'name' => $prefix . '[' . $k . ']',
+);
+if($formatts['value'] === null && isset($v['default'])) $formatts['value'] = $v['default'];
+if(isset($v['form'])){
+$formatts = array_merge($formatts, $v['form']);
+}
+if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
+if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
+if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
+if(isset($v['required']))        $formatts['required'] = $v['required'];
+if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
+if($formatts['type'] == 'disabled'){
+continue;
+}
+elseif ($formatts['type'] !== null) {
+$el = FormElement::Factory($formatts['type']);
+}
+elseif ($v['type'] == Model::ATT_TYPE_BOOL) {
+$el = FormElement::Factory('radio');
+$el->set('options', array('Yes', 'No'));
+if ($formatts['value']) $formatts['value'] = 'Yes';
+elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'Yes';
+elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'No';
+else $formatts['value'] = 'No';
+}
+elseif ($v['type'] == Model::ATT_TYPE_SITE) {
+$el = FormElement::Factory('system');
+}
+elseif ($v['type'] == Model::ATT_TYPE_STRING) {
+$el = FormElement::Factory('text');
+}
+elseif ($v['type'] == Model::ATT_TYPE_INT) {
+$el = FormElement::Factory('text');
+}
+elseif ($v['type'] == Model::ATT_TYPE_FLOAT) {
+$el = FormElement::Factory('text');
+}
+elseif ($v['type'] == Model::ATT_TYPE_TEXT) {
+$el = FormElement::Factory('textarea');
+}
+elseif ($v['type'] == Model::ATT_TYPE_CREATED) {
+continue;
+}
+elseif ($v['type'] == Model::ATT_TYPE_UPDATED) {
+continue;
+}
+elseif ($v['type'] == Model::ATT_TYPE_ENUM) {
+$el   = FormElement::Factory('select');
+$opts = $v['options'];
+if ($v['null']) $opts = array_merge(array('' => '-Select One-'), $opts);
+$el->set('options', $opts);
+if ($v['default']) $el->set('value', $v['default']);
+}
+else {
+die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
+}
+unset($formatts['type']);
+$el->setFromArray($formatts);
+$model->setToFormElement($k, $el);
+if(isset($formatts['group'])){
+$groupname = $formatts['group'];
+if(!isset($groups[$groupname])){
+$groups[$groupname] = new FormGroup(array('title' => $groupname));
+$this->addElement($groups[$groupname]);
+}
+unset($formatts['group']);
+$groups[$groupname]->addElement($el);
+}
+else{
+$this->addElement($el);
+}
+}
+$model->addToFormPost($this, $prefix);
 }
 public function switchElementType($elementname, $newtype) {
 $el = $this->getElement($elementname);
@@ -9819,7 +10064,7 @@ $newel->setFromArray($atts);
 $this->switchElement($el, $newel);
 return true;
 }
-private function saveToSession() {
+public function saveToSession() {
 if (!$this->get('callsmethod')) return; // Don't save anything if there's no method to call.
 $this->set('expires', Time::GetCurrent() + 1800); // 30 minutes
 $_SESSION['FormData'][$this->get('uniqueid')] = serialize($this);
@@ -9868,304 +10113,10 @@ else Core::Redirect($status);
 }
 public static function BuildFromModel(Model $model) {
 $f = new Form();
-$groups = array();
-$f->set('___modelname', get_class($model));
-$s = $model->getKeySchemas();
-$i = $model->GetIndexes();
-if (!isset($i['primary'])) $i['primary'] = array();
-$new = $model->isnew();
-if (!$new) {
-$pks = array();
-foreach ($i['primary'] as $k => $v) {
-$pks[$v] = $model->get($v);
-}
-$f->set('___modelpks', $pks);
-}
-foreach ($s as $k => $v) {
-if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
-if (!$new && in_array($k, $i['primary'])) continue;
-$formatts = array(
-'type' => null,
-'title' => ucwords($k),
-'description' => null,
-'required' => false,
-'value' => $model->get($k),
-'name' => 'model[' . $k . ']',
-);
-if(!$formatts['value'] && isset($v['default'])) $formatts['value'] = $v['default'];
-if(isset($v['form'])){
-$formatts = array_merge($formatts, $v['form']);
-}
-if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
-if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
-if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
-if(isset($v['required']))        $formatts['required'] = $v['required'];
-if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
-if($formatts['type'] == 'disabled'){
-continue;
-}
-elseif ($formatts['type'] !== null) {
-$el = FormElement::Factory($formatts['type']);
-}
-elseif ($v['type'] == Model::ATT_TYPE_BOOL) {
-$el = FormElement::Factory('radio');
-$el->set('options', array('Yes', 'No'));
-if ($formatts['value']) $formatts['value'] = 'Yes';
-elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'Yes';
-elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'No';
-else $formatts['value'] = 'No';
-}
-elseif ($v['type'] == Model::ATT_TYPE_STRING) {
-$el = FormElement::Factory('text');
-}
-elseif ($v['type'] == Model::ATT_TYPE_INT) {
-$el = FormElement::Factory('text');
-}
-elseif ($v['type'] == Model::ATT_TYPE_FLOAT) {
-$el = FormElement::Factory('text');
-}
-elseif ($v['type'] == Model::ATT_TYPE_TEXT) {
-$el = FormElement::Factory('textarea');
-}
-elseif ($v['type'] == Model::ATT_TYPE_CREATED) {
-continue;
-}
-elseif ($v['type'] == Model::ATT_TYPE_UPDATED) {
-continue;
-}
-elseif ($v['type'] == Model::ATT_TYPE_ENUM) {
-$el   = FormElement::Factory('select');
-$opts = $v['options'];
-if ($v['null']) $opts = array_merge(array('' => '-Select One-'), $opts);
-$el->set('options', $opts);
-if ($v['default']) $el->set('value', $v['default']);
-}
-else {
-die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
-}
-unset($formatts['type']);
-if(isset($formatts['group'])){
-$groupname = $formatts['group'];
-if(!isset($groups[$groupname])){
-$groups[$groupname] = new FormGroup(array('title' => $groupname));
-$f->addElement($groups[$groupname]);
-}
-unset($formatts['group']);
-$el->setFromArray($formatts);
-$groups[$groupname]->addElement($el);
-}
-else{
-$el->setFromArray($formatts);
-$f->addElement($el);
-}
-}
+$f->addModel($model);
 return $f;
 }
 }
-class FormPageInsertables extends FormGroup {
-public function  __construct($atts = null) {
-parent::__construct($atts);
-if (!$this->get('title')) $this->set('title', 'Page Content');
-if (!$this->get('baseurl')) return null;
-$p = new PageModel($this->get('baseurl'));
-$tpl = $p->getTemplateName();
-if (!$tpl) return null;
-$tpl = Template::ResolveFile($tpl);
-if (!$tpl) return null;
-$tplcontents = file_get_contents($tpl);
-preg_match_all('/\{insertable(.*)\}(.*)\{\/insertable\}/isU', $tplcontents, $matches);
-if (!sizeof($matches[0])) return null;
-foreach ($matches[0] as $k => $v) {
-$tag     = trim($matches[1][$k]);
-$content = trim($matches[2][$k]);
-$default = $content;
-$name  = preg_replace('/.*name=["\'](.*?)["\'].*/i', '$1', $tag);
-$title = preg_replace('/.*title=["\'](.*?)["\'].*/i', '$1', $tag);
-if($title == $tag) $title = $name;
-$i = new InsertableModel($this->get('baseurl'), $name);
-if ($i->get('value') !== null) $content = $i->get('value');
-if (strpos($default, "\n") === false && strpos($default, "<") === false) {
-$this->addElement('text', array('name'  => "insertable[$name]",
-'title' => $title,
-'value' => $content)
-);
-}
-elseif (preg_match('/<img(.*?)>/i', $default)) {
-$this->addElement(
-'file',
-array(
-'name' => 'insertable[' . $name . ']',
-'title' => $title,
-'accept' => 'image/*',
-'basedir' => 'public/insertable',
-)
-);
-}
-else {
-$this->addElement('wysiwyg', array('name'  => "insertable[$name]",
-'title' => $title,
-'value' => $content)
-);
-}
-}
-}
-public function save() {
-$baseurl = $this->get('baseurl');
-$els     = $this->getElements(true, false);
-foreach ($els as $e) {
-if (!preg_match('/^insertable\[(.*?)\].*/', $e->get('name'), $matches)) continue;
-$i = new InsertableModel($baseurl, $matches[1]);
-$i->set('value', $e->get('value'));
-$i->save();
-}
-}
-} // class FormPageInsertables
-class FormPageMeta extends FormGroup {
-public function  __construct($atts = null) {
-$this->_attributes['name']    = 'page';
-if ($atts instanceof PageModel) {
-parent::__construct(array('name' => 'page'));
-$page = $atts;
-}
-else {
-if(isset($atts['model']) && $atts['model'] instanceof PageModel){
-$page = $atts['model'];
-unset($atts['model']);
-parent::__construct($atts);
-}
-else{
-parent::__construct($atts);
-$page = new PageModel($this->get('baseurl'));
-}
-}
-$this->_attributes['baseurl'] = $page->get('baseurl');
-$name = $this->_attributes['name'];
-$f = new ModelFactory('PageModel');
-if ($this->get('baseurl')) $f->where('baseurl != ' . $this->get('baseurl'));
-$opts = PageModel::GetPagesAsOptions($f, '-- No Parent Page --');
-$this->addElement(
-'pageparentselect',
-array(
-'name'    => $name . "[parenturl]",
-'title'   => 'Parent Page',
-'value'   => strtolower($page->get('parenturl')),
-'options' => $opts
-)
-);
-$this->addElement(
-'text', array(
-'name'        => $name . "[title]",
-'title'       => 'Title',
-'value'       => $page->get('title'),
-'description' => 'Every page needs a title to accompany it, this should be short but meaningful.',
-'required'    => true
-)
-);
-$this->addElement(
-'pagerewriteurl', array(
-'name'        => $name . "[rewriteurl]",
-'title'       => 'Page URL',
-'value'       => $page->get('rewriteurl'),
-'description' => 'Starts with a "/", omit ' . ROOT_URL,
-'required'    => true
-)
-);
-$this->addElement(
-'access', array(
-'name'  => $name . "[access]",
-'title' => 'Access Permissions',
-'value' => $page->get('access')
-)
-);
-$this->addElement(
-'pagemetas',
-array(
-'value' => $page->getMetas(),
-'name' => $name . '_meta',
-)
-);
-$skins = array('' => '-- Site Default Skin --');
-foreach(ThemeHandler::GetTheme(null)->getSkins() as $s){
-$n = ($s['title']) ? $s['title'] : $s['file'];
-if($s['default']) $n .= ' (default)';
-$skins[$s['file']] = $n;
-}
-if(sizeof($skins) > 2){
-$this->addElement(
-'select', array(
-'name'    => $name . "[theme_template]",
-'title'   => 'Theme Skin',
-'value'   => $page->get('theme_template'),
-'options' => $skins
-)
-);
-}
-$tmpname = substr($page->getBaseTemplateName(), 0, -4) . '/';
-$matches = array();
-$t = new Template();
-foreach($t->getTemplateDir() as $d){
-if(is_dir($d . $tmpname)){
-$dir = new Directory_local_backend($d . $tmpname);
-foreach($dir->ls() as $file){
-if($file instanceof Directory_local_backend) continue;
-if($file->getExtension() != 'tpl') continue;
-$matches[] = $file->getBaseFilename();
-}
-}
-}
-if(sizeof($matches)){
-$pages = array('' => '-- Default Page Template --');
-foreach($matches as $m){
-$pages[$m] = ucwords(str_replace('-', ' ', substr($m, 0, -4))) . ' Template';
-}
-$this->addElement(
-'select',
-array(
-'name'    => $name . '[page_template]',
-'title'   => 'Page Template',
-'value'   => $page->get('page_template'),
-'options' => $pages,
-'class' => 'page-template-selector',
-)
-);
-}
-}
-public function save() {
-$page = $this->getModel();
-return $page->save();
-$els = $this->getElements();
-foreach ($els as $e) {
-if (!preg_match('/^insertable\[(.*?)\].*/', $e->get('name'), $matches)) continue;
-$e->set('baseurl', $this->get('baseurl'));
-}
-$i = $this->getElementByName('insertables');
-$i->save();
-return true;
-}
-public function getModel($page = null) {
-if (!$page) $page = new PageModel($this->get('baseurl'));
-$name = $this->_attributes['name'];
-$els = $this->getElements(true, false);
-foreach ($els as $e) {
-if (!preg_match('/^[a-z_]*\[(.*?)\].*/', $e->get('name'), $matches)) continue;
-$key = $matches[1];
-$val = $e->get('value');
-if(strpos($e->get('name'), $name . '_meta') === 0){
-$page->setMeta($key, $val);
-}
-elseif(strpos($e->get('name'), $name) === 0){
-$page->set($key, $val);
-}
-else{
-continue;
-}
-}
-return $page;
-}
-public function getTemplateName() {
-return null;
-}
-} // class FormPageInsertables
 
 ### REQUIRE_ONCE FROM core/libs/core/PageRequest.class.php
 class PageRequest {
@@ -10326,6 +10277,7 @@ return $view;
 $c = Controller_2_1::Factory($pagedat['controller']);
 $view->baseurl = $this->getBaseURL();
 $c->setView($view);
+$c->setPageRequest($this);
 $page = $this->getPageModel();
 if ($c->accessstring !== null) {
 $page->set('access', $c->accessstring);
@@ -10370,9 +10322,16 @@ if ($defaultpage === null) {
 $defaultpage = $page;
 }
 }
-foreach ($defaultpage->getMetas() as $key => $val) {
-if ($val && !isset($return->meta[$key])) {
-$return->meta[$key] = $val;
+$defaultmetas = $defaultpage->getLink('PageMeta');
+$currentmetas = array();
+foreach($return->meta as $k => $meta){
+$currentmetas[] = $k;
+}
+foreach($defaultmetas as $meta){
+$key = $meta->get('meta_key');
+$viewmeta = $meta->getViewMetaObject();
+if ($meta->get('meta_value_title') && !in_array($key, $currentmetas)) {
+$return->meta[$key] = $viewmeta;
 }
 }
 if ($return->title === null){
@@ -10544,6 +10503,9 @@ if ($this->_request === null) {
 $this->_request = PageRequest::GetSystemRequest();
 }
 return $this->_request;
+}
+public function setPageRequest(PageRequest $request){
+$this->_request = $request;
 }
 public function setView(View $view){
 $this->_view = $view;

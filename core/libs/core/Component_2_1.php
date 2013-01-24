@@ -1099,27 +1099,34 @@ class Component_2_1 {
 			// Set as false to begin with, (will be set back to true if an upgrade is ran).
 			$canBeUpgraded = false;
 			foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('upgrade') as $u) {
+				/** @var $u DOMNode */
+
 				// look for a valid upgrade path.
 				if ($this->_versionDB == @$u->getAttribute('from')) {
 					// w00t, found one...
 					$canBeUpgraded = true;
 
-					// The various upgrade tasks that can happen
-					foreach($u->getElementsByTagName('dataset') as $datasetel){
-						$datachanges = $this->_parseDatasetNode($datasetel);
-						if($datachanges !== false) $changes = array_merge($changes, $datachanges);
-					}
+					// This gets a bit tricky, I need to get all the valid upgrade elements in the order that they
+					// are defined in the component.xml.
+					$children = $u->childNodes;
 
-					/*
-					foreach ($node->getElementsByTagName('*') as $c) {
-						$result = HookHandler::DispatchHook('/install_task/' . $c->tagName, $c, $relativeDir);
-						if (!$result) return false;
+					// The various upgrade tasks that can happen
+					foreach($children as $child){
+						/** @var $child DOMNode */
+						switch($child->nodeName){
+							case 'dataset':
+								$datachanges = $this->_parseDatasetNode($child);
+								if($datachanges !== false) $changes = array_merge($changes, $datachanges);
+								break;
+							case 'phpfileinclude':
+								// Easy one :p
+								include(ROOT_PDIR . trim($child->nodeValue));
+								$changes[] = 'Included custom php file ' . basename($child->nodeValue);
+								break;
+							default:
+								$changes[] = 'Ignoring unsupported upgrade directive: [' . $child->nodeName . ']';
+						}
 					}
-					*/
-					/*$result = InstallTask::ParseNode($u, $this->getBaseDir());
-					if (!$result) {
-						throw new InstallerException('Upgrade of Component ' . $this->_name . ' failed.');
-					}*/
 
 					// Record this change.
 					$changes[] = 'Upgraded from [' . $this->_versionDB . '] to [' . $u->getAttribute('to') . ']';
@@ -1311,11 +1318,13 @@ class Component_2_1 {
 			$onreg      = $confignode->getAttribute('onregistration');
 			$onedit     = $confignode->getAttribute('onedit');
 			$options    = $confignode->getAttribute('options');
+			$searchable = $confignode->getAttribute('searchable');
 			$validation = $confignode->getAttribute('validation');
 
 			// Defaults
-			if($onreg === null) $onreg = 1;
-			if($onedit === null) $onedit = 1;
+			if($onreg === null)      $onreg = 1;
+			if($onedit === null)     $onedit = 1;
+			if($searchable === null) $searchable = 0;
 
 			$model = UserConfigModel::Construct($key);
 			$model->set('name', $name);
@@ -1323,8 +1332,10 @@ class Component_2_1 {
 			if($formtype) $model->set('formtype', $formtype);
 			$model->set('onregistration', $onreg);
 			$model->set('onedit', $onedit);
+			$model->set('searchable', $searchable);
 			if($options)  $model->set('options', $options);
 			$model->set('validation', $validation);
+
 
 			if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
 		}

@@ -34,6 +34,15 @@ interface TemplateInterface {
     public function getTemplateVars($varname = null);
 
 	/**
+	 * Get a single variable from the template variables.
+	 *
+	 * @param string $varname The name of the variable
+	 *
+	 * @return mixed
+	 */
+	public function getVariable($varname);
+
+	/**
 	 * Assign a variable into the template
 	 *
 	 * This is required because templates are sandboxed from the rest of the application.

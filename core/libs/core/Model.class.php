@@ -201,12 +201,6 @@ class Model implements ArrayAccess {
 	protected $_dataother = array();
 
 	/**
-	 * This is quicker than checking if $data and $datainit are the same every time.
-	 * @var boolean Dirty flag, if true the data in the model has been changed.
-	 */
-	protected $_dirty = false;
-
-	/**
 	 * @var boolean Flag to signify if this record exists in the database.
 	 */
 	protected $_exists = false;
@@ -317,11 +311,9 @@ class Model implements ArrayAccess {
 			$this->_data     = $data->current();
 			$this->_datainit = $data->current();
 
-			$this->_dirty  = false;
 			$this->_exists = true;
 		}
 		else {
-			$this->_dirty  = true;
 			$this->_exists = false;
 		}
 
@@ -348,7 +340,7 @@ class Model implements ArrayAccess {
 			$save = true;
 		}
 		// Models that have changed content always get saved.
-		elseif($this->_dirty){
+		elseif($this->changed()){
 			$save = true;
 		}
 		else{
@@ -392,7 +384,7 @@ class Model implements ArrayAccess {
 			// No need to save if it was never loaded.
 			if(!(isset($l['records']))) continue;
 
-			if(!(isset($l['records']) || $this->_dirty)) continue; // No need to save if it was never loaded.
+			if(!(isset($l['records']) || $this->changed())) continue; // No need to save if it was never loaded.
 
 			switch($l['link']){
 				case Model::LINK_HASONE:
@@ -410,7 +402,6 @@ class Model implements ArrayAccess {
 		}
 
 		$this->_exists     = true;
-		$this->_dirty      = false;
 		$this->_datainit = $this->_data;
 
 		// Indicate that something happened.
@@ -585,6 +576,10 @@ class Model implements ArrayAccess {
 	 * @return bool
 	 */
 	protected function _saveExisting($useset = false) {
+
+		// If this model doesn't have any changes, don't save it!
+		if(!$this->changed()) return false;
+
 		$i = self::GetIndexes();
 		$s = self::GetSchema();
 		$n = $this->_getTableName();
@@ -651,6 +646,7 @@ class Model implements ArrayAccess {
 		}
 
 		// No data.. nothing to change I guess!
+		// This is a failsafe should (for some reason), the changed() method doesn't return the correct value.
 		if(!sizeof($dat->_sets)){
 			return false;
 		}
@@ -672,7 +668,6 @@ class Model implements ArrayAccess {
 
 		// And since this is supposed to be the initial load method... toggle the appropriate flags.
 		$this->_datainit = $this->_data;
-		$this->_dirty    = false;
 		$this->_exists   = true;
 	}
 
@@ -696,7 +691,6 @@ class Model implements ArrayAccess {
 			$dat->limit(1)->delete();
 
 			if ($dat->execute($this->interface)) {
-				$this->_dirty  = false;
 				$this->_exists = false;
 			}
 		}
@@ -866,7 +860,6 @@ class Model implements ArrayAccess {
 			else{
 				$this->_data[$k] = $v;
 			}
-			$this->_dirty    = true;
 			return true;
 		}
 		else {
@@ -982,6 +975,36 @@ class Model implements ArrayAccess {
 
 
 	/**
+	 * Get the model factory for a given link.
+	 *
+	 * Useful for manipulating the factory of the data.
+	 *
+	 * @param $linkname
+	 *
+	 * @return ModelFactory
+	 */
+	public function getLinkFactory($linkname){
+		if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
+
+		$c = $this->_getLinkClassName($linkname);
+
+		$f = new ModelFactory($c);
+		switch($this->_linked[$linkname]['link']){
+			case Model::LINK_HASONE:
+			case Model::LINK_BELONGSTOONE:
+				$f->limit(1);
+				break;
+		}
+
+		$wheres = $this->_getLinkWhereArray($linkname);
+		$f->where($wheres);
+
+		// Yup, no get or anything, just build the factory.
+		return $f;
+	}
+
+
+	/**
 	 * Get linked models to this model based on a link name
 	 *
 	 * If the link type is a one-to-one or many-to-one, (HASONE), a single Model is returned.
@@ -997,20 +1020,12 @@ class Model implements ArrayAccess {
 
 		// Try to keep these in cache, so when they change I'll be able to save them on the parent's save function.
 		if (!isset($this->_linked[$linkname]['records'])) {
+
+			$f = $this->getLinkFactory($linkname);
 			$c = $this->_getLinkClassName($linkname);
-
-			$f = new ModelFactory($c);
-			switch($this->_linked[$linkname]['link']){
-				case Model::LINK_HASONE:
-				case Model::LINK_BELONGSTOONE:
-					$f->limit(1);
-					break;
-			}
-
 			$wheres = $this->_getLinkWhereArray($linkname);
-			$f->where($wheres);
-			if ($order) $f->order($order);
 
+			if ($order) $f->order($order);
 			$this->_linked[$linkname]['records'] = $f->get();
 
 			// Ensure that it's a valid record and not null.  If it's a LINK_ONE, the factory will return null if it doesn't exist.
@@ -1162,6 +1177,32 @@ class Model implements ArrayAccess {
 		}
 	}
 
+	/**
+	 * Converse to setFromForm, this method is called on each form element created when calling addModel or BuildFromModel.
+	 *
+	 * Any special instructions for your model's elements can go here, simply extend this method and add logic as necessary.
+	 *
+	 * @param             $key
+	 * @param FormElement $element
+	 */
+	public function setToFormElement($key, FormElement $element){
+		// This method left intentionally blank.
+		// If custom logic is required here, extend this method in your model and do so there.
+	}
+
+	/**
+	 * Method that is called on the model after "addModel" is called on a form.
+	 *
+	 * Any special logic such as adding custom elements from the model can be done here, simply extend this method and add logic as necessary.
+	 *
+	 * @param Form   $form
+	 * @param string $prefix
+	 */
+	public function addToFormPost(Form $form, $prefix){
+		// This method left intentionally blank.
+		// If custom logic is required here, extend this method in your model and do so there.
+	}
+
 
 	/**
 	 * Get the requested key for this object.
@@ -1201,12 +1242,65 @@ class Model implements ArrayAccess {
 		}
 	}
 
+	/**
+	 * Get if this model exists in the datastore already.
+	 *
+	 * @return bool
+	 */
 	public function exists() {
 		return $this->_exists;
 	}
 
+	/**
+	 * Get if this model is a new entity that doesn't exist in the datastore.
+	 *
+	 * @return bool
+	 */
 	public function isnew() {
 		return !$this->_exists;
+	}
+
+	/**
+	 * Get if this model has changes that are pending to be applied back to the datastore.
+	 *
+	 * @return bool
+	 */
+	public function changed(){
+		$s = self::GetSchema();
+
+		foreach ($this->_data as $k => $v) {
+			if(!isset($s[$k])){
+				// This key was not in the schema.  Probable reasons for this would be a column that was
+				// removed from the schema in an upgrade, but was never removed from the database.
+				// This is typical because the installer tries to be non-destructive when it comes to data.
+				continue;
+			}
+			$keyschema = $s[$k];
+
+			// Certain key types are to be ignored in the "changed" logic check.  Namely automatic timestamps.
+			switch ($keyschema['type']) {
+				case Model::ATT_TYPE_CREATED:
+				case Model::ATT_TYPE_UPDATED:
+					continue 2;
+			}
+
+			// It's a standard column, check and see if it matches the datainit value.
+			// If the datainit key doesn't exist, that also constitutes as a changed flag!
+			if(!isset($this->_datainit[$k])){
+				//echo "$k changed!"; // DEBUG
+				return true;
+			}
+
+			if($this->_datainit[$k] != $this->_data[$k]){
+				//echo "$k changed!"; // DEBUG
+				return true;
+			}
+
+			// The data seems to have matched up, nothing to see here, move on!
+		}
+
+		// Oh, if it's gotten past all the data keys, then the data must have been identical!
+		return false;
 	}
 
 	/**

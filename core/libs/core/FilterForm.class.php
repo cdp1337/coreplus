@@ -268,7 +268,28 @@ class FilterForm {
 	 * @return string
 	 */
 	public function render(){
-		$filterset = false;
+		return $this->_render(false);
+	}
+
+	/**
+	 * Fetch this filter set as an HTML string
+	 *
+	 * This result set will be readonly however!
+	 *
+	 * @return string
+	 */
+	public function renderReadonly(){
+		return $this->_render(true);
+	}
+
+	/**
+	 * Return true/false on if this filter has any filters set by the user.
+	 *
+	 * Essentially will just check if all elements have their value set to "" or to null.
+	 *
+	 * @return boolean
+	 */
+	public function hasSet(){
 		foreach($this->_elements as $element){
 			/** @var $element FormElement */
 			if($element->get('value') === ''){
@@ -280,17 +301,11 @@ class FilterForm {
 			}
 
 			// Haven't continued yet?
-			$filterset = true;
-			break;
+			return true;
 		}
 
-		$tpl = new Template();
-		$tpl->assign('filtersset', $filterset);
-		$tpl->assign('elements', $this->_elements);
-		$tpl->assign('hassort', $this->hassort);
-		$tpl->assign('sortkey', $this->getSortKey());
-		$tpl->assign('sortdir', $this->getSortDirection());
-		return $tpl->fetch('forms/filters.tpl');
+		// No element has anything set?
+		return false;
 	}
 
 	/**
@@ -551,5 +566,18 @@ class FilterForm {
 
 		// Might as well update the count now, it can always be updated later.
 		$this->setTotalCount($factory->count());
+	}
+
+	private function _render($readonly = false){
+		$filterset = $this->hasSet();
+
+		$tpl = new Template();
+		$tpl->assign('filtersset', $filterset);
+		$tpl->assign('elements', $this->_elements);
+		$tpl->assign('hassort', $this->hassort);
+		$tpl->assign('sortkey', $this->getSortKey());
+		$tpl->assign('sortdir', $this->getSortDirection());
+		$tpl->assign('readonly', $readonly);
+		return $tpl->fetch('forms/filters.tpl');
 	}
 }

@@ -13,3 +13,11 @@
 		{/foreach}
 	</select>
 </div>
+
+{if $element->get('readonly')}
+	{* select options do not support readonly, but no reason why core plus can't ;) *}
+	{script library="jqueryui.readonly"}{/script}
+	{script location="foot"}<script>
+		$('#{$element->get("id")}').readonly();
+	</script>{/script}
+{/if}

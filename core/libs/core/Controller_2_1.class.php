@@ -68,6 +68,16 @@ class Controller_2_1 {
 	}
 
 	/**
+	 * Set the page request for this page.  Only really useful in the PageRequest::Execute method.
+	 *
+	 * @since 2.4.1
+	 * @param PageRequest $request
+	 */
+	public function setPageRequest(PageRequest $request){
+		$this->_request = $request;
+	}
+
+	/**
 	 * Internal function for setting the view object for this controller initially.
 	 *
 	 * Really only useful internally and in the PageRequest object.  Everything else can probably safely ignore this.

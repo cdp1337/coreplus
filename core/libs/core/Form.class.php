@@ -174,6 +174,31 @@ class FormGroup {
 	}
 
 	/**
+	 * Get the ID for this element, will either return the user-set ID, or an automatically generated one.
+	 *
+	 * @return string
+	 */
+	public function getID(){
+		// If the ID is already set, return that.
+		if (!empty($this->_attributes['id'])){
+			return $this->_attributes['id'];
+		}
+		// I need to generate a javascript and UA friendly version from the name.
+		else{
+			$n = $this->get('name');
+			$c = strtolower(get_class($this));
+			// Prepend the form type to the name.
+			$id = $c . '-' . $n;
+			// Remove empty parantheses, (there shouldn't be any)
+			$id = str_replace('[]', '', $id);
+			// And replace brackets with dashes appropriatetly
+			$id = preg_replace('/\[([^\]]*)\]/', '-$1', $id);
+
+			return $id;
+		}
+	}
+
+	/**
 	 * Template helper function
 	 * gets the input attributes as a string
 	 * @return string
@@ -414,6 +439,21 @@ class FormElement {
 		return true;
 	}
 
+	/**
+	 * Get the value of this element as a string
+	 * In select options, this will be the label of the option.
+	 *
+	 * @return string
+	 */
+	public function getValueTitle(){
+		$v = $this->get('value');
+
+		if($v === '' || $v === null) return null;
+
+		if($this->get('options') && isset($this->_attributes['options'][$v])) return $this->_attributes['options'][$v];
+		else return $v;
+	}
+
 	public function hasError() {
 		return ($this->_error);
 	}
@@ -584,9 +624,11 @@ class Form extends FormGroup {
 		'pageinsertables'  => 'FormPageInsertables',
 		'pagemeta'         => 'FormPageMeta',
 		'pagemetas'        => 'FormPageMetasInput',
+		'pagemetakeywords' => 'FormPageMetaKeywordsInput',
 		'pageparentselect' => 'FormPageParentSelectInput',
 		'pagerewriteurl'   => 'FormPageRewriteURLInput',
 		'pagethemeselect'  => 'FormPageThemeSelectInput',
+		'pagepageselect'   => 'FOrmPagePageSelectInput',
 		'password'         => 'FormPasswordInput',
 		'radio'            => 'FormRadioInput',
 		'reset'            => 'FormResetInput',
@@ -738,10 +780,12 @@ class Form extends FormGroup {
 	 * Get the associated model for this form, if there is one.
 	 * This model will also be populated automatically with all the data submitted.
 	 *
+	 * @param string $prefix The prefix name to lookup the model with.
+	 *
 	 * @return Model
 	 */
-	public function getModel() {
-		$m = $this->get('___modelname');
+	public function getModel($prefix = 'model') {
+		$m = $this->get('___' . $prefix . 'name');
 		if (!$m) return null; // A model needs to be defined first of all...
 
 		$model = new $m();
@@ -761,8 +805,8 @@ class Form extends FormGroup {
 		}
 
 		// Set the PK's...
-		if (is_array($this->get('___modelpks'))) {
-			foreach ($this->get('___modelpks') as $k => $v) {
+		if (is_array($this->get('___' . $prefix . 'pks'))) {
+			foreach ($this->get('___' . $prefix . 'pks') as $k => $v) {
 				$model->set($k, $v);
 			}
 
@@ -770,40 +814,7 @@ class Form extends FormGroup {
 			$model->load();
 		}
 
-		$model->setFromForm($this, 'model');
-
-		return $model;
-
-		// The below logic in this method is no longer functional yet.
-
-
-		// Add support for inline Pages for models.
-		if ($model->get('baseurl') && $model->getLink('Page') instanceof PageModel && $this->getElementByName('page')) {
-			$page = $model->getLink('Page');
-
-			// Update the cached information in the page.
-			if ($model->get('title') !== null) $page->set('title', $model->get('title'));
-			if ($model->get('access') !== null) $page->set('access', $model->get('access'));
-
-			// Tack on the Page data too!
-			$this->getElementByName('page')->getModel($page);
-		}
-
-
-		// Add support for inline Widgets for models.
-		if ($model->get('baseurl') && $model->getLink('Widget') instanceof WidgetModel) {
-			// All I have to do is just "get" it.... that's it!
-			// The save algorithm will do the rest.
-			$widget = $model->getLink('Widget');
-
-			// Update the cached information in the page.
-			if ($model->get('title') !== null) $widget->set('title', $model->get('title'));
-			if ($model->get('access') !== null) $widget->set('access', $model->get('access'));
-
-			// Tack on the Page data too!
-			//$this->getElementByName('page')->getModel($page);
-		}
-
+		$model->setFromForm($this, $prefix);
 
 		return $model;
 	}
@@ -822,6 +833,168 @@ class Form extends FormGroup {
 			$e->set('value', $e->lookupValueFrom($src));
 			if ($e->hasError()) Core::SetMessage($e->getError(), 'error');
 		}
+	}
+
+	/**
+	 * Add a model's rendered elements to this form.
+	 *
+	 * All models must have a common prefix, generally this is "model", but if multiple models are on one form,
+	 *  then different prefixes can be used.
+	 *
+	 * @param Model  $model  The model to populate elements from
+	 * @param string $prefix The prefix to create elements as
+	 */
+	public function addModel(Model $model, $prefix = 'model'){
+		// Adding support for grouped items directly from the model :)
+		// This will contain the links to the group names if there are any grouped elements.
+		// Will make lookups quicker.
+		$groups = array();
+
+		// Add the initial model tracker, will remember which model is attached.
+		$this->set('___' . $prefix . 'name', get_class($model));
+		$s = $model->getKeySchemas();
+		$i = $model->GetIndexes();
+		if (!isset($i['primary'])) $i['primary'] = array();
+
+		$new = $model->isnew();
+
+		if (!$new) {
+			// Save the PKs of this model in the SESSION data so they don't have to be sent to the browser.
+			$pks = array();
+			foreach ($i['primary'] as $k => $v) {
+				$pks[$v] = $model->get($v);
+			}
+			$this->set('___' . $prefix . 'pks', $pks);
+		}
+		/*
+		  // Some objects require special attention.
+		  if($model instanceof PageModel){
+			  $f->addElement('pagemeta', array('name' => 'model', 'model' => $model));
+			  return $f;
+		  }
+  */
+		foreach ($s as $k => $v) {
+			// Skip the AI column if it doesn't exist.
+			if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
+
+			// These are already taken care above in the SESSION data.
+			if (!$new && in_array($k, $i['primary'])) continue;
+
+			// Form attribute defaults
+			$formatts = array(
+				'type' => null,
+				'title' => ucwords($k),
+				'description' => null,
+				'required' => false,
+				'value' => $model->get($k),
+				'name' => $prefix . '[' . $k . ']',
+			);
+			if($formatts['value'] === null && isset($v['default'])) $formatts['value'] = $v['default'];
+
+			// Merge the defaults with the form array if it's present.
+			if(isset($v['form'])){
+				$formatts = array_merge($formatts, $v['form']);
+			}
+
+			// Support the standard attributes too.
+			if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
+			if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
+			if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
+			if(isset($v['required']))        $formatts['required'] = $v['required'];
+			if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
+
+			// Boolean checkboxes can have special options.
+			//if(isset($v['formtype']) && $v['formtype'] == 'checkbox' && $v['type'] == Model::ATT_TYPE_BOOL){
+			//	$el = FormElement::Factory($v['formtype']);
+			//	$el->set('options', array('1'));
+			//}
+
+			// Standard form types.
+
+			// "disabled" form types are ignored completely.
+			if($formatts['type'] == 'disabled'){
+				continue;
+			}
+			// These are based off of the formtype declaration in Model.
+			elseif ($formatts['type'] !== null) {
+				$el = FormElement::Factory($formatts['type']);
+			}
+			elseif ($v['type'] == Model::ATT_TYPE_BOOL) {
+				$el = FormElement::Factory('radio');
+				$el->set('options', array('Yes', 'No'));
+
+				if ($formatts['value']) $formatts['value'] = 'Yes';
+				elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'Yes';
+				elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'No';
+				else $formatts['value'] = 'No';
+			}
+			elseif ($v['type'] == Model::ATT_TYPE_SITE) {
+				$el = FormElement::Factory('system');
+			}
+			elseif ($v['type'] == Model::ATT_TYPE_STRING) {
+				$el = FormElement::Factory('text');
+			}
+			elseif ($v['type'] == Model::ATT_TYPE_INT) {
+				$el = FormElement::Factory('text');
+			}
+			elseif ($v['type'] == Model::ATT_TYPE_FLOAT) {
+				$el = FormElement::Factory('text');
+			}
+			elseif ($v['type'] == Model::ATT_TYPE_TEXT) {
+				$el = FormElement::Factory('textarea');
+			}
+			elseif ($v['type'] == Model::ATT_TYPE_CREATED) {
+				// This element doesn't need to be in the form.
+				continue;
+			}
+			elseif ($v['type'] == Model::ATT_TYPE_UPDATED) {
+				// This element doesn't need to be in the form.
+				continue;
+			}
+			elseif ($v['type'] == Model::ATT_TYPE_ENUM) {
+				$el   = FormElement::Factory('select');
+				$opts = $v['options'];
+				if ($v['null']) $opts = array_merge(array('' => '-Select One-'), $opts);
+				$el->set('options', $opts);
+				if ($v['default']) $el->set('value', $v['default']);
+			}
+			else {
+				die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
+			}
+
+			// I no longer need the type attribute.
+			unset($formatts['type']);
+
+			// And set everything else.
+			$el->setFromArray($formatts);
+
+			// I need to give the model a chance to act on this new element too.
+			// Sometimes models may have a few special things to update on the element.
+			// $model->setFromForm($this, $prefix);
+			$model->setToFormElement($k, $el);
+
+
+			// Group support! :)
+			if(isset($formatts['group'])){
+
+				$groupname = $formatts['group'];
+				if(!isset($groups[$groupname])){
+					$groups[$groupname] = new FormGroup(array('title' => $groupname));
+					$this->addElement($groups[$groupname]);
+				}
+
+				unset($formatts['group']);
+
+				$groups[$groupname]->addElement($el);
+			}
+			else{
+				$this->addElement($el);
+			}
+
+		}
+
+		// Anything else?
+		$model->addToFormPost($this, $prefix);
 	}
 
 	/**
@@ -861,9 +1034,11 @@ class Form extends FormGroup {
 	 * Internal method to save a serialized version of this object
 	 *     into the database so it can be loaded upon submitting.
 	 *
+	 * This is now public as of 2.4.1, but don't call it, seriously, leave it alone.  It doesn't want to talk to you.  EVAR!
+	 *
 	 * @return void
 	 */
-	private function saveToSession() {
+	public function saveToSession() {
 
 		if (!$this->get('callsmethod')) return; // Don't save anything if there's no method to call.
 
@@ -963,495 +1138,8 @@ class Form extends FormGroup {
 	 */
 	public static function BuildFromModel(Model $model) {
 		$f = new Form();
-
-		// Adding support for grouped items directly from the model :)
-		// This will contain the links to the group names if there are any grouped elements.
-		// Will make lookups quicker.
-		$groups = array();
-
-		// Add the initial model tracker, will remember which model is attached.
-		$f->set('___modelname', get_class($model));
-		$s = $model->getKeySchemas();
-		$i = $model->GetIndexes();
-		if (!isset($i['primary'])) $i['primary'] = array();
-
-		$new = $model->isnew();
-
-		if (!$new) {
-			// Save the PKs of this model in the SESSION data so they don't have to be sent to the browser.
-			$pks = array();
-			foreach ($i['primary'] as $k => $v) {
-				$pks[$v] = $model->get($v);
-			}
-			$f->set('___modelpks', $pks);
-		}
-		/*
-		  // Some objects require special attention.
-		  if($model instanceof PageModel){
-			  $f->addElement('pagemeta', array('name' => 'model', 'model' => $model));
-			  return $f;
-		  }
-  */
-		foreach ($s as $k => $v) {
-			// Skip the AI column if it doesn't exist.
-			if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
-
-			// These are already taken care above in the SESSION data.
-			if (!$new && in_array($k, $i['primary'])) continue;
-
-			// Form attribute defaults
-			$formatts = array(
-				'type' => null,
-				'title' => ucwords($k),
-				'description' => null,
-				'required' => false,
-				'value' => $model->get($k),
-				'name' => 'model[' . $k . ']',
-			);
-			if($formatts['value'] === null && isset($v['default'])) $formatts['value'] = $v['default'];
-
-			// Merge the defaults with the form array if it's present.
-			if(isset($v['form'])){
-				$formatts = array_merge($formatts, $v['form']);
-			}
-
-			// Support the standard attributes too.
-			if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
-			if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
-			if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
-			if(isset($v['required']))        $formatts['required'] = $v['required'];
-			if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
-
-			// Boolean checkboxes can have special options.
-			//if(isset($v['formtype']) && $v['formtype'] == 'checkbox' && $v['type'] == Model::ATT_TYPE_BOOL){
-			//	$el = FormElement::Factory($v['formtype']);
-			//	$el->set('options', array('1'));
-			//}
-
-			// Standard form types.
-
-			// "disabled" form types are ignored completely.
-			if($formatts['type'] == 'disabled'){
-				continue;
-			}
-			// These are based off of the formtype declaration in Model.
-			elseif ($formatts['type'] !== null) {
-				$el = FormElement::Factory($formatts['type']);
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_BOOL) {
-				$el = FormElement::Factory('radio');
-				$el->set('options', array('Yes', 'No'));
-
-				if ($formatts['value']) $formatts['value'] = 'Yes';
-				elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'Yes';
-				elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'No';
-				else $formatts['value'] = 'No';
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_SITE) {
-				$el = FormElement::Factory('system');
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_STRING) {
-				$el = FormElement::Factory('text');
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_INT) {
-				$el = FormElement::Factory('text');
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_FLOAT) {
-				$el = FormElement::Factory('text');
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_TEXT) {
-				$el = FormElement::Factory('textarea');
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_CREATED) {
-				// This element doesn't need to be in the form.
-				continue;
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_UPDATED) {
-				// This element doesn't need to be in the form.
-				continue;
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_ENUM) {
-				$el   = FormElement::Factory('select');
-				$opts = $v['options'];
-				if ($v['null']) $opts = array_merge(array('' => '-Select One-'), $opts);
-				$el->set('options', $opts);
-				if ($v['default']) $el->set('value', $v['default']);
-			}
-			else {
-				die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
-			}
-
-			// I no longer need the type attribute.
-			unset($formatts['type']);
-
-			// Group support! :)
-			if(isset($formatts['group'])){
-
-				$groupname = $formatts['group'];
-				if(!isset($groups[$groupname])){
-					$groups[$groupname] = new FormGroup(array('title' => $groupname));
-					$f->addElement($groups[$groupname]);
-				}
-
-				unset($formatts['group']);
-
-				// And set everything else.
-				$el->setFromArray($formatts);
-
-				$groups[$groupname]->addElement($el);
-			}
-			else{
-				// And set everything else.
-				$el->setFromArray($formatts);
-
-				$f->addElement($el);
-			}
-
-		}
-		/*
-		// If this model supports Pages, add that too!
-		if($model->get('baseurl') && $model->getLink('Page') instanceof PageModel){
-			// Tack on the page meta inputs for this page.
-			// This will include the rewriteurl, parenturl, theme template and page template.
-			$f->addElement('pagemeta', $model->getLink('Page'));
-		}
-		*/
+		$f->addModel($model);
 		return $f;
 	}
 }
-
-
-class FormPageInsertables extends FormGroup {
-
-	public function  __construct($atts = null) {
-
-		parent::__construct($atts);
-
-		// Some defaults
-		if (!$this->get('title')) $this->set('title', 'Page Content');
-
-		// BaseURL needs to be set for this to work.
-		if (!$this->get('baseurl')) return null;
-
-		$p = new PageModel($this->get('baseurl'));
-
-		// Ensure I can get the filename.
-		$tpl = $p->getTemplateName();
-		if (!$tpl) return null;
-		$tpl = Template::ResolveFile($tpl);
-		if (!$tpl) return null;
-
-		// Scan through $tpl and find any {insertable} tag.
-		$tplcontents = file_get_contents($tpl);
-		preg_match_all('/\{insertable(.*)\}(.*)\{\/insertable\}/isU', $tplcontents, $matches);
-
-		// Guess this page had no insertables.
-		if (!sizeof($matches[0])) return null;
-		foreach ($matches[0] as $k => $v) {
-			$tag     = trim($matches[1][$k]);
-			$content = trim($matches[2][$k]);
-			$default = $content;
-
-			// Pull out the name and label of this insertable.
-			$name  = preg_replace('/.*name=["\'](.*?)["\'].*/i', '$1', $tag);
-			$title = preg_replace('/.*title=["\'](.*?)["\'].*/i', '$1', $tag);
-
-			// No title given?
-			if($title == $tag) $title = $name;
-
-			// This insertable may already have content from the database... if so I want to pull that!
-			$i = new InsertableModel($this->get('baseurl'), $name);
-			if ($i->get('value') !== null) $content = $i->get('value');
-
-			// Determine what the content is intelligently.  (or at least try to...)
-			if (strpos($default, "\n") === false && strpos($default, "<") === false) {
-				// Regular text insert.
-				$this->addElement('text', array('name'  => "insertable[$name]",
-				                                'title' => $title,
-				                                'value' => $content)
-				);
-			}
-			elseif (preg_match('/<img(.*?)>/i', $default)) {
-				// It's an image.
-				$this->addElement(
-					'file',
-					array(
-						'name' => 'insertable[' . $name . ']',
-						'title' => $title,
-						'accept' => 'image/*',
-						'basedir' => 'public/insertable',
-					)
-				);
-			}
-			else {
-				// Just default back to a WYSIWYG.
-				$this->addElement('wysiwyg', array('name'  => "insertable[$name]",
-				                                   'title' => $title,
-				                                   'value' => $content)
-				);
-			}
-		}
-	}
-
-	/**
-	 * Save the elements back to the database for the bound base_url.
-	 */
-	public function save() {
-		// This is similar to the getModel method of the Form, but is done across multiple records instead of just one.
-		$baseurl = $this->get('baseurl');
-		$els     = $this->getElements(true, false);
-		foreach ($els as $e) {
-			if (!preg_match('/^insertable\[(.*?)\].*/', $e->get('name'), $matches)) continue;
-
-			$i = new InsertableModel($baseurl, $matches[1]);
-			$i->set('value', $e->get('value'));
-			$i->save();
-		}
-	}
-
-} // class FormPageInsertables
-
-
-/**
- * Provides inputs for editing:
- * rewriteurl, parenturl, theme template and page template
- * along with page insertables.
- */
-class FormPageMeta extends FormGroup {
-
-	public function  __construct($atts = null) {
-		// Defaults
-		$this->_attributes['name']    = 'page';
-
-		if ($atts instanceof PageModel) {
-			parent::__construct(array('name' => 'page'));
-
-			$page = $atts;
-		}
-		else {
-			if(isset($atts['model']) && $atts['model'] instanceof PageModel){
-				// Everything is based off the page.
-				$page = $atts['model'];
-				unset($atts['model']);
-
-				parent::__construct($atts);
-			}
-			else{
-				parent::__construct($atts);
-
-				// BaseURL needs to be set for this to work.
-				//if(!$this->get('baseurl')) return null;
-
-				// Everything is based off the page.
-				$page = new PageModel($this->get('baseurl'));
-			}
-		}
-
-		$this->_attributes['baseurl'] = $page->get('baseurl');
-		$name = $this->_attributes['name'];
-
-		// I need to get a list of pages to offer as a dropdown for selecting the "parent" page.
-		$f = new ModelFactory('PageModel');
-		if ($this->get('baseurl')) $f->where('baseurl != ' . $this->get('baseurl'));
-		$opts = PageModel::GetPagesAsOptions($f, '-- No Parent Page --');
-
-		$this->addElement(
-			'pageparentselect',
-			array(
-				'name'    => $name . "[parenturl]",
-				'title'   => 'Parent Page',
-				'value'   => strtolower($page->get('parenturl')),
-				'options' => $opts
-			)
-		);
-
-		// Title
-		$this->addElement(
-			'text', array(
-				      'name'        => $name . "[title]",
-				      'title'       => 'Title',
-				      'value'       => $page->get('title'),
-				      'description' => 'Every page needs a title to accompany it, this should be short but meaningful.',
-				      'required'    => true
-			      )
-		);
-
-		// Rewrite url.
-		$this->addElement(
-			'pagerewriteurl', array(
-				                'name'        => $name . "[rewriteurl]",
-				                'title'       => 'Page URL',
-				                'value'       => $page->get('rewriteurl'),
-				                'description' => 'Starts with a "/", omit ' . ROOT_URL,
-				                'required'    => true
-			                )
-		);
-
-		$this->addElement(
-			'access', array(
-				        'name'  => $name . "[access]",
-				        'title' => 'Access Permissions',
-				        'value' => $page->get('access')
-			        )
-		);
-
-		$this->addElement(
-			'pagemetas',
-			array(
-				'value' => $page->getMetas(),
-				'name' => $name . '_meta',
-			)
-		);
-
-		// Give me all the skins available on the current theme.
-		$skins = array('' => '-- Site Default Skin --');
-		foreach(ThemeHandler::GetTheme(null)->getSkins() as $s){
-			$n = ($s['title']) ? $s['title'] : $s['file'];
-			if($s['default']) $n .= ' (default)';
-			$skins[$s['file']] = $n;
-		}
-		if(sizeof($skins) > 2){
-			$this->addElement(
-				'select', array(
-					        'name'    => $name . "[theme_template]",
-					        'title'   => 'Theme Skin',
-					        'value'   => $page->get('theme_template'),
-					        'options' => $skins
-				        )
-			);
-		}
-
-		// Figure out the template directory for custom pages, (if it exists)
-		// In order to get the types, I need to sift through all the potential template directories and look for a directory
-		// with the matching name.
-		$tmpname = substr($page->getBaseTemplateName(), 0, -4) . '/';
-
-		$matches = array();
-
-		$t = new Template();
-		foreach($t->getTemplateDir() as $d){
-			if(is_dir($d . $tmpname)){
-				// Yay, sift through that and get the files!
-				$dir = new Directory_local_backend($d . $tmpname);
-				foreach($dir->ls() as $file){
-					// Skip directories
-					if($file instanceof Directory_local_backend) continue;
-
-					/** @var $file File_local_backend */
-					if($file->getExtension() != 'tpl') continue;
-					$matches[] = $file->getBaseFilename();
-				}
-			}
-		}
-
-		// Are there matches?
-		if(sizeof($matches)){
-			$pages = array('' => '-- Default Page Template --');
-			foreach($matches as $m){
-				$pages[$m] = ucwords(str_replace('-', ' ', substr($m, 0, -4))) . ' Template';
-			}
-
-			$this->addElement(
-				'select',
-				array(
-					'name'    => $name . '[page_template]',
-					'title'   => 'Page Template',
-					'value'   => $page->get('page_template'),
-					'options' => $pages,
-					'class' => 'page-template-selector',
-				)
-			);
-		}
-	}
-
-	/**
-	 * Save the elements back to the database for the bound base_url.
-	 */
-	public function save() {
-
-		$page = $this->getModel();
-
-		//if($this->get('cachedaccess')) $page->set('access', $this->get('cachedaccess'));
-		//if($this->get('cachedtitle')) $page->set('title', $this->get('cachedtitle'));
-		return $page->save();
-
-		// Ensure the children have the right baseurl if that changed.
-		$els = $this->getElements();
-		foreach ($els as $e) {
-			if (!preg_match('/^insertable\[(.*?)\].*/', $e->get('name'), $matches)) continue;
-			$e->set('baseurl', $this->get('baseurl'));
-		}
-
-		// And all the insertables.
-		$i = $this->getElementByName('insertables');
-		$i->save();
-
-		return true;
-	}
-
-	/**
-	 * Get the model for the page subform.
-	 * This is on the group because a page object can be set embedded in another form.
-	 *
-	 * @param null $page
-	 *
-	 * @return null|PageModel
-	 */
-	public function getModel($page = null) {
-		// Allow linked models.
-		if (!$page) $page = new PageModel($this->get('baseurl'));
-
-		// Because name can be changed.
-		$name = $this->_attributes['name'];
-
-		$els = $this->getElements(true, false);
-		foreach ($els as $e) {
-
-			if (!preg_match('/^[a-z_]*\[(.*?)\].*/', $e->get('name'), $matches)) continue;
-
-			$key = $matches[1];
-			$val = $e->get('value');
-
-			// Meta attributes
-			if(strpos($e->get('name'), $name . '_meta') === 0){
-				$page->setMeta($key, $val);
-			}
-			elseif(strpos($e->get('name'), $name) === 0){
-				$page->set($key, $val);
-			}
-			else{
-				continue;
-			}
-		}
-
-		return $page;
-
-		// Add in any insertables too, if they're attached.
-		// DISABLING 2012.05 cpowell
-		/*
-		if(($i = $this->getElementByName('insertables'))){
-			$els = $i->getElements();
-			foreach($els as $e){
-				if(!preg_match('#^insertable\[(.*?)\].*#', $e->get('name'), $matches)) continue;
-
-				$submodel = $page->findLink('Insertable', array('name' => $matches[1]));
-				$submodel->set('value', $e->get('value'));
-			}
-		}
-		
-		return $page;
-		*/
-	}
-
-	/**
-	 * This group does not have a template of its own, should be rendered directly to the form.
-	 * @return null
-	 */
-	public function getTemplateName() {
-		return null;
-	}
-
-//	
-
-} // class FormPageInsertables
 

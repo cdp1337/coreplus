@@ -36,8 +36,8 @@ if (PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')) {
 	die('This application cannot run with magic_quotes_gpc enabled, please disable them now!');
 }
 
-if (PHP_VERSION < '5.3.0') {
-	die('This application requires at least PHP 5.3 to run!');
+if (PHP_VERSION < '5.4.0') {
+	die('This application requires at least PHP 5.4 to run!');
 }
 
 // Damn suPHP, I can handle my own permissions, TYVM
@@ -461,8 +461,6 @@ if (EXEC_MODE == 'WEB') {
 	try {
 		// Sessions are always useful for web apps
 		require_once(ROOT_PDIR . 'core/libs/core/Session.class.php');
-		Session::Singleton();
-		//session_start();
 	}
 	catch (DMI_Exception $e) {
 		// There was a DMI exception... it may not have been installed.

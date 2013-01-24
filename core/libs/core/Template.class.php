@@ -175,4 +175,14 @@ class Template implements TemplateInterface {
 		return null;
 	}
 
+	/**
+	 * Get a single variable from the template variables.
+	 *
+	 * @param string $varname The name of the variable
+	 *
+	 * @return mixed
+	 */
+	public function getVariable($varname) {
+		return $this->getSmarty()->getVariable($varname);
+	}
 }

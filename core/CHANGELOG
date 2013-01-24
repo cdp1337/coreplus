@@ -6,6 +6,27 @@ Core Plus 2.4.1
 	* Load blank meta data from the page object if provided in FormPageMetas.
 	* New method, Core::CompareValues.  Provides more useful variable comparisons in forms.
 	* New Filter option, linkname.  Allows the model key to be defined separately from the element name.
+	* Updated the session system to make use of 5.4 systems.  This should clear up any weird issues with sessions.
+	* Incremented the minimum php version from 5.3.x to 5.4.x.
+	* Added form controller methods for several elements, including alternate page templates, user metatag autocompete,
+	and keyword metatag autocomplete.
+	* Support for alternate page templates is now working better!
+	* Huge redux on how the page meta system operates and stores data.  Each key for each page is now stored individually
+	in the page_meta table.  This allows for lookups of this metadata and for more functionality of the tags.
+	* Scaffolding support for site-wide tag systems via the new metadata system.
+	* Added support for <upgrade> directives to contain a <phpfileinclude> tag.  This file gets executed automatically upon
+	the appropriate upgrade.  This allows for very fine grain upgrade logic such as data manipulations and whatnot.
+	* Minor updates throughout the core and page request system to better support CLI testing.
+	* Added support for readonly filters.  These are useful for print views.
+	* Forms now support multiple models being added to it via Form::addModel.
+	* Form groups now have a getID() method.  Acts the same as the getID method from FormElement.
+	* New FormElement method, getValueTitle.  Gets the title of the currently selected option, if any.
+	* Dropped the property Model::$_dirty in favor of the new Model::changed() method.  This actively checks the data for changes.
+	* Added a new method, Model::getLinkFactory.  Allows for fine grain control of linked model factories.
+	* New methods, Model::setToFormElement.
+	* New method, Model::addToFormPost.
+	* Added a unique flag to the Dataset object, allows for use of the mysql DISTINCT flag.
+	* Added a new class, DatasetStream.  This buffers results from a dataset select statement so as to not use too much memory on massive queries.
 
 
 Core Plus 2.4.0

@@ -142,6 +142,43 @@ class ViewMetas implements Iterator, ArrayAccess {
 			$offset = $this->key();
 		}
 
+		// Is value already a viewmeta object?
+		if($value instanceof ViewMeta || is_subclass_of($value, 'ViewMeta')){
+			if(isset($this->_links[$offset])){
+				// It's already set, merge the values in
+
+				/** @var $existingmeta ViewMeta */
+				$existingmeta = $this->_links[$offset];
+
+				// Does it support multiples?
+				if($existingmeta->multiple){
+					// If so, merge in the incoming meta.
+					if(!is_array($existingmeta->content)){
+						$existingmeta->content = array(
+							$existingmeta->contentkey => $existingmeta->content
+						);
+						$existingmeta->contentkey = null;
+					}
+
+					$existingmeta->content[ $value->contentkey ] = $value->content;
+				}
+				else{
+					// If no, just replace the key and content :)
+					$existingmeta->contentkey = $value->contentkey;
+					$existingmeta->content = $value->content;
+				}
+			}
+			else{
+				// It's not set, but it's still a ViewMeta object already!
+				$this->_links[$offset] = $value;
+			}
+
+			// And my work is done here.
+			return;
+		}
+
+
+		// Standard values...
 		// Is it already set?
 		if(isset($this->_links[$offset])){
 			/** @var $meta ViewMeta */
@@ -151,6 +188,7 @@ class ViewMetas implements Iterator, ArrayAccess {
 			// Create it!
 			/** @var $meta ViewMeta */
 			$meta = ViewMeta::Factory($offset);
+			$meta->parent = $this;
 			$this->_links[$offset] = $meta;
 		}
 
@@ -249,9 +287,21 @@ class ViewMeta {
 	public $property = '';
 
 	/**
-	 * The content or value, usually for meta tags.
+	 * Some content has a key to link the data, ie: the user and tags.  That value is here.
+	 *
+	 * This is directly mapped to the meta_value attribute
 	 *
 	 * @var string
+	 */
+	public $contentkey = '';
+
+	/**
+	 * The content or value, usually for meta tags.
+	 *
+	 * If single, This is directly mapped to the meta_value_title attribute
+	 * If multiple values are present, this is a key/value paired array of keys and their titles.
+	 *
+	 * @var string|array
 	 */
 	public $content = '';
 
@@ -261,6 +311,20 @@ class ViewMeta {
 	 * @var array
 	 */
 	public $otherattributes = array();
+
+	/**
+	 * The ViewMetas parent object, may be useful for some elements to be able to cross reference elements.
+	 *
+	 * @var ViewMetas
+	 */
+	public $parent;
+
+	/**
+	 * Set to true to allow this meta attribute to have multiple values.
+	 *
+	 * @var bool
+	 */
+	public $multiple = false;
 
 
 	public function __toString(){
@@ -336,11 +400,23 @@ class ViewMeta_description extends ViewMeta {
 	}
 }
 
-class ViewMeta_keywords extends ViewMeta {
+class ViewMeta_keyword extends ViewMeta {
+	public function __construct(){
+		$this->multiple = true;
+	}
+
 	public function fetch(){
 		if(!$this->content) return array();
 
-		return array('keywords' => '<meta name="keywords" content="' . str_replace('"', '&quot;', $this->content) . '"/>');
+		// This allows for multiple keywords :)
+		if(is_array($this->content)){
+			$keywords = implode(',', $this->content);
+		}
+		else{
+			$keywords = $this->content;
+		}
+
+		return array('keywords' => '<meta name="keywords" content="' . str_replace('"', '&quot;', $keywords) . '"/>');
 	}
 }
 
@@ -362,6 +438,15 @@ class ViewMeta_author extends ViewMeta {
 		}
 	}
 	public function fetch(){
+
+		if($this->contentkey){
+			// Authorid is the meta tag used as of 2.4.1 from the builtin author autocomplete.
+			$authorid = $this->contentkey;
+		}
+		else{
+			$authorid = null;
+		}
+
 		if(!$this->content) return '';
 
 		$data = array();
@@ -373,6 +458,16 @@ class ViewMeta_author extends ViewMeta {
 			// "Socially enabled" sites also get the link attribute!
 			if(Core::IsComponentAvailable('user-social')){
 				$data['link-author'] = '<link rel="author" href="' . UserSocialHelper::ResolveProfileLink($this->content) . '"/>';
+			}
+		}
+		// Otherwise, if the authorid is set, use that to look up the user.
+		elseif($authorid){
+			$user = User::Construct($authorid);
+			// All profiles get at least the meta tag.
+			$data['author'] = '<meta property="author" content="' . str_replace('"', '&quot;', $user->getDisplayName()) . '"/>';
+			// "Socially enabled" sites also get the link attribute!
+			if(Core::IsComponentAvailable('user-social')){
+				$data['link-author'] = '<link rel="author" href="' . UserSocialHelper::ResolveProfileLink($user) . '"/>';
 			}
 		}
 		else{
