@@ -162,7 +162,7 @@
 	</assets>
 	<skins>
 		<file filename="index.tpl" title="Index Template" md5="c384281ca88eeaf5c6875d90106a362a"/>
-		<file filename="basic.tpl" title="Only one column" md5="1032c060d1fba7a36fbeffb46b25afb7"/>
+		<file filename="basic.tpl" title="Only one column" md5="d356f1a47b2a1852967282ad6d985006"/>
 		<file filename="blank.tpl" title="Blank template, do not use" md5="a126527084ffcbe1d7ba880840ab644f"/>
 	</skins>
 	<view/>
