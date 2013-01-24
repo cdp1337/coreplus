@@ -43,8 +43,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="8cda9f6b7acfd7c60d770df647eeb3e0"/>
-		<file filename="core/CHANGELOG" md5="e9625c4aede14d6a6274c8b0cad9afe5"/>
-		<file filename="core/bootstrap.compiled.php" md5="af983403901a753e1346f6f17e414018">
+		<file filename="core/CHANGELOG" md5="7aabf52dbd6d45b3b346ce37e3a1c9ce"/>
+		<file filename="core/bootstrap.compiled.php" md5="c1b2a0915120c913a42fb603f4905204">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -83,6 +83,7 @@
 			<class name="Dataset"/>
 			<class name="DatasetWhereClause"/>
 			<class name="DatasetWhere"/>
+			<class name="DatasetStream"/>
 			<class name="DMI"/>
 			<class name="DMI_Exception"/>
 			<class name="DMI_Authentication_Exception"/>
@@ -132,7 +133,7 @@
 		<file filename="core/controllers/FileController.class.php" md5="6b4e9ab2d830a45d96ba4e3a2c7f87f0">
 			<class name="FileController"/>
 		</file>
-		<file filename="core/controllers/FormController.class.php" md5="855a65e0547b7a2667f48054c857f249">
+		<file filename="core/controllers/FormController.class.php" md5="aa4a180e9ef996b71dfe5c28766b29c5">
 			<controller name="FormController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="c32e15834efbdd387f37f8c72fc24fea">
@@ -499,7 +500,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="804ecc5c9f0882da5cc86bf513167faf">
+		<file filename="core/libs/core/Component_2_1.php" md5="bb9892b89fe6c4ff3a0a2b61c100cf55">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/Component_2_1.php~" md5="4f5ca980907f5ecafa204e3bfad3a07c"/>
@@ -509,7 +510,7 @@
 		<file filename="core/libs/core/Controller.class.php" md5="f584112515b7c712911a1583ffe23fea">
 			<class name="Controller"/>
 		</file>
-		<file filename="core/libs/core/Controller_2_1.class.php" md5="58e6e037440640f6c83ec6cb477eeb77">
+		<file filename="core/libs/core/Controller_2_1.class.php" md5="8936030230c24685c861131eafaab71c">
 			<class name="Controller_2_1"/>
 		</file>
 		<file filename="core/libs/core/Core.class.php" md5="eda10fdef8e40751fa9701fa21ca323e">
@@ -570,7 +571,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="c33121e2c1f075babe730a4cc252ebba">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="90a472ec5090efd1860f633a951e991f">
+		<file filename="core/libs/core/PageRequest.class.php" md5="b6904069e8ece672c2c45324402a3570">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="0528150b9145ee4d1dd243e8348c71a6">
@@ -639,10 +640,11 @@
 		<file filename="core/libs/datamodel/DMI_Backend.interface.php" md5="274387e4a3a9e791e1182b0572e4b020">
 			<interface name="DMI_Backend"/>
 		</file>
-		<file filename="core/libs/datamodel/Dataset.class.php" md5="26359b8e03755d3753cf46e82be956e2">
+		<file filename="core/libs/datamodel/Dataset.class.php" md5="f13a65695db6e6edbe99d982ad9ed902">
 			<class name="Dataset"/>
 			<class name="DatasetWhereClause"/>
 			<class name="DatasetWhere"/>
+			<class name="DatasetStream"/>
 		</file>
 		<file filename="core/libs/datamodel/backends/cache.backend.php" md5="f3e452b3271afc67a05be567f8416112">
 			<class name="DMI_cache_backend"/>
@@ -650,7 +652,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="e02b68f59cf50bf21f1bb533a2e59ea1">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="c1d678a86f324b900cbbd9ce93347fbc">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="ab1a8faa1a1bb29c7ac55f06ca572f28">
 			<class name="DMI_mysqli_backend"/>
 			<class name="MySQLi_Schema"/>
 			<class name="MySQLi_Schema_Column"/>
@@ -1399,7 +1401,7 @@
 		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="070475a9b15c813ca8b958afff81ff54"/>
 		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="a31d0d69eac1e98ecead81b522a6441f"/>
 		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="b253627a7cac7c2db9c53160272e103c"/>
-		<file filename="core/templates/forms/elements/formpagemetakeywordsinput.tpl" md5="661a0148a9ec0b5ea6d370816e16879d"/>
+		<file filename="core/templates/forms/elements/formpagemetakeywordsinput.tpl" md5="19378ab016f0ec7bcbba6aa1c1691919"/>
 		<file filename="core/templates/forms/elements/formpagemetasinput.tpl" md5="04851f883c681032c2fd96c80714b434"/>
 		<file filename="core/templates/forms/elements/formpagepageselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formpageparentselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>

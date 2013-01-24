@@ -27,6 +27,7 @@ Core Plus 2.4.1
 	* New method, Model::addToFormPost.
 	* Added a unique flag to the Dataset object, allows for use of the mysql DISTINCT flag.
 	* Added a new class, DatasetStream.  This buffers results from a dataset select statement so as to not use too much memory on massive queries.
+	-- Charlie Powell <charlie@eval.bz>  23 Jan 2013
 
 
 Core Plus 2.4.0
