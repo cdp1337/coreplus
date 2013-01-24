@@ -576,6 +576,48 @@ class User {
 	}
 
 	/**
+	 * Search for a user based on a search criteria.  This has functionality above and beyond just a simple Find
+	 * because it will search the email and any custom fields that are marked as searchable.
+	 *
+	 * @param string $term The term to search for
+	 *
+	 * @return array An array of UserBackend objects
+	 */
+	public static function Search($term){
+		// An array of IDs that have been matched.
+		$matches = array();
+		$users = array();
+
+		// First is email, it's the simpliest.
+		$emails = UserModel::FindRaw(array('email LIKE ' . $term . '%'));
+		foreach($emails as $match){
+			$matches[] = $match['id'];
+		}
+
+		// Next it gets more challenging... grab any "searchable" user config and do a search on that table.
+		$configs = UserConfigModel::FindRaw(array('searchable = 1'));
+		foreach($configs as $c){
+			$uucfac = new ModelFactory('UserUserConfigModel');
+			$uucfac->where('key = ' . $c['key']);
+			$uucfac->where('value LIKE ' . $term . '%');
+			$uuc = $uucfac->getRaw();
+			foreach($uuc as $match){
+				$matches[] = $match['user_id'];
+			}
+		}
+
+		// Strip duplicates.
+		$matches = array_unique($matches);
+
+		// And now this array is what I'll be returning.
+		foreach($matches as $id){
+			$users[] = User::Construct($id);
+		}
+
+		return $users;
+	}
+
+	/**
 	 * Get a user object from is id, or null if that user does not exist.
 	 *
 	 * This method DOES make use of the system cache for data!

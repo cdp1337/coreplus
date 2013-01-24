@@ -53,6 +53,10 @@ class UserConfigModel extends Model{
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => true
 		),
+		'searchable' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'default' => false,
+		),
 		/*'system' => array(
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => false
@@ -74,5 +78,6 @@ class UserConfigModel extends Model{
 	
 	public static $Indexes = array(
 		'primary' => array('key'),
+		'searchable' => array('searchable'),
 	);
 }

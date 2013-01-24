@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.0" name="user" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.1" name="User" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.3.1"/>
+		<require name="core" type="component" version="2.4.1"/>
 		<require name="security-suite" type="component" operation="ge" version="1.0.0"/>
 	</requires>
 	<smartyplugins directory="helpers/smarty-plugins/"/>
@@ -17,8 +17,8 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="617f73f0b8fed6519d5557c9bbbbbe1a"/>
-		<file filename="User.class.php" md5="a14f72dcd932467aaa81fc00fd394ced">
+		<file filename="CHANGELOG" md5="68f93a263c951c92e4eedaaba44ff8eb"/>
+		<file filename="User.class.php" md5="84a3fb8bb8b700324a1febfb29ee977b">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
@@ -34,7 +34,7 @@
 		<file filename="Widgets/UserWidget.class.php" md5="85affeee8ce7c56dad1e2ff6582bcb09">
 			<class name="UserWidget"/>
 		</file>
-		<file filename="backends/User_datamodel.backend.php" md5="1bd2efe7181453f6d656687ab61ff857">
+		<file filename="backends/User_datamodel.backend.php" md5="1a298815d7c3397b5f02ffa89b74a498">
 			<class name="User_datamodel_Backend"/>
 		</file>
 		<file filename="backends/User_facebook.backend.php" md5="27371946adaf1cf235d2e72b7866b45e">
@@ -46,7 +46,7 @@
 		<file filename="controllers/UserAdminController.php" md5="6af5fc87967ea54b3fb36d1ccc04dbe8">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="7d71a1a29d38fb630c3bbb7dbe210b0c">
+		<file filename="controllers/UserController.php" md5="5dacd0a7ec8cad5f36a52436a4900f9f">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="1e26a36d85fc0065cec33b198b27f475">
@@ -60,7 +60,7 @@
 		<file filename="models/UserActivityModel.php" md5="5f5bb7b6580bcc7c64bfc2f3c7f82dbd">
 			<class name="UserActivityModel"/>
 		</file>
-		<file filename="models/UserConfigModel.php" md5="565d4f4dbcd73c9cd78c8b4a8dad5a93">
+		<file filename="models/UserConfigModel.php" md5="e1182953047de5aceb6475396f2bbf9a">
 			<class name="UserConfigModel"/>
 		</file>
 		<file filename="models/UserGroupModel.php" md5="4628a66033c01e252738997e44f0262c">
@@ -71,6 +71,9 @@
 		</file>
 		<file filename="models/UserUserConfigModel.php" md5="ce9afd069250444bf94dc414c5b23208">
 			<class name="UserUserConfigModel"/>
+		</file>
+		<file filename="tests/UserTest.php" md5="6cb91001998e13b6c0391029bbfde112">
+			<class name="UserTest"/>
 		</file>
 	</files>
 	<view>
@@ -119,6 +122,7 @@
 	<permissions>
 		<permission key="user_manage" description="Manage users and permissions"/>
 		<permission key="user_activity_list" description="List user activity and analytics"/>
+		<permission key="/user/search/autocomplete" description="Search for users in the system via autocomplete widgets"/>
 	</permissions>
 	<assets>
 		<file filename="assets/js/user/login.js" md5="0a3852f3140eb2e24d66109eb628e6f0"/>
@@ -155,6 +159,7 @@
 		<upgrade from="2.2.3" to="2.3.0"/>
 		<upgrade from="2.3.0" to="2.3.1"/>
 		<upgrade from="2.3.1" to="2.4.0"/>
+		<upgrade from="2.4.0" to="2.4.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

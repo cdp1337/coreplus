@@ -1,3 +1,11 @@
+User 2.4.1
+
+	* Added better support for handling groups in multisite mode.
+	* Set the controls on the admin listing page to be hover based.
+	* Added a new key onto the custom fields, searchable.
+	* Created a new method available on the User object, Search.  This will perform a search given a term for a user based on email, username, and any searchable custom fields.
+	--Charlie Powell <charlie@eval.bz>  Thu, 24 Jan 2013 04:59:12 -0500
+
 User 2.4.0
 
 	* Added setFromForm method on the User object.

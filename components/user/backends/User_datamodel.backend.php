@@ -75,6 +75,11 @@ class User_datamodel_Backend extends User implements User_Backend{
 		}
 	}
 
+	/**
+	 * Set all groups for a given user on the current site.
+	 *
+	 * @param array $groups
+	 */
 	public function setGroups($groups){
 		// If multimode is enabled, this will have to be a list of groups JUST for that site.
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
@@ -97,46 +102,74 @@ class User_datamodel_Backend extends User implements User_Backend{
 		}
 	}
 
+	/**
+	 * Set the groups for a given user on a specified site.
+	 *
+	 * @param int   $site
+	 * @param array $groups
+	 */
+	public function setSiteGroups($site, $groups){
+		// If multimode is enabled, this will have to be a list of groups JUST for that site.
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			// In this case, I need to be sure that the groups are loaded correctly.  getGroups will take care of that.
+			$this->getGroups();
+			// This subset will be blanked out.
+			$this->_groups[$site] = $groups;
+		}
+		else{
+			$this->_groups = $groups;
+		}
+
+		if(sizeof($this->_groups) == 0){
+			$this->_getModel()->set('groups', '');
+		}
+		else{
+			$this->_getModel()->set('groups', json_encode($this->_groups));
+		}
+	}
+
+
+
 	public function delete(){
 		$this->_getModel()->delete();
 	}
-	
+
 	/**
-	 * Utilize the builtin datamodel systems to look for a facebook user 
+	 * Utilize the builtin datamodel systems to look for a facebook user
 	 * that matches the requested clause.
-	 * 
+	 *
 	 * @param array|string $where Where clause
 	 * @param int          $limit Limit clause
 	 * @param string|null  $order Order clause
-	 * 
+	 *
 	 * @return User_datamodel_Backend|array
 	 */
 	public static function Find($where = array(), $limit = 1, $order = null){
 		// Tack on the facebook backend requirement.
 		$where['backend'] = 'datamodel';
-		
+
 		$res = new self();
 		$res->_find($where, $limit, $order);
-		
+
 		return $res;
 	}
-	
-	
+
+
 	public static function Register($email, $password, $attributes = array()){
 		$ub = new self();
-		
+
 		$ub->set('password', $password);
 		$ub->set('email', $email);
 		//$ub->generateNewApiKey();
-		
+
 		// Save the extended attributes or 'UserConfig' options too!
 		foreach($attributes as $k => $v){
 			$ub->set($k, $v);
 		}
-		
+
 		// whee!
 		$ub->save();
-		
+
 		return $ub;
 	}
 }

@@ -54,6 +54,7 @@ class UserController extends Controller_2_1{
 
 
 		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
+		$view->controls->hovercontext = true;
 
 		$view->assign('user', $user);
 		$view->assign('form', $form);
@@ -342,7 +343,7 @@ class UserController extends Controller_2_1{
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		Session::Destroy();
+		Session::DestroySession();
 		Core::Redirect('/');
 	}
 
