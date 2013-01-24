@@ -150,7 +150,7 @@ searchdir CDATA #IMPLIED
 >
 
 <!--- Put your DTDDoc comment here. -->
-<!ELEMENT install (dataset)*>
+<!ELEMENT install (dataset|phpfileinclude)*>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT description (#PCDATA)>
@@ -181,6 +181,8 @@ searchdir CDATA #IMPLIED
 	options CDATA #IMPLIED
 	onregistration (0|1) "1"
 	onedit (0|1) "1"
+	searchable (0|1) "0"
+	validation CDATA #IMPLIED
 >
 
 <!--- Permissions contain all permissions used in this component -->
@@ -197,7 +199,7 @@ searchdir CDATA #IMPLIED
 <!ELEMENT upgrades (upgrade)*>
 
 <!--- Put your DTDDoc comment here. -->
-<!ELEMENT upgrade (dataset)*>
+<!ELEMENT upgrade (dataset|phpfileinclude)*>
 <!ATTLIST upgrade
 	to CDATA #IMPLIED
 	from CDATA #IMPLIED
@@ -238,6 +240,9 @@ searchdir CDATA #IMPLIED
 	oldname CDATA #REQUIRED
 	newname CDATA #REQUIRED
 >
+
+<!-- The phpfileinclude allows upgrades and installs to call a custom php file to be executed automatically. -->
+<!ELEMENT phpfileinclude (#PCDATA)>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT authors (author)*>

@@ -136,6 +136,21 @@ Model properties can be automatically linked to filter keys via the "link" attri
 
 Upon calling `applyToFactory()`, the model factory's where clause is populated with the values appropriately.
 
+## Comment Element Attributes (beyond standard attributes)
+
+* link
+	* Set to the link type for the desired type
+	* String, one of the following:
+	* FilterForm::LINK_TYPE_STANDARD
+	* FilterForm::LINK_TYPE_GE
+	* FilterForm::LINK_TYPE_GT
+	* FilterForm::LINK_TYPE_LE
+	* FilterForm::LINK_TYPE_LT
+* linkname
+	* Optional if the model name is different from the element name.
+	* String
+	
+
 ## Common Public Properties
 	
 * $hassort
