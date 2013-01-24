@@ -254,6 +254,9 @@ class FormPageInsertables extends FormGroup {
 					$elementoptions['accept'] = 'image/*';
 					$elementoptions['basedir'] = 'public/insertable';
 					break;
+				case 'file':
+					$elementoptions['basedir'] = 'public/insertable';
+					break;
 				case 'select':
 					$elementoptions['options'] = array_map('trim', explode('|', $attributes['options']));
 					break;

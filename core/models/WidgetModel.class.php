@@ -42,8 +42,8 @@ class WidgetModel extends Model {
 		// A public user widget for ie: Recent Blog Posts
 		'installable' => array(
 			'type'    => Model::ATT_TYPE_STRING,
-			'null'    => true,
-			'default' => null,
+			'null'    => false,
+			'default' => '',
 			'comment' => 'Baseurl that this widget "plugs" into, if any.',
 		),
 		'title'   => array(

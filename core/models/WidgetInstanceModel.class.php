@@ -51,16 +51,26 @@ class WidgetInstanceModel extends Model {
 		'theme'      => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,
-			'null'      => false,
-			'required'  => true,
-			'comment'   => 'The theme to display on.'
+			'null'      => true,
+			'required'  => false,
+			'comment'   => 'The theme to display on. (for skin-level widgets)',
+			'default' => null,
 		),
 		'template'   => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
-			'null'      => false,
-			'required'  => true,
-			'comment'   => 'The template name on which to display on.'
+			'null'      => true,
+			'required'  => false,
+			'comment'   => 'The template name on which to display on. (for skin-level widgets)',
+			'default' => null,
+		),
+		'page' => array(
+			'type'      => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'null'      => true,
+			'required'  => false,
+			'comment'   => 'The page template file on which to display on. (for page-level widgets)',
+			'default' => null,
 		),
 		'widgetarea' => array(
 			'type'      => Model::ATT_TYPE_STRING,

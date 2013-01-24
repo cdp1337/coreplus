@@ -30,8 +30,7 @@ function smarty_function_widgetarea($params, $template) {
 
 	$body = '';
 	$name = $params['name'];
-
-	// @todo Add support for per-page widgets.
+	$page = $template->template_resource;
 
 	// Pages can have their own template for this theme.
 	$template = PageRequest::GetSystemRequest()->getPageModel()->get('theme_template');
@@ -39,14 +38,35 @@ function smarty_function_widgetarea($params, $template) {
 
 	$theme = ConfigHandler::Get('/theme/selected');
 
-	$criteria = array('theme' => $theme, 'template' => $template, 'widgetarea' => $name);
-
+	// Given support for page-level widgets, this logic gets slightly more difficult...
+	$factory = new ModelFactory('WidgetInstanceModel');
+	$factory->order('weight');
 	if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-		$criteria['site'] = MultiSiteHelper::GetCurrentSiteID();
+		$factory->where('site = ' . MultiSiteHelper::GetCurrentSiteID());
 	}
 
-	$wifac = WidgetInstanceModel::Find($criteria, null, 'weight');
-	foreach ($wifac as $wi) {
+	$subwhere = new DatasetWhereClause();
+	$subwhere->setSeparator('OR');
+
+	// First, the skin-level where clause.
+	$skinwhere = new DatasetWhereClause();
+	$skinwhere->setSeparator('AND');
+	$skinwhere->addWhere('theme = ' . $theme);
+	$skinwhere->addWhere('template = ' . $template);
+	$skinwhere->addWhere('widgetarea = ' . $name);
+	$subwhere->addWhere($skinwhere);
+
+	// And second, the page-level where clause.
+	$pagewhere = new DatasetWhereClause();
+	$pagewhere->setSeparator('AND');
+	$pagewhere->addWhere('page = ' . $page);
+	$pagewhere->addWhere('widgetarea = ' . $name);
+	$subwhere->addWhere($pagewhere);
+
+	$factory->where($subwhere);
+
+
+	foreach ($factory->get() as $wi) {
 		// User cannot access this widget? Don't display it...
 		if (!\Core\user()->checkAccess($wi->get('access'))) continue;
 

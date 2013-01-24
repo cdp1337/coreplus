@@ -43,8 +43,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="8cda9f6b7acfd7c60d770df647eeb3e0"/>
-		<file filename="core/CHANGELOG" md5="7aabf52dbd6d45b3b346ce37e3a1c9ce"/>
-		<file filename="core/bootstrap.compiled.php" md5="c1b2a0915120c913a42fb603f4905204">
+		<file filename="core/CHANGELOG" md5="ee1987bca699c987fbf05455a4561934"/>
+		<file filename="core/bootstrap.compiled.php" md5="8ffa75c78918e22bd471697b259d712d">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -161,7 +161,7 @@
 			<class name="FormPageMetasInput"/>
 			<class name="FormPageMetaKeywordsInput"/>
 		</file>
-		<file filename="core/forms/FormPages.php" md5="21eec745c58181e9e69c39ba43a1c756">
+		<file filename="core/forms/FormPages.php" md5="660c9f958a34469a92f6808c8335e247">
 			<class name="FormPageRewriteURLInput"/>
 			<class name="FormPageThemeSelectInput"/>
 			<class name="FormPagePageSelectInput"/>
@@ -1010,7 +1010,7 @@
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="d8daf3f492d0c8a71e7b8ccf0cd70cc9"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="9ff0428278228b374379b3f08b84db52"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="4f0f7e198dc73658c361edc8d0369365"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="d45a04378d71db3577f4cd9fb032ecd8"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="6c7017980d3ea7e2b77b155e310501eb"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/smarty/README" md5="2280709acce0bf54217c12eff7932997"/>
 		<file filename="core/libs/smarty/SMARTY_2_BC_NOTES.txt" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
@@ -1339,10 +1339,10 @@
 		<file filename="core/models/UpdateSiteModel.class.php" md5="90a7e717dbef4709b4405082482f47e9">
 			<class name="UpdateSiteModel"/>
 		</file>
-		<file filename="core/models/WidgetInstanceModel.class.php" md5="f560772c83ecdcf302f828b5c126c76e">
+		<file filename="core/models/WidgetInstanceModel.class.php" md5="6ea6b56e10044a2a46bccc3706b3488d">
 			<class name="WidgetInstanceModel"/>
 		</file>
-		<file filename="core/models/WidgetModel.class.php" md5="acea5a4fc33f5628e874453dc2f73979">
+		<file filename="core/models/WidgetModel.class.php" md5="91fc83b01fc342292b6046d11b5bfd36">
 			<class name="WidgetModel"/>
 		</file>
 		<file filename="core/tests/CoreTest.php" md5="b32057eeddac833855c4fecc06c33b73">

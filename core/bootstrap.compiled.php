@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 23 Jan 2013 22:22:25 -0500
+ * @compiled Thu, 24 Jan 2013 02:26:17 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -10556,8 +10556,8 @@ public static $Schema = array(
 ),
 'installable' => array(
 'type'    => Model::ATT_TYPE_STRING,
-'null'    => true,
-'default' => null,
+'null'    => false,
+'default' => '',
 'comment' => 'Baseurl that this widget "plugs" into, if any.',
 ),
 'title'   => array(
