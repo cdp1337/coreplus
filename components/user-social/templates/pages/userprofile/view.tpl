@@ -1,3 +1,7 @@
+{**
+ * Public view for the user profiles
+ *}
+
 {css src="assets/css/usersocial.css"}{/css}
 
 {View::AddHead('<link rel="profile" href="http://microformats.org/profile/hcard"/>')}
@@ -28,5 +32,7 @@
 			{/foreach}
 		</ul>
 	{/if}
+
+	{widgetarea name="Public User Profile" baseurl="/user-social/view/`$user->get('id')`"}
 
 </div>

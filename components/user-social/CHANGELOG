@@ -1,3 +1,9 @@
+User-Social 1.0.1
+
+	* Set a couple of the keys to searchable: first_name, last_name, and username.
+	* Added support for a widgetarea on the profile view page.
+	--Charlie Powell <charlie@eval.bz>  Thu, 24 Jan 2013 16:03:07 -0500
+
 User-Social 1.1.0
 
 	* Switched to user the hook-based controls throughout the user system and user administration.

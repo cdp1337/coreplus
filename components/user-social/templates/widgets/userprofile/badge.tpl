@@ -1,6 +1,8 @@
 {css src="assets/css/usersocial.css"}{/css}
-{View::AddHead('<link rel="profile" href="http://microformats.org/profile/hcard"/>')}
+{*{View::AddHead('<link rel="profile" href="http://microformats.org/profile/hcard"/>')}*}
 
+
+<meta content="{$user->getDisplayName()}" itemprop="author">
 
 <div class="user-badge user-badge-{$direction} user-badge-{$orientation} vcard" itemscope itemtype="http://schema.org/Person">
 	<div class="user-badge-photo-wrapper">
@@ -26,7 +28,7 @@
 		{if $profiles}
 			<div class="user-badge-profiles">
 				{foreach $profiles as $profile}
-					<a href="{$profile.url}" rel="me" title="{if $profile.title}{$profile.title}{else}{$profile.url}{/if}">
+					<a itemprop="url"  href="{$profile.url}" rel="me" title="{if $profile.title}{$profile.title}{else}{$profile.url}{/if}">
 						<i class="icon-{$profile.type}"></i>
 					</a>
 				{/foreach}
