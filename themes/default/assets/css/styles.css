@@ -217,6 +217,46 @@ a.button[disabled=disabled]{
 	);
 }
 
+/** Tweak the autocomplete styles slightly **/
+.formelement input[type="text"].ui-autocomplete-loading {
+	background-image: url('../images/loading-bar-small.gif');
+	background-position: center right;
+	background-repeat: no-repeat;
+}
+
+.formelement input[type="text"].ui-autocomplete-input {
+	border: 1px solid #47C6CB;
+}
+
+
+
+/** Keywords multi select, a derivative of the autocomplete input **/
+.formelement .keywords-multi-select {
+	background: none repeat scroll 0 0 #F6F6F6;
+	border: 1px solid #47C6CB;
+	border-radius: 0.4em 0.4em 0.4em 0.4em;
+	cursor: text;
+	height: auto;
+	min-width: 100px;
+	padding: 0.15em 0.8em 0.15em 110px;
+	width: 226px;
+}
+.formelement .keywords-multi-select input[type="text"] {
+	border: 0 none;
+	float: left;
+	min-width: 5px;
+	padding: 0;
+}
+
+.formelement .keywords-multi-select .keywords-multi-select-option {
+	background: none repeat scroll 0 0 #EEEEFF;
+	border: 1px solid #DDDDDD;
+	border-radius: 8px 8px 8px 8px;
+	float: left;
+	margin: 0.05em;
+	padding: 0.2em 0.5em;
+}
+
 
 
 .message-note,

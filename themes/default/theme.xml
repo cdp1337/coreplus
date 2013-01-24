@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.1" name="default">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.2" name="default">
 	<assets>
 		<file filename="assets/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
-		<file filename="assets/css/styles.css" md5="bb8b0432c2a55d9a4fe6c1c62795b54f"/>
+		<file filename="assets/css/styles.css" md5="16ca836a6f7c0d962f63035c0361ab04"/>
 		<file filename="assets/fonts/Cousine-Bold.ttf" md5="8b6cde097069d84859cf7b24403faeca"/>
 		<file filename="assets/fonts/Cousine-BoldItalic.ttf" md5="aa6b45a45a88a9547e30d6a6a9dcf75c"/>
 		<file filename="assets/fonts/Cousine-Italic.ttf" md5="8a0dacd2cc9ef158fff2daec2b7bc435"/>
@@ -43,6 +43,8 @@
 		<file filename="assets/icons/view-sm.png" md5="31c0d2c70ac4f53e7c1b0748efa48e7a"/>
 		<file filename="assets/icons/view.png" md5="5108ec1f152e29684be1bfe393ef2fc8"/>
 		<file filename="assets/images/404.jpg" md5="02f3a71e988dd2c2393c214b6b14d73d"/>
+		<file filename="assets/images/loading-bar-small.gif" md5="657ee2fa16698cbc29d5a1f4b257de46"/>
+		<file filename="assets/images/placeholders/blog.png" md5="2ef8794320891042986b72da16f47bf1"/>
 		<file filename="assets/images/placeholders/generic.png" md5="6b1b8ecb8333dfb86a56f1e1ee348d24"/>
 		<file filename="assets/images/placeholders/person-tall.png" md5="5fceb195fbaf164fbadde1c6419b6aa4"/>
 		<file filename="assets/images/placeholders/person-wide.png" md5="dc7740eb685ceacaa7b1ff3a4dc70e5b"/>
@@ -159,8 +161,8 @@
 		<file filename="assets/mimetype_icons/video-x-ms-asf.png" md5="151bf6436338306e2150a2d5343c11ef"/>
 	</assets>
 	<skins>
-		<file filename="index.tpl" title="Index Template" md5="408ed1cf3154e1e962d177bad83f2359"/>
-		<file filename="basic.tpl" title="Only one column" md5="36b8e5390f1acb49269ce15a14004d1e"/>
+		<file filename="index.tpl" title="Index Template" md5="c384281ca88eeaf5c6875d90106a362a"/>
+		<file filename="basic.tpl" title="Only one column" md5="1032c060d1fba7a36fbeffb46b25afb7"/>
 		<file filename="blank.tpl" title="Blank template, do not use" md5="a126527084ffcbe1d7ba880840ab644f"/>
 	</skins>
 	<view/>
@@ -180,6 +182,7 @@
 		<upgrade from="1.2.1" to="1.2.2"/>
 		<upgrade from="1.2.2" to="1.3.0"/>
 		<upgrade from="1.3.0" to="1.3.1"/>
+		<upgrade from="1.3.1" to="1.3.2"/>
 	</upgrades>
 </theme>
 

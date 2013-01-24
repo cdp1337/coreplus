@@ -43,28 +43,10 @@
 					{else}
 						{$title}
 					{/if}
-					{if isset($controls) && sizeof($controls)}
-						<ul class="controls">
-							{foreach from=$controls item=control}
-								{if $control instanceof ViewControl}
-									{$control->fetch()}
-								{else}
-									<!-- Deprecated version of control -->
-									<li class="{$control.class}">
-										{if $control.link}
-											<a href="{$control.link}" title="{$control.title}">
-												<i class="icon-{$control.class}"></i>
-												<span>{$control.title}</span>
-											</a>
-											{else}
-											<i class="icon-{$control.class}"></i>
-											{$control.title}
-										{/if}
-									</li>
-								{/if}
-							{/foreach}
-						</ul>
-					{/if}
+
+					<menu id="controls" style="float:right; width: 150px;">
+						{$controls->fetch()}
+					</menu>
 				</nav>
 				
 				<aside id="leftcol" class="pagecolumn">

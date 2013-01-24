@@ -36,19 +36,10 @@
 					{else}
 						{$title}
 					{/if}
-					{if isset($controls) && sizeof($controls)}
-						<ul class="controls">
-							{foreach from=$controls item=control}
-								<li class="{$control.class}">
-									{if $control.link}
-										<a href="{$control.link}" title="{$control.title}">{$control.title}</a>
-									{else}
-										{$control.title}
-									{/if}
-								</li>
-							{/foreach}
-						</ul>
-					{/if}
+
+					<menu id="controls" style="float:right; width: 150px;">
+						{$controls->fetch()}
+					</menu>
 				</nav>
 				
 				<section class="pagecontent">
