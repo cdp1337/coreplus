@@ -7,12 +7,12 @@
 
 .widget-dragsource,
 .widget-dragdropped {
-	height: 20px;
+	height: 35px;
 	padding-top: 5px;
 	padding-left: 10px;
 	cursor: move;
 	margin-bottom:5px;
-	width: 400px;
+	width: 340px;
 }
 
 .widget-dragsource { border: 1px solid #999; }

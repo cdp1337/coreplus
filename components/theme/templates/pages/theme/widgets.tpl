@@ -4,7 +4,7 @@
 {script src="js/theme/widgets.js"}{/script}
 {css href="css/theme/widgets.css"}{/css}
 
-<div id="widgetcanvas" attr:theme="{$theme}" attr:template="{$template}">
+<div id="widgetcanvas" attr:theme="{$theme}" attr:template="{$template}" xmlns:attr="http://domain.tld/attr">
 	<div class="widget-bucket-source">
 		{if !count($widgets)}
 			<p>There are no widgets currently installed on the site.</p>
@@ -15,10 +15,19 @@
 				<input type="hidden" class="widgetarea" name="widgets[0][widgetarea]" value=""/>
 				<input type="hidden" class="widgetaccess" name="widgets[0][widgetaccess]" value="*"/>
 				
-				<span class="widget-title">{$widget->get('title')} [{$widget->get('baseurl')}]</span>
+				<span class="widget-title">
+					{if $widget.title}
+						{$widget.title} <br/>
+						[{$widget.baseurl}]
+					{else}
+						{$widget.baseurl}
+					{/if}
+				</span>
 
-				<a href="#" class="control control-delete" style="float:right;"><i class="icon-remove"></i><span>Delete</span></a>
-				<a href="#" class="control control-edit" style="float:right;"><i class="icon-edit"></i><span>Edit</span></a>
+				<div style="float:right;">
+					<a href="#" class="control control-edit"><i class="icon-edit"></i></a>&nbsp;
+					<a href="#" class="control control-delete"><i class="icon-remove"></i></a>
+				</div>
 			</div>
 		{/foreach}
 	</div>
@@ -36,10 +45,17 @@
 								<input type="hidden" class="widgetarea" name="widgetarea[{$widget.id}][widgetarea]" value="{$area.name}"/>
 								<input type="hidden" class="widgetaccess" name="widgetarea[{$widget.id}][widgetaccess]" value="{$widget.access}"/>
 
-								<span class="widget-title">{$widget.title} [{$widget.baseurl}]</span>
+								<span class="widget-title">
+									{if $widget.title}
+										{$widget.title} <br/>
+										[{$widget.baseurl}]
+									{else}
+										{$widget.baseurl}
+									{/if}
+								</span>
 
-								<a href="#" class="control control-delete" style="float:right;"><i class="icon-remove"></i><span>Delete</span></a>
-								<a href="#" class="control control-edit" style="float:right;"><i class="icon-edit"></i><span>Edit</span></a>
+								<a href="#" class="control control-delete" style="float:right;"><i class="icon-remove"></i></a>
+								<a href="#" class="control control-edit" style="float:right;"><i class="icon-edit"></i></a>
 							</div>
 						{/foreach}
 					</div>

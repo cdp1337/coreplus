@@ -264,8 +264,17 @@ class Theme{
 
 		// And recreate them all.
 		foreach ($newarray as $f) {
-			$this->_xmlloader->createElement('//theme/assets/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+			$this->addAssetFile($f);
 		}
+	}
+
+	/**
+	 * Add a single asset file to this theme.
+	 *
+	 * @param array $file The array is expected to be an associative array with attributes "file" and "md5".
+	 */
+	public function addAssetFile($file){
+		$this->_xmlloader->createElement('//theme/assets/file[@filename="' . $file['file'] . '"][@md5="' . $file['md5'] . '"]');
 	}
 
 	/**

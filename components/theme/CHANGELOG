@@ -1,4 +1,8 @@
 Theme 2.0.0
+
 	* Added multisite support.
+	* Added support for managing page-level widgets.
+	* Scaffolding support for theme editing via the web interface.
+	--Charlie Powell <charlie@eval.bz>  Thu, 24 Jan 2013 15:59:24 -0500
 
 Theme 1.9.2

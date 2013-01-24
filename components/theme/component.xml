@@ -10,12 +10,12 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="c944d382a72dbbde5871755f7f84c2d0"/>
-		<file filename="controllers/ThemeController.class.php" md5="d03f6d8850b5b8ee058eaf46f96b3066">
+		<file filename="CHANGELOG" md5="1c4719c88352ba17f97c6a43f21ecea3"/>
+		<file filename="controllers/ThemeController.class.php" md5="c7e54445489468fe0c8b77fb99e9e68f">
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
-		<file filename="libs/Theme.class.php" md5="5d955d25026f2d93741a4d8864d2c7dc">
+		<file filename="libs/Theme.class.php" md5="14c775a4e0efdd66e307aafc669a59ad">
 			<class name="Theme"/>
 		</file>
 		<file filename="libs/ThemeHandler.class.php" md5="2aa86ad81445e12bdd46cb06d450723b">
@@ -23,9 +23,10 @@
 		</file>
 	</files>
 	<view>
-		<file filename="templates/pages/theme/index.tpl" md5="291c6638c10c599e3b785a8d483d596c"/>
+		<file filename="templates/pages/theme/editor.tpl" md5="f0fb5e76747b76374c9dd619e46e5ec9"/>
+		<file filename="templates/pages/theme/index.tpl" md5="8f99fa425d97d64d7aeb34a3c4e7d57e"/>
 		<file filename="templates/pages/theme/setdefault.tpl" md5="835a5142fdb7c580502a6413909a89e0"/>
-		<file filename="templates/pages/theme/widgets.tpl" md5="67e86f7f8dafbaef842ce63f4d21cf0a"/>
+		<file filename="templates/pages/theme/widgets.tpl" md5="e96835f12b3c789786216a905eb27008"/>
 		<file filename="templates/pages/theme/widgets_add.tpl" md5="ea20ae172979c68410c6da05813753a9"/>
 	</view>
 	<pages>
@@ -40,7 +41,7 @@
 		<config key="/theme/selected" type="string" default="default" description=""/>
 	</configs>
 	<assets>
-		<file filename="assets/css/theme/widgets.css" md5="106f0992df1585bb9c94b77ee6f9bdcb"/>
+		<file filename="assets/css/theme/widgets.css" md5="c30e4f3c1849a829d1bfc47fd9eecd0a"/>
 		<file filename="assets/js/theme/widgets.js" md5="0ac5f62b8fb3bddc6c918379a01ed36f"/>
 	</assets>
 	<description/>

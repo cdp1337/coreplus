@@ -39,12 +39,110 @@ class ThemeController extends Controller_2_1{
 			}
 			closedir($dh);
 		}
-		
-		/*if(sizeof($themes) == 1){
-			Core::Redirect('/Theme/View/' . $themes[0]['name']);
-		}*/
-		
-		
+
+		// Get the page templates that have widgetareas defined within.
+		$components = Core::GetComponents();
+		$pagetemplates = array();
+
+		foreach($components as $c) {
+			/** @var $c Component_2_1 */
+			$dir = $c->getViewSearchDir();
+			if(!$dir) continue;
+
+			$dirlen = strlen($dir);
+			$component = $c->getName();
+
+			$dh = new Directory_local_backend($dir);
+			$pagetplfiles = $dh->ls('tpl', true);
+
+			// not sure why getFilename(path) isn't working as expected, but this works too.
+			foreach($pagetplfiles as $obj){
+				/** @var $obj File_local_backend */
+				$file = substr($obj->getFilename(), $dirlen);
+
+				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
+				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
+				$resolved = Template::ResolveFile($file);
+				$newobj = new File_local_backend($resolved);
+
+				// Check the contents of the file and see if there is a {widgetarea...} here.
+				$contents = $newobj->getContents();
+				if(strpos($contents, '{widgetarea') !== false){
+					$haswidgets = true;
+				}
+				else{
+					$haswidgets = false;
+				}
+
+
+				$pagetemplates[] = array(
+					'file' => $file,
+					'resolved' => $resolved,
+					'obj' => $newobj,
+					'haswidgets' => $haswidgets,
+					'component' => $component,
+				);
+			}
+		}
+
+		// The CSS files for the current theme and every component.
+		// This is keyed by the filename so that duplicate entries don't show up more than once,
+		// ie: if an asset exists in both the component and the theme.
+		$cssfiles = array();
+
+		// Give me the current theme!
+		$dir = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/assets';
+		$dirlen = strlen($dir);
+		$component = 'Theme/' . ConfigHandler::Get('/theme/selected');
+		$dh = new Directory_local_backend($dir);
+		$cssls = $dh->ls('css', true);
+		foreach($cssls as $obj){
+			/** @var $obj File_local_backend */
+			$file = 'assets' . substr($obj->getFilename(), $dirlen);
+
+			// Since this is a template, it may actually be in a different location than where the package maintainer put it.
+			// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
+			$newobj = \Core\file($file);
+
+			$cssfiles[$file] = array(
+				'file' => $file,
+				'obj' => $newobj,
+				'component' => $component,
+			);
+		}
+
+		// And the rest of the components... I suppose
+		foreach($components as $c) {
+			// Now, give me all this component's CSS files!
+			$dir = $c->getAssetDir();
+			if(!$dir) continue;
+
+			$dirlen = strlen($dir);
+			$component = $c->getName();
+
+			$dh = new Directory_local_backend($dir);
+			$cssls = $dh->ls('css', true);
+
+			// not sure why getFilename(path) isn't working as expected, but this works too.
+			foreach($cssls as $obj){
+				/** @var $obj File_local_backend */
+				$file = 'assets' . substr($obj->getFilename(), $dirlen);
+
+				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
+				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
+				$newobj = \Core\file($file);
+
+				$cssfiles[$file] = array(
+					'file' => $file,
+					'obj' => $newobj,
+					'component' => $component,
+				);
+			}
+		}
+
+
+		$view->assign('pages', $pagetemplates);
+		$view->assign('css', $cssfiles);
 		$view->assign('themes', $themes);
 		$view->title = 'Theme Manager';
 	}
@@ -114,33 +212,49 @@ class ThemeController extends Controller_2_1{
 	
 	public function widgets(){
 		$view = $this->getView();
-		
-		$t = $this->getPageRequest()->getParameter(0);
-		
-		// Validate
-		if(!\Theme\validate_theme_name($t)){
-			Core::SetMessage('Invalid theme requested', 'error');
-			Core::Redirect('/Theme');
+		$request = $this->getPageRequest();
+		$filename = null;
+
+		// Traditional template management
+		$template = $request->getParameter('template');
+		if($template){
+			$t = $request->getParameter(0);
+
+			// Validate
+			if(!\Theme\validate_theme_name($t)){
+				Core::SetMessage('Invalid theme requested', 'error');
+				Core::Redirect('/theme');
+			}
+
+			$filename = ROOT_PDIR . 'themes/' . $t . '/skins/' . $template;
+
+			if(!\Theme\validate_template_name($t, $template)){
+				Core::SetMessage('Invalid template requested', 'error');
+				Core::Redirect('/theme');
+			}
 		}
-		
-		$template = $this->getPageRequest()->getParameter('template');
-		// @todo Add support for page-specific configuration.
-		
-		$filename = ROOT_PDIR . 'themes/' . $t . '/skins/' . $template;
-		
-		if(!\Theme\validate_template_name($t, $template)){
-			Core::SetMessage('Invalid template requested', 'error');
-			Core::Redirect('/Theme');
+
+		// New page management
+		$page = $request->getParameter('page');
+		if($page){
+			$filename = Template::ResolveFile($page);
+			$t = null;
 		}
+
 		
-		if($this->getPageRequest()->isPost()){
-			
+		if($request->isPost()){
+
 			$counter = 0;
 			foreach($_POST['widgetarea'] as $id => $dat){
 				
 				// Merge in the global information for this request
-				$dat['theme'] = $t;
-				$dat['template'] = $template;
+				if($template){
+					$dat['theme'] = $t;
+					$dat['template'] = $template;
+				}
+				elseif($page){
+					$dat['page'] = $page;
+				}
 				$dat['weight'] = ++$counter;
                 $dat['access'] = $dat['widgetaccess'];
 				
@@ -165,10 +279,27 @@ class ThemeController extends Controller_2_1{
 		
 		// Get a list of the widgetareas on the theme.
 		// These are going to be {widgetarea} tags.
-		// @todo It might make sense to move this into Theme classs at some point.
+		// @todo It might make sense to move this into Theme class at some point.
 		$tplcontents = file_get_contents($filename);
 		preg_match_all("/\{widgetarea.*name=[\"'](.*)[\"'].*\}/isU", $tplcontents, $matches);
-		
+
+		// I need to assemble a list of baseurls to search for as well.
+		// this is because if a page has baseurl="/abc", I don't want to display
+		// widgets for installable="/def".
+		$installables = array(''); // Start with empty, they can go anywhere.
+		foreach($matches[0] as $str){
+			if(!strpos($str, 'baseurl')) continue;
+
+			$baseurl = preg_replace('/.*baseurl="([^"]*)".*/', '$1', $str);
+			// This is required because matches can be fuzzy, probably won't, but can be.
+			// ie: /user-social/view/`$user->get('id')` probably won't be used to mark as installable,
+			// but /user-social/view might be.
+			while($baseurl){
+				$installables[] = $baseurl;
+				if(strpos($baseurl, '/') === false) break;
+				$baseurl = substr($baseurl, 0, strrpos($baseurl, '/'));
+			}
+		}
 		
 		// These are all the available widgets on the site otherwise.
 		$widgetfactory = new ModelFactory('WidgetModel');
@@ -180,6 +311,15 @@ class ThemeController extends Controller_2_1{
 			$where->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
 			$widgetfactory->where($where);
 		}
+		if(sizeof($installables)){
+			$where = new DatasetWhereClause();
+			$where->setSeparator('OR');
+			foreach($installables as $baseurl){
+				$where->addWhereParts('installable', '=', $baseurl);
+			}
+			$widgetfactory->where($where);
+		}
+
 		$widgets = $widgetfactory->get();
 		
 		// This is a lookup of widget titles to URL, since the title is derived from the widget's controller and
@@ -194,10 +334,12 @@ class ThemeController extends Controller_2_1{
 			$instancewidgets = array();
 			$wifac = WidgetInstanceModel::Find(array('theme' => $t, 'template' => $template, 'widgetarea' => $v), null, 'weight');
 			foreach($wifac as $wi){
+				$baseurl = $wi->get('baseurl');
+				$title = isset($widgetnames[ $baseurl ]) ? $widgetnames[ $baseurl ] : null;
 				// All I need is the name and metadata, TYVM.
 				$instancewidgets[] = array(
-					'title' => $widgetnames[$wi->get('baseurl')],
-					'baseurl' => $wi->get('baseurl'),
+					'title' => $title,
+					'baseurl' => $baseurl,
 					'id' => $wi->get('id'),
 					'access' => $wi->get('access')
 				);
@@ -212,7 +354,13 @@ class ThemeController extends Controller_2_1{
 		$view->assign('widgets', $widgets);
 		$view->assign('theme', $t);
 		$view->assign('template', $template);
-		$view->title = 'Widgets on ' . $t . '-' . $template;
+		if($template){
+			$view->title = 'Widgets on ' . $t . '-' . $template;
+		}
+		elseif($page){
+			$view->title = 'Widgets for ' . $page;
+		}
+
 		//$view->addBreadcrumb($view->title);
 	}
 	
@@ -259,6 +407,65 @@ class ThemeController extends Controller_2_1{
 		}
 	}
 
+	public function editor(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!$this->setAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		if($request->getParameter('css')){
+			$file = $request->getParameter('css');
+			$filename = $file;
+			$activefile = 'style';
+		}
+		elseif($request->getParameter('tpl')) {
+			$file = $request->getParameter('tpl');
+			$filename = Template::ResolveFile($file);
+			$activefile = 'template';
+		}
+		elseif($request->getParameter('skin')) {
+			$file = $request->getParameter('skin');
+			$filename = ROOT_PDIR . $file; // Simple enough.
+			$activefile = 'skin';
+		}
+		else {
+			//no special gets...
+			// This version of the editor doesn't support viewing without any file specified.
+			Core::SetMessage('No file requested', 'error');
+			Core::Redirect('/theme');
+		}
+
+
+		$fh = new File_local_backend($filename);
+		$content = $fh->getContents();
+		$basename = $fh->getBasename();
+
+		$m = new ThemeEditorItemModel();
+		$m->set('content', $content);
+		$m->set('filename', $file);
+
+		$form = Form::BuildFromModel($m);
+		$form->set('callsmethod', 'ThemeController::_SaveEditorHandler');
+		// I need to add the file as a system element so core doesn't try to reuse the same forms on concurrent edits.
+		$form->addElement('system', array('name' => 'file', 'value' => $file));
+		$form->addElement('system', array('name' => 'filetype', 'value' => $activefile));
+
+		$form->addElement('submit', array('value' => 'Update'));
+
+		$revisions = ThemeEditorItemModel::Find( array('filename' => $fh->getFilename()), 5, 'updated DESC');
+
+		$view->assignVariable('activefile', $activefile);
+		$view->assignVariable('form', $form);
+		$view->assignVariable('content', $content);
+		$view->assignVariable('filename', $basename);
+		$view->assignVariable('revisions', $revisions);
+
+		//$view->addBreadcrumb('Theme Manager', '/theme');
+		$view->title = 'Editor';
+	}
+
 	/**
 	 * Helper function for the setdefault method.
 	 * @param $message
@@ -279,5 +486,67 @@ class ThemeController extends Controller_2_1{
 	public static function Widgets_Save(View $view){
 	var_dump(CurrentPage::Singleton());
 		var_dump($view); die();
+	}
+
+	public static function _SaveEditorHandler(Form $form){
+		$newmodel = $form->getModel();
+		$file = $form->getElement('file')->get('value');
+		$activefile = $form->getElement('filetype')->get('value');
+		// The inbound file types depends on how to read the file.
+		switch($activefile){
+			case 'skin':
+			case 'style':
+				$filename = $file;
+				break;
+			case 'template':
+				$filename = Template::ResolveFile($file);
+				break;
+			default:
+				Core::SetMessage('Unsupported file type: ' . $activefile, 'error');
+				return false;
+		}
+
+		$fh = new File_local_backend($filename);
+
+		// Check and see if they're the same, ie: no change.  I don't want to create a bunch of moot revisions.
+		if($newmodel->get('content') == $fh->getContents()){
+			Core::SetMessage('Cowardly refusing to save a file with no changes.', 'info');
+			return '/theme';
+		}
+
+		$model = new ThemeEditorItemModel();
+		$model->set('filename', $file);
+		// Remember, I'm setting the contents of the versioned file into the database, NOT the new ones.
+		$model->set('updated', $fh->getMTime());
+		$model->set('content', $fh->getContents());
+		$model->save();
+
+		// What happens now is based on the type of the inbound file.
+		switch($activefile){
+			case 'skin':
+				// Just replace the contents of that file.  No theme versioning allowed.
+				$fh->putContents($newmodel->get('content'));
+				break;
+			case 'template':
+				// This gets written into the current theme directory.
+				$themefh = new File_local_backend(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $file);
+				$themefh->putContents($newmodel->get('content'));
+				break;
+			case 'style':
+				// This gets written into the current theme directory.
+				$themefh = new File_local_backend(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $file);
+				$themefh->putContents($newmodel->get('content'));
+
+				// This is required to get assets updated to the CDN correctly.
+				$theme = ThemeHandler::GetTheme();
+				$hash = $themefh->getHash();
+				$theme->addAssetFile(array('file' => $file, 'md5' => $hash));
+				$theme->save();
+				$theme->reinstall();
+			default:
+		}
+
+		Core::SetMessage('Updated file successfully', 'success');
+		return '/theme';
 	}
 }
