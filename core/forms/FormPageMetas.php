@@ -157,6 +157,11 @@ class FormPageMetasInput extends FormGroup{
 		return true;
 	}
 
+	/**
+	 * Get the meta tags contained herein as an array of metas.
+	 *
+	 * @return array
+	 */
 	public function getValue(){
 		$a = array();
 		$prefix = $this->get('name');
@@ -166,22 +171,11 @@ class FormPageMetasInput extends FormGroup{
 			$name = substr($element->get('name'), strlen($prefix) + 1, -1);
 
 			if($element->get('value')){
-				if($element->get('multiple') && is_array($element->get('value'))){
-					// Flatten them?
-					if($element->get('implode')){
-						$a[$name] = trim(implode($element->get('implode'), $element->get('value')), $element->get('implode'));
-					}
-					else{
-						$a[$name] = $element->get('value');
-					}
-				}
-				else{
-					$a[$name] = $element->get('value');
-				}
-			} // if($element->get('value'))
+				$a[$name] = $element->get('value');
+			}
 		} // foreach($this->getElements() as $element)
 
-		return json_encode($a);
+		return $a;
 	}
 }
 

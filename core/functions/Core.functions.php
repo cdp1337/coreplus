@@ -24,7 +24,7 @@ namespace Core;
 
 /**
  * Shortcut function to get the current system database/datamodel interface.
- * 
+ *
  * @return DMI_Backend
  */
 function DB(){
@@ -33,7 +33,7 @@ function DB(){
 
 /**
  * Shortcut function to get the current system cache interface.
- * 
+ *
  * @return Cache
  */
 function cache(){
@@ -42,9 +42,9 @@ function cache(){
 
 /**
  * Get the global FTP connection.
- * 
+ *
  * Returns the FTP resource or false on failure.
- * 
+ *
  * @return resource | false
  */
 function FTP(){
@@ -72,7 +72,7 @@ function FTP(){
 	if($ftp){
 		// Make sure the FTP directory is always as root whenever this is called.
 		$ftproot = \ConfigHandler::Get('/core/ftp/path');
-		
+
 		if(!ftp_chdir($ftp, $ftproot)) return false;
 	}
 
@@ -81,8 +81,8 @@ function FTP(){
 
 /**
  * Get the current user model that is logged in.
- * 
- * @return \User
+ *
+ * @return \User_Backend
  */
 function user(){
 	static $user = null;
@@ -102,10 +102,10 @@ function user(){
 
 /**
  * Instantiate a new File object, ready for manipulation or access.
- * 
+ *
  * @since 2011.07.09
  * @param string $filename
- * @return File_Backend 
+ * @return File_Backend
  */
 function file($filename = null){
 
@@ -130,10 +130,10 @@ function file($filename = null){
 
 /**
  * Instantiate a new Directory object, ready for manipulation or access.
- * 
+ *
  * @since 2011.07.09
  * @param string $directory
- * @return Directory_Backend 
+ * @return Directory_Backend
  */
 function directory($directory){
 	$backend = \ConfigHandler::Get('/core/filestore/backend');
@@ -153,8 +153,8 @@ function directory($directory){
 
 /**
  * Get the standard HTTP request headers for retrieving remote files.
- * 
- * @param bool $forcurl 
+ *
+ * @param bool $forcurl
  * @return array | string
  */
 function get_standard_http_headers($forcurl = false, $autoclose = false){
@@ -178,10 +178,10 @@ function get_standard_http_headers($forcurl = false, $autoclose = false){
 
 /**
  * Resolve an asset to a fully-resolved URL.
- * 
+ *
  * @todo Add support for external assets.
- * 
- * @param string $asset 
+ *
+ * @param string $asset
  * @return string The full url of the asset, including the http://...
  */
 function resolve_asset($asset){
@@ -214,11 +214,11 @@ function resolve_asset($asset){
 
 /**
  * Resolve a url or application path to a fully-resolved URL.
- * 
+ *
  * This can also be an already-resolved link.  If so, no action is taken
  *  and the original URL is returned unchanged.
- * 
- * @param string $url 
+ *
+ * @param string $url
  * @return string The full url of the link, including the http://...
  */
 function resolve_link($url){
@@ -329,7 +329,7 @@ function GetNavigation($base){
 		if(is_numeric($k)) $coreparams[] = $v;
 		else $extraparams[] = $k . '=' . $v;
 	}
-	return $base . 
+	return $base .
 		( sizeof($coreparams) ? '/' . implode('/', $coreparams) : '') .
 		( sizeof($extraparams) ? '?' . implode('&', $extraparams) : '');
 }
@@ -384,11 +384,11 @@ function SetMessage($messageText, $messageType = 'info'){
 			'mtype' => $messageType,
 		);
 	}
- }
+}
 
 function AddMessage($messageText, $messageType = 'info'){
-	 Core::SetMessage($messageText, $messageType);
- }
+	Core::SetMessage($messageText, $messageType);
+}
 
 /**
  * Retrieve the messages and optionally clear the message stack.
@@ -426,13 +426,13 @@ function SortByKey($named_recs, $order_by, $rev=false, $flags=0){
 	$named_hash = array();
 	foreach($named_recs as $key=>$fields) $named_hash["$key"] = $fields[$order_by];
 
-	 // Order 1-dimensional array,
-	 // maintaining key-value relations
+	// Order 1-dimensional array,
+	// maintaining key-value relations
 	if($rev) arsort($named_hash,$flags) ;
 	else asort($named_hash, $flags);
 
-	 // Create copy of named records array
-	 // in order of sortarray
+	// Create copy of named records array
+	// in order of sortarray
 	$sorted_records = array();
 	foreach($named_hash as $key=>$val) $sorted_records["$key"]= $named_recs[$key];
 
@@ -491,10 +491,10 @@ function RandomHex($length = 1, $casesensitive = false){
 
 /**
  * Utility function to translate a filesize in bytes into a human-readable version.
- * 
+ *
  * @param int $filesize Filesize in bytes
  * @param int $round Precision to round to
- * @return string 
+ * @return string
  */
 function FormatSize($filesize, $round = 2){
 	$suf = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
@@ -516,12 +516,12 @@ function GetExtensionFromString($str){
 /**
  * Validate an email address.
  * Provide email address (raw input)
- * Returns true if the email address has the email 
+ * Returns true if the email address has the email
  * address format and the domain exists.
- * 
+ *
  * Copied (almost) verbatim from http://www.linuxjournal.com/article/9585?page=0,3
  * @author Douglas Lovell @ Linux Journal
- * 
+ *
  * @return boolean
  */
 function CheckEmailValidity($email){
@@ -580,7 +580,7 @@ function CheckEmailValidity($email){
 
 /**
  * Function that attaches the core javascript to the page.
- * 
+ *
  * This should be called automatically from the hook /core/page/prerender.
  */
 function _AttachCoreJavascript(){
@@ -602,7 +602,7 @@ var Core = {
 /**
  * Clone of the php version_compare function, with the exception that it treats
  * version numbers the same that Debian treats them.
- * 
+ *
  * @param string $version1 Version to compare
  * @param string $version2 Version to compare against
  * @param string $operation Operation to use or null
@@ -661,15 +661,15 @@ function VersionCompare($version1, $version2, $operation = null){
 
 /**
  * Break a version string into the corresponding parts.
- * 
+ *
  * Major Version
  * Minor Version
  * Point Release
  * Core Version
  * Developer-Specific Version
  * Development Status
- * 
- * @param string $version 
+ *
+ * @param string $version
  * @return array
  */
 function VersionSplit($version){
@@ -728,7 +728,7 @@ function VersionSplit($version){
 }
 
 function str_to_latin($string){
-	
+
 	$internationalmappings = array(
 		'À' => 'A',
 		'Á' => 'A',

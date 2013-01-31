@@ -844,12 +844,22 @@ function process_component($component, $forcerelease = false){
 			case 'editchange':
 				// Lookup the changelog text of this current version.
 				$file = $comp->getBaseDir();
-				// Core's changelog is located in the core directory.
-				if($comp->getName() == 'core') $file .= 'core/';
-				$file .= 'CHANGELOG'; // Nope, no extension.
 
-				// The header line will be exactly [name] [version].
-				$header = $comp->getName() . ' ' . $version . "\n";
+				if($comp->getName() == 'core'){
+					// Core's changelog is located in the core directory.
+					$file .= 'core/CHANGELOG';
+					$headerprefix = 'Core Plus';
+					$header = 'Core Plus ' . $version . "\n";
+				}
+				else{
+					// Nope, no extension.
+					$file .= 'CHANGELOG';
+					$headerprefix = $comp->getName();
+					// The header line will be exactly [name] [version].
+					$header = $comp->getName() . ' ' . $version . "\n";
+				}
+
+
 				$changelog = '';
 				// I also need to remember what's before and after the changelog, (before is the more likely case).
 				$beforechangelog = '';
@@ -877,7 +887,7 @@ function process_component($component, $forcerelease = false){
 					}
 
 					// Does this line look like the beginning of another header?...
-					if($inchange && preg_match('/^' . $comp->getName() . ' .+$/', $line)){
+					if($inchange && preg_match('/^' . $headerprefix . ' .+$/', $line)){
 						$inchange = false;
 					}
 
@@ -890,6 +900,13 @@ function process_component($component, $forcerelease = false){
 						}
 						elseif(strpos($line, '--') === 0){
 							$inchange = false;
+						}
+						elseif($line == ''){
+							// Skip blank lines
+						}
+						else{
+							// It seems to be a continuation of the last line.  Tack it onto there!
+							$changelog = substr($changelog, 0, -1) . ' ' . $line . "\n";
 						}
 					}
 					elseif($changelog){
@@ -911,7 +928,7 @@ function process_component($component, $forcerelease = false){
 				}
 
 				// Put a note in the header.
-				$changelog = 'Enter the changelog items below, each item separated by a newline.' . "\n" . ';--- ENTER CHANGELOG BELOW ---;' . "\n\n" . $changelog;
+				//$changelog = 'Enter the changelog items below, each item separated by a newline.' . "\n" . ';--- ENTER CHANGELOG BELOW ---;' . "\n\n" . $changelog;
 
 				$changelog = CLI::PromptUser('Enter the changelog.', 'textarea', $changelog);
 
@@ -920,11 +937,31 @@ function process_component($component, $forcerelease = false){
 				$x = 0;
 				foreach(explode("\n", $changelog) as $line){
 					++$x;
-					if($x <= 2) continue;
+				//	if($x <= 2) continue;
 					$line = trim($line);
 					if(!$line) continue;
-					$changeloglines .= "\t* " . $line . "\n";
+					// I need to produce a pretty line here, it takes some finesse.
+					//$linearray = array_map('trim', explode("\n", wordwrap($line, 70, "\n")));
+					//$changeloglines .= "\t* " . implode("\n\t  ", $linearray) . "\n";
+
+					/// hehehe, just because I can do this all in one "line".... :p
+					$changeloglines .= "\t* " .
+						implode(
+							"\n\t  ",
+							array_map(
+								'trim',
+								explode(
+									"\n",
+									wordwrap($line, 90, "\n")
+								)
+							)
+						) .
+						"\n";
+
+					//$changeloglines .= "\t* " . wordwrap($line, 70, "\n\t  ") . "\n";
 				}
+
+				//echo $changeloglines; die('halting'); // DEBUG
 
 				// Write this back out to that file :)
 				file_put_contents($file, $beforechangelog . $header . "\n" . $changeloglines . "\n" . $afterchangelog);

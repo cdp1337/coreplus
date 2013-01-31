@@ -1,3 +1,20 @@
+Core Plus 2.4.2
+
+	* Reduced the size of the page_meta::meta_value attribute slightly, was causing some mysql
+	  servers to complain about the key size.
+	* Some minor fixes and tweaks on the admin config when dealing with multisite modes.
+	* Switched the PageMetas getValue method to return an array of element values instead of a
+	  json string.
+	* MAJOR API CHANGE: Moved the automatic processing of models, assets and other files to
+	  before the <upgrade> tasks.  This means that the database will be at the version of the
+	  code regardless of which version it's upgrading from.
+	* Forcing the save of session data prior to reloading and redirecting. This should resolve
+	  some weird quirks.
+	* New method, Session::ForceSave.  This will write the current $_SESSION data back to the
+	  datastore.
+	* Updated the packager to wordwrap lines to stay within 100 characters. Also improved the
+	  formatting a little.
+
 Core Plus 2.4.1
 
 	* Fixed bug with themes not reinstalling as expected.

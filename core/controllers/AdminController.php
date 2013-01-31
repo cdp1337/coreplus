@@ -132,7 +132,7 @@ class AdminController extends Controller_2_1 {
 
 			// /user/displayname/displayoptions
 			$title = substr($c->get('key'), strlen($gname) + 2);
-			$val   = $c->get('value') ? $c->get('value') : $c->get('default_value');
+			$val   = ConfigHandler::Get($c->get('key'));
 			$name  = 'config[' . $c->get('key') . ']';
 
 			switch ($c->get('type')) {
@@ -160,7 +160,12 @@ class AdminController extends Controller_2_1 {
 				case 'set':
 					$el = FormElement::Factory('checkboxes');
 					$el->set('options', array_map('trim', explode('|', $c->get('options'))));
-					$val  = array_map('trim', explode('|', $val));
+					if(is_array($val)){
+						// Yay, it's already setup
+					}
+					else{
+						$val  = array_map('trim', explode('|', $val));
+					}
 					$name = 'config[' . $c->get('key') . '][]';
 					break;
 				default:
@@ -183,6 +188,11 @@ class AdminController extends Controller_2_1 {
 
 		$form = new Form();
 		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
+		// This form gives me more trouble with its persistence....
+		// @todo Implement a better option than this.
+		// This hack is designed to prevent this form from using stale values from a previous page load instead of
+		// pulling them from the database.
+		$form->set('uniqueid', 'admin-config-' . Core::RandomHex(6));
 		foreach ($groups as $g) {
 			$form->addElement($g);
 		}

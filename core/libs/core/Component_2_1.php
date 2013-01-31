@@ -1038,6 +1038,12 @@ class Component_2_1 {
 
 		$changes = $this->_performInstall();
 
+		// Allow datasets to be in here too.
+		foreach($this->_xmlloader->getElements('install/dataset') as $datasetel){
+			$datachanges = $this->_parseDatasetNode($datasetel);
+			if($datachanges !== false) $changes = array_merge($changes, $datachanges);
+		}
+
 		// Run through each task under <install> and execute it.
 		/*
 		if($this->_xmlloader->getRootDOM()->getElementsByTagName('install')->item(0)){
@@ -1094,6 +1100,10 @@ class Component_2_1 {
 
 		$changes = array();
 
+		// I can now do everything else.
+		$otherchanges = $this->_performInstall();
+		if ($otherchanges !== false) $changes = array_merge($changes, $otherchanges);
+
 		$canBeUpgraded = true;
 		while ($canBeUpgraded) {
 			// Set as false to begin with, (will be set back to true if an upgrade is ran).
@@ -1138,12 +1148,6 @@ class Component_2_1 {
 				}
 			}
 		}
-
-		// I can now do everything else.
-		$otherchanges = $this->_performInstall();
-
-		// After they're merged in of course.
-		if ($otherchanges !== false) $changes = array_merge($changes, $otherchanges);
 
 		return (sizeof($changes)) ? $changes : false;
 	}
@@ -1216,12 +1220,6 @@ class Component_2_1 {
 
 		$change = $this->_installAssets();
 		if ($change !== false) $changed = array_merge($changed, $change);
-
-		// Allow datasets to be in here too.
-		foreach($this->_xmlloader->getElements('install/dataset') as $datasetel){
-			$datachanges = $this->_parseDatasetNode($datasetel);
-			if($datachanges !== false) $changed = array_merge($changed, $datachanges);
-		}
 
 		// Ensure that the core component cache is purged too!
 		Core::Cache()->delete('core-components');

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.1" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.2" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -43,7 +43,7 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="8cda9f6b7acfd7c60d770df647eeb3e0"/>
-		<file filename="core/CHANGELOG" md5="ee1987bca699c987fbf05455a4561934"/>
+		<file filename="core/CHANGELOG" md5="a59405ac6bc195c6ca120f6aa6fe8b12"/>
 		<file filename="core/bootstrap.compiled.php" md5="8ffa75c78918e22bd471697b259d712d">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
@@ -118,7 +118,7 @@
 		<file filename="core/bootstrap_postincludes.php" md5="66f9826e95d4764cb63ff94033b66e33"/>
 		<file filename="core/bootstrap_predefines.php" md5="a75579b94642f0f4fb7b7540f9909288"/>
 		<file filename="core/bootstrap_preincludes.php" md5="dcfb10510205563d42e2d02c8979cc42"/>
-		<file filename="core/controllers/AdminController.php" md5="56b515162d715c7c193048e3e4c4bc6d">
+		<file filename="core/controllers/AdminController.php" md5="d0e0b7e6f428fa7925878e67611154d2">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/CoreController.php" md5="5036876e64219490e1451347ad063d63">
@@ -157,7 +157,7 @@
 		<file filename="core/forms/FormHiddenInput.class.php" md5="b165e1679347782c30492bb4b320ee5c">
 			<class name="FormHiddenInput"/>
 		</file>
-		<file filename="core/forms/FormPageMetas.php" md5="4e7cb4de6d7610f98de57489c5120688">
+		<file filename="core/forms/FormPageMetas.php" md5="07c9225cf503d0e72e5d69015cae4e4d">
 			<class name="FormPageMetasInput"/>
 			<class name="FormPageMetaKeywordsInput"/>
 		</file>
@@ -199,7 +199,7 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="080383e4dade461c3c7ac1d9e504ed28">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="da70d9b079997556ada99300decd5090"/>
+		<file filename="core/functions/Core.functions.php" md5="ab0fba9df914a8e9416a84f2e911f5e7"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="da6e337a8305534398cad21c53dcae54">
 			<class name="RewriteMapHelper"/>
 		</file>
@@ -500,7 +500,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="bb9892b89fe6c4ff3a0a2b61c100cf55">
+		<file filename="core/libs/core/Component_2_1.php" md5="2d0415ad7d971656437322c0a324ce07">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/Component_2_1.php~" md5="4f5ca980907f5ecafa204e3bfad3a07c"/>
@@ -513,7 +513,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="8936030230c24685c861131eafaab71c">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="eda10fdef8e40751fa9701fa21ca323e">
+		<file filename="core/libs/core/Core.class.php" md5="67128ba58ca5a10dcb2de49890a85315">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -578,7 +578,7 @@
 			<class name="RepoXML"/>
 		</file>
 		<file filename="core/libs/core/SQLBuilder.class.php.DISABLED" md5="47925681d58280bff9c130f449c9ba90"/>
-		<file filename="core/libs/core/Session.class.php" md5="88494cc417c8bfda169702facd811d21">
+		<file filename="core/libs/core/Session.class.php" md5="e7c5cf0fe47a815ad19da03ee27bbde1">
 			<class name="Session"/>
 		</file>
 		<file filename="core/libs/core/Template.class.php" md5="43de16fa99016079e2379d667f9dce83">
@@ -1324,7 +1324,7 @@
 		<file filename="core/models/Insertable.class.php" md5="2b6e099fb0e69e99428431e17d27ca60">
 			<class name="InsertableModel"/>
 		</file>
-		<file filename="core/models/PageMetaModel.class.php" md5="563e8fc116337b6945209303b7580873">
+		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
 		<file filename="core/models/PageModel.class.php" md5="e3915ba1831743ff928a7d4345a6e437">
@@ -1540,6 +1540,7 @@
 				core/upgrades/240_to_241_pagemetas.php
 			</phpfileinclude>
 		</upgrade>
+		<upgrade from="2.4.1" to="2.4.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

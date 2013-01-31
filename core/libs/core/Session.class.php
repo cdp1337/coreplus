@@ -26,6 +26,9 @@
 
 class Session implements SessionHandlerInterface {
 
+	/**
+	 * @var Session
+	 */
 	public static $Instance;
 
 	public function __construct(){
@@ -185,6 +188,14 @@ class Session implements SessionHandlerInterface {
 		if(self::$Instance !== null){
 			self::$Instance->destroy(session_id());
 		}
+	}
+
+	/**
+	 * Force the saving of the contents of $_SESSION back to the database.
+	 */
+	public static function ForceSave(){
+		$session = self::$Instance;
+		$session->write(session_id(), $_SESSION);
 	}
 
 

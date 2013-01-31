@@ -29,7 +29,7 @@ class PageMetaModel extends Model {
 		),
 		'meta_value' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 256,
+			'maxlength' => 128,
 			'required' => true,
 			'comment' => 'Machine version of the value of this meta tag',
 		),

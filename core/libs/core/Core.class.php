@@ -864,21 +864,21 @@ class Core implements ISingleton {
 
 		//echo "Checking component name[$name] v[$version] op[$operation]<br>";
 		if (!isset($self->_components[$name])){
-            return false;
-        }
+			return false;
+		}
 
 		// Only included enabled components.
 		elseif (!$self->_components[$name]->isEnabled()){
-            return false;
-        }
+			return false;
+		}
 
 		elseif ($version){
-            return Core::VersionCompare($self->_components[$name]->getVersionInstalled(), $version, $operation);
-        }
+			return Core::VersionCompare($self->_components[$name]->getVersionInstalled(), $version, $operation);
+		}
 
 		else{
-            return true;
-        }
+			return true;
+		}
 	}
 
 
@@ -1030,6 +1030,7 @@ class Core implements ISingleton {
 		// Just before the page stops execution...
 		HookHandler::DispatchHook('/core/page/postrender');
 
+		Session::ForceSave();
 		die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
 	}
 
@@ -1040,6 +1041,7 @@ class Core implements ISingleton {
 		// Just before the page stops execution...
 		HookHandler::DispatchHook('/core/page/postrender');
 
+		Session::ForceSave();
 		die("If your browser does not refresh, please <a href=\"" . CUR_CALL . "\">Click Here</a>");
 	}
 

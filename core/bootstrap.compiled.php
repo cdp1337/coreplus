@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 24 Jan 2013 02:26:17 -0500
+ * @compiled Thu, 31 Jan 2013 17:22:24 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3870,6 +3870,10 @@ public function install() {
 if ($this->isInstalled()) return false;
 if (!$this->isLoadable()) return false;
 $changes = $this->_performInstall();
+foreach($this->_xmlloader->getElements('install/dataset') as $datasetel){
+$datachanges = $this->_parseDatasetNode($datasetel);
+if($datachanges !== false) $changes = array_merge($changes, $datachanges);
+}
 $c = new ComponentModel($this->_name);
 $c->set('version', $this->_version);
 $c->save();
@@ -3889,6 +3893,8 @@ return $this->_performInstall();
 public function upgrade() {
 if (!$this->isInstalled()) return false;
 $changes = array();
+$otherchanges = $this->_performInstall();
+if ($otherchanges !== false) $changes = array_merge($changes, $otherchanges);
 $canBeUpgraded = true;
 while ($canBeUpgraded) {
 $canBeUpgraded = false;
@@ -3918,8 +3924,6 @@ $c->save();
 }
 }
 }
-$otherchanges = $this->_performInstall();
-if ($otherchanges !== false) $changes = array_merge($changes, $otherchanges);
 return (sizeof($changes)) ? $changes : false;
 }
 public function disable(){
@@ -3954,10 +3958,6 @@ $change = $this->_parseWidgets();
 if ($change !== false) $changed = array_merge($changed, $change);
 $change = $this->_installAssets();
 if ($change !== false) $changed = array_merge($changed, $change);
-foreach($this->_xmlloader->getElements('install/dataset') as $datasetel){
-$datachanges = $this->_parseDatasetNode($datasetel);
-if($datachanges !== false) $changed = array_merge($changed, $datachanges);
-}
 Core::Cache()->delete('core-components');
 return (sizeof($changed)) ? $changed : false;
 }
@@ -6580,12 +6580,14 @@ header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 header('HTTP/1.1 ' . $movetext);
 header('Location: ' . $page);
 HookHandler::DispatchHook('/core/page/postrender');
+Session::ForceSave();
 die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
 }
 static public function Reload() {
 if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 header('Location:' . CUR_CALL);
 HookHandler::DispatchHook('/core/page/postrender');
+Session::ForceSave();
 die("If your browser does not refresh, please <a href=\"" . CUR_CALL . "\">Click Here</a>");
 }
 static public function GoBack($depth=2) {
@@ -7722,6 +7724,10 @@ public static function DestroySession(){
 if(self::$Instance !== null){
 self::$Instance->destroy(session_id());
 }
+}
+public static function ForceSave(){
+$session = self::$Instance;
+$session->write(session_id(), $_SESSION);
 }
 private static function _GetModel($session_id) {
 $model = new SessionModel($session_id);
