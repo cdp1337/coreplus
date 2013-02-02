@@ -30,6 +30,11 @@ class GalleryAlbumModel extends Model {
 			'type' => Model::ATT_TYPE_SITE,
 			'formtype' => 'system',
 		),
+		'title' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'formtype' => 'disabled',
+			'comment' => 'The cached title, this is pulled from the Page model'
+		),
 		/*'paginate' => array(
 			'type' => Model::ATT_TYPE_INT,
 			'required' => true,

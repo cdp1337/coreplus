@@ -1,3 +1,11 @@
+Gallery 1.4.1
+
+	* Set the gallery admin to make use of new features in 2.4.2.
+	* Added a gallery widget, allows the admin to create new widgets that link back to a set
+	  gallery album.
+	* Added a gallery album title on the album table itself, allows for sorting by the title.
+	--Charlie Powell <charlie@eval.bz>  Fri, 01 Feb 2013 19:03:53 -0500
+
 Gallery 1.4.0
 
 	* Added support for videos, music, and any arbitrary file.

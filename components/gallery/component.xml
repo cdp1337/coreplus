@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.0" name="gallery" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.1" name="Gallery" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.4.0" operation="ge"/>
+		<require name="core" type="component" version="2.4.2" operation="ge"/>
 	</requires>
 	<permissions>
 		<permission key="gallery_manage" description="Manage Galleries"/>
@@ -27,23 +27,30 @@
 		<file filename="templates/pages/gallery/view.tpl" md5="0c9d5b8cb9104c9d8f8e885d05b5a817"/>
 		<file filename="templates/pages/galleryadmin/images.tpl" md5="3eabcaf67ce559f286c8cb1c00340072"/>
 		<file filename="templates/pages/galleryadmin/index.tpl" md5="93aca2ab7228f28683172bf10dd85bb2"/>
+		<file filename="templates/pages/galleryadmin/widgets.tpl" md5="638e42be8f47518515b13955f0e8fc44"/>
+		<file filename="templates/pages/galleryadmin/widgets_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
 		<file filename="CHANGELOG" md5="3bc4054d6ffe29c379e9ce303ed8a815"/>
-		<file filename="controllers/GalleryAdminController.php" md5="df6e78a9ee0780077a89d30797aa487b">
+		<file filename="controllers/GalleryAdminController.php" md5="e7e9e24bac09986c379ccc1115a9db5b">
 			<controller name="GalleryAdminController"/>
 		</file>
-		<file filename="controllers/GalleryController.php" md5="0425935aaddce6d19a62854706d5294e">
+		<file filename="controllers/GalleryController.php" md5="96cd5d88c49fbd2ef6ab78ee353af47f">
 			<controller name="GalleryController"/>
 		</file>
-		<file filename="helpers/GalleryFormHandler.class.php" md5="927230d2dc095f69456155ab8869978d">
+		<file filename="helpers/GalleryFormHandler.class.php" md5="6244b62dda32b5f6d3460d3e0b8393b7">
 			<class name="GalleryFormHandler"/>
 		</file>
-		<file filename="models/GalleryAlbumModel.php" md5="783f9f86bbc1e342145473fade5dfee0">
+		<file filename="models/GalleryAlbumModel.php" md5="f3cd17ade1ba1260d1f46dc2a42755a0">
 			<class name="GalleryAlbumModel"/>
 		</file>
 		<file filename="models/GalleryImageModel.php" md5="d78ccee75294ca616bcc53a137601517">
 			<class name="GalleryImageModel"/>
+		</file>
+		<file filename="upgrades/140_to_141_cachedtitles.php" md5="0e316e5f9a13a315331c93f1fc44b4dc"/>
+		<file filename="widgets/GalleryWidget.php" md5="7daa22785667f4e5ec91e4991952114b">
+			<class name="GalleryWidget"/>
 		</file>
 	</files>
 	<assets>
@@ -59,6 +66,11 @@
 		<upgrade from="1.3.1" to="1.3.2"/>
 		<upgrade from="1.3.2" to="1.3.3"/>
 		<upgrade from="1.3.3" to="1.4.0"/>
+		<upgrade from="1.4.0" to="1.4.1">
+			<phpfileinclude>
+				components/gallery/upgrades/140_to_141_cachedtitles.php
+			</phpfileinclude>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

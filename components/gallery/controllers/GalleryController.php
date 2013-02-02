@@ -122,7 +122,7 @@ class GalleryController extends Controller_2_1 {
 		$form = Form::BuildFromModel($m);
 		$form->set('callsmethod', 'GalleryFormHandler::SaveAlbum');
 
-		$form->addElement('pagemeta', array('name' => 'page'));
+		$form->addElement('pagemeta', array('name' => 'page', 'baseurl' => '/gallery/view/new'));
 
 		$form->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => '/gallery/view/new'));
 
@@ -602,6 +602,8 @@ class GalleryController extends Controller_2_1 {
 		$view->meta['og:image'] = $image->getFile()->getPreviewURL('200x200');
 		//$view->addBreadcrumb($album->get('title'), $album->get('baseurl'));
 		$view->title = ($image->get('title') ? $image->get('title') : 'Image Details');
+		// This is needed to prevent the parent from overriding the seotitle.
+		$view->meta['title'] = $view->title;
 		if($editor){
 			$view->addControl(
 				array(
