@@ -1621,6 +1621,23 @@ class Core implements ISingleton {
 		return false;
 	}
 
+	/**
+	 * Generate a globally unique identifier that can be used as a replacement for an autoinc or similar.
+	 *
+	 * This method IS compatible with multiple servers on a single codebase!
+	 *
+	 * An example of a UUID returned by this function would be: "1-c5dbcaaf9db-8d77"
+	 *
+	 * @since 2.4.2
+	 *
+	 * @return string
+	 */
+	public static function GenerateUUID(){
+		// @todo Make this dynamic based on the server ID assigned by the administrator.
+		$serverid = 1;
+		return dechex($serverid) . '-' . dechex(microtime(true) * 10000) . '-' . strtolower(Core::RandomHex(4));
+	}
+
 }
 
 class CoreException extends Exception {

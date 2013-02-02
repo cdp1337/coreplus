@@ -14,6 +14,18 @@ Core Plus 2.4.2
 	  datastore.
 	* Updated the packager to wordwrap lines to stay within 100 characters. Also improved the
 	  formatting a little.
+	* Added a "getControls" method onto the Controller.  This allows controls for an entire
+	  controller to be shared and set in one location.
+	* Added a method Core::GenerateUUID to generate a globally unique ID in the format of
+	  "1-c5dbcaaf9db-8d77".  The first digit is the site id, (more on that in a later version),
+	  the next snippet is the timestamp, and the last is a random set of digits.
+	* Set the shorthand version of addControl to allow to use custom icons.
+	* Set the ViewControl system to ignore controls that link to the current page.  These are
+	  redundant to display to the user.
+	* Switched the ViewControl behaviour to use hover context menus by default.
+	* Added setting functionality on the widget system.  This allows for a custom Widget to have
+	  minor settings stored along with the widget definition itself.
+	  --Charlie Powell <charlie@eval.bz>  Fri, 01 Feb 2013 18:59:24 -0500
 
 Core Plus 2.4.1
 

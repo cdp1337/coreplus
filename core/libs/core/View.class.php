@@ -845,10 +845,16 @@ class View {
 				case 'view':
 					$control->icon = 'eye-open';
 					break;
+				default:
+					$control->icon = $control->class;
+					break;
 			}
 		}
 
-		$this->controls[] = $control;
+		// Is this control the current page?  If so don't display it.
+		if($control->link != Core::ResolveLink($this->baseurl)){
+			$this->controls[] = $control;
+		}
 	}
 
 	/**

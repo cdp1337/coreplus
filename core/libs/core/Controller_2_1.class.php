@@ -104,6 +104,17 @@ class Controller_2_1 {
 	}
 
 	/**
+	 * Function that is called to get the controls to the current view.
+	 *
+	 * This function can either return an array of controls to be added, or just add them directly to the view.
+	 *
+	 * @return array|null
+	 */
+	public function getControls(){
+		return null;
+	}
+
+	/**
 	 * Replace this controller's view with a different one.
 	 *
 	 * This is useful for controllers that intercept a page request and replace their own content.

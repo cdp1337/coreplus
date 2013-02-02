@@ -36,7 +36,7 @@ class ViewControls implements Iterator, ArrayAccess {
 	 *
 	 * @var bool
 	 */
-	public $hovercontext = false;
+	public $hovercontext = true;
 
 	private $_links = array();
 

@@ -110,6 +110,17 @@ class WidgetInstanceModel extends Model {
 		'primary' => array('id'),
 	);
 
+	public function __construct($key = null){
+		$this->_linked = array(
+			'Widget' => array(
+				'link' => Model::LINK_BELONGSTOONE,
+				'on' => 'baseurl'
+			),
+		);
+
+		parent::__construct($key);
+	}
+
 
 	/**
 	 * Get an array of all the parts of this request, including:

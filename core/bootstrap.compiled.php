@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 31 Jan 2013 17:22:24 -0500
+ * @compiled Fri, 01 Feb 2013 18:55:04 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -5690,7 +5690,7 @@ class Cache_Exception extends Exception{
 
 ### REQUIRE_ONCE FROM core/libs/core/ViewControl.class.php
 class ViewControls implements Iterator, ArrayAccess {
-public $hovercontext = false;
+public $hovercontext = true;
 private $_links = array();
 private $_pos = 0;
 public function current() {
@@ -6887,6 +6887,10 @@ if(strlen($val1) == strlen($val2) && $val1 == $val2){
 return true;
 }
 return false;
+}
+public static function GenerateUUID(){
+$serverid = 1;
+return dechex($serverid) . '-' . dechex(microtime(true) * 10000) . '-' . strtolower(Core::RandomHex(4));
 }
 }
 class CoreException extends Exception {
@@ -9305,9 +9309,14 @@ break;
 case 'view':
 $control->icon = 'eye-open';
 break;
+default:
+$control->icon = $control->class;
+break;
 }
 }
+if($control->link != Core::ResolveLink($this->baseurl)){
 $this->controls[] = $control;
+}
 }
 public function setAccess($accessstring) {
 $this->access = $accessstring;
@@ -9434,8 +9443,8 @@ if ($this->_view === null) {
 $this->_view              = new View();
 $this->_view->contenttype = View::CTYPE_HTML;
 $this->_view->mode        = View::MODE_WIDGET;
-if ($this->getWidgetModel()) {
-$this->_view->baseurl = $this->getWidgetModel()->get('baseurl');
+if ($this->getWidgetInstanceModel()) {
+$this->_view->baseurl = $this->getWidgetInstanceModel()->get('baseurl');
 }
 else {
 $back = debug_backtrace();
@@ -9453,11 +9462,14 @@ $this->_request = new WidgetRequest();
 }
 return $this->_request;
 }
-public function getWidgetModel() {
+public function getWidgetInstanceModel() {
 return $this->_model;
 }
+public function getWidgetModel(){
+return $this->getWidgetInstanceModel()->getLink('Widget');
+}
 protected function setAccess($accessstring) {
-$this->getWidgetModel()->set('access', $accessstring);
+$this->getWidgetInstanceModel()->set('access', $accessstring);
 return (\Core\user()->checkAccess($accessstring));
 }
 protected function setTemplate($template) {
@@ -9468,10 +9480,13 @@ if($this->_params !== null){
 $parameters = $this->_params;
 }
 else{
-$dat = $this->getWidgetModel()->splitParts();
+$dat = $this->getWidgetInstanceModel()->splitParts();
 $parameters = $dat['parameters'];
 }
 return (isset($parameters[$param])) ? $parameters[$param] : null;
+}
+protected function getSetting($key){
+return $this->getWidgetModel()->getSetting($key);
 }
 public static function Factory($name) {
 return new $name();
@@ -10280,25 +10295,25 @@ if (!method_exists($pagedat['controller'], $pagedat['method'])) {
 $view->error = View::ERROR_NOTFOUND;
 return $view;
 }
-$c = Controller_2_1::Factory($pagedat['controller']);
+$controller = Controller_2_1::Factory($pagedat['controller']);
 $view->baseurl = $this->getBaseURL();
-$c->setView($view);
-$c->setPageRequest($this);
+$controller->setView($view);
+$controller->setPageRequest($this);
 $page = $this->getPageModel();
-if ($c->accessstring !== null) {
-$page->set('access', $c->accessstring);
-if (!\Core\user()->checkAccess($c->accessstring)) {
+if ($controller->accessstring !== null) {
+$page->set('access', $controller->accessstring);
+if (!\Core\user()->checkAccess($controller->accessstring)) {
 $view->error = View::ERROR_ACCESSDENIED;
 return $view;
 }
 }
-$return = call_user_func(array($c, $pagedat['method']));
+$return = call_user_func(array($controller, $pagedat['method']));
 if (is_int($return)) {
 $view->error = $return;
 return $view;
 }
 elseif ($return === null) {
-$return = $c->getView();
+$return = $controller->getView();
 }
 elseif(!is_a($return, 'View')){
 if(DEVELOPMENT_MODE){
@@ -10308,6 +10323,14 @@ die('Sorry, but this controller did not return a valid object.  Please ensure th
 else{
 $view->error = View::ERROR_SERVERERROR;
 return $view;
+}
+}
+if($return->error == View::ERROR_NOERROR){
+$controls = $controller->getControls();
+if(is_array($controls)){
+foreach($controls as $control){
+$return->addControl($control);
+}
 }
 }
 if ($page->exists()) {
@@ -10523,6 +10546,9 @@ $this->_view->baseurl = $this->getPageRequest()->getBaseURL();
 }
 return $this->_view;
 }
+public function getControls(){
+return null;
+}
 protected function overwriteView($newview) {
 $newview->error = View::ERROR_NOERROR;
 $this->_view = $newview;
@@ -10547,6 +10573,7 @@ return new $name();
 
 ### REQUIRE_ONCE FROM core/models/WidgetModel.class.php
 class WidgetModel extends Model {
+private $_settings = null;
 public static $Schema = array(
 'site' => array(
 'type' => Model::ATT_TYPE_INT,
@@ -10573,6 +10600,11 @@ public static $Schema = array(
 'comment'   => '[Cached] Title of the page',
 'null'      => true,
 ),
+'settings' => array(
+'type' => Model::ATT_TYPE_TEXT,
+'formtype' => 'disabled',
+'comment' => 'Provides a section for saving json-encoded settings on the widget.'
+),
 'created' => array(
 'type' => Model::ATT_TYPE_CREATED,
 'null' => false,
@@ -10585,6 +10617,31 @@ public static $Schema = array(
 public static $Indexes = array(
 'primary' => array('baseurl'),
 );
+public function getSetting($key){
+if($this->_settings === null){
+$string = $this->get('settings');
+if($string){
+$this->_settings = json_decode($this->get('settings'), true);
+if(!$this->_settings) $this->_settings = array();
+}
+else{
+$this->_settings = array();
+}
+}
+return (isset($this->_settings[$key])) ? $this->_settings[$key] : null;
+}
+public function setSetting($key, $value){
+$current = $this->getSetting($key);
+if($current === $value) return;
+$this->_settings[$key] = $value;
+$this->set('settings', json_encode($this->_settings));
+}
+public function getID(){
+$split = self::SplitBaseURL($this->get('baseurl'));
+if(!$split) return null;
+if(isset($split['parameters'][0])) return $split['parameters'][0];
+else return null;
+}
 public static function SplitBaseURL($base) {
 if (!$base) return null;
 $base = trim($base, '/');

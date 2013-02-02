@@ -67,9 +67,9 @@ class Widget_2_1 {
 			$this->_view              = new View();
 			$this->_view->contenttype = View::CTYPE_HTML;
 			$this->_view->mode        = View::MODE_WIDGET;
-			if ($this->getWidgetModel()) {
+			if ($this->getWidgetInstanceModel()) {
 				// easy way
-				$this->_view->baseurl = $this->getWidgetModel()->get('baseurl');
+				$this->_view->baseurl = $this->getWidgetInstanceModel()->get('baseurl');
 			}
 			else {
 				// difficult way
@@ -94,12 +94,23 @@ class Widget_2_1 {
 
 
 	/**
-	 * Get the page model for the current page.
+	 * Get the widget instance model for this widget
 	 *
+	 * @since 2.4.2
 	 * @return WidgetInstanceModel
 	 */
-	public function getWidgetModel() {
+	public function getWidgetInstanceModel() {
 		return $this->_model;
+	}
+
+	/**
+	 * Get the actual widget model for this instance.
+	 *
+	 * @since 2.4.2
+	 * @return WidgetModel
+	 */
+	public function getWidgetModel(){
+		return $this->getWidgetInstanceModel()->getLink('Widget');
 	}
 
 
@@ -118,7 +129,7 @@ class Widget_2_1 {
 	 */
 	protected function setAccess($accessstring) {
 		// Update the model
-		$this->getWidgetModel()->set('access', $accessstring);
+		$this->getWidgetInstanceModel()->set('access', $accessstring);
 
 		return (\Core\user()->checkAccess($accessstring));
 	}
@@ -132,11 +143,20 @@ class Widget_2_1 {
 			$parameters = $this->_params;
 		}
 		else{
-			$dat = $this->getWidgetModel()->splitParts();
+			$dat = $this->getWidgetInstanceModel()->splitParts();
 			$parameters = $dat['parameters'];
 		}
 
 		return (isset($parameters[$param])) ? $parameters[$param] : null;
+	}
+
+	/**
+	 * @since 2.4.2
+	 * @param $key
+	 * @return mixed
+	 */
+	protected function getSetting($key){
+		return $this->getWidgetModel()->getSetting($key);
 	}
 
 

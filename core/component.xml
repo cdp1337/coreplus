@@ -43,8 +43,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="8cda9f6b7acfd7c60d770df647eeb3e0"/>
-		<file filename="core/CHANGELOG" md5="a59405ac6bc195c6ca120f6aa6fe8b12"/>
-		<file filename="core/bootstrap.compiled.php" md5="8ffa75c78918e22bd471697b259d712d">
+		<file filename="core/CHANGELOG" md5="342494e2455219ca908a4f110b6b21ff"/>
+		<file filename="core/bootstrap.compiled.php" md5="06c278525586dec7cdf24bcd4755a313">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -510,10 +510,10 @@
 		<file filename="core/libs/core/Controller.class.php" md5="f584112515b7c712911a1583ffe23fea">
 			<class name="Controller"/>
 		</file>
-		<file filename="core/libs/core/Controller_2_1.class.php" md5="8936030230c24685c861131eafaab71c">
+		<file filename="core/libs/core/Controller_2_1.class.php" md5="4b4e76fbefc4dd7cdf4c2d9c3d9a2a6d">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="67128ba58ca5a10dcb2de49890a85315">
+		<file filename="core/libs/core/Core.class.php" md5="20f991d22a4974b312de0f93ae115bbb">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -571,7 +571,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="c33121e2c1f075babe730a4cc252ebba">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="b6904069e8ece672c2c45324402a3570">
+		<file filename="core/libs/core/PageRequest.class.php" md5="ce927eddf31ff0b6b38a95918958f207">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="0528150b9145ee4d1dd243e8348c71a6">
@@ -599,12 +599,12 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="cef48ef6a04ffbf45c3035b5fc3e5318">
+		<file filename="core/libs/core/View.class.php" md5="b6e482814ff6da2501fe41ba93efc53f">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
 		<file filename="core/libs/core/View.class.php~" md5="59ef58afcec744246fd983d97930d627"/>
-		<file filename="core/libs/core/ViewControl.class.php" md5="68d6d3ccd0a0e06e591439b2be052a41">
+		<file filename="core/libs/core/ViewControl.class.php" md5="379a97eb3b4c254e9c72189c4ec8bcda">
 			<class name="ViewControls"/>
 			<class name="ViewControl"/>
 		</file>
@@ -623,7 +623,7 @@
 			<class name="Widget"/>
 			<class name="WidgetException"/>
 		</file>
-		<file filename="core/libs/core/Widget_2_1.class.php" md5="562f03b31c8d9c2909b7db40699e4f26">
+		<file filename="core/libs/core/Widget_2_1.class.php" md5="7c4913cd8a1420ef63223278721a61f6">
 			<class name="Widget_2_1"/>
 			<class name="WidgetRequest"/>
 		</file>
@@ -1339,10 +1339,10 @@
 		<file filename="core/models/UpdateSiteModel.class.php" md5="90a7e717dbef4709b4405082482f47e9">
 			<class name="UpdateSiteModel"/>
 		</file>
-		<file filename="core/models/WidgetInstanceModel.class.php" md5="6ea6b56e10044a2a46bccc3706b3488d">
+		<file filename="core/models/WidgetInstanceModel.class.php" md5="00528251293b26c12e0974ff94f8a09c">
 			<class name="WidgetInstanceModel"/>
 		</file>
-		<file filename="core/models/WidgetModel.class.php" md5="91fc83b01fc342292b6046d11b5bfd36">
+		<file filename="core/models/WidgetModel.class.php" md5="f2818f7f49db2cc665554773558157d0">
 			<class name="WidgetModel"/>
 		</file>
 		<file filename="core/tests/CoreTest.php" md5="b32057eeddac833855c4fecc06c33b73">
@@ -1364,7 +1364,7 @@
 		<file filename="docs/user-permissions.md" md5="53e3322a56a1b537a43f8520394b56ae"/>
 		<file filename="docs/utilities/compiler.md" md5="acfb5b28bfe613bca48ac52f30894899"/>
 		<file filename="htaccess.ex" md5="a9753494f79d3cfa1526c3ccfd19f1cc"/>
-		<file filename="index.php" md5="d01a25c25c5fb9fa77e98da5e4e58f37"/>
+		<file filename="index.php" md5="053e9ae9295e2c1ab0e0eb5b74373f21"/>
 		<file filename="install/InstallPage.class.php" md5="4f34783e9e3b4c2878afa6aa3aa0eb07">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>

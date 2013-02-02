@@ -303,6 +303,7 @@ class PageRequest {
 	public function execute() {
 		$pagedat = $this->splitParts();
 
+		/** @var View $view The valid view object for this page */
 		$view = $this->getView();
 
 		/// A few sanity/security checks for the controller's sake.
@@ -326,31 +327,32 @@ class PageRequest {
 			return $view;
 		}
 
-		// This will be a Controller object.
-		$c = Controller_2_1::Factory($pagedat['controller']);
+
+		/** @var $controller Controller_2_1 This will be a Controller object. */
+		$controller = Controller_2_1::Factory($pagedat['controller']);
 
 		$view->baseurl = $this->getBaseURL();
-		$c->setView($view);
+		$controller->setView($view);
 
 		// Make sure that the controller can access this object.
-		$c->setPageRequest($this);
+		$controller->setPageRequest($this);
 
 		// The main page object.
 		$page = $this->getPageModel();
 
 		// Check the access string first, (if there is one)
-		if ($c->accessstring !== null) {
+		if ($controller->accessstring !== null) {
 			// Update the page's access string, (just in case it's saved at the end of execution)
-			$page->set('access', $c->accessstring);
+			$page->set('access', $controller->accessstring);
 
 			// And if the user doesn't have access to it...
-			if (!\Core\user()->checkAccess($c->accessstring)) {
+			if (!\Core\user()->checkAccess($controller->accessstring)) {
 				$view->error = View::ERROR_ACCESSDENIED;
 				return $view;
 			}
 		}
 
-		$return = call_user_func(array($c, $pagedat['method']));
+		$return = call_user_func(array($controller, $pagedat['method']));
 		if (is_int($return)) {
 			// A generic error code was returned.  Create a View with that code and return that instead.
 			$view->error = $return;
@@ -358,7 +360,7 @@ class PageRequest {
 		}
 		elseif ($return === null) {
 			// Hopefully it's setup!
-			$return = $c->getView();
+			$return = $controller->getView();
 		}
 		elseif(!is_a($return, 'View')){
 			if(DEVELOPMENT_MODE){
@@ -371,7 +373,26 @@ class PageRequest {
 			}
 		}
 		// No else needed, else it's a valid object.
-		/** @var View $view The valid view object for this page */
+
+
+		// You may be asking why $view is one object, but $return is the return from page execution.
+		// GREAT QUESTION, The $view is the original view object created from the page request.  That is passed into
+		// the controller and exposed via $this->getView().  The return can be a view, int, or other status indicator.
+		// However since the controller can return a different view, that view should be used instead!
+		/** @var $return View */
+
+
+		// Allow the controller to assign controls via a shortcut function.
+		if($return->error == View::ERROR_NOERROR){
+			$controls = $controller->getControls();
+
+			// This method may do absolutely nothing, add the controls to the view itself, or return an array of them.
+			if(is_array($controls)){
+				foreach($controls as $control){
+					$return->addControl($control);
+				}
+			}
+		}
 
 
 		// For some of the options, there may be some that can be used for a fuzzy page, ie: a page's non-fuzzy template,

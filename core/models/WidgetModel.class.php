@@ -22,6 +22,15 @@
 
 class WidgetModel extends Model {
 
+	/**
+	 * A cache of the settings available from the model.
+	 * This saves from having to perform the jsondecode every time a setting is requested.
+	 *
+	 * @var array
+	 */
+	private $_settings = null;
+
+
 	public static $Schema = array(
 		'site' => array(
 			'type' => Model::ATT_TYPE_INT,
@@ -53,6 +62,11 @@ class WidgetModel extends Model {
 			'comment'   => '[Cached] Title of the page',
 			'null'      => true,
 		),
+		'settings' => array(
+			'type' => Model::ATT_TYPE_TEXT,
+			'formtype' => 'disabled',
+			'comment' => 'Provides a section for saving json-encoded settings on the widget.'
+		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
@@ -67,12 +81,84 @@ class WidgetModel extends Model {
 		'primary' => array('baseurl'),
 	);
 
+
+	/**
+	 * Get a setting from the json-encoded settings string.
+	 *
+	 * This value is decoded and is the same as the data that went in.
+	 *
+	 * @param $key
+	 * @return mixed
+	 */
+	public function getSetting($key){
+		if($this->_settings === null){
+			// settings is a json encoded array.
+			$string = $this->get('settings');
+			if($string){
+				$this->_settings = json_decode($this->get('settings'), true);
+				if(!$this->_settings) $this->_settings = array();
+			}
+			else{
+				$this->_settings = array();
+			}
+		}
+
+		return (isset($this->_settings[$key])) ? $this->_settings[$key] : null;
+	}
+
+
+	/**
+	 * Set a given setting that is to be saved into the json encoded string.
+	 *
+	 * @param $key
+	 * @param $value
+	 */
+	public function setSetting($key, $value){
+		// First I need to get the settings.  This will do 2 things,
+		// allow me to load up the json encoded string (and not have to duplicate that code),
+		// and allow the values to be checked so if the value is unchanged, no action needs be performed.
+
+		$current = $this->getSetting($key);
+
+		// Is it the same?
+		if($current === $value) return;
+
+		// Nope?  Ok, save in the cache and the json encoded string.
+		$this->_settings[$key] = $value;
+
+		$this->set('settings', json_encode($this->_settings));
+	}
+
+
+	/**
+	 * Widgets are linked via their baseurl, but if the baseurl has an id, ie:
+	 * /something/view/123, then 123 will be returned here.
+	 *
+	 * This is more of a case-by-case method, as not all widgets will have an id.
+	 */
+	public function getID(){
+		// The easiest and most reliable way to parse widget urls is via the builtin Split function :p
+		$split = self::SplitBaseURL($this->get('baseurl'));
+
+		// If it's null, then it's not a valid url... ok
+		if(!$split) return null;
+
+		// Otherwise, if there's a parameter 0, that is usually the id.
+		// and if not, then WHY ARE YOU CALLING THIS METHOD?
+		if(isset($split['parameters'][0])) return $split['parameters'][0];
+		else return null;
+	}
+
+
+
+
+
 	/**
 	 * Split a base url into its corresponding parts, controller method and parameters.
 	 *
 	 * This ONLY supports widgets, and therefore does not support standard Controllers now rewriteurls.
 	 *
-	 * @param string $url
+	 * @param string $base
 	 *
 	 * @return array
 	 */
