@@ -3,6 +3,7 @@
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.0" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.0" operation="ge"/>
+		<require name="user" type="component"/>
 	</requires>
 	<permissions>
 		<permission key="blog_manage" description="Manage Blogs"/>
