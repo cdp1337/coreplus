@@ -1,3 +1,11 @@
+Blog 1.3.0
+
+	* Redesigned how the blog articles behave.  They are now registered as their own page, and
+	  get all the benefits thereof.
+	* Added multiple types of blogs, currently standard and review exist.
+	* Implemented new features introduced in 2.4.2
+	--Charlie Powell <charlie@eval.bz>  Fri, 01 Feb 2013 20:13:29 -0500
+
 Blog 1.2.1
 
 	* Assigned the page author as the user object, this allows the extended functionality in 2.4.0 to be used and the profile linked in the head.

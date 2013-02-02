@@ -22,7 +22,8 @@ class BlogArticleModel extends Model {
 		'title'       => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'required'  => true,
-			'maxlength' => '64'
+			'maxlength' => '64',
+			'comment' => 'This is cached from the Page title.',
 		),
 		'image'       => array(
 			'type'     => Model::ATT_TYPE_STRING,
@@ -39,8 +40,10 @@ class BlogArticleModel extends Model {
 			'required' => true,
 			'form'     => array(
 				'type' => 'wysiwyg',
+				'description' => 'The main body of this blog article.'
 			)
 		),
+		/*
 		'description' => array(
 			'type'     => Model::ATT_TYPE_TEXT,
 			'required' => false,
@@ -52,10 +55,14 @@ class BlogArticleModel extends Model {
 			'type'     => Model::ATT_TYPE_TEXT,
 			'required' => false,
 		),
+		*/
 		'status'      => array(
 			'type'    => Model::ATT_TYPE_ENUM,
 			'options' => array('published', 'draft'),
-			'default' => 'published'
+			'default' => 'published',
+			'form' => array(
+				'description' => 'Set this to "draft" to make it visible to editors and admins only.  Useful for working on an article across multiple sessions while keeping not-ready content hidden from public users.'
+			)
 		),
 		'fb_account_id' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -92,6 +99,10 @@ class BlogArticleModel extends Model {
 			'BlogArticleTag' => array(
 				'link' => Model::LINK_HASMANY,
 				'on'   => array('articleid' => 'id'),
+			),
+			'Page' => array(
+				'link' => Model::LINK_HASONE,
+				'on' => 'baseurl',
 			)
 		);
 
@@ -102,9 +113,11 @@ class BlogArticleModel extends Model {
 		$k = strtolower($k);
 		switch ($k) {
 			case 'baseurl':
-				return '/blog/view/' . $this->_data['blogid'] . '/' . $this->_data['id'];
+				//return '/blog/view/' . $this->_data['blogid'] . '/' . $this->_data['id'];
+				return '/blog/article/view/' . $this->_data['id'];
 			case 'rewriteurl':
-				return $this->getLink('Blog')->get('rewriteurl') . '/' . $this->_data['id'] . '-' . \Core\str_to_url($this->_data['title']);
+				//return $this->getLink('Blog')->get('rewriteurl') . '/' . $this->_data['id'] . '-' . \Core\str_to_url($this->_data['title']);
+				return $this->getLink('Page')->get('rewriteurl');
 			default:
 				return parent::get($k);
 		}

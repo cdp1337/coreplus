@@ -8,7 +8,7 @@
 		<div itemprop="description" style="display:none;">{$page.description}</div>
 	{/if}
 	{foreach $articles as $article}
-		<div class="blog-entry" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="blog-entry blog-article blog-article-status-{$article.status}" itemscope itemtype="http://schema.org/BlogPosting">
 			<link itemprop="url" href="{link link="`$article.rewriteurl`"}"/>
 			{a class="blog-entry-title" href="`$article.rewriteurl`" itemprop="name"}
 				{$article.title}

@@ -78,13 +78,12 @@ class BlogController extends Controller_2_1 {
 
 		$view = $this->getView();
 		$blog = new BlogModel();
-		$form = Form::BuildFromModel($blog);
+		$form = new Form();
 		$form->set('callsmethod', 'BlogHelper::BlogFormHandler');
-		// Merge in the page attributes
-		foreach (Form::BuildFromModel($blog->getLink('Page'))->getElements() as $el) {
-			$el->set('name', str_replace('model[', 'page[', $el->get('name')));
-			$form->addElement($el);
-		}
+
+		$form->addModel($blog->getLink('Page'), 'page');
+		$form->addModel($blog, 'model');
+
 		$form->addElement('submit', array('value' => 'Create'));
 
 		$view->title = 'Create Blog';
@@ -165,9 +164,7 @@ class BlogController extends Controller_2_1 {
 
 		$article = new BlogArticleModel();
 		$article->set('blogid', $blog->get('id'));
-		$form = Form::BuildFromModel($article);
-		$form->set('callsmethod', 'BlogHelper::BlogArticleFormHandler');
-		//$form->addElement('submit', array('value' => 'Create Article'));
+		$form = BlogHelper::GetArticleForm($article);
 
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->title = 'Create Blog Article';
@@ -200,9 +197,7 @@ class BlogController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 
-		$form = Form::BuildFromModel($article);
-		$form->set('callsmethod', 'BlogHelper::BlogArticleFormHandler');
-		//$form->addElement('submit', array('value' => 'Update Article'));
+		$form = BlogHelper::GetArticleForm($article);
 
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->addBreadcrumb($article->get('title'), $article->get('rewriteurl'));
@@ -245,12 +240,52 @@ class BlogController extends Controller_2_1 {
 		Core::Redirect($blog->get('rewriteurl'));
 	}
 
+	/**
+	 * New articles that have their own rewrite url will call this method directly.
+	 */
+	public function article_view() {
+		$request = $this->getPageRequest();
+
+		$articleid = $request->getParameter(0);
+		$article = new BlogArticleModel($articleid);
+		$blog = $article->getLink('Blog');
+
+		if (!$blog->exists()) {
+			return View::ERROR_NOTFOUND;
+		}
+
+		$manager = \Core\user()->checkAccess('p:blog_manage');
+		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
+		$viewer  = \Core\user()->checkAccess($blog->get('access')) || $editor;
+
+		if (!$viewer) {
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		// If the article is still in the draft stage and the user does not have edit permissions,
+		// then it's the same as a 404.
+		if ($article->get('status') != 'published' && !$editor) {
+			return View::ERROR_NOTFOUND;
+		}
+
+		return $this->_viewBlogEntry($blog, $article);
+	}
+
 	private function _viewBlog(BlogModel $blog) {
 		$view     = $this->getView();
 		$page     = $blog->getLink('Page');
-		$articles = $blog->getLink('BlogArticle', 'created DESC');
+
 		$manager  = \Core\user()->checkAccess('p:blog_manage');
 		$editor   = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
+		$viewer   = \Core\user()->checkAccess($blog->get('access')) || $editor;
+
+		$factory = $blog->getLinkFactory('BlogArticle');
+		$factory->order('created DESC');
+		if(!$editor){
+			// Limit these to published articles.
+			$factory->where('status = published');
+		}
+		$articles = $factory->get();
 
 		$view->templatename = '/pages/blog/view-blog.tpl';
 		$view->assign('articles', $articles);
@@ -265,13 +300,15 @@ class BlogController extends Controller_2_1 {
 
 	private function _viewBlogEntry(BlogModel $blog, BlogArticleModel $article) {
 		$view = $this->getView();
-		$page = $blog->getLink('Page');
+		/** @var $page PageModel */
+		$page = $article->getLink('Page');
 		//$articles = $blog->getLink('BlogArticle');
 		$manager = \Core\user()->checkAccess('p:blog_manage');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 		$author = User::Find(array('id' => $article->get('authorid')));
 
-		$view->templatename = '/pages/blog/view-blog-article.tpl';
+		//$view->templatename = $page->get('page_template') ? $page->get('page_template') : 'pages/blog/article_view.tpl';
+		$view->templatename = 'pages/blog/article_view.tpl';
 		//$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->title         = $article->get('title');
 		$view->meta['title'] = $article->get('title');

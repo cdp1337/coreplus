@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.1" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.0" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.0" operation="ge"/>
 	</requires>
@@ -9,13 +9,13 @@
 	</permissions>
 	<files>
 		<file filename="CHANGELOG" md5="6bc293f7293cc2fae13726c6661c34af"/>
-		<file filename="controllers/BlogController.php" md5="976709b96b3c9a55ad5d36ba6744a94e">
+		<file filename="controllers/BlogController.php" md5="bc8324d1d4f6ea387c9a0d00dbded3c3">
 			<controller name="BlogController"/>
 		</file>
-		<file filename="helpers/BlogHelper.php" md5="283487940f0c2b3aeb1bf590752e997c">
+		<file filename="helpers/BlogHelper.php" md5="f68918afb5be346548cac0fe4aecea84">
 			<class name="BlogHelper"/>
 		</file>
-		<file filename="models/BlogArticleModel.php" md5="ed1cb08d304428994a06ebecfd6a27f4">
+		<file filename="models/BlogArticleModel.php" md5="1c93860fe38957828b801826327c826b">
 			<class name="BlogArticleModel"/>
 		</file>
 		<file filename="models/BlogArticleTagModel.php" md5="19113d6a799ff3b6012c99e22558720c">
@@ -24,6 +24,11 @@
 		<file filename="models/BlogModel.php" md5="c759fe5447d3c8ea9b48f4d8e2031502">
 			<class name="BlogModel"/>
 		</file>
+		<file filename="tests/BlogTest.php" md5="5da5c070a57ef48162f343ff0d0aae58">
+			<class name="BlogTest"/>
+		</file>
+		<file filename="tests/blog-test-image.png" md5="2ef8794320891042986b72da16f47bf1"/>
+		<file filename="upgrades/121_to_130.php" md5="4f71587ed4a65da58490523dd9581684"/>
 	</files>
 	<pages>
 		<page baseurl="/blog/admin" admin="1" widget="0" access="p:blog_manage" title="Blog Administration"/>
@@ -33,15 +38,21 @@
 		<file filename="templates/pages/blog/admin.tpl" md5="207445c551f7c2169d951b0a7b501e7c"/>
 		<file filename="templates/pages/blog/article_create.tpl" md5="37a42bd1bbcd4168f1ca2137ec70e597"/>
 		<file filename="templates/pages/blog/article_update.tpl" md5="7188695d360bad19187f63c7da3fc2f8"/>
+		<file filename="templates/pages/blog/article_view.tpl" md5="19b2f01697186acfcb3bf4083ec4450b"/>
+		<file filename="templates/pages/blog/article_view/review-post.tpl" md5="566c5cec8fe7461faa236662e442d22b"/>
 		<file filename="templates/pages/blog/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/blog/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/blog/view-blog-article.tpl" md5="018d40b76323051707c61edf0374d7bb"/>
-		<file filename="templates/pages/blog/view-blog.tpl" md5="d84fb641feb4f4e5bc6c1d8c88511713"/>
+		<file filename="templates/pages/blog/view-blog.tpl" md5="84e89f2260b12f4db58690e955fd7107"/>
 	</view>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.1.0"/>
 		<upgrade from="1.1.0" to="1.2.0"/>
 		<upgrade from="1.2.0" to="1.2.1"/>
+		<upgrade from="1.2.1" to="1.3.0">
+			<phpfileinclude>
+				components/blog/upgrades/121_to_130.php
+			</phpfileinclude>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
