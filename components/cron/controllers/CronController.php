@@ -125,66 +125,6 @@ class CronController extends Controller_2_1 {
 		}
 	}
 
-	/**
-	 * @param $cron
-	 *
-	 * @return CronLogModel
-	 * @throws Exception
-	 */
-	private function _performcron($cron){
-		switch($cron){
-			case 'hourly':
-			case 'daily':
-			case 'weekly':
-			case 'monthly':
-				break;
-			default:
-				throw new Exception('Unsupported cron type: [' . $cron . ']');
-		}
-
-		// First, check and see if there's one that's still running.
-		$runninglogs = CronLogModel::Find(array('cron' => $cron, 'status' => 'running'));
-		if(sizeof($runninglogs)){
-			foreach($runninglogs as $log){
-				/** @var $log CronLogModel */
-				$log->set('status', 'fail');
-				$log->set('log', $log->get('log') . "\n------------\nTIMED OUT!");
-				$log->save();
-			}
-		}
-
-
-
-		// Start recording.
-		$log = new CronLogModel();
-		$log->set('cron', $cron);
-		$log->set('status', 'running');
-		$log->set('memory', memory_get_usage());
-		$log->set('ip', REMOTE_IP);
-		$log->save();
-//var_dump($log); die();
-		$start = microtime(true) * 1000;
-
-		// Since these systems will just be writing to STDOUT, I'll need to capture that.
-		ob_start();
-		$result = HookHandler::DispatchHook('/cron/' . $cron);
-		$contents = ob_get_clean();
-
-		// Just in case the contents are returning html... (they should be plain text).
-		$contents = str_replace(array('<br>', '<br/>', '<br />'), "\n", $contents);
-		// And standardize line endings.
-		$contents = str_replace(array("\r\n", "\r"), "\n", $contents);
-
-		// Save the results.
-		$log->set('completed', Time::GetCurrentGMT());
-		$log->set('duration', ( (microtime(true) * 1000) - $start ) );
-		$log->set('log', $contents);
-		$log->set('status', ($result ? 'pass' : 'fail') );
-		$log->save();
-
-		// Just to notify the calling function.
-		return $log;
-	}
 
 	/**
 	 * Display a list of cron jobs that have ran.
@@ -268,5 +208,67 @@ class CronController extends Controller_2_1 {
 		$view->addBreadcrumb('Cron Results', '/cron/admin');
 		$view->title = 'Log Execution Details';
 		$view->assign('entry', $log);
+	}
+
+
+	/**
+	 * @param $cron
+	 *
+	 * @return CronLogModel
+	 * @throws Exception
+	 */
+	private function _performcron($cron){
+		switch($cron){
+			case 'hourly':
+			case 'daily':
+			case 'weekly':
+			case 'monthly':
+				break;
+			default:
+				throw new Exception('Unsupported cron type: [' . $cron . ']');
+		}
+
+		// First, check and see if there's one that's still running.
+		$runninglogs = CronLogModel::Find(array('cron' => $cron, 'status' => 'running'));
+		if(sizeof($runninglogs)){
+			foreach($runninglogs as $log){
+				/** @var $log CronLogModel */
+				$log->set('status', 'fail');
+				$log->set('log', $log->get('log') . "\n------------\nTIMED OUT!");
+				$log->save();
+			}
+		}
+
+
+
+		// Start recording.
+		$log = new CronLogModel();
+		$log->set('cron', $cron);
+		$log->set('status', 'running');
+		$log->set('memory', memory_get_usage());
+		$log->set('ip', REMOTE_IP);
+		$log->save();
+//var_dump($log); die();
+		$start = microtime(true) * 1000;
+
+		// Since these systems will just be writing to STDOUT, I'll need to capture that.
+		ob_start();
+		$result = HookHandler::DispatchHook('/cron/' . $cron);
+		$contents = ob_get_clean();
+
+		// Just in case the contents are returning html... (they should be plain text).
+		$contents = str_replace(array('<br>', '<br/>', '<br />'), "\n", $contents);
+		// And standardize line endings.
+		$contents = str_replace(array("\r\n", "\r"), "\n", $contents);
+
+		// Save the results.
+		$log->set('completed', Time::GetCurrentGMT());
+		$log->set('duration', ( (microtime(true) * 1000) - $start ) );
+		$log->set('log', $contents);
+		$log->set('status', ($result ? 'pass' : 'fail') );
+		$log->save();
+
+		// Just to notify the calling function.
+		return $log;
 	}
 }

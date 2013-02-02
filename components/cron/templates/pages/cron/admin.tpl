@@ -1,4 +1,5 @@
 {script library="Core.AjaxLinks"}{/script}
+{css src="assets/css/cron.css"}{/css}
 
 {$filters->render()}
 

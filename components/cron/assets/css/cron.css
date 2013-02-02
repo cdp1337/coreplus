@@ -1,0 +1,17 @@
+/** Just some styles to spruce up the cron admin page a little, namely the detailed view. **/
+
+.cron-detail-view-meta{
+	float:left;
+	width:40%;
+}
+
+.cron-detail-view-report{
+	float: right;
+	width: 59%;
+}
+
+.cron-detail-view-report-contents{
+	font-family: monospace;
+	font-size: 11px;
+	text-align: left;
+}
