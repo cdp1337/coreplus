@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Tags" execmode="web">
+	<requires>
+		<require name="core" type="component" version="2.4.3"/>
+		<require name="user-social" type="component"/>
+		<require name="user" type="component"/>
+	</requires>
+	<view searchdir="templates">
+		<file filename="templates/widgets/tags/display.tpl" md5="8f20684d96675d6f7b6ba730de1059f4"/>
+	</view>
+	<files>
+		<file filename="CHANGELOG" md5="4e48f195a27321bbe9099a938b92c90d"/>
+		<file filename="widgets/TagsWidget.php" md5="374cfa66e8b651a72d1c1cd279a71d1b">
+			<class name="TagsWidget"/>
+		</file>
+	</files>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl.html">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+</component>
+
