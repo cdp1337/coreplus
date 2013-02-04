@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <configuration>
 	<!--
-	  -- Important options, database and such
-	  -->
+	   - Important options, database and such
+	   -->
 
 	<return name="database_server" type="string">
 		<value>localhost</value>
@@ -36,8 +36,8 @@
 	</return>
 
 	<!--
-	  -- SSL mode, site name, url, and other general options
-	  -->
+	   - SSL mode, site name, url, and other general options
+	   -->
 
 	<define name="SSL_MODE" type="enum">
 		<value>disabled</value>
@@ -81,9 +81,9 @@
     </define>
 
     <!--
-      -- Technical things you probably don't need to worry about,
-      -- but feel free to if you so choose
-      -->
+       - Technical things you probably don't need to worry about,
+       - but feel free to if you so choose
+       -->
 
 
 	<return name="tmp_dir_web" type="string">
