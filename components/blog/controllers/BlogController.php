@@ -9,11 +9,92 @@
 class BlogController extends Controller_2_1 {
 
 	/**
+	 * This is the frontend blog listing page
+	 */
+	public function index(){
+		$view     = $this->getView();
+		$request  = $this->getPageRequest();
+		$manager  = \Core\user()->checkAccess('p:blog_manage');
+
+
+		// Get a list of all the blogs on the system.  I'll get the page object from each one and see if the current user has access
+		// to each one.  Then I'll have a list of ids that the user can view.
+		$ids = array();
+		$blogs = BlogModel::Find(null, null, null);
+		foreach($blogs as $blog){
+			$page     = $blog->getLink('Page');
+			$editor   = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
+			$viewer   = \Core\user()->checkAccess($blog->get('access')) || $editor;
+
+			if(!$viewer) continue;
+
+			$ids[] = $blog->get('id');
+		}
+
+		// Is the user a manager, but no blogs exist on the system?
+		if($manager && !sizeof($ids)){
+			Core::Redirect('/blog/admin');
+		}
+
+		$filters = new FilterForm();
+		$filters->haspagination = true;
+		$filters->setLimit(20);
+		$filters->load($this->getPageRequest());
+
+		$factory = new ModelFactory('BlogArticleModel');
+		$factory->where('blogid IN ' . implode(',', $ids));
+		$factory->order('published DESC');
+		if(!$editor){
+			// Limit these to published articles.
+			$factory->where('status = published');
+		}
+
+		$filters->applyToFactory($factory);
+		$articles = $factory->get();
+
+		//var_dump($factory, $articles); die();
+
+		$view->mode = View::MODE_PAGEORAJAX;
+		$view->assign('articles', $articles);
+		$view->assign('page', $page);
+		$view->assign('filters', $filters);
+		if ($editor) {
+			//$view->addControl('Add Blog Article', '/blog/article/create/' . $blog->get('id'), 'add');
+		}
+		if ($manager) {
+			$view->addControl('Edit Blog Listing Page', '/blog/editindex', 'edit');
+			$view->addControl('All Articles', '/blog/admin/view', 'tasks');
+		}
+	}
+
+	/**
+	 * Edit the index listing page.
+	 */
+	public function editindex() {
+		if (!$this->setAccess('p:blog_manage')) {
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$view = $this->getView();
+		$page = new PageModel('/blog');
+		$form = new Form();
+		$form->set('callsmethod', 'BlogHelper::BlogIndexFormHandler');
+
+		$form->addModel($page, 'page');
+
+		$form->addElement('submit', array('value' => 'Update Page Listing'));
+
+		$view->title = 'Update Page Listing';
+		$view->assignVariable('form', $form);
+	}
+
+	/**
 	 * Display all blogs in an administrative interface.
 	 *
 	 * Requires the p:blog_manage permission.
 	 */
 	public function admin() {
+		// This is a manager-only function!
 		if (!$this->setAccess('p:blog_manage')) {
 			return View::ERROR_ACCESSDENIED;
 		}
@@ -24,6 +105,56 @@ class BlogController extends Controller_2_1 {
 		$view->title = 'Blog Administration';
 		$view->assignVariable('blogs', $blogs);
 		$view->addControl('Add Blog', '/blog/create', 'add');
+		$view->addControl('All Articles', '/blog/admin/view', 'tasks');
+	}
+
+	/**
+	 * View a specific blog in an admin-type view.  This provides more analytical data than
+	 */
+	public function admin_view(){
+		if (!$this->setAccess('p:blog_manage')) {
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$view  = $this->getView();
+		$request = $this->getPageRequest();
+
+		if($request->getParameter(0)){
+			// A specific blog was requested, limit results to that!
+			$blog = new BlogModel($request->getParameter(0));
+			if (!$blog->exists()) {
+				return View::ERROR_NOTFOUND;
+			}
+			$blogid = $blog->get('id');
+			$title = $blog->get('title') . ' Articles';
+		}
+		else{
+			$blogid = null;
+			$title = 'All Articles';
+		}
+
+
+		$filters = new FilterForm();
+		$filters->setName('blog-admin-' . $blogid);
+		$filters->haspagination = true;
+		$filters->hassort = true;
+		$filters->setSortkeys(array('created', 'title', 'status', 'published', 'updated'));
+		$filters->load($request);
+
+
+		$factory = new ModelFactory('BlogArticleModel');
+		if($blogid){
+			$factory->where('blogid = ' . $blogid);
+		}
+		$filters->applyToFactory($factory);
+		$articles = $factory->get();
+
+		$view->title = $title;
+		$view->assign('articles', $articles);
+		$view->assign('filters', $filters);
+		$view->assign('blogid', $blogid);
+
+		//var_dump($articles);
 	}
 
 	/**
@@ -64,7 +195,7 @@ class BlogController extends Controller_2_1 {
 				return View::ERROR_NOTFOUND;
 			}
 
-			return $this->_viewBlogEntry($blog, $article);
+			return $this->_viewBlogArticle($blog, $article);
 		}
 	}
 
@@ -86,6 +217,7 @@ class BlogController extends Controller_2_1 {
 
 		$form->addElement('submit', array('value' => 'Create'));
 
+		$view->addBreadcrumb('Blog Administration', '/blog/admin');
 		$view->title = 'Create Blog';
 		$view->assignVariable('form', $form);
 	}
@@ -237,7 +369,7 @@ class BlogController extends Controller_2_1 {
 		}
 
 		$article->delete();
-		Core::Redirect($blog->get('rewriteurl'));
+		Core::GoBack(1);
 	}
 
 	/**
@@ -268,7 +400,7 @@ class BlogController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 
-		return $this->_viewBlogEntry($blog, $article);
+		return $this->_viewBlogArticle($blog, $article);
 	}
 
 	private function _viewBlog(BlogModel $blog) {
@@ -279,26 +411,36 @@ class BlogController extends Controller_2_1 {
 		$editor   = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 		$viewer   = \Core\user()->checkAccess($blog->get('access')) || $editor;
 
+		$filters = new FilterForm();
+		$filters->haspagination = true;
+		$filters->setLimit(20);
+		$filters->load($this->getPageRequest());
+
 		$factory = $blog->getLinkFactory('BlogArticle');
-		$factory->order('created DESC');
+		$factory->order('published DESC');
 		if(!$editor){
 			// Limit these to published articles.
 			$factory->where('status = published');
 		}
+
+		$filters->applyToFactory($factory);
 		$articles = $factory->get();
 
+		$view->mode = View::MODE_PAGEORAJAX;
 		$view->templatename = '/pages/blog/view-blog.tpl';
 		$view->assign('articles', $articles);
 		$view->assign('page', $page);
+		$view->assign('filters', $filters);
 		if ($editor) {
 			$view->addControl('Add Blog Article', '/blog/article/create/' . $blog->get('id'), 'add');
 		}
 		if ($manager) {
 			$view->addControl('Edit Blog', '/blog/update/' . $blog->get('id'), 'edit');
+			$view->addControl('All Articles', '/blog/admin/view/' . $blog->get('id'), 'tasks');
 		}
 	}
 
-	private function _viewBlogEntry(BlogModel $blog, BlogArticleModel $article) {
+	private function _viewBlogArticle(BlogModel $blog, BlogArticleModel $article) {
 		$view = $this->getView();
 		/** @var $page PageModel */
 		$page = $article->getLink('Page');
@@ -306,6 +448,9 @@ class BlogController extends Controller_2_1 {
 		$manager = \Core\user()->checkAccess('p:blog_manage');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 		$author = User::Find(array('id' => $article->get('authorid')));
+
+		//var_dump($page->getMeta('keywords')); die();
+
 
 		//$view->templatename = $page->get('page_template') ? $page->get('page_template') : 'pages/blog/article_view.tpl';
 		$view->templatename = 'pages/blog/article_view.tpl';

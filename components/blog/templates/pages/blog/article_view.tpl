@@ -6,7 +6,9 @@
 		{if $author && Core::IsComponentAvailable('user-social')}
 			{widget baseurl="/userprofile/badge" user="$author" title="Posted By" orientation="right"}
 		{/if}
-		<div class="blog-article-date" itemprop="dateCreated" datetime='{date format='c' date="`$article.created`"}'>Posted {date date="`$article.created`"}</div>
+
+		<meta itemprop="datePublished" content="{date format='c' date="`$article.published`"}"/>
+		<div class="blog-article-date">Posted {date date="`$article.published`"}</div>
 	</div>
 
 
@@ -17,5 +19,7 @@
 	<div class="blog-article-body" itemprop="articleBody">
 		{$article.body}
 	</div>
+
+	{widget baseurl="/tags/display" page=$article->getLink('Page') title="Tags:" }
 
 </div>

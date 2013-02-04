@@ -5,19 +5,18 @@
 {/if}
 
 {$filters->pagination()}
-<div itemscope itemtype="http://schema.org/Blog" class="single-blog-listing blog-listing">
-	<h1>{$page.title}</h1>
-
-	{if $page.description}
-		<div itemprop="description" style="display:none;">{$page.description}</div>
-	{/if}
+<div class="multi-blog-listing blog-listing">
 
 	{foreach $articles as $article}
+		{assign var='blog' value=$article->getLink('Blog')}
+
 		<div class="blog-article blog-article-status-{$article.status}" itemscope itemtype="http://schema.org/BlogPosting">
 			<link itemprop="url" href="{link link="`$article.rewriteurl`"}"/>
 			{a class="blog-article-title" href="`$article.rewriteurl`" itemprop="name"}
 				{$article.title}
 			{/a}
+
+
 
 			{if $article.published}
 				<meta itemprop="dateCreated" content="{date format='c' date="`$article.published`"}"/>
@@ -30,6 +29,11 @@
 			<div class="blog-article-image">
 				{img placeholder="blog" src="public/blog/`$article.image`" width='75' height='75' itemprop="thumbnailUrl"}
 			</div>
+
+			<br/>
+			{a href="`$blog->get('rewriteurl')`"}
+				Posted in {$blog->get('title')}
+			{/a}
 
 
 			<p class="blog-article-excerpt" itemprop="articleBody">

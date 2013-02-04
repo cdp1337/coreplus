@@ -72,6 +72,11 @@ class BlogArticleModel extends Model {
 			'type' => Model::ATT_TYPE_STRING,
 			'formtype' => 'hidden',
 		),
+		'published' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'formtype' => 'disabled',
+			'comment' => 'The published date',
+		),
 		'created'     => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
@@ -96,10 +101,6 @@ class BlogArticleModel extends Model {
 				'link' => Model::LINK_BELONGSTOONE,
 				'on'   => array('id' => 'authorid'),
 			),
-			'BlogArticleTag' => array(
-				'link' => Model::LINK_HASMANY,
-				'on'   => array('articleid' => 'id'),
-			),
 			'Page' => array(
 				'link' => Model::LINK_HASONE,
 				'on' => 'baseurl',
@@ -120,6 +121,26 @@ class BlogArticleModel extends Model {
 				return $this->getLink('Page')->get('rewriteurl');
 			default:
 				return parent::get($k);
+		}
+	}
+
+	public function set($k, $v){
+		if($k == 'status'){
+			// Update the published date if it's status has changed.
+			if($v == $this->get($k)) return false;
+
+			if($v == 'published'){
+				$this->set('published', Time::GetCurrentGMT());
+			}
+			else{
+				$this->set('published', '');
+			}
+
+			// And resume!
+			return parent::set($k, $v);
+		}
+		else{
+			return parent::set($k, $v);
 		}
 	}
 

@@ -1,3 +1,18 @@
+Blog 1.4.0
+
+	* New styles for blogs.
+	* New javascript for blogs, infitite scrolling of blog listing pages via waypoint.
+	* New view for blogs, /blogs.  This is a complete syndicate of all blogs on the site and
+	  their articles.
+	* Expanded the admin section of /blogs/admin for super admins.  This now displays the
+	  individual articles in a data-friendly view.
+	* Added a published date to blog articles.  This date is the date the article is switched
+	  from draft to published.
+	* Removed the BlogArticleTagModel; this was never implemented.
+	* Blog articles now record their own page, but are not selectable via the new selectable
+	  option.
+	--Charlie Powell <charlie@eval.bz>  Mon, 04 Feb 2013 15:36:01 -0500
+
 Blog 1.3.0
 
 	* Redesigned how the blog articles behave.  They are now registered as their own page, and

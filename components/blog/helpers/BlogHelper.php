@@ -105,6 +105,14 @@ abstract class BlogHelper {
 
 			$isnew = !$article->exists();
 
+			// Blog pages are not selectable.  Otherwise there would just be WAY too many of them!
+			$page->set('selectable', 0);
+
+			if($article->get('status') == 'published' && !$article->get('published')){
+				// If it's new and is published... set the published date to right now!
+				$article->set('published', Time::GetCurrentGMT());
+			}
+
 			$article->save();
 
 			if($isnew){
@@ -150,7 +158,8 @@ abstract class BlogHelper {
 				$article->save();
 			}
 
-			return $article->get('baseurl');
+			return Core::GetHistory();
+			//return $article->get('baseurl');
 		}
 		catch(ModelValidationException $e){
 			Core::SetMessage($e->getMessage(), 'error');
@@ -160,6 +169,27 @@ abstract class BlogHelper {
 			// Facebook errors are not critical, as the post is still created.
 			Core::SetMessage($e->getMessage(), 'error');
 			return $article->get('rewriteurl');
+		}
+		catch(Exception $e){
+			error_log($e->getMessage());
+			Core::SetMessage($e->getMessage(), 'error');
+			return false;
+		}
+	}
+
+	/**
+	 * Save handler for the index edit form.
+	 *
+	 * This form just manages the page data for the /blog listing.
+	 * @param Form $form
+	 *
+	 * @return bool|mixed|null
+	 */
+	public static function BlogIndexFormHandler(Form $form){
+		try{
+			$page = $form->getModel('page');
+			$page->save();
+			return $page->get('baseurl');
 		}
 		catch(Exception $e){
 			error_log($e->getMessage());
