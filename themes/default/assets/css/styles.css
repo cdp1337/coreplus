@@ -120,6 +120,7 @@ ul.controls.context-menu li a:hover {
 }
 ul.controls.context-menu a span {
 	display: inline;
+	padding-left: 2px;
 }
 
 
@@ -263,18 +264,43 @@ a.button[disabled=disabled]{
 .message-info,
 .message-success,
 .message-error {
-	-moz-box-shadow: 3px 3px 5px rgba(162, 162, 162, 0.4);
-	-webkit-box-shadow: 3px 3px 5px rgba(162, 162, 162, 0.4);
-	box-shadow: 3px 3px 5px rgba(162, 162, 162, 0.4);
+	border-radius: 6px;
 	padding:0.5em 2em;
 	margin:0.05em 2em 1em;
 	text-align:center;
-	border-radius: 0.4em;
 }
-.message-note { background:#FCF0AD; border:1px solid #DED38C; color:#B87B02;}
-.message-info { background:#FFA; border:1px solid #D9D866; color:#B8B102;}
-.message-success { background:#AFA; border: 1px solid #85CC85; color: #0F9F42; }
-.message-error { background:#FCe5ed; border:1px solid #E0ADB4; color:#DF101D;}
+.message-note {
+	background:#FCF0AD;
+	border:1px solid #BCB06D;
+}
+.message-info {
+	background: #EEE9FF;
+	border:1px solid #2667FF;
+	color: #0a1250;
+}
+.message-success {
+	background:#AFA;
+	border: 1px solid #373;
+	color: #151;
+}
+.message-error {
+	background:#FCe5ed;
+	border:1px solid #BC606D;
+	color:#DF101D;
+}
+
+body .pagecontent .message-note a {
+	color: #7f774a;
+}
+body .pagecontent .message-info a {
+	color: #0a1250;
+}
+body .pagecontent .message-success a {
+	color: #151;
+}
+body .pagecontent .message-error a {
+	color:#DF101D;
+}
 
 .rounded-large { border-radius:10px; -moz-border-radius:10px; -webkit-border-radius:10px; }
 .rounded { border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; }
