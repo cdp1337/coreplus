@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.2" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.3" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -42,9 +42,9 @@
 		<file filename="LICENSES/lgpl.txt" md5="e6a600fd5e1d9cbde2d983680233ad02"/>
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
-		<file filename="config/configuration.xml.example" md5="8cda9f6b7acfd7c60d770df647eeb3e0"/>
-		<file filename="core/CHANGELOG" md5="342494e2455219ca908a4f110b6b21ff"/>
-		<file filename="core/bootstrap.compiled.php" md5="06c278525586dec7cdf24bcd4755a313">
+		<file filename="config/configuration.xml.example" md5="9bd76136ebc3395e33b33b4b469817b2"/>
+		<file filename="core/CHANGELOG" md5="72da7c9b8765226673494eba9ce87bdf"/>
+		<file filename="core/bootstrap.compiled.php" md5="6d19b7888ee339e2ab7b0128241cd4bf">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -114,11 +114,11 @@
 			<interface name="DMI_Backend"/>
 			<interface name="TemplateInterface"/>
 		</file>
-		<file filename="core/bootstrap.php" md5="2c1bdf1c6428a08923284746c23dfe02"/>
+		<file filename="core/bootstrap.php" md5="e875236853b6b479d89e6ae9cdc63f20"/>
 		<file filename="core/bootstrap_postincludes.php" md5="66f9826e95d4764cb63ff94033b66e33"/>
 		<file filename="core/bootstrap_predefines.php" md5="a75579b94642f0f4fb7b7540f9909288"/>
 		<file filename="core/bootstrap_preincludes.php" md5="dcfb10510205563d42e2d02c8979cc42"/>
-		<file filename="core/controllers/AdminController.php" md5="d0e0b7e6f428fa7925878e67611154d2">
+		<file filename="core/controllers/AdminController.php" md5="14db7b1889ed4450e8c10e54eb9b4143">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/CoreController.php" md5="5036876e64219490e1451347ad063d63">
@@ -513,7 +513,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="4b4e76fbefc4dd7cdf4c2d9c3d9a2a6d">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="20f991d22a4974b312de0f93ae115bbb">
+		<file filename="core/libs/core/Core.class.php" md5="d108825f49c1aa24c0e199e735b20040">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -571,7 +571,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="c33121e2c1f075babe730a4cc252ebba">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="ce927eddf31ff0b6b38a95918958f207">
+		<file filename="core/libs/core/PageRequest.class.php" md5="ae2b7b6f19dfcf58cb9fb9839f1f3c19">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="0528150b9145ee4d1dd243e8348c71a6">
@@ -599,7 +599,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="b6e482814ff6da2501fe41ba93efc53f">
+		<file filename="core/libs/core/View.class.php" md5="1949adc158a095c5852162010174d4e5">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -640,7 +640,7 @@
 		<file filename="core/libs/datamodel/DMI_Backend.interface.php" md5="274387e4a3a9e791e1182b0572e4b020">
 			<interface name="DMI_Backend"/>
 		</file>
-		<file filename="core/libs/datamodel/Dataset.class.php" md5="f13a65695db6e6edbe99d982ad9ed902">
+		<file filename="core/libs/datamodel/Dataset.class.php" md5="82713620482e0d9e338c4f823c65d6b2">
 			<class name="Dataset"/>
 			<class name="DatasetWhereClause"/>
 			<class name="DatasetWhere"/>
@@ -652,7 +652,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="e02b68f59cf50bf21f1bb533a2e59ea1">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="ab1a8faa1a1bb29c7ac55f06ca572f28">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="7fc38565be84abe05267526177582db9">
 			<class name="DMI_mysqli_backend"/>
 			<class name="MySQLi_Schema"/>
 			<class name="MySQLi_Schema_Column"/>
@@ -1327,7 +1327,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="e3915ba1831743ff928a7d4345a6e437">
+		<file filename="core/models/PageModel.class.php" md5="88480daca93f3acdd7cff45733d862f5">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="f9c51e50c963b6041526bf55f6234f26">
@@ -1349,6 +1349,7 @@
 			<class name="CoreTest"/>
 		</file>
 		<file filename="core/upgrades/240_to_241_pagemetas.php" md5="7887144c4964ca4e2ea91dca5fc3bb40"/>
+		<file filename="core/upgrades/242_to_243_page_selectable.php" md5="a00104bc754034508aa50efb4b61a183"/>
 		<file filename="core/widgets/AdminMenuWidget.php" md5="036fe58467121fbc844891c95282c3db">
 			<class name="AdminMenuWidget"/>
 		</file>
@@ -1377,7 +1378,7 @@
 		<file filename="install/templates/install.tpl" md5="6b466824ffb7cecedfbae5d3ed8189e2"/>
 		<file filename="install/templates/preflight_config.tpl" md5="ed6b08acc6c3224a0527f88d0ac49804"/>
 		<file filename="install/templates/preflight_htaccess.tpl" md5="f15e6c3078b09f5dbc929aa7a046467c"/>
-		<file filename="install/templates/preflight_requirements.tpl" md5="b098146e5c21a95fc00c62e0eadadb2c"/>
+		<file filename="install/templates/preflight_requirements.tpl" md5="090f41a72e8a217cdfa2a9f0f6a2ed22"/>
 		<file filename="install/templates/setup_cassandra.tpl" md5="250c24a0d0d713a8807e0ac1145c64e6"/>
 		<file filename="install/templates/setup_database_host.tpl" md5="d682186e2e987ece6d3533e56614f497"/>
 		<file filename="install/templates/setup_mysqli.tpl" md5="7de7118bdcf412ca6984beec127ecdcc"/>
@@ -1420,7 +1421,7 @@
 		<file filename="core/templates/forms/elements/image.tpl" md5="dc4f74a0297b099ea7913d7582125837"/>
 		<file filename="core/templates/forms/elements/reset.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
 		<file filename="core/templates/forms/filters-pagination.tpl" md5="c8c3f50586386674d070832520b342cf"/>
-		<file filename="core/templates/forms/filters.tpl" md5="9999ab11e22595c4ec984a9a94f75038"/>
+		<file filename="core/templates/forms/filters.tpl" md5="d27dc37edbc74a74b726a472faef68b5"/>
 		<file filename="core/templates/forms/filters.tpl~" md5="40bdea372567b321e9747bb6f930d374"/>
 		<file filename="core/templates/forms/form.body.tpl" md5="8ab5bcc9f1307da533c72b3d18113a74"/>
 		<file filename="core/templates/forms/form.foot.tpl" md5="6e6d3353848b64921070b812c7c99936"/>
@@ -1541,6 +1542,11 @@
 			</phpfileinclude>
 		</upgrade>
 		<upgrade from="2.4.1" to="2.4.2"/>
+		<upgrade from="2.4.2" to="2.4.3">
+			<phpfileinclude>
+				core/upgrades/242_to_243_page_selectable.php
+			</phpfileinclude>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

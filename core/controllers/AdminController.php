@@ -63,7 +63,7 @@ class AdminController extends Controller_2_1 {
 			foreach (Core::GetComponents() as $c) {
 				/** @var $c Component_2_1 */
 
-				if (!$c->isInstalled()) continue;
+				if(!$c->isInstalled()) continue;
 				if(!$c->isEnabled()) continue;
 
 

@@ -480,6 +480,7 @@ class PageRequest {
 
 		// Make sure I update any existing page now that the controller has ran.
 		if ($page->exists() && $return->error == View::ERROR_NOERROR) {
+			$page->set('pageviews', $page->get('pageviews') + 1);
 			$page->save();
 		}
 

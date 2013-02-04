@@ -507,6 +507,8 @@ class Core implements ISingleton {
 	 *
 	 * This was a direct port from the Core.
 	 *
+	 * @throws Exception
+	 *
 	 * @param string $classname
 	 *
 	 * @return void
@@ -524,6 +526,11 @@ class Core implements ISingleton {
 		}
 
 		if (isset(Core::Singleton()->_classes[$classname])) {
+			if(!file_exists(Core::Singleton()->_classes[$classname])){
+				// Eek, I can't open the file!
+				throw new Exception('Unable to open file for class ' . $classname . ' (' . Core::Singleton()->_classes[$classname] . ')');
+			}
+
 			require_once(Core::Singleton()->_classes[$classname]);
 		}
 	}
@@ -1051,19 +1058,29 @@ class Core implements ISingleton {
 	 * @param int $depth The amount of pages back to go
 	 */
 	static public function GoBack($depth=2) {
+		Core::Redirect(self::GetHistory($depth));
+	}
+
+	/**
+	 * Get the page that was last called $depth ago.
+	 *
+	 * @param int $depth
+	 * @return string
+	 */
+	public static function GetHistory($depth = 2){
 		if(!isset($_SESSION['nav'])){
-			// No navigation available?  Just go back to the home page!
-			Core::Redirect(ROOT_WDIR);
+			//navigation isn't set, HOME PAGE!
+			return ROOT_WDIR;
 		}
 
 		$s = sizeof($_SESSION['nav']);
 		if($depth > $s){
 			// Requested depth greater than the amount of data saved?  HOME PAGE!
-			Core::Redirect(ROOT_WDIR);
+			return ROOT_WDIR;
 		}
 
 		if($depth <= 0){
-			Core::Redirect(ROOT_WDIR);
+			return ROOT_WDIR;
 		}
 		//var_dump($_SESSION['nav'], $depth, $_SESSION['nav'][$s - $depth]); die();
 		// I now have the total size of the array and the requested depth of it.
@@ -1072,7 +1089,7 @@ class Core implements ISingleton {
 
 		// If the array is 3 keys deep and a depth of 1 was requested (last element),
 		// it'll be 3 - 1, or 2, the last key in a zero-base array!
-		Core::Redirect($_SESSION['nav'][$s - $depth]['uri']);
+		return $_SESSION['nav'][$s - $depth]['uri'];
 	}
 
 	/**
@@ -1137,6 +1154,10 @@ class Core implements ISingleton {
 
 		// Also do not record anything other than a GET request.
 		if(!$request->isGet()) return;
+
+		// If it's an ajax or json request, don't record that either!
+		if($request->isAjax()) return;
+		if($request->isJSON()) return;
 
 		if (!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
 

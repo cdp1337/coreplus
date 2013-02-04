@@ -74,7 +74,7 @@
 
 {if $hassort}
 	{css}<style>
-		.column-sortable th { cursor: pointer; }
+		.column-sortable th[sortkey] { cursor: pointer; }
 		.column-sortable th i { float: right; }
 		.column-sortable th i.other { visibility: hidden; }
 		.column-sortable th:hover i.other { visibility: visible; }

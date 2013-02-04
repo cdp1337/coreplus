@@ -111,6 +111,17 @@ class PageModel extends Model {
 			'default' => '0',
 			'formtype' => 'system'
 		),
+		'pageviews' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'formtype' => 'disabled',
+			'comment' => 'Number of page views',
+		),
+		'selectable' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'default' => 1,
+			'comment' => 'Selectable as a parent url and sitemap page',
+			'formtype' => 'disabled',
+		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
@@ -347,15 +358,27 @@ class PageModel extends Model {
 	/**
 	 * Get a specific meta tag, or null if it doesn't exist.
 	 *
+	 * There are a couple exceptions that will return an array of results.  Currently it is simply keywords.
+	 *
 	 * @param string $name
 	 *
-	 * @return PageMetaModel | null
+	 * @return PageMetaModel | null | array
 	 */
 	public function getMeta($name) {
 		$metas = $this->getLink('PageMeta');
-		foreach($metas as $meta){
-			/** @var $meta PageMetaModel */
-			if($meta->get('meta_key') == $name) return $meta;
+		if($name == 'keywords'){
+			$keywords = array();
+			foreach($metas as $meta){
+				/** @var $meta PageMetaModel */
+				if($meta->get('meta_key') == 'keyword') $keywords[] = $meta;
+			}
+			return $keywords;
+		}
+		else{
+			foreach($metas as $meta){
+				/** @var $meta PageMetaModel */
+				if($meta->get('meta_key') == $name) return $meta;
+			}
 		}
 
 		return null;
@@ -1026,6 +1049,9 @@ class PageModel extends Model {
 			$g->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
 			$f->where($g);
 		}
+
+		// They must be selectable!
+		$f->where('selectable = 1');
 
 		// Get the pages
 		$pages = $f->get();

@@ -115,6 +115,12 @@ if (!DEVELOPMENT_MODE) {
 	ini_set('display_errors', 0);
     ini_set('html_errors', 0);
 }
+// Make sure that errors are set to be displayed to the fullest extent.
+else{
+	error_reporting(E_ALL | E_STRICT);
+	ini_set('display_errors', 1);
+	ini_set('html_errors', 1);
+}
 
 
 /*******   CALCULATE SEVERAL REQUIRED CONSTANTS, MAINLY ONES FOR PATH AND URL INFORMATION  ********/

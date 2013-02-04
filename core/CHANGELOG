@@ -1,3 +1,17 @@
+Core Plus 2.4.3
+
+	* Fix in Core::CheckClass for when the file containing a given class is not found.  Now an
+	  exception is thrown.
+	* New method, Core::GetHistory.  This behaves the same as GoBack, except that it simply
+	  returns the url instead of redirecting.
+	* Ajax and JSON pages no longer record navigation.
+	* Added pageviews into the core page system.  This is a counter that is incremented every
+	  time a page is viewed if that page exists in the page table.
+	* Added an X-FRAME-OPTIONS header of SAMEORIGIN.  This is a security fix.
+	* Added support for IN where statements.
+	* Force displaying of all errors if in development mode.
+	--Charlie Powell <charlie@eval.bz>  Mon, 04 Feb 2013 15:29:17 -0500
+
 Core Plus 2.4.2
 
 	* Reduced the size of the page_meta::meta_value attribute slightly, was causing some mysql

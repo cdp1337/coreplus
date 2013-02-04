@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 01 Feb 2013 18:55:04 -0500
+ * @compiled Mon, 04 Feb 2013 15:28:30 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -2006,6 +2006,17 @@ public static $Schema = array(
 'default' => '0',
 'formtype' => 'system'
 ),
+'pageviews' => array(
+'type' => Model::ATT_TYPE_INT,
+'formtype' => 'disabled',
+'comment' => 'Number of page views',
+),
+'selectable' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => 1,
+'comment' => 'Selectable as a parent url and sitemap page',
+'formtype' => 'disabled',
+),
 'created' => array(
 'type' => Model::ATT_TYPE_CREATED,
 'null' => false,
@@ -2140,8 +2151,17 @@ $this->_populateView();
 }
 public function getMeta($name) {
 $metas = $this->getLink('PageMeta');
+if($name == 'keywords'){
+$keywords = array();
+foreach($metas as $meta){
+if($meta->get('meta_key') == 'keyword') $keywords[] = $meta;
+}
+return $keywords;
+}
+else{
 foreach($metas as $meta){
 if($meta->get('meta_key') == $name) return $meta;
+}
 }
 return null;
 }
@@ -2506,6 +2526,7 @@ $g->addWhere('site = -1');
 $g->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
 $f->where($g);
 }
+$f->where('selectable = 1');
 $pages = $f->get();
 $opts = array();
 foreach ($pages as $p) {
@@ -6344,6 +6365,9 @@ if (!self::$_LoadedComponents) {
 self::LoadComponents();
 }
 if (isset(Core::Singleton()->_classes[$classname])) {
+if(!file_exists(Core::Singleton()->_classes[$classname])){
+throw new Exception('Unable to open file for class ' . $classname . ' (' . Core::Singleton()->_classes[$classname] . ')');
+}
 require_once(Core::Singleton()->_classes[$classname]);
 }
 }
@@ -6591,17 +6615,20 @@ Session::ForceSave();
 die("If your browser does not refresh, please <a href=\"" . CUR_CALL . "\">Click Here</a>");
 }
 static public function GoBack($depth=2) {
+Core::Redirect(self::GetHistory($depth));
+}
+public static function GetHistory($depth = 2){
 if(!isset($_SESSION['nav'])){
-Core::Redirect(ROOT_WDIR);
+return ROOT_WDIR;
 }
 $s = sizeof($_SESSION['nav']);
 if($depth > $s){
-Core::Redirect(ROOT_WDIR);
+return ROOT_WDIR;
 }
 if($depth <= 0){
-Core::Redirect(ROOT_WDIR);
+return ROOT_WDIR;
 }
-Core::Redirect($_SESSION['nav'][$s - $depth]['uri']);
+return $_SESSION['nav'][$s - $depth]['uri'];
 }
 static public function RequireSSL() {
 if (!ENABLE_SSL) return;
@@ -6630,6 +6657,8 @@ $request = PageRequest::GetSystemRequest();
 $view = $request->getView();
 if(!$view->record) return;
 if(!$request->isGet()) return;
+if($request->isAjax()) return;
+if($request->isJSON()) return;
 if (!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
 $rel = substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
 if($rel === false) $rel = '';
@@ -7149,6 +7178,11 @@ if (!DEVELOPMENT_MODE) {
 ini_set('display_errors', 0);
 ini_set('html_errors', 0);
 }
+else{
+error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors', 1);
+ini_set('html_errors', 1);
+}
 if (EXEC_MODE == 'CLI') {
 $servername          = null;
 $servernameSSL       = null;
@@ -7564,7 +7598,7 @@ if($arguments) $this->_parseWhere($arguments);
 }
 private function _parseWhere($statement){
 $valid = false;
-$operations = array('!=', '<=', '>=', '=', '>', '<', 'LIKE ', 'NOT LIKE');
+$operations = array('!=', '<=', '>=', '=', '>', '<', 'LIKE ', 'NOT LIKE', 'IN');
 $k = preg_replace('/^([^ !=<>]*).*/', '$1', $statement);
 $statement = trim(substr($statement, strlen($k)));
 foreach($operations as $c){
@@ -7572,6 +7606,9 @@ if(($pos = strpos($statement, $c)) === 0){
 $op = $c;
 $statement = trim(substr($statement, strlen($op)));
 $valid = true;
+if($op == 'IN'){
+$statement = array_map('trim', explode(',', $statement));
+}
 break;
 }
 }
@@ -9245,6 +9282,7 @@ if ($this->contenttype == View::CTYPE_HTML) header('Content-Type: text/html; cha
 else header('Content-Type: ' . $this->contenttype);
 }
 header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? Core::GetComponent()->getVersion() : ''));
+header('X-FRAME-OPTIONS', 'SAMEORIGIN');
 }
 if(SSL_MODE != SSL_MODE_DISABLED){
 if($this->ssl && !SSL){
@@ -10389,6 +10427,7 @@ if ($defaultpage->get('theme_template')) {
 $return->mastertemplate = $defaultpage->get('theme_template');
 }
 if ($page->exists() && $return->error == View::ERROR_NOERROR) {
+$page->set('pageviews', $page->get('pageviews') + 1);
 $page->save();
 }
 return $return;

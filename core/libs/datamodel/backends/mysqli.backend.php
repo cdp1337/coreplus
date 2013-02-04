@@ -659,6 +659,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 
 				$op = $w->op;
 
+				// Null values should be IS NULL or IS NOT NULL, no sanitizing needed.
 				if($w->value === null){
 					$v = 'NULL';
 					// NULL also has a fun trick with mysql.... = and != doesn't work :/
@@ -666,8 +667,17 @@ class DMI_mysqli_backend implements DMI_Backend {
 					elseif($op == '!=') $op = 'IS NOT';
 
 				}
+				// Numbers are allowed with no sanitizing, they're just numbers.
 				elseif(is_int($w->value)){
 					$v = $w->value;
+				}
+				// IN statements allow an array to be passed in.  Check the values in the array and wrap them with parentheses.
+				elseif(is_array($w->value) && $op == 'IN'){
+					$vs = array();
+					foreach($w->value as $bit){
+						$vs[] = "'" . $this->_conn->real_escape_string($bit) . "'";
+					}
+					$v = '( ' . implode(',', $vs) . ' )';
 				}
 				else{
 					$v = "'" . $this->_conn->real_escape_string($w->value) . "'";

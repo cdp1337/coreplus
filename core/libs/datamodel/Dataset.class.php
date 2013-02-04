@@ -663,7 +663,7 @@ class DatasetWhere{
 	private function _parseWhere($statement){
 		// The user may have sent something like "blah = mep" or "datecreated < somedate"
 		$valid = false;
-		$operations = array('!=', '<=', '>=', '=', '>', '<', 'LIKE ', 'NOT LIKE');
+		$operations = array('!=', '<=', '>=', '=', '>', '<', 'LIKE ', 'NOT LIKE', 'IN');
 
 		// First, extract out the key.  This is the simplest thing to look for.
 		$k = preg_replace('/^([^ !=<>]*).*/', '$1', $statement);
@@ -679,6 +679,12 @@ class DatasetWhere{
 				$op = $c;
 				$statement = trim(substr($statement, strlen($op)));
 				$valid = true;
+
+				// the IN statement has a bit of an extra functionality.
+				// This expects a comma separated list of values.
+				if($op == 'IN'){
+					$statement = array_map('trim', explode(',', $statement));
+				}
 				break;
 			}
 		}
