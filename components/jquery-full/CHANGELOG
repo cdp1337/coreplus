@@ -1,3 +1,8 @@
+JQuery-Full 1.8.3~core2
+
+	* Added jquery.waypoints plugin into package.
+	--Charlie Powell <charlie@eval.bz>  Mon, 04 Feb 2013 02:04:39 -0500
+
 JQuery-Full 1.8.3~core1
 
 	* Updated jQuery to 1.8.3

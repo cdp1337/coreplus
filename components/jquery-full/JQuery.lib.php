@@ -132,4 +132,17 @@ abstract class JQuery {
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
+
+	public static function Include_waypoints(){
+		// I need jquery first.
+		self::IncludeJQuery();
+
+		$base = 'waypoints';
+
+		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
+		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+
+		// IMPORTANT!  Tells the script that the include succeeded!
+		return true;
+	}
 }
