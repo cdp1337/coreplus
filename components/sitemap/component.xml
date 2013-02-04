@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Sitemap" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="Sitemap" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.1.2"/>
+		<require name="core" type="component" version="2.4.3"/>
 	</requires>
 	<files>
-		<file filename="controllers/SitemapController.php" md5="ba28464ece7d3284aeaa81327e51599e">
+		<file filename="CHANGELOG" md5="d81446f0d7cf7d97eb4c6ca44d87cd23"/>
+		<file filename="controllers/SitemapController.php" md5="94cef4cd519a8fc2b212a338da2bd29a">
 			<controller name="SitemapController"/>
 		</file>
 	</files>
@@ -17,6 +18,7 @@
 	<assets/>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -4,16 +4,35 @@ class SitemapController extends Controller_2_1 {
 	public function index(){
 		$view  = $this->getView();
 		$req   = $this->getPageRequest();
-		// Give me every registered (public) page!
-		$pages = PageModel::Find(null, null, 'title');
-		$user  = User::Factory();
 
+		// Give me every registered (public) page!
+		$factory = new ModelFactory('PageModel');
+		$factory->where('selectable = 1');
+		$factory->order('title');
+		// Multisite?
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			$factory->whereGroup(
+				'OR',
+				array(
+					'site = ' . MultiSiteHelper::GetCurrentSiteID(),
+					'site = -1'
+				)
+			);
+		}
+		// Run this through the streamer, just in case there are a lot of pages...
+		$stream = new DatasetStream($factory->getDataset());
+
+		//$user  = User::Factory();
+		$user = \Core\user();
 		$toshow = array();
-		foreach($pages as $page){
-			if($user->checkAccess($page->get('access'))){
+		while(($record = $stream->getRecord())){
+			if($user->checkAccess( $record['access'] )){
+				$page = new PageModel();
+				$page->_loadFromRecord($record);
 				$toshow[] = $page;
 			}
 		}
+
 
 		// This page allows for a few content types.
 		switch($req->ctype){
