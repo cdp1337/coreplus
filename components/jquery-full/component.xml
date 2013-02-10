@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8.3~core2" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8.3~core3" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="1.9.0" operation="ge"/>
 	</requires>
@@ -103,7 +103,7 @@
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.min.js" md5="28fb224b45d2fdb5e5eef85d2dfc8458"/>
 		<file filename="assets/js/jquery/jquery.ui.readonly.js" md5="3de4b84a6cdbc15e6e42514d80bd743b"/>
 		<file filename="assets/js/jquery/jquery.ui.readonly.min.js" md5="ae62f410564d47cfec4593a0d5e1ffda"/>
-		<file filename="assets/js/jquery/jqueryui.timepicker.js" md5="cc5adcc0e1e6b0a1cd2a26daf6b52903"/>
+		<file filename="assets/js/jquery/jqueryui.timepicker.js" md5="bdf53e3967349b2fc3bb47f91d25412a"/>
 		<file filename="assets/js/jquery/tmpl.js" md5="5e2855f4f4a4fd07ac343c9f0823d67f"/>
 		<file filename="assets/js/jquery/tmpl.min.js" md5="411df7e2bc659d35015f7fdb7432b331"/>
 		<file filename="assets/js/jquery/waypoints.js" md5="820569d0c9032595fcc6f57a96be6b5f"/>
@@ -111,7 +111,7 @@
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="1ad4f3092558110ddd441ec5253b92dd"/>
+		<file filename="CHANGELOG" md5="e3a42cab215bd7bafac00b130641b951"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
 		<file filename="JQuery.lib.php" md5="dd6a768ad47b05990fde77a3da38a728">
 			<class name="JQuery"/>
@@ -137,6 +137,7 @@
 		<upgrade from="1.8.0~core3" to="1.8.2~core1"/>
 		<upgrade from="1.8.2~core1" to="1.8.3~core1"/>
 		<upgrade from="1.8.3~core1" to="1.8.3~core2"/>
+		<upgrade from="1.8.3~core2" to="1.8.3~core3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
