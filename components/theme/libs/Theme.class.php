@@ -149,7 +149,7 @@ class Theme{
 	 * @return string
 	 */
 	public function getBaseDir($prefix = ROOT_PDIR){
-		return $prefix . 'themes/' . $this->_name . '/';
+		return $prefix . 'themes/' . strtolower($this->_name) . '/';
 	}
 	
 	/**

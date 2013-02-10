@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Theme" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Theme" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.0"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
@@ -10,12 +10,12 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="1c4719c88352ba17f97c6a43f21ecea3"/>
+		<file filename="CHANGELOG" md5="db0213011c813e4d31956308773e70a1"/>
 		<file filename="controllers/ThemeController.class.php" md5="c7e54445489468fe0c8b77fb99e9e68f">
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
-		<file filename="libs/Theme.class.php" md5="14c775a4e0efdd66e307aafc669a59ad">
+		<file filename="libs/Theme.class.php" md5="8a7bab5033d13b0555b31f3db8cbdfdb">
 			<class name="Theme"/>
 		</file>
 		<file filename="libs/ThemeHandler.class.php" md5="2aa86ad81445e12bdd46cb06d450723b">
@@ -30,7 +30,7 @@
 		<file filename="templates/pages/theme/widgets_add.tpl" md5="ea20ae172979c68410c6da05813753a9"/>
 	</view>
 	<pages>
-		<page baseurl="/Theme" parenturl="/Admin" admin="1" access="g:admin" title="Theme Manager"/>
+		<page baseurl="/theme" parenturl="/admin" admin="1" access="g:admin" title="Theme Manager"/>
 	</pages>
 	<configs>
 		<config key="/theme/filestore/preview-size-lg" type="int" default="64" description=""/>
@@ -50,6 +50,7 @@
 		<upgrade from="1.9.0" to="1.9.1"/>
 		<upgrade from="1.9.1" to="1.9.2"/>
 		<upgrade from="1.9.2" to="2.0.0"/>
+		<upgrade from="2.0.0" to="2.0.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
