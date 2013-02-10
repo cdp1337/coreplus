@@ -43,7 +43,7 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="9bd76136ebc3395e33b33b4b469817b2"/>
-		<file filename="core/CHANGELOG" md5="e37616069c9ee42e46afc858d350e726"/>
+		<file filename="core/CHANGELOG" md5="06e9404a51197d606e0081e0c496d8ae"/>
 		<file filename="core/bootstrap.compiled.php" md5="68066997e783963f44de2865f7dbbc51">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>

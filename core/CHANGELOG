@@ -15,7 +15,7 @@ Core Plus 2.4.4
 	* Added support for Date based model columns in the form system.
 	* Updated many of the form element styles.
 	* Minor fix in the packager for CHANGELOG management.
-	--Charlie Powell <charlie@eval.bz>  Sat, 09 Feb 2013 23:15:11 -0500
+	--Charlie Powell <charlie@eval.bz>  Sat, 09 Feb 2013 23:36:50 -0500
 
 Core Plus 2.4.3
 

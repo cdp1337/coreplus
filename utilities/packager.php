@@ -848,123 +848,15 @@ function process_component($component, $forcerelease = false){
 				if($comp->getName() == 'core'){
 					// Core's changelog is located in the core directory.
 					$file .= 'core/CHANGELOG';
-					$headerprefix = 'Core Plus';
-					$header = 'Core Plus ' . $version . "\n";
+					$name = 'Core Plus';
 				}
 				else{
 					// Nope, no extension.
 					$file .= 'CHANGELOG';
-					$headerprefix = $comp->getName();
-					// The header line will be exactly [name] [version].
-					$header = $comp->getName() . ' ' . $version . "\n";
+					$name = $comp->getName();
 				}
 
-
-				$changelog = '';
-				// I also need to remember what's before and after the changelog, (before is the more likely case).
-				$beforechangelog = '';
-				$afterchangelog = '';
-
-				// Start reading the file contents until I find the header, (probably on line 1, but you never know).
-				$fh = fopen($file, 'r');
-				if(!$fh){
-					// Hmm, create it?...
-					touch($file);
-					$fh = fopen($file, 'r');
-				}
-				// Still no?
-				if(!$fh){
-					die('Unable to create file ' . $file . ' for reading or writing!');
-				}
-				$inchange = false;
-				while(!feof($fh)){
-					$line = fgets($fh, 512);
-
-					// Does this line look like the exact header?
-					if($line == $header){
-						$inchange = true;
-						continue;
-					}
-
-					// Does this line look like the beginning of another header?...
-					if($inchange && preg_match('/^' . $headerprefix . ' .+$/', $line)){
-						$inchange = false;
-					}
-
-					if($inchange){
-						$line = trim($line); // trim whitespace and newlines.
-						if(strpos($line, '* ') === 0){
-							// line starts with *[space], it's a comment!
-							$line = substr($line, 2);
-							$changelog .= $line . "\n";
-						}
-						elseif(strpos($line, '--') === 0){
-							$inchange = false;
-						}
-						elseif($line == ''){
-							// Skip blank lines
-						}
-						else{
-							// It seems to be a continuation of the last line.  Tack it onto there!
-							$changelog = substr($changelog, 0, -1) . ' ' . $line . "\n";
-						}
-					}
-					elseif($changelog){
-						// After!
-						$afterchangelog .= $line;
-					}
-					else{
-						// Before!
-						$beforechangelog .= $line;
-					}
-				}
-				fclose($fh);
-
-				// Is there even any changelog text here?  If not switch the "before" content to after.
-				// This will ensure that new version entries are always at the top of the file!
-				if(!$changelog && $beforechangelog){
-					$afterchangelog = $beforechangelog;
-					$beforechangelog = '';
-				}
-
-				// Put a note in the header.
-				//$changelog = 'Enter the changelog items below, each item separated by a newline.' . "\n" . ';--- ENTER CHANGELOG BELOW ---;' . "\n\n" . $changelog;
-
-				$changelog = CLI::PromptUser('Enter the changelog.', 'textarea', $changelog);
-
-				// I need to transpose the text only changelog back to a regular format.
-				$changeloglines = '';
-				$x = 0;
-				foreach(explode("\n", $changelog) as $line){
-					++$x;
-				//	if($x <= 2) continue;
-					$line = trim($line);
-					if(!$line) continue;
-					// I need to produce a pretty line here, it takes some finesse.
-					//$linearray = array_map('trim', explode("\n", wordwrap($line, 70, "\n")));
-					//$changeloglines .= "\t* " . implode("\n\t  ", $linearray) . "\n";
-
-					/// hehehe, just because I can do this all in one "line".... :p
-					$changeloglines .= "\t* " .
-						implode(
-							"\n\t  ",
-							array_map(
-								'trim',
-								explode(
-									"\n",
-									wordwrap($line, 90, "\n")
-								)
-							)
-						) .
-						"\n";
-
-					//$changeloglines .= "\t* " . wordwrap($line, 70, "\n\t  ") . "\n";
-				}
-
-				//echo $changeloglines; die('halting'); // DEBUG
-
-				// Write this back out to that file :)
-				file_put_contents($file, $beforechangelog . $header . "\n" . $changeloglines . "\n" . $afterchangelog);
+				manage_changelog($file, $name, $version);
 				break;
 			//case 'dbtables':
 			//	$comp->setDBSchemaTableNames(explode("\n", CLI::PromptUser('Enter the tables that are included in this component', 'textarea', implode("\n", $comp->getDBSchemaTableNames()))));
@@ -1200,6 +1092,7 @@ function process_theme($theme, $forcerelease = false){
 	$assetfiles = array();
 	$skinfiles  = array();
 	$viewfiles  = array();
+	$name       = $t->getName();
 
 	echo "Scanning files for metacode...";
 	foreach($it as $file){
@@ -1236,12 +1129,12 @@ function process_theme($theme, $forcerelease = false){
 		$opts = array(
 			'editvers'   => 'Edit Version',
 			'editdesc'   => 'Edit Description',
-			//'editchange' => 'Edit Changelog',
+			'editchange' => 'Edit Changelog (for version ' . $version . ')',
 			'printdebug' => 'DEBUG - Print the XML',
 			'save' => 'Finish Editing, Save it!',
 			'exit' => 'Abort and exit without saving changes',
 		);
-		$ans = CLI::PromptUser('What do you want to edit for theme ' . $theme . ' ' . $version, $opts);
+		$ans = CLI::PromptUser('What do you want to edit for theme ' . $name . ' ' . $version, $opts);
 
 		switch($ans){
 			case 'editvers':
@@ -1253,7 +1146,10 @@ function process_theme($theme, $forcerelease = false){
 				$t->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $t->getDescription()));
 				break;
 			case 'editchange':
-				$t->setChangelog(CLI::PromptUser('Enter the changelog.', 'textarea', $t->getChangelog()));
+				// Lookup the changelog text of this current version.
+				$file = $t->getBaseDir() . 'CHANGELOG';
+
+				manage_changelog($file, 'Theme/' . $name, $version);
 				break;
 			case 'printdebug':
 				echo $t->getRawXML() . NL;
@@ -1599,6 +1495,124 @@ function get_exported_component($component){
 
 	if(!isset($_cversions[$component])) return array('version' => null, 'signed' => false);
 	else return $_cversions[$component];
+}
+
+/**
+ * Prompt the user for changes and write those changes back to a set changelog in the correct format.
+ */
+function manage_changelog($file, $name, $version){
+
+	$headerprefix = $name;
+
+	// The header line will be exactly [name] [version].
+	$header = $name. ' ' . $version . "\n";
+
+	$changelog = '';
+	// I also need to remember what's before and after the changelog, (before is the more likely case).
+	$beforechangelog = '';
+	$afterchangelog = '';
+
+	// Start reading the file contents until I find the header, (probably on line 1, but you never know).
+	$fh = fopen($file, 'r');
+	if(!$fh){
+		// Hmm, create it?...
+		touch($file);
+		$fh = fopen($file, 'r');
+	}
+	// Still no?
+	if(!$fh){
+		die('Unable to create file ' . $file . ' for reading or writing!');
+	}
+	$inchange = false;
+	while(!feof($fh)){
+		$line = fgets($fh, 512);
+
+		// Does this line look like the exact header?
+		if($line == $header){
+			$inchange = true;
+			continue;
+		}
+
+		// Does this line look like the beginning of another header?...
+		if($inchange && stripos($line, $headerprefix) === 0){
+		//if($inchange && preg_match('/^' . $headerprefix . ' .+$/i', $line)){
+			$inchange = false;
+		}
+
+		if($inchange){
+			$line = trim($line); // trim whitespace and newlines.
+			if(strpos($line, '* ') === 0){
+				// line starts with *[space], it's a comment!
+				$line = substr($line, 2);
+				$changelog .= $line . "\n";
+			}
+			elseif(strpos($line, '--') === 0){
+				$inchange = false;
+			}
+			elseif($line == ''){
+				// Skip blank lines
+			}
+			else{
+				// It seems to be a continuation of the last line.  Tack it onto there!
+				$changelog = substr($changelog, 0, -1) . ' ' . $line . "\n";
+			}
+		}
+		elseif($changelog){
+			// After!
+			$afterchangelog .= $line;
+		}
+		else{
+			// Before!
+			$beforechangelog .= $line;
+		}
+	}
+	fclose($fh);
+
+	// Is there even any changelog text here?  If not switch the "before" content to after.
+	// This will ensure that new version entries are always at the top of the file!
+	if(!$changelog && $beforechangelog){
+		$afterchangelog = $beforechangelog;
+		$beforechangelog = '';
+	}
+
+	// Put a note in the header.
+	//$changelog = 'Enter the changelog items below, each item separated by a newline.' . "\n" . ';--- ENTER CHANGELOG BELOW ---;' . "\n\n" . $changelog;
+
+	$changelog = CLI::PromptUser('Enter the changelog.', 'textarea', $changelog);
+
+	// I need to transpose the text only changelog back to a regular format.
+	$changeloglines = '';
+	$x = 0;
+	foreach(explode("\n", $changelog) as $line){
+		++$x;
+		//	if($x <= 2) continue;
+		$line = trim($line);
+		if(!$line) continue;
+		// I need to produce a pretty line here, it takes some finesse.
+		//$linearray = array_map('trim', explode("\n", wordwrap($line, 70, "\n")));
+		//$changeloglines .= "\t* " . implode("\n\t  ", $linearray) . "\n";
+
+		/// hehehe, just because I can do this all in one "line".... :p
+		$changeloglines .= "\t* " .
+			implode(
+				"\n\t  ",
+				array_map(
+					'trim',
+					explode(
+						"\n",
+						wordwrap($line, 90, "\n")
+					)
+				)
+			) .
+			"\n";
+
+		//$changeloglines .= "\t* " . wordwrap($line, 70, "\n\t  ") . "\n";
+	}
+
+	//echo $changeloglines; die('halting'); // DEBUG
+
+	// Write this back out to that file :)
+	file_put_contents($file, $beforechangelog . $header . "\n" . $changeloglines . "\n" . $afterchangelog);
 }
 
 
