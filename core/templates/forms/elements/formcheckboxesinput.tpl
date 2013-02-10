@@ -1,8 +1,7 @@
 <div class="{$element->getClass()} {$element->get('id')}">
 	{if $element->get('title')}
-		<span>{$element->get('title')|escape}</span>
+		<span class="checkboxes-label">{$element->get('title')|escape}</span>
 	{/if}
-	
 
 	{foreach from=$element->get('options') item=title key=key}
 		<label>

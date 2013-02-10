@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 04 Feb 2013 15:28:30 -0500
+ * @compiled Sat, 09 Feb 2013 19:40:42 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -903,6 +903,7 @@ const ATT_TYPE_INT = 'int';
 const ATT_TYPE_FLOAT = 'float';
 const ATT_TYPE_BOOL = 'boolean';
 const ATT_TYPE_ENUM = 'enum';
+const ATT_TYPE_UUID = '__uuid';
 const ATT_TYPE_ID = '__id';
 const ATT_TYPE_UPDATED = '__updated';
 const ATT_TYPE_CREATED = '__created';
@@ -1078,6 +1079,19 @@ case Model::ATT_TYPE_ID:
 $dat->setID($k, $this->_data[$k]);
 $idcol = $k; // Remember this for after the save.
 break;
+case Model::ATT_TYPE_UUID:
+if($this->_data[$k]){
+$nv = $this->_data[$k];
+$dat->setID($k, $nv);
+}
+else{
+$nv = Core::GenerateUUID();
+$dat->insert($k, $nv);
+$this->_data[$k] = $nv;
+$dat->setID($k, $nv);
+}
+$idcol = $k;
+break;
 case Model::ATT_TYPE_SITE:
 if(
 Core::IsComponentAvailable('enterprise') &&
@@ -1123,6 +1137,7 @@ $dat->update($k, $nv);
 $this->_data[$k] = $nv;
 continue 2;
 case Model::ATT_TYPE_ID:
+case Model::ATT_TYPE_UUID:
 $dat->setID($k, $this->_data[$k]);
 $idcol = $k; // Remember this for after the save.
 continue 2;
@@ -1242,7 +1257,8 @@ return $v;
 }
 public function set($k, $v) {
 if (array_key_exists($k, $this->_data)) {
-if ($this->_data[$k] == $v) return false; // No change needed.
+if($this->_data[$k] === null && $v === null) return false; // No change needed.
+elseif ($this->_data[$k] !== null && $this->_data[$k] == $v) return false; // No change needed.
 $this->validate($k, $v, true);
 $v = $this->translateKey($k, $v);
 $this->_setLinkKeyPropagation($k, $v);
@@ -1697,6 +1713,10 @@ if($column->type == Model::ATT_TYPE_ID && !$column->maxlength){
 $column->maxlength = 15;
 $column->autoinc = true;
 }
+if($column->type == Model::ATT_TYPE_UUID){
+$column->maxlength = 21;
+$column->autoinc = false;
+}
 if($column->type == Model::ATT_TYPE_INT && !$column->maxlength){
 $column->maxlength = 15;
 }
@@ -1804,6 +1824,7 @@ if(implode(',', $this->options) != implode(',', $col->options)) return false;
 $typematches = array(
 array(
 Model::ATT_TYPE_INT,
+Model::ATT_TYPE_UUID,
 Model::ATT_TYPE_CREATED,
 Model::ATT_TYPE_UPDATED,
 Model::ATT_TYPE_SITE,
@@ -4051,6 +4072,9 @@ $node = $this->_xmlloader->getElement('pages');
 foreach ($node->getElementsByTagName('page') as $subnode) {
 $m = new PageModel(-1, $subnode->getAttribute('baseurl'));
 $action = ($m->exists()) ? 'Updated' : 'Added';
+$admin = $subnode->getAttribute('admin');
+$selectable = ($admin ? 0 : 1); // Defaults
+if($subnode->getAttribute('selectable') !== '') $selectable = $subnode->getAttribute('selectable');
 if (!$m->get('rewriteurl')) {
 if ($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
 else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
@@ -4058,8 +4082,8 @@ else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
 if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
 if ($m->get('access') == '*') $m->set('access', $subnode->getAttribute('access'));
 if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
-$m->set('widget', $subnode->getAttribute('widget'));
-$m->set('admin', $subnode->getAttribute('admin'));
+$m->set('admin', $admin);
+$m->set('selectable', $selectable);
 if ($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';
 }
 return ($changes > 0) ? $changes : false;
@@ -7768,7 +7792,7 @@ self::$Instance->destroy(session_id());
 }
 public static function ForceSave(){
 $session = self::$Instance;
-$session->write(session_id(), $_SESSION);
+$session->write(session_id(), serialize($_SESSION));
 }
 private static function _GetModel($session_id) {
 $model = new SessionModel($session_id);
@@ -9282,7 +9306,7 @@ if ($this->contenttype == View::CTYPE_HTML) header('Content-Type: text/html; cha
 else header('Content-Type: ' . $this->contenttype);
 }
 header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? Core::GetComponent()->getVersion() : ''));
-header('X-FRAME-OPTIONS', 'SAMEORIGIN');
+header('X-Frame-Options: SAMEORIGIN');
 }
 if(SSL_MODE != SSL_MODE_DISABLED){
 if($this->ssl && !SSL){
@@ -9878,6 +9902,7 @@ class Form extends FormGroup {
 public static $Mappings = array(
 'checkbox'         => 'FormCheckboxInput',
 'checkboxes'       => 'FormCheckboxesInput',
+'date'             => 'FormDateInput',
 'file'             => 'FormFileInput',
 'hidden'           => 'FormHiddenInput',
 'pageinsertables'  => 'FormPageInsertables',
@@ -10029,6 +10054,7 @@ $this->set('___' . $prefix . 'pks', $pks);
 }
 foreach ($s as $k => $v) {
 if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
+if($new && $v['type'] == Model::ATT_TYPE_UUID) continue;
 if (!$new && in_array($k, $i['primary'])) continue;
 $formatts = array(
 'type' => null,
@@ -10088,6 +10114,10 @@ $opts = $v['options'];
 if ($v['null']) $opts = array_merge(array('' => '-Select One-'), $opts);
 $el->set('options', $opts);
 if ($v['default']) $el->set('value', $v['default']);
+}
+elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATE){
+$formatts['datepicker_dateFormat'] = 'yy-mm-dd';
+$el = FormElement::Factory('date');
 }
 else {
 die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');

@@ -1,2 +1,16 @@
-{assign var='type' value='checkbox'}
-{include file="forms/elements/_standard_elements.tpl"}
+
+<div class="{$element->getClass()} {$element->get('id')}">
+
+	{if $element->get('title')}
+		<label for="{$element->get('id')}">{$element->get('title')|escape}</label>
+	{/if}
+
+	<input type="checkbox" {$element->getInputAttributes()}>
+
+
+
+{if $element->get('description')}
+	<p class="formdescription">{$element->get('description')}</p>
+{/if}
+
+</div>

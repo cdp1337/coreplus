@@ -767,20 +767,20 @@ function process_component($component, $forcerelease = false){
 
 
 				// Well... get the classes!
-				preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller_2_1/im', $fconts, $ret);
+				preg_match_all('/^\s*(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller_2_1/im', $fconts, $ret);
 				foreach($ret[2] as $foundclass){
 					$filedat['controllers'][] = $foundclass;
 				}
 
 				// Add any class found in this file. (skipping the ones I already found)
-				preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
+				preg_match_all('/^\s*(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
 				foreach($ret[2] as $foundclass){
 					if(in_array($foundclass, $filedat['controllers'])) continue;
 					$filedat['classes'][] = $foundclass;
 				}
 
 				// Allow interfaces to be associated as a provided element too.
-				preg_match_all('/^(interface)[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
+				preg_match_all('/^\s*(interface)[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
 				foreach($ret[2] as $foundclass){
 					$filedat['interfaces'][] = $foundclass;
 				}
@@ -1004,12 +1004,21 @@ function process_component($component, $forcerelease = false){
 		// This is done here to signify that the version has actually been bundled up.
 		// Lookup the changelog text of this current version.
 		$file = $comp->getBaseDir();
-		// Core's changelog is located in the core directory.
-		if($comp->getName() == 'core') $file .= 'core/';
-		$file .= 'CHANGELOG'; // Nope, no extension.
 
-		// The header line will be exactly [name] [version].
-		$header = $comp->getName() . ' ' . $version . "\n";
+		if($comp->getName() == 'core'){
+			// Core's changelog is located in the core directory.
+			$file .= 'core/CHANGELOG';
+			$headerprefix = 'Core Plus';
+			$header = 'Core Plus ' . $version . "\n";
+		}
+		else{
+			// Nope, no extension.
+			$file .= 'CHANGELOG';
+			$headerprefix = $comp->getName();
+			// The header line will be exactly [name] [version].
+			$header = $comp->getName() . ' ' . $version . "\n";
+		}
+
 		$timestamp = "\t--$packagername <$packageremail>  " . Time::GetCurrent(Time::TIMEZONE_DEFAULT, Time::FORMAT_RFC2822) . "\n\n";
 		$changelog = '';
 
@@ -1055,7 +1064,7 @@ function process_component($component, $forcerelease = false){
 					$wrotetimestamp = true;
 					$inchange = false;
 				}
-				elseif(strpos($line, $comp->getName()) === 0){
+				elseif(strpos($line, $headerprefix) === 0){
 					// Wait, I found another header, but I haven't written the timestamp yet!
 					// :/
 					$changelog .= $timestamp . $line;

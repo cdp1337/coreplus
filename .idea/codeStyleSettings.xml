@@ -19,7 +19,7 @@
         <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="thead,tbody,tfoot" />
         <option name="HTML_DONT_ADD_BREAKS_IF_INLINE_CONTENT" value="" />
         <CssCodeStyleSettings>
-          <option name="KEEP_SINGLE_LINE_BLOCKS" value="true" />
+          <option name="BLANK_LINES_BETWEEN_BLOCKS" value="0" />
         </CssCodeStyleSettings>
         <JSCodeStyleSettings>
           <option name="ALIGN_OBJECT_PROPERTIES" value="1" />

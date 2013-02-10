@@ -1,12 +1,15 @@
 <div class="{$element->getClass()} {$element->get('id')}">
-	{if $element->get('title')}
-		<label for="{$element->get('id')}">{$element->get('title')|escape}</label>
-	{/if}
+	<div class="formelement-labelinputgroup">
+		{if $element->get('title')}
+			<label for="{$element->get('id')}">{$element->get('title')|escape}</label>
+		{/if}
 
-	<div class="keywords-multi-select">
-		<input type="text"{$element->getInputAttributes()}>
-		<div class="clear"></div>
+		<div class="keywords-multi-select">
+			<input type="text"{$element->getInputAttributes()}>
+			<div class="clear"></div>
+		</div>
 	</div>
+	<div class="clear"></div>
 
 	{if $element->get('description')}
 		<p class="formdescription">{$element->get('description')}</p>

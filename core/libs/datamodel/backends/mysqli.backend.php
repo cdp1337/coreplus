@@ -492,7 +492,12 @@ class DMI_mysqli_backend implements DMI_Backend {
 		$dataset->num_rows = $this->_conn->affected_rows;
 		$dataset->_data = array();
 		// Inserts don't have any data, but do have an ID, (which mysql handles internally)
-		if($dataset->_idcol) $dataset->_idval = $this->_conn->insert_id;
+		if($dataset->_idcol){
+			// Unless it's set externally, say a UUID.
+			if(!$dataset->_idval){
+				$dataset->_idval = $this->_conn->insert_id;
+			}
+		}
 	}
 
 	private function _executeUpdate(Dataset $dataset){
@@ -1078,6 +1083,15 @@ class MySQLi_Schema_Column {
 				$column->type = Model::ATT_TYPE_FLOAT;
 				$column->precision = substr($this->type, 8, -1);
 			}
+			elseif(
+				strpos($this->type, 'char(') !== false &&
+				strpos($this->type, '21') !== false &&
+				isset($index['PRIMARY']) &&
+				in_array($column->field, $index['PRIMARY']['columns'])
+			){
+				$column->type = Model::ATT_TYPE_UUID;
+				$column->maxlength = 21;
+			}
 			else{
 				// Well huhm...
 				$column->type = 'text';
@@ -1141,6 +1155,9 @@ class MySQLi_Schema_Column {
 				$this->type = 'int(' . $column->maxlength . ')';
 				// IDs are also auto_increment!
 				$this->extra = 'auto_increment';
+				break;
+			case Model::ATT_TYPE_UUID:
+				$this->type = 'char(21)';
 				break;
 			case Model::ATT_TYPE_STRING:
 				$maxlength = ($column->maxlength)? $column->maxlength : 255; // It needs something...

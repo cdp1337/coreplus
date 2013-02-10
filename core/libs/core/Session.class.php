@@ -195,7 +195,7 @@ class Session implements SessionHandlerInterface {
 	 */
 	public static function ForceSave(){
 		$session = self::$Instance;
-		$session->write(session_id(), $_SESSION);
+		$session->write(session_id(), serialize($_SESSION));
 	}
 
 

@@ -1363,6 +1363,9 @@ class Component_2_1 {
 
 			// Just something to help the log.
 			$action = ($m->exists()) ? 'Updated' : 'Added';
+			$admin = $subnode->getAttribute('admin');
+			$selectable = ($admin ? 0 : 1); // Defaults
+			if($subnode->getAttribute('selectable') !== '') $selectable = $subnode->getAttribute('selectable');
 
 			// Do not "update" value, keep whatever the user set previously.
 			if (!$m->get('rewriteurl')) {
@@ -1375,8 +1378,9 @@ class Component_2_1 {
 			if ($m->get('access') == '*') $m->set('access', $subnode->getAttribute('access'));
 			// Do not update parent urls if the page already exists.
 			if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
-			$m->set('widget', $subnode->getAttribute('widget'));
-			$m->set('admin', $subnode->getAttribute('admin'));
+			//$m->set('widget', $subnode->getAttribute('widget'));
+			$m->set('admin', $admin);
+			$m->set('selectable', $selectable);
 			if ($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';
 		}
 

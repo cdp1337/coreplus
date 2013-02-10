@@ -126,11 +126,11 @@
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT page EMPTY>
 <!ATTLIST page
-	title CDATA #IMPLIED
+	baseurl CDATA #REQUIRED
+	title CDATA #REQUIRED
 	access CDATA #IMPLIED
-	widget CDATA #IMPLIED
-	admin CDATA #IMPLIED
-	baseurl CDATA #IMPLIED
+	admin (0|1) "0"
+	selectable (0|1) "1"
 >
 
 <!--- Put your DTDDoc comment here. -->

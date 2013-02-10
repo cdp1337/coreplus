@@ -619,6 +619,7 @@ class Form extends FormGroup {
 	public static $Mappings = array(
 		'checkbox'         => 'FormCheckboxInput',
 		'checkboxes'       => 'FormCheckboxesInput',
+		'date'             => 'FormDateInput',
 		'file'             => 'FormFileInput',
 		'hidden'           => 'FormHiddenInput',
 		'pageinsertables'  => 'FormPageInsertables',
@@ -877,6 +878,9 @@ class Form extends FormGroup {
 			// Skip the AI column if it doesn't exist.
 			if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
 
+			// Skip the UUID column if it doesn't exist too.
+			if($new && $v['type'] == Model::ATT_TYPE_UUID) continue;
+
 			// These are already taken care above in the SESSION data.
 			if (!$new && in_array($k, $i['primary'])) continue;
 
@@ -957,6 +961,10 @@ class Form extends FormGroup {
 				if ($v['null']) $opts = array_merge(array('' => '-Select One-'), $opts);
 				$el->set('options', $opts);
 				if ($v['default']) $el->set('value', $v['default']);
+			}
+			elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATE){
+				$formatts['datepicker_dateFormat'] = 'yy-mm-dd';
+				$el = FormElement::Factory('date');
 			}
 			else {
 				die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');

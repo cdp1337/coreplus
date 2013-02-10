@@ -65,6 +65,10 @@ class Model implements ArrayAccess {
 	 */
 	const ATT_TYPE_ENUM = 'enum';
 	/**
+	 * This is a unique id for a table, but instead of relying on auto-increment, it's based on Core's GenerateUUID method.
+	 */
+	const ATT_TYPE_UUID = '__uuid';
+	/**
 	 * The auto-incrementing integer of a table
 	 */
 	const ATT_TYPE_ID = '__id';
@@ -542,6 +546,28 @@ class Model implements ArrayAccess {
 					$idcol = $k; // Remember this for after the save.
 					break;
 
+				case Model::ATT_TYPE_UUID:
+					if($this->_data[$k]){
+						// Yay, a UUID is already set, no need to really do much.
+						$nv = $this->_data[$k];
+						// It's already set and this will most likely be ignored, but may not be for UPDATE statements...
+						// although there shouldn't be any update statements here.... but ya never know
+						$dat->setID($k, $nv);
+					}
+					else{
+						// I need to generate a new key and set that.
+						$nv = Core::GenerateUUID();
+						// In this case, the database isn't going to care what the column is, other than the fact it's unique.
+						// It will be :)
+						$dat->insert($k, $nv);
+						// And I need to set this on the data so it's available next time.
+						$this->_data[$k] = $nv;
+						$dat->setID($k, $nv);
+					}
+					// Remember this for after the save.
+					$idcol = $k;
+					break;
+
 				case Model::ATT_TYPE_SITE:
 					if(
 						Core::IsComponentAvailable('enterprise') &&
@@ -612,6 +638,7 @@ class Model implements ArrayAccess {
 					$this->_data[$k] = $nv;
 					continue 2;
 				case Model::ATT_TYPE_ID:
+				case Model::ATT_TYPE_UUID:
 					$dat->setID($k, $this->_data[$k]);
 					$idcol = $k; // Remember this for after the save.
 					continue 2;
@@ -837,7 +864,8 @@ class Model implements ArrayAccess {
 		// $this->_data will always have the schema keys at least set to null.
 		if (array_key_exists($k, $this->_data)) {
 
-			if ($this->_data[$k] == $v) return false; // No change needed.
+			if($this->_data[$k] === null && $v === null) return false; // No change needed.
+			elseif ($this->_data[$k] !== null && $this->_data[$k] == $v) return false; // No change needed.
 
 			// Is there validation for this key?
 			// That function will handle all of this logic, (including the exception throwing)
@@ -1756,6 +1784,15 @@ class ModelSchema {
 				$column->autoinc = true;
 			}
 
+			if($column->type == Model::ATT_TYPE_UUID){
+				// A UUID is in the format of:
+				// siteid-timestamp-randomhex
+				// or [1-3 numbers] - [11-12 hex] - [4 hex]
+				// a total of up to 21 digits.
+				$column->maxlength = 21;
+				$column->autoinc = false;
+			}
+
 			if($column->type == Model::ATT_TYPE_INT && !$column->maxlength){
 				$column->maxlength = 15;
 			}
@@ -1997,6 +2034,7 @@ class ModelSchemaColumn {
 		$typematches = array(
 			array(
 				Model::ATT_TYPE_INT,
+				Model::ATT_TYPE_UUID,
 				Model::ATT_TYPE_CREATED,
 				Model::ATT_TYPE_UPDATED,
 				Model::ATT_TYPE_SITE,

@@ -1,3 +1,22 @@
+Core Plus 2.4.4
+
+	* Set the packager to allow whitespace before the class declaration.
+	* New form element: date input.  This uses jqueryui to render a datepicker on the form
+	  element.
+	* Some fixes for user permissions in multisite mode.  The permission cache is now cleared on
+	  page load when multisite is enabled.
+	* Added support for UUID column types in models.  These are treated exactly the same as IDs,
+	  but their values are generated via Core instead of the underlying database system and they
+	  are supported in multi-server modes.
+	* Added support for "selectable" as an attribute on the <page> directive in component.xml
+	  files.
+	* Added support for UUID based model columns in the form system.  They are respected the
+	  same as IDs.
+	* Added support for Date based model columns in the form system.
+	* Updated many of the form element styles.
+	* Minor fix in the packager for CHANGELOG management.
+	--Charlie Powell <charlie@eval.bz>  Sat, 09 Feb 2013 23:15:11 -0500
+
 Core Plus 2.4.3
 
 	* Fix in Core::CheckClass for when the file containing a given class is not found.  Now an

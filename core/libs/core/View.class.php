@@ -735,7 +735,7 @@ class View {
 			//mb_internal_encoding('utf-8');
 
 			header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? Core::GetComponent()->getVersion() : ''));
-			header('X-FRAME-OPTIONS', 'SAMEORIGIN');
+			header('X-Frame-Options: SAMEORIGIN');
 		}
 
 		// No SSL, skip all this!
