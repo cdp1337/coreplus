@@ -83,23 +83,23 @@ class User_datamodel_Backend extends User implements User_Backend{
 	public function setGroups($groups){
 		// If multimode is enabled, this will have to be a list of groups JUST for that site.
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-			// In this case, I need to be sure that the groups are loaded correctly.  getGroups will take care of that.
-			$this->getGroups();
-			// Now....
-			$site = MultiSiteHelper::GetCurrentSiteID();
-			// This subset will be blanked out.
-			$this->_groups[$site] = $groups;
+			// setSiteGroups will handle all the logic for mutlisite mode.
+			$this->setSiteGroups(MultiSiteHelper::GetCurrentSiteID(), $groups);
 		}
 		else{
 			$this->_groups = $groups;
+
+
+			if(sizeof($this->_groups) == 0){
+				$this->_getModel()->set('groups', '');
+			}
+			else{
+				$this->_getModel()->set('groups', json_encode($this->_groups));
+			}
 		}
 
-		if(sizeof($this->_groups) == 0){
-			$this->_getModel()->set('groups', '');
-		}
-		else{
-			$this->_getModel()->set('groups', json_encode($this->_groups));
-		}
+		// And clear the cache!
+		$this->clearAccessStringCache();
 	}
 
 	/**
@@ -126,6 +126,9 @@ class User_datamodel_Backend extends User implements User_Backend{
 		else{
 			$this->_getModel()->set('groups', json_encode($this->_groups));
 		}
+
+		// And clear the cache!
+		$this->clearAccessStringCache();
 	}
 
 

@@ -19,7 +19,7 @@ class UserAdminController extends Controller_2_1{
 		$filters->setName('user-admin');
 		$filters->haspagination = true;
 		$filters->hassort = true;
-		$filters->setSortkeys(array('email', 'active'));
+		$filters->setSortkeys(array('email', 'active', 'created'));
 		$filters->addElement(
 			'text',
 			array(

@@ -296,6 +296,17 @@ class User {
 	}
 
 	/**
+	 * Clear out the access string cache.
+	 *
+	 * This is useful if groups on a given user change.
+	 */
+	public function clearAccessStringCache(){
+		$this->_accessstringchecks = array();
+		$this->_resolvedpermissions = null;
+	}
+
+
+	/**
 	 * Check access for a given access string against this user.
 	 *
 	 * The access string is the core component to Core+ authentication.
@@ -530,7 +541,7 @@ class User {
 	 * Create a User object of the appropriate backend.
 	 *
 	 * @param string $backend
-	 * @return User
+	 * @return User_Backend
 	 */
 	public static function Factory($backend = null){
 		// Default to the Datamodel user object.

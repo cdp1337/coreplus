@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.1" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.2" name="User" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.4.1"/>
+		<require name="core" type="component" version="2.4.4"/>
 		<require name="security-suite" type="component" operation="ge" version="1.0.0"/>
 	</requires>
 	<smartyplugins directory="helpers/smarty-plugins/"/>
@@ -17,11 +17,12 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="68f93a263c951c92e4eedaaba44ff8eb"/>
-		<file filename="User.class.php" md5="84a3fb8bb8b700324a1febfb29ee977b">
+		<file filename="CHANGELOG" md5="93b85f1544126c5d484fecc9ff6d1e12"/>
+		<file filename="User.class.php" md5="22c0c949b303a702bf5c52ecb8ba7a17">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
+		<file filename="User.class.php~" md5="c873ad77e20f4a615afe339502752c2f"/>
 		<file filename="UserForm.class.php" md5="7fa4da270ed7edcb017a6e4cf8784585">
 			<class name="FormAccessStringInput"/>
 		</file>
@@ -34,16 +35,18 @@
 		<file filename="Widgets/UserWidget.class.php" md5="85affeee8ce7c56dad1e2ff6582bcb09">
 			<class name="UserWidget"/>
 		</file>
-		<file filename="backends/User_datamodel.backend.php" md5="1a298815d7c3397b5f02ffa89b74a498">
+		<file filename="backends/User_datamodel.backend.php" md5="92f4c736f63f341e834698b9a6bb1103">
 			<class name="User_datamodel_Backend"/>
 		</file>
+		<file filename="backends/User_datamodel.backend.php~" md5="2c12e634a461b970a666e436e51b6252"/>
 		<file filename="backends/User_facebook.backend.php" md5="27371946adaf1cf235d2e72b7866b45e">
 			<class name="User_facebook_Backend"/>
 		</file>
+		<file filename="component.xml~" md5="985d6fe3c68c8e40ed3fc845e19435d1"/>
 		<file filename="controllers/UserActivityController.php" md5="3a5257288e3e0d807f153ded60f0fc6b">
 			<controller name="UserActivityController"/>
 		</file>
-		<file filename="controllers/UserAdminController.php" md5="6af5fc87967ea54b3fb36d1ccc04dbe8">
+		<file filename="controllers/UserAdminController.php" md5="6e458662636d9e783407b161176d5ee2">
 			<controller name="UserAdminController"/>
 		</file>
 		<file filename="controllers/UserController.php" md5="5dacd0a7ec8cad5f36a52436a4900f9f">
@@ -96,9 +99,9 @@
 		<file filename="templates/widgets/userlogin/execute.tpl" md5="8b33f6adb9fdadf3a6f4e10f6722de2e"/>
 	</view>
 	<pages>
-		<page baseurl="/User/Login" admin="0" widget="0" access="!g:authenticated" title="Login"/>
-		<page baseurl="/User/Register" admin="0" widget="0" access="!g:authenticated" title="Register"/>
-		<page baseurl="/User/Logout" admin="0" widget="0" access="g:authenticated" title="Logout"/>
+		<page baseurl="/user/login" admin="0" widget="0" access="!g:authenticated" selectable="0" title="Login"/>
+		<page baseurl="/user/register" admin="0" widget="0" access="!g:authenticated" selectable="0" title="Register"/>
+		<page baseurl="/user/logout" admin="0" widget="0" access="g:authenticated" selectable="0" title="Logout"/>
 		<page baseurl="/useradmin" admin="1" access="g:admin" title="User Administration"/>
 		<page baseurl="/usergroupadmin" admin="1" access="g:admin" title="User Group Administration"/>
 		<page baseurl="/useractivity" admin="1" access="p:user_activity_list" title="User Activity"/>
@@ -160,6 +163,7 @@
 		<upgrade from="2.3.0" to="2.3.1"/>
 		<upgrade from="2.3.1" to="2.4.0"/>
 		<upgrade from="2.4.0" to="2.4.1"/>
+		<upgrade from="2.4.1" to="2.4.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

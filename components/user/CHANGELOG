@@ -1,3 +1,10 @@
+User 2.4.2
+
+	* Clear the permission cache upon setting groups on a given user.
+	* Added created as a sortable column on the user administration.
+	* New method, clearAccessStringCache on the user object.
+	--Charlie Powell <charlie@eval.bz>  Sun, 10 Feb 2013 00:01:01 -0500
+
 User 2.4.1
 
 	* Added better support for handling groups in multisite mode.
