@@ -170,13 +170,13 @@ class NavigationWidget extends Widget_2_1 {
 			$pages = PageModel::Find(array('admin = 1', 'baseurl != /admin'), null, 'title');
 		} else {
 			// Give me all the siblings of that baseurl.
-			$pages = PageModel::Find(array('parenturl' => $baseurl), null, 'title');
+			$pages = PageModel::Find(array('parenturl' => $baseurl, 'selectable' => 1), null, 'title');
 		}
 
 		$entries = array();
 		foreach ($pages as $page) {
 			if ($page->get('baseurl') == $model->get('baseurl')) {
-				$subpages   = PageModel::Find(array('parenturl' => $model->get('baseurl')), null, 'title');
+				$subpages   = PageModel::Find(array('parenturl' => $model->get('baseurl'), 'selectable' => 1), null, 'title');
 				$subentries = array();
 				foreach ($subpages as $subpage) {
 					$subentries[] = array('obj' => $subpage, 'children' => array(), 'class' => '');

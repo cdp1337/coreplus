@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.3" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.4" name="Navigation" execmode="web">
 	<requires>
-		<require name="core" type="component" operation="ge" version="2.4.0"/>
+		<require name="core" type="component" operation="ge" version="2.4.4"/>
 	</requires>
 	<files>
 		<file filename="CHANGELOG" md5="fff0a0bcf12970d16016e3ce977eefa7"/>
@@ -15,7 +15,7 @@
 		<file filename="models/NavigationEntry.model.php" md5="d143d8b99e34338ec178ee9282001044">
 			<class name="NavigationEntryModel"/>
 		</file>
-		<file filename="widgets/NavigationWidget.php" md5="7f4f092ef9a61e9c65bc2a92defaae65">
+		<file filename="widgets/NavigationWidget.php" md5="b5add557a41845f3dafd326911eb52e7">
 			<class name="NavigationWidget"/>
 		</file>
 	</files>
@@ -49,6 +49,7 @@
 		<upgrade from="2.1.0" to="2.1.1"/>
 		<upgrade from="2.1.1" to="2.1.2"/>
 		<upgrade from="2.1.2" to="2.1.3"/>
+		<upgrade from="2.1.3" to="2.1.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

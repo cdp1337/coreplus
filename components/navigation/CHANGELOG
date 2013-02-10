@@ -1,3 +1,8 @@
+Navigation 2.1.4
+
+	* Set the Siblings navigation widget to respect the selectable flag.
+	--Charlie Powell <charlie@eval.bz>  Sat, 09 Feb 2013 23:56:59 -0500
+
 Navigation 2.1.3
 
 	* Added multisite support.
