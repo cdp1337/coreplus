@@ -283,14 +283,14 @@ class ThemeController extends Controller_2_1{
 		$tplcontents = file_get_contents($filename);
 		preg_match_all("/\{widgetarea.*name=[\"'](.*)[\"'].*\}/isU", $tplcontents, $matches);
 
-		// I need to assemble a list of baseurls to search for as well.
-		// this is because if a page has baseurl="/abc", I don't want to display
+		// I need to assemble a list of installables to search for as well.
+		// this is because if a page has installable="/abc", I don't want to display
 		// widgets for installable="/def".
 		$installables = array(''); // Start with empty, they can go anywhere.
 		foreach($matches[0] as $str){
-			if(!strpos($str, 'baseurl')) continue;
+			if(!strpos($str, 'installable')) continue;
 
-			$baseurl = preg_replace('/.*baseurl="([^"]*)".*/', '$1', $str);
+			$baseurl = preg_replace('/.*installable="([^"]*)".*/', '$1', $str);
 			// This is required because matches can be fuzzy, probably won't, but can be.
 			// ie: /user-social/view/`$user->get('id')` probably won't be used to mark as installable,
 			// but /user-social/view might be.
@@ -311,13 +311,17 @@ class ThemeController extends Controller_2_1{
 			$where->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
 			$widgetfactory->where($where);
 		}
-		if(sizeof($installables)){
+
+		if(sizeof($installables) > 1){
 			$where = new DatasetWhereClause();
 			$where->setSeparator('OR');
 			foreach($installables as $baseurl){
 				$where->addWhereParts('installable', '=', $baseurl);
 			}
 			$widgetfactory->where($where);
+		}
+		else{
+			$widgetfactory->where('installable = ');
 		}
 
 		$widgets = $widgetfactory->get();

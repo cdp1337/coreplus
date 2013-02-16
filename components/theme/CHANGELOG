@@ -1,3 +1,8 @@
+Theme 2.0.2
+
+	* Support for the new installable widgets.
+	* Fixed the capitalization issue
+
 Theme 2.0.1
 
 	* Set the theme to return a strtolower string when requesting getBaseDir.  This allows for

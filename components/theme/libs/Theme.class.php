@@ -563,7 +563,7 @@ class Theme{
 	private function _installAssets(){
 		$assetbase = ConfigHandler::Get('/core/filestore/assetdir');
 		$coretheme = ConfigHandler::Get('/theme/selected');
-		$theme = $this->getName();
+		$theme = strtolower($this->getName());
 		$changes = array();
 		
 		foreach($this->_xmlloader->getElements('/assets/file') as $node){
