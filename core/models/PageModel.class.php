@@ -534,7 +534,7 @@ class PageModel extends Model {
 		}
 	}
 
-	public function setToFormElement($key, $element){
+	public function setToFormElement($key, FormElement $element){
 		if($key == 'page_template'){
 			// Make sure to set the element's templatename.
 			$element->set('templatename', $this->getBaseTemplateName());
