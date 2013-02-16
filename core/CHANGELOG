@@ -1,3 +1,13 @@
+Core Plus 2.4.5
+
+	* Made the hover controls enabled by default
+	* New admin hook system and dashboard, (still in beta).
+	* Switched all widgets to use the "installable" flag instead of baseurl for that attribute.
+	  This just helps with confusion between those two different elements.
+	* Fixed support for the "class" names on form elements
+	* Zip files that have a mimetype of application/octet-stream are now detected appropriately.
+	* Fixed the <aside><aside> error.  Widgets should have been divs instead of their aside.
+
 Core Plus 2.4.4
 
 	* Set the packager to allow whitespace before the class declaration.

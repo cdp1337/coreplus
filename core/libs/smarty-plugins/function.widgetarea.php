@@ -88,5 +88,5 @@ function smarty_function_widgetarea($params, $template) {
 	// Do some sanitizing for the css data
 	$class = 'widgetarea-' . strtolower(str_replace(' ', '', $name));
 
-	return '<aside class="widgetarea ' . $class . '" widgetarea="' . $name . '">' . $body . '</aside>';
+	return '<div class="widgetarea ' . $class . '" widgetarea="' . $name . '">' . $body . '</div>';
 }

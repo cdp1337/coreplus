@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.4" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.5" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -18,6 +18,7 @@
 		<hookregister name="/core/page/error-404" description="Called anytime there is a 404 error"/>
 		<hookregister name="/core/page/error-403" description="Called anytime there is a 403 error"/>
 		<hookregister name="/core/page/rendering" description="Called during page rendering.    This is called after the page execution, but just before the metadata and head data is finalized.    If you need something to modify data based on the page output, use this!"/>
+		<hookregister name="/core/admin/view" description="Called when an admin views the /admin page.  Useful for functions that need to inform the admin of happenings or what not."/>
 		<hook name="/core/components/loaded" call="CurrentPage::Singleton"/>
 		<hook name="/core/page/prerender" call="Core::_AttachCoreJavascript"/>
 		<hook name="/core/components/ready" call="Form::CheckSavedSessionData"/>
@@ -29,12 +30,6 @@
 	<includes>
 		<include filename="core/functions/Core.functions.php"/>
 	</includes>
-	<!-- @todo Delete these widgets in the upgrade. -->
-	<!--<widgets>
-		<widget baseurl="/page/siblingsnavigation" title="Page Siblings Nav"/>
-		<widget baseurl="/page/siblingsandchildrennavigation" title="Page Siblings w/Children Nav"/>
-		</widgets>
-	-->
 	<files>
 		<file filename="LICENSES/agpl-3.0.txt" md5="08657324f94cfae679f345f428c68f9b"/>
 		<file filename="LICENSES/apache-2.0.txt" md5="3b83ef96387f14655fc854ddc3c6bd57"/>
@@ -43,8 +38,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="9bd76136ebc3395e33b33b4b469817b2"/>
-		<file filename="core/CHANGELOG" md5="06e9404a51197d606e0081e0c496d8ae"/>
-		<file filename="core/bootstrap.compiled.php" md5="68066997e783963f44de2865f7dbbc51">
+		<file filename="core/CHANGELOG" md5="bf3c8c7732e0b1efa989bf71632e91ae"/>
+		<file filename="core/bootstrap.compiled.php" md5="0456b9127a71aba14cae16c1edff0c38">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -118,7 +113,7 @@
 		<file filename="core/bootstrap_postincludes.php" md5="66f9826e95d4764cb63ff94033b66e33"/>
 		<file filename="core/bootstrap_predefines.php" md5="a75579b94642f0f4fb7b7540f9909288"/>
 		<file filename="core/bootstrap_preincludes.php" md5="dcfb10510205563d42e2d02c8979cc42"/>
-		<file filename="core/controllers/AdminController.php" md5="14db7b1889ed4450e8c10e54eb9b4143">
+		<file filename="core/controllers/AdminController.php" md5="10e756865dc66cd519ad85859a94d27c">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/CoreController.php" md5="5036876e64219490e1451347ad063d63">
@@ -504,7 +499,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="2ab78b4d87dd9f2798e5b3443a1bee35">
+		<file filename="core/libs/core/Component_2_1.php" md5="3d355f837ea86f4efd3e4902c61e5315">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/Component_2_1.php~" md5="2d0415ad7d971656437322c0a324ce07"/>
@@ -539,12 +534,12 @@
 		<file filename="core/libs/core/FilterForm.class.php" md5="2be3ce31680deda0f296514e6b4bfeb0">
 			<class name="FilterForm"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="f99a9776e3d39e7166e0f592942eb2b3">
+		<file filename="core/libs/core/Form.class.php" md5="d5f53b3edabf9659bdb05653d1e2d91e">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php~" md5="bfdb3f416c953df960cd45208474b646"/>
+		<file filename="core/libs/core/Form.class.php~" md5="d09250fcac49eab0fbde0bbe1e1afaea"/>
 		<file filename="core/libs/core/HookHandler.class.php" md5="58ea42454371697c717de9fa01a9f956">
 			<class name="HookHandler"/>
 			<class name="Hook"/>
@@ -844,7 +839,7 @@
 		<file filename="core/libs/filestore/Directory_Backend.interface.php" md5="65d8078d0710d29d51f7b47bf6bb5271">
 			<interface name="Directory_Backend"/>
 		</file>
-		<file filename="core/libs/filestore/FileContentFactory.class.php" md5="ab92f5dcdab694cbfca71332fb7b3838">
+		<file filename="core/libs/filestore/FileContentFactory.class.php" md5="3e8c7bd263c75aff1130d6cae933c1cd">
 			<class name="FileContentFactory"/>
 		</file>
 		<file filename="core/libs/filestore/FileException.class.php" md5="657f6356182a91efb492fcdece04c008">
@@ -1018,7 +1013,7 @@
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="d8daf3f492d0c8a71e7b8ccf0cd70cc9"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="9ff0428278228b374379b3f08b84db52"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="4f0f7e198dc73658c361edc8d0369365"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="6c7017980d3ea7e2b77b155e310501eb"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="8368e8968d944aac9264fa80764cad69"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/smarty/README" md5="2280709acce0bf54217c12eff7932997"/>
 		<file filename="core/libs/smarty/SMARTY_2_BC_NOTES.txt" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
@@ -1350,7 +1345,7 @@
 		<file filename="core/models/WidgetInstanceModel.class.php" md5="00528251293b26c12e0974ff94f8a09c">
 			<class name="WidgetInstanceModel"/>
 		</file>
-		<file filename="core/models/WidgetModel.class.php" md5="f2818f7f49db2cc665554773558157d0">
+		<file filename="core/models/WidgetModel.class.php" md5="e2c5f6408e584083c47c35d248bc03b8">
 			<class name="WidgetModel"/>
 		</file>
 		<file filename="core/tests/CoreTest.php" md5="b32057eeddac833855c4fecc06c33b73">
@@ -1358,7 +1353,7 @@
 		</file>
 		<file filename="core/upgrades/240_to_241_pagemetas.php" md5="7887144c4964ca4e2ea91dca5fc3bb40"/>
 		<file filename="core/upgrades/242_to_243_page_selectable.php" md5="a00104bc754034508aa50efb4b61a183"/>
-		<file filename="core/widgets/AdminMenuWidget.php" md5="036fe58467121fbc844891c95282c3db">
+		<file filename="core/widgets/AdminMenuWidget.php" md5="2831f87f13e606f7cdef8b4deeb86a9e">
 			<class name="AdminMenuWidget"/>
 		</file>
 		<file filename="core/widgets/PageWidget.php" md5="612cd59aef22cda09804b489cb64f327">
@@ -1368,7 +1363,7 @@
 		<file filename="docs/core/filters.md" md5="9d25f83b7a38a9aab877a912e7a1d060"/>
 		<file filename="docs/core/resolvelink.md" md5="85817c90723a34bf7ec6be9f1d554f29"/>
 		<file filename="docs/models.md" md5="f8e6c6e34027ac2e608127af0c0a185f"/>
-		<file filename="docs/schemas/component.dtd" md5="1ace1bcea9ea09b897a0de68b489be58"/>
+		<file filename="docs/schemas/component.dtd" md5="3eb8f9e3e1585e1cc0117bd01fb68b89"/>
 		<file filename="docs/smarty-functions/img.md" md5="96808e22a392b247ba36aefd923b1c6e"/>
 		<file filename="docs/user-permissions.md" md5="53e3322a56a1b537a43f8520394b56ae"/>
 		<file filename="docs/utilities/compiler.md" md5="acfb5b28bfe613bca48ac52f30894899"/>
@@ -1440,7 +1435,7 @@
 		<file filename="core/templates/forms/groups/pagemetas.tpl" md5="176370cfa2f3b27406b5ffeb8d40b8c5"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="645d3b7a407c513622e9f6bc2590b7c9"/>
 		<file filename="core/templates/pages/admin/config.tpl" md5="0ad536be4accac559972aa3e52d27548"/>
-		<file filename="core/templates/pages/admin/index.tpl" md5="db1411269ee527536b0163bf9e913f26"/>
+		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="ec73503565c3b1987c0419bbe5815aaa"/>
 		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
 		<file filename="core/templates/pages/error/error400.tpl" md5="4443f584bf4f2d0268e5af6d62338d07"/>
@@ -1459,8 +1454,7 @@
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
 		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
 		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
-		<file filename="core/templates/widgets/adminmenu.tpl" md5="96c5da325fdf9eb7c6a82ca2ed2abf16"/>
-		<file filename="core/templates/widgets/page/siblingsnavigation.tpl" md5="e02e7719cfb212e4d9f5637b396e5f10"/>
+		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="96c5da325fdf9eb7c6a82ca2ed2abf16"/>
 	</view>
 	<install/>
 	<description>
@@ -1504,7 +1498,7 @@
 		<file filename="core/assets/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
 		<file filename="core/assets/js/core.ajaxlinks.js" md5="8f08ef1384b43f3fa912f61f25f5c0c0"/>
 		<file filename="core/assets/js/core.base64.js" md5="d5858756a4cf8012eb25157105718dfa"/>
-		<file filename="core/assets/js/core.context-controls.js" md5="16d8d74812b44039d323a227a85c9277"/>
+		<file filename="core/assets/js/core.context-controls.js" md5="9eb773cb5b8aad1e6cc0b978652c4c5d"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.fileupload.js" md5="499451d7c6a0e4266eb703f26e25cf33"/>
 		<file filename="core/assets/js/core.js" md5="8c4724ce896c231d0c42c56d2201e33a"/>
@@ -1556,6 +1550,7 @@
 			</phpfileinclude>
 		</upgrade>
 		<upgrade from="2.4.3" to="2.4.4"/>
+		<upgrade from="2.4.4" to="2.4.5"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

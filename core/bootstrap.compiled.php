@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 09 Feb 2013 19:40:42 -0500
+ * @compiled Sat, 16 Feb 2013 15:13:34 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4095,6 +4095,7 @@ foreach ($node->getElementsByTagName('widget') as $subnode) {
 $m = new WidgetModel($subnode->getAttribute('baseurl'));
 $action = ($m->exists()) ? 'Updated' : 'Added';
 if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
+$m->set('installable', $subnode->getAttribute('installable'));
 if ($m->save()) $changes[] = $action . ' widget [' . $m->get('baseurl') . ']';
 }
 return ($changes > 0) ? $changes : false;
@@ -4315,6 +4316,14 @@ case 'application/pgp-signature':
 return new File_asc_contents($file);
 case 'application/zip':
 return new File_zip_contents($file);
+case 'application/octet-stream':
+if($file->getExtension() == 'zip'){
+return new File_zip_contents($file);
+}
+else{
+error_log('@fixme Unknown extension for application/octet-stream mimetype [' . $file->getExtension() . ']');
+return new File_unknown_contents($file);
+}
 default:
 error_log('@fixme Unknown file mimetype [' . $file->getMimetype() . '] with extension [' . $file->getExtension() . ']');
 return new File_unknown_contents($file);
@@ -9711,12 +9720,16 @@ protected $_validattributes = array();
 public $requiresupload = false;
 public $validation = null;
 public $validationmessage = null;
+public $classnames = array();
 public function __construct($atts = null) {
 if ($atts) $this->setFromArray($atts);
 }
 public function set($key, $value) {
 $key = strtolower($key);
 switch ($key) {
+case 'class':
+$this->classnames[] = $value;
+break;
 case 'value': // Drop into special logic.
 $this->setValue($value);
 break;
@@ -9832,10 +9845,10 @@ $tpl->assign('element', $this);
 return $tpl->fetch($file);
 }
 public function getClass() {
-$c = $this->get('class');
-$r = $this->get('required');
-$e = $this->hasError();
-return $c . (($r) ? ' formrequired' : '') . (($e) ? ' formerror' : '');
+$classes = array_merge($this->classnames, explode(' ', $this->get('class')));
+if($this->get('required')) $classes[] = 'formrequired';
+if($this->hasError()) $classes[] = 'formerror';
+return implode(' ', array_unique($classes));
 }
 public function getID(){
 if (!empty($this->_attributes['id'])){

@@ -1411,6 +1411,8 @@ class Component_2_1 {
 			// Do not "update" value, keep whatever the user set previously.
 			if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
 
+			$m->set('installable', $subnode->getAttribute('installable'));
+
 			if ($m->save()) $changes[] = $action . ' widget [' . $m->get('baseurl') . ']';
 		}
 

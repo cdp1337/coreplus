@@ -45,7 +45,7 @@ class WidgetModel extends Model {
 			'null'      => false,
 		),
 		// This indicates which type of widgetarea it's installable to.
-		// ie: {widgetarea baseurl="/admin"} and {widgetarea baseurl="/user-social/view/###"}
+		// ie: {widgetarea installable="/admin"} and {widgetarea installable="/user-social/view/###"}
 		// Anything installable in / is acceptable in any of them,
 		// null is a regular one not applicable to page level templates.
 		// A public user widget for ie: Recent Blog Posts

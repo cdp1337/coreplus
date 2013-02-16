@@ -45,6 +45,16 @@ class FileContentFactory {
 			case 'application/zip':
 				return new File_zip_contents($file);
 
+			case 'application/octet-stream':
+				// These are fun... basically I'm relying on the extension here.
+				if($file->getExtension() == 'zip'){
+					return new File_zip_contents($file);
+				}
+				else{
+					error_log('@fixme Unknown extension for application/octet-stream mimetype [' . $file->getExtension() . ']');
+					return new File_unknown_contents($file);
+				}
+
 			default:
 				error_log('@fixme Unknown file mimetype [' . $file->getMimetype() . '] with extension [' . $file->getExtension() . ']');
 				return new File_unknown_contents($file);

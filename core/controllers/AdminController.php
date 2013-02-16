@@ -38,8 +38,11 @@ class AdminController extends Controller_2_1 {
 			$viewable[] = $p;
 		}
 
-		$this->setTemplate('/pages/admin/index.tpl');
-		$view->assignVariable('links', $viewable);
+		$view->title = 'Administration';
+		$view->assign('links', $viewable);
+
+		// Dispatch the hook that other systems can hook into and perform checks or operations on the admin dashboard page.
+		HookHandler::DispatchHook('/core/admin/view');
 	}
 
 	public function reinstallAll() {

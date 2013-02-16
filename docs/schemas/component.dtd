@@ -139,8 +139,9 @@
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT widget EMPTY>
 <!ATTLIST widget
-	baseurl CDATA #IMPLIED
+	baseurl CDATA #REQUIRED
 	title CDATA #IMPLIED
+	installable CDATA #IMPLIED
 >
 
 <!--- Put your DTDDoc comment here. -->

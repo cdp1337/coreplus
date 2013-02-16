@@ -23,7 +23,14 @@
  */
 
 class AdminMenuWidget extends Widget_2_1 {
+
+	// API Version 1.0 of the widget system.
 	public function execute(){
+		return $this->view();
+	}
+
+	// API Version 2.1 of the widget system.
+	public function view(){
 		$v = $this->getView();
 
 		$pages = PageModel::Find(array('admin' => '1'));
@@ -45,14 +52,14 @@ class AdminMenuWidget extends Widget_2_1 {
 				$p->set('title', "Content Pages");
 			}
 
-			$viewable[] = $p;
+			$viewable[ $p->get('title') ] = $p;
 		}
 
-		$v->templatename = 'widgets/adminmenu.tpl';
+		ksort($viewable);
+
+		$v->templatename = 'widgets/adminmenu/view.tpl';
 		$v->assignVariable('pages', $viewable);
 
 		return $v;
 	}
 }
-
-?>

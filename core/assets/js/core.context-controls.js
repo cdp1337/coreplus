@@ -1,10 +1,11 @@
 $(function(){
-	$('.controls-hover').each(function(){
+	//$('.controls-hover').each(function(){
+	$('.controls').each(function(){
 		var $original = $(this),
 			$clone = $original.clone(),
 			$wrapper = $('<div style="position:relative;"/>');
 
-		$original.after($wrapper);
+		$original.addClass('controls-hover').after($wrapper);
 
 		// Now, I can move them both into the wrapper.
 		$original.appendTo($wrapper);

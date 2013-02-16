@@ -315,6 +315,8 @@ class FormElement {
 	 */
 	public $validationmessage = null;
 
+	public $classnames = array();
+
 	public function __construct($atts = null) {
 
 		if ($atts) $this->setFromArray($atts);
@@ -324,6 +326,9 @@ class FormElement {
 		$key = strtolower($key);
 
 		switch ($key) {
+			case 'class':
+				$this->classnames[] = $value;
+				break;
 			case 'value': // Drop into special logic.
 				$this->setValue($value);
 				break;
@@ -495,11 +500,11 @@ class FormElement {
 	 * @return string
 	 */
 	public function getClass() {
-		$c = $this->get('class');
-		$r = $this->get('required');
-		$e = $this->hasError();
+		$classes = array_merge($this->classnames, explode(' ', $this->get('class')));
+		if($this->get('required')) $classes[] = 'formrequired';
+		if($this->hasError()) $classes[] = 'formerror';
 
-		return $c . (($r) ? ' formrequired' : '') . (($e) ? ' formerror' : '');
+		return implode(' ', array_unique($classes));
 	}
 
 	/**
