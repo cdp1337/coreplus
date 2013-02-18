@@ -35,11 +35,20 @@ class Core implements ISingleton {
 	private static $_LoadedComponents = false;
 
 	/**
-	 * An array of every Component in the system.
+	 * An array of every enabled Component in the system.
 	 *
 	 * @var array
 	 */
 	private $_components = null;
+
+	/**
+	 * Array of the disabled components on the system.
+	 *
+	 * This is useful for the updater where the admin can enable/disable packages.
+	 *
+	 * @var array
+	 */
+	private $_componentsDisabled = array();
 
 	/**
 	 * An array of every library in the system.
@@ -382,6 +391,9 @@ class Core implements ISingleton {
 
 				// Disabled components don't get recognized.
 				if($c->isInstalled() && !$c->isEnabled()){
+					// But they do get sent to the disabled list!
+					$this->_componentsDisabled[$n] = $c;
+
 					unset($list[$n]);
 					continue;
 				}
@@ -700,7 +712,10 @@ class Core implements ISingleton {
 	}
 
 	/**
-	 * Get the component object.
+	 * Get the component object by its name.
+	 *
+	 * @param string $name Name of the requested component
+	 *
 	 * @return Component_2_1
 	 */
 	public static function GetComponent($name = 'core') {
@@ -715,11 +730,17 @@ class Core implements ISingleton {
 		return self::Singleton()->_components;
 	}
 
+	public static function GetDisabledComponents(){
+		return self::Singleton()->_componentsDisabled;
+	}
+
 	/**
 	 * Lookup a component by a controller.
 	 * Useful for figuring out what API version a given controller needs to be handled as.
 	 *
 	 * @param string $controller
+	 *
+	 * @return Component_2_1|null
 	 */
 	public static function GetComponentByController($controller) {
 		$controller = strtolower($controller);
@@ -759,6 +780,11 @@ class Core implements ISingleton {
 		}
 	}
 
+	/**
+	 * Get the core singleton object
+	 *
+	 * @return Core
+	 */
 	public static function Singleton() {
 		if(self::$instance === null){
 			self::$instance = new self();
@@ -767,6 +793,11 @@ class Core implements ISingleton {
 		return self::$instance;
 	}
 
+	/**
+	 * Get the core singleton object
+	 *
+	 * @return Core
+	 */
 	public static function GetInstance() {
 		return self::Singleton();
 	}

@@ -1,10 +1,12 @@
 <?php
 /**
- * [PAGE DESCRIPTION HERE]
+ * The package XML handler.
+ *
+ * This has some specifics for the package.xml files, namely the schema.
  *
  * @package Core Plus\Core
  * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,15 +20,85 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+ *
+ * Compatible with version 1.0 of the API
+ * Compatible with version 2.4 of the API
  */
 
 class PackageXML extends XMLLoader {
-	public function __construct($filename) {
-		$this->setFilename($filename);
+	/**
+	 * Construct a new PackageXML object, as either a new object or an existing one.
+	 *
+	 * @param null|string $filename The filename to load or null if creating a new one.
+	 */
+	public function __construct($filename = null) {
 		$this->setRootName('package');
-		$this->load();
+		$this->_schema = 'http://corepl.us/api/2_4/package.dtd';
+
+		if($filename){
+			$this->setFilename($filename);
+			$this->load();
+		}
 	}
 
+	/**
+	 * Set this packagexml with data from the component.
+	 * This is useful in the packager.
+	 *
+	 * WARNING, this will revert any modifications done to the package.xml file!
+	 *
+	 * @param Component_2_1 $component
+	 *
+	 * @return string
+	 */
+	public function setFromComponent(Component_2_1 $component){
+		// Populate the root attributes for this component package.
+		$this->getRootDOM()->setAttribute('type', 'component');
+		$this->getRootDOM()->setAttribute('name', $component->getName());
+		$this->getRootDOM()->setAttribute('version', $component->getVersion());
+		// Declare the packager
+		$this->getRootDOM()->setAttribute('packager', Core::GetComponent()->getVersion());
+
+
+		// Copy over any provide directives.
+		foreach ($component->getRootDOM()->getElementsByTagName('provide') as $u) {
+			$this->getRootDOM()->appendChild($this->getDOM()->importNode($u));
+		}
+
+		// And the component provide as well.
+		$this->getElement('/provide[type="component"][name="' . strtolower($component->getName()) . '"][version="' . $component->getVersion() . '"]');
+
+	
+		// Copy over any requires directives.
+		foreach ($component->getRootDOM()->getElementsByTagName('require') as $u) {
+
+			$this->getRootDOM()->appendChild($this->getDOM()->importNode($u));
+		}
+	
+		// Copy over any upgrade directives.
+		// This one can be useful for an existing installation to see if this
+		// package can provide a valid upgrade path.
+		foreach ($component->getRootDOM()->getElementsByTagName('upgrade') as $u) {
+			// In this case, I just need the definition itself, I don't also need the contents of that upgrade.
+			$this->getElement(
+				'/upgrade[from="' . $u->getAttribute('from') . '"][to="' . $u->getAttribute('to') . '"]'
+			);
+		}
+	
+		// Tack on description
+		$desc = $component->getRootDOM()->getElementsByTagName('description')->item(0);
+		if ($desc) {
+			$descel = $this->getElement('description');
+			$descel->nodeValue = trim($desc->nodeValue);
+		}
+	}
+
+	/**
+	 * Get the root DOM.
+	 * ... probably should have been called getRootDOM() now that I think about it.
+	 *
+	 * @return DOMNode
+	 */
 	public function getPackageDOM() {
 		return $this->getRootDOM();
 	}
@@ -44,12 +116,11 @@ class PackageXML extends XMLLoader {
 	}
 
 	public function getDescription() {
-		// @todo Implement this
-		return '';
+		return trim($this->getElement('description')->nodeValue);
 	}
 
 	public function getFileLocation() {
-		return $this->getElement('location')->nodeValue;
+		return trim($this->getElement('location')->nodeValue);
 	}
 
 	public function setFileLocation($loc) {

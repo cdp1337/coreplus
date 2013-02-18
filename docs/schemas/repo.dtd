@@ -1,0 +1,98 @@
+<!--
+    PUBLIC ID: -//coreplus//vocabulary//EN
+    SYSTEM ID: http://corepl.us/api/2_4/repo.dtd
+
+	Last revision date: 2013.02
+-->
+
+<!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+	<!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
+
+    <component>
+    ...
+    </component>
+-->
+
+<!--
+	A repo has the following criteria:
+	MUST have 1 description
+	MAY have many keys
+	MUST have at least one of the following: core, components, themes.
+-->
+<!ELEMENT repo (description|(keys)*|(core|components|themes)+)>
+<!ATTLIST repo
+	name CDATA #REQUIRED
+	xmlns:xsi CDATA #FIXED "http://www.w3.org/2001/XMLSchema-instance"
+>
+
+<!--
+	Just a description for this repository
+-->
+<!ELEMENT description (#PCDATA)>
+
+
+<!--
+	The keys group and individual keys.
+	This is used to define the GPG keys for this repo to get installed automatically
+-->
+<!ELEMENT keys (key)+>
+
+<!ELEMENT key EMPTY>
+<!ATTLIST key
+	id CDATA #REQUIRED
+	name CDATA #REQUIRED
+	email CDATA #REQUIRED
+>
+
+<!--
+	There are three main types of packages here, Core, Components, and Themes.
+	They all contain the same subelements, but are broken up for readability,
+	should a human ever be unfortunate enough to have to read raw XML
+-->
+<!ELEMENT core (package)+>
+<!ELEMENT components (package)+>
+<!ELEMENT themes (package)+>
+
+<!--
+	The package directive.
+
+	Each package directive must have:
+	1 location
+	1 description
+
+	And each package will probably have at least one of the following:
+	* provides
+	* requires
+	* upgrade
+-->
+<!ELEMENT package (location|description|(provide|require|upgrade)*) >
+<!ATTLIST package
+	type (component|theme) #REQUIRED
+	name CDATA #REQUIRED
+	version CDATA #REQUIRED
+	packager CDATA #REQUIRED
+>
+
+<!ELEMENT location (#PCDATA)>
+<!-- No need to redefine description, defined above -->
+<!ELEMENT provide EMPTY>
+<!ATTLIST provide
+	name CDATA #REQUIRED
+	type CDATA #REQUIRED
+	version CDATA #REQUIRED
+>
+<!ELEMENT require EMPTY>
+<!ATTLIST require
+	name CDATA #REQUIRED
+	type CDATA #REQUIRED
+	version CDATA #IMPLIED
+	operation (lt|le|eq|ge|gt) "ge"
+>
+<!ELEMENT upgrade EMPTY>
+<!ATTLIST upgrade
+	from CDATA #REQUIRED
+	to CDATA #REQUIRED
+>

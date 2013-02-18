@@ -113,7 +113,7 @@ if (!$core_settings) {
 if (!DEVELOPMENT_MODE) {
 	//error_reporting(0);
 	ini_set('display_errors', 0);
-    ini_set('html_errors', 0);
+	ini_set('html_errors', 0);
 }
 // Make sure that errors are set to be displayed to the fullest extent.
 else{
@@ -154,6 +154,9 @@ if (EXEC_MODE == 'CLI') {
 	// it should use his/her private key, (which is not accesable from the website).
 	if (isset($_SERVER['HOME']) && is_dir($_SERVER['HOME'] . '/.gnupg')) $gnupgdir = $_SERVER['HOME'] . '/.gnupg/';
 	else $gnupgdir = false;
+
+	// CLI mode shouldn't have HTML error reporting.
+	ini_set('html_errors', 0);
 }
 else {
 	/**

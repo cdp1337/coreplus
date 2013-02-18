@@ -35,7 +35,7 @@ class UpdaterController extends Controller_2_1 {
 	public function index() {
 		$view = $this->getView();
 
-		$sitecount = UpdateSiteModel::Count('enabled = 1');
+		$sitecount = UpdateSiteModel::Count();
 		$components = array();
 		foreach(Core::GetComponents() as $k => $c){
 			// Skip the core.
@@ -43,6 +43,12 @@ class UpdaterController extends Controller_2_1 {
 
 			$components[$k] = $c;
 		}
+
+		// These should really be sorted by name
+		ksort($components);
+
+		// Merge in the disabled ones too!
+		$components = array_merge($components, Core::GetDisabledComponents());
 
 		// If the theme is disabled, this won't be available.
 		if(class_exists('ThemeHandler')){
@@ -150,7 +156,21 @@ class UpdaterController extends Controller_2_1 {
 	 */
 	public function repos() {
 		$view = $this->getView();
-		// @todo List the sites currently installed/configured/etc.
+
+		if(!is_dir(GPG_HOMEDIR)){
+			// Try to create it?
+			if(is_writable(dirname(GPG_HOMEDIR))){
+				// w00t
+				mkdir(GPG_HOMEDIR);
+			}
+			else{
+				Core::SetMessage(GPG_HOMEDIR . ' does not exist and could not be created!  Please fix this before proceeding!', 'error');
+			}
+		}
+		elseif(!is_writable(GPG_HOMEDIR)){
+			Core::SetMessage(GPG_HOMEDIR . ' is not writable!  Please fix this before proceeding!', 'error');
+		}
+
 
 		$sites = UpdateSiteModel::Find();
 
@@ -164,48 +184,135 @@ class UpdaterController extends Controller_2_1 {
 
 	}
 
-	public function repos_edit() {
-		$view    = $this->getView();
-		$request = $this->getPageRequest();
-
-		// Make sure the site exists.
-		$siteid = $request->getParameter(0);
-		if (!$siteid) {
-			return View::ERROR_NOTFOUND;
-		}
-
-		$site = new UpdateSiteModel($siteid);
-		if (!$site->exists()) {
-			return View::ERROR_NOTFOUND;
-		}
-
-		$form = Form::BuildFromModel($site);
-		$form->set('callsmethod', 'UpdaterController::_Sites_Update');
-		$form->addElement('submit', array('value' => 'Update Repo'));
-
-		$view->title = 'Edit Site';
-		// Needed because dynamic pages do not record navigation.
-		$view->addBreadcrumb('Repositories', 'Updater/Sites');
-
-		$view->addControl('Add Repo', 'updater/repos/add', 'add');
-
-		$view->assign('form', $form);
-	}
-
+	/**
+	 * Add a repository to the site.
+	 * This will also handle the embedded keys, (as of 2.4.5).
+	 *
+	 * This contains the first step and second steps.
+	 */
 	public function repos_add() {
-		$view = $this->getView();
+		$request = $this->getPageRequest();
+		$view    = $this->getView();
 
 		$site = new UpdateSiteModel();
 
 		$form = Form::BuildFromModel($site);
-		$form->set('callsmethod', 'UpdaterController::_Sites_Update');
-		$form->addElement('submit', array('value' => 'Add Repo'));
+		$form->set('action', Core::ResolveLink('/updater/repos/add'));
+		$form->addElement('submit', array('value' => 'Next'));
 
 		$view->title = 'Add Repo';
 		// Needed because dynamic pages do not record navigation.
 		$view->addBreadcrumb('Repositories', 'updater/repos');
 
 		$view->assign('form', $form);
+
+
+		// This is the logic for step 2 (confirmation).
+		// This is after all the template logic from step 1 because it will fallback to that form if necessary.
+		if($request->isPost()){
+			$url      = $request->getPost('model[url]');
+			$username = $request->getPost('model[username]');
+			$password = $request->getPost('model[password]');
+
+			// Validate and standardize this repo url.
+			// This is because most people will simply type repo.corepl.us.
+			if(strpos($url, '://') === false){
+				$url = 'http://' . $url;
+			}
+
+			// Lookup that URL first!
+			if(UpdateSiteModel::Count(array('url' => $url)) > 0){
+				Core::SetMessage($url . ' is already used!', 'error');
+				return;
+			}
+
+			// Load up a new Model, that's the easiest way to pull the repo data.
+			$model = new UpdateSiteModel();
+			$model->setFromArray([
+				'url' => $url,
+				'username' => $username,
+				'password' => $password,
+			]);
+
+			// From here on out, populate the previous form with this new model.
+			$form = Form::BuildFromModel($model);
+			$form->set('action', Core::ResolveLink('/updater/repos/add'));
+			$form->addElement('submit', array('value' => 'Next'));
+			$view->assign('form', $form);
+
+			if(!$model->isValid()){
+				Core::SetMessage($url . ' does not appear to be a valid repository!', 'error');
+				return;
+			}
+
+			$repo = new RepoXML();
+			$repo->loadFromFile($model->getFile());
+
+			// Make sure the keys are good
+			if(!$repo->validateKeys()){
+				Core::SetMessage('There were invalid/unpublished keys in the repo!  Refusing to import.', 'error');
+				return;
+			}
+
+			// The very final bit of this logic is to look and see if there's a "confirm" present.
+			// If there is, the user clicked accept on the second page and I need to go ahead and import the data.
+			if($request->getPost('confirm')){
+				$model->set('description', $repo->getDescription());
+				$model->save();
+				$keysimported = 0;
+				$keycount = sizeof($repo->getKeys());
+
+				foreach($repo->getKeys() as $key){
+					$id = strtoupper(preg_replace('/[^a-zA-Z0-9]*/', '', $key['id']));
+					$output = array();
+					exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --keyserver "hkp://pool.sks-keyservers.net" --recv-keys "' . $id . '"', $output, $result);
+					if($result != 0){
+						Core::SetMessage('Unable to import key [' . $id . '] from keyserver!', 'error');
+					}
+					else{
+						++$keysimported;
+					}
+				}
+
+				if(!$keycount){
+					Core::SetMessage('Added repository site successfully!', 'success');
+				}
+				elseif($keycount != $keysimported){
+					Core::SetMessage('Added repository site, but unable to import ' . ($keycount-$keysimported) . ' key(s).', 'info');
+				}
+				else{
+					Core::SetMessage('Added repository site and imported ' . $keysimported . ' key(s) successfully!', 'success');
+				}
+
+				Core::Redirect('/updater/repos');
+			}
+
+			$view->templatename = 'pages/updater/repos_add2.tpl';
+			$view->assign('description', $repo->getDescription());
+			$view->assign('keys', $repo->getKeys());
+			$view->assign('url', $url);
+			$view->assign('username', $username);
+			$view->assign('password', $password);
+		}
+	}
+
+	/**
+	 * Page to remove a repository.
+	 */
+	public function repos_delete(){
+		$request = $this->getPageRequest();
+		if(!$request->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		$model = new UpdateSiteModel($request->getParameter(0));
+		if(!$model->exists()){
+			return View::ERROR_NOTFOUND;
+		}
+
+		$model->delete();
+		Core::SetMessage('Removed repository successfully', 'success');
+		Core::Redirect('/updater/repos');
 	}
 
 	/**

@@ -24,40 +24,74 @@
 
 class FileContentFactory {
 	public static function GetFromFile(File_Backend $file) {
+		// The class name to instantiate based on the incoming filetype.
+		$class = null;
+
 		switch ($file->getMimetype()) {
 			case 'application/x-gzip':
 				// gzip can be a wrapper around a lot of things.  
 				// Some of them even have their own content functions.
-				if (strtolower($file->getExtension()) == 'tgz') return new File_tgz_contents($file);
-				else return new File_gz_contents($file);
+				if (strtolower($file->getExtension()) == 'tgz'){
+					$class = 'File_tgz_contents';
+				}
+				else{
+					$class = 'File_gz_contents';
+				}
+				break;
 
 			case 'text/plain':
 				// Sometimes these are actually other files based on the extension.
-				if (strtolower($file->getExtension()) == 'asc') return new File_asc_contents($file);
-				else return new File_unknown_contents($file);
+				if (strtolower($file->getExtension()) == 'asc'){
+					$class = 'File_asc_contents';
+				}
+				else{
+					$class = 'File_unknown_contents';
+				}
+				break;
 
 			case 'text/xml':
-				return new File_xml_contents($file);
+			case 'application/xml':
+				$class = 'File_xml_contents';
+				break;
 
 			case 'application/pgp-signature':
-				return new File_asc_contents($file);
+				$class = 'File_asc_contents';
+				break;
 
 			case 'application/zip':
-				return new File_zip_contents($file);
+				$class = 'File_zip_contents';
+				break;
 
 			case 'application/octet-stream':
 				// These are fun... basically I'm relying on the extension here.
 				if($file->getExtension() == 'zip'){
-					return new File_zip_contents($file);
+					$class = 'File_zip_contents';
 				}
 				else{
 					error_log('@fixme Unknown extension for application/octet-stream mimetype [' . $file->getExtension() . ']');
-					return new File_unknown_contents($file);
+					$class = 'File_unknown_contents';
 				}
+				break;
 
 			default:
 				error_log('@fixme Unknown file mimetype [' . $file->getMimetype() . '] with extension [' . $file->getExtension() . ']');
-				return new File_unknown_contents($file);
+				$class = 'File_unknown_contents';
 		}
+
+		// Make sure that class exists!
+		// In core, even if it doesn't, it should be able to locate the file dynamically.
+		// If it can't, then maybe core isn't available yet or this script has been migrated to a different platform.
+		// Did you migrate this script to a different platform????
+		if(!class_exists($class)){
+			// Hmm.... well
+			if(file_exists(ROOT_PDIR . 'core/libs/filestore/contents/' . $class . '.class.php')){
+				require_once(ROOT_PDIR . 'core/libs/filestore/contents/' . $class . '.class.php');
+			}
+			else{
+				throw new Exception('Unable to locate file for class [' . $class . ']');
+			}
+		}
+
+		return new $class($file);
 	}
 }

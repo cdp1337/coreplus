@@ -7,6 +7,34 @@ Core Plus 2.4.5
 	* Fixed support for the "class" names on form elements
 	* Zip files that have a mimetype of application/octet-stream are now detected appropriately.
 	* Fixed the <aside><aside> error.  Widgets should have been divs instead of their aside.
+	* Removed the "enabled" flag on update sites.  If it's present in the system, it's going to
+	  be used.
+	* Fixed bug #92 - Installer still runs for components if no upgrade path available.
+	* Set the updater page to display the enabled components sorted by name.  This makes it
+	  easier to skim through and see what's installed.
+	* Fixed bug #253 - Disabled components cannot be re-enabled.
+	* Removed repos_edit page.  There's no data to really edit.
+	* Added a warning on the repos landing page if the gnupg directory is not writable.
+	* Cleaned up the repo landing page and added descriptions for the repositories.
+	* New 2.4 API level for repo.xml and package.xml files.
+	* Repositories now support descriptions.
+	* Repositories now support gpg keys embedded.  These get installed automatically upon adding
+	  the repo to a site.
+	* Added a repos_delete page.  This is kinda useful...
+	* Changed how "textarea" user prompting works in CLI mode.  Now it displays the message and
+	  has the user press enter to continue.  This gives the user a chance to see the message.
+	* Major cleanups to the component package logic.
+	* Core API 2.4 is now a recognized API version for components.
+	* The packager now writes at API level 2.4.
+	* PageRequest method getPost now accepts POST data that is nested by one-level, ie:
+	  "model[id]" is now supported.
+	* XMLLoader now supports a schema for XML files.  This is useful in assigning a DTD schema
+	  source automatically.
+	* FileContentFactory now works [better] if Core isn't loaded.
+	* Overhauled the create_repo script to be a little more user friendly and to work with the
+	  new repo features.
+
+	--Charlie Powell <charlie@eval.bz>  Mon, 18 Feb 2013 08:29:12 -0500
 
 Core Plus 2.4.4
 

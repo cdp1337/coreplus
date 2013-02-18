@@ -219,6 +219,8 @@ class Component_2_1 {
 	 * Useful in packager scripts.
 	 */
 	public function save($minified = false) {
+		// Set the schema version to the newest API version.
+		$this->_xmlloader->setSchema('http://corepl.us/api/2_4/component.dtd');
 		// Ensure there's a required namespace on the root node.
 		$this->_xmlloader->getRootDOM()->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 
@@ -282,55 +284,17 @@ class Component_2_1 {
 	 * Save or get the package XML for this component.  This is useful for the
 	 * packager
 	 *
-	 * @param boolean $minified
-	 * @param string  $filename
+	 * @param boolean     $minified
+	 * @param bool|string $filename
+	 *
+	 * @return string|null
 	 */
 	public function savePackageXML($minified = true, $filename = false) {
 
-		// Instantiate a new XML Loader object and get it ready to use.
-		$dom = new XMLLoader();
-		$dom->setRootName('package');
-		$dom->load();
+		$packagexml = new PackageXML();
+		$packagexml->setFromComponent($this);
 
-		// Populate the root attributes for this component package.
-		$dom->getRootDOM()->setAttribute('type', 'component');
-		$dom->getRootDOM()->setAttribute('name', $this->getName());
-		$dom->getRootDOM()->setAttribute('version', $this->getVersion());
-
-		// Declare the packager
-		$dom->createElement('packager[version="' . Core::GetComponent()->getVersion() . '"]');
-
-		// Copy over any provide directives.
-		foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('provides') as $u) {
-			$newu = $dom->getDOM()->importNode($u);
-			$dom->getRootDOM()->appendChild($newu);
-		}
-		$dom->getElement('/provides[type="component"][name="' . strtolower($this->getName()) . '"][version="' . $this->getVersion() . '"]');
-
-		// Copy over any requires directives.
-		foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('requires') as $u) {
-			$newu = $dom->getDOM()->importNode($u);
-			$dom->getRootDOM()->appendChild($newu);
-		}
-
-		// Copy over any upgrade directives.
-		// This one can be useful for an existing installation to see if this 
-		// package can provide a valid upgrade path.
-		foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('upgrade') as $u) {
-			$newu = $dom->getDOM()->importNode($u);
-			$dom->getRootDOM()->appendChild($newu);
-		}
-
-		// Tack on description
-		$desc = $this->_xmlloader->getElement('/description', false);
-		if ($desc) {
-			$newd            = $dom->getDOM()->importNode($desc);
-			$newd->nodeValue = $desc->nodeValue;
-			$dom->getRootDOM()->appendChild($newd);
-		}
-
-
-		$out = ($minified) ? $dom->asMinifiedXML() : $dom->asPrettyXML();
+		$out = ($minified) ? $packagexml->asMinifiedXML() : $packagexml->asPrettyXML();
 
 		if ($filename) {
 			file_put_contents($filename, $out);
@@ -916,6 +880,9 @@ class Component_2_1 {
 			return false;
 		}
 
+		// It's already loaded!
+		if($this->_loaded) return true;
+
 		// Reset the error info.
 		$this->error   = 0;
 		$this->errstrs = array();
@@ -1190,6 +1157,15 @@ class Component_2_1 {
 		Core::Cache()->delete('core-components');
 
 		return true;
+	}
+
+	/**
+	 * Helper function for external classes and scripts to get this component's xml DOM.
+	 *
+	 * @return DOMNode
+	 */
+	public function getRootDOM(){
+		return $this->_xmlloader->getRootDOM();
 	}
 
 	/**

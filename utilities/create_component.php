@@ -153,7 +153,7 @@ foreach($controllers as $controller){
 // I need to create a basic xml file for the component to use initially.
 $implementation = new DOMImplementation();
 
-$dtd = $implementation->createDocumentType('component', 'SYSTEM', 'http://corepl.us/api/2_1/component.dtd');
+$dtd = $implementation->createDocumentType('component', 'SYSTEM', 'http://corepl.us/api/2_4/component.dtd');
 $xml = $implementation->createDocument('', '', $dtd);
 $xml->encoding = 'UTF-8';
 $root = $xml->createElement('component');
@@ -213,7 +213,6 @@ $now = Time::GetCurrentGMT(Time::FORMAT_RFC2822);
 file_put_contents($dirname . 'CHANGELOG', "$componentname 1.0.0
 
 	* Initial version
-	-- $packagername <$packageremail>  $now
 
 ");
 $allfiles[] = array(

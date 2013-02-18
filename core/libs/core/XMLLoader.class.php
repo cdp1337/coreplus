@@ -64,6 +64,13 @@ class XMLLoader implements Serializable {
 	 */
 	private $_rootnode = null;
 
+	/**
+	 * Set this to a valid URL string to ensure that the document is set that for its root node.
+	 *
+	 * @var null|string
+	 */
+	protected $_schema = null;
+
 
 	/************ SERIALIZE and UNSERIALIZE METHODS **********/
 
@@ -122,8 +129,17 @@ class XMLLoader implements Serializable {
 		// I need a root node name.
 		if (!$this->_rootname) return false;
 
-		// Save the DOM object so I have it in the future.
-		$this->_DOM = new DOMDocument();
+		// w00t, new support for a schema declaration!
+		if($this->_schema){
+			$implementation = new DOMImplementation();
+			$dtd = $implementation->createDocumentType($this->_rootname, 'SYSTEM', $this->_schema);
+			$this->_DOM = $implementation->createDocument('', '', $dtd);
+		}
+		else{
+			$this->_DOM = new DOMDocument();
+		}
+
+		$this->_DOM->encoding = 'UTF-8';
 
 		// we want a nice output
 		$this->_DOM->formatOutput = true;
@@ -136,10 +152,16 @@ class XMLLoader implements Serializable {
 			else {
 				$dat = $contents->getContents();
 			}
+
+			// If an empty string is submitted...
+			if(!$dat){
+				return false;
+			}
+
 			$this->_DOM->loadXML($dat);
 		}
 		elseif ($this->_filename) {
-			if (!@$this->_DOM->load($this->_filename)) return false;
+			if (!$this->_DOM->load($this->_filename)) return false;
 		}
 		else {
 			return false;
@@ -159,7 +181,10 @@ class XMLLoader implements Serializable {
 			$this->_file = $file;
 		}
 		else {
-			$this->_filename = $file;
+			// Make sure the file is fully resolved.
+			// To do that, Core has some built in systems.
+			$this->_file = \Core\file($file);
+			//$this->_filename = $file;
 		}
 
 		return $this->load();
@@ -225,11 +250,45 @@ class XMLLoader implements Serializable {
 	}
 
 	/**
+	 * Method to set the schema externally.
+	 *
+	 * This will update the DOM object if it's different.
+	 *
+	 * @param $url
+	 */
+	public function setSchema($url){
+		$this->_schema = $url;
+
+		// Update the document if it was already loaded!
+		if($this->_DOM !== null && $this->_schema != $this->_DOM->doctype->systemId){
+			$implementation = new DOMImplementation();
+			$dtd = $implementation->createDocumentType($this->_rootname, 'SYSTEM', $this->_schema);
+			$newdom = $implementation->createDocument('', '', $dtd);
+
+			// Now I can migrate the data from the previous DOM to the new one.
+			//$string = $this->_DOM->saveXML($this->_DOM->getElementsByTagName($this->_rootname)->item(0));
+			$root = $this->_DOM->getElementsByTagName($this->_rootname)->item(0);
+
+			$newroot = $newdom->importNode($root, true);
+			$newdom->appendChild($newroot);
+
+			$this->_DOM = $newdom;
+			$this->_rootnode = null;
+		}
+	}
+
+	/**
 	 * Get the DOM root node
 	 *
 	 * @return DOMNode
 	 */
 	public function getRootDOM() {
+
+		// First of all, if the dom hasn't been set yet...
+		if($this->_DOM === null){
+			$this->load();
+		}
+
 		if($this->_rootnode === null){
 			$root = $this->_DOM->getElementsByTagName($this->_rootname);
 			if ($root->item(0) === null) {

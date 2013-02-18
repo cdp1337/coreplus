@@ -1,18 +1,26 @@
-<table>
+<table class="listing">
 	<tr>
 		<td>Site</td>
-		<td>Enabled</td>
+		<td>Description</td>
 		<td>&nbsp;</td>
 	</tr>
 	{foreach from=$sites item=site}
 		<tr>
-			<td>{$site.url}</td>
 			<td>
-				{if $site.enabled}Yes{/if}
-				{if !$site.enabled}No{/if}
+				{$site.url}
 			</td>
 			<td>
-				{a href="Updater/repos/Edit/`$site.id`"}edit{/a}
+				{$site.description|truncate:200}
+			</td>
+			<td>
+				<ul class="controls">
+					<li>
+						{a href="/updater/repos/delete/`$site.id`" confirm="Really remove repo?"}
+							<i class="icon-remove"></i>
+							<span>Remove Repository</span>
+						{/a}
+					</li>
+				</ul>
 			</td>
 		</tr>
 	{/foreach}

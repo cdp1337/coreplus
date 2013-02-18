@@ -151,10 +151,11 @@ class CLI {
 					case 'textarea':
 						// This requires a bit of app-trickery.  
 						// I need to pass any "default" data into a text file in /tmp, then edit that and read the file afterwards.
+						echo '(Press enter to open with ' . basename($_SERVER['EDITOR']) . '.  Save and close when done.)';
+						fgets(STDIN);
+
 						$file = "/tmp/cae2-cli-textarea-" . Core::RandomHex(4) . '.tmp';
 						file_put_contents($file, $default);
-						//echo "(Press enter to open the editor.)";
-						//fgets(STDIN);
 						system($_SERVER['EDITOR'] . " " . $file . " > `tty`");
 						// And read back in that file.
 						$data = file_get_contents($file);

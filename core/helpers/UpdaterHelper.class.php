@@ -88,7 +88,7 @@ class UpdaterHelper {
 		}
 		
 		// Now, look up components from all the updates sites.
-		$updatesites = UpdateSiteModel::Find('enabled = 1');
+		$updatesites = UpdateSiteModel::Find();
 		foreach($updatesites as $site){
 
 			if(!$site->isValid()) continue;

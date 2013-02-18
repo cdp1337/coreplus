@@ -29,10 +29,14 @@ if(!isset($_SERVER['SHELL'])){
 }
 
 // This is required to establish the root path of the system, (since it's always one directory up from "here"
-$dir = realpath(dirname($_SERVER['PWD'] . '/' . $_SERVER['SCRIPT_FILENAME']) . '/..') . '/';
+$path = realpath(
+	dirname($_SERVER['PWD'] . '/' . $_SERVER['SCRIPT_FILENAME']) . '/..'
+	) . '/';
+define('ROOT_PDIR', $path);
+define('ROOT_WDIR', '/');
 
 // Include the core bootstrap, this will get the system functional.
-require_once($dir . 'core/bootstrap.php');
+require_once(ROOT_PDIR . 'core/bootstrap.php');
 
 
 /**
@@ -77,87 +81,6 @@ CLI::RequireEditor();
 
 // Some cache variables.
 $_cversions = null;
-
-/**
- * Copy file or folder from source to destination, it can do
- * recursive copy as well and is very smart
- * It recursively creates the dest file or directory path if there weren't exists
- * Situtaions :
- * - Src:/home/test/file.txt ,Dst:/home/test/b ,Result:/home/test/b -> If source was file copy file.txt name with b as name to destination
- * - Src:/home/test/file.txt ,Dst:/home/test/b/ ,Result:/home/test/b/file.txt -> If source was file Creates b directory if does not exsits and copy file.txt into it
- * - Src:/home/test ,Dst:/home/ ,Result:/home/test/** -> If source was directory copy test directory and all of its content into dest
- * - Src:/home/test/ ,Dst:/home/ ,Result:/home/**-> if source was directory copy its content to dest
- * - Src:/home/test ,Dst:/home/test2 ,Result:/home/test2/** -> if source was directory copy it and its content to dest with test2 as name
- * - Src:/home/test/ ,Dst:/home/test2 ,Result:->/home/test2/** if source was directory copy it and its content to dest with test2 as name
- * @todo
- *     - Should have rollback technique so it can undo the copy when it wasn't successful
- *  - Auto destination technique should be possible to turn off
- *  - Supporting callback function
- *  - May prevent some issues on shared enviroments : http://us3.php.net/umask
- * @author http://sina.salek.ws/en/contact
- * @param $source //file or folder
- * @param $dest ///file or folder
- * @param $options //folderPermission,filePermission
- * @return boolean
- */
-function smartCopy($source, $dest, $options=array('folderPermission'=>0755,'filePermission'=>0755)){
-    $result=false;
-
-    if (is_file($source)) {
-        if ($dest[strlen($dest)-1]=='/') {
-            if (!file_exists($dest)) {
-                cmfcDirectory::makeAll($dest,$options['folderPermission'],true);
-            }
-            $__dest=$dest."/".basename($source);
-        } else {
-            $__dest=$dest;
-        }
-        $result=copy($source, $__dest);
-        chmod($__dest,$options['filePermission']);
-
-    } elseif(is_dir($source)) {
-        if ($dest[strlen($dest)-1]=='/') {
-            if ($source[strlen($source)-1]=='/') {
-                //Copy only contents
-            } else {
-                //Change parent itself and its contents
-                $dest=$dest.basename($source);
-                @mkdir($dest);
-                chmod($dest,$options['filePermission']);
-            }
-        } else {
-            if ($source[strlen($source)-1]=='/') {
-                //Copy parent directory with new name and all its content
-                @mkdir($dest,$options['folderPermission']);
-                chmod($dest,$options['filePermission']);
-            } else {
-                //Copy parent directory with new name and all its content
-                @mkdir($dest,$options['folderPermission']);
-                chmod($dest,$options['filePermission']);
-            }
-        }
-
-        $dirHandle=opendir($source);
-        while($file=readdir($dirHandle))
-        {
-            if($file!="." && $file!="..")
-            {
-                 if(!is_dir($source."/".$file)) {
-                    $__dest=$dest."/".$file;
-                } else {
-                    $__dest=$dest."/".$file;
-                }
-                //echo "$source/$file ||| $__dest<br />";
-                $result=smartCopy($source."/".$file, $__dest, $options);
-            }
-        }
-        closedir($dirHandle);
-
-    } else {
-        $result=false;
-    }
-    return $result;
-}
 
 
 /**
@@ -642,10 +565,13 @@ function process_component($component, $forcerelease = false){
 		throw new Exception('Unable to locate component.xml file for component ' . $component);
 	}
 
+	// Resolve it to the full path
+	$fullcfile = ROOT_PDIR . $cfile;
+
 	// Get the XMLLoader object for this file.  This will allow me to have more fine-tune control over the file.
 	$xml = new XMLLoader();
 	$xml->setRootName('component');
-	if(!$xml->loadFromFile(ROOT_PDIR . $cfile)){
+	if(!$xml->loadFromFile($fullcfile)){
 		throw new Exception('Unable to load XML file ' . $cfile);
 	}
 
@@ -653,13 +579,19 @@ function process_component($component, $forcerelease = false){
 	$version = $xml->getRootDOM()->getAttribute("version");
 
 	// Not a 2.1 component version?... well it needs to be!
-	if($xml->getDOM()->doctype->systemId != 'http://corepl.us/api/2_1/component.dtd'){
-		throw new Exception('Unable to package 0.1 based components, please manually upgrade the schema to the newest version.');
+	// This actually needs to work with a variety of versions.
+	$componentapiversion = $xml->getDOM()->doctype->systemId;
+	switch($componentapiversion){
+		case 'http://corepl.us/api/2_1/component.dtd':
+		case 'http://corepl.us/api/2_4/component.dtd':
+			// Now I can load the component itself, now that I know that the metafile is a 2.1 compatible version.
+			$comp = new Component_2_1($fullcfile);
+			$comp->load();
+			break;
+		default:
+			throw new Exception('Unsupported component version, please ensure that your doctype systemid is correct.');
 	}
 
-	// Now I can load the component itself, now that I know that the metafile is a 2.1 compatible version.
-	$comp = new Component_2_1($cfile);
-	$comp->load();
 
 	// Get the licenses currently set.  (maybe there's one that's not in the code)
 	$licenses = array();
@@ -1578,7 +1510,7 @@ function manage_changelog($file, $name, $version){
 	// Put a note in the header.
 	//$changelog = 'Enter the changelog items below, each item separated by a newline.' . "\n" . ';--- ENTER CHANGELOG BELOW ---;' . "\n\n" . $changelog;
 
-	$changelog = CLI::PromptUser('Enter the changelog.', 'textarea', $changelog);
+	$changelog = CLI::PromptUser('Enter the changelog for this release.  Separate each different bullet point on a new line with no dashes or asterisks.', 'textarea', $changelog);
 
 	// I need to transpose the text only changelog back to a regular format.
 	$changeloglines = '';

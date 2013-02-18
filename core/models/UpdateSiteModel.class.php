@@ -39,20 +39,34 @@ class UpdateSiteModel extends Model {
 			'required' => true,
 			'null'     => false
 		),
+		/*
 		'enabled'  => array(
 			'type'    => Model::ATT_TYPE_BOOL,
 			'null'    => false,
 			'default' => true
 		),
+		*/
 		'username' => array(
 			'type'     => Model::ATT_TYPE_STRING,
 			'required' => false,
-			'null'     => true
+			'null'     => true,
+			'form' => array(
+				'description' => '[OPTIONAL] - If you require a username to access the repo, set it here.',
+			),
 		),
 		'password' => array(
 			'type'     => Model::ATT_TYPE_STRING,
 			'required' => false,
-			'null'     => true
+			'null'     => true,
+			'form' => array(
+				'type' => 'password',
+				'description' => '[OPTIONAL] - If you require a password to access the repo, set it here.',
+			),
+		),
+		'description' => array(
+			'type' => Model::ATT_TYPE_TEXT,
+			'formtype' => 'disabled',
+			'comment' => 'Cached description from the repo.xml.gz metadata.',
 		),
 		'created'  => array(
 			'type' => Model::ATT_TYPE_CREATED

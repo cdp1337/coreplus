@@ -1,0 +1,68 @@
+<!--
+    PUBLIC ID: -//coreplus//vocabulary//EN
+    SYSTEM ID: http://corepl.us/api/2_4/package.dtd
+
+	Last revision date: 2013.02
+-->
+
+<!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+	<!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/package.dtd">
+
+    <package>
+    ...
+    </package>
+-->
+
+<!--
+	The package directive.
+
+	Each package directive must have:
+	1 description
+
+	And each package will probably have at least one of the following:
+	* provides
+	* requires
+	* upgrade
+
+	And may have:
+	1 location
+-->
+<!ELEMENT package (description|(provide|require|upgrade*)|location?) >
+<!ATTLIST package
+	type (component|theme) #REQUIRED
+	name CDATA #REQUIRED
+	version CDATA #REQUIRED
+	packager CDATA #REQUIRED
+>
+
+<!--
+	NOTE, as a self-contained package, there is no location unlike when merged into the repo.
+	This is because "location" would be itself, since it's enclosed in the tarball!
+
+	HOWEVER, since the PackageXML class is still used for repo-based package data, allow it as an optional field.
+-->
+<!ELEMENT location (#PCDATA)>
+
+<!ELEMENT description (#PCDATA)>
+
+<!ELEMENT provide EMPTY>
+<!ATTLIST provide
+	name CDATA #REQUIRED
+	type CDATA #REQUIRED
+	version CDATA #REQUIRED
+>
+<!ELEMENT require EMPTY>
+<!ATTLIST require
+	name CDATA #REQUIRED
+	type CDATA #REQUIRED
+	version CDATA #IMPLIED
+	operation (lt|le|eq|ge|gt) "ge"
+>
+<!ELEMENT upgrade EMPTY>
+<!ATTLIST upgrade
+	from CDATA #REQUIRED
+	to CDATA #REQUIRED
+>

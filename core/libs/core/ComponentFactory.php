@@ -81,7 +81,13 @@ abstract class ComponentFactory {
 		$line = fread($fh, 512);
 		fclose($fh);
 
-		if (strpos($line, 'http://corepl.us/api/2_1/component.dtd') !== false) {
+		// The 2.4 is the newest API version released.  It's compatible with 2.1
+		// This was released around Jan 2013
+		if (strpos($line, 'http://corepl.us/api/2_4/component.dtd') !== false) {
+			return new Component_2_1($filename);
+		}
+		// The 2.1 API version, released in early 2012.
+		elseif (strpos($line, 'http://corepl.us/api/2_1/component.dtd') !== false) {
 			return new Component_2_1($filename);
 		}
 		else {

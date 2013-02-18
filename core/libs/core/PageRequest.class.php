@@ -526,7 +526,15 @@ class PageRequest {
 	 * @return null|string
 	 */
 	public function getPost($key){
-		return (isset($_POST[$key])) ? $_POST[$key] : null;
+		// Damn nested data.... :/
+		$src = &$_POST;
+		if(strpos($key, '[') !== false){
+			$k1 = substr($key, 0, strpos($key, '['));
+			$key = substr($key, strlen($k1) + 1, -1);
+			$src = &$_POST[$k1];
+		}
+
+		return (isset($src[$key])) ? $src[$key] : null;
 		// Yup, that's it... like I said, shortcut function.
 	}
 
