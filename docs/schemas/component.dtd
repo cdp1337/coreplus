@@ -61,7 +61,7 @@
 	name CDATA #REQUIRED
 	type CDATA #REQUIRED
 	version CDATA #IMPLIED
-	operation (lt|le|eq|ge|gt) ""
+	operation (lt|le|eq|ge|gt) "ge"
 >
 
 <!--- Put your DTDDoc comment here. -->
