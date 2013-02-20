@@ -1,3 +1,9 @@
+Cron 1.1.2
+
+	* Added an admin dashboard widget to display crons that have run.
+	* New howto page for instructions on setting up the cron jobs.
+	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 16:52:35 -0500
+
 Cron 1.1.1
 
 	* Cleaned up the admin styles a little

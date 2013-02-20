@@ -210,6 +210,25 @@ class CronController extends Controller_2_1 {
 		$view->assign('entry', $log);
 	}
 
+	/**
+	 * Provide the admins with a general "howto" page for setting up cron jobs.
+	 *
+	 * This is linked to from the "your cron hasn't run recently" error.
+	 */
+	public function howto(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+		$view->mode = View::MODE_PAGEORAJAX;
+
+		if(!\Core\user()->checkAccess('p:/cron/viewlog')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$view->title = 'Cron Howto';
+		$view->assign('url', ROOT_URL_NOSSL);
+		$view->assign('sitename', SITENAME);
+	}
+
 
 	/**
 	 * @param $cron

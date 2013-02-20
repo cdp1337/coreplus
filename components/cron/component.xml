@@ -1,12 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.1.1">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.1.2">
 	<hooks>
 		<hookregister name="/cron/hourly" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/daily" description="Daily hook called from the cron system"/>
 		<hookregister name="/cron/weekly" description="Weekly hook called from the cron system"/>
 		<hookregister name="/cron/monthly" description="Monthly hook called from the cron system"/>
+		<hook name="/core/admin/view" call="CronHelper::AdminHook"/>
 	</hooks>
+	<requires>
+		<require name="core" type="component" version="2.4.5"/>
+	</requires>
 	<permissions>
 		<permission key="/cron/viewlog" description="View log of cron jobs that have run"/>
 	</permissions>
@@ -15,21 +19,33 @@
 	</pages>
 	<view searchdir="templates">
 		<file filename="templates/pages/cron/admin.tpl" md5="23eb5700f3221aa5c75c0c78ee25b951"/>
+		<file filename="templates/pages/cron/howto.tpl" md5="2e383dac65fc8c90dfbeb215234c1c83"/>
 		<file filename="templates/pages/cron/view.tpl" md5="2be8b2fa7918cedf851eebd2ada489f4"/>
+		<file filename="templates/widgets/cron/dashboard.tpl" md5="4188c68cf0269f88b2846a9e15bac0d4"/>
 	</view>
+	<widgets>
+		<widget baseurl="/cron/dashboard" title="Cron Status Dashboard" installable="/admin"/>
+	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="3666df1211bd92a478fdfa10ffba2013"/>
+		<file filename="CHANGELOG" md5="a7fc292a9b5752ce97cf8ce32649bce1"/>
 		<file filename="README.md" md5="d03dd621fdcc3aab5a50b9e88b361409"/>
-		<file filename="controllers/CronController.php" md5="d80ecb1bf29a44d8162bf83fe7d5bfb7">
+		<file filename="classes/CronHelper.php" md5="ba7b794f691ba12729d42f2275cee260">
+			<class name="CronHelper"/>
+		</file>
+		<file filename="controllers/CronController.php" md5="6261f2e2620b180d31e5ab0b1b17a70c">
 			<controller name="CronController"/>
 		</file>
 		<file filename="models/CronLogModel.php" md5="07887d6bf0d2c4942fc0df3de9573da3">
 			<class name="CronLogModel"/>
 		</file>
+		<file filename="widgets/CronWidget.php" md5="9eea085a3c8abee8a2b374d5e56e1c4a">
+			<class name="CronWidget"/>
+		</file>
 	</files>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.1.0"/>
 		<upgrade from="1.1.0" to="1.1.1"/>
+		<upgrade from="1.1.1" to="1.1.2"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/cron.css" md5="7a0aa1efe6bb083d16c4b3f79d59064b"/>
