@@ -2,23 +2,10 @@
 /**
  * Handles all the integration of the TinyMCE plugin.
  *
- * @package TinyMCE
- * @since 0.1
+ * @package TinyMCE-Enterprise
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
- * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+ * @license All rights reserved
  */
 
 abstract class TinyMCE {
@@ -26,6 +13,9 @@ abstract class TinyMCE {
 	public static function IncludeTinyMCE(){
 		ComponentHandler::LoadScriptLibrary('jquery');
 		CurrentPage::AddScript('js/tiny_mce/jquery.tinymce.js');
+
+		// Yes, the string needs quotes inside of quotes!  It's to be read by javascript after all.
+		$filebrowsercallback = (\Core\user()->checkAccess('p:/tinymce/imagebrowser/access')) ? "'Core.TinyMCE.FileBrowserCallback'" : 'null';
 
 		$loc = Core::ResolveAsset('js/tiny_mce/tiny_mce.js');
 
@@ -53,6 +43,9 @@ abstract class TinyMCE {
 		// Required to not mungle links.
 		convert_urls: false,
 
+		// Enterprise features
+		file_browser_callback: $filebrowsercallback,
+
 		// Example content CSS (should be your site CSS)
 		//content_css : "css/content.css",
 
@@ -78,6 +71,7 @@ abstract class TinyMCE {
 EOD;
 		// Add the necessary script
 		CurrentPage::AddScript($script, 'foot');
+		CurrentPage::AddScript('assets/js/tiny_mce/coreplus_functions.js', 'foot');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;

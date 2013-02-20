@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.5.6~core4" name="TinyMCE" execmode="web">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.5.6~core5" name="TinyMCE" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 		<require name="jquery" type="library"/>
@@ -11,24 +11,30 @@
 	<forms>
 		<formelement name="wysiwyg" class="TinyMCEFormElement"/>
 	</forms>
+	<permissions>
+		<permission key="/tinymce/filebrowser/access" description="TinyMCE - Access the file browser"/>
+		<permission key="/tinymce/filebrowser/upload" description="TinyMCE - Upload images in the file browser"/>
+	</permissions>
 	<view>
 		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="2d1d9893d6d2e518eaa953eb460df23d"/>
+		<file filename="templates/pages/tinymce/browser-icons.tpl" md5="5b750b271a0774a0021fd3688784728e"/>
 		<file filename="templates/pages/tinymce/link.phtml" md5="524d952e87774b2bafd2324e7c15274b"/>
 	</view>
 	<files>
 		<file filename="CHANGELOG" md5="d0282de892000032787257103464c6fd"/>
-		<file filename="TinyMCE.lib.php" md5="7080a5a9d334d12067cef63150746cff">
+		<file filename="TinyMCE.lib.php" md5="cba884d98b15e95fe2fad30f376aecf9">
 			<class name="TinyMCE"/>
 		</file>
 		<file filename="TinyMCEFormElement.class.php" md5="5c3eccd47fabc69634e956046b08ee73">
 			<class name="TinyMCEFormElement"/>
 		</file>
 		<file filename="changelog.txt" md5="2c4cc5de57ffd55f39c2cfcac0e73179"/>
-		<file filename="controllers/TinyMCEController.php" md5="5bf55247a453f047cf28b3e51f0170a9">
+		<file filename="controllers/TinyMCEController.php" md5="e6c30c44824c0b07c931e1b8145f9404">
 			<controller name="TinyMCEController"/>
 		</file>
 	</files>
 	<assets>
+		<file filename="assets/js/tiny_mce/coreplus_functions.js" md5="3edceacd7e596125d3a86cd277b96996"/>
 		<file filename="assets/js/tiny_mce/jquery.tinymce.js" md5="751418d46d453e7c6b1a7fbd4e60fefa"/>
 		<file filename="assets/js/tiny_mce/langs/en.js" md5="eff36a9433bccea2f3243b1465fe6fe3"/>
 		<file filename="assets/js/tiny_mce/license.txt" md5="0571cf371683742c14f1735079a78e38"/>
@@ -302,6 +308,7 @@
 		<upgrade from="3.5.6~core1" to="3.5.6~core2"/>
 		<upgrade from="3.5.6~core2" to="3.5.6~core3"/>
 		<upgrade from="3.5.6~core3" to="3.5.6~core4"/>
+		<upgrade from="3.5.6~core4" to="3.5.6~core5"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
@@ -310,6 +317,7 @@
 		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
 			GNU Affero General Public License v3
 		</license>
+		<license>All rights reserved</license>
 	</licenses>
 </component>
 

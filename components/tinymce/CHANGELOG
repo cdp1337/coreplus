@@ -1,3 +1,8 @@
+TinyMCE 3.5.6~core5
+
+	* Implementing the file and image browser into tinyMCE.
+	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:38:04 -0500
+
 TinyMCE 3.5.6~core4
 
 	* Moved the default tinymce options into a javascript variable Core.TinyMCEDefaults to allow tinymce to be reinstantiated easily
