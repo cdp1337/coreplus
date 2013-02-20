@@ -149,6 +149,11 @@ class BlogController extends Controller_2_1 {
 		$filters->applyToFactory($factory);
 		$articles = $factory->get();
 
+
+		if($blogid){
+			$view->addControl('Add Article', '/blog/article/create/' . $blogid, 'add');
+		}
+
 		$view->title = $title;
 		$view->assign('articles', $articles);
 		$view->assign('filters', $filters);
@@ -339,6 +344,49 @@ class BlogController extends Controller_2_1 {
 	}
 
 	/**
+	 * Shortcut for publishing an article.
+	 */
+	public function article_publish() {
+		$view    = $this->getView();
+		$request = $this->getPageRequest();
+
+		$blog = new BlogModel($request->getParameter(0));
+		if (!$blog->exists()) {
+			return View::ERROR_NOTFOUND;
+		}
+		$manager = \Core\user()->checkAccess('p:blog_manage');
+		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
+
+		if (!$editor) {
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$article = new BlogArticleModel($request->getParameter(1));
+		if (!$article->exists()) {
+			return View::ERROR_NOTFOUND;
+		}
+		if ($article->get('blogid') != $blog->get('id')) {
+			return View::ERROR_NOTFOUND;
+		}
+
+		if(!$request->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		// Is this article already published?
+		if($article->get('status') == 'published'){
+			Core::SetMessage('Article is already published!', 'error');
+			Core::GoBack(1);
+		}
+
+		$article->set('status', 'published');
+		$article->save();
+
+		Core::SetMessage('Published article successfully!', 'success');
+		Core::GoBack(1);
+	}
+
+	/**
 	 * Delete a blog article
 	 */
 	public function article_delete() {
@@ -473,10 +521,18 @@ class BlogController extends Controller_2_1 {
 		$view->assign('author', $author);
 		$view->assign('article', $article);
 		if ($editor) {
-			$view->addControl('Edit Blog Article', '/blog/article/update/' . $blog->get('id') . '/' . $article->get('id'), 'edit');
+			$view->addControl('Edit Article', '/blog/article/update/' . $blog->get('id') . '/' . $article->get('id'), 'edit');
+			if($article->get('status') == 'draft'){
+				$view->addControl( [
+					'title'   => 'Publish Article',
+					'link'    => '/blog/article/publish/' . $blog->get('id') . '/' . $article->get('id'),
+					'icon'    => 'arrow-up',
+					'confirm' => 'Publish article?'
+				] );
+			}
 			$view->addControl(
 				array(
-					'title'   => 'Delete Blog Article',
+					'title'   => 'Delete Article',
 					'link'    => '/blog/article/delete/' . $blog->get('id') . '/' . $article->get('id'),
 					'icon'    => 'remove',
 					'confirm' => 'Remove blog article?'

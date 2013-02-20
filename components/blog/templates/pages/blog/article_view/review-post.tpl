@@ -6,8 +6,13 @@
 		{if $author && Core::IsComponentAvailable('user-social')}
 			{widget baseurl="/userprofile/badge" user="$author" title="Posted By" orientation="right"}
 		{/if}
-		<meta itemprop="datePublished" content="{date format='c' date="`$article.published`"}"/>
-		<div class="blog-article-date">Posted {date date="`$article.published`"}</div>
+
+		{if $article.published}
+			<meta itemprop="dateCreated" content="{date format='c' date="`$article.published`"}"/>
+			<div class="blog-article-date">Posted {date date="`$article.published`"}</div>
+		{else}
+			<div class="blog-article-date">Not Published</div>
+		{/if}
 	</div>
 
 

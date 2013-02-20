@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.0" name="Blog" execmode="web">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.1" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.3" operation="ge"/>
 		<require name="user" type="component"/>
@@ -10,14 +10,14 @@
 		<permission key="blog_manage" description="Manage Blogs"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="ac50af11d0963921df288a1704a45e12"/>
-		<file filename="controllers/BlogController.php" md5="a79a609c9752b62ed28393bc32ba2aa8">
+		<file filename="CHANGELOG" md5="e55e5457abe2f0a3a8edcb6a927c92e3"/>
+		<file filename="controllers/BlogController.php" md5="37e94eab63201594e37d6e95ec253833">
 			<controller name="BlogController"/>
 		</file>
-		<file filename="helpers/BlogHelper.php" md5="12ce85a85803f96d6edeb679d73188b8">
+		<file filename="helpers/BlogHelper.php" md5="fad356918764eb577d1788dcc01baf98">
 			<class name="BlogHelper"/>
 		</file>
-		<file filename="models/BlogArticleModel.php" md5="1a67c60f61d3f2fc471a4fddac115ce9">
+		<file filename="models/BlogArticleModel.php" md5="29d663cba48d0d71d745ff3bc75d4127">
 			<class name="BlogArticleModel"/>
 		</file>
 		<file filename="models/BlogModel.php" md5="c759fe5447d3c8ea9b48f4d8e2031502">
@@ -37,12 +37,12 @@
 	</pages>
 	<description>Blog system.</description>
 	<view searchdir="templates">
-		<file filename="templates/pages/blog/admin.tpl" md5="d8daa5e7d13dc78c9e3dd1ef15f69eb9"/>
-		<file filename="templates/pages/blog/admin_view.tpl" md5="4d0dc88c545db0a4beae72e2d964dbdb"/>
+		<file filename="templates/pages/blog/admin.tpl" md5="ca665d689f267200349fcef29350b8bc"/>
+		<file filename="templates/pages/blog/admin_view.tpl" md5="21b2ec9bd612ddd8bb2aa9d50a25aa8d"/>
 		<file filename="templates/pages/blog/article_create.tpl" md5="37a42bd1bbcd4168f1ca2137ec70e597"/>
 		<file filename="templates/pages/blog/article_update.tpl" md5="7188695d360bad19187f63c7da3fc2f8"/>
-		<file filename="templates/pages/blog/article_view.tpl" md5="3499270e9c9c434dc3aeb3461bcacfbf"/>
-		<file filename="templates/pages/blog/article_view/review-post.tpl" md5="22a44f3920789fd6907bf8761fd5b5ec"/>
+		<file filename="templates/pages/blog/article_view.tpl" md5="3f444c17f3ddd908c2337161621fed2a"/>
+		<file filename="templates/pages/blog/article_view/review-post.tpl" md5="4f09567bf26232ec2f525f6d9ad5d154"/>
 		<file filename="templates/pages/blog/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/blog/editindex.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/blog/index.tpl" md5="fa6d0115d61816bfa21ba48ffb94f18f"/>
@@ -66,9 +66,10 @@
 				components/blog/upgrades/130_to_140_selectable.php
 			</phpfileinclude>
 		</upgrade>
+		<upgrade from="1.4.0" to="1.4.1"/>
 	</upgrades>
 	<assets>
-		<file filename="assets/css/blog.css" md5="377c9f8b8a5206a35a6751d5258be07c"/>
+		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>
 		<file filename="assets/js/blog-waypoint-scroll.js" md5="785bccef5ce4f802b581d91d26fff6c7"/>
 	</assets>
 	<authors>

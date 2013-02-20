@@ -59,7 +59,7 @@ class BlogArticleModel extends Model {
 		'status'      => array(
 			'type'    => Model::ATT_TYPE_ENUM,
 			'options' => array('published', 'draft'),
-			'default' => 'published',
+			'default' => 'draft',
 			'form' => array(
 				'description' => 'Set this to "draft" to make it visible to editors and admins only.  Useful for working on an article across multiple sessions while keeping not-ready content hidden from public users.'
 			)

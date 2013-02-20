@@ -1,3 +1,7 @@
+/**
+Frontend styles
+**/
+
 .blog-listing .blog-article {
 	border-bottom: 1px solid #BBBBBB;
 	margin-bottom: 1em;
@@ -25,5 +29,14 @@
 }
 
 .blog-listing .blog-article.blog-article-status-draft {
+	background-color: rgba(200, 150, 50, 0.4);
+}
+
+
+/**
+Backend styles
+**/
+
+table.listing tbody .blog-article-status-draft {
 	background-color: rgba(200, 150, 50, 0.4);
 }

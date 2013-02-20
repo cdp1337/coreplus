@@ -1,3 +1,12 @@
+{**
+ * Variables available here are:
+ *
+ * @var $form Form The form
+ *}
+
+{css src="assets/css/blog.css"}{/css}
+
+
 {$filters->render()}
 
 {if !sizeof($articles)}
@@ -21,7 +30,7 @@
 			<th width="80">&nbsp;</th>
 		</tr>
 		{foreach $articles as $article}
-			<tr>
+			<tr class="blog-article-status-{$article.status}">
 				<td>
 					{img src="public/blog/`$article.image`" placeholder="blog" dimensions="50x50"}
 				</td>
@@ -29,7 +38,7 @@
 					{$article.title}
 				</td>
 				<td>
-					<span class="blog-article-status-{$article.status}">{$article.status}</span>
+					{$article.status}
 				</td>
 				<td>
 					{$article->getLink('Page')->get('pageviews')}

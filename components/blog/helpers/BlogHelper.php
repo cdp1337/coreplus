@@ -158,6 +158,7 @@ abstract class BlogHelper {
 				$article->save();
 			}
 
+			Core::SetMessage(($isnew ? 'Created' : 'Updated') . ' blog article successfully!', 'success');
 			return Core::GetHistory();
 			//return $article->get('baseurl');
 		}

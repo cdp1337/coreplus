@@ -1,3 +1,12 @@
+Blog 1.4.1
+
+	* Additional control links throughout the blog system.
+	* New shortcut methods for publishing articles.
+	* Switched default article status to draft instead of published.
+	* Fixed some minor glitches with the published date if it's still in draft.
+	* Minor styling tweaks.
+	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 16:48:08 -0500
+
 Blog 1.4.0
 
 	* New styles for blogs.
