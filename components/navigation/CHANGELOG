@@ -1,3 +1,8 @@
+Navigation 2.1.5
+
+	* New nagivagion widget - children.  Displays the children of the current page.
+	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:30:03 -0500
+
 Navigation 2.1.4
 
 	* Set the Siblings navigation widget to respect the selectable flag.

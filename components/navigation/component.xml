@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.4" name="Navigation" execmode="web">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.5" name="Navigation" execmode="web">
 	<requires>
 		<require name="core" type="component" operation="ge" version="2.4.4"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="fff0a0bcf12970d16016e3ce977eefa7"/>
+		<file filename="CHANGELOG" md5="b6a8017fe7dbd750a5cc6a45151528a1"/>
 		<file filename="controllers/NavigationController.php" md5="f609072de0e71e7ba8e0b07c4959847a">
 			<controller name="NavigationController"/>
 		</file>
@@ -15,7 +15,7 @@
 		<file filename="models/NavigationEntry.model.php" md5="d143d8b99e34338ec178ee9282001044">
 			<class name="NavigationEntryModel"/>
 		</file>
-		<file filename="widgets/NavigationWidget.php" md5="b5add557a41845f3dafd326911eb52e7">
+		<file filename="widgets/NavigationWidget.php" md5="ee1e5f1c87e4d475abd26326820d4369">
 			<class name="NavigationWidget"/>
 		</file>
 	</files>
@@ -27,16 +27,18 @@
 		<file filename="templates/pages/navigation/index.tpl" md5="8fbbccd35a3cbc609cc8845b6a3a45ee"/>
 		<file filename="templates/pages/navigation/view.tpl" md5="44b506f0e3ca0a1bfef9d5f4b992a8c0"/>
 		<file filename="templates/widgets/navigation/_menu.inc.tpl" md5="90dbd8a3b4b2a96a44136ed7a39e9dda"/>
-		<file filename="templates/widgets/navigation/siblings.tpl" md5="15e80b7f0ae2230cc8ff57d316ff6124"/>
-		<file filename="templates/widgets/navigation/siblingsandchildren.tpl" md5="2a5a80e0fdd98d02f7695367a89e9015"/>
+		<file filename="templates/widgets/navigation/children.tpl" md5="2f26fdaa35d28a1a094699a825db64d8"/>
+		<file filename="templates/widgets/navigation/siblings.tpl" md5="e02e7719cfb212e4d9f5637b396e5f10"/>
+		<file filename="templates/widgets/navigation/siblingsandchildren.tpl" md5="2f26fdaa35d28a1a094699a825db64d8"/>
 		<file filename="templates/widgets/navigation/view.tpl" md5="629c5fcb1cd7f3ecddff0451bc1eee7a"/>
 	</view>
 	<pages>
-		<page baseurl="/Navigation" admin="1" widget="0" access="" title="Navigation Listings"/>
+		<page baseurl="/Navigation" admin="1" access="" title="Navigation Listings"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/navigation/siblings" title="Page Siblings Nav"/>
 		<widget baseurl="/navigation/siblingsandchildren" title="Page Siblings w/Children Nav"/>
+		<widget baseurl="/navigation/children" title="Page Children Nav"/>
 	</widgets>
 	<assets>
 		<file filename="assets/js/navigation/manager.js" md5="e7852b3c06f5b208e35b1cb5ad08f84f"/>
@@ -50,6 +52,7 @@
 		<upgrade from="2.1.1" to="2.1.2"/>
 		<upgrade from="2.1.2" to="2.1.3"/>
 		<upgrade from="2.1.3" to="2.1.4"/>
+		<upgrade from="2.1.4" to="2.1.5"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -164,6 +164,8 @@ class NavigationWidget extends Widget_2_1 {
 		$model   = $current->getPageModel();
 		if (!$model) return '';
 		$baseurl = $model->get('parenturl');
+
+		// Top level pages don't get their siblings displayed.
 		if (!$baseurl) return '';
 
 		if ($model->get('admin')) {
@@ -189,6 +191,37 @@ class NavigationWidget extends Widget_2_1 {
 
 		$view->assign('entries', $entries);
 	}
+
+	/**
+	 * This is a widget to display children of the current page
+	 *
+	 * The page is dynamic based on the currently viewed page.
+	 *
+	 * @return int
+	 */
+	public function children() {
+		$view    = $this->getView();
+		$current = PageRequest::GetSystemRequest();
+		$model   = $current->getPageModel();
+		if (!$model) return '';
+		$baseurl = $model->get('baseurl');
+
+		// Give me all the siblings of that baseurl.
+		$pages = PageModel::Find(array('parenturl' => $baseurl, 'selectable' => 1), null, 'title');
+
+		$entries = array();
+		foreach ($pages as $page) {
+			$subpages   = PageModel::Find(array('parenturl' => $page->get('baseurl'), 'selectable' => 1), null, 'title');
+			$subentries = array();
+			foreach ($subpages as $subpage) {
+				$subentries[] = array('obj' => $subpage, 'children' => array(), 'class' => '');
+			}
+			$entries[] = array('obj' => $page, 'children' => $subentries, 'class' => 'active');
+		}
+
+		$view->assign('entries', $entries);
+	}
+
 
 
 	private function _transposeClass(&$el){
