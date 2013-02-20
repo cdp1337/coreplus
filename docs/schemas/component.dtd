@@ -24,7 +24,7 @@
 	The name MUST match the component's directory, (capitalization is optional).
 	The version SHOULD start with a number, and ideally have minor and point revisions, optionally with a third party flag at the end.
 -->
-<!ELEMENT component ((otherfiles)?|licenses|authors|(requires)?|(provides)?|(hooks)?|(smartyplugins)?|(includes)?|files|(pages)?|(view)?|install|(description)?|(configs)?|(userconfigs)?|(assets)?|(upgrades)?|(forms)?|(widgets)?|(permissions)?)>
+<!ELEMENT component (licenses|authors|files|install|(otherfiles|requires|provides|hooks|smartyplugins|includes|pages|view|description|configs|userconfigs|assets|upgrades|forms|widgets|permissions)?)>
 <!ATTLIST component
 	execmode (web|cli|both) "web"
 	name CDATA #REQUIRED

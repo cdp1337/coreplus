@@ -171,8 +171,8 @@ class PackageXML extends XMLLoader {
 
 	public function getRequires() {
 		$ret = array();
-		foreach ($this->getElements('requires') as $el) {
-			// <requires name="JQuery" type="library" version="1.4" operation="ge"/>
+		foreach ($this->getElements('require') as $el) {
+			// <require name="JQuery" type="library" version="1.4" operation="ge"/>
 			$ret[] = array(
 				'name'      => strtolower($el->getAttribute('name')),
 				'type'      => $el->getAttribute('type'),
@@ -185,19 +185,20 @@ class PackageXML extends XMLLoader {
 
 	public function getProvides() {
 		$ret = array();
+		/* (this is now handled in the packager correctly!)
 		// This element itself.
 		$ret[] = array(
 			'name'    => strtolower($this->getName()),
 			'type'    => 'component',
 			'version' => $this->getVersion()
 		);
-		foreach ($this->getElements('provides') as $el) {
+		*/
+		foreach ($this->getElements('provide') as $el) {
 			// <requires name="JQuery" type="library" version="1.4" operation="ge"/>
 			$ret[] = array(
-				'name'      => strtolower($el->getAttribute('name')),
-				'type'      => $el->getAttribute('type'),
-				'version'   => $el->getAttribute('version'),
-				'operation' => $el->getAttribute('operation'),
+				'name'    => strtolower($el->getAttribute('name')),
+				'type'    => $el->getAttribute('type'),
+				'version' => $el->getAttribute('version'),
 			);
 		}
 		return $ret;
@@ -218,4 +219,14 @@ class PackageXML extends XMLLoader {
 		}
 	}
 	*/
+
+	/**
+	 * If this package is embedded in a repo.xml, it probably has a GPG key associated to it!
+	 *
+	 * @return string
+	 */
+	public function getKey(){
+		$k = $this->getRootDOM()->getAttribute('key');
+		return $k ? preg_replace('/[^a-fA-F0-9]/', '', $k) : null;
+	}
 }

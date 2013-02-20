@@ -127,6 +127,20 @@ class CoreDateTime {
 	}
 
 
+	/**
+	 * Shortcut function for getting the time now.
+	 *
+	 * @param string $format
+	 * @param int    $timezone
+	 *
+	 * @return string
+	 */
+	public static function Now($format = 'Y-m-d', $timezone = Time::TIMEZONE_DEFAULT){
+		$d = new CoreDateTime();
+		return $d->getFormatted($format, $timezone);
+	}
+
+
 
 
 	/**

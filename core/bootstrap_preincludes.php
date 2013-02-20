@@ -58,6 +58,7 @@ require_once(ROOT_PDIR . 'core/functions/Core.functions.php');
 require_once(ROOT_PDIR . 'core/libs/filestore/File_Backend.interface.php');
 require_once(ROOT_PDIR . 'core/libs/filestore/Directory_Backend.interface.php');
 require_once(ROOT_PDIR . 'core/libs/filestore/FileContentFactory.class.php');
+require_once(ROOT_PDIR . 'core/libs/filestore/File_Contents.interface.php');
 require_once(ROOT_PDIR . 'core/libs/filestore/backends/file_awss3.backend.php');
 require_once(ROOT_PDIR . 'core/libs/filestore/backends/file_local.backend.php');
 require_once(ROOT_PDIR . 'core/libs/filestore/backends/directory_local.backend.php');

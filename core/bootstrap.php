@@ -77,7 +77,7 @@ $preincludes_time = microtime(true);
 
 // And start the core!
 Debug::Write('Loading core system');
-require_once(ROOT_PDIR . 'core/libs/core/InstallTask.class.php');
+//require_once(ROOT_PDIR . 'core/libs/core/InstallTask.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
 //Core::Singleton();
 
@@ -425,7 +425,7 @@ Core::AddProfileTime('maindefines_complete', $maindefines_time);
 require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
 try {
 	$dbconn = DMI::GetSystemDMI();
-	HookHandler::DispatchHook('/core/db/ready');
+	ConfigHandler::_DBReadyHook();
 }
 // This catch statement should be hit anytime the database is not available,
 // core table doesn't exist, or the like.

@@ -1,0 +1,10 @@
+#update-terminal {
+	border: 1px solid #888888;
+	border-radius: 4px;
+	margin-bottom: 10px;
+}
+
+#update-terminal iframe {
+	width: 100%;
+	height: 25em;
+}

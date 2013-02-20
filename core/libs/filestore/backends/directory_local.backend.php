@@ -259,8 +259,13 @@ class Directory_local_backend implements Directory_Backend {
 	 */
 	public function remove() {
 		$ftp    = \Core\FTP();
+		$tmpdir = TMP_DIR;
+		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 
-		if(!$ftp){
+		if(
+			!$ftp || // FTP not enabled or
+			(strpos($this->getPath(), $tmpdir) === 0) // Destination is a temporary directory.
+		){
 			$dirqueue = array($this->getPath());
 			$x        = 0;
 			do {

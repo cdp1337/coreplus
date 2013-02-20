@@ -28,6 +28,24 @@ class UpdaterController extends Controller_2_1 {
 		$this->accessstring = 'g:admin';
 	}
 
+
+	/**
+	 * Get the controls for the updater.
+	 *
+	 * @return array|null|void
+	 */
+	public function getControls(){
+		$view = $this->getView();
+
+		$view->addControl(['title' => 'Manage Repositories', 'link' => '/updater/repos', 'icon' => 'cloud']);
+		$view->addControl(['title' => 'Add Repository Site', 'link' => 'updater/repos/add', 'icon' => 'add']);
+
+		$view->addControl(['title' => 'Manage GPG Keys', 'link' => '/updater/keys', 'icon' => 'key']);
+		$view->addControl(['title' => 'Import GPG Key', 'link' => '/updater/keys/import', 'icon' => 'add']);
+
+		$view->addControl(['title' => 'Find New Packages', 'link' => '/updater/browse', 'icon' => 'search']);
+	}
+
 	/**
 	 * Listing controller of the updater.
 	 *
@@ -60,9 +78,6 @@ class UpdaterController extends Controller_2_1 {
 
 
 		$view->title = 'System Updater';
-		$view->addControl(array('title' => 'Manage Repos', 'link' => '/updater/repos', 'icon' => 'cloud'));
-		$view->addControl(array('title' => 'Manage GPG Keys', 'link' => '/updater/keys', 'icon' => 'key'));
-		$view->addControl(array('title' => 'Browse Packages', 'link' => '/updater/browse', 'icon' => 'search'));
 		$view->assign('sitecount', $sitecount);
 		$view->assign('components', $components);
 		$view->assign('core', Core::GetComponent('core'));
@@ -80,29 +95,34 @@ class UpdaterController extends Controller_2_1 {
 	public function check() {
 		$view = $this->getView();
 
-		$view->contenttype = View::CTYPE_JSON;
+
 
 		$updates = UpdaterHelper::GetUpdates();
-		$updatesavailable = false;
 
-		// Since I'm not sure which version of core is going to be returned...
-		foreach($updates['core'] as $up){
-			if($up['status'] == 'update') $updatesavailable = true;
+		$view->contenttype = View::CTYPE_JSON;
+		// Will get overwrote if found to be true.
+		$view->jsondata = false;
+		$view->record = false;
+
+
+		if(isset($updates['core']) && $updates['core']['status'] == 'update'){
+			$view->jsondata = true;
+			return;
 		}
 
 		// Same for components and themes, (only a little more depth)
-		foreach($updates['components'] as $c){
-			foreach($c as $up){
-				if($up['status'] == 'update') $updatesavailable = true;
+		foreach($updates['components'] as $up){
+			if($up['status'] == 'update'){
+				$view->jsondata = true;
+				return;
 			}
 		}
-		foreach($updates['themes'] as $c){
-			foreach($c as $up){
-				if($up['status'] == 'update') $updatesavailable = true;
+		foreach($updates['themes'] as $up){
+			if($up['status'] == 'update'){
+				$view->jsondata = true;
+				return;
 			}
 		}
-
-		$view->jsondata = $updatesavailable;
 	}
 
 
@@ -113,28 +133,23 @@ class UpdaterController extends Controller_2_1 {
 		$view = $this->getView();
 		$req  = $this->getPageRequest();
 
-		$view->contenttype = View::CTYPE_JSON;
+
 
 		$components = UpdaterHelper::GetUpdates();
 
 		// Allow filters to be set.
 		if($req->getParameter('onlyupdates')){
-			foreach($components['core'] as $v => $dat){
-				if($dat['status'] != 'update') unset($components['core'][$v]);
+			// Core not updatable? remove it.
+			if($components['core']['status'] != 'update') unset($components['core']);
+
+			// Check each component too.
+			foreach($components['components'] as $c => $dat){
+				if($dat['status'] != 'update') unset($components['components'][$c]);
 			}
 
-			foreach($components['components'] as $c => $arr){
-				foreach($arr as $v => $dat){
-					if($dat['status'] != 'update') unset($components['components'][$c][$v]);
-				}
-				if(!sizeof($components['components'][$c])) unset($components['components'][$c]);
-			}
-
-			foreach($components['themes'] as $c => $arr){
-				foreach($arr as $v => $dat){
-					if($dat['status'] != 'update') unset($components['themes'][$c][$v]);
-				}
-				if(!sizeof($components['themes'][$c])) unset($components['themes'][$c]);
+			// And the themes.
+			foreach($components['themes'] as $c => $dat){
+				if($dat['status'] != 'update') unset($components['themes'][$c]);
 			}
 		}
 
@@ -147,6 +162,8 @@ class UpdaterController extends Controller_2_1 {
 			unset($components['themes']);
 		}
 
+
+		$view->contenttype = View::CTYPE_JSON;
 		$view->jsondata = $components;
 	}
 
@@ -175,11 +192,6 @@ class UpdaterController extends Controller_2_1 {
 		$sites = UpdateSiteModel::Find();
 
 		$view->title = 'Repositories';
-		$view->addControl('Add Repo', 'updater/repos/add', 'add');
-		//$view->addControl(array('title' => 'Manage Repos', 'link' => '/updater/repos', 'icon' => 'cloud'));
-		$view->addControl(array('title' => 'Manage GPG Keys', 'link' => '/updater/keys', 'icon' => 'key'));
-		$view->addControl(array('title' => 'Browse Packages', 'link' => '/updater/browse', 'icon' => 'search'));
-
 		$view->assign('sites', $sites);
 
 	}
@@ -318,15 +330,20 @@ class UpdaterController extends Controller_2_1 {
 	/**
 	 * Browse the repositories for a component, be it new or update.
 	 *
-	 * This is designed to give a syndicated list of ALL components in all enabled repos.
+	 * This is designed to give a syndicated list of ALL components in all available repos.
 	 */
 	public function browse() {
 		$view = $this->getView();
 
-		$view->title = 'Browse Packages';
-		$view->addControl(array('title' => 'Manage Repos', 'link' => '/updater/repos', 'icon' => 'cloud'));
-		$view->addControl(array('title' => 'Manage GPG Keys', 'link' => '/updater/keys', 'icon' => 'key'));
-		//$view->addControl(array('title' => 'Browse Packages', 'link' => '/updater/browse', 'icon' => 'search'));
+		$sitecount = UpdateSiteModel::Count();
+
+		if($sitecount == 0){
+			Core::SetMessage('Please add at least one repository before searching for new packages!', 'error');
+			Core::Redirect('/updater/repos/add');
+		}
+
+		$view->assign('sitecount', $sitecount);
+		$view->title = 'Find New Packages';
 	}
 
 	public function keys() {
@@ -369,10 +386,6 @@ class UpdaterController extends Controller_2_1 {
 
 
 		$view->title = "GPG Keys";
-		$view->addControl('Import Key', '/updater/keys/import', 'add');
-		$view->addControl(array('title' => 'Manage Repos', 'link' => '/updater/repos', 'icon' => 'cloud'));
-		//$view->addControl(array('title' => 'Manage GPG Keys', 'link' => '/updater/keys', 'icon' => 'key'));
-		$view->addControl(array('title' => 'Browse Packages', 'link' => '/updater/browse', 'icon' => 'search'));
 		$view->assign('directory', GPG_HOMEDIR);
 		$view->assign('keys', $keys);
 	}
@@ -454,27 +467,6 @@ class UpdaterController extends Controller_2_1 {
 		Core::Redirect('/updater/keys');
 	}
 
-	public function component_install() {
-		$view = $this->getView();
-		$req = $this->getPageRequest();
-
-		// This is a json-only page.
-		$view->contenttype = View::CTYPE_JSON;
-
-		// This is a post-only page!
-		if(!$req->isPost()){
-			$view->error = View::ERROR_BADREQUEST;
-			return;
-		}
-
-		$name    = strtolower($req->getParameter(0));
-		$version = $req->getParameter(1);
-		$dryrun  = $req->getParameter('dryrun');
-
-		$status = UpdaterHelper::InstallComponent($name, $version, $dryrun);
-
-		$view->jsondata = $status;
-	}
 
 	public function component_disable() {
 		$view = $this->getView();
@@ -620,35 +612,69 @@ class UpdaterController extends Controller_2_1 {
 		$view->jsondata = array('changes' => array($name), 'dryrun' => $dryrun);
 	}
 
+	/**
+	 * Public page to kick off the installation or upgrade of components.
+	 */
+	public function component_install() {
+		$view = $this->getView();
+		$req = $this->getPageRequest();
 
+		$name    = strtolower($req->getParameter(0));
+		$version = $req->getParameter(1);
+
+		$this->_performInstall('components', $name, $version);
+	}
+
+	/**
+	 * Public page to kick off the installation or upgrade of themes.
+	 */
 	public function theme_install() {
 		$view = $this->getView();
 		$req  = $this->getPageRequest();
 
-		// This is a json-only page.
-		$view->contenttype = View::CTYPE_JSON;
-
-		// This is a post-only page!
-		if(!$req->isPost()){
-			$view->error = View::ERROR_BADREQUEST;
-			return;
-		}
-
 		$name    = strtolower($req->getParameter(0));
 		$version = $req->getParameter(1);
-		$dryrun  = $req->getParameter('dryrun');
 
-		$status = UpdaterHelper::InstallTheme($name, $version, $dryrun);
-
-		$view->jsondata = $status;
+		$this->_performInstall('themes', $name, $version);
 	}
 
+	/**
+	 * Public page to kick off the installation or upgrade of the core.
+	 */
 	public function core_install() {
 		$view = $this->getView();
 		$req  = $this->getPageRequest();
 
-		// This is a json-only page.
-		$view->contenttype = View::CTYPE_JSON;
+		$version = $req->getParameter(0);
+
+		$this->_performInstall('core', 'core', $version);
+	}
+
+
+	/**
+	 * Helper function called by the *_install views.
+	 *
+	 * @param $type
+	 * @param $name
+	 * @param $version
+	 */
+	private function _performInstall($type, $name, $version){
+		$view = $this->getView();
+		$req  = $this->getPageRequest();
+
+		$dryrun  = $req->getParameter('dryrun');
+		$verbose = $req->getParameter('verbose');
+		$nl      = "<br/>\n";
+
+		// For standard calls, this is a json-only page.
+		// verbose runs are html however.
+		if($verbose){
+			$view->contenttype = View::CTYPE_HTML;
+			$view->mode = View::MODE_NOOUTPUT;
+		}
+		else{
+			$view->contenttype = View::CTYPE_JSON;
+		}
 
 		// This is a post-only page!
 		if(!$req->isPost()){
@@ -656,38 +682,54 @@ class UpdaterController extends Controller_2_1 {
 			return;
 		}
 
-		$version = $req->getParameter(0);
-		$dryrun  = $req->getParameter('dryrun');
-
-		$status = UpdaterHelper::InstallCore($version, $dryrun);
-
-		// This page cannot continue execution with the core, as it was extracted.  Simply return raw json.
-		if($status['status'] == 1){
-			die(json_encode($status));
-		}
-
-		$view->jsondata = $status;
-	}
+		$return = UpdaterHelper::PerformInstall($type, $name, $version, $dryrun, $verbose);
 
 
-	public function _Sites_Update(Form $form) {
-
-		$m = $form->getModel();
-
-		// Test it first if it's enabled!
-		if ($m->get('enabled')) {
-			if (!$m->isValid()) {
-				Core::SetMessage('Requested update site does not appear to be valid!', 'error');
-				return false;
+		// If it's not a dry run, record a log of this action!
+		if(!$dryrun){
+			if($return['status']){
+				$logmsg = 'Installation of ' . $type . ' ' . $name . ' ' . $version . ' succeeded!' . "\n" . $return['message'];
+				if(isset($return['changes'])){
+					foreach($return['changes'] as $change){
+						$logmsg .= "\n" . $change;
+					}
+				}
+				$logstatus = 'success';
 			}
+			else{
+				$logmsg = 'Installation of ' . $type . ' ' . $name . ' ' . $version . ' failed due to' . "\n" . $return['message'];
+				$logstatus = 'fail';
+			}
+
+			SecurityLogModel::Log(
+				'/updater/installation',
+				$logstatus,
+				null,
+				$logmsg
+			);
 		}
 
-		$form->getModel()->save();
 
-		// Will be useful for importing new keys.
-		// gpg --homedir . --no-permission-warning --keyserver x-hkp://pool.sks-keyservers.net --recv-keys B2BEDCCB
+		if($verbose){
+			if(!$return['status']){
+				echo $nl . '[===========  RESULTS  ===========]' . $nl;
+				echo '[ERROR] - ' . $return['message'] . $nl;
+			}
+			else{
+				echo $nl . '[===========  RESULTS  ===========]' . $nl;
+				if(isset($return['changes'])){
+					foreach($return['changes'] as $change){
+						echo '[INFO] - ' . $change . $nl;
+					}
+				}
+				echo '[SUCCESS] - Performed all operations successfully!' . $nl;
+			}
+			echo '<div id="results" style="display:none;" status="' . $return['status'] . '">' . $return['message'] . '</div>';
+		}
+		else{
+			$view->jsondata = $return;
+		}
 
-		return 'updater/repos';
 	}
 
 }

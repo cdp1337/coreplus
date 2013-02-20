@@ -65,6 +65,8 @@ if(!is_dir($tmpdir)) exec('mkdir -p "' . $tmpdir . '"');
 if(file_exists($destdir . 'repo.xml')){
 	// w00t, load it up and import the info!
 	$repo = new RepoXML($destdir . 'repo.xml');
+	// Don't forget to remove any previous components!
+	$repo->clearPackages();
 }
 else{
 	// Just a new one works...
@@ -189,8 +191,14 @@ foreach($directories as $dir){
 				continue;
 			}
 
+			$output = array();
+			// I also need the GPG key for this specific package.
+			exec('gpg --verify "' . $fullpath . '" 2>&1 | grep "key ID" | sed \'s:.*key ID \([A-Z0-9]*\)$:\1:\'', $output, $result);
+			$key = $output[0];
+
 			// Read in that package file and append it to the repo xml.
 			$package = new PackageXML($tmpdir . 'package.xml');
+			$package->getRootDOM()->setAttribute('key', $key);
 			$package->setFileLocation($relpath);
 			$repo->addPackage($package);
 			$addedpackages++;

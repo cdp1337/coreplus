@@ -77,7 +77,15 @@ class File_remote_backend implements File_Backend {
 	public function getFilesize($formatted = false) {
 		$h = $this->_getHeaders();
 
-		$size = (isset($h['Content-Length'])) ? $h['Content-Length'] : 0;
+		if(isset($h['Content-Length'])){
+			// yay!
+			$size = $h['Content-Length'];
+		}
+		else{
+			// Well damn, download the file then...
+			$tmp = $this->_getTmpLocal();
+			$size = $tmp->getFilesize(false);
+		}
 
 		return ($formatted) ? Core::FormatSize($size, 2) : $size;
 	}
@@ -402,6 +410,16 @@ class File_remote_backend implements File_Backend {
 		$this->_getHeaders();
 
 		return ($this->_response == 200);
+	}
+
+	/**
+	 * Get the HTTP status code for this file.
+	 *
+	 * @return int
+	 */
+	public function getStatus(){
+		$this->_getHeaders();
+		return $this->_response;
 	}
 
 	public function isLocal() {

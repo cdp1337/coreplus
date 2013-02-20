@@ -74,6 +74,7 @@
 	name CDATA #REQUIRED
 	version CDATA #REQUIRED
 	packager CDATA #REQUIRED
+	key CDATA #REQUIRED
 >
 
 <!ELEMENT location (#PCDATA)>

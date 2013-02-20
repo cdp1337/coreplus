@@ -112,11 +112,11 @@ class Component_2_1 {
 	private $_permissions = array();
 
 	// A set of error codes components may encounter.
-	const ERROR_NOERROR = 0; // 0000
-	const ERROR_INVALID = 1; // 0001
-	const ERROR_WRONGEXECMODE = 2; // 0010
-	const ERROR_MISSINGDEPENDENCY = 4; // 0100
-	const ERROR_CONFLICT = 8; // 1000
+	const ERROR_NOERROR = 0;           // 00000
+	const ERROR_INVALID = 1;           // 00001
+	const ERROR_WRONGEXECMODE = 2;     // 00010
+	const ERROR_MISSINGDEPENDENCY = 4; // 00100
+	const ERROR_CONFLICT = 8;          // 01000
 
 	/**
 	 * This is the error code of any errors encountered.
@@ -131,10 +131,18 @@ class Component_2_1 {
 	public $errstrs = array();
 
 	/**
-	 * This object only needs to be loaded once
-	 * @var boolean
+	 * Only try to load a component only once!
+	 *
+	 * @var bool
 	 */
 	private $_loaded = false;
+
+	/**
+	 * Only try to load the files for this component once!
+	 *
+	 * @var bool
+	 */
+	private $_filesloaded = false;
 
 	/**
 	 * The smarty plugin directory cache.  This is to reduce the number of lookups required.
@@ -197,6 +205,8 @@ class Component_2_1 {
 
 		$this->_name    = $this->_xmlloader->getRootDOM()->getAttribute('name');
 		$this->_version = $this->_xmlloader->getRootDOM()->getAttribute("version");
+
+		Debug::Write('Loading metadata for component [' . $this->_name . ']');
 
 		// Load the database information, if there is any.
 		$dat = ComponentFactory::_LookupComponentData($this->_name);
@@ -406,6 +416,9 @@ class Component_2_1 {
 		// First of all, this cannot be called on disabled or uninstalled components.
 		if(!$this->isInstalled()) return false;
 		if(!$this->isEnabled()) return false;
+		if($this->_filesloaded) return true;
+
+		Debug::Write('Loading files for component [' . $this->getName() . ']');
 
 		$dir = $this->getBaseDir();
 
@@ -426,7 +439,6 @@ class Component_2_1 {
 			if($h->getAttribute('return')){
 				$hook->returnType = $h->getAttribute('return');
 			}
-			HookHandler::RegisterHook($hook);
 		}
 
 		// Register any events that may be present.
@@ -443,6 +455,7 @@ class Component_2_1 {
 			Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
 		}
 
+		$this->_filesloaded = true;
 
 		return true;
 	}
@@ -1383,13 +1396,36 @@ class Component_2_1 {
 
 			// Just something to help the log.
 			$action = ($m->exists()) ? 'Updated' : 'Added';
+			$installable = $subnode->getAttribute('installable');
 
 			// Do not "update" value, keep whatever the user set previously.
 			if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
 
-			$m->set('installable', $subnode->getAttribute('installable'));
+			$m->set('installable', $installable);
 
-			if ($m->save()) $changes[] = $action . ' widget [' . $m->get('baseurl') . ']';
+			if ($m->save()){
+				$changes[] = $action . ' widget [' . $m->get('baseurl') . ']';
+
+				// Is this a new widget and it's an admin installable one?
+				// If so install it to the admin widgetarea!
+				if($action == 'Added' && $installable == '/admin'){
+					$weight = WidgetInstanceModel::Count([
+						'widgetarea' => 'Admin Dashboard',
+						'page' => 'pages/admin/index.tpl',
+					]) + 1;
+
+					$wi = new WidgetInstanceModel();
+					$wi->setFromArray([
+						'baseurl' => $m->get('baseurl'),
+						'page' => 'pages/admin/index.tpl',
+						'widgetarea' => 'Admin Dashboard',
+						'weight' => $weight
+					]);
+					$wi->save();
+
+					$changes[] = 'Installed  widget ' . $m->get('baseurl') . ' into the admin dashboard!';
+				}
+			}
 		}
 
 		return ($changes > 0) ? $changes : false;

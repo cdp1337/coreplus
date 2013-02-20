@@ -33,8 +33,23 @@ Core Plus 2.4.5
 	* FileContentFactory now works [better] if Core isn't loaded.
 	* Overhauled the create_repo script to be a little more user friendly and to work with the
 	  new repo features.
-
-	--Charlie Powell <charlie@eval.bz>  Mon, 18 Feb 2013 08:29:12 -0500
+	* Overhauled the update backend and UI.  This now behaves more closely to how the WHM
+	  updater looks.
+	* Added some debug statements throughout the system.
+	* Cleaned up the Hook system a little; it now complains if you try to register two hooks
+	  with the same name.
+	* Admin dashboard widgets now get installed to the dashboard automatically, (they can later
+	  be removed if desired).
+	* Core::CheckClass no longer tries to load itself recursively.....  I'm not sure what I was
+	  smoking when I put those lines in :/
+	* Core::GetComponent now will retrieve a disabled component if called by name.
+	* New shortcut method, CoreDateTime::Now().  This gets the time "now".
+	* Debug::Write now formats the messages using <pre> tags.
+	* Fixed the Directory remove statement for tmp filesystem over FTP.
+	* Fixed the File remove statement for tmp filesystem over FTP.
+	* File copies now throw Exceptions.
+	* The GPG key of a given package is now listed in the repo.xml file.
+	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 09:14:47 -0500
 
 Core Plus 2.4.4
 

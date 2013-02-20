@@ -171,6 +171,7 @@ class ConfigHandler implements ISingleton {
 	}
 
 	private function _loadDB(){
+		Debug::Write('Config data loading from database');
 		// Clear out the cache, (if it has any)
 		$this->_clearCache();
 
@@ -198,7 +199,6 @@ class ConfigHandler implements ISingleton {
 	public static function Singleton() {
 		if (self::$Instance === null) {
 			self::$Instance = new self();
-			HookHandler::AttachToHook('/core/db/ready', 'ConfigHandler::_DBReadyHook');
 		}
 		return self::$Instance;
 	}

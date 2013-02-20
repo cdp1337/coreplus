@@ -295,8 +295,13 @@ class File_local_backend implements File_Backend {
 
 	public function delete() {
 		$ftp    = \Core\FTP();
+		$tmpdir = TMP_DIR;
+		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 
-		if(!$ftp){
+		if(
+			!$ftp || // FTP not enabled or
+			(strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
+		){
 			if (!@unlink($this->getFilename())) return false;
 			$this->_filename = null;
 			return true;
@@ -376,6 +381,7 @@ class File_local_backend implements File_Backend {
 	 * @param      $src Source file backend
 	 * @param bool $overwrite true to overwrite existing file
 	 *
+	 * @throws Exception
 	 * @return bool True or False if succeeded.
 	 */
 	public function copyFrom($src, $overwrite = false) {
@@ -414,8 +420,7 @@ class File_local_backend implements File_Backend {
 		self::_Mkdir(dirname($this->_filename), null, true);
 
 		if (
-			!$ftp // FTP is not enabled
-			||
+			!$ftp || // FTP not enabled or
 			(strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
 		) {
 			// Read in only so much data at a time.  This is to prevent
@@ -425,7 +430,12 @@ class File_local_backend implements File_Backend {
 			$handleout = fopen($this->_filename, 'w');
 
 			// Couldn't get a lock on both input and output files.
-			if(!($handlein && $handleout)) return false;
+			if(!$handlein){
+				throw new Exception('Unable to open file ' . $localfilename . ' for reading.');
+			}
+			if(!$handleout){
+				throw new Exception('Unable to open file ' . $this->_filename . ' for writing.');
+			}
 
 			while(!feof($handlein)){
 				fwrite($handleout, fread($handlein, $maxbuffer));
@@ -452,10 +462,14 @@ class File_local_backend implements File_Backend {
 			// FTP requires a filename, not data...
 			// WELL how bout that!  I happen to have a local filename ;)
 			if (!ftp_put($ftp, $filename, $localfilename, FTP_BINARY)) {
+				throw new Exception(error_get_last()['message']);
 				return false;
 			}
 
-			if (!ftp_chmod($ftp, $mode, $filename)) return false;
+			if (!ftp_chmod($ftp, $mode, $filename)){
+				throw new Exception(error_get_last()['message']);
+				return false;
+			}
 
 			// woot...
 			return true;

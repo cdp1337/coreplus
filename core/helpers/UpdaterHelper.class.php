@@ -31,11 +31,9 @@ class UpdaterHelper {
 	 */
 	public static function GetUpdates(){
 		// Allow this to be cached for x amount of time.  This will save the number of remote requests.
-		if(false && isset($_SESSION['updaterhelper_getupdates']) && $_SESSION['updaterhelper_getupdates']['expire'] <= time()){
-			return $_SESSION['updaterhelper_getupdates']['data'];
-		}
-		
-		$corevers = Core::GetComponent()->getVersion();
+		//if(false && isset($_SESSION['updaterhelper_getupdates']) && $_SESSION['updaterhelper_getupdates']['expire'] <= time()){
+		//	return $_SESSION['updaterhelper_getupdates']['data'];
+		//}
 		
 		// Build a list of components currently installed, this will act as a base.
 		$components = array();
@@ -43,9 +41,10 @@ class UpdaterHelper {
 		$themes     = array();
 
 		foreach(Core::GetComponents() as $c){
+			/** @var $c Component_2_1 */
 			$n = strtolower($c->getName());
 			if($n == 'core'){
-				$core[$c->getVersion()] = array(
+				$core = array(
 					'name' => $n,
 					'title' => $c->getName(),
 					'version' => $c->getVersion(),
@@ -55,11 +54,14 @@ class UpdaterHelper {
 					'requires' => $c->getRequires(),
 					'location' => null,
 					'status' => 'installed',
+					'type' => 'core',
+					'typetitle' => 'Core',
+					'key' => null,
+					'destdir' => $c->getBaseDir(),
 				);
 			}
 			else{
-				if(!isset($components[$n])) $components[$n] = array();
-				$components[$n][$c->getVersion()] = array(
+				$components[$n] = array(
 					'name' => $n,
 					'title' => $c->getName(),
 					'version' => $c->getVersion(),
@@ -69,21 +71,50 @@ class UpdaterHelper {
 					'requires' => $c->getRequires(),
 					'location' => null,
 					'status' => 'installed',
+					'type' => 'components',
+					'typetitle' => 'Component ' . $c->getName(),
+					'key' => null,
+					'destdir' => $c->getBaseDir(),
 				);
 			}
 		}
 
-		foreach(ThemeHandler::GetAllThemes() as $t){
-			$n = strtolower($t->getName());
-			if(!isset($themes[$n])) $themes[$n] = array();
-			$themes[$n][$t->getVersion()] = array(
+		foreach(Core::GetDisabledComponents() as $c){
+			/** @var $c Component_2_1 */
+			$n = strtolower($c->getName());
+
+			$components[$n] = array(
 				'name' => $n,
-				'title' => $n,
+				'title' => $c->getName(),
 				'version' => $c->getVersion(),
 				'source' => 'installed',
 				'description' => $c->getDescription(),
+				'provides' => $c->getProvides(),
+				'requires' => $c->getRequires(),
+				'location' => null,
+				'status' => 'disabled',
+				'type' => 'components',
+				'typetitle' => 'Component ' . $c->getName(),
+				'key' => null,
+				'destdir' => $c->getBaseDir(),
+			);
+		}
+
+		foreach(ThemeHandler::GetAllThemes() as $t){
+			/** @var $t Theme */
+			$n = strtolower($t->getName());
+			$themes[$n] = array(
+				'name' => $n,
+				'title' => $t->getName(),
+				'version' => $t->getVersion(),
+				'source' => 'installed',
+				'description' => $t->getDescription(),
 				'location' => null,
 				'status' => 'installed',
+				'type' => 'themes',
+				'typetitle' => 'Theme ' . $t->getName(),
+				'key' => null,
+				'destdir' => $t->getBaseDir(),
 			);
 		}
 		
@@ -93,13 +124,15 @@ class UpdaterHelper {
 
 			if(!$site->isValid()) continue;
 			$file = $site->getFile();
-			
+
 			$repoxml = new RepoXML();
 			$repoxml->loadFromFile($file);
 			$rootpath = dirname($file->getFilename()) . '/';
+
 			foreach($repoxml->getPackages() as $pkg){
+				/** @var $pkg PackageXML */
 				// Already installed and is up to date, don't do anything.
-				if($pkg->isCurrent()) continue;
+				//if($pkg->isCurrent()) continue;
 
 				$n = strtolower($pkg->getName());
 				$type = $pkg->getType();
@@ -108,9 +141,10 @@ class UpdaterHelper {
 				switch($type){
 					case 'core':
 						$vers = $pkg->getVersion();
-						// Check and see if this version is already listed in the repo.
-						if(!isset($core[$vers])){
-							$core[$vers] = array(
+
+						// Only display the newest version available.
+						if(Core::VersionCompare($vers, $core['version'], 'gt')){
+							$core = array(
 								'name' => $n,
 								'title' => $pkg->getName(),
 								'version' => $vers,
@@ -121,54 +155,67 @@ class UpdaterHelper {
 								'requires' => $pkg->getRequires(),
 								'location' => $rootpath . $pkg->getFileLocation(),
 								'status' =>'update',
+								'type' => 'core',
+								'typetitle' => 'Core ',
+								'key' => $pkg->getKey(),
+								'destdir' => ROOT_PDIR,
 							);
 						}
 						break;
 					case 'component':
 						$vers  = $pkg->getVersion();
-						$status = 'new';
-						if(Core::GetComponent($n)){
-							if(Core::VersionCompare($vers, Core::GetComponent($n)->getVersion(), 'gt')) $status = 'update';
-							else $status = 'downgrade';
+
+						// Is it already loaded in the list?
+						if(isset($components[$n])){
+							// I only want the newest version.
+							if(!Core::VersionCompare($vers, $components[$n]['version'], 'gt')) continue;
 						}
 
-						// Check and see if this version is already listed in the repo.
-						if(!isset($components[$n][$vers])){
-							$components[$n][$vers] = array(
-								'name' => $n,
-								'title' => $pkg->getName(),
-								'version' => $vers,
-								'source' => 'repo-' . $site->get('id'),
-								'sourceurl' => $site->get('url'),
-								'description' => $pkg->getDescription(),
-								'provides' => $pkg->getProvides(),
-								'requires' => $pkg->getRequires(),
-								'location' => $rootpath . $pkg->getFileLocation(),
-								'status' => $status,
-							);
-						}
+						// If it's available in the core, it's an update... otherwise it's new.
+						$status = Core::GetComponent($n) ? 'update' : 'new';
+
+						$components[$n] = array(
+							'name' => $n,
+							'title' => $pkg->getName(),
+							'version' => $vers,
+							'source' => 'repo-' . $site->get('id'),
+							'sourceurl' => $site->get('url'),
+							'description' => $pkg->getDescription(),
+							'provides' => $pkg->getProvides(),
+							'requires' => $pkg->getRequires(),
+							'location' => $rootpath . $pkg->getFileLocation(),
+							'status' => $status,
+							'type' => 'components',
+							'typetitle' => 'Component ' . $pkg->getName(),
+							'key' => $pkg->getKey(),
+							'destdir' => ROOT_PDIR . 'components/' . $n . '/',
+						);
 						break;
 					case 'theme':
 						$vers = $pkg->getVersion();
-						$status = 'new';
-						if(ThemeHandler::GetTheme($n)){
-							if(Core::VersionCompare($vers, ThemeHandler::GetTheme($n)->getVersion(), '>')) $status = 'update';
-							else $status = 'downgrade';
+
+						// Is it already loaded in the list?
+						if(isset($themes[$n])){
+							// I only want the newest version.
+							if(!Core::VersionCompare($vers, $themes[$n]['version'], 'gt')) continue;
 						}
 
-						// Check and see if this version is already listed in the repo.
-						if(!isset($themes[$n][$vers])){
-							$themes[$n][$vers] = array(
-								'name' => $n,
-								'title' => $n,
-								'version' => $vers,
-								'source' => 'repo-' . $site->get('id'),
-								'sourceurl' => $site->get('url'),
-								'description' => $pkg->getDescription(),
-								'location' => $rootpath . $pkg->getFileLocation(),
-								'status' => $status,
-							);
-						}
+						$status = ThemeHandler::GetTheme($n) ? 'update' : 'new';
+
+						$themes[$n] = array(
+							'name' => $n,
+							'title' => $pkg->getName(),
+							'version' => $vers,
+							'source' => 'repo-' . $site->get('id'),
+							'sourceurl' => $site->get('url'),
+							'description' => $pkg->getDescription(),
+							'location' => $rootpath . $pkg->getFileLocation(),
+							'status' => $status,
+							'type' => 'themes',
+							'typetitle' => 'Theme ' . $pkg->getName(),
+							'key' => $pkg->getKey(),
+							'destdir' => ROOT_PDIR . 'themes/' . $n . '/',
+						);
 				}
 				
 				//var_dump($pkg->asPrettyXML()); die();
@@ -179,144 +226,377 @@ class UpdaterHelper {
 		ksort($components);
 		ksort($themes);
 
-		// And sort the versions.
-		krsort($core, SORT_NATURAL);
-		foreach($components as $k => $v){
-			krsort($components[$k], SORT_NATURAL);
-		}
-		foreach($themes as $k => $v){
-			krsort($themes[$k], SORT_NATURAL);
-		}
-		
 		// Cache this for next pass.
-		$_SESSION['updaterhelper_getupdates'] = array();
-		$_SESSION['updaterhelper_getupdates']['data'] = array('core' => $core, 'components' => $components, 'themes' => $themes);
-		$_SESSION['updaterhelper_getupdates']['expire'] = time() + 3600;
+		//$_SESSION['updaterhelper_getupdates'] = array();
+		//$_SESSION['updaterhelper_getupdates']['data'] = array('core' => $core, 'components' => $components, 'themes' => $themes);
+		//$_SESSION['updaterhelper_getupdates']['expire'] = time() + 60;
 		
 		return array('core' => $core, 'components' => $components, 'themes' => $themes);
 	}
 	
-	public static function InstallComponent($name, $version, $dryrun = false){
+	public static function InstallComponent($name, $version, $dryrun = false, $verbose = false){
+		return self::PerformInstall('components', $name, $version, $dryrun, $verbose);
+	}
+
+	public static function InstallTheme($name, $version, $dryrun = false, $verbose = false){
+		return self::PerformInstall('themes', $name, $version, $dryrun, $verbose);
+	}
+
+	public static function InstallCore($version, $dryrun = false, $verbose = false){
+		return self::PerformInstall('core', 'core', $version, $dryrun, $verbose);
+	}
+
+	public static function PerformInstall($type, $name, $version, $dryrun = false, $verbose = false){
+
+		// This will get a list of all available updates and their sources :)
 		$updates = UpdaterHelper::GetUpdates();
 
-		// I just need the component array itself.
-		$components = $updates['components'];
-		
+		// Fewer keystrokes ;P
+		$nl = "<br/>\n";
+
+		// A list of changes that are to be applied, (mainly for the dry run).
+		$changes = array();
+
+		// Target in on the specific object we're installing.  Useful for a shortcut.
+		switch($type){
+			case 'core':
+				$initialtarget = &$updates['core'];
+				break;
+			case 'components':
+				$initialtarget = &$updates['components'][$name];
+				break;
+			case 'themes':
+				$initialtarget = &$updates['themes'][$name];
+				break;
+			default:
+				return [
+					'status' => 0,
+					'message' => '[' . $type . '] is not a valid installation type!',
+				];
+		}
+
+		// This is a special case for testing the installer UI.
+		$test = ($type == 'core' && $version == '99.1337~(test)');
+
+		if($verbose){
+			// These are needed to force the output to be sent immediately.
+			while ( @ob_end_flush() ); // even if there is no nested output buffer
+			apache_setenv('no-gzip', '1');
+			ini_set('output_buffering','on');
+			ini_set('zlib.output_compression', 0);
+			ob_implicit_flush();
+
+			// Give some basic styles for this output.
+			echo '<html>
+	<head>
+	<!-- Yes, the following is 1024 spaces.  This is because some browsers have a 1Kb buffer before they start rendering text -->
+	' . str_repeat(" ", 1024) . '
+		<style>
+			body {
+				background: none repeat scroll 0 0 black;
+				color: #22EE33;
+				font-family: monospace;
+			}
+		</style>
+	</head>
+	<body>';
+		}
+
+
+		if($test && $verbose){
+			echo '[INFO] - Performing a test installation!' . $nl;
+			flush();
+		}
+
+		if($test){
+			if($verbose){
+				echo '[INFO] - Sleeping for a few seconds... because servers are always slow when you don\'t want them to be!' . $nl;
+				flush();
+			}
+			sleep(4);
+
+			// Also overwrite some of the target's information.
+			$repo = UpdateSiteModel::Find(null, 1);
+			$initialtarget['source'] = 'repo-' . $repo->get('id');
+			$initialtarget['location'] = 'http://corepl.us';
+
+			//if($verbose){
+			//	echo '[DEBUG]' . $nl;
+			//	var_dump($initialtarget);
+			//}
+		}
+
 		// Make sure the name and version exist in the updates list.
-		if(!isset($components[$name])){
-			return array('status' => 0, 'message' => 'Component ' . $name . ' does not appear to be valid.');
+		// In theory, the latest version of core is the only one displayed.
+		if(!$test && $initialtarget['version'] != $version){
+			return [
+				'status' => 0,
+				'message' => $initialtarget['typetitle'] . ' does not have the requested version available.',
+				'debug' => [
+					'versionrequested' => $version,
+					'versionfound' => $initialtarget['version'],
+				],
+			];
 		}
-		if(!isset($components[$name][$version])){
-			return array('status' => 0, 'message' => 'Component ' . $name . ' does not appear to have requested version.');
-		}
-		
+
 		// A queue of components to check.
-		$pendingqueue = array($components[$name][$version]);
+		$pendingqueue = array($initialtarget);
 		// A queue of components that will be installed that have satisfied dependencies.
 		$checkedqueue = array();
-		$lastsizeofqueue = 99;
-		
+
+		// This will assemble the list of required installs in the correct order.
+		// If a given dependency can't be met, the installation will be aborted.
+		if($verbose){
+			echo '[===========  CHECKING DEPENDENCIES  ===========]' . $nl;
+			flush();
+		}
 		do{
+			$lastsizeofqueue = sizeof($pendingqueue);
+
 			foreach($pendingqueue as $k => $c){
 				$good = true;
-				foreach($c['requires'] as $r){
 
-					// Sometimes there will be blank requirements in the metafile.
-					if(!$r['name']) continue;
+				if(isset($c['requires'])){
+					if($verbose){
+						echo '[INFO] - Checking dependencies for ' . $c['typetitle'] . $nl;
+						flush();
+					}
 
-					$result = UpdaterHelper::CheckRequirement($r);
-					if($result === false){
-						return array('status' => 0, 'message' => 'Component ' . $name . ' requires ' . $r['name'] . ' ' . $r['version']);
-					}
-					elseif($result === true){
-						// yay
-						continue;
-					}
-					else{
-						die('Yeah... finish this part.');
+					foreach($c['requires'] as $r){
+
+						// Sometimes there will be blank requirements in the metafile.
+						if(!$r['name']) continue;
+
+						$result = UpdaterHelper::CheckRequirement($r, $checkedqueue, $updates);
+
+						if($result === false){
+							// Dependency not met
+							return [
+								'status' => 0,
+								'message' => $c['typetitle'] . ' requires ' . $r['name'] . ' ' . $r['version']
+							];
+						}
+						elseif($result === true){
+							// Dependency met via either installed components or new components
+							// yay
+							if($verbose){
+								echo '[INFO] - Dependency [' . $r['name'] . ' ' . $r['version'] . '] met with already-installed packages.' . $nl;
+								flush();
+							}
+						}
+						else{
+							if($verbose){
+								echo '[INFO] - Additional package [' . $result['typetitle'] . '] required to meet dependency [' . $r['name'] . ' ' . $r['version'] . '], adding to queue and retrying!' . $nl;
+								flush();
+							}
+							// It's an array of requirements that are needed to satisfy this installation.
+							$pendingqueue = array_merge(array($result), $pendingqueue);
+							$good = false;
+						}
 					}
 				}
-				
+				else{
+					if($verbose){
+						echo '[INFO] - Skipping dependency check for ' . $c['typetitle'] . ', no requirements present' . $nl;
+						flush();
+					}
+
+					// The require key isn't present... OK!
+					// This happens with themes, as they do not have any dependency logic.
+				}
+
 				if($good === true){
 					$checkedqueue[] = $c;
+					$changes[] = $c['typetitle'];
 					unset($pendingqueue[$k]);
 				}
 			}
-			
-			$lastsizeofqueue = sizeof($pendingqueue);
 		}
 		while(sizeof($pendingqueue) && sizeof($pendingqueue) != $lastsizeofqueue);
 
+		// Do validation checks on all these changes.  I need to make sure I have the GPG key for each one.
+		// This is done here to save having to download the files from the remote server first.
+		foreach($checkedqueue as $target){
+			// It'll be validated prior to installation anyway.
+			if(!$target['key']) continue;
 
-		$repos = array();
-		$remotefiles = array();
-		$names = array();
-		// Check the signatures for the packages first.
-		foreach($checkedqueue as $component){
-			if(strpos($component['source'], 'repo-') !== false){
-				// Look up that repo's connection information, since username and password may be required.
-				if(!isset($repos[$component['source']])){
-					$repos[$component['source']] = new UpdateSiteModel(substr($component['source'], 5));
+			$output = array();
+			exec('gpg --homedir "' . GPG_HOMEDIR . '" --list-public-keys "' . $target['key'] . '"', $output, $result);
+			if($result > 0){
+				// Key validation failed!
+				if($verbose){
+					echo implode($nl, $output);
 				}
-				$remotefiles[$component['name']] = new File_remote_backend($component['location']);
-				$remotefiles[$component['name']]->username = $repos[$component['source']]->get('username');
-				$remotefiles[$component['name']]->password = $repos[$component['source']]->get('password');
+				return [
+					'status' => 0,
+					'message' => $c['typetitle'] . ' failed GPG verification! Is the key ' . $target['key'] . ' installed?'
+				];
+			}
+		}
 
-				if(!$remotefiles[$component['name']]->exists()){
-					return array('status' => 0, 'message' => $component['location'] . ' does not seem to exist!');
+
+		// If dry run is enabled, stop here.
+		// After this stage, dragons be let loose from thar cages.
+		if($dryrun){
+			return [
+				'status' => 1,
+				'message' => 'All dependencies are met, ok to install',
+				'changes' => $changes,
+			];
+		}
+
+
+		// Reset changes, in this case it'll be what was installed.
+		$changes = array();
+
+		// By now, $checkedqueue will contain all the pending changes, theoretically with
+		// the initially requested package at the end of the list.
+		foreach($checkedqueue as $target){
+
+			if($verbose){
+				echo $nl . '[===========  PERFORMING INSTALL (' . strtoupper($target['typetitle']) . ')  ===========]' . $nl;
+				flush();
+			}
+
+			// This package is already installed and up to date.
+			if($target['source'] == 'installed'){
+				return [
+					'status' => 0,
+					'message' => $target['typetitle'] . ' is already installed and at the newest version.',
+				];
+			}
+			// If this package is coming from a repo, install it from that repo.
+			elseif(strpos($target['source'], 'repo-') !== false){
+				/** @var $repo UpdateSiteModel */
+				$repo = new UpdateSiteModel(substr($target['source'], 5));
+				if($verbose){
+					echo '[INFO] - Using repository ' . $repo->get('url') . ' for installation source' . $nl;
+					flush();
 				}
 
-				$obj = $remotefiles[$component['name']]->getContentsObject();
+				// Setup the remote file that will be used to download from.
+				$file = new File_remote_backend($target['location']);
+				$file->username = $repo->get('username');
+				$file->password = $repo->get('password');
+
+				// The initial HEAD request pulls the metadata for the file, and sees if it exists.
+				if($verbose){
+					echo '[INFO] - Performing HEAD lookup on ' . $file->getFilename() . $nl;
+					flush();
+				}
+				if(!$file->exists()){
+					return [
+						'status' => 0,
+						'message' => $target['location'] . ' does not seem to exist!'
+					];
+				}
+				if($verbose){
+					echo '[INFO] - Found a(n) ' . $file->getMimetype() . ' file that returned a ' . $file->getStatus() . ' status.' . $nl;
+					flush();
+				}
+
+				// Get file contents will download the file.
+				if($verbose){
+					echo '[INFO] - Downloading ' . $file->getFilename() . $nl;
+					flush();
+				}
+				$downloadtimer = microtime(true);
+				$obj = $file->getContentsObject();
+				// Getting the object simply sets it up, it doesn't download the contents yet.
+				$obj->getContents();
+				// Now it has :p
+				// How long did it take?
+				if($verbose){
+					echo '[INFO] - Downloaded ' . $file->getFilesize(true) . ' in ' . (round(microtime(true) - $downloadtimer, 2) . ' seconds') . $nl;
+					flush();
+				}
+
+				if(!($obj instanceof File_asc_contents)){
+					return [
+						'status' => 0,
+						'message' => $target['location'] . ' does not appear to be a valid GPG signed archive'
+					];
+				}
+
 				if(!$obj->verify()){
 					// Maybe it can at least get the key....
 					if($key = $obj->getKey()){
-						return array('status' => 0, 'message' => 'Unable to locate public key for ' . $key);
+						return [
+							'status' => 0,
+							'message' => 'Unable to locate public key for ' . $key . '.  Is it installed?'
+						];
 					}
-					return array('status' => 0, 'message' => 'Invalid GPG signature for ' . $component['title']);
+					return [
+						'status' => 0,
+						'message' => 'Invalid GPG signature for ' . $target['typetitle'],
+					];
 				}
 
-				$dir = Core::Directory('components/' . $component['name']);
+				// The object's key must also match what's in the repo.
+				if($obj->getKey() != $target['key']){
+					return [
+						'status' => 0,
+						'message' => '!!!WARNING!!!, Key for ' . $target['typetitle'] . ' is valid, but does not match what was expected form the repository data!  This could be a major risk!',
+						'debug' => [
+							'detectedkey' => $obj->getKey(),
+							'expectedkey' => $target['key'],
+						],
+					];
+				}
+				if($verbose){
+					echo '[INFO] - Found key ' . $target['key'] . ' for package maintainer, appears to be valid.' . $nl;
+					$output = array();
+					exec('gpg --homedir "' . GPG_HOMEDIR . '" --list-public-keys "' . $target['key'] . '"', $output, $result);
+					foreach($output as $line){
+						if(trim($line)) echo '[INFO] - ' . htmlentities($line) . $nl;
+					}
+				}
+
+				$dir = \Core\directory($target['destdir']);
 				if(!$dir->isWritable()){
-					return array('status' => 0, 'message' => ROOT_PDIR . 'components/' . $component['name'] . '/ is not writable!');
+					return [
+						'status' => 0,
+						'message' => $target['destdir'] . ' is not writable!'
+					];
 				}
-			}
-			// else, it is already locally installed.
 
-			$names[] = $component['name'];
-		}
-		
-		
-		// If dryrun only was requested, just return the status here.
-		if($dryrun){
-			return array('status' => 1, 'message' => 'All dependencies are met, ok to install', 'changes' => $names);
-		}
-		
-		// and do the actual installation.
-		foreach($checkedqueue as $component){
-			if(strpos($component['source'], 'repo-') !== false){
-
-				// Don't need to verify this again, was done above.
-				$obj = $remotefiles[$component['name']]->getContentsObject();
+				if($test){
+					// Well, shy of reinstalling... what else can I do in a test?
+					continue;
+				}
 
 				// Decrypt the signed file.
+				if($verbose){
+					echo '[INFO] - Decrypting signed file' . $nl;
+					flush();
+				}
+				/** @var $localfile File_Backend */
 				$localfile = $obj->decrypt('tmp/updater/');
 				$localobj = $localfile->getContentsObject();
-				
+
 				// This tarball will be extracted to a temporary directory, then copied from there.
+				if($verbose){
+					echo '[INFO] - Extracting tarball ' . $localfile->getFilename() . $nl;
+					flush();
+				}
 				$tmpdir = $localobj->extract('tmp/installer-' . Core::RandomHex(4));
-				
-				// Destination directory it will be installed to.
-				$destbase = ROOT_PDIR . 'components/' . $component['name'] . '/';
-				
+
 				// Now that the data is extracted in a temporary directory, extract every file in the destination.
 				$datadir = $tmpdir->get('data/');
 				if(!$datadir){
-					return array('status' => 0, 'message' => 'Invalid component ' . $component['title'] . ', does not contain a data directory.');
+					return [
+						'status' => 0,
+						'message' => 'Invalid package, ' . $target['typetitle'] . ', does not contain a "data" directory.'
+					];
 				}
-				
+
+
+				if($verbose){
+					echo '[INFO] - Installing files into ' . $target['destdir'] . $nl;
+					flush();
+				}
 				$queue = array($datadir);//$datadir->ls();
 				$x = 0;
-				
 				do{
 					++$x;
 					$queue = array_values($queue);
@@ -330,309 +610,39 @@ class UpdaterHelper {
 						else{
 							// It's a file, copy it over.
 							// To do so, resolve the directory path inside the temp data dir.
-							$dest = $destbase . substr($q->getFilename(), strlen($datadir->getPath()));
+							$dest = $target['destdir'] . substr($q->getFilename(), strlen($datadir->getPath()));
 							$newfile = $q->copyTo($dest, true);
-							
+
 							unset($queue[$k]);
 						}
 					}
 				}
 				while(sizeof($queue) > 0 && $x < 15);
-				
+
 				// Cleanup the temp directory
+				if($verbose){
+					echo '[INFO] - Cleaning up temporary directory' . $nl;
+					flush();
+				}
 				$tmpdir->remove();
-			}
-			// else, it must be locally installed already, just not set to be installed.
-			// This happens if a component was copied in manually and the site is not in development mode.
-			// If this is the case... there's nothing to do extraction-wise.
 
-			// and w00t, the files should be extracted.  Do the actual installation.
-			$c = new Component($component['name']);
-			$c->load();
-			// if it's installed, switch to that version and upgrade.
-			if($c->isInstalled()){
-				$c = Core::GetComponent($component['name']);
-				// Make sure I get the new XML
-				$c->load();
-				// And upgrade
-				$c->upgrade();
-			}
-			else{
-				// It's a new installation.
-				$c->install();
+				$changes[] = 'Installed ' . $target['typetitle'] . ' ' . $target['version'];
 			}
 		}
+
+		// Clear the cache so the next pageload will pick up on the new components and goodies.
+		Core::Cache()->flush();
+
+		// Yup, that's it.
+		// Just extract the files and Core will autoinstall/autoupgrade everything on the next page view.
+
 
 		// yay...
-		return array('status' => 1, 'message' => 'Performed all operations successfully');
-	}
-
-
-	public static function InstallTheme($name, $version, $dryrun = false){
-		$updates = UpdaterHelper::GetUpdates();
-
-		// I just need the component array itself.
-		$themes = $updates['themes'];
-
-		// Make sure the name and version exist in the updates list.
-		if(!isset($themes[$name])){
-			return array('status' => 0, 'message' => 'Theme ' . $name . ' does not appear to be valid.');
-		}
-		if(!isset($themes[$name][$version])){
-			return array('status' => 0, 'message' => 'Theme ' . $name . ' does not appear to have requested version.');
-		}
-
-		// This is the theme that will be installed.
-		// Since themes don't (currently) have dependencies, the logic is much simplier.
-		$theme = $themes[$name][$version];
-
-
-		$repos = array();
-		$remotefiles = array();
-		$names = array();
-		// Check the signatures for the package first.
-		if(strpos($theme['source'], 'repo-') !== false){
-			// Look up that repo's connection information, since username and password may be required.
-			if(!isset($repos[$theme['source']])){
-				$repos[$theme['source']] = new UpdateSiteModel(substr($theme['source'], 5));
-			}
-			$remotefiles[$theme['name']] = new File_remote_backend($theme['location']);
-			$remotefiles[$theme['name']]->username = $repos[$theme['source']]->get('username');
-			$remotefiles[$theme['name']]->password = $repos[$theme['source']]->get('password');
-
-			if(!$remotefiles[$theme['name']]->exists()){
-				return array('status' => 0, 'message' => $theme['location'] . ' does not seem to exist!');
-			}
-
-			$obj = $remotefiles[$theme['name']]->getContentsObject();
-			if(!$obj->verify()){
-				// Maybe it can at least get the key....
-				if($key = $obj->getKey()){
-					return array('status' => 0, 'message' => 'Unable to locate public key for ' . $key);
-				}
-				return array('status' => 0, 'message' => 'Invalid GPG signature for ' . $theme['title']);
-			}
-
-			$dir = Core::Directory('themes/' . $theme['name']);
-			if(!$dir->isWritable()){
-				return array('status' => 0, 'message' => ROOT_PDIR . 'themes/' . $theme['name'] . '/ is not writable!');
-			}
-		}
-
-		$names[] = $theme['name'];
-
-
-		// If dryrun only was requested, just return the status here.
-		if($dryrun){
-			return array('status' => 1, 'message' => 'All dependencies are met, ok to install', 'changes' => $names);
-		}
-
-		// and do the actual installation.
-		if(strpos($theme['source'], 'repo-') !== false){
-
-			// Don't need to verify this again, was done above.
-			$obj = $remotefiles[$theme['name']]->getContentsObject();
-
-			// Decrypt the signed file.
-			$localfile = $obj->decrypt('tmp/updater/');
-			$localobj = $localfile->getContentsObject();
-
-			// This tarball will be extracted to a temporary directory, then copied from there.
-			$tmpdir = $localobj->extract('tmp/installer-' . Core::RandomHex(4));
-
-			// Destination directory it will be installed to.
-			$destbase = ROOT_PDIR . 'themes/' . $theme['name'] . '/';
-
-			// Now that the data is extracted in a temporary directory, extract every file in the destination.
-			$datadir = $tmpdir->get('data/');
-			if(!$datadir){
-				return array('status' => 0, 'message' => 'Invalid theme ' . $theme['title'] . ', does not contain a data directory.');
-			}
-
-			$queue = array($datadir);//$datadir->ls();
-			$x = 0;
-
-			do{
-				++$x;
-				$queue = array_values($queue);
-				foreach($queue as $k => $q){
-					if($q instanceof Directory_local_backend){
-						unset($queue[$k]);
-						// Just queue directories up to be scanned.
-						// (don't do array merge, because I'm inside a foreach loop)
-						foreach($q->ls() as $subq) $queue[] = $subq;
-					}
-					else{
-						// It's a file, copy it over.
-						// To do so, resolve the directory path inside the temp data dir.
-						$dest = $destbase . substr($q->getFilename(), strlen($datadir->getPath()));
-						$newfile = $q->copyTo($dest, true);
-
-						unset($queue[$k]);
-					}
-				}
-			}
-			while(sizeof($queue) > 0 && $x < 15);
-
-			// Cleanup the temp directory
-			$tmpdir->remove();
-
-			// and w00t, the files should be extracted.  Do the actual installation.
-			$t = new Theme($theme['name']);
-			$t->load();
-			// if it's installed, switch to that version and upgrade.
-			if($t->isInstalled()){
-				if(($t = ThemeHandler::GetTheme($theme['name'])) !== false){
-					// Make sure I get the new XML
-					$t->load();
-					// And upgrade
-					$t->upgrade();
-				}
-			}
-			else{
-				// It's a new installation.
-				$t->install();
-			}
-		}
-
-		// yay...
-		return array('status' => 1, 'message' => 'Performed all operations successfully');
-	}
-
-	public static function InstallCore($version, $dryrun = false){
-		$updates = UpdaterHelper::GetUpdates();
-
-		// I just need the component array itself.
-		$cores = $updates['core'];
-
-		// Make sure the name and version exist in the updates list.
-		if(!isset($cores[$version])){
-			return array('status' => 0, 'message' => 'Core does not appear to have requested version.');
-		}
-
-		// This is the theme that will be installed.
-		// Since themes don't (currently) have dependencies, the logic is much simplier.
-		$core = $cores[$version];
-
-
-		$repos = array();
-		$remotefiles = array();
-		$names = array();
-		// Check the signatures for the package first.
-		if(strpos($core['source'], 'repo-') !== false){
-			// Look up that repo's connection information, since username and password may be required.
-			if(!isset($repos[$core['source']])){
-				$repos[$core['source']] = new UpdateSiteModel(substr($core['source'], 5));
-			}
-			$remotefiles['core'] = new File_remote_backend($core['location']);
-			$remotefiles['core']->username = $repos[$core['source']]->get('username');
-			$remotefiles['core']->password = $repos[$core['source']]->get('password');
-
-			if(!$remotefiles['core']->exists()){
-				return array('status' => 0, 'message' => $core['location'] . ' does not seem to exist!');
-			}
-
-			$obj = $remotefiles['core']->getContentsObject();
-
-			if(!($obj instanceof File_asc_contents)){
-				return array(
-					'status' => 0,
-					'message' => $remotefiles['core']->getFilename() . ' does not appear to be a valid GPG signed archive'
-				);
-			}
-
-			if(!$obj->verify()){
-				// Maybe it can at least get the key....
-				if($key = $obj->getKey()){
-					return array('status' => 0, 'message' => 'Unable to locate public key for ' . $key);
-				}
-				return array('status' => 0, 'message' => 'Invalid GPG signature for Core');
-			}
-
-			$dir = Core::Directory(ROOT_PDIR);
-			if(!$dir->isWritable()){
-				return array('status' => 0, 'message' => ROOT_PDIR . ' is not writable!');
-			}
-		}
-
-		$names[] = 'core';
-
-
-		// If dryrun only was requested, just return the status here.
-		if($dryrun){
-			return array('status' => 1, 'message' => 'All dependencies are met, ok to install', 'changes' => $names);
-		}
-
-		// and do the actual installation.
-		if(strpos($core['source'], 'repo-') !== false){
-
-			// Don't need to verify this again, was done above.
-			$obj = $remotefiles['core']->getContentsObject();
-
-			// Decrypt the signed file.
-			$localfile = $obj->decrypt('tmp/updater/');
-			$localobj = $localfile->getContentsObject();
-
-			// This tarball will be extracted to a temporary directory, then copied from there.
-			$tmpdir = $localobj->extract('tmp/installer-' . Core::RandomHex(4));
-
-			// Destination directory it will be installed to.
-			$destbase = ROOT_PDIR;
-
-			// Now that the data is extracted in a temporary directory, extract every file in the destination.
-			$datadir = $tmpdir->get('data/');
-			if(!$datadir){
-				return array('status' => 0, 'message' => 'Invalid theme ' . $core['title'] . ', does not contain a data directory.');
-			}
-
-			$queue = array($datadir);//$datadir->ls();
-			$x = 0;
-
-			do{
-				++$x;
-				$queue = array_values($queue);
-				foreach($queue as $k => $q){
-					if($q instanceof Directory_local_backend){
-						unset($queue[$k]);
-						// Just queue directories up to be scanned.
-						// (don't do array merge, because I'm inside a foreach loop)
-						foreach($q->ls() as $subq) $queue[] = $subq;
-					}
-					else{
-						// It's a file, copy it over.
-						// To do so, resolve the directory path inside the temp data dir.
-						$dest = $destbase . substr($q->getFilename(), strlen($datadir->getPath()));
-						$newfile = $q->copyTo($dest, true);
-
-						unset($queue[$k]);
-					}
-				}
-			}
-			while(sizeof($queue) > 0 && $x < 15);
-
-			// Cleanup the temp directory
-			$tmpdir->remove();
-
-			// and w00t, the files should be extracted.  Do the actual installation.
-			$t = new Theme('core');
-			$t->load();
-			// if it's installed, switch to that version and upgrade.
-			if($t->isInstalled()){
-				if(($t = ThemeHandler::GetTheme('core')) !== false){
-					// Make sure I get the new XML
-					$t->load();
-					// And upgrade
-					$t->upgrade();
-				}
-			}
-			else{
-				// It's a new installation.
-				$t->install();
-			}
-		}
-
-		// yay...
-		return array('status' => 1, 'message' => 'Performed all operations successfully');
+		return [
+			'status' => 1,
+			'message' => 'Performed all operations successfully!',
+			'changes' => $changes,
+		];
 	}
 
 	
@@ -643,30 +653,77 @@ class UpdaterHelper {
 	 * @param array $requirement
 	 * @return array | false
 	 */
-	public static function CheckRequirement($requirement){
-		
+	public static function CheckRequirement($requirement, $newcomponents = array(), $allavailable = array()){
+		$rtype = $requirement['type'];
+		$rname = $requirement['name'];
+		$rvers = $requirement['version'];
+		$rvrop = $requirement['operation'];
+
+
 		// This will check if the requirement is already met.
-		switch($requirement['type']){
+		switch($rtype){
 			case 'library':
-				if(Core::IsLibraryAvailable($requirement['name'], $requirement['version'], $requirement['operation'])){
+				if(Core::IsLibraryAvailable($rname, $rvers, $rvrop)){
 					return true;
 				}
 				break;
 			case 'jslibrary':
-				if(Core::IsJSLibraryAvailable($requirement['name'], $requirement['version'], $requirement['operation'])){
+				if(Core::IsJSLibraryAvailable($rname, $rvers, $rvrop)){
 					return true;
 				}
 				break;
 			case 'component':
-				if(Core::IsComponentAvailable($requirement['name'], $requirement['version'], $requirement['operation'])){
+				if(Core::IsComponentAvailable($rname, $rvers, $rvrop)){
 					return true;
 				}
 				break;
 		}
-		
-		// @todo Run through the components that are available via an update.
+
+		// Check the new components too.  Those are already queued up to be installed.
+		// New components are squashed a little; all themes/components/core updates are lumped together.
+		foreach($newcomponents as $data){
+			// And provides is [type => "", name => "", version => ""].
+			foreach($data['provides'] as $prov){
+				if($prov['type'] == $rtype && $prov['name'] == $rname){
+					if(Core::VersionCompare($prov['version'], $rvers, $rvrop)){
+						// Yay, it's able to be provided by a package already set to be installed!
+						return true;
+					}
+				}
+			}
+		}
+
+		// Maybe it's in the set of available updates...
+		// First array is [core => ..., components => ..., themes => ...].
+		foreach($allavailable as $type => $availableset){
+			// Core doesn't count here!
+			if($type == 'core') continue;
+
+			// Next inner array will be [componentname => {its data}, ... ].
+			foreach($availableset as $data){
+				// And provides is [type => "", name => "", version => ""].
+				foreach($data['provides'] as $prov){
+					if($prov['type'] == $rtype && $prov['name'] == $rname){
+						if(Core::VersionCompare($prov['version'], $rvers, $rvrop)){
+							// Yay, add this to the queue!
+							return $data;
+						}
+					}
+				}
+			}
+		}
 		
 		// Requirement not met... ok.  This needs to be conveyed to the calling script.
 		return false;
+	}
+
+	/**
+	 * A static function that can be tapped into the weekly cron hook.
+	 *
+	 * This ensures that the update cache is never more than a week old.
+	 */
+	public static function CheckWeekly(){
+		self::GetUpdates();
+		return true;
 	}
 }

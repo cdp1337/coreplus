@@ -37,7 +37,10 @@ class UpdateSiteModel extends Model {
 		'url'      => array(
 			'type'     => Model::ATT_TYPE_STRING,
 			'required' => true,
-			'null'     => false
+			'null'     => false,
+			'form' => array(
+				'title' => 'Repository URL',
+			),
 		),
 		/*
 		'enabled'  => array(

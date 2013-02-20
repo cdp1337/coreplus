@@ -30,6 +30,6 @@ class Debug {
 			if($arg typeof 'Array') $out .= '<span class="cae2_debug_array">Array ' . 
 		}*/
 		if (EXEC_MODE == 'CLI') echo '[ DEBUG ] - ' . $text . "\n";
-		else echo "<div class='cae2_debug'>" . $text . "</div>";
+		else echo '<pre class="xdebug-var-dump screen">' . $text . '</pre>';
 	}
 }

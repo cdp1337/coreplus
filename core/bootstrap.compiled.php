@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 16 Feb 2013 15:13:34 -0500
+ * @compiled Wed, 20 Feb 2013 09:14:24 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -78,7 +78,7 @@ class Debug {
 public static function Write($text) {
 if (!FULL_DEBUG) return;
 if (EXEC_MODE == 'CLI') echo '[ DEBUG ] - ' . $text . "\n";
-else echo "<div class='cae2_debug'>" . $text . "</div>";
+else echo '<pre class="xdebug-var-dump screen">' . $text . '</pre>';
 }
 }
 
@@ -94,6 +94,7 @@ protected $_filename;
 protected $_file;
 protected $_DOM;
 private $_rootnode = null;
+protected $_schema = null;
 public function serialize(){
 $dat = array(
 'rootname' => $this->_rootname,
@@ -116,7 +117,15 @@ $this->_DOM->loadXML(gzuncompress(base64_decode($dat['dom'])));
 }
 public function load() {
 if (!$this->_rootname) return false;
+if($this->_schema){
+$implementation = new DOMImplementation();
+$dtd = $implementation->createDocumentType($this->_rootname, 'SYSTEM', $this->_schema);
+$this->_DOM = $implementation->createDocument('', '', $dtd);
+}
+else{
 $this->_DOM = new DOMDocument();
+}
+$this->_DOM->encoding = 'UTF-8';
 $this->_DOM->formatOutput = true;
 if ($this->_file) {
 $contents = $this->_file->getContentsObject();
@@ -126,10 +135,13 @@ $dat = $contents->uncompress();
 else {
 $dat = $contents->getContents();
 }
+if(!$dat){
+return false;
+}
 $this->_DOM->loadXML($dat);
 }
 elseif ($this->_filename) {
-if (!@$this->_DOM->load($this->_filename)) return false;
+if (!$this->_DOM->load($this->_filename)) return false;
 }
 else {
 return false;
@@ -141,7 +153,7 @@ if (is_a($file, 'File_Backend')) {
 $this->_file = $file;
 }
 else {
-$this->_filename = $file;
+$this->_file = \Core\file($file);
 }
 return $this->load();
 }
@@ -165,7 +177,23 @@ $this->_filename = $file;
 public function setRootName($name) {
 $this->_rootname = $name;
 }
+public function setSchema($url){
+$this->_schema = $url;
+if($this->_DOM !== null && $this->_schema != $this->_DOM->doctype->systemId){
+$implementation = new DOMImplementation();
+$dtd = $implementation->createDocumentType($this->_rootname, 'SYSTEM', $this->_schema);
+$newdom = $implementation->createDocument('', '', $dtd);
+$root = $this->_DOM->getElementsByTagName($this->_rootname)->item(0);
+$newroot = $newdom->importNode($root, true);
+$newdom->appendChild($newroot);
+$this->_DOM = $newdom;
+$this->_rootnode = null;
+}
+}
 public function getRootDOM() {
+if($this->_DOM === null){
+$this->load();
+}
 if($this->_rootnode === null){
 $root = $this->_DOM->getElementsByTagName($this->_rootname);
 if ($root->item(0) === null) {
@@ -2262,7 +2290,7 @@ $this->setMeta($key, $element->get('value'));
 }
 }
 }
-public function setToFormElement($key, $element){
+public function setToFormElement($key, FormElement $element){
 if($key == 'page_template'){
 $element->set('templatename', $this->getBaseTemplateName());
 }
@@ -3410,14 +3438,15 @@ private $_versionDB = false;
 private $_execMode = 'WEB';
 private $_file;
 private $_permissions = array();
-const ERROR_NOERROR = 0; // 0000
-const ERROR_INVALID = 1; // 0001
-const ERROR_WRONGEXECMODE = 2; // 0010
-const ERROR_MISSINGDEPENDENCY = 4; // 0100
-const ERROR_CONFLICT = 8; // 1000
+const ERROR_NOERROR = 0;           // 00000
+const ERROR_INVALID = 1;           // 00001
+const ERROR_WRONGEXECMODE = 2;     // 00010
+const ERROR_MISSINGDEPENDENCY = 4; // 00100
+const ERROR_CONFLICT = 8;          // 01000
 public $error = 0;
 public $errstrs = array();
 private $_loaded = false;
+private $_filesloaded = false;
 private $_smartyPluginDirectory = null;
 private $_viewSearchDirectory = null;
 private $_classlist = null;
@@ -3438,6 +3467,7 @@ $this->_execMode = strtoupper($mode);
 }
 $this->_name    = $this->_xmlloader->getRootDOM()->getAttribute('name');
 $this->_version = $this->_xmlloader->getRootDOM()->getAttribute("version");
+Debug::Write('Loading metadata for component [' . $this->_name . ']');
 $dat = ComponentFactory::_LookupComponentData($this->_name);
 if (!$dat) return;
 $this->_versionDB = $dat['version'];
@@ -3449,6 +3479,7 @@ $this->_permissions[$el->getAttribute('key')] = $el->getAttribute('description')
 }
 }
 public function save($minified = false) {
+$this->_xmlloader->setSchema('http://corepl.us/api/2_4/component.dtd');
 $this->_xmlloader->getRootDOM()->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 $XMLFilename = $this->_file->getFilename();
 if ($minified) {
@@ -3459,33 +3490,9 @@ file_put_contents($XMLFilename, $this->_xmlloader->asPrettyXML());
 }
 }
 public function savePackageXML($minified = true, $filename = false) {
-$dom = new XMLLoader();
-$dom->setRootName('package');
-$dom->load();
-$dom->getRootDOM()->setAttribute('type', 'component');
-$dom->getRootDOM()->setAttribute('name', $this->getName());
-$dom->getRootDOM()->setAttribute('version', $this->getVersion());
-$dom->createElement('packager[version="' . Core::GetComponent()->getVersion() . '"]');
-foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('provides') as $u) {
-$newu = $dom->getDOM()->importNode($u);
-$dom->getRootDOM()->appendChild($newu);
-}
-$dom->getElement('/provides[type="component"][name="' . strtolower($this->getName()) . '"][version="' . $this->getVersion() . '"]');
-foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('requires') as $u) {
-$newu = $dom->getDOM()->importNode($u);
-$dom->getRootDOM()->appendChild($newu);
-}
-foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('upgrade') as $u) {
-$newu = $dom->getDOM()->importNode($u);
-$dom->getRootDOM()->appendChild($newu);
-}
-$desc = $this->_xmlloader->getElement('/description', false);
-if ($desc) {
-$newd            = $dom->getDOM()->importNode($desc);
-$newd->nodeValue = $desc->nodeValue;
-$dom->getRootDOM()->appendChild($newd);
-}
-$out = ($minified) ? $dom->asMinifiedXML() : $dom->asPrettyXML();
+$packagexml = new PackageXML();
+$packagexml->setFromComponent($this);
+$out = ($minified) ? $packagexml->asMinifiedXML() : $packagexml->asPrettyXML();
 if ($filename) {
 file_put_contents($filename, $out);
 }
@@ -3549,6 +3556,8 @@ if ($lic['title']) $l->nodeValue = $lic['title'];
 public function loadFiles() {
 if(!$this->isInstalled()) return false;
 if(!$this->isEnabled()) return false;
+if($this->_filesloaded) return true;
+Debug::Write('Loading files for component [' . $this->getName() . ']');
 $dir = $this->getBaseDir();
 foreach ($this->_xmlloader->getElements('/includes/include') as $f) {
 require_once($dir . $f->getAttribute('filename'));
@@ -3559,7 +3568,6 @@ $hook->description = $h->getAttribute('description');
 if($h->getAttribute('return')){
 $hook->returnType = $h->getAttribute('return');
 }
-HookHandler::RegisterHook($hook);
 }
 foreach ($this->_xmlloader->getElementsByTagName('hook') as $h) {
 $event = $h->getAttribute('name');
@@ -3570,6 +3578,7 @@ HookHandler::AttachToHook($event, $call, $type);
 foreach ($this->_xmlloader->getElements('/forms/formelement') as $node) {
 Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
 }
+$this->_filesloaded = true;
 return true;
 }
 public function getLibraryList() {
@@ -3829,6 +3838,7 @@ public function isLoadable() {
 if ($this->error & Component::ERROR_INVALID) {
 return false;
 }
+if($this->_loaded) return true;
 $this->error   = 0;
 $this->errstrs = array();
 if ($this->_execMode != 'BOTH') {
@@ -3986,6 +3996,9 @@ $this->_enabled = true;
 Core::Cache()->delete('core-components');
 return true;
 }
+public function getRootDOM(){
+return $this->_xmlloader->getRootDOM();
+}
 private function _performInstall() {
 $changed = array();
 $change = $this->_parseDBSchema();
@@ -4094,9 +4107,27 @@ $node = $this->_xmlloader->getElement('widgets');
 foreach ($node->getElementsByTagName('widget') as $subnode) {
 $m = new WidgetModel($subnode->getAttribute('baseurl'));
 $action = ($m->exists()) ? 'Updated' : 'Added';
+$installable = $subnode->getAttribute('installable');
 if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
-$m->set('installable', $subnode->getAttribute('installable'));
-if ($m->save()) $changes[] = $action . ' widget [' . $m->get('baseurl') . ']';
+$m->set('installable', $installable);
+if ($m->save()){
+$changes[] = $action . ' widget [' . $m->get('baseurl') . ']';
+if($action == 'Added' && $installable == '/admin'){
+$weight = WidgetInstanceModel::Count([
+'widgetarea' => 'Admin Dashboard',
+'page' => 'pages/admin/index.tpl',
+]) + 1;
+$wi = new WidgetInstanceModel();
+$wi->setFromArray([
+'baseurl' => $m->get('baseurl'),
+'page' => 'pages/admin/index.tpl',
+'widgetarea' => 'Admin Dashboard',
+'weight' => $weight
+]);
+$wi->save();
+$changes[] = 'Installed  widget ' . $m->get('baseurl') . ' into the admin dashboard!';
+}
+}
 }
 return ($changes > 0) ? $changes : false;
 }
@@ -4303,32 +4334,62 @@ public function get($name);
 ### REQUIRE_ONCE FROM core/libs/filestore/FileContentFactory.class.php
 class FileContentFactory {
 public static function GetFromFile(File_Backend $file) {
+$class = null;
 switch ($file->getMimetype()) {
 case 'application/x-gzip':
-if (strtolower($file->getExtension()) == 'tgz') return new File_tgz_contents($file);
-else return new File_gz_contents($file);
+if (strtolower($file->getExtension()) == 'tgz'){
+$class = 'File_tgz_contents';
+}
+else{
+$class = 'File_gz_contents';
+}
+break;
 case 'text/plain':
-if (strtolower($file->getExtension()) == 'asc') return new File_asc_contents($file);
-else return new File_unknown_contents($file);
+if (strtolower($file->getExtension()) == 'asc'){
+$class = 'File_asc_contents';
+}
+else{
+$class = 'File_unknown_contents';
+}
+break;
 case 'text/xml':
-return new File_xml_contents($file);
+case 'application/xml':
+$class = 'File_xml_contents';
+break;
 case 'application/pgp-signature':
-return new File_asc_contents($file);
+$class = 'File_asc_contents';
+break;
 case 'application/zip':
-return new File_zip_contents($file);
+$class = 'File_zip_contents';
+break;
 case 'application/octet-stream':
 if($file->getExtension() == 'zip'){
-return new File_zip_contents($file);
+$class = 'File_zip_contents';
 }
 else{
 error_log('@fixme Unknown extension for application/octet-stream mimetype [' . $file->getExtension() . ']');
-return new File_unknown_contents($file);
+$class = 'File_unknown_contents';
 }
+break;
 default:
 error_log('@fixme Unknown file mimetype [' . $file->getMimetype() . '] with extension [' . $file->getExtension() . ']');
-return new File_unknown_contents($file);
+$class = 'File_unknown_contents';
+}
+if(!class_exists($class)){
+if(file_exists(ROOT_PDIR . 'core/libs/filestore/contents/' . $class . '.class.php')){
+require_once(ROOT_PDIR . 'core/libs/filestore/contents/' . $class . '.class.php');
+}
+else{
+throw new Exception('Unable to locate file for class [' . $class . ']');
 }
 }
+return new $class($file);
+}
+}
+
+### REQUIRE_ONCE FROM core/libs/filestore/File_Contents.interface.php
+interface File_Contents {
+public function __construct(File_Backend $file);
 }
 
 ### REQUIRE_ONCE FROM core/libs/filestore/backends/file_awss3.backend.php
@@ -4650,7 +4711,12 @@ return md5_file($this->_filename);
 }
 public function delete() {
 $ftp    = \Core\FTP();
-if(!$ftp){
+$tmpdir = TMP_DIR;
+if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
+if(
+!$ftp || // FTP not enabled or
+(strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
+){
 if (!@unlink($this->getFilename())) return false;
 $this->_filename = null;
 return true;
@@ -4710,14 +4776,18 @@ if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resol
 $mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
 self::_Mkdir(dirname($this->_filename), null, true);
 if (
-!$ftp // FTP is not enabled
-||
+!$ftp || // FTP not enabled or
 (strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
 ) {
 $maxbuffer = (1024 * 1024 * 10);
 $handlein  = fopen($localfilename, 'r');
 $handleout = fopen($this->_filename, 'w');
-if(!($handlein && $handleout)) return false;
+if(!$handlein){
+throw new Exception('Unable to open file ' . $localfilename . ' for reading.');
+}
+if(!$handleout){
+throw new Exception('Unable to open file ' . $this->_filename . ' for writing.');
+}
 while(!feof($handlein)){
 fwrite($handleout, fread($handlein, $maxbuffer));
 }
@@ -4735,9 +4805,13 @@ $filename = $this->_filename;
 }
 $ftp = \Core\FTP();
 if (!ftp_put($ftp, $filename, $localfilename, FTP_BINARY)) {
+throw new Exception(error_get_last()['message']);
 return false;
 }
-if (!ftp_chmod($ftp, $mode, $filename)) return false;
+if (!ftp_chmod($ftp, $mode, $filename)){
+throw new Exception(error_get_last()['message']);
+return false;
+}
 return true;
 }
 }
@@ -5170,7 +5244,12 @@ return substr($p, strrpos($p, '/') + 1);
 }
 public function remove() {
 $ftp    = \Core\FTP();
-if(!$ftp){
+$tmpdir = TMP_DIR;
+if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
+if(
+!$ftp || // FTP not enabled or
+(strpos($this->getPath(), $tmpdir) === 0) // Destination is a temporary directory.
+){
 $dirqueue = array($this->getPath());
 $x        = 0;
 do {
@@ -5271,7 +5350,10 @@ $fh = fopen($filename, 'r');
 if (!$fh) return null;
 $line = fread($fh, 512);
 fclose($fh);
-if (strpos($line, 'http://corepl.us/api/2_1/component.dtd') !== false) {
+if (strpos($line, 'http://corepl.us/api/2_4/component.dtd') !== false) {
+return new Component_2_1($filename);
+}
+elseif (strpos($line, 'http://corepl.us/api/2_1/component.dtd') !== false) {
 return new Component_2_1($filename);
 }
 else {
@@ -5953,6 +6035,10 @@ HookHandler::$RegisteredHooks[$hookName]->attach($callFunction);
 }
 public static function RegisterHook(Hook $hook) {
 $name = $hook->getName();
+Debug::Write('Registering new hook [' . $name . ']');
+if(isset(HookHandler::$RegisteredHooks[$name])){
+trigger_error('Registering hook that is already registered [' . $name . ']', E_USER_NOTICE);
+}
 HookHandler::$RegisteredHooks[$name] = $hook;
 if (isset(self::$EarlyRegisteredHooks[$name])) {
 foreach (self::$EarlyRegisteredHooks[$name] as $b) {
@@ -6050,126 +6136,15 @@ return sizeof($this->_bindings);
 }
 }
 HookHandler::singleton();
-HookHandler::RegisterNewHook('/core/db/ready', 'Called immediately after the database is available, but before any component is registered.');;
 
 $preincludes_time = microtime(true);
 Debug::Write('Loading core system');
-### REQUIRE_ONCE FROM core/libs/core/InstallTask.class.php
-class InstallTask {
-public static function ParseNode(DomElement $node, $relativeDir) {
-foreach ($node->getElementsByTagName('*') as $c) {
-$result = HookHandler::DispatchHook('/install_task/' . $c->tagName, $c, $relativeDir);
-if (!$result) return false;
-}
-return true;
-}
-public static function _ParseSetConfig($node, $relativeDir) {
-$set   = $node->getAttribute('set');
-$key   = $node->getAttribute('key');
-$value = $node->nodeValue;
-DB::Execute("UPDATE `" . DB_PREFIX . "configs` SET `value` = ? WHERE `config_set` = ? AND `key` = ? LIMIT 1", array($value, $set, $key));
-}
-public static function _ParseAddConfig($node, $relativeDir) {
-$set         = $node->getAttribute('set');
-$key         = $node->getAttribute('key');
-$type        = @$node->getAttribute('type');
-$valueType   = @$node->getAttribute('valuetype');
-$default     = @$node->getAttribute('default');
-$value       = @$node->getAttribute('value');
-$options     = @$node->getAttribute('options');
-$description = @$node->getAttribute('description');
-if (!$type) $type = 'setting';
-if (!$valueType) $valueType = 'string';
-if (!$default) $default = $value;
-if (!$value) $value = $default;
-if (!$description) $description = "";
-$options = null;
-if ($valueType == 'enum') {
-$options = '';
-foreach ($node->getElementsByTagName('option') as $opt) {
-$value = @$opt->getAttribute('value');
-$title = $opt->nodeValue;
-if (!$value) $value = $title;
-$title = str_replace(array(':', ';'), array('/:', '/;'), $title);
-$value = str_replace(array(':', ';'), array('/:', '/;'), $value);
-$options .= (($options == '') ? '' : ";\n") . (($title == $value) ? '' : $value . ':') . $title;
-}
-}
-$pkeys = array(
-'config_set' => $set,
-'key'        => $key
-);
-$keys  = array(
-'type'          => $type,
-'value_type'    => $valueType,
-'default_value' => $default,
-'value'         => $value,
-'options'       => $options,
-'description'   => $description
-);
-$q = DB::CreateSQLFromHash(DB_PREFIX . 'configs', 'auto', $keys, $pkeys);
-DB::Execute($q);
-if ($type == 'define') define($key, $value);
-}
-public static function _ParseAddResourceDir($node, $relativeDir) {
-$dir = $node->getAttribute('dir');
-if (is_dir(ROOT_PDIR . '/resources/' . $dir)) return true;
-return mkdir(ROOT_PDIR . '/resources/' . $dir, 0777, true);
-}
-public static function _ParseSql($node, $relativeDir) {
-$file = @$node->getAttribute('file');
-if ($file) {
-$file = $relativeDir . $file;
-$sql  = file_get_contents($file);
-}
-else {
-$sql = $node->nodeValue;
-}
-if (!$sql) return false;
-$foe = @$node->getAttribute('failonerror');
-switch ($foe) {
-case null:
-case 'true':
-case 'yes':
-case '1':
-$foe = true;
-break;
-default:
-$foe = false;
-break;
-}
-$prefix = $node->getAttribute('prefix');
-$sql    = str_replace($prefix, DB_PREFIX, $sql);
-$sql = str_replace(array('\r\n', '\r'), '\n', $sql);
-$sqls = preg_split('/;[ ]*\n/', $sql);
-foreach ($sqls as $sqlline) {
-if (trim($sqlline) == '') continue;
-if ($foe) {
-DB::Execute($sqlline);
-}
-else {
-$saveErrHandlers = DB::GetConnection()->IgnoreErrors();
-DB::Execute($sqlline);
-DB::GetConnection()->IgnoreErrors($saveErrHandlers);
-}
-}
-return true;
-}
-}
-HookHandler::RegisterNewHook('/install_task/sql');
-HookHandler::AttachToHook('/install_task/sql', 'InstallTask::_ParseSql');
-HookHandler::RegisterNewHook('/install_task/addconfig');
-HookHandler::AttachToHook('/install_task/addconfig', 'InstallTask::_ParseAddConfig');
-HookHandler::RegisterNewHook('/install_task/setconfig');
-HookHandler::AttachToHook('/install_task/setconfig', 'InstallTask::_ParseSetConfig');
-HookHandler::RegisterNewHook('/install_task/addresourcedir');
-HookHandler::AttachToHook('/install_task/addresourcedir', 'InstallTask::_ParseAddResourceDir');
-
 ### REQUIRE_ONCE FROM core/libs/core/Core.class.php
 class Core implements ISingleton {
 private static $instance;
 private static $_LoadedComponents = false;
 private $_components = null;
+private $_componentsDisabled = array();
 private $_libraries = array();
 private $_classes = array();
 private $_widgets = array();
@@ -6327,6 +6302,7 @@ do {
 $size = sizeof($list);
 foreach ($list as $n => $c) {
 if($c->isInstalled() && !$c->isEnabled()){
+$this->_componentsDisabled[$n] = $c;
 unset($list[$n]);
 continue;
 }
@@ -6372,7 +6348,7 @@ $theme->load();
 }
 }
 }
-public function _registerComponent($c) {
+public function _registerComponent(Component_2_1 $c) {
 $name = strtolower($c->getName());
 if ($c->hasLibrary()) {
 $this->_libraries = array_merge($this->_libraries, $c->getLibraryList());
@@ -6394,9 +6370,6 @@ ksort($this->_permissions);
 public static function CheckClass($classname) {
 if (class_exists($classname)) return;
 $classname = strtolower($classname);
-if (!self::$_LoadedComponents) {
-self::LoadComponents();
-}
 if (isset(Core::Singleton()->_classes[$classname])) {
 if(!file_exists(Core::Singleton()->_classes[$classname])){
 throw new Exception('Unable to open file for class ' . $classname . ' (' . Core::Singleton()->_classes[$classname] . ')');
@@ -6476,10 +6449,16 @@ public static function GetPermissions(){
 return self::Singleton()->_permissions;
 }
 public static function GetComponent($name = 'core') {
-return isset(self::Singleton()->_components[$name]) ? self::Singleton()->_components[$name] : null;
+$s = self::Singleton();
+if(isset($s->_components[$name])) return $s->_components[$name];
+if(isset($s->_componentsDisabled[$name])) return $s->_componentsDisabled[$name];
+return null;
 }
 public static function GetComponents() {
 return self::Singleton()->_components;
+}
+public static function GetDisabledComponents(){
+return self::Singleton()->_componentsDisabled;
 }
 public static function GetComponentByController($controller) {
 $controller = strtolower($controller);
@@ -7119,6 +7098,7 @@ return null;
 }
 }
 private function _loadDB(){
+Debug::Write('Config data loading from database');
 $this->_clearCache();
 $fac = ConfigModel::Find();
 foreach ($fac as $config) {
@@ -7133,7 +7113,6 @@ define($config->get('mapto'), $val);
 public static function Singleton() {
 if (self::$Instance === null) {
 self::$Instance = new self();
-HookHandler::AttachToHook('/core/db/ready', 'ConfigHandler::_DBReadyHook');
 }
 return self::$Instance;
 }
@@ -7231,6 +7210,7 @@ $tmpdir              = $core_settings['tmp_dir_cli'];
 $host                = 'localhost';
 if (isset($_SERVER['HOME']) && is_dir($_SERVER['HOME'] . '/.gnupg')) $gnupgdir = $_SERVER['HOME'] . '/.gnupg/';
 else $gnupgdir = false;
+ini_set('html_errors', 0);
 }
 else {
 if (isset ($_SERVER ['HTTPS'])) $servername = "https://";
@@ -7729,7 +7709,7 @@ public $query = null;
 
 try {
 $dbconn = DMI::GetSystemDMI();
-HookHandler::DispatchHook('/core/db/ready');
+ConfigHandler::_DBReadyHook();
 }
 catch (Exception $e) {
 error_log($e->getMessage());
@@ -10487,7 +10467,13 @@ $data = $this->splitParts();
 return (array_key_exists($key, $data['parameters'])) ? $data['parameters'][$key] : null;
 }
 public function getPost($key){
-return (isset($_POST[$key])) ? $_POST[$key] : null;
+$src = &$_POST;
+if(strpos($key, '[') !== false){
+$k1 = substr($key, 0, strpos($key, '['));
+$key = substr($key, strlen($k1) + 1, -1);
+$src = &$_POST[$k1];
+}
+return (isset($src[$key])) ? $src[$key] : null;
 }
 public function getPageModel() {
 if ($this->_pagemodel === null) {

@@ -167,7 +167,7 @@ class RepoXML extends XMLLoader {
 
 	public function getPackages() {
 		$pkgs = array();
-		foreach ($this->getElements('package') as $p) {
+		foreach ($this->getElements('core/package|components/package|themes/package') as $p) {
 			$pkg = new PackageXML(null);
 			$pkg->loadFromNode($p);
 			$pkgs[] = $pkg;

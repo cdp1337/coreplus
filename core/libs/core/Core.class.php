@@ -482,7 +482,7 @@ class Core implements ISingleton {
 	 *
 	 * Expects all checks to be done already.
 	 */
-	public function _registerComponent($c) {
+	public function _registerComponent(Component_2_1 $c) {
 		$name = strtolower($c->getName());
 
 		if ($c->hasLibrary()) {
@@ -532,10 +532,10 @@ class Core implements ISingleton {
 		$classname = strtolower($classname);
 
 		// The system needs to be loaded first.
-		if (!self::$_LoadedComponents) {
-			// Ok, so load it!
-			self::LoadComponents();
-		}
+		//if (!self::$_LoadedComponents) {
+		//	// Ok, so load it!
+		//	self::LoadComponents();
+		//}
 
 		if (isset(Core::Singleton()->_classes[$classname])) {
 			if(!file_exists(Core::Singleton()->_classes[$classname])){
@@ -719,7 +719,14 @@ class Core implements ISingleton {
 	 * @return Component_2_1
 	 */
 	public static function GetComponent($name = 'core') {
-		return isset(self::Singleton()->_components[$name]) ? self::Singleton()->_components[$name] : null;
+		$s = self::Singleton();
+		if(isset($s->_components[$name])) return $s->_components[$name];
+
+		// maybe it's a disabled component.  Those should be returned too.
+		if(isset($s->_componentsDisabled[$name])) return $s->_componentsDisabled[$name];
+
+		// Not that either?
+		return null;
 	}
 
 	/**

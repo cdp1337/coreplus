@@ -25,6 +25,7 @@
 		<hook name="/core/page/error-404" call="GettingStartedController::_HookCatch404"/>
 		<hook name="/core/page/error-404" call="RewriteMapHelper::Catch404Hook"/>
 		<hook name="/core/page/prerender" call="Core::_RecordNavigation"/>
+		<hook name="/cron/weekly" call="UpdaterHelper::CheckWeekly"/>
 	</hooks>
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
 	<includes>
@@ -38,8 +39,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="9bd76136ebc3395e33b33b4b469817b2"/>
-		<file filename="core/CHANGELOG" md5="45534a591be8d9be5af9a2d61f831774"/>
-		<file filename="core/bootstrap.compiled.php" md5="0456b9127a71aba14cae16c1edff0c38">
+		<file filename="core/CHANGELOG" md5="45ac90ac2fdf5afb75ce2cc9aecb3aa1"/>
+		<file filename="core/bootstrap.compiled.php" md5="293e34bef7836af696d4e80f7325e2a0">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -70,7 +71,6 @@
 			<class name="ViewControl"/>
 			<class name="HookHandler"/>
 			<class name="Hook"/>
-			<class name="InstallTask"/>
 			<class name="Core"/>
 			<class name="CoreException"/>
 			<class name="ConfigModel"/>
@@ -105,14 +105,15 @@
 			<interface name="ISingleton"/>
 			<interface name="File_Backend"/>
 			<interface name="Directory_Backend"/>
+			<interface name="File_Contents"/>
 			<interface name="ICacheCore"/>
 			<interface name="DMI_Backend"/>
 			<interface name="TemplateInterface"/>
 		</file>
-		<file filename="core/bootstrap.php" md5="bfacc84a8dcc72ce690b476bbe6a2516"/>
+		<file filename="core/bootstrap.php" md5="c42199e89b043f924bba07d3c2719503"/>
 		<file filename="core/bootstrap_postincludes.php" md5="66f9826e95d4764cb63ff94033b66e33"/>
 		<file filename="core/bootstrap_predefines.php" md5="a75579b94642f0f4fb7b7540f9909288"/>
-		<file filename="core/bootstrap_preincludes.php" md5="dcfb10510205563d42e2d02c8979cc42"/>
+		<file filename="core/bootstrap_preincludes.php" md5="4463ff79cb090c022e279ad39e3a774a"/>
 		<file filename="core/controllers/AdminController.php" md5="10e756865dc66cd519ad85859a94d27c">
 			<controller name="AdminController"/>
 		</file>
@@ -134,7 +135,7 @@
 		<file filename="core/controllers/GettingStartedController.class.php" md5="c32e15834efbdd387f37f8c72fc24fea">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="33f2cb41e5c021cb9718b0b6ae2addef">
+		<file filename="core/controllers/UpdaterController.class.php" md5="315aa902d6864fa89a0c90d3b2f30ac9">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
@@ -202,7 +203,7 @@
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="da6e337a8305534398cad21c53dcae54">
 			<class name="RewriteMapHelper"/>
 		</file>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="e9dff69fcdded3b5a9708d1f8a3180b0">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="0fd81088ff810c452cb5a9a9efc4b38d">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
@@ -499,11 +500,11 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="21742dfb0ecd1e5e883e1298f564a0dd">
+		<file filename="core/libs/core/Component_2_1.php" md5="0b774a32c1428e2845b77e73fe04d0c6">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/Component_2_1.php~" md5="2d0415ad7d971656437322c0a324ce07"/>
-		<file filename="core/libs/core/ConfigHandler.class.php" md5="3e12e2b14dc478de82982586fa4feeb0">
+		<file filename="core/libs/core/ConfigHandler.class.php" md5="6d7f6d3d565b1f88c423917405203574">
 			<class name="ConfigHandler"/>
 		</file>
 		<file filename="core/libs/core/Controller.class.php" md5="f584112515b7c712911a1583ffe23fea">
@@ -512,20 +513,21 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="4b4e76fbefc4dd7cdf4c2d9c3d9a2a6d">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="f259e304c01f27321e0a0832e021c759">
+		<file filename="core/libs/core/Core.class.php" md5="8be76dbdf220a04db500a69e408b4d36">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
-		<file filename="core/libs/core/CoreDateTime.php" md5="9a344243cedcc65c60b683eb848e19cf">
+		<file filename="core/libs/core/CoreDateTime.php" md5="3213bb356fb936d95d1411d922ff7859">
 			<class name="CoreDateTime"/>
 		</file>
+		<file filename="core/libs/core/CoreDateTime.php~" md5="9a344243cedcc65c60b683eb848e19cf"/>
 		<file filename="core/libs/core/CurrentPage.class.php" md5="18aaac70fba624a1c1b4566391ee548b">
 			<class name="CurrentPage"/>
 		</file>
 		<file filename="core/libs/core/DB.class.php" md5="9f249559a301b0250318631011c01b02">
 			<class name="DB"/>
 		</file>
-		<file filename="core/libs/core/Debug.class.php" md5="2f799131f3eb9465395a2d3d1c667b72">
+		<file filename="core/libs/core/Debug.class.php" md5="ac233572240b26b43d3c494ff4569cb0">
 			<class name="Debug"/>
 		</file>
 		<file filename="core/libs/core/Email.class.php" md5="2f0608c1f1aa4bfcb35a0affa35dacb8">
@@ -540,7 +542,7 @@
 			<class name="Form"/>
 		</file>
 		<file filename="core/libs/core/Form.class.php~" md5="d09250fcac49eab0fbde0bbe1e1afaea"/>
-		<file filename="core/libs/core/HookHandler.class.php" md5="58ea42454371697c717de9fa01a9f956">
+		<file filename="core/libs/core/HookHandler.class.php" md5="c9e8c39c25703ab5c4d5c0078690c0f4">
 			<class name="HookHandler"/>
 			<class name="Hook"/>
 		</file>
@@ -554,9 +556,7 @@
 		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="20677792359e49c7315994357c53f9d6">
 			<class name="InstallArchiveAPI"/>
 		</file>
-		<file filename="core/libs/core/InstallTask.class.php" md5="78b24bb7af7d1175eb2d8f797f7bb783">
-			<class name="InstallTask"/>
-		</file>
+		<file filename="core/libs/core/InstallTask.class.php.DISABLED" md5="78b24bb7af7d1175eb2d8f797f7bb783"/>
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
@@ -569,13 +569,13 @@
 			<class name="ModelSchemaColumn"/>
 		</file>
 		<file filename="core/libs/core/Model.class.php~" md5="80c365fcbae327f3b76842b81bfbd48f"/>
-		<file filename="core/libs/core/PackageXML.class.php" md5="5dc394dae65ff81189c66d068cde6cc4">
+		<file filename="core/libs/core/PackageXML.class.php" md5="ce0528597db87201d3842e87c8262fd4">
 			<class name="PackageXML"/>
 		</file>
 		<file filename="core/libs/core/PageRequest.class.php" md5="63c8fa3d2d21e64d0c4d7b1524688958">
 			<class name="PageRequest"/>
 		</file>
-		<file filename="core/libs/core/RepoXML.class.php" md5="369c218ceeb49ebfd1d94b71ba4a55b4">
+		<file filename="core/libs/core/RepoXML.class.php" md5="d934bb49559c9bfa7bc8a8d352b0510b">
 			<class name="RepoXML"/>
 		</file>
 		<file filename="core/libs/core/SQLBuilder.class.php.DISABLED" md5="47925681d58280bff9c130f449c9ba90"/>
@@ -851,16 +851,16 @@
 		<file filename="core/libs/filestore/File_Contents.interface.php" md5="74e9a61ff8a58f95da1a8e114235b019">
 			<interface name="File_Contents"/>
 		</file>
-		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="6149d7a43f48243b3f15e4ebc2fc757c">
+		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="81871ebbae52fe747a105ff1a869d55a">
 			<class name="Directory_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="86f58054362b62b0a0bc760d8f403048">
 			<class name="File_awss3_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="9b15d7524698de1a5b70044b76945458">
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="13b529a46a649dcc938b474326935128">
 			<class name="File_local_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="e948f029839809fa79ac5c6767a78804">
+		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="27ee088630aef9763db8378b374a51af">
 			<class name="File_remote_backend"/>
 		</file>
 		<file filename="core/libs/filestore/contents/File_asc_contents.class.php" md5="1ab9f64e240b30abc32826e0a2ace694">
@@ -1339,7 +1339,7 @@
 		<file filename="core/models/SessionModel.class.php" md5="3dbc89b95a2e8182e6f63c84650a3687">
 			<class name="SessionModel"/>
 		</file>
-		<file filename="core/models/UpdateSiteModel.class.php" md5="8a160dba53136a7b65b384a788b40690">
+		<file filename="core/models/UpdateSiteModel.class.php" md5="05a42e2ff98a48fe8378f42da32366ff">
 			<class name="UpdateSiteModel"/>
 		</file>
 		<file filename="core/models/WidgetInstanceModel.class.php" md5="00528251293b26c12e0974ff94f8a09c">
@@ -1359,18 +1359,21 @@
 		<file filename="core/widgets/PageWidget.php" md5="612cd59aef22cda09804b489cb64f327">
 			<class name="PageWidget"/>
 		</file>
+		<file filename="core/widgets/UpdaterWidget.php" md5="f16480a6b32ab1ecb093360f1ebc44cd">
+			<class name="UpdaterWidget"/>
+		</file>
 		<file filename="docs/component-xml.md" md5="cd75f6261c32124706353f97d263569c"/>
 		<file filename="docs/core/filters.md" md5="9d25f83b7a38a9aab877a912e7a1d060"/>
 		<file filename="docs/core/resolvelink.md" md5="85817c90723a34bf7ec6be9f1d554f29"/>
 		<file filename="docs/models.md" md5="f8e6c6e34027ac2e608127af0c0a185f"/>
-		<file filename="docs/schemas/component.dtd" md5="5d8a67765233544a57c2a23ed25c5c65"/>
+		<file filename="docs/schemas/component.dtd" md5="fdba9b2f059cdcb83b4528f83da5787b"/>
 		<file filename="docs/schemas/package.dtd" md5="d3b4446f1890c346ca35c4ce020fd834"/>
-		<file filename="docs/schemas/repo.dtd" md5="dd96c5b742e5c2359dddd3bfaff53d9a"/>
+		<file filename="docs/schemas/repo.dtd" md5="294413e4a4e49dcd32a58dba267ab880"/>
 		<file filename="docs/smarty-functions/img.md" md5="96808e22a392b247ba36aefd923b1c6e"/>
 		<file filename="docs/user-permissions.md" md5="53e3322a56a1b537a43f8520394b56ae"/>
 		<file filename="docs/utilities/compiler.md" md5="acfb5b28bfe613bca48ac52f30894899"/>
 		<file filename="htaccess.ex" md5="a9753494f79d3cfa1526c3ccfd19f1cc"/>
-		<file filename="index.php" md5="d01a25c25c5fb9fa77e98da5e4e58f37"/>
+		<file filename="index.php" md5="053e9ae9295e2c1ab0e0eb5b74373f21"/>
 		<file filename="install/InstallPage.class.php" md5="4f34783e9e3b4c2878afa6aa3aa0eb07">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1393,11 +1396,14 @@
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 	</files>
 	<pages>
-		<page baseurl="/admin" admin="1" widget="0" access="g:admin" title="Administration"/>
-		<page baseurl="/admin/reinstallall" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="Reinstall All Components"/>
-		<page baseurl="/admin/config" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="System Configuration"/>
-		<page baseurl="/updater" parenturl="/Admin" admin="1" widget="0" access="g:admin" title="System Updater"/>
+		<page baseurl="/admin" admin="1" access="g:admin" title="Administration"/>
+		<page baseurl="/admin/reinstallall" admin="1" access="g:admin" title="Reinstall All Components"/>
+		<page baseurl="/admin/config" admin="1" access="g:admin" title="System Configuration"/>
+		<page baseurl="/updater" admin="1" access="g:admin" title="System Updater"/>
 	</pages>
+	<widgets>
+		<widget baseurl="/updater/check" title="Check For Updates" installable="/admin"/>
+	</widgets>
 	<view searchdir="core/templates">
 		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="db78818d22acfd0bf4388bdbad4f0325"/>
 		<file filename="core/templates/forms/elements/button.tpl" md5="04458c32e1d992bba0255d8d1a2e8dee"/>
@@ -1445,12 +1451,12 @@
 		<file filename="core/templates/pages/error/error404.tpl" md5="7c1198b559dfeae2ba75a3cd9b82d4e0"/>
 		<file filename="core/templates/pages/error/error500.tpl" md5="e641e6a353fb4fdb65b271553bb51763"/>
 		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="c3856d7798a76f98caf744dcc381c9d3"/>
-		<file filename="core/templates/pages/updater/browse.tpl" md5="6f98a757e57dc19569d2f9a859751cb5"/>
-		<file filename="core/templates/pages/updater/index.tpl" md5="297a55fba80dff41e860cd7f441de94f"/>
+		<file filename="core/templates/pages/updater/browse.tpl" md5="46164efb30e799b0daa3062cb53ed548"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="4e51c3db1422cb70ff09055293ae1164"/>
 		<file filename="core/templates/pages/updater/keys.tpl" md5="4ff939a015c21167bda5a5a8d47f3f37"/>
-		<file filename="core/templates/pages/updater/keys_import.tpl" md5="1872117c9db9e7242cdd0485a11ddc4a"/>
+		<file filename="core/templates/pages/updater/keys_import.tpl" md5="3dc1de19f1f96e5ea92b67ef0d0ebc01"/>
 		<file filename="core/templates/pages/updater/repos.tpl" md5="a89ad644a891497f8641c259c69cf159"/>
-		<file filename="core/templates/pages/updater/repos_add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="core/templates/pages/updater/repos_add.tpl" md5="cef69bdbee6456bf08512d0674835cbe"/>
 		<file filename="core/templates/pages/updater/repos_add2.tpl" md5="a1f63dcca556bce813ab72264d4e629c"/>
 		<file filename="core/templates/pages/updater/repos_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/updater/update.tpl" md5="dda6c77aed0d5d36ff520c02f1f9c4f9"/>
@@ -1458,6 +1464,7 @@
 		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
 		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
 		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="96c5da325fdf9eb7c6a82ca2ed2abf16"/>
+		<file filename="core/templates/widgets/updater/check.tpl" md5="691cbf5d720e8891324606f1b96b3454"/>
 	</view>
 	<install/>
 	<description>
@@ -1496,6 +1503,7 @@
 	</configs>
 	<assets>
 		<file filename="core/assets/css/admin/adminbar.css" md5="c9be9f23523adca836440c7f862ed938"/>
+		<file filename="core/assets/css/updater.css" md5="771975b286bac4ea1f55785d6ca1a5eb"/>
 		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="306b7baee9b250a9da2b378f5047ff30"/>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 		<file filename="core/assets/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
@@ -1506,7 +1514,7 @@
 		<file filename="core/assets/js/core.fileupload.js" md5="499451d7c6a0e4266eb703f26e25cf33"/>
 		<file filename="core/assets/js/core.js" md5="8c4724ce896c231d0c42c56d2201e33a"/>
 		<file filename="core/assets/js/core.strings.js" md5="7ba2a6d21dc4529332298404b7df17ff"/>
-		<file filename="core/assets/js/updater/index.js" md5="8bc98840b6292bdf9b98074ee92c7615"/>
+		<file filename="core/assets/js/updater/index.js" md5="935d99be2a5d88d8d6496fb3dd14e13b"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="0.0.2"/>

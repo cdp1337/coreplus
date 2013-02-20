@@ -77,6 +77,12 @@ class HookHandler implements ISingleton {
 	public static function RegisterHook(Hook $hook) {
 		$name = $hook->getName();
 
+		Debug::Write('Registering new hook [' . $name . ']');
+
+		if(isset(HookHandler::$RegisteredHooks[$name])){
+			trigger_error('Registering hook that is already registered [' . $name . ']', E_USER_NOTICE);
+		}
+
 		HookHandler::$RegisteredHooks[$name] = $hook;
 		//var_dump(self::$EarlyRegisteredHooks);
 		// Attach any bindings that may have existed.
@@ -284,4 +290,4 @@ HookHandler::singleton();
 
 
 // Create some pre-system hooks that are used before the component system is functional.
-HookHandler::RegisterNewHook('/core/db/ready', 'Called immediately after the database is available, but before any component is registered.');;
+//HookHandler::RegisterNewHook('/core/db/ready', 'Called immediately after the database is available, but before any component is registered.');;
