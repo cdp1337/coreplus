@@ -843,79 +843,7 @@ function process_component($component, $forcerelease = false){
 			$header = $comp->getName() . ' ' . $version . "\n";
 		}
 
-		$timestamp = "\t--$packagername <$packageremail>  " . Time::GetCurrent(Time::TIMEZONE_DEFAULT, Time::FORMAT_RFC2822) . "\n\n";
-		$changelog = '';
-
-		// Start reading the file contents until I find the header, (probably on line 1, but you never know).
-		$fh = fopen($file, 'r');
-		if(!$fh){
-			// Hmm, create it?...
-			touch($file);
-			$fh = fopen($file, 'r');
-		}
-		// Still no?
-		if(!$fh){
-			die('Unable to create file ' . $file . ' for reading or writing!');
-		}
-		$wrotetimestamp = false;
-		$inchange = false;
-		$previous = null;
-		while(!feof($fh)){
-			$line = fgets($fh, 512);
-
-			// Does this line look like the exact header?
-			if($line == $header){
-				$inchange = true;
-				$changelog .= $line;
-				$previous = $line;
-				continue;
-			}
-
-			if($inchange){
-				// It's in the current change version,
-				// previous line was a comment,
-				// and current line is blank...
-				// EXCELLENT!  Insert the timestamp here!
-				if(strpos($previous, "\t* ") === 0 && trim($line) == ''){
-					// line starts with [tab]*[space], it's a comment!
-					$changelog .= $timestamp;
-					$wrotetimestamp = true;
-					$inchange = false;
-				}
-				elseif(strpos($previous, "\t* ") === 0 && strpos($line, '--') === 0){
-					// Oh, this line already has a timestamp.... DON'T CARE! :p
-					$changelog .= $timestamp;
-					$wrotetimestamp = true;
-					$inchange = false;
-				}
-				elseif(strpos($line, $headerprefix) === 0){
-					// Wait, I found another header, but I haven't written the timestamp yet!
-					// :/
-					$changelog .= $timestamp . $line;
-					$wrotetimestamp = true;
-					$inchange = false;
-				}
-				else{
-					// eh...
-					$changelog .= $line;
-				}
-			}
-			else{
-				// Ok, I don't care anyway
-				$changelog .= $line;
-			}
-
-			$previous = $line;
-		}
-		fclose($fh);
-
-		// Did it never even write the timestamp?
-		if(!$wrotetimestamp){
-			$changelog = $header . "\n" . $timestamp . $changelog;
-		}
-
-		// Write this back out to that file :)
-		file_put_contents($file, $changelog);
+		add_release_date_to_changelog($file, $headerprefix, $header);
 
 		// Create a temp directory to contain all these
 		$dir = TMP_DIR . 'packager-' . $component . '/';
@@ -1105,6 +1033,13 @@ function process_theme($theme, $forcerelease = false){
 
 
 	if($bundleyn){
+
+		$file = $t->getBaseDir() . 'CHANGELOG';
+		$headerprefix = 'Theme/' . $name;
+		// The header line will be exactly [name] [version].
+		$header = 'Theme/' . $name . ' ' . $version . "\n";
+
+		add_release_date_to_changelog($file, $headerprefix, $header);
 
 
 		// Create a temp directory to contain all these
@@ -1547,6 +1482,89 @@ function manage_changelog($file, $name, $version){
 	file_put_contents($file, $beforechangelog . $header . "\n" . $changeloglines . "\n" . $afterchangelog);
 }
 
+/**
+ * Add the release date to the changelog for the current version.
+ */
+function add_release_date_to_changelog($file, $headerprefix, $header){
+	// Update the changelog version first!
+	// This is done here to signify that the version has actually been bundled up.
+	// Lookup the changelog text of this current version.
+	global $packagername, $packageremail;
+
+	$timestamp = "\t--$packagername <$packageremail>  " . Time::GetCurrent(Time::TIMEZONE_DEFAULT, Time::FORMAT_RFC2822) . "\n\n";
+	$changelog = '';
+
+	// Start reading the file contents until I find the header, (probably on line 1, but you never know).
+	$fh = fopen($file, 'r');
+	if(!$fh){
+		// Hmm, create it?...
+		touch($file);
+		$fh = fopen($file, 'r');
+	}
+	// Still no?
+	if(!$fh){
+		die('Unable to create file ' . $file . ' for reading or writing!');
+	}
+	$wrotetimestamp = false;
+	$inchange = false;
+	$previous = null;
+	while(!feof($fh)){
+		$line = fgets($fh, 512);
+
+		// Does this line look like the exact header?
+		if($line == $header){
+			$inchange = true;
+			$changelog .= $line;
+			$previous = $line;
+			continue;
+		}
+
+		if($inchange){
+			// It's in the current change version,
+			// previous line was a comment,
+			// and current line is blank...
+			// EXCELLENT!  Insert the timestamp here!
+			if(strpos($previous, "\t* ") === 0 && trim($line) == ''){
+				// line starts with [tab]*[space], it's a comment!
+				$changelog .= $timestamp;
+				$wrotetimestamp = true;
+				$inchange = false;
+			}
+			elseif(strpos($previous, "\t* ") === 0 && strpos($line, '--') === 0){
+				// Oh, this line already has a timestamp.... DON'T CARE! :p
+				$changelog .= $timestamp;
+				$wrotetimestamp = true;
+				$inchange = false;
+			}
+			elseif(strpos($line, $headerprefix) === 0){
+				// Wait, I found another header, but I haven't written the timestamp yet!
+				// :/
+				$changelog .= $timestamp . $line;
+				$wrotetimestamp = true;
+				$inchange = false;
+			}
+			else{
+				// eh...
+				$changelog .= $line;
+			}
+		}
+		else{
+			// Ok, I don't care anyway
+			$changelog .= $line;
+		}
+
+		$previous = $line;
+	}
+	fclose($fh);
+
+	// Did it never even write the timestamp?
+	if(!$wrotetimestamp){
+		$changelog = $header . "\n" . $timestamp . $changelog;
+	}
+
+	// Write this back out to that file :)
+	file_put_contents($file, $changelog);
+}
 
 // I need a few variables first about the user...
 $packagername = '';
