@@ -45,12 +45,13 @@ class MultiFileInput extends FormElement {
 			}
 		}
 
-		$this->set('key', $key);
-
 		if (!isset($this->_attributes['id'])) {
 			// This system requires a valid id.
 			$this->set('id', 'multifileinput-' . Core::RandomHex('2'));
 		}
+
+		$this->set('key', $key);
+		$this->set('uploadkey', $key);
 
 		// Convert the string representation of a filesize to the raw bytes.
 		$size = strtoupper(str_replace(' ', '', ini_get('upload_max_filesize')));

@@ -1,8 +1,12 @@
 jQuery-File-Upload 6.9.1~core3
 
-	* Switched default upload method from POST to stream.  This allows for much larger files
-	to be uploaded at a time, (tested with a couple 1.7GB videos).  The browser will chunk up to
-	"ini_get('upload_max_filesize')" bytes at a time and upload pieces.
+	* Switched default upload method from POST to stream.  This allows for much larger files to
+	  be uploaded at a time, (tested with a couple 1.7GB videos).  The browser will chunk up to
+	  "ini_get('upload_max_filesize')" bytes at a time and upload pieces.
+	* Switched the key name that tracks the files from "key" to "uploadkey".  This should help
+	  resolve the weird random upload issues that have been experienced.
+
+	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:04:46 -0500
 
 jQuery-File-Upload 6.9.1~core2
 

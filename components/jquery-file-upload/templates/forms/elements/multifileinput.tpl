@@ -171,13 +171,13 @@
 		// Initialize the jQuery File Upload widget:
 		$form.fileupload({
 			url: Core.ROOT_URL + 'jqueryfileupload',
-			formData: { key: '{$element->get('key')}' },
+			formData: { key: '{$element->get('uploadkey')}' },
 			previewSourceFileTypes: /^.*$/, // Core+ handles previews of all files ;)
 			autoUpload: true, // By default, files added to the UI widget are uploaded as soon as the user clicks on the start buttons. To enable automatic uploads, set this option to true.
 			multipart: false,
 			maxChunkSize: {$element->get('maxsize')},
 			headers: {
-				'X-Key': '{$element->get('key')}',
+				'X-Key': '{$element->get('uploadkey')}',
 				'X-Upload-Time': Math.round(d.getTime() / 100) // Used to prevent multiple page loads from appending to the same file if there's an error.
 			},
 			start: function(e, data){
