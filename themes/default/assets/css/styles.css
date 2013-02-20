@@ -1,4 +1,8 @@
-/* Do some useful style defines here... */
+/*****************************************************************************
+ *****************************************************************************
+ **                           GENERIC ELEMENTS                              **
+ *****************************************************************************
+ *****************************************************************************/
 body {
 	text-align:center;
 	padding:0;
@@ -19,6 +23,7 @@ img {
 }
 p {
 	padding:0.5em 0pt;
+	line-height: 1.25em;;
 }
 h1 {
 	border-bottom: 1px solid rgba(90, 90, 90, 0.7);
@@ -87,7 +92,18 @@ footer p {
 	clear: both;
 }
 
-/*** Navigation breadcrumbs and other sub-nav elements ***/
+
+
+
+
+
+/*****************************************************************************
+ *****************************************************************************
+ **                              BREADCRUMBS                                **
+ **                                                                         **
+ ** Navigation breadcrumbs and other sub-nav elements                       **
+ *****************************************************************************
+ *****************************************************************************/
 nav#breadcrumbs {
 	font-size: 80%;
 	margin-bottom: 0.5em;
@@ -285,16 +301,38 @@ a.button[disabled=disabled]{
 }
 
 
-/** Messages **/
+
+
+
+
+/*****************************************************************************
+ *****************************************************************************
+ **                               MESSAGES                                  **
+ *****************************************************************************
+ *****************************************************************************/
+/** general styles for most of the messages **/
 .message-note,
 .message-info,
 .message-success,
 .message-error {
 	border-radius: 6px;
-	padding:0.5em 2em;
-	margin:0.05em 2em 1em;
+	padding: 15px 10px 15px 55px;
+	margin: 10px;
 	text-align:center;
+	overflow: hidden;
+	font-size: 106%;
+	position: relative;;
 }
+.message-tutorial {
+	padding: 15px 10px 15px 55px;
+	margin: 10px;
+	text-align: left;
+	overflow: hidden;
+	font-size: 92%;
+	position: relative;;
+}
+
+/** Specific colors **/
 .message-note {
 	background:#FCF0AD;
 	border:1px solid #BCB06D;
@@ -314,7 +352,13 @@ a.button[disabled=disabled]{
 	border:1px solid #BC606D;
 	color:#DF101D;
 }
+.message-tutorial {
+	background: #faefb9;
+	border:1px solid #BCB06D;
+	color: #6f6841;
+}
 
+/** I need to color the A tags too **/
 body .pagecontent .message-note a {
 	color: #7f774a;
 }
@@ -327,12 +371,45 @@ body .pagecontent .message-success a {
 body .pagecontent .message-error a {
 	color:#DF101D;
 }
+body .pagecontent .message-tutorial a {
+	color: #7f774a;
+}
+
+/** And the message's icons **/
+p[class^="message-"] .message-background-icon i {
+	position: absolute;
+	top: -5px;
+	left: 5px;
+	font-size: 60px;
+	opacity: 0.3;
+	line-height: 70px;
+}
+
+/** And the specific message types icon colors **/
+p.message-note .message-background-icon i[class^="icon-"] {
+	color: #BCB06D;
+}
+p.message-info .message-background-icon i[class^="icon-"] {
+	color: #2667FF;
+}
+p.message-success .message-background-icon i[class^="icon-"] {
+	color: #373;
+}
+p.message-error .message-background-icon i[class^="icon-"] {
+	color: #DF101D;
+}
+p.message-tutorial .message-background-icon i[class^="icon-"] {
+	color: #BCB06D;
+}
+
 
 
 
 
 /*****************************************************************************
+ *****************************************************************************
  **                             FORM ELEMENTS                               **
+ *****************************************************************************
  *****************************************************************************/
 
 /* Error messages for everything */

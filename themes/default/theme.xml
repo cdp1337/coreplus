@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.4" name="Default">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.5" name="Default">
 	<assets>
 		<file filename="assets/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
-		<file filename="assets/css/styles.css" md5="97f8f249d411737c6ccd6e40a1f8dd33"/>
+		<file filename="assets/css/styles.css" md5="684d6ae8525eede45573aad1762b12e9"/>
 		<file filename="assets/fonts/Cousine-Bold.ttf" md5="8b6cde097069d84859cf7b24403faeca"/>
 		<file filename="assets/fonts/Cousine-BoldItalic.ttf" md5="aa6b45a45a88a9547e30d6a6a9dcf75c"/>
 		<file filename="assets/fonts/Cousine-Italic.ttf" md5="8a0dacd2cc9ef158fff2daec2b7bc435"/>
@@ -54,6 +54,7 @@
 		<file filename="assets/images/placeholders/template.xcf" md5="11e1a3508035c4fbea97e078a74048af"/>
 		<file filename="assets/js/html5.js" md5="e919b7e0d6dc0226e3356aeb07bf63c2"/>
 		<file filename="assets/js/html5shiv.js" md5="b145c1e0def61575bca20571a39fc99b"/>
+		<file filename="assets/js/theme.messages.js" md5="0b9c08b63fab40ef80096870e7741d63"/>
 		<file filename="assets/logo.png" md5="a4d441acf634337bc88eec82fcc79a3f"/>
 		<file filename="assets/mimetype_icons/application-illustrator.png" md5="6e1d334fe31f7d28c8ed1c49b1d3fb6e"/>
 		<file filename="assets/mimetype_icons/application-javascript.png" md5="43bd833595a47e5a0737b6af9f3f71d5"/>
@@ -161,7 +162,7 @@
 		<file filename="assets/mimetype_icons/video-x-ms-asf.png" md5="151bf6436338306e2150a2d5343c11ef"/>
 	</assets>
 	<skins>
-		<file filename="index.tpl" title="Index Template" md5="c384281ca88eeaf5c6875d90106a362a"/>
+		<file filename="index.tpl" title="Index Template" md5="d8ba783c1fc880973bcfa8cba65fb8ea"/>
 		<file filename="basic.tpl" title="Only one column" md5="d356f1a47b2a1852967282ad6d985006"/>
 		<file filename="blank.tpl" title="Blank template, do not use" md5="a126527084ffcbe1d7ba880840ab644f"/>
 	</skins>
@@ -185,6 +186,7 @@
 		<upgrade from="1.3.1" to="1.3.2"/>
 		<upgrade from="1.3.2" to="1.3.3"/>
 		<upgrade from="1.3.3" to="1.3.4"/>
+		<upgrade from="1.3.4" to="1.3.5"/>
 	</upgrades>
 </theme>
 

@@ -12,6 +12,9 @@
 		<!-- This will enable the Core Plus context menus new in 2.4.0 -->
 		{script library="jquery"}{/script}
 		{script src="js/core.context-controls.js"}{/script}
+
+		<!-- Spruce up the messages with a bit of flair. -->
+		{script src="js/theme.messages.js" location="foot"}{/script}
 		<title>{$seotitle}</title>
 	</head>
 
