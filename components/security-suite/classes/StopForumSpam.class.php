@@ -17,15 +17,23 @@ class StopForumSpam {
 	 * @return bool
 	 */
 	public static function HookDaily(){
+		// LIVE
+		//$remotefile = new File_remote_backend(StopForumSpam::URL_DAILY);
+		$remotefile = StopForumSpam::URL_DAILY;
+		// TESTING
+		//$remotefile = new File_local_backend(ROOT_PDIR . 'components/security-suite/listed_ip_1_all.zip');
+		//$remotefile = ROOT_PDIR . 'components/security-suite/listed_ip_1_all.zip'
+
+		return self::ImportList($remotefile);
+	}
+
+	public static function ImportList($filename){
 		// Download the latest blacklist from sfs and import it into the system.
 		// Each record will be in a format such as
 		// "5.144.176.232","7","2012-12-11 00:08:10"
 		// IP, number of submissions, date
 
-		// LIVE
-		$remotefile = new File_remote_backend(StopForumSpam::URL_DAILY);
-		// TESTING
-		//$remotefile = new File_local_backend(ROOT_PDIR . 'components/security-suite/listed_ip_1_all.zip');
+		$remotefile = \Core\file($filename);
 
 		// Does it exist?
 		if(!$remotefile->exists()){
@@ -63,6 +71,13 @@ class StopForumSpam {
 			if(!$line[0]) continue;
 
 			++$recordscount;
+
+			// If the record count is too low to even care about... just skip it.
+			if($line[1] <= 2){
+				++$skippedcount;
+				continue;
+			}
+
 			$record = sfsBlacklistModel::Construct($line[0]);
 			$record->setFromArray(
 				array(
@@ -122,42 +137,43 @@ class StopForumSpam {
 				if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['happyfuntime']) && isset($_SESSION['happyfuntimecheck'])){
 					// It's an attempt!
 					if($_POST['happyfuntime'] == $_SESSION['happyfuntimecheck']){
+						SecurityLogModel::Log('/security/unblocked', null, null, 'User successfully answered an anti-bot math question, unblocking.');
 						$_SESSION['security_antispam_allowed'] = true;
 					}
 					else{
+						SecurityLogModel::Log('/security/captchafailed', null, null, 'User attempted, but failed in answering an anti-bot math question.');
 						$html .= '<b>NOPE!</b>';
 					}
 				}
 
-				if(!isset($_SESSION['security_antispam_allowed'])){
-					$random1 = (rand(4, 6) * 2);
-					$random2 = (rand(1, 3) * 2);
-					$random3 = rand(1, 2);
+				SecurityLogModel::Log('/security/blocked', null, null, 'Blocking IP due to over ' . $warnlevel . ' submissions to sfs in a 24 hour period.');
+				$random1 = (rand(4, 6) * 2);
+				$random2 = (rand(1, 3) * 2);
+				$random3 = rand(1, 2);
 
-					switch($random3){
-						case 1:
-							$result = $random1 / $random2;
-							$operation = 'divided by';
-							break;
-						case 2:
-							$result = $random1 * $random2;
-							$operation = 'multiplied by';
-							break;
-					}
-
-					$_SESSION['happyfuntimecheck'] = $result;
-					switch($random2){
-						case 1: $random2 = 'oNe'; break;
-						case 2: $random2 = 'Tw0'; break;
-						case 3: $random2 = 'ThRe'; break;
-						case 4: $random2 = 'Foor'; break;
-						case 5: $random2 = 'fIve'; break;
-						case 6: $random2 = 'Siix'; break;
-					}
-
-					$html .= '<form method="POST"><p>What is ' . $random1 . ' ' . $operation . ' ' . $random2 . '?</p><input type="text" name="happyfuntime" size="3"/><input type="submit" value="GO"/></form></body></html>';
-					die($html);
+				switch($random3){
+					case 1:
+						$result = $random1 / $random2;
+						$operation = 'divided by';
+						break;
+					case 2:
+						$result = $random1 * $random2;
+						$operation = 'multiplied by';
+						break;
 				}
+
+				$_SESSION['happyfuntimecheck'] = $result;
+				switch($random2){
+					case 1: $random2 = 'oNe'; break;
+					case 2: $random2 = 'Tw0'; break;
+					case 3: $random2 = 'ThRe'; break;
+					case 4: $random2 = 'Foor'; break;
+					case 5: $random2 = 'fIve'; break;
+					case 6: $random2 = 'Siix'; break;
+				}
+
+				$html .= '<form method="POST"><p>What is ' . $random1 . ' ' . $operation . ' ' . $random2 . '?</p><input type="text" name="happyfuntime" size="3"/><input type="submit" value="GO"/></form></body></html>';
+				die($html);
 			}
 		}
 	}

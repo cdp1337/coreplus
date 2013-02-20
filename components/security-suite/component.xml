@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Security-Suite" execmode="web">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Security-Suite" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.0"/>
 	</requires>
@@ -24,7 +24,7 @@
 	</description>
 	<files>
 		<file filename="CHANGELOG" md5="7e321f3e90c7975239d74249f431f5e8"/>
-		<file filename="classes/StopForumSpam.class.php" md5="f7bda2a479f9f9cb65c4a63f85dc5288">
+		<file filename="classes/StopForumSpam.class.php" md5="2568aad22a32c342ffd2eed74097751d">
 			<class name="StopForumSpam"/>
 		</file>
 		<file filename="controllers/SecurityController.php" md5="de682b251c1fe80a17254088dce80d1f">
@@ -38,6 +38,10 @@
 		<file filename="models/sfsBlacklistModel.php" md5="4d6d7c012a546ea0f6b54215961af3fa">
 			<class name="sfsBlacklistModel"/>
 		</file>
+		<file filename="tests/SFSTest.php" md5="98c373423c702721ab405070ac3fe50f">
+			<class name="SFSTest"/>
+		</file>
+		<file filename="tests/test_listed_ip_1_all.zip" md5="521eead350c520774354b8a07e0c7f4c"/>
 	</files>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
@@ -47,5 +51,8 @@
 			GNU Affero General Public License v3
 		</license>
 	</licenses>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
 </component>
 

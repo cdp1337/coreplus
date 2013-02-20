@@ -1,3 +1,9 @@
+Security-Suite 1.0.1
+
+	* Minor adjustments to the download logic.
+	* Added tests for ensuring that the system can import a zipped CSV.
+	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:36:10 -0500
+
 Security-Suite 1.0.0
 
 	* Initial Version
