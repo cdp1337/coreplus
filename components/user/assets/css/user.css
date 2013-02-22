@@ -1,0 +1,12 @@
+/****
+LOGIN / REGISTER PAGES
+****/
+
+.user-guest-403-container.two-columns .column-left {
+	float: left;
+	width: 50%;
+}
+
+.user-guest-403-container.two-columns .column-right {
+	margin-left: 50%;
+}

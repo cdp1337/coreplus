@@ -45,6 +45,10 @@ class UserConfigModel extends Model{
 			'required' => false,
 			'null' => true
 		),
+		'weight' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'default' => 0,
+		),
 		'onregistration' => array(
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => true
@@ -55,7 +59,11 @@ class UserConfigModel extends Model{
 		),
 		'searchable' => array(
 			'type' => Model::ATT_TYPE_BOOL,
-			'default' => false,
+			'default' => 0,
+		),
+		'required' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'default' => 0,
 		),
 		/*'system' => array(
 			'type' => Model::ATT_TYPE_BOOL,

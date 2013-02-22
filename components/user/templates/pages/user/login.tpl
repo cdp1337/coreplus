@@ -12,90 +12,12 @@
 
 {if $smarty.const.FACEBOOK_APP_ID && in_array('facebook', $backends)}
 	<p>OR</p>
-	<div id="fb-root"></div>
-	<fieldset>
-		<legend> Connect from Facebook</legend>
-
-		<div id="facebook-connecting-section" style="display:none;"></div>
-		<a href="#" scope="email" style="display:none" id="facebook-login-button">
-			Login with Facebook
-		</a>
-
-		<noscript>
-			<a href="{$facebooklink}">Login with Facebook</a>
-		</noscript>
-
-		<form action="{link link='/User/Login'}" method="POST" id="facebook-login-form">
-			<input type="hidden" name="login-method" value="facebook"/>
-			<input type="hidden" name="access-token"/>
-		</form>
-
-	</fieldset>
-
-	{script library="jquery"}{/script}
-	{script library="facebook"}{/script}
-	{script src="js/user/login.js"}{/script}
+	{widget baseurl="/facebook/login"}
 {/if}
 
 {if Core::IsLibraryAvailable('JQuery')}
 	{script library="jquery"}{/script}
 	{script library="jqueryui"}{/script}
 	{script library="jquery.form"}{/script}
-	<script>
-		var logintimer, $container, $btn, checkresult;
-
-		checkresult = function(result){
-			var $error, $result;
-			clearInterval(logintimer);
-
-			// I need to determine if the result is the actual HTML or an object containing the response.
-			if(result instanceof Object){
-				$result = $(result.responseText);
-			}
-			else{
-				$result = $(result);
-			}
-
-			// Was there an error here?
-			$error = $result.find('.message-error');
-			if($error.length > 0){
-				$container.before($error);
-				$container.replaceWith($result.find('#user-login'));
-				initialize_form();
-				return;
-			}
-
-			$btn.removeAttr('disabled').val('OK!');
-			Core.Reload();
-		}
-
-		initialize_form = function(){
-			$container = $('#user-login');
-			$btn = $container.find('input[type=submit]');
-
-			$container.find('form').ajaxForm({
-				beforeSubmit: function(){
-					logintimer = setInterval(function(){
-						if($btn.val() == 'Processing ....'){
-							$btn.val('Processing ');
-						}
-						else{
-							$btn.val($btn.val() + '.');
-						}
-					}, 250);
-
-					$('.message-error').fadeOut('slow', function(){ $(this).remove(); });
-					$btn.attr('disabled', 'disabled').val('Processing ');
-				},
-				success: checkresult,
-				// If a 403 header was sent on the initial page load, it'll be retrieved as an error.
-				// Damn jquery
-				error: checkresult
-			});
-		}
-
-		initialize_form();
-	</script>
+	{script src="assets/js/user/login.js"}{/script}
 {/if}
-
-{script location="foot"} document.getElementById('formtextinput-email').focus(); {/script}

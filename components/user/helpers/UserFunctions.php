@@ -86,15 +86,18 @@ function get_form($user = null){
 
 	// Avatar is for existing accounts or admins.
 	if($type == 'edit' || \Core\user()->checkAccess('p:user_manage')){
-		$form->addElement('file', array('name' => 'avatar', 'title' => 'Avatar Image', 'basedir' => 'public/user', 'accept' => 'image/*', 'value' => $user->get('avatar')));
+		// Only if enabled.
+		if(\ConfigHandler::Get('/user/enableavatar')){
+			$form->addElement('file', array('name' => 'avatar', 'title' => 'Avatar Image', 'basedir' => 'public/user', 'accept' => 'image/*', 'value' => $user->get('avatar')));
+		}
 	}
 
 	// The factory depends on the registration type as well.
 	if($type == 'registration'){
-		$fac = \UserConfigModel::Find(array('onregistration' => 1));
+		$fac = \UserConfigModel::Find(array('onregistration' => 1), null, 'weight ASC');
 	}
 	else{
-		$fac = \UserConfigModel::Find(array('onedit' => 1));
+		$fac = \UserConfigModel::Find(array('onedit' => 1), null, 'weight ASC');
 	}
 
 	foreach($fac as $f){
@@ -102,6 +105,7 @@ function get_form($user = null){
 		$el->set('name', 'option[' . $f->get('key') . ']');
 		$el->set('title', $f->get('name'));
 		$el->set('value', (($type == 'registration') ? $f->get('default_value') : $user->get($f->get('key'))) );
+		if($f->get('required')) $el->set('required', true);
 
 		switch($f->get('formtype')){
 			case 'file':

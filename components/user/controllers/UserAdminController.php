@@ -45,7 +45,9 @@ class UserAdminController extends Controller_2_1{
 		$users = $factory->get();
 		//$users = UserModel::Find(null, null, 'email');
 
+
 		$view->title = 'User Administration';
+		$view->assign('enableavatar', (\ConfigHandler::Get('/user/enableavatar')));
 		$view->assign('users', $users);
 		$view->assign('filters', $filters);
 		$view->addControl('Add User', '/user/register', 'add');

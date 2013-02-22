@@ -1,3 +1,15 @@
+User 2.4.3
+
+	* Fixed Feature #196 - User Profile Avatar - Config Option
+	* Fixed Bug #246 - Authenticated Display Name is Pointless
+	* Fixed Feature #197 - User Profile userconfig Sorting
+	* Moved the user login javascript into its own file.
+	* Moved the facebook logic out from the user system and into the facebook component.
+	* 403 errors now display both login and register forms.
+	* New userconfig option - required.
+	* Tweaked the registration logic a little.
+	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:20:56 -0500
+
 User 2.4.2
 
 	* Clear the permission cache upon setting groups on a given user.

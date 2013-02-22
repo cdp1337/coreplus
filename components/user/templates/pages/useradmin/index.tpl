@@ -7,7 +7,9 @@
 <table class="listing column-sortable">
 	<tr>
 		<th width="40"></th>
-		<th>Avatar</th>
+		{if $enableavatar}
+			<th>Avatar</th>
+		{/if}
 		<th sortkey="email">Email</th>
 		<th sortkey="active" title="Sort By Active"><abbr title="Active">A</abbr></th>
 		<th sortkey="created">Date Created</th>
@@ -27,9 +29,11 @@
 				{/if}
 			</td>
 
-			<td>
-				{img src="public/user/`$user.avatar`" placeholder="person" dimensions="50x60"}
-			</td>
+			{if $enableavatar}
+				<td>
+					{img src="public/user/`$user.avatar`" placeholder="person" dimensions="50x60"}
+				</td>
+			{/if}
 
 			<td>{$user->get('email')}</td>
 

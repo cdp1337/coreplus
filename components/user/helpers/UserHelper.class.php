@@ -179,8 +179,17 @@ abstract class UserHelper{
 
 		// "login" this user if not already logged in.
 		if(!\Core\user()->exists()){
+
+			// If the user came from the registration page, get the page before that.
+			if(REL_REQUEST_PATH == '/user/register') $url = Core::GetHistory(1);
+			// else the registration link is now on the same page as the 403 handler.
+			else $url = REL_REQUEST_PATH;
+
+			//$url = Core::GetHistory(2);
 			Session::SetUser($user);
-			return '/';
+			//var_dump($url); echo '<pre>'; debug_print_backtrace();
+			Core::SetMessage('Registered account successfully!', 'success');
+			return $url;
 		}
 		// It was created administratively; redirect there instead.
 		else{

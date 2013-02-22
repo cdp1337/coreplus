@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.2" name="User" execmode="web">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.3" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.4"/>
 		<require name="security-suite" type="component" operation="ge" version="1.0.0"/>
@@ -17,7 +17,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="93b85f1544126c5d484fecc9ff6d1e12"/>
+		<file filename="CHANGELOG" md5="da67c4ff67da60996287daa1e1b3b7e5"/>
 		<file filename="User.class.php" md5="22c0c949b303a702bf5c52ecb8ba7a17">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -46,24 +46,24 @@
 		<file filename="controllers/UserActivityController.php" md5="3a5257288e3e0d807f153ded60f0fc6b">
 			<controller name="UserActivityController"/>
 		</file>
-		<file filename="controllers/UserAdminController.php" md5="6e458662636d9e783407b161176d5ee2">
+		<file filename="controllers/UserAdminController.php" md5="5d7db3e838a2fa81c28fa73ee85203ee">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="5dacd0a7ec8cad5f36a52436a4900f9f">
+		<file filename="controllers/UserController.php" md5="d06cca7e0aa66cf1b22978c5a3237ed6">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="1e26a36d85fc0065cec33b198b27f475">
 			<controller name="UserGroupAdminController"/>
 		</file>
-		<file filename="helpers/UserFunctions.php" md5="5e421da19e3891e9e2dfa681407aa388"/>
-		<file filename="helpers/UserHelper.class.php" md5="9a96572bf0b7fde2ba856eed38460e58">
+		<file filename="helpers/UserFunctions.php" md5="0600bfeb92fef70b953d072cdbe14975"/>
+		<file filename="helpers/UserHelper.class.php" md5="9ff38e6a7e394e6961f83a0c6e3bbc53">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
 		<file filename="models/UserActivityModel.php" md5="5f5bb7b6580bcc7c64bfc2f3c7f82dbd">
 			<class name="UserActivityModel"/>
 		</file>
-		<file filename="models/UserConfigModel.php" md5="e1182953047de5aceb6475396f2bbf9a">
+		<file filename="models/UserConfigModel.php" md5="abfc0b4b710287302275611cc269b021">
 			<class name="UserConfigModel"/>
 		</file>
 		<file filename="models/UserGroupModel.php" md5="4628a66033c01e252738997e44f0262c">
@@ -75,7 +75,7 @@
 		<file filename="models/UserUserConfigModel.php" md5="ce9afd069250444bf94dc414c5b23208">
 			<class name="UserUserConfigModel"/>
 		</file>
-		<file filename="tests/UserTest.php" md5="6cb91001998e13b6c0391029bbfde112">
+		<file filename="tests/UserTest.php" md5="c999fd9c492ceeb6dcaabb47c99fdee4">
 			<class name="UserTest"/>
 		</file>
 	</files>
@@ -85,12 +85,13 @@
 		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="8d98f0017081473db0680e1bd1a5d849"/>
 		<file filename="templates/pages/user/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/user/forgotpassword.tpl" md5="f999095e59ac6e03459ae47b45dacfc9"/>
-		<file filename="templates/pages/user/login.tpl" md5="bb300da3d814d500848e364c35e373d2"/>
+		<file filename="templates/pages/user/guest403.tpl" md5="ede763b4d26cfefa44ddf79e80e75580"/>
+		<file filename="templates/pages/user/login.tpl" md5="05f7d46fd4e7c4cfbb2b27f1646482f6"/>
 		<file filename="templates/pages/user/me.tpl" md5="9968689a9b26cdeb9c5eb25d10b96f11"/>
 		<file filename="templates/pages/user/password.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/useractivity/index.tpl" md5="f1463c6f2df95ad634013491b867ba53"/>
-		<file filename="templates/pages/useradmin/index.tpl" md5="e63a99eec27337bb51a61328eb572556"/>
+		<file filename="templates/pages/useradmin/index.tpl" md5="03a23eade9177436e141b1adb8308519"/>
 		<file filename="templates/pages/usergroupadmin/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/usergroupadmin/index.tpl" md5="737ee67c775c5cb219d040015dbcb496"/>
 		<file filename="templates/pages/usergroupadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -116,11 +117,11 @@
 		<config key="/user/password/minlength" type="int" default="8" description=""/>
 		<config key="/user/password/requiresymbols" type="int" default="0" description=""/>
 		<config key="/user/password/requirecapitals" type="int" default="0" description=""/>
-		<config key="/user/displayname/displayoptions" type="set" options="username|firstname|emailbase|emailfull" default="username|firstname|emailbase" description=""/>
-		<config key="/user/displayname/anonymous" type="string" default="Guest" description=""/>
-		<config key="/user/displayname/authenticated" type="string" default="Member" description=""/>
+		<config key="/user/displayas" type="string" default="emailbase" description="The user field to use for displaying in representation of the user, ie: username or email.  If 'email' is used, the full email is displayed.  If 'emailbase' id used, just the prefix of the email is used."/>
+		<config key="/user/displayname/anonymous" type="string" default="Guest" description="What to call guest/unauthenticated users."/>
 		<config key="/user/register/allowpublic" type="boolean" default="true" description="Allow public registrations"/>
 		<config key="/user/register/requireapproval" type="boolean" default="false" description="Require administrative approvals on new accounts"/>
+		<config key="/user/enableavatar" type="boolean" default="true" description="Set to false to disable the use of avatars throughout the system."/>
 	</configs>
 	<permissions>
 		<permission key="user_manage" description="Manage users and permissions"/>
@@ -128,7 +129,8 @@
 		<permission key="/user/search/autocomplete" description="Search for users in the system via autocomplete widgets"/>
 	</permissions>
 	<assets>
-		<file filename="assets/js/user/login.js" md5="0a3852f3140eb2e24d66109eb628e6f0"/>
+		<file filename="assets/css/user.css" md5="41b6fd568a669c1fe134f297652fa657"/>
+		<file filename="assets/js/user/login.js" md5="d6da891e1491cadc393fdb2bb655d179"/>
 		<file filename="assets/js/user/user.js" md5="e5e4dc7f8ff932ce7acd330031dbeec2"/>
 	</assets>
 	<description>
@@ -164,6 +166,7 @@
 		<upgrade from="2.3.1" to="2.4.0"/>
 		<upgrade from="2.4.0" to="2.4.1"/>
 		<upgrade from="2.4.1" to="2.4.2"/>
+		<upgrade from="2.4.2" to="2.4.3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

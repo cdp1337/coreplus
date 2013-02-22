@@ -196,75 +196,8 @@ class UserController extends Controller_2_1{
 
 		// @todo Implement a hook handler here for UserPreLoginForm
 
-		// Provide some facebook logic if that backend is enabled.
-		if(in_array('facebook', ConfigHandler::Get('/user/backends'))){
-			$facebook = new Facebook(array(
-				'appId'  => FACEBOOK_APP_ID,
-				'secret' => FACEBOOK_APP_SECRET,
-			));
-
-			// Did the user submit the facebook login request?
-			if(
-				$_SERVER['REQUEST_METHOD'] == 'POST' &&
-				isset($_POST['login-method']) &&
-				$_POST['login-method'] == 'facebook' &&
-				$_POST['access-token']
-			){
-				try{
-					$facebook->setAccessToken($_POST['access-token']);
-					User_facebook_Backend::Login($facebook);
-
-
-					// Redirect to the home page or the page originally requested.
-					// The exception to this is if the user went straight to the user login page.
-					if(REL_REQUEST_PATH == '/user/login'){
-						$redirect = (isset($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : '/user/me';
-					}
-					elseif(strpos($_SERVER['HTTP_REFERER'], '/user/login') !== false){
-						$redirect = '/';
-					}
-					else{
-						$redirect = null;
-					}
-
-					if($redirect){
-						Core::Redirect($redirect);
-					}
-					else{
-						Core::Reload();
-					}
-				}
-				catch(Exception $e){
-					$error = $e->getMessage();
-				}
-			}
-
-			$user = $facebook->getUser();
-			if($user){
-				// User was already logged in.
-				try{
-					$user_profile = $facebook->api('/me');
-					$facebooklink = false;
-				}
-				catch(Exception $c){
-					$facebooklink = $facebook->getLoginUrl();
-				}
-
-				// $logoutUrl = $facebook->getLogoutUrl();
-			}
-			else{
-				$facebooklink = $facebook->getLoginUrl();
-			}
-		}
-		else{
-			$facebooklink = false;
-		}
-
-
-
 
 		$view->assign('error', $error);
-		$view->assign('facebooklink', $facebooklink);
 		$view->assign('backends', ConfigHandler::Get('/user/backends'));
 		$view->assign('form', $form);
 		$view->assign('allowregister', ConfigHandler::Get('/user/register/allowpublic'));
@@ -520,6 +453,8 @@ class UserController extends Controller_2_1{
 
 
 	public static function _HookHandler403(View $view){
+		require_once(ROOT_PDIR . 'components/user/helpers/UserFunctions.php');
+
 		if(\Core\user()->exists()){
 		//if(Core::User()->exists()){
 			// User is already logged in... I can't do anything.
@@ -528,10 +463,39 @@ class UserController extends Controller_2_1{
 
 		$newcontroller = new self();
 		$newcontroller->overwriteView($view);
-		$view->baseurl = '/User/Login';
+		//$view->baseurl = '/user/login';
 		$view->error = View::ERROR_ACCESSDENIED;
 		$view->allowerrors = true;
-		$newcontroller->login();
+		$view->templatename = 'pages/user/guest403.tpl';
+
+
+		$loginform = new Form();
+		$loginform->set('callsMethod', 'UserHelper::LoginHandler');
+
+		$loginform->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
+		$loginform->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => true));
+		$loginform->addElement('submit', array('value' => 'Login'));
+
+		if(ConfigHandler::Get('/user/register/allowpublic')){
+			$registerform = \User\get_registration_form();
+		}
+		else{
+			$registerform = null;
+		}
+
+
+		$error = false;
+
+
+
+		$view->assign('error', $error);
+		$view->assign('backends', ConfigHandler::Get('/user/backends'));
+		$view->assign('loginform', $loginform);
+		$view->assign('registerform', $registerform);
+		$view->assign('allowregister', ConfigHandler::Get('/user/register/allowpublic'));
+
+
+		return $view;
 	}
 
 }
