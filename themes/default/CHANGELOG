@@ -1,3 +1,11 @@
+Theme/Default 1.3.6
+
+	* Minor tweaks to the message icon.
+	* Implemented a more responsive design to try to keep the main wrapper at no less than 975px
+	  if possible.
+
+	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:06:14 -0500
+
 Theme/Default 1.3.5
 
 	* Added message icons to the default theme.  These use FontAwesome and a bit of javascript.

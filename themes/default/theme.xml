@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.5" name="Default">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.6" name="Default">
 	<assets>
 		<file filename="assets/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
-		<file filename="assets/css/styles.css" md5="684d6ae8525eede45573aad1762b12e9"/>
+		<file filename="assets/css/styles.css" md5="14b47c3aa7d64a409b8e6cfcdc1cfd03"/>
 		<file filename="assets/fonts/Cousine-Bold.ttf" md5="8b6cde097069d84859cf7b24403faeca"/>
 		<file filename="assets/fonts/Cousine-BoldItalic.ttf" md5="aa6b45a45a88a9547e30d6a6a9dcf75c"/>
 		<file filename="assets/fonts/Cousine-Italic.ttf" md5="8a0dacd2cc9ef158fff2daec2b7bc435"/>
@@ -187,6 +187,7 @@
 		<upgrade from="1.3.2" to="1.3.3"/>
 		<upgrade from="1.3.3" to="1.3.4"/>
 		<upgrade from="1.3.4" to="1.3.5"/>
+		<upgrade from="1.3.5" to="1.3.6"/>
 	</upgrades>
 </theme>
 

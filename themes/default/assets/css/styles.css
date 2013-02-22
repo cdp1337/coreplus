@@ -99,6 +99,30 @@ footer p {
 
 /*****************************************************************************
  *****************************************************************************
+ **                      RESPONSIVE WIDTH TWEAKS                            **
+ *****************************************************************************
+ *****************************************************************************/
+
+/*
+The wrapper should be at least 975px wide if possible.
+This works up to 1300px browser width, then it needs to kick over to 75%, (which is 975px @ 1300px).
+For dimensions between 1300 and 975, keep it locked at 975px, it'll float in the middle somewhere.
+For dimensions smaller than 975, just be at 100%.
+*/
+@media screen and (max-width: 1300px) {
+	#wrapper { width: 975px; }
+}
+@media screen and (max-width: 975px) {
+	#wrapper { width: 100%; }
+}
+
+
+
+
+
+
+/*****************************************************************************
+ *****************************************************************************
  **                              BREADCRUMBS                                **
  **                                                                         **
  ** Navigation breadcrumbs and other sub-nav elements                       **
@@ -377,12 +401,12 @@ body .pagecontent .message-tutorial a {
 
 /** And the message's icons **/
 p[class^="message-"] .message-background-icon i {
-	position: absolute;
-	top: -5px;
-	left: 5px;
-	font-size: 60px;
-	opacity: 0.3;
+	font-size: 75px;
+	left: -6px;
 	line-height: 70px;
+	opacity: 0.3;
+	position: absolute;
+	top: -11px;
 }
 
 /** And the specific message types icon colors **/
