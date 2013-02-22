@@ -1,8 +1,9 @@
 JQuery-contextMenu 1.01~core1
 
 	* Updated some of the internals to use newer jquery features
-	* Added support to allow a jquery object to be passed in for the menu instead of just a string
-	-- Charlie Powell <charlie@eval.bz>  18 Sep 2012
+	* Added support to allow a jquery object to be passed in for the menu instead of just a
+	  string
+	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:07:55 -0500
 
 JQuery-contextMenu 1.01
 
