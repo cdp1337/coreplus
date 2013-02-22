@@ -281,7 +281,10 @@ class UpdaterHelper {
 		if($verbose){
 			// These are needed to force the output to be sent immediately.
 			while ( @ob_end_flush() ); // even if there is no nested output buffer
-			apache_setenv('no-gzip', '1');
+			if(function_exists('apache_setenv')){
+				// This function doesn't exist in CGI mode :/
+				apache_setenv('no-gzip', '1');
+			}
 			ini_set('output_buffering','on');
 			ini_set('zlib.output_compression', 0);
 			ob_implicit_flush();
@@ -645,19 +648,29 @@ class UpdaterHelper {
 		];
 	}
 
-	
+
 	/**
 	 * Simple function to scan through the components provided for one that
 	 * satisfies the requirement.
-	 * 
-	 * @param array $requirement
-	 * @return array | false
+	 *
+	 * Returns true if requirement is met with current packages,
+	 * Returns false if requirement cannot be met at all.
+	 * Returns the component array of an available repository package if that will solve this requirement.
+	 *
+	 * @param array $requirement   Associative array [type, name, version, operation], of requirement to look for
+	 * @param array $newcomponents Associatve array [core, components, themes], of currently installed components
+	 * @param array $allavailable  Indexed array of all available components from the repositories
+	 *
+	 * @return array | false | true
 	 */
 	public static function CheckRequirement($requirement, $newcomponents = array(), $allavailable = array()){
 		$rtype = $requirement['type'];
 		$rname = $requirement['name'];
 		$rvers = $requirement['version'];
 		$rvrop = $requirement['operation'];
+
+		// operation by default is ge.
+		if(!$rvrop) $rvrop = 'ge';
 
 
 		// This will check if the requirement is already met.

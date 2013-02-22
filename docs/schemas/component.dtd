@@ -180,9 +180,11 @@ searchdir CDATA #IMPLIED
 	formtype CDATA #IMPLIED
 	default CDATA #IMPLIED
 	options CDATA #IMPLIED
+	weight CDATA #IMPLIED
 	onregistration (0|1) "1"
 	onedit (0|1) "1"
 	searchable (0|1) "0"
+	required (0|1) "0"
 	validation CDATA #IMPLIED
 >
 

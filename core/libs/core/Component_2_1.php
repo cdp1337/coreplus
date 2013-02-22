@@ -1286,6 +1286,10 @@ class Component_2_1 {
 	 * @throws InstallerException
 	 */
 	private function _parseUserConfigs() {
+		// If the class isn't available, don't do anything here.
+		// This is possible if I'm currently loading the user component!
+		if(!class_exists('UserConfigModel')) return false;
+
 		// Keep track of if this changed anything.
 		$changes = array();
 
@@ -1307,11 +1311,16 @@ class Component_2_1 {
 			$options    = $confignode->getAttribute('options');
 			$searchable = $confignode->getAttribute('searchable');
 			$validation = $confignode->getAttribute('validation');
+			$required   = $confignode->getAttribute('required');
+			$weight     = $confignode->getAttribute('weight');
 
 			// Defaults
 			if($onreg === null)      $onreg = 1;
 			if($onedit === null)     $onedit = 1;
 			if($searchable === null) $searchable = 0;
+			if($required === null)   $required = 0;
+			if($weight === null)     $weight = 0;
+			if($weight == '')        $weight = 0;
 
 			$model = UserConfigModel::Construct($key);
 			$model->set('name', $name);
@@ -1322,7 +1331,12 @@ class Component_2_1 {
 			$model->set('searchable', $searchable);
 			if($options)  $model->set('options', $options);
 			$model->set('validation', $validation);
+			$model->set('required', $required);
+			// Only set the weight if it's not already set.
+			// This is because (theoretically), the admin can change the order of userconfig options.
+			if(!$model->get('weight')) $model->set('weight', $weight);
 
+			// if($model->changed()) var_dump($model); // DEBUG \\
 
 			if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
 		}

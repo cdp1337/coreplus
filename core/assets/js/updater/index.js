@@ -21,7 +21,7 @@ Updater = {};
 		performinstall,
 		packages = null,
 		// Set testupdater to true to test out the update procedure.
-		testupdater = true
+		testupdater = false
 		;
 
 	/**

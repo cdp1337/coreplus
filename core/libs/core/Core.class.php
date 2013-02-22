@@ -1080,7 +1080,8 @@ class Core implements ISingleton {
 	}
 
 	static public function Reload() {
-		if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
+		header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
+		header('HTTP/1.1 302 Moved Temporarily');
 		header('Location:' . CUR_CALL);
 
 		// Just before the page stops execution...

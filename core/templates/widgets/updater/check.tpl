@@ -12,7 +12,7 @@
 		dataType: 'json',
 		success: function(d){
 			if(d){
-				$target.html('<a href="' + Core.ROOT_WDIR + 'updater">Updates Available!</a>"').show();
+				$target.html('<a href="' + Core.ROOT_WDIR + 'updater">Updates Available!</a>').show();
 			}
 			else{
 				$target.html('No updates available');

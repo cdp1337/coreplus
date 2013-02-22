@@ -872,13 +872,7 @@ class Form extends FormGroup {
 			}
 			$this->set('___' . $prefix . 'pks', $pks);
 		}
-		/*
-		  // Some objects require special attention.
-		  if($model instanceof PageModel){
-			  $f->addElement('pagemeta', array('name' => 'model', 'model' => $model));
-			  return $f;
-		  }
-  */
+
 		foreach ($s as $k => $v) {
 			// Skip the AI column if it doesn't exist.
 			if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
@@ -1136,9 +1130,14 @@ class Form extends FormGroup {
 		// Cleanup
 		unset($_SESSION['FormData'][$formid]);
 
+
 		// If it's set to die, simply exit the script without outputting anything.
 		if ($status === 'die') exit;
+		// If the return code is boolean true, it's a reload.
 		elseif ($status === true) Core::Reload();
+		// If the page returned the same page as the current url, force a reload, (as redirect will ignore it)
+		elseif($status === REL_REQUEST_PATH) Core::Reload();
+		// Anything else gets sent to the redirect system.
 		else Core::Redirect($status);
 	}
 

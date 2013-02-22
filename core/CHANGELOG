@@ -1,3 +1,17 @@
+Core Plus 2.4.6
+
+	* Minor fixes in the updater including CGI mode support and correctly handling empty
+	  "operation" requests.
+	* Do not try to parse userconfigs if that model doesn't exist.  Fixes user component
+	  updates.
+	* Support for the new userconfig features.
+	* Changed how the reload method works slightly.  It now sends a 302 header along with the
+	  location.
+	* If a form action returns the same page that it is currently on, the form system will
+	  reload the page instead of trying to redirect.
+	* Fixed the smarty issue of SMARTY_DIR already being defined.
+	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:42:17 -0500
+
 Core Plus 2.4.5
 
 	* Made the hover controls enabled by default
@@ -50,6 +64,8 @@ Core Plus 2.4.5
 	* File copies now throw Exceptions.
 	* The GPG key of a given package is now listed in the repo.xml file.
 	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 09:14:47 -0500
+
+	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:56:08 -0500
 
 Core Plus 2.4.4
 

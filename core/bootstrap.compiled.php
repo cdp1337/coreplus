@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 20 Feb 2013 09:14:24 -0500
+ * @compiled Fri, 22 Feb 2013 15:42:08 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4051,6 +4051,7 @@ ConfigHandler::CacheConfig($m);
 return (sizeof($changes)) ? $changes : false;
 } // private function _parseConfigs
 private function _parseUserConfigs() {
+if(!class_exists('UserConfigModel')) return false;
 $changes = array();
 $node = $this->_xmlloader->getElement('userconfigs');
 foreach ($node->getElementsByTagName('userconfig') as $confignode) {
@@ -4063,9 +4064,14 @@ $onedit     = $confignode->getAttribute('onedit');
 $options    = $confignode->getAttribute('options');
 $searchable = $confignode->getAttribute('searchable');
 $validation = $confignode->getAttribute('validation');
+$required   = $confignode->getAttribute('required');
+$weight     = $confignode->getAttribute('weight');
 if($onreg === null)      $onreg = 1;
 if($onedit === null)     $onedit = 1;
 if($searchable === null) $searchable = 0;
+if($required === null)   $required = 0;
+if($weight === null)     $weight = 0;
+if($weight == '')        $weight = 0;
 $model = UserConfigModel::Construct($key);
 $model->set('name', $name);
 if($default)  $model->set('default_value', $default);
@@ -4075,6 +4081,8 @@ $model->set('onedit', $onedit);
 $model->set('searchable', $searchable);
 if($options)  $model->set('options', $options);
 $model->set('validation', $validation);
+$model->set('required', $required);
+if(!$model->get('weight')) $model->set('weight', $weight);
 if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
 }
 return (sizeof($changes)) ? $changes : false;
@@ -6620,7 +6628,8 @@ Session::ForceSave();
 die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
 }
 static public function Reload() {
-if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
+header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
+header('HTTP/1.1 302 Moved Temporarily');
 header('Location:' . CUR_CALL);
 HookHandler::DispatchHook('/core/page/postrender');
 Session::ForceSave();
@@ -7815,7 +7824,9 @@ HookHandler::DispatchHook('/core/components/loaded');
 HookHandler::DispatchHook('/core/components/ready');
 Core::AddProfileTime('components_load_complete');
 ### REQUIRE_ONCE FROM core/bootstrap_postincludes.php
+if(!defined('SMARTY_DIR')){
 define('SMARTY_DIR', ROOT_PDIR . 'core/libs/smarty/');
+}
 ### REQUIRE_ONCE FROM core/libs/smarty/Smarty.class.php
 if (!defined('DS')) {
 define('DS', DIRECTORY_SEPARATOR);
@@ -10191,6 +10202,7 @@ if ($status === null) return;
 unset($_SESSION['FormData'][$formid]);
 if ($status === 'die') exit;
 elseif ($status === true) Core::Reload();
+elseif($status === REL_REQUEST_PATH) Core::Reload();
 else Core::Redirect($status);
 }
 public static function BuildFromModel(Model $model) {
