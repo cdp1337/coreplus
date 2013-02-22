@@ -1,3 +1,11 @@
+User-Social 1.0.2
+
+	* Set the username config to be required.
+	* Set some weights on the configs provided.
+	* Switched the page-level widget to user "installable" instead of "baseurl" (2.4.5 change).
+	* Added support for the new enableavatar option.
+	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:23:44 -0500
+
 User-Social 1.0.1
 
 	* Set a couple of the keys to searchable: first_name, last_name, and username.

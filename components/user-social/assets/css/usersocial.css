@@ -62,3 +62,19 @@
 	left: auto;
 	right: 85px;
 }
+
+/* If avatars are disabled, some things get shuffled around */
+.user-badge-horizontal.user-badge-no-avatar {
+	text-align: left;
+	height: 40px;
+}
+.user-badge-horizontal.user-badge-no-avatar h4 {
+	float: left;
+	padding-right: 5px;
+}
+
+.user-badge-horizontal.user-badge-right.user-badge-no-avatar .user-badge-profiles {
+	float: right;
+	position: relative;
+	right: auto;
+}

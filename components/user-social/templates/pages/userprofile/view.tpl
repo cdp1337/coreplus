@@ -33,6 +33,6 @@
 		</ul>
 	{/if}
 
-	{widgetarea name="Public User Profile" baseurl="/user-social/view/`$user->get('id')`"}
+	{widgetarea name="Public User Profile" installable="/user-social/view/`$user->get('id')`"}
 
 </div>

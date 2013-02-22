@@ -4,14 +4,16 @@
 
 <meta content="{$user->getDisplayName()}" itemprop="author">
 
-<div class="user-badge user-badge-{$direction} user-badge-{$orientation} vcard" itemscope itemtype="http://schema.org/Person">
-	<div class="user-badge-photo-wrapper">
-		<div class="user-badge-photo-inner">
-			<a href="{$link}" class="user-badge-name url" rel="author">
-				{img src="public/user/`$user->get('avatar')`" placeholder="person" dimensions="64x64^" itemprop="image" class="user-badge-photo photo" alt="`$user->getDisplayName()|escape`"}
-			</a>
+<div class="user-badge user-badge-{$direction} user-badge-{$orientation} vcard {if !$enableavatar}user-badge-no-avatar{/if}" itemscope itemtype="http://schema.org/Person">
+	{if $enableavatar}
+		<div class="user-badge-photo-wrapper">
+			<div class="user-badge-photo-inner">
+				<a href="{$link}" class="user-badge-name url" rel="author">
+					{img src="public/user/`$user->get('avatar')`" placeholder="person" dimensions="64x64^" itemprop="image" class="user-badge-photo photo" alt="`$user->getDisplayName()|escape`"}
+				</a>
+			</div>
 		</div>
-	</div>
+	{/if}
 
 	<div class="user-badge-content">
 		{if $title}
