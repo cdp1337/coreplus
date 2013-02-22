@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" name="Theme" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.0"/>
@@ -10,7 +10,7 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="78c094fdf697ff9c58aa3ca502fc862e"/>
+		<file filename="CHANGELOG" md5="9fd55b234500f3c173bce667f2588df9"/>
 		<file filename="controllers/ThemeController.class.php" md5="f300c0721ee3159d1dfda836f9c268da">
 			<controller name="ThemeController"/>
 		</file>
