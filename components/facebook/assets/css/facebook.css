@@ -1,0 +1,12 @@
+#facebook-login-button {
+	background-color: #5B74A8;
+	border: 1px solid #29447E;
+	border-bottom-color: #1A356E;
+	padding: 4px 9px;
+	color: white;
+	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	line-height: 15px;
+	text-decoration: none;
+}

@@ -1,3 +1,10 @@
+Facebook 3.2.0~core4
+
+	* Logic was moved from the user system to this component.  This includes the login widget,
+	  some styles, and the javascript.
+
+	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:36:46 -0500
+
 Facebook 3.2.0~core3
 	* Updated some of the javascript integrators
 	* Added open graph utilities as part of a new core hook.

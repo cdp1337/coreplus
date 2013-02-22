@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0~core3" name="Facebook" execmode="web">
+<!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0~core4" name="Facebook" execmode="web">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 	</hooks>
@@ -9,7 +9,7 @@
 		<scriptlibrary name="facebook" call="FacebookHelper::Includejs"/>
 	</provides>
 	<requires>
-		<require name="user" type="component" version="2.2.1"/>
+		<require name="user" type="component" version="2.4.3"/>
 	</requires>
 	<configs>
 		<config key="/facebook/appid" mapto="FACEBOOK_APP_ID" type="string" default="" description="If you want to enable facebook connectivity, you need to create an &quot;app&quot; and enter that app's appid here."/>
@@ -23,11 +23,16 @@
 		<userconfig key="gender" name="Gender" onregistration="0" onedit="0"/>
 		<userconfig key="facebook_access_token" name="Facebook Access Token (set on login)" onregistration="0" onedit="0"/>
 	</userconfigs>
-	<view searchdir="templates"/>
+	<view searchdir="templates">
+		<file filename="templates/widgets/facebook/login.tpl" md5="a2ecb2faade8f57d53a3837b6a9c0307"/>
+	</view>
 	<files>
 		<file filename="CHANGELOG" md5="9641280866870d21d8e90dfd31c87985"/>
 		<file filename="FacebookHelper.class.php" md5="113e7ab017a0e132e1ba46133762f841">
 			<class name="FacebookHelper"/>
+		</file>
+		<file filename="controllers/FacebookController.php" md5="34db2aebfd429c0e56d18da85831e3b8">
+			<controller name="FacebookController"/>
 		</file>
 		<file filename="facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
 		<file filename="facebook-php-sdk/composer.json" md5="a833b32e03c4ed5375861eefad65933e"/>
@@ -57,14 +62,23 @@
 			<class name="FBPublicGetAccessTokenFromCode"/>
 			<class name="FBPublicState"/>
 		</file>
+		<file filename="widgets/FacebookWidget.php" md5="28901aa25cdac837826fbf895c306ed1">
+			<class name="FacebookWidget"/>
+		</file>
 	</files>
 	<upgrades>
 		<upgrade from="3.0.1~Core1" to="3.2.0~core1"/>
 		<upgrade from="3.2.0~core1" to="3.2.0~core2"/>
 		<upgrade from="3.2.0~core2" to="3.2.0~core3"/>
+		<upgrade from="3.2.0~core3" to="3.2.0~core4"/>
 	</upgrades>
+	<assets>
+		<file filename="assets/css/facebook.css" md5="97603a70f87c05fae85a08213c5e7170"/>
+		<file filename="assets/js/facebook/login.js" md5="17a212d8244b41d712db7dbb480da122"/>
+	</assets>
 	<authors>
 		<author name="Naitik Shah" email="naitik@facebook.com"/>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
 </component>
 
