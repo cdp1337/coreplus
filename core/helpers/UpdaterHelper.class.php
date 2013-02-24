@@ -39,6 +39,8 @@ class UpdaterHelper {
 		$components = array();
 		$core       = array();
 		$themes     = array();
+		$sitecount  = 0;
+		$pkgcount   = 0;
 
 		foreach(Core::GetComponents() as $c){
 			/** @var $c Component_2_1 */
@@ -123,6 +125,8 @@ class UpdaterHelper {
 		foreach($updatesites as $site){
 
 			if(!$site->isValid()) continue;
+
+			++$sitecount;
 			$file = $site->getFile();
 
 			$repoxml = new RepoXML();
@@ -137,6 +141,7 @@ class UpdaterHelper {
 				$n = strtolower($pkg->getName());
 				$type = $pkg->getType();
 				if($n == 'core') $type = 'core'; // Override the core, even though it is a component...
+				++$pkgcount;
 
 				switch($type){
 					case 'core':
@@ -231,7 +236,13 @@ class UpdaterHelper {
 		//$_SESSION['updaterhelper_getupdates']['data'] = array('core' => $core, 'components' => $components, 'themes' => $themes);
 		//$_SESSION['updaterhelper_getupdates']['expire'] = time() + 60;
 		
-		return array('core' => $core, 'components' => $components, 'themes' => $themes);
+		return [
+			'core'       => $core,
+			'components' => $components,
+			'themes'     => $themes,
+			'sitecount'  => $sitecount,
+			'pkgcount'   => $pkgcount,
+		];
 	}
 	
 	public static function InstallComponent($name, $version, $dryrun = false, $verbose = false){
@@ -247,36 +258,6 @@ class UpdaterHelper {
 	}
 
 	public static function PerformInstall($type, $name, $version, $dryrun = false, $verbose = false){
-
-		// This will get a list of all available updates and their sources :)
-		$updates = UpdaterHelper::GetUpdates();
-
-		// Fewer keystrokes ;P
-		$nl = "<br/>\n";
-
-		// A list of changes that are to be applied, (mainly for the dry run).
-		$changes = array();
-
-		// Target in on the specific object we're installing.  Useful for a shortcut.
-		switch($type){
-			case 'core':
-				$initialtarget = &$updates['core'];
-				break;
-			case 'components':
-				$initialtarget = &$updates['components'][$name];
-				break;
-			case 'themes':
-				$initialtarget = &$updates['themes'][$name];
-				break;
-			default:
-				return [
-					'status' => 0,
-					'message' => '[' . $type . '] is not a valid installation type!',
-				];
-		}
-
-		// This is a special case for testing the installer UI.
-		$test = ($type == 'core' && $version == '99.1337~(test)');
 
 		if($verbose){
 			// These are needed to force the output to be sent immediately.
@@ -305,23 +286,58 @@ class UpdaterHelper {
 	<body>';
 		}
 
+		$timer = microtime(true);
+		// Give this script a few more seconds to run.
+		set_time_limit(max(90, ini_get('max_execution_time')));
+
+		// This will get a list of all available updates and their sources :)
+		if($verbose) self::_PrintHeader('Retrieving Updates');
+		$updates = UpdaterHelper::GetUpdates();
+		if($verbose){
+			self::_PrintInfo('Found ' . $updates['sitecount'] . ' repository site(s)!', $timer);
+			self::_PrintInfo('Found ' . $updates['pkgcount'] . ' packages!', $timer);
+		}
+
+		// A list of changes that are to be applied, (mainly for the dry run).
+		$changes = array();
+
+		// Target in on the specific object we're installing.  Useful for a shortcut.
+		switch($type){
+			case 'core':
+				$initialtarget = &$updates['core'];
+				break;
+			case 'components':
+				$initialtarget = &$updates['components'][$name];
+				break;
+			case 'themes':
+				$initialtarget = &$updates['themes'][$name];
+				break;
+			default:
+				return [
+					'status' => 0,
+					'message' => '[' . $type . '] is not a valid installation type!',
+				];
+		}
+
+		// This is a special case for testing the installer UI.
+		$test = ($type == 'core' && $version == '99.1337~(test)');
 
 		if($test && $verbose){
-			echo '[INFO] - Performing a test installation!' . $nl;
-			flush();
+			self::_PrintHeader('Performing a test installation!');
 		}
 
 		if($test){
 			if($verbose){
-				echo '[INFO] - Sleeping for a few seconds... because servers are always slow when you don\'t want them to be!' . $nl;
-				flush();
+				self::_PrintInfo('Sleeping for a few seconds... because servers are always slow when you don\'t want them to be!', $timer);
 			}
 			sleep(4);
 
 			// Also overwrite some of the target's information.
 			$repo = UpdateSiteModel::Find(null, 1);
 			$initialtarget['source'] = 'repo-' . $repo->get('id');
-			$initialtarget['location'] = 'http://corepl.us';
+			$initialtarget['location'] = 'http://corepl.us/api/2_4/tests/updater-test.tgz.asc';
+			$initialtarget['destdir'] = ROOT_PDIR;
+			$initialtarget['key'] = 'B2BEDCCB';
 
 			//if($verbose){
 			//	echo '[DEBUG]' . $nl;
@@ -350,8 +366,7 @@ class UpdaterHelper {
 		// This will assemble the list of required installs in the correct order.
 		// If a given dependency can't be met, the installation will be aborted.
 		if($verbose){
-			echo '[===========  CHECKING DEPENDENCIES  ===========]' . $nl;
-			flush();
+			self::_PrintHeader('CHECKING DEPENDENCIES');
 		}
 		do{
 			$lastsizeofqueue = sizeof($pendingqueue);
@@ -361,8 +376,7 @@ class UpdaterHelper {
 
 				if(isset($c['requires'])){
 					if($verbose){
-						echo '[INFO] - Checking dependencies for ' . $c['typetitle'] . $nl;
-						flush();
+						self::_PrintInfo('Checking dependencies for ' . $c['typetitle'], $timer);
 					}
 
 					foreach($c['requires'] as $r){
@@ -383,14 +397,12 @@ class UpdaterHelper {
 							// Dependency met via either installed components or new components
 							// yay
 							if($verbose){
-								echo '[INFO] - Dependency [' . $r['name'] . ' ' . $r['version'] . '] met with already-installed packages.' . $nl;
-								flush();
+								self::_PrintInfo('Dependency [' . $r['name'] . ' ' . $r['version'] . '] met with already-installed packages.', $timer);
 							}
 						}
 						else{
 							if($verbose){
-								echo '[INFO] - Additional package [' . $result['typetitle'] . '] required to meet dependency [' . $r['name'] . ' ' . $r['version'] . '], adding to queue and retrying!' . $nl;
-								flush();
+								self::_PrintInfo('Additional package [' . $result['typetitle'] . '] required to meet dependency [' . $r['name'] . ' ' . $r['version'] . '], adding to queue and retrying!', $timer);
 							}
 							// It's an array of requirements that are needed to satisfy this installation.
 							$pendingqueue = array_merge(array($result), $pendingqueue);
@@ -400,8 +412,7 @@ class UpdaterHelper {
 				}
 				else{
 					if($verbose){
-						echo '[INFO] - Skipping dependency check for ' . $c['typetitle'] . ', no requirements present' . $nl;
-						flush();
+						self::_PrintInfo('Skipping dependency check for ' . $c['typetitle'] . ', no requirements present', $timer);
 					}
 
 					// The require key isn't present... OK!
@@ -428,7 +439,7 @@ class UpdaterHelper {
 			if($result > 0){
 				// Key validation failed!
 				if($verbose){
-					echo implode($nl, $output);
+					echo implode("<br/>\n", $output);
 				}
 				return [
 					'status' => 0,
@@ -457,8 +468,7 @@ class UpdaterHelper {
 		foreach($checkedqueue as $target){
 
 			if($verbose){
-				echo $nl . '[===========  PERFORMING INSTALL (' . strtoupper($target['typetitle']) . ')  ===========]' . $nl;
-				flush();
+				self::_PrintHeader('PERFORMING INSTALL (' . strtoupper($target['typetitle']) . ')');
 			}
 
 			// This package is already installed and up to date.
@@ -473,8 +483,7 @@ class UpdaterHelper {
 				/** @var $repo UpdateSiteModel */
 				$repo = new UpdateSiteModel(substr($target['source'], 5));
 				if($verbose){
-					echo '[INFO] - Using repository ' . $repo->get('url') . ' for installation source' . $nl;
-					flush();
+					self::_PrintInfo('Using repository ' . $repo->get('url') . ' for installation source', $timer);
 				}
 
 				// Setup the remote file that will be used to download from.
@@ -484,8 +493,7 @@ class UpdaterHelper {
 
 				// The initial HEAD request pulls the metadata for the file, and sees if it exists.
 				if($verbose){
-					echo '[INFO] - Performing HEAD lookup on ' . $file->getFilename() . $nl;
-					flush();
+					self::_PrintInfo('Performing HEAD lookup on ' . $file->getFilename(), $timer);
 				}
 				if(!$file->exists()){
 					return [
@@ -494,14 +502,12 @@ class UpdaterHelper {
 					];
 				}
 				if($verbose){
-					echo '[INFO] - Found a(n) ' . $file->getMimetype() . ' file that returned a ' . $file->getStatus() . ' status.' . $nl;
-					flush();
+					self::_PrintInfo('Found a(n) ' . $file->getMimetype() . ' file that returned a ' . $file->getStatus() . ' status.', $timer);
 				}
 
 				// Get file contents will download the file.
 				if($verbose){
-					echo '[INFO] - Downloading ' . $file->getFilename() . $nl;
-					flush();
+					self::_PrintInfo('Downloading ' . $file->getFilename(), $timer);
 				}
 				$downloadtimer = microtime(true);
 				$obj = $file->getContentsObject();
@@ -510,8 +516,7 @@ class UpdaterHelper {
 				// Now it has :p
 				// How long did it take?
 				if($verbose){
-					echo '[INFO] - Downloaded ' . $file->getFilesize(true) . ' in ' . (round(microtime(true) - $downloadtimer, 2) . ' seconds') . $nl;
-					flush();
+					self::_PrintInfo('Downloaded ' . $file->getFilesize(true) . ' in ' . (round(microtime(true) - $downloadtimer, 2) . ' seconds'), $timer);
 				}
 
 				if(!($obj instanceof File_asc_contents)){
@@ -547,14 +552,14 @@ class UpdaterHelper {
 					];
 				}
 				if($verbose){
-					echo '[INFO] - Found key ' . $target['key'] . ' for package maintainer, appears to be valid.' . $nl;
-					$output = array();
+					self::_PrintInfo('Found key ' . $target['key'] . ' for package maintainer, appears to be valid.', $timer);
 					exec('gpg --homedir "' . GPG_HOMEDIR . '" --list-public-keys "' . $target['key'] . '"', $output, $result);
 					foreach($output as $line){
-						if(trim($line)) echo '[INFO] - ' . htmlentities($line) . $nl;
+						if(trim($line)) self::_PrintInfo(htmlentities($line), $timer);
 					}
 				}
 
+				if($verbose) self::_PrintInfo('Checking write permissions', $timer);
 				$dir = \Core\directory($target['destdir']);
 				if(!$dir->isWritable()){
 					return [
@@ -562,29 +567,26 @@ class UpdaterHelper {
 						'message' => $target['destdir'] . ' is not writable!'
 					];
 				}
+				if($verbose) self::_PrintInfo('OK!', $timer);
 
-				if($test){
-					// Well, shy of reinstalling... what else can I do in a test?
-					continue;
-				}
 
 				// Decrypt the signed file.
-				if($verbose){
-					echo '[INFO] - Decrypting signed file' . $nl;
-					flush();
-				}
+				if($verbose) self::_PrintInfo('Decrypting signed file', $timer);
+
 				/** @var $localfile File_Backend */
 				$localfile = $obj->decrypt('tmp/updater/');
+				/** @var $localobj File_tgz_contents */
 				$localobj = $localfile->getContentsObject();
+				if($verbose) self::_PrintInfo('OK!', $timer);
 
 				// This tarball will be extracted to a temporary directory, then copied from there.
 				if($verbose){
-					echo '[INFO] - Extracting tarball ' . $localfile->getFilename() . $nl;
-					flush();
+					self::_PrintInfo('Extracting tarball ' . $localfile->getFilename(), $timer);
 				}
 				$tmpdir = $localobj->extract('tmp/installer-' . Core::RandomHex(4));
 
 				// Now that the data is extracted in a temporary directory, extract every file in the destination.
+				/** @var $datadir Directory_local_backend */
 				$datadir = $tmpdir->get('data/');
 				if(!$datadir){
 					return [
@@ -592,11 +594,11 @@ class UpdaterHelper {
 						'message' => 'Invalid package, ' . $target['typetitle'] . ', does not contain a "data" directory.'
 					];
 				}
+				if($verbose) self::_PrintInfo('OK!', $timer);
 
 
 				if($verbose){
-					echo '[INFO] - Installing files into ' . $target['destdir'] . $nl;
-					flush();
+					self::_PrintInfo('Installing files into ' . $target['destdir'], $timer);
 				}
 				$queue = array($datadir);//$datadir->ls();
 				$x = 0;
@@ -614,20 +616,26 @@ class UpdaterHelper {
 							// It's a file, copy it over.
 							// To do so, resolve the directory path inside the temp data dir.
 							$dest = $target['destdir'] . substr($q->getFilename(), strlen($datadir->getPath()));
+							/** @var $newfile File_local_backend */
 							$newfile = $q->copyTo($dest, true);
+							if($verbose){
+								self::_PrintInfo('... [' . $newfile->getFilename('') . ']', $timer);
+							}
 
 							unset($queue[$k]);
 						}
 					}
 				}
 				while(sizeof($queue) > 0 && $x < 15);
+				if($verbose) self::_PrintInfo('OK!', $timer);
+
 
 				// Cleanup the temp directory
 				if($verbose){
-					echo '[INFO] - Cleaning up temporary directory' . $nl;
-					flush();
+					self::_PrintInfo('Cleaning up temporary directory', $timer);
 				}
 				$tmpdir->remove();
+				if($verbose) self::_PrintInfo('OK!', $timer);
 
 				$changes[] = 'Installed ' . $target['typetitle'] . ' ' . $target['version'];
 			}
@@ -738,5 +746,32 @@ class UpdaterHelper {
 	public static function CheckWeekly(){
 		self::GetUpdates();
 		return true;
+	}
+
+	private static function _PrintHeader($header){
+		echo
+			"<br/>\n" .
+			'[=' .
+			strtoupper(str_pad(' ' . $header . ' ', 74, '=', STR_PAD_BOTH))
+			. '=]'
+			. "<br/>\n";
+		flush();
+	}
+
+	private static function _PrintInfo($line, $timer){
+		$t = microtime(true);
+		// This will give me the timer at the beginning of the line.
+		$out = '[' .
+			str_pad(
+				number_format(round($t - $timer, 2), 2),
+				5,
+				0,
+				STR_PAD_LEFT
+			) .
+			'] - ' .
+			$line;
+
+		echo wordwrap($out, 80, "<br/>\n") . "<br/>\n";
+		flush();
 	}
 }

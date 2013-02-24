@@ -1190,6 +1190,9 @@ class Component_2_1 {
 	 * @throws InstallerException
 	 */
 	private function _performInstall() {
+		// make sure that some of the installer elements are available!
+		require_once(ROOT_PDIR . 'core/libs/core/InstallerException.php');
+
 		$changed = array();
 
 		$change = $this->_parseDBSchema();

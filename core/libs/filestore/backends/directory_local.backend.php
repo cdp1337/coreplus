@@ -319,6 +319,7 @@ class Directory_local_backend implements Directory_Backend {
 	 * Will search run down subdirectories if a tree'd path is provided.
 	 *
 	 * @param string $name
+	 * @return null|File_local_backend|Directory_local_backend
 	 */
 	public function get($name) {
 		// Trim beginning and trailing slashes.

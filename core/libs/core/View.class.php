@@ -490,7 +490,27 @@ class View {
 	 * @return mixed|null|string
 	 */
 	public function fetch() {
-		$body = $this->fetchBody();
+
+		try{
+			$body = $this->fetchBody();
+		}
+		catch(SmartyException $e){
+			$this->error = View::ERROR_SERVERERROR;
+			error_log('[view error]');
+			error_log('Template name: [' . $this->templatename . ']');
+			error_log($e->getMessage());
+			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+			die();
+		}
+		catch(TemplateException $e){
+			$this->error = View::ERROR_SERVERERROR;
+			error_log('[view error]');
+			error_log('Template name: [' . $this->templatename . ']');
+			error_log($e->getMessage());
+			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+			die();
+		}
+
 
 		// If there's no template, I have nothing to even do!
 		if ($this->mastertemplate === false) {

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.6" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.6.1" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -39,8 +39,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="9bd76136ebc3395e33b33b4b469817b2"/>
-		<file filename="core/CHANGELOG" md5="c6ac9eea01a75f69a01f2c350a130ab1"/>
-		<file filename="core/bootstrap.compiled.php" md5="d21d590344b6a900bdf2656f23236463">
+		<file filename="core/CHANGELOG" md5="d477a4b0c8506507b2a6ff69e74e5067"/>
+		<file filename="core/bootstrap.compiled.php" md5="9475002e149d1b1a14bc12936c33bff8">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -57,6 +57,7 @@
 			<class name="PageModel"/>
 			<class name="Component"/>
 			<class name="Component_2_1"/>
+			<class name="InstallerException"/>
 			<class name="FileContentFactory"/>
 			<class name="File_awss3_backend"/>
 			<class name="File_local_backend"/>
@@ -203,7 +204,7 @@
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="da6e337a8305534398cad21c53dcae54">
 			<class name="RewriteMapHelper"/>
 		</file>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="40bb14cf08fda6e6169b0cd8f7dd5041">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="df34916a2f75e175ae674375ba11a7b5">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
@@ -500,7 +501,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="94cad23ae31cabe5d9cf7e55d412ca63">
+		<file filename="core/libs/core/Component_2_1.php" md5="a004960c43ef91c73583c50eb364f8ed">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/Component_2_1.php~" md5="2d0415ad7d971656437322c0a324ce07"/>
@@ -601,7 +602,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="d9c0c9eb1872ad632e3bedf84a95b084">
+		<file filename="core/libs/core/View.class.php" md5="7eabfd7dc8bea1082d98726f2ae809c6">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -851,7 +852,7 @@
 		<file filename="core/libs/filestore/File_Contents.interface.php" md5="74e9a61ff8a58f95da1a8e114235b019">
 			<interface name="File_Contents"/>
 		</file>
-		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="81871ebbae52fe747a105ff1a869d55a">
+		<file filename="core/libs/filestore/backends/directory_local.backend.php" md5="776174d0ba81e670b4da45058ddc08d9">
 			<class name="Directory_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="86f58054362b62b0a0bc760d8f403048">
@@ -1351,6 +1352,7 @@
 		<file filename="core/tests/CoreTest.php" md5="b32057eeddac833855c4fecc06c33b73">
 			<class name="CoreTest"/>
 		</file>
+		<file filename="core/tests/updater-testdocument.txt" md5="90a5dd568ce404d0c6f96ddbdf41d625"/>
 		<file filename="core/upgrades/240_to_241_pagemetas.php" md5="7887144c4964ca4e2ea91dca5fc3bb40"/>
 		<file filename="core/upgrades/242_to_243_page_selectable.php" md5="a00104bc754034508aa50efb4b61a183"/>
 		<file filename="core/widgets/AdminMenuWidget.php" md5="2831f87f13e606f7cdef8b4deeb86a9e">
@@ -1514,7 +1516,7 @@
 		<file filename="core/assets/js/core.fileupload.js" md5="499451d7c6a0e4266eb703f26e25cf33"/>
 		<file filename="core/assets/js/core.js" md5="8c4724ce896c231d0c42c56d2201e33a"/>
 		<file filename="core/assets/js/core.strings.js" md5="7ba2a6d21dc4529332298404b7df17ff"/>
-		<file filename="core/assets/js/updater/index.js" md5="f794edd3c9812274d8c8793a9d1519e3"/>
+		<file filename="core/assets/js/updater/index.js" md5="5a90182a185541e4333a02aa7b032dec"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="0.0.2"/>
@@ -1563,6 +1565,7 @@
 		<upgrade from="2.4.3" to="2.4.4"/>
 		<upgrade from="2.4.4" to="2.4.5"/>
 		<upgrade from="2.4.5" to="2.4.6"/>
+		<upgrade from="2.4.6" to="2.4.6.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

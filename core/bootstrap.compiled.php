@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 22 Feb 2013 15:42:08 -0500
+ * @compiled Sun, 24 Feb 2013 12:51:07 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4000,6 +4000,10 @@ public function getRootDOM(){
 return $this->_xmlloader->getRootDOM();
 }
 private function _performInstall() {
+### REQUIRE_ONCE FROM core/libs/core/InstallerException.php
+class InstallerException extends Exception {
+}
+
 $changed = array();
 $change = $this->_parseDBSchema();
 if ($change !== false) $changed = array_merge($changed, $change);
@@ -9134,7 +9138,25 @@ Cache::GetSystemCache()->set($key, array('updated' => $this->updated, 'html' => 
 return $html;
 }
 public function fetch() {
+try{
 $body = $this->fetchBody();
+}
+catch(SmartyException $e){
+$this->error = View::ERROR_SERVERERROR;
+error_log('[view error]');
+error_log('Template name: [' . $this->templatename . ']');
+error_log($e->getMessage());
+require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+die();
+}
+catch(TemplateException $e){
+$this->error = View::ERROR_SERVERERROR;
+error_log('[view error]');
+error_log('Template name: [' . $this->templatename . ']');
+error_log($e->getMessage());
+require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+die();
+}
 if ($this->mastertemplate === false) {
 return $body;
 }

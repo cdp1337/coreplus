@@ -124,6 +124,9 @@ Updater = {};
 		// packages must be defined beforehand.
 		if(!packages) return;
 
+		// Clear the existing updates, if any
+		$('.update-link').hide();
+
 		if(testupdater){
 			$l = $coretable.find('.update-link');
 			$l.html('Update to 99.1337 (TEST)').show();
@@ -332,10 +335,12 @@ Updater = {};
 								url: Core.ROOT_URL + 'admin/reinstallall',
 								success: function(){
 									$body.append('Installation successful!');
+									lookupupdates();
 									//Core.Reload();
 								},
 								error: function(){
 									$body.append('Installation probably successful...');
+									lookupupdates();
 									//Core.Reload();
 								}
 							});
@@ -347,11 +352,13 @@ Updater = {};
 								url: Core.ROOT_URL + 'admin/reinstallall',
 								success: function(){
 									$body.append('Installation successful!');
+									lookupupdates();
 									//Core.Reload();
 								},
 								error: function(){
 									$body.append('Installation probably successful...');
-									Core.Reload();
+									lookupupdates();
+									//Core.Reload();
 								}
 							});
 						}
