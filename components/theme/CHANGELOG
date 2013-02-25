@@ -1,3 +1,8 @@
+Theme 2.0.3b1
+
+	* Themes now support auto-install mode for assets when in development.
+	--Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 20:47:33 -0500
+
 Theme 2.0.2
 
 	* Support for the new installable widgets.

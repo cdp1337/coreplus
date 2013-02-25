@@ -97,6 +97,12 @@ class Theme{
 		
 		$this->_versionDB = $dat['version'];
 		$this->_enabled = ($dat['enabled']) ? true : false;
+
+		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS){
+			Debug::Write('Auto-installing assets for theme [' . $this->getName() . ']');
+			$this->_installAssets();
+		}
+
 		$this->_loaded = true;
 	}
 	
