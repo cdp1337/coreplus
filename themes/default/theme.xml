@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.6" name="Default">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.7b1" name="Default">
 	<assets>
 		<file filename="assets/css/reset.css" md5="6d14fba47843fe2375aeeb7e5d9cf783"/>
 		<file filename="assets/css/styles.css" md5="14b47c3aa7d64a409b8e6cfcdc1cfd03"/>
@@ -87,7 +87,6 @@
 		<file filename="assets/mimetype_icons/application-x-debian-package.png" md5="061c7b4fe1746454ead1790bca6e6e01"/>
 		<file filename="assets/mimetype_icons/application-x-executable.png" md5="f0a065ec56c35121741f72dced5eccc0"/>
 		<file filename="assets/mimetype_icons/application-x-font-otf.png" md5="0cb9917ba9f9ec37259eae53314a8ea5"/>
-		<file filename="assets/mimetype_icons/application-x-font-pcf.png" md5="cf44fa1eb433aa83e7dfa20246f59a4c"/>
 		<file filename="assets/mimetype_icons/application-x-font-snf.png" md5="cf44fa1eb433aa83e7dfa20246f59a4c"/>
 		<file filename="assets/mimetype_icons/application-x-font-ttf.png" md5="27a91c3c260460807d82be93e006cd34"/>
 		<file filename="assets/mimetype_icons/application-x-font-type1.png" md5="f41d9575d0d1271fa8f9c766ae46cb13"/>
@@ -188,6 +187,7 @@
 		<upgrade from="1.3.3" to="1.3.4"/>
 		<upgrade from="1.3.4" to="1.3.5"/>
 		<upgrade from="1.3.5" to="1.3.6"/>
+		<upgrade from="1.3.6" to="1.3.7b1"/>
 	</upgrades>
 </theme>
 
