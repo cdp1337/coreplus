@@ -277,7 +277,7 @@ class UpdaterController extends Controller_2_1 {
 				foreach($repo->getKeys() as $key){
 					$id = strtoupper(preg_replace('/[^a-zA-Z0-9]*/', '', $key['id']));
 					$output = array();
-					exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --keyserver "hkp://pool.sks-keyservers.net" --recv-keys "' . $id . '"', $output, $result);
+					exec('gpg --keyserver-options timeout=6 --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --keyserver "hkp://pool.sks-keyservers.net" --recv-keys "' . $id . '"', $output, $result);
 					if($result != 0){
 						Core::SetMessage('Unable to import key [' . $id . '] from keyserver!', 'error');
 					}
@@ -403,7 +403,7 @@ class UpdaterController extends Controller_2_1 {
 			// Receive public key from a keyserver.
 			if($_POST['pubkeyid']){
 				$id = strtoupper(preg_replace('/[^a-zA-Z0-9]*/', '', $_POST['pubkeyid']));
-				exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --keyserver "hkp://pool.sks-keyservers.net" --recv-keys "' . $id . '"', $output, $result);
+				exec('gpg --keyserver-options timeout=6 --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --keyserver "hkp://pool.sks-keyservers.net" --recv-keys "' . $id . '"', $output, $result);
 				if($result != 0){
 					$error = 'Unable to lookup ' . $id . ' from keyserver.';
 				}

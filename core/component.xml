@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.6.1" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.7b6" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -38,9 +38,9 @@
 		<file filename="LICENSES/lgpl.txt" md5="e6a600fd5e1d9cbde2d983680233ad02"/>
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
-		<file filename="config/configuration.xml.example" md5="9bd76136ebc3395e33b33b4b469817b2"/>
-		<file filename="core/CHANGELOG" md5="d477a4b0c8506507b2a6ff69e74e5067"/>
-		<file filename="core/bootstrap.compiled.php" md5="9475002e149d1b1a14bc12936c33bff8">
+		<file filename="config/configuration.xml.example" md5="d1d2c0b2ffb9ead043dc4b6b2335f19a"/>
+		<file filename="core/CHANGELOG" md5="cbdb2c47418be54301f3a6fa324d4c4d"/>
+		<file filename="core/bootstrap.compiled.php" md5="83e8f585e0420044e20979c63f2551e6">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -57,7 +57,6 @@
 			<class name="PageModel"/>
 			<class name="Component"/>
 			<class name="Component_2_1"/>
-			<class name="InstallerException"/>
 			<class name="FileContentFactory"/>
 			<class name="File_awss3_backend"/>
 			<class name="File_local_backend"/>
@@ -136,7 +135,7 @@
 		<file filename="core/controllers/GettingStartedController.class.php" md5="c32e15834efbdd387f37f8c72fc24fea">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="315aa902d6864fa89a0c90d3b2f30ac9">
+		<file filename="core/controllers/UpdaterController.class.php" md5="2b98347df282f56a76f267b16e2f43a3">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
@@ -199,12 +198,12 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="080383e4dade461c3c7ac1d9e504ed28">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="6bc4e29baa18b09133339ebd4b641130"/>
+		<file filename="core/functions/Core.functions.php" md5="f7e541902f5ef65519b5a6df3b22f251"/>
 		<file filename="core/functions/Core.functions.php~" md5="ab0fba9df914a8e9416a84f2e911f5e7"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="da6e337a8305534398cad21c53dcae54">
 			<class name="RewriteMapHelper"/>
 		</file>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="df34916a2f75e175ae674375ba11a7b5">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="2e373a92d40e5b4a9aaae38989b206e8">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
@@ -501,7 +500,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="a004960c43ef91c73583c50eb364f8ed">
+		<file filename="core/libs/core/Component_2_1.php" md5="151dc15d0fd8b41fd9e104f323aafeb5">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/Component_2_1.php~" md5="2d0415ad7d971656437322c0a324ce07"/>
@@ -514,7 +513,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="4b4e76fbefc4dd7cdf4c2d9c3d9a2a6d">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="e773ddbbf56d91d2325480fd6e8705fd">
+		<file filename="core/libs/core/Core.class.php" md5="47208018cf58e19bf5187e4523eb0742">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -576,7 +575,7 @@
 		<file filename="core/libs/core/PageRequest.class.php" md5="63c8fa3d2d21e64d0c4d7b1524688958">
 			<class name="PageRequest"/>
 		</file>
-		<file filename="core/libs/core/RepoXML.class.php" md5="d934bb49559c9bfa7bc8a8d352b0510b">
+		<file filename="core/libs/core/RepoXML.class.php" md5="8845eea7a1533a98cd9e636db7147e9c">
 			<class name="RepoXML"/>
 		</file>
 		<file filename="core/libs/core/SQLBuilder.class.php.DISABLED" md5="47925681d58280bff9c130f449c9ba90"/>
@@ -858,7 +857,7 @@
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="86f58054362b62b0a0bc760d8f403048">
 			<class name="File_awss3_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="13b529a46a649dcc938b474326935128">
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="4f2d2ac372c415ede55c2afba409202c">
 			<class name="File_local_backend"/>
 		</file>
 		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="27ee088630aef9763db8378b374a51af">
@@ -1349,7 +1348,7 @@
 		<file filename="core/models/WidgetModel.class.php" md5="e2c5f6408e584083c47c35d248bc03b8">
 			<class name="WidgetModel"/>
 		</file>
-		<file filename="core/tests/CoreTest.php" md5="b32057eeddac833855c4fecc06c33b73">
+		<file filename="core/tests/CoreTest.php" md5="357df09ab74c07ce95f5d490b698c896">
 			<class name="CoreTest"/>
 		</file>
 		<file filename="core/tests/updater-testdocument.txt" md5="90a5dd568ce404d0c6f96ddbdf41d625"/>
@@ -1516,7 +1515,7 @@
 		<file filename="core/assets/js/core.fileupload.js" md5="499451d7c6a0e4266eb703f26e25cf33"/>
 		<file filename="core/assets/js/core.js" md5="8c4724ce896c231d0c42c56d2201e33a"/>
 		<file filename="core/assets/js/core.strings.js" md5="7ba2a6d21dc4529332298404b7df17ff"/>
-		<file filename="core/assets/js/updater/index.js" md5="5a90182a185541e4333a02aa7b032dec"/>
+		<file filename="core/assets/js/updater/index.js" md5="4900c41083ac914b4bd42873efa4718f"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="0.0.2"/>
@@ -1565,7 +1564,13 @@
 		<upgrade from="2.4.3" to="2.4.4"/>
 		<upgrade from="2.4.4" to="2.4.5"/>
 		<upgrade from="2.4.5" to="2.4.6"/>
-		<upgrade from="2.4.6" to="2.4.6.1"/>
+		<upgrade from="2.4.6" to="2.4.7b1"/>
+		<upgrade from="2.4.6.1" to="2.4.7b2"/>
+		<upgrade from="2.4.7b1" to="2.4.7b2"/>
+		<upgrade from="2.4.7b2" to="2.4.7b3"/>
+		<upgrade from="2.4.7b3" to="2.4.7b4"/>
+		<upgrade from="2.4.7b4" to="2.4.7b5"/>
+		<upgrade from="2.4.7b5" to="2.4.7b6"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

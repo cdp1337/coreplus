@@ -338,6 +338,7 @@ class UpdaterHelper {
 			$initialtarget['location'] = 'http://corepl.us/api/2_4/tests/updater-test.tgz.asc';
 			$initialtarget['destdir'] = ROOT_PDIR;
 			$initialtarget['key'] = 'B2BEDCCB';
+			$initialtarget['status'] = 'update';
 
 			//if($verbose){
 			//	echo '[DEBUG]' . $nl;
@@ -421,7 +422,8 @@ class UpdaterHelper {
 
 				if($good === true){
 					$checkedqueue[] = $c;
-					$changes[] = $c['typetitle'];
+					$changes[] = (($c['status'] == 'update') ? 'Update' : 'Install') .
+						' ' . $c['typetitle'] . ' ' . $c['version'];
 					unset($pendingqueue[$k]);
 				}
 			}
@@ -445,6 +447,46 @@ class UpdaterHelper {
 					'status' => 0,
 					'message' => $c['typetitle'] . ' failed GPG verification! Is the key ' . $target['key'] . ' installed?'
 				];
+			}
+		}
+
+
+		// Check that the queued packages have not been locally modified if installed.
+		if($verbose){
+			self::_PrintHeader('Checking for local modifications');
+		}
+		foreach($checkedqueue as $target){
+			if($target['status'] == 'update'){
+				switch($target['type']){
+					case 'core':
+						$c = Core::GetComponent('core');
+						break;
+					case 'components':
+						$c = Core::GetComponent($target['name']);
+						break;
+					case 'themes':
+						$c = null;
+						break;
+				}
+
+				if($c){
+					// Are there changes?
+					if(sizeof($c->getChangedAssets())){
+						foreach($c->getChangedAssets() as $change){
+							$changes[] = 'Overwrite locally-modified asset ' . $change;
+						}
+					}
+					if(sizeof($c->getChangedFiles())){
+						foreach($c->getChangedFiles() as $change){
+							$changes[] = 'Overwrite locally-modified file ' . $change;
+						}
+					}
+					if(sizeof($c->getChangedTemplates())){
+						foreach($c->getChangedTemplates() as $change){
+							$changes[] = 'Overwrite locally-modified template ' . $change;
+						}
+					}
+				}
 			}
 		}
 
@@ -600,33 +642,23 @@ class UpdaterHelper {
 				if($verbose){
 					self::_PrintInfo('Installing files into ' . $target['destdir'], $timer);
 				}
-				$queue = array($datadir);//$datadir->ls();
-				$x = 0;
-				do{
-					++$x;
-					$queue = array_values($queue);
-					foreach($queue as $k => $q){
-						if($q instanceof Directory_local_backend){
-							unset($queue[$k]);
-							// Just queue directories up to be scanned.
-							// (don't do array merge, because I'm inside a foreach loop)
-							foreach($q->ls() as $subq) $queue[] = $subq;
-						}
-						else{
-							// It's a file, copy it over.
-							// To do so, resolve the directory path inside the temp data dir.
-							$dest = $target['destdir'] . substr($q->getFilename(), strlen($datadir->getPath()));
-							/** @var $newfile File_local_backend */
-							$newfile = $q->copyTo($dest, true);
-							if($verbose){
-								self::_PrintInfo('... [' . $newfile->getFilename('') . ']', $timer);
-							}
 
-							unset($queue[$k]);
-						}
+				// Will give me an array of Files in the data directory.
+				$files = $datadir->ls(null, true);
+				// Used to get the relative path for each contained file.
+				$datalen = strlen($datadir->getPath());
+				foreach($files as $file){
+					if(!$file instanceof File_local_backend) continue;
+
+					// It's a file, copy it over.
+					// To do so, resolve the directory path inside the temp data dir.
+					$dest = \Core\file($target['destdir'] . substr($file->getFilename(), $datalen));
+					/** @var $dest File_local_backend */
+					if($verbose){
+						self::_PrintInfo('...' . substr($dest->getFilename(''), 0, 67), $timer);
 					}
+					$dest->copyFrom($file, true);
 				}
-				while(sizeof($queue) > 0 && $x < 15);
 				if($verbose) self::_PrintInfo('OK!', $timer);
 
 
@@ -770,6 +802,8 @@ class UpdaterHelper {
 			) .
 			'] - ' .
 			$line;
+
+		error_log('[DEBUG] - ' . $line, E_USER_NOTICE);
 
 		echo wordwrap($out, 80, "<br/>\n") . "<br/>\n";
 		flush();

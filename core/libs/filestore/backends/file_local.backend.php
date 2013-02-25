@@ -342,7 +342,7 @@ class File_local_backend implements File_Backend {
 
 		if (is_a($dest, 'File') || $dest instanceof File_Backend) {
 			// Don't need to do anything! The object either is a File
-			// Or is an implmentation of the File_Backend interface.
+			// Or is an implementation of the File_Backend interface.
 		}
 		else {
 			// Well it should be damnit!....
@@ -774,8 +774,13 @@ class File_local_backend implements File_Backend {
 		}
 
 		if (!$ftp) {
-			if(is_dir($pathname)) return false;
-			else return mkdir($pathname, $mode, $recursive);
+			if(is_dir($pathname)){
+				return false;
+			}
+			else{
+				return mkdir($pathname, $mode, $recursive);
+			}
+
 		}
 		elseif (strpos($pathname, $tmpdir) === 0) {
 			// Tmp files should be written directly.

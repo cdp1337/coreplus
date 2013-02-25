@@ -141,19 +141,21 @@ class RepoXML extends XMLLoader {
 			$output = array();
 			// Because this will be sent to the command line..... I want to do a bit of cleaning.
 			$id = strtoupper(preg_replace('/[^a-zA-Z0-9]*/', '', $key['id']));
-			exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -q --batch --keyserver hkp://pool.sks-keyservers.net --search-key ' . $id, $output, $result);
+
+			exec('gpg --keyserver-options timeout=6 --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -q --batch --keyserver hkp://pool.sks-keyservers.net --dry-run --recv-keys ' . $id, $output, $result);
+			//exec('gpg --keyserver-options timeout=6 --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -q --batch --keyserver hkp://pool.sks-keyservers.net --search-key ' . $id, $output, $result);
 
 			// If a key fails lookup, gpg will exit with a status of 0.
-			if($result == 0){
+			if($result != 0){
 				error_log('Key lookup failed!' . "\n" . implode("\n", $output));
 				return false;
 			}
 
 			// I also need to check that the email registered is present!
-			if(strpos(implode("", $output), $key['email']) === false){
-				error_log('Key lookup failed because email address set [' . $key['email'] . '] was not associated with key' . "\n" . implode("\n", $output));
-				return false;
-			}
+			//if(strpos(implode("", $output), $key['email']) === false){
+			//	error_log('Key lookup failed because email address set [' . $key['email'] . '] was not associated with key' . "\n" . implode("\n", $output));
+			//	return false;
+			//}
 		}
 
 		// Did all the keys pass validation?

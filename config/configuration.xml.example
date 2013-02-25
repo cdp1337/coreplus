@@ -44,7 +44,7 @@
 		<description>
 			disabled - SSL is disabled completely
 			ondemand - SSL is allowed on pages that require it only, (standard pages redirect to non-ssl)
-			allowed  - SSL is allowed on any page throughout the site
+			allowed - SSL is allowed on any page throughout the site
 			required - SSL is always required for all pages
 		</description>
 		<option>disabled</option>
@@ -60,46 +60,56 @@
 
 	<return name="site_url" type="string">
 		<value></value>
-		<description>If a site url is provided and not blank, force the servername 
-		to match it.	Useful for restricting access to www.domain.com.
-		Please note, if you set this to an invalid location, you or anyone else will
-		NOT be able to access the site.</description>
+		<description>If a site url is provided and not blank, force the servername
+			to match it. Useful for restricting access to www.domain.com.
+			Please note, if you set this to an invalid location, you or anyone else will
+			NOT be able to access the site.
+		</description>
 	</return>
 
 	<define name="DEVELOPMENT_MODE" type="boolean">
-    		<value>true</value>
-    		<description>If this is a production site, it is advised to disable this.</description>
-    	</define>
+		<value>true</value>
+		<description>If this is a production site, it is advised to disable this.</description>
+	</define>
 
 	<define name="SESSION_COOKIE_DOMAIN" type="string">
-        <value></value>
-        <description>
-            If you would like to enforce a domain to be used for your cookies, set that here.
-            For example, if you have sites on example1.domain.com, example2.domain.com, and
-            www.domain.com, setting this value to ".domain.com" is recommended to have the sessions shared.
-        </description>
-    </define>
+		<value></value>
+		<description>
+			If you would like to enforce a domain to be used for your cookies, set that here.
+			For example, if you have sites on example1.domain.com, example2.domain.com, and
+			www.domain.com, setting this value to ".domain.com" is recommended to have the sessions shared.
+		</description>
+	</define>
 
-    <!--
-       - Technical things you probably don't need to worry about,
-       - but feel free to if you so choose
-       -->
+	<!--
+	   - Technical things you probably don't need to worry about,
+	   - but feel free to if you so choose
+	   -->
+
+	<define name="AUTO_INSTALL_ASSETS" type="string">
+		<value>false</value>
+		<description>
+			Auto-install component assets when in DEVELOPMENT_MODE.  This is a configurable
+			option because it generally doubles the pageload speed.
+			** Has no effect in production **
+		</description>
+	</define>
 
 
 	<return name="tmp_dir_web" type="string">
 		<value>/tmp/coreplus-web/</value>
 		<description>
-		The location of the tmp directory for cache, compile, and general temporary files.  
-		This directory MUST be writable by the apache user.  
-		Please ensure that this ends with a "/"
+			The location of the tmp directory for cache, compile, and general temporary files.
+			This directory MUST be writable by the apache user.
+			Please ensure that this ends with a "/"
 		</description>
 	</return>
 
 	<return name="tmp_dir_cli" type="string">
 		<value>/tmp/coreplus-cli/</value>
 		<description>
-		The location of the tmp directory for anything on the CLI that needs temp storage.  
-		Please ensure that this ends with a "/"
+			The location of the tmp directory for anything on the CLI that needs temp storage.
+			Please ensure that this ends with a "/"
 		</description>
 	</return>
 
@@ -114,14 +124,14 @@
 	</define>
 
 	<define name="PORT_NUMBER" type="int">
-    		<value>80</value>
-    		<description>Port number server is listening on for normal connections.</description>
-    	</define>
+		<value>80</value>
+		<description>Port number server is listening on for normal connections.</description>
+	</define>
 
-    	<define name="PORT_NUMBER_SSL" type="int">
-    		<value>443</value>
-    		<description>Port number server is listening on for secured connections.</description>
-    	</define>
+	<define name="PORT_NUMBER_SSL" type="int">
+		<value>443</value>
+		<description>Port number server is listening on for secured connections.</description>
+	</define>
 
 	<return name="cache_type" type="enum">
 		<option>apc</option>
@@ -140,7 +150,7 @@
 		<value>/path/to/secure/directory/gnupg</value>
 	</define>
 	-->
-	
+
 	<!--
 		Default directory permissions to use for the system.
 		If security oriented, set as 0755.
@@ -157,7 +167,7 @@
 	<define name="DEFAULT_FILE_PERMS" type="octal">
 		<value>0644</value>
 	</define>
-	
+
 	<!--
 		Debug variable, set this to true to allow calling *.json pages explicitly.
 		By default this is set to false, so that json requests cannot proceed without at least the 

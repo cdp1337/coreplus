@@ -413,7 +413,7 @@ Updater = {};
 					// If the length is more than one and the user accepts that more than one component will be disabled,
 					// or if there's only one.
 					if(
-						(r.changes.length > 1 && confirm('The following components will be ' + action + 'd: \n' + r.changes.join('\n')) ) ||
+						(r.changes.length > 1 && confirm('The following components will be ' + action + 'd: \n\n' + r.changes.join('\n')) ) ||
 							(r.changes.length == 1)
 						){
 						xhr = $.ajax({
@@ -479,6 +479,9 @@ Updater = {};
 
 					// This system returns a "status" field.
 					if(!r.status){
+						$this.html($this.attr('original-text'));
+						$this.removeAttr('original-text');
+
 						// and a message.
 						alert(r.message);
 						return;
@@ -486,7 +489,7 @@ Updater = {};
 
 					// Get confirmation from the user before proceeding.
 					if(r.changes && r.changes.length > 1){
-						msg = 'The following additional packages will be installed or updated: \n' +
+						msg = 'The following additional changes will take place: \n\n' +
 							r.changes.join('\n') +
 							'\n\n' +
 							'Click ok to proceed with the upgrade/install.';

@@ -455,6 +455,11 @@ class Component_2_1 {
 			Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
 		}
 
+		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS){
+			Debug::Write('Auto-installing assets for component [' . $this->getName() . ']');
+			$this->_installAssets();
+		}
+
 		$this->_filesloaded = true;
 
 		return true;
@@ -1145,6 +1150,7 @@ class Component_2_1 {
 		$c->set('enabled', false);
 		$c->save();
 		$this->_versionDB = null;
+		$this->_enabled = false;
 
 		// Ensure that the core component cache is purged too!
 		Core::Cache()->delete('core-components');
@@ -1181,6 +1187,128 @@ class Component_2_1 {
 		return $this->_xmlloader->getRootDOM();
 	}
 
+	public function getProvides() {
+		$ret = array();
+		// This element itself.
+		$ret[] = array(
+			'name'    => strtolower($this->getName()),
+			'type'    => 'component',
+			'version' => $this->getVersion()
+		);
+		foreach ($this->_xmlloader->getElements('provides/provide') as $el) {
+			// <provide name="JQuery" type="library" version="1.4"/>
+			$ret[] = array(
+				'name'    => strtolower($el->getAttribute('name')),
+				'type'    => $el->getAttribute('type'),
+				'version' => $el->getAttribute('version'),
+			);
+		}
+		return $ret;
+	}
+
+	/**
+	 * Get the base directory of this component
+	 *
+	 * Generally /home/foo/public_html/components/componentname/
+	 *
+	 * @param mixed|string $prefix base directory to use before the directory.
+	 *
+	 * @return string
+	 */
+	public function getBaseDir($prefix = ROOT_PDIR) {
+		if ($this->_name == 'core') {
+			return $prefix;
+		}
+		else {
+			return $prefix . 'components/' . strtolower($this->_name) . '/';
+		}
+	}
+
+
+	/**
+	 * Function to get any changed files in this component.
+	 * A changed file is any file whose md5 doesn't match what's in the component.xml metafile.
+	 *
+	 * @return array
+	 */
+	public function getChangedFiles(){
+		$changes = array();
+
+		foreach($this->_xmlloader->getElements('/files/file') as $file){
+			// <file filename="CHANGELOG" md5="e55e5457abe2f0a3a8edcb6a927c92e3"/>
+			/** @var $md5 string */
+			$md5 = $file->getAttribute('md5');
+			/** @var $filename string */
+			$filename = $file->getAttribute('filename');
+
+			// Skip the changelog.
+			if($filename == 'CHANGELOG' || $filename == 'core/CHANGELOG') continue;
+
+			/** @var $object File_local_backend */
+			$object = \Core\file($this->getBaseDir() . $filename);
+
+			if($object->getHash() != $md5){
+				$changes[] = $filename;
+			}
+		}
+		return $changes;
+	}
+
+	/**
+	 * Function to get any changed templates in this component.
+	 * A changed file is any file whose md5 doesn't match what's in the component.xml metafile.
+	 *
+	 * @return array
+	 */
+	public function getChangedTemplates(){
+		$changes = array();
+
+		foreach($this->_xmlloader->getElements('/templates/file') as $file){
+			// <file filename="CHANGELOG" md5="e55e5457abe2f0a3a8edcb6a927c92e3"/>
+			/** @var $md5 string */
+			$md5 = $file->getAttribute('md5');
+			/** @var $filename string */
+			$filename = $file->getAttribute('filename');
+
+			/** @var $object File_local_backend */
+			$object = \Core\file($this->getBaseDir() . $filename);
+
+			if($object->getHash() != $md5){
+				$changes[] = $filename;
+			}
+		}
+		return $changes;
+	}
+
+
+	/**
+	 * Function to get any changed templates in this component.
+	 * A changed file is any file whose md5 doesn't match what's in the component.xml metafile.
+	 *
+	 * @return array
+	 */
+	public function getChangedAssets(){
+		$changes = array();
+
+		foreach($this->_xmlloader->getElements('/assets/file') as $file){
+			// <file filename="CHANGELOG" md5="e55e5457abe2f0a3a8edcb6a927c92e3"/>
+			/** @var $md5 string */
+			$md5 = $file->getAttribute('md5');
+			/** @var $filename string */
+			$filename = $file->getAttribute('filename');
+
+			/** @var $object File_local_backend */
+			$object = \Core\file($this->getBaseDir() . $filename);
+
+			if($object->getHash() != $md5){
+				$changes[] = $filename;
+			}
+		}
+		return $changes;
+	}
+
+
+
 	/**
 	 * Component installation operations all share common actions, (mostly).
 	 *
@@ -1191,7 +1319,7 @@ class Component_2_1 {
 	 */
 	private function _performInstall() {
 		// make sure that some of the installer elements are available!
-		require_once(ROOT_PDIR . 'core/libs/core/InstallerException.php');
+		require_once(ROOT_PDIR . 'core/libs/core/InstallerException.php'); #SKIPCOMPILER
 
 		$changed = array();
 
@@ -1219,24 +1347,6 @@ class Component_2_1 {
 		return (sizeof($changed)) ? $changed : false;
 	}
 
-	public function getProvides() {
-		$ret = array();
-		// This element itself.
-		$ret[] = array(
-			'name'    => strtolower($this->getName()),
-			'type'    => 'component',
-			'version' => $this->getVersion()
-		);
-		foreach ($this->_xmlloader->getElements('provides/provide') as $el) {
-			// <provide name="JQuery" type="library" version="1.4"/>
-			$ret[] = array(
-				'name'    => strtolower($el->getAttribute('name')),
-				'type'    => $el->getAttribute('type'),
-				'version' => $el->getAttribute('version'),
-			);
-		}
-		return $ret;
-	}
 
 	/**
 	 * Internal function to parse and handle the configs in the component.xml file.
@@ -1692,22 +1802,4 @@ class Component_2_1 {
 			return true;
 		}
 	}
-
-	/**
-	 * Get the base directory of this component
-	 *
-	 * Generally /home/foo/public_html/components/componentname/
-	 *
-	 * @return string
-	 */
-	public function getBaseDir($prefix = ROOT_PDIR) {
-		if ($this->_name == 'core') {
-			return $prefix;
-		}
-		else {
-			return $prefix . 'components/' . strtolower($this->_name) . '/';
-		}
-	}
-
-
 }

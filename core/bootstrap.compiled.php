@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 24 Feb 2013 12:51:07 -0500
+ * @compiled Sun, 24 Feb 2013 20:47:48 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3578,6 +3578,10 @@ HookHandler::AttachToHook($event, $call, $type);
 foreach ($this->_xmlloader->getElements('/forms/formelement') as $node) {
 Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
 }
+if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS){
+Debug::Write('Auto-installing assets for component [' . $this->getName() . ']');
+$this->_installAssets();
+}
 $this->_filesloaded = true;
 return true;
 }
@@ -3984,6 +3988,7 @@ $c = new ComponentModel($this->_name);
 $c->set('enabled', false);
 $c->save();
 $this->_versionDB = null;
+$this->_enabled = false;
 Core::Cache()->delete('core-components');
 return true;
 }
@@ -3998,27 +4003,6 @@ return true;
 }
 public function getRootDOM(){
 return $this->_xmlloader->getRootDOM();
-}
-private function _performInstall() {
-### REQUIRE_ONCE FROM core/libs/core/InstallerException.php
-class InstallerException extends Exception {
-}
-
-$changed = array();
-$change = $this->_parseDBSchema();
-if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parseConfigs();
-if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parseUserConfigs();
-if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parsePages();
-if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parseWidgets();
-if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_installAssets();
-if ($change !== false) $changed = array_merge($changed, $change);
-Core::Cache()->delete('core-components');
-return (sizeof($changed)) ? $changed : false;
 }
 public function getProvides() {
 $ret = array();
@@ -4035,6 +4019,69 @@ $ret[] = array(
 );
 }
 return $ret;
+}
+public function getBaseDir($prefix = ROOT_PDIR) {
+if ($this->_name == 'core') {
+return $prefix;
+}
+else {
+return $prefix . 'components/' . strtolower($this->_name) . '/';
+}
+}
+public function getChangedFiles(){
+$changes = array();
+foreach($this->_xmlloader->getElements('/files/file') as $file){
+$md5 = $file->getAttribute('md5');
+$filename = $file->getAttribute('filename');
+if($filename == 'CHANGELOG' || $filename == 'core/CHANGELOG') continue;
+$object = \Core\file($this->getBaseDir() . $filename);
+if($object->getHash() != $md5){
+$changes[] = $filename;
+}
+}
+return $changes;
+}
+public function getChangedTemplates(){
+$changes = array();
+foreach($this->_xmlloader->getElements('/templates/file') as $file){
+$md5 = $file->getAttribute('md5');
+$filename = $file->getAttribute('filename');
+$object = \Core\file($this->getBaseDir() . $filename);
+if($object->getHash() != $md5){
+$changes[] = $filename;
+}
+}
+return $changes;
+}
+public function getChangedAssets(){
+$changes = array();
+foreach($this->_xmlloader->getElements('/assets/file') as $file){
+$md5 = $file->getAttribute('md5');
+$filename = $file->getAttribute('filename');
+$object = \Core\file($this->getBaseDir() . $filename);
+if($object->getHash() != $md5){
+$changes[] = $filename;
+}
+}
+return $changes;
+}
+private function _performInstall() {
+require_once(ROOT_PDIR . 'core/libs/core/InstallerException.php'); #SKIPCOMPILER
+$changed = array();
+$change = $this->_parseDBSchema();
+if ($change !== false) $changed = array_merge($changed, $change);
+$change = $this->_parseConfigs();
+if ($change !== false) $changed = array_merge($changed, $change);
+$change = $this->_parseUserConfigs();
+if ($change !== false) $changed = array_merge($changed, $change);
+$change = $this->_parsePages();
+if ($change !== false) $changed = array_merge($changed, $change);
+$change = $this->_parseWidgets();
+if ($change !== false) $changed = array_merge($changed, $change);
+$change = $this->_installAssets();
+if ($change !== false) $changed = array_merge($changed, $change);
+Core::Cache()->delete('core-components');
+return (sizeof($changed)) ? $changed : false;
 }
 private function _parseConfigs() {
 $changes = array();
@@ -4290,14 +4337,6 @@ return true;
 }
 else{
 return true;
-}
-}
-public function getBaseDir($prefix = ROOT_PDIR) {
-if ($this->_name == 'core') {
-return $prefix;
-}
-else {
-return $prefix . 'components/' . strtolower($this->_name) . '/';
 }
 }
 }
@@ -4992,8 +5031,12 @@ if ($mode === null) {
 $mode = (defined('DEFAULT_DIRECTORY_PERMS') ? DEFAULT_DIRECTORY_PERMS : 0777);
 }
 if (!$ftp) {
-if(is_dir($pathname)) return false;
-else return mkdir($pathname, $mode, $recursive);
+if(is_dir($pathname)){
+return false;
+}
+else{
+return mkdir($pathname, $mode, $recursive);
+}
 }
 elseif (strpos($pathname, $tmpdir) === 0) {
 if(is_dir($pathname)) return false;
@@ -6319,11 +6362,19 @@ unset($list[$n]);
 continue;
 }
 if ($c->isInstalled() && $c->isLoadable() && $c->loadFiles()) {
+try{
 if ($c->needsUpdated()) {
 $c->upgrade();
 }
 $this->_components[$n] = $c;
 $this->_registerComponent($c);
+}
+catch(Exception $e){
+error_log('Ignoring component [' . $n . '] due to an error during upgrading!');
+error_log($e->getMessage());
+$c->disable();
+$this->_componentsDisabled[$n] = $c;
+}
 unset($list[$n]);
 continue;
 }
@@ -6846,6 +6897,9 @@ $check = version_compare($v1, $v2);
 if($check == 0 && $version1['user'] && $version2['user']){
 $check = version_compare($version1['user'], $version2['user']);
 }
+if($check == 0 && ($version1['stability'] || $version2['stability'])){
+$check = version_compare($version1['stability'], $version2['stability']);
+}
 if ($operation === null){
 return $check;
 }
@@ -6892,38 +6946,34 @@ $ret = array(
 'minor'     => 0,
 'point'     => 0,
 'user'      => 0,
-'stability' => '',
+'stability' => '1',
 );
-$v = array();
+$v = [0, 0, 0];
 $lengthall = strlen($version);
 $pos       = 0;
 $x         = 0;
-while ($pos < $lengthall && $x < 10) {
-$nextpos = strpos($version, '.', $pos) - $pos;
-$part = ($nextpos > 0) ? substr($version, $pos, $nextpos) : substr($version, $pos);
-if (($subpos = strpos($part, '-')) !== false) {
-$subpart = strtolower(substr($part, $subpos + 1));
-if ($subpart == 'a') {
-$ret['stability'] = 'alpha';
+$parts = explode('.', strtolower($version));
+$last = sizeof($parts) - 1;
+foreach($parts as $k => $digit){
+if(($pos = strpos($digit, '~')) !== false){
+$v[$k] = substr($digit, 0, $pos);
+$ret['user'] = substr($digit, $pos);
 }
-elseif ($subpart == 'b') {
-$ret['stability'] = 'beta';
+elseif(($pos = strpos($digit, 'a')) !== false){
+$v[$k] = substr($digit, 0, $pos);
+$ret['stability'] = substr($digit, $pos);
 }
-else {
-$ret['stability'] = $subpart;
+elseif(($pos = strpos($digit, 'b')) !== false){
+$v[$k] = substr($digit, 0, $pos);
+$ret['stability'] = substr($digit, $pos);
 }
-$part = substr($part, 0, $subpos);
+elseif(($pos = strpos($digit, 'rc')) !== false){
+$v[$k] = substr($digit, 0, $pos);
+$ret['stability'] = substr($digit, $pos);
 }
-elseif(($subpos = strpos($part, '~')) !== false){
-$subpart = strtolower(substr($part, $subpos + 1));
-$ret['user'] = $subpart;
+else{
+$v[$k] = $digit;
 }
-$v[] = (int)$part;
-$pos = ($nextpos > 0) ? $pos + $nextpos + 1 : $lengthall;
-$x++; // Just in case something really bad happens here...
-}
-for ($i = 0; $i < 3; $i++) {
-if (!isset($v[$i])) $v[$i] = 0;
 }
 $ret['major'] = $v[0];
 $ret['minor'] = $v[1];

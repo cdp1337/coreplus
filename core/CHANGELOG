@@ -1,3 +1,36 @@
+Core Plus 2.4.7b6
+
+	* Components now support an auto-install mode for assets.  This only runs during development
+	  mode.
+
+	--Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 20:46:54 -0500
+
+Core Plus 2.4.7b5
+
+	--Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 20:10:29 -0500
+
+Core Plus 2.4.7b4
+
+	* Tweaks to the versioning system.
+	* Wrote some tests for VersionSplit and VersionCompare.
+	--Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 19:30:11 -0500
+
+Core Plus 2.4.6.3
+
+	* More fixes in the updater UI.
+	* New methods to get the changed files in a given component.
+	* Packager now displays which component has local changes, (needs to be packaged).
+	* Installer will now refuse to update a component with local changes.
+	--Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 15:42:08 -0500
+
+Core Plus 2.4.6.2
+
+	* FTP Fixes in core.
+	* Installer is more efficient.
+	* Component->disable now flags the component as disabled on that same pageload.
+	* Core better handles upgrade errors for components.
+	--Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 14:14:27 -0500
+
 Core Plus 2.4.6.1
 
 	* Updates to the installer, primarily more verbose output and reloading the package list on

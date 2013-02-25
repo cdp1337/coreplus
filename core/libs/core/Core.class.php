@@ -401,13 +401,23 @@ class Core implements ISingleton {
 				// If it's loaded, register it and remove it from the list!
 				if ($c->isInstalled() && $c->isLoadable() && $c->loadFiles()) {
 
-					// Allow for on-the-fly package upgrading regardless of DEV mode or not.
-					if ($c->needsUpdated()) {
-						$c->upgrade();
+					try{
+						// Allow for on-the-fly package upgrading regardless of DEV mode or not.
+						if ($c->needsUpdated()) {
+							$c->upgrade();
+						}
+
+						$this->_components[$n] = $c;
+						$this->_registerComponent($c);
+					}
+					catch(Exception $e){
+						error_log('Ignoring component [' . $n . '] due to an error during upgrading!');
+						error_log($e->getMessage());
+
+						$c->disable();
+						$this->_componentsDisabled[$n] = $c;
 					}
 
-					$this->_components[$n] = $c;
-					$this->_registerComponent($c);
 					unset($list[$n]);
 					continue;
 				}
@@ -1535,6 +1545,11 @@ class Core implements ISingleton {
 			$check = version_compare($version1['user'], $version2['user']);
 		}
 
+		// Apply the same to stability
+		if($check == 0 && ($version1['stability'] || $version2['stability'])){
+			$check = version_compare($version1['stability'], $version2['stability']);
+		}
+
 		// Will preserve PHP's -1, 0, 1 nature.
 		if ($operation === null){
 			return $check;
@@ -1601,51 +1616,39 @@ class Core implements ISingleton {
 			'point'     => 0,
 			//'core'      => 0,
 			'user'      => 0,
-			'stability' => '',
+			'stability' => '1',
 		);
 
-		$v = array();
+		$v = [0, 0, 0];
 
 		// dev < alpha = a < beta = b < RC = rc < # < pl = p
 		$lengthall = strlen($version);
 		$pos       = 0;
 		$x         = 0;
-		//while(($pos = strpos($version, '.')) !== false){
-		while ($pos < $lengthall && $x < 10) {
-			$nextpos = strpos($version, '.', $pos) - $pos;
 
-			$part = ($nextpos > 0) ? substr($version, $pos, $nextpos) : substr($version, $pos);
+		$parts = explode('.', strtolower($version));
+		$last = sizeof($parts) - 1;
 
-			if (($subpos = strpos($part, '-')) !== false) {
-				$subpart = strtolower(substr($part, $subpos + 1));
-				/*if (is_numeric($subpart)) {
-					$ret['core'] = $subpart;
-				}
-				else*/
-				if ($subpart == 'a') {
-					$ret['stability'] = 'alpha';
-				}
-				elseif ($subpart == 'b') {
-					$ret['stability'] = 'beta';
-				}
-				else {
-					$ret['stability'] = $subpart;
-				}
-
-				$part = substr($part, 0, $subpos);
+		foreach($parts as $k => $digit){
+			if(($pos = strpos($digit, '~')) !== false){
+				$v[$k] = substr($digit, 0, $pos);
+				$ret['user'] = substr($digit, $pos);
 			}
-			elseif(($subpos = strpos($part, '~')) !== false){
-				$subpart = strtolower(substr($part, $subpos + 1));
-				$ret['user'] = $subpart;
+			elseif(($pos = strpos($digit, 'a')) !== false){
+				$v[$k] = substr($digit, 0, $pos);
+				$ret['stability'] = substr($digit, $pos);
 			}
-
-			$v[] = (int)$part;
-			$pos = ($nextpos > 0) ? $pos + $nextpos + 1 : $lengthall;
-			$x++; // Just in case something really bad happens here...
-		}
-
-		for ($i = 0; $i < 3; $i++) {
-			if (!isset($v[$i])) $v[$i] = 0;
+			elseif(($pos = strpos($digit, 'b')) !== false){
+				$v[$k] = substr($digit, 0, $pos);
+				$ret['stability'] = substr($digit, $pos);
+			}
+			elseif(($pos = strpos($digit, 'rc')) !== false){
+				$v[$k] = substr($digit, 0, $pos);
+				$ret['stability'] = substr($digit, $pos);
+			}
+			else{
+				$v[$k] = $digit;
+			}
 		}
 
 		$ret['major'] = $v[0];

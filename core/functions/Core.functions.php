@@ -73,7 +73,13 @@ function FTP(){
 		// Make sure the FTP directory is always as root whenever this is called.
 		$ftproot = \ConfigHandler::Get('/core/ftp/path');
 
-		if(!ftp_chdir($ftp, $ftproot)) return false;
+		// This serves two purposes, one it resets the location of the FTP back to the home directory
+		// and two, it ensures that the directory exists!
+		if(!ftp_chdir($ftp, $ftproot)){
+			error_log('FTP enabled, but FTP root of [' . $ftproot . '] was not valid or does not exist!');
+			$ftp = false;
+			return false;
+		}
 	}
 
 	return $ftp;

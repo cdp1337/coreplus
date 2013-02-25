@@ -1482,6 +1482,8 @@ switch($ans){
 		foreach($files as $k => $f){
 			$dir = ROOT_PDIR . (($f == 'core') ? 'core/' : 'components/' . $f . '/');
 
+			$c = Core::GetComponent($f);
+
 			// What's this file's version?
 			$xml = new XMLLoader();
 			$xml->setRootName('component');
@@ -1492,15 +1494,24 @@ switch($ans){
 			// Get the current version, this will be used to autocomplete for the next version.
 			$version = $xml->getRootDOM()->getAttribute("version");
 
+			$line = str_pad($f, $longestname+1, ' ', STR_PAD_RIGHT);
+			$lineflags = array();
+
 			// Now give me the exported version.
 			$lookup = get_exported_component($f);
+			if($lookup['version'] != $version) $lineflags[] = '** needs exported **';
 
-			if($lookup['version'] != $version){
-				$versionedfiles[$k] = sprintf('%-' . ($longestname+1) . 's %s', $f, '** needs exported **');
+			// Change the changes
+			if(
+				sizeof($c->getChangedAssets()) ||
+				sizeof($c->getChangedFiles()) ||
+				sizeof($c->getChangedTemplates())
+			){
+				$lineflags[] = '** needs packaged **';
 			}
-			else{
-				$versionedfiles[$k] = $f;
-			}
+
+
+			$versionedfiles[$k] = $line . ' ' . implode(' ', $lineflags);
 		}
 
 		$ans = CLI::PromptUser("Which component do you want to package/manage?", $versionedfiles);
