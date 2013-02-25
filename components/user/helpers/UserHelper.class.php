@@ -111,15 +111,18 @@ abstract class UserHelper{
 			return false;
 		}
 
+		// If the user came from the registration page, get the page before that.
+		if(REL_REQUEST_PATH == '/user/login') $url = Core::GetHistory(2);
+		// else the registration link is now on the same page as the 403 handler.
+		else $url = REL_REQUEST_PATH;
+
 		// Well, record this too!
 		SecurityLogModel::Log('/user/login', 'success', $u->get('id'));
 
 		// yay...
 		Session::SetUser($u);
 
-		// Where shall I return to?
-		if(REL_REQUEST_PATH == '/user/login') return '/';
-		else return REL_REQUEST_PATH;
+		return $url;
 	}
 
 	/**

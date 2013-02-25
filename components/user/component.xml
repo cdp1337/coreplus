@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.3" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.4b1" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.4"/>
 		<require name="security-suite" type="component" operation="ge" version="1.0.0"/>
@@ -17,7 +17,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="da67c4ff67da60996287daa1e1b3b7e5"/>
+		<file filename="CHANGELOG" md5="f5d3f9f68dd8a489594e1f4140359137"/>
 		<file filename="User.class.php" md5="22c0c949b303a702bf5c52ecb8ba7a17">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -49,14 +49,14 @@
 		<file filename="controllers/UserAdminController.php" md5="5d7db3e838a2fa81c28fa73ee85203ee">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="d06cca7e0aa66cf1b22978c5a3237ed6">
+		<file filename="controllers/UserController.php" md5="61ef8cc239d1755a14d4ae0077fe72c9">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="1e26a36d85fc0065cec33b198b27f475">
 			<controller name="UserGroupAdminController"/>
 		</file>
 		<file filename="helpers/UserFunctions.php" md5="0600bfeb92fef70b953d072cdbe14975"/>
-		<file filename="helpers/UserHelper.class.php" md5="9ff38e6a7e394e6961f83a0c6e3bbc53">
+		<file filename="helpers/UserHelper.class.php" md5="000a03909040fc8bd0a80ff6afa70dac">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
@@ -167,6 +167,7 @@
 		<upgrade from="2.4.0" to="2.4.1"/>
 		<upgrade from="2.4.1" to="2.4.2"/>
 		<upgrade from="2.4.2" to="2.4.3"/>
+		<upgrade from="2.4.3" to="2.4.4b1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -1,3 +1,8 @@
+User 2.4.4b1
+
+	* User login now redirects to the page prior to login.
+	--Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 20:59:03 -0500
+
 User 2.4.3
 
 	* Fixed Feature #196 - User Profile Avatar - Config Option
