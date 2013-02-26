@@ -910,6 +910,12 @@ class Model implements ArrayAccess {
 		$exists = $this->exists();
 
 		foreach ($this->_linked as $lk => $l) {
+
+			// I can't change my parent data.
+			// NO CHANGING YOUR PARENTS!
+			if($l['link'] == Model::LINK_BELONGSTOONE) continue;
+			if($l['link'] == Model::LINK_BELONGSTOMANY) continue;
+
 			$dolink = false;
 			// I can't use the getLinkWhereArray function, because that will resolve the key.
 			// I need the key itself.
@@ -1811,6 +1817,27 @@ class ModelSchema {
 				$column->maxlength = 15;
 			}
 
+			// Is default not set?  Some columns would really like this to be!
+			if($column->default === false && !$column->null){
+				switch($column->type){
+					case Model::ATT_TYPE_INT:
+					case Model::ATT_TYPE_BOOL:
+					case Model::ATT_TYPE_CREATED:
+					case Model::ATT_TYPE_UPDATED:
+					case Model::ATT_TYPE_FLOAT:
+						$column->default = 0;
+						break;
+					case Model::ATT_TYPE_ISO_8601_DATE:
+						$column->default = '0000-00-00';
+						break;
+					case Model::ATT_TYPE_ISO_8601_DATETIME:
+						$column->default = '0000-00-00 00:00:00';
+						break;
+					default:
+						$column->default = '';
+				}
+			}
+
 			$this->definitions[$name] = $column;
 			$this->order[] = $name;
 		}
@@ -2015,11 +2042,29 @@ class ModelSchemaColumn {
 
 		//if($this->required != $col->required) return false;
 		if($this->maxlength != $col->maxlength) return false;
-		if($this->default != $col->default) return false;
 		if($this->null != $col->null) return false;
 		if($this->comment != $col->comment) return false;
 		if($this->precision != $col->precision) return false;
 		if($this->autoinc !== $col->autoinc) return false;
+
+		// Default is a bit touchy because it can have database-specific defaults if not set locally.
+		if($this->default === false){
+			// I don't care what the database is, it'll pick its own defaults.
+		}
+		elseif($this->default === $col->default){
+			// They're identical... yay!
+		}
+		elseif(Core::CompareValues($this->default, $col->default)){
+			// They're close enough....
+			// Core will check and see if val1 === (string)"12" and val2 === (int)12.
+			// Consider it a fuzzy comparison that actually acknowledges the difference between NULL, "", and 0.
+		}
+		elseif($col->default === false && $this->default !== false){
+			return false;
+		}
+		else{
+			return false;
+		}
 
 		// If one is an array but not the other....
 		if(is_array($this->options) != is_array($col->options)) return false;

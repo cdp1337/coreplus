@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.7b6" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.7b7" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -39,8 +39,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="d1d2c0b2ffb9ead043dc4b6b2335f19a"/>
-		<file filename="core/CHANGELOG" md5="cbdb2c47418be54301f3a6fa324d4c4d"/>
-		<file filename="core/bootstrap.compiled.php" md5="83e8f585e0420044e20979c63f2551e6">
+		<file filename="core/CHANGELOG" md5="67028c9f79654bd1fd693b53766732e9"/>
+		<file filename="core/bootstrap.compiled.php" md5="103dd1ba96003173aa8379c6a9c7bee5">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -110,7 +110,7 @@
 			<interface name="DMI_Backend"/>
 			<interface name="TemplateInterface"/>
 		</file>
-		<file filename="core/bootstrap.php" md5="c42199e89b043f924bba07d3c2719503"/>
+		<file filename="core/bootstrap.php" md5="852ba007c0781abb82345e666fb673e1"/>
 		<file filename="core/bootstrap_postincludes.php" md5="6be19cb49f5ab39735d4867d116c6daf"/>
 		<file filename="core/bootstrap_predefines.php" md5="a75579b94642f0f4fb7b7540f9909288"/>
 		<file filename="core/bootstrap_preincludes.php" md5="4463ff79cb090c022e279ad39e3a774a"/>
@@ -533,10 +533,10 @@
 		<file filename="core/libs/core/Email.class.php" md5="2f0608c1f1aa4bfcb35a0affa35dacb8">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/FilterForm.class.php" md5="2be3ce31680deda0f296514e6b4bfeb0">
+		<file filename="core/libs/core/FilterForm.class.php" md5="edf9dfba5175565797b9330759692b88">
 			<class name="FilterForm"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="cb85b1fcf858678c0e690f21f3ffedd3">
+		<file filename="core/libs/core/Form.class.php" md5="d3e348a61863c07987ec1ed9052bed11">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -560,7 +560,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="feb3f6f475d850eee2fc6f92439fc153">
+		<file filename="core/libs/core/Model.class.php" md5="d7e3c51bd06228a806b0be5ee7b2fbc3">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -654,7 +654,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="e02b68f59cf50bf21f1bb533a2e59ea1">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="f6cdb62f2e712bb2afed06ce45fc528c">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="b34d0424c7293a103cad09b354d7e170">
 			<class name="DMI_mysqli_backend"/>
 			<class name="MySQLi_Schema"/>
 			<class name="MySQLi_Schema_Column"/>
@@ -1330,7 +1330,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="fb4feeeeb2d92bde524a88eb800854ed">
+		<file filename="core/models/PageModel.class.php" md5="136c2f2c99206ae6cdf32a8f58d48d8c">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="f9c51e50c963b6041526bf55f6234f26">
@@ -1374,7 +1374,7 @@
 		<file filename="docs/user-permissions.md" md5="53e3322a56a1b537a43f8520394b56ae"/>
 		<file filename="docs/utilities/compiler.md" md5="acfb5b28bfe613bca48ac52f30894899"/>
 		<file filename="htaccess.ex" md5="a9753494f79d3cfa1526c3ccfd19f1cc"/>
-		<file filename="index.php" md5="053e9ae9295e2c1ab0e0eb5b74373f21"/>
+		<file filename="index.php" md5="d01a25c25c5fb9fa77e98da5e4e58f37"/>
 		<file filename="install/InstallPage.class.php" md5="4f34783e9e3b4c2878afa6aa3aa0eb07">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1571,6 +1571,7 @@
 		<upgrade from="2.4.7b3" to="2.4.7b4"/>
 		<upgrade from="2.4.7b4" to="2.4.7b5"/>
 		<upgrade from="2.4.7b5" to="2.4.7b6"/>
+		<upgrade from="2.4.7b6" to="2.4.7b7"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

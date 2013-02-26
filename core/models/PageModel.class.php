@@ -395,8 +395,8 @@ class PageModel extends Model {
 		if (is_array($metaarray) && count($metaarray)){
 			foreach($metaarray as $k => $v){
 				$this->setMeta($k, $v);
-				return true;
 			}
+			return true;
 		}
 
 		return false;
@@ -667,7 +667,7 @@ class PageModel extends Model {
 
 			// If the page is currently Edit and there is a View... handle that instance.
 			if ($m == 'edit' && method_exists($this->getControllerClass(), 'view')) {
-				$p = new PageModel(str_replace('/edit/', '/view/', $b));
+				$p = PageModel::Construct(str_replace('/edit/', '/view/', $b));
 				if ($p->exists()) {
 					// I need the array merge because getParentTree only returns << parents >>.
 					return array_merge($p->getParentTree(), array($p));
@@ -676,7 +676,7 @@ class PageModel extends Model {
 
 			// If the page is currently Delete and there is a View... handle that instance.
 			if ($m == 'delete' && method_exists($this->getControllerClass(), 'view')) {
-				$p = new PageModel(str_replace('/delete/', '/view/', $b));
+				$p = PageModel::Construct(str_replace('/delete/', '/view/', $b));
 				// Only try to call the script if it exists.
 				if ($p->exists()) {
 					// I need the array merge because getParentTree only returns << parents >>.

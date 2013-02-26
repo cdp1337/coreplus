@@ -239,8 +239,9 @@ class DMI_mysqli_backend implements DMI_Backend {
 		if($oldmodelschema->isDataIdentical($newmodelschema)) return false;
 
 		//var_dump($table, $oldmodelschema->getDiff($newmodelschema)); // DEBUG //
-		//var_dump($newmodelschema); // DEBUG //
-		//var_dump($oldmodelschema); // DEBUG //
+		//var_dump('Model declaration says:', $newmodelschema); // DEBUG //
+		//var_dump('Database says:', $oldmodelschema); // DEBUG //
+		//die();
 
 		// Table does exist... I need to do a merge of the data schemas.
 		// Create a temp table to do the operations on.
@@ -992,10 +993,18 @@ class MySQLi_Schema_Column {
 		$q = $type;
 		// NULL or NOT NULL, either way it's needed.
 		$q .= ' ' . $null;
-		// If there is a default option, tack that on.
-		if($default !== false) $q .= ' DEFAULT ' . $default;
-		// Is there an AUTO_INCREMENT value here?
-		if($ai) $q .= ' AUTO_INCREMENT';
+
+		// ai tweaks how the default behaves slightly too.
+		// namely, it doesn't allow it!
+		if($ai){
+			// Is there an AUTO_INCREMENT value here?
+			$q .= ' AUTO_INCREMENT';
+		}
+		elseif($default !== false){
+			// If there is a default option, tack that on.
+			$q .= ' DEFAULT ' . $default;
+		}
+
 		// Don't forget the comments!
 		if($this->comment) $q .= ' COMMENT \'' . str_replace("'", "\\'", $this->comment) . '\'';
 
@@ -1110,8 +1119,34 @@ class MySQLi_Schema_Column {
 		}
 
 		// Default
-		if($this->default === null && $this->null == 'YES') $column->default = null;
-		elseif($this->default) $column->default = $this->default;
+		if($this->default === null && $this->null == 'YES'){
+			// YAY, null is allowed!
+			$column->default = null;
+		}
+		elseif($this->default === false){
+			// Default should be intelligent based on the column type!
+			// Since the column type is already setup, I can just use that :)
+			switch($column->type){
+				case Model::ATT_TYPE_INT:
+				case Model::ATT_TYPE_BOOL:
+				case Model::ATT_TYPE_CREATED:
+				case Model::ATT_TYPE_UPDATED:
+				case Model::ATT_TYPE_FLOAT:
+					$column->default = 0;
+					break;
+				case Model::ATT_TYPE_ISO_8601_DATE:
+					$column->default = '0000-00-00';
+					break;
+				case Model::ATT_TYPE_ISO_8601_DATETIME:
+					$column->default = '0000-00-00 00:00:00';
+					break;
+				default:
+					$column->default = '';
+			}
+		}
+		else{
+			$column->default = $this->default;
+		}
 
 		// Null?
 		if($this->null == 'YES') $column->null = true;
@@ -1155,6 +1190,7 @@ class MySQLi_Schema_Column {
 				$this->type = 'int(' . $column->maxlength . ')';
 				// IDs are also auto_increment!
 				$this->extra = 'auto_increment';
+				$this->default = false;
 				break;
 			case Model::ATT_TYPE_UUID:
 				$this->type = 'char(21)';
@@ -1194,8 +1230,27 @@ class MySQLi_Schema_Column {
 		else $this->null = 'NO';
 
 		// Default
-		if($column->default === null && $this->null == 'YES') $this->default = null;
-		elseif($column->default) $this->default = $column->default;
+		if($column->default === null && $this->null == 'YES'){
+			// YAY, null is allowed!
+			$this->default = null;
+		}
+		elseif($column->default === false){
+			// Default should be intelligent based on the column type!
+			switch($column->type){
+				case Model::ATT_TYPE_INT:
+				case Model::ATT_TYPE_BOOL:
+				case Model::ATT_TYPE_CREATED:
+				case Model::ATT_TYPE_UPDATED:
+				case Model::ATT_TYPE_FLOAT:
+					$this->default = 0;
+					break;
+				default:
+					$this->default = '';
+			}
+		}
+		else{
+			$this->default = $column->default;
+		}
 
 		// Lookup the indexes too.
 		$index = $this->_parent->indexes;

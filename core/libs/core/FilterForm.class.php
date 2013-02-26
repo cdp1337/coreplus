@@ -542,8 +542,18 @@ class FilterForm {
 			}
 
 			// No value, just skip.
-			if(!$el->get('value')){
+			if($el->get('value') === '' || $el->get('value') === null){
 				continue;
+			}
+
+			// If there is a "" option, interpret that as empty and allow "0" to be used.
+			if($el->get('value') === '0'){
+				if($el->get('options') && isset($el->get('options')[''])){
+					// '' is set... proceed.
+				}
+				else{
+					continue;
+				}
 			}
 
 			if($el->get('linkname')){

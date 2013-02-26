@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 24 Feb 2013 20:47:48 -0500
+ * @compiled Tue, 26 Feb 2013 14:47:36 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1309,6 +1309,8 @@ return true;
 protected function _setLinkKeyPropagation($key, $newval) {
 $exists = $this->exists();
 foreach ($this->_linked as $lk => $l) {
+if($l['link'] == Model::LINK_BELONGSTOONE) continue;
+if($l['link'] == Model::LINK_BELONGSTOMANY) continue;
 $dolink = false;
 if (!isset($l['on'])) {
 }
@@ -1759,6 +1761,25 @@ $column->default = 0;
 $column->comment = 'The site id in multisite mode, (or 0 otherwise)';
 $column->maxlength = 15;
 }
+if($column->default === false && !$column->null){
+switch($column->type){
+case Model::ATT_TYPE_INT:
+case Model::ATT_TYPE_BOOL:
+case Model::ATT_TYPE_CREATED:
+case Model::ATT_TYPE_UPDATED:
+case Model::ATT_TYPE_FLOAT:
+$column->default = 0;
+break;
+case Model::ATT_TYPE_ISO_8601_DATE:
+$column->default = '0000-00-00';
+break;
+case Model::ATT_TYPE_ISO_8601_DATETIME:
+$column->default = '0000-00-00 00:00:00';
+break;
+default:
+$column->default = '';
+}
+}
 $this->definitions[$name] = $column;
 $this->order[] = $name;
 }
@@ -1840,11 +1861,22 @@ public $autoinc = false;
 public function isDataIdentical(ModelSchemaColumn $col){
 if($this->field != $col->field)       return false;
 if($this->maxlength != $col->maxlength) return false;
-if($this->default != $col->default) return false;
 if($this->null != $col->null) return false;
 if($this->comment != $col->comment) return false;
 if($this->precision != $col->precision) return false;
 if($this->autoinc !== $col->autoinc) return false;
+if($this->default === false){
+}
+elseif($this->default === $col->default){
+}
+elseif(Core::CompareValues($this->default, $col->default)){
+}
+elseif($col->default === false && $this->default !== false){
+return false;
+}
+else{
+return false;
+}
 if(is_array($this->options) != is_array($col->options)) return false;
 if(is_array($this->options) && is_array($col->options)){
 if(implode(',', $this->options) != implode(',', $col->options)) return false;
@@ -2218,8 +2250,8 @@ public function setMetas($metaarray) {
 if (is_array($metaarray) && count($metaarray)){
 foreach($metaarray as $k => $v){
 $this->setMeta($k, $v);
-return true;
 }
+return true;
 }
 return false;
 }
@@ -2366,13 +2398,13 @@ if (!$this->exists()) {
 $m = strtolower($this->getControllerMethod());
 $b = strtolower($this->get('baseurl'));
 if ($m == 'edit' && method_exists($this->getControllerClass(), 'view')) {
-$p = new PageModel(str_replace('/edit/', '/view/', $b));
+$p = PageModel::Construct(str_replace('/edit/', '/view/', $b));
 if ($p->exists()) {
 return array_merge($p->getParentTree(), array($p));
 }
 }
 if ($m == 'delete' && method_exists($this->getControllerClass(), 'view')) {
-$p = new PageModel(str_replace('/delete/', '/view/', $b));
+$p = PageModel::Construct(str_replace('/delete/', '/view/', $b));
 if ($p->exists()) {
 return array_merge($p->getParentTree(), array($p));
 }
@@ -7875,7 +7907,6 @@ die();
 }
 }
 HookHandler::DispatchHook('/core/components/loaded');
-HookHandler::DispatchHook('/core/components/ready');
 Core::AddProfileTime('components_load_complete');
 ### REQUIRE_ONCE FROM core/bootstrap_postincludes.php
 if(!defined('SMARTY_DIR')){
@@ -10001,6 +10032,7 @@ public static $Mappings = array(
 'time'             => 'FormTimeInput',
 'wysiwyg'          => 'FormTextareaInput',
 );
+private $_models = array();
 public function  __construct($atts = null) {
 parent::__construct($atts);
 $this->_validattributes = array('accept', 'accept-charset', 'action', 'enctype', 'id', 'method', 'name', 'target', 'style');
@@ -10086,23 +10118,10 @@ $this->saveToSession();
 return $out;
 }
 public function getModel($prefix = 'model') {
-$m = $this->get('___' . $prefix . 'name');
-if (!$m) return null; // A model needs to be defined first of all...
-$model = new $m();
-if (!$model instanceof Model) return null; // It needs to be a model... :/
-if($model instanceof PageModel){
-foreach($this->getElements(false, false) as $el){
-if($el instanceof FormPageMeta){
-return $el->getModel();
+if(!isset($this->_models[$prefix])){
+return null;
 }
-}
-}
-if (is_array($this->get('___' . $prefix . 'pks'))) {
-foreach ($this->get('___' . $prefix . 'pks') as $k => $v) {
-$model->set($k, $v);
-}
-$model->load();
-}
+$model = $this->_models[$prefix];
 $model->setFromForm($this, $prefix);
 return $model;
 }
@@ -10115,19 +10134,13 @@ if ($e->hasError()) Core::SetMessage($e->getError(), 'error');
 }
 }
 public function addModel(Model $model, $prefix = 'model'){
+if(isset($this->_models[$prefix])) return;
 $groups = array();
-$this->set('___' . $prefix . 'name', get_class($model));
+$this->_models[$prefix] = $model;
 $s = $model->getKeySchemas();
 $i = $model->GetIndexes();
 if (!isset($i['primary'])) $i['primary'] = array();
 $new = $model->isnew();
-if (!$new) {
-$pks = array();
-foreach ($i['primary'] as $k => $v) {
-$pks[$v] = $model->get($v);
-}
-$this->set('___' . $prefix . 'pks', $pks);
-}
 foreach ($s as $k => $v) {
 if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
 if($new && $v['type'] == Model::ATT_TYPE_UUID) continue;
@@ -10871,3 +10884,5 @@ return array('controller' => $controller,
 }
 
 
+HookHandler::DispatchHook('/core/components/ready');
+Core::AddProfileTime('components_ready_complete');

@@ -648,6 +648,15 @@ class Form extends FormGroup {
 		'wysiwyg'          => 'FormTextareaInput',
 	);
 
+
+	/**
+	 * A cache of the actual models attached via addModel().
+	 *
+	 * @var array
+	 */
+	private $_models = array();
+
+
 	/**
 	 * Construct a new Form object
 	 *
@@ -791,34 +800,43 @@ class Form extends FormGroup {
 	 * @return Model
 	 */
 	public function getModel($prefix = 'model') {
-		$m = $this->get('___' . $prefix . 'name');
-		if (!$m) return null; // A model needs to be defined first of all...
 
-		$model = new $m();
+		// A model needs to be defined first of all...
+		if(!isset($this->_models[$prefix])){
+			return null;
+		}
+		/** @var $model Model */
+		$model = $this->_models[$prefix];
 
-		if (!$model instanceof Model) return null; // It needs to be a model... :/
+		//$m = $this->get('___' . $prefix . 'name');
+		//if (!$m) return null; // A model needs to be defined first of all...
+
+		//$model = new $m();
+
+		//if (!$model instanceof Model) return null; // It needs to be a model... :/
 
 		// Page models have special functionality.
 		// This is because they are almost always embedded in forms, so they have their own getModel logic,
 		// allowing them to be singled out and that model extracted along side the main form's model.
-		if($model instanceof PageModel){
-			// Find the page and return its model.
-			foreach($this->getElements(false, false) as $el){
-				if($el instanceof FormPageMeta){
-					return $el->getModel();
-				}
-			}
-		}
+		//if($model instanceof PageModel){
+		//	// Find the page and return its model.
+		//	foreach($this->getElements(false, false) as $el){
+		//		if($el instanceof FormPageMeta){
+		//			return $el->getModel();
+		//		}
+		//	}
+		//}
+
 
 		// Set the PK's...
-		if (is_array($this->get('___' . $prefix . 'pks'))) {
-			foreach ($this->get('___' . $prefix . 'pks') as $k => $v) {
-				$model->set($k, $v);
-			}
-
+		//if (is_array($this->get('___' . $prefix . 'pks'))) {
+		//	foreach ($this->get('___' . $prefix . 'pks') as $k => $v) {
+		//		$model->set($k, $v);
+		//	}
+//
 			// It should now be loadable.
-			$model->load();
-		}
+		//	$model->load();
+		//}
 
 		$model->setFromForm($this, $prefix);
 
@@ -851,27 +869,33 @@ class Form extends FormGroup {
 	 * @param string $prefix The prefix to create elements as
 	 */
 	public function addModel(Model $model, $prefix = 'model'){
+
+		// Is this model already attached?
+		if(isset($this->_models[$prefix])) return;
+
 		// Adding support for grouped items directly from the model :)
 		// This will contain the links to the group names if there are any grouped elements.
 		// Will make lookups quicker.
 		$groups = array();
 
+		$this->_models[$prefix] = $model;
+
 		// Add the initial model tracker, will remember which model is attached.
-		$this->set('___' . $prefix . 'name', get_class($model));
+		//$this->set('___' . $prefix . 'name', get_class($model));
 		$s = $model->getKeySchemas();
 		$i = $model->GetIndexes();
 		if (!isset($i['primary'])) $i['primary'] = array();
 
 		$new = $model->isnew();
 
-		if (!$new) {
-			// Save the PKs of this model in the SESSION data so they don't have to be sent to the browser.
-			$pks = array();
-			foreach ($i['primary'] as $k => $v) {
-				$pks[$v] = $model->get($v);
-			}
-			$this->set('___' . $prefix . 'pks', $pks);
-		}
+		//if (!$new) {
+		//	// Save the PKs of this model in the SESSION data so they don't have to be sent to the browser.
+		//	$pks = array();
+		//	foreach ($i['primary'] as $k => $v) {
+		//		$pks[$v] = $model->get($v);
+		//	}
+		//	$this->set('___' . $prefix . 'pks', $pks);
+		//}
 
 		foreach ($s as $k => $v) {
 			// Skip the AI column if it doesn't exist.
