@@ -122,7 +122,8 @@ class ContentController extends Controller_2_1 {
 		}
 
 		$model = new ContentModel();
-		$page = new PageModel('/content/view/new');
+		$page = $model->getLink('Page');
+		//$page = new PageModel('/content/view/new');
 
 		$form = new Form();
 		$form->set('callsmethod', 'ContentController::_SaveHandler');
@@ -145,28 +146,20 @@ class ContentController extends Controller_2_1 {
 
 	public static function _SaveHandler(Form $form) {
 
-		$model = $form->getModel();
-
-		// Ensure that everything is marked as updated...
-		$model->set('updated', Time::GetCurrent());
-
-		$model->save();
-
-		/** @var $page PageModel */
+		/** @var $model ContentModel */
+		$model = $form->getModel('model');
+		/** @var $page PageModel Page object for this model, already linked up! */
 		$page = $form->getModel('page');
-
-		$page->set('baseurl', '/content/view/' . $model->get('id'));
-		//var_dump($page, $page->exists()); die();
-		$page->set('updated', Time::GetCurrent());
-
-		$model->set('nickname', $page->get('title'));
-		$model->save();
-
+		/** @var $insertables FormPageInsertables */
 		$insertables = $form->getElementByName('insertables');
-		$insertables->set('baseurl', '/content/view/' . $model->get('id'));
+
+		// The content nickname is derived from the page title.
+		$model->set('nickname', $page->get('title'));
 		$page->set('page_template', $insertables->getElement('insertables_page_template')->get('value'));
+
+		$model->save();
+		$insertables->set('baseurl', '/content/view/' . $model->get('id'));
 		$insertables->save();
-		$page->save();
 
 		// w00t
 		return $page->getResolvedURL();

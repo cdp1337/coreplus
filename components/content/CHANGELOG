@@ -1,3 +1,8 @@
+content 2.0.1b1
+
+	* Cleaned up the content controller a whee bit
+	--Charlie Powell <charlie@eval.bz>  Wed, 27 Feb 2013 18:29:23 -0500
+
 Content 2.0.0
 
 	* Updated content to work with the enhancements in 2.4.1.
