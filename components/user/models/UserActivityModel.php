@@ -40,7 +40,8 @@ class UserActivityModel extends Model{
 		),
 		'type' => array(
 			'type' => Model::ATT_TYPE_ENUM,
-			'options' => array('GET', 'POST', 'HEAD', 'PUSH', 'PUT', 'DELETE')
+			'options' => array('GET', 'POST', 'HEAD', 'PUSH', 'PUT', 'DELETE'),
+			'default' => 'GET',
 		),
 		'request' => array(
 			'type' => Model::ATT_TYPE_STRING,

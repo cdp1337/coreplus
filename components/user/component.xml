@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.4b1" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.4b2" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.4"/>
 		<require name="security-suite" type="component" operation="ge" version="1.0.0"/>
@@ -17,7 +17,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="f5d3f9f68dd8a489594e1f4140359137"/>
+		<file filename="CHANGELOG" md5="7576bc6c905f1301b3de6d5bbec5e657"/>
 		<file filename="User.class.php" md5="22c0c949b303a702bf5c52ecb8ba7a17">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -60,7 +60,7 @@
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
-		<file filename="models/UserActivityModel.php" md5="5f5bb7b6580bcc7c64bfc2f3c7f82dbd">
+		<file filename="models/UserActivityModel.php" md5="41c438ef1e60ca80eb22b38248bc38f3">
 			<class name="UserActivityModel"/>
 		</file>
 		<file filename="models/UserConfigModel.php" md5="abfc0b4b710287302275611cc269b021">
@@ -168,6 +168,7 @@
 		<upgrade from="2.4.1" to="2.4.2"/>
 		<upgrade from="2.4.2" to="2.4.3"/>
 		<upgrade from="2.4.3" to="2.4.4b1"/>
+		<upgrade from="2.4.4b1" to="2.4.4b2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

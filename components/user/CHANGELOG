@@ -1,3 +1,8 @@
+User 2.4.4b2
+
+	* Updated the default options for User to keep updated with recent changes in Core.
+	--Charlie Powell <charlie@eval.bz>  Wed, 27 Feb 2013 18:32:56 -0500
+
 User 2.4.4b1
 
 	* User login now redirects to the page prior to login.
