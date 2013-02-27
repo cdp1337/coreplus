@@ -27,6 +27,7 @@ class UserConfigModel extends Model{
 			'type' => Model::ATT_TYPE_STRING,
 			'required' => true,
 			'null' => false,
+			'maxlength' => 64,
 		),
 		'name' => array(
 			'type' => Model::ATT_TYPE_STRING,

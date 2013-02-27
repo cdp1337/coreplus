@@ -20,7 +20,7 @@ class UserActivityModel extends Model{
 		),
 		'session_id' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 160,
+			'maxlength' => 64,
 		),
 		'user_id'    => array(
 			'type'    => Model::ATT_TYPE_INT,

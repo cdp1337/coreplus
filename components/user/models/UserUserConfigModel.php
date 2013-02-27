@@ -31,7 +31,8 @@ class UserUserConfigModel extends Model{
 		'key' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'required' => true,
-			'null' => false
+			'null' => false,
+			'maxlength' => 64,
 		),
 		'value' => array(
 			'type' => Model::ATT_TYPE_TEXT,
