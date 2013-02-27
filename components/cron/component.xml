@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.1.2">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.1.3b1">
 	<hooks>
 		<hookregister name="/cron/hourly" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/daily" description="Daily hook called from the cron system"/>
@@ -27,7 +27,7 @@
 		<widget baseurl="/cron/dashboard" title="Cron Status Dashboard" installable="/admin"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="a7fc292a9b5752ce97cf8ce32649bce1"/>
+		<file filename="CHANGELOG" md5="155f22ae964c63afb2c583eaecc07aea"/>
 		<file filename="README.md" md5="d03dd621fdcc3aab5a50b9e88b361409"/>
 		<file filename="classes/CronHelper.php" md5="ba7b794f691ba12729d42f2275cee260">
 			<class name="CronHelper"/>
@@ -35,7 +35,7 @@
 		<file filename="controllers/CronController.php" md5="6261f2e2620b180d31e5ab0b1b17a70c">
 			<controller name="CronController"/>
 		</file>
-		<file filename="models/CronLogModel.php" md5="07887d6bf0d2c4942fc0df3de9573da3">
+		<file filename="models/CronLogModel.php" md5="febfe029a9b79996df5fb99e26e279fc">
 			<class name="CronLogModel"/>
 		</file>
 		<file filename="widgets/CronWidget.php" md5="9eea085a3c8abee8a2b374d5e56e1c4a">
@@ -46,6 +46,7 @@
 		<upgrade from="1.0.0" to="1.1.0"/>
 		<upgrade from="1.1.0" to="1.1.1"/>
 		<upgrade from="1.1.1" to="1.1.2"/>
+		<upgrade from="1.1.2" to="1.1.3b1"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/cron.css" md5="7a0aa1efe6bb083d16c4b3f79d59064b"/>

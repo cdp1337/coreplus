@@ -18,6 +18,7 @@ class CronLogModel extends Model {
 		'cron'      => array(
 			'type'     => Model::ATT_TYPE_ENUM,
 			'options' => array('hourly', 'daily', 'weekly', 'monthly'),
+			'default' => 'hourly',
 			'required' => true,
 			'null'     => false,
 			'comment' => 'The type of cron executed'
@@ -25,6 +26,7 @@ class CronLogModel extends Model {
 		'status' => array(
 			'type' => Model::ATT_TYPE_ENUM,
 			'options' => array('pass', 'fail', 'running'),
+			'default' => 'running',
 			'required' => true,
 			'null' => false,
 		),

@@ -1,3 +1,8 @@
+Cron 1.1.3b1
+
+	* Updated the default options for Cron to keep updated with recent changes in Core.
+	--Charlie Powell <charlie@eval.bz>  Wed, 27 Feb 2013 18:30:39 -0500
+
 Cron 1.1.2
 
 	* Added an admin dashboard widget to display crons that have run.
