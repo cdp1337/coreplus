@@ -29,8 +29,8 @@
  */
 
 // When working on the core, it's best to switch this back to core/bootstrap.php!
-//require_once('core/bootstrap.php');
-require_once('core/bootstrap.compiled.php');
+require_once('core/bootstrap.php');
+//require_once('core/bootstrap.compiled.php');
 
 // Anything that needs to fire off *before* the page is rendered.
 // This includes widgets, script addons, and anything else that needs a CurrentPage.

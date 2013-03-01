@@ -1,9 +1,11 @@
 /** Admin Bar **/
 #admin-bar {
 	position: fixed;
-	background: #222;
+	/*background: #222;*/
+	background: #013031;
 	font-size: 80%;
-	width: 30px;
+	/*width: 30px;*/
+	width:100%;
 	border-bottom: 1px solid #ddd;
 	z-index: 9999;
 	padding:5px 0;
@@ -12,7 +14,11 @@
 	opacity: 0.9;
 }
 
-#admin-bar ul {position:relative;top:8px;}
+#admin-bar ul {
+	position:relative;
+	top:8px;
+	padding-left: 20px;
+}
 
 .icon-chevron-right,
 .icon-chevron-left {color:#fff;}
@@ -25,8 +31,9 @@
 
 #admin-bar.admin-bar-collapsed{
 	border-right: 1px solid black;
-	width: 30px;
-	height: 30px;
+	/*width: 30px;*/
+	width:100%;
+	min-height: 30px;
 }
 
 #admin-bar ul li {
@@ -50,6 +57,7 @@
 	display: block;
 	float: left;
 	width: 22px;
+	display:none;
 }
 
 /** When the admin bar is collapsed **/
@@ -62,5 +70,67 @@
 /** When the admin bar is expanded **/
 .admin-bar-expanded .admin-bar-toggle i.icon-chevron-right {
 	display: none;
+}
+
+#admin-bar ul li i.icon-cogs {
+	font-size:150%;
+	cursor:pointer;
+}
+
+
+#admin-bar .sub-menu {
+	display:none;
+	position: fixed;
+	z-index: 9999;
+	background: #013031;
+	top:38px;
+	padding: 0;
+}
+
+#admin-bar ul .sub-menu li {
+	float: none;
+	text-align: left;
+	cursor:pointer;
+	margin:0;
+	height:auto;
+}
+
+#admin-bar ul .sub-menu li:last-child {
+	padding-bottom:3px;
+}
+
+#admin-bar ul .sub-menu li a {
+	text-decoration:none;
+	border-bottom:0;
+	position:relative;
+	padding: 6px 10px 6px 10px;
+	display:block;
+}
+
+#admin-bar ul .sub-menu li:hover {
+	background:#000;
+}
+
+#admin-bar ul .sub-menu li:hover a {
+	color:#fff;
+	border-bottom:0;
+}
+
+#admin-bar ul li.has-sub {padding:0 15px 0 0;}
+
+#admin-bar ul li.has-sub:hover > ul.sub-menu {
+	display:block;
+}
+
+#admin-bar .userloginwidget {
+	float:right;
+	display:inline-block;
+	margin-right:15px;
+	margin-top:8px;
+}
+
+#admin-bar i,
+#admin-bar {
+	color:#eeeeee;
 }
 /** End Admin Bar **/
