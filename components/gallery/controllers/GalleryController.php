@@ -187,6 +187,31 @@ class GalleryController extends Controller_2_1 {
 	}
 
 	/**
+	 * Delete a gallery!
+	 *
+	 */
+	public function delete(){
+		$view = $this->getView();
+		$req = $this->getPageRequest();
+
+		$album = new GalleryAlbumModel($req->getParameter(0));
+
+		if(!$album->exists()) return View::ERROR_NOTFOUND;
+
+		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || \Core\user()->checkAccess('p:gallery_manage'));
+		$manager = \Core\user()->checkAccess('p:gallery_manage');
+
+		if(!($editor || $manager)){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+
+		$album->delete();
+		Core::Redirect('/galleryadmin');
+
+	}
+
+	/**
 	 * View to rearrange the images in this gallery.
 	 *
 	 */
