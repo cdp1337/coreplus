@@ -1220,7 +1220,7 @@ class Component_2_1 {
 			return $prefix;
 		}
 		else {
-			return $prefix . 'components/' . strtolower($this->_name) . '/';
+			return $prefix . 'components/' . str_replace(' ', '-', strtolower($this->_name)) . '/';
 		}
 	}
 
@@ -1435,6 +1435,10 @@ class Component_2_1 {
 			if($weight === null)     $weight = 0;
 			if($weight == '')        $weight = 0;
 
+			// Increment the weight by 100.  This will allow new values to be appended at the end,
+			// and the sorted ones to be avove them.
+			$weight += 1000;
+
 			$model = UserConfigModel::Construct($key);
 			$model->set('name', $name);
 			if($default)  $model->set('default_value', $default);
@@ -1447,9 +1451,9 @@ class Component_2_1 {
 			$model->set('required', $required);
 			// Only set the weight if it's not already set.
 			// This is because (theoretically), the admin can change the order of userconfig options.
-			if(!$model->get('weight')) $model->set('weight', $weight);
+			if(!$model->get('weight') || $model->get('weight') >= 100) $model->set('weight', $weight);
 
-			// if($model->changed()) var_dump($model); // DEBUG \\
+			//if($model->changed()) var_dump($model); // DEBUG \\
 
 			if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
 		}
@@ -1480,7 +1484,7 @@ class Component_2_1 {
 			// Just something to help the log.
 			$action = ($m->exists()) ? 'Updated' : 'Added';
 			$admin = $subnode->getAttribute('admin');
-			$selectable = ($admin ? 0 : 1); // Defaults
+			$selectable = ($admin ? '0' : '1'); // Defaults
 			if($subnode->getAttribute('selectable') !== '') $selectable = $subnode->getAttribute('selectable');
 
 			// Do not "update" value, keep whatever the user set previously.

@@ -625,6 +625,7 @@ class Form extends FormGroup {
 		'checkbox'         => 'FormCheckboxInput',
 		'checkboxes'       => 'FormCheckboxesInput',
 		'date'             => 'FormDateInput',
+		'datetime'         => 'FormDateTimeInput',
 		'file'             => 'FormFileInput',
 		'hidden'           => 'FormHiddenInput',
 		'pageinsertables'  => 'FormPageInsertables',
@@ -898,6 +899,7 @@ class Form extends FormGroup {
 		//}
 
 		foreach ($s as $k => $v) {
+			/*
 			// Skip the AI column if it doesn't exist.
 			if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
 
@@ -906,6 +908,7 @@ class Form extends FormGroup {
 
 			// These are already taken care above in the SESSION data.
 			if (!$new && in_array($k, $i['primary'])) continue;
+			*/
 
 			// Form attribute defaults
 			$formatts = array(
@@ -942,7 +945,16 @@ class Form extends FormGroup {
 			if($formatts['type'] == 'disabled'){
 				continue;
 			}
-			// These are based off of the formtype declaration in Model.
+			elseif ($v['type'] == Model::ATT_TYPE_ID){
+				$el = FormElement::Factory('system');
+				// These are handled automatically.
+				$formatts['required'] = false;
+			}
+			elseif($v['type'] == Model::ATT_TYPE_UUID){
+				$el = FormElement::Factory('system');
+				// These are handled automatically.
+				$formatts['required'] = false;
+			}
 			elseif ($formatts['type'] !== null) {
 				$el = FormElement::Factory($formatts['type']);
 			}
@@ -988,6 +1000,11 @@ class Form extends FormGroup {
 			elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATE){
 				$formatts['datepicker_dateFormat'] = 'yy-mm-dd';
 				$el = FormElement::Factory('date');
+			}
+			elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATETIME){
+				$formatts['datetimepicker_dateFormat'] = 'yy-mm-dd';
+				$formatts['datetimepicker_timeFormat'] = 'HH:mm';
+				$el = FormElement::Factory('datetime');
 			}
 			else {
 				die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');

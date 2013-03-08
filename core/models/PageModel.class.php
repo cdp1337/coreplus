@@ -811,18 +811,27 @@ class PageModel extends Model {
 		// remember, fuzzy pages are meant to act as a sort of directory placeholder.
 		else {
 			$try = $base;
+			//$fuzzyfound = false;
 			while($try != '' && $try != '/') {
 				if(isset(self::$_FuzzyCache[$try])) {
 					// The fuzzy page must have the requested arguments, they just need to be tacked onto the end of the base.
 					$base = self::$_FuzzyCache[$try] . substr($base, strlen($try));
+			//		$fuzzyfound = true;
 					break;
 				}
 				elseif(in_array($try, self::$_FuzzyCache)) {
 					$base = self::$_FuzzyCache[array_search($try, self::$_FuzzyCache)] . substr($base, strlen($try));
+			//		$fuzzyfound = true;
 					break;
 				}
 				$try = substr($try, 0, strrpos($try, '/'));
 			}
+
+			// This is a weird exception for when the root page is set to fuzzy.
+			// It's not checked in the above loop because it thinks the check is over.
+			//if(!$fuzzyfound && isset(self::$_FuzzyCache['/'])){
+			//	$base = self::$_FuzzyCache['/'] . $base;
+			//}
 		}
 
 		// Trim off both beginning and trailing slashes.

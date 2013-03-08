@@ -572,7 +572,7 @@ class Model implements ArrayAccess {
 					if(
 						Core::IsComponentAvailable('enterprise') &&
 						MultiSiteHelper::IsEnabled() &&
-						$v === null
+						($v === null || $v === false)
 					){
 						$site = MultiSiteHelper::GetCurrentSiteID();
 						$dat->insert('site', $site);
@@ -584,6 +584,11 @@ class Model implements ArrayAccess {
 					break;
 
 				default:
+					// Make sure this value is resolved to its strict version!
+					// This is because the underlying data layer will throw kinipshits if (for example),
+					// NULL is passed in on a non-null column.
+					$v = $this->translateKey($k, $v);
+
 					$dat->insert($k, $v);
 					break;
 			}
@@ -643,6 +648,12 @@ class Model implements ArrayAccess {
 					$idcol = $k; // Remember this for after the save.
 					continue 2;
 			}
+
+			// Make sure this value is resolved to its strict version!
+			// This is because the underlying data layer will throw kinipshits if (for example),
+			// NULL is passed in on a non-null column.
+			$v = $this->translateKey($k, $v);
+
 			//var_dump($k, $i['primary']);
 			// Everything else
 			if (in_array($k, $i['primary'])) {
@@ -765,6 +776,13 @@ class Model implements ArrayAccess {
 		// Default is true, since by default there is no validation.
 		$valid = true;
 
+		// If this key is not required and not filled in, skip validation.... it's valid.
+		if($v == '' || $v === null){
+			if(!isset($s['required']) || !$s['required']){
+				return true;
+			}
+		}
+
 		if (isset($s[$k]['validation'])) {
 			// Validation exists... check it.
 			$check = $s[$k]['validation'];
@@ -814,6 +832,9 @@ class Model implements ArrayAccess {
 	 * Translate a key to the strict version of it.
 	 * ie: if a given key is a "Boolean" and the string "true" is given, that should be resolved to 1.
 	 *
+	 * This will also handle null and default values more gracefully than trying to pass them directly to the
+	 * underlying datamodel.
+	 *
 	 * @param string $k The key to lookup
 	 * @param mixed $v  The value to check
 	 *
@@ -825,23 +846,103 @@ class Model implements ArrayAccess {
 		// Not in the schema.... just return the value unmodified.
 		if(!isset($s[$k])) return $v;
 
-		$type = $s[$k]['type']; // Type is one of the required properties.
+		// Shortcut
+		$t = &$s[$k];
 
-		if ($type == Model::ATT_TYPE_BOOL) {
-			switch(strtolower($v)){
-				// This is used by checkboxes
-				case 'yes':
-					// A single checkbox will have the value of "on" if checked
-				case 'on':
-					// Hidden inputs will have the value of "1"
-				case 1:
-					// sometimes the string "true" is sent.
-				case 'true':
-					$v = 1;
-					break;
-				default:
-					$v = 0;
+		$type = $t['type']; // Type is one of the required properties.
+
+		// Try to determine the generic default value if not set.
+		if(!isset($t['default'])){
+			if(isset($t['null']) && $t['null']){
+				// Easy enough!
+				$default = null;
 			}
+			else{
+				// Not so easy, I need to guess the default based on the type.
+				switch($type){
+					case Model::ATT_TYPE_BOOL:
+					case Model::ATT_TYPE_CREATED:
+					case Model::ATT_TYPE_FLOAT:
+					case Model::ATT_TYPE_INT:
+					case Model::ATT_TYPE_UPDATED:
+						$default = 0;
+						break;
+					case Model::ATT_TYPE_DATA:
+					case Model::ATT_TYPE_STRING:
+					case Model::ATT_TYPE_TEXT:
+						$default = '';
+						break;
+					case Model::ATT_TYPE_ISO_8601_DATE:
+						$default = '0000-00-00';
+						break;
+					case Model::ATT_TYPE_ISO_8601_DATETIME:
+						$default = '0000-00-00 00:00:00';
+						break;
+				}
+			}
+		}
+		else{
+			// Simple enough :)
+			$default = $t['default'];
+		}
+
+
+		// This part of the logic will detect if the default value should be used!
+		// Usually this is pretty simple, but some values require a little extra care.
+		switch($type){
+			// Damn datetime strings :/
+			case Model::ATT_TYPE_ISO_8601_DATE:
+				if($v == '' || $v == '0000-00-00' || $v === null){
+					// This gets remapped to "default", which may or may not be the same.
+					$v = $default;
+				}
+				break;
+
+			case Model::ATT_TYPE_ISO_8601_DATETIME:
+				if($v == '' || $v == '0000-00-00 00:00:00' || $v === null){
+					// This gets remapped to "default", which may or may not be the same.
+					$v = $default;
+				}
+				break;
+
+			default:
+				// These may or may not remapped... all depends on what the "default" value is.
+				if($v === null){
+					$v = $default;
+				}
+				break;
+		}
+
+
+
+		// Now for the validation.
+		// This will translate invalid values to valid ones!
+		// Most values are suitable as-is.
+		switch($type){
+			case Model::ATT_TYPE_BOOL:
+				if($v === true){
+					$v = 1;
+				}
+				elseif($v === false){
+					$v = 0;
+				}
+				else{
+					switch(strtolower($v)){
+						// This is used by checkboxes
+						case 'yes':
+							// A single checkbox will have the value of "on" if checked
+						case 'on':
+							// Hidden inputs will have the value of "1"
+						case 1:
+							// sometimes the string "true" is sent.
+						case 'true':
+							$v = 1;
+							break;
+						default:
+							$v = 0;
+					}
+				}
+				break;
 		}
 
 		return $v;
@@ -1320,13 +1421,15 @@ class Model implements ArrayAccess {
 
 			// It's a standard column, check and see if it matches the datainit value.
 			// If the datainit key doesn't exist, that also constitutes as a changed flag!
-			if(!isset($this->_datainit[$k])){
-				//echo "$k changed!"; // DEBUG
+			// ** I'm beginning to really dislike PHP....
+			if(!array_key_exists($k, $this->_datainit)){
+				//echo "$k changed!<br/>\n"; // DEBUG
 				return true;
 			}
 
 			if($this->_datainit[$k] != $this->_data[$k]){
-				//echo "$k changed!"; // DEBUG
+				//echo "$k changed!<br/>\n"; // DEBUG
+				//var_dump($this->_datainit[$k], $this->_data[$k]); // DEBUG
 				return true;
 			}
 
@@ -1672,6 +1775,7 @@ class ModelFactory {
 	 * @return array
 	 */
 	public function getRaw(){
+		$this->_performMultisiteCheck();
 		$rs = $this->_dataset->execute($this->interface);
 
 		return $rs->_data;
@@ -1684,6 +1788,7 @@ class ModelFactory {
 	 * @return int
 	 */
 	public function count() {
+		$this->_performMultisiteCheck();
 		$clone = clone $this->_dataset;
 		$rs    = $clone->count()->execute($this->interface);
 

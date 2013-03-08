@@ -5,7 +5,7 @@
 
 	{foreach from=$element->get('options') item=title key=key}
 		<label>
-			<input type="checkbox" {$element->getInputAttributes()} value="{$key}" {if in_array($key, $element->get('value'))}checked="checked"{/if}/>
+			<input type="checkbox" {$element->getInputAttributes()} value="{$key}" {if is_array($element->get('value')) && in_array($key, $element->get('value'))}checked="checked"{/if}/>
 			{$title|escape}
 		</label>
 	{/foreach}

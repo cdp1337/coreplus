@@ -479,7 +479,15 @@ class DMI_mysqli_backend implements DMI_Backend {
 		$vals = array();
 		foreach($dataset->_sets as $k => $v){
 			$keys[] = "`$k`";
-			$vals[] = "'" . $this->_conn->real_escape_string($v) . "'";
+			if($v === null){
+				$vals[] = 'NULL';
+			}
+			//elseif(is_int($v)){
+			//	$vals[] = $v;
+			//}
+			else{
+				$vals[] = "'" . $this->_conn->real_escape_string($v) . "'";
+			}
 		}
 
 		$q .= " ( " . implode(', ', $keys) . " )";
@@ -507,7 +515,16 @@ class DMI_mysqli_backend implements DMI_Backend {
 
 		$sets = array();
 		foreach($dataset->_sets as $k => $v){
-			$sets[] = "`$k` = '" . $this->_conn->real_escape_string($v) . "'";
+			if($v === null){
+				$valstr = 'NULL';
+			}
+			//elseif(is_int($v)){
+			//	$valstr = $v;
+			//}
+			else{
+				$valstr = "'" . $this->_conn->real_escape_string($v) . "'";
+			}
+			$sets[] = "`$k` = $valstr";
 		}
 		$q .= ' SET ' . implode(', ', $sets);
 
