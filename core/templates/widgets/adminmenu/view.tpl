@@ -2,29 +2,41 @@
 
 	{css src="css/admin/adminbar.css"}{/css}
 
-	<div id="admin-bar" {if Core::IsLibraryAvailable('jquery')}class="admin-bar-collapsed"{/if}>
-		{if Core::IsLibraryAvailable('jquery')}
-			<a href="#" class="admin-bar-toggle" title="Expand/Collapse Bar">
-				<i class="icon-chevron-right"></i>
-				<i class="icon-chevron-right"></i>
-				<i class="icon-chevron-left"></i>
-				<i class="icon-chevron-left"></i>
-			</a>
-		{/if}
-		<ul>
-			{foreach from=$pages item=page}
+<div id="admin-bar">
+	<ul>
+		<li class="has-sub">
+			<i class="icon-cogs"></i>
+			<ul class="sub-menu">
+				{foreach from=$pages item=page}
+					{if strpos($page->get('baseurl'), '/volleyball') === false}
+						<li>
+							{a href=$page->get('baseurl')}{$page->get('title')}{/a}
+						</li>
+					{/if}
+				{/foreach}
+			</ul>
+		</li>
+	</ul>
+	{*
+	<ul>
+		{foreach from=$pages item=page}
+			{if strpos($page->get('baseurl'), '/volleyball') !== false}
 				<li>
 					{a href=$page->get('baseurl')}{$page->get('title')}{/a}
 				</li>
-			{/foreach}
-			<li>{a href="/user/logout"}Logout{/a}</li>
-		</ul>
-	</div>
+			{/if}
+		{/foreach}
+	</ul>
+	*}
+
+	{widget baseurl="/user/login"}
+
+</div>
 
 	{if Core::IsLibraryAvailable('jqueryui')}
 		{script library="jqueryui"}{/script}
 		{script library="jquery.cookie"}{/script}
-		{script location="foot" src="js/admin/adminmenu-widget.js"}{/script}
+	{*script location="foot" src="js/admin/adminmenu-widget.js"}{/script*}
 	{/if}
 
 {/if}

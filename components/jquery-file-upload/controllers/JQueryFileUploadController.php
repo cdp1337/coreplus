@@ -75,6 +75,20 @@ class JQueryFileUploadController extends Controller_2_1 {
 				// NO COOKIE FOR YOU!
 				return View::ERROR_BADREQUEST;
 			}
+
+			/*fix for IE not handling XMLHTTPRequest file uploads correctly */
+			header('Vary: Accept');
+
+			if (isset($_SERVER['HTTP_ACCEPT']) &&
+				(strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
+				$view->contenttype = "application/json";
+			} else {
+				//$view->contenttype = "text/plain";
+				$view->mode = View::MODE_NOOUTPUT;
+				echo json_decode($view->jsondata);
+			}
+			/*end IE fix*/
+
 		}
 		else{
 			// What, it's not a post even?

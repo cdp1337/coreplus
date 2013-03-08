@@ -24,13 +24,11 @@
 						<i class="icon-edit"></i><span>Edit</span>
 					{/a}
 				</li>
-				{*
 				<li class="delete">
 					{a href="/gallery/delete/`$album->get('id')`" title="Delete" confirm="Are you sure you want to delete `$album->get('title')`?"}
 						<i class="icon-remove"></i><span>Delete</span>
 					{/a}
 				</li>
-*}
 			</ul>
 		</td>
 	</tr>
