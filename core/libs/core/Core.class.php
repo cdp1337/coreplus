@@ -414,7 +414,7 @@ class Core implements ISingleton {
 						error_log('Ignoring component [' . $n . '] due to an error during upgrading!');
 						error_log($e->getMessage());
 
-						$c->disable();
+						//$c->disable();
 						$this->_componentsDisabled[$n] = $c;
 					}
 
@@ -493,7 +493,7 @@ class Core implements ISingleton {
 	 * Expects all checks to be done already.
 	 */
 	public function _registerComponent(Component_2_1 $c) {
-		$name = strtolower($c->getName());
+		$name = str_replace(' ', '-', strtolower($c->getName()));
 
 		if ($c->hasLibrary()) {
 			$this->_libraries = array_merge($this->_libraries, $c->getLibraryList());

@@ -95,6 +95,7 @@ $core_settings = ConfigHandler::LoadConfigFile("configuration");
 if (!$core_settings) {
 	if(EXEC_MODE == 'WEB'){
 		$newURL = 'install/';
+		header('HTTP/1.1 302 Moved Temporarily');
 		header("Location:" . $newURL);
 		die("If your browser does not refresh, please <a href=\"{$newURL}\">Click Here</a>");
 	}
@@ -435,6 +436,7 @@ catch (Exception $e) {
 	// If it's in development mode, redirect back to the installer, which should hopefully
 	// get whatever problem this was fixed.
 	if (DEVELOPMENT_MODE) {
+		header('HTTP/1.1 302 Moved Temporarily');
 		header('Location: ' . ROOT_WDIR . 'install');
 		die();
 	}
@@ -475,6 +477,7 @@ if (EXEC_MODE == 'WEB') {
 		// There was a DMI exception... it may not have been installed.
 		// Reload to the install page and let that take care.
 		if (DEVELOPMENT_MODE) {
+			header('HTTP/1.1 302 Moved Temporarily');
 			header('Location: ' . ROOT_WDIR . 'install');
 			die();
 		}

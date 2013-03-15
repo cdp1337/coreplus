@@ -487,8 +487,22 @@ class PageRequest {
 		return $return;
 	}
 
+	/**
+	 * Set all parameters for this view
+	 * @param $params
+	 */
 	public function setParameters($params) {
 		$this->parameters = $params;
+	}
+
+	/**
+	 * Set a single parameter, useful for overriding.
+	 *
+	 * @param $key
+	 * @param $value
+	 */
+	public function setParameter($key, $value){
+		$this->parameters[$key] = $value;
 	}
 
 	/**

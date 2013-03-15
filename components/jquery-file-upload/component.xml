@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.9.1~core3" name="jQuery-File-Upload" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.9.1~core4" name="jQuery-File-Upload" execmode="web">
 	<requires>
 		<require name="JQuery" type="library" version="1.6" operation="ge"/>
 		<require name="jqueryui" type="library" version="1.8" operation="ge"/>
@@ -8,6 +8,7 @@
 	<upgrades>
 		<upgrade from="6.9.1~core1" to="6.9.1~core2"/>
 		<upgrade from="6.9.1~core2" to="6.9.1~core3"/>
+		<upgrade from="6.9.1~core3" to="6.9.1~core4"/>
 	</upgrades>
 	<description>
 		File Upload widget with multiple file selection, drag and drop support, progress bars and preview images for jQuery.
@@ -18,12 +19,12 @@
 		<formelement name="multifile" class="MultiFileInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="155a4ece2d1e86362dfc6ea489ae9f8d"/>
+		<file filename="CHANGELOG" md5="15a7822d97ba1ccf7a41834a76c0325e"/>
 		<file filename="README.md" md5="cb22a03a2f5fc8aaf6dcf5a9c2180a66"/>
 		<file filename="classes/MultiFileInput.class.php" md5="37e45d6467329d1c6504c65530fb4735">
 			<class name="MultiFileInput"/>
 		</file>
-		<file filename="controllers/JQueryFileUploadController.php" md5="2b576fa9cf1be63124cff5cc3d64ee23">
+		<file filename="controllers/JQueryFileUploadController.php" md5="5ef7b3231931962d0c7ed0e2528321e1">
 			<controller name="JQueryFileUploadController"/>
 		</file>
 		<file filename="misc/cors/postmessage.html" md5="a44b950eba47719cfd9775e16ffdef70"/>

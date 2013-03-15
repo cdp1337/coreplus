@@ -112,6 +112,13 @@ class FilterForm {
 	const LINK_TYPE_STARTSWITH = '_startswith_';
 
 	/**
+	 * Use the LIKE connector to find anything that contains the value.
+	 *
+	 * format: key LIKE %value%
+	 */
+	const LINK_TYPE_CONTAINS = '_contains_';
+
+	/**
 	 * Create a new filter form object
 	 */
 	public function __construct(){
@@ -570,6 +577,9 @@ class FilterForm {
 					break;
 				case FilterForm::LINK_TYPE_STARTSWITH:
 					$factory->where($name . ' LIKE ' . $el->get('value') . '%');
+					break;
+				case FilterForm::LINK_TYPE_CONTAINS:
+					$factory->where($name . ' LIKE %' . $el->get('value') . '%');
 					break;
 			}
 		}

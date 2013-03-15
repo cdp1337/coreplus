@@ -136,6 +136,12 @@
 			return string.replace(/^[\s]*/gm, '').replace(/[\s]*$/gm, '');
 		},
 
+		rot13: function (str) {
+			return str.replace(/[a-zA-Z]/g, function(c) {
+				return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+			});
+		},
+
 		/**
 		 * Very simple templating system that takes a string and replaces %1, %2, etc with that parameter.
 		 * This system also supports an Object for the second parameter.  This will perform named replaces.

@@ -496,7 +496,7 @@ class View {
 		}
 		catch(SmartyException $e){
 			$this->error = View::ERROR_SERVERERROR;
-			error_log('[view error]');
+			error_log('[view error] (Smarty Exception)');
 			error_log('Template name: [' . $this->templatename . ']');
 			error_log($e->getMessage());
 			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
@@ -504,7 +504,15 @@ class View {
 		}
 		catch(TemplateException $e){
 			$this->error = View::ERROR_SERVERERROR;
-			error_log('[view error]');
+			error_log('[view error] (Template Exception)');
+			error_log('Template name: [' . $this->templatename . ']');
+			error_log($e->getMessage());
+			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+			die();
+		}
+		catch(Exception $e){
+			$this->error = View::ERROR_SERVERERROR;
+			error_log('[view error] (WTF Just Happened?)');
 			error_log('Template name: [' . $this->templatename . ']');
 			error_log($e->getMessage());
 			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
@@ -646,7 +654,10 @@ class View {
 					}
 					// Tack on what components are currently installed.
 					$debug .= "\n" . '<b>Available Components</b>' . "\n";
-					foreach (Core::GetComponents() as $l => $v) {
+					$debugcomponents = Core::GetComponents();
+					// Give me sorting!
+					ksort($debugcomponents);
+					foreach ($debugcomponents as $l => $v) {
 						$debug .= ($v->isEnabled() ? '[<span style="color:green;">Enabled</span>]' : '[<span style="color:red;">Disabled</span>]').
 							$v->getName() . ' ' . $v->getVersion() . "\n";
 					}

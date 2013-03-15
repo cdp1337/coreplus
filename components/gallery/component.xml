@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.1" name="Gallery" execmode="web">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.2" name="Gallery" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.2" operation="ge"/>
 	</requires>
@@ -26,17 +26,17 @@
 		<file filename="templates/pages/gallery/view-video.tpl" md5="abe65b701c1834e7f4a8d270d8cf5915"/>
 		<file filename="templates/pages/gallery/view.tpl" md5="0c9d5b8cb9104c9d8f8e885d05b5a817"/>
 		<file filename="templates/pages/galleryadmin/images.tpl" md5="3eabcaf67ce559f286c8cb1c00340072"/>
-		<file filename="templates/pages/galleryadmin/index.tpl" md5="93aca2ab7228f28683172bf10dd85bb2"/>
+		<file filename="templates/pages/galleryadmin/index.tpl" md5="65bb6129b2ee5b3fac36ee425d3a9141"/>
 		<file filename="templates/pages/galleryadmin/widgets.tpl" md5="638e42be8f47518515b13955f0e8fc44"/>
 		<file filename="templates/pages/galleryadmin/widgets_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="3bc4054d6ffe29c379e9ce303ed8a815"/>
+		<file filename="CHANGELOG" md5="724fbc7122fdea1a75bc5cdabb1e2096"/>
 		<file filename="controllers/GalleryAdminController.php" md5="e7e9e24bac09986c379ccc1115a9db5b">
 			<controller name="GalleryAdminController"/>
 		</file>
-		<file filename="controllers/GalleryController.php" md5="96cd5d88c49fbd2ef6ab78ee353af47f">
+		<file filename="controllers/GalleryController.php" md5="67a36c552601ea291ae864d41cc5682c">
 			<controller name="GalleryController"/>
 		</file>
 		<file filename="helpers/GalleryFormHandler.class.php" md5="6244b62dda32b5f6d3460d3e0b8393b7">
@@ -71,6 +71,7 @@
 				components/gallery/upgrades/140_to_141_cachedtitles.php
 			</phpfileinclude>
 		</upgrade>
+		<upgrade from="1.4.1" to="1.4.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

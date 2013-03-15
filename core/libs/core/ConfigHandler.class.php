@@ -324,6 +324,25 @@ class ConfigHandler implements ISingleton {
 	}
 
 	/**
+	 * See if a given key is overridden via non-config means, such as enterprise options or what not.
+	 *
+	 * @param $key
+	 * @return bool
+	 */
+	public static function IsOverridden($key){
+		$s = self::Singleton();
+
+		// If the override itself isn't present...
+		if(!isset($s->_overrides[$key])) return false;
+
+		// If it's the same...
+		if($s->_overrides[$key] == $s->_cacheFromDB[$key]) return false;
+
+		// otherwise
+		return true;
+	}
+
+	/**
 	 * Add a config model to the system cache.
 	 *
 	 * @param ConfigModel $config

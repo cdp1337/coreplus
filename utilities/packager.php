@@ -31,7 +31,7 @@ if(!isset($_SERVER['SHELL'])){
 // This is required to establish the root path of the system, (since it's always one directory up from "here"
 $path = realpath(
 	dirname($_SERVER['PWD'] . '/' . $_SERVER['SCRIPT_FILENAME']) . '/..'
-	) . '/';
+) . '/';
 define('ROOT_PDIR', $path);
 define('ROOT_WDIR', '/');
 
@@ -43,14 +43,34 @@ require_once(ROOT_PDIR . 'core/bootstrap.php');
  * Just a simple usage tutorial.
  */
 function print_help(){
-	echo "This utility will compile the component.xml metafile for any component," . NL;
-	echo "and optionally allow you to create a deployable package of the component.";
-	echo NL . NL;
-	echo "Usage: simply run it without any arguments and follow the prompts." . NL;
+	echo 'This utility will compile the component.xml metafile for any component,' . NL .
+		'and optionally allow you to create a deployable package of the component.' .
+		NL . NL .
+		'Wizard Usage: simply run it without any arguments and follow the prompts.' . NL .
+		'Advanced Options:' . NL .
+		'  -c, --component=NAME   Operate on a component with the given name' . NL .
+		'  --list-components      List out the available components along with  their versions and exit.' . NL .
+		'  --list-themes          List out the available themes along with  their versions and exit.' . NL .
+		'  -r, --repackage        Simply repackage a given component or theme.  Useful for updating a package while in development.' . NL .
+		'  -t, --theme=NAME       Operate on a theme with the given name' . NL
+		. NL . NL;
 }
 
 
 // Allow for inline arguments.
+$opts = [
+	// Repackage the given [whatever] at the current version and exit, no bundling.
+	'repackage'    => false,
+	// Only list the given [type] and their versions and exit, no saving or bundling.
+	'listonly'     => false,
+	// component|theme
+	'type'         => null,
+	// The name of the [type]
+	'name'         => null,
+	// Display versions along with the listing?
+	'listversions' => false,
+];
+
 if($argc > 1){
 	$arguments = $argv;
 	// Drop the first, that is the filename.
@@ -59,17 +79,49 @@ if($argc > 1){
 	// I'm using a for here instead of a foreach so I can increment $i artifically if an argument is two part,
 	// ie: --option value_for_option --option2 value_for_option2
 	for($i = 0; $i < sizeof($arguments); $i++){
-		switch($arguments[$i]){
-			case '-h':
-			case '--help':
-			case '-?':
-				print_help();
-				exit;
-				break;
-			default:
-				echo "ERROR: unknown argument [" . $arguments[$i] . "]" . NL;
-				print_help();
-				exit;
+		$arg = $arguments[$i];
+
+		if($arg == '-h' || $arg == '--help' || $arg == '-?'){
+			print_help();
+			exit;
+		}
+		elseif($arg == '-c'){
+			$opts['type'] = 'component';
+			$opts['name'] = $arguments[$i+1];
+			// And skip the name, (since that will be the next argument).
+			++$i;
+		}
+		elseif(strpos($arg, '--component=') === 0){
+			$opts['type'] = 'component';
+			$opts['name'] = substr($arg, strpos($arg, '='));
+		}
+		elseif($arg == '--list-components'){
+			$opts['type'] = 'component';
+			$opts['listonly'] = true;
+			$opts['listversions'] = true;
+		}
+		elseif($arg == '--list-themes'){
+			$opts['type'] = 'theme';
+			$opts['listonly'] = true;
+			$opts['listversions'] = true;
+		}
+		elseif($arg == '-r' || $arg == '--repackage'){
+			$opts['repackage'] = true;
+		}
+		elseif($arg == '-t'){
+			$opts['type'] = 'theme';
+			$opts['name'] = $arguments[$i+1];
+			// And skip the name, (since that will be the next argument).
+			++$i;
+		}
+		elseif(strpos($arg, '--theme=') === 0){
+			$opts['type'] = 'theme';
+			$opts['name'] = substr($arg, strpos($arg, '='));
+		}
+		else{
+			echo "ERROR: unknown argument [" . $arg . "]" . NL;
+			print_help();
+			exit;
 		}
 	}
 }
@@ -90,27 +142,27 @@ $_cversions = null;
  * @return array
  */
 function arrayUnique($array, $preserveKeys = false){
-    // Unique Array for return
-    $arrayRewrite = array();
-    // Array with the md5 hashes
-    $arrayHashes = array();
-    foreach($array as $key => $item) {
-        // Serialize the current element and create a md5 hash
-        $hash = md5(serialize($item));
-        // If the md5 didn't come up yet, add the element to
-        // to arrayRewrite, otherwise drop it
-        if (!isset($arrayHashes[$hash])) {
-            // Save the current element hash
-            $arrayHashes[$hash] = $hash;
-            // Add element to the unique Array
-            if ($preserveKeys) {
-                $arrayRewrite[$key] = $item;
-            } else {
-                $arrayRewrite[] = $item;
-            }
-        }
-    }
-    return $arrayRewrite;
+	// Unique Array for return
+	$arrayRewrite = array();
+	// Array with the md5 hashes
+	$arrayHashes = array();
+	foreach($array as $key => $item) {
+		// Serialize the current element and create a md5 hash
+		$hash = md5(serialize($item));
+		// If the md5 didn't come up yet, add the element to
+		// to arrayRewrite, otherwise drop it
+		if (!isset($arrayHashes[$hash])) {
+			// Save the current element hash
+			$arrayHashes[$hash] = $hash;
+			// Add element to the unique Array
+			if ($preserveKeys) {
+				$arrayRewrite[$key] = $item;
+			} else {
+				$arrayRewrite[] = $item;
+			}
+		}
+	}
+	return $arrayRewrite;
 }
 
 
@@ -557,7 +609,7 @@ function get_unique_licenses($licenses){
 
 
 function process_component($component, $forcerelease = false){
-	global $packagername, $packageremail;
+	global $packagername, $packageremail, $opts;
 
 	// Get that component, should be available via the component handler.
 	$cfile = ComponentFactory::ResolveNameToFile($component);
@@ -595,7 +647,14 @@ function process_component($component, $forcerelease = false){
 
 	// Get the licenses currently set.  (maybe there's one that's not in the code)
 	$licenses = array();
-	if(CLI::PromptUser('Retrieve current list of licenses and merge in from code?', 'boolean', true)){
+
+	if($opts['repackage']){
+		$scanlicenses = true;
+	}
+	else{
+		$scanlicenses = CLI::PromptUser('Retrieve current list of licenses and merge in from code?', 'boolean', true);
+	}
+	if($scanlicenses){
 		foreach($xml->getElements('//component/licenses/license') as $el){
 			$url = @$el->getAttribute('url');
 			$licenses[] = array(
@@ -608,7 +667,13 @@ function process_component($component, $forcerelease = false){
 
 	// Get the authors currently set. (maybe there's one that's not in the code)
 	$authors = array();
-	if(CLI::PromptUser('Retrieve current list of authors and merge in from code?', 'boolean', true)){
+	if($opts['repackage']){
+		$scanauthors = true;
+	}
+	else{
+		$scanauthors = CLI::PromptUser('Retrieve current list of authors and merge in from code?', 'boolean', true);
+	}
+	if($scanauthors){
 		foreach($xml->getElements('//component/authors/author') as $el){
 			$authors[] = array(
 				'name' => $el->getAttribute('name'),
@@ -742,6 +807,10 @@ function process_component($component, $forcerelease = false){
 
 
 	$ans = false;
+
+	// If repackage is requested, simply save and exit.
+	if($opts['repackage']) $ans = 'save';
+
 	while($ans != 'save'){
 		$opts = array(
 			'editvers' => 'Edit Version Number',
@@ -818,9 +887,14 @@ function process_component($component, $forcerelease = false){
 		// if force release, don't give the user an option... just do it.
 		$bundleyn = true;
 	}
+	elseif(isset($opts['repackage']) && $opts['repackage']){
+		// Repackaging doesn't bundle it.
+		$bundleyn = false;
+	}
 	else{
 		$bundleyn = CLI::PromptUser('Package saved, do you want to bundle the changes into a package?', 'boolean');
 	}
+
 	if($bundleyn){
 
 
@@ -931,7 +1005,7 @@ function process_theme($theme, $forcerelease = false){
 	// Since "Themes" are not enabled for CLI by default, I need to manually include that file.
 	require_once(ROOT_PDIR . 'components/theme/libs/Theme.class.php');
 
-	global $packagername, $packageremail;
+	global $packagername, $packageremail, $opts;
 
 	$t = new Theme($theme);
 	$t->load();
@@ -1093,6 +1167,10 @@ function process_theme($theme, $forcerelease = false){
 function get_exported_components(){
 	$c = array();
 	$dir = ROOT_PDIR . 'exports/components';
+	if(!is_dir($dir)){
+		// Doesn't exist?  Don't even try opening it.
+		return $c;
+	}
 	$dh = opendir($dir);
 	if(!$dh){
 		// Easy enough, just return a blank array!
@@ -1158,6 +1236,10 @@ function get_exported_components(){
 function get_exported_core(){
 	$c = array();
 	$dir = ROOT_PDIR . 'exports/core';
+	if(!is_dir($dir)){
+		// Doesn't exist?  Don't even try opening it.
+		return $c;
+	}
 	$dh = opendir($dir);
 	if(!$dh){
 		// Easy enough, just return a blank array!
@@ -1262,7 +1344,7 @@ function manage_changelog($file, $name, $version){
 
 		// Does this line look like the beginning of another header?...
 		if($inchange && stripos($line, $headerprefix) === 0){
-		//if($inchange && preg_match('/^' . $headerprefix . ' .+$/i', $line)){
+			//if($inchange && preg_match('/^' . $headerprefix . ' .+$/i', $line)){
 			$inchange = false;
 		}
 
@@ -1442,16 +1524,21 @@ if(!$packageremail){
 CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 
 
-$ans = CLI::PromptUser(
-	"What operation do you want to do?",
-	array(
-		'component' => 'Manage a Component',
-		'theme' => 'Manage a Theme',
-	//	'bundle' => 'Installation Bundle',
-		'exit' => 'Exit the script',
-	),
-	'component'
-);
+if($opts['type']){
+	$ans = $opts['type'];
+}
+else{
+	$ans = CLI::PromptUser(
+		"What operation do you want to do?",
+		array(
+			'component' => 'Manage a Component',
+			'theme' => 'Manage a Theme',
+			//	'bundle' => 'Installation Bundle',
+			'exit' => 'Exit the script',
+		),
+		'component'
+	);
+}
 
 switch($ans){
 	case 'component':
@@ -1461,7 +1548,14 @@ switch($ans){
 		$files = array();
 		$longestname = 4;
 		// Tack on the core component.
-		$files[] = 'core';
+		$core = Core::GetComponent('core');
+		$files['core'] = [
+			'title' => 'core' . ($opts['listversions'] ? (' ' . $core->getVersion()) : '' ),
+			'name' => 'core',
+			'version' => $core->getVersion(),
+			'component' => $core,
+			'dir' => ROOT_PDIR . 'core/',
+		];
 		$dir = ROOT_PDIR . 'components';
 		$dh = opendir($dir);
 		while(($file = readdir($dh)) !== false){
@@ -1469,37 +1563,67 @@ switch($ans){
 			if(!is_dir($dir . '/' . $file)) continue;
 			if(!is_readable($dir . '/' . $file . '/' . 'component.xml')) continue;
 
-			$longestname = max($longestname, strlen($file));
-			$files[] = $file;
+			$c = Core::GetComponent($file);
+
+			// Is this not valid?
+			if(!$c){
+				echo 'Skipping invalid component ' . $file . NL;
+				continue;
+			}
+
+			// What's this file's version?
+			$xml = new XMLLoader();
+			$xml->setRootName('component');
+			if(!$xml->loadFromFile($dir .  '/' . $file . '/component.xml')){
+				echo 'Skipping component ' . $file . ', unable to load XML file' . NL;
+				continue;
+			}
+
+			// Get the current version, this will be used to autocomplete for the next version.
+			//$version = $xml->getRootDOM()->getAttribute("version");
+			$version = $c->getVersion();
+
+			// If display versions is requested, tack on the version number too!
+			if($opts['listversions']){
+				$title = $file . ' ' . $version;
+			}
+			else{
+				$title = $file;
+			}
+
+			$longestname = max($longestname, strlen($title));
+			$files[$file] = [
+				'title' => $title,
+				'name' => $file,
+				'version' => $version,
+				'component' => $c,
+				'dir' => ROOT_PDIR . $file . '/',
+			];
 		}
 		closedir($dh);
 		// They should be in alphabetical order...
-		sort($files);
+		ksort($files);
 
 
 		// Before prompting the user which one to choose, tack on the exported versions.
 		$versionedfiles = array();
 		foreach($files as $k => $f){
-			$dir = ROOT_PDIR . (($f == 'core') ? 'core/' : 'components/' . $f . '/');
 
-			$c = Core::GetComponent($f);
-
-			// What's this file's version?
-			$xml = new XMLLoader();
-			$xml->setRootName('component');
-			if(!$xml->loadFromFile($dir . 'component.xml')){
-				throw new Exception('Unable to load XML file ' . $cfile);
-			}
-
-			// Get the current version, this will be used to autocomplete for the next version.
-			$version = $xml->getRootDOM()->getAttribute("version");
-
-			$line = str_pad($f, $longestname+1, ' ', STR_PAD_RIGHT);
+			$line = str_pad($f['title'], $longestname+1, ' ', STR_PAD_RIGHT);
+			$c = $f['component'];
 			$lineflags = array();
 
 			// Now give me the exported version.
-			$lookup = get_exported_component($f);
-			if($lookup['version'] != $version) $lineflags[] = '** needs exported **';
+			$lookup = get_exported_component($f['name']);
+
+			if(!isset($lookup['version'])){
+				// Is it even set?
+				$lineflags[] = '** needs exported **';
+			}
+			elseif($lookup['version'] != $f['version']){
+				// yeah, it's set... but it's not the right version.
+				$lineflags[] = '** needs exported **';
+			}
 
 			// Change the changes
 			if(
@@ -1514,8 +1638,19 @@ switch($ans){
 			$versionedfiles[$k] = $line . ' ' . implode(' ', $lineflags);
 		}
 
-		$ans = CLI::PromptUser("Which component do you want to package/manage?", $versionedfiles);
-		process_component($files[$ans]);
+		if($opts['listonly']){
+			echo implode(NL, $versionedfiles) . NL;
+			exit;
+		}
+
+		if($opts['name']){
+			process_component($opts['name']);
+		}
+		else{
+			$ans = CLI::PromptUser("Which component do you want to package/manage?", $versionedfiles);
+			process_component($files[$ans]['name']);
+		}
+
 		break; // case 'component'
 	case 'theme':
 		// Open the "themes" directory and look for anything with a valid theme.xml file.
@@ -1532,8 +1667,20 @@ switch($ans){
 		closedir($dh);
 		// They should be in alphabetical order...
 		sort($files);
-		$ans = CLI::PromptUser("Which theme do you want to package/manage?", $files);
-		process_theme($files[$ans]);
+
+		if($opts['listonly']){
+			echo implode(NL, $files) . NL;
+			exit;
+		}
+
+		if($opts['name']){
+			process_theme($opts['name']);
+		}
+		else{
+			$ans = CLI::PromptUser("Which theme do you want to package/manage?", $files);
+			process_theme($files[$ans]);
+		}
+
 		break; // case 'component'
 	case 'exit':
 		echo 'Bye bye' . NL;

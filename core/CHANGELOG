@@ -1,3 +1,28 @@
+Core Plus 2.4.7b9
+
+	* Added some logic to gracefully handle if the export directories do not exist.
+	* Added a Core.Strings.rot13 javascript function.
+	* Added a DateTimeInput.
+	* Added support for components with a space in their filename.
+	* Modified the user config weight a little.  Now automatic weights are all +1000, so they
+	  will float to the bottom of user-defined sorting.
+	* New method, ConfigHandler::IsOverridden.  Useful in enterprise mode.
+	* Heavier use of Model::translateKey throughout the system.  Helps to centralize the logic.
+	* General exceptions are now caught in the view.
+	* Component debug listing is now sorted alphabetically.
+	* NULL is now handled more gracefully in the Model.
+	* Set the install redirect to be a 302.  Should help prevent FF from redirecting endlessly
+	  on new installs.
+
+Core Plus 2.4.7b8
+
+	* Bad components don't get disabled immediately, makes development easier.
+	* Added a new filter type, "CONTAINS".  This is useful for filter examples such as "Email
+      contains @gmail".
+	* Packager now supports some CLI arguments for various common tasks.  Repackage component,
+      repackage theme, list components and list themes.
+	--Charlie Powell <charlie@eval.bz>  Wed, 27 Feb 2013 18:50:35 -0500
+
 Core Plus 2.4.7b7
 
 	* Changed the behaviour of filters.  They now accept "0" as a valid value and will display

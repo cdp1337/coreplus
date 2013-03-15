@@ -1,3 +1,10 @@
+jQuery-File-Upload 6.9.1~core4
+
+	* Fix in IE for uploading files.  That browser did not support json data returned, so it was
+	  instead trying to download the recently uploaded file.  (Yeah, bizarre...)
+
+	--Charlie Powell <charlie@eval.bz>  Thu, 07 Mar 2013 23:09:18 -0500
+
 jQuery-File-Upload 6.9.1~core3
 
 	* Switched default upload method from POST to stream.  This allows for much larger files to
