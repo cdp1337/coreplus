@@ -35,8 +35,8 @@ abstract class JQuery {
 	
 	public static function IncludeJQueryUI(){
 		self::IncludeJQuery();
-		CurrentPage::AddScript ('js/jquery/jquery-ui-1.8.22.min.js');
-		CurrentPage::AddStylesheet('css/jquery-ui-1.8.22.css');
+		CurrentPage::AddScript ('js/jquery/jquery-ui-1.10.2.min.js');
+		CurrentPage::AddStylesheet('css/jquery-ui-1.10.2.css');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
