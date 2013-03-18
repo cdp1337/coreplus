@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8.3~core3" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8.3~core4" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="1.9.0" operation="ge"/>
 	</requires>
@@ -27,19 +27,20 @@
 		<scriptlibrary name="jquery.waypoints" call="JQuery::Include_waypoints"/>
 	</provides>
 	<assets>
+		<file filename="assets/css/images/animated-overlay.gif" md5="2b912f7c0653008ca28ebacda49025e7"/>
 		<file filename="assets/css/images/ui-bg_diagonals-thick_18_b81900_40x40.png" md5="95f9cceeb9d742dd3e917ec16ed754f8"/>
 		<file filename="assets/css/images/ui-bg_diagonals-thick_20_666666_40x40.png" md5="f040b255ca13e693da34ab33c7d6b554"/>
-		<file filename="assets/css/images/ui-bg_flat_0_aaaaaa_40x100.png" md5="2a44fbdb7360c60122bcf6dcef0387d8"/>
+		<file filename="assets/css/images/ui-bg_flat_0_aaaaaa_40x100.png" md5="7bc09caf32229cf53331f1e5c391a98a"/>
 		<file filename="assets/css/images/ui-bg_flat_10_000000_40x100.png" md5="c18cd01623c7fed23c80d53e2f5e7c78"/>
-		<file filename="assets/css/images/ui-bg_flat_75_ffffff_40x100.png" md5="8692e6efddf882acbff144c38ea7dfdf"/>
+		<file filename="assets/css/images/ui-bg_flat_75_ffffff_40x100.png" md5="ffe59d000eab8004200b6e502e387a19"/>
 		<file filename="assets/css/images/ui-bg_glass_100_f6f6f6_1x400.png" md5="4560b9efbc889572de9d97c9ffa04106"/>
 		<file filename="assets/css/images/ui-bg_glass_100_fdf5ce_1x400.png" md5="d26e8f463195a7b86f86b7d550cfc114"/>
-		<file filename="assets/css/images/ui-bg_glass_55_fbf9ee_1x400.png" md5="f8f4558e0b92ff2cd6136781533902ec"/>
+		<file filename="assets/css/images/ui-bg_glass_55_fbf9ee_1x400.png" md5="6bf17d796c787598bdef0c8db15d212b"/>
 		<file filename="assets/css/images/ui-bg_glass_55_fcf0ba_1x400.png" md5="e8fa5df505b503a945e543c5816179ca"/>
-		<file filename="assets/css/images/ui-bg_glass_65_ffffff_1x400.png" md5="e5a8f32e28fd5c27bf0fed33c8a8b9b5"/>
-		<file filename="assets/css/images/ui-bg_glass_75_dadada_1x400.png" md5="c12c6510dad3ebfa64c8a30e959a2469"/>
-		<file filename="assets/css/images/ui-bg_glass_75_e6e6e6_1x400.png" md5="f4254356c2a8c9a383205ef2c4de22c4"/>
-		<file filename="assets/css/images/ui-bg_glass_95_fef1ec_1x400.png" md5="5a3be2d8fff8324d59aec3df7b0a0c83"/>
+		<file filename="assets/css/images/ui-bg_glass_65_ffffff_1x400.png" md5="dde3ae732b4f2b381030171dc2726346"/>
+		<file filename="assets/css/images/ui-bg_glass_75_dadada_1x400.png" md5="6c29316599205f0ee5ec8bb84fbededc"/>
+		<file filename="assets/css/images/ui-bg_glass_75_e6e6e6_1x400.png" md5="1003f239f66bb8560266d2f256470442"/>
+		<file filename="assets/css/images/ui-bg_glass_95_fef1ec_1x400.png" md5="f402870c759c2b5b54f76b550a5868bb"/>
 		<file filename="assets/css/images/ui-bg_gloss-wave_100_ece8da_500x100.png" md5="dccd449740f6fd2a875fc72ef3586b53"/>
 		<file filename="assets/css/images/ui-bg_gloss-wave_35_f6a828_500x100.png" md5="58d2cd501e01573cf537089c694ba899"/>
 		<file filename="assets/css/images/ui-bg_highlight-hard_100_f5f3e5_1x100.png" md5="c3341f3735d126758336bda6f1b21ec4"/>
@@ -47,24 +48,26 @@
 		<file filename="assets/css/images/ui-bg_highlight-hard_15_459e00_1x100.png" md5="f5613fb05e1c5ae3bd9167d85d1d72a7"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_100_eeeeee_1x100.png" md5="384c3f17709ba0f809b023b6e7b10b84"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_25_67b021_1x100.png" md5="bdfc7094828e60a1e89799619382589a"/>
-		<file filename="assets/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png" md5="72c593d16e998952cd8d798fee33c6f3"/>
+		<file filename="assets/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png" md5="e238bad5bf8a1e545a0413cc9abf19ab"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_75_ffe45c_1x100.png" md5="b806658954cb4d16ade8977af737f486"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_95_ffedad_1x100.png" md5="7103bea11984ecc1ebce02dcc10cdc75"/>
 		<file filename="assets/css/images/ui-bg_inset-soft_95_cccccc_1x100.png" md5="df2dbcfe9af96aacfe13e53b108aaf5b"/>
 		<file filename="assets/css/images/ui-bg_spotlight_80_6f6b5d_600x600.png" md5="70e145838be2f61b981cd2ecfb1cd6ab"/>
-		<file filename="assets/css/images/ui-icons_222222_256x240.png" md5="ebe6b6902a408fbf9cac6379a1477525"/>
+		<file filename="assets/css/images/ui-icons_222222_256x240.png" md5="31f367247b9ee294c07cad98c6187d98"/>
 		<file filename="assets/css/images/ui-icons_228ef1_256x240.png" md5="79f41c0765e9ec18562b20b0801d748b"/>
-		<file filename="assets/css/images/ui-icons_2e83ff_256x240.png" md5="2b99a5e48d3c3957d03027d36a25e8bb"/>
-		<file filename="assets/css/images/ui-icons_454545_256x240.png" md5="119dd0c2e94ad689de873ef39fd43e6e"/>
+		<file filename="assets/css/images/ui-icons_2e83ff_256x240.png" md5="3136ba0cf2d2272ce8e35ce397449847"/>
+		<file filename="assets/css/images/ui-icons_454545_256x240.png" md5="4a819c8ebe538398810ca137b8bdf581"/>
 		<file filename="assets/css/images/ui-icons_808080_256x240.png" md5="285708190686f9ee7a48a988a0eed090"/>
 		<file filename="assets/css/images/ui-icons_847e71_256x240.png" md5="6636d8ab6693c387d7c2770dbe8c178e"/>
-		<file filename="assets/css/images/ui-icons_888888_256x240.png" md5="9c46d7cab43e22a14bad26d2d4806d80"/>
+		<file filename="assets/css/images/ui-icons_888888_256x240.png" md5="cd6ca9aad7a58678ef01a21d90453f6c"/>
 		<file filename="assets/css/images/ui-icons_8dc262_256x240.png" md5="4128e64e48bfc9c6e5ab45f29bb32da7"/>
-		<file filename="assets/css/images/ui-icons_cd0a0a_256x240.png" md5="3e450c2a2c66328d9498e7001ad7197c"/>
+		<file filename="assets/css/images/ui-icons_cd0a0a_256x240.png" md5="6e1c749fccb14329f38cf701b460872d"/>
 		<file filename="assets/css/images/ui-icons_eeeeee_256x240.png" md5="2e6d7e1cca1cd751a6e156feb381eb0f"/>
 		<file filename="assets/css/images/ui-icons_ef8c08_256x240.png" md5="ef9a6ccfe3b14041928ddc708665b226"/>
 		<file filename="assets/css/images/ui-icons_ffd27a_256x240.png" md5="ab8c30acc0e3608fb79e01fccf832c70"/>
 		<file filename="assets/css/images/ui-icons_ffffff_256x240.png" md5="342bc03f6264c75d3f1d7f99e34295b9"/>
+		<file filename="assets/css/jquery-ui-1.10.2.custom.css" md5="8c39d8786f4bfbb415f8f724939cdc5f"/>
+		<file filename="assets/css/jquery-ui-1.10.2.custom.min.css" md5="58d6ec84fa8f0eab6c5b5f48d1ae53a6"/>
 		<file filename="assets/css/jquery-ui-1.8.22.css" md5="37aee7c9e30bde3f8d1adc765619b767"/>
 		<file filename="assets/css/jquery-ui-1.9.0.css" md5="7b1117ce0cdc6d0614c1f7b106d69bd6"/>
 		<file filename="assets/css/jquery-ui.css" md5="9814a94835a5507fbc5d2903f9e41c16"/>
@@ -86,6 +89,8 @@
 		<file filename="assets/js/jquery/jquery-1.8.2.min.js" md5="cfa9051cc0b05eb519f1e16b2a6645d7"/>
 		<file filename="assets/js/jquery/jquery-1.8.3.js" md5="b25b0460d7ddea993dad32005f56d255"/>
 		<file filename="assets/js/jquery/jquery-1.8.3.min.js" md5="e1288116312e4728f98923c79b034b67"/>
+		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.js" md5="c913b6b5925699cd1bf4d6aa41082f70"/>
+		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.min.js" md5="a34697840e5bb92b47a5b28034f19b0f"/>
 		<file filename="assets/js/jquery/jquery-ui-1.8.11.min.js" md5="bc1367d7c32e3b4fd746027d8188cc36"/>
 		<file filename="assets/js/jquery/jquery-ui-1.8.16.min.js" md5="65c7c707dddea0c7861714df250d54c4"/>
 		<file filename="assets/js/jquery/jquery-ui-1.8.20.min.js" md5="925ce969efd834fd7be9e35d0007904c"/>
@@ -111,9 +116,9 @@
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="fb2c462a6049dbea7ac128f7ab2fdd7a"/>
+		<file filename="CHANGELOG" md5="35ac95c52f9b6d2b7dd52740c8b0e747"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="dd6a768ad47b05990fde77a3da38a728">
+		<file filename="JQuery.lib.php" md5="b8ad0c85e971469041aa71f9c4b790c2">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
@@ -138,6 +143,7 @@
 		<upgrade from="1.8.2~core1" to="1.8.3~core1"/>
 		<upgrade from="1.8.3~core1" to="1.8.3~core2"/>
 		<upgrade from="1.8.3~core2" to="1.8.3~core3"/>
+		<upgrade from="1.8.3~core3" to="1.8.3~core4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
