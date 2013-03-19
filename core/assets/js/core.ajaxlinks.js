@@ -1,8 +1,8 @@
 
-$('.ajax-link').click(function(){
+$('body').on('click', '.ajax-link', function(){
 	var $link = $(this),
 		title = $link.attr('title') ? $link.attr('title') : 'Page';
-		$window = $('<div>Loading ' + title + '...</div>'),
+	$window = $('<div>Loading ' + title + '...</div>'),
 		$body = $('body');
 
 	$body.append($window);
