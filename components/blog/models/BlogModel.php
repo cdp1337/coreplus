@@ -5,8 +5,8 @@ class BlogModel extends Model {
 		'id'                         => array(
 			'type' => Model::ATT_TYPE_ID,
 		),
-		'site' => array(
-			'type' => Model::ATT_TYPE_SITE,
+		'site'                       => array(
+			'type'     => Model::ATT_TYPE_SITE,
 			'formtype' => 'system',
 		),
 		'manage_articles_permission' => array(

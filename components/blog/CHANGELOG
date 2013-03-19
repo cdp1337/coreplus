@@ -1,3 +1,7 @@
+Blog 1.4.2
+
+	* Updated the dependencies to be more accurate. (Needed to require jQuery for the new frontend pagination).
+
 Blog 1.4.1
 
 	* Additional control links throughout the blog system.

@@ -3,8 +3,9 @@
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.1" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.3" operation="ge"/>
-		<require name="user" type="component"/>
+		<require name="user" type="component" version="2.4.1"/>
 		<require name="tags" type="component"/>
+		<require name="JQuery-Full" type="component" version="1.8.3~core3"/>
 	</requires>
 	<permissions>
 		<permission key="blog_manage" description="Manage Blogs"/>

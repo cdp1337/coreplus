@@ -61,7 +61,9 @@ class BlogArticleModel extends Model {
 			'options' => array('published', 'draft'),
 			'default' => 'draft',
 			'form' => array(
-				'description' => 'Set this to "draft" to make it visible to editors and admins only.  Useful for working on an article across multiple sessions while keeping not-ready content hidden from public users.'
+				'description' => 'Set this to "draft" to make it visible to editors and admins
+					only.  Useful for working on an article across multiple sessions while 
+					keeping not-ready content hidden from public users.'
 			)
 		),
 		'fb_account_id' => array(
@@ -117,7 +119,8 @@ class BlogArticleModel extends Model {
 				//return '/blog/view/' . $this->_data['blogid'] . '/' . $this->_data['id'];
 				return '/blog/article/view/' . $this->_data['id'];
 			case 'rewriteurl':
-				//return $this->getLink('Blog')->get('rewriteurl') . '/' . $this->_data['id'] . '-' . \Core\str_to_url($this->_data['title']);
+				//return $this->getLink('Blog')->get('rewriteurl') . '/' . $this->_data['id'] .
+				//  '-' . \Core\str_to_url($this->_data['title']);
 				return $this->getLink('Page')->get('rewriteurl');
 			default:
 				return parent::get($k);
@@ -125,21 +128,21 @@ class BlogArticleModel extends Model {
 	}
 
 	public function set($k, $v){
-		if($k == 'status'){
+		if($k == 'status') {
 			// Update the published date if it's status has changed.
 			if($v == $this->get($k)) return false;
 
-			if($v == 'published'){
+			if($v == 'published') {
 				$this->set('published', Time::GetCurrentGMT());
 			}
-			else{
+			else {
 				$this->set('published', '');
 			}
 
 			// And resume!
 			return parent::set($k, $v);
 		}
-		else{
+		else {
 			return parent::set($k, $v);
 		}
 	}
@@ -169,7 +172,7 @@ class BlogArticleModel extends Model {
 	 * @return File_local_backend|null
 	 */
 	public function getImage(){
-		if($this->get('image')){
+		if($this->get('image')) {
 			$f = new File_local_backend('public/blog/' . $this->get('image'));
 			return $f;
 		}
