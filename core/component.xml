@@ -5,7 +5,7 @@
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
 		<provide type="library" name="smarty" version="3.1.8"/>
-		<provide type="library" name="phpMailer" version="5.2.0"/>
+		<provide type="library" name="phpMailer" version="5.2.4"/>
 		<scriptlibrary name="Core.Strings" call="Core::_AttachCoreStrings"/>
 		<scriptlibrary name="Core.AjaxLinks" call="Core::_AttachAjaxLinks"/>
 	</provides>
@@ -43,8 +43,8 @@
 		<file filename="LICENSES/mit.txt" md5="fcf1f2648ec1882fe0194fb287928fbe"/>
 		<file filename="README.md" md5="bfc0a037340a15bbaaaf469109568b7a"/>
 		<file filename="config/configuration.xml.example" md5="d1d2c0b2ffb9ead043dc4b6b2335f19a"/>
-		<file filename="core/CHANGELOG" md5="e17e7ce8db6b5646d4e3eb185a6059a9"/>
-		<file filename="core/bootstrap.compiled.php" md5="103dd1ba96003173aa8379c6a9c7bee5">
+		<file filename="core/CHANGELOG" md5="8b9c06dfc7042aefc6aa0b5684e2b416"/>
+		<file filename="core/bootstrap.compiled.php" md5="a819d6d898f11a9fa2e855690ec018a6">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
@@ -205,7 +205,7 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="080383e4dade461c3c7ac1d9e504ed28">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="f7e541902f5ef65519b5a6df3b22f251"/>
+		<file filename="core/functions/Core.functions.php" md5="e4d9cfc8439e9b3caec1ede586f56ab5"/>
 		<file filename="core/functions/Core.functions.php~" md5="ab0fba9df914a8e9416a84f2e911f5e7"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="da6e337a8305534398cad21c53dcae54">
 			<class name="RewriteMapHelper"/>
@@ -507,7 +507,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="3ed20060bf913a665b463d1f4bbac0c0">
+		<file filename="core/libs/core/Component_2_1.php" md5="624d1016571b6bf17ac28e8fe9e8b71a">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/Component_2_1.php~" md5="2d0415ad7d971656437322c0a324ce07"/>
@@ -568,7 +568,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="2224637db3437f20b6c3f179af96e3a8">
+		<file filename="core/libs/core/Model.class.php" md5="a3c0c1cad392f7f2d1cdfee7a1202db8">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -640,7 +640,7 @@
 		<file filename="core/libs/core/XMLLoader.class.php" md5="ebc7d04b3765ee975d40bff9eee7317d">
 			<class name="XMLLoader"/>
 		</file>
-		<file filename="core/libs/datamodel/DMI.class.php" md5="a44f9e1d47c34bebc6dde258b6df1f20">
+		<file filename="core/libs/datamodel/DMI.class.php" md5="5adcb1d7d17da9522b8850a6e58a344b">
 			<class name="DMI"/>
 			<class name="DMI_Exception"/>
 			<class name="DMI_Authentication_Exception"/>
@@ -662,7 +662,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="e02b68f59cf50bf21f1bb533a2e59ea1">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="f07b638356245c8de50e83fe13e36e64">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="3c75025d8acf4c96e43eb5b048c6a369">
 			<class name="DMI_mysqli_backend"/>
 			<class name="MySQLi_Schema"/>
 			<class name="MySQLi_Schema_Column"/>
@@ -893,17 +893,16 @@
 			<class name="PasswordHash"/>
 		</file>
 		<file filename="core/libs/phpmailer/LICENSE" md5="278f2557e3b277b94e9a8430f6a6d0a9"/>
-		<file filename="core/libs/phpmailer/README" md5="826c2fed77985c4576313e42f9fb6d02"/>
-		<file filename="core/libs/phpmailer/aboutus.html" md5="6b81ca2a68934b93499e4f6227061e31"/>
-		<file filename="core/libs/phpmailer/changelog.txt" md5="14d1b94fa3d8fdc704ac0040cad336b1"/>
-		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="4d4c02e6d43f392c9c0a8063ab06c431">
+		<file filename="core/libs/phpmailer/README" md5="3848f3fba320c30e5d3abfb1f39cc1ae"/>
+		<file filename="core/libs/phpmailer/changelog.txt" md5="9fb661bb50b89fbb554e3e391c866762"/>
+		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="5c293086cfc0b6bb5852ac8aad5840d4">
 			<class name="PHPMailer"/>
 			<class name="phpmailerException"/>
 		</file>
-		<file filename="core/libs/phpmailer/class.pop3.php" md5="59e034c4716079a89c623dec90db36d9">
+		<file filename="core/libs/phpmailer/class.pop3.php" md5="205fea92c7ce631126df0ed6ba79dfa5">
 			<class name="POP3"/>
 		</file>
-		<file filename="core/libs/phpmailer/class.smtp.php" md5="20a0a777bc59b119f2322310896af1ce">
+		<file filename="core/libs/phpmailer/class.smtp.php" md5="817712d3132067a4105222e1938e4534">
 			<class name="SMTP"/>
 		</file>
 		<file filename="core/libs/phpmailer/docs.ini" md5="ef2330090d65f531fda92de41e1a5c3a"/>
@@ -911,53 +910,156 @@
 		<file filename="core/libs/phpmailer/docs/DomainKeys_notes.txt" md5="f27cecd9b7ec1547ea24f05b4675dd81"/>
 		<file filename="core/libs/phpmailer/docs/Note_for_SMTP_debugging.txt" md5="ac6288b69704cbb5e1eb392d5813f8a5"/>
 		<file filename="core/libs/phpmailer/docs/extending.html" md5="a86f35cb488235a9ddc59bbfbc3767ac"/>
-		<file filename="core/libs/phpmailer/docs/faq.html" md5="344e423539f660d134d8be8803291676"/>
+		<file filename="core/libs/phpmailer/docs/faq.html" md5="e3197d819848ed8078ebddacc1475fa1"/>
+		<file filename="core/libs/phpmailer/docs/makedocs2.sh" md5="45954ab89f17386977da55818795ea6c"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/classes.svg" md5="5bbc49ec1c65285ce6f91633e5ad7a85"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/classes/PHPMailer.html" md5="d819eda932abe3755521be375470c2e3"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/classes/POP3.html" md5="bd3205c8de5016183f0d5d3ca8912d08"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/classes/SMTP.html" md5="393d38ae9fcc24b1eb2497aa2372460e"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/classes/phpmailerException.html" md5="705994f92ca38695ac581eca2d8817b9"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/css/bootstrap-responsive.css" md5="86da6665814cd8f49aef1cd9ba702bdb"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/css/bootstrap-responsive.min.css" md5="2f5c1d88d5f3de9552e97dae2ecf0417"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/css/bootstrap.css" md5="7232d71ee04fa4de881850b2bb446943"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/css/bootstrap.min.css" md5="18fff18bb1a7f44ed961b4e8ebbe3ef5"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/css/jquery.iviewer.css" md5="5b5213559155616f0f24019fafb1b3f3"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/css/prettify.css" md5="ecd4a5d6c0cbee10b168f6aa000c64ea"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/css/template.css" md5="a06679601e55ccb083bc3eafae94c55d"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/deprecated.html" md5="999a870964314924d2d9a04a08e288fa"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/errors.html" md5="e66957960c05a042f03e714195471db8"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/graph_class.html" md5="d7469cf308b242a72aad4dc043b676f5"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/apple-touch-icon-114x114.png" md5="a88f04df36a78d3a481211ce21ce0e60"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/apple-touch-icon-72x72.png" md5="5a7e1222cab85b4cec71aed67ff637ac"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/apple-touch-icon.png" md5="7bad7e9b405020e6e59caba1f6009ae0"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/favicon.ico" md5="34f05791b5842ab0596600bff367b05d"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/glyphicons-halflings-white.png" md5="11118ae8db796d41dd11482067c89d01"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/glyphicons-halflings.png" md5="531d4b607365ac65b09a181216f0664d"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/arrow_down.png" md5="48cdd977bf6be0709c126da1d45187a3"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/arrow_right.png" md5="abc61b491d4c10a488176c75ec1020dd"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/class.png" md5="91919f7d9bf2c7b5668d82ee76acc1c1"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/constant.png" md5="86c2c325a9a2cd48fc655ccb7e76086a"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/favicon.ico" md5="cb57885028c97c4af37173bd1e3ed697"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/file-php.png" md5="0419497c6443399686e48f8f10bd5ebe"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/file.gif" md5="9ab0e28d85d8ab5eb954fc28f6ac1e80"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/folder.gif" md5="9f41e1454905fd7416f89aa4380a65e1"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/function.png" md5="8e3430636a328d2a1492c3614c84f008"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/icon-folder-open-big.png" md5="e7dfa9d11a6487df96207f5bd2982407"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/icon-th-big.png" md5="af9e1b8a10a3bf6158da886e53f6b12d"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/icon_template.svg" md5="3e4e5471fa44c20ec9f4613b29460a8d"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/interface.png" md5="c43170cf486db886135789a142e0649e"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/method.png" md5="7bc7f7503a11d7e3875e931a68d37158"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/ok.png" md5="dd1e7522ba83cf4d652569faef9203ee"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/property.png" md5="a32de4b1e5df1aad2425687c641b0d4a"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/search.gif" md5="bc255b0f56741b4ac563d9e596e5e7b9"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/variable.png" md5="7dc876213eef62a1a00c590892eaa531"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/view_source.png" md5="c65fadae5a0fc27f401f1a00e66f518f"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/visibility_private.png" md5="e80534513dc70986a89fbbd0ebd5e8b0"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/visibility_protected.png" md5="16dc6946e605881f286b6b08d03c0a95"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/icons/visibility_public.png" md5="0f7f2d3172ef5f59c5929e1af917050e"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/iviewer/grab.cur" md5="006279d108b71864c0b5793dc1f0dd96"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/iviewer/hand.cur" md5="2e6b72311fd0d527dce4b5e26b25c1e6"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/iviewer/iviewer.rotate_left.png" md5="76f2b0ced5a3a64aae4179d13874787b"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/iviewer/iviewer.rotate_right.png" md5="3acdbd5dece2e19ed13a693ad3c92098"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/iviewer/iviewer.zoom_fit.png" md5="2a6f0d6f6619f7f68d0be0b8f4976355"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/iviewer/iviewer.zoom_fit2.gif" md5="336479f36dac6dbce873351d7bb389da"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/iviewer/iviewer.zoom_in.png" md5="37c857d20554941ac14fbe9a9d25715e"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/iviewer/iviewer.zoom_in2.gif" md5="f6965e8fbcbd0890ab6658be618d0887"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/iviewer/iviewer.zoom_out.png" md5="5aa2c0b6f696389c6f25123396bf1c42"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/iviewer/iviewer.zoom_out2.gif" md5="0bcafa55f7e28ea3d89766dc301d8e72"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/iviewer/iviewer.zoom_zero.png" md5="184693b7dc7cd7d201188458ec209b61"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/iviewer/iviewer.zoom_zero2.gif" md5="3ae6c9e28752edc0a29fd20314ebc735"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/img/loader.gif" md5="74a0de894cb0b91d2428f1bc2f98e73b"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/index.html" md5="698f19490514b29c1b60c20ac2ca7b71"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/SVGPan.js" md5="130ebea375319e14ae4bc6b5ed1667f1"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/bootstrap.js" md5="7affe4da9adefaecc32e6323d74d8562"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/bootstrap.min.js" md5="65aa619d80ebcdd8435134a3fdf80b8b"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/jquery-1.4.2.min.js" md5="10092eee563dec2dca82b77d2cf5a1ae"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/jquery-1.7.1.min.js" md5="58a9f922eb0ed74b3e88fc77a676f8c1"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/jquery-ui-1.8.2.custom.min.js" md5="b8ba22c2d061ccb1230276b05f83f07e"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/jquery.cookie.js" md5="ed41694d2e96025cf8ee8942addd400b"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/jquery.iviewer.js" md5="bf0534d3b04f4505331e78db06bf9a6b"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/jquery.iviewer.min.js" md5="84a024e615ec6c9a66c8c6d323dcfa44"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/jquery.mousewheel.min.js" md5="fde6509fae2cafdb6d97e4a9a60cce66"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/jquery.panzoom.js" md5="29e87cd954717c3b17c09128d7ecc230"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/jquery.splitter.js" md5="05d7dd4db2f6cac2a0f750b7e42eb618"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/jquery.tools.min.js" md5="228a24590ee3139cf3b6476378c6ad8d"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/jquery.treeview.js" md5="b8bebcbdde81a3a8509cc39c26f74e7b"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/menu.js" md5="88f7898f0eee1d17471a61e1ef4c5c85"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-apollo.js" md5="b2c7374428473edcfd949a6fd3bbe7d1"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-clj.js" md5="4570c075cc21c2cc97676fd1cecf76b8"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-css.js" md5="914365fa44cd3c094afc7c0de229e29e"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-go.js" md5="45e6b8ed96a6402e6895ba3faac45cdd"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-hs.js" md5="9a14e838945e476bc3c521c94d93d8a0"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-lisp.js" md5="36135ae6f7a0aca0eab647ef2d8e1df0"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-lua.js" md5="1847644558d1150884bf2466760bfe5f"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-ml.js" md5="f496446547053e2f83301691061cb341"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-n.js" md5="9e09c76bc604eae10fc43ae690e974d4"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-proto.js" md5="873efd03c9897ad38d134f95c6eaaabd"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-scala.js" md5="5abc88be48db6dcf53507717394b6884"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-sql.js" md5="a0e5e380bc97357c6fa53200681891b7"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-tex.js" md5="cc32652924e7e4988d3f222578a1e301"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-vb.js" md5="d6f6848c2d54a0a64e62778fedc24270"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-vhdl.js" md5="78a2010abdad48e8861ec1768eae311a"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-wiki.js" md5="6e4eca4a92142fbdf4242851cec7b472"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-xq.js" md5="ebc66642254c40bdd21f56c80e477918"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/lang-yaml.js" md5="e0367f932b3ea37ef511ecb4d1d236e1"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/prettify/prettify.min.js" md5="709bfcc456c694bfe8ee86d184a1c360"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/sidebar.js" md5="7b49d6dc029387f2c55708c05273edf0"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/js/template.js" md5="9b7a835c502c478b1c0eccc3a6b4b5a3"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/markers.html" md5="0a8cf2234766326aedb4d6534ad74650"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/namespaces/global.html" md5="12a7f1328cf919404494b36fd37124fc"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/packages/PHPMailer.html" md5="bea3af71bf23858f5b105d7970987345"/>
+		<file filename="core/libs/phpmailer/docs/phpdoc/structure.xml" md5="8c8b80c31148f1de87346dab75dcf8d1"/>
 		<file filename="core/libs/phpmailer/docs/pop3_article.txt" md5="6e8b04572ccd600441b54e721aefb852"/>
-		<file filename="core/libs/phpmailer/docs/use_gmail.txt" md5="baa2401d601d5ee6edf0864865db12a0"/>
+		<file filename="core/libs/phpmailer/docs/use_gmail.txt" md5="d946aaa2c17f91614af46e4a0bf13fdf"/>
 		<file filename="core/libs/phpmailer/examples/contents.html" md5="905b080299c305f2a4914b2c3c097165"/>
 		<file filename="core/libs/phpmailer/examples/images/phpmailer.gif" md5="f8f03962429653f4707dceafd283410d"/>
 		<file filename="core/libs/phpmailer/examples/images/phpmailer_mini.gif" md5="2937b668321bf6cb6fee2c334ef7ea51"/>
-		<file filename="core/libs/phpmailer/examples/index.html" md5="7e62745ea47981a4db4a4105da3c3cd1"/>
-		<file filename="core/libs/phpmailer/examples/test_db_smtp_basic.php" md5="f541f452f13e88cf492e70a309223105"/>
-		<file filename="core/libs/phpmailer/examples/test_mail_advanced.php" md5="f48e98a5ad04f0d1a9259d1464d19905"/>
-		<file filename="core/libs/phpmailer/examples/test_mail_basic.php" md5="25ec2e4b7d360f5283ca384c67271c21"/>
-		<file filename="core/libs/phpmailer/examples/test_pop_before_smtp_advanced.php" md5="95b8e85f57ad7dd1b87695cb35ab6178"/>
-		<file filename="core/libs/phpmailer/examples/test_pop_before_smtp_basic.php" md5="7fcc18bbcfd1c229e0042b5632d25b78"/>
-		<file filename="core/libs/phpmailer/examples/test_sendmail_advanced.php" md5="70918f1ce2bb55263c49da3b6c72a5ab"/>
-		<file filename="core/libs/phpmailer/examples/test_sendmail_basic.php" md5="6efbaa0767843c29f4081ebeab311c21"/>
-		<file filename="core/libs/phpmailer/examples/test_smtp_advanced.php" md5="3cfd486a03fbe26fa4e17396e38bb095"/>
-		<file filename="core/libs/phpmailer/examples/test_smtp_advanced_no_auth.php" md5="b810136b1e375abe314384f0baa304a6"/>
-		<file filename="core/libs/phpmailer/examples/test_smtp_basic.php" md5="acd19dc6a21841b7ba5600c7ef3ede84"/>
-		<file filename="core/libs/phpmailer/examples/test_smtp_basic_no_auth.php" md5="8f2fc6db3d380336195bd18123539315"/>
-		<file filename="core/libs/phpmailer/examples/test_smtp_gmail_advanced.php" md5="3d93aece229be3476aabb28d69ec1e28"/>
-		<file filename="core/libs/phpmailer/examples/test_smtp_gmail_basic.php" md5="a8677a5c4512ee7e139c69eb1aa3d89d"/>
+		<file filename="core/libs/phpmailer/examples/index.html" md5="decba417c3f586ce8fe299b9c263d297"/>
+		<file filename="core/libs/phpmailer/examples/test_db_smtp_basic.php" md5="6b4b7404947c874f4133ac382a6b83ad"/>
+		<file filename="core/libs/phpmailer/examples/test_mail_advanced.php" md5="a54fe96837d6ce88bcd566d2145833d7"/>
+		<file filename="core/libs/phpmailer/examples/test_mail_basic.php" md5="0dc38469bc7d2d0498d6bcf86d4c7ea2"/>
+		<file filename="core/libs/phpmailer/examples/test_pop_before_smtp_advanced.php" md5="74148dd9c6ad58a96b9fa89120a8f236"/>
+		<file filename="core/libs/phpmailer/examples/test_pop_before_smtp_basic.php" md5="d24afb4955764e8412ef32ab551deb21"/>
+		<file filename="core/libs/phpmailer/examples/test_sendmail_advanced.php" md5="ae19a93342b9932f00488ff78d9c6bae"/>
+		<file filename="core/libs/phpmailer/examples/test_sendmail_basic.php" md5="e9eb4116690c79469f38c947be497702"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_advanced.php" md5="1848d864d0aeee435b1eb65e8654a00a"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_advanced_no_auth.php" md5="4e5891bab57813b895784ab4e933bb5b"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_basic.php" md5="08abd2bdde4d16efc6406b167c957f04"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_basic_no_auth.php" md5="b2a94b3a131edd12e473c5bd01576ca9"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_gmail_advanced.php" md5="524b2f5dc7d18a5273264638e6a5cb16"/>
+		<file filename="core/libs/phpmailer/examples/test_smtp_gmail_basic.php" md5="bb28cd8f44626cb12a7c3558ce4aeced"/>
+		<file filename="core/libs/phpmailer/extras/class.html2text.inc" md5="4512109c4b6274e1bc4d4571fd4a1f61"/>
 		<file filename="core/libs/phpmailer/extras/htmlfilter.php" md5="4d5143899340a690d41a4959428ea674"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ar.php" md5="646c785bc6a11f13671a59ea62a8cdb1"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-br.php" md5="a1364ab381ebdf3f05999b31bada24bd"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ca.php" md5="d62aa6dcbbf9922a0ff5b3157493d34f"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ch.php" md5="68d79d6467a003fa41672a5690d9eae3"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-cz.php" md5="2420cdfa4b0b35142d79ff02a2197520"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-de.php" md5="be8f19de5d7a12568066fb04e7feeb8c"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-dk.php" md5="b889d351c4ed834ff2566be55c7d2a40"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-es.php" md5="bb915fc8e902a08d7f5de070c023c4cd"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-et.php" md5="59ec530db72bdf3c929cbced24d84f1f"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-fi.php" md5="029e5ade41d5ae5dcc7f1869c0e85141"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-fo.php" md5="081059e68c63e095c7584f250232ea2a"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-fr.php" md5="35824828ce4dee7486e2ebddc8c90b54"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-hu.php" md5="06137884e974504647606c12c403ef94"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-it.php" md5="e58eb12280851b2b634480b0eb16cfa9"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ja.php" md5="5633923d2fe9b4a4c91cdc6f645cd2e3"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-nl.php" md5="a31febd0f5ce0f8c9ea3a1487fb90343"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-no.php" md5="4bce15e32912f1b60c1d4e539e258a6d"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-pl.php" md5="3933cfa44296e3c3e41b8fe8bf89092c"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ro.php" md5="a87ff3c8cc2d438c0d4ca1efd3340d33"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ru.php" md5="b7ed33812e39d722df735dc4f11ec660"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-se.php" md5="9f8db6e50c0fcfa53ee2c810e604439b"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-tr.php" md5="8706743bc477210606ddedfbd4c03af3"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-zh.php" md5="826f3a6e03f3d475065ec3b4b9f765f0"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-zh_cn.php" md5="8896e3cb067525faf5526287e7c62efe"/>
+		<file filename="core/libs/phpmailer/extras/ntlm_sasl_client.php" md5="362d79dfcbd380c9595c94011310049e">
+			<class name="ntlm_sasl_client_class"/>
+		</file>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ar.php" md5="1e3f523d708487256ce8daef3725c0d2"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-br.php" md5="d390c7b25d04190f8b7709ef2aa54ef0"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ca.php" md5="9304e45deef43759d72ce328b763d99c"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ch.php" md5="74ed44e5ddf877714f2e867d7da8479f"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-cz.php" md5="71c023a8809c0f1ba3fefdf4d668555a"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-de.php" md5="f0e61a9476e49ff68f3ceb17d6808eb5"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-dk.php" md5="505998d19195db7efaf6974cbff80322"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-es.php" md5="0956885284e7613746d666113597df8a"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-et.php" md5="429383bce464355af568b81125633a50"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-fi.php" md5="21d1ac6f97d96c26d7d6f88e770ea5ac"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-fo.php" md5="0ab51968d697234ba194ebef31ce337d"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-fr.php" md5="c3d801642fa6e224c5c2d09d77a1f86a"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-hu.php" md5="bada8e6c642d978a902b7edd02fec498"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-it.php" md5="f251d634399411681949577656574816"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ja.php" md5="bd446cd8c7233858699851f148862c18"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-nl.php" md5="323275ece7d81c51ed507cc94f1a5c83"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-no.php" md5="3b56e1f9b030556b124618aa629d4227"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-pl.php" md5="26c269656289b88232105b4b9ca8e1e3"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ro.php" md5="4c65e97e181656243f46ea132c146361"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-ru.php" md5="49da2c5df221242755779ff80c981071"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-se.php" md5="ed7e65d7344610c6a36d181ef324c202"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-sk.php" md5="be81f5438b7d4da182681aee71c43ddc"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-tr.php" md5="e3d867b594589b3216c587d3d5f451e9"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-zh.php" md5="d9815fad208242698f890a66580274d0"/>
+		<file filename="core/libs/phpmailer/language/phpmailer.lang-zh_cn.php" md5="71bafcfecea1b4bddc026aba6b2f1ed3"/>
 		<file filename="core/libs/phpmailer/test/contents.html" md5="c07b19ecec950d33d9f41d45a5a71578"/>
-		<file filename="core/libs/phpmailer/test/phpmailerTest.php" md5="43a7f0716677814343354ad307ca94cf">
+		<file filename="core/libs/phpmailer/test/phpmailerTest.php" md5="4db151fbdb4b861aa464131df2129071">
 			<class name="phpmailerTest"/>
 		</file>
 		<file filename="core/libs/phpmailer/test/test.png" md5="9afe6d1850e2a030820c5a6b209c2c6e"/>
@@ -968,7 +1070,7 @@
 		<file filename="core/libs/phpmailer/test_script/images/aikido.gif" md5="5533edc54d3b05d0e221b745ab84ad6e"/>
 		<file filename="core/libs/phpmailer/test_script/images/bkgrnd.gif" md5="a29009d45c0c9217ac41f2e05ad8b84a"/>
 		<file filename="core/libs/phpmailer/test_script/images/phpmailer.gif" md5="f8f03962429653f4707dceafd283410d"/>
-		<file filename="core/libs/phpmailer/test_script/index.php" md5="45241f2ae26b817a40b0749e0ac094de">
+		<file filename="core/libs/phpmailer/test_script/index.php" md5="83b801154a001c322ca19f32c38b6a81">
 			<class name="phpmailerAppException"/>
 		</file>
 		<file filename="core/libs/phpmailer/test_script/scripts/clipboard.swf" md5="e971c772b2df839298a8f8f9451f1eda"/>
@@ -1048,7 +1150,7 @@
 		<file filename="core/libs/smarty/plugins/function.html_select_date.php" md5="a637ac29790c3a851682a86840f363d4"/>
 		<file filename="core/libs/smarty/plugins/function.html_select_time.php" md5="4f7fccd8595d5211958c7123ee82c98a"/>
 		<file filename="core/libs/smarty/plugins/function.html_table.php" md5="172491d13ad37f0b82de821758b21dd2"/>
-		<file filename="core/libs/smarty/plugins/function.mail.php" md5="4c8de2769fbf1e178164bf238f6e7098"/>
+		<file filename="core/libs/smarty/plugins/function.mail.php" md5="fe6280f3f7dd808f2a762c1a526c7b3a"/>
 		<file filename="core/libs/smarty/plugins/function.mailto.php" md5="688de6be86911509c038b6719ea00207"/>
 		<file filename="core/libs/smarty/plugins/function.math.php" md5="0b891f2679f8b1d275e2e3f53489fde5"/>
 		<file filename="core/libs/smarty/plugins/modifier.capitalize.php" md5="3c547dde36e8dba58615593e66d83421"/>
@@ -1339,7 +1441,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="4be28a3804957f000453fd861666a1c8">
+		<file filename="core/models/PageModel.class.php" md5="f499674e4bffd88ea0a0e684881f08d8">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="f9c51e50c963b6041526bf55f6234f26">
@@ -1360,6 +1462,16 @@
 		<file filename="core/tests/CoreTest.php" md5="357df09ab74c07ce95f5d490b698c896">
 			<class name="CoreTest"/>
 		</file>
+		<file filename="core/tests/bugsweeps/Bug250Test.php" md5="026339dc17dd2ddc4f12ba4e71001b18">
+			<class name="Bug250Test"/>
+		</file>
+		<file filename="core/tests/bugsweeps/Bug253Test.php" md5="049b779477df7317f0e571506443bb9f">
+			<class name="Bug253Test"/>
+		</file>
+		<file filename="core/tests/libs/datamodel/DMIBackendTest.php" md5="426a6dfb44bf4a572c80c5cadeeb7e92">
+			<class name="DMIBackendTest"/>
+		</file>
+		<file filename="core/tests/testcomponent.xml" md5="b07aa8dc9b2c48b2d4d26ebd1f5cff46"/>
 		<file filename="core/tests/updater-testdocument.txt" md5="90a5dd568ce404d0c6f96ddbdf41d625"/>
 		<file filename="core/upgrades/240_to_241_pagemetas.php" md5="7887144c4964ca4e2ea91dca5fc3bb40"/>
 		<file filename="core/upgrades/242_to_243_page_selectable.php" md5="a00104bc754034508aa50efb4b61a183"/>
@@ -1463,7 +1575,7 @@
 		<file filename="core/templates/pages/error/error500.tpl" md5="e641e6a353fb4fdb65b271553bb51763"/>
 		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="c3856d7798a76f98caf744dcc381c9d3"/>
 		<file filename="core/templates/pages/updater/browse.tpl" md5="46164efb30e799b0daa3062cb53ed548"/>
-		<file filename="core/templates/pages/updater/index.tpl" md5="4e51c3db1422cb70ff09055293ae1164"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="7694d6e2067053533542ba88f5ddbf58"/>
 		<file filename="core/templates/pages/updater/keys.tpl" md5="4ff939a015c21167bda5a5a8d47f3f37"/>
 		<file filename="core/templates/pages/updater/keys_import.tpl" md5="3dc1de19f1f96e5ea92b67ef0d0ebc01"/>
 		<file filename="core/templates/pages/updater/repos.tpl" md5="a89ad644a891497f8641c259c69cf159"/>
@@ -1474,7 +1586,7 @@
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
 		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
 		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
-		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="96c5da325fdf9eb7c6a82ca2ed2abf16"/>
+		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="76b3d81c69ddc133093c648509941998"/>
 		<file filename="core/templates/widgets/updater/check.tpl" md5="a56be87f37d47c51cb4665ea219da0c4"/>
 	</view>
 	<install/>
@@ -1513,15 +1625,15 @@
 		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'" default=""/>
 	</configs>
 	<assets>
-		<file filename="core/assets/css/admin/adminbar.css" md5="c9be9f23523adca836440c7f862ed938"/>
+		<file filename="core/assets/css/admin/adminbar.css" md5="31880112b59aa3ae45bc5f54e69a5ae4"/>
 		<file filename="core/assets/css/updater.css" md5="771975b286bac4ea1f55785d6ca1a5eb"/>
 		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="306b7baee9b250a9da2b378f5047ff30"/>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 		<file filename="core/assets/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
-		<file filename="core/assets/js/core.ajaxlinks.js" md5="8f08ef1384b43f3fa912f61f25f5c0c0"/>
+		<file filename="core/assets/js/core.ajaxlinks.js" md5="afcbaf5ffaebe993b37530d7606ec956"/>
 		<file filename="core/assets/js/core.base64.js" md5="d5858756a4cf8012eb25157105718dfa"/>
 		<file filename="core/assets/js/core.context-controls.js" md5="9eb773cb5b8aad1e6cc0b978652c4c5d"/>
-		<file filename="core/assets/js/core.email.js" md5="7c52a02314ddf235a3a2113b017c3fdc"/>
+		<file filename="core/assets/js/core.email.js" md5="88329052413c903e14292864f5c621aa"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.fileupload.js" md5="499451d7c6a0e4266eb703f26e25cf33"/>
 		<file filename="core/assets/js/core.js" md5="8c4724ce896c231d0c42c56d2201e33a"/>
@@ -1598,6 +1710,7 @@
 		<author name="Marcus Bointon"/>
 		<author name="Jaroslav Mallat (http://mallat.cz/)"/>
 		<author name="Mark J Panaghiston"/>
+		<author name="Dmitry Petrov"/>
 		<author name="Monte Ohrt" email="monte at ohrt dot com"/>
 		<author name="Mark Priatel" email="mpriatel@rogers.com"/>
 		<author name="Gerard" email="gerard@interfold.com"/>

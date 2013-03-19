@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 26 Feb 2013 14:47:36 -0500
+ * @compiled Mon, 18 Mar 2013 06:57:09 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1124,7 +1124,7 @@ case Model::ATT_TYPE_SITE:
 if(
 Core::IsComponentAvailable('enterprise') &&
 MultiSiteHelper::IsEnabled() &&
-$v === null
+($v === null || $v === false)
 ){
 $site = MultiSiteHelper::GetCurrentSiteID();
 $dat->insert('site', $site);
@@ -1135,6 +1135,7 @@ $dat->insert($k, $v);
 }
 break;
 default:
+$v = $this->translateKey($k, $v);
 $dat->insert($k, $v);
 break;
 }
@@ -1170,6 +1171,7 @@ $dat->setID($k, $this->_data[$k]);
 $idcol = $k; // Remember this for after the save.
 continue 2;
 }
+$v = $this->translateKey($k, $v);
 if (in_array($k, $i['primary'])) {
 if ($this->_datainit[$k] != $v){
 if($useset){
@@ -1238,6 +1240,11 @@ if (isset($this->_linked[$k]['records'])) unset($this->_linked[$k]['records']);
 public function validate($k, $v, $throwexception = false) {
 $s = self::GetSchema();
 $valid = true;
+if($v == '' || $v === null){
+if(!isset($s['required']) || !$s['required']){
+return true;
+}
+}
 if (isset($s[$k]['validation'])) {
 $check = $s[$k]['validation'];
 if (is_array($check) && sizeof($check) == 2 && $check[0] == 'this') {
@@ -1268,8 +1275,71 @@ return $msg;
 public function translateKey($k, $v){
 $s = self::GetSchema();
 if(!isset($s[$k])) return $v;
-$type = $s[$k]['type']; // Type is one of the required properties.
-if ($type == Model::ATT_TYPE_BOOL) {
+$t = &$s[$k];
+$type = $t['type']; // Type is one of the required properties.
+if(!isset($t['default'])){
+if(isset($t['null']) && $t['null']){
+$default = null;
+}
+else{
+switch($type){
+case Model::ATT_TYPE_BOOL:
+case Model::ATT_TYPE_CREATED:
+case Model::ATT_TYPE_FLOAT:
+case Model::ATT_TYPE_INT:
+case Model::ATT_TYPE_UPDATED:
+$default = 0;
+break;
+case Model::ATT_TYPE_DATA:
+case Model::ATT_TYPE_STRING:
+case Model::ATT_TYPE_TEXT:
+$default = '';
+break;
+case Model::ATT_TYPE_ISO_8601_DATE:
+$default = '0000-00-00';
+break;
+case Model::ATT_TYPE_ISO_8601_DATETIME:
+$default = '0000-00-00 00:00:00';
+break;
+case Model::ATT_TYPE_ID:
+case Model::ATT_TYPE_UUID:
+$default = null;
+break;
+default:
+$default = '';
+break;
+}
+}
+}
+else{
+$default = $t['default'];
+}
+switch($type){
+case Model::ATT_TYPE_ISO_8601_DATE:
+if($v == '' || $v == '0000-00-00' || $v === null){
+$v = $default;
+}
+break;
+case Model::ATT_TYPE_ISO_8601_DATETIME:
+if($v == '' || $v == '0000-00-00 00:00:00' || $v === null){
+$v = $default;
+}
+break;
+default:
+if($v === null){
+$v = $default;
+}
+break;
+}
+switch($type){
+case Model::ATT_TYPE_BOOL:
+if($v === true){
+$v = 1;
+}
+elseif($v === false){
+$v = 0;
+}
+else{
 switch(strtolower($v)){
 case 'yes':
 case 'on':
@@ -1280,6 +1350,8 @@ break;
 default:
 $v = 0;
 }
+}
+break;
 }
 return $v;
 }
@@ -1468,12 +1540,6 @@ $key = $e->get('name');
 $val    = $e->get('value');
 $schema = $this->getKeySchema($key);
 if(!$schema) continue;
-if ($schema['type'] == Model::ATT_TYPE_BOOL) {
-if (strtolower($val) == 'yes') $val = 1;
-elseif (strtolower($val) == 'on') $val = 1;
-elseif ($val == 1) $val = 1;
-else $val = 0;
-}
 $this->set($key, $val);
 }
 }
@@ -1521,7 +1587,7 @@ case Model::ATT_TYPE_CREATED:
 case Model::ATT_TYPE_UPDATED:
 continue 2;
 }
-if(!isset($this->_datainit[$k])){
+if(!array_key_exists($k, $this->_datainit)){
 return true;
 }
 if($this->_datainit[$k] != $this->_data[$k]){
@@ -1683,10 +1749,12 @@ return $ret;
 }
 }
 public function getRaw(){
+$this->_performMultisiteCheck();
 $rs = $this->_dataset->execute($this->interface);
 return $rs->_data;
 }
 public function count() {
+$this->_performMultisiteCheck();
 $clone = clone $this->_dataset;
 $rs    = $clone->count()->execute($this->interface);
 return $rs->num_rows;
@@ -3465,7 +3533,6 @@ protected $_enabled = false;
 protected $_description;
 protected $_updateSites = array();
 protected $_authors = array();
-protected $_iterator;
 private $_versionDB = false;
 private $_execMode = 'WEB';
 private $_file;
@@ -3781,6 +3848,9 @@ else return 'component';
 public function getName() {
 return $this->_name;
 }
+public function getKeyName(){
+return str_replace(' ', '-', strtolower($this->_name));
+}
 public function getVersion() {
 return $this->_version;
 }
@@ -4057,7 +4127,7 @@ if ($this->_name == 'core') {
 return $prefix;
 }
 else {
-return $prefix . 'components/' . strtolower($this->_name) . '/';
+return $prefix . 'components/' . $this->getKeyName() . '/';
 }
 }
 public function getChangedFiles(){
@@ -4155,6 +4225,7 @@ if($searchable === null) $searchable = 0;
 if($required === null)   $required = 0;
 if($weight === null)     $weight = 0;
 if($weight == '')        $weight = 0;
+$weight += 1000;
 $model = UserConfigModel::Construct($key);
 $model->set('name', $name);
 if($default)  $model->set('default_value', $default);
@@ -4165,7 +4236,7 @@ $model->set('searchable', $searchable);
 if($options)  $model->set('options', $options);
 $model->set('validation', $validation);
 $model->set('required', $required);
-if(!$model->get('weight')) $model->set('weight', $weight);
+if(!$model->get('weight') || $model->get('weight') >= 100) $model->set('weight', $weight);
 if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
 }
 return (sizeof($changes)) ? $changes : false;
@@ -4177,7 +4248,7 @@ foreach ($node->getElementsByTagName('page') as $subnode) {
 $m = new PageModel(-1, $subnode->getAttribute('baseurl'));
 $action = ($m->exists()) ? 'Updated' : 'Added';
 $admin = $subnode->getAttribute('admin');
-$selectable = ($admin ? 0 : 1); // Defaults
+$selectable = ($admin ? '0' : '1'); // Defaults
 if($subnode->getAttribute('selectable') !== '') $selectable = $subnode->getAttribute('selectable');
 if (!$m->get('rewriteurl')) {
 if ($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
@@ -6247,12 +6318,6 @@ if ($this->_loaded) return;
 $XMLFilename = ROOT_PDIR . 'core/core.xml';
 $this->setFilename($XMLFilename);
 $this->setRootName('core');
-if (!parent::load()) {
-$this->error     = $this->error | Component::ERROR_INVALID;
-$this->errstrs[] = $XMLFilename . ' parsing failed, not valid XML.';
-$this->valid     = false;
-return;
-}
 $this->version = $this->getRootDOM()->getAttribute("version");
 $this->_loaded = true;
 }
@@ -6404,7 +6469,6 @@ $this->_registerComponent($c);
 catch(Exception $e){
 error_log('Ignoring component [' . $n . '] due to an error during upgrading!');
 error_log($e->getMessage());
-$c->disable();
 $this->_componentsDisabled[$n] = $c;
 }
 unset($list[$n]);
@@ -6444,7 +6508,7 @@ $theme->load();
 }
 }
 public function _registerComponent(Component_2_1 $c) {
-$name = strtolower($c->getName());
+$name = str_replace(' ', '-', strtolower($c->getName()));
 if ($c->hasLibrary()) {
 $this->_libraries = array_merge($this->_libraries, $c->getLibraryList());
 foreach ($c->getIncludePaths() as $path) {
@@ -7256,6 +7320,12 @@ return true;
 public static function SetOverride($key, $value){
 self::Singleton()->_overrides[$key] = $value;
 }
+public static function IsOverridden($key){
+$s = self::Singleton();
+if(!isset($s->_overrides[$key])) return false;
+if($s->_overrides[$key] == $s->_cacheFromDB[$key]) return false;
+return true;
+}
 public static function CacheConfig(ConfigModel $config) {
 $instance = self::GetInstance();
 $instance->_cacheFromDB[$config->get('key')] = $config;
@@ -7274,6 +7344,7 @@ $core_settings = ConfigHandler::LoadConfigFile("configuration");
 if (!$core_settings) {
 if(EXEC_MODE == 'WEB'){
 $newURL = 'install/';
+header('HTTP/1.1 302 Moved Temporarily');
 header("Location:" . $newURL);
 die("If your browser does not refresh, please <a href=\"{$newURL}\">Click Here</a>");
 }
@@ -7809,6 +7880,7 @@ ConfigHandler::_DBReadyHook();
 catch (Exception $e) {
 error_log($e->getMessage());
 if (DEVELOPMENT_MODE) {
+header('HTTP/1.1 302 Moved Temporarily');
 header('Location: ' . ROOT_WDIR . 'install');
 die();
 }
@@ -7897,6 +7969,7 @@ session_start();
 }
 catch (DMI_Exception $e) {
 if (DEVELOPMENT_MODE) {
+header('HTTP/1.1 302 Moved Temporarily');
 header('Location: ' . ROOT_WDIR . 'install');
 die();
 }
@@ -9224,7 +9297,7 @@ $body = $this->fetchBody();
 }
 catch(SmartyException $e){
 $this->error = View::ERROR_SERVERERROR;
-error_log('[view error]');
+error_log('[view error] (Smarty Exception)');
 error_log('Template name: [' . $this->templatename . ']');
 error_log($e->getMessage());
 require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
@@ -9232,7 +9305,15 @@ die();
 }
 catch(TemplateException $e){
 $this->error = View::ERROR_SERVERERROR;
-error_log('[view error]');
+error_log('[view error] (Template Exception)');
+error_log('Template name: [' . $this->templatename . ']');
+error_log($e->getMessage());
+require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+die();
+}
+catch(Exception $e){
+$this->error = View::ERROR_SERVERERROR;
+error_log('[view error] (WTF Just Happened?)');
 error_log('Template name: [' . $this->templatename . ']');
 error_log($e->getMessage());
 require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
@@ -9331,7 +9412,9 @@ $debug .= "[" . Core::FormatProfileTime($t['timetotal']) . "] - " . $t['event'] 
 }
 }
 $debug .= "\n" . '<b>Available Components</b>' . "\n";
-foreach (Core::GetComponents() as $l => $v) {
+$debugcomponents = Core::GetComponents();
+ksort($debugcomponents);
+foreach ($debugcomponents as $l => $v) {
 $debug .= ($v->isEnabled() ? '[<span style="color:green;">Enabled</span>]' : '[<span style="color:red;">Disabled</span>]').
 $v->getName() . ' ' . $v->getVersion() . "\n";
 }
@@ -10010,6 +10093,7 @@ public static $Mappings = array(
 'checkbox'         => 'FormCheckboxInput',
 'checkboxes'       => 'FormCheckboxesInput',
 'date'             => 'FormDateInput',
+'datetime'         => 'FormDateTimeInput',
 'file'             => 'FormFileInput',
 'hidden'           => 'FormHiddenInput',
 'pageinsertables'  => 'FormPageInsertables',
@@ -10142,9 +10226,6 @@ $i = $model->GetIndexes();
 if (!isset($i['primary'])) $i['primary'] = array();
 $new = $model->isnew();
 foreach ($s as $k => $v) {
-if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
-if($new && $v['type'] == Model::ATT_TYPE_UUID) continue;
-if (!$new && in_array($k, $i['primary'])) continue;
 $formatts = array(
 'type' => null,
 'title' => ucwords($k),
@@ -10164,6 +10245,14 @@ if(isset($v['required']))        $formatts['required'] = $v['required'];
 if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
 if($formatts['type'] == 'disabled'){
 continue;
+}
+elseif ($v['type'] == Model::ATT_TYPE_ID){
+$el = FormElement::Factory('system');
+$formatts['required'] = false;
+}
+elseif($v['type'] == Model::ATT_TYPE_UUID){
+$el = FormElement::Factory('system');
+$formatts['required'] = false;
 }
 elseif ($formatts['type'] !== null) {
 $el = FormElement::Factory($formatts['type']);
@@ -10207,6 +10296,11 @@ if ($v['default']) $el->set('value', $v['default']);
 elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATE){
 $formatts['datepicker_dateFormat'] = 'yy-mm-dd';
 $el = FormElement::Factory('date');
+}
+elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATETIME){
+$formatts['datetimepicker_dateFormat'] = 'yy-mm-dd';
+$formatts['datetimepicker_timeFormat'] = 'HH:mm';
+$el = FormElement::Factory('datetime');
 }
 else {
 die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
@@ -10554,6 +10648,9 @@ return $return;
 }
 public function setParameters($params) {
 $this->parameters = $params;
+}
+public function setParameter($key, $value){
+$this->parameters[$key] = $value;
 }
 public function getParameters() {
 $data = $this->splitParts();
