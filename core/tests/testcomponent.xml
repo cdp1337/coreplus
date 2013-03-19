@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Test Component" execmode="web">
+	<requires>
+		<require name="core" type="component" version="2.4.3" operation="ge"/>
+	</requires>
+
+	<description>Dummy component used for testing.</description>
+</component>
+
