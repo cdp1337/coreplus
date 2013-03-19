@@ -80,7 +80,10 @@ class DMI {
 		
 		return $this->_backend;
 	}
-	
+
+	/**
+	 * @return \DMI_Backend
+	 */
 	public function connection(){
 		return $this->_backend;
 	}

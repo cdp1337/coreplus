@@ -53,11 +53,16 @@ class DMI_mysqli_backend implements DMI_Backend {
 	/**
 	 * Create a new connection to a mysql server.
 	 *
-	 * @param type $host
-	 * @param type $user
-	 * @param type $pass
-	 * @param type $database
-	 * @return type
+	 * @param string $host
+	 * @param string $user
+	 * @param string $pass
+	 * @param string $database
+	 *
+	 * @throws DMI_Authentication_Exception
+	 * @throws DMI_ServerNotFound_Exception
+	 * @throws DMI_Exception
+	 *
+	 * @return mixed|void
 	 */
 	public function connect($host, $user, $pass, $database){
 
@@ -89,8 +94,6 @@ class DMI_mysqli_backend implements DMI_Backend {
 			default:
 				throw new DMI_Exception($this->_conn->error, $this->_conn->errno);
 		}
-
-		return ($this->_conn);
 	}
 
 	public function execute(Dataset $dataset){
@@ -128,10 +131,17 @@ class DMI_mysqli_backend implements DMI_Backend {
 	}
 
 
+	/**
+	 * Check if a table exists in the database
+	 *
+	 * @param string $tablename
+	 *
+	 * @return bool
+	 */
 	public function tableExists($tablename){
 		$q = "SHOW TABLES LIKE ?";
 		$rs = $this->_rawExecute('read', $q, $tablename);
-		return ($rs->num_rows);
+		return ($rs->num_rows > 0);
 	}
 
 	public function createTable($table, $newschema){
