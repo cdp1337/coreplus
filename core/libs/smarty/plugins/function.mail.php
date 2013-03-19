@@ -97,6 +97,9 @@ function smarty_function_mail($params, $template)
 	$return = '<a href="#" id="' . $elementid . '" user="'.$user.'" domain="'.$domain.'" tld="'.$tld.'"></a>';
 	$return .='<script>Core.Email.assemble($("#' . $elementid . '"));</script>';
 
+	// Set this page to require the script library core strings!
+	Core::_AttachCoreStrings();
+
 	return $return;
 
         $js_encode = '';
