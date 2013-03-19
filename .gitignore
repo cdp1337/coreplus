@@ -1,17 +1,17 @@
 # This is the public and asset files directory.  It is changeable in the installer, so
 # if you set the root directory as something else, please _add_ the directory to this list.
 # Please do not remove the directories that are listed, as someone else is probably expecting that directory exclusion.
-/filestore
-/files
+/src/filestore
+/src/files
 
 # Skip the netbeans project directory, this is developer centric
 /nbproject
 
 # Skip the htaccess file, this is server centric
-/.htaccess
+/src/.htaccess
 
 # Skip the configuration file, this is developer and server centric
-/config/configuration.xml
+/src/config/configuration.xml
 
 # Skip some Apple directories, these is machine centric
 .DS_Store
@@ -37,7 +37,7 @@
 /.idea/workspace.xml
 
 # Skip the GPG keys.
-/gnupg/*.gpg
+/src/gnupg/*.gpg
 
 # These are used in development environments.
 /exports
