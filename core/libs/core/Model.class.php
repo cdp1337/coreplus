@@ -878,6 +878,14 @@ class Model implements ArrayAccess {
 					case Model::ATT_TYPE_ISO_8601_DATETIME:
 						$default = '0000-00-00 00:00:00';
 						break;
+					case Model::ATT_TYPE_ID:
+					case Model::ATT_TYPE_UUID:
+						$default = null;
+						break;
+					// Umm
+					default:
+						$default = '';
+						break;
 				}
 			}
 		}
@@ -1297,16 +1305,6 @@ class Model implements ArrayAccess {
 
 			// If there is no schema entry for this key, no reason to try to set it as it doesn't exist in the Model.
 			if(!$schema) continue;
-
-			if ($schema['type'] == Model::ATT_TYPE_BOOL) {
-				// This is used by checkboxes
-				if (strtolower($val) == 'yes') $val = 1;
-				// A single checkbox will have the value of "on" if checked
-				elseif (strtolower($val) == 'on') $val = 1;
-				// Hidden inputs will have the value of "1"
-				elseif ($val == 1) $val = 1;
-				else $val = 0;
-			}
 
 			$this->set($key, $val);
 		}

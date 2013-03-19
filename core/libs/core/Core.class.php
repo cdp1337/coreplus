@@ -124,12 +124,12 @@ class Core implements ISingleton {
 		$this->setRootName('core');
 
 
-		if (!parent::load()) {
+		/*if (!parent::load()) {
 			$this->error     = $this->error | Component::ERROR_INVALID;
 			$this->errstrs[] = $XMLFilename . ' parsing failed, not valid XML.';
 			$this->valid     = false;
 			return;
-		}
+		}*/
 
 		/*
 		// Can't read the file? nothing to load...
