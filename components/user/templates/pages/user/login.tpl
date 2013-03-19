@@ -1,3 +1,11 @@
+{css src="assets/css/user.css"}{/css}
+
+<!--
+	As you may have guessed by looking at the id...
+	keep this line in here else your javascript login WILL BREAK!
+-->
+<div id="user-login-placeholder-for-javascript-because-otherpages-may-have-an-error"></div>
+
 <fieldset id="user-login">
 	<legend> Login</legend>
 	{$form->render()}

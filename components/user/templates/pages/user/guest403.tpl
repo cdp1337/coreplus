@@ -4,6 +4,12 @@
 	Please login {if $registerform}or create an account {/if} to view this page.
 </p>
 
+<!--
+	As you may have guessed by looking at the id...
+	keep this line in here else your javascript login WILL BREAK!
+-->
+<div id="user-login-placeholder-for-javascript-because-otherpages-may-have-an-error"></div>
+
 <div class="user-guest-403-container {if $registerform}two-columns{/if}">
 	<div class="column-left">
 		<fieldset id="user-login">

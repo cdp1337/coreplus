@@ -101,10 +101,13 @@ function get_form($user = null){
 	}
 
 	foreach($fac as $f){
+		$key = $f->get('key');
+		$val = ($user->get($key) === null) ? $f->get('default_value') : $user->get($key);
+
 		$el = \FormElement::Factory($f->get('formtype'));
-		$el->set('name', 'option[' . $f->get('key') . ']');
+		$el->set('name', 'option[' . $key . ']');
 		$el->set('title', $f->get('name'));
-		$el->set('value', (($type == 'registration') ? $f->get('default_value') : $user->get($f->get('key'))) );
+		$el->set('value', $val);
 		if($f->get('required')) $el->set('required', true);
 
 		switch($f->get('formtype')){
@@ -116,6 +119,10 @@ function get_form($user = null){
 			case 'radio':
 				$opts = array_map('trim', explode('|', $f->get('options')));
 				$el->set('options', $opts);
+				break;
+			case 'checkbox':
+				$el->set('value', 1);
+				$el->set('checked', ($val ? true : false));
 				break;
 		}
 

@@ -25,7 +25,7 @@ class UserAdminController extends Controller_2_1{
 			array(
 				'title' => 'Email',
 				'name' => 'email',
-				'link' => FilterForm::LINK_TYPE_STARTSWITH
+				'link' => FilterForm::LINK_TYPE_CONTAINS
 			)
 		);
 		$filters->addElement(

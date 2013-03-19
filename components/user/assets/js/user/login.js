@@ -13,8 +13,11 @@ checkresult = function(result){
 	}
 
 	// Was there an error here?
-	$error = $result.find('.message-error');
-	if($error.length > 0){
+	// Was the page returned a login page?  If so it'll probably have an error and will
+	// absolutely have an id... :p
+	if($result.find('#user-login-placeholder-for-javascript-because-otherpages-may-have-an-error').length > 0){
+		// Chances are it has an error.
+		$error = $result.find('.message-error');
 		$container.before($error);
 		$container.replaceWith($result.find('#user-login'));
 		initialize_form();

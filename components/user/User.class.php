@@ -184,6 +184,14 @@ class User {
 			elseif(strpos($name, 'option[') === 0){
 				$k = substr($el->get('name'), 7, -1);
 				$v = $el->get('value');
+				$obj = UserConfigModel::Construct($k);
+
+
+				if($v === null && $obj->get('formtype') == 'checkbox'){
+					// Checkboxes behave slightly differently.
+					// null here just means that it was unchecked.
+					$v = 0;
+				}
 
 				// Some attributes require some modifications.
 				if($el instanceof FormFileInput){
@@ -293,6 +301,18 @@ class User {
 			$ret[$k] = $obj->get('value');
 		}
 		return $ret;
+	}
+
+	/**
+	 * Get a single user config object
+	 *
+	 * @param $key
+	 * @return UserUserConfigModel|null
+	 */
+	public function getConfigObject($key){
+		$configs = $this->getConfigs();
+
+		return (isset($this->_configs[$key])) ? $this->_configs[$key] : null;
 	}
 
 	/**
