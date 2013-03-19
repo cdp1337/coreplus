@@ -3,14 +3,7 @@
 
 //use RuntimeException;
 
-// I need to combine the filename onto the current path to determine core plus's installation path.
-$path = $_SERVER['PWD'] . '/' . $_SERVER['SCRIPT_FILENAME'];
-// If there is any "./" here, remove that... it's redundant.
-$path = str_replace('./', '', $path);
-// The path will contain /utilities/phpunit.phar... trim that off to reveal the root installation directory.
-$path = substr($path, 0, -22);
-
-define('ROOT_PDIR', $path);
+define('ROOT_PDIR', dirname(__DIR__) . '/');
 define('ROOT_WDIR', '/');
 
 
@@ -40,4 +33,9 @@ $_SERVER['HTTP_USER_AGENT'] = 'Core Plus phpunit Tester Script';
 unset($path, $settingsxml, $siteurl, $node);
 
 
-require(ROOT_PDIR . 'core/bootstrap.php');
+
+require(ROOT_PDIR . 'core/bootstrap.compiled.php');
+
+// quiet!
+// CLI mode shouldn't have HTML error reporting.
+ini_set('html_errors', 0);
