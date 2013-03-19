@@ -83,7 +83,7 @@ class Component_2_1 {
 	 * The iterator for this object, kept as a cache.
 	 * @var CAEDirectoryIterator
 	 */
-	protected $_iterator;
+	///protected $_iterator;
 
 	/**
 	 * Version of the component, as per the database (installed version).
@@ -729,6 +729,18 @@ class Component_2_1 {
 	}
 
 	/**
+	 * Get this component's "key" name.
+	 *
+	 * This *must* be the name of the directory it's installed in
+	 * and *must not* contain spaces or other weird characters.
+	 *
+	 * @return string
+	 */
+	public function getKeyName(){
+		return str_replace(' ', '-', strtolower($this->_name));
+	}
+
+	/**
 	 * Get this component's version
 	 *
 	 * @return string
@@ -1220,7 +1232,7 @@ class Component_2_1 {
 			return $prefix;
 		}
 		else {
-			return $prefix . 'components/' . str_replace(' ', '-', strtolower($this->_name)) . '/';
+			return $prefix . 'components/' . $this->getKeyName() . '/';
 		}
 	}
 
