@@ -22,7 +22,7 @@
 
 			var address = user + '@' + domain + '.' + tld;
 
-			$node.html(address);
+			$node.html(address).attr('href', 'mailto:' + address);
 		}
 
 	};
