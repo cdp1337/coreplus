@@ -52,17 +52,15 @@ class phpmailerTest extends PHPUnit_Framework_TestCase
     /**
      * @var string Default include path
      */
-    public $INCLUDE_DIR = '../';
+    public $INCLUDE_DIR;
 
     /**
      * Run before each test is started.
      */
     function setUp()
     {
+	    $this->INCLUDE_DIR = __DIR__ . '/../';
 
-        if (file_exists('./testbootstrap.php')) {
-            include './testbootstrap.php'; //Overrides go in here
-        }
         require_once $this->INCLUDE_DIR . 'class.phpmailer.php';
         $this->Mail = new PHPMailer;
 
@@ -111,6 +109,12 @@ class phpmailerTest extends PHPUnit_Framework_TestCase
         if (array_key_exists('mail_cc', $_REQUEST) and strlen($_REQUEST['mail_cc']) > 0) {
             $this->SetAddress($_REQUEST['mail_cc'], 'Carbon User', 'cc');
         }
+
+	    if(file_exists(__DIR__ . '/testbootstrap.php')){
+		    // Let the bootstrap have the final say on the Mail object
+		    include __DIR__ . '/testbootstrap.php'; //Overrides go in here
+	    }
+
     }
 
     /**
@@ -432,7 +436,7 @@ class phpmailerTest extends PHPUnit_Framework_TestCase
         $this->Mail->IsHTML(true);
 
         if (!$this->Mail->AddEmbeddedImage(
-            "test.png",
+            __DIR__ . "/test.png",
             "my-attach",
             "test.png",
             "base64",
@@ -463,7 +467,7 @@ class phpmailerTest extends PHPUnit_Framework_TestCase
         $this->Mail->IsHTML(true);
 
         if (!$this->Mail->AddEmbeddedImage(
-            "test.png",
+	        __DIR__ . "/test.png",
             "my-attach",
             "test.png",
             "base64",
@@ -548,6 +552,12 @@ class phpmailerTest extends PHPUnit_Framework_TestCase
      */
     function test_SendmailSend()
     {
+	    // If this medium is not enabled, do not test it!
+	    if($this->Mail->Mailer != 'sendmail'){
+		    $this->markTestSkipped('sendmail not enabled, skipping send test');
+		    return;
+	    }
+
         $this->Mail->Body = "Sending via sendmail";
         $this->BuildBody();
         $subject = $this->Mail->Subject;
@@ -562,6 +572,12 @@ class phpmailerTest extends PHPUnit_Framework_TestCase
      */
     function test_MailSend()
     {
+	    // If this medium is not enabled, do not test it!
+	    if($this->Mail->Mailer != 'mail'){
+		    $this->markTestSkipped('mail not enabled, skipping send test');
+		    return;
+	    }
+
         $this->Mail->Body = "Sending via mail()";
         $this->BuildBody();
         $subject = $this->Mail->Subject;
@@ -614,6 +630,11 @@ class phpmailerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->Mail->Send() == false, "Send succeeded");
         $this->assertTrue($this->Mail->IsError(), "No error found");
         $this->assertEquals('You must provide at least one recipient email address.', $this->Mail->ErrorInfo);
+
+	    if(!isset($_REQUEST['mail_to'])){
+		    $this->markTestSkipped('Skipping re-send after removing addresses, no address requested.');
+		    return;
+	    }
         $this->Mail->AddAddress($_REQUEST['mail_to']);
         $this->assertTrue($this->Mail->Send(), "Send failed");
     }
@@ -648,7 +669,7 @@ class phpmailerTest extends PHPUnit_Framework_TestCase
     {
         $this->Mail->SetLanguage('en');
         $definedStrings = $this->Mail->GetTranslations();
-        foreach (new DirectoryIterator('../language') as $fileInfo) {
+        foreach (new DirectoryIterator(__DIR__ . '/../language') as $fileInfo) {
             if ($fileInfo->isDot()) {
                 continue;
             }
@@ -671,20 +692,21 @@ class phpmailerTest extends PHPUnit_Framework_TestCase
      */
     function test_Encodings()
     {
-        $this->Mail->CharSet = 'iso-8859-1';
+	    // Sorry man, I can't type in ISO-8859-1, but I can do UTF-8!
+        $this->Mail->CharSet = 'UTF-8';
         $this->assertEquals(
-            '=A1Hola!_Se=F1or!',
-            $this->Mail->EncodeQ('�Hola! Se�or!', 'text'),
+            '=C2=A1Hola!_Se=C3=B1or!',
+            $this->Mail->EncodeQ('¡Hola! Señor!', 'text'),
             'Q Encoding (text) failed'
         );
         $this->assertEquals(
-            '=A1Hola!_Se=F1or!',
-            $this->Mail->EncodeQ('�Hola! Se�or!', 'comment'),
+            '=C2=A1Hola!_Se=C3=B1or!',
+            $this->Mail->EncodeQ('¡Hola! Señor!', 'comment'),
             'Q Encoding (comment) failed'
         );
         $this->assertEquals(
-            '=A1Hola!_Se=F1or!',
-            $this->Mail->EncodeQ('�Hola! Se�or!', 'phrase'),
+            '=C2=A1Hola!_Se=C3=B1or!',
+            $this->Mail->EncodeQ('¡Hola! Señor!', 'phrase'),
             'Q Encoding (phrase) failed'
         );
     }
