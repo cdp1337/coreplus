@@ -7,10 +7,10 @@
  */
 class ThemeEditorController extends Controller_2_1 {
 
-	private function _lookfor($fileext, &$mergearray, Directory_local_backend $directory, $assetdir){
+	static public function _Lookfor($fileext, &$mergearray, Directory_local_backend $directory, $assetdir){
 		foreach($directory->ls() as $file){
 			if($file instanceof Directory_local_backend){
-				$this->_lookfor($fileext, $mergearray, $file, $assetdir);
+				self::_Lookfor($fileext, $mergearray, $file, $assetdir);
 			}
 			elseif($file instanceof File_local_backend){
 

@@ -12,7 +12,7 @@ class TinyMCEController extends Controller_2_1 {
 	 *
 	 * This needs to be a full controller because it requires some of core+'s functionality to determine pages.
 	 */
-	public function popup_link(){
+	public function link(){
 		$view = $this->getView();
 
 		// Since this will deal with mainly frontend data, it's doubtful that the admin would want to list admin pages.
@@ -24,7 +24,7 @@ class TinyMCEController extends Controller_2_1 {
 			$pagesresolved[Core::ResolveLink($url)] = $title;
 		}
 
-		$tplname = Template::ResolveFile('pages/tinymce/popup/link.phtml');
+		$tplname = Template::ResolveFile('pages/tinymce/link.phtml');
 
 		$view->overrideTemplate(new TemplatePHTML());
 
