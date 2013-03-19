@@ -50,7 +50,7 @@
 		<th>&nbsp;</th>
 	</tr>
 	{foreach from=$components item=c}
-		<tr componentname="{$c->getName()|lower}" type="components">
+		<tr componentname="{$c->getKeyName()}" type="components">
 			<td>{$c->getName()}</td>
 			<td>{$c->getVersion()}</td>
 			<td>

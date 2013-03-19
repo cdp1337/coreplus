@@ -8,11 +8,9 @@
 			<i class="icon-cogs"></i>
 			<ul class="sub-menu">
 				{foreach from=$pages item=page}
-					{if strpos($page->get('baseurl'), '/volleyball') === false}
-						<li>
-							{a href=$page->get('baseurl')}{$page->get('title')}{/a}
-						</li>
-					{/if}
+					<li>
+						{a href=$page->get('baseurl')}{$page->get('title')}{/a}
+					</li>
 				{/foreach}
 			</ul>
 		</li>
