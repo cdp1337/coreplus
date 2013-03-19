@@ -1,0 +1,5 @@
+Various patch files needed for converting the base libraries to coreplus-compatible versions.
+
+Most packages work "out of the box", but some require special patches.
+
+@todo Implement a more formal method of handling these.

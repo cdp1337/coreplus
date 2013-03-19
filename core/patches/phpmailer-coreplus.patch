@@ -1,0 +1,921 @@
+Index: core/libs/phpmailer/test/testbootstrap.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/test/testbootstrap.php	(revision )
++++ core/libs/phpmailer/test/testbootstrap.php	(revision )
+@@ -0,0 +1,30 @@
++<?php
++/**
++ * This is called within the scope of phpmailerTest, so $this->Mail points to a valid mail object!
++ *
++ * @var $this phpmailerTest
++ */
++
++
++
++// Load in some default options for this email based on the configuration options.
++$this->Mail->From = ConfigHandler::Get('/core/email/from');
++if (!$this->Mail->From) $this->Mail->From = 'website@' . $_SERVER['HTTP_HOST'];
++
++$this->Mail->FromName = ConfigHandler::Get('/core/email/from_name');
++$this->Mail->Mailer   = ConfigHandler::Get('/core/email/mailer');
++
++$this->Mail->Sendmail = ConfigHandler::Get('/core/email/sendmail_path');
++if ($this->Mail->Mailer == 'smtp') {
++	$this->Mail->Host       = ConfigHandler::Get('/core/email/smtp_host');
++	$this->Mail->Port       = ConfigHandler::Get('/core/email/smtp_port');
++	$this->Mail->Username   = ConfigHandler::Get('/core/email/smtp_user');
++	$this->Mail->Password   = ConfigHandler::Get('/core/email/smtp_password');
++	$this->Mail->SMTPSecure =
++		(ConfigHandler::Get('/core/email/smtp_security') == 'none') ?
++			'' : ConfigHandler::Get('/core/email/smtp_security');
++	if ($this->Mail->Username != '') $this->Mail->SMTPAuth = true;
++}
++
++$this->SetAddress('root@localhost', 'Test User', 'to');
++$this->Mail->Sender = $this->Mail->From;
+\ No newline at end of file
+Index: core/libs/phpmailer/language/phpmailer.lang-hu.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-hu.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-hu.php	(revision )
+@@ -7,19 +7,18 @@
+ $PHPMAILER_LANG['authenticate']         = 'SMTP Hiba: Sikertelen autentikáció.';
+ $PHPMAILER_LANG['connect_host']         = 'SMTP Hiba: Nem tudtam csatlakozni az SMTP host-hoz.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'SMTP Hiba: Nem elfogadható adat.';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Üzenet test üres';
+ $PHPMAILER_LANG['encoding']             = 'Ismeretlen kódolás: ';
+ $PHPMAILER_LANG['execute']              = 'Nem tudtam végrehajtani: ';
+ $PHPMAILER_LANG['file_access']          = 'Nem sikerült elérni a következõ fájlt: ';
+ $PHPMAILER_LANG['file_open']            = 'Fájl Hiba: Nem sikerült megnyitni a következõ fájlt: ';
+ $PHPMAILER_LANG['from_failed']          = 'Az alábbi Feladó cím hibás: ';
+ $PHPMAILER_LANG['instantiate']          = 'Nem sikerült példányosítani a mail funkciót.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']        = 'Nem küldése e-mail címe érvénytelen: ';
+ $PHPMAILER_LANG['provide_address']      = 'Meg kell adnod legalább egy címzett email címet.';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' levelezõ nem támogatott.';
+ $PHPMAILER_LANG['recipients_failed']    = 'SMTP Hiba: Az alábbi címzettek hibásak: ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'Aláírási Error: ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () nem sikerült.';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP szerver hiba: ';
++$PHPMAILER_LANG['variable_set']         = 'Nem lehet beállítani vagy alaphelyzetbe változó: ';
+Index: core/libs/phpmailer/language/phpmailer.lang-ar.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-ar.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-ar.php	(revision )
+@@ -8,20 +8,19 @@
+ $PHPMAILER_LANG['authenticate']         = 'SMTP Error: لم نستطع تأكيد الهوية.';
+ $PHPMAILER_LANG['connect_host']         = 'SMTP Error: لم نستطع الاتصال بمخدم SMTP.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'SMTP Error: لم يتم قبول المعلومات .';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'نص الرسالة فارغ';
+ $PHPMAILER_LANG['encoding']             = 'ترميز غير معروف: ';
+ $PHPMAILER_LANG['execute']              = 'لم أستطع تنفيذ : ';
+ $PHPMAILER_LANG['file_access']          = 'لم نستطع الوصول للملف: ';
+ $PHPMAILER_LANG['file_open']            = 'File Error: لم نستطع فتح الملف: ';
+ $PHPMAILER_LANG['from_failed']          = 'البريد التالي لم نستطع ارسال البريد له : ';
+ $PHPMAILER_LANG['instantiate']          = 'لم نستطع توفير خدمة البريد.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']        = 'عدم ارسال وعنوان البريد الإلكتروني غير صالح: ';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' mailer غير مدعوم.';
+-//$PHPMAILER_LANG['provide_address']      = 'You must provide at least one recipient email address.';
++$PHPMAILER_LANG['provide_address']      = 'يجب توفير واحد على الأقل عنوان البريد الإلكتروني المتلقي.';
+ $PHPMAILER_LANG['recipients_failed']    = 'SMTP Error: الأخطاء التالية ' .
+                                           'فشل في الارسال لكل من : ';
+ $PHPMAILER_LANG['signing']              = 'خطأ في التوقيع: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['smtp_connect_failed']  = 'فشل الاتصال SMTP ().';
++$PHPMAILER_LANG['smtp_error']           = 'خادم SMTP خطأ: ';
++$PHPMAILER_LANG['variable_set']         = 'لا يمكن تعيين أو إعادة تعيين متغير: ';
+Index: core/libs/phpmailer/language/phpmailer.lang-nl.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-nl.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-nl.php	(revision )
+@@ -4,22 +4,21 @@
+ * Dutch Version by Tuxion <team@tuxion.nl>
+ */
+ 
+-$PHPMAILER_LANG['provide_address']      = 'Er moet tenmiste één ontvanger e-mailadres opgegeven worden.';//You must provide at least one recipient email address.
+-$PHPMAILER_LANG['mailer_not_supported'] = ' mailer wordt niet ondersteund.';// mailer is not supported.
+-$PHPMAILER_LANG['execute']              = 'Kon niet uitvoeren: ';//Could not execute: 
+-$PHPMAILER_LANG['instantiate']          = 'Kon mailfunctie niet initialiseren.';//Could not instantiate mail function.
+ $PHPMAILER_LANG['authenticate']         = 'SMTP-fout: authenticatie mislukt.';//SMTP Error: Could not authenticate.
+-$PHPMAILER_LANG['from_failed']          = 'Het volgende afzendersadres is mislukt: ';//The following From address failed: 
+-$PHPMAILER_LANG['recipients_failed']    = 'SMTP-fout: de volgende ontvangers zijn mislukt: ';//SMTP Error: The following recipients failed: 
+-$PHPMAILER_LANG['data_not_accepted']    = 'SMTP-fout: data niet geaccepteerd.';//SMTP Error: Data not accepted.
+ $PHPMAILER_LANG['connect_host']         = 'SMTP-fout: kon niet verbinden met SMTP-host.';//SMTP Error: Could not connect to SMTP host.
++$PHPMAILER_LANG['data_not_accepted']    = 'SMTP-fout: data niet geaccepteerd.';//SMTP Error: Data not accepted.
++$PHPMAILER_LANG['empty_message']        = 'Berichttekst is leeg';//Message body empty
++$PHPMAILER_LANG['encoding']             = 'Onbekende codering: ';//Unknown encoding:
++$PHPMAILER_LANG['execute']              = 'Kon niet uitvoeren: ';//Could not execute:
+-$PHPMAILER_LANG['file_access']          = 'Kreeg geen toegang tot bestand: ';//Could not access file: 
+-$PHPMAILER_LANG['file_open']            = 'Bestandsfout: kon bestand niet openen: ';//File Error: Could not open file: 
++$PHPMAILER_LANG['file_access']          = 'Kreeg geen toegang tot bestand: ';//Could not access file:
++$PHPMAILER_LANG['file_open']            = 'Bestandsfout: kon bestand niet openen: ';//File Error: Could not open file:
+-$PHPMAILER_LANG['encoding']             = 'Onbekende codering: ';//Unknown encoding: 
++$PHPMAILER_LANG['from_failed']          = 'Het volgende afzendersadres is mislukt: ';//The following From address failed:
++$PHPMAILER_LANG['instantiate']          = 'Kon mailfunctie niet initialiseren.';//Could not instantiate mail function.
++$PHPMAILER_LANG['invalid_address']      = 'Ongeldig adres';//Invalid address
++$PHPMAILER_LANG['mailer_not_supported'] = ' mailer wordt niet ondersteund.';// mailer is not supported.
++$PHPMAILER_LANG['provide_address']      = 'Er moet tenmiste één ontvanger e-mailadres opgegeven worden.';//You must provide at least one recipient email address.
++$PHPMAILER_LANG['recipients_failed']    = 'SMTP-fout: de volgende ontvangers zijn mislukt: ';//SMTP Error: The following recipients failed:
+-$PHPMAILER_LANG['signing']              = 'Signeerfout: ';//Signing Error: 
++$PHPMAILER_LANG['signing']              = 'Signeerfout: ';//Signing Error:
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () mislyktes.';
+-$PHPMAILER_LANG['smtp_error']           = 'SMTP-serverfout: ';//SMTP server error: 
++$PHPMAILER_LANG['smtp_error']           = 'SMTP-serverfout: ';//SMTP server error:
+-$PHPMAILER_LANG['empty_message']        = 'Berichttekst is leeg';//Message body empty
+-$PHPMAILER_LANG['invalid_address']      = 'Ongeldig adres';//Invalid address
+ $PHPMAILER_LANG['variable_set']         = 'Kan de volgende variablen niet instellen of resetten: ';//Cannot set or reset variable: 
+-
+-?>
+Index: core/libs/phpmailer/language/phpmailer.lang-tr.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-tr.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-tr.php	(revision )
+@@ -24,4 +24,3 @@
+ $PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP bağlantı() başarısız.';
+ $PHPMAILER_LANG['smtp_error']           = 'SMTP sunucu hatası: ';
+ $PHPMAILER_LANG['variable_set']         = 'Ayarlanamıyor yada sıfırlanamıyor: ';
+-?>
+Index: core/libs/phpmailer/language/phpmailer.lang-sk.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-sk.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-sk.php	(revision )
+@@ -23,4 +23,3 @@
+ $PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() zlyhalo.';
+ $PHPMAILER_LANG['smtp_error']           = 'SMTP chyba serveru: ';
+ $PHPMAILER_LANG['variable_set']         = 'Nemožno nastaviť alebo resetovať premennú: ';
+-?>
+Index: core/libs/phpmailer/language/phpmailer.lang-zh_cn.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-zh_cn.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-zh_cn.php	(revision )
+@@ -8,19 +8,18 @@
+ $PHPMAILER_LANG['authenticate'] = 'SMTP 错误：登录失败。';
+ $PHPMAILER_LANG['connect_host'] = 'SMTP 错误：无法连接到 SMTP 主机。';
+ $PHPMAILER_LANG['data_not_accepted'] = 'SMTP 错误：数据不被接受。';
+-//$P$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = '邮件正文为空';
+ $PHPMAILER_LANG['encoding'] = '未知编码: ';
+ $PHPMAILER_LANG['execute'] = '无法执行：';
+ $PHPMAILER_LANG['file_access'] = '无法访问文件：';
+ $PHPMAILER_LANG['file_open'] = '文件错误：无法打开文件：';
+ $PHPMAILER_LANG['from_failed'] = '发送地址错误：';
+ $PHPMAILER_LANG['instantiate'] = '未知函数调用。';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']        = '不发送，电子邮件地址是无效的： ';
+ $PHPMAILER_LANG['mailer_not_supported'] = '发信客户端不被支持。';
+ $PHPMAILER_LANG['provide_address'] = '必须提供至少一个收件人地址。';
+ $PHPMAILER_LANG['recipients_failed'] = 'SMTP 错误：收件人地址错误：';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = '签名错误： ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP连接（）失败。';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP服务器错误：';
++$PHPMAILER_LANG['variable_set']         = '不能设置或重新设置变量： ';
+\ No newline at end of file
+Index: core/libs/phpmailer/language/phpmailer.lang-es.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-es.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-es.php	(revision )
+@@ -8,19 +8,18 @@
+ $PHPMAILER_LANG['authenticate']         = 'Error SMTP: No se pudo autentificar.';
+ $PHPMAILER_LANG['connect_host']         = 'Error SMTP: No puedo conectar al servidor SMTP.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'Error SMTP: Datos no aceptados.';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Mensaje cuerpo vacío';
+ $PHPMAILER_LANG['encoding']             = 'Codificación desconocida: ';
+ $PHPMAILER_LANG['execute']              = 'No puedo ejecutar: ';
+ $PHPMAILER_LANG['file_access']          = 'No puedo acceder al archivo: ';
+ $PHPMAILER_LANG['file_open']            = 'Error de Archivo: No puede abrir el archivo: ';
+ $PHPMAILER_LANG['from_failed']          = 'La(s) siguiente(s) direcciones de remitente fallaron: ';
+ $PHPMAILER_LANG['instantiate']          = 'No pude crear una instancia de la función Mail.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']        = 'No envío, dirección de correo electrónico no es válida: ';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' mailer no está soportado.';
+ $PHPMAILER_LANG['provide_address']      = 'Debe proveer al menos una dirección de email como destinatario.';
+ $PHPMAILER_LANG['recipients_failed']    = 'Error SMTP: Los siguientes destinatarios fallaron: ';
+ $PHPMAILER_LANG['signing']              = 'Error al firmar: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () falló.';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
++$PHPMAILER_LANG['variable_set']         = 'No se puede establecer o restablecer variable: ';
+Index: core/libs/phpmailer/language/phpmailer.lang-zh.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-zh.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-zh.php	(revision )
+@@ -8,19 +8,18 @@
+ $PHPMAILER_LANG['authenticate'] = 'SMTP 錯誤：登錄失敗。';
+ $PHPMAILER_LANG['connect_host'] = 'SMTP 錯誤：無法連接到 SMTP 主機。';
+ $PHPMAILER_LANG['data_not_accepted'] = 'SMTP 錯誤：數據不被接受。';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = '邮件正文为空';
+ $PHPMAILER_LANG['encoding'] = '未知編碼: ';
+ $PHPMAILER_LANG['file_access'] = '無法訪問文件：';
+ $PHPMAILER_LANG['file_open'] = '文件錯誤：無法打開文件：';
+ $PHPMAILER_LANG['from_failed'] = '發送地址錯誤：';
+ $PHPMAILER_LANG['execute'] = '無法執行：';
+ $PHPMAILER_LANG['instantiate'] = '未知函數調用。';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']        = '不发送，电子邮件地址是无效的： ';
+ $PHPMAILER_LANG['provide_address'] = '必須提供至少一個收件人地址。';
+ $PHPMAILER_LANG['mailer_not_supported'] = '發信客戶端不被支持。';
+ $PHPMAILER_LANG['recipients_failed'] = 'SMTP 錯誤：收件人地址錯誤：';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = '签名错误： ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP连接（）失败。';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP服务器错误：';
++$PHPMAILER_LANG['variable_set']         = '不能设置或重新设置变量： ';
+Index: core/libs/phpmailer/language/phpmailer.lang-ja.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-ja.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-ja.php	(revision )
+@@ -5,22 +5,21 @@
+ * By Mitsuhiro Yoshida - http://mitstek.com/
+ */
+ 
+-$PHPMAILER_LANG['authenticate'] = 'SMTPエラー: 認証できませんでした。';
++$PHPMAILER_LANG['authenticate']         = 'SMTPエラー: 認証できませんでした。';
+-$PHPMAILER_LANG['connect_host'] = 'SMTPエラー: SMTPホストに接続できませんでした。';
++$PHPMAILER_LANG['connect_host']         = 'SMTPエラー: SMTPホストに接続できませんでした。';
+-$PHPMAILER_LANG['data_not_accepted'] = 'SMTPエラー: データが受け付けられませんでした。';
++$PHPMAILER_LANG['data_not_accepted']    = 'SMTPエラー: データが受け付けられませんでした。';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = '空のメッセージ本文';
+-$PHPMAILER_LANG['encoding'] = '不明なエンコーディング: ';
++$PHPMAILER_LANG['encoding']             = '不明なエンコーディング: ';
+-$PHPMAILER_LANG['execute'] = '実行できませんでした: ';
++$PHPMAILER_LANG['execute']              = '実行できませんでした: ';
+-$PHPMAILER_LANG['file_access'] = 'ファイルにアクセスできません: ';
++$PHPMAILER_LANG['file_access']          = 'ファイルにアクセスできません: ';
+-$PHPMAILER_LANG['file_open'] = 'ファイルエラー: ファイルを開けません: ';
++$PHPMAILER_LANG['file_open']            = 'ファイルエラー: ファイルを開けません: ';
+-$PHPMAILER_LANG['from_failed'] = '次のFromアドレスに間違いがあります: ';
++$PHPMAILER_LANG['from_failed']          = '次のFromアドレスに間違いがあります: ';
+-$PHPMAILER_LANG['instantiate'] = 'メール関数が正常に動作しませんでした。';
++$PHPMAILER_LANG['instantiate']          = 'メール関数が正常に動作しませんでした。';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']      = '、送信メールアドレスは無効ではありません： ';
+-$PHPMAILER_LANG['provide_address'] = '少なくとも1つメールアドレスを 指定する必要があります。';
++$PHPMAILER_LANG['provide_address']      = '少なくとも1つメールアドレスを 指定する必要があります。';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' メーラーがサポートされていません。';
+-$PHPMAILER_LANG['recipients_failed'] = 'SMTPエラー: 次の受信者アドレスに 間違いがあります: ';
++$PHPMAILER_LANG['recipients_failed']    = 'SMTPエラー: 次の受信者アドレスに 間違いがあります: ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'エラー署名： ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP接続（）が失敗しました。';
++$PHPMAILER_LANG['smtp_error']           = 'SMTPサーバーエラー： ';
++$PHPMAILER_LANG['variable_set']         = '設定したり、変数をリセットすることはできません。 ';
+Index: core/libs/phpmailer/language/phpmailer.lang-pl.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-pl.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-pl.php	(revision )
+@@ -4,22 +4,21 @@
+ * Polish Version
+ */
+ 
+-$PHPMAILER_LANG['authenticate'] = 'Błąd SMTP: Nie można przeprowadzić autentykacji.';
++$PHPMAILER_LANG['authenticate']         = 'Błąd SMTP: Nie można przeprowadzić autentykacji.';
+-$PHPMAILER_LANG['connect_host'] = 'Błąd SMTP: Nie można połączyć się z wybranym hostem.';
++$PHPMAILER_LANG['connect_host']         = 'Błąd SMTP: Nie można połączyć się z wybranym hostem.';
+-$PHPMAILER_LANG['data_not_accepted'] = 'Błąd SMTP: Dane nie zostały przyjęte.';
++$PHPMAILER_LANG['data_not_accepted']    = 'Błąd SMTP: Dane nie zostały przyjęte.';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Treść wiadomości jest pusty';
+-$PHPMAILER_LANG['encoding'] = 'Nieznany sposób kodowania znaków: ';
++$PHPMAILER_LANG['encoding']             = 'Nieznany sposób kodowania znaków: ';
+-$PHPMAILER_LANG['execute'] = 'Nie można uruchomić: ';
++$PHPMAILER_LANG['execute']              = 'Nie można uruchomić: ';
+-$PHPMAILER_LANG['file_access'] = 'Brak dostępu do pliku: ';
++$PHPMAILER_LANG['file_access']          = 'Brak dostępu do pliku: ';
+-$PHPMAILER_LANG['file_open'] = 'Nie można otworzyć pliku: ';
++$PHPMAILER_LANG['file_open']            = 'Nie można otworzyć pliku: ';
+-$PHPMAILER_LANG['from_failed'] = 'Następujący adres Nadawcy jest jest nieprawidłowy: ';
++$PHPMAILER_LANG['from_failed']          = 'Następujący adres Nadawcy jest jest nieprawidłowy: ';
+-$PHPMAILER_LANG['instantiate'] = 'Nie można wywołać funkcji mail(). Sprawdź konfigurację serwera.';
++$PHPMAILER_LANG['instantiate']          = 'Nie można wywołać funkcji mail(). Sprawdź konfigurację serwera.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']      = 'Nie wysyła, adres email jest nieprawidłowy: ';
+-$PHPMAILER_LANG['provide_address'] = 'Należy podać prawidłowy adres email Odbiorcy.';
++$PHPMAILER_LANG['provide_address']      = 'Należy podać prawidłowy adres email Odbiorcy.';
+ $PHPMAILER_LANG['mailer_not_supported'] = 'Wybrana metoda wysyłki wiadomości nie jest obsługiwana.';
+-$PHPMAILER_LANG['recipients_failed'] = 'Błąd SMTP: Następujący odbiorcy są nieprawidłowi: ';
++$PHPMAILER_LANG['recipients_failed']    = 'Błąd SMTP: Następujący odbiorcy są nieprawidłowi: ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'Podpisywanie Błąd: ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () nie powiodło się.';
++$PHPMAILER_LANG['smtp_error']           = 'Błąd serwera SMTP: ';
++$PHPMAILER_LANG['variable_set']         = 'Nie można ustawić lub zresetować zmienną: ';
+Index: core/libs/phpmailer/language/phpmailer.lang-fo.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-fo.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-fo.php	(revision )
+@@ -9,19 +9,18 @@
+ $PHPMAILER_LANG['authenticate']         = 'SMTP feilur: Kundi ikki góðkenna.';
+ $PHPMAILER_LANG['connect_host']         = 'SMTP feilur: Kundi ikki knýta samband við SMTP vert.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'SMTP feilur: Data ikki góðkent.';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Melding kroppen tom';
+ $PHPMAILER_LANG['encoding']             = 'Ókend encoding: ';
+ $PHPMAILER_LANG['execute']              = 'Kundi ikki útføra: ';
+ $PHPMAILER_LANG['file_access']          = 'Kundi ikki tilganga fílu: ';
+ $PHPMAILER_LANG['file_open']            = 'Fílu feilur: Kundi ikki opna fílu: ';
+ $PHPMAILER_LANG['from_failed']          = 'fylgjandi Frá/From adressa miseydnaðist: ';
+ $PHPMAILER_LANG['instantiate']          = 'Kuni ikki instantiera mail funktión.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']      = 'Ikke sende, e-postadresse er ugyldig: ';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' er ikki supporterað.';
+ $PHPMAILER_LANG['provide_address']      = 'Tú skal uppgeva minst móttakara-emailadressu(r).';
+ $PHPMAILER_LANG['recipients_failed']    = 'SMTP Feilur: Fylgjandi móttakarar miseydnaðust: ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'Signering Feil:';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () mislyktes.';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP server error:';
++$PHPMAILER_LANG['variable_set']         = 'Kan ikke angi eller tilbakestille variabel: ';
+Index: core/libs/phpmailer/language/phpmailer.lang-ru.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-ru.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-ru.php	(revision )
+@@ -22,5 +22,3 @@
+ $PHPMAILER_LANG['smtp_connect_failed']  = 'Ошибка соединения с SMTP-сервером';
+ $PHPMAILER_LANG['smtp_error']           = 'Ошибка SMTP-сервера: ';
+ $PHPMAILER_LANG['variable_set']         = 'Невозможно установить или переустановить переменную: ';
+-
+-?>
+Index: core/libs/phpmailer/language/phpmailer.lang-cz.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-cz.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-cz.php	(revision )
+@@ -7,19 +7,19 @@
+ $PHPMAILER_LANG['authenticate']         = 'SMTP Error: Chyba autentikace.';
+ $PHPMAILER_LANG['connect_host']         = 'SMTP Error: Nelze navázat spojení se SMTP serverem.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'SMTP Error: Data nebyla pøijata';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Tělo zprávy prázdný';
+ $PHPMAILER_LANG['encoding']             = 'Neznámé kódování: ';
+ $PHPMAILER_LANG['execute']              = 'Nelze provést: ';
+ $PHPMAILER_LANG['file_access']          = 'Soubor nenalezen: ';
+ $PHPMAILER_LANG['file_open']            = 'File Error: Nelze otevøít soubor pro ètení: ';
+ $PHPMAILER_LANG['from_failed']          = 'Následující adresa From je nesprávná: ';
+ $PHPMAILER_LANG['instantiate']          = 'Nelze vytvoøit instanci emailové funkce.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']        = 'Neposíláte, e-mailová adresa je neplatná: ';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' mailový klient není podporován.';
+ $PHPMAILER_LANG['provide_address']      = 'Musíte zadat alespoò jednu emailovou adresu pøíjemce.';
+ $PHPMAILER_LANG['recipients_failed']    = 'SMTP Error: Adresy pøíjemcù nejsou správné ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'Podepisování Chyba: ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () se nezdařilo.';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
++$PHPMAILER_LANG['variable_set']         = 'Nelze nastavit nebo obnovit proměnné: ';
++
+Index: core/libs/phpmailer/language/phpmailer.lang-it.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-it.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-it.php	(revision )
+@@ -9,19 +9,19 @@
+ $PHPMAILER_LANG['authenticate']         = 'SMTP Error: Impossibile autenticarsi.';
+ $PHPMAILER_LANG['connect_host']         = 'SMTP Error: Impossibile connettersi all\'host SMTP.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'SMTP Error: Data non accettati dal server.';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Corpo del messaggio vuoto';
+ $PHPMAILER_LANG['encoding']             = 'Encoding set dei caratteri sconosciuto: ';
+ $PHPMAILER_LANG['execute']              = 'Impossibile eseguire l\'operazione: ';
+ $PHPMAILER_LANG['file_access']          = 'Impossibile accedere al file: ';
+ $PHPMAILER_LANG['file_open']            = 'File Error: Impossibile aprire il file: ';
+ $PHPMAILER_LANG['from_failed']          = 'I seguenti indirizzi mittenti hanno generato errore: ';
+ $PHPMAILER_LANG['instantiate']          = 'Impossibile istanziare la funzione mail';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']      = 'Non inviare, indirizzo e-mail non è valido: ';
+ $PHPMAILER_LANG['provide_address']      = 'Deve essere fornito almeno un indirizzo ricevente';
+ $PHPMAILER_LANG['mailer_not_supported'] = 'Mailer non supportato';
+ $PHPMAILER_LANG['recipients_failed']    = 'SMTP Error: I seguenti indirizzi destinatari hanno generato errore: ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'Firma di errore: ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () non riuscita.';
++$PHPMAILER_LANG['smtp_error']           = 'Server SMTP di errore: ';
++$PHPMAILER_LANG['variable_set']         = 'Non è possibile impostare o resettare variabile: ';
++
+Index: core/libs/phpmailer/language/phpmailer.lang-de.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-de.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-de.php	(revision )
+@@ -22,4 +22,3 @@
+ $PHPMAILER_LANG['smtp_connect_failed']  = 'Verbindung zu SMTP Server fehlgeschlagen.';
+ $PHPMAILER_LANG['smtp_error']           = 'Fehler vom SMTP Server: ';
+ $PHPMAILER_LANG['variable_set']         = 'Kann Variable nicht setzen oder zurücksetzen: ';
+-?>
+Index: core/libs/phpmailer/language/phpmailer.lang-se.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-se.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-se.php	(revision )
+@@ -8,19 +8,18 @@
+ $PHPMAILER_LANG['authenticate']         = 'SMTP fel: Kunde inte autentisera.';
+ $PHPMAILER_LANG['connect_host']         = 'SMTP fel: Kunde inte ansluta till SMTP-server.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'SMTP fel: Data accepterades inte.';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Meddelandetext tom';
+ $PHPMAILER_LANG['encoding']             = 'Okänt encode-format: ';
+ $PHPMAILER_LANG['execute']              = 'Kunde inte köra: ';
+ $PHPMAILER_LANG['file_access']          = 'Ingen åtkomst till fil: ';
+ $PHPMAILER_LANG['file_open']            = 'Fil fel: Kunde inte öppna fil: ';
+ $PHPMAILER_LANG['from_failed']          = 'Följande avsändaradress är felaktig: ';
+ $PHPMAILER_LANG['instantiate']          = 'Kunde inte initiera e-postfunktion.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']        = 'Inte skicka, e-postadress är ogiltig: ';
+ $PHPMAILER_LANG['provide_address']      = 'Du måste ange minst en mottagares e-postadress.';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' mailer stöds inte.';
+ $PHPMAILER_LANG['recipients_failed']    = 'SMTP fel: Följande mottagare är felaktig: ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'Signering Fel: ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () misslyckades.';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP-server fel: ';
++$PHPMAILER_LANG['variable_set']         = 'Det går inte att ställa in eller återställa variabel: ';
+Index: core/libs/phpmailer/language/phpmailer.lang-ro.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-ro.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-ro.php	(revision )
+@@ -9,19 +9,18 @@
+ $PHPMAILER_LANG['authenticate']         = 'Eroare SMTP: Nu a functionat autentificarea.';
+ $PHPMAILER_LANG['connect_host']         = 'Eroare SMTP: Nu m-am putut conecta la adresa SMTP.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'Eroare SMTP: Continutul mailului nu a fost acceptat.';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Gol mesaj organism';
+ $PHPMAILER_LANG['encoding']             = 'Encodare necunoscuta: ';
+ $PHPMAILER_LANG['execute']              = 'Nu pot executa:  ';
+ $PHPMAILER_LANG['file_access']          = 'Nu pot accesa fisierul: ';
+ $PHPMAILER_LANG['file_open']            = 'Eroare de fisier: Nu pot deschide fisierul: ';
+ $PHPMAILER_LANG['from_failed']          = 'Urmatoarele adrese From au dat eroare: ';
+ $PHPMAILER_LANG['instantiate']          = 'Nu am putut instantia functia mail.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']      = 'Nu au trimis, adresa de e-mail nu este validă: ';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' mailer nu este suportat.';
+ $PHPMAILER_LANG['provide_address']      = 'Trebuie sa adaugati cel putin un recipient (adresa de mail).';
+ $PHPMAILER_LANG['recipients_failed']    = 'Eroare SMTP: Urmatoarele adrese de mail au dat eroare: ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'Semnarea Eroare: ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () a eșuat.';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP Eroare de server: ';
++$PHPMAILER_LANG['variable_set']         = 'Nu se pot seta sau reseta variabila: ';
+Index: core/libs/phpmailer/language/phpmailer.lang-fi.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-fi.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-fi.php	(revision )
+@@ -8,20 +8,19 @@
+ $PHPMAILER_LANG['authenticate']         = 'SMTP-virhe: käyttäjätunnistus epäonnistui.';
+ $PHPMAILER_LANG['connect_host']         = 'SMTP-virhe: yhteys palvelimeen ei onnistu.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'SMTP-virhe: data on virheellinen.';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Viesti runko tyhjä';
+ $PHPMAILER_LANG['encoding']             = 'Tuntematon koodaustyyppi: ';
+ $PHPMAILER_LANG['execute']              = 'Suoritus epäonnistui: ';
+ $PHPMAILER_LANG['file_access']          = 'Seuraavaan tiedostoon ei ole oikeuksia: ';
+ $PHPMAILER_LANG['file_open']            = 'Tiedostovirhe: Ei voida avata tiedostoa: ';
+ $PHPMAILER_LANG['from_failed']          = 'Seuraava lähettäjän osoite on virheellinen: ';
+ $PHPMAILER_LANG['instantiate']          = 'mail-funktion luonti epäonnistui.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']      = 'Ei lähettäminen, Sähköpostiosoite on virheellinen: ';
+ $PHPMAILER_LANG['mailer_not_supported'] = 'postivälitintyyppiä ei tueta.';
+ $PHPMAILER_LANG['provide_address']      = 'Aseta vähintään yksi vastaanottajan sähk&ouml;postiosoite.';
+ $PHPMAILER_LANG['recipients_failed']    = 'SMTP-virhe: seuraava vastaanottaja osoite on virheellinen.';
+ $PHPMAILER_LANG['encoding']             = 'Tuntematon koodaustyyppi: ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'Allekirjoitus Virhe: ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () epäonnistui.';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP-palvelimen virhe: ';
++$PHPMAILER_LANG['variable_set']         = 'Ei voi määrittää tai nollata muuttuja: ';
+Index: core/libs/phpmailer/test/phpmailerTest.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/test/phpmailerTest.php	(date 1363606037000)
++++ core/libs/phpmailer/test/phpmailerTest.php	(revision )
+@@ -52,17 +52,15 @@
+     /**
+      * @var string Default include path
+      */
+-    public $INCLUDE_DIR = '../';
++    public $INCLUDE_DIR;
+ 
+     /**
+      * Run before each test is started.
+      */
+     function setUp()
+     {
++	    $this->INCLUDE_DIR = __DIR__ . '/../';
+ 
+-        if (file_exists('./testbootstrap.php')) {
+-            include './testbootstrap.php'; //Overrides go in here
+-        }
+         require_once $this->INCLUDE_DIR . 'class.phpmailer.php';
+         $this->Mail = new PHPMailer;
+ 
+@@ -111,8 +109,14 @@
+         if (array_key_exists('mail_cc', $_REQUEST) and strlen($_REQUEST['mail_cc']) > 0) {
+             $this->SetAddress($_REQUEST['mail_cc'], 'Carbon User', 'cc');
+         }
++
++	    if(file_exists(__DIR__ . '/testbootstrap.php')){
++		    // Let the bootstrap have the final say on the Mail object
++		    include __DIR__ . '/testbootstrap.php'; //Overrides go in here
+-    }
++	    }
+ 
++    }
++
+     /**
+      * Run after each test is completed.
+      */
+@@ -432,7 +436,7 @@
+         $this->Mail->IsHTML(true);
+ 
+         if (!$this->Mail->AddEmbeddedImage(
+-            "test.png",
++            __DIR__ . "/test.png",
+             "my-attach",
+             "test.png",
+             "base64",
+@@ -463,7 +467,7 @@
+         $this->Mail->IsHTML(true);
+ 
+         if (!$this->Mail->AddEmbeddedImage(
+-            "test.png",
++	        __DIR__ . "/test.png",
+             "my-attach",
+             "test.png",
+             "base64",
+@@ -548,6 +552,12 @@
+      */
+     function test_SendmailSend()
+     {
++	    // If this medium is not enabled, do not test it!
++	    if($this->Mail->Mailer != 'sendmail'){
++		    $this->markTestSkipped('sendmail not enabled, skipping send test');
++		    return;
++	    }
++
+         $this->Mail->Body = "Sending via sendmail";
+         $this->BuildBody();
+         $subject = $this->Mail->Subject;
+@@ -562,6 +572,12 @@
+      */
+     function test_MailSend()
+     {
++	    // If this medium is not enabled, do not test it!
++	    if($this->Mail->Mailer != 'mail'){
++		    $this->markTestSkipped('mail not enabled, skipping send test');
++		    return;
++	    }
++
+         $this->Mail->Body = "Sending via mail()";
+         $this->BuildBody();
+         $subject = $this->Mail->Subject;
+@@ -614,6 +630,11 @@
+         $this->assertTrue($this->Mail->Send() == false, "Send succeeded");
+         $this->assertTrue($this->Mail->IsError(), "No error found");
+         $this->assertEquals('You must provide at least one recipient email address.', $this->Mail->ErrorInfo);
++
++	    if(!isset($_REQUEST['mail_to'])){
++		    $this->markTestSkipped('Skipping re-send after removing addresses, no address requested.');
++		    return;
++	    }
+         $this->Mail->AddAddress($_REQUEST['mail_to']);
+         $this->assertTrue($this->Mail->Send(), "Send failed");
+     }
+@@ -648,7 +669,7 @@
+     {
+         $this->Mail->SetLanguage('en');
+         $definedStrings = $this->Mail->GetTranslations();
+-        foreach (new DirectoryIterator('../language') as $fileInfo) {
++        foreach (new DirectoryIterator(__DIR__ . '/../language') as $fileInfo) {
+             if ($fileInfo->isDot()) {
+                 continue;
+             }
+@@ -671,20 +692,21 @@
+      */
+     function test_Encodings()
+     {
+-        $this->Mail->CharSet = 'iso-8859-1';
++	    // Sorry man, I can't type in ISO-8859-1, but I can do UTF-8!
++        $this->Mail->CharSet = 'UTF-8';
+         $this->assertEquals(
+-            '=A1Hola!_Se=F1or!',
+-            $this->Mail->EncodeQ('�Hola! Se�or!', 'text'),
++            '=C2=A1Hola!_Se=C3=B1or!',
++            $this->Mail->EncodeQ('¡Hola! Señor!', 'text'),
+             'Q Encoding (text) failed'
+         );
+         $this->assertEquals(
+-            '=A1Hola!_Se=F1or!',
+-            $this->Mail->EncodeQ('�Hola! Se�or!', 'comment'),
++            '=C2=A1Hola!_Se=C3=B1or!',
++            $this->Mail->EncodeQ('¡Hola! Señor!', 'comment'),
+             'Q Encoding (comment) failed'
+         );
+         $this->assertEquals(
+-            '=A1Hola!_Se=F1or!',
+-            $this->Mail->EncodeQ('�Hola! Se�or!', 'phrase'),
++            '=C2=A1Hola!_Se=C3=B1or!',
++            $this->Mail->EncodeQ('¡Hola! Señor!', 'phrase'),
+             'Q Encoding (phrase) failed'
+         );
+     }
+Index: core/libs/phpmailer/language/phpmailer.lang-no.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-no.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-no.php	(revision )
+@@ -7,19 +7,18 @@
+ $PHPMAILER_LANG['authenticate']         = 'SMTP Feil: Kunne ikke authentisere.';
+ $PHPMAILER_LANG['connect_host']         = 'SMTP Feil: Kunne ikke koble til SMTP host.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'SMTP Feil: Data ble ikke akseptert.';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Melding kroppen tom';
+ $PHPMAILER_LANG['encoding']             = 'Ukjent encoding: ';
+ $PHPMAILER_LANG['execute']              = 'Kunne ikke utføre: ';
+ $PHPMAILER_LANG['file_access']          = 'Kunne ikke få tilgang til filen: ';
+ $PHPMAILER_LANG['file_open']            = 'Fil feil: Kunne ikke åpne filen: ';
+ $PHPMAILER_LANG['from_failed']          = 'Følgende Fra feilet: ';
+ $PHPMAILER_LANG['instantiate']          = 'Kunne ikke instantiate mail funksjonen.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']      = 'Ikke sende, e-postadresse er ugyldig: ';
+ $PHPMAILER_LANG['provide_address']      = 'Du må ha med minst en mottager adresse.';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' mailer er ikke supportert.';
+ $PHPMAILER_LANG['recipients_failed']    = 'SMTP Feil: Følgende mottagere feilet: ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'Signering Feil:';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () mislyktes.';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP server error:';
++$PHPMAILER_LANG['variable_set']         = 'Kan ikke angi eller tilbakestille variabel: ';
+Index: core/libs/phpmailer/language/phpmailer.lang-fr.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-fr.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-fr.php	(revision )
+@@ -14,12 +14,11 @@
+ $PHPMAILER_LANG['file_open']            = 'Erreur Fichier : ouverture impossible : ';
+ $PHPMAILER_LANG['from_failed']          = 'L\'adresse d\'expéditeur suivante a échouée : ';
+ $PHPMAILER_LANG['instantiate']          = 'Impossible d\'instancier la fonction mail.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']        = 'Pas d\'envoi, adresse e-mail n\'est pas valide: ';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' client de messagerie non supporté.';
+ $PHPMAILER_LANG['provide_address']      = 'Vous devez fournir au moins une adresse de destinataire.';
+ $PHPMAILER_LANG['recipients_failed']    = 'Erreur SMTP : Les destinataires suivants sont en erreur : ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'Signature d\'erreur: ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () a échoué.';
++$PHPMAILER_LANG['smtp_error']           = 'Erreur du serveur SMTP: ';
++$PHPMAILER_LANG['variable_set']         = 'Vous ne pouvez pas définir ou redéfinir la variable: ';
+Index: core/libs/phpmailer/language/phpmailer.lang-dk.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-dk.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-dk.php	(revision )
+@@ -8,19 +8,18 @@
+ $PHPMAILER_LANG['authenticate']         = 'SMTP fejl: Kunne ikke logge på.';
+ $PHPMAILER_LANG['connect_host']         = 'SMTP fejl: Kunne ikke tilslutte SMTP serveren.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'SMTP fejl: Data kunne ikke accepteres.';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Message krop tom';
+ $PHPMAILER_LANG['encoding']             = 'Ukendt encode-format: ';
+ $PHPMAILER_LANG['execute']              = 'Kunne ikke køre: ';
+ $PHPMAILER_LANG['file_access']          = 'Ingen adgang til fil: ';
+ $PHPMAILER_LANG['file_open']            = 'Fil fejl: Kunne ikke åbne filen: ';
+ $PHPMAILER_LANG['from_failed']          = 'Følgende afsenderadresse er forkert: ';
+ $PHPMAILER_LANG['instantiate']          = 'Kunne ikke initialisere email funktionen.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']        = 'Ikke sende, e-mail adresse er ugyldig: ';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' mailer understøttes ikke.';
+ $PHPMAILER_LANG['provide_address']      = 'Du skal indtaste mindst en modtagers emailadresse.';
+ $PHPMAILER_LANG['recipients_failed']    = 'SMTP fejl: Følgende modtagere er forkerte: ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'Signing Fejl: ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () mislykkedes.';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP-server error: ';
++$PHPMAILER_LANG['variable_set']         = 'Kan ikke indstille eller nulstille variable: ';
+Index: core/libs/phpmailer/language/phpmailer.lang-ca.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-ca.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-ca.php	(revision )
+@@ -8,19 +8,18 @@
+ $PHPMAILER_LANG['authenticate']         = 'Error SMTP: No s\'hapogut autenticar.';
+ $PHPMAILER_LANG['connect_host']         = 'Error SMTP: No es pot connectar al servidor SMTP.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'Error SMTP: Dades no acceptades.';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Missatge cos buit';
+ $PHPMAILER_LANG['encoding']             = 'Codificació desconeguda: ';
+ $PHPMAILER_LANG['execute']              = 'No es pot executar: ';
+ $PHPMAILER_LANG['file_access']          = 'No es pot accedir a l\'arxiu: ';
+ $PHPMAILER_LANG['file_open']            = 'Error d\'Arxiu: No es pot obrir l\'arxiu: ';
+ $PHPMAILER_LANG['from_failed']          = 'La(s) següent(s) adreces de remitent han fallat: ';
+ $PHPMAILER_LANG['instantiate']          = 'No s\'ha pogut crear una instància de la funció Mail.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']      = 'No enviament, adreça de correu electrònic no és vàlida: ';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' mailer no està suportat';
+ $PHPMAILER_LANG['provide_address']      = 'S\'ha de proveir almenys una adreça d\'email com a destinatari.';
+ $PHPMAILER_LANG['recipients_failed']    = 'Error SMTP: Els següents destinataris han fallat: ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'La signatura d\'error: ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () ha fallat.';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
++$PHPMAILER_LANG['variable_set']         = 'No es pot establir o restablir variable: ';
+Index: core/libs/phpmailer/language/phpmailer.lang-ch.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-ch.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-ch.php	(revision )
+@@ -8,19 +8,18 @@
+ $PHPMAILER_LANG['authenticate'] = 'SMTP 错误：身份验证失败。';
+ $PHPMAILER_LANG['connect_host'] = 'SMTP 错误: 不能连接SMTP主机。';
+ $PHPMAILER_LANG['data_not_accepted'] = 'SMTP 错误: 数据不可接受。';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = '邮件正文为空';
+ $PHPMAILER_LANG['encoding'] = '未知编码：';
+ $PHPMAILER_LANG['execute'] = '不能执行: ';
+ $PHPMAILER_LANG['file_access'] = '不能访问文件：';
+ $PHPMAILER_LANG['file_open'] = '文件错误：不能打开文件：';
+ $PHPMAILER_LANG['from_failed'] = '下面的发送地址邮件发送失败了： ';
+ $PHPMAILER_LANG['instantiate'] = '不能实现mail方法。';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']        = '不发送，电子邮件地址是无效的： ';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' 您所选择的发送邮件的方法并不支持。';
+ $PHPMAILER_LANG['provide_address'] = '您必须提供至少一个 收信人的email地址。';
+ $PHPMAILER_LANG['recipients_failed'] = 'SMTP 错误： 下面的 收件人失败了： ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = '签名错误： ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP连接（）失败。';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP服务器错误：';
++$PHPMAILER_LANG['variable_set']         = '不能设置或重新设置变量： ';
+Index: core/libs/phpmailer/language/phpmailer.lang-br.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- core/libs/phpmailer/language/phpmailer.lang-br.php	(date 1363606037000)
++++ core/libs/phpmailer/language/phpmailer.lang-br.php	(revision )
+@@ -8,19 +8,18 @@
+ $PHPMAILER_LANG['authenticate']         = 'Erro de SMTP: Não foi possível autenticar.';
+ $PHPMAILER_LANG['connect_host']         = 'Erro de SMTP: Não foi possível conectar com o servidor SMTP.';
+ $PHPMAILER_LANG['data_not_accepted']    = 'Erro de SMTP: Dados não aceitos.';
+-//$PHPMAILER_LANG['empty_message']        = 'Message body empty';
++$PHPMAILER_LANG['empty_message']        = 'Corpo da mensagem vazia';
+ $PHPMAILER_LANG['encoding']             = 'Codificação desconhecida: ';
+ $PHPMAILER_LANG['execute']              = 'Não foi possível executar: ';
+ $PHPMAILER_LANG['file_access']          = 'Não foi possível acessar o arquivo: ';
+ $PHPMAILER_LANG['file_open']            = 'Erro de Arquivo: Não foi possível abrir o arquivo: ';
+ $PHPMAILER_LANG['from_failed']          = 'Os endereços de rementente a seguir falharam: ';
+ $PHPMAILER_LANG['instantiate']          = 'Não foi possível instanciar a função mail.';
+-//$PHPMAILER_LANG['invalid_address']        = 'Not sending, email address is invalid: ';
++$PHPMAILER_LANG['invalid_address']      = 'Não envio, endereço de e-mail é inválido: ';
+ $PHPMAILER_LANG['mailer_not_supported'] = ' mailer não suportado.';
+ $PHPMAILER_LANG['provide_address']      = 'Você deve fornecer pelo menos um endereço de destinatário de email.';
+ $PHPMAILER_LANG['recipients_failed']    = 'Erro de SMTP: Os endereços de destinatário a seguir falharam: ';
+-//$PHPMAILER_LANG['signing']              = 'Signing Error: ';
+-//$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect() failed.';
+-//$PHPMAILER_LANG['smtp_error']           = 'SMTP server error: ';
+-//$PHPMAILER_LANG['variable_set']         = 'Cannot set or reset variable: ';
+-?>
++$PHPMAILER_LANG['signing']              = 'Assinatura de erro: ';
++$PHPMAILER_LANG['smtp_connect_failed']  = 'SMTP Connect () falhou.';
++$PHPMAILER_LANG['smtp_error']           = 'SMTP erro do servidor: ';
++$PHPMAILER_LANG['variable_set']         = 'Não é possível definir ou redefinir variável: ';
