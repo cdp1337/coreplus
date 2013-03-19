@@ -44,6 +44,11 @@ class UserSocialHelper {
 		}
 	}
 
+	public static function ResolveUsernameById($userid){
+		$user = User::Construct($userid);
+		return $user->get('username') ? $user->get('username') : $user->get('id');
+	}
+
 	public static function ResolveProfileLinkById($userid){
 		$user = User::Find(array('id' => $userid), 1);
 		if(!$user) return false;
