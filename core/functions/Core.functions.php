@@ -22,13 +22,15 @@
 
 namespace Core;
 
+use DMI;
+use Cache;
+
 /**
  * Shortcut function to get the current system database/datamodel interface.
- *
  * @return DMI_Backend
  */
-function DB(){
-	return \DMI::GetSystemDMI()->connection();
+function db(){
+	return DMI::GetSystemDMI()->connection();
 }
 
 /**
@@ -37,7 +39,7 @@ function DB(){
  * @return Cache
  */
 function cache(){
-	return \Cache::GetSystemCache();
+	return Cache::GetSystemCache();
 }
 
 /**
@@ -173,7 +175,7 @@ function directory($directory){
  */
 function get_standard_http_headers($forcurl = false, $autoclose = false){
 	$headers = array(
-		'User-Agent: Core Plus ' . self::GetComponent()->getVersion() . ' (http://corepl.us)',
+		'User-Agent: Core Plus ' . Core::GetComponent()->getVersion() . ' (http://corepl.us)',
 		'Servername: ' . SERVERNAME,
 	);
 
@@ -210,17 +212,17 @@ function resolve_asset($asset){
 
 	// Maybe it's cached :)
 	$keyname = 'asset-resolveurl';
-	$cachevalue = self::Cache()->get($keyname, (3600 * 24));
+	$cachevalue = Core::Cache()->get($keyname, (3600 * 24));
 
 	if(!$cachevalue) $cachevalue = array();
 
 	if(!isset($cachevalue[$asset])){
 		// Well, look it up!
-		$f = self::File($asset);
+		$f = Core::File($asset);
 
 		$cachevalue[$asset] = $f->getURL();
 		// Save this for future lookups.
-		self::Cache()->set($keyname, $cachevalue, (3600 * 24));
+		Core::Cache()->set($keyname, $cachevalue, (3600 * 24));
 	}
 
 	return $cachevalue[$asset];
@@ -281,7 +283,7 @@ function Redirect($page){
 	//This is NOT designed to refresh the current page.	If the pageto redirect to IS
 	// this current page, simply do nothing.
 
-	$page = self::ResolveLink($page);
+	$page = Core::ResolveLink($page);
 
 	//if(!preg_match('/^[a-zA-Z]{0,7}:\/\//', $page)){
 	//	$m = PageModel::Find(array('baseurl' => $page), 1);
@@ -601,7 +603,7 @@ function _AttachCoreJavascript(){
 
 	$script = '<script type="text/javascript">
 var Core = {
-	Version: "' . self::GetComponent()->getVersion() . '",
+	Version: "' . Core::GetComponent()->getVersion() . '",
 	ROOT_WDIR: "' . ROOT_WDIR . '",
 	ROOT_URL: "' . ROOT_URL . '",
 	ROOT_URL_SSL: "' . ROOT_URL_SSL . '",
