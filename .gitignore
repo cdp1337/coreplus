@@ -41,3 +41,7 @@
 
 # These are used in development environments.
 /exports
+
+# These are used in the build system.
+/ant.properties
+/build/*

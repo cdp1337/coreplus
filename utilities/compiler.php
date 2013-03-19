@@ -27,7 +27,7 @@ if(!isset($_SERVER['SHELL'])){
 	die("Please run this script from the command line.");
 }
 
-define('ROOT_PDIR', dirname(__DIR__) . '/');
+define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
 
 // Include the core bootstrap, this will get the system functional.
 require_once(ROOT_PDIR . 'core/bootstrap.php');
