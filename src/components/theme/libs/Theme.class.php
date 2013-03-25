@@ -567,8 +567,12 @@ class Theme{
 	 * @throws InstallerException
 	 */
 	private function _installAssets(){
-		$assetbase = ConfigHandler::Get('/core/filestore/assetdir');
+		$assetbase = CDN_LOCAL_ASSETDIR;
 		$coretheme = ConfigHandler::Get('/theme/selected');
+		// WHY is core theme set to blank?!?
+		// Damn installer...
+		// this happens in the installer.
+		if($coretheme === null) $coretheme = 'default';
 		$theme = strtolower($this->getName());
 		$changes = array();
 		
