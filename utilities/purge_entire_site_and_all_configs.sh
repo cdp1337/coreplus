@@ -4,6 +4,7 @@
 # restore it back to git checkout defaults.
 # aka, DO NOT USE THIS!
 
+BASEDIR="$(readlink -f $(dirname $0)/..)"
 ROOTPDIR="$(readlink -f $(dirname $0)/../src)"
 
 REALLY=""
@@ -33,17 +34,17 @@ fi
 
 
 # Before I purge the configuration file... I need to pull out the relevant information.
-DBHOST="$(xpath -q -e '/configuration/return[@name="database_server"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
-DBPORT="$(xpath -q -e '/configuration/return[@name="database_port"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
-DBTYPE="$(xpath -q -e '/configuration/return[@name="database_type"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
-DBNAME="$(xpath -q -e '/configuration/return[@name="database_name"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
-DBUSER="$(xpath -q -e '/configuration/return[@name="database_user"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
-DBPASS="$(xpath -q -e '/configuration/return[@name="database_pass"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
+DBHOST="$($BASEDIR/vendor/xpath.pl -q -e '/configuration/return[@name="database_server"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
+DBPORT="$($BASEDIR/vendor/xpath.pl -q -e '/configuration/return[@name="database_port"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
+DBTYPE="$($BASEDIR/vendor/xpath.pl -q -e '/configuration/return[@name="database_type"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
+DBNAME="$($BASEDIR/vendor/xpath.pl -q -e '/configuration/return[@name="database_name"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
+DBUSER="$($BASEDIR/vendor/xpath.pl -q -e '/configuration/return[@name="database_user"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
+DBPASS="$($BASEDIR/vendor/xpath.pl -q -e '/configuration/return[@name="database_pass"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
 
-SITENAME="$(xpath -q -e '/configuration/define[@name="SITENAME"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
-CDNTYPE="$(xpath -q -e '/configuration/define[@name="CDN_TYPE"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
-CDNLOCALASSETDIR="$(xpath -q -e '/configuration/define[@name="CDN_LOCAL_ASSETDIR"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
-CDNLOCALPUBLICDIR="$(xpath -q -e '/configuration/define[@name="CDN_LOCAL_PUBLICDIR"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
+SITENAME="$($BASEDIR/vendor/xpath.pl -q -e '/configuration/define[@name="SITENAME"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
+CDNTYPE="$($BASEDIR/vendor/xpath.pl -q -e '/configuration/define[@name="CDN_TYPE"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
+CDNLOCALASSETDIR="$($BASEDIR/vendor/xpath.pl -q -e '/configuration/define[@name="CDN_LOCAL_ASSETDIR"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
+CDNLOCALPUBLICDIR="$($BASEDIR/vendor/xpath.pl -q -e '/configuration/define[@name="CDN_LOCAL_PUBLICDIR"]/value' src/config/configuration.xml | sed 's:^<[^>]*>::' | sed 's:</[^>]*>$::')";
 
 
 echo "Beginning purge of site $SITENAME..."
