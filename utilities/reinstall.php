@@ -103,4 +103,5 @@ foreach(\Core::GetComponents() as $c){
 	$c->reinstall();
 }
 
+\ThemeHandler::GetTheme('default')->install();
 \ThemeHandler::GetTheme('default')->reinstall();
