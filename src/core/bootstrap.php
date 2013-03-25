@@ -477,6 +477,11 @@ if(!defined('CDN_LOCAL_PUBLICDIR')){
 }
 
 
+// Let the core override the server's timezone as well.
+// In the case that the timezone isn't set, this will prevent the "strftime unsafe" error.
+date_default_timezone_set(TIME_DEFAULT_TIMEZONE);
+
+
 
 /*
  * This is all done from within the component handler now.
