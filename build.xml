@@ -31,7 +31,7 @@
 		The complete complete build with all purging, building, source code scanning, and validation. 
 		This takes about 10 minutes to complete on a high speed SSD, so be warned with running it!
 	-->
-	<target name="fullbuild" depends="prepare_build,purge_src,reinstall_src,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdoc,compile,phpunit,phpcb"/>
+	<target name="fullbuild" depends="prepare_build,purge_src,reinstall_src,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdoc,compile,phpunit-ci,phpcb"/>
 
 	<!--
 		Delete the dynamic resources created in the build directory.
@@ -179,6 +179,14 @@
 	<target name="phpunit" depends="compile" description="Run unit tests with PHPUnit">
 		<exec executable="phpunit" failonerror="true">
 			<arg value="--colors"/>
+			<arg value="--bootstrap"/>
+			<arg value="${basedir}/utilities/phpunit-loader.php"/>
+			<arg path="${basedir}/src"/>
+		</exec>
+	</target>
+
+	<target name="phpunit-ci" depends="compile" description="Run unit tests with PHPUnit (CI Compatible version)">
+		<exec executable="phpunit" failonerror="true">
 			<arg value="--bootstrap"/>
 			<arg value="${basedir}/utilities/phpunit-loader.php"/>
 			<arg path="${basedir}/src"/>
