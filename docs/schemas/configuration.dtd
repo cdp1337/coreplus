@@ -1,0 +1,19 @@
+<!ELEMENT configuration (return|define)*>
+
+<!ELEMENT return ((value,description),option*)>
+<!ATTLIST return
+		formtype CDATA #REQUIRED
+		name CDATA #REQUIRED
+		type (string|int|enum|boolean|octal) #REQUIRED
+		advanced (0|1) "1">
+
+<!ELEMENT define ((value,description),option*)>
+<!ATTLIST define
+		formtype CDATA #REQUIRED
+		name CDATA #REQUIRED
+		type (string|int|enum|boolean|octal) #REQUIRED
+		advanced (0|1) "1">
+
+<!ELEMENT value (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT option (#PCDATA)>
