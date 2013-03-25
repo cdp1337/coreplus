@@ -47,7 +47,7 @@ class FormAccessStringInput extends FormElement {
 		static $renderedcount = 0;
 
 		$renderedcount++;
-		$this->_targetname = '_formaccessstring' . $renderedcount . \Core\RandomHex(8);
+		$this->_targetname = '_formaccessstring' . $renderedcount . \Core\random_hex(8);
 
 		$v               = trim($this->get('value'));
 		$checked         = 'advanced';
