@@ -3,22 +3,15 @@
 	<head>
 		<link rel="stylesheet" href="assets/style.css"/>
 		<script src="assets/jquery-1.7.1.min.js"></script>
-		
-		%head%
-		
-		<title>%title%</title>
+
+		<title><?php echo $title; ?></title>
 	</head>
 
 	<body>
 		<div id="wrapper">
-			<header>%title%</header>
-			
-			{if("%error%" != "")}
-				<p class="message-error">
-					%error%
-				</p>
-			{/if}
-			<section>%body%</section>
+			<header><?php echo $title; ?></header>
+
+			<section><?php echo $body; ?></section>
 			
 			<footer></footer>
 		</div>

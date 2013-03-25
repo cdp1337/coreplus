@@ -17,9 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  *
- * @package [packagename]
+ * @package Core\Installer
  * @author Charlie Powell <charlie@eval.bz>
- * @date [date]
  */
 
 // I expect some configuration options....
@@ -37,9 +36,95 @@ define('DEVELOPMENT_MODE', true);
 
 
 // I need to override some defines here...
-$rpdr = pathinfo(dirname($_SERVER['SCRIPT_FILENAME' ]), PATHINFO_DIRNAME );
-define('ROOT_PDIR', $rpdr . '/');
+define('ROOT_PDIR', realpath(dirname(__DIR__)) . '/');
 define('ROOT_WDIR', dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/');
+define('ROOT_URL', ROOT_WDIR);
+define('TMP_DIR', sys_get_temp_dir() . '/coreplus-installer/');
+define('CUR_CALL', ROOT_WDIR . 'install/');
+
+
+// Start a timer for performance tuning purposes.
+// This will be saved into the Core once that's available.
+$start_time = microtime(true);
+
+
+
+if(!is_dir(TMP_DIR)){
+	mkdir(TMP_DIR, 0755, true);
+}
+
+// Start a traditional session.
+if(!file_exists(TMP_DIR . 'sessions')){
+	mkdir(TMP_DIR . 'sessions', 0700, true);
+}
+session_save_path(TMP_DIR . 'sessions');
+session_start();
+
+// Initial system defines
+require_once(ROOT_PDIR . 'core/bootstrap_predefines.php');
+$predefines_time = microtime(true);
+
+// Critical file inclusions
+require_once(ROOT_PDIR . 'core/bootstrap_preincludes.php');
+require_once(ROOT_PDIR . 'core/libs/core/TemplateInterface.php');
+require_once(ROOT_PDIR . 'core/libs/core/TemplateException.php');
+require_once(ROOT_PDIR . 'core/libs/core/TemplatePHTML.php');
+require_once(ROOT_PDIR . 'install/classes/InstallerStep.php');
+require_once(ROOT_PDIR . 'core/functions/Core.functions.php');
+require_once(ROOT_PDIR . 'install/utilities.php');
+
+require_once(ROOT_PDIR . "core/libs/core/ConfigHandler.class.php");
+
+// If the configuration file has been written already, load up those config options!
+if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
+	require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
+	require_once(ROOT_PDIR . "core/libs/core/HookHandler.class.php");
+	try {
+		HookHandler::singleton();
+		ConfigHandler::LoadConfigFile('configuration');
+	}
+	catch (Exception $e) {
+		// Yeah... I probably don't care at this stage... but maybe I do...
+		error_log($e->getMessage());
+	}
+}
+
+
+
+if(!defined('CDN_TYPE')){
+	define('CDN_TYPE', 'local');
+}
+if(!defined('CDN_LOCAL_ASSETDIR')){
+	define('CDN_LOCAL_ASSETDIR', 'files/assets/');
+}
+if(!defined('CDN_LOCAL_PUBLICDIR')){
+	define('CDN_LOCAL_PUBLICDIR', 'files/public/');
+}
+
+
+// These are the installer steps, put them in the order that they need to be executed!
+$steps = array(
+	'PreflightCheckStep',
+	'InstallHTAccessStep',
+	'SetupConfigurationStep',
+	'InstallConfigurationStep',
+	'PerformInstallStep',
+);
+
+foreach ($steps as $step) {
+	require_once(ROOT_PDIR . 'install/steps/' . $step . '.php');
+	$reflection = new ReflectionClass('Core\\Installer\\' . $step);
+	/** @var $stepobject Core\Installer\InstallerStep */
+	$stepobject = $reflection->newInstance();
+
+	if(!$stepobject->hasPassed()){
+		$stepobject->execute();
+		$stepobject->render();
+		die();
+	}
+}
+
+die(':)');
 
 
 // Useful in setting certain directories as globally forbidden via htaccess.
@@ -55,142 +140,11 @@ EOD;
 
 
 
-// These are some CGI-based hacks, so native PHP doesn't need them.
-if(!function_exists('apache_get_modules')){
-	// Create the root filestore as world-browsable, as if the user picks defaults,
-	// it will need to be!
-	if(!file_exists(ROOT_PDIR . 'filestore')){
-		mkdir(ROOT_PDIR . 'filestore', 0755, true);
-	}
-
-	// Start a traditional session.
-	if(!file_exists(ROOT_PDIR . 'filestore/tmp/sessions')){	
-		mkdir(ROOT_PDIR . 'filestore/tmp/sessions', 0700, true);
-		file_put_contents(ROOT_PDIR . 'filestore/tmp', $htaccessdeny);
-		file_put_contents(ROOT_PDIR . 'filestore/tmp/sessions', $htaccessdeny);
-	}
-	session_save_path(ROOT_PDIR . 'filestore/tmp/sessions');
-}
-
-session_start();
-
-
-// Start a timer for performance tuning purposes.
-// This will be saved into the Core once that's available.
-$start_time = microtime(true);
-
-
-// Initial system defines
-require_once('../core/bootstrap_predefines.php');
-$predefines_time = microtime(true);
-
-// Critical file inclusions
-require_once('../core/bootstrap_preincludes.php');
 require_once('../core/libs/core/InstallerException.php');
 
 // This is the entire templating system for the installer.
 require_once('InstallPage.class.php');
 
-
-// The configuration file needs to be modified!
-if(!file_exists(ROOT_PDIR . 'config/configuration.xml')){
-	$page = new InstallPage();
-	$page->assign('error', 'No such file [' . ROOT_PDIR . 'config/configuration.xml]');
-	$page->template = 'templates/preflight_config.tpl';
-	$page->render();
-}
-
-
-// If it exists and is not readable.... that's an error too!
-// I could try to copy the example version over automatically, but I want the user to have to
-// edit that file somehow.  Since there's no GUI to do so.... manually editing will have to do.
-if(!is_readable(ROOT_PDIR . 'config/configuration.xml')){
-	$page = new InstallPage();
-	$page->assign('error', 'Unable to read file [' . ROOT_PDIR . 'config/configuration.xml], please check its permissions');
-	$page->template = 'templates/preflight_config.tpl';
-	$page->render();
-}
-
-
-// Some more preflight checks, such as htaccess presence and permissions.
-// See https://bugs.powelltechs.com/redmine/issues/29 for more info.
-
-
-// Check if mod_rewrite is available
-if(function_exists('apache_get_modules')){
-	if(!in_array('mod_rewrite', apache_get_modules())){
-		$page = new InstallPage();
-		$page->assign('error', 'mod_rewrite is not available.  This is a requirement of the system!');
-		$page->template = 'templates/preflight_requirements.tpl';
-		$page->render();
-	}
-}
-else{
-	// This is not working again.... gah
-	/*
-	// PHP is running as CGI.... guess I have to do this the long way :/
-	$fp = fsockopen((isset($_SERVER['HTTPS']) ? 'ssl://' : '') . $_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']);
-	if($fp) {
-		fwrite($fp, "GET " . ROOT_WDIR . "install/test_rewrite/ HTTP/1.0\r\n\r\n");
-		stream_set_timeout($fp, 2);
-		$line = trim(fgets($fp, 512));
-		if(strpos($line, '300 Multiple Choices') === false){
-			// OH NOES!
-			$page = new InstallPage();
-			$page->assign('error', 'mod_rewrite is not available.  This is a requirement of the system!');
-			$page->template = 'templates/preflight_requirements.tpl';
-			$page->render();
-		}
-	}
-	*/
-}
-
-// Test the presence of DOMDocument, this is provided by php-xml
-if(!class_exists('DOMDocument')){
-	$page = new InstallPage();
-	$page->assign('error', 'php-xml is not available.  This is a requirement of the system!');
-	$page->template = 'templates/preflight_requirements.tpl';
-	$page->render();
-}
-
-
-// The configuration file should absolutely not be accessable from the outside world, this includes php fopen'ing the file!
-$fp = fsockopen((isset($_SERVER['HTTPS']) ? 'ssl://' : '') . $_SERVER['SERVER_NAME'], $_SERVER['SERVER_PORT']);
-if($fp) {
-	fwrite($fp, "GET " . ROOT_WDIR . "config/configuration.xml HTTP/1.0\r\n\r\n");
-	stream_set_timeout($fp, 2);
-	$line = trim(fgets($fp, 512));
-	if(strpos($line, '200 OK') !== false){
-		// OH NOES!
-		$page = new InstallPage();
-		$page->assign('error', 'Your configuration.xml file is publically accessable!  This is a huge security hole and must be rectified before installation can continue.  Please ensure that there is a .htaccess file in that directory and it denies all access to all files.');
-		$page->template = 'templates/preflight_requirements.tpl';
-		$page->render();
-	}
-	else{
-		// Because otherwise the admin will get "Access to blah blah was denied, OH NOEZ"
-		error_log('Access to config/configuration.xml was denied, (that is a GOOD thing!)');
-	}
-}
-
-
-// Check the for the presence of the .htaccess file.  I always forget that bastard otherwise.
-if(!file_exists(ROOT_PDIR . '.htaccess')){
-	if(is_writable(ROOT_PDIR)){
-		// Just automatically copy it over, (with the necessary tranformations).
-		$fdata = file_get_contents(ROOT_PDIR . 'htaccess.ex');
-		$fdata = preg_replace('/^([\s]*RewriteBase).*$/m', '$1 ' . ROOT_WDIR, $fdata);
-		file_put_contents(ROOT_PDIR . '.htaccess', $fdata);
-		// :)
-	}
-	else{
-		$page = new InstallPage();
-		$page->assign('error', 'No .htaccess file!');
-		$page->assign('wdir', ROOT_WDIR);
-		$page->template = 'templates/preflight_htaccess.tpl';
-		$page->render();
-	}
-}
 
 
 require_once(ROOT_PDIR . "core/libs/core/HookHandler.class.php");
@@ -233,80 +187,6 @@ if(!file_exists(TMP_DIR . '.htaccess')){
 //if(!DEVELOPMENT_MODE){
 //	die('Installation cannot proceed while site is NOT in Development mode.');
 //}
-
-
-
-
-// Datamodel, GOGO!
-require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
-try{
-	$dbconn = DMI::GetSystemDMI();
-}
-catch(DMI_ServerNotFound_Exception $e){
-	$page = new InstallPage();
-	$page->template = 'templates/setup_database_host.tpl';
-	$page->assign('error', $e->getMessage());
-	$page->assign('dbhost', $core_settings['database_server']);
-	$page->render();
-}
-// This is specific to user denied.
-catch(DMI_Authentication_Exception $e){
-	$page = new InstallPage();
-	$page->assign('error', $e->getMessage());
-	//$dbinfo = ConfigHandler::LoadConfigFile('db');
-	$dbuser = $core_settings['database_user'];
-	$dbname = $core_settings['database_name'];
-	$dbpass = $core_settings['database_pass'];
-
-	// Different connection backends will have different instructions.
-	switch($core_settings['database_type']){
-		case 'cassandra':
-			$page->template = 'templates/setup_cassandra.tpl';
-			$page->assign('dbname', $dbname);
-			break;
-		case 'mysql':
-		case 'mysqli':
-			$page->template = 'templates/setup_mysqli_user.tpl';
-			$page->assign('dbuser', $dbuser);
-			$page->assign('dbpass', $dbpass);
-			$page->assign('dbname', $dbname);
-			break;
-		default:
-			die("<p class='error-message'>I don't know what datamodel store you're trying to use, but I don't support it...</p>");
-			break;
-	}
-	$page->render();
-}
-// Any other error.
-catch(Exception $e){
-	// Couldn't establish connection... do something fun!
-	
-	$page = new InstallPage();
-	$page->assign('error', $e->getMessage());
-	//$dbinfo = ConfigHandler::LoadConfigFile('db');
-	$dbuser = $core_settings['database_user'];
-	$dbname = $core_settings['database_name'];
-	$dbpass = $core_settings['database_pass'];
-
-	// Different connection backends will have different instructions.
-	switch($core_settings['database_type']){
-		case 'cassandra':
-			$page->template = 'templates/setup_cassandra.tpl';
-			$page->assign('dbname', $dbname);
-			break;
-		case 'mysql':
-		case 'mysqli':
-			$page->template = 'templates/setup_mysqli.tpl';
-			$page->assign('dbuser', $dbuser);
-			$page->assign('dbpass', $dbpass);
-			$page->assign('dbname', $dbname);
-			break;
-		default:
-			die("<p class='error-message'>I don't know what datamodel store you're trying to use, but I don't support it...</p>");
-			break;
-	}
-	$page->render();
-}
 
 
 // Data model backend should be ready now.

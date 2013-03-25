@@ -1,0 +1,28 @@
+<table class="preflightcheckstep">
+	<?php foreach($tests as $test): ?>
+		<tr>
+			<td class="title"><?php echo $test['title']; ?></td>
+			<td class="status-<?php echo $test['status']; ?>"><?php echo $test['status']; ?></td>
+			<td><?php echo $test['message']; ?></td>
+		</tr>
+		<?php if($test['description']): ?>
+			<tr>
+				<td colspan="3" class="checklist-description">
+					<?php echo $test['description']; ?>
+				</td>
+			</tr>
+		<?php endif; ?>
+	<?php endforeach; ?>
+</table>
+
+<br/>
+
+<a href="" class="button" style="float:left;">Re-Check</a>
+
+<?php if($good): ?>
+	<form action="" method="POST">
+		<input type="submit" style="float:right;" value="Next"/>
+	</form>
+<?php endif; ?>
+
+<div class="clear"></div>

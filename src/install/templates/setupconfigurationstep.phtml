@@ -1,0 +1,85 @@
+<?php if($message): ?>
+	<p class="message-error"><?php echo $message; ?></p>
+<?php endif; ?>
+
+<?php if($instructions): ?>
+	<br/>
+	<div class="formelement formcheckboxinput" style="float:right;">
+		<label for="solutions-toggle">Toggle Instructions/Solution</label>
+		<input type="checkbox" id="solutions-toggle"/>
+	</div>
+	<div class="clear"></div>
+	<div class="message-tutorial solutions" style="display:none;">
+		<?php echo $instructions; ?>
+	</div>
+	<hr/>
+<?php endif; ?>
+
+
+<form action="" method="POST">
+
+	<div class="formelement formcheckboxinput" style="float:right;">
+		<label for="advanced-options">Toggle Advanced Options</label>
+		<input type="checkbox" id="advanced-options"/>
+	</div>
+	<div class="clear"></div>
+	<br/>
+
+	<?php foreach($formelements as $el): ?>
+		<div class="formelement form<?php echo $el['type']; ?>input <?php if($el['advanced']) echo 'advanced'; ?>">
+			<div class="formelement-labelinputgroup">
+				<label for="formelement-<?php echo $el['name']; ?>"><?php echo $el['title']; ?></label>
+
+				<?php if($el['type'] == 'select'): ?>
+					<select name="<?php echo $el['name']; ?>" id="formelement-<?php echo $el['name']; ?>" >
+						<?php foreach($el['options'] as $opt): ?>
+							<option value="<?php echo $opt; ?>" <?php if($opt == $el['value']) echo ' selected="selected"'; ?>>
+								<?php echo $opt; ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+				<?php elseif($el['type'] == 'checkbox'): ?>
+					<input type="checkbox"
+						name="<?php echo $el['name']; ?>"
+						id="formelement-<?php echo $el['name']; ?>"
+						value="1"
+						<?php if($el['value'] == 'true') echo ' checked="checked"'; ?>
+					/>
+				<?php else: ?>
+					<input
+						type="<?php echo $el['type']; ?>"
+						name="<?php echo $el['name']; ?>"
+						id="formelement-<?php echo $el['name']; ?>"
+						value="<?php echo htmlentities($el['value']); ?>"
+					/>
+				<?php endif; ?>
+			</div>
+
+			<div class="clear"></div>
+
+			<?php if($el['description']): ?>
+				<div class="formdescription"><?php echo $el['description']; ?></div>
+			<?php endif; ?>
+
+		</div>
+	<?php endforeach; ?>
+
+	<br/>
+	<input type="submit" value="Save" style="float:right;"/>
+</form>
+
+
+
+<script>
+	$(function(){
+		$('#advanced-options').click(function(){
+				if($(this).is(':checked')) $('.advanced').show();
+				else $('.advanced').hide();
+		});
+
+		$('#solutions-toggle').click(function(){
+			if($(this).is(':checked')) $('.solutions').show();
+			else $('.solutions').hide();
+		});
+	});
+</script>

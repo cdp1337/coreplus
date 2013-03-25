@@ -1,0 +1,19 @@
+<h2>Installing <?php echo $component; ?>...</h2>
+
+<?php if(isset($errors) && $errors): ?>
+	<p class="message-error">
+		<?php echo $errors; ?>
+	</p>
+
+	<a href="#" class="button">Retry</a>
+<?php else: ?>
+
+	<a href="" class="button">Continue!</a>
+
+	<pre class="install-log">
+	<?php echo $log; ?>
+	</pre>
+
+	<a href="" class="button">Continue!</a>
+
+<?php endif; ?>
