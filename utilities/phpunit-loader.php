@@ -3,7 +3,7 @@
 
 //use RuntimeException;
 
-define('ROOT_PDIR', dirname(__DIR__) . '/');
+define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
 define('ROOT_WDIR', '/');
 
 
