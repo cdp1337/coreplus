@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Core Plus" default="build">
+<project name="Core Plus" default="scan">
 	<!--
 	This template was snagged from http://jenkins-php.org/
 	They have an awesome set of information for building PHP sites with Jenkins/Hudson.
@@ -8,36 +8,51 @@
 	
 	<!-- Pull in the user/server-definable settings for this project -->
 	<property file="${basedir}/ant.properties"/>
+	
+	<tstamp>
+		<format property="build.time" pattern="yyyy.MM.d@H:m" locale="en,US"/>
+	</tstamp>
+
+
 
 	<!-- 
-	The default target; build.
+	The default target; scan.
 	This will do a basic lint test of the codebase, compile any necessary resources, and execute tests.
 	-->
-	<target name="build" depends="prepare,lint,compile,phpunit"/>
+	<target name="scan" depends="prepare_build,lint,compile,phpunit"/>
+	
+	<!--
+		Slightly more exhaustive than a scan.
+		This will actually go through and build the site, including configuration file, htacces, and reinstallation.
+	-->
+	<target name="build" depends="prepare_build,reinstall_src,lint,compile,phpunit"/>
 	
 	<!-- 
-	The complete build with all source code scanning and validation. 
-	This takes about 10 minutes to complete on a high speed SSD, so be warned with running it!
+		The complete complete build with all purging, building, source code scanning, and validation. 
+		This takes about 10 minutes to complete on a high speed SSD, so be warned with running it!
 	-->
-	<target name="fullbuild" depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdoc,compile,phpunit,phpcb"/>
+	<target name="fullbuild" depends="prepare_build,purge_src,reinstall_src,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdoc,compile,phpunit,phpcb"/>
 
 	<!--
 		Delete the dynamic resources created in the build directory.
 		Also clean out the dynamic resources in core itself.
 	-->
-	<target name="clean" description="Cleanup build artifacts">
+	<target name="clean_build" description="Cleanup build artifacts">
 		<delete dir="${basedir}/build/api"/>
 		<delete dir="${basedir}/build/code-browser"/>
 		<delete dir="${basedir}/build/coverage"/>
 		<delete dir="${basedir}/build/logs"/>
 		<delete dir="${basedir}/build/pdepend"/>
+	</target>
+	
+	<target name="clean_src" description="Cleanup the src directory from compiled resources and the like">
 		<delete file="${basedir}/src/core/bootstrap.compiled.php"/>
 	</target>
 
 	<!--
 		Create the 
 	-->
-	<target name="prepare" depends="clean" description="Prepare for build">
+	<target name="prepare_build" depends="clean_build" description="Prepare for build">
 		<mkdir dir="${basedir}/build/api"/>
 		<mkdir dir="${basedir}/build/code-browser"/>
 		<mkdir dir="${basedir}/build/coverage"/>
@@ -45,10 +60,41 @@
 		<mkdir dir="${basedir}/build/pdepend"/>
 		<mkdir dir="${basedir}/build/phpdox"/>
 	</target>
-	
-	<target name="compile" depends="clean" description="Compile the bootstrap.php file">
-		<exec executable="${basedir}/utilities/compiler.php">
+
+	<target name="purge_src" depends="clean_src" description="Purge the configuration, htaccess, data, and everything for a given site.">
+		<exec executable="${basedir}/utilities/purge_entire_site_and_all_configs.sh">
+			<arg value="--really"/>
+			<arg value="--reallyreally"/>
 		</exec>
+	</target>
+	
+	<target name="compile" depends="clean_src" description="Compile the bootstrap.php file">
+		<exec executable="${basedir}/utilities/compiler.php"/>
+	</target>
+
+	<target name="setup_htaccess" description="Populate and setup the htaccess file from the template and ant properties">
+		<copy tofile="${basedir}/src/.htaccess" file="${basedir}/src/htaccess.ant" overwrite="true"/>
+		<replace file="${basedir}/src/.htaccess">
+			<replacefilter value="${rewritebase}" token="@{rewritebase}@"/>
+			<replacefilter value="${build.time}" token="@{build.time}@"/>
+		</replace>
+	</target>
+	
+	<target name="setup_configuration" description="Populate and setup the configuration file from the template and ant properties">
+		<copy tofile="${basedir}/src/config/configuration.xml" file="${basedir}/src/config/configuration.xml.ant" overwrite="true"/>
+		<replace file="${basedir}/src/config/configuration.xml">
+			<replacefilter value="${build.time}" token="@{build.time}@"/>
+			<replacefilter value="${db.server}" token="@{db.server}@"/>
+			<replacefilter value="${db.port}" token="@{db.port}@"/>
+			<replacefilter value="${db.type}" token="@{db.type}@"/>
+			<replacefilter value="${db.name}" token="@{db.name}@"/>
+			<replacefilter value="${db.user}" token="@{db.user}@"/>
+			<replacefilter value="${db.pass}" token="@{db.pass}@"/>
+		</replace>
+	</target>
+
+	<target name="reinstall_src" depends="setup_htaccess,setup_configuration" description="Install/Reinstall Core Plus using the CLI installer">
+		<exec executable="${basedir}/utilities/reinstall.php"/>
 	</target>
 
 	<!--
@@ -134,12 +180,12 @@
 		<exec executable="phpunit" failonerror="true">
 			<arg value="--colors"/>
 			<arg value="--bootstrap"/>
-			<arg value="${basedir}/src/utilities/phpunit-loader.php"/>
+			<arg value="${basedir}/utilities/phpunit-loader.php"/>
 			<arg path="${basedir}/src"/>
 		</exec>
 	</target>
 	
-	<target name="phpdoc" depends="prepare" description="Generate phpDoc Documentation on the product">
+	<target name="phpdoc" depends="prepare_build" description="Generate phpDoc Documentation on the product">
 		<exec executable="phpdoc" failonerror="false">			
 			<!-- Scan this directory (source code) -->
 			<arg value="-d"/>
