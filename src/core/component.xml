@@ -1612,7 +1612,7 @@
 		<config key="/core/session/ttl" type="int" default="3600" description="Time to live for sessions.  Amount of seconds to keep an idle session active before requesting the user to log back in due to inactivity."/>
 		<config key="/core/email/from" type="string" description="Email address emails should be sent 'from' by defualt." default=""/>
 		<config key="/core/email/from_name" type="string" description="Name emails should be sent 'from' by default." default=""/>
-		<config key="/core/email/mailer" type="enum" options="smtp|sendmail|mail" default="sendmail" description=""/>
+		<config key="/core/email/mailer" type="enum" options="smtp|sendmail|mail" default="mail" description=""/>
 		<config key="/core/email/sendmail_path" type="string" default="" description=""/>
 		<config key="/core/email/smtp_host" type="string" default="" description=""/>
 		<config key="/core/email/smtp_security" type="enum" options="none|ssl|tls" default="none" description="Security mode for connecting to the SMTP server"/>
