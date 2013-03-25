@@ -11,7 +11,7 @@
 	</provides>
 	<requires>
 		<!-- I need the new model schema for user changed in 2.4.4 in order to avoid a conflict! -->
-		<require name="User" type="component" version="2.4.3" operation="gt"/>
+		<!--<require name="User" type="component" version="2.4.3" operation="gt"/>-->
 	</requires>
 	<hooks>
 		<hookregister name="/core/components/loaded" description="Called immediately after all components have been loaded into memory."/>

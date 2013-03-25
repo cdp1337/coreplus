@@ -85,7 +85,7 @@ class File_local_backend implements File_Backend {
 	}
 
 	public function getExtension() {
-		return Core::GetExtensionFromString($this->_filename);
+		return \Core\get_extension_from_string($this->_filename);
 		//return substr($this->_filename, strrpos($this->_filename, '.'));
 	}
 
@@ -128,22 +128,31 @@ class File_local_backend implements File_Backend {
 	public function setFilename($filename) {
 		// Ensure that the root_pdir directories are cached and ready.
 		if (self::$_Root_pdir_assets === null) {
-			$dir = ConfigHandler::Get('/core/filestore/assetdir');
-			if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
-			if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
-			self::$_Root_pdir_assets = $dir;
+			$dir = CDN_LOCAL_ASSETDIR;
+			// If the configuration subsystem is not available, this will be null.
+			if($dir){
+				if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
+				if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
+				self::$_Root_pdir_assets = $dir;
+			}
 		}
 		if (self::$_Root_pdir_public === null) {
-			$dir = ConfigHandler::Get('/core/filestore/publicdir');
-			if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
-			if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
-			self::$_Root_pdir_public = $dir;
+			$dir = CDN_LOCAL_PUBLICDIR;
+			// If the configuration subsystem is not available, this will be null.
+			if($dir){
+				if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
+				if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
+				self::$_Root_pdir_public = $dir;
+			}
 		}
 		if (self::$_Root_pdir_private === null) {
 			$dir = ConfigHandler::Get('/core/filestore/privatedir');
-			if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
-			if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
-			self::$_Root_pdir_private = $dir;
+			// If the configuration subsystem is not available, this will be null.
+			if($dir){
+				if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
+				if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
+				self::$_Root_pdir_private = $dir;
+			}
 		}
 		if (self::$_Root_pdir_tmp === null) {
 			$dir = TMP_DIR;

@@ -41,8 +41,12 @@ class UpdaterHelper {
 		$themes     = array();
 		$sitecount  = 0;
 		$pkgcount   = 0;
+		$current    = Core::GetComponents();
 
-		foreach(Core::GetComponents() as $c){
+		// If Core isn't installed yet, GetComponents will yield null.
+		if($current === null) $current = array();
+
+		foreach($current as $c){
 			/** @var $c Component_2_1 */
 			$n = strtolower($c->getName());
 			if($n == 'core'){
@@ -102,7 +106,17 @@ class UpdaterHelper {
 			);
 		}
 
-		foreach(ThemeHandler::GetAllThemes() as $t){
+		// And repeat for the themes.
+		// I need to do a check if they exist because if called from the installer, it may not.
+		if(class_exists('ThemeHandler')){
+			$currentthemes = ThemeHandler::GetAllThemes();
+			if($currentthemes === null) $currentthemes = array();
+		}
+		else{
+			$currentthemes = array();
+		}
+
+		foreach($currentthemes as $t){
 			/** @var $t Theme */
 			$n = strtolower($t->getName());
 			$themes[$n] = array(
@@ -121,7 +135,15 @@ class UpdaterHelper {
 		}
 		
 		// Now, look up components from all the updates sites.
-		$updatesites = UpdateSiteModel::Find();
+		// If the system isn't installed yet, then this will not be found.  Just use a blank array.
+		if(class_exists('UpdateSiteModel')){
+			$updatesites = UpdateSiteModel::Find();
+		}
+		else{
+			$updatesites = array();
+		}
+
+
 		foreach($updatesites as $site){
 
 			if(!$site->isValid()) continue;

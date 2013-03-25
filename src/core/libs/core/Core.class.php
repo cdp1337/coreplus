@@ -1341,31 +1341,14 @@ class Core implements ISingleton {
 	/**
 	 * Generate a random hex-deciman value of a given length.
 	 *
-	 * @param int    $length
-	 * @param bolean $casesensitive [false] Set to true to return a case-sensitive string.
+	 * @param int     $length
+	 * @param boolean $casesensitive [false] Set to true to return a case-sensitive string.
 	 *                              Otherwise the resulting string will simply be all uppercase.
 	 *
 	 * @return string
 	 */
 	static public function RandomHex($length = 1, $casesensitive = false) {
-		$output = '';
-		if ($casesensitive) {
-			$chars   = '0123456789ABCDEFabcdef';
-			$charlen = 21; // (needs to be -1 of the actual length)
-		}
-		else {
-			$chars   = '0123456789ABCDEF';
-			$charlen = 15; // (needs to be -1 of the actual length)
-		}
-
-		$output = '';
-
-		for ($i = 0; $i < $length; $i++) {
-			$pos = rand(0, $charlen);
-			$output .= $chars{$pos};
-		}
-
-		return $output;
+		return \Core\random_hex($length, $casesensitive);
 	}
 
 

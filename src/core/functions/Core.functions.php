@@ -54,8 +54,8 @@ function FTP(){
 
 	if($ftp === null){
 		// Is FTP enabled?
-		$ftpuser = \ConfigHandler::Get('/core/ftp/username');
-		$ftppass = \ConfigHandler::Get('/core/ftp/password');
+		$ftpuser = FTP_USERNAME;
+		$ftppass = FTP_PASSWORD;
 
 		if(!($ftpuser && $ftppass)){
 			$ftp = false;
@@ -73,7 +73,7 @@ function FTP(){
 	// if FTP is not enabled, I can't chdir...
 	if($ftp){
 		// Make sure the FTP directory is always as root whenever this is called.
-		$ftproot = \ConfigHandler::Get('/core/ftp/path');
+		$ftproot = FTP_PATH;
 
 		// This serves two purposes, one it resets the location of the FTP back to the home directory
 		// and two, it ensures that the directory exists!
@@ -130,8 +130,13 @@ function file($filename = null){
 		return new \File_remote_backend($filename);
 	}
 
-	$backend = \ConfigHandler::Get('/core/filestore/backend');
-	switch($backend){
+	// If it's a fully resolved file already,
+	// no need in trying to figure out which backend it belongs to.
+	if(strpos($filename, ROOT_PDIR) === 0){
+		return new \File_local_backend($filename);
+	}
+
+	switch(CDN_TYPE){
 		case 'aws':
 			return new \File_awss3_backend($filename);
 			break;
@@ -152,8 +157,7 @@ function file($filename = null){
  * @return Directory_Backend
  */
 function directory($directory){
-	$backend = \ConfigHandler::Get('/core/filestore/backend');
-	switch($backend){
+	switch(CDN_TYPE){
 		case 'aws':
 			return new \Directory_awss3_backend($directory);
 			break;
@@ -258,6 +262,22 @@ function resolve_link($url){
 	//if($p->exists()) return $p->getResolvedURL();
 	//else return ROOT_URL . substr($url, 1);
 
+}
+
+/**
+ * Get an extension from a given filename.
+ *
+ * Will return just the extension itself without the ".", or a blank string if empty.
+ *
+ * @param $str
+ *
+ * @return string
+ */
+function get_extension_from_string($str) {
+	// File doesn't have any extension... easy enough!
+	if (strpos($str, '.') === false) return '';
+
+	return substr($str, strrpos($str, '.') + 1);
 }
 
 /**
@@ -478,12 +498,13 @@ function ImplodeKey($glue, &$array){
 /**
  * Generate a random hex-deciman value of a given length.
  *
- * @param int $length
- * @param bolean $casesensitive [false] Set to true to return a case-sensitive string.
- *                              Otherwise the resulting string will simply be all uppercase.
+ * @param int  $length
+ * @param bool $casesensitive [false] Set to true to return a case-sensitive string.
+ *                            Otherwise the resulting string will simply be all uppercase.
+ *
  * @return string
  */
-function RandomHex($length = 1, $casesensitive = false){
+function random_hex($length = 1, $casesensitive = false){
 	$output = '';
 	if($casesensitive){
 		$chars = '0123456789ABCDEFabcdef';

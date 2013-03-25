@@ -74,7 +74,18 @@ class DMI {
 		
 		$this->_backend = new $class();
 	}
-	
+
+	/**
+	 * @param $host
+	 * @param $user
+	 * @param $pass
+	 * @param $database
+	 *
+	 * @throws DMI_Exception
+	 * @throws DMI_Authentication_Exception
+	 *
+	 * @return DMI_Backend|null
+	 */
 	public function connect($host, $user, $pass, $database){
 		$this->_backend->connect($host, $user, $pass, $database);
 		
@@ -91,6 +102,10 @@ class DMI {
 	
 	/**
 	 * Get the current system DMI based on configuration values.
+	 *
+	 * @throws DMI_Exception
+	 * @throws DMI_Authentication_Exception
+	 *
 	 * @return DMI
 	 */
 	public static function GetSystemDMI(){
@@ -98,10 +113,20 @@ class DMI {
 		
 		self::$_Interface = new DMI();
 		
-		// Because this is the system data connection, I also need to pull the settings automatically.
-		
-		$cs = ConfigHandler::LoadConfigFile("configuration");
-		
+
+		if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
+			// Because this is the system data connection, I also need to pull the settings automatically.
+			// This will only be done if the configuration file exists.
+			$cs = ConfigHandler::LoadConfigFile("configuration");
+		}
+		elseif(isset($_SESSION['configs'])){
+			// If the file doesn't exist, (ie: during installation), I need to check the session data.
+			$cs = $_SESSION['configs'];
+		}
+		else{
+			throw new DMI_Exception('No database settings defined for the DMI');
+		}
+
 		self::$_Interface->setBackend($cs['database_type']);
 		
 		self::$_Interface->connect($cs['database_server'], $cs['database_user'], $cs['database_pass'], $cs['database_name']);

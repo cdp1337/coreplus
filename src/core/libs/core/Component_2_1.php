@@ -1711,7 +1711,7 @@ class Component_2_1 {
 	 * @throws InstallerException
 	 */
 	private function _installAssets() {
-		$assetbase = ConfigHandler::Get('/core/filestore/assetdir');
+		$assetbase = CDN_LOCAL_ASSETDIR;
 		$theme     = ConfigHandler::Get('/theme/selected');
 		$changes   = array();
 

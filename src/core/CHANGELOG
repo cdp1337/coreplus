@@ -36,6 +36,9 @@ Core Plus 2.5.0
 	  on new installs.
 	* Upgraded phpmailer to 5.2.4
 	* Using "getKeyName" for components, should fix the name/directory issues.
+	* Switched the filestore directives to constants defined within the configuration.xml file.
+	  This helps make the installer more user-friendly and stable.
+	* Updated several core subsystems to work better when the core isn't installed yet.
 
 Core Plus 2.4.6.3
 

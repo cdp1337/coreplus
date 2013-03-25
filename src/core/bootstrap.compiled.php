@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 18 Mar 2013 06:57:09 -0400
+ * @compiled Mon, 25 Mar 2013 17:20:58 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4376,7 +4376,7 @@ return false;
 }
 }
 private function _installAssets() {
-$assetbase = ConfigHandler::Get('/core/filestore/assetdir');
+$assetbase = CDN_LOCAL_ASSETDIR;
 $theme     = ConfigHandler::Get('/theme/selected');
 $changes   = array();
 foreach ($this->_xmlloader->getElements('/assets/file') as $node) {
@@ -4745,7 +4745,7 @@ elseif ($ext == 'otf' && $type == 'application/octet-stream') $type = 'font/otf'
 return $type;
 }
 public function getExtension() {
-return Core::GetExtensionFromString($this->_filename);
+return \Core\get_extension_from_string($this->_filename);
 }
 public function getURL() {
 if (!preg_match('/^' . str_replace('/', '\\/', ROOT_PDIR) . '/', $this->_filename)) return false;
@@ -4769,22 +4769,28 @@ return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', $prefix
 }
 public function setFilename($filename) {
 if (self::$_Root_pdir_assets === null) {
-$dir = ConfigHandler::Get('/core/filestore/assetdir');
+$dir = CDN_LOCAL_ASSETDIR;
+if($dir){
 if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
 self::$_Root_pdir_assets = $dir;
 }
+}
 if (self::$_Root_pdir_public === null) {
-$dir = ConfigHandler::Get('/core/filestore/publicdir');
+$dir = CDN_LOCAL_PUBLICDIR;
+if($dir){
 if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
 self::$_Root_pdir_public = $dir;
 }
+}
 if (self::$_Root_pdir_private === null) {
 $dir = ConfigHandler::Get('/core/filestore/privatedir');
+if($dir){
 if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
 self::$_Root_pdir_private = $dir;
+}
 }
 if (self::$_Root_pdir_tmp === null) {
 $dir = TMP_DIR;
@@ -5280,12 +5286,12 @@ private static $_Root_pdir_tmp = null;
 public function __construct($directory) {
 if (!is_null($directory)) {
 if (self::$_Root_pdir_assets === null) {
-$dir = ConfigHandler::Get('/core/filestore/assetdir');
+$dir = CDN_LOCAL_ASSETDIR;
 if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 self::$_Root_pdir_assets = $dir;
 }
 if (self::$_Root_pdir_public === null) {
-$dir = ConfigHandler::Get('/core/filestore/publicdir');
+$dir = CDN_LOCAL_PUBLICDIR;
 if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 self::$_Root_pdir_public = $dir;
 }
@@ -5304,8 +5310,15 @@ $directory = preg_replace(':/+:', '/', $directory);
 if (strpos($directory, 'assets/') === 0) {
 $theme     = ConfigHandler::Get('/theme/selected');
 $directory = substr($directory, 7); // Trim off the 'asset/' prefix.
-if (file_exists(self::$_Root_pdir_assets . $theme . '/' . $directory)) $directory = self::$_Root_pdir_assets . $theme . '/' . $directory;
-else $directory = self::$_Root_pdir_assets . 'default/' . $directory;
+if($directory === false){
+$directory = self::$_Root_pdir_assets;
+}
+elseif (file_exists(self::$_Root_pdir_assets . $theme . '/' . $directory)){
+$directory = self::$_Root_pdir_assets . $theme . '/' . $directory;
+}
+else{
+$directory = self::$_Root_pdir_assets . 'default/' . $directory;
+}
 }
 elseif (strpos($directory, 'public/') === 0) {
 $directory = substr($directory, 7); // Trim off the 'public/' prefix.
@@ -6889,21 +6902,7 @@ $arrayKeys[] = $key;
 return implode($glue, $arrayKeys);
 }
 static public function RandomHex($length = 1, $casesensitive = false) {
-$output = '';
-if ($casesensitive) {
-$chars   = '0123456789ABCDEFabcdef';
-$charlen = 21; // (needs to be -1 of the actual length)
-}
-else {
-$chars   = '0123456789ABCDEF';
-$charlen = 15; // (needs to be -1 of the actual length)
-}
-$output = '';
-for ($i = 0; $i < $length; $i++) {
-$pos = rand(0, $charlen);
-$output .= $chars{$pos};
-}
-return $output;
+return \Core\random_hex($length, $casesensitive);
 }
 public static function FormatSize($filesize, $round = 2) {
 $suf = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
@@ -7849,7 +7848,15 @@ return $this->_backend;
 public static function GetSystemDMI(){
 if(self::$_Interface !== null) return self::$_Interface;
 self::$_Interface = new DMI();
+if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
 $cs = ConfigHandler::LoadConfigFile("configuration");
+}
+elseif(isset($_SESSION['configs'])){
+$cs = $_SESSION['configs'];
+}
+else{
+throw new DMI_Exception('No database settings defined for the DMI');
+}
 self::$_Interface->setBackend($cs['database_type']);
 self::$_Interface->connect($cs['database_server'], $cs['database_user'], $cs['database_pass'], $cs['database_name']);
 return self::$_Interface;
@@ -7890,6 +7897,24 @@ die();
 }
 }
 unset($start_time, $predefines_time, $preincludes_time, $maindefines_time);
+if(!defined('FTP_USERNAME')){
+define('FTP_USERNAME', ConfigHandler::Get('/core/ftp/username'));
+}
+if(!defined('FTP_PASSWORD')){
+define('FTP_PASSWORD', ConfigHandler::Get('/core/ftp/password'));
+}
+if(!defined('FTP_PATH')){
+define('FTP_PATH', ConfigHandler::Get('/core/ftp/path'));
+}
+if(!defined('CDN_TYPE')){
+define('CDN_TYPE', ConfigHandler::Get('/core/filestore/backend'));
+}
+if(!defined('CDN_LOCAL_ASSETDIR')){
+define('CDN_LOCAL_ASSETDIR', ConfigHandler::Get('/core/filestore/assetdir'));
+}
+if(!defined('CDN_LOCAL_PUBLICDIR')){
+define('CDN_LOCAL_PUBLICDIR', ConfigHandler::Get('/core/filestore/publicdir'));
+}
 Core::LoadComponents();
 if (EXEC_MODE == 'WEB') {
 try {

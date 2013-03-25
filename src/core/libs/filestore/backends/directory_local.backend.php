@@ -55,12 +55,12 @@ class Directory_local_backend implements Directory_Backend {
 
 			// Ensure that the root_pdir directories are cached and ready.
 			if (self::$_Root_pdir_assets === null) {
-				$dir = ConfigHandler::Get('/core/filestore/assetdir');
+				$dir = CDN_LOCAL_ASSETDIR;
 				if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 				self::$_Root_pdir_assets = $dir;
 			}
 			if (self::$_Root_pdir_public === null) {
-				$dir = ConfigHandler::Get('/core/filestore/publicdir');
+				$dir = CDN_LOCAL_PUBLICDIR;
 				if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
 				self::$_Root_pdir_public = $dir;
 			}
@@ -89,8 +89,19 @@ class Directory_local_backend implements Directory_Backend {
 			if (strpos($directory, 'assets/') === 0) {
 				$theme     = ConfigHandler::Get('/theme/selected');
 				$directory = substr($directory, 7); // Trim off the 'asset/' prefix.
-				if (file_exists(self::$_Root_pdir_assets . $theme . '/' . $directory)) $directory = self::$_Root_pdir_assets . $theme . '/' . $directory;
-				else $directory = self::$_Root_pdir_assets . 'default/' . $directory;
+				if($directory === false){
+					// The user literally wanted the assets base directory... OK
+					// This is used in the installer to make sure that it's writable.
+					$directory = self::$_Root_pdir_assets;
+				}
+				elseif (file_exists(self::$_Root_pdir_assets . $theme . '/' . $directory)){
+					// If the file exists in the current theme directory, use that.
+					$directory = self::$_Root_pdir_assets . $theme . '/' . $directory;
+				}
+				else{
+					// Otherwise default back to "default".
+					$directory = self::$_Root_pdir_assets . 'default/' . $directory;
+				}
 			}
 			elseif (strpos($directory, 'public/') === 0) {
 				$directory = substr($directory, 7); // Trim off the 'public/' prefix.

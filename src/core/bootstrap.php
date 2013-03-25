@@ -449,6 +449,35 @@ catch (Exception $e) {
 
 
 unset($start_time, $predefines_time, $preincludes_time, $maindefines_time);
+
+
+
+
+// < 2.5.0 Hack
+// This is to provide support with < 2.5.0 configuration.xml files.
+// Many of the CDN and FTP configuration options have been moved into the root configuration.xml file
+// so that it's better supported in the installer.
+if(!defined('FTP_USERNAME')){
+	define('FTP_USERNAME', ConfigHandler::Get('/core/ftp/username'));
+}
+if(!defined('FTP_PASSWORD')){
+	define('FTP_PASSWORD', ConfigHandler::Get('/core/ftp/password'));
+}
+if(!defined('FTP_PATH')){
+	define('FTP_PATH', ConfigHandler::Get('/core/ftp/path'));
+}
+if(!defined('CDN_TYPE')){
+	define('CDN_TYPE', ConfigHandler::Get('/core/filestore/backend'));
+}
+if(!defined('CDN_LOCAL_ASSETDIR')){
+	define('CDN_LOCAL_ASSETDIR', ConfigHandler::Get('/core/filestore/assetdir'));
+}
+if(!defined('CDN_LOCAL_PUBLICDIR')){
+	define('CDN_LOCAL_PUBLICDIR', ConfigHandler::Get('/core/filestore/publicdir'));
+}
+
+
+
 /*
  * This is all done from within the component handler now.
 Core::_LoadFromDatabase();

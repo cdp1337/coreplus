@@ -86,7 +86,7 @@ class TemplatePHTML implements TemplateInterface {
 
 		// I need to make the assigned variables visible in the scope.
 		foreach($this->_scope as $key => $var){
-			$$key =& $var;
+			${$key} = $var;
 		}
 
 		try{
