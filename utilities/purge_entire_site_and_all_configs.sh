@@ -4,7 +4,7 @@
 # restore it back to git checkout defaults.
 # aka, DO NOT USE THIS!
 
-ROOTPDIR="$(realpath $(dirname $0)/../src)"
+ROOTPDIR="$(readlink -f $(dirname $0)/../src)"
 
 REALLY=""
 REALLYREALLY=""

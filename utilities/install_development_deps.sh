@@ -5,7 +5,7 @@
 #
 # Please note, this does not apply to simply running the site, only for developing on Core Plus.
 
-ROOTPDIR="$(realpath $(dirname $0))"
+ROOTPDIR="$(readlink -f $(dirname $0))"
 
 
 
