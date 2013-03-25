@@ -29,10 +29,7 @@ if(!isset($_SERVER['SHELL'])){
 }
 
 // This is required to establish the root path of the system, (since it's always one directory up from "here"
-$path = realpath(
-	dirname($_SERVER['PWD'] . '/' . $_SERVER['SCRIPT_FILENAME']) . '/..'
-) . '/';
-define('ROOT_PDIR', $path);
+define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
 define('ROOT_WDIR', '/');
 
 // Include the core bootstrap, this will get the system functional.
@@ -689,8 +686,8 @@ function process_component($component, $forcerelease = false){
 	// The core has a "few" extra ignores to it...
 	if($component == 'core'){
 		$it->addIgnores('components/', 'config/configuration.xml', 'dropins/', 'exports/', 'nbproject/', 'themes/', 'utilities/', '.htaccess', 'gnupg');
-		if(ConfigHandler::Get('/core/filestore/assetdir')) $it->addIgnore(ConfigHandler::Get('/core/filestore/assetdir'));
-		if(ConfigHandler::Get('/core/filestore/publicdir')) $it->addIgnore(ConfigHandler::Get('/core/filestore/publicdir'));
+		if(CDN_LOCAL_ASSETDIR) $it->addIgnore(CDN_LOCAL_ASSETDIR);
+		if(CDN_LOCAL_PUBLICDIR) $it->addIgnore(CDN_LOCAL_PUBLICDIR);
 		if(strpos(TMP_DIR_WEB, ROOT_PDIR) === 0) $it->addIgnore(TMP_DIR_WEB);
 		if(strpos(TMP_DIR_CLI, ROOT_PDIR) === 0) $it->addIgnore(TMP_DIR_CLI);
 	}
@@ -925,10 +922,10 @@ function process_component($component, $forcerelease = false){
 		// The destination depends on the type.
 		switch($component){
 			case 'core':
-				$tgz = ROOT_PDIR . 'exports/core/' . $component . '-' . $version . '.tgz';
+				$tgz = ROOT_PDIR . '../exports/core/' . $component . '-' . $version . '.tgz';
 				break;
 			default:
-				$tgz = ROOT_PDIR . 'exports/components/' . $component . '-' . $version . '.tgz';
+				$tgz = ROOT_PDIR . '../exports/components/' . $component . '-' . $version . '.tgz';
 				break;
 		}
 
@@ -1120,7 +1117,7 @@ function process_theme($theme, $forcerelease = false){
 		$dir = TMP_DIR . 'packager-' . $theme . '/';
 
 		// Destination tarball
-		$tgz = ROOT_PDIR . 'exports/themes/' . $theme . '-' . $version . '.tgz';
+		$tgz = ROOT_PDIR . '../exports/themes/' . $theme . '-' . $version . '.tgz';
 
 		// Ensure the export directory exists.
 		if(!is_dir(dirname($tgz))) exec('mkdir -p "' . dirname($tgz) . '"');
@@ -1166,7 +1163,7 @@ function process_theme($theme, $forcerelease = false){
  */
 function get_exported_components(){
 	$c = array();
-	$dir = ROOT_PDIR . 'exports/components';
+	$dir = ROOT_PDIR . '../exports/components';
 	if(!is_dir($dir)){
 		// Doesn't exist?  Don't even try opening it.
 		return $c;
@@ -1235,7 +1232,7 @@ function get_exported_components(){
  */
 function get_exported_core(){
 	$c = array();
-	$dir = ROOT_PDIR . 'exports/core';
+	$dir = ROOT_PDIR . '../exports/core';
 	if(!is_dir($dir)){
 		// Doesn't exist?  Don't even try opening it.
 		return $c;

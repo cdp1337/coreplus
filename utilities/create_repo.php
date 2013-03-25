@@ -28,11 +28,10 @@ if(!isset($_SERVER['SHELL'])){
 	die("Please run this script from the command line.");
 }
 
-// This is required to establish the root path of the system, (since it's always one directory up from "here"
-$dir = realpath(dirname($_SERVER['PWD'] . '/' . $_SERVER['SCRIPT_FILENAME']) . '/..') . '/';
+define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
 
-// Inlude the core bootstrap, this will get the system functional.
-require_once($dir . 'core/bootstrap.php');
+// Include the core bootstrap, this will get the system functional.
+require_once(ROOT_PDIR . 'core/bootstrap.php');
 
 
 // I need a valid editor.
@@ -55,8 +54,8 @@ if(!$packageremail){
 CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 
 
-$destdir = ROOT_PDIR . 'exports/';
-$tmpdir = ROOT_PDIR . 'exports/_tmp/';
+$destdir = ROOT_PDIR . '../exports/';
+$tmpdir = ROOT_PDIR . '../exports/_tmp/';
 // Ensure the export directory exists.
 if(!is_dir($destdir)) exec('mkdir -p "' . $destdir . '"');
 if(!is_dir($tmpdir)) exec('mkdir -p "' . $tmpdir . '"');

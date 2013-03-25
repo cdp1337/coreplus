@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROOTPDIR="$(realpath $(dirname $0)/..)"
+ROOTPDIR="$(realpath $(dirname $0)/../src)"
 
 
 OPTS="--colors"

@@ -9,11 +9,10 @@ if(!isset($_SERVER['SHELL'])){
 	die("Please run this script from the command line.");
 }
 
-// This is required to establish the root path of the system, (since it's always one directory up from "here"
-$dir = realpath(dirname($_SERVER['PWD'] . '/' . $_SERVER['SCRIPT_FILENAME']) . '/..') . '/';
+define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
 
 // Include the core bootstrap, this will get the system functional.
-require_once($dir . 'core/bootstrap.php');
+require_once(ROOT_PDIR . 'core/bootstrap.php');
 
 
 if(!DEVELOPMENT_MODE){

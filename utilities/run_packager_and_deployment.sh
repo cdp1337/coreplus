@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROOTPDIR="$(dirname $0)/.."
+ROOTPDIR="$(dirname $0)/../src/"
 
 # Run the compiler
 $ROOTPDIR/utilities/compiler.php
