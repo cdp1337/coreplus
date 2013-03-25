@@ -26,10 +26,10 @@ CacheFile::response_manager() with reset()
 	}
 
 	$cache = new CacheFile('test', dirname(__FILE__) . '/cache', 2);
-	var_dump($cache->response_manager('fetch_data', array('http://github.com/skyzyx/cachecore/raw/master/_tests/test_request.txt', true)));
+	var_dump($cache->response_manager('fetch_data', array('https://raw.github.com/nicholasryan/CorePlus/master/src/core/libs/cachecore/backends/_tests/test_request.txt', true)));
 	$start = $cache->timestamp();
 	sleep(3);
-	var_dump($cache->response_manager('fetch_data', array('http://github.com/skyzyx/cachecore/raw/master/_tests/test_request.txt', false)));
+	var_dump($cache->response_manager('fetch_data', array('https://raw.github.com/nicholasryan/CorePlus/master/src/core/libs/cachecore/backends/_tests/test_request.txt', false)));
 	$end = $cache->timestamp();
 	var_dump($start < $end);
 ?>
