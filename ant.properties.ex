@@ -2,19 +2,16 @@
 # It's default to the directory the build.xml file is located in.
 
 
-# Assets directory for Core Plus.
-# Assets are static resources from components and templates such as stylesheets and javascript files.
-dir.assets=
+# Rewrite base for the site.
+# If this is currently installed in /~userblah/coreplus, set this to
+# /~userblah/coreplus/
+rewritebase=/src/
 
-# Public directory for Core Plus.
-# Public files are user-contributed and admin-contributed content for the site, such as
-# gallery images, content uploads, and user avatars.
-dir.public=
 
-# @todo
-dir.private=
 
-# Private temporary location
-# In production, this SHOULD NOT BE WEB-READABLE!
-# It's stored by Core Plus to store cache of templates, settings, and components.
-dir.tmp=
+db.server=localhost
+db.port=3306
+db.type=mysqli
+db.name=coreplus
+db.user=coreplus
+db.pass=coreplus
