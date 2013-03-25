@@ -1,6 +1,9 @@
 Blog 1.4.2
 
-	* Updated the dependencies to be more accurate. (Needed to require jQuery for the new frontend pagination).
+	* Updated the dependencies to be more accurate. (Needed to require jQuery for the new
+	  frontend pagination).
+	* Fixed bug #321 - News update items are showing up in the left nav
+	--Charlie Powell <charlie@eval.bz>  Mon, 25 Mar 2013 05:11:39 -0400
 
 Blog 1.4.1
 

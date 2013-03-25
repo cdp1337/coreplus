@@ -106,6 +106,7 @@ abstract class BlogHelper {
 			$isnew = !$article->exists();
 
 			// Blog pages are not selectable.  Otherwise there would just be WAY too many of them!
+			// This addresses bug #321
 			$page->set('selectable', 0);
 
 			if($article->get('status') == 'published' && !$article->get('published')){

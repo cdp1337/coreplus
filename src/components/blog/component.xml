@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.1" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.2" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.3" operation="ge"/>
 		<require name="user" type="component" version="2.4.1"/>
@@ -11,17 +11,17 @@
 		<permission key="blog_manage" description="Manage Blogs"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="e55e5457abe2f0a3a8edcb6a927c92e3"/>
+		<file filename="CHANGELOG" md5="e4d420aba1930f6214648633859c9261"/>
 		<file filename="controllers/BlogController.php" md5="37e94eab63201594e37d6e95ec253833">
 			<controller name="BlogController"/>
 		</file>
-		<file filename="helpers/BlogHelper.php" md5="fad356918764eb577d1788dcc01baf98">
+		<file filename="helpers/BlogHelper.php" md5="5a357d45de496a449a55e4de2826f76a">
 			<class name="BlogHelper"/>
 		</file>
-		<file filename="models/BlogArticleModel.php" md5="29d663cba48d0d71d745ff3bc75d4127">
+		<file filename="models/BlogArticleModel.php" md5="b74792c6808ab0334618e4ff229919aa">
 			<class name="BlogArticleModel"/>
 		</file>
-		<file filename="models/BlogModel.php" md5="c759fe5447d3c8ea9b48f4d8e2031502">
+		<file filename="models/BlogModel.php" md5="d75ec50e23fc8cd2e451a16ac0678011">
 			<class name="BlogModel"/>
 		</file>
 		<file filename="tests/BlogTest.php" md5="5da5c070a57ef48162f343ff0d0aae58">
@@ -68,6 +68,15 @@
 			</phpfileinclude>
 		</upgrade>
 		<upgrade from="1.4.0" to="1.4.1"/>
+		<upgrade from="1.4.1" to="1.4.2">
+			<!-- This will retro-actively fix bug #321. -->
+			<dataset action="update" table="page">
+				<datasetset key="selectable">0</datasetset>
+				<datasetwhere>
+					baseurl LIKE /blog/article/view%
+				</datasetwhere>
+			</dataset>
+		</upgrade>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>
