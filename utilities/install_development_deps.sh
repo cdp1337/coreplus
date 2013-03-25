@@ -34,9 +34,18 @@ source "/opt/eval/basescript.sh"
 
 # Install the necessary dependencies
 if [ "$OSFAMILY" == "debian" ]; then
-	install ant php-pear php5-xsl php-dev
+	install ant php-pear php5-xsl php5-dev libxml-xpath-perl
 elif [ "$OSFAMILY" == "redhat" ]; then
-	install ant php-pear php-xsl php-devel
+	# RH based distros need some updates to utilize 3rd party projects.
+	if [ "$OSVERSIONMAJ" == "6" ]; then
+		rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+		rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+	elif [ "$OSVERSIONMAJ" == "5" ]; then
+		rpm -Uvh http://dl.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm
+		rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-5.rpm
+	fi
+
+	yum --enablerepo=remi,remi-test install -y php php-common php-devel php-xsl php-mbstring php-pear ant
 fi
 
 
@@ -52,23 +61,27 @@ pear channel-discover pear.phpdoc.org
 printheader "Installing PEAR packages"
 
 # Install the phpunit libraries.
-pear install pear.phpunit.de/phploc
-pear install pear.phpunit.de/PHPUnit
-pear install pear.phpunit.de/phpcpd
-
-# Download pdepend - A small program that performs static code analysis on a given source base. 
-pear install pdepend/PHP_Depend-beta
-
-# Download phpmd - A spin-off project of PHP Depend and aims to be a PHP equivalent of the Java tool PMD
-pear install --alldeps phpmd/PHP_PMD
-
-pear install pear.php.net/Text_Highlighter-0.7.3
-
-pear install --alldeps phpqatools/PHP_CodeBrowser
-
-pear install PHP_CodeSniffer-1.5.0RC1
+for i in \
+	pear.phpunit.de/phploc \
+	pear.phpunit.de/PHPUnit \
+	pear.phpunit.de/phpcpd \
+	pdepend/PHP_Depend-beta \
+	phpmd/PHP_PMD \
+	pear.php.net/Text_Highlighter-0.7.3 \
+	PHP_CodeSniffer-1.5.0RC1;
+do
+	pear info pear.phpunit.de/phploc 1>/dev/null
+	if [ "$?" == "0" ]; then
+		printline "$i already installed, skipping"
+	else
+		printline "$i is new, installing..."
+		pear install $i
+		checkexitstatus "$?"
+	fi
+done
 
 # Actually remove the previous one... it may have sneaked in.
+# This will check and see if phpdoc is installed, but is installed as version 1.x
 pear info phpdoc/phpDocumentor 1>/dev/null
 if [ "$?" == "0" ]; then
 	if [ -z "$(pear info phpdoc/phpDocumentor | grep 'API Version' | grep '2.0')" ]; then
@@ -76,4 +89,12 @@ if [ "$?" == "0" ]; then
 	fi
 fi
 
-pear install phpdoc/phpDocumentor-alpha
+# Now I can check/install v2!
+pear info phpdoc/phpDocumentor 1>/dev/null
+if [ "$?" == "0" ]; then
+	printline "phpdoc/phpDocumentor-alpha already installed, skipping"
+else
+	printline "phpdoc/phpDocumentor-alpha is new, installing..."
+	pear install phpdoc/phpDocumentor-alpha
+	checkexitstatus "$?"
+fi
