@@ -43,6 +43,7 @@
 		<delete dir="${basedir}/build/coverage"/>
 		<delete dir="${basedir}/build/logs"/>
 		<delete dir="${basedir}/build/pdepend"/>
+		<delete dir="${basedir}/build/phpunit"/>
 	</target>
 	
 	<target name="clean_src" description="Cleanup the src directory from compiled resources and the like">
@@ -58,7 +59,7 @@
 		<mkdir dir="${basedir}/build/coverage"/>
 		<mkdir dir="${basedir}/build/logs"/>
 		<mkdir dir="${basedir}/build/pdepend"/>
-		<mkdir dir="${basedir}/build/phpdox"/>
+		<mkdir dir="${basedir}/build/phpunit"/>
 	</target>
 
 	<target name="purge_src" depends="clean_src" description="Purge the configuration, htaccess, data, and everything for a given site.">
@@ -187,6 +188,10 @@
 
 	<target name="phpunit-ci" depends="compile" description="Run unit tests with PHPUnit (CI Compatible version)">
 		<exec executable="phpunit" failonerror="true">
+			<arg value="--log-junit"/>
+			<arg value="${basedir}/build/logs/junit.xml"/>
+			<arg value="--coverage-clover"/>
+			<arg value="${basedir}/build/logs/clover.xml"/>
 			<arg value="--bootstrap"/>
 			<arg value="${basedir}/utilities/phpunit-loader.php"/>
 			<arg path="${basedir}/src"/>
