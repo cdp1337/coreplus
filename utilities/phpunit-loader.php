@@ -5,6 +5,7 @@
 
 define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
 define('ROOT_WDIR', '/');
+define('TMP_DIR', sys_get_temp_dir() . '/coreplus-phpunit-tests/');
 
 
 // I need to load up the configuration file to get some settings first... namely the site_url.
@@ -13,7 +14,7 @@ $settingsxml = new SimpleXMLElement(ROOT_PDIR . 'config/configuration.xml', 0, t
 $siteurl = 'localhost';
 foreach($settingsxml->return as $node){
 	/** @var $node SimpleXMLElement */
-	if($node->attributes()['name'] == 'site_url'){
+	if($node->attributes()['name'] == 'site_url' && (string)$node->value){
 		$siteurl = (string)$node->value;
 		break;
 	}

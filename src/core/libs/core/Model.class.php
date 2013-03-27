@@ -710,6 +710,32 @@ class Model implements ArrayAccess {
 	}
 
 	public function delete() {
+
+		// Blank out any dependent records based on links.
+		// Since relationships may have various levels, I need to execute delete on each of them instead of just
+		// issuing a broad delete request.
+		foreach ($this->_linked as $k => $l) {
+
+			switch($l['link']){
+				case Model::LINK_HASONE:
+					// Delete this child, (and any of its subordinates).
+					$child = $this->getLink($k);
+					$child->delete();
+					break;
+				case Model::LINK_HASMANY:
+					// Request all the children and issue a delete on them.
+					$children = $this->getLink($k);
+					foreach($children as $child){
+						$child->delete();
+					}
+					break;
+				// There is no default behaviour... other than to ignore it.
+			}
+
+			if (isset($this->_linked[$k]['records'])) unset($this->_linked[$k]['records']);
+		}
+
+
 		if ($this->exists()) {
 			$n = $this->_getTableName();
 			$i = self::GetIndexes();
@@ -733,27 +759,7 @@ class Model implements ArrayAccess {
 			}
 		}
 
-		// Blank out any dependent records based on links.
-		foreach ($this->_linked as $k => $l) {
 
-			switch($l['link']){
-				case Model::LINK_HASONE:
-				case Model::LINK_HASMANY:
-					// I can do this without actually calling them.
-					$c     = $this->_getLinkClassName($k);
-					$model = new $c();
-
-					Dataset::Init()
-						->table($model->getTableName())
-						->where($this->_getLinkWhereArray($k))
-						->delete()
-						->execute($this->interface);
-					break;
-				// There is no default behaviour... other than to ignore it.
-			}
-
-			if (isset($this->_linked[$k]['records'])) unset($this->_linked[$k]['records']);
-		}
 	}
 
 	/**

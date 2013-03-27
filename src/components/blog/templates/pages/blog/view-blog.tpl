@@ -5,7 +5,7 @@
 {/if}
 
 {$filters->pagination()}
-<div itemscope itemtype="http://schema.org/Blog" class="single-blog-listing blog-listing">
+<div itemscope="itemscope" itemtype="http://schema.org/Blog" class="single-blog-listing blog-listing">
 	<h1>{$page.title}</h1>
 
 	{if $page.description}
@@ -13,7 +13,7 @@
 	{/if}
 
 	{foreach $articles as $article}
-		<div class="blog-article blog-article-status-{$article.status}" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="blog-article blog-article-status-{$article.status}" itemscope="itemscope" itemtype="http://schema.org/BlogPosting">
 			<link itemprop="url" href="{link link="`$article.rewriteurl`"}"/>
 			{a class="blog-article-title" href="`$article.rewriteurl`" itemprop="name"}
 				{$article.title}

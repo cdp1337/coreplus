@@ -1,5 +1,6 @@
 #!/bin/bash
 
+BASEDIR="$(readlink -f $(dirname $0)/..)"
 ROOTPDIR="$(readlink -f $(dirname $0)/../src)"
 
 
@@ -14,7 +15,7 @@ function perform_test (){
 	echo "##############################################";
 	echo "##  Testing $(basename $(dirname $TESTDIR))";
 
-	phpunit $OPTS --bootstrap $ROOTPDIR/utilities/phpunit-loader.php $TESTDIR
+	phpunit $OPTS --bootstrap $BASEDIR/utilities/phpunit-loader.php $TESTDIR
 }
 
 
@@ -23,7 +24,7 @@ function perform_test (){
 # If a specific component is requested, run the tests on only that location.
 if [ "$1" != "" ]; then
 	# Single always gets remapped to verbose.
-	//OPTS="--debug --verbose"
+	#OPTS="--debug --verbose"
 	OPTS="--debug --colors"
 
 	if [ "$1" == "core" ]; then

@@ -27,7 +27,7 @@
  * @throws SmartyException
  */
 function smarty_function_img($params, $template){
-	
+
 	// Key/value array of attributes for the resulting HTML.
 	$attributes = array();
 
@@ -39,7 +39,7 @@ function smarty_function_img($params, $template){
 		unset($params['file']);
 	}
 	elseif(isset($params['src'])){
-		$f = Core::File($params['src']);
+		$f = \Core\file($params['src']);
 		unset($params['src']);
 	}
 	else{
@@ -87,8 +87,6 @@ function smarty_function_img($params, $template){
 
 		$d = ($width && $height) ? $width . 'x' . $height : false;
 	}
-
-
 
 	// If the file doesn't exist and a placeholder was provided, use the appropriate placeholder image!
 	if(!($f && $f->exists() && $f->isImage()) && $placeholder){

@@ -620,7 +620,9 @@ class File_local_backend implements File_Backend {
 		}
 
 		// If the system is getting too close to the max_execution_time variable, just return the mimetype!
-		if(Core::GetProfileTimeTotal() + 5 >= ini_get('max_execution_time')){
+		// One note though, this is only available when running php from the web.
+		// CLI scripts don't have it!
+		if(ini_get('max_execution_time') && Core::GetProfileTimeTotal() + 5 >= ini_get('max_execution_time')){
 			// Try and get the mime icon for this file.
 			$filemime = str_replace('/', '-', $this->getMimetype());
 

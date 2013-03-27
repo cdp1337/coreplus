@@ -118,17 +118,41 @@ EOD;
 		if($formsubmission === false){
 			throw new Exception(implode("\n", $form->getErrors()));
 		}
+
+		// Go to the parent listing page and find this entry.
+		$request = new PageRequest($blog->get('rewriteurl'));
+		$return = $request->execute();
+		$this->assertEquals(200, $return->error);
+		$html = $return->fetch();
+		$this->assertContains($title, $html);
+		$this->assertContains('itemtype="http://schema.org/BlogPosting"', $html);
+
+		// Convert this to XML so I can easily parse it.
+		$xml = new XMLLoader();
+		$xml->setRootName('html');
+		$xml->loadFromString($html);
+
+		$node = $xml->getElement('//div[@itemtype="http://schema.org/BlogPosting"]/link', false);
+		$this->assertInstanceOf('DomElement', $node);
+
+		// This node contains the URL.
+		$url = $node->getAttribute('href');
+		// Make sure the url contains the site url.
+		$this->assertStringStartsWith(ROOT_URL, $url);
+		// And trim it off.  This is because PageRequest expects that the url is already trimmed.
+		$url = '/' . substr($url, strlen(ROOT_URL));
+
 		//$this->assertStringStartsWith('/blog/article/view/', $formsubmission, 'Checking that blog article creation was successful');
 
 		// Go to the page and make sure that it loads up!
-		$request = new PageRequest($formsubmission);
+		$request = new PageRequest($url);
 		$return = $request->execute();
 		$this->assertEquals(200, $return->error, 'Checking that public blog article exists');
 
 		$html = $return->fetch();
 		$this->assertContains($title, $html, 'Checking that the public blog article page contains the correct title');
 		$this->assertContains($randomsnippet, $html, 'Checking that the public blog article page contains the correct body');
-		$this->assertContains('blog-test-image.png', $html, 'Checking that the public blog article page contains the correct image');
+		$this->assertContains('blog-test-image', $html, 'Checking that the public blog article page contains the correct image');
 	}
 
 	/**
