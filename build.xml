@@ -219,12 +219,21 @@
 
 	<target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
 		<exec executable="phpcb">
+
 			<arg value="--log"/>
 			<arg path="${basedir}/build/logs"/>
+
 			<arg value="--source"/>
 			<arg path="${basedir}/src"/>
+
 			<arg value="--output"/>
 			<arg path="${basedir}/build/code-browser"/>
+
+			<arg value="--exclude"/>
+			<arg path="/usr"/>
+
+			<arg value="--exclude"/>
+			<arg path="/tmp"/>
 		</exec>
 	</target>
 </project>
