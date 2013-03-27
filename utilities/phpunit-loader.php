@@ -40,3 +40,6 @@ require(ROOT_PDIR . 'core/bootstrap.compiled.php');
 // quiet!
 // CLI mode shouldn't have HTML error reporting.
 ini_set('html_errors', 0);
+// These tests require more memory allocated as well.
+// This may hinder some bugs that pop up with low-memory allocations, but oh well.
+ini_set('memory_limit', '512M');
