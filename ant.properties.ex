@@ -15,3 +15,4 @@ db.type=mysqli
 db.name=coreplus
 db.user=coreplus
 db.pass=coreplus
+devmode=false

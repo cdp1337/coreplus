@@ -1,3 +1,8 @@
+JQuery-Full 1.9.1~core1
+
+	* Updated to latest release of jQuery 1.9.1
+	* Updated jquery.cookie, jquery.form, jquery.json, jquery.masonry, jqueryui.timepicker to latest versions
+
 JQuery-Full 1.8.3~core4
 
 	* Updated to jQuery UI 1.10.2

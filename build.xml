@@ -91,6 +91,7 @@
 			<replacefilter value="${db.name}" token="@{db.name}@"/>
 			<replacefilter value="${db.user}" token="@{db.user}@"/>
 			<replacefilter value="${db.pass}" token="@{db.pass}@"/>
+			<replacefilter value="${devmode}" token="@{devmode}@"/>
 		</replace>
 	</target>
 

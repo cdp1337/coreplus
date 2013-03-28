@@ -24,7 +24,7 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		$base = 'jquery-1.8.3';
+		$base = 'jquery-1.9.1';
 
 		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
 		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
@@ -81,7 +81,7 @@ abstract class JQuery {
 	}
 	
 	public static function Include_json(){
-		$base = 'jquery.json-2.2';
+		$base = 'jquery.json-2.4';
 		
 		// I need jquery first.
 		self::IncludeJQuery();

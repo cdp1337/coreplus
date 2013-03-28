@@ -85,7 +85,7 @@ required - SSL is always required for all pages
 	</return>
 
 	<define name="DEVELOPMENT_MODE" type="boolean" formtype="checkbox">
-		<value>false</value>
+		<value>@{devmode}@</value>
 		<description>If this is a production site, it is advised to disable this.</description>
 	</define>
 
