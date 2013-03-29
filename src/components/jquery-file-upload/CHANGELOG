@@ -1,3 +1,7 @@
+jQuery-File-Upload 7.4.2~core2
+
+	* Upgraded to latest release of jQuery-file-upload 7.4.2
+
 jQuery-File-Upload 6.9.1~core4
 
 	* Fix in IE for uploading files.  That browser did not support json data returned, so it was

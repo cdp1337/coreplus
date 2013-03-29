@@ -9,6 +9,7 @@ class JQueryContextMenu {
 	    // jqueryui is a dependency.
 	    JQuery::IncludeJQueryUI();
 
+	    CurrentPage::AddScript ('js/jquery/jquery.browser.js');
         CurrentPage::AddScript ('js/jquery/jquery.contextMenu.js');
 	    CurrentPage::AddStylesheet('css/jquery.contextMenu.css');
 

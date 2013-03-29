@@ -56,6 +56,8 @@ class JQueryFileUploadController extends Controller_2_1 {
 
 		if($request->method == View::METHOD_POST){
 
+			//var_dump($_SERVER);die();
+
 			// Damn browsers that don't support DELETE...
 			if (isset($_REQUEST['_method']) && $_REQUEST['_method'] === 'DELETE') {
 				$view->jsondata = $this->_doDelete();
@@ -67,7 +69,8 @@ class JQueryFileUploadController extends Controller_2_1 {
 			}
 
 			// A streaming request
-			elseif(isset($_SERVER['HTTP_X_FILE_NAME'])){
+			//elseif(isset($_SERVER['HTTP_X_FILE_NAME'])){
+			elseif(isset($_SERVER['HTTP_CONTENT_DISPOSITION'])){
 				$view->jsondata = $this->_doStream();
 			}
 
@@ -102,9 +105,12 @@ class JQueryFileUploadController extends Controller_2_1 {
 	 */
 	private function _doStream(){
 		// Read INPUT and write it directly to a temporary file based on the requested filename.
+		//var_dump($_SERVER); die();
+
+		$name = substr($_SERVER['HTTP_CONTENT_DISPOSITION'],22,-1);
 
 		$file = array(
-			'name' => $_SERVER['HTTP_X_FILE_NAME'],
+			'name' => $name,
 			'size' => 0,
 			'remaining' => 0,
 			'type' => null,
@@ -113,8 +119,16 @@ class JQueryFileUploadController extends Controller_2_1 {
 			'error' => '', // also may be populated later.
 		);
 
-		$finalsize = $_SERVER['HTTP_X_FILE_SIZE'];
+		//$finalsize = $_SERVER['HTTP_X_FILE_SIZE'];
+		if(isset($_SERVER['HTTP_CONTENT_RANGE'])) {
+			$contentrange = explode('/', $_SERVER['HTTP_CONTENT_RANGE']);
+			$finalsize = $contentrange[1];
+		} else {
+			$finalsize = $_SERVER['CONTENT_LENGTH'];
+		}
+
 		$incomingsize = $_SERVER['CONTENT_LENGTH'];
+
 		// Just used to prevent multiple pageloads from appending to the same file should something happen.
 		$datestamp = (isset($_SERVER['HTTP_X_UPLOAD_TIME'])) ? $_SERVER['HTTP_X_UPLOAD_TIME'] : 0;
 		$tmpfile = TMP_DIR . md5($this->_formelement->get('key') . $file['name'] . $datestamp) . '.part.dat';

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.9.1~core4" name="jQuery-File-Upload" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="7.4.2~core2" name="jQuery-File-Upload" execmode="web">
 	<requires>
 		<require name="JQuery" type="library" version="1.6" operation="ge"/>
 		<require name="jqueryui" type="library" version="1.8" operation="ge"/>
@@ -9,6 +9,8 @@
 		<upgrade from="6.9.1~core1" to="6.9.1~core2"/>
 		<upgrade from="6.9.1~core2" to="6.9.1~core3"/>
 		<upgrade from="6.9.1~core3" to="6.9.1~core4"/>
+		<upgrade from="6.9.1~core4" to="7.4.2~core1"/>
+		<upgrade from="7.4.2~core1" to="7.4.2~core2"/>
 	</upgrades>
 	<description>
 		File Upload widget with multiple file selection, drag and drop support, progress bars and preview images for jQuery.
@@ -19,7 +21,7 @@
 		<formelement name="multifile" class="MultiFileInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="15a7822d97ba1ccf7a41834a76c0325e"/>
+		<file filename="CHANGELOG" md5="5306baedb3f379e81f65ebf742f6f8c7"/>
 		<file filename="README.md" md5="cb22a03a2f5fc8aaf6dcf5a9c2180a66"/>
 		<file filename="classes/MultiFileInput.class.php" md5="37e45d6467329d1c6504c65530fb4735">
 			<class name="MultiFileInput"/>
@@ -54,22 +56,20 @@
 		<file filename="misc/test/test.js" md5="2f21c6e24f3d0623f4cf14d212543ef8"/>
 	</files>
 	<assets>
-		<file filename="assets/css/jquery-file-upload.css" md5="be2f8ac827a0623b2241d3c07263c4b7"/>
+		<file filename="assets/css/jquery-file-upload.css" md5="f0883d44be9474afff17a026d175c904"/>
+		<file filename="assets/img/loading.gif" md5="05992d3434d3589b38a3a5431842d38f"/>
+		<file filename="assets/img/progressbar.gif" md5="2165b99c89c8431e7165530ccb5f89fb"/>
 		<file filename="assets/js/cors/jquery.postmessage-transport.js" md5="11fe256b13a09546f7280198d8e98239"/>
-		<file filename="assets/js/cors/jquery.xdr-transport.js" md5="0927262e8bbd59ec33eda07237e6f19a"/>
-		<file filename="assets/js/jquery.fileupload-fp.js" md5="b26df0946db6d77ffcae7d02b7fdfff3"/>
-		<file filename="assets/js/jquery.fileupload-ui.js" md5="f594ca00dff11b09c2340d56c7be2766"/>
-		<file filename="assets/js/jquery.fileupload.js" md5="5554a67234029282d81603f3b810f02b"/>
-		<file filename="assets/js/jquery.iframe-transport.js" md5="64c4919f8d8d06d25f1174f11d7a14e4"/>
-		<file filename="assets/js/locale.js" md5="a3e000456648ad121c8aadf7d918a4e7"/>
-		<file filename="assets/js/main.js" md5="107bdfd43c84dc9cc817d9e8b3e821e5"/>
-		<file filename="assets/js/vendor/jquery.ui.widget.js" md5="34af0fa43f73d5db9d7ff94d218ccdd9"/>
+		<file filename="assets/js/cors/jquery.xdr-transport.js" md5="f725a09bf18dd40a6a9d1f2febe97948"/>
+		<file filename="assets/js/jquery.fileupload-fp.js" md5="e43147041dea9988e6c84fabfee2aeca"/>
+		<file filename="assets/js/jquery.fileupload-ui.js" md5="b8bf3fe9082006ebe4b2af2d04c36b92"/>
+		<file filename="assets/js/jquery.fileupload.js" md5="10002f30a2a2f9189b0314471cd5e4d5"/>
+		<file filename="assets/js/jquery.iframe-transport.js" md5="e041d8a3038edd182d73e92660a698bf"/>
+		<file filename="assets/js/main.js" md5="9c120bc3fc9d55c2859dcacf8857e629"/>
+		<file filename="assets/js/vendor/jquery.ui.widget.js" md5="f479494e3c298af1be1f4b1164cf484f"/>
 	</assets>
 	<view searchdir="templates">
 		<file filename="templates/forms/elements/multifileinput.tpl" md5="627ce85a0c080421381236dbc6c507c8"/>
 	</view>
-	<authors>
-		<author name="Sebastian Tschan"/>
-	</authors>
 </component>
 
