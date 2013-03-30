@@ -10,6 +10,7 @@
 	overflow:hidden;
 	top: 0;
 	box-shadow: 0 0 3px rgb(10, 10, 10);
+	position: relative;
 }
 
 #admin-bar ul {
