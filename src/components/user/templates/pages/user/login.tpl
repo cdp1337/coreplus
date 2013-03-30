@@ -6,22 +6,38 @@
 -->
 <div id="user-login-placeholder-for-javascript-because-otherpages-may-have-an-error"></div>
 
-<fieldset id="user-login">
-	<legend> Login</legend>
-	{$form->render()}
-	<br/>
-	{a href="/User/ForgotPassword"}Forgot Password{/a}
-	{if $allowregister}
-		<br/><br/>
-		{a href="/User/Register"}Register Account{/a}
+
+<div id="login-center">
+
+	<fieldset id="login-existing">
+		<em>Login to your existing account.</em>
+	</fieldset>
+
+	<fieldset class="left">
+		{$form->render()}
+
+		{a class="login-forgot" href="/User/ForgotPassword"}Forgot Password?{/a}
+	</fieldset>
+
+	{if $smarty.const.FACEBOOK_APP_ID && in_array('facebook', $backends)}
+		<div id="login-divider"></div>
+
+		<fieldset class="right">
+			{widget baseurl="/facebook/login"}
+		</fieldset>
 	{/if}
-</fieldset>
 
+	<div class="clear"></div>
 
-{if $smarty.const.FACEBOOK_APP_ID && in_array('facebook', $backends)}
-	<p>OR</p>
-	{widget baseurl="/facebook/login"}
-{/if}
+	{if $allowregister}
+		<fieldset id="user-login">
+			{a class="register-account" href="/User/Register"}Register Account{/a}
+
+			<em>Like this site? Sign up for an account!</em>
+		</fieldset>
+	{/if}
+
+</div>
 
 {if Core::IsLibraryAvailable('JQuery')}
 	{script library="jquery"}{/script}
