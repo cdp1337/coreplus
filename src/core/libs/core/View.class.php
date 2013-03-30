@@ -690,6 +690,21 @@ class View {
 
 			// Provide a way for stylesheets to target this page specifically.
 			$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
+
+			switch ($this->error) {
+				case 400:
+					$url = "error error-400";
+				break;
+
+				case 403:
+					$url = "error error-403 page-user-login";
+				break;
+
+				case 404:
+					$url = "error error-404";
+				break;
+			}
+
 			$bodyclass = 'page-' . $url;
 			// Merge them.
 			if(preg_match('/<body[^>]*>/', $data, $matches)){

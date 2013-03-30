@@ -997,3 +997,11 @@ fieldset.right {
 	width: 720px;
 	margin: 25px auto 0 auto;
 }
+
+/** Errors! **/
+
+body.page-error #breadcrumbs {
+	display:none;
+}
+
+body.page-error .pagecontent {margin-left:0;}

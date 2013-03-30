@@ -10,32 +10,36 @@
 -->
 <div id="user-login-placeholder-for-javascript-because-otherpages-may-have-an-error"></div>
 
-<div class="user-guest-403-container {if $registerform}two-columns{/if}">
-	<div class="column-left">
-		<fieldset id="user-login">
-			<legend> Login </legend>
-			{$loginform->render()}
-			<br/>
-			{a href="/user/forgotpassword"}Forget Password?{/a}
-		</fieldset>
+<div id="login-center">
 
-		{if $smarty.const.FACEBOOK_APP_ID && in_array('facebook', $backends)}
-			<p>OR</p>
+	<fieldset id="login-existing">
+		<em>Login to your existing account.</em>
+	</fieldset>
+
+	<fieldset class="left">
+		{$loginform->render()}
+
+		{a class="login-forgot" href="/User/ForgotPassword"}Forgot Password?{/a}
+	</fieldset>
+
+	{if $smarty.const.FACEBOOK_APP_ID && in_array('facebook', $backends)}
+		<div id="login-divider"></div>
+
+		<fieldset class="right">
 			{widget baseurl="/facebook/login"}
-		{/if}
-	</div>
+		</fieldset>
+	{/if}
 
-	{if $registerform}
-		<div class="column-right">
-			<fieldset id="user-register">
-				<legend> Create Account </legend>
-				{$registerform->render()}
-			</fieldset>
-		</div>
+	<div class="clear"></div>
+
+	{if $allowregister}
+		<fieldset id="user-login">
+			{a class="register-account" href="/User/Register"}Register Account{/a}
+
+			<em>Like this site? Sign up for an account!</em>
+		</fieldset>
 	{/if}
 </div>
-
-
 
 {if Core::IsLibraryAvailable('JQuery')}
 	{script library="jquery"}{/script}
