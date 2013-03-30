@@ -21,12 +21,12 @@
 		<formelement name="multifile" class="MultiFileInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="5306baedb3f379e81f65ebf742f6f8c7"/>
+		<file filename="CHANGELOG" md5="2f9e12231d2fbdf90d855234e5b414b7"/>
 		<file filename="README.md" md5="cb22a03a2f5fc8aaf6dcf5a9c2180a66"/>
 		<file filename="classes/MultiFileInput.class.php" md5="37e45d6467329d1c6504c65530fb4735">
 			<class name="MultiFileInput"/>
 		</file>
-		<file filename="controllers/JQueryFileUploadController.php" md5="5ef7b3231931962d0c7ed0e2528321e1">
+		<file filename="controllers/JQueryFileUploadController.php" md5="17bba5108c639a429795673a9d5fd512">
 			<controller name="JQueryFileUploadController"/>
 		</file>
 		<file filename="misc/cors/postmessage.html" md5="a44b950eba47719cfd9775e16ffdef70"/>

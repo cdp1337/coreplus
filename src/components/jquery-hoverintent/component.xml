@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="r6~core1" name="JQuery-hoverIntent" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="r7~core1" name="JQuery-hoverIntent" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.2" operation="ge"/>
 	</requires>
 	<provides>
-		<provide version="r6" name="JQuery.hoverIntent" type="library"/>
+		<provide version="r7" name="JQuery.hoverIntent" type="library"/>
 		<scriptlibrary name="jquery.hoverIntent" call="JQueryHoverIntent::Load"/>
 	</provides>
 	<assets>
