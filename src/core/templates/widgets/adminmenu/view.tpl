@@ -15,17 +15,6 @@
 			</ul>
 		</li>
 	</ul>
-	{*
-	<ul>
-		{foreach from=$pages item=page}
-			{if strpos($page->get('baseurl'), '/volleyball') !== false}
-				<li>
-					{a href=$page->get('baseurl')}{$page->get('title')}{/a}
-				</li>
-			{/if}
-		{/foreach}
-	</ul>
-	*}
 
 	{widget baseurl="/user/login"}
 
@@ -34,7 +23,37 @@
 	{if Core::IsLibraryAvailable('jqueryui')}
 		{script library="jqueryui"}{/script}
 		{script library="jquery.cookie"}{/script}
-	{*script location="foot" src="js/admin/adminmenu-widget.js"}{/script*}
+		{script library="jquery.hoverintent"}{/script}
+
 	{/if}
+
+	{script}<script>
+		function hoverOver(){
+			$(this).find('ul.sub-menu').slideDown(350);
+		}
+
+		function hoverOut(){
+			$(this).find('ul.sub-menu').slideUp(350);
+		}
+
+		$(function(){
+			if ( $.fn.hoverIntent) {
+				$('li.has-sub').hoverIntent({
+					over: hoverOver,
+					out: hoverOut,
+					timeout: 320
+				});
+			} else {
+				$('li.has-sub').hover(
+					function(){
+						hoverOver();
+					},
+					function(){
+						hoverOut();
+					}
+				);
+			}
+		});
+	</script>{/script}
 
 {/if}
