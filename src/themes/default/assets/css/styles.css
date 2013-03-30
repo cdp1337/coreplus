@@ -1004,6 +1004,10 @@ fieldset.right {
 	position:relative;
 }
 
+.error-image > img {
+	width: 100%;
+}
+
 .error-top {
 	position:absolute;
 	top:50px;
