@@ -959,11 +959,6 @@ body.page-user-login .column1 section.pagecontent {margin-left:0;}
 .page-user-login fieldset fieldset {background:transparent;}
 
 
-.page-user-login #formtextinput-email,
-.page-user-login #formpasswordinput-pass {
-	width:215px;
-}
-
 .left {float:left;}
 .right {float:right;}
 
@@ -997,6 +992,8 @@ fieldset.right {
 	width: 720px;
 	margin: 25px auto 0 auto;
 }
+
+.page-user-login label {max-width:100px;}
 
 /** Errors! **/
 
