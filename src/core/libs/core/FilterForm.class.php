@@ -198,31 +198,32 @@ class FilterForm {
 			}
 		}
 
-		// Check the page key?
-		if($this->haspagination){
-			if($request->getParameter('page')){
-				$this->setPage($request->getParameter('page'));
-				$p['page'] = $this->_currentpage;
-			}
-		}
-
-
+		// Did the user change a filter?
+		// If a filter was changed, reset back to page 1!
 		if($request->getParameter('filter')){
 			$filters = $request->getParameter('filter');
+
+			foreach($filters as $f => $v){
+				if(!isset($this->_elementindexes['filter[' . $f . ']'])) continue;
+				/** @var $el FormElement */
+				$el = $this->_elementindexes['filter[' . $f . ']'];
+				$el->setValue($v);
+
+				// Remember this for the session data.
+				$a[$f] = $v;
+				$this->setPage(1);
+				$p['page'] = 1;
+			}
+		}
+		// How 'bout the pagination?
+		elseif($this->haspagination && $request->getParameter('page')){
+			$this->setPage($request->getParameter('page'));
+			$p['page'] = $this->_currentpage;
+
+			// Don't change the filter sets, those have been cached and are fine as-is.
 		}
 		else{
-			$filters = array();
-		}
-
-
-		foreach($filters as $f => $v){
-			if(!isset($this->_elementindexes['filter[' . $f . ']'])) continue;
-			/** @var $el FormElement */
-			$el = $this->_elementindexes['filter[' . $f . ']'];
-			$el->setValue($v);
-
-			// Remember this for the session data.
-			$a[$f] = $v;
+			// No pagination or filters were modified... don't do anything.
 		}
 
 
