@@ -137,6 +137,18 @@ class Theme{
 	public function getTemplates(){
 		return $this->getSkins();
 	}
+
+	/**
+	 * Get this component's "key" name.
+	 *
+	 * This *must* be the name of the directory it's installed in
+	 * and *must not* contain spaces or other weird characters.
+	 *
+	 * @return string
+	 */
+	public function getKeyName(){
+		return str_replace(' ', '-', strtolower($this->_name));
+	}
 	
 	/**
 	 * Get this theme's name
@@ -146,16 +158,18 @@ class Theme{
 	public function getName(){
 		return $this->_name;
 	}
-	
+
 	/**
 	 * Get the base directory of this component
-	 * 
-	 * Generally /home/foo/public_html/themes/componentname/
-	 * 
+	 *
+	 * Generally /home/foo/public_html/themes/theme-name/
+	 *
+	 * @param mixed|string $prefix Path to prepend to the string.  Use "" for relative, or ROOT_PDIR for fully resolved.
+	 *
 	 * @return string
 	 */
 	public function getBaseDir($prefix = ROOT_PDIR){
-		return $prefix . 'themes/' . strtolower($this->_name) . '/';
+		return $prefix . 'themes/' . $this->getKeyName() . '/';
 	}
 	
 	/**
@@ -567,15 +581,21 @@ class Theme{
 	 * @throws InstallerException
 	 */
 	private function _installAssets(){
-		$assetbase = CDN_LOCAL_ASSETDIR;
+		if(CDN_TYPE == 'local'){
+			$assetbase = ROOT_PDIR . CDN_LOCAL_ASSETDIR;
+		}
+		else{
+			die('Unsupported CDN type [' . CDN_TYPE . ']');
+		}
+
 		$coretheme = ConfigHandler::Get('/theme/selected');
 		// WHY is core theme set to blank?!?
 		// Damn installer...
 		// this happens in the installer.
 		if($coretheme === null) $coretheme = 'default';
-		$theme = strtolower($this->getName());
+		$theme = $this->getKeyName();
 		$changes = array();
-		
+
 		foreach($this->_xmlloader->getElements('/assets/file') as $node){
 			// Cannot install assets if the directory is not setup!
 			if(!$this->getAssetDir()){
@@ -596,32 +616,16 @@ class Theme{
 			// The new destination must be in the theme-specific directory, this is a
 			// bit of a hack from the usual behaviour of the filestore system.
 			// Since that's designed to return the default if the theme-specific doesn't exist.
-
-			// If the theme is not the installed theme, I need to replace any matches from the current theme back to the
-			// currenlty working theme so that it installs in its own directory.
-			if($theme != $coretheme){
-				$nf->setFilename(str_replace($assetbase . $coretheme, $assetbase . $theme, $nf->getFilename()));
-			}
-			// Otherwise if it's the currently installed, just make sure that it doesn't match default.
-			// Unless it does, then it would replace 'default' to 'default', so no issues should be seen.
-			else{
-				$nf->setFilename(str_replace($assetbase . 'default', $assetbase . $theme, $nf->getFilename()));
-			}
-
-			/*
-			if($theme != 'default' && strpos($nf->getFilename(), $assetbase . $theme) === false){
-				// The only possible filename bases to be returned are the $coretheme and default.
-				// so...
-				if($theme == 'default'){
-					$nf->setFilename(str_replace($assetbase . $coretheme, $assetbase . $theme, $nf->getFilename()));
-				}
-				else{
+			if($theme != 'default'){
+				if(strpos($nf->getFilename(), $assetbase . 'default') === 0){
+					// The theme is not default, but the system translated the path to the default directory.
+					// This is actually expected behaviour, except unwanted here.
 					$nf->setFilename(str_replace($assetbase . 'default', $assetbase . $theme, $nf->getFilename()));
 				}
-			}*/
+			}
 			
 			// Check if this file even needs updated. (this is primarily used for reporting reasons)
-			if($nf->exists() && $nf->identicalTo($f)){
+				if($nf->exists() && $nf->identicalTo($f)){
 				//echo "Skipping file, it's identical.<br/>";
 				continue;
 			}

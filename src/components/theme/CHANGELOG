@@ -1,3 +1,9 @@
+Theme 2.0.3
+
+	* Fixes in the theme asset installer.
+	* Fixes to support themes with a space in their name.
+	--Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:31:39 -0400
+
 Theme 2.0.3b1
 
 	* Themes now support auto-install mode for assets when in development.
