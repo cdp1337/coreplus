@@ -1,0 +1,881 @@
+/*****************************************************************************
+ *****************************************************************************
+ **                           GENERIC ELEMENTS                              **
+ *****************************************************************************
+ *****************************************************************************/
+body {
+	text-align:center;
+	padding:0;
+	margin:0;
+	background:#505050;
+	font-family:Helvetica, sans-serif;
+	font-size:11pt;
+	color:#222;
+}
+a {
+	color:#1C2B0D;
+}
+a:hover {
+	text-shadow:0px 1px 1px rgba(150, 150, 150, 0.8)
+}
+img {
+	border:0;
+}
+p {
+	padding:0.5em 0pt;
+	line-height: 1.25em;;
+}
+h1 {
+	border-bottom: 1px solid rgba(90, 90, 90, 0.7);
+	font-size: 150%;
+	font-weight: bold;
+	margin-bottom: 0.3em;
+	padding-bottom: 0.2em;
+}
+h2 {
+	font-weight: bold;
+	font-size: 125%;
+}
+h3 {
+	font-weight: bold;
+	font-size: 110%;
+}
+h4 {
+	font-weight: bold;
+}
+#wrapper {
+	width: 75%;
+	margin: 0 auto;
+	text-align: left;
+	background: #dfdfdf;
+	box-shadow: 0 0 5px #111111;
+	-moz-box-shadow: 0 1px 4px black;
+	-webkit-box-shadow: 0 1px 4px black;
+}
+#innerwrapper {
+	background: #EDEDED;
+	padding: 1em 1em 2em;
+	margin: 0 2px;
+	min-height: 400px;
+}
+fieldset {
+	border: 1px solid #AAA;
+	padding: 0.75em;
+	margin: 0.5em;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+fieldset legend {
+	color: #555;
+	font-size: 84%;
+	padding: 0 0.5em;
+}
+header {
+	padding: 5px 2px 1px;
+	display: block;
+}
+footer {
+	min-height: 50px;
+	clear: both;
+	color: #888;
+	font-size: 90%;
+	padding: 0.25em 1em;
+}
+footer a {
+	color: #999;
+}
+footer p {
+	clear: both;
+}
+.clear {
+	clear: both;
+}
+
+
+
+
+
+
+/*****************************************************************************
+ *****************************************************************************
+ **                      RESPONSIVE WIDTH TWEAKS                            **
+ *****************************************************************************
+ *****************************************************************************/
+
+/*
+The wrapper should be at least 975px wide if possible.
+This works up to 1300px browser width, then it needs to kick over to 75%, (which is 975px @ 1300px).
+For dimensions between 1300 and 975, keep it locked at 975px, it'll float in the middle somewhere.
+For dimensions smaller than 975, just be at 100%.
+*/
+@media screen and (max-width: 1300px) {
+	#wrapper { width: 975px; }
+}
+@media screen and (max-width: 975px) {
+	#wrapper { width: 100%; }
+}
+
+
+
+
+
+
+/*****************************************************************************
+ *****************************************************************************
+ **                              BREADCRUMBS                                **
+ **                                                                         **
+ ** Navigation breadcrumbs and other sub-nav elements                       **
+ *****************************************************************************
+ *****************************************************************************/
+nav#breadcrumbs {
+	font-size: 80%;
+	margin-bottom: 0.5em;
+	margin-left: 1em;
+	color: #555;
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid #888;
+	height: 10px;
+}
+nav#breadcrumbs a {
+	color: #555;
+}
+nav#breadcrumbs ul.controls {
+	float: right;
+	margin-top: -4px;
+}
+
+/*** Left-column ***/
+.pagecolumn { width:170px; }
+.column1 #leftcol { float:left; }
+.column1 section.pagecontent {
+	margin-left:175px;
+	/* Re-enabling the body overflow to allow for context menus.
+	overflow: hidden;
+	*/
+}
+
+
+.rounded-large { border-radius:10px; -moz-border-radius:10px; -webkit-border-radius:10px; }
+.rounded { border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; }
+
+
+/*** Controls that can be implemented throughout the site ***/
+ul.controls { height:20px; }
+ul.controls li { float:left; margin-right:0.1em; list-style:none;}
+/*
+And their images.  Stand-alone "control" buttons also get the same styling.
+Since the icons are now being handled by font-awesome, the bulk of this logic will have been removed.
+*/
+
+
+/* First, the common styles for all icon'd controls. */
+ul.controls li a { text-decoration: none; font-size: 14px; padding: 2px; line-height: 18px; }
+ul.controls li a:hover { text-shadow: none; font-size: 18px; padding: 0; }
+
+ul.controls li a span {
+	display: none;
+}
+
+ul.controls li a i {
+
+}
+
+/** Spruce up FA with some color :) **/
+ul.controls li a i.icon-remove,
+ul.controls li a i.icon-delete { color: #7a0200; }
+ul.controls li a i.icon-edit { color: blue; }
+ul.controls li a i.icon-plus,
+ul.controls li a i.icon-add { color: green; }
+
+/**
+ * Contextual controls are similar, but slightly different.
+ * Instead of being inline, they're in a context menu.
+ */
+ul.controls.context-menu {
+	position: absolute;
+	border: 1px solid #999;
+	height: auto;
+	background: #eee;
+	top: 0pt;
+	z-index: 999;
+}
+ul.controls.context-menu li {
+	float: none;
+	padding: 3px;
+	white-space: nowrap;
+}
+ul.controls.context-menu li a {
+	display: block;
+}
+ul.controls.context-menu li a:hover {
+	font-size: 14px;
+	padding: 2px;
+	background: white;
+}
+ul.controls.context-menu a span {
+	display: inline;
+	padding-left: 2px;
+}
+
+
+/*** Buttons and their respective images that can be used throughout ***/
+
+/*
+ * jQuery UI Button 1.8.11
+ *
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Button#theming
+ */
+a.button,
+.ui-widget-content a.button,
+span.button {
+	display: inline-block;
+	position: relative;
+	padding:0 1em;
+	margin-right:.1em;
+	text-decoration: none !important;
+	cursor: pointer;
+	text-align: center;
+	zoom: 1;
+	/* the overflow property removes extra width in IE */
+	overflow: visible;
+	line-height: 1.4;
+	background-repeat:no-repeat;
+
+
+	background: #f6f8f9; /* Old browsers */
+	background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 49%, #d7dee3 51%, #f5f7f9 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f8f9), color-stop(49%,#e5ebee), color-stop(51%,#d7dee3), color-stop(100%,#f5f7f9)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-9 */
+
+	border:2px outset rgba(80, 84, 87, 0.52);
+	color: #444;
+	font-weight:normal;
+	border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;
+}
+
+input[type="submit"], button {
+	padding:0 1em;
+	margin-right:.1em;
+	cursor: pointer;
+	text-align: center;
+	zoom: 1;
+	/* the overflow property removes extra width in IE */
+	overflow: visible;
+	line-height: 1.4;
+	background-repeat:no-repeat;
+
+
+	background: #f6f8f9; /* Old browsers */
+	background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 49%, #d7dee3 51%, #f5f7f9 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f8f9), color-stop(49%,#e5ebee), color-stop(51%,#d7dee3), color-stop(100%,#f5f7f9)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-9 */
+
+	border:2px outset rgba(80, 84, 87, 0.52);
+	color: #444;
+	font-weight:normal;
+	border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;
+}
+
+a.button:hover { text-decoration:none; background-color: #50a3a5;}
+
+a.button[disabled=disabled]{
+	background-color: rgba(62, 126, 128, 0.49);
+	border:2px outset rgba(29, 84, 87, 0.32);
+	cursor: no-drop;
+	color: #CCC;
+
+	background-image: linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
+	background-image: -o-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
+	background-image: -moz-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
+	background-image: -webkit-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
+	background-image: -ms-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.19, rgb(148,148,148)),
+		color-stop(0.42, rgb(112,111,112)),
+		color-stop(1, rgb(148,148,148))
+	);
+}
+
+/** Tweak the autocomplete styles slightly **/
+.formelement input[type="text"].ui-autocomplete-loading {
+	background-image: url('../images/loading-bar-small.gif');
+	background-position: center right;
+	background-repeat: no-repeat;
+}
+
+.formelement input[type="text"].ui-autocomplete-input {
+	border: 1px solid #47C6CB;
+}
+
+
+
+
+
+
+/*****************************************************************************
+ *****************************************************************************
+ **                               MESSAGES                                  **
+ *****************************************************************************
+ *****************************************************************************/
+/** general styles for most of the messages **/
+.message-note,
+.message-info,
+.message-success,
+.message-error {
+	border-radius: 6px;
+	padding: 15px 10px 15px 55px;
+	margin: 10px;
+	text-align:center;
+	overflow: hidden;
+	font-size: 106%;
+	position: relative;;
+}
+.message-tutorial {
+	padding: 15px 10px 15px 55px;
+	margin: 10px;
+	text-align: left;
+	overflow: hidden;
+	font-size: 92%;
+	position: relative;;
+}
+
+/** Specific colors **/
+.message-note {
+	background:#FCF0AD;
+	border:1px solid #BCB06D;
+}
+.message-info {
+	background: #EEE9FF;
+	border:1px solid #2667FF;
+	color: #0a1250;
+}
+.message-success {
+	background:#AFA;
+	border: 1px solid #373;
+	color: #151;
+}
+.message-error {
+	background:#FCe5ed;
+	border:1px solid #BC606D;
+	color:#DF101D;
+}
+.message-tutorial {
+	background: #faefb9;
+	border:1px solid #BCB06D;
+	color: #6f6841;
+}
+
+/** I need to color the A tags too **/
+body .pagecontent .message-note a {
+	color: #7f774a;
+}
+body .pagecontent .message-info a {
+	color: #0a1250;
+}
+body .pagecontent .message-success a {
+	color: #151;
+}
+body .pagecontent .message-error a {
+	color:#DF101D;
+}
+body .pagecontent .message-tutorial a {
+	color: #7f774a;
+}
+
+/** And the message's icons **/
+p[class^="message-"] .message-background-icon i {
+	font-size: 75px;
+	left: -6px;
+	line-height: 70px;
+	opacity: 0.3;
+	position: absolute;
+	top: -11px;
+}
+
+/** And the specific message types icon colors **/
+p.message-note .message-background-icon i[class^="icon-"] {
+	color: #BCB06D;
+}
+p.message-info .message-background-icon i[class^="icon-"] {
+	color: #2667FF;
+}
+p.message-success .message-background-icon i[class^="icon-"] {
+	color: #373;
+}
+p.message-error .message-background-icon i[class^="icon-"] {
+	color: #DF101D;
+}
+p.message-tutorial .message-background-icon i[class^="icon-"] {
+	color: #BCB06D;
+}
+
+
+
+
+
+/*****************************************************************************
+ *****************************************************************************
+ **                             FORM ELEMENTS                               **
+ *****************************************************************************
+ *****************************************************************************/
+
+/* Error messages for everything */
+.formelement.formerror input,
+.formelement.formerror select,
+.formelement.formerror textarea {
+	border:1px inset red;
+	background:#FFF0F0;
+}
+
+/* Description tag for form elements */
+.formelement .formdescription,
+fieldset .formdescription {
+	font-size:85%;
+	color:#777;
+	margin:0.25em 0pt 0.25em 1em;
+}
+
+.formelement {
+	margin-bottom:0.75em;
+	position:relative;
+}
+
+.formelement .formelement-labelinputgroup {
+	background: #F6F6F6;
+	border: 1px solid #CBCBCB;
+	border-radius: .4em;
+	color: #3C3C3C;
+	float: left;
+}
+
+.formelement .formelement-labelinputgroup label {
+	float:left;
+	color: #888;
+	padding: 7px 6px 7px 9px;
+	background: #DDD;
+	min-width: 100px;
+}
+
+.formelement .formelement-labelinputgroup input {
+	color: #3C3C3C;
+	float: left;
+	min-width: 100px;
+	background: none;
+	border: 0px none;
+	padding: 5px 0 5px 10px;
+}
+
+/* Select specific styles */
+.formelement.formselect .formelement-labelinputgroup label {
+	/* Select boxes generally are a little taller than inputs, have more padding for the label. */
+	padding: 7px 4px 8px 9px;
+}
+.formelement.formselect .formelement-labelinputgroup select {
+	background: #F6F6F6;
+	border: 0px none;
+	border-radius: 0.4em 0.4em 0 0;
+	color: #3C3C3C;
+	padding: 0.35em 0 0.35em 0.8em;
+	min-width: 100px;
+	cursor: pointer;
+}
+
+/* Radio specific styles */
+.formelement.formradioinput {
+	max-width: 415px;
+	display:inline-block;
+	clear:both;
+	background:#F6F6F6;
+	border: 1px solid #CBCBCB;
+	border-radius: 0.4em;
+	color: #3C3C3C;
+	margin-right: 0.75em;
+}
+.formelement.formradioinput span.radio-label {
+	display: block;
+	background: #DDD;
+	padding: 8px 7px;
+	margin-bottom:5px;
+	color: #888888;
+}
+.formelement.formradioinput label {
+	border: none;
+	color: #3C3C3C;
+	cursor: pointer;
+	display: block;
+	line-height: 1.7em;
+	margin-right: 0.5em;
+	padding: 0.25em 0.5em;
+	white-space: nowrap;
+	position: relative;
+	top: 7px;
+	left: 6px;
+}
+.formelement.formradioinput label input {
+	margin-top:0;
+}
+
+/* Checkbox and checkboxes specific styles */
+.formelement.formcheckboxinput {
+	display:inline-block;
+	clear:both;
+	background:#F6F6F6;
+	border: 1px solid #CBCBCB;
+	border-radius: 0.4em;
+	color: #3C3C3C;
+	padding: 0.3em 0.8em;
+	margin-right: 0.75em;
+}
+.formelement.formcheckboxesinput {
+	background: #F6F6F6;
+	border: 1px solid #CBCBCB;
+	border-radius: 0.4em;
+	max-width: 415px;
+	color: #888;
+	padding-bottom: 4px;
+}
+.formelement.formcheckboxinput label{
+	padding: 0.25em 0;
+	white-space: nowrap;
+	top:4px;
+}
+.formelement.formcheckboxesinput label {
+	display: block;
+	margin: 0 8px;
+	position: relative;
+	padding: 0.25em 0;
+	white-space: nowrap;
+	top:4px;
+}
+.formelement.formcheckboxinput input {
+	color: #3C3C3C;
+	padding: 0.35em 0;
+}
+.formelement.formcheckboxesinput input {
+	margin-left:0;
+	color: #3C3C3C;
+	padding: 0.35em 0;
+}
+.formelement.formcheckboxesinput span.checkboxes-label {
+	display: block;
+	background: #DDD;
+	padding: 8px 7px;
+}
+
+/* Textarea specific styles */
+.formelement.formtextareainput .formelement-labelinputgroup label {
+	display: block;
+	float: none;
+	position: relative;
+	top: 0;
+}
+.formelement.formtextareainput .formelement-labelinputgroup textarea {
+	padding:0.35em 0.8em;
+	min-width: 400px;
+	min-height: 80px;
+	border: 0px none;
+}
+
+/* File input specific styles */
+.formelement.formfileinput {
+	clear:both;
+}
+.formelement.formfileinput label {
+	float: none;
+	display: block;
+}
+.formelement.formfileinput .file-input-innercontainer {
+	padding: 4px;
+}
+.formelement.formfileinput .file-input-innercontainer .formfileinput-selector {
+	float:left;
+	width:150px;
+}
+.formelement.formfileinput .file-input-innercontainer .formfileinput-selector label {
+	position:relative;
+	top:0;
+	margin-bottom: 5px;
+	background: none;
+}
+.formelement.formfileinput .file-input-innercontainer .file-input-actions {
+	float: left;
+}
+
+/* Page Keywords input specific styles */
+.formelement.formpagemetakeywordsinput label {
+	display: block;
+	float: none;
+}
+.formelement.formpagemetakeywordsinput .keywords-multi-select {
+	background: none repeat scroll 0 0 #F6F6F6;
+	border: 1px solid #47C6CB;
+	border-radius: 0.4em 0.4em 0.4em 0.4em;
+	cursor: text;
+	height: auto;
+	min-width: 100px;
+	max-width: 400px;
+	padding: 0.15em 0.8em 0.15em 0.15em;
+}
+.formelement.formpagemetakeywordsinput .keywords-multi-select input[type="text"] {
+	border: 0 none;
+	float: left;
+	min-width: 5px;
+	padding: 0;
+}
+.formelement.formpagemetakeywordsinput .keywords-multi-select .keywords-multi-select-option {
+	background: none repeat scroll 0 0 #EEEEFF;
+	border: 1px solid #DDDDDD;
+	border-radius: 8px 8px 8px 8px;
+	float: left;
+	margin: 0.05em;
+	padding: 0.2em 0.5em;
+}
+
+
+.facebook-integration {
+	margin-left: 0;
+	max-width: 515px;
+}
+
+.ui-dialog .formelement label {
+	position:relative;
+	top:0;
+	margin-bottom:5px;
+	text-align:left;
+}
+.ui-dialog .formelement input {
+	padding: 0.35em 0.8em;
+	display: block;
+}
+
+.ui-dialog .formelement select {
+	display: block;
+	max-width: 100%;
+}
+
+.tinymce label {
+	position:relative;
+	top:0;
+	margin-bottom: 5px;
+}
+
+table.listing { width:100%; border:1px solid #AAA; border-collapse:collapse;}
+table.listing tr:nth-child(odd) { background-color:#DDEDDD; }
+table.listing th{ padding:0.15em 0.5em; border:1px solid #AAA; vertical-align:top; background:#BEB; background:-moz-linear-gradient(top, #DFD 0%, #BEB 100%);}
+table.listing td{ padding:0.15em 0.5em; border:1px solid #AAA; vertical-align:top;}
+
+
+/*** Debugging Classes ***/
+pre.xdebug-var-dump { border: 1px solid #FFE5C0; padding: 0.5em; text-align: left; font-size:0.8em; background: #f5f5f5;color:#555; }
+
+
+/*** Sortables and Nested Sortables ***/
+ol.sortable-listing { margin:0.5em 0pt; }
+ol.sortable-listing li {  display: block; list-style: none outside none;  }
+ol.sortable-listing li div.entry { border: 1px solid #BBBBBB; padding: 0.25em; }
+ol.sortable-listing li.placeholder { border: 1px solid #BBBBBB; background:#BBB;}
+ol.sortable-listing li a.control { margin-top: -2px; }
+ol.sortable-listing ol { margin-left:1em; }
+
+
+
+/*** Primary Navigation ***/
+#primary-nav li { float:left; position:relative; text-align:center;}
+#primary-nav li.navigation-menu-over a:hover { background: #333; }
+#primary-nav a,
+#primary-nav span { color: #777; font-weight: bold; text-decoration: none; text-transform: uppercase; display:inline-block; padding:0.5em 1em; width:160px;}
+/* Enable the mouse over menu */
+#primary-nav li.navigation-menu-over>ul { display:block; }
+/* And the sub menu */
+#primary-nav li ul { display:none; position:absolute; background:black; border:1px solid black; border-top:0 none; width:190px; -moz-box-shadow: 0 3px 6px #000; -webkit-box-shadow: 0 3px 6px #000; box-shadow: 0 3px 6px #000;}
+#primary-nav li ul li { width:190px; text-align:left; }
+#primary-nav li ul a,
+#primary-nav li ul span{ padding-left:20px; width:155px; }
+/* And any sub sub menu */
+#primary-nav li ul li ul { top:-2px; left:180px; display:none; position:absolute; background:#1C2B0D; border:1px solid black; border-left:0 none; width:190px; -moz-box-shadow: 0 3px 6px #000; -webkit-box-shadow: 0 3px 6px #000; box-shadow: 0 3px 6px #000;}
+#primary-nav a:hover {text-shadow:none;}
+
+/*** Footer Navigation ***/
+footer ul.navigation-menu li { list-style-type: none; float: left; padding: 0 0.5em; }
+footer ul.navigation-menu li li { float: none;}
+
+
+/** Collapsible fieldsets **/
+fieldset.collapsed { padding:0; border-width: 1px 0px 0px; }
+
+
+.progress-container {
+	position: relative;
+}
+.progress-success {
+	background: none repeat scroll 0 0 #992222;
+	border: 2px solid green;
+	height: 20px;
+	margin-bottom: 5px;
+}
+.progress-success .bar {
+	background: none repeat scroll 0 0 green;
+	height: 20px;
+}
+.progress-container .progress-extended {
+	color: white;
+	left: 46px;
+	position: absolute;
+	top: 6px;
+}
+
+/** Theme Editor **/
+
+.page-themeeditor .column1 section.pagecontent {
+	margin-left:12px;
+}
+#theme-editor-wysiwyg {
+
+}
+
+.editor-container {
+	position:relative;
+}
+
+#code {
+	min-width:590px;
+}
+
+#theme-editor-browser {
+	background: transparent;
+	position: absolute;
+	width: 350px;
+	z-index: 100;
+	top: 52px;
+}
+
+#theme-editor-browser a {
+	color:#222;
+}
+
+#theme-editor-browser .left {
+	float:left;
+	width:300px;
+	background:#dddddd;
+	padding: 10px;
+	box-shadow: 3px 4px 15px 6px #090909;
+	max-height: 650px;
+	opacity: 0.8;
+	overflow-y: auto;
+}
+
+#theme-editor-browser .left:hover {opacity:0.9;}
+
+#theme-editor-browser .right {
+	float:right;
+	width:28px;
+	background:#090909;
+	color:#999999;
+	padding:10px 0;
+	border-radius: 0 5px 5px 0;
+	cursor:pointer;
+	opacity: 0.8;
+	border-bottom: 1px solid #2b2b2b;
+	border-right: 1px solid #2b2b2b;
+	border-top: 1px solid #2b2b2b;
+}
+
+#theme-editor-browser .right:hover {opacity:1;}
+
+#theme-editor-browser .right i {margin-left:8px;}
+
+#theme-editor-browser .icon {
+	float:right;
+	margin-right:2px;
+}
+
+#theme-editor-browser li .icon {margin-right:0;}
+
+#theme-editor-browser h2 {color:#666;margin-bottom:3px;}
+
+#theme-editor-browser ul {
+	margin-bottom:9px;
+	padding-bottom:3px;
+	border-bottom: 1px solid #e1e1e1;
+}
+
+#theme-editor-browser .sub {display:none;}
+
+#theme-editor-browser li .icon {cursor:pointer;}
+
+#theme-editor-browser li {
+	list-style-type: none;
+	margin-bottom:3px;
+}
+
+#theme-editor-browser ul ul {margin-left:10px;}
+
+#theme-editor-browser h2 {
+	cursor:pointer;
+}
+
+.theme-editor {
+	display:none;
+}
+
+#theme-editor-wysiwyg .image-editor {
+	background: #202020;
+	padding-bottom: 25px;
+	padding-left: 285px;
+}
+
+.image-editor h2 {margin-bottom:5px;}
+
+#revert {
+	cursor:pointer;
+	font-weight:bold;
+	text-decoration:underline;
+}
+
+#revisions li.revision {margin-bottom:3px;}
+
+#revisions .revision-title {cursor:pointer;}
+#revisions .revision-date {color:#888;}
+
+.page-themeeditor #dialog-confirm {display:none;}
+
+
+/** Pagination styles **/
+.pagination {
+	color: #555555;
+	font-size: 84%;
+	padding: 0 0.5em;
+	margin: 0.5em 0;
+}
+.pagination a {
+	text-decoration: none;
+	color: #555555;
+}
+.pagination .disabled {
+	color: #999;
+}
+
+.pagination-pager {
+	float: left;
+}
+
+.pagination-list {
+	float: right;
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Base V2">
+	<assets>
+		<file filename="assets/css/error404.css" md5="d451b8028c05fb6474223b84ddc7f417"/>
+		<file filename="assets/css/styles.css" md5="f4964c267bf78e69c4edc50e8e97206f"/>
+		<file filename="assets/images/404.jpg" md5="815cb4116bbbec081a645e85de74025c"/>
+	</assets>
+	<skins>
+		<file filename="basic.tpl" title="Standard skin" md5="d8ba783c1fc880973bcfa8cba65fb8ea"/>
+		<file filename="blank.tpl" title="Blank template, do not use" md5="a126527084ffcbe1d7ba880840ab644f"/>
+	</skins>
+	<view/>
+	<otherfiles/>
+	<upgrades/>
+</theme>
+

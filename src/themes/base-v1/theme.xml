@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Base V1">
+	<assets>
+		<file filename="assets/css/styles.css" md5="14b47c3aa7d64a409b8e6cfcdc1cfd03"/>
+	</assets>
+	<skins>
+		<file filename="basic.tpl" title="Standard skin" md5="d8ba783c1fc880973bcfa8cba65fb8ea"/>
+		<file filename="blank.tpl" title="Blank template, do not use" md5="a126527084ffcbe1d7ba880840ab644f"/>
+	</skins>
+	<view/>
+	<otherfiles/>
+	<upgrades/>
+</theme>
+
