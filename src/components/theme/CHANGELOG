@@ -2,7 +2,8 @@ Theme 2.0.3
 
 	* Fixes in the theme asset installer.
 	* Fixes to support themes with a space in their name.
-	--Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:31:39 -0400
+	* Set the default theme to be base-v2 and removed some legacy configuration options.
+	--Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:41:19 -0400
 
 Theme 2.0.3b1
 
