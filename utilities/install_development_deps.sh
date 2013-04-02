@@ -45,7 +45,9 @@ elif [ "$OSFAMILY" == "redhat" ]; then
 		rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-5.rpm
 	fi
 
-	yum --enablerepo=remi,remi-test install -y php php-common php-devel php-xsl php-mbstring php-pear ant php-mysql mysql-server mysql perl-XML-XPath
+	yum --enablerepo=remi,remi-test install -y \
+		php php-common php-devel php-xsl php-mbstring php-pear php-mysql php-gd php-xdebug \
+		ant mysql-server mysql perl-XML-XPath graphviz
 fi
 
 
