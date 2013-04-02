@@ -197,6 +197,7 @@ class UserController extends Controller_2_1{
 		// @todo Implement a hook handler here for UserPreLoginForm
 
 
+		$view->ssl = true;
 		$view->assign('error', $error);
 		$view->assign('backends', ConfigHandler::Get('/user/backends'));
 		$view->assign('form', $form);
@@ -260,6 +261,7 @@ class UserController extends Controller_2_1{
 
 		$form = \User\get_registration_form();
 
+		$view->ssl = true;
 		$view->assign('form', $form);
 
 		// Breadcrumbs! (based on access permissions)
@@ -464,6 +466,7 @@ class UserController extends Controller_2_1{
 		$newcontroller = new self();
 		$newcontroller->overwriteView($view);
 		//$view->baseurl = '/user/login';
+		$view->ssl = true;
 		$view->error = View::ERROR_ACCESSDENIED;
 		$view->allowerrors = true;
 		$view->templatename = 'pages/user/guest403.tpl';

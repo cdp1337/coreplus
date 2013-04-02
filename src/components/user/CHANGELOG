@@ -1,3 +1,9 @@
+User 2.4.4
+
+	* Require SSL on the login, register, and 403 pages.
+	* Redesigned the login and 403 pages slightly.
+	--Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:38:15 -0400
+
 User 2.4.4b2
 
 	* Updated the default options for User to keep updated with recent changes in Core.

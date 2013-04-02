@@ -31,7 +31,7 @@
 
 	{if $allowregister}
 		<fieldset id="user-login">
-			{a class="register-account" href="/User/Register"}Register Account{/a}
+			{a class="register-account button" href="/User/Register"}Register Account{/a}
 
 			<em>Like this site? Sign up for an account!</em>
 		</fieldset>
