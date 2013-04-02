@@ -100,8 +100,23 @@ require_once(ROOT_PDIR . 'core/helpers/UpdaterHelper.class.php');
 
 // And perform an actual reinstall
 foreach(\Core::GetComponents() as $c){
-	$c->reinstall();
+	echo 'Reinstalling ' . $c->getName() . "...";
+	$change = $c->reinstall();
+
+	if($change === false){
+		echo '   No changes' . "\n";
+	}
+	else{
+		echo "\n" . implode("\n", $change) . "\n";
+	}
 }
 
 \ThemeHandler::GetTheme('default')->install();
 \ThemeHandler::GetTheme('default')->reinstall();
+
+// And the current theme if it's different.
+$theme    = ConfigHandler::Get('/theme/selected');
+if($theme != 'default'){
+	\ThemeHandler::GetTheme($theme)->install();
+	\ThemeHandler::GetTheme($theme)->reinstall();
+}
