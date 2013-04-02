@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.2" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.3" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.3" operation="ge"/>
 		<require name="user" type="component" version="2.4.1"/>
@@ -11,7 +11,7 @@
 		<permission key="blog_manage" description="Manage Blogs"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="e4d420aba1930f6214648633859c9261"/>
+		<file filename="CHANGELOG" md5="6371f744b2adf9c483d09f3f8bad6a34"/>
 		<file filename="controllers/BlogController.php" md5="37e94eab63201594e37d6e95ec253833">
 			<controller name="BlogController"/>
 		</file>
@@ -24,7 +24,7 @@
 		<file filename="models/BlogModel.php" md5="d75ec50e23fc8cd2e451a16ac0678011">
 			<class name="BlogModel"/>
 		</file>
-		<file filename="tests/BlogTest.php" md5="5da5c070a57ef48162f343ff0d0aae58">
+		<file filename="tests/BlogTest.php" md5="a26adc503eb10d58c0b438fba62fec34">
 			<class name="BlogTest"/>
 		</file>
 		<file filename="tests/blog-test-image.png" md5="2ef8794320891042986b72da16f47bf1"/>
@@ -48,7 +48,7 @@
 		<file filename="templates/pages/blog/editindex.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/blog/index.tpl" md5="fa6d0115d61816bfa21ba48ffb94f18f"/>
 		<file filename="templates/pages/blog/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/blog/view-blog.tpl" md5="bf5614abea3fc7709d321f42974f877c"/>
+		<file filename="templates/pages/blog/view-blog.tpl" md5="f3c1d47f58d9c8474b588b6b251f60fa"/>
 	</view>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.1.0"/>
@@ -77,6 +77,7 @@
 				</datasetwhere>
 			</dataset>
 		</upgrade>
+		<upgrade from="1.4.2" to="1.4.3"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>

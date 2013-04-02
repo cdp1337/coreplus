@@ -1,3 +1,8 @@
+Blog 1.4.3
+
+	* Updated the test suite so it completes.
+	--Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:27:43 -0400
+
 Blog 1.4.2
 
 	* Updated the dependencies to be more accurate. (Needed to require jQuery for the new
