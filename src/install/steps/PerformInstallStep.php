@@ -28,6 +28,7 @@ class PerformInstallStep extends InstallerStep {
 		\Core::LoadComponents();
 
 		\ThemeHandler::GetTheme('default')->reinstall();
+		\ThemeHandler::GetTheme('base-v2')->reinstall();
 
 		unset($_SESSION['passes']);
 		// Yup, that's it!

@@ -971,7 +971,9 @@ class Core implements ISingleton {
 		// Skip the cache while I decide on if it's needed or not.
 		// the issue was that if clientA went to the site on ie: localhost, and clientB went to the site
 		// on 192.168.1.20, all assets would be resolving to "localhost", potentially producing invalid links.
-		$f = self::File($asset);
+		$f = \Core\file($asset);
+		//var_dump($asset);
+		//$f = self::File($asset);
 		return $f->getURL();
 
 

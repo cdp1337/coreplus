@@ -244,11 +244,11 @@ class AdminController extends Controller_2_1 {
 			// This is required because enterprise multisite mode has a different location for site configs.
 			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
 				$siteconfig = MultiSiteConfigModel::Construct($c->get('key'), MultiSiteHelper::GetCurrentSiteID());
-				$siteconfig->set('value', $val);
+				$siteconfig->setValue($val);
 				if($siteconfig->save()) ++$updatedcount;
 			}
 			else{
-				$c->set('value', $val);
+				$c->setValue($val);
 				if ($c->save()) ++$updatedcount;
 			}
 

@@ -411,6 +411,7 @@ class ViewControl implements ArrayAccess {
 				$this->icon = $value;
 				break;
 			case 'link':
+			case 'url':
 			case 'href': // Just for an alias of the link.
 				$this->link = Core::ResolveLink($value);
 				break;

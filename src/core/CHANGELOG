@@ -1,21 +1,22 @@
 Core Plus 2.5.0
+
 	* Tweaks to the versioning system.
 	* Wrote some tests for VersionSplit and VersionCompare.
 	* Components now support an auto-install mode for assets.  This only runs during development
 	  mode.
 	* Changed the behaviour of filters.  They now accept "0" as a valid value and will display
-      the filter system with it if a "" value is present.  This enables filters that act on a
-      boolean property to function correctly.
-    * Changed the behaviour of Form::addModel and getModel methods.  The form system now saves
-      the model in a local variable and makes that exact model available on the next pageload.
-    * Removed some legacy code from the Form system pertaining to the PageModel.  That model now
-      handles the logic internally.
-    * Fix in the Model system to not try to propagate keys up to the parent of a linked model.
-    * Better enforcing Model and the DMI default values.  ex: enum field types now require one
-      of the options to be set as default if null is set to false.
-    * Minor performance tweaks in the PageModel.
-    * Moved the "components_load_complete" hook to be fired after the postincludes instead of
-      before.  This ensures that smarty and some other systems are available.
+	  the filter system with it if a "" value is present.  This enables filters that act on a
+	  boolean property to function correctly.
+	* Changed the behaviour of Form::addModel and getModel methods.  The form system now saves
+	  the model in a local variable and makes that exact model available on the next pageload.
+	* Removed some legacy code from the Form system pertaining to the PageModel.  That model now
+	  handles the logic internally.
+	* Fix in the Model system to not try to propagate keys up to the parent of a linked model.
+	* Better enforcing Model and the DMI default values.  ex: enum field types now require one
+	  of the options to be set as default if null is set to false.
+	* Minor performance tweaks in the PageModel.
+	* Moved the "components_load_complete" hook to be fired after the postincludes instead of
+	  before.  This ensures that smarty and some other systems are available.
 	* Bad components don't get disabled immediately, makes development easier.
 	* Added a new filter type, "CONTAINS".  This is useful for filter examples such as "Email
 	  contains @gmail".
@@ -39,6 +40,8 @@ Core Plus 2.5.0
 	* Switched the filestore directives to constants defined within the configuration.xml file.
 	  This helps make the installer more user-friendly and stable.
 	* Updated several core subsystems to work better when the core isn't installed yet.
+	* Added support for encrypted configuration options.
+	--Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:51:54 -0400
 
 Core Plus 2.4.6.3
 

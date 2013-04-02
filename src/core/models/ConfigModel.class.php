@@ -44,6 +44,10 @@ class ConfigModel extends Model {
 			'default' => 'string',
 			'null'    => false,
 		),
+		'encrypted' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'default' => 0,
+		),
 		'default_value' => array(
 			'type'    => Model::ATT_TYPE_TEXT,
 			'default' => null,
@@ -98,9 +102,52 @@ class ConfigModel extends Model {
 	 */
 	public function getValue() {
 		$v = $this->get('value');
-		if ($v === null) $v = $this->get('default');
+
+		// If it's null, it just get the default value.
+		if ($v === null){
+			$v = $this->get('default');
+		}
+		// If it's encrypted, decrypt it first!
+		// This must be done outside the regular model encryption logic because it's dynamic for each config.
+		elseif($this->get('encrypted') && $v !== ''){
+			preg_match('/^\$([^$]*)\$([0-9]*)\$(.*)$/m', $v, $matches);
+
+			$cipher = $matches[1];
+			$passes = $matches[2];
+			$size = openssl_cipher_iv_length($cipher);
+			// Now I can trim off the beginning crap from the encrypted string.
+			$dec = substr($v, strlen($cipher) + 5, 0-$size);
+			$iv = substr($v, 0-$size);
+
+			for($i=0; $i<$passes; $i++){
+				$dec = openssl_decrypt($dec, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+			}
+
+			$v = $dec;
+		}
 
 		return self::TranslateValue($this->get('type'), $v);
+	}
+
+	public function setValue($value){
+		if($this->get('encrypted')){
+			$cipher = 'AES-256-CBC';
+			$passes = 10;
+			$size = openssl_cipher_iv_length($cipher);
+			$iv = mcrypt_create_iv($size, MCRYPT_RAND);
+
+			$enc = $value;
+			for($i=0; $i<$passes; $i++){
+				$enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+			}
+
+			$payload = '$' . $cipher . '$' . str_pad($passes, 2, '0', STR_PAD_LEFT) . '$' . $enc . $iv;
+
+			return parent::set('value', $payload);
+		}
+		else{
+			return parent::set('value', $value);
+		}
 	}
 
 	/**

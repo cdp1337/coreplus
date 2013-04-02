@@ -306,7 +306,7 @@ class ConfigHandler implements ISingleton {
 			$instance->_overrides[$key] = $value;
 		}
 		else{
-			$config->set('value', $value);
+			$config->setValue($value);
 			$config->save();
 		}
 

@@ -1379,13 +1379,26 @@ class Component_2_1 {
 
 		// Now, get every table under this node.
 		foreach ($node->getElementsByTagName('config') as $confignode) {
-			$key = $confignode->getAttribute('key');
+
+			$key         = $confignode->getAttribute('key');
+			$options     = $confignode->getAttribute('options');
+			$type        = $confignode->getAttribute('type');
+			$default     = $confignode->getAttribute('default');
+			$description = $confignode->getAttribute('description');
+			$mapto       = $confignode->getAttribute('mapto');
+			$encrypted   = $confignode->getAttribute('encrypted');
+
+			if($encrypted === null || $encrypted === '') $encrypted = '0';
+
+
 			$m   = ConfigHandler::GetConfig($key);
-			$m->set('options', $confignode->getAttribute('options'));
-			$m->set('type', $confignode->getAttribute('type'));
-			$m->set('default_value', $confignode->getAttribute('default'));
-			$m->set('description', $confignode->getAttribute('description'));
-			$m->set('mapto', $confignode->getAttribute('mapto'));
+			$m->set('options', $options);
+			$m->set('type', $type);
+			$m->set('default_value', $default);
+			$m->set('description', $description);
+			$m->set('mapto', $mapto);
+			$m->set('encrypted', $encrypted);
+
 			// Default from the xml, only if it's not already set.
 			if (!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
 			// Allow configurations to overwrite any value.  This is useful on the initial installation.
@@ -1465,7 +1478,7 @@ class Component_2_1 {
 			// This is because (theoretically), the admin can change the order of userconfig options.
 			if(!$model->get('weight') || $model->get('weight') >= 100) $model->set('weight', $weight);
 
-			//if($model->changed()) var_dump($model); // DEBUG \\
+			// if($model->changed()) var_dump($model); // DEBUG \\
 
 			if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
 		}
