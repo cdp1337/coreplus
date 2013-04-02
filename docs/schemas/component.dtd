@@ -71,6 +71,7 @@
 <!ATTLIST hookregister
 	name CDATA #REQUIRED
 	description CDATA #IMPLIED
+	return (array|bool|void) "bool"
 >
 
 <!--- Put your DTDDoc comment here. -->
