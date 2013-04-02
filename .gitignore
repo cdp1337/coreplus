@@ -45,7 +45,8 @@
 # These are used in the build system.
 /ant.properties
 /build/*
-
+/cache.properties
+/message.txt
 
 # Skip any compiled resource.
 /src/core/bootstrap.compiled.php
