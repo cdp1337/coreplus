@@ -111,12 +111,25 @@ foreach(\Core::GetComponents() as $c){
 	}
 }
 
-\ThemeHandler::GetTheme('default')->install();
-\ThemeHandler::GetTheme('default')->reinstall();
+echo 'Installing default theme...';
+$change = \ThemeHandler::GetTheme('default')->install();
+if($change === false){
+	echo '   No changes' . "\n";
+}
+else{
+	echo "\n" . implode("\n", $change) . "\n";
+}
+
 
 // And the current theme if it's different.
 $theme    = ConfigHandler::Get('/theme/selected');
 if($theme != 'default'){
+	echo 'Installing ' . $theme . ' theme...';
 	\ThemeHandler::GetTheme($theme)->install();
-	\ThemeHandler::GetTheme($theme)->reinstall();
+	if($change === false){
+		echo '   No changes' . "\n";
+	}
+	else{
+		echo "\n" . implode("\n", $change) . "\n";
+	}
 }

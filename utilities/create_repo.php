@@ -29,6 +29,7 @@ if(!isset($_SERVER['SHELL'])){
 }
 
 define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
+define('BASE_DIR', realpath(dirname(__DIR__)) . '/');
 
 // Include the core bootstrap, this will get the system functional.
 require_once(ROOT_PDIR . 'core/bootstrap.php');
@@ -54,8 +55,8 @@ if(!$packageremail){
 CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 
 
-$destdir = ROOT_PDIR . '../exports/';
-$tmpdir = ROOT_PDIR . '../exports/_tmp/';
+$destdir = BASE_DIR . 'exports/';
+$tmpdir = BASE_DIR . 'exports/_tmp/';
 // Ensure the export directory exists.
 if(!is_dir($destdir)) exec('mkdir -p "' . $destdir . '"');
 if(!is_dir($tmpdir)) exec('mkdir -p "' . $tmpdir . '"');

@@ -28,6 +28,7 @@ if(!isset($_SERVER['SHELL'])){
 }
 
 define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
+define('BASE_DIR', realpath(dirname(__DIR__)) . '/');
 
 // Include the core bootstrap, this will get the system functional.
 require_once(ROOT_PDIR . 'core/bootstrap.php');
@@ -42,7 +43,7 @@ require_once(ROOT_PDIR . 'core/bootstrap.php');
 
 // Get the bundler metafiles
 $bundlefiles = array();
-$dir = ROOT_PDIR . 'exports/bundles';
+$dir = BASE_DIR . 'exports/bundles';
 if(is_dir($dir)){
 	$dh = opendir($dir);
 	if($dh){
@@ -138,14 +139,14 @@ $export = array();
 $export[] = array(
 	'name' => 'core',
 	'type' => 'core',
-	'src' => ROOT_PDIR . 'exports/core',
+	'src' => BASE_DIR . 'exports/core',
 	'dest' => $destdir . '/' . $desttgz
 );
 foreach($xml->getElements('//component') as $el){
 	$export[] = array(
 		'name' => strtolower($el->getAttribute('name')),
 		'type' => 'component',
-		'src' => ROOT_PDIR . 'exports/components',
+		'src' => BASE_DIR . 'exports/components',
 		'dest' => $destdir . '/' . $desttgz . '/components/' . strtolower($el->getAttribute('name'))
 	);
 }
@@ -153,7 +154,7 @@ foreach($xml->getElements('//theme') as $el){
 	$export[] = array(
 		'name' => strtolower($el->getAttribute('name')),
 		'type' => 'theme',
-		'src' => ROOT_PDIR . 'exports/themes',
+		'src' => BASE_DIR . 'exports/themes',
 		'dest' => $destdir . '/' . $desttgz . '/themes/' . strtolower($el->getAttribute('name'))
 	);
 }
