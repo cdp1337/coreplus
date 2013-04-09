@@ -499,7 +499,12 @@ class View {
 			error_log('[view error] (Smarty Exception)');
 			error_log('Template name: [' . $this->templatename . ']');
 			error_log($e->getMessage());
-			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+			if(DEVELOPMENT_MODE){
+				trigger_error($e->getMessage(), E_USER_ERROR);
+			}
+			else{
+				require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+			}
 			die();
 		}
 		catch(TemplateException $e){
@@ -507,7 +512,12 @@ class View {
 			error_log('[view error] (Template Exception)');
 			error_log('Template name: [' . $this->templatename . ']');
 			error_log($e->getMessage());
-			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+			if(DEVELOPMENT_MODE){
+				trigger_error($e->getMessage(), E_USER_ERROR);
+			}
+			else{
+				require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+			}
 			die();
 		}
 		catch(Exception $e){
@@ -515,7 +525,12 @@ class View {
 			error_log('[view error] (WTF Just Happened?)');
 			error_log('Template name: [' . $this->templatename . ']');
 			error_log($e->getMessage());
-			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+			if(DEVELOPMENT_MODE){
+				trigger_error($e->getMessage(), E_USER_ERROR);
+			}
+			else{
+				require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+			}
 			die();
 		}
 

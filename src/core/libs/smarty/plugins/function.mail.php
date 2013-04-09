@@ -45,49 +45,49 @@
  */
 function smarty_function_mail($params, $template)
 {
-    static $_allowed_encoding = array('javascript' => true, 'javascript_charcode' => true, 'hex' => true, 'none' => true);
-    $extra = '';
+	static $_allowed_encoding = array('javascript' => true, 'javascript_charcode' => true, 'hex' => true, 'none' => true);
+	$extra = '';
 
-    if (empty($params['address'])) {
-        trigger_error("mail: missing 'address' parameter",E_USER_WARNING);
-        return;
-    } else {
-        $address = $params['address'];
-    }
+	if (empty($params['address'])) {
+		trigger_error("mail: missing 'address' parameter",E_USER_WARNING);
+		return;
+	} else {
+		$address = $params['address'];
+	}
 
-    $text = $address;
-    // netscape and mozilla do not decode %40 (@) in BCC field (bug?)
-    // so, don't encode it.
-    $search = array('%40', '%2C');
-    $replace = array('@', ',');
-    $mail_parms = array();
-    foreach ($params as $var => $value) {
-        switch ($var) {
-            case 'cc':
-            case 'bcc':
-            case 'followupto':
-                if (!empty($value))
-                    $mail_parms[] = $var . '=' . str_replace($search, $replace, rawurlencode($value));
-                break;
+	$text = $address;
+	// netscape and mozilla do not decode %40 (@) in BCC field (bug?)
+	// so, don't encode it.
+	$search = array('%40', '%2C');
+	$replace = array('@', ',');
+	$mail_parms = array();
+	foreach ($params as $var => $value) {
+		switch ($var) {
+			case 'cc':
+			case 'bcc':
+			case 'followupto':
+				if (!empty($value))
+					$mail_parms[] = $var . '=' . str_replace($search, $replace, rawurlencode($value));
+				break;
 
-            case 'subject':
-            case 'newsgroups':
-                $mail_parms[] = $var . '=' . rawurlencode($value);
-                break;
+			case 'subject':
+			case 'newsgroups':
+				$mail_parms[] = $var . '=' . rawurlencode($value);
+				break;
 
-            case 'extra':
-            case 'text':
-                $$var = $value;
+			case 'extra':
+			case 'text':
+				$$var = $value;
 
-            default:
-        }
-    }
+			default:
+		}
+	}
 
-    if ($mail_parms) {
-        $address .= '?' . join('&', $mail_parms);
-    }
-    
-    $encode = (empty($params['encode'])) ? 'none' : $params['encode'];
+	if ($mail_parms) {
+		$address .= '?' . join('&', $mail_parms);
+	}
+
+	$encode = (empty($params['encode'])) ? 'none' : $params['encode'];
 	$elementid = 'email-' . Core::RandomHex(10);
 
 	$user = str_rot13( substr($address, 0, strpos($address, '@')) );
@@ -99,14 +99,13 @@ function smarty_function_mail($params, $template)
 
 	// Set this page to require the script library core strings!
 	Core::_AttachCoreStrings();
+	View::AddScript('js/core.email.js');
 
 	return $return;
 
-        $js_encode = '';
-        for ($x = 0, $_length = strlen($string); $x < $_length; $x++) {
-            $js_encode .= '%' . bin2hex($string[$x]);
-        }
+	$js_encode = '';
+	for ($x = 0, $_length = strlen($string); $x < $_length; $x++) {
+		$js_encode .= '%' . bin2hex($string[$x]);
+	}
 
 }
-
-?>

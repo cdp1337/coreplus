@@ -378,8 +378,8 @@ class ViewControl implements ArrayAccess {
 		$dat = $this->otherattributes;
 
 		if($this->confirm){
-			$dat['onclick'] = "if(confirm('" . str_replace("'", "\\'", $this->confirm) . "')){" .
-				"Core.PostURL('" . str_replace("'", "\\'", Core::ResolveLink($this->link)) . "');" .
+			$dat['onclick'] = "if(confirm('" . str_replace(["'", '"'], ["\\'", '&quot;'], $this->confirm) . "')){" .
+				"Core.PostURL('" . str_replace(["'", '"'], ["\\'", '&quot;'], Core::ResolveLink($this->link)) . "');" .
 				"} return false; ";
 			$dat['href'] = '#';
 		}

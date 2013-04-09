@@ -471,6 +471,15 @@ class FilterForm {
 	}
 
 	/**
+	 * Get the total count for the number of records filtered.
+	 *
+	 * @return int|null
+	 */
+	public function getTotalCount(){
+		return $this->_total;
+	}
+
+	/**
 	 * Set the limit for pagination, will default to 50.
 	 *
 	 * @since 2.4.0

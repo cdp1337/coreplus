@@ -950,7 +950,17 @@ class Form extends FormGroup {
 				// These are handled automatically.
 				$formatts['required'] = false;
 			}
+			elseif ($v['type'] == Model::ATT_TYPE_ID_FK){
+				$el = FormElement::Factory('system');
+				// These are handled automatically.
+				$formatts['required'] = false;
+			}
 			elseif($v['type'] == Model::ATT_TYPE_UUID){
+				$el = FormElement::Factory('system');
+				// These are handled automatically.
+				$formatts['required'] = false;
+			}
+			elseif($v['type'] == Model::ATT_TYPE_UUID_FK){
 				$el = FormElement::Factory('system');
 				// These are handled automatically.
 				$formatts['required'] = false;

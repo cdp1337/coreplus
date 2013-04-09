@@ -69,9 +69,17 @@ class Model implements ArrayAccess {
 	 */
 	const ATT_TYPE_UUID = '__uuid';
 	/**
+	 * A column that is a "foreign key" to a UUID column.
+	 */
+	const ATT_TYPE_UUID_FK = '__uuid_fk';
+	/**
 	 * The auto-incrementing integer of a table
 	 */
 	const ATT_TYPE_ID = '__id';
+	/**
+	 * A column that is a "foreign key" to an ID column.
+	 */
+	const ATT_TYPE_ID_FK = '__id_fk';
 	/**
 	 * Date this record was last updated, updated automatically
 	 */
@@ -577,6 +585,10 @@ class Model implements ArrayAccess {
 						$site = MultiSiteHelper::GetCurrentSiteID();
 						$dat->insert('site', $site);
 						$this->_data[$k] = $site;
+					}
+					elseif($v === null || $v === false){
+						$dat->insert('site', 0);
+						$this->_data[$k] = 0;
 					}
 					else{
 						$dat->insert($k, $v);
@@ -1899,6 +1911,10 @@ class ModelSchema {
 				$column->autoinc = true;
 			}
 
+			if($column->type == Model::ATT_TYPE_ID_FK){
+				$column->maxlength = 15;
+			}
+
 			if($column->type == Model::ATT_TYPE_UUID){
 				// A UUID is in the format of:
 				// siteid-timestamp-randomhex
@@ -1906,6 +1922,11 @@ class ModelSchema {
 				// a total of up to 21 digits.
 				$column->maxlength = 21;
 				$column->autoinc = false;
+			}
+
+			if($column->type == Model::ATT_TYPE_UUID_FK){
+				// Mimic the UUID column.
+				$column->maxlength = 21;
 			}
 
 			if($column->type == Model::ATT_TYPE_INT && !$column->maxlength){

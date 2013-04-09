@@ -74,10 +74,12 @@ class Widget_2_1 {
 			else {
 				// difficult way
 				$back = debug_backtrace();
-				$cls  = $back[1]['class'];
-				if (strpos($cls, 'Widget') !== false) $cls = substr($cls, 0, -6);
-				$mth                  = $back[1]['function'];
-				$this->_view->baseurl = $cls . '/' . $mth;
+				if(isset($back[1]['class'])){
+					$cls  = $back[1]['class'];
+					if (strpos($cls, 'Widget') !== false) $cls = substr($cls, 0, -6);
+					$mth                  = $back[1]['function'];
+					$this->_view->baseurl = $cls . '/' . $mth;
+				}
 			}
 		}
 

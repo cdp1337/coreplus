@@ -1128,6 +1128,13 @@ class MySQLi_Schema_Column {
 				$column->type = Model::ATT_TYPE_UUID;
 				$column->maxlength = 21;
 			}
+			elseif(
+				strpos($this->type, 'char(') !== false &&
+				strpos($this->type, '21') !== false
+			){
+				$column->type = Model::ATT_TYPE_UUID_FK;
+				$column->maxlength = 21;
+			}
 			else{
 				// Well huhm...
 				$column->type = 'text';
@@ -1219,7 +1226,13 @@ class MySQLi_Schema_Column {
 				$this->extra = 'auto_increment';
 				$this->default = false;
 				break;
+			case Model::ATT_TYPE_ID_FK:
+				$this->type = 'int(' . $column->maxlength . ')';
+				break;
 			case Model::ATT_TYPE_UUID:
+				$this->type = 'char(21)';
+				break;
+			case Model::ATT_TYPE_UUID_FK:
 				$this->type = 'char(21)';
 				break;
 			case Model::ATT_TYPE_STRING:
