@@ -117,7 +117,8 @@
 		<config key="/user/password/minlength" type="int" default="8" description=""/>
 		<config key="/user/password/requiresymbols" type="int" default="0" description=""/>
 		<config key="/user/password/requirecapitals" type="int" default="0" description=""/>
-		<config key="/user/displayas" type="string" default="emailbase" description="The user field to use for displaying in representation of the user, ie: username or email.  If 'email' is used, the full email is displayed.  If 'emailbase' id used, just the prefix of the email is used."/>
+		<config key="/user/displayas" type="enum" default="emailbase" options="emailfull|emailbase|username|firstname"
+			description="The user field to use for displaying in representation of the user, ie: username or email.  If 'email' is used, the full email is displayed.  If 'emailbase' id used, just the prefix of the email is used."/>
 		<config key="/user/displayname/anonymous" type="string" default="Guest" description="What to call guest/unauthenticated users."/>
 		<config key="/user/register/allowpublic" type="boolean" default="true" description="Allow public registrations"/>
 		<config key="/user/register/requireapproval" type="boolean" default="false" description="Require administrative approvals on new accounts"/>

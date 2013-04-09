@@ -471,18 +471,19 @@ class User {
 			return ConfigHandler::Get('/user/displayname/anonymous');
 		}
 
-		$displayopts = ConfigHandler::Get('/user/displayname/displayoptions');
+		$displayas = ConfigHandler::Get('/user/displayas');
 
-		// Simple enough.
-		if( ($u = $this->get('username')) && in_array('username', $displayopts)) return $u;
-		// Next, the first name.
-		elseif( ($n = $this->get('first_name')) && in_array('firstname', $displayopts)) return $n;
-		// Next, the email base.
-		elseif( ($e = $this->get('email')) && in_array('emailbase', $displayopts)) return strstr($e, '@', true);
-		// Next, the email in full.
-		elseif( ($e = $this->get('email')) && in_array('emailfull', $displayopts)) return $e;
-		// Still no?!?
-		else return ConfigHandler::Get('/user/displayname/authenticated');
+		switch($displayas){
+			case 'username':
+				return $this->get('username');
+			case 'firstname':
+				return $this->get('first_name');
+			case 'emailfull':
+				return $this->get('email');
+			case 'emailbase':
+			default:
+				return strstr($this->get('email'), '@', true);
+		}
 	}
 
 	/**

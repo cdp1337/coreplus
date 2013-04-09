@@ -1,3 +1,7 @@
+User 2.4.next
+
+	* bug /user/displayas is now currently used to display the username.
+
 User 2.4.4
 
 	* Require SSL on the login, register, and 403 pages.
