@@ -1,3 +1,10 @@
+Sitemap 1.0.3
+
+	* Added a new hook - /sitemap/getlisting.  Useful for components that need to register their
+	  own pages on the sitemap.
+	* Minor fix to support pages that don't actually exist.
+	--Charlie Powell <charlie@eval.bz>  Sun, 07 Apr 2013 20:32:52 -0400
+
 Sitemap 1.0.2
 
 	* Updated the sitemap page to only display "selectable" pages.

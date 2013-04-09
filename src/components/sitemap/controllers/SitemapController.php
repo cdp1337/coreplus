@@ -33,6 +33,9 @@ class SitemapController extends Controller_2_1 {
 			}
 		}
 
+		// Anything else?
+		$extra = HookHandler::DispatchHook('/sitemap/getlisting');
+		$toshow = array_merge($toshow, $extra);
 
 		// This page allows for a few content types.
 		switch($req->ctype){

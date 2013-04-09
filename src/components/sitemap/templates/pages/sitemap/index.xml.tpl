@@ -3,7 +3,9 @@
 	{foreach $pages as $page}
 		<url>
 			<loc>{$page->getResolvedURL()}</loc>
-			<lastmod>{date date=$page.updated format='Y-m-d'}</lastmod>
+			{if $page.updated}
+				<lastmod>{date date=$page.updated format='Y-m-d'}</lastmod>
+			{/if}
 			<changefreq>monthly</changefreq>
 			<priority>0.8</priority>
 		</url>
