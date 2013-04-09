@@ -116,7 +116,9 @@ class Theme{
 		$out = array();
 		$default = null;
 		// If this theme is currently selected, check the default template too.
-		if($this->getName() == ConfigHandler::Get('/theme/selected')) $default = ConfigHandler::Get('/theme/default_template');
+		if($this->getKeyName() == ConfigHandler::Get('/theme/selected')){
+			$default = ConfigHandler::Get('/theme/default_template');
+		}
 		
 		foreach($this->_xmlloader->getElements('//skins/file') as $f){
 			$out[] = array(
@@ -126,7 +128,7 @@ class Theme{
 				'default' => ($default == $f->getAttribute('filename'))
 			);
 		}
-		
+
 		return $out;
 	}
 
@@ -472,7 +474,7 @@ class Theme{
 	
 	
 	/**
-	 * Install this theme
+	 * Install this theme and its assets.
 	 * 
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 * 
@@ -481,37 +483,36 @@ class Theme{
 	 */
 	public function install(){
 		// @todo I need actual error checking here.
-		if($this->isInstalled()) return false;
+		//if($this->isInstalled()) return false;
 		
 		return $this->_performInstall();
 	}
 	
 	/**
-	 * Reinstall this theme.
+	 * "Reinstall" (aka) Install this theme and its assets.
 	 * 
-	 * Returns false if nothing changed, else will return an array containing all changes.
+	 * Alias of install()
 	 * 
 	 * @return false | array
 	 * @throws InstallerException
 	 */
 	public function reinstall(){
 		// @todo I need actual error checking here.
-		if(!$this->isInstalled()) return false;
+		//if(!$this->isInstalled()) return false;
 		
 		return $this->_performInstall();
 	}
 	
 	/**
-	 * Upgrade the theme and reinstall all components.
+	 * "Upgrade" (aka) Install this theme and its assets.
 	 * 
-	 * This is actually an alias for reinstall, as there is no difference!
-	 * Returns false if nothing changed, else will return an array containing all changes.
+	 * Alias of install()
 	 * 
 	 * @return false | array
 	 * @throws InstallerException
 	 */
 	public function upgrade(){
-		if(!$this->isInstalled()) return false;
+		//if(!$this->isInstalled()) return false;
 		
 		return $this->_performInstall();
 	}
@@ -616,16 +617,22 @@ class Theme{
 			// The new destination must be in the theme-specific directory, this is a
 			// bit of a hack from the usual behaviour of the filestore system.
 			// Since that's designed to return the default if the theme-specific doesn't exist.
-			if($theme != 'default'){
-				if(strpos($nf->getFilename(), $assetbase . 'default') === 0){
-					// The theme is not default, but the system translated the path to the default directory.
-					// This is actually expected behaviour, except unwanted here.
-					$nf->setFilename(str_replace($assetbase . 'default', $assetbase . $theme, $nf->getFilename()));
-				}
+			if($theme != 'default' && strpos($nf->getFilename(), $assetbase . 'default') === 0){
+				// The theme is not default, but the system translated the path to the default directory.
+				// This is because the file doesn't exist in any theme.
+				// This is actually expected behaviour, except unwanted here.
+				$nf->setFilename(str_replace($assetbase . 'default', $assetbase . $theme, $nf->getFilename()));
 			}
+			elseif($theme != $coretheme && strpos($nf->getFilename(), $assetbase . $coretheme) === 0){
+				// The theme is not the currently installed, but the system translated the path to the that directory.
+				// This is because the filename is the same as the installed theme, so the system just translated there.
+				// We don't want that.
+				$nf->setFilename(str_replace($assetbase . $coretheme, $assetbase . $theme, $nf->getFilename()));
+			}
+			// No else required.
 			
 			// Check if this file even needs updated. (this is primarily used for reporting reasons)
-				if($nf->exists() && $nf->identicalTo($f)){
+			if($nf->exists() && $nf->identicalTo($f)){
 				//echo "Skipping file, it's identical.<br/>";
 				continue;
 			}
