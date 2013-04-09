@@ -28,6 +28,7 @@ if(!isset($_SERVER['SHELL'])){
 }
 
 define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
+define('BASE_DIR', realpath(dirname(__DIR__)) . '/');
 
 // Include the core bootstrap, this will get the system functional.
 require_once(ROOT_PDIR . 'core/bootstrap.php');

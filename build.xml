@@ -31,7 +31,7 @@
 		The complete complete build with all purging, building, source code scanning, and validation. 
 		This takes about 10 minutes to complete on a high speed SSD, so be warned with running it!
 	-->
-	<target name="fullbuild" depends="prepare_build,purge_src,reinstall_src,lint,phploc,pdepend,phpcpd,phpdoc,compile,phpunit-ci,phpcb"/>
+	<target name="fullbuild" depends="prepare_build,purge_src,reinstall_src,lint,phploc,pdepend,phpcpd,phpdoc,compile,phpunit-ci,phpcb,changelogs"/>
 
 	<!--
 		Delete the dynamic resources created in the build directory.
@@ -44,6 +44,7 @@
 		<delete dir="${basedir}/build/logs"/>
 		<delete dir="${basedir}/build/pdepend"/>
 		<delete dir="${basedir}/build/phpunit"/>
+		<delete dir="${basedir}/build/changelogs"/>
 	</target>
 	
 	<target name="clean_src" description="Cleanup the src directory from compiled resources and the like">
@@ -60,6 +61,7 @@
 		<mkdir dir="${basedir}/build/logs"/>
 		<mkdir dir="${basedir}/build/pdepend"/>
 		<mkdir dir="${basedir}/build/phpunit"/>
+		<mkdir dir="${basedir}/build/changelogs"/>
 	</target>
 
 	<target name="purge_src" depends="clean_src" description="Purge the configuration, htaccess, data, and everything for a given site.">
@@ -97,6 +99,10 @@
 
 	<target name="reinstall_src" depends="setup_htaccess,setup_configuration" description="Install/Reinstall Core Plus using the CLI installer">
 		<exec executable="${basedir}/utilities/reinstall.php"/>
+	</target>
+
+	<target name="changelogs" description="Generate HTML versions of all changelogs on the system">
+		<exec executable="${basedir}/utilities/generate_changelogs.php"/>
 	</target>
 
 	<!--

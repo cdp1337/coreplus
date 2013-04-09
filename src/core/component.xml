@@ -39,7 +39,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="8f4995b2cf0e30aa05d321527c4f9039"/>
+		<file filename="core/CHANGELOG" md5="b005f69b4b4fc5aa48bf848091c33d70"/>
 		<file filename="core/bootstrap.compiled.php" md5="823056f179c72a3d3abf84587e599cc1">
 			<class name="Debug"/>
 			<class name="XMLLoader"/>
@@ -535,10 +535,11 @@
 		<file filename="core/libs/core/Email.class.php" md5="2f0608c1f1aa4bfcb35a0affa35dacb8">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/FilterForm.class.php" md5="fe131e5ee3a43975627eee058a4bbb45">
+		<file filename="core/libs/core/FilterForm.class.php" md5="84518c1dabdc5cce3ca716319a61fc84">
 			<class name="FilterForm"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="170c93fa8d30062dec0d49a34305357d">
+		<file filename="core/libs/core/FilterForm.class.php~" md5="fe131e5ee3a43975627eee058a4bbb45"/>
+		<file filename="core/libs/core/Form.class.php" md5="e9e38682e73379c5f3874a374df31d67">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -562,7 +563,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="8d7492c1e44fb5bb51ea4c964bf5c7bb">
+		<file filename="core/libs/core/Model.class.php" md5="6d437a60baf0ab5e503ff333b2b969e7">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -603,12 +604,12 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="20599d0ae0f4a5033305a69e2f3bbddf">
+		<file filename="core/libs/core/View.class.php" md5="f5dd57992bbecf2382a4ebb249f8a37c">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
 		<file filename="core/libs/core/View.class.php~" md5="59ef58afcec744246fd983d97930d627"/>
-		<file filename="core/libs/core/ViewControl.class.php" md5="715d47a33529fdd87f30e240bb34dfb1">
+		<file filename="core/libs/core/ViewControl.class.php" md5="1e5274fbe1f493517f30b1580026d146">
 			<class name="ViewControls"/>
 			<class name="ViewControl"/>
 		</file>
@@ -627,12 +628,21 @@
 			<class name="Widget"/>
 			<class name="WidgetException"/>
 		</file>
-		<file filename="core/libs/core/Widget_2_1.class.php" md5="7c4913cd8a1420ef63223278721a61f6">
+		<file filename="core/libs/core/Widget_2_1.class.php" md5="f19adc3b0f3196942bef4e214e1834c8">
 			<class name="Widget_2_1"/>
 			<class name="WidgetRequest"/>
 		</file>
 		<file filename="core/libs/core/XMLLoader.class.php" md5="ebc7d04b3765ee975d40bff9eee7317d">
 			<class name="XMLLoader"/>
+		</file>
+		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="8e3cdf866c04d38b34d206684c16a82c">
+			<class name="Core\Utilities\Changelog\Entry"/>
+		</file>
+		<file filename="core/libs/core/utilities/changelog/Parser.php" md5="3ada8da2618ee7033631abcddaec3b18">
+			<class name="Core\Utilities\Changelog\Parser"/>
+		</file>
+		<file filename="core/libs/core/utilities/changelog/Section.php" md5="e1f7348e24cf898fa3e4d945ed2eb160">
+			<class name="Core\Utilities\Changelog\Section"/>
 		</file>
 		<file filename="core/libs/datamodel/DMI.class.php" md5="221e92ef728640eb1782da22cb5512ba">
 			<class name="DMI"/>
@@ -656,7 +666,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="e02b68f59cf50bf21f1bb533a2e59ea1">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="3c75025d8acf4c96e43eb5b048c6a369">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="84d46e3f61e83df667dac67b40ae5863">
 			<class name="DMI_mysqli_backend"/>
 			<class name="MySQLi_Schema"/>
 			<class name="MySQLi_Schema_Column"/>
@@ -1145,7 +1155,7 @@
 		<file filename="core/libs/smarty/plugins/function.html_select_date.php" md5="a637ac29790c3a851682a86840f363d4"/>
 		<file filename="core/libs/smarty/plugins/function.html_select_time.php" md5="4f7fccd8595d5211958c7123ee82c98a"/>
 		<file filename="core/libs/smarty/plugins/function.html_table.php" md5="172491d13ad37f0b82de821758b21dd2"/>
-		<file filename="core/libs/smarty/plugins/function.mail.php" md5="fe6280f3f7dd808f2a762c1a526c7b3a"/>
+		<file filename="core/libs/smarty/plugins/function.mail.php" md5="24c22d839b406965a7ae55fc6818c41c"/>
 		<file filename="core/libs/smarty/plugins/function.mailto.php" md5="688de6be86911509c038b6719ea00207"/>
 		<file filename="core/libs/smarty/plugins/function.math.php" md5="0b891f2679f8b1d275e2e3f53489fde5"/>
 		<file filename="core/libs/smarty/plugins/modifier.capitalize.php" md5="3c547dde36e8dba58615593e66d83421"/>
@@ -1492,23 +1502,23 @@
 		<file filename="install/assets/jquery-1.7.1.min.js" md5="ddb84c1587287b2df08966081ef063bf"/>
 		<file filename="install/assets/style.css" md5="56aab5fb013265c4ab8cc85899df7dd1"/>
 		<file filename="install/classes/InstallerStep.php" md5="93c79acf852c3227e30d1e596b405c52">
-			<class name="InstallerStep"/>
+			<class name="Core\Installer\InstallerStep"/>
 		</file>
 		<file filename="install/index.php" md5="fae0458812b32651629cf1bb78181fe8"/>
 		<file filename="install/steps/InstallConfigurationStep.php" md5="3cf6cc705f8e124d277ac9780e74e570">
-			<class name="InstallConfigurationStep"/>
+			<class name="Core\Installer\InstallConfigurationStep"/>
 		</file>
 		<file filename="install/steps/InstallHTAccessStep.php" md5="eb3cbb0417714bc034c3e7a7a8cff4f5">
-			<class name="InstallHTAccessStep"/>
+			<class name="Core\Installer\InstallHTAccessStep"/>
 		</file>
 		<file filename="install/steps/PerformInstallStep.php" md5="14721a258b37ae62ed6ceac1954cc977">
-			<class name="PerformInstallStep"/>
+			<class name="Core\Installer\PerformInstallStep"/>
 		</file>
 		<file filename="install/steps/PreflightCheckStep.php" md5="08f1df5691fe338050fc2e1eb83d14c4">
-			<class name="PreflightCheckStep"/>
+			<class name="Core\Installer\PreflightCheckStep"/>
 		</file>
 		<file filename="install/steps/SetupConfigurationStep.php" md5="7e9896258b5212217b0018ef2d70ff28">
-			<class name="SetupConfigurationStep"/>
+			<class name="Core\Installer\SetupConfigurationStep"/>
 		</file>
 		<file filename="install/templates-legacy/configs.tpl" md5="46fa1ad5d0ee122196b9b9b40f0e6e94"/>
 		<file filename="install/templates-legacy/install.tpl" md5="6b466824ffb7cecedfbae5d3ed8189e2"/>

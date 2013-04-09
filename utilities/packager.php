@@ -73,7 +73,7 @@ if($argc > 1){
 	// Drop the first, that is the filename.
 	array_shift($arguments);
 
-	// I'm using a for here instead of a foreach so I can increment $i artifically if an argument is two part,
+	// I'm using a for here instead of a foreach so I can increment $i artificially if an argument is two part,
 	// ie: --option value_for_option --option2 value_for_option2
 	for($i = 0; $i < sizeof($arguments); $i++){
 		$arg = $arguments[$i];
@@ -760,23 +760,32 @@ function process_component($component, $forcerelease = false){
 				$fconts = preg_replace('://.*$:', '', $fconts);
 
 
+				// If there is a namespace on this file, make sure to grab that and prefix any classes!
+				if(preg_match('/^namespace ([a-z\\\\0-9]*);$/im', $fconts, $ret)){
+					$namespace = $ret[1] . '\\';
+				}
+				else{
+					$namespace = '';
+				}
+
+
 				// Well... get the classes!
 				preg_match_all('/^\s*(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller_2_1/im', $fconts, $ret);
 				foreach($ret[2] as $foundclass){
-					$filedat['controllers'][] = $foundclass;
+					$filedat['controllers'][] = $namespace . $foundclass;
 				}
 
 				// Add any class found in this file. (skipping the ones I already found)
 				preg_match_all('/^\s*(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
 				foreach($ret[2] as $foundclass){
 					if(in_array($foundclass, $filedat['controllers'])) continue;
-					$filedat['classes'][] = $foundclass;
+					$filedat['classes'][] = $namespace . $foundclass;
 				}
 
 				// Allow interfaces to be associated as a provided element too.
 				preg_match_all('/^\s*(interface)[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
 				foreach($ret[2] as $foundclass){
-					$filedat['interfaces'][] = $foundclass;
+					$filedat['interfaces'][] = $namespace . $foundclass;
 				}
 			}
 
@@ -914,7 +923,7 @@ function process_component($component, $forcerelease = false){
 			$header = $comp->getName() . ' ' . $version . "\n";
 		}
 
-		add_release_date_to_changelog($file, $headerprefix, $header);
+		add_release_date_to_changelog($file, $headerprefix, $version);
 
 		// Create a temp directory to contain all these
 		$dir = TMP_DIR . 'packager-' . $component . '/';
@@ -1110,7 +1119,7 @@ function process_theme($theme, $forcerelease = false){
 		// The header line will be exactly [name] [version].
 		$header = 'Theme/' . $name . ' ' . $version . "\n";
 
-		add_release_date_to_changelog($file, $headerprefix, $header);
+		add_release_date_to_changelog($file, $headerprefix, $version);
 
 
 		// Create a temp directory to contain all these
@@ -1308,201 +1317,56 @@ function get_exported_component($component){
  */
 function manage_changelog($file, $name, $version){
 
-	$headerprefix = $name;
+	$parser = new Core\Utilities\Changelog\Parser($name, $file);
+	$parser->parse();
 
-	// The header line will be exactly [name] [version].
-	$header = $name. ' ' . $version . "\n";
+	/** @var $thisversion Core\Utilities\Changelog\Section */
+	$thisversion = $parser->getSection($version);
 
-	$changelog = '';
-	// I also need to remember what's before and after the changelog, (before is the more likely case).
-	$beforechangelog = '';
-	$afterchangelog = '';
+	// Read the current changelog.
+	$changelog = $thisversion->fetch();
 
-	// Start reading the file contents until I find the header, (probably on line 1, but you never know).
-	$fh = fopen($file, 'r');
-	if(!$fh){
-		// Hmm, create it?...
-		touch($file);
-		$fh = fopen($file, 'r');
-	}
-	// Still no?
-	if(!$fh){
-		die('Unable to create file ' . $file . ' for reading or writing!');
-	}
-	$inchange = false;
-	while(!feof($fh)){
-		$line = fgets($fh, 512);
+	// Prompt the user with the ability to change them.
+	$changelog = CLI::PromptUser(
+		'Enter the changelog for this release.  Separate each different bullet point on a new line with no dashes or asterisks.',
+		'textarea',
+		$changelog
+	);
 
-		// Does this line look like the exact header?
-		if($line == $header){
-			$inchange = true;
-			continue;
-		}
-
-		// Does this line look like the beginning of another header?...
-		if($inchange && stripos($line, $headerprefix) === 0){
-			//if($inchange && preg_match('/^' . $headerprefix . ' .+$/i', $line)){
-			$inchange = false;
-		}
-
-		if($inchange){
-			$line = trim($line); // trim whitespace and newlines.
-			if(strpos($line, '* ') === 0){
-				// line starts with *[space], it's a comment!
-				$line = substr($line, 2);
-				$changelog .= $line . "\n";
-			}
-			elseif(strpos($line, '--') === 0){
-				$inchange = false;
-			}
-			elseif($line == ''){
-				// Skip blank lines
-			}
-			else{
-				// It seems to be a continuation of the last line.  Tack it onto there!
-				$changelog = substr($changelog, 0, -1) . ' ' . $line . "\n";
-			}
-		}
-		elseif($changelog){
-			// After!
-			$afterchangelog .= $line;
-		}
-		else{
-			// Before!
-			$beforechangelog .= $line;
-		}
-	}
-	fclose($fh);
-
-	// Is there even any changelog text here?  If not switch the "before" content to after.
-	// This will ensure that new version entries are always at the top of the file!
-	if(!$changelog && $beforechangelog){
-		$afterchangelog = $beforechangelog;
-		$beforechangelog = '';
-	}
-
-	// Put a note in the header.
-	//$changelog = 'Enter the changelog items below, each item separated by a newline.' . "\n" . ';--- ENTER CHANGELOG BELOW ---;' . "\n\n" . $changelog;
-
-	$changelog = CLI::PromptUser('Enter the changelog for this release.  Separate each different bullet point on a new line with no dashes or asterisks.', 'textarea', $changelog);
-
-	// I need to transpose the text only changelog back to a regular format.
-	$changeloglines = '';
-	$x = 0;
+	// And write them back in.
+	$thisversion->clearEntries();
 	foreach(explode("\n", $changelog) as $line){
-		++$x;
-		//	if($x <= 2) continue;
-		$line = trim($line);
-		if(!$line) continue;
-		// I need to produce a pretty line here, it takes some finesse.
-		//$linearray = array_map('trim', explode("\n", wordwrap($line, 70, "\n")));
-		//$changeloglines .= "\t* " . implode("\n\t  ", $linearray) . "\n";
-
-		/// hehehe, just because I can do this all in one "line".... :p
-		$changeloglines .= "\t* " .
-			implode(
-				"\n\t  ",
-				array_map(
-					'trim',
-					explode(
-						"\n",
-						wordwrap($line, 90, "\n")
-					)
-				)
-			) .
-			"\n";
-
-		//$changeloglines .= "\t* " . wordwrap($line, 70, "\n\t  ") . "\n";
+		$thisversion->addLine($line);
 	}
 
-	//echo $changeloglines; die('halting'); // DEBUG
+	//echo $thisversion->fetchFormatted(); die('halting'); // DEBUG
 
 	// Write this back out to that file :)
-	file_put_contents($file, $beforechangelog . $header . "\n" . $changeloglines . "\n" . $afterchangelog);
+	$parser->save();
+
+	$htmlversion = dirname($file) . '/changelog.html';
+	$parser->saveHTML($htmlversion);
 }
 
 /**
  * Add the release date to the changelog for the current version.
  */
-function add_release_date_to_changelog($file, $headerprefix, $header){
+function add_release_date_to_changelog($file, $name, $version){
 	// Update the changelog version first!
 	// This is done here to signify that the version has actually been bundled up.
 	// Lookup the changelog text of this current version.
 	global $packagername, $packageremail;
 
-	$timestamp = "\t--$packagername <$packageremail>  " . Time::GetCurrent(Time::TIMEZONE_DEFAULT, Time::FORMAT_RFC2822) . "\n\n";
-	$changelog = '';
+	$parser = new Core\Utilities\Changelog\Parser($name, $file);
+	$parser->parse();
 
-	// Start reading the file contents until I find the header, (probably on line 1, but you never know).
-	$fh = fopen($file, 'r');
-	if(!$fh){
-		// Hmm, create it?...
-		touch($file);
-		$fh = fopen($file, 'r');
-	}
-	// Still no?
-	if(!$fh){
-		die('Unable to create file ' . $file . ' for reading or writing!');
-	}
-	$wrotetimestamp = false;
-	$inchange = false;
-	$previous = null;
-	while(!feof($fh)){
-		$line = fgets($fh, 512);
+	/** @var $thisversion Core\Utilities\Changelog\Section */
+	$thisversion = $parser->getSection($version);
 
-		// Does this line look like the exact header?
-		if($line == $header){
-			$inchange = true;
-			$changelog .= $line;
-			$previous = $line;
-			continue;
-		}
-
-		if($inchange){
-			// It's in the current change version,
-			// previous line was a comment,
-			// and current line is blank...
-			// EXCELLENT!  Insert the timestamp here!
-			if(strpos($previous, "\t* ") === 0 && trim($line) == ''){
-				// line starts with [tab]*[space], it's a comment!
-				$changelog .= $timestamp;
-				$wrotetimestamp = true;
-				$inchange = false;
-			}
-			elseif(strpos($previous, "\t* ") === 0 && strpos($line, '--') === 0){
-				// Oh, this line already has a timestamp.... DON'T CARE! :p
-				$changelog .= $timestamp;
-				$wrotetimestamp = true;
-				$inchange = false;
-			}
-			elseif(strpos($line, $headerprefix) === 0){
-				// Wait, I found another header, but I haven't written the timestamp yet!
-				// :/
-				$changelog .= $timestamp . $line;
-				$wrotetimestamp = true;
-				$inchange = false;
-			}
-			else{
-				// eh...
-				$changelog .= $line;
-			}
-		}
-		else{
-			// Ok, I don't care anyway
-			$changelog .= $line;
-		}
-
-		$previous = $line;
-	}
-	fclose($fh);
-
-	// Did it never even write the timestamp?
-	if(!$wrotetimestamp){
-		$changelog = $header . "\n" . $timestamp . $changelog;
-	}
+	$thisversion->parseLine("--$packagername <$packageremail>  " . Time::GetCurrent(Time::TIMEZONE_DEFAULT, Time::FORMAT_RFC2822));
 
 	// Write this back out to that file :)
-	file_put_contents($file, $changelog);
+	$parser->save();
 }
 
 // I need a few variables first about the user...

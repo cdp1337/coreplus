@@ -1,47 +1,61 @@
+Core Plus 2.5.1
+
+	* [Bug] Set the smarty "mail" command to require the Core mail javascript.
+	* [Feature] Added support for Model::ATT_TYPE_UUID_FK and Model::ATT_TYPE_ID_FK. These are currently
+	  just helper constants so I don't have to remember how many characters a UUID is.
+	* [Feature] New method: FilterForm::getTotalCount; just returns the total if it's set.
+	* Display view errors when in development mode along with their backtrace.
+	* Minor fix in the {a confirm} usage; properly escaping single and double quotes now.
+	* Added support to for namespaced classes in the Core autoload system.  They are treated just like any other
+	  class, as in they can be in whatever directory for a given component.  The packager also correctly scans them too.
+	* feature Moved the changelog parsing logic into its own set of classes.  This allows the changelogs to be parsed from additional scripts.
+	* feature Added a utilities/generate_changelog script to compile HTML versions of the changelogs on the site.
+	* feature Changelog entries will now be organized in a particular order: bugs, features, then other.
+	* Added the changelog generation to the full build.
+
 Core Plus 2.5.0
 
+	* [Bug] Fix in the Model system to not try to propagate keys up to the parent of a linked model.
+	* [Feature] Added a new filter type, "CONTAINS".  This is useful for filter examples such as "Email
+	  contains @gmail".
+	* [Feature] Added some logic to gracefully handle if the export directories do not exist.
+	* [Feature] Added a Core.Strings.rot13 javascript function.
+	* [Feature] Added a DateTimeInput.
+	* [Feature] Added support for components with a space in their filename.
+	* [Feature] Added support for encrypted configuration options.
 	* Tweaks to the versioning system.
 	* Wrote some tests for VersionSplit and VersionCompare.
-	* Components now support an auto-install mode for assets.  This only runs during development
-	  mode.
-	* Changed the behaviour of filters.  They now accept "0" as a valid value and will display
-	  the filter system with it if a "" value is present.  This enables filters that act on a
-	  boolean property to function correctly.
-	* Changed the behaviour of Form::addModel and getModel methods.  The form system now saves
-	  the model in a local variable and makes that exact model available on the next pageload.
-	* Removed some legacy code from the Form system pertaining to the PageModel.  That model now
-	  handles the logic internally.
-	* Fix in the Model system to not try to propagate keys up to the parent of a linked model.
-	* Better enforcing Model and the DMI default values.  ex: enum field types now require one
-	  of the options to be set as default if null is set to false.
+	* Components now support an auto-install mode for assets.  This only runs during development mode.
+	* Changed the behaviour of filters.  They now accept "0" as a valid value and will display the filter
+	  system with it if a "" value is present.  This enables filters that act on a boolean property to
+	  function correctly.
+	* Changed the behaviour of Form::addModel and getModel methods.  The form system now saves the model
+	  in a local variable and makes that exact model available on the next pageload.
+	* Removed some legacy code from the Form system pertaining to the PageModel.  That model now handles
+	  the logic internally.
+	* Better enforcing Model and the DMI default values.  ex: enum field types now require one of the
+	  options to be set as default if null is set to false.
 	* Minor performance tweaks in the PageModel.
-	* Moved the "components_load_complete" hook to be fired after the postincludes instead of
-	  before.  This ensures that smarty and some other systems are available.
+	* Moved the "components_load_complete" hook to be fired after the postincludes instead of before. This
+	  ensures that smarty and some other systems are available.
 	* Bad components don't get disabled immediately, makes development easier.
-	* Added a new filter type, "CONTAINS".  This is useful for filter examples such as "Email
-	  contains @gmail".
-	* Packager now supports some CLI arguments for various common tasks.  Repackage component,
-	  repackage theme, list components and list themes.
-	* Added some logic to gracefully handle if the export directories do not exist.
-	* Added a Core.Strings.rot13 javascript function.
-	* Added a DateTimeInput.
-	* Added support for components with a space in their filename.
-	* Modified the user config weight a little.  Now automatic weights are all +1000, so they
-	  will float to the bottom of user-defined sorting.
+	* Packager now supports some CLI arguments for various common tasks.  Repackage component, repackage
+	  theme, list components and list themes.
+	* Modified the user config weight a little.  Now automatic weights are all +1000, so they will float
+	  to the bottom of user-defined sorting.
 	* New method, ConfigHandler::IsOverridden.  Useful in enterprise mode.
 	* Heavier use of Model::translateKey throughout the system.  Helps to centralize the logic.
 	* General exceptions are now caught in the view.
 	* Component debug listing is now sorted alphabetically.
 	* NULL is now handled more gracefully in the Model.
-	* Set the install redirect to be a 302.  Should help prevent FF from redirecting endlessly
-	  on new installs.
+	* Set the install redirect to be a 302.  Should help prevent FF from redirecting endlessly on new
+	  installs.
 	* Upgraded phpmailer to 5.2.4
 	* Using "getKeyName" for components, should fix the name/directory issues.
-	* Switched the filestore directives to constants defined within the configuration.xml file.
-	  This helps make the installer more user-friendly and stable.
+	* Switched the filestore directives to constants defined within the configuration.xml file. This helps
+	  make the installer more user-friendly and stable.
 	* Updated several core subsystems to work better when the core isn't installed yet.
-	* Added support for encrypted configuration options.
-	--Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:51:54 -0400
+	-- Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:51:54 -0400
 
 Core Plus 2.4.6.3
 
@@ -49,7 +63,7 @@ Core Plus 2.4.6.3
 	* New methods to get the changed files in a given component.
 	* Packager now displays which component has local changes, (needs to be packaged).
 	* Installer will now refuse to update a component with local changes.
-	--Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 15:42:08 -0500
+	-- Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 15:42:08 -0500
 
 Core Plus 2.4.6.2
 
@@ -57,273 +71,299 @@ Core Plus 2.4.6.2
 	* Installer is more efficient.
 	* Component->disable now flags the component as disabled on that same pageload.
 	* Core better handles upgrade errors for components.
-	--Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 14:14:27 -0500
+	-- Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 14:14:27 -0500
 
 Core Plus 2.4.6.1
 
-	* Updates to the installer, primarily more verbose output and reloading the package list on
-	  a successful installation via the UI.
+	* Updates to the installer, primarily more verbose output and reloading the package list on a
+	  successful installation via the UI.
 	* Removed some legacy code from the packager.
-	--Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 12:53:22 -0500
+	-- Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 12:53:22 -0500
 
 Core Plus 2.4.6
 
-	* Minor fixes in the updater including CGI mode support and correctly handling empty
-	  "operation" requests.
-	* Do not try to parse userconfigs if that model doesn't exist.  Fixes user component
-	  updates.
+	* [Bug] Fixed the smarty issue of SMARTY_DIR already being defined.
+	* Minor fixes in the updater including CGI mode support and correctly handling empty "operation"
+	  requests.
+	* Do not try to parse userconfigs if that model doesn't exist.  Fixes user component updates.
 	* Support for the new userconfig features.
-	* Changed how the reload method works slightly.  It now sends a 302 header along with the
-	  location.
-	* If a form action returns the same page that it is currently on, the form system will
-	  reload the page instead of trying to redirect.
-	* Fixed the smarty issue of SMARTY_DIR already being defined.
-	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:42:17 -0500
+	* Changed how the reload method works slightly.  It now sends a 302 header along with the location.
+	* If a form action returns the same page that it is currently on, the form system will reload the page
+	  instead of trying to redirect.
+	-- Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:42:17 -0500
 
 Core Plus 2.4.5
 
+	* [Bug] Fixed support for the "class" names on form elements
+	* [Bug] Fixed the <aside><aside> error.  Widgets should have been divs instead of their aside.
+	* [Bug] Fixed bug #92 - Installer still runs for components if no upgrade path available.
+	* [Bug] Fixed bug #253 - Disabled components cannot be re-enabled.
+	* [Bug] Fixed the Directory remove statement for tmp filesystem over FTP.
+	* [Bug] Fixed the File remove statement for tmp filesystem over FTP.
+	* [Feature] Added a warning on the repos landing page if the gnupg directory is not writable.
+	* [Feature] Added a repos_delete page.  This is kinda useful...
+	* [Feature] Added some debug statements throughout the system.
 	* Made the hover controls enabled by default
 	* New admin hook system and dashboard, (still in beta).
-	* Switched all widgets to use the "installable" flag instead of baseurl for that attribute.
-	  This just helps with confusion between those two different elements.
-	* Fixed support for the "class" names on form elements
+	* Switched all widgets to use the "installable" flag instead of baseurl for that attribute. This just
+	  helps with confusion between those two different elements.
 	* Zip files that have a mimetype of application/octet-stream are now detected appropriately.
-	* Fixed the <aside><aside> error.  Widgets should have been divs instead of their aside.
-	* Removed the "enabled" flag on update sites.  If it's present in the system, it's going to
-	  be used.
-	* Fixed bug #92 - Installer still runs for components if no upgrade path available.
-	* Set the updater page to display the enabled components sorted by name.  This makes it
-	  easier to skim through and see what's installed.
-	* Fixed bug #253 - Disabled components cannot be re-enabled.
+	* Removed the "enabled" flag on update sites.  If it's present in the system, it's going to be used.
+	* Set the updater page to display the enabled components sorted by name.  This makes it easier to skim
+	  through and see what's installed.
 	* Removed repos_edit page.  There's no data to really edit.
-	* Added a warning on the repos landing page if the gnupg directory is not writable.
 	* Cleaned up the repo landing page and added descriptions for the repositories.
 	* New 2.4 API level for repo.xml and package.xml files.
 	* Repositories now support descriptions.
-	* Repositories now support gpg keys embedded.  These get installed automatically upon adding
-	  the repo to a site.
-	* Added a repos_delete page.  This is kinda useful...
-	* Changed how "textarea" user prompting works in CLI mode.  Now it displays the message and
-	  has the user press enter to continue.  This gives the user a chance to see the message.
+	* Repositories now support gpg keys embedded.  These get installed automatically upon adding the repo
+	  to a site.
+	* Changed how "textarea" user prompting works in CLI mode.  Now it displays the message and has the
+	  user press enter to continue.  This gives the user a chance to see the message.
 	* Major cleanups to the component package logic.
 	* Core API 2.4 is now a recognized API version for components.
 	* The packager now writes at API level 2.4.
-	* PageRequest method getPost now accepts POST data that is nested by one-level, ie:
-	  "model[id]" is now supported.
-	* XMLLoader now supports a schema for XML files.  This is useful in assigning a DTD schema
-	  source automatically.
+	* PageRequest method getPost now accepts POST data that is nested by one-level, ie: "model[id]" is now
+	  supported.
+	* XMLLoader now supports a schema for XML files.  This is useful in assigning a DTD schema source
+	  automatically.
 	* FileContentFactory now works [better] if Core isn't loaded.
-	* Overhauled the create_repo script to be a little more user friendly and to work with the
-	  new repo features.
-	* Overhauled the update backend and UI.  This now behaves more closely to how the WHM
-	  updater looks.
-	* Added some debug statements throughout the system.
-	* Cleaned up the Hook system a little; it now complains if you try to register two hooks
-	  with the same name.
-	* Admin dashboard widgets now get installed to the dashboard automatically, (they can later
-	  be removed if desired).
-	* Core::CheckClass no longer tries to load itself recursively.....  I'm not sure what I was
-	  smoking when I put those lines in :/
+	* Overhauled the create_repo script to be a little more user friendly and to work with the new repo
+	  features.
+	* Overhauled the update backend and UI.  This now behaves more closely to how the WHM updater looks.
+	* Cleaned up the Hook system a little; it now complains if you try to register two hooks with the same
+	  name.
+	* Admin dashboard widgets now get installed to the dashboard automatically, (they can later be removed
+	  if desired).
+	* Core::CheckClass no longer tries to load itself recursively.....  I'm not sure what I was smoking
+	  when I put those lines in :/
 	* Core::GetComponent now will retrieve a disabled component if called by name.
 	* New shortcut method, CoreDateTime::Now().  This gets the time "now".
 	* Debug::Write now formats the messages using <pre> tags.
-	* Fixed the Directory remove statement for tmp filesystem over FTP.
-	* Fixed the File remove statement for tmp filesystem over FTP.
 	* File copies now throw Exceptions.
 	* The GPG key of a given package is now listed in the repo.xml file.
-	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 09:14:47 -0500
-
-	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:56:08 -0500
+	-- Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:56:08 -0500
 
 Core Plus 2.4.4
 
-	* Set the packager to allow whitespace before the class declaration.
-	* New form element: date input.  This uses jqueryui to render a datepicker on the form
-	  element.
-	* Some fixes for user permissions in multisite mode.  The permission cache is now cleared on
-	  page load when multisite is enabled.
-	* Added support for UUID column types in models.  These are treated exactly the same as IDs,
-	  but their values are generated via Core instead of the underlying database system and they
-	  are supported in multi-server modes.
-	* Added support for "selectable" as an attribute on the <page> directive in component.xml
+	* [Feature] Added support for UUID column types in models.  These are treated exactly the same as IDs,
+	  but their values are generated via Core instead of the underlying database system and they are
+	  supported in multi-server modes.
+	* [Feature] Added support for "selectable" as an attribute on the <page> directive in component.xml
 	  files.
-	* Added support for UUID based model columns in the form system.  They are respected the
+	* [Feature] Added support for UUID based model columns in the form system.  They are respected the
 	  same as IDs.
-	* Added support for Date based model columns in the form system.
+	* [Feature] Added support for Date based model columns in the form system.
+	* Set the packager to allow whitespace before the class declaration.
+	* New form element: date input.  This uses jqueryui to render a datepicker on the form element.
+	* Some fixes for user permissions in multisite mode.  The permission cache is now cleared on page load
+	  when multisite is enabled.
 	* Updated many of the form element styles.
 	* Minor fix in the packager for CHANGELOG management.
-	--Charlie Powell <charlie@eval.bz>  Sat, 09 Feb 2013 23:36:50 -0500
+	-- Charlie Powell <charlie@eval.bz>  Sat, 09 Feb 2013 23:36:50 -0500
 
 Core Plus 2.4.3
 
-	* Fix in Core::CheckClass for when the file containing a given class is not found.  Now an
+	* [Bug] Fix in Core::CheckClass for when the file containing a given class is not found. Now an
 	  exception is thrown.
-	* New method, Core::GetHistory.  This behaves the same as GoBack, except that it simply
-	  returns the url instead of redirecting.
-	* Ajax and JSON pages no longer record navigation.
-	* Added pageviews into the core page system.  This is a counter that is incremented every
+	* [Feature] Added pageviews into the core page system.  This is a counter that is incremented every
 	  time a page is viewed if that page exists in the page table.
-	* Added an X-FRAME-OPTIONS header of SAMEORIGIN.  This is a security fix.
-	* Added support for IN where statements.
+	* [Feature] Added an X-FRAME-OPTIONS header of SAMEORIGIN.  This is a security fix.
+	* [Feature] Added support for IN where statements.
+	* New method, Core::GetHistory.  This behaves the same as GoBack, except that it simply returns the
+	  url instead of redirecting.
+	* Ajax and JSON pages no longer record navigation.
 	* Force displaying of all errors if in development mode.
-	--Charlie Powell <charlie@eval.bz>  Mon, 04 Feb 2013 15:29:17 -0500
+	-- Charlie Powell <charlie@eval.bz>  Mon, 04 Feb 2013 15:29:17 -0500
 
 Core Plus 2.4.2
 
-	* Reduced the size of the page_meta::meta_value attribute slightly, was causing some mysql
-	  servers to complain about the key size.
-	* Some minor fixes and tweaks on the admin config when dealing with multisite modes.
-	* Switched the PageMetas getValue method to return an array of element values instead of a
-	  json string.
-	* MAJOR API CHANGE: Moved the automatic processing of models, assets and other files to
-	  before the <upgrade> tasks.  This means that the database will be at the version of the
-	  code regardless of which version it's upgrading from.
-	* Forcing the save of session data prior to reloading and redirecting. This should resolve
-	  some weird quirks.
-	* New method, Session::ForceSave.  This will write the current $_SESSION data back to the
-	  datastore.
-	* Updated the packager to wordwrap lines to stay within 100 characters. Also improved the
-	  formatting a little.
-	* Added a "getControls" method onto the Controller.  This allows controls for an entire
+	* [Feature] Added a "getControls" method onto the Controller.  This allows controls for an entire
 	  controller to be shared and set in one location.
-	* Added a method Core::GenerateUUID to generate a globally unique ID in the format of
-	  "1-c5dbcaaf9db-8d77".  The first digit is the site id, (more on that in a later version),
-	  the next snippet is the timestamp, and the last is a random set of digits.
-	* Set the shorthand version of addControl to allow to use custom icons.
-	* Set the ViewControl system to ignore controls that link to the current page.  These are
-	  redundant to display to the user.
-	* Switched the ViewControl behaviour to use hover context menus by default.
-	* Added setting functionality on the widget system.  This allows for a custom Widget to have
+	* [Feature] Added a method Core::GenerateUUID to generate a globally unique ID in the format of
+	  "1-c5dbcaaf9db-8d77".  The first digit is the site id, (more on that in a later version), the next
+	  snippet is the timestamp, and the last is a random set of digits.
+	* [Feature] Added setting functionality on the widget system.  This allows for a custom Widget to have
 	  minor settings stored along with the widget definition itself.
-	  --Charlie Powell <charlie@eval.bz>  Fri, 01 Feb 2013 18:59:24 -0500
+	* Reduced the size of the page_meta::meta_value attribute slightly, was causing some mysql servers to
+	  complain about the key size.
+	* Some minor fixes and tweaks on the admin config when dealing with multisite modes.
+	* Switched the PageMetas getValue method to return an array of element values instead of a json
+	  string.
+	* MAJOR API CHANGE: Moved the automatic processing of models, assets and other files to before the
+	  <upgrade> tasks.  This means that the database will be at the version of the code regardless of
+	  which version it's upgrading from.
+	* Forcing the save of session data prior to reloading and redirecting. This should resolve some weird
+	  quirks.
+	* New method, Session::ForceSave.  This will write the current $_SESSION data back to the datastore.
+	* Updated the packager to wordwrap lines to stay within 100 characters. Also improved the formatting a
+	  little.
+	* Set the shorthand version of addControl to allow to use custom icons.
+	* Set the ViewControl system to ignore controls that link to the current page.  These are redundant to
+	  display to the user.
+	* Switched the ViewControl behaviour to use hover context menus by default.
+	-- Charlie Powell <charlie@eval.bz>  Fri, 01 Feb 2013 18:59:24 -0500
 
 Core Plus 2.4.1
 
-	* Fixed bug with themes not reinstalling as expected.
+	* [Bug] Fixed bug with themes not reinstalling as expected.
+	* [Feature] Added form controller methods for several elements, including alternate page templates,
+	  user metatag autocompete, and keyword metatag autocomplete.
+	* [Feature] Added support for <upgrade> directives to contain a <phpfileinclude> tag.  This file gets
+	  executed automatically upon the appropriate upgrade.  This allows for very fine grain upgrade logic
+	  such as data manipulations and whatnot.
+	* [Feature] Added support for readonly filters.  These are useful for print views.
+	* [Feature] Added a new method, Model::getLinkFactory.  Allows for fine grain control of linked model
+	  factories.
+	* [Feature] Added a unique flag to the Dataset object, allows for use of the mysql DISTINCT flag.
+	* [Feature] Added a new class, DatasetStream.  This buffers results from a dataset select statement so
+	  as to not use too much memory on massive queries.
 	* Moved the description field to above the input on standard form elements.
 	* Better error reporting on the View.
 	* Load blank meta data from the page object if provided in FormPageMetas.
 	* New method, Core::CompareValues.  Provides more useful variable comparisons in forms.
 	* New Filter option, linkname.  Allows the model key to be defined separately from the element name.
-	* Updated the session system to make use of 5.4 systems.  This should clear up any weird issues with sessions.
+	* Updated the session system to make use of 5.4 systems.  This should clear up any weird issues with
+	  sessions.
 	* Incremented the minimum php version from 5.3.x to 5.4.x.
-	* Added form controller methods for several elements, including alternate page templates, user metatag autocompete,
-	and keyword metatag autocomplete.
 	* Support for alternate page templates is now working better!
-	* Huge redux on how the page meta system operates and stores data.  Each key for each page is now stored individually
-	in the page_meta table.  This allows for lookups of this metadata and for more functionality of the tags.
+	* Huge redux on how the page meta system operates and stores data.  Each key for each page is now
+	  stored individually in the page_meta table.  This allows for lookups of this metadata and for more
+	  functionality of the tags.
 	* Scaffolding support for site-wide tag systems via the new metadata system.
-	* Added support for <upgrade> directives to contain a <phpfileinclude> tag.  This file gets executed automatically upon
-	the appropriate upgrade.  This allows for very fine grain upgrade logic such as data manipulations and whatnot.
 	* Minor updates throughout the core and page request system to better support CLI testing.
-	* Added support for readonly filters.  These are useful for print views.
 	* Forms now support multiple models being added to it via Form::addModel.
 	* Form groups now have a getID() method.  Acts the same as the getID method from FormElement.
 	* New FormElement method, getValueTitle.  Gets the title of the currently selected option, if any.
-	* Dropped the property Model::$_dirty in favor of the new Model::changed() method.  This actively checks the data for changes.
-	* Added a new method, Model::getLinkFactory.  Allows for fine grain control of linked model factories.
+	* Dropped the property Model::$_dirty in favor of the new Model::changed() method.  This actively
+	  checks the data for changes.
 	* New methods, Model::setToFormElement.
 	* New method, Model::addToFormPost.
-	* Added a unique flag to the Dataset object, allows for use of the mysql DISTINCT flag.
-	* Added a new class, DatasetStream.  This buffers results from a dataset select statement so as to not use too much memory on massive queries.
 	-- Charlie Powell <charlie@eval.bz>  23 Jan 2013
 
-
 Core Plus 2.4.0
-	* Added support for hooks to have a return type attached to them.  This allows different hooks to return arrays or return statuses.
-	* Added a ViewControls object, which is responsible for handling the <ul/> group of control links for a given object.
-	* Added the docs into the upstream codebase for easier maintenance.
-	* Added a smarty "controls" function meant for displaying the control links of a given subject.
-	* Added the Dataset mode "Alter".  Useful for structural changes to the datastore.
-	* Added the alter command "rename" to the dataset.  This allows for columns to be renamed pragmatically.
-	* Added ModelSchema, ModelSchemaColumn, MySQLi_Schema, and MySQLi_Schema_Column objects.  These help break apart the
-	different components of the mysqli backend and greatly simplified some of its logic.
-	* Rewrote the createTable and modifyTable methods of the mysqli backend to make use of the new ModelSchema system.
-	This has optimized the reinstall logic by scanning the tables before attempting modifications, the number of write
-	statements is drastically lower.
+
+	* [Bug] Fixed some View logic to properly replace tags in the rendering now instead of duplicating the
+	  replacements.
+	* [Bug] Fixed `key` = NULL and `key` != NULL statements in the mysqli backend.  These are now replaced
+	  with IS and IS NOT.
+	* [Feature] Added support for hooks to have a return type attached to them.  This allows different
+	  hooks to return arrays or return statuses.
+	* [Feature] Added a ViewControls object, which is responsible for handling the <ul/> group of control
+	  links for a given object.
+	* [Feature] Added the docs into the upstream codebase for easier maintenance.
+	* [Feature] Added a smarty "controls" function meant for displaying the control links of a given
+	  subject.
+	* [Feature] Added the Dataset mode "Alter".  Useful for structural changes to the datastore.
+	* [Feature] Added the alter command "rename" to the dataset.  This allows for columns to be renamed
+	  pragmatically.
+	* [Feature] Added ModelSchema, ModelSchemaColumn, MySQLi_Schema, and MySQLi_Schema_Column objects.
+	  These help break apart the different components of the mysqli backend and greatly simplified some of
+	  its logic.
+	* [Feature] Added an XMLLoader::loadFromString method, allows XML data to be loaded from a string
+	  representation of it.
+	* [Feature] Added "getExtension" method in Directory_local_backend to provide better compatibility
+	  with the File backend.
+	* [Feature] Added logging for mimetype icons that don't exist on the system yet, (for DEVELOPMENT_MODE
+	  only).
+	* [Feature] #223 - Historical Permalink lookup.  URLs can now be changed onthefly, and any requests to
+	  the old url will automatically be redirected to the new page with a 301.
+	* [Feature] Added redirect status option to Core::Redirect.  It defaults to a 302, but can be set to a
+	  permanent redirect instead.
+	* [Feature] Added support for page resolution requests to start with a '?'.
+	* [Feature] Added scaffolding support for multisite mode.
+	* [Feature] Added logic to check for a valid upgrade path in components prior to executing any of its
+	  upgrade logic.
+	* [Feature] Added support for the model to be "loaded" without all primary keys set.
+	* [Feature] Added a "SESSION_COOKIE_DOMAIN" configuration define, allows the site domain to be set for
+	  cookies.
+	* [Feature] Added a "findByField" method on the DatasetWhere object.  Allows for searching of a
+	  specific key in the where clause.
+	* [Feature] Added a modify method on the CoreDateTime object.
+	* [Feature] Added a zip contents object.
+	* [Feature] Added an ajaxlink javascript method.  Allows any "ajax-link" classed link to open in a
+	  jquery window.
+	* [Feature] Added a Core.Request javascript object to help with manipulation of the GET parameters.
+	* [Feature] Added sort and pagination ability to the Filter system.
+	* [Feature] Added context menus for controls.  These by default are hover based via the class
+	  "controls-hover".
+	* [Feature] Added hovercontext support to the ViewControl object.
+	* [Feature] Added a addWhereParts method to the DatasetWhereClause object.  Allows for adding of
+	  single where statements.
+	* Rewrote the createTable and modifyTable methods of the mysqli backend to make use of the new
+	  ModelSchema system. This has optimized the reinstall logic by scanning the tables before attempting
+	  modifications, the number of write statements is drastically lower.
 	* Set the CoreDateTime object to default to "now" if no date is given on construction.
-	* Added an XMLLoader::loadFromString method, allows XML data to be loaded from a string representation of it.
 	* Cleaned up the XMLLoader a little and added inline documentation on the rest of its methods.
-	* Added "getExtension" method in Directory_local_backend to provide better compatibility with the File backend.
-	* Added logging for mimetype icons that don't exist on the system yet, (for DEVELOPMENT_MODE only).
-	* Greatly optimized the copyFrom logic on local files.  Now instead of reading the entire file in memory, only up
-	to 10MB of a file is read/written at a time.
-	* Set the getPreviewURL method to skip processing if the execution time is within 5 seconds of timeout.
+	* Greatly optimized the copyFrom logic on local files.  Now instead of reading the entire file in
+	  memory, only up to 10MB of a file is read/written at a time.
+	* Set the getPreviewURL method to skip processing if the execution time is within 5 seconds of
+	  timeout.
 	* Updated some documentation.
-	* Feature #223 - Historical Permalink lookup.  URLs can now be changed onthefly, and any requests to the old
-	url will automatically be redirected to the new page with a 301.
-	* Added redirect status option to Core::Redirect.  It defaults to a 302, but can be set to a permanent redirect instead.
-	* Form elements now get 'required="required"' or 'checked="checked"' regardless if the value is set to true or "1".
+	* Form elements now get 'required="required"' or 'checked="checked"' regardless if the value is set to
+	  true or "1".
 	* Reimplemented the meta tags.  They're now more expandable by external components.
 	* Set maxlength as a valid attribute on text inputs.
 	* Set maxlength as one of the attributes passed from the Model to the Form on BuildFromModel.
-	* Added support for page resolution requests to start with a '?'.
-	* Changed the Template object to no longer extend Smarty.  This allows for a more specialized control of it and
-	cleared up a STRICT warning in php 5.4.
+	* Changed the Template object to no longer extend Smarty.  This allows for a more specialized control
+	  of it and cleared up a STRICT warning in php 5.4.
 	* Updated the config controller a little.
-	* Added scaffolding support for multisite mode.
-	* Added logic to check for a valid upgrade path in components prior to executing any of its upgrade logic.
 	* Rewrote the ConfigHandler internal logic.  This is now a little easier to follow what it's doing.
-	* Added support for the model to be "loaded" without all primary keys set.
-	* Updated the ModelFactory to make use of the native ReflectionClass class.  Allows for more control over instantiating of objects.
-	* Added a "SESSION_COOKIE_DOMAIN" configuration define, allows the site domain to be set for cookies.
-	* Added a "findByField" method on the DatasetWhere object.  Allows for searching of a specific key in the where clause.
+	* Updated the ModelFactory to make use of the native ReflectionClass class.  Allows for more control
+	  over instantiating of objects.
 	* Reorganized the config.xml example to make it easier to set initially.
 	* Reorganized some of the core hook names.
 	* Removed some legacy code.
-	* Added a modify method on the CoreDateTime object.
-	* Added a zip contents object.
-	* Added an ajaxlink javascript method.  Allows any "ajax-link" classed link to open in a jquery window.
-	* Added a Core.Request javascript object to help with manipulation of the GET parameters.
-	* Added sort and pagination ability to the Filter system.
-	* Added context menus for controls.  These by default are hover based via the class "controls-hover".
-	* Model _saveExisting can now be called from extending Models.  This is useful for those models that need to have
-	more control over the save procedure.
-	* Fixed some View logic to properly replace tags in the rendering now instead of duplicating the replacements.
-	* Added hovercontext support to the ViewControl object.
-	* Fixed `key` = NULL and `key` != NULL statements in the mysqli backend.  These are now replaced with IS and IS NOT.
-	* Added a addWhereParts method to the DatasetWhereClause object.  Allows for adding of single where statements.
+	* Model _saveExisting can now be called from extending Models.  This is useful for those models that
+	  need to have more control over the save procedure.
 	* Expanded the Directory ls command to allow searching for specific extensions.
-	* Updated the SessionModel save logic to perform an INSERT_OR_UPDATE on save.  Should fix the race condition.
-	* Starting to add support for specific target widgets.  These will be targetable for areas such as /admin and user profiles.
+	* Updated the SessionModel save logic to perform an INSERT_OR_UPDATE on save.  Should fix the race
+	  condition.
+	* Starting to add support for specific target widgets.  These will be targetable for areas such as
+	  /admin and user profiles.
 	-- Charlie Powell <charlie@eval.bz>  30 Dec 2012
 
-
 Core Plus 2.3.2
-	* Set the FormPageParentSelectInput value to be strtolower all the time.  Should fix many of the baseurl and parenturl issues.
-	* Added FilterForm system; allows for filters to be created and utilized.
-	* Fixed the FormPageMeta form for page template lookup.  It was trying to use directories as files.
-	* Added a resetLink method in the Model.  Useful for deleting a child and not wanting them to come back as linked.
+
+	* [Bug] Fixed the FormPageMeta form for page template lookup.  It was trying to use directories as
+	  files.
+	* [Bug] Fixed the PageModel being set from a pageMetas object.  The meta tags were not coming over
+	  correctly because the name was changed slightly.
+	* [Bug] Fixed the input value being terminated after double quotes.  Resolution was replace the '/"'
+	  with '&quot;'.
+	* [Feature] Added FilterForm system; allows for filters to be created and utilized.
+	* [Feature] Added a resetLink method in the Model.  Useful for deleting a child and not wanting them
+	  to come back as linked.
+	* [Feature] Added the input ID as the containing div's class name on formcheckboxesinput.
+	* Set the FormPageParentSelectInput value to be strtolower all the time.  Should fix many of the
+	  baseurl and parenturl issues.
 	* Updated the title/seotitle feature (Feature #194) to make use of a dedicated variable.
-	* Fixed the PageModel being set from a pageMetas object.  The meta tags were not coming over correctly because the name
-	was changed slightly.
-	* Added the input ID as the containing div's class name on formcheckboxesinput.
 	* Updated the compiler to set only the relative path for the comments instead of the full path.
 	* Switched the updater listing from NUMERIC sort to NATURAL sort.  This fixes the order of versions.
-	* Fixed the input value being terminated after double quotes.  Resolution was replace the '/"' with '&quot;'.
 	-- Charlie Powell <charlie@eval.bz>  16 Nov 2012
 
 Core Plus 2.3.1
 
-	* Fixed a bug with the parent page selection not selecting the correct parent page.
-	* Updated the core.strings.js a little to prevent URLs from being crafted with two slashes next to each other.
+	* [Bug] Fixed a bug with the parent page selection not selecting the correct parent page.
+	* Updated the core.strings.js a little to prevent URLs from being crafted with two slashes next to
+	  each other.
 	* Updated the smarty a block to ignore blank confirm requests.
 	-- Charlie Powell <charlie@eval.bz>  5 Nov 2012
 
 Core Plus 2.3.0
 
-	* Major change in the dataset WHERE structure.  Where statements now support nested clauses, each with their own
-	separator and children.
-	* Fixed a recursion bug with local files for if the file and mimetype icon are both unavailable.
-	* Added a reset input element to the form system.
-	* Added a "setLink" method to models, useful for HAS../BELONGSTO relationships.
-	* Added a new "setFromForm" method on models.  Allows for more fine-tune control over the form/model interaction in controllers.
-	* Added some inline documentation to the Dataset system.
+	* [Bug] Fixed a recursion bug with local files for if the file and mimetype icon are both unavailable.
+	* [Feature] Added a reset input element to the form system.
+	* [Feature] Added a "setLink" method to models, useful for HAS../BELONGSTO relationships.
+	* [Feature] Added a new "setFromForm" method on models.  Allows for more fine-tune control over the
+	  form/model interaction in controllers.
+	* [Feature] Added some inline documentation to the Dataset system.
+	* Major change in the dataset WHERE structure.  Where statements now support nested clauses, each with
+	  their own separator and children.
 	* Removed some debug content in the core.
 	* Implemented Feature #194, SEO friendly title tag system.
 	* Implemented the "getHash" method on remote files.
-	* Improved logic in the smarty date function for invalid data being passed in.  Now an error is only thrown if the site
-	is in development mode, otherwise simply a blank string is returned.
+	* Improved logic in the smarty date function for invalid data being passed in.  Now an error is only
+	  thrown if the site is in development mode, otherwise simply a blank string is returned.
 	* Switched default SSL mode from ONDEMAND to DISABLED in the configuration example file.
 	* Reorganized the page edit form a little and wrapped the SEO options in a common fieldset.
 	* Optimized some system performance a little.
@@ -332,67 +372,74 @@ Core Plus 2.3.0
 
 Core Plus 2.2.6
 
-	* Fixed the navigation history in Core+.  Now saves the last 5 GET requests in history.
-	* Fixed the "GoBack" function of Core.
+	* [Bug] Fixed the navigation history in Core+.  Now saves the last 5 GET requests in history.
+	* [Bug] Fixed the "GoBack" function of Core.
+	* [Feature] Added a "isGet" method on the current page request.
+	* [Feature] Added a "record" property onto the View.  Useful for indicating that certain pages
+	  shouldn't be recorded by analytical tools.
 	* Updated some documentation.
-	* Added a "isGet" method on the current page request.
-	* Added a "record" property onto the View.  Useful for indicating that certain pages shouldn't be recorded by analytical tools.
 	-- Charlie Powell <charlie@eval.bz>  22 Oct 2012
 
 Core Plus 2.2.5
 
-	* Added logic to prevent URLs with a '#' in them.
-	* Added a new class to handle datetimes, CoreDateTime.  This has better support for non-GMT unix timestamps by using
-	the DateTime object more directly.  (Legacy Time class was based on php < 5.2 logic.)
-	* Bug #173 - Minor tweak in the file preview system to strip spaces from the filenames.
-	* Fixed a major bug in the core component loader.  Installed components were being listed as being loaded and activated
-	before they were technically available.
-	* Added support for custom user config validation.
-	* Added "Registered Hooks" in the debug information at the bottom of the page.
-	* Added support for resizing images with different rules, ie: fill mode or ignore aspect ratio.
-	* Updated how widget parameters can be passed in.  Now smarty-style parameters are supports with the {widget} function.
-	* Added a getRequest function for widgets.  Useful for getting the calling parameters.
+	* [Bug] #173 - Minor tweak in the file preview system to strip spaces from the filenames.
+	* [Bug] Fixed a major bug in the core component loader.  Installed components were being listed as
+	  being loaded and activated before they were technically available.
+	* [Feature] Added logic to prevent URLs with a '#' in them.
+	* [Feature] Added a new class to handle datetimes, CoreDateTime.  This has better support for non-GMT
+	  unix timestamps by using the DateTime object more directly.  (Legacy Time class was based on php <
+	  5.2 logic.)
+	* [Feature] Added support for custom user config validation.
+	* [Feature] Added "Registered Hooks" in the debug information at the bottom of the page.
+	* [Feature] Added support for resizing images with different rules, ie: fill mode or ignore aspect
+	  ratio.
+	* [Feature] Added a getRequest function for widgets.  Useful for getting the calling parameters.
+	* Updated how widget parameters can be passed in.  Now smarty-style parameters are supports with the
+	  {widget} function.
 	-- Charlie Powell <charlie@eval.bz>  21 Oct 2012
 
 Core Plus 2.2.4
 
-	* Fixed a bug on the page URL validation for the home page
-	* Fixed the file local backend to better handle duplicate filenames.  It will now check the hash of each (#) file it
-	finds instead of just skipping to the end of the line.
+	* [Bug] Fixed a bug on the page URL validation for the home page
+	* [Bug] Fixed the file local backend to better handle duplicate filenames.  It will now check the hash
+	  of each (#) file it finds instead of just skipping to the end of the line.
 	* Removed an unnecessary directory from the root.
 	-- Charlie Powell <charlie@eval.bz>  15 Oct 2012
 
 Core Plus 2.2.3
 
-	* Added more files into the compiled bootstrap
-	* Added an included files section in the debug info
-	* Added new core hook, "/core/page/rendering"
-	* Fixed Bug #146: URL conflicts
-	* Fixed Bug #156: Installer does not complete in non-development mode
-	* Fixed Bug #115: Auto-installer does not handle models
+	* [Bug] Fixed Bug #146: URL conflicts
+	* [Bug] Fixed Bug #156: Installer does not complete in non-development mode
+	* [Bug] Fixed Bug #115: Auto-installer does not handle models
+	* [Feature] Added more files into the compiled bootstrap
+	* [Feature] Added an included files section in the debug info
+	* [Feature] Added new core hook, "/core/page/rendering"
 	-- Charlie Powell <charlie@eval.bz>  14 Oct 2012
 
 Core Plus 2.2.2
 
-	* Fixed the installer, it now handles enabling packages correctly.
-	* Fixed some other little bugs.
+	* [Bug] Fixed the installer, it now handles enabling packages correctly.
+	* [Bug] Fixed some other little bugs.
 	-- Charlie Powell <charlie@eval.bz>  8 Oct 2012
 
 Core Plus 2.2.1
 
-	* Fixed the SSL implementation
-	* Added javascript library for base64 operations
+	* [Bug] Fixed the SSL implementation
+	* [Bug] Fixed the file upload input if only one option is present
+	* [Bug] Fixes in the {img} tag for when the src is set but not available.
+	* [Bug] Fix in the form system, added the autocomplete argument to parse correctly and a new getID
+	  method.
+	* [Bug] Fix in the model system to add support for models that are extended by other classes.
+	* [Feature] Added javascript library for base64 operations
+	* [Feature] Added a new utility, create_component.  This will create the skeleton structure of a new
+	  component.
+	* [Feature] Added html5shiv, the successor to the html5ie project.
+	* [Feature] Added element IDs as a class name of the containing wrapper, allows for easier styling.
+	* [Feature] Added a User object in the javascript api to make some basic user information visible in
+	  javascript applications.
 	* Styling tweaks
-	* Fixed the file upload input if only one option is present
 	* Switched the changelog to the new standard format
-	* Added a new utility, create_component.  This will create the skeleton structure of a new component.
-	* Added html5shiv, the successor to the html5ie project.
-	* Added element IDs as a class name of the containing wrapper, allows for easier styling.
-	* Fixes in the {img} tag for when the src is set but not available.
-	* Added a User object in the javascript api to make some basic user information visible in javascript applications.
 	* Updated the email system a little, it now sets the "Sender" and "X-Content-Encoded-By" headers.
-	* Fix in the form system, added the autocomplete argument to parse correctly and a new getID method.
-	* Fix in the model system to add support for models that are extended by other classes.
 	* Set the debug info to be hidden in print views.
 	-- Charlie Powell <charlie@eval.bz>  3 Oct 2012
 
@@ -401,11 +448,11 @@ Core Plus 2.2.0
 	-- Charlie Powell <charlie@eval.bz>  20 Sep 2012
 
 Core Plus 0.1.0
+
 	* Implementing better support for Debian-style version strings.
 	* new {css} smarty block.
 	* CurrentPage now supports inline styles to be added to the head.
 	* Other minor fixes.
-	-- Charlie Powell <charlie@eval.bz>
 
 Core Plus 0.0.9
 
@@ -426,7 +473,8 @@ Core Plus 0.0.6
 
 	* Did some fixes to the email system, it now actually works.
 	* Considerable work on improving the Model validation system.  It now actually works.
-	* Minor tweak in the Form validation logic, it now just shows the validation check in the error message if the site is in development mode.
+	* Minor tweak in the Form validation logic, it now just shows the validation check in the error
+	  message if the site is in development mode.
 	-- Charlie Powell <charlie@eval.bz>  Tue, 11 Oct 2011 19:47:58 -0400
 
 Core Plus 0.0.5
@@ -435,6 +483,7 @@ Core Plus 0.0.5
 	-- Charlie Powell <charlie@eval.bz>  Sun, 18 Sep 2011 22:19:37 -0400
 
 Core Plus 0.0.4
+
 	* Adding phpMailer and the Email functionality back into the core.
 	* Minor change to configuration options and how they're stored in the database.
 	-- Charlie Powell <charlie@eval.bz>  Tue, 16 Aug 2011 23:47:36 -0400
@@ -446,20 +495,24 @@ Core Plus 0.0.3
 
 Core Plus 0.0.2-2
 
-	* New cachecore method, flush().  This is useful in reinstalling all components and ensuring that there are no lingering artifacts.
+	* New cachecore method, flush().  This is useful in reinstalling all components and ensuring that
+	  there are no lingering artifacts.
 	-- Charlie Powell <charlie@eval.bz>  Mon, 15 Aug 2011 17:24:19 -0400
 
 Core Plus 0.0.2-1
 
-	* Removing some unnecessary components, namely the adodb5 library and the old version of the Form system.
+	* Removing some unnecessary components, namely the adodb5 library and the old version of the Form
+	  system.
 	* Did some updates to the phpass library.
 	-- Charlie Powell <charlie@eval.bz>  Sun, 24 Jul 2011 21:11:35 -0400
 
 Core Plus 0.0.2
 
-	* MAJOR changes, first re-release since the system switched from DAO to AR.  Includes a lot of other fixes too.
+	* MAJOR changes, first re-release since the system switched from DAO to AR.  Includes a lot of other
+	  fixes too.
 	-- Charlie Powell <charlie@eval.bz>  Tue, 21 Jun 2011 23:02:02 -0400
 
 Core Plus 0.0.1-dev1
 
 	-- Charlie Powell <charlie@eval.bz>  Sun, 22 May 2011 02:00:52 -0400
+
