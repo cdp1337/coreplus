@@ -4,14 +4,25 @@ Core Plus 2.5.1
 	* [Feature] Added support for Model::ATT_TYPE_UUID_FK and Model::ATT_TYPE_ID_FK. These are currently
 	  just helper constants so I don't have to remember how many characters a UUID is.
 	* [Feature] New method: FilterForm::getTotalCount; just returns the total if it's set.
+	* [Feature] Added support to for namespaced classes in the Core autoload system.  They are treated
+	  just like any other class, as in they can be in whatever directory for a given component.  The
+	  packager also correctly scans them too.
+	* [Feature] Moved the changelog parsing logic into its own set of classes.  This allows the changelogs
+	  to be parsed from additional scripts.
+	* [Feature] Added a utilities/generate_changelog script to compile HTML versions of the changelogs on
+	  the site.
+	* [Feature] Changelog entries will now be organized in a particular order: bugs, features, then other.
+	* [Feature] Added the changelog generation to the full build.
+	* [Feature] Added additional debugging logs throughout the core code to better troubleshoot core
+	  issues.
 	* Display view errors when in development mode along with their backtrace.
 	* Minor fix in the {a confirm} usage; properly escaping single and double quotes now.
-	* Added support to for namespaced classes in the Core autoload system.  They are treated just like any other
-	  class, as in they can be in whatever directory for a given component.  The packager also correctly scans them too.
-	* feature Moved the changelog parsing logic into its own set of classes.  This allows the changelogs to be parsed from additional scripts.
-	* feature Added a utilities/generate_changelog script to compile HTML versions of the changelogs on the site.
-	* feature Changelog entries will now be organized in a particular order: bugs, features, then other.
-	* Added the changelog generation to the full build.
+	* Organizing phpdoc to build better documentation.
+	* Migrated Debug::Write to Core\Utilities\Logger
+	* Migrated Core::*Profile to Core\Utilities\Profiler
+	* Organized the core-cache logic a little in hopes of alleviating a strange bug that popped up on one
+	  site.
+	* PageModel::getResolvedURL now can render cross-site links when in enterprise/multisite mode.
 
 Core Plus 2.5.0
 

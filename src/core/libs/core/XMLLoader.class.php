@@ -8,7 +8,7 @@
  *       Ideally each file set can have a cache TTL, and the contents of the XML
  *       file or the DOM itself is contained in memory for that set amount of time.
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>

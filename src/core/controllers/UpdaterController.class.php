@@ -1,8 +1,7 @@
 <?php
 /**
- * [PAGE DESCRIPTION HERE]
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>

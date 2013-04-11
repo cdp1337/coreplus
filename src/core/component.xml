@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.0" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.1" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -39,9 +39,8 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="b005f69b4b4fc5aa48bf848091c33d70"/>
-		<file filename="core/bootstrap.compiled.php" md5="823056f179c72a3d3abf84587e599cc1">
-			<class name="Debug"/>
+		<file filename="core/CHANGELOG" md5="5821f45dc0436fb6490a40ca911ceae9"/>
+		<file filename="core/bootstrap.compiled.php" md5="236dcc4ed0f85bcd51b448ce033813a2">
 			<class name="XMLLoader"/>
 			<class name="InstallArchive"/>
 			<class name="InstallArchiveAPI"/>
@@ -110,11 +109,11 @@
 			<interface name="DMI_Backend"/>
 			<interface name="TemplateInterface"/>
 		</file>
-		<file filename="core/bootstrap.php" md5="4623366ad22c907ee3af80287c77fd28"/>
+		<file filename="core/bootstrap.php" md5="81874f90d1956abeee538544bb2eca39"/>
 		<file filename="core/bootstrap_postincludes.php" md5="6be19cb49f5ab39735d4867d116c6daf"/>
-		<file filename="core/bootstrap_predefines.php" md5="a75579b94642f0f4fb7b7540f9909288"/>
-		<file filename="core/bootstrap_preincludes.php" md5="4463ff79cb090c022e279ad39e3a774a"/>
-		<file filename="core/controllers/AdminController.php" md5="8abc43a9770e8fa58556f1ee0b335e07">
+		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
+		<file filename="core/bootstrap_preincludes.php" md5="3dcb640a7ef19f2285d25a2eefe4c787"/>
+		<file filename="core/controllers/AdminController.php" md5="82da30f2f4d0d22c7b957589fed554ea">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/CoreController.php" md5="5036876e64219490e1451347ad063d63">
@@ -132,10 +131,10 @@
 		<file filename="core/controllers/FormController.class.php" md5="aa4a180e9ef996b71dfe5c28766b29c5">
 			<controller name="FormController"/>
 		</file>
-		<file filename="core/controllers/GettingStartedController.class.php" md5="c32e15834efbdd387f37f8c72fc24fea">
+		<file filename="core/controllers/GettingStartedController.class.php" md5="270a7376ba8381bb8dfba5a0f71970b0">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="2b98347df282f56a76f267b16e2f43a3">
+		<file filename="core/controllers/UpdaterController.class.php" md5="3ae9073ac2a46725f611faf2ba1f9516">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
@@ -354,7 +353,7 @@
 		<file filename="core/libs/aws-sdk/utilities/utilities.class.php" md5="7ef08a416322208d5d57cf5d95937512">
 			<class name="CFUtilities"/>
 		</file>
-		<file filename="core/libs/cachecore/Cache.class.php" md5="e378a3919d3eb9ceedb36f5ec46d1398">
+		<file filename="core/libs/cachecore/Cache.class.php" md5="3a6c1308f923f1f9807f43b57a927e93">
 			<class name="Cache"/>
 			<class name="Cache_Exception"/>
 		</file>
@@ -501,21 +500,21 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="a6a27745741d702ca27ccc297d92c235">
+		<file filename="core/libs/core/Component_2_1.php" md5="2465d3c6ac732e167f6ecda58f22a46d">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/Component_2_1.php~" md5="2d0415ad7d971656437322c0a324ce07"/>
-		<file filename="core/libs/core/ConfigHandler.class.php" md5="9df914a465486fc89458b77cbbdac6cc">
+		<file filename="core/libs/core/ConfigHandler.class.php" md5="78088e9905213826b011aa0f8ad386f2">
 			<class name="ConfigHandler"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php~" md5="6d7f6d3d565b1f88c423917405203574"/>
 		<file filename="core/libs/core/Controller.class.php" md5="f584112515b7c712911a1583ffe23fea">
 			<class name="Controller"/>
 		</file>
-		<file filename="core/libs/core/Controller_2_1.class.php" md5="4b4e76fbefc4dd7cdf4c2d9c3d9a2a6d">
+		<file filename="core/libs/core/Controller_2_1.class.php" md5="789549928dfa8773be60a7fb12e17438">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="e1d8e8d544d57a87b9d019d04efea8b1">
+		<file filename="core/libs/core/Core.class.php" md5="2fa5d717e2a6bb5eed4dfa41644ed232">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -529,28 +528,28 @@
 		<file filename="core/libs/core/DB.class.php" md5="9f249559a301b0250318631011c01b02">
 			<class name="DB"/>
 		</file>
-		<file filename="core/libs/core/Debug.class.php" md5="ac233572240b26b43d3c494ff4569cb0">
+		<file filename="core/libs/core/Debug.class.php" md5="e641dbfa7f2a5e70694a786d896dd9b9">
 			<class name="Debug"/>
 		</file>
-		<file filename="core/libs/core/Email.class.php" md5="2f0608c1f1aa4bfcb35a0affa35dacb8">
+		<file filename="core/libs/core/Email.class.php" md5="647f2cb2222a3116bfceb0d038f1f550">
 			<class name="Email"/>
 		</file>
 		<file filename="core/libs/core/FilterForm.class.php" md5="84518c1dabdc5cce3ca716319a61fc84">
 			<class name="FilterForm"/>
 		</file>
 		<file filename="core/libs/core/FilterForm.class.php~" md5="fe131e5ee3a43975627eee058a4bbb45"/>
-		<file filename="core/libs/core/Form.class.php" md5="e9e38682e73379c5f3874a374df31d67">
+		<file filename="core/libs/core/Form.class.php" md5="af60a700e2f672ee2af33f9fa71ed94d">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
 		</file>
 		<file filename="core/libs/core/Form.class.php~" md5="15f1baa931cd24d2a296be3f1933c704"/>
-		<file filename="core/libs/core/HookHandler.class.php" md5="c9e8c39c25703ab5c4d5c0078690c0f4">
+		<file filename="core/libs/core/HookHandler.class.php" md5="ff132aff0651d3714bd342add72a39bd">
 			<class name="HookHandler"/>
 			<class name="Hook"/>
 		</file>
 		<file filename="core/libs/core/HookHandler.class.php~" md5="96680c11f8367a7df64963a74cf6d195"/>
-		<file filename="core/libs/core/ISingleton.interface.php" md5="c2a97e7692c5bc8a985487f9ffbeac25">
+		<file filename="core/libs/core/ISingleton.interface.php" md5="8fd6e9bd9d4695b3caadb029cc81e3a8">
 			<interface name="ISingleton"/>
 		</file>
 		<file filename="core/libs/core/InstallArchive.class.php" md5="d7c2f51ee6ec5a968818e50f632cfc4c">
@@ -563,7 +562,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="6d437a60baf0ab5e503ff333b2b969e7">
+		<file filename="core/libs/core/Model.class.php" md5="6374d68ce00e9954094ee0add06e9647">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -572,21 +571,21 @@
 			<class name="ModelSchemaColumn"/>
 		</file>
 		<file filename="core/libs/core/Model.class.php~" md5="80c365fcbae327f3b76842b81bfbd48f"/>
-		<file filename="core/libs/core/PackageXML.class.php" md5="ce0528597db87201d3842e87c8262fd4">
+		<file filename="core/libs/core/PackageXML.class.php" md5="efb9982eb8a9d38481f0ae42f3bcb957">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="a14bcb97df3b16f51ec5b3b6a716c3e8">
+		<file filename="core/libs/core/PageRequest.class.php" md5="72bc0af4038ee1947397c4aab0d73dcb">
 			<class name="PageRequest"/>
 		</file>
-		<file filename="core/libs/core/RepoXML.class.php" md5="8845eea7a1533a98cd9e636db7147e9c">
+		<file filename="core/libs/core/RepoXML.class.php" md5="598a7f067ea84ea03d02b6ef517c4e3f">
 			<class name="RepoXML"/>
 		</file>
 		<file filename="core/libs/core/SQLBuilder.class.php.DISABLED" md5="47925681d58280bff9c130f449c9ba90"/>
-		<file filename="core/libs/core/Session.class.php" md5="e7ceb93e233943b09454afbff39fba06">
+		<file filename="core/libs/core/Session.class.php" md5="13177c774dd176f4ba7db2cf0f351898">
 			<class name="Session"/>
 		</file>
 		<file filename="core/libs/core/Session.class.php~" md5="e7c5cf0fe47a815ad19da03ee27bbde1"/>
-		<file filename="core/libs/core/Template.class.php" md5="43de16fa99016079e2379d667f9dce83">
+		<file filename="core/libs/core/Template.class.php" md5="a9938fe80bf75eb43a4a4d24caf82f0d">
 			<class name="Template"/>
 		</file>
 		<file filename="core/libs/core/TemplateException.php" md5="2f52b502e657f426effcacc792ce2828">
@@ -595,7 +594,7 @@
 		<file filename="core/libs/core/TemplateInterface.php" md5="c2f2fe78d893ef26920ac87f0109cd0e">
 			<interface name="TemplateInterface"/>
 		</file>
-		<file filename="core/libs/core/TemplatePHTML.php" md5="606e5b38ced22f1513e0b34665b0b462">
+		<file filename="core/libs/core/TemplatePHTML.php" md5="b3929cc6cc8fb22df1fafef6a5627cba">
 			<class name="TemplatePHTML"/>
 		</file>
 		<file filename="core/libs/core/Time.class.php" md5="ae56c336aefe716b5272de4d95f3bc19">
@@ -604,17 +603,17 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="f5dd57992bbecf2382a4ebb249f8a37c">
+		<file filename="core/libs/core/View.class.php" md5="3ba9d400bf31a9104035e493ac4c41ed">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
 		<file filename="core/libs/core/View.class.php~" md5="59ef58afcec744246fd983d97930d627"/>
-		<file filename="core/libs/core/ViewControl.class.php" md5="1e5274fbe1f493517f30b1580026d146">
+		<file filename="core/libs/core/ViewControl.class.php" md5="4fa621d54e53438fbf5fab9f3cd58d1e">
 			<class name="ViewControls"/>
 			<class name="ViewControl"/>
 		</file>
 		<file filename="core/libs/core/ViewControl.class.php~" md5="590385b6189e2aced5f59c379a1d1cbb"/>
-		<file filename="core/libs/core/ViewMeta.class.php" md5="e7e79c3ced202294ed53b7de785fc184">
+		<file filename="core/libs/core/ViewMeta.class.php" md5="afb221f9887be0668d9068d4184ff7d2">
 			<class name="ViewMetas"/>
 			<class name="ViewMeta"/>
 			<class name="ViewMeta_description"/>
@@ -628,21 +627,25 @@
 			<class name="Widget"/>
 			<class name="WidgetException"/>
 		</file>
-		<file filename="core/libs/core/Widget_2_1.class.php" md5="f19adc3b0f3196942bef4e214e1834c8">
+		<file filename="core/libs/core/Widget_2_1.class.php" md5="7c6b9f4b89f81245ad7d211d4a17e5ab">
 			<class name="Widget_2_1"/>
 			<class name="WidgetRequest"/>
 		</file>
-		<file filename="core/libs/core/XMLLoader.class.php" md5="ebc7d04b3765ee975d40bff9eee7317d">
+		<file filename="core/libs/core/XMLLoader.class.php" md5="ac8978f9804f0aaec4ef0a92c7b330ea">
 			<class name="XMLLoader"/>
 		</file>
-		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="8e3cdf866c04d38b34d206684c16a82c">
+		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="b18792bcce6ff5d68c9ec9ec9dfc5aaf">
 			<class name="Core\Utilities\Changelog\Entry"/>
 		</file>
-		<file filename="core/libs/core/utilities/changelog/Parser.php" md5="3ada8da2618ee7033631abcddaec3b18">
+		<file filename="core/libs/core/utilities/changelog/Parser.php" md5="5dda89b65b6248c08f47941b86545ebb">
 			<class name="Core\Utilities\Changelog\Parser"/>
 		</file>
-		<file filename="core/libs/core/utilities/changelog/Section.php" md5="e1f7348e24cf898fa3e4d945ed2eb160">
+		<file filename="core/libs/core/utilities/changelog/Section.php" md5="ac16209f08e3cf132465b31595fa7fea">
 			<class name="Core\Utilities\Changelog\Section"/>
+		</file>
+		<file filename="core/libs/core/utilities/logger/functions.php" md5="616d3b7797927dc6e455cac04cffed11"/>
+		<file filename="core/libs/core/utilities/profiler/Profiler.php" md5="d7918189d7535368101053888a68279c">
+			<class name="Core\Utilities\Profiler\Profiler"/>
 		</file>
 		<file filename="core/libs/datamodel/DMI.class.php" md5="221e92ef728640eb1782da22cb5512ba">
 			<class name="DMI"/>
@@ -1446,7 +1449,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="f499674e4bffd88ea0a0e684881f08d8">
+		<file filename="core/models/PageModel.class.php" md5="80ff24202cbfca7666be67469d7640cc">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="f9c51e50c963b6041526bf55f6234f26">
@@ -1493,7 +1496,7 @@
 		</file>
 		<file filename="htaccess.ant" md5="0bf209cd00d6a90d884a584d28445d5f"/>
 		<file filename="htaccess.ex" md5="6e335eb0574ab61fca2dea4c2517a372"/>
-		<file filename="index.php" md5="d933919c8752ce5ebbcb3bb6a063d4f9"/>
+		<file filename="index.php" md5="6d087b205ab2a4bda77c3a7eab7ca1c3"/>
 		<file filename="install/InstallPage.class.php" md5="1a9af37ca611d67f729cec53c4cd624a">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1721,6 +1724,7 @@
 		<upgrade from="2.4.7b7" to="2.4.7b8"/>
 		<upgrade from="2.4.7b8" to="2.4.7b9"/>
 		<upgrade from="2.4.7b9" to="2.5.0"/>
+		<upgrade from="2.5.0" to="2.5.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -2,7 +2,7 @@
 /**
  * Systems for the control widgets used for page-level operations and inline operations.
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @since 2.1.2
  * @copyright Copyright (C) 2009-2012  Charlie Powell
@@ -270,7 +270,7 @@ class ViewControls implements Iterator, ArrayAccess {
  * These are usually tiny icons or snippets of text that provide a bit of inline administrative
  * functionality for pages.
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @since 2.1.2
  * @copyright Copyright (C) 2009-2012  Charlie Powell

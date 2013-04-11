@@ -3,7 +3,7 @@
  * Core component system, responsible for reading and parsing the component.xml,
  * saving it, and installing all components on the system.
  *
- * @package Core Plus\Core
+ * @package Core
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
@@ -206,7 +206,7 @@ class Component_2_1 {
 		$this->_name    = $this->_xmlloader->getRootDOM()->getAttribute('name');
 		$this->_version = $this->_xmlloader->getRootDOM()->getAttribute("version");
 
-		Debug::Write('Loading metadata for component [' . $this->_name . ']');
+		Core\Utilities\Logger\write_debug('Loading metadata for component [' . $this->_name . ']');
 
 		// Load the database information, if there is any.
 		$dat = ComponentFactory::_LookupComponentData($this->_name);
@@ -418,7 +418,7 @@ class Component_2_1 {
 		if(!$this->isEnabled()) return false;
 		if($this->_filesloaded) return true;
 
-		Debug::Write('Loading files for component [' . $this->getName() . ']');
+		Core\Utilities\Logger\write_debug('Loading files for component [' . $this->getName() . ']');
 
 		$dir = $this->getBaseDir();
 
@@ -456,7 +456,7 @@ class Component_2_1 {
 		}
 
 		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS){
-			Debug::Write('Auto-installing assets for component [' . $this->getName() . ']');
+			Core\Utilities\Logger\write_debug('Auto-installing assets for component [' . $this->getName() . ']');
 			$this->_installAssets();
 		}
 
@@ -1373,6 +1373,8 @@ class Component_2_1 {
 		// Keep track of if this changed anything.
 		$changes = array();
 
+		Core\Utilities\Logger\write_debug('Installing configs for ' . $this->getName());
+
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('configs');
 		//$prefix = $node->getAttribute('prefix');
@@ -1430,6 +1432,8 @@ class Component_2_1 {
 
 		// Keep track of if this changed anything.
 		$changes = array();
+
+		Core\Utilities\Logger\write_debug('Installing User Configs for ' . $this->getName());
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('userconfigs');
@@ -1496,6 +1500,8 @@ class Component_2_1 {
 	private function _parsePages() {
 		$changes = array();
 
+		Core\Utilities\Logger\write_debug('Installing pages for ' . $this->getName());
+
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('pages');
 		//$prefix = $node->getAttribute('prefix');
@@ -1540,6 +1546,8 @@ class Component_2_1 {
 	 */
 	private function _parseWidgets() {
 		$changes = array();
+
+		Core\Utilities\Logger\write_debug('Installing Widgets for ' . $this->getName());
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('widgets');
@@ -1602,6 +1610,7 @@ class Component_2_1 {
 
 		$changes = array();
 
+		Core\Utilities\Logger\write_debug('Installing database schema for ' . $this->getName());
 
 		// Get the table structure as it exists in the database first, this will be the comparison point.
 		$classes = $this->getClassList();
@@ -1727,6 +1736,8 @@ class Component_2_1 {
 		$assetbase = CDN_LOCAL_ASSETDIR;
 		$theme     = ConfigHandler::Get('/theme/selected');
 		$changes   = array();
+
+		Core\Utilities\Logger\write_debug('Installing assets for ' . $this->getName());
 
 		foreach ($this->_xmlloader->getElements('/assets/file') as $node) {
 			$b = $this->getBaseDir();

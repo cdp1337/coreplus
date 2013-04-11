@@ -2,7 +2,7 @@
 /**
  * Core class of this entire system.
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -256,21 +256,6 @@ class Core implements ISingleton {
 		//var_dump($this->_componentobj); die();
 	}
 
-	private function _addProfileTime($event, $microtime = null) {
-		// If no microtime requested, grab the current.
-		if ($microtime === null) $microtime = microtime(true);
-		// Find the differences between the first and now.
-		$time = (sizeof($this->_profiletimes)) ? ($microtime - $this->_profiletimes[0]['microtime']) : 0;
-
-		// And record!
-		$this->_profiletimes[] = array(
-			'event'     => $event,
-			'microtime' => $microtime,
-			'timetotal' => $time
-		);
-	}
-
-
 	private function _isInstalled() {
 		//var_dump($this->_componentobj, $this->_componentobj->getVersion()); die();
 		return ($this->_componentobj->getVersionInstalled() === false) ? false : true;
@@ -290,7 +275,8 @@ class Core implements ISingleton {
 
 		$this->_components = array();
 		$this->_libraries  = array();
-		$tempcomponents    = array();
+		$tempcomponents    = false;
+		Core\Utilities\Logger\write_debug('Starting loading of component metadata');
 
 		// If the site is in DEVELOPMENT mode, component caching would probably be a bad idea; ie: the developer probably wants
 		// those component files loaded everytime.
@@ -303,7 +289,29 @@ class Core implements ISingleton {
 
 		// Is there a cache of elements available?  This is a primary system cache that greatly increases performance,
 		// since it will no longer have to run through each component.xml file to register each one.
-		if(!$enablecache || ($cachedcomponents = Cache::GetSystemCache()->get('core-components', (3600 * 24))) === false){
+		if($enablecache){
+			Core\Utilities\Logger\write_debug(' * Checking core-components cache');
+			// Try to load up the cached components and check them first.
+			$tempcomponents = Cache::GetSystemCache()->get('core-components', (3600 * 24));
+
+			if($tempcomponents !== false){
+				// Cached components only need to be loaded.
+				foreach ($tempcomponents as $c) {
+					try {
+						$c->load();
+					}
+					catch (Exception $e) {
+						// Don't completely bail out here, just invalidate the cache and continue on.
+						Cache::GetSystemCache()->delete('core-components');
+						$tempcomponents = false;
+					}
+				}
+			}
+		}
+
+
+		if(!$enablecache || $tempcomponents == false){
+			Core\Utilities\Logger\write_debug(' * Scanning for component.xml files manually');
 			// Core is first, (obviously)
 			$tempcomponents['core'] = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
 
@@ -365,16 +373,14 @@ class Core implements ISingleton {
 
 			// Cache this list!
 			if($enablecache){
-				Cache::GetSystemCache()->set('core-components', $tempcomponents);
+				Core\Utilities\Logger\write_debug(' * Caching core-components for next pass');
+				Cache::GetSystemCache()->set('core-components', $tempcomponents, (3600 * 24));
 			}
-		}
-		else{
-			// Yay, cache is available.
-			$tempcomponents = $cachedcomponents;
 		}
 
 		$list = $tempcomponents;
 
+		Core\Utilities\Logger\write_debug(' * Component metadata loaded, starting registration');
 
 		// The core component at a minimum needs to be loaded and registered.
 //		$this->_registerComponent($list['core']);
@@ -681,23 +687,6 @@ class Core implements ISingleton {
 		else return 'sm';
 	}
 
-
-	public static function AddProfileTime($event, $microtime = null) {
-		self::Singleton()->_addProfileTime($event, $microtime);
-	}
-
-	/**
-	 * Get the number of seconds that have passed between the start of the page execution and now.
-	 * @return int|mixed
-	 */
-	public static function GetProfileTimeTotal() {
-		// Find the differences between the first and now.
-		return (sizeof(self::Singleton()->_profiletimes)) ? (microtime(true) - self::Singleton()->_profiletimes[0]['microtime']) : 0;
-	}
-
-	public static function GetProfileTimes() {
-		return self::Singleton()->_profiletimes;
-	}
 
 	public static function FormatProfileTime($in) {
 		// Because the incoming time is in whole seconds.

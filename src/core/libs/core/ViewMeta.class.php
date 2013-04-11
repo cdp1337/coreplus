@@ -2,7 +2,7 @@
 /**
  * Systems for the meta data and tags on Views.
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @since 2.4.0
  * @copyright Copyright (C) 2009-2012  Charlie Powell
@@ -243,7 +243,6 @@ class ViewMetas implements Iterator, ArrayAccess {
  * These are usually tiny icons or snippets of text that provide a bit of inline administrative
  * functionality for pages.
  *
- * @package Core Plus\Core
  * @author Charlie Powell <charlie@eval.bz>
  * @since 2.1.2
  * @copyright Copyright (C) 2009-2012  Charlie Powell

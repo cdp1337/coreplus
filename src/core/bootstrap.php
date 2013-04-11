@@ -5,7 +5,7 @@
  * This file is the core of the application; it's responsible for setting up
  *  all the necessary paths, settings and includes.
  *
- * @package Core Plus\Core
+ * @package Core
  * @since 0.1
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
@@ -44,20 +44,20 @@ if (PHP_VERSION < '5.4.0') {
 umask(0);
 
 // Start a timer for performance tuning purposes.
-// This will be saved into the Core once that's available.
-$start_time = microtime(true);
+require_once(__DIR__ . '/libs/core/utilities/profiler/Profiler.php');
+require_once(__DIR__ . '/libs/core/utilities/logger/functions.php');
+$profiler = new Core\Utilities\Profiler\Profiler('Core Plus');
 
 // gogo i18n!
 mb_internal_encoding('UTF-8');
 
 /********************* Initial system defines *********************************/
 require_once(__DIR__ . '/bootstrap_predefines.php');
-
-$predefines_time = microtime(true);
+Core\Utilities\Logger\write_debug('Starting Application');
 
 
 /********************** Critical file inclusions ******************************/
-
+Core\Utilities\Logger\write_debug('Loading pre-include files');
 require_once(__DIR__ . '/bootstrap_preincludes.php');
 
 
@@ -68,7 +68,7 @@ require_once(__DIR__ . '/bootstrap_preincludes.php');
 
 
 // Load the hook handler, which will allow cross-library/module communication abstractly.
-Debug::Write('Loading hook handler');
+Core\Utilities\Logger\write_debug('Loading hook handler');
 require_once(ROOT_PDIR . "core/libs/core/HookHandler.class.php");
 
 
@@ -76,14 +76,14 @@ require_once(ROOT_PDIR . "core/libs/core/HookHandler.class.php");
 $preincludes_time = microtime(true);
 
 // And start the core!
-Debug::Write('Loading core system');
+Core\Utilities\Logger\write_debug('Loading core system');
 //require_once(ROOT_PDIR . 'core/libs/core/InstallTask.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
 //Core::Singleton();
 
 
 // Configuration handler, for loading any config variable/constant from XML data or the database.
-Debug::Write('Loading configs');
+Core\Utilities\Logger\write_debug('Loading configs');
 require_once(ROOT_PDIR . "core/libs/core/ConfigHandler.class.php");
 ConfigHandler::Singleton();
 
@@ -416,12 +416,6 @@ $maindefines_time = microtime(true);
 
 /**************************  START EXECUTION *****************************/
 
-// Record the times thus far
-Core::AddProfileTime('application_start', $start_time);
-Core::AddProfileTime('predefines_complete', $predefines_time);
-Core::AddProfileTime('preincludes_complete', $preincludes_time);
-Core::AddProfileTime('maindefines_complete', $maindefines_time);
-
 // Datamodel, GOGO!
 require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
 try {
@@ -531,7 +525,7 @@ if (EXEC_MODE == 'WEB') {
 //ThemeHandler::Load();
 
 HookHandler::DispatchHook('/core/components/loaded');
-Core::AddProfileTime('components_load_complete');
+$profiler->record('Components Load Complete');
 
 /**
  * All the post includes, these are here for performance reasons, (they can get compiled into the compiled bootstrap)
@@ -539,4 +533,4 @@ Core::AddProfileTime('components_load_complete');
 require_once(__DIR__ . '/bootstrap_postincludes.php');
 
 HookHandler::DispatchHook('/core/components/ready');
-Core::AddProfileTime('components_ready_complete');
+$profiler->record('Components Ready Complete');

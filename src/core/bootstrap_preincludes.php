@@ -5,7 +5,7 @@
  * This file is the core of the application; it's responsible for setting up
  *  all the necessary paths, settings and includes.
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -24,7 +24,6 @@
  */
 
 // These are generally files required for getting the rest of the system loadable.
-require_once(ROOT_PDIR . 'core/libs/core/Debug.class.php');
 require_once(ROOT_PDIR . "core/libs/core/ISingleton.interface.php");
 //require_once("core/classes/IDatabaseClass.interface.php");
 require_once(ROOT_PDIR . 'core/libs/core/XMLLoader.class.php');

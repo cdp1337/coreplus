@@ -2,7 +2,7 @@
 /**
  * [PAGE DESCRIPTION HERE]
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -51,7 +51,7 @@ class HookHandler implements ISingleton {
 	 */
 	public static function AttachToHook($hookName, $callFunction) {
 		$hookName = strtolower($hookName); // Case insensitive will prevent errors later on.
-		Debug::Write('Registering function ' . $callFunction . ' to hook ' . $hookName);
+		Core\Utilities\Logger\write_debug('Registering function ' . $callFunction . ' to hook ' . $hookName);
 		//if(!isset(HookHandler::$RegisteredHooks[$hookName])) HookHandler::$RegisteredHooks[$hookName] = array();
 		if (!isset(HookHandler::$RegisteredHooks[$hookName])) {
 
@@ -77,7 +77,7 @@ class HookHandler implements ISingleton {
 	public static function RegisterHook(Hook $hook) {
 		$name = $hook->getName();
 
-		Debug::Write('Registering new hook [' . $name . ']');
+		Core\Utilities\Logger\write_debug('Registering new hook [' . $name . ']');
 
 		if(isset(HookHandler::$RegisteredHooks[$name])){
 			trigger_error('Registering hook that is already registered [' . $name . ']', E_USER_NOTICE);
@@ -111,8 +111,7 @@ class HookHandler implements ISingleton {
 	 */
 	public static function DispatchHook($hookName, $args = null) {
 		$hookName = strtolower($hookName); // Case insensitive will prevent errors later on.
-		Debug::Write('Dispatching hook ' . $hookName);
-		Core::AddProfileTime('Calling hook ' . $hookName);
+		Core\Utilities\Logger\write_debug('Dispatching hook ' . $hookName);
 		//echo "Calling hook $hookName<br>";
 		//var_dump(HookHandler::$RegisteredHooks[$hookName]);
 		if (!isset(HookHandler::$RegisteredHooks[$hookName])) {
@@ -127,7 +126,7 @@ class HookHandler implements ISingleton {
 		$hook   = HookHandler::$RegisteredHooks[$hookName];
 		$result = call_user_func_array(array(&$hook, 'dispatch'), $args);
 
-		Core::AddProfileTime('Called hook ' . $hookName);
+		Core\Utilities\Logger\write_debug('Dispatched hook ' . $hookName);
 		return $result;
 	}
 

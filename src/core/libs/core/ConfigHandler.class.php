@@ -8,7 +8,7 @@
  * The class that handles all configuration getting and setting.
  * Can handle calls to XML config files and DB configuration `configs` table.
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -171,7 +171,7 @@ class ConfigHandler implements ISingleton {
 	}
 
 	private function _loadDB(){
-		Debug::Write('Config data loading from database');
+		Core\Utilities\Logger\write_debug('Config data loading from database');
 		// Clear out the cache, (if it has any)
 		$this->_clearCache();
 

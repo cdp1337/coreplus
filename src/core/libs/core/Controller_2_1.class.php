@@ -2,7 +2,7 @@
 /**
  * Main Controller parent for the 2.1 API version.
  *
- * @package Core Plus\Core
+ * @package Core
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell

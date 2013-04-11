@@ -87,7 +87,7 @@ class Cache{
 		$c = $this->_factory($key, $expires);
 
 		self::$_KeyCache[$key] = $value;
-		
+
 		// Try to create and if that fails try an update.
 		if($c->create($value)) return true;
 		elseif($c->update($value)) return true;

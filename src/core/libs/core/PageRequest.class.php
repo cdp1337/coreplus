@@ -2,7 +2,7 @@
 /**
  * The main object responsible for setting up the page request and getting the data corresponding to it.
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @since 1.9
  * @copyright Copyright (C) 2009-2012  Charlie Powell

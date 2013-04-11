@@ -561,12 +561,37 @@ class PageModel extends Model {
 	}
 
 	public function getResolvedURL() {
+
+		// If enterprise // multisite mode is enabled and this page model is NOT the current site...
+		// I need to lookup THAT site's root url and use that instead.
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			if($this->get('site') == -1){
+				// "-1" pages exist on every site as a relative page.
+				$base = ROOT_URL;
+			}
+			elseif($this->get('site') != MultiSiteHelper::GetCurrentSiteID()){
+				// The site isn't the same as the current.... I need to do a little bit of work.
+				// Please note, this only happens about 0.5% of the time.
+				// primarily in the sitemap plugin :/
+				$site = MultiSiteModel::Construct($this->get('site'));
+				$base = 'http://' . $site->get('url') . '/';
+			}
+			else{
+				// Who cares in this case, just use the root url.
+				$base = ROOT_URL;
+			}
+		}
+		else{
+			// Enterprise/MM isn't enabled... no biggie!
+			$base = ROOT_URL;
+		}
+
 		if ($this->exists()) {
-			return ROOT_URL . substr($this->get('rewriteurl'), 1);
+			return $base . substr($this->get('rewriteurl'), 1);
 		}
 		else {
 			$s = self::SplitBaseURL($this->get('baseurl'));
-			return ROOT_URL . substr($s['baseurl'], 1);
+			return $base . substr($s['baseurl'], 1);
 		}
 	}
 

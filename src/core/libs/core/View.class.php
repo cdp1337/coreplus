@@ -2,7 +2,7 @@
 /**
  * Provides all elements required to connect the Controller's data and logic back to the browser in the necessary format.
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @since 1.9
  * @copyright Copyright (C) 2009-2012  Charlie Powell
@@ -661,9 +661,10 @@ class View {
 					$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
 					//$debug .= "Number of queries: " . DB::Singleton()->counter . "\n";
 					$debug .= "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
-					$debug .= "Total processing time: " . round(Core::GetProfileTimeTotal(), 4) * 1000 . ' ms' . "\n";
+					$profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
+					$debug .= "Total processing time: " . round($profiler->getTime(), 4) * 1000 . ' ms' . "\n";
 					if (FULL_DEBUG) {
-						foreach (Core::GetProfileTimes() as $t) {
+						foreach ($profiler->getEvents() as $t) {
 							$debug .= "[" . Core::FormatProfileTime($t['timetotal']) . "] - " . $t['event'] . "\n";
 						}
 					}

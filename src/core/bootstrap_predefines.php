@@ -5,7 +5,7 @@
  * This file is the core of the application; it's responsible for setting up
  *  all the necessary paths, settings and includes.
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>

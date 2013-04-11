@@ -8,7 +8,7 @@
  * Javascript template files are a perfect example; they tend to use { ... } as delimiters too, so trying to escape those
  * in a smarty template would be insane.
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @since 2.2.0
  * @copyright Copyright (C) 2009-2012  Charlie Powell
