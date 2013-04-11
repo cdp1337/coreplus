@@ -1343,9 +1343,6 @@ function manage_changelog($file, $name, $version){
 
 	// Write this back out to that file :)
 	$parser->save();
-
-	$htmlversion = dirname($file) . '/changelog.html';
-	$parser->saveHTML($htmlversion);
 }
 
 /**
