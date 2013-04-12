@@ -685,7 +685,7 @@ function process_component($component, $forcerelease = false){
 
 	// The core has a "few" extra ignores to it...
 	if($component == 'core'){
-		$it->addIgnores('components/', 'config/configuration.xml', 'dropins/', 'exports/', 'nbproject/', 'themes/', 'utilities/', '.htaccess', 'gnupg');
+		$it->addIgnores('components/', 'config/configuration.xml', 'dropins/', 'exports/', 'nbproject/', 'themes/', 'utilities/', '.htaccess', 'gnupg', 'core/bootstrap.compiled.php');
 		if(CDN_LOCAL_ASSETDIR) $it->addIgnore(CDN_LOCAL_ASSETDIR);
 		if(CDN_LOCAL_PUBLICDIR) $it->addIgnore(CDN_LOCAL_PUBLICDIR);
 		if(strpos(TMP_DIR_WEB, ROOT_PDIR) === 0) $it->addIgnore(TMP_DIR_WEB);
@@ -1009,11 +1009,11 @@ EOD;
 function process_theme($theme, $forcerelease = false){
 
 	// Since "Themes" are not enabled for CLI by default, I need to manually include that file.
-	require_once(ROOT_PDIR . 'components/theme/libs/Theme.class.php');
+	require_once(ROOT_PDIR . 'components/theme/libs/Theme/Theme.php');
 
 	global $packagername, $packageremail, $opts;
 
-	$t = new Theme($theme);
+	$t = new Theme\Theme($theme);
 	$t->load();
 
 	$version = $t->getVersion();
