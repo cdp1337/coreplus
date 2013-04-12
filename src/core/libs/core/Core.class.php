@@ -1098,7 +1098,18 @@ class Core implements ISingleton {
 	 * @param int $depth The amount of pages back to go
 	 */
 	static public function GoBack($depth=2) {
-		Core::Redirect(self::GetHistory($depth));
+		$hist = self::GetHistory($depth);
+
+		if($depth == 1 && CUR_CALL == $hist){
+			// If the user requested the last page, but the last page is this page...
+			// go back to the page before that!
+			// This can happen commonly on form submissions.
+			// You display a form on page X, submit it, and request to go back,
+			// but simply dsiplaying the same page should be done with reload.
+			$hist = self::GetHistory(2);
+		}
+
+		Core::Redirect($hist);
 	}
 
 	/**
@@ -1198,6 +1209,10 @@ class Core implements ISingleton {
 		// If it's an ajax or json request, don't record that either!
 		if($request->isAjax()) return;
 		if($request->isJSON()) return;
+
+		// If it's an error... don't record either.
+		if($view->error != View::ERROR_NOERROR) return;
+
 
 		if (!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
 

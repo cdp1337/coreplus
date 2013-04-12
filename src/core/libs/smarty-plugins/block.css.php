@@ -43,6 +43,20 @@ function smarty_block_css($params, $innercontent, $template, &$repeat){
 
 	// Standard include from an external file.
 	if($href !== null){
+
+		// If optional is set, then look up the data to see if it's set.
+		if(isset($params['optional']) && $params['optional']){
+			$file = $template->template_resource;
+			// Trim off the ROOT directory.
+			$file = substr($file, strlen(ROOT_PDIR));
+
+			// Look up and see if this css is requested to be loaded by the user.
+			$model = TemplateCssModel::Construct($file, $href);
+			$enabled = $model->exists() ? $model->get('enabled') : (isset($params['default']) ? $params['default'] : 0);
+
+			if(!$enabled) return;
+		}
+
 		CurrentPage::AddStylesheet($href, $media);
 	}
 	// Styles defined inline, fine as well.  The styles will be displayed in the head.

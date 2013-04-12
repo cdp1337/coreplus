@@ -1,6 +1,8 @@
 Core Plus 2.5.1
 
 	* [Bug] Set the smarty "mail" command to require the Core mail javascript.
+	* [Bug] PageModel::getResolvedURL now can render cross-site links when in enterprise/multisite mode.
+	* [Bug] Make sure not to record the navigation for 404 pages.
 	* [Feature] Added support for Model::ATT_TYPE_UUID_FK and Model::ATT_TYPE_ID_FK. These are currently
 	  just helper constants so I don't have to remember how many characters a UUID is.
 	* [Feature] New method: FilterForm::getTotalCount; just returns the total if it's set.
@@ -15,6 +17,7 @@ Core Plus 2.5.1
 	* [Feature] Added the changelog generation to the full build.
 	* [Feature] Added additional debugging logs throughout the core code to better troubleshoot core
 	  issues.
+	* [Feature] New support for optional CSS files in template files.
 	* Display view errors when in development mode along with their backtrace.
 	* Minor fix in the {a confirm} usage; properly escaping single and double quotes now.
 	* Organizing phpdoc to build better documentation.
@@ -22,7 +25,10 @@ Core Plus 2.5.1
 	* Migrated Core::*Profile to Core\Utilities\Profiler
 	* Organized the core-cache logic a little in hopes of alleviating a strange bug that popped up on one
 	  site.
-	* PageModel::getResolvedURL now can render cross-site links when in enterprise/multisite mode.
+	* Overhauled the template system entirelly.  Template is now a factory-only class and the specific
+	  rendering engines are now polled automatically based on the file extension.
+	* Changed the Core::GoBack method to ignore the same page that the user is currently on.  This allows
+	  "1" to be used on a POST page as if it were the original page load.
 
 Core Plus 2.5.0
 

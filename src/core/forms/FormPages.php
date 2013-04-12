@@ -58,8 +58,7 @@ class FormPagePageSelectInput extends FormSelectInput{
 
 		$matches = array();
 
-		$t = new Template();
-		foreach($t->getTemplateDir() as $d){
+		foreach(\Core\Templates\Template::GetPaths() as $d){
 			if(is_dir($d . $tmpname)){
 				// Yay, sift through that and get the files!
 				$dir = new Directory_local_backend($d . $tmpname);

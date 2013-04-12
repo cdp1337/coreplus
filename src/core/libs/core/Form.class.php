@@ -154,10 +154,10 @@ class FormGroup {
 		// Groups may not have a template... if so just render the children directly.
 		if (!$file) return $out;
 
-		$tpl = new Template();
+		$tpl = \Core\Templates\Template::Factory($file);
 		$tpl->assign('group', $this);
 		$tpl->assign('elements', $out);
-		return $tpl->fetch($file);
+		return $tpl->fetch();
 	}
 
 	/**
@@ -487,11 +487,11 @@ class FormElement {
 
 		$file = $this->getTemplateName();
 
-		$tpl = new Template();
+		$tpl = \Core\Templates\Template::Factory($file);
 
 		$tpl->assign('element', $this);
 
-		return $tpl->fetch($file);
+		return $tpl->fetch();
 	}
 
 	/**
@@ -758,7 +758,7 @@ class Form extends FormGroup {
 			}
 		}
 
-		$tpl = new Template();
+		$tpl = \Core\Templates\Template::Factory('forms/form.tpl');
 		$tpl->assign('group', $this);
 		if ($part === null || $part == 'body') {
 			$els = '';

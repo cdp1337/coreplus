@@ -361,12 +361,12 @@ class FilterForm {
 		}
 
 
-		$tpl = new Template();
+		$tpl = \Core\Templates\Template::Factory('forms/filters-pagination.tpl');
 		$tpl->assign('page_current', $currentpage);
 		$tpl->assign('page_max', $maxpages);
 		$tpl->assign('display_min', $displaymin);
 		$tpl->assign('display_max', $displaymax);
-		return $tpl->fetch('forms/filters-pagination.tpl');
+		return $tpl->fetch();
 	}
 
 	/**
@@ -601,13 +601,13 @@ class FilterForm {
 	private function _render($readonly = false){
 		$filterset = $this->hasSet();
 
-		$tpl = new Template();
+		$tpl = \Core\Templates\Template::Factory('forms/filters.tpl');
 		$tpl->assign('filtersset', $filterset);
 		$tpl->assign('elements', $this->_elements);
 		$tpl->assign('hassort', $this->hassort);
 		$tpl->assign('sortkey', $this->getSortKey());
 		$tpl->assign('sortdir', $this->getSortDirection());
 		$tpl->assign('readonly', $readonly);
-		return $tpl->fetch('forms/filters.tpl');
+		return $tpl->fetch();
 	}
 }

@@ -58,7 +58,7 @@ class Email {
 	 */
 	public function getTemplate() {
 		if (!$this->_template) {
-			$this->_template = new Template();
+			$this->_template = \Core\Templates\Template::Factory($this->templatename);
 			//$this->_template->setBaseURL($this->baseurl);
 		}
 

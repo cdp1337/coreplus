@@ -291,12 +291,12 @@ class View {
 
 	/**
 	 *
-	 * @return Template
+	 * @return Core\Templates\Template
 	 */
 	public function getTemplate() {
 		if (!$this->_template) {
-			$this->_template = new Template();
-			$this->_template->setBaseURL($this->baseurl);
+			$this->_template = \Core\Templates\Template::Factory($this->templatename);
+			//$this->_template->setBaseURL($this->baseurl);
 		}
 
 		return $this->_template;
@@ -305,7 +305,7 @@ class View {
 	/**
 	 * Override a template, useful for forcing a different template type for this view.
 	 *
-	 * @param $template TemplateInterface
+	 * @param $template Core\Templates\TemplateInterface
 	 */
 	public function overrideTemplate($template){
 		if(!is_a($template, 'TemplateInterface')){
@@ -386,7 +386,7 @@ class View {
 					$this->mastertemplate = false;
 				}
 				else {
-					$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'xml.tpl', $tmpl));
+					$ctemp = Core\Templates\Template::ResolveFile(preg_replace('/tpl$/i', 'xml.tpl', $tmpl));
 					if ($ctemp) {
 						$tmpl                 = $ctemp;
 						$this->mastertemplate = false;
@@ -402,7 +402,7 @@ class View {
 					$this->mastertemplate = false;
 				}
 				else{
-					$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'ics.tpl', $tmpl));
+					$ctemp = Core\Templates\Template::ResolveFile(preg_replace('/tpl$/i', 'ics.tpl', $tmpl));
 					if($ctemp){
 						$tmpl = $ctemp;
 						$this->mastertemplate = false;
@@ -423,7 +423,7 @@ class View {
 					$tmpl                 = false;
 					return json_encode($this->jsondata);
 				}
-				$ctemp = Template::ResolveFile(preg_replace('/tpl$/i', 'json.tpl', $tmpl));
+				$ctemp = Core\Templates\Template::ResolveFile(preg_replace('/tpl$/i', 'json.tpl', $tmpl));
 				if ($ctemp) {
 					$tmpl                 = $ctemp;
 					$this->mastertemplate = false;
@@ -469,7 +469,7 @@ class View {
 				break;
 			case View::MODE_WIDGET:
 				// This template can be a couple things.
-				$tn = Template::ResolveFile(preg_replace(':^[/]{0,1}pages/:', '/widgets/', $tmpl));
+				$tn = Core\Templates\Template::ResolveFile(preg_replace(':^[/]{0,1}pages/:', '/widgets/', $tmpl));
 				if (!$tn) $tn = $tmpl;
 
 				$t = $this->getTemplate();
@@ -545,7 +545,7 @@ class View {
 		}
 
 		// Whee!
-		//var_dump($this->templatename, Template::ResolveFile($this->templatename));
+		//var_dump($this->templatename, Core\Templates\Template::ResolveFile($this->templatename));
 		// Content types take priority on controlling the master template.
 		if ($this->contenttype == View::CTYPE_JSON) {
 			$mastertpl = false;
@@ -571,7 +571,7 @@ class View {
 					$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/skins/' . $this->mastertemplate;
 					break;
 				case View::MODE_WIDGET:
-					$mastertpl = Template::ResolveFile('widgetcontainers/' . $this->mastertemplate);
+					$mastertpl = Core\Templates\Template::ResolveFile('widgetcontainers/' . $this->mastertemplate);
 					break;
 			}
 		}
@@ -580,8 +580,9 @@ class View {
 		if (!$mastertpl) return $body;
 
 
-		$template = new Template();
-		$template->setBaseURL('/');
+		$template = \Core\Templates\Template::Factory($mastertpl);
+		//$template = new Core\Templates\Template();
+		//$template->setBaseURL('/');
 		// Page-level views have some special variables.
 		if ($this->mode == View::MODE_PAGE) {
 			$template->assign('breadcrumbs', $this->getBreadcrumbs());
@@ -609,7 +610,7 @@ class View {
 		$template->assign('body', $body);
 
 		try{
-			$data = $template->fetch($mastertpl);
+			$data = $template->fetch();
 		}
 		catch(SmartyException $e){
 			$this->error = View::ERROR_SERVERERROR;

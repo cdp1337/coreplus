@@ -26,7 +26,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
-class TemplatePHTML implements TemplateInterface {
+
+namespace Core\Templates\Backends;
+
+use Core\Templates;
+
+class PHTML implements Templates\TemplateInterface {
 	private $_scope = array();
 
 	/**
@@ -107,5 +112,25 @@ class TemplatePHTML implements TemplateInterface {
 	 */
 	public function getVariable($varname) {
 		return $this->getTemplateVars($varname);
+	}
+
+	/**
+	 * Set a template filename to be remembered if fetch or render are called with null parameters.
+	 *
+	 * @param string $template Filename to remember for this template.
+	 *
+	 * @return void
+	 */
+	public function setFilename($template) {
+		// TODO: Implement setFilename() method.
+	}
+
+	/**
+	 * Scan through this template file and see if it has optional stylesheets that the admin can select to enable.
+	 *
+	 * @return boolean
+	 */
+	public function hasOptionalStylesheets() {
+		// TODO: Implement hasOptionalStylesheets() method.
 	}
 }
