@@ -1097,7 +1097,7 @@ class Core implements ISingleton {
 	 *
 	 * @param int $depth The amount of pages back to go
 	 */
-	static public function GoBack($depth=2) {
+	static public function GoBack($depth=1) {
 		$hist = self::GetHistory($depth);
 
 		if($depth == 1 && CUR_CALL == $hist){
