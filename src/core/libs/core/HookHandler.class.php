@@ -140,6 +140,17 @@ class HookHandler implements ISingleton {
 	}
 
 	/**
+	 * Get the hook by name
+	 *
+	 * @param $hookname
+	 *
+	 * @return null|Hook
+	 */
+	public static function GetHook($hookname){
+		return isset(self::$RegisteredHooks[$hookname]) ? self::$RegisteredHooks[$hookname] : null;
+	}
+
+	/**
 	 * Just a simple debugging function to print out a list of the currently
 	 * registered hooks on the system.
 	 */
@@ -226,11 +237,7 @@ class Hook {
 	 * @return bool
 	 */
 	public function dispatch($args = null) {
-		//echo "Dispatching event " . $this->getName() . "<br/>";
-		//$args = func_get_args();
-		//array_shift($args); // Drop the hookName off of the arguments.
-		//echo '<pre>'; var_dump($args); echo '</pre>';
-
+		// This sets up the original variable and the default return status.
 		switch($this->returnType){
 			case self::RETURN_TYPE_BOOL:
 				// Default status for void, either no calls made or all returned successfully.
@@ -247,7 +254,7 @@ class Hook {
 			// If the type is set to something and the call type is that
 			// OR
 			// The call type is not set/null.
-			$result = call_user_func_array($call['call'], func_get_args());
+			$result = $this->callBinding($call, func_get_args());
 
 			switch($this->returnType){
 				case self::RETURN_TYPE_BOOL:
@@ -271,6 +278,27 @@ class Hook {
 		return $return;
 	}
 
+	/**
+	 * Actually execute a binding call and get back the result.
+	 *
+	 * @param $call
+	 * @param $args
+	 *
+	 * @return null|boolean|array
+	 */
+	public function callBinding($call, $args){
+		// If the type is set to something and the call type is that
+		// OR
+		// The call type is not set/null.
+		$result = call_user_func_array($call['call'], $args);
+
+		// If it's expecting an array, make sure it's an array!
+		if($this->returnType == self::RETURN_TYPE_ARRAY && !is_array($result)){
+			$result = array();
+		}
+		return $result;
+	}
+
 	public function __toString() {
 		return $this->getName();
 	}
@@ -281,6 +309,14 @@ class Hook {
 
 	public function getBindingCount(){
 		return sizeof($this->_bindings);
+	}
+
+	/**
+	 * Get the array of bindings currently attached to this hook
+	 * @return array
+	 */
+	public function getBindings(){
+		return $this->_bindings;
 	}
 }
 

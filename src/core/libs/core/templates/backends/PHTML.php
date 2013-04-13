@@ -32,7 +32,17 @@ namespace Core\Templates\Backends;
 use Core\Templates;
 
 class PHTML implements Templates\TemplateInterface {
+	/**
+	 * An array of scoped variables for this template.
+	 * @var array
+	 */
 	private $_scope = array();
+
+	/**
+	 * The filename of this template
+	 * @var String
+	 */
+	protected $_filename;
 
 	/**
 	 * Assign a variable to this template
@@ -69,7 +79,7 @@ class PHTML implements Templates\TemplateInterface {
 		}
 	}
 
-	public function fetch($template){
+	public function fetch($template = null){
 		// Since the only way to capture php output is to use buffers...
 		ob_start();
 		$this->render($template);
@@ -77,16 +87,24 @@ class PHTML implements Templates\TemplateInterface {
 		return $contents;
 	}
 
-	public function render($template){
-		// Templates don't need a beginning '/'.  They'll be resolved automatically
-		// UNLESS they're already resolved fully.....
-		if (strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
+	public function render($template = null){
 
-		if(!file_exists($template)){
-			throw new TemplateException('Unable to read template ' . $template . ', file does not exist');
+		// Resolve this template.
+		if($template === null){
+			$file = $this->_filename;
 		}
-		if(!is_readable($template)){
-			throw new TemplateException('Unable to read template ' . $template . ', file is not readable');
+		else{
+			$file = Templates\Template::ResolveFile($template);
+			if($file === null){
+				throw new Templates\Exception('Template ' . $template . ' could not be found!');
+			}
+		}
+
+		if(!file_exists($file)){
+			throw new Templates\Exception('Unable to read template ' . $file . ', file does not exist');
+		}
+		if(!is_readable($file)){
+			throw new Templates\Exception('Unable to read template ' . $file . ', file is not readable');
 		}
 
 		// I need to make the assigned variables visible in the scope.
@@ -95,7 +113,7 @@ class PHTML implements Templates\TemplateInterface {
 		}
 
 		try{
-			require($template);
+			require($file);
 		}
 		catch(Exception $e){
 			var_dump($e->getMessage()); die();
@@ -122,7 +140,8 @@ class PHTML implements Templates\TemplateInterface {
 	 * @return void
 	 */
 	public function setFilename($template) {
-		// TODO: Implement setFilename() method.
+		// Make sure it's resolved first.
+		$this->_filename = Templates\Template::ResolveFile($template);
 	}
 
 	/**

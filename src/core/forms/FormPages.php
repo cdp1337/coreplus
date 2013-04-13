@@ -188,7 +188,7 @@ class FormPageInsertables extends FormGroup {
 
 
 		// Translate the filename to an absolute path.
-		$tpl = Template::ResolveFile($templatename);
+		$tpl = Core\Templates\Template::ResolveFile($templatename);
 		if (!$tpl) return null;
 
 		// Scan through $tpl and find any {insertable} tag.
