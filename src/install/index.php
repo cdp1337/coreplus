@@ -26,6 +26,10 @@ if(PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')){
 	die('This application cannot run with magic_quotes_gpc enabled, please disable them now!');
 }
 
+if (PHP_VERSION < '5.4.0') {
+	die('This application requires at least PHP 5.4 to run!');
+}
+
 // Damn suPHP, I can handle my own permissions, TYVM
 umask(0);
 
@@ -44,9 +48,12 @@ define('CUR_CALL', ROOT_WDIR . 'install/');
 
 
 // Start a timer for performance tuning purposes.
-// This will be saved into the Core once that's available.
-$start_time = microtime(true);
+require_once(__DIR__ . '/../core/libs/core/utilities/profiler/Profiler.php');
+require_once(__DIR__ . '/../core/libs/core/utilities/logger/functions.php');
+$profiler = new Core\Utilities\Profiler\Profiler('Core Plus');
 
+// gogo i18n!
+mb_internal_encoding('UTF-8');
 
 
 if(!is_dir(TMP_DIR)){
@@ -60,15 +67,22 @@ if(!file_exists(TMP_DIR . 'sessions')){
 session_save_path(TMP_DIR . 'sessions');
 session_start();
 
-// Initial system defines
-require_once(ROOT_PDIR . 'core/bootstrap_predefines.php');
-$predefines_time = microtime(true);
+/********************* Initial system defines *********************************/
+require_once(__DIR__ . '/../core/bootstrap_predefines.php');
+Core\Utilities\Logger\write_debug('Starting Application');
 
-// Critical file inclusions
-require_once(ROOT_PDIR . 'core/bootstrap_preincludes.php');
-require_once(ROOT_PDIR . 'core/libs/core/TemplateInterface.php');
-require_once(ROOT_PDIR . 'core/libs/core/TemplateException.php');
-require_once(ROOT_PDIR . 'core/libs/core/TemplatePHTML.php');
+
+/********************** Critical file inclusions ******************************/
+Core\Utilities\Logger\write_debug('Loading pre-include files');
+require_once(__DIR__ . '/../core/bootstrap_preincludes.php');
+
+
+require_once(ROOT_PDIR . 'core/libs/core/templates/TemplateInterface.php');
+require_once(ROOT_PDIR . 'core/libs/core/templates/Exception.php');
+require_once(ROOT_PDIR . 'core/libs/core/templates/Template.php');
+require_once(ROOT_PDIR . 'core/libs/core/templates/backends/PHTML.php');
+
+//require_once(ROOT_PDIR . 'core/libs/core/Exception.php');
 require_once(ROOT_PDIR . 'install/classes/InstallerStep.php');
 require_once(ROOT_PDIR . 'core/functions/Core.functions.php');
 require_once(ROOT_PDIR . 'install/utilities.php');

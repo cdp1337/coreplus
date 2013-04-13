@@ -20,6 +20,7 @@
  *
  * @package Core Plus\Installer
  * @author Charlie Powell <charlie@eval.bz>
+ * @deprecated 2013.04 - This file has been deprecated and is a candidate for removal very soon.
  */
 
 class _InstallTemplate {

@@ -11,6 +11,8 @@
 
 namespace Core\Installer;
 
+use Core\Templates;
+
 /**
  * The scaffolding class for installer steps.
  */
@@ -25,16 +27,13 @@ abstract class InstallerStep {
 	}
 
 	public function render() {
-		$c = get_called_class();
-		$template = str_replace('Core\\Installer\\', '', $c);
-		$template = strtolower($template);
-		$body = $this->getTemplate()->fetch(ROOT_PDIR . 'install/templates/' . $template . '.phtml');
+		$body = $this->getTemplate()->fetch();
 
 		$title = 'Core Plus Installation';
 		if($this->title) $title .= ' [' . $this->title . ']';
 
 		// This of course gets wrapped in the skin template.
-		$skin = new \TemplatePHTML();
+		$skin = Templates\Template::Factory(ROOT_PDIR . 'install/templates/skin.phtml');
 		$skin->assign('title', $title);
 		$skin->assign('body', $body);
 		$skin->render(ROOT_PDIR . 'install/templates/skin.phtml');
@@ -47,7 +46,11 @@ abstract class InstallerStep {
 	 */
 	protected function getTemplate() {
 		if($this->_template === null){
-			$this->_template = new \TemplatePHTML();
+
+			$c = get_called_class();
+			$template = str_replace('Core\\Installer\\', '', $c);
+			$template = strtolower($template);
+			$this->_template = Templates\Template::Factory(ROOT_PDIR . 'install/templates/' . $template . '.phtml');
 		}
 
 		return $this->_template;
