@@ -278,21 +278,6 @@ a.button[disabled=disabled]{
 	border:2px outset rgba(29, 84, 87, 0.32);
 	cursor: no-drop;
 	color: #CCC;
-
-	background-image: linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
-	background-image: -o-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
-	background-image: -moz-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
-	background-image: -webkit-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
-	background-image: -ms-linear-gradient(bottom, rgb(148,148,148) 19%, rgb(112,111,112) 42%, rgb(148,148,148) 100%);
-
-	background-image: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0.19, rgb(148,148,148)),
-		color-stop(0.42, rgb(112,111,112)),
-		color-stop(1, rgb(148,148,148))
-	);
 }
 
 /** Tweak the autocomplete styles slightly **/
@@ -658,11 +643,33 @@ fieldset .formdescription {
 	margin-bottom: 5px;
 }
 
-table.listing { width:100%; border:1px solid #AAA; border-collapse:collapse;}
-table.listing tr:nth-child(odd) { background-color:#DDEDDD; }
-table.listing th{ padding:0.15em 0.5em; border:1px solid #AAA; vertical-align:top; background:#BEB; background:-moz-linear-gradient(top, #DFD 0%, #BEB 100%);}
-table.listing td{ padding:0.15em 0.5em; border:1px solid #AAA; vertical-align:top;}
 
+
+/*****************************************************************************
+ *****************************************************************************
+ **                            LISTING TABLES                               **
+ *****************************************************************************
+ *****************************************************************************/
+
+table.listing {
+	width: 100%;
+	border: 1px solid #AAA;
+	border-collapse: collapse;
+}
+table.listing tr:nth-child(odd) {
+	background-color: #d5deed;
+}
+table.listing th {
+	padding: 0.15em 0.5em;
+	border: 1px solid #AAA;
+	vertical-align: top;
+	background: #afc5ee;
+}
+table.listing td {
+	padding: 0.15em 0.5em;
+	border: 1px solid #AAA;
+	vertical-align: top;
+}
 
 /*** Debugging Classes ***/
 pre.xdebug-var-dump { border: 1px solid #FFE5C0; padding: 0.5em; text-align: left; font-size:0.8em; background: #f5f5f5;color:#555; }

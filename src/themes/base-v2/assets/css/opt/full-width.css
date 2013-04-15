@@ -1,0 +1,7 @@
+/**
+ * Style sheet option to change the page width to 100% of the window.
+ */
+
+body #wrapper {
+	width: 100%;
+}

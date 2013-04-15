@@ -3,8 +3,10 @@
 	<head>
 		<!-- Force latest IE rendering engine or ChromeFrame if installed -->
 		<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
-		<link href="{asset src='css/reset.css'}" type="text/css" rel="stylesheet"/>
-		<link href="{asset src='css/styles.css'}" type="text/css" rel="stylesheet"/>
+		{css src="css/reset.css"}{/css}
+		{css src="css/styles.css"}{/css}
+		{css src="css/opt/gradients.css" optional="1" default="0"}{/css}
+		{css src="css/opt/full-width.css" optional="1" default="0" title="Set the page to be full width"}{/css}
 		<!--[if lt IE 9]>
 			<script type="text/javascript" src="{asset src='js/html5.js'}"></script>
 		<![endif]-->

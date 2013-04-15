@@ -1,0 +1,17 @@
+table.listing th {
+	background: #afc5ee;
+	background: linear-gradient(to bottom, #d5deed 0%, #afc5ee 100%);
+}
+
+
+a.button, .ui-widget-content a.button, span.button, input[type="submit"], input[type="reset"], button {
+	background: #666;
+	background: linear-gradient(to bottom, #999 0%, #696969 100%);
+}
+
+.message-success {
+	background: linear-gradient(to bottom, #AAFFAA 0%, #CCFFCC 100%);
+}
+.message-error {
+	background: linear-gradient(to bottom, #f0d8e0 0%, #fae8ef 100%);
+}
