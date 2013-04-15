@@ -1,7 +1,9 @@
 JQuery-Full 1.9.1~core1
 
 	* Updated to latest release of jQuery 1.9.1
-	* Updated jquery.cookie, jquery.form, jquery.json, jquery.masonry, jqueryui.timepicker to latest versions
+	* Updated jquery.cookie, jquery.form, jquery.json, jquery.masonry, jqueryui.timepicker to latest
+	  versions
+	-- Charlie Powell <charlie@eval.bz>  Mon, 15 Apr 2013 15:29:23 -0400
 
 JQuery-Full 1.8.3~core4
 
@@ -10,12 +12,12 @@ JQuery-Full 1.8.3~core4
 JQuery-Full 1.8.3~core3
 
 	* Updated timepicker to latest release
-	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 08:34:02 -0500
+	-- Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 08:34:02 -0500
 
 JQuery-Full 1.8.3~core2
 
-	* Added jquery.waypoints plugin into package.
-	--Charlie Powell <charlie@eval.bz>  Mon, 04 Feb 2013 02:04:39 -0500
+	* [Feature] Added jquery.waypoints plugin into package.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 04 Feb 2013 02:04:39 -0500
 
 JQuery-Full 1.8.3~core1
 
@@ -30,16 +32,16 @@ JQuery-Full 1.8.2~core1
 
 JQuery-Full 1.8.0~core3
 
-	* Added jquery.timepicker plugin
+	* [Feature] Added jquery.timepicker plugin
 	-- Charlie Powell <charlie@eval.bz>  4 Oct 2012
 
 JQuery-Full 1.7.1~core2
 
-	* Added jquery.cookie plugin.
+	* [Feature] Added jquery.cookie plugin.
 	-- Charlie Powell <charlie@eval.bz>  20 Jul 2012
 
 JQuery-Full 1.7.0-1
-	
+
 	* New upstream release.
 	* Upgraded jquery.readonly to release 2.0.1
 	* Switched to a more pure Debian-style versioning system
@@ -51,18 +53,18 @@ JQuery-Full 1.6.4~core1
 
 JQuery-Full 1.5.1~cae3
 
-	* Set the included libraries to be 'library' instead of 'component'.  This allows them to be "required" by other
-	components via <require name="JQuery.plugin.desired" type="library"/>
+	* Set the included libraries to be 'library' instead of 'component'.  This allows them to be
+	  "required" by other components via <require name="JQuery.plugin.desired" type="library"/>
 	-- Charlie Powell <charlie@eval.bz>  Thu, 06 Oct 2011 22:08:52 -0400
-
 
 JQuery-Full 1.5.1~cae2
 
-	* Switch the system to use "/core/javascript/minified" configuration option instead of "/jquery/minfied".
-	This is because other systems may use the same logic to determine if the minified versions should be used or standard/dev.
+	* Switch the system to use "/core/javascript/minified" configuration option instead of
+	  "/jquery/minfied". This is because other systems may use the same logic to determine if the minified
+	  versions should be used or standard/dev.
 	-- Charlie Powell <charlie@eval.bz>  Tue, 21 Jun 2011 22:56:08 -0400
-	
 
 JQuery-Full 1.5.1~cae1
 
 	-- Charlie Powell <charlie@eval.bz>  Sat, 18 Jun 2011 02:11:08 -0400
+

@@ -30,11 +30,14 @@ class ThemeController extends Controller_2_1{
 			while(($file = readdir($dh)) !== false){
 				if($file{0} == '.') continue;
 				if(!is_dir($dir . '/' . $file)) continue;
-				
+
+				// Load up the templates for this theme.
+				$templates = ThemeHandler::GetTheme($file)->getTemplates();
+
 				$themes[] = array(
 					'name' => $file,
 					'default' => ($default == $file),
-					'templates' => ThemeHandler::GetTheme($file)->getTemplates(),
+					'templates' => $templates,
 				);
 			}
 			closedir($dh);
@@ -62,7 +65,7 @@ class ThemeController extends Controller_2_1{
 
 				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
 				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
-				$resolved = Template::ResolveFile($file);
+				$resolved = Core\Templates\Template::ResolveFile($file);
 				$newobj = new File_local_backend($resolved);
 
 				// Check the contents of the file and see if there is a {widgetarea...} here.
@@ -468,6 +471,58 @@ class ThemeController extends Controller_2_1{
 
 		//$view->addBreadcrumb('Theme Manager', '/theme');
 		$view->title = 'Editor';
+	}
+
+	/**
+	 * Page to display a user interface to select the optional stylesheets.
+	 */
+	public function selectstylesheets(){
+		$request = $this->getPageRequest();
+		$view = $this->getView();
+
+		$file = $request->getParameter('template');
+		$tpl = \Core\Templates\Template::Factory(ROOT_PDIR . $file);
+		$stylesheets = $tpl->getOptionalStylesheets();
+
+		$form = new Form();
+		foreach($stylesheets as $style){
+			$model = TemplateCssModel::Construct($file, $style['src']);
+			if(!$model->exists() && isset($style['default']) && $style['default']){
+				$model->set('enabled', 1);
+			}
+
+			$form->addElement(
+				'checkbox',
+				[
+					'title' => $style['title'],
+					'name' => 'stylesheets[]',
+					'value' => $style['src'],
+					'checked' => $model->get('enabled'),
+				]
+			);
+		}
+		$form->addElement('submit', ['name' => 'submit', 'value' => 'Update Stylesheets']);
+
+
+		// If it was a POST... then save that and go back.
+		if($request->isPost()){
+			if(!isset($_POST['stylesheets'])) $_POST['stylesheets'] = array();
+			// Run through the stylesheets retrieved and save their setting.
+			foreach($stylesheets as $style){
+				$model = TemplateCssModel::Construct($file, $style['src']);
+				$model->set('enabled', (in_array($style['src'], $_POST['stylesheets']) ? 1 : 0));
+				$model->save();
+			}
+
+			Core::SetMessage('Updated optional stylesheets successfully', 'success');
+			Core::GoBack(1);
+		}
+
+
+		$view->addBreadcrumb('Theme Manager', '/theme');
+		$view->title = 'Select Optional Stylesheets';
+		$view->assign('file', $file);
+		$view->assign('form', $form);
 	}
 
 	/**

@@ -26,7 +26,7 @@ class TinyMCEController extends Controller_2_1 {
 
 		$tplname = Template::ResolveFile('pages/tinymce/link.phtml');
 
-		$view->overrideTemplate(new TemplatePHTML());
+		$view->overrideTemplate(new Core\Templates\Backends\PHTML());
 
 		$view->mastertemplate = false;
 		$view->templatename = $tplname;

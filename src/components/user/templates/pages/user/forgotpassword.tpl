@@ -1,30 +1,13 @@
 {if $step == 1}
-	<p>Please enter your email address that is registered.  You will be sent an email containing instructions to reset your password.</p>
-	<form action="" method="POST">
-		<div class="formelement formtextinput">
-			<label for="email-to-reset">Email</label>
-			<input type="text" name="email" id="email-to-reset"/>
-		</div>
-		<div class="formelement formsubmitinput">
-			<input type="submit" value="Send Reset Instructions"/>
-		</div>
-	</form>
+	<p class="message-tutorial">
+		Please enter your email address that is registered.
+		You will be sent an email containing a link to reset your password.
+	</p>
+	{$form->render()}
 {/if}
 {if $step == 2}
-	<p>Enter a new password</p>
-	<form action="" method="POST">
-		<div class="formelement formpasswordinput">
-			<label>Password</label>
-			<input type="password" name="p1"/>
-		</div>
-		
-		<div class="formelement formpasswordinput">
-			<label>Confirm</label>
-			<input type="password" name="p2"/>
-		</div>
-		
-		<div class="formelement formsubmitinput">
-			<input type="submit" value="Set Password"/>
-		</div>
-	</form>
+	<p class="message-tutorial">
+		Please enter a new password, (and confirm it).
+	</p>
+	{$form->render()}
 {/if}

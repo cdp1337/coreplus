@@ -287,7 +287,7 @@ class UserController extends Controller_2_1{
 		$request = $this->getPageRequest();
 
 		// If e and k are set as parameters... it's on step 2.
-		if($request->getParameter('e') && $request->getParameter('k')){
+		if($request->getParameter('e') && $request->getParameter('n')){
 			return $this->_forgotPassword2();
 		}
 		// Else, just step 1.
@@ -301,10 +301,16 @@ class UserController extends Controller_2_1{
 		$request = $this->getPageRequest();
 
 
-		$view->title = 'Forgot Password';
+		// Create a simple form to render.  This is better than doing it in the template.
+		$form = new Form();
+		$form->set('method', 'POST');
+		$form->addElement('text', ['name' => 'email', 'title' => 'Email', 'required' => true]);
+		$form->addElement('submit', ['name' => 'submit', 'value' => 'Send Reset Instructions']);
 
+		$view->title = 'Forgot Password';
 		// This is step 1
 		$view->assign('step', 1);
+		$view->assign('form', $form);
 
 		// There's really nothing to do here except for check the email and send it.
 
@@ -313,17 +319,23 @@ class UserController extends Controller_2_1{
 			$u = User::Find(array('email' => $_POST['email']), 1);
 			if(!$u){
 				Core::SetMessage('Invalid user account requested', 'error');
+				SecurityLogModel::Log('/user/forgotpassword/send', 'fail', null, 'Invalid email requested for reset: [' . $_POST['email'] . ']');
 				return;
 			}
 
 			if(($str = $u->canResetPassword()) !== true){
 				Core::SetMessage($str, 'error');
+				SecurityLogModel::Log('/user/forgotpassword/send', 'fail', $u->get('id'), $str . ': [' . $_POST['email'] . ']');
 				return;
 			}
 
-			// Generate the key based on the apikey and the current password.
-			$key = md5(substr($u->get('apikey'), 0, 15) . substr($u->get('password'), -10));
-			$link = '/user/forgotpassword?e=' . urlencode(base64_encode($u->get('email'))) . '&k=' . $key;
+			// Use the Nonce system to generate a one-time key with this user's data.
+			$nonce = NonceModel::Generate(
+				'20 minutes',
+				['type' => 'password-reset', 'user' => $u->get('id')]
+			);
+
+			$link = '/user/forgotpassword?e=' . urlencode($u->get('email')) . '&n=' . $nonce;
 
 			$e = new Email();
 			$e->setSubject('Forgot Password Request');
@@ -333,6 +345,7 @@ class UserController extends Controller_2_1{
 			$e->templatename = 'emails/user/forgotpassword.tpl';
 			try{
 				$e->send();
+				SecurityLogModel::Log('/user/forgotpassword/send', 'success', $u->get('id'), 'Forgot password request sent successfully');
 			}
 			catch(Exception $e){
 				Core::SetMessage('Error sending the email, ' . $e->getMessage(), 'error');
@@ -349,29 +362,44 @@ class UserController extends Controller_2_1{
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
-		$view->title = 'Forgot Password';
+		// Create a simple form to render.  This is better than doing it in the template.
+		$form = new Form();
+		$form->set('method', 'POST');
+		$form->addElement('password', ['name' => 'p1', 'title' => 'Password', 'required' => true]);
+		$form->addElement('password', ['name' => 'p2', 'title' => 'Confirm', 'required' => true]);
+		$form->addElement('submit', ['name' => 'submit', 'value' => 'Set New Password']);
 
+		$view->title = 'Forgot Password';
 		$view->assign('step', 2);
+		$view->assign('form', $form);
 
 		// Lookup and validate this information first.
-		$e = base64_decode($request->getParameter('e'));
+		$e = urldecode($request->getParameter('e'));
 
 		$u = User::Find(array('email' => $e), 1);
 		if(!$u){
+			SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', null, 'Invalid user account requested: [' . $e . ']');
 			Core::SetMessage('Invalid user account requested', 'error');
 			Core::Redirect('/');
 			return;
 		}
 
-		$key = md5(substr($u->get('apikey'), 0, 15) . substr($u->get('password'), -10));
-		if($key != $request->getParameter('k')){
-			Core::SetMessage('Invalid user account requested', 'error');
+		// Make sure that nonce hasn't expired yet and is still valid.
+		$n = $request->getParameter('n');
+
+		/** @var $nonce NonceModel */
+		$nonce = NonceModel::Construct($n);
+		// I can't invalidate it quite yet... the user still needs to set the new password.
+		if(!$nonce->isValid(['type' => 'password-reset', 'user' => $u->get('id')])){
+			SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', $u->get('id'), 'Invalid key requested: [' . $n . ']');
+			Core::SetMessage('Invalid key provided!', 'error');
 			Core::Redirect('/');
 			return;
 		}
 
 		if(($str = $u->canResetPassword()) !== true){
 			Core::SetMessage($str, 'error');
+			SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', $u->get('id'), $str);
 			Core::Redirect('/');
 			return;
 		}
@@ -387,15 +415,20 @@ class UserController extends Controller_2_1{
 			try{
 				$u->set('password', $_POST['p1']);
 				$u->save();
+				// NOW I can invalidate that nonce!
+				$nonce->markUsed();
+				SecurityLogModel::Log('/user/forgotpassword/confirm', 'success', $u->get('id'), 'Reset password successfully!');
 				Core::SetMessage('Reset password successfully', 'success');
 				Session::SetUser($u);
 				Core::Redirect('/');
 			}
 			catch(ModelValidationException $e){
+				SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', $u->get('id'), $e->getMessage());
 				Core::SetMessage($e->getMessage(), 'error');
 				return;
 			}
 			catch(Exception $e){
+				SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', $u->get('id'), $e->getMessage());
 				if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
 				else Core::SetMessage('An unknown error occured', 'error');
 

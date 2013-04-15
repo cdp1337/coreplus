@@ -29,7 +29,7 @@ abstract class UserHelper{
 				'status' => $view->error,
 				'db_reads' => Core::DB()->readCount(),
 				'db_writes' => (Core::DB()->writeCount() + 1),
-				'processing_time' => (round(Core::GetProfileTimeTotal(), 4) * 1000)
+				'processing_time' => (round(Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime(), 4) * 1000)
 			)
 		);
 		try{

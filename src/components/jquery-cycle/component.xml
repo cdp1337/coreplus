@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.1~core1" name="JQuery-cycle" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.1~core2" name="JQuery-cycle" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.2" operation="ge"/>
@@ -14,6 +14,7 @@
 	</assets>
 	<upgrades>
 		<upgrade from="2.9999.5~core1" to="3.0.1~core1"/>
+		<upgrade from="3.0.1~core1" to="3.0.1~core2"/>
 	</upgrades>
 	<files>
 		<file filename="JQueryCycle.lib.php" md5="340b9137fc227982032836ae2cecbc2c">

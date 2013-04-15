@@ -7,12 +7,12 @@
 		<th width="100">&nbsp;</th>
 	</tr>
 	{foreach from=$themes item=theme}
-		<tr>
-			<td rowspan="{sizeof($theme.templates) + 1}">{$theme.name}</td>
-			<td colspan="3"></td>
-		</tr>
-		{foreach from=$theme.templates item=template}
+		{foreach from=$theme.templates item=template name="tplforeach"}
 			<tr>
+				{* Add the theme name on the first template foreach iteration. *}
+				{if $smarty.foreach.tplforeach.index == 0}
+					<td rowspan="{sizeof($theme.templates)}">{$theme.name}</td>
+				{/if}
 				<td>{$template.file}</td>
 				<td>{$template.title}</td>
 				<td>
@@ -34,6 +34,17 @@
 								<span>Widgets</span>
 							{/a}
 						</li>
+
+
+						{if $template.has_stylesheets}
+							<li>
+								{a href="/theme/selectstylesheets/?template=themes/`$theme.name`/skins/`$template.file`"}
+									<i class="icon-strikethrough"></i>
+									<span>Optional Stylesheets</span>
+								{/a}
+							</li>
+						{/if}
+
 						{* This will be finished in the next version. *}
 
 						<li>

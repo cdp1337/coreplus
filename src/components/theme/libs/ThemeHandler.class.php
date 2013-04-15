@@ -58,7 +58,7 @@ class ThemeHandler implements ISingleton{
 				
 				// Finally, load the theme and keep it in cache.
 				
-				$t = new Theme($file);
+				$t = new Theme\Theme($file);
 				
 				$this->_themeCache[$file] = $t;
 				unset($t);
@@ -104,7 +104,7 @@ class ThemeHandler implements ISingleton{
 	 * Get the theme object of a requested theme.
 	 * 
 	 * @param string|null $themeName Theme name to return, null for current default
-	 * @return Theme
+	 * @return Theme\Theme
 	 */
 	public static function GetTheme($themeName = null){
 		if($themeName === null){

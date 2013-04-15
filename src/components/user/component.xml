@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.4" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.5" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.4"/>
+		<!-- User authentication events trigger security logs. -->
 		<require name="security-suite" type="component" operation="ge" version="1.0.0"/>
+		<!-- The password reset is now powered by the nonce system. -->
+		<require name="nonce" type="component"/>
 	</requires>
 	<smartyplugins directory="helpers/smarty-plugins/"/>
 	<hooks>
@@ -17,13 +20,13 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="4ad1868303e36bc732576edecc6d2a44"/>
-		<file filename="User.class.php" md5="2859d53dfc3aea7aa4afe45b729bd154">
+		<file filename="CHANGELOG" md5="c75ff2c7bcf80bf14ed31f91c5321377"/>
+		<file filename="User.class.php" md5="cc0790fb24c2f1840948104fd83286bc">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
 		<file filename="User.class.php~" md5="c873ad77e20f4a615afe339502752c2f"/>
-		<file filename="UserForm.class.php" md5="d6a69b30188e03eee6d51a89f0ef623e">
+		<file filename="UserForm.class.php" md5="a7f5fb9f5167aff9abc41012e6344b9a">
 			<class name="FormAccessStringInput"/>
 		</file>
 		<file filename="User_Backend.interface.php" md5="338a174c0a903e9bf637e30f2e0a9c75">
@@ -49,14 +52,14 @@
 		<file filename="controllers/UserAdminController.php" md5="639bca8727cf48460d54830b680e144d">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="0be3390186379a694cb3a7942763da3a">
+		<file filename="controllers/UserController.php" md5="bdf5b3c8b99ad5fbffb5d1008468d2c3">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="1e26a36d85fc0065cec33b198b27f475">
 			<controller name="UserGroupAdminController"/>
 		</file>
 		<file filename="helpers/UserFunctions.php" md5="38df03370f1641180a5f9946b6511af7"/>
-		<file filename="helpers/UserHelper.class.php" md5="000a03909040fc8bd0a80ff6afa70dac">
+		<file filename="helpers/UserHelper.class.php" md5="5a13aa62e4b335a2d2c940cddbfce9ae">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
@@ -84,7 +87,7 @@
 		<file filename="templates/emails/user/registration.tpl" md5="bc0af99c272dc0849608642ef56185f2"/>
 		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="8d98f0017081473db0680e1bd1a5d849"/>
 		<file filename="templates/pages/user/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/user/forgotpassword.tpl" md5="f999095e59ac6e03459ae47b45dacfc9"/>
+		<file filename="templates/pages/user/forgotpassword.tpl" md5="4e44ae9de19645a4040d4fc34a5876d3"/>
 		<file filename="templates/pages/user/guest403.tpl" md5="336576c142f10bcd6c462e02d4e15853"/>
 		<file filename="templates/pages/user/login.tpl" md5="c036e9df1ef5e68868e02300c4bb3086"/>
 		<file filename="templates/pages/user/me.tpl" md5="9968689a9b26cdeb9c5eb25d10b96f11"/>
@@ -117,8 +120,7 @@
 		<config key="/user/password/minlength" type="int" default="8" description=""/>
 		<config key="/user/password/requiresymbols" type="int" default="0" description=""/>
 		<config key="/user/password/requirecapitals" type="int" default="0" description=""/>
-		<config key="/user/displayas" type="enum" default="emailbase" options="emailfull|emailbase|username|firstname"
-			description="The user field to use for displaying in representation of the user, ie: username or email.  If 'email' is used, the full email is displayed.  If 'emailbase' id used, just the prefix of the email is used."/>
+		<config key="/user/displayas" type="enum" default="emailbase" options="emailfull|emailbase|username|firstname" description="The user field to use for displaying in representation of the user, ie: username or email.  If 'email' is used, the full email is displayed.  If 'emailbase' id used, just the prefix of the email is used."/>
 		<config key="/user/displayname/anonymous" type="string" default="Guest" description="What to call guest/unauthenticated users."/>
 		<config key="/user/register/allowpublic" type="boolean" default="true" description="Allow public registrations"/>
 		<config key="/user/register/requireapproval" type="boolean" default="false" description="Require administrative approvals on new accounts"/>
@@ -171,6 +173,7 @@
 		<upgrade from="2.4.3" to="2.4.4b1"/>
 		<upgrade from="2.4.4b1" to="2.4.4b2"/>
 		<upgrade from="2.4.4b2" to="2.4.4"/>
+		<upgrade from="2.4.4" to="2.4.5"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

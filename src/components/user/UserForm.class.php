@@ -119,14 +119,14 @@ class FormAccessStringInput extends FormElement {
 		}
 
 
-		$tpl = new Template();
+		$tpl = \Core\Templates\Template::Factory($this->getTemplateName());
 		$tpl->assign('element', $this);
 		$tpl->assign('groups', $groups);
 		$tpl->assign('dynname', $this->_targetname);
 		$tpl->assign('main_checked', $checked);
 		$tpl->assign('advanced_type', $type);
 
-		return $tpl->fetch($this->getTemplateName());
+		return $tpl->fetch();
 	}
 
 	/**

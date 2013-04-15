@@ -1,7 +1,6 @@
 <?php
 /**
- * 
- * 
+ *
  * @package Theme
  * @since 2011.06
  * @author Charlie Powell <charlie@eval.bz>
@@ -12,6 +11,8 @@
  * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>, 
  * and please contribute back to the community :)
  */
+
+namespace Theme;
 
 /**
  * Theme object.
@@ -25,7 +26,7 @@ class Theme{
 	 * 
 	 * Responsible for retrieving most information about this component.
 	 * 
-	 * @var XMLLoader
+	 * @var \XMLLoader
 	 */
 	private $_xmlloader = null;
 	
@@ -75,13 +76,13 @@ class Theme{
 	
 	
 	public function __construct($name = null){
-		$this->_xmlloader = new XMLLoader();
+		$this->_xmlloader = new \XMLLoader();
 		$this->_xmlloader->setRootName('theme');
 		
 		$filename = ROOT_PDIR . 'themes/' . $name . '/theme.xml';
 		
 		if(!$this->_xmlloader->loadFromFile($filename)){
-			throw new Exception('Parsing of XML Metafile [' . $filename . '] failed, not valid XML.');
+			throw new \Exception('Parsing of XML Metafile [' . $filename . '] failed, not valid XML.');
 		}
 	}
 	
@@ -92,14 +93,14 @@ class Theme{
 		$this->_version = $this->_xmlloader->getRootDOM()->getAttribute("version");
 		
 		// Load the database information, if there is any.
-		$dat = ComponentFactory::_LookupComponentData('theme/' . $this->_name);
+		$dat = \ComponentFactory::_LookupComponentData('theme/' . $this->_name);
 		if(!$dat) return;
 		
 		$this->_versionDB = $dat['version'];
 		$this->_enabled = ($dat['enabled']) ? true : false;
 
 		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS){
-			Debug::Write('Auto-installing assets for theme [' . $this->getName() . ']');
+			\Core\Utilities\Logger\write_debug('Auto-installing assets for theme [' . $this->getName() . ']');
 			$this->_installAssets();
 		}
 
@@ -116,16 +117,28 @@ class Theme{
 		$out = array();
 		$default = null;
 		// If this theme is currently selected, check the default template too.
-		if($this->getKeyName() == ConfigHandler::Get('/theme/selected')){
-			$default = ConfigHandler::Get('/theme/default_template');
+		if($this->getKeyName() == \ConfigHandler::Get('/theme/selected')){
+			$default = \ConfigHandler::Get('/theme/default_template');
 		}
 		
 		foreach($this->_xmlloader->getElements('//skins/file') as $f){
+			$basefilename = $f->getAttribute('filename');
+			$filename = $this->getBaseDir() . 'skins/' . $basefilename;
+
+
+			if($basefilename == 'blank.tpl'){
+				continue;
+			}
+
+			$skin = \Core\Templates\Template::Factory($filename);
+
+			// The return is expecting an array.
 			$out[] = array(
-				'filename' => $this->getBaseDir() . $f->getAttribute('filename'),
-				'file' => $f->getAttribute('filename'),
+				'filename' => $filename,
+				'file' => $basefilename,
 				'title' => $f->getAttribute('title'),
-				'default' => ($default == $f->getAttribute('filename'))
+				'default' => ($default == $filename),
+				'has_stylesheets' => $skin->hasOptionalStylesheets(),
 			);
 		}
 
@@ -203,7 +216,7 @@ class Theme{
 	public function savePackageXML($minified = true, $filename = false) {
 
 		// Instantiate a new XML Loader object and get it ready to use.
-		$dom = new XMLLoader();
+		$dom = new \XMLLoader();
 		$dom->setRootName('package');
 		$dom->load();
 
@@ -213,7 +226,7 @@ class Theme{
 		$dom->getRootDOM()->setAttribute('version', $this->getVersion());
 
 		// Declare the packager
-		$dom->createElement('packager[version="' . Core::GetComponent()->getVersion() . '"]');
+		$dom->createElement('packager[version="' . \Core::GetComponent()->getVersion() . '"]');
 
 		/* // Themes don't have any provide directives.
 		// Copy over any provide directives.
@@ -535,7 +548,7 @@ class Theme{
 		if($change !== false) $changed = array_merge($changed, $change);
 		
 		// Make sure the version is correct in the database.
-		$c = new ComponentModel('theme/' . $this->_name);
+		$c = new \ComponentModel('theme/' . $this->_name);
 		$c->set('version', $this->_version);
 		$c->save();
 		
@@ -560,7 +573,7 @@ class Theme{
 		
 		// Now, get every table under this node.
 		foreach($node->getElementsByTagName('config') as $confignode){
-			$m = new ConfigModel($confignode->getAttribute('key'));
+			$m = new \ConfigModel($confignode->getAttribute('key'));
 			$m->set('type', $confignode->getAttribute('type'));
 			$m->set('default_value', $confignode->getAttribute('default'));
 			// Themes overwrite the settings regardless.
@@ -589,7 +602,7 @@ class Theme{
 			die('Unsupported CDN type [' . CDN_TYPE . ']');
 		}
 
-		$coretheme = ConfigHandler::Get('/theme/selected');
+		$coretheme = \ConfigHandler::Get('/theme/selected');
 		// WHY is core theme set to blank?!?
 		// Damn installer...
 		// this happens in the installer.
@@ -606,13 +619,13 @@ class Theme{
 			// The base filename with the directory.
 			$filename = $node->getAttribute('filename');
 			// Local file is guaranteed to be a local file.
-			$f = new File_local_backend($b . $filename);
+			$f = new \File_local_backend($b . $filename);
 			// The new theme asset will be installed into the same directory as its theme.
 			// This differs from usual components because they just follow whatever theme is currently running.
 			//$nf = Core::File($assetbase . $theme . '/' . $filename);
 			$newfilename = 'assets/' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
 
-			$nf = Core::File($newfilename);
+			$nf = \Core::File($newfilename);
 
 			// The new destination must be in the theme-specific directory, this is a
 			// bit of a hack from the usual behaviour of the filestore system.
@@ -658,7 +671,7 @@ class Theme{
 		if(!sizeof($changes)) return false;
 		
 		// Make sure the asset cache is purged!
-		Core::Cache()->delete('asset-resolveurl');
+		\Core::Cache()->delete('asset-resolveurl');
 		
 		return $changes;
 	}

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="GoogleAnalytics" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
@@ -14,7 +14,7 @@
 		<config key="/google-analytics/accountid" type="string" default="" description="This is the Account ID (sometimes called 'Web Property ID') listed for this account in google analytics."/>
 	</configs>
 	<files>
-		<file filename="GoogleAnalyticsHelper.class.php" md5="7cdf43871f4a71cf2cf8d9d4a2299d22">
+		<file filename="GoogleAnalyticsHelper.class.php" md5="c89afaf3870f3cefd45a573e289ce4a2">
 			<class name="GoogleAnalyticsHelper"/>
 		</file>
 	</files>

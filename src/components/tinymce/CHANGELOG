@@ -1,32 +1,38 @@
+TinyMCE 3.5.6~core6
+
+	* Minor tweak to keep up to date with the new namespaced features.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 15 Apr 2013 15:36:18 -0400
+
 TinyMCE 3.5.6~core5
 
 	* Implementing the file and image browser into tinyMCE.
-	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:38:04 -0500
+	-- Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:38:04 -0500
 
 TinyMCE 3.5.6~core4
 
-	* Moved the default tinymce options into a javascript variable Core.TinyMCEDefaults to allow tinymce to be reinstantiated easily
-	via javascript after content has been dynamically added to the dom.
+	* Moved the default tinymce options into a javascript variable Core.TinyMCEDefaults to allow tinymce
+	  to be reinstantiated easily via javascript after content has been dynamically added to the dom.
 	-- Charlie Powell <charlie@eval.bz>  23 Jan 2013
 
 TinyMCE 3.5.6~core3
 
-	* Minor fix - removed the "required" attribute for tinymce elements.  It wasn't playing nicely with FF or Chrome.
+	* Minor fix - removed the "required" attribute for tinymce elements.  It wasn't playing nicely with FF
+	  or Chrome.
 	-- Charlie Powell <charlie@eval.bz>  4 Dec 2012
 
 TinyMCE 3.5.6~core2
 
-	* Fixed some template logic with the wysiwyg editor.
+	* [Bug] Fixed some template logic with the wysiwyg editor.
 	* Set the default height to 25 rows, provides more space for viewing the workspace.
 	-- Charlie Powell <charlie@eval.bz>  17 Oct 2012
 
 TinyMCE 3.5.6~core1
 
 	* New upstream version
-	-- Charlie Powell
 
 TinyMCE 3.5.5-core1
 
 	* Upgraded TinyMCE to newest upstream version.
 	* Removed several plugin icons, such as print and help.
 	-- Charlie Powell <charlie@eval.bz>  21 Jul 2012
+

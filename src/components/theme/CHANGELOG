@@ -1,46 +1,49 @@
-Theme 2.0.next
+Theme 2.0.5
 
-	* bug Minor fix in the Theme::getSkin method for themes that have a space in their name.  The keyname is now used for comparison.
+	* [Bug] Minor fix in the Theme::getSkin method for themes that have a space in their name.  The
+	  keyname is now used for comparison.
+	* [Feature] Theme skins now support optional CSS files.
+	* Migrated some of the theme system to a namespaced scope.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 15 Apr 2013 15:32:40 -0400
 
 Theme 2.0.4
 
-	* Minor tweaks in the theme methods install, reinstall, and upgrade.  These are now
-	  literally the same thing.
-	* Yet again corrected the asset installer for theme assets.. hopefully THIS TIME it's
-	  correct...
-
-	--Charlie Powell <charlie@eval.bz>  Wed, 03 Apr 2013 15:01:32 -0400
-
-Theme 2.0.3
-
-	* Fixes in the theme asset installer.
-	* Fixes to support themes with a space in their name.
-	* Set the default theme to be base-v2 and removed some legacy configuration options.
-	--Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:41:19 -0400
+	* Minor tweaks in the theme methods install, reinstall, and upgrade.  These are now literally the same
+	  thing.
+	* Yet again corrected the asset installer for theme assets.. hopefully THIS TIME it's correct...
+	-- Charlie Powell <charlie@eval.bz>  Wed, 03 Apr 2013 15:01:32 -0400
 
 Theme 2.0.3b1
 
 	* Themes now support auto-install mode for assets when in development.
-	--Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 20:47:33 -0500
+	-- Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 20:47:33 -0500
+
+Theme 2.0.3
+
+	* [Bug] Fixes in the theme asset installer.
+	* [Bug] Fixes to support themes with a space in their name.
+	* Set the default theme to be base-v2 and removed some legacy configuration options.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:41:19 -0400
 
 Theme 2.0.2
 
+	* [Bug] Fixed the capitalization issue
 	* Support for the new installable widgets.
-	* Fixed the capitalization issue
-	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:16:31 -0500
+	-- Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:16:31 -0500
 
 Theme 2.0.1
 
-	* Set the theme to return a strtolower string when requesting getBaseDir.  This allows for
-	  themes to have capitalization in their names.
-
-	--Charlie Powell <charlie@eval.bz>  Sat, 09 Feb 2013 23:58:22 -0500
+	* Set the theme to return a strtolower string when requesting getBaseDir.  This allows for themes to
+	  have capitalization in their names.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 09 Feb 2013 23:58:22 -0500
 
 Theme 2.0.0
 
-	* Added multisite support.
-	* Added support for managing page-level widgets.
+	* [Feature] Added multisite support.
+	* [Feature] Added support for managing page-level widgets.
 	* Scaffolding support for theme editing via the web interface.
-	--Charlie Powell <charlie@eval.bz>  Thu, 24 Jan 2013 15:59:24 -0500
+	-- Charlie Powell <charlie@eval.bz>  Thu, 24 Jan 2013 15:59:24 -0500
 
 Theme 1.9.2
+
+

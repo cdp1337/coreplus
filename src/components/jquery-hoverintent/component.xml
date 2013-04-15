@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="r7~core1" name="JQuery-hoverIntent" execmode="web">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="r7~core2" name="JQuery-hoverIntent" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.2" operation="ge"/>
@@ -10,10 +10,11 @@
 		<scriptlibrary name="jquery.hoverIntent" call="JQueryHoverIntent::Load"/>
 	</provides>
 	<assets>
-		<file filename="assets/js/jquery.hoverIntent.min.js" md5="3e36c5ccb99b2d56265b877e8e00980e"/>
+		<file filename="assets/js/jquery.hoverIntent.min.js" md5="66de76b355f11c339085a2ac27621816"/>
 	</assets>
 	<upgrades>
 		<upgrade from="r6~core1" to="r7~core1"/>
+		<upgrade from="r7~core1" to="r7~core2"/>
 	</upgrades>
 	<files>
 		<file filename="JQueryHoverIntent.lib.php" md5="aee32463fa0e30a75179e374e21ca641">

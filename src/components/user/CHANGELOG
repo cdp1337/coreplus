@@ -1,58 +1,61 @@
-User 2.4.next
+User 2.4.5
 
-	* bug /user/displayas is now currently used to display the username.
+	* [Bug] /user/displayas is now currently used to display the username.
+	* [Feature] User forgot password now uses the nonce key system
+	-- Charlie Powell <charlie@eval.bz>  Mon, 15 Apr 2013 15:42:32 -0400
+
+User 2.4.4b2
+
+	* Updated the default options for User to keep updated with recent changes in Core.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 27 Feb 2013 18:32:56 -0500
+
+User 2.4.4b1
+
+	* User login now redirects to the page prior to login.
+	-- Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 20:59:03 -0500
 
 User 2.4.4
 
 	* Require SSL on the login, register, and 403 pages.
 	* Redesigned the login and 403 pages slightly.
-	--Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:38:15 -0400
-
-User 2.4.4b2
-
-	* Updated the default options for User to keep updated with recent changes in Core.
-	--Charlie Powell <charlie@eval.bz>  Wed, 27 Feb 2013 18:32:56 -0500
-
-User 2.4.4b1
-
-	* User login now redirects to the page prior to login.
-	--Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 20:59:03 -0500
+	-- Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:38:15 -0400
 
 User 2.4.3
 
-	* Fixed Feature #196 - User Profile Avatar - Config Option
-	* Fixed Bug #246 - Authenticated Display Name is Pointless
-	* Fixed Feature #197 - User Profile userconfig Sorting
+	* [Bug] Fixed Feature #196 - User Profile Avatar - Config Option
+	* [Bug] Fixed Bug #246 - Authenticated Display Name is Pointless
+	* [Bug] Fixed Feature #197 - User Profile userconfig Sorting
 	* Moved the user login javascript into its own file.
 	* Moved the facebook logic out from the user system and into the facebook component.
 	* 403 errors now display both login and register forms.
 	* New userconfig option - required.
 	* Tweaked the registration logic a little.
-	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:20:56 -0500
+	-- Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:20:56 -0500
 
 User 2.4.2
 
+	* [Feature] Added created as a sortable column on the user administration.
 	* Clear the permission cache upon setting groups on a given user.
-	* Added created as a sortable column on the user administration.
 	* New method, clearAccessStringCache on the user object.
-	--Charlie Powell <charlie@eval.bz>  Sun, 10 Feb 2013 00:01:01 -0500
+	-- Charlie Powell <charlie@eval.bz>  Sun, 10 Feb 2013 00:01:01 -0500
 
 User 2.4.1
 
-	* Added better support for handling groups in multisite mode.
+	* [Feature] Added better support for handling groups in multisite mode.
+	* [Feature] Added a new key onto the custom fields, searchable.
 	* Set the controls on the admin listing page to be hover based.
-	* Added a new key onto the custom fields, searchable.
-	* Created a new method available on the User object, Search.  This will perform a search given a term for a user based on email, username, and any searchable custom fields.
-	--Charlie Powell <charlie@eval.bz>  Thu, 24 Jan 2013 04:59:12 -0500
+	* Created a new method available on the User object, Search.  This will perform a search given a term
+	  for a user based on email, username, and any searchable custom fields.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 24 Jan 2013 04:59:12 -0500
 
 User 2.4.0
 
-	* Added setFromForm method on the User object.
-	* Added setPassword method on the User object.
+	* [Bug] Fixed Bug #203 - Forgot Password Not Allowing Reset.
+	* [Feature] Added setFromForm method on the User object.
+	* [Feature] Added setPassword method on the User object.
+	* [Feature] Added multisite support.
 	* Improvements in the user creation logic to make use of the new user::setFromForm logic.
-	* Fixed Bug #203 - Forgot Password Not Allowing Reset.
 	* Cleaned up some STRICT warnings in the user system.
-	* Added multisite support.
 	* Cleaned up the access string input template by switching the checkboxes to a single select box.
 	* Switched to user the hook-based controls throughout the user system and user administration.
 	* Minor bug fix in the user javascript.
@@ -61,18 +64,19 @@ User 2.4.0
 
 User 2.3.1
 
-	* Added checkboxes and radio options as valid userconfig types.
-	* Added a "GetControlLinks" method on the UserHelper class.  This will act as authoritative source of the administrative
-	actions possible for a given user or user id that the currently logged in user can perform.
+	* [Feature] Added checkboxes and radio options as valid userconfig types.
+	* [Feature] Added a "GetControlLinks" method on the UserHelper class.  This will act as authoritative
+	  source of the administrative actions possible for a given user or user id that the currently logged
+	  in user can perform.
 	* Implemented user caching via the Construct method.
 	* Minor NOTICE fix in the admin form for when no groups are available.
 	-- Charlie Powell <charlie@eval.bz>  5 Nov 2012
 
 User 2.3.0
 
-	* Added support for the new user social component.
-	* Fixed the user configurations not saving on edit and registration.
-	* Added user config validation.
+	* [Bug] Fixed the user configurations not saving on edit and registration.
+	* [Feature] Added support for the new user social component.
+	* [Feature] Added user config validation.
 	* Updated the /me template, no longer displays the view information (edit only).
 	-- Charlie Powell <charlie@eval.bz>  20 Oct 2012
 
@@ -83,26 +87,26 @@ User 2.2.3
 
 User 2.2.2
 
-	* Fixed the onregistration and onedit keys
-	* Changed default hashing count from 15 iterations to 11 iterations.  This should drastically decrease login times on production.
+	* [Bug] Fixed the onregistration and onedit keys
+	* Changed default hashing count from 15 iterations to 11 iterations.  This should drastically decrease
+	  login times on production.
 	-- Charlie Powell <charlie@eval.bz>  8 Oct 2012
-
 
 User 2.2.1
 
-	* Fixed some facebook issues with the newest api version.
+	* [Bug] Fixed some facebook issues with the newest api version.
+	* [Bug] Fixed a minor bug with the avatar
 	* Updated the login script to provide some user feedback
-	* Fixed a minor bug with the avatar
 	-- Charlie Powell <charlie@eval.bz>  3 Oct 2012
 
 User 2.2.0
 
-	* Added a javascript login form to provide some animation for the user to wait for slow server processors,
-	(the hashing algorithm takes a few seconds to calculate).
+	* [Bug] Fixed several bugs with administration.
+	* [Feature] Added a javascript login form to provide some animation for the user to wait for slow
+	  server processors, (the hashing algorithm takes a few seconds to calculate).
+	* [Feature] Added avatars.
+	* [Feature] Added new hook, /user/postsave.
 	* Set the controller to redirect to the profile page if a logged in user goes to /user/login.
-	* Added avatars.
-	* Fixed several bugs with administration.
-	* Added new hook, /user/postsave.
 	* Minor fixes in the user system.
 	* Standardized the CHANGELOG format.
 	-- Charlie Powell <charlie@eval.bz>  20 Sep 2012
@@ -122,8 +126,8 @@ User 2.0.0
 
 User 1.9.1
 
+	* [Feature] Added registration as its own widget.
 	* Rearranged the widgets a little.
-	* Added registration as its own widget.
 	-- Charlie Powell <charlie@eval.bz>  13 June 2012
 
 User 1.9.0
@@ -133,15 +137,17 @@ User 1.9.0
 
 User 0.0.3
 
-	* Added some user validation to the system, (now that validation at a low level is actually possible).
+	* [Feature] Added some user validation to the system, (now that validation at a low level is actually
+	  possible).
 	* Finished the forgot password script.
 	-- Charlie Powell <charlie@eval.bz>  28 Sep 2011 02:27:06 -0400
 
 User 0.0.2
 
-	* Added allow public registration config option.
+	* [Feature] Added allow public registration config option.
 	-- Charlie Powell <charlie@eval.bz>  19 Sep 2011 01:28:48 -0400
 
 User 0.0.1-dev1
 
 	-- Charlie Powell <charlie@eval.bz>  07 Aug 2011 17:42:39 -0400
+

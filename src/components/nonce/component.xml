@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Nonce" version="1.0.0">
+	<requires>
+		<require name="Core" type="component" version="2.5.1"/>
+	</requires>
+	<hooks>
+		<hook name="/cron/hourly" call="NonceModel::Cleanup"/>
+	</hooks>
+	<files>
+		<file filename="CHANGELOG" md5="8106e0a3bf1eb8348089c0e37370b5e2"/>
+		<file filename="README.md" md5="5bcf92183d0ab8d2045c82f264e66369"/>
+		<file filename="models/NonceModel.php" md5="f06782b88e2f10ce2796818dfd433631">
+			<class name="NonceModel"/>
+		</file>
+		<file filename="tests/NonceTest.php" md5="14bc619d92407038c260dd7aebe764d4">
+			<class name="NonceTest"/>
+		</file>
+	</files>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+		<author name="Charlie Powell &lt;charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+</component>
+
