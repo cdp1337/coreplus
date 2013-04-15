@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.1~core1" name="JQuery-cycle" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.0" operation="ge"/>
@@ -10,8 +10,11 @@
 		<scriptlibrary name="jquery.cycle" call="JQueryCycle::Load"/>
 	</provides>
 	<assets>
-		<file filename="assets/js/jquery.cycle.all.js" md5="1afbc5e61bf421dd381c7e76496db89c"/>
+		<file filename="assets/js/jquery.cycle.all.js" md5="2fdaf616681256cd6d32d811f2ee987b"/>
 	</assets>
+	<upgrades>
+		<upgrade from="2.9999.5~core1" to="3.0.1~core1"/>
+	</upgrades>
 	<files>
 		<file filename="JQueryCycle.lib.php" md5="340b9137fc227982032836ae2cecbc2c">
 			<class name="JQueryCycle"/>
