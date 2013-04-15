@@ -12,6 +12,9 @@
 	<assets>
 		<file filename="assets/js/jquery.hoverIntent.min.js" md5="3e36c5ccb99b2d56265b877e8e00980e"/>
 	</assets>
+	<upgrades>
+		<upgrade from="r6~core1" to="r7~core1"/>
+	</upgrades>
 	<files>
 		<file filename="JQueryHoverIntent.lib.php" md5="aee32463fa0e30a75179e374e21ca641">
 			<class name="JQueryHoverIntent"/>
