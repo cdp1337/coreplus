@@ -20,6 +20,7 @@ class CronController extends Controller_2_1 {
 
 		// Check and see if I need to run this cron already, ie: don't run an hourly log twice in the same hour.
 		$last = CronLogModel::Find(array('cron' => 'hourly'), 1, 'created DESC');
+		$last = false;
 		if($last && (Time::GetCurrentGMT() - $last->get('created') < 3540) ){
 			// No run needed, already ran within the past 59 minutes.
 
@@ -270,10 +271,47 @@ class CronController extends Controller_2_1 {
 //var_dump($log); die();
 		$start = microtime(true) * 1000;
 
-		// Since these systems will just be writing to STDOUT, I'll need to capture that.
-		ob_start();
-		$result = HookHandler::DispatchHook('/cron/' . $cron);
-		$contents = ob_get_clean();
+		$sep = '==========================================' . "\n";
+		$contents = "Starting cron execution for $cron\n$sep";
+
+		// This uses the hook system, but will be slightly different than most things.
+		$overallresult = true;
+		$hook = HookHandler::GetHook('/cron/' . $cron);
+		if($hook){
+			if($hook->getBindingCount()){
+				$bindings = $hook->getBindings();
+				foreach($bindings as $b){
+					$contents .= sprintf(
+						"\nExecuting Binding %s...\n",
+						$b['call']
+					);
+					// Since these systems will just be writing to STDOUT, I'll need to capture that.
+					ob_start();
+					$execution = $hook->callBinding($b, array());
+					$executiondata = ob_get_clean();
+
+					if($executiondata == '' && $execution){
+						$contents .= "Cron executed successfully with no output\n";
+					}
+					elseif($execution){
+						$contents .= $executiondata . "\n";
+					}
+					else{
+						$contents .= $executiondata . "\n!!FAILED\n";
+						$overallresult = false;
+					}
+				}
+			}
+			else{
+				$contents = 'No bindings located for requested cron';
+				$overallresult = true;
+			}
+		}
+		else{
+			$contents = 'Invalid hook requested: ' . $cron;
+			$overallresult = false;
+		}
+
 
 		// Just in case the contents are returning html... (they should be plain text).
 		$contents = str_replace(array('<br>', '<br/>', '<br />'), "\n", $contents);
@@ -284,7 +322,7 @@ class CronController extends Controller_2_1 {
 		$log->set('completed', Time::GetCurrentGMT());
 		$log->set('duration', ( (microtime(true) * 1000) - $start ) );
 		$log->set('log', $contents);
-		$log->set('status', ($result ? 'pass' : 'fail') );
+		$log->set('status', ($overallresult ? 'pass' : 'fail') );
 		$log->save();
 
 		// Just to notify the calling function.

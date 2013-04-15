@@ -41,9 +41,8 @@
 	</div>
 
 	<div class="cron-detail-view-report">
-		<h3>Execution Log</h3>
 		<div class="cron-detail-view-report-contents">
-			{$entry.log|nl2br}
+			<pre>{$entry.log}</pre>
 		</div>
 	</div>
 

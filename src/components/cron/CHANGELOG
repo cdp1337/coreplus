@@ -1,26 +1,32 @@
+Cron 1.1.4
+
+	* Reformatted cron reports to make them more verbose about the different actions called during each
+	  cron.
+	* Cleaned up the admin interface for viewing crons a bit.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 15 Apr 2013 15:19:59 -0400
+
 Cron 1.1.3b1
 
 	* Updated the default options for Cron to keep updated with recent changes in Core.
-	--Charlie Powell <charlie@eval.bz>  Wed, 27 Feb 2013 18:30:39 -0500
+	-- Charlie Powell <charlie@eval.bz>  Wed, 27 Feb 2013 18:30:39 -0500
 
 Cron 1.1.2
 
-	* Added an admin dashboard widget to display crons that have run.
+	* [Feature] Added an admin dashboard widget to display crons that have run.
 	* New howto page for instructions on setting up the cron jobs.
-	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 16:52:35 -0500
+	-- Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 16:52:35 -0500
 
 Cron 1.1.1
 
 	* Cleaned up the admin styles a little
-	--Charlie Powell <charlie@eval.bz>  Fri, 01 Feb 2013 20:14:59 -0500
-
+	-- Charlie Powell <charlie@eval.bz>  Fri, 01 Feb 2013 20:14:59 -0500
 
 Cron 1.1.0
 
-	* Added a controller and templates for viewing and searching for executed cron passes.
-	* Added memory usage to the cron system and reports.
+	* [Feature] Added a controller and templates for viewing and searching for executed cron passes.
+	* [Feature] Added memory usage to the cron system and reports.
 	* Using the new CHANGELOG handler in the package :P
-	--Charlie Powell <charlie@eval.bz>  Thu, 24 Jan 2013 04:51:15 -0500
+	-- Charlie Powell <charlie@eval.bz>  Thu, 24 Jan 2013 04:51:15 -0500
 
 Cron 1.0.0
 

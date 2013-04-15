@@ -11,7 +11,19 @@
 }
 
 .cron-detail-view-report-contents{
+	background: none repeat scroll 0 0 #F2F2F2;
+	border: 1px solid #BBBBBB;
 	font-family: monospace;
 	font-size: 11px;
+	max-height: 600px;
+	overflow: auto;
+	padding: 0.5em;
 	text-align: left;
+}
+
+.cron-status-fail {
+	color: red;
+}
+.cron-status-pass {
+	color: green;
 }
