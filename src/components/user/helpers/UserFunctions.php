@@ -28,7 +28,7 @@ namespace User;
 /**
  * Get the form object for registrations.
  *
- * @return Form
+ * @return \Form
  */
 function get_registration_form(){
 	return get_form(null);
@@ -37,12 +37,19 @@ function get_registration_form(){
 /**
  * Get the form object for editing users.
  *
- * @return Form
+ * @param \User_Backend $user
+ *
+ * @return \Form
  */
 function get_edit_form(\User_Backend $user){
 	return get_form($user);
 }
 
+/**
+ * @param \User_Backend|null $user
+ *
+ * @return \Form
+ */
 function get_form($user = null){
 	$form = new \Form();
 	if($user === null) $user = \User::Factory();

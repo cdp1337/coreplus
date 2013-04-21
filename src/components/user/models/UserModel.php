@@ -34,6 +34,7 @@ class UserModel extends Model {
 			'maxlength' => 64,
 			'null' => false,
 			'validation' => Model::VALIDATION_EMAIL,
+			'required' => true,
 		),
 		'backend' => array(
 			'type' => Model::ATT_TYPE_STRING,

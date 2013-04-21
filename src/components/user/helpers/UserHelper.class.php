@@ -73,6 +73,38 @@ abstract class UserHelper{
 			return false;
 		}
 
+		// This is a special case if the password isn't set yet.
+		// It can happen with imported users or if a password is invalidated.
+		if($u->get('password') == '' && $u->canResetPassword() === true){
+			// Use the Nonce system to generate a one-time key with this user's data.
+			$nonce = NonceModel::Generate(
+				'20 minutes',
+				['type' => 'password-reset', 'user' => $u->get('id')]
+			);
+
+			$link = '/user/forgotpassword?e=' . urlencode($u->get('email')) . '&n=' . $nonce;
+
+			$e = new Email();
+			$e->setSubject('Initial Password Request');
+			$e->to($u->get('email'));
+			$e->assign('link', Core::ResolveLink($link));
+			$e->assign('ip', REMOTE_IP);
+			$e->templatename = 'emails/user/initialpassword.tpl';
+			try{
+				$e->send();
+				SecurityLogModel::Log('/user/initialpassword/send', 'success', $u->get('id'), 'Initial password request sent successfully');
+
+				Core::SetMessage('You must set a new password.  An email has been sent to your inbox containing a link and instructions on setting a new password.', 'info');
+				return true;
+			}
+			catch(Exception $e){
+				error_log($e->getMessage());
+				Core::SetMessage('Unable to send new password link to your email, please contact the system administrator!', 'error');
+				return false;
+			}
+		}
+
+
 		if(!$u->checkPassword($p->get('value'))){
 
 			// Log this as a login attempt!

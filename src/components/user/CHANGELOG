@@ -1,3 +1,15 @@
+User 2.4.6
+
+	* [Bug] Facebook backend now doesn't throw a STRICT error for the Find method.
+	* [Feature] User Import.  This allows users to upload a CSV and map it to the user table and user
+	  configurations.
+	* [Feature] Users can now "login" with a blank password.  This actually fires off an email to the
+	  user's account with a NONCE link that allows them to set their password.  This is useful for the
+	  import feature and a "Revoke Password" feature.
+	* [Feature] Added a setFromArray method on the user base object.
+	* Set the email to be a required field on the User Model.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 20 Apr 2013 20:56:24 -0400
+
 User 2.4.5
 
 	* [Bug] /user/displayas is now currently used to display the username.

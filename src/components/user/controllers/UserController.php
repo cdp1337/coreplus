@@ -189,8 +189,8 @@ class UserController extends Controller_2_1{
 		$form->set('callsMethod', 'UserHelper::LoginHandler');
 
 		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
-		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => true));
-		$form->addElement('submit', array('value' => 'Login'));
+		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => false));
+		$form->addElement('submit', array('name' => 'submit', 'value' => 'Login'));
 
 		$error = false;
 

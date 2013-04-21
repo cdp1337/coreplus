@@ -130,6 +130,16 @@ class User {
 	}
 
 	/**
+	 * Set the arguments on this user object from an array.
+	 * @param $array
+	 */
+	public function setFromArray($array){
+		foreach($array as $k => $v){
+			$this->set($k, $v);
+		}
+	}
+
+	/**
 	 * Populate this user object from a form
 	 *
 	 * @param Form $form
@@ -253,24 +263,27 @@ class User {
 	/**
 	 * Save this user and all of its metadata, including configs and groups.
 	 *
-	 * @return void (TODO - return something meaningful)
+	 * @return bool
 	 */
 	public function save() {
 		// No user object, no need to do anything.
 		if($this->_model === null) return false;
 
-		$this->_getModel()->save();
+		$result = $this->_getModel()->save();
 
 		// also update any/all config options.
 		if($this->_configs){
 			foreach($this->_configs as $c){
 				$c->set('user_id', $this->get('id'));
-				$c->save();
+				// Save it, but if save returns TRUE, then force this return to be marked as changed too.
+				if($c->save()) $result = true;
 			}
 		}
 
 		// Fire off the hook!
 		HookHandler::DispatchHook('/user/postsave', $this);
+
+		return $result;
 	}
 
 

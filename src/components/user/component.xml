@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.5" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.6" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.4.4"/>
 		<!-- User authentication events trigger security logs. -->
@@ -20,8 +20,8 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="c75ff2c7bcf80bf14ed31f91c5321377"/>
-		<file filename="User.class.php" md5="cc0790fb24c2f1840948104fd83286bc">
+		<file filename="CHANGELOG" md5="d9287c1fa7f04b31683131a6b0facf20"/>
+		<file filename="User.class.php" md5="d4569cac78b52317e16eac2feb1a19a8">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
@@ -42,24 +42,27 @@
 			<class name="User_datamodel_Backend"/>
 		</file>
 		<file filename="backends/User_datamodel.backend.php~" md5="2c12e634a461b970a666e436e51b6252"/>
-		<file filename="backends/User_facebook.backend.php" md5="27371946adaf1cf235d2e72b7866b45e">
+		<file filename="backends/User_facebook.backend.php" md5="57476ce9040790fbc4e7f23b6c0ced0d">
 			<class name="User_facebook_Backend"/>
 		</file>
 		<file filename="component.xml~" md5="985d6fe3c68c8e40ed3fc845e19435d1"/>
 		<file filename="controllers/UserActivityController.php" md5="3a5257288e3e0d807f153ded60f0fc6b">
 			<controller name="UserActivityController"/>
 		</file>
-		<file filename="controllers/UserAdminController.php" md5="639bca8727cf48460d54830b680e144d">
+		<file filename="controllers/UserAdminController.php" md5="03b8bb51752e03ef4c36d17a4fb4d76e">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="bdf5b3c8b99ad5fbffb5d1008468d2c3">
+		<file filename="controllers/UserController.php" md5="44b4788cef43e34c296da9a724bfb2c3">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="1e26a36d85fc0065cec33b198b27f475">
 			<controller name="UserGroupAdminController"/>
 		</file>
-		<file filename="helpers/UserFunctions.php" md5="38df03370f1641180a5f9946b6511af7"/>
-		<file filename="helpers/UserHelper.class.php" md5="5a13aa62e4b335a2d2c940cddbfce9ae">
+		<file filename="helpers/ImportHelper.php" md5="5a0faa3ce1ed5da4b8433ec821019842">
+			<class name="User\ImportHelper"/>
+		</file>
+		<file filename="helpers/UserFunctions.php" md5="1568866b592c1fa116f978910bf8f788"/>
+		<file filename="helpers/UserHelper.class.php" md5="f5da22dd612ca42a12e8080f69c4f633">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
@@ -72,7 +75,7 @@
 		<file filename="models/UserGroupModel.php" md5="4628a66033c01e252738997e44f0262c">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="models/UserModel.php" md5="495879755a62c716d7e46cc835db893b">
+		<file filename="models/UserModel.php" md5="891017119df73bf073c5e163b50cc853">
 			<class name="UserModel"/>
 		</file>
 		<file filename="models/UserUserConfigModel.php" md5="4effee3eafd958fa65ce9a8204767258">
@@ -84,6 +87,7 @@
 	</files>
 	<view>
 		<file filename="templates/emails/user/forgotpassword.tpl" md5="8463f6b3726164f63e8c838a58a28ba7"/>
+		<file filename="templates/emails/user/initialpassword.tpl" md5="e1313d158e73c9104cd798ef5d5e39e7"/>
 		<file filename="templates/emails/user/registration.tpl" md5="bc0af99c272dc0849608642ef56185f2"/>
 		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="8d98f0017081473db0680e1bd1a5d849"/>
 		<file filename="templates/pages/user/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -94,6 +98,9 @@
 		<file filename="templates/pages/user/password.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/useractivity/index.tpl" md5="f1463c6f2df95ad634013491b867ba53"/>
+		<file filename="templates/pages/useradmin/import1.tpl" md5="34d4a67fc553d310cef459dc9a288da9"/>
+		<file filename="templates/pages/useradmin/import2.tpl" md5="bb67d4446d420094507d43e1b4d21390"/>
+		<file filename="templates/pages/useradmin/import3.tpl" md5="655994a8909458e93fa643349788621d"/>
 		<file filename="templates/pages/useradmin/index.tpl" md5="03a23eade9177436e141b1adb8308519"/>
 		<file filename="templates/pages/usergroupadmin/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/usergroupadmin/index.tpl" md5="737ee67c775c5cb219d040015dbcb496"/>
@@ -174,6 +181,7 @@
 		<upgrade from="2.4.4b1" to="2.4.4b2"/>
 		<upgrade from="2.4.4b2" to="2.4.4"/>
 		<upgrade from="2.4.4" to="2.4.5"/>
+		<upgrade from="2.4.5" to="2.4.6"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
