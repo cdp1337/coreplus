@@ -437,6 +437,7 @@ class File_remote_backend implements File_Backend {
 
 	/**
 	 * Get the headers for this given file.
+	 * This will go out and query the server with a HEAD request if no headers set otherwise.
 	 */
 	private function _getHeaders() {
 		if ($this->_headers === null) {
@@ -449,12 +450,12 @@ class File_remote_backend implements File_Backend {
 			$curl = curl_init();
 			curl_setopt_array(
 				$curl, array(
-					     CURLOPT_HEADER         => true,
-					     CURLOPT_NOBODY         => true,
-					     CURLOPT_RETURNTRANSFER => true,
-					     CURLOPT_URL            => $this->getURL(),
-					     CURLOPT_HTTPHEADER     => Core::GetStandardHTTPHeaders(true),
-				     )
+					CURLOPT_HEADER         => true,
+					CURLOPT_NOBODY         => true,
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_URL            => $this->getURL(),
+					CURLOPT_HTTPHEADER     => Core::GetStandardHTTPHeaders(true),
+				)
 			);
 
 			$result = curl_exec($curl);
@@ -522,13 +523,22 @@ class File_remote_backend implements File_Backend {
 				if ($systemcachedata) {
 					// I can only look them up if the cache is available.
 
-					// First attempt, try ETag.
-					if ($this->_getHeader('ETag')) {
-						$needtodownload = ($this->_getHeader('ETag') != $systemcachedata['etag']);
+					// First check will be the expires header.
+					// If this is set and the data exists locally, don't even try to
+					if(isset($systemcachedata['Expires']) && strtotime($systemcachedata['Expires']) > time()){
+						$needtodownload = false;
+						// And set the headers!
+						// This is required
+						$this->_headers = $systemcachedata;
+						$this->_response = 200;
+					}
+					// Next, try ETag.
+					elseif ($this->_getHeader('ETag')) {
+						$needtodownload = ($this->_getHeader('ETag') != $systemcachedata['ETag']);
 					}
 					// No?  How 'bout 
 					elseif ($this->_getHeader('Last-Modified')) {
-						$needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['last-modified']);
+						$needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['Last-Modified']);
 					}
 					// Still no?  The default is to download it anway.
 				}
@@ -550,10 +560,8 @@ class File_remote_backend implements File_Backend {
 
 				// And remember this header data for nexttime.
 				Core::Cache()->set(
-					'remotefile-cache-header-' . $f, array(
-						                               'etag'          => $this->_getHeader('ETag'),
-						                               'last-modified' => $this->_getHeader('Last-Modified'),
-					                               )
+					'remotefile-cache-header-' . $f,
+					$this->_getHeaders()
 				);
 			}
 		}

@@ -1615,7 +1615,7 @@ class Component_2_1 {
 		// Get the table structure as it exists in the database first, this will be the comparison point.
 		$classes = $this->getClassList();
 		foreach ($classes as $k => $v) {
-			if ($k == 'model' || strpos($k, 'model') !== strlen($k) - 5) unset($classes[$k]);
+			if ($k == 'model' || strrpos($k, 'model') !== strlen($k) - 5) unset($classes[$k]);
 		}
 
 		// Do the actual processing of every Model.

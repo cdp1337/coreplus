@@ -32,6 +32,14 @@ function smarty_function_widgetarea($params, $template) {
 	$name = $params['name'];
 	$page = $template->template_resource;
 
+	// I need to resolve the page template down to the base version in order for the lookup to work.
+	foreach(Core\Templates\Template::GetPaths() as $base){
+		if(strpos($page, $base) === 0){
+			$page = substr($page, strlen($base));
+			break;
+		}
+	}
+
 	// Pages can have their own template for this theme.
 	$template = PageRequest::GetSystemRequest()->getPageModel()->get('theme_template');
 	if (!$template) $template = ConfigHandler::Get('/theme/default_template');

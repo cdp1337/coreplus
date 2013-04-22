@@ -62,6 +62,10 @@ class FileContentFactory {
 				$class = 'File_zip_contents';
 				break;
 
+			case 'text/csv':
+				$class = 'File_csv_contents';
+				break;
+
 			case 'application/octet-stream':
 				// These are fun... basically I'm relying on the extension here.
 				if($file->getExtension() == 'zip'){

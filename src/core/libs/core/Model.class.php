@@ -387,6 +387,11 @@ class Model implements ArrayAccess {
 			}
 		}
 		*/
+
+		// Dispatch the pre-save hook for models.
+		// This allows utilities to hook in and modify the model or perform some other action.
+		HookHandler::DispatchHook('/core/model/presave', $this);
+
 		if ($this->_exists) $this->_saveExisting();
 		else $this->_saveNew();
 
@@ -415,6 +420,8 @@ class Model implements ArrayAccess {
 
 		$this->_exists     = true;
 		$this->_datainit = $this->_data;
+
+		HookHandler::DispatchHook('/core/model/postsave', $this);
 
 		// Indicate that something happened.
 		return true;
@@ -484,6 +491,9 @@ class Model implements ArrayAccess {
 	/**
 	 * Get a valid schema of all keys of this model.
 	 *
+	 * This will ensure all the core optional attributes are set at the
+	 * default value and a few other dynamic attributes.
+	 *
 	 * @return array
 	 */
 	public function getKeySchemas() {
@@ -500,6 +510,26 @@ class Model implements ArrayAccess {
 				if (!isset($v['comment']))   $this->_schemacache[$k]['comment']   = false;
 				if (!isset($v['default']))   $this->_schemacache[$k]['default']   = false;
 				if (!isset($v['encrypted'])) $this->_schemacache[$k]['encrypted'] = false;
+
+				// Generate a title for this key from the form data.
+				// This can be useful for Model utilities that want to display the
+				// human-friendly name instead of the machine name.
+				if(isset($v['title'])){
+					// For the schema data, the "title" attribute is the highest priority.
+					$this->_schemacache[$k]['title'] = $v['title'];
+				}
+				elseif(isset($v['form']) && is_array($v['form']) && isset($v['form']['title'])){
+					// Next, form.title is the preferred default.
+					$this->_schemacache[$k]['title'] = $v['form']['title'];
+				}
+				elseif(isset($v['formtitle'])){
+					// This is an older shorthand format that's supported too.
+					$this->_schemacache[$k]['title'] = $v['formtitle'];
+				}
+				else{
+					// Guess I need to calculate this manually then....
+					$this->_schemacache[$k]['title'] = ucwords(str_replace('_', ' ', $k));
+				}
 			}
 		}
 
@@ -1394,6 +1424,25 @@ class Model implements ArrayAccess {
 	}
 
 	/**
+	 * Get the data of this model.
+	 * Don't use this, it's probably not what you need.
+	 *
+	 * @return array
+	 */
+	public function getData(){
+		return $this->_data;
+	}
+
+	/**
+	 * Get the initial data of this model as it was when it was loaded from teh database.
+	 *
+	 * @return array|null
+	 */
+	public function getInitialData(){
+		return $this->_datainit;
+	}
+
+	/**
 	 * Get if this model exists in the datastore already.
 	 *
 	 * @return bool
@@ -1529,17 +1578,34 @@ class Model implements ArrayAccess {
 
 	protected function _getCacheKey() {
 		if (!$this->_cacheable) return false;
+		$i = self::GetIndexes();
+
 		if (!(isset($i['primary']) && sizeof($i['primary']))) return false;
 
-		$cachekeys = array();
-		foreach ($i['primary'] as $k) {
-			$val = $this->get($k);
-			if ($val === null) $val = 'null';
-			elseif ($val === false) $val = 'false';
-			$cachekeys[] = $val;
+		$keys = $this->getPrimaryKeyString();
+
+		return 'DATA:' . self::GetTableName() . ':' . $keys;
+	}
+
+	/**
+	 * Get the primary key value(s) of this model as a string
+	 *
+	 * @return string
+	 */
+	public function getPrimaryKeyString(){
+		$bits = array();
+		$i = self::GetIndexes();
+
+		if(isset($i['primary'])){
+			foreach ($i['primary'] as $k) {
+				$val = $this->get($k);
+				if ($val === null) $val = 'null';
+				elseif ($val === false) $val = 'false';
+				$bits[] = $val;
+			}
 		}
 
-		return 'DATA:' . self::GetTableName() . ':' . implode('-', $cachekeys);
+		return implode('-', $bits);
 	}
 
 

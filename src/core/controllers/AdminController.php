@@ -23,7 +23,7 @@
 class AdminController extends Controller_2_1 {
 
 	public function __construct() {
-		$this->accessstring = 'g:admin';
+
 	}
 
 	public function index() {
@@ -38,6 +38,11 @@ class AdminController extends Controller_2_1 {
 			$viewable[] = $p;
 		}
 
+		// If there are no viewable pages... don't display any admin dashboard.
+		if(!sizeof($viewable)){
+			return View::ERROR_ACCESSDENIED;
+		}
+
 		$view->title = 'Administration';
 		$view->assign('links', $viewable);
 
@@ -46,6 +51,11 @@ class AdminController extends Controller_2_1 {
 	}
 
 	public function reinstallAll() {
+		// Admin-only page.
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
 		// Just run through every component currently installed and reinstall it.
 		// This will just ensure that the component is up to date and correct as per the component.xml metafile.
 		$view = $this->getView();
@@ -114,6 +124,11 @@ class AdminController extends Controller_2_1 {
 	}
 
 	public function config() {
+		// Admin-only page.
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
 		$view = $this->getView();
 
 		$where = array();

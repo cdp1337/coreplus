@@ -1,15 +1,70 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: powellc
- * Date: 7/6/12
- * Time: 5:12 PM
- * To change this template use File | Settings | File Templates.
+ * Class file for FormFileInput
+ *
+ * @package Core\Forms
+ * @author Charlie Powell <charlie@eval.bz>
+ * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+/**
+ * Class FormFileInput provides built-in support for file uploads in forms.
+ *
+ * Destination directory, filetypes, max file sizes, etc are all typically handled automatically,
+ * as with standard form elements.
+ *
+ * <h3>Options</h3>
+ *
+ * <p>The following standard options are supported for File Input types:</p>
+ *
+ * <dl>
+ *     <dt>accept</dt>
+ *     <dd>
+ *         A comma-separated list of accept mimetypes for this file.  (Also supports extensions if prefixed with a ".".<br/>
+ *         Examples:<br/>
+ *         <code>
+ * // Accept only PNG, JPEG, and GIF images.
+ * accept: 'image/png, image/jpg, image/gif'</code>
+ *         <code>// Accept any (rasterized) image.
+ * accept: 'image/*'</code>
+ *         <code>// Accept CSV, XLS, or ODS files
+ * accept: '.csv, .xsl, .ods';</code>
+ *     </dd>
+ *
+ *     <dt>allowlink</dt>
+ *     <dd>I can't remember what this does...</dd>
+ *
+ *     <dt>basedir</dt>
+ *     <dd>
+ *         The destination directory this file will get saved to.  This is rendered with Core's File system, so
+ *         any valid File prefix will work, ie: "public/foo", "private/blah", "tmp/this-will-get-deleted-next-reboot/", etc.
+ * </dl>
+ *
+ *
+ * @package Core\Forms
+ */
 class FormFileInput extends FormElement {
+	/**
+	 * @var int
+	 */
 	private static $_AutoID = 0;
 
+	/**
+	 * @param null $atts
+	 */
 	public function __construct($atts = null) {
 		// Some defaults
 		$this->_attributes      = array(
@@ -25,6 +80,10 @@ class FormFileInput extends FormElement {
 		parent::__construct($atts);
 	}
 
+	/**
+	 * @return string
+	 * @throws Exception
+	 */
 	public function render() {
 		if (!$this->get('id')) {
 			// This system requires a valid id.
@@ -55,6 +114,11 @@ class FormFileInput extends FormElement {
 		return $f;
 	}
 
+	/**
+	 * @param mixed $value
+	 *
+	 * @return bool
+	 */
 	public function setValue($value) {
 		if ($this->get('required') && !$value) {
 			$this->_error = $this->get('label') . ' is required.';

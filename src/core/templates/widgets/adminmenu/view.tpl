@@ -2,7 +2,7 @@
 
 	{css src="css/admin/adminbar.css"}{/css}
 
-<div id="admin-bar">
+<div id="admin-bar" class="screen">
 	<ul>
 		<li class="has-sub">
 			<i class="icon-cogs"></i>

@@ -27,7 +27,7 @@ use Cache;
 
 /**
  * Shortcut function to get the current system database/datamodel interface.
- * @return DMI_Backend
+ * @return \DMI_Backend
  */
 function db(){
 	return DMI::GetSystemDMI()->connection();
@@ -121,7 +121,7 @@ function user(){
  *
  * @since 2011.07.09
  * @param string $filename
- * @return File_Backend
+ * @return \File_Backend
  */
 function file($filename = null){
 
@@ -154,7 +154,7 @@ function file($filename = null){
  *
  * @since 2011.07.09
  * @param string $directory
- * @return Directory_Backend
+ * @return \Directory_Backend
  */
 function directory($directory){
 	switch(CDN_TYPE){
@@ -303,7 +303,7 @@ function Redirect($page){
 	//This is NOT designed to refresh the current page.	If the pageto redirect to IS
 	// this current page, simply do nothing.
 
-	$page = Core::ResolveLink($page);
+	$page = \Core::ResolveLink($page);
 
 	//if(!preg_match('/^[a-zA-Z]{0,7}:\/\//', $page)){
 	//	$m = PageModel::Find(array('baseurl' => $page), 1);
@@ -927,6 +927,9 @@ function check_file_mimetype($acceptlist, $mimetype, $extension = null){
 		)
 	);
 
+	// Also lowercase the incoming extension.
+	$extension = strtolower($extension);
+
 	foreach($accepts as $accepttype){
 		// '*' is the wildcard to accept any filetype....
 		// why would this even be set?!?
@@ -963,7 +966,13 @@ function check_file_mimetype($acceptlist, $mimetype, $extension = null){
 
 	// Now that all the mimetypes have run through, I can see if one matched.
 	if(!$acceptgood){
-		return 'Invalid file uploaded, please ensure it is one of [' . implode(', ', $accepts) . ']';
+		if(sizeof($accepts) > 1){
+			$err = 'matches one of [ ' . implode(', ', $accepts) . ' ]';
+		}
+		else{
+			$err = 'is a ' . $accepts[0] . ' file';
+		}
+		return 'Invalid file uploaded, please ensure it ' . $err;
 	}
 	else{
 		return '';

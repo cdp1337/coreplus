@@ -73,13 +73,14 @@ class File_local_backend implements File_Backend {
 
 		// There are a few exceptions to the rule.... namely with plain text.
 		$ext = strtolower($this->getExtension());
-		if ($ext == 'js' && $type == 'text/plain') $type = 'text/javascript';
-		elseif ($ext == 'js' && $type == 'text/x-c++') $type = 'text/javascript';
-		elseif ($ext == 'css' && $type == 'text/plain') $type = 'text/css';
-		elseif ($ext == 'css' && $type == 'text/x-c') $type = 'text/css';
-		elseif ($ext == 'html' && $type == 'text/plain') $type = 'text/html';
-		elseif ($ext == 'ttf' && $type == 'application/octet-stream') $type = 'font/ttf';
-		elseif ($ext == 'otf' && $type == 'application/octet-stream') $type = 'font/otf';
+		if     ($ext == 'js'   && $type == 'text/plain')               $type = 'text/javascript';
+		elseif ($ext == 'js'   && $type == 'text/x-c++')               $type = 'text/javascript';
+		elseif ($ext == 'css'  && $type == 'text/plain')               $type = 'text/css';
+		elseif ($ext == 'css'  && $type == 'text/x-c')                 $type = 'text/css';
+		elseif ($ext == 'html' && $type == 'text/plain')               $type = 'text/html';
+		elseif ($ext == 'ttf'  && $type == 'application/octet-stream') $type = 'font/ttf';
+		elseif ($ext == 'otf'  && $type == 'application/octet-stream') $type = 'font/otf';
+		elseif ($ext == 'csv'  && $type == 'text/plain')               $type = 'text/csv';
 
 		return $type;
 	}

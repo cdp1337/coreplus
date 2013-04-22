@@ -1,3 +1,27 @@
+Core Plus 2.5.2
+
+	* [Bug] Fixed a bug that ocurred with models that start with "Model" and end with "Model".
+	* [Bug] Fixed a bug on the smarty widgetarea function to translate fully resolved paths back to their
+	  relative location.  Useful for matching up which page has which widget installed on it.
+	* [Bug] Set the adminbar to be hidden on print by default.
+	* [Feature] New hooks available - /core/model/presave and /core/model/postsave.  These are useful for
+	  attaching into the model save procedure.
+	* [Feature] Model->getKeySchemas and getKeySchema now have a "title" attribute for each record.  This
+	  is a human-friendly name generated from either the form data or the machine name.
+	* [Feature] New methods, Model->getData and getInitialData.  Useful for getting the raw data prior to
+	  or post save.
+	* [Feature] new method, Model->getPrimaryKeyString gets the PK values for a given record as a
+	  flattened string.
+	* [Feature] New support for reading CSV files.
+	* [Feature] New support for the "expries" header in remote files.  If this is present and valid, no
+	  server calls will even be made for a given remote file.
+	* Removed the "g:admin" permission string on /admin.  This allows the dashboard page to be properly
+	  used as a dashboard for any user with access to a "admin=1" page.
+	* Better phpdoc for the file input form element.
+	* Prettified the accept file error a little.  It now generates english-readable text instead of a
+	  machine-type printout.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 22 Apr 2013 10:24:39 -0400
+
 Core Plus 2.5.1
 
 	* [Bug] Set the smarty "mail" command to require the Core mail javascript.
@@ -29,6 +53,7 @@ Core Plus 2.5.1
 	  rendering engines are now polled automatically based on the file extension.
 	* Changed the Core::GoBack method to ignore the same page that the user is currently on.  This allows
 	  "1" to be used on a POST page as if it were the original page load.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 15 Apr 2013 15:48:05 -0400
 
 Core Plus 2.5.0
 

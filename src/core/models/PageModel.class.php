@@ -115,6 +115,7 @@ class PageModel extends Model {
 			'type' => Model::ATT_TYPE_INT,
 			'formtype' => 'disabled',
 			'comment' => 'Number of page views',
+			'model_audit_ignore' => true, // Custom key for the component "Model Audit".
 		),
 		'selectable' => array(
 			'type' => Model::ATT_TYPE_BOOL,
