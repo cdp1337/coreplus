@@ -65,7 +65,7 @@ class Whois extends WhoisClient {
 	function lookup($query = '', $is_utf = true) {
 
 		// See if this query has been cached by Core <3
-		$cachekey = 'whois-' . $query;
+		$cachekey = \Core\str_to_url('whois-' . $query);
 		$cached = \Core\cache()->get($cachekey);
 
 		if($cached){
@@ -90,6 +90,12 @@ class Whois extends WhoisClient {
 			// Configure to use default whois server
 			$this->Query['server'] = $this->NSI_REGISTRY;
 			return new WhoisNotFoundResult($query);
+		}
+
+		// If the query is an IP range, just drop off the network identifier.
+		// The whois agent should still be able to lookup the network base.
+		if(preg_match('/^[0-9\.]*\/[0-9]+$/', $query)){
+			$query = substr($query, 0, strpos($query, '/'));
 		}
 
 		// Set domain to query in query array

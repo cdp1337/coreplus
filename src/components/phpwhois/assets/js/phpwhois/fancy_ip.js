@@ -13,7 +13,7 @@ $(function(){
 		// country, network, ip, flag_sm, and flag_lg.
 		var currenthtml = $node.html();
 		$node.attr('ip', data.ip).html('<img src="' + data.flag_sm + '" title="' + data.country_name + '" alt="' + data.country + '"/> ' + currenthtml);
-		$node.append(ips[data.ip].tooltip);
+		$node.append(ips[data.query].tooltip);
 	};
 
 	function build_fancy_overlay(data){
@@ -40,7 +40,7 @@ $(function(){
 		//$html = $(html);
 		//$('body').append($html);
 
-		ips[data.ip]['tooltip'] = html;
+		ips[data.query]['tooltip'] = html;
 	};
 
 	$('.ip')
