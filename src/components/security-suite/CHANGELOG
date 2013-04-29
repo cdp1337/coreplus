@@ -1,10 +1,18 @@
+Security-Suite 1.1.0
+
+	* There is now a manual IP blacklist option as part of the security suite.
+	* The security suite now makes use of the new phpwhois and geoinformation components.  This helps
+	  administrators decide who to block ;)
+	-- Charlie Powell <charlie@eval.bz>  Mon, 29 Apr 2013 03:02:32 -0400
+
 Security-Suite 1.0.1
 
+	* [Feature] Added tests for ensuring that the system can import a zipped CSV.
 	* Minor adjustments to the download logic.
-	* Added tests for ensuring that the system can import a zipped CSV.
-	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:36:10 -0500
+	-- Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:36:10 -0500
 
 Security-Suite 1.0.0
 
 	* Initial Version
 	-- Charlie Powell <charlie@eval.bz>  30 Dec 2012
+

@@ -1,37 +1,49 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Security-Suite" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" name="Security-Suite" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.4.0"/>
+		<require name="core" type="component" version="2.5.2"/>
+		<require name="phpwhois" type="component"/>
 	</requires>
 	<configs/>
 	<hooks>
 		<hook name="/core/components/loaded" call="StopForumSpam::CheckIP"/>
+		<hook name="/core/components/loaded" call="IpBlacklistHelper::CheckIP"/>
 		<hook name="/cron/daily" call="StopForumSpam::HookDaily"/>
 	</hooks>
 	<pages>
 		<page access="p:/security/viewlog" admin="1" baseurl="/security/log" title="Security Log"/>
+		<page access="g:admin" admin="1" baseurl="/security/blacklistip" title="Blacklisted IP addresses"/>
 	</pages>
 	<permissions>
 		<permission key="/security/viewlog" description="View Security Log"/>
 	</permissions>
 	<view searchdir="templates">
-		<file filename="templates/pages/security/log.tpl" md5="01d8c56a1b9f25d93362ee9f0b624b0c"/>
+		<file filename="templates/pages/security/blacklistip.tpl" md5="b6f9b7a4d23c7d7f025c645a9e0bfa31"/>
+		<file filename="templates/pages/security/blacklistip_add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/security/blacklistip_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/security/log.tpl" md5="8b679efe76f5b6f8bcdbad48db44b144"/>
 		<file filename="templates/pages/security/view.tpl" md5="ff23af3634c04a9a1d46076d6b5fadf2"/>
 	</view>
 	<description>
 		Collection of security suites for sites, including anti-spam.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="7e321f3e90c7975239d74249f431f5e8"/>
+		<file filename="CHANGELOG" md5="b62f47413502a3746d852762220fef3f"/>
+		<file filename="classes/IpBlacklistHelper.php" md5="8dee7ca83899e95cfabd27767c1add7c">
+			<class name="IpBlacklistHelper"/>
+		</file>
 		<file filename="classes/StopForumSpam.class.php" md5="2568aad22a32c342ffd2eed74097751d">
 			<class name="StopForumSpam"/>
 		</file>
-		<file filename="controllers/SecurityController.php" md5="de682b251c1fe80a17254088dce80d1f">
+		<file filename="controllers/SecurityController.php" md5="97cab5737435f532817f5e74ae712f11">
 			<controller name="SecurityController"/>
 		</file>
 		<file filename="listed_ip_1.zip" md5="9e6a0866ba2c7b797b0bbe39af7a6736"/>
 		<file filename="listed_ip_1_all.zip" md5="aabf67226a6d5d2bebcf6cc4e6a8c187"/>
+		<file filename="models/IpBlacklistModel.php" md5="8ea58568d6ad42584032e67b1acf63c9">
+			<class name="IpBlacklistModel"/>
+		</file>
 		<file filename="models/SecurityLogModel.php" md5="e94c0c930142ba6df3ac961ead1643b9">
 			<class name="SecurityLogModel"/>
 		</file>
@@ -43,6 +55,10 @@
 		</file>
 		<file filename="tests/test_listed_ip_1_all.zip" md5="521eead350c520774354b8a07e0c7f4c"/>
 	</files>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.1.0"/>
+	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
@@ -51,8 +67,5 @@
 			GNU Affero General Public License v3
 		</license>
 	</licenses>
-	<upgrades>
-		<upgrade from="1.0.0" to="1.0.1"/>
-	</upgrades>
 </component>
 
