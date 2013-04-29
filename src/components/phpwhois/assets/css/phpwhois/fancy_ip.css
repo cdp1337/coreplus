@@ -1,0 +1,33 @@
+.ip {
+	position: relative;
+}
+
+.ip-tooltip {
+	background: none repeat scroll 0 0 white;
+	border: 1px solid #444444;
+	border-top-width: 0;
+	box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
+	left: -6px;
+	min-width: 16em;
+	padding: 5px;
+	position: absolute;
+	top: 1.05em;
+	z-index: 20;
+}
+
+.ip-tooltip .ip-tooltip-label {
+	color: #666666;
+	display: inline-block;
+	padding-right: 5px;
+	text-align: right;
+	width: 6em;
+	line-height: 1.5em;
+}
+
+.ip-tooltip .nowrap {
+	white-space: nowrap;
+}
+
+.ip-tooltip .ip-tooltip-ban-link {
+	float: right;
+}
