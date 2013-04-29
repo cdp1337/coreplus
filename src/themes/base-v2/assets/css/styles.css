@@ -160,6 +160,19 @@ nav#breadcrumbs ul.controls {
 .rounded { border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; }
 
 
+
+
+
+
+/*****************************************************************************
+ *****************************************************************************
+ **                          CONTROL ELEMENTS                               **
+ ** Control objects provide little administrative functionality bits        **
+ ** throughout the site.  They generally appear as a <ul> with <a> or {a}   **
+ ** tags and spans inside.  The listing itself is re-rendered with          **
+ ** javascript to make it a popup menu for better usability.                **
+ *****************************************************************************
+ *****************************************************************************/
 /*** Controls that can be implemented throughout the site ***/
 ul.controls { height:20px; }
 ul.controls li { float:left; margin-right:0.1em; list-style:none;}
@@ -197,35 +210,75 @@ ul.controls.context-menu {
 	border: 1px solid #999;
 	height: auto;
 	background: #eee;
-	top: 0pt;
+	top: 0;
 	z-index: 999;
 }
+
+/* The many links have a bit different styles. */
+ul.controls.context-menu-many-links {
+	box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
+	left: 20px;
+	opacity: 0.9;
+	top: -3px;
+}
 ul.controls.context-menu li {
+	font-size: 14px;
 	float: none;
-	padding: 3px;
 	white-space: nowrap;
+	width: 100%;
+	/* This will get overwritten by a's */
+	color: #555;
+}
+ul.controls.context-menu li i {
+	line-height: 1.5em;
 }
 ul.controls.context-menu li a {
+	padding: 0px;
 	display: block;
+	color: #000;
 }
 ul.controls.context-menu li a:hover {
 	font-size: 14px;
-	padding: 2px;
-	background: white;
+	background: #AFC5EE;
+	color: #000;
+}
+
+ul.controls.context-menu i {
+	padding-left: 4px;
+}
+ul.controls.context-menu span {
+	line-height: 1.9em;
+	padding: 0 2px;
+	display: inline;
 }
 ul.controls.context-menu a span {
-	display: inline;
-	padding-left: 2px;
+
 }
 
 
-/*** Buttons and their respective images that can be used throughout ***/
 
+
+
+/*****************************************************************************
+ *****************************************************************************
+ **                               BUTTONS                                   **
+ **                                                                         **
+ ** These include all of the valid button types, including:                 **
+ ** a.button                                                                **
+ ** span.button                                                             **
+ ** button                                                                  **
+ ** input type="submit"                                                     **
+ ** input type="reset"                                                      **
+ **                                                                         **
+ ** Buttons and their respective images that can be used throughout         **
+ *****************************************************************************
+ *****************************************************************************/
 /* First, all the shared elements amongst the buttons. */
 a.button,
 .ui-widget-content a.button,
 span.button,
 input[type="submit"],
+input[type="reset"],
 button {
 	background: #666;
 	background-repeat:no-repeat;
@@ -252,10 +305,6 @@ span.button {
 	display: inline-block;
 	position: relative;
 	text-decoration: none !important;
-}
-
-input[type="submit"], button {
-
 }
 
 #login-center ,
@@ -657,19 +706,29 @@ table.listing {
 	border-collapse: collapse;
 }
 table.listing tr:nth-child(odd) {
-	background-color: #d5deed;
+	background-color: #d4d6d9;
 }
 table.listing th {
 	padding: 0.15em 0.5em;
 	border: 1px solid #AAA;
 	vertical-align: top;
-	background: #afc5ee;
+	background: #666;
+	color: #EEE;
 }
 table.listing td {
 	padding: 0.15em 0.5em;
 	border: 1px solid #AAA;
 	vertical-align: top;
 }
+
+/* Give a little high-lighting effect on mouseover for the records. */
+table.listing tr:hover {
+	background-color: #c7d5eb;
+}
+
+
+
+
 
 /*** Debugging Classes ***/
 pre.xdebug-var-dump { border: 1px solid #FFE5C0; padding: 0.5em; text-align: left; font-size:0.8em; background: #f5f5f5;color:#555; }
@@ -901,6 +960,7 @@ body.page-user-login .column1 section.pagecontent {margin-left:0;}
 
 .page-user-login fieldset.left {
 	min-width:51%;
+	width: 51%;
 }
 
 .page-user-login fieldset.left .formelement {
@@ -955,3 +1015,18 @@ fieldset.right {
 }
 
 .page-user-login label {max-width:100px;}
+
+
+.widgetarea-admindashboard .widget {
+	background: #e9e9e9;
+	border: 1px solid #BBBBBB;
+	border-radius: 0.25em 0.25em 0.25em 0.25em;
+	float: left;
+	margin: 0.5em;
+	padding: 1em;
+}
+
+.widgetarea-admindashboard .widget h3 {
+	text-align: center;
+	margin-bottom: 0.5em;
+}

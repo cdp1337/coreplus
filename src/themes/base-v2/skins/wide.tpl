@@ -25,7 +25,7 @@
 
 	<body>
 		{widget name="AdminMenu"}
-		<div id="wrapper" class="column1">
+		<div id="wrapper" class="column0">
 			<header>
 				<a href="{$smarty.const.ROOT_URL}" title="Home"><img src="{asset src='logo.png'}" alt="Home"/></a>
 			</header>
@@ -56,12 +56,7 @@
 						{$controls->fetch()}
 					</menu>
 				</nav>
-				
-				<aside id="leftcol" class="pagecolumn">
 
-					{*widget name="/Content/View/5"*}
-					{widgetarea name="Left Column"}
-				</aside>
 				<section class="pagecontent">
 					{if !empty($messages)}
 						{foreach from=$messages item="m"}

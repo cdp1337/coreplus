@@ -1,3 +1,10 @@
+Theme/Base V2 1.0.2
+
+	* [Feature] Added the print and screen stylesheets.
+	* [Feature] Added a wide template, (useful for admin or full-width layouts).
+	* Removed some of the color from the admin listing table.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 29 Apr 2013 03:13:06 -0400
+
 Theme/Base V2 1.0.1
 
 	* Base V2 now includes two optional stylesheets; full-width and gradient.

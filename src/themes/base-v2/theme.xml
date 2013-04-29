@@ -1,20 +1,24 @@
 <?xml version="1.0"?>
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Base V2">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="Base V2">
 	<assets>
 		<file filename="assets/css/error404.css" md5="d451b8028c05fb6474223b84ddc7f417"/>
 		<file filename="assets/css/opt/full-width.css" md5="b874f3da2ccf0890f507834f8ae1a3fc"/>
-		<file filename="assets/css/opt/gradients.css" md5="e5190d41192b72e0713d0befdb2ebe31"/>
-		<file filename="assets/css/styles.css" md5="ee874e15e04fddd47446bc4bbb2e6814"/>
+		<file filename="assets/css/opt/gradients.css" md5="26c1738ce9d7e3a909f633dedf52db63"/>
+		<file filename="assets/css/print.css" md5="f3dd7a5f96e67e8d2156b5887ea785d4"/>
+		<file filename="assets/css/screen.css" md5="616a30b3d90d734a28c0b429991eb77e"/>
+		<file filename="assets/css/styles.css" md5="e17b11376f49873d747ebc18bfc57887"/>
 		<file filename="assets/images/404.jpg" md5="815cb4116bbbec081a645e85de74025c"/>
 	</assets>
 	<skins>
-		<file filename="basic.tpl" title="Standard skin" md5="d5abcc5fbcd257a6d55271cccdeac182"/>
+		<file filename="basic.tpl" title="Standard skin with one left column" md5="59ffaf7b70a6b3c26fcd2b60bb93f3c2"/>
+		<file filename="wide.tpl" title="Full-width body skin, contains no columns" md5="a901ed7adcdbf1aec6cbcf5decbee077"/>
 		<file filename="blank.tpl" title="Blank template, do not use" md5="a126527084ffcbe1d7ba880840ab644f"/>
 	</skins>
 	<view/>
 	<otherfiles/>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.2"/>
 	</upgrades>
 </theme>
 
