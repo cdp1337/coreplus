@@ -1,10 +1,14 @@
-<div id="updater-check-widget" style="display:none;">
-	Checking for updates...
+<h3>Updates</h3>
+
+<div id="updater-check-widget">
+	<noscript>Please enable javascript to check for updates, or {a href="/updater"}check manually{/a}</noscript>
 </div>
 
 
 {script location="foot"}<script type="text/javascript">
 	$target = $('#updater-check-widget');
+
+	$target.html('Checking for updates...');
 
 	$.ajax({
 		url: Core.ROOT_WDIR + 'updater/check.json',
@@ -16,6 +20,8 @@
 			}
 			else{
 				$target.html('No updates available');
+				// And hide this widget.
+				$target.closest('.widget').hide();
 			}
 		},
 		error: function(){

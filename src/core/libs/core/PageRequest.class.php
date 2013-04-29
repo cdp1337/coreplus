@@ -472,10 +472,24 @@ class PageRequest {
 
 		//var_dump($defaultpage->get('page_template'), $return->templatename); die();
 
-		// Master template set in the database?
+
 		if ($defaultpage->get('theme_template')) {
+			// Master template set in the database?
 			$return->mastertemplate = $defaultpage->get('theme_template');
 		}
+		elseif($defaultpage->exists() && $defaultpage->get('admin')){
+			// Or an admin level page?
+			$return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
+		}
+		elseif(sizeof($return->breadcrumbs) && $return->breadcrumbs[0]['title'] == 'Administration'){
+			// Whatever, close e-damn-nough!
+			// This happens for pages that don't actually exist, like "edit"....
+			$return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
+		}
+		else{
+			$this->mastertemplate = ConfigHandler::Get('/theme/default_template');
+		}
+
 
 
 		// Make sure I update any existing page now that the controller has ran.

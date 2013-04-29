@@ -207,7 +207,6 @@ class File_remote_backend implements File_Backend {
 			// Or is an implmentation of the File_Backend interface.
 		}
 		else {
-			die('Implement this method...');
 			// Well it should be damnit!....
 			$file = $dest;
 

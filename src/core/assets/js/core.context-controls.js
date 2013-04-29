@@ -3,7 +3,8 @@ $(function(){
 	$('.controls').each(function(){
 		var $original = $(this),
 			$clone = $original.clone(),
-			$wrapper = $('<div style="position:relative;"/>');
+			$wrapper = $('<div style="position:relative;" class="controls-hover-wrapper"/>'),
+			controlcount = $clone.find('li').length;
 
 		$original.addClass('controls-hover').after($wrapper);
 
@@ -14,6 +15,14 @@ $(function(){
 		// I'm going to do modifications to the original, since that may have events already bound to it.
 		$original.addClass('context-menu');
 
+		// This helps fine-tune the styles a little.
+		if(controlcount == 1){
+			$original.addClass('context-menu-one-link');
+		}
+		else{
+			$original.addClass('context-menu-many-links');
+		}
+
 		// Ensure the clone width is correct.
 		$original.css('min-width', $wrapper.width());
 
@@ -21,7 +30,7 @@ $(function(){
 		$original.hide();
 
 		// If there are more than 3 options, hide the rest.
-		if($clone.find('li').length > 3){
+		if(controlcount > 3){
 			$clone.html('<li><i class="icon-cog"></i> Controls</li>');
 		}
 

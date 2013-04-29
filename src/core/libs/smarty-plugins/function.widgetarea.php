@@ -86,8 +86,12 @@ function smarty_function_widgetarea($params, $template) {
 		// If it's just a string, return that.
 		if (is_string($view)) {
 			$contents = $view;
-		} else {
-			$contents = ($view->error == View::ERROR_NOERROR) ? $view->fetch() : ('Error displaying widget: [' . $view->error . ']');
+		}
+		elseif($view->error == View::ERROR_NOERROR){
+			$contents = $view->fetch();
+		}
+		else{
+			$contents = 'Error displaying widget [' . $wi->get('baseurl') . '], returned error [' . $view->error . ']';
 		}
 
 		$body .= '<div class="widget">' . $contents . '</div>';

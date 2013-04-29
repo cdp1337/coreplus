@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.2" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.3" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -41,7 +41,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="2812067db4d4be26173f2206caeb747d"/>
+		<file filename="core/CHANGELOG" md5="ef52e42654f0b8bb9c171247423d1131"/>
 		<file filename="core/bootstrap.php" md5="4d982ac0586d423cd3c170a46d372db4"/>
 		<file filename="core/bootstrap_postincludes.php" md5="e877be1a1b418440d796ffdc3a622bba"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -504,7 +504,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="efb9982eb8a9d38481f0ae42f3bcb957">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="72bc0af4038ee1947397c4aab0d73dcb">
+		<file filename="core/libs/core/PageRequest.class.php" md5="34dd3fbf38fe420289a11a8570b41b9a">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="598a7f067ea84ea03d02b6ef517c4e3f">
@@ -521,7 +521,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="88efda89b07f413f89962084a0e2b41a">
+		<file filename="core/libs/core/View.class.php" md5="526adeb68ea4955d406e456a6ca01606">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -808,7 +808,7 @@
 		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="1ef7b98780bf35e4a03958bd94da0a31">
 			<class name="File_local_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="e76f43cc8b0384241c0c224222bd8499">
+		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="2d0d12fa2ab4e24ef42c408c3ddac932">
 			<class name="File_remote_backend"/>
 		</file>
 		<file filename="core/libs/filestore/contents/File_asc_contents.class.php" md5="1ab9f64e240b30abc32826e0a2ace694">
@@ -1067,7 +1067,7 @@
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="d8daf3f492d0c8a71e7b8ccf0cd70cc9"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="9ff0428278228b374379b3f08b84db52"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="4f0f7e198dc73658c361edc8d0369365"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="2b27c09e76d92fd76b5811a287e1e500"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="5d25b7234d4d68d19c3b3bf9bd13a0e9"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/smarty/README" md5="2280709acce0bf54217c12eff7932997"/>
 		<file filename="core/libs/smarty/SMARTY_2_BC_NOTES.txt" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
@@ -1435,7 +1435,7 @@
 		</file>
 		<file filename="htaccess.ant" md5="0bf209cd00d6a90d884a584d28445d5f"/>
 		<file filename="htaccess.ex" md5="6e335eb0574ab61fca2dea4c2517a372"/>
-		<file filename="index.php" md5="6d087b205ab2a4bda77c3a7eab7ca1c3"/>
+		<file filename="index.php" md5="3206af3fc5cb5ddc9495f71757c4871c"/>
 		<file filename="install/InstallPage.class.php" md5="908d4058af1a52767fc85ce03a5f0de3">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1551,7 +1551,7 @@
 		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
 		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
 		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="f8db57210e3f19c278f999c493356f8e"/>
-		<file filename="core/templates/widgets/updater/check.tpl" md5="a56be87f37d47c51cb4665ea219da0c4"/>
+		<file filename="core/templates/widgets/updater/check.tpl" md5="72e3def2db04a820ebc32d3659e15f76"/>
 	</view>
 	<install/>
 	<description>
@@ -1596,7 +1596,7 @@
 		<file filename="core/assets/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
 		<file filename="core/assets/js/core.ajaxlinks.js" md5="afcbaf5ffaebe993b37530d7606ec956"/>
 		<file filename="core/assets/js/core.base64.js" md5="d5858756a4cf8012eb25157105718dfa"/>
-		<file filename="core/assets/js/core.context-controls.js" md5="9eb773cb5b8aad1e6cc0b978652c4c5d"/>
+		<file filename="core/assets/js/core.context-controls.js" md5="9cceadad2a7328d7cf536c9d47562ddf"/>
 		<file filename="core/assets/js/core.email.js" md5="88329052413c903e14292864f5c621aa"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.fileupload.js" md5="499451d7c6a0e4266eb703f26e25cf33"/>
@@ -1665,6 +1665,7 @@
 		<upgrade from="2.4.7b9" to="2.5.0"/>
 		<upgrade from="2.5.0" to="2.5.1"/>
 		<upgrade from="2.5.1" to="2.5.2"/>
+		<upgrade from="2.5.2" to="2.5.3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

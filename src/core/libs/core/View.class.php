@@ -540,6 +540,7 @@ class View {
 			return $body;
 		}
 		// Else if it's null, it's just not set yet :p
+		// @deprecated here!
 		elseif ($this->mastertemplate === null) {
 			$this->mastertemplate = ConfigHandler::Get('/theme/default_template');
 		}
