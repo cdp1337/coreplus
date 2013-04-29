@@ -13,7 +13,7 @@ class CronWidget extends Widget_2_1{
 	public function dashboard(){
 		// This dashboard has no effect if the user can't view crons.
 		if(!\Core\user()->checkAccess('p:/cron/viewlog')){
-			return;
+			return '';
 		}
 
 		$view = $this->getView();
@@ -34,7 +34,10 @@ class CronWidget extends Widget_2_1{
 			$cronfac->where('cron = ' . $check['cron']);
 			$cronfac->order('created desc');
 
-			$crons[] = $cronfac->get();
+			$c = $cronfac->get();
+			if($c){
+				$crons[] = $c;
+			}
 		}
 
 		$view->title = 'Latest Cron Results';

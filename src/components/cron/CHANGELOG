@@ -1,3 +1,8 @@
+Cron 1.1.5
+
+	* Cleaned up the admin dashboard widget a little.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 29 Apr 2013 02:27:54 -0400
+
 Cron 1.1.4
 
 	* Reformatted cron reports to make them more verbose about the different actions called during each
