@@ -3,7 +3,7 @@
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.2.2~core1" name="PHPWhois" execmode="both">
 	<requires>
 		<require name="core" type="component" version="2.5.2"/>
-		<require name="Geographic Codes" type="component" version="1.0.0"/>
+		<require name="geographic-codes" type="component" version="1.0.0"/>
 	</requires>
 	<configs/>
 	<description>
@@ -15,7 +15,7 @@
 		<scriptlibrary name="fancy_ip" call="phpwhois\JSHelper::LoadFancyIP"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="b95af7efd91ddca9da791bcf7cc67e46"/>
+		<file filename="CHANGELOG" md5="cfcec976e96ab7d67925fd5bb297e459"/>
 		<file filename="controllers/PhpwhoisController.php" md5="70abd2f5e5f4e673fdabbb1c6d49186d">
 			<controller name="PhpwhoisController"/>
 		</file>
