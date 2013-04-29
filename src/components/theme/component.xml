@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.5" name="Theme" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.6" name="Theme" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.4.0"/>
+		<require name="core" type="component" version="2.5.2"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
 		<require name="jqueryui" type="library" version="1.8.0" operation="ge"/>
 	</requires>
@@ -10,12 +10,12 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="8d18c622a23f0d71135ceabc124131e4"/>
-		<file filename="controllers/ThemeController.class.php" md5="c0d135e59741acd11331a83f4ebbcbba">
+		<file filename="CHANGELOG" md5="bc749d2901a805a5b97cf573d6fcd772"/>
+		<file filename="controllers/ThemeController.class.php" md5="c9bc2304bb4ae4ad29959836b8a2ca43">
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
-		<file filename="libs/Theme/Theme.php" md5="e9e1432156aa28b98e6e0524ebab71a6">
+		<file filename="libs/Theme/Theme.php" md5="847152fd11d07c94d60a0e3300d6760a">
 			<class name="Theme\Theme"/>
 		</file>
 		<file filename="libs/ThemeHandler.class.php" md5="442ad8dde9ce1ea74da0857e01b99aee">
@@ -24,7 +24,7 @@
 	</files>
 	<view>
 		<file filename="templates/pages/theme/editor.tpl" md5="f0fb5e76747b76374c9dd619e46e5ec9"/>
-		<file filename="templates/pages/theme/index.tpl" md5="f8cc9404da9601f60687b552134adebb"/>
+		<file filename="templates/pages/theme/index.tpl" md5="aee2b35ff778ef85a7677a8ccccb3fde"/>
 		<file filename="templates/pages/theme/selectstylesheets.tpl" md5="47956fc42e0954353264ab3d2f5c0e59"/>
 		<file filename="templates/pages/theme/setdefault.tpl" md5="835a5142fdb7c580502a6413909a89e0"/>
 		<file filename="templates/pages/theme/widgets.tpl" md5="e96835f12b3c789786216a905eb27008"/>
@@ -35,6 +35,7 @@
 	</pages>
 	<configs>
 		<config key="/theme/default_template" type="string" default="basic.tpl" description=""/>
+		<config key="/theme/default_admin_template" type="string" default="basic.tpl" description=""/>
 		<config key="/theme/selected" type="string" default="base-v2" description=""/>
 	</configs>
 	<assets>
@@ -53,6 +54,7 @@
 		<upgrade from="2.0.3b1" to="2.0.3"/>
 		<upgrade from="2.0.3" to="2.0.4"/>
 		<upgrade from="2.0.4" to="2.0.5"/>
+		<upgrade from="2.0.5" to="2.0.6"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

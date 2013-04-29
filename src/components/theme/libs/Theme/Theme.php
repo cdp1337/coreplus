@@ -116,9 +116,18 @@ class Theme{
 	public function getSkins(){
 		$out = array();
 		$default = null;
+		$admindefault = null;
+		$currenttheme = false;
+
 		// If this theme is currently selected, check the default template too.
 		if($this->getKeyName() == \ConfigHandler::Get('/theme/selected')){
 			$default = \ConfigHandler::Get('/theme/default_template');
+			$admindefault = \ConfigHandler::Get('/theme/default_admin_template');
+
+			// Defaults to the main public skin.
+			if(!$admindefault) $admindefault = $default;
+
+			$currenttheme = true;
 		}
 		
 		foreach($this->_xmlloader->getElements('//skins/file') as $f){
@@ -134,11 +143,13 @@ class Theme{
 
 			// The return is expecting an array.
 			$out[] = array(
-				'filename' => $filename,
-				'file' => $basefilename,
-				'title' => $f->getAttribute('title'),
-				'default' => ($default == $filename),
+				'filename'        => $filename,
+				'file'            => $basefilename,
+				'title'           => $f->getAttribute('title'),
+				'default'         => ($default == $basefilename),
+				'admindefault'    => ($admindefault == $basefilename),
 				'has_stylesheets' => $skin->hasOptionalStylesheets(),
+				'current_theme'   => $currenttheme,
 			);
 		}
 

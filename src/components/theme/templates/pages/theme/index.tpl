@@ -11,23 +11,53 @@
 			<tr>
 				{* Add the theme name on the first template foreach iteration. *}
 				{if $smarty.foreach.tplforeach.index == 0}
-					<td rowspan="{sizeof($theme.templates)}">{$theme.name}</td>
+					<td rowspan="{sizeof($theme.templates)}">
+						{if $theme.default}
+							<i class="icon-ok" title="Current Theme"></i>
+						{/if}
+
+						{$theme.name}
+					</td>
 				{/if}
-				<td>{$template.file}</td>
+				<td>
+
+					{$template.file}
+				</td>
 				<td>{$template.title}</td>
 				<td>
 					<ul class="controls controls-hover">
-						<li>
-							{if $template.default}
-								<i class="icon-star"></i>
-								Current Default
-							{else}
-								{a href="/theme/setdefault/`$theme.name`?template=`$template.file`" class="set-default"}
+						{if $theme.default}
+							<li>
+								{if $template.default}
+									<i class="icon-star"></i>
+									<span>Current Public Default</span>
+								{else}
+									{a href="/theme/setdefault/`$theme.name`?template=`$template.file`" confirm="Set `$template.file` as default?"}
+										<i class="icon-ok"></i>
+										<span>Set As Public Default</span>
+									{/a}
+								{/if}
+							</li>
+							<li>
+								{if $template.admindefault}
+									<i class="icon-star"></i>
+									<span>Current Admin Default</span>
+								{else}
+									{a href="/theme/setadmindefault/`$theme.name`?template=`$template.file`" confirm="Set `$template.file` as default for admin pages?"}
+										<i class="icon-ok"></i>
+										<span>Set As Admin Default</span>
+									{/a}
+								{/if}
+
+							</li>
+						{else}
+							<li>
+								{a href="/theme/setdefault/`$theme.name`?template=`$template.file`" confirm="Set `$template.file` as default?"}
 									<i class="icon-ok"></i>
-									<span>Set As Default</span>
+									<span>Set Default</span>
 								{/a}
-							{/if}
-						</li>
+							</li>
+						{/if}
 						<li>
 							{a href="/theme/widgets/`$theme.name`?template=`$template.file`"}
 								<i class="icon-cogs"></i>
@@ -133,27 +163,3 @@
 
 
 {script library="jquery"}{/script}
-{script location="foot"}<script>
-	$(function(){ 
-		$('.set-default').click(function(){
-			$.ajax({
-				type: 'POST',
-				dataType: 'json',
-				url: $(this).attr('href'),
-				success: function(dat){
-					if(dat && dat.status){
-						window.location.reload();
-					}
-					else if(dat && dat.message){
-						alert(dat.message);
-					}
-					else {
-						alert('An unknown error occurred.');
-						console.log(dat);
-					}
-				}
-			});
-			return false;
-		});
-	});
-</script>{/script}

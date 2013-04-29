@@ -1,3 +1,8 @@
+Theme 2.0.6
+
+	* [Feature] Added the ability to have an admin skin settable from within the theme editor.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 29 Apr 2013 03:04:35 -0400
+
 Theme 2.0.5
 
 	* [Bug] Minor fix in the Theme::getSkin method for themes that have a space in their name.  The

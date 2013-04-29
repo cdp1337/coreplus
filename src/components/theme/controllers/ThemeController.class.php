@@ -167,13 +167,13 @@ class ThemeController extends Controller_2_1{
 
 		// Validate
 		if(!\Theme\validate_theme_name($theme)){
-			$this->_sendError('Invalid theme requested');
-			return;
+			Core::SetMessage('Invalid theme requested', 'error');
+			Core::GoBack();
 		}
 		
 		if(!\Theme\validate_template_name($theme, $template)){
-			$this->_sendError('Invalid template requested');
-			return;
+			Core::SetMessage('Invalid template requested', 'error');
+			Core::GoBack();
 		}
 
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
@@ -182,35 +182,85 @@ class ThemeController extends Controller_2_1{
 
 			if($config_default->get('overrideable') == 0){
 				// It's a child site and the admin never gave them permission to change default themes!
-				$this->_sendError('Unable to set the default template on a child site, please ensure that the "/theme/default_template" config is set to be overrideable!');
-				return;
+				Core::SetMessage('Unable to set the default template on a child site, please ensure that the "/theme/default_template" config is set to be overrideable!', 'error');
+				Core::GoBack();
 			}
 			if($config_selected->get('overrideable') == 0){
 				// It's a child site and the admin never gave them permission to change default themes!
-				$this->_sendError('Unable to set the selected theme on a child site, please ensure that the "/theme/selected" config is set to be overrideable!');
-				return;
+				Core::SetMessage('Unable to set the selected theme on a child site, please ensure that the "/theme/selected" config is set to be overrideable!', 'error');
+				Core::GoBack();
 			}
 		}
 
 		if($request->isPost()){
-			
+
+			if($theme != ConfigHandler::Get('/theme/selected')){
+				// The theme changed, change the admin skin too!
+				ConfigHandler::Set('/theme/default_admin_template', $template);
+			}
 			ConfigHandler::Set('/theme/default_template', $template);
 			ConfigHandler::Set('/theme/selected', $theme);
 			
 			Core::SetMessage('Updated default theme', 'success');
-			
-			// If the browser prefers JSON data, send that.
-			if($request->prefersContentType(View::CTYPE_JSON)){
-				$view->contenttype = View::CTYPE_JSON;
-				$view->jsondata = array('message' => 'Updated default theme', 'status' => 1);
-			}
-			else{
-				Core::Redirect('/Theme');
-			}
+			Core::GoBack();
 		}
 		
 		$view->assign('theme', $theme);
 		$view->assign('template', $template);
+	}
+
+	/**
+	 * Set a given skin for default use on admin pages.
+	 *
+	 * Will NOT affect the theme selected.
+	 */
+	public function setadmindefault(){
+		$request = $this->getPageRequest();
+		$view = $this->getView();
+
+		$theme = $this->getPageRequest()->getParameter(0);
+		$template = $this->getPageRequest()->getParameter('template');
+
+		// If the browser prefers JSON data, send that.
+		if($request->prefersContentType(View::CTYPE_JSON)){
+			$view->contenttype = View::CTYPE_JSON;
+		}
+
+		// Validate
+		if(!\Theme\validate_theme_name($theme)){
+			Core::SetMessage('Invalid theme requested', 'error');
+			Core::GoBack();
+		}
+
+		if(!\Theme\validate_template_name($theme, $template)){
+			Core::SetMessage('Invalid template requested', 'error');
+			Core::GoBack();
+		}
+
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
+			$config_default  = ConfigHandler::GetConfig('/theme/default_admin_template');
+
+			if($config_default->get('overrideable') == 0){
+				// It's a child site and the admin never gave them permission to change default themes!
+				Core::SetMessage('Unable to set the default template on a child site, please ensure that the "/theme/default_template" config is set to be overrideable!', 'error');
+				Core::GoBack();
+			}
+		}
+
+		if($request->isPost()){
+
+			if($theme != ConfigHandler::Get('/theme/selected')){
+				Core::SetMessage('The admin skin must be on the same theme as the site!', 'error');
+				Core::GoBack();
+			}
+			ConfigHandler::Set('/theme/default_admin_template', $template);
+
+			Core::SetMessage('Updated admin theme', 'success');
+			Core::GoBack();
+		}
+		else{
+			return View::ERROR_BADREQUEST;
+		}
 	}
 	
 	public function widgets(){
@@ -240,7 +290,7 @@ class ThemeController extends Controller_2_1{
 		// New page management
 		$page = $request->getParameter('page');
 		if($page){
-			$filename = Template::ResolveFile($page);
+			$filename = Core\Templates\Template::ResolveFile($page);
 			$t = null;
 		}
 
@@ -248,6 +298,8 @@ class ThemeController extends Controller_2_1{
 		if($request->isPost()){
 
 			$counter = 0;
+			$changes = ['created' => 0, 'updated' => 0, 'deleted' => 0];
+
 			foreach($_POST['widgetarea'] as $id => $dat){
 				
 				// Merge in the global information for this request
@@ -265,19 +317,42 @@ class ThemeController extends Controller_2_1{
 					$w = new WidgetInstanceModel();
 					$w->setFromArray($dat);
 					$w->save();
+					$changes['created']++;
 				}
 				elseif(strpos($id, 'del-') !== false){
 					$w = new WidgetInstanceModel(substr($id, 4));
 					$w->delete();
 					// Reset the counter back down one notch since this was a deletion request.
 					--$counter;
+					$changes['deleted']++;
 				}
 				else{
 					$w = new WidgetInstanceModel($id);
 					$w->setFromArray($dat);
-					$w->save();
+					if($w->save()) $changes['updated']++;
 				}
 			} // foreach($_POST['widgetarea'] as $id => $dat)
+
+			// Display some human friendly status message.
+			if($changes['created'] || $changes['updated'] || $changes['deleted']){
+				$changetext = [];
+
+				if($changes['created'] == 1) $changetext[] = 'One widget added';
+				elseif($changes['created'] > 1) $changetext[] = $changes['created'] . ' widgets added';
+
+				if($changes['updated'] == 1) $changetext[] = 'One widget updated';
+				elseif($changes['updated'] > 1) $changetext[] = $changes['updated'] . ' widgets updated';
+
+				if($changes['deleted'] == 1) $changetext[] = 'One widget deleted';
+				elseif($changes['deleted'] > 1) $changetext[] = $changes['deleted'] . ' widgets deleted';
+
+				Core::SetMessage(implode('<br/>', $changetext), 'success');
+			}
+			else{
+				Core::SetMessage('No changes performed', 'info');
+			}
+
+			Core::Reload();
 		} // if($this->getPageRequest()->isPost())
 		
 		// Get a list of the widgetareas on the theme.
@@ -339,7 +414,13 @@ class ThemeController extends Controller_2_1{
 		$areas = array();
 		foreach($matches[1] as $v){
 			$instancewidgets = array();
-			$wifac = WidgetInstanceModel::Find(array('theme' => $t, 'template' => $template, 'widgetarea' => $v), null, 'weight');
+			if($page){
+				$wifac = WidgetInstanceModel::Find(array('page' => $page, 'widgetarea' => $v), null, 'weight');
+			}
+			else{
+				$wifac = WidgetInstanceModel::Find(array('theme' => $t, 'template' => $template, 'widgetarea' => $v), null, 'weight');
+			}
+
 			foreach($wifac as $wi){
 				$baseurl = $wi->get('baseurl');
 				$title = isset($widgetnames[ $baseurl ]) ? $widgetnames[ $baseurl ] : null;
