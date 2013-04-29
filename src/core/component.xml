@@ -41,7 +41,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="ef52e42654f0b8bb9c171247423d1131"/>
+		<file filename="core/CHANGELOG" md5="a07cc38cfbacb7d9bf0141ed33024500"/>
 		<file filename="core/bootstrap.php" md5="4d982ac0586d423cd3c170a46d372db4"/>
 		<file filename="core/bootstrap_postincludes.php" md5="e877be1a1b418440d796ffdc3a622bba"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -433,7 +433,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="ca772d2dab9a4ce26a9bf1868b6cd1f6">
+		<file filename="core/libs/core/Component_2_1.php" md5="c0fb5d4d684dbfdc60a3a4b09f1aacee">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/Component_2_1.php~" md5="2d0415ad7d971656437322c0a324ce07"/>
@@ -1394,7 +1394,7 @@
 		<file filename="core/models/SessionModel.class.php" md5="3dbc89b95a2e8182e6f63c84650a3687">
 			<class name="SessionModel"/>
 		</file>
-		<file filename="core/models/TemplateCssModel.php" md5="e4f6b7f2e0a2a590666e0d4096670166">
+		<file filename="core/models/TemplateCssModel.php" md5="035af7fbc97dacd40b945e1edf650569">
 			<class name="TemplateCssModel"/>
 		</file>
 		<file filename="core/models/UpdateSiteModel.class.php" md5="05a42e2ff98a48fe8378f42da32366ff">
@@ -1435,7 +1435,7 @@
 		</file>
 		<file filename="htaccess.ant" md5="0bf209cd00d6a90d884a584d28445d5f"/>
 		<file filename="htaccess.ex" md5="6e335eb0574ab61fca2dea4c2517a372"/>
-		<file filename="index.php" md5="3206af3fc5cb5ddc9495f71757c4871c"/>
+		<file filename="index.php" md5="6d087b205ab2a4bda77c3a7eab7ca1c3"/>
 		<file filename="install/InstallPage.class.php" md5="908d4058af1a52767fc85ce03a5f0de3">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>

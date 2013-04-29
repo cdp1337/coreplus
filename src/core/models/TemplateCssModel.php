@@ -14,10 +14,12 @@ class TemplateCssModel extends Model{
 	public static $Schema = array(
 		'template' => array(
 			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 100,
 			'required' => true,
 		),
 		'css_asset' => array(
 			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 100,
 			'required' => true,
 		),
 		'enabled' => array(

@@ -1639,6 +1639,7 @@ class Component_2_1 {
 				}
 			}
 			catch(DMI_Query_Exception $e){
+				error_log($e->query . "\n<br/>(original table " . $tablename . ")");
 				// Append the table name since otherwise it may be "_tmptable"... which does not provide any useful information!
 				$e->query = $e->query . "\n<br/>(original table " . $tablename . ")";
 				//echo '<pre>' . $e->getTraceAsString() . '</pre>'; // DEBUG //
