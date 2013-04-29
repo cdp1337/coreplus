@@ -80,6 +80,7 @@ abstract class ImportHelper {
 	 * Handler to actually perform the import.
 	 *
 	 * @param \Form $form
+	 * @return bool
 	 */
 	public static function FormHandler2(\Form $form) {
 		$filename = $_SESSION['user-import']['file'];
@@ -114,7 +115,7 @@ abstract class ImportHelper {
 			try{
 				// Create a data map of this record for fields to actually map over.
 				$dat = array();
-				foreach($maptos as $userkey => $recordkey){
+				foreach($maptos as $recordkey => $userkey){
 					$dat[$userkey] = $record[$recordkey];
 				}
 

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.6" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.0" name="User" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.4.4"/>
+		<require name="core" type="component" version="2.5.2"/>
 		<!-- User authentication events trigger security logs. -->
 		<require name="security-suite" type="component" operation="ge" version="1.0.0"/>
 		<!-- The password reset is now powered by the nonce system. -->
@@ -20,7 +20,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="d9287c1fa7f04b31683131a6b0facf20"/>
+		<file filename="CHANGELOG" md5="60bb30082519e9d1d3bebb9dd9071541"/>
 		<file filename="User.class.php" md5="d4569cac78b52317e16eac2feb1a19a8">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -31,6 +31,9 @@
 		</file>
 		<file filename="User_Backend.interface.php" md5="338a174c0a903e9bf637e30f2e0a9c75">
 			<interface name="User_Backend"/>
+		</file>
+		<file filename="Widgets/UserAdminWidget.php" md5="a6b79e083966799581ddc70da8480a1a">
+			<class name="UserAdminWidget"/>
 		</file>
 		<file filename="Widgets/UserLoginWidget.class.php" md5="04d3602121f6cb231473284124dfa88f">
 			<class name="UserLoginWidget"/>
@@ -46,10 +49,10 @@
 			<class name="User_facebook_Backend"/>
 		</file>
 		<file filename="component.xml~" md5="985d6fe3c68c8e40ed3fc845e19435d1"/>
-		<file filename="controllers/UserActivityController.php" md5="3a5257288e3e0d807f153ded60f0fc6b">
+		<file filename="controllers/UserActivityController.php" md5="b90ce46eca5feb688ecff24c367080d8">
 			<controller name="UserActivityController"/>
 		</file>
-		<file filename="controllers/UserAdminController.php" md5="03b8bb51752e03ef4c36d17a4fb4d76e">
+		<file filename="controllers/UserAdminController.php" md5="2e098737deb92002639e9801b1ddf994">
 			<controller name="UserAdminController"/>
 		</file>
 		<file filename="controllers/UserController.php" md5="44b4788cef43e34c296da9a724bfb2c3">
@@ -58,7 +61,7 @@
 		<file filename="controllers/UserGroupAdminController.php" md5="1e26a36d85fc0065cec33b198b27f475">
 			<controller name="UserGroupAdminController"/>
 		</file>
-		<file filename="helpers/ImportHelper.php" md5="5a0faa3ce1ed5da4b8433ec821019842">
+		<file filename="helpers/ImportHelper.php" md5="00c11b054cc245bf6b3ac3779066ba6b">
 			<class name="User\ImportHelper"/>
 		</file>
 		<file filename="helpers/UserFunctions.php" md5="1568866b592c1fa116f978910bf8f788"/>
@@ -66,7 +69,7 @@
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
-		<file filename="models/UserActivityModel.php" md5="5ef7b95402d678aa7ec367a843970316">
+		<file filename="models/UserActivityModel.php" md5="ea8c749c33e5b539023224974998d660">
 			<class name="UserActivityModel"/>
 		</file>
 		<file filename="models/UserConfigModel.php" md5="6a9d77e42f867f4d04c5077bf0e5a5d4">
@@ -97,6 +100,7 @@
 		<file filename="templates/pages/user/me.tpl" md5="9968689a9b26cdeb9c5eb25d10b96f11"/>
 		<file filename="templates/pages/user/password.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/useractivity/details.tpl" md5="de29022cf2a9958ca00d2ad0f991f6cb"/>
 		<file filename="templates/pages/useractivity/index.tpl" md5="f1463c6f2df95ad634013491b867ba53"/>
 		<file filename="templates/pages/useradmin/import1.tpl" md5="34d4a67fc553d310cef459dc9a288da9"/>
 		<file filename="templates/pages/useradmin/import2.tpl" md5="bb67d4446d420094507d43e1b4d21390"/>
@@ -107,6 +111,7 @@
 		<file filename="templates/pages/usergroupadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/user/login.tpl" md5="054c8c86b99b890e6490b96d3ff0c634"/>
 		<file filename="templates/widgets/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/widgets/useradmin/newestsignups.tpl" md5="77e2e9aaee9c8561e0190bc3735305ee"/>
 		<file filename="templates/widgets/userlogin/execute.tpl" md5="8b33f6adb9fdadf3a6f4e10f6722de2e"/>
 	</view>
 	<pages>
@@ -120,6 +125,7 @@
 	<widgets>
 		<widget baseurl="/UserWidget/Login"/>
 		<widget baseurl="/UserWidget/Register"/>
+		<widget baseurl="/useradmin/newestsignups" title="Recent User Registrations" installable="/admin"/>
 	</widgets>
 	<configs>
 		<config key="/user/register/requirecaptcha" type="boolean" default="0" description=""/>
@@ -182,6 +188,7 @@
 		<upgrade from="2.4.4b2" to="2.4.4"/>
 		<upgrade from="2.4.4" to="2.4.5"/>
 		<upgrade from="2.4.5" to="2.4.6"/>
+		<upgrade from="2.4.6" to="2.5.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -98,4 +98,16 @@ class UserActivityModel extends Model{
 		}
 		return $this->_ua;
 	}
+
+	public function getDisplayName(){
+		if($this->get('user_id')){
+			$user = User::Construct($this->get('user_id'));
+			$uname = $user->getDisplayName();
+		}
+		else{
+			$uname = ConfigHandler::Get('/user/displayname/anonymous');
+		}
+
+		return $uname;
+	}
 }

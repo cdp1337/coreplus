@@ -51,7 +51,7 @@ class UserAdminController extends Controller_2_1{
 		$view->assign('users', $users);
 		$view->assign('filters', $filters);
 		$view->addControl('Add User', '/user/register', 'add');
-		$view->addControl('Inport Users', '/useradmin/import', 'upload-alt');
+		$view->addControl('Import Users', '/useradmin/import', 'upload-alt');
 	}
 
 	/**

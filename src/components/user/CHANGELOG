@@ -1,3 +1,10 @@
+User 2.5.0
+
+	* [Feature] Detailed view for traffic.  Now the admin can view a detailed report of each pageload by a
+	  specific IP or session.
+	* [Feature] New widget - New registration widget for the admin dashboard.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 29 Apr 2013 03:08:12 -0400
+
 User 2.4.6
 
 	* [Bug] Facebook backend now doesn't throw a STRICT error for the Find method.

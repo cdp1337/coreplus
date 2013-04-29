@@ -30,6 +30,14 @@ class UserActivityController extends Controller_2_1 {
 		$view = $this->getView();
 
 		$view->title = 'User Activity';
+
+		$view->addControl(
+			[
+				'title' => 'Detailed Activity',
+				'icon' => 'list-alt',
+				'link' => '/useractivity/details'
+			]
+		);
 	}
 
 	public function now(){
@@ -233,6 +241,46 @@ class UserActivityController extends Controller_2_1 {
 
 		//var_dump($data, $users, $listings); die();
 		$view->jsondata = $data;
+	}
+
+	/**
+	 * See the details of a given search criteria, be it IP address, session, or user.
+	 */
+	public function details(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		$filters = new FilterForm();
+		$filters->haspagination = true;
+		$filters->setLimit(100);
+		$filters->setName('useractivity-details');
+
+		$filters->addElement(
+			'text',
+			['name' => 'user_id', 'title' => 'User ID', 'link' => FilterForm::LINK_TYPE_STANDARD]
+		);
+
+		$filters->addElement(
+			'text',
+			['name' => 'ip_addr', 'title' => 'IP Address', 'link' => FilterForm::LINK_TYPE_STANDARD]
+		);
+
+		$filters->addElement(
+			'text',
+			['name' => 'session_id', 'title' => 'Session ID', 'link' => FilterForm::LINK_TYPE_STANDARD]
+		);
+
+		$filters->load($request);
+
+
+		$factory = new ModelFactory('UserActivityModel');
+		$factory->order('datetime DESC');
+
+		$filters->applyToFactory($factory);
+
+		$view->title = 'Detailed Activity';
+		$view->assign('filters', $filters);
+		$view->assign('listings', $factory->get());
 	}
 
 	/**
