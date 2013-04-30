@@ -3,7 +3,7 @@
  *
  * @link http://abeautifulsite.net/2008/09/jquery-context-menu-plugin/
  *
- * @version 1.01~core1
+ * @version 1.01~core2
  *
  * @author Charlie Powell <charlie@eval.bz>
  * @author Cory S.N. LaViska - A Beautiful Site (http://abeautifulsite.net/)
@@ -150,13 +150,12 @@ if(jQuery)( function() {
 				});
 
 				// Disable text selection
-				if( $.browser.mozilla ) {
-					menu.each( function() { $(this).css({ 'MozUserSelect' : 'none' }); });
-				} else if( $.browser.msie ) {
-					menu.each( function() { $(this).bind('selectstart.disableTextSelect', function() { return false; }); });
-				} else {
-					menu.each(function() { $(this).bind('mousedown.disableTextSelect', function() { return false; }); });
-				}
+				menu.each( function() {
+					$(this).css({ 'MozUserSelect' : 'none' });
+					$(this).bind('selectstart.disableTextSelect', function() { return false; });
+					$(this).bind('mousedown.disableTextSelect', function() { return false; });
+				});
+
 				// Disable browser context menu (requires both selectors to work in IE/Safari + FF/Chrome)
 				$(el).add($('UL.contextMenu')).bind('contextmenu', function() { return false; });
 

@@ -1,11 +1,16 @@
+JQuery-contextMenu 1.01~core2
+
+	* [Bug] Fixed bug that developed after jquery removed support for the $.browser object.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 29 Apr 2013 20:14:37 -0400
+
 JQuery-contextMenu 1.01~core1
 
-	* Updated some of the internals to use newer jquery features
-	* Added support to allow a jquery object to be passed in for the menu instead of just a
+	* [Feature] Added support to allow a jquery object to be passed in for the menu instead of just a
 	  string
-	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:07:55 -0500
+	* Updated some of the internals to use newer jquery features
+	-- Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:07:55 -0500
 
 JQuery-contextMenu 1.01
 
 	* original version
-	-- Cory S.N. LaViska  10 Mar 2010
+
