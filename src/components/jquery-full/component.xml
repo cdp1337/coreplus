@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.1~core1" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.1~core2" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="1.9.0" operation="ge"/>
 	</requires>
@@ -16,6 +16,7 @@
 		<provide name="jquery.masonry" version="2.1.08" type="library"/>
 		<provide name="jquery.form" version="3.31.0" type="library"/>
 		<provide name="jquery.waypoints" version="2.0.2" type="library"/>
+		<provide name="jquery.smoothscroll" version="1.4.10" type="library"/>
 		<scriptlibrary name="jquery" call="JQuery::IncludeJQuery"/>
 		<scriptlibrary name="jquery.json" call="JQuery::Include_json"/>
 		<scriptlibrary name="jquery.cookie" call="JQuery::Include_cookie"/>
@@ -27,6 +28,7 @@
 		<scriptlibrary name="jquery.masonry" call="JQuery::Include_masonry"/>
 		<scriptlibrary name="jquery.form" call="JQuery::Include_form"/>
 		<scriptlibrary name="jquery.waypoints" call="JQuery::Include_waypoints"/>
+		<scriptlibrary name="jquery.smoothscroll" call="JQuery::Include_Smoothscroll"/>
 	</provides>
 	<assets>
 		<file filename="assets/css/images/animated-overlay.gif" md5="2b912f7c0653008ca28ebacda49025e7"/>
@@ -85,6 +87,7 @@
 		<file filename="assets/js/jquery/jquery.json-2.4.js" md5="916c946e972ec0315db82ebaacbcf111"/>
 		<file filename="assets/js/jquery/jquery.json-2.4.min.js" md5="f7b87723e700272150f9785de8f03f1c"/>
 		<file filename="assets/js/jquery/jquery.masonry.min.js" md5="a6b726ee7fce43453a6eb25e8a1cb819"/>
+		<file filename="assets/js/jquery/jquery.smooth-scroll.min.js" md5="34b5513756446947afd1b7399d02ea65"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.js" md5="fbd3ec46c4cb84a8433f3b5c468e98cf"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.min.js" md5="28fb224b45d2fdb5e5eef85d2dfc8458"/>
 		<file filename="assets/js/jquery/jquery.ui.readonly.js" md5="3de4b84a6cdbc15e6e42514d80bd743b"/>
@@ -97,9 +100,9 @@
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="2bfe187a8143ea8bc89b9f0e31951c7d"/>
+		<file filename="CHANGELOG" md5="dafb031859543037b8eb8318169cf7df"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="23eb981ea0d81187a94681b114c6334d">
+		<file filename="JQuery.lib.php" md5="eb491764c15c8319c7fad2d79464591b">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
@@ -126,6 +129,7 @@
 		<upgrade from="1.8.3~core2" to="1.8.3~core3"/>
 		<upgrade from="1.8.3~core3" to="1.8.3~core4"/>
 		<upgrade from="1.8.3~core4" to="1.9.1~core1"/>
+		<upgrade from="1.9.1~core1" to="1.9.1~core2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

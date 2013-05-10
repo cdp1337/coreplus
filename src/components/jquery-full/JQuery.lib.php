@@ -145,4 +145,14 @@ abstract class JQuery {
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
+
+	public static function Include_Smoothscroll(){
+		// I need jquery first.
+		self::IncludeJQuery();
+
+		CurrentPage::AddScript('js/jquery/jquery.smooth-scroll.min.js');
+
+		// IMPORTANT!  Tells the script that the include succeeded!
+		return true;
+	}
 }

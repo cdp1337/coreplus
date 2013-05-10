@@ -41,7 +41,9 @@ class NavigationWidget extends Widget_2_1 {
 			if (!$e->get('parentid')) {
 
 				$classes = array();
+				$classes[] = Core\str_to_url($e->get('title')) . '-link';
 				if($e->get('baseurl') == $currenturl) $classes[] = 'active';
+
 
 				$sortedentries[] = array(
 					'obj' => $e,
@@ -59,6 +61,7 @@ class NavigationWidget extends Widget_2_1 {
 					if ($e->get('parentid') == $se['obj']->get('id')) {
 
 						$classes = array();
+						$classes[] = Core\str_to_url($e->get('title')) . '-link';
 						if($e->get('baseurl') == $currenturl) $classes[] = 'active';
 
 						// Add the "more" class to the parent.
@@ -84,6 +87,7 @@ class NavigationWidget extends Widget_2_1 {
 						if ($e->get('parentid') == $subse['obj']->get('id')) {
 
 							$classes = array();
+							$classes[] = Core\str_to_url($e->get('title')) . '-link';
 							if($e->get('baseurl') == $currenturl) $classes[] = 'active';
 
 							// Add the "more" class to the parent.

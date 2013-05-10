@@ -1,25 +1,31 @@
+Navigation 2.1.6
+
+	* updated nav widget template to include class name of the link target
+
 Navigation 2.1.5
 
 	* New nagivagion widget - children.  Displays the children of the current page.
-	--Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:30:03 -0500
+	-- Charlie Powell <charlie@eval.bz>  Wed, 20 Feb 2013 17:30:03 -0500
 
 Navigation 2.1.4
 
 	* Set the Siblings navigation widget to respect the selectable flag.
-	--Charlie Powell <charlie@eval.bz>  Sat, 09 Feb 2013 23:56:59 -0500
+	-- Charlie Powell <charlie@eval.bz>  Sat, 09 Feb 2013 23:56:59 -0500
 
 Navigation 2.1.3
 
-	* Added multisite support.
+	* [Feature] Added multisite support.
 	-- Charlie Powell <charlie@eval.bz>  30 Dec 2012
 
 Navigation 2.1.2
 
-	* Added an "active" class on the active navigation entry.
-	* Fixed the multiple "more" class that was showing for navigation entries with more than one child.
+	* [Bug] Fixed the multiple "more" class that was showing for navigation entries with more than one
+	  child.
+	* [Feature] Added an "active" class on the active navigation entry.
 	-- Charlie Powell <charlie@eval.bz>  5 Nov 2012
 
 Navigation 2.1.1
 
-	* Fixed minor js bug with editing entries.
+	* [Bug] Fixed minor js bug with editing entries.
 	-- Charlie Powell <charlie@eval.bz>  17 Oct 2012
+

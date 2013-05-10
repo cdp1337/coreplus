@@ -1033,3 +1033,92 @@ body.page-error #breadcrumbs {
 }
 
 body.page-error .pagecontent {margin-left:0;}
+
+
+/** Nick being lazy... new form styles, eventually prune this stylesheet **/
+.formelement .formelement-labelinputgroup input {
+	background: none repeat scroll 0 0 transparent;
+	border: 0 none;
+	color: #5E5E5E;
+	float: left;
+	min-width: 100px;
+	padding: 9px 0 10px 10px;
+}
+
+.formelement.formtextinput.formtextinput-page-metas-author label {
+	padding:13px 6px 10px 9px;
+}
+
+.formelement .formelement-labelinputgroup label {
+	background: none repeat scroll 0 0 #E6E6E6;
+	color: #9A9A9A;
+	float: left;
+	min-width: 100px;
+	padding: 12px 6px 10px 9px;
+}
+
+
+.formelement .formelement-labelinputgroup {
+	background: none repeat scroll 0 0 #F5F5F5;
+	border: 1px solid #E4E4E4;
+	border-radius: 0.3em 0.3em 0.3em 0.3em;
+	color: #3C3C3C;
+	float: left;
+}
+
+.formelement .formelement-labelinputgroup label {
+	background: none repeat scroll 0 0 #E6E6E6;
+	color: #9A9A9A;
+	float: left;
+	min-width: 100px;
+	padding: 14px 6px 11px 9px;
+}
+
+#tinymceformelement-insertables-body_tbl {width:100%}
+
+.formelement.formaccessstringinput {
+	padding: 15px;
+}
+
+
+.formelement.formpagemetakeywordsinput .keywords-multi-select input[type="text"] {
+	border: 0 none;
+	float: left;
+	min-width: 5px;
+	padding: 9px 0 10px 10px;
+}
+
+.formelement.formtextareainput .formelement-labelinputgroup textarea {
+	border: 0 none;
+	min-height: 80px;
+	min-width: 400px;
+	padding: 0.7em;
+}
+
+.formelement.formradioinput {
+	background: none repeat scroll 0 0 #F5F5F5;
+	border: 1px solid #E4E4E4;
+	border-radius: 0.4em 0.4em 0.4em 0.4em;
+	clear: both;
+	color: #5E5E5E;
+	display: inline-block;
+	margin-right: 0.75em;
+	max-width: 415px;
+	padding: 0;
+}
+
+.formelement.formaccessstringinput {
+	padding: 15px;
+}
+
+
+.formelement.formpagemetakeywordsinput .keywords-multi-select {
+	background: none repeat scroll 0 0 #F6F6F6;
+	border: 1px solid #47C6CB;
+	border-radius: 0;
+	cursor: text;
+	height: auto;
+	max-width: 400px;
+	min-width: 100px;
+	padding: 0.15em 0.8em 0.15em 0.15em;
+}

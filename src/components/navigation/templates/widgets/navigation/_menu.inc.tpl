@@ -1,4 +1,4 @@
-<li {if $class}class="{$class}"{/if}>
+<li class="{$class}">
 {if $element->get('baseurl')}
 	<a href="{$element->getResolvedURL()}" target="{$element->get('target')}">{$element->get('title')}</a>
 	{else}
