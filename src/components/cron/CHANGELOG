@@ -1,3 +1,8 @@
+Cron 1.1.6
+
+	* [Bug] Just removed a minor development flag from the widget.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 15 May 2013 10:34:08 -0400
+
 Cron 1.1.5
 
 	* Cleaned up the admin dashboard widget a little.

@@ -20,7 +20,6 @@ class CronController extends Controller_2_1 {
 
 		// Check and see if I need to run this cron already, ie: don't run an hourly log twice in the same hour.
 		$last = CronLogModel::Find(array('cron' => 'hourly'), 1, 'created DESC');
-		$last = false;
 		if($last && (Time::GetCurrentGMT() - $last->get('created') < 3540) ){
 			// No run needed, already ran within the past 59 minutes.
 
