@@ -1,0 +1,321 @@
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.12~core1" name="CodeMirror" execmode="web">
+	<requires>
+		<require name="core" type="component" version="2.5.0" operation="ge"/>
+	</requires>
+	<files>
+		<file filename="classes/codemirror/Utils.php" md5="0ff85fa4ba0201eed17ca831f380f5e1">
+			<class name="CodeMirror\Utils"/>
+		</file>
+	</files>
+	<pages/>
+	<description>
+		CodeMirror is a JavaScript component that provides a code editor in the browser.
+		When a mode is available for the language you are coding in, it will color your code,
+		and optionally help with indentation.
+	</description>
+	<provides>
+		<scriptlibrary name="codemirror_css" call="CodeMirror\Utils::IncludeCSS"/>
+		<scriptlibrary name="codemirror_html" call="CodeMirror\Utils::IncludeHTML"/>
+		<scriptlibrary name="codemirror_http" call="CodeMirror\Utils::IncludeHTTP"/>
+		<scriptlibrary name="codemirror_js" call="CodeMirror\Utils::IncludeJS"/>
+		<scriptlibrary name="codemirror_md" call="CodeMirror\Utils::IncludeMD"/>
+		<scriptlibrary name="codemirror_php" call="CodeMirror\Utils::IncludePHP"/>
+		<scriptlibrary name="codemirror_smarty" call="CodeMirror\Utils::IncludeSmarty"/>
+	</provides>
+	<view searchdir="templates"/>
+	<upgrades/>
+	<assets>
+		<file filename="assets/css/codemirror.css" md5="e80f3d7349a4563458e8088bce1ae39e"/>
+		<file filename="assets/libs/codemirror/CONTRIBUTING.md" md5="db0c81d428132d1f4df5050ba3e949d4"/>
+		<file filename="assets/libs/codemirror/LICENSE" md5="484390b3b150dea935e23c7dc73b3d90"/>
+		<file filename="assets/libs/codemirror/README.md" md5="22a47bb08c62ec055fa7b2bcd7dddb1f"/>
+		<file filename="assets/libs/codemirror/addon/dialog/dialog.css" md5="910c1893a275073be1f80f32b77cd5a4"/>
+		<file filename="assets/libs/codemirror/addon/dialog/dialog.js" md5="56ebb5c2fffc4b74150528e4534eeec4"/>
+		<file filename="assets/libs/codemirror/addon/display/placeholder.js" md5="4c0f22464f26552d4fb82c2ec437fb17"/>
+		<file filename="assets/libs/codemirror/addon/edit/closebrackets.js" md5="0530d3b52db5088dcb705de81aa26cde"/>
+		<file filename="assets/libs/codemirror/addon/edit/closetag.js" md5="96c1de3058f611c7b4549b2335e73d58"/>
+		<file filename="assets/libs/codemirror/addon/edit/continuecomment.js" md5="43b2d91dabdae1848a5da1e13da26379"/>
+		<file filename="assets/libs/codemirror/addon/edit/continuelist.js" md5="70666e9d4a89c9355e90dd4e8559b5df"/>
+		<file filename="assets/libs/codemirror/addon/edit/matchbrackets.js" md5="3bf36ec8f7709197d1bcc9adcf67c73e"/>
+		<file filename="assets/libs/codemirror/addon/fold/brace-fold.js" md5="6d6d1d507d7f4fc4e536c10050aff29d"/>
+		<file filename="assets/libs/codemirror/addon/fold/foldcode.js" md5="1f71da32e9b787897204f96c2d841b8e"/>
+		<file filename="assets/libs/codemirror/addon/fold/indent-fold.js" md5="d5684617fb06541d1090bbe8340ff2d8"/>
+		<file filename="assets/libs/codemirror/addon/fold/xml-fold.js" md5="e5cfd7e771820849766c21cd6b628b88"/>
+		<file filename="assets/libs/codemirror/addon/hint/html-hint.js" md5="7e3dc27037945453a07f3579311f1f3b"/>
+		<file filename="assets/libs/codemirror/addon/hint/javascript-hint.js" md5="9245c846ce46f6b3e9cb28e976289987"/>
+		<file filename="assets/libs/codemirror/addon/hint/pig-hint.js" md5="cecc5e71af31ab5f136a0c2d631c0ea5"/>
+		<file filename="assets/libs/codemirror/addon/hint/python-hint.js" md5="36f0d2b76d387207e89a2f97cd0d79d8"/>
+		<file filename="assets/libs/codemirror/addon/hint/show-hint.css" md5="6909e2a9d8f4b5a51b0fbe5e6768b722"/>
+		<file filename="assets/libs/codemirror/addon/hint/show-hint.js" md5="189d41b173c5d8f20f322921502d890c"/>
+		<file filename="assets/libs/codemirror/addon/hint/xml-hint.js" md5="26db46bbaeb8db8d792dc7ba367f7c38"/>
+		<file filename="assets/libs/codemirror/addon/lint/javascript-lint.js" md5="d2a0f05c37e34725b741106f2c110495"/>
+		<file filename="assets/libs/codemirror/addon/lint/json-lint.js" md5="0c3e8c02fbac540c01e9a34dc5099ebe"/>
+		<file filename="assets/libs/codemirror/addon/lint/lint.css" md5="ce1512c77ed3fbe0b1494b626d45ed0a"/>
+		<file filename="assets/libs/codemirror/addon/lint/lint.js" md5="128fe5ebde818655e6f802c902636cd6"/>
+		<file filename="assets/libs/codemirror/addon/mode/loadmode.js" md5="77c25116ca25c8f486b6e51b8508b61b"/>
+		<file filename="assets/libs/codemirror/addon/mode/multiplex.js" md5="4ed49b6aa20a73c9e62dc5832d342c61"/>
+		<file filename="assets/libs/codemirror/addon/mode/overlay.js" md5="d8c2d47f490ce2737d63567d72cd6cbd"/>
+		<file filename="assets/libs/codemirror/addon/runmode/colorize.js" md5="128a96f6aa5c2fb19bea3cc4033b47f4"/>
+		<file filename="assets/libs/codemirror/addon/runmode/runmode-standalone.js" md5="be396a7497662e49a08206bcfee3806f"/>
+		<file filename="assets/libs/codemirror/addon/runmode/runmode.js" md5="c788a67d9ded9411634c6135741e130e"/>
+		<file filename="assets/libs/codemirror/addon/runmode/runmode.node.js" md5="4d29a136b196b2bbec7ce1e66a034c05"/>
+		<file filename="assets/libs/codemirror/addon/search/match-highlighter.js" md5="06d18ea5a94d91d204a43fc522149bbd"/>
+		<file filename="assets/libs/codemirror/addon/search/search.js" md5="44d3330dd0962bfa9aaf80ab552427ec"/>
+		<file filename="assets/libs/codemirror/addon/search/searchcursor.js" md5="d7f8089470374cfb5ebf2f21edd3f266"/>
+		<file filename="assets/libs/codemirror/addon/selection/active-line.js" md5="acd1cbb36b6a5a0d9c5990087e5d8ae9"/>
+		<file filename="assets/libs/codemirror/addon/selection/mark-selection.js" md5="2ae70497b4cb5dde4a7f8e6071e47a46"/>
+		<file filename="assets/libs/codemirror/bin/compress" md5="adca9aa4cb0dfa35d2bf3255c0035892"/>
+		<file filename="assets/libs/codemirror/bin/lint" md5="5e6cf82a51ab84572861418f87d51b9e"/>
+		<file filename="assets/libs/codemirror/demo/activeline.html" md5="9a387065c04fd6d4a56ca414c631aef8"/>
+		<file filename="assets/libs/codemirror/demo/bidi.html" md5="2930575e7f143fc3f42074436b4d9b9a"/>
+		<file filename="assets/libs/codemirror/demo/btree.html" md5="4e8fa240046b9bfbe655298bb39c36c9"/>
+		<file filename="assets/libs/codemirror/demo/buffers.html" md5="40d9d886b073edcd1102e508998427a2"/>
+		<file filename="assets/libs/codemirror/demo/changemode.html" md5="eda8c56c8c9aceb8c46e91a284d27203"/>
+		<file filename="assets/libs/codemirror/demo/closebrackets.html" md5="f8de093aa5680db559a9f2fc81b921e8"/>
+		<file filename="assets/libs/codemirror/demo/closetag.html" md5="a6ef8cedbf4addc302b9ee1d51a44e17"/>
+		<file filename="assets/libs/codemirror/demo/complete.html" md5="b730a89c54d34ad7cbce2a3ecc9a7d30"/>
+		<file filename="assets/libs/codemirror/demo/emacs.html" md5="3ba4cc1a4e76e45d96aa634141a0f4ac"/>
+		<file filename="assets/libs/codemirror/demo/folding.html" md5="d022a4551db34ea4c454416763b543f1"/>
+		<file filename="assets/libs/codemirror/demo/fullscreen.html" md5="803f0d141794d1dd322957a0bb113c15"/>
+		<file filename="assets/libs/codemirror/demo/html5complete.html" md5="a875d0e119f8cdffcb761baea3cafd9f"/>
+		<file filename="assets/libs/codemirror/demo/indentwrap.html" md5="713b3847a19375a6175a4eec2d054fbc"/>
+		<file filename="assets/libs/codemirror/demo/lint.html" md5="4cd38aa2eb8c71d510d867d503dcf7bb"/>
+		<file filename="assets/libs/codemirror/demo/loadmode.html" md5="9ecabf0be4ae103b2b9736321b7fd1a7"/>
+		<file filename="assets/libs/codemirror/demo/marker.html" md5="20bf39db2351116405b7874ed5a22f88"/>
+		<file filename="assets/libs/codemirror/demo/markselection.html" md5="73235542e41d59d3dac8374cac57ad7b"/>
+		<file filename="assets/libs/codemirror/demo/matchhighlighter.html" md5="6be27b7fcd937ef591beb77abe2c57c1"/>
+		<file filename="assets/libs/codemirror/demo/multiplex.html" md5="08e0ebaeee9181ad28e63d7e741930f6"/>
+		<file filename="assets/libs/codemirror/demo/mustache.html" md5="2f419c005c1d4a99b67e41b00d1168b5"/>
+		<file filename="assets/libs/codemirror/demo/placeholder.html" md5="426b0db06620c916b777e1259197b412"/>
+		<file filename="assets/libs/codemirror/demo/preview.html" md5="ac2f903e1812125cce56a7531536ef61"/>
+		<file filename="assets/libs/codemirror/demo/resize.html" md5="61093b48f0eab9610f15812644a56253"/>
+		<file filename="assets/libs/codemirror/demo/runmode.html" md5="d68d7614c39c9c3bb2ce3df3883fae6c"/>
+		<file filename="assets/libs/codemirror/demo/search.html" md5="ecc87bf3047dcdeb6a70c2a9b7556227"/>
+		<file filename="assets/libs/codemirror/demo/spanaffectswrapping_shim.html" md5="e7e70f5cf6c5801ba53c71801fb15b18"/>
+		<file filename="assets/libs/codemirror/demo/theme.html" md5="ebcd06977bd52ce983668fffdb30b963"/>
+		<file filename="assets/libs/codemirror/demo/variableheight.html" md5="864dff93d11917bda9f7537103761328"/>
+		<file filename="assets/libs/codemirror/demo/vim.html" md5="95c7bc9c8618d625042e1a640e3a0856"/>
+		<file filename="assets/libs/codemirror/demo/visibletabs.html" md5="eae52b0d9b57adb78ed2df01cf73dc8e"/>
+		<file filename="assets/libs/codemirror/demo/widget.html" md5="e101cbc5aa7dd8fc56a2980449b6b492"/>
+		<file filename="assets/libs/codemirror/demo/xmlcomplete.html" md5="1e125f151e25a8b0b48acb24cdce2b1a"/>
+		<file filename="assets/libs/codemirror/doc/baboon.png" md5="f8a5922c3789f6fdc9c688910b4a2fc6"/>
+		<file filename="assets/libs/codemirror/doc/baboon_vector.svg" md5="a2a72c9a2d997142b6df8ab4e8b28f2d"/>
+		<file filename="assets/libs/codemirror/doc/compress.html" md5="c4bc3f16f2f312a277d22921744f4a3d"/>
+		<file filename="assets/libs/codemirror/doc/docs.css" md5="1151c3fb76645e0944b0536249e717b1"/>
+		<file filename="assets/libs/codemirror/doc/internals.html" md5="6b4a299537f8af05fb662c49f20f445f"/>
+		<file filename="assets/libs/codemirror/doc/manual.html" md5="e877249fe2a45554239b3c1ca71943ff"/>
+		<file filename="assets/libs/codemirror/doc/modes.html" md5="c9f625bb007a602a5b6202dd29dd9f24"/>
+		<file filename="assets/libs/codemirror/doc/oldrelease.html" md5="989cc3118850874048041e47ca9e49a7"/>
+		<file filename="assets/libs/codemirror/doc/realworld.html" md5="0e6f048de54f14df51946836f429c09d"/>
+		<file filename="assets/libs/codemirror/doc/reporting.html" md5="f48756f547bb0f7f700e00b10a617c07"/>
+		<file filename="assets/libs/codemirror/doc/upgrade_v2.2.html" md5="5af3bc90970e9ef6f440a7db5cb810f5"/>
+		<file filename="assets/libs/codemirror/doc/upgrade_v3.html" md5="1146e3a7bbef8f7c4051cd8392337f51"/>
+		<file filename="assets/libs/codemirror/index.html" md5="31ede7c4352f7b34e1d758350798082c"/>
+		<file filename="assets/libs/codemirror/keymap/emacs.js" md5="d1dda835308d87a6104f4b0e9572c89c"/>
+		<file filename="assets/libs/codemirror/keymap/vim.js" md5="5aa330f7315db5a83ec0009b3c0a370c"/>
+		<file filename="assets/libs/codemirror/lib/codemirror.css" md5="6e90f6aaf0369e7fb893617f4baa08b3"/>
+		<file filename="assets/libs/codemirror/lib/codemirror.js" md5="548b0e1a5999bfedb4999925c10d096e"/>
+		<file filename="assets/libs/codemirror/mode/apl/apl.js" md5="6aa390c327b2ee1171a943b71a596ae7"/>
+		<file filename="assets/libs/codemirror/mode/apl/index.html" md5="6e1760ff60d6e4b0539f379989735729"/>
+		<file filename="assets/libs/codemirror/mode/asterisk/asterisk.js" md5="ade77f6b98bb959e89d917ebce727172"/>
+		<file filename="assets/libs/codemirror/mode/asterisk/index.html" md5="deb4b4d2b41ee4ea11f66d30f880ecee"/>
+		<file filename="assets/libs/codemirror/mode/clike/clike.js" md5="46fadaa55ae0299e7049717a5a28953a"/>
+		<file filename="assets/libs/codemirror/mode/clike/index.html" md5="71492e4d651e38650ec7a77b572b5f99"/>
+		<file filename="assets/libs/codemirror/mode/clike/scala.html" md5="d9525d0eae7cc074d4db5c44a7b90579"/>
+		<file filename="assets/libs/codemirror/mode/clojure/clojure.js" md5="d67e2c096d0b5328a8b6704dab226597"/>
+		<file filename="assets/libs/codemirror/mode/clojure/index.html" md5="e70f17958c05491179bd47988f660c84"/>
+		<file filename="assets/libs/codemirror/mode/coffeescript/LICENSE" md5="3b1d670b998d957c34ced941eef83451"/>
+		<file filename="assets/libs/codemirror/mode/coffeescript/coffeescript.js" md5="0f84ebd40fcf873b0f21f1e14e769a09"/>
+		<file filename="assets/libs/codemirror/mode/coffeescript/index.html" md5="60cca1d512462c2059afbb60c764bc39"/>
+		<file filename="assets/libs/codemirror/mode/commonlisp/commonlisp.js" md5="940841b62308e73dcb6af2113a8aab8b"/>
+		<file filename="assets/libs/codemirror/mode/commonlisp/index.html" md5="baf386f17db15b9f5d6f01d50cecb3d9"/>
+		<file filename="assets/libs/codemirror/mode/css/css.js" md5="11f98f37ab005452103592e9591d5cf8"/>
+		<file filename="assets/libs/codemirror/mode/css/index.html" md5="a7c62af7b2b472e23c15ad5d89ac70ff"/>
+		<file filename="assets/libs/codemirror/mode/css/scss.html" md5="bd8be7e3756390b40718520b89b564b0"/>
+		<file filename="assets/libs/codemirror/mode/css/scss_test.js" md5="dcf5a9cdafe46b8c2aec514b2edb22b5"/>
+		<file filename="assets/libs/codemirror/mode/css/test.js" md5="d458f4632e09ce284f75db734ff13dd7"/>
+		<file filename="assets/libs/codemirror/mode/d/d.js" md5="ceb0ff462bccc0360f8d1b5335760867"/>
+		<file filename="assets/libs/codemirror/mode/d/index.html" md5="3cdd94b644270fcc18ed7f06810758d2"/>
+		<file filename="assets/libs/codemirror/mode/diff/diff.js" md5="0b5676e2ab2d2be1ac6f0d2db13f7809"/>
+		<file filename="assets/libs/codemirror/mode/diff/index.html" md5="a80729b68c771c16cce17b9656b5a11d"/>
+		<file filename="assets/libs/codemirror/mode/ecl/ecl.js" md5="27f18ff670ad67602283b3e35350d1d5"/>
+		<file filename="assets/libs/codemirror/mode/ecl/index.html" md5="fd5358dac27006fefef0713e15800c76"/>
+		<file filename="assets/libs/codemirror/mode/erlang/erlang.js" md5="bc3482c8c67bb35c4a2f196f2e826096"/>
+		<file filename="assets/libs/codemirror/mode/erlang/index.html" md5="bc6b06bf783bfb123bfde5c92d136a8a"/>
+		<file filename="assets/libs/codemirror/mode/gas/gas.js" md5="f7c43c81a0d19700c7367e25a203c728"/>
+		<file filename="assets/libs/codemirror/mode/gas/index.html" md5="c9973c1bb347338b1c4e9a8b8c82c9ae"/>
+		<file filename="assets/libs/codemirror/mode/gfm/gfm.js" md5="954468c68e50f17a5c017f4614246885"/>
+		<file filename="assets/libs/codemirror/mode/gfm/index.html" md5="05c105b6ce599a17d5e3e55851b6d78f"/>
+		<file filename="assets/libs/codemirror/mode/gfm/test.js" md5="aa4dab964b202ab75160f7074812f705"/>
+		<file filename="assets/libs/codemirror/mode/go/go.js" md5="abad570dcca3fc6cc1138e65f4f40c76"/>
+		<file filename="assets/libs/codemirror/mode/go/index.html" md5="209c859a12e3585643fae0aa718aae49"/>
+		<file filename="assets/libs/codemirror/mode/groovy/groovy.js" md5="443191ebf3c1c4750fa271dc86227fed"/>
+		<file filename="assets/libs/codemirror/mode/groovy/index.html" md5="ad1b2bb3889f980dab0e025e586cf0ff"/>
+		<file filename="assets/libs/codemirror/mode/haskell/haskell.js" md5="32c2e07d171b3a00268715f127b75487"/>
+		<file filename="assets/libs/codemirror/mode/haskell/index.html" md5="ac182b52603624a7234dcd930591f1f2"/>
+		<file filename="assets/libs/codemirror/mode/haxe/haxe.js" md5="c33c4b91e4a7d2fab186967d8329070c"/>
+		<file filename="assets/libs/codemirror/mode/haxe/index.html" md5="83df386f9b6196203199fa4952c1a278"/>
+		<file filename="assets/libs/codemirror/mode/htmlembedded/htmlembedded.js" md5="800fb412d8564565e7135f8b00e12958"/>
+		<file filename="assets/libs/codemirror/mode/htmlembedded/index.html" md5="3886104eb99f5126c43e0f8a49681fb8"/>
+		<file filename="assets/libs/codemirror/mode/htmlmixed/htmlmixed.js" md5="0c9b53ade03ec21f4d45ac1c01cfe856"/>
+		<file filename="assets/libs/codemirror/mode/htmlmixed/index.html" md5="340264d421aa63006c616078beacd8a4"/>
+		<file filename="assets/libs/codemirror/mode/http/http.js" md5="71109e194894dd33c634d450f6926adc"/>
+		<file filename="assets/libs/codemirror/mode/http/index.html" md5="81702279ece68567bf1e9faba74268c6"/>
+		<file filename="assets/libs/codemirror/mode/javascript/index.html" md5="47a9bf417ccf10fd5d5af71c10e2d8ff"/>
+		<file filename="assets/libs/codemirror/mode/javascript/javascript.js" md5="2bb467e6b38af4b7b8d3b284ac52394b"/>
+		<file filename="assets/libs/codemirror/mode/javascript/typescript.html" md5="d306cc8186c7610353ced61d14e33afc"/>
+		<file filename="assets/libs/codemirror/mode/jinja2/index.html" md5="ce056c294ca735ec05df5e19cbdefe60"/>
+		<file filename="assets/libs/codemirror/mode/jinja2/jinja2.js" md5="9b83ad3f3318295ec0d0e8a6e2c8c7c6"/>
+		<file filename="assets/libs/codemirror/mode/less/index.html" md5="e96ea83c7f2b68352e6ce8703fdd495c"/>
+		<file filename="assets/libs/codemirror/mode/less/less.js" md5="23838f330295445e1af69d547058916d"/>
+		<file filename="assets/libs/codemirror/mode/livescript/LICENSE" md5="ce5b71fa83d2d33f22418fd0e560d513"/>
+		<file filename="assets/libs/codemirror/mode/livescript/index.html" md5="48965b7ae1c8505d98bad59937d80f93"/>
+		<file filename="assets/libs/codemirror/mode/livescript/livescript.js" md5="123c39c322cab40bb1d6dfbd62c7a39d"/>
+		<file filename="assets/libs/codemirror/mode/livescript/livescript.ls" md5="5c5a5ca6c3c59910fb825b0125a4766a"/>
+		<file filename="assets/libs/codemirror/mode/lua/index.html" md5="60dc77832ce72847800a3cbae4163c9a"/>
+		<file filename="assets/libs/codemirror/mode/lua/lua.js" md5="25a460a18595163729ce8ea981e671fa"/>
+		<file filename="assets/libs/codemirror/mode/markdown/index.html" md5="9d765cd381ba3bca45d0021d38791578"/>
+		<file filename="assets/libs/codemirror/mode/markdown/markdown.js" md5="4390d97a6909091d59cf8865f33d3d52"/>
+		<file filename="assets/libs/codemirror/mode/markdown/test.js" md5="628c08aa23672b2ec1305502a4b670af"/>
+		<file filename="assets/libs/codemirror/mode/meta.js" md5="6bf7196fcbe22d5c373e4c5f17fb1534"/>
+		<file filename="assets/libs/codemirror/mode/mirc/index.html" md5="5e5583bbdbaceaa95dc41a11e1724ee4"/>
+		<file filename="assets/libs/codemirror/mode/mirc/mirc.js" md5="2e348791c09c9269545aac59ff48f76f"/>
+		<file filename="assets/libs/codemirror/mode/ntriples/index.html" md5="18737f5c7e16c022b9f0461899d831ff"/>
+		<file filename="assets/libs/codemirror/mode/ntriples/ntriples.js" md5="a0b4fb294baf50b2dc185b00099aa16a"/>
+		<file filename="assets/libs/codemirror/mode/ocaml/index.html" md5="ad90b230501195f3569801dae37807e4"/>
+		<file filename="assets/libs/codemirror/mode/ocaml/ocaml.js" md5="c0dc03feb869ff476931b57de3bdda11"/>
+		<file filename="assets/libs/codemirror/mode/pascal/LICENSE" md5="74a918322615d1293d2c015f6ace3119"/>
+		<file filename="assets/libs/codemirror/mode/pascal/index.html" md5="7c9f7c8a720e43d2f77f2f959e0a8fa3"/>
+		<file filename="assets/libs/codemirror/mode/pascal/pascal.js" md5="106639e0f8560bdba62b54297b5c4034"/>
+		<file filename="assets/libs/codemirror/mode/perl/LICENSE" md5="ebac40a632fa4fef2fdf6b3ec0e546d5"/>
+		<file filename="assets/libs/codemirror/mode/perl/index.html" md5="7002b14b77ab1164fc40f9d41ceaa1a5"/>
+		<file filename="assets/libs/codemirror/mode/perl/perl.js" md5="fe51d06d35daf95d5096c61cbc70466e"/>
+		<file filename="assets/libs/codemirror/mode/php/index.html" md5="4165176900bcff5ed59a631aeec1c914"/>
+		<file filename="assets/libs/codemirror/mode/php/php.js" md5="263cc241fb8eac8105613a6a1d6a712f"/>
+		<file filename="assets/libs/codemirror/mode/pig/index.html" md5="2751772491ad50cba03b54abda6c3afd"/>
+		<file filename="assets/libs/codemirror/mode/pig/pig.js" md5="4d2e762193ef420abb2507fe20ff52a7"/>
+		<file filename="assets/libs/codemirror/mode/properties/index.html" md5="6d8faf589d1c6add4c6daa811d9e66c5"/>
+		<file filename="assets/libs/codemirror/mode/properties/properties.js" md5="deeb1d35f255acb30abc37593f552952"/>
+		<file filename="assets/libs/codemirror/mode/python/LICENSE.txt" md5="c138be39245f6d3615ccfff4c6484f18"/>
+		<file filename="assets/libs/codemirror/mode/python/index.html" md5="3497e2fff9d3de65fcb149621c366ff5"/>
+		<file filename="assets/libs/codemirror/mode/python/python.js" md5="bd3afc393d60319285296a7cbc6c4e3a"/>
+		<file filename="assets/libs/codemirror/mode/q/index.html" md5="3429d498b41a1cd079809ebaaae901d0"/>
+		<file filename="assets/libs/codemirror/mode/q/q.js" md5="c147f028c6d6782677305609b4068cbc"/>
+		<file filename="assets/libs/codemirror/mode/r/LICENSE" md5="ee8e69bff23f650b94289a43df67a457"/>
+		<file filename="assets/libs/codemirror/mode/r/index.html" md5="ec9b62548b7898a37bbd40697dec262f"/>
+		<file filename="assets/libs/codemirror/mode/r/r.js" md5="4db2e1faa8d3d07d0c3057cebf0d8f78"/>
+		<file filename="assets/libs/codemirror/mode/rpm/changes/changes.js" md5="82a2852918bcbe3b8cdc519092c6e97b"/>
+		<file filename="assets/libs/codemirror/mode/rpm/changes/index.html" md5="e34ed174d9ddb629604904bb03a43f31"/>
+		<file filename="assets/libs/codemirror/mode/rpm/spec/index.html" md5="a23861bc9ee2ef9ef825372f72911113"/>
+		<file filename="assets/libs/codemirror/mode/rpm/spec/spec.css" md5="cc2f7b87aa1b66ae81c7c6f2a2dd869e"/>
+		<file filename="assets/libs/codemirror/mode/rpm/spec/spec.js" md5="3c393c49595f1ac2a11d55b92280c387"/>
+		<file filename="assets/libs/codemirror/mode/rst/LICENSE.txt" md5="f044a91293a714000765f2458240c018"/>
+		<file filename="assets/libs/codemirror/mode/rst/index.html" md5="5fade57c3b9025a6faaf0ec5d0df605b"/>
+		<file filename="assets/libs/codemirror/mode/rst/rst.js" md5="1273dcd5da163ae7bbf547f4a46e5077"/>
+		<file filename="assets/libs/codemirror/mode/ruby/LICENSE" md5="58a4db61a5f9172bee707c2353e954ac"/>
+		<file filename="assets/libs/codemirror/mode/ruby/index.html" md5="bf36641e3737d3011c03be3ea8c8cfd8"/>
+		<file filename="assets/libs/codemirror/mode/ruby/ruby.js" md5="a3889342a703aa2a2abe33883bfbb62e"/>
+		<file filename="assets/libs/codemirror/mode/rust/index.html" md5="3bbd95379b6b2f041fcda41a270b3125"/>
+		<file filename="assets/libs/codemirror/mode/rust/rust.js" md5="e52b35fea4b46f5995353a1c87f11ea6"/>
+		<file filename="assets/libs/codemirror/mode/sass/index.html" md5="c8851a64a8326cd06889df88bcace407"/>
+		<file filename="assets/libs/codemirror/mode/sass/sass.js" md5="d5ecea7bbb81a4d7910928e3ac88826e"/>
+		<file filename="assets/libs/codemirror/mode/scheme/index.html" md5="d2326837920f2253dbe15237b54a4db2"/>
+		<file filename="assets/libs/codemirror/mode/scheme/scheme.js" md5="d2dcf83df3465e5a65dd95d5ffec695b"/>
+		<file filename="assets/libs/codemirror/mode/shell/index.html" md5="0092aafa7627f424a16aa81a18cdbd57"/>
+		<file filename="assets/libs/codemirror/mode/shell/shell.js" md5="742284c557d465d97250af77402dcf66"/>
+		<file filename="assets/libs/codemirror/mode/sieve/LICENSE" md5="198cde9e77c34203eaef9708b264110c"/>
+		<file filename="assets/libs/codemirror/mode/sieve/index.html" md5="54aeea3b6eb2771696dc2b2ef663b2dc"/>
+		<file filename="assets/libs/codemirror/mode/sieve/sieve.js" md5="9d4e36a2e7693f71d2baa29fa6bb6348"/>
+		<file filename="assets/libs/codemirror/mode/smalltalk/index.html" md5="172d8133055113be9b66afbc36e32dd3"/>
+		<file filename="assets/libs/codemirror/mode/smalltalk/smalltalk.js" md5="1f947ba012167b2974dbd14d1019f40d"/>
+		<file filename="assets/libs/codemirror/mode/smarty/index.html" md5="e927b61c8868567ec949ccb06590ffdc"/>
+		<file filename="assets/libs/codemirror/mode/smarty/smarty.js" md5="e0c9ca721b2dcbd60fd695da845ad665"/>
+		<file filename="assets/libs/codemirror/mode/sparql/index.html" md5="ae14121dc6a9b7290ddd50a4373d0316"/>
+		<file filename="assets/libs/codemirror/mode/sparql/sparql.js" md5="c170e9efdc4012f996febd7ff2f90e1c"/>
+		<file filename="assets/libs/codemirror/mode/sql/index.html" md5="5e0fe0a3dc9ab746c0a638f34b2ce844"/>
+		<file filename="assets/libs/codemirror/mode/sql/sql.js" md5="ae2e393b9894fea80558ad188de95039"/>
+		<file filename="assets/libs/codemirror/mode/stex/index.html" md5="17c2aa9119032060ce30698da4304f9a"/>
+		<file filename="assets/libs/codemirror/mode/stex/stex.js" md5="0133784f751c59bd591fe8fc01dbab6e"/>
+		<file filename="assets/libs/codemirror/mode/stex/test.js" md5="bb2b86f2078f565a75975318eae453c9"/>
+		<file filename="assets/libs/codemirror/mode/tcl/index.html" md5="ab9d5787871a8ed7f2fe3a079b76f57a"/>
+		<file filename="assets/libs/codemirror/mode/tcl/tcl.js" md5="9aad257ae2d8033dd4749b85473149b4"/>
+		<file filename="assets/libs/codemirror/mode/tiddlywiki/index.html" md5="a17a43238508514108d644daaeb7fe98"/>
+		<file filename="assets/libs/codemirror/mode/tiddlywiki/tiddlywiki.css" md5="e745b2150c79295cfb93a210d34f2587"/>
+		<file filename="assets/libs/codemirror/mode/tiddlywiki/tiddlywiki.js" md5="12e24f6cc6e034aa95049d3daffdcac5"/>
+		<file filename="assets/libs/codemirror/mode/tiki/index.html" md5="a978ec1eef536ce261b660fe9828e320"/>
+		<file filename="assets/libs/codemirror/mode/tiki/tiki.css" md5="73b88640ab2cafbb97f237082bb79deb"/>
+		<file filename="assets/libs/codemirror/mode/tiki/tiki.js" md5="e71599f8e65003b3a83be6559a4066e4"/>
+		<file filename="assets/libs/codemirror/mode/turtle/index.html" md5="f50cc15cbf37f98b46e46e6dbf7e4929"/>
+		<file filename="assets/libs/codemirror/mode/turtle/turtle.js" md5="2e4c8135eef1b9fb938b5dc538cc34be"/>
+		<file filename="assets/libs/codemirror/mode/vb/LICENSE.txt" md5="199c3fef2601f5cb9cf563289c9eccf8"/>
+		<file filename="assets/libs/codemirror/mode/vb/index.html" md5="07ed7c243029fb2c217f4a7127a79c2c"/>
+		<file filename="assets/libs/codemirror/mode/vb/vb.js" md5="a80b66efea607f8367e4105181861918"/>
+		<file filename="assets/libs/codemirror/mode/vbscript/index.html" md5="faefe8ddf0159711505620ab4c62d896"/>
+		<file filename="assets/libs/codemirror/mode/vbscript/vbscript.js" md5="8d89c9084bb5691d13fc9fd5f45b09ed"/>
+		<file filename="assets/libs/codemirror/mode/velocity/index.html" md5="d03e1b61ce934780f0f9e61da8f3cc06"/>
+		<file filename="assets/libs/codemirror/mode/velocity/velocity.js" md5="49307ebf881ff805b47947596032613a"/>
+		<file filename="assets/libs/codemirror/mode/verilog/index.html" md5="4c2c6eab77f71bd0e13ebe80c730035f"/>
+		<file filename="assets/libs/codemirror/mode/verilog/verilog.js" md5="2aab33c9232ecc51318dae2e774a1ed1"/>
+		<file filename="assets/libs/codemirror/mode/xml/index.html" md5="beb453a53923e9600517def5dd8041ae"/>
+		<file filename="assets/libs/codemirror/mode/xml/xml.js" md5="05e21b330759ad2948a20b0a3f7b268f"/>
+		<file filename="assets/libs/codemirror/mode/xquery/LICENSE" md5="a5704c2363a17666712ab14312fbe6b8"/>
+		<file filename="assets/libs/codemirror/mode/xquery/index.html" md5="83c72b380fd300f703995f4e2c1b1a52"/>
+		<file filename="assets/libs/codemirror/mode/xquery/test.js" md5="b8dc222e40ffae02ec0c96bc7ab02253"/>
+		<file filename="assets/libs/codemirror/mode/xquery/xquery.js" md5="1b29aa8669f05fe45fd3b64cefb7c668"/>
+		<file filename="assets/libs/codemirror/mode/yaml/index.html" md5="68e044d5f9684f80544acce3d69a1a9c"/>
+		<file filename="assets/libs/codemirror/mode/yaml/yaml.js" md5="ae904d56271914d2bda4dd375cbd470e"/>
+		<file filename="assets/libs/codemirror/mode/z80/index.html" md5="c74759f5f8fc61677b156b6b2c37ab7e"/>
+		<file filename="assets/libs/codemirror/mode/z80/z80.js" md5="7a39ae1d9514673fbba19fa93682bb94"/>
+		<file filename="assets/libs/codemirror/package.json" md5="4f6d307ada5ac91f48d33350fb24250e"/>
+		<file filename="assets/libs/codemirror/test/doc_test.js" md5="5918dea3a73f1b28591c2b85c62945a3"/>
+		<file filename="assets/libs/codemirror/test/driver.js" md5="fb8056dbd27f1b146ff306a7d387ea88"/>
+		<file filename="assets/libs/codemirror/test/index.html" md5="368e89797797b07cce873588430abfb1"/>
+		<file filename="assets/libs/codemirror/test/lint/acorn.js" md5="990bbaf4c4f5517345b101e233962ea9"/>
+		<file filename="assets/libs/codemirror/test/lint/lint.js" md5="bdcaf463baa9d816921b69ff953017f1"/>
+		<file filename="assets/libs/codemirror/test/lint/parse-js.js" md5="d74b58955e07161837f31f8d13634701"/>
+		<file filename="assets/libs/codemirror/test/lint/walk.js" md5="4377f3b533b8f098ee1b89834e8c526d"/>
+		<file filename="assets/libs/codemirror/test/mode_test.css" md5="9fef28aab26dc10d223605ae123744b8"/>
+		<file filename="assets/libs/codemirror/test/mode_test.js" md5="9fe5ae2fbbee7056f709800caa5c631d"/>
+		<file filename="assets/libs/codemirror/test/phantom_driver.js" md5="9ef81c96901ef04a1025ea80e120bc74"/>
+		<file filename="assets/libs/codemirror/test/run.js" md5="285b009c21eda4fc3f74ac38af81a3d3"/>
+		<file filename="assets/libs/codemirror/test/test.js" md5="e87e3018c51cf6f325ffe8e88aee89d5"/>
+		<file filename="assets/libs/codemirror/test/vim_test.js" md5="e2913b0cb38d1ab74a66eca812514717"/>
+		<file filename="assets/libs/codemirror/theme/ambiance-mobile.css" md5="256f2dd130b80c6afaa40fddf700d12a"/>
+		<file filename="assets/libs/codemirror/theme/ambiance.css" md5="67bf7a0775c3edda68405ad23d5d3427"/>
+		<file filename="assets/libs/codemirror/theme/blackboard.css" md5="0b816b714783a14048411c35c361c9b8"/>
+		<file filename="assets/libs/codemirror/theme/cobalt.css" md5="db905535cc5f1b992b0be1b5b3dba2a5"/>
+		<file filename="assets/libs/codemirror/theme/eclipse.css" md5="fc0a69f703cf21380f098dea2d0c6120"/>
+		<file filename="assets/libs/codemirror/theme/elegant.css" md5="45460b6e9937f915e9fe05b0f85295fb"/>
+		<file filename="assets/libs/codemirror/theme/erlang-dark.css" md5="3fd3ca1a2c990d4c3e1e8b9d33a7c6e5"/>
+		<file filename="assets/libs/codemirror/theme/lesser-dark.css" md5="930cc6469b168b5463c1ee7e948190cb"/>
+		<file filename="assets/libs/codemirror/theme/midnight.css" md5="b9b53378a440c06af827787a11da8c02"/>
+		<file filename="assets/libs/codemirror/theme/monokai.css" md5="0bd5666cdb039ce0c9aa1404cb1c6a81"/>
+		<file filename="assets/libs/codemirror/theme/neat.css" md5="f4bb4bda3f7870377e4b280c1555213b"/>
+		<file filename="assets/libs/codemirror/theme/night.css" md5="8aa0fc785346c70bb9c1dc1089bff4e7"/>
+		<file filename="assets/libs/codemirror/theme/rubyblue.css" md5="856b35f6ad1a6473c3f7a749fcc44631"/>
+		<file filename="assets/libs/codemirror/theme/solarized.css" md5="6e3ba79a3293be9831e5f8754d9c1ebf"/>
+		<file filename="assets/libs/codemirror/theme/twilight.css" md5="5f70070ee2ce5bafd49c7b758149d374"/>
+		<file filename="assets/libs/codemirror/theme/vibrant-ink.css" md5="8bdb11d3e1a578fbfd574f9473117ec7"/>
+		<file filename="assets/libs/codemirror/theme/xq-dark.css" md5="b79862e0a537482fd60befb28d2f0704"/>
+		<file filename="assets/libs/codemirror/theme/xq-light.css" md5="e649aa3f01b1dd56bec5ffa7c2b9e628"/>
+	</assets>
+	<authors>
+		<author name="Marijn Haverbeke" email="marijnh@gmail.com"/>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+		<author name="Koh Zi Han, based on implementation by Koh Zi Chun"/>
+		<author name="Hans Engel"/>
+		<author name="Nick Hinsch &lt;nicholas@eval.bz"/>
+		<author name="Stas Kobzar" email="stas@modulis.ca"/>
+		<author name="Author: Mike Brevoort" email="mike@brevoort.com"/>
+		<author name="Constantin Jucovschi" email="c.jucovschi@jacobs-university.de"/>
+	</authors>
+	<licenses>
+		<license>MIT</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+</component>
+
