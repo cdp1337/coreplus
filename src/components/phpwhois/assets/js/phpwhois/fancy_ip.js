@@ -60,8 +60,9 @@ $(function(){
 					doms: [ $(this) ],
 					result: false,
 					xhr: $.ajax({
-						url: Core.ROOT_URL + 'phpwhois/lookup?q=' + ip,
-						type: 'json',
+						url: Core.ROOT_URL + 'phpwhois/lookup.json?q=' + ip,
+						dataType: 'json',
+						type: 'get',
 						success: function(r){
 							var i;
 							for(i in ips[ip]['doms']){
