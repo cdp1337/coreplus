@@ -28,7 +28,7 @@
 		<div class="span7">
 			<!-- The fileinput-button span is used to style the file input field as button -->
 			<label style="display:block; float:left; position:relative; overflow:hidden; width:120px; margin-right:10px;">
-				<span class="button btn-success fileinput-button" style="width:87px;">
+				<span class="button btn-success fileinput-button" style="min-width:90px;">
 					<i class="icon-plus icon-white"></i>
 					<span>Add files...</span>
 					<input id="{$element->get('id')}" type="file" name="{$element->get('name')}[]" multiple="multiple" style="position:absolute; left:0pt; top:0pt; opacity:0;">
