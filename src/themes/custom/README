@@ -1,0 +1,8 @@
+The "custom" directory is not a theme, but a location for user-script to install overwritten stylesheets, assets, and templates into.
+This is to accommodate the new (2.5.4), feature of users being able to install and manage their site assets.
+
+There are no meta files here, just the raw files themselves.
+
+! IMPORTANT ! If you're a developer and you're looking here... DON'T!  This is a dynamic directory meant for files
+modified from within the UI of the application.  It provides a location for your client to edit your custom theme
+and asset resources, without actually changing your theme and resources.
