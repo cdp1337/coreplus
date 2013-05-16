@@ -1,10 +1,9 @@
 <?php
-// @todo 2012.05.11 cpowell - Can I kill this file?  It doesn't seem to be doing anything.
 /**
  * DESCRIPTION
  *
- * @package
- * @since 0.1
+ * @package Core
+ * @since 2.5.4
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -22,83 +21,64 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class FileController extends Controller {
-	public static function Index(View $page) {
+class FileController extends Controller_2_1 {
 
-	}
+	public function preview() {
+		$view = $this->getView();
+		$request = $this->getPageRequest();
 
-	public static function Preview(View $page) {
-		$filename = $page->getParameter(0);
+		// This is designed to only return data!
+		$view->mode = View::MODE_NOOUTPUT;
+		$view->contenttype = 'image/png';
 
-		$page->mode                    = View::MODE_NOOUTPUT;
-		$page->response['contenttype'] = 'image/png';
+		// The filename should be something like files/public/blah... or files/assets/foo...
+		// This will get fed into the core system and checked internally.
+		$filename = $request->getParameter('f');
 
-		// A file must have been requested to preview
-		if (!$filename) {
-			$page->error = View::ERROR_BADREQUEST;
-			return;
-		}
 
-		// File must be a base64 encoded string.
+		// Was there a resize-to dimension requested?
+		$d = $request->getParameter('d');
+
+
+		// The inbound filename must be in the format of base64:[b64data].
 		if (strpos($filename, 'base64:') !== 0) {
-			$page->error = View::ERROR_BADREQUEST;
+			if(DEVELOPMENT_MODE){
+				error_log('Invalid request made for /file/preview!  Expecting: [base64:*b64data*], Received: [' . $filename . ']');
+			}
+
+			$file = \Core\file('assets/images/mimetypes/notfound.png');
+			$file->displayPreview($d);
 			return;
 		}
 
-		// Resolve the base64 data to its actual filename.
-		$filename = base64_decode(substr($filename, 7));
+		// This preview ONLY supports assets and public files!
+		// This is a security precaution.
+		$base = base64_decode(substr($filename, 7));
 
-		// For security reasons, only allow "public" resources to be previewed.
-		if (!preg_match('/^public\/[a-z0-9]+/', $filename)) {
-			$page->error = View::ERROR_BADREQUEST;
+		if(!(strpos($base, 'public/') === 0 || strpos($base, 'assets/') === 0)){
+			SecurityLogModel::Log('/file/preview', 'fail', null, 'Invalid file requested: ' . $base);
+
+			if(DEVELOPMENT_MODE){
+				error_log('Invalid request made for /file/preview!  Expecting: [public/ or assets/], Received: [' . $base . ']');
+			}
+
+			$file = \Core\file('assets/images/mimetypes/notfound.png');
+			$file->displayPreview($d);
 			return;
 		}
 
-		$file = Core::File($filename);
+		$file = \Core\file($filename);
+		if(!$file->exists()){
+			if(DEVELOPMENT_MODE){
+				error_log('File not found for /file/preview!  Looking For: [' . $file->getFilename('') . ' (' . $filename . ') ]');
+			}
 
-		if (!$file->isReadable()) {
-			$page->error = View::ERROR_NOTFOUND;
+			$file = \Core\file('assets/images/mimetypes/notfound.png');
+			$file->displayPreview($d);
 			return;
 		}
 
-
-		$size = $page->getParameter('size') ? strtolower($page->getParameter('size')) : 'med';
-		// $size has a few limitations...
-		switch ($size) {
-			case 's':
-			case 'sm':
-			case 'small':
-				$size = 'sm';
-				break;
-				defualt:
-			case 'm':
-			case 'med':
-			case 'medium':
-				$size = 'med';
-				break;
-			case 'l':
-			case 'lg':
-			case 'large':
-				$size = 'lg';
-				break;
-			case 'xl':
-			case 'x-large':
-				$size = 'xl';
-				break;
-		}
-
-		// Flag to tell if this file can even be previewed to begin with.
-		$preview = false; // Default to explicit.
-
-
-		if (ConfigHandler::Get('/core/filestore/previews') && $file->isPreviewable()) {
-			$d = ConfigHandler::Get('/theme/filestore/preview-size-' . $size);
-			$file->displayPreview($d, false);
-		}
-		else {
-			$icon = Core::File('assets/mimetype_icons/' . str_replace('/', '-', $file->getMimetype()) . '-' . $size . '.png');
-			if (!$icon->isReadable()) $icon = Core::File('assets/mimetype_icons/unknown-' . $size . '.png');
-			echo $icon->getContents();
-		}
+		// And this will render it to the browser.
+		$file->displayPreview($d);
 	}
 }

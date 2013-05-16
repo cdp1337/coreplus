@@ -819,13 +819,14 @@ function process_component($component, $forcerelease = false){
 
 	while($ans != 'save'){
 		$opts = array(
-			'editvers' => 'Edit Version Number',
-			'editdesc' => 'Edit Description',
+			'editvers'   => 'Edit Version Number',
+			'editdesc'   => 'Edit Description',
 			'editchange' => 'Edit Changelog (for version ' . $version . ')',
+			'viewchange' => 'View Changelog (for version ' . $version . ')',
 			//'dbtables' => 'Manage DB Tables',
 			'printdebug' => 'DEBUG - Print the XML',
-			'save' => 'Finish Editing, Save it!',
-			'exit' => 'Abort and exit without saving changes',
+			'save'       => 'Finish Editing, Save it!',
+			'exit'       => 'Abort and exit without saving changes',
 		);
 		$ans = CLI::PromptUser('What do you want to edit for component ' . $component . ' ' . $version, $opts);
 
@@ -864,6 +865,31 @@ function process_component($component, $forcerelease = false){
 				}
 
 				manage_changelog($file, $name, $version);
+				break;
+			case 'viewchange':
+				// Lookup the changelog text of this current version.
+				$file = $comp->getBaseDir();
+
+				if($comp->getName() == 'core'){
+					// Core's changelog is located in the core directory.
+					$file .= 'core/CHANGELOG';
+					$name = 'Core Plus';
+				}
+				else{
+					// Nope, no extension.
+					$file .= 'CHANGELOG';
+					$name = $comp->getName();
+				}
+
+				$parser = new Core\Utilities\Changelog\Parser($name, $file);
+				$parser->parse();
+
+				/** @var $thisversion Core\Utilities\Changelog\Section */
+				$thisversion = $parser->getSection($version);
+
+				// Read the current changelog.
+				$changelog = $thisversion->fetchFormatted();
+				print $changelog . NL . NL;
 				break;
 			//case 'dbtables':
 			//	$comp->setDBSchemaTableNames(explode("\n", CLI::PromptUser('Enter the tables that are included in this component', 'textarea', implode("\n", $comp->getDBSchemaTableNames()))));

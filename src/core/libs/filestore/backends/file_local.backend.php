@@ -75,9 +75,14 @@ class File_local_backend implements File_Backend {
 		$ext = strtolower($this->getExtension());
 		if     ($ext == 'js'   && $type == 'text/plain')               $type = 'text/javascript';
 		elseif ($ext == 'js'   && $type == 'text/x-c++')               $type = 'text/javascript';
+		elseif ($ext == 'js'   && $type == 'text/x-asm')               $type = 'text/javascript';
 		elseif ($ext == 'css'  && $type == 'text/plain')               $type = 'text/css';
 		elseif ($ext == 'css'  && $type == 'text/x-c')                 $type = 'text/css';
+		elseif ($ext == 'css'  && $type == 'text/x-asm')               $type = 'text/css';
+		elseif ($ext == 'css'  && $type == 'text/troff')               $type = 'text/css';
 		elseif ($ext == 'html' && $type == 'text/plain')               $type = 'text/html';
+		elseif ($ext == 'html' && $type == 'text/x-c++')               $type = 'text/html';
+		elseif ($ext == 'html' && $type == 'text/troff')               $type = 'text/html';
 		elseif ($ext == 'ttf'  && $type == 'application/octet-stream') $type = 'font/ttf';
 		elseif ($ext == 'otf'  && $type == 'application/octet-stream') $type = 'font/otf';
 		elseif ($ext == 'csv'  && $type == 'text/plain')               $type = 'text/csv';
@@ -178,8 +183,19 @@ class File_local_backend implements File_Backend {
 		if (strpos($filename, 'assets/') === 0) {
 			$theme    = ConfigHandler::Get('/theme/selected');
 			$filename = substr($filename, 7); // Trim off the 'asset/' prefix.
-			if (file_exists(self::$_Root_pdir_assets . $theme . '/' . $filename)) $filename = self::$_Root_pdir_assets . $theme . '/' . $filename;
-			else $filename = self::$_Root_pdir_assets . 'default/' . $filename;
+
+
+			if (file_exists(self::$_Root_pdir_assets  . 'custom/' . $filename)){
+				// If there is a custom asset installed, USE THAT FIRST!
+				$filename = self::$_Root_pdir_assets  . 'custom/' . $filename;
+			}
+			elseif (file_exists(self::$_Root_pdir_assets . $theme . '/' . $filename)){
+				// Otherwise, the themes can override component assets too.
+				$filename = self::$_Root_pdir_assets . $theme . '/' . $filename;
+			}
+			else{
+				$filename = self::$_Root_pdir_assets . 'default/' . $filename;
+			}
 
 			$this->_type = 'asset';
 		}
@@ -533,93 +549,90 @@ class File_local_backend implements File_Backend {
 	 */
 	public function displayPreview($dimensions = "300x300", $includeHeader = true) {
 
-		// The legacy support for simply a number.
-		if (is_numeric($dimensions)) {
-			$width  = $dimensions;
-			$height = $dimensions;
-		}
-		elseif ($dimensions === null) {
-			$width  = 300;
-			$height = 300;
-		}
-		else {
-			// New method. Split on the "x" and that should give me the width/height.
-			$vals   = explode('x', strtolower($dimensions));
-			$width  = (int)$vals[0];
-			$height = (int)$vals[1];
-		}
-
-		// Enable caching.
-		$key = 'filepreview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
-
-		if (file_exists(TMP_DIR . $key)) {
+		$preview = $this->getPreviewFile($dimensions);
+		if ($includeHeader){
 			header('Content-Type: image/png');
-			echo file_get_contents(TMP_DIR . $key); // (should be binary)
-			return; // whee, nothing else to do!
+			header('Content-Length: ' . $preview->getFilesize());
+			header('X-Alternate-Location: ' . $preview->getURL());
+			header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? Core::GetComponent()->getVersion() : ''));
 		}
-
-		$img2 = $this->_getResizedImage($width, $height);
-
-		// Save this image to cache.
-		imagepng($img2, TMP_DIR . $key);
-
-		if ($includeHeader) header('Content-Type: image/png');
-		imagepng($img2);
+		echo $preview->getContents();
 		return;
-
-
-		// __TODO__ Support text for previewing.	Use maxWidth as maxLines instead.
 	}
 
-	public function getPreviewURL($dimensions = "300x300") {
-		// The legacy support for simply a number.
-		if (is_numeric($dimensions)) {
-			$width  = $dimensions;
-			$height = $dimensions;
-			$mode = '';
+
+	/**
+	 * Get the mimetype icon for this file.
+	 *
+	 * @param string $dimensions
+	 *
+	 * @return string
+	 */
+	public function getMimetypeIconURL($dimensions = '32x32'){
+		$filemime = str_replace('/', '-', $this->getMimetype());
+
+		$file = \Core\file('assets/images/mimetypes/' . $filemime . '.png');
+		if(!$file->exists()){
+			if(DEVELOPMENT_MODE){
+				// Inform the developer, otherwise it's not a huge issue.
+				error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown" (filename: ' . $this->getFilename('') . ')');
+			}
+			$file = \Core\file('assets/images/mimetypes/unknown.png');
 		}
-		elseif ($dimensions === null) {
-			$width  = 300;
-			$height = 300;
-			$mode = '';
+		return $file->getPreviewURL($dimensions);
+	}
+
+	/**
+	 * Get the preview file object without actually populating the sources.
+	 * This is useful for checking to see if the file exists before resizing it over.
+	 *
+	 * WARNING, this will NOT check if the file exists and/or copy data over!
+	 *
+	 * @param string $dimensions
+	 *
+	 * @return File_backend
+	 */
+	public function getQuickPreviewFile($dimensions = '300x300'){
+		$bits   = $this->_getReizedKeyComponents($dimensions);
+		$width  = $bits['width'];
+		$height = $bits['height'];
+		$mode   = $bits['mode'];
+		$key    = $bits['key'];
+
+
+		if (!$this->exists()) {
+			// Log it so the admin knows that the file is missing, otherwise nothing is shown.
+			error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
+
+			// Return a 404 image.
+			return \Core\file('assets/images/mimetypes/notfound.png');
 		}
-		elseif($dimensions === false){
-			$width = false;
-			$height = false;
-			$mode = '';
+		elseif ($this->isPreviewable()) {
+			// If no resize was requested, simply return the full size image.
+			if($width === false) return $this;
+
+			// Yes, this must be within public because it's meant to be publicly visible.
+			return \Core\file('public/tmp/' . $key);
 		}
 		else {
-			// Allow some special modifiers.
-			if(strpos($dimensions, '^') !== false){
-				// Fit the smallest dimension instead of the largest, (useful for overflow tricks)
-				$mode = '^';
-				$dimensions = str_replace('^', '', $dimensions);
-			}
-			elseif(strpos($dimensions, '!') !== false){
-				// Absolutely resize, regardless of aspect ratio
-				$mode = '!';
-				$dimensions = str_replace('!', '', $dimensions);
-			}
-			elseif(strpos($dimensions, '>') !== false){
-				// Only increase images.
-				$mode = '>';
-				$dimensions = str_replace('>', '', $dimensions);
-			}
-			elseif(strpos($dimensions, '<') !== false){
-				// Only decrease images.
-				$mode = '<';
-				$dimensions = str_replace('<', '', $dimensions);
+			// Try and get the mime icon for this file.
+			$filemime = str_replace('/', '-', $this->getMimetype());
+
+			$file = \Core\file('assets/images/mimetypes/' . $filemime . '.png');
+			if(!$file->exists()){
+				if(DEVELOPMENT_MODE){
+					// Inform the developer, otherwise it's not a huge issue.
+					error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown"');
+				}
+				return \Core\file('assets/images/mimetypes/unknown.png');
 			}
 			else{
-				// Default mode
-				$mode = '';
+				return $file;
 			}
-			// New method. Split on the "x" and that should give me the width/height.
-			$vals   = explode('x', strtolower($dimensions));
-			$width  = (int)$vals[0];
-			$height = (int)$vals[1];
 		}
+	}
 
+	public function getPreviewFile($dimensions = '300x300'){
 		// If the system is getting too close to the max_execution_time variable, just return the mimetype!
 		// One note though, this is only available when running php from the web.
 		// CLI scripts don't have it!
@@ -627,66 +640,57 @@ class File_local_backend implements File_Backend {
 			// Try and get the mime icon for this file.
 			$filemime = str_replace('/', '-', $this->getMimetype());
 
-			$file = Core::File('assets/mimetype_icons/' . $filemime . '.png');
+			$file = Core::File('assets/images/mimetypes/' . $filemime . '.png');
 			if(!$file->exists()){
-				$file = Core::File('assets/mimetype_icons/unknown.png');
+				$file = Core::File('assets/images/mimetypes/unknown.png');
 			}
-			return $file->getURL();
+			return $file;
 		}
 
+		// This will get me the file, but none of the data or anything.
+		$file = $this->getQuickPreviewFile($dimensions);
 
-		// The basename is for SEO purposes, that way even resized images still contain the filename.
-		// The -preview- is just because I feel like it; completely optional.
-		// The hash is just to ensure that no two files conflict, ie: /public/a/file1.png and /public/b/file1.png
-		//  might conflict without this hash.
-		// Finally, the width and height dimensions are there just because as well; it gives more of a human
-		//  touch to the file. :p
-		$key = str_replace(' ', '-', $this->getBaseFilename(true)) . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.png';
+		$bits   = $this->_getReizedKeyComponents($dimensions);
+		$width  = $bits['width'];
+		$height = $bits['height'];
+		$mode   = $bits['mode'];
+		$key    = $bits['key'];
+
+		// dunno how this may work... but prevent the possible infinite loop scenario.
+		if($file == $this){
+			return $this;
+		}
 
 		if (!$this->exists()) {
-			// Log it so the admin knows that the file is missing, otherwise nothing is shown.
-			error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
-
-			// Return a 404 image.
-			$file = Core::File('assets/mimetype_icons/notfound.png');
-			if($width === false) return $file->getURL();
-			elseif($file->exists()) return $file->getPreviewURL($dimensions);
-			else return null;
-
-			//$size = Core::TranslateDimensionToPreviewSize($width, $height);
-			//return Core::ResolveAsset('mimetype_icons/notfound-' . $size . '.png');
+			// This will be a 404 image.
+			return $file->getPreviewFile($dimensions);
 		}
 		elseif ($this->isPreviewable()) {
 			// If no resize was requested, simply return the full size image.
-			if($width === false) return $this->getURL();
+			if($width === false) return $file;
 
-			// Yes, this must be within public because it's meant to be publically visible.
-			$file = Core::File('public/tmp/' . $key);
 			if (!$file->exists()) {
 				$img2 = $this->_getResizedImage($width, $height, $mode);
-				// Save this image to cache.
+				// Save this image to a temporary fs location.
 				imagepng($img2, TMP_DIR . $key);
+				// So I can put the contents in, (know of an easier method?  patch it!)
 				$file->putContents(file_get_contents(TMP_DIR . $key));
+				// And cleanup
+				unlink(TMP_DIR . $key);
 			}
 
-			return $file->getURL();
+			return $file;
 		}
 		else {
-			// Try and get the mime icon for this file.
-			$filemime = str_replace('/', '-', $this->getMimetype());
-
-			$file = Core::File('assets/mimetype_icons/' . $filemime . '.png');
-			if(!$file->exists()){
-				if(DEVELOPMENT_MODE){
-					// Inform the developer, otherwise it's not a huge issue.
-					error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown"');
-				}
-				$file = Core::File('assets/mimetype_icons/unknown.png');
-			}
-
-			if($width === false) return $file->getURL();
-			else return $file->getPreviewURL($dimensions);
+			// This will be a mimetype image.
+			$file->getPreviewFile($dimensions);
 		}
+	}
+
+	public function getPreviewURL($dimensions = "300x300") {
+
+		$file = $this->getPreviewFile($dimensions);
+		return $file->getURL();
 	}
 
 	/**
@@ -726,6 +730,24 @@ class File_local_backend implements File_Backend {
 
 	public function isReadable() {
 		return is_readable($this->_filename);
+	}
+
+	public function isWritable(){
+		$ftp    = \Core\FTP();
+		$tmpdir = TMP_DIR;
+		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
+
+		if (
+			!$ftp || // FTP not enabled or
+			(strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
+		) {
+			return is_writable($this->_filename);
+		}
+		else {
+			// @todo Implement a better FTP check here!
+			return true;
+		}
+
 	}
 
 	public function isLocal() {
@@ -904,6 +926,79 @@ class File_local_backend implements File_Backend {
 			unlink($tmpfile);
 			return true;
 		}
+	}
+
+
+	/**
+	 * Get an array of the various resize components from a given dimension set.
+	 * These include: width, height, mode, key.
+	 *
+	 * @param $dimensions
+	 *
+	 * @return array
+	 */
+	private function _getReizedKeyComponents($dimensions){
+		// The legacy support for simply a number.
+		if (is_numeric($dimensions)) {
+			$width  = $dimensions;
+			$height = $dimensions;
+			$mode = '';
+		}
+		elseif ($dimensions === null) {
+			$width  = 300;
+			$height = 300;
+			$mode = '';
+		}
+		elseif($dimensions === false){
+			$width = false;
+			$height = false;
+			$mode = '';
+		}
+		else {
+			// Allow some special modifiers.
+			if(strpos($dimensions, '^') !== false){
+				// Fit the smallest dimension instead of the largest, (useful for overflow tricks)
+				$mode = '^';
+				$dimensions = str_replace('^', '', $dimensions);
+			}
+			elseif(strpos($dimensions, '!') !== false){
+				// Absolutely resize, regardless of aspect ratio
+				$mode = '!';
+				$dimensions = str_replace('!', '', $dimensions);
+			}
+			elseif(strpos($dimensions, '>') !== false){
+				// Only increase images.
+				$mode = '>';
+				$dimensions = str_replace('>', '', $dimensions);
+			}
+			elseif(strpos($dimensions, '<') !== false){
+				// Only decrease images.
+				$mode = '<';
+				$dimensions = str_replace('<', '', $dimensions);
+			}
+			else{
+				// Default mode
+				$mode = '';
+			}
+			// New method. Split on the "x" and that should give me the width/height.
+			$vals   = explode('x', strtolower($dimensions));
+			$width  = (int)$vals[0];
+			$height = (int)$vals[1];
+		}
+
+		// The basename is for SEO purposes, that way even resized images still contain the filename.
+		// The hash is just to ensure that no two files conflict, ie: /public/a/file1.png and /public/b/file1.png
+		//  might conflict without this hash.
+		// Finally, the width and height dimensions are there just because as well; it gives more of a human
+		//  touch to the file. :p
+		$key = str_replace(' ', '-', $this->getBaseFilename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.png';
+
+		return array(
+			'width' => $width,
+			'height' => $height,
+			'mode' => $mode,
+			'key' => $key,
+		);
 	}
 
 

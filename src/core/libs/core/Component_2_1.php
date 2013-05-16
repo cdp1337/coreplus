@@ -455,7 +455,7 @@ class Component_2_1 {
 			Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
 		}
 
-		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS){
+		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB'){
 			Core\Utilities\Logger\write_debug('Auto-installing assets for component [' . $this->getName() . ']');
 			$this->_installAssets();
 		}
@@ -656,8 +656,8 @@ class Component_2_1 {
 
 	public function getAssetDir() {
 		// Core has a special exception...
-		if ($this->getName() == 'core') $d = $this->getBaseDir() . 'core/assets';
-		else $d = $this->getBaseDir() . 'assets';
+		if ($this->getName() == 'core') $d = $this->getBaseDir() . 'core/assets/';
+		else $d = $this->getBaseDir() . 'assets/';
 
 		if (is_dir($d)) return $d;
 		else return null;
@@ -1742,12 +1742,21 @@ class Component_2_1 {
 
 		foreach ($this->_xmlloader->getElements('/assets/file') as $node) {
 			$b = $this->getBaseDir();
-			// Local file is guaranteed to be a local file.
-			$f = new File_local_backend($b . $node->getAttribute('filename'));
+
 
 			// The new file should have a filename identical to the original, with the exception of
 			// everything before the filename.. ie: the ROOT_PDIR and the asset directory.
-			$newfilename = 'assets' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
+			$newfilename = 'assets/' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
+
+			// Before anything, check and see if this file has a custom override file present.
+			if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
+				// If so, then copy that asset to the custom directory too!
+				$f = \Core\file(ROOT_PDIR . 'themes/custom/' . $newfilename);
+			}
+			else{
+				// Otherwise, the local file is guaranteed to be a local file.
+				$f = new File_local_backend($b . $node->getAttribute('filename'));
+			}
 
 			$nf = Core::File($newfilename);
 

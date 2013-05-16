@@ -54,11 +54,12 @@ if(!is_dir(TMP_DIR)){
 require_once(ROOT_PDIR . 'core/bootstrap_predefines.php');
 // Critical file inclusions
 require_once(ROOT_PDIR . 'core/bootstrap_preincludes.php');
-require_once(ROOT_PDIR . 'core/libs/core/TemplateInterface.php');
-require_once(ROOT_PDIR . 'core/libs/core/Exception.php');
-require_once(ROOT_PDIR . 'core/libs/core/PHTML.php');
+require_once(ROOT_PDIR . 'core/libs/core/templates/TemplateInterface.php');
+require_once(ROOT_PDIR . 'core/libs/core/templates/Exception.php');
+require_once(ROOT_PDIR . 'core/libs/core/templates/backends/PHTML.php');
 require_once(ROOT_PDIR . 'install/classes/InstallerStep.php');
 require_once(ROOT_PDIR . 'core/functions/Core.functions.php');
+require_once(ROOT_PDIR . 'core/libs/core/utilities/logger/functions.php');
 require_once(ROOT_PDIR . 'install/utilities.php');
 
 require_once(ROOT_PDIR . "core/libs/core/ConfigHandler.class.php");

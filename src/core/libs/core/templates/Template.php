@@ -77,6 +77,10 @@ abstract class Template {
 	public static function GetPaths(){
 		$paths = array();
 
+		// Tack on the custom directory.
+		// This needs to be before the current theme because it takes precedence.
+		$paths[] = ROOT_PDIR . 'themes/custom/';
+
 		// Tack on the current theme's directory.
 		$paths[] = ROOT_PDIR . 'themes/' . \ConfigHandler::Get('/theme/selected') . '/';
 

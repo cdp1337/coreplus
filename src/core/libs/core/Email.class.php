@@ -221,6 +221,11 @@ class Email {
 			if ($m->ContentType == 'text/html') $m->AltBody = $body;
 			else $m->Body = $body;
 		}
+
+		// Make sure the template is blanked out too!
+		// This is because either the template method OR the set body method must be used... NOT BOTH
+		$this->_template = null;
+		$this->templatename = '';
 	}
 
 	/**
@@ -244,17 +249,26 @@ class Email {
 		//	$this->MsgHTML($this->Body);
 		//}
 
-		// Set the body first.
-		if ($this->templatename) {
-			$html = $this->getTemplate()->fetch($this->templatename);
-			if (strpos($html, '<html>') === false) {
-				// Ensuring that the body is wrapped with <html> tags helps with spam checks with spamassassin.
-				$html = '<html>' . $html . '</html>';
-			}
-			//$this->setBody($html, true);
-			$this->getMailer()->MsgHTML($html);
+		$m = $this->getMailer();
+
+		// Render out the body.  Will be either HTML or text...
+		$body = $this->renderBody();
+
+		// Wrap this body with the main email template if it's set.
+		if(ConfigHandler::Get('/theme/default_email_template')){
+			$skintpl = \Core\Templates\Template::Factory('emailskins/' . ConfigHandler::Get('/theme/default_email_template'));
+			$skintpl->assign('body', $body);
+			$m->MsgHTML($skintpl->fetch());
+		}
+		elseif (strpos($body, '<html>') === false) {
+			// Ensuring that the body is wrapped with <html> tags helps with spam checks with spamassassin.
+			$m->MsgHTML('<html>' . $body . '</html>');
+		}
+		else{
+			$m->MsgHTML($body);
 		}
 
-		return $this->getMailer()->Send();
+
+		return $m->Send();
 	}
 }

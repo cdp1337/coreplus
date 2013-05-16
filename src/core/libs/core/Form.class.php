@@ -677,6 +677,38 @@ class Form extends FormGroup {
 	}
 
 	/**
+	 * Generate a unique hash for this form and return it as a flattened string.
+	 * @return string
+	 */
+	public function generateUniqueHash(){
+		$hash = '';
+
+		if ($this->get('___modelpks')) {
+			foreach ($this->get('___modelpks') as $k => $v) {
+				$hash .= $k . ':' . $v . ';';
+			}
+		}
+
+		foreach ($this->getElements() as $el) {
+			// Skip the ___formid element... this shouldn't affect the unique hash!
+			if($el->get('name') == '___formid') continue;
+
+			// System inputs require the value as well, since they're set by the controller; they're not
+			// meant to be changed.
+			if($el instanceof FormSystemInput){
+				$hash .= get_class($el) . ':' . $el->get('name') . ':' . $el->get('value') . ';';
+			}
+			else{
+				$hash .= get_class($el) . ':' . $el->get('name') . ';';
+			}
+		}
+		// Hash it!
+		$hash = md5($hash);
+
+		return $hash;
+	}
+
+	/**
 	 * Render this form and all inside elements to valid HTML.
 	 *
 	 * This will also save the form to the session data for post-submission validation.
@@ -713,26 +745,7 @@ class Form extends FormGroup {
 			// I need to ensure a repeatable but unique id for this form.
 			// Essentially when this form is submitted, I need to be able to know that it's the same form upon re-rendering.
 			if (!$this->get('uniqueid')) {
-				$hash = '';
-
-				if ($this->get('___modelpks')) {
-					foreach ($this->get('___modelpks') as $k => $v) {
-						$hash .= $k . ':' . $v . ';';
-					}
-				}
-
-				foreach ($this->getElements() as $el) {
-					// System inputs require the value as well, since they're set by the controller; they're not
-					// meant to be changed.
-					if($el instanceof FormSystemInput){
-						$hash .= get_class($el) . ':' . $el->get('name') . ':' . $el->get('value') . ';';
-					}
-					else{
-						$hash .= get_class($el) . ':' . $el->get('name') . ';';
-					}
-				}
-				// Hash it!
-				$hash = md5($hash);
+				$hash = $this->generateUniqueHash();
 				$this->set('uniqueid', $hash);
 				$this->getElementByName('___formid')->set('value', $hash);
 			}
@@ -1103,6 +1116,14 @@ class Form extends FormGroup {
 		$this->set('expires', Time::GetCurrent() + 1800); // 30 minutes
 
 		$_SESSION['FormData'][$this->get('uniqueid')] = serialize($this);
+	}
+
+	public function clearFromSession(){
+		// If the unique hash has already been set, use that.
+		// otherwise, generate it from the set elements.
+		$hash = $this->get('uniqueid') ? $this->get('uniqueid') : $this->generateUniqueHash();
+
+		if(isset($_SESSION['FormData'][$hash])) unset($_SESSION['FormData'][$hash]);
 	}
 
 

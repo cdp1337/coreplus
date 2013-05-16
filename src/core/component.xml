@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.3" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.4" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -41,7 +41,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="a07cc38cfbacb7d9bf0141ed33024500"/>
+		<file filename="core/CHANGELOG" md5="e8c9495974660ec1ea05ebaa9a6c126c"/>
 		<file filename="core/bootstrap.php" md5="4d982ac0586d423cd3c170a46d372db4"/>
 		<file filename="core/bootstrap_postincludes.php" md5="e877be1a1b418440d796ffdc3a622bba"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -58,8 +58,8 @@
 		<file filename="core/controllers/ErrorController.php" md5="6404e772cb5a9030a742d32d0c511827">
 			<class name="ErrorController"/>
 		</file>
-		<file filename="core/controllers/FileController.class.php" md5="6b4e9ab2d830a45d96ba4e3a2c7f87f0">
-			<class name="FileController"/>
+		<file filename="core/controllers/FileController.class.php" md5="10f8af551cb1f906e9d76bef87154e38">
+			<controller name="FileController"/>
 		</file>
 		<file filename="core/controllers/FormController.class.php" md5="aa4a180e9ef996b71dfe5c28766b29c5">
 			<controller name="FormController"/>
@@ -133,7 +133,7 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="080383e4dade461c3c7ac1d9e504ed28">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="f56c314b20b233cb79e1e69edfb9c8a0"/>
+		<file filename="core/functions/Core.functions.php" md5="4d44fe8d3a5978554ccf0f8b29dde2c9"/>
 		<file filename="core/functions/Core.functions.php~" md5="ab0fba9df914a8e9416a84f2e911f5e7"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="da6e337a8305534398cad21c53dcae54">
 			<class name="RewriteMapHelper"/>
@@ -433,7 +433,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="c0fb5d4d684dbfdc60a3a4b09f1aacee">
+		<file filename="core/libs/core/Component_2_1.php" md5="3fdfe540b34839163f060acae36fd67e">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/Component_2_1.php~" md5="2d0415ad7d971656437322c0a324ce07"/>
@@ -461,20 +461,20 @@
 		<file filename="core/libs/core/DB.class.php" md5="9f249559a301b0250318631011c01b02">
 			<class name="DB"/>
 		</file>
-		<file filename="core/libs/core/Email.class.php" md5="a45827c7de22e283dd2d1f04b2bd1b5e">
+		<file filename="core/libs/core/Email.class.php" md5="9328c2f5a07c82e127f2296d27424a39">
 			<class name="Email"/>
 		</file>
 		<file filename="core/libs/core/FilterForm.class.php" md5="aebe713fe23e0decb8029a6ff17ce6e6">
 			<class name="FilterForm"/>
 		</file>
 		<file filename="core/libs/core/FilterForm.class.php~" md5="fe131e5ee3a43975627eee058a4bbb45"/>
-		<file filename="core/libs/core/Form.class.php" md5="0acf45bca3191e154edc861090679d32">
+		<file filename="core/libs/core/Form.class.php" md5="8415a65169e87d0140228fe7a18a4244">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
 		</file>
 		<file filename="core/libs/core/Form.class.php~" md5="15f1baa931cd24d2a296be3f1933c704"/>
-		<file filename="core/libs/core/HookHandler.class.php" md5="d9b2f83c26bf616127704197287d66de">
+		<file filename="core/libs/core/HookHandler.class.php" md5="5c55e760a00409a2dd0cc76085d8d310">
 			<class name="HookHandler"/>
 			<class name="Hook"/>
 		</file>
@@ -492,7 +492,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="2b492fece33fa4189c9cdcbd70938295">
+		<file filename="core/libs/core/Model.class.php" md5="29ef2bc987e0acf3ead469270662082e">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -504,7 +504,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="efb9982eb8a9d38481f0ae42f3bcb957">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="34dd3fbf38fe420289a11a8570b41b9a">
+		<file filename="core/libs/core/PageRequest.class.php" md5="b2263ae690e555a3e7e62d2353222216">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="598a7f067ea84ea03d02b6ef517c4e3f">
@@ -521,7 +521,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="526adeb68ea4955d406e456a6ca01606">
+		<file filename="core/libs/core/View.class.php" md5="35f99e7b81e4a4d08c66c8ea665e379e">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -555,7 +555,7 @@
 		<file filename="core/libs/core/templates/Exception.php" md5="9d116f5547824aa600334c0ddcca2f08">
 			<class name="Core\Templates\Exception"/>
 		</file>
-		<file filename="core/libs/core/templates/Template.php" md5="3afa64363aadfe635b97e4fc4f3a64af">
+		<file filename="core/libs/core/templates/Template.php" md5="acb194f762d1917c778e5bb7b59ba01a">
 			<class name="Core\Templates\Template"/>
 		</file>
 		<file filename="core/libs/core/templates/TemplateInterface.php" md5="4c211de443cb35761e22e2e3459f97de">
@@ -780,7 +780,7 @@
 		<file filename="core/libs/datamodel/drivers/phpcassa/thrift/transport/TTransportFactory.php" md5="c3ddb6d18771dd873d785875ffbf9179">
 			<class name="TTransportFactory"/>
 		</file>
-		<file filename="core/libs/datamodel/drivers/phpcassa/uuid.php" md5="e18fff7e213a2d00ce0ee67782b7b774">
+		<file filename="core/libs/datamodel/drivers/phpcassa/uuid.php" md5="99099a60af9d43b593bcbc28e0c45d54">
 			<class name="UUID"/>
 			<class name="UUIDException"/>
 		</file>
@@ -805,10 +805,10 @@
 		<file filename="core/libs/filestore/backends/file_awss3.backend.php" md5="86f58054362b62b0a0bc760d8f403048">
 			<class name="File_awss3_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="1ef7b98780bf35e4a03958bd94da0a31">
+		<file filename="core/libs/filestore/backends/file_local.backend.php" md5="482dcde5f26b9b32e356c73340a708c6">
 			<class name="File_local_backend"/>
 		</file>
-		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="2d0d12fa2ab4e24ef42c408c3ddac932">
+		<file filename="core/libs/filestore/backends/file_remote.backend.php" md5="5678c1b3cf27487383d11987828f9603">
 			<class name="File_remote_backend"/>
 		</file>
 		<file filename="core/libs/filestore/contents/File_asc_contents.class.php" md5="1ab9f64e240b30abc32826e0a2ace694">
@@ -1055,15 +1055,15 @@
 		<file filename="core/libs/phpmailer/test_script/styles/wrapping.png" md5="9a4ffd836c709958eff80a3260f8a1cb"/>
 		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="5e3e19afb2a649beece4b2eeea62ac48"/>
-		<file filename="core/libs/smarty-plugins/block.css.php" md5="1a0ca6eb8cc9744455b157371ee36f13"/>
+		<file filename="core/libs/smarty-plugins/block.css.php" md5="5967ccd081d862e1e73a407e115436a2"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="67958e43bf491058ed9f05f7d1f9c384"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="84d16e1ba8fb38b5c8be6a1ca960ab43"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="85f908c0a9fa616aca30a0b94afeae18"/>
 		<file filename="core/libs/smarty-plugins/function.controls.php" md5="6d27ea6f00b10982d9e7741e42be46e5"/>
 		<file filename="core/libs/smarty-plugins/function.date.php" md5="2b700cd93e47d5b92ebcc0a24533d467"/>
-		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="b90dc10b7caf30b01b9a487b5653c9ce"/>
+		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="8f9279948dac616871ea465c70c24836"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="4ccc817b64cccb0c9455d3fe1a28ddf2"/>
-		<file filename="core/libs/smarty-plugins/function.img.php" md5="2e011b19fde017dcab74c9abb1a27ab7"/>
+		<file filename="core/libs/smarty-plugins/function.img.php" md5="45eeca72adcab0920abaffd8d96738db"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="d8daf3f492d0c8a71e7b8ccf0cd70cc9"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="9ff0428278228b374379b3f08b84db52"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="4f0f7e198dc73658c361edc8d0369365"/>
@@ -1589,11 +1589,102 @@
 		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'" default=""/>
 	</configs>
 	<assets>
-		<file filename="core/assets/css/admin/adminbar.css" md5="81396f3b633ce429e7ba95fc9cc981ec"/>
+		<file filename="core/assets/css/admin/adminbar.css" md5="3c2c59235032e5dcf5f56cc15695def6"/>
+		<file filename="core/assets/css/reset.css" md5="e2188e4f93e2d39b22a252f30634c8cd"/>
+		<file filename="core/assets/css/reset.min.css" md5="68d1825019e37e56a695a645dc4dfb4d"/>
 		<file filename="core/assets/css/updater.css" md5="771975b286bac4ea1f55785d6ca1a5eb"/>
+		<file filename="core/assets/images/404.jpg" md5="815cb4116bbbec081a645e85de74025c"/>
+		<file filename="core/assets/images/loading-bar-small.gif" md5="657ee2fa16698cbc29d5a1f4b257de46"/>
+		<file filename="core/assets/images/logo.png" md5="a4d441acf634337bc88eec82fcc79a3f"/>
+		<file filename="core/assets/images/mimetypes/application-illustrator.png" md5="6e1d334fe31f7d28c8ed1c49b1d3fb6e"/>
+		<file filename="core/assets/images/mimetypes/application-javascript.png" md5="43bd833595a47e5a0737b6af9f3f71d5"/>
+		<file filename="core/assets/images/mimetypes/application-msword.png" md5="9dedb8dd79217a6afa02f2e3fd41ca4e"/>
+		<file filename="core/assets/images/mimetypes/application-octet-stream.png" md5="b2eaa6a788d775504bf87515fb27a5bf"/>
+		<file filename="core/assets/images/mimetypes/application-ogg.png" md5="2038248c06ce371fb438f7e84303670d"/>
+		<file filename="core/assets/images/mimetypes/application-pdf.png" md5="4ead9007e0f7715a91d74029988646d0"/>
+		<file filename="core/assets/images/mimetypes/application-pgp-encrypted.png" md5="abc96ab3c424266978bbfc59db9fcda0"/>
+		<file filename="core/assets/images/mimetypes/application-pgp-keys.png" md5="e1a435c873ceb042e72e1a447bf4cd24"/>
+		<file filename="core/assets/images/mimetypes/application-pkcs7-mime.png" md5="625e4a395958d10e121a1f5a2fec5c96"/>
+		<file filename="core/assets/images/mimetypes/application-postscript.png" md5="a941a925691f8386264852e971f389d8"/>
+		<file filename="core/assets/images/mimetypes/application-rss+xml.png" md5="61508c7b0f945a5f43daefd7cb9a01ab"/>
+		<file filename="core/assets/images/mimetypes/application-rtf.png" md5="e7b4d7775db5f40317eea9abfe206134"/>
+		<file filename="core/assets/images/mimetypes/application-sxw.png" md5="cfbbcc8b81404d485425cafdf52cf4f0"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.iccprofile.png" md5="b36dbbd8c9b09a1e915e95006f28059c"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.ms-access.png" md5="b78fdbb0968f972571c2c175abb30429"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.ms-excel.png" md5="fbd33531d43858a4a99f6b517209fdf3"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.ms-powerpoint.png" md5="ca1516edc9fe27310c2b619f4ceb1bc4"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.oasis.opendocument.chart.png" md5="4bb244102149dad0318f562ebb6c2963"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.oasis.opendocument.database.png" md5="78ce48d877ca51e12cb944673273d1d4"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.oasis.opendocument.formula-template.png" md5="85b3208640896877d0e01986980630e5"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.oasis.opendocument.formula.png" md5="159f428770d47f89693ae312b318b97a"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.oasis.opendocument.graphics.png" md5="28e85ca3c57c018b94712670daf1bf14"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.oasis.opendocument.image.png" md5="e2463da4dd4d3f430d17b45a1429d55e"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.oasis.opendocument.presentation-template.png" md5="4165ec349c4f7af73f44e5671d075715"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.oasis.opendocument.presentation.png" md5="555540c9b65557ea0daa97c13a55f535"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.oasis.opendocument.text-master.png" md5="cc015471267d3f53b6a96b1333a1d0af"/>
+		<file filename="core/assets/images/mimetypes/application-vnd.scribus.png" md5="b25c02fe1e5b00ccf547faf1c56d07d3"/>
+		<file filename="core/assets/images/mimetypes/application-x-deb.png" md5="061c7b4fe1746454ead1790bca6e6e01"/>
+		<file filename="core/assets/images/mimetypes/application-x-debian-package.png" md5="061c7b4fe1746454ead1790bca6e6e01"/>
+		<file filename="core/assets/images/mimetypes/application-x-executable.png" md5="f0a065ec56c35121741f72dced5eccc0"/>
+		<file filename="core/assets/images/mimetypes/application-x-font-otf.png" md5="0cb9917ba9f9ec37259eae53314a8ea5"/>
+		<file filename="core/assets/images/mimetypes/application-x-font-snf.png" md5="cf44fa1eb433aa83e7dfa20246f59a4c"/>
+		<file filename="core/assets/images/mimetypes/application-x-font-ttf.png" md5="27a91c3c260460807d82be93e006cd34"/>
+		<file filename="core/assets/images/mimetypes/application-x-font-type1.png" md5="f41d9575d0d1271fa8f9c766ae46cb13"/>
+		<file filename="core/assets/images/mimetypes/application-x-gnumeric.png" md5="f0a2e399885bd41344f309a0e36c98ce"/>
+		<file filename="core/assets/images/mimetypes/application-x-gzdvi.png" md5="131c32c17a61f4d7481837acfda5e14c"/>
+		<file filename="core/assets/images/mimetypes/application-x-gzip.png" md5="12eca721f53d2b482ade67716e0a0173"/>
+		<file filename="core/assets/images/mimetypes/application-x-gzpostscript.png" md5="166197e401fb254117895cc9af32d25d"/>
+		<file filename="core/assets/images/mimetypes/application-x-java-applet.png" md5="8469a770a09ab496678bf60e400891bb"/>
+		<file filename="core/assets/images/mimetypes/application-x-java-archive.png" md5="de5efedc99d5436d18fc11ad88c65ae6"/>
+		<file filename="core/assets/images/mimetypes/application-x-shockwave-flash.png" md5="b2eaa6a788d775504bf87515fb27a5bf"/>
+		<file filename="core/assets/images/mimetypes/application-zip.png" md5="8c5b62105e1e69393d397ca2bff09d4d"/>
+		<file filename="core/assets/images/mimetypes/audio-ac3.png" md5="2038248c06ce371fb438f7e84303670d"/>
+		<file filename="core/assets/images/mimetypes/audio-midi.png" md5="2582cd54e71e4c1cdefd8e1fa1c8766d"/>
+		<file filename="core/assets/images/mimetypes/audio-mpeg.png" md5="2038248c06ce371fb438f7e84303670d"/>
+		<file filename="core/assets/images/mimetypes/audio-wav.png" md5="d4281964e14a0e5604334c115f92acf3"/>
+		<file filename="core/assets/images/mimetypes/audio-x-flac.png" md5="2038248c06ce371fb438f7e84303670d"/>
+		<file filename="core/assets/images/mimetypes/directory.png" md5="94f572aabe4d6efe74356cfdc5abe331"/>
+		<file filename="core/assets/images/mimetypes/image-gif.png" md5="b446319a1da8794602efa5972a658c6a"/>
+		<file filename="core/assets/images/mimetypes/image-jpeg.png" md5="b446319a1da8794602efa5972a658c6a"/>
+		<file filename="core/assets/images/mimetypes/image-jpg.png" md5="b446319a1da8794602efa5972a658c6a"/>
+		<file filename="core/assets/images/mimetypes/image-png.png" md5="b446319a1da8794602efa5972a658c6a"/>
+		<file filename="core/assets/images/mimetypes/image-svg+xml.png" md5="28e85ca3c57c018b94712670daf1bf14"/>
+		<file filename="core/assets/images/mimetypes/notfound.png" md5="6a5e689f57e697606d3a8fa2eb495fdd"/>
+		<file filename="core/assets/images/mimetypes/text-css.png" md5="6d8c54559af97ae88e1d10414bbc6790"/>
+		<file filename="core/assets/images/mimetypes/text-html.png" md5="028f3c934f333d9cfdd150d25242275e"/>
+		<file filename="core/assets/images/mimetypes/text-javascript.png" md5="43bd833595a47e5a0737b6af9f3f71d5"/>
+		<file filename="core/assets/images/mimetypes/text-plain.png" md5="fa72d9363818efd2b2bb56ad07d82679"/>
+		<file filename="core/assets/images/mimetypes/text-x-objcsrc.png" md5="828a138b6921ce160c5ec60af8e6fc77"/>
+		<file filename="core/assets/images/mimetypes/text-x-pascal.png" md5="e7c05339ab8f05111d5df93bd6676a1c"/>
+		<file filename="core/assets/images/mimetypes/text-x-patch.png" md5="3bd1324108cd6de098bae11f3284f973"/>
+		<file filename="core/assets/images/mimetypes/text-x-po.png" md5="26add87951fd366ff97c9a301d4f2549"/>
+		<file filename="core/assets/images/mimetypes/text-x-python.png" md5="a82b5920bbb66be79f27dcfd7034a8e6"/>
+		<file filename="core/assets/images/mimetypes/text-x-qml.png" md5="9addfcaaf10599a6b39679ab8ca2ab6b"/>
+		<file filename="core/assets/images/mimetypes/text-x-readme.png" md5="c5e9660e380854da6020492f5fc8e5f4"/>
+		<file filename="core/assets/images/mimetypes/text-x-rpm-spec.png" md5="3c1ab479668e6a62f3fa80f058ca5f38"/>
+		<file filename="core/assets/images/mimetypes/text-x-script.png" md5="e428135c6a09424e56e8fc2d66f562fd"/>
+		<file filename="core/assets/images/mimetypes/text-x-shellscript.png" md5="e428135c6a09424e56e8fc2d66f562fd"/>
+		<file filename="core/assets/images/mimetypes/text-x-sql.png" md5="265602943f55e62b09f65ffda3e9c600"/>
+		<file filename="core/assets/images/mimetypes/text-x-tcl.png" md5="ffaeb1a3b53369635cdd5d9e6eb58321"/>
+		<file filename="core/assets/images/mimetypes/text-x-tex.png" md5="bf4e3a0bb3ab0b34a099a0eae623309a"/>
+		<file filename="core/assets/images/mimetypes/text-x-texinfo.png" md5="0253dce6d36467b7abe227b9b97a44e1"/>
+		<file filename="core/assets/images/mimetypes/text-x-vcard.png" md5="b96eb1a2e2f4a31d0ad23db55596014b"/>
+		<file filename="core/assets/images/mimetypes/unknown.png" md5="2510d5565850a7b8d762312fc41dd8eb"/>
+		<file filename="core/assets/images/mimetypes/video-mp4.png" md5="151bf6436338306e2150a2d5343c11ef"/>
+		<file filename="core/assets/images/mimetypes/video-x-flv.png" md5="151bf6436338306e2150a2d5343c11ef"/>
+		<file filename="core/assets/images/mimetypes/video-x-generic.png" md5="151bf6436338306e2150a2d5343c11ef"/>
+		<file filename="core/assets/images/mimetypes/video-x-ms-asf.png" md5="151bf6436338306e2150a2d5343c11ef"/>
+		<file filename="core/assets/images/placeholders/blog.png" md5="2ef8794320891042986b72da16f47bf1"/>
+		<file filename="core/assets/images/placeholders/generic.png" md5="6b1b8ecb8333dfb86a56f1e1ee348d24"/>
+		<file filename="core/assets/images/placeholders/person-tall.png" md5="5fceb195fbaf164fbadde1c6419b6aa4"/>
+		<file filename="core/assets/images/placeholders/person-wide.png" md5="dc7740eb685ceacaa7b1ff3a4dc70e5b"/>
+		<file filename="core/assets/images/placeholders/person.png" md5="dc6760a27890d742c748e7385068abeb"/>
+		<file filename="core/assets/images/placeholders/photo.png" md5="0665e6fda435b01116122b863a4548d2"/>
+		<file filename="core/assets/images/placeholders/placeholder-generic1.jpg" md5="7ee2b126c0396dcb5f3f41c25bea16d6"/>
+		<file filename="core/assets/images/placeholders/template.xcf" md5="11e1a3508035c4fbea97e078a74048af"/>
 		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="306b7baee9b250a9da2b378f5047ff30"/>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
-		<file filename="core/assets/js/core-foot.js" md5="9f4a017d5951b7dcd7736ac0bd800a3f"/>
+		<file filename="core/assets/js/core-foot.js" md5="3219cf19aeaea943c371585b8d96d74a"/>
 		<file filename="core/assets/js/core.ajaxlinks.js" md5="afcbaf5ffaebe993b37530d7606ec956"/>
 		<file filename="core/assets/js/core.base64.js" md5="d5858756a4cf8012eb25157105718dfa"/>
 		<file filename="core/assets/js/core.context-controls.js" md5="9cceadad2a7328d7cf536c9d47562ddf"/>
@@ -1603,6 +1694,8 @@
 		<file filename="core/assets/js/core.js" md5="8c4724ce896c231d0c42c56d2201e33a"/>
 		<file filename="core/assets/js/core.strings.js" md5="0816e7d4e07cc8db0c43c0b2cc090701"/>
 		<file filename="core/assets/js/core.strings.js~" md5="7ba2a6d21dc4529332298404b7df17ff"/>
+		<file filename="core/assets/js/html5shiv.js" md5="6f9ae49ba54ad8f6751991a0eb0b27e8"/>
+		<file filename="core/assets/js/html5shiv.min.js" md5="62ac572189514315ebfb31c43a225009"/>
 		<file filename="core/assets/js/updater/index.js" md5="4900c41083ac914b4bd42873efa4718f"/>
 	</assets>
 	<upgrades>
@@ -1666,6 +1759,7 @@
 		<upgrade from="2.5.0" to="2.5.1"/>
 		<upgrade from="2.5.1" to="2.5.2"/>
 		<upgrade from="2.5.2" to="2.5.3"/>
+		<upgrade from="2.5.3" to="2.5.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

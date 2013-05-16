@@ -103,12 +103,21 @@ function smarty_function_img($params, $template){
 		$attributes[$k] = $v;
 	}
 
-	// Well...
-	if($d){
-		$attributes['src'] = $f->getPreviewURL($d);
+	// Try to lookup the preview file.
+	// if it exists, then YAY... I can return that direct resource.
+	// otherwise, I should check and see if the file is larger than a set filesize.
+	// if it is, then I want to return a link to a controller to render that file instead of rendering the file from within the {img} tag.
+	//
+	// This is useful because any logic contained within this block will halt page execution!
+	// To improve the perception of performance, that can be offloaded to the browser requesting the <img/> contents.
+	$previewfile = $d ? $f->getQuickPreviewFile($d) : $f;
+
+	if(!$previewfile->exists()){
+		// Ok, it doesn't exist... return a link to the controller to render this file.
+		$attributes['src'] = Core::ResolveLink('/file/preview') . '?f=' . $f->getFilenameHash() . '&d=' . $d;
 	}
 	else{
-		$attributes['src'] = $f->getURL();
+		$attributes['src'] = $previewfile->getURL();
 	}
 	
 	// Merge them back together in one string.

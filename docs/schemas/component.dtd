@@ -6,21 +6,21 @@
 -->
 
 <!--
-    An example how to use this DTD from your XML document:
+	An example how to use this DTD from your XML document:
 
-    <?xml version="1.0"?>
+	<?xml version="1.0"?>
 	<!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
 
-    <component>
-    ...
-    </component>
+	<component>
+	...
+	</component>
 -->
 
 <!--
 	Component is the main container for everything for a given... well, component.
 	It's the root node, and each component can only contain one component.xml, which contains only one component directive.
 
-	The component directive MUST have a name and version attribute.  
+	The component directive MUST have a name and version attribute.
 	The name MUST match the component's directory, (capitalization is optional).
 	The version SHOULD start with a number, and ideally have minor and point revisions, optionally with a third party flag at the end.
 -->
@@ -40,15 +40,15 @@
 
 <!ELEMENT provide EMPTY>
 <!ATTLIST provide
-	version CDATA #REQUIRED
-	name CDATA #REQUIRED
-	type CDATA #IMPLIED
+version CDATA #REQUIRED
+name CDATA #REQUIRED
+type CDATA #IMPLIED
 >
 <!ELEMENT scriptlibrary EMPTY>
 <!ATTLIST scriptlibrary
 	name CDATA #REQUIRED
 	call CDATA #IMPLIED
->
+	>
 
 <!ELEMENT forms (formelement)>
 <!ELEMENT formelement EMPTY>
@@ -62,7 +62,7 @@
 	type CDATA #REQUIRED
 	version CDATA #IMPLIED
 	operation (lt|le|eq|ge|gt) "ge"
->
+	>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT hooks (hookregister|hook)*>
@@ -71,21 +71,21 @@
 <!ATTLIST hookregister
 	name CDATA #REQUIRED
 	description CDATA #IMPLIED
-	return (array|bool|void) "bool"
->
+	return (array|bool|string|void) "bool"
+	>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT hook EMPTY>
 <!ATTLIST hook
 	name CDATA #REQUIRED
 	call CDATA #REQUIRED
->
+	>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT smartyplugins EMPTY>
 <!ATTLIST smartyplugins
 	directory CDATA #REQUIRED
->
+	>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT includes (include)*>
@@ -94,7 +94,7 @@
 <!ELEMENT include EMPTY>
 <!ATTLIST include
 	filename CDATA #REQUIRED
->
+	>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT files (file)*>
@@ -104,22 +104,22 @@
 <!ATTLIST file
 	md5 CDATA #IMPLIED
 	filename CDATA #REQUIRED
->
+	>
 
 <!ELEMENT class EMPTY>
 <!ATTLIST class
 	name CDATA #REQUIRED
->
+	>
 
 <!ELEMENT interface EMPTY>
 <!ATTLIST interface
 	name CDATA #REQUIRED
->
+	>
 
 <!ELEMENT controller EMPTY>
 <!ATTLIST controller
 	name CDATA #REQUIRED
->
+	>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT pages (page)*>
@@ -132,7 +132,7 @@
 	access CDATA #IMPLIED
 	admin (0|1) "0"
 	selectable (0|1) "1"
->
+	>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT widgets (widget)*>
@@ -143,13 +143,13 @@
 	baseurl CDATA #REQUIRED
 	title CDATA #IMPLIED
 	installable CDATA #IMPLIED
->
+	>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT view (file)*>
 <!ATTLIST view
-searchdir CDATA #IMPLIED
->
+	searchdir CDATA #IMPLIED
+	>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT install (dataset|phpfileinclude)*>
@@ -168,7 +168,7 @@ searchdir CDATA #IMPLIED
 	options CDATA #IMPLIED
 	description CDATA #IMPLIED
 	default CDATA #IMPLIED
->
+	>
 
 <!--- User config options, since they're usually defined by the components. -->
 <!ELEMENT userconfigs (userconfig)*>
@@ -210,7 +210,7 @@ searchdir CDATA #IMPLIED
 >
 
 <!--
-	Execute a low-level dataset operation on the installation or upgrade.
+Execute a low-level dataset operation on the installation or upgrade.
 -->
 <!ELEMENT dataset (datasetset|datasetwhere|datasetrenamecolumn)*>
 <!ATTLIST dataset

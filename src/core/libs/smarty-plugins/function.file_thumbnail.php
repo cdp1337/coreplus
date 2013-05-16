@@ -75,19 +75,9 @@ function smarty_function_file_thumbnail($params, $template){
 			$width = (int)$vals[0];
 			$height = (int)$vals[1];
 		}
-		// Translate this dimension set to a "sm/med/lg" size.
-		$size = Core::TranslateDimensionToPreviewSize($width, $height);
 		unset($params['dimensions']);
 	}
-	
-	if(isset($params['size'])){
-		$size = $params['size'];
-		// Let size override width and height.
-		$width = $height = ConfigHandler::Get('/theme/filestore/preview-size-' . $size);
-		$d = $width . 'x' . $height;
-		unset($params['size']);
-	}
-	
+
 	
 	// If one is provided but not the other, just make them the same.
 	if(!$d){
@@ -95,13 +85,12 @@ function smarty_function_file_thumbnail($params, $template){
 		if($height && !$width) $width = $height;
 
 		$d = ($width && $height) ? $width . 'x' . $height : false;
-		$size = Core::TranslateDimensionToPreviewSize($width, $height);
 	}
 	
 	
 	if(!$file->exists()){
-		$icon = Core::File('assets/mimetype_icons/notfound-' . $size . '.png');
-		$attributes['src'] = $icon->getURL();
+		$icon = \Core\file('assets/images/mimetypes/notfound.png');
+		$attributes['src'] = $d ? $icon->getPreviewURL($d) : $icon->getURL();
 	}
 	elseif(ConfigHandler::Get('/core/filestore/previews') && $file->isPreviewable()){
 		if($file->getFilesize() < (1024*1024*4)){
@@ -115,8 +104,8 @@ function smarty_function_file_thumbnail($params, $template){
 		}
 	}
 	else{
-		$icon = Core::File('assets/mimetype_icons/' . str_replace('/', '-', strtolower($file->getMimetype()) ) . '-' . $size . '.png');
-		if(!$icon->isReadable()) $icon = Core::File('assets/mimetype_icons/unknown-' . $size . '.png');
+		$icon = \Core\file('assets/images/mimetypes/' . str_replace('/', '-', strtolower($file->getMimetype()) ) . '.png');
+		if(!$icon->isReadable()) $icon = Core::File('assets/images/mimetypes/unknown.png');
 		$attributes['src'] = $icon->getURL();
 	}
 	

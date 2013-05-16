@@ -472,8 +472,12 @@ class PageRequest {
 
 		//var_dump($defaultpage->get('page_template'), $return->templatename); die();
 
-
-		if ($defaultpage->get('theme_template')) {
+		if($return->mastertemplate == 'admin'){
+			// If the master template is set explictly to be the admin skin, then transpose that to the set admin skin.
+			// This is useful for the pages that may not be under the "/admin" umbrella, but still rendered with the admin UI.
+			$return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
+		}
+		elseif ($defaultpage->get('theme_template')) {
 			// Master template set in the database?
 			$return->mastertemplate = $defaultpage->get('theme_template');
 		}

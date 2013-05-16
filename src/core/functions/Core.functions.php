@@ -58,16 +58,27 @@ function FTP(){
 		$ftppass = FTP_PASSWORD;
 
 		if(!($ftpuser && $ftppass)){
+			// This is the most common case; if the either the username or password is not set,
+			// just don't try to connect to anything and set the FTP to false immediately.
+			// This is usually because the admin never entered in credentials and wishes to use direct file access.
 			$ftp = false;
 			return false;
 		}
 
 		$ftp = ftp_connect('127.0.0.1');
 		if(!$ftp){
+			error_log('FTP enabled, but connection to "127.0.0.1" failed!');
+
 			$ftp = false;
 			return false;
 		}
-		ftp_login($ftp, $ftpuser, $ftppass);
+
+		if(!ftp_login($ftp, $ftpuser, $ftppass)){
+			error_log('FTP enabled, but a bad username or password was used!');
+
+			$ftp = false;
+			return false;
+		}
 	}
 
 	// if FTP is not enabled, I can't chdir...
@@ -93,26 +104,23 @@ function FTP(){
  * @return \User_Backend
  */
 function user(){
-	static $user = null;
-	if($user === null){
-		// Is the session data present?
-		if(!isset($_SESSION['user'])){
-			$user = \User::Factory();
-		}
-		else{
-			/** @var $user \User */
-			$user = $_SESSION['user'];
+	// Is the session data present?
+	if(!isset($_SESSION['user'])){
+		$_SESSION['user'] = \User::Factory();
+	}
+	else{
+		/** @var $user \User */
+		$user = $_SESSION['user'];
 
-			// If this is in multisite mode, blank out the access string cache too!
-			// This is because siteA may have some groups, while siteB may have another.
-			// We don't want a user going to a site they have full access to, hopping to another and having cached permissions!
-			if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
-				$user->clearAccessStringCache();
-			}
+		// If this is in multisite mode, blank out the access string cache too!
+		// This is because siteA may have some groups, while siteB may have another.
+		// We don't want a user going to a site they have full access to, hopping to another and having cached permissions!
+		if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
+			$user->clearAccessStringCache();
 		}
 	}
 
-	return $user;
+	return $_SESSION['user'];
 }
 
 
@@ -216,17 +224,17 @@ function resolve_asset($asset){
 
 	// Maybe it's cached :)
 	$keyname = 'asset-resolveurl';
-	$cachevalue = Core::Cache()->get($keyname, (3600 * 24));
+	$cachevalue = \Core::Cache()->get($keyname, (3600 * 24));
 
 	if(!$cachevalue) $cachevalue = array();
 
 	if(!isset($cachevalue[$asset])){
 		// Well, look it up!
-		$f = Core::File($asset);
+		$f = \Core::File($asset);
 
 		$cachevalue[$asset] = $f->getURL();
 		// Save this for future lookups.
-		Core::Cache()->set($keyname, $cachevalue, (3600 * 24));
+		\Core::Cache()->set($keyname, $cachevalue, (3600 * 24));
 	}
 
 	return $cachevalue[$asset];

@@ -254,9 +254,11 @@ class Model implements ArrayAccess {
 
 		// Check the index (primary), and the incoming data.  If it matches, load it up!
 		$i = self::GetIndexes();
+		$pri = (isset($i['primary'])) ? $i['primary'] : false;
+		if($pri && !is_array($pri)) $pri = array($pri);
 
-		if (isset($i['primary']) && func_num_args() == sizeof($i['primary'])) {
-			foreach ($i['primary'] as $k => $v) {
+		if ($pri && func_num_args() == sizeof($i['primary'])) {
+			foreach ($pri as $k => $v) {
 				$this->_data[$v] = func_get_arg($k);
 			}
 		}
@@ -278,9 +280,12 @@ class Model implements ArrayAccess {
 		$i = self::GetIndexes();
 		$s = self::GetSchema();
 
+		$pri = (isset($i['primary'])) ? $i['primary'] : false;
+		if($pri && !is_array($pri)) $pri = array($pri);
+
 		$keys = array();
-		if (isset($i['primary']) && sizeof($i['primary'])) {
-			foreach ($i['primary'] as $k) {
+		if ($pri && sizeof($i['primary'])) {
+			foreach ($pri as $k) {
 				$v = $this->get($k);
 
 				// 2012.12.15 cp - I am changing this from return to continue to support enterprise data in non-enterprise mode.
@@ -551,6 +556,45 @@ class Model implements ArrayAccess {
 		return $s[$key];
 	}
 
+	/**
+	 * Lookup and see if this model instance has a draft saved for it.
+	 *
+	 * @return bool
+	 */
+	public function hasDraft(){
+		if(!Core::IsComponentAvailable('model-audit')){
+			// If the underlying component is not available, drafts cannot be enabled!
+			return false;
+		}
+		else{
+			return ModelAudit\Helper::ModelHasDraft($this);
+		}
+	}
+
+	/**
+	 * Get the draft status of this model.
+	 *
+	 * @return string
+	 */
+	public function getDraftStatus(){
+		if(!$this->exists()){
+			// If it's here, it must be a draft creation :p
+			return 'pending_creation';
+		}
+		elseif($this->hasDraft() && $this->get('___auditmodel')->get('data') == '[]'){
+			// A blank data record on the audit model indicates that the request is to be deleted.
+			return 'pending_deletion';
+		}
+		elseif($this->hasDraft()){
+			// Otherwise, just changes were performed.
+			return 'pending_update';
+		}
+		else{
+			// And if it exists and no draft object attached... then this doesn't have one.
+			return '';
+		}
+	}
+
 	/*
 	public boolean offsetExists ( mixed $offset )
 	public mixed offsetGet ( mixed $offset )
@@ -574,9 +618,16 @@ class Model implements ArrayAccess {
 			switch ($keyschema['type']) {
 				case Model::ATT_TYPE_CREATED:
 				case Model::ATT_TYPE_UPDATED:
-					$nv = Time::GetCurrentGMT();
-					$dat->insert($k, $nv);
-					$this->_data[$k] = $nv;
+					// If this value has already been set, (some advanced utilities may want to specify a different updated or created time),
+					// then allow that value to stick.
+					if($v){
+						$dat->insert($k, $v);
+					}
+					else{
+						$nv = Time::GetCurrentGMT();
+						$dat->insert($k, $nv);
+						$this->_data[$k] = $nv;
+					}
 					break;
 
 				case Model::ATT_TYPE_ID:
@@ -657,8 +708,12 @@ class Model implements ArrayAccess {
 		$s = self::GetSchema();
 		$n = $this->_getTableName();
 
-		// No primary schema defined... just don't make the in_array bail out.
-		if (!isset($i['primary'])) $i['primary'] = array();
+		// No primary schema defined or it's a string, (single value)... just don't make the in_array bail out.
+		$pri = isset($i['primary']) ? $i['primary'] : array();
+
+		if($pri && !is_array($pri)) $pri = array($pri);
+
+		if($pri && !is_array($pri)) $pri = array($pri);
 
 		// This is the dataset object that will be integral in this function.
 		$dat = new Dataset();
@@ -698,7 +753,7 @@ class Model implements ArrayAccess {
 
 			//var_dump($k, $i['primary']);
 			// Everything else
-			if (in_array($k, $i['primary'])) {
+			if (in_array($k, $pri)) {
 				// Just in case the new data changed....
 				if ($this->_datainit[$k] != $v){
 					if($useset){
@@ -790,7 +845,10 @@ class Model implements ArrayAccess {
 				throw new Exception('Unable to delete model [ ' . get_class($this) . ' ] without any primary keys.');
 			}
 
-			foreach ($i['primary'] as $k) {
+			$pri = $i['primary'];
+			if(!is_array($pri)) $pri = array($pri);
+
+			foreach ($pri as $k) {
 				$dat->where(array($k => $this->_data[$k]));
 			}
 
@@ -1597,7 +1655,11 @@ class Model implements ArrayAccess {
 		$i = self::GetIndexes();
 
 		if(isset($i['primary'])){
-			foreach ($i['primary'] as $k) {
+			// It should be an array, but doesn't have to be.
+			$pri = $i['primary'];
+			if(!is_array($pri)) $pri = array($pri);
+
+			foreach ($pri as $k) {
 				$val = $this->get($k);
 				if ($val === null) $val = 'null';
 				elseif ($val === false) $val = 'false';

@@ -191,6 +191,14 @@ class Hook {
 	const RETURN_TYPE_ARRAY = 'array';
 
 	/**
+	 * A non-empty return status from one hook will return immediately and stop execution of any other hook attachments.
+	 *
+	 * This does not constitute a failed hook, simply that it no longer needs to proceed, ie: useful for form submissions
+	 * where the returning URL may be overwritten.  In this case, it's simply FIFO.
+	 */
+	const RETURN_TYPE_STRING = 'string';
+
+	/**
 	 * The name of this hook.  MUST be system unique.
 	 * @var string
 	 */
@@ -270,6 +278,12 @@ class Hook {
 					break;
 				case self::RETURN_TYPE_VOID:
 					// I DON'T CARE!  :p
+					break;
+				case self::RETURN_TYPE_STRING:
+					if(is_scalar($result) && $result != ''){
+						// It's a non-empty string!
+						return $result;
+					}
 					break;
 			}
 

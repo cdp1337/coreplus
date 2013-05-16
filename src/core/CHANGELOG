@@ -1,3 +1,43 @@
+Core Plus 2.5.4
+
+	* [Bug] Minor bug fix, components needed to include the trailing slash for getAssetDir().
+	* [Bug] Models now support non-array primary keys.  This is a discouraged ability, but still a
+	  supported one.
+	* [Feature] Added the ability for web administrators to manage their own "custom" assets and
+	  templates.  These are resources set by the developer, but editable admins.  Upon changing a file,
+	  that file is copied to the "themes/custom" directory to prevent overwriting of the file upon future
+	  updates.
+	* [Feature] Emails can now have a skin.  This is useful for outbound communication branding.
+	* [Feature] Form caches can now be purged from within a controller!
+	* [Feature] New hook type - "string".  This will stop propagation immediately if a non-zero length
+	  string is returned from a listener.
+	* [Feature] Do not set the updated timestamp on a new model if it's already set.  This may be useful
+	  for fine-tuning how the data behaves.
+	* [Feature] Added a few more custom mimetypes that may be returned in Ubuntu 13.04.
+	* [Feature] New reset.css and reset.min.css files available in core.  These are a combination of the
+	  normalize and main html5 bootstrap files.
+	* [Feature] Message icons are now a part of core instead of the default theme.
+	* [Feature] Imported newest version of html5shiv into the core.
+	* [Feature] Controllers can now register their view to be rendered with the "admin" mastertemplate,
+	  (aka skin).  This is a shortcut to use whichever admin skin is set.
+	* [Feature] Retooled the smarty {img} function to use the /file/preview controller if the file doesn't
+	  exist.  This allows for non-blocking displaying of previewable assets.
+	* Centralized the hash generation for forms.  This allows better support for purging a form's cache
+	  from within the controller.
+	* Migrated "default" theme asset files to core.  With the new structure, it doesn't make as much sense
+	  to keep that as a separate directory.  These include mimetypes, placeholders, and a few other
+	  images.
+	* Reimplemented the file/preview controller in core.  This now supports public/ and asset/ files
+	  again.
+	* Increased FTP error reporting.  It now complains with the specific part that failed, (username,
+	  path, etc).
+	* \Core\user now retrieves from the session variable all the time.  This allows an external script,
+	  (say /login), to modify the user object and make it immediately visible.
+	* Completely rewrote the local file management for previewing files.  It is now broken into three
+	  separate methods, (with one private helper method).  getPreviewFile(), getPreviewURL(), and
+	  getQuickPreviewFile().
+	-- Charlie Powell <charlie@eval.bz>  Thu, 16 May 2013 02:13:43 -0400
+
 Core Plus 2.5.3
 
 	* [Feature] Now supports the new admin-only skin option.

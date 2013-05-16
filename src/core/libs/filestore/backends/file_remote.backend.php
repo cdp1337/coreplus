@@ -340,8 +340,7 @@ class File_remote_backend implements File_Backend {
 			error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
 
 			// Return a 404 image.
-			$size = Core::TranslateDimensionToPreviewSize($width, $height);
-			return Core::ResolveAsset('mimetype_icons/notfound-' . $size . '.png');
+			return Core::ResolveAsset('images/mimetypes/notfound.png');
 		}
 		elseif ($this->isPreviewable()) {
 			$key = 'filepreview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';

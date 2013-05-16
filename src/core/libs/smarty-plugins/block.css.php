@@ -47,8 +47,14 @@ function smarty_block_css($params, $innercontent, $template, &$repeat){
 		// If optional is set, then look up the data to see if it's set.
 		if(isset($params['optional']) && $params['optional']){
 			$file = $template->template_resource;
-			// Trim off the ROOT directory.
-			$file = substr($file, strlen(ROOT_PDIR));
+			// Trim off the base directory.
+			$paths = \Core\Templates\Template::GetPaths();
+			foreach($paths as $p){
+				if(strpos($file, $p) === 0){
+					$file = substr($file, strlen($p));
+					break;
+				}
+			}
 
 			// Look up and see if this css is requested to be loaded by the user.
 			$model = TemplateCssModel::Construct($file, $href);

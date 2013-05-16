@@ -1,0 +1,137 @@
+<!--
+    PUBLIC ID: -//coreplus//vocabulary//EN
+    SYSTEM ID: http://corepl.us/api/2_4/theme.dtd
+
+	Last revision date: 2013.05.12
+-->
+
+<!--
+	An example how to use this DTD from your XML document:
+
+	<?xml version="1.0"?>
+	<!DOCTYPE theme SYSTEM "http://corepl.us/api/2_4/theme.dtd">
+
+	<theme>
+	...
+	</theme>
+-->
+
+<!--
+	Theme is the main container for everything for a given... well, theme.
+	It's the root node, and each theme can only contain one theme.xml, which contains only one theme directive.
+
+	The theme directive MUST have a name and version attribute.
+	The name MUST match the theme's directory, (capitalization is optional).
+	The version SHOULD start with a number, and ideally have minor and point revisions, optionally with a third party flag at the end.
+-->
+<!ELEMENT theme ((assets|skins|otherfiles|upgrades|screenshots)?)>
+<!ATTLIST theme
+	name CDATA #REQUIRED
+	version CDATA #REQUIRED
+	xmlns:xsi CDATA #FIXED "http://www.w3.org/2001/XMLSchema-instance"
+>
+
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT assets (file)*>
+<!ELEMENT skins (file)*>
+<!ELEMENT otherfiles (file)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT file EMPTY>
+<!ATTLIST file
+	md5 CDATA #IMPLIED
+	filename CDATA #REQUIRED
+	title CDATA #IMPLIED
+>
+
+
+<!--- Set of site configuration options -->
+<!ELEMENT configs (config)*>
+
+<!--- Each configuration option, editable from within system configuration -->
+<!ELEMENT config EMPTY>
+<!ATTLIST config
+	key CDATA #REQUIRED
+	type CDATA #IMPLIED
+	options CDATA #IMPLIED
+	description CDATA #IMPLIED
+	default CDATA #IMPLIED
+>
+
+<!--- User config options, since they're usually defined by the components. -->
+<!ELEMENT userconfigs (userconfig)*>
+
+<!--- The actual user configuration option, contained within uesrconfigs -->
+<!ELEMENT userconfig EMPTY>
+<!ATTLIST userconfig
+	key CDATA #REQUIRED
+	name CDATA #REQUIRED
+	formtype CDATA #IMPLIED
+	default CDATA #IMPLIED
+	options CDATA #IMPLIED
+	weight CDATA #IMPLIED
+	onregistration (0|1) "1"
+	onedit (0|1) "1"
+	searchable (0|1) "0"
+	required (0|1) "0"
+	validation CDATA #IMPLIED
+>
+
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT upgrades (upgrade)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT upgrade (dataset|phpfileinclude)*>
+<!ATTLIST upgrade
+	to CDATA #IMPLIED
+	from CDATA #IMPLIED
+>
+
+<!--
+Execute a low-level dataset operation on the installation or upgrade.
+-->
+<!ELEMENT dataset (datasetset|datasetwhere|datasetrenamecolumn)*>
+<!ATTLIST dataset
+	action (update|insert|delete|alter) #REQUIRED
+	table CDATA #REQUIRED
+>
+
+<!--
+	The "SET" clause for datasets.  Useful for UPDATE and INSERT statements.
+	The only attribute (which is required), is "key" and the nodeValue is the value that is set for that key.
+-->
+<!ELEMENT datasetset (#PCDATA)>
+<!ATTLIST datasetset
+	key CDATA #REQUIRED
+>
+
+<!--
+	The "WHERE" clause for datasets.  Useful for all types of statements.
+	The nodeValue here is the where statement, which is parsed via the dataset system.
+-->
+<!ELEMENT datasetwhere (#PCDATA)>
+
+<!--
+	The system cannot handle renames natively, as a renamed column in the schema is seen as a new column.
+	This will allow you to rename a column in the schema during an upgrade.
+
+	Please note, this is ONLY applicable with the "alter" action in the dataset.
+-->
+<!ELEMENT datasetrenamecolumn (EMPTY)>
+<!ATTLIST datasetrenamecolumn
+	oldname CDATA #REQUIRED
+	newname CDATA #REQUIRED
+>
+
+<!-- The phpfileinclude allows upgrades and installs to call a custom php file to be executed automatically. -->
+<!ELEMENT phpfileinclude (#PCDATA)>
+
+
+<!ELEMENT screenshots (screenshot)*>
+<!ELEMENT screenshot EMPTY>
+<!ATTLIST screenshot
+	file #REQUIRED
+	title #IMPLIED
+>

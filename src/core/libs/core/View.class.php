@@ -569,7 +569,8 @@ class View {
 					$mastertpl = false;
 					break;
 				case View::MODE_PAGE:
-					$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/skins/' . $this->mastertemplate;
+					$mastertpl = Core\Templates\Template::ResolveFile('skins/' . $this->mastertemplate);
+					//$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/skins/' . $this->mastertemplate;
 					break;
 				case View::MODE_WIDGET:
 					$mastertpl = Core\Templates\Template::ResolveFile('widgetcontainers/' . $this->mastertemplate);
