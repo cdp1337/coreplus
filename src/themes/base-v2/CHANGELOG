@@ -1,3 +1,9 @@
+Theme/Base V2 1.0.3
+
+	* [Feature] Added a screenshot of this theme.
+	* Updated some directives to point to the new locations of the files as of Core 2.5.4.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 16 May 2013 02:27:34 -0400
+
 Theme/Base V2 1.0.2
 
 	* [Feature] Added the print and screen stylesheets.

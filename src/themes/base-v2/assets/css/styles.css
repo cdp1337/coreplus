@@ -174,8 +174,16 @@ nav#breadcrumbs ul.controls {
  *****************************************************************************
  *****************************************************************************/
 /*** Controls that can be implemented throughout the site ***/
-ul.controls { height:20px; }
-ul.controls li { float:left; margin-right:0.1em; list-style:none;}
+ul.controls {
+	height:20px;
+	margin: 0;
+	padding: 0;
+}
+ul.controls li {
+	float:left;
+	margin-right:0.1em;
+	list-style:none;
+}
 /*
 And their images.  Stand-alone "control" buttons also get the same styling.
 Since the icons are now being handled by font-awesome, the bulk of this logic will have been removed.
@@ -305,12 +313,6 @@ span.button {
 	display: inline-block;
 	position: relative;
 	text-decoration: none !important;
-}
-
-#login-center ,
-.page-user-login .register-account:hover {
-	text-shadow:none;
-
 }
 
 a.button:hover,
@@ -516,13 +518,26 @@ fieldset .formdescription {
 /* Radio specific styles */
 .formelement.formradioinput {
 	max-width: 415px;
-	display:inline-block;
+	display: block;
 	clear:both;
 	background:#F6F6F6;
 	border: 1px solid #CBCBCB;
 	border-radius: 0.4em;
 	color: #3C3C3C;
 	margin-right: 0.75em;
+}
+.formelement.formradioinput .formelement-labelinputgroup {
+	float: none;
+	border: 0px none;
+}
+.formelement.formradioinput .formelement-labelinputgroup > label {
+	background: #DDDDDD;
+	color: #888888;
+	display: block;
+	float: none;
+	left: 0;
+	margin: 0;
+	top: 0;
 }
 .formelement.formradioinput span.radio-label {
 	display: block;

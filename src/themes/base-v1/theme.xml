@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Base V1">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Base V1">
 	<assets>
 		<file filename="assets/css/styles.css" md5="14b47c3aa7d64a409b8e6cfcdc1cfd03"/>
 	</assets>
@@ -9,6 +9,11 @@
 	</skins>
 	<view/>
 	<otherfiles/>
-	<upgrades/>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
+	<screenshots>
+		<screenshot file="screenshots/screen.png"/>
+	</screenshots>
 </theme>
 

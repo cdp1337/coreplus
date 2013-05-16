@@ -3,7 +3,7 @@
 	<head>
 		<!-- Force latest IE rendering engine or ChromeFrame if installed -->
 		<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
-		{css src="css/reset.css"}{/css}
+		{css src="css/reset.min.css"}{/css}
 		{css src="css/styles.css"}{/css}
 		{css src="css/opt/gradients.css" optional="1" default="0"}{/css}
 		{css src="css/opt/full-width.css" optional="1" default="0" title="Set the page to be full width"}{/css}
@@ -11,15 +11,13 @@
 		{css src="css/screen.css" media="screen"}{/css}
 
 		<!--[if lt IE 9]>
-			<script type="text/javascript" src="{asset src='js/html5.js'}"></script>
+			<script type="text/javascript" src="{asset src='js/html5shiv.min.js'}"></script>
 		<![endif]-->
 		{script library="fontawesome"}{/script}
 		<!-- This will enable the Core Plus context menus new in 2.4.0 -->
 		{script library="jquery"}{/script}
 		{script src="js/core.context-controls.js"}{/script}
 
-		<!-- Spruce up the messages with a bit of flair. -->
-		{script src="js/theme.messages.js" location="foot"}{/script}
 		<title>{$seotitle}</title>
 	</head>
 
@@ -27,7 +25,7 @@
 		{widget name="AdminMenu"}
 		<div id="wrapper" class="column1">
 			<header>
-				<a href="{$smarty.const.ROOT_URL}" title="Home"><img src="{asset src='logo.png'}" alt="Home"/></a>
+				<a href="{$smarty.const.ROOT_URL}" title="Home"><img src="{asset src='images/logo.png'}" alt="Home"/></a>
 			</header>
 			<nav id="primary-nav">
 				{widgetarea name="Primary Navigation"}
@@ -45,7 +43,7 @@
 							{/if}
 
 							{if !$smarty.foreach.crumbs.last}
-								&raquo;
+								»
 							{/if}
 						{/foreach}
 					{else}
