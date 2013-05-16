@@ -1,27 +1,13 @@
-{*
-<!-- Bootstrap CSS Toolkit styles -->
-<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap.min.css">
-<!-- Generic page styles -->
-<link rel="stylesheet" href="css/style.css">
-<!-- Bootstrap styles for responsive website layout, supporting different screen sizes -->
-<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css">
-<!-- Bootstrap CSS fixes for IE6 -->
-<!--[if lt IE 7]><link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css"><![endif]-->
-<!-- Bootstrap Image Gallery styles -->
-<link rel="stylesheet" href="http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css">
-<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
-<link rel="stylesheet" href="css/jquery.fileupload-ui.css">
-*}
 
 <div class="container {$element->getClass()} {$element->get('id')}">
 
-{if $element->get('title')}
-	<label for="{$element->get('name')}">{$element->get('title')|escape}</label>
-{/if}
+	{if $element->get('title')}
+		<label for="{$element->get('name')}">{$element->get('title')|escape}</label>
+	{/if}
 
-{if $element->get('description')}
-	<p class="formdescription">{$element->get('description')}</p>
-{/if}
+	{if $element->get('description')}
+		<p class="formdescription">{$element->get('description')}</p>
+	{/if}
 
 	<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
 	<div class="row fileupload-buttonbar">
@@ -29,7 +15,7 @@
 			<!-- The fileinput-button span is used to style the file input field as button -->
 			<label style="display:block; float:left; position:relative; overflow:hidden; width:120px; margin-right:10px;">
 				<span class="button btn-success fileinput-button" style="min-width:90px;">
-					<i class="icon-plus icon-white"></i>
+					<i class="icon-plus"></i>
 					<span>Add files...</span>
 					<input id="{$element->get('id')}" type="file" name="{$element->get('name')}[]" multiple="multiple" style="position:absolute; left:0pt; top:0pt; opacity:0;">
 				</span>
@@ -39,12 +25,12 @@
 				<span>Start uploads</span>
 			</button>-->
 			<button type="reset" class="button btn-warning cancel">
-				<i class="icon-ban-circle icon-white"></i>
+				<i class="icon-ban-circle"></i>
 				<span>Cancel uploads</span>
 			</button>
 		</div>
 		<!-- The global progress information -->
-		<div class="progress-container span5 fileupload-progress fade" style="display:none;">
+		<div class="progress-container fileupload-progress" style="display:none;">
 			<!-- The global progress bar -->
 			<div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
 				<div class="bar" style="width:0%;"></div>
@@ -62,7 +48,9 @@
 	<div class="fileupload-loading"></div>
 	<br>
 	<!-- The table listing the files available for upload/download -->
-	<table role="presentation" class="table table-striped listing"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+	<table class="listing">
+		<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
+	</table>
 	<br>
 
 </div>
@@ -75,62 +63,65 @@
 	<tr class="template-upload fade">
 		<td class="preview" width="100">
 			{% if (o.files.valid && !i) { %}
-			<div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
+				<div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
 			{% } %}
 			<span class="fade"></span>
 		</td>
 		<td class="name"><span>{%=file.name%}</span></td>
 		<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
 		{% if (file.error) { %}
-		<td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+			<td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
 		{% } else if (o.files.valid && !i) { %}
-		{% if (!o.options.autoUpload) { %}
-		<td class="start">
-			<button class="button btn-primary">
-				<i class="icon-upload icon-white"></i>
-				<span>{%=locale.fileupload.start%}</span>
-			</button>
-		</td>
-		{% } %}
+			{% if (!o.options.autoUpload) { %}
+			<td class="start">
+				<button class="button btn-primary">
+					<i class="icon-upload icon-white"></i>
+					<span>Start</span>
+				</button>
+			</td>
+			{% } %}
 		{% } else { %}
-		<td colspan="2"></td>
+			<td colspan="2"></td>
 		{% } %}
 		<td class="cancel">{% if (!i) { %}
 			<button class="button btn-warning">
 				<i class="icon-ban-circle icon-white"></i>
-				<span>{%=locale.fileupload.cancel%}</span>
+				<span>Cancel</span>
 			</button>
-			{% } %}</td>
+		{% } %}</td>
 	</tr>
 	{% } %}
 </script>
 <!-- The template to display files available for download -->
 <script id="template-download" type="text/x-tmpl">
 	{% for (var i=0, file; file=o.files[i]; i++) { %}
-<tr class="template-download fade">
-	{% if (file.error) { %}
-	<td></td>
-	<td class="name"><span>{%=file.name%}</span></td>
-	<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-	<td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
-	{% } else { %}
-	<td class="preview">{% if (file.thumbnail_url) { %}
-		<a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
-		{% } %}</td>
-<td class="name">
-{/literal}{* Remember, this form doesn't actually change the database... that's still up to the form submission! *}{literal}
-	<input type="hidden" name="{/literal}{$element->get('name')}[]{literal}" value="{%=file.name%}"/>
-	<a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}" target="_BLANK">{%=file.name%}</a>
-</td>
-	<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-	{% } %}
-	<td class="delete">
-		<button class="button btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
-			<i class="icon-trash icon-white"></i>
-			<span>{%=locale.fileupload.destroy%}</span>
-		</button>
-	</td>
-</tr>
+		<tr class="template-download fade">
+			{% if (file.error) { %}
+				<td class="preview"></td>
+				<td class="name"><span>{%=file.name%}</span></td>
+				<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+				<td class="error" colspan="1"><span class="label label-important">Error!</span> {%=file.error%}</td>
+			{% } else { %}
+				<td class="preview">
+					{% if (file.thumbnail_url) { %}
+						<a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}" target="_BLANK"><img src="{%=file.thumbnail_url%}"></a>
+					{% } %}
+				</td>
+				<td class="name">
+					<!-- Remember, this form doesn't actually change the database... that's still up to the form submission! -->
+					<input type="hidden" name="{/literal}{$element->get('name')}[]{literal}" value="{%=file.name%}"/>
+					<a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}" target="_BLANK">{%=file.name%}</a>
+				</td>
+				<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+				<td class="error"></td>
+			{% } %}
+			<td class="delete">
+				<button class="button remove-uploaded-file-link" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
+					<i class="icon-trash icon-white"></i>
+					<span>Remove File</span>
+				</button>
+			</td>
+		</tr>
 	{% } %}
 </script>
 {/literal}
@@ -148,15 +139,15 @@
 {*<script src="http://blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js"></script>*}
 
 {* The Iframe Transport is required for browsers without support for XHR file uploads *}
-{script src="js/jquery.iframe-transport.js"}{/script}
+{script src="libs/jquery-file-upload/js/jquery.iframe-transport.js"}{/script}
 {* The basic File Upload plugin *}
-{script src="js/jquery.fileupload.js"}{/script}
+{script src="libs/jquery-file-upload/js/jquery.fileupload.js"}{/script}
 {* The File Upload file processing plugin *}
-{script src="js/jquery.fileupload-fp.js"}{/script}
+{script src="libs/jquery-file-upload/js/jquery.fileupload-process.js"}{/script}
+{*{script src="libs/jquery-file-upload/js/jquery.fileupload-resize.js"}{/script}*}
+{script src="libs/jquery-file-upload/js/jquery.fileupload-validate.js"}{/script}
 {* The File Upload user interface plugin *}
-{script src="js/jquery.fileupload-ui.js"}{/script}
-{* The localization script *}
-{script src="js/locale.js"}{/script}
+{script src="libs/jquery-file-upload/js/jquery.fileupload-ui.js"}{/script}
 
 <script>
 	$(function () {
@@ -184,6 +175,13 @@
 				$progressbar.show();
 				$bargraphinner.width('1%');
 				bitrates = [];
+			},
+			finished: function(e, data){
+				// I need to bind the remove button event on the record!
+				data.context.find('.remove-uploaded-file-link').click(function(){
+					$(this).closest('tr').remove();
+					return false;
+				});
 			},
 			fail: function(e, data){
 				if(!failnotice){
@@ -284,7 +282,5 @@
 		});
 	});
 </script>
-{* The main application script *}
-{*script src="js/main.js"}{/script*}
 <!-- The XDomainRequest Transport is included for cross-domain file deletion for IE8+ -->
 <!--[if gte IE 8]><script src="{asset file='js/cors/jquery.xdr-transport.js'}"></script><![endif]-->

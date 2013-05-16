@@ -173,7 +173,7 @@ class JQueryFileUploadController extends Controller_2_1 {
 				if($acceptcheck != ''){
 					$file['error'] = $acceptcheck;
 					unlink($tmpfile);
-					return array($file);
+					return array('files' => [$file]);
 				}
 			}
 
@@ -187,7 +187,7 @@ class JQueryFileUploadController extends Controller_2_1 {
 			$file['thumbnail_url'] = $nf->getPreviewURL('50x50');
 		}
 
-		return array($file);
+		return array('files' => [$file]);
 	}
 
 	/**

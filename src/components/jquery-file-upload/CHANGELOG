@@ -1,3 +1,9 @@
+jQuery-File-Upload 8.1.0~core1
+
+	* [Bug] Fixed some bugs from 7 in the controller.
+	* Imported newest version of JQuery-File-Upload from upstream repo.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 16 May 2013 02:30:07 -0400
+
 jQuery-File-Upload 7.4.2~core2
 
 	* Upgraded to latest release of jQuery-file-upload 7.4.2
