@@ -1,3 +1,11 @@
+Theme 2.1.0
+
+	* [Feature] Rewrote the theme management UI.  It should now be much more user friendly.
+	* [Feature] Email skin support
+	* [Feature] Theme screenshot support
+	* [Feature] Admin editing of asset files, (JS/CSS)
+	-- Charlie Powell <charlie@eval.bz>  Thu, 16 May 2013 02:34:22 -0400
+
 Theme 2.0.6
 
 	* [Feature] Added the ability to have an admin skin settable from within the theme editor.

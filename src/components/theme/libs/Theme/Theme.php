@@ -99,7 +99,7 @@ class Theme{
 		$this->_versionDB = $dat['version'];
 		$this->_enabled = ($dat['enabled']) ? true : false;
 
-		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS){
+		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB'){
 			\Core\Utilities\Logger\write_debug('Auto-installing assets for theme [' . $this->getName() . ']');
 			$this->_installAssets();
 		}
@@ -152,6 +152,53 @@ class Theme{
 				'current_theme'   => $currenttheme,
 			);
 		}
+
+		return $out;
+	}
+
+	/**
+	 * Get all the email skins registered for this theme.
+	 * Each template can be a different site skin, ie: 2-column, 3-column, etc.
+	 *
+	 * @return array
+	 */
+	public function getEmailSkins(){
+		$out = array();
+		$default = null;
+		$currenttheme = false;
+
+		// If this theme is currently selected, check the default template too.
+		if($this->getKeyName() == \ConfigHandler::Get('/theme/selected')){
+			$default = \ConfigHandler::Get('/theme/default_email_template');
+
+			$currenttheme = true;
+		}
+
+		foreach($this->_xmlloader->getElements('//emailskins/file') as $f){
+			$basefilename = $f->getAttribute('filename');
+			$filename = $this->getBaseDir() . 'emailskins/' . $basefilename;
+
+			$skin = \Core\Templates\Template::Factory($filename);
+			$title = $basefilename;
+
+			// The return is expecting an array.
+			$out[] = array(
+				'filename'        => $filename,
+				'file'            => $basefilename,
+				'title'           => $title,
+				'default'         => ($default == $basefilename),
+				'current_theme'   => $currenttheme,
+			);
+		}
+
+		// Tack on the main default... no skin!
+		$out[] = array(
+			'filename'        => '',
+			'file'            => '',
+			'title'           => '-- No Skin --',
+			'default'         => ($default == ''),
+			'current_theme'   => $currenttheme,
+		);
 
 		return $out;
 	}
@@ -453,17 +500,17 @@ class Theme{
 	
 	public function getViewSearchDir(){
 		$d = $this->getBaseDir() . 'templates/';
-		return (is_dir($d)) ? $d : null;;
+		return (is_dir($d)) ? $d : null;
 	}
 	
 	public function getAssetDir(){
 		$d = $this->getBaseDir() . 'assets/';
-		return (is_dir($d)) ? $d : null;;
+		return (is_dir($d)) ? $d : null;
 	}
 
 	public function getSkinDir(){
 		$d = $this->getBaseDir() . 'skins/';
-		return (is_dir($d)) ? $d : null;;
+		return (is_dir($d)) ? $d : null;
 	}
 	
 	public function isLoadable(){
@@ -503,7 +550,7 @@ class Theme{
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 * 
 	 * @return false | array
-	 * @throws InstallerException
+	 * @throws \InstallerException
 	 */
 	public function install(){
 		// @todo I need actual error checking here.
@@ -518,7 +565,7 @@ class Theme{
 	 * Alias of install()
 	 * 
 	 * @return false | array
-	 * @throws InstallerException
+	 * @throws \InstallerException
 	 */
 	public function reinstall(){
 		// @todo I need actual error checking here.
@@ -533,12 +580,43 @@ class Theme{
 	 * Alias of install()
 	 * 
 	 * @return false | array
-	 * @throws InstallerException
+	 * @throws \InstallerException
 	 */
 	public function upgrade(){
 		//if(!$this->isInstalled()) return false;
 		
 		return $this->_performInstall();
+	}
+
+	/**
+	 * Get if this theme is currently set as the site default.
+	 *
+	 * @return bool
+	 */
+	public function isDefault(){
+		return \ConfigHandler::Get('/theme/selected') == $this->getKeyName();
+	}
+
+	/**
+	 * Get the primary, (first), screenshot of this theme.
+	 *
+	 * @return array
+	 */
+	public function getScreenshot(){
+		$s = $this->_xmlloader->getElement('//screenshots/screenshot', false);
+
+		if(!$s){
+			return array(
+				'file' => '',
+				'title' => $this->getName()
+			);
+		}
+		else{
+			return array(
+				'file' => $this->getBaseDir() . $s->getAttribute('file'),
+				'title' => ($s->getAttribute('title') ? $s->getAttribute('title') : $this->getName()),
+			);
+		}
 	}
 	
 	/**
@@ -547,7 +625,7 @@ class Theme{
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 * 
 	 * @return false | array
-	 * @throws InstallerException
+	 * @throws \InstallerException
 	 */
 	private function _performInstall(){
 		$changed = array();
@@ -573,7 +651,7 @@ class Theme{
 	 * Returns false if nothing changed, else will return the configuration options changed.
 	 * 
 	 * @return false | array
-	 * @throws InstallerException
+	 * @throws \InstallerException
 	 */
 	private function _parseConfigs(){
 		$changes = array();
@@ -603,7 +681,7 @@ class Theme{
 	 * Returns false if nothing changed, else will return an array of all the changes that occured.
 	 * 
 	 * @return false | array
-	 * @throws InstallerException
+	 * @throws \InstallerException
 	 */
 	private function _installAssets(){
 		if(CDN_TYPE == 'local'){
@@ -629,12 +707,23 @@ class Theme{
 			$b = $this->getBaseDir();
 			// The base filename with the directory.
 			$filename = $node->getAttribute('filename');
-			// Local file is guaranteed to be a local file.
-			$f = new \File_local_backend($b . $filename);
+
+
 			// The new theme asset will be installed into the same directory as its theme.
 			// This differs from usual components because they just follow whatever theme is currently running.
 			//$nf = Core::File($assetbase . $theme . '/' . $filename);
 			$newfilename = 'assets/' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
+
+
+			// Before anything, check and see if this file has a custom override file present.
+			if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
+				// If so, then copy that asset to the custom directory too!
+				$f = \Core\file(ROOT_PDIR . 'themes/custom/' . $newfilename);
+			}
+			else{
+				// Otherwise, the local file is guaranteed to be a local file.
+				$f = new \File_local_backend($b . $filename);
+			}
 
 			$nf = \Core::File($newfilename);
 
@@ -672,8 +761,8 @@ class Theme{
 			try{
 				$f->copyTo($nf, true);
 			}
-			catch(Exception $e){
-				throw new InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
+			catch(\Exception $e){
+				throw new \InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
 			}
 			
 			$changes[] = $action . ' ' . $nf->getFilename();

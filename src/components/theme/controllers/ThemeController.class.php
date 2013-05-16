@@ -12,6 +12,82 @@ class ThemeController extends Controller_2_1{
 	public function __construct() {
 		$this->accessstring = 'g:admin';
 	}
+
+	/**
+	 * Page to display the currently installed themes and shortcuts to various operations therein.
+	 */
+	public function index(){
+		$view = $this->getView();
+		$selected = ConfigHandler::Get('/theme/selected');
+
+		$themes = ThemeHandler::GetAllThemes();
+		$current = ThemeHandler::GetTheme($selected);
+
+		// The source objects to look for assets in.
+		// Set initially to all the installed components.
+		$assetsources = Core::GetComponents();
+		// And add on the current theme.
+		$assetsources[] = $current;
+
+		// Load in all asset files available from the installed components and current theme.
+		// these are assembled into a virtual directory listing.
+		$assets = array();
+
+		// Give me the current theme!
+		foreach($assetsources as $source) {
+			$dir = $source->getAssetDir();
+			if(!$dir) continue;
+
+			$dirlen = strlen($dir);
+			$name = $source->getName();
+
+			$dh = new Directory_local_backend($dir);
+			$ls = $dh->ls(null, true);
+			foreach($ls as $obj){
+				// Skip directories.
+				if(!$obj instanceof File_local_backend) continue;
+
+				/** @var $obj File_local_backend */
+				$file = 'assets/' . substr($obj->getFilename(), $dirlen);
+
+				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
+				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
+				$newobj = \Core\file($file);
+
+				$assets[$file] = array(
+					'file' => $file,
+					'obj' => $newobj,
+					'component' => $name,
+				);
+			}
+		}
+
+		// Now that the asset files have been loaded into a flat array, I need to convert that to the properly nested version.
+		ksort($assets);
+		$nestedassets = array();
+		foreach($assets as $k => $obj){
+			$parts = explode('/', $k);
+			$lastkey = sizeof($parts) - 1;
+			$thistarget =& $nestedassets;
+			foreach($parts as $i => $bit){
+				if($i == $lastkey){
+					$thistarget[$bit] = $obj;
+				}
+				else{
+					if(!isset($thistarget[$bit])){
+						$thistarget[$bit] = [];
+					}
+					$thistarget =& $thistarget[$bit];
+				}
+			}
+		}
+
+
+		$view->title = 'Theme Manager';
+		$view->assign('themes', $themes);
+		$view->assign('current', $current);
+		$view->assign('assets', $nestedassets);
+	}
 	
 	/**
 	 * View to display a list of currently installed themes, their templates, and be able to manage
@@ -19,7 +95,7 @@ class ThemeController extends Controller_2_1{
 	 * 
 	 * @todo Implement an Add/Upload Theme link on this page.
 	 */
-	public function index(){
+	public function index2(){
 		$view = $this->getView();
 		$default = ConfigHandler::Get('/theme/selected');
 		
@@ -157,7 +233,7 @@ class ThemeController extends Controller_2_1{
 		$request = $this->getPageRequest();
 		$view = $this->getView();
 		
-		$theme = $this->getPageRequest()->getParameter(0);
+		$themename = $this->getPageRequest()->getParameter(0);
 		$template = $this->getPageRequest()->getParameter('template');
 
 		// If the browser prefers JSON data, send that.
@@ -165,16 +241,28 @@ class ThemeController extends Controller_2_1{
 			$view->contenttype = View::CTYPE_JSON;
 		}
 
-		// Validate
-		if(!\Theme\validate_theme_name($theme)){
+		// Validate the theme name
+		if(!\Theme\validate_theme_name($themename)){
 			Core::SetMessage('Invalid theme requested', 'error');
 			Core::GoBack();
 		}
-		
-		if(!\Theme\validate_template_name($theme, $template)){
-			Core::SetMessage('Invalid template requested', 'error');
-			Core::GoBack();
+
+		$theme = ThemeHandler::GetTheme($themename);
+
+
+		if($template){
+			// The template itself can be ignored.
+			if(!\Theme\validate_template_name($themename, $template)){
+				Core::SetMessage('Invalid template requested', 'error');
+				Core::GoBack();
+			}
 		}
+		else{
+			// and the default one is used otherwise.
+			$allskins = $theme->getSkins();
+			$template = $allskins[0]['file'];
+		}
+
 
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
 			$config_default  = ConfigHandler::GetConfig('/theme/default_template');
@@ -194,18 +282,20 @@ class ThemeController extends Controller_2_1{
 
 		if($request->isPost()){
 
-			if($theme != ConfigHandler::Get('/theme/selected')){
+			if($themename != ConfigHandler::Get('/theme/selected')){
 				// The theme changed, change the admin skin too!
 				ConfigHandler::Set('/theme/default_admin_template', $template);
+				// And the email skin.
+				ConfigHandler::Set('/theme/default_email_template', '');
 			}
 			ConfigHandler::Set('/theme/default_template', $template);
-			ConfigHandler::Set('/theme/selected', $theme);
+			ConfigHandler::Set('/theme/selected', $themename);
 			
 			Core::SetMessage('Updated default theme', 'success');
 			Core::GoBack();
 		}
 		
-		$view->assign('theme', $theme);
+		$view->assign('theme', $themename);
 		$view->assign('template', $template);
 	}
 
@@ -255,7 +345,57 @@ class ThemeController extends Controller_2_1{
 			}
 			ConfigHandler::Set('/theme/default_admin_template', $template);
 
-			Core::SetMessage('Updated admin theme', 'success');
+			Core::SetMessage('Updated admin skin', 'success');
+			Core::GoBack();
+		}
+		else{
+			return View::ERROR_BADREQUEST;
+		}
+	}
+
+
+	/**
+	 * Set a given skin for default use on email communications.
+	 *
+	 * Will NOT affect the theme selected.
+	 */
+	public function setemaildefault(){
+		$request = $this->getPageRequest();
+		$view = $this->getView();
+
+		$theme = $this->getPageRequest()->getParameter(0);
+		$template = $this->getPageRequest()->getParameter('template');
+
+		// If the browser prefers JSON data, send that.
+		if($request->prefersContentType(View::CTYPE_JSON)){
+			$view->contenttype = View::CTYPE_JSON;
+		}
+
+		// Validate
+		if(!\Theme\validate_theme_name($theme)){
+			Core::SetMessage('Invalid theme requested', 'error');
+			Core::GoBack();
+		}
+
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
+			$config_default  = ConfigHandler::GetConfig('/theme/default_email_template');
+
+			if($config_default->get('overrideable') == 0){
+				// It's a child site and the admin never gave them permission to change default themes!
+				Core::SetMessage('Unable to set the default template on a child site, please ensure that the "/theme/default_email_template" config is set to be overrideable!', 'error');
+				Core::GoBack();
+			}
+		}
+
+		if($request->isPost()){
+
+			if($theme != ConfigHandler::Get('/theme/selected')){
+				Core::SetMessage('The admin skin must be on the same theme as the site!', 'error');
+				Core::GoBack();
+			}
+			ConfigHandler::Set('/theme/default_email_template', $template);
+
+			Core::SetMessage('Updated email skin', 'success');
 			Core::GoBack();
 		}
 		else{
@@ -503,20 +643,40 @@ class ThemeController extends Controller_2_1{
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		if($request->getParameter('css')){
-			$file = $request->getParameter('css');
-			$filename = $file;
-			$activefile = 'style';
-		}
-		elseif($request->getParameter('tpl')) {
-			$file = $request->getParameter('tpl');
-			$filename = Template::ResolveFile($file);
+
+		if($request->getParameter('template')){
+			// This is the basename of the file, (unresolved)
+			// example: "skins/basic.tpl"
+			$file = $request->getParameter('template');
+			// And the fully resolved one!
+			// example: "/home/blah/public_html/themes/awesome-one/skins/basic.tpl"
+			$filename = \Core\Templates\Template::ResolveFile($file);
+			// This gets resolved automatically.
+			$mode = null;
 			$activefile = 'template';
 		}
-		elseif($request->getParameter('skin')) {
-			$file = $request->getParameter('skin');
-			$filename = ROOT_PDIR . $file; // Simple enough.
-			$activefile = 'skin';
+		elseif($request->getParameter('file') && strpos($request->getParameter('file'), 'assets/') === 0){
+			$file = $request->getParameter('file');
+			// Trim off the base of the filename, ("assets/")
+			$filename = substr($file, 7);
+			// And try to look up and find this damn file...
+			$srcdirs = array();
+			$srcdirs[] = ROOT_PDIR . 'themes/custom/assets/';
+			$srcdirs[] = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/assets/';
+			foreach(Core::GetComponents() as $c){
+				if($c->getAssetDir()){
+					$srcdirs[] = $c->getAssetDir();
+				}
+			}
+			foreach($srcdirs as $dir){
+				if(file_exists($dir . $filename)){
+					$filename = $dir . $filename;
+					break;
+				}
+			}
+			// This gets resolved automatically.
+			$mode = null;
+			$activefile = 'file';
 		}
 		else {
 			//no special gets...
@@ -527,28 +687,111 @@ class ThemeController extends Controller_2_1{
 
 
 		$fh = new File_local_backend($filename);
-		$content = $fh->getContents();
+		$customdest = \Core\directory('themes/custom');
+		if(!$customdest->isWritable()){
+			Core::SetMessage('Directory themes/custom is not writable!  Inline file editing disabled.', 'error');
+			Core::GoBack();
+		}
+
+		// Lookup the mode.
+		if(!$mode){
+			switch($fh->getMimetype()){
+				case 'text/css':
+					$mode = 'css';
+					break;
+				case 'text/javascript':
+					$mode = 'javascript';
+					break;
+				case 'text/html':
+					$mode = 'htmlmixed';
+					break;
+				default:
+					$mode = 'smarty';
+					break;
+			}
+		}
+
+		// @todo Finish this.
+		if(strpos($fh->getMimetype(), 'text/') !== 0){
+			Core::SetMessage('Sorry, but only text files can be edited right now... Expect this to function soon though ;)', 'info');
+			Core::GoBack();
+		}
+
+
+		// Load the last 10 revisions from the database.
+		$revisions = ThemeTemplateChangeModel::Find( array('filename' => $file), 10, 'updated DESC');
+
+		$rev = null;
+		if($request->getParameter('revision')){
+			// Look up that revision.
+			$rev = ThemeTemplateChangeModel::Construct($request->getParameter('revision'));
+			if($rev->get('filename') == $file){
+				$content = $rev->get('content');
+				$revision = $rev->get('id');
+			}
+			else{
+				Core::SetMessage('Invalid revision requested!', 'error');
+				$rev = null;
+			}
+		}
+
+		if(!$rev){
+			// No revision requested, just pull the contents from the live file
+			$content = $fh->getContents();
+
+			if(sizeof($revisions)){
+				// Grab the latest one!
+				$rev = $revisions[0];
+			}
+		}
+
+		if($rev && $rev == $revisions[0]){
+			$islatest = true;
+		}
+		elseif(!$rev){
+			$islatest = true;
+		}
+		else{
+			$islatest = false;
+		}
+
 		$basename = $fh->getBasename();
 
-		$m = new ThemeEditorItemModel();
+		$m = new ThemeTemplateChangeModel();
 		$m->set('content', $content);
 		$m->set('filename', $file);
 
 		$form = Form::BuildFromModel($m);
 		$form->set('callsmethod', 'ThemeController::_SaveEditorHandler');
 		// I need to add the file as a system element so core doesn't try to reuse the same forms on concurrent edits.
+		//$form->addElement('system', array('name' => 'revision', 'value' => $revision));
 		$form->addElement('system', array('name' => 'file', 'value' => $file));
 		$form->addElement('system', array('name' => 'filetype', 'value' => $activefile));
 
-		$form->addElement('submit', array('value' => 'Update'));
+		if(!$islatest){
+			$form->addElement('submit', array('value' => 'Update/Revert'));
+		}
+		else{
+			$form->addElement('submit', array('value' => 'Update'));
+		}
 
-		$revisions = ThemeEditorItemModel::Find( array('filename' => $fh->getFilename()), 5, 'updated DESC');
+		// This form needs to load the content live on every pageload!
+		// This is because the user can jump between the different versions on-the-fly,
+		// so if the form system has its way, it would keep the first in cache and only display that.
+		// No cache for you!
+		$form->clearFromSession();
 
-		$view->assignVariable('activefile', $activefile);
-		$view->assignVariable('form', $form);
-		$view->assignVariable('content', $content);
-		$view->assignVariable('filename', $basename);
-		$view->assignVariable('revisions', $revisions);
+
+		$view->assign('activefile', $activefile);
+		$view->assign('form', $form);
+		$view->assign('content', $content);
+		$view->assign('filename', $basename);
+		$view->assign('revisions', $revisions);
+		$view->assign('revision', $rev);
+		$view->assign('file', $file);
+		$view->assign('fh', $fh);
+		$view->assign('islatest', $islatest);
+		$view->assign('mode', $mode);
 
 		//$view->addBreadcrumb('Theme Manager', '/theme');
 		$view->title = 'Editor';
@@ -562,7 +805,7 @@ class ThemeController extends Controller_2_1{
 		$view = $this->getView();
 
 		$file = $request->getParameter('template');
-		$tpl = \Core\Templates\Template::Factory(ROOT_PDIR . $file);
+		$tpl = \Core\Templates\Template::Factory($file);
 		$stylesheets = $tpl->getOptionalStylesheets();
 
 		$form = new Form();
@@ -600,7 +843,7 @@ class ThemeController extends Controller_2_1{
 		}
 
 
-		$view->addBreadcrumb('Theme Manager', '/theme');
+		//$view->addBreadcrumb('Theme Manager', '/theme');
 		$view->title = 'Select Optional Stylesheets';
 		$view->assign('file', $file);
 		$view->assign('form', $form);
@@ -634,48 +877,76 @@ class ThemeController extends Controller_2_1{
 		$activefile = $form->getElement('filetype')->get('value');
 		// The inbound file types depends on how to read the file.
 		switch($activefile){
-			case 'skin':
-			case 'style':
-				$filename = $file;
-				break;
 			case 'template':
-				$filename = Template::ResolveFile($file);
+				$filename = \Core\Templates\Template::ResolveFile($file);
+				$customfilename = ROOT_PDIR . 'themes/custom/' . $file;
+				break;
+			case 'file':
+				$filename = $file; // It'll get transposed.
+				$customfilename = ROOT_PDIR . 'themes/custom/' . $file;
 				break;
 			default:
 				Core::SetMessage('Unsupported file type: ' . $activefile, 'error');
 				return false;
 		}
 
-		$fh = new File_local_backend($filename);
+		$customfh = \Core\file($customfilename);
+		if($customfh->exists()){
+			// If the custom one exists... this will be the source file too!
+			$sourcefh = $customfh;
+		}
+		else{
+			$sourcefh = new File_local_backend($filename);
+		}
+
 
 		// Check and see if they're the same, ie: no change.  I don't want to create a bunch of moot revisions.
-		if($newmodel->get('content') == $fh->getContents()){
-			Core::SetMessage('Cowardly refusing to save a file with no changes.', 'info');
+		if($newmodel->get('content') == $sourcefh->getContents()){
+			Core::SetMessage('No changes performed.', 'info');
 			return '/theme';
 		}
 
-		$model = new ThemeEditorItemModel();
-		$model->set('filename', $file);
-		// Remember, I'm setting the contents of the versioned file into the database, NOT the new ones.
-		$model->set('updated', $fh->getMTime());
-		$model->set('content', $fh->getContents());
-		$model->save();
+		// Before I overwrite this file, check and see if the original has been snapshot first!
+		$c = ThemeTemplateChangeModel::Count(['filename = ' . $file]);
+		if(!$c){
+			$original = new ThemeTemplateChangeModel();
+			$original->setFromArray(
+				[
+					'comment' => 'Original File',
+					'filename' => $file,
+					'content' => $sourcefh->getContents(),
+					'content_md5' => $sourcefh->getHash(),
+					'updated' => $sourcefh->getMTime(),
+				]
+			);
 
+			$original->save();
+		}
+
+		// All destination files get written to the custom directory!
+		$customfh->putContents($newmodel->get('content'));
+		$hash = $customfh->getHash();
+
+		/*
 		// What happens now is based on the type of the inbound file.
 		switch($activefile){
 			case 'skin':
-				// Just replace the contents of that file.  No theme versioning allowed.
+				// Just replace the contents of that file.
 				$fh->putContents($newmodel->get('content'));
+				$hash = $fh->getHash();
 				break;
 			case 'template':
 				// This gets written into the current theme directory.
 				$themefh = new File_local_backend(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $file);
 				$themefh->putContents($newmodel->get('content'));
+				$hash = $themefh->getHash();
 				break;
 			case 'style':
+			case 'file':
 				// This gets written into the current theme directory.
 				$themefh = new File_local_backend(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $file);
 				$themefh->putContents($newmodel->get('content'));
+				$hash = $themefh->getHash();
 
 				// This is required to get assets updated to the CDN correctly.
 				$theme = ThemeHandler::GetTheme();
@@ -684,6 +955,30 @@ class ThemeController extends Controller_2_1{
 				$theme->save();
 				$theme->reinstall();
 			default:
+		}
+*/
+
+		// Make a record of this change too!
+		$change = new ThemeTemplateChangeModel();
+		$change->setFromArray(
+			[
+				'comment' => $newmodel->get('comment'),
+				'filename' => $file,
+				'content' => $newmodel->get('content'),
+				'content_md5' => $hash
+			]
+		);
+
+		$change->save();
+
+
+		if($activefile == 'file'){
+			// Reinstall all assets too!
+			foreach(Core::GetComponents() as $component){
+				$component->reinstall();
+			}
+			// And the current theme.
+			ThemeHandler::GetTheme(ConfigHandler::Get('/theme/selected'))->reinstall();
 		}
 
 		Core::SetMessage('Updated file successfully', 'success');
