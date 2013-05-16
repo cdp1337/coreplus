@@ -269,21 +269,48 @@ class User {
 		// No user object, no need to do anything.
 		if($this->_model === null) return false;
 
-		$result = $this->_getModel()->save();
+		// Set to true if something changed.
+		$status = false;
+		$isnew = $this->_getModel()->isnew();
+		$admin = \Core\user()->checkAccess('g:admin');
+
+		if($this->_getModel()->changed()){
+			if(!$admin && !$isnew && ConfigHandler::Get('/user/profileedits/requireapproval') && Core::IsComponentAvailable('model-audit')){
+				// If the option to require administrative approval is checked, any existing user change must be approved.
+				\ModelAudit\Helper::SaveDraftOnly($this->_getModel());
+			}
+			else{
+				$this->_getModel()->save();
+			}
+
+			$status = true;
+		}
+
+
 
 		// also update any/all config options.
 		if($this->_configs){
 			foreach($this->_configs as $c){
+				/** @var $c UserUserConfigModel */
 				$c->set('user_id', $this->get('id'));
-				// Save it, but if save returns TRUE, then force this return to be marked as changed too.
-				if($c->save()) $result = true;
-			}
-		}
+
+				if($c->changed()){
+					if(!$admin && !$isnew && ConfigHandler::Get('/user/profileedits/requireapproval') && Core::IsComponentAvailable('model-audit')){
+						\ModelAudit\Helper::SaveDraftOnly($c);
+					}
+					else{
+						$c->save();
+					}
+
+					$status = true;
+				}
+			} // foreach($this->_configs as $c)
+		} // if($this->_configs)
 
 		// Fire off the hook!
 		HookHandler::DispatchHook('/user/postsave', $this);
 
-		return $result;
+		return $status;
 	}
 
 
@@ -326,6 +353,16 @@ class User {
 		$configs = $this->getConfigs();
 
 		return (isset($this->_configs[$key])) ? $this->_configs[$key] : null;
+	}
+
+	/**
+	 * Get all the config objects associated to this user.
+	 *
+	 * @return array
+	 */
+	public function getConfigObjects(){
+		$this->getConfigs();
+		return $this->_configs;
 	}
 
 	/**
@@ -529,12 +566,83 @@ class User {
 	 * @since 2011.07
 	 * @return UserModel
 	 */
-	protected function _getModel(){
+	public function _getModel(){
 		if($this->_model === null){
 			$this->_model = new UserModel();
 		}
 
 		return $this->_model;
+	}
+
+	/**
+	 * Lookup and see if this model instance has a draft saved for it.
+	 *
+	 * @return bool
+	 */
+	public function hasDraft(){
+		if(!Core::IsComponentAvailable('model-audit')){
+			// If the underlying component is not available, drafts cannot be enabled!
+			return false;
+		}
+		else{
+			if(ModelAudit\Helper::ModelHasDraft($this->_getModel())) return true;
+
+			// This needs to include the config options too.
+			foreach($this->getConfigObjects() as $c){
+				if(ModelAudit\Helper::ModelHasDraft($c)) return true;
+			}
+
+			return false;
+		}
+	}
+
+	/**
+	 * Get the draft ID of this user, (or its config)
+	 *
+	 * @return string
+	 */
+	public function getDraftID(){
+		if(!Core::IsComponentAvailable('model-audit')){
+			// If the underlying component is not available, drafts cannot be enabled!
+			return '';
+		}
+		else{
+			if(ModelAudit\Helper::ModelHasDraft($this->_getModel())) return $this->_getModel()->get('___auditmodel')->get('revision');
+
+			// This needs to include the config options too.
+			foreach($this->getConfigObjects() as $c){
+				if(ModelAudit\Helper::ModelHasDraft($c)){
+					return $c->get('___auditmodel')->get('revision');
+				}
+			}
+
+			return false;
+		}
+	}
+
+	/**
+	 * Get the draft status of this model.
+	 *
+	 * @return string
+	 */
+	public function getDraftStatus(){
+		$this->hasDraft();
+		if(!$this->exists()){
+			// If it's here, it must be a draft creation :p
+			return 'pending_creation';
+		}
+		elseif($this->hasDraft() && $this->get('___auditmodel') && $this->get('___auditmodel')->get('data') == '[]'){
+			// A blank data record on the audit model indicates that the request is to be deleted.
+			return 'pending_deletion';
+		}
+		elseif($this->hasDraft()){
+			// Otherwise, just changes were performed.
+			return 'pending_update';
+		}
+		else{
+			// And if it exists and no draft object attached... then this doesn't have one.
+			return '';
+		}
 	}
 
 	/**

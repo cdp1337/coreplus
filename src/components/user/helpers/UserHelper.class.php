@@ -154,6 +154,12 @@ abstract class UserHelper{
 		// yay...
 		Session::SetUser($u);
 
+		// Allow an external script to override the redirecting URL.
+		$overrideurl = HookHandler::DispatchHook('/user/postlogin/getredirecturl');
+		if($overrideurl){
+			$url = $overrideurl;
+		}
+
 		return $url;
 	}
 
@@ -224,6 +230,13 @@ abstract class UserHelper{
 			Session::SetUser($user);
 			//var_dump($url); echo '<pre>'; debug_print_backtrace();
 			Core::SetMessage('Registered account successfully!', 'success');
+
+			// Allow an external script to override the redirecting URL.
+			$overrideurl = HookHandler::DispatchHook('/user/postlogin/getredirecturl');
+			if($overrideurl){
+				$url = $overrideurl;
+			}
+
 			return $url;
 		}
 		// It was created administratively; redirect there instead.

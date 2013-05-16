@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.0" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.1" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.2"/>
 		<!-- User authentication events trigger security logs. -->
@@ -10,18 +10,19 @@
 	</requires>
 	<smartyplugins directory="helpers/smarty-plugins/"/>
 	<hooks>
-		<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
-		<hook call="UserHelper::RecordActivity" name="/core/page/postrender"/>
 		<hookregister name="/user/postsave" description="Hook that is called after the user object is saved"/>
 		<hookregister name="/core/controllinks/user/view" description="Control links when viewing a specific user" return="array"/>
+		<hookregister name="/user/postlogin/getredirecturl" description="Hook that is called after the user has successfully logged in.  Return a non-empty string to redirect to that page." return="string"/>
+		<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
+		<hook call="UserHelper::RecordActivity" name="/core/page/postrender"/>
 		<hook name="/core/controllinks/user/view" call="UserHelper::GetControlLinks"/>
 	</hooks>
 	<forms>
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="60bb30082519e9d1d3bebb9dd9071541"/>
-		<file filename="User.class.php" md5="d4569cac78b52317e16eac2feb1a19a8">
+		<file filename="CHANGELOG" md5="56e56512d047b47d9b6ed1b819e7342e"/>
+		<file filename="User.class.php" md5="60c316007e90807cf2fdbbf024924095">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
@@ -65,7 +66,7 @@
 			<class name="User\ImportHelper"/>
 		</file>
 		<file filename="helpers/UserFunctions.php" md5="1568866b592c1fa116f978910bf8f788"/>
-		<file filename="helpers/UserHelper.class.php" md5="f5da22dd612ca42a12e8080f69c4f633">
+		<file filename="helpers/UserHelper.class.php" md5="7db132303f15a8e7079f32b304cbbcad">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
@@ -92,14 +93,14 @@
 		<file filename="templates/emails/user/forgotpassword.tpl" md5="8463f6b3726164f63e8c838a58a28ba7"/>
 		<file filename="templates/emails/user/initialpassword.tpl" md5="e1313d158e73c9104cd798ef5d5e39e7"/>
 		<file filename="templates/emails/user/registration.tpl" md5="bc0af99c272dc0849608642ef56185f2"/>
-		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="8d98f0017081473db0680e1bd1a5d849"/>
-		<file filename="templates/pages/user/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/user/forgotpassword.tpl" md5="4e44ae9de19645a4040d4fc34a5876d3"/>
+		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="50859dcf77c9c0b2cb3cabf8f9481699"/>
+		<file filename="templates/pages/user/edit.tpl" md5="17d96573034118ddbfd8e785a8aded88"/>
+		<file filename="templates/pages/user/forgotpassword.tpl" md5="2dc6db0e125d8c729bac0081db90bfa4"/>
 		<file filename="templates/pages/user/guest403.tpl" md5="336576c142f10bcd6c462e02d4e15853"/>
 		<file filename="templates/pages/user/login.tpl" md5="c036e9df1ef5e68868e02300c4bb3086"/>
-		<file filename="templates/pages/user/me.tpl" md5="9968689a9b26cdeb9c5eb25d10b96f11"/>
-		<file filename="templates/pages/user/password.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/user/me.tpl" md5="d1b0fb80fdd098d3a085a018232a0264"/>
+		<file filename="templates/pages/user/password.tpl" md5="17d96573034118ddbfd8e785a8aded88"/>
+		<file filename="templates/pages/user/register.tpl" md5="17d96573034118ddbfd8e785a8aded88"/>
 		<file filename="templates/pages/useractivity/details.tpl" md5="de29022cf2a9958ca00d2ad0f991f6cb"/>
 		<file filename="templates/pages/useractivity/index.tpl" md5="f1463c6f2df95ad634013491b867ba53"/>
 		<file filename="templates/pages/useradmin/import1.tpl" md5="34d4a67fc553d310cef459dc9a288da9"/>
@@ -145,7 +146,7 @@
 		<permission key="/user/search/autocomplete" description="Search for users in the system via autocomplete widgets"/>
 	</permissions>
 	<assets>
-		<file filename="assets/css/user.css" md5="41b6fd568a669c1fe134f297652fa657"/>
+		<file filename="assets/css/user.css" md5="236d7d84133b44175293ef53460eb4f7"/>
 		<file filename="assets/js/user/login.js" md5="12a1daec1bfee08eaf0839667b903bf0"/>
 		<file filename="assets/js/user/user.js" md5="e5e4dc7f8ff932ce7acd330031dbeec2"/>
 	</assets>
@@ -189,6 +190,7 @@
 		<upgrade from="2.4.4" to="2.4.5"/>
 		<upgrade from="2.4.5" to="2.4.6"/>
 		<upgrade from="2.4.6" to="2.5.0"/>
+		<upgrade from="2.5.0" to="2.5.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

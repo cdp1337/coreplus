@@ -1,3 +1,5 @@
+{css src="assets/css/user.css"}{/css}
+
 <div id="user-edit-listing" style="display:none;">
 	<table>
 		<tr>

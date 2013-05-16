@@ -10,3 +10,23 @@ LOGIN / REGISTER PAGES
 .user-guest-403-container.two-columns .column-right {
 	margin-left: 50%;
 }
+
+#login-center ,
+.page-user-login .register-account:hover {
+	text-shadow:none;
+
+}
+
+
+/**
+ * Make the UI for the user access string a little more pretty
+ */
+.formaccessstringinput .formelement-labelinputgroup .formradioinput label ,
+.formaccessstringinput .formelement-labelinputgroup .formcheckboxinput label {
+	background: none repeat scroll 0 0 transparent;
+	border: 1px solid #CCCCCC;
+	border-radius: 3px 3px 3px 3px;
+	float: left;
+	margin: 3px;
+	padding: 7px 3px 3px;
+}

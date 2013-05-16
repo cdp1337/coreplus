@@ -1,3 +1,11 @@
+User 2.5.1
+
+	* [Feature] New hook - "/user/postlogin/getredirecturl".  This allows a listener to return a string to
+	  be redirected to instead of the default.
+	* Updated some styles for the user access string form element.
+	* Stub support for some enterprise features.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 16 May 2013 02:37:38 -0400
+
 User 2.5.0
 
 	* [Feature] Detailed view for traffic.  Now the admin can view a detailed report of each pageload by a

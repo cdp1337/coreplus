@@ -1,8 +1,10 @@
 {script library="jquery"}{/script}
+{css src="assets/css/user.css"}{/css}
 
-<div class="{$element->getClass()}">
+<div class="{$element->getClass()} clearfix">
+	<div class="formelement-labelinputgroup">
 	{if $element->get('title')}
-		<span>{$element->get('title')|escape}</span>
+		<label>{$element->get('title')|escape}</label>
 	{/if}
 
 	{if $element->get('description')}
@@ -66,4 +68,5 @@
 			}
 		});
 	</script>
+	</div>
 </div>
