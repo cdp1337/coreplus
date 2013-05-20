@@ -117,7 +117,7 @@ class File_local_backend implements File_Backend {
 		if ($prefix === false) {
 			// Trim off all the prefacing components from the filename.
 			if ($this->_type == 'asset')
-				return 'asset/' . substr($this->_filename, strlen(self::$_Root_pdir_asset));
+				return 'asset/' . substr($this->_filename, strlen(self::$_Root_pdir_assets));
 			elseif ($this->_type == 'public')
 				return 'public/' . substr($this->_filename, strlen(self::$_Root_pdir_public));
 			elseif ($this->_type == 'private')
@@ -301,11 +301,30 @@ class File_local_backend implements File_Backend {
 	 * @return string The encoded string
 	 */
 	public function getFilenameHash() {
-		if ($this->_type == 'asset') $filename = 'asset/' . substr($this->_filename, strlen(self::$_Root_pdir_asset));
-		elseif ($this->_type == 'public') $filename = 'public/' . substr($this->_filename, strlen(self::$_Root_pdir_public));
-		elseif ($this->_type == 'private') $filename = 'private/' . substr($this->_filename, strlen(self::$_Root_pdir_private));
-		elseif ($this->_type == 'tmp') $filename = 'tmp/' . substr($this->_filename, strlen(self::$_Root_pdir_tmp));
-		else $filename = $this->_filename;
+		if ($this->_type == 'asset'){
+			$base = 'assets/';
+			$filename = substr($this->_filename, strlen(self::$_Root_pdir_assets));
+			// If the filename starts with the current theme, (which it very well may),
+			// trim that off too.
+			// this script is meant to be a generic resource handle that gets resolved by the receiving script.
+			if(strpos($filename, ConfigHandler::Get('/theme/selected') . '/') === 0){
+				$filename = substr($filename, strlen(ConfigHandler::Get('/theme/selected')) + 1);
+			}
+			// And now I can add the base onto it.
+			$filename = $base . $filename;
+		}
+		elseif ($this->_type == 'public'){
+			$filename = 'public/' . substr($this->_filename, strlen(self::$_Root_pdir_public));
+		}
+		elseif ($this->_type == 'private'){
+			$filename = 'private/' . substr($this->_filename, strlen(self::$_Root_pdir_private));
+		}
+		elseif ($this->_type == 'tmp'){
+			$filename = 'tmp/' . substr($this->_filename, strlen(self::$_Root_pdir_tmp));
+		}
+		else{
+			$filename = $this->_filename;
+		}
 
 		return 'base64:' . base64_encode($filename);
 	}

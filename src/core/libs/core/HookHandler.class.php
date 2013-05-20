@@ -256,6 +256,10 @@ class Hook {
 				break;
 			case self::RETURN_TYPE_VOID:
 				$return = null;
+				break;
+			case self::RETURN_TYPE_STRING:
+				$return = false;
+				break;
 		}
 
 		foreach ($this->_bindings as $call) {

@@ -1513,10 +1513,13 @@ class Component_2_1 {
 			$m = new PageModel(-1, $subnode->getAttribute('baseurl'));
 
 			// Just something to help the log.
-			$action = ($m->exists()) ? 'Updated' : 'Added';
-			$admin = $subnode->getAttribute('admin');
+			$action     = ($m->exists()) ? 'Updated' : 'Added';
+			$admin      = $subnode->getAttribute('admin');
 			$selectable = ($admin ? '0' : '1'); // Defaults
-			if($subnode->getAttribute('selectable') !== '') $selectable = $subnode->getAttribute('selectable');
+			$group      = ($admin ? $subnode->getAttribute('group') : '');
+			if($subnode->getAttribute('selectable') !== ''){
+				$selectable = $subnode->getAttribute('selectable');
+			}
 
 			// Do not "update" value, keep whatever the user set previously.
 			if (!$m->get('rewriteurl')) {
@@ -1526,11 +1529,13 @@ class Component_2_1 {
 			// Do not "update" value, keep whatever the user set previously.
 			if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
 			// Do not "update" value, keep whatever the user set previously.
-			if ($m->get('access') == '*') $m->set('access', $subnode->getAttribute('access'));
+			//if ($m->get('access') == '*') $m->set('access', $subnode->getAttribute('access'));
+			$m->set('access', $subnode->getAttribute('access'));
 			// Do not update parent urls if the page already exists.
 			if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
 			//$m->set('widget', $subnode->getAttribute('widget'));
 			$m->set('admin', $admin);
+			$m->set('admin_group', $group);
 			$m->set('selectable', $selectable);
 			if ($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';
 		}
@@ -1574,17 +1579,17 @@ class Component_2_1 {
 				// If so install it to the admin widgetarea!
 				if($action == 'Added' && $installable == '/admin'){
 					$weight = WidgetInstanceModel::Count([
-						'widgetarea' => 'Admin Dashboard',
-						'page' => 'pages/admin/index.tpl',
-					]) + 1;
+								'widgetarea' => 'Admin Dashboard',
+								'page' => 'pages/admin/index.tpl',
+							]) + 1;
 
 					$wi = new WidgetInstanceModel();
 					$wi->setFromArray([
-						'baseurl' => $m->get('baseurl'),
-						'page' => 'pages/admin/index.tpl',
-						'widgetarea' => 'Admin Dashboard',
-						'weight' => $weight
-					]);
+							'baseurl' => $m->get('baseurl'),
+							'page' => 'pages/admin/index.tpl',
+							'widgetarea' => 'Admin Dashboard',
+							'weight' => $weight
+						]);
 					$wi->save();
 
 					$changes[] = 'Installed  widget ' . $m->get('baseurl') . ' into the admin dashboard!';

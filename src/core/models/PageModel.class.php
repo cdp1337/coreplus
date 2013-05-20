@@ -111,6 +111,12 @@ class PageModel extends Model {
 			'default' => '0',
 			'formtype' => 'system'
 		),
+		'admin_group' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'comment' => 'Admin pages can be grouped together.  This is the name.',
+			'null' => false,
+			'default' => '',
+		),
 		'pageviews' => array(
 			'type' => Model::ATT_TYPE_INT,
 			'formtype' => 'disabled',

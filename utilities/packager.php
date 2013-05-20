@@ -726,6 +726,10 @@ function process_component($component, $forcerelease = false){
 		$licenses = array_merge($licenses, $docelements['licenses']);
 		$authors = array_merge($authors, $docelements['authors']);
 
+		// If this ends with a "~", skip it!
+		// These are backup files used by gedit.
+		if(substr($file->getFilename(), -1) == '~') continue;
+
 		// And then, scan this file for code, ie: classes, controllers, etc.
 		$fname = substr($file->getFilename(), $basestrlen);
 

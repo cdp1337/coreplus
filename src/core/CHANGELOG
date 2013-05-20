@@ -1,3 +1,21 @@
+Core Plus 2.5.5
+
+	* [Bug] Fixed a minor glitch when /file/preview is recording its entry in the page navigation.  This
+	  caused some weird redirect issues.
+	* [Bug] Set /file/preview to allow reading of "asset/" files.  This is the discouraged method of
+	  loading assets, but allowed.
+	* [Bug] Minor bug in the HookHandler.  Did not account for type="string" returns that didn't have a
+	  return value.
+	* [Bug] Set the file local getFilenameHash to return a more agnostic asset path.  Now the theme name
+	  is dropped as it's unnecessary.
+	* [Bug] Fix in the packager to ignore filenames that end with "~".  These are backup files that are
+	  not necessary.
+	* [Feature] Added support for page groups under the admin menu.
+	* [Feature] Set hard-mapped pages to overwrite their access strings from the component metafile upon
+	  reinstallation.  This is because those pages are generally managed by the developer and not the end
+	  user.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 20 May 2013 17:29:44 -0400
+
 Core Plus 2.5.4
 
 	* [Bug] Minor bug fix, components needed to include the trailing slash for getAssetDir().

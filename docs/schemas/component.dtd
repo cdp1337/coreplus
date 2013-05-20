@@ -109,17 +109,17 @@ type CDATA #IMPLIED
 <!ELEMENT class EMPTY>
 <!ATTLIST class
 	name CDATA #REQUIRED
-	>
+>
 
 <!ELEMENT interface EMPTY>
 <!ATTLIST interface
 	name CDATA #REQUIRED
-	>
+>
 
 <!ELEMENT controller EMPTY>
 <!ATTLIST controller
 	name CDATA #REQUIRED
-	>
+>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT pages (page)*>
@@ -131,8 +131,9 @@ type CDATA #IMPLIED
 	title CDATA #REQUIRED
 	access CDATA #IMPLIED
 	admin (0|1) "0"
+	group CDATA #IMPLIED
 	selectable (0|1) "1"
-	>
+>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT widgets (widget)*>
@@ -143,13 +144,13 @@ type CDATA #IMPLIED
 	baseurl CDATA #REQUIRED
 	title CDATA #IMPLIED
 	installable CDATA #IMPLIED
-	>
+>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT view (file)*>
 <!ATTLIST view
 	searchdir CDATA #IMPLIED
-	>
+>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT install (dataset|phpfileinclude)*>

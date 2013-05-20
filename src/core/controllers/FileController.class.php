@@ -29,7 +29,10 @@ class FileController extends Controller_2_1 {
 
 		// This is designed to only return data!
 		$view->mode = View::MODE_NOOUTPUT;
+		// And it's going to be an image of some sorts.
 		$view->contenttype = 'image/png';
+		// And it shouldn't be recorded in navigation.
+		$view->record = false;
 
 		// The filename should be something like files/public/blah... or files/assets/foo...
 		// This will get fed into the core system and checked internally.
@@ -55,11 +58,11 @@ class FileController extends Controller_2_1 {
 		// This is a security precaution.
 		$base = base64_decode(substr($filename, 7));
 
-		if(!(strpos($base, 'public/') === 0 || strpos($base, 'assets/') === 0)){
+		if(!(strpos($base, 'public/') === 0 || strpos($base, 'assets/') === 0 || strpos($base, 'asset/') === 0)){
 			SecurityLogModel::Log('/file/preview', 'fail', null, 'Invalid file requested: ' . $base);
 
 			if(DEVELOPMENT_MODE){
-				error_log('Invalid request made for /file/preview!  Expecting: [public/ or assets/], Received: [' . $base . ']');
+				error_log('Invalid request made for /file/preview!  Expecting: [public/* or asset[s]/*], Received: [' . $base . ']');
 			}
 
 			$file = \Core\file('assets/images/mimetypes/notfound.png');

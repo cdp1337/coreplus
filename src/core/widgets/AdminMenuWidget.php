@@ -34,9 +34,10 @@ class AdminMenuWidget extends Widget_2_1 {
 		$v = $this->getView();
 
 		$pages = PageModel::Find(array('admin' => '1'));
-		$viewable = array();
+		$groups = array();
+		$flatlist = array();
 		foreach($pages as $p){
-			if(!Core::User()->checkAccess($p->get('access'))) continue;
+			if(!\Core\user()->checkAccess($p->get('access'))) continue;
 			if($p->get('title') == "Administration") {
 				$p->set('title', trim(str_replace("Administration", "Admin", $p->get('title'))) );
 			} else {
@@ -52,13 +53,31 @@ class AdminMenuWidget extends Widget_2_1 {
 				$p->set('title', "Content Pages");
 			}
 
-			$viewable[ $p->get('title') ] = $p;
+			$group = $p->get('admin_group') ? $p->get('admin_group') : 'Admin';
+
+			// Some group tweaks ;)
+			$group = str_replace('and', '&', $group);
+
+			if(!isset($groups[$group])){
+				$groups[$group] = array();
+			}
+
+			// The new grouped pages
+			$groups[$group][ $p->get('title') ] = $p;
+			// And the flattened list to support legacy templates.
+			$flatlist[ $p->get('title') ] = $p;
 		}
 
-		ksort($viewable);
+		ksort($flatlist);
+		ksort($groups);
+
+		foreach($groups as $gname => $dat){
+			ksort($groups[$gname]);
+		}
 
 		$v->templatename = 'widgets/adminmenu/view.tpl';
-		$v->assignVariable('pages', $viewable);
+		$v->assign('pages', $flatlist);
+		$v->assign('groups', $groups);
 
 		return $v;
 	}
