@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="GoogleAnalytics" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="GoogleAnalytics" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 	</requires>
@@ -20,6 +20,7 @@
 	</files>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.2"/>
 	</upgrades>
 </component>
 
