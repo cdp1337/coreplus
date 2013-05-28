@@ -1,3 +1,9 @@
+JQuery-Full 1.10.0~core1
+
+	* Updated jquery to newest upstream version.
+	* Updated jquery-ui to newest upstream version.
+	-- Charlie Powell <charlie@eval.bz>  Tue, 28 May 2013 19:10:56 -0400
+
 JQuery-Full 1.9.1~core3
 
 	* [Feature] added waypoints shortcuts
@@ -75,4 +81,3 @@ JQuery-Full 1.5.1~cae2
 JQuery-Full 1.5.1~cae1
 
 	-- Charlie Powell <charlie@eval.bz>  Sat, 18 Jun 2011 02:11:08 -0400
-

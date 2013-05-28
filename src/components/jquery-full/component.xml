@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.1~core3" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.9.1~core2" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="1.9.0" operation="ge"/>
 	</requires>
@@ -95,12 +95,12 @@
 		<file filename="assets/js/jquery/jqueryui.timepicker.js" md5="08d8151043927a37b472a4ae8d2a311f"/>
 		<file filename="assets/js/jquery/tmpl.js" md5="5e2855f4f4a4fd07ac343c9f0823d67f"/>
 		<file filename="assets/js/jquery/tmpl.min.js" md5="411df7e2bc659d35015f7fdb7432b331"/>
-		<file filename="assets/js/jquery/waypoints.js" md5="625d68db370cbf60ee9e0b31be3ed50f"/>
-		<file filename="assets/js/jquery/waypoints.min.js" md5="8648f5161f11768a924dff7a435dfc9b"/>
+		<file filename="assets/js/jquery/waypoints.js" md5="820569d0c9032595fcc6f57a96be6b5f"/>
+		<file filename="assets/js/jquery/waypoints.min.js" md5="b72a7b8d3d65ebc954b5b3103fdff409"/>
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="4afd6231d010b980b9ecfcfd07e10829"/>
+		<file filename="CHANGELOG" md5="dafb031859543037b8eb8318169cf7df"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
 		<file filename="JQuery.lib.php" md5="eb491764c15c8319c7fad2d79464591b">
 			<class name="JQuery"/>
@@ -131,6 +131,8 @@
 		<upgrade from="1.8.3~core4" to="1.9.1~core1"/>
 		<upgrade from="1.9.1~core1" to="1.9.1~core2"/>
 		<upgrade from="1.9.1~core2" to="1.9.1~core3"/>
+		<upgrade from="1.9.1~core2" to="1.10.0~core1"/>
+		<upgrade from="1.9.1~core3" to="1.10.0~core1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
