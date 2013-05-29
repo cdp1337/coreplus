@@ -24,10 +24,7 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		$base = 'jquery-1.9.1';
-
-		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
-		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+		CurrentPage::AddScript ('js/jquery/jquery-1.10.0.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -35,72 +32,59 @@ abstract class JQuery {
 	
 	public static function IncludeJQueryUI(){
 		self::IncludeJQuery();
-		CurrentPage::AddScript ('js/jquery/jquery-ui-1.10.2.custom.min.js');
-		CurrentPage::AddStylesheet('css/jquery-ui-1.10.2.custom.css');
+		CurrentPage::AddScript ('js/jquery/jquery-ui-1.10.3.custom.js');
+		CurrentPage::AddStylesheet('css/jquery-ui-1.10.3.custom.css');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
 	
 	public static function Include_nestedSortable(){
-		$base = 'jquery.ui.nestedSortable';
 		// I need jquery ui first.
 		self::IncludeJQueryUI();
 		
-		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
-		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+		CurrentPage::AddScript ('js/jquery/jquery.ui.nestedSortable.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
 
 	public static function Include_tmpl(){
-		$base = 'tmpl';
 		// I need jquery ui first.
 		self::IncludeJQueryUI();
 
-		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
-		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+		CurrentPage::AddScript ('js/jquery/tmpl.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
 	
 	public static function Include_readonly(){
-		$base = 'jquery.ui.readonly';
 		// I need jquery ui first.
 		self::IncludeJQueryUI();
 		
 		CurrentPage::AddStylesheet('css/jquery.readonly.css');
-		
-		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
-		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+		CurrentPage::AddScript ('js/jquery/jquery.ui.readonly.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
 	
 	public static function Include_json(){
-		$base = 'jquery.json-2.4';
-		
 		// I need jquery first.
 		self::IncludeJQuery();
 		
-		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
-		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+		CurrentPage::AddScript ('js/jquery/jquery.json-2.4.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
 
 	public static function Include_cookie(){
-		$base = 'jquery.cookie';
-
 		// I need jquery first.
 		self::IncludeJQuery();
 
-		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
-		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+		CurrentPage::AddScript ('js/jquery/jquery.cookie.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -136,11 +120,7 @@ abstract class JQuery {
 	public static function Include_waypoints(){
 		// I need jquery first.
 		self::IncludeJQuery();
-
-		$base = 'waypoints';
-
-		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/jquery/' . $base . '.min.js');
-		else CurrentPage::AddScript ('js/jquery/' . $base . '.js');
+		CurrentPage::AddScript ('js/jquery/waypoints.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
