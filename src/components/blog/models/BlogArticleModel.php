@@ -169,11 +169,11 @@ class BlogArticleModel extends Model {
 	/**
 	 * Get the image object or null
 	 *
-	 * @return File_local_backend|null
+	 * @return Core\Filestore\File|null
 	 */
 	public function getImage(){
 		if($this->get('image')) {
-			$f = new File_local_backend('public/blog/' . $this->get('image'));
+			$f = \Core\Filestore\factory('public/blog/' . $this->get('image'));
 			return $f;
 		}
 		else{

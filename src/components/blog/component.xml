@@ -1,30 +1,30 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.3" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.4" name="Blog" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.4.3" operation="ge"/>
+		<require name="core" type="component" version="2.5.6" operation="ge"/>
 		<require name="user" type="component" version="2.4.1"/>
 		<require name="tags" type="component"/>
-		<require name="JQuery-Full" type="component" version="1.8.3~core3"/>
+		<require name="JQuery-Full" type="component" version="1.9"/>
 	</requires>
 	<permissions>
 		<permission key="blog_manage" description="Manage Blogs"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="6371f744b2adf9c483d09f3f8bad6a34"/>
+		<file filename="CHANGELOG" md5="93e68a5ecf986ec2d1b37ded472a6118"/>
 		<file filename="controllers/BlogController.php" md5="37e94eab63201594e37d6e95ec253833">
 			<controller name="BlogController"/>
 		</file>
 		<file filename="helpers/BlogHelper.php" md5="5a357d45de496a449a55e4de2826f76a">
 			<class name="BlogHelper"/>
 		</file>
-		<file filename="models/BlogArticleModel.php" md5="b74792c6808ab0334618e4ff229919aa">
+		<file filename="models/BlogArticleModel.php" md5="777140cb3aa43dc2906dfedc014be24d">
 			<class name="BlogArticleModel"/>
 		</file>
 		<file filename="models/BlogModel.php" md5="d75ec50e23fc8cd2e451a16ac0678011">
 			<class name="BlogModel"/>
 		</file>
-		<file filename="tests/BlogTest.php" md5="a26adc503eb10d58c0b438fba62fec34">
+		<file filename="tests/BlogTest.php" md5="22d68cdec520ad4e21259414d3398cc6">
 			<class name="BlogTest"/>
 		</file>
 		<file filename="tests/blog-test-image.png" md5="2ef8794320891042986b72da16f47bf1"/>
@@ -33,7 +33,7 @@
 		<file filename="upgrades/130_to_140_selectable.php" md5="33c3b2e0c9456a6a900d7340f1c65c5b"/>
 	</files>
 	<pages>
-		<page baseurl="/blog/admin" admin="1" widget="0" access="p:blog_manage" title="Blog Administration"/>
+		<page baseurl="/blog/admin" admin="1" access="p:blog_manage" title="Blog Administration" group="Content"/>
 		<page baseurl="/blog" title="Blogs"/>
 	</pages>
 	<description>Blog system.</description>
@@ -78,6 +78,7 @@
 			</dataset>
 		</upgrade>
 		<upgrade from="1.4.2" to="1.4.3"/>
+		<upgrade from="1.4.3" to="1.4.4"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>

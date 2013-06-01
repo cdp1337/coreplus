@@ -102,9 +102,9 @@ EOD;
 		$form->getElement('model[body]')->set('value', $body);
 
 		// Copy in the image
-		$src = new File_local_backend(ROOT_PDIR . 'components/blog/tests/blog-test-image.png');
+		$src = \Core\Filestore\factory(ROOT_PDIR . 'components/blog/tests/blog-test-image.png');
 		/** @var $dest File_Backend */
-		$dest = \Core\file('public/blog/blog-test-image.png');
+		$dest = \Core\Filestore\factory('public/blog/blog-test-image.png');
 
 		$src->copyTo($dest, true);
 
