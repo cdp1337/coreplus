@@ -864,26 +864,7 @@ function str_to_url($string){
  * @return string
  */
 function translate_upload_error($errno){
-	switch($errno){
-		case UPLOAD_ERR_OK:
-			return '';
-		case UPLOAD_ERR_INI_SIZE:
-			if(DEVELOPMENT_MODE){
-				return 'The uploaded file exceeds the upload_max_filesize directive in php.ini [' . ini_get('upload_max_filesize') . ']';
-			}
-			else{
-				return 'The uploaded file is too large, maximum size is ' . ini_get('upload_max_filesize');
-			}
-		case UPLOAD_ERR_FORM_SIZE:
-			if(DEVELOPMENT_MODE){
-				return 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form. ';
-			}
-			else{
-				return 'The uploaded file is too large.';
-			}
-		default:
-			return 'An error occurred while trying to upload the file.';
-	}
+	return \Core\Filestore\translate_upload_error($errno);
 }
 
 /**
@@ -900,65 +881,7 @@ function translate_upload_error($errno){
  * @return string Empty string if passed, else the error.
  */
 function check_file_mimetype($acceptlist, $mimetype, $extension = null){
-	$acceptgood = false;
-	$accepts = array_map(
-		'trim',
-		explode(
-			',',
-			strtolower($acceptlist)
-		)
-	);
-
-	// Also lowercase the incoming extension.
-	$extension = strtolower($extension);
-
-	foreach($accepts as $accepttype){
-		// '*' is the wildcard to accept any filetype....
-		// why would this even be set?!?
-		if($accepttype == '*'){
-			$acceptgood = true;
-			break;
-		}
-		// accepts that are standard full mimetypes are also pretty easy.
-		elseif(preg_match('#^[a-z\-\+]+/[0-9a-z\-\+\.]+#', $accepttype)){
-			if($accepttype == $mimetype){
-				$acceptgood = true;
-				break;
-			}
-		}
-		// wildcard mimetypes are allowed too.
-		elseif(preg_match('#^[a-z\-\+]+/\*#', $accepttype)){
-			if(strpos($mimetype, substr($accepttype, 0, -1)) === 0){
-				$acceptgood = true;
-				break;
-			}
-		}
-		// extensions are allowed as well, (if provided)
-		elseif($extension && preg_match('#^\.*#', $accepttype)){
-			if(substr($accepttype, 1) == $extension){
-				$acceptgood = true;
-				break;
-			}
-		}
-		// Umm....
-		else{
-			return 'Unsupported accept option, ' . $accepttype;
-		}
-	}
-
-	// Now that all the mimetypes have run through, I can see if one matched.
-	if(!$acceptgood){
-		if(sizeof($accepts) > 1){
-			$err = 'matches one of [ ' . implode(', ', $accepts) . ' ]';
-		}
-		else{
-			$err = 'is a ' . $accepts[0] . ' file';
-		}
-		return 'Invalid file uploaded, please ensure it ' . $err;
-	}
-	else{
-		return '';
-	}
+	return \Core\Filestore\check_file_mimetype($acceptlist, $mimetype, $extension);
 }
 
 /**
