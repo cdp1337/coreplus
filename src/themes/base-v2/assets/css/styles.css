@@ -329,10 +329,10 @@ button:hover {
 }
 
 a.button[disabled=disabled]{
-	background-color: rgba(62, 126, 128, 0.49);
-	border:2px outset rgba(29, 84, 87, 0.32);
+	background-color: rgba(126, 126, 128, 0.69);
+	border: 1px outset rgba(80, 84, 87, 0.32);
+	color: #CCCCCC;
 	cursor: no-drop;
-	color: #CCC;
 }
 
 /** Tweak the autocomplete styles slightly **/
