@@ -1,11 +1,11 @@
 <?php
 /**
- * Description of File_zip_contents
+ * Description of ContentTGZ
  *
- * Provides useful extra functions that can be done with a Zipped file.
+ * Provides useful extra functions that can be done with a GZipped file.
  *
  * @package
- * @since 2.4.0
+ * @since 0.1
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -23,10 +23,15 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class File_zip_contents implements File_Contents {
+
+namespace Core\Filestore\Contents;
+
+use Core\Filestore;
+
+class ContentTGZ implements Filestore\Contents {
 	private $_file = null;
 
-	public function __construct(File_Backend $file) {
+	public function __construct(Filestore\File $file) {
 		$this->_file = $file;
 	}
 
@@ -39,30 +44,19 @@ class File_zip_contents implements File_Contents {
 	 *
 	 * @param string $dst Destination to extract the archive to.
 	 *
-	 * @return Directory_local_backend
+	 * @return \Directory_local_backend
 	 */
 	public function extract($destdir) {
-		// This will ensure that the destdir is properly resolved.
-		$d = Core::Directory($destdir);
+		// This will ensure that the destdir is properlly resolved.
+		$d = \Core::Directory($destdir);
 		if (!$d->isReadable()) $d->mkdir();
-
-		$archive = new ZipArchive();
-		$archive->open($this->_file->getLocalFilename());
-		$archive->extractTo($d->getPath());
-
+		exec('tar -xzf "' . $this->_file->getLocalFilename() . '" -C "' . $d->getPath() . '"');
 		return $d;
 	}
 
 	public function listfiles() {
 		$output = array();
-		$archive = new ZipArchive();
-		$archive->open($this->_file->getLocalFilename());
-
-		for( $i = 0; $i < $archive->numFiles; $i++ ){
-			$stat = $archive->statIndex($i);
-			$output[] = $stat['name'];
-		}
-
+		exec('tar -zf "' . $this->_file->getLocalFilename() . '" --list', $output);
 
 		foreach ($output as $k => $v) {
 			// Trim some characters off.

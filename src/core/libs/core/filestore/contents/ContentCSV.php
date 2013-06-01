@@ -1,6 +1,6 @@
 <?php
 /**
- * File for class File_csv_contents definition in the coreplus project
+ * File for class ContentCSV definition in the coreplus project
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130419.1445
@@ -20,6 +20,9 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+namespace Core\Filestore\Contents;
+
+use Core\Filestore;
 
 /**
  * A short teaser of what File_csv_contents does.
@@ -49,7 +52,7 @@
  * @author Charlie Powell <charlie@eval.bz>
  *
  */
-class File_csv_contents implements File_Contents {
+class ContentCSV implements Filestore\Contents {
 
 	/**
 	 * Has Header flag.
@@ -70,9 +73,9 @@ class File_csv_contents implements File_Contents {
 	/**
 	 * The original file object
 	 *
-	 * @var File_Backend
+	 * @var Filestore\File
 	 */
-	public function __construct(File_Backend $file) {
+	public function __construct(Filestore\File $file) {
 		$this->_file = $file;
 	}
 
@@ -80,7 +83,7 @@ class File_csv_contents implements File_Contents {
 		$filename = $this->_file->getFilename();
 
 		if(!$this->_file->exists()){
-			throw new Exception('Unable to open ' . $filename . ' for parsing, does not exist!');
+			throw new \Exception('Unable to open ' . $filename . ' for parsing, does not exist!');
 		}
 
 		// Some CSV files may ship with a header line.
@@ -91,7 +94,7 @@ class File_csv_contents implements File_Contents {
 		// Try to get a lock on the file handle.
 		$fh = fopen($filename, 'r');
 		if(!$fh){
-			throw new Exception('Unable to lock ' . $filename . ' for parsing!');
+			throw new \Exception('Unable to lock ' . $filename . ' for parsing!');
 		}
 
 		$data = array();
@@ -128,7 +131,7 @@ class File_csv_contents implements File_Contents {
 	 * (of just return the explicitly set value)
 	 *
 	 * @return bool
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function hasHeader(){
 		if($this->_hasheader === null){
@@ -177,20 +180,20 @@ class File_csv_contents implements File_Contents {
 	 * Get the header columns
 	 *
 	 * @return array
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function getHeader(){
 		if($this->_header === null){
 			$filename = $this->_file->getFilename();
 
 			if(!$this->_file->exists()){
-				throw new Exception('Unable to open ' . $filename . ' for parsing, does not exist!');
+				throw new \Exception('Unable to open ' . $filename . ' for parsing, does not exist!');
 			}
 
 			// Try to get a lock on the file handle.
 			$fh = fopen($filename, 'r');
 			if(!$fh){
-				throw new Exception('Unable to lock ' . $filename . ' for parsing!');
+				throw new \Exception('Unable to lock ' . $filename . ' for parsing!');
 			}
 
 			// Just get the first line and close.

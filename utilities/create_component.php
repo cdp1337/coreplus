@@ -138,15 +138,15 @@ EOF;
 
 
 // Start making the directories and writing everything.
-File_local_backend::_Mkdir($dirname);
-File_local_backend::_Mkdir($dirname . 'assets');
-if(sizeof($controllers)) File_local_backend::_Mkdir($dirname . 'controllers');
-if(sizeof($models))      File_local_backend::_Mkdir($dirname . 'models');
-if(sizeof($controllers)) File_local_backend::_Mkdir($dirname . 'templates');
-if(sizeof($controllers)) File_local_backend::_Mkdir($dirname . 'templates/pages');
+mkdir($dirname, 0777, true);
+mkdir($dirname . 'assets', 0777, true);
+if(sizeof($controllers)) mkdir($dirname . 'controllers', 0777, true);
+if(sizeof($models))      mkdir($dirname . 'models', 0777, true);
+if(sizeof($controllers)) mkdir($dirname . 'templates', 0777, true);
+if(sizeof($controllers)) mkdir($dirname . 'templates/pages', 0777, true);
 
 foreach($controllers as $controller){
-	if(sizeof($controllers)) File_local_backend::_Mkdir($dirname . 'templates/pages/' . strtolower($controller));
+	if(sizeof($controllers)) mkdir($dirname . 'templates/pages/' . strtolower($controller), 0777, true);
 }
 
 

@@ -179,7 +179,7 @@ class Component_2_1 {
 
 
 	public function __construct($filename = null) {
-		$this->_file = \Core\file($filename);
+		$this->_file = \Core\Filestore\factory($filename);
 
 		$this->_xmlloader = new XMLLoader();
 		$this->_xmlloader->setRootName('component');
@@ -643,7 +643,7 @@ class Component_2_1 {
 				}
 				elseif (is_dir($this->getBaseDir() . 'templates')) {
 					// Still no?!?  Try just a filesystem check instead...
-					$this->_viewSearchDirectory = $this->getBaseDir() . 'templates';
+					$this->_viewSearchDirectory = $this->getBaseDir() . 'templates/';
 				}
 				else{
 					$this->_viewSearchDirectory = false;
@@ -1016,7 +1016,9 @@ class Component_2_1 {
 	}
 
 	public function hasView() {
-		return ($this->_xmlloader->getRootDOM()->getElementsByTagName('view')->length) ? true : false;
+		if($this->_xmlloader->getRootDOM()->getElementsByTagName('view')->length) return true;
+		elseif(is_dir($this->getBaseDir() . 'templates/')) return true;
+		else return false;
 	}
 
 	/**
@@ -1256,8 +1258,8 @@ class Component_2_1 {
 			// Skip the changelog.
 			if($filename == 'CHANGELOG' || $filename == 'core/CHANGELOG') continue;
 
-			/** @var $object File_local_backend */
-			$object = \Core\file($this->getBaseDir() . $filename);
+			/** @var $object \Core\Filestore\Backends\FileLocal */
+			$object = \Core\Filestore\factory($this->getBaseDir() . $filename);
 
 			if($object->getHash() != $md5){
 				$changes[] = $filename;
@@ -1282,8 +1284,8 @@ class Component_2_1 {
 			/** @var $filename string */
 			$filename = $file->getAttribute('filename');
 
-			/** @var $object File_local_backend */
-			$object = \Core\file($this->getBaseDir() . $filename);
+			/** @var $object \Core\Filestore\Backends\FileLocal */
+			$object = \Core\Filestore\factory($this->getBaseDir() . $filename);
 
 			if($object->getHash() != $md5){
 				$changes[] = $filename;
@@ -1309,8 +1311,8 @@ class Component_2_1 {
 			/** @var $filename string */
 			$filename = $file->getAttribute('filename');
 
-			/** @var $object File_local_backend */
-			$object = \Core\file($this->getBaseDir() . $filename);
+			/** @var $object \Core\Filestore\Backends\FileLocal */
+			$object = \Core\Filestore\factory($this->getBaseDir() . $filename);
 
 			if($object->getHash() != $md5){
 				$changes[] = $filename;
@@ -1756,14 +1758,15 @@ class Component_2_1 {
 			// Before anything, check and see if this file has a custom override file present.
 			if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
 				// If so, then copy that asset to the custom directory too!
-				$f = \Core\file(ROOT_PDIR . 'themes/custom/' . $newfilename);
+				$f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/custom/' . $newfilename);
 			}
 			else{
 				// Otherwise, the local file is guaranteed to be a local file.
-				$f = new File_local_backend($b . $node->getAttribute('filename'));
+				$f = new \Core\Filestore\Backends\FileLocal($b . $node->getAttribute('filename'));
 			}
 
-			$nf = Core::File($newfilename);
+			$nf = \Core\Filestore\factory($newfilename);
+			//var_dump($newfilename, $nf->getFilename(), $nf);
 
 			// If it's null, don't change the path any.
 			if ($theme === null) {

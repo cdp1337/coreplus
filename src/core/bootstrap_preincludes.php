@@ -54,13 +54,16 @@ require_once(ROOT_PDIR . 'core/libs/core/Component_2_1.php');
 require_once(ROOT_PDIR . 'core/functions/Core.functions.php');
 
 // File manipulation is a core feature required by the component system.
-require_once(ROOT_PDIR . 'core/libs/filestore/File_Backend.interface.php');
-require_once(ROOT_PDIR . 'core/libs/filestore/Directory_Backend.interface.php');
-require_once(ROOT_PDIR . 'core/libs/filestore/FileContentFactory.class.php');
-require_once(ROOT_PDIR . 'core/libs/filestore/File_Contents.interface.php');
-require_once(ROOT_PDIR . 'core/libs/filestore/backends/file_awss3.backend.php');
-require_once(ROOT_PDIR . 'core/libs/filestore/backends/file_local.backend.php');
-require_once(ROOT_PDIR . 'core/libs/filestore/backends/directory_local.backend.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/functions.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/File.interface.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/Directory_Backend.interface.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/FileContentFactory.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/Contents.interface.php');
+//require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/file_awss3.backend.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/FileLocal.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/FileFTP.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/FileRemote.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/directory_local.backend.php');
 
 // Many of these are needed because some systems, such as the installer
 // execute before the ComponentHandler has loaded the class locations.

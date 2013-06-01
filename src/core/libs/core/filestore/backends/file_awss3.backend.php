@@ -2,8 +2,8 @@
 /**
  * DESCRIPTION
  *
- * @package
- * @since 0.1
+ * @package Core\Filestore
+ * @since 2.5.6
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -21,7 +21,11 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class File_awss3_backend implements File_Backend {
+namespace Core\Filestore\Backends;
+
+use Core\Filestore;
+
+class File_awss3_backend implements File {
 	/**
 	 * @var AmazonS3
 	 */
@@ -163,9 +167,9 @@ class File_awss3_backend implements File_Backend {
 	public function copyTo($dest, $overwrite = false) {
 		//echo "Copying " . $this->filename . " to " . $dest . "\n"; // DEBUG //
 
-		if (is_a($dest, 'File') || $dest instanceof File_Backend) {
+		if (is_a($dest, 'File') || $dest instanceof File) {
 			// Don't need to do anything! The object either is a File
-			// Or is an implmentation of the File_Backend interface.
+			// Or is an implmentation of the File interface.
 		}
 		else {
 			// Well it should be damnit!....
@@ -300,7 +304,7 @@ class File_awss3_backend implements File_Backend {
 
 	public function identicalTo($otherfile) {
 
-		if (is_a($otherfile, 'File') || $otherfile instanceof File_Backend) {
+		if (is_a($otherfile, 'File') || $otherfile instanceof File) {
 			// Just compare the hashes.
 			return ($this->getHash() == $otherfile->getHash());
 		}

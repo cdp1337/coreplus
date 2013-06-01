@@ -34,7 +34,7 @@ interface TemplateInterface {
 	 * @param string|null  $varname        variable name or null
 	 * @return string|array|null variable value or or array of variables
 	 */
-    public function getTemplateVars($varname = null);
+	public function getTemplateVars($varname = null);
 
 	/**
 	 * Get a single variable from the template variables.
@@ -70,4 +70,11 @@ interface TemplateInterface {
 	 * @return boolean
 	 */
 	public function hasOptionalStylesheets();
+
+	/**
+	 * Scan through this template file and see if it has widgetareas contained within.
+	 *
+	 * @return boolean
+	 */
+	public function hasWidgetAreas();
 }

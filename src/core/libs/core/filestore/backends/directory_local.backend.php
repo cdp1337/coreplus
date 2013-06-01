@@ -149,7 +149,7 @@ class Directory_local_backend implements Directory_Backend {
 				if($obj instanceof Directory_local_backend && $recursive){
 					$ret = array_merge($ret, $obj->ls($extension, $recursive));
 				}
-				elseif($obj instanceof File_local_backend){
+				elseif($obj instanceof \Core\Filestore\File){
 					//echo $obj->getExtension() . ' vs ' . $extension . '<br/>';
 					// Is it a match?
 					if($obj->getExtension() == $extension){
@@ -226,7 +226,7 @@ class Directory_local_backend implements Directory_Backend {
 	 */
 	public function mkdir() {
 		if (is_dir($this->getPath())) return null;
-		else return File_local_backend::_Mkdir($this->getPath(), null, true);
+		else return mkdir($this->getPath(), 0777, true);
 	}
 
 	public function rename($newname) {
@@ -393,7 +393,7 @@ class Directory_local_backend implements Directory_Backend {
 				$this->_files[$sub] = new Directory_local_backend($this->_path . $sub);
 			}
 			else {
-				$this->_files[$sub] = new File_local_backend($this->_path . $sub);
+				$this->_files[$sub] = new \Core\Filestore\Backends\FileLocal($this->_path . $sub);
 			}
 		}
 

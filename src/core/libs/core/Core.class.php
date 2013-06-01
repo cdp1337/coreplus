@@ -622,7 +622,7 @@ class Core implements ISingleton {
 	 * @return File_Backend
 	 */
 	public static function File($filename = null) {
-		return \Core\file($filename);
+		return \Core\Filestore\factory($filename);
 	}
 
 
@@ -957,10 +957,27 @@ class Core implements ISingleton {
 
 		if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
 
+		if(ConfigHandler::Get('/core/javascript/minified') && substr($asset, -3) == '.js'){
+			// Try to load the minified version instead.
+			$minified = str_replace('.js', '.min.js', $asset);
+			$file = \Core\Filestore\factory($minified);
+			if($file->exists()){
+				return $file->getURL();
+			}
+		}
+		elseif(ConfigHandler::Get('/core/javascript/minified') && substr($asset, -4) == '.css'){
+			// Try to load the minified version instead.
+			$minified = str_replace('.css', '.min.css', $asset);
+			$file = \Core\Filestore\factory($minified);
+			if($file->exists()){
+				return $file->getURL();
+			}
+		}
+
 		// Skip the cache while I decide on if it's needed or not.
 		// the issue was that if clientA went to the site on ie: localhost, and clientB went to the site
 		// on 192.168.1.20, all assets would be resolving to "localhost", potentially producing invalid links.
-		$f = \Core\file($asset);
+		$f = \Core\Filestore\factory($asset);
 		//var_dump($asset);
 		//$f = self::File($asset);
 		return $f->getURL();
@@ -1361,19 +1378,15 @@ class Core implements ISingleton {
 	/**
 	 * Utility function to translate a filesize in bytes into a human-readable version.
 	 *
+	 * @deprecated 2013.05.31
+	 *
 	 * @param int $filesize Filesize in bytes
 	 * @param int $round Precision to round to
 	 *
 	 * @return string
 	 */
 	public static function FormatSize($filesize, $round = 2) {
-		$suf = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
-		$c   = 0;
-		while ($filesize >= 1024) {
-			$c++;
-			$filesize = $filesize / 1024;
-		}
-		return (round($filesize, $round) . ' ' . $suf[$c]);
+		return \Core\Filestore\format_size($filesize, $round);
 	}
 
 	public static function GetExtensionFromString($str) {

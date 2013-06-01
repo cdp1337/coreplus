@@ -233,4 +233,20 @@ class Smarty implements Templates\TemplateInterface {
 
 		return $results;
 	}
+
+	/**
+	 * Scan through this template file and see if it has widgetareas contained within.
+	 *
+	 * @return boolean
+	 */
+	public function hasWidgetAreas() {
+		$contents = file_get_contents($this->_filename);
+
+		if(strpos($contents, '{widgetarea') !== false){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 }

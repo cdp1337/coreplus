@@ -1,9 +1,9 @@
 <?php
 /**
- * DESCRIPTION
+ * Description of ContentUnknown
  *
  * @package
- * @since 1.9
+ * @since 0.1
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -21,7 +21,18 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+namespace Core\Filestore\Contents;
 
-interface File_Contents {
-	public function __construct(File_Backend $file);
+use Core\Filestore;
+
+class ContentUnknown implements Filestore\Contents {
+	private $_file = null;
+
+	public function __construct(Filestore\File $file) {
+		$this->_file = $file;
+	}
+
+	public function getContents() {
+		return $this->_file->getContents();
+	}
 }

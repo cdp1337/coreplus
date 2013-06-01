@@ -670,12 +670,12 @@ class UpdaterHelper {
 				// Used to get the relative path for each contained file.
 				$datalen = strlen($datadir->getPath());
 				foreach($files as $file){
-					if(!$file instanceof File_local_backend) continue;
+					if(!$file instanceof \Core\Filestore\Backends\FileLocal) continue;
 
 					// It's a file, copy it over.
 					// To do so, resolve the directory path inside the temp data dir.
-					$dest = \Core\file($target['destdir'] . substr($file->getFilename(), $datalen));
-					/** @var $dest File_local_backend */
+					$dest = \Core\Filestore\factory($target['destdir'] . substr($file->getFilename(), $datalen));
+					/** @var $dest \Core\Filestore\Backends\FileLocal */
 					if($verbose){
 						self::_PrintInfo('...' . substr($dest->getFilename(''), 0, 67), $timer);
 					}

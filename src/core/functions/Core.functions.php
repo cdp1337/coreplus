@@ -128,33 +128,12 @@ function user(){
  * Instantiate a new File object, ready for manipulation or access.
  *
  * @since 2011.07.09
+ * @deprecated 2013.05.30
  * @param string $filename
- * @return \File_Backend
+ * @return \Core\Filestore\File
  */
 function file($filename = null){
-
-	// Allow remote files to be requested here too!
-	if(strpos($filename, '://') !== false){
-		return new \File_remote_backend($filename);
-	}
-
-	// If it's a fully resolved file already,
-	// no need in trying to figure out which backend it belongs to.
-	if(strpos($filename, ROOT_PDIR) === 0){
-		return new \File_local_backend($filename);
-	}
-
-	switch(CDN_TYPE){
-		case 'aws':
-			return new \File_awss3_backend($filename);
-			break;
-		case 'local':
-		default:
-			// Automatically resolve this file.
-			//$filename = File_local_backend:
-			return new \File_local_backend($filename);
-			break;
-	}
+	return \Core\Filestore\factory($filename);
 }
 
 /**
@@ -172,7 +151,7 @@ function directory($directory){
 		case 'local':
 		default:
 			// Automatically resolve this file.
-			//$filename = File_local_backend:
+			//$filename = \Core\Filestore\Backends\FileLocal:
 			return new \Directory_local_backend($directory);
 			break;
 	}
@@ -537,18 +516,13 @@ function random_hex($length = 1, $casesensitive = false){
 /**
  * Utility function to translate a filesize in bytes into a human-readable version.
  *
+ * @deprecated 2013.06.01
  * @param int $filesize Filesize in bytes
  * @param int $round Precision to round to
  * @return string
  */
 function FormatSize($filesize, $round = 2){
-	$suf = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
-	$c = 0;
-	while($filesize >= 1024){
-		$c++;
-		$filesize = $filesize / 1024;
-	}
-	return (round($filesize, $round) . ' ' . $suf[$c]);
+	return \Core\Filestore\format_size($filesize, $round);
 }
 
 function GetExtensionFromString($str){

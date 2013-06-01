@@ -968,9 +968,9 @@ function process_component($component, $forcerelease = false){
 				break;
 		}
 
-		File_local_backend::_Mkdir(dirname($tgz));
-		File_local_backend::_Mkdir($dir);
-		File_local_backend::_Mkdir($dir . 'data/');
+		if(!is_dir(dirname($tgz)))  mkdir(dirname($tgz), 0777, true);
+		if(!is_dir($dir))           mkdir($dir, 0777, true);
+		if(!is_dir($dir . 'data/')) mkdir($dir . 'data/', 0777, true);
 
 		// I already have a good iterator...just reuse it.
 		$it->rewind();
@@ -1008,7 +1008,7 @@ EOD;
 
 		// Because the destination is relative...
 		$xmldest = 'data/' . substr(ROOT_PDIR . $cfile, $basestrlen);
-		$xmloutput = new File_local_backend($dir . $xmldest);
+		$xmloutput = \Core\Filestore\factory($dir . $xmldest);
 		$xmloutput->putContents($xml->asMinifiedXML());
 
 		//$packager = 'Core Plus ' . ComponentHandler::GetComponent('core')->getVersion() . ' (http://corepl.us)';
@@ -1175,7 +1175,7 @@ function process_theme($theme, $forcerelease = false){
 
 		// Because the destination is relative...
 		$xmldest = 'data/theme.xml' ;
-		$xmloutput = new File_local_backend($dir . $xmldest);
+		$xmloutput = \Core\Filestore\factory($dir . $xmldest);
 		$xmloutput->putContents($t->getRawXML(true));
 
 		// Save the package.xml file.

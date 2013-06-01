@@ -183,7 +183,7 @@ class XMLLoader implements Serializable {
 		else {
 			// Make sure the file is fully resolved.
 			// To do that, Core has some built in systems.
-			$this->_file = \Core\file($file);
+			$this->_file = \Core\Filestore\factory($file);
 			//$this->_filename = $file;
 		}
 

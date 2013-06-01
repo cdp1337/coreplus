@@ -150,6 +150,15 @@ class PHTML implements Templates\TemplateInterface {
 	 * @return boolean
 	 */
 	public function hasOptionalStylesheets() {
-		// TODO: Implement hasOptionalStylesheets() method.
+		return false;
+	}
+
+	/**
+	 * Scan through this template file and see if it has widgetareas contained within.
+	 *
+	 * @return boolean
+	 */
+	public function hasWidgetAreas() {
+		return false;
 	}
 }

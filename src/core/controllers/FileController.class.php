@@ -49,7 +49,7 @@ class FileController extends Controller_2_1 {
 				error_log('Invalid request made for /file/preview!  Expecting: [base64:*b64data*], Received: [' . $filename . ']');
 			}
 
-			$file = \Core\file('assets/images/mimetypes/notfound.png');
+			$file = \Core\Filestore\factory('assets/images/mimetypes/notfound.png');
 			$file->displayPreview($d);
 			return;
 		}
@@ -65,18 +65,18 @@ class FileController extends Controller_2_1 {
 				error_log('Invalid request made for /file/preview!  Expecting: [public/* or asset[s]/*], Received: [' . $base . ']');
 			}
 
-			$file = \Core\file('assets/images/mimetypes/notfound.png');
+			$file = \Core\Filestore\factory('assets/images/mimetypes/notfound.png');
 			$file->displayPreview($d);
 			return;
 		}
 
-		$file = \Core\file($filename);
+		$file = \Core\Filestore\factory($filename);
 		if(!$file->exists()){
 			if(DEVELOPMENT_MODE){
 				error_log('File not found for /file/preview!  Looking For: [' . $file->getFilename('') . ' (' . $filename . ') ]');
 			}
 
-			$file = \Core\file('assets/images/mimetypes/notfound.png');
+			$file = \Core\Filestore\factory('assets/images/mimetypes/notfound.png');
 			$file->displayPreview($d);
 			return;
 		}

@@ -89,7 +89,7 @@ function smarty_function_file_thumbnail($params, $template){
 	
 	
 	if(!$file->exists()){
-		$icon = \Core\file('assets/images/mimetypes/notfound.png');
+		$icon = \Core\Filestore\factory('assets/images/mimetypes/notfound.png');
 		$attributes['src'] = $d ? $icon->getPreviewURL($d) : $icon->getURL();
 	}
 	elseif(ConfigHandler::Get('/core/filestore/previews') && $file->isPreviewable()){
@@ -104,7 +104,7 @@ function smarty_function_file_thumbnail($params, $template){
 		}
 	}
 	else{
-		$icon = \Core\file('assets/images/mimetypes/' . str_replace('/', '-', strtolower($file->getMimetype()) ) . '.png');
+		$icon = \Core\Filestore\factory('assets/images/mimetypes/' . str_replace('/', '-', strtolower($file->getMimetype()) ) . '.png');
 		if(!$icon->isReadable()) $icon = Core::File('assets/images/mimetypes/unknown.png');
 		$attributes['src'] = $icon->getURL();
 	}

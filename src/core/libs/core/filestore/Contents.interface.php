@@ -1,11 +1,9 @@
 <?php
 /**
- * Description of File_xml_contents
+ * Interface for file contents and their manipulation.
  *
- * Provides useful extra functions that can be done with an XML file.
- *
- * @package
- * @since 2.2.0
+ * @package Core\Filestore
+ * @since 2.5.6
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -23,26 +21,9 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class File_xml_contents implements File_Contents {
-	private $_file = null;
+namespace Core\Filestore;
 
-	public function __construct(File_Backend $file) {
-		$this->_file = $file;
-	}
 
-	public function getContents() {
-		return $this->_file->getContents();
-	}
-
-	/**
-	 * Get the associated XMLLoader object for this data
-	 *
-	 * @return XMLLoader
-	 */
-	public function getLoader(){
-		$xml = new XMLLoader();
-		$xml->loadFromFile($this->_file);
-		return $xml;
-	}
+interface Contents {
+	public function __construct(File $file);
 }
-

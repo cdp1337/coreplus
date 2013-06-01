@@ -1,6 +1,6 @@
 <?php
 /**
- * Description of File_gz_contents
+ * Description of ContentGZ
  *
  * Provides useful extra functions that can be done with a GZipped file.
  *
@@ -23,10 +23,14 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class File_tgz_contents implements File_Contents {
+namespace Core\Filestore\Contents;
+
+use Core\Filestore;
+
+class ContentGZ implements Filestore\Contents {
 	private $_file = null;
 
-	public function __construct(File_Backend $file) {
+	public function __construct(Filestore\File $file) {
 		$this->_file = $file;
 	}
 
@@ -35,33 +39,32 @@ class File_tgz_contents implements File_Contents {
 	}
 
 	/**
-	 * Extract this archive to a requested directory.
+	 * Uncompress this file contents and return the result.
+	 * Obviously, if a multi-gigibyte file is read with no immediate destination,
+	 * you'll probably run out of memory.
 	 *
-	 * @param string $dst Destination to extract the archive to.
+	 * @param Filestore\File|bool $dst The destination to write the uncompressed data to
+	 *        If not provided, just returns the data.
 	 *
-	 * @return Directory_local_backend
+	 * @return mixed
 	 */
-	public function extract($destdir) {
-		// This will ensure that the destdir is properlly resolved.
-		$d = Core::Directory($destdir);
-		if (!$d->isReadable()) $d->mkdir();
-		exec('tar -xzf "' . $this->_file->getLocalFilename() . '" -C "' . $d->getPath() . '"');
-		return $d;
-	}
-
-	public function listfiles() {
-		$output = array();
-		exec('tar -zf "' . $this->_file->getLocalFilename() . '" --list', $output);
-
-		foreach ($output as $k => $v) {
-			// Trim some characters off.
-			if (strpos($v, './') === 0) $v = substr($v, 2);
-
-			if (!$v) unset($output[$k]);
-			else $output[$k] = $v;
+	public function uncompress($dst = false) {
+		if ($dst) {
+			// @todo decompress the file to the requested destination file.
 		}
+		else {
+			// Just return the file contents.
+			$zd = gzopen($this->_file->getLocalFilename(), "r");
+			if (!$zd) return false;
 
-		return array_values($output);
+			$contents = '';
+			while (!feof($zd)) {
+				$contents .= gzread($zd, 2048);
+			}
+			gzclose($zd);
+
+			return $contents;
+		}
 	}
 }
 

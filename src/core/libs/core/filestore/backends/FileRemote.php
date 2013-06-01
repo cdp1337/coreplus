@@ -3,21 +3,32 @@
  * Remote file backend.
  *
  * Provides standard API access to remote HTTP files.
- * Could also in theory be used with FTP files, but untested.
  *
- * @package Core
- * @since 2011.07
+ * @package Core\Filestore\Backends
+ * @since 2.5.6
  * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright 2011, Charlie Powell
- * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
- * This system is licensed under the GNU LGPL, feel free to incorporate it into
- * custom applications, but keep all references of the original authors intact,
- * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>,
- * and please contribute back to the community :)
+ * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+namespace Core\Filestore\Backends;
 
-class File_remote_backend implements File_Backend {
+use Core\Filestore;
+
+
+class FileRemote implements Filestore\File {
 
 	/**
 	 * The username to use if basic authentication is required.
@@ -66,7 +77,7 @@ class File_remote_backend implements File_Backend {
 	 * Temporary local version of the file.
 	 * This is necessary for some operations such as "copyFrom" and "identicalTo"
 	 *
-	 * @var File_local_backend
+	 * @var FileLocal
 	 */
 	private $_tmplocal = null;
 
@@ -87,7 +98,7 @@ class File_remote_backend implements File_Backend {
 			$size = $tmp->getFilesize(false);
 		}
 
-		return ($formatted) ? Core::FormatSize($size, 2) : $size;
+		return ($formatted) ? \Core::FormatSize($size, 2) : $size;
 	}
 
 	public function getMimetype() {
@@ -100,7 +111,7 @@ class File_remote_backend implements File_Backend {
 	}
 
 	public function getExtension() {
-		return Core::GetExtensionFromString($this->getBaseFilename());
+		return \Core::GetExtensionFromString($this->getBasename());
 	}
 
 	/**
@@ -139,21 +150,7 @@ class File_remote_backend implements File_Backend {
 	 * Get the base filename of this file.
 	 */
 	public function getBaseFilename($withoutext = false) {
-		// This will also intelligently pull from the Location header if it's set.
-		$h = $this->_getHeaders();
-
-		if (isset($h['Location'])) $f = $h['Location'];
-		else $f = $this->_url;
-
-		// Drop off the directory and everything else.
-		// (yes, basename somehow works on URLs too!)
-		$f = basename($f);
-		if (strpos($f, '?') !== false) {
-			// Take off everything after the '?'.
-			$f = substr($f, 0, strpos($f, '?'));
-		}
-
-		return $withoutext ? substr($f, 0, strrpos($f, '.')) : $f;
+		return $this->getBasename($withoutext);
 	}
 
 	/**
@@ -186,7 +183,7 @@ class File_remote_backend implements File_Backend {
 	}
 
 	public function delete() {
-		throw new FileException('Cannot delete a remote file!');
+		throw new \Exception('Cannot delete a remote file!');
 	}
 
 	/**
@@ -194,19 +191,15 @@ class File_remote_backend implements File_Backend {
 	 * If the destination is a directory (ends with a '/'), the same filename is used, (if possible).
 	 * If the destination is relative, ('.' or 'subdir/'), it is assumed relative to the current file.
 	 *
-	 * @param string|File $dest
+	 * @param string|Filestore\File $dest
 	 * @param boolean     $overwrite
 	 *
-	 * @return File
+	 * @return Filestore\File
 	 */
 	public function copyTo($dest, $overwrite = false) {
 		//echo "Copying " . $this->_filename . " to " . $dest . "\n"; // DEBUG //
 
-		if (is_a($dest, 'File') || $dest instanceof File_Backend) {
-			// Don't need to do anything! The object either is a File
-			// Or is an implmentation of the File_Backend interface.
-		}
-		else {
+		if (!(is_a($dest, 'File') || $dest instanceof Filestore\File)) {
 			// Well it should be damnit!....
 			$file = $dest;
 
@@ -223,7 +216,7 @@ class File_remote_backend implements File_Backend {
 			}
 
 			// Now dest can be instantiated as a valid file object!
-			$dest = new File_local_backend($file);
+			$dest = new FileLocal($file);
 		}
 
 		if ($this->identicalTo($dest)) return $dest;
@@ -236,7 +229,7 @@ class File_remote_backend implements File_Backend {
 	}
 
 	public function copyFrom($src, $overwrite = false) {
-		throw new FileException('Unable to write to remote files!');
+		throw new \Exception('Unable to write to remote files!');
 	}
 
 	public function getContents() {
@@ -244,11 +237,11 @@ class File_remote_backend implements File_Backend {
 	}
 
 	public function putContents($data) {
-		throw new FileException('Unable to write to remote files!');
+		throw new \Exception('Unable to write to remote files!');
 	}
 
 	public function getContentsObject() {
-		return FileContentFactory::GetFromFile($this);
+		return Filestore\resolve_contents_object($this);
 	}
 
 	public function isImage() {
@@ -278,85 +271,34 @@ class File_remote_backend implements File_Backend {
 	 * @param boolean    $includeHeader Include the correct mimetype header or no.
 	 */
 	public function displayPreview($dimensions = "300x300", $includeHeader = true) {
-		// @todo Revise this method!
-		// The legacy support for simply a number.
-		if (is_numeric($dimensions)) {
-			$width  = $dimensions;
-			$height = $dimensions;
+		if (!$this->exists()) {
+			// Log it so the admin knows that the file is missing, otherwise nothing is shown.
+			error_log('File not found [ ' . $this->_url . ' ]', E_USER_NOTICE);
+
+			// Return a 404 image.
+			$file = Filestore\factory('asset/images/mimetypes/notfound.png');
+			return $file->displayPreview($dimensions, $includeHeader);
 		}
-		elseif ($dimensions === null) {
-			$width  = 300;
-			$height = 300;
+		else{
+			// Yay, just use the local copy to get the preview url :p
+			$file = $this->_getTmpLocal();
+			return $file->displayPreview($dimensions, $includeHeader);
 		}
-		else {
-			// New method. Split on the "x" and that should give me the width/height.
-			$vals   = explode('x', strtolower($dimensions));
-			$width  = (int)$vals[0];
-			$height = (int)$vals[1];
-		}
-
-		// Enable caching.
-		$key = 'filepreview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
-
-		if (file_exists(TMP_DIR . $key)) {
-			header('Content-Type: image/png');
-			echo file_get_contents(TMP_DIR . $key); // (should be binary)
-			return; // whee, nothing else to do!
-		}
-
-		$img2 = $this->_getResizedImage($width, $height);
-
-		// Save this image to cache.
-		imagepng($img2, TMP_DIR . $key);
-
-		if ($includeHeader) header('Content-Type: image/png');
-		imagepng($img2);
-		return;
-
-
-		// __TODO__ Support text for previewing.	Use maxWidth as maxLines instead.
 	}
 
 	public function getPreviewURL($dimensions = "300x300") {
-		// @todo Revise this method!
-		// The legacy support for simply a number.
-		if (is_numeric($dimensions)) {
-			$width  = $dimensions;
-			$height = $dimensions;
-		}
-		elseif ($dimensions === null) {
-			$width  = 300;
-			$height = 300;
-		}
-		else {
-			// New method. Split on the "x" and that should give me the width/height.
-			$vals   = explode('x', strtolower($dimensions));
-			$width  = (int)$vals[0];
-			$height = (int)$vals[1];
-		}
-
 		if (!$this->exists()) {
 			// Log it so the admin knows that the file is missing, otherwise nothing is shown.
-			error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
+			error_log('File not found [ ' . $this->_url . ' ]', E_USER_NOTICE);
 
 			// Return a 404 image.
-			return Core::ResolveAsset('images/mimetypes/notfound.png');
+			$file = Filestore\factory('asset/images/mimetypes/notfound.png');
+			return $file->getPreviewURL($dimensions);
 		}
-		elseif ($this->isPreviewable()) {
-			$key = 'filepreview-' . $this->getHash() . '-' . $width . 'x' . $height . '.png';
-
-			$file = Core::File('public/tmp/' . $key);
-			if (!$file->exists()) {
-				$img2 = $this->_getResizedImage($width, $height);
-				// Save this image to cache.
-				imagepng($img2, TMP_DIR . $key);
-				$file->putContents(file_get_contents(TMP_DIR . $key));
-			}
-
-			return $file->getURL();
-		}
-		else {
-			return false;
+		else{
+			// Yay, just use the local copy to get the preview url :p
+			$file = $this->_getTmpLocal();
+			return $file->getPreviewURL($dimensions);
 		}
 	}
 
@@ -368,17 +310,13 @@ class File_remote_backend implements File_Backend {
 	 * @return boolean
 	 */
 	public function inDirectory($path) {
-		// @todo Revise this method!
-		// The path should be fully resolved, (the file is).
-		if (strpos($path, ROOT_PDIR) === false) $path = ROOT_PDIR . $path;
-
 		// Just a simple strpos shortcut...
-		return (strpos($this->_filename, $path) !== false);
+		return (strpos($this->_url, $path) !== false);
 	}
 
 	public function identicalTo($otherfile) {
 
-		if (is_a($otherfile, 'File') || $otherfile instanceof File_Backend) {
+		if (is_a($otherfile, 'File') || $otherfile instanceof Filestore\File) {
 			// Just compare the hashes.
 			//var_dump($this->getHash(), $this, $otherfile->getHash(), $otherfile); die();
 			return ($this->_getTmpLocal()->getHash() == $otherfile->getHash());
@@ -434,6 +372,105 @@ class File_remote_backend implements File_Backend {
 	}
 
 	/**
+	 * Get the base filename of this file.
+	 *
+	 * @param boolean $withoutext Set to true to drop the extension.
+	 *
+	 * @return string
+	 */
+	public function getBasename($withoutext = false) {
+		// This will also intelligently pull from the Location header if it's set.
+		$h = $this->_getHeaders();
+
+		if (isset($h['Location'])) $f = $h['Location'];
+		else $f = $this->_url;
+
+		if (strpos($f, '?') !== false) {
+			// Take off everything after the '?'.
+			$f = substr($f, 0, strpos($f, '?'));
+		}
+
+		// Drop off the directory and everything else.
+		// (yes, basename somehow works on URLs too!)
+		$b = basename($f);
+
+		if ($withoutext) {
+			$ext = $this->getExtension();
+			if($ext != '') {
+				return substr($b, 0, (-1 - strlen($ext)));
+			}
+		}
+
+		return $b;
+	}
+
+	/**
+	 * Rename this file to a new name
+	 *
+	 * @param $newname
+	 *
+	 * @return boolean
+	 */
+	public function rename($newname) {
+		return false;
+	}
+
+	/**
+	 * Get the mimetype icon for this file.
+	 *
+	 * @param string $dimensions
+	 *
+	 * @return string
+	 */
+	public function getMimetypeIconURL($dimensions = '32x32'){
+		$filemime = str_replace('/', '-', $this->getMimetype());
+
+		$file = Filestore\factory('assets/images/mimetypes/' . $filemime . '.png');
+		if(!$file->exists()){
+			if(DEVELOPMENT_MODE){
+				// Inform the developer, otherwise it's not a huge issue.
+				error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown" (filename: ' . $this->getFilename('') . ')');
+			}
+			$file = Filestore\factory('assets/images/mimetypes/unknown.png');
+		}
+		return $file->getPreviewURL($dimensions);
+	}
+
+	/**
+	 * Get the preview file object without actually populating the sources.
+	 * This is useful for checking to see if the file exists before resizing it over.
+	 *
+	 * WARNING, this will NOT check if the file exists and/or copy data over!
+	 *
+	 * @param string $dimensions
+	 *
+	 * @return File
+	 */
+	public function getQuickPreviewFile($dimensions = '300x300') {
+		// TODO: Implement getQuickPreviewFile() method.
+	}
+
+	/**
+	 * Get the preview file with the contents copied over resized/previewed.
+	 *
+	 * @param string $dimensions
+	 *
+	 * @return File
+	 */
+	public function getPreviewFile($dimensions = '300x300') {
+		// TODO: Implement getPreviewFile() method.
+	}
+
+	/**
+	 * Check if this file is writable.
+	 *
+	 * @return boolean
+	 */
+	public function isWritable() {
+		return false;
+	}
+
+	/**
 	 * Get the headers for this given file.
 	 * This will go out and query the server with a HEAD request if no headers set otherwise.
 	 */
@@ -452,7 +489,7 @@ class File_remote_backend implements File_Backend {
 					CURLOPT_NOBODY         => true,
 					CURLOPT_RETURNTRANSFER => true,
 					CURLOPT_URL            => $this->getURL(),
-					CURLOPT_HTTPHEADER     => Core::GetStandardHTTPHeaders(true),
+					CURLOPT_HTTPHEADER     => \Core::GetStandardHTTPHeaders(true),
 				)
 			);
 
@@ -504,7 +541,7 @@ class File_remote_backend implements File_Backend {
 	 * Get the temporary local version of the file.
 	 * This is useful for doing operations such as hash and identicalto.
 	 *
-	 * @return File_local_backend
+	 * @return FileLocal
 	 */
 	private function _getTmpLocal() {
 		if ($this->_tmplocal === null) {
@@ -512,12 +549,12 @@ class File_remote_backend implements File_Backend {
 			// Gotta love obviously-named flags.
 			$needtodownload = true;
 
-			$this->_tmplocal = new File_local_backend('tmp/remotefile-cache/' . $f);
+			$this->_tmplocal = Filestore\factory('tmp/remotefile-cache/' . $f);
 
 			// File exists already!  Check and see if it needs to be redownloaded.
 			if ($this->cacheable && $this->_tmplocal->exists()) {
 				// Lookup this file in the system cache.
-				$systemcachedata = Core::Cache()->get('remotefile-cache-header-' . $f);
+				$systemcachedata = \Core::Cache()->get('remotefile-cache-header-' . $f);
 				if ($systemcachedata) {
 					// I can only look them up if the cache is available.
 
@@ -548,7 +585,7 @@ class File_remote_backend implements File_Backend {
 					'http' => array(
 						'protocol_version' => '1.1',
 						'method'           => "GET",
-						'header'           => Core::GetStandardHTTPHeaders(false, true)
+						'header'           => \Core::GetStandardHTTPHeaders(false, true)
 					)
 				);
 
@@ -557,7 +594,7 @@ class File_remote_backend implements File_Backend {
 				$this->_tmplocal->putContents(file_get_contents($this->getURL(), false, $context));
 
 				// And remember this header data for nexttime.
-				Core::Cache()->set(
+				\Core::Cache()->set(
 					'remotefile-cache-header-' . $f,
 					$this->_getHeaders()
 				);

@@ -1,45 +1,40 @@
 <?php
 /**
- * // enter a good description here
+ * The local file object
  *
- * @package Core
- * @since 2011.06
+ * @package Core\Filestore
+ * @since 2.5.6
  * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright 2011, Charlie Powell
- * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
- * This system is licensed under the GNU LGPL, feel free to incorporate it into
- * custom applications, but keep all references of the original authors intact,
- * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>,
- * and please contribute back to the community :)
+ * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+namespace Core\Filestore\Backends;
 
-class File_local_backend implements File_Backend {
+use Core\Filestore;
+
+class FileLocal implements Filestore\File {
+
+	public $_type = Filestore\File::TYPE_OTHER;
 
 	/**
 	 * The fully resolved filename of this file.
 	 *
 	 * @var string
 	 */
-	private $_filename = null;
-
-	/**
-	 * The "type" of this file, be it asset, public or private.
-	 *
-	 * @var string
-	 */
-	private $_type = null;
-
-	/**
-	 * The fully resolved path of assets.
-	 * Used as a cache.
-	 *
-	 * @var string
-	 */
-	private static $_Root_pdir_assets = null;
-	private static $_Root_pdir_public = null;
-	private static $_Root_pdir_private = null;
-	private static $_Root_pdir_tmp = null;
+	protected $_filename = null;
 
 	public function __construct($filename = null) {
 		if ($filename) $this->setFilename($filename);
@@ -47,7 +42,7 @@ class File_local_backend implements File_Backend {
 
 	public function getFilesize($formatted = false) {
 		$f = filesize($this->_filename);
-		return ($formatted) ? Core::FormatSize($f, 2) : $f;
+		return ($formatted) ? Filestore\format_size($f, 2) : $f;
 	}
 
 	public function getMimetype() {
@@ -131,127 +126,29 @@ class File_local_backend implements File_Backend {
 		return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', $prefix . '$1', $this->_filename);
 	}
 
+	/**
+	 * Set the filename of this file manually.
+	 * Useful for operating on a file after construction.
+	 *
+	 * @param $filename string
+	 */
 	public function setFilename($filename) {
-		// Ensure that the root_pdir directories are cached and ready.
-		if (self::$_Root_pdir_assets === null) {
-			$dir = CDN_LOCAL_ASSETDIR;
-			// If the configuration subsystem is not available, this will be null.
-			if($dir){
-				if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
-				if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
-				self::$_Root_pdir_assets = $dir;
-			}
-		}
-		if (self::$_Root_pdir_public === null) {
-			$dir = CDN_LOCAL_PUBLICDIR;
-			// If the configuration subsystem is not available, this will be null.
-			if($dir){
-				if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
-				if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
-				self::$_Root_pdir_public = $dir;
-			}
-		}
-		if (self::$_Root_pdir_private === null) {
-			$dir = ConfigHandler::Get('/core/filestore/privatedir');
-			// If the configuration subsystem is not available, this will be null.
-			if($dir){
-				if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
-				if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
-				self::$_Root_pdir_private = $dir;
-			}
-		}
-		if (self::$_Root_pdir_tmp === null) {
-			$dir = TMP_DIR;
-			if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
-			if (substr($dir, -1) != '/') $dir = $dir . '/'; // Needs to end in a '/'
-			self::$_Root_pdir_tmp = $dir;
-		}
-
-		// base64 comes first.  If the filename is encoded in that, decode it first.
-		if (strpos($filename, 'base64:') === 0) $filename = base64_decode(substr($filename, 7));
+		if ($filename{0} != '/') $filename = ROOT_PDIR . $filename; // Needs to be fully resolved
 
 		// Do some cleaning on the filename, ie: // should be just /.
 		$filename = preg_replace(':/+:', '/', $filename);
-
-		// Also lookup this filename and resolve it.
-		// ie, if it starts with "asset/", it should be an asset.
-		// public/, public.
-		// private/, private.
-
-
-		// Allow "asset/blah" to be passed in
-		if (strpos($filename, 'assets/') === 0) {
-			$theme    = ConfigHandler::Get('/theme/selected');
-			$filename = substr($filename, 7); // Trim off the 'asset/' prefix.
-
-
-			if (file_exists(self::$_Root_pdir_assets  . 'custom/' . $filename)){
-				// If there is a custom asset installed, USE THAT FIRST!
-				$filename = self::$_Root_pdir_assets  . 'custom/' . $filename;
-			}
-			elseif (file_exists(self::$_Root_pdir_assets . $theme . '/' . $filename)){
-				// Otherwise, the themes can override component assets too.
-				$filename = self::$_Root_pdir_assets . $theme . '/' . $filename;
-			}
-			else{
-				$filename = self::$_Root_pdir_assets . 'default/' . $filename;
-			}
-
-			$this->_type = 'asset';
-		}
-		// Allow the fully resolved filename to be passed in
-		elseif (strpos($filename, self::$_Root_pdir_assets) === 0) {
-			// No filename resolution needed, already in full form.
-
-			$this->_type = 'asset';
-		}
-		elseif (strpos($filename, 'public/') === 0) {
-			$filename = substr($filename, 7); // Trim off the 'public/' prefix.
-			$filename = self::$_Root_pdir_public . $filename;
-
-			$this->_type = 'public';
-		}
-		// Allow the fully resolved filename to be passed in
-		elseif (strpos($filename, self::$_Root_pdir_public) === 0) {
-			// No filename resolution needed, already in full form.
-
-			$this->_type = 'public';
-		}
-		elseif (strpos($filename, 'private/') === 0) {
-			$filename = substr($filename, 8); // Trim off the 'private/' prefix.
-			$filename = self::$_Root_pdir_private . $filename;
-
-			$this->_type = 'private';
-		}
-		// Allow the fully resolved filename to be passed in
-		elseif (strpos($filename, self::$_Root_pdir_private) === 0) {
-			// No filename resolution needed, already in full form.
-
-			$this->_type = 'private';
-		}
-		elseif (strpos($filename, 'tmp/') === 0) {
-			$filename = substr($filename, 4); // Trim off the 'tmp/' prefix.
-			$filename = self::$_Root_pdir_tmp . $filename;
-
-			$this->_type = 'tmp';
-		}
-		// Allow the fully resolved filename to be passed in
-		elseif (strpos($filename, self::$_Root_pdir_tmp) === 0) {
-			// No filename resolution needed, already in full form.
-
-			$this->_type = 'tmp';
-		}
-		else {
-			// Nothing to do on the else, just use this filename as-is.
-		}
 
 		$this->_filename = $filename;
 	}
 
 	/**
 	 * Get the base filename of this file.
+	 *
+	 * @param boolean $withoutext Set to true to drop the extension.
+	 *
+	 * @return string
 	 */
-	public function getBaseFilename($withoutext = false) {
+	public function getBasename($withoutext = false) {
 		$b = basename($this->_filename);
 
 		if ($withoutext) {
@@ -265,12 +162,10 @@ class File_local_backend implements File_Backend {
 	}
 
 	/**
-	 * Simple basename function for this file.
-	 *
-	 * @return string
+	 * Get the base filename of this file.
 	 */
-	public function getBasename() {
-		return basename($this->_filename);
+	public function getBaseFilename($withoutext = false) {
+		return $this->getBasename($withoutext);
 	}
 
 	/**
@@ -303,24 +198,24 @@ class File_local_backend implements File_Backend {
 	public function getFilenameHash() {
 		if ($this->_type == 'asset'){
 			$base = 'assets/';
-			$filename = substr($this->_filename, strlen(self::$_Root_pdir_assets));
+			$filename = substr($this->_filename, strlen(Filestore\get_asset_path()));
 			// If the filename starts with the current theme, (which it very well may),
 			// trim that off too.
 			// this script is meant to be a generic resource handle that gets resolved by the receiving script.
-			if(strpos($filename, ConfigHandler::Get('/theme/selected') . '/') === 0){
-				$filename = substr($filename, strlen(ConfigHandler::Get('/theme/selected')) + 1);
+			if(strpos($filename, \ConfigHandler::Get('/theme/selected') . '/') === 0){
+				$filename = substr($filename, strlen(\ConfigHandler::Get('/theme/selected')) + 1);
 			}
 			// And now I can add the base onto it.
 			$filename = $base . $filename;
 		}
 		elseif ($this->_type == 'public'){
-			$filename = 'public/' . substr($this->_filename, strlen(self::$_Root_pdir_public));
+			$filename = 'public/' . substr($this->_filename, strlen(Filestore\get_public_path() ));
 		}
 		elseif ($this->_type == 'private'){
-			$filename = 'private/' . substr($this->_filename, strlen(self::$_Root_pdir_private));
+			$filename = 'private/' . substr($this->_filename, strlen(Filestore\get_private_path() ));
 		}
 		elseif ($this->_type == 'tmp'){
-			$filename = 'tmp/' . substr($this->_filename, strlen(self::$_Root_pdir_tmp));
+			$filename = 'tmp/' . substr($this->_filename, strlen(Filestore\get_tmp_path() ));
 		}
 		else{
 			$filename = $this->_filename;
@@ -380,16 +275,12 @@ class File_local_backend implements File_Backend {
 	 * @param string|File $dest
 	 * @param boolean     $overwrite
 	 *
-	 * @return File
+	 * @return Filestore\File
 	 */
 	public function copyTo($dest, $overwrite = false) {
 		//echo "Copying " . $this->_filename . " to " . $dest . "\n"; // DEBUG //
 
-		if (is_a($dest, 'File') || $dest instanceof File_Backend) {
-			// Don't need to do anything! The object either is a File
-			// Or is an implementation of the File_Backend interface.
-		}
-		else {
+		if (!(is_a($dest, 'File') || $dest instanceof Filestore\File)) {
 			// Well it should be damnit!....
 			$file = $dest;
 
@@ -406,7 +297,7 @@ class File_local_backend implements File_Backend {
 			}
 
 			// Now dest can be instantiated as a valid file object!
-			$dest = new File_local_backend($file);
+			$dest = new FileLocal($file);
 		}
 
 		if ($this->identicalTo($dest)) return $dest;
@@ -419,7 +310,7 @@ class File_local_backend implements File_Backend {
 	}
 
 	/**
-	 * Make a copy of a source File into this File.
+	 * Make a copy of a source Filestore\File into this File.
 	 *
 	 * (Generally only useful internally)
 	 *
@@ -529,15 +420,27 @@ class File_local_backend implements File_Backend {
 
 		// Ensure the directory exists.  The internal logic will handle if it already exists.
 		self::_Mkdir(dirname($this->_filename), null, true);
+
+		$dmode = (defined('DEFAULT_DIRECTORY_PERMS') ? DEFAULT_DIRECTORY_PERMS : 0777);
+
+		if(!is_dir( dirname($this->_filename) )){
+			mkdir(dirname($this->_filename), $dmode, true);
+		}
+
 		if(!is_dir(dirname($this->_filename))){
 			throw new Exception("Unable to make directory " . dirname($this->_filename) . ", please check permissions.");
 		}
 
-		return self::_PutContents($this->_filename, $data);
+		$mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
+
+		$ret = file_put_contents($this->_filename, $data);
+		if ($ret === false) return $ret;
+		chmod($this->_filename, $mode);
+		return true;
 	}
 
 	public function getContentsObject() {
-		return FileContentFactory::GetFromFile($this);
+		return Filestore\resolve_contents_object($this);
 	}
 
 	public function isImage() {
@@ -590,13 +493,13 @@ class File_local_backend implements File_Backend {
 	public function getMimetypeIconURL($dimensions = '32x32'){
 		$filemime = str_replace('/', '-', $this->getMimetype());
 
-		$file = \Core\file('assets/images/mimetypes/' . $filemime . '.png');
+		$file = Filestore\factory('assets/images/mimetypes/' . $filemime . '.png');
 		if(!$file->exists()){
 			if(DEVELOPMENT_MODE){
 				// Inform the developer, otherwise it's not a huge issue.
 				error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown" (filename: ' . $this->getFilename('') . ')');
 			}
-			$file = \Core\file('assets/images/mimetypes/unknown.png');
+			$file = Filestore\factory('assets/images/mimetypes/unknown.png');
 		}
 		return $file->getPreviewURL($dimensions);
 	}
@@ -609,7 +512,7 @@ class File_local_backend implements File_Backend {
 	 *
 	 * @param string $dimensions
 	 *
-	 * @return File_backend
+	 * @return Filestore\File_backend
 	 */
 	public function getQuickPreviewFile($dimensions = '300x300'){
 		$bits   = $this->_getReizedKeyComponents($dimensions);
@@ -624,26 +527,26 @@ class File_local_backend implements File_Backend {
 			error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
 
 			// Return a 404 image.
-			return \Core\file('assets/images/mimetypes/notfound.png');
+			return \Core\Filestore\factory('assets/images/mimetypes/notfound.png');
 		}
 		elseif ($this->isPreviewable()) {
 			// If no resize was requested, simply return the full size image.
 			if($width === false) return $this;
 
 			// Yes, this must be within public because it's meant to be publicly visible.
-			return \Core\file('public/tmp/' . $key);
+			return \Core\Filestore\factory('public/tmp/' . $key);
 		}
 		else {
 			// Try and get the mime icon for this file.
 			$filemime = str_replace('/', '-', $this->getMimetype());
 
-			$file = \Core\file('assets/images/mimetypes/' . $filemime . '.png');
+			$file = \Core\Filestore\factory('assets/images/mimetypes/' . $filemime . '.png');
 			if(!$file->exists()){
 				if(DEVELOPMENT_MODE){
 					// Inform the developer, otherwise it's not a huge issue.
 					error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown"');
 				}
-				return \Core\file('assets/images/mimetypes/unknown.png');
+				return \Core\Filestore\factory('assets/images/mimetypes/unknown.png');
 			}
 			else{
 				return $file;
@@ -655,13 +558,13 @@ class File_local_backend implements File_Backend {
 		// If the system is getting too close to the max_execution_time variable, just return the mimetype!
 		// One note though, this is only available when running php from the web.
 		// CLI scripts don't have it!
-		if(ini_get('max_execution_time') && Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime() + 5 >= ini_get('max_execution_time')){
+		if(ini_get('max_execution_time') && \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime() + 5 >= ini_get('max_execution_time')){
 			// Try and get the mime icon for this file.
 			$filemime = str_replace('/', '-', $this->getMimetype());
 
-			$file = Core::File('assets/images/mimetypes/' . $filemime . '.png');
+			$file = \Core\Filestore\factory('assets/images/mimetypes/' . $filemime . '.png');
 			if(!$file->exists()){
-				$file = Core::File('assets/images/mimetypes/unknown.png');
+				$file = \Core\Filestore\factory('assets/images/mimetypes/unknown.png');
 			}
 			return $file;
 		}
@@ -707,7 +610,6 @@ class File_local_backend implements File_Backend {
 	}
 
 	public function getPreviewURL($dimensions = "300x300") {
-
 		$file = $this->getPreviewFile($dimensions);
 		return $file->getURL();
 	}
@@ -729,7 +631,7 @@ class File_local_backend implements File_Backend {
 
 	public function identicalTo($otherfile) {
 
-		if (is_a($otherfile, 'File') || $otherfile instanceof File_Backend) {
+		if (is_a($otherfile, 'File') || $otherfile instanceof Filestore\File) {
 			// Just compare the hashes.
 			//var_dump($this->getHash(), $this, $otherfile->getHash(), $otherfile); die();
 			return ($this->getHash() == $otherfile->getHash());
@@ -752,21 +654,7 @@ class File_local_backend implements File_Backend {
 	}
 
 	public function isWritable(){
-		$ftp    = \Core\FTP();
-		$tmpdir = TMP_DIR;
-		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
-
-		if (
-			!$ftp || // FTP not enabled or
-			(strpos($this->_filename, $tmpdir) === 0) // Destination is a temporary file.
-		) {
-			return is_writable($this->_filename);
-		}
-		else {
-			// @todo Implement a better FTP check here!
-			return true;
-		}
-
+		return is_writable($this->_filename);
 	}
 
 	public function isLocal() {
@@ -1148,5 +1036,4 @@ class File_local_backend implements File_Backend {
 		return $ret;
 	}
 	*/
-
 }

@@ -202,9 +202,9 @@ class FormFileInput extends FormElement {
 				}
 
 				// Source
-				$f = new File_local_backend($in['tmp_name']);
+				$f = \Core\Filestore\factory($in['tmp_name']);
 				// Destination
-				$nf = Core::File($this->get('basedir') . '/' . $in['name']);
+				$nf = \Core\Filestore\factory($this->get('basedir') . '/' . $in['name']);
 
 				// do NOT copy the contents over until the accept check has been ran!
 

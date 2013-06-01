@@ -79,7 +79,7 @@ class HookHandler implements ISingleton {
 
 		Core\Utilities\Logger\write_debug('Registering new hook [' . $name . ']');
 
-		if(isset(HookHandler::$RegisteredHooks[$name])){
+		if(isset(HookHandler::$RegisteredHooks[$name]) && FULL_DEBUG){
 			trigger_error('Registering hook that is already registered [' . $name . ']', E_USER_NOTICE);
 		}
 

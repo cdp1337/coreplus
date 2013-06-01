@@ -23,7 +23,7 @@
 
 
 class FileContentFactory {
-	public static function GetFromFile(File_Backend $file) {
+	public static function GetFromFile(File $file) {
 		// The class name to instantiate based on the incoming filetype.
 		$class = null;
 

@@ -411,7 +411,7 @@ class UpdaterController extends Controller_2_1 {
 				}
 			}
 			elseif($_POST['pubkey']){
-				$tmp = new File_local_backend('tmp/importkey-' . Core::RandomHex(2) . '.gpg');
+				$tmp = \Core\Filestore\factory('tmp/importkey-' . Core::RandomHex(2) . '.gpg');
 				$tmp->putContents($_POST['pubkey']);
 				exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --import "' . $tmp->getFilename() . '"', $output, $result);
 				$tmp->delete();
@@ -423,7 +423,7 @@ class UpdaterController extends Controller_2_1 {
 				}
 			}
 			elseif($_FILES['pubkeyfile']){
-				$tmp = new File_local_backend($_FILES['pubkeyfile']['tmp_name']);
+				$tmp = \Core\Filestore\factory($_FILES['pubkeyfile']['tmp_name']);
 				$tmp->putContents($_POST['pubkey']);
 				exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --import "' . $tmp->getFilename() . '"', $output, $result);
 				$tmp->delete();

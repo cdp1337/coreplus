@@ -1,6 +1,6 @@
 <?php
 /**
- * Description of File_gz_contents
+ * Description of ContentASC
  *
  * Provides useful extra functions that can be done with a GZipped file.
  *
@@ -23,15 +23,19 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class File_asc_contents implements File_Contents {
+namespace Core\Filestore\Contents;
+
+use Core\Filestore;
+
+class ContentASC implements Filestore\Contents {
 	/**
 	 * The original file object
 	 *
-	 * @var File_Backend
+	 * @var Filestore\File
 	 */
 	private $_file = null;
 
-	public function __construct(File_Backend $file) {
+	public function __construct(Filestore\File $file) {
 		$this->_file = $file;
 	}
 
@@ -69,15 +73,15 @@ class File_asc_contents implements File_Contents {
 	}
 
 	/**
-	 * Decrypt the encrypted/signed file and return a valid File_Backend object
+	 * Decrypt the encrypted/signed file and return a valid File object
 	 *
 	 * @return mixed
 	 */
 	public function decrypt($dest = false) {
 		if ($dest) {
-			if (is_a($dest, 'File') || $dest instanceof File_Backend) {
+			if (is_a($dest, 'File') || $dest instanceof Filestore\File) {
 				// Don't need to do anything! The object either is a File
-				// Or is an implmentation of the File_Backend interface.
+				// Or is an implmentation of the File interface.
 			}
 			else {
 				// Well it should be damnit!....
@@ -92,7 +96,7 @@ class File_asc_contents implements File_Contents {
 				// Drop the .asc extension if it's there.
 				if ($this->_file->getExtension() == 'asc') $file = substr($file, 0, -4);
 
-				$dest = Core::File($file);
+				$dest = Filestore\factory($file);
 			}
 
 			// And load up the contents!

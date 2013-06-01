@@ -1,3 +1,10 @@
+Core Plus 2.5.6
+
+	* [Feature] Retooled the filestore system.  It is now more self contained and has actual tests behind
+	  it
+	* [Feature] Added a new method for templates, hasWidgetAreas.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 01 Jun 2013 17:05:25 -0400
+
 Core Plus 2.5.5
 
 	* [Bug] Fixed a minor glitch when /file/preview is recording its entry in the page navigation.  This

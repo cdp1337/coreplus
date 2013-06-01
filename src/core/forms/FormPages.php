@@ -66,7 +66,7 @@ class FormPagePageSelectInput extends FormSelectInput{
 					// Skip directories
 					if($file instanceof Directory_local_backend) continue;
 
-					/** @var $file File_local_backend */
+					/** @var $file \Core\Filestore\File */
 					//$fullpath = $tmpname . $file->getBaseFilename();
 					$fullpath = $file->getBaseFilename();
 					$name = $file->getBaseFilename();
