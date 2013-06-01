@@ -206,9 +206,9 @@
 	.directory-listing .expanded > .collapsed-hint{
 		display:none;
 	}
-</style>{/css}
+	</style>{/css}
 
-{script location="foot"}<script>
+	{script location="foot"}<script>
 	$('.expanded-hint').click(function(){
 		$(this).closest('li').removeClass('expanded').addClass('collapsed');
 		return false;
@@ -217,7 +217,7 @@
 		$(this).closest('li').removeClass('collapsed').addClass('expanded');
 		return false;
 	});
-</script>{/script}
+	</script>{/script}
 
 {function name=printAssetList}
 	<ul>
@@ -239,6 +239,41 @@
 {/function}
 
 
+{function name=printTemplateList}
+	<ul>
+		{foreach $items as $key => $item}
+			<li class="collapsed">
+				{if isset($item.obj)}
+					<img src="{$item.obj->getMimetypeIconURL('48x48')}"/>
+					<span>{$key}</span>
+					{if $item.haswidgets}
+						{a class="button" href="/theme/widgets/?page=`$item.file`" title="Manage Widgets"}
+							<i class="icon-cogs"></i>
+							<span>Manage Widgets</span>
+						{/a}
+					{/if}
+					{if $item.has_stylesheets}
+						{a class="button" href="/theme/selectstylesheets/?template=skins/`$item.file`" title="Optional Stylesheets"}
+							<i class="icon-strikethrough"></i>
+							<span>Optional Stylesheets</span>
+						{/a}
+					{/if}
+					{a class="button" href="/theme/editor?template=`$item.file`" title="Edit Template"}
+						<i class="icon-pencil"></i>
+						<span>Edit Template</span>
+					{/a}
+				{else}
+					<i class="icon-folder-close collapsed-hint"></i>
+					<i class="icon-folder-open expanded-hint"></i>
+					<span>{$key}</span>
+					{call name=printTemplateList items=$item}
+				{/if}
+			</li>
+		{/foreach}
+	</ul>
+{/function}
+
+
 <br/><br/>
 <h3>Assets</h3>
 <p class="message-tutorial">
@@ -247,3 +282,16 @@
 <div class="directory-listing">
 	{call name=printAssetList items=$assets.assets}
 </div>
+
+
+{if sizeof($templates)}
+	<br/><br/>
+	<h3>Templates</h3>
+	<p class="message-tutorial">
+		Templates are pages, emails, widgets, and other views that are used throughout your site.
+	</p>
+
+	<div class="directory-listing">
+		{call name=printTemplateList items=$templates}
+	</div>
+{/if}

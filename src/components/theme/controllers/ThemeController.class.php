@@ -4,11 +4,11 @@ require_once(ROOT_PDIR . 'components/theme/functions/common.php');
 
 /**
  * The main theme administration controller.
- * 
- * This is reponsible for all administrative tasks associated with the theme. 
+ *
+ * This is reponsible for all administrative tasks associated with the theme.
  */
 class ThemeController extends Controller_2_1{
-	
+
 	public function __construct() {
 		$this->accessstring = 'g:admin';
 	}
@@ -45,14 +45,14 @@ class ThemeController extends Controller_2_1{
 			$ls = $dh->ls(null, true);
 			foreach($ls as $obj){
 				// Skip directories.
-				if(!$obj instanceof File_local_backend) continue;
+				if(!$obj instanceof \Core\Filestore\File) continue;
 
-				/** @var $obj File_local_backend */
+				/** @var $obj \Core\Filestore\File */
 				$file = 'assets/' . substr($obj->getFilename(), $dirlen);
 
 				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
 				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
-				$newobj = \Core\file($file);
+				$newobj = \Core\Filestore\factory($file);
 
 				$assets[$file] = array(
 					'file' => $file,
@@ -83,22 +83,88 @@ class ThemeController extends Controller_2_1{
 		}
 
 
+
+		// Get the templates throughout the site.  These can include pages, emails, form elements, etc.
+		$components = Core::GetComponents();
+		$templates = array();
+
+		foreach($components as $c) {
+			/** @var $c Component_2_1 */
+			$dir = $c->getViewSearchDir();
+			if(!$dir) continue;
+
+			$dirlen = strlen($dir);
+			$component = $c->getName();
+
+			$dh = new Directory_local_backend($dir);
+			//$pagetplfiles = $dh->ls('tpl', true);
+			$pagetplfiles = $dh->ls(null, true);
+
+			// not sure why getFilename(path) isn't working as expected, but this works too.
+			foreach($pagetplfiles as $obj){
+
+				// I don't want directories.
+				if($obj instanceof Directory_local_backend) continue;
+
+				/** @var $obj \Core\Filestore\File */
+				$file = substr($obj->getFilename(), $dirlen);
+
+				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
+				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
+				$tpl = Core\Templates\Template::Factory($file);
+				$resolved = Core\Templates\Template::ResolveFile($file);
+
+				$newobj = \Core\Filestore\factory($resolved);
+
+				$templates[$file] = array(
+					'file' => $file,
+					'resolved' => $resolved,
+					'obj' => $newobj,
+					'haswidgets' => $tpl->hasWidgetAreas(),
+					'component' => $component,
+					'has_stylesheets' => $tpl->hasOptionalStylesheets()
+				);
+			}
+		}
+
+		// Now that the template files have been loaded into a flat array, I need to convert that to the properly nested version.
+		ksort($templates);
+		$nestedtemplates = array();
+		foreach($templates as $k => $obj){
+			$parts = explode('/', $k);
+			$lastkey = sizeof($parts) - 1;
+			$thistarget =& $nestedtemplates;
+			foreach($parts as $i => $bit){
+				if($i == $lastkey){
+					$thistarget[$bit] = $obj;
+				}
+				else{
+					if(!isset($thistarget[$bit])){
+						$thistarget[$bit] = [];
+					}
+					$thistarget =& $thistarget[$bit];
+				}
+			}
+		}
+
+
 		$view->title = 'Theme Manager';
 		$view->assign('themes', $themes);
 		$view->assign('current', $current);
 		$view->assign('assets', $nestedassets);
+		$view->assign('templates', $nestedtemplates);
 	}
-	
+
 	/**
 	 * View to display a list of currently installed themes, their templates, and be able to manage
 	 * their templates and set them as default.
-	 * 
+	 *
 	 * @todo Implement an Add/Upload Theme link on this page.
 	 */
 	public function index2(){
 		$view = $this->getView();
 		$default = ConfigHandler::Get('/theme/selected');
-		
+
 		$themes = array();
 		$dir = ROOT_PDIR . 'themes';
 		$dh = opendir($dir);
@@ -136,13 +202,13 @@ class ThemeController extends Controller_2_1{
 
 			// not sure why getFilename(path) isn't working as expected, but this works too.
 			foreach($pagetplfiles as $obj){
-				/** @var $obj File_local_backend */
+				/** @var $obj \Core\Filestore\File */
 				$file = substr($obj->getFilename(), $dirlen);
 
 				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
 				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
 				$resolved = Core\Templates\Template::ResolveFile($file);
-				$newobj = new File_local_backend($resolved);
+				$newobj = \Core\Filestore\factory($resolved);
 
 				// Check the contents of the file and see if there is a {widgetarea...} here.
 				$contents = $newobj->getContents();
@@ -176,12 +242,12 @@ class ThemeController extends Controller_2_1{
 		$dh = new Directory_local_backend($dir);
 		$cssls = $dh->ls('css', true);
 		foreach($cssls as $obj){
-			/** @var $obj File_local_backend */
+			/** @var $obj \Core\Filestore\Backends\FileLocal */
 			$file = 'assets' . substr($obj->getFilename(), $dirlen);
 
 			// Since this is a template, it may actually be in a different location than where the package maintainer put it.
 			// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
-			$newobj = \Core\file($file);
+			$newobj = \Core\Filestore\factory($file);
 
 			$cssfiles[$file] = array(
 				'file' => $file,
@@ -204,12 +270,12 @@ class ThemeController extends Controller_2_1{
 
 			// not sure why getFilename(path) isn't working as expected, but this works too.
 			foreach($cssls as $obj){
-				/** @var $obj File_local_backend */
+				/** @var $obj \Core\Filestore\Backends\FileLocal */
 				$file = 'assets' . substr($obj->getFilename(), $dirlen);
 
 				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
 				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
-				$newobj = \Core\file($file);
+				$newobj = \Core\Filestore\factory($file);
 
 				$cssfiles[$file] = array(
 					'file' => $file,
@@ -225,14 +291,14 @@ class ThemeController extends Controller_2_1{
 		$view->assign('themes', $themes);
 		$view->title = 'Theme Manager';
 	}
-	
+
 	/**
 	 * Set a requested theme and template as default for the site.
 	 */
 	public function setdefault(){
 		$request = $this->getPageRequest();
 		$view = $this->getView();
-		
+
 		$themename = $this->getPageRequest()->getParameter(0);
 		$template = $this->getPageRequest()->getParameter('template');
 
@@ -290,11 +356,11 @@ class ThemeController extends Controller_2_1{
 			}
 			ConfigHandler::Set('/theme/default_template', $template);
 			ConfigHandler::Set('/theme/selected', $themename);
-			
+
 			Core::SetMessage('Updated default theme', 'success');
 			Core::GoBack();
 		}
-		
+
 		$view->assign('theme', $themename);
 		$view->assign('template', $template);
 	}
@@ -402,7 +468,7 @@ class ThemeController extends Controller_2_1{
 			return View::ERROR_BADREQUEST;
 		}
 	}
-	
+
 	public function widgets(){
 		$view = $this->getView();
 		$request = $this->getPageRequest();
@@ -434,14 +500,14 @@ class ThemeController extends Controller_2_1{
 			$t = null;
 		}
 
-		
+
 		if($request->isPost()){
 
 			$counter = 0;
 			$changes = ['created' => 0, 'updated' => 0, 'deleted' => 0];
 
 			foreach($_POST['widgetarea'] as $id => $dat){
-				
+
 				// Merge in the global information for this request
 				if($template){
 					$dat['theme'] = $t;
@@ -451,8 +517,8 @@ class ThemeController extends Controller_2_1{
 					$dat['page'] = $page;
 				}
 				$dat['weight'] = ++$counter;
-                $dat['access'] = $dat['widgetaccess'];
-				
+				$dat['access'] = $dat['widgetaccess'];
+
 				if(strpos($id, 'new') !== false){
 					$w = new WidgetInstanceModel();
 					$w->setFromArray($dat);
@@ -494,7 +560,7 @@ class ThemeController extends Controller_2_1{
 
 			Core::Reload();
 		} // if($this->getPageRequest()->isPost())
-		
+
 		// Get a list of the widgetareas on the theme.
 		// These are going to be {widgetarea} tags.
 		// @todo It might make sense to move this into Theme class at some point.
@@ -518,7 +584,7 @@ class ThemeController extends Controller_2_1{
 				$baseurl = substr($baseurl, 0, strrpos($baseurl, '/'));
 			}
 		}
-		
+
 		// These are all the available widgets on the site otherwise.
 		$widgetfactory = new ModelFactory('WidgetModel');
 		$widgetfactory->order('title');
@@ -543,7 +609,7 @@ class ThemeController extends Controller_2_1{
 		}
 
 		$widgets = $widgetfactory->get();
-		
+
 		// This is a lookup of widget titles to URL, since the title is derived from the widget's controller and
 		// saved in the widget table separate from the instances.
 		$widgetnames = array();
@@ -572,12 +638,12 @@ class ThemeController extends Controller_2_1{
 					'access' => $wi->get('access')
 				);
 			}
-			
+
 			$areas[] = array('name' => $v, 'instances' => $instancewidgets);
 		}
-		
-		
-		
+
+
+
 		$view->assign('widget_areas', $areas);
 		$view->assign('widgets', $widgets);
 		$view->assign('theme', $t);
@@ -591,17 +657,17 @@ class ThemeController extends Controller_2_1{
 
 		//$view->addBreadcrumb($view->title);
 	}
-	
+
 	public function widgets_Add(){
 		$view = $this->getView();
-				
+
 		$widgets = array();
 		foreach(ComponentHandler::GetLoadedWidgets() as $w){
 			$widgets[] = $w;
 		}
-		
+
 		$view->assign('widget_classes', $widgets);
-		
+
 		if($view->request['method'] == View::METHOD_POST){
 			$w = $_POST['widgetclass'];
 			if(!$w){
@@ -612,15 +678,15 @@ class ThemeController extends Controller_2_1{
 				Core::SetMessage('Invalid widget requested', 'error');
 				return;
 			}
-			
+
 			$title = $_POST['title'] ? $_POST['title'] : 'New ' . $w;
-			
+
 			// Save this widget into the database.
 			$m = new WidgetModel();
 			$m->set('class', $w);
 			$m->set('title', $title);
 			$m->save();
-			
+
 			if($w::MustBeInstanced()){
 				// This widget requires additional settings in order for it to be instantiated.
 				// Redirect to the edit page.
@@ -686,7 +752,7 @@ class ThemeController extends Controller_2_1{
 		}
 
 
-		$fh = new File_local_backend($filename);
+		$fh = \Core\Filestore\factory($filename);
 		$customdest = \Core\directory('themes/custom');
 		if(!$customdest->isWritable()){
 			Core::SetMessage('Directory themes/custom is not writable!  Inline file editing disabled.', 'error');
@@ -865,9 +931,9 @@ class ThemeController extends Controller_2_1{
 			Core::Redirect('/theme');
 		}
 	}
-	
+
 	public static function Widgets_Save(View $view){
-	var_dump(CurrentPage::Singleton());
+		var_dump(CurrentPage::Singleton());
 		var_dump($view); die();
 	}
 
@@ -890,13 +956,13 @@ class ThemeController extends Controller_2_1{
 				return false;
 		}
 
-		$customfh = \Core\file($customfilename);
+		$customfh = \Core\Filestore\factory($customfilename);
 		if($customfh->exists()){
 			// If the custom one exists... this will be the source file too!
 			$sourcefh = $customfh;
 		}
 		else{
-			$sourcefh = new File_local_backend($filename);
+			$sourcefh = \Core\Filestore\factory($filename);
 		}
 
 
@@ -937,14 +1003,14 @@ class ThemeController extends Controller_2_1{
 				break;
 			case 'template':
 				// This gets written into the current theme directory.
-				$themefh = new File_local_backend(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $file);
+				$themefh = \Core\Filestore\factory(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $file);
 				$themefh->putContents($newmodel->get('content'));
 				$hash = $themefh->getHash();
 				break;
 			case 'style':
 			case 'file':
 				// This gets written into the current theme directory.
-				$themefh = new File_local_backend(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $file);
+				$themefh = \Core\Filestore\factory(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $file);
 				$themefh->putContents($newmodel->get('content'));
 				$hash = $themefh->getHash();
 

@@ -1,3 +1,8 @@
+Theme 2.1.1
+
+	* Updated theme to work on Core 2.5.6
+	-- Charlie Powell <charlie@eval.bz>  Sat, 01 Jun 2013 17:15:11 -0400
+
 Theme 2.1.0
 
 	* [Feature] Rewrote the theme management UI.  It should now be much more user friendly.

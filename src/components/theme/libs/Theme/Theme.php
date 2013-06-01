@@ -684,12 +684,7 @@ class Theme{
 	 * @throws \InstallerException
 	 */
 	private function _installAssets(){
-		if(CDN_TYPE == 'local'){
-			$assetbase = ROOT_PDIR . CDN_LOCAL_ASSETDIR;
-		}
-		else{
-			die('Unsupported CDN type [' . CDN_TYPE . ']');
-		}
+		$assetbase = \Core\Filestore\get_asset_path();
 
 		$coretheme = \ConfigHandler::Get('/theme/selected');
 		// WHY is core theme set to blank?!?
@@ -708,41 +703,48 @@ class Theme{
 			// The base filename with the directory.
 			$filename = $node->getAttribute('filename');
 
-
 			// The new theme asset will be installed into the same directory as its theme.
 			// This differs from usual components because they just follow whatever theme is currently running.
 			//$nf = Core::File($assetbase . $theme . '/' . $filename);
-			$newfilename = 'assets/' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
+			$trimmedfilename = substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
+			$themespecificfilename = $assetbase . $theme . '/' . $trimmedfilename;
+			$newfilename = 'assets/' . $trimmedfilename;
 
 
 			// Before anything, check and see if this file has a custom override file present.
 			if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
 				// If so, then copy that asset to the custom directory too!
-				$f = \Core\file(ROOT_PDIR . 'themes/custom/' . $newfilename);
+				$f = \Core\Filestore\factory(ROOT_PDIR . 'themes/custom/' . $newfilename);
 			}
 			else{
 				// Otherwise, the local file is guaranteed to be a local file.
-				$f = new \File_local_backend($b . $filename);
+				$f = new \Core\Filestore\Backends\FileLocal($b . $filename);
 			}
 
-			$nf = \Core::File($newfilename);
+			$nf = \Core\Filestore\factory($newfilename);
 
+			// The various replacement possibilities for this file.
 			// The new destination must be in the theme-specific directory, this is a
 			// bit of a hack from the usual behaviour of the filestore system.
 			// Since that's designed to return the default if the theme-specific doesn't exist.
-			if($theme != 'default' && strpos($nf->getFilename(), $assetbase . 'default') === 0){
+			$replacements = array(
 				// The theme is not default, but the system translated the path to the default directory.
 				// This is because the file doesn't exist in any theme.
 				// This is actually expected behaviour, except unwanted here.
-				$nf->setFilename(str_replace($assetbase . 'default', $assetbase . $theme, $nf->getFilename()));
-			}
-			elseif($theme != $coretheme && strpos($nf->getFilename(), $assetbase . $coretheme) === 0){
+				'default/' . $trimmedfilename => $theme . '/' . $trimmedfilename,
 				// The theme is not the currently installed, but the system translated the path to the that directory.
 				// This is because the filename is the same as the installed theme, so the system just translated there.
 				// We don't want that.
-				$nf->setFilename(str_replace($assetbase . $coretheme, $assetbase . $theme, $nf->getFilename()));
+				$coretheme . '/' . $trimmedfilename => $theme . '/' . $trimmedfilename,
+			);
+
+
+			foreach($replacements as $k => $v){
+				if($k == $v) continue;
+				if(strpos($nf->getFilename(), $k) !== false){
+					$nf->setFilename( str_replace($k, $v, $nf->getFilename()) );
+				}
 			}
-			// No else required.
 			
 			// Check if this file even needs updated. (this is primarily used for reporting reasons)
 			if($nf->exists() && $nf->identicalTo($f)){
