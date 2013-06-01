@@ -135,8 +135,12 @@ nav#breadcrumbs {
 	color: #555;
 	padding-bottom: 0.5em;
 	border-bottom: 1px solid #888;
-	height: 10px;
 }
+
+#breadcrumbs #controls {
+	margin:0;
+}
+
 nav#breadcrumbs a {
 	color: #555;
 }
@@ -618,10 +622,11 @@ fieldset .formdescription {
 	top: 0;
 }
 .formelement.formtextareainput .formelement-labelinputgroup textarea {
-	padding:0.35em 0.8em;
-	min-width: 400px;
+	padding:4%;
+	width: 92%;
 	min-height: 80px;
 	border: 0px none;
+	background:#f6f6f6;
 }
 
 /* File input specific styles */
