@@ -1,3 +1,8 @@
+jQuery-File-Upload 8.1.0~core2
+
+	* Updated jquery-file-upload to work with Core 2.5.6
+	-- Charlie Powell <charlie@eval.bz>  Sat, 01 Jun 2013 17:13:30 -0400
+
 jQuery-File-Upload 8.1.0~core1
 
 	* [Bug] Fixed some bugs from 7 in the controller.

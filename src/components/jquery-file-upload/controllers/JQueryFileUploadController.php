@@ -155,9 +155,9 @@ class JQueryFileUploadController extends Controller_2_1 {
 		// Is the file upload complete?
 		if($file['size'] == $finalsize){
 			// Source
-			$f = new File_local_backend($tmpfile);
+			$f = \Core\Filestore\factory($tmpfile);
 			// Destination
-			$nf = Core::File($this->_formelement->get('basedir') . $file['name']);
+			$nf = \Core\Filestore\factory($this->_formelement->get('basedir') . $file['name']);
 			$file['type'] = $f->getMimetype();
 
 			// do NOT copy the contents over until the accept check has been ran!
@@ -208,9 +208,9 @@ class JQueryFileUploadController extends Controller_2_1 {
 			// $_FILES is a multi-dimensional array:
 			foreach ($upload['tmp_name'] as $index => $value) {
 				// Source
-				$f = new File_local_backend($upload['tmp_name'][$index]);
+				$f = \Core\Filestore\factory($upload['tmp_name'][$index]);
 				// Destination
-				$nf = Core::File($this->_formelement->get('basedir') . '/' . $upload['name'][$index]);
+				$nf = \Core\Filestore\factory($this->_formelement->get('basedir') . '/' . $upload['name'][$index]);
 
 				// This is the object that is returned in the json array.
 				// It needs to contain something.
