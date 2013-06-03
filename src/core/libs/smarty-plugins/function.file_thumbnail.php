@@ -43,8 +43,8 @@ function smarty_function_file_thumbnail($params, $template){
 	unset($params['file']);
 	
 	// $file should be a File...
-	if(!$file instanceof File_Backend){
-		throw new SmartyException('Invalid parameter [file] for file_thumbnail, must be a File_Backend!');
+	if(!$file instanceof \Core\Filestore\File){
+		throw new SmartyException('Invalid parameter [file] for file_thumbnail, must be a \Core\Filestore\File!');
 	}
 	
 	if(isset($params['assign'])){

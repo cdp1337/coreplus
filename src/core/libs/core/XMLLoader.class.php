@@ -47,7 +47,7 @@ class XMLLoader implements Serializable {
 	 * The file object of this XML Loader.
 	 * This is an option parameter for advanced usage, (ie: loading an XML file from a remote server).
 	 *
-	 * @var File_Backend
+	 * @var \Core\Filestore\File
 	 */
 	protected $_file;
 
@@ -173,11 +173,11 @@ class XMLLoader implements Serializable {
 	/**
 	 * Load the document from a valid File object or a filename.
 	 *
-	 * @param File_Backend|string $file
+	 * @param \Core\Filestore\File|string $file
 	 * @return bool
 	 */
 	public function loadFromFile($file) {
-		if (is_a($file, 'File_Backend')) {
+		if (is_a($file, '\\Core\\Filestore\\File')) {
 			$this->_file = $file;
 		}
 		else {

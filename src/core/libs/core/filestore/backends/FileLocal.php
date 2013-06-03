@@ -139,6 +139,15 @@ class FileLocal implements Filestore\File {
 		$filename = preg_replace(':/+:', '/', $filename);
 
 		$this->_filename = $filename;
+
+		// Resolve if this is an asset, public, etc.
+		// This is to speed up the other functions so they don't have to perform this operation.
+		if(strpos($this->_filename, Filestore\get_asset_path()) === 0){
+			$this->_type = 'asset';
+		}
+		elseif(strpos($this->_filename, Filestore\get_public_path()) === 0){
+			$this->_type = 'public';
+		}
 	}
 
 	/**
@@ -476,7 +485,7 @@ class FileLocal implements Filestore\File {
 			header('Content-Type: image/png');
 			header('Content-Length: ' . $preview->getFilesize());
 			header('X-Alternate-Location: ' . $preview->getURL());
-			header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? Core::GetComponent()->getVersion() : ''));
+			header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
 		}
 		echo $preview->getContents();
 		return;

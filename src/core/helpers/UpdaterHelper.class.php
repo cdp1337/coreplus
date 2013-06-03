@@ -637,7 +637,7 @@ class UpdaterHelper {
 				// Decrypt the signed file.
 				if($verbose) self::_PrintInfo('Decrypting signed file', $timer);
 
-				/** @var $localfile File_Backend */
+				/** @var $localfile \Core\Filestore\File */
 				$localfile = $obj->decrypt('tmp/updater/');
 				/** @var $localobj File_tgz_contents */
 				$localobj = $localfile->getContentsObject();

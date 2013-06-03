@@ -5,7 +5,7 @@ The {img} smarty function is the recommended way to load images in templates fro
 ## Parameters
 
 * file
-	* File_Backend
+	* \Core\Filestore\File
 	* File object passed in to display
 	* Either "file" or "src" is required.
 

@@ -100,7 +100,7 @@ class Component_2_1 {
 	private $_execMode = 'WEB';
 
 	/**
-	 * @var File_Backend
+	 * @var \Core\Filestore\File
 	 */
 	private $_file;
 

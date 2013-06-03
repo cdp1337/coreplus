@@ -67,9 +67,11 @@ class FileFTP implements Filestore\File{
 	 */
 	protected $_ftp;
 
+	protected $_prefix;
 	protected $_filename;
 
 	protected $_tmplocal;
+
 
 	/**
 	 * Set to true if this FTP connection is the proxy for local files.
@@ -168,7 +170,9 @@ class FileFTP implements Filestore\File{
 			return $this->_getTmpLocal()->getFilename($prefix);
 		}
 		else{
-			return $this->_filename;
+			$full = $this->_prefix . $this->_filename;
+
+			return $full;
 		}
 	}
 
@@ -244,7 +248,34 @@ class FileFTP implements Filestore\File{
 	 * @return string The encoded string
 	 */
 	public function getFilenameHash() {
-		// TODO: Implement getFilenameHash() method.
+		$full = $this->getFilename();
+
+		if ($this->_type == 'asset'){
+			$base = 'assets/';
+			$filename = substr($full, strlen(Filestore\get_asset_path()));
+			// If the filename starts with the current theme, (which it very well may),
+			// trim that off too.
+			// this script is meant to be a generic resource handle that gets resolved by the receiving script.
+			if(strpos($filename, \ConfigHandler::Get('/theme/selected') . '/') === 0){
+				$filename = substr($filename, strlen(\ConfigHandler::Get('/theme/selected')) + 1);
+			}
+			// And now I can add the base onto it.
+			$filename = $base . $filename;
+		}
+		elseif ($this->_type == 'public'){
+			$filename = 'public/' . substr($full, strlen(Filestore\get_public_path() ));
+		}
+		elseif ($this->_type == 'private'){
+			$filename = 'private/' . substr($full, strlen(Filestore\get_private_path() ));
+		}
+		elseif ($this->_type == 'tmp'){
+			$filename = 'tmp/' . substr($full, strlen(Filestore\get_tmp_path() ));
+		}
+		else{
+			$filename = $full;
+		}
+
+		return 'base64:' . base64_encode($filename);
 	}
 
 	/**
@@ -304,7 +335,7 @@ class FileFTP implements Filestore\File{
 	 * @param boolean    $includeHeader Include the correct mimetype header or no.
 	 */
 	public function displayPreview($dimensions = "300x300", $includeHeader = true) {
-		// TODO: Implement displayPreview() method.
+		return $this->_getTmpLocal()->displayPreview($dimensions, $includeHeader);
 	}
 
 	/**
@@ -329,7 +360,7 @@ class FileFTP implements Filestore\File{
 	 * @return Filestore\File
 	 */
 	public function getQuickPreviewFile($dimensions = '300x300') {
-		// TODO: Implement getQuickPreviewFile() method.
+		return $this->_getTmpLocal()->getQuickPreviewFile($dimensions);
 	}
 
 	/**
@@ -340,7 +371,7 @@ class FileFTP implements Filestore\File{
 	 * @return Filestore\File
 	 */
 	public function getPreviewFile($dimensions = '300x300') {
-		// TODO: Implement getPreviewFile() method.
+		return $this->_getTmpLocal()->getPreviewFile($dimensions);
 	}
 
 	/**
@@ -538,13 +569,28 @@ class FileFTP implements Filestore\File{
 		if(strpos($filename, ROOT_PDIR) === 0){
 			// If the file starts with the PDIR... trim that off!
 			$filename = substr($filename, strlen(ROOT_PDIR));
+			$prefix = ROOT_PDIR;
 		}
 		elseif(strpos($filename, $cwd) === 0){
 			// If the file already starts with the CWD... trim that off!
 			$filename = substr($filename, strlen($cwd));
+			$prefix = $cwd;
+		}
+		else{
+			$prefix = $cwd;
+		}
+
+		// Resolve if this is an asset, public, etc.
+		// This is to speed up the other functions so they don't have to perform this operation.
+		if(strpos($prefix . $filename, Filestore\get_asset_path()) === 0){
+			$this->_type = 'asset';
+		}
+		elseif(strpos($prefix . $filename, Filestore\get_public_path()) === 0){
+			$this->_type = 'public';
 		}
 
 		$this->_filename = $filename;
+		$this->_prefix = $prefix;
 		// Clear the local cache too
 		$this->_tmplocal = null;
 	}

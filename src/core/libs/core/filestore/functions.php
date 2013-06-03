@@ -376,16 +376,13 @@ function resolve_asset_file($filename){
 
 	if($custom->exists()){
 		// If there is a custom asset installed, USE THAT FIRST!
-		$custom->_type = File::TYPE_ASSET;
 		return $custom;
 	}
 	elseif($themed->exists()){
 		// Otherwise, the themes can override component assets too.
-		$themed->_type = File::TYPE_ASSET;
 		return $themed;
 	}
 	else{
-		$default->_type = File::TYPE_ASSET;
 		return $default;
 	}
 }

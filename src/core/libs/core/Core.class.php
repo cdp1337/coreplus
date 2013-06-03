@@ -619,7 +619,7 @@ class Core implements ISingleton {
 	 *
 	 * @param string $filename
 	 *
-	 * @return File_Backend
+	 * @return \Core\Filestore\File
 	 */
 	public static function File($filename = null) {
 		return \Core\Filestore\factory($filename);

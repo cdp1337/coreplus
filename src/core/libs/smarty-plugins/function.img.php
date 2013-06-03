@@ -33,8 +33,8 @@ function smarty_function_img($params, $template){
 
 	if(isset($params['file'])){
 		$f = $params['file'];
-		if(!$f instanceof File_Backend){
-			throw new SmartyException('{img} tag expects a File object for the "file" parameter.');
+		if(!$f instanceof \Core\Filestore\File){
+			throw new SmartyException('{img} tag expects a \Core\Filestore\File object for the "file" parameter.');
 		}
 		unset($params['file']);
 	}

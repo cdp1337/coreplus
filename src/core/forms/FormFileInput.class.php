@@ -102,7 +102,7 @@ class FormFileInput extends FormElement {
 	 * Get the respective File object for this element.
 	 * Use the Core system to ensure compatibility with CDNs.
 	 *
-	 * @return File_Backend
+	 * @return \Core\Filestore\File
 	 */
 	public function getFile() {
 		if ($this->get('value')) {
