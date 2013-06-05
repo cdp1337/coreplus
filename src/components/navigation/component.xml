@@ -33,7 +33,7 @@
 		<file filename="templates/widgets/navigation/view.tpl" md5="629c5fcb1cd7f3ecddff0451bc1eee7a"/>
 	</view>
 	<pages>
-		<page baseurl="/Navigation" admin="1" access="" title="Navigation Listings"/>
+		<page baseurl="/Navigation" admin="1" access="" title="Navigation Listings" group="Theme and Layouts"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/navigation/siblings" title="Page Siblings Nav"/>

@@ -131,6 +131,7 @@ class GalleryController extends Controller_2_1 {
 
 
 		$view->templatename = '/pages/gallery/update.tpl';
+		$view->mastertemplate = 'admin';
 		$view->title = 'New Gallery Album';
 		$view->assignVariable('model', $m);
 		$view->assignVariable('form', $form);

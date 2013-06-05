@@ -3,12 +3,14 @@
 
 
 <form action="" method="POST">
+	<input type="submit" value="Save Order"/>
+
 	<ul id="gallery-images-sorting">
 		{foreach from=$images item=i}
 			<li>
 				<input type="hidden" name="images[]" value="{$i.id}"/>
 				{img file=$i->getFile() width="100" height="50" title="`$i.title`"}
-				<span>{$i.title}</span>
+				<span>({$i.previewsize}) {$i.title}</span>
 			</li>
 		{/foreach}
 	</ul>

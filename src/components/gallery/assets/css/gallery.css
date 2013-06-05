@@ -45,18 +45,26 @@
 	margin-bottom: 9px;
 }
 
+
+#gallery-images .gallery-image-wrapper-xs {
+	width: 44px;
+}
 #gallery-images .gallery-image-wrapper-sm {
-	width: 200px;
+	width: 94px;
 }
 #gallery-images .gallery-image-wrapper-med {
-	width: 408px;
+	width: 194px;
 }
 #gallery-images .gallery-image-wrapper-lg {
-	width: 824px;
+	width: 394px;
+}
+#gallery-images .gallery-image-wrapper-xl {
+	width: 794px;
 }
 
 #gallery-images .gallery-image-wrapper .gallery-image-title {
 	color: #666;
+	overflow: hidden;
 }
 
 #gallery-images .gallery-image-wrapper .gallery-admin-image-utils {
@@ -67,8 +75,14 @@
 	left: 20px;
 	padding-top: 5px;
 	top: 0;
+	text-align: left;
 }
 
+#gallery-images .gallery-image-wrapper .controls-hover-wrapper {
+	position: absolute !important; /* Important is required to override the usual behaviour of hover controls. */
+	top: 0;
+	min-width: 100px;
+}
 #gallery-images .gallery-image-wrapper.hover .gallery-admin-image-utils {
 	display: block;
 }

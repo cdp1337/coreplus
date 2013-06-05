@@ -69,7 +69,7 @@ abstract class Updater {
 
 		foreach($databases as $db){
 			if(!$quiet) echo 'Retrieving ' . $db['title'] . '...';
-			$src = \Core\file($db['source']);
+			$src = \Core\Filestore\Factory::File($db['source']);
 			$src->copyTo('tmp/geographic-codes/' . $db['dest']);
 		}
 	}

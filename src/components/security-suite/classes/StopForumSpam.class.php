@@ -21,7 +21,7 @@ class StopForumSpam {
 		//$remotefile = new File_remote_backend(StopForumSpam::URL_DAILY);
 		$remotefile = StopForumSpam::URL_DAILY;
 		// TESTING
-		//$remotefile = new File_local_backend(ROOT_PDIR . 'components/security-suite/listed_ip_1_all.zip');
+		//$remotefile = \Core\Filestore\Factory::File(ROOT_PDIR . 'components/security-suite/listed_ip_1_all.zip');
 		//$remotefile = ROOT_PDIR . 'components/security-suite/listed_ip_1_all.zip'
 
 		return self::ImportList($remotefile);
@@ -33,7 +33,7 @@ class StopForumSpam {
 		// "5.144.176.232","7","2012-12-11 00:08:10"
 		// IP, number of submissions, date
 
-		$remotefile = \Core\file($filename);
+		$remotefile = \Core\Filestore\Factory::File($filename);
 
 		// Does it exist?
 		if(!$remotefile->exists()){
@@ -44,15 +44,15 @@ class StopForumSpam {
 		$contents = $remotefile->getContentsObject();
 
 		// Make sure it's a zip file.  If it's not, then we'll have problems.
-		if(!$contents instanceof File_zip_contents){
+		if(!$contents instanceof \Core\Filestore\Contents\ContentZIP){
 			echo 'File ' . $remotefile->getFilename() . ' does not appear to be a zip file, aborting extraction!';
 			return false;
 		}
 
 		$dest = 'tmp/sfs-blacklist/';
-		/** @var $extracted Directory_local_backend */
+		/** @var $extracted \Core\Filestore\Directory */
 		$extracted = $contents->extract($dest);
-		/** @var $file File_local_backend */
+		/** @var $file \Core\Filestore\File */
 		$file = $extracted->get('listed_ip_1_all.txt');
 
 		// Do this line by line instead of reading the entire contents into memory.

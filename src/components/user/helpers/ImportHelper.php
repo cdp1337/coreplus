@@ -84,8 +84,8 @@ abstract class ImportHelper {
 	 */
 	public static function FormHandler2(\Form $form) {
 		$filename = $_SESSION['user-import']['file'];
-		$file = \Core\file($filename);
-		/** @var $contents \File_csv_contents */
+		$file = \Core\Filestore\Factory::File($filename);
+		/** @var $contents \Core\Filestore\Contents\ContentCSV */
 		$contents = $file->getContentsObject();
 
 		// If the user checked that it has a header... do that.

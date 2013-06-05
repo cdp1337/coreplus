@@ -28,7 +28,7 @@
 <div class="gallery-{$image->getFileType()}-details">
 	{* To change the size the "large" version opens at, simply change the resolution here. *}
 	{a href="`$image->getFile()->getPreviewURL('1020x800')`" class="lightbox"}
-		{img file=$image->getFile() width="620" height="700" title="`$image.title`"}
+		{img file=$image->getFile() width="760" height="760" title="`$image.title`"}
 	{/a}
 
 	<div class="gallery-image-detailspaneouter">

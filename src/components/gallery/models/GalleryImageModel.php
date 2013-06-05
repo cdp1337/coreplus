@@ -81,8 +81,8 @@ class GalleryImageModel extends Model {
 		),
 		'previewsize' => array(
 			'type' => Model::ATT_TYPE_ENUM,
-			'options' => array('sm', 'med', 'lg'),
-			'default' => 'sm',
+			'options' => array('xs', 'sm', 'med', 'lg', 'xl'),
+			'default' => 'med',
 		),
 		'keywords' => array(
 			'type' => Model::ATT_TYPE_TEXT,
@@ -118,7 +118,7 @@ class GalleryImageModel extends Model {
 	/**
 	 * Cache of the file object, so consecutive calls to getFile will not re-request the entire file.
 	 *
-	 * @var null|File_Backend
+	 * @var null|\Core\Filestore\File
 	 */
 	private $_file = null;
 
@@ -183,7 +183,7 @@ class GalleryImageModel extends Model {
 	 * This has an interesting function; it will return the original filename or the rotated version.
 	 * This rotated version is stored in a different directory to prevent name conflicts.
 	 *
-	 * @return File_Backend
+	 * @return \Core\Filestore\File
 	 */
 	public function getFile(){
 		if($this->_file !== null) return $this->_file;
@@ -198,11 +198,18 @@ class GalleryImageModel extends Model {
 			$base = substr($filename, 0, 0 -strlen($ext));
 			$rotatedfilename = $base . '-deg' . $this->get('rotation') . $ext;
 
-			// Since rotated files are all temporary...
-			$tmpfile = Core::File('tmp/galleryalbum/' . $rotatedfilename);
+			// Since rotated files are all temporary, (but need to be publicly visible)...
+			$tmpfile = \Core\Filestore\Factory::File('public/tmp/galleryalbum/' . $rotatedfilename);
 
-			if(!$tmpfile->exists()){
-				$tmpfile->putContents('');
+			if(!($tmpfile->exists() && $tmpfile->getFilesize() > 0)){
+
+				// I need physical write access, /tmp provides that!
+				$tmptmp = \Core\Filestore\Factory::File('tmp/galleryalbum/' . $rotatedfilename);
+
+				// Write a small amount of data to the file so the subsystem will create the directories and everything.
+				// Otherwise, if /tmp/galleryalbum doesn't exist, the image operations won't be able to write to it.
+				$tmptmp->putContents('');
+
 				// Rotate it!
 				$originallocal = $this->getOriginalFile()->getLocalFilename();
 
@@ -211,17 +218,23 @@ class GalleryImageModel extends Model {
 					case '.jpeg':
 						$imagedat   = imagecreatefromjpeg($originallocal);
 						$rotateddat = imagerotate($imagedat, $this->get('rotation'), 0);
-						imagejpeg($rotateddat, $tmpfile->getFilename());
+						imagejpeg($rotateddat, $tmptmp->getFilename());
+						$tmptmp->copyTo($tmpfile, true);
+						$tmptmp->delete();
 						break;
 					case '.png':
 						$imagedat   = imagecreatefrompng($originallocal);
 						$rotateddat = imagerotate($imagedat, $this->get('rotation'), 0);
-						imagepng($rotateddat, $tmpfile->getFilename());
+						imagepng($rotateddat, $tmptmp->getFilename());
+						$tmptmp->copyTo($tmpfile, true);
+						$tmptmp->delete();
 						break;
 					case '.gif':
 						$imagedat   = imagecreatefromgif($originallocal);
 						$rotateddat = imagerotate($imagedat, $this->get('rotation'), 0);
-						imagegif($rotateddat, $tmpfile->getFilename());
+						imagegif($rotateddat, $tmptmp->getFilename());
+						$tmptmp->copyTo($tmpfile, true);
+						$tmptmp->delete();
 						break;
 					default:
 						return $this->getOriginalFile();
@@ -239,7 +252,7 @@ class GalleryImageModel extends Model {
 	 *
 	 * This is critical because the getFile may return the *rotated* image!
 	 *
-	 * @return File_Backend
+	 * @return \Core\Filestore\File
 	 */
 	public function getOriginalFile(){
 		return Core::File('public/galleryalbum/' . $this->get('file'));

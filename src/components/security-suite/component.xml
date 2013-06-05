@@ -12,8 +12,8 @@
 		<hook name="/cron/daily" call="StopForumSpam::HookDaily"/>
 	</hooks>
 	<pages>
-		<page access="p:/security/viewlog" admin="1" baseurl="/security/log" title="Security Log"/>
-		<page access="g:admin" admin="1" baseurl="/security/blacklistip" title="Blacklisted IP addresses"/>
+		<page access="p:/security/viewlog" admin="1" baseurl="/security/log" title="Security Log" group="Security"/>
+		<page access="g:admin" admin="1" baseurl="/security/blacklistip" title="Blacklisted IP addresses" group="Security"/>
 	</pages>
 	<permissions>
 		<permission key="/security/viewlog" description="View Security Log"/>

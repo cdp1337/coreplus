@@ -173,10 +173,10 @@ class WhoisResult {
 	public function getCountryIcon($dimensions = '20x20'){
 		$c = $this->getCountry();
 		if(!$c){
-			$f = \Core\file('assets/images/placeholders/generic.png');
+			$f = \Core\Filestore\Factory::File('assets/images/placeholders/generic.png');
 		}
 		else{
-			$f = \Core\file('assets/images/iso-country-flags/png-country-4x3/res-640x480/' . strtolower($c) . '.png');
+			$f = \Core\Filestore\Factory::File('assets/images/iso-country-flags/png-country-4x3/res-640x480/' . strtolower($c) . '.png');
 		}
 
 		return $f->getPreviewURL($dimensions);

@@ -28,14 +28,18 @@
 	{foreach from=$images item=i}
 
 		{* Calculate the image size based on sm/med/lg *}
-		{if $i.previewsize == 'sm'}
-			{assign var="dimensions" value="200x200"}
+		{if $i.previewsize == 'xs'}
+			{assign var="dimensions" value="44x44"}
+		{elseif $i.previewsize == 'sm'}
+			{assign var="dimensions" value="94x94"}
 		{elseif $i.previewsize == 'med'}
-			{assign var="dimensions" value="400x400"}
+			{assign var="dimensions" value="194x194"}
 		{elseif $i.previewsize == 'lg'}
-			{assign var="dimensions" value="800x800"}
+			{assign var="dimensions" value="394x394"}
+		{elseif $i.previewsize == 'xl'}
+			{assign var="dimensions" value="794x794"}
 		{else}
-			{assign var="dimensions" value="200x200"}
+			{assign var="dimensions" value="194x194"}
 		{/if}
 
 		<div class="gallery-image-wrapper gallery-image-wrapper-{$i.previewsize}">
@@ -104,7 +108,7 @@
 					modal:   true,
 					autoOpen:false,
 					title:   windowtitle,
-					width:   '500px',
+					width:   '600px',
 					close: function(){ $(this).remove(); }
 				}).dialog('open');
 
@@ -166,7 +170,7 @@
 		$container.masonry({
 			itemSelector : '.gallery-image-wrapper',
 			isAnimated: true,
-			columnWidth: 208
+			columnWidth: 50
 		});
 	});
 

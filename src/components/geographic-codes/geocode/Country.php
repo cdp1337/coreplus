@@ -82,12 +82,12 @@ class Country {
 	 * @throws \Exception
 	 */
 	private static function _LookupISO2() {
-		$f = \Core\file('tmp/geographic-codes/country_name_iso_2.txt');
+		$f = \Core\Filestore\Factory::File('tmp/geographic-codes/country_name_iso_2.txt');
 		if(!$f->exists()){
 			// Try to update the cache!
 			Updater::UpdateDatabases(true);
 
-			$f = \Core\file('tmp/geographic-codes/country_name_iso_2.txt');
+			$f = \Core\Filestore\Factory::File('tmp/geographic-codes/country_name_iso_2.txt');
 			// Still doesn't exist?
 			if(!$f->exists()){
 				throw new \Exception('Unable to retrieve the ISO codes from www.iso.org!');

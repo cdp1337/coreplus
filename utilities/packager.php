@@ -1008,7 +1008,7 @@ EOD;
 
 		// Because the destination is relative...
 		$xmldest = 'data/' . substr(ROOT_PDIR . $cfile, $basestrlen);
-		$xmloutput = \Core\Filestore\factory($dir . $xmldest);
+		$xmloutput = \Core\Filestore\Factory::File($dir . $xmldest);
 		$xmloutput->putContents($xml->asMinifiedXML());
 
 		//$packager = 'Core Plus ' . ComponentHandler::GetComponent('core')->getVersion() . ' (http://corepl.us)';
@@ -1175,7 +1175,7 @@ function process_theme($theme, $forcerelease = false){
 
 		// Because the destination is relative...
 		$xmldest = 'data/theme.xml' ;
-		$xmloutput = \Core\Filestore\factory($dir . $xmldest);
+		$xmloutput = \Core\Filestore\Factory::File($dir . $xmldest);
 		$xmloutput->putContents($t->getRawXML(true));
 
 		// Save the package.xml file.

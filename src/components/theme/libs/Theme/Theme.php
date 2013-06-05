@@ -714,14 +714,14 @@ class Theme{
 			// Before anything, check and see if this file has a custom override file present.
 			if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
 				// If so, then copy that asset to the custom directory too!
-				$f = \Core\Filestore\factory(ROOT_PDIR . 'themes/custom/' . $newfilename);
+				$f = \Core\Filestore\Factory::File(ROOT_PDIR . 'themes/custom/' . $newfilename);
 			}
 			else{
 				// Otherwise, the local file is guaranteed to be a local file.
 				$f = new \Core\Filestore\Backends\FileLocal($b . $filename);
 			}
 
-			$nf = \Core\Filestore\factory($newfilename);
+			$nf = \Core\Filestore\Factory::File($newfilename);
 
 			// The various replacement possibilities for this file.
 			// The new destination must be in the theme-specific directory, this is a

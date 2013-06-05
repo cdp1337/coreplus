@@ -2,102 +2,6 @@
 	body {
 		background: #eee;
 	}
-
-	.directory-browser{
-		border: 1px solid #CCC;
-
-		background:#fafafa;
-		color: #444;
-	}
-
-    .directory-browser-previewarea {
-        width: 200px;
-        float: left;
-	    padding-bottom: 10px;
-
-
-		background-image: linear-gradient(bottom, rgb(141,163,204) 4%, rgb(227,237,255) 62%);
-		background-image: -o-linear-gradient(bottom, rgb(141,163,204) 4%, rgb(227,237,255) 62%);
-		background-image: -moz-linear-gradient(bottom, rgb(141,163,204) 4%, rgb(227,237,255) 62%);
-		background-image: -webkit-linear-gradient(bottom, rgb(141,163,204) 4%, rgb(227,237,255) 62%);
-		background-image: -ms-linear-gradient(bottom, rgb(141,163,204) 4%, rgb(227,237,255) 62%);
-
-			background-image: -webkit-gradient(
-			linear,
-			left bottom,
-			left top,
-			color-stop(0.04, rgb(141,163,204)),
-			color-stop(0.62, rgb(227,237,255))
-		);
-
-
-    }
-    .directory-browser-addressbar{
-        background: none repeat scroll 0 0 white;
-        border: 1px solid #888888;
-        padding: 5px;
-        text-align: left;
-        margin-left: 200px;
-    }
-	.directory-browser-files {
-		margin-left: 200px;
-        padding: 5px;
-		overflow: hidden;
-	}
-
-	.directory-browser-files .preview {
-		display: none;
-	}
-
-	.directory-browser-sm .directory,  .directory-browser-sm .file  { width: 18px;  height: 40px; }
-	.directory-browser-med .directory, .directory-browser-med .file { width: 36px;  height: 60px; }
-	.directory-browser-lg .directory,  .directory-browser-lg .file  { width: 72px;  height: 90px; }
-	.directory-browser-xl .directory,  .directory-browser-xl .file  { width: 140px; height: 170px; }
-
-	.directory, .file {
-		text-align: center;
-		float: left;
-		overflow: hidden;
-		border: 1px solid #fafafa;
-		cursor: pointer;
-	}
-
-	.directory:hover, .file:hover {
-		background: #e3edff;
-		border: 1px solid #999;
-	}
-	.directory.selected, .file.selected {
-		background: #a0bbe5;
-	}
-
-	.directory-browser-tip {
-		background: none repeat scroll 0 0 #FFFFCC;
-		color: #999999;
-		font-size: 90%;
-		padding-bottom: 5px;
-		padding-left: 250px;
-		padding-top: 5px;
-		text-align: left;
-    }
-
-	.bargraph {
-		background-color: #aa877f;
-		background-image: -moz-linear-gradient(center bottom , #bf5a43 3%, #aa877f 30%);
-		border: 2px solid #bf5a43;
-		display: block;
-		height: 30px;
-		width: 99%;
-	}
-	.bargraph-inner {
-		background-color: #7688a8;
-		background-image: -moz-linear-gradient(center bottom , #3064bf 3%, #7688a8 30%);
-		display: block;
-		height: 25px;
-		margin-left: -5px;
-		margin-top: -5px;
-		opacity: 0.7;
-		position: absolute;
-	}
 </style>
 
 
@@ -125,10 +29,10 @@
 
 		{foreach $directories as $dir}
 			<div class="directory" browsename="{$dir.browsename}">
-				<table style="margin:0pt auto;"><tr><td style="vertical-align:middle; height:{$sizepx}px;">{img src="assets/mimetype_icons/directory-`$size`.png"}</td></tr></table>
+				<table style="margin:0pt auto;"><tr><td style="vertical-align:middle; height:{$sizepx}px;">{img src="assets/images/mimetypes/directory.png" dimensions="`$sizepx`"}</td></tr></table>
 				{$dir.name}
 				<div class="preview">
-					{img src="assets/mimetype_icons/directory-xl.png"}<br/>
+					{img src="assets/images/mimetypes/directory-xl.png"}<br/>
 					{$dir.name}<br/>
 					Contains {$dir.children} {if $dir.children == 1}child{else}children{/if}<br/>
 				</div>
@@ -199,7 +103,7 @@
 {script library="jquery"}{/script}
 {script library="jqueryui.readonly"}{/script}
 {script library="jqueryui.contextmenu"}{/script}
-{script src="assets/js/tiny_mce/tiny_mce_popup.js"}{/script}
+{*script src="assets/js/tinymce/plugins/compat3x/tiny_mce_popup.js"}{/script*}
 
 <script type="text/javascript">
 	$(function(){
@@ -320,7 +224,9 @@
 		}
 
 		function file_select(el){
-			var win = tinyMCEPopup.getWindowArg("window"),
+			var parent = window.parent,
+				targetinput = parent.Core.TinyMCE.helper.targetinput,
+				win = parent.Core.TinyMCE.helper.window,
 				$el, url;
 
 			if(typeof el.jquery != 'undefined') $el = el;
@@ -328,21 +234,33 @@
 
 			url = $el.attr('selectname');
 
-			win.document.getElementById(tinyMCEPopup.getWindowArg("input")).value = url;
+			//console.log(parent.Core.TinyMCE.targetinput, parent.tinymce.activeEditor); return false;
 
-			// are we an image browser
-			if (typeof(win.ImageDialog) != "undefined") {
-				// we are, so update image dimensions...
-				if (win.ImageDialog.getImageData)
-					win.ImageDialog.getImageData();
+			parent.document.getElementById(targetinput).value = url;
 
-				// ... and preview if necessary
-				if (win.ImageDialog.showPreviewImage)
-					win.ImageDialog.showPreviewImage(url);
+			parent.tinymce.activeEditor.windowManager.close();
+
+			if(parent.Core.TinyMCE.helper.image){
+				parent.Core.TinyMCE.helper.image.recalcSize();
 			}
 
+			/*
+			 if (typeof(win.ImageDialog) != "undefined") {
+			 // we are, so update image dimensions...
+			 if (win.ImageDialog.getImageData)
+			 win.ImageDialog.getImageData();
+
+			 // ... and preview if necessary
+			 if (win.ImageDialog.showPreviewImage)
+			 win.ImageDialog.showPreviewImage(url);
+			 }
+			 */
+
+			// are we an image browser
+			//parent.tinymce.PluginManager.lookup.image.instance().recalcSize();
+
 			// close popup window
-			tinyMCEPopup.close();
+			this.close();
 		}
 
 		/**
@@ -744,7 +662,7 @@
 		}
 	}
 
-	if(typeof tinyMCEPopup.onInit != 'undefined'){
-		tinyMCEPopup.onInit.add(FileBrowserDialogue.init, FileBrowserDialogue);
-	}
+	//if(typeof tinyMCEPopup.onInit != 'undefined'){
+	//	tinyMCEPopup.onInit.add(FileBrowserDialogue.init, FileBrowserDialogue);
+	//}
 </script>

@@ -83,7 +83,7 @@ class MultiFileInput extends FormElement {
 	 * Get the respective File object for this element.
 	 * Use the Core system to ensure compatibility with CDNs.
 	 *
-	 * @return File_Backend
+	 * @return \Core\Filestore\File
 	 */
 	public function getFile() {
 		if ($this->get('value')) {
@@ -161,9 +161,9 @@ class MultiFileInput extends FormElement {
 				}
 
 				// Source
-				$f = \Core\Filestore\factory($in['tmp_name']);
+				$f = \Core\Filestore\Factory::File($in['tmp_name']);
 				// Destination
-				$nf = \Core\Filestore\factory($this->get('basedir') . '/' . $in['name']);
+				$nf = \Core\Filestore\Factory::File($this->get('basedir') . '/' . $in['name']);
 
 				// do NOT copy the contents over until the accept check has been ran!
 

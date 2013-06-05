@@ -59,6 +59,9 @@ class BlogTest extends PHPUnit_Framework_TestCase {
 	 * @depends testCreateBlog
 	 */
 	public function testCreateBlogArticle(){
+		// Update the current user so it has admin access.
+		\Core\user()->set('admin', true);
+
 		// Setup some variables that will be used throughout this method.
 		$title = 'New Test Blog Article';
 		$randomsnippet = 'Random-Snippet-' . Core::RandomHex(10);
@@ -102,9 +105,9 @@ EOD;
 		$form->getElement('model[body]')->set('value', $body);
 
 		// Copy in the image
-		$src = \Core\Filestore\factory(ROOT_PDIR . 'components/blog/tests/blog-test-image.png');
-		/** @var $dest File_Backend */
-		$dest = \Core\Filestore\factory('public/blog/blog-test-image.png');
+		$src = \Core\Filestore\Factory::File(ROOT_PDIR . 'components/blog/tests/blog-test-image.png');
+		/** @var $dest \Core\Filestore\File */
+		$dest = \Core\Filestore\Factory::File('public/blog/blog-test-image.png');
 
 		$src->copyTo($dest, true);
 
@@ -124,28 +127,31 @@ EOD;
 		$return = $request->execute();
 		$this->assertEquals(200, $return->error);
 		$html = $return->fetch();
+
 		$this->assertContains($title, $html);
 		$this->assertContains('itemtype="http://schema.org/BlogPosting"', $html);
 
-		// Convert this to XML so I can easily parse it.
-		$xml = new XMLLoader();
-		$xml->setRootName('html');
-		$xml->loadFromString($html);
+		preg_match_all('#<div[^>]*itemtype="http://schema.org/BlogPosting"[^>]*>.*<a[^>]*href="(.*)"[^>]*>(.*)</a>#msU', $html, $matches);
+		// Title should now have three keys, with at least one value each.
 
-		$node = $xml->getElement('//div[@itemtype="http://schema.org/BlogPosting"]/link', false);
-		$this->assertInstanceOf('DomElement', $node);
+		$this->assertNotEmpty($matches[1]);
+		$this->assertNotEmpty($matches[2]);
 
 		// This node contains the URL.
-		$url = $node->getAttribute('href');
+		$foundurl = $matches[1][0];
+		$foundtitle = trim($matches[2][0]);
+
 		// Make sure the url contains the site url.
-		$this->assertStringStartsWith(ROOT_URL, $url);
+		$this->assertStringStartsWith(ROOT_URL, $foundurl);
 		// And trim it off.  This is because PageRequest expects that the url is already trimmed.
-		$url = '/' . substr($url, strlen(ROOT_URL));
+		$foundurl = '/' . substr($foundurl, strlen(ROOT_URL));
+
+		$this->assertEquals($title, $foundtitle);
 
 		//$this->assertStringStartsWith('/blog/article/view/', $formsubmission, 'Checking that blog article creation was successful');
 
 		// Go to the page and make sure that it loads up!
-		$request = new PageRequest($url);
+		$request = new PageRequest($foundurl);
 		$return = $request->execute();
 		$this->assertEquals(200, $return->error, 'Checking that public blog article exists');
 

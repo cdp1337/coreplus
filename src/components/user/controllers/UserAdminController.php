@@ -175,10 +175,10 @@ class UserAdminController extends Controller_2_1{
 		$request = $this->getPageRequest();
 
 		$filename = $_SESSION['user-import']['file'];
-		$file = \Core\file($filename);
+		$file = \Core\Filestore\Factory::File($filename);
 		$contents = $file->getContentsObject();
 
-		if(!$contents instanceof File_csv_contents){
+		if(!$contents instanceof \Core\Filestore\Contents\ContentCSV){
 			Core::SetMessage($file->getBaseFilename() . ' does not appear to be a valid CSV file!', 'error');
 			unset($_SESSION['user-import']['file']);
 			Core::Reload();

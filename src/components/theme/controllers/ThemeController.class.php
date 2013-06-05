@@ -41,7 +41,7 @@ class ThemeController extends Controller_2_1{
 			$dirlen = strlen($dir);
 			$name = $source->getName();
 
-			$dh = new Directory_local_backend($dir);
+			$dh = \Core\Filestore\Factory::Directory($dir);
 			$ls = $dh->ls(null, true);
 			foreach($ls as $obj){
 				// Skip directories.
@@ -52,7 +52,7 @@ class ThemeController extends Controller_2_1{
 
 				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
 				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
-				$newobj = \Core\Filestore\factory($file);
+				$newobj = \Core\Filestore\Factory::File($file);
 
 				$assets[$file] = array(
 					'file' => $file,
@@ -96,7 +96,7 @@ class ThemeController extends Controller_2_1{
 			$dirlen = strlen($dir);
 			$component = $c->getName();
 
-			$dh = new Directory_local_backend($dir);
+			$dh = \Core\Filestore\Factory::Directory($dir);
 			//$pagetplfiles = $dh->ls('tpl', true);
 			$pagetplfiles = $dh->ls(null, true);
 
@@ -104,7 +104,7 @@ class ThemeController extends Controller_2_1{
 			foreach($pagetplfiles as $obj){
 
 				// I don't want directories.
-				if($obj instanceof Directory_local_backend) continue;
+				if($obj instanceof \Core\Filestore\Directory) continue;
 
 				/** @var $obj \Core\Filestore\File */
 				$file = substr($obj->getFilename(), $dirlen);
@@ -114,7 +114,7 @@ class ThemeController extends Controller_2_1{
 				$tpl = Core\Templates\Template::Factory($file);
 				$resolved = Core\Templates\Template::ResolveFile($file);
 
-				$newobj = \Core\Filestore\factory($resolved);
+				$newobj = \Core\Filestore\Factory::File($resolved);
 
 				$templates[$file] = array(
 					'file' => $file,
@@ -197,7 +197,7 @@ class ThemeController extends Controller_2_1{
 			$dirlen = strlen($dir);
 			$component = $c->getName();
 
-			$dh = new Directory_local_backend($dir);
+			$dh = \Core\Filestore\Factory::Directory($dir);
 			$pagetplfiles = $dh->ls('tpl', true);
 
 			// not sure why getFilename(path) isn't working as expected, but this works too.
@@ -208,7 +208,7 @@ class ThemeController extends Controller_2_1{
 				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
 				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
 				$resolved = Core\Templates\Template::ResolveFile($file);
-				$newobj = \Core\Filestore\factory($resolved);
+				$newobj = \Core\Filestore\Factory::File($resolved);
 
 				// Check the contents of the file and see if there is a {widgetarea...} here.
 				$contents = $newobj->getContents();
@@ -239,7 +239,7 @@ class ThemeController extends Controller_2_1{
 		$dir = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/assets';
 		$dirlen = strlen($dir);
 		$component = 'Theme/' . ConfigHandler::Get('/theme/selected');
-		$dh = new Directory_local_backend($dir);
+		$dh = \Core\Filestore\Factory::Directory($dir);
 		$cssls = $dh->ls('css', true);
 		foreach($cssls as $obj){
 			/** @var $obj \Core\Filestore\Backends\FileLocal */
@@ -247,7 +247,7 @@ class ThemeController extends Controller_2_1{
 
 			// Since this is a template, it may actually be in a different location than where the package maintainer put it.
 			// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
-			$newobj = \Core\Filestore\factory($file);
+			$newobj = \Core\Filestore\Factory::File($file);
 
 			$cssfiles[$file] = array(
 				'file' => $file,
@@ -265,7 +265,7 @@ class ThemeController extends Controller_2_1{
 			$dirlen = strlen($dir);
 			$component = $c->getName();
 
-			$dh = new Directory_local_backend($dir);
+			$dh = \Core\Filestore\Factory::Directory($dir);
 			$cssls = $dh->ls('css', true);
 
 			// not sure why getFilename(path) isn't working as expected, but this works too.
@@ -275,7 +275,7 @@ class ThemeController extends Controller_2_1{
 
 				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
 				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
-				$newobj = \Core\Filestore\factory($file);
+				$newobj = \Core\Filestore\Factory::File($file);
 
 				$cssfiles[$file] = array(
 					'file' => $file,
@@ -752,7 +752,7 @@ class ThemeController extends Controller_2_1{
 		}
 
 
-		$fh = \Core\Filestore\factory($filename);
+		$fh = \Core\Filestore\Factory::File($filename);
 		$customdest = \Core\directory('themes/custom');
 		if(!$customdest->isWritable()){
 			Core::SetMessage('Directory themes/custom is not writable!  Inline file editing disabled.', 'error');
@@ -956,13 +956,13 @@ class ThemeController extends Controller_2_1{
 				return false;
 		}
 
-		$customfh = \Core\Filestore\factory($customfilename);
+		$customfh = \Core\Filestore\Factory::File($customfilename);
 		if($customfh->exists()){
 			// If the custom one exists... this will be the source file too!
 			$sourcefh = $customfh;
 		}
 		else{
-			$sourcefh = \Core\Filestore\factory($filename);
+			$sourcefh = \Core\Filestore\Factory::File($filename);
 		}
 
 
@@ -1003,14 +1003,14 @@ class ThemeController extends Controller_2_1{
 				break;
 			case 'template':
 				// This gets written into the current theme directory.
-				$themefh = \Core\Filestore\factory(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $file);
+				$themefh = \Core\Filestore\Factory::File(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $file);
 				$themefh->putContents($newmodel->get('content'));
 				$hash = $themefh->getHash();
 				break;
 			case 'style':
 			case 'file':
 				// This gets written into the current theme directory.
-				$themefh = \Core\Filestore\factory(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $file);
+				$themefh = \Core\Filestore\Factory::File(ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/' . $file);
 				$themefh->putContents($newmodel->get('content'));
 				$hash = $themefh->getHash();
 

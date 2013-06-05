@@ -68,11 +68,15 @@ class TinyMCEController extends Controller_2_1 {
 		if($status != View::ERROR_NOERROR) return $status;
 
 		// Get a listing of files in the appropriate directory.
-		if(ConfigHandler::Get('/tinymce/imagebrowser/sandbox-user-uploads')){
-			$basedirname = 'public/tinymce/' . \Core\user()->get('id') . '/';
-		}
-		else{
-			$basedirname = 'public/tinymce/';
+		switch(ConfigHandler::Get('/tinymce/user-uploads/sandbox')){
+			case 'user-sandboxed':
+				$basedirname = 'public/tinymce/' . \Core\user()->get('id') . '/';
+				break;
+			case 'shared-user-sandbox':
+				$basedirname = 'public/tinymce/';
+				break;
+			case 'completely-open':
+				$basedirname = 'public/';
 		}
 
 		if(!isset($_POST['dir'])) return View::ERROR_BADREQUEST;
@@ -98,7 +102,7 @@ class TinyMCEController extends Controller_2_1 {
 
 		$newdirname = $dirname . '/' . $newdir;
 
-		$dir = new Directory_local_backend($newdirname);
+		$dir = \Core\Filestore\Factory::Directory($newdirname);
 		if($dir->exists()){
 			$view->jsondata = array('status' => 0, 'message' => 'Directory already exists');
 			return;
@@ -157,7 +161,7 @@ class TinyMCEController extends Controller_2_1 {
 		$newdir = str_replace(' ', '-', $newdir);
 
 		$dirname = $basedirname . str_replace('..', '', $_POST['olddir']);
-		$dir = new Directory_local_backend($dirname);
+		$dir = \Core\Filestore\Factory::Directory($dirname);
 		if($dir->rename($newdir)){
 			$view->jsondata = array('status' => 1, 'message' => 'Renamed directory successfully');
 			return;
@@ -192,7 +196,7 @@ class TinyMCEController extends Controller_2_1 {
 		if(!isset($_POST['olddir'])) return View::ERROR_BADREQUEST;
 
 		$dirname = $basedirname . str_replace('..', '', $_POST['olddir']);
-		$dir = new Directory_local_backend($dirname);
+		$dir = \Core\Filestore\Factory::Directory($dirname);
 
 		if(!$dir->exists()){
 			$view->jsondata = array('status' => 0, 'message' => 'Cannot remove a directory that does not exist');
@@ -243,7 +247,7 @@ class TinyMCEController extends Controller_2_1 {
 			return;
 		}
 
-		$file = new File_local_backend($basedirname . $_POST['dir'] . '/' . $_POST['file']);
+		$file = \Core\Filestore\Factory::File($basedirname . $_POST['dir'] . '/' . $_POST['file']);
 
 		$newname = $_POST['newname'];
 		// Replace some potentially dangerous characters.
@@ -286,7 +290,7 @@ class TinyMCEController extends Controller_2_1 {
 		if(!isset($_POST['dir'])) return View::ERROR_BADREQUEST;
 		if(!isset($_POST['file'])) return View::ERROR_BADREQUEST;
 
-		$file = new File_local_backend($basedirname . $_POST['dir'] . '/' . $_POST['file']);
+		$file = \Core\Filestore\Factory::File($basedirname . $_POST['dir'] . '/' . $_POST['file']);
 
 		if(!$file->exists()){
 			$view->jsondata = array('status' => 0, 'message' => 'Cannot remove a file that does not exist');
@@ -354,7 +358,7 @@ class TinyMCEController extends Controller_2_1 {
 			}
 		}
 
-		$dir = new Directory_local_backend($dirname);
+		$dir = \Core\Filestore\Factory::Directory($dirname);
 
 		// Allow automatic creation of the root directory.
 		if($dirname == $basedirname && !$dir->exists()){
@@ -367,14 +371,14 @@ class TinyMCEController extends Controller_2_1 {
 		$directories = array();
 		$files = array();
 		foreach($dir->ls() as $file){
-			if($file instanceof Directory_local_backend){
+			if($file instanceof \Core\Filestore\Directory){
 				// Give me a count of children in that directory.  I need to do the logic custom here because I only want directories and imgaes.
 				$count = 0;
 				foreach($file->ls() as $subfile){
-					if($file instanceof Directory_local_backend){
+					if($file instanceof \Core\Filestore\Directory){
 						$count++;
 					}
-					elseif(($file instanceof File_local_backend)){
+					elseif(($file instanceof \Core\Filestore\File)){
 						if($type == 'image' && $file->isImage() || $type == 'file') $count++;
 					}
 				}
@@ -387,7 +391,7 @@ class TinyMCEController extends Controller_2_1 {
 				);
 
 			}
-			elseif($file instanceof File_local_backend){
+			elseif($file instanceof \Core\Filestore\File){
 				// I only want images
 				if($type == 'image' && !$file->isImage()) continue;
 

@@ -17,7 +17,7 @@
 		</file>
 	</files>
 	<pages>
-		<page baseurl="/content" admin="1" widget="0" access="g:admin" title="Content Page Listings"/>
+		<page baseurl="/content" admin="1" access="g:admin" title="Content Page Listings" group="Content"/>
 	</pages>
 	<description>
 		Provides basic HTML page functionality.

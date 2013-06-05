@@ -173,7 +173,7 @@ class BlogArticleModel extends Model {
 	 */
 	public function getImage(){
 		if($this->get('image')) {
-			$f = \Core\Filestore\factory('public/blog/' . $this->get('image'));
+			$f = \Core\Filestore\Factory::File('public/blog/' . $this->get('image'));
 			return $f;
 		}
 		else{
