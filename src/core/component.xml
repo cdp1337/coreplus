@@ -41,7 +41,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="31464f152a127266336a12a78f536059"/>
+		<file filename="core/CHANGELOG" md5="bb93d629591f0e360b48bddc814e78e0"/>
 		<file filename="core/bootstrap.php" md5="d8dcc739a7efcbfb0d78d6ae7b02d34d"/>
 		<file filename="core/bootstrap_postincludes.php" md5="e877be1a1b418440d796ffdc3a622bba"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -432,7 +432,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="b8b4f60c00b4fcd9d36ad3fdf891cd6f">
+		<file filename="core/libs/core/Component_2_1.php" md5="84a119e018444ee005a55a3f7d657e18">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="78088e9905213826b011aa0f8ad386f2">
@@ -444,7 +444,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="789549928dfa8773be60a7fb12e17438">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="9eab2692f8e6141c3f6f7da60b0eef51">
+		<file filename="core/libs/core/Core.class.php" md5="1fbda34bb46ddd499d1465ddd2d7f84c">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -512,7 +512,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="35f99e7b81e4a4d08c66c8ea665e379e">
+		<file filename="core/libs/core/View.class.php" md5="ad47c933d816270841241446aff3c72b">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -550,7 +550,7 @@
 		<file filename="core/libs/core/filestore/Directory_Backend.interface.php" md5="65d8078d0710d29d51f7b47bf6bb5271">
 			<interface name="Directory_Backend"/>
 		</file>
-		<file filename="core/libs/core/filestore/Factory.php" md5="56dad10bca53100240a76abb8b56989b">
+		<file filename="core/libs/core/filestore/Factory.php" md5="f4c64eb0e48a72079a4800b94fd8bbde">
 			<class name="Core\Filestore\Factory"/>
 		</file>
 		<file filename="core/libs/core/filestore/File.interface.php" md5="f90b4f74cc153cd48d57270a602bcf04">
@@ -568,10 +568,10 @@
 		<file filename="core/libs/core/filestore/backends/DirectoryLocal.php" md5="6474f303199bab0c119a807f8a497ff9">
 			<class name="Core\Filestore\Backends\DirectoryLocal"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="980392590db54778357a6e3f80b20317">
+		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="2b1d14a17a78c96e8239a8ac2bc9d7be">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="46ac00569ddb9d8af468e65be66d2eb9">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="c0fa2e7dbf0e68bbc0eef399d9a09849">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="505d33f62b949b85d7d41bd43f410c0f">
@@ -601,11 +601,11 @@
 		<file filename="core/libs/core/filestore/contents/ContentZIP.php" md5="f5bdfebfd3dffcccc13505726558efe3">
 			<class name="Core\Filestore\Contents\ContentZIP"/>
 		</file>
-		<file filename="core/libs/core/filestore/functions.php" md5="e9c28b87ab83d1bfa8550633334f1d31"/>
+		<file filename="core/libs/core/filestore/functions.php" md5="af704f94e163c4b09b67faf5eb984238"/>
 		<file filename="core/libs/core/templates/Exception.php" md5="9d116f5547824aa600334c0ddcca2f08">
 			<class name="Core\Templates\Exception"/>
 		</file>
-		<file filename="core/libs/core/templates/Template.php" md5="acb194f762d1917c778e5bb7b59ba01a">
+		<file filename="core/libs/core/templates/Template.php" md5="40e52be96e149a6a0b4778fdb4fe2c33">
 			<class name="Core\Templates\Template"/>
 		</file>
 		<file filename="core/libs/core/templates/TemplateInterface.php" md5="e4f82cbbf2bcce2ad7b1968757185ffb">
@@ -1420,10 +1420,10 @@
 		</file>
 		<file filename="core/tests/ivak_TV_Test_Screen.png" md5="e23ff09f0d6d5c8f9f14877264c251b7"/>
 		<file filename="core/tests/ivak_TV_Test_Screen.svg" md5="1a472f61a12a8ee5f6b828df7942a3e4"/>
-		<file filename="core/tests/libs/core/filestore/FileFTPTest.php" md5="b420951680b5da48a6295712939f6fac">
+		<file filename="core/tests/libs/core/filestore/FileFTPTest.php" md5="d0110c850fb7c737d35d7b04cce14efd">
 			<class name="FileFTPTest"/>
 		</file>
-		<file filename="core/tests/libs/core/filestore/FileLocalTest.php" md5="63b9ee586032a8f692812eb7d58779b6">
+		<file filename="core/tests/libs/core/filestore/FileLocalTest.php" md5="ed448575546b8ca68cbfc9b5dd7d0f2f">
 			<class name="FileLocalTest"/>
 		</file>
 		<file filename="core/tests/libs/core/filestore/FileRemoteTest.php" md5="2ead0c5ccfeb32d7ff4639ef67d867b4">
@@ -1492,8 +1492,6 @@
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 		<file filename="install/utilities.php" md5="19b6e7d1483e8ec8e0a6fad9932ce850"/>
-		<file filename="tmp/geographic-codes/country_name_iso_2.txt" md5="c4f16611ce0dd874c401f879c2f1dbf4"/>
-		<file filename="tmp/test-filelocaltest-testrename2.dat" md5="fb843efb2ffec987db12e72ca75c9ea2"/>
 	</files>
 	<pages>
 		<page baseurl="/admin" admin="1" access="g:admin" title="Administration"/>

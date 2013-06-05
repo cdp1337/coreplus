@@ -16,16 +16,6 @@
  * @see core/libs/core/filestore/backends/FileLocal.php
  */
 class FileLocalTest extends PHPUnit_Framework_TestCase {
-	/**
-	 * Unit test to test the construction of a new file object and to ensure it returns the correct data.
-	 */
-	public function testFactory(){
-		$file = \Core\Filestore\Factory::File('core/tests/updater-testdocument.txt');
-
-		$this->assertInstanceOf('\Core\Filestore\File', $file);
-		$this->assertInstanceOf('\Core\Filestore\Backends\FileLocal', $file);
-		$this->assertTrue($file->exists());
-	}
 
 	/**
 	 * Test the getFilesize method
@@ -65,7 +55,7 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 			$this->markTestSkipped('asset files are not local files, skipping getURL');
 		}
 		else{
-			$this->assertStringStartsWith(ROOT_WDIR, $file->getURL());
+			$this->assertStringStartsWith(ROOT_URL, $file->getURL());
 		}
 	}
 
@@ -79,7 +69,7 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 			$this->markTestSkipped('asset files are not local files, skipping getPreviewURL');
 		}
 		else{
-			$this->assertStringStartsWith(ROOT_WDIR, $file->getPreviewURL());
+			$this->assertStringStartsWith(ROOT_URL, $file->getPreviewURL());
 		}
 	}
 

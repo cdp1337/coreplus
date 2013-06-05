@@ -973,7 +973,7 @@ class View {
 	 */
 	public function getHeadContent(){
 		// First, the basic ones.
-		$data = array_merge($this->head, $this->scripts['head'], $this->stylesheets);
+		$data = array_merge($this->stylesheets, $this->head, $this->scripts['head']);
 
 		// Some of the automatic settings only get set if no errors.
 		if($this->error == View::ERROR_NOERROR){

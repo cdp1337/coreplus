@@ -315,6 +315,8 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCopyTo() {
+		if(!$this->_ftp) $this->markTestSkipped('FTP disabled, skipping tests');
+
 		$file = new \Core\Filestore\Backends\FileFTP('core/tests/updater-testdocument.txt');
 
 		// I should be able to copy to a filename.

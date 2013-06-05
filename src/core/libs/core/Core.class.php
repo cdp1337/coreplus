@@ -490,6 +490,8 @@ class Core implements ISingleton {
 			}
 		}
 
+		// Lastly, make sure that the template path cache is updated!
+		\Core\Templates\Template::RequeryPaths();
 	}
 
 	/**

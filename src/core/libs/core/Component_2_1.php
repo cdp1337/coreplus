@@ -111,6 +111,13 @@ class Component_2_1 {
 	 */
 	private $_permissions = array();
 
+	/**
+	 * Set to true or false after evaluating.
+	 *
+	 * @var null|boolean
+	 */
+	private $_hasview = null;
+
 	// A set of error codes components may encounter.
 	const ERROR_NOERROR = 0;           // 00000
 	const ERROR_INVALID = 1;           // 00001
@@ -164,6 +171,14 @@ class Component_2_1 {
 	 * @var null|array
 	 */
 	private $_classlist = null;
+
+	/**
+	 * Array of controllers in this component.
+	 * Used to reduce the number of XML lookups required.
+	 *
+	 * @var null|array
+	 */
+	private $_controllerlist = null;
 
 	/**
 	 * Array of widgets in this component.  This is to reduce the number of lookups required.
@@ -586,22 +601,24 @@ class Component_2_1 {
 	 * @return array
 	 */
 	public function getControllerList() {
-		// Get an array of class -> file (fully resolved)
-		$classes = array();
-		$dir = $this->getBaseDir();
+		if($this->_controllerlist === null){
+			// Get an array of class -> file (fully resolved)
+			$this->_controllerlist = array();
+			$dir = $this->getBaseDir();
 
-		//foreach($this->_xmlloader->getElementByTagName('files')->getElementsByTagName('file') as $f){
-		foreach ($this->_xmlloader->getElements('/files/file') as $f) {
-			$filename = $dir . $f->getAttribute('filename');
-			//foreach($f->getElementsByTagName('provides') as $p){
+			//foreach($this->_xmlloader->getElementByTagName('files')->getElementsByTagName('file') as $f){
+			foreach ($this->_xmlloader->getElements('/files/file') as $f) {
+				$filename = $dir . $f->getAttribute('filename');
+				//foreach($f->getElementsByTagName('provides') as $p){
 
-			foreach ($f->getElementsByTagName('controller') as $p) {
-				$n           = strtolower($p->getAttribute('name'));
-				$classes[$n] = $filename;
+				foreach ($f->getElementsByTagName('controller') as $p) {
+					$n           = strtolower($p->getAttribute('name'));
+					$this->_controllerlist[$n] = $filename;
+				}
 			}
 		}
 
-		return $classes;
+		return $this->_controllerlist;
 	}
 
 	/**
@@ -1016,9 +1033,21 @@ class Component_2_1 {
 	}
 
 	public function hasView() {
-		if($this->_xmlloader->getRootDOM()->getElementsByTagName('view')->length) return true;
-		elseif(is_dir($this->getBaseDir() . 'templates/')) return true;
-		else return false;
+		if($this->_hasview === null){
+			if($this->_xmlloader->getRootDOM()->getElementsByTagName('view')->length){
+				$this->_hasview = true;
+			}
+			elseif(is_dir($this->getBaseDir() . 'templates/')){
+				$this->_hasview = true;
+			}
+			else{
+				$this->_hasview = false;
+			}
+		}
+
+		return $this->_hasview;
+
+
 	}
 
 	/**

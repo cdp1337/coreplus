@@ -133,6 +133,11 @@ class FileLocal implements Filestore\File {
 	 * @param $filename string
 	 */
 	public function setFilename($filename) {
+		// If this file already has a filename, ensure that it's deleted from cache!
+		if($this->_filename){
+			Filestore\Factory::RemoveFromCache($this);
+		}
+
 		if ($filename{0} != '/') $filename = ROOT_PDIR . $filename; // Needs to be fully resolved
 
 		// Do some cleaning on the filename, ie: // should be just /.

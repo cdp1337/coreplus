@@ -71,6 +71,13 @@ abstract class Factory {
 	protected static $_Directories = array();
 
 	/**
+	 * Cache of incoming URIs to the fully resolved version.
+	 *
+	 * @var array
+	 */
+	protected static $_ResolveCache = array();
+
+	/**
 	 * Static function to act as Factory for the underlying Filestore system.
 	 * This will parse the incoming URI and return the appropriate type based on Core settings and filetype.
 	 *
@@ -81,11 +88,10 @@ abstract class Factory {
 	public static function File($uri) {
 
 		// GOGO caching ;)
-		if(isset(self::$_Files[$uri])){
-			return self::$_Files[$uri];
+		if(isset(self::$_ResolveCache[$uri])){
+			$resolved = self::$_ResolveCache[$uri];
+			return self::$_Files[$resolved];
 		}
-
-		$originaluri = $uri;
 
 		// self::$_Files[$originaluri]
 
@@ -100,8 +106,8 @@ abstract class Factory {
 		// This needs to be before the :// check, because technically FTP can be a remote file,
 		// but it has extra functionality, (namely being able to write or perform other operations through FTP)
 		if(strpos($uri, 'ftp://') === 0){
-			self::$_Files[$originaluri] = new Backends\FileFTP($uri);
-			return self::$_Files[$originaluri];
+			// Don't cache remote files.
+			return new Backends\FileFTP($uri);
 		}
 
 		// If this is a local file, just the URL version.... allow that remap too!
@@ -114,51 +120,57 @@ abstract class Factory {
 
 		// Allow remote files to be requested here too!
 		if(strpos($uri, '://') !== false){
-			self::$_Files[$originaluri] = new Backends\FileRemote($uri);
-			return self::$_Files[$originaluri];
+			// Don't cache remote files.
+			return new Backends\FileRemote($uri);
 		}
 
-		// Is this an asset request?
+
+
+
 		if(
 			strpos($uri, 'asset/') === 0 ||
 			strpos($uri, 'assets/') === 0 ||
 			strpos($uri, get_asset_path()) === 0
 		){
-			self::$_Files[$originaluri] = resolve_asset_file($uri);
-			return self::$_Files[$originaluri];
+			// Is this an asset request?
+			$file = self::ResolveAssetFile($uri);
 		}
-
-		// Is this a public request?
-		if(
+		elseif(
 			strpos($uri, 'public/') === 0 ||
 			strpos($uri, get_public_path()) === 0
 		){
-			self::$_Files[$originaluri] = resolve_public_file($uri);
-			return self::$_Files[$originaluri];
+			// Is this a public request?
+			$file = resolve_public_file($uri);
 		}
-
-		// Is this a private request?
-		if(
+		elseif(
 			strpos($uri, 'private/') === 0 ||
 			strpos($uri, get_private_path()) === 0
 		){
+			// Is this a private request?
 			// @todo
 			return new CDN\FileAsset($uri);
 		}
-
-		// Is this a tmp request?
-		if(strpos($uri, 'tmp/') === 0){
-			self::$_Files[$originaluri] = new Backends\FileLocal(get_tmp_path() . substr($uri, 4));
-			return self::$_Files[$originaluri];
+		elseif(strpos($uri, 'tmp/') === 0){
+			// Is this a tmp request?
+			$file = new Backends\FileLocal(get_tmp_path() . substr($uri, 4));
 		}
 		elseif(strpos($uri, get_tmp_path()) === 0){
-			self::$_Files[$originaluri] = new Backends\FileLocal($uri);
-			return self::$_Files[$originaluri];
+			// tmp fully resolved?
+			$file = new Backends\FileLocal($uri);
+		}
+		elseif(\Core\FTP()){
+			// Umm.... ok
+			// Still, try to use the FTP proxy files if it's enabled.
+			$file = new Backends\FileFTP($uri);
+		}
+		else{
+			// Screw it... regular file it is!
+			$file = new Backends\FileLocal($uri);
 		}
 
-		// Umm.... ok
-		self::$_Files[$originaluri] = new Backends\FileLocal($uri);
-		return self::$_Files[$originaluri];
+		// Cache this for future calls on this page load.
+		self::$_Files[$file->getFilename()] = $file;
+		return $file;
 	}
 
 	/**
@@ -224,5 +236,100 @@ abstract class Factory {
 
 		// Umm.... ok
 		return new Backends\DirectoryLocal($uri);
+	}
+
+	/**
+	 * Resolve a name for an asset to an actual file.
+	 *
+	 * @param $filename
+	 *
+	 * @return \Core\Filestore\File
+	 *
+	 * @throws \Exception
+	 */
+	public static function ResolveAssetFile($filename){
+		$originaluri = $filename;
+
+		$resolved = get_asset_path();
+
+		if (strpos($filename, 'assets/') === 0) {
+			// Allow "assets/blah" to be passed in
+			$filename = substr($filename, 7);
+		}
+		elseif(strpos($filename, 'asset/') === 0){
+			// Allow "asset/blah" to be passed in.
+			$filename = substr($filename, 6);
+		}
+		elseif(strpos($filename, $resolved) === 0){
+			// Allow the fully resolved name to be passed in
+			$filename = substr($filename, strlen($resolved));
+		}
+
+		//var_dump($filename);
+
+		// I need to check the custom, current theme, and finally default locations for the file.
+		$theme = \ConfigHandler::Get('/theme/selected');
+		switch(CDN_TYPE){
+			case 'local':
+				if(\Core\ftp()){
+					// FTP has its own sub-type.
+					$custom  = new Backends\FileFTP($resolved  . 'custom/' . $filename);
+					$themed  = new Backends\FileFTP($resolved  . $theme . '/' . $filename);
+					$default = new Backends\FileFTP($resolved  . 'default/' . $filename);
+				}
+				else{
+					$custom  = new Backends\FileLocal($resolved  . 'custom/' . $filename);
+					$themed  = new Backends\FileLocal($resolved  . $theme . '/' . $filename);
+					$default = new Backends\FileLocal($resolved  . 'default/' . $filename);
+				}
+
+				break;
+			default:
+				throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
+				break;
+		}
+
+		if($custom->exists()){
+			// If there is a custom asset installed, USE THAT FIRST!
+			self::$_ResolveCache[$originaluri] = $custom->getFilename();
+			return $custom;
+		}
+		elseif($themed->exists()){
+			// Otherwise, the themes can override component assets too.
+			self::$_ResolveCache[$originaluri] = $themed->getFilename();
+			return $themed;
+		}
+		else{
+			self::$_ResolveCache[$originaluri] = $default->getFilename();
+			return $default;
+		}
+	}
+
+	/**
+	 * If a file needs to be removed from cache, (ie it was renamed, deleted, etc)
+	 * this method should be called to ensure that a future call doesn't use a corrupt/incorrect file!
+	 *
+	 * @param $file string|File
+	 */
+	public static function RemoveFromCache($file) {
+		if($file instanceof File){
+			$filename = $file->getFilename();
+		}
+		else{
+			$filename = $file;
+		}
+
+		// Is this file resolved already?
+		if(isset(self::$_Files[$filename])){
+			// Note, unsetting the object will not purge it from memory!
+			// If another method is using that memory space, then it'll remain as a valid object.
+			unset(self::$_Files[$filename]);
+		}
+
+		// And lookup the lookup cache.
+		$keys = array_keys(self::$_ResolveCache, $filename);
+		foreach($keys as $k){
+			unset(self::$_ResolveCache[$k]);
+		}
 	}
 }

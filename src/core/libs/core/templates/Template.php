@@ -16,6 +16,9 @@ namespace Core\Templates;
  * @package Core\Templates
  */
 abstract class Template {
+
+	private static $_Paths = null;
+
 	/**
 	 * @param $filename Filename of the template
 	 * @return TemplateInterface
@@ -75,14 +78,23 @@ abstract class Template {
 	 * @return array
 	 */
 	public static function GetPaths(){
-		$paths = array();
+		if(self::$_Paths === null){
+			self::RequeryPaths();
+		}
+
+		return self::$_Paths;
+
+	}
+
+	public static function RequeryPaths() {
+		self::$_Paths = array();
 
 		// Tack on the custom directory.
 		// This needs to be before the current theme because it takes precedence.
-		$paths[] = ROOT_PDIR . 'themes/custom/';
+		self::$_Paths[] = ROOT_PDIR . 'themes/custom/';
 
 		// Tack on the current theme's directory.
-		$paths[] = ROOT_PDIR . 'themes/' . \ConfigHandler::Get('/theme/selected') . '/';
+		self::$_Paths[] = ROOT_PDIR . 'themes/' . \ConfigHandler::Get('/theme/selected') . '/';
 
 		// Tack on the search directories from the loaded components.
 		// Also handle the plugins directory search.
@@ -92,10 +104,8 @@ abstract class Template {
 			if ($d){
 				// Make sure it ends wih a '/'.
 				if($d{strlen($d)-1} != '/') $d .= '/';
-				$paths[] = $d;
+				self::$_Paths[] = $d;
 			}
 		}
-
-		return $paths;
 	}
 }

@@ -563,7 +563,7 @@ class FileFTP implements Filestore\File{
 	 * @return Contents
 	 */
 	public function getContentsObject() {
-		// TODO: Implement getContentsObject() method.
+		return $this->_getTmpLocal()->getContentsObject();
 	}
 
 	/**
@@ -615,6 +615,12 @@ class FileFTP implements Filestore\File{
 	 * @param $filename string
 	 */
 	public function setFilename($filename) {
+
+		// If this file already has a filename, ensure that it's deleted from cache!
+		if($this->_filename){
+			Filestore\Factory::RemoveFromCache($this);
+		}
+
 		$cwd = ftp_pwd($this->_ftp);
 
 		if(strpos($filename, ROOT_PDIR) === 0){
