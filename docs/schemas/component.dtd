@@ -165,7 +165,7 @@ type CDATA #IMPLIED
 <!ELEMENT config EMPTY>
 <!ATTLIST config
 	key CDATA #REQUIRED
-	type CDATA #IMPLIED
+	type (string|int|boolean|enum|set) 'string'
 	options CDATA #IMPLIED
 	description CDATA #IMPLIED
 	default CDATA #IMPLIED
