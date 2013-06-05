@@ -55,6 +55,67 @@ function smarty_block_insertable($params, $content, $template, &$repeat){
 		$value = $i->get('value');
 	}
 
+	// Replace images with the optimized version.
+	if(strpos($value, '<img') !== false){
+		$x = 0;
+		$imagestart = null;
+
+		while($x < strlen($value)){
+			if(substr($value, $x, 4) == '<img'){
+				$imagestart = $x;
+				$x+= 3;
+				continue;
+			}
+
+			if($imagestart !== null && ($value{$x} == '>' || substr($value, $x, 2) == '/>')){
+				// This will equal the full image HTML tag, ie: <img src="blah"/>...
+				$fullimagetag = substr($value, $imagestart, $x-1);
+
+				// Convert it to a DOM element so I can process it.
+				$simple = new SimpleXMLElement($fullimagetag);
+				$attributes = array();
+				foreach($simple->attributes() as $k => $v){
+					$attributes[$k] = (string)$v;
+				}
+
+				if(isset($attributes['width']) || isset($attributes['height'])){
+					$file = \Core\Filestore\Factory::File($attributes['src']);
+
+					if(isset($attributes['width']) && isset($attributes['height'])){
+						$dimension = $attributes['width'] . 'x' . $attributes['height'] . '!';
+						unset($attributes['width'], $attributes['height']);
+					}
+					elseif(isset($attributes['width'])){
+						$dimension = $attributes['width'];
+						unset($attributes['width']);
+					}
+					else{
+						$dimension = $attributes['height'];
+						unset($attributes['height']);
+					}
+
+					$attributes['src'] = $file->getPreviewURL($dimension);
+
+					// And rebuild.
+					$img = '<img';
+					foreach($attributes as $k => $v){
+						$img .= ' ' . $k . '="' . str_replace('"', '&quot;', $v) . '"';
+					}
+					$img .= '/>';
+
+					// Figure out the offset for X.  I'll need to modify this after I merge it in.
+					$x += strlen($img) - strlen($fullimagetag);
+					// Split this string back in.
+					$value = substr_replace($value, $img, $imagestart, strlen($fullimagetag));
+				}
+				// Reset...
+				$imagestart = null;
+			}
+			$x++;
+		}
+	}
+	//var_dump($value);
+
 	if($assign){
 		$template->assign($assign, $value);
 	}

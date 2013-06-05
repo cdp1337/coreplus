@@ -216,7 +216,7 @@ class FileRemote implements Filestore\File {
 			}
 
 			// Now dest can be instantiated as a valid file object!
-			$dest = new FileLocal($file);
+			$dest = Filestore\Factory::File($file);
 		}
 
 		if ($this->identicalTo($dest)) return $dest;
@@ -276,7 +276,7 @@ class FileRemote implements Filestore\File {
 			error_log('File not found [ ' . $this->_url . ' ]', E_USER_NOTICE);
 
 			// Return a 404 image.
-			$file = Filestore\factory('asset/images/mimetypes/notfound.png');
+			$file = Filestore\Factory::File('asset/images/mimetypes/notfound.png');
 			return $file->displayPreview($dimensions, $includeHeader);
 		}
 		else{
@@ -292,7 +292,7 @@ class FileRemote implements Filestore\File {
 			error_log('File not found [ ' . $this->_url . ' ]', E_USER_NOTICE);
 
 			// Return a 404 image.
-			$file = Filestore\factory('asset/images/mimetypes/notfound.png');
+			$file = Filestore\Factory::File('asset/images/mimetypes/notfound.png');
 			return $file->getPreviewURL($dimensions);
 		}
 		else{
@@ -425,13 +425,13 @@ class FileRemote implements Filestore\File {
 	public function getMimetypeIconURL($dimensions = '32x32'){
 		$filemime = str_replace('/', '-', $this->getMimetype());
 
-		$file = Filestore\factory('assets/images/mimetypes/' . $filemime . '.png');
+		$file = Filestore\Factory::File('assets/images/mimetypes/' . $filemime . '.png');
 		if(!$file->exists()){
 			if(DEVELOPMENT_MODE){
 				// Inform the developer, otherwise it's not a huge issue.
 				error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown" (filename: ' . $this->getFilename('') . ')');
 			}
-			$file = Filestore\factory('assets/images/mimetypes/unknown.png');
+			$file = Filestore\Factory::File('assets/images/mimetypes/unknown.png');
 		}
 		return $file->getPreviewURL($dimensions);
 	}
@@ -549,7 +549,7 @@ class FileRemote implements Filestore\File {
 			// Gotta love obviously-named flags.
 			$needtodownload = true;
 
-			$this->_tmplocal = Filestore\factory('tmp/remotefile-cache/' . $f);
+			$this->_tmplocal = Filestore\Factory::File('tmp/remotefile-cache/' . $f);
 
 			// File exists already!  Check and see if it needs to be redownloaded.
 			if ($this->cacheable && $this->_tmplocal->exists()) {

@@ -133,7 +133,7 @@ function user(){
  * @return \Core\Filestore\File
  */
 function file($filename = null){
-	return \Core\Filestore\factory($filename);
+	return \Core\Filestore\Factory::File($filename);
 }
 
 /**
@@ -144,17 +144,7 @@ function file($filename = null){
  * @return \Directory_Backend
  */
 function directory($directory){
-	switch(CDN_TYPE){
-		case 'aws':
-			return new \Directory_awss3_backend($directory);
-			break;
-		case 'local':
-		default:
-			// Automatically resolve this file.
-			//$filename = \Core\Filestore\Backends\FileLocal:
-			return new \Directory_local_backend($directory);
-			break;
-	}
+	return \Core\Filestore\Factory::Directory($directory);
 }
 
 
@@ -166,7 +156,7 @@ function directory($directory){
  */
 function get_standard_http_headers($forcurl = false, $autoclose = false){
 	$headers = array(
-		'User-Agent: Core Plus ' . Core::GetComponent()->getVersion() . ' (http://corepl.us)',
+		'User-Agent: Core Plus ' . \Core::GetComponent()->getVersion() . ' (http://corepl.us)',
 		'Servername: ' . SERVERNAME,
 	);
 

@@ -45,7 +45,7 @@ class InstallArchive {
 		}
 		else {
 			// @todo Add support for URLs.
-			$this->_file = \Core\Filestore\factory($file);
+			$this->_file = \Core\Filestore\Factory::File($file);
 		}
 	}
 

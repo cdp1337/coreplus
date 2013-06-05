@@ -25,14 +25,14 @@ namespace Core\Filestore\Contents;
 use Core\Filestore;
 
 /**
- * A short teaser of what File_csv_contents does.
+ * A short teaser of what \Core\Filestore\Contents\ContentCSV does.
  *
- * More lengthy description of what File_csv_contents does and why it's fantastic.
+ * More lengthy description of what \Core\Filestore\Contents\ContentCSV does and why it's fantastic.
  *
  * <h3>Usage Examples</h3>
  *
  *
- * @todo Write documentation for File_csv_contents
+ * @todo Write documentation for \Core\Filestore\Contents\ContentCSV
  * <h4>Example 1</h4>
  * <p>Description 1</p>
  * <code>

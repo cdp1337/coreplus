@@ -63,7 +63,7 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 	public function testGetURL(){
 		if(!$this->_ftp) $this->markTestSkipped('FTP disabled, skipping tests');
 
-		$file = \Core\Filestore\factory('asset/images/logo.png');
+		$file = \Core\Filestore\Factory::File('asset/images/logo.png');
 
 		if(!$file instanceof \Core\Filestore\Backends\FileFTP){
 			$this->markTestSkipped('asset files are not local files, skipping getURL');
@@ -79,7 +79,7 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 	public function testGetPreviewURL(){
 		if(!$this->_ftp) $this->markTestSkipped('FTP disabled, skipping tests');
 
-		$file = \Core\Filestore\factory('asset/images/logo.png');
+		$file = \Core\Filestore\Factory::File('asset/images/logo.png');
 
 		if(!$file instanceof \Core\Filestore\Backends\FileFTP){
 			$this->markTestSkipped('asset files are not local files, skipping getPreviewURL');
@@ -170,7 +170,7 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 	public function testDelete() {
 		if(!$this->_ftp) $this->markTestSkipped('FTP disabled, skipping tests');
 
-		$file = \Core\Filestore\factory('tmp/test-filelocaltest-testdelete.dat');
+		$file = \Core\Filestore\Factory::File('tmp/test-filelocaltest-testdelete.dat');
 
 		// I need to write something to it so it exists!
 		// (this is usually the case)
@@ -189,7 +189,7 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 	public function testRename() {
 		if(!$this->_ftp) $this->markTestSkipped('FTP disabled, skipping tests');
 
-		$file = \Core\Filestore\factory('tmp/test-filelocaltest-testrename.dat');
+		$file = \Core\Filestore\Factory::File('tmp/test-filelocaltest-testrename.dat');
 
 		// I need to write something to it so it exists!
 		// (this is usually the case)
@@ -209,7 +209,7 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('test-filelocaltest-testrename2.dat', $file->getBasename());
 
 		// And verify that this new file exists
-		$file2 = \Core\Filestore\factory('tmp/test-filelocaltest-testrename2.dat');
+		$file2 = \Core\Filestore\Factory::File('tmp/test-filelocaltest-testrename2.dat');
 		$this->assertTrue($file2->exists());
 
 		// And cleanup
@@ -247,7 +247,7 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 		if(!$this->_ftp) $this->markTestSkipped('FTP disabled, skipping tests');
 
 		$src = new \Core\Filestore\Backends\FileFTP('core/tests/ivak_TV_Test_Screen.png');
-		$dst = \Core\Filestore\factory('tmp/filelocaltest-displaypreview.dat');
+		$dst = \Core\Filestore\Factory::File('tmp/filelocaltest-displaypreview.dat');
 
 		// Start capturing the output
 		ob_start();
@@ -297,8 +297,9 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 
 		$file = new \Core\Filestore\Backends\FileFTP('core/tests/updater-testdocument.txt');
 
-		$this->assertTrue($file->inDirectory(ROOT_PDIR));
-		$this->assertTrue($file->inDirectory(ROOT_PDIR . 'core/tests'));
+		$dir = dirname($file->getFilename());
+
+		$this->assertTrue($file->inDirectory($dir));
 		$this->assertFalse($file->inDirectory(\Core\Filestore\get_tmp_path()));
 	}
 
@@ -306,7 +307,7 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 		if(!$this->_ftp) $this->markTestSkipped('FTP disabled, skipping tests');
 
 		$file1 = new \Core\Filestore\Backends\FileFTP('core/tests/updater-testdocument.txt');
-		$file2 = \Core\Filestore\factory('core/tests/updater-testdocument.txt');
+		$file2 = \Core\Filestore\Factory::File('core/tests/updater-testdocument.txt');
 		$file3 = new \Core\Filestore\Backends\FileFTP('core/tests/ivak_TV_Test_Screen.png');
 
 		$this->assertTrue($file1->identicalTo($file2));
@@ -314,8 +315,21 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCopyTo() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		$file = new \Core\Filestore\Backends\FileFTP('core/tests/updater-testdocument.txt');
+
+		// I should be able to copy to a filename.
+		// this gets resolved to a local file.
+		$copy = $file->copyTo('tmp/tests-fileremotetest-testcopyto.dat');
+		$this->assertInstanceOf('\\Core\\Filestore\\File', $copy);
+		$this->assertTrue($copy->exists());
+		$this->assertTrue($copy->delete());
+
+		// And it should be able to copy to a local file object.
+		$copy = new \Core\Filestore\Backends\FileLocal('tmp/tests-fileremotetest-testcopyto.dat');
+		$this->assertFalse($copy->exists());
+		$file->copyTo($copy);
+		$this->assertTrue($copy->exists());
+		$this->assertTrue($copy->delete());
 	}
 
 	public function testCopyFrom() {
@@ -336,7 +350,7 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 
 		$contents = 'Some Example Content';
 
-		$file1 = \Core\Filestore\factory('tmp/test-filelocaltest-putcontents.dat');
+		$file1 = \Core\Filestore\Factory::File('tmp/test-filelocaltest-putcontents.dat');
 
 		$this->assertTrue($file1->putContents($contents));
 		$this->assertTrue($file1->exists());

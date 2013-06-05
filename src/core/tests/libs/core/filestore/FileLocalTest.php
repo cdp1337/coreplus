@@ -20,7 +20,7 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	 * Unit test to test the construction of a new file object and to ensure it returns the correct data.
 	 */
 	public function testFactory(){
-		$file = \Core\Filestore\factory('core/tests/updater-testdocument.txt');
+		$file = \Core\Filestore\Factory::File('core/tests/updater-testdocument.txt');
 
 		$this->assertInstanceOf('\Core\Filestore\File', $file);
 		$this->assertInstanceOf('\Core\Filestore\Backends\FileLocal', $file);
@@ -59,7 +59,7 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	 * Test the getURL method
 	 */
 	public function testGetURL(){
-		$file = \Core\Filestore\factory('asset/images/logo.png');
+		$file = \Core\Filestore\Factory::File('asset/images/logo.png');
 
 		if(!$file instanceof \Core\Filestore\Backends\FileLocal){
 			$this->markTestSkipped('asset files are not local files, skipping getURL');
@@ -73,7 +73,7 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	 * Test the getPreviewURL method
 	 */
 	public function testGetPreviewURL(){
-		$file = \Core\Filestore\factory('asset/images/logo.png');
+		$file = \Core\Filestore\Factory::File('asset/images/logo.png');
 
 		if(!$file instanceof \Core\Filestore\Backends\FileLocal){
 			$this->markTestSkipped('asset files are not local files, skipping getPreviewURL');
@@ -150,7 +150,7 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	 * Test the delete method
 	 */
 	public function testDelete() {
-		$file = \Core\Filestore\factory('tmp/test-filelocaltest-testdelete.dat');
+		$file = \Core\Filestore\Factory::File('tmp/test-filelocaltest-testdelete.dat');
 
 		// I need to write something to it so it exists!
 		// (this is usually the case)
@@ -167,7 +167,7 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testRename() {
-		$file = \Core\Filestore\factory('tmp/test-filelocaltest-testrename.dat');
+		$file = \Core\Filestore\Factory::File('tmp/test-filelocaltest-testrename.dat');
 
 		// I need to write something to it so it exists!
 		// (this is usually the case)
@@ -187,7 +187,7 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('test-filelocaltest-testrename2.dat', $file->getBasename());
 
 		// And verify that this new file exists
-		$file2 = \Core\Filestore\factory('tmp/test-filelocaltest-testrename2.dat');
+		$file2 = \Core\Filestore\Factory::File('tmp/test-filelocaltest-testrename2.dat');
 		$this->assertTrue($file2->exists());
 
 		// And cleanup
@@ -217,7 +217,7 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 
 	public function testDisplayPreview(){
 		$src = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png');
-		$dst = \Core\Filestore\factory('tmp/filelocaltest-displaypreview.dat');
+		$dst = \Core\Filestore\Factory::File('tmp/filelocaltest-displaypreview.dat');
 
 		// Start capturing the output
 		ob_start();
@@ -270,7 +270,7 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 
 	public function testIdenticalTo() {
 		$file1 = new \Core\Filestore\Backends\FileLocal('core/tests/updater-testdocument.txt');
-		$file2 = \Core\Filestore\factory('core/tests/updater-testdocument.txt');
+		$file2 = \Core\Filestore\Factory::File('core/tests/updater-testdocument.txt');
 		$file3 = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png');
 
 		$this->assertTrue($file1->identicalTo($file2));
@@ -278,8 +278,21 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCopyTo() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		$file = new \Core\Filestore\Backends\FileLocal('core/tests/updater-testdocument.txt');
+
+		// I should be able to copy to a filename.
+		// this gets resolved to a local file.
+		$copy = $file->copyTo('tmp/tests-filelocaltest-testcopyto.dat');
+		$this->assertInstanceOf('\\Core\\Filestore\\File', $copy);
+		$this->assertTrue($copy->exists());
+		$this->assertTrue($copy->delete());
+
+		// And it should be able to copy to a local file object.
+		$copy = new \Core\Filestore\Backends\FileLocal('tmp/tests-filelocaltest-testcopyto.dat');
+		$this->assertFalse($copy->exists());
+		$file->copyTo($copy);
+		$this->assertTrue($copy->exists());
+		$this->assertTrue($copy->delete());
 	}
 
 	public function testCopyFrom() {
@@ -296,7 +309,7 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	public function testPutContents() {
 		$contents = 'Some Example Content';
 
-		$file1 = \Core\Filestore\factory('tmp/test-filelocaltest-putcontents.dat');
+		$file1 = \Core\Filestore\Factory::File('tmp/test-filelocaltest-putcontents.dat');
 
 		$this->assertTrue($file1->putContents($contents));
 		$this->assertTrue($file1->exists());

@@ -179,7 +179,7 @@ class Component_2_1 {
 
 
 	public function __construct($filename = null) {
-		$this->_file = \Core\Filestore\factory($filename);
+		$this->_file = \Core\Filestore\Factory::File($filename);
 
 		$this->_xmlloader = new XMLLoader();
 		$this->_xmlloader->setRootName('component');
@@ -1259,7 +1259,7 @@ class Component_2_1 {
 			if($filename == 'CHANGELOG' || $filename == 'core/CHANGELOG') continue;
 
 			/** @var $object \Core\Filestore\Backends\FileLocal */
-			$object = \Core\Filestore\factory($this->getBaseDir() . $filename);
+			$object = \Core\Filestore\Factory::File($this->getBaseDir() . $filename);
 
 			if($object->getHash() != $md5){
 				$changes[] = $filename;
@@ -1285,7 +1285,7 @@ class Component_2_1 {
 			$filename = $file->getAttribute('filename');
 
 			/** @var $object \Core\Filestore\Backends\FileLocal */
-			$object = \Core\Filestore\factory($this->getBaseDir() . $filename);
+			$object = \Core\Filestore\Factory::File($this->getBaseDir() . $filename);
 
 			if($object->getHash() != $md5){
 				$changes[] = $filename;
@@ -1312,7 +1312,7 @@ class Component_2_1 {
 			$filename = $file->getAttribute('filename');
 
 			/** @var $object \Core\Filestore\Backends\FileLocal */
-			$object = \Core\Filestore\factory($this->getBaseDir() . $filename);
+			$object = \Core\Filestore\Factory::File($this->getBaseDir() . $filename);
 
 			if($object->getHash() != $md5){
 				$changes[] = $filename;
@@ -1765,7 +1765,7 @@ class Component_2_1 {
 				$f = new \Core\Filestore\Backends\FileLocal($b . $node->getAttribute('filename'));
 			}
 
-			$nf = \Core\Filestore\factory($newfilename);
+			$nf = \Core\Filestore\Factory::File($newfilename);
 			//var_dump($newfilename, $nf->getFilename(), $nf);
 
 			// If it's null, don't change the path any.

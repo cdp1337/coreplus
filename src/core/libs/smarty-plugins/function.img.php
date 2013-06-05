@@ -39,7 +39,7 @@ function smarty_function_img($params, $template){
 		unset($params['file']);
 	}
 	elseif(isset($params['src'])){
-		$f = \Core\Filestore\factory($params['src']);
+		$f = \Core\Filestore\Factory::File($params['src']);
 		unset($params['src']);
 	}
 	else{
@@ -91,7 +91,7 @@ function smarty_function_img($params, $template){
 	// If the file doesn't exist and a placeholder was provided, use the appropriate placeholder image!
 	if(!($f && $f->exists() && $f->isImage()) && $placeholder){
 		// Try that!
-		$f = \Core\Filestore\factory('assets/images/placeholders/' . $placeholder . '.png');
+		$f = \Core\Filestore\Factory::File('assets/images/placeholders/' . $placeholder . '.png');
 	}
 
 	if(!$f){

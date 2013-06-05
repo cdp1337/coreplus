@@ -622,7 +622,7 @@ class Core implements ISingleton {
 	 * @return \Core\Filestore\File
 	 */
 	public static function File($filename = null) {
-		return \Core\Filestore\factory($filename);
+		return \Core\Filestore\Factory::File($filename);
 	}
 
 
@@ -960,7 +960,7 @@ class Core implements ISingleton {
 		if(ConfigHandler::Get('/core/javascript/minified') && substr($asset, -3) == '.js'){
 			// Try to load the minified version instead.
 			$minified = str_replace('.js', '.min.js', $asset);
-			$file = \Core\Filestore\factory($minified);
+			$file = \Core\Filestore\Factory::File($minified);
 			if($file->exists()){
 				return $file->getURL();
 			}
@@ -968,7 +968,7 @@ class Core implements ISingleton {
 		elseif(ConfigHandler::Get('/core/javascript/minified') && substr($asset, -4) == '.css'){
 			// Try to load the minified version instead.
 			$minified = str_replace('.css', '.min.css', $asset);
-			$file = \Core\Filestore\factory($minified);
+			$file = \Core\Filestore\Factory::File($minified);
 			if($file->exists()){
 				return $file->getURL();
 			}
@@ -977,7 +977,7 @@ class Core implements ISingleton {
 		// Skip the cache while I decide on if it's needed or not.
 		// the issue was that if clientA went to the site on ie: localhost, and clientB went to the site
 		// on 192.168.1.20, all assets would be resolving to "localhost", potentially producing invalid links.
-		$f = \Core\Filestore\factory($asset);
+		$f = \Core\Filestore\Factory::File($asset);
 		//var_dump($asset);
 		//$f = self::File($asset);
 		return $f->getURL();

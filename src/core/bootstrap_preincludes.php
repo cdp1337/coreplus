@@ -56,6 +56,8 @@ require_once(ROOT_PDIR . 'core/functions/Core.functions.php');
 // File manipulation is a core feature required by the component system.
 require_once(ROOT_PDIR . 'core/libs/core/filestore/functions.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/File.interface.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/Directory.interface.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/Factory.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/Directory_Backend.interface.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/FileContentFactory.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/Contents.interface.php');
@@ -63,7 +65,8 @@ require_once(ROOT_PDIR . 'core/libs/core/filestore/Contents.interface.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/FileLocal.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/FileFTP.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/FileRemote.php');
-require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/directory_local.backend.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/DirectoryLocal.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/DirectoryFTP.php');
 
 // Many of these are needed because some systems, such as the installer
 // execute before the ComponentHandler has loaded the class locations.

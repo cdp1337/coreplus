@@ -96,7 +96,7 @@ class ContentASC implements Filestore\Contents {
 				// Drop the .asc extension if it's there.
 				if ($this->_file->getExtension() == 'asc') $file = substr($file, 0, -4);
 
-				$dest = Filestore\factory($file);
+				$dest = Filestore\Factory::File($file);
 			}
 
 			// And load up the contents!

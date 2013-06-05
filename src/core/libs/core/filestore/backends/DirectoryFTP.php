@@ -21,9 +21,16 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class Directory_local_backend implements Directory_Backend {
+namespace Core\Filestore\Backends;
 
-	private $_path;
+use Core\Filestore;
+
+class DirectoryFTP implements Filestore\Directory {
+
+	protected $_prefix;
+	protected $_path;
+
+	private $_type;
 
 	/**
 	 * The internal listing of files
@@ -40,86 +47,33 @@ class Directory_local_backend implements Directory_Backend {
 	private $_ignores = array();
 
 	/**
-	 * The fully resolved path of assets.
-	 * Used as a cache.
+	 * The backend FTP resource.
+	 * This is a native PHP object.
 	 *
-	 * @var string
+	 * @var
 	 */
-	private static $_Root_pdir_assets = null;
-	private static $_Root_pdir_public = null;
-	private static $_Root_pdir_private = null;
-	private static $_Root_pdir_tmp = null;
+	protected $_ftp;
 
-	public function __construct($directory) {
+	/**
+	 * Set to true if this FTP connection is the proxy for local files.
+	 * @var bool
+	 */
+	protected $_islocal = false;
+
+	public function __construct($directory, $ftpobject = null) {
+		if($ftpobject !== null){
+			$this->_ftp = $ftpobject;
+		}
+		else{
+			$this->_ftp = \Core\FTP();
+		}
+
+		if($this->_ftp == \Core\FTP()){
+			$this->_islocal = true;
+		}
+
 		if (!is_null($directory)) {
-
-			// Ensure that the root_pdir directories are cached and ready.
-			if (self::$_Root_pdir_assets === null) {
-				$dir = CDN_LOCAL_ASSETDIR;
-				if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
-				self::$_Root_pdir_assets = $dir;
-			}
-			if (self::$_Root_pdir_public === null) {
-				$dir = CDN_LOCAL_PUBLICDIR;
-				if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
-				self::$_Root_pdir_public = $dir;
-			}
-			if (self::$_Root_pdir_private === null) {
-				$dir = ConfigHandler::Get('/core/filestore/privatedir');
-				if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
-				self::$_Root_pdir_private = $dir;
-			}
-			if (self::$_Root_pdir_tmp === null) {
-				$dir = TMP_DIR;
-				if ($dir{0} != '/') $dir = ROOT_PDIR . $dir; // Needs to be fully resolved
-				self::$_Root_pdir_tmp = $dir;
-			}
-
-			// Directories should always end in a trailing slash
-			$directory = $directory . '/';
-
-			// Do some cleaning on the filename, ie: // should be just /.
-			$directory = preg_replace(':/+:', '/', $directory);
-
-			// Also lookup this filename and resolve it.
-			// ie, if it starts with "asset/", it should be an asset.
-			// public/, public.
-			// private/, private.
-
-			if (strpos($directory, 'assets/') === 0) {
-				$theme     = ConfigHandler::Get('/theme/selected');
-				$directory = substr($directory, 7); // Trim off the 'asset/' prefix.
-				if($directory === false){
-					// The user literally wanted the assets base directory... OK
-					// This is used in the installer to make sure that it's writable.
-					$directory = self::$_Root_pdir_assets;
-				}
-				elseif (file_exists(self::$_Root_pdir_assets . $theme . '/' . $directory)){
-					// If the file exists in the current theme directory, use that.
-					$directory = self::$_Root_pdir_assets . $theme . '/' . $directory;
-				}
-				else{
-					// Otherwise default back to "default".
-					$directory = self::$_Root_pdir_assets . 'default/' . $directory;
-				}
-			}
-			elseif (strpos($directory, 'public/') === 0) {
-				$directory = substr($directory, 7); // Trim off the 'public/' prefix.
-				$directory = self::$_Root_pdir_public . $directory;
-			}
-			elseif (strpos($directory, 'private/') === 0) {
-				$directory = substr($directory, 8); // Trim off the 'private/' prefix.
-				$directory = self::$_Root_pdir_private . $directory;
-			}
-			elseif (strpos($directory, 'tmp/') === 0) {
-				$directory = substr($directory, 4); // Trim off the 'tmp/' prefix.
-				$directory = self::$_Root_pdir_tmp . $directory;
-			}
-			else {
-				// Nothing to do on the else, just use this filename as-is.
-			}
-
-			$this->_path = $directory;
+			$this->setPath($directory);
 		}
 	}
 
@@ -146,10 +100,10 @@ class Directory_local_backend implements Directory_Backend {
 
 			// Is there an extension requested?
 			if($extension){
-				if($obj instanceof Directory_local_backend && $recursive){
+				if($obj instanceof Filestore\Directory && $recursive){
 					$ret = array_merge($ret, $obj->ls($extension, $recursive));
 				}
-				elseif($obj instanceof \Core\Filestore\File){
+				elseif($obj instanceof Filestore\File){
 					//echo $obj->getExtension() . ' vs ' . $extension . '<br/>';
 					// Is it a match?
 					if($obj->getExtension() == $extension){
@@ -162,7 +116,7 @@ class Directory_local_backend implements Directory_Backend {
 				$ret[] = $obj;
 
 				// And recurse into directories for its children.
-				if($obj instanceof Directory_local_backend && $recursive){
+				if($obj instanceof Filestore\Directory && $recursive){
 					$ret = array_merge($ret, $obj->ls($extension, $recursive));
 				}
 			}
@@ -182,31 +136,12 @@ class Directory_local_backend implements Directory_Backend {
 	 * @return bool true if the directory exists and is readable, false otherwise.
 	 */
 	public function isReadable() {
-		return is_readable($this->_path);
+		return is_readable($this->getPath());
 	}
 
 	public function isWritable() {
-		$ftp    = \Core\FTP();
-		$tmpdir = TMP_DIR;
-		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
-
-
-		if (!$ftp) {
-			// If the directory doesn't exist, maybe the parent is still writable...
-			$testpath = $this->_path;
-			while($testpath && !is_dir($testpath)){
-				$testpath = substr($testpath, 0, strrpos($testpath, '/'));
-			}
-			return is_writable($testpath);
-		}
-		elseif (strpos($this->_path, $tmpdir) === 0) {
-			// Tmp files should be written directly.
-			return is_writable($this->_path);
-		}
-		else {
-			// There is no easy way to know if an FTP directory is writable....
-			return true;
-		}
+		// There is no easy way to know if an FTP directory is writable....
+		return true;
 	}
 
 	/**
@@ -225,24 +160,53 @@ class Directory_local_backend implements Directory_Backend {
 	 * @return boolean | null
 	 */
 	public function mkdir() {
-		if (is_dir($this->getPath())) return null;
-		else return mkdir($this->getPath(), 0777, true);
+		if($this->exists()) return null;
+
+		// Resolve it from its default.
+		// This is provided from a config define, (probably).
+		$mode = (defined('DEFAULT_DIRECTORY_PERMS') ? DEFAULT_DIRECTORY_PERMS : 0777);
+
+		// Because ftp_mkdir doesn't like to create parent directories...
+		$paths = explode('/', $this->_path);
+
+		foreach ($paths as $p) {
+			if(trim($p) == '') continue;
+
+			if (!@ftp_chdir($this->_ftp, $p)) {
+				if (!ftp_mkdir($this->_ftp, $p)) return false;
+				if (!ftp_chmod($this->_ftp, $mode, $p)) return false;
+				ftp_chdir($this->_ftp, $p);
+			}
+		}
+
+		// woot...
+		return true;
 	}
 
 	public function rename($newname) {
-		// If the new name is not fully resolved, translate it to the same as the current directory.
-		if($newname{0} != '/'){
-			$newname = substr($this->getPath(), 0, -1 - strlen($this->getBasename())) . $newname;
-		}
 
-		if(File_local_backend::_Rename($this->getPath(), $newname)){
-			$this->_path = $newname;
-			$this->_files = null;
-			return true;
+		$cwd = ftp_pwd($this->_ftp);
+
+		if(strpos($newname, ROOT_PDIR) === 0){
+			// If the file starts with the PDIR... trim that off!
+			$newname = substr($newname, strlen(ROOT_PDIR));
+		}
+		elseif(strpos($newname, $cwd) === 0){
+			// If the file already starts with the CWD... trim that off!
+			$newname = substr($newname, strlen($cwd));
 		}
 		else{
-			return false;
+			$newname = dirname($this->_path) . '/' . $newname;
 		}
+
+		$status = ftp_rename($this->_ftp, $this->_path, $newname);
+
+		if($status){
+			$this->_path = $newname;
+			$this->_files = null;
+		}
+
+		return $status;
 	}
 
 	/**
@@ -251,7 +215,58 @@ class Directory_local_backend implements Directory_Backend {
 	 * @return string
 	 */
 	public function getPath() {
-		return $this->_path;
+		return $this->_prefix . $this->_path;
+	}
+
+	/**
+	 * Set the path for this directory.
+	 *
+	 * @param $path
+	 *
+	 * @return void
+	 */
+	public function setPath($path){
+		if(substr($path, -1) != '/'){
+			// Directories should always end in a trailing slash
+			$path = $path . '/';
+		}
+
+		$cwd = ftp_pwd($this->_ftp);
+
+		if(strpos($path, ROOT_PDIR) === 0){
+			// If the file starts with the PDIR... trim that off!
+			$path = substr($path, strlen(ROOT_PDIR));
+			$prefix = ROOT_PDIR;
+		}
+		elseif(strpos($path, $cwd) === 0){
+			// If the file already starts with the CWD... trim that off!
+			$path = substr($path, strlen($cwd));
+			$prefix = $cwd;
+		}
+		else{
+			$prefix = $cwd;
+		}
+
+		// Make sure that prefix ends with a '/'.
+		if(substr($prefix, -1) != '/') $prefix .= '/';
+
+		// Do some cleaning on the filename, ie: // should be just /.
+		$path = preg_replace(':/+:', '/', $path);
+
+		$this->_prefix = $prefix;
+		$this->_path = $path;
+
+		// Resolve if this is an asset, public, etc.
+		// This is to speed up the other functions so they don't have to perform this operation.
+		if(strpos($this->_path, Filestore\get_asset_path()) === 0){
+			$this->_type = 'asset';
+		}
+		elseif(strpos($this->_path, Filestore\get_public_path()) === 0){
+			$this->_type = 'public';
+		}
+		elseif(strpos($this->_path, Filestore\get_tmp_path()) === 0){
+			$this->_type = 'tmp';
+		}
 	}
 
 
@@ -261,14 +276,16 @@ class Directory_local_backend implements Directory_Backend {
 	 * @return string
 	 */
 	public function getBasename() {
-		$p = trim($this->_path, '/');
-		return substr($p, strrpos($p, '/') + 1);
+		return basename($this->_path);
+
+		//$p = trim($this->_path, '/');
+		//return substr($p, strrpos($p, '/') + 1);
 	}
 
 	/**
-	 * Remove a directory and recursively any file inside it.
+	 * Delete a directory and recursively any file inside it.
 	 */
-	public function remove() {
+	public function delete() {
 		$ftp    = \Core\FTP();
 		$tmpdir = TMP_DIR;
 		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
@@ -309,8 +326,8 @@ class Directory_local_backend implements Directory_Backend {
 			// If there are children, drop into them and remove those too.
 			// This is because directories need to be empty.
 			foreach($this->ls() as $sub){
-				if($sub instanceof File_local_backend) $sub->delete();
-				else $sub->remove();
+				if($sub instanceof Filestore\File) $sub->delete();
+				else $sub->delete();
 			}
 			$path = $this->getPath();
 
@@ -324,13 +341,17 @@ class Directory_local_backend implements Directory_Backend {
 		}
 	}
 
+	public function remove(){
+		return $this->delete();
+	}
+
 	/**
 	 * Find and get a directory or file that matches the name provided.
 	 *
 	 * Will search run down subdirectories if a tree'd path is provided.
 	 *
 	 * @param string $name
-	 * @return null|File_local_backend|Directory_local_backend
+	 * @return null|Filestore\File|Filestore\Directory
 	 */
 	public function get($name) {
 		// Trim beginning and trailing slashes.
@@ -378,7 +399,7 @@ class Directory_local_backend implements Directory_Backend {
 		// Clear out the files array, (should be null anyways)
 		$this->_files = array();
 
-		$dh = opendir($this->_path);
+		$dh = opendir($this->getPath());
 
 		// If for some reason opendir cannot open the directory, do nothing else.
 		if (!$dh) return;
@@ -389,11 +410,11 @@ class Directory_local_backend implements Directory_Backend {
 			// This is kind of like a built-in autoignore.
 			if ($sub{0} == '.') continue;
 
-			if (is_dir($this->_path . $sub)) {
-				$this->_files[$sub] = new Directory_local_backend($this->_path . $sub);
+			if (is_dir($this->getPath() . $sub)) {
+				$this->_files[$sub] = new DirectoryFTP($this->getPath() . $sub);
 			}
 			else {
-				$this->_files[$sub] = new \Core\Filestore\Backends\FileLocal($this->_path . $sub);
+				$this->_files[$sub] = new FileFTP($this->getPath() . $sub);
 			}
 		}
 

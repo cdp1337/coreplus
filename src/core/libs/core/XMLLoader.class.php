@@ -146,7 +146,7 @@ class XMLLoader implements Serializable {
 
 		if ($this->_file) {
 			$contents = $this->_file->getContentsObject();
-			if (is_a($contents, 'File_gz_contents')) {
+			if (is_a($contents, '\Core\Filestore\Contents\ContentGZ')) {
 				$dat = $contents->uncompress();
 			}
 			else {
@@ -183,7 +183,7 @@ class XMLLoader implements Serializable {
 		else {
 			// Make sure the file is fully resolved.
 			// To do that, Core has some built in systems.
-			$this->_file = \Core\Filestore\factory($file);
+			$this->_file = \Core\Filestore\Factory::File($file);
 			//$this->_filename = $file;
 		}
 

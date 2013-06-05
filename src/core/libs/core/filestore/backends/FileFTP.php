@@ -116,7 +116,6 @@ class FileFTP implements Filestore\File{
 			return 0;
 		}
 
-		$f = filesize($this->_filename);
 		return ($formatted) ? Filestore\format_size($f, 2) : $f;
 	}
 
@@ -259,6 +258,9 @@ class FileFTP implements Filestore\File{
 			if(strpos($filename, \ConfigHandler::Get('/theme/selected') . '/') === 0){
 				$filename = substr($filename, strlen(\ConfigHandler::Get('/theme/selected')) + 1);
 			}
+			elseif(strpos($filename, 'default/') === 0){
+				$filename = substr($filename, 8);
+			}
 			// And now I can add the base onto it.
 			$filename = $base . $filename;
 		}
@@ -284,7 +286,7 @@ class FileFTP implements Filestore\File{
 	 * @return boolean
 	 */
 	public function delete() {
-		// TODO: Implement delete() method.
+		return ftp_delete($this->_ftp, $this->_filename);
 	}
 
 	/**
@@ -295,7 +297,28 @@ class FileFTP implements Filestore\File{
 	 * @return boolean
 	 */
 	public function rename($newname) {
-		// TODO: Implement rename() method.
+		$cwd = ftp_pwd($this->_ftp);
+
+		if(strpos($newname, ROOT_PDIR) === 0){
+			// If the file starts with the PDIR... trim that off!
+			$newname = substr($newname, strlen(ROOT_PDIR));
+		}
+		elseif(strpos($newname, $cwd) === 0){
+			// If the file already starts with the CWD... trim that off!
+			$newname = substr($newname, strlen($cwd));
+		}
+		else{
+			$newname = dirname($this->_filename) . '/' . $newname;
+		}
+
+		$status = ftp_rename($this->_ftp, $this->_filename, $newname);
+
+		if($status){
+			$this->_filename = $newname;
+			$this->_tmplocal = null;
+		}
+
+		return $status;
 	}
 
 	/**
@@ -346,7 +369,7 @@ class FileFTP implements Filestore\File{
 	 * @return string
 	 */
 	public function getMimetypeIconURL($dimensions = '32x32') {
-		// TODO: Implement getMimetypeIconURL() method.
+		return $this->_getTmpLocal()->getMimetypeIconURL($dimensions);
 	}
 
 	/**
@@ -383,7 +406,7 @@ class FileFTP implements Filestore\File{
 	 */
 	public function inDirectory($path) {
 		// Just a simple strpos shortcut...
-		return (strpos($this->_filename, $path) !== false);
+		return (strpos($this->_prefix . $this->_filename, $path) !== false);
 	}
 
 	public function identicalTo($otherfile) {
@@ -401,7 +424,33 @@ class FileFTP implements Filestore\File{
 	 * @return Filestore\File
 	 */
 	public function copyTo($dest, $overwrite = false) {
-		// TODO: Implement copyTo() method.
+		if (!(is_a($dest, 'File') || $dest instanceof Filestore\File)) {
+			// Well it should be damnit!....
+			$file = $dest;
+
+			// Get the location of the destination, be it relative or absolute.
+			// If the file does not start with a "/", assume it's relative to this current file.
+			//if($file{0} != '/'){
+			//	$file = dirname($this->_filename) . '/' . $file;
+			//}
+
+			// Is the destination a directory or filename?
+			// If it's a directory just tack on this current file's basename.
+			if (substr($file, -1) == '/') {
+				$file .= $this->getBaseFilename();
+			}
+
+			// Now dest can be instantiated as a valid file object!
+			$dest = Filestore\Factory::File($file);
+		}
+
+		if ($this->identicalTo($dest)) return $dest;
+
+		// GO!
+		// The receiving function's logic will handle the rest.
+		$dest->copyFrom($this, $overwrite);
+
+		return $dest;
 	}
 
 	/**
@@ -552,7 +601,9 @@ class FileFTP implements Filestore\File{
 	 * @return int
 	 */
 	public function getMTime() {
-		// TODO: Implement getMTime() method.
+		if (!$this->exists()) return false;
+
+		return ftp_mdtm($this->_ftp, $this->_filename);
 	}
 
 
@@ -579,6 +630,9 @@ class FileFTP implements Filestore\File{
 		else{
 			$prefix = $cwd;
 		}
+
+		// Make sure that prefix ends with a '/'.
+		if(substr($prefix, -1) != '/') $prefix .= '/';
 
 		// Resolve if this is an asset, public, etc.
 		// This is to speed up the other functions so they don't have to perform this operation.
@@ -646,7 +700,7 @@ class FileFTP implements Filestore\File{
 			else{
 				$f = md5($this->getFilename());
 
-				$this->_tmplocal = Filestore\factory('tmp/remotefile-cache/' . $f);
+				$this->_tmplocal = Filestore\Factory::File('tmp/remotefile-cache/' . $f);
 
 				ftp_get($this->_ftp, $this->_tmplocal->getFilename(), $this->_filename, FTP_BINARY);
 			}

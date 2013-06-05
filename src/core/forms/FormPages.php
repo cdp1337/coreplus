@@ -61,10 +61,10 @@ class FormPagePageSelectInput extends FormSelectInput{
 		foreach(\Core\Templates\Template::GetPaths() as $d){
 			if(is_dir($d . $tmpname)){
 				// Yay, sift through that and get the files!
-				$dir = new Directory_local_backend($d . $tmpname);
+				$dir = \Core\Filestore\Factory::Directory($d . $tmpname);
 				foreach($dir->ls('tpl') as $file){
 					// Skip directories
-					if($file instanceof Directory_local_backend) continue;
+					if($file instanceof \Core\Filestore\Directory) continue;
 
 					/** @var $file \Core\Filestore\File */
 					//$fullpath = $tmpname . $file->getBaseFilename();

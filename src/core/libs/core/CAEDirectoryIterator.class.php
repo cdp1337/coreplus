@@ -138,7 +138,7 @@ class CAEDirectoryIterator implements Iterator {
 			}
 			else {
 				// @todo have intelligent file matching to return the appropriate object.
-				$this->_files[] = \Core\Filestore\factory($dir . $sub);
+				$this->_files[] = \Core\Filestore\Factory::File($dir . $sub);
 			}
 		}
 

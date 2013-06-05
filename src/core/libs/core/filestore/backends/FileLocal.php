@@ -148,6 +148,9 @@ class FileLocal implements Filestore\File {
 		elseif(strpos($this->_filename, Filestore\get_public_path()) === 0){
 			$this->_type = 'public';
 		}
+		elseif(strpos($this->_filename, Filestore\get_tmp_path()) === 0){
+			$this->_type = 'tmp';
+		}
 	}
 
 	/**
@@ -213,6 +216,9 @@ class FileLocal implements Filestore\File {
 			// this script is meant to be a generic resource handle that gets resolved by the receiving script.
 			if(strpos($filename, \ConfigHandler::Get('/theme/selected') . '/') === 0){
 				$filename = substr($filename, strlen(\ConfigHandler::Get('/theme/selected')) + 1);
+			}
+			elseif(strpos($filename, 'default/') === 0){
+				$filename = substr($filename, 8);
 			}
 			// And now I can add the base onto it.
 			$filename = $base . $filename;
@@ -306,7 +312,7 @@ class FileLocal implements Filestore\File {
 			}
 
 			// Now dest can be instantiated as a valid file object!
-			$dest = new FileLocal($file);
+			$dest = Filestore\Factory::File($file);
 		}
 
 		if ($this->identicalTo($dest)) return $dest;
@@ -481,6 +487,8 @@ class FileLocal implements Filestore\File {
 	public function displayPreview($dimensions = "300x300", $includeHeader = true) {
 
 		$preview = $this->getPreviewFile($dimensions);
+
+		//var_dump($preview, $this); die(';)');
 		if ($includeHeader){
 			header('Content-Type: image/png');
 			header('Content-Length: ' . $preview->getFilesize());
@@ -502,13 +510,13 @@ class FileLocal implements Filestore\File {
 	public function getMimetypeIconURL($dimensions = '32x32'){
 		$filemime = str_replace('/', '-', $this->getMimetype());
 
-		$file = Filestore\factory('assets/images/mimetypes/' . $filemime . '.png');
+		$file = Filestore\Factory::File('assets/images/mimetypes/' . $filemime . '.png');
 		if(!$file->exists()){
 			if(DEVELOPMENT_MODE){
 				// Inform the developer, otherwise it's not a huge issue.
 				error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown" (filename: ' . $this->getFilename('') . ')');
 			}
-			$file = Filestore\factory('assets/images/mimetypes/unknown.png');
+			$file = Filestore\Factory::File('assets/images/mimetypes/unknown.png');
 		}
 		return $file->getPreviewURL($dimensions);
 	}
@@ -524,6 +532,8 @@ class FileLocal implements Filestore\File {
 	 * @return Filestore\File_backend
 	 */
 	public function getQuickPreviewFile($dimensions = '300x300'){
+		//var_dump('Requesting quick file preview for ' . __CLASS__);
+
 		$bits   = $this->_getReizedKeyComponents($dimensions);
 		$width  = $bits['width'];
 		$height = $bits['height'];
@@ -536,31 +546,35 @@ class FileLocal implements Filestore\File {
 			error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
 
 			// Return a 404 image.
-			return \Core\Filestore\factory('assets/images/mimetypes/notfound.png');
+			$file = \Core\Filestore\Factory::File('assets/images/mimetypes/notfound.png');
+			$preview = $file->getPreviewFile($dimensions);
 		}
 		elseif ($this->isPreviewable()) {
 			// If no resize was requested, simply return the full size image.
 			if($width === false) return $this;
 
 			// Yes, this must be within public because it's meant to be publicly visible.
-			return \Core\Filestore\factory('public/tmp/' . $key);
+			$preview = \Core\Filestore\Factory::File('public/tmp/' . $key);
 		}
 		else {
 			// Try and get the mime icon for this file.
 			$filemime = str_replace('/', '-', $this->getMimetype());
 
-			$file = \Core\Filestore\factory('assets/images/mimetypes/' . $filemime . '.png');
+			$file = \Core\Filestore\Factory::File('assets/images/mimetypes/' . $filemime . '.png');
 			if(!$file->exists()){
 				if(DEVELOPMENT_MODE){
 					// Inform the developer, otherwise it's not a huge issue.
 					error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown"');
 				}
-				return \Core\Filestore\factory('assets/images/mimetypes/unknown.png');
+				$file = \Core\Filestore\Factory::File('assets/images/mimetypes/unknown.png');
 			}
-			else{
-				return $file;
-			}
+
+			$preview = $file->getPreviewFile($dimensions);
 		}
+
+		//var_dump('From this: ', $this);
+		//var_dump('Returning this: ', $preview, $preview->exists());
+		return $preview;
 	}
 
 	public function getPreviewFile($dimensions = '300x300'){
@@ -571,9 +585,9 @@ class FileLocal implements Filestore\File {
 			// Try and get the mime icon for this file.
 			$filemime = str_replace('/', '-', $this->getMimetype());
 
-			$file = \Core\Filestore\factory('assets/images/mimetypes/' . $filemime . '.png');
+			$file = \Core\Filestore\Factory::File('assets/images/mimetypes/' . $filemime . '.png');
 			if(!$file->exists()){
-				$file = \Core\Filestore\factory('assets/images/mimetypes/unknown.png');
+				$file = \Core\Filestore\Factory::File('assets/images/mimetypes/unknown.png');
 			}
 			return $file;
 		}
@@ -594,6 +608,7 @@ class FileLocal implements Filestore\File {
 
 		if (!$this->exists()) {
 			// This will be a 404 image.
+			//$file = \Core\Filestore\Factory::File('assets/images/mimetypes/notfound.png');
 			return $file->getPreviewFile($dimensions);
 		}
 		elseif ($this->isPreviewable()) {
@@ -614,7 +629,7 @@ class FileLocal implements Filestore\File {
 		}
 		else {
 			// This will be a mimetype image.
-			$file->getPreviewFile($dimensions);
+			return $file->getPreviewFile($dimensions);
 		}
 	}
 

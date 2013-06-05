@@ -43,7 +43,7 @@ class ContentZIP implements Filestore\Contents {
 	 *
 	 * @param string $dst Destination to extract the archive to.
 	 *
-	 * @return \Directory_local_backend
+	 * @return \Core\Filestore\Directory
 	 */
 	public function extract($destdir) {
 		// This will ensure that the destdir is properly resolved.

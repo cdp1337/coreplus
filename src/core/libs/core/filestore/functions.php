@@ -25,70 +25,6 @@ namespace Core\Filestore;
 
 use Core\Filestore\CDN;
 
-/**
- * Function to act as Factory for the underlying Filestore system.
- * This will parse the incoming URI and return the appropriate type based on Core settings and filetype.
- *
- * @param $uri
- *
- * @return File
- */
-function factory($uri){
-	//var_dump($uri);
-
-	// base64 comes first.  If the filename is encoded in that, decode it first.
-	if (strpos($uri, 'base64:') === 0){
-		$uri = base64_decode(substr($uri, 7));
-	}
-
-	// Allow FTP files to be requested here!
-	// This needs to be before the :// check, because technically FTP can be a remote file,
-	// but it has extra functionality, (namely being able to write or perform other operations through FTP)
-	if(strpos($uri, 'ftp://') === 0){
-		return new Backends\FileFTP($uri);
-	}
-
-	// Allow remote files to be requested here too!
-	if(strpos($uri, '://') !== false){
-		return new Backends\FileRemote($uri);
-	}
-
-	// Is this an asset request?
-	if(
-		strpos($uri, 'asset/') === 0 ||
-		strpos($uri, 'assets/') === 0 ||
-		strpos($uri, get_asset_path()) === 0
-	){
-		return resolve_asset_file($uri);
-	}
-
-	// Is this a public request?
-	if(
-		strpos($uri, 'public/') === 0 ||
-		strpos($uri, get_public_path()) === 0
-	){
-		return resolve_public_file($uri);
-	}
-
-	// Is this a private request?
-	if(
-		strpos($uri, 'private/') === 0 ||
-		strpos($uri, get_private_path()) === 0
-	){
-		return new CDN\FileAsset($uri);
-	}
-
-	// Is this a tmp request?
-	if(strpos($uri, 'tmp/') === 0){
-		return new Backends\FileLocal(get_tmp_path() . substr($uri, 4));
-	}
-	elseif(strpos($uri, get_tmp_path()) === 0){
-		return new Backends\FileLocal($uri);
-	}
-
-	// Umm.... ok
-	return new Backends\FileLocal($uri);
-}
 
 /**
  * Utility function to translate a filesize in bytes into a human-readable version.
@@ -419,6 +355,109 @@ function resolve_public_file($filename){
 			}
 			else{
 				return new Backends\FileLocal($resolved . $filename);
+			}
+
+			break;
+		default:
+			throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
+			break;
+	}
+}
+
+/**
+ * Resolve a name for an asset to an actual file.
+ *
+ * @param $filename
+ *
+ * @return \Core\Filestore\Directory
+ *
+ * @throws \Exception
+ */
+function resolve_asset_directory($filename){
+	$resolved = get_asset_path();
+
+	if (strpos($filename, 'assets/') === 0) {
+		// Allow "assets/blah" to be passed in
+		$filename = substr($filename, 7);
+	}
+	elseif(strpos($filename, 'asset/') === 0){
+		// Allow "asset/blah" to be passed in.
+		$filename = substr($filename, 6);
+	}
+	elseif(strpos($filename, $resolved) === 0){
+		// Allow the fully resolved name to be passed in
+		$filename = substr($filename, strlen($resolved));
+	}
+
+	//var_dump($filename);
+
+	// I need to check the custom, current theme, and finally default locations for the file.
+	$theme = \ConfigHandler::Get('/theme/selected');
+	switch(CDN_TYPE){
+		case 'local':
+			if(\Core\ftp()){
+				// FTP has its own sub-type.
+				$custom  = new Backends\DirectoryFTP($resolved  . 'custom/' . $filename);
+				$themed  = new Backends\DirectoryFTP($resolved  . $theme . '/' . $filename);
+				$default = new Backends\DirectoryFTP($resolved  . 'default/' . $filename);
+			}
+			else{
+				$custom  = new Backends\DirectoryLocal($resolved  . 'custom/' . $filename);
+				$themed  = new Backends\DirectoryLocal($resolved  . $theme . '/' . $filename);
+				$default = new Backends\DirectoryLocal($resolved  . 'default/' . $filename);
+			}
+
+			break;
+		default:
+			throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
+			break;
+	}
+
+	if($custom->exists()){
+		// If there is a custom asset installed, USE THAT FIRST!
+		return $custom;
+	}
+	elseif($themed->exists()){
+		// Otherwise, the themes can override component assets too.
+		return $themed;
+	}
+	else{
+		return $default;
+	}
+}
+
+
+/**
+ * Resolve a name for a public to an actual file.
+ *
+ * @param $filename
+ *
+ * @return \Core\Filestore\Directory
+ *
+ * @throws \Exception
+ */
+function resolve_public_directory($filename){
+	$resolved = get_public_path();
+
+	if (strpos($filename, 'public/') === 0) {
+		// Allow "assets/blah" to be passed in
+		$filename = substr($filename, 7);
+	}
+	elseif(strpos($filename, $resolved) === 0){
+		// Allow the fully resolved name to be passed in
+		$filename = substr($filename, strlen($resolved));
+	}
+
+	// I need to check the custom, current theme, and finally default locations for the file.
+	$theme = \ConfigHandler::Get('/theme/selected');
+	switch(CDN_TYPE){
+		case 'local':
+			if(\Core\ftp()){
+				// FTP has its own sub-type.
+				return new Backends\DirectoryFTP($resolved . $filename);
+			}
+			else{
+				return new Backends\DirectoryLocal($resolved . $filename);
 			}
 
 			break;

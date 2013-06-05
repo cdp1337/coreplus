@@ -31,7 +31,7 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 	 * Unit test to test the construction of a new file object and to ensure it returns the correct data.
 	 */
 	public function testFactory(){
-		$file = \Core\Filestore\factory($this->_testfile);
+		$file = \Core\Filestore\Factory::File($this->_testfile);
 
 		$this->assertInstanceOf('\Core\Filestore\File', $file);
 		$this->assertInstanceOf('\Core\Filestore\Backends\FileRemote', $file);
@@ -70,7 +70,7 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 	 * Test the getURL method
 	 */
 	public function testGetURL(){
-		$file = \Core\Filestore\factory($this->_testimage);
+		$file = \Core\Filestore\Factory::File($this->_testimage);
 
 		$this->assertNotEmpty($file->getURL());
 	}
@@ -79,7 +79,7 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 	 * Test the getPreviewURL method
 	 */
 	public function testGetPreviewURL(){
-		$file = \Core\Filestore\factory($this->_testimage);
+		$file = \Core\Filestore\Factory::File($this->_testimage);
 
 		$this->assertNotEmpty($file->getPreviewURL());
 	}
@@ -135,7 +135,7 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 		$file = new \Core\Filestore\Backends\FileRemote($this->_testfile);
 
 		// Download the file manually and check.
-		$tmpfile = \Core\Filestore\factory('tmp/test-fileremotetest-testgethash.dat');
+		$tmpfile = \Core\Filestore\Factory::File('tmp/test-fileremotetest-testgethash.dat');
 		$tmpfile->putContents(file_get_contents($this->_testfile));
 
 		$this->assertEquals(md5_file($tmpfile->getFilename()), $file->getHash());
@@ -157,7 +157,7 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 	 * Test the delete method
 	 */
 	public function testDelete() {
-		$file = \Core\Filestore\factory('tmp/test-filelocaltest-testdelete.dat');
+		$file = \Core\Filestore\Factory::File('tmp/test-filelocaltest-testdelete.dat');
 
 		// I need to write something to it so it exists!
 		// (this is usually the case)
@@ -174,7 +174,7 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testRename() {
-		$file = \Core\Filestore\factory('tmp/test-filelocaltest-testrename.dat');
+		$file = \Core\Filestore\Factory::File('tmp/test-filelocaltest-testrename.dat');
 
 		// I need to write something to it so it exists!
 		// (this is usually the case)
@@ -194,7 +194,7 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('test-filelocaltest-testrename2.dat', $file->getBasename());
 
 		// And verify that this new file exists
-		$file2 = \Core\Filestore\factory('tmp/test-filelocaltest-testrename2.dat');
+		$file2 = \Core\Filestore\Factory::File('tmp/test-filelocaltest-testrename2.dat');
 		$this->assertTrue($file2->exists());
 
 		// And cleanup
@@ -224,7 +224,7 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 
 	public function testDisplayPreview(){
 		$src = new \Core\Filestore\Backends\FileRemote($this->_testimage);
-		$dst = \Core\Filestore\factory('tmp/filelocaltest-displaypreview.dat');
+		$dst = \Core\Filestore\Factory::File('tmp/filelocaltest-displaypreview.dat');
 
 		// Start capturing the output
 		ob_start();
@@ -276,7 +276,7 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 
 	public function testIdenticalTo() {
 		$file1 = new \Core\Filestore\Backends\FileRemote($this->_testfile);
-		$file2 = \Core\Filestore\factory($this->_testfile);
+		$file2 = \Core\Filestore\Factory::File($this->_testfile);
 		$file3 = new \Core\Filestore\Backends\FileRemote($this->_testimage);
 
 		$this->assertTrue($file1->identicalTo($file2));
@@ -284,8 +284,21 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCopyTo() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		$file = new \Core\Filestore\Backends\FileRemote($this->_testfile);
+
+		// I should be able to copy to a filename.
+		// this gets resolved to a local file.
+		$copy = $file->copyTo('tmp/tests-fileremotetest-testcopyto.dat');
+		$this->assertInstanceOf('\\Core\\Filestore\\File', $copy);
+		$this->assertTrue($copy->exists());
+		$this->assertTrue($copy->delete());
+
+		// And it should be able to copy to a local file object.
+		$copy = new \Core\Filestore\Backends\FileLocal('tmp/tests-fileremotetest-testcopyto.dat');
+		$this->assertFalse($copy->exists());
+		$file->copyTo($copy);
+		$this->assertTrue($copy->exists());
+		$this->assertTrue($copy->delete());
 	}
 
 	public function testCopyFrom() {

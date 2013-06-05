@@ -3,6 +3,7 @@ Core Plus 2.5.6
 	* [Feature] Retooled the filestore system.  It is now more self contained and has actual tests behind
 	  it
 	* [Feature] Added a new method for templates, hasWidgetAreas.
+	* [Feature] Insertables now will parse for resized images and return the server-resized version.
 	-- Charlie Powell <charlie@eval.bz>  Sat, 01 Jun 2013 17:05:25 -0400
 
 Core Plus 2.5.5

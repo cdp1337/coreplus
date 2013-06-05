@@ -382,6 +382,13 @@ if(SSL_MODE == SSL_MODE_REQUIRED && !SSL){
 	header('Location: ' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1));
 	die('This site requires SSL, if it does not redirect you automatically, please <a href="' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
 }
+elseif(SSL_MODE == SSL_MODE_DISABLED && SSL){
+	// Skip the 301 when not in production because it makes things rather annoying to debug at times...
+	// ie: the browser remembers it was a permanent redirect and doesn't even try the nonSSL version.
+	if(!DEVELOPMENT_MODE) header("HTTP/1.1 301 Moved Permanently");
+	header('Location: ' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1));
+	die('This site has SSL disabled, if it does not redirect you automatically, please <a href="' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
+}
 
 
 // (handled by the installer now)

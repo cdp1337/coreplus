@@ -1369,12 +1369,12 @@ class Component extends XMLLoader {
 		foreach ($this->getElements('/assets/file') as $node) {
 			$b = $this->getBaseDir();
 			// Local file is guaranteed to be a local file.
-			$f = \Core\Filestore\factory($b . $node->getAttribute('filename'));
+			$f = \Core\Filestore\Factory::File($b . $node->getAttribute('filename'));
 
 			// The new file should have a filename identical to the original, with the exception of
 			// everything before the filename.. ie: the ROOT_PDIR and the asset directory.
 			$newfilename = 'assets' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
-			$nf          = \Core\Filestore\factory($newfilename);
+			$nf          = \Core\Filestore\Factory::File($newfilename);
 
 			// If it's null, don't change the path any.
 			if ($theme === null) {

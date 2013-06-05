@@ -583,7 +583,7 @@ class UpdaterHelper {
 					self::_PrintInfo('Downloaded ' . $file->getFilesize(true) . ' in ' . (round(microtime(true) - $downloadtimer, 2) . ' seconds'), $timer);
 				}
 
-				if(!($obj instanceof File_asc_contents)){
+				if(!($obj instanceof \Core\Filestore\Contents\ContentASC)){
 					return [
 						'status' => 0,
 						'message' => $target['location'] . ' does not appear to be a valid GPG signed archive'
@@ -639,7 +639,7 @@ class UpdaterHelper {
 
 				/** @var $localfile \Core\Filestore\File */
 				$localfile = $obj->decrypt('tmp/updater/');
-				/** @var $localobj File_tgz_contents */
+				/** @var $localobj \Core\Filestore\Contents\ContentTGZ */
 				$localobj = $localfile->getContentsObject();
 				if($verbose) self::_PrintInfo('OK!', $timer);
 
@@ -650,7 +650,7 @@ class UpdaterHelper {
 				$tmpdir = $localobj->extract('tmp/installer-' . Core::RandomHex(4));
 
 				// Now that the data is extracted in a temporary directory, extract every file in the destination.
-				/** @var $datadir Directory_local_backend */
+				/** @var $datadir \Core\Filestore\Directory */
 				$datadir = $tmpdir->get('data/');
 				if(!$datadir){
 					return [
@@ -674,7 +674,7 @@ class UpdaterHelper {
 
 					// It's a file, copy it over.
 					// To do so, resolve the directory path inside the temp data dir.
-					$dest = \Core\Filestore\factory($target['destdir'] . substr($file->getFilename(), $datalen));
+					$dest = \Core\Filestore\Factory::File($target['destdir'] . substr($file->getFilename(), $datalen));
 					/** @var $dest \Core\Filestore\Backends\FileLocal */
 					if($verbose){
 						self::_PrintInfo('...' . substr($dest->getFilename(''), 0, 67), $timer);
