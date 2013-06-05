@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Geographic Codes" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Geographic Codes" execmode="both">
 	<description>
 		A collection of geocode utilities for countries and states.
 	</description>
 	<files>
+		<file filename="CHANGELOG" md5="232e55ece587c0be8fc487631e19161c"/>
 		<file filename="build-iso-country-flags-svg-collection.sh" md5="ffd3f010b2fad6c70aa1a76b5bf0bc00"/>
-		<file filename="geocode/Country.php" md5="54abd50af1c1e441e8aa0b818ae1d19d">
+		<file filename="geocode/Country.php" md5="d802775bb4576622981339d7238d45e3">
 			<class name="geocode\Country"/>
 		</file>
-		<file filename="geocode/Updater.php" md5="b9d88cc96438f9c5b430f58da4d153df">
+		<file filename="geocode/Updater.php" md5="ce6077f3b6262894b5c0930d0ab14235">
 			<class name="geocode\Updater"/>
 		</file>
 		<file filename="libs/iso-country-flags-svg-collection/Makefile" md5="d19882a15fc74bda63eb2947d954b6c7"/>
@@ -556,6 +557,9 @@
 		<file filename="libs/iso-country-flags-svg-collection/svg/country-squared/za.svg" md5="dff3a2803526dde56e20ca43e1f72a52"/>
 		<file filename="libs/iso-country-flags-svg-collection/svg/country-squared/zm.svg" md5="a3e78f4a333aec4baad1f5f7b8063560"/>
 		<file filename="libs/iso-country-flags-svg-collection/svg/country-squared/zw.svg" md5="aada5e263d915efa06e06b6e050ea4a4"/>
+		<file filename="tests/geocode/GeocodeUpdaterTest.php" md5="6d8c91df68f5108f7faf53d68b2b2ab9">
+			<class name="GeocodeUpdaterTest"/>
+		</file>
 	</files>
 	<assets>
 		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/aa.png" md5="b51cd1f73e48dff9282fd18da28ebb9a"/>
@@ -819,5 +823,8 @@
 			GNU Affero General Public License v3
 		</license>
 	</licenses>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
 </component>
 

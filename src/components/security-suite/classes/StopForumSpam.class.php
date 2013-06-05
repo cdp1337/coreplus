@@ -18,10 +18,8 @@ class StopForumSpam {
 	 */
 	public static function HookDaily(){
 		// LIVE
-		//$remotefile = new File_remote_backend(StopForumSpam::URL_DAILY);
 		$remotefile = StopForumSpam::URL_DAILY;
 		// TESTING
-		//$remotefile = \Core\Filestore\Factory::File(ROOT_PDIR . 'components/security-suite/listed_ip_1_all.zip');
 		//$remotefile = ROOT_PDIR . 'components/security-suite/listed_ip_1_all.zip'
 
 		return self::ImportList($remotefile);

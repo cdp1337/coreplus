@@ -1,3 +1,8 @@
+Security-Suite 1.1.1
+
+	* Updated to work with Core 2.5.6
+	-- Charlie Powell <charlie@eval.bz>  Wed, 05 Jun 2013 16:30:24 -0400
+
 Security-Suite 1.1.0
 
 	* There is now a manual IP blacklist option as part of the security suite.

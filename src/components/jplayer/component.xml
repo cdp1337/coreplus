@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0~core1" name="jPlayer" execmode="web">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0~core2" name="jPlayer" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 		<require name="JQuery" type="library" version="1.4" operation="ge"/>
@@ -13,6 +13,7 @@
 		<upgrade from="2.0.0~cae2" to="2.0.0~cae3"/>
 		<upgrade from="2.0.0~cae3" to="2.1.0~core1"/>
 		<upgrade from="2.1.0~core1" to="2.2.0~core1"/>
+		<upgrade from="2.2.0~core1" to="2.2.0~core2"/>
 	</upgrades>
 	<files>
 		<file filename="CHANGELOG" md5="4a80dadc8ec706b8544c2090f5625d83"/>
@@ -37,7 +38,7 @@
 		<file filename="assets/css/skin/jplayer.blue.monday.video.play.png" md5="d736613748cb6f59e1ce86db5e58bee0"/>
 		<file filename="assets/css/skin/spirites_blue.monday_2011.psd" md5="0afab271084584b60d4f642bd9d60d4f"/>
 		<file filename="assets/js/jplayer.playlist.min.js" md5="58f29924f2e0951ab6cbeb7e502d350e"/>
-		<file filename="assets/js/jquery.jplayer.inspector.js" md5="efdcfd5a92b8aa45743788331113d7eb"/>
+		<file filename="assets/js/jquery.jplayer.inspector.js" md5="c009339d6136287c282eca94144f12c7"/>
 		<file filename="assets/js/jquery.jplayer.min.js" md5="0ab0a4d5b0b17a5697f08c78f7750f65"/>
 		<file filename="assets/js/popcorn.jplayer.js" md5="af75a155444d1fe964eef1be9ba245e2"/>
 		<file filename="assets/swf/Jplayer.swf" md5="f85e71a50abbaf2a1866ef16d392a420"/>

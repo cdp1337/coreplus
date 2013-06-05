@@ -8,9 +8,9 @@
 		<hook name="/cron/hourly" call="NonceModel::Cleanup"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="8106e0a3bf1eb8348089c0e37370b5e2"/>
+		<file filename="CHANGELOG" md5="91b5524e81976ddac70b9e1afcb9507e"/>
 		<file filename="README.md" md5="5bcf92183d0ab8d2045c82f264e66369"/>
-		<file filename="models/NonceModel.php" md5="f06782b88e2f10ce2796818dfd433631">
+		<file filename="models/NonceModel.php" md5="edcbc06e8b657b8ace7493d21ce5f062">
 			<class name="NonceModel"/>
 		</file>
 		<file filename="tests/NonceTest.php" md5="14bc619d92407038c260dd7aebe764d4">

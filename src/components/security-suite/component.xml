@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" name="Security-Suite" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.1" name="Security-Suite" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.2"/>
 		<require name="phpwhois" type="component"/>
@@ -29,11 +29,11 @@
 		Collection of security suites for sites, including anti-spam.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="b62f47413502a3746d852762220fef3f"/>
+		<file filename="CHANGELOG" md5="0309a70ca215ec374326d0b948788769"/>
 		<file filename="classes/IpBlacklistHelper.php" md5="8dee7ca83899e95cfabd27767c1add7c">
 			<class name="IpBlacklistHelper"/>
 		</file>
-		<file filename="classes/StopForumSpam.class.php" md5="2568aad22a32c342ffd2eed74097751d">
+		<file filename="classes/StopForumSpam.class.php" md5="dd9e2a3d9dd7a535863ede6d2328ad1a">
 			<class name="StopForumSpam"/>
 		</file>
 		<file filename="controllers/SecurityController.php" md5="97cab5737435f532817f5e74ae712f11">
@@ -58,6 +58,7 @@
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.1.0"/>
+		<upgrade from="1.1.0" to="1.1.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

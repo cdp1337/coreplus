@@ -1,3 +1,8 @@
+PHPWhois 4.2.2~core3
+
+	* Updated to work with Core 2.5.6
+	-- Charlie Powell <charlie@eval.bz>  Wed, 05 Jun 2013 05:08:54 -0400
+
 PHPWhois 4.2.2~core2
 
 	* [Bug] Minor bug fix on the javascript request logic.  Somehow I put "type:json" instead of

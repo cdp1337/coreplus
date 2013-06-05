@@ -80,7 +80,7 @@ class User_facebook_Backend extends User implements User_Backend{
 		}
 
 		// Sync the user avatar.
-		$f = new File_remote_backend('http://graph.facebook.com/' . $user_profile['id'] . '/picture?type=large');
+		$f = new \Core\Filestore\Backends\FileRemote('http://graph.facebook.com/' . $user_profile['id'] . '/picture?type=large');
 
 		$dest = Core::File('public/user/' . $f->getBaseFilename());
 		$f->copyTo($dest);

@@ -2,7 +2,7 @@
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Tags" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.4.3"/>
+		<require name="core" type="component" version="2.5.6"/>
 		<require name="user-social" type="component"/>
 		<require name="user" type="component"/>
 	</requires>

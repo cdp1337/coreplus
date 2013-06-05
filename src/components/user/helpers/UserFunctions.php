@@ -185,7 +185,10 @@ function get_form($user = null){
 
 	$form->addElement(
 		'submit',
-		array('value' => (($type == 'registration') ? 'Register' : 'Update'))
+		[
+			'value' => (($type == 'registration') ? 'Register' : 'Update'),
+			'name' => 'submit',
+		]
 	);
 
 	// @todo Implement a hook handler here for UserPreRegisterForm

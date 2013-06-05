@@ -1,3 +1,8 @@
+User 2.5.2
+
+	* Updated User to work with Core 2.5.6
+	-- Charlie Powell <charlie@eval.bz>  Wed, 05 Jun 2013 16:30:54 -0400
+
 User 2.5.1
 
 	* [Feature] New hook - "/user/postlogin/getredirecturl".  This allows a listener to return a string to

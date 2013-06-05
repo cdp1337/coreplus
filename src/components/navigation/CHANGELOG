@@ -1,3 +1,8 @@
+Navigation 2.1.7
+
+	* Updated navigation to work with Core 2.5.6
+	-- Charlie Powell <charlie@eval.bz>  Wed, 05 Jun 2013 05:07:27 -0400
+
 Navigation 2.1.6
 
 	* updated nav widget template to include class name of the link target

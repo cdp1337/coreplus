@@ -1,20 +1,25 @@
-User-Social 1.0.2
-
-	* Set the username config to be required.
-	* Set some weights on the configs provided.
-	* Switched the page-level widget to user "installable" instead of "baseurl" (2.4.5 change).
-	* Added support for the new enableavatar option.
-	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:23:44 -0500
-
-User-Social 1.0.1
-
-	* Set a couple of the keys to searchable: first_name, last_name, and username.
-	* Added support for a widgetarea on the profile view page.
-	--Charlie Powell <charlie@eval.bz>  Thu, 24 Jan 2013 16:03:07 -0500
-
 User-Social 1.1.0
 
 	* Switched to user the hook-based controls throughout the user system and user administration.
+
+User-Social 1.0.3
+
+	* Updated User-Social to work with Core 2.5.6
+	-- Charlie Powell <charlie@eval.bz>  Wed, 05 Jun 2013 05:13:37 -0400
+
+User-Social 1.0.2
+
+	* [Feature] Added support for the new enableavatar option.
+	* Set the username config to be required.
+	* Set some weights on the configs provided.
+	* Switched the page-level widget to user "installable" instead of "baseurl" (2.4.5 change).
+	-- Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:23:44 -0500
+
+User-Social 1.0.1
+
+	* [Feature] Added support for a widgetarea on the profile view page.
+	* Set a couple of the keys to searchable: first_name, last_name, and username.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 24 Jan 2013 16:03:07 -0500
 
 User-Social 1.0.0
 

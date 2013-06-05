@@ -1,3 +1,12 @@
+TinyMCE 4.0b3~core1
+
+	* [Feature] New UI
+	* [Feature] New page for managing the public files
+	* [Feature] New config options for TinyMCE
+	* [Feature] New image selector popup
+	* Updated to newest version of TinyMCE.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 05 Jun 2013 05:12:25 -0400
+
 TinyMCE 3.5.6~core6
 
 	* Minor tweak to keep up to date with the new namespaced features.

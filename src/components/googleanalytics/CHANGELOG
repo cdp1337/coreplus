@@ -1,3 +1,8 @@
+GoogleAnalytics 1.0.3
+
+	* [Feature] New universal GA code
+	-- Charlie Powell <charlie@eval.bz>  Wed, 05 Jun 2013 05:05:11 -0400
+
 GoogleAnalytics 1.0.2
 
 	* [Feature] Added the inpage_linkid plugin by default.

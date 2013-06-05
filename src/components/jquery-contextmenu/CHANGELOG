@@ -1,7 +1,7 @@
 JQuery-contextMenu 1.01~core2
 
 	* [Bug] Fixed bug that developed after jquery removed support for the $.browser object.
-	-- Charlie Powell <charlie@eval.bz>  Mon, 29 Apr 2013 20:14:37 -0400
+	-- Charlie Powell <charlie@eval.bz>  Wed, 05 Jun 2013 05:06:18 -0400
 
 JQuery-contextMenu 1.01~core1
 

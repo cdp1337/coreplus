@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.6" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.7" name="Navigation" execmode="web">
 	<requires>
-		<require name="core" type="component" operation="ge" version="2.4.4"/>
+		<require name="core" type="component" operation="ge" version="2.5.6"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="62b54336f4463159f90331619fd18ceb"/>
+		<file filename="CHANGELOG" md5="3b8100178c1fdbc9e26c00418d03cf47"/>
 		<file filename="controllers/NavigationController.php" md5="f609072de0e71e7ba8e0b07c4959847a">
 			<controller name="NavigationController"/>
 		</file>
@@ -26,7 +26,7 @@
 		<file filename="templates/pages/navigation/edit.tpl" md5="a6eda39bbc1a33dac2888ffe43ab7868"/>
 		<file filename="templates/pages/navigation/index.tpl" md5="8fbbccd35a3cbc609cc8845b6a3a45ee"/>
 		<file filename="templates/pages/navigation/view.tpl" md5="44b506f0e3ca0a1bfef9d5f4b992a8c0"/>
-		<file filename="templates/widgets/navigation/_menu.inc.tpl" md5="0cad03c8a8506187c6ce4d09424a9c9e"/>
+		<file filename="templates/widgets/navigation/_menu.inc.tpl" md5="d64446108dff7be324ae96c683b7b04e"/>
 		<file filename="templates/widgets/navigation/children.tpl" md5="2f26fdaa35d28a1a094699a825db64d8"/>
 		<file filename="templates/widgets/navigation/siblings.tpl" md5="e02e7719cfb212e4d9f5637b396e5f10"/>
 		<file filename="templates/widgets/navigation/siblingsandchildren.tpl" md5="2f26fdaa35d28a1a094699a825db64d8"/>
@@ -54,6 +54,7 @@
 		<upgrade from="2.1.3" to="2.1.4"/>
 		<upgrade from="2.1.4" to="2.1.5"/>
 		<upgrade from="2.1.5" to="2.1.6"/>
+		<upgrade from="2.1.6" to="2.1.7"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="GoogleAnalytics" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.3" name="GoogleAnalytics" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 	</requires>
@@ -14,13 +14,15 @@
 		<config key="/google-analytics/accountid" type="string" default="" description="This is the Account ID (sometimes called 'Web Property ID') listed for this account in google analytics."/>
 	</configs>
 	<files>
-		<file filename="GoogleAnalyticsHelper.class.php" md5="c89afaf3870f3cefd45a573e289ce4a2">
+		<file filename="CHANGELOG" md5="7f889a2888b213e0fbcd669a2c890e7c"/>
+		<file filename="GoogleAnalyticsHelper.class.php" md5="34162cb0a7898ec447dc700e64cf37c7">
 			<class name="GoogleAnalyticsHelper"/>
 		</file>
 	</files>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
+		<upgrade from="1.0.2" to="1.0.3"/>
 	</upgrades>
 </component>
 

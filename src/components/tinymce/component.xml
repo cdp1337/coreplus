@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.5.6~core6" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0b3~core1" name="TinyMCE" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.1"/>
 		<require name="jquery" type="library"/>
@@ -490,6 +490,7 @@
 		<upgrade from="3.5.6~core3" to="3.5.6~core4"/>
 		<upgrade from="3.5.6~core4" to="3.5.6~core5"/>
 		<upgrade from="3.5.6~core5" to="3.5.6~core6"/>
+		<upgrade from="3.5.6~core6" to="4.0b3~core1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

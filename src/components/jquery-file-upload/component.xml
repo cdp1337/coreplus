@@ -24,12 +24,12 @@
 		<formelement name="multifile" class="MultiFileInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="3f7b0cd483c3cf11a44d46033f46e5d6"/>
+		<file filename="CHANGELOG" md5="6387175b06bcb930d8b15b306d36c5fb"/>
 		<file filename="README.md" md5="cb22a03a2f5fc8aaf6dcf5a9c2180a66"/>
-		<file filename="classes/MultiFileInput.class.php" md5="76bb824e5a6414e09922103474b7eb5a">
+		<file filename="classes/MultiFileInput.class.php" md5="fa63cb2293c48085befc32bca8b995a0">
 			<class name="MultiFileInput"/>
 		</file>
-		<file filename="controllers/JQueryFileUploadController.php" md5="0a4561c0e5bff51f4b9eee512e780144">
+		<file filename="controllers/JQueryFileUploadController.php" md5="5596177826aaddcade2fffbc57fe1c54">
 			<controller name="JQueryFileUploadController"/>
 		</file>
 	</files>

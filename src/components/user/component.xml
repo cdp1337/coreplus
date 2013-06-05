@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.1" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.2" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.2"/>
 		<!-- User authentication events trigger security logs. -->
@@ -21,12 +21,11 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="56e56512d047b47d9b6ed1b819e7342e"/>
+		<file filename="CHANGELOG" md5="837655a328ca287f8195b696302bdde9"/>
 		<file filename="User.class.php" md5="60c316007e90807cf2fdbbf024924095">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
-		<file filename="User.class.php~" md5="c873ad77e20f4a615afe339502752c2f"/>
 		<file filename="UserForm.class.php" md5="a7f5fb9f5167aff9abc41012e6344b9a">
 			<class name="FormAccessStringInput"/>
 		</file>
@@ -45,15 +44,13 @@
 		<file filename="backends/User_datamodel.backend.php" md5="92f4c736f63f341e834698b9a6bb1103">
 			<class name="User_datamodel_Backend"/>
 		</file>
-		<file filename="backends/User_datamodel.backend.php~" md5="2c12e634a461b970a666e436e51b6252"/>
-		<file filename="backends/User_facebook.backend.php" md5="57476ce9040790fbc4e7f23b6c0ced0d">
+		<file filename="backends/User_facebook.backend.php" md5="780444ea133fae59ecdb10636642344c">
 			<class name="User_facebook_Backend"/>
 		</file>
-		<file filename="component.xml~" md5="985d6fe3c68c8e40ed3fc845e19435d1"/>
 		<file filename="controllers/UserActivityController.php" md5="b90ce46eca5feb688ecff24c367080d8">
 			<controller name="UserActivityController"/>
 		</file>
-		<file filename="controllers/UserAdminController.php" md5="2e098737deb92002639e9801b1ddf994">
+		<file filename="controllers/UserAdminController.php" md5="e4a7b78911d1e3c43f0335ceb2c837bc">
 			<controller name="UserAdminController"/>
 		</file>
 		<file filename="controllers/UserController.php" md5="44b4788cef43e34c296da9a724bfb2c3">
@@ -62,10 +59,10 @@
 		<file filename="controllers/UserGroupAdminController.php" md5="1e26a36d85fc0065cec33b198b27f475">
 			<controller name="UserGroupAdminController"/>
 		</file>
-		<file filename="helpers/ImportHelper.php" md5="00c11b054cc245bf6b3ac3779066ba6b">
+		<file filename="helpers/ImportHelper.php" md5="6c98001060f0a23e5bac768e21424553">
 			<class name="User\ImportHelper"/>
 		</file>
-		<file filename="helpers/UserFunctions.php" md5="1568866b592c1fa116f978910bf8f788"/>
+		<file filename="helpers/UserFunctions.php" md5="1c5eaf485d0d9a338ad71a3bbdc6f316"/>
 		<file filename="helpers/UserHelper.class.php" md5="7db132303f15a8e7079f32b304cbbcad">
 			<class name="UserHelper"/>
 		</file>
@@ -191,6 +188,7 @@
 		<upgrade from="2.4.5" to="2.4.6"/>
 		<upgrade from="2.4.6" to="2.5.0"/>
 		<upgrade from="2.5.0" to="2.5.1"/>
+		<upgrade from="2.5.1" to="2.5.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
