@@ -927,7 +927,7 @@ class FileLocal implements Filestore\File {
 		//  might conflict without this hash.
 		// Finally, the width and height dimensions are there just because as well; it gives more of a human
 		//  touch to the file. :p
-		$key = str_replace(' ', '-', $this->getBaseFilename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.png';
+		$key = str_replace(' ', '-', $this->getBasename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.png';
 
 		return array(
 			'width' => $width,

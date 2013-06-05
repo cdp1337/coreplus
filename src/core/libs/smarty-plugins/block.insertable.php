@@ -67,10 +67,18 @@ function smarty_block_insertable($params, $content, $template, &$repeat){
 				continue;
 			}
 
-			if($imagestart !== null && ($value{$x} == '>' || substr($value, $x, 2) == '/>')){
-				// This will equal the full image HTML tag, ie: <img src="blah"/>...
-				$fullimagetag = substr($value, $imagestart, $x-1);
+			$fullimagetag = null;
 
+			if($imagestart !== null && $value{$x} == '>'){
+				// This will equal the full image HTML tag, ie: <img src="blah"/>...
+				$fullimagetag = substr($value, $imagestart, $x-$imagestart+1);
+			}
+			elseif($imagestart !== null && substr($value, $x, 2) == '/>'){
+				// This will equal the full image HTML tag, ie: <img src="blah"/>...
+				$fullimagetag = substr($value, $imagestart, $x-$imagestart+2);
+			}
+
+			if($imagestart !== null && $fullimagetag){
 				// Convert it to a DOM element so I can process it.
 				$simple = new SimpleXMLElement($fullimagetag);
 				$attributes = array();

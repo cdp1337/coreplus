@@ -551,7 +551,7 @@ class UpdaterHelper {
 				}
 
 				// Setup the remote file that will be used to download from.
-				$file = new File_remote_backend($target['location']);
+				$file = new \Core\Filestore\Backends\FileRemote($target['location']);
 				$file->username = $repo->get('username');
 				$file->password = $repo->get('password');
 

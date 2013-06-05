@@ -133,7 +133,7 @@ class FormFileInput extends FormElement {
 			$value = substr($value, 9);
 
 			// Source
-			$f = new File_remote_backend($value);
+			$f = new \Core\Filestore\Backends\FileRemote($value);
 
 			if(!$f->exists()){
 				$this->_error = 'Remote file does not seem to exist';

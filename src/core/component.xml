@@ -41,7 +41,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="bb93d629591f0e360b48bddc814e78e0"/>
+		<file filename="core/CHANGELOG" md5="dd02ff187076d528442747fdcdf83e74"/>
 		<file filename="core/bootstrap.php" md5="d8dcc739a7efcbfb0d78d6ae7b02d34d"/>
 		<file filename="core/bootstrap_postincludes.php" md5="e877be1a1b418440d796ffdc3a622bba"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -85,7 +85,7 @@
 		<file filename="core/forms/FormDateTimeInput.php" md5="abfb7380b014ed65776b2ae5ec68e25c">
 			<class name="FormDateTimeInput"/>
 		</file>
-		<file filename="core/forms/FormFileInput.class.php" md5="7f5db653f69ff0b9d264a6cd71adfc98">
+		<file filename="core/forms/FormFileInput.class.php" md5="86d68d423c538d5a198269c7d82b8c95">
 			<class name="FormFileInput"/>
 		</file>
 		<file filename="core/forms/FormHiddenInput.class.php" md5="b165e1679347782c30492bb4b320ee5c">
@@ -137,7 +137,7 @@
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="da6e337a8305534398cad21c53dcae54">
 			<class name="RewriteMapHelper"/>
 		</file>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="6c81a843e55e306da489433b947d4305">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="706d1c550503f40cbcb6eda1679dc64b">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
@@ -571,7 +571,7 @@
 		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="2b1d14a17a78c96e8239a8ac2bc9d7be">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="c0fa2e7dbf0e68bbc0eef399d9a09849">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="7b6e0f96f8d85bb12dc35e7fd7a492ea">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="505d33f62b949b85d7d41bd43f410c0f">
@@ -1057,7 +1057,7 @@
 		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="5e3e19afb2a649beece4b2eeea62ac48"/>
 		<file filename="core/libs/smarty-plugins/block.css.php" md5="5967ccd081d862e1e73a407e115436a2"/>
-		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="7f165d3b7b8019c6e2fc0796f83f5430"/>
+		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="85b8d0998f50ee75ab8de0f8387d0d7c"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="84d16e1ba8fb38b5c8be6a1ca960ab43"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="85f908c0a9fa616aca30a0b94afeae18"/>
 		<file filename="core/libs/smarty-plugins/function.controls.php" md5="6d27ea6f00b10982d9e7741e42be46e5"/>
@@ -1398,7 +1398,7 @@
 		<file filename="core/models/TemplateCssModel.php" md5="035af7fbc97dacd40b945e1edf650569">
 			<class name="TemplateCssModel"/>
 		</file>
-		<file filename="core/models/UpdateSiteModel.class.php" md5="05a42e2ff98a48fe8378f42da32366ff">
+		<file filename="core/models/UpdateSiteModel.class.php" md5="1510854c1383ce490f7d66ffbc823888">
 			<class name="UpdateSiteModel"/>
 		</file>
 		<file filename="core/models/WidgetInstanceModel.class.php" md5="00528251293b26c12e0974ff94f8a09c">

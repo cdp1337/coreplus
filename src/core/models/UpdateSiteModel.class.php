@@ -24,7 +24,7 @@ class UpdateSiteModel extends Model {
 
 	/**
 	 * Remote file.
-	 * @var null|File_remote_backend
+	 * @var null|\Core\Filestore\File
 	 */
 	private $_remotefile = null;
 
@@ -104,11 +104,11 @@ class UpdateSiteModel extends Model {
 	/**
 	 * Get the remote file for this update site
 	 *
-	 * @return File_remote_backend
+	 * @return \Core\Filestore\File
 	 */
 	public function getFile(){
 		if($this->_remotefile === null){
-			$this->_remotefile           = new File_remote_backend();
+			$this->_remotefile           = new \Core\Filestore\Backends\FileRemote();
 			$this->_remotefile->password = $this->get('password');
 			$this->_remotefile->username = $this->get('username');
 			$this->_remotefile->setFilename($this->get('url') . '/repo.xml.gz');
