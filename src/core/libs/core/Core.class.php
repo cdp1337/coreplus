@@ -528,13 +528,6 @@ class Core implements ISingleton {
 
 			$liblist = $c->getLibraryList();
 
-			// Make sure the libraries contained herein aren't provided already!
-			foreach($liblist as $k => $v){
-				if(isset($this->_libraries[$k])){
-					throw new \Exception('Library ' . $k . ' already provided by another component!');
-				}
-			}
-
 			$this->_libraries = array_merge($this->_libraries, $liblist);
 
 			// Register the include paths if set.
@@ -1315,7 +1308,11 @@ class Core implements ISingleton {
 		}
 		else {
 			if (!isset($_SESSION['message_stack'])) $_SESSION['message_stack'] = array();
-			$_SESSION['message_stack'][] = array(
+
+			// Look for this message in the stack.  This helps prevent duplicate messages.
+			$key = md5($messageType . '-' . $messageText);
+
+			$_SESSION['message_stack'][$key] = array(
 				'mtext' => $messageText,
 				'mtype' => $messageType,
 			);
@@ -1504,6 +1501,15 @@ class Core implements ISingleton {
 	 */
 	public static function _AttachCoreJavascript() {
 
+		if(Core::IsComponentAvailable('User')){
+			$userid   = (\Core\user()->get('id') ? \Core\user()->get('id') : 0);
+			$userauth = \Core\user()->exists() ? 'true' : 'false';
+		}
+		else{
+			$userid   = 0;
+			$userauth = 'false';
+		}
+
 		$script = '<script type="text/javascript">
 	var Core = {
 		Version: "' . self::GetComponent()->getVersion() . '",
@@ -1514,8 +1520,8 @@ class Core implements ISingleton {
 		SSL: ' . (SSL ? 'true' : 'false') . ',
 		SSL_MODE: "' . SSL_MODE . '",
 		User: {
-			id: ' . (\Core\user()->get('id') ? \Core\user()->get('id') : 0) . ',
-			authenticated: ' . (\Core\user()->exists() ? 'true' : 'false') . '
+			id: ' . $userid . ',
+			authenticated: ' . $userauth . '
 		}
 	};
 </script>';

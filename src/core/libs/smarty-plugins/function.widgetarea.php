@@ -76,6 +76,7 @@ function smarty_function_widgetarea($params, $template) {
 
 	foreach ($factory->get() as $wi) {
 		// User cannot access this widget? Don't display it...
+		if(!\Core\user()) continue;
 		if (!\Core\user()->checkAccess($wi->get('access'))) continue;
 
 		$view = $wi->execute();

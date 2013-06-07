@@ -155,7 +155,12 @@ class Controller_2_1 {
 		// Update the model
 		$this->getPageModel()->set('access', $accessstring);
 
-		return (\Core\user()->checkAccess($accessstring));
+		if(\Core::IsComponentAvailable('User')){
+			return (\Core\user()->checkAccess($accessstring));
+		}
+		else{
+			return false;
+		}
 	}
 
 	/**

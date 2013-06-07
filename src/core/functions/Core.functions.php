@@ -104,6 +104,10 @@ function FTP(){
  * @return \User_Backend
  */
 function user(){
+	if(!\Core::IsComponentAvailable('User')){
+		return null;
+	}
+
 	// Is the session data present?
 	if(!isset($_SESSION['user'])){
 		$_SESSION['user'] = \User::Factory();

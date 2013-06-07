@@ -5,6 +5,7 @@ Core Plus 2.5.7
 	* [Bug] Component isLoadable needed to check if the files are loaded instead of just loaded.
 	* [Bug] Component added library checks the the isLoadable check.  This was needed for components that
 	  provide functionality from another component.
+	* [Bug] Core can now load without the User component available.  This is a fringe case for upgrades.
 	* [Feature] Some new developer utilities, "export_dev_bundle.sh" for one.  This is a script that will
 	  export the CWD as an installable bundle with all the developer utilities and un-minified components.
 	* [Feature] Updated the system updater to better display components that have errors with them.

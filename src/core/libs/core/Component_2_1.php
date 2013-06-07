@@ -1030,7 +1030,7 @@ class Component_2_1 {
 		// Check that if the version installed is not what's in the component file, that there is a valid upgrade path.
 		if(!$this->_checkUpgradePath()){
 			$this->error = $this->error | Component::ERROR_UPGRADEPATH;
-			$this->errstrs[] = 'No upgrade path found';
+			$this->errstrs[] = 'No upgrade path found (' . $this->_versionDB . ' to ' . $this->_version . ')';
 		}
 
 		// I should have a good idea of any errors by now...
