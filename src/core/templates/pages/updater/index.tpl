@@ -50,29 +50,42 @@
 		<th>&nbsp;</th>
 	</tr>
 	{foreach from=$components item=c}
-		<tr componentname="{$c->getKeyName()}" type="components">
-			<td>{$c->getName()}</td>
-			<td>{$c->getVersion()}</td>
-			<td>
-				{if $c->isEnabled()}
-					<i title="Yes" style="color:green;" class="icon-ok"></i>
-				{else}
-					<i title="No" style="color:red;" class="icon-remove"></i>
-				{/if}
-			</td>
-			<td>
-				{if $c->isEnabled()}
-					<a href="#" class="disable-link">Disable</a>
-					<a href="#" class="update-link perform-update" style="display:none;">Update</a>
-				{else}
-					{if $c->isInstalled()}
-						<a href="#" class="enable-link">Enable</a>
+		{if $c->isEnabled() && !$c->isReady()}
+			<tr componentname="{$c->getKeyName()}" type="components">
+				<td colspan="4">
+					<p class="message-error">
+						Errors with {$c->getName()} {$c->getVersion()}
+						&nbsp;&nbsp;<a href="#" class="disable-link">Disable Component</a>
+					</p>
+					{$c->getErrors()}
+				</td>
+			</tr>
+		{else}
+			<tr componentname="{$c->getKeyName()}" type="components">
+				<td>{$c->getName()}</td>
+				<td>{$c->getVersion()}</td>
+				<td>
+					{if $c->isEnabled()}
+						<i title="Yes" style="color:green;" class="icon-ok"></i>
 					{else}
-						<a href="#" class="perform-update" type="components" name="{$c->getName()}" version="{$c->getVersion()}">Install</a>
+						<i title="No" style="color:red;" class="icon-remove"></i>
 					{/if}
-				{/if}
-			</td>
-		</tr>
+				</td>
+				<td>
+					{if $c->isEnabled()}
+						<a href="#" class="disable-link">Disable</a>
+						<a href="#" class="update-link perform-update" style="display:none;">Update</a>
+					{else}
+						{if $c->isInstalled()}
+							<a href="#" class="enable-link">Enable</a>
+						{else}
+							<a href="#" class="perform-update" type="components" name="{$c->getName()}" version="{$c->getVersion()}">Install</a>
+						{/if}
+					{/if}
+				</td>
+			</tr>
+		{/if}
+
 	{/foreach}
 </table>
 <br/>

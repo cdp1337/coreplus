@@ -274,43 +274,51 @@ else {
 
 /**
  * Full URL of server.
- * ie: http://www.example.com or https://127.0.0.1:8443
+ * @example http://www.example.com or https://127.0.0.1:8443
+ * @var string
  */
 define('SERVERNAME', $servername);
 /**
  * Full URL of the server forced non-ssl mode.
- * ie: http://www.example.com
+ * @example http://www.example.com
+ * @var string
  */
 define('SERVERNAME_NOSSL', $servernameNOSSL);
 /**
  * Full URL of the server forced SSL mode.
- * ie: https://www.example.com or https://127.0.0.1:8443
+ * @example https://www.example.com or https://127.0.0.1:8443
+ * @var string
  */
 define('SERVERNAME_SSL', $servernameSSL);
 /**
  * URL of web root.
- * ie: http://www.example.com/foo/man/choo/
+ * @example http://www.example.com/foo/man/choo/
+ * @var string
  */
 define('ROOT_URL', $rooturl);
 /**
  * URL of web root.
- * ie: http://www.example.com/foo/man/choo/
+ * @example http://www.example.com/foo/man/choo/
+ * @var string
  */
 define('ROOT_URL_NOSSL', $rooturlNOSSL);
 /**
  * URL of web root.
- * ie: https://www.example.com/foo/man/choo/
+ * @example https://www.example.com/foo/man/choo/
+ * @var string
  */
 define('ROOT_URL_SSL', $rooturlSSL);
 /**
  * Current call/request.
- * ie: /foo/man/choo/?somevariable=true&somethingelse=false
+ * @example /foo/man/choo/?somevariable=true&somethingelse=false
+ * @var string
  */
 define('CUR_CALL', $curcall);
 
 /**
  * Relative requested path.
- * ie: /User/Login or '/' for the index.
+ * @example /User/Login or '/' for the index.
+ * @var string
  */
 define('REL_REQUEST_PATH', $relativerequestpath);
 
@@ -364,6 +372,7 @@ define('TMP_DIR_CLI', $core_settings['tmp_dir_cli']);
 /**
  * Host is a more human-friendly version of SERVERNAME.
  * It does not include port number or protocol, but just the hostname itself.
+ * @example domain.tld
  * @var string
  */
 define('HOST', $host);

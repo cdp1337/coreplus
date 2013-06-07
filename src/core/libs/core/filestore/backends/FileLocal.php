@@ -86,7 +86,7 @@ class FileLocal implements Filestore\File {
 	}
 
 	public function getExtension() {
-		return \Core\get_extension_from_string($this->_filename);
+		return Filestore\get_extension_from_string($this->_filename);
 		//return substr($this->_filename, strrpos($this->_filename, '.'));
 	}
 

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.6" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.7" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -41,8 +41,8 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="dd02ff187076d528442747fdcdf83e74"/>
-		<file filename="core/bootstrap.php" md5="d8dcc739a7efcbfb0d78d6ae7b02d34d"/>
+		<file filename="core/CHANGELOG" md5="0bd7ad045f4938a46251bde8742e5c7a"/>
+		<file filename="core/bootstrap.php" md5="8cc1207576fa8bcb00ad0d02e97c68e6"/>
 		<file filename="core/bootstrap_postincludes.php" md5="e877be1a1b418440d796ffdc3a622bba"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
 		<file filename="core/bootstrap_preincludes.php" md5="d3778843206ed4ab907da2f6e9e4777a"/>
@@ -61,7 +61,7 @@
 		<file filename="core/controllers/FileController.class.php" md5="f94d9e4da1121c8109729ff987178d67">
 			<controller name="FileController"/>
 		</file>
-		<file filename="core/controllers/FormController.class.php" md5="aa4a180e9ef996b71dfe5c28766b29c5">
+		<file filename="core/controllers/FormController.class.php" md5="c1369ab19bec8f1562bf600070be5951">
 			<controller name="FormController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="270a7376ba8381bb8dfba5a0f71970b0">
@@ -133,7 +133,7 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="080383e4dade461c3c7ac1d9e504ed28">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="f0d9b40d6639d18252e01d384416794b"/>
+		<file filename="core/functions/Core.functions.php" md5="4bc632e32ff9d7d344a29288f4981e55"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="da6e337a8305534398cad21c53dcae54">
 			<class name="RewriteMapHelper"/>
 		</file>
@@ -432,7 +432,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="84a119e018444ee005a55a3f7d657e18">
+		<file filename="core/libs/core/Component_2_1.php" md5="bd9d2c3437546e6fa0795aeb4a70d1b4">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="78088e9905213826b011aa0f8ad386f2">
@@ -444,7 +444,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="789549928dfa8773be60a7fb12e17438">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="1fbda34bb46ddd499d1465ddd2d7f84c">
+		<file filename="core/libs/core/Core.class.php" md5="cc7df9cf38c902afb73d21f48c31b5e7">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -512,7 +512,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="ad47c933d816270841241446aff3c72b">
+		<file filename="core/libs/core/View.class.php" md5="b2d663e4981993dac38dc03f86cc6574">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -550,7 +550,7 @@
 		<file filename="core/libs/core/filestore/Directory_Backend.interface.php" md5="65d8078d0710d29d51f7b47bf6bb5271">
 			<interface name="Directory_Backend"/>
 		</file>
-		<file filename="core/libs/core/filestore/Factory.php" md5="f4c64eb0e48a72079a4800b94fd8bbde">
+		<file filename="core/libs/core/filestore/Factory.php" md5="a306cbe3bff4caa34d5ec684359e581e">
 			<class name="Core\Filestore\Factory"/>
 		</file>
 		<file filename="core/libs/core/filestore/File.interface.php" md5="f90b4f74cc153cd48d57270a602bcf04">
@@ -571,7 +571,7 @@
 		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="2b1d14a17a78c96e8239a8ac2bc9d7be">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="7b6e0f96f8d85bb12dc35e7fd7a492ea">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="f8e1a67aebbf538a14707b44f4a2dd18">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="505d33f62b949b85d7d41bd43f410c0f">
@@ -601,7 +601,7 @@
 		<file filename="core/libs/core/filestore/contents/ContentZIP.php" md5="f5bdfebfd3dffcccc13505726558efe3">
 			<class name="Core\Filestore\Contents\ContentZIP"/>
 		</file>
-		<file filename="core/libs/core/filestore/functions.php" md5="af704f94e163c4b09b67faf5eb984238"/>
+		<file filename="core/libs/core/filestore/functions.php" md5="dea67c49230836b44b8564abeacb5bb9"/>
 		<file filename="core/libs/core/templates/Exception.php" md5="9d116f5547824aa600334c0ddcca2f08">
 			<class name="Core\Templates\Exception"/>
 		</file>
@@ -1419,14 +1419,17 @@
 			<class name="Bug253Test"/>
 		</file>
 		<file filename="core/tests/ivak_TV_Test_Screen.png" md5="e23ff09f0d6d5c8f9f14877264c251b7"/>
+		<file filename="core/tests/ivak_TV_Test_Screen.png.gz" md5="a2390c9433fd58483d43429f5aad28b3"/>
+		<file filename="core/tests/ivak_TV_Test_Screen.png.tar.gz" md5="cb92cb78ef3ec5b77bed30e258bb3884"/>
+		<file filename="core/tests/ivak_TV_Test_Screen.png.zip" md5="57b152deca5f73cd91de1a9386e2c6ba"/>
 		<file filename="core/tests/ivak_TV_Test_Screen.svg" md5="1a472f61a12a8ee5f6b828df7942a3e4"/>
-		<file filename="core/tests/libs/core/filestore/FileFTPTest.php" md5="d0110c850fb7c737d35d7b04cce14efd">
+		<file filename="core/tests/libs/core/filestore/FileFTPTest.php" md5="132ddc6103ef06dcf89b79ac4274a8fe">
 			<class name="FileFTPTest"/>
 		</file>
-		<file filename="core/tests/libs/core/filestore/FileLocalTest.php" md5="ed448575546b8ca68cbfc9b5dd7d0f2f">
+		<file filename="core/tests/libs/core/filestore/FileLocalTest.php" md5="dbb57679a9f360e886d0aaa56166686e">
 			<class name="FileLocalTest"/>
 		</file>
-		<file filename="core/tests/libs/core/filestore/FileRemoteTest.php" md5="2ead0c5ccfeb32d7ff4639ef67d867b4">
+		<file filename="core/tests/libs/core/filestore/FileRemoteTest.php" md5="e96da8bd5e93da274faadeeb2eb09b15">
 			<class name="FileRemoteTest"/>
 		</file>
 		<file filename="core/tests/libs/datamodel/DMIBackendTest.php" md5="426a6dfb44bf4a572c80c5cadeeb7e92">
@@ -1540,7 +1543,7 @@
 		<file filename="core/templates/forms/groups/pageinsertables.tpl" md5="be0fed93de5310e26a207ffcecd15547"/>
 		<file filename="core/templates/forms/groups/pagemetas.tpl" md5="176370cfa2f3b27406b5ffeb8d40b8c5"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="645d3b7a407c513622e9f6bc2590b7c9"/>
-		<file filename="core/templates/pages/admin/config.tpl" md5="f626583aa76a1f75047f22d536952787"/>
+		<file filename="core/templates/pages/admin/config.tpl" md5="e24bea097690df9b0a70f074f4803371"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="ec73503565c3b1987c0419bbe5815aaa"/>
 		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
@@ -1550,7 +1553,7 @@
 		<file filename="core/templates/pages/error/error500.tpl" md5="e641e6a353fb4fdb65b271553bb51763"/>
 		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="c3856d7798a76f98caf744dcc381c9d3"/>
 		<file filename="core/templates/pages/updater/browse.tpl" md5="46164efb30e799b0daa3062cb53ed548"/>
-		<file filename="core/templates/pages/updater/index.tpl" md5="7694d6e2067053533542ba88f5ddbf58"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="3c7cfdd53c45c98dbcf5f9cd249f448d"/>
 		<file filename="core/templates/pages/updater/keys.tpl" md5="4ff939a015c21167bda5a5a8d47f3f37"/>
 		<file filename="core/templates/pages/updater/keys_import.tpl" md5="3dc1de19f1f96e5ea92b67ef0d0ebc01"/>
 		<file filename="core/templates/pages/updater/repos.tpl" md5="a89ad644a891497f8641c259c69cf159"/>
@@ -1601,6 +1604,7 @@
 	</configs>
 	<assets>
 		<file filename="core/assets/css/admin/adminbar.css" md5="3c2c59235032e5dcf5f56cc15695def6"/>
+		<file filename="core/assets/css/admin/config.css" md5="d02178cb36de0f96500cfe784d9d90e2"/>
 		<file filename="core/assets/css/reset.css" md5="968510374a9ff8a69e49ddd2719eca0d"/>
 		<file filename="core/assets/css/reset.min.css" md5="44b43a8b1471320ee192b0938fab3372"/>
 		<file filename="core/assets/css/updater.css" md5="771975b286bac4ea1f55785d6ca1a5eb"/>
@@ -1772,6 +1776,7 @@
 		<upgrade from="2.5.3" to="2.5.4"/>
 		<upgrade from="2.5.4" to="2.5.5"/>
 		<upgrade from="2.5.5" to="2.5.6"/>
+		<upgrade from="2.5.6" to="2.5.7"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

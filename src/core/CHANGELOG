@@ -1,10 +1,22 @@
+Core Plus 2.5.7
+
+	* [Bug] Fix for bundling components that have a < 1 version.  An example of this is "r7".
+	* [Bug] Component getRequires needed to return all components in lowercase.
+	* [Bug] Component isLoadable needed to check if the files are loaded instead of just loaded.
+	* [Bug] Component added library checks the the isLoadable check.  This was needed for components that
+	  provide functionality from another component.
+	* [Feature] Some new developer utilities, "export_dev_bundle.sh" for one.  This is a script that will
+	  export the CWD as an installable bundle with all the developer utilities and un-minified components.
+	* [Feature] Updated the system updater to better display components that have errors with them.
+	* [Feature] Removed the execMode check on components.
+
 Core Plus 2.5.6
 
 	* [Feature] Retooled the filestore system.  It is now more self contained and has actual tests behind
 	  it
 	* [Feature] Added a new method for templates, hasWidgetAreas.
 	* [Feature] Insertables now will parse for resized images and return the server-resized version.
-	-- Charlie Powell <charlie@eval.bz>  Wed, 05 Jun 2013 16:33:32 -0400
+	-- Charlie Powell <charlie@eval.bz>  Wed, 05 Jun 2013 17:59:50 -0400
 
 Core Plus 2.5.5
 

@@ -290,7 +290,7 @@ class Core implements ISingleton {
 		// Is there a cache of elements available?  This is a primary system cache that greatly increases performance,
 		// since it will no longer have to run through each component.xml file to register each one.
 		if($enablecache){
-			Core\Utilities\Logger\write_debug(' * Checking core-components cache');
+			Core\Utilities\Logger\write_debug('Checking core-components cache');
 			// Try to load up the cached components and check them first.
 			$tempcomponents = Cache::GetSystemCache()->get('core-components', (3600 * 24));
 
@@ -311,9 +311,11 @@ class Core implements ISingleton {
 
 
 		if(!$enablecache || $tempcomponents == false){
-			Core\Utilities\Logger\write_debug(' * Scanning for component.xml files manually');
+			Core\Utilities\Logger\write_debug('Scanning for component.xml files manually');
+
 			// Core is first, (obviously)
 			$tempcomponents['core'] = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
+			Core\Utilities\Logger\write_debug('Core component loaded');
 
 			// First, build my cache of components, regardless if the component is installed or not.
 			$dh = opendir(ROOT_PDIR . 'components');
@@ -331,7 +333,9 @@ class Core implements ISingleton {
 				// Skip directories that do not have a readable component.xml file.
 				if (!is_readable(ROOT_PDIR . 'components/' . $file . '/component.xml')) continue;
 
+				//Core\Utilities\Logger\write_debug(' * Loading component ' . $file);
 				$c = ComponentFactory::Load(ROOT_PDIR . 'components/' . $file . '/component.xml');
+				Core\Utilities\Logger\write_debug('Opened component ' . $file);
 
 				// All further operations are case insensitive.
 				// The original call to Component needs to be case sensitive because it sets the filename to pull.
@@ -340,7 +344,7 @@ class Core implements ISingleton {
 				// If the component was flagged as invalid.. just skip to the next one.
 				if (!$c->isValid()) {
 					if (DEVELOPMENT_MODE) {
-						CAEUtils::AddMessage('Component ' . $c->getName() . ' appears to be invalid.');
+						Core::SetMessage('Component ' . $c->getName() . ' appears to be invalid.');
 					}
 					continue;
 				}
@@ -412,9 +416,6 @@ class Core implements ISingleton {
 						if ($c->needsUpdated()) {
 							$c->upgrade();
 						}
-
-						$this->_components[$n] = $c;
-						$this->_registerComponent($c);
 					}
 					catch(Exception $e){
 						error_log('Ignoring component [' . $n . '] due to an error during upgrading!');
@@ -422,6 +423,22 @@ class Core implements ISingleton {
 
 						//$c->disable();
 						$this->_componentsDisabled[$n] = $c;
+						unset($list[$n]);
+						continue;
+					}
+
+					try{
+						$this->_components[$n] = $c;
+						$this->_registerComponent($c);
+					}
+					catch(Exception $e){
+						error_log('Ignoring component [' . $n . '] due to an error during registration!');
+						error_log($e->getMessage());
+
+						//$c->disable();
+						$this->_componentsDisabled[$n] = $c;
+						unset($list[$n]);
+						continue;
 					}
 
 					unset($list[$n]);
@@ -471,12 +488,16 @@ class Core implements ISingleton {
 
 		// If dev mode is enabled, display a list of components installed but not loadable.
 		if (DEVELOPMENT_MODE) {
-			foreach ($list as $l) {
+			foreach ($list as $n => $c) {
+
+				//$this->_components[$n] = $c;
+				$this->_componentsDisabled[$n] = $c;
+
 				// Ignore anything with the execmode different, those should be minor notices for debugging if anything.
-				if ($l->error & Component::ERROR_WRONGEXECMODE) continue;
+				if ($c->error & Component::ERROR_WRONGEXECMODE) continue;
 
 
-				$msg = 'Could not load installed component ' . $l->getName() . ' due to requirement failed.' . "\n" . $l->getErrors();
+				$msg = 'Could not load installed component ' . $n . ' due to requirement failed.' . "\n" . $c->getErrors();
 				error_log($msg);
 				//Core::AddMessage($msg);
 			}
@@ -504,7 +525,17 @@ class Core implements ISingleton {
 		$name = str_replace(' ', '-', strtolower($c->getName()));
 
 		if ($c->hasLibrary()) {
-			$this->_libraries = array_merge($this->_libraries, $c->getLibraryList());
+
+			$liblist = $c->getLibraryList();
+
+			// Make sure the libraries contained herein aren't provided already!
+			foreach($liblist as $k => $v){
+				if(isset($this->_libraries[$k])){
+					throw new \Exception('Library ' . $k . ' already provided by another component!');
+				}
+			}
+
+			$this->_libraries = array_merge($this->_libraries, $liblist);
 
 			// Register the include paths if set.
 			foreach ($c->getIncludePaths() as $path) {
@@ -526,6 +557,9 @@ class Core implements ISingleton {
 			$this->_permissions       = array_merge($this->_permissions, $c->getPermissions());
 			ksort($this->_permissions);
 		}
+
+		// Lastly, mark this component as available!
+		$c->_setReady(true);
 	}
 
 

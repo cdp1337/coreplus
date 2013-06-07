@@ -185,11 +185,17 @@ function resolve_contents_object(File $file){
 	// The class name to instantiate based on the incoming filetype.
 	$class = null;
 
-	switch ($file->getMimetype()) {
+	$ext = $file->getExtension();
+	$mime = $file->getMimetype();
+
+	switch ($mime) {
 		case 'application/x-gzip':
 			// gzip can be a wrapper around a lot of things.
 			// Some of them even have their own content functions.
-			if (strtolower($file->getExtension()) == 'tgz'){
+			if ($ext == 'tgz'){
+				$class = 'ContentTGZ';
+			}
+			elseif($ext == 'tar.gz'){
 				$class = 'ContentTGZ';
 			}
 			else{
@@ -199,7 +205,7 @@ function resolve_contents_object(File $file){
 
 		case 'text/plain':
 			// Sometimes these are actually other files based on the extension.
-			if (strtolower($file->getExtension()) == 'asc'){
+			if ($ext == 'asc'){
 				$class = 'ContentASC';
 			}
 			else{
@@ -226,17 +232,17 @@ function resolve_contents_object(File $file){
 
 		case 'application/octet-stream':
 			// These are fun... basically I'm relying on the extension here.
-			if($file->getExtension() == 'zip'){
+			if($ext == 'zip'){
 				$class = 'ContentZIP';
 			}
 			else{
-				error_log('@fixme Unknown extension for application/octet-stream mimetype [' . $file->getExtension() . ']');
+				error_log('@fixme Unknown extension for application/octet-stream mimetype [' . $ext . ']');
 				$class = 'ContentUnknown';
 			}
 			break;
 
 		default:
-			error_log('@fixme Unknown file mimetype [' . $file->getMimetype() . '] with extension [' . $file->getExtension() . ']');
+			error_log('@fixme Unknown file mimetype [' . $mime . '] with extension [' . $ext . ']');
 			$class = 'ContentUnknown';
 	}
 
@@ -261,6 +267,31 @@ function resolve_contents_object(File $file){
 	return $ref->newInstance($file);
 }
 
+
+/**
+ * Get an extension from a given filename.
+ *
+ * Will return just the extension itself without the ".", or a blank string if empty.
+ *
+ * @param $str
+ *
+ * @return string
+ */
+function get_extension_from_string($str) {
+	// File doesn't have any extension... easy enough!
+	if (strpos($str, '.') === false) return '';
+
+	// strtolower for simplicity.
+	$str = strtolower($str);
+
+	$ext = substr($str, strrpos($str, '.') + 1);
+
+	if($ext == 'gz' && substr($str, -7) == '.tar.gz'){
+		return 'tar.gz';
+	}
+
+	return $ext;
+}
 
 
 /**

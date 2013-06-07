@@ -361,8 +361,15 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetContentsObject() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		if(!$this->_ftp) $this->markTestSkipped('FTP disabled, skipping tests');
+
+		$file1 = new \Core\Filestore\Backends\FileFTP('core/tests/ivak_TV_Test_Screen.png.gz');
+		$file2 = new \Core\Filestore\Backends\FileFTP('core/tests/ivak_TV_Test_Screen.png.tar.gz');
+		$file3 = new \Core\Filestore\Backends\FileFTP('core/tests/ivak_TV_Test_Screen.png.zip');
+
+		$this->assertInstanceOf('\\Core\\Filestore\\Contents\\ContentGZ', $file1->getContentsObject());
+		$this->assertInstanceOf('\\Core\\Filestore\\Contents\\ContentTGZ', $file2->getContentsObject());
+		$this->assertInstanceOf('\\Core\\Filestore\\Contents\\ContentZIP', $file3->getContentsObject());
 	}
 
 	public function testExists() {
@@ -391,7 +398,10 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetMTime() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		if(!$this->_ftp) $this->markTestSkipped('FTP disabled, skipping tests');
+
+		$file1 = new \Core\Filestore\Backends\FileFTP('core/tests/updater-testdocument.txt');
+
+		$this->assertGreaterThan(100, $file1->getMTime());
 	}
 }

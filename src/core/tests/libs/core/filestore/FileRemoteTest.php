@@ -324,8 +324,13 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetContentsObject() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		$file1 = new \Core\Filestore\Backends\FileRemote($this->_testimage);
+		//$file2 = new \Core\Filestore\Backends\FileRemote('core/tests/ivak_TV_Test_Screen.png.tar.gz');
+		//$file3 = new \Core\Filestore\Backends\FileRemote('core/tests/ivak_TV_Test_Screen.png.zip');
+
+		$this->assertInstanceOf('\\Core\\Filestore\\Contents\\ContentUnknown', $file1->getContentsObject());
+		//$this->assertInstanceOf('\\Core\\Filestore\\Contents\\ContentTGZ', $file2->getContentsObject());
+		//$this->assertInstanceOf('\\Core\\Filestore\\Contents\\ContentZIP', $file3->getContentsObject());
 	}
 
 	public function testExists() {
@@ -351,7 +356,8 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetMTime() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		$file1 = new \Core\Filestore\Backends\FileRemote($this->_testfile);
+
+		$this->assertFalse($file1->getMTime());
 	}
 }

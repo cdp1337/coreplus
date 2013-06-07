@@ -31,9 +31,17 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	 * Test the getMimetype method
 	 */
 	public function testGetMimetype(){
-		$file = new \Core\Filestore\Backends\FileLocal('core/tests/updater-testdocument.txt');
+		$file0 = new \Core\Filestore\Backends\FileLocal('core/tests/updater-testdocument.txt');
+		$file1 = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png');
+		$file2 = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png.gz');
+		$file3 = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png.tar.gz');
+		$file4 = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png.zip');
 
-		$this->assertStringStartsWith('text/', $file->getMimetype());
+		$this->assertStringStartsWith('text/', $file0->getMimetype());
+		$this->assertEquals('image/png', $file1->getMimetype());
+		$this->assertEquals('application/x-gzip', $file2->getMimetype());
+		$this->assertStringStartsWith('application/x-gzip', $file3->getMimetype());
+		$this->assertStringStartsWith('application/zip', $file4->getMimetype());
 	}
 
 	/**
@@ -308,8 +316,13 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetContentsObject() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		$file1 = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png.gz');
+		$file2 = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png.tar.gz');
+		$file3 = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png.zip');
+
+		$this->assertInstanceOf('\\Core\\Filestore\\Contents\\ContentGZ', $file1->getContentsObject());
+		$this->assertInstanceOf('\\Core\\Filestore\\Contents\\ContentTGZ', $file2->getContentsObject());
+		$this->assertInstanceOf('\\Core\\Filestore\\Contents\\ContentZIP', $file3->getContentsObject());
 	}
 
 	public function testExists() {
@@ -334,7 +347,8 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetMTime() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		$file1 = new \Core\Filestore\Backends\FileLocal('core/tests/updater-testdocument.txt');
+
+		$this->assertGreaterThan(100, $file1->getMTime());
 	}
 }

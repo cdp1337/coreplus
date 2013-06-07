@@ -241,21 +241,6 @@ function resolve_link($url){
 
 }
 
-/**
- * Get an extension from a given filename.
- *
- * Will return just the extension itself without the ".", or a blank string if empty.
- *
- * @param $str
- *
- * @return string
- */
-function get_extension_from_string($str) {
-	// File doesn't have any extension... easy enough!
-	if (strpos($str, '.') === false) return '';
-
-	return substr($str, strrpos($str, '.') + 1);
-}
 
 /**
  * Resolve filename to ... script.

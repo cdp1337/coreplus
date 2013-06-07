@@ -192,6 +192,14 @@ class Component_2_1 {
 	 */
 	private $_requires = null;
 
+	/**
+	 * Set to true after all the files have been loaded.
+	 * This is done by the Core.
+	 *
+	 * @var bool
+	 */
+	private $_ready = false;
+
 
 	public function __construct($filename = null) {
 		$this->_file = \Core\Filestore\Factory::File($filename);
@@ -344,7 +352,7 @@ class Component_2_1 {
 
 				$this->_requires[] = array(
 					'type'      => strtolower($t),
-					'name'      => $n,
+					'name'      => strtolower($n),
 					'version'   => strtolower($v),
 					'operation' => strtolower($op),
 					//'value' => $value,
@@ -478,6 +486,19 @@ class Component_2_1 {
 		$this->_filesloaded = true;
 
 		return true;
+	}
+
+	/**
+	 * Internal method used by the Core to set when a given component has been loaded and is ready for use.
+	 *
+	 * @param bool $status
+	 */
+	public function _setReady($status = true){
+		$this->_ready = $status;
+	}
+
+	public function isReady(){
+		return $this->_ready;
 	}
 
 	public function getLibraryList() {
@@ -928,19 +949,23 @@ class Component_2_1 {
 		}
 
 		// It's already loaded!
-		if($this->_loaded) return true;
+		if($this->_filesloaded) return true;
 
 		// Reset the error info.
 		$this->error   = 0;
 		$this->errstrs = array();
 
 		// Check the mode of it also, quick check.
-		if ($this->_execMode != 'BOTH') {
-			if ($this->_execMode != EXEC_MODE) {
-				$this->error     = $this->error | Component::ERROR_WRONGEXECMODE;
-				$this->errstrs[] = 'Wrong execution mode, can only be ran in ' . $this->_execMode . ' mode';
-			}
-		}
+		// 2013.06.06 cpowell
+		// Is this check even really needed?  Asking because any operation on the web simply won't apply on CLI,
+		// like controllers and hooks.  HOWEVER, the libraries themselves should still be available!
+		// Same thing vice versa... if there is a CLI application, it simply won't have Controllers or what not.
+		//if ($this->_execMode != 'BOTH') {
+		//	if ($this->_execMode != EXEC_MODE) {
+		//		$this->error     = $this->error | Component::ERROR_WRONGEXECMODE;
+		//		$this->errstrs[] = 'Wrong execution mode, can only be ran in ' . $this->_execMode . ' mode';
+		//	}
+		//}
 
 		// Can this component be loaded as-is?
 		foreach ($this->getRequires() as $r) {
@@ -986,6 +1011,18 @@ class Component_2_1 {
 			if (Core::IsClassAvailable($c)) {
 				$this->error     = $this->error | Component::ERROR_CONFLICT;
 				$this->errstrs[] = $c . ' already defined in another component';
+				break;
+			}
+		}
+
+		// Check the libraries themselves.
+		$liblist = $this->getLibraryList();
+
+		// Make sure the libraries contained herein aren't provided already!
+		foreach($liblist as $k => $v){
+			if(Core::IsLibraryAvailable($k)){
+				$this->error     = $this->error | Component::ERROR_CONFLICT;
+				$this->errstrs[] = 'Library ' . $k . ' already provided by another component!';
 				break;
 			}
 		}

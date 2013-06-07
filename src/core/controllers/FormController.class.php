@@ -29,6 +29,7 @@ class FormController extends Controller_2_1 {
 		$view = $this->getView();
 		$view->mode = View::MODE_AJAX;
 		$view->contenttype = View::CTYPE_JSON;
+		$view->record = false;
 
 		// This is an ajax-only request.
 		if(!$request->isAjax()){
@@ -76,6 +77,7 @@ class FormController extends Controller_2_1 {
 		$view = $this->getView();
 		$view->mode = View::MODE_AJAX;
 		$view->contenttype = View::CTYPE_JSON;
+		$view->record = false;
 
 		// This is an ajax-only request.
 		if(!$request->isAjax()){
@@ -112,6 +114,7 @@ class FormController extends Controller_2_1 {
 		$view->mode = View::MODE_AJAX;
 		$view->contenttype = View::CTYPE_JSON;
 		$term = $request->getParameter('term');
+		$view->record = false;
 
 		// This is an ajax-only request.
 		if(!$request->isAjax()){

@@ -44,6 +44,7 @@
 
 # These are used in development environments.
 /exports
+/exports-archived
 
 # These are used in the build system.
 /ant.properties

@@ -1,40 +1,4 @@
-{css}<style>
-#system-config-form .formelement:before,
-#system-config-form .formelement:after
-{
-	content: " "; /* 1 */
-	display: table; /* 2 */
-}
-
-#system-config-form .formelement:after {
-	clear: both;
-}
-
-#system-config-form .formelement .formelement-labelinputgroup {
-	border-radius: 0;
-}
-#system-config-form label {
-	padding: 1px;
-	width: 140px;
-	overflow: hidden;
-}
-#system-config-form input,
-#system-config-form select
-{
-	padding: 1px;
-	min-width: 200px;
-}
-#system-config-form .formelement .formdescription {
-	float: left;
-	font-size: 75%;
-	margin-left: 5px;
-	max-width: 425px;
-	padding: 0 0 5px;
-}
-#system-config-form .formelement > .clear {
-	clear: none;
-}
-</style>{/css}
+{css src="assets/css/admin/config.css"}{/css}
 
 {if $config_count}
 	{script library="jquery"}{/script}

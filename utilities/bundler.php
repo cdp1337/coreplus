@@ -184,7 +184,15 @@ foreach($export as $dat){
 		// Yay, extract out the version from this filename.
 		$filev = substr($file, strlen($dat['name']) + 1, -4);
 
-		if(Core::VersionCompare($compversion, $filev, 'lt')) $compversion = $filev;
+		if($compversion == '0.0.0'){
+			// If there's no version set yet...
+			// This is because if the file version is < 1, the check will, (for some reason), return false.
+			$compversion = $filev;
+		}
+		else{
+			if(Core::VersionCompare($compversion, $filev, 'lt')) $compversion = $filev;
+		}
+
 	}
 	closedir($dh);
 	if($compversion == '0.0.0') die('Unable to find required component ' . $dat['name'] . "\n");

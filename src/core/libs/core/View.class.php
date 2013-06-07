@@ -673,12 +673,22 @@ class View {
 					}
 					// Tack on what components are currently installed.
 					$debug .= "\n" . '<b>Available Components</b>' . "\n";
-					$debugcomponents = Core::GetComponents();
+					$debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
 					// Give me sorting!
 					ksort($debugcomponents);
 					foreach ($debugcomponents as $l => $v) {
-						$debug .= ($v->isEnabled() ? '[<span style="color:green;">Enabled</span>]' : '[<span style="color:red;">Disabled</span>]').
-							$v->getName() . ' ' . $v->getVersion() . "\n";
+						if($v->isEnabled() && $v->isReady()){
+							$debug .= '[<span style="color:green;">Enabled</span>]';
+						}
+						elseif($v->isEnabled() && !$v->isReady()){
+							$debug .= '[<span style="color:red;">!ERROR!</span>]';
+						}
+						else{
+							$debug .= '[<span style="color:red;">Disabled</span>]';
+						}
+
+
+						$debug .= $v->getName() . ' ' . $v->getVersion() . "\n";
 					}
 
 					// I wanna see what hooks are registered too!
