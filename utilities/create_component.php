@@ -36,12 +36,15 @@ CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 
 $component = CLI::PromptUser('Enter the name of the component to create', 'text-required');
 
-// Sanitize this name.
-$component = str_replace(' ', '-', $component);
+// Sanitize this name to a point for everything
 $component = trim($component);
-$component = preg_replace('/[^a-zA-Z\-]/', '', $component);
-// The name can have capitals in it.
+$component = preg_replace('/[^a-zA-Z\- ]/', '', $component);
+
+// The name can have capitals and spaces in it.
 $componentname = $component;
+
+// And the key name must be a little more strict.
+$component = str_replace(' ', '-', $component);
 // The directory will be all lowercase.
 $component = strtolower($component);
 $dirname = ROOT_PDIR . 'components/' . $component . '/';
@@ -61,23 +64,37 @@ $directories = array(
 $models = array();
 $controllers = array();
 
-echo 'Enter the models to create on this component initially, separated by a newline' . "\n";
-echo "(Press enter to open the editor.)";
-fgets(STDIN);
-$modellines = CLI::PromptUser('Reading models...', 'textarea');
+
+$modellines = CLI::PromptUser('Enter the models to create on this component initially, separated by a newline', 'textarea');
 foreach(explode("\n", $modellines) as $line){
-	if(!trim($line)) continue;
+	$line = trim($line);
+
+	// Skip blank lines
+	if(!$line) continue;
+
+	// See if this line ends with "Model".. if it does drop that.
+	if(strtolower(substr($line, -5)) == 'model'){
+		$line = substr($line, 0, -5);
+	}
+
 	$models[] = $line;
 	$controllers[] = $line;
 }
 
-echo "Enter the controllers to create on this component initially, separated by a newline." . "\n";
-echo "(Press enter to open the editor.)";
-fgets(STDIN);
-$controllerlines = CLI::PromptUser('Reading controllers...', 'textarea', implode("\n", $controllers));
+
+$controllerlines = CLI::PromptUser('Enter the controllers to create on this component initially, separated by a newline.', 'textarea', implode("\n", $controllers));
 $controllers = array();
 foreach(explode("\n", $controllerlines) as $line){
-	if(!trim($line)) continue;
+	$line = trim($line);
+
+	// Skip blank lines
+	if(!$line) continue;
+
+	// See if this line ends with "Model".. if it does drop that.
+	if(strtolower(substr($line, -10)) == 'controller'){
+		$line = substr($line, 0, -10);
+	}
+
 	$controllers[] = $line;
 }
 
