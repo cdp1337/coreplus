@@ -240,7 +240,7 @@ Execute a low-level dataset operation on the installation or upgrade.
 
 	Please note, this is ONLY applicable with the "alter" action in the dataset.
 -->
-<!ELEMENT datasetrenamecolumn (EMPTY)>
+<!ELEMENT datasetrenamecolumn EMPTY>
 <!ATTLIST datasetrenamecolumn
 	oldname CDATA #REQUIRED
 	newname CDATA #REQUIRED
