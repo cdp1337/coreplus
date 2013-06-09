@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Google" execmode="web">
+	<requires>
+		<require name="core" type="component" version="2.5.5"/>
+	</requires>
+	<provides>
+		<provide version="3.12" name="GoogleMaps" type="library"/>
+		<provide version="1.1.0" name="GoogleAnalytics" type="library"/>
+		<provide version="1.1.0" name="GoogleAnalytics" type="component"/>
+	</provides>
+	<hooks>
+		<hook name="/core/page/prerender" call="\Google\Analytics\Helper::InstallTracking"/>
+	</hooks>
+	<description>
+		Provides (in theory), many of the Google API products.
+	</description>
+	<configs>
+		<config key="/google-mapsv3/key" type="string" description="Google Maps API v3 key"/>
+		<config key="/google-analytics/accountid" type="string" default="" description="This is the Account ID (sometimes called 'Web Property ID') listed for this account in google analytics."/>
+	</configs>
+	<pages>
+		<page baseurl="/google/configure" title="Google Keys and Apps" group="Configure" access="g:admin" admin="1" selectable="0"/>
+	</pages>
+	<files>
+		<file filename="controllers/GoogleController.php" md5="0e37e67cbdeb651b6715bdcc986a6c3c">
+			<controller name="GoogleController"/>
+		</file>
+		<file filename="libs/google/analytics/Helper.php" md5="20d7d1d95c3aba15e386d05b74829ef5">
+			<class name="Google\Analytics\Helper"/>
+		</file>
+		<file filename="libs/google/maps/GeocodeRequest.php" md5="004989557f59e785da079b60e1cb392e">
+			<class name="Google\Maps\GeocodeRequest"/>
+		</file>
+		<file filename="libs/google/maps/GeocodeResponse.php" md5="9ed866d771e9072b43060296b62a1cad">
+			<class name="Google\Maps\GeocodeResponse"/>
+		</file>
+	</files>
+	<upgrades/>
+	<view>
+		<file filename="templates/pages/google/configure.tpl" md5="7f14a2c9999b94bd20374d35b14fa119"/>
+		<file filename="templates/pages/google/configure_analytics.tpl" md5="e652afdcb24569e1e9676ad36c4d822a"/>
+	</view>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+</component>
+
