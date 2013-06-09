@@ -27,3 +27,5 @@
 	{widget baseurl="/tags/display" page=$article->getLink('Page') title="Tags:" }
 
 </div>
+
+{widgetarea name="After Blog Content"}

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.4" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.5" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.6" operation="ge"/>
 		<require name="user" type="component" version="2.4.1"/>
@@ -11,11 +11,11 @@
 		<permission key="blog_manage" description="Manage Blogs"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="ccaf78aae682ecaa8c8698e9ad828a50"/>
-		<file filename="controllers/BlogController.php" md5="37e94eab63201594e37d6e95ec253833">
+		<file filename="CHANGELOG" md5="801438555592611508b55cae8bb5dd47"/>
+		<file filename="controllers/BlogController.php" md5="d1b8b94cc7828066f790ca282a25dce9">
 			<controller name="BlogController"/>
 		</file>
-		<file filename="helpers/BlogHelper.php" md5="5a357d45de496a449a55e4de2826f76a">
+		<file filename="helpers/BlogHelper.php" md5="6f1d99f749b165fd0f6cc17e13d55625">
 			<class name="BlogHelper"/>
 		</file>
 		<file filename="models/BlogArticleModel.php" md5="27613af0c5834557e6c2ef19bc6ba593">
@@ -40,9 +40,8 @@
 	<view searchdir="templates">
 		<file filename="templates/pages/blog/admin.tpl" md5="ca665d689f267200349fcef29350b8bc"/>
 		<file filename="templates/pages/blog/admin_view.tpl" md5="21b2ec9bd612ddd8bb2aa9d50a25aa8d"/>
-		<file filename="templates/pages/blog/article_create.tpl" md5="37a42bd1bbcd4168f1ca2137ec70e597"/>
-		<file filename="templates/pages/blog/article_update.tpl" md5="7188695d360bad19187f63c7da3fc2f8"/>
-		<file filename="templates/pages/blog/article_view.tpl" md5="3f444c17f3ddd908c2337161621fed2a"/>
+		<file filename="templates/pages/blog/article_create_update.tpl" md5="8987b7747088a99fd8ec5b9b20cca665"/>
+		<file filename="templates/pages/blog/article_view.tpl" md5="6b716f77de3706d89d3ccc8b4046ba8a"/>
 		<file filename="templates/pages/blog/article_view/review-post.tpl" md5="4f09567bf26232ec2f525f6d9ad5d154"/>
 		<file filename="templates/pages/blog/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/blog/editindex.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -59,6 +58,7 @@
 				components/blog/upgrades/121_to_130.php
 			</phpfileinclude>
 		</upgrade>
+		<upgrade from="1.2.9a" to="1.3.0"/>
 		<upgrade from="1.3.0" to="1.4.0">
 			<phpfileinclude>
 				components/blog/upgrades/130_to_140_published.php
@@ -79,6 +79,7 @@
 		</upgrade>
 		<upgrade from="1.4.2" to="1.4.3"/>
 		<upgrade from="1.4.3" to="1.4.4"/>
+		<upgrade from="1.4.4" to="1.4.5"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>

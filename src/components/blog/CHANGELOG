@@ -1,3 +1,10 @@
+Blog 1.4.5
+
+	* [Bug] Fixed the facebook integration for existing articles.  This was broken for articles that were
+	  created as draft and later set to published.
+	* Merged the create and update templates together for sake of reducing code duplication.
+	-- Charlie Powell <charlie@eval.bz>  Sun, 09 Jun 2013 17:19:47 -0400
+
 Blog 1.4.4
 
 	* Updated blog to work with 2.5.6

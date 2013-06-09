@@ -303,6 +303,7 @@ class BlogController extends Controller_2_1 {
 		$article->set('blogid', $blog->get('id'));
 		$form = BlogHelper::GetArticleForm($article);
 
+		$view->templatename = 'pages/blog/article_create_update.tpl';
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->title = 'Create Blog Article';
 		$view->assignVariable('form', $form);
@@ -336,6 +337,7 @@ class BlogController extends Controller_2_1 {
 
 		$form = BlogHelper::GetArticleForm($article);
 
+		$view->templatename = 'pages/blog/article_create_update.tpl';
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->addBreadcrumb($article->get('title'), $article->get('rewriteurl'));
 		$view->title = 'Update Blog Article';

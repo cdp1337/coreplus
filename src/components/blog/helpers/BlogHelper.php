@@ -125,7 +125,7 @@ abstract class BlogHelper {
 			$insertables->save();
 
 			// if it's new, allow the user to post it to facebook.
-			if($isnew && isset($_POST['facebook_post']) && $_POST['facebook_post']){
+			if(isset($_POST['facebook_post']) && $_POST['facebook_post']){
 				// facebook_post
 
 				$token = substr($_POST['facebook_post'], strpos($_POST['facebook_post'], ':')+1);
