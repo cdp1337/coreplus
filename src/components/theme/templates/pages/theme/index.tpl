@@ -182,6 +182,9 @@
 
 
 {css}<style>
+	.directory-listing ul {
+		margin: 0;
+	}
 	.directory-listing li {
 		margin-left: 1em;
 		list-style: none;
@@ -205,6 +208,17 @@
 	}
 	.directory-listing .expanded > .collapsed-hint{
 		display:none;
+	}
+
+	.directory-listing .filename {
+		display: inline-block;
+		width: 120px;
+	}
+	.directory-listing .inline-control {
+		display: inline-block;
+		font-size: 85%;
+		white-space: nowrap;
+		width: 120px;
 	}
 	</style>{/css}
 
@@ -244,27 +258,27 @@
 		{foreach $items as $key => $item}
 			<li class="collapsed">
 				{if isset($item.obj)}
-					<img src="{$item.obj->getMimetypeIconURL('48x48')}"/>
-					<span>{$key}</span>
+					{img file=$item.obj dimensions="24x24"}
+					<span class="filename" title="{$key|escape}">{$key}</span>
 					{if $item.haswidgets}
-						{a class="button" href="/theme/widgets/?page=`$item.file`" title="Manage Widgets"}
+						{a class="inline-control" href="/theme/widgets/?page=`$item.file`" title="Manage Widgets"}
 							<i class="icon-cogs"></i>
 							<span>Manage Widgets</span>
 						{/a}
 					{/if}
 					{if $item.has_stylesheets}
-						{a class="button" href="/theme/selectstylesheets/?template=skins/`$item.file`" title="Optional Stylesheets"}
+						{a class="inline-control" href="/theme/selectstylesheets/?template=skins/`$item.file`" title="Optional Stylesheets"}
 							<i class="icon-strikethrough"></i>
 							<span>Optional Stylesheets</span>
 						{/a}
 					{/if}
-					{a class="button" href="/theme/editor?template=`$item.file`" title="Edit Template"}
+					{a class="inline-control" href="/theme/editor?template=`$item.file`" title="Edit Template"}
 						<i class="icon-pencil"></i>
 						<span>Edit Template</span>
 					{/a}
 				{else}
-					<i class="icon-folder-close collapsed-hint"></i>
-					<i class="icon-folder-open expanded-hint"></i>
+					<i class="icon-folder-close collapsed-hint" title="Click to expand"></i>
+					<i class="icon-folder-open expanded-hint" title="Click to close"></i>
 					<span>{$key}</span>
 					{call name=printTemplateList items=$item}
 				{/if}
