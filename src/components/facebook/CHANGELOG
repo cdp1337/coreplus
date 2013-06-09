@@ -1,18 +1,23 @@
+Facebook 3.2.0~core5
+
+	* Minor change in the Core integration to know if facebook has been configured or not.
+	-- Charlie Powell <charlie@eval.bz>  Sun, 09 Jun 2013 18:59:28 -0400
+
 Facebook 3.2.0~core4
 
-	* Logic was moved from the user system to this component.  This includes the login widget,
-	  some styles, and the javascript.
-
-	--Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:36:46 -0500
+	* Logic was moved from the user system to this component.  This includes the login widget, some
+	  styles, and the javascript.
+	-- Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:36:46 -0500
 
 Facebook 3.2.0~core3
+
+	* [Feature] Added open graph utilities as part of a new core hook.
 	* Updated some of the javascript integrators
-	* Added open graph utilities as part of a new core hook.
 	-- Charlie Powell <charlie@eval.bz>  14 Oct 2012
 
 Facebook 3.2.0~core2
 
-	* Fix the requirement set for this package.
+	* [Bug] Fix the requirement set for this package.
 	-- Charlie Powell <charlie@eval.bz>  8 Oct 2012
 
 Facebook 3.2.0~core1
@@ -23,3 +28,4 @@ Facebook 3.2.0~core1
 Facebook 3.0.1~core1
 
 	-- Charlie Powell <charlie@eval.bz>  15 Jun 2012
+

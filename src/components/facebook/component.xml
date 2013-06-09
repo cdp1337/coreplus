@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0~core4" name="Facebook" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0~core5" name="Facebook" execmode="web">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 	</hooks>
@@ -27,8 +27,8 @@
 		<file filename="templates/widgets/facebook/login.tpl" md5="a2ecb2faade8f57d53a3837b6a9c0307"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="9641280866870d21d8e90dfd31c87985"/>
-		<file filename="FacebookHelper.class.php" md5="113e7ab017a0e132e1ba46133762f841">
+		<file filename="CHANGELOG" md5="526b5ac7c18533014a2d5e15e3ed6beb"/>
+		<file filename="FacebookHelper.class.php" md5="215002cb0f7c0b563a50e34fce9a1e62">
 			<class name="FacebookHelper"/>
 		</file>
 		<file filename="controllers/FacebookController.php" md5="34db2aebfd429c0e56d18da85831e3b8">
@@ -71,6 +71,7 @@
 		<upgrade from="3.2.0~core1" to="3.2.0~core2"/>
 		<upgrade from="3.2.0~core2" to="3.2.0~core3"/>
 		<upgrade from="3.2.0~core3" to="3.2.0~core4"/>
+		<upgrade from="3.2.0~core4" to="3.2.0~core5"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/facebook.css" md5="97603a70f87c05fae85a08213c5e7170"/>

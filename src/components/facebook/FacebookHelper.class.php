@@ -55,32 +55,41 @@ Core.FB = {
 	ready: false,
 	access_token: $token,
 	id: $id,
+	appid: "$appid",
 	onReady: function(fn){
 		if(Core.FB.ready) fn();
 		else Core.FB._onReadyStack.push(fn);
 	},
 	_onReadyStack: []
 };
-window.fbAsyncInit = function() {
-	FB.init({
-		appId: '$appid',
-		status: true,
-		cookie: true,
-		xfbml: true,
-		oauth: true
-	});
-	Core.FB.ready = true;
-	Core.FB.status = 'loaded';
-	for(i in Core.FB._onReadyStack){
-		if(typeof Core.FB._onReadyStack[i] == 'function') Core.FB._onReadyStack[i]();
-	}
-};
 
-(function() {
-	var e = document.createElement('script'); e.async = true;
-	e.src = "$p" + "$src";
-	document.getElementById('fb-root').appendChild(e);
-}());
+if(Core.FB.appid){
+	window.fbAsyncInit = function() {
+		FB.init({
+			appId: '$appid',
+			status: true,
+			cookie: true,
+			xfbml: true,
+			oauth: true
+		});
+		Core.FB.ready = true;
+		Core.FB.status = 'loaded';
+		for(i in Core.FB._onReadyStack){
+			if(typeof Core.FB._onReadyStack[i] == 'function') Core.FB._onReadyStack[i]();
+		}
+	};
+
+	(function() {
+		var e = document.createElement('script'); e.async = true;
+		e.src = "$p" + "$src";
+		document.getElementById('fb-root').appendChild(e);
+	}());
+}
+else{
+	console.log('Refusing to try to load facebook with no appid set.  Please configure it first!');
+}
+
+
 </script>
 EOD;
 			// Add the necessary script
