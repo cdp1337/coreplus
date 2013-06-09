@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Livefyre" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Livefyre" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.5.0" operation="ge"/>
+		<require name="core" type="component" version="2.5.6" operation="ge"/>
 	</requires>
 	<configs>
 		<config key="/livefyre/siteid" type="string" description="Your LiveFyre SiteID"/>
 	</configs>
 	<pages>
-		<page baseurl="/livefyre" title="LiveFyre Administration" admin="1" access="g:admin" selectable="0"/>
+		<page baseurl="/livefyre" title="LiveFyre Administration" admin="1" access="g:admin" selectable="0" group="Configure"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/livefyre/view" title="LiveFyre Comments"/>
@@ -23,6 +23,7 @@
 		<file filename="templates/widgets/livefyre/view.tpl" md5="296d59df8c74a3a5ea5d4ad4061e3fb2"/>
 	</view>
 	<files>
+		<file filename="CHANGELOG" md5="942f5b7e9e3ee04219294bdfa4cb982b"/>
 		<file filename="controllers/LivefyreController.php" md5="99efa5503af17be2c446330a62b82877">
 			<controller name="LivefyreController"/>
 		</file>
@@ -34,7 +35,9 @@
 		<file filename="assets/images/livefyre/livefyre-16x16.png" md5="a869b32cdb4d1f01d4bdfc54018c4608"/>
 		<file filename="assets/images/livefyre/logo-header.png" md5="e058a634e02dfba963313ad62bbde234"/>
 	</assets>
-	<upgrades/>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
