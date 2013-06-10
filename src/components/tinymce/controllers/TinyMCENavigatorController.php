@@ -67,10 +67,13 @@ class TinyMCENavigatorController extends  Controller_2_1{
 		if($request->getParameter('ajax')){
 			$navigator->setBaseURL('/tinymcenavigator?ajax=1');
 			$view->mastertemplate = 'blank.tpl';
+			$view->record = false;
+			//$view->mode = View::MODE_AJAX;
 		}
 		else{
 			$navigator->setBaseURL('/tinymcenavigator');
 			$view->mastertemplate = 'admin';
+			//$view->mode = View::MODE_PAGE;
 		}
 
 		try{
@@ -81,7 +84,6 @@ class TinyMCENavigatorController extends  Controller_2_1{
 			Core::SetMessage($e->getMessage(), 'error');
 		}
 
-		$view->mode = View::MODE_PAGEORAJAX;
 		$view->title = 'Uploaded Files Navigator';
 		$navigator->render();
 		//var_dump($navigator, $navigator->render()); die();
@@ -105,10 +107,13 @@ class TinyMCENavigatorController extends  Controller_2_1{
 		if($request->getParameter('ajax')){
 			$navigator->setBaseURL('/tinymcenavigator/image?ajax=1');
 			$view->mastertemplate = 'blank.tpl';
+			$view->record = false;
+			//$view->mode = View::MODE_AJAX;
 		}
 		else{
 			$navigator->setBaseURL('/tinymcenavigator/image');
 			$view->mastertemplate = 'admin';
+			//$view->mode = View::MODE_PAGE;
 		}
 
 		try{
@@ -118,7 +123,6 @@ class TinyMCENavigatorController extends  Controller_2_1{
 			Core::SetMessage($e->getMessage(), 'error');
 		}
 
-		$view->mode = View::MODE_PAGEORAJAX;
 		$view->title = 'Images';
 		$navigator->render();
 		//var_dump($navigator, $navigator->render()); die();

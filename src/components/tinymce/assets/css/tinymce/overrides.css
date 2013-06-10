@@ -1,0 +1,20 @@
+/**
+ * TinyMCE Core Plus Styles
+ *
+ * A list of custom styles for customizing the tinymce editor to play nicely with Core Plus.
+ * Any specific styles for the main line distro, please place them here.
+ */
+
+.mce-menu {
+	text-align: left;
+}
+.mce-btn button {
+	min-width: 10px;
+	text-align: left;
+	display: inline;
+}
+
+.mce-fullscreen {
+	/* I need to bump up the z-index of fullscreen mode to force it above the admin bar. */
+	z-index: 10000;
+}

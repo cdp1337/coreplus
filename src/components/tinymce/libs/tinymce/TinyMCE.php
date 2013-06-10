@@ -15,12 +15,13 @@ abstract class TinyMCE {
 	public static function IncludeTinyMCE(){
 		\ComponentHandler::LoadScriptLibrary('jquery');
 		\CurrentPage::AddScript('js/tinymce/jquery.tinymce.min.js');
-		\CurrentPage::AddStylesheet('css/tinymce.css');
+		\CurrentPage::AddStylesheet('css/tinymce/overrides.css');
 
 		// Yes, the string needs quotes inside of quotes!  It's to be read by javascript after all.
 		$filebrowsercallback = (\Core\user()->checkAccess('p:/tinymce/imagebrowser/access')) ? "Core.TinyMCE.FileBrowserCallback" : 'null';
 
 		$loc = \Core::ResolveAsset('js/tinymce/tinymce.js');
+		$content = \Core::ResolveAsset('css/tinymce/content.css');
 
 		$script = <<< EOD
 <script type="text/javascript">
@@ -49,7 +50,7 @@ abstract class TinyMCE {
 		file_browser_callback: $filebrowsercallback,
 
 		// Example content CSS (should be your site CSS)
-		//content_css : "css/content.css",
+		content_css : "$content",
 
 		// Drop lists for link/image/media/template dialogs
 		//template_external_list_url : "lists/template_list.js",

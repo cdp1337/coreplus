@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0b3~core1" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0b3~core2" name="TinyMCE" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.1"/>
 		<require name="jquery" type="library"/>
@@ -26,11 +26,11 @@
 		<file filename="templates/pages/tinymce/browser-icons.tpl" md5="e9e783cbc75b5dbe1d7618e5e4e41ebe"/>
 		<file filename="templates/pages/tinymce/link.phtml" md5="524d952e87774b2bafd2324e7c15274b"/>
 		<file filename="templates/pages/tinymcenavigator/index.tpl" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="templates/pages/tinymcenavigator/index/icons.tpl" md5="0d45edead907d23b1f9464649c934d1e"/>
-		<file filename="templates/pages/tinymcenavigator/index/list.tpl" md5="a2ab17ae6b325b0305861ad6f48714d8"/>
+		<file filename="templates/pages/tinymcenavigator/index/icons.tpl" md5="faa826fa7ef1e137c3b2e5cf8b177e28"/>
+		<file filename="templates/pages/tinymcenavigator/index/list.tpl" md5="4245f51a463d40e24e24c0eace199e6b"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="3d89c5cf56c7e460c89f16fbae61c1f4"/>
+		<file filename="CHANGELOG" md5="f4c87b7fb925c7731a373ac77c12da9b"/>
 		<file filename="LICENSE.TXT" md5="045d04e17422d99e338da75b9c749b7c"/>
 		<file filename="TinyMCEFormElement.class.php" md5="5c3eccd47fabc69634e956046b08ee73">
 			<class name="TinyMCEFormElement"/>
@@ -39,19 +39,20 @@
 		<file filename="controllers/TinyMCEController.php" md5="5dd2945866df74f2b3bea7a28db19fd4">
 			<controller name="TinyMCEController"/>
 		</file>
-		<file filename="controllers/TinyMCENavigatorController.php" md5="16bd5f122f87b4b7ced03545b08cbbbb">
+		<file filename="controllers/TinyMCENavigatorController.php" md5="6b42749b295aaf409bdbb4487a3822ab">
 			<controller name="TinyMCENavigatorController"/>
 		</file>
-		<file filename="libs/tinymce/Navigator.php" md5="2684926cd5e9e0068bbf904062c64901">
+		<file filename="libs/tinymce/Navigator.php" md5="d15b6ce651f7ce60e2b74529619ea969">
 			<class name="TinyMCE\Navigator"/>
 		</file>
-		<file filename="libs/tinymce/TinyMCE.php" md5="7758a11f0fbdab6628f81b7d48253ff0">
+		<file filename="libs/tinymce/TinyMCE.php" md5="d4abcaf9a2d6674a3f76c573228f7216">
 			<class name="TinyMCE\TinyMCE"/>
 		</file>
 	</files>
 	<assets>
-		<file filename="assets/css/tinymce.css" md5="75a8a438d32bd40b2b924ca7a2360971"/>
-		<file filename="assets/css/tinymcenavigator.css" md5="10756dc46d9eb76805745daf55be227a"/>
+		<file filename="assets/css/tinymce/content.css" md5="7f4ddd19337b5ec82f8ea094543c42d8"/>
+		<file filename="assets/css/tinymce/navigator.css" md5="10756dc46d9eb76805745daf55be227a"/>
+		<file filename="assets/css/tinymce/overrides.css" md5="8c550606d8cb0f9d78c337201e0562fc"/>
 		<file filename="assets/js/tiny_mce/coreplus_functions.js" md5="3edceacd7e596125d3a86cd277b96996"/>
 		<file filename="assets/js/tiny_mce/jquery.tinymce.js" md5="751418d46d453e7c6b1a7fbd4e60fefa"/>
 		<file filename="assets/js/tiny_mce/langs/en.js" md5="eff36a9433bccea2f3243b1465fe6fe3"/>
@@ -491,6 +492,7 @@
 		<upgrade from="3.5.6~core4" to="3.5.6~core5"/>
 		<upgrade from="3.5.6~core5" to="3.5.6~core6"/>
 		<upgrade from="3.5.6~core6" to="4.0b3~core1"/>
+		<upgrade from="4.0b3~core1" to="4.0b3~core2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

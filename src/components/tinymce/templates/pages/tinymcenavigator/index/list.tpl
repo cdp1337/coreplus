@@ -1,5 +1,5 @@
 {script library="jquery"}{/script}
-{css src="assets/css/tinymcenavigator.css"}{/css}
+{css src="assets/css/tinymce/navigator.css"}{/css}
 {script src="assets/js/tinymcenavigator.js"}{/script}
 {script library="jqueryui.readonly"}{/script}
 {script location="foot"}<script>Navigator.Setup();</script>{/script}

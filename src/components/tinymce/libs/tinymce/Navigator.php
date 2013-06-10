@@ -126,6 +126,10 @@ class Navigator {
 
 		if($dir == '.') $dir = '';
 
+		// Make sure it ends with a trailing slash.
+		// If it doesn't, then the upload will be in the directory directoryfilename.
+		if(substr($dir, -1) != '/') $dir .= '/';
+
 		// make sure it exists.
 		$dh = \Core\Filestore\Factory::Directory($this->_basedir . $dir);
 		if(!$dh->exists()){

@@ -1,3 +1,13 @@
+TinyMCE 4.0b3~core2
+
+	* [Bug] Set the pop-up pages to be not recorded in page navigation.
+	* [Bug] Fixed file names that are uploaded to a directory where the script may not append the
+	  directory with a trailing slash.
+	* [Feature] Added a new stylesheet that can be overwrote; tinymce/content.css.  This provides the
+	  ability for themes to specify the site styles to be used inside of editors.
+	* Rearranged the stylesheets a little
+	-- Charlie Powell <charlie@eval.bz>  Sun, 09 Jun 2013 21:37:09 -0400
+
 TinyMCE 4.0b3~core1
 
 	* [Feature] New UI
