@@ -131,6 +131,10 @@
 	</script>{/script}
 {/if}
 
-<input type="submit" value="Update Article"/>
+{if $article->exists()}
+	<input type="submit" value="Update Article"/>
+{else}
+	<input type="submit" value="Create Article"/>
+{/if}
 
 {$form->render('foot')}

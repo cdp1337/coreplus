@@ -33,7 +33,7 @@ class BlogController extends Controller_2_1 {
 
 		// Is the user a manager, but no blogs exist on the system?
 		if($manager && !sizeof($ids)){
-			Core::Redirect('/blog/admin');
+			\core\redirect('/blog/admin');
 		}
 
 		$filters = new FilterForm();
@@ -278,7 +278,7 @@ class BlogController extends Controller_2_1 {
 		}
 
 		$blog->delete();
-		Core::Redirect('/blog/admin');
+		\core\redirect('/blog/admin');
 	}
 
 	/**
@@ -307,6 +307,7 @@ class BlogController extends Controller_2_1 {
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->title = 'Create Blog Article';
 		$view->assignVariable('form', $form);
+		$view->assign('article', $article);
 	}
 
 	/**
@@ -522,6 +523,8 @@ class BlogController extends Controller_2_1 {
 		$view->meta['description'] = $article->getTeaser();
 		$view->assign('author', $author);
 		$view->assign('article', $article);
+		$view->assign('body', \Core\parse_html($article->get('body')));
+
 		if ($editor) {
 			$view->addControl('Edit Article', '/blog/article/update/' . $blog->get('id') . '/' . $article->get('id'), 'edit');
 			if($article->get('status') == 'draft'){

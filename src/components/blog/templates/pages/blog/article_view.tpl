@@ -21,7 +21,7 @@
 	{/if}
 
 	<div class="blog-article-body" itemprop="articleBody">
-		{$article.body}
+		{$body}
 	</div>
 
 	{widget baseurl="/tags/display" page=$article->getLink('Page') title="Tags:" }
