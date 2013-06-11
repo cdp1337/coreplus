@@ -1,7 +1,8 @@
-content 2.0.1b1
+Content 2.0.1
 
 	* Cleaned up the content controller a whee bit
-	--Charlie Powell <charlie@eval.bz>  Wed, 27 Feb 2013 18:29:23 -0500
+	* Update Content for Core 2.5.7
+	-- Charlie Powell <charlie@eval.bz>  Tue, 11 Jun 2013 12:33:09 -0400
 
 Content 2.0.0
 
@@ -11,9 +12,8 @@ Content 2.0.0
 
 Content 1.9.6
 
-	* Added multisite support.
+	* [Feature] Added multisite support.
 	-- Charlie Powell <charlie@eval.bz>  30 Dec 2012
-
 
 Content 1.9.5
 
@@ -23,7 +23,8 @@ Content 1.9.5
 Content 1.9.4
 
 	* Sort content pages by nickname.
-	* Page rewrite updates. - Made the page creation / management system a little easier to user, (hopefully).
+	* Page rewrite updates. - Made the page creation / management system a little easier to user,
+	  (hopefully).
 	* Removed the nickname field, this is now automatically set from the title of the linked page.
 	* Started the formal changelog for this component
 	-- Charlie Powell <charlie@eval.bz>  20 Sep 2012
@@ -35,3 +36,4 @@ Content 1.9.3
 Content 1.9.2
 
 	-- Charlie Powell <charlie@eval.bz>  2012-07-16 15:33:01
+

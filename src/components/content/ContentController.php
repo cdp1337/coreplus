@@ -182,6 +182,6 @@ class ContentController extends Controller_2_1 {
 
 		if (!$m->exists()) return View::ERROR_NOTFOUND;
 		$m->delete();
-		Core::Redirect('/content');
+		\core\redirect('/content');
 	}
 }
