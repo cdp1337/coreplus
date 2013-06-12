@@ -1,3 +1,9 @@
+Facebook 3.2.0~core6
+
+	* Updated some things to keep up with Core 2.5.7
+	* Switched Gender to a selectbox instead of an open ended text field.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 12 Jun 2013 17:17:25 -0400
+
 Facebook 3.2.0~core5
 
 	* Minor change in the Core integration to know if facebook has been configured or not.

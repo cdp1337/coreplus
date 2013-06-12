@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0~core5" name="Facebook" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0~core6" name="Facebook" execmode="web">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 	</hooks>
@@ -20,18 +20,18 @@
 	<userconfigs>
 		<userconfig key="facebook_id" name="Facebook ID" onregistration="0" onedit="0"/>
 		<userconfig key="facebook_link" name="Facebook Link" onregistration="0" onedit="0"/>
-		<userconfig key="gender" name="Gender" onregistration="0" onedit="0"/>
+		<userconfig key="gender" name="Gender" onregistration="0" onedit="0" formtype="select" options="|Male|Female|Other"/>
 		<userconfig key="facebook_access_token" name="Facebook Access Token (set on login)" onregistration="0" onedit="0"/>
 	</userconfigs>
 	<view searchdir="templates">
 		<file filename="templates/widgets/facebook/login.tpl" md5="a2ecb2faade8f57d53a3837b6a9c0307"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="526b5ac7c18533014a2d5e15e3ed6beb"/>
+		<file filename="CHANGELOG" md5="7ae4d675a37b78a09f0b12382b05a7b9"/>
 		<file filename="FacebookHelper.class.php" md5="215002cb0f7c0b563a50e34fce9a1e62">
 			<class name="FacebookHelper"/>
 		</file>
-		<file filename="controllers/FacebookController.php" md5="34db2aebfd429c0e56d18da85831e3b8">
+		<file filename="controllers/FacebookController.php" md5="439bcd076fb45b8f2216af0f07a80202">
 			<controller name="FacebookController"/>
 		</file>
 		<file filename="facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
@@ -72,6 +72,7 @@
 		<upgrade from="3.2.0~core2" to="3.2.0~core3"/>
 		<upgrade from="3.2.0~core3" to="3.2.0~core4"/>
 		<upgrade from="3.2.0~core4" to="3.2.0~core5"/>
+		<upgrade from="3.2.0~core5" to="3.2.0~core6"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/facebook.css" md5="97603a70f87c05fae85a08213c5e7170"/>

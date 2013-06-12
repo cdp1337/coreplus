@@ -47,10 +47,10 @@ class FacebookController extends Controller_2_1{
 					}
 
 					if($redirect){
-						Core::Redirect($redirect);
+						\core\redirect($redirect);
 					}
 					else{
-						Core::Reload();
+						\core\reload();
 					}
 				}
 				catch(Exception $e){
