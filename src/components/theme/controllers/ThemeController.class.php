@@ -482,14 +482,14 @@ class ThemeController extends Controller_2_1{
 			// Validate
 			if(!\Theme\validate_theme_name($t)){
 				Core::SetMessage('Invalid theme requested', 'error');
-				Core::Redirect('/theme');
+				\core\redirect('/theme');
 			}
 
 			$filename = ROOT_PDIR . 'themes/' . $t . '/skins/' . $template;
 
 			if(!\Theme\validate_template_name($t, $template)){
 				Core::SetMessage('Invalid template requested', 'error');
-				Core::Redirect('/theme');
+				\core\redirect('/theme');
 			}
 		}
 
@@ -558,7 +558,7 @@ class ThemeController extends Controller_2_1{
 				Core::SetMessage('No changes performed', 'info');
 			}
 
-			Core::Reload();
+			\Core\reload();
 		} // if($this->getPageRequest()->isPost())
 
 		// Get a list of the widgetareas on the theme.
@@ -691,12 +691,12 @@ class ThemeController extends Controller_2_1{
 				// This widget requires additional settings in order for it to be instantiated.
 				// Redirect to the edit page.
 				Core::SetMessage('Created widget, please configure it.', 'info');
-				Core::Redirect('/Theme/Widgets/Edit/' . $m->get('id'));
+				\core\redirect('/Theme/Widgets/Edit/' . $m->get('id'));
 			}
 			else{
 				// Doesn't need instantiated, can be used as is.
 				Core::SetMessage('Created widget.', 'success');
-				Core::Redirect(Core::GetNavigation('/Theme/Widgets'));
+				\core\redirect(Core::GetNavigation('/Theme/Widgets'));
 			}
 		}
 	}
@@ -748,7 +748,7 @@ class ThemeController extends Controller_2_1{
 			//no special gets...
 			// This version of the editor doesn't support viewing without any file specified.
 			Core::SetMessage('No file requested', 'error');
-			Core::Redirect('/theme');
+			\core\redirect('/theme');
 		}
 
 
@@ -928,7 +928,7 @@ class ThemeController extends Controller_2_1{
 		}
 		else{
 			Core::SetMessage($message, 'error');
-			Core::Redirect('/theme');
+			\core\redirect('/theme');
 		}
 	}
 

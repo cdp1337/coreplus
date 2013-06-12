@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.3" name="Theme" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.4" name="Theme" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.6"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
@@ -10,8 +10,8 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="3aa18395b509af83e37ef90988884494"/>
-		<file filename="controllers/ThemeController.class.php" md5="5e9db5ae1f7a034760aca5cbcbe74997">
+		<file filename="CHANGELOG" md5="e53d439038a20cc9f63a38d972e52c51"/>
+		<file filename="controllers/ThemeController.class.php" md5="2a607a992a3781e171f3721292d61431">
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
@@ -64,6 +64,7 @@
 		<upgrade from="2.1.0" to="2.1.1"/>
 		<upgrade from="2.1.1" to="2.1.2"/>
 		<upgrade from="2.1.2" to="2.1.3"/>
+		<upgrade from="2.1.3" to="2.1.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
