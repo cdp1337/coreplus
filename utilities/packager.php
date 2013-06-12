@@ -836,11 +836,9 @@ function process_component($component, $forcerelease = false){
 
 		switch($ans){
 			case 'editvers':
-				// Try to determine if it's an official package based on the author email.
-				$original = false;
-				foreach($authors as $aut){
-					if(isset($aut['email']) && $aut['email'] == $packageremail) $original = true;
-				}
+				// If the current version has a 3rd party signifier... keep it as such.
+				if(!strpos($version, '~')) $original = true;
+				else $original = false;
 
 				// Try to explode the version by a ~ sign, this signifies not the original packager/source.
 				// ie: ForeignComponent 3.2.4 may be versioned 3.2.4.thisproject5
