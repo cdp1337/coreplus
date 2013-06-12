@@ -101,7 +101,7 @@ class NavigationController extends Controller_2_1 {
 
 		$m->delete();
 
-		Core::Redirect('/navigation');
+		\core\redirect('/navigation');
 	}
 
 	public static function _SaveHandler(Form $form) {

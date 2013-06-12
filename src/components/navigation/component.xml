@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.7" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.8" name="Navigation" execmode="web">
 	<requires>
 		<require name="core" type="component" operation="ge" version="2.5.6"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="3b8100178c1fdbc9e26c00418d03cf47"/>
-		<file filename="controllers/NavigationController.php" md5="f609072de0e71e7ba8e0b07c4959847a">
+		<file filename="CHANGELOG" md5="10f7c3961265743924787d944b2d786f"/>
+		<file filename="controllers/NavigationController.php" md5="47d368a14b8ee518ff805652b3c77dfe">
 			<controller name="NavigationController"/>
 		</file>
 		<file filename="models/Navigation.model.php" md5="2a44cc7cb2aab937daccfe52550f046d">
@@ -55,6 +55,7 @@
 		<upgrade from="2.1.4" to="2.1.5"/>
 		<upgrade from="2.1.5" to="2.1.6"/>
 		<upgrade from="2.1.6" to="2.1.7"/>
+		<upgrade from="2.1.7" to="2.1.8"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
