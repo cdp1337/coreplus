@@ -33,6 +33,6 @@ class PerformInstallStep extends InstallerStep {
 		unset($_SESSION['passes']);
 		// Yup, that's it!
 		// The core system handles all installs automatically.
-		\Core::Redirect(ROOT_WDIR);
+		\core\redirect(ROOT_WDIR);
 	}
 }
