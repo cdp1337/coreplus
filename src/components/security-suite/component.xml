@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.1" name="Security-Suite" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.2" name="Security-Suite" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.2"/>
 		<require name="phpwhois" type="component"/>
@@ -14,6 +14,8 @@
 	<pages>
 		<page access="p:/security/viewlog" admin="1" baseurl="/security/log" title="Security Log" group="Security"/>
 		<page access="g:admin" admin="1" baseurl="/security/blacklistip" title="Blacklisted IP addresses" group="Security"/>
+		<page access="*" admin="0" baseurl="/wphoneypot/wplogin" rewriteurl="/wp-login" selectable="0" title="WP Login"/>
+		<page access="*" admin="0" baseurl="/wphoneypot/wpadmin" rewriteurl="/wp-admin" selectable="0" title="WP Admin"/>
 	</pages>
 	<permissions>
 		<permission key="/security/viewlog" description="View Security Log"/>
@@ -24,20 +26,25 @@
 		<file filename="templates/pages/security/blacklistip_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/security/log.tpl" md5="8b679efe76f5b6f8bcdbad48db44b144"/>
 		<file filename="templates/pages/security/view.tpl" md5="ff23af3634c04a9a1d46076d6b5fadf2"/>
+		<file filename="templates/pages/wphoneypot/wpadmin.phtml" md5="b22f2d01e716682b27599c19a76b44e2"/>
+		<file filename="templates/pages/wphoneypot/wplogin.phtml" md5="748f545b5796b0ef78a77e38ee232417"/>
 	</view>
 	<description>
 		Collection of security suites for sites, including anti-spam.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="0309a70ca215ec374326d0b948788769"/>
+		<file filename="CHANGELOG" md5="360e5d5341831420992959465b22860e"/>
 		<file filename="classes/IpBlacklistHelper.php" md5="8dee7ca83899e95cfabd27767c1add7c">
 			<class name="IpBlacklistHelper"/>
 		</file>
 		<file filename="classes/StopForumSpam.class.php" md5="dd9e2a3d9dd7a535863ede6d2328ad1a">
 			<class name="StopForumSpam"/>
 		</file>
-		<file filename="controllers/SecurityController.php" md5="97cab5737435f532817f5e74ae712f11">
+		<file filename="controllers/SecurityController.php" md5="f092d34a2a61176a0a0ffcf72b7e59be">
 			<controller name="SecurityController"/>
+		</file>
+		<file filename="controllers/WPHoneypotController.php" md5="3d3c4ccf26836b9d54261b78de9a5e8c">
+			<controller name="WPHoneypotController"/>
 		</file>
 		<file filename="listed_ip_1.zip" md5="9e6a0866ba2c7b797b0bbe39af7a6736"/>
 		<file filename="listed_ip_1_all.zip" md5="aabf67226a6d5d2bebcf6cc4e6a8c187"/>
@@ -59,7 +66,13 @@
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.1.0"/>
 		<upgrade from="1.1.0" to="1.1.1"/>
+		<upgrade from="1.1.1" to="1.1.2"/>
 	</upgrades>
+	<assets>
+		<file filename="assets/wp-admin/css/wp-admin.min.css" md5="1060bbdd464bed007f6fa460dd3f6a56"/>
+		<file filename="assets/wp-admin/css/wpcom.css" md5="faab35031e9109d28fc8435eb635c3af"/>
+		<file filename="assets/wp-includes/css/buttons.min.css" md5="f3dcaa18ed8e6638089d4e1a196ccae9"/>
+	</assets>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>

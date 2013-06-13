@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>WordPress.com &rsaquo; Log In</title>
+	<link rel='stylesheet' id='all-css-0' href='<?php echo Core::ResolveAsset("wp-admin/css/wp-admin.min.css"); ?>' type='text/css' media='all' />
+	<link rel='stylesheet' id='all-css-0' href='<?php echo Core::ResolveAsset("wp-includes/css/buttons.min.css"); ?>' type='text/css' media='all' />
+	<link rel='stylesheet' href='<?php echo Core::ResolveAsset("wp-admin/css/wpcom.css"); ?>' type='text/css' />
+	<script type="text/javascript">
+		if ( window.top !== window.self ) {
+			if ( window.top.location.hostname !== window.self.location.hostname || window.top.location.protocol !== window.top.location.protocol ) {
+				window.top.location.href = window.self.location.href;
+			}
+		}
+	</script>
+
+
+	<style type="text/css">
+		body, form .input {
+			font-family: "Open Sans", "Helvetica Neue", "Arial", sans;
+		}
+
+		body.login.recover-password,
+		body.login.recover-password-success {
+			height: auto;
+			min-height: 100%;
+		}
+
+
+		.recover-password #recovery,
+		.recover-password-success #recovery,
+		.recover-password #login_error {
+			width: 400px;
+		}
+
+		#recovery {
+			padding-bottom: 24px;
+		}
+
+		.recover-password #login_error {
+			width: auto;
+		}
+
+		#login_error ul {
+			list-style: square outside none;
+			margin-left: 15px;
+		}
+
+		.message ol {
+			margin: 10px 0px 10px 20px;
+		}
+
+		#login_error h2, #recovery h2 {
+			padding-bottom: 10px;
+		}
+
+		#login_error h3 {
+			padding-bottom: 5px;
+		}
+
+		#login_error h3 {
+			margin-top: 10px;
+		}
+
+		.recover-password #recovery h2 {
+			margin-bottom: 5px;
+		}
+		.recover-password-success #recovery h2 {
+			margin-bottom: .5em;
+		}
+
+		.recover-password #recovery p {
+			line-height: 1.6;
+			padding-bottom: 10px;
+		}
+		.recover-password-success #recovery p {
+			line-height: 1.6;
+			padding-bottom: 1em;
+		}
+
+		.recovery-stage {
+			margin: 7px 0px 20px 0px;
+		}
+		.login .recovery-stage input[type="text"] {
+			margin-bottom: 5px;
+		}
+
+		.recover-password #recovery textarea {
+			width: 95%;
+		}
+
+		.recover-password #recovery .recovery-ownership-title {
+			position: relative;
+			padding-bottom: 0;
+		}
+
+		.recovery-ownership-help {
+			float: right;
+			font-size: 11px;
+			margin-top: -10px;
+			margin-bottom: 5px;
+		}
+
+		.recovery-ownership {
+			clear: both;
+		}
+
+		.recovery-ownership-help {
+			margin: 3px 0 0 0;
+		}
+
+		.recovery-ownership-help-text {
+			display: none;
+			position: absolute;
+			top: 25px;
+			right: 0;
+			z-index: 100;
+			border: 1px solid #e6db55;
+			background-color: lightyellow;
+			width: 250px;
+			padding: 8px;
+			box-shadow: 0 4px 10px -1px rgba(200, 200, 200, 0.7);
+		}
+
+		.account-recovery-link {
+			float: left;
+			margin-top: 4px;
+		}
+	</style>
+	<style type="text/css">
+		.twostep-login-details strong {
+			white-space: nowrap;
+		}
+	</style>
+	<meta name='robots' content='noindex,nofollow' />
+</head>
+<body class="login login-action-login wp-core-ui">
+	<div style="border:1px solid red; background: #f9cad1; padding:1em; text-align:center; font-weight:bold;">If you are a real person, DO NOT USE THIS FORM!  <a href="<?php echo Core::ResolveLink('/user/login'); ?>">Use this instead.</a></div>
+	<div id="login">
+		<h1><a href="http://wordpress.com/" title="WordPress.com">WordPress.com</a></h1>
+
+		<form name="loginform" id="loginform" action="wp-login.php" method="post">
+			<p>
+				<label for="user_login">Email or Username<br />
+					<input type="text" name="log" id="user_login" class="input" value="" size="20" /></label>
+			</p>
+			<p>
+				<label for="user_pass">Password<br />
+					<input type="password" name="pwd" id="user_pass" class="input" value="" size="20" /></label>
+			</p>
+			<p class="forgetmenot"><label for="rememberme"><input name="rememberme" type="checkbox" id="rememberme" value="forever"  /> Remember Me</label></p>
+			<p class="submit">
+				<input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large" value="Log In" />
+				<input type="hidden" name="redirect_to" value="http://wordpress.com/wp-admin/" />
+				<input type="hidden" name="testcookie" value="1" />
+			</p>
+		</form>
+
+		<p id="nav">
+			<a href="http://wordpress.com/signup/?ref=wplogin">Register</a> |
+			<a href="http://wordpress.com/wp-login.php?action=lostpassword" title="Password Lost and Found">Lost your password?</a>
+		</p>
+
+		<script type="text/javascript">
+			function wp_attempt_focus(){
+				setTimeout( function(){ try{
+					d = document.getElementById('user_login');
+					d.focus();
+					d.select();
+				} catch(e){}
+				}, 200);
+			}
+
+			wp_attempt_focus();
+			if(typeof wpOnload=='function')wpOnload();
+		</script>
+
+		<p id="backtoblog"><a href="http://wordpress.com/" title="Are you lost?">&larr; Back to WordPress.com</a></p>
+
+	</div>
+	<div class="clear"></div>
+</body>
+</html>

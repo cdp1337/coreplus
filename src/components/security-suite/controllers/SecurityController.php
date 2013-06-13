@@ -88,7 +88,13 @@ class SecurityController extends Controller_2_1 {
 
 			if($entry->get('affected_user_id')){
 				$userobject = User::Construct($entry->get('affected_user_id'));
-				$entry->set('affected_user', $userobject->getDisplayName());
+				if($userobject){
+					$entry->set('affected_user', $userobject->getDisplayName());
+				}
+				else{
+					$entry->set('affected_user', '[DELETED USER]');
+				}
+
 			}
 		}
 
