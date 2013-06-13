@@ -3,7 +3,7 @@
  * Class file for the model ThemeEditorItemModel
  *
  * @package theme-editor
- * @author Nick Hinsch <nicholas@eval.bz
+ * @author Nick Hinsch <nicholas@eval.bz>
  */
 class ThemeTemplateChangeModel extends Model {
 	/**

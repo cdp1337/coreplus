@@ -96,7 +96,7 @@
  * </code>
  *
  * @package Nonce
- * @author Charlie Powell <charlie@eval.bz
+ * @author Charlie Powell <charlie@eval.bz>
  *
  */
 class NonceModel extends Model {

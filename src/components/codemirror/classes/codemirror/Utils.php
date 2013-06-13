@@ -4,7 +4,7 @@
  * 
  * @package CodeMirror
  * @author Charlie Powell <charlie@eval.bz>
- * @author Nick Hinsch <nicholas@eval.bz
+ * @author Nick Hinsch <nicholas@eval.bz>
  * @date 20130509.1449
  * @copyright Copyright (C) 2009-2013  Author
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
