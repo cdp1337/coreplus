@@ -24,7 +24,7 @@ abstract class RewriteMapHelper {
 
 			// Resolve that to the new rewriteurl and redirect!
 			$newpage = PageModel::Construct($match);
-			Core::Redirect($newpage->get('rewriteurl'), 301);
+			\core\redirect($newpage->get('rewriteurl'), 301);
 		}
 
 		// Else, no match was found... maybe it's a fuzzy page!
@@ -44,7 +44,7 @@ abstract class RewriteMapHelper {
 					// Only if the new page is fuzzy too.
 					$url .= substr($incomingurl, strlen($fuzzy));
 				}
-				Core::Redirect($url, 301);
+				\core\redirect($url, 301);
 			}
 		}
 		while($fuzzy);

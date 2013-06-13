@@ -1206,11 +1206,11 @@ class Form extends FormGroup {
 		// If it's set to die, simply exit the script without outputting anything.
 		if ($status === 'die') exit;
 		// If the return code is boolean true, it's a reload.
-		elseif ($status === true) Core::Reload();
+		elseif ($status === true) \Core\reload();
 		// If the page returned the same page as the current url, force a reload, (as redirect will ignore it)
-		elseif($status === REL_REQUEST_PATH) Core::Reload();
+		elseif($status === REL_REQUEST_PATH) \Core\reload();
 		// Anything else gets sent to the redirect system.
-		else Core::Redirect($status);
+		else \core\redirect($status);
 	}
 
 	/**

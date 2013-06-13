@@ -6,10 +6,27 @@ Core Plus 2.5.7
 	* [Bug] Component added library checks the the isLoadable check.  This was needed for components that
 	  provide functionality from another component.
 	* [Bug] Core can now load without the User component available.  This is a fringe case for upgrades.
+	* [Bug] Prevented the admin_group page attribute from displaying on forms.
+	* [Bug] Added additional logic in the admin menu to be able to render on legacy codebases without the
+	  proper jquery version.
 	* [Feature] Some new developer utilities, "export_dev_bundle.sh" for one.  This is a script that will
 	  export the CWD as an installable bundle with all the developer utilities and un-minified components.
 	* [Feature] Updated the system updater to better display components that have errors with them.
 	* [Feature] Removed the execMode check on components.
+	* [Feature] Created a \Core\parse_html function.  This scans for <img/> tags and replaces them with
+	  server-resized versions if necessary.
+	* [Feature] Added in Directory_local_backend, File_local_backend, and Template classes to support
+	  legacy versions of the code.
+	* [Feature] Added the ability to specify the <h /> level for the starting element of the Changelog
+	  system.  Useful for creating custom changelog reports.
+	* [Feature] Added a "/core/security/x-frame-options" config option for defining the X-Fame-Options
+	  header.  Defaults to "SAMEORIGIN".
+	* [Feature] The admin menu now responds to touch events as well as hover.
+	* Moved Core::Redirect to \Core\redirect
+	* Moved Core::Reload to \Core\reload
+	* Moved Core::GoBack to \Core\go_back
+	* Minor fixes in the Changelog system for parsing files.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 13 Jun 2013 17:45:25 -0400
 
 Core Plus 2.5.6
 

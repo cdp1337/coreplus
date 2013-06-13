@@ -295,7 +295,7 @@ class UpdaterController extends Controller_2_1 {
 					Core::SetMessage('Added repository site and imported ' . $keysimported . ' key(s) successfully!', 'success');
 				}
 
-				Core::Redirect('/updater/repos');
+				\core\redirect('/updater/repos');
 			}
 
 			$view->templatename = 'pages/updater/repos_add2.tpl';
@@ -323,7 +323,7 @@ class UpdaterController extends Controller_2_1 {
 
 		$model->delete();
 		Core::SetMessage('Removed repository successfully', 'success');
-		Core::Redirect('/updater/repos');
+		\core\redirect('/updater/repos');
 	}
 
 	/**
@@ -338,7 +338,7 @@ class UpdaterController extends Controller_2_1 {
 
 		if($sitecount == 0){
 			Core::SetMessage('Please add at least one repository before searching for new packages!', 'error');
-			Core::Redirect('/updater/repos/add');
+			\core\redirect('/updater/repos/add');
 		}
 
 		$view->assign('sitecount', $sitecount);
@@ -407,7 +407,7 @@ class UpdaterController extends Controller_2_1 {
 					$error = 'Unable to lookup ' . $id . ' from keyserver.';
 				}
 				else{
-					Core::Redirect('/updater/keys');
+					\core\redirect('/updater/keys');
 				}
 			}
 			elseif($_POST['pubkey']){
@@ -419,7 +419,7 @@ class UpdaterController extends Controller_2_1 {
 					$error = 'Unable to import requested key.';
 				}
 				else{
-					Core::Redirect('/updater/keys');
+					\core\redirect('/updater/keys');
 				}
 			}
 			elseif($_FILES['pubkeyfile']){
@@ -431,7 +431,7 @@ class UpdaterController extends Controller_2_1 {
 					$error = 'Unable to import requested key.';
 				}
 				else{
-					Core::Redirect('/updater/keys');
+					\core\redirect('/updater/keys');
 				}
 			}
 		}
@@ -463,7 +463,7 @@ class UpdaterController extends Controller_2_1 {
 		if($result != 0){
 			Core::SetMessage('Unable to remove key ' . $key, 'error');
 		}
-		Core::Redirect('/updater/keys');
+		\core\redirect('/updater/keys');
 	}
 
 

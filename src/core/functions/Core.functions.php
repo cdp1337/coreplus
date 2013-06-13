@@ -261,37 +261,173 @@ function ResolveFilenameTo($filename, $base = ROOT_URL){
 
 /**
  * Redirect the user to another page via sending the Location header.
- *	Prevents any POST data from being reloaded.
+ *    Prevents any POST data from being reloaded.
  *
- * @param string $page_to_redirect_to
+ * @param  string $page The page URL to redirect to
+ * @param  int    $code  The HTTP status code to send to the browser, MUST be 301 or 302.
+ *
+ * @throws \Exception
  */
-function Redirect($page){
+function redirect($page, $code = 302){
+	if(!($code == 301 || $code == 302)){
+		throw new \Exception('Invalid response code requested for redirect, [' . $code . '].  Please ensure it is either a 301 (permanent), or 302 (temporary) redirect!');
+	}
 	//This is NOT designed to refresh the current page.	If the pageto redirect to IS
 	// this current page, simply do nothing.
 
 	$page = \Core::ResolveLink($page);
 
-	//if(!preg_match('/^[a-zA-Z]{0,7}:\/\//', $page)){
-	//	$m = PageModel::Find(array('baseurl' => $page), 1);
-	//	if(!$m) $page = ROOT_WDIR;
-	//	else $page = $m->getResolvedURL();
-	//}
-	//var_dump($page);
-	//die();
 	// Do nothing if the page is the current page.... that is Reload()'s job.
-	if($page == CUR_CALL) return false;
+	if ($page == CUR_CALL) return;
 
-	header("Location:" . $page);
-	die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
+	// Determine the string to send with the code.
+	switch($code){
+		case 301:
+			$movetext = '301 Moved Permanently';
+			break;
+		case 302:
+			$movetext = '302 Moved Temporarily';
+			break;
+	}
+
+	header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
+	if(\ConfigHandler::Get('/core/security/x-frame-options')){
+		header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
+	}
+	header('HTTP/1.1 ' . $movetext);
+	header('Location: ' . $page);
+
+	// Just before the page stops execution...
+	\HookHandler::DispatchHook('/core/page/postrender');
+
+	\Session::ForceSave();
+	die('If your browser does not refresh, please <a href="' . $page . '">Click Here</a>');
 }
 
-function Reload(){
+/**
+ * Utility function to reload the current page
+ */
+function reload(){
+	$movetext = '302 Moved Temporarily';
+
+	header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
+	if(\ConfigHandler::Get('/core/security/x-frame-options')){
+		header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
+	}
+	header('HTTP/1.1 302 Moved Temporarily');
 	header('Location:' . CUR_CALL);
-	die("If your browser does not refresh, please <a href=\"" . CUR_CALL . "\">Click Here</a>");
+
+	// Just before the page stops execution...
+	\HookHandler::DispatchHook('/core/page/postrender');
+
+	\Session::ForceSave();
+	die('If your browser does not refresh, please <a href="' . CUR_CALL . '">Click Here</a>');
 }
 
-function GoBack(){
-	CAEUtils::redirect(CAEUtils::GetNavigation());
+/**
+ * Utility function to just go back to a page before this one.
+ *
+ * @param int $depth The amount of pages back to go
+ */
+function go_back($depth=1) {
+	$hist = \Core::GetHistory($depth);
+
+	if($depth == 1 && CUR_CALL == $hist){
+		// If the user requested the last page, but the last page is this page...
+		// go back to the page before that!
+		// This can happen commonly on form submissions.
+		// You display a form on page X, submit it, and request to go back,
+		// but simply dsiplaying the same page should be done with reload.
+		$hist = \Core::GetHistory(2);
+	}
+
+	redirect($hist);
+}
+
+/**
+ * Utility to Core-ify a given HTML string.
+ *
+ * Will use a tokenizer to scan for <img /> tags and <a /> tags.
+ *
+ * @param $html
+ * @return string
+ */
+function parse_html($html){
+	// Counter for the current position of the tokenizer.
+	$x = 0;
+	// Set to the position of the current image
+	$imagestart = null;
+
+	// @todo a rel=nofollow tags for external/untrusted links
+	//       This can make use of an external utility to allow the admin to set which links are allowed.
+
+	// @todo a tags that are absolutely resolved or have a core prefix such as core:///about-us or what not.
+
+	while($x < strlen($html)){
+		// Replace images with the optimized version.
+		if(substr($html, $x, 4) == '<img'){
+			$imagestart = $x;
+			$x+= 3;
+			continue;
+		}
+
+		$fullimagetag = null;
+
+		if($imagestart !== null && $html{$x} == '>'){
+			// This will equal the full image HTML tag, ie: <img src="blah"/>...
+			$fullimagetag = substr($html, $imagestart, $x-$imagestart+1);
+		}
+		elseif($imagestart !== null && substr($html, $x, 2) == '/>'){
+			// This will equal the full image HTML tag, ie: <img src="blah"/>...
+			$fullimagetag = substr($html, $imagestart, $x-$imagestart+2);
+		}
+
+		if($imagestart !== null && $fullimagetag){
+			// Convert it to a DOM element so I can process it.
+			$simple = new \SimpleXMLElement($fullimagetag);
+			$attributes = array();
+			foreach($simple->attributes() as $k => $v){
+				$attributes[$k] = (string)$v;
+			}
+
+			if(isset($attributes['width']) || isset($attributes['height'])){
+				$file = \Core\Filestore\Factory::File($attributes['src']);
+
+				if(isset($attributes['width']) && isset($attributes['height'])){
+					$dimension = $attributes['width'] . 'x' . $attributes['height'] . '!';
+					unset($attributes['width'], $attributes['height']);
+				}
+				elseif(isset($attributes['width'])){
+					$dimension = $attributes['width'];
+					unset($attributes['width']);
+				}
+				else{
+					$dimension = $attributes['height'];
+					unset($attributes['height']);
+				}
+
+				$attributes['src'] = $file->getPreviewURL($dimension);
+
+				// And rebuild.
+				$img = '<img';
+				foreach($attributes as $k => $v){
+					$img .= ' ' . $k . '="' . str_replace('"', '&quot;', $v) . '"';
+				}
+				$img .= '/>';
+
+				// Figure out the offset for X.  I'll need to modify this after I merge it in.
+				$x += strlen($img) - strlen($fullimagetag);
+				// Split this string back in.
+				$html = substr_replace($html, $img, $imagestart, strlen($fullimagetag));
+			}
+			// Reset...
+			$imagestart = null;
+		}
+		$x++;
+	}
+	//var_dump($html);
+
+	return $html;
 }
 
 /**

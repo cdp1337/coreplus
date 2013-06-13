@@ -1079,83 +1079,39 @@ class Core implements ISingleton {
 	 * Redirect the user to another page via sending the Location header.
 	 *    Prevents any POST data from being reloaded.
 	 *
+	 * @deprecated 2013.06.11 Please use the namespaced versions.
+	 *
 	 * @param  string $page The page URL to redirect to
 	 * @param  int    $code  The HTTP status code to send to the browser, MUST be 301 or 302.
 	 *
-	 * @throws CoreException
+	 * @throws \Exception
 	 *
-	 * @return false|null False on failure, success will halt the script.
+	 * @return bool|null False on failure, success will halt the script.
 	 */
 	static public function Redirect($page, $code = 302) {
-		if(!($code == 301 || $code == 302)){
-			throw new CoreException('Invalid response code requested for redirect, [' . $code . '].  Please ensure it is either a 301 (permanent), or 302 (temporary) redirect!');
-		}
-		//This is NOT designed to refresh the current page.	If the pageto redirect to IS
-		// this current page, simply do nothing.
-
-		$page = self::ResolveLink($page);
-
-		//if(!preg_match('/^[a-zA-Z]{0,7}:\/\//', $page)){
-		//	$m = PageModel::Find(array('baseurl' => $page), 1);
-		//	if(!$m) $page = ROOT_WDIR;
-		//	else $page = $m->getResolvedURL();
-		//}
-		//var_dump($page);
-		//die();
-		// Do nothing if the page is the current page.... that is Reload()'s job.
-		if ($page == CUR_CALL) return false;
-
-		// Determine the string to send with the code.
-		switch($code){
-			case 301:
-				$movetext = '301 Moved Permanently';
-				break;
-			case 302:
-				$movetext = '302 Moved Temporarily';
-				break;
-		}
-
-		header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
-		header('HTTP/1.1 ' . $movetext);
-		header('Location: ' . $page);
-
-		// Just before the page stops execution...
-		HookHandler::DispatchHook('/core/page/postrender');
-
-		Session::ForceSave();
-		die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
+		error_log('Core::Redirect is deprecated, please use \\Core\\redirect() instead.', E_USER_DEPRECATED);
+		\Core\redirect($page, $code);
 	}
 
+	/**
+	 * @deprecated 2013.06.11 Please use the namespaced versions.
+	 */
 	static public function Reload() {
-		header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
-		header('HTTP/1.1 302 Moved Temporarily');
-		header('Location:' . CUR_CALL);
-
-		// Just before the page stops execution...
-		HookHandler::DispatchHook('/core/page/postrender');
-
-		Session::ForceSave();
-		die("If your browser does not refresh, please <a href=\"" . CUR_CALL . "\">Click Here</a>");
+		error_log('Core::Reload is deprecated, please use \\Core\\reload() instead.', E_USER_DEPRECATED);
+		\Core\reload();
 	}
 
 	/**
 	 * Helper function to just go back to a page before this one.
 	 *
+	 * @deprecated 2013.06.11 Please use the namespaced versions.
+	 *
 	 * @param int $depth The amount of pages back to go
 	 */
 	static public function GoBack($depth=1) {
-		$hist = self::GetHistory($depth);
+		error_log('Core::GoBack is deprecated, please use \\Core\\go_back() instead.', E_USER_DEPRECATED);
 
-		if($depth == 1 && CUR_CALL == $hist){
-			// If the user requested the last page, but the last page is this page...
-			// go back to the page before that!
-			// This can happen commonly on form submissions.
-			// You display a form on page X, submit it, and request to go back,
-			// but simply dsiplaying the same page should be done with reload.
-			$hist = self::GetHistory(2);
-		}
-
-		Core::Redirect($hist);
+		\Core\go_back($depth);
 	}
 
 	/**

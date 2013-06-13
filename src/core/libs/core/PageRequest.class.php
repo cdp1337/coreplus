@@ -477,6 +477,9 @@ class PageRequest {
 			// This is useful for the pages that may not be under the "/admin" umbrella, but still rendered with the admin UI.
 			$return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 		}
+		elseif($return->mastertemplate){
+			// No change needed, just skip the below cases.
+		}
 		elseif ($defaultpage->get('theme_template')) {
 			// Master template set in the database?
 			$return->mastertemplate = $defaultpage->get('theme_template');

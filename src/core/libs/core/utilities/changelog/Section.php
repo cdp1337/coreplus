@@ -38,14 +38,14 @@ class Section {
 
 	/**
 	 * The last entry processed, useful for parseLine and its continuation ability.
-	 * @var ChangelogEntry
+	 * @var Entry
 	 */
 	private $_lastentry;
 
 	public function parseHeader($line){
 		// The name of this section will be the first part followed by one space, followed by any non-space character.
 		// ie: Core Plus 1.2.3
-		$version = preg_replace('/^.* ([^ ]*)$/', '$1', $line);
+		$version = preg_replace('/^.* ([^ ]+)$/', '$1', $line);
 		$name = substr($line, 0, (-1-strlen($version)));
 
 		$this->_name = $name;
@@ -174,12 +174,14 @@ class Section {
 	/**
 	 * Fetch this changelog section as HTML; useful for reports.
 	 *
+	 * @param int $startinglevel The starting <h#> level to start with.
+	 *
 	 * @return string (HTML)
 	 */
-	public function fetchAsHTML(){
+	public function fetchAsHTML($startinglevel = 2){
 		$out = '';
 
-		$out .= '<h2>' . $this->_name . ' ' . $this->_version . '</h2>' . "\n";
+		$out .= '<h' . $startinglevel . '>' . $this->_name . ' ' . $this->_version . '</h' . $startinglevel . '>' . "\n";
 		if($this->_packageddate){
 			$out .= sprintf(
 				'<p>Packaged by %s on %s</p>',

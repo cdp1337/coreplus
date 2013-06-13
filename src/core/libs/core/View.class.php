@@ -659,6 +659,7 @@ class View {
 					$debug .= '<b>Template Information</b>' . "\n";
 					$debug .= 'Base URL: ' . $this->baseurl . "\n";
 					$debug .= 'Template Used: ' . $this->templatename . "\n";
+					$debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
 					$debug .= "\n" . '<b>Performance Information</b>' . "\n";
 					$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
 					$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
@@ -810,7 +811,9 @@ class View {
 			//mb_internal_encoding('utf-8');
 
 			header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? Core::GetComponent()->getVersion() : ''));
-			header('X-Frame-Options: SAMEORIGIN');
+			if(\ConfigHandler::Get('/core/security/x-frame-options')){
+				header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
+			}
 		}
 
 		// No SSL, skip all this!

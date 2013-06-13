@@ -25,7 +25,7 @@
 
 	</div>
 
-	{if Core::IsLibraryAvailable('jqueryui')}
+	{if Core::IsLibraryAvailable('jqueryui') && Core::IsLibraryAvailable('jquery.hoverintent')}
 		{script library="jqueryui"}{/script}
 		{script library="jquery.cookie"}{/script}
 		{script library="jquery.hoverintent"}{/script}
@@ -58,7 +58,15 @@
 				}
 			});
 		</script>{/script}
+	{/if}
 
+	{if Core::IsLibraryAvailable("jquery")}
+		{script location="foot"}<script>
+		// Fail safe on mobile platforms where hoverintent won't work or if it's not available.
+		$('#admin-bar').find('span').click(function(){
+			$(this).closest('li').find('ul').toggle();
+		});
+		</script>{/script}
 	{/if}
 
 {/if}

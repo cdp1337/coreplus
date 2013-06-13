@@ -33,7 +33,7 @@ class Parser {
 	/**
 	 * Parse the given changelog file.
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function parse(){
 		// Blank out the existing sections, if any.
@@ -44,7 +44,7 @@ class Parser {
 			// Start reading the file contents until I find the header, (probably on line 1, but you never know).
 			$fh = fopen($this->_file, 'r');
 			if(!$fh){
-				throw new Exception('Unable to open file ' . $this->_file . ' for reading');
+				throw new \Exception('Unable to open file ' . $this->_file . ' for reading');
 			}
 
 			$currentsection = null;
@@ -73,6 +73,9 @@ class Parser {
 				}
 			}
 			fclose($fh);
+		}
+		else{
+			throw new \Exception($this->_file . ' does not exist, cannot parse!');
 		}
 	}
 
@@ -146,13 +149,13 @@ class Parser {
 		file_put_contents($filename, $out);
 	}
 
-	public function saveHTML($filename){
+	public function saveHTML($filename, $startinglevel = 1){
 		// Make sure they're sorted.
 		$this->sort();
 
-		$out = '<h1>' . $this->_name . ' Change Log</h1>' . "\n";
+		$out = '<h' . $startinglevel . '>' . $this->_name . ' Change Log</h' . $startinglevel . '>' . "\n";
 		foreach($this->_sections as $s){
-			$out .= $s->fetchAsHTML() . "\n<hr/>\n";
+			$out .= $s->fetchAsHTML($startinglevel + 1) . "\n<hr/>\n";
 		}
 
 		// make sure the directory exists.

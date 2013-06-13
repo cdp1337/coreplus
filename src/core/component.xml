@@ -41,7 +41,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="0bd7ad045f4938a46251bde8742e5c7a"/>
+		<file filename="core/CHANGELOG" md5="71ca0becd3a23dc5fef72eeb3a52a783"/>
 		<file filename="core/bootstrap.php" md5="8cc1207576fa8bcb00ad0d02e97c68e6"/>
 		<file filename="core/bootstrap_postincludes.php" md5="e877be1a1b418440d796ffdc3a622bba"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -67,7 +67,7 @@
 		<file filename="core/controllers/GettingStartedController.class.php" md5="270a7376ba8381bb8dfba5a0f71970b0">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="d8b298edf793f6af3563d75cea806b5c">
+		<file filename="core/controllers/UpdaterController.class.php" md5="91a7f7b3d44c12c725b1f96fb79941d8">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
@@ -133,12 +133,21 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="080383e4dade461c3c7ac1d9e504ed28">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="4bc632e32ff9d7d344a29288f4981e55"/>
-		<file filename="core/helpers/RewriteMapHelper.class.php" md5="da6e337a8305534398cad21c53dcae54">
+		<file filename="core/functions/Core.functions.php" md5="00bff290d8786118ca711fcd2b23d91a"/>
+		<file filename="core/helpers/RewriteMapHelper.class.php" md5="94999059abc6ed854620c39d952814f3">
 			<class name="RewriteMapHelper"/>
 		</file>
 		<file filename="core/helpers/UpdaterHelper.class.php" md5="706d1c550503f40cbcb6eda1679dc64b">
 			<class name="UpdaterHelper"/>
+		</file>
+		<file filename="core/legacy-support/pre-2.5.6/Directory_local_backend.php" md5="2f0b33bbdd83163e6ba067c6450085bd">
+			<class name="Directory_local_backend"/>
+		</file>
+		<file filename="core/legacy-support/pre-2.5.6/File_local_backend.php" md5="a260b8843a6633a943a288f2aadb5b65">
+			<class name="File_local_backend"/>
+		</file>
+		<file filename="core/legacy-support/pre-2.5.6/Template.php" md5="8480b15c53411b7ae45f3997881a8db6">
+			<class name="Template"/>
 		</file>
 		<file filename="core/libs/aws-sdk/CAE2-notes.README" md5="04a3722d3640cc5d48cc0bbd0c7cd454"/>
 		<file filename="core/libs/aws-sdk/README.md" md5="b290d5d6e4b4c494df4093ea05257ccf"/>
@@ -432,7 +441,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="bd9d2c3437546e6fa0795aeb4a70d1b4">
+		<file filename="core/libs/core/Component_2_1.php" md5="10b610795a78dd83a50413097ff08a7d">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="78088e9905213826b011aa0f8ad386f2">
@@ -441,10 +450,10 @@
 		<file filename="core/libs/core/Controller.class.php" md5="f584112515b7c712911a1583ffe23fea">
 			<class name="Controller"/>
 		</file>
-		<file filename="core/libs/core/Controller_2_1.class.php" md5="789549928dfa8773be60a7fb12e17438">
+		<file filename="core/libs/core/Controller_2_1.class.php" md5="5d652ff290213340a6517f2743e40cb3">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="cc7df9cf38c902afb73d21f48c31b5e7">
+		<file filename="core/libs/core/Core.class.php" md5="bfb47882bf587a02e1d92bd102717dd4">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -463,7 +472,7 @@
 		<file filename="core/libs/core/FilterForm.class.php" md5="aebe713fe23e0decb8029a6ff17ce6e6">
 			<class name="FilterForm"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="8415a65169e87d0140228fe7a18a4244">
+		<file filename="core/libs/core/Form.class.php" md5="2d3144f5272afb826980238bad142162">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -496,7 +505,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="efb9982eb8a9d38481f0ae42f3bcb957">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="b2263ae690e555a3e7e62d2353222216">
+		<file filename="core/libs/core/PageRequest.class.php" md5="82ce2b4f2fd395d22f6b3a7d7a09908a">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="598a7f067ea84ea03d02b6ef517c4e3f">
@@ -512,7 +521,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
 			<class name="UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="b2d663e4981993dac38dc03f86cc6574">
+		<file filename="core/libs/core/View.class.php" md5="38f5c0d64fac7c25a75a4645e2895c63">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -620,10 +629,10 @@
 		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="b18792bcce6ff5d68c9ec9ec9dfc5aaf">
 			<class name="Core\Utilities\Changelog\Entry"/>
 		</file>
-		<file filename="core/libs/core/utilities/changelog/Parser.php" md5="5dda89b65b6248c08f47941b86545ebb">
+		<file filename="core/libs/core/utilities/changelog/Parser.php" md5="5d3226e46be3bb7524423724ed0a5256">
 			<class name="Core\Utilities\Changelog\Parser"/>
 		</file>
-		<file filename="core/libs/core/utilities/changelog/Section.php" md5="ac16209f08e3cf132465b31595fa7fea">
+		<file filename="core/libs/core/utilities/changelog/Section.php" md5="6f105d2c37aac504e77dd3ac44597bc1">
 			<class name="Core\Utilities\Changelog\Section"/>
 		</file>
 		<file filename="core/libs/core/utilities/logger/functions.php" md5="616d3b7797927dc6e455cac04cffed11"/>
@@ -1057,7 +1066,7 @@
 		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="5e3e19afb2a649beece4b2eeea62ac48"/>
 		<file filename="core/libs/smarty-plugins/block.css.php" md5="5967ccd081d862e1e73a407e115436a2"/>
-		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="85b8d0998f50ee75ab8de0f8387d0d7c"/>
+		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="7f4423a6253efe1d1ef9c730ce2aac4c"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="84d16e1ba8fb38b5c8be6a1ca960ab43"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="85f908c0a9fa616aca30a0b94afeae18"/>
 		<file filename="core/libs/smarty-plugins/function.controls.php" md5="6d27ea6f00b10982d9e7741e42be46e5"/>
@@ -1068,7 +1077,7 @@
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="d8daf3f492d0c8a71e7b8ccf0cd70cc9"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="9ff0428278228b374379b3f08b84db52"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="4f0f7e198dc73658c361edc8d0369365"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="5d25b7234d4d68d19c3b3bf9bd13a0e9"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="51fdf407e7013056748847758020af2e"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/smarty/README" md5="2280709acce0bf54217c12eff7932997"/>
 		<file filename="core/libs/smarty/SMARTY_2_BC_NOTES.txt" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
@@ -1386,7 +1395,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="102617537e6ef0cc5de2a68b614782e3">
+		<file filename="core/models/PageModel.class.php" md5="d316b0575e4dc13d4ba71ada8a302f4c">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="f9c51e50c963b6041526bf55f6234f26">
@@ -1439,7 +1448,7 @@
 		<file filename="core/tests/updater-testdocument.txt" md5="90a5dd568ce404d0c6f96ddbdf41d625"/>
 		<file filename="core/upgrades/240_to_241_pagemetas.php" md5="7887144c4964ca4e2ea91dca5fc3bb40"/>
 		<file filename="core/upgrades/242_to_243_page_selectable.php" md5="a00104bc754034508aa50efb4b61a183"/>
-		<file filename="core/widgets/AdminMenuWidget.php" md5="cd33f080f04f013c51b416ef2de322ac">
+		<file filename="core/widgets/AdminMenuWidget.php" md5="389851cdb5c38e5511d4653079101c3f">
 			<class name="AdminMenuWidget"/>
 		</file>
 		<file filename="core/widgets/PageWidget.php" md5="612cd59aef22cda09804b489cb64f327">
@@ -1468,7 +1477,7 @@
 		<file filename="install/steps/InstallHTAccessStep.php" md5="eb3cbb0417714bc034c3e7a7a8cff4f5">
 			<class name="Core\Installer\InstallHTAccessStep"/>
 		</file>
-		<file filename="install/steps/PerformInstallStep.php" md5="2c583a295028f0452e357d23801257c6">
+		<file filename="install/steps/PerformInstallStep.php" md5="85bf4698dee524edfeeec565cae5b1b0">
 			<class name="Core\Installer\PerformInstallStep"/>
 		</file>
 		<file filename="install/steps/PreflightCheckStep.php" md5="08f1df5691fe338050fc2e1eb83d14c4">
@@ -1564,7 +1573,7 @@
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
 		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
 		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
-		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="17636cfd09b3c7c76b91504dc51b6cbb"/>
+		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="d41a6967f1fab7882cf024310d626162"/>
 		<file filename="core/templates/widgets/updater/check.tpl" md5="72e3def2db04a820ebc32d3659e15f76"/>
 	</view>
 	<install/>
@@ -1601,6 +1610,7 @@
 		<config key="/core/ftp/username" type="string" description="FTP username to use when writing local files" default=""/>
 		<config key="/core/ftp/password" type="string" description="FTP password to use when writing local files" default=""/>
 		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'" default=""/>
+		<config key="/core/security/x-frame-options" type="string" description="Value for the X-Frame-Options header." default="SAMEORIGIN"/>
 	</configs>
 	<assets>
 		<file filename="core/assets/css/admin/adminbar.css" md5="3c2c59235032e5dcf5f56cc15695def6"/>
