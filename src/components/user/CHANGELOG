@@ -1,3 +1,18 @@
+User 2.5.3
+
+	* [Bug] Fixed a bug when deleting a user.  The attached user configs did not remove along with that
+	  user.
+	* [Bug] User accounts can now be edited without activating them.
+	* [Feature] Password is no longer required for administratively creating users.  If left blank, the
+	  user will be presented with the ability to set their password on first login, (with email
+	  validation).
+	* [Feature] User managers can now see every user config for a given user, regardless of if it's set to
+	  onregistration or onedit.  This allows the administrator to edit hidden fields if necessary.
+	* [Feature] Users now get a registration email upon registration.
+	* [Feature] Users now get an activation email upon activating.
+	* Updated some various things to keep up dated with Core 2.5.7
+	-- Charlie Powell <charlie@eval.bz>  Thu, 13 Jun 2013 16:06:45 -0400
+
 User 2.5.2
 
 	* Updated User to work with Core 2.5.6

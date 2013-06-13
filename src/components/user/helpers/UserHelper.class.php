@@ -183,7 +183,11 @@ abstract class UserHelper{
 
 			// setFromForm will handle all attributes and custom values.
 			$user->setFromForm($form);
-			$user->setPassword($p1->get('value'), $p2->get('value'));
+
+			// Users can be created with no password.  They will be prompted to set it on first login.
+			if($p1->get('value') || $p2->get('value')){
+				$user->setPassword($p1->get('value'), $p2->get('value'));
+			}
 		}
 		catch(ModelValidationException $e){
 			// Make a note of this!
@@ -217,6 +221,28 @@ abstract class UserHelper{
 
 		// User created... make a log of this!
 		SecurityLogModel::Log('/user/register', 'success', $user->get('id'));
+
+		// Send a thank you for registering email to the user.
+		try{
+			$email = new Email();
+			$email->assign('user', $user);
+			$email->assign('sitename', SITENAME);
+			$email->assign('rooturl', ROOT_URL);
+			$email->assign('loginurl', Core::ResolveLink('/user/login'));
+			$email->setSubject('Welcome to ' . SITENAME);
+			$email->templatename = 'emails/user/registration.tpl';
+			$email->to($user->get('email'));
+
+			// TESTING
+			//error_log($email->renderBody());
+			$email->send();
+		}
+		catch(\Exception $e){
+			error_log($e->getMessage());
+			Core::SetMessage('Unable to send welcome email', 'error');
+		}
+
+
 
 		// "login" this user if not already logged in.
 		if(!\Core\user()->exists()){
@@ -265,12 +291,13 @@ abstract class UserHelper{
 			return false;
 		}
 
+		$userisactive = $user->get('active');
 
 		try{
 			$user->setFromForm($form);
 		}
 		catch(ModelValidationException $e){
-			Core::SetMessage($e->getMessage());
+			Core::SetMessage($e->getMessage(), 'error');
 			return false;
 		}
 		catch(Exception $e){
@@ -282,10 +309,40 @@ abstract class UserHelper{
 
 		$user->save();
 
+
+		if(!$userisactive && $user->get('active')){
+			// If the user wasn't active before, but is now....
+			// Send an activation notice email to the user.
+			try{
+				$email = new Email();
+				$email->assign('user', $user);
+				$email->assign('sitename', SITENAME);
+				$email->assign('rooturl', ROOT_URL);
+				$email->assign('loginurl', Core::ResolveLink('/user/login'));
+				$email->setSubject('Welcome to ' . SITENAME);
+				$email->templatename = 'emails/user/activation.tpl';
+				$email->to($user->get('email'));
+
+				// TESTING
+				//error_log($email->renderBody());
+				$email->send();
+			}
+			catch(\Exception $e){
+				error_log($e->getMessage());
+			}
+		}
+
+
 		// If this was the current user, update the session data too!
 		if($user->get('id') == \core\user()->get('id')){
 			$_SESSION['user'] = $user;
-			Core::SetMessage('Updated your account successfully', 'success');
+
+			if(ConfigHandler::Get('/user/profileedits/requireapproval') && Core::IsComponentAvailable('model-audit')){
+				Core::SetMessage('Updated your account successfully, but an administrator will need to approve all changes.', 'success');
+			}
+			else{
+				Core::SetMessage('Updated your account successfully', 'success');
+			}
 		}
 		else{
 			Core::SetMessage('Updated user successfully', 'success');

@@ -103,7 +103,7 @@ class UserGroupAdminController extends Controller_2_1{
 
 		$model->delete();
 		Core::SetMessage('Removed group successfully', 'success');
-		Core::Redirect('/usergroupadmin');
+		\core\redirect('/usergroupadmin');
 	}
 
 	public static function _UpdateFormHandler(Form $form){

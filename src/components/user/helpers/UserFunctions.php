@@ -87,8 +87,17 @@ function get_form($user = null){
 
 	// Passwords are for registrations only, at least here.
 	if($type == 'registration'){
-		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => true));
-		$form->addElement('password', array('name' => 'pass2', 'title' => 'Confirm', 'required' => true));
+		// If the user is a manager, the new account can be created with an empty password.
+		// That user will get the prompt to set an initial password on login via the forgot password logic.
+		$passrequired = \Core\user()->checkAccess('p:user_manage') ? false : true;
+		$form->addElement(
+			'password',
+			array('name' => 'pass', 'title' => 'Password', 'required' => $passrequired)
+		);
+		$form->addElement(
+			'password',
+			array('name' => 'pass2', 'title' => 'Confirm', 'required' => $passrequired)
+		);
 	}
 
 	// Avatar is for existing accounts or admins.
@@ -99,8 +108,11 @@ function get_form($user = null){
 		}
 	}
 
-	// The factory depends on the registration type as well.
-	if($type == 'registration'){
+	// For non-admins, the factory depends on the registration type as well.
+	if(\Core\user()->checkAccess('p:user_manage')){
+		$fac = \UserConfigModel::Find(array(), null, 'weight ASC');
+	}
+	elseif($type == 'registration'){
 		$fac = \UserConfigModel::Find(array('onregistration' => 1), null, 'weight ASC');
 	}
 	else{

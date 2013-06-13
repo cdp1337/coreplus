@@ -89,6 +89,25 @@ class UserAdminController extends Controller_2_1{
 		$user->set('active', $active);
 		$user->save();
 
+		// Send an activation notice email to the user.
+		try{
+			$email = new Email();
+			$email->assign('user', $user);
+			$email->assign('sitename', SITENAME);
+			$email->assign('rooturl', ROOT_URL);
+			$email->assign('loginurl', Core::ResolveLink('/user/login'));
+			$email->setSubject('Welcome to ' . SITENAME);
+			$email->templatename = 'emails/user/activation.tpl';
+			$email->to($user->get('email'));
+
+			// TESTING
+			//error_log($email->renderBody());
+			$email->send();
+		}
+		catch(\Exception $e){
+			error_log($e->getMessage());
+		}
+
 		$view->jsondata = array(
 			'userid' => $user->get('id'),
 			'active' => $user->get('active'),
@@ -105,9 +124,14 @@ class UserAdminController extends Controller_2_1{
 			return View::ERROR_BADREQUEST;
 		}
 
+		// Delete the user configs first.
+		foreach($model->getConfigObjects() as $conf){
+			$conf->delete();
+		}
+
 		$model->delete();
 		Core::SetMessage('Removed user successfully', 'success');
-		Core::Redirect('/useradmin');
+		\core\redirect('/useradmin');
 	}
 
 	/**
@@ -138,7 +162,7 @@ class UserAdminController extends Controller_2_1{
 	 */
 	public function import_cancel(){
 		unset($_SESSION['user-import']);
-		Core::Redirect('/useradmin/import');
+		\core\redirect('/useradmin/import');
 	}
 
 	/**
@@ -181,7 +205,7 @@ class UserAdminController extends Controller_2_1{
 		if(!$contents instanceof \Core\Filestore\Contents\ContentCSV){
 			Core::SetMessage($file->getBaseFilename() . ' does not appear to be a valid CSV file!', 'error');
 			unset($_SESSION['user-import']['file']);
-			Core::Reload();
+			\Core\reload();
 		}
 
 		$hasheader = $contents->hasHeader();

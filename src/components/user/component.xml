@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.2" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.3" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.2"/>
 		<!-- User authentication events trigger security logs. -->
@@ -21,8 +21,8 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="837655a328ca287f8195b696302bdde9"/>
-		<file filename="User.class.php" md5="60c316007e90807cf2fdbbf024924095">
+		<file filename="CHANGELOG" md5="dc045ea378fcec3bf3fedef0aecba495"/>
+		<file filename="User.class.php" md5="0ef4074154bd480ed5ea067f53d82170">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
@@ -50,20 +50,20 @@
 		<file filename="controllers/UserActivityController.php" md5="b90ce46eca5feb688ecff24c367080d8">
 			<controller name="UserActivityController"/>
 		</file>
-		<file filename="controllers/UserAdminController.php" md5="e4a7b78911d1e3c43f0335ceb2c837bc">
+		<file filename="controllers/UserAdminController.php" md5="902646f3af099130140cf6b3303f3653">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="44b4788cef43e34c296da9a724bfb2c3">
+		<file filename="controllers/UserController.php" md5="6ad363f7c70f9780d7fb5e78d445dc7b">
 			<controller name="UserController"/>
 		</file>
-		<file filename="controllers/UserGroupAdminController.php" md5="1e26a36d85fc0065cec33b198b27f475">
+		<file filename="controllers/UserGroupAdminController.php" md5="b327f8bf47a6dd177493b3a72a66f2c9">
 			<controller name="UserGroupAdminController"/>
 		</file>
 		<file filename="helpers/ImportHelper.php" md5="6c98001060f0a23e5bac768e21424553">
 			<class name="User\ImportHelper"/>
 		</file>
-		<file filename="helpers/UserFunctions.php" md5="1c5eaf485d0d9a338ad71a3bbdc6f316"/>
-		<file filename="helpers/UserHelper.class.php" md5="7db132303f15a8e7079f32b304cbbcad">
+		<file filename="helpers/UserFunctions.php" md5="0bcec65de1d551943bf68a89a35ae4e5"/>
+		<file filename="helpers/UserHelper.class.php" md5="a4ebdc0a78b7496981722d944f2aa6a4">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
@@ -87,9 +87,10 @@
 		</file>
 	</files>
 	<view>
+		<file filename="templates/emails/user/activation.tpl" md5="8d61af5f8125678edda93321a39af123"/>
 		<file filename="templates/emails/user/forgotpassword.tpl" md5="8463f6b3726164f63e8c838a58a28ba7"/>
 		<file filename="templates/emails/user/initialpassword.tpl" md5="e1313d158e73c9104cd798ef5d5e39e7"/>
-		<file filename="templates/emails/user/registration.tpl" md5="bc0af99c272dc0849608642ef56185f2"/>
+		<file filename="templates/emails/user/registration.tpl" md5="ee342d30eb7c14725eda1d42516765bf"/>
 		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="50859dcf77c9c0b2cb3cabf8f9481699"/>
 		<file filename="templates/pages/user/edit.tpl" md5="17d96573034118ddbfd8e785a8aded88"/>
 		<file filename="templates/pages/user/forgotpassword.tpl" md5="2dc6db0e125d8c729bac0081db90bfa4"/>
@@ -113,12 +114,12 @@
 		<file filename="templates/widgets/userlogin/execute.tpl" md5="8b33f6adb9fdadf3a6f4e10f6722de2e"/>
 	</view>
 	<pages>
-		<page baseurl="/user/login" admin="0" widget="0" access="!g:authenticated" selectable="0" title="Login"/>
-		<page baseurl="/user/register" admin="0" widget="0" access="!g:authenticated" selectable="0" title="Register"/>
-		<page baseurl="/user/logout" admin="0" widget="0" access="g:authenticated" selectable="0" title="Logout"/>
+		<page baseurl="/user/login" admin="0" access="!g:authenticated" selectable="0" title="Login"/>
+		<page baseurl="/user/register" admin="0" access="!g:authenticated" selectable="0" title="Register"/>
+		<page baseurl="/user/logout" admin="0" access="g:authenticated" selectable="0" title="Logout"/>
 		<page baseurl="/useradmin" admin="1" access="g:admin" title="User Administration"/>
 		<page baseurl="/usergroupadmin" admin="1" access="g:admin" title="User Group Administration"/>
-		<page baseurl="/useractivity" admin="1" access="p:user_activity_list" title="User Activity"/>
+		<page baseurl="/useractivity" admin="1" access="p:user_activity_list" title="User Activity" group="Reporting"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/UserWidget/Login"/>
@@ -136,6 +137,7 @@
 		<config key="/user/register/allowpublic" type="boolean" default="true" description="Allow public registrations"/>
 		<config key="/user/register/requireapproval" type="boolean" default="false" description="Require administrative approvals on new accounts"/>
 		<config key="/user/enableavatar" type="boolean" default="true" description="Set to false to disable the use of avatars throughout the system."/>
+		<config key="/user/profileedits/requireapproval" type="boolean" default="false" description="If model auditing is available, it will be used to require administrative approval for profile edits."/>
 	</configs>
 	<permissions>
 		<permission key="user_manage" description="Manage users and permissions"/>
@@ -189,6 +191,7 @@
 		<upgrade from="2.4.6" to="2.5.0"/>
 		<upgrade from="2.5.0" to="2.5.1"/>
 		<upgrade from="2.5.1" to="2.5.2"/>
+		<upgrade from="2.5.2" to="2.5.3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

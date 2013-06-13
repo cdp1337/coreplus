@@ -26,14 +26,14 @@
  */
 class UserController extends Controller_2_1{
 	
-	public function index(){
+	/*public function index(){
 		$view = $this->getView();
 
 		// @todo This should probably be enabled in the future, at least toggleable.
 		if(!$view->setAccess('g:admin')){
 			return View::ERROR_ACCESSDENIED;
 		}
-	}
+	}*/
 
 	/**
 	 * Show the current user's profile.
@@ -104,10 +104,10 @@ class UserController extends Controller_2_1{
 				$user->save();
 				Core::SetMessage('Updated Password Successfully', 'success');
 				if($ownpassword){
-					Core::Redirect('/user/me');
+					\core\redirect('/user/me');
 				}
 				else{
-					Core::Redirect('/useradmin');
+					\core\redirect('/useradmin');
 				}
 			}
 			catch(ModelValidationException $e){
@@ -154,7 +154,7 @@ class UserController extends Controller_2_1{
 		// Only allow this if the user is either the same user or has the user manage permission.
 		if(!($userid == \Core\user()->get('id') || $manager)){
 			Core::SetMessage('Insufficient Permissions', 'error');
-			Core::Redirect('/');
+			\core\redirect('/');
 		}
 
 		$user = User::Find(array('id' => $userid));
@@ -177,7 +177,7 @@ class UserController extends Controller_2_1{
 
 		// Is the user already logged in?
 		if(\Core\user()->exists()){
-			Core::Redirect('/user/me');
+			\core\redirect('/user/me');
 		}
 
 		// Set the access permissions for this page as anonymous-only.
@@ -279,7 +279,7 @@ class UserController extends Controller_2_1{
 		}
 
 		Session::DestroySession();
-		Core::Redirect('/');
+		\core\redirect('/');
 	}
 
 
@@ -354,7 +354,7 @@ class UserController extends Controller_2_1{
 
 			// Otherwise, it must have sent, (hopefully)...
 			Core::SetMessage('Sent reset instructions via email.', 'success');
-			Core::Redirect('/');
+			\core\redirect('/');
 		}
 	}
 
@@ -380,7 +380,7 @@ class UserController extends Controller_2_1{
 		if(!$u){
 			SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', null, 'Invalid user account requested: [' . $e . ']');
 			Core::SetMessage('Invalid user account requested', 'error');
-			Core::Redirect('/');
+			\core\redirect('/');
 			return;
 		}
 
@@ -393,14 +393,14 @@ class UserController extends Controller_2_1{
 		if(!$nonce->isValid(['type' => 'password-reset', 'user' => $u->get('id')])){
 			SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', $u->get('id'), 'Invalid key requested: [' . $n . ']');
 			Core::SetMessage('Invalid key provided!', 'error');
-			Core::Redirect('/');
+			\core\redirect('/');
 			return;
 		}
 
 		if(($str = $u->canResetPassword()) !== true){
 			Core::SetMessage($str, 'error');
 			SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', $u->get('id'), $str);
-			Core::Redirect('/');
+			\core\redirect('/');
 			return;
 		}
 
@@ -420,7 +420,7 @@ class UserController extends Controller_2_1{
 				SecurityLogModel::Log('/user/forgotpassword/confirm', 'success', $u->get('id'), 'Reset password successfully!');
 				Core::SetMessage('Reset password successfully', 'success');
 				Session::SetUser($u);
-				Core::Redirect('/');
+				\core\redirect('/');
 			}
 			catch(ModelValidationException $e){
 				SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', $u->get('id'), $e->getMessage());
@@ -448,7 +448,7 @@ class UserController extends Controller_2_1{
 
 		// This is a json-only page.
 		if($request->ctype != View::CTYPE_JSON){
-			Core::Redirect('/');
+			\core\redirect('/');
 		}
 
 		// The data that will be returned.

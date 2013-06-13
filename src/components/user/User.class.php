@@ -219,7 +219,7 @@ class User {
 			}
 
 			elseif($name == 'active'){
-				$this->set('active', $el->get('value'));
+				$this->set('active', $el->get('value') ? 1 : 0);
 			}
 
 			elseif($name == 'admin'){
