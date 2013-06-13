@@ -139,14 +139,14 @@ $export = array();
 $export[] = array(
 	'name' => 'core',
 	'type' => 'core',
-	'src' => BASE_DIR . 'exports/core',
+	'src'  => BASE_DIR . 'exports/core',
 	'dest' => $destdir . '/' . $desttgz
 );
 foreach($xml->getElements('//component') as $el){
 	$export[] = array(
 		'name' => strtolower($el->getAttribute('name')),
 		'type' => 'component',
-		'src' => BASE_DIR . 'exports/components',
+		'src'  => BASE_DIR . 'exports/components',
 		'dest' => $destdir . '/' . $desttgz . '/components/' . strtolower($el->getAttribute('name'))
 	);
 }
@@ -154,10 +154,12 @@ foreach($xml->getElements('//theme') as $el){
 	$export[] = array(
 		'name' => strtolower($el->getAttribute('name')),
 		'type' => 'theme',
-		'src' => BASE_DIR . 'exports/themes',
+		'src'  => BASE_DIR . 'exports/themes',
 		'dest' => $destdir . '/' . $desttgz . '/themes/' . strtolower($el->getAttribute('name'))
 	);
 }
+
+$changelog = '<h2>Packages included in ' . $name . ' ' . $version . '</h2>' . "\n\n";
 
 
 foreach($export as $dat){
@@ -198,11 +200,42 @@ foreach($export as $dat){
 	if($compversion == '0.0.0') die('Unable to find required component ' . $dat['name'] . "\n");
 	echo "Found version " . $compversion . '!' . "\n";
 
-	echo "Extracting tarball...\n";
+	echo "Extracting tarball... ";
 	if(!is_dir($dat['dest'])) mkdir($dat['dest']);
 	exec('tar -xzf ' . $dat['src'] . '/' . $dat['name'] . '-' . $compversion . '.tgz' . ' -C ' . $dat['dest'] . ' --transform "s:\./data::" ./data', $out, $result);
 	if($result != 0) die(":( \n");
 	echo "OK!\n";
+
+	echo "Processing CHANGELOG... ";
+	if($dat['name'] == 'core'){
+		$parser = new Core\Utilities\Changelog\Parser($dat['name'], $dat['dest'] . '/core/CHANGELOG');
+	}
+	else{
+		$parser = new Core\Utilities\Changelog\Parser($dat['name'], $dat['dest'] . '/CHANGELOG');
+	}
+
+
+	if(!$parser->exists()){
+		echo "Failed!\n";
+		$changelog .= '<h3>' . $dat['name'] . ' ' . $compversion . '</h3>';
+	}
+	else{
+		try{
+			$parser->parse();
+
+			/** @var $thisversion Core\Utilities\Changelog\Section */
+			$thisversion = $parser->getSection($compversion);
+
+			// Read the current changelog.
+			$changelog .= $thisversion->fetchAsHTML(3);
+
+			echo "OK!\n";
+		}
+		catch(Exception $e){
+			echo "Failed!\n";
+			$changelog .= '<h3>' . $dat['name'] . ' ' . $compversion . '</h3>';
+		}
+	}
 }
 
 // Keys
@@ -216,6 +249,9 @@ foreach($xml->getElements('//key') as $el){
 	unlink($destdir . '/' . $id . '.gpg');
 	echo "OK!\n";
 }
+
+// Write out the changelog for the bundle.
+file_put_contents($destdir . '/' . $desttgz . '/packages.html', $changelog);
 
 
 // create the tarballs!
