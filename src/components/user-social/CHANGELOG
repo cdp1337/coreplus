@@ -1,6 +1,9 @@
-User-Social 1.1.0
+User-Social 1.0.4
 
+	* [Feature] Added a more sanity logic to the nicknames to prevent use of non-latin characters.
 	* Switched to user the hook-based controls throughout the user system and user administration.
+	* Updated user-social to work with Core 2.5.7
+	-- Charlie Powell <charlie@eval.bz>  Thu, 13 Jun 2013 16:14:29 -0400
 
 User-Social 1.0.3
 

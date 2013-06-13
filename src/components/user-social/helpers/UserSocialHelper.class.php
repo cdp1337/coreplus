@@ -14,10 +14,15 @@ class UserSocialHelper {
 		if($username == '') return true;
 
 		// Usernames should start with a number at least.
-		if(!preg_match('/^[a-zA-Z].*/', $username)) return 'Please start usernames with a letter.';
+		if(!preg_match('/^[a-zA-Z].*/', $username)) return 'Please start nicknames with a letter.';
 
 		// and should not contain spaces
-		if(strpos($username, ' ') !== false) return 'Please do not include spaces in your username.';
+		if(strpos($username, ' ') !== false) return 'Please do not include spaces in your nickname.';
+
+		// Usernames should be only a-z, 0-9, and a few standard characters.
+		if(!preg_match('/^[a-zA-Z0-9\-\.@_+]*$/', $username)){
+			return 'Please ensure that your nickname only contains letters, numbers, and dashes.';
+		}
 
 		// Search the database for the same username.  Remember, THERE CAN ONLY BE ONE!
 		$match = UserUserConfigModel::Find(array('key' => 'username', 'value' => $username), 1);
@@ -79,7 +84,7 @@ class UserSocialHelper {
 		if(!$user) return array();
 
 		$a[] = array(
-			'title' => 'Public Profile',
+			'title' => 'View Profile',
 			'icon' => 'user',
 			'link' => self::ResolveProfileLink($user),
 		);

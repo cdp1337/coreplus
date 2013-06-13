@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="1.0.3">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="1.0.4">
 	<requires>
 		<require name="User" type="component" version="2.4.1"/>
 		<require name="Core" type="component" version="2.4.3"/>
@@ -10,19 +10,19 @@
 		<userconfig weight="3" key="last_name" name="Last Name" onedit="1" onregistration="1" searchable="1"/>
 		<userconfig weight="4" key="phone" name="Phone Number" onedit="1" onregistration="0"/>
 		<userconfig weight="50" key="bio" name="Biography" formtype="wysiwyg" onedit="1" onregistration="0"/>
-		<userconfig weight="1" key="username" name="Username (nick name)" required="1" onedit="1" onregistration="1" validation="UserSocialHelper::ValidateUsername" searchable="1"/>
+		<userconfig weight="1" key="username" name="Nick Name" required="1" onedit="1" onregistration="1" validation="UserSocialHelper::ValidateUsername" searchable="1"/>
 		<userconfig weight="" key="json:profiles" name="Connected Profiles (json encoded)" onedit="0" onregistration="0" formtype="disabled"/>
 	</userconfigs>
 	<hooks>
 		<hook name="/core/controllinks/user/view" call="UserSocialHelper::GetUserLinks"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="8578a227a7ead1970551030edf99bbd5"/>
+		<file filename="CHANGELOG" md5="777f505dfd5ea09440bb1e5dab16dd65"/>
 		<file filename="README.md" md5="97aac508b463a1040b383a0f0654d113"/>
-		<file filename="controllers/UserProfileController.php" md5="1c7090b2dfa2881bd58d14f53803f27f">
+		<file filename="controllers/UserProfileController.php" md5="bbb8893144eebaf4ba832fc7a8cc5925">
 			<controller name="UserProfileController"/>
 		</file>
-		<file filename="helpers/UserSocialHelper.class.php" md5="b848c2d350fb6089f9e13dd41d1c4413">
+		<file filename="helpers/UserSocialHelper.class.php" md5="278dc90e567ae7c2940bde9f43247a46">
 			<class name="UserSocialHelper"/>
 		</file>
 		<file filename="widgets/UserProfileWidget.php" md5="a99a6802a1f87d6b23d53cbe92436495">
@@ -30,7 +30,7 @@
 		</file>
 	</files>
 	<assets>
-		<file filename="assets/css/usersocial.css" md5="6b051678a3372d2bdd1f4558fe69cf6f"/>
+		<file filename="assets/css/usersocial.css" md5="4cf64ea147f88e890f4c79d8c7c5f7e3"/>
 	</assets>
 	<view searchdir="templates">
 		<file filename="templates/pages/userprofile/connectedprofiles.tpl" md5="aa7df8ae9e197157efcdd397c78eddba"/>
@@ -41,10 +41,10 @@
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="1.0.3"/>
+		<upgrade from="1.0.3" to="1.0.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
-		<author name="Charlie Powell &lt;charlie@eval.bz"/>
 	</authors>
 </component>
 
