@@ -1,0 +1,11 @@
+@import '../../../default/reset.css';
+@import '../styles.css';
+
+/**
+ * Emulate some #innerwrapper elements for the body here.
+ */
+body.mce-content-body {
+	background: none repeat scroll 0 0 #EDEDED;
+	padding: 1em 1em 2em;
+	text-align: left;
+}

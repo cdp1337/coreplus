@@ -25,12 +25,19 @@ p {
 	padding:0.5em 0pt;
 	line-height: 1.25em;;
 }
+/**
+ * In this template, the page title, (H1), is displayed in the breadcrumbs.
+ */
 h1 {
+	/*
 	border-bottom: 1px solid rgba(90, 90, 90, 0.7);
 	font-size: 150%;
 	font-weight: bold;
 	margin-bottom: 0.3em;
 	padding-bottom: 0.2em;
+	*/
+	font-size: 100%;
+	display: inline;
 }
 h2 {
 	font-weight: bold;
@@ -43,6 +50,22 @@ h3 {
 h4 {
 	font-weight: bold;
 }
+
+/* TESTS */
+/*
+h1:before { content:"H1: [ "; }
+h1:after { content: " ]" }
+h2:before { content:"H2: [ "; }
+h2:after { content: " ]" }
+h3:before { content:"H3: [ "; }
+h3:after { content: " ]" }
+h4:before { content:"H4: [ "; }
+h4:after { content: " ]" }
+p:before { content:"P: ["; }
+p:after { content:"]"; }
+*/
+
+
 #wrapper {
 	width: 75%;
 	margin: 0 auto;

@@ -40,7 +40,7 @@
 							{if $crumb.link && !$smarty.foreach.crumbs.last}
 								<a href="{$crumb.link}">{$crumb.title}</a>
 							{else}
-								{$crumb.title}
+								<h1>{$crumb.title}</h1>
 							{/if}
 
 							{if !$smarty.foreach.crumbs.last}
@@ -48,7 +48,7 @@
 							{/if}
 						{/foreach}
 					{else}
-						{$title}
+						<h1>{$title}</h1>
 					{/if}
 
 					<menu id="controls" style="float:right; width: 150px;">
