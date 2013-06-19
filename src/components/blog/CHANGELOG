@@ -6,6 +6,7 @@ Blog 1.5.0
 	* [Feature] Added an RSS feed option for blogs.
 	* [Feature] Added an Atom feed option for blogs.
 	* Switched blogs and blog articles to UUIDs instead of IDs.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 19 Jun 2013 04:54:54 -0400
 
 Blog 1.4.5
 

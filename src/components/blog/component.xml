@@ -11,8 +11,8 @@
 		<permission key="blog_manage" description="Manage Blogs"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="b010a9c3b38ec5a227babc8ee5427230"/>
-		<file filename="controllers/BlogController.php" md5="12132208d4a2a8a14cc40c701a91e967">
+		<file filename="CHANGELOG" md5="cd73b8d0b79cdafbaba1ccc44eb6f998"/>
+		<file filename="controllers/BlogController.php" md5="fada612157b26b84dd994b379835d584">
 			<controller name="BlogController"/>
 		</file>
 		<file filename="helpers/BlogHelper.php" md5="6f1d99f749b165fd0f6cc17e13d55625">
@@ -24,10 +24,6 @@
 		<file filename="models/BlogModel.php" md5="282d3c9a874747efe36ccb39b53fd175">
 			<class name="BlogModel"/>
 		</file>
-		<file filename="tests/BlogTest.php" md5="7e4661cdeea3ee68cea659cfa43466e3">
-			<class name="BlogTest"/>
-		</file>
-		<file filename="tests/blog-test-image.png" md5="2ef8794320891042986b72da16f47bf1"/>
 		<file filename="upgrades/121_to_130.php" md5="4f71587ed4a65da58490523dd9581684"/>
 		<file filename="upgrades/130_to_140_published.php" md5="4ab899aa7768154bde4f5197a7cfbf2b"/>
 		<file filename="upgrades/130_to_140_selectable.php" md5="33c3b2e0c9456a6a900d7340f1c65c5b"/>
