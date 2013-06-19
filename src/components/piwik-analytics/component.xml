@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Piwik Analytics" execmode="web">
+	<requires>
+		<require name="core" type="component" version="2.5.7"/>
+	</requires>
+	<hooks>
+		<hook name="/core/page/prerender" call="\Piwik\PiwikHelper::InstallTracking"/>
+	</hooks>
+	<description>
+		Provides google analytics integration.
+	</description>
+	<configs>
+		<config key="/piwik/server/host" type="string" default="" description="Set to the hostname of your Piwik server"/>
+		<config key="/piwik/siteid" type="int" default="" description="Set to your site id"/>
+	</configs>
+	<pages>
+		<page baseurl="/piwik/configure" title="Piwik Analytics" selectable="0" admin="1" group="Configure"/>
+	</pages>
+	<view>
+		<file filename="templates/pages/piwik/configure.tpl" md5="2ebddb8a00faee1306d901b3ef3f7204"/>
+	</view>
+	<files>
+		<file filename="CHANGELOG" md5="17d259a0bfbca6f3da938aa92bd57ed3"/>
+		<file filename="controllers/PiwikController.php" md5="b9fe202c963a76203be11a5cc26b8ea4">
+			<controller name="PiwikController"/>
+		</file>
+		<file filename="libs/piwik/PiwikHelper.php" md5="4f4790355e0571a043eff72421cc5a73">
+			<class name="Piwik\PiwikHelper"/>
+		</file>
+	</files>
+	<assets>
+		<file filename="assets/images/piwik_logo.png" md5="07fef632b699f34c32337af65bda9d46"/>
+	</assets>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+</component>
+
