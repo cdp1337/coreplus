@@ -42,7 +42,7 @@ tinyMCEPopup = {
 			if (settings.popup_css) {
 				settings.popup_css = t.documentBaseURI.toAbsolute(settings.popup_css);
 			} else {
-				settings.popup_css = null;//t.baseURI.toAbsolute("themes/" + settings.theme + "/skins/" + settings.skin + "/dialog.css");
+				settings.popup_css = t.baseURI.toAbsolute("themes/" + settings.theme + "/skins/" + settings.skin + "/dialog.css");
 			}
 		}
 
