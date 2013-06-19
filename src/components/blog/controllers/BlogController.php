@@ -627,7 +627,7 @@ class BlogController extends Controller_2_1 {
 			$view->addControl('All Articles', '/blog/admin/view/' . $blog->get('id'), 'tasks');
 		}
 		$view->addControl('RSS Feed', Core::ResolveLink($blog->get('baseurl')) . '.rss', 'rss');
-		$view->addControl('Atom Feed', Core::ResolveLink($blog->get('baseurl')) . '.atom', 'rss');
+		//$view->addControl('Atom Feed', Core::ResolveLink($blog->get('baseurl')) . '.atom', 'rss');
 	}
 
 	private function _viewBlogArticle(BlogModel $blog, BlogArticleModel $article) {
