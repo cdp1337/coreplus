@@ -1,3 +1,12 @@
+Blog 1.5.0
+
+	* [Feature] Added the ability to create a remote-driven blog.  This blog is one that is entirely
+	  driven from an external RSS feed and links back to that original site.
+	* [Feature] Added a quick unpublish link for articles.
+	* [Feature] Added an RSS feed option for blogs.
+	* [Feature] Added an Atom feed option for blogs.
+	* Switched blogs and blog articles to UUIDs instead of IDs.
+
 Blog 1.4.5
 
 	* [Bug] Fixed the facebook integration for existing articles.  This was broken for articles that were

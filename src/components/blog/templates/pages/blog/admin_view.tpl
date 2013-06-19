@@ -60,20 +60,38 @@
 				<td>
 					<ul class="controls controls-hover">
 						<li class="view">
-							{a href="/blog/article/view/`$article.id`" title="View"}
+							<a href="{$article->getResolvedLink()}" title="View">
 								<i class="icon-eye-open"></i><span>View</span>
-							{/a}
+							</a>
 						</li>
-						<li class="edit">
-							{a href="/blog/article/update/`$article.blogid`/`$article.id`" title="Edit"}
-								<i class="icon-edit"></i><span>Edit</span>
-							{/a}
-						</li>
-						<li class="delete">
-							{a href="/blog/article/delete/`$article.blogid`/`$article.id`" title="Delete" confirm="Are you sure you want to delete `$article.title`?"}
-								<i class="icon-remove"></i><span>Delete</span>
-							{/a}
-						</li>
+						{if $article.status == 'draft'}
+							<li>
+								{a href="/blog/article/publish/`$article.blogid`/`$article.id`" title="Publish Article" confirm="Publish Article?"}
+									<i class="icon-arrow-up"></i><span>Publish Article</span>
+								{/a}
+							</li>
+						{/if}
+
+						{if $article.status == 'published'}
+							<li>
+								{a href="/blog/article/unpublish/`$article.blogid`/`$article.id`" title="Unpublish Article" confirm="Unpublish Article?"}
+									<i class="icon-arrow-down"></i><span>Unpublish Article</span>
+								{/a}
+							</li>
+						{/if}
+
+						{if !$article.link}
+							<li class="edit">
+								{a href="/blog/article/update/`$article.blogid`/`$article.id`" title="Edit"}
+									<i class="icon-edit"></i><span>Edit</span>
+								{/a}
+							</li>
+							<li class="delete">
+								{a href="/blog/article/delete/`$article.blogid`/`$article.id`" title="Delete" confirm="Are you sure you want to delete `$article.title`?"}
+									<i class="icon-remove"></i><span>Delete</span>
+								{/a}
+							</li>
+						{/if}
 					</ul>
 				</td>
 			</tr>
