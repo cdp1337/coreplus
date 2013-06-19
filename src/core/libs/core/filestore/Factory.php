@@ -150,11 +150,16 @@ abstract class Factory {
 			// @todo
 			return new CDN\FileAsset($uri);
 		}
-		elseif(strpos($uri, 'tmp/') === 0){
+		elseif(
+			strpos($uri, 'tmp/') === 0
+		){
 			// Is this a tmp request?
 			$file = new Backends\FileLocal(get_tmp_path() . substr($uri, 4));
 		}
-		elseif(strpos($uri, get_tmp_path()) === 0){
+		elseif(
+			strpos($uri, get_tmp_path()) === 0 ||
+			strpos($uri, '/tmp/') === 0
+		){
 			// tmp fully resolved?
 			$file = new Backends\FileLocal($uri);
 		}

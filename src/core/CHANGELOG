@@ -1,3 +1,12 @@
+Core Plus 2.5.8
+
+	* [Bug] Fixed a bug when loading a file from /tmp.  This needed to have been forced as a FileLocal
+	  object despite that it may not be in the registered tmp location.  PHP File uploads for example use
+	  the system-registered location.
+	* [Feature] Added a \Core\Filestore\extension_to_mimetype function to help centralize mimetype
+	  resolution for files and incoming requests.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 19 Jun 2013 04:44:42 -0400
+
 Core Plus 2.5.7
 
 	* [Bug] Fix for bundling components that have a < 1 version.  An example of this is "r7".

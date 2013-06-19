@@ -67,20 +67,16 @@ class FileLocal implements Filestore\File {
 		$type = trim($type);
 
 		// There are a few exceptions to the rule.... namely with plain text.
-		$ext = strtolower($this->getExtension());
-		if     ($ext == 'js'   && $type == 'text/plain')               $type = 'text/javascript';
-		elseif ($ext == 'js'   && $type == 'text/x-c++')               $type = 'text/javascript';
-		elseif ($ext == 'js'   && $type == 'text/x-asm')               $type = 'text/javascript';
-		elseif ($ext == 'css'  && $type == 'text/plain')               $type = 'text/css';
-		elseif ($ext == 'css'  && $type == 'text/x-c')                 $type = 'text/css';
-		elseif ($ext == 'css'  && $type == 'text/x-asm')               $type = 'text/css';
-		elseif ($ext == 'css'  && $type == 'text/troff')               $type = 'text/css';
-		elseif ($ext == 'html' && $type == 'text/plain')               $type = 'text/html';
-		elseif ($ext == 'html' && $type == 'text/x-c++')               $type = 'text/html';
-		elseif ($ext == 'html' && $type == 'text/troff')               $type = 'text/html';
+		// These should simply guess the application based on the extension.
+		$ext = $this->getExtension();
+		if(
+			($ext == 'js' || $ext == 'csv' || $ext == 'css' || $ext == 'html') &&
+			(strpos($type, 'text/') === 0)
+		){
+			$type = \Core\Filestore\extension_to_mimetype($ext);
+		}
 		elseif ($ext == 'ttf'  && $type == 'application/octet-stream') $type = 'font/ttf';
 		elseif ($ext == 'otf'  && $type == 'application/octet-stream') $type = 'font/otf';
-		elseif ($ext == 'csv'  && $type == 'text/plain')               $type = 'text/csv';
 
 		return $type;
 	}

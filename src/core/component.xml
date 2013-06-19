@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.7" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.8" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -41,7 +41,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="71ca0becd3a23dc5fef72eeb3a52a783"/>
+		<file filename="core/CHANGELOG" md5="dee9f0b1f9c0fd9ea0e8b13620948115"/>
 		<file filename="core/bootstrap.php" md5="8cc1207576fa8bcb00ad0d02e97c68e6"/>
 		<file filename="core/bootstrap_postincludes.php" md5="e877be1a1b418440d796ffdc3a622bba"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -505,7 +505,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="efb9982eb8a9d38481f0ae42f3bcb957">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="82ce2b4f2fd395d22f6b3a7d7a09908a">
+		<file filename="core/libs/core/PageRequest.class.php" md5="837809828488f2010ec38c839ac39dab">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="598a7f067ea84ea03d02b6ef517c4e3f">
@@ -559,7 +559,7 @@
 		<file filename="core/libs/core/filestore/Directory_Backend.interface.php" md5="65d8078d0710d29d51f7b47bf6bb5271">
 			<interface name="Directory_Backend"/>
 		</file>
-		<file filename="core/libs/core/filestore/Factory.php" md5="a306cbe3bff4caa34d5ec684359e581e">
+		<file filename="core/libs/core/filestore/Factory.php" md5="e87703307095301ab3527761220fecdf">
 			<class name="Core\Filestore\Factory"/>
 		</file>
 		<file filename="core/libs/core/filestore/File.interface.php" md5="f90b4f74cc153cd48d57270a602bcf04">
@@ -580,7 +580,7 @@
 		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="2b1d14a17a78c96e8239a8ac2bc9d7be">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="f8e1a67aebbf538a14707b44f4a2dd18">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="c99eb96408474336cb5f85c70f2ba4c4">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="505d33f62b949b85d7d41bd43f410c0f">
@@ -610,7 +610,7 @@
 		<file filename="core/libs/core/filestore/contents/ContentZIP.php" md5="f5bdfebfd3dffcccc13505726558efe3">
 			<class name="Core\Filestore\Contents\ContentZIP"/>
 		</file>
-		<file filename="core/libs/core/filestore/functions.php" md5="dea67c49230836b44b8564abeacb5bb9"/>
+		<file filename="core/libs/core/filestore/functions.php" md5="85f61569c9f319bdc5ba2d39864f7819"/>
 		<file filename="core/libs/core/templates/Exception.php" md5="9d116f5547824aa600334c0ddcca2f08">
 			<class name="Core\Templates\Exception"/>
 		</file>
@@ -1418,34 +1418,6 @@
 		</file>
 		<file filename="core/patches/README" md5="a6b3f1a04205df566eaba3d6704df484"/>
 		<file filename="core/patches/phpmailer-coreplus.patch" md5="1ff93e5e72c7a2f4f47cb4e2f1fd3d64"/>
-		<file filename="core/tests/CoreTest.php" md5="357df09ab74c07ce95f5d490b698c896">
-			<class name="CoreTest"/>
-		</file>
-		<file filename="core/tests/bugsweeps/Bug250Test.php" md5="026339dc17dd2ddc4f12ba4e71001b18">
-			<class name="Bug250Test"/>
-		</file>
-		<file filename="core/tests/bugsweeps/Bug253Test.php" md5="049b779477df7317f0e571506443bb9f">
-			<class name="Bug253Test"/>
-		</file>
-		<file filename="core/tests/ivak_TV_Test_Screen.png" md5="e23ff09f0d6d5c8f9f14877264c251b7"/>
-		<file filename="core/tests/ivak_TV_Test_Screen.png.gz" md5="a2390c9433fd58483d43429f5aad28b3"/>
-		<file filename="core/tests/ivak_TV_Test_Screen.png.tar.gz" md5="cb92cb78ef3ec5b77bed30e258bb3884"/>
-		<file filename="core/tests/ivak_TV_Test_Screen.png.zip" md5="57b152deca5f73cd91de1a9386e2c6ba"/>
-		<file filename="core/tests/ivak_TV_Test_Screen.svg" md5="1a472f61a12a8ee5f6b828df7942a3e4"/>
-		<file filename="core/tests/libs/core/filestore/FileFTPTest.php" md5="132ddc6103ef06dcf89b79ac4274a8fe">
-			<class name="FileFTPTest"/>
-		</file>
-		<file filename="core/tests/libs/core/filestore/FileLocalTest.php" md5="dbb57679a9f360e886d0aaa56166686e">
-			<class name="FileLocalTest"/>
-		</file>
-		<file filename="core/tests/libs/core/filestore/FileRemoteTest.php" md5="e96da8bd5e93da274faadeeb2eb09b15">
-			<class name="FileRemoteTest"/>
-		</file>
-		<file filename="core/tests/libs/datamodel/DMIBackendTest.php" md5="426a6dfb44bf4a572c80c5cadeeb7e92">
-			<class name="DMIBackendTest"/>
-		</file>
-		<file filename="core/tests/testcomponent.xml" md5="b07aa8dc9b2c48b2d4d26ebd1f5cff46"/>
-		<file filename="core/tests/updater-testdocument.txt" md5="90a5dd568ce404d0c6f96ddbdf41d625"/>
 		<file filename="core/upgrades/240_to_241_pagemetas.php" md5="7887144c4964ca4e2ea91dca5fc3bb40"/>
 		<file filename="core/upgrades/242_to_243_page_selectable.php" md5="a00104bc754034508aa50efb4b61a183"/>
 		<file filename="core/widgets/AdminMenuWidget.php" md5="389851cdb5c38e5511d4653079101c3f">
@@ -1787,6 +1759,7 @@
 		<upgrade from="2.5.4" to="2.5.5"/>
 		<upgrade from="2.5.5" to="2.5.6"/>
 		<upgrade from="2.5.6" to="2.5.7"/>
+		<upgrade from="2.5.7" to="2.5.8"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

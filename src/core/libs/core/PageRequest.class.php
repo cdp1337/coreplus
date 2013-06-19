@@ -120,20 +120,8 @@ class PageRequest {
 		$this->uriresolved = $uri;
 		$this->protocol    = $_SERVER['SERVER_PROTOCOL'];
 		// Specified with prepending ".xml|.json,etc" to the resource.
-		switch ($ctype) {
-			case 'xml':
-				$this->ctype = View::CTYPE_XML;
-				break;
-			case 'json':
-				$this->ctype = View::CTYPE_JSON;
-				break;
-			case 'ics':
-				$this->ctype = View::CTYPE_ICS;
-				break;
-			default:
-				$this->ctype = View::CTYPE_HTML;
-				break;
-		}
+		// This is merely a suggestion by the user agent.  If the application doesn't support this medium.... it won't return it.
+		$this->ctype = \Core\Filestore\extension_to_mimetype($ctype);
 
 		$this->_resolveMethod();
 		$this->_resolveAcceptHeader();

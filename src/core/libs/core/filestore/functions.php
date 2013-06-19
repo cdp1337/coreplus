@@ -542,3 +542,44 @@ function check_file_mimetype($acceptlist, $mimetype, $extension = null){
 		return '';
 	}
 }
+
+
+/**
+ * Simple function to try to guess the mimetype for a given file extension.
+ * This is not guaranteed to be the actual mimetype of the file, but just the most common for a given extension.
+ *
+ * @param string $ext
+ *
+ * @return string
+ */
+function extension_to_mimetype($ext){
+	switch($ext){
+		case 'atom':
+			return 'application/atom+xml';
+		case 'csv':
+			return 'text/csv';
+		case 'css':
+			return 'text/css';
+		case 'html':
+		case 'htm':
+			return 'text/html';
+		case 'ics':
+			return 'text/calendar';
+		case 'js':
+			return 'text/javascript';
+		case 'json':
+			return 'application/json';
+		case 'otf':
+			return 'font/otf';
+		case 'rss':
+			return 'application/rss+xml';
+		case 'ttf':
+			return 'font/ttf';
+		case 'xhtml':
+			return 'application/xhtml+xml';
+		case 'xml':
+			return 'application/xml';
+		default:
+			return 'application/octet-stream';
+	}
+}
