@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.3" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.4" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.2"/>
 		<!-- User authentication events trigger security logs. -->
@@ -21,8 +21,8 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="dc045ea378fcec3bf3fedef0aecba495"/>
-		<file filename="User.class.php" md5="0ef4074154bd480ed5ea067f53d82170">
+		<file filename="CHANGELOG" md5="5b1397404ab5c28cf57495195901ccf5"/>
+		<file filename="User.class.php" md5="097fab24c5528e52f7076215b2b72d4b">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
@@ -91,7 +91,7 @@
 		<file filename="templates/emails/user/forgotpassword.tpl" md5="8463f6b3726164f63e8c838a58a28ba7"/>
 		<file filename="templates/emails/user/initialpassword.tpl" md5="e1313d158e73c9104cd798ef5d5e39e7"/>
 		<file filename="templates/emails/user/registration.tpl" md5="ee342d30eb7c14725eda1d42516765bf"/>
-		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="50859dcf77c9c0b2cb3cabf8f9481699"/>
+		<file filename="templates/forms/elements/formaccessstringinput.tpl" md5="17f3726f9dce3b79d27b079ff1b57975"/>
 		<file filename="templates/pages/user/edit.tpl" md5="17d96573034118ddbfd8e785a8aded88"/>
 		<file filename="templates/pages/user/forgotpassword.tpl" md5="2dc6db0e125d8c729bac0081db90bfa4"/>
 		<file filename="templates/pages/user/guest403.tpl" md5="336576c142f10bcd6c462e02d4e15853"/>
@@ -192,6 +192,7 @@
 		<upgrade from="2.5.0" to="2.5.1"/>
 		<upgrade from="2.5.1" to="2.5.2"/>
 		<upgrade from="2.5.2" to="2.5.3"/>
+		<upgrade from="2.5.3" to="2.5.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
