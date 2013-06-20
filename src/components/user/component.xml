@@ -21,7 +21,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="5b1397404ab5c28cf57495195901ccf5"/>
+		<file filename="CHANGELOG" md5="f25992bab17b095c605aee0ef8cf19df"/>
 		<file filename="User.class.php" md5="097fab24c5528e52f7076215b2b72d4b">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -81,9 +81,6 @@
 		</file>
 		<file filename="models/UserUserConfigModel.php" md5="4effee3eafd958fa65ce9a8204767258">
 			<class name="UserUserConfigModel"/>
-		</file>
-		<file filename="tests/UserTest.php" md5="c999fd9c492ceeb6dcaabb47c99fdee4">
-			<class name="UserTest"/>
 		</file>
 	</files>
 	<view>

@@ -1,6 +1,7 @@
 User 2.5.4
 
 	* Minor fix on the form access string template.  Needed to add the ID of the form back in.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 19 Jun 2013 05:07:32 -0400
 
 User 2.5.3
 

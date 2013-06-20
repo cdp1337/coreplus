@@ -21,7 +21,7 @@
 		<file filename="templates/pages/piwik/configure.tpl" md5="2ebddb8a00faee1306d901b3ef3f7204"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="17d259a0bfbca6f3da938aa92bd57ed3"/>
+		<file filename="CHANGELOG" md5="cf4b98a2330f782ea0bd0565a86173be"/>
 		<file filename="controllers/PiwikController.php" md5="b9fe202c963a76203be11a5cc26b8ea4">
 			<controller name="PiwikController"/>
 		</file>
