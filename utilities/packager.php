@@ -984,6 +984,11 @@ function process_component($component, $forcerelease = false){
 
 		// The core will have some additional files required to be created.
 		if($component == 'core'){
+
+			// I need the compiled version of the bootstrap.
+			copy(ROOT_PDIR . 'core/bootstrap.compiled.php', $dir . 'data/core/bootstrap.compiled.php');
+
+			// The deny hosts text will go into the various secure directories.
 			$denytext = <<<EOD
 # This is specifically created to prevent access to ANYTHING in this directory.
 #  Under no situation should anything in this directory be readable
@@ -1419,6 +1424,12 @@ if(!$packageremail){
 }
 
 CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
+
+
+// Before ANYTHING happens.... make sure that the system is compiled!
+echo '# Compiling system...' . "\n";
+exec(ROOT_PDIR . '../utilities/compiler.php');
+echo "OK!\n";
 
 
 if($opts['type']){
