@@ -48,7 +48,7 @@ class UpdaterHelper {
 
 		foreach($current as $c){
 			/** @var $c Component_2_1 */
-			$n = strtolower($c->getName());
+			$n = $c->getKeyName();
 			if($n == 'core'){
 				$core = array(
 					'name' => $n,
@@ -87,7 +87,7 @@ class UpdaterHelper {
 
 		foreach(Core::GetDisabledComponents() as $c){
 			/** @var $c Component_2_1 */
-			$n = strtolower($c->getName());
+			$n = $c->getKeyName();
 
 			$components[$n] = array(
 				'name' => $n,
@@ -118,7 +118,7 @@ class UpdaterHelper {
 
 		foreach($currentthemes as $t){
 			/** @var $t Theme */
-			$n = strtolower($t->getName());
+			$n = $c->getKeyName();
 			$themes[$n] = array(
 				'name' => $n,
 				'title' => $t->getName(),
@@ -160,7 +160,7 @@ class UpdaterHelper {
 				// Already installed and is up to date, don't do anything.
 				//if($pkg->isCurrent()) continue;
 
-				$n = strtolower($pkg->getName());
+				$n = str_replace(' ', '-', strtolower($pkg->getName()));
 				$type = $pkg->getType();
 				if($n == 'core') $type = 'core'; // Override the core, even though it is a component...
 				++$pkgcount;

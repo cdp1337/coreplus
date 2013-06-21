@@ -41,7 +41,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="dee9f0b1f9c0fd9ea0e8b13620948115"/>
+		<file filename="core/CHANGELOG" md5="2509eafb9ca18697c23e2b437f555a4f"/>
 		<file filename="core/bootstrap.php" md5="8cc1207576fa8bcb00ad0d02e97c68e6"/>
 		<file filename="core/bootstrap_postincludes.php" md5="e877be1a1b418440d796ffdc3a622bba"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -137,7 +137,7 @@
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="94999059abc6ed854620c39d952814f3">
 			<class name="RewriteMapHelper"/>
 		</file>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="706d1c550503f40cbcb6eda1679dc64b">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="bb4a36d9e874f90e25eab4ef8579e6dd">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/legacy-support/pre-2.5.6/Directory_local_backend.php" md5="2f0b33bbdd83163e6ba067c6450085bd">
@@ -453,7 +453,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="5d652ff290213340a6517f2743e40cb3">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="bfb47882bf587a02e1d92bd102717dd4">
+		<file filename="core/libs/core/Core.class.php" md5="a4a60059da1d56790d4ce71cda3b6dff">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -1534,7 +1534,7 @@
 		<file filename="core/templates/pages/error/error500.tpl" md5="e641e6a353fb4fdb65b271553bb51763"/>
 		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="c3856d7798a76f98caf744dcc381c9d3"/>
 		<file filename="core/templates/pages/updater/browse.tpl" md5="46164efb30e799b0daa3062cb53ed548"/>
-		<file filename="core/templates/pages/updater/index.tpl" md5="3c7cfdd53c45c98dbcf5f9cd249f448d"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="c318b971f820bcbf4d82bfda085e64ff"/>
 		<file filename="core/templates/pages/updater/keys.tpl" md5="4ff939a015c21167bda5a5a8d47f3f37"/>
 		<file filename="core/templates/pages/updater/keys_import.tpl" md5="3dc1de19f1f96e5ea92b67ef0d0ebc01"/>
 		<file filename="core/templates/pages/updater/repos.tpl" md5="a89ad644a891497f8641c259c69cf159"/>

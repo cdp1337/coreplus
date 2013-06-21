@@ -1386,6 +1386,15 @@ class Core implements ISingleton {
 	}
 
 	/**
+	 * @deprecated 2013.05.31
+	 * @return float
+	 */
+	public static function GetProfileTimeTotal() {
+		error_log(__FUNCTION__ . ' is deprecated, please use \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime() instead', E_USER_DEPRECATED);
+		return \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime();
+	}
+
+	/**
 	 * Validate an email address.
 	 * Provide email address (raw input)
 	 * Returns true if the email address has the email
