@@ -21,7 +21,7 @@
 		<title>{$seotitle}</title>
 	</head>
 
-	<body>
+	<body class="{$body_classes}">
 		{widget name="AdminMenu"}
 		<div id="wrapper" class="column1">
 			<header>

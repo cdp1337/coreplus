@@ -12,7 +12,7 @@
 		<title>{$title}</title>
 	</head>
 
-	<body>
+	<body class="{$body_classes}">
 
 		{$body}
 		<footer>

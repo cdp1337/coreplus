@@ -1,3 +1,9 @@
+Theme/Base V2 1.0.6
+
+	* [Feature] Added a style for icon-rss icons.
+	* [Feature] Added the {$body_classes} variable appropriately.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 26 Jun 2013 18:56:05 -0400
+
 Theme/Base V2 1.0.5
 
 	* [Feature] Added a tinymce/content.css stylesheet override.  Provides a correctly themed body for the

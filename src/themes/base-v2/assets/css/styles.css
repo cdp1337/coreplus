@@ -235,6 +235,7 @@ ul.controls li a i.icon-delete { color: #7a0200; }
 ul.controls li a i.icon-edit { color: blue; }
 ul.controls li a i.icon-plus,
 ul.controls li a i.icon-add { color: green; }
+ul.controls li a i.icon-rss { color: #e99700; }
 
 /**
  * Contextual controls are similar, but slightly different.
@@ -537,7 +538,7 @@ fieldset .formdescription {
 	border: 0px none;
 	border-radius: 0.4em 0.4em 0 0;
 	color: #3C3C3C;
-	padding: 0.35em 0 0.35em 0.8em;
+	padding: 8px 4px 8px 9px;
 	min-width: 100px;
 	cursor: pointer;
 }
