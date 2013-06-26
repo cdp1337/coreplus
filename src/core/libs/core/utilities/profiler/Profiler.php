@@ -25,9 +25,48 @@ namespace Core\Utilities\Profiler;
 
 
 /**
- * Class Profiler description
+ * Profiler gives a simple performance profiler for scripts and utilities.
+ *
+ * <h3>Usage</h3>
+ *
+ * <h4>System Profiler</h4>
+ * <p>
+ * Core has a system profiler running from the start of the application.
+ * If FULL_DEBUG is set to true, then any event recorded there will be displayed at the end of the page execution.
+ * </p>
+ *
+ * <code>
+ * $profiler = \Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
+ * $profiler->record('my awesome event');
+ * </code>
+ *
+ * <h4>Custom Profiler</h4>
+ * <p>
+ * To create a new profiler, (and a new timer), the following code will do that job.
+ * </p>
+ *
+ * <code>
+ * $profiler = new \Core\Utilities\Profiler\Profiler('this set');
+ *
+ * // Do some logic that takes some amount of time
+ * // ...
+ * // ...
+ * $profiler->record('done with step one');
+ *
+ * // More stuff that takes a long time
+ * // ...
+ * // ...
+ * $profiler->record('Finished!');
+ *
+ * // Display the overall time!
+ * echo '&lt;h1&gt;Finished in ' . $profiler-&gt;getTimeFormatted() . '&lt;/h1&gt;';
+ *
+ * // Or if you want a breakdown of the events themselves...
+ * echo '&lt;pre&gt;' . $profiler-&gt;getEventTimesFormatted() . '&lt;/pre&gt;';
+ * </code>
  * 
  * @package Core\Utilities\Profiler
+ * @author Charlie Powell <charlie@eval.bz>
  */
 class Profiler {
 	private $_name;
@@ -81,8 +120,62 @@ class Profiler {
 		return microtime(true) - $this->_microtime;
 	}
 
+	/**
+	 * Get all the recorded events of this profiler as an array.
+	 *
+	 * @return array
+	 */
 	public function getEvents(){
 		return $this->_events;
+	}
+
+	/**
+	 * Get the overall execution time of this profiler.
+	 *
+	 * This will be rounded and appended with "ns", "ms", "seconds", or "minutes".
+	 *
+	 * @return string
+	 */
+	public function getTimeFormatted(){
+		$time = $this->getTime();
+		if($time < 0.1){
+			return round($time, 4) * 1000000 . ' ns';
+		}
+		elseif($time < 2.5){
+			return round($time, 4) * 1000 . ' ms';
+		}
+		elseif($time < 200){
+			return round($time, 4) . ' seconds';
+		}
+		else{
+			return round($time, 4) / 60 . ' minutes';
+		}
+	}
+
+	/**
+	 * Get the breakdown of recorded events and their time into the profiler operation.
+	 * 
+	 * @return string
+	 */
+	public function getEventTimesFormatted(){
+		$out = '';
+		foreach ($this->getEvents() as $t) {
+			$in = round($t['timetotal'], 5) * 1000;
+
+			if ($in == 0){
+				$time = '0000.00 ms';
+			}
+			else{
+				$parts = explode('.', $in);
+				$whole = str_pad($parts[0], 4, 0, STR_PAD_LEFT);
+				$dec   = (isset($parts[1])) ? str_pad($parts[1], 2, 0, STR_PAD_RIGHT) : '00';
+				$time = $whole . '.' . $dec . ' ms';
+			}
+
+			$out .= "[" . $time . "] - " . $t['event'] . "\n";
+		}
+
+		return $out;
 	}
 
 	/**

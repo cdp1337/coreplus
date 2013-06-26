@@ -716,19 +716,6 @@ class Core implements ISingleton {
 		else return 'sm';
 	}
 
-
-	public static function FormatProfileTime($in) {
-		// Because the incoming time is in whole seconds.
-		$in = round($in, 5) * 1000;
-
-		if ($in == 0) return '0000.00 ms';
-
-		$parts = explode('.', $in);
-		$whole = str_pad($parts[0], 4, 0, STR_PAD_LEFT);
-		$dec   = (isset($parts[1])) ? str_pad($parts[1], 2, 0, STR_PAD_RIGHT) : '00';
-		return $whole . '.' . $dec . ' ms';
-	}
-
 	/**
 	 * Get all registered permissions for all loaded components.
 	 *
@@ -1475,9 +1462,25 @@ class Core implements ISingleton {
 			$userauth = 'false';
 		}
 
+		$ua = new \Core\UserAgent();
+		$uastring = '';
+		foreach($ua->asArray() as $k => $v){
+			if($v === true){
+				$uastring .= "\t\t\t$k: true,\n";
+			}
+			elseif($v === false){
+				$uastring .= "\t\t\t$k: false,\n";
+			}
+			else{
+				$uastring .= "\t\t\t$k: \"$v\",\n";
+			}
+
+		}
+		$uastring .= "\t\t\tis_mobile: " . ($ua->isMobile() ? 'true' : 'false') . "\n";
+
 		$script = '<script type="text/javascript">
 	var Core = {
-		Version: "' . self::GetComponent()->getVersion() . '",
+		Version: "' . (DEVELOPMENT_MODE ? self::GetComponent()->getVersion() : '') . '",
 		ROOT_WDIR: "' . ROOT_WDIR . '",
 		ROOT_URL: "' . ROOT_URL . '",
 		ROOT_URL_SSL: "' . ROOT_URL_SSL . '",
@@ -1487,6 +1490,9 @@ class Core implements ISingleton {
 		User: {
 			id: ' . $userid . ',
 			authenticated: ' . $userauth . '
+		},
+		Browser: {
+' . $uastring . '
 		}
 	};
 </script>';

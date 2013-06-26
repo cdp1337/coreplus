@@ -238,6 +238,15 @@ class View {
 	public $record = true;
 
 	/**
+	 * An array of the body classes and their values.
+	 *
+	 * These automatically get appended in the <body> tag of the skin, providing the skin supports it.
+	 *
+	 * @var array
+	 */
+	public $bodyclasses = [];
+
+	/**
 	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
 	 * @var array
 	 */
@@ -611,6 +620,37 @@ class View {
 		$template->assign('title', $this->title);
 		$template->assign('body', $body);
 
+		// The body needs some custom classes for assisting the designers.
+		// These are mainly pulled from the UA.
+		$ua = new \Core\UserAgent();
+
+		$this->bodyclasses[] = 'ua-browser-' . $ua->browser;
+		$this->bodyclasses[] = 'ua-engine-' . $ua->rendering_engine_name;
+		$this->bodyclasses[] = 'ua-browser-version-' . $ua->major_ver;
+		$this->bodyclasses[] = 'ua-platform-' . $ua->platform;
+		if($ua->isMobile()) $this->bodyclasses[] = 'ua-is-mobile';
+
+		// Provide a way for stylesheets to target this page specifically.
+		$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
+		switch ($this->error) {
+			case 400:
+				$url = "error error-400";
+				break;
+
+			case 403:
+				$url = "error error-403 page-user-login";
+				break;
+
+			case 404:
+				$url = "error error-404";
+				break;
+		}
+		$this->bodyclasses[] = 'page-' . $url;
+
+
+		$bodyclasses = strtolower(implode(' ', $this->bodyclasses));
+		$template->assign('body_classes', $bodyclasses);
+
 		try{
 			$data = $template->fetch();
 		}
@@ -666,11 +706,9 @@ class View {
 					//$debug .= "Number of queries: " . DB::Singleton()->counter . "\n";
 					$debug .= "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
 					$profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
-					$debug .= "Total processing time: " . round($profiler->getTime(), 4) * 1000 . ' ms' . "\n";
+					$debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
 					if (FULL_DEBUG) {
-						foreach ($profiler->getEvents() as $t) {
-							$debug .= "[" . Core::FormatProfileTime($t['timetotal']) . "] - " . $t['event'] . "\n";
-						}
+						$debug .= $profiler->getEventTimesFormatted();
 					}
 					// Tack on what components are currently installed.
 					$debug .= "\n" . '<b>Available Components</b>' . "\n";
@@ -718,25 +756,9 @@ class View {
 			}
 			$data = preg_replace('#<html#', '<html ' . self::GetHTMLAttributes(), $data, 1);
 
-			// Provide a way for stylesheets to target this page specifically.
-			$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
 
-			switch ($this->error) {
-				case 400:
-					$url = "error error-400";
-				break;
-
-				case 403:
-					$url = "error error-403 page-user-login";
-				break;
-
-				case 404:
-					$url = "error error-404";
-				break;
-			}
-
-			$bodyclass = 'page-' . $url;
-			// Merge them.
+			// This logic has been migrated to the {$body_classes} variable.
+			/*
 			if(preg_match('/<body[^>]*>/', $data, $matches)){
 				// body is $matches[0].
 				$fullbody = $matches[0];
@@ -765,6 +787,7 @@ class View {
 				// And replace!
 				$data = preg_replace('#<body[^>]*>#', $body, $data, 1);
 			}
+			*/
 		}
 
 		return $data;

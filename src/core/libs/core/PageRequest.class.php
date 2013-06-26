@@ -664,10 +664,10 @@ class PageRequest {
 	/**
 	 * Get the user agent for this request.
 	 *
-	 * @return UserAgent
+	 * @return \Core\UserAgent
 	 */
 	public function getUserAgent(){
-		return new UserAgent($this->useragent);
+		return new \Core\UserAgent($this->useragent);
 	}
 
 

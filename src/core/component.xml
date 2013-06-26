@@ -41,7 +41,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="2509eafb9ca18697c23e2b437f555a4f"/>
+		<file filename="core/CHANGELOG" md5="c470d317a1ce3bfaf046a721a7e14835"/>
 		<file filename="core/bootstrap.php" md5="8cc1207576fa8bcb00ad0d02e97c68e6"/>
 		<file filename="core/bootstrap_postincludes.php" md5="e877be1a1b418440d796ffdc3a622bba"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -453,7 +453,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="5d652ff290213340a6517f2743e40cb3">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="a4a60059da1d56790d4ce71cda3b6dff">
+		<file filename="core/libs/core/Core.class.php" md5="e8ac6455a549953e5e36f15b27cd374f">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -505,7 +505,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="efb9982eb8a9d38481f0ae42f3bcb957">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="837809828488f2010ec38c839ac39dab">
+		<file filename="core/libs/core/PageRequest.class.php" md5="97bb2692a55578ed42d4684dca9d0121">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="598a7f067ea84ea03d02b6ef517c4e3f">
@@ -518,10 +518,10 @@
 		<file filename="core/libs/core/Time.class.php" md5="ae56c336aefe716b5272de4d95f3bc19">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/UserAgent.php" md5="6aafaea1f00eca1669ee3305f5688a84">
-			<class name="UserAgent"/>
+		<file filename="core/libs/core/UserAgent.php" md5="3266df7736cf46f425f715dd578ba5b3">
+			<class name="Core\UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="38f5c0d64fac7c25a75a4645e2895c63">
+		<file filename="core/libs/core/View.class.php" md5="c01755bf9d25a0c36c0e24117e42eced">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -636,7 +636,7 @@
 			<class name="Core\Utilities\Changelog\Section"/>
 		</file>
 		<file filename="core/libs/core/utilities/logger/functions.php" md5="616d3b7797927dc6e455cac04cffed11"/>
-		<file filename="core/libs/core/utilities/profiler/Profiler.php" md5="d7918189d7535368101053888a68279c">
+		<file filename="core/libs/core/utilities/profiler/Profiler.php" md5="1416da99591bb166490aa8806c3bd825">
 			<class name="Core\Utilities\Profiler\Profiler"/>
 		</file>
 		<file filename="core/libs/datamodel/DMI.class.php" md5="221e92ef728640eb1782da22cb5512ba">
@@ -1689,7 +1689,7 @@
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.fileupload.js" md5="499451d7c6a0e4266eb703f26e25cf33"/>
 		<file filename="core/assets/js/core.js" md5="8c4724ce896c231d0c42c56d2201e33a"/>
-		<file filename="core/assets/js/core.strings.js" md5="0816e7d4e07cc8db0c43c0b2cc090701"/>
+		<file filename="core/assets/js/core.strings.js" md5="0ee2bf37241051ea146b2e2fc6d67103"/>
 		<file filename="core/assets/js/html5shiv.js" md5="6f9ae49ba54ad8f6751991a0eb0b27e8"/>
 		<file filename="core/assets/js/html5shiv.min.js" md5="62ac572189514315ebfb31c43a225009"/>
 		<file filename="core/assets/js/updater/index.js" md5="4900c41083ac914b4bd42873efa4718f"/>
