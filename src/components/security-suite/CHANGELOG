@@ -1,3 +1,8 @@
+Security-Suite 1.1.3
+
+	* Updated to keep current with Core 2.5.8.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 26 Jun 2013 18:51:37 -0400
+
 Security-Suite 1.1.2
 
 	* [Bug] Fixed a bug on the view security listing page for if a user has been deleted from the system.

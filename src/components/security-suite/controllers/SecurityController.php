@@ -78,7 +78,7 @@ class SecurityController extends Controller_2_1 {
 		foreach($listings as $k => $entry){
 			/** @var $entry SecurityLogModel */
 			// Look up the user agent
-			//$ua = new UserAgent($entry->get('useragent'));
+			//$ua = new \Core\UserAgent($entry->get('useragent'));
 			//var_dump($ua); die();
 
 			if($entry->get('user_id')){

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.2" name="Security-Suite" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.3" name="Security-Suite" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.5.2"/>
+		<require name="core" type="component" version="2.5.8"/>
 		<require name="phpwhois" type="component"/>
 	</requires>
 	<configs/>
@@ -33,14 +33,14 @@
 		Collection of security suites for sites, including anti-spam.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="360e5d5341831420992959465b22860e"/>
+		<file filename="CHANGELOG" md5="4c38d9a8d37a17bc584c369577e0b245"/>
 		<file filename="classes/IpBlacklistHelper.php" md5="8dee7ca83899e95cfabd27767c1add7c">
 			<class name="IpBlacklistHelper"/>
 		</file>
 		<file filename="classes/StopForumSpam.class.php" md5="dd9e2a3d9dd7a535863ede6d2328ad1a">
 			<class name="StopForumSpam"/>
 		</file>
-		<file filename="controllers/SecurityController.php" md5="f092d34a2a61176a0a0ffcf72b7e59be">
+		<file filename="controllers/SecurityController.php" md5="b32d18f82fb3c5d65aec5bb6dd7c52fc">
 			<controller name="SecurityController"/>
 		</file>
 		<file filename="controllers/WPHoneypotController.php" md5="3d3c4ccf26836b9d54261b78de9a5e8c">
@@ -51,22 +51,19 @@
 		<file filename="models/IpBlacklistModel.php" md5="8ea58568d6ad42584032e67b1acf63c9">
 			<class name="IpBlacklistModel"/>
 		</file>
-		<file filename="models/SecurityLogModel.php" md5="e94c0c930142ba6df3ac961ead1643b9">
+		<file filename="models/SecurityLogModel.php" md5="76bd1717b34a44931d6e3eabf826fd2d">
 			<class name="SecurityLogModel"/>
 		</file>
 		<file filename="models/sfsBlacklistModel.php" md5="4d6d7c012a546ea0f6b54215961af3fa">
 			<class name="sfsBlacklistModel"/>
 		</file>
-		<file filename="tests/SFSTest.php" md5="98c373423c702721ab405070ac3fe50f">
-			<class name="SFSTest"/>
-		</file>
-		<file filename="tests/test_listed_ip_1_all.zip" md5="521eead350c520774354b8a07e0c7f4c"/>
 	</files>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.1.0"/>
 		<upgrade from="1.1.0" to="1.1.1"/>
 		<upgrade from="1.1.1" to="1.1.2"/>
+		<upgrade from="1.1.2" to="1.1.3"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/wp-admin/css/wp-admin.min.css" md5="1060bbdd464bed007f6fa460dd3f6a56"/>

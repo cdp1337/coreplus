@@ -74,11 +74,11 @@ class SecurityLogModel extends Model{
 	/**
 	 * Get the matching user agent for this model.
 	 *
-	 * @return UserAgent
+	 * @return \Core\UserAgent
 	 */
 	public function getUserAgent(){
 		if($this->_ua === null){
-			$this->_ua = new UserAgent($this->get('useragent'));
+			$this->_ua = new \Core\UserAgent($this->get('useragent'));
 		}
 		return $this->_ua;
 	}
