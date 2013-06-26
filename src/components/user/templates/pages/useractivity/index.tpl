@@ -116,24 +116,24 @@ $(function(){
 
 	userheader = '<tr><th>User Name</th><th>IP Address</th><th>Browser</th><th>Operating System</th><th>Count</th><th>Last Page</th></tr>';
 	usertemplate = '<tr>' +
-			'<td>%username%</td>' +
-			'<td>%ip%</td>' +
-			'<td>%browser%' +
-			'<td>%os%</td>' +
-			'<td>%count%</td>' +
-			'<td>%lastpage%</td>' +
+			'<td>[%%username%%]</td>' +
+			'<td>[%%ip%%]</td>' +
+			'<td>[%%browser%%]</td>' +
+			'<td>[%%os%%]</td>' +
+			'<td>[%%count%%]</td>' +
+			'<td>[%%lastpage%%]</td>' +
 			'</tr>';
 
 	botheader = '<tr><th>Bot Name</th><th>IP Address</th><th>Count</th><th>Last Page</th></tr>';
 	bottemplate = '<tr>' +
-			'<td>%browser%</td>' +
-			'<td>%ip%</td>' +
-			'<td>%count%</td>' +
-			'<td>%lastpage%</td>' +
+			'<td>[%%browser%%]</td>' +
+			'<td>[%%ip%%]</td>' +
+			'<td>[%%count%%]</td>' +
+			'<td>[%%lastpage%%]</td>' +
 			'</tr>';
 
 	hist_generic_header = '<tr><th>&nbsp;</th><th>Count</th></tr>';
-	hist_generic_template = '<tr><td>%1</td><td>%2</td></tr>';
+	hist_generic_template = '<tr><td>[%%1%%]</td><td>[%%2%%]</td></tr>';
 
 	datenow = new Date();
 	datemonth = datenow.getMonth() + 1;

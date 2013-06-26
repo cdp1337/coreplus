@@ -50,7 +50,7 @@ class UserActivityController extends Controller_2_1 {
 		$view->record = false;
 
 		$limit = $this->_getQueryLimit();
-		$duration = 30;
+		$duration = 60;
 		// Use FindRaw because it's faster than using full Models for everything, especially when dealing with 20k + records.
 		$listings = UserActivityModel::FindRaw('datetime >= ' . (Time::GetCurrent() - $duration), $limit, 'datetime DESC');
 
@@ -76,7 +76,7 @@ class UserActivityController extends Controller_2_1 {
 				$data['requests']['post']++;
 			}
 
-			$ua = new UserAgent($log['useragent']);
+			$ua = new \Core\UserAgent($log['useragent']);
 
 			// Bots have their own data, because, well... they're bots.
 			// Damn bots!
@@ -87,8 +87,8 @@ class UserActivityController extends Controller_2_1 {
 						'useragent' => $log['useragent'],
 						'lastpage'  => $log['request'],
 						'status'    => $log['status'],
-						'type'      => $ua->type,
-						'browser'   => $ua->ua_family,
+						//'type'      => $ua->,
+						'browser'   => $ua->browser,
 						'count'     => 1,
 					);
 				}
@@ -106,9 +106,9 @@ class UserActivityController extends Controller_2_1 {
 						'username'  => User::Construct($log['user_id'])->getDisplayName(),
 						'useragent' => $log['useragent'],
 						'lastpage'  => $log['request'],
-						'type'      => $ua->type,
-						'browser'   => $ua->ua_family,
-						'os'        => $ua->os_family,
+						//'type'      => $ua->type,
+						'browser'   => $ua->browser . ' ' . $ua->version,
+						'os'        => $ua->platform,
 						'count'     => 1,
 					);
 				}
@@ -137,6 +137,8 @@ class UserActivityController extends Controller_2_1 {
 		$view->mode = View::MODE_AJAX;
 		$view->record = false;
 
+		$profiler = new \Core\Utilities\Profiler\Profiler('useractivity');
+
 		$limit  = $this->_getQueryLimit();
 		$dstart = $request->getParameter('dstart');
 		$dend   = $request->getParameter('dend');
@@ -155,6 +157,7 @@ class UserActivityController extends Controller_2_1 {
 		}
 		// Use FindRaw because it's faster than using full Models for everything, especially when dealing with 20k + records.
 		$listings = UserActivityModel::FindRaw(array('datetime >= ' . $dstart, 'datetime <= ' . $dend), $limit, 'datetime DESC');
+		$profiler->record('Found raw models');
 
 		$data = array(
 			'performance' => array('get' => 0, 'post' => 0),
@@ -169,8 +172,11 @@ class UserActivityController extends Controller_2_1 {
 		);
 
 		$sessions = array();
+		$x = 0;
 
 		foreach($listings as $log){
+			++$x;
+
 			if($log['type'] == 'GET'){
 				$data['performance']['get'] += $log['processing_time'];
 				$data['requests']['get']++;
@@ -180,7 +186,7 @@ class UserActivityController extends Controller_2_1 {
 				$data['requests']['post']++;
 			}
 
-			$ua = new UserAgent($log['useragent']);
+			$ua = \Core\UserAgent::Construct($log['useragent']);
 
 			if($ua->isBot()){
 				$data['counts']['bots']++;
@@ -191,29 +197,34 @@ class UserActivityController extends Controller_2_1 {
 				if(!isset($sessions[ $log['session_id'] ])) $sessions[ $log['session_id'] ] = true;
 			}
 
-			if(!isset($data['browsers'][ $ua->ua_family ])) $data['browsers'][ $ua->ua_family ] = 1;
-			else $data['browsers'][ $ua->ua_family ]++;
+			$browser = $ua->browser . ' ' . $ua->version;
+
+			if(!isset($data['browsers'][ $browser ])) $data['browsers'][ $browser ] = 1;
+			else $data['browsers'][ $browser ]++;
 
 			if($log['referrer'] == ''){
 				$referrer = 'none';
 			}
-			elseif(strpos($log['referrer'], ROOT_URL_NOSSL) === 0){
+			elseif(strpos($log['referrer'], 'http://' . HOST) === 0){
 				$referrer = 'internal';
 			}
-			elseif(strpos($log['referrer'], ROOT_URL_SSL) === 0){
+			elseif(strpos($log['referrer'], 'https://' . HOST) === 0){
 				$referrer = 'internal-ssl';
 			}
 			else{
-				$referrer = $log['referrer'];
+				// I want to trim the referrer a bit so I don't end up with a bunch of one-offs.
+				if(($qpos = strpos($log['referrer'], '?')) !== false) $referrer = substr($log['referrer'], 0, $qpos);
+				else $referrer = $log['referrer'];
 			}
+
 			if(!isset($data['referrers'][ $referrer ])) $data['referrers'][ $referrer ] = 1;
 			else $data['referrers'][ $referrer ]++;
 
 			if(!isset($data['ips'][ $log['ip_addr'] ])) $data['ips'][ $log['ip_addr'] ] = 1;
 			else $data['ips'][ $log['ip_addr'] ]++;
 
-			if(!isset($data['os'][ $ua->os_family ])) $data['os'][ $ua->os_family ] = 1;
-			else $data['os'][ $ua->os_family ]++;
+			if(!isset($data['os'][ $ua->platform ])) $data['os'][ $ua->platform ] = 1;
+			else $data['os'][ $ua->platform ]++;
 
 			if($log['status'] == 404){
 				if(!isset($data['notfounds'][ $log['request'] ])) $data['notfounds'][ $log['request'] ] = 1;
@@ -224,6 +235,8 @@ class UserActivityController extends Controller_2_1 {
 				if(!isset($data['pages'][ $log['baseurl'] ])) $data['pages'][ $log['baseurl'] ] = 1;
 				else $data['pages'][ $log['baseurl'] ]++;
 			}
+
+			$profiler->record('Parsed record #' . $x);
 		}
 //UserAgent::Test(); die();
 		if($data['requests']['get'] > 0) $data['performance']['get'] = round($data['performance']['get'] /  $data['requests']['get'], 2);
@@ -238,6 +251,13 @@ class UserActivityController extends Controller_2_1 {
 		arsort($data['os']);
 		arsort($data['notfounds']);
 		arsort($data['pages']);
+
+		$profiler->record('Sorted all data');
+
+		// DEBUG!
+		//echo '<pre>';
+		//echo $profiler->getEventTimesFormatted();
+		//die();
 
 		//var_dump($data, $users, $listings); die();
 		$view->jsondata = $data;

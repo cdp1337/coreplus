@@ -8,9 +8,9 @@
  */
 class UserActivityModel extends Model{
 	/**
-	 * The UserAgent object for this log.
+	 * The \Core\UserAgent object for this log.
 	 *
-	 * @var null|UserAgent
+	 * @var null|\Core\UserAgent
 	 */
 	private $_ua = null;
 
@@ -90,11 +90,11 @@ class UserActivityModel extends Model{
 	/**
 	 * Get the matching user agent for this model.
 	 *
-	 * @return UserAgent
+	 * @return \Core\UserAgent
 	 */
 	public function getUserAgent(){
 		if($this->_ua === null){
-			$this->_ua = new UserAgent($this->get('useragent'));
+			$this->_ua = new \Core\UserAgent($this->get('useragent'));
 		}
 		return $this->_ua;
 	}

@@ -1,3 +1,10 @@
+User 2.5.5
+
+	* Increased the "now" activity to the last 60 seconds instead of 30 seconds.
+	* Switched to the 2.5.8 version of UserAgent.
+	* The browser version number is now displayed in the user activity.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 26 Jun 2013 18:54:33 -0400
+
 User 2.5.4
 
 	* Minor fix on the form access string template.  Needed to add the ID of the form back in.

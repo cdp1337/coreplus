@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.4" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.5" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.2"/>
 		<!-- User authentication events trigger security logs. -->
@@ -21,7 +21,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="f25992bab17b095c605aee0ef8cf19df"/>
+		<file filename="CHANGELOG" md5="dfdd7edfca31557019dd7211abd5969d"/>
 		<file filename="User.class.php" md5="097fab24c5528e52f7076215b2b72d4b">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -47,7 +47,7 @@
 		<file filename="backends/User_facebook.backend.php" md5="780444ea133fae59ecdb10636642344c">
 			<class name="User_facebook_Backend"/>
 		</file>
-		<file filename="controllers/UserActivityController.php" md5="b90ce46eca5feb688ecff24c367080d8">
+		<file filename="controllers/UserActivityController.php" md5="726759615734546f23451781137c8d14">
 			<controller name="UserActivityController"/>
 		</file>
 		<file filename="controllers/UserAdminController.php" md5="902646f3af099130140cf6b3303f3653">
@@ -67,7 +67,7 @@
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
-		<file filename="models/UserActivityModel.php" md5="ea8c749c33e5b539023224974998d660">
+		<file filename="models/UserActivityModel.php" md5="0f717052e3cc4bbe90db4239303baa6a">
 			<class name="UserActivityModel"/>
 		</file>
 		<file filename="models/UserConfigModel.php" md5="6a9d77e42f867f4d04c5077bf0e5a5d4">
@@ -97,7 +97,7 @@
 		<file filename="templates/pages/user/password.tpl" md5="17d96573034118ddbfd8e785a8aded88"/>
 		<file filename="templates/pages/user/register.tpl" md5="17d96573034118ddbfd8e785a8aded88"/>
 		<file filename="templates/pages/useractivity/details.tpl" md5="de29022cf2a9958ca00d2ad0f991f6cb"/>
-		<file filename="templates/pages/useractivity/index.tpl" md5="f1463c6f2df95ad634013491b867ba53"/>
+		<file filename="templates/pages/useractivity/index.tpl" md5="90893b4472a5e60805afef1b16452dee"/>
 		<file filename="templates/pages/useradmin/import1.tpl" md5="34d4a67fc553d310cef459dc9a288da9"/>
 		<file filename="templates/pages/useradmin/import2.tpl" md5="bb67d4446d420094507d43e1b4d21390"/>
 		<file filename="templates/pages/useradmin/import3.tpl" md5="655994a8909458e93fa643349788621d"/>
@@ -190,6 +190,7 @@
 		<upgrade from="2.5.1" to="2.5.2"/>
 		<upgrade from="2.5.2" to="2.5.3"/>
 		<upgrade from="2.5.3" to="2.5.4"/>
+		<upgrade from="2.5.4" to="2.5.5"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
