@@ -11,10 +11,10 @@
 		{assign var='blog' value=$article->getLink('Blog')}
 
 		<div class="blog-article blog-article-status-{$article.status}" itemscope itemtype="http://schema.org/BlogPosting">
-			<link itemprop="url" href="{link link="`$article.rewriteurl`"}"/>
-			{a class="blog-article-title" href="`$article.rewriteurl`" itemprop="name"}
+			<link itemprop="url" href="{$article->getResolvedLink()}"/>
+			<a class="blog-article-title" href="{$article->getResolvedLink()}" itemprop="name">
 				{$article.title}
-			{/a}
+			</a>
 
 
 
@@ -38,7 +38,7 @@
 
 			<p class="blog-article-excerpt" itemprop="articleBody">
 				{$article->getTeaser()}
-				... {a class="blog-article-read-more" href="`$article.rewriteurl`"}Read More{/a}
+				... <a class="blog-article-read-more" href="{$article->getResolvedLink()}">Read More</a>
 			</p>
 
 			<div class="clear"></div>

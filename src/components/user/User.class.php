@@ -703,7 +703,7 @@ class User {
 	 * @param int $limit
 	 * @param type $order
 	 *
-	 * @return array|UserBackend|null
+	 * @return array|User_Backend|null
 	 *         if $limit of 1 is given, a single User object or null is returned
 	 *         else an array of User objects is returned, or an array with null.
 	 */

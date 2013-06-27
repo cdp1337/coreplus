@@ -31,6 +31,8 @@ define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
 // I need to override some defines here...
 define('ROOT_WDIR', '/cli-installer/');
 define('ROOT_URL', ROOT_WDIR);
+define('ROOT_URL_SSL', ROOT_WDIR);
+define('ROOT_URL_NOSSL', ROOT_WDIR);
 define('TMP_DIR', sys_get_temp_dir() . '/coreplus-installer/');
 define('CUR_CALL', ROOT_WDIR . 'install/');
 
@@ -112,6 +114,7 @@ foreach(\Core::GetComponents() as $c){
 	}
 }
 
+/*
 echo 'Installing default theme...';
 $change = \ThemeHandler::GetTheme('default')->install();
 if($change === false){
@@ -120,6 +123,7 @@ if($change === false){
 else{
 	echo "\n" . implode("\n", $change) . "\n";
 }
+*/
 
 
 // And the current theme if it's different.

@@ -129,6 +129,7 @@ class BlogController extends Controller_2_1 {
 			$title = $blog->get('title') . ' Articles';
 		}
 		else{
+			$blog = null;
 			$blogid = null;
 			$title = 'All Articles';
 		}
@@ -151,7 +152,12 @@ class BlogController extends Controller_2_1 {
 
 
 		if($blogid){
-			$view->addControl('Add Article', '/blog/article/create/' . $blogid, 'add');
+			if($blog->get('type') == 'remote') {
+				$view->addControl('Import Feed', '/blog/import/' . $blog->get('id'), 'exchange');
+			}
+			else{
+				$view->addControl('Add Blog Article', '/blog/article/create/' . $blog->get('id'), 'add');
+			}
 		}
 
 		$view->title = $title;
@@ -241,18 +247,57 @@ class BlogController extends Controller_2_1 {
 		if (!$blog->exists()) {
 			return View::ERROR_NOTFOUND;
 		}
-		$form = Form::BuildFromModel($blog);
+
+		$form = new Form();
 		$form->set('callsmethod', 'BlogHelper::BlogFormHandler');
-		// Merge in the page attributes
-		foreach (Form::BuildFromModel($blog->getLink('Page'))->getElements() as $el) {
-			$el->set('name', str_replace('model[', 'page[', $el->get('name')));
-			$form->addElement($el);
-		}
+
+		$form->addModel($blog->getLink('Page'), 'page');
+		$form->addModel($blog, 'model');
+
 		$form->addElement('submit', array('value' => 'Update'));
+
+		// Some elements of the form need to be readonly.
+		$form->getElement('model[type]')->set('readonly', true);
 
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->title = 'Update Blog';
 		$view->assignVariable('form', $form);
+	}
+
+	/**
+	 * View to import a given feed into the system.
+	 *
+	 * @return int
+	 */
+	public function import() {
+		if (!$this->setAccess('p:blog_manage')) {
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$view    = $this->getView();
+		$request = $this->getPageRequest();
+		$blog    = new BlogModel($request->getParameter(0));
+		$blogid  = $blog->get('id');
+		if (!$blog->exists()) {
+			return View::ERROR_NOTFOUND;
+		}
+
+		// Try to perform the import.
+		try{
+			$results = $blog->importFeed();
+		}
+		catch(Exception $e){
+			Core::SetMessage($e->getMessage(), 'error');
+			\Core\go_back();
+		}
+
+		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
+		$view->title = 'Import Blog Feed';
+		$view->assign('changelog', $results['changelog']);
+		$view->assign('added', $results['added']);
+		$view->assign('updated', $results['updated']);
+		$view->assign('skipped', $results['skipped']);
+		$view->assign('deleted', $results['deleted']);
 	}
 
 	/**
@@ -297,6 +342,11 @@ class BlogController extends Controller_2_1 {
 
 		if (!$editor) {
 			return View::ERROR_ACCESSDENIED;
+		}
+
+		if($blog->get('type') == 'remote'){
+			Core::SetMessage('You cannot add articles to a remote feed!', 'error');
+			\Core\go_back();
 		}
 
 		$article = new BlogArticleModel();
@@ -379,14 +429,57 @@ class BlogController extends Controller_2_1 {
 		// Is this article already published?
 		if($article->get('status') == 'published'){
 			Core::SetMessage('Article is already published!', 'error');
-			Core::GoBack(1);
+			\Core\go_back();
 		}
 
 		$article->set('status', 'published');
 		$article->save();
 
 		Core::SetMessage('Published article successfully!', 'success');
-		Core::GoBack(1);
+		\Core\go_back();
+	}
+
+	/**
+	 * Shortcut for unpublishing an article.
+	 */
+	public function article_unpublish() {
+		$view    = $this->getView();
+		$request = $this->getPageRequest();
+
+		$blog = new BlogModel($request->getParameter(0));
+		if (!$blog->exists()) {
+			return View::ERROR_NOTFOUND;
+		}
+		$manager = \Core\user()->checkAccess('p:blog_manage');
+		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
+
+		if (!$editor) {
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$article = new BlogArticleModel($request->getParameter(1));
+		if (!$article->exists()) {
+			return View::ERROR_NOTFOUND;
+		}
+		if ($article->get('blogid') != $blog->get('id')) {
+			return View::ERROR_NOTFOUND;
+		}
+
+		if(!$request->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		// Is this article already published?
+		if($article->get('status') == 'draft'){
+			Core::SetMessage('Article is already in draft mode!', 'error');
+			\Core\go_back();
+		}
+
+		$article->set('status', 'draft');
+		$article->save();
+
+		Core::SetMessage('Unpublished article successfully!', 'success');
+		\Core\go_back();
 	}
 
 	/**
@@ -457,14 +550,45 @@ class BlogController extends Controller_2_1 {
 	private function _viewBlog(BlogModel $blog) {
 		$view     = $this->getView();
 		$page     = $blog->getLink('Page');
+		$request  = $this->getPageRequest();
 
 		$manager  = \Core\user()->checkAccess('p:blog_manage');
 		$editor   = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 		$viewer   = \Core\user()->checkAccess($blog->get('access')) || $editor;
 
+		// Get the latest published article's update date.  This will be used for the blog updated timestamp.
+		$latest = $blog->getLinkFactory('BlogArticle');
+		$latest->order('published DESC');
+		$latest->where('status = published');
+		$latest->limit(1);
+		$latestarticle = $latest->get();
+
+
 		$filters = new FilterForm();
 		$filters->haspagination = true;
-		$filters->setLimit(20);
+
+		// Allow different type of requests to come in here.
+		switch($request->ctype){
+			case 'application/atom+xml':
+				$view->templatename = 'pages/blog/view-blog.atom.tpl';
+				$view->contenttype = $request->ctype;
+				$view->mastertemplate = false;
+				$filters->setLimit(200);
+				break;
+
+			case 'application/rss+xml':
+				$view->templatename = 'pages/blog/view-blog.rss.tpl';
+				$view->contenttype = $request->ctype;
+				$view->mastertemplate = false;
+				$filters->setLimit(200);
+				break;
+
+			default:
+				$view->templatename = 'pages/blog/view-blog.tpl';
+				$filters->setLimit(20);
+				break;
+		}
+
 		$filters->load($this->getPageRequest());
 
 		$factory = $blog->getLinkFactory('BlogArticle');
@@ -478,17 +602,32 @@ class BlogController extends Controller_2_1 {
 		$articles = $factory->get();
 
 		$view->mode = View::MODE_PAGEORAJAX;
-		$view->templatename = '/pages/blog/view-blog.tpl';
+		$view->assign('blog', $blog);
 		$view->assign('articles', $articles);
 		$view->assign('page', $page);
 		$view->assign('filters', $filters);
-		if ($editor) {
-			$view->addControl('Add Blog Article', '/blog/article/create/' . $blog->get('id'), 'add');
+		$view->assign('canonical_url', Core::ResolveLink($blog->get('baseurl')));
+		$view->assign('last_updated', ($latestarticle ? $latestarticle->get('updated') : 0));
+		$view->assign('servername', SERVERNAME_NOSSL);
+
+		// Add the extra view types for this page
+		$view->AddHead('<link rel="alternate" type="application/atom+xml" title="' . $page->get('title') . ' Atom Feed" href="' . Core::ResolveLink($blog->get('baseurl')) . '.atom"/>');
+		$view->AddHead('<link rel="alternate" type="application/rss+xml" title="' . $page->get('title') . ' RSS Feed" href="' . Core::ResolveLink($blog->get('baseurl')) . '.rss"/>');
+
+		if ($editor){
+			if($blog->get('type') == 'remote') {
+				$view->addControl('Import Feed', '/blog/import/' . $blog->get('id'), 'exchange');
+			}
+			else{
+				$view->addControl('Add Blog Article', '/blog/article/create/' . $blog->get('id'), 'add');
+			}
 		}
 		if ($manager) {
 			$view->addControl('Edit Blog', '/blog/update/' . $blog->get('id'), 'edit');
 			$view->addControl('All Articles', '/blog/admin/view/' . $blog->get('id'), 'tasks');
 		}
+		$view->addControl('RSS Feed', Core::ResolveLink($blog->get('baseurl')) . '.rss', 'rss');
+		//$view->addControl('Atom Feed', Core::ResolveLink($blog->get('baseurl')) . '.atom', 'rss');
 	}
 
 	private function _viewBlogArticle(BlogModel $blog, BlogArticleModel $article) {

@@ -1,3 +1,28 @@
+Core Plus 2.5.8
+
+	* [Bug] Fixed a bug when loading a file from /tmp.  This needed to have been forced as a FileLocal
+	  object despite that it may not be in the registered tmp location.  PHP File uploads for example use
+	  the system-registered location.
+	* [Bug] Several fixes to the system updater, particularly in regards to theme support.
+	* [Feature] Added a \Core\Filestore\extension_to_mimetype function to help centralize mimetype
+	  resolution for files and incoming requests.
+	* [Feature] Added a javascript object Core.Browser.  This contains some information about the user
+	  agent currently viewing the site.
+	* [Feature] UserAgent now has a 'isMobile' method.  Simply checks if the type is "Mobile Browser".
+	* [Feature] Added a skin-level variable, "body_classes".  This automatically gets the various
+	  system-defined classes such as ua-is-mobile, the page id, and a few others.  In addition, the
+	  bodyclasses property of the view is now accessable for custom class names.  (NOTE, you will NEED to
+	  add {$body_classes} in your skin.)
+	* Removed the Core.Version property in production.
+	* Retooled the UserAgent system to use browscap.ini instead of the previous system.  Browscap seems to
+	  be better maintained and has more uptime.
+	* Improved the documentation of the Profiler class.
+	* Centralized some of the logic in the Profiler class internally.  This makes the system more stable
+	  and easier to maintain.
+	* Modified the Core JS template function.  It now uses "[%%" and "%%]" as the prefix and suffix for
+	  variables.  This removes the chance that "%" will be used inside the template body.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 26 Jun 2013 17:43:16 -0400
+
 Core Plus 2.5.7
 
 	* [Bug] Fix for bundling components that have a < 1 version.  An example of this is "r7".

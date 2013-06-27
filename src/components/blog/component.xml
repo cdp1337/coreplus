@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.5" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.0" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.7" operation="ge"/>
-		<require name="user" type="component" version="2.4.1"/>
+		<require name="user" type="component" version="2.5.4"/>
 		<require name="tags" type="component"/>
 		<require name="JQuery-Full" type="component" version="1.9"/>
 	</requires>
@@ -11,23 +11,19 @@
 		<permission key="blog_manage" description="Manage Blogs"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="5bc5ffd98cc219b8fdf8d5c745d361fe"/>
-		<file filename="controllers/BlogController.php" md5="92bda4c8b1564ddabe1981a8c84fd054">
+		<file filename="CHANGELOG" md5="cd73b8d0b79cdafbaba1ccc44eb6f998"/>
+		<file filename="controllers/BlogController.php" md5="fada612157b26b84dd994b379835d584">
 			<controller name="BlogController"/>
 		</file>
 		<file filename="helpers/BlogHelper.php" md5="6f1d99f749b165fd0f6cc17e13d55625">
 			<class name="BlogHelper"/>
 		</file>
-		<file filename="models/BlogArticleModel.php" md5="27613af0c5834557e6c2ef19bc6ba593">
+		<file filename="models/BlogArticleModel.php" md5="8a23d8dcf677c6029d013c43d210615e">
 			<class name="BlogArticleModel"/>
 		</file>
-		<file filename="models/BlogModel.php" md5="d75ec50e23fc8cd2e451a16ac0678011">
+		<file filename="models/BlogModel.php" md5="282d3c9a874747efe36ccb39b53fd175">
 			<class name="BlogModel"/>
 		</file>
-		<file filename="tests/BlogTest.php" md5="7e4661cdeea3ee68cea659cfa43466e3">
-			<class name="BlogTest"/>
-		</file>
-		<file filename="tests/blog-test-image.png" md5="2ef8794320891042986b72da16f47bf1"/>
 		<file filename="upgrades/121_to_130.php" md5="4f71587ed4a65da58490523dd9581684"/>
 		<file filename="upgrades/130_to_140_published.php" md5="4ab899aa7768154bde4f5197a7cfbf2b"/>
 		<file filename="upgrades/130_to_140_selectable.php" md5="33c3b2e0c9456a6a900d7340f1c65c5b"/>
@@ -38,16 +34,19 @@
 	</pages>
 	<description>Blog system.</description>
 	<view searchdir="templates">
-		<file filename="templates/pages/blog/admin.tpl" md5="ca665d689f267200349fcef29350b8bc"/>
-		<file filename="templates/pages/blog/admin_view.tpl" md5="21b2ec9bd612ddd8bb2aa9d50a25aa8d"/>
+		<file filename="templates/pages/blog/admin.tpl" md5="d4cf9f6a5261ef7420d7924ddb0d139d"/>
+		<file filename="templates/pages/blog/admin_view.tpl" md5="57149a1a08e5773260e2f72ba17f817b"/>
 		<file filename="templates/pages/blog/article_create_update.tpl" md5="843616082c6990b3d75dded8e08d9025"/>
 		<file filename="templates/pages/blog/article_view.tpl" md5="3c889e24656e3f1da8bf59e13c8f5dd5"/>
 		<file filename="templates/pages/blog/article_view/review-post.tpl" md5="4f09567bf26232ec2f525f6d9ad5d154"/>
-		<file filename="templates/pages/blog/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/blog/create.tpl" md5="88a92a02a91699df3f24063112502867"/>
 		<file filename="templates/pages/blog/editindex.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/blog/index.tpl" md5="fa6d0115d61816bfa21ba48ffb94f18f"/>
-		<file filename="templates/pages/blog/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/blog/view-blog.tpl" md5="f3c1d47f58d9c8474b588b6b251f60fa"/>
+		<file filename="templates/pages/blog/import.tpl" md5="7e3f8c90db26ba500fa9e3ee439d2655"/>
+		<file filename="templates/pages/blog/index.tpl" md5="87d1c753a2adb0bbd15eff6abbfc513c"/>
+		<file filename="templates/pages/blog/update.tpl" md5="e2df73ed8b507c4318fa29588015a80f"/>
+		<file filename="templates/pages/blog/view-blog.atom.tpl" md5="1b7c56f76a07e8d90b33476600fa51a1"/>
+		<file filename="templates/pages/blog/view-blog.rss.tpl" md5="ceb8e4980938fd43f6d7e59c4dbc23a2"/>
+		<file filename="templates/pages/blog/view-blog.tpl" md5="06dc97ec831c6879fdaf0c71790e2adb"/>
 	</view>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.1.0"/>
@@ -80,9 +79,12 @@
 		<upgrade from="1.4.2" to="1.4.3"/>
 		<upgrade from="1.4.3" to="1.4.4"/>
 		<upgrade from="1.4.4" to="1.4.5"/>
+		<upgrade from="1.4.5" to="1.5.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>
+		<file filename="assets/images/valid-atom.png" md5="e343955a970cb2f7834fdb550f600ab2"/>
+		<file filename="assets/images/valid-rss.png" md5="7dac8fdd319e86cf82fa27bc7e2d416f"/>
 		<file filename="assets/js/blog-waypoint-scroll.js" md5="785bccef5ce4f802b581d91d26fff6c7"/>
 	</assets>
 	<authors>

@@ -9,15 +9,27 @@
 class BlogArticleModel extends Model {
 	public static $Schema = array(
 		'id'          => array(
-			'type' => Model::ATT_TYPE_ID,
+			'type' => Model::ATT_TYPE_UUID,
 		),
 		'blogid'      => array(
-			'type' => Model::ATT_TYPE_INT,
+			'type' => Model::ATT_TYPE_UUID_FK,
 			'form' => array('type' => 'system'),
 		),
 		'authorid'    => array(
 			'type' => Model::ATT_TYPE_INT,
 			'form' => array('type' => 'system'),
+		),
+		'guid' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => '128',
+			'comment' => 'External feeds have a GUID attached to this article.',
+			'formtype' => 'disabled',
+		),
+		'link' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => '256',
+			'comment' => 'External feeds have a link back to the original article.',
+			'formtype' => 'disabled',
 		),
 		'title'       => array(
 			'type'      => Model::ATT_TYPE_STRING,
@@ -128,22 +140,31 @@ class BlogArticleModel extends Model {
 	}
 
 	public function set($k, $v){
-		if($k == 'status') {
-			// Update the published date if it's status has changed.
-			if($v == $this->get($k)) return false;
+		switch($k){
+			case 'status':
+				// Update the published date if it's status has changed.
+				if($v == $this->get($k)) return false;
 
-			if($v == 'published') {
-				$this->set('published', Time::GetCurrentGMT());
-			}
-			else {
-				$this->set('published', '');
-			}
+				if($v == 'published' && !$this->get('published')) {
+					parent::set('published', Time::GetCurrentGMT());
+				}
+				elseif($v == 'draft' && $this->get('published')) {
+					parent::set('published', '');
+				}
 
-			// And resume!
-			return parent::set($k, $v);
-		}
-		else {
-			return parent::set($k, $v);
+				// And resume!
+				return parent::set($k, $v);
+			case 'published':
+				// make sure this is a valid timestamp!
+				if($v != '' && !is_int($v)){
+					$time = strtotime($v);
+					return parent::set($k, $time);
+				}
+				else{
+					return parent::set($k, $v);
+				}
+			default:
+				return parent::set($k, $v);
 		}
 	}
 
@@ -178,6 +199,30 @@ class BlogArticleModel extends Model {
 		}
 		else{
 			return null;
+		}
+	}
+
+	/**
+	 * Get the author of this article
+	 *
+	 * @return null|User_Backend
+	 */
+	public function getAuthor() {
+		$author = User::Find(array('id' => $this->get('authorid')));
+		return $author;
+	}
+
+	/**
+	 * Get the resolved link for this blog article.  Will be remote if it's a remote article.
+	 *
+	 * @return string
+	 */
+	public function getResolvedLink(){
+		if($this->get('link')){
+			return $this->get('link');
+		}
+		else{
+			return Core::ResolveLink($this->get('baseurl'));
 		}
 	}
 }

@@ -14,8 +14,8 @@
 				<td>{$blog->get('title')}</td>
 				<td>
 					{a href="/blog/view/`$blog->get('id')`"}
-							{link link="/blog/view/`$blog->get('id')`"}
-						{/a}
+						{link link="/blog/view/`$blog->get('id')`"}
+					{/a}
 				</td>
 				<td>
 					<ul class="controls controls-hover">
@@ -25,12 +25,23 @@
 								<span>Articles</span>
 							{/a}
 						</li>
-						<li>
-							{a href="/blog/article/create/`$blog.id`" title="Add Article"}
-								<i class="icon-add"></i>
-								<span>Add Article</span>
-							{/a}
-						</li>
+						{if $blog.type == 'remote'}
+							<li>
+								{a href="/blog/import/`$blog.id`" title="Import Feed"}
+									<i class="icon-exchange"></i>
+									<span>Import Feed</span>
+								{/a}
+							</li>
+						{else}
+							<li>
+								{a href="/blog/article/create/`$blog.id`" title="Add Article"}
+									<i class="icon-add"></i>
+									<span>Add Article</span>
+								{/a}
+							</li>
+						{/if}
+
+
 						<li class="view">
 							{a href="/blog/view/`$blog.id`" title="View"}
 								<i class="icon-eye-open"></i>

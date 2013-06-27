@@ -1,3 +1,10 @@
+Geographic Codes 1.0.2
+
+	* [Bug] Fixed the build script a little for this component.
+	* Rebuilding with the newest version of Core.  This allows the dev and tests directories to be ignored
+	  for releases.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 19 Jun 2013 04:18:10 -0400
+
 Geographic Codes 1.0.1
 
 	* Updated to work with Core 2.5.6

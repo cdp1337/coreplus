@@ -1,7 +1,7 @@
 {script library="jquery"}{/script}
 {css src="assets/css/user.css"}{/css}
 
-<div class="{$element->getClass()} clearfix">
+<div class="{$element->getClass()} {$element->get('id')} clearfix">
 	<div class="formelement-labelinputgroup">
 	{if $element->get('title')}
 		<label>{$element->get('title')|escape}</label>
@@ -11,7 +11,7 @@
 		<p class="formdescription">{$element->get('description')}</p>
 	{/if}
 	<div>
-		<select name="{$element->get('name')}" class="{$dynname}_main">
+		<select id="{$element->get('id')}" name="{$element->get('name')}" class="{$dynname}_main">
 			<option value="basic_anyone" {if $main_checked == 'basic_anyone'}selected="selected"{/if}>
 				Allow Anyone
 			</option>

@@ -20,7 +20,7 @@ abstract class TinyMCE {
 		// Yes, the string needs quotes inside of quotes!  It's to be read by javascript after all.
 		$filebrowsercallback = (\Core\user()->checkAccess('p:/tinymce/imagebrowser/access')) ? "Core.TinyMCE.FileBrowserCallback" : 'null';
 
-		$loc = \Core::ResolveAsset('js/tinymce/tinymce.js');
+		$loc = \Core::ResolveAsset('js/tinymce/tinymce.min.js');
 		$content = \Core::ResolveAsset('css/tinymce/content.css');
 
 		$script = <<< EOD

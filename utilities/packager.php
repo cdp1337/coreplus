@@ -692,6 +692,10 @@ function process_component($component, $forcerelease = false){
 		if(strpos(TMP_DIR_CLI, ROOT_PDIR) === 0) $it->addIgnore(TMP_DIR_CLI);
 	}
 
+	// Set a couple generic development-only utilities.
+	$it->addIgnore(dirname($cfile) . '/dev/');
+	$it->addIgnore(dirname($cfile) . '/tests/');
+
 	// @todo Should I support ignored files in the component.xml file?
 	// advantage, developers can have tools in their directories that are not meant to be packaged.
 	// disadvantage, currently no component other than core requires this.....
@@ -980,6 +984,11 @@ function process_component($component, $forcerelease = false){
 
 		// The core will have some additional files required to be created.
 		if($component == 'core'){
+
+			// I need the compiled version of the bootstrap.
+			copy(ROOT_PDIR . 'core/bootstrap.compiled.php', $dir . 'data/core/bootstrap.compiled.php');
+
+			// The deny hosts text will go into the various secure directories.
 			$denytext = <<<EOD
 # This is specifically created to prevent access to ANYTHING in this directory.
 #  Under no situation should anything in this directory be readable
@@ -1346,13 +1355,20 @@ function get_exported_component($component){
 function manage_changelog($file, $name, $version){
 
 	$parser = new Core\Utilities\Changelog\Parser($name, $file);
-	$parser->parse();
 
-	/** @var $thisversion Core\Utilities\Changelog\Section */
-	$thisversion = $parser->getSection($version);
+	if(file_exists($file)){
+		$parser->parse();
 
-	// Read the current changelog.
-	$changelog = $thisversion->fetch();
+		/** @var $thisversion Core\Utilities\Changelog\Section */
+		$thisversion = $parser->getSection($version);
+
+		// Read the current changelog.
+		$changelog = $thisversion->fetch();
+	}
+	else{
+		$thisversion = $parser->getSection($version);
+		$changelog = '';
+	}
 
 	// Prompt the user with the ability to change them.
 	$changelog = CLI::PromptUser(
@@ -1408,6 +1424,12 @@ if(!$packageremail){
 }
 
 CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
+
+
+// Before ANYTHING happens.... make sure that the system is compiled!
+echo '# Compiling system...' . "\n";
+exec(ROOT_PDIR . '../utilities/compiler.php');
+echo "OK!\n";
 
 
 if($opts['type']){

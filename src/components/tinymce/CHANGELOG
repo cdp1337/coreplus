@@ -1,3 +1,9 @@
+TinyMCE 4.0.0~core1
+
+	* First stable release of the 4.0 tree.
+	* Removed some legacy code that wasn't being used anymore.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 19 Jun 2013 04:50:28 -0400
+
 TinyMCE 4.0b3~core2
 
 	* [Bug] Set the pop-up pages to be not recorded in page navigation.

@@ -90,19 +90,27 @@
 </table>
 <br/>
 
-<table class="listing" id="theme-list">
-	<tr>
-		<th>Theme</th>
-		<th>Version</th>
-		<th>&nbsp;</th>
-	</tr>
-	{foreach from=$themes item=t}
-		<tr themename="{$t->getName()|lower}" type="themes">
-			<td>{$t->getName()}</td>
-			<td>{$t->getVersion()}</td>
-			<td>
-				<a href="#" class="update-link perform-update" style="display:none;">Update</a>
-			</td>
+{* Themes < 2.1.0 do not support keynames. *}
+
+{if Core::IsComponentAvailable('theme') && Core::GetComponent('theme')->getVersion() > 2.1}
+	<table class="listing" id="theme-list">
+		<tr>
+			<th>Theme</th>
+			<th>Version</th>
+			<th>&nbsp;</th>
 		</tr>
-	{/foreach}
-</table>
+		{foreach from=$themes item=t}
+			<tr themename="{$t->getKeyName()}" type="themes">
+				<td>{$t->getName()}</td>
+				<td>{$t->getVersion()}</td>
+				<td>
+					<a href="#" class="update-link perform-update" style="display:none;">Update</a>
+				</td>
+			</tr>
+		{/foreach}
+	</table>
+{else}
+	<p class="message-error">
+		Either the "Theme" component is not installed or it is too old.  Please update it to get access to manage theme updates.
+	</p>
+{/if}
