@@ -95,8 +95,25 @@
  * }
  * </code>
  *
+ * <h4>Storing Data</h4>
+ * <p>
+ * A nonce can be generated with a payload attached to it that's returned on validation.
+ * This is useful if you want to store some bit of information securely, and retrieve it on another pageload, say a custom form submission.
+ * </p>
+ *
+ * <code>
+ * $supersecretdata = ['something', 'blah', 'more stuffs'];
+ * $noncekey = NonceModel::Generate('2 hours', null, $supersecretdata);
+ *
+ * // The $noncekey is now literally a key to that data.  Anyone with it can retrieve the data.
+ * // So later on in the session...
+ * $nonce = new Nonce($noncekey);
+ * $savedsecretdata = $nonce->get('data');
+ * // $supersecretdata == $savedsecretdata
+ * </code>
+ *
  * @package Nonce
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@eval.bz
  *
  */
 class NonceModel extends Model {
@@ -122,8 +139,9 @@ class NonceModel extends Model {
 			'comment' => 'An optional hash usable to verify this is matching exactly what is expected',
 		),
 		'data' => array(
-			'type' => Model::ATT_TYPE_DATA,
-			'comment' => 'Large column space for JSON, serialized, or any other data'
+			'type'      => Model::ATT_TYPE_DATA,
+			'comment'   => 'Large column space for JSON, serialized, or any other data',
+			'encrypted' => true,
 		)
 	);
 
@@ -136,6 +154,17 @@ class NonceModel extends Model {
 	public static $Indexes = array(
 		'primary' => array('key'),
 	);
+
+	public function get($k){
+		if($k == 'data'){
+			$try = unserialize(parent::get($k));
+			if(!$try) return parent::get($k);
+			else return $try;
+		}
+		else{
+			return parent::get($k);
+		}
+	}
 
 	/**
 	 * Check and see if this nonce is valid and has not expired yet.
@@ -239,7 +268,7 @@ class NonceModel extends Model {
 		$date->modify($expires);
 		$nonce->set('expires', $date->getFormatted('U', Time::TIMEZONE_GMT));
 
-		$nonce->set('data', $data);
+		$nonce->set('data', serialize($data));
 		$nonce->save();
 
 		return $nonce->get('key');

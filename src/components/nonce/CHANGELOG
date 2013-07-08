@@ -1,3 +1,12 @@
+Nonce 1.0.1
+
+	* Nonce models now encrypt the stored data associated with a given key.  This allows more sensitive
+	  information to be stored.
+	* Nonce data is now being serialized.  This means that a raw object or array can be directly passed
+	  into the set or Generate methods.  This object is also unserialized automatically, so the reverse
+	  methods can be called directly.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 08 Jul 2013 11:39:12 -0400
+
 Nonce 1.0.0
 
 	* Initial version
