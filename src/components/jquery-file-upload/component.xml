@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="8.1.0~core2" name="jQuery-File-Upload" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="8.5.0~core1" name="jQuery-File-Upload" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.5.6"/>
+		<require name="core" type="component" version="2.5.9"/>
 		<require name="JQuery" type="library" version="1.6" operation="ge"/>
 		<require name="jqueryui" type="library" version="1.8" operation="ge"/>
 	</requires>
@@ -14,69 +14,51 @@
 		<upgrade from="7.4.2~core1" to="7.4.2~core2"/>
 		<upgrade from="7.4.2~core2" to="8.1.0~core1"/>
 		<upgrade from="8.1.0~core1" to="8.1.0~core2"/>
+		<upgrade from="8.1.0~core2" to="8.1.0~core3"/>
+		<upgrade from="8.1.0~core3" to="8.5.0~core1"/>
 	</upgrades>
 	<description>
-		File Upload widget with multiple file selection, drag and drop support, progress bars and preview images for jQuery.
-		Supports cross-domain, chunked and resumable file uploads and client-side image resizing.
-		This package has been minimized to include support for only PHP based server platforms, since that's all that Core+ runs on.
+		File Upload widget with multiple file selection, drag and drop support, progress bar, validation and preview images,
+		audio and video for jQuery.
+		Supports cross-domain, chunked and resumable file uploads. Works with any server-side platform
+		(Google App Engine, PHP, Python, Ruby on Rails, Java, etc.) that supports standard HTML form file uploads.
 	</description>
 	<forms>
 		<formelement name="multifile" class="MultiFileInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="6387175b06bcb930d8b15b306d36c5fb"/>
+		<file filename="CHANGELOG" md5="e36e1896ee118f7ee460140979c70d59"/>
 		<file filename="README.md" md5="cb22a03a2f5fc8aaf6dcf5a9c2180a66"/>
 		<file filename="classes/MultiFileInput.class.php" md5="fa63cb2293c48085befc32bca8b995a0">
 			<class name="MultiFileInput"/>
 		</file>
-		<file filename="controllers/JQueryFileUploadController.php" md5="5596177826aaddcade2fffbc57fe1c54">
+		<file filename="controllers/JQueryFileUploadController.php" md5="ccf4e0721dcf78e952c0c86a5eea16eb">
 			<controller name="JQueryFileUploadController"/>
 		</file>
 	</files>
 	<assets>
 		<file filename="assets/css/jquery-file-upload.css" md5="09f10ce2d8f99f79f61576bef5b35d88"/>
-		<file filename="assets/libs/jquery-file-upload/CONTRIBUTING.md" md5="ce110243b1a1b6caff96d8a6f8a7e82b"/>
-		<file filename="assets/libs/jquery-file-upload/README.md" md5="cb0a307d632385e65965abc131ac4a4d"/>
-		<file filename="assets/libs/jquery-file-upload/angularjs.html" md5="a0d2b9e62b89476fe00f0cd3c4a1e10a"/>
-		<file filename="assets/libs/jquery-file-upload/basic-plus.html" md5="7fc4f0cb3908e2c2e2193d5970f1dbb1"/>
-		<file filename="assets/libs/jquery-file-upload/basic.html" md5="f7a36ca96626da39654b400e3ec6c329"/>
-		<file filename="assets/libs/jquery-file-upload/blueimp-file-upload.jquery.json" md5="52c2d579619d5b8803b99d959edc669d"/>
-		<file filename="assets/libs/jquery-file-upload/cors/postmessage.html" md5="0e8f8e9c3f87433d82746e6bc24e9a37"/>
+		<file filename="assets/libs/jquery-file-upload/cors/postmessage.html" md5="a5aaa99fc1e05a492eef9412eb8c1bc5"/>
 		<file filename="assets/libs/jquery-file-upload/cors/result.html" md5="e07ff3e2fa24130baf5a11c1aa0ba7c0"/>
 		<file filename="assets/libs/jquery-file-upload/css/jquery.fileupload-ui-noscript.css" md5="280c7e347233ddd1c489f49c14fb72b7"/>
-		<file filename="assets/libs/jquery-file-upload/css/jquery.fileupload-ui.css" md5="1dfa37ef632ab546f4cf5819172baf7a"/>
+		<file filename="assets/libs/jquery-file-upload/css/jquery.fileupload-ui.css" md5="0da0d56761e684ac1353d6175c880fbe"/>
 		<file filename="assets/libs/jquery-file-upload/css/style.css" md5="0225c760b457ffb26073efc1cb55c4dc"/>
 		<file filename="assets/libs/jquery-file-upload/img/loading.gif" md5="05992d3434d3589b38a3a5431842d38f"/>
 		<file filename="assets/libs/jquery-file-upload/img/progressbar.gif" md5="2165b99c89c8431e7165530ccb5f89fb"/>
-		<file filename="assets/libs/jquery-file-upload/index.html" md5="d056e7063a375b7e5f0356084bf3c117"/>
-		<file filename="assets/libs/jquery-file-upload/js/app.js" md5="f3f20db06ae2f5a7cfafc495aec7f75b"/>
-		<file filename="assets/libs/jquery-file-upload/js/cors/jquery.postmessage-transport.js" md5="11fe256b13a09546f7280198d8e98239"/>
+		<file filename="assets/libs/jquery-file-upload/js/app.js" md5="85f81da5d9b110f9088e875debf54447"/>
+		<file filename="assets/libs/jquery-file-upload/js/cors/jquery.postmessage-transport.js" md5="82c9d1bb7363178c02a9aaee830ac43c"/>
 		<file filename="assets/libs/jquery-file-upload/js/cors/jquery.xdr-transport.js" md5="f725a09bf18dd40a6a9d1f2febe97948"/>
-		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-angular.js" md5="b4530269d9666b976eeeb02bfb1aa03d"/>
-		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-fp.js" md5="e43147041dea9988e6c84fabfee2aeca"/>
-		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-process.js" md5="8f27159561d43ede851b9b84f63cd727"/>
-		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-resize.js" md5="23a8f0c0a8e9febbf563aef9fb28f2b0"/>
-		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-ui.js" md5="a9695c3cff9ffc50790fab6785b5c260"/>
-		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-validate.js" md5="9e083d9e4a3e014b760d70ad0f1e85cb"/>
-		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload.js" md5="78635d61001613940c5ddadeff08c6f4"/>
-		<file filename="assets/libs/jquery-file-upload/js/jquery.iframe-transport.js" md5="e041d8a3038edd182d73e92660a698bf"/>
-		<file filename="assets/libs/jquery-file-upload/js/main.js" md5="0acd13dd145c60e8e068ba67a9e5925e"/>
-		<file filename="assets/libs/jquery-file-upload/js/vendor/jquery.ui.widget.js" md5="f479494e3c298af1be1f4b1164cf484f"/>
-		<file filename="assets/libs/jquery-file-upload/package.json" md5="cabf4d7e69d5b1c3bfa9d90912cb29da"/>
-		<file filename="assets/libs/jquery-file-upload/server/gae-go/app.yaml" md5="62779923186fce0d4f8126b14f94daf2"/>
-		<file filename="assets/libs/jquery-file-upload/server/gae-go/app/main.go" md5="9daa953950a3a2d290dc0bba024ba2bc"/>
-		<file filename="assets/libs/jquery-file-upload/server/gae-go/static/favicon.ico" md5="9c0ded6158793bdab415f17a7f1ba98d"/>
-		<file filename="assets/libs/jquery-file-upload/server/gae-go/static/robots.txt" md5="b6216d61c03e6ce0c9aea6ca7808f7ca"/>
-		<file filename="assets/libs/jquery-file-upload/server/gae-python/app.yaml" md5="96d2461ea0e89ac8bb56f11e9b869732"/>
-		<file filename="assets/libs/jquery-file-upload/server/gae-python/main.py" md5="646e41867c7b4b2f9ef460827c527513"/>
-		<file filename="assets/libs/jquery-file-upload/server/gae-python/static/favicon.ico" md5="9c0ded6158793bdab415f17a7f1ba98d"/>
-		<file filename="assets/libs/jquery-file-upload/server/gae-python/static/robots.txt" md5="b6216d61c03e6ce0c9aea6ca7808f7ca"/>
-		<file filename="assets/libs/jquery-file-upload/server/node/package.json" md5="05a60814ac629e1b5ab892d459eac80e"/>
-		<file filename="assets/libs/jquery-file-upload/server/node/server.js" md5="a2b28d0caebfd4af0f42721711e4e66f"/>
-		<file filename="assets/libs/jquery-file-upload/server/php/UploadHandler.php" md5="556a944efb7bccca8617691dedf08672"/>
-		<file filename="assets/libs/jquery-file-upload/server/php/index.php" md5="61d7925806cb0b5592a93d7b0e6c2b4c"/>
-		<file filename="assets/libs/jquery-file-upload/test/index.html" md5="1b52de238dae13c58849caa3742491a2"/>
-		<file filename="assets/libs/jquery-file-upload/test/test.js" md5="1e3c19e259edb7efcdbc55e0887b6cf4"/>
+		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-angular.js" md5="3bdd54589b884356ff0e922cdbbfdf28"/>
+		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-audio.js" md5="e1c4980e81d90bfa70e3e6de8d141fb1"/>
+		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-image.js" md5="fcf12f17af3b37565cceea4403ac335b"/>
+		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-process.js" md5="0da6f8ef76956f6ce7842dcf8941d1fa"/>
+		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-ui.js" md5="192aad9c9f449d8ecc25be11c50bb275"/>
+		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-validate.js" md5="18544203fa791490d3e2a6d6bb853000"/>
+		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload-video.js" md5="4f24884cd80879e26275bde64396201a"/>
+		<file filename="assets/libs/jquery-file-upload/js/jquery.fileupload.js" md5="929e2d481ee80d94e06ee205952552ff"/>
+		<file filename="assets/libs/jquery-file-upload/js/jquery.iframe-transport.js" md5="487d5e5434beb03193861df573f01a93"/>
+		<file filename="assets/libs/jquery-file-upload/js/main.js" md5="30ab3dcbe96411f2eebcfe6fff134140"/>
+		<file filename="assets/libs/jquery-file-upload/js/vendor/jquery.ui.widget.js" md5="06fca9ef95fcd664b53fd10681b94a5d"/>
 	</assets>
 	<view searchdir="templates">
 		<file filename="templates/forms/elements/multifileinput.tpl" md5="a54f04eec00935831509e8547700a7fa"/>

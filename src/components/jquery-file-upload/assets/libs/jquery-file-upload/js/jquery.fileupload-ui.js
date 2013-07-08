@@ -1,5 +1,5 @@
 /*
- * jQuery File Upload User Interface Plugin 8.1
+ * jQuery File Upload User Interface Plugin 8.5.0
  * https://github.com/blueimp/jQuery-File-Upload
  *
  * Copyright 2010, Sebastian Tschan
@@ -19,7 +19,9 @@
         define([
             'jquery',
             'tmpl',
-            './jquery.fileupload-resize',
+            './jquery.fileupload-image',
+            './jquery.fileupload-audio',
+            './jquery.fileupload-video',
             './jquery.fileupload-validate'
         ], factory);
     } else {
@@ -65,6 +67,14 @@
             // used by the maxNumberOfFiles validation:
             getNumberOfFiles: function () {
                 return this.filesContainer.children().length;
+            },
+
+            // Callback to retrieve the list of files from the server response:
+            getFilesFromResponse: function (data) {
+                if (data.result && $.isArray(data.result.files)) {
+                    return data.result.files;
+                }
+                return [];
             },
 
             // The add callback is invoked as soon as files are added to the fileupload
@@ -121,7 +131,9 @@
             done: function (e, data) {
                 var that = $(this).data('blueimp-fileupload') ||
                         $(this).data('fileupload'),
-                    files = that._getFilesFromResponse(data),
+                    getFilesFromResponse = data.getFilesFromResponse ||
+                        that.options.getFilesFromResponse,
+                    files = getFilesFromResponse(data),
                     template,
                     deferred;
                 if (data.context) {
@@ -294,16 +306,19 @@
             // Callback for file deletion:
             destroy: function (e, data) {
                 var that = $(this).data('blueimp-fileupload') ||
-                        $(this).data('fileupload');
-                if (data.url) {
-                    $.ajax(data).done(function () {
+                        $(this).data('fileupload'),
+                    removeNode = function () {
                         that._transition(data.context).done(
                             function () {
                                 $(this).remove();
                                 that._trigger('destroyed', e, data);
                             }
                         );
-                    });
+                    };
+                if (data.url) {
+                    $.ajax(data).done(removeNode);
+                } else {
+                    removeNode();
                 }
             }
         },
@@ -324,13 +339,6 @@
             return this._finishedUploads;
         },
 
-        _getFilesFromResponse: function (data) {
-            if (data.result && $.isArray(data.result.files)) {
-                return data.result.files;
-            }
-            return [];
-        },
-
         // Link handler, that allows to download files
         // by drag & drop of the links to the desktop:
         _enableDragToDesktop: function () {
@@ -344,7 +352,7 @@
                         'DownloadURL',
                         [type, name, url].join(':')
                     );
-                } catch (err) {}
+                } catch (ignore) {}
             });
         },
 
@@ -603,6 +611,9 @@
         _create: function () {
             this._super();
             this._resetFinishedDeferreds();
+            if (!$.support.fileInput) {
+                this._disableFileInputButton();
+            }
         },
 
         enable: function () {

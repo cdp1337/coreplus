@@ -157,7 +157,9 @@ class JQueryFileUploadController extends Controller_2_1 {
 			// Source
 			$f = \Core\Filestore\Factory::File($tmpfile);
 			// Destination
-			$nf = \Core\Filestore\Factory::File($this->_formelement->get('basedir') . $file['name']);
+			// Make sure the filename is sanitized.
+			$newbasename = \Core\str_to_url(urldecode($file['name']), true);
+			$nf = \Core\Filestore\Factory::File($this->_formelement->get('basedir') . $newbasename);
 			$file['type'] = $f->getMimetype();
 
 			// do NOT copy the contents over until the accept check has been ran!
@@ -210,7 +212,9 @@ class JQueryFileUploadController extends Controller_2_1 {
 				// Source
 				$f = \Core\Filestore\Factory::File($upload['tmp_name'][$index]);
 				// Destination
-				$nf = \Core\Filestore\Factory::File($this->_formelement->get('basedir') . '/' . $upload['name'][$index]);
+				// Make sure the filename is sanitized.
+				$newbasename = \Core\str_to_url(urldecode($upload['name'][$index]), true);
+				$nf = \Core\Filestore\Factory::File($this->_formelement->get('basedir') . $newbasename);
 
 				// This is the object that is returned in the json array.
 				// It needs to contain something.

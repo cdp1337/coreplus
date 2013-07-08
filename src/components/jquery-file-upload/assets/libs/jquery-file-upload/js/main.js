@@ -1,5 +1,5 @@
 /*
- * jQuery File Upload Plugin JS Example 8.0
+ * jQuery File Upload Plugin JS Example 8.2.1
  * https://github.com/blueimp/jQuery-File-Upload
  *
  * Copyright 2010, Sebastian Tschan
@@ -9,8 +9,8 @@
  * http://www.opensource.org/licenses/MIT
  */
 
-/*jslint nomen: true, unparam: true, regexp: true */
-/*global $, window, document */
+/*jslint nomen: true, regexp: true */
+/*global $, window, blueimp */
 
 $(function () {
     'use strict';
@@ -32,12 +32,15 @@ $(function () {
         )
     );
 
-    if (window.location.hostname === 'blueimp.github.com' ||
-            window.location.hostname === 'blueimp.github.io') {
+    if (window.location.hostname === 'blueimp.github.io') {
         // Demo settings:
         $('#fileupload').fileupload('option', {
             url: '//jquery-file-upload.appspot.com/',
-            disableImageResize: false,
+            // Enable image resizing, except for Android and Opera,
+            // which actually support image resizing, but fail to
+            // send Blob objects via XHR requests:
+            disableImageResize: /Android(?!.*Chrome)|Opera/
+                .test(window.navigator.userAgent),
             maxFileSize: 5000000,
             acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
         });
@@ -62,12 +65,24 @@ $(function () {
             url: $('#fileupload').fileupload('option', 'url'),
             dataType: 'json',
             context: $('#fileupload')[0]
-        }).always(function (result) {
+        }).always(function () {
             $(this).removeClass('fileupload-processing');
         }).done(function (result) {
             $(this).fileupload('option', 'done')
                 .call(this, null, {result: result});
         });
     }
+
+    // Show the blueimp Gallery as lightbox when clicking on image links:
+    $('#fileupload .files').on('click', '.gallery', function (event) {
+        // The :even filter removes duplicate links (thumbnail and file name links):
+        if (blueimp.Gallery($('#fileupload .gallery').filter(':even'), {
+                index: this
+            })) {
+            // Prevent the default link action on
+            // successful Gallery initialization:
+            event.preventDefault();
+        }
+    });
 
 });

@@ -1,3 +1,14 @@
+jQuery-File-Upload 8.5.0~core1
+
+	* [Feature] #385 - Sanitize filenames for files uploaded
+	* Merged in newest version (8.5.0), of jquery file upload from upstream
+	-- Charlie Powell <charlie@eval.bz>  Mon, 08 Jul 2013 01:39:32 -0400
+
+jQuery-File-Upload 8.1.0~core3
+
+	* Minor updates to the file uploader to work on 2.5.8... these must have slipped through the cracks.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 27 Jun 2013 12:10:17 -0400
+
 jQuery-File-Upload 8.1.0~core2
 
 	* Updated jquery-file-upload to work with Core 2.5.6
