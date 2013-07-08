@@ -92,7 +92,7 @@
 
 {* Themes < 2.1.0 do not support keynames. *}
 
-{if Core::IsComponentAvailable('theme') && Core::GetComponent('theme')->getVersion() > 2.1}
+{if Core::IsComponentAvailable('theme') && version_compare(Core::GetComponent('theme')->getVersion(), 2.1)}
 	<table class="listing" id="theme-list">
 		<tr>
 			<th>Theme</th>
@@ -111,6 +111,6 @@
 	</table>
 {else}
 	<p class="message-error">
-		Either the "Theme" component is not installed or it is too old.  Please update it to get access to manage theme updates.
+		Either the "Theme" component is not installed or it is too old.  Please update it to at least 2.1 to get access to manage theme updates.
 	</p>
 {/if}

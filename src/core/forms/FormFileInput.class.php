@@ -203,8 +203,11 @@ class FormFileInput extends FormElement {
 
 				// Source
 				$f = \Core\Filestore\Factory::File($in['tmp_name']);
+
 				// Destination
-				$nf = \Core\Filestore\Factory::File($this->get('basedir') . '/' . $in['name']);
+				// Make sure the filename is sanitized.
+				$newbasename = \Core\str_to_url($in['name'], true);
+				$nf = \Core\Filestore\Factory::File($this->get('basedir') . '/' . $newbasename);
 
 				// do NOT copy the contents over until the accept check has been ran!
 

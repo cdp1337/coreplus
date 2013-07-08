@@ -943,12 +943,35 @@ function str_to_latin($string){
 }
 
 /**
- * Cleanup a string and ensure it can make a valid URL.
+ * Cleanup a string and ensure it can make a valid URL component.
  *
- * @param string
+ * Note, this is only meant for an individual directory level of a URL, such as the filename or a directory name.
+ * This is because it removes slashes "/".
+ *
+ * <h3>Usage</h3>
+ *
+ * <p>Typical Usage</p>
+ * <code>
+ * // Will print "something-foo"
+ * echo \Core\str_to_url('Something Foo!');
+ *
+ * // International characters are also handled gracefully
+ * // Will print "thors hammer"
+ * echo \Core\str_to_url('Þors hammer');
+ * </code>
+ *
+ * <p>If you are dealing with a filename instead of a url, you may want to preserve the extensions.</p>
+ * <code>
+ * // Will print awesome-hot-image.jpg
+ * echo \Core\str_to_url('AWESOME höt Image!!!!!!!.JPG');
+ * </code>
+ *
+ * @param string $string  Incoming string to convert
+ * @param bool   $keepdots Set to true if you want to keep dots "." and file extensions.
+ *
  * @return string
  */
-function str_to_url($string){
+function str_to_url($string, $keepdots = false){
 	// URLs should only be in latin.
 	$string = str_to_latin($string);
 
@@ -956,7 +979,12 @@ function str_to_url($string){
 	$string = str_replace(' ', '-', $string);
 
 	// Anything else I missed?  Get rid of it!
-	$string = preg_replace('/[^a-z0-9\-]/i', '', $string);
+	if($keepdots){
+		$string = preg_replace('/[^a-z0-9\-\.]/i', '', $string);
+	}
+	else{
+		$string = preg_replace('/[^a-z0-9\-]/i', '', $string);
+	}
 
 	// Multiple separators should get truncated, along with beginning and trailing ones.
 	$string = preg_replace('/[-]+/', '-', $string);

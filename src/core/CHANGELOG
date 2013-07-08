@@ -1,3 +1,11 @@
+Core Plus 2.5.9
+
+	* Feature #385 - Sanitize filenames for files uploaded
+	* Feature checkbox groups now have a toggle all option
+	* Added a "keepdots" parameter to the str_to_url function.  Useful for filenames
+	* System form elements now jsonencode their values.  Allows multi-values to be used in the unique key
+	* Minor bug in the updater template.  Needed to use version_compare instead of "<="
+
 Core Plus 2.5.8
 
 	* [Bug] Fixed a bug when loading a file from /tmp.  This needed to have been forced as a FileLocal
