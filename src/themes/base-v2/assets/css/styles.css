@@ -637,6 +637,11 @@ fieldset .formdescription {
 	background: #DDD;
 	padding: 8px 7px;
 }
+.formelement.formcheckboxesinput span.checkboxes-label span.checkboxes-toggle {
+	cursor: pointer;
+	float: right;
+}
+
 
 /* Textarea specific styles */
 .formelement.formtextareainput .formelement-labelinputgroup label {
