@@ -14,13 +14,6 @@
 	</div>
 
 	<div class="tinymcenavigator-files clearfix">
-		{if !(sizeof($directories) || sizeof($files))}
-			There are no files or directories here.
-			{if $uploadform}
-				Drag some files here to upload some!
-			{/if}
-		{/if}
-
 		{if $uploadform}
 			{$uploadform->render()}
 		{/if}
@@ -152,6 +145,14 @@
 				</td>
 			</tr>
 		{/foreach}
+
+		{if !(sizeof($directories) || sizeof($files))}
+			<tr class="file">
+				<td colspan="6">
+					<p class="message-info">This directory is empty.</p>
+				</td>
+			</tr>
+		{/if}
 
 		</table>
 

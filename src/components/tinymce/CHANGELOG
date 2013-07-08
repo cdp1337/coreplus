@@ -1,10 +1,20 @@
+TinyMCE 4.0.1~core1
+
+	* [Bug] Fixed Bug #254 - TinyMCE File browser needs to be alphabetical
+	* [Bug] Fixes in the navigator to ensure that files are prepended with the correct directory name.
+	  This was causing issues from changing to the top directory "" or ".", and the system not recognizing
+	  that path translated to public/tinymce.
+	* Minor style tweaks to the navigator icon and list views.
+	* Updated TinyMCE to 4.0.1 from upstream.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 08 Jul 2013 12:01:11 -0400
+
 TinyMCE 4.0.0~core1
 
 	* First stable release of the 4.0 tree.
 	* Removed some legacy code that wasn't being used anymore.
 	-- Charlie Powell <charlie@eval.bz>  Wed, 19 Jun 2013 04:50:28 -0400
 
-TinyMCE 4.0b3~core2
+TinyMCE 4.0.0b3~core2
 
 	* [Bug] Set the pop-up pages to be not recorded in page navigation.
 	* [Bug] Fixed file names that are uploaded to a directory where the script may not append the
@@ -14,7 +24,7 @@ TinyMCE 4.0b3~core2
 	* Rearranged the stylesheets a little
 	-- Charlie Powell <charlie@eval.bz>  Sun, 09 Jun 2013 21:37:09 -0400
 
-TinyMCE 4.0b3~core1
+TinyMCE 4.0.0b3~core1
 
 	* [Feature] New UI
 	* [Feature] New page for managing the public files

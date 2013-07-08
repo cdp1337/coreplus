@@ -124,6 +124,7 @@ class Navigator {
 	public function cd($dir){
 		$dir = str_replace('..', '', $dir);
 
+		// "." is the shorthand for the root directory.
 		if($dir == '.') $dir = '';
 
 		// Make sure it ends with a trailing slash.
@@ -186,7 +187,9 @@ class Navigator {
 			}
 		}
 
-		$dir = \Core\Filestore\Factory::Directory($this->_basedir . $this->_cwd);
+		// The base directory, because it may not be in /public necessarily.
+		$base = \Core\Filestore\Factory::Directory($this->_basedir);
+		$dir  = \Core\Filestore\Factory::Directory($this->_basedir . $this->_cwd);
 
 		// Allow automatic creation of the root directory.
 		if($this->_cwd == '' && !$dir->exists()){
@@ -198,7 +201,7 @@ class Navigator {
 		}
 
 		$dirlen = strlen($dir->getPath());
-		$baselen = strlen(\Core\Filestore\get_public_path());
+		$baselen = strlen($base->getPath());
 		$directories = array();
 		$files = array();
 		foreach($dir->ls() as $file){
@@ -238,15 +241,18 @@ class Navigator {
 		}
 
 		// Sorting would be nice!
-		ksort($directories);
-		ksort($files);
+		ksort($directories, SORT_STRING | SORT_FLAG_CASE);
+		ksort($files, SORT_STRING | SORT_FLAG_CASE);
 
 		// If it's a nested directory, provide a link back to the parent.
-		if($this->_cwd != ''){
-			$uplink = $resolvedwmode . '&dir=' . urlencode(dirname(substr($dir->getPath(), $baselen)));
+		if($this->_cwd == ''){
+			$uplink = null;
+		}
+		elseif($this->_cwd == '/'){
+			$uplink = null;
 		}
 		else{
-			$uplink = null;
+			$uplink = $resolvedwmode . '&dir=' . urlencode(dirname(substr($dir->getPath(), $baselen)));
 		}
 
 		// Only certain people are allowed the rights to upload here.
