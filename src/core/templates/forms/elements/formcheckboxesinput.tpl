@@ -1,7 +1,6 @@
 <div class="{$element->getClass()} {$element->get('id')}">
-	{if $element->get('title')}
-		<span class="checkboxes-label">{$element->get('title')|escape}</span>
-	{/if}
+
+	<span class="checkboxes-label">{$element->get('title')|escape} <span class="checkboxes-toggle">Check All <i class='icon-check'></i></span></span>
 
 	{foreach from=$element->get('options') item=title key=key}
 		<label>
@@ -14,3 +13,35 @@
 		<p class="formdescription">{$element->get('description')}</p>
 	{/if}
 </div>
+
+{script library="jquery"}{/script}
+
+{script location="foot"}<script>
+
+	$(function(){
+
+		var checkstate = false;
+
+		$('.checkboxes-toggle').click(function(){
+
+			var $checkboxes = $(this).closest('.formcheckboxesinput').find('input[type=checkbox]');
+
+			if(!checkstate) {
+				$checkboxes.each(function(){
+					$(this).prop('checked', true);
+				});
+				checkstate = true;
+				$(this).html("Uncheck All <i class='icon-check'></i>");
+			} else {
+				$checkboxes.each(function(){
+					$(this).prop('checked', false);
+				});
+				checkstate = false;
+				$(this).html("Check All <i class='icon-check'></i>");
+			}
+
+		});
+
+	});
+
+</script>{/script}
