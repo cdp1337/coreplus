@@ -89,23 +89,25 @@ class UserAdminController extends Controller_2_1{
 		$user->set('active', $active);
 		$user->save();
 
-		// Send an activation notice email to the user.
-		try{
-			$email = new Email();
-			$email->assign('user', $user);
-			$email->assign('sitename', SITENAME);
-			$email->assign('rooturl', ROOT_URL);
-			$email->assign('loginurl', Core::ResolveLink('/user/login'));
-			$email->setSubject('Welcome to ' . SITENAME);
-			$email->templatename = 'emails/user/activation.tpl';
-			$email->to($user->get('email'));
+		// Send an activation notice email to the user if the active flag is set to true.
+		if($active){
+			try{
+				$email = new Email();
+				$email->assign('user', $user);
+				$email->assign('sitename', SITENAME);
+				$email->assign('rooturl', ROOT_URL);
+				$email->assign('loginurl', Core::ResolveLink('/user/login'));
+				$email->setSubject('Welcome to ' . SITENAME);
+				$email->templatename = 'emails/user/activation.tpl';
+				$email->to($user->get('email'));
 
-			// TESTING
-			//error_log($email->renderBody());
-			$email->send();
-		}
-		catch(\Exception $e){
-			error_log($e->getMessage());
+				// TESTING
+				//error_log($email->renderBody());
+				$email->send();
+			}
+			catch(\Exception $e){
+				error_log($e->getMessage());
+			}
 		}
 
 		$view->jsondata = array(

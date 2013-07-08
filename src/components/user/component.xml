@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.5" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.6" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.2"/>
 		<!-- User authentication events trigger security logs. -->
@@ -21,7 +21,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="dfdd7edfca31557019dd7211abd5969d"/>
+		<file filename="CHANGELOG" md5="1c11131a092b8ea2a9c57204b1446dda"/>
 		<file filename="User.class.php" md5="097fab24c5528e52f7076215b2b72d4b">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -47,10 +47,10 @@
 		<file filename="backends/User_facebook.backend.php" md5="780444ea133fae59ecdb10636642344c">
 			<class name="User_facebook_Backend"/>
 		</file>
-		<file filename="controllers/UserActivityController.php" md5="726759615734546f23451781137c8d14">
+		<file filename="controllers/UserActivityController.php" md5="def79927b684ce697f09bee34e5d56eb">
 			<controller name="UserActivityController"/>
 		</file>
-		<file filename="controllers/UserAdminController.php" md5="902646f3af099130140cf6b3303f3653">
+		<file filename="controllers/UserAdminController.php" md5="a11be21e58c849bc48017b7d80d005a4">
 			<controller name="UserAdminController"/>
 		</file>
 		<file filename="controllers/UserController.php" md5="6ad363f7c70f9780d7fb5e78d445dc7b">
@@ -191,6 +191,7 @@
 		<upgrade from="2.5.2" to="2.5.3"/>
 		<upgrade from="2.5.3" to="2.5.4"/>
 		<upgrade from="2.5.4" to="2.5.5"/>
+		<upgrade from="2.5.5" to="2.5.6"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

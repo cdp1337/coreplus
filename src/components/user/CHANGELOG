@@ -1,3 +1,9 @@
+User 2.5.6
+
+	* [Bug] Fixed a bug on the activation logic.  It now does not send an email on deactivation.
+	* [Bug] Added the appropriate guest title for anonymous users in the activity.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 08 Jul 2013 12:05:11 -0400
+
 User 2.5.5
 
 	* Increased the "now" activity to the last 60 seconds instead of 30 seconds.

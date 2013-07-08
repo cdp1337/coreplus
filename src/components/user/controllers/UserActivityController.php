@@ -66,6 +66,8 @@ class UserActivityController extends Controller_2_1 {
 		$users = array();
 		$bots = array();
 
+		$guestname = \ConfigHandler::Get('/user/displayname/anonymous');
+
 		foreach($listings as $log){
 			if($log['type'] == 'GET'){
 				$data['performance']['get'] += $log['processing_time'];
@@ -99,11 +101,13 @@ class UserActivityController extends Controller_2_1 {
 			// The user agent information I want to know on a per-user basis, not a per-click basis.
 			else{
 				if(!isset($users[ $log['session_id'] ])){
+					$thisuser = User::Construct($log['user_id']);
+
 					$users[ $log['session_id'] ] = array(
 						'session'   => $log['session_id'],
 						'ip'        => $log['ip_addr'],
 						'user_id'   => $log['user_id'],
-						'username'  => User::Construct($log['user_id'])->getDisplayName(),
+						'username'  => ($thisuser ? $thisuser->getDisplayName() : $guestname),
 						'useragent' => $log['useragent'],
 						'lastpage'  => $log['request'],
 						//'type'      => $ua->type,
