@@ -3,6 +3,10 @@
 BASEDIR="$(readlink -f $(dirname $0)/..)"
 ROOTPDIR="$(readlink -f $(dirname $0)/../src)"
 
+# Where is PHPUnit at?
+EXEC="$(which phpunit)"
+#EXEC="$BASEDIR/vendor/phpunit.phar"
+
 
 OPTS="--colors"
 #OPTS="--debug --verbose"
@@ -13,12 +17,10 @@ function perform_test (){
 
 	echo "";
 	echo "##############################################";
-	echo "##  Testing $(basename $(dirname $TESTDIR))";
+	echo "##  Testing $TESTDIR";
 
-	phpunit $OPTS --bootstrap $BASEDIR/utilities/phpunit-loader.php $TESTDIR
+	"$EXEC" $OPTS --bootstrap "$BASEDIR/utilities/phpunit-loader.php" "$TESTDIR"
 }
-
-
 
 
 # If a specific component is requested, run the tests on only that location.
