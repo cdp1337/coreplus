@@ -17,9 +17,10 @@ namespace Core\Utilities\Changelog;
  */
 class Entry {
 
-	const TYPE_OTHER   = 'Change';
-	const TYPE_BUG     = 'Bug';
-	const TYPE_FEATURE = 'Feature';
+	const TYPE_OTHER       = 'Change';
+	const TYPE_BUG         = 'Bug';
+	const TYPE_FEATURE     = 'Feature';
+	const TYPE_PERFORMANCE = 'Performance';
 
 	private $_comment;
 
@@ -42,29 +43,49 @@ class Entry {
 		}
 
 		// First-lines of the entry may have some special keywords.
-		if(stripos($line, '[bug]') === 0){
-			$this->_type = self::TYPE_BUG;
-			$line = trim(substr($line, 5));
-		}
-		elseif(stripos($line, 'bug') === 0){
-			$this->_type = self::TYPE_BUG;
-			$line = trim(substr($line, 3));
-		}
-		elseif(stripos($line, 'fix') === 0){
-			$this->_type = self::TYPE_BUG;
-		}
-		elseif(stripos($line, 'added') === 0){
-			$this->_type = self::TYPE_FEATURE;
-		}
-		elseif(stripos($line, '[feature]') === 0){
-			$this->_type = self::TYPE_FEATURE;
-			$line = trim(substr($line, 9));
-		}
-		elseif(stripos($line, 'feature') === 0){
-			$this->_type = self::TYPE_FEATURE;
-			$line = trim(substr($line, 7));
+		$word1keywords = [
+			'[bug]'         => [ 'type' => self::TYPE_BUG,         'trim' => true  ],
+			'bug'           => [ 'type' => self::TYPE_BUG,         'trim' => true  ],
+			'fix'           => [ 'type' => self::TYPE_BUG,         'trim' => false ],
+			'added'         => [ 'type' => self::TYPE_FEATURE,     'trim' => false ],
+			'[feature]'     => [ 'type' => self::TYPE_FEATURE,     'trim' => true  ],
+			'feature'       => [ 'type' => self::TYPE_FEATURE,     'trim' => true  ],
+			'[performance]' => [ 'type' => self::TYPE_PERFORMANCE, 'trim' => true  ],
+			'performance'   => [ 'type' => self::TYPE_PERFORMANCE, 'trim' => true  ],
+			'perf '         => [ 'type' => self::TYPE_PERFORMANCE, 'trim' => true  ],
+		];
+
+		foreach($word1keywords as $word => $dat){
+			if(stripos($line, $word) === 0){
+				$this->_type = $dat['type'];
+				if($dat['trim']) $line = trim(substr($line, strlen($word)));
+				break;
+			}
 		}
 
+		if(!$this->_type){
+			$phrases = [
+				'fixes bug'   => self::TYPE_BUG,
+				'fix bug'     => self::TYPE_BUG,
+				'fixed bug'   => self::TYPE_BUG,
+				'bug #'       => self::TYPE_BUG,
+				'new feature' => self::TYPE_FEATURE,
+				'feature #'   => self::TYPE_FEATURE,
+			];
+
+			foreach($phrases as $word => $type){
+				if(stripos($line, $word) !== false){
+					$this->_type = $type;
+					break;
+				}
+			}
+		}
+
+
+		// Still empty?
+		if(!$this->_type){
+			$this->_type = self::TYPE_OTHER;
+		}
 		$this->_comment = $line;
 	}
 
@@ -115,26 +136,6 @@ class Entry {
 	 * @return string
 	 */
 	public function getType(){
-		if($this->_type == ''){
-			// And if the type isn't set already...
-			// This handles a more of a linguistic analysis approach, trying to decypher what the line says.
-			if(stripos($this->_comment, 'fixes bug') !== false){
-				$this->_type = self::TYPE_BUG;
-			}
-			elseif(stripos($this->_comment, 'fix bug') !== false){
-				$this->_type = self::TYPE_BUG;
-			}
-			elseif(stripos($this->_comment, 'fixed bug') !== false){
-				$this->_type = self::TYPE_BUG;
-			}
-			elseif(stripos($this->_comment, 'new feature') !== false){
-				$this->_type = self::TYPE_FEATURE;
-			}
-			else{
-				$this->_type = self::TYPE_OTHER;
-			}
-		}
-
 		return $this->_type;
 	}
 

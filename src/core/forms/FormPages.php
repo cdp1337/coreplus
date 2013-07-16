@@ -1,7 +1,29 @@
 <?php
+/**
+ * Class file for the several FormPage* classes that exist.
+ *
+ * @package Core\Forms
+ * @author Charlie Powell <charlie@eval.bz>
+ * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+ */
 
 /**
- * This needs to be a standard text input, but it needs to extend it due to some javascript that gets added.
+ * Class FormPageRewriteURLInput provides a text input with custom javascript to pull from the title and urlify it.
+ *
+ * @package Core\Forms
  */
 class FormPageRewriteURLInput extends FormTextInput{
 
@@ -9,6 +31,8 @@ class FormPageRewriteURLInput extends FormTextInput{
 
 /**
  * Input type for the theme selection input.  Only really useful from within the PageModel.
+ *
+ * @package Core\Forms
  */
 class FormPageThemeSelectInput extends FormSelectInput{
 	public function render(){
@@ -42,11 +66,16 @@ class FormPageThemeSelectInput extends FormSelectInput{
 
 /**
  * Input type for the page selection input.  Only really useful from within the PageModel.
+ *
+ * @package Core\Forms
  */
 class FormPagePageSelectInput extends FormSelectInput{
 	public function __construct($atts = null){
 
 		parent::__construct($atts);
+	}
+
+	public function render(){
 
 		if(!$this->get('templatename')){
 			throw new Exception('Unable to render pageselectinput element without templatename set!');
@@ -84,9 +113,16 @@ class FormPagePageSelectInput extends FormSelectInput{
 
 		$options = array_merge(array('' => '-- Default Page Template --'), $matches);
 		$this->set('options', $options);
+
+		return parent::render();
 	}
 }
 
+/**
+ * Class FormPageParentSelectInput provides a select input with the list of selectable parent URLs in the system.
+ *
+ * @package Core\Forms
+ */
 class FormPageParentSelectInput extends FormSelectInput{
 
 	public function setValue($value){
@@ -106,7 +142,14 @@ class FormPageParentSelectInput extends FormSelectInput{
 	}
 }
 
-
+/**
+ * Class FormPageInsertables
+ *
+ * @deprecated 2013.07.11 cpowell
+ *             This has been migrated to the PageModel system.  Please use that if available.
+ *
+ * @package Core\Forms
+ */
 class FormPageInsertables extends FormGroup {
 
 	/**
@@ -117,6 +160,7 @@ class FormPageInsertables extends FormGroup {
 	private $_selector;
 
 	public function  __construct($atts = null) {
+		error_log(__CLASS__ . ' is candidate for removal, please change this code!', E_USER_DEPRECATED);
 
 		// The inbound options may vary slightly.
 		if(isset($atts['model']) && $atts['model'] instanceof PageModel){
@@ -312,10 +356,14 @@ class FormPageInsertables extends FormGroup {
  * Provides inputs for editing:
  * rewriteurl, parenturl, theme template and page template
  * along with page insertables.
+ *
+ * @deprecated 2013.07.11 cpowell - Candidate for immediate removal.
  */
 class FormPageMeta extends FormGroup {
 
 	public function  __construct($atts = null) {
+		error_log(__CLASS__ . ' is candidate for immediate removal, please change this code!', E_USER_DEPRECATED);
+
 		// Defaults
 		$this->_attributes['name']    = 'page';
 

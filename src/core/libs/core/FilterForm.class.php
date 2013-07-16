@@ -573,6 +573,22 @@ class FilterForm {
 				}
 			}
 
+			$value = $el->get('value');
+
+			// Was there a prefix and/or suffix requested?
+			if($el->get('linkvalueprefix')){
+				$value = $el->get('linkvalueprefix') . $value;
+			}
+			if($el->get('linkvaluesuffix')){
+				$value = $value . $el->get('linkvaluesuffix');
+			}
+
+			// If this link is a date object, convert a date string to its unix timestamp representation.
+			if($el instanceof FormDateInput){
+				$value = strtotime($value);
+			}
+
+
 			if($el->get('linkname')){
 				$name = $el->get('linkname');
 			}
@@ -583,13 +599,13 @@ class FilterForm {
 				case FilterForm::LINK_TYPE_GE:
 				case FilterForm::LINK_TYPE_LT:
 				case FilterForm::LINK_TYPE_LE:
-					$factory->where($name . $el->get('link') . $el->get('value'));
+					$factory->where($name . $el->get('link') . $value);
 					break;
 				case FilterForm::LINK_TYPE_STARTSWITH:
-					$factory->where($name . ' LIKE ' . $el->get('value') . '%');
+					$factory->where($name . ' LIKE ' . $value . '%');
 					break;
 				case FilterForm::LINK_TYPE_CONTAINS:
-					$factory->where($name . ' LIKE %' . $el->get('value') . '%');
+					$factory->where($name . ' LIKE %' . $value . '%');
 					break;
 			}
 		}

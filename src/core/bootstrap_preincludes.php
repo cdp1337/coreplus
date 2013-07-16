@@ -44,6 +44,9 @@ require_once(ROOT_PDIR . 'core/libs/core/Time.class.php');
 
 require_once(ROOT_PDIR . 'core/models/ComponentModel.class.php');
 require_once(ROOT_PDIR . 'core/models/PageModel.class.php');
+require_once(ROOT_PDIR . 'core/models/SessionModel.class.php');
+require_once(ROOT_PDIR . 'core/models/PageMetaModel.class.php');
+require_once(ROOT_PDIR . 'core/models/Insertable.class.php');
 
 /** @deprecated 2011.11 */
 require_once(ROOT_PDIR . 'core/libs/core/Component.class.php');
@@ -61,6 +64,7 @@ require_once(ROOT_PDIR . 'core/libs/core/filestore/Factory.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/Directory_Backend.interface.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/FileContentFactory.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/Contents.interface.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/contents/ContentXML.php');
 //require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/file_awss3.backend.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/FileLocal.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/FileFTP.php');
@@ -77,3 +81,5 @@ require_once(ROOT_PDIR . 'core/libs/cachecore/backends/cachecore.class.php');
 require_once(ROOT_PDIR . 'core/libs/cachecore/backends/cachefile.class.php');
 require_once(ROOT_PDIR . 'core/libs/cachecore/Cache.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/ViewControl.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/ViewMeta.class.php');
+

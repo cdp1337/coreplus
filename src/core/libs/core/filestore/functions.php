@@ -253,7 +253,7 @@ function resolve_contents_object(File $file){
 	// In core, even if it doesn't, it should be able to locate the file dynamically.
 	// If it can't, then maybe core isn't available yet or this script has been migrated to a different platform.
 	// Did you migrate this script to a different platform????
-	if(!class_exists($class)){
+	if(!class_exists($resolved)){
 		// Hmm.... well
 		if(file_exists(ROOT_PDIR . 'core/libs/core/filestore/contents/' . $class . '.php')){
 			require_once(ROOT_PDIR . 'core/libs/core/filestore/contents/' . $class . '.php');

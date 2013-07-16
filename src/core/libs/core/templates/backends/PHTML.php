@@ -161,4 +161,27 @@ class PHTML implements Templates\TemplateInterface {
 	public function hasWidgetAreas() {
 		return false;
 	}
+
+	/**
+	 * Get the list of optional stylesheets in this template.
+	 *
+	 * The returned array will be an array of the attributes on the declaration, with at minimum 'src' and 'title'.
+	 *
+	 * @return array
+	 */
+	public function getOptionalStylesheets() {
+		// TODO: Implement getOptionalStylesheets() method.
+	}
+
+	/**
+	 * Get an array of the insertables in this template.
+	 *
+	 * Should have "name", "type", "title", "value", and "description" in each array.
+	 * Should also have any formelement-specific key necessary for operation, ie: "basedir", "accept", etc.
+	 *
+	 * @return array
+	 */
+	public function getInsertables() {
+		// TODO: Implement getInsertables() method.
+	}
 }

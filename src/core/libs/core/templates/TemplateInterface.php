@@ -15,7 +15,7 @@ interface TemplateInterface {
 	 *
 	 * @param $template string Fully resolved filename of the template to render
 	 * @return string HTML
-	 * @throws TemplateException
+	 * @throws Exception
 	 */
 	public function fetch($template = null);
 
@@ -24,7 +24,7 @@ interface TemplateInterface {
 	 *
 	 * @param $template string Fully resolved filename of the template to render
 	 * @return void
-	 * @throws TemplateException
+	 * @throws Exception
 	 */
 	public function render($template = null);
 
@@ -72,9 +72,28 @@ interface TemplateInterface {
 	public function hasOptionalStylesheets();
 
 	/**
+	 * Get the list of optional stylesheets in this template.
+	 *
+	 * The returned array will be an array of the attributes on the declaration, with at minimum 'src' and 'title'.
+	 *
+	 * @return array
+	 */
+	public function getOptionalStylesheets();
+
+	/**
 	 * Scan through this template file and see if it has widgetareas contained within.
 	 *
 	 * @return boolean
 	 */
 	public function hasWidgetAreas();
+
+	/**
+	 * Get an array of the insertables in this template.
+	 *
+	 * Should have "name", "type", "title", "value", and "description" in each array.
+	 * Should also have any formelement-specific key necessary for operation, ie: "basedir", "accept", etc.
+	 *
+	 * @return array
+	 */
+	public function getInsertables();
 }

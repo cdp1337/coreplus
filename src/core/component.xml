@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.9" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.0" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -36,16 +36,17 @@
 	</hooks>
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
 	<includes>
-		<include filename="core/functions/Core.functions.php"/>
+		<!--<include filename="core/functions/Core.functions.php"/>
+		-->
 	</includes>
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="c77dce901c6ec4f793b8f39c21d96f6a"/>
-		<file filename="core/bootstrap.php" md5="8cc1207576fa8bcb00ad0d02e97c68e6"/>
-		<file filename="core/bootstrap_postincludes.php" md5="e877be1a1b418440d796ffdc3a622bba"/>
+		<file filename="core/CHANGELOG" md5="44dffdc142ae8f70f91a68d89a23f4f5"/>
+		<file filename="core/bootstrap.php" md5="576c124273e2eb2a2a392d1b7f6835ed"/>
+		<file filename="core/bootstrap_postincludes.php" md5="129d5a6cab56e728c99eb116c2786051"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
-		<file filename="core/bootstrap_preincludes.php" md5="d3778843206ed4ab907da2f6e9e4777a"/>
+		<file filename="core/bootstrap_preincludes.php" md5="dcdd0b6bbd323c923d0f654d35f15713"/>
 		<file filename="core/controllers/AdminController.php" md5="8a16e9609413b3871795f9450051116b">
 			<controller name="AdminController"/>
 		</file>
@@ -61,41 +62,42 @@
 		<file filename="core/controllers/FileController.class.php" md5="f94d9e4da1121c8109729ff987178d67">
 			<controller name="FileController"/>
 		</file>
-		<file filename="core/controllers/FormController.class.php" md5="c1369ab19bec8f1562bf600070be5951">
+		<file filename="core/controllers/FormController.class.php" md5="fedc3ffbf74c496785616f1ec0329063">
 			<controller name="FormController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="270a7376ba8381bb8dfba5a0f71970b0">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="91a7f7b3d44c12c725b1f96fb79941d8">
+		<file filename="core/controllers/UpdaterController.class.php" md5="2267c8e1529de6b544f88577efcf8beb">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/WidgetController.class.php" md5="6ba2f7ad0c4835f4a603dfdd59756b2e">
 			<class name="WidgetController"/>
 		</file>
-		<file filename="core/forms/FormCheckboxInput.class.php" md5="d7dcf76c91d94d46ad55f9ce4551564e">
+		<file filename="core/forms/FormCheckboxInput.class.php" md5="1b29363a2e46f13251ea8524f61067ea">
 			<class name="FormCheckboxInput"/>
 		</file>
-		<file filename="core/forms/FormCheckboxesInput.class.php" md5="7b11d9b50cb06a03d4d4109b9bc02f08">
+		<file filename="core/forms/FormCheckboxesInput.class.php" md5="6cae0358beaa5e7394885386afbd703f">
 			<class name="FormCheckboxesInput"/>
 		</file>
-		<file filename="core/forms/FormDateInput.php" md5="1ef0e1059941b0795d4bd02700d5c18c">
+		<file filename="core/forms/FormDateInput.php" md5="71176d5593c2bdb46767e410b26841fd">
 			<class name="FormDateInput"/>
 		</file>
-		<file filename="core/forms/FormDateTimeInput.php" md5="abfb7380b014ed65776b2ae5ec68e25c">
+		<file filename="core/forms/FormDateTimeInput.php" md5="b0a9207e4266aaff63fc700528ce5a4b">
 			<class name="FormDateTimeInput"/>
 		</file>
-		<file filename="core/forms/FormFileInput.class.php" md5="4a597aa9a556684188f592e41d4f8468">
+		<file filename="core/forms/FormFileInput.class.php" md5="2b33c179f210bda07e3c09c85ee08b90">
 			<class name="FormFileInput"/>
 		</file>
-		<file filename="core/forms/FormHiddenInput.class.php" md5="b165e1679347782c30492bb4b320ee5c">
+		<file filename="core/forms/FormHiddenInput.class.php" md5="649925954aa070d9637657f4016dd5b7">
 			<class name="FormHiddenInput"/>
 		</file>
-		<file filename="core/forms/FormPageMetas.php" md5="07c9225cf503d0e72e5d69015cae4e4d">
+		<file filename="core/forms/FormPageMetas.php" md5="40e02496d7f517b0b489e0e1f967ff2f">
 			<class name="FormPageMetasInput"/>
+			<class name="FormPageMetaAuthorInput"/>
 			<class name="FormPageMetaKeywordsInput"/>
 		</file>
-		<file filename="core/forms/FormPages.php" md5="7adee6ac46911b9d4c312b5edf220dfa">
+		<file filename="core/forms/FormPages.php" md5="da0485c8ae3598fd58c008bc63706664">
 			<class name="FormPageRewriteURLInput"/>
 			<class name="FormPageThemeSelectInput"/>
 			<class name="FormPagePageSelectInput"/>
@@ -103,37 +105,40 @@
 			<class name="FormPageInsertables"/>
 			<class name="FormPageMeta"/>
 		</file>
-		<file filename="core/forms/FormPasswordInput.class.php" md5="948596510dac1aca25422f5d408d4b21">
+		<file filename="core/forms/FormPasswordInput.class.php" md5="5d45b3e984591e0e7355b96c13785107">
 			<class name="FormPasswordInput"/>
 		</file>
-		<file filename="core/forms/FormRadioInput.class.php" md5="79bd0049d599f08044933166082dfc05">
+		<file filename="core/forms/FormRadioInput.class.php" md5="d2d194ae2a1accf1df31d9025f564878">
 			<class name="FormRadioInput"/>
 		</file>
-		<file filename="core/forms/FormResetInput.class.php" md5="b1a15713c45accf8bae2f224df3f92a4">
+		<file filename="core/forms/FormResetInput.class.php" md5="2d21917799def765f36c8ddf3c4cb509">
 			<class name="FormResetInput"/>
 		</file>
-		<file filename="core/forms/FormSelectInput.class.php" md5="e539843aa341e69f26fae865407de997">
+		<file filename="core/forms/FormSelectInput.class.php" md5="5ef8cad370c429676b83a98943aa25b5">
 			<class name="FormSelectInput"/>
 		</file>
-		<file filename="core/forms/FormStateInput.class.php" md5="ccf9f13c7031b4d0dace212d44151d1c">
+		<file filename="core/forms/FormStateInput.class.php" md5="72c8810617b6f58346c68790f386b0c0">
 			<class name="FormStateInput"/>
 		</file>
-		<file filename="core/forms/FormSubmitInput.class.php" md5="a8c7075479f162010671026ee798c19a">
+		<file filename="core/forms/FormSubmitInput.class.php" md5="913b78385abb979e6fb7fb09b95423b0">
 			<class name="FormSubmitInput"/>
 		</file>
-		<file filename="core/forms/FormSystemInput.class.php" md5="df27d1027b16ed038d0d12c0c8e8b9cd">
+		<file filename="core/forms/FormSystemInput.class.php" md5="755c8f0daa6c5cba7e14b3d41e042949">
 			<class name="FormSystemInput"/>
 		</file>
-		<file filename="core/forms/FormTextInput.class.php" md5="15ded6f1cefc23ebb6de0c765ac4d85f">
+		<file filename="core/forms/FormTabsGroup.php" md5="84bd435fea5fc8c16e7fc4b080a8b243">
+			<class name="FormTabsGroup"/>
+		</file>
+		<file filename="core/forms/FormTextInput.class.php" md5="5befb88fa76dad078373d83d487ac5ba">
 			<class name="FormTextInput"/>
 		</file>
-		<file filename="core/forms/FormTextareaInput.class.php" md5="b8156ab8b0059f6e032acdb3f69bfc1f">
+		<file filename="core/forms/FormTextareaInput.class.php" md5="6cb2a00386d30b9fcf02940e77379b37">
 			<class name="FormTextareaInput"/>
 		</file>
-		<file filename="core/forms/FormTimeInput.class.php" md5="080383e4dade461c3c7ac1d9e504ed28">
+		<file filename="core/forms/FormTimeInput.class.php" md5="5f8e43a929efc5c9c3aadfccc7b73396">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="42abbc92cf01943bf40bd8d8144fb0cd"/>
+		<file filename="core/functions/Core.functions.php" md5="4de31e1f91b66c08879f80676461c2c9"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="94999059abc6ed854620c39d952814f3">
 			<class name="RewriteMapHelper"/>
 		</file>
@@ -426,6 +431,9 @@
 		<file filename="core/libs/cachecore/backends/icachecore.interface.php" md5="38c793c1d311f17e7a9e7442a236e981">
 			<interface name="ICacheCore"/>
 		</file>
+		<file filename="core/libs/core/BaconIpsumGenerator.class.php" md5="86b32e7d145971143b73024e714ffd29">
+			<class name="BaconIpsumGenerator"/>
+		</file>
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="84d811942b1445934f0de5e817296aa2">
 			<class name="CAEDirectoryIterator"/>
 		</file>
@@ -441,7 +449,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="02aba428bbcacffef0dd1b3ccecf8369">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="10b610795a78dd83a50413097ff08a7d">
+		<file filename="core/libs/core/Component_2_1.php" md5="9987dedd8c083143c7dabb6b8da692b9">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="78088e9905213826b011aa0f8ad386f2">
@@ -453,7 +461,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="5d652ff290213340a6517f2743e40cb3">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="e8ac6455a549953e5e36f15b27cd374f">
+		<file filename="core/libs/core/Core.class.php" md5="bd5bbdfd64137ea29e845313e1eb4178">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -469,10 +477,10 @@
 		<file filename="core/libs/core/Email.class.php" md5="9328c2f5a07c82e127f2296d27424a39">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/FilterForm.class.php" md5="aebe713fe23e0decb8029a6ff17ce6e6">
+		<file filename="core/libs/core/FilterForm.class.php" md5="11d29eb984ae2de7e0b03d3abc503eef">
 			<class name="FilterForm"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="29c95f8f7abfdff1210bf427dbaee164">
+		<file filename="core/libs/core/Form.class.php" md5="b3716e1a75a442b1143ad96f51a7898d">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -543,7 +551,7 @@
 			<class name="Widget"/>
 			<class name="WidgetException"/>
 		</file>
-		<file filename="core/libs/core/Widget_2_1.class.php" md5="7c6b9f4b89f81245ad7d211d4a17e5ab">
+		<file filename="core/libs/core/Widget_2_1.class.php" md5="bf1bc954033dfcd644c78cb3f00f6a16">
 			<class name="Widget_2_1"/>
 			<class name="WidgetRequest"/>
 		</file>
@@ -610,29 +618,29 @@
 		<file filename="core/libs/core/filestore/contents/ContentZIP.php" md5="f5bdfebfd3dffcccc13505726558efe3">
 			<class name="Core\Filestore\Contents\ContentZIP"/>
 		</file>
-		<file filename="core/libs/core/filestore/functions.php" md5="85f61569c9f319bdc5ba2d39864f7819"/>
+		<file filename="core/libs/core/filestore/functions.php" md5="3104cb946f6bb5cb887c9af1932983ca"/>
 		<file filename="core/libs/core/templates/Exception.php" md5="9d116f5547824aa600334c0ddcca2f08">
 			<class name="Core\Templates\Exception"/>
 		</file>
 		<file filename="core/libs/core/templates/Template.php" md5="40e52be96e149a6a0b4778fdb4fe2c33">
 			<class name="Core\Templates\Template"/>
 		</file>
-		<file filename="core/libs/core/templates/TemplateInterface.php" md5="e4f82cbbf2bcce2ad7b1968757185ffb">
+		<file filename="core/libs/core/templates/TemplateInterface.php" md5="5fe81fa7ae9bc21bcaab076dde8b0f7e">
 			<interface name="Core\Templates\TemplateInterface"/>
 		</file>
-		<file filename="core/libs/core/templates/backends/PHTML.php" md5="15b60091f03a647ddf5ac86891b449e2">
+		<file filename="core/libs/core/templates/backends/PHTML.php" md5="27c222cda85d9b763a3eb2e72cfe623b">
 			<class name="Core\Templates\Backends\PHTML"/>
 		</file>
-		<file filename="core/libs/core/templates/backends/Smarty.php" md5="dab0ec86bef19d3b836e4853f18ae931">
+		<file filename="core/libs/core/templates/backends/Smarty.php" md5="dbf517c6da7d299a2bd3062a1c7c7700">
 			<class name="Core\Templates\Backends\Smarty"/>
 		</file>
-		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="b18792bcce6ff5d68c9ec9ec9dfc5aaf">
+		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="91a74bed7dc64095e9e941acd87b57ec">
 			<class name="Core\Utilities\Changelog\Entry"/>
 		</file>
 		<file filename="core/libs/core/utilities/changelog/Parser.php" md5="5d3226e46be3bb7524423724ed0a5256">
 			<class name="Core\Utilities\Changelog\Parser"/>
 		</file>
-		<file filename="core/libs/core/utilities/changelog/Section.php" md5="6f105d2c37aac504e77dd3ac44597bc1">
+		<file filename="core/libs/core/utilities/changelog/Section.php" md5="2b22161c955d6fb0e38f9672e90cbfd8">
 			<class name="Core\Utilities\Changelog\Section"/>
 		</file>
 		<file filename="core/libs/core/utilities/logger/functions.php" md5="616d3b7797927dc6e455cac04cffed11"/>
@@ -661,7 +669,7 @@
 		<file filename="core/libs/datamodel/backends/cassandra.backend.php" md5="e02b68f59cf50bf21f1bb533a2e59ea1">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="84d46e3f61e83df667dac67b40ae5863">
+		<file filename="core/libs/datamodel/backends/mysqli.backend.php" md5="8a1c7a9e2ab5a3290252a83af3c85a2d">
 			<class name="DMI_mysqli_backend"/>
 			<class name="MySQLi_Schema"/>
 			<class name="MySQLi_Schema_Column"/>
@@ -1066,7 +1074,7 @@
 		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="5e3e19afb2a649beece4b2eeea62ac48"/>
 		<file filename="core/libs/smarty-plugins/block.css.php" md5="5967ccd081d862e1e73a407e115436a2"/>
-		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="7f4423a6253efe1d1ef9c730ce2aac4c"/>
+		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="58e2f94fd8bd60611ea2a38641eff7ca"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="84d16e1ba8fb38b5c8be6a1ca960ab43"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="85f908c0a9fa616aca30a0b94afeae18"/>
 		<file filename="core/libs/smarty-plugins/function.controls.php" md5="6d27ea6f00b10982d9e7741e42be46e5"/>
@@ -1077,7 +1085,7 @@
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="d8daf3f492d0c8a71e7b8ccf0cd70cc9"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="9ff0428278228b374379b3f08b84db52"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="4f0f7e198dc73658c361edc8d0369365"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="51fdf407e7013056748847758020af2e"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="4ca6c4003df95c2b288ba0cd46cb55d4"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/smarty/README" md5="2280709acce0bf54217c12eff7932997"/>
 		<file filename="core/libs/smarty/SMARTY_2_BC_NOTES.txt" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
@@ -1395,7 +1403,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="d316b0575e4dc13d4ba71ada8a302f4c">
+		<file filename="core/models/PageModel.class.php" md5="31708071439d0170f63c11754c3b53d0">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="f9c51e50c963b6041526bf55f6234f26">
@@ -1410,7 +1418,7 @@
 		<file filename="core/models/UpdateSiteModel.class.php" md5="1510854c1383ce490f7d66ffbc823888">
 			<class name="UpdateSiteModel"/>
 		</file>
-		<file filename="core/models/WidgetInstanceModel.class.php" md5="00528251293b26c12e0974ff94f8a09c">
+		<file filename="core/models/WidgetInstanceModel.class.php" md5="cbee87490bb7bcff13d971e7b485fcb5">
 			<class name="WidgetInstanceModel"/>
 		</file>
 		<file filename="core/models/WidgetModel.class.php" md5="e2c5f6408e584083c47c35d248bc03b8">
@@ -1420,6 +1428,7 @@
 		<file filename="core/patches/phpmailer-coreplus.patch" md5="1ff93e5e72c7a2f4f47cb4e2f1fd3d64"/>
 		<file filename="core/upgrades/240_to_241_pagemetas.php" md5="7887144c4964ca4e2ea91dca5fc3bb40"/>
 		<file filename="core/upgrades/242_to_243_page_selectable.php" md5="a00104bc754034508aa50efb4b61a183"/>
+		<file filename="core/upgrades/258_to_260_pagemetasandinsertables.php" md5="610ccb1a0cfea957e86e9fd0584ece8a"/>
 		<file filename="core/widgets/AdminMenuWidget.php" md5="389851cdb5c38e5511d4653079101c3f">
 			<class name="AdminMenuWidget"/>
 		</file>
@@ -1431,7 +1440,7 @@
 		</file>
 		<file filename="htaccess.ant" md5="0bf209cd00d6a90d884a584d28445d5f"/>
 		<file filename="htaccess.ex" md5="6e335eb0574ab61fca2dea4c2517a372"/>
-		<file filename="index.php" md5="6d087b205ab2a4bda77c3a7eab7ca1c3"/>
+		<file filename="index.php" md5="6eb42bcdfdbbbd72f23e8d1488b0f619"/>
 		<file filename="install/InstallPage.class.php" md5="908d4058af1a52767fc85ce03a5f0de3">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1490,15 +1499,16 @@
 		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="db78818d22acfd0bf4388bdbad4f0325"/>
 		<file filename="core/templates/forms/elements/button.tpl" md5="04458c32e1d992bba0255d8d1a2e8dee"/>
 		<file filename="core/templates/forms/elements/file.tpl" md5="90e30e0242238cee016d8b30571e9ac1"/>
-		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="2d6bc58a756d24fbf28168297a9a8c53"/>
+		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="d58931121076813e0fed4cdb6f14f0c4"/>
 		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="5f6f0a4d4732e1555f7afe73297f0717"/>
 		<file filename="core/templates/forms/elements/formdateinput.tpl" md5="bc5a17edff3be9f0d9dd4710b57460a8"/>
 		<file filename="core/templates/forms/elements/formdatetimeinput.tpl" md5="0dab7e1348963b014876b638d7f162af"/>
 		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="9d1ac83e48d182b441ec6f4244199ed3"/>
 		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="b253627a7cac7c2db9c53160272e103c"/>
+		<file filename="core/templates/forms/elements/formpagemetaauthorinput.tpl" md5="20b6fa4ce125de53802deff937ba89d0"/>
 		<file filename="core/templates/forms/elements/formpagemetakeywordsinput.tpl" md5="3cb29890d687cbb42918d86e9d75151f"/>
 		<file filename="core/templates/forms/elements/formpagemetasinput.tpl" md5="04851f883c681032c2fd96c80714b434"/>
-		<file filename="core/templates/forms/elements/formpagepageselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
+		<file filename="core/templates/forms/elements/formpagepageselectinput.tpl" md5="975bb4f2930d56a63169a371e1df884d"/>
 		<file filename="core/templates/forms/elements/formpageparentselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formpagerewriteurlinput.tpl" md5="58c0ffa26002427aa745b8b57c4eceae"/>
 		<file filename="core/templates/forms/elements/formpagethemeselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
@@ -1522,7 +1532,8 @@
 		<file filename="core/templates/forms/form.tpl" md5="2910e3a5d1cc14ff87bfea0a15c927ce"/>
 		<file filename="core/templates/forms/groups/default.tpl" md5="edbebf4924beac32a9f98f97cbfa23d2"/>
 		<file filename="core/templates/forms/groups/pageinsertables.tpl" md5="be0fed93de5310e26a207ffcecd15547"/>
-		<file filename="core/templates/forms/groups/pagemetas.tpl" md5="176370cfa2f3b27406b5ffeb8d40b8c5"/>
+		<file filename="core/templates/forms/groups/pagemetas.tpl" md5="f8def8d34a18483bb59dddba141e5645"/>
+		<file filename="core/templates/forms/groups/tabs.tpl" md5="c3cba7b0ef3bb0af68e03b048495bc4b"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="645d3b7a407c513622e9f6bc2590b7c9"/>
 		<file filename="core/templates/pages/admin/config.tpl" md5="e24bea097690df9b0a70f074f4803371"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
@@ -1761,6 +1772,11 @@
 		<upgrade from="2.5.6" to="2.5.7"/>
 		<upgrade from="2.5.7" to="2.5.8"/>
 		<upgrade from="2.5.8" to="2.5.9"/>
+		<upgrade from="2.5.9" to="2.6.0">
+			<phpfileinclude>
+				core/upgrades/258_to_260_pagemetasandinsertables.php
+			</phpfileinclude>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
@@ -1796,6 +1812,7 @@
 		<author name="David JEAN LOUIS" email="izimobil@gmail.com"/>
 		<author name="David JEAN" email="izimobil@gmail.com"/>
 		<author name="Naitik Shah" email="naitik@facebook.com"/>
+		<author name="Pete Nelson" email="@GunGeekATX"/>
 	</authors>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">

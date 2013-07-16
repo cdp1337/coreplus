@@ -135,15 +135,19 @@ class Section {
 	public function fetchFormatted(){
 		$out = $this->_name . ' ' . $this->_version . "\n\n";
 
-		$bugs = [];
+		$bugs     = [];
+		$perfs    = [];
 		$features = [];
-		$other = [];
+		$other    = [];
 
 		// First for sortting them and putting them in the right category.
 		foreach($this->_entries as $e){
 			switch($e->getType()){
 				case Entry::TYPE_BUG:
 					$bugs[] = $e->getLineFormatted();
+					break;
+				case Entry::TYPE_PERFORMANCE:
+					$perfs[] = $e->getLineFormatted();
 					break;
 				case Entry::TYPE_FEATURE:
 					$features[] = $e->getLineFormatted();
@@ -154,8 +158,8 @@ class Section {
 			}
 		}
 
-		// Because I want bugs, then features, then other.
-		foreach(array_merge($bugs, $features, $other) as $line){
+		// Because I want bugs, then performance notes, then features, then other.
+		foreach(array_merge($bugs, $perfs, $features, $other) as $line){
 			$out .= $line . "\n";
 		}
 

@@ -21,7 +21,6 @@ class RewriteMapModel extends Model {
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'null' => false,
-			'validation' => array('this', 'validateRewriteURL'),
 			'form' => array(
 				'title' => 'Page URL',
 				'type' => 'pagerewriteurl',

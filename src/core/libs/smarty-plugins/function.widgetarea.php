@@ -31,6 +31,8 @@ function smarty_function_widgetarea($params, $template) {
 	$body = '';
 	$name = $params['name'];
 	$page = $template->template_resource;
+	// May provide metadata useful for the called widget.... maybe.
+	$installable = (isset($params['installable'])) ? $params['installable'] : null;
 
 	// I need to resolve the page template down to the base version in order for the lookup to work.
 	foreach(Core\Templates\Template::GetPaths() as $base){
@@ -75,10 +77,14 @@ function smarty_function_widgetarea($params, $template) {
 
 
 	foreach ($factory->get() as $wi) {
+		/** @var $wi WidgetInstanceModel */
 		// User cannot access this widget? Don't display it...
 		if(!\Core\user()) continue;
 		if (!\Core\user()->checkAccess($wi->get('access'))) continue;
 
+		if($installable){
+			$wi->set('installable', $installable);
+		}
 		$view = $wi->execute();
 
 		// Some widgets may return simply a blank string.  Those should just be ignored.

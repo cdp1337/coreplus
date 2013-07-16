@@ -23,13 +23,9 @@
 class PageModel extends Model {
 
 	public static $Schema = array(
-		'parenturl' => array(
-			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 128,
-			'null' => true,
-			'formtype' => 'pageparentselect',
-			'formtitle' => 'Parent Page'
-		),
+		// 2013.07.10 cpowell
+		// This has been moved to the beginning of the model so that forms that are built off it will
+		// have the title and the corresponding basic data at the top of the list.
 		'title' => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
@@ -38,7 +34,21 @@ class PageModel extends Model {
 			'null'      => true,
 			'form'      => array(
 				'type' => 'text',
-				'description' => 'Every page needs a title to accompany it, this should be short but meaningful.'
+				'description' => 'Every page needs a title to accompany it, this should be short but meaningful.',
+				'group' => 'Basic',
+				'grouptype' => 'tabs',
+			),
+		),
+		'parenturl' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'null' => true,
+			'form' => array(
+				'type' => 'pageparentselect',
+				'title' => 'Parent Page',
+				'description' => 'The parent this page will appear under in the site breadcrumbs and structure.',
+				'group' => 'Meta Information & URL (SEO)',
+				'grouptype' => 'tabs',
 			),
 		),
 		'site' => array(
@@ -52,7 +62,9 @@ class PageModel extends Model {
 			'maxlength' => 128,
 			'required' => true,
 			'null' => false,
-			'form' => array('type' => 'system'),
+			'form' => array(
+				'type' => 'system',
+			),
 		),
 		'rewriteurl' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -63,6 +75,8 @@ class PageModel extends Model {
 				'title' => 'Page URL',
 				'type' => 'pagerewriteurl',
 				'description' => 'Starts with a "/", omit the root web dir.',
+				'group' => 'Meta Information & URL (SEO)',
+				'grouptype' => 'tabs',
 			),
 		),
 		'theme_template' => array(
@@ -74,7 +88,9 @@ class PageModel extends Model {
 			'form' => array(
 				'type' => 'pagethemeselect',
 				'title' => 'Theme Skin',
-				'description' => 'This defines the master theme skin that will be used on this page.'
+				'description' => 'This defines the master theme skin that will be used on this page.',
+				'group' => 'Access & Advanced',
+				'grouptype' => 'tabs',
 			)
 		),
 		'page_template' => array(
@@ -84,8 +100,10 @@ class PageModel extends Model {
 			'null' => true,
 			'comment' => 'Allows the specific page template to be overridden.',
 			'form' => array(
-				'type' => 'disabled',
+				'type' => 'pagepageselect',
 				'title' => 'Alternative Page Template',
+				'group' => 'Basic',
+				'grouptype' => 'tabs',
 			)
 		),
 		'access' => array(
@@ -94,8 +112,12 @@ class PageModel extends Model {
 			'comment' => 'Access string of the page',
 			'null' => false,
 			'default' => '*',
-			'formtype' => 'access',
-			'formtitle' => 'Access Permissions',
+			'form' => array(
+				'type' => 'access',
+				'title' => 'Access Permissions',
+				'group' => 'Access & Advanced',
+				'grouptype' => 'tabs',
+			),
 		),
 		'fuzzy' => array(
 			'type' => Model::ATT_TYPE_BOOL,
@@ -186,6 +208,10 @@ class PageModel extends Model {
 				'link' => Model::LINK_HASMANY,
 				'on' => array('site' => 'site', 'baseurl' => 'baseurl'),
 			),
+			'RewriteMap' => array(
+				'link' => Model::LINK_HASMANY,
+				'on' => array('site' => 'site', 'baseurl' => 'baseurl', 'fuzzy' => 'fuzzy'),
+			)
 		);
 
 		// This system now has a combined primary key.
@@ -364,6 +390,52 @@ class PageModel extends Model {
 	}
 
 	/**
+	 * Get an array of the metadata for the metadata.
+	 * This is useful for constructing form elements for a given page.
+	 *
+	 * @return array
+	 */
+	public function getMetasArray() {
+
+		$fullmetas = array(
+			// The SEO title.  This isn't quite a meta tag, but part of that system regardless, so might as well.
+			'title' => array(
+				'title'       => 'Search-Optimized Title',
+				'description' => 'If a value is entered here, the &lt;title&gt; tag of the page will be replaced with this value.  Useful for making the page more indexable by search bots.',
+				'type'        => 'text',
+				'value'       => (($meta = $this->getMeta('title')) ? $meta->get('meta_value_title') : null),
+			),
+			// Author
+			'author' => array(
+				'title'       => 'Author',
+				'description' => 'Completely optional, but feel free to include it if relevant',
+				'type'        => 'pagemetaauthor',
+				'value'       => (($meta = $this->getMeta('author')) ? $meta->get('meta_value_title') : null),
+			),
+			// The author id
+			'authorid' => array(
+				'type'        => 'hidden',
+				'value'       => (($meta = $this->getMeta('author')) ? $meta->get('meta_value') : null),
+			),
+			// Keywords, (the human friendly text of them)
+			'keywords' => array(
+				'title'       => 'Keywords',
+				'description' => 'Provides taxonomy data for this page, separate different keywords with a comma.',
+				'type'        => 'pagemetakeywords',
+				'model'       => $this,
+			),
+			'description' => array(
+				'title'       => 'Description',
+				'description' => 'Text that displays on search engine and social network preview links',
+				'type'        => 'textarea',
+				'value'       => (($meta = $this->getMeta('description')) ? $meta->get('meta_value_title') : null),
+			)
+		);
+
+		return $fullmetas;
+	}
+
+	/**
 	 * Get a specific meta tag, or null if it doesn't exist.
 	 *
 	 * There are a couple exceptions that will return an array of results.  Currently it is simply keywords.
@@ -507,12 +579,141 @@ class PageModel extends Model {
 
 			// Doesn't exist?
 			if($value){
-				$meta = new PageMetaModel($this->get('baseurl'), $name, '');
+				$meta = new PageMetaModel($this->get('site'), $this->get('baseurl'), $name, '');
 				$meta->set('meta_value_title', $value);
 
 				// And append it so it'll get saved on save!
 				$this->_linked['PageMeta']['records'][] = $meta;
 			}
+		}
+	}
+
+	/**
+	 * Set the insertable's value for this page.
+	 * Will automatically create the InsertableModel and attach it to this page if it doesn't exist.
+	 *
+	 * Please note, will NOT save the models automatically.
+	 *
+	 * @param $name
+	 * @param $value
+	 */
+	public function setInsertable($name, $value){
+		// Get, all of the insertables for this model!
+		$insertables = $this->getLink('Insertable');
+
+		foreach($insertables as $ins){
+			/** @var $ins InsertableModel */
+
+			// Look for this key to see if it exists.
+
+			// I'm only interested in this one!
+			if($ins->get('name') == $name){
+				$ins->set('value', $value);
+				return; // :)
+			}
+		}
+
+		// Doesn't exist?
+		if($value){
+			$ins = new InsertableModel($this->get('site'), $this->get('baseurl'), $name);
+			$ins->set('value', $value);
+
+			// And append it so it'll get saved on save!
+			$this->_linked['Insertable']['records'][] = $ins;
+		}
+	}
+
+	/**
+	 * Get the rewrite URLs of this page as a "\n" separated string, suitable for forms.
+	 *
+	 * @return string
+	 */
+	public function getRewriteURLs(){
+		$rewrites = $this->getLink('RewriteMap');
+
+		$out = '';
+		foreach($rewrites as $r){
+			/** @var $r RewriteMapModel */
+			$v = $r->get('rewriteurl');
+			if($v{0} == '/') $out .= ROOT_URL . substr($v, 1) . "\n";
+			else $out .= $v . "\n";
+		}
+
+		return trim($out);
+	}
+
+	/**
+	 * Set the available rewrites for this page.
+	 * Will automatically create the RewriteMapModel and attach it to this page if it doesn't exist.
+	 *
+	 * Please note, will NOT save the models automatically.
+	 *
+	 * @param string|array $urls newline, comma, or pipe delimited string of urls, also arrays are accepted.
+	 */
+	public function setRewriteURLs($urls){
+		// make sure the URLs are in a format I can actually use.
+		if(!is_array($urls)){
+			$string = $urls;
+			$urls = array();
+
+			// Convert the various accepted delimiters to a standard single one so I can explode easily.
+			$string = str_replace([',', '|', "\r"], "\n", $string);
+			$urls = array_map('trim', explode("\n", $string));
+		}
+
+		// Next step now that I have an array, I need to go through each one and standardize it.
+		// ie: if ROOT_URL is present, I need to trim that off since it's redundant.
+		// Same thing for any other URL in fact....
+		// The mapping doesn't care about the hostname.
+		foreach($urls as $k => $v){
+			if(!$v){
+				unset($urls[$k]);
+			}
+			elseif(strpos($v, ROOT_URL_NOSSL) === 0){
+				$urls[$k] = '/' . substr($v, strlen(ROOT_URL_NOSSL));
+			}
+			elseif(strpos($v, ROOT_URL_SSL) === 0){
+				$urls[$k] = '/' . substr($v, strlen(ROOT_URL_SSL));
+			}
+			elseif(strpos($v, '://') !== false){
+				// Trim whatever is before the ://
+				$v = substr($v, strpos($v, '://') + 3);
+				// Trim whatever is left after the first '/'.t
+				$urls[$k] = substr($v, strpos($v, '/'));
+			}
+			else{
+				// It just needs to start with a '/'.
+				if($v{0} != '/'){
+					$urls[$k] = '/' . $v;
+				}
+			}
+		}
+
+
+		// Get, all of the rewrites for this model currently.
+		// This is because if there is a deletion, I want to be able to delete the old link.
+		$rewrites = $this->getLink('RewriteMap');
+
+		// Queue up any that need to be deleted first.
+		foreach($rewrites as $rewrite){
+			/** @var $rewrite RewriteMapModel */
+			if(!in_array($rewrite->get('rewriteurl'), $urls)){
+				$this->deleteLink($rewrite);
+			}
+		}
+
+		// Now I can add any new one.
+
+		foreach($urls as $url){
+			// Since RewriteURLs can be set from anywhere and they're pretty in-flux,
+			// I need to lookup this url and force it to be what I need it to be.
+			$rewrite = RewriteMapModel::Find(['rewriteurl = ' . $url], 1);
+			if(!$rewrite){
+				$rewrite = new RewriteMapModel();
+				$rewrite->set('rewriteurl', $url);
+			}
+
+			$this->setLink('RewriteMap', $rewrite);
 		}
 	}
 
@@ -527,17 +728,29 @@ class PageModel extends Model {
 		// This will take care of all the standard elements.
 		parent::setFromForm($form, $prefix);
 
+		// And this will take care of the rewrites
+		$rewrites = $form->getElement($prefix . '[rewrites]')->get('value');
+		$this->setRewriteURLs($rewrites);
+
 		// And this will take care of the meta elements.
-		$metagroup = $form->getElement($prefix . '[metas]');
-		if($metagroup){
-			/** @var $metagroup FormGroup */
-			$base = $prefix . '[metas]';
+		$baselen = strlen($prefix . '[metas]');
+		foreach($form->getElements(true, false) as $el){
+			$name = $el->get('name');
+			if(strpos($name, $prefix . '[metas]') === 0){
+				$key = substr($name, $baselen+1, -1);
 
-			foreach($metagroup->getElements() as $element){
-				/** @var $element FormElement */
-				$key = substr($element->get('name'), strlen($base)+1, -1);
+				$this->setMeta($key, $el->get('value'));
+			}
+		}
 
-				$this->setMeta($key, $element->get('value'));
+		// And this will take care of the insertable elements.
+		$baselen = strlen($prefix . '[insertables]');
+		foreach($form->getElements(true, false) as $el){
+			$name = $el->get('name');
+			if(strpos($name, $prefix . '[insertables]') === 0){
+				$key = substr($name, $baselen+1, -1);
+
+				$this->setInsertable($key, $el->get('value'));
 			}
 		}
 	}
@@ -554,18 +767,64 @@ class PageModel extends Model {
 	 *
 	 * Any special logic such as adding custom elements from the model can be done here, simply extend this method and add logic as necessary.
 	 *
-	 * @param Form $form
+	 * @param Form   $form    The form itself.
+	 * @param string $prefix  The form prefix to use, ie: "page" or "model", etc.
 	 */
 	public function addToFormPost(Form $form, $prefix){
-		// YES!
-		// I need to add the pagemetas!
-		$form->addElement(
-			'pagemetas',
-			array(
-				'model' => $this,
-				'name' => $prefix . '[metas]',
-			)
+		// Get the groups that these additional elements will tack onto,
+		// and create them if necessary.
+		$metasgroupname = 'Meta Information & URL (SEO)';
+		$insertablesgroupname = 'Basic';
+
+		$metasgroup = $form->getElement($metasgroupname);
+		if(!$metasgroup){
+			$metasgroup = new FormGroup(array('title' => $metasgroupname, 'name' => $metasgroupname));
+			$form->addElement($metasgroup);
+		}
+
+		$insertablesgroup = $form->getElement($insertablesgroupname);
+		if(!$insertablesgroup){
+			$insertablesgroup = new FormGroup(array('title' => $insertablesgroupname, 'name' => $insertablesgroupname));
+			$form->addElement($insertablesgroup);
+		}
+
+		// I need to add the rewrite options, (I need to get them too).
+		$metasgroup->addElement(
+			'textarea',
+			[
+				'name' => $prefix . '[rewrites]',
+				'title' => 'Rewrite Aliases',
+				'value' => $this->getRewriteURLs(),
+				'description' => 'Enter rewrite aliases that point to this page, one per line.  You may use the fully resolved path or simply the part after the ".com".',
+			]
 		);
+
+		// I need to add the pagemetas!
+		foreach($this->getMetasArray() as $key => $dat){
+			$type = $dat['type'];
+			$dat['name'] = $prefix . '[metas][' . $key . ']';
+
+			$metasgroup->addElement($type, $dat);
+		}
+
+		// And the page insertables.
+		$tpl = Core\Templates\Template::Factory($this->getTemplateName());
+		if($tpl){
+			foreach($tpl->getInsertables() as $key => $dat){
+				$type = $dat['type'];
+				$dat['name'] = $prefix . '[insertables][' . $key . ']';
+
+				// This insertable may already have content from the database... if so I want to pull that!
+				$i = InsertableModel::Construct($this->get('site'), $this->get('baseurl'), $key);
+				if ($i->get('value') !== null){
+					$dat['value'] = $i->get('value');
+				}
+
+				$dat['class'] = 'insertable';
+
+				$insertablesgroup->addElement($type, $dat);
+			}
+		}
 	}
 
 	public function getResolvedURL() {
@@ -682,6 +941,7 @@ class PageModel extends Model {
 			// I don't care if the map existed, or was linked to something else...
 			// All I need to do is ensure that it will redirect to the new URL.
 			$map = new RewriteMapModel($this->_datainit['rewriteurl']);
+			$map->set('site', $this->_data['site']);
 			$map->set('baseurl', $this->_data['baseurl']);
 			$map->set('fuzzy', $this->_data['fuzzy']);
 			$map->save();

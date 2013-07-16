@@ -1,7 +1,35 @@
 <?php
+/**
+ * Class file for FormPageMetasInput
+ *
+ * @package Core\Forms
+ * @author Charlie Powell <charlie@eval.bz>
+ * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+ */
 
 /**
+ *
+ */
+/**
  * This input element consists of only the seo fields, ie: title, author, description, keywords.
+ *
+ * @deprecated 2013.07.11 cpowell
+ *             Although not strictly deprecated, it is recommended to use the PageModel's built-in form management
+ *             via $form->addModel($page, 'page'); instead.
+ * @package Core\Forms
  */
 class FormPageMetasInput extends FormGroup{
 
@@ -15,78 +43,8 @@ class FormPageMetasInput extends FormGroup{
 
 		/** @var $page PageModel */
 		$page = $this->get('model');
-		$metas = $page->getLink('PageMeta');
 
-
-		$fullmetas = array(
-			// The SEO title.  This isn't quite a meta tag, but part of that system regardless, so might as well.
-			'title' => array(
-				'title'       => 'Search-Optimized Title',
-				'description' => 'If a value is entered here, the &lt;title&gt; tag of the page will be replaced with this value.  Useful for making the page more indexable by search bots.',
-				'type'        => 'text',
-			),
-			// Author
-			'author' => array(
-				'title'       => 'Author',
-				'description' => 'Completely optional, but feel free to include it if relevant',
-				'type'        => 'text'
-			),
-			// The author id
-			'authorid' => array(
-				'type' => 'hidden',
-			),
-			// Keywords, (the human friendly text of them)
-			'keywords' => array(
-				'title'       => 'Keywords',
-				'description' => 'Provides taxonomy data for this page, separate different keywords with a comma.',
-				'type'        => 'pagemetakeywords',
-			),
-			'description' => array(
-				'title'       => 'Description',
-				'description' => 'Text that displays on search engine and social network preview links',
-				'type'        => 'textarea'
-			)
-		);
-
-		foreach($fullmetas as $k => $v){
-			switch($k){
-				case 'keywords':
-					$fullmetas[$k]['model'] = $page;
-					break;
-				case 'author':
-					$author = null;
-					$authorid = null;
-					// Look for the author and author id values from the meta field.
-					foreach($metas as $meta){
-						/** @var $meta PageMetaModel */
-						if($meta->get('meta_key') == 'author'){
-							$authorid = $meta->get('meta_value');
-							$author = $meta->get('meta_value_title');
-							break;
-						}
-					}
-					$fullmetas['author']['value'] = $author;
-					$fullmetas['authorid']['value'] = $authorid;
-					break;
-				case 'authorid':
-					// Taken care of in the author case.
-					break;
-				default:
-					$value = null;
-					// Look for this key in the set of meta information
-					foreach($metas as $meta){
-						/** @var $meta PageMetaModel */
-						if($meta->get('meta_key') == $k){
-							$value = $meta->get('meta_value_title');
-							break;
-						}
-					}
-					$fullmetas[$k]['value'] = $value;
-					break;
-			}
-		}
-
-		return $fullmetas;
+		return $page->getMetasArray();
 	}
 
 	public function get($key){
@@ -179,7 +137,28 @@ class FormPageMetasInput extends FormGroup{
 	}
 }
 
+/**
+ * Class FormPageMetaAuthorInput provides a text input that pulls autocomplete data from the site users.
+ *
+ * Most of this form's magick lies within the template.
+ *
+ * @package Core\Forms
+ */
+class FormPageMetaAuthorInput extends FormTextInput {
+	public function __construct($atts = null){
+		parent::__construct($atts);
 
+		$this->_attributes['class'] = 'formelement formpagemetaauthorinput';
+	}
+}
+
+/**
+ * Class FormPageMetaKeywordsInput provides a multi-select textarea for the keywords with autocomplete.
+ *
+ * Most of this form's magick lies within the template.
+ *
+ * @package Core\Forms
+ */
 class FormPageMetaKeywordsInput extends FormTextInput {
 
 	public function __construct($atts = null){

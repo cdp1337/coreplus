@@ -307,6 +307,7 @@ class Model implements ArrayAccess {
 
 		// If the enterprise/multimode is set and enabled and there's a site column here,
 		// that should be enforced at a low level.
+		/** @noinspection PhpUndefinedClassInspection */
 		if(
 			isset($s['site']) &&
 			$s['site']['type'] == Model::ATT_TYPE_SITE &&
@@ -314,6 +315,7 @@ class Model implements ArrayAccess {
 			MultiSiteHelper::IsEnabled() &&
 			$this->get('site') === null
 		){
+			/** @noinspection PhpUndefinedClassInspection */
 			$keys['site'] = MultiSiteHelper::GetCurrentSiteID();
 		}
 
@@ -363,6 +365,12 @@ class Model implements ArrayAccess {
 		else{
 			foreach($this->_linked as $k => $l){
 				if(isset($l['records'])){
+					// If there are any linked models in the records array, trigger the save.
+					$save = true;
+					break;
+				}
+				if(isset($l['purged'])){
+					// If there are any linked models in the purged array, trigger the save, (to delete them).
 					$save = true;
 					break;
 				}
@@ -404,22 +412,44 @@ class Model implements ArrayAccess {
 		// Go through any linked tables and ensure that they're saved as well.
 		foreach($this->_linked as $k => $l){
 			// No need to save if it was never loaded.
-			if(!(isset($l['records']))) continue;
+			//if(!(isset($l['records']))) continue;
 
-			if(!(isset($l['records']) || $this->changed())) continue; // No need to save if it was never loaded.
+			// No need to save if it was never loaded.
+			//if(!(isset($l['records']) || $this->changed())) continue;
 
 			switch($l['link']){
 				case Model::LINK_HASONE:
-				case Model::LINK_HASMANY:
-					$models = (is_array($l['records']))? $l['records'] : array($l['records']);
-
-					foreach($models as $model){
-						// Ensure all linked fields still match up.  Something may have been changed in the parent.
-						$model->setFromArray($this->_getLinkWhereArray($k));
-						$model->save();
-					}
+					$models = isset($l['records']) ? array($l['records']) : null;
+					$deletes = isset($l['purged']) ? $l['purged'] : null;
 					break;
-				// There is no default behaviour... other than to ignore it.
+				case Model::LINK_HASMANY:
+					$models = isset($l['records']) ? $l['records'] : null;
+					$deletes = isset($l['purged']) ? $l['purged'] : null;
+					break;
+				default:
+					// There is no default behaviour... other than to ignore it.
+					$models = null;
+					$deletes = null;
+					break;
+			}
+
+			// Are there saves requested?
+			if($models){
+				foreach($models as $model){
+					/** @var $model Model */
+					// Ensure all linked fields still match up.  Something may have been changed in the parent.
+					$model->setFromArray($this->_getLinkWhereArray($k));
+					$model->save();
+				}
+			}
+
+			// Are there deletes requested?
+			if($deletes){
+				foreach($deletes as $model){
+					$model->delete();
+				}
+
+				unset($l['purged']);
 			}
 		}
 
@@ -562,12 +592,14 @@ class Model implements ArrayAccess {
 	 * @return bool
 	 */
 	public function hasDraft(){
-		if(!Core::IsComponentAvailable('model-audit')){
-			// If the underlying component is not available, drafts cannot be enabled!
-			return false;
+		if(Core::IsComponentAvailable('model-audit')){
+			/** @noinspection PhpUndefinedNamespaceInspection */
+			/** @noinspection PhpUndefinedClassInspection */
+			return ModelAudit\Helper::ModelHasDraft($this);
 		}
 		else{
-			return ModelAudit\Helper::ModelHasDraft($this);
+			// If the underlying component is not available, drafts cannot be enabled!
+			return false;
 		}
 	}
 
@@ -1289,12 +1321,13 @@ class Model implements ArrayAccess {
 		return $this->_linked[$linkname]['records'];
 	}
 
-	/*
+	/**
 	 * In 1-to-1 mode, this returns either the single record matched or nothing at all.
 	 * In 1-to-M mode, this returns an attached object with the requested search keys, either bound or new.
 	 *
-	 * @param type $linkname
-	 * @param type $searchkeys
+	 * @param string $linkname
+	 * @param array  $searchkeys
+	 * @return bool|\Model|null
 	 */
 	public function findLink($linkname, $searchkeys = array()) {
 		$l = $this->getLink($linkname);
@@ -1326,10 +1359,11 @@ class Model implements ArrayAccess {
 			// Still here?  Guess it didn't find it.
 			// Create the element, attach it and return that!
 			$c = $this->_getLinkClassName($linkname);
-			// @var Model $model
+			/** @var $model Model */
 			$model = new $c();
 			$model->setFromArray($this->_getLinkWhereArray($linkname));
 			$model->setFromArray($searchkeys);
+			var_dump($model); die();
 			$model->load();
 			$this->_linked[$linkname]['records'][] = $model;
 			return $model;
@@ -1338,6 +1372,8 @@ class Model implements ArrayAccess {
 	}
 
 	/**
+	 * Add a model to the set of linked records, (or replace it in the case or HASONE).
+	 *
 	 * Administrative method used internally by some systems.  This allows a link to be overwritten externally.
 	 *
 	 * Particularly useful for BELONGSTOONE models being updated by their parent.
@@ -1373,6 +1409,43 @@ class Model implements ArrayAccess {
 		if (!isset($this->_linked[$linkname])) return; // @todo Error Handling
 
 		$this->_linked[$linkname]['records'] = null;
+	}
+
+	/**
+	 * Mark a linked model for deletion.
+	 * Doesn't actually delete the linked model until this element is saved.
+	 *
+	 * @param Model $link
+	 * @return bool
+	 */
+	public function deleteLink(Model $link){
+		// Since I don't get the linkname like usual ones...
+		foreach($this->_linked as $linkname => $linkset){
+			if(!isset($linkset['records'])) continue;
+
+			if(is_array($linkset['records'])){
+				foreach($linkset['records'] as $k => $rec){
+					if($rec == $link){
+						if(!isset($this->_linked[$linkname]['purged'])){
+							$this->_linked[$linkname]['purged'] = array();
+						}
+						$this->_linked[$linkname]['purged'][] = $link;
+						unset($this->_linked[$linkname]['records'][$k]);
+						return true;
+					}
+				}
+			}
+			elseif($linkset['records'] == $link){
+				if(!isset($this->_linked[$linkname]['purged'])){
+					$this->_linked[$linkname]['purged'] = array();
+				}
+				$this->_linked[$linkname]['purged'][] = $link;
+				$this->_linked[$linkname]['records'] = null;
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -1810,16 +1883,14 @@ class Model implements ArrayAccess {
 
 	public static function GetSchema() {
 		// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
-		$m = get_called_class();
-
-		return $m::$Schema;
+		$ref = new ReflectionClass(get_called_class());
+		return $ref->getProperty('Schema')->getValue();
 	}
 
 	public static function GetIndexes() {
 		//// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
-		$m = get_called_class();
-
-		return $m::$Indexes;
+		$ref = new ReflectionClass(get_called_class());
+		return $ref->getProperty('Indexes')->getValue();
 	}
 }
 

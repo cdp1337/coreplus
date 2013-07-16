@@ -43,16 +43,20 @@ function smarty_block_insertable($params, $content, $template, &$repeat){
 		}
 	}
 
+	$page = PageRequest::GetSystemRequest()->getPageModel();
+
 	// I need to use the parent to lookup the current base url.
 	$baseurl = PageRequest::GetSystemRequest()->getBaseURL();
 
 	if(!isset($params['name'])) return '';
 
-
-	$i = InsertableModel::Construct($baseurl, $params['name']);
+	$i = InsertableModel::Construct($page->get('site'), $baseurl, $params['name']);
 
 	if($i->exists()){
 		$value = $i->get('value');
+	}
+	else{
+		$value = $content;
 	}
 
 	// Coreify the string

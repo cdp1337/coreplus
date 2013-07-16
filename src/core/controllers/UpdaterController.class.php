@@ -467,6 +467,11 @@ class UpdaterController extends Controller_2_1 {
 	}
 
 
+	/**
+	 * Page that is called to disable a given component.
+	 *
+	 * Performs all the necessary checks before disable, ie: dependencies from other components.
+	 */
 	public function component_disable() {
 		$view = $this->getView();
 		$req = $this->getPageRequest();
@@ -539,15 +544,36 @@ class UpdaterController extends Controller_2_1 {
 
 		$todisable = array_unique($todisable);
 
+
+
 		if(!$dryrun){
+			// I want to record a list of actual changes performed.
+			$changes = array();
+
 			foreach($todisable as $c){
-				Core::GetComponent($c)->disable();
+				$changes[] = 'Disabling component ' . $c;
+				$change = Core::GetComponent($c)->disable();
+				if(is_array($change)) $changes = array_merge($changes, $change);
 			}
+
+			$logmsg = implode("\n", $changes);
+			SecurityLogModel::Log(
+				'/updater/component/disabled',
+				'success',
+				null,
+				$logmsg
+			);
 		}
 
+		// Yeah I know json "changes" isn't actually $changes.... STFU.
 		$view->jsondata = array('changes' => $todisable, 'dryrun' => $dryrun);
 	}
 
+	/**
+	 * Page that is called to enable a given component.
+	 *
+	 * Performs all the necessary checks before enable, ie: dependencies from other components.
+	 */
 	public function component_enable() {
 		$view = $this->getView();
 		$req = $this->getPageRequest();
@@ -605,7 +631,20 @@ class UpdaterController extends Controller_2_1 {
 		}
 
 		if(!$dryrun){
-			$c->enable();
+			// I want to record a list of actual changes performed.
+			$changes = array();
+
+			$changes[] = 'Enabling component ' . $c->getName();
+			$change = $c->enable();
+			if(is_array($change)) $changes = array_merge($changes, $change);
+
+			$logmsg = implode("\n", $changes);
+			SecurityLogModel::Log(
+				'/updater/component/enabled',
+				'success',
+				null,
+				$logmsg
+			);
 		}
 
 		$view->jsondata = array('changes' => array($name), 'dryrun' => $dryrun);

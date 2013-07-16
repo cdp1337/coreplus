@@ -414,13 +414,18 @@ class Core implements ISingleton {
 					try{
 						// Allow for on-the-fly package upgrading regardless of DEV mode or not.
 						if ($c->needsUpdated()) {
+							// Lock the site first!
+							// This is because some upgrade procedures take a long time to upgrade.
+							file_put_contents(TMP_DIR . 'lock.message', 'Core Plus is being upgraded, please try again in a minute. ');
 							$c->upgrade();
+							unlink(TMP_DIR . 'lock.message');
 						}
 					}
 					catch(Exception $e){
 						error_log('Ignoring component [' . $n . '] due to an error during upgrading!');
 						error_log($e->getMessage());
 
+						unlink(TMP_DIR . 'lock.message');
 						//$c->disable();
 						$this->_componentsDisabled[$n] = $c;
 						unset($list[$n]);
@@ -449,10 +454,16 @@ class Core implements ISingleton {
 				// Allow for on-the-fly package upgrading regardless of DEV mode or not.
 				// Guess this is needed for the loadFiles part...
 				if ($c->isInstalled() && $c->needsUpdated() && $c->isLoadable()) {
+					// Lock the site first!
+					// This is because some upgrade procedures take a long time to upgrade.
+					file_put_contents(TMP_DIR . 'lock.message', 'Core Plus is being upgraded, please try again in a minute. ');
+
 					$c->upgrade();
 					$c->loadFiles();
 					$this->_components[$n] = $c;
 					$this->_registerComponent($c);
+					unlink(TMP_DIR . 'lock.message');
+
 					unset($list[$n]);
 					continue;
 				}
@@ -1496,6 +1507,11 @@ class Core implements ISingleton {
 		}
 	};
 </script>';
+
+		$minified = \ConfigHandler::Get('/core/javascript/minified');
+		if($minified){
+			$script = str_replace(["\t", "\n"], ['', ''], $script);
+		}
 
 		View::AddScript($script, 'head');
 

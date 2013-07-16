@@ -154,14 +154,14 @@ class Component_2_1 {
 	/**
 	 * The smarty plugin directory cache.  This is to reduce the number of lookups required.
 	 *
-	 * @var null|false|string
+	 * @var null|boolean|string
 	 */
 	private $_smartyPluginDirectory = null;
 
 	/**
 	 * View search directory cache.  This is to reduce the number of lookups required.
 	 *
-	 * @var null|false|string
+	 * @var null|boolean|string
 	 */
 	private $_viewSearchDirectory = null;
 
@@ -1092,7 +1092,7 @@ class Component_2_1 {
 	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 *
-	 * @return false | array
+	 * @return boolean | array
 	 * @throws InstallerException
 	 */
 	public function install() {
@@ -1142,7 +1142,7 @@ class Component_2_1 {
 	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 *
-	 * @return false | array
+	 * @return boolean | array
 	 * @throws InstallerException
 	 */
 	public function reinstall() {
@@ -1157,7 +1157,7 @@ class Component_2_1 {
 	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 *
-	 * @return false | array
+	 * @return boolean | array
 	 * @throws InstallerException
 	 */
 	public function upgrade() {
@@ -1232,10 +1232,22 @@ class Component_2_1 {
 		$this->_versionDB = null;
 		$this->_enabled = false;
 
+		$changed = array();
+
+		$change = $this->_parseUserConfigs(false);
+		if ($change !== false) $changed = array_merge($changed, $change);
+
+		$change = $this->_parsePages(false);
+		if ($change !== false) $changed = array_merge($changed, $change);
+
+		// Do this when I actually have widgets to test.
+		//$change = $this->_parseWidgets(false);
+		//if ($change !== false) $changed = array_merge($changed, $change);
+
 		// Ensure that the core component cache is purged too!
 		Core::Cache()->delete('core-components');
 
-		return true;
+		return (sizeof($changed)) ? $changed : false;
 	}
 
 	/**
@@ -1249,13 +1261,23 @@ class Component_2_1 {
 		$c->set('enabled', true);
 		$c->save();
 		$this->_enabled = true;
-		//echo 'ENABLING!<br/>';
-		//var_dump($c);
+
+		$changed = array();
+
+		$change = $this->_parseUserConfigs();
+		if ($change !== false) $changed = array_merge($changed, $change);
+
+		$change = $this->_parsePages();
+		if ($change !== false) $changed = array_merge($changed, $change);
+
+		// Do this when I actually have widgets to test.
+		//$change = $this->_parseWidgets();
+		//if ($change !== false) $changed = array_merge($changed, $change);
 
 		// Ensure that the core component cache is purged too!
 		Core::Cache()->delete('core-components');
 
-		return true;
+		return (sizeof($changed)) ? $changed : false;
 	}
 
 	/**
@@ -1434,14 +1456,18 @@ class Component_2_1 {
 	 *
 	 * Returns false if nothing changed, else will return an int of the number of configuration options changed.
 	 *
-	 * @return false | int
+	 * @param boolean $install Set to false to force uninstall/disable mode.
+	 * @return boolean | int
 	 * @throws InstallerException
 	 */
-	private function _parseConfigs() {
+	private function _parseConfigs($install = true) {
 		// Keep track of if this changed anything.
 		$changes = array();
 
-		Core\Utilities\Logger\write_debug('Installing configs for ' . $this->getName());
+		$action = $install ? 'Installing' : 'Uninstalling';
+		$set    = $install ? 'Set' : 'Unset';
+
+		Core\Utilities\Logger\write_debug($action . ' configs for ' . $this->getName());
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('configs');
@@ -1474,7 +1500,7 @@ class Component_2_1 {
 			// Allow configurations to overwrite any value.  This is useful on the initial installation.
 			if (isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])) $m->set('value', $_SESSION['configs'][$key]);
 
-			if ($m->save()) $changes[] = 'Set configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
+			if ($m->save()) $changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
 
 			// Make it available immediately
 			ConfigHandler::CacheConfig($m);
@@ -1490,10 +1516,11 @@ class Component_2_1 {
 	 *
 	 * Returns false if nothing changed, else will return an int of the number of configuration options changed.
 	 *
-	 * @return false | int
+	 * @param boolean $install Set to false to force uninstall/disable mode.
+	 * @return boolean | int
 	 * @throws InstallerException
 	 */
-	private function _parseUserConfigs() {
+	private function _parseUserConfigs($install = true) {
 		// If the class isn't available, don't do anything here.
 		// This is possible if I'm currently loading the user component!
 		if(!class_exists('UserConfigModel')) return false;
@@ -1501,7 +1528,9 @@ class Component_2_1 {
 		// Keep track of if this changed anything.
 		$changes = array();
 
-		Core\Utilities\Logger\write_debug('Installing User Configs for ' . $this->getName());
+		$action = $install ? 'Installing' : 'Uninstalling';
+
+		Core\Utilities\Logger\write_debug($action . ' User Configs for ' . $this->getName());
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('userconfigs');
@@ -1537,22 +1566,37 @@ class Component_2_1 {
 			$weight += 1000;
 
 			$model = UserConfigModel::Construct($key);
-			$model->set('name', $name);
-			if($default)  $model->set('default_value', $default);
-			if($formtype) $model->set('formtype', $formtype);
-			$model->set('onregistration', $onreg);
-			$model->set('onedit', $onedit);
-			$model->set('searchable', $searchable);
-			if($options)  $model->set('options', $options);
-			$model->set('validation', $validation);
-			$model->set('required', $required);
-			// Only set the weight if it's not already set.
-			// This is because (theoretically), the admin can change the order of userconfig options.
-			if(!$model->get('weight') || $model->get('weight') >= 100) $model->set('weight', $weight);
+			$isnew = !$model->exists();
 
-			// if($model->changed()) var_dump($model); // DEBUG \\
+			if(!$install){
+				// Uninstallations remove user configuration keys.
+				$model->delete();
+				$changes[] = 'Removed user config [' . $key . ']';
+			}
+			else{
+				// Installations create/save it!
+				$model->set('name', $name);
+				if($default)  $model->set('default_value', $default);
+				if($formtype) $model->set('formtype', $formtype);
+				$model->set('onregistration', $onreg);
+				$model->set('onedit', $onedit);
+				$model->set('searchable', $searchable);
+				if($options)  $model->set('options', $options);
+				$model->set('validation', $validation);
+				$model->set('required', $required);
+				// Only set the weight if it's not already set.
+				// This is because (theoretically), the admin can change the order of userconfig options.
+				if(!$model->get('weight') || $model->get('weight') >= 100) $model->set('weight', $weight);
 
-			if($model->save()) $changes[] = 'Set user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
+				if($model->save()){
+					if($isnew){
+						$changes[] = 'Created user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
+					}
+					else{
+						$changes[] = 'Updated user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
+					}
+				}
+			}
 		}
 
 		return (sizeof($changes)) ? $changes : false;
@@ -1562,13 +1606,16 @@ class Component_2_1 {
 	/**
 	 * Internal function to parse and handle the configs in the component.xml file.
 	 * This is used for installations and upgrades.
-	 *
+	 * @param boolean $install Set to false to force uninstall/disable mode.
+	 * @return boolean | int
 	 * @throws InstallerException
 	 */
-	private function _parsePages() {
+	private function _parsePages($install = true) {
 		$changes = array();
 
-		Core\Utilities\Logger\write_debug('Installing pages for ' . $this->getName());
+		$action = $install ? 'Installing' : 'Uninstalling';
+
+		Core\Utilities\Logger\write_debug($action . ' pages for ' . $this->getName());
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('pages');
@@ -1580,32 +1627,39 @@ class Component_2_1 {
 			// These are always global pages.
 			$m = new PageModel(-1, $subnode->getAttribute('baseurl'));
 
-			// Just something to help the log.
-			$action     = ($m->exists()) ? 'Updated' : 'Added';
-			$admin      = $subnode->getAttribute('admin');
-			$selectable = ($admin ? '0' : '1'); // Defaults
-			$group      = ($admin ? $subnode->getAttribute('group') : '');
-			if($subnode->getAttribute('selectable') !== ''){
-				$selectable = $subnode->getAttribute('selectable');
+			// Hard-set pages get removed upon disabling.  They'll be recreated if re-enabled.
+			if(!$install){
+				$m->delete();
+				$changes[] = 'Removed page [' . $subnode->getAttribute('baseurl') . ']';
 			}
+			else{
+				// Just something to help the log.
+				$action     = ($m->exists()) ? 'Updated' : 'Added';
+				$admin      = $subnode->getAttribute('admin');
+				$selectable = ($admin ? '0' : '1'); // Defaults
+				$group      = ($admin ? $subnode->getAttribute('group') : '');
+				if($subnode->getAttribute('selectable') !== ''){
+					$selectable = $subnode->getAttribute('selectable');
+				}
 
-			// Do not "update" value, keep whatever the user set previously.
-			if (!$m->get('rewriteurl')) {
-				if ($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
-				else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
+				// Do not "update" value, keep whatever the user set previously.
+				if (!$m->get('rewriteurl')) {
+					if ($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
+					else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
+				}
+				// Do not "update" value, keep whatever the user set previously.
+				if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
+				// Do not "update" value, keep whatever the user set previously.
+				//if ($m->get('access') == '*') $m->set('access', $subnode->getAttribute('access'));
+				$m->set('access', $subnode->getAttribute('access'));
+				// Do not update parent urls if the page already exists.
+				if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
+				//$m->set('widget', $subnode->getAttribute('widget'));
+				$m->set('admin', $admin);
+				$m->set('admin_group', $group);
+				$m->set('selectable', $selectable);
+				if ($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';
 			}
-			// Do not "update" value, keep whatever the user set previously.
-			if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
-			// Do not "update" value, keep whatever the user set previously.
-			//if ($m->get('access') == '*') $m->set('access', $subnode->getAttribute('access'));
-			$m->set('access', $subnode->getAttribute('access'));
-			// Do not update parent urls if the page already exists.
-			if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
-			//$m->set('widget', $subnode->getAttribute('widget'));
-			$m->set('admin', $admin);
-			$m->set('admin_group', $group);
-			$m->set('selectable', $selectable);
-			if ($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';
 		}
 
 		return ($changes > 0) ? $changes : false;
@@ -1615,9 +1669,11 @@ class Component_2_1 {
 	 * Internal function to parse and handle the configs in the component.xml file.
 	 * This is used for installations and upgrades.
 	 *
+	 * @param boolean $install Set to false to force uninstall/disable mode.
+	 * @return boolean | int
 	 * @throws InstallerException
 	 */
-	private function _parseWidgets() {
+	private function _parseWidgets($install = true) {
 		$changes = array();
 
 		Core\Utilities\Logger\write_debug('Installing Widgets for ' . $this->getName());
@@ -1673,10 +1729,11 @@ class Component_2_1 {
 	 * Internal function to parse and handle the DBSchema in the component.xml file.
 	 * This is used for installations and upgrades.
 	 *
+	 * @param boolean $install Set to false to force uninstall/disable mode.
+	 * @return boolean | int
 	 * @throws InstallerException
-	 * @returns array|false
 	 */
-	private function _parseDBSchema() {
+	private function _parseDBSchema($install = true) {
 		// I need to get the schema definitions first.
 		$node   = $this->_xmlloader->getElement('dbschema');
 		$prefix = $node->getAttribute('prefix');
@@ -1699,15 +1756,15 @@ class Component_2_1 {
 			$tablename = $m::GetTableName();
 
 			try{
-				if (Core::DB()->tableExists($tablename)) {
+				if (\Core\db()->tableExists($tablename)) {
 					// Exists, ensure that it's up to date instead.
-					if(Core::DB()->modifyTable($tablename, $schema)){
+					if(\Core\db()->modifyTable($tablename, $schema)){
 						$changes[] = 'Modified table ' . $tablename;
 					}
 				}
 				else {
 					// Pass this schema into the DMI processor for create table.
-					Core::DB()->createTable($tablename, $schema);
+					\Core\db()->createTable($tablename, $schema);
 					$changes[] = 'Created table ' . $tablename;
 				}
 			}

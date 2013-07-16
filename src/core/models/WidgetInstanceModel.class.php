@@ -185,6 +185,11 @@ class WidgetInstanceModel extends Model {
 		// Make sure it's linked
 		$c->_model = $this;
 
+		// Was installable passed in?  It may contain data useful to the widget.
+		if($this->get('installable')){
+			$c->_installable = $this->get('installable');
+		}
+
 		$return = call_user_func(array($c, $pagedat['method']));
 		if (is_int($return)) {
 			// A generic error code was returned.  Create a View with that code and return that instead.

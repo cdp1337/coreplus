@@ -1,10 +1,46 @@
-Core Plus 2.5.9
+Core Plus 2.6.0
 
-	* Feature #385 - Sanitize filenames for files uploaded
-	* Feature checkbox groups now have a toggle all option
-	* Added a "keepdots" parameter to the str_to_url function.  Useful for filenames
+	* [Bug] Minor bug in the updater template.  Needed to use version_compare instead of "<="
+	* [Bug] The "disabled" form attribute is now better handled on both the renderer and the parser.
+	* [Performance] Applied more aggressive compiling on the bootstrap.  Gives a little bit more
+	  performance.
+	* [Feature] New feature - /form/savetemporary.ajax, this is a page that will save a given submitted
+	  form back to the session as an auto-save feature.
+	* [Feature] Added a new form element, FormPageMetaAuthor.
+	* [Feature] Added a new form group: 'FormTabsGroup'.  This uses javascript to render out a tab-based
+	  layout.
+	* [Feature] Added support for FromGroups to be mapped via name.
+	* [Feature] Implemented Feature #385 - Sanitize filenames for files uploaded
+	* [Feature] checkbox groups now have a toggle all option
+	* [Feature] Added a "keepdots" parameter to the str_to_url function.  Useful for filenames
+	* [Feature] Major rewrite to the page form elements.  The PageModel is now responsible for all of the
+	  elements rendered out.
+	* [Feature] Disabling components now actually removes their user configuration options and pages from
+	  the system; (enabling re-adds them back).
+	* [Feature] Disabling and enabling components now register in the security log.
+	* [Feature] The site is now locked automatically when the automatic reinstaller is initialized.  This
+	  prevents the site from dropping into multiple reinstalls at once.
+	* [Feature] FilterForm now supports "linkvalueprefix" and "linkvaluesuffix".  These get prepended and
+	  appended automatically to any value; useful for datetime strings.
+	* [Feature] Widget instances and Widgets now can keep track of which "installable" tag the widget was
+	  called with.  This allows metadata to be passed into the widget.
+	* [Feature] Added 'Performance' to the list of changelog types.
+	* Updated the documentation on all the Form elements.
+	* New method, Template::getInsertables.  This has been moved from the page element system to the
+	  template system where it belongs.
+	* New method, Form::addElementAfter.  This allows an element to be insert into the Form after another
+	  element.  Useful for Form manipulation.
+	* New method, Form::getGroup.  Will search through the element list for a given group by its name, and
+	  create one if it doesn't exist.  Takes into account the Group type too.
+	* New method, Form::getModels.  Just returns the unaltered models associated to a Form.
+	* Form::addElement now supports the attributes "group" and "grouptype".
+	* The Form system now skips automatic form handling on any /form/*.ajax page.  This allows those pages
+	  to be submitted to directly to act as metafunctions for forms.
+	* Models with existing data can now have a UUID column added.
+	* Insertables are now better linked to the given page's site.
+	* Rearranged the title and parenturl for pages.  This allows the basic information to be displayed
+	  first.
 	* System form elements now jsonencode their values.  Allows multi-values to be used in the unique key
-	* Minor bug in the updater template.  Needed to use version_compare instead of "<="
 
 Core Plus 2.5.8
 
@@ -511,9 +547,9 @@ Core Plus 2.3.2
 	* [Feature] Added a resetLink method in the Model.  Useful for deleting a child and not wanting them
 	  to come back as linked.
 	* [Feature] Added the input ID as the containing div's class name on formcheckboxesinput.
+	* [Feature] Updated the title/seotitle feature (Feature #194) to make use of a dedicated variable.
 	* Set the FormPageParentSelectInput value to be strtolower all the time.  Should fix many of the
 	  baseurl and parenturl issues.
-	* Updated the title/seotitle feature (Feature #194) to make use of a dedicated variable.
 	* Updated the compiler to set only the relative path for the comments instead of the full path.
 	* Switched the updater listing from NUMERIC sort to NATURAL sort.  This fixes the order of versions.
 	-- Charlie Powell <charlie@eval.bz>  16 Nov 2012
@@ -534,10 +570,10 @@ Core Plus 2.3.0
 	* [Feature] Added a new "setFromForm" method on models.  Allows for more fine-tune control over the
 	  form/model interaction in controllers.
 	* [Feature] Added some inline documentation to the Dataset system.
+	* [Feature] Implemented Feature #194, SEO friendly title tag system.
 	* Major change in the dataset WHERE structure.  Where statements now support nested clauses, each with
 	  their own separator and children.
 	* Removed some debug content in the core.
-	* Implemented Feature #194, SEO friendly title tag system.
 	* Implemented the "getHash" method on remote files.
 	* Improved logic in the smarty date function for invalid data being passed in.  Now an error is only
 	  thrown if the site is in development mode, otherwise simply a blank string is returned.

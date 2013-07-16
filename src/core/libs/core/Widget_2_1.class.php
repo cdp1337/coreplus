@@ -54,6 +54,14 @@ class Widget_2_1 {
 	 */
 	public $_params = null;
 
+	/**
+	 * If this widget was called from a widgetarea with an "installable" property,  that value
+	 * will be transposed here.  It may be useful for determining a userid or something... maybe.
+	 *
+	 * @var null|string
+	 */
+	public $_installable = null;
+
 
 	/**
 	 * Get the view for this controller.

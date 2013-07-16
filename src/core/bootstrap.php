@@ -400,6 +400,21 @@ elseif(SSL_MODE == SSL_MODE_DISABLED && SSL){
 }
 
 
+// If there is a "lock.message" file, open that and stop page execution immediately.
+// This is useful for automatic upgrades.
+if(file_exists(TMP_DIR . 'lock.message')){
+	$contents = file_get_contents(TMP_DIR . 'lock.message');
+
+	$adminmsg = '(Site is currently locked via ' . TMP_DIR . 'lock.message.  If this is in error, simply remove that file).';
+	if(DEVELOPMENT_MODE){
+		echo $adminmsg . "<br/>\n";
+	}
+	error_log($adminmsg);
+
+	die($contents);
+}
+
+
 // (handled by the installer now)
 /*
 // The TMP_DIR needs to be writable!

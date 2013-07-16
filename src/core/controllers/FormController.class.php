@@ -24,6 +24,54 @@
  */
 
 class FormController extends Controller_2_1 {
+
+	/**
+	 * A page load to save a given form in session only.
+	 * This applies all user-supplied values from the UA, but does not call the overall save method.
+	 */
+	public function savetemporary(){
+		$request = $this->getPageRequest();
+		$view = $this->getView();
+		$view->mode = View::MODE_AJAX;
+		$view->contenttype = View::CTYPE_JSON;
+		$view->record = false;
+
+		// This is an ajax-only request.
+		if(!$request->isAjax()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		$formid = $request->getPost('___formid');
+		if(!$formid){
+			return View::ERROR_NOTFOUND;
+		}
+
+		// Lookup that form!
+		if(!isset($_SESSION['FormData'][ $formid ])){
+			return View::ERROR_NOTFOUND;
+		}
+
+		/** @var $form Form */
+		$form = unserialize($_SESSION['FormData'][ $formid ]);
+
+		if(!$form){
+			return View::ERROR_NOTFOUND;
+		}
+
+		// Run though each element submitted and try to validate it.
+		if (strtoupper($form->get('method')) == 'POST') $src =& $_POST;
+		else $src =& $_GET;
+
+		$form->loadFrom($src);
+
+		$form->saveToSession();
+
+		$view->jsondata = ['status' => '1', 'message' => 'Saved POST temporarily'];
+
+		// Yup, that's it!
+		// Saving the form back to the session will preserve those values.
+	}
+
 	public function pageinsertables_update(){
 		$request = $this->getPageRequest();
 		$view = $this->getView();
@@ -36,40 +84,88 @@ class FormController extends Controller_2_1 {
 			return View::ERROR_BADREQUEST;
 		}
 
-		// The form object is located in $_SESSION['FormData'].
-
-		if($request->getPost('formid')){
-			// Lookup that form!
-			if(!isset($_SESSION['FormData'][ $request->getPost('formid') ])){
-				return View::ERROR_NOTFOUND;
-			}
-
-			/** @var $form Form */
-			$form = unserialize($_SESSION['FormData'][ $request->getPost('formid') ]);
-
-			if(!$form){
-				return View::ERROR_NOTFOUND;
-			}
-
-			/** @var $element FormPageInsertables */
-			$element = $form->getElement( $request->getPost('elementname') );
-
-			$element->setTemplateName( $request->getPost('templatename') );
-
-			//var_dump($element); die();
-
-			// Whee, don't forget to resave these form updates back to the session!
-			$form->saveToSession();
-
-			// And return something useful :)
-			$view->jsondata = array(
-				'status' => '1',
-				'message' => 'Switched templatename successfully',
-				'html' => $element->render()
-			);
-			return;
+		$formid = $request->getPost('___formid');
+		if(!$formid){
+			return View::ERROR_NOTFOUND;
 		}
-		var_dump('0.ó', $_POST, $_SESSION); die();
+
+		// Lookup that form!
+		if(!isset($_SESSION['FormData'][ $formid ])){
+			return View::ERROR_NOTFOUND;
+		}
+
+		/** @var $form Form */
+		$form = unserialize($_SESSION['FormData'][ $formid ]);
+
+		if(!$form){
+			return View::ERROR_NOTFOUND;
+		}
+
+		// Run though each element submitted and try to validate it.
+		if (strtoupper($form->get('method')) == 'POST') $src =& $_POST;
+		else $src =& $_GET;
+
+		$form->loadFrom($src, true);
+
+		// Now that the form has been loaded with the data, reinitialize the page's insertable elements.
+		foreach($form->getModels() as $prefix => $model){
+			if($model instanceof PageModel && $form->getElement($prefix . '[page_template]')){
+				$pagetemplate = $form->getElement($prefix . '[page_template]');
+
+				// Get all insertables currently present and remove them from the form.
+				// (They will be added back shortly)
+				foreach($form->getElements(true, false) as $el){
+					$name = $el->get('name');
+					if(strpos($name, $prefix . '[insertables]') === 0){
+						$form->removeElement($name);
+					}
+				}
+
+				// Now that the previous insertables are removed, update the value on the model and add the new insertables.
+				$model->set('page_template', $pagetemplate->get('value'));
+				$tpl = Core\Templates\Template::Factory($model->getTemplateName());
+				if($tpl){
+					// My counter for which element was added last... I need this because I have "addElementAfter"...
+					// so if I just kept adding the stack after a single element, they'd be in reverse order.
+					// ie: stack: [a, b, c] -> {ref_el}, c, b, a
+					$lastelementadded = $pagetemplate;
+					foreach($tpl->getInsertables() as $key => $dat){
+						$type = $dat['type'];
+						$dat['name'] = $prefix . '[insertables][' . $key . ']';
+
+						// This insertable may already have content from the database... if so I want to pull that!
+						$i = InsertableModel::Construct($model->get('baseurl'), $key);
+						if ($i->get('value') !== null){
+							$dat['value'] = $i->get('value');
+						}
+
+						$dat['class'] = 'insertable';
+
+						$insertableelement = FormElement::Factory($type, $dat);
+						$form->addElementAfter($insertableelement, $lastelementadded);
+						$lastelementadded = $insertableelement;
+					}
+				}
+
+				// Since there are new elements here, there may be old values that correspond to the new elements too.
+				$form->loadFrom($src, true);
+
+				// Don't forget to resave these form updates back to the session!
+				$form->saveToSession();
+
+				$view->jsondata = array(
+					'status' => '1',
+					'message' => 'Switched templatename successfully',
+				);
+				return;
+			} // if($model instanceof PageModel && $form->getElement($prefix . '[page_template]'))
+		} // foreach($form->getModels() as $prefix => $model)
+
+		// Ummmm.....
+		$view->jsondata = array(
+			'status' => '0',
+			'message' => 'No page found :/',
+		);
 	}
 
 	public function pagemetas_autocompleteuser(){

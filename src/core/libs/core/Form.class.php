@@ -2,7 +2,7 @@
 /**
  * All core Form objects in the system
  *
- * @package Core
+ * @package Core\Forms
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -20,6 +20,11 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+/**
+ * Class FormGroup is the standard parent of any form or group of form elements that have children.
+ *
+ * @package Core\Forms
+ */
 class FormGroup {
 	protected $_elements;
 
@@ -74,6 +79,12 @@ class FormGroup {
 		return $err;
 	}
 
+	/**
+	 * Add a given element, (or element type with attributes), onto this form or form group.
+	 *
+	 * @param            $element
+	 * @param null|array $atts
+	 */
 	public function addElement($element, $atts = null) {
 		// Since this allows for just plain names to be submitted, translate
 		// them to the form object to be rendered.
@@ -93,6 +104,37 @@ class FormGroup {
 
 			$this->_elements[] = new Form::$Mappings[$element]($atts);
 		}
+	}
+
+	public function addElementAfter($newelement, $currentelement){
+		if(is_string($currentelement)){
+			// I need to convert this to an element.
+			$currentelement = $this->getElement($currentelement);
+			if(!$currentelement){
+				// Cannot locate element by name... can't add after.
+				return false;
+			}
+		}
+
+		foreach ($this->_elements as $k => $el) {
+			// A match found?  Replace it!
+			if($el == $currentelement){
+				// Splice this new element into the array.
+				// I need to do $k+1 because $elements is a zero-based index.
+				// If it's the first element in the stack, that would be index 0, but I want after that, so it
+				// needs to shift to element index 1.
+				array_splice($this->_elements, $k+1, 0, [$newelement]);
+				return true;
+			}
+
+			// If the element was another group, tell that group to scan too!
+			if ($el instanceof FormGroup) {
+				// Scan this object too!
+				if ($el->addElementAfter($newelement, $currentelement)) return true;
+			}
+		}
+
+		return false;
 	}
 
 	public function switchElement(FormElement $oldelement, FormElement $newelement) {
@@ -116,10 +158,11 @@ class FormGroup {
 
 	/**
 	 * Remove an element from the form by name.
-	 * Useful for automatically generated forms and workin backwards instead of forward, (sometimes you only
+	 * Useful for automatically generated forms and working backwards instead of forward, (sometimes you only
 	 * want to remove one or two fields instead of creating twenty).
 	 *
-	 * @param strign $name The name of the element to remove.
+	 * @param string $name The name of the element to remove.
+	 * @return boolean
 	 */
 	public function removeElement($name){
 		foreach ($this->_elements as $k => $el) {
@@ -185,7 +228,7 @@ class FormGroup {
 		}
 		// I need to generate a javascript and UA friendly version from the name.
 		else{
-			$n = $this->get('name');
+			$n = \Core\str_to_url($this->get('name'));
 			$c = strtolower(get_class($this));
 			// Prepend the form type to the name.
 			$id = $c . '-' . $n;
@@ -270,6 +313,11 @@ class FormGroup {
 	}
 }
 
+/**
+ * Class FormElement is the base object for all elements
+ *
+ * @package Core\Forms
+ */
 class FormElement {
 	/**
 	 * Array of attributes for this form element object.
@@ -540,22 +588,17 @@ class FormElement {
 	public function getInputAttributes() {
 		$out = '';
 		foreach ($this->_validattributes as $k) {
-			if ($k == 'required'){
-				// 'Required' is skipped if it's false.
+			if (
+				$k == 'required' ||
+				$k == 'disabled' ||
+				$k == 'checked'
+			){
+				// These are all $k = $k if they're enabled.
 				if(!$this->get($k)){
 					continue;
 				}
 				else{
-					$out .= ' required="required"';
-				}
-			}
-			elseif($k == 'checked'){
-				// 'checked' is skipped if false also.
-				if(!$this->get($k)){
-					continue;
-				}
-				else{
-					$out .= ' checked="checked"';
+					$out .= sprintf(' %s="%s"', $k, $k);
 				}
 			}
 			elseif (($v = $this->get($k)) !== null){
@@ -612,6 +655,8 @@ class FormElement {
 
 /**
  * The main Form object.
+ *
+ * @package Core\Forms
  */
 class Form extends FormGroup {
 
@@ -631,11 +676,12 @@ class Form extends FormGroup {
 		'pageinsertables'  => 'FormPageInsertables',
 		'pagemeta'         => 'FormPageMeta',
 		'pagemetas'        => 'FormPageMetasInput',
+		'pagemetaauthor'   => 'FormPageMetaAuthorInput',
 		'pagemetakeywords' => 'FormPageMetaKeywordsInput',
 		'pageparentselect' => 'FormPageParentSelectInput',
 		'pagerewriteurl'   => 'FormPageRewriteURLInput',
 		'pagethemeselect'  => 'FormPageThemeSelectInput',
-		'pagepageselect'   => 'FOrmPagePageSelectInput',
+		'pagepageselect'   => 'FormPagePageSelectInput',
 		'password'         => 'FormPasswordInput',
 		'radio'            => 'FormRadioInput',
 		'reset'            => 'FormResetInput',
@@ -647,6 +693,10 @@ class Form extends FormGroup {
 		'textarea'         => 'FormTextareaInput',
 		'time'             => 'FormTimeInput',
 		'wysiwyg'          => 'FormTextareaInput',
+	);
+
+	public static $GroupMappings = array(
+		'tabs'             => 'FormTabsGroup',
 	);
 
 
@@ -806,6 +856,29 @@ class Form extends FormGroup {
 	}
 
 	/**
+	 * Get a group by its name/title.
+	 * Will create the group if it does not exist.
+	 *
+	 * @param string $name Name of the group to find/create
+	 * @param string $type Type of group, used in conjunction with the GroupMappings array
+	 * @return FormGroup
+	 */
+	public function getGroup($name, $type = 'default'){
+		$element = $this->getElement($name);
+		if(!$element){
+			// Determine the type type.
+			if(isset(self::$GroupMappings[$type])) $class = self::$GroupMappings[$type];
+			else $class = 'FormGroup'; // Default.
+
+			$ref = new ReflectionClass($class);
+			$element = $ref->newInstance(['name' => $name, 'title' => $name]);
+			$this->addElement($element);
+		}
+
+		return $element;
+	}
+
+	/**
 	 * Get the associated model for this form, if there is one.
 	 * This model will also be populated automatically with all the data submitted.
 	 *
@@ -858,18 +931,36 @@ class Form extends FormGroup {
 	}
 
 	/**
+	 * Get the unmodified models that are attached to this form.
+	 * @return array
+	 */
+	public function getModels(){
+		return $this->_models;
+	}
+
+	/**
 	 * Load this form's values from the provided array, usually GET or POST.
 	 * This is really an internal function that should not be called externally.
 	 *
-	 * @param array $src
+	 * @param array   $src
+	 * @param boolean $quiet Set to true to squelch errors.
 	 */
-	public function loadFrom($src) {
+	public function loadFrom($src, $quiet = false) {
 		$els = $this->getElements(true, false);
 		foreach ($els as $e) {
+			/** @var $e FormElement */
 			// Be sure to clear any errors from the previous page load....
 			$e->clearError();
+
+			if($e->get('disabled')){
+				// Readonly elements cannot get written from the UA.
+				continue;
+			}
+
 			$e->set('value', $e->lookupValueFrom($src));
-			if ($e->hasError()) Core::SetMessage($e->getError(), 'error');
+			if ($e->hasError() && !$quiet){
+				Core::SetMessage($e->getError(), 'error');
+			}
 		}
 	}
 
@@ -1044,28 +1135,35 @@ class Form extends FormGroup {
 			// $model->setFromForm($this, $prefix);
 			$model->setToFormElement($k, $el);
 
-
-			// Group support! :)
-			if(isset($formatts['group'])){
-
-				$groupname = $formatts['group'];
-				if(!isset($groups[$groupname])){
-					$groups[$groupname] = new FormGroup(array('title' => $groupname));
-					$this->addElement($groups[$groupname]);
-				}
-
-				unset($formatts['group']);
-
-				$groups[$groupname]->addElement($el);
-			}
-			else{
-				$this->addElement($el);
-			}
-
+			$this->addElement($el);
 		}
 
 		// Anything else?
 		$model->addToFormPost($this, $prefix);
+	}
+
+	/**
+	 * Add a given element to this form, (or group in this form).
+	 * If the element as the "group" property, it will automatically be added to that respective group.
+	 *
+	 * @param       $element
+	 * @param array $atts
+	 */
+	public function addElement($element, $atts = []){
+		// Group support! :)
+		if(isset($atts['group'])){
+			$grouptype = isset($atts['grouptype']) ? $atts['grouptype'] : 'default';
+
+			$this->getGroup( $atts['group'], $grouptype )->addElement($element, $atts);
+		}
+		elseif($element instanceof FormElement && $element->get('group')){
+			$grouptype = $element->get('grouptype') ? $element->get('grouptype') : 'default';
+
+			$this->getGroup( $element->get('group'), $grouptype )->addElement($element, $atts);
+		}
+		else{
+			parent::addElement($element, $atts);
+		}
 	}
 
 	/**
@@ -1134,6 +1232,10 @@ class Form extends FormGroup {
 	 * @return null
 	 */
 	public static function CheckSavedSessionData() {
+		// This needs to ignore the /form/savetemporary.ajax page!
+		// This is a custom page that's meant to intercept all POST submissions.
+		if(preg_match('#^/form/(.*)\.ajax$#', REL_REQUEST_PATH)) return;
+
 		// There has to be data in the session.
 		if (!(isset($_SESSION['FormData']) && is_array($_SESSION['FormData']))) return;
 
@@ -1161,6 +1263,9 @@ class Form extends FormGroup {
 
 		// No form found... simple enough
 		if (!$form) return;
+
+		// Otherwise
+		/** @var $form Form */
 
 		// Ensure the submission types match up.
 		if (strtoupper($form->get('method')) != $_SERVER['REQUEST_METHOD']) {

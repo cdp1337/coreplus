@@ -168,7 +168,32 @@ class FormFileInput extends FormElement {
 			$n = $this->get('name');
 
 			// Because PHP will have different sources depending if the name has [] in it...
-			if (strpos($n, '[') !== false) {
+			if (strpos($n, '][') !== false) {
+				// This is a 2+ nested array value.
+
+				preg_match_all('#\[([^\]]*)\]#', $n, $matches);
+				$p1 = substr($n, 0, strpos($n, '['));
+				$src =& $_FILES[$p1];
+
+				$in = array(
+					'name'     => $src['name'],
+					'type'     => $src['type'],
+					'tmp_name' => $src['tmp_name'],
+					'error'    => $src['error'],
+					'size'     => $src['size'],
+				);
+
+				foreach($matches[1] as $next){
+					$in['name']     =& $in['name'][$next];
+					$in['type']     =& $in['type'][$next];
+					$in['tmp_name'] =& $in['tmp_name'][$next];
+					$in['error']    =& $in['error'][$next];
+					$in['size']     =& $in['size'][$next];
+				}
+			}
+			elseif (strpos($n, '[') !== false) {
+				// This is a single array value.
+
 				$p1 = substr($n, 0, strpos($n, '['));
 				$p2 = substr($n, strpos($n, '[') + 1, -1);
 

@@ -293,6 +293,10 @@ class DMI_mysqli_backend implements DMI_Backend {
 			}
 		}
 
+		// Useful for determining if I need to do weird voodoo for UUIDs...
+		$originalindexes = $oldschema->indexes;
+		$newcolumns      = array();
+
 		// My simple counter.  Helps keep track of column order.
 		$x = 0;
 		// Now I can start running through the new schema and create/move the columns as necessary.
@@ -316,6 +320,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$neednewschema = true;
 			}
 			else{
+				$newcolumns[$column->field] = $column;
 				// It's a new column altogether!  ADD IT!
 				$q = 'ALTER TABLE _tmptable ADD `' . $column->field . '` ' . $columndef . ' ';
 				$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $oldschema->order[$x-1] . '`';
@@ -329,6 +334,34 @@ class DMI_mysqli_backend implements DMI_Backend {
 				// Only update the schema if the column order changed.
 				// This is to increase performance a little.
 				$oldschema = $this->_describeTableSchema('_tmptable');
+			}
+		}
+
+
+
+		// Here's where some voodoo begins real quick.
+		// If there is a new column that's added to an existing table,
+		// that let's say has data already... and this new column is a UUID based column...
+		// The easiest way to handle this is to convert that new column to an auto-inc column first.
+		// This will allow the mysql engine to give a unique, (albeit not secure), ID to each record.
+		// This works because IDs can never conflict with UUIDs due to formatting, (UUIDs have additional formatting),
+		// and thus are acceptable replacements for existing data.
+		if(isset($newschema->indexes['PRIMARY']) && sizeof($newschema->indexes['PRIMARY']['columns']) == 1){
+			$col = $newschema->indexes['PRIMARY']['columns'][0];
+			if(
+				isset($newcolumns[$col]) &&
+				isset($newmodelschema->definitions[$col]) &&
+				$newmodelschema->definitions[$col]->type == Model::ATT_TYPE_UUID
+			){
+				// This is a UUID that didn't exist before!  AUTOINC-VOODOO-BEGIN!
+				$column = $newcolumns[$col];
+				$q = 'ALTER TABLE `_tmptable` CHANGE `' . $column->field . '` `' . $column->field . '` int(16) NOT NULL AUTO_INCREMENT key';
+				$this->_rawExecute('write', $q);
+				// This new column is now unique and meets the criteria of the PRIMARY KEY about to happen.... erm, again.... ;)
+				// However, I need to reset this table back to how it was before this voodoo.
+				$q = 'ALTER TABLE `_tmptable` CHANGE `' . $column->field . '` `' . $column->field . '` ' . $column->getColumnString();
+				$this->_rawExecute('write', $q);
+				$this->_rawExecute('write', 'ALTER TABLE _tmptable DROP PRIMARY KEY');
 			}
 		}
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Class file for FormSelectInput
+ * File for class FormTabsGroup definition in the coreplus project
  *
  * @package Core\Forms
  * @author Charlie Powell <charlie@eval.bz>
@@ -20,17 +20,37 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-/**
- * Class FormSelectInput provides a select box
- *
- * @package Core\Forms
- */
-class FormSelectInput extends FormElement {
-	public function  __construct($atts = null) {
-		parent::__construct($atts);
 
-		// Some defaults
-		$this->_attributes['class'] = 'formelement formselect';
-		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'rows', 'cols');
+/**
+ * A short teaser of what FormTabsGroup does.
+ *
+ * More lengthy description of what FormTabsGroup does and why it's fantastic.
+ *
+ * <h3>Usage Examples</h3>
+ *
+ *
+ * @todo Write documentation for FormTabsGroup
+ * <h4>Example 1</h4>
+ * <p>Description 1</p>
+ * <code>
+ * // Some code for example 1
+ * $a = $b;
+ * </code>
+ *
+ *
+ * <h4>Example 2</h4>
+ * <p>Description 2</p>
+ * <code>
+ * // Some code for example 2
+ * $b = $a;
+ * </code>
+ *
+ * 
+ * @author Charlie Powell <charlie@eval.bz>
+ *
+ */
+class FormTabsGroup extends FormGroup {
+	public function getTemplateName(){
+		return 'forms/groups/tabs.tpl';
 	}
 }
