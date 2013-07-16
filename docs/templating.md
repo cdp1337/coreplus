@@ -32,12 +32,20 @@ There can be an unlimited number of additional skins available for the admin to 
 
 ### Pages
 
-Nearly every component has a page template for each different page view used; such as `index.tpl`, `view.tpl`, `update.tpl`, `create.tpl`.  Two or more pages can also share a single template such as `create_update.tpl`, or other pages that share very similar functionality.  Pages are normally stored in `components/[component name]/pages/`.
+Nearly every component has a page template for each different page view used; such as `index.tpl`, `view.tpl`, `update.tpl`, `create.tpl`.  Two or more pages can also share a single template such as `create_update.tpl`, or other pages that share very similar functionality.  Pages are normally stored in `components/[component name]/templates/pages/`.
 
 To override a template, copy the template into `themes/[theme name]/pages/` to match the directory structure.
 
 ### Widgets
+
+Widgets are nearly identical as pages, except the fact that they are used as small components inside another page instead of a full page itself.  Widgets also do not get wrapped in another skin, they are simply inserted directly into a `<div class="widget">...</div>`.
+
+Widget templates are normally stored in `components/[component name]/templates/widgets/`.
+
 ### Emails
+
+Email templates are nearly identical as pages, except the fact that they are used to format emails.  They may be wrapped by an email skin, if so defined by an administrator; otherwise they are simply inserted into a generic `<html><body>...</body></html>`.
+
 ### Form Elements
 
 ## TinyMCE Notes
