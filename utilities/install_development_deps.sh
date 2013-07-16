@@ -65,7 +65,7 @@ printheader "Installing PEAR packages"
 # Install the phpunit libraries.
 for i in \
 	pear.phpunit.de/phploc \
-	pear.phpunit.de/PHPUnit \
+	phpunit/PHPUnit \
 	pear.phpunit.de/phpcpd \
 	pdepend/PHP_Depend-beta \
 	phpmd/PHP_PMD \
