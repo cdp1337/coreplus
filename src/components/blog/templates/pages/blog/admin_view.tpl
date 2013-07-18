@@ -32,7 +32,7 @@
 		{foreach $articles as $article}
 			<tr class="blog-article-status-{$article.status}">
 				<td>
-					{img src="public/blog/`$article.image`" placeholder="blog" dimensions="50x50"}
+					{img src="`$article.image`" placeholder="blog" dimensions="50x50"}
 				</td>
 				<td>
 					{$article.title}

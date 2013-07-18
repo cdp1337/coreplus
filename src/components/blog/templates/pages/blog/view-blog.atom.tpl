@@ -2,9 +2,9 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
 	<title>{$page.title|escape}</title>
-	<link rel="self" href="{$canonical_url}.atom" type="application/atom+xml" title="{$page.title} Atom Feed"/>
-	<link rel="alternate" href="{$canonical_url}" type="text/html" title="{$page.title}"/>
-	<link rel="alternate" href="{$canonical_url}.rss" type="application/rss+xml" title="{$page.title} RSS Feed"/>
+	<link rel="self" href="{$canonical_url}.atom" type="application/atom+xml" title="{$page.title|escape} Atom Feed"/>
+	<link rel="alternate" href="{$canonical_url}" type="text/html" title="{$page.title|escape}"/>
+	<link rel="alternate" href="{$canonical_url}.rss" type="application/rss+xml" title="{$page.title|escape} RSS Feed"/>
 	<updated>{date date="`$last_updated`" format="c"}</updated>
 
 	<id>{$servername}/blog/view/{$blog.id}</id>
@@ -16,13 +16,13 @@
 	{foreach $articles as $article}
 
 	<entry>
-		<title>{$article.title}</title>
+		<title>{$article.title|escape}</title>
 		<link href="{$article->getResolvedLink()}"/>
 		<id>{$servername}/blog/view/{$blog.id}/{$article.id}</id>
 		{if $article->getAuthor() && Core::IsComponentAvailable('user-social')}
 
 		<author>
-			<name>{$article->getAuthor()->getDisplayName()}</name>
+			<name>{$article->getAuthor()->getDisplayName()|escape}</name>
 			<uri>{UserSocialHelper::ResolveProfileLink($article->getAuthor())}</uri>
 		</author>
 		{/if}

@@ -26,9 +26,11 @@
 			{/if}
 
 
-			<div class="blog-article-image">
-				{img placeholder="blog" src="public/blog/`$article.image`" width='75' height='75' itemprop="thumbnailUrl"}
-			</div>
+			{if $article.image}
+				<div class="blog-article-image">
+					{img placeholder="blog" src="`$article.image`" width='75' height='75' itemprop="thumbnailUrl"}
+				</div>
+			{/if}
 
 			<br/>
 			{a href="`$blog->get('rewriteurl')`"}

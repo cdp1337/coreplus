@@ -44,15 +44,18 @@ class BlogArticleModel extends Model {
 				'type'        => 'file',
 				'accept'      => 'image/*',
 				'basedir'     => 'public/blog',
-				'description' => 'An optional image to showcase for this article.'
+				'description' => 'An optional image to showcase for this article.',
+				'group'       => 'Basic',
+				'browsable'   => true,
 			)
 		),
 		'body'        => array(
 			'type'     => Model::ATT_TYPE_TEXT,
 			'required' => true,
 			'form'     => array(
-				'type' => 'wysiwyg',
-				'description' => 'The main body of this blog article.'
+				'type'        => 'wysiwyg',
+				'description' => 'The main body of this blog article.',
+				'group'       => 'Basic',
 			)
 		),
 		/*
@@ -75,7 +78,8 @@ class BlogArticleModel extends Model {
 			'form' => array(
 				'description' => 'Set this to "draft" to make it visible to editors and admins
 					only.  Useful for working on an article across multiple sessions while 
-					keeping not-ready content hidden from public users.'
+					keeping not-ready content hidden from public users.',
+				'group'       => 'Basic',
 			)
 		),
 		'fb_account_id' => array(
@@ -194,7 +198,7 @@ class BlogArticleModel extends Model {
 	 */
 	public function getImage(){
 		if($this->get('image')) {
-			$f = \Core\Filestore\Factory::File('public/blog/' . $this->get('image'));
+			$f = \Core\Filestore\Factory::File($this->get('image'));
 			return $f;
 		}
 		else{

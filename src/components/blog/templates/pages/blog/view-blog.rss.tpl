@@ -21,13 +21,13 @@
 		{foreach $articles as $article}
 
 		<item>
-			<title>{$article.title}</title>
+			<title>{$article.title|escape}</title>
 			<link>{$article->getResolvedLink()}</link>
 			<description><![CDATA[{$article->getTeaser()}]]></description>
 			<pubDate>{date format='r' date="`$article.published`"}</pubDate>
 			<guid>{$servername}/blog/view/{$blog.id}/{$article.id}</guid>
 			{if $article->getAuthor() && Core::IsComponentAvailable('user-social')}
-<dc:creator>{$article->getAuthor()->getDisplayName()}</dc:creator>{/if}
+<dc:creator>{$article->getAuthor()->getDisplayName()|escape}</dc:creator>{/if}
 
 			{if $article.image}
 <media:thumbnail url="{$article->getImage()->getPreviewURL('200x200')}"/>

@@ -24,9 +24,6 @@ abstract class BlogHelper {
 		$form->set('callsmethod', 'BlogHelper::BlogArticleFormHandler');
 
 		$form->addModel($page, 'page');
-
-		$form->addElement('pageinsertables', array('name' => 'insertables', 'model' => $page));
-
 		$form->addModel($article, 'model');
 
 
@@ -53,17 +50,12 @@ abstract class BlogHelper {
 	 */
 	public static function BlogFormHandler(Form $form) {
 		$model = $form->getModel();
-		$page  = $model->getLink('Page');
-
-		foreach ($form->getElements() as $el) {
-			$n = $el->get('name');
-
-			if (strpos($n, 'page[') === 0) {
-				$page->set(substr($n, 5, -1), $el->get('value'));
-			}
-		}
+		$page = $form->getModel('page');
 		$page->set('fuzzy', '1'); // Needs to be fuzzy since it supports children
+
 		$model->save();
+		$page->save();
+
 		return $model->get('baseurl');
 	}
 
@@ -84,10 +76,6 @@ abstract class BlogHelper {
 
 			// I need to update some of the article information from the page info.
 			$article->set('title', $page->get('title'));
-
-			// And handle the insertables
-			$page->set('page_template', $form->getElement('insertables_page_template')->get('value'));
-			$insertables = $form->getElementByName('insertables');
 
 			/** @var $pageauthor PageMetaModel|null */
 			$pageauthor = $page->getMeta('author');
@@ -119,10 +107,8 @@ abstract class BlogHelper {
 			if($isnew){
 				// Set the baseurls too!
 				$page->set('baseurl', $article->get('baseurl'));
-				$insertables->set('baseurl', $article->get('baseurl'));
 			}
 			$page->save();
-			$insertables->save();
 
 			// if it's new, allow the user to post it to facebook.
 			if(isset($_POST['facebook_post']) && $_POST['facebook_post']){
@@ -198,5 +184,33 @@ abstract class BlogHelper {
 			Core::SetMessage($e->getMessage(), 'error');
 			return false;
 		}
+	}
+
+	/**
+	 * Helper method to be called on cron events to pull in the latest feeds for all the remote articles.
+	 */
+	public static function CronRetrieveRemoteFeeds(){
+		$blogs = BlogModel::Find(['type = remote']);
+		foreach($blogs as $blog){
+			/** @var $blog BlogModel */
+			echo 'Retrieving remote feed for blog #' . $blog->get('id') . "...\n";
+
+			try{
+				$results = $blog->importFeed();
+			}
+			catch(Exception $e){
+				echo $e->getMessage();
+				return false;
+			}
+
+			echo 'Added: ' . $results['added'] . "\n" .
+				'Updated: ' . $results['updated'] . "\n" .
+				'Skipped: ' . $results['skipped'] . "\n" .
+				'Deleted: ' . $results['deleted'] . "\n" .
+				"\n" .
+				$results['changelog'];
+		}
+
+		return true;
 	}
 }

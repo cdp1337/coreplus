@@ -15,7 +15,8 @@ class BlogModel extends Model {
 			'default' => 'local',
 			'form' => array(
 				'title' => 'Type of Blog',
-				'description' => 'If this is a remote feed, change to remote here, otherwise local is sufficient.'
+				'description' => 'If this is a remote feed, change to remote here, otherwise local is sufficient.',
+				'group' => 'Basic',
 			)
 		),
 		'manage_articles_permission' => array(
@@ -24,7 +25,8 @@ class BlogModel extends Model {
 			'form'    => array(
 				'type' => 'access',
 				'title' => 'Article Management Permission',
-				'description' => 'Which groups can add, edit, and remove blog articles in this blog.'
+				'description' => 'Which groups can add, edit, and remove blog articles in this blog.',
+				'group' => 'Access & Advanced',
 			),
 		),
 		'remote_url' => array(
@@ -32,6 +34,7 @@ class BlogModel extends Model {
 			'form' => array(
 				'title' => 'Remote URL',
 				'description' => 'For remote feeds, this must be the URL of the remote RSS or Atom feed.',
+				'group' => 'Basic',
 			)
 		)
 	);

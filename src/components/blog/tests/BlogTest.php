@@ -65,27 +65,12 @@ class BlogTest extends PHPUnit_Framework_TestCase {
 		// Setup some variables that will be used throughout this method.
 		$title = 'New Test Blog Article';
 		$randomsnippet = 'Random-Snippet-' . Core::RandomHex(10);
-		$body = <<< EOD
-<p>
-	Lorem ipsum dolor sit amet, $randomsnippet consectetur adipiscing elit. Pellentesque sodales eros quis purus auctor sit amet
-	placerat tortor imperdiet. Quisque ullamcorper sodales quam eu dictum. Etiam rutrum, mi vitae auctor luctus,
-	metus sem consequat urna, eu rutrum magna purus non arcu. Integer sem massa, euismod id tincidunt sit amet,
-	porttitor sed mauris. Etiam rhoncus magna quis nibh fringilla id volutpat justo fermentum.
-	Praesent pretium porta lectus ut consequat. Sed rutrum massa ut mauris vestibulum sodales.
-	Proin vehicula volutpat diam vitae gravida. Curabitur ut ipsum turpis. Cras lorem leo, ullamcorper quis venenatis a,
-	mollis a tellus. Proin facilisis scelerisque lectus ut porta. Integer cursus purus id magna pretium pellentesque
-	suscipit lectus sagittis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-	Duis nec libero diam, hendrerit dignissim mi. Morbi vitae molestie dolor. Vivamus placerat, nunc id lobortis lobortis,
-	velit orci cursus lectus, eget elementum orci justo sit amet erat.
-</p>
-<p>
-	Curabitur a quam eget dolor luctus pharetra vel et felis. Sed vitae venenatis nisi. Nam imperdiet hendrerit mi,
-	et dictum velit varius at. In in lacus dolor. Donec rutrum interdum felis, vitae malesuada nunc condimentum vel.
-	Mauris ut dui eu risus viverra ullamcorper nec vel magna. Morbi varius mi eget turpis lobortis pulvinar.
-	Fusce consectetur interdum ante, vitae aliquet purus vehicula et. Proin pulvinar porta elementum.
-	Curabitur auctor vulputate ipsum. Phasellus et urna eget lacus sagittis bibendum quis ac mauris.
-</p>
-EOD;
+		$lorem = new BaconIpsumGenerator();
+
+		$body = $lorem->getParagraph(1);
+		// Tack on the random snipped I'll be looking for.
+		$body .= $lorem->getParagraphsAsMarkup(8, $randomsnippet);
+
 		$blog = new BlogModel(self::$TestBlogID);
 
 		$request = new PageRequest('/blog/article/create/' . self::$TestBlogID);
@@ -101,7 +86,7 @@ EOD;
 		// Set some variables on the form
 		$form->getElement('page[title]')->set('value', $title);
 		$form->getElement('page[rewriteurl]')->set('value', $blog->get('rewriteurl') . '/' . \Core\str_to_url($title));
-		$form->getElement('model[image]')->set('value', 'blog-test-image.png');
+		$form->getElement('model[image]')->set('value', 'public/blog/blog-test-image.png');
 		$form->getElement('model[body]')->set('value', $body);
 
 		// Copy in the image

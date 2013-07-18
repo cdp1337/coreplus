@@ -6,12 +6,14 @@
 	<table class="listing">
 		<tr>
 			<th>Title</th>
+			<th>Type</th>
 			<th>Link</th>
 			<th width="80">&nbsp;</th>
 		</tr>
 		{foreach $blogs as $blog}
 			<tr>
 				<td>{$blog->get('title')}</td>
+				<td>{$blog.type}</td>
 				<td>
 					{a href="/blog/view/`$blog->get('id')`"}
 						{link link="/blog/view/`$blog->get('id')`"}

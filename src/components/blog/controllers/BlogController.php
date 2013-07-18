@@ -257,7 +257,7 @@ class BlogController extends Controller_2_1 {
 		$form->addElement('submit', array('value' => 'Update'));
 
 		// Some elements of the form need to be readonly.
-		$form->getElement('model[type]')->set('readonly', true);
+		$form->getElement('model[type]')->set('disabled', true);
 
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->title = 'Update Blog';
@@ -651,7 +651,7 @@ class BlogController extends Controller_2_1 {
 		$view->canonicalurl  = Core::ResolveLink($article->get('rewriteurl'));
 		$view->meta['og:type'] = 'article';
 		if ($article->get('image')) {
-			$image                  = Core::File('public/blog/' . $article->get('image'));
+			$image                  = \Core\Filestore\Factory::File($article->get('image'));
 			$view->meta['og:image'] = $image->getPreviewURL('200x200');
 		}
 		if($author){

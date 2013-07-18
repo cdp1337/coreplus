@@ -1,3 +1,13 @@
+Blog 1.5.1
+
+	* [Bug] Fixed Bug #409 - RSS feed not validating by w3
+	* [Bug] Minor bug where the blog type could be modified after creation, thus causing odd issues.
+	* [Feature] Added support for browsing for the showcase image.
+	* [Feature] Set the remote blogs to be imported daily via a cron.
+	* Switched all the images to be resolved in the database.  This is to support the new format of the
+	  fileinput field.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 18 Jul 2013 15:10:06 -0400
+
 Blog 1.5.0
 
 	* [Feature] Added the ability to create a remote-driven blog.  This blog is one that is entirely
