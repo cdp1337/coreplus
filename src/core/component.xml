@@ -42,7 +42,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
 		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="6568b5a2cb7e8f70442242f990dfe2c3"/>
+		<file filename="core/CHANGELOG" md5="ca04b3ef703b1f927909db13cbfec69e"/>
 		<file filename="core/bootstrap.php" md5="576c124273e2eb2a2a392d1b7f6835ed"/>
 		<file filename="core/bootstrap_postincludes.php" md5="129d5a6cab56e728c99eb116c2786051"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -1452,7 +1452,7 @@
 		</file>
 		<file filename="htaccess.ant" md5="0bf209cd00d6a90d884a584d28445d5f"/>
 		<file filename="htaccess.ex" md5="6e335eb0574ab61fca2dea4c2517a372"/>
-		<file filename="index.php" md5="6d087b205ab2a4bda77c3a7eab7ca1c3"/>
+		<file filename="index.php" md5="5a82a0099fd67a28a28a749e4c7f4d3b"/>
 		<file filename="install/InstallPage.class.php" md5="908d4058af1a52767fc85ce03a5f0de3">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>

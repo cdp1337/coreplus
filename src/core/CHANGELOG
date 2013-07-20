@@ -63,7 +63,7 @@ Core Plus 2.6.0
 	* New metadata system for files.
 	* Switched to use the cacheable version of UserAgent in the two spots that it was being called.
 	  Caching on this object is extremely important because it's so heavy.
-	-- Charlie Powell <charlie@eval.bz>  Sat, 20 Jul 2013 05:01:43 -0400
+	-- Charlie Powell <charlie@eval.bz>  Sat, 20 Jul 2013 05:14:09 -0400
 
 Core Plus 2.5.8
 
