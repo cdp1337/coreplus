@@ -14,7 +14,7 @@
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="7a4631268d91debda5a2c9470299e3e4"/>
+		<file filename="CHANGELOG" md5="76e20b7c3ec3f1a33b48827500dc753d"/>
 		<file filename="controllers/BlogController.php" md5="a543e226d15503c04193fb914ba783bc">
 			<controller name="BlogController"/>
 		</file>
@@ -24,7 +24,7 @@
 		<file filename="models/BlogArticleModel.php" md5="1bf56c3b92dbe784f78ea05e41ea480a">
 			<class name="BlogArticleModel"/>
 		</file>
-		<file filename="models/BlogModel.php" md5="c43acbef0bbbcc2e7293ce24a38f1df2">
+		<file filename="models/BlogModel.php" md5="37bc0cf4adbacd59cd96fcb68f39a080">
 			<class name="BlogModel"/>
 		</file>
 		<file filename="upgrades/121_to_130.php" md5="4f71587ed4a65da58490523dd9581684"/>

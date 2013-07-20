@@ -250,7 +250,7 @@ class BlogModel extends Model {
 			if($dat['thumbnail']){
 				$remote = \Core\Filestore\Factory::File($dat['thumbnail']);
 				$new = $remote->copyTo('public/blog/');
-				$article->set('image', $new->getBasename());
+				$article->set('image', $new->getFilename(false));
 			}
 
 			if($dat['updated']){
