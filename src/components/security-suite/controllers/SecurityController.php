@@ -119,11 +119,8 @@ class SecurityController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		list($dt, $s) = explode('-', $request->getParameter(0));
-		if(!$dt || !$s){
-			return View::ERROR_NOTFOUND;
-		}
-		$log = SecurityLogModel::Construct($dt, $s);
+		$logid = $request->getParameter(0);
+		$log = SecurityLogModel::Construct($logid);
 		if(!$log->exists()){
 			return View::ERROR_NOTFOUND;
 		}

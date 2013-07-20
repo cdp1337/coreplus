@@ -8,6 +8,9 @@
  */
 class SecurityLogModel extends Model{
 	public static $Schema = array(
+		'id' => array(
+			'type' => Model::ATT_TYPE_UUID,
+		),
 		'datetime' => array(
 			'type' => Model::ATT_TYPE_CREATED
 		),
@@ -49,7 +52,7 @@ class SecurityLogModel extends Model{
 	);
 
 	public static $Indexes = array(
-		'primary' => array('datetime', 'session_id'),
+		'primary' => array('id'),
 		'datetime' => array('datetime'),
 		'user' => array('user_id'),
 		'affected_user' => array('affected_user_id'),

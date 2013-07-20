@@ -45,7 +45,7 @@
 			<td>
 				<ul class="controls">
 					<li>
-						{a href="/security/view/`$entry.datetime`-`$entry.session_id`" title="View Details" class="ajax-link"}
+						{a href="/security/view/`$entry.id`" title="View Details" class="ajax-link"}
 							<i class="icon-view"></i>
 							<span>View Details</span>
 						{/a}
