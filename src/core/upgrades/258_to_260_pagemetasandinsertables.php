@@ -1,8 +1,8 @@
 <?php
 
 // Give me the page system!
-require_once(ROOT_PDIR . 'core/models/PageModel.class.php');
-require_once(ROOT_PDIR . 'core/models/PageMetaModel.class.php');
+if(!class_exists('PageModel')) require_once(ROOT_PDIR . 'core/models/PageModel.class.php');
+if(!class_exists('PageMetaModel')) require_once(ROOT_PDIR . 'core/models/PageMetaModel.class.php');
 
 // If this site was not in multisite mode.... the insertables and metadata may not have matched up 1-to-1 with the page's site.
 // In 2.6.0, this relationship is a little more strictly enforced.
