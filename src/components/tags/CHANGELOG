@@ -1,5 +1,12 @@
+Tags 1.0.1
+
+	* [Feature] Added a check in the template to allow the tag system to run without the user-social
+	  component
+	-- Charlie Powell <charlie@eval.bz>  Sat, 20 Jul 2013 04:38:02 -0400
+
 Tags 1.0.0
 
 	* Initial version
 	* Includes just the widget to display the linked tags for a given page.
-	--Charlie Powell <charlie@eval.bz>  Mon, 04 Feb 2013 16:04:59 -0500
+	-- Charlie Powell <charlie@eval.bz>  Mon, 04 Feb 2013 16:04:59 -0500
+

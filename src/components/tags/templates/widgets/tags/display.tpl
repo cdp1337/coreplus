@@ -6,7 +6,7 @@
 		{foreach $tags as $keyword}
 
 			<span clss="tags-display-widget-keyword">
-				{if strpos($keyword.meta_value, 'u:') === 0}
+				{if strpos($keyword.meta_value, 'u:') === 0 && Core::IsComponentAvailable('user-social')}
 					{assign var="keyworduser" value=User::Construct(substr($keyword.meta_value,2))}
 
 					<a href="{UserSocialHelper::ResolveProfileLink($keyworduser)}">
