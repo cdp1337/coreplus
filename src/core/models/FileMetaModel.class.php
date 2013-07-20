@@ -23,7 +23,7 @@ class FileMetaModel extends Model {
 		),
 		'meta_value' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 128,
+			'maxlength' => 64,
 			'required' => true,
 			'comment' => 'Machine version of the value of this meta tag',
 		),
