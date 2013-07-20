@@ -110,4 +110,15 @@ class UserActivityModel extends Model{
 
 		return $uname;
 	}
+
+	/**
+	 * Get the processing time of this request formatted with either "ms" or "s.
+	 *
+	 * @return string
+	 */
+	public function getTimeFormatted() {
+		$t = $this->get('processing_time');
+		if($t < 1100) return $t . 'ms';
+		else return round(($t/1000), 1) . 's';
+	}
 }

@@ -8,6 +8,7 @@
 	<tr>
 		<th>Request Time</th>
 		<th>User/IP/Sess</th>
+		<th><abbr title="Rendering Time">Time</abbr></th>
 		<th>Type</th>
 		<th>Request</th>
 		<th>Referrer</th>
@@ -31,7 +32,15 @@
 					{$l.session_id}
 				{/a}
 			</td>
+
+			<td>
+
+				{$l->getTimeFormatted()}
+
+			</td>
+
 			<td>{$l.type}</td>
+
 			<td>
 				{if $l.status == 200}
 					<i class="icon-ok" style="color:green;" title="Request OK"></i>

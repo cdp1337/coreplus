@@ -14,7 +14,14 @@ LOGIN / REGISTER PAGES
 #login-center ,
 .page-user-login .register-account:hover {
 	text-shadow:none;
+}
 
+#login-center .formelement .formelement-labelinputgroup label {
+	min-width: 110px;
+}
+
+#login-center .formelement .formelement-labelinputgroup input {
+	min-width: 210px;
 }
 
 

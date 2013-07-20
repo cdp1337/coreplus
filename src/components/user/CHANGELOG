@@ -1,3 +1,10 @@
+User 2.5.7
+
+	* [Feature] Added the ability to remove historical activity.  This is necessary because that table
+	  could otherwise balloon very quickly.
+	* Display the rendered time on each page call in the detailed user activity.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 20 Jul 2013 04:48:10 -0400
+
 User 2.5.6
 
 	* [Bug] Fixed a bug on the activation logic.  It now does not send an email on deactivation.

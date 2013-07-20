@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.6" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.7" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.2"/>
 		<!-- User authentication events trigger security logs. -->
@@ -16,12 +16,13 @@
 		<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
 		<hook call="UserHelper::RecordActivity" name="/core/page/postrender"/>
 		<hook name="/core/controllinks/user/view" call="UserHelper::GetControlLinks"/>
+		<hook name="/cron/daily" call="UserHelper::PurgeUserActivityCron"/>
 	</hooks>
 	<forms>
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="1c11131a092b8ea2a9c57204b1446dda"/>
+		<file filename="CHANGELOG" md5="d1e86f6d2cbf45a6db1de3f4830d5520"/>
 		<file filename="User.class.php" md5="097fab24c5528e52f7076215b2b72d4b">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -63,11 +64,11 @@
 			<class name="User\ImportHelper"/>
 		</file>
 		<file filename="helpers/UserFunctions.php" md5="0bcec65de1d551943bf68a89a35ae4e5"/>
-		<file filename="helpers/UserHelper.class.php" md5="a4ebdc0a78b7496981722d944f2aa6a4">
+		<file filename="helpers/UserHelper.class.php" md5="86cc69e492f5100d65dc89f85da1bc8a">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
-		<file filename="models/UserActivityModel.php" md5="0f717052e3cc4bbe90db4239303baa6a">
+		<file filename="models/UserActivityModel.php" md5="8d70f5be700a16328e2107ff48887fd0">
 			<class name="UserActivityModel"/>
 		</file>
 		<file filename="models/UserConfigModel.php" md5="6a9d77e42f867f4d04c5077bf0e5a5d4">
@@ -96,7 +97,7 @@
 		<file filename="templates/pages/user/me.tpl" md5="d1b0fb80fdd098d3a085a018232a0264"/>
 		<file filename="templates/pages/user/password.tpl" md5="17d96573034118ddbfd8e785a8aded88"/>
 		<file filename="templates/pages/user/register.tpl" md5="17d96573034118ddbfd8e785a8aded88"/>
-		<file filename="templates/pages/useractivity/details.tpl" md5="de29022cf2a9958ca00d2ad0f991f6cb"/>
+		<file filename="templates/pages/useractivity/details.tpl" md5="64842bd2c660f8f88ecfcbbf70f81fd9"/>
 		<file filename="templates/pages/useractivity/index.tpl" md5="90893b4472a5e60805afef1b16452dee"/>
 		<file filename="templates/pages/useradmin/import1.tpl" md5="34d4a67fc553d310cef459dc9a288da9"/>
 		<file filename="templates/pages/useradmin/import2.tpl" md5="bb67d4446d420094507d43e1b4d21390"/>
@@ -135,6 +136,7 @@
 		<config key="/user/register/requireapproval" type="boolean" default="false" description="Require administrative approvals on new accounts"/>
 		<config key="/user/enableavatar" type="boolean" default="true" description="Set to false to disable the use of avatars throughout the system."/>
 		<config key="/user/profileedits/requireapproval" type="boolean" default="false" description="If model auditing is available, it will be used to require administrative approval for profile edits."/>
+		<config key="/user/activity/keephistory" type="enum" default="3-months" options="1-week|1-month|2-months|3-months|6-months|12-months|24-months|36-months|all" description="How long should the full verbose user activity be kept."/>
 	</configs>
 	<permissions>
 		<permission key="user_manage" description="Manage users and permissions"/>
@@ -142,7 +144,7 @@
 		<permission key="/user/search/autocomplete" description="Search for users in the system via autocomplete widgets"/>
 	</permissions>
 	<assets>
-		<file filename="assets/css/user.css" md5="236d7d84133b44175293ef53460eb4f7"/>
+		<file filename="assets/css/user.css" md5="091b04c3f1466fbb00a32a7a51fc54cf"/>
 		<file filename="assets/js/user/login.js" md5="12a1daec1bfee08eaf0839667b903bf0"/>
 		<file filename="assets/js/user/user.js" md5="e5e4dc7f8ff932ce7acd330031dbeec2"/>
 	</assets>
@@ -192,6 +194,7 @@
 		<upgrade from="2.5.3" to="2.5.4"/>
 		<upgrade from="2.5.4" to="2.5.5"/>
 		<upgrade from="2.5.5" to="2.5.6"/>
+		<upgrade from="2.5.6" to="2.5.7"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

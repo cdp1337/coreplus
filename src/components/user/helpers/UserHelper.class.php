@@ -406,4 +406,57 @@ abstract class UserHelper{
 
 		return $a;
 	}
+
+	/**
+	 * Method to purge the user activity cron.
+	 *
+	 * This is useful because on an extremely busy site, this table can grow to several gigs within not much time.
+	 */
+	public static function PurgeUserActivityCron() {
+		$opt = \ConfigHandler::Get('/user/activity/keephistory');
+
+		if($opt == 'all' || !$opt){
+			echo 'Not purging any user activity.' . "\n";
+			return true;
+		}
+
+		// Convert the key to a datestring value.
+		$date = new CoreDateTime();
+		switch($opt){
+			case '1-week':
+				$date->modify('-1 week');
+				break;
+			case '1-month':
+				$date->modify('-1 month');
+				break;
+			case '2-months':
+				$date->modify('-2 month');
+				break;
+			case '3-months':
+				$date->modify('-3 month');
+				break;
+			case '6-months':
+				$date->modify('-6 month');
+				break;
+			case '12-months':
+				$date->modify('-12 month');
+				break;
+			case '24-months':
+				$date->modify('-24 month');
+				break;
+			case '36-months':
+				$date->modify('-36 month');
+				break;
+			default:
+				echo 'Invalid value for /user/activity/keephistory: [' . $opt . ']';
+				return false;
+		}
+
+		// And delete any activity older than this date.
+		echo 'Purging user activity older than ' . $date->getFormatted('r') . "...\n";
+		$ds = new Dataset();
+		$ds->delete()->table('user_activity')->where('datetime < ' . $date->getFormatted('U', TIME::TIMEZONE_GMT))->execute();
+		echo 'Removed ' . $ds->num_rows . ' record(s).' . "\n";
+		return true;
+	}
 }
