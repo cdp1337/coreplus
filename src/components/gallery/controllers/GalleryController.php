@@ -63,8 +63,7 @@ class GalleryController extends Controller_2_1 {
 
 		$page = new PageModel('/gallery');
 		$form = Form::BuildFromModel($page);
-		$form->set('callsmethod', 'GalleryFormHandler::SaveListing');
-		$form->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => '/gallery'));
+		$form->set('callsmethod', 'GalleryController::UpdateListingSave');
 		$form->addElement('submit', array('value' => 'Update Listing'));
 
 		$view->assign('form', $form);
@@ -117,18 +116,16 @@ class GalleryController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$m = new GalleryAlbumModel();
+		$m    = new GalleryAlbumModel();
+		$page = $m->getLink('Page');
 
-		$form = Form::BuildFromModel($m);
+		$form = new Form();
+		$form->addModel($page, 'page');
+		$form->addModel($m, 'model');
 		$form->set('callsmethod', 'GalleryFormHandler::SaveAlbum');
-
-		$form->addElement('pagemeta', array('name' => 'page', 'baseurl' => '/gallery/view/new'));
-
-		$form->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => '/gallery/view/new'));
 
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Create'));
-
 
 		$view->templatename = '/pages/gallery/update.tpl';
 		$view->mastertemplate = 'admin';
@@ -151,6 +148,7 @@ class GalleryController extends Controller_2_1 {
 		$req = $this->getPageRequest();
 
 		$album = new GalleryAlbumModel($req->getParameter(0));
+		$page  = $album->getLink('Page');
 
 		if(!$album->exists()) return View::ERROR_NOTFOUND;
 
@@ -161,12 +159,10 @@ class GalleryController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$form = Form::BuildFromModel($album);
+		$form = new Form();
+		$form->addModel($page, 'page');
+		$form->addModel($album, 'model');
 		$form->set('callsmethod', 'GalleryFormHandler::SaveAlbum');
-
-		$form->addElement('pagemeta', array('name' => 'page', 'model' => $album->getLink('Page')));
-
-		$form->addElement('pageinsertables', array('name' => 'insertables', 'baseurl' => '/gallery/view/' . $album->get('id')));
 
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Update'));
@@ -208,7 +204,7 @@ class GalleryController extends Controller_2_1 {
 
 
 		$album->delete();
-		Core::Redirect('/galleryadmin');
+		\core\redirect('/galleryadmin');
 
 	}
 
@@ -247,7 +243,7 @@ class GalleryController extends Controller_2_1 {
 				$image->save();
 			}
 
-			Core::Redirect($album->get('rewriteurl'));
+			\core\redirect($album->get('rewriteurl'));
 		}
 
 		$view->addBreadcrumb($album->get('title'), $album->get('rewriteurl'));
@@ -264,16 +260,24 @@ class GalleryController extends Controller_2_1 {
 	 * Handles the upload of new and existing images.  Not meant to be called directly, but is used by the images page.
 	 */
 	public function images_update(){
-		$view    = $this->getView();
-		$request = $this->getPageRequest();
-		$albumid = $request->getParameter(0);
-		$album   = new GalleryAlbumModel($albumid);
-		$type    = $album->get('store_type');
-		$image   = new GalleryImageModel($request->getParameter('image'));
-
-		$manager = \Core\user()->checkAccess('p:gallery_manage');
-		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
+		$view      = $this->getView();
+		$request   = $this->getPageRequest();
+		$albumid   = $request->getParameter(0);
+		$album     = new GalleryAlbumModel($albumid);
+		$image     = new GalleryImageModel($request->getParameter('image'));
+		$manager   = \Core\user()->checkAccess('p:gallery_manage');
+		$editor    = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
 		$uploader  = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
+
+		if($request->isAjax()){
+			// OK
+			//$view->mode = View::MODE_AJAX;
+			$view->mastertemplate = 'blank.tpl';
+		}
+
+		if(!$album->exists()){
+			return View::ERROR_NOTFOUND;
+		}
 
 		if(!$uploader){
 			return View::ERROR_ACCESSDENIED;
@@ -309,13 +313,14 @@ class GalleryController extends Controller_2_1 {
 			$last = GalleryImageModel::Find(array('albumid' => $album->get('id')), 1, 'weight DESC');
 			$weight = ($last) ? $last->get('weight') : 0;
 
+
 			// Multiple images were uploaded, (probably via one of the multi uploaders).
 			// In this case, minimal data is available, but enough to save the image.
 			if(isset($_POST['images']) && is_array($_POST['images'])){
 				$savecount = 0;
 				foreach($_POST['images'] as $img){
 					// The uploader doesn't prepend the destination directory :/
-					$file = $album->getUploadDirectory() . $img;
+					$file = $album->getFullUploadDirectory() . $img;
 
 					// instead of just blindly saving this image...
 					$image = GalleryImageModel::Find(array('albumid' => $album->get('id'), 'file' => $file));
@@ -339,6 +344,11 @@ class GalleryController extends Controller_2_1 {
 					);
 					$image->save();
 					$savecount++;
+
+					// And the metadata for this element
+					$metas = new \Core\Filestore\FileMetaHelper($image->getOriginalFile());
+					$metas->setMeta('title', $title);
+
 				}
 				if($savecount == 0){
 					$action = 'No files uploaded';
@@ -350,57 +360,9 @@ class GalleryController extends Controller_2_1 {
 				}
 				$imageid = '';
 			}
-			// Traditional image update, just one image, so it has all the information.
 			else{
-				// These are the standard updateable fields.
-				$image->setFromArray(
-					array(
-						'title' => $_POST['model']['title'],
-						'keywords' => $_POST['model']['keywords'],
-						'description' => $_POST['model']['description'],
-						'location' => $_POST['model']['location'],
-						'datetaken' => $_POST['model']['datetaken'],
-						'previewsize' => $_POST['model']['previewsize'],
-					)
-				);
-
-				// The fields that need to be set on new images
-				if(!$image->exists()){
-					$image->setFromArray(
-						array(
-							'albumid' => $album->get('id'),
-							'weight' => ++$weight,
-						)
-					);
-				}
-
-				// Make sure it uploaded successfully.
-				// I'm using the form system because it already has support for file errors builtin.
-				// Also, this is only required for new images.  Existing ones can skip this if _upload_ is not chosen.
-				if(!$image->exists() || ($image->exists() && $_POST['model']['file'] == '_upload_')){
-					$el = new FormFileInput(
-						array(
-							'name' => 'model[file]',
-							'basedir' => $album->getFullUploadDirectory(),
-							'accept' => $album->get('accepttypes'),
-						)
-					);
-					$el->setValue('_upload_');
-					if($el->hasError()){
-						echo '<div id="error">' . $el->getError() . '</div>';
-						return;
-					}
-
-					$f = $el->getFile();
-					$image->set('file', $album->getUploadDirectory() . $f->getBaseFilename());
-				}
-
-				// I need to know what to say...
-				$action = (($image->exists()) ? 'Updated' : 'Added') . ' Image!';
-				$actiontype = 'success';
-				$imageid = $image->get('id');
-
-				$image->save();
+				// This POST is only for multiple files!
+				return view::ERROR_BADREQUEST;
 			}
 
 			if($request->isAjax()){
@@ -411,12 +373,12 @@ class GalleryController extends Controller_2_1 {
 			}
 			else{
 				Core::SetMessage($action, $actiontype);
-				Core::Redirect((isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $album->get('rewriteurl')));
+				\core\redirect((isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $album->get('rewriteurl')));
 			}
 		}
 		else{
 
-			$view->mode = View::MODE_AJAX;
+
 
 			if(!$albumid){
 				return View::ERROR_BADREQUEST;
@@ -430,9 +392,22 @@ class GalleryController extends Controller_2_1 {
 				return View::ERROR_BADREQUEST;
 			}
 
-			// Give me the upload new form.
-			$form = Form::BuildFromModel($image);
+			$file = $image->getOriginalFile();
+			$meta = new \Core\Filestore\FileMetaHelper($file);
 
+			$form = new Form();
+			$form->addModel($image, 'image');
+			$meta->addElementsToForm($form, 'metas');
+
+			// If this file exists and it's not an image.... enable the preview uploader.
+			if($image->exists() && !$file->isImage()){
+				$form->switchElementType('image[previewfile]', 'file');
+			}
+
+			$form->set('callsmethod', 'GalleryController::ImagesUpdateSaveHandler');
+			$form->addElement('submit', ['name' => 'submit', 'value' => 'Save']);
+
+			$view->title = 'Editing image ' . $image->get('title');
 			$view->assign('image', $image);
 			$view->assign('album', $album);
 			$view->assign('form', $form);
@@ -472,7 +447,7 @@ class GalleryController extends Controller_2_1 {
 		$image->delete();
 
 		Core::SetMessage('Removed image successfully', 'success');
-		Core::Redirect($album->get('rewriteurl'));
+		\core\redirect($album->get('rewriteurl'));
 	}
 
 	public function images_rotate(){
@@ -572,9 +547,10 @@ class GalleryController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 
-		$id = $image->get('id');
-		$link = $image->getRewriteURL();
-		$exif = $image->getExif();
+		$id    = $image->get('id');
+		$link  = $image->getRewriteURL();
+		$exif  = $image->getExif();
+		$metas = new \Core\Filestore\FileMetaHelper($image->getOriginalFile());
 
 		//var_dump($exif); die();
 		/*
@@ -621,10 +597,13 @@ class GalleryController extends Controller_2_1 {
 		$view->assign('prev', $prev);
 		$view->assign('next', $next);
 		$view->assign('exif', $exif);
+		$view->assign('metas', $metas);
 		$view->updated = $image->get('updated');
 		$view->canonicalurl = Core::ResolveLink($link);
-		$view->meta['keywords'] = $image->get('keywords');
-		$view->meta['description'] = $image->get('description');
+		if(is_array($metas->getMetaTitle('keywords'))){
+			$view->meta['keywords'] = implode(', ', $metas->getMetaTitle('keywords'));
+		}
+		$view->meta['description'] = $metas->getMetaTitle('description');
 		$view->meta['og:image'] = $image->getFile()->getPreviewURL('200x200');
 		//$view->addBreadcrumb($album->get('title'), $album->get('baseurl'));
 		$view->title = ($image->get('title') ? $image->get('title') : 'Image Details');
@@ -634,8 +613,8 @@ class GalleryController extends Controller_2_1 {
 			$view->addControl(
 				array(
 					'title' => 'Edit Image',
-					'link' => '#',
-					'class' => 'update-link',
+					'link' => 'gallery/images/update/' . $album->get('id') . '?image=' . $image->get('id'),
+					'class' => 'ajax-link',
 					'icon' => 'edit',
 					'image' => $image->get('id'),
 				)
@@ -746,5 +725,72 @@ class GalleryController extends Controller_2_1 {
 				)
 			);
 		}
+	}
+
+	public static function ImagesUpdateSaveHandler(Form $form) {
+		try{
+			/** @var $image GalleryImageModel */
+			$image = $form->getModel('image');
+		}
+		catch(Exception $e){
+			Core::SetMessage($e->getMessage(), 'error');
+			return false;
+		}
+
+		$metas = new \Core\Filestore\FileMetaHelper($image->getOriginalFile());
+
+		// Set the meta information from the form.
+		foreach($form->getElements() as $el){
+			/** @var $el FormElement */
+			$name = $el->get('name');
+			if(strpos($name, 'metas[') !== 0) continue;
+
+			$name = substr($name, 6, -1);
+			$metas->setMeta($name, $el->get('value'));
+		}
+
+		// If no title was set, I need to pick one by default.
+		if(!$metas->getMetaTitle('title')){
+			// Generate a moderately meaningful title from the filename.
+			$title = $image->getOriginalFile()->getBasename(true);
+			$title = preg_replace('/[^a-zA-Z0-9 ]/', ' ', $title);
+			$title = trim(preg_replace('/[ ]+/', ' ', $title));
+			$title = ucwords($title);
+			$metas->setMeta('title', $title);
+		}
+
+
+		if(!$image->exists()){
+			// Figure out the largest weight of this album.
+			// Note, this is NOT the size of the images, as one or more may have been deleted after uploading.
+			$last = GalleryImageModel::Find(array('albumid' => $image->get('albumid')), 1, 'weight DESC');
+			$weight = ($last) ? $last->get('weight') : 0;
+
+			$image->set('weight', $weight);
+		}
+
+		// Don't forget to keep the metatags in sync!
+		$image->set('title', $metas->getMetaTitle('title'));
+
+		$action = $image->exists() ? 'Updated' : 'Added';
+
+		$image->save();
+		Core::SetMessage($action . ' image successfully!', 'success');
+		return true;
+	}
+
+	/**
+	 * Save just the gallery listing page itself.  This doesn't actually have any administrable data
+	 * associated to it, other than the page.
+	 *
+	 * @static
+	 * @param Form $form
+	 */
+	public static function UpdateListingSave(Form $form) {
+		$model = $form->getModel();
+		$model->save();
+
+		// w00t
+		return $model->getResolvedURL();
 	}
 }

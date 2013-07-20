@@ -44,7 +44,7 @@ class GalleryAdminController extends Controller_2_1{
 		$albums = GalleryAlbumModel::Find(null, null, 'title');
 
 		$view->templatename = '/pages/galleryadmin/index.tpl';
-		$view->title = 'Gallery Administration';
+		$view->title = 'Gallery Albums Administration';
 		$view->assignVariable('albums', $albums);
 
 

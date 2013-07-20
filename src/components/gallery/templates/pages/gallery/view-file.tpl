@@ -2,6 +2,7 @@
 {script src="js/core.fileupload.js"}{/script}
 {script library="jqueryui.timepicker"}{/script}
 {css src="css/gallery.css"}{/css}
+{script library="core.ajaxlinks"}{/script}
 
 
 {if $prev}

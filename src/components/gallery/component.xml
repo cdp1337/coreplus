@@ -1,30 +1,31 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.3" name="Gallery" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.4" name="Gallery" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.5.6" operation="ge"/>
+		<require name="core" type="component" version="2.6.0" operation="ge"/>
+		<require name="user" type="component"/>
 	</requires>
 	<permissions>
 		<permission key="gallery_manage" description="Manage Galleries"/>
 	</permissions>
 	<pages>
 		<page baseurl="/gallery" admin="0" access="*" title="Gallery Listings"/>
-		<page baseurl="/galleryadmin" admin="1" access="g:admin" title="Gallery Administration" group="Content"/>
+		<page baseurl="/galleryadmin" admin="1" access="g:admin" title="Gallery Albums Administration" group="Content"/>
 	</pages>
 	<description>
 		Gallery browsing system for core+
 	</description>
 	<view searchdir="templates">
-		<file filename="templates/pages/gallery/images_update.tpl" md5="b59d2b61005d91762fecae40ad768f46"/>
-		<file filename="templates/pages/gallery/index.tpl" md5="27602f4c3d5cfda3605738666567dac9"/>
-		<file filename="templates/pages/gallery/order.tpl" md5="fa1cd954ed88ab26a41857456ec6904a"/>
+		<file filename="templates/pages/gallery/images_update.tpl" md5="de82a0e6ddce8d82aaa555161bd88bdc"/>
+		<file filename="templates/pages/gallery/index.tpl" md5="08e7390f13bfe3bbdaf9558e04d4f508"/>
+		<file filename="templates/pages/gallery/order.tpl" md5="d70de8d8ac304055362ba640df6f0e3c"/>
 		<file filename="templates/pages/gallery/update.tpl" md5="5db5bf97680ec52e8ee5b5580af17daa"/>
 		<file filename="templates/pages/gallery/updatelisting.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/gallery/view-audio.tpl" md5="13cee03374835e963916b9e46ed450ac"/>
-		<file filename="templates/pages/gallery/view-file.tpl" md5="3bee771a5c30d6b9d6d4727cc3f47cba"/>
-		<file filename="templates/pages/gallery/view-image.tpl" md5="ffdf3d6faf3f0b639a3aa6cbbada585e"/>
-		<file filename="templates/pages/gallery/view-video.tpl" md5="abe65b701c1834e7f4a8d270d8cf5915"/>
-		<file filename="templates/pages/gallery/view.tpl" md5="51298cf90ff2f2f385409aaa4aa95284"/>
+		<file filename="templates/pages/gallery/view-audio.tpl" md5="6c4f441f3a72c5734a2e3153a39a67d7"/>
+		<file filename="templates/pages/gallery/view-file.tpl" md5="3a50e3ea955d4086c354169afb1c55cd"/>
+		<file filename="templates/pages/gallery/view-image.tpl" md5="ed6a73c03584b8536951616f8d9ca71e"/>
+		<file filename="templates/pages/gallery/view-video.tpl" md5="f5d62cac8985b8a9432600f8277ea1f0"/>
+		<file filename="templates/pages/gallery/view.tpl" md5="9af158fcc94d0b87b074c014ba915d44"/>
 		<file filename="templates/pages/galleryadmin/images.tpl" md5="3eabcaf67ce559f286c8cb1c00340072"/>
 		<file filename="templates/pages/galleryadmin/index.tpl" md5="65bb6129b2ee5b3fac36ee425d3a9141"/>
 		<file filename="templates/pages/galleryadmin/widgets.tpl" md5="638e42be8f47518515b13955f0e8fc44"/>
@@ -32,23 +33,24 @@
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="8081147de76df99a5d507ba943805412"/>
-		<file filename="controllers/GalleryAdminController.php" md5="e7e9e24bac09986c379ccc1115a9db5b">
+		<file filename="CHANGELOG" md5="5e1ad9c31eb5b45171c3f6efee110d06"/>
+		<file filename="controllers/GalleryAdminController.php" md5="d9d5c3c77fa1e9b52628f795345bfd37">
 			<controller name="GalleryAdminController"/>
 		</file>
-		<file filename="controllers/GalleryController.php" md5="c6a2808a69951ac9bbbacc1232d0d887">
+		<file filename="controllers/GalleryController.php" md5="33b6ec6945cab2f1295ee1825cfd9d14">
 			<controller name="GalleryController"/>
 		</file>
-		<file filename="helpers/GalleryFormHandler.class.php" md5="6244b62dda32b5f6d3460d3e0b8393b7">
+		<file filename="helpers/GalleryFormHandler.class.php" md5="582ed33f8629605c0523567bc06ae945">
 			<class name="GalleryFormHandler"/>
 		</file>
-		<file filename="models/GalleryAlbumModel.php" md5="f3cd17ade1ba1260d1f46dc2a42755a0">
+		<file filename="models/GalleryAlbumModel.php" md5="1aef510c2d4fab0c65157eda4c11883d">
 			<class name="GalleryAlbumModel"/>
 		</file>
-		<file filename="models/GalleryImageModel.php" md5="eaeddd69dbfbfa24e946429e2daba11c">
+		<file filename="models/GalleryImageModel.php" md5="daebab783fc3772dc1481b4adb357d54">
 			<class name="GalleryImageModel"/>
 		</file>
 		<file filename="upgrades/140_to_141_cachedtitles.php" md5="0e316e5f9a13a315331c93f1fc44b4dc"/>
+		<file filename="upgrades/143_to_144_filepathchange.php" md5="6556ad176be0b1119219a7b0becd9109"/>
 		<file filename="widgets/GalleryWidget.php" md5="7daa22785667f4e5ec91e4991952114b">
 			<class name="GalleryWidget"/>
 		</file>
@@ -73,6 +75,11 @@
 		</upgrade>
 		<upgrade from="1.4.1" to="1.4.2"/>
 		<upgrade from="1.4.2" to="1.4.3"/>
+		<upgrade from="1.4.3" to="1.4.4">
+			<phpfileinclude>
+				components/gallery/upgrades/143_to_144_filepathchange.php
+			</phpfileinclude>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

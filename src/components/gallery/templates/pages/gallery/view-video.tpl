@@ -2,6 +2,7 @@
 {script src="js/core.fileupload.js"}{/script}
 {script library="jqueryui.timepicker"}{/script}
 {css src="css/gallery.css"}{/css}
+{script library="core.ajaxlinks"}{/script}
 
 
 {if $prev}
@@ -171,7 +172,8 @@
 			$("#jquery_jplayer_1").jPlayer({
 				ready: function () {
 					$(this).jPlayer("setMedia", {
-						"{$playkey}": "{$image->getFile()->getURL()}"
+						"{$playkey}": "{$image->getFile()->getURL()}",
+						poster: "{$image->getPreviewFile()->getURL()}"
 					});
 				},
 				swfPath: "{dirname(Core::ResolveAsset('swf/Jplayer.swf'))}",

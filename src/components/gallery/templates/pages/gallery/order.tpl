@@ -9,7 +9,7 @@
 		{foreach from=$images item=i}
 			<li>
 				<input type="hidden" name="images[]" value="{$i.id}"/>
-				{img file=$i->getFile() width="100" height="50" title="`$i.title`"}
+				{img file=$i->getPreviewFile() width="100" height="50" title="`$i.title`"}
 				<span>({$i.previewsize}) {$i.title}</span>
 			</li>
 		{/foreach}

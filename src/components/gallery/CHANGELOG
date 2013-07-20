@@ -1,3 +1,13 @@
+Gallery 1.4.4
+
+	* [Feature] Added a preview file for non-images.
+	* Optimized the controllers a little bit.  They forms are now using the builtin system for page
+	  management.
+	* Switched the images to use the new metadata system available in 2.6.0.
+	* Removed location as an editable field.  Candidate for complete removal.
+	* Removed date taken as an editable field.  Candidate for complete removal.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 20 Jul 2013 04:26:19 -0400
+
 Gallery 1.4.3
 
 	* Updated gallery to work with 2.5.6

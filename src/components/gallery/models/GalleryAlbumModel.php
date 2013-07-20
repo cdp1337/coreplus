@@ -64,6 +64,7 @@ class GalleryAlbumModel extends Model {
 				'type' => 'access',
 				'title' => 'Edit Permissions',
 				'description' => 'Permissions for who is allowed to edit this album',
+				'group' => 'Access & Advanced',
 			)
 		),
 		'uploadpermissions' => array(
@@ -73,6 +74,7 @@ class GalleryAlbumModel extends Model {
 				'type' => 'access',
 				'title' => 'Upload Permissions',
 				'description' => 'Permissions for who is allowed to upload new images to this album',
+				'group' => 'Access & Advanced',
 			)
 		),
 		'accepttypes' => array(
@@ -90,6 +92,7 @@ class GalleryAlbumModel extends Model {
 					'*' => 'Accept Anything',
 				),
 				'description' => 'What types of files are intended to be uploaded to this gallery?',
+				'group' => 'Basic',
 			),
 		),
 		'created' => array(

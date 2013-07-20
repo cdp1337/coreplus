@@ -2,6 +2,7 @@
 {script src="js/core.fileupload.js"}{/script}
 {script library="jqueryui.timepicker"}{/script}
 {css src="css/gallery.css"}{/css}
+{script library="core.ajaxlinks"}{/script}
 
 
 {if $prev}
@@ -166,12 +167,16 @@
 </div>
 
 <div class="gallery-image-description">
-	{$image.description}
+	{$metas.description}
 </div>
 
-<div class="gallery-image-keywords">
-	{$image.keywords}
-</div>
+{if $metas.keywords}
+	<div class="gallery-image-keywords">
+		{$metas.keywords|implode:", "}
+	</div>
+{/if}
+
+{$metas->getAsHTML()}
 
 
 {if $exif && $exif.GPS}

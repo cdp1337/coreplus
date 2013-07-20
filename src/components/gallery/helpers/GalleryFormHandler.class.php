@@ -3,25 +3,6 @@
 abstract class GalleryFormHandler{
 
 	/**
-	 * Save just the gallery listing page itself.  This doesn't actually have any administrable data
-	 * associated to it, other than the page.
-	 *
-	 * @static
-	 * @param Form $form
-	 */
-	public static function SaveListing(Form $form){
-		$model = $form->getModel();
-		$model->save();
-
-		$insertables = $form->getElementByName('insertables');
-		$insertables->set('baseurl', '/gallery');
-		$insertables->save();
-
-		// w00t
-		return $model->getResolvedURL();
-	}
-
-	/**
 	 * Save a new or existing album
 	 *
 	 * @static
@@ -30,10 +11,9 @@ abstract class GalleryFormHandler{
 	 */
 	public static function SaveAlbum(Form $form){
 
-		$model = $form->getModel();
-
-		$page = $model->getLink('Page');
-		$page->setFromForm($form, 'page');
+		$model = $form->getModel('model');
+		/** @var $page PageModel */
+		$page  = $form->getModel('page');
 		$page->set('fuzzy', 1);
 
 		// Update the model cache data
@@ -41,10 +21,6 @@ abstract class GalleryFormHandler{
 
 		//var_dump($model); die();
 		$model->save();
-
-		$insertables = $form->getElementByName('insertables');
-		$insertables->set('baseurl', '/gallery/view/' . $model->get('id'));
-		$insertables->save();
 
 		// w00t
 		return $page->getResolvedURL();

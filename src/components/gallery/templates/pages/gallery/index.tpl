@@ -20,7 +20,7 @@
 				<div class="gallery-listing-preview">
 					<div class="gallery-listing-preview-inner">
 						{a href="`$album.rewriteurl`/`$image.id`"}
-							{img file=$image->getFile() dimensions="^150x150" title="`$image.title`"}
+							{img file=$image->getPreviewFile() dimensions="^150x150" title="`$image.title`"}
 						{/a}
 					</div>
 				</div>

@@ -3,6 +3,7 @@
 {script src="js/core.fileupload.js"}{/script}
 {script library="jqueryui.timepicker"}{/script}
 {css src="css/gallery.css"}{/css}
+{script library="core.ajaxlinks"}{/script}
 
 <h1>{$album.title}</h1>
 
@@ -45,7 +46,7 @@
 		<div class="gallery-image-wrapper gallery-image-wrapper-{$i.previewsize}">
 			<div class="gallery-image">
 				{a href="`$i.link`"}
-					{img file=$i->getFile() dimensions="`$dimensions`" title="`$i.title`"}
+					{img file=$i->getPreviewFile() dimensions="`$dimensions`" title="`$i.title`"}
 				{/a}
 			</div>
 			<div class="gallery-image-title">
@@ -55,10 +56,10 @@
 			{if $editor || $userid == $i.uploaderid}
 				<ul class="gallery-admin-image-utils controls">
 					<li class="control-edit">
-						<a href="#" title="Edit {$i->getFileType()}" class="update-link" image="{$i.id}">
+						{a href="gallery/images/update/`$album.id`?image=`$i.id`" title="Edit {$i->getFileType()}" class="ajax-link" image="`$i.id`"}
 							<i class="icon-edit"></i>
 							<span>Edit {$i->getFileType()}</span>
-						</a>
+						{/a}
 					</li>
 					{if ($i->getFileType() == 'image')}
 						<li class="control-rotate-ccw">

@@ -53,14 +53,16 @@ class GalleryImageModel extends Model {
 		),
 		'title' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 128
+			'maxlength' => 128,
+			'formtype' => 'disabled',
 		),
 		'location' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => '64',
 			'form' => array(
 				'title' => 'Location taken',
-				'description' => 'Where was this taken?'
+				'description' => 'Where was this taken?',
+				'type' => 'disabled', // Candidate for removal?
 			)
 		),
 		'latitude' => array(
@@ -76,20 +78,38 @@ class GalleryImageModel extends Model {
 			'maxlength' => '64',
 			'form' => array(
 				'title' => 'Date taken',
-				'description' => 'When was this taken?'
+				'description' => 'When was this taken?',
+				'type' => 'disabled', // Candidate for removal?
 			)
+		),
+		'previewfile' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'required' => false,
+			'form' => array(
+				'title' => 'Preview Image',
+				'type' => 'hidden', // Hidden by default, (enabled for non-image uploads)
+				'basedir' => 'public/galleryalbum', // Defaults, but may be changed in the controller.
+				'accept' => 'image/*',
+				'description' => 'Upload an image to use as the preview version of this file.',
+			),
+			'comment' => 'For videos and non-images, this is the preview image',
 		),
 		'previewsize' => array(
 			'type' => Model::ATT_TYPE_ENUM,
 			'options' => array('xs', 'sm', 'med', 'lg', 'xl'),
 			'default' => 'med',
+			'form' => array(
+				'title' => 'Preview Size',
+				'description' => 'The preview size of this item on the listing page',
+			)
 		),
-		'keywords' => array(
+		/*'keywords' => array(
 			'type' => Model::ATT_TYPE_TEXT,
-		),
-		'description' => array(
+		),*/
+		/*'description' => array(
 			'type' => Model::ATT_TYPE_TEXT,
-		),
+		),*/
 		'rotation' => array(
 			'type' => Model::ATT_TYPE_INT,
 			'formtype' => 'hidden',
@@ -147,7 +167,7 @@ class GalleryImageModel extends Model {
 				// File was updated... load the exif data too!
 				// Note, only do this if it was an image!
 				$file = $this->getOriginalFile();
-				if($file->isImage()){
+				if($file->isImage() && ($file->getExtension() == 'jpg')){
 					$this->_data['exifdata'] = json_encode( exif_read_data($file->getFilename()) );
 				}
 				else{
@@ -174,6 +194,27 @@ class GalleryImageModel extends Model {
 				return json_decode($this->_data['exifdata'], true);
 			default:
 				return parent::get($k);
+		}
+	}
+
+	/**
+	 * Get the preview file associated to this image/item.
+	 *
+	 * This is required because albeit images are their own previews, videos, music and other files do not have a useful preview version.
+	 * As such, if there was one uploaded, use that image instead of the mimetype image.
+	 *
+	 * @return \Core\Filestore\File
+	 */
+	public function getPreviewFile(){
+		if($this->getOriginalFile()->isImage()){
+			return $this->getFile();
+		}
+		elseif($this->get('previewfile')){
+			$file = \Core\Filestore\Factory::File($this->get('previewfile'));
+			return $file;
+		}
+		else{
+			return $this->getFile();
 		}
 	}
 
@@ -255,7 +296,7 @@ class GalleryImageModel extends Model {
 	 * @return \Core\Filestore\File
 	 */
 	public function getOriginalFile(){
-		return Core::File('public/galleryalbum/' . $this->get('file'));
+		return \Core\Filestore\Factory::File($this->get('file'));
 	}
 
 	public function getRewriteURL(){
