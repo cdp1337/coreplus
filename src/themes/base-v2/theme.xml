@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.6" name="Base V2">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.7" name="Base V2">
 	<assets>
 		<file filename="assets/css/codemirror.css" md5="3ae79db8923119601aa32d46e9074a29"/>
 		<file filename="assets/css/error404.css" md5="d451b8028c05fb6474223b84ddc7f417"/>
@@ -7,7 +7,7 @@
 		<file filename="assets/css/opt/gradients.css" md5="26c1738ce9d7e3a909f633dedf52db63"/>
 		<file filename="assets/css/print.css" md5="f3dd7a5f96e67e8d2156b5887ea785d4"/>
 		<file filename="assets/css/screen.css" md5="616a30b3d90d734a28c0b429991eb77e"/>
-		<file filename="assets/css/styles.css" md5="de4f55d1b8304fee29feaa1b5646bfa7"/>
+		<file filename="assets/css/styles.css" md5="36eda30dabcbfb9ae3783a65fcecc485"/>
 		<file filename="assets/css/tinymce/content.css" md5="1ff045c082c1f366dd16e8322644e484"/>
 		<file filename="assets/images/404.jpg" md5="815cb4116bbbec081a645e85de74025c"/>
 	</assets>
@@ -28,6 +28,7 @@
 		<upgrade from="1.0.3" to="1.0.4"/>
 		<upgrade from="1.0.4" to="1.0.5"/>
 		<upgrade from="1.0.5" to="1.0.6"/>
+		<upgrade from="1.0.6" to="1.0.7"/>
 	</upgrades>
 	<screenshots>
 		<screenshot file="screenshots/screen1.png" title="Home Page"/>

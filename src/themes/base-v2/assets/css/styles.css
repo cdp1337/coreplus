@@ -118,6 +118,29 @@ footer p {
 
 
 
+/*****************************************************************************
+ *****************************************************************************
+ **                        IMAGE METADATA STYLES                            **
+ *****************************************************************************
+ *****************************************************************************/
+.image-metadata-wrapper {
+	display: inline-block;
+	position: relative;
+}
+.image-metadata-wrapper .image-metadata {
+	background: none repeat scroll 0 0 #DDDDDD;
+	bottom: 0;
+	color: black;
+	font-size: 90%;
+	opacity: 0.4;
+	padding: 0 1em;
+	position: absolute;
+}
+.image-metadata-wrapper:hover .image-metadata {
+	opacity: 0.7;
+}
+
+
 
 
 /*****************************************************************************
@@ -137,6 +160,26 @@ For dimensions smaller than 975, just be at 100%.
 }
 @media screen and (max-width: 975px) {
 	#wrapper { width: 100%; }
+}
+@media screen and (max-width: 640px) {
+	#wrapper {
+		width: 100%;
+	}
+	#wrapper #leftcol {
+		display: none;
+	}
+	#wrapper.column1 section.pagecontent {
+		margin-left: 0px;
+	}
+}
+@media screen and (max-width: 480px) {
+	/*img {
+		width: 100%;
+		height: auto;
+	}
+	.image-metadata img {
+		width: auto;
+	}*/
 }
 
 
@@ -516,13 +559,13 @@ fieldset .formdescription {
 	color: #888;
 	padding: 7px 6px 7px 9px;
 	background: #DDD;
-	min-width: 100px;
+	min-width: 120px;
 }
 
 .formelement .formelement-labelinputgroup input {
 	color: #3C3C3C;
 	float: left;
-	min-width: 100px;
+	min-width: 260px;
 	background: none;
 	border: 0px none;
 	padding: 5px 0 5px 10px;
@@ -538,7 +581,7 @@ fieldset .formdescription {
 	border: 0px none;
 	border-radius: 0.4em 0.4em 0 0;
 	color: #3C3C3C;
-	padding: 8px 4px 8px 9px;
+	padding: 7px 4px 7px 9px;
 	min-width: 100px;
 	cursor: pointer;
 }
@@ -651,8 +694,8 @@ fieldset .formdescription {
 	top: 0;
 }
 .formelement.formtextareainput .formelement-labelinputgroup textarea {
-	padding:4%;
-	width: 92%;
+	padding: 2px;
+	width: 400px;
 	min-height: 80px;
 	border: 0px none;
 	background:#f6f6f6;
@@ -670,7 +713,7 @@ fieldset .formdescription {
 	padding: 4px;
 }
 .formelement.formfileinput .file-input-innercontainer .formfileinput-selector {
-	float:left;
+	vertical-align: top;
 	width:150px;
 }
 .formelement.formfileinput .file-input-innercontainer .formfileinput-selector label {
@@ -680,7 +723,19 @@ fieldset .formdescription {
 	background: none;
 }
 .formelement.formfileinput .file-input-innercontainer .file-input-actions {
-	float: left;
+	vertical-align: top;
+}
+.formelement.formfileinput .file-input-innercontainer .fileinput-action {
+	max-height: 350px;
+	min-width: 200px;
+	max-width: 720px;
+	overflow-y: auto;
+}
+.formelement.formfileinput .file-input-innercontainer .fileinput-action input {
+	background: white;
+	border: 1px solid #888;
+	padding: 2px;
+	margin: 1px;
 }
 
 /* Page Keywords input specific styles */
@@ -694,9 +749,8 @@ fieldset .formdescription {
 	border-radius: 0.4em 0.4em 0.4em 0.4em;
 	cursor: text;
 	height: auto;
-	min-width: 100px;
-	max-width: 400px;
-	padding: 0.15em 0.8em 0.15em 0.15em;
+	width: 400px;
+	padding: 2px;
 }
 .formelement.formpagemetakeywordsinput .keywords-multi-select input[type="text"] {
 	border: 0 none;
@@ -711,6 +765,15 @@ fieldset .formdescription {
 	float: left;
 	margin: 0.05em;
 	padding: 0.2em 0.5em;
+}
+
+
+/* Disabled selects should look a little more ... disabled. */
+.formelement.formselect .formelement-labelinputgroup select[disabled],
+.formelement.formselect select[disabled] {
+	opacity: 0.4;
+	color: #111;
+	cursor: no-drop;
 }
 
 
