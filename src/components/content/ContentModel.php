@@ -45,6 +45,7 @@ class ContentModel extends Model{
 				'type' => 'access',
 				'title' => 'Edit Permissions',
 				'description' => 'Permissions for who is allowed to edit this page',
+				'group' => 'Access & Advanced',
 			)
 		),
 		'created' => array(

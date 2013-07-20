@@ -7,7 +7,7 @@
 		</p>
 	{/insertable}
 
-	{insertable name="img1" type="file" assign="img1"}
+	{insertable name="img1" title="Large Image" assign="img1"}
 		{img src="public/insertable/`$img1`" placeholder="generic" dimensions="800x400" title="`$img1`"}
 	{/insertable}
 </div>

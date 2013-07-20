@@ -89,7 +89,6 @@ class ContentController extends Controller_2_1 {
 
 		$form->addModel($page, 'page');
 		$form->addModel($model, 'model');
-		$form->addElement('pageinsertables', array('name' => 'insertables', 'model' => $page));
 
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Update'));
@@ -130,7 +129,6 @@ class ContentController extends Controller_2_1 {
 
 		$form->addModel($page, 'page');
 		$form->addModel($model, 'model');
-		$form->addElement('pageinsertables', array('name' => 'insertables', 'model' => $page));
 
 		// Tack on a submit button
 		$form->addElement('submit', array('value' => 'Create'));
@@ -150,16 +148,10 @@ class ContentController extends Controller_2_1 {
 		$model = $form->getModel('model');
 		/** @var $page PageModel Page object for this model, already linked up! */
 		$page = $form->getModel('page');
-		/** @var $insertables FormPageInsertables */
-		$insertables = $form->getElementByName('insertables');
 
 		// The content nickname is derived from the page title.
 		$model->set('nickname', $page->get('title'));
-		$page->set('page_template', $insertables->getElement('insertables_page_template')->get('value'));
-
 		$model->save();
-		$insertables->set('baseurl', '/content/view/' . $model->get('id'));
-		$insertables->save();
 
 		// w00t
 		return $page->getResolvedURL();
