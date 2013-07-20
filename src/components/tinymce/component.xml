@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.1~core1" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.1~core2" name="TinyMCE" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.1"/>
 		<require name="jquery" type="library"/>
@@ -11,26 +11,16 @@
 	<forms>
 		<formelement name="wysiwyg" class="TinyMCEFormElement"/>
 	</forms>
-	<permissions>
-		<permission key="/tinymce/filebrowser/access" description="TinyMCE - Access the file browser"/>
-		<permission key="/tinymce/filebrowser/upload" description="TinyMCE - Upload images in the file browser"/>
-	</permissions>
-	<configs>
-		<config key="/tinymce/user-uploads/sandbox" type="enum" options="user-sandboxed|shared-user-sandbox|completely-open" default="shared-user-sandbox" description="The browse mode for tinymce.  By default, tinymce uploads are constrained to the public/tinymce directory.  If user-sandboxed is selected, then each user gets their own directory for uploads.  Setting to completely-open will enable all of /public to be browseable."/>
-	</configs>
-	<pages>
-		<page baseurl="/tinymcenavigator" title="Uploaded Files Navigator" group="Content" access="g:admin" admin="1"/>
-	</pages>
+	<permissions></permissions>
+	<configs></configs>
+	<pages></pages>
 	<view>
 		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="2d1d9893d6d2e518eaa953eb460df23d"/>
 		<file filename="templates/pages/tinymce/browser-icons.tpl" md5="e9e783cbc75b5dbe1d7618e5e4e41ebe"/>
 		<file filename="templates/pages/tinymce/link.phtml" md5="524d952e87774b2bafd2324e7c15274b"/>
-		<file filename="templates/pages/tinymcenavigator/index.tpl" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="templates/pages/tinymcenavigator/index/icons.tpl" md5="888082f0ec6e08ba483cbee0de3cfd27"/>
-		<file filename="templates/pages/tinymcenavigator/index/list.tpl" md5="ba136c5f2f6138c2bb6ddb9746a95d90"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="9a3a40f8616b3b15056044b31d053c0c"/>
+		<file filename="CHANGELOG" md5="a79687afafceb67ce60a9c9bb35c02bd"/>
 		<file filename="LICENSE.TXT" md5="045d04e17422d99e338da75b9c749b7c"/>
 		<file filename="TinyMCEFormElement.class.php" md5="5c3eccd47fabc69634e956046b08ee73">
 			<class name="TinyMCEFormElement"/>
@@ -39,21 +29,14 @@
 		<file filename="controllers/TinyMCEController.php" md5="5dd2945866df74f2b3bea7a28db19fd4">
 			<controller name="TinyMCEController"/>
 		</file>
-		<file filename="controllers/TinyMCENavigatorController.php" md5="6b42749b295aaf409bdbb4487a3822ab">
-			<controller name="TinyMCENavigatorController"/>
-		</file>
-		<file filename="libs/tinymce/Navigator.php" md5="98fdc66e4bdedd3f198bc855f45d5933">
-			<class name="TinyMCE\Navigator"/>
-		</file>
-		<file filename="libs/tinymce/TinyMCE.php" md5="100345d8063cf75e370423ce1750b131">
+		<file filename="libs/tinymce/TinyMCE.php" md5="0add1882d03b3acbb08caed57014c44c">
 			<class name="TinyMCE\TinyMCE"/>
 		</file>
 	</files>
 	<assets>
 		<file filename="assets/css/tinymce/content.css" md5="7f4ddd19337b5ec82f8ea094543c42d8"/>
-		<file filename="assets/css/tinymce/navigator.css" md5="10756dc46d9eb76805745daf55be227a"/>
 		<file filename="assets/css/tinymce/overrides.css" md5="8c550606d8cb0f9d78c337201e0562fc"/>
-		<file filename="assets/js/tinymce/coreplus_functions.js" md5="739ffe6fd4a284996b1fbd4feae3fd11"/>
+		<file filename="assets/js/tinymce/coreplus_functions.js" md5="6aa9e7757955b8d621052f348538ed2f"/>
 		<file filename="assets/js/tinymce/jquery.tinymce.min.js" md5="c3b150836f2c5b282f8f24f200931c37"/>
 		<file filename="assets/js/tinymce/langs/readme.md" md5="a803b8446c1cdbaa1984d49b92bb8001"/>
 		<file filename="assets/js/tinymce/license.txt" md5="045d04e17422d99e338da75b9c749b7c"/>
@@ -214,7 +197,6 @@
 		<file filename="assets/js/tinymce/themes/modern/theme.js" md5="b864f6c02fda5469672c3910e44c4fbf"/>
 		<file filename="assets/js/tinymce/themes/modern/theme.min.js" md5="0170f9d8e1b6c0482dd43464593c6319"/>
 		<file filename="assets/js/tinymce/tinymce.min.js" md5="c1c2124c32505b8d6be41a2140863dae"/>
-		<file filename="assets/js/tinymcenavigator.js" md5="1e611f7fd2f5bea0ebf1ba81d1248443"/>
 	</assets>
 	<upgrades>
 		<upgrade from="3.4.6" to="3.4.6~core1"/>
@@ -231,6 +213,16 @@
 		<upgrade from="4.0b3~core1" to="4.0b3~core2"/>
 		<upgrade from="4.0b3~core2" to="4.0.0~core1"/>
 		<upgrade from="4.0.0~core1" to="4.0.1~core1"/>
+		<upgrade from="4.0.1~core1" to="4.0.1~core2">
+			<dataset action="delete" table="page">
+				<datasetwhere>baseurl = /tinymcenavigator</datasetwhere>
+			</dataset>
+			<dataset action="delete" table="config">
+				<datasetwhere>
+					key = /tinymce/user-uploads/sandbox
+				</datasetwhere>
+			</dataset>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

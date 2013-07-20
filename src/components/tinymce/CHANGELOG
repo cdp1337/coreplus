@@ -1,3 +1,8 @@
+TinyMCE 4.0.1~core2
+
+	* Moved the navigator functionality into the Media Manager component.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 20 Jul 2013 04:45:27 -0400
+
 TinyMCE 4.0.1~core1
 
 	* [Bug] Fixed Bug #254 - TinyMCE File browser needs to be alphabetical

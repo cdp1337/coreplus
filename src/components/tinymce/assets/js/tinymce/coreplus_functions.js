@@ -11,11 +11,11 @@ Core.TinyMCE = {
 		// There are two types of browsers here, file and image.
 		// each has a few specific settings.
 		if(type == 'file'){
-			url = Core.ROOT_URL + 'tinymcenavigator?ajax=1';
+			url = Core.ROOT_URL + 'mediamanagernavigator?iframe=1&controls=0';
 			title = 'File Browser';
 		}
 		else if(type == 'image'){
-			url =  Core.ROOT_URL + 'tinymcenavigator/image?ajax=1';
+			url =  Core.ROOT_URL + 'mediamanagernavigator/image?iframe=1&controls=0';
 			title = 'Image Browser';
 		}
 		else{

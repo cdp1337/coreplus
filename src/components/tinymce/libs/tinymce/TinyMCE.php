@@ -18,7 +18,8 @@ abstract class TinyMCE {
 		\CurrentPage::AddStylesheet('css/tinymce/overrides.css');
 
 		// Yes, the string needs quotes inside of quotes!  It's to be read by javascript after all.
-		$filebrowsercallback = (\Core\user()->checkAccess('p:/tinymce/imagebrowser/access')) ? "Core.TinyMCE.FileBrowserCallback" : 'null';
+		$browsable           = ( \Core::IsComponentAvailable('media-manager') && \Core\user()->checkAccess('p:/mediamanager/browse') );
+		$filebrowsercallback = $browsable ? "Core.TinyMCE.FileBrowserCallback" : 'null';
 
 		$loc = \Core::ResolveAsset('js/tinymce/tinymce.min.js');
 		$content = \Core::ResolveAsset('css/tinymce/content.css');
