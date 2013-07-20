@@ -17,11 +17,13 @@ Navigator = {
 	UploadTimer: false,
 	UploadProgress: 0,
 	UploadTotalProgress: 0,
+	FakeBarProgress: false,
 
 	Setup: function(){
 
-		Navigator.Location = $('.tinymcenavigator').attr('location');
-		Navigator.Mode = $('.tinymcenavigator').attr('mode');
+		Navigator.Location = $('.mediamanagernavigator').attr('location');
+		Navigator.Mode = $('.mediamanagernavigator').attr('mode');
+		Navigator.FakeBarProgress = false;
 
 		$('.directory-create').click(function(){
 			Navigator.Mkdir();
@@ -53,30 +55,31 @@ Navigator = {
 			return false;
 		});
 
-		$('.tinymcenavigator').find('.directory a, .file a').click(function(){
+		$('.mediamanagernavigator').find('.directory a, .file a').click(function(){
 			if($(this).attr('href') != '#'){
+				Navigator.FakeBarProgress = true;
 				Navigator.Bargraph.Set(40);
 
 				// If it's still on this page in a moment...
 				// Yes, this is a blatant dirty hack to make some pointless visual appeal,
 				// but it at least gives the user something to look at for a couple seconds!
-				setTimeout(function(){ Navigator.Bargraph.Set(50); }, 200);
-				setTimeout(function(){ Navigator.Bargraph.Set(60); }, 400);
-				setTimeout(function(){ Navigator.Bargraph.Set(70); }, 600);
-				setTimeout(function(){ Navigator.Bargraph.Set(80); }, 1000);
-				setTimeout(function(){ Navigator.Bargraph.Set(0); },  4000);
+				setTimeout(function(){ if(Navigator.FakeBarProgress) Navigator.Bargraph.Set(50); }, 200);
+				setTimeout(function(){ if(Navigator.FakeBarProgress) Navigator.Bargraph.Set(60); }, 400);
+				setTimeout(function(){ if(Navigator.FakeBarProgress) Navigator.Bargraph.Set(70); }, 600);
+				setTimeout(function(){ if(Navigator.FakeBarProgress) Navigator.Bargraph.Set(80); }, 1000);
+				setTimeout(function(){ if(Navigator.FakeBarProgress) Navigator.Bargraph.Set(0); },  4000);
 			}
 		});
 
-		Navigator.DOM.$bargraph = $('.tinymcenavigator-addressbar .bargraph-inner');
+		Navigator.DOM.$bargraph = $('.mediamanagernavigator-addressbar .bargraph-inner');
 		Navigator.DOM.$uploader = $('.multifileinput').closest('form');
 
 
 		// Change some of the default behaviour of the uploader.
-		if(Navigator.DOM.$uploader){
+		if(Navigator.DOM.$uploader.length > 0){
 
 			Navigator.DOM.$uploader.fileupload({
-				dropzone: $('.tinymcenavigator'),
+				dropzone: $('.mediamanagernavigator'),
 				done: function (e, data) {
 					if(Navigator.UploadProgress >= 100){
 						Core.Reload();
@@ -84,7 +87,7 @@ Navigator = {
 					}
 				},
 				fail: function(e, data){
-					$('.tinymcenavigator').readonly(false);
+					$('.mediamanagernavigator').readonly(false);
 					Navigator.Bargraph.Set(0);
 					alert(data.errorThrown);
 				}
@@ -93,7 +96,7 @@ Navigator = {
 			Navigator.DOM.$uploader.bind('fileuploadadd', function(){
 				if(!Navigator.Bargraph.Get()){
 					Navigator.Bargraph.Set(5);
-					$('.tinymcenavigator').readonly(true);
+					$('.mediamanagernavigator').readonly(true);
 				}
 			});
 
@@ -113,7 +116,7 @@ Navigator = {
 
 		// Post the new name.
 		$.ajax({
-			url: Core.ROOT_URL + 'tinymcenavigator/directory/mkdir',
+			url: Core.ROOT_URL + 'mediamanagernavigator/directory/mkdir',
 			type: 'post',
 			dataType: 'json',
 			data: { dir: Navigator.Location, newdir: newname },
@@ -146,7 +149,7 @@ Navigator = {
 
 		// Post the new name.
 		$.ajax({
-			url: Core.ROOT_URL + 'tinymcenavigator/' + type + '/rename',
+			url: Core.ROOT_URL + 'mediamanagernavigator/' + type + '/rename',
 			type: 'post',
 			dataType: 'json',
 			data: { dir: Navigator.Location, olddir: $target.attr('browsename'), newdir: newname },
@@ -176,7 +179,7 @@ Navigator = {
 			Navigator.Bargraph.Set(35);
 
 			$.ajax({
-				url: Core.ROOT_URL + 'tinymcenavigator/' + type + '/delete',
+				url: Core.ROOT_URL + 'mediamanagernavigator/' + type + '/delete',
 				type: 'post',
 				dataType: 'json',
 				data: { dir: Navigator.Location, olddir: $target.attr('browsename') },

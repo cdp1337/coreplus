@@ -1,0 +1,8 @@
+Media Manager 1.0.0
+
+	* [Feature] Initial version!
+	* Migrated much of the tinymce navigator functionality into this component.
+	* Handles metadata of files as well.
+	* Cleaned up UI for embedded views.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 20 Jul 2013 04:29:48 -0400
+

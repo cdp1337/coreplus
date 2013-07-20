@@ -1,6 +1,6 @@
 <?php
 /**
- * File for class TinyMCENavigatorController definition in the coreplus project
+ * File for class MediaManagerNavigatorController definition in the coreplus project
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130603.1641
@@ -29,7 +29,7 @@
  * <h3>Usage Examples</h3>
  *
  *
- * @todo Write documentation for TinyMCENavigatorController
+ * @todo Write documentation for MediaManagerNavigatorController
  * <h4>Example 1</h4>
  * <p>Description 1</p>
  * <code>
@@ -49,7 +49,7 @@
  * @author Charlie Powell <charlie@eval.bz>
  *
  */
-class TinyMCENavigatorController extends  Controller_2_1{
+class MediaManagerNavigatorController extends  Controller_2_1{
 
 	/**
 	 * Main view for the navigator.
@@ -62,16 +62,21 @@ class TinyMCENavigatorController extends  Controller_2_1{
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
-		$navigator = new \TinyMCE\Navigator();
+		$navigator = new \MediaManager\Navigator();
 		$navigator->setView($view);
 		if($request->getParameter('ajax')){
-			$navigator->setBaseURL('/tinymcenavigator?ajax=1');
+			$navigator->setBaseURL('/mediamanagernavigator?ajax=1');
+			$view->mastertemplate = false;
+			$view->record = false;
+			$view->mode = View::MODE_AJAX;
+		}
+		elseif($request->getParameter('iframe')){
+			$navigator->setBaseURL('/mediamanagernavigator?iframe=1');
 			$view->mastertemplate = 'blank.tpl';
 			$view->record = false;
-			//$view->mode = View::MODE_AJAX;
 		}
 		else{
-			$navigator->setBaseURL('/tinymcenavigator');
+			$navigator->setBaseURL('/mediamanagernavigator');
 			$view->mastertemplate = 'admin';
 			//$view->mode = View::MODE_PAGE;
 		}
@@ -79,12 +84,18 @@ class TinyMCENavigatorController extends  Controller_2_1{
 		try{
 			$navigator->cd($request->getParameter('dir'));
 			$navigator->setMode($request->getParameter('mode'));
+			if($request->getParameter('controls') !== null){
+				$navigator->usecontrols = ($request->getParameter('controls') == 1);
+			}
+			if($request->getParameter('uploader') !== null){
+				$navigator->useuploader = ($request->getParameter('uploader') == 1);
+			}
 		}
 		catch(Exception $e){
 			Core::SetMessage($e->getMessage(), 'error');
 		}
 
-		$view->title = 'Uploaded Files Navigator';
+		$view->title = 'File Media Navigator';
 		$navigator->render();
 		//var_dump($navigator, $navigator->render()); die();
 	}
@@ -100,24 +111,35 @@ class TinyMCENavigatorController extends  Controller_2_1{
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
-		$navigator = new \TinyMCE\Navigator();
+		$navigator = new \MediaManager\Navigator();
 		$navigator->setView($view);
 		$navigator->setMode($request->getParameter('mode'));
 		$navigator->setAccept('image');
 		if($request->getParameter('ajax')){
-			$navigator->setBaseURL('/tinymcenavigator/image?ajax=1');
+			$navigator->setBaseURL('/mediamanagernavigator/image?ajax=1');
+			$view->mastertemplate = false;
+			$view->record = false;
+			$view->mode = View::MODE_AJAX;
+		}
+		elseif($request->getParameter('iframe')){
+			$navigator->setBaseURL('/mediamanagernavigator/image?iframe=1');
 			$view->mastertemplate = 'blank.tpl';
 			$view->record = false;
-			//$view->mode = View::MODE_AJAX;
 		}
 		else{
-			$navigator->setBaseURL('/tinymcenavigator/image');
+			$navigator->setBaseURL('/mediamanagernavigator/image');
 			$view->mastertemplate = 'admin';
 			//$view->mode = View::MODE_PAGE;
 		}
 
 		try{
 			$navigator->cd($request->getParameter('dir'));
+			if($request->getParameter('controls') !== null){
+				$navigator->usecontrols = ($request->getParameter('controls') == 1);
+			}
+			if($request->getParameter('uploader') !== null){
+				$navigator->useuploader = ($request->getParameter('uploader') == 1);
+			}
 		}
 		catch(Exception $e){
 			Core::SetMessage($e->getMessage(), 'error');
@@ -141,7 +163,7 @@ class TinyMCENavigatorController extends  Controller_2_1{
 		$view->mode = View::MODE_AJAX;
 		$view->contenttype = View::CTYPE_JSON;
 
-		$navigator = new \TinyMCE\Navigator();
+		$navigator = new \MediaManager\Navigator();
 		$navigator->setView($view);
 
 		if(!$request->isPost()){
@@ -183,7 +205,7 @@ class TinyMCENavigatorController extends  Controller_2_1{
 		$view->mode = View::MODE_AJAX;
 		$view->contenttype = View::CTYPE_JSON;
 
-		$navigator = new \TinyMCE\Navigator();
+		$navigator = new \MediaManager\Navigator();
 		$navigator->setView($view);
 
 		if(!$request->isPost()){
@@ -230,7 +252,7 @@ class TinyMCENavigatorController extends  Controller_2_1{
 		$view->mode = View::MODE_AJAX;
 		$view->contenttype = View::CTYPE_JSON;
 
-		$navigator = new \TinyMCE\Navigator();
+		$navigator = new \MediaManager\Navigator();
 		$navigator->setView($view);
 
 		if(!$request->isPost()){
@@ -267,7 +289,7 @@ class TinyMCENavigatorController extends  Controller_2_1{
 		$view->mode = View::MODE_AJAX;
 		$view->contenttype = View::CTYPE_JSON;
 
-		$navigator = new \TinyMCE\Navigator();
+		$navigator = new \MediaManager\Navigator();
 		$navigator->setView($view);
 
 		if(!$request->isPost()){
@@ -303,6 +325,54 @@ class TinyMCENavigatorController extends  Controller_2_1{
 	}
 
 	/**
+	 * Manage a given file's metadata.
+	 */
+	public function file_metadata(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		$navigator = new \MediaManager\Navigator();
+		$navigator->setView($view);
+		if($request->isAjax()){
+			$navigator->isembedded = true;
+			$view->mastertemplate = 'blank.tpl';
+			$view->record = false;
+		}
+
+
+		// Since this won't use the navigator to render the view.
+		if(!$navigator->canupload){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$file = $request->getParameter('file');
+		if(!$file){
+			return View::ERROR_NOTFOUND;
+		}
+
+		try{
+			$dir = dirname($file);
+			$file = basename($file);
+			$navigator->cd($dir);
+			$file = $navigator->getFile($file);
+		}
+		catch(Exception $e){
+			return View::ERROR_NOTFOUND;
+		}
+
+		// And now, $file is a valid File object!
+
+		$meta = new \Core\Filestore\FileMetaHelper($file);
+
+		$form = $meta->getForm(null);
+		$form->set('callsmethod', 'MediaManagerNavigatorController::FileMetadataSaveHandler');
+		$form->addElement('submit', ['name' => 'submit', 'value' => 'Save Metadata']);
+
+		$view->title = 'Metadata for ' . $file->getBasename();
+		$view->assign('form', $form);
+	}
+
+	/**
 	 * Helper function for the file delete command.
 	 *
 	 * Returns JSON data and is expected to be called via ajax.
@@ -314,7 +384,7 @@ class TinyMCENavigatorController extends  Controller_2_1{
 		$view->mode = View::MODE_AJAX;
 		$view->contenttype = View::CTYPE_JSON;
 
-		$navigator = new \TinyMCE\Navigator();
+		$navigator = new \MediaManager\Navigator();
 		$navigator->setView($view);
 
 		if(!$request->isPost()){
@@ -337,5 +407,30 @@ class TinyMCENavigatorController extends  Controller_2_1{
 		}
 
 		$view->jsondata = array('status' => 1, 'message' => 'Deleted file successfully');
+	}
+
+	/**
+	 * Save handler for the form_metadata page.
+	 *
+	 * @param Form $form
+	 */
+	public static function FileMetadataSaveHandler(Form $form) {
+		$filename = $form->getElement('file')->get('value');
+		$file     = \Core\Filestore\Factory::File($filename);
+		$helper   = new \Core\Filestore\FileMetaHelper($file);
+
+		// Run through each element and save its metadata to the table.
+		foreach($form->getElements() as $el){
+			/** @var $el FormElement */
+			$name = $el->get('name');
+
+			if($name == 'file') continue;
+			if($name == '___formid') continue;
+			if($name == 'submit') continue;
+
+			$helper->setMeta($name, $el->get('value'));
+		}
+
+		return true;
 	}
 }

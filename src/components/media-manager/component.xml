@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Media Manager">
+	<requires>
+		<require name="core" type="component" version="2.6.0"/>
+		<require name="jquery" type="library"/>
+	</requires>
+	<permissions>
+		<permission key="/mediamanager/browse" description="Media Manager - Access the file browser"/>
+		<permission key="/mediamanager/upload" description="Media Manager - Upload images in the file browser"/>
+	</permissions>
+	<configs>
+		<config key="/mediamanager/sandbox" type="enum" options="user-sandboxed|shared-user-sandbox|completely-open" default="completely-open" description="The browse mode for mediamanager.  By default, media uploads are constrained to the public/media directory.  If user-sandboxed is selected, then each user gets their own directory for uploads.  Setting to completely-open will enable all of /public to be browseable."/>
+	</configs>
+	<pages>
+		<page baseurl="/mediamanagernavigator" title="File Media Navigator" group="Content" access="p:/mediamanager/browse" admin="1"/>
+	</pages>
+	<view>
+		<file filename="templates/pages/mediamanagernavigator/file_metadata.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/mediamanagernavigator/index.tpl" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="templates/pages/mediamanagernavigator/index/icons.tpl" md5="1239234c6ff0f581b25861ed93741521"/>
+		<file filename="templates/pages/mediamanagernavigator/index/list.tpl" md5="12907c0d2122d492806504d8f1aa4b01"/>
+	</view>
+	<files>
+		<file filename="controllers/MediaManagerNavigatorController.php" md5="4ad8781484bfc7c8cd07a780de25db49">
+			<controller name="MediaManagerNavigatorController"/>
+		</file>
+		<file filename="libs/mediamanager/Navigator.php" md5="8ac57c2c7becdebc0df6042ccfd97409">
+			<class name="MediaManager\Navigator"/>
+		</file>
+	</files>
+	<assets>
+		<file filename="assets/css/mediamanager/navigator.css" md5="6c144cb29a061b8731eaad7a63003367"/>
+		<file filename="assets/js/mediamanager/navigator.js" md5="dd042f6215ac83c055a472b0fb94cc9e"/>
+	</assets>
+	<upgrades/>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+		<license>All rights reserved</license>
+	</licenses>
+</component>
+

@@ -1,19 +1,20 @@
 {script library="jquery"}{/script}
-{css src="assets/css/tinymce/navigator.css"}{/css}
-{script src="assets/js/tinymcenavigator.js"}{/script}
+{css src="assets/css/mediamanager/navigator.css"}{/css}
+{script src="assets/js/mediamanager/navigator.js"}{/script}
 {script library="jqueryui.readonly"}{/script}
+{script library="Core.AjaxLinks"}{/script}
 {script location="foot"}<script>Navigator.Setup();</script>{/script}
 
-<div class="tinymcenavigator tinymcenavigator-list" location="{$location}" mode="list">
-	<div class="tinymcenavigator-addressbar">
+<div class="mediamanagernavigator mediamanagernavigator-list" location="{$location}" mode="list">
+	<div class="mediamanagernavigator-addressbar">
 		<span class="bargraph-inner"></span>
-		<a href="{$baseurl}?mode={$mode}"><i class="icon-home"></i></a>
+		<a href="{$baseurl}"><i class="icon-home"></i></a>
 		{foreach $location_tree as $dir}
 			<a href="{$dir.href}">/{$dir.name}</a>
 		{/foreach}
 	</div>
 
-	<div class="tinymcenavigator-files clearfix">
+	<div class="mediamanagernavigator-files clearfix">
 		{if $uploadform}
 			{$uploadform->render()}
 		{/if}
@@ -70,28 +71,30 @@
 					<!-- @todo Support directory modified time-->&nbsp;
 				</td>
 				<td>
-					<ul class="controls">
-						<li>
-							<a href="{$dir.href}" title="Open">
-								<i class="icon-folder-open"></i>
-								<span>Open</span>
-							</a>
-						</li>
-						{if $canupload}
+					{if $usecontrols}
+						<ul class="controls">
 							<li>
-								<a href="#" class="directory-rename" browsename="{$dir.browsename}" title="Rename">
-									<i class="icon-font"></i>
-									<span>Rename</span>
+								<a href="{$dir.href}" title="Open">
+									<i class="icon-folder-open"></i>
+									<span>Open</span>
 								</a>
 							</li>
-							<li>
-								<a href="#" class="directory-delete" browsename="{$dir.browsename}" title="Delete">
-									<i class="icon-trash"></i>
-									<span>Delete</span>
-								</a>
-							</li>
-						{/if}
-					</ul>
+							{if $canupload}
+								<li>
+									<a href="#" class="directory-rename" browsename="{$dir.browsename}" title="Rename">
+										<i class="icon-font"></i>
+										<span>Rename</span>
+									</a>
+								</li>
+								<li>
+									<a href="#" class="directory-delete" browsename="{$dir.browsename}" title="Delete">
+										<i class="icon-trash"></i>
+										<span>Delete</span>
+									</a>
+								</li>
+							{/if}
+						</ul>
+					{/if}
 				</td>
 			</tr>
 		{/foreach}
@@ -100,13 +103,13 @@
 			<tr class="file" selectname="{$file.selectname}">
 				<td>
 					<div class="file-image-wrapper">
-						<a href="#" class="file-select" browsename="{$file.object->getBasename()}" selectname="{$file.selectname}">
+						<a href="#" class="file-select" browsename="{$file.object->getBasename()}" selectname="{$file.selectname}" corename="{$file.corename}">
 							{img file="`$file.object`" dimensions="36x36"}
 						</a>
 					</div>
 				</td>
 				<td>
-					<a href="#" class="file-select" browsename="{$file.object->getBasename()}" selectname="{$file.selectname}">
+					<a href="#" class="file-select" browsename="{$file.object->getBasename()}" selectname="{$file.selectname}" corename="{$file.corename}">
 						{$file.name}
 					</a>
 				</td>
@@ -120,28 +123,36 @@
 					{date date="`$file.object->getMTime()`"}
 				</td>
 				<td>
-					<ul class="controls">
-						<li>
-							<a href="{$file.object->getURL()}" class="defaultaction" target="_BLANK" title="Download">
-								<i class="icon-download"></i>
-								<span>Download</span>
-							</a>
-						</li>
-						{if $canupload}
+					{if $usecontrols}
+						<ul class="controls">
 							<li>
-								<a href="#" class="file-rename" browsename="{$file.object->getBasename()}" title="Rename">
-									<i class="icon-font"></i>
-									<span>Rename</span>
+								<a href="{$file.object->getURL()}" class="defaultaction" target="_BLANK" title="Download">
+									<i class="icon-download"></i>
+									<span>Download</span>
 								</a>
 							</li>
-							<li>
-								<a href="#" class="file-delete" browsename="{$file.object->getBasename()}" title="Delete">
-									<i class="icon-trash"></i>
-									<span>Delete</span>
-								</a>
-							</li>
-						{/if}
-					</ul>
+							{if $canupload}
+								<li>
+									{a href="/mediamanagernavigator/file/metadata?file=`$file.browsename`" class="file-meta ajax-link" title="Manage Metadata"}
+										<i class="icon-bullseye"></i>
+										<span>Metadata</span>
+									{/a}
+								</li>
+								<li>
+									<a href="#" class="file-rename" browsename="{$file.object->getBasename()}" title="Rename">
+										<i class="icon-font"></i>
+										<span>Rename</span>
+									</a>
+								</li>
+								<li>
+									<a href="#" class="file-delete" browsename="{$file.object->getBasename()}" title="Delete">
+										<i class="icon-trash"></i>
+										<span>Delete</span>
+									</a>
+								</li>
+							{/if}
+						</ul>
+					{/if}
 				</td>
 			</tr>
 		{/foreach}

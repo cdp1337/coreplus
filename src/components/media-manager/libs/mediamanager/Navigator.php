@@ -2,7 +2,7 @@
 /**
  * File for class Navigator definition in the coreplus project
  * 
- * @package TinyMCE
+ * @package MediaManager
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130603.1802
  * @copyright Copyright (C) 2009-2013  Author
@@ -21,13 +21,14 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-namespace TinyMCE;
+namespace MediaManager;
+use Core\Filestore;
 
 
 /**
- * A short teaser of what Navigator does.
+ * The MediaManager/Navigator is intended to be a full management suite for your website.
  *
- * More lengthy description of what Navigator does and why it's fantastic.
+ * It can manage just /public/media, or all of /public.
  *
  * <h3>Usage Examples</h3>
  *
@@ -49,14 +50,16 @@ namespace TinyMCE;
  * </code>
  *
  * 
- * @package TinyMCE
+ * @package MediaManager
  * @author Charlie Powell <charlie@eval.bz>
  *
  */
 class Navigator {
 
-	public $canupload = false;
-	public $canaccess = false;
+	public $canupload   = false;
+	public $canaccess   = false;
+	public $usecontrols = true;
+	public $useuploader = true;
 
 	/**
 	 * @var \View
@@ -66,22 +69,25 @@ class Navigator {
 	protected $_accept = '*';
 	protected $_mode = 'icon';
 	protected $_cwd = '';
-	protected $_baseurl = '/tinymcenavigator';
+	protected $_baseurl = '/mediamanagernavigator';
 
 	public function __construct(){
 		$admin    = \Core\user()->checkAccess('g:admin');
-		$this->canupload = $admin || \Core\user()->checkAccess('p:/tinymce/filebrowser/upload');
-		$this->canaccess = $this->canupload || \Core\user()->checkAccess('p:/tinymce/filebrowser/access');
+		$this->canupload = $admin || \Core\user()->checkAccess('p:/mediamanager/upload');
+		$this->canaccess = $this->canupload || \Core\user()->checkAccess('p:/mediamanager/browse');
 
-		switch(\ConfigHandler::Get('/tinymce/user-uploads/sandbox')){
+		switch(\ConfigHandler::Get('/mediamanager/sandbox')){
 			case 'user-sandboxed':
-				$this->_basedir = 'public/tinymce/' . \Core\user()->get('id') . '/';
+				$this->_basedir = 'public/media/' . \Core\user()->get('id') . '/';
 				break;
 			case 'shared-user-sandbox':
-				$this->_basedir = 'public/tinymce/';
+				$this->_basedir = 'public/media/';
 				break;
 			case 'completely-open':
 				$this->_basedir = 'public/';
+				break;
+			default:
+				$this->_basedir = 'public/media/';
 				break;
 		}
 	}
@@ -117,10 +123,22 @@ class Navigator {
 		$this->_baseurl = $page;
 	}
 
+	/**
+	 * Get this navigator's current working directory, (after the basedir).
+	 *
+	 * @return string
+	 */
 	public function cwd(){
 		return $this->_cwd;
 	}
 
+	/**
+	 * Change directories into a nested directory, (after the basedir).
+	 *
+	 * @param $dir
+	 *
+	 * @throws \Exception
+	 */
 	public function cd($dir){
 		$dir = str_replace('..', '', $dir);
 
@@ -132,12 +150,38 @@ class Navigator {
 		if(substr($dir, -1) != '/') $dir .= '/';
 
 		// make sure it exists.
-		$dh = \Core\Filestore\Factory::Directory($this->_basedir . $dir);
+		$dh = Filestore\Factory::Directory($this->_basedir . $dir);
 		if(!$dh->exists()){
 			throw new \Exception('Cannot switch to directory ' . $dir . ', does not exist');
 		}
 
 		$this->_cwd = $dir;
+	}
+
+	/**
+	 * Get the file in the current directory by its basename.
+	 *
+	 * @param $filename
+	 * @return \Core\Filestore\File
+	 *
+	 * @throws \Exception
+	 */
+	public function getFile($filename){
+		$dir  = Filestore\Factory::Directory($this->_basedir . $this->_cwd);
+		if(!$dir->exists()){
+			throw new \Exception('Cannot switch to directory ' . $this->_cwd . ', does not exist');
+		}
+
+		$file = $dir->get($filename);
+		if(!$file){
+			throw new \Exception('File ' . $filename . ' does not exist!');
+		}
+		elseif($file instanceof Filestore\File){
+			return $file;
+		}
+		else{
+			throw new \Exception('Requested file ' . $filename . ' is not a file!');
+		}
 	}
 
 	public function render(){
@@ -150,21 +194,24 @@ class Navigator {
 		}
 
 		$resolved = \Core::ResolveLink($this->_baseurl);
-		$resolvedwmode = $resolved . (strpos($resolved, '?') === false ? '?' : '&') . 'mode=' . $this->_mode;
-		$otherviewlink = $resolved . (strpos($resolved, '?') === false ? '?' : '&') . 'dir=' . urlencode($this->_cwd);
+		// Tack on the system-defined uri-based options.
+		$resolved .= (strpos($resolved, '?') === false ? '?' : '&') . 'controls=' . ($this->usecontrols ? '1' : '0') . '&uploader=' . ($this->useuploader ? '1' : '0');
+		// This is meant to be called from most of the change directory methods, so it needs to drop that argument.
+		$resolvedwmode = $resolved . '&mode=' . $this->_mode;
+
 		// Get a list of the view modes along with current directories and titles.
 		$viewmodes = array(
 			[
 				'mode'  => 'icon',
 				'title' => 'View as Icons',
 				'icon'  => 'th-large',
-				'link'  => $otherviewlink . '&mode=icon'
+				'link'  => $resolved . '&dir=' . urlencode($this->_cwd) . '&mode=icon'
 			],
 			[
 				'mode'  => 'list',
 				'title' => 'View as List',
 				'icon'  => 'th-list',
-				'link'  => $otherviewlink . '&mode=list'
+				'link'  => $resolved . '&dir=' . urlencode($this->_cwd) . '&mode=list'
 			],
 		);
 
@@ -188,8 +235,8 @@ class Navigator {
 		}
 
 		// The base directory, because it may not be in /public necessarily.
-		$base = \Core\Filestore\Factory::Directory($this->_basedir);
-		$dir  = \Core\Filestore\Factory::Directory($this->_basedir . $this->_cwd);
+		$base = Filestore\Factory::Directory($this->_basedir);
+		$dir  = Filestore\Factory::Directory($this->_basedir . $this->_cwd);
 
 		// Allow automatic creation of the root directory.
 		if($this->_cwd == '' && !$dir->exists()){
@@ -205,16 +252,16 @@ class Navigator {
 		$directories = array();
 		$files = array();
 		foreach($dir->ls() as $file){
-			if($file instanceof \Core\Filestore\Directory){
+			if($file instanceof Filestore\Directory){
 				// Give me a count of children in that directory.  I need to do the logic custom here because I only want directories and images.
 				$count = 0;
 				foreach($file->ls() as $subfile){
-					if($file instanceof \Core\Filestore\Directory){
+					if($file instanceof Filestore\Directory){
 						$count++;
 					}
 					elseif(
-						($file instanceof \Core\Filestore\File) &&
-						\Core\Filestore\check_file_mimetype($this->_accept, $file->getMimetype(), $file->getExtension()) == ''
+						($file instanceof Filestore\File) &&
+						Filestore\check_file_mimetype($this->_accept, $file->getMimetype(), $file->getExtension()) == ''
 					){
 						$count++;
 					}
@@ -228,14 +275,16 @@ class Navigator {
 					'href'       => $resolvedwmode . '&dir=' . urlencode(substr($file->getPath(), $baselen))
 				);
 			}
-			elseif($file instanceof \Core\Filestore\File){
+			elseif($file instanceof Filestore\File){
 				// I only want images
-				if(\Core\Filestore\check_file_mimetype($this->_accept, $file->getMimetype(), $file->getExtension()) != '') continue;
+				if(Filestore\check_file_mimetype($this->_accept, $file->getMimetype(), $file->getExtension()) != '') continue;
 
 				$files[$file->getBaseFilename()] = array(
-					'object' => $file,
-					'name' => $file->getBaseFilename(),
+					'object'     => $file,
+					'name'       => $file->getBaseFilename(),
+					'browsename' => substr($file->getFilename(), $baselen),
 					'selectname' => $file->getURL(),
+					'corename'   => $file->getFilename(false),
 				);
 			}
 		}
@@ -256,9 +305,9 @@ class Navigator {
 		}
 
 		// Only certain people are allowed the rights to upload here.
-		if($this->canupload){
+		if($this->canupload && $this->useuploader){
 			$uploadform = new \Form();
-			//$uploadform->set('action', \Core::ResolveLink('/tinymcenavigator/upload'));
+			//$uploadform->set('action', \Core::ResolveLink('/mediamanagernavigator/upload'));
 			$uploadform->addElement(
 				'multifile',
 				array(
@@ -276,7 +325,7 @@ class Navigator {
 		}
 
 
-		if($this->canupload){
+		if($this->canupload && $this->usecontrols){
 			$this->_view->addControl(
 				[
 					'link' => '#',
@@ -287,27 +336,30 @@ class Navigator {
 			);
 		}
 
-		foreach($viewmodes as $viewmode){
-			if($viewmode['mode'] == $this->_mode) continue;
-			$this->_view->addControl($viewmode);
+		if($this->usecontrols){
+			foreach($viewmodes as $viewmode){
+				if($viewmode['mode'] == $this->_mode) continue;
+				$this->_view->addControl($viewmode);
+			}
 		}
 
 		switch($this->_mode){
 			case 'list':
-				$this->_view->templatename = 'pages/tinymcenavigator/index/list.tpl';
+				$this->_view->templatename = 'pages/mediamanagernavigator/index/list.tpl';
 				break;
 			default:
-				$this->_view->templatename = 'pages/tinymcenavigator/index/icons.tpl';
+				$this->_view->templatename = 'pages/mediamanagernavigator/index/icons.tpl';
 		}
 		$this->_view->assign('directories', array_values($directories));
 		$this->_view->assign('files', array_values($files));
 		$this->_view->assign('location_tree', $tree);
 		$this->_view->assign('location', $treestack);
 		$this->_view->assign('uploadform', $uploadform);
-		$this->_view->assign('baseurl', \Core::ResolveLink($this->_baseurl));
+		$this->_view->assign('baseurl', $resolvedwmode);
 		$this->_view->assign('mode', $this->_mode);
 		$this->_view->assign('uplink', $uplink);
 		$this->_view->assign('canupload', $this->canupload);
+		$this->_view->assign('usecontrols', $this->usecontrols);
 
 		return \View::ERROR_NOERROR;
 	}
@@ -334,7 +386,7 @@ class Navigator {
 
 		$directory = trim($directory);
 
-		$dir = \Core\Filestore\Factory::Directory($this->_basedir . $this->_cwd . '/' . $directory);
+		$dir = Filestore\Factory::Directory($this->_basedir . $this->_cwd . '/' . $directory);
 		if($dir->exists()){
 			throw new \Exception('Directory ' . $directory . ' already exists!');
 		}
@@ -369,7 +421,7 @@ class Navigator {
 		}
 
 
-		$dir = \Core\Filestore\Factory::Directory($this->_basedir . $this->_cwd);
+		$dir = Filestore\Factory::Directory($this->_basedir . $this->_cwd);
 
 		$obj = $dir->get($old);
 		if(!$obj){
@@ -394,7 +446,7 @@ class Navigator {
 			throw new \Exception('Invalid directory name');
 		}
 
-		$dir = \Core\Filestore\Factory::Directory($this->_basedir . $this->_cwd);
+		$dir = Filestore\Factory::Directory($this->_basedir . $this->_cwd);
 
 		$obj = $dir->get($old);
 		if(!$obj){

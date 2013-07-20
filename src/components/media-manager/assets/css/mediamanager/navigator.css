@@ -1,4 +1,4 @@
-.tinymcenavigator-addressbar{
+.mediamanagernavigator-addressbar{
 	background: none repeat scroll 0 0 white;
 	border: 1px solid #888888;
 	margin-bottom: 5px;
@@ -7,7 +7,7 @@
 	text-align: left;
 }
 
-.tinymcenavigator-addressbar .bargraph {
+.mediamanagernavigator-addressbar .bargraph {
 	background-color: #aa877f;
 	background-image: -moz-linear-gradient(center bottom , #bf5a43 3%, #aa877f 30%);
 	border: 2px solid #bf5a43;
@@ -15,7 +15,7 @@
 	height: 30px;
 	width: 99%;
 }
-.tinymcenavigator-addressbar .bargraph-inner {
+.mediamanagernavigator-addressbar .bargraph-inner {
 	background-color: #7688a8;
 	background-image: -moz-linear-gradient(center bottom , #3064BF 10%, #7688A8 50%);
 	display: block;
@@ -25,40 +25,40 @@
 	opacity: 0.7;
 	position: absolute;
 }
-.tinymcenavigator-addressbar a {
+.mediamanagernavigator-addressbar a {
 	position: relative;
 	z-index: 2;
 }
 
-.tinymcenavigator-icons .directory,
-.tinymcenavigator-icons .file {
+.mediamanagernavigator-icons .directory,
+.mediamanagernavigator-icons .file {
 	position: relative;
 }
-.tinymcenavigator .directory:hover,
-.tinymcenavigator .file:hover {
+.mediamanagernavigator .directory:hover,
+.mediamanagernavigator .file:hover {
 	background: #e3edff;
 	border: 1px solid #999;
 }
 
-.tinymcenavigator .directory .controls-wrapper,
-.tinymcenavigator .file .controls-wrapper {
+.mediamanagernavigator .directory .controls-wrapper,
+.mediamanagernavigator .file .controls-wrapper {
 	background: none repeat scroll 0 0 rgba(240, 240, 240, 0.9);
 	display: none;
 	position: absolute;
 	top: 0;
 }
 
-.tinymcenavigator .directory:hover .controls-wrapper,
-.tinymcenavigator .file:hover .controls-wrapper{
+.mediamanagernavigator .directory:hover .controls-wrapper,
+.mediamanagernavigator .file:hover .controls-wrapper{
 	display: block;
 }
 
-.tinymcenavigator-icons .directory a,
-.tinymcenavigator-icons .file a {
+.mediamanagernavigator-icons .directory a,
+.mediamanagernavigator-icons .file a {
 	text-decoration: none;
 }
 
-.tinymcenavigator .directory-browser-tip {
+.mediamanagernavigator .directory-browser-tip {
 	background: none repeat scroll 0 0 #FFFFCC;
 	color: #999999;
 	font-size: 90%;
@@ -71,8 +71,8 @@
 
 /** Icon-view specific styles **/
 
-.tinymcenavigator-icons .directory,
-.tinymcenavigator-icons .file {
+.mediamanagernavigator-icons .directory,
+.mediamanagernavigator-icons .file {
 	background: none repeat scroll 0 0 #F5F5F5;
 	border: 1px solid #CCCCCC;
 	float: left;
@@ -84,33 +84,33 @@
 	width: 124px;
 }
 
-.tinymcenavigator-icons .directory .controls,
-.tinymcenavigator-icons .file .controls {
+.mediamanagernavigator-icons .directory .controls,
+.mediamanagernavigator-icons .file .controls {
 	text-align: left;
 }
 
 
 /** List-view specific styles **/
 
-.tinymcenavigator-list table {
+.mediamanagernavigator-list table {
 	width: 100%;
 }
 
-.tinymcenavigator-list .directory,
-.tinymcenavigator-list .file {
+.mediamanagernavigator-list .directory,
+.mediamanagernavigator-list .file {
 	background: none repeat scroll 0 0 #F5F5F5;
 	border: 1px solid #CCCCCC;
 	margin: 2px;
 	width: 100%;
 }
 
-.tinymcenavigator-list .directory-image-wrapper a,
-.tinymcenavigator-list .file-image-wrapper a {
+.mediamanagernavigator-list .directory-image-wrapper a,
+.mediamanagernavigator-list .file-image-wrapper a {
 	text-decoration: none;
 }
 
-.tinymcenavigator-list .directory .controls,
-.tinymcenavigator-list .file .controls {
+.mediamanagernavigator-list .directory .controls,
+.mediamanagernavigator-list .file .controls {
 	text-align: left;
 }
 
