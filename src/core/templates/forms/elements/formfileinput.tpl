@@ -1,6 +1,11 @@
 {* This input type actually requires jquery to function *}
 {script library="jquery"}{/script}
 {script src="js/core.fileupload.js"}{/script}
+{if Core::IsComponentAvailable('media-manager')}
+	{css src="assets/css/mediamanager/navigator.css"}{/css}
+	{script src="assets/js/mediamanager/navigator.js"}{/script}
+	{script library="jqueryui.readonly"}{/script}
+{/if}
 
 <div class="{$element->getClass()}">
 	<div class="formelement-labelinputgroup">
@@ -15,71 +20,73 @@
 			(Please enable javascript to get the most out of this form)
 		</noscript>
 
-		<div class="file-input-innercontainer">
+		<table class="file-input-innercontainer clearfix" id="{$element->get('id')}" accept="{$element->get('accept')}"><tr>
 
-			<div id="{$element->get('id')}-selector" style="display:none;" class="formfileinput-selector">
-				<label>
-					<input type="radio" id="{$element->get('id')}-selector-upload" name="{$element->get('name')}" value="_upload_"/>
-					Upload
-				</label>
-
+			<td id="{$element->get('id')}-selector" style="display:none;" class="formfileinput-selector">
 				{if $element->get('value')}
 					<label>
-						<input type="radio" id="{$element->get('id')}-selector-current" name="{$element->get('name')}" value="{$element->get('value')}"/>
+						<input type="radio" class="fileinput-selector" selectortype="current" name="{$element->get('name')}" value="{$element->get('value')}" checked="checked"/>
 						Current
 					</label>
 				{/if}
+
+				<label>
+					<input type="radio" class="fileinput-selector" selectortype="upload" name="{$element->get('name')}" value="_upload_" {if !$element->get('value')}checked="checked"{/if}/>
+					Upload
+				</label>
+
+
 				{if $element->get('allowlink')}
 					<label>
-						<input type="radio" id="{$element->get('id')}-selector-link" name="{$element->get('name')}" value=""/>
+						<input type="radio" class="fileinput-selector" selectortype="link" name="{$element->get('name')}" value=""/>
 						Paste via URL
 					</label>
 				{/if}
-				{if $element->get('browsable')}
+
+				{if $browsable}
 					<label>
-						<input type="radio" id="{$element->get('id')}-selector-browse" name="{$element->get('name')}" value="{$element->get('value')}"/>
-						Browse Server
+						<input type="radio" class="fileinput-selector" selectortype="browse" name="{$element->get('name')}" value=""/>
+						Browse
 					</label>
 				{/if}
+
 				{if !$element->get('required')}
 					<label>
-						<input type="radio" id="{$element->get('id')}-selector-none" name="{$element->get('name')}" value=""/>
+						<input type="radio" class="fileinput-selector" selectortype="none" name="{$element->get('name')}" value=""/>
 						None
 					</label>
 				{/if}
-			</div>
+			</td>
 
-			<div class="file-input-actions" id="{$element->get('id')}-actions" style="display:none;">
-				<div id="{$element->get('id')}-action-upload">
+			<td class="file-input-actions" id="{$element->get('id')}-actions" style="display:none;">
+				<div class="fileinput-action" selectortype="upload">
 					<!-- This will be enabled if selected. -->
-					<input type="file" name="{$element->get('name')}" disabled="disabled"/>
+					<input type="file" name="{$element->get('name')}" disabled="disabled" accept="{$element->get('accept')}"/>
 				</div>
-			{if $element->get('value')}
-				<div id="{$element->get('id')}-action-current">
-					{file_thumbnail file=$element->getFile() dimensions=$element->get('previewdimensions')}
-					{$element->getFile()->getBaseFilename()}
-				</div>
-			{/if}
-			{if $element->get('allowlink')}
-				<div id="{$element->get('id')}-action-link">
-					<input type="text" id="{$element->get('id')}-link-entry"/>
-				</div>
-			{/if}
-			{if $element->get('browsable')}
-				<div id="{$element->get('id')}-action-browse">
-					(not supported yet)
-				</div>
-			{/if}
-			{if !$element->get('required')}
-				<div id="{$element->get('id')}-action-none">
-				</div>
-			{/if}
-			</div>
+				{if $element->get('value')}
+					<div class="fileinput-action" selectortype="current">
+						{img file=$element->getFile() dimensions=$element->get('previewdimensions')}<br/>
+						{$element->getFile()->getBaseFilename()|truncate:60}
+					</div>
+				{/if}
+				{if $element->get('allowlink')}
+					<div class="fileinput-action" selectortype="link">
+						<input type="text" id="{$element->get('id')}-link-entry"/>
+					</div>
+				{/if}
+				{if $browsable}
+					<div class="fileinput-action" selectortype="browse">
+						Loading...<br/>
+						{img src="assets/images/loading-bar-small.gif"}
+					</div>
+				{/if}
+				{if !$element->get('required')}
+					<div class="fileinput-action" selectortype="none">
+					</div>
+				{/if}
+			</td>
 
-			<div class="clear"></div>
-		</div>
-
-		<div class="clear"></div>
+		</tr></table>
 
 	</div>
 
@@ -93,5 +100,5 @@
 
 
 <script type="text/javascript">
-	$(function(){ Core.fileupload("{$element->get('id')}", "{$element->get('value')}"); });
+	$(function(){ Core.fileupload("{$element->get('id')}"); });
 </script>

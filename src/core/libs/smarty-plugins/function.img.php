@@ -124,6 +124,16 @@ function smarty_function_img($params, $template){
 	$html = '<img';
 	foreach($attributes as $k => $v) $html .= " $k=\"$v\"";
 	$html .= '/>';
-	
+
+	// If the extended metadata was requested... look that up too!
+	if(isset($params['includemeta']) && $params['includemeta']){
+
+		$metahelper  = new \Core\Filestore\FileMetaHelper($f);
+		$metacontent = $metahelper->getAsHTML();
+		if($metacontent){
+			$html = '<div class="image-metadata-wrapper">' . $html . $metacontent . '</div>';
+		}
+	}
+
     return $assign ? $template->assign($assign, $html) : $html;
 }

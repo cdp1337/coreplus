@@ -68,6 +68,7 @@ class FormFileInput extends FormElement {
 	public function __construct($atts = null) {
 		// Some defaults
 		$this->_attributes      = array(
+			'accept'            => '*',
 			'class'             => 'formelement formfileinput',
 			'previewdimensions' => '200x100',
 			'browsable'         => false,
@@ -95,7 +96,22 @@ class FormFileInput extends FormElement {
 			throw new Exception('FormFileInput cannot be rendered without a basedir attribute!');
 		}
 
-		return parent::render();
+		// If multiple is set, but the name does not have a [] at the end.... add it.
+		if ($this->get('multiple') && !preg_match('/.*\[.*\]/', $this->get('name'))) $this->_attributes['name'] .= '[]';
+
+		$file = $this->getTemplateName();
+
+		$tpl = \Core\Templates\Template::Factory($file);
+
+
+
+		$mediaavailable = Core::IsComponentAvailable('media-manager');
+		$browsable      = ( $mediaavailable && \Core\user()->checkAccess('p:/mediamanager/browse') && ($this->get('browsable') || $this->get('browseable')) );
+		//var_dump($file, $this); die();
+		$tpl->assign('element', $this);
+		$tpl->assign('browsable', $browsable);
+
+		return $tpl->fetch();
 	}
 
 	/**
@@ -106,7 +122,8 @@ class FormFileInput extends FormElement {
 	 */
 	public function getFile() {
 		if ($this->get('value')) {
-			$f = Core::File($this->get('basedir') . '/' . $this->get('value'));
+			//$f = Core::File($this->get('basedir') . '/' . $this->get('value'));
+			$f = \Core\Filestore\Factory::File($this->get('value'));
 		}
 		else {
 			$f = Core::File();
@@ -141,7 +158,7 @@ class FormFileInput extends FormElement {
 			}
 
 			// Destination
-			$nf = Core::File($this->get('basedir') . '/' . $f->getBaseFilename());
+			$nf = \Core\Filestore\Factory::File($this->get('basedir') . '/' . $f->getBaseFilename());
 
 			// do NOT copy the contents over until the accept check has been ran!
 
@@ -162,7 +179,31 @@ class FormFileInput extends FormElement {
 			// Now all the checks should be completed and I can safely copy the file away from the temporary filesystem.
 			$f->copyTo($nf);
 
-			$value = $nf->getBaseFilename();
+			$value = $nf->getFilename(false);
+		}
+		elseif(($this->get('browsable') || $this->get('browseable')) && strpos($value, '_browse_://public') === 0){
+			$n = $this->get('name');
+			$value = substr($value, 11);
+
+			// Source
+			$f = \Core\Filestore\Factory::File($value);
+
+			if(!$f->exists()){
+				$this->_error = 'File does not seem to exist';
+				return false;
+			}
+
+			// Now that I have a file object, I still need to validate that this file was what the user was supposed to select.
+			// If present, I'll have something to run through and see if the file matches.
+			if($this->get('accept')){
+				$acceptcheck = \Core\check_file_mimetype($this->get('accept'), $f->getMimetype(), $f->getExtension());
+
+				// Now that all the mimetypes have run through, I can see if one matched.
+				if($acceptcheck != ''){
+					$this->_error = $acceptcheck;
+					return false;
+				}
+			}
 		}
 		elseif ($value == '_upload_') {
 			$n = $this->get('name');
@@ -253,7 +294,7 @@ class FormFileInput extends FormElement {
 				// Now all the checks should be completed and I can safely copy the file away from the temporary filesystem.
 				$f->copyTo($nf);
 
-				$value = $nf->getBaseFilename();
+				$value = $nf->getFilename(false);
 			}
 		}
 

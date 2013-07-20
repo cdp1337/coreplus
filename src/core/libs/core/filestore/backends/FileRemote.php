@@ -228,7 +228,7 @@ class FileRemote implements Filestore\File {
 		return $dest;
 	}
 
-	public function copyFrom($src, $overwrite = false) {
+	public function copyFrom(Filestore\File $src, $overwrite = false) {
 		throw new \Exception('Unable to write to remote files!');
 	}
 

@@ -20,6 +20,9 @@
  */
 
 /**
+ * @deprecated 2013.07 - cpowell
+ *             The {img} function now supports all of what this did.
+ *
  * @param $params
  * @param $template
  *
@@ -27,6 +30,8 @@
  * @throws SmartyException
  */
 function smarty_function_file_thumbnail($params, $template){
+
+	error_log('file_thumbnail is deprecated, please use the {img} tag instead.', E_USER_DEPRECATED);
 	
 	// Key/value array of attributes for the resulting HTML.
 	$attributes = array();

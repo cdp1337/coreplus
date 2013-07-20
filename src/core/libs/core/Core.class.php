@@ -1473,7 +1473,7 @@ class Core implements ISingleton {
 			$userauth = 'false';
 		}
 
-		$ua = new \Core\UserAgent();
+		$ua = \Core\UserAgent::Construct();
 		$uastring = '';
 		foreach($ua->asArray() as $k => $v){
 			if($v === true){

@@ -2,8 +2,13 @@ Core Plus 2.6.0
 
 	* [Bug] Minor bug in the updater template.  Needed to use version_compare instead of "<="
 	* [Bug] The "disabled" form attribute is now better handled on both the renderer and the parser.
+	* [Bug] Moved component include installation directives to a separate method so that they won't
+	  interferre with the installation variables!
 	* [Performance] Applied more aggressive compiling on the bootstrap.  Gives a little bit more
 	  performance.
+	* [Performance] Modified time is now used for local -> local file comparisons.  This is because mtime
+	  is about 14-times quicker than a md5sum comparison.
+	* [Performance] Boosted the caching on the UserAgent object a little.
 	* [Feature] New feature - /form/savetemporary.ajax, this is a page that will save a given submitted
 	  form back to the session as an auto-save feature.
 	* [Feature] Added a new form element, FormPageMetaAuthor.
@@ -25,6 +30,10 @@ Core Plus 2.6.0
 	* [Feature] Widget instances and Widgets now can keep track of which "installable" tag the widget was
 	  called with.  This allows metadata to be passed into the widget.
 	* [Feature] Added 'Performance' to the list of changelog types.
+	* [Feature] BaconIpsum is now included in Core by default!
+	* [Feature] Added the various Creative Commons license images and GNU license images.  These are used
+	  along wtih the new metaata/media manager system.
+	* [Feature] Parsed HTML now get the metadata tags for images automatically.  ie: insertables.
 	* Updated the documentation on all the Form elements.
 	* New method, Template::getInsertables.  This has been moved from the page element system to the
 	  template system where it belongs.
@@ -41,6 +50,20 @@ Core Plus 2.6.0
 	* Rearranged the title and parenturl for pages.  This allows the basic information to be displayed
 	  first.
 	* System form elements now jsonencode their values.  Allows multi-values to be used in the unique key
+	* Greatly cleaned up the fileinput javascript.  It's now actually readable.
+	* FileInput now supports browsing for files on the server.  This is enabled with the form element
+	  attribute "browsable".
+	* Changed what the FileInput returns for its set value.  Now, instead of simply returning the basename
+	  of the file, it returns the prefix "public/*" part as well.  This is to support the browseable
+	  feature.
+	* New form element, License Input ("license").  This display a drop-down with the various licenses
+	  supported on the system.
+	* PageMetaKeywords file input no longer requires a page to be attached.  This allows the same input to
+	  be used for file keywords as well.
+	* New metadata system for files.
+	* Switched to use the cacheable version of UserAgent in the two spots that it was being called.
+	  Caching on this object is extremely important because it's so heavy.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 20 Jul 2013 05:01:43 -0400
 
 Core Plus 2.5.8
 
@@ -229,6 +252,7 @@ Core Plus 2.5.1
 Core Plus 2.5.0
 
 	* [Bug] Fix in the Model system to not try to propagate keys up to the parent of a linked model.
+	* [Performance] Minor performance tweaks in the PageModel.
 	* [Feature] Added a new filter type, "CONTAINS".  This is useful for filter examples such as "Email
 	  contains @gmail".
 	* [Feature] Added some logic to gracefully handle if the export directories do not exist.
@@ -248,7 +272,6 @@ Core Plus 2.5.0
 	  the logic internally.
 	* Better enforcing Model and the DMI default values.  ex: enum field types now require one of the
 	  options to be set as default if null is set to false.
-	* Minor performance tweaks in the PageModel.
 	* Moved the "components_load_complete" hook to be fired after the postincludes instead of before. This
 	  ensures that smarty and some other systems are available.
 	* Bad components don't get disabled immediately, makes development easier.
@@ -565,6 +588,7 @@ Core Plus 2.3.1
 Core Plus 2.3.0
 
 	* [Bug] Fixed a recursion bug with local files for if the file and mimetype icon are both unavailable.
+	* [Performance] Optimized some system performance a little.
 	* [Feature] Added a reset input element to the form system.
 	* [Feature] Added a "setLink" method to models, useful for HAS../BELONGSTO relationships.
 	* [Feature] Added a new "setFromForm" method on models.  Allows for more fine-tune control over the
@@ -579,7 +603,6 @@ Core Plus 2.3.0
 	  thrown if the site is in development mode, otherwise simply a blank string is returned.
 	* Switched default SSL mode from ONDEMAND to DISABLED in the configuration example file.
 	* Reorganized the page edit form a little and wrapped the SEO options in a common fieldset.
-	* Optimized some system performance a little.
 	* Started to implement the new page_template system (partial support in place).
 	-- Charlie Powell <charlie@eval.bz>  5 Nov 2012
 

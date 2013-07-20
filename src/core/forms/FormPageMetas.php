@@ -167,34 +167,26 @@ class FormPageMetaKeywordsInput extends FormTextInput {
 
 		$atts['multiple'] = true;
 
-		if(isset($atts['value'])){
-			$value = $atts['value'];
-		}
-		elseif(isset($atts['model'])){
+		if(isset($atts['model'])){
 
 			$page = $atts['model'];
 
 			if(!$page instanceof PageModel){
-				throw new Exception('PageMetaKeywords requires a model attribute to be a valid PageModel object!');
+				throw new Exception('PageMetaKeywords requires the model attribute to be a valid PageModel object!');
 			}
 
 			// Sift through the page and get out all the "keyword" metas.
 			// This is a bit different than default because this one form retrieves data from multiple records.
-			$value = array();
+			$atts['value'] = array();
 			foreach($page->getLink('PageMeta') as $meta){
 				/** @var $meta PageMetaModel */
 
 				// I only am concerned with these.
 				if($meta->get('meta_key') != 'keyword') continue;
 
-				$value[ $meta->get('meta_value') ] = $meta->get('meta_value_title');
+				$atts['value'][ $meta->get('meta_value') ] = $meta->get('meta_value_title');
 			}
 		}
-		else{
-			throw new Exception('PageMetaKeywords requires either a model or a value attribute!');
-		}
-
-		$atts['value'] = $value;
 
 
 		parent::__construct($atts);

@@ -673,6 +673,7 @@ class Form extends FormGroup {
 		'datetime'         => 'FormDateTimeInput',
 		'file'             => 'FormFileInput',
 		'hidden'           => 'FormHiddenInput',
+		'license'          => 'FormLicenseInput',
 		'pageinsertables'  => 'FormPageInsertables',
 		'pagemeta'         => 'FormPageMeta',
 		'pagemetas'        => 'FormPageMetasInput',

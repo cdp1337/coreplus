@@ -1194,8 +1194,8 @@ class Component_2_1 {
 								if($datachanges !== false) $changes = array_merge($changes, $datachanges);
 								break;
 							case 'phpfileinclude':
-								// Easy one :p
-								include(ROOT_PDIR . trim($child->nodeValue));
+								// I need to do this in a method so that include file doesn't mess with my local variables!
+								$this->_includeFileForUpgrade(ROOT_PDIR . trim($child->nodeValue));
 								$changes[] = 'Included custom php file ' . basename($child->nodeValue);
 								break;
 							default:
@@ -1854,6 +1854,10 @@ class Component_2_1 {
 		}
 	}
 
+	private function _includeFileForUpgrade($filename){
+		include($filename);
+	}
+
 
 	/**
 	 * Copy in all the assets for this component into the assets location.
@@ -1902,17 +1906,36 @@ class Component_2_1 {
 			}
 
 			// Check if this file even needs updated. (this is primarily used for reporting reasons)
-			if ($nf->exists() && $nf->identicalTo($f)) {
+			$newfileexists    = $nf->exists();
+			$newfileidentical = $nf->identicalTo($f);
+
+
+			if(
+				$newfileexists &&
+				$newfileidentical &&
+				$f instanceof \Core\Filestore\Backends\FileLocal &&
+				$nf instanceof \Core\Filestore\Backends\FileLocal &&
+				$f->getMTime() != $nf->getMTime()
+			){
+				// This is a bit of a hack because in 2.6.0 and above, the mtime is duplicated along with the contents.
+				// This is to speed up file scans for local -> local disk changes.
+				touch($nf->getFilename(), $f->getMTime());
+				$changes[] = 'Modified timestamp on ' . $nf->getFilename();
+				continue;
+			}
+			elseif($newfileexists && $newfileidentical){
+				// The new file and old file are identical, just continue.
 				continue;
 			}
 			// Otherwise if it exists, I want to be able to inform the user that it was replaced and not just installed.
-			elseif ($nf->exists()) {
+			elseif ($newfileexists) {
 				$action = 'Replaced';
 			}
 			// Otherwise otherwise, it's a new file.
 			else {
 				$action = 'Installed';
 			}
+
 
 			try {
 				$f->copyTo($nf, true);

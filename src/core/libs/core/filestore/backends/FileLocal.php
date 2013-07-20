@@ -36,6 +36,11 @@ class FileLocal implements Filestore\File {
 	 */
 	protected $_filename = null;
 
+	/**
+	 * @var array Cache of filename lookups to speed up getFilename() on repeated calls.
+	 */
+	private $_filenamecache = [];
+
 	public function __construct($filename = null) {
 		if ($filename) $this->setFilename($filename);
 	}
@@ -105,21 +110,32 @@ class FileLocal implements Filestore\File {
 		// Since the filename is stored fully resolved...
 		if ($prefix == ROOT_PDIR) return $this->_filename;
 
-		if ($prefix === false) {
-			// Trim off all the prefacing components from the filename.
-			if ($this->_type == 'asset')
-				return 'asset/' . substr($this->_filename, strlen(self::$_Root_pdir_assets));
-			elseif ($this->_type == 'public')
-				return 'public/' . substr($this->_filename, strlen(self::$_Root_pdir_public));
-			elseif ($this->_type == 'private')
-				return 'private/' . substr($this->_filename, strlen(self::$_Root_pdir_private));
-			elseif ($this->_type == 'tmp')
-				return 'tmp/' . substr($this->_filename, strlen(self::$_Root_pdir_tmp));
-			else
-				return $this->_filename;
+		// First thing first... I want to keep a cache of the filename in memory so I don't have to do preg_replace thousands of times.
+		if(!isset($this->_filenamecache[$prefix])){
+			if ($prefix === false) {
+				// Trim off all the prefacing components from the filename.
+				if ($this->_type == 'asset'){
+					$this->_filenamecache[$prefix] = 'asset/' . substr($this->_filename, strlen(Filestore\get_asset_path()));
+				}
+				elseif ($this->_type == 'public'){
+					$this->_filenamecache[$prefix] = 'public/' . substr($this->_filename, strlen(Filestore\get_public_path()));
+				}
+				elseif ($this->_type == 'private'){
+					$this->_filenamecache[$prefix] = 'private/' . substr($this->_filename, strlen(Filestore\get_private_path()));
+				}
+				elseif ($this->_type == 'tmp'){
+					$this->_filenamecache[$prefix] = 'tmp/' . substr($this->_filename, strlen(Filestore\get_tmp_path()));
+				}
+				else{
+					$this->_filenamecache[$prefix] = $this->_filename;
+				}
+			}
+			else{
+				$this->_filenamecache[$prefix] = preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', $prefix . '$1', $this->_filename);
+			}
 		}
 
-		return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', $prefix . '$1', $this->_filename);
+		return $this->_filenamecache[$prefix];
 	}
 
 	/**
@@ -132,12 +148,14 @@ class FileLocal implements Filestore\File {
 		// If this file already has a filename, ensure that it's deleted from cache!
 		if($this->_filename){
 			Filestore\Factory::RemoveFromCache($this);
+			$this->_filenamecache = [];
 		}
 
 		if ($filename{0} != '/') $filename = ROOT_PDIR . $filename; // Needs to be fully resolved
 
 		// Do some cleaning on the filename, ie: // should be just /.
-		$filename = preg_replace(':/+:', '/', $filename);
+		$filename = str_replace('//', '/', $filename);
+		//$filename = preg_replace(':/+:', '/', $filename);
 
 		$this->_filename = $filename;
 
@@ -330,13 +348,13 @@ class FileLocal implements Filestore\File {
 	 *
 	 * (Generally only useful internally)
 	 *
-	 * @param      $src Source file backend
-	 * @param bool $overwrite true to overwrite existing file
+	 * @param Filestore\File $src Source file backend
+	 * @param bool           $overwrite true to overwrite existing file
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return bool True or False if succeeded.
 	 */
-	public function copyFrom($src, $overwrite = false) {
+	public function copyFrom(Filestore\File $src, $overwrite = false) {
 		// Don't overwrite existing files unless told otherwise...
 		if (!$overwrite) {
 			$c    = 0;
@@ -358,6 +376,8 @@ class FileLocal implements Filestore\File {
 		// And do the actual copy!
 		// To save memory, try to use as low-level functions as possible.
 		$localfilename = $src->getLocalFilename();
+		// I also want to know when this file was modified so I can set the new version to have the same datestamp.
+		$modifiedtime = $src->getMTime();
 
 		$ftp    = \Core\FTP();
 		$tmpdir = TMP_DIR;
@@ -383,10 +403,10 @@ class FileLocal implements Filestore\File {
 
 			// Couldn't get a lock on both input and output files.
 			if(!$handlein){
-				throw new Exception('Unable to open file ' . $localfilename . ' for reading.');
+				throw new \Exception('Unable to open file ' . $localfilename . ' for reading.');
 			}
 			if(!$handleout){
-				throw new Exception('Unable to open file ' . $this->_filename . ' for writing.');
+				throw new \Exception('Unable to open file ' . $this->_filename . ' for writing.');
 			}
 
 			while(!feof($handlein)){
@@ -397,6 +417,8 @@ class FileLocal implements Filestore\File {
 			fclose($handlein);
 			fclose($handleout);
 			chmod($this->_filename, $mode);
+			// Don't forget the mtime ;)
+			touch($this->_filename, $modifiedtime);
 			return true;
 		}
 		else {
@@ -414,13 +436,11 @@ class FileLocal implements Filestore\File {
 			// FTP requires a filename, not data...
 			// WELL how bout that!  I happen to have a local filename ;)
 			if (!ftp_put($ftp, $filename, $localfilename, FTP_BINARY)) {
-				throw new Exception(error_get_last()['message']);
-				return false;
+				throw new \Exception(error_get_last()['message']);
 			}
 
 			if (!ftp_chmod($ftp, $mode, $filename)){
-				throw new Exception(error_get_last()['message']);
-				return false;
+				throw new \Exception(error_get_last()['message']);
 			}
 
 			// woot...
@@ -616,6 +636,13 @@ class FileLocal implements Filestore\File {
 			// If no resize was requested, simply return the full size image.
 			if($width === false) return $file;
 
+			// if this file was smaller than the requested size, (and the mode isn't set to force the size)...
+			$currentdata = getimagesize($this->getFilename());
+			if(($mode == '' || $mode == '<') && $currentdata[0] <= $width){
+				return $this;
+			}
+			//var_dump($currentdata, $width, $mode); die();
+
 			if (!$file->exists()) {
 				$img2 = $this->_getResizedImage($width, $height, $mode);
 				// Save this image to a temporary fs location.
@@ -657,6 +684,14 @@ class FileLocal implements Filestore\File {
 	public function identicalTo($otherfile) {
 
 		if (is_a($otherfile, 'File') || $otherfile instanceof Filestore\File) {
+			if($otherfile instanceof FileLocal){
+				// I can do a faster comparison than md5.
+				// mtime only accesses the file headers and not the entire file contents.
+				if($this->getMTime() == $otherfile->getMTime()){
+					// It's the same!
+					return true;
+				}
+			}
 			// Just compare the hashes.
 			//var_dump($this->getHash(), $this, $otherfile->getHash(), $otherfile); die();
 			return ($this->getHash() == $otherfile->getHash());

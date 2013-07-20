@@ -622,7 +622,7 @@ class View {
 
 		// The body needs some custom classes for assisting the designers.
 		// These are mainly pulled from the UA.
-		$ua = new \Core\UserAgent();
+		$ua = \Core\UserAgent::Construct();
 
 		$this->bodyclasses[] = 'ua-browser-' . $ua->browser;
 		$this->bodyclasses[] = 'ua-engine-' . $ua->rendering_engine_name;

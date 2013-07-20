@@ -71,6 +71,8 @@ class Entry {
 				'bug #'       => self::TYPE_BUG,
 				'new feature' => self::TYPE_FEATURE,
 				'feature #'   => self::TYPE_FEATURE,
+				'performance' => self::TYPE_PERFORMANCE,
+				'faster'      => self::TYPE_PERFORMANCE,
 			];
 
 			foreach($phrases as $word => $type){

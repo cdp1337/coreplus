@@ -255,6 +255,10 @@ abstract class Factory {
 	public static function ResolveAssetFile($filename){
 		$originaluri = $filename;
 
+		if(isset(self::$_ResolveCache[$originaluri])){
+			return self::$_ResolveCache[$originaluri]->getFilename();
+		}
+
 		$resolved = get_asset_path();
 
 		if (strpos($filename, 'assets/') === 0) {

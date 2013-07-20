@@ -464,7 +464,7 @@ class FileFTP implements Filestore\File{
 	 * @throws \Exception
 	 * @return bool True or False if succeeded.
 	 */
-	public function copyFrom($src, $overwrite = false) {
+	public function copyFrom(Filestore\File $src, $overwrite = false) {
 		// Don't overwrite existing files unless told otherwise...
 		if (!$overwrite) {
 			$c    = 0;

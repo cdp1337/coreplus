@@ -445,7 +445,19 @@ class UserAgent {
 	 *
 	 * @return UserAgent
 	 */
-	public static function Construct($useragent){
+	public static function Construct($useragent = null){
+		if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
+
+		$cachekey = 'useragent-constructor-' . md5($useragent);
+		$cache = \Cache::GetSystemCache()->get($cachekey);
+		if(!$cache){
+			$cache = new UserAgent($useragent);
+			\Cache::GetSystemCache()->set($cachekey, $cache, (3600));
+		}
+
+
+		return $cache;
+
 		if(!isset(self::$_Cache[$useragent])){
 			self::$_Cache[$useragent] = new UserAgent($useragent);
 		}

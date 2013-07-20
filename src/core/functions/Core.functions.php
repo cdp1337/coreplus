@@ -415,6 +415,12 @@ function parse_html($html){
 				}
 				$img .= '/>';
 
+				$metahelper  = new \Core\Filestore\FileMetaHelper($file);
+				$metacontent = $metahelper->getAsHTML();
+				if($metacontent){
+					$img = '<div class="image-metadata-wrapper">' . $img . $metacontent . '</div>';
+				}
+
 				// Figure out the offset for X.  I'll need to modify this after I merge it in.
 				$x += strlen($img) - strlen($fullimagetag);
 				// Split this string back in.

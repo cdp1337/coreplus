@@ -269,7 +269,7 @@ interface File {
 	 * @throws \Exception
 	 * @return bool True or False if succeeded.
 	 */
-	public function copyFrom($src, $overwrite = false);
+	public function copyFrom(File $src, $overwrite = false);
 
 	/**
 	 * Get the raw contents of this file
