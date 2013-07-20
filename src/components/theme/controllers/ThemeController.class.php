@@ -153,6 +153,9 @@ class ThemeController extends Controller_2_1{
 		$view->assign('current', $current);
 		$view->assign('assets', $nestedassets);
 		$view->assign('templates', $nestedtemplates);
+		$view->assign('url_themeeditor', Core::ResolveLink('/theme/editor'));
+		$view->assign('url_themewidgets', Core::ResolveLink('/theme/widgets'));
+		$view->assign('url_themestylesheets', Core::ResolveLink('/theme/selectstylesheets'));
 	}
 
 	/**

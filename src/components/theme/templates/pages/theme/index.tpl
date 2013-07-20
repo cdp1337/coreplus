@@ -238,9 +238,9 @@
 		{foreach $items as $key => $item}
 			<li class="collapsed">
 				{if isset($item.obj)}
-					<img src="{$item.obj->getMimetypeIconURL('24x24')}"/>
+					{*<img src="{$item.obj->getMimetypeIconURL('24x24')}"/>*}
 					<span>{$key}</span>
-					{a href="/theme/editor?file=`$item.file`" title="Edit Asset"}<i class="icon-pencil"></i>{/a}
+					<a href="{$url_themeeditor}?file={$item.file}" title="Edit Asset"><i class="icon-pencil"></i></a>
 				{else}
 					<i class="icon-folder-close collapsed-hint"></i>
 					<i class="icon-folder-open expanded-hint"></i>
@@ -258,24 +258,24 @@
 		{foreach $items as $key => $item}
 			<li class="collapsed">
 				{if isset($item.obj)}
-					{img file=$item.obj dimensions="24x24"}
+					{*img file=$item.obj dimensions="24x24"*}
 					<span class="filename" title="{$key|escape}">{$key}</span>
 					{if $item.haswidgets}
-						{a class="inline-control" href="/theme/widgets/?page=`$item.file`" title="Manage Widgets"}
+						<a class="inline-control" href="{$url_themewidgets}?page={$item.file}" title="Manage Widgets">
 							<i class="icon-cogs"></i>
 							<span>Manage Widgets</span>
-						{/a}
+						</a>
 					{/if}
 					{if $item.has_stylesheets}
-						{a class="inline-control" href="/theme/selectstylesheets/?template=skins/`$item.file`" title="Optional Stylesheets"}
+						<a class="inline-control" href="{$url_themestylesheets}?template=skins/{$item.file}" title="Optional Stylesheets">
 							<i class="icon-strikethrough"></i>
 							<span>Optional Stylesheets</span>
-						{/a}
+						</a>
 					{/if}
-					{a class="inline-control" href="/theme/editor?template=`$item.file`" title="Edit Template"}
+					<a class="inline-control" href="{$url_themeeditor}?template={$item.file}" title="Edit Template">
 						<i class="icon-pencil"></i>
 						<span>Edit Template</span>
-					{/a}
+					</a>
 				{else}
 					<i class="icon-folder-close collapsed-hint" title="Click to expand"></i>
 					<i class="icon-folder-open expanded-hint" title="Click to close"></i>

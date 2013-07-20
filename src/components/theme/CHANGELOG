@@ -1,3 +1,9 @@
+Theme 2.1.5
+
+	* [Performance] Increased performance of the theme management page.  It should now actually be able to
+	  load on slower servers!
+	-- Charlie Powell <charlie@eval.bz>  Sat, 20 Jul 2013 04:41:30 -0400
+
 Theme 2.1.4
 
 	* Updated some minor things to keep up to date with Core 2.5.7
