@@ -99,6 +99,32 @@ class Parser {
 	}
 
 	/**
+	 * Get the previous changelog set from the version requested.
+	 *
+	 * @param $version
+	 *
+	 * @return null|Section
+	 */
+	public function getPreviousSection($version){
+		// First of all, they need to be sorted in order for this to work!
+		$this->sort();
+
+		// Transpose the indexes to a numeric array so I can easily grab the next one.
+		$versioned = array();
+		foreach($this->_sections as $s){
+			$versioned[] = $s->getVersion();
+		}
+
+		foreach($versioned as $index => $v){
+			if($v == $version){
+				return isset($versioned[ $index + 1 ]) ? $this->_sections[ $versioned[ $index + 1 ] ] : null;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Sort the sections.
 	 * This is called internally, so you shouldn't need to worry about it.
 	 */
@@ -112,7 +138,7 @@ class Parser {
 
 		krsort($versioned);
 
-		$this->_sections = array_values($versioned);
+		$this->_sections = $versioned;
 	}
 
 	/**
