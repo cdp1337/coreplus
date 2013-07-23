@@ -464,7 +464,7 @@ class FileLocal implements Filestore\File {
 		}
 
 		if(!is_dir(dirname($this->_filename))){
-			throw new Exception("Unable to make directory " . dirname($this->_filename) . ", please check permissions.");
+			throw new \Exception("Unable to make directory " . dirname($this->_filename) . ", please check permissions.");
 		}
 
 		$mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
