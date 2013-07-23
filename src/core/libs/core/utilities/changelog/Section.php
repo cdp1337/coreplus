@@ -91,16 +91,31 @@ class Section {
 	 * Add a single line that's just a plain string.
 	 * Meant to be called with user-submitted data.
 	 *
+	 * This can be called with duplicate lines and it will not produce duplicate entries.
+	 *
 	 * @param $line
 	 */
 	public function addLine($line){
 		if(trim($line) == '') return;
 
-		$this->_lastentry = new Entry();
-		$this->_lastentry->parseLine($line);
+		$entry = new Entry();
+		$entry->parseLine($line);
+
+		// Before I go and add it, I need to skim through the current set of entries and see if this one matches.
+		$newlineformatted = $entry->getLine();
+		foreach($this->_entries as $e){
+			/** @var $e Entry */
+			if($e->getLine() == $newlineformatted){
+				// Abort the addition!
+				return;
+			}
+		}
+
+		// Otherwise... all good!
+		$this->_lastentry = $entry;
 
 		// And append it to the list of entries.
-		$this->_entries[] = $this->_lastentry;
+		$this->_entries[] = $entry;
 	}
 
 	public function clearEntries(){
@@ -108,8 +123,22 @@ class Section {
 		$this->_lastentry = null;
 	}
 
+	/**
+	 * Get the version string of this section
+	 *
+	 * @return mixed
+	 */
 	public function getVersion(){
 		return $this->_version;
+	}
+
+	/**
+	 * Get the released/packaged date of this changelog section.
+	 *
+	 * @return mixed
+	 */
+	public function getReleasedDate(){
+		return $this->_packageddate;
 	}
 
 	/**
