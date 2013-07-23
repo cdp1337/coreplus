@@ -12,7 +12,7 @@
 
 		<div class="blog-article blog-article-status-{$article.status}" itemscope itemtype="http://schema.org/BlogPosting">
 			<link itemprop="url" href="{$article->getResolvedLink()}"/>
-			<a class="blog-article-title" href="{$article->getResolvedLink()}" itemprop="name">
+			<a {if $blog.type == 'remote'} target="_blank"{/if} class="blog-article-title" href="{$article->getResolvedLink()}" itemprop="name">
 				{$article.title}
 			</a>
 
@@ -40,7 +40,7 @@
 
 			<p class="blog-article-excerpt" itemprop="articleBody">
 				{$article->getTeaser()}
-				... <a class="blog-article-read-more" href="{$article->getResolvedLink()}">Read More</a>
+				... <a{if $blog.type == 'remote'} target="_blank"{/if} class="blog-article-read-more" href="{$article->getResolvedLink()}">Read More</a>
 			</p>
 
 			<div class="clear"></div>
