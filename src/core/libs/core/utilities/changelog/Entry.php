@@ -21,6 +21,7 @@ class Entry {
 	const TYPE_BUG         = 'Bug';
 	const TYPE_FEATURE     = 'Feature';
 	const TYPE_PERFORMANCE = 'Performance';
+	const TYPE_SECURITY    = 'Security';
 
 	private $_comment;
 
@@ -53,6 +54,9 @@ class Entry {
 			'[performance]' => [ 'type' => self::TYPE_PERFORMANCE, 'trim' => true  ],
 			'performance'   => [ 'type' => self::TYPE_PERFORMANCE, 'trim' => true  ],
 			'perf '         => [ 'type' => self::TYPE_PERFORMANCE, 'trim' => true  ],
+			'[security]'    => [ 'type' => self::TYPE_SECURITY,    'trim' => true  ],
+			'security'      => [ 'type' => self::TYPE_SECURITY,    'trim' => true  ],
+			'sec '          => [ 'type' => self::TYPE_SECURITY,    'trim' => true  ],
 		];
 
 		foreach($word1keywords as $word => $dat){
@@ -73,6 +77,8 @@ class Entry {
 				'feature #'   => self::TYPE_FEATURE,
 				'performance' => self::TYPE_PERFORMANCE,
 				'faster'      => self::TYPE_PERFORMANCE,
+				'secure'      => self::TYPE_SECURITY,
+				'security'    => self::TYPE_SECURITY,
 			];
 
 			foreach($phrases as $word => $type){
