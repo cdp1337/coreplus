@@ -178,6 +178,7 @@ class CronController extends Controller_2_1 {
 		$filters->applyToFactory($cronfac);
 		$listings = $cronfac->get();
 
+		$view->mastertemplate = 'admin';
 		$view->title = 'Cron Results';
 		$view->assign('filters', $filters);
 		$view->assign('listings', $listings);
@@ -205,6 +206,7 @@ class CronController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 
+		$view->mastertemplate = 'admin';
 		$view->addBreadcrumb('Cron Results', '/cron/admin');
 		$view->title = 'Log Execution Details';
 		$view->assign('entry', $log);
@@ -224,6 +226,7 @@ class CronController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
+		$view->mastertemplate = 'admin';
 		$view->title = 'Cron Howto';
 		$view->assign('url', ROOT_URL_NOSSL);
 		$view->assign('sitename', SITENAME);
