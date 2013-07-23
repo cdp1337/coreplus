@@ -649,7 +649,8 @@ function process_component($component, $forcerelease = false){
 		$scanlicenses = true;
 	}
 	else{
-		$scanlicenses = CLI::PromptUser('Retrieve current list of licenses and merge in from code?', 'boolean', true);
+		//$scanlicenses = CLI::PromptUser('Retrieve current list of licenses and merge in from code?', 'boolean', true);
+		$scanlicenses = true;
 	}
 	if($scanlicenses){
 		foreach($xml->getElements('//component/licenses/license') as $el){
@@ -668,7 +669,8 @@ function process_component($component, $forcerelease = false){
 		$scanauthors = true;
 	}
 	else{
-		$scanauthors = CLI::PromptUser('Retrieve current list of authors and merge in from code?', 'boolean', true);
+		//$scanauthors = CLI::PromptUser('Retrieve current list of authors and merge in from code?', 'boolean', true);
+		$scanauthors = true;
 	}
 	if($scanauthors){
 		foreach($xml->getElements('//component/authors/author') as $el){
@@ -827,16 +829,41 @@ function process_component($component, $forcerelease = false){
 
 	while($ans != 'save'){
 		$opts = array(
-			'editvers'   => 'Edit Version Number',
-			'editdesc'   => 'Edit Description',
-			'editchange' => 'Edit Changelog (for version ' . $version . ')',
-			'viewchange' => 'View Changelog (for version ' . $version . ')',
+			'editvers'   => '[ VERSION     ] Set version number',
+			'editdesc'   => '[ DESCRIPTION ] Edit description',
+			'importgit'  => '[ CHANGELOG   ] Import GIT commit logs into version ' . $version,
+			'editchange' => '[ CHANGELOG   ] Edit for version ' . $version,
+			'viewchange' => '[ CHANGELOG   ] View for version ' . $version,
 			//'dbtables' => 'Manage DB Tables',
-			'printdebug' => 'DEBUG - Print the XML',
-			'save'       => 'Finish Editing, Save it!',
+			'printdebug' => '[ DEBUG       ] Print the XML',
+			'save'       => '[ FINISH      ] Save it!',
 			'exit'       => 'Abort and exit without saving changes',
 		);
 		$ans = CLI::PromptUser('What do you want to edit for component ' . $component . ' ' . $version, $opts);
+
+
+		// Lookup the changelog text of this current version.
+		$changelogfile = $comp->getBaseDir();
+		if($comp->getName() == 'core'){
+			// Core's changelog is located in the core directory.
+			$changelogfile .= 'core/CHANGELOG';
+			$name = 'Core Plus';
+			$gitpaths = [
+				$comp->getBaseDir() . 'config',
+				$comp->getBaseDir() . 'core',
+				$comp->getBaseDir() . 'install',
+				$comp->getBaseDir() . 'index.php'
+			];
+		}
+		else{
+			// Nope, no extension.
+			$changelogfile .= 'CHANGELOG';
+			$name = $comp->getName();
+			$gitpaths = [
+				$comp->getBaseDir()
+			];
+		}
+
 
 		switch($ans){
 			case 'editvers':
@@ -847,47 +874,90 @@ function process_component($component, $forcerelease = false){
 				// Try to explode the version by a ~ sign, this signifies not the original packager/source.
 				// ie: ForeignComponent 3.2.4 may be versioned 3.2.4.thisproject5
 				// if it's the 5th revision of the upstream version 3.2.4 for 'thisproject'.
+				$previousversion = $version;
 				$version = _increment_version($version, $original);
 
 				$version = CLI::PromptUser('Please set the new version or', 'text', $version);
 				$comp->setVersion($version);
+
+				if($version != $previousversion){
+					$importgit = CLI::PromptUser('Do you want to automatically import GIT commits performed after ' . $previousversion . ' into the ' . $version . ' changelog?', 'boolean', true);
+					if($importgit){
+						$parser = new Core\Utilities\Changelog\Parser($name, $changelogfile);
+						$parser->parse();
+						$previouschange = $parser->getSection($previousversion);
+						$thischange     = $parser->getSection($version);
+
+						$changes = get_git_changes_since($name, $previousversion, $previouschange->getReleasedDate(), $gitpaths);
+						$linecount = sizeof($thischange->getEntriesSorted());
+						foreach($changes as $line){
+							$thischange->addLine($line);
+						}
+						$linesadded = sizeof($thischange->getEntriesSorted()) - $linecount;
+
+						// Don't forget to save this changelog back down to the original file!
+						$parser->save();
+
+						// And notify the user of what happened.
+						if(!sizeof($changes)){
+							print 'No GIT history found.' . NL;
+						}
+						elseif(!$linesadded){
+							print 'No new GIT commits found.' . NL;
+						}
+						else{
+							print 'Added ' . $linesadded . ($linesadded != 1 ? ' lines' : ' line') . ' to the changelog successfully!' . NL;
+							print $thischange->fetchFormatted() . NL . NL;
+						}
+					}
+				}
 				break;
 			case 'editdesc':
 				$comp->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $comp->getDescription()));
 				break;
 			case 'editchange':
-				// Lookup the changelog text of this current version.
-				$file = $comp->getBaseDir();
+				manage_changelog($changelogfile, $name, $version);
+				break;
+			case 'importgit':
+				$parser = new Core\Utilities\Changelog\Parser($name, $changelogfile);
+				$parser->parse();
 
-				if($comp->getName() == 'core'){
-					// Core's changelog is located in the core directory.
-					$file .= 'core/CHANGELOG';
-					$name = 'Core Plus';
+				/** @var $thisversion Core\Utilities\Changelog\Section */
+				$thischange      = $parser->getSection($version);
+				$previouschange  = $parser->getPreviousSection($version);
+				$previousversion = $previouschange ? $previouschange->getVersion() : '0.0.0';
+				$previousdate    = $previouschange ? $previouschange->getReleasedDate() : '2000-01-01';
+
+				// If this version is released, I can't import anything!
+				if($thischange->getReleasedDate()){
+					print 'Version ' . $version . ' is already marked as released!  Refusing to import GIT changes into a released version.' . NL;
 				}
 				else{
-					// Nope, no extension.
-					$file .= 'CHANGELOG';
-					$name = $comp->getName();
-				}
+					$changes = get_git_changes_since($name, $previousversion, $previousdate, $gitpaths);
+					$linecount = sizeof($thischange->getEntriesSorted());
+					foreach($changes as $line){
+						$thischange->addLine($line);
+					}
+					$linesadded = sizeof($thischange->getEntriesSorted()) - $linecount;
 
-				manage_changelog($file, $name, $version);
+					// Don't forget to save this changelog back down to the original file!
+					$parser->save();
+
+					// And notify the user of what happened.
+					if(!sizeof($changes)){
+						print 'No GIT history found since version ' . $previousversion . ' was released on ' . $previousdate . '.' . NL;
+					}
+					elseif(!$linesadded){
+						print 'No new GIT commits found since version ' . $previousversion . ' was released on ' . $previousdate . '.' . NL;
+					}
+					else{
+						print 'Added ' . $linesadded . ($linesadded != 1 ? ' lines' : ' line') . ' to the changelog successfully!' . NL;
+						print $thischange->fetchFormatted() . NL . NL;
+					}
+				}
 				break;
 			case 'viewchange':
-				// Lookup the changelog text of this current version.
-				$file = $comp->getBaseDir();
-
-				if($comp->getName() == 'core'){
-					// Core's changelog is located in the core directory.
-					$file .= 'core/CHANGELOG';
-					$name = 'Core Plus';
-				}
-				else{
-					// Nope, no extension.
-					$file .= 'CHANGELOG';
-					$name = $comp->getName();
-				}
-
-				$parser = new Core\Utilities\Changelog\Parser($name, $file);
+				$parser = new Core\Utilities\Changelog\Parser($name, $changelogfile);
 				$parser->parse();
 
 				/** @var $thisversion Core\Utilities\Changelog\Section */
@@ -1408,6 +1478,30 @@ function add_release_date_to_changelog($file, $name, $version){
 
 	// Write this back out to that file :)
 	$parser->save();
+}
+
+
+function get_git_changes_since($componentname, $sinceversion, $sincedate, $gitpaths){
+	$paths = [];
+	$changes = [];
+	foreach($gitpaths as $path){
+		$paths[] = '"' . trim($path) . '"';
+	}
+	exec('git log --no-merges --format="%s" --since="' . $sincedate . '" ' . implode(' ', $paths), $gitlogoutput);
+
+	$linesadded = 0;
+	foreach($gitlogoutput as $line){
+		// If the line matches "[COMP NAME] [version]"... then assume that's simply a release commit and ignore it.
+		if($line == $componentname . ' ' . $sinceversion) continue;
+
+		// Or if it contains the name, since version, and "release"... same thing!
+		if(stripos($line, $componentname . ' ' . $sinceversion) !== false && stripos($line, 'release') !== false) continue;
+
+		// Otherwise, it's a change!
+		$changes[] = $line;
+	}
+
+	return $changes;
 }
 
 // I need a few variables first about the user...
