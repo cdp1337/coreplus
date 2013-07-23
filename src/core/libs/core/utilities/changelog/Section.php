@@ -165,7 +165,7 @@ class Section {
 		$out = $this->_name . ' ' . $this->_version . "\n\n";
 
 		// Because I want bugs, then performance notes, then features, then other.
-		foreach($this->_getEntriesSorted() as $e){
+		foreach($this->getEntriesSorted() as $e){
 			/** @var $e Entry */
 			$out .= $e->getLineFormatted() . "\n";
 		}
@@ -203,7 +203,7 @@ class Section {
 
 		// Because I want bugs, then features, then other.
 		$out .= '<ul>' . "\n";
-		foreach($this->_getEntriesSorted() as $e){
+		foreach($this->getEntriesSorted() as $e){
 			/** @var $e Entry */
 			if($e->getType() == Entry::TYPE_OTHER){
 				$out .= sprintf("\t<li>%s</li>\n", $e->getComment());
@@ -222,7 +222,7 @@ class Section {
 	 *
 	 * @return array
 	 */
-	private function _getEntriesSorted(){
+	public function getEntriesSorted(){
 		$security = [];
 		$bugs     = [];
 		$perfs    = [];
