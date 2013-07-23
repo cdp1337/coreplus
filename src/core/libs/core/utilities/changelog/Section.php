@@ -164,32 +164,10 @@ class Section {
 	public function fetchFormatted(){
 		$out = $this->_name . ' ' . $this->_version . "\n\n";
 
-		$bugs     = [];
-		$perfs    = [];
-		$features = [];
-		$other    = [];
-
-		// First for sortting them and putting them in the right category.
-		foreach($this->_entries as $e){
-			switch($e->getType()){
-				case Entry::TYPE_BUG:
-					$bugs[] = $e->getLineFormatted();
-					break;
-				case Entry::TYPE_PERFORMANCE:
-					$perfs[] = $e->getLineFormatted();
-					break;
-				case Entry::TYPE_FEATURE:
-					$features[] = $e->getLineFormatted();
-					break;
-				default:
-					$other[] = $e->getLineFormatted();
-					break;
-			}
-		}
-
 		// Because I want bugs, then performance notes, then features, then other.
-		foreach(array_merge($bugs, $perfs, $features, $other) as $line){
-			$out .= $line . "\n";
+		foreach($this->_getEntriesSorted() as $e){
+			/** @var $e Entry */
+			$out .= $e->getLineFormatted() . "\n";
 		}
 
 		if($this->_packageddate){
@@ -223,15 +201,46 @@ class Section {
 			);
 		}
 
-		$bugs = [];
+		// Because I want bugs, then features, then other.
+		$out .= '<ul>' . "\n";
+		foreach($this->_getEntriesSorted() as $e){
+			/** @var $e Entry */
+			if($e->getType() == Entry::TYPE_OTHER){
+				$out .= sprintf("\t<li>%s</li>\n", $e->getComment());
+			}
+			else{
+				$out .= sprintf("\t<li><b>%s</b> - %s</li>\n", $e->getType(), $e->getComment());
+			}
+		}
+		$out .= '</ul>';
+
+		return $out;
+	}
+
+	/**
+	 * Get the entries of this section sorted by importance.
+	 *
+	 * @return array
+	 */
+	private function _getEntriesSorted(){
+		$security = [];
+		$bugs     = [];
+		$perfs    = [];
 		$features = [];
-		$other = [];
+		$other    = [];
 
 		// First for sortting them and putting them in the right category.
 		foreach($this->_entries as $e){
+			/** @var $e Entry */
 			switch($e->getType()){
+				case Entry::TYPE_SECURITY:
+					$security[] = $e;
+					break;
 				case Entry::TYPE_BUG:
 					$bugs[] = $e;
+					break;
+				case Entry::TYPE_PERFORMANCE:
+					$perfs[] = $e;
 					break;
 				case Entry::TYPE_FEATURE:
 					$features[] = $e;
@@ -242,16 +251,12 @@ class Section {
 			}
 		}
 
-		// Because I want bugs, then features, then other.
-		$out .= '<ul>' . "\n";
-		foreach(array_merge($bugs, $features) as $line){
-			$out .= sprintf("\t<li><b>%s</b> - %s</li>\n", $line->getType(), $line->getComment());
-		}
-		foreach($other as $line){
-			$out .= sprintf("\t<li>%s</li>\n", $line->getComment());
-		}
-		$out .= '</ul>';
-
-		return $out;
+		// Order:
+		// 1) Security Fixes
+		// 2) Bugs
+		// 3) Performance
+		// 4) Features
+		// 5) Everything else
+		return array_merge($security, $bugs, $perfs, $features, $other);
 	}
 }
