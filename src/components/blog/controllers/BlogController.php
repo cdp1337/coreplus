@@ -47,6 +47,8 @@ class BlogController extends Controller_2_1 {
 		if(!$editor){
 			// Limit these to published articles.
 			$factory->where('status = published');
+			// And where the published date is >= now.
+			$factory->where('published <= ' . CoreDateTime::Now('U', Time::TIMEZONE_GMT));
 		}
 
 		$filters->applyToFactory($factory);
@@ -202,7 +204,12 @@ class BlogController extends Controller_2_1 {
 			}
 			// If the article is still in the draft stage and the user does not have view permissions, (public),
 			// then it's the same as a 404.
-			if ($article->get('status') != 'published' && !$viewer) {
+			if ($article->get('status') != 'published' && !$editor) {
+				return View::ERROR_NOTFOUND;
+			}
+
+			// And where the published date is >= now.
+			if($article->get('published') > CoreDateTime::Now('U', Time::TIMEZONE_GMT) && !$editor ){
 				return View::ERROR_NOTFOUND;
 			}
 
@@ -544,6 +551,10 @@ class BlogController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 
+		if($article->get('published') > CoreDateTime::Now('U', Time::TIMEZONE_GMT) && !$editor){
+			return View::ERROR_NOTFOUND;
+		}
+
 		return $this->_viewBlogArticle($blog, $article);
 	}
 
@@ -559,7 +570,11 @@ class BlogController extends Controller_2_1 {
 		// Get the latest published article's update date.  This will be used for the blog updated timestamp.
 		$latest = $blog->getLinkFactory('BlogArticle');
 		$latest->order('published DESC');
+
 		$latest->where('status = published');
+		// And where the published date is >= now.
+		$latest->where('published <= ' . CoreDateTime::Now('U', Time::TIMEZONE_GMT));
+
 		$latest->limit(1);
 		$latestarticle = $latest->get();
 
@@ -596,6 +611,9 @@ class BlogController extends Controller_2_1 {
 		if(!$editor){
 			// Limit these to published articles.
 			$factory->where('status = published');
+
+			// And where the published date is >= now.
+			$factory->where('published <= ' . CoreDateTime::Now('U', Time::TIMEZONE_GMT));
 		}
 
 		$filters->applyToFactory($factory);

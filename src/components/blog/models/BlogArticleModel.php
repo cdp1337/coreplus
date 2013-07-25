@@ -92,7 +92,12 @@ class BlogArticleModel extends Model {
 		),
 		'published' => array(
 			'type' => Model::ATT_TYPE_INT,
-			'formtype' => 'disabled',
+			'form' => array(
+				'title' => 'Published Date',
+				'type' => 'datetime',
+				'description' => 'Leave this blank for default published time, or set it to a desired date/time to set the published time.  Note, you CAN set this to a future date to set the article as published at that time, however doing so will disable the facebook publishing ability.',
+				'group' => 'Access & Advanced',
+			),
 			'comment' => 'The published date',
 		),
 		'created'     => array(
@@ -160,7 +165,7 @@ class BlogArticleModel extends Model {
 				return parent::set($k, $v);
 			case 'published':
 				// make sure this is a valid timestamp!
-				if($v != '' && !is_int($v)){
+				if($v != '' && !is_numeric($v)){
 					$time = strtotime($v);
 					return parent::set($k, $time);
 				}
@@ -228,5 +233,14 @@ class BlogArticleModel extends Model {
 		else{
 			return Core::ResolveLink($this->get('baseurl'));
 		}
+	}
+
+	/**
+	 * Get if this article is published AND not set to a future published date.
+	 *
+	 * @return bool
+	 */
+	public function isPublished(){
+		return ($this->get('status') == 'published' && $this->get('published') <= CoreDateTime::Now('U', Time::TIMEZONE_GMT));
 	}
 }

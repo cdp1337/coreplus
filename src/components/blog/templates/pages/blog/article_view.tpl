@@ -7,7 +7,7 @@
 			{widget baseurl="/userprofile/badge" user="$author" title="Posted By" orientation="right"}
 		{/if}
 
-		{if $article.published}
+		{if $article->isPublished()}
 			<meta itemprop="dateCreated" content="{date format='c' date="`$article.published`"}"/>
 			<div class="blog-article-date">Posted {date date="`$article.published`"}</div>
 		{else}
