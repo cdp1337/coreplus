@@ -1,35 +1,54 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: powellc
- * Date: 12/3/12
- * Time: 8:00 PM
- * Just a simple class to encapsulate the catch 404 logic and lookup the mapped URL.
+ * Class file for the RewriteMapHelper
+ *
+ * @package Core
+ */
+
+/**
+ * A simple class to encapsulate the catch 404 logic and lookup the mapped URL.
+ *
+ * This is bound and called with the hook <code>/core/page/error-404</code>
+ *
+ * @package Core
+ * @author Charlie Powell <charlie@eval.bz>
  */
 abstract class RewriteMapHelper {
 	public static function Catch404Hook(View $view){
 
 		$request = PageRequest::GetSystemRequest();
 
-		// The incoming rewrite request maybe a rewrite url in the map table.
-		$incomingurl = $request->uriresolved;
+		// All the exact matches, in the order of precedence.
+		$exactmatches = [];
 
-		// Look for it!
-		$maps = RewriteMapModel::Find(array('rewriteurl' => $incomingurl));
+		// The first search I want do is for the full URL exactly as submitted.
+		// This is because the user can submit URLs with GET parameters attached to them.
+		// It needs to act in a google-esque manner, where if the user requested x=1&y=2... then give them x=1 and y=2!
+		$exactmatches[] = '/' . substr($request->uri, strlen(ROOT_WDIR));
 
-		// Did I get one did I get one did I get one?
-		if(sizeof($maps)){
-			// Grab the first one, that'll be the latest, (should multiple exist.... somehow :/ )
-			$match = $maps[0]->get('baseurl');
+		// This one is the resolved URL, without any GET parameters.  It's still a very common and very specific rewrite choice.
+		$exactmatches[] = $request->uriresolved;
 
-			// Resolve that to the new rewriteurl and redirect!
-			$newpage = PageModel::Construct($match);
-			\core\redirect($newpage->get('rewriteurl'), 301);
+		// Now, look for them!
+		foreach($exactmatches as $incomingurl){
+			// Look for it!
+			$maps = RewriteMapModel::Find(array('rewriteurl' => $incomingurl));
+
+			// Did I get one did I get one did I get one?
+			if(sizeof($maps)){
+				// Grab the first one, that'll be the latest, (should multiple exist.... somehow :/ )
+				$match = $maps[0]->get('baseurl');
+
+				// Resolve that to the new rewriteurl and redirect!
+				$newpage = PageModel::Construct($match);
+				\core\redirect($newpage->get('rewriteurl'), 301);
+			}
 		}
+
 
 		// Else, no match was found... maybe it's a fuzzy page!
 		// Since this page will have no longer existed, I can't just use the builtin logic :(
-		$fuzzy = $incomingurl;
+		$fuzzy = $request->uriresolved;
 		do{
 			$fuzzy = substr($fuzzy, 0, strrpos($fuzzy, '/'));
 
@@ -50,5 +69,6 @@ abstract class RewriteMapHelper {
 		while($fuzzy);
 
 		// Sigh, guess this page didn't make the cut.
+		// There is no return necessary, this hook will simply silently continue to the next.
 	}
 }
