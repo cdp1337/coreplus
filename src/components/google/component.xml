@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Google" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Google" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.5"/>
 	</requires>
@@ -23,10 +23,11 @@
 		<page baseurl="/google/configure" title="Google Keys and Apps" group="Configure" access="g:admin" admin="1" selectable="0"/>
 	</pages>
 	<files>
+		<file filename="CHANGELOG" md5="7f05bede0119417ce5eb835b85b92a48"/>
 		<file filename="controllers/GoogleController.php" md5="0e37e67cbdeb651b6715bdcc986a6c3c">
 			<controller name="GoogleController"/>
 		</file>
-		<file filename="libs/google/analytics/Helper.php" md5="20d7d1d95c3aba15e386d05b74829ef5">
+		<file filename="libs/google/analytics/Helper.php" md5="8219b491db24f359f2a476a6d8e328fd">
 			<class name="Google\Analytics\Helper"/>
 		</file>
 		<file filename="libs/google/maps/GeocodeRequest.php" md5="004989557f59e785da079b60e1cb392e">
@@ -36,7 +37,9 @@
 			<class name="Google\Maps\GeocodeResponse"/>
 		</file>
 	</files>
-	<upgrades/>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
 	<view>
 		<file filename="templates/pages/google/configure.tpl" md5="7f14a2c9999b94bd20374d35b14fa119"/>
 		<file filename="templates/pages/google/configure_analytics.tpl" md5="e652afdcb24569e1e9676ad36c4d822a"/>
