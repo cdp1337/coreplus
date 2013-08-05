@@ -55,8 +55,17 @@ rsync $OPTIONS --delete "$UPSTREAM/src/themes/base-v2/" "$BASEDIR/src/themes/bas
 for i in $COMPONENTS; do
 	if [ -e "$UPSTREAM/src/components/$i" ]; then
 		echo "Syncing  component $i..."
-		rsync $OPTIONS --delete "$UPSTREAM/src/components/$i/" "$BASEDIR/src/components/$i"
+
+		if [ -e "$BASEDIR/src/components/$i/.upstreamignore" ]; then
+			rsync $OPTIONS --exclude=.upstreamignore --exclude-from="$BASEDIR/src/components/$i/.upstreamignore" \
+			--delete "$UPSTREAM/src/components/$i/" "$BASEDIR/src/components/$i"
+		else
+			rsync $OPTIONS --delete "$UPSTREAM/src/components/$i/" "$BASEDIR/src/components/$i"
+		fi
+
+
 	else
 		echo "Skipping component $i, (does not exist in upstream)"
 	fi
 done
+
