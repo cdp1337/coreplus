@@ -1044,10 +1044,12 @@ class Form extends FormGroup {
 			//	$el->set('options', array('1'));
 			//}
 
-			// Standard form types.
 
-			// "disabled" form types are ignored completely.
-			if($formatts['type'] == 'disabled'){
+
+			//// IDs, FOREIGN IDs, UUIDs, ETC
+
+				if($formatts['type'] == 'disabled'){
+				// "disabled" form types are ignored completely.
 				continue;
 			}
 			elseif ($v['type'] == Model::ATT_TYPE_ID){
@@ -1070,9 +1072,22 @@ class Form extends FormGroup {
 				// These are handled automatically.
 				$formatts['required'] = false;
 			}
+
+			//// FORM TYPE ATTRIBUTES
+
+			elseif($formatts['type'] == 'datetime' && $v['type'] == Model::ATT_TYPE_INT){
+				$formatts['datetimepicker_dateFormat'] = 'yy-mm-dd';
+				$formatts['datetimepicker_timeFormat'] = 'HH:mm';
+				$formatts['displayformat'] = 'Y-m-d H:i';
+				$formatts['saveformat'] = 'U';
+				$el = FormElement::Factory('datetime');
+			}
 			elseif ($formatts['type'] !== null) {
 				$el = FormElement::Factory($formatts['type']);
 			}
+
+			// MODEL TYPE ATTRIBUTES ONLY
+
 			elseif ($v['type'] == Model::ATT_TYPE_BOOL) {
 				$el = FormElement::Factory('radio');
 				$el->set('options', array('Yes', 'No'));
@@ -1119,6 +1134,7 @@ class Form extends FormGroup {
 			elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATETIME){
 				$formatts['datetimepicker_dateFormat'] = 'yy-mm-dd';
 				$formatts['datetimepicker_timeFormat'] = 'HH:mm';
+				$formatts['saveformat'] = 'Y-m-d H:i:00';
 				$el = FormElement::Factory('datetime');
 			}
 			else {
