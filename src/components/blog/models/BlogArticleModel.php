@@ -79,7 +79,8 @@ class BlogArticleModel extends Model {
 				'description' => 'Set this to "draft" to make it visible to editors and admins
 					only.  Useful for working on an article across multiple sessions while 
 					keeping not-ready content hidden from public users.',
-				'group'       => 'Basic',
+				'group' => 'Publish Settings',
+				'grouptype' => 'tabs',
 			)
 		),
 		'fb_account_id' => array(
@@ -96,7 +97,8 @@ class BlogArticleModel extends Model {
 				'title' => 'Published Date',
 				'type' => 'datetime',
 				'description' => 'Leave this blank for default published time, or set it to a desired date/time to set the published time.  Note, you CAN set this to a future date to set the article as published at that time, however doing so will disable the facebook publishing ability.',
-				'group' => 'Access & Advanced',
+				'group' => 'Publish Settings',
+				'grouptype' => 'tabs',
 			),
 			'comment' => 'The published date',
 		),

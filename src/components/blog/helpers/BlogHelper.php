@@ -27,6 +27,35 @@ abstract class BlogHelper {
 		$form->addModel($article, 'model');
 
 
+		if(Core::IsComponentAvailable('facebook') && Core::IsLibraryAvailable('jquery')){
+			// Is this article already posted?
+			if($article->get('fb_post_id')){
+				$form->addElement(
+					'select',
+					[
+						'disabled' => true,
+						'title' => 'Post to Facebook',
+						'options' => ['' => 'Posted!'],
+						'group'    => 'Publish Settings',
+					]
+				);
+			}
+			else{
+				$form->addElement(
+					'select',
+					[
+						'class'    => 'facebook-post-to-select',
+						'title'    => 'Post to Facebook',
+						'name'     => 'facebook_post',
+						//'options'  => ['' => '-- Do not post --', '__self__' => 'My Wall Feed'],
+						'options' => ['' => '-- Please enable javascript --'],
+						'group'    => 'Publish Settings',
+					]
+				);
+			}
+		}
+
+
 		// Lock in some elements for this blog article page.
 		$form->getElement('page[parenturl]')->setFromArray(
 			array(

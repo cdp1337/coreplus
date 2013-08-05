@@ -659,6 +659,17 @@ class BlogController extends Controller_2_1 {
 
 		//var_dump($page->getMeta('keywords')); die();
 
+		if(!$article->isPublished()){
+			// Is it actually not published, or just marked for a future publish date?
+			if($article->get('status') == 'published'){
+				$publishdate = new CoreDateTime($article->get('published'));
+				Core::SetMessage('Article is set to be published on ' . $publishdate->getFormatted('F jS, Y \a\t h:ia'), 'info');
+			}
+			else{
+				Core::SetMessage('Article not published yet!', 'info');
+			}
+		}
+
 
 		//$view->templatename = $page->get('page_template') ? $page->get('page_template') : 'pages/blog/article_view.tpl';
 		$view->templatename = 'pages/blog/article_view.tpl';
