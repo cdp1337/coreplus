@@ -1,3 +1,29 @@
+a.facebook-button {
+	background: #5B74A8;
+	border: 1px solid #29447E;
+	border-bottom-color: #1A356E;
+	color: white;
+	cursor: pointer;
+	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+	font-weight:normal;
+	line-height: 1.8em;
+	margin-right:.1em;
+	min-width: 90px;
+	/* the overflow property removes extra width in IE */
+	overflow: visible;
+	padding: 4px 10px 5px;
+	text-align: center;
+	text-decoration: none;
+	zoom: 1;
+}
+
+
+a.facebook-button:hover {
+	border: 1px solid #5B74A8;
+	background: #5976b3;
+}
+
+
 #facebook-login-button {
 	background-color: #5B74A8;
 	border: 1px solid #29447E;
