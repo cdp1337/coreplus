@@ -23,9 +23,38 @@
 /**
  * Class FormDateTimeInput provides a jQuery datepicker with time added on.
  *
- * All the options from the official jQuery date picker API are supported,
- * simply pass them in as attributes.
+ * <h3>Parameters</h3>
  *
+ * <p>
+ * All the options from the <a href="http://api.jqueryui.com/datepicker/" target="_BLANK">official jQuery date picker API</a>
+ * are supported, simply pass them in as attributes.
+ * </p>
+ *
+ * <p>
+ * Besides the jquery options, the datetime picker also supports the parameters "displayformat" and "saveformat".
+ * </p>
+ *
+ * <h4>displayformat</h4>
+ * <p>
+ * The "displayformat" option controls how a timestamp is formatted to display on the form.
+ * This string should match the <a href="http://php.net/manual/en/function.date.php" target="_BLANK">format provided at php.net</a>.
+ * </p>
+ *
+ * <p>
+ * This timestamp is converted from GMT to the user's default timezone automatically.
+ * </p>
+ *
+ * <h4>saveformat</h4>
+ * <p>
+ * Generally used alongside "displayformat".  Useful for taking a human-readable string and converting that back to a machine timestamp.
+ * Set this to "U" to achieve this.
+ * </p>
+ *
+ * <p>
+ * This string is converted from the user's default timezone to GMT automatically.
+ * </p>
+ *
+ * @link http://api.jqueryui.com/datepicker/
  * @package Core\Forms
  */
 class FormDateTimeInput extends FormTextInput {
@@ -110,6 +139,27 @@ class FormDateTimeInput extends FormTextInput {
 
 		$this->_javascriptconstructorstring = json_encode($opts);
 
+		// Does the value need to be transposed to a specific display format?
+		if(isset($this->_attributes['displayformat'])){
+			if(is_numeric($this->get('value'))){
+				$dt = new CoreDateTime($this->get('value'));
+				$formattedvalue = $dt->getFormatted($this->_attributes['displayformat']);
+				$this->_attributes['value'] = $formattedvalue;
+			}
+		}
+
 		return parent::render();
+	}
+
+	public function setValue($value){
+		if(isset($this->_attributes['saveformat']) && !is_numeric($value)){
+			// Set value succeeded, now I can convert the string to an int, (if requested).
+			$dt = new CoreDateTime($value);
+			$value = $dt->getFormatted($this->_attributes['saveformat'], Time::TIMEZONE_GMT);
+			return parent::setValue($value);
+		}
+		else{
+			return parent::setValue($value);
+		}
 	}
 }
