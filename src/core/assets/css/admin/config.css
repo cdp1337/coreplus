@@ -9,27 +9,71 @@
 	clear: both;
 }
 
+/* I need to override the default clear behaviour so it well... doesn't clear. */
+#system-config-form .formelement > .clear {
+	clear: none;
+}
+
+#system-config-form .formelement {
+	margin-bottom: -1px;
+	border-bottom: 1px solid #ccc;
+}
+
+#system-config-form .formelement:hover {
+	background: rgb(246, 246, 246);
+}
+#system-config-form .formtextinput:hover label,
+#system-config-form .formselect:hover label,
+#system-config-form .formelement:hover span.radio-label {
+	background: rgb(234, 234, 234);
+}
+
 #system-config-form .formelement .formelement-labelinputgroup {
 	border-radius: 0;
 }
-#system-config-form label {
-	padding: 1px;
-	width: 140px;
+
+/* General label tweaks, make it smaller and float to the left. */
+#system-config-form label,
+#system-config-form .formradioinput > span {
+	float: left;
 	overflow: hidden;
+	padding: 1px;
+	width: 170px;
 }
-#system-config-form input,
-#system-config-form select
-{
+
+/* Inputs and selects need to be smaller too */
+#system-config-form input {
 	padding: 1px;
 	min-width: 200px;
 }
+#system-config-form select {
+	padding: 1px;
+	min-width: 204px;
+}
+
+/* The radio input parent needs to be the entire width with no styling. */
+#system-config-form .formradioinput {
+	max-width: 100%;
+	background: none;
+	border: 0px none;
+	border-bottom: 1px solid #ccc;
+}
+
+/* Radio inputs need to play nicer */
+#system-config-form .formradioinput .formradioinput-options {
+	float: left;
+	min-width: 204px;
+}
+#system-config-form .formradioinput .formradioinput-options > label {
+	float: none;
+	left: auto;
+	top: auto;
+}
+
 #system-config-form .formelement .formdescription {
 	float: left;
 	font-size: 75%;
 	margin-left: 5px;
 	max-width: 425px;
 	padding: 0 0 5px;
-}
-#system-config-form .formelement > .clear {
-	clear: none;
 }
