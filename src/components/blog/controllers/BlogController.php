@@ -712,5 +712,10 @@ class BlogController extends Controller_2_1 {
 				)
 			);
 		}
+
+		// Add the extra view types for this page
+		$view->AddHead('<link rel="alternate" type="application/atom+xml" title="' . $page->get('title') . ' Atom Feed" href="' . Core::ResolveLink($blog->get('baseurl')) . '.atom"/>');
+		$view->AddHead('<link rel="alternate" type="application/rss+xml" title="' . $page->get('title') . ' RSS Feed" href="' . Core::ResolveLink($blog->get('baseurl')) . '.rss"/>');
+		$view->addControl('RSS Feed', Core::ResolveLink($blog->get('baseurl')) . '.rss', 'rss');
 	}
 }
