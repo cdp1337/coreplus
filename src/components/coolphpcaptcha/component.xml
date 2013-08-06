@@ -11,11 +11,25 @@
 		<formelement name="captcha" class="FormCaptchaInput"/>
 	</forms>
 	<description>
-		El objetivo de este proyecto es la generación de captchas de seguridad básica generando imágenes relativamente amigables para el usuario.
-		The objective of this project is the generation of basic security captchas generating images relatively user friendly.
-		This is an implementation of a captcha system developed by Jose Rodriguez with the appropriate bindings to tie into the CAE2 system.
-		Original project site: http://code.google.com/p/cool-php-captcha/
+		Standard self-hosted version of an image captcha with fully customizable settings.
 	</description>
+	<configs>
+		<config key="/captcha/width" description="Image width" type="int" default="150"/>
+		<config key="/captcha/height" description="Image height" type="int" default="60"/>
+		<config key="/captcha/minlength" description="Minimum word length" type="int" default="4"/>
+		<config key="/captcha/maxlength" description="Maximum word length" type="int" default="5"/>
+		<config key="/captcha/linethrough" description="Size of the line to strike through the text, 0 to disable" type="int" default="0"/>
+		<config key="/captcha/yperiod" description="Y-Period of the sinewave distortion" type="int" default="12"/>
+		<config key="/captcha/yamplitude" description="Y-Amplitude of the sinewave distortion" type="int" default="14"/>
+		<config key="/captcha/xperiod" description="X-Period of the sinewave distortion" type="int" default="11"/>
+		<config key="/captcha/xamplitude" description="X-Amplitude of the sinewave distortion" type="int" default="2"/>
+		<config key="/captcha/maxrotation" description="Maximum degree of rotation for the letters" type="int" default="4"/>
+		<config key="/captcha/blur" description="Enable or disable blur on the text" type="boolean" default="false"/>
+		<config key="/captcha/formtext" description="Form text for the captcha label" type="string" default="Are you a Human?"/>
+	</configs>
+	<pages>
+		<page baseurl="/simplecaptcha/admin" title="Captcha Tweaks" access="g:admin" admin="1" group="Configure"/>
+	</pages>
 	<files>
 		<file filename="CHANGELOG" md5="c2e471d3003f78b9add51a2634b76000"/>
 		<file filename="FormCaptchaInput.class.php" md5="88567b1a36c7e0dbf6c42de32313d74f">
