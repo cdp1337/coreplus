@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.1" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.2" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.6.0" operation="ge"/>
 		<require name="user" type="component" version="2.5.4"/>
@@ -14,14 +14,14 @@
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="76e20b7c3ec3f1a33b48827500dc753d"/>
-		<file filename="controllers/BlogController.php" md5="a543e226d15503c04193fb914ba783bc">
+		<file filename="CHANGELOG" md5="62fd10d0c900f44986d337f76805abf6"/>
+		<file filename="controllers/BlogController.php" md5="d6865d05ae33b43394dd0712f01e8124">
 			<controller name="BlogController"/>
 		</file>
-		<file filename="helpers/BlogHelper.php" md5="61accf39c5879f6f906892195e38c8d3">
+		<file filename="helpers/BlogHelper.php" md5="27d8ed9093c1d35d3bdbc84b370afe58">
 			<class name="BlogHelper"/>
 		</file>
-		<file filename="models/BlogArticleModel.php" md5="1bf56c3b92dbe784f78ea05e41ea480a">
+		<file filename="models/BlogArticleModel.php" md5="e653158979ab72bd3cbd944d81d3e1e6">
 			<class name="BlogArticleModel"/>
 		</file>
 		<file filename="models/BlogModel.php" md5="37bc0cf4adbacd59cd96fcb68f39a080">
@@ -40,17 +40,17 @@
 	<view searchdir="templates">
 		<file filename="templates/pages/blog/admin.tpl" md5="44274363e8c7fea512396a63293c63fd"/>
 		<file filename="templates/pages/blog/admin_view.tpl" md5="e1ca90792ff8835bee5ef1d03c54a851"/>
-		<file filename="templates/pages/blog/article_create_update.tpl" md5="843616082c6990b3d75dded8e08d9025"/>
-		<file filename="templates/pages/blog/article_view.tpl" md5="ec825042c51643a9955fdcf9184e86fb"/>
+		<file filename="templates/pages/blog/article_create_update.tpl" md5="782384ef977b501e5b80dabf783ecd2d"/>
+		<file filename="templates/pages/blog/article_view.tpl" md5="7c9a9139a84fa327e7c16f7851aad92d"/>
 		<file filename="templates/pages/blog/article_view/review-post.tpl" md5="f645ccbfa064359ed5962077ad666ddd"/>
 		<file filename="templates/pages/blog/create.tpl" md5="88a92a02a91699df3f24063112502867"/>
 		<file filename="templates/pages/blog/editindex.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/blog/import.tpl" md5="7e3f8c90db26ba500fa9e3ee439d2655"/>
-		<file filename="templates/pages/blog/index.tpl" md5="9a74ac7f89123b40f8421b02ec9a3887"/>
+		<file filename="templates/pages/blog/index.tpl" md5="e2fb2f2a1b19f35279ebe9a1eb6c863c"/>
 		<file filename="templates/pages/blog/update.tpl" md5="e2df73ed8b507c4318fa29588015a80f"/>
 		<file filename="templates/pages/blog/view-blog.atom.tpl" md5="5e7fe2a6a81b5c70b69094dce22ee078"/>
 		<file filename="templates/pages/blog/view-blog.rss.tpl" md5="dc2fd8c75e28eb869d068c1919654c96"/>
-		<file filename="templates/pages/blog/view-blog.tpl" md5="86fcd7022a353f51f73a101985ab6823"/>
+		<file filename="templates/pages/blog/view-blog.tpl" md5="7de8922f83fdb8451e0581bfa71527e0"/>
 	</view>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.1.0"/>
@@ -89,12 +89,13 @@
 				components/blog/upgrades/150_to_151_filepathchange.php
 			</phpfileinclude>
 		</upgrade>
+		<upgrade from="1.5.1" to="1.5.2"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>
 		<file filename="assets/images/valid-atom.png" md5="e343955a970cb2f7834fdb550f600ab2"/>
 		<file filename="assets/images/valid-rss.png" md5="7dac8fdd319e86cf82fa27bc7e2d416f"/>
-		<file filename="assets/js/blog-waypoint-scroll.js" md5="785bccef5ce4f802b581d91d26fff6c7"/>
+		<file filename="assets/js/blog-waypoint-scroll.js" md5="33b327ff598cb3c05f8a2d109ca6d9f9"/>
 	</assets>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

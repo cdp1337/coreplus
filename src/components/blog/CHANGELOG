@@ -1,3 +1,12 @@
+Blog 1.5.2
+
+	* [Bug] Fix the bug of waypoints not knowing where the reference point is.
+	* [Bug] Fix the remote article links, they now open in a new window.
+	* [Feature] Implement Feature #442 - RSS link/icon on individual article pages.
+	* [Feature] Blog articles support changing of the published date, both in the future and past.
+	* Cleanup the publish options for article creation and updating.
+	-- Charlie Powell <charlie@eval.bz>  Tue, 06 Aug 2013 20:35:33 -0400
+
 Blog 1.5.1
 
 	* [Bug] Fixed Bug #409 - RSS feed not validating by w3
