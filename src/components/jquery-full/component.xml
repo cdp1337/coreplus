@@ -15,7 +15,7 @@
 		<provide name="JQuery.tmpl" version="2.1.0" type="library"/>
 		<provide name="jquery.masonry" version="2.1.08" type="library"/>
 		<provide name="jquery.form" version="3.31.0" type="library"/>
-		<provide name="jquery.waypoints" version="2.0.2" type="library"/>
+		<provide name="jquery.waypoints" version="2.0.3" type="library"/>
 		<provide name="jquery.smoothscroll" version="1.4.10" type="library"/>
 		<scriptlibrary name="jquery" call="JQuery::IncludeJQuery"/>
 		<scriptlibrary name="jquery.json" call="JQuery::Include_json"/>
