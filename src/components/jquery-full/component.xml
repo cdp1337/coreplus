@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.10.0~core1" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.10.2~core1" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="1.9.0" operation="ge"/>
 	</requires>
@@ -142,6 +142,7 @@
 		<upgrade from="1.9.1~core2" to="1.9.1~core3"/>
 		<upgrade from="1.9.1~core2" to="1.10.0~core1"/>
 		<upgrade from="1.9.1~core3" to="1.10.0~core1"/>
+		<upgrade from="1.10.0~core1" to="1.10.2~core1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
