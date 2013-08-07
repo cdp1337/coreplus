@@ -5,10 +5,10 @@
 		<require name="core" type="component" version="1.9.0" operation="ge"/>
 	</requires>
 	<provides>
-		<provide name="JQuery" version="1.9.1" type="library"/>
+		<provide name="JQuery" version="1.10.2" type="library"/>
 		<provide name="JQuery.json" version="2.4" type="library"/>
 		<provide name="JQuery.cookie" version="1.3.1" type="library"/>
-		<provide name="JQueryUI" version="1.10.2" type="library"/>
+		<provide name="JQueryUI" version="1.10.3" type="library"/>
 		<provide name="JQueryUI.NestedSortable" version="1.4.0" type="library"/>
 		<provide name="JQueryUI.readonly" version="2.0.1" type="library"/>
 		<provide name="JQueryUI.timepicker" version="1.2" type="library"/>
@@ -80,6 +80,9 @@
 		<file filename="assets/css/jquery.readonly.css" md5="ca07e99b858d310cd3e855abf65d9b06"/>
 		<file filename="assets/js/jquery/jquery-1.10.0.js" md5="7afc740382f2bf4147d8f63850a9c2b9"/>
 		<file filename="assets/js/jquery/jquery-1.10.0.min.js" md5="00ff34b67a328f219fa3ae2423d4f252"/>
+		<file filename="assets/js/jquery/jquery-1.10.2.js" md5="91515770ce8c55de23b306444d8ea998"/>
+		<file filename="assets/js/jquery/jquery-1.10.2.min.js" md5="628072e7212db1e8cdacb22b21752cda"/>
+		<file filename="assets/js/jquery/jquery-1.10.2.min.map" md5="6c3ccfc221d36777d383b6e04d0b8af9"/>
 		<file filename="assets/js/jquery/jquery-1.9.1.js" md5="08c235d357750c657ac1db7d1cf656a9"/>
 		<file filename="assets/js/jquery/jquery-1.9.1.min.js" md5="397754ba49e9e0cf4e7c190da78dda05"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.js" md5="c913b6b5925699cd1bf4d6aa41082f70"/>
@@ -101,14 +104,14 @@
 		<file filename="assets/js/jquery/jqueryui.timepicker.js" md5="08d8151043927a37b472a4ae8d2a311f"/>
 		<file filename="assets/js/jquery/tmpl.js" md5="5e2855f4f4a4fd07ac343c9f0823d67f"/>
 		<file filename="assets/js/jquery/tmpl.min.js" md5="411df7e2bc659d35015f7fdb7432b331"/>
-		<file filename="assets/js/jquery/waypoints.js" md5="625d68db370cbf60ee9e0b31be3ed50f"/>
-		<file filename="assets/js/jquery/waypoints.min.js" md5="8648f5161f11768a924dff7a435dfc9b"/>
+		<file filename="assets/js/jquery/waypoints.js" md5="4368b7f02174252838ee0da80ca4523c"/>
+		<file filename="assets/js/jquery/waypoints.min.js" md5="58ffb73122f5f45083261c3023cab168"/>
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="22c91de55c5207e2085005eeb15341b5"/>
+		<file filename="CHANGELOG" md5="3e8d0bf2b66fd57f9df25b2a2373f559"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="fe991348abc3b8e5485828b6090410ef">
+		<file filename="JQuery.lib.php" md5="96a83eeb65da32bf4089b0ff7bfab0b1">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>

@@ -5,7 +5,7 @@
  * @package JQuery
  * @since 0.1
  * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		CurrentPage::AddScript ('js/jquery/jquery-1.10.0.js');
+		CurrentPage::AddScript ('js/jquery/jquery-1.10.2.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
