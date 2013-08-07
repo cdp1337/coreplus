@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.3~core5" name="CoolPHPCaptcha" execmode="web">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="CoolPHPCaptcha" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 	</requires>
@@ -31,19 +31,17 @@
 		<page baseurl="/simplecaptcha/admin" title="Captcha Tweaks" access="g:admin" admin="1" group="Configure"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="c2e471d3003f78b9add51a2634b76000"/>
-		<file filename="FormCaptchaInput.class.php" md5="88567b1a36c7e0dbf6c42de32313d74f">
+		<file filename="CHANGELOG" md5="8900656aab36815e866cadd9943612b0"/>
+		<file filename="FormCaptchaInput.class.php" md5="4c1795a45d48323e16d9c6430e48ec0b">
 			<class name="FormCaptchaInput"/>
 		</file>
-		<file filename="SimpleCaptchaController.class.php" md5="8df5664d0ff80f49d1fcde716ca289a4">
+		<file filename="SimpleCaptchaController.class.php" md5="be9c456922fcaa93e0ec85a08db664e1">
 			<controller name="SimpleCaptchaController"/>
 		</file>
 		<file filename="libs/cool-php-captcha/LICENSE.txt" md5="d32239bcb673463ab874e80d47fae504"/>
-		<file filename="libs/cool-php-captcha/SimpleCaptcha.class.php" md5="dba8cfdb5e06954b3fa6b5347a0e4859">
+		<file filename="libs/cool-php-captcha/SimpleCaptcha.class.php" md5="bb4075033659e9a18a6b9da654424683">
 			<class name="SimpleCaptcha"/>
 		</file>
-		<file filename="libs/cool-php-captcha/captcha.php" md5="b5bdd51b42073d3d50a8fc260547c177"/>
-		<file filename="libs/cool-php-captcha/example-form.php" md5="12e2cc13f2eb805423236db5d42c3063"/>
 		<file filename="libs/cool-php-captcha/example.jpg" md5="c43a4ccb03c2ab8d5daaad15e0c93192"/>
 		<file filename="libs/cool-php-captcha/resources/fonts/AntykwaBold.ttf" md5="b9106ffe9631b4ab2e28f3d7accc48a3"/>
 		<file filename="libs/cool-php-captcha/resources/fonts/Candice.ttf" md5="9c7bc61ece0a61a85b6e8a59bebef3d2"/>
@@ -54,15 +52,10 @@
 		<file filename="libs/cool-php-captcha/resources/fonts/StayPuft.ttf" md5="59299d5b871590f70b455395c244e8d6"/>
 		<file filename="libs/cool-php-captcha/resources/fonts/TimesNewRomanBold.ttf" md5="ed6e29caf3843142d739232aa8642158"/>
 		<file filename="libs/cool-php-captcha/resources/fonts/VeraSansBold.ttf" md5="4ebf664c986099acf6d151c62bdb24eb"/>
-		<file filename="libs/cool-php-captcha/resources/tools/dictionary-import/README.txt" md5="62eed72b08dd2c38251bd2fda88f5f16"/>
-		<file filename="libs/cool-php-captcha/resources/tools/dictionary-import/importwords.php" md5="9e4ba5a658267f7e2058f34d7eced1c8"/>
-		<file filename="libs/cool-php-captcha/resources/tools/dictionary-import/sample-words-en.txt" md5="d750dbbc0ffd664f8393f31ceb521e42"/>
-		<file filename="libs/cool-php-captcha/resources/tools/dictionary-import/sample-words-es.txt" md5="86e831ec736bb57f624a8cb1462d8c86"/>
-		<file filename="libs/cool-php-captcha/resources/words/en.php" md5="ef0f1910e5c269184433ae7a00e41a36"/>
-		<file filename="libs/cool-php-captcha/resources/words/es.php" md5="6af474ca4c1918801c3f86b88b30eacb"/>
 	</files>
 	<view>
 		<file filename="templates/forms/elements/formcaptchainput.tpl" md5="266dee08cef5d48db18ddd2d35b33bd1"/>
+		<file filename="templates/pages/simplecaptcha/admin.tpl" md5="8c95bae056b157297d7f495fa0a21f7e"/>
 	</view>
 	<upgrades>
 		<upgrade from="0.3~cae1" to="0.3~core1"/>
@@ -70,14 +63,17 @@
 		<upgrade from="0.3~core2" to="0.3~core3"/>
 		<upgrade from="0.3~core3" to="0.3~core4"/>
 		<upgrade from="0.3~core4" to="0.3~core5"/>
+		<upgrade from="0.3~core5" to="1.0.0"/>
 	</upgrades>
-	<component></component>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 		<author name="Jose Rodriguez" email="jose.rodriguez@exec.cl"/>
 	</authors>
 	<licenses>
 		<license>GPLv3</license>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
 	</licenses>
 </component>
 
