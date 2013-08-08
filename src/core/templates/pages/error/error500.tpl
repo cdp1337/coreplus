@@ -1,6 +1,6 @@
-<h1>And... you broke it!</h1>
+<h1>Server Error</h1>
 
-<p>Actually I guess we did, a server error was encountered and the administrator notified.</p>
+<p class="message-error">There was a sever error and the administrator has been notified.</p>
 
 {if $smarty.const.DEVELOPMENT_MODE && isset($exception)}
 	<pre class="xdebug-var-dump">

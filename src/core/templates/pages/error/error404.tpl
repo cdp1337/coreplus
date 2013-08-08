@@ -1,3 +1,3 @@
 <h1>Not Found</h1>
 
-<p>The page you requested was not found.</p>
+<p class="message-error">The page you requested was not found.</p>
