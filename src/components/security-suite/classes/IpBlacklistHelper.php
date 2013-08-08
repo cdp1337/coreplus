@@ -56,6 +56,13 @@ abstract class IpBlacklistHelper {
 	public static function CheckIP() {
 
 		$factory = new ModelFactory('IpBlacklistModel');
+		$factory->whereGroup(
+			'OR',
+			[
+				'expires > ' . CoreDateTime::Now('U', Time::TIMEZONE_GMT),
+				'expires == 0'
+			]
+		);
 		$where = new DatasetWhereClause();
 		$where->setSeparator('or');
 
@@ -78,9 +85,36 @@ abstract class IpBlacklistHelper {
 			'/security/blocked',
 			null,
 			null,
-			'Blacklisted IP tried to access the site!<br/>The IP ' . REMOTE_IP . ' was detected in blacklisted range ' . $ban->get('ip_addr') . ' and therefore was blocked.'
+			'Blacklisted IP tried to access the site!<br/>Remote IP: ' . REMOTE_IP . '<br/>Matching Range: ' . $ban->get('ip_addr') . '<br/>Requested URL: ' . CUR_CALL
 		);
 
 		die($ban->get('message'));
+	}
+
+	/**
+	 * Method to cleanup expired IP addresses from the database.
+	 *
+	 * @return bool
+	 */
+	public static function CleanupHook() {
+		$factory = new ModelFactory('IpBlacklistModel');
+		$factory->where('expires > 0'); // If they're set not to be deleted, don't purge them...
+		$factory->where('expires <= ' . CoreDateTime::Now('U', Time::TIMEZONE_GMT));
+
+		// DELETE!
+		$count = $factory->count();
+		if(!$count){
+			echo 'No records purged.';
+			return true;
+		}
+
+
+		foreach($factory->get() as $record){
+			/** @var $record IpBlacklistModel */
+			$record->delete();
+		}
+
+		echo "Purged " . $count . ' record'. ($count > 1 ? 's' : '') . ' successfully.';
+		return true;
 	}
 }

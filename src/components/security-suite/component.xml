@@ -10,6 +10,7 @@
 		<hook name="/core/components/loaded" call="StopForumSpam::CheckIP"/>
 		<hook name="/core/components/loaded" call="IpBlacklistHelper::CheckIP"/>
 		<hook name="/cron/daily" call="StopForumSpam::HookDaily"/>
+		<hook name="/cron/daily" call="IpBlacklistHelper::CleanupHook"/>
 	</hooks>
 	<pages>
 		<page access="p:/security/viewlog" admin="1" baseurl="/security/log" title="Security Log" group="Security"/>
