@@ -340,6 +340,17 @@ class PageRequest {
 			}
 		}
 
+		// If the parent Controller object has a method named $pagedat['method'], assume it's a security error!
+		// This is because if the parent Controller object has a method, it's most likely a utility method
+		// that shouldn't be called from the public web!
+		foreach(get_class_methods('Controller_2_1') as $parentmethod){
+			$parentmethod = strtolower($parentmethod);
+			if($parentmethod == $pagedat['method']){
+				$view->error = View::ERROR_BADREQUEST;
+				return $view;
+			}
+		}
+
 		$return = call_user_func(array($controller, $pagedat['method']));
 		if (is_int($return)) {
 			// A generic error code was returned.  Create a View with that code and return that instead.
