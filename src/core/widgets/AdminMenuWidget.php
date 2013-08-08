@@ -39,21 +39,29 @@ class AdminMenuWidget extends Widget_2_1 {
 		if(\Core\user()){
 			foreach($pages as $p){
 				if(!\Core\user()->checkAccess($p->get('access'))) continue;
-				if($p->get('title') == "Administration") {
-					$p->set('title', trim(str_replace("Administration", "Admin", $p->get('title'))) );
-				} else {
-					$p->set('title', trim(str_replace("Admin","", str_replace("Administration", "", $p->get('title'))) ) );
-				}
-				if($p->get('title') == "System Configuration") {
-					$p->set('title', "System Config");
-				}
-				if($p->get('title') == "Navigation Listings") {
-					$p->set('title', "Navigation");
-				}
-				if($p->get('title') == "Content Page Listings") {
-					$p->set('title', "Content Pages");
+
+				switch($p->get('title')){
+					case 'Administration':
+						$p->set('title', 'Admin');
+						break;
+					case 'System Configuration':
+						$p->set('title', "System Config");
+						break;
+					case 'Navigation Listings':
+						$p->set('title', "Navigation");
+						break;
+					case 'Content Page Listings':
+						$p->set('title', "Content Pages");
+						break;
+					default:
+						$p->set(
+							'title',
+							trim( str_replace(['Administration', 'Admin'],'', $p->get('title')) )
+						);
 				}
 
+				// Pages can define which sub-menu they get grouped under.
+				// The 'Admin' submenu is the default.
 				$group = $p->get('admin_group') ? $p->get('admin_group') : 'Admin';
 
 				// Some group tweaks ;)
