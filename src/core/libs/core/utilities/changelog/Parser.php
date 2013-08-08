@@ -136,7 +136,15 @@ class Parser {
 			$versioned[ $s->getVersion() ] = $s;
 		}
 
-		krsort($versioned);
+		// krsort doesn't do a good enough job, because version numbers are more complex
+		// than both numbers and strings by themselves.
+		// As such, uksort allows me to pass in a function name to use for sorting, which achieves half of what I need it to.
+		uksort($versioned, 'version_compare');
+
+		// But I need them in reversed order.
+		$versioned = array_reverse($versioned, true);
+
+		//krsort($versioned);
 
 		$this->_sections = $versioned;
 	}
