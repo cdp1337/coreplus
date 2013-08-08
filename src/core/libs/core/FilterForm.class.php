@@ -584,8 +584,12 @@ class FilterForm {
 			}
 
 			// If this link is a date object, convert a date string to its unix timestamp representation.
-			if($el instanceof FormDateInput){
-				$value = strtotime($value);
+			if($el instanceof FormDateInput || $el->get('dateformat')){
+				// Default to a unix timestamp, but allow the user to override this.
+				// This is useful for saving a date in the datastore as a human-readable format.
+				$format = $el->get('dateformat') ? $el->get('dateformat') : 'U';
+				$date = new CoreDateTime($value);
+				$value = $date->getFormatted($format, Time::TIMEZONE_GMT);
 			}
 
 
