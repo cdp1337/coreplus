@@ -984,12 +984,14 @@ class Core implements ISingleton {
 
 		if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
 
+		$version = ConfigHandler::Get('/core/filestore/assetversion');
+
 		if(ConfigHandler::Get('/core/javascript/minified') && substr($asset, -3) == '.js'){
 			// Try to load the minified version instead.
 			$minified = str_replace('.js', '.min.js', $asset);
 			$file = \Core\Filestore\Factory::File($minified);
 			if($file->exists()){
-				return $file->getURL();
+				return $file->getURL() . ($version ? '?v=' . $version : '');
 			}
 		}
 		elseif(ConfigHandler::Get('/core/javascript/minified') && substr($asset, -4) == '.css'){
@@ -997,7 +999,7 @@ class Core implements ISingleton {
 			$minified = str_replace('.css', '.min.css', $asset);
 			$file = \Core\Filestore\Factory::File($minified);
 			if($file->exists()){
-				return $file->getURL();
+				return $file->getURL() . ($version ? '?v=' . $version : '');
 			}
 		}
 
@@ -1007,25 +1009,7 @@ class Core implements ISingleton {
 		$f = \Core\Filestore\Factory::File($asset);
 		//var_dump($asset);
 		//$f = self::File($asset);
-		return $f->getURL();
-
-
-		// Maybe it's cached :)
-		$keyname    = 'asset-resolveurl';
-		$cachevalue = self::Cache()->get($keyname, (3600 * 24));
-
-		if (!$cachevalue) $cachevalue = array();
-
-		if (!isset($cachevalue[$asset])) {
-			// Well, look it up!
-			$f = self::File($asset);
-
-			$cachevalue[$asset] = $f->getURL();
-			// Save this for future lookups.
-			self::Cache()->set($keyname, $cachevalue, (3600 * 24));
-		}
-
-		return $cachevalue[$asset];
+		return $f->getURL() . ($version ? '?v=' . $version : '');
 	}
 
 	/**

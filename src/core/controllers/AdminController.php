@@ -116,6 +116,11 @@ class AdminController extends Controller_2_1 {
 
 		// Flush the system cache, just in case
 		Core::Cache()->flush();
+		Cache::GetSystemCache()->delete('core-components');
+
+		// Increment the version counter.
+		$version = ConfigHandler::Get('/core/filestore/assetversion');
+		ConfigHandler::Set('/core/filestore/assetversion', ++$version);
 
 		//$page->title = 'Reinstall All Components';
 		$this->setTemplate('/pages/admin/reinstallall.tpl');
