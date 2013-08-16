@@ -8,7 +8,12 @@
 		<hook name="/core/page/prerender" call="\Piwik\PiwikHelper::InstallTracking"/>
 	</hooks>
 	<description>
-		Provides google analytics integration.
+		Piwik displays reports regarding the geographic location of visits, the source of visits
+		(i.e. whether they came from a website, directly, or something else), the technical capabilities
+		of visitors (browser, screen size, operating system, etc.), what the visitors did
+		(pages they viewed, actions they took, how they left), the time of visits and more.
+
+		Provides simple Piwik Analytics integration into Core Plus.
 	</description>
 	<configs>
 		<config key="/piwik/server/host" type="string" default="" description="Set to the hostname of your Piwik server"/>
