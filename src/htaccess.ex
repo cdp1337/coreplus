@@ -24,7 +24,11 @@ Options -Indexes
 # Turn on expiry
 <IfModule mod_expires.c>
 	ExpiresActive On
-	ExpiresDefault "access plus 1 week"
+	ExpiresDefault                       "access plus 1 week"
+	# Since Core supports asset versioning, we can safely crank this WAY up!
+	ExpiresByType text/css               "access plus 2 years"
+	ExpiresByType text/js                "access plus 2 years"
+	ExpiresByType application/javascript "access plus 2 years"
 </IfModule>
 
 
@@ -41,6 +45,7 @@ Options -Indexes
 	mod_gzip_item_include mime ^application/x-javascript$
 	# Exclude old browsers and images since IE has trouble with this
 	mod_gzip_item_exclude reqheader "User-Agent: .*Mozilla/4\..*\["
+	# Exclude images, as they're already compressed.
 	mod_gzip_item_exclude mime ^image/.*
 </IfModule>
 
@@ -55,16 +60,15 @@ Options -Indexes
 	BrowserMatch ^Mozilla/4\.[0678] no-gzip
 	BrowserMatch \bMSIE !no-gzip
 
-<IfModule mod_headers.c>
-	Header append Vary User-Agent env=!dont-vary
-</IfModule>
+	<IfModule mod_headers.c>
+		Header append Vary User-Agent env=!dont-vary
+	</IfModule>
 
 	# The following is to disable compression for actions. The reason being is that these
 	# may offer direct downloads which (since the initial request comes in as text/html and headers
 	# get changed in the script) get double compressed and become unusable when downloaded by IE.
-	SetEnvIfNoCase Request_URI action\/* no-gzip dont-vary
-	SetEnvIfNoCase Request_URI actions\/* no-gzip dont-vary
-
+	#SetEnvIfNoCase Request_URI action\/* no-gzip dont-vary
+	#SetEnvIfNoCase Request_URI actions\/* no-gzip dont-vary
 </IfModule>
 
 
