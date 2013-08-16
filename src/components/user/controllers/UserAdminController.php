@@ -8,7 +8,7 @@
  */
 class UserAdminController extends Controller_2_1{
 	public function __construct(){
-		$this->accessstring = 'p:user_manage';
+		$this->accessstring = 'p:/user/users/manage';
 	}
 
 	public function index(){
@@ -260,8 +260,9 @@ class UserAdminController extends Controller_2_1{
 			]
 		);
 
+		// Only display the user groups if the current user has access to manage user groups.
 		$usergroups = UserGroupModel::Find();
-		if(sizeof($usergroups)){
+		if(sizeof($usergroups) && \Core\user()->checkAccess('p:/user/groups/manage')){
 			$usergroupopts = array();
 			foreach($usergroups as $ug){
 				$usergroupopts[$ug->get('id')] = $ug->get('name');

@@ -3,11 +3,17 @@
 <table class="listing">
 	<tr>
 		<th>Name</th>
+		{if $permissionmanager}<th>Permissions</th>{/if}
 		<th width="80">&nbsp;</th>
 	</tr>
 	{foreach $groups as $group}
 		<tr>
 			<td>{$group.name}</td>
+			{if $permissionmanager}
+				<td>
+					{$group->getPermissions()|implode:", "}
+				</td>
+			{/if}
 			<td>
 				<ul class="controls">
 					<li class="edit">

@@ -8,11 +8,14 @@
  */
 class UserGroupAdminController extends Controller_2_1{
 	public function __construct(){
-		$this->accessstring = 'p:user_manage';
+		$this->accessstring = 'p:/user/groups/manage';
 	}
 
 	public function index(){
+
 		$view = $this->getView();
+
+		$permissionmanager = \Core\user()->checkAccess('p:/user/permissions/manage');
 
 		$where = array();
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
@@ -22,7 +25,8 @@ class UserGroupAdminController extends Controller_2_1{
 		$groups = UserGroupModel::Find($where, null, 'name');
 
 		$view->title = 'User Group Administration';
-		$view->assignVariable('groups', $groups);
+		$view->assign('groups', $groups);
+		$view->assign('permissionmanager', $permissionmanager);
 		$view->addControl('Add Group', '/usergroupadmin/create', 'add');
 	}
 
@@ -38,17 +42,9 @@ class UserGroupAdminController extends Controller_2_1{
 		$form  = Form::BuildFromModel($model);
 
 		$form->set('callsmethod', 'UserGroupAdminController::_UpdateFormHandler');
-
-		// Add in the permissions to set to this group.
-		$form->addElement(
-			'checkboxes',
-			array(
-				'name' => 'permissions',
-				'title' => 'Permissions to assign',
-				'options' => Core::GetPermissions(),
-			)
-		);
-
+		if(\Core\user()->checkAccess('p:/user/permissions/manage')){
+			$this->_setPermissionsToForm($form, $model);
+		}
 		$form->addElement('submit', array('value' => 'Create'));
 
 		$view->assign('model', $model);
@@ -68,18 +64,9 @@ class UserGroupAdminController extends Controller_2_1{
 		}
 
 		$form->set('callsmethod', 'UserGroupAdminController::_UpdateFormHandler');
-
-		// Add in the permissions to set to this group.
-		$form->addElement(
-			'checkboxes',
-			array(
-				'name' => 'permissions',
-				'title' => 'Permissions to assign',
-				'options' => Core::GetPermissions(),
-				'value' => $model->getPermissions(),
-			)
-		);
-
+		if(\Core\user()->checkAccess('p:/user/permissions/manage')){
+			$this->_setPermissionsToForm($form, $model);
+		}
 		$form->addElement('submit', array('value' => 'Update'));
 
 		$view->assign('model', $model);
@@ -106,6 +93,51 @@ class UserGroupAdminController extends Controller_2_1{
 		\core\redirect('/usergroupadmin');
 	}
 
+	/**
+	 * Set the site permissions to a given Form object.
+	 *
+	 * Used by the create and update pages.
+	 *
+	 * @param Form $form
+	 * @param UserGroupModel $model
+	 */
+	private function _setPermissionsToForm(Form $form, UserGroupModel $model){
+		// I want to split up the permission set into a set of groups, based on the first key.
+		$groups = [];
+		foreach(Core::GetPermissions() as $key => $description){
+			if($key{0} == '/'){
+				$group = substr($key, 1, strpos($key, '/', 1)-1);
+			}
+			else{
+				$group = 'general';
+			}
+
+			if(!isset($groups[$group])){
+				$groups[$group] = [];
+			}
+
+			$groups[$group][$key] = $description;
+		}
+
+		// Now, I can add these groups to the form.
+		foreach($groups as $gkey => $options){
+			// Make the title a little more friendly.
+			$gtitle = ucwords($gkey) . ' Permissions to Assign';
+
+			$form->addElement(
+				'checkboxes',
+				array(
+					'group' => 'Permissions',
+					'id' => 'permissions-' . $gkey,
+					'name' => 'permissions',
+					'title' => $gtitle,
+					'options' => $options,
+					'value' => $model->getPermissions(),
+				)
+			);
+		}
+	}
+
 	public static function _UpdateFormHandler(Form $form){
 
 		try{
@@ -118,7 +150,14 @@ class UserGroupAdminController extends Controller_2_1{
 				}
 			}
 
-			$model->setPermissions($form->getElement('permissions[]')->get('value'));
+			if(\Core\user()->checkAccess('p:/user/permissions/manage')){
+				// hehe... this is kind of a hack that works.
+				// it's a hack because "getElement" returns only 1 element, but it works
+				// because all those elements share the same POST name.
+				// As such, the value from all permission[] checkboxes actually get transposed to all
+				// form elements with that same base name.
+				$model->setPermissions($form->getElement('permissions[]')->get('value'));
+			}
 			$model->save();
 		}
 		catch(ModelValidationException $e){

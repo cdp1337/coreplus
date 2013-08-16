@@ -2,7 +2,7 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.7" name="User" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.5.2"/>
+		<require name="core" type="component" version="2.6.0"/>
 		<!-- User authentication events trigger security logs. -->
 		<require name="security-suite" type="component" operation="ge" version="1.0.0"/>
 		<!-- The password reset is now powered by the nonce system. -->
@@ -33,13 +33,13 @@
 		<file filename="User_Backend.interface.php" md5="338a174c0a903e9bf637e30f2e0a9c75">
 			<interface name="User_Backend"/>
 		</file>
-		<file filename="Widgets/UserAdminWidget.php" md5="a6b79e083966799581ddc70da8480a1a">
+		<file filename="widgets/UserAdminWidget.php" md5="a6b79e083966799581ddc70da8480a1a">
 			<class name="UserAdminWidget"/>
 		</file>
-		<file filename="Widgets/UserLoginWidget.class.php" md5="04d3602121f6cb231473284124dfa88f">
+		<file filename="widgets/UserLoginWidget.class.php" md5="04d3602121f6cb231473284124dfa88f">
 			<class name="UserLoginWidget"/>
 		</file>
-		<file filename="Widgets/UserWidget.class.php" md5="85affeee8ce7c56dad1e2ff6582bcb09">
+		<file filename="widgets/UserWidget.class.php" md5="85affeee8ce7c56dad1e2ff6582bcb09">
 			<class name="UserWidget"/>
 		</file>
 		<file filename="backends/User_datamodel.backend.php" md5="92f4c736f63f341e834698b9a6bb1103">
@@ -115,9 +115,9 @@
 		<page baseurl="/user/login" admin="0" access="!g:authenticated" selectable="0" title="Login"/>
 		<page baseurl="/user/register" admin="0" access="!g:authenticated" selectable="0" title="Register"/>
 		<page baseurl="/user/logout" admin="0" access="g:authenticated" selectable="0" title="Logout"/>
-		<page baseurl="/useradmin" admin="1" access="g:admin" title="User Administration"/>
-		<page baseurl="/usergroupadmin" admin="1" access="g:admin" title="User Group Administration"/>
-		<page baseurl="/useractivity" admin="1" access="p:user_activity_list" title="User Activity" group="Reporting"/>
+		<page baseurl="/useradmin" admin="1" access="p:/user/users/manage" title="User Administration"/>
+		<page baseurl="/usergroupadmin" admin="1" access="p:/user/groups/manage" title="User Group Administration"/>
+		<page baseurl="/useractivity" admin="1" access="p:/user/activity/view" title="User Activity" group="Reporting"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/UserWidget/Login"/>
@@ -126,22 +126,32 @@
 	</widgets>
 	<configs>
 		<config key="/user/register/requirecaptcha" type="boolean" default="0" description=""/>
-		<config key="/user/backends" type="set" default="datamodel" description="" options="datamodel| facebook| ldap"/>
+
 		<config key="/user/password/minlength" type="int" default="8" description=""/>
 		<config key="/user/password/requiresymbols" type="int" default="0" description=""/>
 		<config key="/user/password/requirecapitals" type="int" default="0" description=""/>
+
 		<config key="/user/displayas" type="enum" default="emailbase" options="emailfull|emailbase|username|firstname" description="The user field to use for displaying in representation of the user, ie: username or email.  If 'email' is used, the full email is displayed.  If 'emailbase' id used, just the prefix of the email is used."/>
 		<config key="/user/displayname/anonymous" type="string" default="Guest" description="What to call guest/unauthenticated users."/>
+
+		<config key="/user/backends" type="set" default="datamodel" description="" options="datamodel| facebook| ldap"/>
+
 		<config key="/user/register/allowpublic" type="boolean" default="true" description="Allow public registrations"/>
 		<config key="/user/register/requireapproval" type="boolean" default="false" description="Require administrative approvals on new accounts"/>
+
+		<config key="/user/email/allowchanging" type="boolean" default="false" description="Allow the user to change his/her email address after account registration."/>
 		<config key="/user/enableavatar" type="boolean" default="true" description="Set to false to disable the use of avatars throughout the system."/>
+
 		<config key="/user/profileedits/requireapproval" type="boolean" default="false" description="If model auditing is available, it will be used to require administrative approval for profile edits."/>
+
 		<config key="/user/activity/keephistory" type="enum" default="3-months" options="1-week|1-month|2-months|3-months|6-months|12-months|24-months|36-months|all" description="How long should the full verbose user activity be kept."/>
 	</configs>
 	<permissions>
-		<permission key="user_manage" description="Manage users and permissions"/>
-		<permission key="user_activity_list" description="List user activity and analytics"/>
 		<permission key="/user/search/autocomplete" description="Search for users in the system via autocomplete widgets"/>
+		<permission key="/user/users/manage" description="Manage site users"/>
+		<permission key="/user/permissions/manage" description="Manage site permissions"/>
+		<permission key="/user/groups/manage" description="Manage site groups"/>
+		<permission key="/user/activity/view" description="View user activity and analytics"/>
 	</permissions>
 	<assets>
 		<file filename="assets/css/user.css" md5="091b04c3f1466fbb00a32a7a51fc54cf"/>
@@ -195,6 +205,9 @@
 		<upgrade from="2.5.4" to="2.5.5"/>
 		<upgrade from="2.5.5" to="2.5.6"/>
 		<upgrade from="2.5.6" to="2.5.7"/>
+		<upgrade from="2.5.7" to="2.6.0">
+			<phpfileinclude>components/user/upgrades/257_to_260.php</phpfileinclude>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

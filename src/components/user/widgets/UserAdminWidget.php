@@ -52,7 +52,7 @@ class UserAdminWidget extends Widget_2_1{
 	 * Widget to display some of the newest registrations, (if any).
 	 */
 	public function newestSignups(){
-		if(!\Core\user()->checkAccess('p:user_manage')){
+		if(!\Core\user()->checkAccess('p:/user/users/manage')){
 			 return '';
 		}
 

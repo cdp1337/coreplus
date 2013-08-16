@@ -68,7 +68,7 @@ class UserController extends Controller_2_1{
 		$view    = $this->getView();
 		$req     = $this->getPageRequest();
 		$userid  = $req->getParameter(0);
-		$manager = \Core\user()->checkAccess('p:user_manage'); // Current user an admin?
+		$manager = \Core\user()->checkAccess('p:/user/users/manage'); // Current user an admin?
 
 		// Default to current user.
 		if($userid === null){
@@ -147,7 +147,7 @@ class UserController extends Controller_2_1{
 		$view    = $this->getView();
 		$req     = $this->getPageRequest();
 		$userid  = $req->getParameter(0);
-		$manager = \Core\user()->checkAccess('p:user_manage'); // Current user an admin?
+		$manager = \Core\user()->checkAccess('p:/user/users/manage'); // Current user an admin?
 
 		if($userid === null) $userid = \Core\user()->get('id'); // Default to current user.
 
@@ -247,7 +247,7 @@ class UserController extends Controller_2_1{
 		require_once(ROOT_PDIR . 'components/user/helpers/UserFunctions.php');
 
 		$view = $this->getView();
-		$manager = \Core\user()->checkAccess('p:user_manage'); // Current user an admin?
+		$manager = \Core\user()->checkAccess('p:/user/users/manage'); // Current user an admin?
 
 		// Anonymous users should have access to this if it's allow public.
 		if(!\Core\user()->exists() && !ConfigHandler::Get('/user/register/allowpublic')){

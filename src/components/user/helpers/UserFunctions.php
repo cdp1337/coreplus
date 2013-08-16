@@ -54,7 +54,10 @@ function get_form($user = null){
 	$form = new \Form();
 	if($user === null) $user = \User::Factory();
 
-	$type = ($user->exists()) ? 'edit' : 'registration';
+	$type               = ($user->exists()) ? 'edit' : 'registration';
+	$usermanager        = \Core\user()->checkAccess('p:/user/users/manage');
+	$groupmanager       = \Core\user()->checkAccess('p:/user/groups/manage');
+	$allowemailchanging = \ConfigHandler::Get('/user/email/allowchanging');
 
 	if($type == 'registration'){
 		$form->set('callsMethod', 'UserHelper::RegisterHandler');
@@ -68,12 +71,13 @@ function get_form($user = null){
 	// I cannot simply do a setModel() call here.
 
 	// Only enable email changes if the current user is an admin or it's new.
-	if($type == 'registration' || \Core\user()->checkAccess('p:user_manage')){
+	// (Unless the admin allows it via the site config)
+	if($type == 'registration' || $usermanager || $allowemailchanging){
 		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true, 'value' => $user->get('email')));
 	}
 
 	// Tack on the active option if the current user is an admin.
-	if(\Core\user()->checkAccess('p:user_manage')){
+	if($usermanager){
 		$form->addElement(
 			'checkbox',
 			array(
@@ -89,7 +93,7 @@ function get_form($user = null){
 	if($type == 'registration'){
 		// If the user is a manager, the new account can be created with an empty password.
 		// That user will get the prompt to set an initial password on login via the forgot password logic.
-		$passrequired = \Core\user()->checkAccess('p:user_manage') ? false : true;
+		$passrequired = $usermanager ? false : true;
 		$form->addElement(
 			'password',
 			array('name' => 'pass', 'title' => 'Password', 'required' => $passrequired)
@@ -100,16 +104,23 @@ function get_form($user = null){
 		);
 	}
 
-	// Avatar is for existing accounts or admins.
-	if($type == 'edit' || \Core\user()->checkAccess('p:user_manage')){
-		// Only if enabled.
-		if(\ConfigHandler::Get('/user/enableavatar')){
-			$form->addElement('file', array('name' => 'avatar', 'title' => 'Avatar Image', 'basedir' => 'public/user', 'accept' => 'image/*', 'value' => $user->get('avatar')));
-		}
+	// Avatars can be updated on editing the profile, if enabled.
+	if(\ConfigHandler::Get('/user/enableavatar') && ($type == 'edit' || $usermanager)){
+		// Avatar is for existing accounts or admins.
+		$form->addElement(
+			'file',
+			array(
+				'name' => 'avatar',
+				'title' => 'Avatar Image',
+				'basedir' => 'public/user',
+				'accept' => 'image/*',
+				'value' => $user->get('avatar')
+			)
+		);
 	}
 
 	// For non-admins, the factory depends on the registration type as well.
-	if(\Core\user()->checkAccess('p:user_manage')){
+	if($usermanager){
 		$fac = \UserConfigModel::Find(array(), null, 'weight ASC');
 	}
 	elseif($type == 'registration'){
@@ -161,7 +172,7 @@ function get_form($user = null){
 	}
 
 	// Tack on the group registration if the current user is an admin.
-	if(\Core\user()->checkAccess('p:user_manage')){
+	if($groupmanager){
 		// Find all the groups currently on the site.
 
 		$where = array();
