@@ -697,6 +697,7 @@ class UpdaterHelper {
 
 		// Clear the cache so the next pageload will pick up on the new components and goodies.
 		Core::Cache()->flush();
+		Cache::GetSystemCache()->delete('core-components');
 
 		// Yup, that's it.
 		// Just extract the files and Core will autoinstall/autoupgrade everything on the next page view.
