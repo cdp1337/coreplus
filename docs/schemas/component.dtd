@@ -128,6 +128,7 @@ type CDATA #IMPLIED
 <!ELEMENT page EMPTY>
 <!ATTLIST page
 	baseurl CDATA #REQUIRED
+	rewriteurl CDATA #IMPLIED
 	title CDATA #REQUIRED
 	access CDATA #IMPLIED
 	admin (0|1) "0"
