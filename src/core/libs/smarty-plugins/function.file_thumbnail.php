@@ -97,7 +97,7 @@ function smarty_function_file_thumbnail($params, $template){
 		$icon = \Core\Filestore\Factory::File('assets/images/mimetypes/notfound.png');
 		$attributes['src'] = $d ? $icon->getPreviewURL($d) : $icon->getURL();
 	}
-	elseif(ConfigHandler::Get('/core/filestore/previews') && $file->isPreviewable()){
+	elseif($file->isPreviewable()){
 		if($file->getFilesize() < (1024*1024*4)){
 			// Files that are smaller than a certain size can probably be safely rendered on this pageload.
 			$attributes['src'] = $file->getPreviewURL($d);
