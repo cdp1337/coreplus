@@ -58,6 +58,16 @@ abstract class UserHelper{
 
 
 		$u = User::Find(array('email' => $e->get('value')));
+
+		$active = $u->get('active');
+
+		if($active == 0){
+			$logmsg = 'User tried to login before account activation' . "\n" . 'User: ' . $u->get('email') . "\n";
+			SecurityLogModel::Log('/user/login', 'fail', null, $logmsg);
+			$e->setError('Your account is not active yet.');
+			return false;
+		}
+
 		if(!$u){
 			// Log this as a login attempt!
 			$logmsg = 'Email not registered' . "\n" . 'Email: ' . $e->get('value') . "\n";
@@ -206,14 +216,27 @@ abstract class UserHelper{
 			return false;
 		}
 
-		// Check if there are no users already registered on the system.  If
-		// none, register this user as an admin automatically.
+		// Check if there are no users already registered on the system.
+		// This determines how the admin and active flags are handled.
 		if(UserModel::Count() == 0){
+			// If none, register this user as an admin automatically.
 			$user->set('admin', true);
+			$user->set('active', true);
 		}
 		else{
-			if(\ConfigHandler::Get('/user/register/requireapproval')){
+			// There is at least one user on the system, use the standard logic.
+
+			// if a super admin is registering an account, it should use the value of the active checkbox!
+			if( \Core\user()->checkAccess('g:admin') ) {
+				$activeElement = $form->getElement('active')->get('value');
+				$active = ($activeElement === "on" ? 1 : 0);
+				$user->set('active', $active);
+			}
+			elseif(\ConfigHandler::Get('/user/register/requireapproval')){
 				$user->set('active', false);
+			}
+			else{
+				$user->set('active', true);
 			}
 		}
 
@@ -275,10 +298,11 @@ abstract class UserHelper{
 
 	public static function UpdateHandler(Form $form){
 
-		$userid = $form->getElement('id')->get('value');
+		$userid             = $form->getElement('id')->get('value');
+		$usermanager        = \Core\user()->checkAccess('p:/user/users/manage');
 
 		// Only allow this if the user is either the same user or has the user manage permission.
-		if(!($userid == \Core\user()->get('id') || \Core\user()->checkAccess('p:user_manage'))){
+		if(!($userid == \Core\user()->get('id') || $usermanager)){
 			Core::SetMessage('Insufficient Permissions', 'error');
 			return false;
 		}
@@ -380,7 +404,12 @@ abstract class UserHelper{
 		// still nothing?
 		if(!$user) return array();
 
-		if(\Core\user()->checkAccess('p:user_manage')){
+
+		$usermanager = \Core\user()->checkAccess('p:/user/users/manage');
+		$selfaccount = \Core\user()->get('id') == $user->get('id');
+
+
+		if($usermanager || $selfaccount){
 			$a[] = array(
 				'title' => 'Edit',
 				'icon' => 'edit',
@@ -394,12 +423,12 @@ abstract class UserHelper{
 			);
 
 			// Even though this user has admin access, he/she cannot remove his/her own account!
-			if(\Core\user()->get('id') != $user->get('id')){
+			if(!$selfaccount){
 				$a[] = array(
 					'title' => 'Delete',
 					'icon' => 'remove',
 					'link' => '/useradmin/delete/' . $user->get('id'),
-					'confirm' => 'Really delete user ' . $user->getDisplayName(),
+					'confirm' => 'Are you sure you want to delete user ' . $user->getDisplayName() . '?',
 				);
 			}
 		}
