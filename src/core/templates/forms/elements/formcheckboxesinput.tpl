@@ -1,6 +1,9 @@
-<div class="{$element->getClass()} {$element->get('id')}">
+<div class="{$element->getClass()} {$element->get('id')} checkboxes-toggleable">
 
-	<span class="checkboxes-label">{$element->get('title')|escape} <span class="checkboxes-toggle">Check All <i class='icon-check'></i></span></span>
+	<span class="checkboxes-label">{$element->get('title')|escape}
+		<span class="checkboxes-toggle checkboxes-toggle-check" style="display:none;">Check All <i class='icon-check'></i></span>
+		<span class="checkboxes-toggle checkboxes-toggle-uncheck" style="display:none;">Uncheck All <i class='icon-check'></i></span>
+	</span>
 
 	{foreach from=$element->get('options') item=title key=key}
 		<label>
@@ -20,28 +23,47 @@
 
 	$(function(){
 
-		var checkstate = false;
+		$('.checkboxes-toggleable').each(function(){
+			// Should this set be checked or unchecked by default?
+			var allchecked = true,
+				$this = $(this),
+				$checktoggle = $this.find('.checkboxes-toggle-check'),
+				$unchecktoggle = $this.find('.checkboxes-toggle-uncheck'),
+				$inputs = $this.find('input');
 
-		$('.checkboxes-toggle').click(function(){
+			$inputs.each(function(){
+				if(!$(this).is(':checked')){
+					allchecked = false;
+					return false;
+				}
+			});
 
-			var $checkboxes = $(this).closest('.formcheckboxesinput').find('input[type=checkbox]');
-
-			if(!checkstate) {
-				$checkboxes.each(function(){
-					$(this).prop('checked', true);
-				});
-				checkstate = true;
-				$(this).html("Uncheck All <i class='icon-check'></i>");
-			} else {
-				$checkboxes.each(function(){
-					$(this).prop('checked', false);
-				});
-				checkstate = false;
-				$(this).html("Check All <i class='icon-check'></i>");
+			if(allchecked){
+				// All children checkboxes are checked... show the uncheck option.
+				$unchecktoggle.show();
+			}
+			else{
+				// There is at least one checkbox that is unchecked.  Display the check all option.
+				$checktoggle.show();
 			}
 
-		});
+			// Now, I can bind the click events on the toggle options.
+			$unchecktoggle.click(function(){
+				$inputs.each(function(){
+					$(this).prop('checked', false);
+				});
+				$unchecktoggle.toggle();
+				$checktoggle.toggle();
+			});
 
+			$checktoggle.click(function(){
+				$inputs.each(function(){
+					$(this).prop('checked', true);
+				});
+				$unchecktoggle.toggle();
+				$checktoggle.toggle();
+			});
+		});
 	});
 
 </script>{/script}
