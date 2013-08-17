@@ -1500,22 +1500,22 @@ class Core implements ISingleton {
 			$script = str_replace(["\t", "\n"], ['', ''], $script);
 		}
 
-		View::AddScript($script, 'head');
+		\Core\view()->addScript($script, 'head');
 
 		// And the static functions.
-		View::AddScript('js/core.js', 'head');
-		View::AddScript('js/core-foot.js', 'foot');
+		\Core\view()->addScript('js/core.js', 'foot');
+		//\Core\view()->addScript('js/core-foot.js', 'foot');
 	}
 
 	public static function _AttachCoreStrings() {
-		View::AddScript('js/core.strings.js');
+		\Core\view()->addScript('js/core.strings.js');
 
 		return true;
 	}
 
 	public static function _AttachAjaxLinks(){
 		JQuery::IncludeJQueryUI();
-		View::AddScript('js/core.ajaxlinks.js', 'foot');
+		\Core\view()->addScript('js/core.ajaxlinks.js', 'foot');
 
 		return true;
 	}
@@ -1623,6 +1623,8 @@ class Core implements ISingleton {
 	 * Developer-Specific Version
 	 * Development Status
 	 *
+	 * Optimized 2013.08.17
+	 *
 	 * @param string $version
 	 *
 	 * @return array
@@ -1637,17 +1639,72 @@ class Core implements ISingleton {
 			'stability' => '1',
 		);
 
-		$v = [0, 0, 0];
-
 		// dev < alpha = a < beta = b < RC = rc < # < pl = p
-		$lengthall = strlen($version);
-		$pos       = 0;
-		$x         = 0;
 
 		$parts = explode('.', strtolower($version));
-		$last = sizeof($parts) - 1;
 
-		foreach($parts as $k => $digit){
+		// This version of the code executes about twice as fast as the traditional foreach version below!
+
+		if(isset($parts[0])){
+			$ret['major'] = $parts[0];
+		}
+		if(isset($parts[1])){
+			if(is_numeric($parts[1])){
+				// Strictly an int... process as usual.
+				$ret['minor'] = $parts[1];
+			}
+			else{
+				$digit = $parts[1];
+
+				if(($pos = strpos($digit, '~')) !== false){
+					$ret['minor'] = substr($digit, 0, $pos);
+					$ret['user'] = substr($digit, $pos);
+				}
+				elseif(($pos = strpos($digit, 'a')) !== false){
+					$ret['minor'] = substr($digit, 0, $pos);
+					$ret['stability'] = substr($digit, $pos);
+				}
+				elseif(($pos = strpos($digit, 'b')) !== false){
+					$ret['minor'] = substr($digit, 0, $pos);
+					$ret['stability'] = substr($digit, $pos);
+				}
+				elseif(($pos = strpos($digit, 'rc')) !== false){
+					$ret['minor'] = substr($digit, 0, $pos);
+					$ret['stability'] = substr($digit, $pos);
+				}
+			}
+		}
+		if(isset($parts[2])){
+			if(is_numeric($parts[2])){
+				// Strictly an int... process as usual.
+				$ret['point'] = $parts[2];
+			}
+			else{
+				$digit = $parts[2];
+
+				if(($pos = strpos($digit, '~')) !== false){
+					$ret['point'] = substr($digit, 0, $pos);
+					$ret['user'] = substr($digit, $pos);
+				}
+				elseif(($pos = strpos($digit, 'a')) !== false){
+					$ret['point'] = substr($digit, 0, $pos);
+					$ret['stability'] = substr($digit, $pos);
+				}
+				elseif(($pos = strpos($digit, 'b')) !== false){
+					$ret['point'] = substr($digit, 0, $pos);
+					$ret['stability'] = substr($digit, $pos);
+				}
+				elseif(($pos = strpos($digit, 'rc')) !== false){
+					$ret['point'] = substr($digit, 0, $pos);
+					$ret['stability'] = substr($digit, $pos);
+				}
+			}
+		}
+
+		/*
+		$v = [0, 0, 0];
+		$k         = 0;
+		foreach($parts as $digit){
 			if(($pos = strpos($digit, '~')) !== false){
 				$v[$k] = substr($digit, 0, $pos);
 				$ret['user'] = substr($digit, $pos);
@@ -1667,11 +1724,13 @@ class Core implements ISingleton {
 			else{
 				$v[$k] = $digit;
 			}
+			++$k;
 		}
 
 		$ret['major'] = $v[0];
 		$ret['minor'] = $v[1];
 		$ret['point'] = $v[2];
+		*/
 		return $ret;
 	}
 
