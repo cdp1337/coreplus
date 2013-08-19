@@ -24,7 +24,7 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		CurrentPage::AddScript ('js/jquery/jquery-1.10.2.js');
+		\Core\view()->addScript ('js/jquery/jquery-1.10.2.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -32,8 +32,8 @@ abstract class JQuery {
 	
 	public static function IncludeJQueryUI(){
 		self::IncludeJQuery();
-		CurrentPage::AddScript ('js/jquery/jquery-ui-1.10.3.custom.js');
-		CurrentPage::AddStylesheet('css/jquery-ui-1.10.3.custom.css');
+		\Core\view()->addScript ('js/jquery/jquery-ui-1.10.3.custom.js');
+		\Core\view()->addStylesheet('css/jquery-ui-1.10.3.custom.css');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -43,7 +43,7 @@ abstract class JQuery {
 		// I need jquery ui first.
 		self::IncludeJQueryUI();
 		
-		CurrentPage::AddScript ('js/jquery/jquery.ui.nestedSortable.js');
+		\Core\view()->addScript ('js/jquery/jquery.ui.nestedSortable.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -53,7 +53,7 @@ abstract class JQuery {
 		// I need jquery ui first.
 		self::IncludeJQueryUI();
 
-		CurrentPage::AddScript ('js/jquery/tmpl.js');
+		\Core\view()->addScript ('js/jquery/tmpl.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -63,8 +63,8 @@ abstract class JQuery {
 		// I need jquery ui first.
 		self::IncludeJQueryUI();
 		
-		CurrentPage::AddStylesheet('css/jquery.readonly.css');
-		CurrentPage::AddScript ('js/jquery/jquery.ui.readonly.js');
+		\Core\view()->addStylesheet('css/jquery.readonly.css');
+		\Core\view()->addScript ('js/jquery/jquery.ui.readonly.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -74,7 +74,7 @@ abstract class JQuery {
 		// I need jquery first.
 		self::IncludeJQuery();
 		
-		CurrentPage::AddScript ('js/jquery/jquery.json-2.4.js');
+		\Core\view()->addScript ('js/jquery/jquery.json-2.4.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -84,7 +84,7 @@ abstract class JQuery {
 		// I need jquery first.
 		self::IncludeJQuery();
 
-		CurrentPage::AddScript ('js/jquery/jquery.cookie.js');
+		\Core\view()->addScript ('js/jquery/jquery.cookie.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -93,7 +93,7 @@ abstract class JQuery {
 	public static function Include_masonry(){
 		// I need jquery first.
 		self::IncludeJQuery();
-		CurrentPage::AddScript('js/jquery/jquery.masonry.min.js');
+		\Core\view()->addScript('js/jquery/jquery.masonry.min.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -102,7 +102,7 @@ abstract class JQuery {
 	public static function Include_form(){
 		// I need jquery first.
 		self::IncludeJQuery();
-		CurrentPage::AddScript('js/jquery/jquery.form.js');
+		\Core\view()->addScript('js/jquery/jquery.form.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -111,7 +111,7 @@ abstract class JQuery {
 	public static function Include_timepicker(){
 		// I need jquery ui first.
 		self::IncludeJQueryUI();
-		CurrentPage::AddScript('js/jquery/jqueryui.timepicker.js');
+		\Core\view()->addScript('js/jquery/jqueryui.timepicker.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -120,7 +120,7 @@ abstract class JQuery {
 	public static function Include_waypoints(){
 		// I need jquery first.
 		self::IncludeJQuery();
-		CurrentPage::AddScript ('js/jquery/waypoints.js');
+		\Core\view()->addScript ('js/jquery/waypoints.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -130,7 +130,7 @@ abstract class JQuery {
 		// I need jquery first.
 		self::IncludeJQuery();
 
-		CurrentPage::AddScript('js/jquery/jquery.smooth-scroll.min.js');
+		\Core\view()->addScript('js/jquery/jquery.smooth-scroll.min.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;

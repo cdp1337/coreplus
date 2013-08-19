@@ -62,9 +62,9 @@ abstract class Utils {
 	 */
 	public static function IncludeCodeMirror() {
 
-		\CurrentPage::AddScript('assets/libs/codemirror/lib/codemirror.js');
-		\CurrentPage::AddStylesheet('assets/libs/codemirror/lib/codemirror.css');
-		\CurrentPage::AddStylesheet('assets/css/codemirror.css'); // This is one that can get overridden with custom themes.
+		\Core\view()->addScript('assets/libs/codemirror/lib/codemirror.js');
+		\Core\view()->addStylesheet('assets/libs/codemirror/lib/codemirror.css');
+		\Core\view()->addStylesheet('assets/css/codemirror.css'); // This is one that can get overridden with custom themes.
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -111,7 +111,7 @@ abstract class Utils {
 	private static function _IncludeMode($mode) {
 		self::IncludeCodeMirror();
 
-		\CurrentPage::AddScript('libs/codemirror/mode/' . $mode . '/' . $mode . '.js');
+		\Core\view()->addScript('libs/codemirror/mode/' . $mode . '/' . $mode . '.js');
 		return true;
 	}
 }

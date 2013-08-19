@@ -9,7 +9,7 @@
 class JQueryHoverIntent {
     public static function Load(){
 
-        CurrentPage::AddScript ('js/jquery.hoverIntent.min.js');
+        \Core\view()->addScript ('js/jquery.hoverIntent.min.js');
 
         // IMPORTANT!  Tells the script that the include succeeded!
         return true;

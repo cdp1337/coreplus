@@ -179,7 +179,7 @@ class CurrentPage {
 	 * @param string $location
 	 */
 	public static function AddScript($script, $location = 'head') {
-		View::AddScript($script, $location);
+		\Core\view()->addScript($script, $location);
 	}
 
 	/**
@@ -252,7 +252,7 @@ class CurrentPage {
 	}
 
 	public static function GetHTMLAttributes($asarray = false) {
-		return View::GetHTMLAttributes($asarray);
+		return \Core\view()->getHTMLAttributes($asarray);
 	}
 
 	private function _render() {

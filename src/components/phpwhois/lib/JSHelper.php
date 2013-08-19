@@ -62,9 +62,9 @@ abstract class JSHelper {
 		\Core::_AttachCoreStrings();
 
 		// Add the styles
-		\CurrentPage::AddStylesheet('assets/css/phpwhois/fancy_ip.css');
+		\Core\view()->addStylesheet('assets/css/phpwhois/fancy_ip.css');
 		// And the script itself
-		\CurrentPage::AddScript('assets/js/phpwhois/fancy_ip.js');
+		\Core\view()->addScript('assets/js/phpwhois/fancy_ip.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;

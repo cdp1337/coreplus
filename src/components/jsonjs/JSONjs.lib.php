@@ -24,8 +24,8 @@
 abstract class JSONjs {
 	
 	public static function IncludeJS(){
-		if(ConfigHandler::Get('/core/javascript/minified')) CurrentPage::AddScript ('js/json2.min.js');
-		else CurrentPage::AddScript ('js/json2.js');
+		if(ConfigHandler::Get('/core/javascript/minified')) \Core\view()->addScript ('js/json2.min.js');
+		else \Core\view()->addScript ('js/json2.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;

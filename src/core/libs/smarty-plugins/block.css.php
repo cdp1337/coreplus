@@ -63,10 +63,10 @@ function smarty_block_css($params, $innercontent, $template, &$repeat){
 			if(!$enabled) return;
 		}
 
-		CurrentPage::AddStylesheet($href, $media);
+		\Core\view()->addStylesheet($href, $media);
 	}
 	// Styles defined inline, fine as well.  The styles will be displayed in the head.
 	elseif($innercontent){
-		CurrentPage::AddStyle($innercontent);
+		\Core\view()->addStyle($innercontent);
 	}
 }

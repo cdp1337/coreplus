@@ -44,7 +44,7 @@ article:tag - string array - Tag words associated with this article.
 		if(!$id) $id = "null";
 		
 		// Facebook also requires a location to render to.
-		View::AppendBodyContent('<div id="fb-root"></div>');
+		\Core\view()->appendBodyContent('<div id="fb-root"></div>');
 		
 		if($async){
 			// This script does the init and the include in one go.
@@ -93,12 +93,12 @@ else{
 </script>
 EOD;
 			// Add the necessary script
-			View::AddScript($script, 'foot');
+			\Core\view()->addScript($script, 'foot');
 		}
 		else{
 			// Just the simple script. (which is actually in 2 parts)
 			$script = $p . $src;
-			View::AddScript($script, 'foot');
+			\Core\view()->addScript($script, 'foot');
 			
 			$script = <<<EOD
 <script type="text/javascript">
@@ -112,7 +112,7 @@ EOD;
 </script>
 EOD;
 			// And the second part.
-			View::AddScript($script, 'foot');
+			\Core\view()->addScript($script, 'foot');
 			//CurrentPage::AddBodyContent($script);
 		}
 		

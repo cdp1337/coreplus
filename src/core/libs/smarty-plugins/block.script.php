@@ -71,7 +71,7 @@ function smarty_block_script($params, $innercontent, $template, &$repeat){
 	// but also useful for any standard asset.
 	elseif(isset($params['src'])){
 		$loc = (isset($params['location']))? $params['location'] : 'head';
-		CurrentPage::AddScript($params['src'], $loc);
+		\Core\view()->addScript($params['src'], $loc);
 	}
 	// a script tag can be called with no parameters, it is after all a script tag....
 	elseif($innercontent){
@@ -80,6 +80,6 @@ function smarty_block_script($params, $innercontent, $template, &$repeat){
 			$innercontent = '<script type="text/javascript">' . $innercontent . '</script>';
 		}
 		$loc = (isset($params['location']))? $params['location'] : 'head';
-		CurrentPage::AddScript($innercontent, $loc);
+		\Core\view()->addScript($innercontent, $loc);
 	}
 }

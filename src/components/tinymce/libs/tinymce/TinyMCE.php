@@ -14,8 +14,8 @@ abstract class TinyMCE {
 
 	public static function IncludeTinyMCE(){
 		\ComponentHandler::LoadScriptLibrary('jquery');
-		\CurrentPage::AddScript('js/tinymce/jquery.tinymce.min.js');
-		\CurrentPage::AddStylesheet('css/tinymce/overrides.css');
+		\Core\view()->addScript('js/tinymce/jquery.tinymce.min.js');
+		\Core\view()->addStylesheet('css/tinymce/overrides.css');
 
 		// Yes, the string needs quotes inside of quotes!  It's to be read by javascript after all.
 		$browsable           = ( \Core::IsComponentAvailable('media-manager') && \Core\user()->checkAccess('p:/mediamanager/browse') );
@@ -74,8 +74,8 @@ abstract class TinyMCE {
 </script>	
 EOD;
 		// Add the necessary script
-		\CurrentPage::AddScript('assets/js/tinymce/coreplus_functions.js', 'head');
-		\CurrentPage::AddScript($script, 'foot');
+		\Core\view()->addScript('assets/js/tinymce/coreplus_functions.js', 'head');
+		\Core\view()->addScript($script, 'foot');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;

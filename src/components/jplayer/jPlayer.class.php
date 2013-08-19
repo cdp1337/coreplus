@@ -9,8 +9,8 @@
 abstract class jPlayer {
 	public static function IncludeJPlayer(){
 		ComponentHandler::LoadScriptLibrary('jquery');
-		CurrentPage::AddScript('js/jquery.jplayer.min.js');
-		CurrentPage::AddStylesheet('css/skin/jplayer.blue.monday.css');
+		\Core\view()->addScript('js/jquery.jplayer.min.js');
+		\Core\view()->addStylesheet('css/skin/jplayer.blue.monday.css');
 	
 		//Can has include?
 		return true;

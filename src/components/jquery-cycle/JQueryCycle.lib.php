@@ -9,7 +9,7 @@
 class JQueryCycle {
     public static function Load(){
 
-        CurrentPage::AddScript ('js/jquery.cycle.all.js');
+        \Core\view()->addScript ('js/jquery.cycle.all.js');
 
         // IMPORTANT!  Tells the script that the include succeeded!
         return true;

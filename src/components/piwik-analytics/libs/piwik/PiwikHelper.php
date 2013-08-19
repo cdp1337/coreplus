@@ -84,7 +84,7 @@ abstract class PiwikHelper {
 EOD;
 
 		// Add the necessary script
-		\CurrentPage::AddScript($script, 'head');
+		\Core\view()->addScript($script, 'head');
 
 		return true;
 	}

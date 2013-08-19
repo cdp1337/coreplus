@@ -15,13 +15,13 @@ class JQueryLightbox {
 		}
 
 		if(ConfigHandler::Get('/core/javascript/minified')){
-			CurrentPage::AddScript ('js/jquery.lightbox-0.5.min.js');
+			\Core\view()->addScript ('js/jquery.lightbox-0.5.min.js');
 		}
 		else{
-			CurrentPage::AddScript ('js/jquery.lightbox-0.5.js');
+			\Core\view()->addScript ('js/jquery.lightbox-0.5.js');
 		}
 
-		CurrentPage::AddStylesheet('css/jquery.lightbox-0.5.css');
+		\Core\view()->addStylesheet('css/jquery.lightbox-0.5.css');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;

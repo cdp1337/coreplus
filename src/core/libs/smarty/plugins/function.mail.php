@@ -99,7 +99,7 @@ function smarty_function_mail($params, $template)
 
 	// Set this page to require the script library core strings!
 	Core::_AttachCoreStrings();
-	View::AddScript('js/core.email.js');
+	\Core\view()->addScript('js/core.email.js');
 
 	return $return;
 
