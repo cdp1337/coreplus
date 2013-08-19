@@ -136,6 +136,8 @@ class AdminController extends Controller_2_1 {
 
 		$view = $this->getView();
 
+		require_once(ROOT_PDIR . 'core/libs/core/configs/functions.php');
+
 		$where = array();
 		// If the enterprise component is installed and multisite is enabled, configurations have another layer of complexity.
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
@@ -147,63 +149,17 @@ class AdminController extends Controller_2_1 {
 		$groups  = array();
 		foreach ($configs as $c) {
 			// Export out the group for this config option.
-			$gname = substr($c->get('key'), 1);
-			$gname = ucwords(substr($gname, 0, strpos($gname, '/')));
+			$el = \Core\Configs\get_form_element_from_config($c);
+			$gname = $el->get('group');
 
-			if (!isset($groups[$gname])) $groups[$gname] = new FormGroup(array('title' => $gname,
-			                                                                   'class' => 'collapsible collapsed'));
-
-			// /user/displayname/displayoptions
-			$title = substr($c->get('key'), strlen($gname) + 2);
-			$val   = ConfigHandler::Get($c->get('key'));
-			$name  = 'config[' . $c->get('key') . ']';
-
-			switch ($c->get('type')) {
-				case 'string':
-					$el = FormElement::Factory('text');
-					break;
-				case 'enum':
-					$el = FormElement::Factory('select');
-					$el->set('options', array_map('trim', explode('|', $c->get('options'))));
-					break;
-				case 'boolean':
-					$el = FormElement::Factory('radio');
-					$el->set(
-						'options', array('false' => 'No/False',
-						                 'true'  => 'Yes/True')
-					);
-					if ($val == '1' || $val == 'true' || $val == 'yes') $val = 'true';
-					else $val = 'false';
-					break;
-				case 'int':
-					$el                    = FormElement::Factory('text');
-					$el->validation        = '/^[0-9]*$/';
-					$el->validationmessage = $gname . ' - ' . $title . ' expects only whole numbers with no punctuation.';
-					break;
-				case 'set':
-					$el = FormElement::Factory('checkboxes');
-					$el->set('options', array_map('trim', explode('|', $c->get('options'))));
-					if(is_array($val)){
-						// Yay, it's already setup
-					}
-					else{
-						$val  = array_map('trim', explode('|', $val));
-					}
-					$name = 'config[' . $c->get('key') . '][]';
-					break;
-				default:
-					throw new Exception('Supported configuration type for ' . $c->get('key') . ', [' . $c->get('type') . ']');
-					break;
+			if (!isset($groups[$gname])){
+				$groups[$gname] = new FormGroup(
+					[
+						'title' => $gname,
+						'class' => 'collapsible collapsed'
+					]
+				);
 			}
-
-			$el->set('title', $title);
-			$el->set('name', $name);
-			$el->set('value', $val);
-
-			$desc = $c->get('description');
-			if ($c->get('default_value') && $desc) $desc .= ' (default value is ' . $c->get('default_value') . ')';
-			elseif ($c->get('default_value')) $desc = 'Default value is ' . $c->get('default_value');
-			$el->set('description', $desc);
 
 			$groups[$gname]->addElement($el);
 		}
