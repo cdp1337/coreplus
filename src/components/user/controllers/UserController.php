@@ -202,6 +202,8 @@ class UserController extends Controller_2_1{
 		$view->assign('backends', ConfigHandler::Get('/user/backends'));
 		$view->assign('form', $form);
 		$view->assign('allowregister', ConfigHandler::Get('/user/register/allowpublic'));
+		// Google has no business indexing user-action pages.
+		$view->addMetaName('robots', 'noindex');
 
 
 		return $view;
@@ -263,6 +265,8 @@ class UserController extends Controller_2_1{
 
 		$view->ssl = true;
 		$view->assign('form', $form);
+		// Google has no business indexing user-action pages.
+		$view->addMetaName('robots', 'noindex');
 
 		// Breadcrumbs! (based on access permissions)
 		if($manager){
@@ -311,6 +315,8 @@ class UserController extends Controller_2_1{
 		// This is step 1
 		$view->assign('step', 1);
 		$view->assign('form', $form);
+		// Google has no business indexing user-action pages.
+		$view->addMetaName('robots', 'noindex');
 
 		// There's really nothing to do here except for check the email and send it.
 
