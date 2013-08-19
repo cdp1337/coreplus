@@ -247,32 +247,9 @@ class View {
 	public $bodyclasses = [];
 
 	/**
-	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
-	 * @var array
+	 * @var array Associative array of attributes for the <html> tag.
 	 */
-	public static $MetaData = array();
-	/**
-	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
-	 * @var array
-	 */
-	public static $HeadScripts = array();
-	/**
-	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
-	 * @var array
-	 */
-	public static $FootScripts = array();
-	/**
-	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
-	 * @var array
-	 */
-	public static $Stylesheets = array();
-	public static $HTMLAttributes = array();
-
-	/**
-	 * @deprecated 2012.06.25 cpowell The non-static version should be better.
-	 * @var array
-	 */
-	public static $HeadData = array();
+	public $htmlAttributes = array();
 
 	public function __construct() {
 		$this->error = View::ERROR_NOERROR;
@@ -754,7 +731,7 @@ class View {
 				}
 				$data = substr_replace($data, $foot . "\n" . '</body>', $match, 7);
 			}
-			$data = preg_replace('#<html#', '<html ' . self::GetHTMLAttributes(), $data, 1);
+			$data = preg_replace('#<html#', '<html ' . $this->getHTMLAttributes(), $data, 1);
 
 
 			// This logic has been migrated to the {$body_classes} variable.
@@ -859,6 +836,12 @@ class View {
 		echo $data;
 	}
 
+	/**
+	 * Add a breadcrumb to the end of the breadcrumb stack.
+	 *
+	 * @param      $title
+	 * @param null $link
+	 */
 	public function addBreadcrumb($title, $link = null) {
 
 		// Allow a non-resolved link to be passed in.
@@ -868,6 +851,11 @@ class View {
 		                             'link'  => $link);
 	}
 
+	/**
+	 * Override and replace the breadcrumbs with an array.
+	 *
+	 * @param $array
+	 */
 	public function setBreadcrumbs($array) {
 		// Array should be an array of either link => title keys or pages.
 		$this->breadcrumbs = array();
@@ -882,19 +870,17 @@ class View {
 		}
 	}
 
+	/**
+	 * Get this view's breadcrumbs as an array
+	 *
+	 * @return array
+	 */
 	public function getBreadcrumbs() {
 		$crumbs = $this->breadcrumbs;
 		if ($this->title) $crumbs[] = array('title' => $this->title,
 		                                    'link'  => null);
 
 		return $crumbs;
-
-		//var_dump($crumbs); die();
-
-		// Make sure the last element on breadcrumbs is not empty.
-		/*if(($n = sizeof($this->breadcrumbs)) && !$this->breadcrumbs[$n-1]['title']){
-			$this->breadcrumbs[$n-1]['title'] = $this->title;
-		}*/
 	}
 
 	/**
@@ -990,7 +976,7 @@ class View {
 	public function checkAccess() {
 		// And do some logic to see if the current user can access this resource.
 		// This is more of a helper function to Controllers.
-		$u = Core::User();
+		$u = \Core\user();
 		if ($u->checkAccess($this->access)) {
 			// yay.
 			return true;
@@ -1084,13 +1070,23 @@ class View {
 	 * @param string $script
 	 * @param string $location
 	 */
-	public static function AddScript($script, $location = 'head') {
+	public function addScript($script, $location = 'head') {
 		if (strpos($script, '<script') === false) {
 			// Resolve the script and wrap it with a script block.
 			$script = '<script type="text/javascript" src="' . Core::ResolveAsset($script) . '"></script>';
 		}
 
-		$scripts =& PageRequest::GetSystemRequest()->getView()->scripts;
+		// This snippet is to allow AddScript to be called statically.
+		// Core <= 2.6.0 used this method, and components built on it will be expecting this functionality.
+		// ! IMPORTANT ! Do NOT remove this until if/else block until 2.6.0 is no longer supported!
+		// 2013.08.16 - cpowell
+		if(isset($this)){
+			$scripts =& $this->scripts;
+		}
+		else{
+			$scripts =& \Core\view()->scripts;
+		}
+
 
 		// I can check to see if this script has been loaded before.
 		if (in_array($script, $scripts['head'])) return;
@@ -1101,10 +1097,20 @@ class View {
 		else $scripts['foot'][] = $script;
 	}
 
-	public static function AppendBodyContent($content){
-		// Yeah I know script is a weird one to use, but it works damnit!
-		$scripts =& PageRequest::GetSystemRequest()->getView()->scripts;
+	public function appendBodyContent($content){
 
+		// This snippet is to allow AppendBodyContent to be called statically.
+		// Core <= 2.6.0 used this method, and components built on it will be expecting this functionality.
+		// ! IMPORTANT ! Do NOT remove this until if/else block until 2.6.0 is no longer supported!
+		// 2013.08.18 - cpowell
+		if(isset($this)){
+			$scripts =& $this->scripts;
+		}
+		else{
+			$scripts =& \Core\view()->scripts;
+		}
+
+		// Yeah I know script is a weird one to use, but it works damnit!
 		if (in_array($content, $scripts['foot'])) return;
 
 		$scripts['foot'][] = $content;
@@ -1114,15 +1120,24 @@ class View {
 	 * Add a linked stylesheet file to the global View object.
 	 *
 	 * @param string $link The link of the stylesheet
-	 * @param type   $media Media to display the stylesheet with.
+	 * @param string $media Media to display the stylesheet with.
 	 */
-	public static function AddStylesheet($link, $media = "all") {
+	public function addStylesheet($link, $media = "all") {
 		if (strpos($link, '<link') === false) {
 			// Resolve the script and wrap it with a script block.
 			$link = '<link type="text/css" href="' . Core::ResolveAsset($link) . '" media="' . $media . '" rel="stylesheet"/>';
 		}
 
-		$styles =& PageRequest::GetSystemRequest()->getView()->stylesheets;
+		// This snippet is to allow AddStylesheet to be called statically.
+		// Core <= 2.6.0 used this method, and components built on it will be expecting this functionality.
+		// ! IMPORTANT ! Do NOT remove this until if/else block until 2.6.0 is no longer supported!
+		// 2013.08.18 - cpowell
+		if(isset($this)){
+			$styles =& $this->stylesheets;
+		}
+		else{
+			$styles =& \Core\view()->stylesheets;
+		}
 
 		// I can check to see if this script has been loaded before.
 		if (!in_array($link, $styles)) $styles[] = $link;
@@ -1133,30 +1148,54 @@ class View {
 	 *
 	 * @param string $style The contents of the <style> tag.
 	 */
-	public static function AddStyle($style) {
+	public function addStyle($style) {
 		if (strpos($style, '<style') === false) {
 			$style = '<style>' . $style . '</style>';
 		}
 
-		$styles =& PageRequest::GetSystemRequest()->getView()->stylesheets;
+		// This snippet is to allow AddStyle to be called statically.
+		// Core <= 2.6.0 used this method, and components built on it will be expecting this functionality.
+		// ! IMPORTANT ! Do NOT remove this until if/else block until 2.6.0 is no longer supported!
+		// 2013.08.18 - cpowell
+		if(isset($this)){
+			$styles =& $this->stylesheets;
+		}
+		else{
+			$styles =& \Core\view()->stylesheets;
+		}
 
 		// I can check to see if this script has been loaded before.
 		if (!in_array($style, $styles)) $styles[] = $style;
 	}
 
-	public static function SetHTMLAttribute($attribute, $value) {
-		self::$HTMLAttributes[$attribute] = $value;
+	/**
+	 * Set an HTML attribute
+	 *
+	 * @param string $attribute key
+	 * @param string $value     value
+	 */
+	public function setHTMLAttribute($attribute, $value) {
+		$this->htmlAttributes[$attribute] = $value;
 	}
 
-	public static function GetHTMLAttributes($asarray = false) {
-		$atts = self::$HTMLAttributes;
+	/**
+	 * Get the HTML attributes as either a string or an array.
+	 *
+	 * These attributes are from the <html> tag.
+	 *
+	 * @param bool $asarray Set to false for a string, true for an array.
+	 *
+	 * @return array|string
+	 */
+	public function getHTMLAttributes($asarray = false) {
+		$atts = $this->htmlAttributes;
 
 		if ($asarray) {
 			return $atts;
 		}
 		else {
 			$str = '';
-			foreach ($atts as $k => $v) $str .= " $k=\"" . str_replace('"', '\"', $v) . "\"";
+			foreach ($atts as $k => $v) $str .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
 			return trim($str);
 		}
 	}
