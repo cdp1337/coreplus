@@ -32,6 +32,10 @@ class FormCaptchaInput extends FormElement{
 
 		// Some defaults
 		$this->_attributes['class'] = 'formelement formcaptchainput';
+		if(!$this->get('name')){
+			$this->set('name', 'captcha');
+		}
+
 		$this->_validattributes = array('id', 'name', 'required', 'tabindex', 'style');
 	}
 	
