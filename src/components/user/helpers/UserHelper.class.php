@@ -59,20 +59,18 @@ abstract class UserHelper{
 
 		$u = User::Find(array('email' => $e->get('value')));
 
-		$active = $u->get('active');
-
-		if($active == 0){
-			$logmsg = 'User tried to login before account activation' . "\n" . 'User: ' . $u->get('email') . "\n";
-			SecurityLogModel::Log('/user/login', 'fail', null, $logmsg);
-			$e->setError('Your account is not active yet.');
-			return false;
-		}
-
 		if(!$u){
 			// Log this as a login attempt!
 			$logmsg = 'Email not registered' . "\n" . 'Email: ' . $e->get('value') . "\n";
 			SecurityLogModel::Log('/user/login', 'fail', null, $logmsg);
 			$e->setError('Requested email is not registered.');
+			return false;
+		}
+
+		if($u->get('active') == 0){
+			$logmsg = 'User tried to login before account activation' . "\n" . 'User: ' . $u->get('email') . "\n";
+			SecurityLogModel::Log('/user/login', 'fail', null, $logmsg);
+			$e->setError('Your account is not active yet.');
 			return false;
 		}
 
