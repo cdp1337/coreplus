@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.7" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.0" name="User" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.6.0"/>
+		<require name="core" type="component" version="2.6.1"/>
 		<!-- User authentication events trigger security logs. -->
 		<require name="security-suite" type="component" operation="ge" version="1.0.0"/>
 		<!-- The password reset is now powered by the nonce system. -->
@@ -45,7 +45,7 @@
 		<file filename="controllers/UserAdminController.php" md5="67adf6e6f1c69d5338f7abecf9600604">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserConfigController.php" md5="8ad7dca8319e45bf44838fa4a5163f96">
+		<file filename="controllers/UserConfigController.php" md5="94c202fbd48a79df7820aa3e62328458">
 			<controller name="UserConfigController"/>
 		</file>
 		<file filename="controllers/UserController.php" md5="13f0b6b5be65d82936b8dc64db9690b7">
@@ -71,7 +71,7 @@
 		<file filename="models/UserGroupModel.php" md5="4628a66033c01e252738997e44f0262c">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="models/UserModel.php" md5="891017119df73bf073c5e163b50cc853">
+		<file filename="models/UserModel.php" md5="8eb79cc5141680dd113bb6d5187fdd56">
 			<class name="UserModel"/>
 		</file>
 		<file filename="models/UserUserConfigModel.php" md5="4effee3eafd958fa65ce9a8204767258">
@@ -107,6 +107,7 @@
 		<file filename="templates/pages/useradmin/import2.tpl" md5="bb67d4446d420094507d43e1b4d21390"/>
 		<file filename="templates/pages/useradmin/import3.tpl" md5="655994a8909458e93fa643349788621d"/>
 		<file filename="templates/pages/useradmin/index.tpl" md5="03a23eade9177436e141b1adb8308519"/>
+		<file filename="templates/pages/userconfig/admin.tpl" md5="b052123c686d1e46bb6275fbed19eba9"/>
 		<file filename="templates/pages/usergroupadmin/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/usergroupadmin/index.tpl" md5="a5f88d1e78a024a0b0af9388e3a9206f"/>
 		<file filename="templates/pages/usergroupadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>

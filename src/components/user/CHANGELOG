@@ -1,3 +1,14 @@
+User 2.6.0
+
+	* [Bug] Fix the user profile to allow standard users to be able to edit their own accounts.
+	* [Bug] Fix an error with the user active field.
+	* [Feature] Implement Feature #435 - Add a "require numbers" option for user passwords.
+	* [Feature] New config option to allow or disallow users from updating their email addresses.
+	* [Feature] New interface for managing the userconfig options.
+	* [Feature] Switch to a more granular permission level.
+	* [Feature] Rename the "Confirm" field on registration to "Confirm Password".
+	* [Feature] Set several user action pages as no-index by search engines.
+
 User 2.5.7
 
 	* [Feature] Added the ability to remove historical activity.  This is necessary because that table
@@ -76,6 +87,12 @@ User 2.4.5
 	* [Feature] User forgot password now uses the nonce key system
 	-- Charlie Powell <charlie@eval.bz>  Mon, 15 Apr 2013 15:42:32 -0400
 
+User 2.4.4
+
+	* Require SSL on the login, register, and 403 pages.
+	* Redesigned the login and 403 pages slightly.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:38:15 -0400
+
 User 2.4.4b2
 
 	* Updated the default options for User to keep updated with recent changes in Core.
@@ -85,12 +102,6 @@ User 2.4.4b1
 
 	* User login now redirects to the page prior to login.
 	-- Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 20:59:03 -0500
-
-User 2.4.4
-
-	* Require SSL on the login, register, and 403 pages.
-	* Redesigned the login and 403 pages slightly.
-	-- Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:38:15 -0400
 
 User 2.4.3
 
