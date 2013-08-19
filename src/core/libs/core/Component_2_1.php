@@ -1561,10 +1561,6 @@ class Component_2_1 {
 			if($weight === null)     $weight = 0;
 			if($weight == '')        $weight = 0;
 
-			// Increment the weight by 100.  This will allow new values to be appended at the end,
-			// and the sorted ones to be avove them.
-			$weight += 1000;
-
 			$model = UserConfigModel::Construct($key);
 			$isnew = !$model->exists();
 
@@ -1575,18 +1571,30 @@ class Component_2_1 {
 			}
 			else{
 				// Installations create/save it!
-				$model->set('name', $name);
+
+				// First, all the default and non-editable fields.
+				$model->set('default_name', $name);
 				if($default)  $model->set('default_value', $default);
 				if($formtype) $model->set('formtype', $formtype);
-				$model->set('onregistration', $onreg);
-				$model->set('onedit', $onedit);
+				$model->set('default_onregistration', $onreg);
+				$model->set('default_onedit', $onedit);
 				$model->set('searchable', $searchable);
 				if($options)  $model->set('options', $options);
 				$model->set('validation', $validation);
 				$model->set('required', $required);
-				// Only set the weight if it's not already set.
-				// This is because (theoretically), the admin can change the order of userconfig options.
-				if(!$model->get('weight') || $model->get('weight') >= 100) $model->set('weight', $weight);
+				$model->set('default_weight', $weight);
+
+				// And now the admin-editable fields.
+				// These only get set if the configuration option does not exist prior.
+				if($isnew){
+					$model->set('name', $name);
+					$model->set('onregistration', $onreg);
+					$model->set('onedit', $onedit);
+					$model->set('weight', $weight);
+				}
+
+				if($default)  $model->set('default_value', $default);
+				if($formtype) $model->set('formtype', $formtype);
 
 				if($model->save()){
 					if($isnew){
