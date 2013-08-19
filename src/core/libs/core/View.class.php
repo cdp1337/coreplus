@@ -1200,34 +1200,86 @@ class View {
 		}
 	}
 
+	/**
+	 * Add a meta name, (and value), to this view.
+	 *
+	 * @param string $key
+	 * @param string $value
+	 */
+	public function addMetaName($key, $value) {
+		// This snippet is to allow AddStyle to be called statically.
+		// Core <= 2.6.0 used this method, and components built on it will be expecting this functionality.
+		// ! IMPORTANT ! Do NOT remove this until if/else block until 2.6.0 is no longer supported!
+		// 2013.08.18 - cpowell
+		if(isset($this)){
+			$this->meta[$key] = $value;
+		}
+		else{
+			\Core\view()->meta[$key] = $value;
+		}
+	}
+
+	/**
+	 * Add a full meta string to the head of this view.
+	 *
+	 * This should be formatted as &lt;meta name="blah" content="foo"/&gt;, (or however as necessary).
+	 *
+	 * @param $string
+	 */
+	public function addMeta($string) {
+		if (strpos($string, '<meta') === false) $string = '<meta ' . $string . '/>';
+
+		// This snippet is to allow AddStyle to be called statically.
+		// Core <= 2.6.0 used this method, and components built on it will be expecting this functionality.
+		// ! IMPORTANT ! Do NOT remove this until if/else block until 2.6.0 is no longer supported!
+		// 2013.08.18 - cpowell
+		if(isset($this)){
+			$this->head[] = $string;
+		}
+		else{
+			\Core\view()->head[] = $string;
+		}
+	}
+
+	/**
+	 * Add a full string to the head of this view.
+	 *
+	 * @param $string
+	 */
+	public function addHead($string){
+		// This snippet is to allow AddStyle to be called statically.
+		// Core <= 2.6.0 used this method, and components built on it will be expecting this functionality.
+		// ! IMPORTANT ! Do NOT remove this until if/else block until 2.6.0 is no longer supported!
+		// 2013.08.18 - cpowell
+		if(isset($this)){
+			$this->head[] = $string;
+		}
+		else{
+			\Core\view()->head[] = $string;
+		}
+	}
+
 
 	/**
 	 * Get the head data for the system view.
 	 *
+	 * @deprecated 2013.08.18
 	 * @static
 	 * @return string
 	 */
 	public static function GetHead() {
-		return PageRequest::GetSystemRequest()->getView()->getHeadContent();
+		trigger_error('View::GetHead is deprecated, please use \Core\view()->getHeadContent instead!', E_USER_DEPRECATED);
+		return \Core\view()->getHeadContent();
 	}
 
+	/**
+	 * @deprecated 2013.08.18
+	 * @return string
+	 */
 	public static function GetFoot() {
-		return PageRequest::GetSystemRequest()->getView()->getFootContent();
+		trigger_error('View::GetFoot is deprecated, please use \Core\view()->getFootContent instead!', E_USER_DEPRECATED);
+		return \Core\view()->getFootContent();
 	}
-
-	public static function AddMetaName($key, $value) {
-		PageRequest::GetSystemRequest()->getView()->meta[$key] = $value;
-	}
-
-	public static function AddMeta($string) {
-		if (strpos($string, '<meta') === false) $string = '<meta ' . $string . '/>';
-		PageRequest::GetSystemRequest()->getView()->head[] = $string;
-	}
-
-	public static function AddHead($string){
-		PageRequest::GetSystemRequest()->getView()->head[] = $string;
-	}
-
 }
 
 
