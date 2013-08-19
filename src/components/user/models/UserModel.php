@@ -101,9 +101,9 @@ class UserModel extends Model {
 
 			// complexity check from the config
 			if(ConfigHandler::Get('/user/password/requiresymbols') > 0){
-				preg_match_all('/[^a-zA-Z]/', $v, $matches); // Count a number as a symbol.  Close enough :/
+				preg_match_all('/[^a-zA-Z0-9]/', $v, $matches);
 				if(sizeof($matches[0]) < ConfigHandler::Get('/user/password/requiresymbols')){
-					$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requiresymbols') . ' symbol(s) or number(s).';
+					$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requiresymbols') . ' symbol(s).';
 				}
 			}
 
@@ -114,6 +114,16 @@ class UserModel extends Model {
 					$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requirecapitals') . ' capital letter(s).';
 				}
 			}
+
+			// complexity check from the config
+			if(ConfigHandler::Get('/user/password/requirenumbers') > 0){
+				preg_match_all('/[0-9]/', $v, $matches);
+				if(sizeof($matches[0]) < ConfigHandler::Get('/user/password/requirenumbers')){
+					$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requirenumbers') . ' number(s).';
+				}
+			}
+
+			// /user/password/requirenumbers
 
 			// Validation's good, return true!
 			if($valid === true) return true;

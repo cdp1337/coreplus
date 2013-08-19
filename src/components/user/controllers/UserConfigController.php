@@ -67,8 +67,10 @@ class UserConfigController extends Controller_2_1{
 		// Build a form to handle the config options themselves.
 		// These will include password strength, whether or not captcha is enabled, etc.
 		$configs = [
-			'/user/displayas', '/user/displayname/anonymous', '/user/email/allowchanging', '/user/enableavatar', '/user/password/minlength',
-			'/user/password/requirecapitals', '/user/password/requiresymbols', '/user/profileedits/requireapproval',
+			'/user/displayas', '/user/displayname/anonymous', '/user/email/allowchanging', '/user/enableavatar',
+			'/user/password/minlength',
+			'/user/password/requirecapitals', '/user/password/requiresymbols', '/user/password/requirenumbers',
+			'/user/profileedits/requireapproval',
 			'/user/register/allowpublic', '/user/register/requireapproval', '/user/register/requirecaptcha',
 		];
 		$configform = new Form();

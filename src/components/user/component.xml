@@ -134,6 +134,7 @@
 		<config key="/user/password/minlength" type="int" default="8" description="Minimum password length for users."/>
 		<config key="/user/password/requiresymbols" type="int" default="0" description="Minimum number of symbols in the password, ($@#*, etc)."/>
 		<config key="/user/password/requirecapitals" type="int" default="0" description="Minumum number of capital letters in the password."/>
+		<config key="/user/password/requirenumbers" type="int" default="0" description="Minumum number of numbers in the password."/>
 		<config key="/user/displayas" type="enum" default="emailbase" options="emailfull|emailbase|username|firstname" description="The user field to use for displaying in representation of the user, ie: username or email.  If 'email' is used, the full email is displayed.  If 'emailbase' id used, just the prefix of the email is used."/>
 		<config key="/user/displayname/anonymous" type="string" default="Guest" description="What to call guest/unauthenticated users."/>
 		<config key="/user/backends" type="set" default="datamodel" description="" options="datamodel| facebook| ldap"/>
