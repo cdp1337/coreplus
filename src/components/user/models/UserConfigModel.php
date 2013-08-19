@@ -29,9 +29,15 @@ class UserConfigModel extends Model{
 			'null' => false,
 			'maxlength' => 64,
 		),
+		'default_name' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'required' => false,
+			'comment' => 'The default name/title',
+		),
 		'name' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'required' => false
+			'required' => false,
+			'comment' => 'The name/title displayed on the system',
 		),
 		'formtype' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -46,11 +52,23 @@ class UserConfigModel extends Model{
 			'required' => false,
 			'null' => true
 		),
+		'default_weight' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'default' => 0,
+		),
 		'weight' => array(
 			'type' => Model::ATT_TYPE_INT,
 			'default' => 0,
 		),
+		'default_onregistration' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'default' => true
+		),
 		'onregistration' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'default' => true
+		),
+		'default_onedit' => array(
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => true
 		),

@@ -22,7 +22,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="d1e86f6d2cbf45a6db1de3f4830d5520"/>
+		<file filename="CHANGELOG" md5="a2ab4b768e8b688de76aaf5a24df38a2"/>
 		<file filename="User.class.php" md5="097fab24c5528e52f7076215b2b72d4b">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -33,15 +33,6 @@
 		<file filename="User_Backend.interface.php" md5="338a174c0a903e9bf637e30f2e0a9c75">
 			<interface name="User_Backend"/>
 		</file>
-		<file filename="widgets/UserAdminWidget.php" md5="a6b79e083966799581ddc70da8480a1a">
-			<class name="UserAdminWidget"/>
-		</file>
-		<file filename="widgets/UserLoginWidget.class.php" md5="04d3602121f6cb231473284124dfa88f">
-			<class name="UserLoginWidget"/>
-		</file>
-		<file filename="widgets/UserWidget.class.php" md5="85affeee8ce7c56dad1e2ff6582bcb09">
-			<class name="UserWidget"/>
-		</file>
 		<file filename="backends/User_datamodel.backend.php" md5="92f4c736f63f341e834698b9a6bb1103">
 			<class name="User_datamodel_Backend"/>
 		</file>
@@ -51,27 +42,30 @@
 		<file filename="controllers/UserActivityController.php" md5="def79927b684ce697f09bee34e5d56eb">
 			<controller name="UserActivityController"/>
 		</file>
-		<file filename="controllers/UserAdminController.php" md5="a11be21e58c849bc48017b7d80d005a4">
+		<file filename="controllers/UserAdminController.php" md5="67adf6e6f1c69d5338f7abecf9600604">
 			<controller name="UserAdminController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="6ad363f7c70f9780d7fb5e78d445dc7b">
+		<file filename="controllers/UserConfigController.php" md5="8ad7dca8319e45bf44838fa4a5163f96">
+			<controller name="UserConfigController"/>
+		</file>
+		<file filename="controllers/UserController.php" md5="13f0b6b5be65d82936b8dc64db9690b7">
 			<controller name="UserController"/>
 		</file>
-		<file filename="controllers/UserGroupAdminController.php" md5="b327f8bf47a6dd177493b3a72a66f2c9">
+		<file filename="controllers/UserGroupAdminController.php" md5="2c490a28c0a0ff5113b3623a00fce22d">
 			<controller name="UserGroupAdminController"/>
 		</file>
 		<file filename="helpers/ImportHelper.php" md5="6c98001060f0a23e5bac768e21424553">
 			<class name="User\ImportHelper"/>
 		</file>
-		<file filename="helpers/UserFunctions.php" md5="0bcec65de1d551943bf68a89a35ae4e5"/>
-		<file filename="helpers/UserHelper.class.php" md5="86cc69e492f5100d65dc89f85da1bc8a">
+		<file filename="helpers/UserFunctions.php" md5="21facd4c7b807fbae6710d47a755e21a"/>
+		<file filename="helpers/UserHelper.class.php" md5="cb96afa2c93ec39bb33ce53d1655f143">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
 		<file filename="models/UserActivityModel.php" md5="8d70f5be700a16328e2107ff48887fd0">
 			<class name="UserActivityModel"/>
 		</file>
-		<file filename="models/UserConfigModel.php" md5="6a9d77e42f867f4d04c5077bf0e5a5d4">
+		<file filename="models/UserConfigModel.php" md5="d26645660e75e6ddde57472df77a330f">
 			<class name="UserConfigModel"/>
 		</file>
 		<file filename="models/UserGroupModel.php" md5="4628a66033c01e252738997e44f0262c">
@@ -82,6 +76,16 @@
 		</file>
 		<file filename="models/UserUserConfigModel.php" md5="4effee3eafd958fa65ce9a8204767258">
 			<class name="UserUserConfigModel"/>
+		</file>
+		<file filename="upgrades/257_to_260.php" md5="3342d4db74259612ac60586a9c573fdb"/>
+		<file filename="widgets/UserAdminWidget.php" md5="aba6a7a45c1d64a512ea8de47e734c9c">
+			<class name="UserAdminWidget"/>
+		</file>
+		<file filename="widgets/UserLoginWidget.class.php" md5="04d3602121f6cb231473284124dfa88f">
+			<class name="UserLoginWidget"/>
+		</file>
+		<file filename="widgets/UserWidget.class.php" md5="85affeee8ce7c56dad1e2ff6582bcb09">
+			<class name="UserWidget"/>
 		</file>
 	</files>
 	<view>
@@ -104,7 +108,7 @@
 		<file filename="templates/pages/useradmin/import3.tpl" md5="655994a8909458e93fa643349788621d"/>
 		<file filename="templates/pages/useradmin/index.tpl" md5="03a23eade9177436e141b1adb8308519"/>
 		<file filename="templates/pages/usergroupadmin/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/usergroupadmin/index.tpl" md5="737ee67c775c5cb219d040015dbcb496"/>
+		<file filename="templates/pages/usergroupadmin/index.tpl" md5="a5f88d1e78a024a0b0af9388e3a9206f"/>
 		<file filename="templates/pages/usergroupadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/user/login.tpl" md5="054c8c86b99b890e6490b96d3ff0c634"/>
 		<file filename="templates/widgets/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -118,6 +122,7 @@
 		<page baseurl="/useradmin" admin="1" access="p:/user/users/manage" title="User Administration"/>
 		<page baseurl="/usergroupadmin" admin="1" access="p:/user/groups/manage" title="User Group Administration"/>
 		<page baseurl="/useractivity" admin="1" access="p:/user/activity/view" title="User Activity" group="Reporting"/>
+		<page baseurl="/userconfig/admin" admin="1" access="g:admin" title="User Options" group="Configure"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/UserWidget/Login"/>
@@ -125,25 +130,18 @@
 		<widget baseurl="/useradmin/newestsignups" title="Recent User Registrations" installable="/admin"/>
 	</widgets>
 	<configs>
-		<config key="/user/register/requirecaptcha" type="boolean" default="0" description=""/>
-
-		<config key="/user/password/minlength" type="int" default="8" description=""/>
-		<config key="/user/password/requiresymbols" type="int" default="0" description=""/>
-		<config key="/user/password/requirecapitals" type="int" default="0" description=""/>
-
+		<config key="/user/register/requirecaptcha" type="boolean" default="0" description="If a captcha system is available, set to true to require it to be completed on the registration page."/>
+		<config key="/user/password/minlength" type="int" default="8" description="Minimum password length for users."/>
+		<config key="/user/password/requiresymbols" type="int" default="0" description="Minimum number of symbols in the password, ($@#*, etc)."/>
+		<config key="/user/password/requirecapitals" type="int" default="0" description="Minumum number of capital letters in the password."/>
 		<config key="/user/displayas" type="enum" default="emailbase" options="emailfull|emailbase|username|firstname" description="The user field to use for displaying in representation of the user, ie: username or email.  If 'email' is used, the full email is displayed.  If 'emailbase' id used, just the prefix of the email is used."/>
 		<config key="/user/displayname/anonymous" type="string" default="Guest" description="What to call guest/unauthenticated users."/>
-
 		<config key="/user/backends" type="set" default="datamodel" description="" options="datamodel| facebook| ldap"/>
-
 		<config key="/user/register/allowpublic" type="boolean" default="true" description="Allow public registrations"/>
 		<config key="/user/register/requireapproval" type="boolean" default="false" description="Require administrative approvals on new accounts"/>
-
 		<config key="/user/email/allowchanging" type="boolean" default="false" description="Allow the user to change his/her email address after account registration."/>
 		<config key="/user/enableavatar" type="boolean" default="true" description="Set to false to disable the use of avatars throughout the system."/>
-
 		<config key="/user/profileedits/requireapproval" type="boolean" default="false" description="If model auditing is available, it will be used to require administrative approval for profile edits."/>
-
 		<config key="/user/activity/keephistory" type="enum" default="3-months" options="1-week|1-month|2-months|3-months|6-months|12-months|24-months|36-months|all" description="How long should the full verbose user activity be kept."/>
 	</configs>
 	<permissions>
@@ -206,7 +204,9 @@
 		<upgrade from="2.5.5" to="2.5.6"/>
 		<upgrade from="2.5.6" to="2.5.7"/>
 		<upgrade from="2.5.7" to="2.6.0">
-			<phpfileinclude>components/user/upgrades/257_to_260.php</phpfileinclude>
+			<phpfileinclude>
+				components/user/upgrades/257_to_260.php
+			</phpfileinclude>
 		</upgrade>
 	</upgrades>
 	<authors>
