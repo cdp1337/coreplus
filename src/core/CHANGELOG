@@ -1,3 +1,36 @@
+Core Plus 2.6.1
+
+	* [Security] Hide version numbers when not in development!
+	* [Security] fix - Pages cannot be requested on methods that exist on the parent Controller object.
+	* [Security] Add a "Security" type into the changelog system.
+	* [Bug] Fix checkboxes "check/uncheck all" logic and support for multiple instances.
+	* [Bug] Fix file inputs with no value selected by default, but not required.
+	* [Bug] Fix the installer not being able to purge the cache.
+	* [Bug] Rewrite maps correctly handle URLs with query strings attached to them.
+	* [Bug] Forgot to prefix an Exception with the root namespace.
+	* [Performance] Optimize the performance of Core::VersionSplit.
+	* [Performance] Optimize some of the Core javascript a bit.
+	* [Performance] New support for an asset version for better cache control.
+	* [Performance] Optimize the admin bar logic slightly.
+	* [Feature] FilterForm supports a 'dateformat' attribute.
+	* [Feature] Minify the the admin configuration page a bit more.
+	* Switch the userconfig install directive to use the new default fields.
+	* Config to FormElement is abstracted into its own function.
+	* View is more self-contained and less static.
+	* New methods, \Core\page_request and \Core\view.
+	* Remove the /core/filestore/previews option as this is no longer used anywhere.
+	* Remove an unnecessary file from a legacy naming convention.
+	* Error pages are a little more professional reading.
+	* Resolve Link gracefully handles controllers that cannot be resolved.
+	* Need to use version_compare for the changelog sorting.
+	* Group the radio options in a common div.
+	* Set a few defaults for datetime type form fields.
+	* DateTime form elements support displayformat and saveformat as parameters.
+	* Switched the private method getEntriesSorted to public.
+	* Add a getPreviousSection method on the changelog parser.
+	* Standardized the order of returning changelog entries.
+	* Changelog sections properly ignore duplicate entries.
+
 Core Plus 2.6.0
 
 	* [Bug] Minor bug in the updater template.  Needed to use version_compare instead of "<="
@@ -63,7 +96,7 @@ Core Plus 2.6.0
 	* New metadata system for files.
 	* Switched to use the cacheable version of UserAgent in the two spots that it was being called.
 	  Caching on this object is extremely important because it's so heavy.
-	-- Charlie Powell <charlie@eval.bz>  Sat, 20 Jul 2013 05:14:09 -0400
+	-- Charlie Powell <charlie@eval.bz>  Sat, 20 Jul 2013 16:07:38 -0400
 
 Core Plus 2.5.8
 
