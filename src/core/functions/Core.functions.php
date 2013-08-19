@@ -36,10 +36,10 @@ function db(){
 /**
  * Shortcut function to get the current system cache interface.
  *
- * @return Cache
+ * @return \Cache
  */
 function cache(){
-	return Cache::GetSystemCache();
+	return \Cache::GetSystemCache();
 }
 
 /**
@@ -149,6 +149,24 @@ function file($filename = null){
  */
 function directory($directory){
 	return \Core\Filestore\Factory::Directory($directory);
+}
+
+/**
+ * Get the system page request
+ *
+ * @return \PageRequest
+ */
+function page_request(){
+	return \PageRequest::GetSystemRequest();
+}
+
+/**
+ * Get the system View
+ *
+ * @return \View
+ */
+function view(){
+	return page_request()->getView();
 }
 
 
@@ -727,7 +745,7 @@ function _AttachCoreJavascript(){
 
 	$script = '<script type="text/javascript">
 var Core = {
-	Version: "' . Core::GetComponent()->getVersion() . '",
+	Version: "' . \Core::GetComponent()->getVersion() . '",
 	ROOT_WDIR: "' . ROOT_WDIR . '",
 	ROOT_URL: "' . ROOT_URL . '",
 	ROOT_URL_SSL: "' . ROOT_URL_SSL . '",
@@ -735,7 +753,7 @@ var Core = {
 };
 </script>';
 
-	CurrentPage::AddScript($script, 'head');
+	\Core\view()->addScript($script, 'head');
 }
 
 
