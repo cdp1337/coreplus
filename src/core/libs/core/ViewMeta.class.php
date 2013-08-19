@@ -491,6 +491,13 @@ class ViewMeta_canonical extends ViewMeta {
 
 class ViewMeta_generator extends ViewMeta {
 	public function fetch(){
-		return array('generator' => '<meta name="generator" content="Core Plus ' . Core::GetComponent()->getVersion() . '"/>');
+
+		$generator = 'Core Plus';
+		// Hide version numbers when not in development!
+		if(DEVELOPMENT_MODE) $generator .= ' ' . Core::GetComponent()->getVersion();
+
+		return array(
+			'generator' => '<meta name="generator" content="' . $generator . '"/>'
+		);
 	}
 }
