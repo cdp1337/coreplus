@@ -14,7 +14,7 @@
 			<script type="text/javascript" src="{asset src='js/html5shiv.min.js'}"></script>
 		<![endif]-->
 		{script library="fontawesome"}{/script}
-		<!-- This will enable the Core Plus context menus new in 2.4.0 -->
+		{* This will enable the Core Plus context menus new in 2.4.0 *}
 		{script library="jquery"}{/script}
 		{script src="js/core.context-controls.js"}{/script}
 

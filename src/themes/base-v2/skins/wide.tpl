@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html prefix="og: http://ogp.me/ns#">
-<!-- :D -->
 	<head>
 		<!-- Force latest IE rendering engine or ChromeFrame if installed -->
 		<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
@@ -15,7 +14,7 @@
 		<script type="text/javascript" src="{asset src='js/html5shiv.min.js'}"></script>
 		<![endif]-->
 		{script library="fontawesome"}{/script}
-		<!-- This will enable the Core Plus context menus new in 2.4.0 -->
+		{* This will enable the Core Plus context menus new in 2.4.0 *}
 		{script library="jquery"}{/script}
 		{script src="js/core.context-controls.js"}{/script}
 
