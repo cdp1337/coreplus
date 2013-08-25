@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.2" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.3" name="Blog" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.6.0" operation="ge"/>
+		<require name="core" type="component" version="2.6.1" operation="ge"/>
 		<require name="user" type="component" version="2.5.4"/>
 		<require name="tags" type="component"/>
 		<require name="JQuery-Full" type="component" version="1.9"/>
@@ -14,8 +14,8 @@
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="62fd10d0c900f44986d337f76805abf6"/>
-		<file filename="controllers/BlogController.php" md5="d6865d05ae33b43394dd0712f01e8124">
+		<file filename="CHANGELOG" md5="72e6f4bfccf32ef444fbb527af3bf136"/>
+		<file filename="controllers/BlogController.php" md5="d876b20913373241681f117f0cf74159">
 			<controller name="BlogController"/>
 		</file>
 		<file filename="helpers/BlogHelper.php" md5="27d8ed9093c1d35d3bdbc84b370afe58">
@@ -90,6 +90,7 @@
 			</phpfileinclude>
 		</upgrade>
 		<upgrade from="1.5.1" to="1.5.2"/>
+		<upgrade from="1.5.2" to="1.5.3"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>

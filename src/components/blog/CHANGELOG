@@ -1,3 +1,8 @@
+Blog 1.5.3
+
+	* Minor update to switch to the instantiated version of the View.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 24 Aug 2013 22:15:57 -0400
+
 Blog 1.5.2
 
 	* [Bug] Fix the bug of waypoints not knowing where the reference point is.
