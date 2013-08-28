@@ -30,7 +30,7 @@
 
 // When working on the core, it's best to switch this back to core/bootstrap.php!
 // Set this to true to skip checking for the compiled version.
-$skipcompiled = true;
+$skipcompiled = false;
 
 if(!$skipcompiled && file_exists('core/bootstrap.compiled.php')) require_once('core/bootstrap.compiled.php');
 else require_once('core/bootstrap.php');
