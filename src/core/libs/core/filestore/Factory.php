@@ -89,8 +89,10 @@ abstract class Factory {
 
 		// GOGO caching ;)
 		if(isset(self::$_ResolveCache[$uri])){
-			$resolved = self::$_ResolveCache[$uri];
-			return self::$_Files[$resolved];
+			$resolved = self::$_ResolveCache[$uri]->getFilename();
+			if(isset(self::$_Files[$resolved])){
+				return self::$_Files[$resolved];
+			}
 		}
 
 		// self::$_Files[$originaluri]
@@ -256,7 +258,7 @@ abstract class Factory {
 		$originaluri = $filename;
 
 		if(isset(self::$_ResolveCache[$originaluri])){
-			return self::$_ResolveCache[$originaluri]->getFilename();
+			return self::$_ResolveCache[$originaluri];
 		}
 
 		$resolved = get_asset_path();
@@ -300,16 +302,16 @@ abstract class Factory {
 
 		if($custom->exists()){
 			// If there is a custom asset installed, USE THAT FIRST!
-			self::$_ResolveCache[$originaluri] = $custom->getFilename();
+			self::$_ResolveCache[$originaluri] = $custom;
 			return $custom;
 		}
 		elseif($themed->exists()){
 			// Otherwise, the themes can override component assets too.
-			self::$_ResolveCache[$originaluri] = $themed->getFilename();
+			self::$_ResolveCache[$originaluri] = $themed;
 			return $themed;
 		}
 		else{
-			self::$_ResolveCache[$originaluri] = $default->getFilename();
+			self::$_ResolveCache[$originaluri] = $default;
 			return $default;
 		}
 	}
