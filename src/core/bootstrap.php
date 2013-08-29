@@ -495,10 +495,16 @@ if(!defined('CDN_TYPE')){
 	define('CDN_TYPE', ConfigHandler::Get('/core/filestore/backend'));
 }
 if(!defined('CDN_LOCAL_ASSETDIR')){
+	error_log('Please define the CDN_LOCAL_ASSETDIR in your config.xml file!  This has been migrated from the web config.', E_USER_DEPRECATED);
 	define('CDN_LOCAL_ASSETDIR', ConfigHandler::Get('/core/filestore/assetdir'));
 }
 if(!defined('CDN_LOCAL_PUBLICDIR')){
+	error_log('Please define the CDN_LOCAL_PUBLICDIR in your config.xml file!  This has been migrated from the web config.', E_USER_DEPRECATED);
 	define('CDN_LOCAL_PUBLICDIR', ConfigHandler::Get('/core/filestore/publicdir'));
+}
+if(!defined('CDN_LOCAL_PRIVATEDIR')){
+	error_log('Please define the CDN_LOCAL_PRIVATEDIR in your config.xml file!  This has been migrated from the web config.', E_USER_DEPRECATED);
+	define('CDN_LOCAL_PRIVATEDIR', 'files/private');
 }
 
 

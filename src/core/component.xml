@@ -1587,10 +1587,13 @@
 		<config key="/core/cache_backend" type="string" default="file" description="apc; file; memcache; xcache; BLAH"/>
 		<config key="/core/javascript/minified" type="boolean" default="true" description="Try to use minified javascript files whenever possible."/>
 		<config key="/core/markup/minified" type="boolean" default="true" description="Try to collapse rendered markup whenever possible."/>
+		<!-- These are now contained inside the configuration.xml file! -->
+		<!--
 		<config key="/core/filestore/backend" type="enum" options="aws|local" default="local" description="What type of storage should be used for assets?  This will determine the CDN that is used."/>
 		<config key="/core/filestore/assetdir" type="string" default="files/assets/" description="Directory for assets, must be directly accessable via the web."/>
 		<config key="/core/filestore/publicdir" type="string" default="files/public/" description="Directory for public files (uploads), must be directly accessable via the web."/>
 		<config key="/core/filestore/privatedir" type="string" default="files/private/" description="Directory for private files (uploads), should not be directly accessable via the web."/>
+		-->
 		<config key="/core/filestore/assetversion" type="int" default="1" description="Auto-incrementer for the asset version; incremented by calling reinstall on the system."/>
 		<config key="/core/session/ttl" type="int" default="3600" description="Time to live for sessions.  Amount of seconds to keep an idle session active before requesting the user to log back in due to inactivity."/>
 		<config key="/core/email/from" type="string" description="Email address emails should be sent 'from' by defualt." default=""/>
