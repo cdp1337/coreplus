@@ -121,8 +121,7 @@ function get_private_path(){
 	static $_path;
 
 	if ($_path === null) {
-		//$dir = CDN_LOCAL_PRIVATEDIR;
-		$dir = \ConfigHandler::Get('/core/filestore/privatedir');
+		$dir = CDN_LOCAL_PRIVATEDIR;
 
 		switch(CDN_TYPE){
 			case 'local':
@@ -315,8 +314,44 @@ function resolve_public_file($filename){
 		$filename = substr($filename, strlen($resolved));
 	}
 
-	// I need to check the custom, current theme, and finally default locations for the file.
-	$theme = \ConfigHandler::Get('/theme/selected');
+	switch(CDN_TYPE){
+		case 'local':
+			if(\Core\ftp()){
+				// FTP has its own sub-type.
+				return new Backends\FileFTP($resolved . $filename);
+			}
+			else{
+				return new Backends\FileLocal($resolved . $filename);
+			}
+
+			break;
+		default:
+			throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
+			break;
+	}
+}
+
+/**
+ * Resolve a name for a private to an actual file.
+ *
+ * @param $filename
+ *
+ * @return \Core\Filestore\File
+ *
+ * @throws \Exception
+ */
+function resolve_private_file($filename){
+	$resolved = get_private_path();
+
+	if (strpos($filename, 'private/') === 0) {
+		// Allow "assets/blah" to be passed in
+		$filename = substr($filename, 8);
+	}
+	elseif(strpos($filename, $resolved) === 0){
+		// Allow the fully resolved name to be passed in
+		$filename = substr($filename, strlen($resolved));
+	}
+
 	switch(CDN_TYPE){
 		case 'local':
 			if(\Core\ftp()){

@@ -140,6 +140,11 @@ required - SSL is always required for all pages
     		<description>The user-supplied and admin-supplied public uploads that get access directly by the browser.</description>
     	</define>
 
+    	<define name="CDN_LOCAL_PRIVATEDIR" type="string" formtype="text">
+            <value>files/private/</value>
+            <description>The user-supplied and admin-supplied private uploads that cannot be accessed directly.</description>
+        </define>
+
     	<!--
     	For AWS, I still need to support the following:
     	$p->assign('/core/aws/key', ConfigHandler::Get('/core/aws/key'));

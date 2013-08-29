@@ -149,8 +149,7 @@ abstract class Factory {
 			strpos($uri, get_private_path()) === 0
 		){
 			// Is this a private request?
-			// @todo
-			return new CDN\FileAsset($uri);
+			$file = resolve_private_file($uri);
 		}
 		elseif(
 			strpos($uri, 'tmp/') === 0
