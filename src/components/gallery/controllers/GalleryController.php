@@ -38,14 +38,41 @@ class GalleryController extends Controller_2_1 {
 
 		$manager = \Core\user()->checkAccess('p:gallery_manage');
 
-		$view->title = 'Gallery Listings';
+		// The user is allowed to edit the title now. -- 2013.08
+		//$view->title = 'Gallery Listings';
+
 		$view->assignVariable('albums', $albums);
 
 		if($manager){
+			$view->addControl('Gallery Albums Administration', '/gallery/admin', 'directory');
 			$view->addControl('Add Album', '/gallery/create', 'add');
-			$view->addControl('Edit Album Listing Page', '/gallery/updatelisting', 'edit');
+			$view->addControl('Edit Gallery Listing Page', '/gallery/updatelisting', 'edit');
+		}
+	}
+
+	/**
+	 * The admin listing version for galleries.
+	 *
+	 * Will simply display a list of gallery albums on the system.
+	 *
+	 * @return mixed
+	 */
+	public function admin() {
+		$view = $this->getView();
+
+		if(!$this->setAccess('p:gallery_manage')){
+			return View::ERROR_ACCESSDENIED;
 		}
 
+		$albums = GalleryAlbumModel::Find(null, null, 'title');
+
+		$view->mastertemplate = 'admin';
+		$view->title = 'Gallery Albums Administration';
+		$view->assignVariable('albums', $albums);
+
+		$view->addControl('Gallery Albums', '/gallery', 'directory');
+		$view->addControl('Add Album', '/gallery/create', 'add');
+		$view->addControl('Edit Gallery Listing Page', '/gallery/updatelisting', 'edit');
 	}
 
 	/**
@@ -66,6 +93,7 @@ class GalleryController extends Controller_2_1 {
 		$form->set('callsmethod', 'GalleryController::UpdateListingSave');
 		$form->addElement('submit', array('value' => 'Update Listing'));
 
+		$view->title = 'Edit Gallery Listing Page';
 		$view->assign('form', $form);
 	}
 
@@ -684,15 +712,6 @@ class GalleryController extends Controller_2_1 {
 		// I need to attach a friendly URL for each image.
 		// This gets a little tricky since each image doesn't have a unique title necessarily.
 		foreach($images as $i){
-			// This will be the core part; the ID.
-			// This is what actually provides a useful lookup for the image.
-			$link = $i->get('id');
-			if($i->get('title')) $link .= '-' . \Core\str_to_url($i->get('title'));
-
-			// Prepend the album URL.
-			$link = $url . '/' . $link;
-			$i->set('link', $link);
-
 			// I would like to know when the last change overall was, not just for the gallery.
 			$lastupdated = max($lastupdated, $i->get('updated'));
 		}
@@ -713,6 +732,7 @@ class GalleryController extends Controller_2_1 {
 		}
 
 		if($editor){
+			$view->addControl('Gallery Albums Administration', '/gallery/admin', 'directory');
 			$view->addControl('Edit Gallery Album', '/gallery/edit/' . $album->get('id'), 'edit');
 		}
 		if($uploader){

@@ -1,10 +1,10 @@
 <?php
 /**
- * Gallery admin listing page, mainly acts as a placeholder for the admin menu.
- *
- * @package Gallery
+ * File for class GalleryWidgetController definition in the coreplus project
+ * 
  * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright (C) 2012  Charlie Powell
+ * @date 20130808.1133
+ * @copyright Copyright (C) 2009-2013  Author
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,41 +20,40 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class GalleryAdminController extends Controller_2_1{
-	public function __construct(){
-		$this->accessstring = 'p:gallery_manage';
-	}
 
-	public function getControls(){
-		$view = $this->getView();
-
-		$view->addControl('Gallery Administration', '/galleryadmin', 'directory');
-		$view->addControl('Add Album', '/gallery/create', 'add');
-		$view->addControl('Gallery Widgets', '/galleryadmin/widgets', 'cog');
-		$view->addControl('Create Gallery Widget', '/galleryadmin/widgets/update', 'add');
-	}
-
-	public function index(){
-		$view = $this->getView();
-
-		if(!$this->setAccess('p:gallery_manage')){
-			return View::ERROR_ACCESSDENIED;
-		}
-
-		$albums = GalleryAlbumModel::Find(null, null, 'title');
-
-		$view->templatename = '/pages/galleryadmin/index.tpl';
-		$view->title = 'Gallery Albums Administration';
-		$view->assignVariable('albums', $albums);
-
-
-		$view->controls->hovercontext = true;
-	}
-
+/**
+ * A short teaser of what GalleryWidgetController does.
+ *
+ * More lengthy description of what GalleryWidgetController does and why it's fantastic.
+ *
+ * <h3>Usage Examples</h3>
+ *
+ *
+ * @todo Write documentation for GalleryWidgetController
+ * <h4>Example 1</h4>
+ * <p>Description 1</p>
+ * <code>
+ * // Some code for example 1
+ * $a = $b;
+ * </code>
+ *
+ *
+ * <h4>Example 2</h4>
+ * <p>Description 2</p>
+ * <code>
+ * // Some code for example 2
+ * $b = $a;
+ * </code>
+ *
+ * 
+ * @author Charlie Powell <charlie@eval.bz>
+ *
+ */
+class GalleryWidgetController extends Controller_2_1{
 	/**
 	 * Page to display and manage all gallery widgets.
 	 */
-	public function widgets(){
+	public function admin(){
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
@@ -66,9 +65,14 @@ class GalleryAdminController extends Controller_2_1{
 		$view->title = 'Gallery Widgets';
 		$view->assign('can_manage_theme', \Core\user()->checkAccess('g:admin'));
 		$view->assign('widgets', $widgets);
+
+		$view->addControl('Create Gallery Widget', '/gallerywidget/update', 'add');
 	}
 
-	public function widgets_update(){
+	/**
+	 * Page for creating and updating a gallery widget
+	 */
+	public function update(){
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
@@ -178,11 +182,11 @@ class GalleryAdminController extends Controller_2_1{
 
 		$form->addElement('submit', array('value' => ($isnew ? 'Create' : 'Update') . ' Widget'));
 
-		$view->addBreadcrumb('Gallery Widgets', '/galleryadmin/widgets');
+		$view->mastertemplate = 'admin';
+		$view->addBreadcrumb('Gallery Widgets', '/gallerywidget/admin');
 		$view->title = ($isnew ? 'Create' : 'Update') . ' Gallery Widget';
 		$view->assign('form', $form);
+
+		$view->addControl('Gallery Widgets', '/gallerywidget/admin', 'directory');
 	}
-
-
-
 }

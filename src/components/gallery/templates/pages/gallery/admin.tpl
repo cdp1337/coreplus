@@ -2,6 +2,10 @@
 	<tr>
 		<th>Nickname</th>
 		<th>Link</th>
+		<th>Images</th>
+		<th>Videos</th>
+		<th>Audios</th>
+		<th>Files</th>
 		<th width="80">&nbsp;</th>
 	</tr>
 {foreach from=$albums item=album}
@@ -11,6 +15,18 @@
 			{a href="/gallery/view/`$album->get('id')`"}
 				{link link="/gallery/view/`$album->get('id')`"}
 			{/a}
+		</td>
+		<td>
+			{$album->getChildrenCount('image')}
+		</td>
+		<td>
+			{$album->getChildrenCount('video')}
+		</td>
+		<td>
+			{$album->getChildrenCount('audio')}
+		</td>
+		<td>
+			{$album->getChildrenCount('file')}
 		</td>
 		<td>
 			<ul class="controls">

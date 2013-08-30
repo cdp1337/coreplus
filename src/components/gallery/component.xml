@@ -10,13 +10,15 @@
 	</permissions>
 	<pages>
 		<page baseurl="/gallery" admin="0" access="*" title="Gallery Listings"/>
-		<page baseurl="/galleryadmin" admin="1" access="g:admin" title="Gallery Albums Administration" group="Content"/>
+		<page baseurl="/gallery/admin" admin="1" access="p:gallery_manage" title="Gallery Albums Administration" group="Content"/>
+		<page baseurl="/gallerywidget/admin" admin="1" access="p:gallery_manage" title="Gallery Widgets Administration" group="Content" parenturl="/admin"/>
 	</pages>
 	<description>
 		Gallery browsing system for core+
 	</description>
 	<view searchdir="templates">
-		<file filename="templates/pages/gallery/images_update.tpl" md5="de82a0e6ddce8d82aaa555161bd88bdc"/>
+		<file filename="templates/pages/gallery/admin.tpl" md5="b4534548e52eff48e49a87f2ba046fbb"/>
+		<file filename="templates/pages/gallery/images_update.tpl" md5="32f2630482b423fd776cfa15b8079155"/>
 		<file filename="templates/pages/gallery/index.tpl" md5="08e7390f13bfe3bbdaf9558e04d4f508"/>
 		<file filename="templates/pages/gallery/order.tpl" md5="d70de8d8ac304055362ba640df6f0e3c"/>
 		<file filename="templates/pages/gallery/update.tpl" md5="5db5bf97680ec52e8ee5b5580af17daa"/>
@@ -25,28 +27,26 @@
 		<file filename="templates/pages/gallery/view-file.tpl" md5="3a50e3ea955d4086c354169afb1c55cd"/>
 		<file filename="templates/pages/gallery/view-image.tpl" md5="ed6a73c03584b8536951616f8d9ca71e"/>
 		<file filename="templates/pages/gallery/view-video.tpl" md5="f5d62cac8985b8a9432600f8277ea1f0"/>
-		<file filename="templates/pages/gallery/view.tpl" md5="9af158fcc94d0b87b074c014ba915d44"/>
-		<file filename="templates/pages/galleryadmin/images.tpl" md5="3eabcaf67ce559f286c8cb1c00340072"/>
-		<file filename="templates/pages/galleryadmin/index.tpl" md5="65bb6129b2ee5b3fac36ee425d3a9141"/>
-		<file filename="templates/pages/galleryadmin/widgets.tpl" md5="638e42be8f47518515b13955f0e8fc44"/>
-		<file filename="templates/pages/galleryadmin/widgets_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/gallery/view.tpl" md5="0e1db82a21103493cbf5398d43396fa2"/>
+		<file filename="templates/pages/gallerywidget/admin.tpl" md5="638e42be8f47518515b13955f0e8fc44"/>
+		<file filename="templates/pages/gallerywidget/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="5e1ad9c31eb5b45171c3f6efee110d06"/>
-		<file filename="controllers/GalleryAdminController.php" md5="d9d5c3c77fa1e9b52628f795345bfd37">
-			<controller name="GalleryAdminController"/>
-		</file>
-		<file filename="controllers/GalleryController.php" md5="33b6ec6945cab2f1295ee1825cfd9d14">
+		<file filename="CHANGELOG" md5="56330e0c8bd6c8d1c371aa2bf4f985ce"/>
+		<file filename="controllers/GalleryController.php" md5="87c728f5bdc3efb7ed61460c3dd0876f">
 			<controller name="GalleryController"/>
 		</file>
-		<file filename="helpers/GalleryFormHandler.class.php" md5="582ed33f8629605c0523567bc06ae945">
+		<file filename="controllers/GalleryWidgetController.php" md5="6531e54034e4a132b82b2bdb628e58d5">
+			<controller name="GalleryWidgetController"/>
+		</file>
+		<file filename="helpers/GalleryFormHandler.class.php" md5="98b2192606e21d061c0f50b39f7bb53e">
 			<class name="GalleryFormHandler"/>
 		</file>
-		<file filename="models/GalleryAlbumModel.php" md5="1aef510c2d4fab0c65157eda4c11883d">
+		<file filename="models/GalleryAlbumModel.php" md5="42e066aebc160e4bf0f587cf588157c2">
 			<class name="GalleryAlbumModel"/>
 		</file>
-		<file filename="models/GalleryImageModel.php" md5="daebab783fc3772dc1481b4adb357d54">
+		<file filename="models/GalleryImageModel.php" md5="9c9faf46be400e20a41e614f75876a9f">
 			<class name="GalleryImageModel"/>
 		</file>
 		<file filename="upgrades/140_to_141_cachedtitles.php" md5="0e316e5f9a13a315331c93f1fc44b4dc"/>
@@ -79,6 +79,12 @@
 			<phpfileinclude>
 				components/gallery/upgrades/143_to_144_filepathchange.php
 			</phpfileinclude>
+		</upgrade>
+		<upgrade from="1.4.4" to="1.4.5">
+			<!-- This page has been moved to /gallery/admin. -->
+			<dataset action="delete" table="page">
+				<datasetwhere>baseurl = /galleryadmin</datasetwhere>
+			</dataset>
 		</upgrade>
 	</upgrades>
 	<authors>
