@@ -17,7 +17,7 @@
 	</description>
 	<configs>
 		<config key="/google-mapsv3/key" type="string" description="Google Maps API v3 key"/>
-		<config key="/google-analytics/accountid" type="string" default="" description="This is the Account ID (sometimes called 'Web Property ID') listed for this account in google analytics."/>
+		<config key="/google-analytics/accountid" type="string" default="" description="This is the Account ID (sometimes called 'Web Property ID') listed for this account in google analytics.  Leaving this blank will disable GA; likewise populating it will automatically enable GA."/>
 	</configs>
 	<pages>
 		<page baseurl="/google/configure" title="Google Keys and Apps" group="Configure" access="g:admin" admin="1" selectable="0"/>
@@ -39,6 +39,12 @@
 	</files>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.2">
+			<!-- Remove the old component's page on upgrade. -->
+			<dataset action="delete" table="page">
+				<datasetwhere>baseurl = /googleapi/configure</datasetwhere>
+			</dataset>
+		</upgrade>
 	</upgrades>
 	<view>
 		<file filename="templates/pages/google/configure.tpl" md5="7f14a2c9999b94bd20374d35b14fa119"/>

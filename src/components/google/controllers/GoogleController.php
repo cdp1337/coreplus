@@ -54,27 +54,41 @@ class GoogleController extends Controller_2_1 {
 	 * View to set google API keys and other configuration options.
 	 */
 	public function configure(){
+		require_once(ROOT_PDIR . 'core/libs/core/configs/functions.php');
 
-	}
-
-	public function configure_maps(){
-
-	}
-
-	public function configure_analytics(){
 		$view = $this->getView();
+		$request = $this->getPageRequest();
 
 		$form = new Form();
-		$form->addElement(
-			'text',
-			[
-				'title' => 'Property ID',
-				'required' => true,
-				'value' => \ConfigHandler::Get('/google-analytics/accountid'),
-			]
-		);
-		$form->addElement('submit', ['name' => 'submit', 'value' => 'Update']);
+		$form->set('callsmethod', 'GoogleController::ConfigureSave');
 
+		$analytics = new FormTabsGroup(['name' => 'analytics', 'title' => 'Analytics']);
+
+		$analytics->addElement(
+			\Core\Configs\get_form_element_from_config(ConfigModel::Construct('/google-analytics/accountid'))
+		);
+
+		$form->addElement($analytics);
+		$form->addElement('submit', ['name' => 'submit', 'value' => 'Update Settings']);
+
+		$view->title = 'Google Keys and Apps ';
 		$view->assign('form', $form);
+	}
+
+	public static function ConfigureSave(Form $form) {
+		foreach($form->getElements() as $el){
+			/** @var $el FormElement */
+			$n = $el->get('name');
+
+			// I only want config options here.
+			if(strpos($n, 'config[') !== 0) continue;
+
+			// Trim off the "config[]" wrapper.
+			$k = substr($n, 7, -1);
+			ConfigHandler::Set($k, $el->get('value'));
+		}
+
+		Core::SetMessage('Saved configuration options', 'success');
+		return true;
 	}
 }

@@ -86,7 +86,7 @@ EOD;
 		if($min) $script = trim(str_replace(array("\n", "\r"), '', $script));
 
 		// Add the necessary script
-		\CurrentPage::AddScript($script, 'head');
+		\Core\view()->addScript($script, 'head');
 
 		return true;
 	}
