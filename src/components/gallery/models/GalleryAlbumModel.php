@@ -166,4 +166,25 @@ class GalleryAlbumModel extends Model {
 	public function getFullUploadDirectory(){
 		return 'public/galleryalbum/' . $this->getUploadDirectory();
 	}
+
+	public function getChildrenCount($type = null){
+		$children = $this->getLink('GalleryImage');
+
+		if(!$type){
+			// If no type was requested, just return all children.
+			return sizeof($children);
+		}
+		else{
+			// A type was requested.  It should probably be one of:
+			// image|video|audio|file
+			// but could be anything.... they'll just return 0.
+
+			$c = 0;
+			foreach($children as $child){
+				/** @var $child GalleryImageModel */
+				if($child->getFileType() == $type) ++$c;
+			}
+			return $c;
+		}
+	}
 }
