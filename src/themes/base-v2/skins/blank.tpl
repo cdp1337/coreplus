@@ -3,7 +3,6 @@
 	<head>
 		<!-- Force latest IE rendering engine or ChromeFrame if installed -->
 		<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
-		<link href="{asset src='css/reset.css'}" type="text/css" rel="stylesheet"/>
 		<link href="{asset src='css/styles.css'}" type="text/css" rel="stylesheet"/>
 		<!--[if lt IE 9]>
 			<script type="text/javascript" src="{asset src='js/html5.js'}"></script>

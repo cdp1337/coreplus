@@ -1,54 +1,758 @@
+/**
+ * normalize.css
+ *
+ * Normalize.css is a customisable CSS file that makes browsers render all elements more consistently and in line with modern standards.
+ *
+ * The project relies on researching the differences between default browser styles in order to precisely target only
+ * the styles that need or benefit from normalizing.
+ *
+ * @version 2.1.3
+ * @license MIT License
+ * @see http://git.io/normalize
+ *
+ *
+ * CORE PLUS NOTES
+ *
+ * Extracted from
+ * https://github.com/necolas/normalize.css/blob/master/normalize.css
+ *
+ * When extracting a new version, please keep this doc tag structure and ensure to re-add several of the elements
+ * that I find useful, such as the h2, h3, h4 tags and what not.
+ */
+/* ==========================================================================
+HTML5 display definitions
+========================================================================== */
+/**
+* Correct `block` display not defined in IE 8/9.
+*/
+/* line 42, _normalize.scss */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+  display: block;
+}
+
+/**
+* Correct `inline-block` display not defined in IE 8/9.
+*/
+/* line 52, _normalize.scss */
+audio,
+canvas,
+video {
+  display: inline-block;
+}
+
+/**
+* Prevent modern browsers from displaying `audio` without controls.
+* Remove excess height in iOS 5 devices.
+*/
+/* line 61, _normalize.scss */
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+/**
+* Address `[hidden]` styling not present in IE 8/9.
+* Hide the `template` element in IE, Safari, and Firefox < 22.
+*/
+/* line 72, _normalize.scss */
+[hidden],
+template {
+  display: none;
+}
+
+/* ==========================================================================
+Base
+========================================================================== */
+/**
+* 1. Set default font family to sans-serif.
+* 2. Prevent iOS text size adjust after orientation change, without disabling
+* user zoom.
+*/
+/* line 86, _normalize.scss */
+html {
+  font-family: sans-serif;
+  /* 1 */
+  -ms-text-size-adjust: 100%;
+  /* 2 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
+}
+
+/**
+* Remove default margin.
+*/
+/* line 96, _normalize.scss */
+body {
+  margin: 0;
+}
+
+/* ==========================================================================
+Links
+========================================================================== */
+/**
+* Remove the gray background color from active links in IE 10.
+*/
+/* line 108, _normalize.scss */
+a {
+  background: transparent;
+}
+
+/**
+* Address `outline` inconsistency between Chrome and other browsers.
+*/
+/* line 116, _normalize.scss */
+a:focus {
+  outline: thin dotted;
+}
+
+/**
+* Improve readability when focused and also mouse hovered in all browsers.
+*/
+/* line 125, _normalize.scss */
+a:active,
+a:hover {
+  outline: 0;
+}
+
+/* ==========================================================================
+Typography
+========================================================================== */
+/**
+* Address variable `h1` font-size and margin within `section` and `article`
+* contexts in Firefox 4+, Safari 5, and Chrome.
+*/
+/* line 138, _normalize.scss */
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+/**
+* Address styling not present in IE 8/9, Safari 5, and Chrome.
+*/
+/* line 147, _normalize.scss */
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+
+/**
+* Address style set to `bolder` in Firefox 4+, Safari 5, and Chrome.
+*/
+/* line 156, _normalize.scss */
+b,
+strong {
+  font-weight: bold;
+}
+
+/**
+* Address styling not present in Safari 5 and Chrome.
+*/
+/* line 164, _normalize.scss */
+dfn {
+  font-style: italic;
+}
+
+/**
+* Address differences between Firefox and other browsers.
+*/
+/* line 172, _normalize.scss */
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+/**
+* Address styling not present in IE 8/9.
+*/
+/* line 182, _normalize.scss */
+mark {
+  background: #ff0;
+  color: #000;
+}
+
+/**
+* Correct font family set oddly in Safari 5 and Chrome.
+*/
+/* line 194, _normalize.scss */
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, serif;
+  font-size: 1em;
+}
+
+/**
+* Improve readability of pre-formatted text in all browsers.
+*/
+/* line 203, _normalize.scss */
+pre {
+  white-space: pre-wrap;
+}
+
+/**
+* Set consistent quote types.
+*/
+/* line 211, _normalize.scss */
+q {
+  quotes: "\201C" "\201D" "\2018" "\2019";
+}
+
+/**
+* Address inconsistent and variable font size in all browsers.
+*/
+/* line 219, _normalize.scss */
+small {
+  font-size: 80%;
+}
+
+/**
+* Prevent `sub` and `sup` affecting `line-height` in all browsers.
+*/
+/* line 228, _normalize.scss */
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+/* line 235, _normalize.scss */
+sup {
+  top: -0.5em;
+}
+
+/* line 239, _normalize.scss */
+sub {
+  bottom: -0.25em;
+}
+
+/* ==========================================================================
+Embedded content
+========================================================================== */
+/**
+* Remove border when inside `a` element in IE 8/9.
+*/
+/* line 251, _normalize.scss */
+img {
+  border: 0;
+}
+
+/**
+* Correct overflow displayed oddly in IE 9.
+*/
+/* line 259, _normalize.scss */
+svg:not(:root) {
+  overflow: hidden;
+}
+
+/* ==========================================================================
+Figures
+========================================================================== */
+/**
+* Address margin not present in IE 8/9 and Safari 5.
+*/
+/* line 271, _normalize.scss */
+figure {
+  margin: 0;
+}
+
+/* ==========================================================================
+Forms
+========================================================================== */
+/**
+* Define consistent border, margin, and padding.
+*/
+/* line 283, _normalize.scss */
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+
+/**
+* 1. Correct `color` not being inherited in IE 8/9.
+* 2. Remove padding so people aren't caught out if they zero out fieldsets.
+*/
+/* line 294, _normalize.scss */
+legend {
+  border: 0;
+  /* 1 */
+  padding: 0;
+  /* 2 */
+}
+
+/**
+* 1. Correct font family not being inherited in all browsers.
+* 2. Correct font size not being inherited in all browsers.
+* 3. Address margins set differently in Firefox 4+, Safari 5, and Chrome.
+*/
+/* line 308, _normalize.scss */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  /* 1 */
+  font-size: 100%;
+  /* 2 */
+  margin: 0;
+  /* 3 */
+}
+
+/**
+* Address Firefox 4+ setting `line-height` on `input` using `!important` in
+* the UA stylesheet.
+*/
+/* line 320, _normalize.scss */
+button,
+input {
+  line-height: normal;
+}
+
+/**
+* Address inconsistent `text-transform` inheritance for `button` and `select`.
+* All other form control elements do not inherit `text-transform` values.
+* Correct `button` style inheritance in Chrome, Safari 5+, and IE 8+.
+* Correct `select` style inheritance in Firefox 4+ and Opera.
+*/
+/* line 332, _normalize.scss */
+button,
+select {
+  text-transform: none;
+}
+
+/**
+* 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+* and `video` controls.
+* 2. Correct inability to style clickable `input` types in iOS.
+* 3. Improve usability and consistency of cursor style between image-type
+* `input` and others.
+*/
+/* line 347, _normalize.scss */
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  /* 2 */
+  cursor: pointer;
+  /* 3 */
+}
+
+/**
+* Re-set default cursor for disabled elements.
+*/
+/* line 357, _normalize.scss */
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+
+/**
+* 1. Address box sizing set to `content-box` in IE 8/9/10.
+* 2. Remove excess padding in IE 8/9/10.
+*/
+/* line 367, _normalize.scss */
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box;
+  /* 1 */
+  padding: 0;
+  /* 2 */
+}
+
+/**
+* 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
+* 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
+* (include `-moz` to future-proof).
+*/
+/* line 378, _normalize.scss */
+input[type="search"] {
+  -webkit-appearance: textfield;
+  /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  /* 2 */
+  box-sizing: content-box;
+}
+
+/**
+* Remove inner padding and search cancel button in Safari 5 and Chrome
+* on OS X.
+*/
+/* line 391, _normalize.scss */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/**
+* Remove inner padding and border in Firefox 4+.
+*/
+/* line 400, _normalize.scss */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+/**
+* 1. Remove default vertical scrollbar in IE 8/9.
+* 2. Improve readability and alignment in all browsers.
+*/
+/* line 410, _normalize.scss */
+textarea {
+  overflow: auto;
+  /* 1 */
+  vertical-align: top;
+  /* 2 */
+}
+
+/* ==========================================================================
+Tables
+========================================================================== */
+/**
+* Remove most spacing between table cells.
+*/
+/* line 423, _normalize.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/**
+ * RE-ADDING because someone took them out from upstream........ *glares*
+ */
+/* line 442, _normalize.scss */
+h2 {
+  font-size: 1.5em;
+  margin: 0.83em 0;
+}
+
+/* line 447, _normalize.scss */
+h3 {
+  font-size: 1.17em;
+  margin: 1em 0;
+}
+
+/* line 452, _normalize.scss */
+h4 {
+  font-size: 1em;
+  margin: 1.33em 0;
+}
+
+/* line 457, _normalize.scss */
+h5 {
+  font-size: 0.83em;
+  margin: 1.67em 0;
+}
+
+/* line 462, _normalize.scss */
+h6 {
+  font-size: 0.67em;
+  margin: 2.33em 0;
+}
+
+/* line 468, _normalize.scss */
+nav ul,
+nav ol {
+  list-style: none;
+  list-style-image: none;
+}
+
+@media print {
+  /* line 1, _print.scss */
+  .screen {
+    display: none !important;
+  }
+}
+@media screen, projection {
+  /* line 1, _screen.scss */
+  .print {
+    display: none !important;
+  }
+}
+/**
+ * HTML5 Boilerplate
+ *
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ *
+ *
+ *
+ * CORE PLUS NOTES
+ *
+ * Extracted in part from
+ * https://github.com/h5bp/html5-boilerplate/blob/master/css/main.css
+ *
+ * For updates, please only extract out the parts down to the end of the clearfix.
+ * Core themes generally provide their own responsive design tweaks!
+ */
+/* ==========================================================================
+Base styles: opinionated defaults
+========================================================================== */
+/* line 27, _h5bp.scss */
+html,
+button,
+input,
+select,
+textarea {
+  color: #222;
+}
+
+/* line 31, _h5bp.scss */
+html {
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+/*
+* Remove text-shadow in selection highlight: h5bp.com/i
+* These selection rule sets have to be separate.
+* Customize the background color to match your design.
+*/
+/* line 42, _h5bp.scss */
+::-moz-selection {
+  background: #b3d4fc;
+  text-shadow: none;
+}
+
+/* line 47, _h5bp.scss */
+::selection {
+  background: #b3d4fc;
+  text-shadow: none;
+}
+
+/*
+* A better looking default horizontal rule
+*/
+/* line 56, _h5bp.scss */
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+/*
+* Remove the gap between images, videos, audio and canvas and the bottom of
+* their containers: h5bp.com/i/440
+*/
+/* line 73, _h5bp.scss */
+audio,
+canvas,
+img,
+video {
+  vertical-align: middle;
+}
+
+/*
+* Remove default fieldset styles.
+*/
+/* line 81, _h5bp.scss */
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+* Allow only vertical resizing of textareas.
+*/
+/* line 91, _h5bp.scss */
+textarea {
+  resize: vertical;
+}
+
+/* ==========================================================================
+Helper classes
+========================================================================== */
+/*
+* Image replacement
+*/
+/* line 105, _h5bp.scss */
+.ir {
+  background-color: transparent;
+  border: 0;
+  overflow: hidden;
+  /* IE 6/7 fallback */
+  *text-indent: -9999px;
+}
+
+/* line 113, _h5bp.scss */
+.ir:before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 150%;
+}
+
+/*
+* Hide from both screenreaders and browsers: h5bp.com/u
+*/
+/* line 124, _h5bp.scss */
+.hidden {
+  display: none !important;
+  visibility: hidden;
+}
+
+/*
+* Hide only visually, but have it available for screenreaders: h5bp.com/v
+*/
+/* line 133, _h5bp.scss */
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+/*
+* Extends the .visuallyhidden class to allow the element to be focusable
+* when navigated to via the keyboard: h5bp.com/p
+*/
+/* line 150, _h5bp.scss */
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
+
+/*
+* Hide visually and from screenreaders, but maintain layout
+*/
+/* line 163, _h5bp.scss */
+.invisible {
+  visibility: hidden;
+}
+
+/*
+* Clearfix: contain floats
+*
+* For modern browsers
+* 1. The space content is one way to avoid an Opera bug when the
+* `contenteditable` attribute is included anywhere else in the document.
+* Otherwise it causes space to appear at the top and bottom of elements
+* that receive the `clearfix` class.
+* 2. The use of `table` rather than `block` is only necessary if using
+* `:before` to contain the top-margins of child elements.
+*/
+/* line 180, _h5bp.scss */
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+
+/* line 185, _h5bp.scss */
+.clearfix:after {
+  clear: both;
+}
+
+/*
+* For IE 6/7 only
+* Include this rule to trigger hasLayout and contain floats.
+*/
+/* line 194, _h5bp.scss */
+.clearfix {
+  *zoom: 1;
+}
+
 /*****************************************************************************
  *****************************************************************************
  **                           GENERIC ELEMENTS                              **
  *****************************************************************************
  *****************************************************************************/
+/* line 18, styles.scss */
 body {
-	text-align:center;
-	padding:0;
-	margin:0;
-	background:#f3f3f3;
-	font-family:Helvetica, sans-serif;
-	font-size:11pt;
-	color:#222;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  background: #f3f3f3;
+  font-family: Helvetica, sans-serif;
+  font-size: 11pt;
+  color: #222;
 }
+
+/* line 27, styles.scss */
 a {
-	color:#1C2B0D;
+  color: #1C2B0D;
 }
+
+/* line 30, styles.scss */
 a:hover {
-	text-shadow:0px 1px 1px rgba(150, 150, 150, 0.8)
+  text-shadow: 0 1px 1px rgba(150, 150, 150, 0.8);
 }
+
+/* line 33, styles.scss */
 img {
-	border:0;
+  border: 0;
 }
+
+/* line 36, styles.scss */
 p {
-	padding:0.5em 0pt;
-	line-height: 1.25em;;
+  padding: 0.5em 0;
+  line-height: 1.25em;
 }
+
 /**
  * In this template, the page title, (H1), is displayed in the breadcrumbs.
  */
+/* line 43, styles.scss */
 h1 {
-	/*
-	border-bottom: 1px solid rgba(90, 90, 90, 0.7);
-	font-size: 150%;
-	font-weight: bold;
-	margin-bottom: 0.3em;
-	padding-bottom: 0.2em;
-	*/
-	font-size: 100%;
-	display: inline;
+  /*
+  border-bottom: 1px solid rgba(90, 90, 90, 0.7);
+  font-size: 150%;
+  font-weight: bold;
+  margin-bottom: 0.3em;
+  padding-bottom: 0.2em;
+  */
+  font-size: 100%;
+  display: inline;
 }
+
+/* line 54, styles.scss */
 h2 {
-	font-weight: bold;
-	font-size: 125%;
+  font-weight: bold;
+  font-size: 125%;
 }
+
+/* line 58, styles.scss */
 h3 {
-	font-weight: bold;
-	font-size: 110%;
+  font-weight: bold;
+  font-size: 110%;
 }
+
+/* line 62, styles.scss */
 h4 {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 /* TESTS */
@@ -64,91 +768,104 @@ h4:after { content: " ]" }
 p:before { content:"P: ["; }
 p:after { content:"]"; }
 */
-
-
+/* line 81, styles.scss */
 #wrapper {
-	width: 75%;
-	margin: 0 auto;
-	text-align: left;
-	background: #dfdfdf;
-	box-shadow: 0 0 3px #ddd;
-	-moz-box-shadow: 0 0 3px #ddd;
-	-webkit-box-shadow: 0 0 3px #ddd;
+  width: 75%;
+  margin: 0 auto;
+  text-align: left;
+  background: #dfdfdf;
+  box-shadow: 0 0 3px #ddd;
+  -moz-box-shadow: 0 0 3px #ddd;
+  -webkit-box-shadow: 0 0 3px #ddd;
 }
+
+/* line 90, styles.scss */
 #innerwrapper {
-	background: #EDEDED;
-	padding: 1em 1em 2em;
-	margin: 0 2px;
-	min-height: 400px;
+  background: #EDEDED;
+  padding: 1em 1em 2em;
+  margin: 0 2px;
+  min-height: 400px;
 }
+
+/* line 96, styles.scss */
 fieldset {
-	border: 1px solid #AAA;
-	padding: 0.75em;
-	margin: 0.5em;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
+  border: 1px solid #AAA;
+  padding: 0.75em;
+  margin: 0.5em;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
 }
+
+/* line 104, styles.scss */
 fieldset legend {
-	color: #555;
-	font-size: 84%;
-	padding: 0 0.5em;
+  color: #555;
+  font-size: 84%;
+  padding: 0 0.5em;
 }
+
+/* line 109, styles.scss */
 header {
-	padding: 5px 2px 1px;
-	display: block;
+  padding: 5px 2px 1px;
+  display: block;
 }
+
+/* line 113, styles.scss */
 footer {
-	min-height: 50px;
-	clear: both;
-	color: #888;
-	font-size: 90%;
-	padding: 0.25em 1em;
+  min-height: 50px;
+  clear: both;
+  color: #888;
+  font-size: 90%;
+  padding: 0.25em 1em;
 }
+
+/* line 120, styles.scss */
 footer a {
-	color: #999;
+  color: #999;
 }
+
+/* line 123, styles.scss */
 footer p {
-	clear: both;
+  clear: both;
 }
+
+/* line 126, styles.scss */
 .clear {
-	clear: both;
+  clear: both;
 }
-
-
-
 
 /*****************************************************************************
  *****************************************************************************
  **                        IMAGE METADATA STYLES                            **
  *****************************************************************************
  *****************************************************************************/
+/* line 138, styles.scss */
 .image-metadata-wrapper {
-	display: inline-block;
-	position: relative;
+  display: inline-block;
+  position: relative;
 }
+
+/* line 142, styles.scss */
 .image-metadata-wrapper .image-metadata {
-	background: none repeat scroll 0 0 #DDDDDD;
-	bottom: 0;
-	color: black;
-	font-size: 90%;
-	opacity: 0.4;
-	padding: 0 1em;
-	position: absolute;
+  background: none repeat scroll 0 0 #DDDDDD;
+  bottom: 0;
+  color: black;
+  font-size: 90%;
+  opacity: 0.4;
+  padding: 0 1em;
+  position: absolute;
 }
+
+/* line 151, styles.scss */
 .image-metadata-wrapper:hover .image-metadata {
-	opacity: 0.7;
+  opacity: 0.7;
 }
-
-
-
 
 /*****************************************************************************
  *****************************************************************************
  **                      RESPONSIVE WIDTH TWEAKS                            **
  *****************************************************************************
  *****************************************************************************/
-
 /*
 The wrapper should be at least 975px wide if possible.
 This works up to 1300px browser width, then it needs to kick over to 75%, (which is 975px @ 1300px).
@@ -156,37 +873,42 @@ For dimensions between 1300 and 975, keep it locked at 975px, it'll float in the
 For dimensions smaller than 975, just be at 100%.
 */
 @media screen and (max-width: 1300px) {
-	#wrapper { width: 975px; }
+  /* line 171, styles.scss */
+  #wrapper {
+    width: 975px;
+  }
 }
 @media screen and (max-width: 975px) {
-	#wrapper { width: 100%; }
+  /* line 174, styles.scss */
+  #wrapper {
+    width: 100%;
+  }
 }
 @media screen and (max-width: 640px) {
-	#wrapper {
-		width: 100%;
-	}
-	#wrapper #leftcol {
-		display: none;
-	}
-	#wrapper.column1 section.pagecontent {
-		margin-left: 0px;
-	}
+  /* line 177, styles.scss */
+  #wrapper {
+    width: 100%;
+  }
+
+  /* line 180, styles.scss */
+  #wrapper #leftcol {
+    display: none;
+  }
+
+  /* line 183, styles.scss */
+  #wrapper.column1 section.pagecontent {
+    margin-left: 0;
+  }
 }
 @media screen and (max-width: 480px) {
-	/*img {
-		width: 100%;
-		height: auto;
-	}
-	.image-metadata img {
-		width: auto;
-	}*/
+  /*img {
+  	width: 100%;
+  	height: auto;
+  }
+  .image-metadata img {
+  	width: auto;
+  }*/
 }
-
-
-
-
-
-
 /*****************************************************************************
  *****************************************************************************
  **                              BREADCRUMBS                                **
@@ -194,45 +916,64 @@ For dimensions smaller than 975, just be at 100%.
  ** Navigation breadcrumbs and other sub-nav elements                       **
  *****************************************************************************
  *****************************************************************************/
+/* line 209, styles.scss */
 nav#breadcrumbs {
-	font-size: 80%;
-	margin-bottom: 0.5em;
-	margin-left: 1em;
-	color: #555;
-	padding-bottom: 0.5em;
-	border-bottom: 1px solid #888;
+  font-size: 80%;
+  margin-bottom: 0.5em;
+  margin-left: 1em;
+  color: #555;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid #888;
 }
 
+/* line 218, styles.scss */
 #breadcrumbs #controls {
-	margin:0;
+  margin: 0;
 }
 
+/* line 222, styles.scss */
 nav#breadcrumbs a {
-	color: #555;
+  color: #555;
 }
+
+/* line 225, styles.scss */
 nav#breadcrumbs ul.controls {
-	float: right;
-	margin-top: -4px;
+  float: right;
+  margin-top: -4px;
 }
 
 /*** Left-column ***/
-.pagecolumn { width:170px; }
-.column1 #leftcol { float:left; }
-.column1 section.pagecontent {
-	margin-left:175px;
-	/* Re-enabling the body overflow to allow for context menus.
-	overflow: hidden;
-	*/
+/* line 231, styles.scss */
+.pagecolumn {
+  width: 170px;
 }
 
+/* line 232, styles.scss */
+.column1 #leftcol {
+  float: left;
+}
 
-.rounded-large { border-radius:10px; -moz-border-radius:10px; -webkit-border-radius:10px; }
-.rounded { border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; }
+/* line 233, styles.scss */
+.column1 section.pagecontent {
+  margin-left: 175px;
+  /* Re-enabling the body overflow to allow for context menus.
+  overflow: hidden;
+  */
+}
 
+/* line 241, styles.scss */
+.rounded-large {
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
 
-
-
-
+/* line 242, styles.scss */
+.rounded {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
 
 /*****************************************************************************
  *****************************************************************************
@@ -244,99 +985,131 @@ nav#breadcrumbs ul.controls {
  *****************************************************************************
  *****************************************************************************/
 /*** Controls that can be implemented throughout the site ***/
+/* line 259, styles.scss */
 ul.controls {
-	height:20px;
-	margin: 0;
-	padding: 0;
+  height: 20px;
+  margin: 0;
+  padding: 0;
 }
+
+/* line 264, styles.scss */
 ul.controls li {
-	float:left;
-	margin-right:0.1em;
-	list-style:none;
+  float: left;
+  margin-right: 0.1em;
+  list-style: none;
 }
+
 /*
 And their images.  Stand-alone "control" buttons also get the same styling.
 Since the icons are now being handled by font-awesome, the bulk of this logic will have been removed.
 */
-
-
 /* First, the common styles for all icon'd controls. */
-ul.controls li a { text-decoration: none; font-size: 14px; padding: 2px; line-height: 18px; }
-ul.controls li a:hover { text-shadow: none; font-size: 18px; padding: 0; }
-
-ul.controls li a span {
-	display: none;
+/* line 276, styles.scss */
+ul.controls li a {
+  text-decoration: none;
+  font-size: 14px;
+  padding: 2px;
+  line-height: 18px;
 }
 
-ul.controls li a i {
+/* line 277, styles.scss */
+ul.controls li a:hover {
+  text-shadow: none;
+  font-size: 18px;
+  padding: 0;
+}
 
+/* line 279, styles.scss */
+ul.controls li a span {
+  display: none;
 }
 
 /** Spruce up FA with some color :) **/
+/* line 289, styles.scss */
 ul.controls li a i.icon-remove,
-ul.controls li a i.icon-delete { color: #7a0200; }
-ul.controls li a i.icon-edit { color: blue; }
+ul.controls li a i.icon-delete {
+  color: #7a0200;
+}
+
+/* line 290, styles.scss */
+ul.controls li a i.icon-edit {
+  color: blue;
+}
+
+/* line 292, styles.scss */
 ul.controls li a i.icon-plus,
-ul.controls li a i.icon-add { color: green; }
-ul.controls li a i.icon-rss { color: #e99700; }
+ul.controls li a i.icon-add {
+  color: green;
+}
+
+/* line 293, styles.scss */
+ul.controls li a i.icon-rss {
+  color: #e99700;
+}
 
 /**
  * Contextual controls are similar, but slightly different.
  * Instead of being inline, they're in a context menu.
  */
+/* line 299, styles.scss */
 ul.controls.context-menu {
-	position: absolute;
-	border: 1px solid #999;
-	height: auto;
-	background: #eee;
-	top: 0;
-	z-index: 999;
+  position: absolute;
+  border: 1px solid #999;
+  height: auto;
+  background: #eee;
+  top: 0;
+  z-index: 999;
 }
 
 /* The many links have a bit different styles. */
+/* line 309, styles.scss */
 ul.controls.context-menu-many-links {
-	box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
-	left: 20px;
-	opacity: 0.9;
-	top: -3px;
+  box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
+  left: 20px;
+  opacity: 0.9;
+  top: -3px;
 }
+
+/* line 315, styles.scss */
 ul.controls.context-menu li {
-	font-size: 14px;
-	float: none;
-	white-space: nowrap;
-	width: 100%;
-	/* This will get overwritten by a's */
-	color: #555;
+  font-size: 14px;
+  float: none;
+  white-space: nowrap;
+  width: 100%;
+  /* This will get overwritten by a's */
+  color: #555;
 }
+
+/* line 323, styles.scss */
 ul.controls.context-menu li i {
-	line-height: 1.5em;
+  line-height: 1.5em;
 }
+
+/* line 326, styles.scss */
 ul.controls.context-menu li a {
-	padding: 0px;
-	display: block;
-	color: #000;
+  padding: 0;
+  display: block;
+  color: #000;
 }
+
+/* line 331, styles.scss */
 ul.controls.context-menu li a:hover {
-	font-size: 14px;
-	background: #AFC5EE;
-	color: #000;
+  font-size: 14px;
+  background: #AFC5EE;
+  color: #000;
 }
 
+/* line 337, styles.scss */
 ul.controls.context-menu i {
-	padding-left: 4px;
+  padding-left: 4px;
 }
+
+/* line 340, styles.scss */
 ul.controls.context-menu span {
-	line-height: 1.9em;
-	padding: 0 2px;
-	display: inline;
+  line-height: 1.9em;
+  padding: 0 2px;
+  display: inline;
 }
-ul.controls.context-menu a span {
-
-}
-
-
-
-
 
 /*****************************************************************************
  *****************************************************************************
@@ -353,70 +1126,73 @@ ul.controls.context-menu a span {
  *****************************************************************************
  *****************************************************************************/
 /* First, all the shared elements amongst the buttons. */
+/* line 373, styles.scss */
 a.button,
 .ui-widget-content a.button,
 span.button,
 input[type="submit"],
 input[type="reset"],
 button {
-	background: #666;
-	background-repeat:no-repeat;
-	border:1px solid #555;
-	border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;
-	color:#eee;
-	cursor: pointer;
-	font-family: sans-serif;
-	font-weight:normal;
-	line-height: 1.4;
-	margin-right:.1em;
-	min-width: 90px;
-	/* the overflow property removes extra width in IE */
-	overflow: visible;
-	padding: 4px 10px 5px;
-	text-align: center;
-	zoom: 1;
+  background: #666;
+  background-repeat: no-repeat;
+  border: 1px solid #555;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  color: #eee;
+  cursor: pointer;
+  font-family: sans-serif;
+  font-weight: normal;
+  line-height: 1.4;
+  margin-right: .1em;
+  min-width: 90px;
+  /* the overflow property removes extra width in IE */
+  overflow: visible;
+  padding: 4px 10px 5px;
+  text-align: center;
+  zoom: 1;
 }
 
 /* Standard nodes that act as buttons require a little more care */
+/* line 395, styles.scss */
 a.button,
 .ui-widget-content a.button,
 span.button {
-	display: inline-block;
-	position: relative;
-	text-decoration: none !important;
+  display: inline-block;
+  position: relative;
+  text-decoration: none !important;
 }
 
+/* line 405, styles.scss */
 a.button:hover,
 .ui-widget-content a.button:hover,
 span.button:hover,
 input[type="submit"]:hover,
 button:hover {
-	text-decoration:none;
-	background: #888;
+  text-decoration: none;
+  background: #888;
 }
 
-a.button[disabled=disabled]{
-	background-color: rgba(126, 126, 128, 0.69);
-	border: 1px outset rgba(80, 84, 87, 0.32);
-	color: #CCCCCC;
-	cursor: no-drop;
+/* line 410, styles.scss */
+a.button[disabled=disabled] {
+  background-color: rgba(126, 126, 128, 0.69);
+  border: 1px outset rgba(80, 84, 87, 0.32);
+  color: #CCCCCC;
+  cursor: no-drop;
 }
 
 /** Tweak the autocomplete styles slightly **/
+/* line 418, styles.scss */
 .formelement input[type="text"].ui-autocomplete-loading {
-	background-image: url('../images/loading-bar-small.gif');
-	background-position: center right;
-	background-repeat: no-repeat;
+  background-image: url("../images/loading-bar-small.gif");
+  background-position: center right;
+  background-repeat: no-repeat;
 }
 
+/* line 424, styles.scss */
 .formelement input[type="text"].ui-autocomplete-input {
-	border: 1px solid #47C6CB;
+  border: 1px solid #47C6CB;
 }
-
-
-
-
-
 
 /*****************************************************************************
  *****************************************************************************
@@ -424,721 +1200,1035 @@ a.button[disabled=disabled]{
  *****************************************************************************
  *****************************************************************************/
 /** general styles for most of the messages **/
+/* line 442, styles.scss */
 .message-note,
 .message-info,
 .message-success,
 .message-error {
-	border-radius: 6px;
-	padding: 15px 10px 15px 55px;
-	margin: 10px;
-	text-align:center;
-	overflow: hidden;
-	font-size: 106%;
-	position: relative;;
+  border-radius: 6px;
+  padding: 15px 10px 15px 55px;
+  margin: 10px;
+  text-align: center;
+  overflow: hidden;
+  font-size: 106%;
+  position: relative;
 }
+
+/* line 451, styles.scss */
 .message-tutorial {
-	padding: 15px 10px 15px 55px;
-	margin: 10px;
-	text-align: left;
-	overflow: hidden;
-	font-size: 92%;
-	position: relative;;
+  padding: 15px 10px 15px 55px;
+  margin: 10px;
+  text-align: left;
+  overflow: hidden;
+  font-size: 92%;
+  position: relative;
 }
 
 /** Specific colors **/
+/* line 461, styles.scss */
 .message-note {
-	background:#FCF0AD;
-	border:1px solid #BCB06D;
+  background: #FCF0AD;
+  border: 1px solid #BCB06D;
 }
+
+/* line 465, styles.scss */
 .message-info {
-	background: #EEE9FF;
-	border:1px solid #2667FF;
-	color: #0a1250;
+  background: #EEE9FF;
+  border: 1px solid #2667FF;
+  color: #0a1250;
 }
+
+/* line 470, styles.scss */
 .message-success {
-	background:#AFA;
-	border: 1px solid #373;
-	color: #151;
+  background: #AFA;
+  border: 1px solid #373;
+  color: #151;
 }
+
+/* line 475, styles.scss */
 .message-error {
-	background:#FCe5ed;
-	border:1px solid #BC606D;
-	color:#DF101D;
+  background: #FCe5ed;
+  border: 1px solid #BC606D;
+  color: #DF101D;
 }
+
+/* line 480, styles.scss */
 .message-tutorial {
-	background: #faefb9;
-	border:1px solid #BCB06D;
-	color: #6f6841;
+  background: #faefb9;
+  border: 1px solid #BCB06D;
+  color: #6f6841;
 }
 
 /** I need to color the A tags too **/
+/* line 487, styles.scss */
 body .pagecontent .message-note a {
-	color: #7f774a;
+  color: #7f774a;
 }
+
+/* line 490, styles.scss */
 body .pagecontent .message-info a {
-	color: #0a1250;
+  color: #0a1250;
 }
+
+/* line 493, styles.scss */
 body .pagecontent .message-success a {
-	color: #151;
+  color: #151;
 }
+
+/* line 496, styles.scss */
 body .pagecontent .message-error a {
-	color:#DF101D;
+  color: #DF101D;
 }
+
+/* line 499, styles.scss */
 body .pagecontent .message-tutorial a {
-	color: #7f774a;
+  color: #7f774a;
 }
 
 /** And the message's icons **/
+/* line 504, styles.scss */
 p[class^="message-"] .message-background-icon i {
-	font-size: 75px;
-	left: -6px;
-	line-height: 70px;
-	opacity: 0.3;
-	position: absolute;
-	top: -11px;
+  font-size: 75px;
+  left: -6px;
+  line-height: 70px;
+  opacity: 0.3;
+  position: absolute;
+  top: -11px;
 }
 
 /** And the specific message types icon colors **/
+/* line 514, styles.scss */
 p.message-note .message-background-icon i[class^="icon-"] {
-	color: #BCB06D;
+  color: #BCB06D;
 }
+
+/* line 517, styles.scss */
 p.message-info .message-background-icon i[class^="icon-"] {
-	color: #2667FF;
+  color: #2667FF;
 }
+
+/* line 520, styles.scss */
 p.message-success .message-background-icon i[class^="icon-"] {
-	color: #373;
+  color: #373;
 }
+
+/* line 523, styles.scss */
 p.message-error .message-background-icon i[class^="icon-"] {
-	color: #DF101D;
+  color: #DF101D;
 }
+
+/* line 526, styles.scss */
 p.message-tutorial .message-background-icon i[class^="icon-"] {
-	color: #BCB06D;
+  color: #BCB06D;
 }
-
-
-
-
 
 /*****************************************************************************
  *****************************************************************************
  **                             FORM ELEMENTS                               **
  *****************************************************************************
  *****************************************************************************/
-
 /* Error messages for everything */
+/* line 543, styles.scss */
 .formelement.formerror input,
 .formelement.formerror select,
 .formelement.formerror textarea {
-	border:1px inset red;
-	background:#FFF0F0;
+  border: 1px inset red;
+  background: #FFF0F0;
 }
 
 /* Description tag for form elements */
+/* line 550, styles.scss */
 .formelement .formdescription,
 fieldset .formdescription {
-	font-size:85%;
-	color:#777;
-	margin:0.25em 0pt 0.25em 1em;
+  font-size: 85%;
+  color: #777;
+  margin: 0.25em 0 0.25em 1em;
 }
 
+/* line 556, styles.scss */
 .formelement {
-	margin-bottom:0.75em;
-	position:relative;
+  margin-bottom: 0.75em;
+  position: relative;
 }
 
+/* line 561, styles.scss */
 .formelement .formelement-labelinputgroup {
-	background: #F6F6F6;
-	border: 1px solid #CBCBCB;
-	border-radius: .4em;
-	color: #3C3C3C;
-	float: left;
+  background: #F6F6F6;
+  border: 1px solid #CBCBCB;
+  border-radius: .4em;
+  color: #3C3C3C;
+  float: left;
 }
 
+/* line 569, styles.scss */
 .formelement .formelement-labelinputgroup label {
-	float:left;
-	color: #888;
-	padding: 7px 6px 7px 9px;
-	background: #DDD;
-	min-width: 120px;
+  float: left;
+  color: #888;
+  padding: 7px 6px 7px 9px;
+  background: #DDD;
+  min-width: 120px;
 }
 
+/* line 577, styles.scss */
 .formelement .formelement-labelinputgroup input {
-	color: #3C3C3C;
-	float: left;
-	min-width: 260px;
-	background: none;
-	border: 0px none;
-	padding: 5px 0 5px 10px;
+  color: #3C3C3C;
+  float: left;
+  min-width: 260px;
+  background: none;
+  border: 0 none;
+  padding: 5px 0 5px 10px;
 }
 
 /* Select specific styles */
+/* line 587, styles.scss */
 .formelement.formselect .formelement-labelinputgroup label {
-	/* Select boxes generally are a little taller than inputs, have more padding for the label. */
-	padding: 7px 4px 8px 9px;
+  /* Select boxes generally are a little taller than inputs, have more padding for the label. */
+  padding: 7px 4px 8px 9px;
 }
+
+/* line 591, styles.scss */
 .formelement.formselect .formelement-labelinputgroup select {
-	background: #F6F6F6;
-	border: 0px none;
-	border-radius: 0.4em 0.4em 0 0;
-	color: #3C3C3C;
-	padding: 7px 4px 7px 9px;
-	min-width: 100px;
-	cursor: pointer;
+  background: #F6F6F6;
+  border: 0 none;
+  border-radius: 0.4em 0.4em 0 0;
+  color: #3C3C3C;
+  padding: 7px 4px 7px 9px;
+  min-width: 100px;
+  cursor: pointer;
 }
 
 /* Radio specific styles */
+/* line 602, styles.scss */
 .formelement.formradioinput {
-	max-width: 415px;
-	display: block;
-	clear:both;
-	background:#F6F6F6;
-	border: 1px solid #CBCBCB;
-	border-radius: 0.4em;
-	color: #3C3C3C;
-	margin-right: 0.75em;
+  max-width: 415px;
+  display: block;
+  clear: both;
+  background: #F6F6F6;
+  border: 1px solid #CBCBCB;
+  border-radius: 0.4em;
+  color: #3C3C3C;
+  margin-right: 0.75em;
 }
+
+/* line 612, styles.scss */
 .formelement.formradioinput .formelement-labelinputgroup {
-	float: none;
-	border: 0px none;
+  float: none;
+  border: 0 none;
 }
+
+/* line 616, styles.scss */
 .formelement.formradioinput .formelement-labelinputgroup > label {
-	background: #DDDDDD;
-	color: #888888;
-	display: block;
-	float: none;
-	left: 0;
-	margin: 0;
-	top: 0;
+  background: #DDDDDD;
+  color: #888888;
+  display: block;
+  float: none;
+  left: 0;
+  margin: 0;
+  top: 0;
 }
+
+/* line 625, styles.scss */
 .formelement.formradioinput span.radio-label {
-	display: block;
-	background: #DDD;
-	padding: 8px 7px;
-	margin-bottom:5px;
-	color: #888888;
+  display: block;
+  background: #DDD;
+  padding: 8px 7px;
+  margin-bottom: 5px;
+  color: #888888;
 }
+
+/* line 632, styles.scss */
 .formelement.formradioinput label {
-	border: none;
-	color: #3C3C3C;
-	cursor: pointer;
-	display: block;
-	line-height: 1.7em;
-	margin-right: 0.5em;
-	padding: 0.25em 0.5em;
-	white-space: nowrap;
-	position: relative;
-	top: 7px;
-	left: 6px;
+  border: none;
+  color: #3C3C3C;
+  cursor: pointer;
+  display: block;
+  line-height: 1.7em;
+  margin-right: 0.5em;
+  padding: 0.25em 0.5em;
+  white-space: nowrap;
+  position: relative;
+  top: 7px;
+  left: 6px;
 }
+
+/* line 645, styles.scss */
 .formelement.formradioinput label input {
-	margin-top:0;
+  margin-top: 0;
 }
 
 /* Checkbox and checkboxes specific styles */
+/* line 650, styles.scss */
 .formelement.formcheckboxinput {
-	display:inline-block;
-	clear:both;
-	background:#F6F6F6;
-	border: 1px solid #CBCBCB;
-	border-radius: 0.4em;
-	color: #3C3C3C;
-	padding: 0.3em 0.8em;
-	margin-right: 0.75em;
-}
-.formelement.formcheckboxesinput {
-	background: #F6F6F6;
-	border: 1px solid #CBCBCB;
-	border-radius: 0.4em;
-	max-width: 415px;
-	color: #888;
-	padding-bottom: 4px;
-}
-.formelement.formcheckboxinput label{
-	padding: 0.25em 0;
-	white-space: nowrap;
-	top:4px;
-}
-.formelement.formcheckboxesinput label {
-	display: block;
-	margin: 0 8px;
-	position: relative;
-	padding: 0.25em 0;
-	white-space: nowrap;
-	top:4px;
-}
-.formelement.formcheckboxinput input {
-	color: #3C3C3C;
-	padding: 0.35em 0;
-}
-.formelement.formcheckboxesinput input {
-	margin-left:0;
-	color: #3C3C3C;
-	padding: 0.35em 0;
-}
-.formelement.formcheckboxesinput span.checkboxes-label {
-	display: block;
-	background: #DDD;
-	padding: 8px 7px;
-}
-.formelement.formcheckboxesinput span.checkboxes-label span.checkboxes-toggle {
-	cursor: pointer;
-	float: right;
+  display: inline-block;
+  clear: both;
+  background: #F6F6F6;
+  border: 1px solid #CBCBCB;
+  border-radius: 0.4em;
+  color: #3C3C3C;
+  padding: 0.3em 0.8em;
+  margin-right: 0.75em;
 }
 
+/* line 660, styles.scss */
+.formelement.formcheckboxesinput {
+  background: #F6F6F6;
+  border: 1px solid #CBCBCB;
+  border-radius: 0.4em;
+  max-width: 415px;
+  color: #888;
+  padding-bottom: 4px;
+}
+
+/* line 668, styles.scss */
+.formelement.formcheckboxinput label {
+  padding: 0.25em 0;
+  white-space: nowrap;
+  top: 4px;
+}
+
+/* line 673, styles.scss */
+.formelement.formcheckboxesinput label {
+  display: block;
+  margin: 0 8px;
+  position: relative;
+  padding: 0.25em 0;
+  white-space: nowrap;
+  top: 4px;
+}
+
+/* line 681, styles.scss */
+.formelement.formcheckboxinput input {
+  color: #3C3C3C;
+  padding: 0.35em 0;
+}
+
+/* line 685, styles.scss */
+.formelement.formcheckboxesinput input {
+  margin-left: 0;
+  color: #3C3C3C;
+  padding: 0.35em 0;
+}
+
+/* line 690, styles.scss */
+.formelement.formcheckboxesinput span.checkboxes-label {
+  display: block;
+  background: #DDD;
+  padding: 8px 7px;
+}
+
+/* line 695, styles.scss */
+.formelement.formcheckboxesinput span.checkboxes-label span.checkboxes-toggle {
+  cursor: pointer;
+  float: right;
+}
 
 /* Textarea specific styles */
+/* line 702, styles.scss */
 .formelement.formtextareainput .formelement-labelinputgroup label {
-	display: block;
-	float: none;
-	position: relative;
-	top: 0;
+  display: block;
+  float: none;
+  position: relative;
+  top: 0;
 }
+
+/* line 708, styles.scss */
 .formelement.formtextareainput .formelement-labelinputgroup textarea {
-	padding: 2px;
-	width: 400px;
-	min-height: 80px;
-	border: 0px none;
-	background:#f6f6f6;
+  padding: 2px;
+  width: 400px;
+  min-height: 80px;
+  border: 0 none;
+  background: #f6f6f6;
 }
 
 /* File input specific styles */
+/* line 717, styles.scss */
 .formelement.formfileinput {
-	clear:both;
+  clear: both;
 }
+
+/* line 720, styles.scss */
 .formelement.formfileinput label {
-	float: none;
-	display: block;
+  float: none;
+  display: block;
 }
+
+/* line 724, styles.scss */
 .formelement.formfileinput .file-input-innercontainer {
-	padding: 4px;
+  padding: 4px;
 }
+
+/* line 727, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .formfileinput-selector {
-	vertical-align: top;
-	width:150px;
+  vertical-align: top;
+  width: 150px;
 }
+
+/* line 731, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .formfileinput-selector label {
-	position:relative;
-	top:0;
-	margin-bottom: 5px;
-	background: none;
+  position: relative;
+  top: 0;
+  margin-bottom: 5px;
+  background: none;
 }
+
+/* line 737, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .file-input-actions {
-	vertical-align: top;
+  vertical-align: top;
 }
+
+/* line 740, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .fileinput-action {
-	max-height: 350px;
-	min-width: 200px;
-	max-width: 720px;
-	overflow-y: auto;
+  max-height: 350px;
+  min-width: 200px;
+  max-width: 720px;
+  overflow-y: auto;
 }
+
+/* line 746, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .fileinput-action input {
-	background: white;
-	border: 1px solid #888;
-	padding: 2px;
-	margin: 1px;
+  background: white;
+  border: 1px solid #888;
+  padding: 2px;
+  margin: 1px;
 }
 
 /* Page Keywords input specific styles */
+/* line 754, styles.scss */
 .formelement.formpagemetakeywordsinput label {
-	display: block;
-	float: none;
-}
-.formelement.formpagemetakeywordsinput .keywords-multi-select {
-	background: none repeat scroll 0 0 #F6F6F6;
-	border: 1px solid #47C6CB;
-	border-radius: 0.4em 0.4em 0.4em 0.4em;
-	cursor: text;
-	height: auto;
-	width: 400px;
-	padding: 2px;
-}
-.formelement.formpagemetakeywordsinput .keywords-multi-select input[type="text"] {
-	border: 0 none;
-	float: left;
-	min-width: 5px;
-	padding: 0;
-}
-.formelement.formpagemetakeywordsinput .keywords-multi-select .keywords-multi-select-option {
-	background: none repeat scroll 0 0 #EEEEFF;
-	border: 1px solid #DDDDDD;
-	border-radius: 8px 8px 8px 8px;
-	float: left;
-	margin: 0.05em;
-	padding: 0.2em 0.5em;
+  display: block;
+  float: none;
 }
 
+/* line 758, styles.scss */
+.formelement.formpagemetakeywordsinput .keywords-multi-select {
+  background: none repeat scroll 0 0 #F6F6F6;
+  border: 1px solid #47C6CB;
+  border-radius: 0.4em 0.4em 0.4em 0.4em;
+  cursor: text;
+  height: auto;
+  width: 400px;
+  padding: 2px;
+}
+
+/* line 767, styles.scss */
+.formelement.formpagemetakeywordsinput .keywords-multi-select input[type="text"] {
+  border: 0 none;
+  float: left;
+  min-width: 5px;
+  padding: 0;
+}
+
+/* line 773, styles.scss */
+.formelement.formpagemetakeywordsinput .keywords-multi-select .keywords-multi-select-option {
+  background: none repeat scroll 0 0 #EEEEFF;
+  border: 1px solid #DDDDDD;
+  border-radius: 8px 8px 8px 8px;
+  float: left;
+  margin: 0.05em;
+  padding: 0.2em 0.5em;
+}
 
 /* Disabled selects should look a little more ... disabled. */
+/* line 785, styles.scss */
 .formelement.formselect .formelement-labelinputgroup select[disabled],
 .formelement.formselect select[disabled] {
-	opacity: 0.4;
-	color: #111;
-	cursor: no-drop;
+  opacity: 0.4;
+  color: #111;
+  cursor: no-drop;
 }
 
-
+/* line 792, styles.scss */
 .facebook-integration {
-	margin-left: 0;
-	max-width: 515px;
+  margin-left: 0;
+  max-width: 515px;
 }
 
+/* line 797, styles.scss */
 .ui-dialog .formelement label {
-	position:relative;
-	top:0;
-	margin-bottom:5px;
-	text-align:left;
+  position: relative;
+  top: 0;
+  margin-bottom: 5px;
+  text-align: left;
 }
+
+/* line 803, styles.scss */
 .ui-dialog .formelement input {
-	padding: 0.35em 0.8em;
-	display: block;
+  padding: 0.35em 0.8em;
+  display: block;
 }
 
+/* line 808, styles.scss */
 .ui-dialog .formelement select {
-	display: block;
-	max-width: 100%;
+  display: block;
+  max-width: 100%;
 }
 
+/* line 813, styles.scss */
 .tinymce label {
-	position:relative;
-	top:0;
-	margin-bottom: 5px;
+  position: relative;
+  top: 0;
+  margin-bottom: 5px;
 }
-
-
 
 /*****************************************************************************
  *****************************************************************************
  **                            LISTING TABLES                               **
  *****************************************************************************
  *****************************************************************************/
-
+/* line 827, styles.scss */
 table.listing {
-	width: 100%;
-	border: 1px solid #AAA;
-	border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #AAA;
+  border-collapse: collapse;
 }
+
+/* line 832, styles.scss */
 table.listing tr:nth-child(odd) {
-	background-color: #d4d6d9;
+  background-color: #d4d6d9;
 }
+
+/* line 835, styles.scss */
 table.listing th {
-	padding: 0.15em 0.5em;
-	border: 1px solid #AAA;
-	vertical-align: top;
-	background: #666;
-	color: #EEE;
+  padding: 0.15em 0.5em;
+  border: 1px solid #AAA;
+  vertical-align: top;
+  background: #666;
+  color: #EEE;
 }
+
+/* line 842, styles.scss */
 table.listing td {
-	padding: 0.15em 0.5em;
-	border: 1px solid #AAA;
-	vertical-align: top;
+  padding: 0.15em 0.5em;
+  border: 1px solid #AAA;
+  vertical-align: top;
 }
 
 /* Give a little high-lighting effect on mouseover for the records. */
+/* line 849, styles.scss */
 table.listing tr:hover {
-	background-color: #c7d5eb;
+  background-color: #c7d5eb;
 }
 
+/*****************************************************************************
+ *****************************************************************************
+ **                          DEBUGGING CLASSES                              **
+ *****************************************************************************
+ *****************************************************************************/
+/* line 861, styles.scss */
+pre.xdebug-var-dump {
+  border: 1px solid #FFE5C0;
+  padding: 0.5em;
+  text-align: left;
+  font-size: 0.8em;
+  background: #f5f5f5;
+  color: #555;
+}
 
+/*****************************************************************************
+ *****************************************************************************
+ **                     SORTABLES & NESTED SORTABLES                        **
+ *****************************************************************************
+ *****************************************************************************/
+/* line 878, styles.scss */
+ol.sortable-listing {
+  margin: 0.5em 0;
+}
 
+/* line 881, styles.scss */
+ol.sortable-listing li {
+  display: block;
+  list-style: none outside none;
+}
 
+/* line 885, styles.scss */
+ol.sortable-listing li div.entry {
+  border: 1px solid #BBBBBB;
+  padding: 0.25em;
+}
 
-/*** Debugging Classes ***/
-pre.xdebug-var-dump { border: 1px solid #FFE5C0; padding: 0.5em; text-align: left; font-size:0.8em; background: #f5f5f5;color:#555; }
+/* line 889, styles.scss */
+ol.sortable-listing li.placeholder {
+  border: 1px solid #BBBBBB;
+  background: #BBB;
+}
 
+/* line 893, styles.scss */
+ol.sortable-listing li a.control {
+  margin-top: -2px;
+}
 
-/*** Sortables and Nested Sortables ***/
-ol.sortable-listing { margin:0.5em 0pt; }
-ol.sortable-listing li {  display: block; list-style: none outside none;  }
-ol.sortable-listing li div.entry { border: 1px solid #BBBBBB; padding: 0.25em; }
-ol.sortable-listing li.placeholder { border: 1px solid #BBBBBB; background:#BBB;}
-ol.sortable-listing li a.control { margin-top: -2px; }
-ol.sortable-listing ol { margin-left:1em; }
+/* line 896, styles.scss */
+ol.sortable-listing ol {
+  margin-left: 1em;
+}
 
+/*****************************************************************************
+ *****************************************************************************
+ **                           PRIMARY NAVIGATION                            **
+ *****************************************************************************
+ *****************************************************************************/
+/* line 908, styles.scss */
+#primary-nav li {
+  float: left;
+  position: relative;
+  text-align: center;
+}
 
+/* line 913, styles.scss */
+#primary-nav li.navigation-menu-over a:hover {
+  background: #333;
+}
 
-/*** Primary Navigation ***/
-#primary-nav li { float:left; position:relative; text-align:center;}
-#primary-nav li.navigation-menu-over a:hover { background: #333; }
+/* line 917, styles.scss */
 #primary-nav a,
-#primary-nav span { color: #777; font-weight: bold; text-decoration: none; text-transform: uppercase; display:inline-block; padding:0.5em 1em; width:160px;}
+#primary-nav span {
+  color: #777;
+  font-weight: bold;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 0.5em 1em;
+  width: 160px;
+}
+
 /* Enable the mouse over menu */
-#primary-nav li.navigation-menu-over>ul { display:block; }
+/* line 927, styles.scss */
+#primary-nav li.navigation-menu-over > ul {
+  display: block;
+}
+
 /* And the sub menu */
-#primary-nav li ul { display:none; position:absolute; background:black; border:1px solid black; border-top:0 none; width:190px; -moz-box-shadow: 0 3px 6px #000; -webkit-box-shadow: 0 3px 6px #000; box-shadow: 0 3px 6px #000;}
-#primary-nav li ul li { width:190px; text-align:left; }
+/* line 931, styles.scss */
+#primary-nav li ul {
+  display: none;
+  position: absolute;
+  background: black;
+  border: 1px solid black;
+  border-top: 0 none;
+  width: 190px;
+  -moz-box-shadow: 0 3px 6px #000;
+  -webkit-box-shadow: 0 3px 6px #000;
+  box-shadow: 0 3px 6px #000;
+}
+
+/* line 942, styles.scss */
+#primary-nav li ul li {
+  width: 190px;
+  text-align: left;
+}
+
+/* line 947, styles.scss */
 #primary-nav li ul a,
-#primary-nav li ul span{ padding-left:20px; width:155px; }
+#primary-nav li ul span {
+  padding-left: 20px;
+  width: 155px;
+}
+
 /* And any sub sub menu */
-#primary-nav li ul li ul { top:-2px; left:180px; display:none; position:absolute; background:#1C2B0D; border:1px solid black; border-left:0 none; width:190px; -moz-box-shadow: 0 3px 6px #000; -webkit-box-shadow: 0 3px 6px #000; box-shadow: 0 3px 6px #000;}
-#primary-nav a:hover {text-shadow:none;}
+/* line 952, styles.scss */
+#primary-nav li ul li ul {
+  top: -2px;
+  left: 180px;
+  display: none;
+  position: absolute;
+  background: #1C2B0D;
+  border: 1px solid black;
+  border-left: 0 none;
+  width: 190px;
+  -moz-box-shadow: 0 3px 6px #000;
+  -webkit-box-shadow: 0 3px 6px #000;
+  box-shadow: 0 3px 6px #000;
+}
 
-/*** Footer Navigation ***/
-footer ul.navigation-menu li { list-style-type: none; float: left; padding: 0 0.5em; }
-footer ul.navigation-menu li li { float: none;}
+/* line 965, styles.scss */
+#primary-nav a:hover {
+  text-shadow: none;
+}
 
+/*****************************************************************************
+ *****************************************************************************
+ **                          FOOTER NAVIGATION                              **
+ *****************************************************************************
+ *****************************************************************************/
+/* line 976, styles.scss */
+footer ul.navigation-menu li {
+  list-style-type: none;
+  float: left;
+  padding: 0 0.5em;
+}
 
-/** Collapsible fieldsets **/
-fieldset.collapsed { padding:0; border-width: 1px 0px 0px; }
+/* line 981, styles.scss */
+footer ul.navigation-menu li li {
+  float: none;
+}
 
+/*****************************************************************************
+ *****************************************************************************
+ **                         COLLAPSIBLE FIELDSETS                           **
+ *****************************************************************************
+ *****************************************************************************/
+/* line 993, styles.scss */
+fieldset.collapsed {
+  padding: 0;
+  border-width: 1px 0 0;
+}
 
+/*****************************************************************************
+ *****************************************************************************
+ **                            PROGRESS BARS                                **
+ *****************************************************************************
+ *****************************************************************************/
+/* line 1003, styles.scss */
 .progress-container {
-	position: relative;
+  position: relative;
 }
+
+/* line 1006, styles.scss */
 .progress-success {
-	background: none repeat scroll 0 0 #992222;
-	border: 2px solid green;
-	height: 20px;
-	margin-bottom: 5px;
+  background: none repeat scroll 0 0 #992222;
+  border: 2px solid green;
+  height: 20px;
+  margin-bottom: 5px;
 }
+
+/* line 1012, styles.scss */
 .progress-success .bar {
-	background: none repeat scroll 0 0 green;
-	height: 20px;
+  background: none repeat scroll 0 0 green;
+  height: 20px;
 }
+
+/* line 1016, styles.scss */
 .progress-container .progress-extended {
-	color: white;
-	left: 46px;
-	position: absolute;
-	top: 6px;
+  color: white;
+  left: 46px;
+  position: absolute;
+  top: 6px;
 }
 
 /** Theme Editor **/
-
+/* line 1025, styles.scss */
 .page-themeeditor .column1 section.pagecontent {
-	margin-left:12px;
-}
-#theme-editor-wysiwyg {
-
+  margin-left: 12px;
 }
 
+/* line 1032, styles.scss */
 .editor-container {
-	position:relative;
+  position: relative;
 }
 
+/* line 1036, styles.scss */
 #code {
-	min-width:590px;
+  min-width: 590px;
 }
 
+/* line 1040, styles.scss */
 #theme-editor-browser {
-	background: transparent;
-	position: absolute;
-	width: 350px;
-	z-index: 100;
-	top: 52px;
+  background: transparent;
+  position: absolute;
+  width: 350px;
+  z-index: 100;
+  top: 52px;
 }
 
+/* line 1048, styles.scss */
 #theme-editor-browser a {
-	color:#222;
+  color: #222;
 }
 
+/* line 1052, styles.scss */
 #theme-editor-browser .left {
-	float:left;
-	width:300px;
-	background:#dddddd;
-	padding: 10px;
-	box-shadow: 3px 4px 15px 6px #090909;
-	max-height: 650px;
-	opacity: 0.8;
-	overflow-y: auto;
+  float: left;
+  width: 300px;
+  background: #dddddd;
+  padding: 10px;
+  box-shadow: 3px 4px 15px 6px #090909;
+  max-height: 650px;
+  opacity: 0.8;
+  overflow-y: auto;
 }
 
-#theme-editor-browser .left:hover {opacity:0.9;}
+/* line 1063, styles.scss */
+#theme-editor-browser .left:hover {
+  opacity: 0.9;
+}
 
+/* line 1065, styles.scss */
 #theme-editor-browser .right {
-	float:right;
-	width:28px;
-	background:#090909;
-	color:#999999;
-	padding:10px 0;
-	border-radius: 0 5px 5px 0;
-	cursor:pointer;
-	opacity: 0.8;
-	border-bottom: 1px solid #2b2b2b;
-	border-right: 1px solid #2b2b2b;
-	border-top: 1px solid #2b2b2b;
+  float: right;
+  width: 28px;
+  background: #090909;
+  color: #999999;
+  padding: 10px 0;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  opacity: 0.8;
+  border-bottom: 1px solid #2b2b2b;
+  border-right: 1px solid #2b2b2b;
+  border-top: 1px solid #2b2b2b;
 }
 
-#theme-editor-browser .right:hover {opacity:1;}
+/* line 1079, styles.scss */
+#theme-editor-browser .right:hover {
+  opacity: 1;
+}
 
-#theme-editor-browser .right i {margin-left:8px;}
+/* line 1081, styles.scss */
+#theme-editor-browser .right i {
+  margin-left: 8px;
+}
 
+/* line 1083, styles.scss */
 #theme-editor-browser .icon {
-	float:right;
-	margin-right:2px;
+  float: right;
+  margin-right: 2px;
 }
 
-#theme-editor-browser li .icon {margin-right:0;}
-
-#theme-editor-browser h2 {color:#666;margin-bottom:3px;}
-
-#theme-editor-browser ul {
-	margin-bottom:9px;
-	padding-bottom:3px;
-	border-bottom: 1px solid #e1e1e1;
+/* line 1088, styles.scss */
+#theme-editor-browser li .icon {
+  margin-right: 0;
 }
 
-#theme-editor-browser .sub {display:none;}
-
-#theme-editor-browser li .icon {cursor:pointer;}
-
-#theme-editor-browser li {
-	list-style-type: none;
-	margin-bottom:3px;
-}
-
-#theme-editor-browser ul ul {margin-left:10px;}
-
+/* line 1090, styles.scss */
 #theme-editor-browser h2 {
-	cursor:pointer;
+  color: #666;
+  margin-bottom: 3px;
 }
 
+/* line 1092, styles.scss */
+#theme-editor-browser ul {
+  margin-bottom: 9px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+/* line 1098, styles.scss */
+#theme-editor-browser .sub {
+  display: none;
+}
+
+/* line 1100, styles.scss */
+#theme-editor-browser li .icon {
+  cursor: pointer;
+}
+
+/* line 1102, styles.scss */
+#theme-editor-browser li {
+  list-style-type: none;
+  margin-bottom: 3px;
+}
+
+/* line 1107, styles.scss */
+#theme-editor-browser ul ul {
+  margin-left: 10px;
+}
+
+/* line 1109, styles.scss */
+#theme-editor-browser h2 {
+  cursor: pointer;
+}
+
+/* line 1113, styles.scss */
 .theme-editor {
-	display:none;
+  display: none;
 }
 
+/* line 1117, styles.scss */
 #theme-editor-wysiwyg .image-editor {
-	background: #202020;
-	padding-bottom: 25px;
-	padding-left: 285px;
+  background: #202020;
+  padding-bottom: 25px;
+  padding-left: 285px;
 }
 
-.image-editor h2 {margin-bottom:5px;}
+/* line 1123, styles.scss */
+.image-editor h2 {
+  margin-bottom: 5px;
+}
 
+/* line 1125, styles.scss */
 #revert {
-	cursor:pointer;
-	font-weight:bold;
-	text-decoration:underline;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: underline;
 }
 
-#revisions li.revision {margin-bottom:3px;}
+/* line 1131, styles.scss */
+#revisions li.revision {
+  margin-bottom: 3px;
+}
 
-#revisions .revision-title {cursor:pointer;}
-#revisions .revision-date {color:#888;}
+/* line 1133, styles.scss */
+#revisions .revision-title {
+  cursor: pointer;
+}
 
-.page-themeeditor #dialog-confirm {display:none;}
+/* line 1134, styles.scss */
+#revisions .revision-date {
+  color: #888;
+}
 
+/* line 1136, styles.scss */
+.page-themeeditor #dialog-confirm {
+  display: none;
+}
 
 /** Pagination styles **/
+/* line 1140, styles.scss */
 .pagination {
-	color: #555555;
-	font-size: 84%;
-	padding: 0 0.5em;
-	margin: 0.5em 0;
+  color: #555555;
+  font-size: 84%;
+  padding: 0 0.5em;
+  margin: 0.5em 0;
 }
+
+/* line 1146, styles.scss */
 .pagination a {
-	text-decoration: none;
-	color: #555555;
+  text-decoration: none;
+  color: #555555;
 }
+
+/* line 1150, styles.scss */
 .pagination .disabled {
-	color: #999;
+  color: #999;
 }
 
+/* line 1154, styles.scss */
 .pagination-pager {
-	float: left;
+  float: left;
 }
 
+/* line 1158, styles.scss */
 .pagination-list {
-	float: right;
+  float: right;
 }
 
 /* login page */
+/* line 1164, styles.scss */
 .page-user-login #leftcol,
-.page-user-login #breadcrumbs {display:none;}
+.page-user-login #breadcrumbs {
+  display: none;
+}
 
-body.page-user-login .column1 section.pagecontent {margin-left:0;}
+/* line 1166, styles.scss */
+body.page-user-login .column1 section.pagecontent {
+  margin-left: 0;
+}
 
-
+/* line 1169, styles.scss */
 .page-user-login .register-account {
-	margin-right:15px;
+  margin-right: 15px;
 }
 
+/* line 1173, styles.scss */
 #facebook-login-button {
-	padding: 6px 8px;
-	text-decoration: none;
-	color: #fff;
-	background: #3B5998;
-	position: relative;
-	left:0;
-	border-radius: 3px;
-	border: 1px solid #5D729F;
-	top:0;
+  padding: 6px 8px;
+  text-decoration: none;
+  color: #fff;
+  background: #3B5998;
+  position: relative;
+  left: 0;
+  border-radius: 3px;
+  border: 1px solid #5D729F;
+  top: 0;
 }
 
+/* line 1185, styles.scss */
 .page-user-login fieldset {
-	border:none;
-	border-radius:0;
-	margin-bottom: 0;
-	padding: 15px 10px;
+  border: none;
+  border-radius: 0;
+  margin-bottom: 0;
+  padding: 15px 10px;
 }
 
+/* line 1192, styles.scss */
 .page-user-login fieldset.left {
-	min-width:51%;
-	width: 51%;
+  min-width: 51%;
+  width: 51%;
 }
 
+/* line 1197, styles.scss */
 .page-user-login fieldset.left .formelement {
-	margin-bottom:1.25em;
+  margin-bottom: 1.25em;
 }
 
+/* line 1201, styles.scss */
 .page-user-login #login-divider {
-	background: #ccc;
-	background: radial-gradient(ellipse at center center , rgba(50, 50, 50, 0.25) 0%, transparent 70%) repeat scroll 0 0 transparent;
-	border: medium none;
-	min-height: 180px;
-	max-width: 1600px;
-	width: 1px;
-	float:left;
+  background: #ccc;
+  background: radial-gradient(ellipse at center center, rgba(50, 50, 50, 0.25) 0%, transparent 70%) repeat scroll 0 0 transparent;
+  border: medium none;
+  min-height: 180px;
+  max-width: 1600px;
+  width: 1px;
+  float: left;
 }
 
+/* line 1211, styles.scss */
 .page-user-login fieldset.right {
-	min-width:33%;
+  min-width: 33%;
 }
 
-.page-user-login fieldset fieldset {background:transparent;}
+/* line 1215, styles.scss */
+.page-user-login fieldset fieldset {
+  background: transparent;
+}
 
+/* line 1218, styles.scss */
+.left {
+  float: left;
+}
 
-.left {float:left;}
-.right {float:right;}
+/* line 1219, styles.scss */
+.right {
+  float: right;
+}
 
+/* line 1222, styles.scss */
 fieldset.left,
 fieldset.right {
-	min-height:180px;
+  min-height: 180px;
 }
 
+/* line 1226, styles.scss */
 .login-forgot {
-	display: block;
-	float: right;
-	position: relative;
-	top: -38px;
-	right: 25px;
-	color:#969696;
-	font-style:italic;
+  display: block;
+  float: right;
+  position: relative;
+  top: -38px;
+  right: 25px;
+  color: #969696;
+  font-style: italic;
 }
 
+/* line 1237, styles.scss */
 #login-existing,
 #user-login {
-	background: rgba(0, 0, 0, 0.05);
-	border-radius: 6px 6px 6px 6px;
-	margin: 25px 0.5em 20px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px 6px 6px 6px;
+  margin: 25px 0.5em 20px;
 }
 
+/* line 1243, styles.scss */
 #login-center {
-	width: 720px;
-	margin: 25px auto 0 auto;
+  width: 720px;
+  margin: 25px auto 0 auto;
 }
 
-.page-user-login label {max-width:100px;}
+/* line 1248, styles.scss */
+.page-user-login label {
+  max-width: 100px;
+}
 
-
+/* line 1251, styles.scss */
 .widgetarea-admindashboard .widget {
-	background: #e9e9e9;
-	border: 1px solid #BBBBBB;
-	border-radius: 0.25em 0.25em 0.25em 0.25em;
-	float: left;
-	margin: 0.5em;
-	padding: 1em;
+  background: #e9e9e9;
+  border: 1px solid #BBBBBB;
+  border-radius: 0.25em 0.25em 0.25em 0.25em;
+  float: left;
+  margin: 0.5em;
+  padding: 1em;
 }
 
+/* line 1260, styles.scss */
 .widgetarea-admindashboard .widget h3 {
-	text-align: center;
-	margin-bottom: 0.5em;
+  text-align: center;
+  margin-bottom: 0.5em;
 }
