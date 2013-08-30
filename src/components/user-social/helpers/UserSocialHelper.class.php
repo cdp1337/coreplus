@@ -83,13 +83,16 @@ class UserSocialHelper {
 		// still nothing?
 		if(!$user) return array();
 
+		$usermanager = \Core\user()->checkAccess('p:/user/users/manage');
+		$selfaccount = \Core\user()->get('id') == $user->get('id');
+
 		$a[] = array(
 			'title' => 'View Profile',
 			'icon' => 'user',
 			'link' => self::ResolveProfileLink($user),
 		);
 
-		if(\Core\user()->checkAccess('p:user_manage')){
+		if($usermanager || $selfaccount){
 			$a[] = array(
 				'title' => 'Public Profiles',
 				'icon' => 'link',
