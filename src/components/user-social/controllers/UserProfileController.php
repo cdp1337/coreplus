@@ -17,7 +17,7 @@ class UserProfileController extends Controller_2_1 {
 	public function view(){
 		$view    = $this->getView();
 		$request = $this->getPageRequest();
-		$manager = \Core\user()->checkAccess('p:user_manage'); // Current user an admin?
+		$manager = \Core\user()->checkAccess('p:/user/users/manage'); // Current user an admin?
 
 		// First argument here will either be the username or user id.
 		$arg1 = $request->getParameter(0);
@@ -61,7 +61,7 @@ class UserProfileController extends Controller_2_1 {
 		$view    = $this->getView();
 		$req     = $this->getPageRequest();
 		$userid  = $req->getParameter(0);
-		$manager = \Core\user()->checkAccess('p:user_manage'); // Current user an admin?
+		$manager = \Core\user()->checkAccess('p:/user/users/manage'); // Current user an admin?
 
 		if($userid === null) $userid = \Core\user()->get('id'); // Default to current user.
 
