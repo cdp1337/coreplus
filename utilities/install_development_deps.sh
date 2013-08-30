@@ -34,7 +34,7 @@ source "/opt/eval/basescript.sh"
 
 # Install the necessary dependencies
 if [ "$OSFAMILY" == "debian" ]; then
-	install ant php-pear php5-xsl php5-dev libxml-xpath-perl
+	install ant php-pear php5-xsl php5-dev libxml-xpath-perl rubygems
 elif [ "$OSFAMILY" == "redhat" ]; then
 	# RH based distros need some updates to utilize 3rd party projects.
 	if [ "$OSVERSIONMAJ" == "6" ]; then
@@ -47,7 +47,7 @@ elif [ "$OSFAMILY" == "redhat" ]; then
 
 	yum --enablerepo=remi,remi-test install -y \
 		php php-common php-devel php-xsl php-mbstring php-pear php-mysql php-gd php-xdebug \
-		ant mysql-server mysql perl-XML-XPath graphviz
+		ant mysql-server mysql perl-XML-XPath graphviz rubygems
 fi
 
 
@@ -100,3 +100,6 @@ else
 	pear install phpdoc/phpDocumentor-alpha
 	checkexitstatus "$?"
 fi
+
+printheader "Installing GEM packages"
+gem install sass
