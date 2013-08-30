@@ -323,7 +323,10 @@ if(exec('which sass') == ''){
 }
 else{
 	echo "Scanning for SASS/SCSS resources...\n";
-	exec('find "' . ROOT_PDIR . '" -name "[a-z]*.scss"', $results);
+	exec('find "' . ROOT_PDIR . 'components/" -name "[a-z]*.scss"', $compresults);
+	exec('find "' . ROOT_PDIR . 'themes/" -name "[a-z]*.scss"', $themeresults);
+
+	$results = array_merge($compresults, $themeresults);
 
 	foreach($results as $file){
 		echo "Compiling $file...\n";
