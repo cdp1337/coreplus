@@ -2,15 +2,15 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="1.0.4">
 	<requires>
-		<require name="User" type="component" version="2.4.1"/>
-		<require name="Core" type="component" version="2.4.3"/>
+		<require name="User" type="component" version="2.6.0"/>
+		<require name="Core" type="component" version="2.6.1"/>
 	</requires>
 	<userconfigs>
 		<userconfig weight="2" key="first_name" name="First Name" onedit="1" onregistration="1" searchable="1"/>
 		<userconfig weight="3" key="last_name" name="Last Name" onedit="1" onregistration="1" searchable="1"/>
 		<userconfig weight="4" key="phone" name="Phone Number" onedit="1" onregistration="0"/>
 		<userconfig weight="50" key="bio" name="Biography" formtype="wysiwyg" onedit="1" onregistration="0"/>
-		<userconfig weight="1" key="username" name="Nick Name" required="1" onedit="1" onregistration="1" validation="UserSocialHelper::ValidateUsername" searchable="1"/>
+		<userconfig weight="1" key="username" name="Username" required="1" onedit="1" onregistration="1" validation="UserSocialHelper::ValidateUsername" searchable="1"/>
 		<userconfig weight="" key="json:profiles" name="Connected Profiles (json encoded)" onedit="0" onregistration="0" formtype="disabled"/>
 	</userconfigs>
 	<hooks>
