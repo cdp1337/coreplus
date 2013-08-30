@@ -16,6 +16,11 @@ abstract class GalleryFormHandler{
 		$page  = $form->getModel('page');
 		$page->set('fuzzy', 1);
 
+		if($page->get('rewriteurl') == '/' || $page->get('rewriteurl') == ''){
+			Core::SetMessage('Galleries cannot be installed on the root of your site!  Please change the URL to something other than "/".', 'error');
+			return false;
+		}
+
 		// Update the model cache data
 		$model->set('title', $page->get('title'));
 
@@ -46,6 +51,6 @@ abstract class GalleryFormHandler{
 
 		$model->save();
 
-		return '/galleryadmin/widgets';
+		return '/gallerywidget/admin';
 	}
 }
