@@ -45,7 +45,7 @@
 
 		<div class="gallery-image-wrapper gallery-image-wrapper-{$i.previewsize}">
 			<div class="gallery-image">
-				{a href="`$i.link`"}
+				{a href="`$i.rewriteurl`"}
 					{img file=$i->getPreviewFile() dimensions="`$dimensions`" title="`$i.title`"}
 				{/a}
 			</div>
