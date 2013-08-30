@@ -302,3 +302,44 @@ $header = <<<EOD
 EOD;
 
 file_put_contents(ROOT_PDIR . 'core/bootstrap.compiled.php', '<?php' . "\n" . $header . $contents . $globalnamespace->getClosingTag());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Can we compile SCSS files too?
+if(exec('which sass') == ''){
+	echo "Skipping compiling of SASS resources, you do not have the sass compiler installed!\n";
+}
+else{
+	echo "Scanning for SASS/SCSS resources...\n";
+	exec('find "' . ROOT_PDIR . '" -name "[a-z]*.scss"', $results);
+
+	foreach($results as $file){
+		echo "Compiling $file...\n";
+
+		$cssfile = substr($file, 0, -4) . 'css';
+		$minfile = substr($file, 0, -4) . 'min.css';
+
+		exec('sass "' . $file . '":"' . $cssfile . '" -C -l -f -t expanded --unix-newlines', $null, $ret);
+		if($ret == 0) echo "Compiled CSS file successfully!\n";
+		else echo "Couldn't compile CSS file!\n";
+
+		exec('sass "' . $file . '":"' . $minfile . '" -C -f -t compressed --unix-newlines', $null, $ret);
+		if($ret == 0) echo "Compiled minified CSS file successfully!\n";
+		else echo "Couldn't compile minified CSS file!\n";
+	}
+
+	// sass styles.scss:styles.css -l -f -t expanded --unix-newlines
+	// sass styles.scss:styles.min.css --style compressed
+}
