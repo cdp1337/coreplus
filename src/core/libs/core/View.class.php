@@ -994,8 +994,26 @@ class View {
 	 * @return string
 	 */
 	public function getHeadContent(){
+		$minified = ConfigHandler::Get('/core/markup/minified');
+
 		// First, the basic ones.
-		$data = array_merge($this->stylesheets, $this->head, $this->scripts['head']);
+		if($minified){
+			$data = array_merge($this->stylesheets, $this->head, $this->scripts['head']);
+		}
+		else{
+			$data = array_merge(
+				['<!-- BEGIN STYLESHEET INSERTIONS -->'],
+				$this->stylesheets,
+				['<!-- END STYLESHEET INSERTIONS -->'],
+				['<!-- BEGIN HEAD CONTENT INSERTIONS -->'],
+				$this->head,
+				['<!-- END HEAD CONTENT INSERTIONS -->'],
+				['<!-- BEGIN JAVASCRIPT INSERTIONS -->'],
+				$this->scripts['head'],
+				['<!-- END JAVASCRIPT INSERTIONS -->']
+			);
+		}
+
 
 		// Some of the automatic settings only get set if no errors.
 		if($this->error == View::ERROR_NOERROR){
@@ -1032,11 +1050,11 @@ class View {
 		$data = array_merge($data, $this->meta->fetch());
 
 
-		if (ConfigHandler::Get('/core/markup/minified')) {
+		if ($minified) {
 			$out = implode('', $data);
 		}
 		else {
-			$out = '<!-- BEGIN Automatic meta tag generation -->' . "\n" . implode("\n", $data) . "\n" . '<!-- END Automatic meta tag generation -->';
+			$out = '<!-- BEGIN Automatic HEAD generation -->' . "\n\n" . implode("\n", $data) . "\n\n" . '<!-- END Automatic HEAD generation -->';
 		}
 
 		return trim($out);
@@ -1048,10 +1066,22 @@ class View {
 	 * @return string
 	 */
 	public function getFootContent(){
-		// This section only contains scripts right now.
-		$data = $this->scripts['foot'];
+		$minified = ConfigHandler::Get('/core/markup/minified');
 
-		if (ConfigHandler::Get('/core/markup/minified')) {
+		// This section only contains scripts right now.
+		if($minified){
+			$data = $this->scripts['foot'];
+		}
+		else{
+			$data = array_merge(
+				['<!-- BEGIN JAVASCRIPT INSERTIONS -->'],
+				$this->scripts['foot'],
+				['<!-- END JAVASCRIPT INSERTIONS -->']
+			);
+		}
+
+
+		if ($minified) {
 			$out = implode('', $data);
 		}
 		else {
