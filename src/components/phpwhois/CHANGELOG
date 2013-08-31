@@ -1,3 +1,10 @@
+PHPWhois 4.2.2~core4
+
+	* Make use of the namespace versions of View instead of static.
+	* Just had to fix the template.  Since it was a .php file, the syntax checker was still trying to
+	  perform lint testing on it.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:48:16 -0400
+
 PHPWhois 4.2.2~core3
 
 	* Updated to work with Core 2.5.6

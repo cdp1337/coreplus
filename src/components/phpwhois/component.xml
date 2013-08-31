@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.2.2~core3" name="PHPWhois" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.2.2~core4" name="PHPWhois" execmode="both">
 	<requires>
 		<require name="core" type="component" version="2.5.2"/>
 		<require name="geographic-codes" type="component" version="1.0.0"/>
@@ -15,14 +15,14 @@
 		<scriptlibrary name="fancy_ip" call="phpwhois\JSHelper::LoadFancyIP"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="395304064bcde91a7c4691cbc7cb8fa3"/>
+		<file filename="CHANGELOG" md5="bf2fcd3022c2ed92ebe0a638f2024200"/>
 		<file filename="controllers/PhpwhoisController.php" md5="70abd2f5e5f4e673fdabbb1c6d49186d">
 			<controller name="PhpwhoisController"/>
 		</file>
 		<file filename="lib/CHANGES" md5="33acf079d69323c8b980652e83598f26"/>
 		<file filename="lib/FAQ" md5="fa6daf6a58ce17160335982e1772ff9c"/>
 		<file filename="lib/HANDLERS" md5="95c8d46c77a596e1a6f5c6236d83ad0f"/>
-		<file filename="lib/JSHelper.php" md5="6ed586de4efd70988a2fe98e92842eb7">
+		<file filename="lib/JSHelper.php" md5="c04ce3762e7b33eb3d1cf250394ebb5a">
 			<class name="phpwhois\JSHelper"/>
 		</file>
 		<file filename="lib/LICENSE" md5="eb723b61539feef013de476e68b5c50a"/>
@@ -36,8 +36,8 @@
 		<file filename="lib/example.cli.php" md5="f370214545d897b5acc792c08d43e2ff"/>
 		<file filename="lib/example.html" md5="a24e446edb0ae3b25605972fce8408ee"/>
 		<file filename="lib/example.php" md5="82f35b69597211fe1664c055e7b30545"/>
-		<file filename="lib/handler.template.php" md5="0873abab94ddde12644d822185938fc6">
-			<class name="xx_handler"/>
+		<file filename="lib/handler.template.php" md5="c2493657c54b921b6a090731df5e8357">
+			<class name="phpwhois\xx_handler"/>
 		</file>
 		<file filename="lib/npdata.ser" md5="e844d12e1c72013c1d6bcfd559c69fde"/>
 		<file filename="lib/test.txt" md5="28cec96cfc39ffa23dcf056341e4d762"/>
@@ -401,13 +401,11 @@
 		<file filename="lib/whois.zanet.php" md5="86a5903573c39209f74664a90a76ca7b">
 			<class name="phpwhois\zanet_handler"/>
 		</file>
-		<file filename="tests/PhpwhoisControllerTest.php" md5="fad4bd4e976eecdefb163de484c3f4bd">
-			<class name="PhpwhoisControllerTest"/>
-		</file>
 	</files>
 	<upgrades>
 		<upgrade from="4.2.2~core1" to="4.2.2~core2"/>
 		<upgrade from="4.2.2~core2" to="4.2.2~core3"/>
+		<upgrade from="4.2.2~core3" to="4.2.2~core4"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/phpwhois/fancy_ip.css" md5="c78fb7fd4a37703a00f30ef4f2524361"/>
