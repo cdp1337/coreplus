@@ -1,3 +1,11 @@
+Gallery 1.5.0
+
+	* [Bug] Fix the link for the a tag on gallery album pages.
+	* [Bug] Prevent a bug when trying to register a gallery page directly on top of "/".
+	* [Feature] Overhaul the gallery administration to make it more useful.
+	* New method on the gallery album, getChildrenCount.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:33:45 -0400
+
 Gallery 1.4.4
 
 	* [Feature] Added a preview file for non-images.

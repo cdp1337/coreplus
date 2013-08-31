@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.4" name="Gallery" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.0" name="Gallery" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.6.0" operation="ge"/>
 		<require name="user" type="component"/>
@@ -37,16 +37,16 @@
 		<file filename="controllers/GalleryController.php" md5="87c728f5bdc3efb7ed61460c3dd0876f">
 			<controller name="GalleryController"/>
 		</file>
-		<file filename="controllers/GalleryWidgetController.php" md5="6531e54034e4a132b82b2bdb628e58d5">
+		<file filename="controllers/GalleryWidgetController.php" md5="238bf2662f77f306d485fe4fca445030">
 			<controller name="GalleryWidgetController"/>
 		</file>
-		<file filename="helpers/GalleryFormHandler.class.php" md5="98b2192606e21d061c0f50b39f7bb53e">
+		<file filename="helpers/GalleryFormHandler.class.php" md5="f74f47af1e418c3dba8b3f8c85e0d4ec">
 			<class name="GalleryFormHandler"/>
 		</file>
 		<file filename="models/GalleryAlbumModel.php" md5="42e066aebc160e4bf0f587cf588157c2">
 			<class name="GalleryAlbumModel"/>
 		</file>
-		<file filename="models/GalleryImageModel.php" md5="9c9faf46be400e20a41e614f75876a9f">
+		<file filename="models/GalleryImageModel.php" md5="daebab783fc3772dc1481b4adb357d54">
 			<class name="GalleryImageModel"/>
 		</file>
 		<file filename="upgrades/140_to_141_cachedtitles.php" md5="0e316e5f9a13a315331c93f1fc44b4dc"/>
@@ -86,6 +86,7 @@
 				<datasetwhere>baseurl = /galleryadmin</datasetwhere>
 			</dataset>
 		</upgrade>
+		<upgrade from="1.4.4" to="1.5.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
