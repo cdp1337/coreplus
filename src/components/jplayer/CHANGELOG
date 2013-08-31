@@ -1,3 +1,8 @@
+jPlayer 2.2.0~core3
+
+	* Make use of the namespace versions of View instead of static.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:35:24 -0400
+
 jPlayer 2.2.0~core2
 
 	* Updated to work with Core 2.5.6
@@ -5,14 +10,14 @@ jPlayer 2.2.0~core2
 
 jPlayer 2.2.0~core1
 
+	* [Security] [2.1.2] Security Fix: The Flash SWF had a security vulnerability that could be exploited
+	  to steal cookies from the domain hosting the SWF. Reported by Jason Calvert.
 	* [Feature] [2.1.1] New Feature: Added RTMP support to the Flash fallback. Enables the supplied
 	  options: rtmpv and rtmpa for video and media RTMP streams respectively. RTMP feature developed by
 	  Robert M. Hall in this GitHub fork github.com/rmhall/jPlayer of jPlayer.
 	* [Feature] [2.1.2] New Feature: The Flash SWF jPlayer version number is once again displayed when
 	  visiting the URL directly.
 	* New upstream version!
-	* [2.1.2] Security Fix: The Flash SWF had a security vulnerability that could be exploited to steal
-	  cookies from the domain hosting the SWF. Reported by Jason Calvert.
 	* [2.1.3] Bug Fix: Affecting iOS and Blackberry. iOS 5.1 sometimes fails to give the media.duration
 	  and it remains a NaN. Blackberry OS7 gives the initial media.duration as Infinity. jPlayer now
 	  leaves the status.duration at zero until the media.duration is finite.
