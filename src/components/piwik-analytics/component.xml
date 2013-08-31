@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Piwik Analytics" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Piwik Analytics" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.7"/>
 	</requires>
@@ -12,7 +12,6 @@
 		(i.e. whether they came from a website, directly, or something else), the technical capabilities
 		of visitors (browser, screen size, operating system, etc.), what the visitors did
 		(pages they viewed, actions they took, how they left), the time of visits and more.
-
 		Provides simple Piwik Analytics integration into Core Plus.
 	</description>
 	<configs>
@@ -26,11 +25,11 @@
 		<file filename="templates/pages/piwik/configure.tpl" md5="2ebddb8a00faee1306d901b3ef3f7204"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="cf4b98a2330f782ea0bd0565a86173be"/>
+		<file filename="CHANGELOG" md5="ab8df00c2f461a37aa5a6d8d6ed410b4"/>
 		<file filename="controllers/PiwikController.php" md5="b9fe202c963a76203be11a5cc26b8ea4">
 			<controller name="PiwikController"/>
 		</file>
-		<file filename="libs/piwik/PiwikHelper.php" md5="4f4790355e0571a043eff72421cc5a73">
+		<file filename="libs/piwik/PiwikHelper.php" md5="87fe4e3a06d1b0eb1a9122bf73a36857">
 			<class name="Piwik\PiwikHelper"/>
 		</file>
 	</files>
@@ -45,5 +44,8 @@
 			GNU Affero General Public License v3
 		</license>
 	</licenses>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
 </component>
 

@@ -1,3 +1,10 @@
+Piwik Analytics 1.0.1
+
+	* Make use of the namespace versions of View instead of static.
+	* Update the description for Piwik.
+	* A few new assets.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:48:53 -0400
+
 Piwik Analytics 1.0.0
 
 	* Initial version
