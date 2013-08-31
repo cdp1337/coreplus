@@ -12,8 +12,15 @@ Core Plus 2.6.1
 	* [Performance] Optimize some of the Core javascript a bit.
 	* [Performance] New support for an asset version for better cache control.
 	* [Performance] Optimize the admin bar logic slightly.
+	* [Feature] Implement the private directory directive and backend.
 	* [Feature] FilterForm supports a 'dateformat' attribute.
 	* [Feature] Minify the the admin configuration page a bit more.
+	* Provide some cleaner rendered source code for head and foot content.
+	* Test file for the Filestore\Factory class.
+	* Lessen up the constraint for the DMI_Backend interface.
+	* Deprecate /core/filestore/[assetdir,publicdir,privatedir] directives.
+	* A bug in the filestore caching system that caused file assets that were assumed to be already cached
+	  to return as an non-existant object. Instead, it should have not returned anything
 	* Switch the userconfig install directive to use the new default fields.
 	* Config to FormElement is abstracted into its own function.
 	* View is more self-contained and less static.
@@ -30,6 +37,7 @@ Core Plus 2.6.1
 	* Add a getPreviousSection method on the changelog parser.
 	* Standardized the order of returning changelog entries.
 	* Changelog sections properly ignore duplicate entries.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:58:54 -0400
 
 Core Plus 2.6.0
 

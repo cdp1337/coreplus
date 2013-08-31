@@ -40,10 +40,10 @@
 		-->
 	</includes>
 	<files>
-		<file filename="config/configuration.xml.ant" md5="fb91b428ec86fb83a326faa1f012bfeb"/>
-		<file filename="config/configuration.xml.ex" md5="e89935ea0a883510cfee31f8f0f33cb1"/>
-		<file filename="core/CHANGELOG" md5="0a17c416c9c47c340c2de9e1f4ec3ac6"/>
-		<file filename="core/bootstrap.php" md5="576c124273e2eb2a2a392d1b7f6835ed"/>
+		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
+		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
+		<file filename="core/CHANGELOG" md5="7ee77cffe074608dc02ec491615d3be2"/>
+		<file filename="core/bootstrap.php" md5="6885762e3fd11610ea22aceffd3375ff"/>
 		<file filename="core/bootstrap_postincludes.php" md5="129d5a6cab56e728c99eb116c2786051"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
 		<file filename="core/bootstrap_preincludes.php" md5="dcdd0b6bbd323c923d0f654d35f15713"/>
@@ -532,7 +532,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="278ad7ddb3e300c5165328a00eb635da">
 			<class name="Core\UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="c59171685ce42e499b5c52e14538414f">
+		<file filename="core/libs/core/View.class.php" md5="a332fad46ffd049aaf57e2250751f324">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -571,7 +571,7 @@
 		<file filename="core/libs/core/filestore/Directory_Backend.interface.php" md5="65d8078d0710d29d51f7b47bf6bb5271">
 			<interface name="Directory_Backend"/>
 		</file>
-		<file filename="core/libs/core/filestore/Factory.php" md5="1f9ad6b8ee8d9f2cc1bb7cf830681404">
+		<file filename="core/libs/core/filestore/Factory.php" md5="3115e72c40a8dd7f0f62619faa11d9e0">
 			<class name="Core\Filestore\Factory"/>
 		</file>
 		<file filename="core/libs/core/filestore/File.interface.php" md5="080f82cf3018a42f0972ccc93f103cb5">
@@ -625,7 +625,7 @@
 		<file filename="core/libs/core/filestore/contents/ContentZIP.php" md5="f5bdfebfd3dffcccc13505726558efe3">
 			<class name="Core\Filestore\Contents\ContentZIP"/>
 		</file>
-		<file filename="core/libs/core/filestore/functions.php" md5="3104cb946f6bb5cb887c9af1932983ca"/>
+		<file filename="core/libs/core/filestore/functions.php" md5="6aa0163d59efb3898336655d5cc98de9"/>
 		<file filename="core/libs/core/licenses/Factory.php" md5="ccf611bedbac87225425bb84ac08a0ab">
 			<class name="Core\Licenses\Factory"/>
 		</file>
@@ -664,7 +664,7 @@
 			<class name="DMI_ServerNotFound_Exception"/>
 			<class name="DMI_Query_Exception"/>
 		</file>
-		<file filename="core/libs/datamodel/DMI_Backend.interface.php" md5="274387e4a3a9e791e1182b0572e4b020">
+		<file filename="core/libs/datamodel/DMI_Backend.interface.php" md5="03905b03805cece3174cdd8882d5fcd0">
 			<interface name="DMI_Backend"/>
 		</file>
 		<file filename="core/libs/datamodel/Dataset.class.php" md5="82713620482e0d9e338c4f823c65d6b2">
@@ -1451,6 +1451,7 @@
 		<file filename="core/widgets/UpdaterWidget.php" md5="f16480a6b32ab1ecb093360f1ebc44cd">
 			<class name="UpdaterWidget"/>
 		</file>
+		<file filename="files/private/tests/ivak_TV_Test_Screen.png" md5="e23ff09f0d6d5c8f9f14877264c251b7"/>
 		<file filename="htaccess.ant" md5="322af832f67bca99dc34d618ca6f896f"/>
 		<file filename="htaccess.ex" md5="12ff3c40e1481795c1027629011abd10"/>
 		<file filename="index.php" md5="5a82a0099fd67a28a28a749e4c7f4d3b"/>
@@ -1589,10 +1590,10 @@
 		<config key="/core/markup/minified" type="boolean" default="true" description="Try to collapse rendered markup whenever possible."/>
 		<!-- These are now contained inside the configuration.xml file! -->
 		<!--
-		<config key="/core/filestore/backend" type="enum" options="aws|local" default="local" description="What type of storage should be used for assets?  This will determine the CDN that is used."/>
-		<config key="/core/filestore/assetdir" type="string" default="files/assets/" description="Directory for assets, must be directly accessable via the web."/>
-		<config key="/core/filestore/publicdir" type="string" default="files/public/" description="Directory for public files (uploads), must be directly accessable via the web."/>
-		<config key="/core/filestore/privatedir" type="string" default="files/private/" description="Directory for private files (uploads), should not be directly accessable via the web."/>
+			<config key="/core/filestore/backend" type="enum" options="aws|local" default="local" description="What type of storage should be used for assets?  This will determine the CDN that is used."/>
+			<config key="/core/filestore/assetdir" type="string" default="files/assets/" description="Directory for assets, must be directly accessable via the web."/>
+			<config key="/core/filestore/publicdir" type="string" default="files/public/" description="Directory for public files (uploads), must be directly accessable via the web."/>
+			<config key="/core/filestore/privatedir" type="string" default="files/private/" description="Directory for private files (uploads), should not be directly accessable via the web."/>
 		-->
 		<config key="/core/filestore/assetversion" type="int" default="1" description="Auto-incrementer for the asset version; incremented by calling reinstall on the system."/>
 		<config key="/core/session/ttl" type="int" default="3600" description="Time to live for sessions.  Amount of seconds to keep an idle session active before requesting the user to log back in due to inactivity."/>
