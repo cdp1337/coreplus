@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.10.2~core1" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.10.2~core2" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="1.9.0" operation="ge"/>
 	</requires>
@@ -109,9 +109,9 @@
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="3e8d0bf2b66fd57f9df25b2a2373f559"/>
+		<file filename="CHANGELOG" md5="9da1e6790f9d29f1fe1ce0fda145c1d7"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="96a83eeb65da32bf4089b0ff7bfab0b1">
+		<file filename="JQuery.lib.php" md5="068b2595aae526b9c019e4834e63e618">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
@@ -143,6 +143,7 @@
 		<upgrade from="1.9.1~core2" to="1.10.0~core1"/>
 		<upgrade from="1.9.1~core3" to="1.10.0~core1"/>
 		<upgrade from="1.10.0~core1" to="1.10.2~core1"/>
+		<upgrade from="1.10.2~core1" to="1.10.2~core2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

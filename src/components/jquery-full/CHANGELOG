@@ -1,3 +1,8 @@
+JQuery-Full 1.10.2~core2
+
+	* Make use of the namespace versions of View instead of static.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:37:26 -0400
+
 JQuery-Full 1.10.2~core1
 
 	* New upstream version of jquery, 1.10.2
