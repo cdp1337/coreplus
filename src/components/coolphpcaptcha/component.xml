@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="CoolPHPCaptcha" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="CoolPHPCaptcha" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 	</requires>
@@ -31,11 +31,11 @@
 		<page baseurl="/simplecaptcha/admin" title="Captcha Tweaks" access="g:admin" admin="1" group="Configure"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="8900656aab36815e866cadd9943612b0"/>
-		<file filename="FormCaptchaInput.class.php" md5="4c1795a45d48323e16d9c6430e48ec0b">
+		<file filename="CHANGELOG" md5="85ff1caa930a956c67e68a2af49983d3"/>
+		<file filename="FormCaptchaInput.class.php" md5="cb24b8b0b04c2858c8430ded68acd1ac">
 			<class name="FormCaptchaInput"/>
 		</file>
-		<file filename="SimpleCaptchaController.class.php" md5="be9c456922fcaa93e0ec85a08db664e1">
+		<file filename="SimpleCaptchaController.class.php" md5="86feef575e2e821c87c1f5c7154745e3">
 			<controller name="SimpleCaptchaController"/>
 		</file>
 		<file filename="libs/cool-php-captcha/LICENSE.txt" md5="d32239bcb673463ab874e80d47fae504"/>
@@ -64,6 +64,7 @@
 		<upgrade from="0.3~core3" to="0.3~core4"/>
 		<upgrade from="0.3~core4" to="0.3~core5"/>
 		<upgrade from="0.3~core5" to="1.0.0"/>
+		<upgrade from="1.0.0" to="1.0.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

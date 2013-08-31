@@ -1,3 +1,9 @@
+CoolPHPCaptcha 1.0.1
+
+	* [Bug] Fix the captcha image registering as a page call.
+	* [Bug] Fix the default captcha form element.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:07:13 -0400
+
 CoolPHPCaptcha 1.0.0
 
 	* [Feature] Captcha is fully configurable via an admin interface.
@@ -26,3 +32,4 @@ CoolPHPCaptcha 0.3~core2
 
 	* [Feature] Added back in the view directive that got lost somehow....
 	-- Charlie Powell <charlie@eval.bz>  31 May 2012
+
