@@ -22,7 +22,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="a2ab4b768e8b688de76aaf5a24df38a2"/>
+		<file filename="CHANGELOG" md5="b5529dbb4c14ec93a20beffa2c3eea22"/>
 		<file filename="User.class.php" md5="097fab24c5528e52f7076215b2b72d4b">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -58,7 +58,7 @@
 			<class name="User\ImportHelper"/>
 		</file>
 		<file filename="helpers/UserFunctions.php" md5="21facd4c7b807fbae6710d47a755e21a"/>
-		<file filename="helpers/UserHelper.class.php" md5="cb96afa2c93ec39bb33ce53d1655f143">
+		<file filename="helpers/UserHelper.class.php" md5="5280677af0f801140ca62ad659f580f9">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>

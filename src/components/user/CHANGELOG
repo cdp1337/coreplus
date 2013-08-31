@@ -2,12 +2,14 @@ User 2.6.0
 
 	* [Bug] Fix the user profile to allow standard users to be able to edit their own accounts.
 	* [Bug] Fix an error with the user active field.
+	* [Bug] Fix the order of active/email not registered for logins.
 	* [Feature] Implement Feature #435 - Add a "require numbers" option for user passwords.
 	* [Feature] New config option to allow or disallow users from updating their email addresses.
 	* [Feature] New interface for managing the userconfig options.
 	* [Feature] Switch to a more granular permission level.
 	* [Feature] Rename the "Confirm" field on registration to "Confirm Password".
 	* [Feature] Set several user action pages as no-index by search engines.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:55:33 -0400
 
 User 2.5.7
 
