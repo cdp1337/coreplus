@@ -1,3 +1,9 @@
+Cron 1.1.7
+
+	* [Bug] Fix on the admin pages of the Cron system, incorrect master template was being used.
+	* [Feature] Added some documentation for the cron system.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:28:29 -0400
+
 Cron 1.1.6
 
 	* [Bug] Just removed a minor development flag from the widget.
