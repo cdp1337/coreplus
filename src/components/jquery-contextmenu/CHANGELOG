@@ -1,3 +1,12 @@
+JQuery-contextMenu 1.01
+
+	* original version
+
+JQuery-contextMenu 1.01~core3
+
+	* Make use of the namespace versions of View instead of static.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:36:13 -0400
+
 JQuery-contextMenu 1.01~core2
 
 	* [Bug] Fixed bug that developed after jquery removed support for the $.browser object.
@@ -9,8 +18,4 @@ JQuery-contextMenu 1.01~core1
 	  string
 	* Updated some of the internals to use newer jquery features
 	-- Charlie Powell <charlie@eval.bz>  Fri, 22 Feb 2013 15:07:55 -0500
-
-JQuery-contextMenu 1.01
-
-	* original version
 

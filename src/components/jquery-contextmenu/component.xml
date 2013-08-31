@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.01~core2" name="JQuery-contextMenu" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.01~core3" name="JQuery-contextMenu" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.3" operation="ge"/>
 		<require name="jquery" type="library" version="1.9.1" operation="ge"/>
@@ -14,8 +14,8 @@
 		menu functionality easy and requires minimal effort to configure.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="d94002d46d19fbdb912d15dad3473a08"/>
-		<file filename="JQueryContextMenu.lib.php" md5="43e185f413c6931a97037b317317ca6f">
+		<file filename="CHANGELOG" md5="d0f1af1554c262c5c18493b366f772ef"/>
+		<file filename="JQueryContextMenu.lib.php" md5="c22288599d3e6e7af5357ee797ebc9a7">
 			<class name="JQueryContextMenu"/>
 		</file>
 		<file filename="example/index.html" md5="c7d169b1376cb0d337d010d0782c1e47"/>
@@ -27,6 +27,7 @@
 	</assets>
 	<upgrades>
 		<upgrade from="1.01~core1" to="1.01~core2"/>
+		<upgrade from="1.01~core2" to="1.01~core3"/>
 	</upgrades>
 </component>
 
