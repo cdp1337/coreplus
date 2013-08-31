@@ -1,3 +1,9 @@
+CodeMirror 3.12~core2
+
+	* Make use of the namespace versions of View instead of static.
+	* Forgot an ending ">" on a couple author lines.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 16:02:40 -0400
+
 CodeMirror 3.12~core1
 
 	* Initial version imported into Core.

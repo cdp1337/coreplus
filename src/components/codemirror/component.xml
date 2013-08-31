@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.12~core1" name="CodeMirror" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.12~core2" name="CodeMirror" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.0" operation="ge"/>
 	</requires>
 	<files>
-		<file filename="classes/codemirror/Utils.php" md5="0ff85fa4ba0201eed17ca831f380f5e1">
+		<file filename="CHANGELOG" md5="e8f19aa54e63005907429bb3264d333f"/>
+		<file filename="classes/codemirror/Utils.php" md5="df0b32d524d4c7de0323428ef2b3565a">
 			<class name="CodeMirror\Utils"/>
 		</file>
 	</files>
@@ -25,7 +26,9 @@
 		<scriptlibrary name="codemirror_smarty" call="CodeMirror\Utils::IncludeSmarty"/>
 	</provides>
 	<view searchdir="templates"/>
-	<upgrades/>
+	<upgrades>
+		<upgrade from="3.12~core1" to="3.12~core2"/>
+	</upgrades>
 	<assets>
 		<file filename="assets/css/codemirror.css" md5="e80f3d7349a4563458e8088bce1ae39e"/>
 		<file filename="assets/libs/codemirror/CONTRIBUTING.md" md5="db0c81d428132d1f4df5050ba3e949d4"/>
@@ -310,6 +313,7 @@
 		<author name="Stas Kobzar" email="stas@modulis.ca"/>
 		<author name="Author: Mike Brevoort" email="mike@brevoort.com"/>
 		<author name="Constantin Jucovschi" email="c.jucovschi@jacobs-university.de"/>
+		<author name="Nick Hinsch" email="nicholas@eval.bz"/>
 	</authors>
 	<licenses>
 		<license>MIT</license>
