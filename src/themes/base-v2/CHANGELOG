@@ -1,3 +1,10 @@
+Theme/Base V2 1.1.0
+
+	* [Feature] Use SASS for better stylesheet management and useragent compression
+	* Add the loading... graphic back into base-v2 to keep the editor from complaining.
+	* Change a comment from HTML style to Smarty style.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 15:14:00 -0400
+
 Theme/Base V2 1.0.7
 
 	* Styles for the new check/uncheck all feature for formcheckboxes.

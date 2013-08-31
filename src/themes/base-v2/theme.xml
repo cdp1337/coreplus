@@ -1,20 +1,27 @@
 <?xml version="1.0"?>
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.7" name="Base V2">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" name="Base V2">
 	<assets>
+		<file filename="assets/css/_h5bp.scss" md5="116831636be07686f46026a66e6587bf"/>
+		<file filename="assets/css/_normalize.scss" md5="91507f70613b12359e35b966afad8c30"/>
+		<file filename="assets/css/_print.scss" md5="f3dd7a5f96e67e8d2156b5887ea785d4"/>
+		<file filename="assets/css/_screen.scss" md5="616a30b3d90d734a28c0b429991eb77e"/>
 		<file filename="assets/css/codemirror.css" md5="3ae79db8923119601aa32d46e9074a29"/>
 		<file filename="assets/css/error404.css" md5="d451b8028c05fb6474223b84ddc7f417"/>
 		<file filename="assets/css/opt/full-width.css" md5="b874f3da2ccf0890f507834f8ae1a3fc"/>
 		<file filename="assets/css/opt/gradients.css" md5="26c1738ce9d7e3a909f633dedf52db63"/>
-		<file filename="assets/css/print.css" md5="f3dd7a5f96e67e8d2156b5887ea785d4"/>
-		<file filename="assets/css/screen.css" md5="616a30b3d90d734a28c0b429991eb77e"/>
-		<file filename="assets/css/styles.css" md5="36eda30dabcbfb9ae3783a65fcecc485"/>
+		<file filename="assets/css/print.css" md5="5bcfc09ac6affe440f91a89e44070ef0"/>
+		<file filename="assets/css/screen.css" md5="3671c7323c4cdd2a6deb8242e6fdd518"/>
+		<file filename="assets/css/styles.css" md5="aa67a3b12c988970c2cbaa366d1de232"/>
+		<file filename="assets/css/styles.min.css" md5="3ab655cc81089cbc4facdce47543ef77"/>
+		<file filename="assets/css/styles.scss" md5="ead4d2cc0acc62b33ee6fac7301f67d7"/>
 		<file filename="assets/css/tinymce/content.css" md5="1ff045c082c1f366dd16e8322644e484"/>
 		<file filename="assets/images/404.jpg" md5="815cb4116bbbec081a645e85de74025c"/>
+		<file filename="assets/images/loading-bar-small.gif" md5="657ee2fa16698cbc29d5a1f4b257de46"/>
 	</assets>
 	<skins>
-		<file filename="basic.tpl" title="Standard skin with one left column" md5="9274faf642c8a54b8df95a311c42c575"/>
-		<file filename="wide.tpl" title="Full-width body skin, contains no columns" md5="dd2d1c6622e31b252b77cdd7ddb17ae2"/>
-		<file filename="blank.tpl" title="Blank template, do not use" md5="524eb700b4288a9d763fc653f8c46c4f"/>
+		<file filename="basic.tpl" title="Standard skin with one left column" md5="9e73c4b0f94cb55c0c749f02940da9de"/>
+		<file filename="wide.tpl" title="Full-width body skin, contains no columns" md5="372d847798d7c3a4abf220a940e69141"/>
+		<file filename="blank.tpl" title="Blank template, do not use" md5="261d8d70a592918d16da399060d13ef7"/>
 	</skins>
 	<emailskins>
 		<file filename="basic.tpl"/>
@@ -29,6 +36,7 @@
 		<upgrade from="1.0.4" to="1.0.5"/>
 		<upgrade from="1.0.5" to="1.0.6"/>
 		<upgrade from="1.0.6" to="1.0.7"/>
+		<upgrade from="1.0.7" to="1.1.0"/>
 	</upgrades>
 	<screenshots>
 		<screenshot file="screenshots/screen1.png" title="Home Page"/>
