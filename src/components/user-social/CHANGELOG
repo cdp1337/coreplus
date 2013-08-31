@@ -1,3 +1,10 @@
+User-Social 1.0.5
+
+	* [Bug] Fix a minor error where the edit public profiles control wasn't displaying for the own user.
+	* Changes necessary for the new User updates, (permission key name).
+	* Change "Nick Name" to "Username".
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:56:09 -0400
+
 User-Social 1.0.4
 
 	* [Feature] Added a more sanity logic to the nicknames to prevent use of non-latin characters.
