@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.1~core2" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.1~core3" name="TinyMCE" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.1"/>
 		<require name="jquery" type="library"/>
@@ -11,16 +11,16 @@
 	<forms>
 		<formelement name="wysiwyg" class="TinyMCEFormElement"/>
 	</forms>
-	<permissions></permissions>
-	<configs></configs>
-	<pages></pages>
+	<permissions/>
+	<configs/>
+	<pages/>
 	<view>
 		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="2d1d9893d6d2e518eaa953eb460df23d"/>
 		<file filename="templates/pages/tinymce/browser-icons.tpl" md5="e9e783cbc75b5dbe1d7618e5e4e41ebe"/>
 		<file filename="templates/pages/tinymce/link.phtml" md5="524d952e87774b2bafd2324e7c15274b"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="a79687afafceb67ce60a9c9bb35c02bd"/>
+		<file filename="CHANGELOG" md5="c2895e380c7a2d8172016ab094513279"/>
 		<file filename="LICENSE.TXT" md5="045d04e17422d99e338da75b9c749b7c"/>
 		<file filename="TinyMCEFormElement.class.php" md5="5c3eccd47fabc69634e956046b08ee73">
 			<class name="TinyMCEFormElement"/>
@@ -29,7 +29,7 @@
 		<file filename="controllers/TinyMCEController.php" md5="5dd2945866df74f2b3bea7a28db19fd4">
 			<controller name="TinyMCEController"/>
 		</file>
-		<file filename="libs/tinymce/TinyMCE.php" md5="0add1882d03b3acbb08caed57014c44c">
+		<file filename="libs/tinymce/TinyMCE.php" md5="95eec77b7c9dd2ea9fc8027f5d953e6f">
 			<class name="TinyMCE\TinyMCE"/>
 		</file>
 	</files>
@@ -223,6 +223,7 @@
 				</datasetwhere>
 			</dataset>
 		</upgrade>
+		<upgrade from="4.0.1~core2" to="4.0.1~core3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

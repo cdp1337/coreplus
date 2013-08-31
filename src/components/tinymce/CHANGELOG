@@ -1,3 +1,8 @@
+TinyMCE 4.0.1~core3
+
+	* Make use of the namespace versions of View instead of static.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:49:15 -0400
+
 TinyMCE 4.0.1~core2
 
 	* Moved the navigator functionality into the Media Manager component.
@@ -12,12 +17,6 @@ TinyMCE 4.0.1~core1
 	* Minor style tweaks to the navigator icon and list views.
 	* Updated TinyMCE to 4.0.1 from upstream.
 	-- Charlie Powell <charlie@eval.bz>  Mon, 08 Jul 2013 12:01:11 -0400
-
-TinyMCE 4.0.0~core1
-
-	* First stable release of the 4.0 tree.
-	* Removed some legacy code that wasn't being used anymore.
-	-- Charlie Powell <charlie@eval.bz>  Wed, 19 Jun 2013 04:50:28 -0400
 
 TinyMCE 4.0.0b3~core2
 
@@ -37,6 +36,12 @@ TinyMCE 4.0.0b3~core1
 	* [Feature] New image selector popup
 	* Updated to newest version of TinyMCE.
 	-- Charlie Powell <charlie@eval.bz>  Wed, 05 Jun 2013 05:12:25 -0400
+
+TinyMCE 4.0.0~core1
+
+	* First stable release of the 4.0 tree.
+	* Removed some legacy code that wasn't being used anymore.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 19 Jun 2013 04:50:28 -0400
 
 TinyMCE 3.5.6~core6
 
