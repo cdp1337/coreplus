@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.11~core1" name="FontAwesome" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.11~core2" name="FontAwesome" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.5" operation="ge"/>
 	</requires>
@@ -11,9 +11,9 @@
 		The iconic font designed for use with Twitter Bootstrap
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="587b44f4f4ca1492324a41c1438769c0"/>
+		<file filename="CHANGELOG" md5="b3382abc966b5e7c7697288f8615dad3"/>
 		<file filename="FontAwesome-Vectors.pdf" md5="f20834970d9f01b246f65b9939b97f11"/>
-		<file filename="FontAwesome.lib.php" md5="f390e22f306175178982dc0f275689b4">
+		<file filename="FontAwesome.lib.php" md5="5028291fd224858f6a7ba312fde25312">
 			<class name="FontAwesome"/>
 		</file>
 		<file filename="README.md" md5="bcb91e0d16d1f010effa565d0c7980d2"/>
@@ -33,6 +33,7 @@
 	<upgrades>
 		<upgrade from="2.0" to="2.0~core2"/>
 		<upgrade from="2.0~core2" to="3.11~core1"/>
+		<upgrade from="3.11~core1" to="3.11~core2"/>
 	</upgrades>
 	<authors>
 		<author name="Dave Gandy" email="dave@davegandy.com"/>
