@@ -1,3 +1,9 @@
+Facebook 3.2.0~core7
+
+	* Make use of the namespace versions of View instead of static.
+	* New facebook button class, "facebook-button".
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:29:10 -0400
+
 Facebook 3.2.0~core6
 
 	* Updated some things to keep up with Core 2.5.7
