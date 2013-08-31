@@ -1,4 +1,11 @@
+JSONjs 2011.11.18~core3
+
+	* Make use of the namespace versions of View instead of static.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 31 Aug 2013 17:47:23 -0400
+
 JSONjs 2011.11.18~core2
 
-	* Added the "JSONjs" script library tag.  This allows the library to be called via {script library="jsonjs"}{/script}
+	* [Feature] Added the "JSONjs" script library tag.  This allows the library to be called via {script
+	  library="jsonjs"}{/script}
 	-- Charlie Powell <charlie@eval.bz>  30 Dec 2012
+
