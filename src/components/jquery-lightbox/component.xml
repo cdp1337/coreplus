@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component SYSTEM "http://corepl.us/api/2_1/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.5~core1" name="JQuery-lightbox" execmode="web">
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.5~core2" name="JQuery-lightbox" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.4" operation="ge"/>
@@ -20,12 +20,12 @@
 		<file filename="assets/js/jquery.lightbox-0.5.min.js" md5="89a2ef0f8dc320697d03148604fd5526"/>
 	</assets>
 	<files>
-		<file filename="JQueryLightbox.lib.php" md5="458e6cfd5aec29aff515bda9eef56944">
+		<file filename="JQueryLightbox.lib.php" md5="5a1333e1703f65954cf15c6fe723bd8d">
 			<class name="JQueryLightbox"/>
 		</file>
 	</files>
 	<description>
-		Query lightBox plugin is simple, elegant, unobtrusive, no need extra markup and is used to overlay images on the current page through the power and flexibility of jQuery´s selector.
+		Query lightBox plugin is simple, elegant, unobtrusive, no need extra markup and is used to overlay images on the current page through the power and flexibility of jQuery&#xB4;s selector.
 		lightBox is a plugin for jQuery. It was inspired in Lightbox JS by Lokesh Dhakar.
 		Visit http://leandrovieira.com/projects/jquery/lightbox/ for more informations about this jQuery plugin
 	</description>
@@ -37,5 +37,8 @@
 			CCAttribution-ShareAlike 2.5 Brazil
 		</license>
 	</licenses>
+	<upgrades>
+		<upgrade from="0.5~core1" to="0.5~core2"/>
+	</upgrades>
 </component>
 
