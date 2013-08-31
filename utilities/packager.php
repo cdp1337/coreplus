@@ -84,7 +84,7 @@ if($argc > 1){
 		}
 		elseif($arg == '-c'){
 			$opts['type'] = 'component';
-			$opts['name'] = $arguments[$i+1];
+			$opts['name'] = isset($arguments[$i+1]) ? $arguments[$i+1] : null;
 			// And skip the name, (since that will be the next argument).
 			++$i;
 		}
@@ -831,9 +831,10 @@ function process_component($component, $forcerelease = false){
 		$opts = array(
 			'editvers'   => '[ VERSION     ] Set version number',
 			'editdesc'   => '[ DESCRIPTION ] Edit description',
-			'importgit'  => '[ CHANGELOG   ] Import GIT commit logs into version ' . $version,
-			'editchange' => '[ CHANGELOG   ] Edit for version ' . $version,
-			'viewchange' => '[ CHANGELOG   ] View for version ' . $version,
+			'viewgit'    => '[ GIT         ] View pending GIT commits between ' . $version . ' and HEAD',
+			'importgit'  => '[ CHNGLOG/GIT ] Import GIT commit logs into version ' . $version,
+			'editchange' => '[ CHNGLOG     ] Edit for version ' . $version,
+			'viewchange' => '[ CHNGLOG     ] View for version ' . $version,
 			//'dbtables' => 'Manage DB Tables',
 			'printdebug' => '[ DEBUG       ] Print the XML',
 			'save'       => '[ FINISH      ] Save it!',
@@ -884,11 +885,19 @@ function process_component($component, $forcerelease = false){
 					$importgit = CLI::PromptUser('Do you want to automatically import GIT commits performed after ' . $previousversion . ' into the ' . $version . ' changelog?', 'boolean', true);
 					if($importgit){
 						$parser = new Core\Utilities\Changelog\Parser($name, $changelogfile);
-						$parser->parse();
-						$previouschange = $parser->getSection($previousversion);
-						$thischange     = $parser->getSection($version);
+						try{
+							$parser->parse();
+							$previouschange = $parser->getSection($previousversion);
+							$previousdate   = $previouschange->getReleasedDate();
+							$thischange     = $parser->getSection($version);
 
-						$changes = get_git_changes_since($name, $previousversion, $previouschange->getReleasedDate(), $gitpaths);
+						}
+						catch(Exception $e){
+							$previousdate = '01 Jan 2013 00:00:00 -0400';
+							$thischange   = $parser->getSection($version);
+						}
+
+						$changes = get_git_changes_since($name, $previousversion, $previousdate, $gitpaths);
 						$linecount = sizeof($thischange->getEntriesSorted());
 						foreach($changes as $line){
 							$thischange->addLine($line);
@@ -918,6 +927,33 @@ function process_component($component, $forcerelease = false){
 			case 'editchange':
 				manage_changelog($changelogfile, $name, $version);
 				break;
+			case 'viewgit':
+				try{
+					$parser = new Core\Utilities\Changelog\Parser($name, $changelogfile);
+					$parser->parse();
+
+					/** @var $thisversion Core\Utilities\Changelog\Section */
+					$thischange      = $parser->getSection($version);
+					$thisdate        = $thischange->getReleasedDate();
+					$versioncheck    = $version;
+					if(!$thisdate){
+						$previouschange = $parser->getPreviousSection($version);
+						$thisdate       = $previouschange->getReleasedDate();
+						$versioncheck   = $previouschange->getVersion();
+					}
+				}
+				catch(Exception $e){
+					$thisdate = '01 Jan 2013 00:00:00 -0400';
+				}
+
+				$changes = get_git_changes_since($name, $versioncheck, $thisdate, $gitpaths);
+				print "GIT commits since $name $versioncheck was released on $thisdate:\n\n";
+				foreach($changes as $line){
+					print $line . "\n";
+				}
+				print "\n";
+				break;
+
 			case 'importgit':
 				$parser = new Core\Utilities\Changelog\Parser($name, $changelogfile);
 				$parser->parse();
@@ -989,6 +1025,14 @@ function process_component($component, $forcerelease = false){
 		//@todo The XML file didn't load.... would this be a good time to revert a saved state?
 		throw new Exception('Unable to load XML file ' . $cfile);
 	}
+
+
+	// Update the version installed in the database, since the codebase *was* afterall running with whatever files
+	// were currently available, (and thus were set as the next version).
+	$cmodel = ComponentModel::Construct($name);
+	$cmodel->set('version', $version);
+	$cmodel->save();
+
 	echo "Saved!" . NL;
 
 	if($forcerelease){
@@ -1103,6 +1147,28 @@ EOD;
 		if(CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
 			exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -u "' . $packageremail . '" -a --sign "' . $tgz . '"');
 			$bundle .= '.asc';
+
+			// If the user signed it... give the option to automatically commit and tag all changes for the component.
+			if(CLI::PromptUser('Package signed, GIT commit and tag everything?', 'boolean', true)){
+				// First, see if any new files need to be added to GIT in the directories.
+				exec('git status -u -s "' . implode('" "', $gitpaths) . '" | egrep "^\?\?" | sed "s:?? ::"', $newfiles);
+				foreach($newfiles as $nf){
+					exec('git add "' . $nf . '"');
+				}
+
+				exec('git status -u -s "' . implode('" "', $gitpaths) . '" | egrep "(^A|^ M)" | sed "s:[A M]*::"', $modifiedfiles);
+				foreach($modifiedfiles as $nf){
+					exec('git add "' . $nf . '"');
+				}
+
+				exec('git status -u -s "' . implode('" "', $gitpaths) . '" | egrep "(^ D)" | sed "s:[A M]*::"', $deletedfiles);
+				foreach($deletedfiles as $nf){
+					exec('git del "' . $nf . '"');
+				}
+
+				exec('git commit -s -m "Release ' . $name . ' ' . $version . '" "' . implode('" "', $gitpaths) . '"');
+				exec('git tag -m "Release ' . $name . ' ' . $version . '" -f ' . str_replace(' ', '-', $name) . '-' . str_replace('~', '-', $version));
+			}
 		}
 
 		// And remove the tmp directory.
@@ -1170,33 +1236,110 @@ function process_theme($theme, $forcerelease = false){
 	$t->setSkinFiles($skinfiles);
 	$t->setViewFiles($viewfiles);
 
+	// Lookup the changelog text of this current version.
+	$changelogfile = $t->getBaseDir() . 'CHANGELOG';
+	$gitpaths = [
+		$t->getBaseDir(),
+	];
+
 	$ans = false;
 
 	while($ans != 'save'){
 		$opts = array(
-			'editvers'   => 'Edit Version',
-			'editdesc'   => 'Edit Description',
-			'editchange' => 'Edit Changelog (for version ' . $version . ')',
-			'printdebug' => 'DEBUG - Print the XML',
-			'save' => 'Finish Editing, Save it!',
-			'exit' => 'Abort and exit without saving changes',
+			'editvers'   => '[ VERSION     ] Set version number',
+			'editdesc'   => '[ DESCRIPTION ] Edit description',
+			//'importgit'  => '[ CHANGELOG   ] Import GIT commit logs into version ' . $version,
+			'editchange' => '[ CHANGELOG   ] Edit for version ' . $version,
+			//'viewchange' => '[ CHANGELOG   ] View for version ' . $version,
+			'printdebug' => '[ DEBUG       ] Print the XML',
+			'save'       => '[ FINISH      ] Save it!',
+			'exit'       => 'Abort and exit without saving changes',
 		);
 		$ans = CLI::PromptUser('What do you want to edit for theme ' . $name . ' ' . $version, $opts);
 
 		switch($ans){
 			case 'editvers':
+				$previousversion = $t->getVersion();
 				$version = _increment_version($t->getVersion(), true);
 				$version = CLI::PromptUser('Please set the version of the new release', 'text', $version);
 				$t->setVersion($version);
+
+				if($version != $previousversion){
+					$importgit = CLI::PromptUser('Do you want to automatically import GIT commits performed after ' . $previousversion . ' into the ' . $version . ' changelog?', 'boolean', true);
+					if($importgit){
+						$parser = new Core\Utilities\Changelog\Parser('Theme/' . $name, $changelogfile);
+						$parser->parse();
+						$previouschange = $parser->getSection($previousversion);
+						$thischange     = $parser->getSection($version);
+
+						$changes = get_git_changes_since('Theme/' . $name, $previousversion, $previouschange->getReleasedDate(), $gitpaths);
+						$linecount = sizeof($thischange->getEntriesSorted());
+						foreach($changes as $line){
+							$thischange->addLine($line);
+						}
+						$linesadded = sizeof($thischange->getEntriesSorted()) - $linecount;
+
+						// Don't forget to save this changelog back down to the original file!
+						$parser->save();
+
+						// And notify the user of what happened.
+						if(!sizeof($changes)){
+							print 'No GIT history found.' . NL;
+						}
+						elseif(!$linesadded){
+							print 'No new GIT commits found.' . NL;
+						}
+						else{
+							print 'Added ' . $linesadded . ($linesadded != 1 ? ' lines' : ' line') . ' to the changelog successfully!' . NL;
+							print $thischange->fetchFormatted() . NL . NL;
+						}
+					}
+				}
+
 				break;
 			case 'editdesc':
 				$t->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $t->getDescription()));
 				break;
 			case 'editchange':
-				// Lookup the changelog text of this current version.
-				$file = $t->getBaseDir() . 'CHANGELOG';
+				manage_changelog($changelogfile, 'Theme/' . $name, $version);
+				break;
+			case 'importgit':
+				$parser = new Core\Utilities\Changelog\Parser('Theme/' . $name, $changelogfile);
+				$parser->parse();
 
-				manage_changelog($file, 'Theme/' . $name, $version);
+				/** @var $thisversion Core\Utilities\Changelog\Section */
+				$thischange      = $parser->getSection($version);
+				$previouschange  = $parser->getPreviousSection($version);
+				$previousversion = $previouschange ? $previouschange->getVersion() : '0.0.0';
+				$previousdate    = $previouschange ? $previouschange->getReleasedDate() : '2000-01-01';
+
+				// If this version is released, I can't import anything!
+				if($thischange->getReleasedDate()){
+					print 'Version ' . $version . ' is already marked as released!  Refusing to import GIT changes into a released version.' . NL;
+				}
+				else{
+					$changes = get_git_changes_since('Theme/' . $name, $previousversion, $previousdate, $gitpaths);
+					$linecount = sizeof($thischange->getEntriesSorted());
+					foreach($changes as $line){
+						$thischange->addLine($line);
+					}
+					$linesadded = sizeof($thischange->getEntriesSorted()) - $linecount;
+
+					// Don't forget to save this changelog back down to the original file!
+					$parser->save();
+
+					// And notify the user of what happened.
+					if(!sizeof($changes)){
+						print 'No GIT history found since version ' . $previousversion . ' was released on ' . $previousdate . '.' . NL;
+					}
+					elseif(!$linesadded){
+						print 'No new GIT commits found since version ' . $previousversion . ' was released on ' . $previousdate . '.' . NL;
+					}
+					else{
+						print 'Added ' . $linesadded . ($linesadded != 1 ? ' lines' : ' line') . ' to the changelog successfully!' . NL;
+						print $thischange->fetchFormatted() . NL . NL;
+					}
+				}
 				break;
 			case 'printdebug':
 				echo $t->getRawXML() . NL;
@@ -1264,6 +1407,28 @@ function process_theme($theme, $forcerelease = false){
 		if(CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
 			exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -u "' . $packageremail . '" -a --sign "' . $tgz . '"');
 			$bundle .= '.asc';
+
+			// If the user signed it... give the option to automatically commit and tag all changes for the component.
+			if(CLI::PromptUser('Package signed, GIT commit and tag everything?', 'boolean', true)){
+				// First, see if any new files need to be added to GIT in the directories.
+				exec('git status -u -s "' . implode('" "', $gitpaths) . '" | egrep "^\?\?" | sed "s:?? ::"', $newfiles);
+				foreach($newfiles as $nf){
+					exec('git add "' . $nf . '"');
+				}
+
+				exec('git status -u -s "' . implode('" "', $gitpaths) . '" | egrep "(^A|^ M)" | sed "s:[A M]*::"', $modifiedfiles);
+				foreach($modifiedfiles as $nf){
+					exec('git add "' . $nf . '"');
+				}
+
+				exec('git status -u -s "' . implode('" "', $gitpaths) . '" | egrep "(^ D)" | sed "s:[A M]*::"', $deletedfiles);
+				foreach($deletedfiles as $nf){
+					exec('git del "' . $nf . '"');
+				}
+
+				exec('git commit -s -m "Release Theme/' . $name . ' ' . $version . '" "' . implode('" "', $gitpaths) . '"');
+				exec('git tag "Release Theme ' . $name . ' ' . $version . '" -f Theme-' . str_replace(' ', '-', $name) . '-' . str_replace('~', '-', $version));
+			}
 		}
 
 		// And remove the tmp directory.
