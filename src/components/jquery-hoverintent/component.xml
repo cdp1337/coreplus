@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="r7~core2" name="JQuery-hoverIntent" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="r7~core3" name="JQuery-hoverIntent" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.2" operation="ge"/>
@@ -15,9 +15,11 @@
 	<upgrades>
 		<upgrade from="r6~core1" to="r7~core1"/>
 		<upgrade from="r7~core1" to="r7~core2"/>
+		<upgrade from="r7~core2" to="r7~core3"/>
 	</upgrades>
 	<files>
-		<file filename="JQueryHoverIntent.lib.php" md5="aee32463fa0e30a75179e374e21ca641">
+		<file filename="CHANGELOG" md5="b0322590dab2555fa1f04d8a5bd833ab"/>
+		<file filename="JQueryHoverIntent.lib.php" md5="e6a4fe9f9f530ba8a308508b280a0280">
 			<class name="JQueryHoverIntent"/>
 		</file>
 	</files>
