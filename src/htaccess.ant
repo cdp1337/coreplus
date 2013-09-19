@@ -80,3 +80,14 @@ Options -Indexes
 
 #  Add Proper MIME-Type for Favicon to allow expires to work
 AddType image/vnd.microsoft.icon .ico
+
+# since IE has a bug where the X-UA-Compatible header is set but ignored due to other comments present in head
+# setting the X-UA-Compatible header here!
+<IfModule mod_headers.c>
+	Header set X-UA-Compatible "IE=edge"
+	# `mod_headers` can't match based on the content-type, however, we only
+	# want to send this header for HTML pages and not for the other resources
+	<FilesMatch "\.(appcache|crx|css|eot|gif|htc|ico|jpe?g|js|m4a|m4v|manifest|mp4|oex|oga|ogg|ogv|otf|pdf|png|safariextz|svgz?|ttf|vcf|webapp|webm|webp|woff|xml|xpi)$">
+		Header unset X-UA-Compatible
+	</FilesMatch>
+</IfModule>
