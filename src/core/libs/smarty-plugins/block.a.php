@@ -34,17 +34,20 @@ function smarty_block_a($params, $innercontent, $template, &$repeat){
 	if($repeat) return '';
 
 	$assign= false;
-	
+
 	// Start the A tag
 	$content = '<a';
 
 	// Allow "confirm" text to override the href and onClick functions.
 	// This has the cool ability of not requiring jquery to run, since it is all handled with PHP logic.
 	if(isset($params['confirm']) && $params['confirm']){
-		$params['onClick'] = "if(confirm('" . str_replace("'", "\\'", $params['confirm']) . "')){ Core.PostURL('" . str_replace("'", "\\'", Core::ResolveLink($params['href'])) . "'); } return false;";
-		$params['href'] = '#';
+		$params['onclick'] = 'return Core.ConfirmEvent(this);';
+		$params['data:href'] = Core::ResolveLink($params['href']);
+		$params['data:confirm'] = $params['confirm'];
+		//$params['onClick'] = "if(confirm('" . str_replace("'", "\\'", $params['confirm']) . "')){ Core.PostURL('" . str_replace("'", "\\'", Core::ResolveLink($params['href'])) . "'); } return false;";
+		$params['href'] = '#false';
 	}
-	
+
 	// Add in any attributes.
 	foreach($params as $k => $v){
 		$k = strtolower($k);
@@ -56,17 +59,17 @@ function smarty_block_a($params, $innercontent, $template, &$repeat){
 				$assign = $v;
 				break;
 			default:
-				$content .= " $k=\"$v\"";
+				$content .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
 		}
 	}
 	// Close the starting tag.
 	$content .= '>';
-	
+
 	// Add any content inside.
 	$content .= $innercontent;
-	
+
 	// Close the set.
 	$content .= '</a>';
 
-    return $assign ? $template->assign($assign, $content) : $content;
+	return $assign ? $template->assign($assign, $content) : $content;
 }
