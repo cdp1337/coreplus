@@ -229,7 +229,8 @@ abstract class Factory {
 			strpos($uri, 'private/') === 0 ||
 			strpos($uri, get_private_path()) === 0
 		){
-			return new CDN\FileAsset($uri);
+			// @TODO
+			//return resolve_private_file($uri);
 		}
 
 		// Is this a tmp request?
@@ -256,7 +257,9 @@ abstract class Factory {
 	public static function ResolveAssetFile($filename){
 		$originaluri = $filename;
 
-		if(isset(self::$_ResolveCache[$originaluri])){
+		// Cache is disabled on this element for the time being.
+		// it returns inconsistent results across different themes.
+		if(false && isset(self::$_ResolveCache[$originaluri])){
 			return self::$_ResolveCache[$originaluri];
 		}
 
@@ -301,16 +304,16 @@ abstract class Factory {
 
 		if($custom->exists()){
 			// If there is a custom asset installed, USE THAT FIRST!
-			self::$_ResolveCache[$originaluri] = $custom;
+			//self::$_ResolveCache[$originaluri] = $custom;
 			return $custom;
 		}
 		elseif($themed->exists()){
 			// Otherwise, the themes can override component assets too.
-			self::$_ResolveCache[$originaluri] = $themed;
+			//self::$_ResolveCache[$originaluri] = $themed;
 			return $themed;
 		}
 		else{
-			self::$_ResolveCache[$originaluri] = $default;
+			//self::$_ResolveCache[$originaluri] = $default;
 			return $default;
 		}
 	}
