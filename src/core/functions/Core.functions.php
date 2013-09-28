@@ -736,26 +736,6 @@ function CheckEmailValidity($email){
 	return true;
 }
 
-/**
- * Function that attaches the core javascript to the page.
- *
- * This should be called automatically from the hook /core/page/prerender.
- */
-function _AttachCoreJavascript(){
-
-	$script = '<script type="text/javascript">
-var Core = {
-	Version: "' . \Core::GetComponent()->getVersion() . '",
-	ROOT_WDIR: "' . ROOT_WDIR . '",
-	ROOT_URL: "' . ROOT_URL . '",
-	ROOT_URL_SSL: "' . ROOT_URL_SSL . '",
-	ROOT_URL_NOSSL: "' . ROOT_URL_NOSSL . '"
-};
-</script>';
-
-	\Core\view()->addScript($script, 'head');
-}
-
 
 /**
  * Clone of the php version_compare function, with the exception that it treats
