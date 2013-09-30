@@ -61,16 +61,10 @@ class UserAdminController extends Controller_2_1{
 	public function activate(){
 		$req    = $this->getPageRequest();
 		$view   = $this->getView();
-		$userid = $req->getPost('user');
-		$active = $req->getPost('status');
+		$userid = $req->getPost('user') ? $req->getPost('user') : $req->getParameter('user');
+		$active = ($req->getPost('status') !== null) ? $req->getPost('status') : $req->getParameter('status');
 		if($active === '') $active = 1; // default.
 
-		$view->mode = View::MODE_AJAX;
-		$view->contenttype = View::CTYPE_JSON;
-
-		if(!$req->isJSON()){
-			return View::ERROR_BADREQUEST;
-		}
 
 		if(!$req->isPost()){
 			return View::ERROR_BADREQUEST;
@@ -93,10 +87,25 @@ class UserAdminController extends Controller_2_1{
 		if($active){
 			try{
 				$email = new Email();
+
+				if(!$user->get('password')){
+					// Generate a Nonce for this user with the password reset.
+					// Use the Nonce system to generate a one-time key with this user's data.
+					$nonce = NonceModel::Generate(
+						'1 week',
+						['type' => 'password-reset', 'user' => $user->get('id')]
+					);
+					$setpasswordlink = Core::ResolveLink('/user/forgotpassword?e=' . urlencode($user->get('email')) . '&n=' . $nonce);
+				}
+				else{
+					$setpasswordlink = null;
+				}
+
 				$email->assign('user', $user);
 				$email->assign('sitename', SITENAME);
 				$email->assign('rooturl', ROOT_URL);
 				$email->assign('loginurl', Core::ResolveLink('/user/login'));
+				$email->assign('setpasswordlink', $setpasswordlink);
 				$email->setSubject('Welcome to ' . SITENAME);
 				$email->templatename = 'emails/user/activation.tpl';
 				$email->to($user->get('email'));
@@ -110,10 +119,18 @@ class UserAdminController extends Controller_2_1{
 			}
 		}
 
-		$view->jsondata = array(
-			'userid' => $user->get('id'),
-			'active' => $user->get('active'),
-		);
+		if($req->isJSON()){
+			$view->mode = View::MODE_AJAX;
+			$view->contenttype = View::CTYPE_JSON;
+
+			$view->jsondata = array(
+				'userid' => $user->get('id'),
+				'active' => $user->get('active'),
+			);
+		}
+		else{
+			\Core\go_back();
+		}
 	}
 
 	public function delete(){
@@ -133,7 +150,7 @@ class UserAdminController extends Controller_2_1{
 
 		$model->delete();
 		Core::SetMessage('Removed user successfully', 'success');
-		\core\redirect('/useradmin');
+		\Core\go_back();
 	}
 
 	/**
