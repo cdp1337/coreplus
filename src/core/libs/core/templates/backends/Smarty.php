@@ -264,82 +264,88 @@ class Smarty implements Templates\TemplateInterface {
 
 		// Scan through $tpl and find any {insertable} tag.
 		$contents = file_get_contents($this->_filename);
-		preg_match_all('/\{insertable(.*)\}(.*)\{\/insertable\}/isU', $contents, $matches);
 
-		// Guess this page had no insertables.
-		if (!sizeof($matches[0])){
-			return $insertables;
+
+		// I need to make sure that I'm accommodating for nested insertables!
+		// Easiest way.... convert this to XML/HTML!
+		$fullsearch = $contents;
+		$fullsearch = preg_replace('#\{insertable(.*)\}#isU', '<insertable$1>', $fullsearch);
+		$fullsearch = preg_replace('#\{\/insertable[ ]*\}#', '</insertable>', $fullsearch);
+
+		//echo '<pre>' . str_replace('<', '&lt;', $fullsearch) . '</pre>';
+
+		$dom = new \DOMDocument();
+		// I don't care about parsing errors here... I just want the damn nodes!
+		// @TODO Find a better way to ignore errors!
+		try{
+			@$dom->loadHTML('<html>' . $fullsearch . '</html>');
+			$nodes = $dom->getElementsByTagName('insertable');
+			$validattributes = ['accept', 'basedir', 'cols', 'default', 'description', 'name', 'option', 'rows', 'size', 'type', 'title', 'value', 'width'];
+
+			foreach($nodes as $n){
+				/** @var $n \DOMElement */
+				// Pull out all the valid attributes for each node.
+				$nodedata = [];
+				foreach($validattributes as $k){
+					$nodedata[$k] = $n->getAttribute($k);
+				}
+				$inner = $dom->saveXML($n);
+
+				if(!$nodedata['type']){
+					// Try to determine the form type based on the content since this is optional.
+					if (preg_match('/<img(.*?)>/i', $inner)) {
+						// It's an image!
+						$nodedata['type'] = 'image';
+					}
+					elseif (preg_match('/{img(.*?)}/i', $inner)) {
+						// Also an image, but using the smarty version instead.... I don't care.
+						$nodedata['type'] = 'image';
+					}
+					elseif (strpos($inner, "\n") === false && strpos($inner, "<") === false) {
+						// If there are no newlines or &lt;'s, it's just simple text.
+						$nodedata['type'] = 'text';
+					}
+					else {
+						$nodedata['type'] = 'wysiwyg';
+					}
+				}
+
+				if(!$nodedata['title']){
+					// Use the name as a default title if none provided.
+					$nodedata['title'] = $nodedata['name'];
+				}
+
+				if(!$nodedata['default'] && $nodedata['value']){
+					// Default but no value...
+					$nodedata['default'] = $nodedata['value'];
+				}
+				if(!$nodedata['value'] && $nodedata['default']){
+					// Value but no default...
+					$nodedata['value'] = $nodedata['default'];
+				}
+
+				// Some elements have specific options that need to be set.
+				switch($nodedata['type']){
+					case 'image':
+						$nodedata['type'] = 'file';
+						if(!$nodedata['accept'])  $nodedata['accept']  = 'image/*';
+						if(!$nodedata['basedir']) $nodedata['basedir'] = 'public/insertable';
+						break;
+					case 'file':
+						if(!$nodedata['basedir']) $nodedata['basedir'] = 'public/insertable';
+						break;
+					case 'select':
+						$nodedata['options'] = array_map('trim', explode('|', $nodedata['options']));
+						break;
+				}
+
+				// Add the actual elements now!
+				$insertables[ $nodedata['name'] ] = $nodedata;
+
+			}
 		}
-
-		foreach ($matches[0] as $k => $v) {
-			// The contents of the {insertable ...} tag.
-			$tag     = trim($matches[1][$k]);
-			// The contents inside of the tags.
-			$content = trim($matches[2][$k]);
-			// By default, the value is the content.  This can be changed though.
-			$value = $content;
-
-			// To make this tag searchable easily, convert it to an xml element and get the attributes from that.
-			$simple = new \SimpleXMLElement('<insertable ' . $tag . '/>');
-			$attributes = array();
-			foreach($simple->attributes() as $sk => $sv){
-				$attributes[$sk] = (string)$sv;
-			}
-
-			$name = $attributes['name'];
-
-			// Allow the "default" attribute to override the actual content.  May be useful in some situtations.
-			if(isset($attributes['default'])) $value = $attributes['default'];
-
-			// If the type is null, try to determine the form type based on the content.
-			if(isset($attributes['type'])){
-				$type = $attributes['type'];
-			}
-			else{
-
-				if (preg_match('/<img(.*?)>/i', $content)) {
-					$type = 'image';
-					if($value == $content) $value = '';
-				}
-				elseif (preg_match('/{img(.*?)}/i', $content)) {
-					$type = 'image';
-					if($value == $content) $value = '';
-				}
-				elseif (strpos($content, "\n") === false && strpos($content, "<") === false) {
-					$type = 'text';
-				}
-				else {
-					$type = 'wysiwyg';
-				}
-			}
-
-
-			// These will be the default options for creating form elements, extend them as necessary.
-			$dat = array(
-				'type'        => $type,
-				'name'        => $name,
-				'title'       => isset($attributes['title']) ? $attributes['title'] : $name,
-				'value'       => $value,
-				'description' => isset($attributes['description']) ? $attributes['description'] : null,
-			);
-
-			// Some elements have specific options that need to be set.
-			switch($dat['type']){
-				case 'image':
-					$dat['type'] = 'file';
-					$dat['accept'] = 'image/*';
-					$dat['basedir'] = 'public/insertable';
-					break;
-				case 'file':
-					$dat['basedir'] = 'public/insertable';
-					break;
-				case 'select':
-					$dat['options'] = array_map('trim', explode('|', $attributes['options']));
-					break;
-			}
-
-			// Add the actual elements now!
-			$insertables[$name] = $dat;
+		catch(\Exception $e){
+			// I honestly don't care if it failed.
 		}
 
 		return $insertables;
