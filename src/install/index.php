@@ -43,6 +43,8 @@ define('DEVELOPMENT_MODE', true);
 define('ROOT_PDIR', realpath(dirname(__DIR__)) . '/');
 define('ROOT_WDIR', str_replace('//', '/', dirname(dirname($_SERVER['SCRIPT_NAME'])) . '/'));
 define('ROOT_URL', ROOT_WDIR);
+define('ROOT_URL_SSL', ROOT_WDIR);
+define('ROOT_URL_NOSSL', ROOT_WDIR);
 define('TMP_DIR', sys_get_temp_dir() . '/coreplus-installer/');
 define('CUR_CALL', ROOT_WDIR . 'install/');
 
@@ -116,6 +118,15 @@ if(!defined('CDN_LOCAL_ASSETDIR')){
 }
 if(!defined('CDN_LOCAL_PUBLICDIR')){
 	define('CDN_LOCAL_PUBLICDIR', 'files/public/');
+}
+if(!defined('CDN_LOCAL_PRIVATEDIR')){
+	define('CDN_LOCAL_PRIVATEDIR', 'files/private/');
+}
+if(!defined('FTP_USERNAME')){
+	define('FTP_USERNAME', '');
+}
+if(!defined('FTP_PASSWORD')){
+	define('FTP_PASSWORD', '');
 }
 
 
