@@ -106,6 +106,14 @@ class PageModel extends Model {
 				'grouptype' => 'tabs',
 			)
 		),
+		'last_template' => array(
+			'type'      => Model::ATT_TYPE_STRING,
+			'maxlength' => 64,
+			'default'   => null,
+			'null'      => true,
+			'formtype'  => 'disabled',
+			'comment'   => 'The last page template used to render this page, useful in edit pages.',
+		),
 		'access' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 512,
@@ -351,12 +359,17 @@ class PageModel extends Model {
 	 * @return string
 	 */
 	public function getTemplateName() {
+		// can I just cheat and return the last displayed template?
+		if($this->get('last_template')){
+			return $this->get('last_template');
+		}
+
 		$t = $this->getBaseTemplateName();
 
 		// Allow the specific template to be overridden.
 		if (($override = $this->get('page_template'))){
 			$t = substr($t, 0, -4) . '/' . $override;
-	}
+		}
 
 		return $t;
 	}
@@ -1109,12 +1122,12 @@ class PageModel extends Model {
 				if(isset(self::$_FuzzyCache[$try])) {
 					// The fuzzy page must have the requested arguments, they just need to be tacked onto the end of the base.
 					$base = self::$_FuzzyCache[$try] . substr($base, strlen($try));
-			//		$fuzzyfound = true;
+					//		$fuzzyfound = true;
 					break;
 				}
 				elseif(in_array($try, self::$_FuzzyCache)) {
 					$base = self::$_FuzzyCache[array_search($try, self::$_FuzzyCache)] . substr($base, strlen($try));
-			//		$fuzzyfound = true;
+					//		$fuzzyfound = true;
 					break;
 				}
 				$try = substr($try, 0, strrpos($try, '/'));
@@ -1249,10 +1262,10 @@ class PageModel extends Model {
 		// Tack on the "arguments" too, these are 
 
 		return array('controller' => $controller,
-			'method' => $method,
-			'parameters' => $params,
-			'baseurl' => $baseurl,
-			'rewriteurl' => $rewriteurl);
+		             'method' => $method,
+		             'parameters' => $params,
+		             'baseurl' => $baseurl,
+		             'rewriteurl' => $rewriteurl);
 	}
 
 	/**
