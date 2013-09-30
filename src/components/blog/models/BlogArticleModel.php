@@ -34,7 +34,7 @@ class BlogArticleModel extends Model {
 		'title'       => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'required'  => true,
-			'maxlength' => '64',
+			'maxlength' => '256',
 			'comment' => 'This is cached from the Page title.',
 		),
 		'image'       => array(
