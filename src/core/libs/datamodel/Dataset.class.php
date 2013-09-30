@@ -273,6 +273,18 @@ class Dataset implements Iterator{
 	}
 
 	/**
+	 * @param bool $unique
+	 *
+	 * @return Dataset
+	 */
+	public function unique($unique = true){
+		$this->uniquerecords = $unique;
+
+		// Allow chaining
+		return $this;
+	}
+
+	/**
 	 * @return DatasetWhereClause
 	 */
 	public function getWhereClause(){
@@ -554,7 +566,11 @@ class DatasetWhereClause{
 					}
 					else{
 						// It's an associative array of key => 'this or that';
-						$this->_statements[] = new DatasetWhere($k . ' = ' . $v);
+						$dsw = new DatasetWhere();
+						$dsw->field = $k;
+						$dsw->op    = '=';
+						$dsw->value = $v;
+						$this->_statements[] = $dsw;
 					}
 				}
 			}
