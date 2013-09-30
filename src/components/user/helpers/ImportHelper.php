@@ -119,6 +119,12 @@ abstract class ImportHelper {
 					$dat[$userkey] = $record[$recordkey];
 				}
 
+				// No email, NO IMPORT!
+				if(!$dat['email']){
+					$_SESSION['user-import']['counts']['skipped']++;
+					continue;
+				}
+
 				// Try to find this record by email, since that's a primary key.
 				$existing = \User::Find(['email = ' . $dat['email'] ], 1);
 				if($existing && !$merge){
