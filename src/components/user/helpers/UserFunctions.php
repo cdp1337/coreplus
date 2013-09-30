@@ -165,7 +165,7 @@ function get_form($user = null){
 			'checkbox',
 			array(
 				'name' => 'admin',
-				'title' => 'Admin Account',
+				'title' => 'System Admin',
 				'checked' => $user->get('admin'),
 			)
 		);
