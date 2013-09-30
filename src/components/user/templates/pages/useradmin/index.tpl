@@ -13,6 +13,8 @@
 		<th sortkey="email">Email</th>
 		<th sortkey="active" title="Sort By Active"><abbr title="Active">A</abbr></th>
 		<th sortkey="created">Date Created</th>
+		<th>Registration Source</th>
+		<th>Registration Invitee</th>
 		<th width="100">&nbsp;</th>
 	</tr>
 	{foreach $users as $user}
@@ -48,6 +50,12 @@
 			</td>
 
 			<td>{date date="`$user.created`"}</td>
+			<td>{$user.registration_source}</td>
+			<td>
+				{if $user.registration_invitee}
+					{user user=$user.registration_invitee}
+				{/if}
+			</td>
 
 			<td>
 

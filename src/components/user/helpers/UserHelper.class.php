@@ -160,6 +160,8 @@ abstract class UserHelper{
 		SecurityLogModel::Log('/user/login', 'success', $u->get('id'));
 
 		// yay...
+		$u->set('last_login', CoreDateTime::Now('U', Time::TIMEZONE_GMT));
+		$u->save();
 		Session::SetUser($u);
 
 		// Allow an external script to override the redirecting URL.
@@ -195,6 +197,7 @@ abstract class UserHelper{
 			// Users can be created with no password.  They will be prompted to set it on first login.
 			if($p1->get('value') || $p2->get('value')){
 				$user->setPassword($p1->get('value'), $p2->get('value'));
+				$user->set('last_password', CoreDateTime::Now('U', Time::TIMEZONE_GMT));
 			}
 		}
 		catch(ModelValidationException $e){
@@ -238,6 +241,19 @@ abstract class UserHelper{
 			}
 		}
 
+		// Set the default group on new accounts, if a default is set.
+		$defaultgroups = UserGroupModel::Find(array("default = 1"));
+		$gs = [];
+		foreach($defaultgroups as $g){
+			$gs[] = $g->get('id');
+		}
+		$user->setGroups($gs);
+
+		// Record some more meta information about this user.
+		$user->set('registration_ip', REMOTE_IP);
+		$user->set('registration_source', \Core\user()->exists() ? 'admin' : 'self');
+		$user->set('registration_invitee', \Core\user()->get('id'));
+
 		$user->save();
 
 		// User created... make a log of this!
@@ -274,7 +290,11 @@ abstract class UserHelper{
 			else $url = REL_REQUEST_PATH;
 
 			//$url = Core::GetHistory(2);
-			Session::SetUser($user);
+			if($user->get('active')){
+				$user->set('last_login', CoreDateTime::Now('U', Time::TIMEZONE_GMT));
+				$user->save();
+				Session::SetUser($user);
+			}
 			//var_dump($url); echo '<pre>'; debug_print_backtrace();
 			Core::SetMessage('Registered account successfully!', 'success');
 
@@ -282,6 +302,9 @@ abstract class UserHelper{
 			$overrideurl = HookHandler::DispatchHook('/user/postlogin/getredirecturl');
 			if($overrideurl){
 				$url = $overrideurl;
+			}
+			elseif($url == Core::ResolveLink('/user/register')){
+				$url = '/';
 			}
 
 			return $url;

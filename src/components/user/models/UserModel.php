@@ -75,6 +75,28 @@ class UserModel extends Model {
 				'basedir' => 'public/user/avatar',
 			),
 		),
+		'registration_ip' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => '24',
+			'comment' => 'The original IP of the user registration',
+		),
+		'registration_source' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'default' => 'self',
+			'comment' => 'The source of the user registration, either self, admin, or other.'
+		),
+		'registration_invitee' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'comment' => 'If invited/created by a user, this is the ID of that user.',
+		),
+		'last_login' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'comment' => 'The timestamp of the last login of this user',
+		),
+		'last_password' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'comment' => 'The timestamp of the last password reset of this user',
+		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
@@ -122,8 +144,6 @@ class UserModel extends Model {
 					$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requirenumbers') . ' number(s).';
 				}
 			}
-
-			// /user/password/requirenumbers
 
 			// Validation's good, return true!
 			if($valid === true) return true;

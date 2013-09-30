@@ -101,6 +101,7 @@ class UserController extends Controller_2_1{
 				}
 
 				$user->set('password', $p1val);
+				$user->set('last_password', CoreDateTime::Now('U', Time::TIMEZONE_GMT));
 				$user->save();
 				Core::SetMessage('Updated Password Successfully', 'success');
 				if($ownpassword){
@@ -127,6 +128,37 @@ class UserController extends Controller_2_1{
 
 		$form->addElement('submit', array('value' => 'Update Password'));
 
+		// Pull some info about the complexity requirements.
+		$complexity = [
+			'enabled'  => false,
+			'length'   => 0,
+			'symbols'  => 0,
+			'capitals' => 0,
+			'numbers'  => 0,
+			'messages' => [],
+		];
+		if(ConfigHandler::Get('/user/password/minlength')){
+			$complexity['enabled'] = true;
+			$complexity['length'] = ConfigHandler::Get('/user/password/minlength');
+			$complexity['messages'][] = 'The password is at least ' . $complexity['length'] . ' characters long.';
+		}
+		if(ConfigHandler::Get('/user/password/requiresymbols')){
+			$complexity['enabled'] = true;
+			$complexity['symbols'] = ConfigHandler::Get('/user/password/requiresymbols');
+			$complexity['messages'][] = 'The password contains at least ' . $complexity['symbols'] . ' symbol(s).';
+		}
+		if(ConfigHandler::Get('/user/password/requirecapitals')){
+			$complexity['enabled'] = true;
+			$complexity['capitals'] = ConfigHandler::Get('/user/password/requirecapitals');
+			$complexity['messages'][] = 'The password contains at least ' . $complexity['capitals'] . ' capital(s).';
+		}
+		if(ConfigHandler::Get('/user/password/requirenumbers')){
+			$complexity['enabled'] = true;
+			$complexity['numbers'] = ConfigHandler::Get('/user/password/requirenumbers');
+			$complexity['messages'][] = 'The password contains at least ' . $complexity['numbers'] . ' number(s).';
+		}
+
+		$view->assign('complexity', $complexity);
 		$view->assign('form', $form);
 		$view->title = 'Password Management ';
 
@@ -158,7 +190,12 @@ class UserController extends Controller_2_1{
 		}
 
 		$user = User::Find(array('id' => $userid));
-		$form = \User\get_edit_form($user);
+		if($user) {
+			$form = \User\get_edit_form($user);
+		} else {
+			Core::SetMessage('A user with this ID does not exist');
+			\Core\go_back();
+		}
 
 		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
 		$view->assign('form', $form);
@@ -420,12 +457,15 @@ class UserController extends Controller_2_1{
 			// Else, try to set it... the user model will complain if it's invalid.
 			try{
 				$u->set('password', $_POST['p1']);
+				$u->set('last_password', CoreDateTime::Now('U', Time::TIMEZONE_GMT));
 				$u->save();
 				// NOW I can invalidate that nonce!
 				$nonce->markUsed();
 				SecurityLogModel::Log('/user/forgotpassword/confirm', 'success', $u->get('id'), 'Reset password successfully!');
 				Core::SetMessage('Reset password successfully', 'success');
-				Session::SetUser($u);
+				if($u->get('active')){
+					Session::SetUser($u);
+				}
 				\core\redirect('/');
 			}
 			catch(ModelValidationException $e){

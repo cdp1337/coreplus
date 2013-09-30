@@ -7,8 +7,10 @@
 			<th>Avatar</th>
 		{/if}
 		<th sortkey="email">Email</th>
-		<th sortkey="active" title="Sort By Active"><abbr title="Active">A</abbr></th>
+		<th sortkey="active" title="Sort By Active"><abbr title="Active">Active</abbr></th>
 		<th sortkey="created">Date Created</th>
+		<th>Registration Source</th>
+		<th>Registration Invitee</th>
 		<th width="100">&nbsp;</th>
 	</tr>
 	{foreach $users as $user}
@@ -42,6 +44,12 @@
 			</td>
 
 			<td>{date date="`$user.created`"}</td>
+			<td>{$user.registration_source}</td>
+			<td>
+				{if $user.registration_invitee}
+					{user user=$user.registration_invitee}
+				{/if}
+			</td>
 
 			<td>
 				{controls baseurl="/user/view" subject="`$user.id`" hover="true"}
@@ -55,3 +63,47 @@
 	<i class="icon-view"></i>
 	<span>View All Recent Registrations</span>
 {/a}
+
+{script location="foot"}
+<script>
+
+	function update_user_table (){
+		$('.listing .user-entry').each(function(){
+			var $tr = $(this),
+					$status = $tr.find('.active-status');
+
+			if($status.attr('useractive') == '1'){
+				$status.html('<a href="#" class="user-activate-link" title="Activated"><i class="icon-ok"></i></a>');
+			}
+			else{
+				$status.html('<a href="#" class="user-activate-link" title="Not Activated"><i class="icon-exclamation-sign"></i></a>');
+			}
+		});
+	}
+
+	$(function(){
+		// Update the table first of all.
+		update_user_table();
+
+		$('.listing').on('click', '.user-activate-link', function(){
+			var $status = $(this).closest('.active-status'),
+					$tr = $(this).closest('tr');
+
+			$.ajax({
+				url: Core.ROOT_URL + 'useradmin/activate.json',
+				data: {
+					user: $tr.attr('userid'),
+					status: ($status.attr('useractive') != '1') // It needs to be whatever it's currently not...
+				},
+				dataType: 'json',
+				type: 'post',
+				success: function(d){
+					$status.attr('useractive', d.active);
+					update_user_table();
+				}
+			});
+
+			return false;
+		});
+	});
+</script>{/script}

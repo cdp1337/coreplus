@@ -270,18 +270,19 @@ class User {
 		if($this->_model === null) return false;
 
 		// Set to true if something changed.
-		$status = false;
-		$isnew = $this->_getModel()->isnew();
-		$admin = \Core\user()->checkAccess('g:admin');
+		$status  = false;
+		$isnew   = $this->_getModel()->isnew();
+		$manager = \Core\user()->checkAccess('p:/user/users/manage');
+		$admin   = \Core\user()->checkAccess('g:admin');
 
 		if($this->_getModel()->changed()){
-			if(!$admin && !$isnew && ConfigHandler::Get('/user/profileedits/requireapproval') && Core::IsComponentAvailable('model-audit')){
-				// If the option to require administrative approval is checked, any existing user change must be approved.
-				\ModelAudit\Helper::SaveDraftOnly($this->_getModel());
-			}
-			else{
-				$this->_getModel()->save();
-			}
+			//if(!$manager && !$isnew && ConfigHandler::Get('/user/profileedits/requireapproval') && Core::IsComponentAvailable('model-audit')){
+			//	// If the option to require administrative approval is checked, any existing user change must be approved.
+			//	\ModelAudit\Helper::SaveDraftOnly($this->_getModel());
+			//}
+			//else{
+			$this->_getModel()->save();
+			//}
 
 			$status = true;
 		}
@@ -295,7 +296,7 @@ class User {
 				$c->set('user_id', $this->get('id'));
 
 				if($c->changed()){
-					if(!$admin && !$isnew && ConfigHandler::Get('/user/profileedits/requireapproval') && Core::IsComponentAvailable('model-audit')){
+					if(!$manager && !$isnew && ConfigHandler::Get('/user/profileedits/requireapproval') && Core::IsComponentAvailable('model-audit')){
 						\ModelAudit\Helper::SaveDraftOnly($c);
 					}
 					else{
@@ -502,6 +503,15 @@ class User {
 	}
 
 	public function checkPassword($password){
+		die('Please extend ' . __METHOD__ . ' in ' . get_called_class() . '!');
+	}
+
+	/**
+	 * Set all groups for a given user on the current site.
+	 *
+	 * @param array $groups
+	 */
+	public function setGroups($groups){
 		die('Please extend ' . __METHOD__ . ' in ' . get_called_class() . '!');
 	}
 
