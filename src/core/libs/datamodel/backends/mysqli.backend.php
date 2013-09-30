@@ -733,6 +733,14 @@ class DMI_mysqli_backend implements DMI_Backend {
 					elseif($op == '!=') $op = 'IS NOT';
 
 				}
+				elseif($w->value === 1){
+					// (int)1 is used sometimes to describe enum(1).
+					$v = "'1'";
+				}
+				elseif($w->value === 0){
+					// (int)0 is used sometimes to describe enum(0).
+					$v = "'0'";
+				}
 				// Numbers are allowed with no sanitizing, they're just numbers.
 				elseif(is_int($w->value)){
 					$v = $w->value;
