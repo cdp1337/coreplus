@@ -13,6 +13,6 @@
  */
 class UpdaterWidget extends Widget_2_1{
 	public function check(){
-
+		if( !\Core\user()->checkAccess('g:admin') ) return '';
 	}
 }
