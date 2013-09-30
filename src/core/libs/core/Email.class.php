@@ -115,6 +115,13 @@ class Email {
 		return $this->_mailer;
 	}
 
+	/**
+	 * Add a custom header to the email message
+	 * @param $val
+	 */
+	public function addCustomHeader($val){
+		$this->getMailer()->AddCustomHeader($val);
+	}
 
 	/**
 	 * Assign a value to this emails' template.
@@ -262,7 +269,7 @@ class Email {
 		}
 		elseif (strpos($body, '<html>') === false) {
 			// Ensuring that the body is wrapped with <html> tags helps with spam checks with spamassassin.
-			$m->MsgHTML('<html>' . $body . '</html>');
+			$m->MsgHTML('<html><body>' . $body . '</body></html>');
 		}
 		else{
 			$m->MsgHTML($body);
