@@ -801,7 +801,16 @@ class Model implements ArrayAccess {
 				$this->_data[$k] = $v;
 			}
 			else {
-				if (isset($this->_datainit[$k]) && $this->_datainit[$k] == $v) continue; // Skip non-changed columns
+				// Do some logic to see if I can skip updating non-changed columns.
+				if(isset($this->_datainit[$k])){
+					if($keyschema['type'] == Model::ATT_TYPE_STRING){
+						if(\Core\compare_strings($this->_datainit[$k], $v)) continue;
+					}
+					else{
+						if(\Core\compare_values($this->_datainit[$k], $v)) continue;
+					}
+				}
+
 				//echo "Setting [$k] = [$v]<br/>"; // DEBUG
 				if($useset){
 					$dat->set($k, $v);
@@ -1003,7 +1012,7 @@ class Model implements ArrayAccess {
 					case Model::ATT_TYPE_FLOAT:
 					case Model::ATT_TYPE_INT:
 					case Model::ATT_TYPE_UPDATED:
-						$default = 0;
+						$default = '0';
 						break;
 					case Model::ATT_TYPE_DATA:
 					case Model::ATT_TYPE_STRING:
@@ -1067,10 +1076,10 @@ class Model implements ArrayAccess {
 		switch($type){
 			case Model::ATT_TYPE_BOOL:
 				if($v === true){
-					$v = 1;
+					$v = '1';
 				}
 				elseif($v === false){
-					$v = 0;
+					$v = '0';
 				}
 				else{
 					switch(strtolower($v)){
@@ -1082,10 +1091,10 @@ class Model implements ArrayAccess {
 						case 1:
 							// sometimes the string "true" is sent.
 						case 'true':
-							$v = 1;
+							$v = '1';
 							break;
 						default:
-							$v = 0;
+							$v = '0';
 					}
 				}
 				break;
@@ -1111,8 +1120,27 @@ class Model implements ArrayAccess {
 		// $this->_data will always have the schema keys at least set to null.
 		if (array_key_exists($k, $this->_data)) {
 
-			if($this->_data[$k] === null && $v === null) return false; // No change needed.
-			elseif ($this->_data[$k] !== null && $this->_data[$k] == $v) return false; // No change needed.
+			$keydat = $this->getKeySchema($k);
+
+			if($this->_data[$k] === null && $v === null){
+				// Both values are NULL, No change needed.
+				return false;
+			}
+			elseif(
+				$this->_data[$k] !== null &&
+				$keydat['type'] == Model::ATT_TYPE_STRING
+			){
+				if(\Core\compare_strings($this->_data[$k], $v)){
+					// The attribute type is a string and they seem to be identical...
+					return false;
+				}
+			}
+			elseif ($this->_data[$k] !== null){
+				if(\Core\compare_values($this->_data[$k], $v)){
+					// The data is something or other, but they still seem to be identical.
+					return false;
+				}
+			}
 
 			// Is there validation for this key?
 			// That function will handle all of this logic, (including the exception throwing)
@@ -1126,7 +1154,6 @@ class Model implements ArrayAccess {
 			$this->_setLinkKeyPropagation($k, $v);
 
 			// See if this is an encrypted field first.  If it is... set the decrypted version and encrypt it.
-			$keydat = $this->getKeySchema($k);
 			if($keydat['encrypted']){
 				$this->decryptData();
 				$this->_datadecrypted[$k] = $v;
@@ -1624,9 +1651,22 @@ class Model implements ArrayAccess {
 			}
 
 			if($this->_datainit[$k] != $this->_data[$k]){
+				// This will match if "blah" is different than "foo", but fails at "" is different than "0".
+
 				//echo "$k changed!<br/>\n"; // DEBUG
 				//var_dump($this->_datainit[$k], $this->_data[$k]); // DEBUG
 				return true;
+			}
+
+
+			if(isset($keyschema['type']) && $keyschema['type'] == Model::ATT_TYPE_STRING){
+				// If this attribute is a string, use Core's string comparison.
+				if(!\Core\compare_strings($this->_datainit[$k], $this->_data[$k])) return true;
+			}
+			else{
+				// Default, more precise comparison.
+				// This one knows the difference between "", "0", and false!
+				if(!\Core\compare_values($this->_datainit[$k], $this->_data[$k])) return true;
 			}
 
 			// The data seems to have matched up, nothing to see here, move on!
@@ -2383,7 +2423,7 @@ class ModelSchemaColumn {
 		elseif($this->default === $col->default){
 			// They're identical... yay!
 		}
-		elseif(Core::CompareValues($this->default, $col->default)){
+		elseif(\Core\compare_values($this->default, $col->default)){
 			// They're close enough....
 			// Core will check and see if val1 === (string)"12" and val2 === (int)12.
 			// Consider it a fuzzy comparison that actually acknowledges the difference between NULL, "", and 0.
