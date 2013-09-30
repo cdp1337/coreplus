@@ -47,6 +47,14 @@ class UserGroupModel extends Model {
 			'formtype' => 'disabled',
 			'comment' => 'json-encoded array of permissions this group has'
 		),
+		'default' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'default' => false,
+			'form' => array(
+				'title' => 'Default Group',
+				'description' => 'Is this a default user group for new account sign-ups?',
+			),
+		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
