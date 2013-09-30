@@ -42,6 +42,7 @@ class UpdaterHelper {
 		$sitecount  = 0;
 		$pkgcount   = 0;
 		$current    = Core::GetComponents();
+		$froze      = \ConfigHandler::Get('/core/updater/versionfreeze');
 
 		// If Core isn't installed yet, GetComponents will yield null.
 		if($current === null) $current = array();
@@ -49,11 +50,15 @@ class UpdaterHelper {
 		foreach($current as $c){
 			/** @var $c Component_2_1 */
 			$n = $c->getKeyName();
+
+			$parts = Core::VersionSplit($c->getVersion());
+
 			if($n == 'core'){
 				$core = array(
 					'name' => $n,
 					'title' => $c->getName(),
 					'version' => $c->getVersion(),
+					'feature' => $parts['major'] . '.' . $parts['minor'],
 					'source' => 'installed',
 					'description' => $c->getDescription(),
 					'provides' => $c->getProvides(),
@@ -71,6 +76,7 @@ class UpdaterHelper {
 					'name' => $n,
 					'title' => $c->getName(),
 					'version' => $c->getVersion(),
+					'feature' => $parts['major'] . '.' . $parts['minor'],
 					'source' => 'installed',
 					'description' => $c->getDescription(),
 					'provides' => $c->getProvides(),
@@ -89,10 +95,13 @@ class UpdaterHelper {
 			/** @var $c Component_2_1 */
 			$n = $c->getKeyName();
 
+			$parts = Core::VersionSplit($c->getVersion());
+
 			$components[$n] = array(
 				'name' => $n,
 				'title' => $c->getName(),
 				'version' => $c->getVersion(),
+				'feature' => $parts['major'] . '.' . $parts['minor'],
 				'source' => 'installed',
 				'description' => $c->getDescription(),
 				'provides' => $c->getProvides(),
@@ -118,11 +127,15 @@ class UpdaterHelper {
 
 		foreach($currentthemes as $t){
 			/** @var $t Theme */
-			$n = $c->getKeyName();
+			$n = $t->getKeyName();
+
+			$parts = Core::VersionSplit($t->getVersion());
+
 			$themes[$n] = array(
 				'name' => $n,
 				'title' => $t->getName(),
 				'version' => $t->getVersion(),
+				'feature' => $parts['major'] . '.' . $parts['minor'],
 				'source' => 'installed',
 				'description' => $t->getDescription(),
 				'location' => null,
@@ -170,32 +183,47 @@ class UpdaterHelper {
 						$vers = $pkg->getVersion();
 
 						// Only display the newest version available.
-						if(Core::VersionCompare($vers, $core['version'], 'gt')){
-							$core = array(
-								'name' => $n,
-								'title' => $pkg->getName(),
-								'version' => $vers,
-								'source' => 'repo-' . $site->get('id'),
-								'sourceurl' => $site->get('url'),
-								'description' => $pkg->getDescription(),
-								'provides' => $pkg->getProvides(),
-								'requires' => $pkg->getRequires(),
-								'location' => $rootpath . $pkg->getFileLocation(),
-								'status' =>'update',
-								'type' => 'core',
-								'typetitle' => 'Core ',
-								'key' => $pkg->getKey(),
-								'destdir' => ROOT_PDIR,
-							);
-						}
+						if(!Core::VersionCompare($vers, $core['version'], 'gt')) continue;
+
+						// Only display new feature versions if it's not frozen.
+						$parts = Core::VersionSplit($pkg->getVersion());
+						if($froze && $core['feature'] != $parts['major'] . '.' . $parts['minor']) continue;
+
+						$core = array(
+							'name' => $n,
+							'title' => $pkg->getName(),
+							'version' => $vers,
+							'feature' => $parts['major'] . '.' . $parts['minor'],
+							'source' => 'repo-' . $site->get('id'),
+							'sourceurl' => $site->get('url'),
+							'description' => $pkg->getDescription(),
+							'provides' => $pkg->getProvides(),
+							'requires' => $pkg->getRequires(),
+							'location' => $rootpath . $pkg->getFileLocation(),
+							'status' =>'update',
+							'type' => 'core',
+							'typetitle' => 'Core ',
+							'key' => $pkg->getKey(),
+							'destdir' => ROOT_PDIR,
+						);
 						break;
 					case 'component':
 						$vers  = $pkg->getVersion();
+						$parts = Core::VersionSplit($pkg->getVersion());
 
 						// Is it already loaded in the list?
 						if(isset($components[$n])){
 							// I only want the newest version.
 							if(!Core::VersionCompare($vers, $components[$n]['version'], 'gt')) continue;
+
+							// Only display new feature versions if it's not frozen.
+							if(
+								$froze &&
+								$components[$n]['status'] == 'installed' &&
+								$components[$n]['feature'] != $parts['major'] . '.' . $parts['minor']
+							){
+								continue;
+							}
 						}
 
 						// If it's available in the core, it's an update... otherwise it's new.
@@ -205,6 +233,7 @@ class UpdaterHelper {
 							'name' => $n,
 							'title' => $pkg->getName(),
 							'version' => $vers,
+							'feature' => $parts['major'] . '.' . $parts['minor'],
 							'source' => 'repo-' . $site->get('id'),
 							'sourceurl' => $site->get('url'),
 							'description' => $pkg->getDescription(),
@@ -220,11 +249,21 @@ class UpdaterHelper {
 						break;
 					case 'theme':
 						$vers = $pkg->getVersion();
+						$parts = Core::VersionSplit($pkg->getVersion());
 
 						// Is it already loaded in the list?
 						if(isset($themes[$n])){
 							// I only want the newest version.
 							if(!Core::VersionCompare($vers, $themes[$n]['version'], 'gt')) continue;
+
+							// Only display new feature versions if it's not frozen.
+							if(
+								$froze &&
+								$themes[$n]['status'] == 'installed' &&
+								$themes[$n]['feature'] != $parts['major'] . '.' . $parts['minor']
+							){
+								continue;
+							}
 						}
 
 						$status = ThemeHandler::GetTheme($n) ? 'update' : 'new';
@@ -233,6 +272,7 @@ class UpdaterHelper {
 							'name' => $n,
 							'title' => $pkg->getName(),
 							'version' => $vers,
+							'feature' => $parts['major'] . '.' . $parts['minor'],
 							'source' => 'repo-' . $site->get('id'),
 							'sourceurl' => $site->get('url'),
 							'description' => $pkg->getDescription(),
