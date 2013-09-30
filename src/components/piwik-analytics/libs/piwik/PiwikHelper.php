@@ -78,13 +78,13 @@ abstract class PiwikHelper {
   })();
 
 </script>
-<noscript><p><img src="http://$server/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
 <!-- End Piwik Code -->
 
 EOD;
 
-		// Add the necessary script
+		// Add the necessary scripts
 		\Core\view()->addScript($script, 'head');
+		\Core\view()->appendBodyContent('<noscript><p><img src="http://' . $server . '/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>');
 
 		return true;
 	}
