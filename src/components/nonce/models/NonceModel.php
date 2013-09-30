@@ -138,6 +138,10 @@ class NonceModel extends Model {
 			'maxlength' => 64,
 			'comment' => 'An optional hash usable to verify this is matching exactly what is expected',
 		),
+		'hash_version' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'default' => '1',
+		),
 		'data' => array(
 			'type'      => Model::ATT_TYPE_DATA,
 			'comment'   => 'Large column space for JSON, serialized, or any other data',
@@ -179,7 +183,19 @@ class NonceModel extends Model {
 		if($this->get('expires') < CoreDateTime::Now('U', Time::TIMEZONE_GMT)) return false;
 
 		// Only check the hash if it's requested.
-		if($hash && $this->_generateHashValue($hash) != $this->get('hash')) return false;
+		if($hash){
+			switch($this->get('hash_version')){
+				case 1:
+					if($this->_generateHashValue1($hash) != $this->get('hash')) return false;
+				break;
+				case 2:
+					if($this->_generateHashValue2($hash) != $this->get('hash')) return false;
+				break;
+				default:
+					/// Ummm...
+					return false;
+			}
+		}
 
 		return true;
 	}
@@ -202,16 +218,18 @@ class NonceModel extends Model {
 	 * @param string|null|mixed $data The string, number, or data as a whole to hash.
 	 */
 	public function setHash($data = null){
-		parent::set('hash', $this->_generateHashValue($data));
+		$newhash = $this->_generateHashValue2($data);
+		parent::set('hash', $newhash);
+		parent::set('hash_version', 2);
 	}
 
 	/**
-	 * Generate the hashed value of a given data.
+	 * Generate the hashed value of a given data, (Version 1)
 	 *
 	 * @param string|null|mixed $data The string, number, or data as a whole to hash.
 	 * @return string
 	 */
-	private function _generateHashValue($data){
+	private function _generateHashValue1($data){
 		if($data === null){
 			// Null hashes simply get saved as empty strings.
 			return '';
@@ -222,7 +240,52 @@ class NonceModel extends Model {
 		}
 		else{
 			// Hash it to make it fit.
-			return hash('sha256', serialize($data));
+			$data = hash('sha256', serialize($data));
+			return $data;
+		}
+	}
+
+	/**
+	 * Generate the hashed value of a given data, (Version 2)
+	 *
+	 * @param string|null|mixed $data The string, number, or data as a whole to hash.
+	 * @return string
+	 */
+	private function _generateHashValue2($data){
+		if($data === null){
+			// Null hashes simply get saved as empty strings.
+			return '';
+		}
+		elseif(is_scalar($data) && strlen($data) <= 32 && preg_match('/^[a-zA-Z0-9]*$/', $data)){
+			// String data or numeric data that are < 32 characters long can be saved directly as-is.
+			return $data;
+		}
+		elseif(is_scalar($data)){
+			// String or numeric data can simply be hashed directly.
+			$data = hash('sha256', $data);
+			return $data;
+		}
+		elseif(is_array($data)){
+			// Arrays can be transposed to a string.
+			// This is to allow ['key' => 123] to be validated with ['key' => '123'].
+			$d = '';
+			foreach($data as $k => $v){
+				$d .= $k . ':';
+				if(is_scalar($v)){
+					$d .= $v;
+				}
+				else{
+					$d .= serialize($v);
+				}
+				$d .= ';';
+			}
+			$data = hash('sha256', $d);
+			return $data;
+		}
+		else{
+			// Hash it to make it fit.
+			$data = hash('sha256', serialize($data));
+			return $data;
 		}
 	}
 
@@ -246,6 +309,13 @@ class NonceModel extends Model {
 		$bits_b64 = substr($bits_b64, 0, -2);
 		// And append.
 		$key .= $bits_b64;
+
+		// And convert spaces and other invalid characters to a random digit.
+		$randombit = Core::RandomHex(2);
+		$key = str_replace(['+', ' ', '\\', '/', ], $randombit, $key);
+
+		// make sure it's all lowercase... URLs don't like capital letters!
+		$key = strtolower($key);
 
 		$this->set('key', $key);
 	}
@@ -283,7 +353,7 @@ class NonceModel extends Model {
 	 */
 	public static function ValidateAndUse($key, $hash = null){
 		/** @var $nonce NonceModel */
-		$nonce = NonceModel::Construct($key);
+		$nonce = NonceModel::Construct(strtolower($key));
 		if($nonce->isValid($hash)){
 			$nonce->markUsed();
 			return true;
@@ -300,6 +370,7 @@ class NonceModel extends Model {
 	 * @return NonceModel
 	 */
 	public static function LookupKey($key){
+		$key = strtolower($key);
 		$search = NonceModel::Find(['key' => $key], 1);
 
 		return $search;

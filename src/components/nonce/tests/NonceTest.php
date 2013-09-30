@@ -1,11 +1,11 @@
 <?php
 /**
  * Enter a meaningful file description here!
- * 
+ *
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130412.1031
  * @package PackageName
- * 
+ *
  * Created with JetBrains PhpStorm.
  */
 
@@ -81,5 +81,74 @@ class NonceTest extends PHPUnit_Framework_TestCase {
 		$nonce = new NonceModel($key);
 		// And NOW it should not exist.
 		$this->assertFalse($nonce->exists());
+	}
+
+	/**
+	 * Make sure that the keys generated are URL save, (all lower case, no weird characters, etc).
+	 *
+	 * Repeat this several times, just to make sure ;)
+	 */
+	public function testURLSafe(){
+		// Yes, you can technically create an already-expired nonce.
+		$key = NonceModel::Generate('-1 minute');
+
+		// Make sure that it's the same.
+		$encoded = urlencode($key);
+		$this->assertEquals($key, $encoded);
+
+
+		// Yes, you can technically create an already-expired nonce.
+		$key = NonceModel::Generate('-1 minute');
+
+		// Make sure that it's the same.
+		$encoded = urlencode($key);
+		$this->assertEquals($key, $encoded);
+
+
+		// Yes, you can technically create an already-expired nonce.
+		$key = NonceModel::Generate('-1 minute');
+
+		// Make sure that it's the same.
+		$encoded = urlencode($key);
+		$this->assertEquals($key, $encoded);
+
+
+		// Yes, you can technically create an already-expired nonce.
+		$key = NonceModel::Generate('-1 minute');
+
+		// Make sure that it's the same.
+		$encoded = urlencode($key);
+		$this->assertEquals($key, $encoded);
+	}
+
+	/**
+	 * Test that capitalization doesn't bork up the nonce.
+	 */
+	public function testCapitalizationTolerance() {
+		$nonce = NonceModel::Generate('10 seconds');
+
+		// ucase it!
+		$nonce = strtoupper($nonce);
+
+		// And is it still valid?
+		$this->assertTrue(NonceModel::ValidateAndUse($nonce));
+	}
+
+	/**
+	 * This test is to check and make sure that the nonce system is typecast tolerant.
+	 *
+	 * This causes issue because Core models are not strict in their datatypes.
+	 * ie: an int may be 123 or "123", and to Core they're both the same.
+	 */
+	public function testStrictTypecastTolerance() {
+		$d1 = [
+			'something' => '123',
+		];
+		$d2 = [
+			'something' => 123,
+		];
+
+		$nonce = NonceModel::Generate('12 seconds', $d1);
+		$this->assertTrue(NonceModel::ValidateAndUse($nonce, $d2));
 	}
 }
