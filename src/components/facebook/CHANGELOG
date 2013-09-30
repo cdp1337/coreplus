@@ -1,3 +1,8 @@
+Facebook 3.2.0~core8
+
+	* Use the View instead of CurrentPage for attaching the HTML attribute.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 30 Sep 2013 00:04:08 -0400
+
 Facebook 3.2.0~core7
 
 	* Make use of the namespace versions of View instead of static.
