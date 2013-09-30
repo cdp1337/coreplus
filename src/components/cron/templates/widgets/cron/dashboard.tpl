@@ -29,7 +29,9 @@
 				<td>{$cron.cron}</td>
 				<td>{date date="`$cron.created`"}</td>
 				<td>
-					{if $cron.duration > 1500}
+					{if $cron.duration > 120000}
+						{($cron.duration/1000/60)|round:0} minutes
+					{elseif $cron.duration > 1500}
 						{($cron.duration/1000)|round:0} seconds
 					{else}
 						{$cron.duration|round:2} ms
