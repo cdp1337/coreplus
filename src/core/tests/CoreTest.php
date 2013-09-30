@@ -51,4 +51,22 @@ class CoreTest extends PHPUnit_Framework_TestCase {
 			$this->assertTrue($result, 'Checking that ' . $test['v1'] . ' is ' . $test['op'] . ' ' . $test['v2']);
 		}
 	}
+
+	public function testCompareValues() {
+		// float 5.20 and float 5.20000 are the same value.
+		$this->assertTrue(\Core\compare_values(5.20, 5.20000));
+		$this->assertTrue(\Core\compare_values(5.20, '5.20000'));
+
+		// (string) "0" and (int) 0 are the same value.
+		$this->assertTrue(\Core\compare_values('0', 0));
+
+		// (boolean) false and (int) 0 are not the same value.
+		$this->assertTrue(!\Core\compare_values(false, 0));
+	}
+
+	public function testCompareStrings(){
+		$this->assertTrue(!\Core\compare_strings(1234, '01234'));
+		$this->assertTrue(!\Core\compare_strings('1234', '01234'));
+		$this->assertTrue(\Core\compare_strings(1234, '1234'));
+	}
 }

@@ -1742,23 +1742,27 @@ class Core implements ISingleton {
 	 * @param $val1
 	 * @param $val2
 	 *
+	 * @deprecated 2013.09 Please use the namespaced function instead.
+	 *
 	 * @return boolean
 	 */
 	public static function CompareValues($val1, $val2){
-		if($val1 === $val2){
-			// Exact same values and exact same typecasts.  They're the same!
-			return true;
-		}
-		if(is_numeric($val1) && is_numeric($val2) && $val1 == $val2){
-			// Both values are numeric and seem to be the same value, ie: "3" and 3.
-			return true;
-		}
-		if(strlen($val1) == strlen($val2) && $val1 == $val2){
-			// If they're both strings of the same length and equal to each other... same value.
-			return true;
-		}
+		return \Core\compare_values($val1, $val2);
+	}
 
-		return false;
+	/**
+	 * Compare two values as strings explictly.
+	 * This is useful for numbers that need to behave like strings, ie: postal codes with their leading zeros.
+	 *
+	 * @param $val1
+	 * @param $val2
+	 *
+	 * @deprecated 2013.09 Please use the namespaced function instead.
+	 *
+	 * @return boolean
+	 */
+	public static function CompareStrings($val1, $val2) {
+		return \Core\compare_strings($val1, $val2);
 	}
 
 	/**

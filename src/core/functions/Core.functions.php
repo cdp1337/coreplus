@@ -653,6 +653,56 @@ function random_hex($length = 1, $casesensitive = false){
 
 
 /**
+ * Simple method to compare two values with each other in a more restrictive manner than == but not quite fully typecasted.
+ *
+ * This is useful for the scenarios that involve needing to check that "3" == 3, but "" != 0.
+ *
+ * @param $val1
+ * @param $val2
+ *
+ * @return boolean
+ */
+function compare_values($val1, $val2){
+	if($val1 === $val2){
+		// Exact same values and exact same typecasts.  They're the same!
+		return true;
+	}
+	if(is_numeric($val1) && is_numeric($val2) && $val1 == $val2){
+		// Both values are numeric and seem to be the same value, ie: "3" and 3.
+		return true;
+	}
+	if(strlen($val1) == strlen($val2) && $val1 == $val2){
+		// If they're both strings of the same length and equal to each other... same value.
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Compare two values as strings explictly.
+ * This is useful for numbers that need to behave like strings, ie: postal codes with their leading zeros.
+ *
+ * @param $val1
+ * @param $val2
+ *
+ * @return boolean
+ */
+function compare_strings($val1, $val2) {
+	if($val1 === $val2){
+		// Exact same values and exact same typecasts.  They're the same!
+		return true;
+	}
+	if(strlen($val1) == strlen($val2) && $val1 == $val2){
+		// If they're both strings of the same length and equal to each other... same value.
+		return true;
+	}
+
+	return false;
+}
+
+
+/**
  * Utility function to translate a filesize in bytes into a human-readable version.
  *
  * @deprecated 2013.06.01
