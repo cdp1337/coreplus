@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.0" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.1" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.6.1"/>
 		<!-- User authentication events trigger security logs. -->
@@ -22,8 +22,8 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="b5529dbb4c14ec93a20beffa2c3eea22"/>
-		<file filename="User.class.php" md5="097fab24c5528e52f7076215b2b72d4b">
+		<file filename="CHANGELOG" md5="fcd869ba1ac47b89307d7c68b520d490"/>
+		<file filename="User.class.php" md5="57f400af40ad681efe0ae0ae5dcf8548">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
@@ -42,36 +42,37 @@
 		<file filename="controllers/UserActivityController.php" md5="def79927b684ce697f09bee34e5d56eb">
 			<controller name="UserActivityController"/>
 		</file>
-		<file filename="controllers/UserAdminController.php" md5="67adf6e6f1c69d5338f7abecf9600604">
+		<file filename="controllers/UserAdminController.php" md5="887da46a2d3b0ef36020127c07f4105b">
 			<controller name="UserAdminController"/>
 		</file>
 		<file filename="controllers/UserConfigController.php" md5="94c202fbd48a79df7820aa3e62328458">
 			<controller name="UserConfigController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="13f0b6b5be65d82936b8dc64db9690b7">
+		<file filename="controllers/UserController.php" md5="0b9f5c329757f2f27592a22b0c1e22fd">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="2c490a28c0a0ff5113b3623a00fce22d">
 			<controller name="UserGroupAdminController"/>
 		</file>
-		<file filename="helpers/ImportHelper.php" md5="6c98001060f0a23e5bac768e21424553">
+		<file filename="helpers/ImportHelper.php" md5="b41f16905ed807095df915d7a98f9aab">
 			<class name="User\ImportHelper"/>
 		</file>
-		<file filename="helpers/UserFunctions.php" md5="21facd4c7b807fbae6710d47a755e21a"/>
-		<file filename="helpers/UserHelper.class.php" md5="5280677af0f801140ca62ad659f580f9">
+		<file filename="helpers/UserFunctions.php" md5="a7a13c451288acfa82b18c7a2ad75836"/>
+		<file filename="helpers/UserHelper.class.php" md5="2f6de13bfffa326df9063de2f642b2a8">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
+		<file filename="helpers/smarty-plugins/function.user.php" md5="6855b7cfe07650189b1f77f425710213"/>
 		<file filename="models/UserActivityModel.php" md5="8d70f5be700a16328e2107ff48887fd0">
 			<class name="UserActivityModel"/>
 		</file>
 		<file filename="models/UserConfigModel.php" md5="d26645660e75e6ddde57472df77a330f">
 			<class name="UserConfigModel"/>
 		</file>
-		<file filename="models/UserGroupModel.php" md5="4628a66033c01e252738997e44f0262c">
+		<file filename="models/UserGroupModel.php" md5="ae481e6e254d45794192725314b5d360">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="models/UserModel.php" md5="8eb79cc5141680dd113bb6d5187fdd56">
+		<file filename="models/UserModel.php" md5="402356d29752635472e248f3e7428479">
 			<class name="UserModel"/>
 		</file>
 		<file filename="models/UserUserConfigModel.php" md5="4effee3eafd958fa65ce9a8204767258">
@@ -89,7 +90,7 @@
 		</file>
 	</files>
 	<view>
-		<file filename="templates/emails/user/activation.tpl" md5="8d61af5f8125678edda93321a39af123"/>
+		<file filename="templates/emails/user/activation.tpl" md5="2894752e5f2b582bf16dd0eed82e14e9"/>
 		<file filename="templates/emails/user/forgotpassword.tpl" md5="8463f6b3726164f63e8c838a58a28ba7"/>
 		<file filename="templates/emails/user/initialpassword.tpl" md5="e1313d158e73c9104cd798ef5d5e39e7"/>
 		<file filename="templates/emails/user/registration.tpl" md5="ee342d30eb7c14725eda1d42516765bf"/>
@@ -99,21 +100,21 @@
 		<file filename="templates/pages/user/guest403.tpl" md5="336576c142f10bcd6c462e02d4e15853"/>
 		<file filename="templates/pages/user/login.tpl" md5="c036e9df1ef5e68868e02300c4bb3086"/>
 		<file filename="templates/pages/user/me.tpl" md5="d1b0fb80fdd098d3a085a018232a0264"/>
-		<file filename="templates/pages/user/password.tpl" md5="17d96573034118ddbfd8e785a8aded88"/>
+		<file filename="templates/pages/user/password.tpl" md5="f03aa0a7377f78bff70374f79e050f64"/>
 		<file filename="templates/pages/user/register.tpl" md5="17d96573034118ddbfd8e785a8aded88"/>
 		<file filename="templates/pages/useractivity/details.tpl" md5="64842bd2c660f8f88ecfcbbf70f81fd9"/>
 		<file filename="templates/pages/useractivity/index.tpl" md5="90893b4472a5e60805afef1b16452dee"/>
 		<file filename="templates/pages/useradmin/import1.tpl" md5="34d4a67fc553d310cef459dc9a288da9"/>
 		<file filename="templates/pages/useradmin/import2.tpl" md5="bb67d4446d420094507d43e1b4d21390"/>
 		<file filename="templates/pages/useradmin/import3.tpl" md5="655994a8909458e93fa643349788621d"/>
-		<file filename="templates/pages/useradmin/index.tpl" md5="03a23eade9177436e141b1adb8308519"/>
+		<file filename="templates/pages/useradmin/index.tpl" md5="1b4464d4d28fd465b9df35d9fa77821b"/>
 		<file filename="templates/pages/userconfig/admin.tpl" md5="b052123c686d1e46bb6275fbed19eba9"/>
 		<file filename="templates/pages/usergroupadmin/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/usergroupadmin/index.tpl" md5="a5f88d1e78a024a0b0af9388e3a9206f"/>
 		<file filename="templates/pages/usergroupadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/user/login.tpl" md5="054c8c86b99b890e6490b96d3ff0c634"/>
 		<file filename="templates/widgets/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/widgets/useradmin/newestsignups.tpl" md5="77e2e9aaee9c8561e0190bc3735305ee"/>
+		<file filename="templates/widgets/useradmin/newestsignups.tpl" md5="f2b204a7f171da97eab32ccca3cab2c3"/>
 		<file filename="templates/widgets/userlogin/execute.tpl" md5="8b33f6adb9fdadf3a6f4e10f6722de2e"/>
 	</view>
 	<pages>
@@ -210,6 +211,7 @@
 				components/user/upgrades/257_to_260.php
 			</phpfileinclude>
 		</upgrade>
+		<upgrade from="2.6.0" to="2.6.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

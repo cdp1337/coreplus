@@ -1,3 +1,13 @@
+User 2.6.1
+
+	* New support for additional meta data for the user system.
+	* New support for default user groups.
+	* Just changed the term "Admin Account" to "System Admin"
+	* Skip empty emails on user imports.
+	* New smarty template, {user}.
+	* Allow the activate link to be called from the widget.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 30 Sep 2013 00:07:02 -0400
+
 User 2.6.0
 
 	* [Bug] Fix the user profile to allow standard users to be able to edit their own accounts.
