@@ -42,7 +42,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
 		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
-		<file filename="core/CHANGELOG" md5="45d4c71d6b5adbaf70be1210f786b1de"/>
+		<file filename="core/CHANGELOG" md5="533e7ff66f29bd1e045b81a38acff79b"/>
 		<file filename="core/bootstrap.php" md5="6885762e3fd11610ea22aceffd3375ff"/>
 		<file filename="core/bootstrap_postincludes.php" md5="129d5a6cab56e728c99eb116c2786051"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -145,7 +145,7 @@
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="d30419047aee346d119cf990054ab851">
 			<class name="RewriteMapHelper"/>
 		</file>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="b00b1e6464599638556a75a9981bd700">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="a6c6a43ea5cabcf14f38ef78499d9c76">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/legacy-support/pre-2.5.6/Directory_local_backend.php" md5="2f0b33bbdd83163e6ba067c6450085bd">

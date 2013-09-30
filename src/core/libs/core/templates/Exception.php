@@ -9,6 +9,7 @@
 
 namespace Core\Templates;
 
+// @TODO Rename this to TemplateException if it's really needed even.
 class Exception extends \Exception{
 
 }

@@ -1,3 +1,27 @@
+Core Plus 2.6.2
+
+	* [Bug] Better event handler for the <a confirm="..."/> tags.
+	* [Feature] Core supports feature freezing, forcing the updater to only give bug and security fixes.
+	* A few more defines that may not be present in the installer.
+	* Increase the secret encryption passphrase from 64 characters to 96 characters.
+	* Better updater check in its widget.
+	* Make sure that the admin link stays in the adminbar.
+	* Dataset allows for unique() to be chained like everything else.
+	* Allow "1" and "0" to be wrapped by quotes for mysqli.
+	* Pages now remember the last page template used to render the page.
+	* The model now knows and respects the raw datatype being stored, and uses the appropriate function
+	  for comparisons.
+	* New method, Email->addCustomHeader, useful for adding custom email headers.
+	* Deprecate some methods in the CurrentPage object in favour of the View.
+	* New function, \Core\compare_strings;  Useful for comparing values that explictly need to be seen as
+	  strings.
+	* Smarty templates use php's DOMDocument system for processing {insertable} tags.
+	* Static asset cache is disabled as it causes inconsistent results across different themes.
+	* Code cleanup - remove some unnecessary code.
+	* 'class' is reserved in ie... This changes the types object parameter class to something IE won't
+	  bitch about
+	-- Charlie Powell <charlie@eval.bz>  Mon, 30 Sep 2013 01:03:44 -0400
+
 Core Plus 2.6.1
 
 	* [Security] Hide version numbers when not in development!
