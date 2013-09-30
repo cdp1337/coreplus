@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.3" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.4" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.6.1" operation="ge"/>
 		<require name="user" type="component" version="2.5.4"/>
@@ -14,14 +14,14 @@
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="72e6f4bfccf32ef444fbb527af3bf136"/>
+		<file filename="CHANGELOG" md5="9a18252af34af0bea0a86b350786c02a"/>
 		<file filename="controllers/BlogController.php" md5="d876b20913373241681f117f0cf74159">
 			<controller name="BlogController"/>
 		</file>
 		<file filename="helpers/BlogHelper.php" md5="27d8ed9093c1d35d3bdbc84b370afe58">
 			<class name="BlogHelper"/>
 		</file>
-		<file filename="models/BlogArticleModel.php" md5="e653158979ab72bd3cbd944d81d3e1e6">
+		<file filename="models/BlogArticleModel.php" md5="04ba3337f16bf87457b3e84076cb31b3">
 			<class name="BlogArticleModel"/>
 		</file>
 		<file filename="models/BlogModel.php" md5="37bc0cf4adbacd59cd96fcb68f39a080">
@@ -91,6 +91,7 @@
 		</upgrade>
 		<upgrade from="1.5.1" to="1.5.2"/>
 		<upgrade from="1.5.2" to="1.5.3"/>
+		<upgrade from="1.5.3" to="1.5.4"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>

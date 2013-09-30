@@ -1,3 +1,8 @@
+Blog 1.5.4
+
+	* Increase the blog title length from 64 to 256 characters.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 30 Sep 2013 00:01:02 -0400
+
 Blog 1.5.3
 
 	* Minor update to switch to the instantiated version of the View.
