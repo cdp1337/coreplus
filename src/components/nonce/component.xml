@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Nonce" version="1.0.1">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Nonce" version="1.0.2">
 	<requires>
 		<require name="Core" type="component" version="2.5.1"/>
 	</requires>
@@ -8,12 +8,16 @@
 		<hook name="/cron/hourly" call="NonceModel::Cleanup"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="edcef8e00f63aefcaede4b8adde8d26b"/>
+		<file filename="CHANGELOG" md5="74ddb59c9994e873d5295eccbca49c31"/>
 		<file filename="README.md" md5="5bcf92183d0ab8d2045c82f264e66369"/>
-		<file filename="models/NonceModel.php" md5="85bd84c2346d89136c67a89adaf8cbe9">
+		<file filename="models/NonceModel.php" md5="1184758472a7424ee57da24d2127f171">
 			<class name="NonceModel"/>
 		</file>
 	</files>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.2"/>
+	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 		<author name="Charlie Powell &lt;charlie@eval.bz"/>
@@ -23,8 +27,5 @@
 			GNU Affero General Public License v3
 		</license>
 	</licenses>
-	<upgrades>
-		<upgrade from="1.0.0" to="1.0.1"/>
-	</upgrades>
 </component>
 

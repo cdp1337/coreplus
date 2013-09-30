@@ -1,3 +1,8 @@
+Nonce 1.0.2
+
+	* The Nonce hash validation is more forgiving for different-typecasted strings.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 30 Sep 2013 00:05:54 -0400
+
 Nonce 1.0.1
 
 	* Nonce models now encrypt the stored data associated with a given key.  This allows more sensitive
