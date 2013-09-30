@@ -1,3 +1,8 @@
+Piwik Analytics 1.0.2
+
+	* Render the piwik html snipped at the end of the body instead of in the head...
+	-- Charlie Powell <charlie@eval.bz>  Mon, 30 Sep 2013 00:06:17 -0400
+
 Piwik Analytics 1.0.1
 
 	* Make use of the namespace versions of View instead of static.

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Piwik Analytics" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="Piwik Analytics" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.7"/>
 	</requires>
@@ -25,17 +25,21 @@
 		<file filename="templates/pages/piwik/configure.tpl" md5="2ebddb8a00faee1306d901b3ef3f7204"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="ab8df00c2f461a37aa5a6d8d6ed410b4"/>
+		<file filename="CHANGELOG" md5="a52fd54d1757637896c33882f7ab3370"/>
 		<file filename="controllers/PiwikController.php" md5="b9fe202c963a76203be11a5cc26b8ea4">
 			<controller name="PiwikController"/>
 		</file>
-		<file filename="libs/piwik/PiwikHelper.php" md5="87fe4e3a06d1b0eb1a9122bf73a36857">
+		<file filename="libs/piwik/PiwikHelper.php" md5="69fc9e742887704bb73d142cd0dd4c69">
 			<class name="Piwik\PiwikHelper"/>
 		</file>
 	</files>
 	<assets>
 		<file filename="assets/images/piwik_logo.png" md5="07fef632b699f34c32337af65bda9d46"/>
 	</assets>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.2"/>
+	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
@@ -44,8 +48,5 @@
 			GNU Affero General Public License v3
 		</license>
 	</licenses>
-	<upgrades>
-		<upgrade from="1.0.0" to="1.0.1"/>
-	</upgrades>
 </component>
 
