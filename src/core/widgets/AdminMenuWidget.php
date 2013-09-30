@@ -76,6 +76,12 @@ class AdminMenuWidget extends Widget_2_1 {
 				// And the flattened list to support legacy templates.
 				$flatlist[ $p->get('title') ] = $p;
 			}
+
+			// This is a hack to make sure that users can view the /admin link if they can view other admin pages.
+			if(sizeof($flatlist) && !isset($groups['Admin']['Admin'])){
+				$groups['Admin']['Admin'] = new PageModel('/admin');
+				$groups['Admin']['Admin']->set('title', 'Admin');
+			}
 		}
 
 		ksort($flatlist);
