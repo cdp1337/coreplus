@@ -1,3 +1,8 @@
+Google 1.2.0
+
+	* [Feature] Google geocode supports enterprise signing!
+	-- Charlie Powell <charlie@eval.bz>  Mon, 30 Sep 2013 00:32:52 -0400
+
 Google 1.1.0
 
 	* Rewrite the Google configuration page to make it more user friendly.
