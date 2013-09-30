@@ -68,7 +68,17 @@ class GoogleController extends Controller_2_1 {
 			\Core\Configs\get_form_element_from_config(ConfigModel::Construct('/google-analytics/accountid'))
 		);
 
+		$maps = new FormTabsGroup(['name' => 'maps', 'title' => 'Maps']);
+
+		$maps->addElement(
+			\Core\Configs\get_form_element_from_config(ConfigModel::Construct('/googlemaps/enterprise/privatekey'))
+		);
+		$maps->addElement(
+			\Core\Configs\get_form_element_from_config(ConfigModel::Construct('/googlemaps/enterprise/clientname'))
+		);
+
 		$form->addElement($analytics);
+		$form->addElement($maps);
 		$form->addElement('submit', ['name' => 'submit', 'value' => 'Update Settings']);
 
 		$view->title = 'Google Keys and Apps ';

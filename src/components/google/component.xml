@@ -16,7 +16,8 @@
 		Provides (in theory), many of the Google API products.
 	</description>
 	<configs>
-		<config key="/google-mapsv3/key" type="string" description="Google Maps API v3 key"/>
+		<config key="/googlemaps/enterprise/privatekey" type="string" default="" description="Private key for Google Maps Enterprise"/>
+		<config key="/googlemaps/enterprise/clientname" type="string" description="Client name for Google Maps Enterprise"/>
 		<config key="/google-analytics/accountid" type="string" default="" description="This is the Account ID (sometimes called 'Web Property ID') listed for this account in google analytics.  Leaving this blank will disable GA; likewise populating it will automatically enable GA."/>
 	</configs>
 	<pages>
@@ -45,7 +46,7 @@
 				<datasetwhere>baseurl = /googleapi/configure</datasetwhere>
 			</dataset>
 		</upgrade>
-		<upgrade from="1.0.1" to="1.1.0"/>
+		<upgrade from="1.0.2" to="1.1.0"/>
 	</upgrades>
 	<view>
 		<file filename="templates/pages/google/configure.tpl" md5="a3fc7915404242b727080991ab014cda"/>

@@ -1,7 +1,7 @@
 <?php
 /**
  * File for class GeocodeRequest definition in the Alliance One project
- * 
+ *
  * @package Google\Maps
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130521.1504
@@ -48,7 +48,7 @@ namespace Google\Maps;
  * $b = $a;
  * </code>
  *
- * 
+ *
  * @package Google\Maps
  * @author Charlie Powell <charlie@eval.bz>
  *
@@ -82,9 +82,15 @@ class GeocodeRequest {
 			throw new \Exception('At least the address or city are required for geocode lookups.');
 		}
 
+		// a couple of required vars to sign the request url
+		$private_key = \ConfigHandler::Get('/googlemaps/enterprise/privatekey');
+		$clientname = \ConfigHandler::Get('/googlemaps/enterprise/clientname');
+
 		$params = [
 			'address' => $this->address1 . ' ' . $this->address2 . ($this->city ? ',' . $this->city : '') . ($this->state ? ',' . $this->state : ''),
-			'sensor' => ($this->sensor ? 'true' : 'false')
+			//'address' => $this->address1 . ($this->city ? ','.$this->city : '') . ($this->state ? ',' . $this->state : ''),
+			'sensor' => ($this->sensor ? 'true' : 'false'),
+			'client' => $clientname,
 		];
 		$address = trim($this->address1 . ' ' . $this->address2 . ' ' . $this->city . ' ' . $this->state);
 		if($this->country) $params['region'] = $this->country;
@@ -95,7 +101,23 @@ class GeocodeRequest {
 		foreach($params as $k => $v){
 			$ps[] = $k . '=' . urlencode(trim($v));
 		}
-		$url = 'http://maps.googleapis.com/maps/api/geocode/json?' . implode('&', $ps);
+
+		if($private_key){
+			// Use the enterprise-friendly URL.
+			// the url to sign
+			$signurl = '/maps/api/geocode/json?' . implode('&', $ps);
+
+			//zee signature!
+			$signature = hash_hmac("sha1", $signurl, base64_decode(strtr($private_key, '-_', '+/')), true);
+			$signature = strtr(base64_encode($signature), '+/', '-_');
+
+			//var_dump($signature); die();
+
+			$url = 'http://maps.googleapis.com/maps/api/geocode/json?' . implode('&', $ps) . '&signature=' . $signature;
+		}
+		else{
+			$url = 'http://maps.googleapis.com/maps/api/geocode/json?' . implode('&', $ps);;
+		}
 
 		// Make the request
 		// Since this is making use of Core's native File system, caching of remote files is builtin for free :)
@@ -105,15 +127,18 @@ class GeocodeRequest {
 
 		// If contents aren't good, just continue to the next.
 		if(!$contents){
-			throw new \Exception('Bad response for: ' . $address);
+			throw new \Exception('no contents Bad response for: ' . $address);
 		}
 		// If it's not an array, just continue.
 		if(!is_array($contents)){
-			throw new \Exception('Bad response for: ' . $address);
+			var_dump($contents);
+			throw new \Exception('not array Bad response for: ' . $address . "\n");
 		}
 		// If the status isn't good, just continue.
 		if($contents['status'] != 'OK'){
-			throw new \Exception('Bad response for: ' . $address);
+			echo $contents['status'] . "\n";
+			throw new \Exception('Bad status for: ' . $address . "\n");
+
 		}
 
 		// Yay, it's a valid location!
