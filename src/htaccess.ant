@@ -81,8 +81,9 @@ Options -Indexes
 #  Add Proper MIME-Type for Favicon to allow expires to work
 AddType image/vnd.microsoft.icon .ico
 
-# since IE has a bug where the X-UA-Compatible header is set but ignored due to other comments present in head
-# setting the X-UA-Compatible header here!
+# Force IE to render pages in the highest available mode in the various
+# cases when it may not: http://hsivonen.iki.fi/doctype/ie-mode.pdf.
+# Pulled from https://github.com/h5bp/html5-boilerplate/blob/master/.htaccess
 <IfModule mod_headers.c>
 	Header set X-UA-Compatible "IE=edge"
 	# `mod_headers` can't match based on the content-type, however, we only
