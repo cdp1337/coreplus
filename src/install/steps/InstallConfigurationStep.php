@@ -40,7 +40,7 @@ class InstallConfigurationStep extends InstallerStep{
 				if($c->nodeName == 'value'){
 					// This one requires a random string.
 					if($name == 'SECRET_ENCRYPTION_PASSPHRASE' && isset($_SESSION['configs'][$name]) && $_SESSION['configs'][$name] == 'RANDOM'){
-						$value = \Core\random_hex(64);
+						$value = \Core\random_hex(96);
 						$c->nodeValue = $value;
 					}
 					// An override is provided, use that and overwrite the xml.
