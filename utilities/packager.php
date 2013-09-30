@@ -1149,7 +1149,7 @@ EOD;
 			$bundle .= '.asc';
 
 			// If the user signed it... give the option to automatically commit and tag all changes for the component.
-			if(CLI::PromptUser('Package signed, GIT commit and tag everything?', 'boolean', true)){
+			if(CLI::PromptUser('Package signed, GIT commit everything?', 'boolean', true)){
 				// First, see if any new files need to be added to GIT in the directories.
 				exec('git status -u -s "' . implode('" "', $gitpaths) . '" | egrep "^\?\?" | sed "s:?? ::"', $newfiles);
 				foreach($newfiles as $nf){
@@ -1167,7 +1167,8 @@ EOD;
 				}
 
 				exec('git commit -s -m "Release ' . $name . ' ' . $version . '" "' . implode('" "', $gitpaths) . '"');
-				exec('git tag -m "Release ' . $name . ' ' . $version . '" -f ' . str_replace(' ', '-', $name) . '-' . str_replace('~', '-', $version));
+
+				echo "Don't forget to do a git push ;)" . NL;
 			}
 		}
 
@@ -1248,9 +1249,10 @@ function process_theme($theme, $forcerelease = false){
 		$opts = array(
 			'editvers'   => '[ VERSION     ] Set version number',
 			'editdesc'   => '[ DESCRIPTION ] Edit description',
-			//'importgit'  => '[ CHANGELOG   ] Import GIT commit logs into version ' . $version,
-			'editchange' => '[ CHANGELOG   ] Edit for version ' . $version,
-			//'viewchange' => '[ CHANGELOG   ] View for version ' . $version,
+			'viewgit'    => '[ GIT         ] View pending GIT commits between ' . $version . ' and HEAD',
+			'importgit'  => '[ CHNGLOG/GIT ] Import GIT commit logs into version ' . $version,
+			'editchange' => '[ CHNGLOG     ] Edit for version ' . $version,
+			'viewchange' => '[ CHNGLOG     ] View for version ' . $version,
 			'printdebug' => '[ DEBUG       ] Print the XML',
 			'save'       => '[ FINISH      ] Save it!',
 			'exit'       => 'Abort and exit without saving changes',
@@ -1303,6 +1305,34 @@ function process_theme($theme, $forcerelease = false){
 			case 'editchange':
 				manage_changelog($changelogfile, 'Theme/' . $name, $version);
 				break;
+
+			case 'viewgit':
+				try{
+					$parser = new Core\Utilities\Changelog\Parser('Theme/' . $name, $changelogfile);
+					$parser->parse();
+
+					/** @var $thisversion Core\Utilities\Changelog\Section */
+					$thischange      = $parser->getSection($version);
+					$thisdate        = $thischange->getReleasedDate();
+					$versioncheck    = $version;
+					if(!$thisdate){
+						$previouschange = $parser->getPreviousSection($version);
+						$thisdate       = $previouschange->getReleasedDate();
+						$versioncheck   = $previouschange->getVersion();
+					}
+				}
+				catch(Exception $e){
+					$thisdate = '01 Jan 2013 00:00:00 -0400';
+				}
+
+				$changes = get_git_changes_since('Theme ' . $name, $versioncheck, $thisdate, $gitpaths);
+				print "GIT commits since $name $versioncheck was released on $thisdate:\n\n";
+				foreach($changes as $line){
+					print $line . "\n";
+				}
+				print "\n";
+				break;
+
 			case 'importgit':
 				$parser = new Core\Utilities\Changelog\Parser('Theme/' . $name, $changelogfile);
 				$parser->parse();
@@ -1340,6 +1370,17 @@ function process_theme($theme, $forcerelease = false){
 						print $thischange->fetchFormatted() . NL . NL;
 					}
 				}
+				break;
+			case 'viewchange':
+				$parser = new Core\Utilities\Changelog\Parser('Theme/' . $name, $changelogfile);
+				$parser->parse();
+
+				/** @var $thisversion Core\Utilities\Changelog\Section */
+				$thisversion = $parser->getSection($version);
+
+				// Read the current changelog.
+				$changelog = $thisversion->fetchFormatted();
+				print $changelog . NL . NL;
 				break;
 			case 'printdebug':
 				echo $t->getRawXML() . NL;
@@ -1409,7 +1450,7 @@ function process_theme($theme, $forcerelease = false){
 			$bundle .= '.asc';
 
 			// If the user signed it... give the option to automatically commit and tag all changes for the component.
-			if(CLI::PromptUser('Package signed, GIT commit and tag everything?', 'boolean', true)){
+			if(CLI::PromptUser('Package signed, GIT commit everything?', 'boolean', true)){
 				// First, see if any new files need to be added to GIT in the directories.
 				exec('git status -u -s "' . implode('" "', $gitpaths) . '" | egrep "^\?\?" | sed "s:?? ::"', $newfiles);
 				foreach($newfiles as $nf){
@@ -1427,7 +1468,6 @@ function process_theme($theme, $forcerelease = false){
 				}
 
 				exec('git commit -s -m "Release Theme/' . $name . ' ' . $version . '" "' . implode('" "', $gitpaths) . '"');
-				exec('git tag "Release Theme ' . $name . ' ' . $version . '" -f Theme-' . str_replace(' ', '-', $name) . '-' . str_replace('~', '-', $version));
 			}
 		}
 
