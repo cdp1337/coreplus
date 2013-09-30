@@ -113,12 +113,9 @@ EOD;
 EOD;
 			// And the second part.
 			\Core\view()->addScript($script, 'foot');
-			//CurrentPage::AddBodyContent($script);
 		}
-		
-		
-		CurrentPage::SetHTMLAttribute('xmlns:fb', 'http://www.facebook.com/2008/fbml');
-		
+
+		\Core\view()->setHTMLAttribute('xmlns:fb', 'http://www.facebook.com/2008/fbml');
 		return true;
 	}
 }
