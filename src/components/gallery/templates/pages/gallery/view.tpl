@@ -5,8 +5,6 @@
 {css src="css/gallery.css"}{/css}
 {script library="core.ajaxlinks"}{/script}
 
-<h1>{$album.title}</h1>
-
 {if $uploader}
 	{if Core::IsComponentAvailable('jQuery-File-Upload')}
 		{$uploadform->render()}
@@ -46,7 +44,7 @@
 		<div class="gallery-image-wrapper gallery-image-wrapper-{$i.previewsize}">
 			<div class="gallery-image">
 				{a href="`$i.rewriteurl`"}
-					{img file=$i->getPreviewFile() dimensions="`$dimensions`" title="`$i.title`"}
+					{img alt="`$i.title|escape`" file=$i->getPreviewFile() dimensions="`$dimensions`" title="`$i.title|escape`"}
 				{/a}
 			</div>
 			<div class="gallery-image-title">
