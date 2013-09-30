@@ -175,10 +175,13 @@ class CurrentPage {
 	/**
 	 * Add a script to the current page.
 	 *
+	 * @deprecated 2013.09
+	 *
 	 * @param string $script
 	 * @param string $location
 	 */
 	public static function AddScript($script, $location = 'head') {
+		trigger_error('CurrentPage::AddScript is deprecated, please use \\Core\\view()->addScript instead.', E_USER_DEPRECATED);
 		\Core\view()->addScript($script, $location);
 	}
 
@@ -188,9 +191,7 @@ class CurrentPage {
 	 * @return array
 	 */
 	public static function GetScripts() {
-		$obj = self::Singleton();
-		$s   = array_merge($obj->_headscripts, $obj->footscripts);
-		return $s;
+		return \Core\view()->scripts;
 	}
 
 	/**
@@ -215,31 +216,56 @@ class CurrentPage {
 	/**
 	 * Add a linked stylesheet file to the current page.
 	 *
+	 * @deprecated 2013.09
+	 *
 	 * @param string $link The link of the stylesheet
 	 * @param type   $media Media to display the stylesheet with.
 	 */
 	public static function AddStylesheet($link, $media = "all") {
-		View::AddStylesheet($link, $media);
+		trigger_error('CurrentPage::AddStylesheet is deprecated, please use \\Core\\view()->addStylesheet instead.', E_USER_DEPRECATED);
+		\Core\view()->addStylesheet($link, $media);
 	}
 
 	/**
 	 * Add an inline style to the current page.
 	 *
+	 * @deprecated 2013.09
+	 *
 	 * @param string $style The contents of the <style> tag.
 	 */
 	public static function AddStyle($style) {
-		View::AddStyle($style);
+		trigger_error('CurrentPage::AddStyle is deprecated, please use \\Core\\view()->addStyle instead.', E_USER_DEPRECATED);
+		\Core\view()->addStyle($style);
 	}
 
+	/**
+	 * @deprecated 2013.09
+	 *
+	 * @param $attribute
+	 * @param $value
+	 */
 	public static function SetHTMLAttribute($attribute, $value) {
-		View::SetHTMLAttribute($attribute, $value);
+		trigger_error('CurrentPage::SetHTMLAttribute is deprecated, please use \\Core\\view()->setHTMLAttribute instead.', E_USER_DEPRECATED);
+		\Core\view()->setHTMLAttribute($attribute, $value);
 	}
 
+	/**
+	 * @deprecated 2013.09
+	 *
+	 * @return string
+	 */
 	public static function GetHead() {
+		trigger_error('CurrentPage::GetHead is deprecated, please use \\Core\\view()->getHead instead.', E_USER_DEPRECATED);
 		return View::GetHead();
 	}
 
+	/**
+	 * @deprecated 2013.09
+	 *
+	 * @return string
+	 */
 	public static function GetFoot() {
+		trigger_error('CurrentPage::GetFoot is deprecated, please use \\Core\\view()->getFoot instead.', E_USER_DEPRECATED);
 		return View::GetFoot();
 	}
 
@@ -251,7 +277,15 @@ class CurrentPage {
 		return trim(implode("\n", self::Singleton()->_postbody));
 	}
 
+	/**
+	 * @deprecated 2013.09
+	 *
+	 * @param bool $asarray
+	 *
+	 * @return array|string
+	 */
 	public static function GetHTMLAttributes($asarray = false) {
+		trigger_error('CurrentPage::GetHTMLAttributes is deprecated, please use \\Core\\view()->getHTMLAttributes instead.', E_USER_DEPRECATED);
 		return \Core\view()->getHTMLAttributes($asarray);
 	}
 
