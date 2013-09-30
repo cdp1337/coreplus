@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.0" name="Gallery" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.1" name="Gallery" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.6.0" operation="ge"/>
 		<require name="user" type="component"/>
@@ -27,14 +27,14 @@
 		<file filename="templates/pages/gallery/view-file.tpl" md5="3a50e3ea955d4086c354169afb1c55cd"/>
 		<file filename="templates/pages/gallery/view-image.tpl" md5="ed6a73c03584b8536951616f8d9ca71e"/>
 		<file filename="templates/pages/gallery/view-video.tpl" md5="f5d62cac8985b8a9432600f8277ea1f0"/>
-		<file filename="templates/pages/gallery/view.tpl" md5="0e1db82a21103493cbf5398d43396fa2"/>
+		<file filename="templates/pages/gallery/view.tpl" md5="eeb3eaf5cffb73f1c113c88e7c6a2ad9"/>
 		<file filename="templates/pages/gallerywidget/admin.tpl" md5="638e42be8f47518515b13955f0e8fc44"/>
 		<file filename="templates/pages/gallerywidget/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="56330e0c8bd6c8d1c371aa2bf4f985ce"/>
-		<file filename="controllers/GalleryController.php" md5="87c728f5bdc3efb7ed61460c3dd0876f">
+		<file filename="CHANGELOG" md5="3adadac6fe0b8051ccaafe91bdb111a5"/>
+		<file filename="controllers/GalleryController.php" md5="ac672f45fa2c0bdcc0739a277585fd15">
 			<controller name="GalleryController"/>
 		</file>
 		<file filename="controllers/GalleryWidgetController.php" md5="238bf2662f77f306d485fe4fca445030">
@@ -86,7 +86,8 @@
 				<datasetwhere>baseurl = /galleryadmin</datasetwhere>
 			</dataset>
 		</upgrade>
-		<upgrade from="1.4.4" to="1.5.0"/>
+		<upgrade from="1.4.5" to="1.5.0"/>
+		<upgrade from="1.5.0" to="1.5.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

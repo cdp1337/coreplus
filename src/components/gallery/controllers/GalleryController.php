@@ -44,6 +44,8 @@ class GalleryController extends Controller_2_1 {
 		$view->assignVariable('albums', $albums);
 
 		if($manager){
+			// WIP: eh?... haven't decided on this yet.
+			//$view->addControl('Gallery Albums Administration', '/gallery/admin', FontAwesome::ICON_DIRECTORY);
 			$view->addControl('Gallery Albums Administration', '/gallery/admin', 'directory');
 			$view->addControl('Add Album', '/gallery/create', 'add');
 			$view->addControl('Edit Gallery Listing Page', '/gallery/updatelisting', 'edit');
