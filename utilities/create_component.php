@@ -54,12 +54,14 @@ if(is_dir($dirname)){
 }
 
 $directories = array(
-	'components/' . $component,
-	'components/' . $component . '/assets',
-	'components/' . $component . '/controllers',
-	'components/' . $component . '/models',
-	'components/' . $component . '/templates',
-	'components/' . $component . '/templates/pages',
+	'assets/css',
+	'assets/js',
+	'classes',
+	'controllers',
+	'models',
+	'templates/pages',
+	'templates/widgets',
+	'widgets',
 );
 $models = array();
 $controllers = array();
@@ -107,7 +109,7 @@ $modelscaffolding = <<<EOF
  * Class file for the model %CLASS%
  *
  * @package %COMPONENT%
- * @author %AUTHORNAME% <%AUTHOREMAIL%
+ * @author %AUTHORNAME% <%AUTHOREMAIL%>
  */
 class %CLASS% extends Model {
 	/**
@@ -118,9 +120,9 @@ class %CLASS% extends Model {
 	 * @var array
 	 */
 	public static \$Schema = array(
-		'id' => array(
-			'type' => Model::ATT_TYPE_ID
-		),
+		'id' => [
+			'type' => Model::ATT_TYPE_UUID,
+		],
 	);
 
 	/**
@@ -142,7 +144,7 @@ $controllerscaffolding = <<<EOF
  * Class file for the controller %CLASS%
  *
  * @package %COMPONENT%
- * @author %AUTHORNAME% <%AUTHOREMAIL%
+ * @author %AUTHORNAME% <%AUTHOREMAIL%>
  */
 class %CLASS% extends Controller_2_1 {
 	// @todo Add your views here
@@ -155,15 +157,13 @@ EOF;
 
 
 // Start making the directories and writing everything.
-mkdir($dirname, 0777, true);
-mkdir($dirname . 'assets', 0777, true);
-if(sizeof($controllers)) mkdir($dirname . 'controllers', 0777, true);
-if(sizeof($models))      mkdir($dirname . 'models', 0777, true);
-if(sizeof($controllers)) mkdir($dirname . 'templates', 0777, true);
-if(sizeof($controllers)) mkdir($dirname . 'templates/pages', 0777, true);
+foreach($directories as $d){
+	$dir = new \Core\Filestore\Backends\DirectoryLocal($dirname . $d);
+	$dir->mkdir();
+}
 
 foreach($controllers as $controller){
-	if(sizeof($controllers)) mkdir($dirname . 'templates/pages/' . strtolower($controller), 0777, true);
+	if(sizeof($controllers)) mkdir($dirname . 'templates/pages/' . strtolower($controller), DEFAULT_DIRECTORY_PERMS, true);
 }
 
 
