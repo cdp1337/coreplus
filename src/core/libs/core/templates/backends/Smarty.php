@@ -289,7 +289,10 @@ class Smarty implements Templates\TemplateInterface {
 				foreach($validattributes as $k){
 					$nodedata[$k] = $n->getAttribute($k);
 				}
-				$inner = $dom->saveXML($n);
+
+				// Because saveXML will include the node itself,
+				// I need to render the first child only, (which includes any child node).
+				$inner = $dom->saveXML($n->firstChild);
 
 				if(!$nodedata['type']){
 					// Try to determine the form type based on the content since this is optional.
@@ -319,6 +322,12 @@ class Smarty implements Templates\TemplateInterface {
 					// Default but no value...
 					$nodedata['default'] = $nodedata['value'];
 				}
+				elseif(!$nodedata['default'] && $inner){
+					// No default value nor value, but it has inner contents.
+					// This will suffice as the default value.
+					$nodedata['default'] = $inner;
+				}
+
 				if(!$nodedata['value'] && $nodedata['default']){
 					// Value but no default...
 					$nodedata['value'] = $nodedata['default'];

@@ -627,13 +627,11 @@ class PageModel extends Model {
 		}
 
 		// Doesn't exist?
-		if($value){
-			$ins = new InsertableModel($this->get('site'), $this->get('baseurl'), $name);
-			$ins->set('value', $value);
+		$ins = new InsertableModel($this->get('site'), $this->get('baseurl'), $name);
+		$ins->set('value', $value);
 
-			// And append it so it'll get saved on save!
-			$this->_linked['Insertable']['records'][] = $ins;
-		}
+		// And append it so it'll get saved on save!
+		$this->_linked['Insertable']['records'][] = $ins;
 	}
 
 	/**
