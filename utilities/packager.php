@@ -823,6 +823,27 @@ function process_component($component, $forcerelease = false){
 
 
 	$ans = false;
+	// Lookup the changelog text of this current version.
+	$changelogfile = $comp->getBaseDir();
+	if($comp->getName() == 'core'){
+		// Core's changelog is located in the core directory.
+		$changelogfile .= 'core/CHANGELOG';
+		$name = 'Core Plus';
+		$gitpaths = [
+			$comp->getBaseDir() . 'config',
+			$comp->getBaseDir() . 'core',
+			$comp->getBaseDir() . 'install',
+			$comp->getBaseDir() . 'index.php'
+		];
+	}
+	else{
+		// Nope, no extension.
+		$changelogfile .= 'CHANGELOG';
+		$name = $comp->getName();
+		$gitpaths = [
+			$comp->getBaseDir()
+		];
+	}
 
 	// If repackage is requested, simply save and exit.
 	if($opts['repackage']) $ans = 'save';
@@ -841,30 +862,6 @@ function process_component($component, $forcerelease = false){
 			'exit'       => 'Abort and exit without saving changes',
 		);
 		$ans = CLI::PromptUser('What do you want to edit for component ' . $component . ' ' . $version, $opts);
-
-
-		// Lookup the changelog text of this current version.
-		$changelogfile = $comp->getBaseDir();
-		if($comp->getName() == 'core'){
-			// Core's changelog is located in the core directory.
-			$changelogfile .= 'core/CHANGELOG';
-			$name = 'Core Plus';
-			$gitpaths = [
-				$comp->getBaseDir() . 'config',
-				$comp->getBaseDir() . 'core',
-				$comp->getBaseDir() . 'install',
-				$comp->getBaseDir() . 'index.php'
-			];
-		}
-		else{
-			// Nope, no extension.
-			$changelogfile .= 'CHANGELOG';
-			$name = $comp->getName();
-			$gitpaths = [
-				$comp->getBaseDir()
-			];
-		}
-
 
 		switch($ans){
 			case 'editvers':
