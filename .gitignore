@@ -52,5 +52,6 @@
 /cache.properties
 /message.txt
 
-# Skip any compiled resource.
+# Skip any compiled and dynamic resource.
 /src/core/bootstrap.compiled.php
+/src/logs
