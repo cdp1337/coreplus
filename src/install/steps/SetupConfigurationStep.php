@@ -159,7 +159,7 @@ class SetupConfigurationStep extends InstallerStep{
 	private function testDatabaseConnection(){
 
 		try{
-			require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
+			require_once(ROOT_PDIR . 'core/libs/core/datamodel/DMI.class.php');
 			$dbconn = \DMI::GetSystemDMI();
 		}
 		// The server can't be located
