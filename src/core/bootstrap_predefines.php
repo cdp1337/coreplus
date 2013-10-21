@@ -28,8 +28,8 @@ if (PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')) {
 	die('This application cannot run with magic_quotes_gpc enabled, please disable them now!' . "\n");
 }
 
-if (PHP_VERSION < '5.3.0') {
-	die('This application requires at least PHP 5.3 to run!' . "\n");
+if (PHP_VERSION < '5.4.0') {
+	die('This application requires at least PHP 5.4 to run!' . "\n");
 }
 
 
