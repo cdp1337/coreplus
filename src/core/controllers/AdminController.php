@@ -68,6 +68,9 @@ class AdminController extends Controller_2_1 {
 			if (!$t->isInstalled()) continue;
 
 			if (($change = $t->reinstall()) !== false) {
+
+				SystemLogModel::LogInfoEvent('/updater/theme/reinstall', 'Theme ' . $t->getName() . ' reinstalled successfully', implode("\n", $change));
+
 				$changes[] = '<b>Changes to theme [' . $t->getName() . ']:</b><br/>' . "\n" . implode("<br/>\n", $change) . "<br/>\n<br/>\n";
 			}
 		}
@@ -89,6 +92,7 @@ class AdminController extends Controller_2_1 {
 				}
 				// 2.1 components support an array of changes, yay!
 				elseif ($change !== false) {
+					SystemLogModel::LogInfoEvent('/updater/component/reinstall', 'Component ' . $c->getName() . ' reinstalled successfully', implode("\n", $change));
 					$changes[] = '<b>Changes to component [' . $c->getName() . ']:</b><br/>' . "\n" . implode("<br/>\n", $change) . "<br/>\n<br/>\n";
 				}
 				// I don't care about "else", nothing changed if it was false.
