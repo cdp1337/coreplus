@@ -122,6 +122,8 @@ else{
 	ini_set('display_errors', 1);
 	ini_set('html_errors', 1);
 }
+set_error_handler('Core\\ErrorManagement\\error_handler', error_reporting());
+register_shutdown_function('Core\\ErrorManagement\\check_for_fatal');
 
 
 /*******   CALCULATE SEVERAL REQUIRED CONSTANTS, MAINLY ONES FOR PATH AND URL INFORMATION  ********/
@@ -448,7 +450,7 @@ $maindefines_time = microtime(true);
 /**************************  START EXECUTION *****************************/
 
 // Datamodel, GOGO!
-require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/DMI.class.php');
 try {
 	$dbconn = DMI::GetSystemDMI();
 	ConfigHandler::_DBReadyHook();
