@@ -296,7 +296,7 @@ class DMI_mysqli_backend implements DMI_Backend {
 				$this->_rawExecute('write', 'ALTER TABLE _tmptable DROP PRIMARY KEY');
 			}
 			else{
-				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` DROP INDEX ' . $idx['name'] . '');
+				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` DROP INDEX `' . $idx['name'] . '`');
 			}
 		}
 
