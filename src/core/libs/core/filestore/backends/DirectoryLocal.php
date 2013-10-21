@@ -156,7 +156,7 @@ class DirectoryLocal implements Filestore\Directory {
 
 		if($this->exists()) return null;
 
-		return mkdir($this->getPath(), 0777, true);
+		return mkdir($this->getPath(), DEFAULT_DIRECTORY_PERMS, true);
 	}
 
 	public function rename($newname) {
