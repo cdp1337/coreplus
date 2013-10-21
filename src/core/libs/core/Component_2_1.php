@@ -1103,21 +1103,63 @@ class Component_2_1 {
 
 		$changes = $this->_performInstall();
 
-		// Allow datasets to be in here too.
-		foreach($this->_xmlloader->getElements('install/dataset') as $datasetel){
-			$datachanges = $this->_parseDatasetNode($datasetel);
-			if($datachanges !== false) $changes = array_merge($changes, $datachanges);
-		}
 
 		// Run through each task under <install> and execute it.
-		/*
-		if($this->_xmlloader->getRootDOM()->getElementsByTagName('install')->item(0)){
-			InstallTask::ParseNode(
-				$this->_xmlloader->getRootDOM()->getElementsByTagName('install')->item(0), 
-				$this->getBaseDir()
-			);
+		/** @var $u DOMNode */
+		$u = $this->_xmlloader->getRootDOM()->getElementsByTagName('upgrade')->item(0);
+
+		// This gets a bit tricky, I need to get all the valid upgrade elements in the order that they
+		// are defined in the component.xml.
+		$children = $u->childNodes;
+
+		// The various upgrade tasks that can happen
+		foreach($children as $child){
+			/** @var $child DOMNode */
+			switch($child->nodeName){
+				case 'dataset':
+					$datachanges = $this->_parseDatasetNode($child);
+					if($datachanges !== false) $changes = array_merge($changes, $datachanges);
+					break;
+				case 'phpfileinclude':
+					// I need to do this in a method so that include file doesn't mess with my local variables!
+					$this->_includeFileForUpgrade(ROOT_PDIR . trim($child->nodeValue));
+					$changes[] = 'Included custom php file ' . basename($child->nodeValue);
+					break;
+				case 'php':
+					$file = $child->getAttribute('file');
+					if($file){
+						// I need to do this in a method so that include file doesn't mess with my local variables!
+						$this->_includeFileForUpgrade($this->getBaseDir() . $file);
+						$changes[] = 'Included custom php file ' . $file;
+					}
+					else{
+						$changes[] = 'Ignoring invalid &lt;php&gt; directive, no file attribute provided!';
+					}
+					break;
+				case 'sql':
+					$file = $child->getAttribute('file');
+					if($file){
+						$contents = file_get_contents($this->getBaseDir() . $file);
+						$execs = 0;
+						$parser = new SQL_Parser_Dataset($contents, SQL_Parser::DIALECT_MYSQL);
+						$datasets = $parser->parse();
+						foreach($datasets as $ds){
+							$ds->execute();
+							$execs++;
+						}
+						$changes[] = 'Executed custom sql file ' . $file . ' and ran ' . $execs . ($execs == 1 ? ' query' : 'queries');
+					}
+					else{
+						$changes[] = 'Ignoring invalid &lt;sql&gt; directive, no file attribute provided!';
+					}
+					break;
+				default:
+					$changes[] = 'Ignoring unsupported install directive: [' . $child->nodeName . ']';
+			}
 		}
-		*/
+
+		SystemLogModel::LogInfoEvent('/updater/component/install', 'Component ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
+
 
 		// Yay, it should be installed now.	Update the version in the database.
 		$c = new ComponentModel($this->_name);
@@ -1149,7 +1191,13 @@ class Component_2_1 {
 		// @todo I need actual error checking here.
 		if (!$this->isInstalled()) return false;
 
-		return $this->_performInstall();
+		$changes = $this->_performInstall();
+
+		if(is_array($changes) && sizeof($changes) > 0){
+			SystemLogModel::LogInfoEvent('/updater/component/reinstall', 'Component ' . $this->getName() . ' reinstalled successfully!', implode("\n", $changes));
+		}
+
+		return $changes;
 	}
 
 	/**
@@ -1198,6 +1246,37 @@ class Component_2_1 {
 								$this->_includeFileForUpgrade(ROOT_PDIR . trim($child->nodeValue));
 								$changes[] = 'Included custom php file ' . basename($child->nodeValue);
 								break;
+							case 'php':
+								$file = $child->getAttribute('file');
+								if($file){
+									// I need to do this in a method so that include file doesn't mess with my local variables!
+									$this->_includeFileForUpgrade($this->getBaseDir() . $file);
+									$changes[] = 'Included custom php file ' . $file;
+								}
+								else{
+									$changes[] = 'Ignoring invalid &lt;php&gt; directive, no file attribute provided!';
+								}
+								break;
+							case 'sql':
+								$file = $child->getAttribute('file');
+								if($file){
+									$contents = file_get_contents($this->getBaseDir() . $file);
+									$execs = 0;
+									$parser = new SQL_Parser_Dataset($contents, SQL_Parser::DIALECT_MYSQL);
+									$datasets = $parser->parse();
+									foreach($datasets as $ds){
+										$ds->execute();
+										$execs++;
+									}
+									$changes[] = 'Executed custom sql file ' . $file . ' and ran ' . $execs . ($execs == 1 ? ' query' : ' queries');
+								}
+								else{
+									$changes[] = 'Ignoring invalid &lt;sql&gt; directive, no file attribute provided!';
+								}
+								break;
+							case '#text':
+								// This can be ignored without triggering any notice.
+								break;
 							default:
 								$changes[] = 'Ignoring unsupported upgrade directive: [' . $child->nodeName . ']';
 						}
@@ -1205,6 +1284,8 @@ class Component_2_1 {
 
 					// Record this change.
 					$changes[] = 'Upgraded from [' . $this->_versionDB . '] to [' . $u->getAttribute('to') . ']';
+
+					SystemLogModel::LogInfoEvent('/updater/component/upgrade', 'Component ' . $this->getName() . ' upgraded successfully!', implode("\n", $changes));
 
 					$this->_versionDB = @$u->getAttribute('to');
 					$c                = new ComponentModel($this->_name);
@@ -1240,6 +1321,10 @@ class Component_2_1 {
 		$change = $this->_parsePages(false);
 		if ($change !== false) $changed = array_merge($changed, $change);
 
+		if(sizeof($changed)){
+			SystemLogModel::LogInfoEvent('/updater/component/disable', 'Component ' . $this->getName() . ' disabled successfully!', implode("\n", $changed));
+		}
+
 		// Do this when I actually have widgets to test.
 		//$change = $this->_parseWidgets(false);
 		//if ($change !== false) $changed = array_merge($changed, $change);
@@ -1273,6 +1358,10 @@ class Component_2_1 {
 		// Do this when I actually have widgets to test.
 		//$change = $this->_parseWidgets();
 		//if ($change !== false) $changed = array_merge($changed, $change);
+
+		if(sizeof($changed)){
+			SystemLogModel::LogInfoEvent('/updater/component/enable', 'Component ' . $this->getName() . ' enabled successfully!', implode("\n", $changed));
+		}
 
 		// Ensure that the core component cache is purged too!
 		Core::Cache()->delete('core-components');

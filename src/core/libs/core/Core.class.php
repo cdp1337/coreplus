@@ -422,8 +422,7 @@ class Core implements ISingleton {
 						}
 					}
 					catch(Exception $e){
-						error_log('Ignoring component [' . $n . '] due to an error during upgrading!');
-						error_log($e->getMessage());
+						SystemLogModel::LogErrorEvent('/core/component/failedupgrade', 'Ignoring component [' . $n . '] due to an error during upgrading!', $e->getMessage());
 
 						unlink(TMP_DIR . 'lock.message');
 						//$c->disable();
@@ -437,8 +436,7 @@ class Core implements ISingleton {
 						$this->_registerComponent($c);
 					}
 					catch(Exception $e){
-						error_log('Ignoring component [' . $n . '] due to an error during registration!');
-						error_log($e->getMessage());
+						SystemLogModel::LogErrorEvent('/core/component/failedregister', 'Ignoring component [' . $n . '] due to an error during registration!', $e->getMessage());
 
 						//$c->disable();
 						$this->_componentsDisabled[$n] = $c;
@@ -507,10 +505,7 @@ class Core implements ISingleton {
 				// Ignore anything with the execmode different, those should be minor notices for debugging if anything.
 				if ($c->error & Component::ERROR_WRONGEXECMODE) continue;
 
-
-				$msg = 'Could not load installed component ' . $n . ' due to requirement failed.' . "\n" . $c->getErrors();
-				error_log($msg);
-				//Core::AddMessage($msg);
+				SystemLogModel::LogErrorEvent('/core/component/missingrequirement', 'Could not load installed component ' . $n . ' due to requirement failed.', $c->getErrors());
 			}
 		}
 
