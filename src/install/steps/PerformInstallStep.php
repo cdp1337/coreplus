@@ -25,14 +25,21 @@ class PerformInstallStep extends InstallerStep {
 		//if(!\Core\DB()->tableExists(DB_PREFIX . 'component')){
 
 
-		\Core::LoadComponents();
+		try{
+			\Core::LoadComponents();
 
-		//\ThemeHandler::GetTheme('default')->install();
-		\ThemeHandler::GetTheme('base-v2')->install();
+			//\ThemeHandler::GetTheme('default')->install();
+			\ThemeHandler::GetTheme('base-v2')->install();
 
-		unset($_SESSION['passes']);
-		// Yup, that's it!
-		// The core system handles all installs automatically.
-		\core\redirect(ROOT_WDIR);
+			unset($_SESSION['passes']);
+			// Yup, that's it!
+			// The core system handles all installs automatically.
+			\core\redirect(ROOT_WDIR);
+		}
+		catch(\Exception $e){
+			$this->getTemplate()->assign('errors', $e->getMessage());
+			$this->getTemplate()->assign('component', 'Core Plus');
+		}
+
 	}
 }
