@@ -24,8 +24,11 @@ class PreflightCheckStep extends InstallerStep {
 			$this->testPHPVersion(),
 			$this->testRewrite(),
 			$this->testPHPXML(),
+			$this->testPHPMcrypt(),
+			$this->testPHPcURL(),
 			$this->testHTAccessFile(),
 			$this->testConfigFile(),
+			$this->testLogDirectory(),
 		);
 
 		// Run through all these checks and see if there were any errors.
@@ -59,7 +62,7 @@ class PreflightCheckStep extends InstallerStep {
 		// @todo Write a blog post on upgrading php on centos.
 		if(version_compare($version, '5.4.0', '<')){
 			return [
-				'title' => 'php',
+				'title' => 'PHP Version',
 				'status' => 'error',
 				'message' => 'php is too old',
 				'description' => 'Your version of PHP is ' . $version . '.  The bare minimum required is 5.4.0!  Please upgrade PHP before proceeding.'
@@ -68,7 +71,7 @@ class PreflightCheckStep extends InstallerStep {
 
 		if(version_compare($version, '5.4.6', '<')){
 			return [
-				'title' => 'php',
+				'title' => 'PHP Version',
 				'status' => 'warning',
 				'message' => 'php might be too old',
 				'description' => 'Your version of PHP is ' . $version . '.  It is probably a good idea to upgrade to newest version, ya know, for security and all.',
@@ -76,7 +79,7 @@ class PreflightCheckStep extends InstallerStep {
 		}
 
 		return [
-			'title' => 'php',
+			'title' => 'PHP Version',
 			'status' => 'passed',
 			'message' => 'php is new enough!',
 			'description' => 'Your version of PHP is ' . $version . '.  That\'ll work.',
@@ -95,7 +98,7 @@ class PreflightCheckStep extends InstallerStep {
 			if(!in_array('mod_rewrite', apache_get_modules())){
 				// @todo Write blog post about mod_rewrite and how to enable it on different servers.
 				return [
-					'title' => 'mod_rewrite',
+					'title' => 'Mod Rewrite',
 					'status' => 'error',
 					'message' => 'mod_rewrite is not available',
 					'description' => 'In order to use Core Plus, the apache module mod_rewrite must be installed and enabled!'
@@ -103,10 +106,10 @@ class PreflightCheckStep extends InstallerStep {
 			}
 			else{
 				return [
-					'title' => 'mod_rewrite',
+					'title' => 'Mod Rewrite',
 					'status' => 'passed',
 					'message' => 'mod_rewrite is available!',
-					'description' => '',
+					'description' => 'The module "mod_rewrite" was located as a native apache module.',
 				];
 			}
 		}
@@ -120,7 +123,7 @@ class PreflightCheckStep extends InstallerStep {
 				$line = trim(fgets($fp, 512));
 				if(strpos($line, '300 Multiple Choices') === false){
 					return [
-						'title' => 'mod_rewrite',
+						'title' => 'Mod Rewrite',
 						'status' => 'warning',
 						'message' => 'mod_rewrite may not available',
 						'description' => 'Preliminary tests show that url rewriting may not be available.  If this is the case, you will not be able to fully use Core Plus.  Proceed with caution.'
@@ -128,10 +131,10 @@ class PreflightCheckStep extends InstallerStep {
 				}
 				else{
 					return [
-						'title' => 'mod_rewrite',
+						'title' => 'Mod Rewrite',
 						'status' => 'passed',
 						'message' => 'mod_rewrite is available!',
-						'description' => '',
+						'description' => 'The native module could not located, but work-around tests confirmed that it is indeed functioning.',
 					];
 				}
 			}
@@ -160,6 +163,44 @@ class PreflightCheckStep extends InstallerStep {
 				'status' => 'passed',
 				'message' => 'php-xml is available!',
 				'description' => '',
+			];
+		}
+	}
+
+	private function testPHPMcrypt(){
+		if(function_exists('mcrypt_encrypt')){
+			return [
+				'title' => 'php-mcrypt',
+				'status' => 'passed',
+				'message' => 'php-mcrypt is available!',
+				'description' => '',
+			];
+		}
+		else{
+			return [
+				'title' => 'php-mcrypt',
+				'status' => 'error',
+				'message' => 'php-mcrypt is not available',
+				'description' => 'Core Plus utilizes encryption via the mcrypt library.  Please install php5-mcrypt.',
+			];
+		}
+	}
+
+	private function testPHPcURL(){
+		if(function_exists('curl_exec')){
+			return [
+				'title' => 'php-curl',
+				'status' => 'passed',
+				'message' => 'php-curl is available!',
+				'description' => '',
+			];
+		}
+		else{
+			return [
+				'title' => 'php-curl',
+				'status' => 'error',
+				'message' => 'php-curl is not available',
+				'description' => 'Please install php5-curl.',
 			];
 		}
 	}
@@ -247,5 +288,40 @@ class PreflightCheckStep extends InstallerStep {
 			'message' => ROOT_PDIR . ' is writable',
 			'description' => ''
 		];
+	}
+
+	/**
+	 * Test that the logs/ directory exists and is writable.
+	 *
+	 * @return array
+	 */
+	private function testLogDirectory(){
+		$dir = ROOT_PDIR . 'logs/';
+
+		if(is_dir($dir) && is_writable($dir)){
+			// Yay, everything is good here!
+			return [
+				'title' => 'Log Directory',
+				'status' => 'passed',
+				'message' => 'Log directory is writable',
+				'description' => $dir . ' is writable, this is the directory that the site logs will be stored in.',
+			];
+		}
+		elseif(is_dir($dir)){
+			return [
+				'title' => 'Log Directory',
+				'status' => 'error',
+				'message' => 'Log directory is not writable',
+				'description' => $dir . ' is not writable!  Since this is the directory that logs get saved in, you will not see any site logs.  To fix this, please issue a chmod a+x on the directory.',
+			];
+		}
+		else{
+			return [
+				'title' => 'Log Directory',
+				'status' => 'error',
+				'message' => 'Log directory does not exist',
+				'description' => $dir . ' does not exist.  Since this is the directory that logs get saved in, you will not see any site logs.  To fix this, please create it and issue a chmod a+x on the directory.',
+			];
+		}
 	}
 }
