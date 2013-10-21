@@ -112,11 +112,16 @@ abstract class Factory {
 			return new Backends\FileFTP($uri);
 		}
 
-		// If this is a local file, just the URL version.... allow that remap too!
-		if(strpos($uri, ROOT_URL_NOSSL) === 0){
+
+		if(strpos($uri, ROOT_PDIR) === 0){
+			// No change needed ;)
+		}
+		elseif(strpos($uri, ROOT_URL_NOSSL) === 0){
+			// If this is a local file, just the URL version.... allow that remap too!
 			$uri = ROOT_PDIR . substr($uri, strlen(ROOT_URL_NOSSL));
 		}
 		elseif(strpos($uri, ROOT_URL_SSL) === 0){
+			// If this is a local file, just the URL version.... allow that remap too!
 			$uri = ROOT_PDIR . substr($uri, strlen(ROOT_URL_SSL));
 		}
 
