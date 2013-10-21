@@ -97,7 +97,7 @@ if (!$core_settings) {
 		$newURL = 'install/';
 		//header('HTTP/1.1 302 Moved Temporarily');
 		//header("Location:" . $newURL);
-		die("Please <a href=\"{$newURL}\">install Core Plus.</a>");
+		die("Please <a href=\"{$newURL}\">install Core Plus.</a><br/><br/>(You may need to refresh this page a time or two if you just installed)");
 	}
 	else{
 		die('Please install core plus through the web interface first!' . "\n");
