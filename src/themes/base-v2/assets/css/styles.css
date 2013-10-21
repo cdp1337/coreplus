@@ -1200,10 +1200,12 @@ a.button[disabled=disabled] {
  *****************************************************************************
  *****************************************************************************/
 /** general styles for most of the messages **/
-/* line 442, styles.scss */
+/* line 444, styles.scss */
 .message-note,
 .message-info,
 .message-success,
+.message-warning,
+.message-deprecated,
 .message-error {
   border-radius: 6px;
   padding: 15px 10px 15px 55px;
@@ -1214,7 +1216,7 @@ a.button[disabled=disabled] {
   position: relative;
 }
 
-/* line 451, styles.scss */
+/* line 453, styles.scss */
 .message-tutorial {
   padding: 15px 10px 15px 55px;
   margin: 10px;
@@ -1225,34 +1227,48 @@ a.button[disabled=disabled] {
 }
 
 /** Specific colors **/
-/* line 461, styles.scss */
+/* line 463, styles.scss */
 .message-note {
   background: #FCF0AD;
   border: 1px solid #BCB06D;
 }
 
-/* line 465, styles.scss */
+/* line 467, styles.scss */
 .message-info {
   background: #EEE9FF;
   border: 1px solid #2667FF;
   color: #0a1250;
 }
 
-/* line 470, styles.scss */
+/* line 472, styles.scss */
 .message-success {
   background: #AFA;
   border: 1px solid #373;
   color: #151;
 }
 
-/* line 475, styles.scss */
+/* line 477, styles.scss */
+.message-deprecated {
+  background: #fff4bd;
+  border: 1px solid #ded081;
+  color: #c1b572;
+}
+
+/* line 482, styles.scss */
+.message-warning {
+  background: #fce8d1;
+  border: 1px solid #bc8565;
+  color: #df5c25;
+}
+
+/* line 487, styles.scss */
 .message-error {
   background: #FCe5ed;
   border: 1px solid #BC606D;
   color: #DF101D;
 }
 
-/* line 480, styles.scss */
+/* line 492, styles.scss */
 .message-tutorial {
   background: #faefb9;
   border: 1px solid #BCB06D;
@@ -1260,33 +1276,34 @@ a.button[disabled=disabled] {
 }
 
 /** I need to color the A tags too **/
-/* line 487, styles.scss */
+/* line 499, styles.scss */
 body .pagecontent .message-note a {
   color: #7f774a;
 }
 
-/* line 490, styles.scss */
+/* line 502, styles.scss */
 body .pagecontent .message-info a {
   color: #0a1250;
 }
 
-/* line 493, styles.scss */
+/* line 505, styles.scss */
 body .pagecontent .message-success a {
   color: #151;
 }
 
-/* line 496, styles.scss */
+/* line 508, styles.scss */
 body .pagecontent .message-error a {
   color: #DF101D;
 }
 
-/* line 499, styles.scss */
+/* line 511, styles.scss */
 body .pagecontent .message-tutorial a {
   color: #7f774a;
 }
 
 /** And the message's icons **/
-/* line 504, styles.scss */
+/* line 517, styles.scss */
+div[class^="message-"] .message-background-icon i,
 p[class^="message-"] .message-background-icon i {
   font-size: 75px;
   left: -6px;
@@ -1297,29 +1314,46 @@ p[class^="message-"] .message-background-icon i {
 }
 
 /** And the specific message types icon colors **/
-/* line 514, styles.scss */
-p.message-note .message-background-icon i[class^="icon-"] {
+/* line 527, styles.scss */
+3.message-note .message-background-icon i  [class^="icon-"] {
   color: #BCB06D;
 }
 
-/* line 517, styles.scss */
-p.message-info .message-background-icon i[class^="icon-"] {
+/* line 530, styles.scss */
+.message-info .message-background-icon i[class^="icon-"] {
   color: #2667FF;
 }
 
-/* line 520, styles.scss */
-p.message-success .message-background-icon i[class^="icon-"] {
+/* line 533, styles.scss */
+.message-success .message-background-icon i[class^="icon-"] {
   color: #373;
 }
 
-/* line 523, styles.scss */
-p.message-error .message-background-icon i[class^="icon-"] {
+/* line 536, styles.scss */
+.message-error .message-background-icon i[class^="icon-"] {
   color: #DF101D;
 }
 
-/* line 526, styles.scss */
-p.message-tutorial .message-background-icon i[class^="icon-"] {
+/* line 539, styles.scss */
+.message-tutorial .message-background-icon i[class^="icon-"] {
   color: #BCB06D;
+}
+
+/* line 543, styles.scss */
+table.stacktrace {
+  width: 100%;
+  border: 1px solid;
+}
+
+/* line 547, styles.scss */
+table.stacktrace th {
+  border: 1px solid;
+}
+
+/* line 550, styles.scss */
+table.stacktrace td {
+  border: 1px solid;
+  font-size: 80%;
 }
 
 /*****************************************************************************
@@ -1328,7 +1362,7 @@ p.message-tutorial .message-background-icon i[class^="icon-"] {
  *****************************************************************************
  *****************************************************************************/
 /* Error messages for everything */
-/* line 543, styles.scss */
+/* line 568, styles.scss */
 .formelement.formerror input,
 .formelement.formerror select,
 .formelement.formerror textarea {
@@ -1337,7 +1371,7 @@ p.message-tutorial .message-background-icon i[class^="icon-"] {
 }
 
 /* Description tag for form elements */
-/* line 550, styles.scss */
+/* line 575, styles.scss */
 .formelement .formdescription,
 fieldset .formdescription {
   font-size: 85%;
@@ -1345,13 +1379,13 @@ fieldset .formdescription {
   margin: 0.25em 0 0.25em 1em;
 }
 
-/* line 556, styles.scss */
+/* line 581, styles.scss */
 .formelement {
   margin-bottom: 0.75em;
   position: relative;
 }
 
-/* line 561, styles.scss */
+/* line 586, styles.scss */
 .formelement .formelement-labelinputgroup {
   background: #F6F6F6;
   border: 1px solid #CBCBCB;
@@ -1360,7 +1394,7 @@ fieldset .formdescription {
   float: left;
 }
 
-/* line 569, styles.scss */
+/* line 594, styles.scss */
 .formelement .formelement-labelinputgroup label {
   float: left;
   color: #888;
@@ -1369,7 +1403,7 @@ fieldset .formdescription {
   min-width: 120px;
 }
 
-/* line 577, styles.scss */
+/* line 602, styles.scss */
 .formelement .formelement-labelinputgroup input {
   color: #3C3C3C;
   float: left;
@@ -1380,13 +1414,13 @@ fieldset .formdescription {
 }
 
 /* Select specific styles */
-/* line 587, styles.scss */
+/* line 612, styles.scss */
 .formelement.formselect .formelement-labelinputgroup label {
   /* Select boxes generally are a little taller than inputs, have more padding for the label. */
   padding: 7px 4px 8px 9px;
 }
 
-/* line 591, styles.scss */
+/* line 616, styles.scss */
 .formelement.formselect .formelement-labelinputgroup select {
   background: #F6F6F6;
   border: 0 none;
@@ -1398,7 +1432,7 @@ fieldset .formdescription {
 }
 
 /* Radio specific styles */
-/* line 602, styles.scss */
+/* line 627, styles.scss */
 .formelement.formradioinput {
   max-width: 415px;
   display: block;
@@ -1410,13 +1444,13 @@ fieldset .formdescription {
   margin-right: 0.75em;
 }
 
-/* line 612, styles.scss */
+/* line 637, styles.scss */
 .formelement.formradioinput .formelement-labelinputgroup {
   float: none;
   border: 0 none;
 }
 
-/* line 616, styles.scss */
+/* line 641, styles.scss */
 .formelement.formradioinput .formelement-labelinputgroup > label {
   background: #DDDDDD;
   color: #888888;
@@ -1427,7 +1461,7 @@ fieldset .formdescription {
   top: 0;
 }
 
-/* line 625, styles.scss */
+/* line 650, styles.scss */
 .formelement.formradioinput span.radio-label {
   display: block;
   background: #DDD;
@@ -1436,7 +1470,7 @@ fieldset .formdescription {
   color: #888888;
 }
 
-/* line 632, styles.scss */
+/* line 657, styles.scss */
 .formelement.formradioinput label {
   border: none;
   color: #3C3C3C;
@@ -1451,13 +1485,13 @@ fieldset .formdescription {
   left: 6px;
 }
 
-/* line 645, styles.scss */
+/* line 670, styles.scss */
 .formelement.formradioinput label input {
   margin-top: 0;
 }
 
 /* Checkbox and checkboxes specific styles */
-/* line 650, styles.scss */
+/* line 675, styles.scss */
 .formelement.formcheckboxinput {
   display: inline-block;
   clear: both;
@@ -1469,7 +1503,7 @@ fieldset .formdescription {
   margin-right: 0.75em;
 }
 
-/* line 660, styles.scss */
+/* line 685, styles.scss */
 .formelement.formcheckboxesinput {
   background: #F6F6F6;
   border: 1px solid #CBCBCB;
@@ -1479,14 +1513,14 @@ fieldset .formdescription {
   padding-bottom: 4px;
 }
 
-/* line 668, styles.scss */
+/* line 693, styles.scss */
 .formelement.formcheckboxinput label {
   padding: 0.25em 0;
   white-space: nowrap;
   top: 4px;
 }
 
-/* line 673, styles.scss */
+/* line 698, styles.scss */
 .formelement.formcheckboxesinput label {
   display: block;
   margin: 0 8px;
@@ -1496,34 +1530,34 @@ fieldset .formdescription {
   top: 4px;
 }
 
-/* line 681, styles.scss */
+/* line 706, styles.scss */
 .formelement.formcheckboxinput input {
   color: #3C3C3C;
   padding: 0.35em 0;
 }
 
-/* line 685, styles.scss */
+/* line 710, styles.scss */
 .formelement.formcheckboxesinput input {
   margin-left: 0;
   color: #3C3C3C;
   padding: 0.35em 0;
 }
 
-/* line 690, styles.scss */
+/* line 715, styles.scss */
 .formelement.formcheckboxesinput span.checkboxes-label {
   display: block;
   background: #DDD;
   padding: 8px 7px;
 }
 
-/* line 695, styles.scss */
+/* line 720, styles.scss */
 .formelement.formcheckboxesinput span.checkboxes-label span.checkboxes-toggle {
   cursor: pointer;
   float: right;
 }
 
 /* Textarea specific styles */
-/* line 702, styles.scss */
+/* line 727, styles.scss */
 .formelement.formtextareainput .formelement-labelinputgroup label {
   display: block;
   float: none;
@@ -1531,7 +1565,7 @@ fieldset .formdescription {
   top: 0;
 }
 
-/* line 708, styles.scss */
+/* line 733, styles.scss */
 .formelement.formtextareainput .formelement-labelinputgroup textarea {
   padding: 2px;
   width: 400px;
@@ -1541,29 +1575,29 @@ fieldset .formdescription {
 }
 
 /* File input specific styles */
-/* line 717, styles.scss */
+/* line 742, styles.scss */
 .formelement.formfileinput {
   clear: both;
 }
 
-/* line 720, styles.scss */
+/* line 745, styles.scss */
 .formelement.formfileinput label {
   float: none;
   display: block;
 }
 
-/* line 724, styles.scss */
+/* line 749, styles.scss */
 .formelement.formfileinput .file-input-innercontainer {
   padding: 4px;
 }
 
-/* line 727, styles.scss */
+/* line 752, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .formfileinput-selector {
   vertical-align: top;
   width: 150px;
 }
 
-/* line 731, styles.scss */
+/* line 756, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .formfileinput-selector label {
   position: relative;
   top: 0;
@@ -1571,12 +1605,12 @@ fieldset .formdescription {
   background: none;
 }
 
-/* line 737, styles.scss */
+/* line 762, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .file-input-actions {
   vertical-align: top;
 }
 
-/* line 740, styles.scss */
+/* line 765, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .fileinput-action {
   max-height: 350px;
   min-width: 200px;
@@ -1584,7 +1618,7 @@ fieldset .formdescription {
   overflow-y: auto;
 }
 
-/* line 746, styles.scss */
+/* line 771, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .fileinput-action input {
   background: white;
   border: 1px solid #888;
@@ -1593,13 +1627,13 @@ fieldset .formdescription {
 }
 
 /* Page Keywords input specific styles */
-/* line 754, styles.scss */
+/* line 779, styles.scss */
 .formelement.formpagemetakeywordsinput label {
   display: block;
   float: none;
 }
 
-/* line 758, styles.scss */
+/* line 783, styles.scss */
 .formelement.formpagemetakeywordsinput .keywords-multi-select {
   background: none repeat scroll 0 0 #F6F6F6;
   border: 1px solid #47C6CB;
@@ -1610,7 +1644,7 @@ fieldset .formdescription {
   padding: 2px;
 }
 
-/* line 767, styles.scss */
+/* line 792, styles.scss */
 .formelement.formpagemetakeywordsinput .keywords-multi-select input[type="text"] {
   border: 0 none;
   float: left;
@@ -1618,7 +1652,7 @@ fieldset .formdescription {
   padding: 0;
 }
 
-/* line 773, styles.scss */
+/* line 798, styles.scss */
 .formelement.formpagemetakeywordsinput .keywords-multi-select .keywords-multi-select-option {
   background: none repeat scroll 0 0 #EEEEFF;
   border: 1px solid #DDDDDD;
@@ -1629,7 +1663,7 @@ fieldset .formdescription {
 }
 
 /* Disabled selects should look a little more ... disabled. */
-/* line 785, styles.scss */
+/* line 810, styles.scss */
 .formelement.formselect .formelement-labelinputgroup select[disabled],
 .formelement.formselect select[disabled] {
   opacity: 0.4;
@@ -1637,13 +1671,13 @@ fieldset .formdescription {
   cursor: no-drop;
 }
 
-/* line 792, styles.scss */
+/* line 817, styles.scss */
 .facebook-integration {
   margin-left: 0;
   max-width: 515px;
 }
 
-/* line 797, styles.scss */
+/* line 822, styles.scss */
 .ui-dialog .formelement label {
   position: relative;
   top: 0;
@@ -1651,19 +1685,19 @@ fieldset .formdescription {
   text-align: left;
 }
 
-/* line 803, styles.scss */
+/* line 828, styles.scss */
 .ui-dialog .formelement input {
   padding: 0.35em 0.8em;
   display: block;
 }
 
-/* line 808, styles.scss */
+/* line 833, styles.scss */
 .ui-dialog .formelement select {
   display: block;
   max-width: 100%;
 }
 
-/* line 813, styles.scss */
+/* line 838, styles.scss */
 .tinymce label {
   position: relative;
   top: 0;
@@ -1675,19 +1709,19 @@ fieldset .formdescription {
  **                            LISTING TABLES                               **
  *****************************************************************************
  *****************************************************************************/
-/* line 827, styles.scss */
+/* line 852, styles.scss */
 table.listing {
   width: 100%;
   border: 1px solid #AAA;
   border-collapse: collapse;
 }
 
-/* line 832, styles.scss */
+/* line 857, styles.scss */
 table.listing tr:nth-child(odd) {
   background-color: #d4d6d9;
 }
 
-/* line 835, styles.scss */
+/* line 860, styles.scss */
 table.listing th {
   padding: 0.15em 0.5em;
   border: 1px solid #AAA;
@@ -1696,7 +1730,7 @@ table.listing th {
   color: #EEE;
 }
 
-/* line 842, styles.scss */
+/* line 867, styles.scss */
 table.listing td {
   padding: 0.15em 0.5em;
   border: 1px solid #AAA;
@@ -1704,7 +1738,7 @@ table.listing td {
 }
 
 /* Give a little high-lighting effect on mouseover for the records. */
-/* line 849, styles.scss */
+/* line 874, styles.scss */
 table.listing tr:hover {
   background-color: #c7d5eb;
 }
@@ -1714,7 +1748,7 @@ table.listing tr:hover {
  **                          DEBUGGING CLASSES                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 861, styles.scss */
+/* line 886, styles.scss */
 pre.xdebug-var-dump {
   border: 1px solid #FFE5C0;
   padding: 0.5em;
@@ -1729,35 +1763,35 @@ pre.xdebug-var-dump {
  **                     SORTABLES & NESTED SORTABLES                        **
  *****************************************************************************
  *****************************************************************************/
-/* line 878, styles.scss */
+/* line 903, styles.scss */
 ol.sortable-listing {
   margin: 0.5em 0;
 }
 
-/* line 881, styles.scss */
+/* line 906, styles.scss */
 ol.sortable-listing li {
   display: block;
   list-style: none outside none;
 }
 
-/* line 885, styles.scss */
+/* line 910, styles.scss */
 ol.sortable-listing li div.entry {
   border: 1px solid #BBBBBB;
   padding: 0.25em;
 }
 
-/* line 889, styles.scss */
+/* line 914, styles.scss */
 ol.sortable-listing li.placeholder {
   border: 1px solid #BBBBBB;
   background: #BBB;
 }
 
-/* line 893, styles.scss */
+/* line 918, styles.scss */
 ol.sortable-listing li a.control {
   margin-top: -2px;
 }
 
-/* line 896, styles.scss */
+/* line 921, styles.scss */
 ol.sortable-listing ol {
   margin-left: 1em;
 }
@@ -1767,19 +1801,19 @@ ol.sortable-listing ol {
  **                           PRIMARY NAVIGATION                            **
  *****************************************************************************
  *****************************************************************************/
-/* line 908, styles.scss */
+/* line 933, styles.scss */
 #primary-nav li {
   float: left;
   position: relative;
   text-align: center;
 }
 
-/* line 913, styles.scss */
+/* line 938, styles.scss */
 #primary-nav li.navigation-menu-over a:hover {
   background: #333;
 }
 
-/* line 917, styles.scss */
+/* line 942, styles.scss */
 #primary-nav a,
 #primary-nav span {
   color: #777;
@@ -1792,13 +1826,13 @@ ol.sortable-listing ol {
 }
 
 /* Enable the mouse over menu */
-/* line 927, styles.scss */
+/* line 952, styles.scss */
 #primary-nav li.navigation-menu-over > ul {
   display: block;
 }
 
 /* And the sub menu */
-/* line 931, styles.scss */
+/* line 956, styles.scss */
 #primary-nav li ul {
   display: none;
   position: absolute;
@@ -1811,13 +1845,13 @@ ol.sortable-listing ol {
   box-shadow: 0 3px 6px #000;
 }
 
-/* line 942, styles.scss */
+/* line 967, styles.scss */
 #primary-nav li ul li {
   width: 190px;
   text-align: left;
 }
 
-/* line 947, styles.scss */
+/* line 972, styles.scss */
 #primary-nav li ul a,
 #primary-nav li ul span {
   padding-left: 20px;
@@ -1825,7 +1859,7 @@ ol.sortable-listing ol {
 }
 
 /* And any sub sub menu */
-/* line 952, styles.scss */
+/* line 977, styles.scss */
 #primary-nav li ul li ul {
   top: -2px;
   left: 180px;
@@ -1840,7 +1874,7 @@ ol.sortable-listing ol {
   box-shadow: 0 3px 6px #000;
 }
 
-/* line 965, styles.scss */
+/* line 990, styles.scss */
 #primary-nav a:hover {
   text-shadow: none;
 }
@@ -1850,14 +1884,14 @@ ol.sortable-listing ol {
  **                          FOOTER NAVIGATION                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 976, styles.scss */
+/* line 1001, styles.scss */
 footer ul.navigation-menu li {
   list-style-type: none;
   float: left;
   padding: 0 0.5em;
 }
 
-/* line 981, styles.scss */
+/* line 1006, styles.scss */
 footer ul.navigation-menu li li {
   float: none;
 }
@@ -1867,7 +1901,7 @@ footer ul.navigation-menu li li {
  **                         COLLAPSIBLE FIELDSETS                           **
  *****************************************************************************
  *****************************************************************************/
-/* line 993, styles.scss */
+/* line 1018, styles.scss */
 fieldset.collapsed {
   padding: 0;
   border-width: 1px 0 0;
@@ -1878,12 +1912,12 @@ fieldset.collapsed {
  **                            PROGRESS BARS                                **
  *****************************************************************************
  *****************************************************************************/
-/* line 1003, styles.scss */
+/* line 1028, styles.scss */
 .progress-container {
   position: relative;
 }
 
-/* line 1006, styles.scss */
+/* line 1031, styles.scss */
 .progress-success {
   background: none repeat scroll 0 0 #992222;
   border: 2px solid green;
@@ -1891,13 +1925,13 @@ fieldset.collapsed {
   margin-bottom: 5px;
 }
 
-/* line 1012, styles.scss */
+/* line 1037, styles.scss */
 .progress-success .bar {
   background: none repeat scroll 0 0 green;
   height: 20px;
 }
 
-/* line 1016, styles.scss */
+/* line 1041, styles.scss */
 .progress-container .progress-extended {
   color: white;
   left: 46px;
@@ -1906,22 +1940,22 @@ fieldset.collapsed {
 }
 
 /** Theme Editor **/
-/* line 1025, styles.scss */
+/* line 1050, styles.scss */
 .page-themeeditor .column1 section.pagecontent {
   margin-left: 12px;
 }
 
-/* line 1032, styles.scss */
+/* line 1057, styles.scss */
 .editor-container {
   position: relative;
 }
 
-/* line 1036, styles.scss */
+/* line 1061, styles.scss */
 #code {
   min-width: 590px;
 }
 
-/* line 1040, styles.scss */
+/* line 1065, styles.scss */
 #theme-editor-browser {
   background: transparent;
   position: absolute;
@@ -1930,12 +1964,12 @@ fieldset.collapsed {
   top: 52px;
 }
 
-/* line 1048, styles.scss */
+/* line 1073, styles.scss */
 #theme-editor-browser a {
   color: #222;
 }
 
-/* line 1052, styles.scss */
+/* line 1077, styles.scss */
 #theme-editor-browser .left {
   float: left;
   width: 300px;
@@ -1947,12 +1981,12 @@ fieldset.collapsed {
   overflow-y: auto;
 }
 
-/* line 1063, styles.scss */
+/* line 1088, styles.scss */
 #theme-editor-browser .left:hover {
   opacity: 0.9;
 }
 
-/* line 1065, styles.scss */
+/* line 1090, styles.scss */
 #theme-editor-browser .right {
   float: right;
   width: 28px;
@@ -1967,112 +2001,112 @@ fieldset.collapsed {
   border-top: 1px solid #2b2b2b;
 }
 
-/* line 1079, styles.scss */
+/* line 1104, styles.scss */
 #theme-editor-browser .right:hover {
   opacity: 1;
 }
 
-/* line 1081, styles.scss */
+/* line 1106, styles.scss */
 #theme-editor-browser .right i {
   margin-left: 8px;
 }
 
-/* line 1083, styles.scss */
+/* line 1108, styles.scss */
 #theme-editor-browser .icon {
   float: right;
   margin-right: 2px;
 }
 
-/* line 1088, styles.scss */
+/* line 1113, styles.scss */
 #theme-editor-browser li .icon {
   margin-right: 0;
 }
 
-/* line 1090, styles.scss */
+/* line 1115, styles.scss */
 #theme-editor-browser h2 {
   color: #666;
   margin-bottom: 3px;
 }
 
-/* line 1092, styles.scss */
+/* line 1117, styles.scss */
 #theme-editor-browser ul {
   margin-bottom: 9px;
   padding-bottom: 3px;
   border-bottom: 1px solid #e1e1e1;
 }
 
-/* line 1098, styles.scss */
+/* line 1123, styles.scss */
 #theme-editor-browser .sub {
   display: none;
 }
 
-/* line 1100, styles.scss */
+/* line 1125, styles.scss */
 #theme-editor-browser li .icon {
   cursor: pointer;
 }
 
-/* line 1102, styles.scss */
+/* line 1127, styles.scss */
 #theme-editor-browser li {
   list-style-type: none;
   margin-bottom: 3px;
 }
 
-/* line 1107, styles.scss */
+/* line 1132, styles.scss */
 #theme-editor-browser ul ul {
   margin-left: 10px;
 }
 
-/* line 1109, styles.scss */
+/* line 1134, styles.scss */
 #theme-editor-browser h2 {
   cursor: pointer;
 }
 
-/* line 1113, styles.scss */
+/* line 1138, styles.scss */
 .theme-editor {
   display: none;
 }
 
-/* line 1117, styles.scss */
+/* line 1142, styles.scss */
 #theme-editor-wysiwyg .image-editor {
   background: #202020;
   padding-bottom: 25px;
   padding-left: 285px;
 }
 
-/* line 1123, styles.scss */
+/* line 1148, styles.scss */
 .image-editor h2 {
   margin-bottom: 5px;
 }
 
-/* line 1125, styles.scss */
+/* line 1150, styles.scss */
 #revert {
   cursor: pointer;
   font-weight: bold;
   text-decoration: underline;
 }
 
-/* line 1131, styles.scss */
+/* line 1156, styles.scss */
 #revisions li.revision {
   margin-bottom: 3px;
 }
 
-/* line 1133, styles.scss */
+/* line 1158, styles.scss */
 #revisions .revision-title {
   cursor: pointer;
 }
 
-/* line 1134, styles.scss */
+/* line 1159, styles.scss */
 #revisions .revision-date {
   color: #888;
 }
 
-/* line 1136, styles.scss */
+/* line 1161, styles.scss */
 .page-themeeditor #dialog-confirm {
   display: none;
 }
 
 /** Pagination styles **/
-/* line 1140, styles.scss */
+/* line 1165, styles.scss */
 .pagination {
   color: #555555;
   font-size: 84%;
@@ -2080,45 +2114,45 @@ fieldset.collapsed {
   margin: 0.5em 0;
 }
 
-/* line 1146, styles.scss */
+/* line 1171, styles.scss */
 .pagination a {
   text-decoration: none;
   color: #555555;
 }
 
-/* line 1150, styles.scss */
+/* line 1175, styles.scss */
 .pagination .disabled {
   color: #999;
 }
 
-/* line 1154, styles.scss */
+/* line 1179, styles.scss */
 .pagination-pager {
   float: left;
 }
 
-/* line 1158, styles.scss */
+/* line 1183, styles.scss */
 .pagination-list {
   float: right;
 }
 
 /* login page */
-/* line 1164, styles.scss */
+/* line 1189, styles.scss */
 .page-user-login #leftcol,
 .page-user-login #breadcrumbs {
   display: none;
 }
 
-/* line 1166, styles.scss */
+/* line 1191, styles.scss */
 body.page-user-login .column1 section.pagecontent {
   margin-left: 0;
 }
 
-/* line 1169, styles.scss */
+/* line 1194, styles.scss */
 .page-user-login .register-account {
   margin-right: 15px;
 }
 
-/* line 1173, styles.scss */
+/* line 1198, styles.scss */
 #facebook-login-button {
   padding: 6px 8px;
   text-decoration: none;
@@ -2131,7 +2165,7 @@ body.page-user-login .column1 section.pagecontent {
   top: 0;
 }
 
-/* line 1185, styles.scss */
+/* line 1210, styles.scss */
 .page-user-login fieldset {
   border: none;
   border-radius: 0;
@@ -2139,18 +2173,18 @@ body.page-user-login .column1 section.pagecontent {
   padding: 15px 10px;
 }
 
-/* line 1192, styles.scss */
+/* line 1217, styles.scss */
 .page-user-login fieldset.left {
   min-width: 51%;
   width: 51%;
 }
 
-/* line 1197, styles.scss */
+/* line 1222, styles.scss */
 .page-user-login fieldset.left .formelement {
   margin-bottom: 1.25em;
 }
 
-/* line 1201, styles.scss */
+/* line 1226, styles.scss */
 .page-user-login #login-divider {
   background: #ccc;
   background: radial-gradient(ellipse at center center, rgba(50, 50, 50, 0.25) 0%, transparent 70%) repeat scroll 0 0 transparent;
@@ -2161,33 +2195,33 @@ body.page-user-login .column1 section.pagecontent {
   float: left;
 }
 
-/* line 1211, styles.scss */
+/* line 1236, styles.scss */
 .page-user-login fieldset.right {
   min-width: 33%;
 }
 
-/* line 1215, styles.scss */
+/* line 1240, styles.scss */
 .page-user-login fieldset fieldset {
   background: transparent;
 }
 
-/* line 1218, styles.scss */
+/* line 1243, styles.scss */
 .left {
   float: left;
 }
 
-/* line 1219, styles.scss */
+/* line 1244, styles.scss */
 .right {
   float: right;
 }
 
-/* line 1222, styles.scss */
+/* line 1247, styles.scss */
 fieldset.left,
 fieldset.right {
   min-height: 180px;
 }
 
-/* line 1226, styles.scss */
+/* line 1251, styles.scss */
 .login-forgot {
   display: block;
   float: right;
@@ -2198,7 +2232,7 @@ fieldset.right {
   font-style: italic;
 }
 
-/* line 1237, styles.scss */
+/* line 1262, styles.scss */
 #login-existing,
 #user-login {
   background: rgba(0, 0, 0, 0.05);
@@ -2206,18 +2240,18 @@ fieldset.right {
   margin: 25px 0.5em 20px;
 }
 
-/* line 1243, styles.scss */
+/* line 1268, styles.scss */
 #login-center {
   width: 720px;
   margin: 25px auto 0 auto;
 }
 
-/* line 1248, styles.scss */
+/* line 1273, styles.scss */
 .page-user-login label {
   max-width: 100px;
 }
 
-/* line 1251, styles.scss */
+/* line 1276, styles.scss */
 .widgetarea-admindashboard .widget {
   background: #e9e9e9;
   border: 1px solid #BBBBBB;
@@ -2227,7 +2261,7 @@ fieldset.right {
   padding: 1em;
 }
 
-/* line 1260, styles.scss */
+/* line 1285, styles.scss */
 .widgetarea-admindashboard .widget h3 {
   text-align: center;
   margin-bottom: 0.5em;

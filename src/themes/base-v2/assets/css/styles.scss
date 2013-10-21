@@ -439,6 +439,8 @@ a.button[disabled=disabled]{
 .message-note,
 .message-info,
 .message-success,
+.message-warning,
+.message-deprecated,
 .message-error {
 	border-radius: 6px;
 	padding: 15px 10px 15px 55px;
@@ -472,6 +474,16 @@ a.button[disabled=disabled]{
 	border: 1px solid #373;
 	color: #151;
 }
+.message-deprecated {
+  background: #fff4bd;
+  border:1px solid #ded081;
+  color: #c1b572;
+}
+.message-warning {
+  background: #fce8d1;
+  border:1px solid #bc8565;
+  color: #df5c25;
+}
 .message-error {
 	background:#FCe5ed;
 	border:1px solid #BC606D;
@@ -501,6 +513,7 @@ body .pagecontent .message-tutorial a {
 }
 
 /** And the message's icons **/
+div[class^="message-"] .message-background-icon i,
 p[class^="message-"] .message-background-icon i {
 	font-size: 75px;
 	left: -6px;
@@ -511,20 +524,32 @@ p[class^="message-"] .message-background-icon i {
 }
 
 /** And the specific message types icon colors **/
-p.message-note .message-background-icon i[class^="icon-"] {
+3.message-note .message-background-icon i[class^="icon-"] {
 	color: #BCB06D;
 }
-p.message-info .message-background-icon i[class^="icon-"] {
+.message-info .message-background-icon i[class^="icon-"] {
 	color: #2667FF;
 }
-p.message-success .message-background-icon i[class^="icon-"] {
+.message-success .message-background-icon i[class^="icon-"] {
 	color: #373;
 }
-p.message-error .message-background-icon i[class^="icon-"] {
+.message-error .message-background-icon i[class^="icon-"] {
 	color: #DF101D;
 }
-p.message-tutorial .message-background-icon i[class^="icon-"] {
+.message-tutorial .message-background-icon i[class^="icon-"] {
 	color: #BCB06D;
+}
+
+table.stacktrace {
+	width: 100%;
+	border: 1px solid;
+}
+table.stacktrace th {
+	border: 1px solid;
+}
+table.stacktrace td {
+	 border: 1px solid;
+	font-size: 80%;
 }
 
 
