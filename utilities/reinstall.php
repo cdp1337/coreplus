@@ -68,7 +68,7 @@ require_once(ROOT_PDIR . "core/libs/core/ConfigHandler.class.php");
 
 // If the configuration file has been written already, load up those config options!
 if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
-	require_once(ROOT_PDIR . 'core/libs/datamodel/DMI.class.php');
+	require_once(ROOT_PDIR . 'core/libs/core/datamodel/DMI.class.php');
 	require_once(ROOT_PDIR . "core/libs/core/HookHandler.class.php");
 	try {
 		HookHandler::singleton();
