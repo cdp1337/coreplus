@@ -47,6 +47,7 @@ require_once(ROOT_PDIR . 'core/models/PageModel.class.php');
 require_once(ROOT_PDIR . 'core/models/SessionModel.class.php');
 require_once(ROOT_PDIR . 'core/models/PageMetaModel.class.php');
 require_once(ROOT_PDIR . 'core/models/Insertable.class.php');
+require_once(ROOT_PDIR . 'core/models/SystemLogModel.php');
 
 /** @deprecated 2011.11 */
 require_once(ROOT_PDIR . 'core/libs/core/Component.class.php');
@@ -82,4 +83,4 @@ require_once(ROOT_PDIR . 'core/libs/cachecore/backends/cachefile.class.php');
 require_once(ROOT_PDIR . 'core/libs/cachecore/Cache.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/ViewControl.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/ViewMeta.class.php');
-
+require_once(ROOT_PDIR . 'core/libs/core/errormanagement/functions.php');
