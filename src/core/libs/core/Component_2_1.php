@@ -1106,11 +1106,17 @@ class Component_2_1 {
 
 		// Run through each task under <install> and execute it.
 		/** @var $u DOMNode */
-		$u = $this->_xmlloader->getRootDOM()->getElementsByTagName('upgrade')->item(0);
+		$u = $this->_xmlloader->getRootDOM()->getElementsByTagName('install')->item(0);
 
 		// This gets a bit tricky, I need to get all the valid upgrade elements in the order that they
 		// are defined in the component.xml.
-		$children = $u->childNodes;
+		if($u){
+			$children = $u->childNodes;
+		}
+		else{
+			$children = [];
+		}
+
 
 		// The various upgrade tasks that can happen
 		foreach($children as $child){
@@ -1153,12 +1159,17 @@ class Component_2_1 {
 						$changes[] = 'Ignoring invalid &lt;sql&gt; directive, no file attribute provided!';
 					}
 					break;
+				case '#text':
+					// Text entries can silently be ignored.
+					break;
 				default:
 					$changes[] = 'Ignoring unsupported install directive: [' . $child->nodeName . ']';
 			}
 		}
 
-		SystemLogModel::LogInfoEvent('/updater/component/install', 'Component ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
+		if(is_array($changes) && sizeof($changes)){
+			SystemLogModel::LogInfoEvent('/updater/component/install', 'Component ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
+		}
 
 
 		// Yay, it should be installed now.	Update the version in the database.
