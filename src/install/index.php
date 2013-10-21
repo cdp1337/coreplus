@@ -100,7 +100,19 @@ if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
 		// Register some low-level hooks so it doesn't complain.
 		HookHandler::RegisterNewHook('/core/model/presave');
 		HookHandler::RegisterNewHook('/core/model/postsave');
-		ConfigHandler::LoadConfigFile('configuration');
+		$core_settings = ConfigHandler::LoadConfigFile('configuration');
+
+		// It was able to pull a valid configuration file... see if I can connect to the database
+		$dbconn = DMI::GetSystemDMI();
+
+		// And the backend connection...
+		$backend = $dbconn->connection();
+
+		// If I can poll the components table.... just stop right the fuck here!
+		// This is a pretty good indication that the system is installed.
+		if($backend->tableExists('component')){
+			die('The system appears to be installed already.  Try dropping off the "/install" from the URL and hitting refresh a couple times.');
+		}
 	}
 	catch (Exception $e) {
 		// Yeah... I probably don't care at this stage... but maybe I do...
