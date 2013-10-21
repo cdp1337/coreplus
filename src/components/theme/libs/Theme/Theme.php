@@ -556,7 +556,13 @@ class Theme{
 		// @todo I need actual error checking here.
 		//if($this->isInstalled()) return false;
 		
-		return $this->_performInstall();
+		$changes = $this->_performInstall();
+
+		if(is_array($changes) && sizeof($changes)){
+			\SystemLogModel::LogInfoEvent('/updater/theme/install', 'Theme ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
+		}
+
+		return $changes;
 	}
 	
 	/**
@@ -570,10 +576,16 @@ class Theme{
 	public function reinstall(){
 		// @todo I need actual error checking here.
 		//if(!$this->isInstalled()) return false;
-		
-		return $this->_performInstall();
+
+		$changes =  $this->_performInstall();
+
+		if(is_array($changes) && sizeof($changes)){
+			\SystemLogModel::LogInfoEvent('/updater/theme/reinstall', 'Theme ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
+		}
+
+		return $changes;
 	}
-	
+
 	/**
 	 * "Upgrade" (aka) Install this theme and its assets.
 	 * 
@@ -584,8 +596,14 @@ class Theme{
 	 */
 	public function upgrade(){
 		//if(!$this->isInstalled()) return false;
-		
-		return $this->_performInstall();
+
+		$changes =  $this->_performInstall();
+
+		if(is_array($changes) && sizeof($changes)){
+			\SystemLogModel::LogInfoEvent('/updater/theme/upgrade', 'Theme ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
+		}
+
+		return $changes;
 	}
 
 	/**
