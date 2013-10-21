@@ -48,10 +48,18 @@ else {
 	$em  = 'WEB';
 	$rip = '127.0.0.1';
 	// Set the constants for the root directory (relative) and root directory (full path).
-	$rpdr = pathinfo($_SERVER['SCRIPT_FILENAME'], PATHINFO_DIRNAME);
+
+	// I must use realpath here because if the script is symlinked to a different location,
+	// that would throw off the SCRIPT_FILENAME path.
+	// This is because apache sees the symlinked path, but php will see the actual file path.
+	$rpdr = pathinfo(realpath($_SERVER['SCRIPT_FILENAME']), PATHINFO_DIRNAME);
 	if ($rpdr != '/') $rpdr .= '/'; // Append a slash if it's not the root dir itself.
+
+	// The web path is simplier
 	$rwdr = pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME);
 	if ($rwdr != '/') $rwdr .= '/'; // Append a slash if it's not the root dir itself.
+
+	// And the remote IP is even easier, (proxy systems are NOT taken into account yet)
 	$rip = $_SERVER['REMOTE_ADDR'];
 }
 
