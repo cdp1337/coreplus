@@ -2,7 +2,7 @@
 /**
  * Dataset
  *
- * @package Core Plus\Datamodel
+ * @package Core\Datamodel
  * @since 0.1
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
@@ -546,6 +546,12 @@ class DatasetWhereClause{
 
 		// Allow another clause to be sent in, that will be set as a child of this one.
 		if($arguments instanceof DatasetWhereClause){
+			$this->_statements[] = $arguments;
+			return true;
+		}
+
+		// Allow a child statement to be passed in.
+		if($arguments instanceof DatasetWhere){
 			$this->_statements[] = $arguments;
 			return true;
 		}

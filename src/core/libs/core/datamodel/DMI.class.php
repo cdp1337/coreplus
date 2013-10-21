@@ -2,7 +2,7 @@
 /**
  * Provides the main interface system for the DMI subsystem.
  * 
- * @package Core Plus\Datamodel
+ * @package Core\Datamodel
  * @since 0.1
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
@@ -28,9 +28,9 @@
 //require_once(__DMI_PDIR . 'DMI_Backend.interface.php');
 //require_once(__DMI_PDIR . 'Dataset.class.php');
 
-define('__DMI_PDIR', ROOT_PDIR . 'core/libs/datamodel/');
-require_once(ROOT_PDIR . 'core/libs/datamodel/' . 'DMI_Backend.interface.php');
-require_once(ROOT_PDIR . 'core/libs/datamodel/' . 'Dataset.class.php');
+define('__DMI_PDIR', ROOT_PDIR . 'core/libs/core/datamodel/');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'DMI_Backend.interface.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'Dataset.class.php');
 
 
 /**

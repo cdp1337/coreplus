@@ -2,7 +2,7 @@
 /**
  * MySQLi datamodel backend system
  *
- * @package Core Plus\Datamodel
+ * @package Core\Datamodel
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2012  Charlie Powell
@@ -96,6 +96,13 @@ class DMI_mysqli_backend implements DMI_Backend {
 		}
 	}
 
+	/**
+	 * Execute a given Dataset object on this backend
+	 *
+	 * @param Dataset $dataset
+	 *
+	 * @throws DMI_Exception
+	 */
 	public function execute(Dataset $dataset){
 		switch($dataset->_mode){
 			case Dataset::MODE_GET:
@@ -428,14 +435,23 @@ class DMI_mysqli_backend implements DMI_Backend {
 		
 	}*/
 
-
-	public function _getTables(){
+	/**
+	 * Get a flat array of table names currently available on this backend.
+	 *
+	 * @return array
+	 */
+	public function showTables(){
 		$rs = $this->_rawExecute('read', 'SHOW TABLES');
 		$ret = array();
 		while($row = $rs->fetch_row()){
 			$ret[] = $row[0];
 		}
 		return $ret;
+	}
+
+	public function _getTables(){
+		trigger_error('mysqli_backend->_getTables is deprecated, please use showTables instead!', E_USER_DEPRECATED);
+		return $this->showTables();
 	}
 
 	/**
@@ -853,6 +869,58 @@ class DMI_mysqli_backend implements DMI_Backend {
 			throw $e;
 		}
 		return $res;
+	}
+
+
+	/**
+	 * Process an SQL file and return an array of generic dataset objects.
+	 *
+	 * <h3>Usage Examples</h3>
+	 *
+	 *
+	 * <h4>Example 1</h4>
+	 * <p>Standard Usage</p>
+	 * <code>
+	 * // Some code for example 1
+	 * $file = ROOT_PDIR . 'components/foo/upgrades/000-do-something-awesome.sql';
+	 * $records = DMI_mysqli_backend::ProcessSQLFile($file);
+	 * foreach($records as $rec){
+	 *     $rec->execute();
+	 * }
+	 * </code>
+	 *
+	 * @param $file
+	 *
+	 * @throws Exception
+	 *
+	 * @return array
+	 */
+	public static function ProcessSQLFile($file){
+		if(is_scalar($file)){
+			$file = \Core\Filestore\Factory::File($file);
+		}
+		elseif(!$file instanceof \Core\Filestore\File){
+			throw new Exception('Please ensure that the argument for ProcessSQLFile is either a string or a valid File object!');
+		}
+
+		$contents = $file->getContents();
+
+		$parser = new SQL_Parser_Dataset($contents, SQL_Parser::DIALECT_MYSQL);
+		return $parser->parse();
+	}
+
+	/**
+	 * Convert a raw SQL statement to a generic dataset, (if possible).
+	 *
+	 * @param string $rawstatement
+	 *
+	 * @throws Exception
+	 *
+	 * @return array
+	 */
+	public static function ProcessSQLStatement($rawstatement) {
+		$parser = new SQL_Parser_Dataset($rawstatement, SQL_Parser::DIALECT_MYSQL);
+		return $parser->parse();
 	}
 }
 
