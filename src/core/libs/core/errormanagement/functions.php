@@ -49,6 +49,17 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 			$class = 'deprecated';
 			$code = 'PHP Deprecated Notice';
 			break;
+		case E_STRICT:
+			$type = 'info';
+			$class = 'warning';
+			$code = 'PHP Strict Warning';
+			$suppressed = true;
+			break;
+		default:
+			$type = 'info';
+			$class = 'unknown';
+			$code = 'Unknown PHP Error [' . $errno . ']';
+			break;
 	}
 
 	if($suppressed){
@@ -56,11 +67,14 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 	}
 
 	// All errors/warnings/notices get logged!
-	if(strpos($errfile, ROOT_PDIR) === 0){
+	if($errfile && strpos($errfile, ROOT_PDIR) === 0){
 		$details = '[src: ' . '/' . substr($errfile, strlen(ROOT_PDIR)) . ':' . $errline . '] ';
 	}
-	else{
+	elseif($errfile){
 		$details = '[src: ' . $errfile . ':' . $errline . '] ';
+	}
+	else{
+		$details = '';
 	}
 
 	try{
@@ -71,8 +85,14 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 	}
 
 	// Display all errors when in development mode.
-	if(DEVELOPMENT_MODE && error_reporting() !== 0){
-		if(EXEC_MODE == 'WEB'){
+	if(DEVELOPMENT_MODE && !$suppressed){
+		// The correct way to handle output is via EXEC_MODE.
+		// HOWEVER, since the unit tests emulate a WEB mode so that the scripts behave as they would in the web browser,
+		// this is not a reliable test here.
+		if(isset($_SERVER['TERM']) || isset($_SERVER['SHELL'])){
+			print_error_as_text($class, $code, $errstr);
+		}
+		elseif(EXEC_MODE == 'WEB'){
 			print_error_as_html($class, $code, $errstr);
 		}
 		else{
@@ -96,7 +116,10 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 function check_for_fatal() {
 	$error = error_get_last();
 	if ( $error["type"] == E_ERROR ){
-		error_handler($error["type"], $error["message"], $error["file"], $error["line"]);
+		$file = $error['file'];
+		if(strpos($file, ROOT_PDIR) === 0) $file = '/' . substr($file, strlen(ROOT_PDIR));
+
+		error_handler($error["type"], $error["message"] . ' in ' . $file . ':' . $error['line'], null, null);
 	}
 }
 
@@ -104,7 +127,7 @@ function print_error_as_html($class, $code, $errstr){
 	echo '<div class="message-' . $class . '">' . "\n";
 
 	// The header
-	echo '<strong>' . $code . ':</strong> ' . $errstr . "\n<br/>";
+	echo '<strong>' . $code . ':</strong> ' . $errstr . "\n<br/>\n<br/>";
 
 	// And the stack trace
 	echo '<em>Stack Trace</em>' . "\n<br/>" . '<table class="stacktrace">';
@@ -124,6 +147,11 @@ function print_error_as_html($class, $code, $errstr){
 
 		// Self?  Also skip!
 		if(isset($entry['function']) && $entry['function'] == 'Core\ErrorManagement\print_error_as_html'){
+			continue;
+		}
+
+		// The fatal error function?  Skip!
+		if(isset($entry['function']) && $entry['function'] == 'Core\ErrorManagement\check_for_fatal'){
 			continue;
 		}
 
@@ -184,6 +212,11 @@ function print_error_as_text($class, $code, $errstr){
 			continue;
 		}
 
+		// The fatal error function?  Skip!
+		if(isset($entry['function']) && $entry['function'] == 'Core\ErrorManagement\check_for_fatal'){
+			continue;
+		}
+
 		// Cleanup the file location
 		$file = (isset($entry['file']) ? $entry['file'] : 'unknown');
 		if(strpos($file, ROOT_PDIR) === 0){
@@ -215,6 +248,7 @@ function print_error_as_text($class, $code, $errstr){
 	}
 
 	// Now I know the sizes of the table.
+	// This jumble of code will create a table in the shell using ASCII characters.
 	$borderheader = '+' . str_repeat('-', $maxlength1 + $maxlength2) . '+';
 	$borderinner = '+' . str_repeat('-', $maxlength1+2) . '+' . str_repeat('-', $maxlength2-3) . '+';
 	echo $borderheader . "\n";
