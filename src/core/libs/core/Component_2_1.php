@@ -1865,9 +1865,18 @@ class Component_2_1 {
 
 			try{
 				if (\Core\db()->tableExists($tablename)) {
-					// Exists, ensure that it's up to date instead.
-					if(\Core\db()->modifyTable($tablename, $schema)){
+
+					// Get a list of the changes for reporting reasons.
+					/** @var \Core\Datamodel\SchemaColumn $old_schema */
+					$old_schema = \Core\db()->describeTable($tablename);
+					$tablediffs = $old_schema->getDiff($schema);
+
+					if(sizeof($tablediffs)){
+						\Core\db()->modifyTable($tablename, $schema);
 						$changes[] = 'Modified table ' . $tablename;
+						foreach($tablediffs as $d){
+							$changes[] = '[' . $d['type'] . '] ' . $d['title'];
+						}
 					}
 				}
 				else {
@@ -1904,7 +1913,7 @@ class Component_2_1 {
 		$haswhere = false;
 		$sets     = array();
 		$renames  = array();
-		$ds       = new Dataset();
+		$ds       = new Core\Datamodel\Dataset();
 
 
 		$ds->table($table);
