@@ -504,7 +504,7 @@ abstract class UserHelper{
 
 		// And delete any activity older than this date.
 		echo 'Purging user activity older than ' . $date->getFormatted('r') . "...\n";
-		$ds = new Dataset();
+		$ds = new Core\Datamodel\Dataset();
 		$ds->delete()->table('user_activity')->where('datetime < ' . $date->getFormatted('U', TIME::TIMEZONE_GMT))->execute();
 		echo 'Removed ' . $ds->num_rows . ' record(s).' . "\n";
 		return true;

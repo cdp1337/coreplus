@@ -22,12 +22,13 @@
 
 namespace Core;
 
+use Core\Datamodel;
 use DMI;
 use Cache;
 
 /**
  * Shortcut function to get the current system database/datamodel interface.
- * @return \DMI_Backend
+ * @return Datamodel\BackendInterface;
  */
 function db(){
 	return DMI::GetSystemDMI()->connection();

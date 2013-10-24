@@ -217,7 +217,7 @@ class FormController extends Controller_2_1 {
 			return View::ERROR_BADREQUEST;
 		}
 
-		$ds = new Dataset();
+		$ds = new Core\Datamodel\Dataset();
 		$ds->table('page_meta');
 		$ds->uniquerecords = true;
 		$ds->select('meta_value', 'meta_value_title');

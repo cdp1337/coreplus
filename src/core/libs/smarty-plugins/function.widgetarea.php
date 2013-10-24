@@ -55,11 +55,11 @@ function smarty_function_widgetarea($params, $template) {
 		$factory->where('site = ' . MultiSiteHelper::GetCurrentSiteID());
 	}
 
-	$subwhere = new DatasetWhereClause();
+	$subwhere = new Core\Datamodel\DatasetWhereClause();
 	$subwhere->setSeparator('OR');
 
 	// First, the skin-level where clause.
-	$skinwhere = new DatasetWhereClause();
+	$skinwhere = new Core\Datamodel\DatasetWhereClause();
 	$skinwhere->setSeparator('AND');
 	$skinwhere->addWhere('theme = ' . $theme);
 	$skinwhere->addWhere('template = ' . $template);
@@ -67,7 +67,7 @@ function smarty_function_widgetarea($params, $template) {
 	$subwhere->addWhere($skinwhere);
 
 	// And second, the page-level where clause.
-	$pagewhere = new DatasetWhereClause();
+	$pagewhere = new Core\Datamodel\DatasetWhereClause();
 	$pagewhere->setSeparator('AND');
 	$pagewhere->addWhere('page = ' . $page);
 	$pagewhere->addWhere('widgetarea = ' . $name);

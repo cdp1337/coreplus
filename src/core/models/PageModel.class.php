@@ -308,7 +308,7 @@ class PageModel extends Model {
 		}
 
 		// Lookup if there is a conflicting URL.
-		$ds = Dataset::Init()
+		$ds = Core\Datamodel\Dataset::Init()
 			->table('page')
 			->count()
 			->whereGroup('OR', 'baseurl = ' . $v, 'rewriteurl = ' . $v);
@@ -1273,12 +1273,12 @@ class PageModel extends Model {
 	 */
 	private static function _LookupUrl($url = null) {
 		if (self::$_RewriteCache === null) {
-			$s = new Dataset();
+			$s = new Core\Datamodel\Dataset();
 			$s->select('rewriteurl, baseurl, fuzzy');
 			$s->table(DB_PREFIX . 'page');
 
 			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-				$g = new DatasetWhereClause();
+				$g = new Core\Datamodel\DatasetWhereClause();
 				$g->setSeparator('OR');
 				$g->addWhere('site = -1');
 				$g->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
@@ -1356,7 +1356,7 @@ class PageModel extends Model {
 		}
 
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-			$g = new DatasetWhereClause();
+			$g = new Core\Datamodel\DatasetWhereClause();
 			$g->setSeparator('OR');
 			$g->addWhere('site = -1');
 			$g->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());

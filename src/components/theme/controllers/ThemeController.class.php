@@ -592,7 +592,7 @@ class ThemeController extends Controller_2_1{
 		$widgetfactory = new ModelFactory('WidgetModel');
 		$widgetfactory->order('title');
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-			$where = new DatasetWhereClause();
+			$where = new Core\Datamodel\DatasetWhereClause();
 			$where->setSeparator('OR');
 			$where->addWhere('site = -1');
 			$where->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
@@ -600,7 +600,7 @@ class ThemeController extends Controller_2_1{
 		}
 
 		if(sizeof($installables) > 1){
-			$where = new DatasetWhereClause();
+			$where = new Core\Datamodel\DatasetWhereClause();
 			$where->setSeparator('OR');
 			foreach($installables as $baseurl){
 				$where->addWhereParts('installable', '=', $baseurl);

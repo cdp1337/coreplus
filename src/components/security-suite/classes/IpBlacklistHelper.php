@@ -63,7 +63,7 @@ abstract class IpBlacklistHelper {
 				'expires == 0'
 			]
 		);
-		$where = new DatasetWhereClause();
+		$where = new Core\Datamodel\DatasetWhereClause();
 		$where->setSeparator('or');
 
 		$longip = ip2long(REMOTE_IP);
