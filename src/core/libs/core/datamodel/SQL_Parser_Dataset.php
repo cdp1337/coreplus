@@ -51,12 +51,12 @@ class SQL_Parser_Dataset extends SQL_Parser {
 	 *
 	 * @param bool $subSelect
 	 *
-	 * @return Dataset
+	 * @return Core\Datamodel\Dataset
 	 */
 	public function parseSelect($subSelect = false)
 	{
-		$tree = new Dataset();
-		$tree->_mode = Dataset::MODE_GET;
+		$tree = new Core\Datamodel\Dataset();
+		$tree->_mode = Core\Datamodel\Dataset::MODE_GET;
 		$this->getTok();
 		if ($this->token == 'distinct') {
 			$tree->uniquerecords = true;
@@ -217,7 +217,7 @@ class SQL_Parser_Dataset extends SQL_Parser {
 
 	/**
 	 * @access  public
-	 * @return array|Dataset|bool
+	 * @return array|Core\Datamodel\Dataset|bool
 	 */
 	public function parseInsert()
 	{
@@ -226,8 +226,8 @@ class SQL_Parser_Dataset extends SQL_Parser {
 			$this->raiseError('Expected "into"');
 		}
 
-		$tree = new Dataset();
-		$tree->_mode = Dataset::MODE_INSERT;
+		$tree = new Core\Datamodel\Dataset();
+		$tree->_mode = Core\Datamodel\Dataset::MODE_INSERT;
 		$column_names = false;
 
 		$this->getTok();
@@ -363,8 +363,8 @@ class SQL_Parser_Dataset extends SQL_Parser {
 	 */
 	public function parseDelete()
 	{
-		$tree = new Dataset();
-		$tree->_mode = Dataset::MODE_DELETE;
+		$tree = new Core\Datamodel\Dataset();
+		$tree->_mode = Core\Datamodel\Dataset::MODE_DELETE;
 
 		$this->getTok();
 		if ($this->token == 'from') {
@@ -506,9 +506,9 @@ class SQL_Parser_Dataset extends SQL_Parser {
 	 */
 	public function parseWhereCondition()
 	{
-		$clause = new DatasetWhereClause();
+		$clause = new Core\Datamodel\DatasetWhereClause();
 
-		$laststatement = new DatasetWhere();
+		$laststatement = new Core\Datamodel\DatasetWhere();
 
 		while (true) {
 			// parse the first argument
@@ -613,7 +613,7 @@ class SQL_Parser_Dataset extends SQL_Parser {
 					$clause->setSeparator($not . $op);
 					// Don't forget to append the previous statement and start a new one.
 					$clause->addWhere($laststatement);
-					$laststatement = new DatasetWhere();
+					$laststatement = new Core\Datamodel\DatasetWhere();
 					continue;
 					break;
 				default:

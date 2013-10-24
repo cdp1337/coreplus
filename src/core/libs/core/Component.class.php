@@ -326,7 +326,7 @@ class Component extends XMLLoader {
 		foreach ($viewclasses as $c) {
 			// Should end in Controller.
 			if (strlen($c) - strpos($c, 'Controller') == 10) $c = substr($c, 0, -10);
-			$data = Dataset::Init()->table('page')->select('*')->where("baseurl = /$c", 'admin=1', 'fuzzy=0')->execute();
+			$data = Core\Datamodel\Dataset::Init()->table('page')->select('*')->where("baseurl = /$c", 'admin=1', 'fuzzy=0')->execute();
 
 			//$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "page WHERE ( `baseurl` = '/$c' OR `baseurl` LIKE '/$c/%' ) AND `fuzzy` = '0' AND `admin` = '1'");
 			foreach ($data as $row) {
@@ -337,7 +337,7 @@ class Component extends XMLLoader {
 				$node->setAttribute('title', $row['title']);
 			}
 
-			$data = Dataset::Init()->table('page')->select('*')->where("baseurl LIKE /$c/%", 'admin=1', 'fuzzy=0')->execute();
+			$data = Core\Datamodel\Dataset::Init()->table('page')->select('*')->where("baseurl LIKE /$c/%", 'admin=1', 'fuzzy=0')->execute();
 
 			//$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "page WHERE ( `baseurl` = '/$c' OR `baseurl` LIKE '/$c/%' ) AND `fuzzy` = '0' AND `admin` = '1'");
 			foreach ($data as $row) {
@@ -351,7 +351,7 @@ class Component extends XMLLoader {
 
 
 		///////////////////////  Handle the config options \\\\\\\\\\\\\\\\\\\\\
-		$data = Dataset::Init()->table('config')->select('*')->where('key LIKE /' . $this->getName() . '/%')->execute();
+		$data = Core\Datamodel\Dataset::Init()->table('config')->select('*')->where('key LIKE /' . $this->getName() . '/%')->execute();
 		//$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "config WHERE `key` LIKE '/" . $this->getName() . "/%'");
 		foreach ($data as $row) {
 			$node = $this->getElement('/configs/config[@key="' . $row['key'] . '"]');

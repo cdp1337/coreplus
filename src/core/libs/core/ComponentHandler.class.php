@@ -135,7 +135,7 @@ class ComponentHandler implements ISingleton {
 
 		// Load in all the data in the components table.
 		try {
-			$res            = Dataset::Init()->table('component')->select('*')->execute();
+			$res            = Core\Datamodel\Dataset::Init()->table('component')->select('*')->execute();
 			$this->_dbcache = array();
 			foreach ($res as $r) {
 				$n                  = strtolower($r['name']);

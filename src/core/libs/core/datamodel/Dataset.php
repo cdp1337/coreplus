@@ -21,7 +21,9 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class Dataset implements Iterator{
+namespace Core\Datamodel;
+
+class Dataset implements \Iterator{
 
 	/**
 	 * Mode for altering the structure of the datastore
@@ -112,7 +114,7 @@ class Dataset implements Iterator{
 
 		$n = func_num_args();
 
-		if($n == 0) throw new DMI_Exception ('Invalid amount of parameters requested for Dataset::set()');
+		if($n == 0) throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::set()');
 
 		// Allow null to clear out the selects.
 		if($n == 1 && func_get_arg(0) === null){
@@ -216,11 +218,11 @@ class Dataset implements Iterator{
 		$n = func_num_args();
 
 		if($n == 0 || $n > 2){
-			throw new DMI_Exception ('Invalid amount of parameters requested for Dataset::set(), ' . $n . ' provided, exactly 1 or 2 expected');
+			throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::set(), ' . $n . ' provided, exactly 1 or 2 expected');
 		}
 		elseif($n == 1){
 			$a = func_get_arg(0);
-			if(!is_array($a)) throw new DMI_Exception ('Invalid parameter sent for Dataset::set()');
+			if(!is_array($a)) throw new \DMI_Exception ('Invalid parameter sent for Dataset::set()');
 
 			foreach($a as $k => $v){
 				$this->_sets[$k] = $v;
@@ -237,7 +239,7 @@ class Dataset implements Iterator{
 		$n = func_num_args();
 
 		if($n != 2){
-			throw new DMI_Exception ('Invalid amount of parameters requested for Dataset::renameColumn(), ' . $n . ' provided, exactly 2 expected');
+			throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::renameColumn(), ' . $n . ' provided, exactly 2 expected');
 		}
 
 		$oldname = func_get_arg(0);
@@ -378,14 +380,14 @@ class Dataset implements Iterator{
 	 * Set the limit for this dataset.
 	 *
 	 * Supports a single argument for a hard limit or two arguments for starting at and limit.
-	 * @throws DMI_Exception
+	 * @throws \DMI_Exception
 	 * @return Dataset
 	 */
 	public function limit(){
 		$n = func_num_args();
 		if($n == 1) $this->_limit = func_get_arg(0);
 		elseif($n == 2) $this->_limit = func_get_arg(0) . ', ' . func_get_arg(1);
-		else throw new DMI_Exception('Invalid amount of parameters requested for Dataset::limit()');
+		else throw new \DMI_Exception('Invalid amount of parameters requested for Dataset::limit()');
 
 		// Allow chaining
 		return $this;
@@ -398,7 +400,7 @@ class Dataset implements Iterator{
 		$n = func_num_args();
 		if($n == 1) $this->_order = func_get_arg(0);
 		elseif($n == 2) $this->_order = func_get_arg(0) . ', ' . func_get_arg(1);
-		else throw new DMI_Exception('Invalid amount of parameters requested for Dataset::order()');
+		else throw new \DMI_Exception('Invalid amount of parameters requested for Dataset::order()');
 
 		// Allow chaining
 		return $this;
@@ -407,12 +409,12 @@ class Dataset implements Iterator{
 
 	/**
 	 *
-	 * @param type $interface
+	 * @param BackendInterface $interface
 	 * @return Dataset
 	 */
 	public function execute($interface = null){
 		// Default to the system interface.
-		if(!$interface) $interface = DMI::GetSystemDMI();
+		if(!$interface) $interface = \DMI::GetSystemDMI();
 
 		// This actually goes the other way, as the interface has the logic.
 		$interface->connection()->execute($this);
@@ -473,324 +475,8 @@ class Dataset implements Iterator{
 	}
 }
 
-class DatasetWhereClause{
-
-	/**
-	 * If multiple statements are contained herein, this is the separator of all statements.
-	 *
-	 * @var string
-	 */
-	private $_separator = 'AND';
-
-	/**
-	 * The array of statements (of groups) contained herein
-	 *
-	 * @var array
-	 */
-	private $_statements = array();
 
 
-	/**
-	 * The name of this group/clause.  Completely meaningless other than external lookups.
-	 * (FUTURE FEATURE)
-	 * @var string
-	 */
-	private $_name;
-
-	/**
-	 * @param string $name The name of this group/clause.  Completely meaningless other than external lookups.
-	 */
-	public function __construct($name = '_unnamed_'){
-		$this->_name = $name;
-	}
-
-	/**
-	 * Add a where statement by the three components.
-	 * Only supports one where at a time, but useful for some of the tricky statements.
-	 *
-	 * @since 2.4.0
-	 *
-	 * @param $field
-	 * @param $operation
-	 * @param $value
-	 */
-	public function addWhereParts($field, $operation, $value){
-		$c = new DatasetWhere();
-		$c->field = $field;
-		$c->op = $operation;
-		$c->value = $value;
-		$this->_statements[] = $c;
-
-	}
-
-	/**
-	 * Add a where statement to this clause.
-	 *
-	 * DOES NOT SUPPORT addWhere('key', 'value'); format!!!
-	 *
-	 * @param $arguments
-	 *
-	 * @return bool
-	 */
-	public function addWhere($arguments){
-
-		// <strike>Allow $k, $v to be passed in.</strike>
-		//
-		// This format is no longer supported at the low level!  DON'T DO IT!
-		//
-//		if(sizeof($arguments) == 2 && !is_array($arguments[0]) && !is_array($arguments[1])){
-//
-//			$this->_statements[] = new DatasetWhere($arguments[0] . ' = ' . $arguments[1]);
-//			return true;
-//		}
-
-		// Allow another clause to be sent in, that will be set as a child of this one.
-		if($arguments instanceof DatasetWhereClause){
-			$this->_statements[] = $arguments;
-			return true;
-		}
-
-		// Allow a child statement to be passed in.
-		if($arguments instanceof DatasetWhere){
-			$this->_statements[] = $arguments;
-			return true;
-		}
-
-		// Allow just a plain ol string to be passed in too
-		if(is_string($arguments)){
-			$this->_statements[] = new DatasetWhere($arguments);
-			return true;
-		}
-
-		// Otherwise, interpret each argument as its own entity.
-		foreach($arguments as $a){
-			if(is_array($a)){
-				foreach($a as $k => $v){
-					if(is_numeric($k)){
-						// It's an indexed array of 'something = this or that';
-						$this->_statements[] = new DatasetWhere($v);
-					}
-					else{
-						// It's an associative array of key => 'this or that';
-						$dsw = new DatasetWhere();
-						$dsw->field = $k;
-						$dsw->op    = '=';
-						$dsw->value = $v;
-						$this->_statements[] = $dsw;
-					}
-				}
-			}
-			elseif($a instanceof DatasetWhereClause){
-				$this->_statements[] = $a;
-			}
-			elseif($a instanceof DatasetWhere){
-				$this->_statements[] = $a;
-			}
-			else{
-				$this->_statements[] = new DatasetWhere($a);
-			}
-		}
-	}
-
-	/**
-	 * Shortcut function to add a subgroup to an existing group.
-	 *
-	 * @param $sep
-	 * @param $arguments
-	 */
-	public function addWhereSub($sep, $arguments){
-		$subgroup = new DatasetWhereClause();
-		$subgroup->setSeparator($sep);
-		$subgroup->addWhere($arguments);
-
-		$this->addWhere($subgroup);
-	}
-
-	public function getStatements(){
-		return $this->_statements;
-	}
-
-	public function setSeparator($sep){
-		$sep = trim(strtoupper($sep));
-		switch($sep){
-			case 'AND':
-			case 'OR':
-				$this->_separator = $sep;
-				break;
-			default:
-				throw new DMI_Exception('Invalid separator, [' . $sep . ']');
-		}
-	}
-
-	public function getSeparator(){
-		return $this->_separator;
-	}
-
-	/**
-	 * Sometimes you just want a good'ol "flat" representation.
-	 */
-	public function getAsArray(){
-		$children = array();
-		foreach($this->_statements as $s){
-			if($s instanceof DatasetWhereClause){
-				$children[] = $s->getAsArray();
-			}
-			elseif($s instanceof DatasetWhere){
-				if($s->field === null) continue;
-				$children[] = $s->field . ' ' . $s->op . ' ' . $s->value;
-			}
-		}
-		return array('sep' => $this->_separator, 'children' => $children);
-	}
-
-	/**
-	 * Get any/all statements that have a field set to that which is requested.
-	 *
-	 * Useful for looking up to see if a specific column has been set in a where statement.
-	 *
-	 * @param string $fieldname The field to search for
-	 * @return array
-	 */
-	public function findByField($fieldname){
-		$matches = array();
-		foreach($this->_statements as $s){
-			if($s instanceof DatasetWhereClause){
-				$matches = array_merge($matches, $s->findByField($fieldname));
-			}
-			elseif($s instanceof DatasetWhere){
-				if($s->field == $fieldname) $matches[] = $s;
-			}
-		}
-
-		return $matches;
-	}
-
-}
-
-class DatasetWhere{
-	public $field;
-	public $op;
-	public $value;
-
-	public function __construct($arguments = null){
-		if($arguments) $this->_parseWhere($arguments);
-	}
-
-	/**
-	 * Parse a single where statement for the key, operation, and value.
-	 *
-	 * @param string $statement The where statement to parse and evaluate
-	 * @return void
-	 */
-	private function _parseWhere($statement){
-		// The user may have sent something like "blah = mep" or "datecreated < somedate"
-		$valid = false;
-		$operations = array('!=', '<=', '>=', '=', '>', '<', 'LIKE ', 'NOT LIKE', 'IN');
-
-		// First, extract out the key.  This is the simplest thing to look for.
-		$k = preg_replace('/^([^ !=<>]*).*/', '$1', $statement);
-
-		// and the rest of the query...
-		$statement = trim(substr($statement, strlen($k)));
 
 
-		// Now I can sift through each operation and find the one that this query is.
-		foreach($operations as $c){
-			// The match MUST be the first character.
-			if(($pos = strpos($statement, $c)) === 0){
-				$op = $c;
-				$statement = trim(substr($statement, strlen($op)));
-				$valid = true;
 
-				// the IN statement has a bit of an extra functionality.
-				// This expects a comma separated list of values.
-				if($op == 'IN'){
-					$statement = array_map('trim', explode(',', $statement));
-				}
-				break;
-			}
-		}
-
-		if($valid){
-			$this->field = $k;
-			$this->op = $op;
-			$this->value = $statement;
-		}
-	}
-}
-
-
-/**
- * A wrapper around the dataset system to allow streaming large numbers of records for processing.
- *
- * To use it, simply pass in a valid Dataset object into the constructor and proceed to use getRecord() at will.
- *
- * @example
- * <pre>
- *
- * $ds = new Dataset();
- * $ds->table('my_awesome_huge_table');
- * $ds->select('*');
- *
- * $stream = new DatasetStream($ds);
- * // If the record is really REALLY huge, feel free to do this:
- * // $stream->bufferlimit = 25; // Sets the size of the buffer ie: number of records pulled at a time.
- * while(($record = $stream->getRecord())){
- *   // do something with $record, which is an associative array of the current record
- * }
- *
- * </pre>
- */
-class DatasetStream{
-
-	private $_dataset;
-
-	private $_totalcount;
-
-	private $_counter = -1;
-
-	private $_startlimit = 0;
-
-	/**
-	 * Total number of records to load into the buffer at a time.
-	 *
-	 * @var int
-	 */
-	public $bufferlimit = 100;
-
-	public function __construct(Dataset $ds){
-		$this->_dataset = $ds;
-
-		$mode = $this->_dataset->_mode;
-
-		// I need to know how many are records are present.
-		$this->_totalcount = $this->_dataset->count()->execute()->num_rows;
-
-		// And reset the mode back... damn count
-		$this->_dataset->_mode = $mode;
-	}
-
-	/**
-	 * Get the next record from the dataset, or null if at the end of the list.
-	 *
-	 * @return array|null
-	 */
-	public function getRecord(){
-		// NEXT!
-		++$this->_counter;
-
-		if($this->_dataset->_data === null || $this->_counter >= $this->bufferlimit){
-			// Get the next set of records from the database!
-
-			$this->_dataset->limit($this->_startlimit, $this->bufferlimit);
-			$this->_dataset->execute();
-
-			// Increment the startlimit to the next counter!
-			$this->_startlimit += $this->bufferlimit;
-			// And reset the counter.
-			$this->_counter = 0;
-		}
-
-		return isset($this->_dataset->_data[$this->_counter]) ? $this->_dataset->_data[$this->_counter] : null;
-	}
-}

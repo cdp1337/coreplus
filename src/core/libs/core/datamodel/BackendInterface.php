@@ -21,14 +21,16 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-interface DMI_Backend {
+namespace Core\Datamodel;
+
+interface BackendInterface {
 
 	/**
 	 * Execute a given Dataset object on this backend
 	 *
 	 * @param Dataset $dataset
 	 *
-	 * @throws DMI_Exception
+	 * @throws \DMI_Exception
 	 */
 	public function execute(Dataset $dataset);
 
@@ -42,28 +44,48 @@ interface DMI_Backend {
 	public function tableExists($tablename);
 
 	/**
-	 * Create a table on this backend with the provided ModelSchema.
+	 * Create a table on this backend with the provided Schema.
 	 *
-	 * @param string $tablename
-	 * @param ModelSchema $schema
+	 * @param string $table  Table name to be created
+	 * @param Schema $schema Schema to create table with
 	 *
 	 * @return bool
+	 *
+	 * @throws \DMI_Exception
 	 */
-	public function createTable($tablename, $schema);
+	public function createTable($table, Schema $schema);
 
 	/**
 	 * Modify a table to match a new schema.
 	 *
 	 * This is used to keep the database in sync with the code upon upgrades, installations and reinstalls.
 	 *
-	 * @param string $table
-	 * @param ModelSchema $newschema
+	 * @param string $table  Table name to be created
+	 * @param Schema $schema Schema to match
 	 *
 	 * @return bool
-	 * @throws DMI_Exception
-	 * @throws DMI_Query_Exception
+	 * @throws \DMI_Exception
+	 * @throws \DMI_Query_Exception
 	 */
-	public function modifyTable($table, $newschema);
+	public function modifyTable($table, Schema $schema);
+
+	/**
+	 * Drop a table from the system.
+	 *
+	 * @param $table
+	 *
+	 * @return bool
+	 * @throws \DMI_Exception
+	 */
+	public function dropTable($table);
+	
+	/**
+	 * Describe the schema of a given table
+	 *
+	 * @param string $table Table name to query
+	 * @return Schema
+	 */
+	public function describeTable($table);
 
 	/**
 	 * Get a flat array of table names currently available on this backend.
@@ -92,4 +114,5 @@ interface DMI_Backend {
 	 * @return array
 	 */
 	public function queryLog();
+
 }

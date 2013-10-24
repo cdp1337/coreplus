@@ -87,7 +87,7 @@ class Session implements SessionHandlerInterface {
 	public function destroy($session_id) {
 		// Low-level datasets are used here because they have less overhead than
 		// the full-blown model system.
-		$dataset = new Dataset();
+		$dataset = new Core\Datamodel\Dataset();
 		$dataset->table('session');
 		$dataset->where('session_id = ' . $session_id);
 		$dataset->where('ip_addr = ' . REMOTE_IP);
@@ -163,7 +163,7 @@ class Session implements SessionHandlerInterface {
 
 		// Low-level datasets are used here because they have less overhead than
 		// the full-blown model system.
-		$dataset = new Dataset();
+		$dataset = new Core\Datamodel\Dataset();
 		$dataset->table('session');
 		$dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl));
 		$dataset->delete()->execute();

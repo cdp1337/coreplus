@@ -44,7 +44,7 @@ abstract class ComponentFactory {
 
 			// Try to load the components
 			try {
-				$res = Dataset::Init()->table('component')->select('*')->execute();
+				$res = Core\Datamodel\Dataset::Init()->table('component')->select('*')->execute();
 			}
 				// But since this function is called during the installer, it might fail... that's acceptable.
 			catch (DMI_Exception $e) {

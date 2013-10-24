@@ -55,10 +55,10 @@ class DMI_cassandra_backend implements DMI_Backend {
 		}
 	}
 	
-	public function execute(Dataset $dataset){
+	public function execute(Core\Datamodel\Dataset $dataset){
 		try{
 			switch($dataset->_mode){
-				case Dataset::MODE_GET:
+				case Core\Datamodel\Dataset::MODE_GET:
 					return $this->_executeGet($dataset);
 					break;
 			}
@@ -85,7 +85,7 @@ class DMI_cassandra_backend implements DMI_Backend {
 		// @todo something...
 	}
 	
-	private function _executeGet(Dataset $dataset){
+	private function _executeGet(Core\Datamodel\Dataset $dataset){
 		$name = $dataset->_name;
 		// Is this name prefixed by the DB_PREFIX variable?
 		if(strpos($name, DB_PREFIX) === false) $name = DB_PREFIX . $name;

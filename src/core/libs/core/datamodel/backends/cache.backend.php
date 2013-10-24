@@ -64,21 +64,21 @@ class DMI_cache_backend implements DMI_Backend {
 		return $this->_conn;
 	}
 	
-	public function execute(Dataset $dataset){
+	public function execute(Core\Datamodel\Dataset $dataset){
 		switch($dataset->_mode){
-			case Dataset::MODE_GET:
+			case Core\Datamodel\Dataset::MODE_GET:
 				++$this->_reads;
 				$this->_executeGet($dataset);
 				break;
-			case Dataset::MODE_INSERT:
+			case Core\Datamodel\Dataset::MODE_INSERT:
 				++$this->_writes;
 				$this->_executeInsert($dataset);
 				break;
-			case Dataset::MODE_UPDATE:
+			case Core\Datamodel\Dataset::MODE_UPDATE:
 				++$this->_writes;
 				$this->_executeUpdate($dataset);
 				break;
-			case Dataset::MODE_DELETE:
+			case Core\Datamodel\Dataset::MODE_DELETE:
 				++$this->_writes;
 				$this->_executeDelete($dataset);
 				break;
@@ -140,7 +140,7 @@ class DMI_cache_backend implements DMI_Backend {
 	}
 	
 	
-	private function _executeGet(Dataset $dataset){
+	private function _executeGet(Core\Datamodel\Dataset $dataset){
 		$key = 'DM-' . $dataset->_table;
 		// Generate a query to run.
 		$q = 'SELECT';
@@ -181,7 +181,7 @@ class DMI_cache_backend implements DMI_Backend {
 		}
 	}
 	
-	private function _executeInsert(Dataset $dataset){
+	private function _executeInsert(Core\Datamodel\Dataset $dataset){
 		// Generate a query to run.
 		$q = "INSERT INTO `" . $dataset->_table . "`";
 		
@@ -206,7 +206,7 @@ class DMI_cache_backend implements DMI_Backend {
 		if($dataset->_idcol) $dataset->_idval = $this->_conn->insert_id;
 	}
 	
-	private function _executeUpdate(Dataset $dataset){
+	private function _executeUpdate(Core\Datamodel\Dataset $dataset){
 		// Generate a query to run.
 		$q = "UPDATE `" . $dataset->_table . "`";
 		
@@ -237,7 +237,7 @@ class DMI_cache_backend implements DMI_Backend {
 		//if($dataset->_idcol) $dataset->_idval = $this->_conn->insert_id;
 	}
 	
-	private function _executeDelete(Dataset $dataset){
+	private function _executeDelete(Core\Datamodel\Dataset $dataset){
 		$q = 'DELETE FROM `' . $dataset->_table . '`';
 		
 		if(sizeof($dataset->_where)){

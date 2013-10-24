@@ -320,7 +320,7 @@ class Model implements ArrayAccess {
 		}
 
 
-		$data = Dataset::Init()
+		$data = Core\Datamodel\Dataset::Init()
 			->select('*')
 			->table(self::GetTableName())
 			->where($keys)
@@ -542,9 +542,20 @@ class Model implements ArrayAccess {
 				if (!isset($v['type']))      $this->_schemacache[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
 				if (!isset($v['maxlength'])) $this->_schemacache[$k]['maxlength'] = false;
 				if (!isset($v['null']))      $this->_schemacache[$k]['null']      = false;
-				if (!isset($v['comment']))   $this->_schemacache[$k]['comment']   = false;
+				if (!isset($v['comment']))   $this->_schemacache[$k]['comment']   = '';
 				if (!isset($v['default']))   $this->_schemacache[$k]['default']   = false;
 				if (!isset($v['encrypted'])) $this->_schemacache[$k]['encrypted'] = false;
+				if (!isset($v['required']))  $this->_schemacache[$k]['required']  = false;
+
+
+				if($v['type'] == Model::ATT_TYPE_ENUM){
+					// Enums have an options array!
+					$this->_schemacache[$k]['options'] = isset($this->_schemacache[$k]['options']) ? $this->_schemacache[$k]['options'] : array();
+				}
+				else{
+					// Other fields don't.
+					$this->_schemacache[$k]['options'] = null;
+				}
 
 				// Generate a title for this key from the form data.
 				// This can be useful for Model utilities that want to display the
@@ -640,7 +651,7 @@ class Model implements ArrayAccess {
 
 		if (!isset($i['primary'])) $i['primary'] = array(); // No primary schema defined... just don't make the in_array bail out.
 
-		$dat = new Dataset();
+		$dat = new Core\Datamodel\Dataset();
 		$dat->table($n);
 
 		$idcol = false;
@@ -748,7 +759,7 @@ class Model implements ArrayAccess {
 		if($pri && !is_array($pri)) $pri = array($pri);
 
 		// This is the dataset object that will be integral in this function.
-		$dat = new Dataset();
+		$dat = new Core\Datamodel\Dataset();
 		$dat->table($n);
 
 		$idcol = false;
@@ -878,7 +889,7 @@ class Model implements ArrayAccess {
 			$n = $this->_getTableName();
 			$i = self::GetIndexes();
 			// Delete the data from the database.
-			$dat = new Dataset();
+			$dat = new Core\Datamodel\Dataset();
 
 			$dat->table($n);
 
@@ -1961,7 +1972,7 @@ class ModelFactory {
 	/**
 	 * Contains the dataset object for this search.
 	 *
-	 * @var Dataset
+	 * @var Core\Datamodel\Dataset
 	 */
 	private $_dataset;
 
@@ -1971,7 +1982,7 @@ class ModelFactory {
 		$this->_model = $model;
 
 		$m              = $this->_model;
-		$this->_dataset = new Dataset();
+		$this->_dataset = new Core\Datamodel\Dataset();
 		$this->_dataset->table($m::GetTablename());
 		$this->_dataset->select('*');
 	}
@@ -2055,7 +2066,7 @@ class ModelFactory {
 	 * This can sometimes be useful for advanced manipulations of the low-level object.
 	 *
 	 * @since 2.1
-	 * @return Dataset
+	 * @return Core\Datamodel\Dataset
 	 */
 	public function getDataset(){
 		return $this->_dataset;
@@ -2106,368 +2117,6 @@ class ModelException extends Exception {
 class ModelValidationException extends ModelException {
 }
 
-class ModelSchema {
-	/**
-	 * An associative array of ModelSchemaColumn objects.
-	 *
-	 * @var array
-	 */
-	public $definitions = array();
 
-	/**
-	 * An indexed array of the names of the columns in this schema.
-	 *
-	 * @var array
-	 */
-	public $order = array();
 
-	public $indexes = array();
 
-	public function __construct($model = null){
-		if($model !== null){
-			$this->readModel($model);
-		}
-	}
-
-	public function readModel($model){
-		$vars = get_class_vars($model);
-		$schema = $vars['Schema'];
-
-		foreach($schema as $name => $def){
-			$column = new ModelSchemaColumn();
-			$column->field = $name;
-			foreach($def as $k => $v){
-				$column->{$k} = $v;
-			}
-
-			// Some defaults.
-			if($column->type == Model::ATT_TYPE_STRING && !$column->maxlength){
-				$column->maxlength = 255;
-			}
-
-			if($column->type == Model::ATT_TYPE_ID && !$column->maxlength){
-				$column->maxlength = 15;
-				$column->autoinc = true;
-			}
-
-			if($column->type == Model::ATT_TYPE_ID_FK){
-				$column->maxlength = 15;
-			}
-
-			if($column->type == Model::ATT_TYPE_UUID){
-				// A UUID is in the format of:
-				// siteid-timestamp-randomhex
-				// or [1-3 numbers] - [11-12 hex] - [4 hex]
-				// a total of up to 21 digits.
-				$column->maxlength = 21;
-				$column->autoinc = false;
-			}
-
-			if($column->type == Model::ATT_TYPE_UUID_FK){
-				// Mimic the UUID column.
-				$column->maxlength = 21;
-			}
-
-			if($column->type == Model::ATT_TYPE_INT && !$column->maxlength){
-				$column->maxlength = 15;
-			}
-
-			if($column->type == Model::ATT_TYPE_CREATED && !$column->maxlength){
-				$column->maxlength = 15;
-			}
-
-			if($column->type == Model::ATT_TYPE_UPDATED && !$column->maxlength){
-				$column->maxlength = 15;
-			}
-
-			if($column->type == Model::ATT_TYPE_SITE){
-				$column->default = 0;
-				$column->comment = 'The site id in multisite mode, (or 0 otherwise)';
-				$column->maxlength = 15;
-			}
-
-			// Is default not set?  Some columns would really like this to be!
-			if($column->default === false && !$column->null){
-				switch($column->type){
-					case Model::ATT_TYPE_INT:
-					case Model::ATT_TYPE_BOOL:
-					case Model::ATT_TYPE_CREATED:
-					case Model::ATT_TYPE_UPDATED:
-					case Model::ATT_TYPE_FLOAT:
-						$column->default = 0;
-						break;
-					case Model::ATT_TYPE_ISO_8601_DATE:
-						$column->default = '0000-00-00';
-						break;
-					case Model::ATT_TYPE_ISO_8601_DATETIME:
-						$column->default = '0000-00-00 00:00:00';
-						break;
-					default:
-						$column->default = '';
-				}
-			}
-
-			$this->definitions[$name] = $column;
-			$this->order[] = $name;
-		}
-
-		$this->indexes = $vars['Indexes'];
-		foreach($this->indexes as $key => $dat){
-			if(!is_array($dat)){
-				// Models can be defined with a single element for its index.
-				// This is an acceptable shorthand standard, but the lower level utilities
-				// are expecting an array.
-				$this->indexes[$key] = array($dat);
-			}
-		}
-	}
-
-	/**
-	 * Get a column by order (int) or name
-	 *
-	 * @param string|int $column
-	 * @return ModelSchemaColumn|null
-	 */
-	public function getColumn($column){
-		// This will resolve an int to the column name.
-		if(is_int($column)){
-			if(isset($this->order[$column])) $column = $this->order[$column];
-			else return null;
-		}
-
-		if(isset($this->definitions[$column])) return $this->definitions[$column];
-		else return null;
-	}
-
-	/**
-	 * Get an array of differences between this schema and another schema.
-	 *
-	 * @param ModelSchema $schema
-	 * @return array
-	 */
-	public function getDiff(ModelSchema $schema){
-		$diffs = array();
-
-		// This will only check for incoming changes.  If schema B (that schema), has a column that
-		// schema A does not, flag that as different.
-		// If schema A has a column that schema B does not, ignore that change as it is not relevant.
-		// Do the same for the order; ignore columns that A has but B does not.
-		foreach($schema->definitions as $name => $dat){
-			$thiscol = $this->getColumn($name);
-
-			// This model doesn't have a column the other one has... DIFFERENCE!
-			if(!$thiscol){
-				$diffs[] = array(
-					'title' => 'A does not have column ' . $name,
-					'type' => 'column',
-				);
-				continue;
-			}
-
-			if(!$thiscol->isDataIdentical($dat)){
-				$diffs[] = array(
-					'title' => 'Column ' . $name . ' does not match up',
-					'type' => 'column',
-				);
-			}
-		}
-
-		$a_order = $this->order;
-		foreach($this->definitions as $name => $dat){
-			// If A has a column but B does not, drop that from the b order so the checks are accurate.
-			if(!$schema->getColumn($name)) unset($a_order[array_search($name, $a_order)]);
-		}
-
-		// Check the order of them.
-		if(implode(',', $a_order) != implode(',', $schema->order)){
-			$diffs[] = array(
-				'title' => 'Order of columns is different',
-				'type' => 'order',
-			);
-		}
-
-		// And lastly, the indexes.
-		$thisidx = '';
-		foreach($this->indexes as $name => $cols) $thisidx .= ';' . $name . '-' . implode(',', $cols);
-		$thatidx = '';
-		foreach($this->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
-
-		if($thisidx != $thatidx){
-			$diffs[] = array(
-				'title' => 'Indexes do not match up',
-				'type' => 'index'
-			);
-		}
-
-		return $diffs;
-	}
-
-	/**
-	 * Test if this schema is identical (from a datastore perspective) to another model schema.
-	 *
-	 * Useful for reinstallations.
-	 *
-	 * @param ModelSchema $schema
-	 * @return bool
-	 */
-	public function isDataIdentical(ModelSchema $schema){
-		// Get a diff of the two.
-		$diff = $this->getDiff($schema);
-
-		// And see if there is something there.
-		return !sizeof($diff);
-	}
-}
-
-class ModelSchemaColumn {
-	/**
-	 * The field name or key name of this column
-	 * @var string
-	 */
-	public $field;
-	/**
-	 * Specifies the data type contained in this column.  Must be one of the Model::ATT_TYPE_* fields.
-	 * @var string
-	 */
-	public $type = Model::ATT_TYPE_TEXT;
-	/**
-	 * Set to true to disallow blank values
-	 * @var bool
-	 */
-	public $required = false;
-	/**
-	 * Maximum length in characters (or bytes), of data stored.
-	 * @var bool|int
-	 */
-	public $maxlength = false;
-	/**
-	 * Validation options for this column.
-	 *
-	 * The validation logic for data in the column, can be a regex (indicated by "/ ... /" or "# ... #"),
-	 * a public static method ("SomeClass::ValidateSomething"), or an internal method ("this::validateField").
-	 *
-	 * @var null|string
-	 */
-	public $validation = null;
-	/**
-	 * ATT_TYPE_ENUM column types expect a set of values.  This is defined here as an array.
-	 * @var null|array
-	 */
-	public $options = null;
-	/**
-	 * Default value to use for this column
-	 * @var bool|int|float|string
-	 */
-	public $default = false;
-	/**
-	 * Allow null values for this column.  If set to true, null is preserved as null.  False will change null values to blank.
-	 * @var bool
-	 */
-	public $null = false;
-	/**
-	 * Shortcut for specifying the form type when rendering as a form.  Should be a valid form type
-	 * @var string
-	 */
-	public $formtype = 'text';
-	/**
-	 * Full version of specifying form parameters for this column.
-	 * @var array
-	 */
-	public $form = array();
-	/**
-	 * Comment to add onto the database column.  Useful for administrative comments for.
-	 * @var string
-	 */
-	public $comment = '';
-	/**
-	 * ATT_TYPE_FLOAT supports precision for its data.  Should be set as a string such as "6,2" for 6 digits left of decimal,
-	 * 2 digits right of decimal.
-	 * @var null|string
-	 */
-	public $precision = null;
-	/**
-	 * Core+ allows data to be encrypted / decrypted on-the-fly.  This is useful for sensitive information such as
-	 * credit card data or authorization credentials for external sources.  Setting this to true will store all
-	 * information as encrypted, and allow it to be read decrypted.
-	 * @var bool
-	 */
-	public $encrypted = false;
-
-	/**
-	 * Indicator if this column needs to be auto incremented from the datamodel.
-	 * @var bool
-	 */
-	public $autoinc = false;
-
-	/**
-	 * Check to see if this column is datastore identical to another column.
-	 *
-	 * @param ModelSchemaColumn $col
-	 * @return bool
-	 */
-	public function isDataIdentical(ModelSchemaColumn $col){
-		// The columns that matter....
-		if($this->field != $col->field)       return false;
-
-		//if($this->required != $col->required) return false;
-		if($this->maxlength != $col->maxlength) return false;
-		if($this->null != $col->null) return false;
-		if($this->comment != $col->comment) return false;
-		if($this->precision != $col->precision) return false;
-		if($this->autoinc !== $col->autoinc) return false;
-
-		// Default is a bit touchy because it can have database-specific defaults if not set locally.
-		if($this->default === false){
-			// I don't care what the database is, it'll pick its own defaults.
-		}
-		elseif($this->default === $col->default){
-			// They're identical... yay!
-		}
-		elseif(\Core\compare_values($this->default, $col->default)){
-			// They're close enough....
-			// Core will check and see if val1 === (string)"12" and val2 === (int)12.
-			// Consider it a fuzzy comparison that actually acknowledges the difference between NULL, "", and 0.
-		}
-		elseif($col->default === false && $this->default !== false){
-			return false;
-		}
-		else{
-			return false;
-		}
-
-		// If one is an array but not the other....
-		if(is_array($this->options) != is_array($col->options)) return false;
-
-		if(is_array($this->options) && is_array($col->options)){
-			// If they're both arrays, I need another way to check them.
-			if(implode(',', $this->options) != implode(',', $col->options)) return false;
-		}
-
-		// Type needs to allow for a few special cases.
-		// Here, there are several columns that are all identical.
-		$typematches = array(
-			array(
-				Model::ATT_TYPE_INT,
-				Model::ATT_TYPE_UUID,
-				Model::ATT_TYPE_CREATED,
-				Model::ATT_TYPE_UPDATED,
-				Model::ATT_TYPE_SITE,
-			)
-		);
-
-		$typesidentical = false;
-		foreach($typematches as $types){
-			if(in_array($this->type, $types) && in_array($col->type, $types)){
-				// Found an identical pair!  break out to continue;
-				$typesidentical = true;
-				break;
-			}
-		}
-
-		// If the types aren't found to be identical from above, then they have to actually be identical!
-		if(!$typesidentical && $this->type != $col->type) return false;
-
-		// Otherwise....
-		return true;
-	}
-}

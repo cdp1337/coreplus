@@ -22,6 +22,8 @@
  */
 
 
+// GLOBAL NAMESPACE!
+
 
 // I has some dependencies...
 //define('__DMI_PDIR', dirname(__FILE__) . '/');
@@ -29,21 +31,21 @@
 //require_once(__DMI_PDIR . 'Dataset.class.php');
 
 define('__DMI_PDIR', ROOT_PDIR . 'core/libs/core/datamodel/');
-require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'DMI_Backend.interface.php');
-require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'Dataset.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'BackendInterface.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'Dataset.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'DatasetWhere.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'DatasetWhereClause.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'Schema.php');
 
 
 /**
- * A top level interface class for the datamodel system.  Provides abstraction 
- * for different backends
+ * A top level interface class for the Data Model Interface.
+ * Provides abstraction for different backends.
  *
  */
 class DMI {
 	
-	/**
-	 * The backend currently in use for this DMI object.
-	 * @var DMI_Backend
-	 */
+	/** @var Core\Datamodel\DMI_Backend The backend currently in use for this DMI object. */
 	protected $_backend = null;
 	
 	/**
@@ -63,14 +65,23 @@ class DMI {
 	
 	public function setBackend($backend){
 		if($this->_backend) throw new DMI_Exception('Backend already set');
-		
-		$class = 'DMI_' . $backend . '_backend';
-		$classfile = strtolower($backend);
-		if(!file_exists(__DMI_PDIR . 'backends/' . strtolower($classfile) . '.backend.php')){
+
+		// All backends are lowercase.
+		$backend     = strtolower($backend);
+		$class       = 'Core\\Datamodel\\Drivers\\' . $backend . '\\' . $backend . '_backend';
+		$backendfile = $backend . '.backend.php';
+		$schemafile  = $backend . '.schema.php';
+
+		if(!file_exists(__DMI_PDIR . 'drivers/' . $backend . '/' . $backendfile)){
 			throw new DMI_Exception('Could not locate backend file for ' . $class);
 		}
-		
-		require_once(__DMI_PDIR . 'backends/' . strtolower($classfile) . '.backend.php');
+		require_once(__DMI_PDIR . 'drivers/' . $backend . '/' . $backendfile);
+
+		// Include the schemas too?
+		if(file_exists(__DMI_PDIR . 'drivers/' . $backend . '/' . $schemafile)){
+			require_once(__DMI_PDIR . 'drivers/' . $backend . '/' . $schemafile);
+		}
+
 		
 		$this->_backend = new $class();
 	}

@@ -21,14 +21,14 @@ class SQL_Parser_DatasetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, sizeof($dss));
 
 		$ds = $dss[0];
-		$this->assertInstanceOf('Dataset', $ds);
-		/** @var Dataset $ds */
+		$this->assertInstanceOf('Core\\Datamodel\\Dataset', $ds);
+		/** @var Core\Datamodel\Dataset $ds */
 
 		$this->assertEquals('sometableblah', $ds->_table);
 		$this->assertEquals('*', $ds->_selects[0]);
 		$this->assertEquals(1, sizeof($ds->getWhereClause()->getStatements()));
 
-		/** @var DatasetWhere $statement */
+		/** @var Core\Datamodel\DatasetWhere $statement */
 		$statement = $ds->getWhereClause()->getStatements()[0];
 		$this->assertEquals('key', $statement->field);
 		$this->assertEquals('=', $statement->op);
@@ -46,24 +46,24 @@ class SQL_Parser_DatasetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, sizeof($dss));
 
 		$ds = $dss[0];
-		$this->assertInstanceOf('Dataset', $ds);
-		/** @var Dataset $ds */
+		$this->assertInstanceOf('Core\\Datamodel\\Dataset', $ds);
+		/** @var Core\Datamodel\Dataset $ds */
 
 		$this->assertEquals('someThiNg', $ds->_table);
 		$this->assertEquals('row1', $ds->_selects[0]);
 		$this->assertEquals('key', $ds->_selects[1]);
 		$this->assertEquals(3, sizeof($ds->getWhereClause()->getStatements()));
 
-		/** @var DatasetWhere $statement1 */
+		/** @var Core\Datamodel\DatasetWhere $statement1 */
 		$statement1 = $ds->getWhereClause()->getStatements()[0];
-		/** @var DatasetWhere $statement2 */
+		/** @var Core\Datamodel\DatasetWhere $statement2 */
 		$statement2 = $ds->getWhereClause()->getStatements()[1];
-		/** @var DatasetWhereClause $statement3 */
+		/** @var Core\Datamodel\DatasetWhereClause $statement3 */
 		$statement3 = $ds->getWhereClause()->getStatements()[2];
 
-		$this->assertInstanceOf('DatasetWhere', $statement1);
-		$this->assertInstanceOf('DatasetWhere', $statement2);
-		$this->assertInstanceOf('DatasetWhereClause', $statement3);
+		$this->assertInstanceOf('Core\\Datamodel\\DatasetWhere', $statement1);
+		$this->assertInstanceOf('Core\\Datamodel\\DatasetWhere', $statement2);
+		$this->assertInstanceOf('Core\\Datamodel\\DatasetWhereClause', $statement3);
 
 		$this->assertEquals('key', $statement1->field);
 		$this->assertEquals('=', $statement1->op);
@@ -74,13 +74,13 @@ class SQL_Parser_DatasetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('23', $statement2->value);
 
 		$this->assertEquals('OR', $statement3->getSeparator());
-		/** @var DatasetWhere $sub1 */
+		/** @var Core\Datamodel\DatasetWhere $sub1 */
 		$sub1 = $statement3->getStatements()[0];
-		/** @var DatasetWhere $sub2 */
+		/** @var Core\Datamodel\DatasetWhere $sub2 */
 		$sub2 = $statement3->getStatements()[1];
 
-		$this->assertInstanceOf('DatasetWhere', $sub1);
-		$this->assertInstanceOf('DatasetWhere', $sub2);
+		$this->assertInstanceOf('Core\\Datamodel\\DatasetWhere', $sub1);
+		$this->assertInstanceOf('Core\\Datamodel\\DatasetWhere', $sub2);
 
 		$this->assertEquals('subkey1', $sub1->field);
 		$this->assertEquals('like', $sub1->op);
@@ -101,8 +101,8 @@ class SQL_Parser_DatasetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, sizeof($dss));
 
 		$ds = $dss[0];
-		$this->assertInstanceOf('Dataset', $ds);
-		/** @var Dataset $ds */
+		$this->assertInstanceOf('Core\\Datamodel\\Dataset', $ds);
+		/** @var Core\Datamodel\Dataset $ds */
 
 		$this->assertEquals('states', $ds->_table);
 		$this->assertEquals('insert', $ds->_mode);
@@ -122,8 +122,8 @@ class SQL_Parser_DatasetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(3, sizeof($dss));
 
 		$ds = $dss[0];
-		$this->assertInstanceOf('Dataset', $ds);
-		/** @var Dataset $ds */
+		$this->assertInstanceOf('Core\\Datamodel\\Dataset', $ds);
+		/** @var Core\Datamodel\Dataset $ds */
 
 		$this->assertEquals('states', $ds->_table);
 		$this->assertEquals('insert', $ds->_mode);
@@ -133,8 +133,8 @@ class SQL_Parser_DatasetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('OR', $ds->_sets['code']);
 
 		$ds = $dss[1];
-		$this->assertInstanceOf('Dataset', $ds);
-		/** @var Dataset $ds */
+		$this->assertInstanceOf('Core\\Datamodel\\Dataset', $ds);
+		/** @var Core\Datamodel\Dataset $ds */
 
 		$this->assertEquals('states', $ds->_table);
 		$this->assertEquals('insert', $ds->_mode);
@@ -144,8 +144,8 @@ class SQL_Parser_DatasetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('BL', $ds->_sets['code']);
 
 		$ds = $dss[2];
-		$this->assertInstanceOf('Dataset', $ds);
-		/** @var Dataset $ds */
+		$this->assertInstanceOf('Core\\Datamodel\\Dataset', $ds);
+		/** @var Core\Datamodel\Dataset $ds */
 
 		$this->assertEquals('states', $ds->_table);
 		$this->assertEquals('insert', $ds->_mode);
@@ -162,8 +162,8 @@ class SQL_Parser_DatasetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, sizeof($dss));
 
 		$ds = $dss[0];
-		$this->assertInstanceOf('Dataset', $ds);
-		/** @var Dataset $ds */
+		$this->assertInstanceOf('Core\\Datamodel\\Dataset', $ds);
+		/** @var Core\Datamodel\Dataset $ds */
 
 		$this->assertEquals('delete', $ds->_mode);
 		$this->assertEquals('geo_country', $ds->_table);
