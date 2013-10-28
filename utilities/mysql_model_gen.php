@@ -55,8 +55,8 @@ foreach($backend->_getTables() as $name){
 
 	$classname .= 'Model';
 	
-	$schema = $backend->_describeTableSchema($name);
-	$index = $backend->_describeTableIndexes($name);
+	$schema = $backend->describeTable($name);
+	$index = $schema;
 	// All I care about is the defition part of it.
 	$def = $schema['def'];
 	
@@ -118,7 +118,7 @@ foreach($backend->_getTables() as $name){
 		}
 		
 		// Check if this is a key.
-		if(isset($index['PRIMARY']) && in_array($c['name'], $index['PRIMARY']['columns'])){
+		if(isset($index['primary']) && in_array($c['name'], $index['primary'])){
 			$c['required'] = 'true';
 		}
 		
@@ -140,15 +140,15 @@ foreach($backend->_getTables() as $name){
 	
 	
 	$indexes = array();
-	foreach($index as $i){
-		if($i['name'] == 'PRIMARY'){
+	foreach($index as $key => $i){
+		if($key == 'primary'){
 			$iname = 'primary';
 		}
 		else{
 			$iname = (($i['nonunique'])? '' : 'unique:') . $i['name'];
 		}
 		
-		$indexes[$iname] = $i['columns'];
+		$indexes[$iname] = $i;
 	}
 	
 	// Gen the actual code!
