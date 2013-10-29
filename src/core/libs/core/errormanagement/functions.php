@@ -78,10 +78,22 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 	}
 
 	try{
-		Logger\append_to($type, $details . $errstr, $code);
+		$log = \SystemLogModel::Factory();
+		$log->setFromArray([
+			'type'    => $type,
+			'code'    => $code,
+			'message' => $details . $errstr
+		]);
+		$log->save();
 	}
 	catch(\Exception $e){
-		// meh
+		// meh, try a traditional log.
+		try{
+			Logger\append_to($type, $details . $errstr, $code);
+		}
+		catch(\Exception $e){
+			// Really meh now!
+		}
 	}
 
 	// Display all errors when in development mode.
