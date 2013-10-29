@@ -1,3 +1,5 @@
+			//'address' => $this->address1 . ' ' . $this->address2 . ($this->city ? ',' . $this->city : '') . ($this->state ? ',' . $this->state : ''),
+			'address' => null, // Set below!
 <?php
 /**
  * File for class GeocodeRequest definition in the Alliance One project
@@ -59,6 +61,7 @@ class GeocodeRequest {
 	public $address2;
 	public $city;
 	public $state;
+	public $postal;
 	public $country = 'US';
 
 	public $lat;
@@ -78,7 +81,7 @@ class GeocodeRequest {
 	private function _lookup() {
 
 		// At least address or city are required.
-		if(!($this->address1 || $this->city)){
+		if(!($this->address1 || $this->city || $this->postal)){
 			throw new \Exception('At least the address or city are required for geocode lookups.');
 		}
 
@@ -92,7 +95,16 @@ class GeocodeRequest {
 			'sensor' => ($this->sensor ? 'true' : 'false'),
 			'client' => $clientname,
 		];
-		$address = trim($this->address1 . ' ' . $this->address2 . ' ' . $this->city . ' ' . $this->state);
+
+		if($this->address1 && $this->city){
+			$params['address'] = $this->address1 . ($this->city ? ','.$this->city : '') . ($this->state ? ',' . $this->state : '');
+			$address = trim($this->address1 . ' ' . $this->address2 . ' ' . $this->city . ' ' . $this->state);
+		}
+		elseif($this->postal){
+			$params['address'] = $this->postal;
+			$address = trim($this->postal);
+		}
+
 		if($this->country) $params['region'] = $this->country;
 
 		// Make a request to google and update the record.
