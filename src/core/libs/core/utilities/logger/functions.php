@@ -57,12 +57,19 @@ function write_debug($message, $level = DEBUG_LEVEL_FULL){
 /**
  * Append a message onto the end of a given log file.
  *
- * @param string $filebase The log type base to write to, (used to create ${filebase}.log).
- * @param string $message  The message to append.
+ * @param string      $filebase The log type base to write to, (used to create ${filebase}.log).
+ * @param string      $message  The message to append.
+ * @param null|string $code     Code or error type to prefix the log with.
  *
  * @throws \Exception
  */
 function append_to($filebase, $message, $code = null){
+
+	// Make sure it contains only valid characters!
+	$filebase = preg_replace('/[^a-z0-9]/g', '', str_replace(' ', '-', strtolower($filebase)));
+
+	if(!$filebase) $filebase = 'unknown';
+
 	$logpath = ROOT_PDIR . 'logs/';
 	$outfile = $logpath . $filebase . '.log';
 
@@ -112,7 +119,7 @@ EOD;
 
 	$logfh = fopen($outfile, 'a');
 	if(!$logfh){
-		throw new \Exception('Unable to open ' . $logpath . 'sfsync.log for appending!');
+		throw new \Exception('Unable to open ' . $outfile . ' for appending!');
 	}
 	foreach(explode("\n", $message) as $line){
 		fwrite($logfh, $header . $line . "\n");
