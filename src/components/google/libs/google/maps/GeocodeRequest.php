@@ -1,5 +1,3 @@
-			//'address' => $this->address1 . ' ' . $this->address2 . ($this->city ? ',' . $this->city : '') . ($this->state ? ',' . $this->state : ''),
-			'address' => null, // Set below!
 <?php
 /**
  * File for class GeocodeRequest definition in the Alliance One project
@@ -90,8 +88,7 @@ class GeocodeRequest {
 		$clientname = \ConfigHandler::Get('/googlemaps/enterprise/clientname');
 
 		$params = [
-			'address' => $this->address1 . ' ' . $this->address2 . ($this->city ? ',' . $this->city : '') . ($this->state ? ',' . $this->state : ''),
-			//'address' => $this->address1 . ($this->city ? ','.$this->city : '') . ($this->state ? ',' . $this->state : ''),
+			'address' => null, // Set below!
 			'sensor' => ($this->sensor ? 'true' : 'false'),
 			'client' => $clientname,
 		];
