@@ -369,6 +369,14 @@ class SQL_Parser_Dataset extends SQL_Parser {
 		$this->getTok();
 		if ($this->token == 'from') {
 			// FROM is not required
+			// This is used from the DELETE FROM tablename
+			$this->getTok();
+		}
+
+		if($this->token == 'table'){
+			// Table is allowed in the
+			// TRUNCATE TABLE tablename
+			// syntax.
 			$this->getTok();
 		}
 
