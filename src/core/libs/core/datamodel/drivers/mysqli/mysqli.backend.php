@@ -109,6 +109,10 @@ class mysqli_backend implements BackendInterface {
 			default:
 				throw new \DMI_Exception($this->_conn->error, $this->_conn->errno);
 		}
+
+		// Set the encoding to UTF-8
+		// This will prevent the mysql server from translating characters to their LATIN versions during the commit.
+		$this->_conn->query("SET NAMES utf8");
 	}
 
 	/**
