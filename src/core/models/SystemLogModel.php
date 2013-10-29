@@ -171,32 +171,78 @@ class SystemLogModel extends Model {
 	}
 
 
+	/**
+	 * Shortcut method available to log a security-based event on the system
+	 *
+	 * @param string   $code          Any code that may be associated to this event.
+	 * @param string   $message       The subject of the security event.
+	 * @param string   $details       Any additional details of the security event beyond the subject line.
+	 * @param null|int $affected_user If this security event affected a given user, the affected user's id.
+	 */
 	public static function LogSecurityEvent($code, $message = '', $details = '', $affected_user = null) {
-		$log = self::Factory();
-		$log->set('type', 'security');
-		$log->set('code', $code);
-		$log->set('message', $message);
-		$log->set('details', $details);
-		$log->set('affected_user_id', $affected_user);
-		$log->save();
+		try{
+			$log = self::Factory();
+			$log->set('type', 'security');
+			$log->set('code', $code);
+			$log->set('message', $message);
+			$log->set('details', $details);
+			$log->set('affected_user_id', $affected_user);
+			$log->save();
+		}
+		catch(Exception $e){
+			// If the model isn't available for some reason, (Core isn't set up, etc),
+			// just fall back to the traditional error log mechanism.
+			error_log($code . ': ' . $message);
+			error_log('ADDITIONALLY, ' . $e->getMessage());
+		}
 	}
 
+	/**
+	 * Shortcut method available to log a error-based event on the system
+	 *
+	 * @param string $code    Any code that may be associated to this event.
+	 * @param string $message The subject of the error event.
+	 * @param string $details Any additional details of the error event beyond the subject line.
+	 */
 	public static function LogErrorEvent($code, $message, $details = '') {
-		$log = self::Factory();
-		$log->set('type', 'error');
-		$log->set('code', $code);
-		$log->set('message', $message);
-		$log->set('details', $details);
-		$log->save();
+		try{
+			$log = self::Factory();
+			$log->set('type', 'error');
+			$log->set('code', $code);
+			$log->set('message', $message);
+			$log->set('details', $details);
+			$log->save();
+		}
+		catch(Exception $e){
+			// If the model isn't available for some reason, (Core isn't set up, etc),
+			// just fall back to the traditional error log mechanism.
+			error_log($code . ': ' . $message);
+			error_log('ADDITIONALLY, ' . $e->getMessage());
+		}
 	}
 
+	/**
+	 * Shortcut method available to log a informative-based event on the system
+	 *
+	 * @param string $code    Any code that may be associated to this event.
+	 * @param string $message The subject of the info event.
+	 * @param string $details Any additional details of the info event beyond the subject line.
+	 */
 	public static function LogInfoEvent($code, $message, $details = '') {
-		$log = self::Factory();
-		$log->set('type', 'info');
-		$log->set('code', $code);
-		$log->set('message', $message);
-		$log->set('details', $details);
-		$log->save();
+		try{
+			$log = self::Factory();
+			$log->set('type', 'info');
+			$log->set('code', $code);
+			$log->set('message', $message);
+			$log->set('details', $details);
+			$log->save();
+		}
+		catch(Exception $e){
+			// If the model isn't available for some reason, (Core isn't set up, etc),
+			// just fall back to the traditional error log mechanism.
+			error_log($code . ': ' . $message);
+			error_log('ADDITIONALLY, ' . $e->getMessage());
+		}
 	}
 
 	/**
