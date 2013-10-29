@@ -66,7 +66,7 @@ function write_debug($message, $level = DEBUG_LEVEL_FULL){
 function append_to($filebase, $message, $code = null){
 
 	// Make sure it contains only valid characters!
-	$filebase = preg_replace('/[^a-z0-9]/g', '', str_replace(' ', '-', strtolower($filebase)));
+	$filebase = preg_replace('/[^a-z0-9\-]/', '', str_replace(' ', '-', strtolower($filebase)));
 
 	if(!$filebase) $filebase = 'unknown';
 
