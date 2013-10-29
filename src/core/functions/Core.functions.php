@@ -109,6 +109,10 @@ function user(){
 		return null;
 	}
 
+	if(!class_exists('\\User')){
+		return null;
+	}
+
 	// Is the session data present?
 	if(!isset($_SESSION['user'])){
 		$_SESSION['user'] = \User::Factory();
