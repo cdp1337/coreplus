@@ -158,7 +158,16 @@ class SystemLogModel extends Model {
 		// @todo email message function
 
 		// log message (to file).
-		Core\Utilities\Logger\append_to($this->get('type'), $this->get('message'), $this->get('code'));
+		if(
+			($this->get('type') == 'error' || $this->get('type') == 'security') &&
+			$this->get('details')
+		){
+			Core\Utilities\Logger\append_to($this->get('type'), $this->get('message') . "\n" . $this->get('details'), $this->get('code'));
+		}
+		else{
+			Core\Utilities\Logger\append_to($this->get('type'), $this->get('message'), $this->get('code'));
+		}
+
 	}
 
 
