@@ -1,17 +1,28 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="Geographic Codes" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" name="Geographic Codes" execmode="both">
 	<description>
 		A collection of geocode utilities for countries and states.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="22775ed57aeb045c339c5a709f37acd1"/>
+		<file filename="CHANGELOG" md5="50b45cf2aaa5bd8db937aca08529382b"/>
 		<file filename="geocode/Country.php" md5="d802775bb4576622981339d7238d45e3">
 			<class name="geocode\Country"/>
 		</file>
 		<file filename="geocode/Updater.php" md5="ce6077f3b6262894b5c0930d0ab14235">
 			<class name="geocode\Updater"/>
 		</file>
+		<file filename="installs/countries.sql" md5="b58f465fce692e3ba7ddbce9b6cec2f4"/>
+		<file filename="models/GeoAddressModel.php" md5="bb936777bb41ed915edce9bd46a8ab13">
+			<class name="GeoAddressModel"/>
+		</file>
+		<file filename="models/GeoCountryModel.php" md5="30f22a9c6421e7445997133ea5ad25a8">
+			<class name="GeoCountryModel"/>
+		</file>
+		<file filename="models/GeoProvinceModel.php" md5="a607c6849d3b10e6784f7864cad0cc50">
+			<class name="GeoProvinceModel"/>
+		</file>
+		<file filename="upgrades/102-to-110-countries.sql" md5="b58f465fce692e3ba7ddbce9b6cec2f4"/>
 	</files>
 	<assets>
 		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/aa.png" md5="b51cd1f73e48dff9282fd18da28ebb9a"/>
@@ -267,9 +278,17 @@
 		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/zm.png" md5="41e061f4685c58db70aa3a3438e1eb9c"/>
 		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/zw.png" md5="8b41c57da86b79d51de3343cca04be9b"/>
 	</assets>
+	<install>
+		<sql file="datafiles/countries.sql"/>
+		<sql file="datafiles/provinces.sql"/>
+	</install>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
+		<upgrade from="1.0.2" to="1.1.0">
+			<sql file="datafiles/countries.sql"/>
+			<sql file="datafiles/provinces.sql"/>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
