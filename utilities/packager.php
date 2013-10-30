@@ -31,6 +31,7 @@ if(!isset($_SERVER['SHELL'])){
 // This is required to establish the root path of the system, (since it's always one directory up from "here"
 define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
 define('ROOT_WDIR', '/');
+define('BASE_DIR', realpath(dirname(__DIR__)) . '/');
 
 // Include the core bootstrap, this will get the system functional.
 require_once(ROOT_PDIR . 'core/bootstrap.php');
@@ -1724,7 +1725,7 @@ CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 
 // Before ANYTHING happens.... make sure that the system is compiled!
 echo '# Compiling system...' . "\n";
-exec(ROOT_PDIR . '../utilities/compiler.php');
+exec('"' . BASE_DIR . 'utilities/compiler.php"');
 echo "OK!\n";
 
 
