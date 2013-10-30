@@ -89,6 +89,13 @@ class Model implements ArrayAccess {
 	 */
 	const ATT_TYPE_CREATED = '__created';
 	/**
+	 * Date this record was deleted, (if deleted)
+	 * Will be updated automatically on delete() instead of actually deleting the record.
+	 *
+	 * Calling delete() a second time on a "deleted" record will actually delete it from the system.
+	 */
+	const ATT_TYPE_DELETED = '__deleted';
+	/**
 	 * Site ID for the current site.
 	 * Has no function outside of enterprise/multisite mode.
 	 */
@@ -849,6 +856,33 @@ class Model implements ArrayAccess {
 
 	public function delete() {
 
+		$s = self::GetSchema();
+
+		foreach ($this->_data as $k => $v) {
+			if(!isset($s[$k])){
+				// This key was not in the schema.  Probable reasons for this would be a column that was
+				// removed from the schema in an upgrade, but was never removed from the database.
+				// This is typical because the installer tries to be non-destructive when it comes to data.
+				continue;
+			}
+			$keyschema = $s[$k];
+			// Certain key types have certain functions.
+			if($keyschema['type'] == Model::ATT_TYPE_DELETED) {
+				// Is this record already set as deleted?
+				// If it is, then proceed with the delete as usual.
+				// Otherwise, update the record instead of deleting it.
+				if(!$v){
+					$nv = Time::GetCurrentGMT();
+					$this->set($k, $nv);
+					return $this->save();
+				}
+				else{
+					// I can safely break out of the foreach statement at this stage.
+					break;
+				}
+			}
+		}
+
 		// Blank out any dependent records based on links.
 		// Since relationships may have various levels, I need to execute delete on each of them instead of just
 		// issuing a broad delete request.
@@ -1012,6 +1046,7 @@ class Model implements ArrayAccess {
 					case Model::ATT_TYPE_FLOAT:
 					case Model::ATT_TYPE_INT:
 					case Model::ATT_TYPE_UPDATED:
+					case Model::ATT_TYPE_DELETED:
 						$default = '0';
 						break;
 					case Model::ATT_TYPE_DATA:
@@ -1610,6 +1645,43 @@ class Model implements ArrayAccess {
 	}
 
 	/**
+	 * Get if this model is marked as deleted and/or deleted already.
+	 *
+	 * @return bool
+	 */
+	public function isdeleted(){
+		$s = self::GetSchema();
+
+		foreach ($this->_data as $k => $v) {
+			if(!isset($s[$k])){
+				// This key was not in the schema.  Probable reasons for this would be a column that was
+				// removed from the schema in an upgrade, but was never removed from the database.
+				// This is typical because the installer tries to be non-destructive when it comes to data.
+				continue;
+			}
+			$keyschema = $s[$k];
+			// Certain key types have certain functions.
+			if($keyschema['type'] == Model::ATT_TYPE_DELETED) {
+				if($v){
+					// Is this record already set as deleted?
+					// If value is > 0|NULL, it's marked as deleted!
+					return true;
+				}
+			}
+		}
+
+		if( sizeof($this->_datainit) > 0 && !$this->_exists ){
+			// The data at time of initialization existed, but
+			// the exists flag is set to false, which gets set on initialization.
+			// This means that delete() was called at some point.
+			return true;
+		}
+
+		// Still no?  OK!
+		return false;
+	}
+
+	/**
 	 * Get if this model is a new entity that doesn't exist in the datastore.
 	 *
 	 * @return bool
@@ -1637,6 +1709,7 @@ class Model implements ArrayAccess {
 
 			// Certain key types are to be ignored in the "changed" logic check.  Namely automatic timestamps.
 			switch ($keyschema['type']) {
+				case Model::ATT_TYPE_DELETED:
 				case Model::ATT_TYPE_CREATED:
 				case Model::ATT_TYPE_UPDATED:
 					continue 2;
@@ -2176,6 +2249,10 @@ class ModelSchema {
 				$column->maxlength = 15;
 			}
 
+			if($column->type == Model::ATT_TYPE_DELETED && !$column->maxlength){
+				$column->maxlength = 15;
+			}
+
 			if($column->type == Model::ATT_TYPE_UPDATED && !$column->maxlength){
 				$column->maxlength = 15;
 			}
@@ -2193,6 +2270,7 @@ class ModelSchema {
 					case Model::ATT_TYPE_BOOL:
 					case Model::ATT_TYPE_CREATED:
 					case Model::ATT_TYPE_UPDATED:
+					case Model::ATT_TYPE_DELETED:
 					case Model::ATT_TYPE_FLOAT:
 						$column->default = 0;
 						break;
@@ -2451,6 +2529,7 @@ class ModelSchemaColumn {
 				Model::ATT_TYPE_UUID,
 				Model::ATT_TYPE_CREATED,
 				Model::ATT_TYPE_UPDATED,
+				Model::ATT_TYPE_DELETED,
 				Model::ATT_TYPE_SITE,
 			)
 		);

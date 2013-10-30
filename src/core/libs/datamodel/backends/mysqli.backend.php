@@ -1142,6 +1142,10 @@ class MySQLi_Schema_Column {
 				$column->type = Model::ATT_TYPE_CREATED;
 				$column->maxlength = (int)substr($this->type, 4, -1);
 			}
+			elseif(strpos($this->type, 'int(') !== false && $column->field == 'deleted'){
+				$column->type = Model::ATT_TYPE_DELETED;
+				$column->maxlength = (int)substr($this->type, 4, -1);
+			}
 			elseif(
 				strpos($this->type, 'int(') !== false &&
 				isset($index['PRIMARY']) &&
@@ -1206,6 +1210,7 @@ class MySQLi_Schema_Column {
 				case Model::ATT_TYPE_BOOL:
 				case Model::ATT_TYPE_CREATED:
 				case Model::ATT_TYPE_UPDATED:
+				case Model::ATT_TYPE_DELETED:
 				case Model::ATT_TYPE_FLOAT:
 					$column->default = 0;
 					break;
@@ -1289,6 +1294,7 @@ class MySQLi_Schema_Column {
 			case Model::ATT_TYPE_INT:
 			case Model::ATT_TYPE_CREATED:
 			case Model::ATT_TYPE_UPDATED:
+			case Model::ATT_TYPE_DELETED:
 			case Model::ATT_TYPE_SITE:
 				$this->type = 'int(' . $column->maxlength . ')';
 				break;
@@ -1322,6 +1328,7 @@ class MySQLi_Schema_Column {
 				case Model::ATT_TYPE_BOOL:
 				case Model::ATT_TYPE_CREATED:
 				case Model::ATT_TYPE_UPDATED:
+				case Model::ATT_TYPE_DELETED:
 				case Model::ATT_TYPE_FLOAT:
 					$this->default = 0;
 					break;
