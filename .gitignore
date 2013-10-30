@@ -53,5 +53,5 @@
 /message.txt
 
 # Skip any compiled and dynamic resource.
-/src/core/bootstrap.compiled.php
 /src/logs
+/src/themes/custom
