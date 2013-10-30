@@ -154,7 +154,7 @@ type CDATA #IMPLIED
 >
 
 <!--- Put your DTDDoc comment here. -->
-<!ELEMENT install (dataset|phpfileinclude)*>
+<!ELEMENT install (dataset|phpfileinclude|php|sql)*>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT description (#PCDATA)>
@@ -205,10 +205,16 @@ type CDATA #IMPLIED
 <!ELEMENT upgrades (upgrade)*>
 
 <!--- Put your DTDDoc comment here. -->
-<!ELEMENT upgrade (dataset|phpfileinclude)*>
+<!ELEMENT upgrade (dataset|phpfileinclude|php|sql)*>
 <!ATTLIST upgrade
 	to CDATA #IMPLIED
 	from CDATA #IMPLIED
+>
+
+<!-- Execute a SQL file, (after transposed through the dataset abstraction system) -->
+<!ELEMENT sql EMPTY>
+<!ATTLIST sql
+	file CDATA #REQUIRED "The sql file to execute, relative to the component directory"
 >
 
 <!--
@@ -249,6 +255,12 @@ Execute a low-level dataset operation on the installation or upgrade.
 
 <!-- The phpfileinclude allows upgrades and installs to call a custom php file to be executed automatically. -->
 <!ELEMENT phpfileinclude (#PCDATA)>
+
+<!-- The PHP element is a more short-hand version of phpfileinclude. -->
+<!ELEMENT php EMPTY>
+<!ATTLIST php
+	file CDATA #REQUIRED "The filename, relative to the component directory"
+>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT authors (author)*>
