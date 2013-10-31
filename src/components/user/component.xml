@@ -2,7 +2,7 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.1" name="User" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.6.1"/>
+		<require name="core" type="component" version="2.6.2"/>
 		<!-- User authentication events trigger security logs. -->
 		<require name="security-suite" type="component" operation="ge" version="1.0.0"/>
 		<!-- The password reset is now powered by the nonce system. -->
@@ -212,6 +212,9 @@
 			</phpfileinclude>
 		</upgrade>
 		<upgrade from="2.6.0" to="2.6.1"/>
+		<upgrade from="2.6.1" to="2.6.2">
+			<php file="upgrades/261_to_262.php"/>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
