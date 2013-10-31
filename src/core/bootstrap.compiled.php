@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 31 Oct 2013 11:49:14 -0400
+ * @compiled Thu, 31 Oct 2013 12:21:41 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1104,6 +1104,369 @@ return clone $this->_iterator;
 }
 
 
+### REQUIRE_ONCE FROM core/libs/core/datamodel/DMI.class.php
+define('__DMI_PDIR', ROOT_PDIR . 'core/libs/core/datamodel/');
+### REQUIRE_ONCE FROM core/libs/core/datamodel/BackendInterface.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel {
+interface BackendInterface {
+public function execute(Dataset $dataset);
+public function tableExists($tablename);
+public function createTable($table, Schema $schema);
+public function modifyTable($table, Schema $schema);
+public function dropTable($table);
+public function describeTable($table);
+public function showTables();
+public function readCount();
+public function writeCount();
+public function queryLog();
+}
+} // ENDING NAMESPACE Core\Datamodel
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/Dataset.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel {
+class Dataset implements \Iterator{
+const MODE_ALTER = 'alter';
+const MODE_GET = 'get';
+const MODE_INSERT = 'insert';
+const MODE_UPDATE = 'update';
+const MODE_INSERTUPDATE = 'insertupdate';
+const MODE_DELETE = 'delete';
+const MODE_COUNT = 'count';
+public $_table;
+public $_selects = array();
+public $_where = null;
+public $_mode = Dataset::MODE_GET;
+public $_sets = array();
+public $_idcol = null;
+public $_idval = null;
+public $_limit = false;
+public $_order = false;
+public $_data = null;
+public $num_rows = null;
+public $_renames = array();
+public $uniquerecords = false;
+public function __construct(){
+}
+public function select(){
+$n = func_num_args();
+if($n == 0) throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::set()');
+if($n == 1 && func_get_arg(0) === null){
+$this->_selects = array();
+return $this;
+}
+$this->_mode = Dataset::MODE_GET;
+$args = func_get_args();
+foreach($args as $a){
+if(is_array($a)){
+$this->_selects = array_merge($this->_selects, $a);
+}
+elseif(strpos($a, ',') !== false){
+$parts = explode(',', $a);
+foreach($parts as $p){
+$this->_selects[] = trim($p);
+}
+}
+else{
+$this->_selects[] = $a;
+}
+}
+$this->_selects = array_unique($this->_selects);
+return $this;
+}
+public function insert(){
+call_user_func_array(array($this, '_set'), func_get_args());
+$this->_mode = Dataset::MODE_INSERT;
+return $this;
+}
+public function update(){
+call_user_func_array(array($this, '_set'), func_get_args());
+$this->_mode = Dataset::MODE_UPDATE;
+return $this;
+}
+public function set(){
+call_user_func_array(array($this, '_set'), func_get_args());
+$this->_mode = Dataset::MODE_INSERTUPDATE;
+return $this;
+}
+public function renameColumn(){
+call_user_func_array(array($this, '_renameColumn'), func_get_args());
+$this->_mode = Dataset::MODE_ALTER;
+return $this;
+}
+public function delete(){
+$this->_mode = Dataset::MODE_DELETE;
+return $this;
+}
+public function count(){
+$this->_mode = Dataset::MODE_COUNT;
+return $this;
+}
+private function _set(){
+$n = func_num_args();
+if($n == 0 || $n > 2){
+throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::set(), ' . $n . ' provided, exactly 1 or 2 expected');
+}
+elseif($n == 1){
+$a = func_get_arg(0);
+if(!is_array($a)) throw new \DMI_Exception ('Invalid parameter sent for Dataset::set()');
+foreach($a as $k => $v){
+$this->_sets[$k] = $v;
+}
+}
+else{
+$k = func_get_arg(0);
+$v = func_get_arg(1);
+$this->_sets[$k] = $v;
+}
+}
+private function _renameColumn(){
+$n = func_num_args();
+if($n != 2){
+throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::renameColumn(), ' . $n . ' provided, exactly 2 expected');
+}
+$oldname = func_get_arg(0);
+$newname = func_get_arg(1);
+$this->_renames[$oldname] = $newname;
+}
+public function setID($key, $val = null){
+$this->_idcol = $key;
+$this->_idval = $val;
+if($val) $this->where("$key = $val");
+}
+public function getID(){
+return $this->_idval;
+}
+public function table($tablename){
+if(DB_PREFIX && strpos($tablename, DB_PREFIX) === false) $tablename = DB_PREFIX . $tablename;
+$this->_table = $tablename;
+return $this;
+}
+public function unique($unique = true){
+$this->uniquerecords = $unique;
+return $this;
+}
+public function getWhereClause(){
+if($this->_where === null){
+$this->_where = new DatasetWhereClause('root');
+}
+return $this->_where;
+}
+public function where(){
+$args = func_get_args();
+if(sizeof($args) == 2 && is_string($args[0]) && is_string($args[1])){
+$this->getWhereClause()->addWhere($args[0] . ' = ' . $args[1]);
+}
+else{
+$this->getWhereClause()->addWhere($args);
+}
+return $this;
+}
+public function whereGroup($separator, $wheres){
+$args = func_get_args();
+$sep = array_shift($args);
+$clause = new DatasetWhereClause();
+$clause->setSeparator($sep);
+$clause->addWhere($args);
+$this->getWhereClause()->addWhere($clause);
+return $this;
+}
+public function limit(){
+$n = func_num_args();
+if($n == 1) $this->_limit = func_get_arg(0);
+elseif($n == 2) $this->_limit = func_get_arg(0) . ', ' . func_get_arg(1);
+else throw new \DMI_Exception('Invalid amount of parameters requested for Dataset::limit()');
+return $this;
+}
+public function order(){
+$n = func_num_args();
+if($n == 1) $this->_order = func_get_arg(0);
+elseif($n == 2) $this->_order = func_get_arg(0) . ', ' . func_get_arg(1);
+else throw new \DMI_Exception('Invalid amount of parameters requested for Dataset::order()');
+return $this;
+}
+public function execute($interface = null){
+if(!$interface) $interface = \DMI::GetSystemDMI();
+$interface->connection()->execute($this);
+if($this->_data !== null) reset($this->_data);
+return $this;
+}
+function rewind() {
+if($this->_data !== null) reset($this->_data);
+}
+function current() {
+if($this->_data === null) $this->execute();
+return $this->_data[key($this->_data)];
+}
+function key() {
+if($this->_data === null) $this->execute();
+return key($this->_data);
+}
+function next() {
+if($this->_data === null) $this->execute();
+next($this->_data);
+}
+function valid() {
+if($this->_data === null) $this->execute();
+return isset($this->_data[key($this->_data)]);
+}
+public static function Init(){
+return new self();
+}
+}
+} // ENDING NAMESPACE Core\Datamodel
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/DatasetWhere.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel {
+class DatasetWhere{
+public $field;
+public $op;
+public $value;
+public function __construct($arguments = null){
+if($arguments) $this->_parseWhere($arguments);
+}
+private function _parseWhere($statement){
+$valid = false;
+$operations = array('!=', '<=', '>=', '=', '>', '<', 'LIKE ', 'NOT LIKE', 'IN');
+$k = preg_replace('/^([^ !=<>]*).*/', '$1', $statement);
+$statement = trim(substr($statement, strlen($k)));
+foreach($operations as $c){
+if(($pos = strpos($statement, $c)) === 0){
+$op = $c;
+$statement = trim(substr($statement, strlen($op)));
+$valid = true;
+if($op == 'IN'){
+$statement = array_map('trim', explode(',', $statement));
+}
+break;
+}
+}
+if($valid){
+$this->field = $k;
+$this->op = $op;
+$this->value = $statement;
+}
+}
+}
+} // ENDING NAMESPACE Core\Datamodel
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/DatasetWhereClause.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel {
+class DatasetWhereClause{
+private $_separator = 'AND';
+private $_statements = array();
+private $_name;
+public function __construct($name = '_unnamed_'){
+$this->_name = $name;
+}
+public function addWhereParts($field, $operation, $value){
+$c = new DatasetWhere();
+$c->field = $field;
+$c->op = $operation;
+$c->value = $value;
+$this->_statements[] = $c;
+}
+public function addWhere($arguments){
+if($arguments instanceof DatasetWhereClause){
+$this->_statements[] = $arguments;
+return true;
+}
+if($arguments instanceof DatasetWhere){
+$this->_statements[] = $arguments;
+return true;
+}
+if(is_string($arguments)){
+$this->_statements[] = new DatasetWhere($arguments);
+return true;
+}
+foreach($arguments as $a){
+if(is_array($a)){
+foreach($a as $k => $v){
+if(is_numeric($k)){
+$this->_statements[] = new DatasetWhere($v);
+}
+else{
+$dsw = new DatasetWhere();
+$dsw->field = $k;
+$dsw->op    = '=';
+$dsw->value = $v;
+$this->_statements[] = $dsw;
+}
+}
+}
+elseif($a instanceof DatasetWhereClause){
+$this->_statements[] = $a;
+}
+elseif($a instanceof DatasetWhere){
+$this->_statements[] = $a;
+}
+else{
+$this->_statements[] = new DatasetWhere($a);
+}
+}
+}
+public function addWhereSub($sep, $arguments){
+$subgroup = new DatasetWhereClause();
+$subgroup->setSeparator($sep);
+$subgroup->addWhere($arguments);
+$this->addWhere($subgroup);
+}
+public function getStatements(){
+return $this->_statements;
+}
+public function setSeparator($sep){
+$sep = trim(strtoupper($sep));
+switch($sep){
+case 'AND':
+case 'OR':
+$this->_separator = $sep;
+break;
+default:
+throw new DMI_Exception('Invalid separator, [' . $sep . ']');
+}
+}
+public function getSeparator(){
+return $this->_separator;
+}
+public function getAsArray(){
+$children = array();
+foreach($this->_statements as $s){
+if($s instanceof DatasetWhereClause){
+$children[] = $s->getAsArray();
+}
+elseif($s instanceof DatasetWhere){
+if($s->field === null) continue;
+$children[] = $s->field . ' ' . $s->op . ' ' . $s->value;
+}
+}
+return array('sep' => $this->_separator, 'children' => $children);
+}
+public function findByField($fieldname){
+$matches = array();
+foreach($this->_statements as $s){
+if($s instanceof DatasetWhereClause){
+$matches = array_merge($matches, $s->findByField($fieldname));
+}
+elseif($s instanceof DatasetWhere){
+if($s->field == $fieldname) $matches[] = $s;
+}
+}
+return $matches;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel
+
+namespace  {
+
 ### REQUIRE_ONCE FROM core/libs/core/datamodel/Schema.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Datamodel {
@@ -1238,6 +1601,71 @@ return null;
 } // ENDING NAMESPACE Core\Datamodel
 
 namespace  {
+
+class DMI {
+protected $_backend = null;
+static protected $_Interface = null;
+public function __construct($backend = null, $host = null, $user = null, $pass = null, $database = null){
+if($backend) $this->setBackend($backend);
+if($host) $this->connect($host, $user, $pass, $database);
+}
+public function setBackend($backend){
+if($this->_backend) throw new DMI_Exception('Backend already set');
+$backend     = strtolower($backend);
+$class       = 'Core\\Datamodel\\Drivers\\' . $backend . '\\' . $backend . '_backend';
+$backendfile = $backend . '.backend.php';
+$schemafile  = $backend . '.schema.php';
+if(!file_exists(__DMI_PDIR . 'drivers/' . $backend . '/' . $backendfile)){
+throw new DMI_Exception('Could not locate backend file for ' . $class);
+}
+require_once(__DMI_PDIR . 'drivers/' . $backend . '/' . $backendfile);
+if(file_exists(__DMI_PDIR . 'drivers/' . $backend . '/' . $schemafile)){
+require_once(__DMI_PDIR . 'drivers/' . $backend . '/' . $schemafile);
+}
+$this->_backend = new $class();
+}
+public function connect($host, $user, $pass, $database){
+$this->_backend->connect($host, $user, $pass, $database);
+return $this->_backend;
+}
+public function connection(){
+return $this->_backend;
+}
+public static function GetSystemDMI(){
+if(self::$_Interface !== null) return self::$_Interface;
+self::$_Interface = new DMI();
+if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
+$cs = ConfigHandler::LoadConfigFile("configuration");
+}
+elseif(isset($_SESSION['configs'])){
+$cs = $_SESSION['configs'];
+}
+else{
+throw new DMI_Exception('No database settings defined for the DMI');
+}
+self::$_Interface->setBackend($cs['database_type']);
+self::$_Interface->connect($cs['database_server'], $cs['database_user'], $cs['database_pass'], $cs['database_name']);
+return self::$_Interface;
+}
+}
+class DMI_Exception extends Exception{
+const ERRNO_NODATASET = '42S02';
+const ERRNO_UNKNOWN = '07000';
+public $ansicode;
+public function __construct($message, $code = null, $previous = null, $ansicode = null) {
+parent::__construct($message, $code, $previous);
+if($ansicode) $this->ansicode = $ansicode;
+elseif($code) $this->ansicode = $code;
+}
+}
+class DMI_Authentication_Exception extends DMI_Exception{
+}
+class DMI_ServerNotFound_Exception extends DMI_Exception{
+}
+class DMI_Query_Exception extends DMI_Exception{
+public $query = null;
+}
+
 
 ### REQUIRE_ONCE FROM core/libs/core/Model.class.php
 class Model implements ArrayAccess {
@@ -10956,569 +11384,6 @@ define('GPG_HOMEDIR', ($gnupgdir) ? $gnupgdir : ROOT_PDIR . 'gnupg');
 }
 unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl);
 $maindefines_time = microtime(true);
-### REQUIRE_ONCE FROM core/libs/core/datamodel/DMI.class.php
-define('__DMI_PDIR', ROOT_PDIR . 'core/libs/core/datamodel/');
-### REQUIRE_ONCE FROM core/libs/core/datamodel/BackendInterface.php
-} // ENDING GLOBAL NAMESPACE
-namespace Core\Datamodel {
-interface BackendInterface {
-public function execute(Dataset $dataset);
-public function tableExists($tablename);
-public function createTable($table, Schema $schema);
-public function modifyTable($table, Schema $schema);
-public function dropTable($table);
-public function describeTable($table);
-public function showTables();
-public function readCount();
-public function writeCount();
-public function queryLog();
-}
-} // ENDING NAMESPACE Core\Datamodel
-
-namespace  {
-
-### REQUIRE_ONCE FROM core/libs/core/datamodel/Dataset.php
-} // ENDING GLOBAL NAMESPACE
-namespace Core\Datamodel {
-class Dataset implements \Iterator{
-const MODE_ALTER = 'alter';
-const MODE_GET = 'get';
-const MODE_INSERT = 'insert';
-const MODE_UPDATE = 'update';
-const MODE_INSERTUPDATE = 'insertupdate';
-const MODE_DELETE = 'delete';
-const MODE_COUNT = 'count';
-public $_table;
-public $_selects = array();
-public $_where = null;
-public $_mode = Dataset::MODE_GET;
-public $_sets = array();
-public $_idcol = null;
-public $_idval = null;
-public $_limit = false;
-public $_order = false;
-public $_data = null;
-public $num_rows = null;
-public $_renames = array();
-public $uniquerecords = false;
-public function __construct(){
-}
-public function select(){
-$n = func_num_args();
-if($n == 0) throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::set()');
-if($n == 1 && func_get_arg(0) === null){
-$this->_selects = array();
-return $this;
-}
-$this->_mode = Dataset::MODE_GET;
-$args = func_get_args();
-foreach($args as $a){
-if(is_array($a)){
-$this->_selects = array_merge($this->_selects, $a);
-}
-elseif(strpos($a, ',') !== false){
-$parts = explode(',', $a);
-foreach($parts as $p){
-$this->_selects[] = trim($p);
-}
-}
-else{
-$this->_selects[] = $a;
-}
-}
-$this->_selects = array_unique($this->_selects);
-return $this;
-}
-public function insert(){
-call_user_func_array(array($this, '_set'), func_get_args());
-$this->_mode = Dataset::MODE_INSERT;
-return $this;
-}
-public function update(){
-call_user_func_array(array($this, '_set'), func_get_args());
-$this->_mode = Dataset::MODE_UPDATE;
-return $this;
-}
-public function set(){
-call_user_func_array(array($this, '_set'), func_get_args());
-$this->_mode = Dataset::MODE_INSERTUPDATE;
-return $this;
-}
-public function renameColumn(){
-call_user_func_array(array($this, '_renameColumn'), func_get_args());
-$this->_mode = Dataset::MODE_ALTER;
-return $this;
-}
-public function delete(){
-$this->_mode = Dataset::MODE_DELETE;
-return $this;
-}
-public function count(){
-$this->_mode = Dataset::MODE_COUNT;
-return $this;
-}
-private function _set(){
-$n = func_num_args();
-if($n == 0 || $n > 2){
-throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::set(), ' . $n . ' provided, exactly 1 or 2 expected');
-}
-elseif($n == 1){
-$a = func_get_arg(0);
-if(!is_array($a)) throw new \DMI_Exception ('Invalid parameter sent for Dataset::set()');
-foreach($a as $k => $v){
-$this->_sets[$k] = $v;
-}
-}
-else{
-$k = func_get_arg(0);
-$v = func_get_arg(1);
-$this->_sets[$k] = $v;
-}
-}
-private function _renameColumn(){
-$n = func_num_args();
-if($n != 2){
-throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::renameColumn(), ' . $n . ' provided, exactly 2 expected');
-}
-$oldname = func_get_arg(0);
-$newname = func_get_arg(1);
-$this->_renames[$oldname] = $newname;
-}
-public function setID($key, $val = null){
-$this->_idcol = $key;
-$this->_idval = $val;
-if($val) $this->where("$key = $val");
-}
-public function getID(){
-return $this->_idval;
-}
-public function table($tablename){
-if(DB_PREFIX && strpos($tablename, DB_PREFIX) === false) $tablename = DB_PREFIX . $tablename;
-$this->_table = $tablename;
-return $this;
-}
-public function unique($unique = true){
-$this->uniquerecords = $unique;
-return $this;
-}
-public function getWhereClause(){
-if($this->_where === null){
-$this->_where = new DatasetWhereClause('root');
-}
-return $this->_where;
-}
-public function where(){
-$args = func_get_args();
-if(sizeof($args) == 2 && is_string($args[0]) && is_string($args[1])){
-$this->getWhereClause()->addWhere($args[0] . ' = ' . $args[1]);
-}
-else{
-$this->getWhereClause()->addWhere($args);
-}
-return $this;
-}
-public function whereGroup($separator, $wheres){
-$args = func_get_args();
-$sep = array_shift($args);
-$clause = new DatasetWhereClause();
-$clause->setSeparator($sep);
-$clause->addWhere($args);
-$this->getWhereClause()->addWhere($clause);
-return $this;
-}
-public function limit(){
-$n = func_num_args();
-if($n == 1) $this->_limit = func_get_arg(0);
-elseif($n == 2) $this->_limit = func_get_arg(0) . ', ' . func_get_arg(1);
-else throw new \DMI_Exception('Invalid amount of parameters requested for Dataset::limit()');
-return $this;
-}
-public function order(){
-$n = func_num_args();
-if($n == 1) $this->_order = func_get_arg(0);
-elseif($n == 2) $this->_order = func_get_arg(0) . ', ' . func_get_arg(1);
-else throw new \DMI_Exception('Invalid amount of parameters requested for Dataset::order()');
-return $this;
-}
-public function execute($interface = null){
-if(!$interface) $interface = \DMI::GetSystemDMI();
-$interface->connection()->execute($this);
-if($this->_data !== null) reset($this->_data);
-return $this;
-}
-function rewind() {
-if($this->_data !== null) reset($this->_data);
-}
-function current() {
-if($this->_data === null) $this->execute();
-return $this->_data[key($this->_data)];
-}
-function key() {
-if($this->_data === null) $this->execute();
-return key($this->_data);
-}
-function next() {
-if($this->_data === null) $this->execute();
-next($this->_data);
-}
-function valid() {
-if($this->_data === null) $this->execute();
-return isset($this->_data[key($this->_data)]);
-}
-public static function Init(){
-return new self();
-}
-}
-} // ENDING NAMESPACE Core\Datamodel
-
-namespace  {
-
-### REQUIRE_ONCE FROM core/libs/core/datamodel/DatasetWhere.php
-} // ENDING GLOBAL NAMESPACE
-namespace Core\Datamodel {
-class DatasetWhere{
-public $field;
-public $op;
-public $value;
-public function __construct($arguments = null){
-if($arguments) $this->_parseWhere($arguments);
-}
-private function _parseWhere($statement){
-$valid = false;
-$operations = array('!=', '<=', '>=', '=', '>', '<', 'LIKE ', 'NOT LIKE', 'IN');
-$k = preg_replace('/^([^ !=<>]*).*/', '$1', $statement);
-$statement = trim(substr($statement, strlen($k)));
-foreach($operations as $c){
-if(($pos = strpos($statement, $c)) === 0){
-$op = $c;
-$statement = trim(substr($statement, strlen($op)));
-$valid = true;
-if($op == 'IN'){
-$statement = array_map('trim', explode(',', $statement));
-}
-break;
-}
-}
-if($valid){
-$this->field = $k;
-$this->op = $op;
-$this->value = $statement;
-}
-}
-}
-} // ENDING NAMESPACE Core\Datamodel
-
-namespace  {
-
-### REQUIRE_ONCE FROM core/libs/core/datamodel/DatasetWhereClause.php
-} // ENDING GLOBAL NAMESPACE
-namespace Core\Datamodel {
-class DatasetWhereClause{
-private $_separator = 'AND';
-private $_statements = array();
-private $_name;
-public function __construct($name = '_unnamed_'){
-$this->_name = $name;
-}
-public function addWhereParts($field, $operation, $value){
-$c = new DatasetWhere();
-$c->field = $field;
-$c->op = $operation;
-$c->value = $value;
-$this->_statements[] = $c;
-}
-public function addWhere($arguments){
-if($arguments instanceof DatasetWhereClause){
-$this->_statements[] = $arguments;
-return true;
-}
-if($arguments instanceof DatasetWhere){
-$this->_statements[] = $arguments;
-return true;
-}
-if(is_string($arguments)){
-$this->_statements[] = new DatasetWhere($arguments);
-return true;
-}
-foreach($arguments as $a){
-if(is_array($a)){
-foreach($a as $k => $v){
-if(is_numeric($k)){
-$this->_statements[] = new DatasetWhere($v);
-}
-else{
-$dsw = new DatasetWhere();
-$dsw->field = $k;
-$dsw->op    = '=';
-$dsw->value = $v;
-$this->_statements[] = $dsw;
-}
-}
-}
-elseif($a instanceof DatasetWhereClause){
-$this->_statements[] = $a;
-}
-elseif($a instanceof DatasetWhere){
-$this->_statements[] = $a;
-}
-else{
-$this->_statements[] = new DatasetWhere($a);
-}
-}
-}
-public function addWhereSub($sep, $arguments){
-$subgroup = new DatasetWhereClause();
-$subgroup->setSeparator($sep);
-$subgroup->addWhere($arguments);
-$this->addWhere($subgroup);
-}
-public function getStatements(){
-return $this->_statements;
-}
-public function setSeparator($sep){
-$sep = trim(strtoupper($sep));
-switch($sep){
-case 'AND':
-case 'OR':
-$this->_separator = $sep;
-break;
-default:
-throw new DMI_Exception('Invalid separator, [' . $sep . ']');
-}
-}
-public function getSeparator(){
-return $this->_separator;
-}
-public function getAsArray(){
-$children = array();
-foreach($this->_statements as $s){
-if($s instanceof DatasetWhereClause){
-$children[] = $s->getAsArray();
-}
-elseif($s instanceof DatasetWhere){
-if($s->field === null) continue;
-$children[] = $s->field . ' ' . $s->op . ' ' . $s->value;
-}
-}
-return array('sep' => $this->_separator, 'children' => $children);
-}
-public function findByField($fieldname){
-$matches = array();
-foreach($this->_statements as $s){
-if($s instanceof DatasetWhereClause){
-$matches = array_merge($matches, $s->findByField($fieldname));
-}
-elseif($s instanceof DatasetWhere){
-if($s->field == $fieldname) $matches[] = $s;
-}
-}
-return $matches;
-}
-}
-} // ENDING NAMESPACE Core\Datamodel
-
-namespace  {
-
-### REQUIRE_ONCE FROM core/libs/core/datamodel/Schema.php
-} // ENDING GLOBAL NAMESPACE
-namespace Core\Datamodel {
-class Schema {
-public $definitions = array();
-public $order = array();
-public $indexes = array();
-public function getColumn($column){
-if(is_int($column)){
-if(isset($this->order[$column])) $column = $this->order[$column];
-else return null;
-}
-if(isset($this->definitions[$column])) return $this->definitions[$column];
-else return null;
-}
-public function getDiff(Schema $schema){
-$diffs = array();
-foreach($schema->definitions as $name => $dat){
-$thiscol = $this->getColumn($name);
-if(!$thiscol){
-$diffs[] = array(
-'title' => 'A does not have column ' . $name,
-'type' => 'column',
-);
-continue;
-}
-if(($colchange = $thiscol->getDiff($dat)) !== null){
-$diffs[] = array(
-'title' => 'Column ' . $name . ' does not match up: ' . $colchange,
-'type' => 'column',
-);
-}
-}
-$a_order = $this->order;
-foreach($this->definitions as $name => $dat){
-if(!$schema->getColumn($name)) unset($a_order[array_search($name, $a_order)]);
-}
-if(implode(',', $a_order) != implode(',', $schema->order)){
-$diffs[] = array(
-'title' => 'Order of columns is different',
-'type' => 'order',
-);
-}
-$thisidx = '';
-foreach($this->indexes as $name => $cols) $thisidx .= ';' . $name . '-' . implode(',', $cols);
-$thatidx = '';
-foreach($this->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
-if($thisidx != $thatidx){
-$diffs[] = array(
-'title' => 'Indexes do not match up',
-'type' => 'index'
-);
-}
-return $diffs;
-}
-public function isDataIdentical(Schema $schema){
-$diff = $this->getDiff($schema);
-return !sizeof($diff);
-}
-}
-class SchemaColumn {
-public $field;
-public $type = null;
-public $required = false;
-public $maxlength = false;
-public $options = null;
-public $default = false;
-public $null = false;
-public $comment = '';
-public $precision = null;
-public $encrypted = false;
-public $autoinc = false;
-public $encoding = null;
-public function isIdenticalTo(SchemaColumn $col){
-$diff = $this->getDiff($col);
-return ($diff === null);
-}
-public function getDiff(SchemaColumn $col){
-$thisarray = (array)$this;
-$colarray  = (array)$col;
-if($thisarray === $colarray) return null;
-$differences = [];
-if($this->field != $col->field) $differences[] = 'field name';
-if($this->maxlength != $col->maxlength) $differences[] = 'max length';
-if($this->null != $col->null) $differences[] = 'is null';
-if($this->comment != $col->comment) $differences[] = 'comment';
-if($this->precision != $col->precision) $differences[] = 'precision';
-if($this->autoinc !== $col->autoinc) $differences[] = 'auto increment';
-if($this->encoding != $col->encoding) $differences[] = 'encoding';
-if($this->default === false){
-}
-elseif($this->default === $col->default){
-}
-elseif(\Core\compare_values($this->default, $col->default)){
-}
-elseif($col->default === false && $this->default !== false){
-$differences[] = 'default value (1)';
-}
-else{
-$differences[] = 'default value (2)';
-}
-if(is_array($this->options) != is_array($col->options)) $differences[] = 'options set/unset';
-if(is_array($this->options) && is_array($col->options)){
-if(implode(',', $this->options) != implode(',', $col->options)) $differences[] = 'options changed';
-}
-$typematches = array(
-array(
-\Model::ATT_TYPE_INT,
-\Model::ATT_TYPE_UUID,
-\Model::ATT_TYPE_CREATED,
-\Model::ATT_TYPE_UPDATED,
-\Model::ATT_TYPE_DELETED,
-\Model::ATT_TYPE_SITE,
-)
-);
-$typesidentical = false;
-foreach($typematches as $types){
-if(in_array($this->type, $types) && in_array($col->type, $types)){
-$typesidentical = true;
-break;
-}
-}
-if(!$typesidentical && $this->type != $col->type) $differences[] = 'type';
-if(sizeof($differences)){
-return implode(', ', $differences);
-}
-else{
-return null;
-}
-}
-}
-} // ENDING NAMESPACE Core\Datamodel
-
-namespace  {
-
-class DMI {
-protected $_backend = null;
-static protected $_Interface = null;
-public function __construct($backend = null, $host = null, $user = null, $pass = null, $database = null){
-if($backend) $this->setBackend($backend);
-if($host) $this->connect($host, $user, $pass, $database);
-}
-public function setBackend($backend){
-if($this->_backend) throw new DMI_Exception('Backend already set');
-$backend     = strtolower($backend);
-$class       = 'Core\\Datamodel\\Drivers\\' . $backend . '\\' . $backend . '_backend';
-$backendfile = $backend . '.backend.php';
-$schemafile  = $backend . '.schema.php';
-if(!file_exists(__DMI_PDIR . 'drivers/' . $backend . '/' . $backendfile)){
-throw new DMI_Exception('Could not locate backend file for ' . $class);
-}
-require_once(__DMI_PDIR . 'drivers/' . $backend . '/' . $backendfile);
-if(file_exists(__DMI_PDIR . 'drivers/' . $backend . '/' . $schemafile)){
-require_once(__DMI_PDIR . 'drivers/' . $backend . '/' . $schemafile);
-}
-$this->_backend = new $class();
-}
-public function connect($host, $user, $pass, $database){
-$this->_backend->connect($host, $user, $pass, $database);
-return $this->_backend;
-}
-public function connection(){
-return $this->_backend;
-}
-public static function GetSystemDMI(){
-if(self::$_Interface !== null) return self::$_Interface;
-self::$_Interface = new DMI();
-if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
-$cs = ConfigHandler::LoadConfigFile("configuration");
-}
-elseif(isset($_SESSION['configs'])){
-$cs = $_SESSION['configs'];
-}
-else{
-throw new DMI_Exception('No database settings defined for the DMI');
-}
-self::$_Interface->setBackend($cs['database_type']);
-self::$_Interface->connect($cs['database_server'], $cs['database_user'], $cs['database_pass'], $cs['database_name']);
-return self::$_Interface;
-}
-}
-class DMI_Exception extends Exception{
-const ERRNO_NODATASET = '42S02';
-const ERRNO_UNKNOWN = '07000';
-public $ansicode;
-public function __construct($message, $code = null, $previous = null, $ansicode = null) {
-parent::__construct($message, $code, $previous);
-if($ansicode) $this->ansicode = $ansicode;
-elseif($code) $this->ansicode = $code;
-}
-}
-class DMI_Authentication_Exception extends DMI_Exception{
-}
-class DMI_ServerNotFound_Exception extends DMI_Exception{
-}
-class DMI_Query_Exception extends DMI_Exception{
-public $query = null;
-}
-
-
 try {
 $dbconn = DMI::GetSystemDMI();
 ConfigHandler::_DBReadyHook();
@@ -15042,6 +14907,88 @@ return array('controller' => $controller,
 'method'     => $method,
 'parameters' => $params,
 'baseurl'    => $baseurl);
+}
+}
+
+
+### REQUIRE_ONCE FROM core/libs/core/CoreDateTime.php
+class CoreDateTime {
+private $_dt;
+public function __construct($datetime = null){
+if($datetime){
+$this->setDate($datetime);
+}
+else{
+$this->_dt = new DateTime();
+}
+}
+public function setDate($datetime){
+if(is_numeric($datetime)){
+$this->_dt = new DateTime(null, self::_GetTimezone('GMT'));
+$this->_dt->setTimestamp($datetime);
+}
+else{
+$this->_dt = new DateTime($datetime, self::_GetTimezone(TIME_DEFAULT_TIMEZONE));
+}
+}
+public function getTimezoneName(){
+if(!$this->_dt) return null;
+return $this->_dt->getTimezone()->getName();
+}
+public function isGMT(){
+if(!$this->_dt) return false;
+return ($this->_dt->getTimezone()->getName() == 'UTC');
+}
+public function getFormatted($format, $desttimezone = Time::TIMEZONE_USER){
+if($format == 'RELATIVE'){
+return $this->getRelative();
+}
+else{
+$tzto = self::_GetTimezone($desttimezone);
+if($tzto->getName() == $this->_dt->getTimezone()->getName()){
+return $this->_dt->format($format);
+}
+$clone = clone $this->_dt;
+$clone->setTimezone($tzto);
+return $clone->format($format);
+}
+}
+public function getRelative($dateformat = 'M j, Y', $timeformat = 'g:ia', $accuracy = 3, $timezone = Time::TIMEZONE_DEFAULT) {
+$now = new DateTime();
+$now->setTimezone(self::_GetTimezone($timezone));
+$nowStamp = $now->format('Ymd');
+$cStamp   = $this->getFormatted('Ymd', $timezone);
+if ($nowStamp - $cStamp == 0) return 'Today at ' . $this->getFormatted($timeformat, $timezone);
+elseif ($nowStamp - $cStamp == 1) return 'Yesterday at ' . $this->getFormatted($timeformat, $timezone);
+elseif ($nowStamp - $cStamp == -1) return 'Tomorrow at ' . $this->getFormatted($timeformat, $timezone);
+if ($accuracy <= 2) return $this->getFormatted($dateformat, $timezone);
+if (abs($nowStamp - $cStamp) > 6) return $this->getFormatted($dateformat, $timezone);
+return $this->getFormatted('l \a\t ' . $timeformat, $timezone);
+}
+public function modify($modify){
+return ($this->_dt->modify($modify));
+}
+public static function Now($format = 'Y-m-d', $timezone = Time::TIMEZONE_DEFAULT){
+$d = new CoreDateTime();
+return $d->getFormatted($format, $timezone);
+}
+private static function _GetTimezone($timezone) {
+static $timezones = array();
+if ($timezone == Time::TIMEZONE_USER) {
+$timezone = \Core\user()->get('timezone');
+if($timezone === null) $timezone = date_default_timezone_get();
+if (is_numeric($timezone)) $timezone = Time::TIMEZONE_DEFAULT;
+}
+if($timezone === Time::TIMEZONE_GMT || $timezone === 'GMT'){
+$timezone = 'UTC';
+}
+elseif($timezone == Time::TIMEZONE_DEFAULT){
+$timezone = TIME_DEFAULT_TIMEZONE;
+}
+if (!isset($timezones[$timezone])) {
+$timezones[$timezone] = new DateTimeZone($timezone);
+}
+return $timezones[$timezone];
 }
 }
 

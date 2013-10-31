@@ -450,7 +450,7 @@ $maindefines_time = microtime(true);
 /**************************  START EXECUTION *****************************/
 
 // Datamodel, GOGO!
-require_once(ROOT_PDIR . 'core/libs/core/datamodel/DMI.class.php');
+//require_once(ROOT_PDIR . 'core/libs/core/datamodel/DMI.class.php');
 try {
 	$dbconn = DMI::GetSystemDMI();
 	ConfigHandler::_DBReadyHook();
