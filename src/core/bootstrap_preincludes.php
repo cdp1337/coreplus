@@ -36,7 +36,9 @@ require_once(ROOT_PDIR . 'core/libs/core/InstallArchiveAPI.class.php');
 
 
 // The PHP elements of the MVC framework.
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/Schema.php');
 require_once(ROOT_PDIR . 'core/libs/core/Model.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/ModelSchema.php');
 require_once(ROOT_PDIR . 'core/libs/core/Controller.class.php');
 
 // Time is a useful component.
