@@ -724,6 +724,8 @@ function process_component($component, $forcerelease = false){
 	$assetfiles = array();
 	$viewfiles  = array();
 	$otherfiles = array();
+	// Get the current branch the user is in.
+	$gitbranch = exec("git branch -q | egrep '^\*' | sed 's:^\* ::'");
 
 
 	echo "Scanning files for documentation and metacode...";
@@ -862,7 +864,7 @@ function process_component($component, $forcerelease = false){
 			'save'       => '[ FINISH      ] Save it!',
 			'exit'       => 'Abort and exit without saving changes',
 		);
-		$ans = CLI::PromptUser('What do you want to edit for component ' . $component . ' ' . $version, $opts);
+		$ans = CLI::PromptUser('What do you want to edit for component ' . $component . ' ' . $version . ' on branch ' . $gitbranch, $opts);
 
 		switch($ans){
 			case 'editvers':
@@ -876,7 +878,7 @@ function process_component($component, $forcerelease = false){
 				$previousversion = $version;
 				$version = _increment_version($version, $original);
 
-				$version = CLI::PromptUser('Please set the new version or', 'text', $version);
+				$version = CLI::PromptUser('Please set the new version on branch ' . $gitbranch . ' or', 'text', $version);
 				$comp->setVersion($version);
 
 				if($version != $previousversion){
