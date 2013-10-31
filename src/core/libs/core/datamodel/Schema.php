@@ -327,6 +327,7 @@ class SchemaColumn {
 				\Model::ATT_TYPE_UUID,
 				\Model::ATT_TYPE_CREATED,
 				\Model::ATT_TYPE_UPDATED,
+				\Model::ATT_TYPE_DELETED,
 				\Model::ATT_TYPE_SITE,
 			)
 		);

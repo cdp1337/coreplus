@@ -1021,6 +1021,7 @@ class mysqli_backend implements BackendInterface {
 			case \Model::ATT_TYPE_INT:
 			case \Model::ATT_TYPE_CREATED:
 			case \Model::ATT_TYPE_UPDATED:
+			case \Model::ATT_TYPE_DELETED:
 			case \Model::ATT_TYPE_SITE:
 				$type = 'int(' . $column->maxlength . ')';
 				break;
