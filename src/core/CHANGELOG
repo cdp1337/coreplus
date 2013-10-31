@@ -1,3 +1,45 @@
+Core Plus 2.7.0
+
+	* [Security] Tack on details for errors and security notices in log files.
+	* [Security] Fix Prevent the installer from being executed after the site has been installed.
+	* [Security] New Core model - SystemLogModel; provides an interface for standard logging for errors,
+	  security, and informative reports.
+	* [Bug] Fix on the filestore factory for when the root_url_nossl is "/" and the file passed in starts
+	  with a "/".
+	* [Bug] Fix the ROOT_PDIR directory resolution on symlinked directories.
+	* [Bug] Fix a bug where directory creation was not respecting DEFAULT_DIRECTORY_PERMS.
+	* [Bug] Fix the smarty insertable rendering.
+	* [Bug] Fix in Core just in case the user component is available but not loaded yet.
+	* [Bug] Minor fix for "TRUNCATE TABLE" statements in the datamodel sql parser.
+	* [Bug] Update the error management system to work better with PHPUnit tests.
+	* [Bug] Properly escape indexes on the DROP INDEX instruction for table modifying.
+	* [Bug] Page insertables need to be saved even with a blank value.
+	* [Feature] Add a new feature, a simple tic-tac-toe game on the fatal error page.
+	* [Feature] Add support for deleted models not really being deleted.
+	* [Feature] Force all mysql transactions to be seen as UTF8 strings.
+	* [Feature] Handle exceptions internally on the SystemLogModel::Log*Event methods.
+	* [Feature] Set the error handler to record errors to the database instead of only to log files.
+	* [Feature] Make the modify table a little more verbose on the installer and updater.
+	* [Feature] Reorganize the Dataset structure.
+	* [Feature] Numerous additional checks on the installer, such as mcrypt, curl, and the new log
+	  directory permissions.
+	* [Feature] Catch any unexpected exceptions on the installer and handle them pseudo-gracefully.
+	* [Feature] Log the installs and reinstalls requested by an administrator.
+	* [Feature] Install, update, reinstall, disable, and enable actions create log reports and a database
+	  entry detailing the changes performed.
+	* [Feature] Complement to the new SQL_Parser, a Dataset-oriented version.
+	* [Feature] New utility set, ErrorManagement; provides a central location for error management and
+	  reporting.
+	* [Feature] New logging function, Logger\append_to(); writes to files located in src/logs/.
+	* [Feature] New bundled library - Pear SQL_Parser.
+	* [Feature] Update smarty to the newest upstream version.
+	* Legacy support for pre 2.7.0 components on the new Dataset structure.
+	* Downstream changes from the Dataset migration.
+	* Increment the minimum PHP version to 5.4 in the bootstrap.
+	* Add some verbiage to the bootstrap when the site has not been installed yet.
+	* The link on the installer just needs to point to the root URL, "".
+	* Move the Dataset location into libs/core/dataset.
+
 Core Plus 2.6.2
 
 	* [Bug] Better event handler for the <a confirm="..."/> tags.
