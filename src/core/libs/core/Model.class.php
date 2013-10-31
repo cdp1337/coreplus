@@ -1709,7 +1709,6 @@ class Model implements ArrayAccess {
 
 			// Certain key types are to be ignored in the "changed" logic check.  Namely automatic timestamps.
 			switch ($keyschema['type']) {
-				case Model::ATT_TYPE_DELETED:
 				case Model::ATT_TYPE_CREATED:
 				case Model::ATT_TYPE_UPDATED:
 					continue 2;

@@ -1120,6 +1120,10 @@ class Form extends FormGroup {
 				// This element doesn't need to be in the form.
 				continue;
 			}
+			elseif ($v['type'] == Model::ATT_TYPE_DELETED) {
+				// This element doesn't need to be in the form.
+				continue;
+			}
 			elseif ($v['type'] == Model::ATT_TYPE_ENUM) {
 				$el   = FormElement::Factory('select');
 				$opts = $v['options'];
