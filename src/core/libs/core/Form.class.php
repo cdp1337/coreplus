@@ -1048,7 +1048,7 @@ class Form extends FormGroup {
 
 			//// IDs, FOREIGN IDs, UUIDs, ETC
 
-				if($formatts['type'] == 'disabled'){
+			if($formatts['type'] == 'disabled'){
 				// "disabled" form types are ignored completely.
 				continue;
 			}
@@ -1117,6 +1117,10 @@ class Form extends FormGroup {
 				continue;
 			}
 			elseif ($v['type'] == Model::ATT_TYPE_UPDATED) {
+				// This element doesn't need to be in the form.
+				continue;
+			}
+			elseif ($v['type'] == Model::ATT_TYPE_DELETED) {
 				// This element doesn't need to be in the form.
 				continue;
 			}
