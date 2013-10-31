@@ -213,7 +213,9 @@
 		</upgrade>
 		<upgrade from="2.6.0" to="2.6.1"/>
 		<upgrade from="2.6.1" to="2.6.2">
-			<php file="upgrades/261_to_262.php"/>
+			<phpfileinclude>
+				components/user/upgrades/261_to_262.php
+			</phpfileinclude>
 		</upgrade>
 	</upgrades>
 	<authors>
