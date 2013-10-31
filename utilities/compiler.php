@@ -30,6 +30,8 @@ if(!isset($_SERVER['SHELL'])){
 define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
 define('BASE_DIR', realpath(dirname(__DIR__)) . '/');
 
+define('MAX_RECURSE_LEVEL', 4);
+
 // Include the core bootstrap, this will get the system functional.
 require_once(ROOT_PDIR . 'core/bootstrap.php');
 
@@ -70,12 +72,20 @@ function compile_file($filename, $recursivelevel = 0, CompilerNamespace $parentn
 
 	global $included_files;
 
+	$haschildren = 0;
+
+	$filedisplay = '/' . substr($filename, strlen(ROOT_PDIR));
+
 	if(in_array($filename, $included_files)){
-		echo "Skipping " . $filename . ", already included.\n";
+		echo "Skipping " . $filedisplay . ", already included!\n";
 		return false;
 	}
 
-	echo "Scanning " . $filename . "...\n";
+	if($recursivelevel > 0){
+		echo "\n" . str_repeat(' |   ', $recursivelevel-1) .  ' |>- ';
+	}
+	//echo "[$recursivelevel] ";
+	echo "Scanning " . $filedisplay . "... ";
 	$fh = fopen($filename, 'r');
 	if(!$fh) die('Unable to open [' .$filename . '] for reading.');
 
@@ -147,7 +157,7 @@ function compile_file($filename, $recursivelevel = 0, CompilerNamespace $parentn
 
 		// If recursion is enabled, we will recurse into REQUIRE_ONCE statements.
 		// And if the namespace is global....
-		if(strpos($line, 'require_once') === 0 && $recursivelevel > 0){
+		if(strpos($line, 'require_once') === 0 && $recursivelevel <= MAX_RECURSE_LEVEL){
 			$subfile = preg_replace('#require_once[ ]*\([ ]*([^\)]*)[ ]*\)[ ]*;#', '$1', $line);
 			// The file probably has relative paths...
 			$replaces = array(
@@ -173,13 +183,14 @@ function compile_file($filename, $recursivelevel = 0, CompilerNamespace $parentn
 
 				eval("\$subfile = $subfile;");
 
-				$filecontents = compile_file($subfile, ($recursivelevel-1), $namespace);
+				$filecontents = compile_file($subfile, ($recursivelevel+1), $namespace);
 
 				// Trim the root directory and put a location-independent one instead.
 				$subfilerelative = substr($subfile, strlen(ROOT_PDIR));
 
 				// If this file could not be minified, false will be returned.
 				if($filecontents !== false){
+					$haschildren++;
 					$line = '### REQUIRE_ONCE FROM ' . $subfilerelative . "\n" . $filecontents . "\n";
 					// Do I need to re-open my namespace?
 					// This doesn't actually have any effect if it's already open :)
@@ -222,14 +233,27 @@ function compile_file($filename, $recursivelevel = 0, CompilerNamespace $parentn
 		$contents .= $namespace->getClosingTag();
 	}
 
-	echo "Finished scanning $filename, found $codenumber lines\n";
+	if($haschildren){
+		if($recursivelevel > 0){
+			echo "\n" . str_repeat(' |   ', $recursivelevel-1) .  ' |>- ';
+		}
+		else{
+			echo "\n";
+		}
+
+		echo $filedisplay . " - found $codenumber lines and $haschildren children files";
+	}
+	else{
+		echo "found $codenumber lines!";
+	}
+
 	return $contents;
 }
 
 $globalnamespace = new CompilerNamespace();
 // Start the namespace.
 $contents = $globalnamespace->getOpeningTag();
-$contents .= compile_file(ROOT_PDIR . 'core/bootstrap.php', 4, $globalnamespace);
+$contents .= compile_file(ROOT_PDIR . 'core/bootstrap.php', 0, $globalnamespace);
 
 // The compiled file will have a header stating some useful information.
 $date = Time::GetCurrent(Time::TIMEZONE_DEFAULT, Time::FORMAT_RFC2822);
