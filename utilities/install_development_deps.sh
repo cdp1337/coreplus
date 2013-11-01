@@ -73,7 +73,7 @@ for i in \
 	pear.php.net/Text_Highlighter-0.7.3 \
 	PHP_CodeSniffer-1.5.0RC1;
 do
-	pear info pear.phpunit.de/phploc 1>/dev/null
+	pear info $i 1>/dev/null
 	if [ "$?" == "0" ]; then
 		printline "$i already installed, skipping"
 	else
@@ -87,7 +87,7 @@ done
 # This will check and see if phpdoc is installed, but is installed as version 1.x
 pear info phpdoc/phpDocumentor 1>/dev/null
 if [ "$?" == "0" ]; then
-	if [ -z "$(pear info phpdoc/phpDocumentor | grep 'API Version' | grep '2.0')" ]; then
+	if [ -z "$(pear info phpdoc/phpDocumentor | grep 'API Version' | grep '2.1')" ]; then
 		pear uninstall phpdoc/phpDocumentor	
 	fi
 fi
