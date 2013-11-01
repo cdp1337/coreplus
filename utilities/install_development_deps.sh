@@ -59,6 +59,7 @@ pear channel-discover pear.pdepend.org
 pear channel-discover pear.phpmd.org
 pear channel-discover pear.phpqatools.org
 pear channel-discover pear.phpdoc.org
+pear channel-update pear.phpdoc.org
 
 printheader "Installing PEAR packages"
 

@@ -549,7 +549,7 @@ if (EXEC_MODE == 'WEB') {
 			die("Please <a href=\"{$newURL}\">install Core Plus.</a>");
 		}
 		else {
-            require(ROOT_PDIR . 'core/libs/fatal_errors/database.php');
+            require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 			die();
 		}
 	}
