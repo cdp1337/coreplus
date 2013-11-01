@@ -6,23 +6,151 @@
 	</description>
 	<files>
 		<file filename="CHANGELOG" md5="50b45cf2aaa5bd8db937aca08529382b"/>
+		<file filename="classes/AddressFormInput.php" md5="8c128808947e1efd3e90847883c376e7">
+			<class name="AddressFormInput"/>
+		</file>
+		<file filename="datafiles/countries.sql" md5="a48225d34a0eaeac9d43a391449af8f4"/>
+		<file filename="datafiles/provinces.sql" md5="ab8d439b6592edb3ee0fbf14f17ed099"/>
 		<file filename="geocode/Country.php" md5="d802775bb4576622981339d7238d45e3">
 			<class name="geocode\Country"/>
 		</file>
 		<file filename="geocode/Updater.php" md5="ce6077f3b6262894b5c0930d0ab14235">
 			<class name="geocode\Updater"/>
 		</file>
-		<file filename="installs/countries.sql" md5="b58f465fce692e3ba7ddbce9b6cec2f4"/>
+		<file filename="libs/GeoIp2/CHANGELOG.md" md5="15e498e9e60e23fc6cad82a7c8b6962a"/>
+		<file filename="libs/GeoIp2/LICENSE" md5="fbc093901857fcd118f065f900982c24"/>
+		<file filename="libs/GeoIp2/README.md" md5="6a41f6a99dac9c2e1e003e388f9b4871"/>
+		<file filename="libs/GeoIp2/src/Database/Reader.php" md5="1262453cd097b58d8838a276fee3e984">
+			<class name="GeoIp2\Database\Reader"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Exception/AddressNotFoundException.php" md5="f7b42f2f1952b78482e1cc6ae3e9c92e">
+			<class name="GeoIp2\Exception\AddressNotFoundException"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Exception/AuthenticationException.php" md5="a664ef571be82c82fa584545e66ff1fb">
+			<class name="GeoIp2\Exception\AuthenticationException"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Exception/GeoIp2Exception.php" md5="b14e09b853d258d93f7a0fd50e07b1d3">
+			<class name="GeoIp2\Exception\GeoIp2Exception"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Exception/HttpException.php" md5="c8129a00315622f4b2ce282096d41562">
+			<class name="GeoIp2\Exception\HttpException"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Exception/InvalidRequestException.php" md5="79b7b13a3057e02ad573f01795bad4d3">
+			<class name="GeoIp2\Exception\InvalidRequestException"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Exception/OutOfQueriesException.php" md5="35f4fa482a66d2e424b0f0ca9d19d390">
+			<class name="GeoIp2\Exception\OutOfQueriesException"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Model/City.php" md5="c7500eaeee8d7a31f576e388abe21e74">
+			<class name="GeoIp2\Model\City"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Model/CityIspOrg.php" md5="e1068bd9b6d5bdd255aefca9fdd4b8df">
+			<class name="GeoIp2\Model\CityIspOrg"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Model/Country.php" md5="c447295196c506206a8455a194283454">
+			<class name="GeoIp2\Model\Country"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Model/Omni.php" md5="25aaebf897d3863458b71a93e6df9343">
+			<class name="GeoIp2\Model\Omni"/>
+		</file>
+		<file filename="libs/GeoIp2/src/ProviderInterface.php" md5="7dff9af8221bf53ceca74ea1e13b68ad">
+			<interface name="GeoIp2\ProviderInterface"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Record/AbstractPlaceRecord.php" md5="d07fba3e728df07dba3a53bc8a4c2656">
+			<class name="GeoIp2\Record\AbstractPlaceRecord"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Record/AbstractRecord.php" md5="638c09b9ac4e0c6631bd828c9acedefe">
+			<class name="GeoIp2\Record\AbstractRecord"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Record/City.php" md5="23d84c15338c8c3132155ef5d0c0a723">
+			<class name="GeoIp2\Record\City"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Record/Continent.php" md5="d6037a65a9ce93237387de7a7dac5b8e">
+			<class name="GeoIp2\Record\Continent"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Record/Country.php" md5="7e149795e2e6722dfe111a55c0253c7f">
+			<class name="GeoIp2\Record\Country"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Record/Location.php" md5="cf9988853ee042d5865d865630fe062f">
+			<class name="GeoIp2\Record\Location"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Record/MaxMind.php" md5="4e66fdb9dc6a5ab841a8a920c0867bdb">
+			<class name="GeoIp2\Record\MaxMind"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Record/Postal.php" md5="d35d3ca9f2a1891f6855c70cd1f45123">
+			<class name="GeoIp2\Record\Postal"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Record/RepresentedCountry.php" md5="a0fe00c94515d61bdcd25393bfd784ed">
+			<class name="GeoIp2\Record\RepresentedCountry"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Record/Subdivision.php" md5="16d23a26acdee06aa26b2aa471f095b5">
+			<class name="GeoIp2\Record\Subdivision"/>
+		</file>
+		<file filename="libs/GeoIp2/src/Record/Traits.php" md5="f3ab8a669c169a5e70f449c8151ef61c">
+			<class name="GeoIp2\Record\Traits"/>
+		</file>
+		<file filename="libs/GeoIp2/src/WebService/Client.php" md5="e51faffd210bed553b45dc1af18b114c">
+			<class name="GeoIp2\WebService\Client"/>
+		</file>
+		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Database/ReaderTest.php" md5="72279c6475bb93f4d113b9e558091997">
+			<class name="GeoIp2\Test\WebService\ReaderTest"/>
+		</file>
+		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Model/CountryTest.php" md5="3db576019b0891b3f89762e489eab92f">
+			<class name="GeoIp2\Test\Model\CountryTest"/>
+		</file>
+		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Model/NameTest.php" md5="b95dbc092e8280f44a19d8a90fc72328">
+			<class name="GeoIp2\Test\Model\NameTest"/>
+		</file>
+		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Model/OmniTest.php" md5="d71d8a9b9459bab4bd13f3753936776d">
+			<class name="GeoIp2\Test\Model\OmniTest"/>
+		</file>
+		<file filename="libs/GeoIp2/tests/GeoIp2/Test/WebService/ClientTest.php" md5="f13abebae0f0463eb558e8d1a92b5135">
+			<class name="GeoIp2\Test\WebService\ClientTest"/>
+		</file>
+		<file filename="libs/GeoIp2/tests/bootstrap.php" md5="3d9dac2ca18b01e861ac34200d4a2841"/>
+		<file filename="libs/MaxMind-DB-Reader-php/CHANGELOG.md" md5="322c6d5e3c16cb410ea74fc58a83ceee"/>
+		<file filename="libs/MaxMind-DB-Reader-php/LICENSE" md5="fbc093901857fcd118f065f900982c24"/>
+		<file filename="libs/MaxMind-DB-Reader-php/README.md" md5="e8884e3ae2443424b1a9ec6605c3e780"/>
+		<file filename="libs/MaxMind-DB-Reader-php/examples/benchmark.php" md5="a4d0f3a314b49ac76b070116fdc243e2"/>
+		<file filename="libs/MaxMind-DB-Reader-php/ext/config.m4" md5="78bc5278e40822c3bbd207f0787daf23"/>
+		<file filename="libs/MaxMind-DB-Reader-php/ext/config.w32" md5="9f04c9485522c6bc27a5bd78b3309a4e"/>
+		<file filename="libs/MaxMind-DB-Reader-php/ext/maxminddb.c" md5="c06fa7b04ba9245cde511efd2a98a78c"/>
+		<file filename="libs/MaxMind-DB-Reader-php/ext/php_maxminddb.h" md5="7f71911863a1fa7a2386d890f63ceb2a"/>
+		<file filename="libs/MaxMind-DB-Reader-php/ext/tests/001-load.phpt" md5="86ba1adc502540b42cbb1ef2fe5cfd67"/>
+		<file filename="libs/MaxMind-DB-Reader-php/src/MaxMind/Db/Reader.php" md5="162090f1d4ce01bdbcc09092b7fb611b">
+			<class name="MaxMind\Db\Reader"/>
+		</file>
+		<file filename="libs/MaxMind-DB-Reader-php/src/MaxMind/Db/Reader/Decoder.php" md5="e0d1bd7e8cf1ddc7d8993c3e12be067e">
+			<class name="MaxMind\Db\Reader\Decoder"/>
+		</file>
+		<file filename="libs/MaxMind-DB-Reader-php/src/MaxMind/Db/Reader/InvalidDatabaseException.php" md5="30a5d8369ea2012e747ac1e59f78c76f">
+			<class name="MaxMind\Db\Reader\InvalidDatabaseException"/>
+		</file>
+		<file filename="libs/MaxMind-DB-Reader-php/src/MaxMind/Db/Reader/Metadata.php" md5="72920eb4329883a189570e315d9ccf45">
+			<class name="MaxMind\Db\Reader\Metadata"/>
+		</file>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/Reader/DecoderTest.php" md5="8c51cb0205d8abd032144d375bdade05">
+			<class name="MaxMind\Db\Test\Reader\DecoderTest"/>
+		</file>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/Reader/PointerTest.php" md5="8197a06fb542e60f37dec8d38f928d63">
+			<class name="MaxMind\Db\Test\Reader\PointerTest"/>
+		</file>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/ReaderTest.php" md5="b12f912b7459f910786e03381aef0b9d">
+			<class name="MaxMind\Db\Test\Reader\ReaderTest"/>
+		</file>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/bootstrap.php" md5="4fb24dd5dd38f07a4e4dab3146f3cd5b"/>
+		<file filename="libs/maxmind-geoip/GeoLite2-City.mmdb" md5="4db1f8e0219eabffa5ed2293f480f45d"/>
+		<file filename="libs/maxmind-geoip/LICENSE" md5="85eefaa2cbb8581ef26edbdbc7e4f926"/>
+		<file filename="libs/maxmind-geoip/SUPPORT" md5="2831aedc85a165bf7db688c39233366c"/>
 		<file filename="models/GeoAddressModel.php" md5="bb936777bb41ed915edce9bd46a8ab13">
 			<class name="GeoAddressModel"/>
 		</file>
-		<file filename="models/GeoCountryModel.php" md5="30f22a9c6421e7445997133ea5ad25a8">
+		<file filename="models/GeoCountryModel.php" md5="c1b43f93683dbb60af61f815d96d5f28">
 			<class name="GeoCountryModel"/>
 		</file>
-		<file filename="models/GeoProvinceModel.php" md5="a607c6849d3b10e6784f7864cad0cc50">
+		<file filename="models/GeoProvinceModel.php" md5="3b2bc5144be9ee504c2e9c1c6875548a">
 			<class name="GeoProvinceModel"/>
 		</file>
-		<file filename="upgrades/102-to-110-countries.sql" md5="b58f465fce692e3ba7ddbce9b6cec2f4"/>
 	</files>
 	<assets>
 		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/aa.png" md5="b51cd1f73e48dff9282fd18da28ebb9a"/>
