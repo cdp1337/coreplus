@@ -338,10 +338,13 @@ define('SSL_MODE_ALLOWED',  'allowed');
  */
 define('SSL_MODE_REQUIRED', 'required');
 
-/**
- * Temp directory
- */
-if(!defined('TMP_DIR')) define('TMP_DIR', $tmpdir);
+
+if(!defined('TMP_DIR')) {
+	/**
+	 * Temporary directory
+	 */
+	define('TMP_DIR', $tmpdir);
+}
 
 /**
  * Temporary directory for web only
