@@ -1,3 +1,8 @@
+User 2.7.0
+
+	* Set all the last_login and last_password metadata as appropriate.
+	* Downstream changes from the Dataset migration.
+
 User 2.6.1
 
 	* New support for additional meta data for the user system.

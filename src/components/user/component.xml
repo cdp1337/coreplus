@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.1" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.7.0" name="User" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.6.2"/>
+		<require name="core" type="component" version="2.7.0"/>
 		<!-- User authentication events trigger security logs. -->
 		<require name="security-suite" type="component" operation="ge" version="1.0.0"/>
 		<!-- The password reset is now powered by the nonce system. -->
@@ -22,7 +22,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="fcd869ba1ac47b89307d7c68b520d490"/>
+		<file filename="CHANGELOG" md5="98d44887b748a2bbeb22bc3b243740f7"/>
 		<file filename="User.class.php" md5="57f400af40ad681efe0ae0ae5dcf8548">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -58,7 +58,7 @@
 			<class name="User\ImportHelper"/>
 		</file>
 		<file filename="helpers/UserFunctions.php" md5="a7a13c451288acfa82b18c7a2ad75836"/>
-		<file filename="helpers/UserHelper.class.php" md5="2f6de13bfffa326df9063de2f642b2a8">
+		<file filename="helpers/UserHelper.class.php" md5="5370c551fee52243efea670a1d2f338c">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
@@ -79,6 +79,7 @@
 			<class name="UserUserConfigModel"/>
 		</file>
 		<file filename="upgrades/257_to_260.php" md5="3342d4db74259612ac60586a9c573fdb"/>
+		<file filename="upgrades/261_to_262.php" md5="f980ebc7df2bcdb6cb3d553b96567d07"/>
 		<file filename="widgets/UserAdminWidget.php" md5="aba6a7a45c1d64a512ea8de47e734c9c">
 			<class name="UserAdminWidget"/>
 		</file>
@@ -212,9 +213,10 @@
 			</phpfileinclude>
 		</upgrade>
 		<upgrade from="2.6.0" to="2.6.1"/>
-		<upgrade from="2.6.1" to="2.6.2">
+		<upgrade from="2.6.1" to="2.7.0">
 			<php file="upgrades/261_to_262.php"/>
 		</upgrade>
+		<upgrade from="2.6.2" to="2.7.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
