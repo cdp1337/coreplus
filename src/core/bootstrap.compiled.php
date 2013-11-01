@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 31 Oct 2013 12:21:41 -0400
+ * @compiled Fri, 01 Nov 2013 15:39:24 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -14995,6 +14995,47 @@ return $timezones[$timezone];
 
 
 
+if(Core::IsComponentAvailable('geographic-codes') && class_exists('GeoIp2\\Database\\Reader')){
+try{
+if(REMOTE_IP == '127.0.0.1'){
+$geocity     = 'Columbus';
+$geoprovince = 'OH';
+$geocountry  = 'US';
+$geotimezone = 'America/New_York';
+}
+else{
+$reader = new GeoIp2\Database\Reader(ROOT_PDIR . 'components/geographic-codes/libs/maxmind-geolite-db/GeoLite2-City.mmdb');
+$profiler->record('Initialized GeoLite Database');
+$geo = $reader->cityIspOrg(REMOTE_IP);
+$profiler->record('Read GeoLite Database');
+$reader->close();
+$profiler->record('Closed GeoLite Database');
+$geocity = $geo->city->name;
+$geoprovinceobj = $geo->subdivisions[0];
+$geoprovince = $geoprovinceobj->isoCode;
+$geocountry  = $geo->country->isoCode;
+$geotimezone = $geo->location->timeZone;
+unset($geoprovinceobj, $geo, $reader);
+}
+}
+catch(Exception $e){
+$geocity     = 'McMurdo Base';
+$geoprovince = '';
+$geocountry  = 'AQ'; // Yes, AQ is Antarctica!
+$geotimezone = 'CAST';
+}
+}
+else{
+$geocity     = 'McMurdo Base';
+$geoprovince = '';
+$geocountry  = 'AQ'; // Yes, AQ is Antarctica!
+$geotimezone = 'CAST';
+}
+define('REMOTE_CITY', $geocity);
+define('REMOTE_PROVINCE', $geoprovince);
+define('REMOTE_COUNTRY', $geocountry);
+define('REMOTE_TIMEZONE', $geotimezone);
+unset($geocity, $geoprovince, $geocountry, $geotimezone);
 HookHandler::DispatchHook('/core/components/ready');
 $profiler->record('Components Ready Complete');
 } // ENDING GLOBAL NAMESPACE

@@ -66,6 +66,9 @@ else {
 	$view->error = View::ERROR_NOTFOUND;
 }
 
+
+//var_dump(get_defined_constants(true)['user']); die();
+
 // There is a valid view one way or another now, (or the legacy script kicked in already).
 
 // Dispatch the hooks here if it's a 404 or 403.

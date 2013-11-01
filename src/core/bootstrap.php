@@ -571,5 +571,86 @@ $profiler->record('Components Load Complete');
  */
 require_once(__DIR__ . '/bootstrap_postincludes.php');
 
+
+// If the geo-location libraries are available, load the user's location!
+if(Core::IsComponentAvailable('geographic-codes') && class_exists('GeoIp2\\Database\\Reader')){
+	try{
+		if(REMOTE_IP == '127.0.0.1'){
+			// Load local connections up with Columbus, OH.
+			// Why?  ;)
+			$geocity     = 'Columbus';
+			$geoprovince = 'OH';
+			$geocountry  = 'US';
+			$geotimezone = 'America/New_York';
+		}
+		else{
+			$reader = new GeoIp2\Database\Reader(ROOT_PDIR . 'components/geographic-codes/libs/maxmind-geolite-db/GeoLite2-City.mmdb');
+			$profiler->record('Initialized GeoLite Database');
+
+			$geo = $reader->cityIspOrg(REMOTE_IP);
+			//$geo = $reader->cityIspOrg('67.149.214.236');
+			$profiler->record('Read GeoLite Database');
+
+			$reader->close();
+			$profiler->record('Closed GeoLite Database');
+
+			$geocity = $geo->city->name;
+			/** @var GeoIp2\Record\Subdivision $geoprovinceobj */
+			$geoprovinceobj = $geo->subdivisions[0];
+			$geoprovince = $geoprovinceobj->isoCode;
+			$geocountry  = $geo->country->isoCode;
+			$geotimezone = $geo->location->timeZone;
+
+			// Memory cleanup
+			unset($geoprovinceobj, $geo, $reader);
+		}
+	}
+	catch(Exception $e){
+		// Well, we tried!  Load something at least.
+		$geocity     = 'McMurdo Base';
+		$geoprovince = '';
+		$geocountry  = 'AQ'; // Yes, AQ is Antarctica!
+		$geotimezone = 'CAST';
+	}
+}
+else{
+	// Well, we tried!  Load something at least.
+	$geocity     = 'McMurdo Base';
+	$geoprovince = '';
+	$geocountry  = 'AQ'; // Yes, AQ is Antarctica!
+	$geotimezone = 'CAST';
+}
+
+// And define these.
+
+/**
+ * The city of the remote user
+ * eg: "Columbus", "", "New York", etc.
+ */
+define('REMOTE_CITY', $geocity);
+
+/**
+ * The province or state ISO code of the remote user
+ * eg: "OH", "IN", etc.
+ */
+define('REMOTE_PROVINCE', $geoprovince);
+
+/**
+ * The country ISO code of the remote user
+ * eg: "US", "DE", "AQ", etc.
+ */
+define('REMOTE_COUNTRY', $geocountry);
+
+/**
+ * The timezone of the remote user
+ * eg: "America/New_York", etc.
+ */
+define('REMOTE_TIMEZONE', $geotimezone);
+
+// And cleanup the geo information
+unset($geocity, $geoprovince, $geocountry, $geotimezone);
+
+
+
 HookHandler::DispatchHook('/core/components/ready');
 $profiler->record('Components Ready Complete');
