@@ -276,106 +276,92 @@ else {
 
 /**
  * Full URL of server.
- * @example http://www.example.com or https://127.0.0.1:8443
- * @var string
+ * eg: http://www.example.com or https://127.0.0.1:8443
  */
 define('SERVERNAME', $servername);
 /**
  * Full URL of the server forced non-ssl mode.
- * @example http://www.example.com
- * @var string
+ * eg: http://www.example.com
  */
 define('SERVERNAME_NOSSL', $servernameNOSSL);
 /**
  * Full URL of the server forced SSL mode.
- * @example https://www.example.com or https://127.0.0.1:8443
- * @var string
+ * eg: https://www.example.com or https://127.0.0.1:8443
  */
 define('SERVERNAME_SSL', $servernameSSL);
 /**
  * URL of web root.
- * @example http://www.example.com/foo/man/choo/
- * @var string
+ * eg: http://www.example.com/foo/man/choo/
  */
 define('ROOT_URL', $rooturl);
 /**
  * URL of web root.
- * @example http://www.example.com/foo/man/choo/
- * @var string
+ * eg: http://www.example.com/foo/man/choo/
  */
 define('ROOT_URL_NOSSL', $rooturlNOSSL);
 /**
  * URL of web root.
- * @example https://www.example.com/foo/man/choo/
- * @var string
+ * eg: https://www.example.com/foo/man/choo/
  */
 define('ROOT_URL_SSL', $rooturlSSL);
 /**
  * Current call/request.
- * @example /foo/man/choo/?somevariable=true&somethingelse=false
- * @var string
+ * eg: /foo/man/choo/?somevariable=true&somethingelse=false
  */
 define('CUR_CALL', $curcall);
 
 /**
  * Relative requested path.
- * @example /User/Login or '/' for the index.
- * @var string
+ * eg: /User/Login or '/' for the index.
  */
 define('REL_REQUEST_PATH', $relativerequestpath);
 
 /**
  * Simple true/false if current page call is via SSL.
- * @var boolean
  */
 define('SSL', $ssl);
 
 /**
  * SSL Mode for SSL being disabled completely
- * @var string
  */
 define('SSL_MODE_DISABLED', 'disabled');
 /**
  * SSL is allowed on pages that require it only, (standard pages redirect to non-ssl)
- * @var string
  */
 define('SSL_MODE_ONDEMAND', 'ondemand');
 /**
  * SSL is allowed on any page throughout the site
- * @var string
  */
 define('SSL_MODE_ALLOWED',  'allowed');
 /**
  * SSL is always required for all pages
- * @var string
  */
 define('SSL_MODE_REQUIRED', 'required');
 
-/**
- * Temp directory
- * @var string
- */
-if(!defined('TMP_DIR')) define('TMP_DIR', $tmpdir);
+
+if(!defined('TMP_DIR')) {
+	/**
+	 * Temporary directory
+	 */
+	define('TMP_DIR', $tmpdir);
+}
 
 /**
  * Temporary directory for web only
  * (useful in the packager)
- * @var string
  */
 define('TMP_DIR_WEB', $core_settings['tmp_dir_web']);
 
 /**
  * Temporary directory for cli only
  * (useful in the packager)
- * @var string
  */
 define('TMP_DIR_CLI', $core_settings['tmp_dir_cli']);
 
 /**
  * Host is a more human-friendly version of SERVERNAME.
  * It does not include port number or protocol, but just the hostname itself.
- * @example domain.tld
- * @var string
+ * eg: domain.tld
  */
 define('HOST', $host);
 
