@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 01 Nov 2013 15:39:24 -0400
+ * @compiled Fri, 01 Nov 2013 21:48:18 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -7151,6 +7151,7 @@ if(false && isset(self::$_ResolveCache[$originaluri])){
 return self::$_ResolveCache[$originaluri];
 }
 $resolved = get_asset_path();
+$theme = \ConfigHandler::Get('/theme/selected');
 if (strpos($filename, 'assets/') === 0) {
 $filename = substr($filename, 7);
 }
@@ -7158,9 +7159,19 @@ elseif(strpos($filename, 'asset/') === 0){
 $filename = substr($filename, 6);
 }
 elseif(strpos($filename, $resolved) === 0){
+if(strpos($filename, $resolved . 'custom/') === 0){
+$filename = substr($filename, strlen($resolved . 'custom/'));
+}
+elseif(strpos($filename, $resolved . $theme . '/') === 0){
+$filename = substr($filename, strlen($resolved . $theme . '/'));
+}
+elseif(strpos($filename, $resolved . 'default/') === 0){
+$filename = substr($filename, strlen($resolved . 'default/'));
+}
+else{
 $filename = substr($filename, strlen($resolved));
 }
-$theme = \ConfigHandler::Get('/theme/selected');
+}
 switch(CDN_TYPE){
 case 'local':
 if(\Core\ftp()){
@@ -10571,22 +10582,26 @@ public static function ResolveAsset($asset) {
 if (strpos($asset, '://') !== false) return $asset;
 if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
 $version = ConfigHandler::Get('/core/filestore/assetversion');
-if(ConfigHandler::Get('/core/javascript/minified') && substr($asset, -3) == '.js'){
-$minified = str_replace('.js', '.min.js', $asset);
-$file = \Core\Filestore\Factory::File($minified);
-if($file->exists()){
+$file     = \Core\Filestore\Factory::File($asset);
+$filename = $file->getFilename();
+$ext      = $file->getExtension();
+if(ConfigHandler::Get('/core/javascript/minified')){
+if($ext == 'js'){
+$minified = substr($filename, 0, -3) . '.min.js';
+$minfile = \Core\Filestore\Factory::File($minified);
+if($minfile->exists()){
+$file = $minfile;
+}
+}
+elseif($ext == 'css'){
+$minified = substr($filename, 0, -4) . '.min.css';
+$minfile = \Core\Filestore\Factory::File($minified);
+if($minfile->exists()){
+$file = $minfile;
+}
+}
+}
 return $file->getURL() . ($version ? '?v=' . $version : '');
-}
-}
-elseif(ConfigHandler::Get('/core/javascript/minified') && substr($asset, -4) == '.css'){
-$minified = str_replace('.css', '.min.css', $asset);
-$file = \Core\Filestore\Factory::File($minified);
-if($file->exists()){
-return $file->getURL() . ($version ? '?v=' . $version : '');
-}
-}
-$f = \Core\Filestore\Factory::File($asset);
-return $f->getURL() . ($version ? '?v=' . $version : '');
 }
 public static function ResolveLink($url) {
 if ($url == '#') return $url;
@@ -11507,7 +11522,7 @@ if (DEVELOPMENT_MODE) {
 die("Please <a href=\"{$newURL}\">install Core Plus.</a>");
 }
 else {
-require(ROOT_PDIR . 'core/libs/fatal_errors/database.php');
+require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 die();
 }
 }

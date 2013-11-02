@@ -14,6 +14,7 @@ Core Plus 2.7.0
 	* [Bug] Update the error management system to work better with PHPUnit tests.
 	* [Bug] Properly escape indexes on the DROP INDEX instruction for table modifying.
 	* [Bug] Page insertables need to be saved even with a blank value.
+	* [Bug] Fix the file assets being renamed to .min.* before the location check being ran.
 	* [Performance] Optimize the bootstrap includes.
 	* [Feature] Add a new feature, a simple tic-tac-toe game on the fatal error page.
 	* [Feature] Add support for deleted models not really being deleted.
