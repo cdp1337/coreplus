@@ -112,11 +112,16 @@ abstract class Factory {
 			return new Backends\FileFTP($uri);
 		}
 
+
+		if(strpos($uri, ROOT_PDIR) === 0){
+			// No change needed ;)
+		}
+		elseif(strpos($uri, ROOT_URL_NOSSL) === 0){
 		// If this is a local file, just the URL version.... allow that remap too!
-		if(strpos($uri, ROOT_URL_NOSSL) === 0){
 			$uri = ROOT_PDIR . substr($uri, strlen(ROOT_URL_NOSSL));
 		}
 		elseif(strpos($uri, ROOT_URL_SSL) === 0){
+			// If this is a local file, just the URL version.... allow that remap too!
 			$uri = ROOT_PDIR . substr($uri, strlen(ROOT_URL_SSL));
 		}
 
@@ -265,6 +270,9 @@ abstract class Factory {
 
 		$resolved = get_asset_path();
 
+		// I need to check the custom, current theme, and finally default locations for the file.
+		$theme = \ConfigHandler::Get('/theme/selected');
+
 		if (strpos($filename, 'assets/') === 0) {
 			// Allow "assets/blah" to be passed in
 			$filename = substr($filename, 7);
@@ -275,13 +283,23 @@ abstract class Factory {
 		}
 		elseif(strpos($filename, $resolved) === 0){
 			// Allow the fully resolved name to be passed in
-			$filename = substr($filename, strlen($resolved));
+			// The caveat here is that the fully resolve file will probably have "default/" or "themename/" in it too.
+			// I need to trim that off as well.
+			if(strpos($filename, $resolved . 'custom/') === 0){
+				$filename = substr($filename, strlen($resolved . 'custom/'));
+			}
+			elseif(strpos($filename, $resolved . $theme . '/') === 0){
+				$filename = substr($filename, strlen($resolved . $theme . '/'));
+			}
+			elseif(strpos($filename, $resolved . 'default/') === 0){
+				$filename = substr($filename, strlen($resolved . 'default/'));
+			}
+			else{
+				$filename = substr($filename, strlen($resolved));
+			}
 		}
 
-		//var_dump($filename);
 
-		// I need to check the custom, current theme, and finally default locations for the file.
-		$theme = \ConfigHandler::Get('/theme/selected');
 		switch(CDN_TYPE){
 			case 'local':
 				if(\Core\ftp()){

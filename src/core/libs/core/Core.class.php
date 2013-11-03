@@ -986,30 +986,36 @@ class Core implements ISingleton {
 
 		$version = ConfigHandler::Get('/core/filestore/assetversion');
 
-		if(ConfigHandler::Get('/core/javascript/minified') && substr($asset, -3) == '.js'){
+
+		$file     = \Core\Filestore\Factory::File($asset);
+		$filename = $file->getFilename();
+		$ext      = $file->getExtension();
+
+		if(ConfigHandler::Get('/core/javascript/minified')){
+			// Core is set to use minified css and javascript assets, try to locate those!
+			// I need to do the check based on the base $filename, because 'assets/css/reset.css' may reside in one
+			// of many locations, and not all of them may have a minified version.
+			if($ext == 'js'){
 			// Try to load the minified version instead.
-			$minified = str_replace('.js', '.min.js', $asset);
-			$file = \Core\Filestore\Factory::File($minified);
-			if($file->exists()){
-				return $file->getURL() . ($version ? '?v=' . $version : '');
+				$minified = substr($filename, 0, -3) . '.min.js';
+				$minfile = \Core\Filestore\Factory::File($minified);
+				if($minfile->exists()){
+					// Overwrite the $file variable so it's returned instead.
+					$file = $minfile;
 			}
 		}
-		elseif(ConfigHandler::Get('/core/javascript/minified') && substr($asset, -4) == '.css'){
+			elseif($ext == 'css'){
 			// Try to load the minified version instead.
-			$minified = str_replace('.css', '.min.css', $asset);
-			$file = \Core\Filestore\Factory::File($minified);
-			if($file->exists()){
-				return $file->getURL() . ($version ? '?v=' . $version : '');
+				$minified = substr($filename, 0, -4) . '.min.css';
+				$minfile = \Core\Filestore\Factory::File($minified);
+				if($minfile->exists()){
+					// Overwrite the $file variable so it's returned instead.
+					$file = $minfile;
 			}
+		}
 		}
 
-		// Skip the cache while I decide on if it's needed or not.
-		// the issue was that if clientA went to the site on ie: localhost, and clientB went to the site
-		// on 192.168.1.20, all assets would be resolving to "localhost", potentially producing invalid links.
-		$f = \Core\Filestore\Factory::File($asset);
-		//var_dump($asset);
-		//$f = self::File($asset);
-		return $f->getURL() . ($version ? '?v=' . $version : '');
+		return $file->getURL() . ($version ? '?v=' . $version : '');
 	}
 
 	/**
