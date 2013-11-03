@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 01 Nov 2013 21:48:18 -0400
+ * @compiled Sun, 03 Nov 2013 17:41:20 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -5881,7 +5881,15 @@ $changes = array();
 Core\Utilities\Logger\write_debug('Installing database schema for ' . $this->getName());
 $classes = $this->getClassList();
 foreach ($classes as $k => $v) {
-if ($k == 'model' || strrpos($k, 'model') !== strlen($k) - 5) unset($classes[$k]);
+if($k == 'model'){
+unset($classes[$k]);
+}
+elseif(strrpos($k, 'model') !== strlen($k) - 5){
+unset($classes[$k]);
+}
+elseif(strpos($k, '\\') !== false){
+unset($classes[$k]);
+}
 }
 foreach ($classes as $m => $file) {
 if(!class_exists($m)) require_once($file);
@@ -11368,7 +11376,9 @@ define('SSL_MODE_DISABLED', 'disabled');
 define('SSL_MODE_ONDEMAND', 'ondemand');
 define('SSL_MODE_ALLOWED',  'allowed');
 define('SSL_MODE_REQUIRED', 'required');
-if(!defined('TMP_DIR')) define('TMP_DIR', $tmpdir);
+if(!defined('TMP_DIR')) {
+define('TMP_DIR', $tmpdir);
+}
 define('TMP_DIR_WEB', $core_settings['tmp_dir_web']);
 define('TMP_DIR_CLI', $core_settings['tmp_dir_cli']);
 define('HOST', $host);
