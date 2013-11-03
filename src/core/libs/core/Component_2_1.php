@@ -1838,8 +1838,10 @@ class Component_2_1 {
 	 * This is used for installations and upgrades.
 	 *
 	 * @param boolean $install Set to false to force uninstall/disable mode.
+	 *
+	 * @throws DMI_Query_Exception
+	 * @throws Exception
 	 * @return boolean | int
-	 * @throws InstallerException
 	 */
 	private function _parseDBSchema($install = true) {
 		// I need to get the schema definitions first.
@@ -1853,7 +1855,19 @@ class Component_2_1 {
 		// Get the table structure as it exists in the database first, this will be the comparison point.
 		$classes = $this->getClassList();
 		foreach ($classes as $k => $v) {
-			if ($k == 'model' || strrpos($k, 'model') !== strlen($k) - 5) unset($classes[$k]);
+			if($k == 'model'){
+				// Anything named "Model" is the actual Model object... the base object doesn't have an associated table!
+				unset($classes[$k]);
+			}
+			elseif(strrpos($k, 'model') !== strlen($k) - 5){
+				// If the class doesn't explicitly end with "Model", it's also not a model.
+				unset($classes[$k]);
+			}
+			elseif(strpos($k, '\\') !== false){
+				// If this "Model" class is namespaced, it's not a valid model!
+				// All Models MUST reside in the global namespace in order to be valid.
+				unset($classes[$k]);
+			}
 		}
 
 		// Do the actual processing of every Model.
