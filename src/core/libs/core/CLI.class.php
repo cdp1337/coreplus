@@ -24,13 +24,16 @@ class CLI {
 	/**
 	 * Prompt the user a question and return the result.
 	 *
-	 * @param $question string The question to prompt to the user.
-	 * @param $answers array | string What answers to provide to the user.
-	 *                 array            - Will prompt the user with the value of each pair, returning the key.
-	 *                 "boolean"        - Will ask for a yes/no response and return true/false.
-	 *                 "text"            - Open-ended text input, user can type in anything and that input is returned.
-	 *                 "text-required"    - Open-ended text input, user can type in anything (non-blank), and that value is returned.
-	 * @param $default string The default answer if the user simply presses "enter". [optional]
+	 * @param string       $question The question to prompt to the user.
+	 * @param array|string $answers  What answers to provide to the user.
+	 *                               array           - Will prompt the user with the value of each pair, returning the key.
+	 *                               "boolean"       - Will ask for a yes/no response and return true/false.
+	 *                               "text"          - Open-ended text input, user can type in anything and that input is returned.
+	 *                               "text-required" - Open-ended text input, user can type in anything (non-blank), and that value is returned.
+	 * @param string|bool  $default  string The default answer if the user simply presses "enter". [optional]
+	 *
+	 * @throws Exception
+	 * @return bool|string
 	 */
 	public static function PromptUser($question, $answers, $default = false) {
 		$isanswered = false;
@@ -96,6 +99,7 @@ class CLI {
 			else {
 				switch (strtolower($answers)) {
 					case 'boolean':
+					case 'bool':
 						echo "(enter y for yes, n for no.) ";
 						$line = strtolower(trim(fgets(STDIN)));
 						echo NL;
@@ -162,6 +166,8 @@ class CLI {
 						// Remove the file from the filesystem, no need for clutter.
 						unlink($file);
 						return $data;
+					default:
+						throw new \Exception('Unsupported answer choice [' . strtolower($answers) . '], please ensure it is either an array of options, "boolean", "text", "text-required", or "textarea"!');
 				}
 			}
 
