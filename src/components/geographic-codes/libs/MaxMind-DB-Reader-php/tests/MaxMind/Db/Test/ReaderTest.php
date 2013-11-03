@@ -10,7 +10,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     {
         foreach (array(24, 28, 32) as $recordSize) {
             foreach (array(4, 6) as $ipVersion) {
-                $fileName = 'tests/data/test-data/MaxMind-DB-test-ipv'
+                $fileName = ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-ipv'
                     . $ipVersion . '-' . $recordSize . '.mmdb';
                 $reader = new Reader($fileName);
 
@@ -27,7 +27,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testDecoder()
     {
-        $reader = new Reader('tests/data/test-data/MaxMind-DB-test-decoder.mmdb');
+        $reader = new Reader(ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-decoder.mmdb');
         $record = $reader->get('::1.1.1.0');
 
         $this->assertEquals(true, $record['boolean']);
@@ -62,7 +62,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testZeros()
     {
-        $reader = new Reader('tests/data/test-data/MaxMind-DB-test-decoder.mmdb');
+        $reader = new Reader(ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-decoder.mmdb');
         $record = $reader->get('::');
 
         $this->assertEquals(false, $record['boolean']);
@@ -84,7 +84,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     public function testNoIpV4SearchTree()
     {
         $reader = new Reader(
-            'tests/data/test-data/MaxMind-DB-no-ipv4-search-tree.mmdb'
+            ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-no-ipv4-search-tree.mmdb'
         );
         $this->assertEquals('::/64', $reader->get('1.1.1.1'));
         $this->assertEquals('::/64', $reader->get('192.1.1.1'));
@@ -96,7 +96,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testV6AddressV4Database()
     {
-        $reader = new Reader('tests/data/test-data/MaxMind-DB-test-ipv4-24.mmdb');
+        $reader = new Reader(ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-ipv4-24.mmdb');
         $reader->get('2001::');
     }
 
@@ -106,7 +106,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testIpValidation()
     {
-        $reader = new Reader('tests/data/test-data/MaxMind-DB-test-decoder.mmdb');
+        $reader = new Reader(ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-decoder.mmdb');
         $reader->get('not_ip');
     }
 
@@ -116,7 +116,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testBrokenDatabase()
     {
-        $reader = new Reader('tests/data/test-data/GeoIP2-City-Test-Broken-Double-Format.mmdb');
+        $reader = new Reader(ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/GeoIP2-City-Test-Broken-Double-Format.mmdb');
         $reader->get('2001:220::');
     }
 
@@ -126,7 +126,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testBrokenSearchTreePointer()
     {
-        $reader = new Reader('tests/data/test-data/MaxMind-DB-test-broken-pointers-24.mmdb');
+        $reader = new Reader(ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-broken-pointers-24.mmdb');
         $reader->get('1.1.1.32');
     }
 
@@ -136,7 +136,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testBrokenDataPointer()
     {
-        $reader = new Reader('tests/data/test-data/MaxMind-DB-test-broken-pointers-24.mmdb');
+        $reader = new Reader(ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-broken-pointers-24.mmdb');
         $reader->get('1.1.1.16');
     }
 
@@ -188,7 +188,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     public function testTooManyGetAgs()
     {
         $reader = new Reader(
-            'tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
+            ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
         );
         $reader->get('1.1.1.1', 'blah');
     }
@@ -202,7 +202,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     {
         if (extension_loaded('maxminddb')) {
             $reader = new Reader(
-                'tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
+                ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
             );
             $reader->get();
         } else {
@@ -217,7 +217,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     public function testMetadataAgs()
     {
         $reader = new Reader(
-            'tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
+            ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
         );
         $reader->metadata('blah');
     }
@@ -225,7 +225,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     public function testClose()
     {
         $reader = new Reader(
-            'tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
+            ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
         );
         $reader->close();
     }
@@ -237,7 +237,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     public function testDoubleClose()
     {
         $reader = new Reader(
-            'tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
+            ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
         );
         $reader->close();
         $reader->close();
@@ -250,7 +250,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     public function testClosedGet()
     {
         $reader = new Reader(
-            'tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
+            ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
         );
         $reader->close();
         $reader->get('1.1.1.1');
@@ -263,7 +263,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     public function testClosedMetadata()
     {
         $reader = new Reader(
-            'tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
+            ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-decoder.mmdb'
         );
         $reader->close();
         $reader->metadata();
