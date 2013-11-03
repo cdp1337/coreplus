@@ -34,13 +34,37 @@ CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 
 
 
-$component = CLI::PromptUser('Enter the name of the component to create', 'text-required');
+
+
+if($argc > 1){
+	$arguments = $argv;
+	// Drop the first, that is the filename.
+	array_shift($arguments);
+
+	// I'm using a for here instead of a foreach so I can increment $i artificially if an argument is two part,
+	// ie: --option value_for_option --option2 value_for_option2
+	for($i = 0; $i < sizeof($arguments); $i++){
+
+		// The next argument is the component name.
+		$arg = $arguments[$i];
+
+		/** @var string $component The name of the component as supplied by the user */
+		$component = $arg;
+	}
+}
+else{
+	/** @var string $component The name of the component as supplied by the user */
+	$component = CLI::PromptUser('Enter the name of the component to create', 'text-required');
+}
+
+
 
 // Sanitize this name to a point for everything
 $component = trim($component);
 $component = preg_replace('/[^a-zA-Z\- ]/', '', $component);
 
-// The name can have capitals and spaces in it.
+// The proper name can have capitals and spaces in it.
+/** @var string $componentname The proper human-readable Component Name, spaces and all. */
 $componentname = $component;
 
 // And the key name must be a little more strict.
@@ -50,7 +74,16 @@ $component = strtolower($component);
 $dirname = ROOT_PDIR . 'components/' . $component . '/';
 
 if(is_dir($dirname)){
-	die($component . ' already exists, corwardly refusing to overwrite with scaffolding' . "\n");
+	// See if there's a component.xml file herein.
+	// If there is, do not create the scaffolding!
+	if(file_exists($dirname . 'component.xml')){
+		die($component . ' already exists, corwardly refusing to overwrite with scaffolding' . "\n");
+	}
+
+	$exists_prior = true;
+}
+else{
+	$exists_prior = false;
 }
 
 $directories = array(
@@ -156,15 +189,14 @@ class %CLASS% extends Controller_2_1 {
 EOF;
 
 
+if(CLI::PromptUser('Create standard directory structure?', 'bool', true)){
 // Start making the directories and writing everything.
-foreach($directories as $d){
-	$dir = new \Core\Filestore\Backends\DirectoryLocal($dirname . $d);
-	$dir->mkdir();
+	foreach($directories as $d){
+		$dir = new \Core\Filestore\Backends\DirectoryLocal($dirname . $d);
+		$dir->mkdir();
+	}
 }
 
-foreach($controllers as $controller){
-	if(sizeof($controllers)) mkdir($dirname . 'templates/pages/' . strtolower($controller), DEFAULT_DIRECTORY_PERMS, true);
-}
 
 
 // I need to create a basic xml file for the component to use initially.
@@ -222,6 +254,10 @@ foreach($controllers as $class){
 		'md5' => $md5,
 		'controllers' => array($class . 'Controller')
 	);
+
+	// Don't forget to create a template directory for any pages on this controller.
+	$dir = new \Core\Filestore\Backends\DirectoryLocal($dirname . 'templates/pages/' . strtolower($class));
+	$dir->mkdir();
 }
 
 
@@ -259,3 +295,8 @@ $componentobject->save();
 
 
 echo "Created new component " . $componentname . "\n";
+
+if($exists_prior){
+	echo "If there were files in this directory previously, please run the following to scan them:" . "\n" .
+		"utilities/packager.php -r -c $component" . "\n";
+}
