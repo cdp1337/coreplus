@@ -1460,7 +1460,7 @@
 		<!--<config key="/core/aws/asset_bucket" type="string" default="" description=""/>
 		-->
 		<config key="/core/cache_backend" type="string" default="file" description="apc; file; memcache; xcache; BLAH"/>
-		<config key="/core/javascript/minified" type="boolean" default="true" description="Try to use minified javascript files whenever possible."/>
+		<config key="/core/javascript/minified" type="boolean" default="true" description="Try to use minified javascript and CSS files whenever possible."/>
 		<config key="/core/markup/minified" type="boolean" default="true" description="Try to collapse rendered markup whenever possible."/>
 		<!-- These are now contained inside the configuration.xml file! -->
 		<!--

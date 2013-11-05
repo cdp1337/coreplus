@@ -8,7 +8,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefaultLocale()
     {
-        $reader = new Reader('maxmind-db/test-data/GeoIP2-City-Test.mmdb');
+        $reader = new Reader(ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/GeoIP2-City-Test.mmdb');
         // Needed for PHP 5.3
         $that = $this;
         $this->checkAllMethods(
@@ -23,7 +23,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
     public function testLocaleList()
     {
         $reader = new Reader(
-            'maxmind-db/test-data/GeoIP2-City-Test.mmdb',
+	        ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/GeoIP2-City-Test.mmdb',
             array('xx', 'ru', 'pt-BR', 'es', 'en')
         );
         $that = $this;
@@ -38,7 +38,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testHasIpAddress()
     {
-        $reader = new Reader('maxmind-db/test-data/GeoIP2-City-Test.mmdb');
+        $reader = new Reader(ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/GeoIP2-City-Test.mmdb');
         $that = $this;
         $this->checkAllMethods(
             function ($method) use (&$that, &$reader) {
@@ -55,7 +55,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnknownAddress()
     {
-        $reader = new Reader('maxmind-db/test-data/GeoIP2-City-Test.mmdb');
+        $reader = new Reader(ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/GeoIP2-City-Test.mmdb');
         $reader->city('10.10.10.10');
         $reader->close();
     }
@@ -66,7 +66,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidAddress()
     {
-        $reader = new Reader('maxmind-db/test-data/GeoIP2-City-Test.mmdb');
+        $reader = new Reader(ROOT_PDIR . 'components/geographic-codes/libs/MaxMind-DB-Reader-php/tests/data/test-data/GeoIP2-City-Test.mmdb');
         $reader->city('invalid');
         $reader->close();
     }
