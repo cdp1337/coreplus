@@ -82,7 +82,7 @@
 			<div class="file" selectname="{$file.selectname}">
 				<div class="file-image-wrapper">
 					<a href="#" class="file-select" browsename="{$file.object->getBasename()}" selectname="{$file.selectname}" corename="{$file.corename}">
-						{img file="`$file.object`" dimensions="96x96"}
+						{img file=$file.object dimensions="96x96"}
 					</a>
 				</div>
 				<a href="#" class="file-select" browsename="{$file.object->getBasename()}" selectname="{$file.selectname}" corename="{$file.corename}">

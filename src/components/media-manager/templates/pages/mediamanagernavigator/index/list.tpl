@@ -104,7 +104,7 @@
 				<td>
 					<div class="file-image-wrapper">
 						<a href="#" class="file-select" browsename="{$file.object->getBasename()}" selectname="{$file.selectname}" corename="{$file.corename}">
-							{img file="`$file.object`" dimensions="36x36"}
+							{img file=$file.object dimensions="36x36"}
 						</a>
 					</div>
 				</td>
