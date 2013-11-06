@@ -14,7 +14,7 @@
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="9a18252af34af0bea0a86b350786c02a"/>
+		<file filename="CHANGELOG" md5="4ae852d06f1d8413fd702f017a858dd2"/>
 		<file filename="controllers/BlogController.php" md5="d876b20913373241681f117f0cf74159">
 			<controller name="BlogController"/>
 		</file>

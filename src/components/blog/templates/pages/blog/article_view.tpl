@@ -4,7 +4,7 @@
 
 	<div class="blog-article-posting-stats">
 		{if $author && Core::IsComponentAvailable('user-social')}
-			{widget baseurl="/userprofile/badge" user="$author" title="Posted By" orientation="right"}
+			{widget baseurl="/userprofile/badge" user=$author title="Posted By" orientation="right"}
 		{/if}
 
 		{if $article->isPublished()}

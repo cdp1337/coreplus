@@ -657,6 +657,7 @@ class BlogController extends Controller_2_1 {
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 		$author = User::Find(array('id' => $article->get('authorid')));
 
+		//$authorid = $author->get('id');
 		//var_dump($page->getMeta('keywords')); die();
 
 		if(!$article->isPublished()){
