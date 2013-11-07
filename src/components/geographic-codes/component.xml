@@ -2,12 +2,19 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" name="Geographic Codes" execmode="both">
 	<description>
-		A collection of geocode utilities for countries and states.
+		A collection of geographic utilities for geocoding, ip-lookups, and dealing with geographic addresses in general.
 	</description>
+	<forms>
+		<formelement name="geoaddress" class="GeoAddressFormInput"/>
+	</forms>
 	<files>
 		<file filename="CHANGELOG" md5="50b45cf2aaa5bd8db937aca08529382b"/>
-		<file filename="classes/AddressFormInput.php" md5="8c128808947e1efd3e90847883c376e7">
-			<class name="AddressFormInput"/>
+		<file filename="README.md" md5="f9b7f8a97be5c4f55afea2ef46724f50"/>
+		<file filename="classes/GeoAddressFormInput.php" md5="447402c02cb31393129a00a6e8383fbd">
+			<class name="GeoAddressFormInput"/>
+		</file>
+		<file filename="controllers/GeoAddressController.php" md5="8f12f6eac6b08a93bd460a1cd196e27a">
+			<controller name="GeoAddressController"/>
 		</file>
 		<file filename="datafiles/countries.sql" md5="a48225d34a0eaeac9d43a391449af8f4"/>
 		<file filename="datafiles/provinces.sql" md5="ab8d439b6592edb3ee0fbf14f17ed099"/>
@@ -89,10 +96,7 @@
 		<file filename="libs/GeoIp2/src/Record/Traits.php" md5="f3ab8a669c169a5e70f449c8151ef61c">
 			<class name="GeoIp2\Record\Traits"/>
 		</file>
-		<file filename="libs/GeoIp2/src/WebService/Client.php" md5="e51faffd210bed553b45dc1af18b114c">
-			<class name="GeoIp2\WebService\Client"/>
-		</file>
-		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Database/ReaderTest.php" md5="72279c6475bb93f4d113b9e558091997">
+		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Database/ReaderTest.php" md5="1118a884e9464cab328db2975470809f">
 			<class name="GeoIp2\Test\WebService\ReaderTest"/>
 		</file>
 		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Model/CountryTest.php" md5="3db576019b0891b3f89762e489eab92f">
@@ -103,9 +107,6 @@
 		</file>
 		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Model/OmniTest.php" md5="d71d8a9b9459bab4bd13f3753936776d">
 			<class name="GeoIp2\Test\Model\OmniTest"/>
-		</file>
-		<file filename="libs/GeoIp2/tests/GeoIp2/Test/WebService/ClientTest.php" md5="f13abebae0f0463eb558e8d1a92b5135">
-			<class name="GeoIp2\Test\WebService\ClientTest"/>
 		</file>
 		<file filename="libs/GeoIp2/tests/bootstrap.php" md5="3d9dac2ca18b01e861ac34200d4a2841"/>
 		<file filename="libs/MaxMind-DB-Reader-php/CHANGELOG.md" md5="322c6d5e3c16cb410ea74fc58a83ceee"/>
@@ -132,17 +133,36 @@
 		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/Reader/DecoderTest.php" md5="8c51cb0205d8abd032144d375bdade05">
 			<class name="MaxMind\Db\Test\Reader\DecoderTest"/>
 		</file>
-		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/Reader/PointerTest.php" md5="8197a06fb542e60f37dec8d38f928d63">
+		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/Reader/PointerTest.php" md5="ccbdd0f2f1214fd958e432537ba6c6f4">
 			<class name="MaxMind\Db\Test\Reader\PointerTest"/>
 		</file>
-		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/ReaderTest.php" md5="b12f912b7459f910786e03381aef0b9d">
+		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/ReaderTest.php" md5="4d73231ad39f383fa4aecfc7ed1560bf">
 			<class name="MaxMind\Db\Test\Reader\ReaderTest"/>
 		</file>
 		<file filename="libs/MaxMind-DB-Reader-php/tests/bootstrap.php" md5="4fb24dd5dd38f07a4e4dab3146f3cd5b"/>
-		<file filename="libs/maxmind-geoip/GeoLite2-City.mmdb" md5="4db1f8e0219eabffa5ed2293f480f45d"/>
-		<file filename="libs/maxmind-geoip/LICENSE" md5="85eefaa2cbb8581ef26edbdbc7e4f926"/>
-		<file filename="libs/maxmind-geoip/SUPPORT" md5="2831aedc85a165bf7db688c39233366c"/>
-		<file filename="models/GeoAddressModel.php" md5="bb936777bb41ed915edce9bd46a8ab13">
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/GeoIP2-City-Test-Broken-Double-Format.mmdb" md5="b215ab3675b223d402ea0cabc2641a35"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/GeoIP2-City-Test.mmdb" md5="2abeaa59e79a23beca37fa503c90a77f"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-no-ipv4-search-tree.mmdb" md5="9ae637d9b0a3642526e078253706e39d"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-string-value-entries.mmdb" md5="1c4f85da3b31cfad0dcc42ccfc204fd6"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-broken-pointers-24.mmdb" md5="89b25594a2aaf74ce71ce9a16b4006b3"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-decoder.mmdb" md5="2d5623e2a5d5d2010e0ae0bd8722d050"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-ipv4-24.mmdb" md5="4a9464a17cbe3cb360b8cf8c097f83b7"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-ipv4-28.mmdb" md5="ae074e195d7baabcb7c23504123e8783"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-ipv4-32.mmdb" md5="fd47f17e4a53d478053767bf281034c7"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-ipv6-24.mmdb" md5="d58eaa40905988d51045d2d690dd4e12"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-ipv6-28.mmdb" md5="896e5b154688a9d3b32ef26b62bc4fbf"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-ipv6-32.mmdb" md5="1d0cd11b27281309f65554141f48d4f9"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-mixed-24.mmdb" md5="4c2350bff75d772b8f65dd95496a8ab1"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-mixed-28.mmdb" md5="3efc024545fd23e9eb710318fba8ec60"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-mixed-32.mmdb" md5="3270c37f10aea598f70eabf8c73e8238"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/MaxMind-DB-test-nested.mmdb" md5="5e43bab5ffbf125b7cf8f09aec02fd31"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/README.md" md5="57a8718b4fb0d1a16b70fa40699cc090"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/maps-with-pointers.raw" md5="c5f1312813dd1d2fe67f1373a5bab029"/>
+		<file filename="libs/MaxMind-DB-Reader-php/tests/data/test-data/write-test-data" md5="c850b70c78f02ad6d8695b19fb994205"/>
+		<file filename="libs/maxmind-geolite-db/GeoLite2-City.mmdb" md5="4db1f8e0219eabffa5ed2293f480f45d"/>
+		<file filename="libs/maxmind-geolite-db/LICENSE" md5="85eefaa2cbb8581ef26edbdbc7e4f926"/>
+		<file filename="libs/maxmind-geolite-db/SUPPORT" md5="2831aedc85a165bf7db688c39233366c"/>
+		<file filename="models/GeoAddressModel.php" md5="9ad95fb3a98102a976fbdebe44372861">
 			<class name="GeoAddressModel"/>
 		</file>
 		<file filename="models/GeoCountryModel.php" md5="c1b43f93683dbb60af61f815d96d5f28">
@@ -418,6 +438,10 @@
 			<sql file="datafiles/provinces.sql"/>
 		</upgrade>
 	</upgrades>
+	<view>
+		<file filename="templates/forms/elements/geoaddressforminput.tpl" md5="954d7af422c98d57100d5fdc18437884"/>
+		<file filename="templates/pages/geoaddress/testform.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+	</view>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>

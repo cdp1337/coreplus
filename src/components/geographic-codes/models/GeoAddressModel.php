@@ -71,6 +71,14 @@ class GeoAddressModel extends Model {
 			'null' => true,
 			'comment' => 'Longitude of this location',
 		),
+		'created' => array(
+			'type' => Model::ATT_TYPE_CREATED,
+			'null' => false,
+		),
+		'updated' => array(
+			'type' => Model::ATT_TYPE_UPDATED,
+			'null' => false,
+		),
 	);
 
 	/**
@@ -82,4 +90,23 @@ class GeoAddressModel extends Model {
 	public static $Indexes = array(
 		'primary' => array('id'),
 	);
+
+	public function save(){
+		// Quick check to see if this address is actually populated or not.
+		if( $this->_data['address1'] == '' && $this->_data['postal'] == '' ){
+			if($this->exists()){
+				$ret = $this->delete();
+				$this->_data['id'] = null;
+				return $ret;
+			}
+			else{
+				// No change!
+				return false;
+			}
+		}
+		else{
+			// Resume with the traditional save!
+			return parent::save();
+		}
+	}
 }
