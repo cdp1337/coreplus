@@ -276,6 +276,8 @@ class SQL_Parser_Dataset extends SQL_Parser {
 
 			$v = [];
 			foreach ($values as $key => $value) {
+				// Core handles quote escaping automatically.
+				$value = str_replace("''", "'", $value);
 				$v[ $column_names[$key] ] = $value;
 			}
 			$valsets[] = $v;
