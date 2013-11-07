@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" name="Content" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.3" name="Content" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.6.0" operation="ge"/>
 	</requires>
@@ -8,11 +8,11 @@
 		<permission key="content_manage" description="Manage Site Content"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="50f6bbddc0a5df1bbe7f2e621aa77252"/>
-		<file filename="ContentController.php" md5="814deb2ce425be8e382863773db3f631">
+		<file filename="CHANGELOG" md5="2214e528156e9acbd56af893b186771e"/>
+		<file filename="ContentController.php" md5="1345bf8d65d100e3e1f2bf7916675142">
 			<controller name="ContentController"/>
 		</file>
-		<file filename="ContentModel.php" md5="5ecf2ab38ab9f37a0cc209d231a60552">
+		<file filename="ContentModel.php" md5="ac505b424472e15ad85ae6cdf1e633d4">
 			<class name="ContentModel"/>
 		</file>
 	</files>
@@ -27,7 +27,7 @@
 		<file filename="templates/pages/content/delete.tpl" md5="64255b05d03ba0b58cbacb107e2b2dff"/>
 		<file filename="templates/pages/content/edit.tpl" md5="1f45af7838e6eb4421220a6dd5a8428d"/>
 		<file filename="templates/pages/content/index.tpl" md5="9f35bc9ec83575bec0135d3a65865f29"/>
-		<file filename="templates/pages/content/view.tpl" md5="b149433e9927396cb65c8e2880395663"/>
+		<file filename="templates/pages/content/view.tpl" md5="38919251bf738ec4bfeac8a8d69f9a43"/>
 		<file filename="templates/pages/content/view/option1.tpl" md5="4c8037182441dcac26d7f31496ac2a1a"/>
 	</view>
 	<upgrades>
@@ -43,6 +43,7 @@
 		<upgrade from="2.0.0" to="2.0.1"/>
 		<upgrade from="2.0.1b1" to="2.0.1"/>
 		<upgrade from="2.0.1" to="2.0.2"/>
+		<upgrade from="2.0.2" to="2.0.3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
