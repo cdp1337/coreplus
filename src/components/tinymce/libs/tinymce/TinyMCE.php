@@ -4,7 +4,7 @@
  *
  * @package TinyMCE-Enterprise
  * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license All rights reserved
  */
 

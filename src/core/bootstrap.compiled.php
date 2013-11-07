@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 06 Nov 2013 13:34:24 -0500
+ * @compiled Thu, 07 Nov 2013 14:06:51 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -13855,28 +13855,33 @@ $this->set($k, $v);
 }
 }
 public function setValue($value) {
-if ($this->get('required') && !$value) {
-$this->_error = $this->get('label') . ' is required.';
+$valid = $this->validate($value);
+if($valid !== true){
+$this->_error = $valid;
 return false;
+}
+$this->_attributes['value'] = $value;
+return true;
+}
+public function validate($value){
+if ($this->get('required') && !$value) {
+return $this->get('label') . ' is required.';
 }
 if ($value && $this->validation) {
 $vmesg = $this->validationmessage ? $this->validationmessage : $this->get('label') . ' does not validate correctly, please double check it.';
 $v     = $this->validation;
 if (strpos($v, '::') !== false && ($out = call_user_func($v, $value)) !== true) {
 if ($out !== false) $vmesg = $out;
-$this->_error = $vmesg;
-return false;
+return $vmesg;
 }
 elseif (
 ($v{0} == '/' && !preg_match($v, $value)) ||
 ($v{0} == '#' && !preg_match($v, $value))
 ) {
 if (DEVELOPMENT_MODE) $vmesg .= ' validation used: ' . $v;
-$this->_error = $vmesg;
-return false;
+return $vmesg;
 }
 }
-$this->_attributes['value'] = $value;
 return true;
 }
 public function getValueTitle(){
