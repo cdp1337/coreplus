@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="JSONjs" execmode="web" version="2011.11.18~core3">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="JSONjs" execmode="web" version="2011.11.18~core4">
 	<requires>
 		<require name="JQuery" type="library" version="1.4"/>
 	</requires>
@@ -13,6 +13,7 @@
 		<upgrade from="2011.02.23~cae2" to="2011.11.18~core1"/>
 		<upgrade from="2011.11.18~core1" to="2011.11.18~core2"/>
 		<upgrade from="2011.11.18~core2" to="2011.11.18~core3"/>
+		<upgrade from="2011.11.18~core3" to="2011.11.18~core4"/>
 	</upgrades>
 	<description>
 		JSON in JavaScript
@@ -35,8 +36,8 @@
 		prefering the built-in JSON object.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="0fc718e48fb6d0754ae169606c5766ce"/>
-		<file filename="JSONjs.lib.php" md5="5f86e66ea9499a19b70f70d66c035bb6">
+		<file filename="CHANGELOG" md5="c1941b4f1a1e48667964b5017d9bfc36"/>
+		<file filename="JSONjs.lib.php" md5="83bfbf5c9442beabcfd3226495aa5601">
 			<class name="JSONjs"/>
 		</file>
 	</files>

@@ -1,3 +1,8 @@
+JSONjs 2011.11.18~core4
+
+	* Update the copyright datestamp to the current year.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 07 Nov 2013 14:57:25 -0500
+
 JSONjs 2011.11.18~core3
 
 	* Make use of the namespace versions of View instead of static.
