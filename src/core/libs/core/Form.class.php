@@ -458,9 +458,27 @@ class FormElement {
 	 * @return boolean
 	 */
 	public function setValue($value) {
-		if ($this->get('required') && !$value) {
-			$this->_error = $this->get('label') . ' is required.';
+
+		$valid = $this->validate($value);
+		if($valid !== true){
+			$this->_error = $valid;
 			return false;
+		}
+
+		$this->_attributes['value'] = $value;
+		return true;
+	}
+
+	/**
+	 * Validate a given value for this form element.
+	 * Will use the extendable validation logic if provided.
+	 *
+	 * @param mixed $value
+	 * @return string|boolean String if an error was encountered, otherwise TRUE if no errors.
+	 */
+	public function validate($value){
+		if ($this->get('required') && !$value) {
+			return $this->get('label') . ' is required.';
 		}
 
 		// If there's a value, pass it through the validation check, (if available).
@@ -474,8 +492,7 @@ class FormElement {
 			if (strpos($v, '::') !== false && ($out = call_user_func($v, $value)) !== true) {
 				// If a string was returned from the validation logic, set the error to that string.
 				if ($out !== false) $vmesg = $out;
-				$this->_error = $vmesg;
-				return false;
+				return $vmesg;
 			}
 			// regex-based validation.  These don't have any return strings so they're easier.
 			elseif (
@@ -483,12 +500,11 @@ class FormElement {
 				($v{0} == '#' && !preg_match($v, $value))
 			) {
 				if (DEVELOPMENT_MODE) $vmesg .= ' validation used: ' . $v;
-				$this->_error = $vmesg;
-				return false;
+				return $vmesg;
 			}
 		}
 
-		$this->_attributes['value'] = $value;
+		// No errors received!
 		return true;
 	}
 
