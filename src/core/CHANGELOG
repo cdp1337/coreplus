@@ -1,3 +1,13 @@
+Core Plus 2.6.3
+
+	* [Security] Fix Prevent the installer from being executed after the site has been installed.
+	* [Bug] Fixes for the deleted model logic.
+	* [Bug] Fix the smarty insertable rendering.
+	* [Bug] Backport the fix for asset filenames.
+	* [Bug] Page insertables need to be saved even with a blank value.
+	* [Feature] Add support for deleted models not really being deleted.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 07 Nov 2013 14:19:08 -0500
+
 Core Plus 2.6.2
 
 	* [Bug] Better event handler for the <a confirm="..."/> tags.
