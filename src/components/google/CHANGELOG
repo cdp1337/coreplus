@@ -1,3 +1,8 @@
+Google 1.2.1
+
+	* [Feature] Add postal-only geocode requests.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 07 Nov 2013 14:56:47 -0500
+
 Google 1.2.0
 
 	* [Feature] Google geocode supports enterprise signing!
