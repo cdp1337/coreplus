@@ -1,3 +1,10 @@
+Geographic Codes 1.1.0
+
+	* [Feature] Add the MaxMind ip-geolocation libraries for more accurate and faster geo loookups.
+	* [Feature] Address form element works.
+	* The tests to the new Geo-IP systems work.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 07 Nov 2013 14:52:40 -0500
+
 Geographic Codes 1.0.2
 
 	* [Bug] Fixed the build script a little for this component.

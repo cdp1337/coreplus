@@ -13,7 +13,7 @@
 		<file filename="classes/GeoAddressFormInput.php" md5="447402c02cb31393129a00a6e8383fbd">
 			<class name="GeoAddressFormInput"/>
 		</file>
-		<file filename="controllers/GeoAddressController.php" md5="8f12f6eac6b08a93bd460a1cd196e27a">
+		<file filename="controllers/GeoAddressController.php" md5="b4eabb65ecc77166c583879a2c536408">
 			<controller name="GeoAddressController"/>
 		</file>
 		<file filename="datafiles/countries.sql" md5="a48225d34a0eaeac9d43a391449af8f4"/>
