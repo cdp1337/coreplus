@@ -84,7 +84,7 @@ require_once(ROOT_PDIR . 'core/libs/core/datamodel/Dataset.php');
 
 $db = DMI::GetSystemDMI();
 
-$ds = new Dataset();
+$ds = new \Core\Datamodel\Dataset();
 $ds->delete()->table('component')->execute($db);
 
 // And now execute reinstall.
