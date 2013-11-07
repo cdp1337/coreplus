@@ -22,24 +22,24 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="98d44887b748a2bbeb22bc3b243740f7"/>
-		<file filename="User.class.php" md5="57f400af40ad681efe0ae0ae5dcf8548">
+		<file filename="CHANGELOG" md5="1f4732e5164f8c7dd8ddb8f529bb83c8"/>
+		<file filename="User.class.php" md5="384e73121c4582b4b362919697f39223">
 			<class name="User"/>
 			<class name="UserException"/>
 		</file>
-		<file filename="UserForm.class.php" md5="a7f5fb9f5167aff9abc41012e6344b9a">
+		<file filename="UserForm.class.php" md5="9b35980a1e9cc350edfd73cf562570ba">
 			<class name="FormAccessStringInput"/>
 		</file>
-		<file filename="User_Backend.interface.php" md5="338a174c0a903e9bf637e30f2e0a9c75">
+		<file filename="User_Backend.interface.php" md5="63d5aacb720df1f034e6a76802dcf909">
 			<interface name="User_Backend"/>
 		</file>
-		<file filename="backends/User_datamodel.backend.php" md5="92f4c736f63f341e834698b9a6bb1103">
+		<file filename="backends/User_datamodel.backend.php" md5="5ba32aa63a2796feec553fb79620d014">
 			<class name="User_datamodel_Backend"/>
 		</file>
-		<file filename="backends/User_facebook.backend.php" md5="780444ea133fae59ecdb10636642344c">
+		<file filename="backends/User_facebook.backend.php" md5="36bcda51a9b1ba090e7ecedf66faa665">
 			<class name="User_facebook_Backend"/>
 		</file>
-		<file filename="controllers/UserActivityController.php" md5="def79927b684ce697f09bee34e5d56eb">
+		<file filename="controllers/UserActivityController.php" md5="78143a2ac78d69aaa91fc5f35f53ae0b">
 			<controller name="UserActivityController"/>
 		</file>
 		<file filename="controllers/UserAdminController.php" md5="887da46a2d3b0ef36020127c07f4105b">
@@ -48,7 +48,7 @@
 		<file filename="controllers/UserConfigController.php" md5="94c202fbd48a79df7820aa3e62328458">
 			<controller name="UserConfigController"/>
 		</file>
-		<file filename="controllers/UserController.php" md5="0b9f5c329757f2f27592a22b0c1e22fd">
+		<file filename="controllers/UserController.php" md5="dc0d6d079ec1015a4e1762e9337b7a19">
 			<controller name="UserController"/>
 		</file>
 		<file filename="controllers/UserGroupAdminController.php" md5="2c490a28c0a0ff5113b3623a00fce22d">
@@ -61,21 +61,21 @@
 		<file filename="helpers/UserHelper.class.php" md5="5370c551fee52243efea670a1d2f338c">
 			<class name="UserHelper"/>
 		</file>
-		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
+		<file filename="helpers/smarty-plugins/block.permission.php" md5="cd0d2f15873ae84eb6e0197781a5f6b7"/>
 		<file filename="helpers/smarty-plugins/function.user.php" md5="6855b7cfe07650189b1f77f425710213"/>
 		<file filename="models/UserActivityModel.php" md5="8d70f5be700a16328e2107ff48887fd0">
 			<class name="UserActivityModel"/>
 		</file>
-		<file filename="models/UserConfigModel.php" md5="d26645660e75e6ddde57472df77a330f">
+		<file filename="models/UserConfigModel.php" md5="42386d28bf9e3beb92ba613f9ff999c1">
 			<class name="UserConfigModel"/>
 		</file>
-		<file filename="models/UserGroupModel.php" md5="ae481e6e254d45794192725314b5d360">
+		<file filename="models/UserGroupModel.php" md5="d615151fba2586f93b2cfe3ee08cb467">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="models/UserModel.php" md5="402356d29752635472e248f3e7428479">
+		<file filename="models/UserModel.php" md5="86fa6799c78b28de70cae5e7b0fa6071">
 			<class name="UserModel"/>
 		</file>
-		<file filename="models/UserUserConfigModel.php" md5="4effee3eafd958fa65ce9a8204767258">
+		<file filename="models/UserUserConfigModel.php" md5="76dc8c9b41f8bb2bb09e4ffe838f3df0">
 			<class name="UserUserConfigModel"/>
 		</file>
 		<file filename="upgrades/257_to_260.php" md5="3342d4db74259612ac60586a9c573fdb"/>
@@ -83,10 +83,10 @@
 		<file filename="widgets/UserAdminWidget.php" md5="aba6a7a45c1d64a512ea8de47e734c9c">
 			<class name="UserAdminWidget"/>
 		</file>
-		<file filename="widgets/UserLoginWidget.class.php" md5="04d3602121f6cb231473284124dfa88f">
+		<file filename="widgets/UserLoginWidget.class.php" md5="127b6dc23fed6b640d0741d274e8c56d">
 			<class name="UserLoginWidget"/>
 		</file>
-		<file filename="widgets/UserWidget.class.php" md5="85affeee8ce7c56dad1e2ff6582bcb09">
+		<file filename="widgets/UserWidget.class.php" md5="fa8c9980fb19502e978cbce7caa62f87">
 			<class name="UserWidget"/>
 		</file>
 	</files>

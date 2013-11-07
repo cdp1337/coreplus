@@ -2,6 +2,7 @@ User 2.7.0
 
 	* Set all the last_login and last_password metadata as appropriate.
 	* Downstream changes from the Dataset migration.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 07 Nov 2013 15:02:28 -0500
 
 User 2.6.1
 
