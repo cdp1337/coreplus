@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Media Manager">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Media Manager">
 	<requires>
 		<require name="core" type="component" version="2.6.0"/>
 		<require name="jquery" type="library"/>
@@ -18,10 +18,11 @@
 	<view>
 		<file filename="templates/pages/mediamanagernavigator/file_metadata.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/mediamanagernavigator/index.tpl" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="templates/pages/mediamanagernavigator/index/icons.tpl" md5="1239234c6ff0f581b25861ed93741521"/>
-		<file filename="templates/pages/mediamanagernavigator/index/list.tpl" md5="12907c0d2122d492806504d8f1aa4b01"/>
+		<file filename="templates/pages/mediamanagernavigator/index/icons.tpl" md5="c9d2c9d331b9cd848dd1ce74cc8225c6"/>
+		<file filename="templates/pages/mediamanagernavigator/index/list.tpl" md5="ebe362af28ed768c736ac99d6cf86639"/>
 	</view>
 	<files>
+		<file filename="CHANGELOG" md5="65c9c70962372fcacfd44f31a3a33df9"/>
 		<file filename="controllers/MediaManagerNavigatorController.php" md5="4ad8781484bfc7c8cd07a780de25db49">
 			<controller name="MediaManagerNavigatorController"/>
 		</file>
@@ -33,7 +34,9 @@
 		<file filename="assets/css/mediamanager/navigator.css" md5="6c144cb29a061b8731eaad7a63003367"/>
 		<file filename="assets/js/mediamanager/navigator.js" md5="dd042f6215ac83c055a472b0fb94cc9e"/>
 	</assets>
-	<upgrades/>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
