@@ -15,6 +15,7 @@ Core Plus 2.7.0
 	* [Bug] Properly escape indexes on the DROP INDEX instruction for table modifying.
 	* [Bug] Page insertables need to be saved even with a blank value.
 	* [Bug] Fix the file assets being renamed to .min.* before the location check being ran.
+	* [Bug] fixed the path to the template when a fatal error is hit
 	* [Performance] Optimize the bootstrap includes.
 	* [Feature] Add a new feature, a simple tic-tac-toe game on the fatal error page.
 	* [Feature] Add support for deleted models not really being deleted.
@@ -42,6 +43,15 @@ Core Plus 2.7.0
 	* Add some verbiage to the bootstrap when the site has not been installed yet.
 	* The link on the installer just needs to point to the root URL, "".
 	* Move the Dataset location into libs/core/dataset.
+	* Update the copyright datestamp to the current year.
+	* Split FormElement validation to its own method.
+	* Un-escape strings that are read in from a SQL file.
+	* Smarty no longer supports wrapping an object assigned to a template in quotes within the smarty tag
+	* Tweak the verbiage on the core/javascript/minified option.
+	* More precise targeting of correct "Model" classes in the parseDBSchema for components.
+	* Improved phpdoc on CLI::PromptUser and better support for different answer types.
+	* cleaned up moar documentation for constants
+	-- Charlie Powell <charlie@eval.bz>  Thu, 07 Nov 2013 15:07:29 -0500
 
 Core Plus 2.6.2
 
