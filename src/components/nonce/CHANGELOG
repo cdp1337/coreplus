@@ -1,3 +1,8 @@
+Nonce 1.0.3
+
+	* Update the copyright datestamp to the current year.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 07 Nov 2013 14:58:41 -0500
+
 Nonce 1.0.2
 
 	* The Nonce hash validation is more forgiving for different-typecasted strings.
