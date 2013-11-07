@@ -1,3 +1,8 @@
+TinyMCE 4.0.1~core4
+
+	* Update the copyright datestamp to the current year.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 07 Nov 2013 15:01:57 -0500
+
 TinyMCE 4.0.1~core3
 
 	* Make use of the namespace versions of View instead of static.

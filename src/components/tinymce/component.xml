@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.1~core3" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.1~core4" name="TinyMCE" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.1"/>
 		<require name="jquery" type="library"/>
@@ -20,16 +20,16 @@
 		<file filename="templates/pages/tinymce/link.phtml" md5="524d952e87774b2bafd2324e7c15274b"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="c2895e380c7a2d8172016ab094513279"/>
+		<file filename="CHANGELOG" md5="bb442fd8f61e7c8f60a506b47b3323ff"/>
 		<file filename="LICENSE.TXT" md5="045d04e17422d99e338da75b9c749b7c"/>
-		<file filename="TinyMCEFormElement.class.php" md5="5c3eccd47fabc69634e956046b08ee73">
+		<file filename="TinyMCEFormElement.class.php" md5="3dbe13e9154aee92a92c4612c2c8b5f5">
 			<class name="TinyMCEFormElement"/>
 		</file>
 		<file filename="changelog.txt" md5="4d7505646c4aa7e07037ad0b773dd681"/>
 		<file filename="controllers/TinyMCEController.php" md5="5dd2945866df74f2b3bea7a28db19fd4">
 			<controller name="TinyMCEController"/>
 		</file>
-		<file filename="libs/tinymce/TinyMCE.php" md5="95eec77b7c9dd2ea9fc8027f5d953e6f">
+		<file filename="libs/tinymce/TinyMCE.php" md5="4406f00c6e24eb8f984a7d7ed1aa10a4">
 			<class name="TinyMCE\TinyMCE"/>
 		</file>
 	</files>
@@ -224,6 +224,7 @@
 			</dataset>
 		</upgrade>
 		<upgrade from="4.0.1~core2" to="4.0.1~core3"/>
+		<upgrade from="4.0.1~core3" to="4.0.1~core4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
