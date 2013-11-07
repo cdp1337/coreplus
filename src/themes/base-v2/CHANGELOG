@@ -1,3 +1,8 @@
+Theme/Base V2 1.2.0
+
+	* New message types, "message-warning" and "message-deprecated".
+	-- Charlie Powell <charlie@eval.bz>  Thu, 07 Nov 2013 15:03:28 -0500
+
 Theme/Base V2 1.1.0
 
 	* [Feature] Use SASS for better stylesheet management and useragent compression
