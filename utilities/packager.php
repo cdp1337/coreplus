@@ -1141,7 +1141,7 @@ EOD;
 		// Save the package.xml file.
 		$comp->savePackageXML(true, $dir . 'package.xml');
 
-		exec('tar -czf ' . $tgz . ' -C ' . $dir . ' --exclude-vcs --exclude=*~ --exclude=._* .');
+		exec('tar -czf "' . $tgz . '" -C "' . $dir . '" --exclude-vcs --exclude=*~ --exclude=._* .');
 		$bundle = $tgz;
 
 		if(CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
