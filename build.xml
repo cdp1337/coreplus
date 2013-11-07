@@ -23,7 +23,7 @@
 	
 	<!--
 		Slightly more exhaustive than a scan.
-		This will actually go through and build the site, including configuration file, htacces, and reinstallation.
+		This will actually go through and build the site, including configuration file, htaccess, and reinstallation.
 	-->
 	<target name="build" depends="prepare_build,reinstall_src,lint,compile,phpunit"/>
 	
@@ -42,6 +42,7 @@
 		<delete dir="${basedir}/build/code-browser"/>
 		<delete dir="${basedir}/build/coverage"/>
 		<delete dir="${basedir}/build/logs"/>
+		<delete dir="${basedir}/build/phpdoc"/>
 		<delete dir="${basedir}/build/pdepend"/>
 		<delete dir="${basedir}/build/phpunit"/>
 		<delete dir="${basedir}/build/changelogs"/>
@@ -60,6 +61,7 @@
 		<mkdir dir="${basedir}/build/coverage"/>
 		<mkdir dir="${basedir}/build/logs"/>
 		<mkdir dir="${basedir}/build/pdepend"/>
+		<mkdir dir="${basedir}/build/phpdoc"/>
 		<mkdir dir="${basedir}/build/phpunit"/>
 		<mkdir dir="${basedir}/build/changelogs"/>
 	</target>
@@ -121,7 +123,7 @@
 		</apply>
 	</target>
 
-	<target name="phploc" description="Measure project size using PHPLOC">
+	<target name="phploc" depends="clean_src" description="Measure project size using PHPLOC">
 		<exec executable="phploc">
 			<arg value="--log-csv"/>
 			<arg value="${basedir}/build/logs/phploc.csv"/>
@@ -129,7 +131,7 @@
 		</exec>
 	</target>
 
-	<target name="pdepend" description="Calculate software metrics using PHP_Depend">
+	<target name="pdepend" depends="clean_src" description="Calculate software metrics using PHP_Depend">
 		<exec executable="pdepend">
 			<arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml"/>
 			<arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg"/>
@@ -138,7 +140,7 @@
 		</exec>
 	</target>
 
-	<target name="phpmd"
+	<target name="phpmd" depends="clean_src"
 	        description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
 		<exec executable="phpmd">
 			<arg path="${basedir}/src"/>
@@ -147,7 +149,7 @@
 		</exec>
 	</target>
 
-	<target name="phpmd-ci"
+	<target name="phpmd-ci" depends="clean_src"
 	        description="Perform project mess detection using PHPMD creating a log file for the continuous integration server">
 		<exec executable="phpmd">
 			<arg path="${basedir}/src"/>
@@ -158,7 +160,7 @@
 		</exec>
 	</target>
 
-	<target name="phpcs"
+	<target name="phpcs" depends="clean_src"
 	        description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
 		<exec executable="phpcs">
 			<arg value="--standard=${basedir}/build/phpcs.xml"/>
@@ -166,7 +168,7 @@
 		</exec>
 	</target>
 
-	<target name="phpcs-ci"
+	<target name="phpcs-ci" depends="clean_src"
 	        description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server">
 		<exec executable="phpcs" output="/dev/null">
 			<arg value="--report=checkstyle"/>
@@ -176,7 +178,7 @@
 		</exec>
 	</target>
 
-	<target name="phpcpd" description="Find duplicate code using PHPCPD">
+	<target name="phpcpd" depends="clean_src" description="Find duplicate code using PHPCPD">
 		<exec executable="phpcpd">
 			<arg value="--log-pmd"/>
 			<arg value="${basedir}/build/logs/pmd-cpd.xml"/>
@@ -205,28 +207,7 @@
 		</exec>
 	</target>
 	
-	<target name="phpdoc" depends="prepare_build" description="Generate phpDoc Documentation on the product">
-		<exec executable="phpdoc" failonerror="false">			
-			<!-- Scan this directory (source code) -->
-			<arg value="-d"/>
-			<arg value="${basedir}/src"/>
-			<!-- Output to this directory (build directory) -->
-			<arg value="-t"/>
-			<arg value="${basedir}/build/phpdoc"/>
-			<!-- Ignore files -->
-			<arg value="-i"/>
-			<arg value="bootstrap.compiled.php"/>
-			<!-- Page title -->
-			<arg value="--title"/>
-			<arg value="Core Plus"/>
-			<!-- Scan and log private and @internal methods too -->
-			<arg value="--parseprivate"/>
-			<!-- Generate source code -->
-			<arg value="--sourcecode"/>
-			<arg value="--progressbar"/>
-		</exec>
-	</target>
-	<target name="phpdoc-ci" depends="prepare_build" description="Generate phpDoc Documentation on the product (CI Compatible version)">
+	<target name="phpdoc" depends="prepare_build,clean_src" description="Generate phpDoc Documentation on the product">
 		<exec executable="phpdoc" failonerror="false">
 			<!-- Scan this directory (source code) -->
 			<arg value="-d"/>
@@ -236,7 +217,27 @@
 			<arg value="${basedir}/build/phpdoc"/>
 			<!-- Ignore files -->
 			<arg value="-i"/>
-			<arg value="bootstrap.compiled.php"/>
+			<arg value="${basedir}/src/core/bootstrap.compiled.php"/>
+			<!-- Page title -->
+			<arg value="--title"/>
+			<arg value="Core Plus"/>
+			<!-- Scan and log private and @internal methods too -->
+			<arg value="--parseprivate"/>
+			<!-- Generate source code -->
+			<arg value="--sourcecode"/>
+		</exec>
+	</target>
+	<target name="phpdoc-ci" depends="prepare_build,clean_src" description="Generate phpDoc Documentation on the product (CI Compatible version)">
+		<exec executable="phpdoc" failonerror="false">
+			<!-- Scan this directory (source code) -->
+			<arg value="-d"/>
+			<arg value="${basedir}/src"/>
+			<!-- Output to this directory (build directory) -->
+			<arg value="-t"/>
+			<arg value="${basedir}/build/phpdoc"/>
+			<!-- Ignore files -->
+			<arg value="-i"/>
+			<arg value="${basedir}/src/core/bootstrap.compiled.php"/>
 			<!-- Page title -->
 			<arg value="--title"/>
 			<arg value="Core Plus"/>
