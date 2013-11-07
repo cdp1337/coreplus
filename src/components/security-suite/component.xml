@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.5" name="Security-Suite" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.0" name="Security-Suite" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.6.0"/>
+		<require name="core" type="component" version="2.7.0"/>
 		<require name="phpwhois" type="component"/>
 	</requires>
 	<configs/>
@@ -34,8 +34,8 @@
 		Collection of security suites for sites, including anti-spam.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="194183df1de1e84bb2dee820b7e8bdfc"/>
-		<file filename="classes/IpBlacklistHelper.php" md5="f4ae5ce5d895736461ecf285bf4c6704">
+		<file filename="CHANGELOG" md5="82d223cde4f71b0619dcff06cdef4dcb"/>
+		<file filename="classes/IpBlacklistHelper.php" md5="5b137ab7e09e68b44613d7b730c60210">
 			<class name="IpBlacklistHelper"/>
 		</file>
 		<file filename="classes/StopForumSpam.class.php" md5="dd9e2a3d9dd7a535863ede6d2328ad1a">
@@ -67,6 +67,7 @@
 		<upgrade from="1.1.2" to="1.1.3"/>
 		<upgrade from="1.1.3" to="1.1.4"/>
 		<upgrade from="1.1.4" to="1.1.5"/>
+		<upgrade from="1.1.5" to="1.2.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/wp-admin/css/wp-admin.min.css" md5="1060bbdd464bed007f6fa460dd3f6a56"/>
