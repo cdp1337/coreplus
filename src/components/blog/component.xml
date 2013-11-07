@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.4" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.5" name="Blog" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.6.1" operation="ge"/>
+		<require name="core" type="component" version="2.7.0" operation="ge"/>
 		<require name="user" type="component" version="2.5.4"/>
 		<require name="tags" type="component"/>
 		<require name="JQuery-Full" type="component" version="1.9"/>
@@ -14,8 +14,8 @@
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="4ae852d06f1d8413fd702f017a858dd2"/>
-		<file filename="controllers/BlogController.php" md5="d876b20913373241681f117f0cf74159">
+		<file filename="CHANGELOG" md5="fe0dd80938f93f22647c6cfc2ba0f8ed"/>
+		<file filename="controllers/BlogController.php" md5="099b38e845abce6138aba083f193592c">
 			<controller name="BlogController"/>
 		</file>
 		<file filename="helpers/BlogHelper.php" md5="27d8ed9093c1d35d3bdbc84b370afe58">
@@ -41,8 +41,8 @@
 		<file filename="templates/pages/blog/admin.tpl" md5="44274363e8c7fea512396a63293c63fd"/>
 		<file filename="templates/pages/blog/admin_view.tpl" md5="e1ca90792ff8835bee5ef1d03c54a851"/>
 		<file filename="templates/pages/blog/article_create_update.tpl" md5="782384ef977b501e5b80dabf783ecd2d"/>
-		<file filename="templates/pages/blog/article_view.tpl" md5="7c9a9139a84fa327e7c16f7851aad92d"/>
-		<file filename="templates/pages/blog/article_view/review-post.tpl" md5="f645ccbfa064359ed5962077ad666ddd"/>
+		<file filename="templates/pages/blog/article_view.tpl" md5="03e79d65af8e9865f31b2ac1f05facee"/>
+		<file filename="templates/pages/blog/article_view/review-post.tpl" md5="bf28ec2ea5c0caf7e1a2f0fb55ab969f"/>
 		<file filename="templates/pages/blog/create.tpl" md5="88a92a02a91699df3f24063112502867"/>
 		<file filename="templates/pages/blog/editindex.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/blog/import.tpl" md5="7e3f8c90db26ba500fa9e3ee439d2655"/>
@@ -92,6 +92,7 @@
 		<upgrade from="1.5.1" to="1.5.2"/>
 		<upgrade from="1.5.2" to="1.5.3"/>
 		<upgrade from="1.5.3" to="1.5.4"/>
+		<upgrade from="1.5.4" to="1.5.5"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>

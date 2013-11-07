@@ -1,3 +1,8 @@
+Blog 1.5.5
+
+	* Smarty no longer supports wrapping an object assigned to a template in quotes within the smarty tag
+	-- Charlie Powell <charlie@eval.bz>  Thu, 07 Nov 2013 14:48:35 -0500
+
 Blog 1.5.4
 
 	* Increase the blog title length from 64 to 256 characters.
