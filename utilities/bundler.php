@@ -234,4 +234,5 @@ foreach($bundles as $b){
 // Give the option to automatically commit and tag all changes for the component.
 if(CLI::PromptUser('Bundles created, GIT tag the release for ' . $version . '?', 'boolean', true)){
 	exec('git tag -m "Release Version ' . $version . '" -f ' . 'v' . str_replace('~', '-', $version));
+	exec('git push --tags');
 }
