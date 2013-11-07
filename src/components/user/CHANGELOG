@@ -1,3 +1,9 @@
+User 2.6.2
+
+	* 2.6.x didn't support <php/> tags in the upgrader... had to revert that to phpfileinclude.
+	* Upgrade patch for 2.6.2 version to set all the last_login and last_password metadata as appropriate.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 07 Nov 2013 14:18:06 -0500
+
 User 2.6.1
 
 	* New support for additional meta data for the user system.

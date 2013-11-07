@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.1" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.2" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.6.2"/>
 		<!-- User authentication events trigger security logs. -->
@@ -22,7 +22,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="fcd869ba1ac47b89307d7c68b520d490"/>
+		<file filename="CHANGELOG" md5="98d44887b748a2bbeb22bc3b243740f7"/>
 		<file filename="User.class.php" md5="57f400af40ad681efe0ae0ae5dcf8548">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -79,6 +79,7 @@
 			<class name="UserUserConfigModel"/>
 		</file>
 		<file filename="upgrades/257_to_260.php" md5="3342d4db74259612ac60586a9c573fdb"/>
+		<file filename="upgrades/261_to_262.php" md5="9d04b151fb24461499e5c92b051e0bad"/>
 		<file filename="widgets/UserAdminWidget.php" md5="aba6a7a45c1d64a512ea8de47e734c9c">
 			<class name="UserAdminWidget"/>
 		</file>
