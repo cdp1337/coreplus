@@ -20,8 +20,7 @@
 		<config key="/googlemaps/enterprise/privatekey" type="string" default="" description="Private key for Google Maps Enterprise"/>
 		<config key="/googlemaps/enterprise/clientname" type="string" description="Client name for Google Maps Enterprise"/>
 		<config key="/google-analytics/accountid" type="string" default="" description="This is the Account ID (sometimes called 'Web Property ID') listed for this account in google analytics.  Leaving this blank will disable GA; likewise populating it will automatically enable GA."/>
-		<!-- This default key points CSE to http://corepl.us -->
-		<config key="/google/cse/key" type="string" default="001816801766955366691:ce5lmnwv23g" description="The cx for Google CSE Site Search"/>
+		<config key="/google/cse/key" type="string" default="" description="The cx for Google CSE Site Search"/>
 	</configs>
 	<pages>
 		<page baseurl="/google/configure" title="Google Keys and Apps" group="Configure" access="g:admin" admin="1" selectable="0"/>
