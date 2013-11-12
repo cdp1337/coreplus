@@ -1,8 +1,8 @@
-.error-404 #wrapper.column0 {
+.page-error-error-500 #wrapper.column0 {
 	width:100%;
 }
 
-.error-404 .column0 #innerwrapper {
+.page-error-error-500 .column0 #innerwrapper {
 	margin:0;
 	padding:0;
 }
@@ -231,7 +231,6 @@ body .column1 .box.runtime p {padding: 0 4px;}
 body .column1 .ui-container {
 	top: -4em;
 }
-
 .column1 .gol-wrapper {
 	margin-top: 5em;
 }
@@ -242,16 +241,6 @@ body .column1 .ui-container {
 	display: block;
 	width: 90%;
 	text-align: center;
-}
-
-body .gsc-control-cse {
-	background: #1A1A1A;
-	border: 1px solid #363636;
-}
-
-body .gsc-resultsbox-visible {
-	background: #fff;
-	text-align: left;
 }
 
 .author {

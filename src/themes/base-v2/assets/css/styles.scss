@@ -931,7 +931,7 @@ ol.sortable-listing ol {
  *****************************************************************************
  *****************************************************************************/
 #primary-nav li {
-	float: left;
+	display: inline-block;
 	position: relative;
 	text-align: center;
 }

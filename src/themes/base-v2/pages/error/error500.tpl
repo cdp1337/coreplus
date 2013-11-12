@@ -1,27 +1,25 @@
-{css src="assets/css/error404.css"}{/css}
+{css src="assets/css/error500.css"}{/css}
 {script src="assets/js/json-sans-eval.js" location="head"}{/script}
 {script src="assets/js/css-browser-selector.js" location="head"}{/script}
 {script src="assets/js/game-of-life-v3.1.1.js" location="head"}{/script}
 
 
 <div class="error-container">
-	<h2>That page doesn't seem to exist...</h2>
-	<h3>Why not play a game before {a history="1"}going back{/a} or continuing your search?</h3>
-	<p>We promise not to tell the boss.</p>
-	<gcse:search></gcse:search>
+	<h2>Server Error 500 &ndash; He's dead, Jim!</h2>
+	<h3>Why not play a game while the network engineers fix whatever blew up?</h3>
+	<p>Or you can {a history="1"}go back{/a}. Studies show it sure beats mashing the f5 key.</p>
 </div>
 
 <div class="gol-wrapper">
-	<div class="clear"></div>
 	<canvas id="canvas" height=""></canvas>
 	<div class="ui-container">
 		<div class="ui-center">
 			<div class="box gol-controls">
 				<div class="subtitle">Controls</div>
 				<form action="">
-					<input type="button" value="Run" id="buttonRun"/>
-					<input type="button" value="Step" id="buttonStep" />
-					<input type="button" value="Clear" id="buttonClear" />
+					<input type="button" value="Run" id="buttonRun" title="Key: R" />
+					<input type="button" value="Step" id="buttonStep" title="Key: S" />
+					<input type="button" value="Clear" id="buttonClear" title="Key: C" />
 					<input type="button" value="Share" id="buttonExport" />
 					<span id="exportUrl"><a id="exportUrlLink">Link</a> | <a id="exportTinyUrlLink" title="Tiny URL">Create micro URL</a></span>
 				</form>

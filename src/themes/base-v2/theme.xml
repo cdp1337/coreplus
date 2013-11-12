@@ -7,20 +7,24 @@
 		<file filename="assets/css/_screen.scss" md5="616a30b3d90d734a28c0b429991eb77e"/>
 		<file filename="assets/css/codemirror.css" md5="3ae79db8923119601aa32d46e9074a29"/>
 		<file filename="assets/css/error404.css" md5="d451b8028c05fb6474223b84ddc7f417"/>
+		<file filename="assets/css/error500.css" md5="207fccf0d2321938cdea2a15bbf99ebf"/>
 		<file filename="assets/css/opt/full-width.css" md5="b874f3da2ccf0890f507834f8ae1a3fc"/>
 		<file filename="assets/css/opt/gradients.css" md5="26c1738ce9d7e3a909f633dedf52db63"/>
 		<file filename="assets/css/print.css" md5="5bcfc09ac6affe440f91a89e44070ef0"/>
 		<file filename="assets/css/screen.css" md5="3671c7323c4cdd2a6deb8242e6fdd518"/>
-		<file filename="assets/css/styles.css" md5="6edf62fee9fe163253d1f0a44ff28c35"/>
-		<file filename="assets/css/styles.min.css" md5="9860ccbd3a110eff5a8ec68089da9875"/>
-		<file filename="assets/css/styles.scss" md5="479e0cf7d65bb930e179373d213f3b62"/>
+		<file filename="assets/css/styles.css" md5="31f4bb66d137fab9ec4c0d1bf5c3271e"/>
+		<file filename="assets/css/styles.min.css" md5="1e5187fb0f6121b480cbe4501cda4d73"/>
+		<file filename="assets/css/styles.scss" md5="f76dcef09acd26fc5a4a07101c60fa65"/>
 		<file filename="assets/css/tinymce/content.css" md5="1ff045c082c1f366dd16e8322644e484"/>
 		<file filename="assets/images/404.jpg" md5="815cb4116bbbec081a645e85de74025c"/>
 		<file filename="assets/images/loading-bar-small.gif" md5="657ee2fa16698cbc29d5a1f4b257de46"/>
+		<file filename="assets/js/css-browser-selector.js" md5="b5231d4cce0c8293631acc546da86a97"/>
+		<file filename="assets/js/game-of-life-v3.1.1.js" md5="45d0548fad7ba669b403f9d0711b2472"/>
+		<file filename="assets/js/json-sans-eval.js" md5="5cce2220bf8caa8ca9291bc3d0eb7b81"/>
 	</assets>
 	<skins>
 		<file filename="basic.tpl" title="Standard skin with one left column" md5="9e73c4b0f94cb55c0c749f02940da9de"/>
-		<file filename="wide.tpl" title="Full-width body skin, contains no columns" md5="372d847798d7c3a4abf220a940e69141"/>
+		<file filename="wide.tpl" title="Full-width body skin, contains no columns" md5="82f2f5fe8a15923c10f48c2590f629d4"/>
 		<file filename="blank.tpl" title="Blank template, do not use" md5="261d8d70a592918d16da399060d13ef7"/>
 	</skins>
 	<emailskins>

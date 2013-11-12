@@ -3,7 +3,7 @@
  * @package Core Plus\Core
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright (C) 2009-2013  Charlie Powell
+ * @copyright Copyright (C) 2009-2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -48,12 +48,17 @@ function smarty_block_a($params, $innercontent, $template, &$repeat){
 		$params['href'] = '#false';
 	}
 
+	if(isset($params['history'])) $href = Core::GetHistory($params['history']);
+
 	// Add in any attributes.
 	foreach($params as $k => $v){
 		$k = strtolower($k);
 		switch($k){
 			case 'href':
 				$content .= ' href="' . Core::ResolveLink ($v) . '"';
+				break;
+			case 'history':
+				$content .= ' href="' . Core::GetHistory($v) . '"';
 				break;
 			case 'assign':
 				$assign = $v;

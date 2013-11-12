@@ -1803,7 +1803,7 @@ ol.sortable-listing ol {
  *****************************************************************************/
 /* line 933, styles.scss */
 #primary-nav li {
-  float: left;
+  display: inline-block;
   position: relative;
   text-align: center;
 }
