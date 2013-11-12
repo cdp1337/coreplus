@@ -54,7 +54,7 @@
 			<div class="clear"></div>
 		</div>
 	</div>
-	<span class="author">{a target="_blank" href="http://pmav.eu"}Game of Life{/a}</span>
+	<span class="author">{a target="_blank" href="http://pmav.eu/stuff/javascript-game-of-life-v3.1.1/"}Game of Life{/a}</span>
 
 	<div class="hint-container">
 		<span id="hint">Hint: hit the <strong>Run</strong> button!</span>
