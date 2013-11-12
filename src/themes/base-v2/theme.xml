@@ -20,7 +20,6 @@
 		<file filename="assets/images/loading-bar-small.gif" md5="657ee2fa16698cbc29d5a1f4b257de46"/>
 		<file filename="assets/js/css-browser-selector.js" md5="b5231d4cce0c8293631acc546da86a97"/>
 		<file filename="assets/js/game-of-life-v3.1.1.js" md5="45d0548fad7ba669b403f9d0711b2472"/>
-		<file filename="assets/js/json-sans-eval.js" md5="5cce2220bf8caa8ca9291bc3d0eb7b81"/>
 	</assets>
 	<skins>
 		<file filename="basic.tpl" title="Standard skin with one left column" md5="9e73c4b0f94cb55c0c749f02940da9de"/>

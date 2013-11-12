@@ -1,5 +1,4 @@
 {css src="assets/css/error404.css"}{/css}
-{script src="assets/js/json-sans-eval.js" location="head"}{/script}
 {script src="assets/js/css-browser-selector.js" location="head"}{/script}
 {script src="assets/js/game-of-life-v3.1.1.js" location="head"}{/script}
 

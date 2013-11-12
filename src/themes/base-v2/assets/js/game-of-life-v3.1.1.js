@@ -12,9 +12,11 @@
 
     columns : 0,
     rows : 0,
-  
+
     waitTime: 30,
     generation : 0,
+	timecount : 0,
+	timeval : 0,
 
     running : false,
     autoplay : false,
@@ -147,7 +149,6 @@
         this.keepDOMElements(); // Keep DOM References (getElementsById)
         this.canvas.init();     // Init canvas GUI
         this.registerEvents();  // Register event handlers
-    
         this.prepare();
       } catch (e) {
         alert("Error: "+e);
@@ -205,8 +206,9 @@
 	      this.randomState();
         }
 
-        state = jsonParse(decodeURI(s));
-          
+        //state = jsonParse(decodeURI(s));
+	    state = $.parseJSON(decodeURI(s));
+
         for (i = 0; i < state.length; i++) {
           for (y in state[i]) {
             for (j = 0 ; j < state[i][y].length ; j++) {
@@ -223,7 +225,7 @@
      */
     randomState : function() {
       var i, liveCells = (this.rows * this.columns) * 0.12;
-      
+
       for (i = 0; i < liveCells; i++) {
         this.listLife.addCell(this.helpers.random(0, this.columns - 1), this.helpers.random(0, this.rows - 1), this.listLife.actualState);
       }
@@ -303,8 +305,11 @@
     nextStep : function() {
       var i, x, y, r, liveCellNumber, algorithmTime, guiTime;
 
+	  //var start = new Date().getMilliseconds();
+
+
       // Algorithm run
-    
+
       algorithmTime = (new Date());
 
       liveCellNumber = this.listLife.nextGeneration();
@@ -371,6 +376,14 @@
           this.cleanUp();
         }
       }
+
+	    //var end = new Date().getMilliseconds();
+	    //var time = end - start;
+
+	    //if(parseInt(time) > 0) GOL.timeval += parseInt(time);
+	    //console.log(GOL.timeval);
+	    //GOL.timecount++;
+	    //console.log(GOL.timecount);
     },
 
 
@@ -427,7 +440,7 @@
         if (!event) {
           event = window.event;
         }
-      
+
         if (event.keyCode === 67) { // Key: C
           GOL.handlers.buttons.clear();
         } else if (event.keyCode === 82 ) { // Key: R
@@ -439,7 +452,7 @@
 
 
       buttons : {
-      
+
         /**
          * Button Handler - Run
          */
@@ -448,9 +461,13 @@
 
           GOL.running = !GOL.running;
           if (GOL.running) {
+
+
             GOL.nextStep();
+
             document.getElementById('buttonRun').value = 'Stop';
           } else {
+	          console.log(GOL.timeval / GOL.timecount);
             document.getElementById('buttonRun').value = 'Run';
           }
         },
@@ -556,7 +573,7 @@
         }
 
       }
-    
+
     },
 
 
@@ -669,7 +686,7 @@
        * drawCell
        */
       drawCell : function (i, j, alive) {
-                
+
         if (alive) {
 
           if (this.age[i][j] > -1)
@@ -684,7 +701,7 @@
         }
 
         this.context.fillRect(this.cellSpace + (this.cellSpace * i) + (this.cellSize * i), this.cellSpace + (this.cellSpace * j) + (this.cellSize * j), this.cellSize, this.cellSize);
-                
+
       },
 
 
@@ -757,9 +774,9 @@
       /**
        *
 	NOTE: The following code is slower than the used one.
-	
+
 	(...)
-	
+
 	if (allDeadNeighbours[key] === undefined) {
 	  allDeadNeighbours[key] = {
 			x: deadNeighbours[m][0],
@@ -769,14 +786,14 @@
 	} else {
 	  allDeadNeighbours[key].i++;
 	}
-	
+
 	(...)
-			
+
 	// Process dead neighbours
 	for (key in allDeadNeighbours) {
-	  
+
 	  if (allDeadNeighbours[key].i === 3) { // Add new Cell
-		
+
 		this.addCell(allDeadNeighbours[key].x, allDeadNeighbours[key].y, newState);
 		alive++;
 		this.redrawList.push([allDeadNeighbours[key].x, allDeadNeighbours[key].y, 1]);
@@ -790,7 +807,7 @@
         for (i = 0; i < this.actualState.length; i++) {
           this.topPointer = 1;
           this.bottomPointer = 1;
-                    
+
           for (j = 1; j < this.actualState[i].length; j++) {
             x = this.actualState[i][j];
             y = this.actualState[i][0];
@@ -805,7 +822,7 @@
             for (m = 0; m < 8; m++) {
               if (deadNeighbours[m] !== undefined) {
                 key = deadNeighbours[m][0] + ',' + deadNeighbours[m][1]; // Create hashtable key
-                
+
                 if (allDeadNeighbours[key] === undefined) {
                   allDeadNeighbours[key] = 1;
                 } else {
@@ -830,7 +847,7 @@
             key = key.split(',');
             t1 = parseInt(key[0], 10);
             t2 = parseInt(key[1], 10);
-			
+
             this.addCell(t1, t2, newState);
             alive++;
             this.redrawList.push([t1, t2, 1]);
@@ -880,7 +897,7 @@
                   } else {
                     this.topPointer = k - 1;
                   }
-                                    
+
                   neighbours++;
                 }
 
@@ -891,7 +908,7 @@
             }
           }
         }
-        
+
         // Middle
         for (k = 1; k < this.actualState[i].length; k++) {
           if (this.actualState[i][k] >= (x - 1)) {
@@ -932,7 +949,7 @@
 
                 if (this.actualState[i+1][k] === (x + 1)) {
                   possibleNeighboursList[7] = undefined;
-                                    
+
                   if (k == 1) {
                     this.bottomPointer = 1;
                   } else {
@@ -949,7 +966,7 @@
             }
           }
         }
-		
+
         return neighbours;
       },
 
@@ -959,7 +976,7 @@
        */
       isAlive : function(x, y) {
         var i, j;
-      
+
         for (i = 0; i < this.actualState.length; i++) {
           if (this.actualState[i][0] === y) {
             for (j = 1; j < this.actualState[i].length; j++) {
@@ -978,7 +995,7 @@
        */
       removeCell : function(x, y, state) {
         var i, j;
-      
+
         for (i = 0; i < state.length; i++) {
           if (state[i][0] === y) {
 
@@ -1091,7 +1108,7 @@
       getUrlParameter : function(name) {
         if (this.urlParameters === null) { // Cache miss
           var hash, hashes, i;
-        
+
           this.urlParameters = [];
           hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
 
@@ -1130,7 +1147,7 @@
         if (!event) {
           event = window.event;
         }
-      
+
         if (event.pageX || event.pageY) 	{
           posx = event.pageX;
           posy = event.pageY;
@@ -1165,6 +1182,7 @@
    */
   GOL.helpers.registerEvent(window, 'load', function () {
 	var el = document.getElementById('canvas');
+
 	  el.height = Math.floor(window.outerHeight - $('#primary-nav .navigation-menu').height() - $('header').height() );
     GOL.init();
   }, false);
