@@ -32,7 +32,6 @@ namespace Google\CSE;
  * <h3>Usage Examples</h3>
  *
  *
- * @todo Write documentation for Helper
  * <h4>Example 1</h4>
  * <p>Description 1</p>
  * <code>
@@ -49,8 +48,8 @@ namespace Google\CSE;
  * </code>
  *
  *
- * @package Google\Analytics
- * @author Charlie Powell <charlie@eval.bz>
+ * @package Google\CSE
+ * @author Nicholas Hinsch <nicholas@eval.bz>
  *
  */
 abstract class Helper {
