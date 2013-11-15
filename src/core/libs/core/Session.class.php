@@ -172,7 +172,15 @@ class Session implements SessionHandlerInterface {
 		return true;
 	}
 
-	public static function SetUser(User $u) {
+	/**
+	 * Set the current session to be owned by the given user,
+	 * effectively logging the user in.
+	 *
+	 * Drop support for the User class in favour of UserModel after pre-2.8.x is no longer supported.
+	 *
+	 * @param UserModel|User $u
+	 */
+	public static function SetUser($u) {
 		$model = self::_GetModel(session_id());
 
 		$model->set('user_id', $u->get('id'));
