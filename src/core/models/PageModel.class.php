@@ -971,6 +971,7 @@ class PageModel extends Model {
 
 			// If the page is currently Edit and there is a View... handle that instance.
 			if ($m == 'edit' && method_exists($this->getControllerClass(), 'view')) {
+				/** @var PageModel $p */
 				$p = PageModel::Construct(str_replace('/edit/', '/view/', $b));
 				if ($p->exists()) {
 					// I need the array merge because getParentTree only returns << parents >>.
@@ -980,9 +981,27 @@ class PageModel extends Model {
 
 			// If the page is currently Delete and there is a View... handle that instance.
 			if ($m == 'delete' && method_exists($this->getControllerClass(), 'view')) {
+				/** @var PageModel $p */
 				$p = PageModel::Construct(str_replace('/delete/', '/view/', $b));
 				// Only try to call the script if it exists.
 				if ($p->exists()) {
+					// I need the array merge because getParentTree only returns << parents >>.
+					return array_merge($p->getParentTree(), array($p));
+				}
+			}
+
+			// If the page is currently update, edit, or create and there is an "admin" page, link that instead.
+			if(
+				($m == 'create' || $m == 'update' || $m == 'edit') &&
+				method_exists($this->getControllerClass(), 'admin')
+			){
+				// Replace the current baseurl with a /admin version.
+				$parentb = strpos($b, '/' . $m) ? substr($b, 0, strpos($b, '/' . $m)) : $b;
+				// Append the /admin method
+				$parentb .= '/admin';
+				/** @var PageModel $p */
+				$p = PageModel::Construct($parentb);
+				if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
 					// I need the array merge because getParentTree only returns << parents >>.
 					return array_merge($p->getParentTree(), array($p));
 				}
