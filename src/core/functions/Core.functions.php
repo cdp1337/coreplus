@@ -102,31 +102,56 @@ function FTP(){
 /**
  * Get the current user model that is logged in.
  *
- * @return \User_Backend
+ * To support legacy systems, this will also return the User object if it's available instead.
+ * This support is for < 2.8.x Core installations and will be removed after some amount of time TBD.
+ *
+ * If no user systems are currently available, null is returned.
+ *
+ * @return \UserModel|\User|null
  */
 function user(){
 	if(!\Core::IsComponentAvailable('User')){
 		return null;
 	}
 
-	if(!class_exists('\\User')){
+	if(!class_exists('\\UserModel')){
 		return null;
 	}
 
+	/** @var bool $use_legacy Use the legacy (pre-2.8.x), user system. */
+	$use_legacy = (class_exists('\\User'));
+
+
 	// Is the session data present?
-	if(!isset($_SESSION['user'])){
-		$_SESSION['user'] = \User::Factory();
+	if($use_legacy){
+		if(!isset($_SESSION['user'])){
+			$_SESSION['user'] = \User::Factory();
+		}
+		elseif(!$_SESSION['user'] instanceof \User){
+			// Clear out this user too!
+			// This may happen when dealing with a combination of 2.7 and 2.8 components.
+			$_SESSION['user'] = \User::Factory();
+		}
 	}
 	else{
-		/** @var $user \User */
-		$user = $_SESSION['user'];
-
-		// If this is in multisite mode, blank out the access string cache too!
-		// This is because siteA may have some groups, while siteB may have another.
-		// We don't want a user going to a site they have full access to, hopping to another and having cached permissions!
-		if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
-			$user->clearAccessStringCache();
+		if(!isset($_SESSION['user'])){
+			$_SESSION['user'] = new \UserModel();
 		}
+		elseif(!$_SESSION['user'] instanceof \UserModel){
+			// Clear out this user too!
+			// This may happen with pre-2.8.x systems.
+			$_SESSION['user'] = new \UserModel();
+		}
+	}
+
+	/** @var $user \UserModel|\User */
+	$user = $_SESSION['user'];
+
+	// If this is in multisite mode, blank out the access string cache too!
+	// This is because siteA may have some groups, while siteB may have another.
+	// We don't want a user going to a site they have full access to, hopping to another and having cached permissions!
+	if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
+		$user->clearAccessStringCache();
 	}
 
 	return $_SESSION['user'];
