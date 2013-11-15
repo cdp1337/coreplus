@@ -1,4 +1,4 @@
-<fieldset class="{$group->getClass()}"{$group->getGroupAttributes()}>
+<fieldset id="{$group->getID()}" class="{$group->getClass()}"{$group->getGroupAttributes()}>
 	<legend> {$group->get('title')} </legend>
 	{if $group->get('description')}
 		<p class="formdescription">{$group->get('description')}</p>

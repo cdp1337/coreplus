@@ -1,4 +1,4 @@
-<div class="{$element->getClass()} {$element->get('id')} checkboxes-toggleable">
+<div class="{$element->getClass()} {$element->get('id')} checkboxes-toggleable" id="{$element->get('id')}">
 
 	<span class="checkboxes-label">{$element->get('title')|escape}
 		<span class="checkboxes-toggle checkboxes-toggle-check" style="display:none;">Check All <i class='icon-check'></i></span>
