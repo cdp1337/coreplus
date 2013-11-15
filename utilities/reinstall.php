@@ -101,8 +101,15 @@ require_once(ROOT_PDIR . 'core/helpers/UpdaterHelper.class.php');
 
 \Core::LoadComponents();
 
+$allpages = [];
+
 // And perform an actual reinstall
 foreach(\Core::GetComponents() as $c){
+	/** @var Component_2_1 $c */
+
+	// Get the pages, (for the cleanup operation)
+	$allpages = array_merge($allpages, $c->getPagesDefined());
+
 	echo 'Reinstalling ' . $c->getName() . "...";
 	$change = $c->reinstall();
 
@@ -137,4 +144,18 @@ if($theme != 'default'){
 	else{
 		echo "\n" . implode("\n", $change) . "\n";
 	}
+}
+
+echo 'Cleaning up non-existent pages...' . "\n";
+foreach(\Core\Datamodel\Dataset::Init()->select('baseurl')->table('page')->where('admin = 1')->execute() as $row){
+	$baseurl = $row['baseurl'];
+
+	// This page existed already, no need to do anything :)
+	if(isset($allpages[$baseurl])) continue;
+
+	// Otherwise, this page was deleted or for some reason doesn't exist in the component list.....
+	// BUH BAI
+	echo "Deleting page " . $baseurl . "\n";
+	\Core\Datamodel\Dataset::Init()->delete()->table('page')->where('baseurl = ' . $baseurl)->execute();
+	\Core\Datamodel\Dataset::Init()->delete()->table('page_meta')->where('baseurl = ' . $baseurl)->execute();
 }
