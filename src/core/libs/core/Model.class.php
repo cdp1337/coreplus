@@ -224,6 +224,9 @@ class Model implements ArrayAccess {
 	 */
 	protected $_exists = false;
 
+	/**
+	 * @var array Set of linked children models on this model, populated by the Constructor and *link methods.
+	 */
 	protected $_linked = array();
 
 	protected $_cacheable = true;
@@ -237,15 +240,21 @@ class Model implements ArrayAccess {
 	protected $_schemacache = null;
 
 	/**
-	 * The schema as per defined in the extending model.
-	 * @var array
+	 * @var array The schema as per defined in the extending model.
 	 */
 	public static $Schema = array();
 
+	/**
+	 * @var array Any indexes that are required on this data.  Must be defined in the extending model if used.
+	 */
 	public static $Indexes = array();
 
 	public static $_ModelCache = array();
 
+
+	/*************************************************************************
+	 ****                   STANDARD PUBLIC METHODS                       ****
+	 *************************************************************************/
 
 	/**
 	 * Create a new instance of the requested model.
@@ -256,7 +265,31 @@ class Model implements ArrayAccess {
 		// Update the _data array based on the schema.
 		$s = self::GetSchema();
 		foreach ($s as $k => $v) {
+			// Populate the default options based on the schema.
 			$this->_data[$k] = (isset($v['default'])) ? $v['default'] : null;
+
+			if(isset($v['link'])){
+				// If the link is requested on this property, populate the linked array for the corresponding model!
+				if(is_array($v['link'])){
+					$linkmodel = $v['link']['model'];
+					$linktype  = isset($v['link']['type']) ? $v['link']['type'] : Model::LINK_HASONE;
+					$linkon    = isset($v['link']['on']) ? $v['link']['on'] : 'id';
+				}
+				else{
+					// Allow the short-hand version to be used too.
+					// This will setup a 1-to-1 relationship.
+					$linkmodel = $v['link'];
+					$linktype  = Model::LINK_HASONE;
+					$linkon    = 'id'; // ... erm yeah... hopefully this is it!
+				}
+
+
+				// And populate the linked array with this link data.
+				$this->_linked[$linkmodel] = [
+					'on'   => [$linkon => $k],
+					'link' => $linktype,
+				];
+			}
 		}
 
 		// Check the index (primary), and the incoming data.  If it matches, load it up!
@@ -275,6 +308,11 @@ class Model implements ArrayAccess {
 		}
 	}
 
+	/**
+	 * Load this record from the datastore.
+	 *
+	 * Generally not needed to be called directly, but can be if required.
+	 */
 	public function load() {
 
 		// If there is no associated table, do not load anything.
@@ -412,6 +450,31 @@ class Model implements ArrayAccess {
 		// This allows utilities to hook in and modify the model or perform some other action.
 		HookHandler::DispatchHook('/core/model/presave', $this);
 
+		// NEW in 2.8, I need to run through the linked models and see if any local key is a foreign key of a linked model.
+		// If it is, then I need to save that foreign model so I can get its updated primary key, (if it changed).
+		foreach($this->_linked as $k => $l){
+			// If this link has a 1-sized relationship and the local node is set as a FK, then read it as such.
+			if($l['link'] == Model::LINK_HASONE && sizeof($l['on']) == 1){
+				reset($l['on']);
+				$remotek = key($l['on']);
+				$localk  = $l['on'][$remotek];
+				$locals = $this->getKeySchema($localk);
+
+				// No schema?  Ok, nothing to save to!
+				if(!$locals) continue;
+
+				// If this is not a FK, then I don't care!
+				if($locals['type'] != Model::ATT_TYPE_UUID_FK) continue;
+
+				// OTHERWISE..... ;)
+				/** @var Model $model */
+				$model = $l['records'];
+				$model->save();
+				$this->set($localk, $model->get($remotek));
+			}
+		}
+
+
 		if ($this->_exists) $this->_saveExisting();
 		else $this->_saveNew();
 
@@ -469,65 +532,93 @@ class Model implements ArrayAccess {
 		return true;
 	}
 
-	//// A few array access functions \\\\
-
 	/**
-	 * Whether an offset exists
+	 * Get the requested key for this object.
 	 *
-	 * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+	 * @param string $k
 	 *
-	 * @param mixed $offset An offset to check for.
-	 *
-	 * @return boolean Returns true on success or false on failure.
+	 * @return mixed
 	 */
-	public function offsetExists($offset) {
-		return (array_key_exists($offset, $this->_data));
+	public function get($k) {
+		if($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
+			// Check if the data exists and was decrypted from the database.
+			return $this->_datadecrypted[$k];
+		}
+		elseif (array_key_exists($k, $this->_data)) {
+			// Check if this data was loaded from the original data array
+			return $this->_data[$k];
+		}
+		elseif (array_key_exists($k, $this->_dataother)) {
+			// Check if this data was set from the "set" command on a non-tracked column.
+			return $this->_dataother[$k];
+		}
+		elseif($this->getLink($k)){
+			// Check if this data is actually a linked model
+			return $this->getLink($k);
+		}
+		else {
+			return null;
+		}
 	}
 
 	/**
-	 * Offset to retrieve
+	 * Get the human-readable label for this record.
 	 *
-	 * Alias of Model::get()
+	 * By default, it will sift through the schema looking for keys that appear to be human-readable terms,
+	 * but for best results, please extend this method and have it return what's necessary for the given Model.
 	 *
-	 * @link http://php.net/manual/en/arrayaccess.offsetget.php
-	 *
-	 * @param mixed $offset The offset to retrieve.
-	 *
-	 * @return mixed Can return all value types.
+	 * @return string
 	 */
-	public function offsetGet($offset) {
-		return $this->get($offset);
+	public function getLabel(){
+		$s = $this->getKeySchemas();
+
+		if(isset($s['name'])){
+			return $this->get('name');
+		}
+		elseif(isset($s['title'])){
+			return $this->get('title');
+		}
+		elseif(isset($s['key'])){
+			return $this->get('key');
+		}
+		else{
+			return 'Unnamed ' . $this->getPrimaryKeyString();
+		}
 	}
 
 	/**
-	 * Offset to set
+	 * Just return this object as an array
+	 * (essentially just the _data array... :p)
 	 *
-	 * Alias of Model::set()
-	 *
-	 * @link http://php.net/manual/en/arrayaccess.offsetset.php
-	 *
-	 * @param mixed $offset The offset to assign the value to.
-	 * @param mixed $value The value to set.
-	 *
-	 * @return void
+	 * @return array
 	 */
-	public function offsetSet($offset, $value) {
-		$this->set($offset, $value);
+	public function getAsArray() {
+		// Has there been data that has been decrypted?
+		if($this->_datadecrypted !== null){
+			return array_merge($this->_data, $this->_dataother, $this->_datadecrypted);
+		}
+		else{
+			return array_merge($this->_data, $this->_dataother);
+		}
 	}
 
 	/**
-	 * Offset to unset
+	 * Get the data of this model.
+	 * Don't use this, it's probably not what you need.
 	 *
-	 * This just sets the value to null.
-	 *
-	 * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-	 *
-	 * @param mixed $offset The offset to unset.
-	 *
-	 * @return void
+	 * @return array
 	 */
-	public function offsetUnset($offset) {
-		$this->set($offset, null);
+	public function getData(){
+		return $this->_data;
+	}
+
+	/**
+	 * Get the initial data of this model as it was when it was loaded from teh database.
+	 *
+	 * @return array|null
+	 */
+	public function getInitialData(){
+		return $this->_datainit;
 	}
 
 	/**
@@ -544,7 +635,7 @@ class Model implements ArrayAccess {
 
 			foreach ($this->_schemacache as $k => $v) {
 				// These are all defaults for schemas.
-				// Setting them to the default if they're not set will ensure that 
+				// Setting them to the default if they're not set will ensure that
 				// 'undefined index' notices are not incurred.
 				if (!isset($v['type']))      $this->_schemacache[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
 				if (!isset($v['maxlength'])) $this->_schemacache[$k]['maxlength'] = false;
@@ -645,210 +736,6 @@ class Model implements ArrayAccess {
 		}
 	}
 
-	/*
-	public boolean offsetExists ( mixed $offset )
-	public mixed offsetGet ( mixed $offset )
-	public void offsetSet ( mixed $offset , mixed $value )
-	public void offsetUnset ( mixed $offset )
-	*/
-	private function _saveNew() {
-		$i = self::GetIndexes();
-		$s = self::GetSchema();
-		$n = $this->_getTableName();
-
-		if (!isset($i['primary'])) $i['primary'] = array(); // No primary schema defined... just don't make the in_array bail out.
-
-		$dat = new Core\Datamodel\Dataset();
-		$dat->table($n);
-
-		$idcol = false;
-		foreach ($this->_data as $k => $v) {
-			$keyschema = $s[$k];
-
-			switch ($keyschema['type']) {
-				case Model::ATT_TYPE_CREATED:
-				case Model::ATT_TYPE_UPDATED:
-					// If this value has already been set, (some advanced utilities may want to specify a different updated or created time),
-					// then allow that value to stick.
-					if($v){
-						$dat->insert($k, $v);
-					}
-					else{
-						$nv = Time::GetCurrentGMT();
-						$dat->insert($k, $nv);
-						$this->_data[$k] = $nv;
-					}
-					break;
-
-				case Model::ATT_TYPE_ID:
-					$dat->setID($k, $this->_data[$k]);
-					$idcol = $k; // Remember this for after the save.
-					break;
-
-				case Model::ATT_TYPE_UUID:
-					if($this->_data[$k]){
-						// Yay, a UUID is already set, no need to really do much.
-						$nv = $this->_data[$k];
-						// It's already set and this will most likely be ignored, but may not be for UPDATE statements...
-						// although there shouldn't be any update statements here.... but ya never know
-						$dat->setID($k, $nv);
-					}
-					else{
-						// I need to generate a new key and set that.
-						$nv = Core::GenerateUUID();
-						// In this case, the database isn't going to care what the column is, other than the fact it's unique.
-						// It will be :)
-						$dat->insert($k, $nv);
-						// And I need to set this on the data so it's available next time.
-						$this->_data[$k] = $nv;
-						$dat->setID($k, $nv);
-					}
-					// Remember this for after the save.
-					$idcol = $k;
-					break;
-
-				case Model::ATT_TYPE_SITE:
-					if(
-						Core::IsComponentAvailable('enterprise') &&
-						MultiSiteHelper::IsEnabled() &&
-						($v === null || $v === false)
-					){
-						$site = MultiSiteHelper::GetCurrentSiteID();
-						$dat->insert('site', $site);
-						$this->_data[$k] = $site;
-					}
-					elseif($v === null || $v === false){
-						$dat->insert('site', 0);
-						$this->_data[$k] = 0;
-					}
-					else{
-						$dat->insert($k, $v);
-					}
-					break;
-
-				default:
-					// Make sure this value is resolved to its strict version!
-					// This is because the underlying data layer will throw kinipshits if (for example),
-					// NULL is passed in on a non-null column.
-					$v = $this->translateKey($k, $v);
-
-					$dat->insert($k, $v);
-					break;
-			}
-		}
-
-		$dat->execute($this->interface);
-
-		if ($idcol) $this->_data[$idcol] = $dat->getID();
-	}
-
-	/**
-	 * Save an existing Model object into the database.
-	 * Will create, set and execute a dataset object as appropriately internally.
-	 *
-	 * @param boolean @useset Set to true to have this model use an INSERT_UPDATE statement instead of just UPDATE.
-	 * @return bool
-	 */
-	protected function _saveExisting($useset = false) {
-
-		// If this model doesn't have any changes, don't save it!
-		if(!$this->changed()) return false;
-
-		$i = self::GetIndexes();
-		$s = self::GetSchema();
-		$n = $this->_getTableName();
-
-		// No primary schema defined or it's a string, (single value)... just don't make the in_array bail out.
-		$pri = isset($i['primary']) ? $i['primary'] : array();
-
-		if($pri && !is_array($pri)) $pri = array($pri);
-
-		if($pri && !is_array($pri)) $pri = array($pri);
-
-		// This is the dataset object that will be integral in this function.
-		$dat = new Core\Datamodel\Dataset();
-		$dat->table($n);
-
-		$idcol = false;
-		foreach ($this->_data as $k => $v) {
-			if(!isset($s[$k])){
-				// This key was not in the schema.  Probable reasons for this would be a column that was
-				// removed from the schema in an upgrade, but was never removed from the database.
-				// This is typical because the installer tries to be non-destructive when it comes to data.
-				continue;
-			}
-			$keyschema = $s[$k];
-			// Certain key types have certain functions.
-			switch ($keyschema['type']) {
-				case Model::ATT_TYPE_CREATED:
-					// Already created... don't update the flag.
-					continue 2;
-				case Model::ATT_TYPE_UPDATED:
-					// Update the updated timestamp with now.
-					$nv = Time::GetCurrentGMT();
-					$dat->update($k, $nv);
-					$this->_data[$k] = $nv;
-					continue 2;
-				case Model::ATT_TYPE_ID:
-				case Model::ATT_TYPE_UUID:
-					$dat->setID($k, $this->_data[$k]);
-					$idcol = $k; // Remember this for after the save.
-					continue 2;
-			}
-
-			// Make sure this value is resolved to its strict version!
-			// This is because the underlying data layer will throw kinipshits if (for example),
-			// NULL is passed in on a non-null column.
-			$v = $this->translateKey($k, $v);
-
-			//var_dump($k, $i['primary']);
-			// Everything else
-			if (in_array($k, $pri)) {
-				// Just in case the new data changed....
-				if ($this->_datainit[$k] != $v){
-					if($useset){
-						$dat->set($k, $v);
-					}
-					else{
-						$dat->update($k, $v);
-					}
-				}
-
-				$dat->where($k, $this->_datainit[$k]);
-
-				$this->_data[$k] = $v;
-			}
-			else {
-				// Do some logic to see if I can skip updating non-changed columns.
-				if(isset($this->_datainit[$k])){
-					if($keyschema['type'] == Model::ATT_TYPE_STRING){
-						if(\Core\compare_strings($this->_datainit[$k], $v)) continue;
-					}
-					else{
-						if(\Core\compare_values($this->_datainit[$k], $v)) continue;
-					}
-				}
-
-				//echo "Setting [$k] = [$v]<br/>"; // DEBUG
-				if($useset){
-					$dat->set($k, $v);
-				}
-				else{
-					$dat->update($k, $v);
-				}
-			}
-		}
-
-		// No data.. nothing to change I guess!
-		// This is a failsafe should (for some reason), the changed() method doesn't return the correct value.
-		if(!sizeof($dat->_sets)){
-			return false;
-		}
-		//var_dump($dat); die('mep'); // DEBUG
-		$dat->execute($this->interface);
-		// IDs don't change in updates, else they wouldn't be the id.
-	}
-
 	/**
 	 * Load this model from an associative array, or record.
 	 * This is meant to be called from the Factory system, and the data passed in
@@ -865,6 +752,17 @@ class Model implements ArrayAccess {
 		$this->_exists   = true;
 	}
 
+	/**
+	 * Delete this record from the datastore.
+	 *
+	 * Will IMMEDIATELY remove the record!
+	 *
+	 * If this model has a "deleted" column that is set as a zero value, that record is set to the current timestamp instead.
+	 * This functionality is meant for advanced record tracking such as those in use in sync systems.
+	 *
+	 * @return bool
+	 * @throws Exception
+	 */
 	public function delete() {
 
 		$s = self::GetSchema();
@@ -949,7 +847,7 @@ class Model implements ArrayAccess {
 	}
 
 	/**
-	 * Function to handle data validation for keys.
+	 * Handle data validation for keys.
 	 *
 	 * This will lookup if any "validation" is set on the schema, and check it if it exists.
 	 * This will not actually do any setting, simply return true or throw an exception, (if requested).
@@ -1218,116 +1116,6 @@ class Model implements ArrayAccess {
 		}
 	}
 
-	/*
-	 * Go through any linked tables and update them if the linking key has been changed.
-	 *
-	 * This needs to actually go through the database and update the saved keys if necessary.
-	 *
-	 * @param type $key
-	 */
-	protected function _setLinkKeyPropagation($key, $newval) {
-		// If this model does not exist yet, there will be no information linked in the database.
-		$exists = $this->exists();
-
-		foreach ($this->_linked as $lk => $l) {
-
-			// I can't change my parent data.
-			// NO CHANGING YOUR PARENTS!
-			if($l['link'] == Model::LINK_BELONGSTOONE) continue;
-			if($l['link'] == Model::LINK_BELONGSTOMANY) continue;
-
-			$dolink = false;
-			// I can't use the getLinkWhereArray function, because that will resolve the key.
-			// I need the key itself.
-			if (!isset($l['on'])) {
-				// @todo automatic linking
-			}
-			elseif (is_array($l['on'])) {
-				foreach ($l['on'] as $k => $v) {
-					if (is_numeric($k) && $v == $key) $dolink = true;
-					elseif (!is_numeric($k) && $k == $key) $dolink = true;
-				}
-			}
-			else {
-				if ($l['on'] == $key) $dolink = true;
-			}
-
-			// $dolink should now be true/false.  If true I need to load that linked table and set the new key.
-			if (!$dolink) continue;
-
-			if($exists){
-				// Get the data and update it!
-				$links = $this->getLink($lk);
-				if (!is_array($links)) $links = array($links);
-
-				foreach ($links as $model) {
-					$model->set($key, $newval);
-				}
-			}
-			else{
-				// Only update the cached data, as nothing has been saved, so the database doesn't have anything.
-				if(!isset($this->_linked[$lk]['records'])) continue;
-
-				foreach($this->_linked[$lk]['records'] as $model){
-					$model->set($key, $newval);
-				}
-			}
-		}
-	}
-
-	protected function _getLinkClassName($linkname) {
-		// Determine the class.
-		$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname . 'Model';
-
-		if (!is_subclass_of($c, 'Model')) return null; // @todo Error Handling
-
-		return $c;
-	}
-
-
-	/**
-	 * Get the where array of criteria for a given link.
-	 * Useful for manually tweaking the clause.
-	 *
-	 * @param $linkname
-	 *
-	 * @return array|null
-	 */
-	protected function _getLinkWhereArray($linkname) {
-		if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
-
-		// Build a standard where criteria that can be used throughout this function.
-		$wheres = array();
-
-		if (!isset($this->_linked[$linkname]['on'])) {
-			return null; // @todo automatic linking.
-		}
-		elseif (is_array($this->_linked[$linkname]['on'])) {
-			foreach ($this->_linked[$linkname]['on'] as $k => $v) {
-				if (is_numeric($k)) $wheres[$v] = $this->get($v);
-				else $wheres[$k] = $this->get($v);
-			}
-		}
-		else {
-			$k          = $this->_linked[$linkname]['on'];
-			$wheres[$k] = $this->get($k);
-		}
-
-
-		// Pages have a special extra here.  If it's enterprise/multisite mode, enforce that relationship.
-		if($linkname == 'Page' && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-			// See if there's a site column on this schema.  If there is, enforce that binding too!
-			$schema = self::GetSchema();
-			if(isset($schema['site']) && $schema['site']['type'] == Model::ATT_TYPE_SITE){
-				$wheres['site'] = $this->get('site');
-			}
-		}
-
-
-		return $wheres;
-	}
-
-
 	/**
 	 * Get the model factory for a given link.
 	 *
@@ -1357,20 +1145,24 @@ class Model implements ArrayAccess {
 		return $f;
 	}
 
-
 	/**
 	 * Get linked models to this model based on a link name
 	 *
 	 * If the link type is a one-to-one or many-to-one, (HASONE), a single Model is returned.
 	 * else this behaves as the Find function, where an array of models is returned.
 	 *
-	 * @param      $linkname
-	 * @param null $order
+	 * @param string      $linkname The linked model name (minus the Model part)
+	 * @param null|string $order    Specify the order clause
 	 *
 	 * @return Model|array
 	 */
 	public function getLink($linkname, $order = null) {
 		if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
+
+		// Allow order to be set from the model itself.
+		if($order === null && isset($this->_linked[$linkname]['order'])){
+			$order = $this->_linked[$linkname]['order'];
+		}
 
 		// Try to keep these in cache, so when they change I'll be able to save them on the parent's save function.
 		if (!isset($this->_linked[$linkname]['records'])) {
@@ -1441,7 +1233,7 @@ class Model implements ArrayAccess {
 			$this->_linked[$linkname]['records'][] = $model;
 			return $model;
 		}
-		// Search through each of these and find a matching 
+		// Search through each of these and find a matching
 	}
 
 	/**
@@ -1586,64 +1378,6 @@ class Model implements ArrayAccess {
 	public function addToFormPost(Form $form, $prefix){
 		// This method left intentionally blank.
 		// If custom logic is required here, extend this method in your model and do so there.
-	}
-
-
-	/**
-	 * Get the requested key for this object.
-	 *
-	 * @param string $k
-	 *
-	 * @return mixed
-	 */
-	public function get($k) {
-		if($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
-			return $this->_datadecrypted[$k];
-		}
-		elseif (array_key_exists($k, $this->_data)) {
-			return $this->_data[$k];
-		}
-		elseif (array_key_exists($k, $this->_dataother)) {
-			return $this->_dataother[$k];
-		}
-		else {
-			return null;
-		}
-	}
-
-	/**
-	 * Just return this object as an array
-	 * (essentially just the _data array... :p)
-	 *
-	 * @return array
-	 */
-	public function getAsArray() {
-		// Has there been data that has been decrypted?
-		if($this->_datadecrypted !== null){
-			return array_merge($this->_data, $this->_dataother, $this->_datadecrypted);
-		}
-		else{
-			return array_merge($this->_data, $this->_dataother);
-		}
-	}
-
-	/**
-	 * Get the data of this model.
-	 * Don't use this, it's probably not what you need.
-	 *
-	 * @return array
-	 */
-	public function getData(){
-		return $this->_data;
-	}
-
-	/**
-	 * Get the initial data of this model as it was when it was loaded from teh database.
-	 *
-	 * @return array|null
-	 */
-	public function getInitialData(){
-		return $this->_datainit;
 	}
 
 	/**
@@ -1806,42 +1540,6 @@ class Model implements ArrayAccess {
 	}
 
 	/**
-	 * Method to encrypt a specific key for storage.
-	 *
-	 * Called internally by the set function.
-	 * Will return the encrypted data.
-	 *
-	 * @param $key string
-	 * @return string Encrypted data
-	 */
-	protected function encryptValue($value){
-		$cipher = 'AES-256-CBC';
-		$passes = 10;
-		$size = openssl_cipher_iv_length($cipher);
-		$iv = mcrypt_create_iv($size, MCRYPT_RAND);
-
-		$enc = $value;
-		for($i=0; $i<$passes; $i++){
-			$enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
-		}
-
-		$payload = '$' . $cipher . '$' . str_pad($passes, 2, '0', STR_PAD_LEFT) . '$' . $enc . $iv;
-		return $payload;
-	}
-
-
-	protected function _getCacheKey() {
-		if (!$this->_cacheable) return false;
-		$i = self::GetIndexes();
-
-		if (!(isset($i['primary']) && sizeof($i['primary']))) return false;
-
-		$keys = $this->getPrimaryKeyString();
-
-		return 'DATA:' . self::GetTableName() . ':' . $keys;
-	}
-
-	/**
 	 * Get the primary key value(s) of this model as a string
 	 *
 	 * @return string
@@ -1867,7 +1565,432 @@ class Model implements ArrayAccess {
 	}
 
 
-	///////////////////    Factory-Related Static Methods
+	/*************************************************************************
+	 ****                    ARRAY ACCESS METHODS                         ****
+	 *************************************************************************/
+
+	/**
+	 * Whether an offset exists
+	 *
+	 * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+	 *
+	 * @param mixed $offset An offset to check for.
+	 *
+	 * @return boolean Returns true on success or false on failure.
+	 */
+	public function offsetExists($offset) {
+		return (array_key_exists($offset, $this->_data));
+	}
+
+	/**
+	 * Offset to retrieve
+	 *
+	 * Alias of Model::get()
+	 *
+	 * @link http://php.net/manual/en/arrayaccess.offsetget.php
+	 *
+	 * @param mixed $offset The offset to retrieve.
+	 *
+	 * @return mixed Can return all value types.
+	 */
+	public function offsetGet($offset) {
+		return $this->get($offset);
+	}
+
+	/**
+	 * Offset to set
+	 *
+	 * Alias of Model::set()
+	 *
+	 * @link http://php.net/manual/en/arrayaccess.offsetset.php
+	 *
+	 * @param mixed $offset The offset to assign the value to.
+	 * @param mixed $value The value to set.
+	 *
+	 * @return void
+	 */
+	public function offsetSet($offset, $value) {
+		$this->set($offset, $value);
+	}
+
+	/**
+	 * Offset to unset
+	 *
+	 * This just sets the value to null.
+	 *
+	 * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+	 *
+	 * @param mixed $offset The offset to unset.
+	 *
+	 * @return void
+	 */
+	public function offsetUnset($offset) {
+		$this->set($offset, null);
+	}
+
+	/**
+	 * Go through any linked tables and update them if the linking key has been changed.
+	 *
+	 * This needs to actually go through the database and update the saved keys if necessary.
+	 *
+	 * @param string $key
+	 * @param mixed $newval
+	 */
+	protected function _setLinkKeyPropagation($key, $newval) {
+		// If this model does not exist yet, there will be no information linked in the database.
+		$exists = $this->exists();
+
+		foreach ($this->_linked as $lk => $l) {
+
+			// I can't change my parent data.
+			// NO CHANGING YOUR PARENTS!
+			if($l['link'] == Model::LINK_BELONGSTOONE) continue;
+			if($l['link'] == Model::LINK_BELONGSTOMANY) continue;
+
+			$dolink = false;
+			// I can't use the getLinkWhereArray function, because that will resolve the key.
+			// I need the key itself.
+			if (!isset($l['on'])) {
+				// @todo automatic linking
+			}
+			elseif (is_array($l['on'])) {
+				foreach ($l['on'] as $k => $v) {
+					if (is_numeric($k) && $v == $key) $dolink = true;
+					elseif (!is_numeric($k) && $k == $key) $dolink = true;
+				}
+			}
+			else {
+				if ($l['on'] == $key) $dolink = true;
+			}
+
+			// $dolink should now be true/false.  If true I need to load that linked table and set the new key.
+			if (!$dolink) continue;
+
+			if($exists){
+				// Get the data and update it!
+				$links = $this->getLink($lk);
+				if (!is_array($links)) $links = array($links);
+
+				foreach ($links as $model) {
+					$model->set($key, $newval);
+				}
+			}
+			else{
+				// Only update the cached data, as nothing has been saved, so the database doesn't have anything.
+				if(!isset($this->_linked[$lk]['records'])) continue;
+
+				if(is_array($this->_linked[$lk]['records'])){
+					// Standard 1-to-M structure
+					foreach($this->_linked[$lk]['records'] as $model){
+						$model->set($key, $newval);
+					}
+				}
+				else{
+					// Only a 1-to-1 structure
+					$this->_linked[$lk]['records']->set($key, $newval);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Get the fully resolved ClassName of the requested link name.
+	 *
+	 * @param string $linkname Name of one of the linked models.
+	 *
+	 * @return null|string
+	 */
+	protected function _getLinkClassName($linkname) {
+		// Determine the class.
+		$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname . 'Model';
+
+		if (!is_subclass_of($c, 'Model')) return null; // @todo Error Handling
+
+		return $c;
+	}
+
+	/**
+	 * Called internally by the save() method for new records.
+	 */
+	protected function _saveNew() {
+		$i = self::GetIndexes();
+		$s = self::GetSchema();
+		$n = $this->_getTableName();
+
+		if (!isset($i['primary'])) $i['primary'] = array(); // No primary schema defined... just don't make the in_array bail out.
+
+		$dat = new Core\Datamodel\Dataset();
+		$dat->table($n);
+
+		$idcol = false;
+		foreach ($this->_data as $k => $v) {
+			$keyschema = $s[$k];
+
+			switch ($keyschema['type']) {
+				case Model::ATT_TYPE_CREATED:
+				case Model::ATT_TYPE_UPDATED:
+					// If this value has already been set, (some advanced utilities may want to specify a different updated or created time),
+					// then allow that value to stick.
+					if($v){
+						$dat->insert($k, $v);
+					}
+					else{
+						$nv = Time::GetCurrentGMT();
+						$dat->insert($k, $nv);
+						$this->_data[$k] = $nv;
+					}
+					break;
+
+				case Model::ATT_TYPE_ID:
+					$dat->setID($k, $this->_data[$k]);
+					$idcol = $k; // Remember this for after the save.
+					break;
+
+				case Model::ATT_TYPE_UUID:
+					if($this->_data[$k]){
+						// Yay, a UUID is already set, no need to really do much.
+						$nv = $this->_data[$k];
+						// It's already set and this will most likely be ignored, but may not be for UPDATE statements...
+						// although there shouldn't be any update statements here.... but ya never know
+						$dat->setID($k, $nv);
+					}
+					else{
+						// I need to generate a new key and set that.
+						$nv = Core::GenerateUUID();
+						// In this case, the database isn't going to care what the column is, other than the fact it's unique.
+						// It will be :)
+						$dat->insert($k, $nv);
+						// And I need to set this on the data so it's available next time.
+						$this->_data[$k] = $nv;
+						$dat->setID($k, $nv);
+					}
+					// Remember this for after the save.
+					$idcol = $k;
+					break;
+
+				case Model::ATT_TYPE_SITE:
+					if(
+						Core::IsComponentAvailable('enterprise') &&
+						MultiSiteHelper::IsEnabled() &&
+						($v === null || $v === false)
+					){
+						$site = MultiSiteHelper::GetCurrentSiteID();
+						$dat->insert('site', $site);
+						$this->_data[$k] = $site;
+					}
+					elseif($v === null || $v === false){
+						$dat->insert('site', 0);
+						$this->_data[$k] = 0;
+					}
+					else{
+						$dat->insert($k, $v);
+					}
+					break;
+
+				default:
+					// Make sure this value is resolved to its strict version!
+					// This is because the underlying data layer will throw kinipshits if (for example),
+					// NULL is passed in on a non-null column.
+					$v = $this->translateKey($k, $v);
+
+					$dat->insert($k, $v);
+					break;
+			}
+		}
+
+		$dat->execute($this->interface);
+
+		if ($idcol) $this->_data[$idcol] = $dat->getID();
+	}
+
+	/**
+	 * Save an existing Model object into the database.
+	 * Will create, set and execute a dataset object as appropriately internally.
+	 *
+	 * @param boolean $useset Set to true to have this model use an INSERT_UPDATE statement instead of just UPDATE.
+	 * @return bool
+	 */
+	protected function _saveExisting($useset = false) {
+
+		// If this model doesn't have any changes, don't save it!
+		if(!$this->changed()) return false;
+
+		$i = self::GetIndexes();
+		$s = self::GetSchema();
+		$n = $this->_getTableName();
+
+		// No primary schema defined or it's a string, (single value)... just don't make the in_array bail out.
+		$pri = isset($i['primary']) ? $i['primary'] : array();
+
+		if($pri && !is_array($pri)) $pri = array($pri);
+
+		if($pri && !is_array($pri)) $pri = array($pri);
+
+		// This is the dataset object that will be integral in this function.
+		$dat = new Core\Datamodel\Dataset();
+		$dat->table($n);
+
+		$idcol = false;
+		foreach ($this->_data as $k => $v) {
+			if(!isset($s[$k])){
+				// This key was not in the schema.  Probable reasons for this would be a column that was
+				// removed from the schema in an upgrade, but was never removed from the database.
+				// This is typical because the installer tries to be non-destructive when it comes to data.
+				continue;
+			}
+			$keyschema = $s[$k];
+			// Certain key types have certain functions.
+			switch ($keyschema['type']) {
+				case Model::ATT_TYPE_CREATED:
+					// Already created... don't update the flag.
+					continue 2;
+				case Model::ATT_TYPE_UPDATED:
+					// Update the updated timestamp with now.
+					$nv = Time::GetCurrentGMT();
+					$dat->update($k, $nv);
+					$this->_data[$k] = $nv;
+					continue 2;
+				case Model::ATT_TYPE_ID:
+				case Model::ATT_TYPE_UUID:
+					$dat->setID($k, $this->_data[$k]);
+					$idcol = $k; // Remember this for after the save.
+					continue 2;
+			}
+
+			// Make sure this value is resolved to its strict version!
+			// This is because the underlying data layer will throw kinipshits if (for example),
+			// NULL is passed in on a non-null column.
+			$v = $this->translateKey($k, $v);
+
+			//var_dump($k, $i['primary']);
+			// Everything else
+			if (in_array($k, $pri)) {
+				// Just in case the new data changed....
+				if ($this->_datainit[$k] != $v){
+					if($useset){
+						$dat->set($k, $v);
+					}
+					else{
+						$dat->update($k, $v);
+					}
+				}
+
+				$dat->where($k, $this->_datainit[$k]);
+
+				$this->_data[$k] = $v;
+			}
+			else {
+				// Do some logic to see if I can skip updating non-changed columns.
+				if(isset($this->_datainit[$k])){
+					if($keyschema['type'] == Model::ATT_TYPE_STRING){
+						if(\Core\compare_strings($this->_datainit[$k], $v)) continue;
+					}
+					else{
+						if(\Core\compare_values($this->_datainit[$k], $v)) continue;
+					}
+				}
+
+				//echo "Setting [$k] = [$v]<br/>"; // DEBUG
+				if($useset){
+					$dat->set($k, $v);
+				}
+				else{
+					$dat->update($k, $v);
+				}
+			}
+		}
+
+		// No data.. nothing to change I guess!
+		// This is a failsafe should (for some reason), the changed() method doesn't return the correct value.
+		if(!sizeof($dat->_sets)){
+			return false;
+		}
+		//var_dump($dat); die('mep'); // DEBUG
+		$dat->execute($this->interface);
+		// IDs don't change in updates, else they wouldn't be the id.
+	}
+
+	/**
+	 * Get the where array of criteria for a given link.
+	 * Useful for manually tweaking the clause.
+	 *
+	 * @param $linkname
+	 *
+	 * @return array|null
+	 */
+	protected function _getLinkWhereArray($linkname) {
+		if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
+
+		// Build a standard where criteria that can be used throughout this function.
+		$wheres = array();
+
+		if (!isset($this->_linked[$linkname]['on'])) {
+			return null; // @todo automatic linking.
+		}
+		elseif (is_array($this->_linked[$linkname]['on'])) {
+			foreach ($this->_linked[$linkname]['on'] as $k => $v) {
+				if (is_numeric($k)) $wheres[$v] = $this->get($v);
+				else $wheres[$k] = $this->get($v);
+			}
+		}
+		else {
+			$k          = $this->_linked[$linkname]['on'];
+			$wheres[$k] = $this->get($k);
+		}
+
+
+		// Pages have a special extra here.  If it's enterprise/multisite mode, enforce that relationship.
+		if($linkname == 'Page' && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			// See if there's a site column on this schema.  If there is, enforce that binding too!
+			$schema = self::GetSchema();
+			if(isset($schema['site']) && $schema['site']['type'] == Model::ATT_TYPE_SITE){
+				$wheres['site'] = $this->get('site');
+			}
+		}
+
+
+		return $wheres;
+	}
+
+	/**
+	 * Method to encrypt a specific key for storage.
+	 *
+	 * Called internally by the set function.
+	 * Will return the encrypted data.
+	 *
+	 * @param mixed $value The plain-text value to encrypt
+	 * @return string Encrypted data
+	 */
+	protected function encryptValue($value){
+		$cipher = 'AES-256-CBC';
+		$passes = 10;
+		$size = openssl_cipher_iv_length($cipher);
+		$iv = mcrypt_create_iv($size, MCRYPT_RAND);
+
+		$enc = $value;
+		for($i=0; $i<$passes; $i++){
+			$enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+		}
+
+		$payload = '$' . $cipher . '$' . str_pad($passes, 2, '0', STR_PAD_LEFT) . '$' . $enc . $iv;
+		return $payload;
+	}
+
+	protected function _getCacheKey() {
+		if (!$this->_cacheable) return false;
+		$i = self::GetIndexes();
+
+		if (!(isset($i['primary']) && sizeof($i['primary']))) return false;
+
+		$keys = $this->getPrimaryKeyString();
+
+		return 'DATA:' . self::GetTableName() . ':' . $keys;
+	}
+
+
+	/*************************************************************************
+	 ****                    FACTORY-RELATED STATIC METHODS               ****
+	 *************************************************************************/
 
 	/**
 	 * Constructor alternative that utilizes caching to save on database lookups.
@@ -1961,7 +2084,9 @@ class Model implements ArrayAccess {
 	}
 
 
-	/*******************   Other Static Methods *************************/
+	/*************************************************************************
+	 ****                    OTHER STATIC METHODS                         ****
+	 *************************************************************************/
 
 	/**
 	 * Get the table name for a given Model object
