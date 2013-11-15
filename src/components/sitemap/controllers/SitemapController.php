@@ -22,7 +22,6 @@ class SitemapController extends Controller_2_1 {
 		// Run this through the streamer, just in case there are a lot of pages...
 		$stream = new DatasetStream($factory->getDataset());
 
-		//$user  = User::Factory();
 		$user = \Core\user();
 		$toshow = array();
 		while(($record = $stream->getRecord())){
