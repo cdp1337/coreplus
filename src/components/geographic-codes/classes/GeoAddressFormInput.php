@@ -66,7 +66,7 @@ class GeoAddressFormInput extends FormElement {
 		// Make sure that some defaults are set first.
 		if(!$this->get('name')) $this->set('name', 'address');
 
-		if($this->_model){
+		if($this->_model && $this->_model->exists()){
 			// There is a valid model set, I can pull all the values from that!
 			$v = $this->_model->getAsArray();
 		}
@@ -146,7 +146,7 @@ class GeoAddressFormInput extends FormElement {
 				$this->_model = GeoAddressModel::Construct( isset($value['id']) ? $value['id'] : null );
 			}
 
-			if(!($value['address1'] && $value['postal'])){
+			if(!($value['address1'] || $value['postal'])){
 				// An empty address1 and empty postal code mean it was an empty address, treat it as such.
 				$value = null;
 			}
