@@ -194,9 +194,18 @@ type CDATA #IMPLIED
 <!--- Permissions contain all permissions used in this component -->
 <!ELEMENT permissions (permission)*>
 
-<!--- Each permission that is used throughout the component, useful for displaying the names in the group admin -->
+<!--
+  - Each permission that is used throughout the component, useful for displaying the names in the group admin
+  - Must have a "key" attribute that will be used to check for that permission throughout the site.
+  - Should have a "description" attribute that will describe to the system admin what this permission does.
+  - May have a "context" attribute that indicates to the system that it must be bound to a Model with the given basename.
+  -->
 <!ELEMENT permission EMPTY>
-<!ATTLIST permission key CDATA #REQUIRED description CDATA #IMPLIED>
+<!ATTLIST permission
+	key CDATA #REQUIRED
+	description CDATA #IMPLIED
+	context CDATA #IMPLIED
+>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT assets (file)*>

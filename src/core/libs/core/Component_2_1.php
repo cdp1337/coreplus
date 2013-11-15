@@ -242,7 +242,10 @@ class Component_2_1 {
 		// Set the permissions
 		$this->_permissions = array();
 		foreach($this->_xmlloader->getElements('/permissions/permission') as $el){
-			$this->_permissions[$el->getAttribute('key')] = $el->getAttribute('description');
+			$this->_permissions[$el->getAttribute('key')] = [
+				'description' => $el->getAttribute('description'),
+				'context' => ($el->getAttribute('context')) ? $el->getAttribute('context') : '',
+			];
 		}
 	}
 
@@ -393,6 +396,54 @@ class Component_2_1 {
 	 */
 	public function getPermissions(){
 		return $this->_permissions;
+	}
+
+	/**
+	 * Get the pages defined in this component.
+	 *
+	 * These are usually admin-only pages, (but may not be).
+	 *
+	 * @return array
+	 */
+	public function getPagesDefined(){
+		$pages = [];
+
+		// I need to get the schema definitions first.
+		$node = $this->_xmlloader->getElement('pages');
+
+		// Now, get every table under this node.
+		foreach ($node->getElementsByTagName('page') as $subnode) {
+			/** @var DOMElement $subnode */
+
+			$baseurl = $subnode->getAttribute('baseurl');
+			$admin   = $subnode->getAttribute('admin');
+			$group   = ($admin ? $subnode->getAttribute('group') : '');
+			if(($selectable = $subnode->getAttribute('selectable')) === ''){
+				// Selectable is blank, means it's left up to if it's an admin page or not.
+				$selectable = ($admin ? '0' : '1'); // Defaults
+			}
+			if(!($rewriteurl = $subnode->getAttribute('rewriteurl'))){
+				// Just use the baseurl for this parameter instead.
+				$rewriteurl = $baseurl;
+			}
+			$title = $subnode->getAttribute('title');
+			$access = $subnode->getAttribute('access');
+			$parent = $subnode->getAttribute('parenturl');
+
+			// Toss this page onto the stack :)
+			$pages[$baseurl] = [
+				'title' => $title,
+				'group' => $group,
+				'baseurl' => $baseurl,
+				'rewriteurl' => $rewriteurl,
+				'parent' => $parent,
+				'admin' => $admin,
+				'selectable' => $selectable,
+				'access' => $access,
+			];
+		}
+
+		return $pages;
 	}
 
 	/**
