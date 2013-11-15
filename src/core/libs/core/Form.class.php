@@ -40,6 +40,11 @@ class FormGroup {
 	 */
 	public $requiresupload = false;
 
+	/**
+	 * @var bool Persistent elements are sticky on the form between page loads.
+	 */
+	public $persistent = true;
+
 	public function __construct($atts = null) {
 		$this->_attributes = array();
 		$this->_elements   = array();
@@ -363,6 +368,11 @@ class FormElement {
 	 */
 	public $validationmessage = null;
 
+	/**
+	 * @var bool Persistent elements are sticky on the form between page loads.
+	 */
+	public $persistent = true;
+
 	public $classnames = array();
 
 	public function __construct($atts = null) {
@@ -407,6 +417,9 @@ class FormElement {
 				else{
 					$this->_attributes[$key] = 'on';
 				}
+				break;
+			case 'persistent':
+				$this->persistent = $value;
 				break;
 			default:
 				$this->_attributes[$key] = $value;
@@ -821,7 +834,12 @@ class Form extends FormGroup {
 			// If so, render that form instead!  This way the values get transported seemlessly.
 			if (isset($_SESSION['FormData'][$this->get('uniqueid')])) {
 				if (($savedform = unserialize($_SESSION['FormData'][$this->get('uniqueid')]))) {
-					$this->_elements = $savedform->_elements;
+					foreach($this->_elements as $k => $element){
+						/** @var FormElement $element */
+						if($element->persistent){
+							$this->_elements[$k] = $savedform->_elements[$k];
+						}
+					}
 				}
 				else {
 					$ignoreerrors = true;
@@ -1031,7 +1049,7 @@ class Form extends FormGroup {
 			if (!$new && in_array($k, $i['primary'])) continue;
 			*/
 
-			// Form attribute defaults
+			// Form attribute default keys
 			$formatts = array(
 				'type' => null,
 				'title' => ucwords($k),
@@ -1042,17 +1060,19 @@ class Form extends FormGroup {
 			);
 			if($formatts['value'] === null && isset($v['default'])) $formatts['value'] = $v['default'];
 
-			// Merge the defaults with the form array if it's present.
-			if(isset($v['form'])){
-				$formatts = array_merge($formatts, $v['form']);
-			}
-
-			// Support the standard attributes too.
+			// Default values from the standard attributes.
 			if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
 			if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
 			if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
 			if(isset($v['required']))        $formatts['required'] = $v['required'];
 			if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
+
+			// Merge the defaults with the form array if it's present.
+			// This is the most precise method for setting form attributes, and is therefore authoritative.
+			if(isset($v['form'])){
+				$formatts = array_merge($formatts, $v['form']);
+			}
+
 
 			// Boolean checkboxes can have special options.
 			//if(isset($v['formtype']) && $v['formtype'] == 'checkbox' && $v['type'] == Model::ATT_TYPE_BOOL){
@@ -1083,7 +1103,8 @@ class Form extends FormGroup {
 				// These are handled automatically.
 				$formatts['required'] = false;
 			}
-			elseif($v['type'] == Model::ATT_TYPE_UUID_FK){
+			elseif($v['type'] == Model::ATT_TYPE_UUID_FK && $formatts['type'] === null){
+				// Allow foreign keys to be represented as other form types if there is a form type set!
 				$el = FormElement::Factory('system');
 				// These are handled automatically.
 				$formatts['required'] = false;
