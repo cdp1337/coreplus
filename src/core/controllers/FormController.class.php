@@ -186,11 +186,11 @@ class FormController extends Controller_2_1 {
 		}
 
 		$term = $request->getParameter('term');
-		$results = User::Search($term);
+		$results = UserModel::Search($term);
 
 		$filteredresults = array();
 		foreach($results as $user){
-			/** @var $user User_Backend */
+			/** @var UserModel $user */
 			$filteredresults[] = array(
 				'id' => $user->get('id'),
 				'label' => $user->getDisplayName(),
