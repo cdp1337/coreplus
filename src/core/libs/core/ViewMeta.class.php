@@ -461,7 +461,7 @@ class ViewMeta_author extends ViewMeta {
 		}
 		// Otherwise, if the authorid is set, use that to look up the user.
 		elseif($authorid){
-			$user = User::Construct($authorid);
+			$user = UserModel::Construct($authorid);
 			// All profiles get at least the meta tag.
 			$data['author'] = '<meta property="author" content="' . str_replace('"', '&quot;', $user->getDisplayName()) . '"/>';
 			// "Socially enabled" sites also get the link attribute!
