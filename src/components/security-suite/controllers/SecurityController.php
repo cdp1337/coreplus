@@ -82,12 +82,12 @@ class SecurityController extends Controller_2_1 {
 			//var_dump($ua); die();
 
 			if($entry->get('user_id')){
-				$userobject = User::Construct($entry->get('user_id'));
+				$userobject = UserModel::Construct($entry->get('user_id'));
 				$entry->set('user', $userobject->getDisplayName());
 			}
 
 			if($entry->get('affected_user_id')){
-				$userobject = User::Construct($entry->get('affected_user_id'));
+				$userobject = UserModel::Construct($entry->get('affected_user_id'));
 				if($userobject){
 					$entry->set('affected_user', $userobject->getDisplayName());
 				}
@@ -126,7 +126,7 @@ class SecurityController extends Controller_2_1 {
 		}
 
 		if($log->get('user_id')){
-			$userobject = User::Construct($log->get('user_id'));
+			$userobject = UserModel::Construct($log->get('user_id'));
 			$user = $userobject->getDisplayName();
 		}
 		else{
@@ -134,7 +134,7 @@ class SecurityController extends Controller_2_1 {
 		}
 
 		if($log->get('affected_user_id')){
-			$userobject = User::Construct($log->get('affected_user_id'));
+			$userobject = UserModel::Construct($log->get('affected_user_id'));
 			$affected_user = $userobject->getDisplayName();
 		}
 		else{
