@@ -84,4 +84,3 @@ class ContentModel extends Model{
 		}
 	}
 }
-?>
