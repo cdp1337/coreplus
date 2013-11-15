@@ -1389,6 +1389,7 @@ class Core implements ISingleton {
 	 * Copied (almost) verbatim from http://www.linuxjournal.com/article/9585?page=0,3
 	 * @author Douglas Lovell @ Linux Journal
 	 *
+	 * @param string $email The email to validate
 	 * @return boolean
 	 */
 	public static function CheckEmailValidity($email) {
@@ -1487,7 +1488,7 @@ class Core implements ISingleton {
 		SSL: ' . (SSL ? 'true' : 'false') . ',
 		SSL_MODE: "' . SSL_MODE . '",
 		User: {
-			id: ' . $userid . ',
+			id: "' . $userid . '",
 			authenticated: ' . $userauth . '
 		},
 		Browser: {
