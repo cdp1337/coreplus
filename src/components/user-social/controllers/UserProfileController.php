@@ -21,13 +21,14 @@ class UserProfileController extends Controller_2_1 {
 
 		// First argument here will either be the username or user id.
 		$arg1 = $request->getParameter(0);
-		if(is_numeric($arg1)){
-			$user = User::Find(array('id' => $arg1), 1);
-		}
-		else{
+
+		$user = UserModel::Construct($arg1);
+
+		if(!($user && $user->exists())){
+			// Try by username instead.
 			$match = UserUserConfigModel::Find(array('key' => 'username', 'value' => $arg1), 1);
 			if(!$match) return View::ERROR_NOTFOUND;
-			$user = User::Find(array('id' => $match->get('user_id')), 1);
+			$user = UserModel::Construct($match->get('user_id'));
 		}
 
 		if(!$user) return View::ERROR_NOTFOUND;
@@ -37,7 +38,7 @@ class UserProfileController extends Controller_2_1 {
 		if(is_numeric($arg1) && $user->get('username')) return View::ERROR_NOTFOUND;
 
 		// Now see why username needs to not begin with a number? :p
-		/** @var $user User */
+		/** @var $user UserModel */
 
 		// Only allow this if the user is either the same user or has the user manage permission.
 		if($user->get('id') == \Core\user()->get('id') || $manager){
@@ -70,7 +71,8 @@ class UserProfileController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$user = User::Find(array('id' => $userid));
+		/** @var UserModel $user */
+		$user = UserModel::Construct($userid);
 		// I will be dealing with only one custom field...
 		$jsonprofiles = $user->get('json:profiles');
 		$profiles = json_decode($jsonprofiles, true);

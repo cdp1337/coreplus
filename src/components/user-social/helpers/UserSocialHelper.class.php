@@ -37,10 +37,10 @@ class UserSocialHelper {
 	/**
 	 * Get the resolved profile link for a given user
 	 *
-	 * @param User $user
+	 * @param UserModel $user
 	 * @return string
 	 */
-	public static function ResolveProfileLink(User $user){
+	public static function ResolveProfileLink(UserModel $user){
 		if($user->get('username')){
 			return Core::ResolveLink('/userprofile/view/' . $user->get('username'));
 		}
@@ -50,12 +50,12 @@ class UserSocialHelper {
 	}
 
 	public static function ResolveUsernameById($userid){
-		$user = User::Construct($userid);
+		$user = UserModel::Construct($userid);
 		return $user->get('username') ? $user->get('username') : $user->get('id');
 	}
 
 	public static function ResolveProfileLinkById($userid){
-		$user = User::Find(array('id' => $userid), 1);
+		$user = UserModel::Construct($userid);
 		if(!$user) return false;
 
 		return self::ResolveProfileLink($user);
@@ -64,15 +64,11 @@ class UserSocialHelper {
 	public static function GetUserLinks($user){
 		$a = array();
 
-		if(is_numeric($user)){
+		if(is_scalar($user)){
 			// Transpose the ID to a user backend object.
-			$user = User::Construct($user);
+			$user = UserModel::Construct($user);
 		}
 		elseif($user instanceof UserModel){
-			// Transpose the model to a user backend object.
-			$user = User::Construct($user->get('id'));
-		}
-		elseif(is_subclass_of($user, 'UserBackend')){
 			// NO change needed :)
 		}
 		else{
