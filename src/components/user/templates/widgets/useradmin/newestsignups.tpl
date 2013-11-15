@@ -59,7 +59,7 @@
 </table>
 
 <br/>
-{a href="/useradmin?sortkey=created&sortdir=down" class="button"}
+{a href="/user/admin?sortkey=created&sortdir=down" class="button"}
 	<i class="icon-view"></i>
 	<span>View All Recent Registrations</span>
 {/a}
@@ -90,7 +90,7 @@
 					$tr = $(this).closest('tr');
 
 			$.ajax({
-				url: Core.ROOT_URL + 'useradmin/activate.json',
+				url: Core.ROOT_URL + 'user/activate.json',
 				data: {
 					user: $tr.attr('userid'),
 					status: ($status.attr('useractive') != '1') // It needs to be whatever it's currently not...

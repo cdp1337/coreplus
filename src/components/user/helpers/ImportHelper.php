@@ -126,7 +126,7 @@ abstract class ImportHelper {
 				}
 
 				// Try to find this record by email, since that's a primary key.
-				$existing = \User::Find(['email = ' . $dat['email'] ], 1);
+				$existing = \UserModel::Find(['email = ' . $dat['email'] ], 1);
 				if($existing && !$merge){
 					// Skip existing records.
 					$_SESSION['user-import']['counts']['skipped']++;
@@ -144,7 +144,7 @@ abstract class ImportHelper {
 					}
 				}
 				else{
-					$new = new \User_datamodel_Backend();
+					$new = new \UserModel();
 					$new->setFromArray($dat);
 					$new->setGroups($groups);
 					$new->save();

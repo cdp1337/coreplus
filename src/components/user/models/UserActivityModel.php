@@ -101,7 +101,7 @@ class UserActivityModel extends Model{
 
 	public function getDisplayName(){
 		if($this->get('user_id')){
-			$user = User::Construct($this->get('user_id'));
+			$user = UserModel::Construct($this->get('user_id'));
 			$uname = $user->getDisplayName();
 		}
 		else{

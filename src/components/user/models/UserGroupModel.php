@@ -25,7 +25,7 @@ class UserGroupModel extends Model {
 	
 	public static $Schema = array(
 		'id' => array(
-			'type' => Model::ATT_TYPE_ID,
+			'type' => Model::ATT_TYPE_UUID,
 			'required' => true,
 			'null' => false,
 		),
@@ -40,7 +40,19 @@ class UserGroupModel extends Model {
 			'maxlength' => 48,
 			'null' => false,
 			'required' => true,
-			'validation' => array('this', '_validateName')
+			'validation' => array('this', '_validateName'),
+			'form' => array(
+				'description' => 'The name for this group displayed in the admin and user interface.',
+			)
+		),
+		'context' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'default' => '',
+			'comment' => 'If this group is for a specific context, the Model base name is here.',
+			'form' => array(
+				'type' => 'select',
+				'description' => 'If this group will be used to apply permissions in specific contexts, select it here. The specific context object is selected on the respective user edit page under their groups.',
+			)
 		),
 		'permissions' => array(
 			'type' => Model::ATT_TYPE_TEXT,
@@ -70,6 +82,16 @@ class UserGroupModel extends Model {
 		'unique:name' => array('site', 'name'),
 	);
 
+	public function __construct($id = null){
+
+		$this->_linked['UserUserGroup'] = [
+			'link' => Model::LINK_HASMANY,
+			'on' => ['group_id' => 'id'],
+		];
+
+		parent::__construct($id);
+	}
+
 	/**
 	 * Get all the permissions this group as assigned to it.
 	 *
@@ -86,6 +108,25 @@ class UserGroupModel extends Model {
 			$this->set('permissions', '');
 		}
 		else{
+
+			// Verify that the permissions being set match this group's context!
+			$allperms = Core::GetPermissions();
+			$thiscontext = $this->get('context');
+			foreach($permissions as $k => $perm){
+				if(!isset($allperms[$perm])){
+					// Skip invalid permissions!
+					unset($permissions[$k]);
+				}
+				elseif($allperms[$perm]['context'] != $thiscontext){
+					// Skip non-matching context permissions.
+					unset($permissions[$k]);
+				}
+				// Else, it's fine!
+			}
+
+			// Don't forget to re-index the keys.... just because.
+			$permissions = array_values($permissions);
+
 			$this->set('permissions', json_encode($permissions));
 		}
 	}

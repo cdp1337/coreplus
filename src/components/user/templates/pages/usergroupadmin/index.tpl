@@ -3,13 +3,19 @@
 <table class="listing">
 	<tr>
 		<th>Name</th>
-		{if $permissionmanager}<th>Permissions</th>{/if}
+		{if $permissionmanager}
+			<th>Context</th>
+			<th>Permissions</th>
+		{/if}
 		<th width="80">&nbsp;</th>
 	</tr>
 	{foreach $groups as $group}
 		<tr>
 			<td>{$group.name}</td>
 			{if $permissionmanager}
+				<td>
+					{$group.context}
+				</td>
 				<td>
 					{$group->getPermissions()|implode:", "}
 				</td>

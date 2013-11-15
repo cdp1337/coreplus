@@ -39,39 +39,111 @@ class UserGroupAdminController extends Controller_2_1{
 			$model->set('site', MultiSiteHelper::GetCurrentSiteID());
 		}
 
+		$contextnames = [];
+		$contexts     = [];
+		$usecontexts  = false;
+
 		$form  = Form::BuildFromModel($model);
 
 		$form->set('callsmethod', 'UserGroupAdminController::_UpdateFormHandler');
 		if(\Core\user()->checkAccess('p:/user/permissions/manage')){
+
+			foreach(Core::GetPermissions() as $key => $data){
+				$ckey = $data['context'];
+				$ctitle = ($ckey == '') ? '** Global Context Permissions **' : $ckey . ' Context Permissions';
+
+				$contextnames[$ckey] = $ctitle;
+				$contexts[$key] = $ckey;
+			}
+
+			if(sizeof($contextnames) > 1){
+				$form->getElement('model[context]')->set('options', $contextnames);
+
+				$usecontexts = true;
+			}
+			else{
+				$form->removeElement('model[context]');
+			}
+
 			$this->_setPermissionsToForm($form, $model);
+		}
+		else{
+			$form->removeElement('model[context]');
 		}
 		$form->addElement('submit', array('value' => 'Create'));
 
+		$view->templatename = 'pages/usergroupadmin/create_update.tpl';
+		$view->title = 'Create Group ';
 		$view->assign('model', $model);
 		$view->assign('form', $form);
-		$view->title = 'Create Group ';
+		$view->assign('context_json', json_encode($contexts));
+		$view->assign('use_contexts', $usecontexts);
 	}
 
 	public function update(){
-		$view  = $this->getView();
-		$req   = $this->getPageRequest();
-		$id    = $req->getParameter(0);
-		$model = new UserGroupModel($id);
-		$form  = Form::BuildFromModel($model);
+		$view          = $this->getView();
+		$req           = $this->getPageRequest();
+		$id            = $req->getParameter(0);
+		$model         = new UserGroupModel($id);
+		$form          = Form::BuildFromModel($model);
+		$contextnames  = [];
+		$contexts      = [];
+		$usecontexts   = false;
+		$contextlocked = (sizeof($model->getLink('UserUserGroup')) > 0);
 
 		if(!$model->exists()){
 			return View::ERROR_NOERROR;
 		}
 
-		$form->set('callsmethod', 'UserGroupAdminController::_UpdateFormHandler');
 		if(\Core\user()->checkAccess('p:/user/permissions/manage')){
+			// The user has access to manage user permissions.... the enclosed is that full logic for edits.
+
+			foreach(Core::GetPermissions() as $key => $data){
+				$ckey = $data['context'];
+				$ctitle = ($ckey == '') ? '** Global Context Permissions **' : $ckey . ' Context Permissions';
+
+				$contextnames[$ckey] = $ctitle;
+				$contexts[$key] = $ckey;
+			}
+
+			if(sizeof($contextnames) > 1){
+				if(!$contextlocked){
+					// There are contexts defined and this group has not yet been added to a user's profile,
+					// editing of the context is still permitted.
+					$form->getElement('model[context]')->set('options', $contextnames);
+					$usecontexts = true;
+				}
+				else{
+					// This group has been added to a user's profile, display a message that it's locked!
+					Core::SetMessage('This group has been added to a user account and therefore has been locked to the ' . $contextnames[$model->get('context')]);
+					$form->removeElement('model[context]');
+				}
+			}
+			else{
+				$form->removeElement('model[context]');
+			}
+
 			$this->_setPermissionsToForm($form, $model);
 		}
+		else{
+			// No permission edit access, just remove the context options too!
+			$form->removeElement('model[context]');
+		}
+
+		// If this group is locked and not a global group, it cannot be defined as a default group!
+		if($contextlocked && $model->get('context') != ''){
+			$form->removeElement('model[default]');
+		}
+
+		$form->set('callsmethod', 'UserGroupAdminController::_UpdateFormHandler');
 		$form->addElement('submit', array('value' => 'Update'));
 
+		$view->templatename = 'pages/usergroupadmin/create_update.tpl';
+		$view->title = 'Update Group ' . $model->get('name');
 		$view->assign('model', $model);
 		$view->assign('form', $form);
-		$view->title = 'Update Group ' . $model->get('name');
+		$view->assign('context_json', json_encode($contexts));
+		$view->assign('use_contexts', $usecontexts);
 	}
 
 	public function delete(){
@@ -104,7 +176,9 @@ class UserGroupAdminController extends Controller_2_1{
 	private function _setPermissionsToForm(Form $form, UserGroupModel $model){
 		// I want to split up the permission set into a set of groups, based on the first key.
 		$groups = [];
-		foreach(Core::GetPermissions() as $key => $description){
+		foreach(Core::GetPermissions() as $key => $data){
+			$description = $data['description'];
+
 			if($key{0} == '/'){
 				$group = substr($key, 1, strpos($key, '/', 1)-1);
 			}
@@ -141,6 +215,7 @@ class UserGroupAdminController extends Controller_2_1{
 	public static function _UpdateFormHandler(Form $form){
 
 		try{
+			/** @var UserGroupModel $model */
 			$model = $form->getModel();
 
 			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
@@ -158,6 +233,12 @@ class UserGroupAdminController extends Controller_2_1{
 				// form elements with that same base name.
 				$model->setPermissions($form->getElement('permissions[]')->get('value'));
 			}
+
+			if($model->get('context') != ''){
+				// Non-global context groups can never be default!
+				$model->set('default', 0);
+			}
+
 			$model->save();
 		}
 		catch(ModelValidationException $e){

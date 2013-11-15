@@ -101,7 +101,7 @@ class UserActivityController extends Controller_2_1 {
 			// The user agent information I want to know on a per-user basis, not a per-click basis.
 			else{
 				if(!isset($users[ $log['session_id'] ])){
-					$thisuser = User::Construct($log['user_id']);
+					$thisuser = UserModel::Construct($log['user_id']);
 
 					$users[ $log['session_id'] ] = array(
 						'session'   => $log['session_id'],

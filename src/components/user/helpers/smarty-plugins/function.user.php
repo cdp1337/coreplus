@@ -16,7 +16,7 @@ function smarty_function_user($params, $template){
 	// Defaults
 	$userid = $params['user'];
 
-	$user = User::Construct($userid);
+	$user = UserModel::Construct($userid);
 
 	if(!$user) return '';
 

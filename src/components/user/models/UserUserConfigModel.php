@@ -24,15 +24,25 @@
 class UserUserConfigModel extends Model{
 	public static $Schema = array(
 		'user_id' => array(
-			'type' => Model::ATT_TYPE_INT,
+			'type' => Model::ATT_TYPE_UUID_FK,
 			'required' => true,
 			'null' => false,
+			'link' => [
+				'model' => 'User',
+				'type' => Model::LINK_BELONGSTOONE,
+				'on' => 'id',
+			],
 		),
 		'key' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'required' => true,
 			'null' => false,
 			'maxlength' => 64,
+			'link' => [
+				'model' => 'UserConfig',
+				'type' => Model::LINK_BELONGSTOONE,
+				'on' => 'key',
+			],
 		),
 		'value' => array(
 			'type' => Model::ATT_TYPE_TEXT,

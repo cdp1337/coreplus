@@ -33,7 +33,6 @@ class UserWidget extends Widget_2_1{
 	}
 
 	public function register() {
-		require_once(ROOT_PDIR . 'components/user/helpers/UserFunctions.php');
 
 		$view = $this->getView();
 		$user = Core::User();
@@ -48,7 +47,7 @@ class UserWidget extends Widget_2_1{
 			return '';
 		}
 
-		$form = \User\get_registration_form();
+		$form = \User\Helper::GetRegistrationForm();
 
 		$view->assign('form', $form);
 	}

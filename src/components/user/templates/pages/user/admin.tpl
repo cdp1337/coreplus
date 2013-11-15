@@ -92,7 +92,7 @@
 				$tr = $(this).closest('tr');
 
 			$.ajax({
-				url: Core.ROOT_URL + 'useradmin/activate.json',
+				url: Core.ROOT_URL + 'user/activate.json',
 				data: {
 				      user: $tr.attr('userid'),
 				      status: ($status.attr('useractive') != '1') // It needs to be whatever it's currently not...

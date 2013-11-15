@@ -29,7 +29,7 @@
 
 
 <br/>
-{a href="/useradmin/import/cancel" class="button"}
+{a href="/user/import/cancel" class="button"}
 	Cancel Import
 {/a}
 
