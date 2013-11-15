@@ -114,3 +114,45 @@ GalleryAlbumModel may have a page for it, and numerous images under it, making t
         
         parent::__construct($key);
     }
+
+Links can be defined from within the Schema if it exists on a single local property,
+or from within the constructor if more complex.  Depending on where they are defined depends slightly on the keys.
+
+### Attributes when defined in the `__constructor`
+
+* class
+	* Override the class name of the foreign record.
+
+* link
+	* Specify the link type of this relationship, from the standpoint of the current Model.
+	* Alias of `type` for the `$Schema` version.
+	* MUST be one of the `Model::LINK_*` constants.
+
+* on
+	* Specify the local/foreign keys that define the relationship.
+	* If this is a single scalar value, then both Models MUST have the same key that relates them.
+	* If this is an array, each pair is used in the relationship.  `['local_key_name' => 'foreign_key_name']`.
+
+* order
+	* Specify the default order clause for this link.
+
+### Attributes when defined in the `$Schema`
+
+* class
+	* Override the class name of the foreign record.
+
+* type
+    * Specify the link type of this relationship, from the standpoint of the current Model.
+    * Alias of `link` for the `__constructor` version.
+    * MUST be one of the `Model::LINK_*` constants.
+
+* on
+	* Specify the local/foreign keys that define the relationship.
+	* This value MUST be a single scalar value, which maps to the foreign key name.
+
+* model
+	* Specify the foreign model name, (without the "Model" suffix).
+	* __REQUIRED__
+
+* order
+	* Specify the default order clause for this link.
