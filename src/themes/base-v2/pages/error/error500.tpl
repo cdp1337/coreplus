@@ -9,6 +9,15 @@
 	<p>Or you can {a history="1"}go back{/a}. Studies show it sure beats mashing the f5 key.</p>
 </div>
 
+{if $smarty.const.DEVELOPMENT_MODE && isset($exception)}
+	<pre class="xdebug-var-dump">
+		Error Code: {$exception->getCode()}
+		Error Message: {$exception->getMessage()}
+		Trace:
+		{$exception->getTraceAsString()}
+	</pre>
+{/if}
+
 <div class="gol-wrapper">
 	<canvas id="canvas" height=""></canvas>
 	<div class="ui-container">
