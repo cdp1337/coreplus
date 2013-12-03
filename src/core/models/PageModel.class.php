@@ -965,26 +965,25 @@ class PageModel extends Model {
 		// Allow pages that do not exist to have a bit of "extended" logic for determining the breadcrumbs.
 		if (!$this->exists()) {
 			// Do a bit of custom logic here.
+			// This is all to try to guess and populate the breadcrumbs so the developer doesn't have to.
 
-			$m = strtolower($this->getControllerMethod());
-			$b = strtolower($this->get('baseurl'));
+			$m               = strtolower($this->getControllerMethod());
+			$b               = strtolower($this->get('baseurl'));
+			$controllerclass = $this->getControllerClass();
+			$hasview         = method_exists($controllerclass, 'view');
+			$hasadmin        = method_exists($controllerclass, 'admin');
 
-			// If the page is currently Edit and there is a View... handle that instance.
-			if ($m == 'edit' && method_exists($this->getControllerClass(), 'view')) {
+			// If the page is currently Edit and there is a View for this specific object.
+			// These pages get the underlying model as the breadcrumb parent.
+			if (
+				($m == 'edit' || $m == 'update' || $m == 'delete') && $hasview
+			) {
+				// Replace the current baseurl with a /view version.
+				$altbaseurl = str_replace('/' . $m . '/', '/view/', $b);
+
 				/** @var PageModel $p */
-				$p = PageModel::Construct(str_replace('/edit/', '/view/', $b));
-				if ($p->exists()) {
-					// I need the array merge because getParentTree only returns << parents >>.
-					return array_merge($p->getParentTree(), array($p));
-				}
-			}
-
-			// If the page is currently Delete and there is a View... handle that instance.
-			if ($m == 'delete' && method_exists($this->getControllerClass(), 'view')) {
-				/** @var PageModel $p */
-				$p = PageModel::Construct(str_replace('/delete/', '/view/', $b));
-				// Only try to call the script if it exists.
-				if ($p->exists()) {
+				$p = PageModel::Construct($altbaseurl);
+				if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
 					// I need the array merge because getParentTree only returns << parents >>.
 					return array_merge($p->getParentTree(), array($p));
 				}
@@ -992,8 +991,7 @@ class PageModel extends Model {
 
 			// If the page is currently update, edit, or create and there is an "admin" page, link that instead.
 			if(
-				($m == 'create' || $m == 'update' || $m == 'edit') &&
-				method_exists($this->getControllerClass(), 'admin')
+				($m == 'create' || $m == 'update' || $m == 'edit' || $m == 'delete') && $hasadmin
 			){
 				// Replace the current baseurl with a /admin version.
 				$parentb = strpos($b, '/' . $m) ? substr($b, 0, strpos($b, '/' . $m)) : $b;
