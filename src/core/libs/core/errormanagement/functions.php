@@ -78,6 +78,11 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 	}
 
 	try{
+		if(!\Core::GetComponent()){
+			// SQUAK!  Core isn't even loaded yet!
+			throw new \Exception('Error retrieved before Core was loaded!');
+		}
+
 		$log = \SystemLogModel::Factory();
 		$log->setFromArray([
 			'type'    => $type,

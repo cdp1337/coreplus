@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 03 Dec 2013 15:04:40 -0500
+ * @compiled Tue, 03 Dec 2013 17:41:11 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -5443,7 +5443,7 @@ return $this->_smartyPluginDirectory;
 public function getSmartyPlugins(){
 $plugins = [];
 $node = $this->_xmlloader->getElement('/smartyplugins');
-if(!$node) $plugins;
+if(!$node) return $plugins;
 foreach($node->getElementsByTagName('smartyplugin') as $n){
 $plugins[ $n->getAttribute('name') ] = $n->getAttribute('call');
 }
@@ -6351,22 +6351,9 @@ return false;
 return $ftp;
 }
 function user(){
-if(!\Core::IsComponentAvailable('User')){
-return null;
-}
 if(!class_exists('\\UserModel')){
 return null;
 }
-$use_legacy = (class_exists('\\User'));
-if($use_legacy){
-if(!isset($_SESSION['user'])){
-$_SESSION['user'] = \User::Factory();
-}
-elseif(!$_SESSION['user'] instanceof \User){
-$_SESSION['user'] = \User::Factory();
-}
-}
-else{
 if(!isset($_SESSION['user'])){
 $_SESSION['user'] = new \UserModel();
 }
@@ -6377,7 +6364,6 @@ elseif(isset(\Session::$Externals['user_forcesync'])){
 $tmpuser = $_SESSION['user'];
 $_SESSION['user'] = \UserModel::Construct($tmpuser->get('id'));
 unset(\Session::$Externals['user_forcesync']);
-}
 }
 $user = $_SESSION['user'];
 if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
@@ -10126,6 +10112,9 @@ else{
 $details = '';
 }
 try{
+if(!\Core::GetComponent()){
+throw new \Exception('Error retrieved before Core was loaded!');
+}
 $log = \SystemLogModel::Factory();
 $log->setFromArray([
 'type'    => $type,
@@ -11688,7 +11677,7 @@ die($contents);
 if (!defined('GPG_HOMEDIR')) {
 define('GPG_HOMEDIR', ($gnupgdir) ? $gnupgdir : ROOT_PDIR . 'gnupg');
 }
-unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl);
+unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl, $gnupgdir, $host, $sslmode, $tmpdir);
 $maindefines_time = microtime(true);
 try {
 $dbconn = DMI::GetSystemDMI();
@@ -14304,6 +14293,7 @@ return new Form::$Mappings[$type]($attributes);
 }
 class Form extends FormGroup {
 public static $Mappings = array(
+'access'           => 'FormAccessStringInput',
 'checkbox'         => 'FormCheckboxInput',
 'checkboxes'       => 'FormCheckboxesInput',
 'date'             => 'FormDateInput',

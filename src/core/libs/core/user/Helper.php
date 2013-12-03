@@ -22,7 +22,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  *
  */
-namespace User;
+namespace Core\User;
 
 
 abstract class Helper{
@@ -685,31 +685,38 @@ abstract class Helper{
 
 		foreach($fac as $f){
 			$key = $f->get('key');
-			$val = ($user->get($key) === null) ? $f->get('default_value') : $user->get($key);
 
-			$el = \FormElement::Factory($f->get('formtype'));
-			$el->set('name', 'option[' . $key . ']');
-			$el->set('title', $f->get('name'));
-			$el->set('value', $val);
-			if($f->get('required')) $el->set('required', true);
+			try{
+				$val = ($user->get($key) === null) ? $f->get('default_value') : $user->get($key);
+				$el = \FormElement::Factory($f->get('formtype'));
+				$el->set('name', 'option[' . $key . ']');
+				$el->set('title', $f->get('name'));
+				$el->set('value', $val);
+				if($f->get('required')) $el->set('required', true);
 
-			switch($f->get('formtype')){
-				case 'file':
-					$el->set('basedir', 'public/user/config');
-					break;
-				case 'checkboxes':
-				case 'select':
-				case 'radio':
-					$opts = array_map('trim', explode('|', $f->get('options')));
-					$el->set('options', $opts);
-					break;
-				case 'checkbox':
-					$el->set('value', 1);
-					$el->set('checked', ($val ? true : false));
-					break;
+				switch($f->get('formtype')){
+					case 'file':
+						$el->set('basedir', 'public/user/config');
+						break;
+					case 'checkboxes':
+					case 'select':
+					case 'radio':
+						$opts = array_map('trim', explode('|', $f->get('options')));
+						$el->set('options', $opts);
+						break;
+					case 'checkbox':
+						$el->set('value', 1);
+						$el->set('checked', ($val ? true : false));
+						break;
+				}
+
+				$form->addElement($el);
+			}
+			catch(\Exception $e){
+				// Well, damn... Don't really care.
+				\SystemLogModel::LogErrorEvent('/userconfig/exception/' . $key, $e->getMessage());
 			}
 
-			$form->addElement($el);
 			//var_dump($f);
 		}
 

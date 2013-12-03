@@ -3,7 +3,7 @@
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.1" name="Gallery" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.6.0" operation="ge"/>
-		<require name="user" type="component"/>
+		<require name="user" type="library"/>
 	</requires>
 	<permissions>
 		<permission key="gallery_manage" description="Manage Galleries"/>

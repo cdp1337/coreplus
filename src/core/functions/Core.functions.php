@@ -110,49 +110,29 @@ function FTP(){
  * @return \UserModel|\User|null
  */
 function user(){
-	if(!\Core::IsComponentAvailable('User')){
-		return null;
-	}
 
 	if(!class_exists('\\UserModel')){
 		return null;
 	}
 
-	/** @var bool $use_legacy Use the legacy (pre-2.8.x), user system. */
-	$use_legacy = (class_exists('\\User'));
-
-
-	// Is the session data present?
-	if($use_legacy){
-		if(!isset($_SESSION['user'])){
-			$_SESSION['user'] = \User::Factory();
-		}
-		elseif(!$_SESSION['user'] instanceof \User){
-			// Clear out this user too!
-			// This may happen when dealing with a combination of 2.7 and 2.8 components.
-			$_SESSION['user'] = \User::Factory();
-		}
+	if(!isset($_SESSION['user'])){
+		$_SESSION['user'] = new \UserModel();
 	}
-	else{
-		if(!isset($_SESSION['user'])){
-			$_SESSION['user'] = new \UserModel();
-		}
-		elseif(!$_SESSION['user'] instanceof \UserModel){
-			// Clear out this user too!
-			// This may happen with pre-2.8.x systems.
-			$_SESSION['user'] = new \UserModel();
-		}
-		elseif(isset(\Session::$Externals['user_forcesync'])){
-			// A force sync was requested by something that modified the original UserModel object.
-			// Keep the user logged in, but reload the data from the database.
-			$tmpuser = $_SESSION['user'];
+	elseif(!$_SESSION['user'] instanceof \UserModel){
+		// Clear out this user too!
+		// This may happen with pre-2.8.x systems.
+		$_SESSION['user'] = new \UserModel();
+	}
+	elseif(isset(\Session::$Externals['user_forcesync'])){
+		// A force sync was requested by something that modified the original UserModel object.
+		// Keep the user logged in, but reload the data from the database.
+		$tmpuser = $_SESSION['user'];
 
-			$_SESSION['user'] = \UserModel::Construct($tmpuser->get('id'));
-			unset(\Session::$Externals['user_forcesync']);
-		}
+		$_SESSION['user'] = \UserModel::Construct($tmpuser->get('id'));
+		unset(\Session::$Externals['user_forcesync']);
 	}
 
-	/** @var $user \UserModel|\User */
+	/** @var $user \UserModel */
 	$user = $_SESSION['user'];
 
 	// If this is in multisite mode, blank out the access string cache too!

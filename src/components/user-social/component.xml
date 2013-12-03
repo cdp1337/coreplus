@@ -2,7 +2,7 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="1.0.5">
 	<requires>
-		<require name="User" type="component" version="2.6.0"/>
+		<require name="User" type="library" version="2.6.0"/>
 		<require name="Core" type="component" version="2.6.1"/>
 	</requires>
 	<userconfigs>

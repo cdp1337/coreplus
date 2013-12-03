@@ -3,7 +3,7 @@
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Tags" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.6"/>
-		<require name="user" type="component"/>
+		<require name="user" type="library"/>
 	</requires>
 	<view searchdir="templates">
 		<file filename="templates/widgets/tags/display.tpl" md5="d817935e0c5a4a37c58ba555d38b5417"/>

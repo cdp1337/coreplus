@@ -696,6 +696,7 @@ class Form extends FormGroup {
 	 * @var array
 	 */
 	public static $Mappings = array(
+		'access'           => 'FormAccessStringInput',
 		'checkbox'         => 'FormCheckboxInput',
 		'checkboxes'       => 'FormCheckboxesInput',
 		'date'             => 'FormDateInput',

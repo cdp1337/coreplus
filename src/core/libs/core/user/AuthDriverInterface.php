@@ -9,7 +9,7 @@
  * Created with PhpStorm.
  */
 
-namespace User;
+namespace Core\User;
 
 
 interface AuthDriverInterface {

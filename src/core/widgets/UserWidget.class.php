@@ -47,7 +47,7 @@ class UserWidget extends Widget_2_1{
 			return '';
 		}
 
-		$form = \User\Helper::GetRegistrationForm();
+		$form = \Core\User\Helper::GetRegistrationForm();
 
 		$view->assign('form', $form);
 	}

@@ -93,7 +93,7 @@ class UserController extends Controller_2_1{
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$form = \User\Helper::GetEditForm($user);
+		$form = \Core\User\Helper::GetEditForm($user);
 
 
 		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
@@ -261,7 +261,7 @@ class UserController extends Controller_2_1{
 		/** @var UserModel $user */
 		$user = UserModel::Construct($userid);
 		if($user) {
-			$form = \User\Helper::GetEditForm($user);
+			$form = \Core\User\Helper::GetEditForm($user);
 		} else {
 			Core::SetMessage('A user with this ID does not exist');
 			\Core\go_back();
@@ -400,7 +400,7 @@ class UserController extends Controller_2_1{
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$form = \User\Helper::GetRegistrationForm();
+		$form = \Core\User\Helper::GetRegistrationForm();
 
 		if($groupmanager){
 			$contextgroups = UserGroupModel::Find(['context != '], null, 'name');
@@ -1034,7 +1034,7 @@ class UserController extends Controller_2_1{
 		$loginform->addElement('submit', array('value' => 'Login'));
 
 		if(ConfigHandler::Get('/user/register/allowpublic')){
-			$registerform = \User\Helper::GetRegistrationForm();
+			$registerform = \Core\User\Helper::GetRegistrationForm();
 		}
 		else{
 			$registerform = null;

@@ -425,7 +425,7 @@ if (!defined('GPG_HOMEDIR')) {
 }
 
 // Cleanup!
-unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl);
+unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl, $gnupgdir, $host, $sslmode, $tmpdir);
 $maindefines_time = microtime(true);
 
 

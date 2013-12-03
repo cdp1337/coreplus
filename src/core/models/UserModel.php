@@ -394,11 +394,11 @@ class UserModel extends Model {
 	public function getAuthDriver(){
 		if($this->_authdriver === null){
 			$driver = $this->get('backend');
-			if(!class_exists('\\User\\AuthDrivers\\' . $driver)){
+			if(!class_exists('\\Core\\User\\AuthDrivers\\' . $driver)){
 				throw new Exception('Invalid auth backend for user, ' . $driver);
 			}
 
-			$ref = new ReflectionClass('\\User\\AuthDrivers\\' . $driver);
+			$ref = new ReflectionClass('\\Core\\User\\AuthDrivers\\' . $driver);
 			$this->_authdriver = $ref->newInstance($this);
 		}
 

@@ -3,7 +3,7 @@
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.5" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.7.0" operation="ge"/>
-		<require name="user" type="component" version="2.5.4"/>
+		<require name="user" type="library" version="2.5.4"/>
 		<require name="tags" type="component"/>
 		<require name="JQuery-Full" type="component" version="1.9"/>
 	</requires>
