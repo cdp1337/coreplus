@@ -1049,7 +1049,8 @@ class Form extends FormGroup {
 			if (!$new && in_array($k, $i['primary'])) continue;
 			*/
 
-			// Form attribute default keys
+			// Base required keys for all form elements.
+			// These get mapped by the necessary fields.
 			$formatts = array(
 				'type' => null,
 				'title' => ucwords($k),
@@ -1058,9 +1059,13 @@ class Form extends FormGroup {
 				'value' => $model->get($k),
 				'name' => $prefix . '[' . $k . ']',
 			);
+
+			// Default options, these are set by the conditional switch below, and are only set if the $formatts do not contain them.
+			$defaults = [];
+
 			if($formatts['value'] === null && isset($v['default'])) $formatts['value'] = $v['default'];
 
-			// Default values from the standard attributes.
+			// Default values from the standard (outside the form set), attributes.
 			if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
 			if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
 			if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
@@ -1068,17 +1073,10 @@ class Form extends FormGroup {
 			if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
 
 			// Merge the defaults with the form array if it's present.
-			// This is the most precise method for setting form attributes, and is therefore authoritative.
+			// This is the most precise method for setting form attributes, and is therefore authoritative above the generic ones.
 			if(isset($v['form'])){
 				$formatts = array_merge($formatts, $v['form']);
 			}
-
-
-			// Boolean checkboxes can have special options.
-			//if(isset($v['formtype']) && $v['formtype'] == 'checkbox' && $v['type'] == Model::ATT_TYPE_BOOL){
-			//	$el = FormElement::Factory($v['formtype']);
-			//	$el->set('options', array('1'));
-			//}
 
 
 
@@ -1113,10 +1111,10 @@ class Form extends FormGroup {
 			//// FORM TYPE ATTRIBUTES
 
 			elseif($formatts['type'] == 'datetime' && $v['type'] == Model::ATT_TYPE_INT){
-				$formatts['datetimepicker_dateFormat'] = 'yy-mm-dd';
-				$formatts['datetimepicker_timeFormat'] = 'HH:mm';
-				$formatts['displayformat'] = 'Y-m-d H:i';
-				$formatts['saveformat'] = 'U';
+				$defaults['datetimepicker_dateformat'] = 'yy-mm-dd';
+				$defaults['datetimepicker_timeformat'] = 'HH:mm';
+				$defaults['displayformat'] = 'Y-m-d H:i';
+				$defaults['saveformat'] = 'U';
 				$el = FormElement::Factory('datetime');
 			}
 			elseif ($formatts['type'] !== null) {
@@ -1169,13 +1167,13 @@ class Form extends FormGroup {
 				if ($v['default']) $el->set('value', $v['default']);
 			}
 			elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATE){
-				$formatts['datepicker_dateFormat'] = 'yy-mm-dd';
+				$defaults['datepicker_dateformat'] = 'yy-mm-dd';
 				$el = FormElement::Factory('date');
 			}
 			elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATETIME){
-				$formatts['datetimepicker_dateFormat'] = 'yy-mm-dd';
-				$formatts['datetimepicker_timeFormat'] = 'HH:mm';
-				$formatts['saveformat'] = 'Y-m-d H:i:00';
+				$defaults['datetimepicker_dateformat'] = 'yy-mm-dd';
+				$defaults['datetimepicker_timeformat'] = 'HH:mm';
+				$defaults['saveformat'] = 'Y-m-d H:i:00';
 				$el = FormElement::Factory('datetime');
 			}
 			else {
@@ -1184,6 +1182,11 @@ class Form extends FormGroup {
 
 			// I no longer need the type attribute.
 			unset($formatts['type']);
+
+			// Merge in any defaults, (without overriding).
+			foreach($defaults as $k => $v){
+				if(!isset($formatts[$k])) $formatts[$k] = $v;
+			}
 
 			// And set everything else.
 			$el->setFromArray($formatts);
