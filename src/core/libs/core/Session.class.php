@@ -31,6 +31,9 @@ class Session implements SessionHandlerInterface {
 	 */
 	public static $Instance;
 
+	/** @var array Any externally set information on this session model. */
+	public static $Externals = [];
+
 	public function __construct(){
 		if(self::$Instance === null){
 			self::$Instance = $this;
@@ -114,6 +117,8 @@ class Session implements SessionHandlerInterface {
 	 */
 	public function read($session_id) {
 		$model = self::_GetModel($session_id);
+
+		self::$Externals = $model->getExternalData();
 		return $model->getData();
 	}
 
@@ -137,6 +142,7 @@ class Session implements SessionHandlerInterface {
 	public function write($session_id, $session_data) {
 		$model = self::_GetModel($session_id);
 		$model->setData($session_data);
+		$model->setExternalData(self::$Externals);
 		return $model->save();
 	}
 
@@ -156,20 +162,7 @@ class Session implements SessionHandlerInterface {
 	 * </p>
 	 */
 	public function gc($maxlifetime) {
-		/**
-		 * Delete ANY session that has expired.
-		 */
-		$ttl = ConfigHandler::Get('/core/session/ttl');
-
-		// Low-level datasets are used here because they have less overhead than
-		// the full-blown model system.
-		$dataset = new Core\Datamodel\Dataset();
-		$dataset->table('session');
-		$dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl));
-		$dataset->delete()->execute();
-
-		// Always return TRUE
-		return true;
+		return self::CleanupExpired();
 	}
 
 	/**
@@ -206,6 +199,28 @@ class Session implements SessionHandlerInterface {
 		$session->write(session_id(), serialize($_SESSION));
 	}
 
+	/**
+	 * Cleanup any expired sessions from the database.
+	 *
+	 * @return bool Always returns true :)
+	 */
+	public static function CleanupExpired(){
+		/**
+		 * Delete ANY session that has expired.
+		 */
+		$ttl = ConfigHandler::Get('/core/session/ttl');
+
+		// Low-level datasets are used here because they have less overhead than
+		// the full-blown model system.
+		$dataset = new Core\Datamodel\Dataset();
+		$dataset->table('session');
+		$dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl));
+		$dataset->delete()->execute();
+
+		// Always return TRUE
+		return true;
+	}
+
 
 	/**
 	 * Get the Model for this current session.
@@ -227,14 +242,17 @@ class Session implements SessionHandlerInterface {
 
 // and GO
 // Now I can session_start everything.
-ini_set('session.hash_bits_per_character', 5);
-ini_set('session.hash_function', 1);
+if(EXEC_MODE != 'CLI'){
+	ini_set('session.hash_bits_per_character', 5);
+	ini_set('session.hash_function', 1);
 // Allow a config-set cookie domain.  This is required for xsite sessions in multimode.
-if(defined('SESSION_COOKIE_DOMAIN') && SESSION_COOKIE_DOMAIN){
-	// A valid session name is required for xsite sessions to work. (not sure why)
-	session_name('CorePlusSession');
-	session_set_cookie_params(0, '/', SESSION_COOKIE_DOMAIN);
+	if(defined('SESSION_COOKIE_DOMAIN') && SESSION_COOKIE_DOMAIN){
+		// A valid session name is required for xsite sessions to work. (not sure why)
+		session_name('CorePlusSession');
+		session_set_cookie_params(0, '/', SESSION_COOKIE_DOMAIN);
+	}
+	$session = new Session();
+	session_set_save_handler($session, true);
+	session_start();
+
 }
-$session = new Session();
-session_set_save_handler($session, true);
-session_start();

@@ -51,6 +51,12 @@ class SessionModel extends Model {
 			'default' => null,
 			'null'    => true,
 		),
+		'external_data' => array(
+			'type' => Model::ATT_TYPE_DATA,
+			'comment' => 'JSON-encoded array of any external data set onto this session.',
+			'default' => null,
+			'null' => true,
+		),
 		'created'    => array(
 			'type' => Model::ATT_TYPE_CREATED
 		),
@@ -102,6 +108,25 @@ class SessionModel extends Model {
 	}
 
 	/**
+	 * Get the JSON-decoded data of the external data on this session.
+	 *
+	 * @return array
+	 */
+	public function getExternalData(){
+		$ext = $this->get('external_data');
+
+		// Blank values decode as an empty array.
+		if($ext == '') return [];
+
+		$json = json_decode($ext, true);
+
+		// Invalid encoded arrays decode as an empty aray.
+		if(!$json) return [];
+
+		return $json;
+	}
+
+	/**
 	 * Set the data for this session.  This will automatically compress the contents.
 	 *
 	 * @param $data Uncompressed data
@@ -111,6 +136,23 @@ class SessionModel extends Model {
 		$this->_data['data'] = $zipped;
 		// Always cause this to set the dirty flag.
 		$this->_dirty = true;
+	}
+
+	/**
+	 * Set data on this session from an external script or source.
+	 *
+	 * @param array $data External data to set
+	 */
+	public function setExternalData($data){
+		if(!is_array($data)){
+			$this->set('external_data', null);
+		}
+		elseif(!sizeof($data)){
+			$this->set('external_data', null);
+		}
+		else{
+			$this->set('external_data', json_encode($data));
+		}
 	}
 /*
 	public function save(){
