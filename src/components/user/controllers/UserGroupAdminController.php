@@ -116,7 +116,8 @@ class UserGroupAdminController extends Controller_2_1{
 				else{
 					// This group has been added to a user's profile, display a message that it's locked!
 					Core::SetMessage('This group has been added to a user account and therefore has been locked to the ' . $contextnames[$model->get('context')]);
-					$form->removeElement('model[context]');
+					$form->switchElementType('model[context]', 'hidden');
+					$usecontexts = true;
 				}
 			}
 			else{
