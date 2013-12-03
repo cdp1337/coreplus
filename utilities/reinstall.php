@@ -37,7 +37,7 @@ define('TMP_DIR', sys_get_temp_dir() . '/coreplus-installer/');
 define('CUR_CALL', ROOT_WDIR . 'install/');
 
 // Make this page load appear as a standard web request instead of a CLI one.
-unset($_SERVER['SHELL']);
+//unset($_SERVER['SHELL']);
 $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
 $_SERVER['REQUEST_URI'] = '/cli-installer';
@@ -158,4 +158,38 @@ foreach(\Core\Datamodel\Dataset::Init()->select('baseurl')->table('page')->where
 	echo "Deleting page " . $baseurl . "\n";
 	\Core\Datamodel\Dataset::Init()->delete()->table('page')->where('baseurl = ' . $baseurl)->execute();
 	\Core\Datamodel\Dataset::Init()->delete()->table('page_meta')->where('baseurl = ' . $baseurl)->execute();
+}
+
+echo 'Synchronizing searchable models...' . "\n";
+foreach(\Core::GetComponents() as $c){
+	/** @var Component_2_1 $c */
+
+	foreach($c->getClassList() as $class => $file){
+		if($class == 'model'){
+			continue;
+		}
+		if(strrpos($class, 'model') !== strlen($class) - 5){
+			// If the class doesn't explicitly end with "Model", it's also not a model.
+			continue;
+		}
+		if(strpos($class, '\\') !== false){
+			// If this "Model" class is namespaced, it's not a valid model!
+			// All Models MUST reside in the global namespace in order to be valid.
+			continue;
+		}
+
+		$ref = new ReflectionClass($class);
+		if(!$ref->getProperty('HasSearch')->getValue()){
+			// This model doesn't have the searchable flag, skip it.
+			continue;
+		}
+
+		echo "Syncing $class\n";
+		$fac = new ModelFactory($class);
+		foreach($fac->get() as $m){
+			/** @var Model $m */
+			$m->set('search_index_pri', '!');
+			$m->save();
+		}
+	}
 }
