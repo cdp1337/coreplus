@@ -14,9 +14,10 @@
 		<hookregister name="/core/controllinks/user/view" description="Control links when viewing a specific user" return="array"/>
 		<hookregister name="/user/postlogin/getredirecturl" description="Hook that is called after the user has successfully logged in.  Return a non-empty string to redirect to that page." return="string"/>
 		<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
-		<hook call="User\Helper::RecordActivity" name="/core/page/postrender"/>
+		<hook name="/core/page/postrender" call="User\Helper::RecordActivity"/>
 		<hook name="/core/controllinks/user/view" call="User\Helper::GetControlLinks"/>
 		<hook name="/cron/daily" call="User\Helper::PurgeUserActivityCron"/>
+		<hook name="/user/postsave" call="User\Helper::ForceSessionSync"/>
 	</hooks>
 	<forms>
 		<formelement name="access" class="FormAccessStringInput"/>
@@ -157,6 +158,7 @@
 	<permissions>
 		<permission key="/user/search/autocomplete" description="Search for users in the system via autocomplete widgets"/>
 		<permission key="/user/users/manage" description="Manage site users"/>
+		<permission key="/user/users/sudo" description="Can assume the role of ANY other use on the system."/>
 		<permission key="/user/permissions/manage" description="Manage site permissions"/>
 		<permission key="/user/groups/manage" description="Manage site groups"/>
 		<permission key="/user/activity/view" description="View user activity and analytics"/>

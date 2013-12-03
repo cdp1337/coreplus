@@ -485,9 +485,18 @@ abstract class Helper{
 		if(!$user) return array();
 
 
+		$usersudo    = \Core\user()->checkAccess('p:/user/users/sudo');
 		$usermanager = \Core\user()->checkAccess('p:/user/users/manage');
 		$selfaccount = \Core\user()->get('id') == $user->get('id');
 
+		if($usersudo && !$selfaccount){
+			$a[] = array(
+				'title' => 'Switch To User',
+				'icon' => 'bullseye',
+				'link' => '/user/sudo/' . $user->get('id'),
+				'confirm' => 'By switching, (or SUDOing), to a user, you inherit that user permissions.',
+			);
+		}
 
 		if($usermanager || $selfaccount){
 			$a[] = array(
@@ -788,5 +797,38 @@ abstract class Helper{
 		// @todo Implement a hook handler here for UserPreRegisterForm
 
 		return $form;
+	}
+
+	/**
+	 * Called from the /user/postsave hook with the one argument of the UserModel.
+	 *
+	 * @param \UserModel $user
+	 * @return bool
+	 */
+	public static function ForceSessionSync(\UserModel $user){
+
+		// BEFORE I do this, cleanup any old sessions!
+		\Session::CleanupExpired();
+
+		$me = (\Core\user() && \Core\user()->get('id') == $user->get('id'));
+
+		foreach(\SessionModel::Find(['user_id = ' . $user->get('id')]) as $sess){
+			/** @var \SessionModel $sess */
+
+			if($me && $sess->get('session_id') == session_id()){
+				// It's this current session!
+				// Reload this user object :)
+				// Remember, the external data cannot be set from within the same session!
+				$_SESSION['user'] = $user;
+				continue;
+			}
+
+			$dat = $sess->getExternalData();
+			$dat['user_forcesync'] = true;
+			$sess->setExternalData($dat);
+			$sess->save();
+		}
+
+		return true;
 	}
 }

@@ -579,6 +579,39 @@ class UserController extends Controller_2_1{
 	}
 
 	/**
+	 * View to sudo as another user.
+	 */
+	public function sudo(){
+		$view  = $this->getView();
+		$req   = $this->getPageRequest();
+		$id    = $req->getParameter(0);
+
+
+		if($id){
+			$model = UserModel::Construct($id);
+
+			if(!\Core\user()->checkAccess('p:/user/users/sudo')){
+				return View::ERROR_ACCESSDENIED;
+			}
+
+			if(!$req->isPost()){
+				return View::ERROR_BADREQUEST;
+			}
+
+			if(!$model->exists()){
+				return View::ERROR_NOTFOUND;
+			}
+
+			$_SESSION['user_sudo'] = $model;
+		}
+		elseif(isset($_SESSION['user_sudo'])){
+			unset($_SESSION['user_sudo']);
+		}
+
+		\Core\redirect('/');
+	}
+
+	/**
 	 * Import a set of users from a CSV file.
 	 */
 	public function import(){
