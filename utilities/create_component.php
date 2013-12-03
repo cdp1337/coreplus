@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 /**
- * Create a component from some scafolding templates.
+ * Create the scaffolding for a new component, including the component.xml, Models, Controllers, and all directories.
  */
 
 if(!isset($_SERVER['SHELL'])){
@@ -88,13 +88,15 @@ else{
 
 $directories = array(
 	'assets/css',
+	'assets/images',
 	'assets/js',
-	'classes',
+	//'classes', // The global classes are deprecated in favour of namespaced versions located in the libs folder.
 	'controllers',
 	'models',
 	'templates/pages',
 	'templates/widgets',
 	'widgets',
+	'libs/' . str_replace('-', '', $component),
 );
 $models = array();
 $controllers = array();
