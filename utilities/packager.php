@@ -1727,7 +1727,7 @@ CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 
 // Before ANYTHING happens.... make sure that the system is compiled!
 echo '# Compiling system...' . "\n";
-exec('"' . BASE_DIR . 'utilities/compiler.php"');
+exec(escapeshellarg(BASE_DIR . 'utilities/compiler.php'));
 echo "OK!\n";
 
 
