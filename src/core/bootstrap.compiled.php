@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 11 Nov 2013 16:56:27 -0500
+ * @compiled Tue, 03 Dec 2013 15:04:40 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1706,11 +1706,34 @@ protected $_cacheable = true;
 protected $_schemacache = null;
 public static $Schema = array();
 public static $Indexes = array();
+public static $HasSearch = false;
+public static $HasCreated = false;
+public static $HasUpdated = false;
+public static $HasDeleted = false;
 public static $_ModelCache = array();
 public function __construct($key = null) {
 $s = self::GetSchema();
 foreach ($s as $k => $v) {
 $this->_data[$k] = (isset($v['default'])) ? $v['default'] : null;
+if(isset($v['link'])){
+if(is_array($v['link'])){
+if(!isset($v['link']['model'])){
+throw new Exception('Required attribute [model] not provided on link [' . $k . '] of model [' . get_class($this) . ']');
+}
+$linkmodel = $v['link']['model'];
+$linktype  = isset($v['link']['type']) ? $v['link']['type'] : Model::LINK_HASONE;
+$linkon    = isset($v['link']['on']) ? $v['link']['on'] : 'id';
+}
+else{
+$linkmodel = $v['link'];
+$linktype  = Model::LINK_HASONE;
+$linkon    = 'id'; // ... erm yeah... hopefully this is it!
+}
+$this->_linked[$linkmodel] = [
+'on'   => [$linkon => $k],
+'link' => $linktype,
+];
+}
 }
 $i = self::GetIndexes();
 $pri = (isset($i['primary'])) ? $i['primary'] : false;
@@ -1792,6 +1815,22 @@ if(!$save){
 return false;
 }
 HookHandler::DispatchHook('/core/model/presave', $this);
+foreach($this->_linked as $k => $l){
+if(!is_array($l['on'])){
+$l['on'] = array($l['on'] => $l['on'] );
+}
+if($l['link'] == Model::LINK_HASONE && sizeof($l['on']) == 1){
+reset($l['on']);
+$remotek = key($l['on']);
+$localk  = $l['on'][$remotek];
+$locals = $this->getKeySchema($localk);
+if(!$locals) continue;
+if($locals['type'] != Model::ATT_TYPE_UUID_FK) continue;
+$model = $l['records'];
+$model->save();
+$this->set($localk, $model->get($remotek));
+}
+}
 if ($this->_exists) $this->_saveExisting();
 else $this->_saveNew();
 foreach($this->_linked as $k => $l){
@@ -1827,17 +1866,51 @@ $this->_datainit = $this->_data;
 HookHandler::DispatchHook('/core/model/postsave', $this);
 return true;
 }
-public function offsetExists($offset) {
-return (array_key_exists($offset, $this->_data));
+public function get($k) {
+if($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
+return $this->_datadecrypted[$k];
 }
-public function offsetGet($offset) {
-return $this->get($offset);
+elseif (array_key_exists($k, $this->_data)) {
+return $this->_data[$k];
 }
-public function offsetSet($offset, $value) {
-$this->set($offset, $value);
+elseif (array_key_exists($k, $this->_dataother)) {
+return $this->_dataother[$k];
 }
-public function offsetUnset($offset) {
-$this->set($offset, null);
+elseif($this->getLink($k)){
+return $this->getLink($k);
+}
+else {
+return null;
+}
+}
+public function getLabel(){
+$s = $this->getKeySchemas();
+if(isset($s['name'])){
+return $this->get('name');
+}
+elseif(isset($s['title'])){
+return $this->get('title');
+}
+elseif(isset($s['key'])){
+return $this->get('key');
+}
+else{
+return 'Unnamed ' . $this->getPrimaryKeyString();
+}
+}
+public function getAsArray() {
+if($this->_datadecrypted !== null){
+return array_merge($this->_data, $this->_dataother, $this->_datadecrypted);
+}
+else{
+return array_merge($this->_data, $this->_dataother);
+}
+}
+public function getData(){
+return $this->_data;
+}
+public function getInitialData(){
+return $this->_datainit;
 }
 public function getKeySchemas() {
 if ($this->_schemacache === null) {
@@ -1877,6 +1950,25 @@ $s = $this->getKeySchemas();
 if (!isset($s[$key])) return null;
 return $s[$key];
 }
+public function getSearchIndexString(){
+$strs = [];
+foreach($this->getKeySchemas() as $k => $dat){
+if(isset($dat['form']) && isset($dat['form']['type'])){
+if($dat['form']['type'] == 'file') continue;
+}
+if($k == 'search_index_str') continue;
+if($k == 'search_index_pri') continue;
+if($k == 'search_index_sec') continue;
+switch($dat['type']){
+case Model::ATT_TYPE_TEXT:
+case Model::ATT_TYPE_STRING:
+$val = $this->get($k);
+if($val) $strs[] = $val;
+break;
+}
+}
+return implode(' ', $strs);
+}
 public function hasDraft(){
 if(Core::IsComponentAvailable('model-audit')){
 return ModelAudit\Helper::ModelHasDraft($this);
@@ -1898,137 +1990,6 @@ return 'pending_update';
 else{
 return '';
 }
-}
-private function _saveNew() {
-$i = self::GetIndexes();
-$s = self::GetSchema();
-$n = $this->_getTableName();
-if (!isset($i['primary'])) $i['primary'] = array(); // No primary schema defined... just don't make the in_array bail out.
-$dat = new Core\Datamodel\Dataset();
-$dat->table($n);
-$idcol = false;
-foreach ($this->_data as $k => $v) {
-$keyschema = $s[$k];
-switch ($keyschema['type']) {
-case Model::ATT_TYPE_CREATED:
-case Model::ATT_TYPE_UPDATED:
-if($v){
-$dat->insert($k, $v);
-}
-else{
-$nv = Time::GetCurrentGMT();
-$dat->insert($k, $nv);
-$this->_data[$k] = $nv;
-}
-break;
-case Model::ATT_TYPE_ID:
-$dat->setID($k, $this->_data[$k]);
-$idcol = $k; // Remember this for after the save.
-break;
-case Model::ATT_TYPE_UUID:
-if($this->_data[$k]){
-$nv = $this->_data[$k];
-$dat->setID($k, $nv);
-}
-else{
-$nv = Core::GenerateUUID();
-$dat->insert($k, $nv);
-$this->_data[$k] = $nv;
-$dat->setID($k, $nv);
-}
-$idcol = $k;
-break;
-case Model::ATT_TYPE_SITE:
-if(
-Core::IsComponentAvailable('enterprise') &&
-MultiSiteHelper::IsEnabled() &&
-($v === null || $v === false)
-){
-$site = MultiSiteHelper::GetCurrentSiteID();
-$dat->insert('site', $site);
-$this->_data[$k] = $site;
-}
-elseif($v === null || $v === false){
-$dat->insert('site', 0);
-$this->_data[$k] = 0;
-}
-else{
-$dat->insert($k, $v);
-}
-break;
-default:
-$v = $this->translateKey($k, $v);
-$dat->insert($k, $v);
-break;
-}
-}
-$dat->execute($this->interface);
-if ($idcol) $this->_data[$idcol] = $dat->getID();
-}
-protected function _saveExisting($useset = false) {
-if(!$this->changed()) return false;
-$i = self::GetIndexes();
-$s = self::GetSchema();
-$n = $this->_getTableName();
-$pri = isset($i['primary']) ? $i['primary'] : array();
-if($pri && !is_array($pri)) $pri = array($pri);
-if($pri && !is_array($pri)) $pri = array($pri);
-$dat = new Core\Datamodel\Dataset();
-$dat->table($n);
-$idcol = false;
-foreach ($this->_data as $k => $v) {
-if(!isset($s[$k])){
-continue;
-}
-$keyschema = $s[$k];
-switch ($keyschema['type']) {
-case Model::ATT_TYPE_CREATED:
-continue 2;
-case Model::ATT_TYPE_UPDATED:
-$nv = Time::GetCurrentGMT();
-$dat->update($k, $nv);
-$this->_data[$k] = $nv;
-continue 2;
-case Model::ATT_TYPE_ID:
-case Model::ATT_TYPE_UUID:
-$dat->setID($k, $this->_data[$k]);
-$idcol = $k; // Remember this for after the save.
-continue 2;
-}
-$v = $this->translateKey($k, $v);
-if (in_array($k, $pri)) {
-if ($this->_datainit[$k] != $v){
-if($useset){
-$dat->set($k, $v);
-}
-else{
-$dat->update($k, $v);
-}
-}
-$dat->where($k, $this->_datainit[$k]);
-$this->_data[$k] = $v;
-}
-else {
-if(isset($this->_datainit[$k])){
-if($keyschema['type'] == Model::ATT_TYPE_STRING){
-if(\Core\compare_strings($this->_datainit[$k], $v)) continue;
-}
-else{
-if(\Core\compare_values($this->_datainit[$k], $v)) continue;
-}
-}
-if($useset){
-$dat->set($k, $v);
-}
-else{
-$dat->update($k, $v);
-}
-}
-}
-if(!sizeof($dat->_sets)){
-return false;
-}
-$dat->execute($this->interface);
 }
 public function _loadFromRecord($record) {
 $this->_data = $record;
@@ -2243,68 +2204,6 @@ $this->_dataother[$k] = $v;
 return true;
 }
 }
-protected function _setLinkKeyPropagation($key, $newval) {
-$exists = $this->exists();
-foreach ($this->_linked as $lk => $l) {
-if($l['link'] == Model::LINK_BELONGSTOONE) continue;
-if($l['link'] == Model::LINK_BELONGSTOMANY) continue;
-$dolink = false;
-if (!isset($l['on'])) {
-}
-elseif (is_array($l['on'])) {
-foreach ($l['on'] as $k => $v) {
-if (is_numeric($k) && $v == $key) $dolink = true;
-elseif (!is_numeric($k) && $k == $key) $dolink = true;
-}
-}
-else {
-if ($l['on'] == $key) $dolink = true;
-}
-if (!$dolink) continue;
-if($exists){
-$links = $this->getLink($lk);
-if (!is_array($links)) $links = array($links);
-foreach ($links as $model) {
-$model->set($key, $newval);
-}
-}
-else{
-if(!isset($this->_linked[$lk]['records'])) continue;
-foreach($this->_linked[$lk]['records'] as $model){
-$model->set($key, $newval);
-}
-}
-}
-}
-protected function _getLinkClassName($linkname) {
-$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname . 'Model';
-if (!is_subclass_of($c, 'Model')) return null; // @todo Error Handling
-return $c;
-}
-protected function _getLinkWhereArray($linkname) {
-if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
-$wheres = array();
-if (!isset($this->_linked[$linkname]['on'])) {
-return null; // @todo automatic linking.
-}
-elseif (is_array($this->_linked[$linkname]['on'])) {
-foreach ($this->_linked[$linkname]['on'] as $k => $v) {
-if (is_numeric($k)) $wheres[$v] = $this->get($v);
-else $wheres[$k] = $this->get($v);
-}
-}
-else {
-$k          = $this->_linked[$linkname]['on'];
-$wheres[$k] = $this->get($k);
-}
-if($linkname == 'Page' && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-$schema = self::GetSchema();
-if(isset($schema['site']) && $schema['site']['type'] == Model::ATT_TYPE_SITE){
-$wheres['site'] = $this->get('site');
-}
-}
-return $wheres;
-}
 public function getLinkFactory($linkname){
 if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
 $c = $this->_getLinkClassName($linkname);
@@ -2321,6 +2220,9 @@ return $f;
 }
 public function getLink($linkname, $order = null) {
 if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
+if($order === null && isset($this->_linked[$linkname]['order'])){
+$order = $this->_linked[$linkname]['order'];
+}
 if (!isset($this->_linked[$linkname]['records'])) {
 $f = $this->getLinkFactory($linkname);
 $c = $this->_getLinkClassName($linkname);
@@ -2439,34 +2341,6 @@ public function setToFormElement($key, FormElement $element){
 }
 public function addToFormPost(Form $form, $prefix){
 }
-public function get($k) {
-if($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
-return $this->_datadecrypted[$k];
-}
-elseif (array_key_exists($k, $this->_data)) {
-return $this->_data[$k];
-}
-elseif (array_key_exists($k, $this->_dataother)) {
-return $this->_dataother[$k];
-}
-else {
-return null;
-}
-}
-public function getAsArray() {
-if($this->_datadecrypted !== null){
-return array_merge($this->_data, $this->_dataother, $this->_datadecrypted);
-}
-else{
-return array_merge($this->_data, $this->_dataother);
-}
-}
-public function getData(){
-return $this->_data;
-}
-public function getInitialData(){
-return $this->_datainit;
-}
 public function exists() {
 return $this->_exists;
 }
@@ -2545,6 +2419,231 @@ $this->_datadecrypted[$k] = $dec;
 public function _getTableName(){
 return self::GetTableName();
 }
+public function getPrimaryKeyString(){
+$bits = array();
+$i = self::GetIndexes();
+if(isset($i['primary'])){
+$pri = $i['primary'];
+if(!is_array($pri)) $pri = array($pri);
+foreach ($pri as $k) {
+$val = $this->get($k);
+if ($val === null) $val = 'null';
+elseif ($val === false) $val = 'false';
+$bits[] = $val;
+}
+}
+return implode('-', $bits);
+}
+public function offsetExists($offset) {
+return (array_key_exists($offset, $this->_data));
+}
+public function offsetGet($offset) {
+return $this->get($offset);
+}
+public function offsetSet($offset, $value) {
+$this->set($offset, $value);
+}
+public function offsetUnset($offset) {
+$this->set($offset, null);
+}
+protected function _setLinkKeyPropagation($key, $newval) {
+$exists = $this->exists();
+foreach ($this->_linked as $lk => $l) {
+if($l['link'] == Model::LINK_BELONGSTOONE) continue;
+if($l['link'] == Model::LINK_BELONGSTOMANY) continue;
+$dolink = false;
+if (!isset($l['on'])) {
+}
+elseif (is_array($l['on'])) {
+foreach ($l['on'] as $k => $v) {
+if (is_numeric($k) && $v == $key) $dolink = true;
+elseif (!is_numeric($k) && $k == $key) $dolink = true;
+}
+}
+else {
+if ($l['on'] == $key) $dolink = true;
+}
+if (!$dolink) continue;
+if($exists){
+$links = $this->getLink($lk);
+if (!is_array($links)) $links = array($links);
+foreach ($links as $model) {
+$model->set($key, $newval);
+}
+}
+else{
+if(!isset($this->_linked[$lk]['records'])) continue;
+if(is_array($this->_linked[$lk]['records'])){
+foreach($this->_linked[$lk]['records'] as $model){
+$model->set($key, $newval);
+}
+}
+else{
+$this->_linked[$lk]['records']->set($key, $newval);
+}
+}
+}
+}
+protected function _getLinkClassName($linkname) {
+$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname . 'Model';
+if (!is_subclass_of($c, 'Model')) return null; // @todo Error Handling
+return $c;
+}
+protected function _saveNew() {
+$i = self::GetIndexes();
+$s = self::GetSchema();
+$n = $this->_getTableName();
+if (!isset($i['primary'])) $i['primary'] = array(); // No primary schema defined... just don't make the in_array bail out.
+$dat = new Core\Datamodel\Dataset();
+$dat->table($n);
+$idcol = false;
+foreach ($this->_data as $k => $v) {
+$keyschema = $s[$k];
+switch ($keyschema['type']) {
+case Model::ATT_TYPE_CREATED:
+case Model::ATT_TYPE_UPDATED:
+if($v){
+$dat->insert($k, $v);
+}
+else{
+$nv = Time::GetCurrentGMT();
+$dat->insert($k, $nv);
+$this->_data[$k] = $nv;
+}
+break;
+case Model::ATT_TYPE_ID:
+$dat->setID($k, $this->_data[$k]);
+$idcol = $k; // Remember this for after the save.
+break;
+case Model::ATT_TYPE_UUID:
+if($this->_data[$k]){
+$nv = $this->_data[$k];
+$dat->setID($k, $nv);
+}
+else{
+$nv = Core::GenerateUUID();
+$dat->insert($k, $nv);
+$this->_data[$k] = $nv;
+$dat->setID($k, $nv);
+}
+$idcol = $k;
+break;
+case Model::ATT_TYPE_SITE:
+if(
+Core::IsComponentAvailable('enterprise') &&
+MultiSiteHelper::IsEnabled() &&
+($v === null || $v === false)
+){
+$site = MultiSiteHelper::GetCurrentSiteID();
+$dat->insert('site', $site);
+$this->_data[$k] = $site;
+}
+elseif($v === null || $v === false){
+$dat->insert('site', 0);
+$this->_data[$k] = 0;
+}
+else{
+$dat->insert($k, $v);
+}
+break;
+default:
+$v = $this->translateKey($k, $v);
+$dat->insert($k, $v);
+break;
+}
+}
+$dat->execute($this->interface);
+if ($idcol) $this->_data[$idcol] = $dat->getID();
+}
+protected function _saveExisting($useset = false) {
+if(!$this->changed()) return false;
+$i = self::GetIndexes();
+$s = self::GetSchema();
+$n = $this->_getTableName();
+$pri = isset($i['primary']) ? $i['primary'] : array();
+if($pri && !is_array($pri)) $pri = array($pri);
+if($pri && !is_array($pri)) $pri = array($pri);
+$dat = new Core\Datamodel\Dataset();
+$dat->table($n);
+$idcol = false;
+foreach ($this->_data as $k => $v) {
+if(!isset($s[$k])){
+continue;
+}
+$keyschema = $s[$k];
+switch ($keyschema['type']) {
+case Model::ATT_TYPE_CREATED:
+continue 2;
+case Model::ATT_TYPE_UPDATED:
+$nv = Time::GetCurrentGMT();
+$dat->update($k, $nv);
+$this->_data[$k] = $nv;
+continue 2;
+case Model::ATT_TYPE_ID:
+case Model::ATT_TYPE_UUID:
+$dat->setID($k, $this->_data[$k]);
+$idcol = $k; // Remember this for after the save.
+continue 2;
+}
+$v = $this->translateKey($k, $v);
+if (in_array($k, $pri)) {
+if ($this->_datainit[$k] != $v){
+if($useset){
+$dat->set($k, $v);
+}
+else{
+$dat->update($k, $v);
+}
+}
+$dat->where($k, $this->_datainit[$k]);
+$this->_data[$k] = $v;
+}
+else {
+if(isset($this->_datainit[$k])){
+if($keyschema['type'] == Model::ATT_TYPE_STRING){
+if(\Core\compare_strings($this->_datainit[$k], $v)) continue;
+}
+else{
+if(\Core\compare_values($this->_datainit[$k], $v)) continue;
+}
+}
+if($useset){
+$dat->set($k, $v);
+}
+else{
+$dat->update($k, $v);
+}
+}
+}
+if(!sizeof($dat->_sets)){
+return false;
+}
+$dat->execute($this->interface);
+}
+protected function _getLinkWhereArray($linkname) {
+if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
+$wheres = array();
+if (!isset($this->_linked[$linkname]['on'])) {
+return null; // @todo automatic linking.
+}
+elseif (is_array($this->_linked[$linkname]['on'])) {
+foreach ($this->_linked[$linkname]['on'] as $k => $v) {
+if (is_numeric($k)) $wheres[$v] = $this->get($v);
+else $wheres[$k] = $this->get($v);
+}
+}
+else {
+$k          = $this->_linked[$linkname]['on'];
+$wheres[$k] = $this->get($k);
+}
+if($linkname == 'Page' && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+$schema = self::GetSchema();
+if(isset($schema['site']) && $schema['site']['type'] == Model::ATT_TYPE_SITE){
+$wheres['site'] = $this->get('site');
+}
+}
+return $wheres;
+}
 protected function encryptValue($value){
 $cipher = 'AES-256-CBC';
 $passes = 10;
@@ -2563,21 +2662,6 @@ $i = self::GetIndexes();
 if (!(isset($i['primary']) && sizeof($i['primary']))) return false;
 $keys = $this->getPrimaryKeyString();
 return 'DATA:' . self::GetTableName() . ':' . $keys;
-}
-public function getPrimaryKeyString(){
-$bits = array();
-$i = self::GetIndexes();
-if(isset($i['primary'])){
-$pri = $i['primary'];
-if(!is_array($pri)) $pri = array($pri);
-foreach ($pri as $k) {
-$val = $this->get($k);
-if ($val === null) $val = 'null';
-elseif ($val === false) $val = 'false';
-$bits[] = $val;
-}
-}
-return implode('-', $bits);
 }
 public static function Construct($keys = null){
 $class = get_called_class();
@@ -2618,6 +2702,29 @@ $fac = new ModelFactory(get_called_class());
 $fac->where($where);
 return $fac->count();
 }
+public static function Search($query, $where = array()){
+$ret = [];
+$ref = new ReflectionClass(get_called_class());
+if(!$ref->getProperty('HasSearch')->getValue()){
+return $ret;
+}
+$fac = new ModelFactory(get_called_class());
+if(sizeof($where)){
+$fac->where($where);
+}
+if($ref->getProperty('HasDeleted')->getValue()){
+$fac->where('deleted = 0');
+}
+$fac->where(\Core\Search\Helper::GetWhereClause($query));
+foreach($fac->get() as $m){
+$sr = new \Core\Search\ModelResult($query, $m);
+if($sr->relevancy < 1) continue;
+$sr->title = $m->getLabel();
+$sr->link  = $m->get('baseurl');
+$ret[] = $sr;
+}
+return $ret;
+}
 public static function GetTableName() {
 static $_tablenames = array();
 $m = get_called_class();
@@ -2634,7 +2741,64 @@ return $_tablenames[$m];
 }
 public static function GetSchema() {
 $ref = new ReflectionClass(get_called_class());
-return $ref->getProperty('Schema')->getValue();
+$schema = $ref->getProperty('Schema')->getValue();
+if($ref->getProperty('HasCreated')->getValue()){
+if(!isset($schema['created'])){
+$schema['created'] = [
+'type' => Model::ATT_TYPE_CREATED,
+'null' => false,
+'default' => 0,
+'comment' => 'The created timestamp of this record, populated automatically',
+];
+}
+}
+if($ref->getProperty('HasUpdated')->getValue()){
+if(!isset($schema['updated'])){
+$schema['updated'] = [
+'type' => Model::ATT_TYPE_UPDATED,
+'null' => false,
+'default' => 0,
+'comment' => 'The updated timestamp of this record, populated automatically',
+];
+}
+}
+if($ref->getProperty('HasDeleted')->getValue()){
+if(!isset($schema['deleted'])){
+$schema['deleted'] = [
+'type' => Model::ATT_TYPE_DELETED,
+'null' => false,
+'default' => 0,
+'comment' => 'The deleted timestamp of this record, populated automatically',
+];
+}
+}
+if($ref->getProperty('HasSearch')->getValue()){
+$schema['search_index_str'] = [
+'type' => Model::ATT_TYPE_TEXT,
+'required' => false,
+'null' => true,
+'default' => null,
+'formtype' => 'disabled',
+'comment' => 'The search index of this record as a string'
+];
+$schema['search_index_pri'] = [
+'type' => Model::ATT_TYPE_TEXT,
+'required' => false,
+'null' => true,
+'default' => null,
+'formtype' => 'disabled',
+'comment' => 'The search index of this record as the DMP primary version'
+];
+$schema['search_index_sec'] = [
+'type' => Model::ATT_TYPE_TEXT,
+'required' => false,
+'null' => true,
+'default' => null,
+'formtype' => 'disabled',
+'comment' => 'The search index of this record as the DMP secondary version'
+];
+}
+return $schema;
 }
 public static function GetIndexes() {
 $ref = new ReflectionClass(get_called_class());
@@ -2786,6 +2950,9 @@ $column->maxlength = 15;
 if($column->type == Model::ATT_TYPE_UPDATED && !$column->maxlength){
 $column->maxlength = 15;
 }
+if($column->type == Model::ATT_TYPE_DELETED && !$column->maxlength){
+$column->maxlength = 15;
+}
 if($column->type == Model::ATT_TYPE_SITE){
 $column->default = 0;
 $column->comment = 'The site id in multisite mode, (or 0 otherwise)';
@@ -2801,6 +2968,7 @@ case Model::ATT_TYPE_INT:
 case Model::ATT_TYPE_BOOL:
 case Model::ATT_TYPE_CREATED:
 case Model::ATT_TYPE_UPDATED:
+case Model::ATT_TYPE_DELETED:
 case Model::ATT_TYPE_FLOAT:
 $column->default = 0;
 break;
@@ -3523,17 +3691,27 @@ return parent::save();
 }
 public function getParentTree() {
 if (!$this->exists()) {
-$m = strtolower($this->getControllerMethod());
-$b = strtolower($this->get('baseurl'));
-if ($m == 'edit' && method_exists($this->getControllerClass(), 'view')) {
-$p = PageModel::Construct(str_replace('/edit/', '/view/', $b));
-if ($p->exists()) {
+$m               = strtolower($this->getControllerMethod());
+$b               = strtolower($this->get('baseurl'));
+$controllerclass = $this->getControllerClass();
+$hasview         = method_exists($controllerclass, 'view');
+$hasadmin        = method_exists($controllerclass, 'admin');
+if (
+($m == 'edit' || $m == 'update' || $m == 'delete') && $hasview
+) {
+$altbaseurl = str_replace('/' . $m . '/', '/view/', $b);
+$p = PageModel::Construct($altbaseurl);
+if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
 return array_merge($p->getParentTree(), array($p));
 }
 }
-if ($m == 'delete' && method_exists($this->getControllerClass(), 'view')) {
-$p = PageModel::Construct(str_replace('/delete/', '/view/', $b));
-if ($p->exists()) {
+if(
+($m == 'create' || $m == 'update' || $m == 'edit' || $m == 'delete') && $hasadmin
+){
+$parentb = strpos($b, '/' . $m) ? substr($b, 0, strpos($b, '/' . $m)) : $b;
+$parentb .= '/admin';
+$p = PageModel::Construct($parentb);
+if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
 return array_merge($p->getParentTree(), array($p));
 }
 }
@@ -3781,6 +3959,12 @@ public static $Schema = array(
 'default' => null,
 'null'    => true,
 ),
+'external_data' => array(
+'type' => Model::ATT_TYPE_DATA,
+'comment' => 'JSON-encoded array of any external data set onto this session.',
+'default' => null,
+'null' => true,
+),
 'created'    => array(
 'type' => Model::ATT_TYPE_CREATED
 ),
@@ -3819,10 +4003,28 @@ else {
 return $unzipped;
 }
 }
+public function getExternalData(){
+$ext = $this->get('external_data');
+if($ext == '') return [];
+$json = json_decode($ext, true);
+if(!$json) return [];
+return $json;
+}
 public function setData($data) {
 $zipped              = gzcompress($data);
 $this->_data['data'] = $zipped;
 $this->_dirty = true;
+}
+public function setExternalData($data){
+if(!is_array($data)){
+$this->set('external_data', null);
+}
+elseif(!sizeof($data)){
+$this->set('external_data', null);
+}
+else{
+$this->set('external_data', json_encode($data));
+}
 }
 }
 
@@ -4988,7 +5190,10 @@ $this->_enabled   = ($dat['enabled']) ? true : false;
 $this->_loaded    = true;
 $this->_permissions = array();
 foreach($this->_xmlloader->getElements('/permissions/permission') as $el){
-$this->_permissions[$el->getAttribute('key')] = $el->getAttribute('description');
+$this->_permissions[$el->getAttribute('key')] = [
+'description' => $el->getAttribute('description'),
+'context' => ($el->getAttribute('context')) ? $el->getAttribute('context') : '',
+];
 }
 }
 public function save($minified = false) {
@@ -5045,6 +5250,35 @@ $this->_xmlloader->getElement('//description')->nodeValue = $desc;
 }
 public function getPermissions(){
 return $this->_permissions;
+}
+public function getPagesDefined(){
+$pages = [];
+$node = $this->_xmlloader->getElement('pages');
+foreach ($node->getElementsByTagName('page') as $subnode) {
+$baseurl = $subnode->getAttribute('baseurl');
+$admin   = $subnode->getAttribute('admin');
+$group   = ($admin ? $subnode->getAttribute('group') : '');
+if(($selectable = $subnode->getAttribute('selectable')) === ''){
+$selectable = ($admin ? '0' : '1'); // Defaults
+}
+if(!($rewriteurl = $subnode->getAttribute('rewriteurl'))){
+$rewriteurl = $baseurl;
+}
+$title = $subnode->getAttribute('title');
+$access = $subnode->getAttribute('access');
+$parent = $subnode->getAttribute('parenturl');
+$pages[$baseurl] = [
+'title' => $title,
+'group' => $group,
+'baseurl' => $baseurl,
+'rewriteurl' => $rewriteurl,
+'parent' => $parent,
+'admin' => $admin,
+'selectable' => $selectable,
+'access' => $access,
+];
+}
+return $pages;
 }
 public function setAuthors($authors) {
 $this->_xmlloader->removeElements('/authors');
@@ -5205,6 +5439,15 @@ if ($d) $this->_smartyPluginDirectory = $this->getBaseDir() . $d;
 else $this->_smartyPluginDirectory = false;
 }
 return $this->_smartyPluginDirectory;
+}
+public function getSmartyPlugins(){
+$plugins = [];
+$node = $this->_xmlloader->getElement('/smartyplugins');
+if(!$node) $plugins;
+foreach($node->getElementsByTagName('smartyplugin') as $n){
+$plugins[ $n->getAttribute('name') ] = $n->getAttribute('call');
+}
+return $plugins;
 }
 public function getScriptLibraryList() {
 $libs = array();
@@ -6111,16 +6354,54 @@ function user(){
 if(!\Core::IsComponentAvailable('User')){
 return null;
 }
-if(!class_exists('\\User')){
+if(!class_exists('\\UserModel')){
 return null;
 }
+$use_legacy = (class_exists('\\User'));
+if($use_legacy){
 if(!isset($_SESSION['user'])){
 $_SESSION['user'] = \User::Factory();
 }
+elseif(!$_SESSION['user'] instanceof \User){
+$_SESSION['user'] = \User::Factory();
+}
+}
 else{
+if(!isset($_SESSION['user'])){
+$_SESSION['user'] = new \UserModel();
+}
+elseif(!$_SESSION['user'] instanceof \UserModel){
+$_SESSION['user'] = new \UserModel();
+}
+elseif(isset(\Session::$Externals['user_forcesync'])){
+$tmpuser = $_SESSION['user'];
+$_SESSION['user'] = \UserModel::Construct($tmpuser->get('id'));
+unset(\Session::$Externals['user_forcesync']);
+}
+}
 $user = $_SESSION['user'];
 if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
 $user->clearAccessStringCache();
+}
+if(isset($_SESSION['user_sudo'])){
+$sudo = $_SESSION['user_sudo'];
+if($sudo instanceof \UserModel){
+if($user->checkAccess('p:/user/users/sudo')){
+if($sudo->checkAccess('g:admin') && !$user->checkAccess('g:admin')){
+\SystemLogModel::LogSecurityEvent('/user/sudo', 'Authorized but non-SA user requested sudo access to a system admin!', null, $sudo->get('id'));
+unset($_SESSION['user_sudo']);
+}
+else{
+return $sudo;
+}
+}
+else{
+\SystemLogModel::LogSecurityEvent('/user/sudo', 'Unauthorized user requested sudo access to another user!', null, $sudo->get('id'));
+unset($_SESSION['user_sudo']);
+}
+}
+else{
+unset($_SESSION['user_sudo']);
 }
 }
 return $_SESSION['user'];
@@ -9752,7 +10033,7 @@ $data['link-author'] = '<link rel="author" href="' . UserSocialHelper::ResolvePr
 }
 }
 elseif($authorid){
-$user = User::Construct($authorid);
+$user = UserModel::Construct($authorid);
 $data['author'] = '<meta property="author" content="' . str_replace('"', '&quot;', $user->getDisplayName()) . '"/>';
 if(Core::IsComponentAvailable('user-social')){
 $data['link-author'] = '<link rel="author" href="' . UserSocialHelper::ResolveProfileLink($user) . '"/>';
@@ -10825,7 +11106,7 @@ ROOT_URL_NOSSL: "' . ROOT_URL_NOSSL . '",
 SSL: ' . (SSL ? 'true' : 'false') . ',
 SSL_MODE: "' . SSL_MODE . '",
 User: {
-id: ' . $userid . ',
+id: "' . $userid . '",
 authenticated: ' . $userauth . '
 },
 Browser: {
@@ -11455,6 +11736,7 @@ try {
 ### REQUIRE_ONCE FROM core/libs/core/Session.class.php
 class Session implements SessionHandlerInterface {
 public static $Instance;
+public static $Externals = [];
 public function __construct(){
 if(self::$Instance === null){
 self::$Instance = $this;
@@ -11479,22 +11761,19 @@ return true;
 }
 public function read($session_id) {
 $model = self::_GetModel($session_id);
+self::$Externals = $model->getExternalData();
 return $model->getData();
 }
 public function write($session_id, $session_data) {
 $model = self::_GetModel($session_id);
 $model->setData($session_data);
+$model->setExternalData(self::$Externals);
 return $model->save();
 }
 public function gc($maxlifetime) {
-$ttl = ConfigHandler::Get('/core/session/ttl');
-$dataset = new Core\Datamodel\Dataset();
-$dataset->table('session');
-$dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl));
-$dataset->delete()->execute();
-return true;
+return self::CleanupExpired();
 }
-public static function SetUser(User $u) {
+public static function SetUser($u) {
 $model = self::_GetModel(session_id());
 $model->set('user_id', $u->get('id'));
 $model->save();
@@ -11509,12 +11788,21 @@ public static function ForceSave(){
 $session = self::$Instance;
 $session->write(session_id(), serialize($_SESSION));
 }
+public static function CleanupExpired(){
+$ttl = ConfigHandler::Get('/core/session/ttl');
+$dataset = new Core\Datamodel\Dataset();
+$dataset->table('session');
+$dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl));
+$dataset->delete()->execute();
+return true;
+}
 private static function _GetModel($session_id) {
 $model = new SessionModel($session_id);
 $model->set('ip_addr', REMOTE_IP);
 return $model;
 }
 }
+if(EXEC_MODE != 'CLI'){
 ini_set('session.hash_bits_per_character', 5);
 ini_set('session.hash_function', 1);
 if(defined('SESSION_COOKIE_DOMAIN') && SESSION_COOKIE_DOMAIN){
@@ -11524,6 +11812,7 @@ session_set_cookie_params(0, '/', SESSION_COOKIE_DOMAIN);
 $session = new Session();
 session_set_save_handler($session, true);
 session_start();
+}
 
 
 }
@@ -12495,6 +12784,15 @@ $this->getSmarty()->addTemplateDir(Templates\Template::GetPaths());
 foreach (\Core::GetComponents() as $c) {
 $plugindir = $c->getSmartyPluginDirectory();
 if ($plugindir) $this->getSmarty()->addPluginsDir($plugindir);
+foreach($c->getSmartyPlugins() as $name => $call){
+if(strpos($call, '::') !== false){
+$parts = explode('::', $call);
+$this->getSmarty()->registerPlugin('function', $name, $parts);
+}
+else{
+$this->getSmarty()->registerPlugin('function', $name, $call);
+}
+}
 }
 }
 public function setBaseURL($url) {
@@ -12783,6 +13081,33 @@ $prop = self::$Map[$key];
 $this->$prop = $value;
 }
 }
+if($this->platform == 'unknown'){
+if(stripos($this->useragent, 'linux') !== false){
+$this->platform = 'Linux';
+}
+}
+if($this->browser == 'Default Browser'){
+if(stripos($this->useragent, 'firefox/') !== false){
+$this->browser = 'Firefox';
+$this->javascript = true;
+$this->cookies = true;
+$this->tables = true;
+$this->frames = true;
+$this->iframes = true;
+}
+}
+if($this->version == 0.0){
+if(preg_match('#' . $this->browser . '/[0-9\.]+#', $this->useragent) !== 0){
+$this->version = preg_replace('#.*' . $this->browser . '/([0-9\.]+).*#', '$1', $this->useragent);
+$this->major_ver = substr($this->version, 0, strpos($this->version, '.'));
+$this->minor_ver = substr($this->version, strpos($this->version, '.')+1);
+}
+}
+if($this->rendering_engine_name == 'unknown'){
+if(stripos($this->useragent, 'gecko/') !== false){
+$this->rendering_engine_name = 'Gecko';
+}
+}
 }
 public function isBot(){
 return $this->crawler;
@@ -12874,10 +13199,6 @@ $cache = new UserAgent($useragent);
 \Cache::GetSystemCache()->set($cachekey, $cache, (3600));
 }
 return $cache;
-if(!isset(self::$_Cache[$useragent])){
-self::$_Cache[$useragent] = new UserAgent($useragent);
-}
-return self::$_Cache[$useragent];
 }
 }
 } // ENDING NAMESPACE Core
@@ -13625,6 +13946,7 @@ protected $_elements;
 protected $_attributes;
 protected $_validattributes = array();
 public $requiresupload = false;
+public $persistent = true;
 public function __construct($atts = null) {
 $this->_attributes = array();
 $this->_elements   = array();
@@ -13784,6 +14106,7 @@ protected $_validattributes = array();
 public $requiresupload = false;
 public $validation = null;
 public $validationmessage = null;
+public $persistent = true;
 public $classnames = array();
 public function __construct($atts = null) {
 if ($atts) $this->setFromArray($atts);
@@ -13821,6 +14144,9 @@ $this->_attributes[$key] = 'off';
 else{
 $this->_attributes[$key] = 'on';
 }
+break;
+case 'persistent':
+$this->persistent = $value;
 break;
 default:
 $this->_attributes[$key] = $value;
@@ -14056,7 +14382,11 @@ $this->getElementByName('___formid')->set('value', $hash);
 }
 if (isset($_SESSION['FormData'][$this->get('uniqueid')])) {
 if (($savedform = unserialize($_SESSION['FormData'][$this->get('uniqueid')]))) {
-$this->_elements = $savedform->_elements;
+foreach($this->_elements as $k => $element){
+if($element->persistent){
+$this->_elements[$k] = $savedform->_elements[$k];
+}
+}
 }
 else {
 $ignoreerrors = true;
@@ -14151,15 +14481,16 @@ $formatts = array(
 'value' => $model->get($k),
 'name' => $prefix . '[' . $k . ']',
 );
+$defaults = [];
 if($formatts['value'] === null && isset($v['default'])) $formatts['value'] = $v['default'];
-if(isset($v['form'])){
-$formatts = array_merge($formatts, $v['form']);
-}
 if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
 if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
 if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
 if(isset($v['required']))        $formatts['required'] = $v['required'];
 if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
+if(isset($v['form'])){
+$formatts = array_merge($formatts, $v['form']);
+}
 if($formatts['type'] == 'disabled'){
 continue;
 }
@@ -14175,15 +14506,15 @@ elseif($v['type'] == Model::ATT_TYPE_UUID){
 $el = FormElement::Factory('system');
 $formatts['required'] = false;
 }
-elseif($v['type'] == Model::ATT_TYPE_UUID_FK){
+elseif($v['type'] == Model::ATT_TYPE_UUID_FK && $formatts['type'] === null){
 $el = FormElement::Factory('system');
 $formatts['required'] = false;
 }
 elseif($formatts['type'] == 'datetime' && $v['type'] == Model::ATT_TYPE_INT){
-$formatts['datetimepicker_dateFormat'] = 'yy-mm-dd';
-$formatts['datetimepicker_timeFormat'] = 'HH:mm';
-$formatts['displayformat'] = 'Y-m-d H:i';
-$formatts['saveformat'] = 'U';
+$defaults['datetimepicker_dateformat'] = 'yy-mm-dd';
+$defaults['datetimepicker_timeformat'] = 'HH:mm';
+$defaults['displayformat'] = 'Y-m-d H:i';
+$defaults['saveformat'] = 'U';
 $el = FormElement::Factory('datetime');
 }
 elseif ($formatts['type'] !== null) {
@@ -14229,19 +14560,22 @@ $el->set('options', $opts);
 if ($v['default']) $el->set('value', $v['default']);
 }
 elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATE){
-$formatts['datepicker_dateFormat'] = 'yy-mm-dd';
+$defaults['datepicker_dateformat'] = 'yy-mm-dd';
 $el = FormElement::Factory('date');
 }
 elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATETIME){
-$formatts['datetimepicker_dateFormat'] = 'yy-mm-dd';
-$formatts['datetimepicker_timeFormat'] = 'HH:mm';
-$formatts['saveformat'] = 'Y-m-d H:i:00';
+$defaults['datetimepicker_dateformat'] = 'yy-mm-dd';
+$defaults['datetimepicker_timeformat'] = 'HH:mm';
+$defaults['saveformat'] = 'Y-m-d H:i:00';
 $el = FormElement::Factory('datetime');
 }
 else {
 die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
 }
 unset($formatts['type']);
+foreach($defaults as $k => $v){
+if(!isset($formatts[$k])) $formatts[$k] = $v;
+}
 $el->setFromArray($formatts);
 $model->setToFormElement($k, $el);
 $this->addElement($el);
