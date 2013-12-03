@@ -26,6 +26,13 @@ class AdminController extends Controller_2_1 {
 
 	}
 
+	/**
+	 * Display the admin dashboard.
+	 *
+	 * This page is primarily made up of widgets added by other systems.
+	 *
+	 * @return int
+	 */
 	public function index() {
 
 		$view     = $this->getView();
@@ -50,6 +57,11 @@ class AdminController extends Controller_2_1 {
 		HookHandler::DispatchHook('/core/admin/view');
 	}
 
+	/**
+	 * Run through and reinstall all components and themes.
+	 *
+	 * @return int
+	 */
 	public function reinstallAll() {
 		// Admin-only page.
 		if(!\Core\user()->checkAccess('g:admin')){
@@ -60,8 +72,9 @@ class AdminController extends Controller_2_1 {
 		// This will just ensure that the component is up to date and correct as per the component.xml metafile.
 		$view = $this->getView();
 
-		$changes = array();
-		$errors = array();
+		$changes  = array();
+		$errors   = array();
+		$allpages = [];
 
 		foreach (ThemeHandler::GetAllThemes() as $t) {
 
@@ -96,6 +109,32 @@ class AdminController extends Controller_2_1 {
 				}
 				// I don't care about "else", nothing changed if it was false.
 
+				// Get the pages, (for the cleanup operation)
+				$allpages = array_merge($allpages, $c->getPagesDefined());
+
+			}
+
+
+			// Flush any non-existent admin page.
+			// These can be created from developers changing their page URLs after the page is already registered.
+			// Purging admin-only pages is relatively safe because these are defined in component metafiles anyway.
+			foreach(
+				\Core\Datamodel\Dataset::Init()
+					->select('baseurl')
+					->table('page')
+					->where('admin = 1')
+					->execute() as $row
+			){
+				$baseurl = $row['baseurl'];
+
+				// This page existed already, no need to do anything :)
+				if(isset($allpages[$baseurl])) continue;
+
+				// Otherwise, this page was deleted or for some reason doesn't exist in the component list.....
+				// BUH BAI
+				\Core\Datamodel\Dataset::Init()->delete()->table('page')->where('baseurl = ' . $baseurl)->execute();
+				\Core\Datamodel\Dataset::Init()->delete()->table('page_meta')->where('baseurl = ' . $baseurl)->execute();
+				$changes[] = "<b>Flushed non-existent admin page:</b> " . $baseurl;
 			}
 		}
 		catch(DMI_Query_Exception $e){
@@ -131,6 +170,11 @@ class AdminController extends Controller_2_1 {
 		$view->assign('errors', $errors);
 	}
 
+	/**
+	 * Display ALL the system configuration options.
+	 *
+	 * @return int
+	 */
 	public function config() {
 		// Admin-only page.
 		if(!\Core\user()->checkAccess('g:admin')){
@@ -186,6 +230,61 @@ class AdminController extends Controller_2_1 {
 		$view->assign('config_count', sizeof($configs));
 	}
 
+	/**
+	 * Sync the search index fields of every model on the system.
+	 *
+	 * @return int
+	 */
+	public function syncSearchIndex(){
+		// Admin-only page.
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		// Just run through every component currently installed and reinstall it.
+		// This will just ensure that the component is up to date and correct as per the component.xml metafile.
+		$view = $this->getView();
+		$changes = [];
+
+		foreach(\Core::GetComponents() as $c){
+			/** @var Component_2_1 $c */
+
+			foreach($c->getClassList() as $class => $file){
+				if($class == 'model'){
+					continue;
+				}
+				if(strrpos($class, 'model') !== strlen($class) - 5){
+					// If the class doesn't explicitly end with "Model", it's also not a model.
+					continue;
+				}
+				if(strpos($class, '\\') !== false){
+					// If this "Model" class is namespaced, it's not a valid model!
+					// All Models MUST reside in the global namespace in order to be valid.
+					continue;
+				}
+
+				$ref = new ReflectionClass($class);
+				if(!$ref->getProperty('HasSearch')->getValue()){
+					// This model doesn't have the searchable flag, skip it.
+					continue;
+				}
+
+				$c = ['name' => $class, 'count' => 0];
+				$fac = new ModelFactory($class);
+				foreach($fac->get() as $m){
+					/** @var Model $m */
+					$m->set('search_index_pri', '!');
+					$m->save();
+					$c['count']++;
+				}
+
+				$changes[] = $c;
+			}
+		}
+
+		$view->title = 'Sync Searchable Index';
+		$view->assign('changes', $changes);
+	}
 
 	public static function _ConfigSubmit(Form $form) {
 		$elements = $form->getElements();
