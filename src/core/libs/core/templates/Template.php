@@ -20,7 +20,7 @@ abstract class Template {
 	private static $_Paths = null;
 
 	/**
-	 * @param $filename Filename of the template
+	 * @param string $filename Filename of the template
 	 * @return TemplateInterface
 	 */
 	public static function Factory($filename){
