@@ -306,6 +306,35 @@ class UserAgent {
 				$this->$prop = $value;
 			}
 		}
+
+		// Try to guess if there are still empty slots!
+		if($this->platform == 'unknown'){
+			if(stripos($this->useragent, 'linux') !== false){
+				$this->platform = 'Linux';
+			}
+		}
+		if($this->browser == 'Default Browser'){
+			if(stripos($this->useragent, 'firefox/') !== false){
+				$this->browser = 'Firefox';
+				$this->javascript = true;
+				$this->cookies = true;
+				$this->tables = true;
+				$this->frames = true;
+				$this->iframes = true;
+			}
+		}
+		if($this->version == 0.0){
+			if(preg_match('#' . $this->browser . '/[0-9\.]+#', $this->useragent) !== 0){
+				$this->version = preg_replace('#.*' . $this->browser . '/([0-9\.]+).*#', '$1', $this->useragent);
+				$this->major_ver = substr($this->version, 0, strpos($this->version, '.'));
+				$this->minor_ver = substr($this->version, strpos($this->version, '.')+1);
+			}
+		}
+		if($this->rendering_engine_name == 'unknown'){
+			if(stripos($this->useragent, 'gecko/') !== false){
+				$this->rendering_engine_name = 'Gecko';
+			}
+		}
 	}
 
 	/**
@@ -455,13 +484,6 @@ class UserAgent {
 			\Cache::GetSystemCache()->set($cachekey, $cache, (3600));
 		}
 
-
 		return $cache;
-
-		if(!isset(self::$_Cache[$useragent])){
-			self::$_Cache[$useragent] = new UserAgent($useragent);
-		}
-
-		return self::$_Cache[$useragent];
 	}
 }
