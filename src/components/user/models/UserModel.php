@@ -1,7 +1,7 @@
 <?php
 /**
  * Model for UserModel
- * 
+ *
  * @package User
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
@@ -92,20 +92,16 @@ class UserModel extends Model {
 			'type' => Model::ATT_TYPE_INT,
 			'comment' => 'The timestamp of the last password reset of this user',
 		),
-		'created' => array(
-			'type' => Model::ATT_TYPE_CREATED,
-			'null' => false,
-		),
-		'updated' => array(
-			'type' => Model::ATT_TYPE_UPDATED,
-			'null' => false,
-		),
 	);
-	
+
 	public static $Indexes = array(
 		'primary' => array('id'),
 		'unique:email' => array('email'),
 	);
+
+	public static $HasSearch  = true;
+	public static $HasCreated = true;
+	public static $HasUpdated = true;
 
 
 
@@ -330,11 +326,32 @@ class UserModel extends Model {
 	 *
 	 * This will only return context groups, regular groups WILL NOT BE RETURNED.
 	 *
+	 * @param null|Model|string $context        The context to return groups of, optionally provided
+	 * @param bool              $return_objects Set to true to return an array of UserUserGroup objects instead of a flat array of IDs.
+	 *
 	 * @return array
 	 */
-	public function getContextGroups() {
+	public function getContextGroups($context = null, $return_objects = false) {
 		$out  = [];
 		$uugs = $this->getLink('UserUserGroup');
+
+
+		if($context && $context instanceof Model){
+			// If there was a context requested, only return that context.
+			$contextname = substr(get_class($context), 0, -5);
+			$contextpk   = $context->getPrimaryKeyString();
+		}
+		elseif(is_scalar($context)){
+			// If a context name was provided, search for just that model.
+			$contextname = $context;
+			$contextpk   = null;
+		}
+		else{
+			// No parameters provided, just return everything!
+			$contextname = null;
+			$contextpk   = null;
+		}
+
 		foreach($uugs as $uug){
 			/** @var UserUserGroupModel $uug */
 
@@ -344,12 +361,20 @@ class UserModel extends Model {
 			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
 				// Only return this site's groups if in multisite mode
 				$g = $uug->getLink('UserGroup');
-				if($g->get('site') == MultiSiteHelper::GetCurrentSiteID()){
-					$out[] = $g->get('id');
+				if($g->get('site') != MultiSiteHelper::GetCurrentSiteID()){
+					continue;
 				}
 			}
+
+			if($contextname && $uug->get('context') != $contextname) continue;
+			if($contextpk && $uug->get('context_pk') != $contextpk) continue;
+
+
+			// If it's gotten here, I can return this group!
+			if($return_objects){
+				$out[] = $uug;
+			}
 			else{
-				// Else I can just return all the groups.
 				$out[] = [
 					'group_id'   => $uug->get('group_id'),
 					'context'    => $uug->get('context'),
@@ -378,6 +403,31 @@ class UserModel extends Model {
 		}
 
 		return $this->_authdriver;
+	}
+
+	/**
+	 * Get a textual representation of this Model as a flat string.
+	 *
+	 * Used by the search systems to index the model, (or multiple models into one).
+	 *
+	 * @return string
+	 */
+	public function getSearchIndexString(){
+		// The default behaviour is to sift through the records on this model itself.
+		$strs = [];
+
+		// The user account only has an email address
+		$strs[] = $this->get('email');
+
+		// I also need to sift over the user config options, since they relate to this object too.
+		foreach($this->getConfigObjects() as $uug){
+			/** @var UserUserGroupModel $uug */
+			if($uug->getLink('UserConfig')->get('searchable')){
+				$strs[] = $uug->get('value');
+			}
+		}
+
+		return implode(' ', $strs);
 	}
 
 	public function validateEmail($email){
@@ -484,11 +534,14 @@ class UserModel extends Model {
 	 *
 	 * This method ONLY supports context groups.
 	 *
-	 * @param array $groups
+	 * @param array             $groups
+	 * @param null|Model|string $context The context to overwrite groups to, optional
 	 */
-	public function setContextGroups($groups) {
+	public function setContextGroups($groups, $context = null) {
 		if(!is_array($groups)) $groups = [];
-		$this->_setGroups($groups, true);
+
+		// If no context was provided, the default is to override them all!
+		$this->_setGroups($groups, $context === null ? true : $context);
 	}
 
 	/**
@@ -611,15 +664,15 @@ class UserModel extends Model {
 
 		return $status;
 	}
-	
+
 	/**
 	 * Generate a new secure API key for this user.
-	 * 
+	 *
 	 * This is a built-in function that can be used for automated access to
-	 * secured resources on the application/site. 
-	 * 
+	 * secured resources on the application/site.
+	 *
 	 * Will only set the config, save() still needs to be called externally.
-	 * 
+	 *
 	 * @since 2011.08
 	 */
 	public function generateNewApiKey(){
@@ -795,7 +848,7 @@ class UserModel extends Model {
 	 * Set all groups for a given user on the current site from a set of IDs.
 	 *
 	 * @param array $groups
-	 * @param boolean $context
+	 * @param bool|Model|string $context True to set all context groups, false to ignore, a string or model for the specific context.
 	 */
 	protected function _setGroups($groups, $context) {
 
@@ -810,13 +863,53 @@ class UserModel extends Model {
 			}
 		}
 
+		if($context === false){
+			// Skip all context groups.
+			$contextname = null;
+			$contextpk   = null;
+		}
+		elseif($context === true){
+			// Skip regular groups, but include all context groups.
+			$contextname = null;
+			$contextpk   = null;
+		}
+		elseif($context instanceof Model){
+			$contextname = substr(get_class($context), 0, -5);
+			$contextpk   = $context->getPrimaryKeyString();
+			$context     = true;
+		}
+		elseif(is_scalar($context)){
+			$contextname = $context;
+			$contextpk   = null;
+			$context     = true;
+		}
+		else{
+			throw new Exception('If a context is provided, please ensure it is either a model or model name');
+		}
+
 		$uugs = $this->getLink('UserUserGroup');
 		foreach($uugs as $uug){
 			/** @var UserUserGroupModel $uug */
 
 			// Only process the requested group types.
-			if($context && !$uug->get('context')) continue;
-			elseif(!$context && $uug->get('context')) continue;
+			if($context && !$uug->get('context')){
+				// A context option was selected, but this is a regular group, skip it.
+				continue;
+			}
+			elseif(!$context && $uug->get('context')){
+				// Similarly, no context was requested, but this group has one.
+				continue;
+			}
+			elseif($context && $contextname && $uug->get('context') != $contextname){
+				// A context was requested, and a specific context name was set also!
+				// But it doesn't match.... SKIP!
+				continue;
+			}
+			elseif($context && $contextpk && $uug->get('context_pk') != $contextpk){
+				// A context was requested, and a specific context name was set also!
+				// But it doesn't match.... SKIP!
+				continue;
+			}
 
 			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
 				// Only return this site's groups if in multisite mode
@@ -890,41 +983,79 @@ class UserModel extends Model {
 	 * Search for a user based on a search criteria.  This has functionality above and beyond just a simple Find
 	 * because it will search the email and any custom fields that are marked as searchable.
 	 *
-	 * @param string $term The term to search for
+	 * @param string $query The term to search for
+	 * @param array $where Any additional where clause to tack on.
 	 *
 	 * @return array An array of UserModel objects
 	 */
-	public static function Search($term){
-		// An array of IDs that have been matched.
-		$matches = array();
-		$users = array();
+	public static function Search($query, $where = array()){
 
-		// First is email, it's the simpliest.
-		$emails = UserModel::FindRaw(array('email LIKE ' . $term . '%'));
-		foreach($emails as $match){
-			$matches[] = $match['id'];
+		$ret = [];
+		$schema = self::GetSchema();
+		$configwheres = [];
+
+		// If this object does not support searching, simply return an empty array.
+		$ref = new ReflectionClass(get_called_class());
+
+		if(!$ref->getProperty('HasSearch')->getValue()){
+			return $ret;
 		}
 
-		// Next it gets more challenging... grab any "searchable" user config and do a search on that table.
-		$configs = UserConfigModel::FindRaw(array('searchable = 1'));
-		foreach($configs as $c){
-			$uucfac = new ModelFactory('UserUserConfigModel');
-			$uucfac->where('key = ' . $c['key']);
-			$uucfac->where('value LIKE ' . $term . '%');
-			$uuc = $uucfac->getRaw();
-			foreach($uuc as $match){
-				$matches[] = $match['user_id'];
+		$fac = new ModelFactory(get_called_class());
+
+		if(sizeof($where)){
+			$clause = new \Core\Datamodel\DatasetWhereClause();
+			$clause->addWhere($where);
+			// If this isn't actually a column present, maybe it's a user user config option instead.
+			foreach($clause->getStatements() as $statement){
+				/** @var \Core\Datamodel\DatasetWhere $statement */
+				if(isset($schema[$statement->field])){
+					$fac->where($statement);
+				}
+				else{
+					$configwheres[] = $statement;
+				}
 			}
 		}
 
-		// Strip duplicates.
-		$matches = array_unique($matches);
-
-		// And now this array is what I'll be returning.
-		foreach($matches as $id){
-			$users[] = UserModel::Construct($id);
+		if($ref->getProperty('HasDeleted')->getValue()){
+			$fac->where('deleted = 0');
 		}
 
-		return $users;
+		$fac->where(\Core\Search\Helper::GetWhereClause($query));
+		foreach($fac->get() as $m){
+			/** @var UserModel $m */
+
+			$add = true;
+
+			// If this user has configs that don't match the userconfig where requested, skip it.
+			foreach($configwheres as $statement){
+				/** @var \Core\Datamodel\DatasetWhere $statement */
+				if(($config = $m->getConfigObject($statement->field))){
+					switch($statement->op){
+						case '=':
+							if($config->get('value') != $statement->value){
+								$add = false;
+								break 2;
+							}
+							break;
+						default:
+							// @todo.
+					}
+				}
+			}
+
+			if($add){
+				$sr = new \Core\Search\ModelResult($query, $m);
+
+				// This may happen since the where clause can be a little open-ended.
+				if($sr->relevancy < 1) continue;
+				$sr->title = $m->getLabel();
+				$sr->link  = $m->get('baseurl');
+
+				$ret[] = $sr;
+			}
+		}
+		return $ret;
 	}
 }
