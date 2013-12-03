@@ -2,10 +2,12 @@
 
 {if $use_contexts}
 	{script location="foot"}<script>
-		var contexts = {$context_json};
+		var contexts = {$context_json},
+			contextupdatefn;
 
-		$('#formselectinput-model-context').click(function(){
-			var val = $(this).val(),
+		contextupdatefn = function(){
+			var $inp = $('#formselectinput-model-context').length == 1 ? $('#formselectinput-model-context') : $('#formhiddeninput-model-context'),
+				val = $inp.val(),
 				i,
 				$perms = $('input[name="permissions[]"]');
 
@@ -24,10 +26,11 @@
 			else{
 				$('#formradioinput-model-default').slideUp();
 			}
+		}
 
-		});
+		$('#formselectinput-model-context').click(contextupdatefn);
 
-		$('#formselectinput-model-context').click();
+		contextupdatefn();
 
 	</script>{/script}
 {/if}
