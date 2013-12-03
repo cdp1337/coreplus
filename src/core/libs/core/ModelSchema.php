@@ -151,6 +151,10 @@ class ModelSchema extends Core\Datamodel\Schema{
 			$column->maxlength = 15;
 		}
 
+		if($column->type == Model::ATT_TYPE_DELETED && !$column->maxlength){
+			$column->maxlength = 15;
+		}
+
 		if($column->type == Model::ATT_TYPE_SITE){
 			$column->default = 0;
 			$column->comment = 'The site id in multisite mode, (or 0 otherwise)';
@@ -168,6 +172,7 @@ class ModelSchema extends Core\Datamodel\Schema{
 					case Model::ATT_TYPE_BOOL:
 					case Model::ATT_TYPE_CREATED:
 					case Model::ATT_TYPE_UPDATED:
+					case Model::ATT_TYPE_DELETED:
 					case Model::ATT_TYPE_FLOAT:
 						$column->default = 0;
 						break;
