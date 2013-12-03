@@ -142,6 +142,14 @@ function user(){
 			// This may happen with pre-2.8.x systems.
 			$_SESSION['user'] = new \UserModel();
 		}
+		elseif(isset(\Session::$Externals['user_forcesync'])){
+			// A force sync was requested by something that modified the original UserModel object.
+			// Keep the user logged in, but reload the data from the database.
+			$tmpuser = $_SESSION['user'];
+
+			$_SESSION['user'] = \UserModel::Construct($tmpuser->get('id'));
+			unset(\Session::$Externals['user_forcesync']);
+		}
 	}
 
 	/** @var $user \UserModel|\User */
@@ -152,6 +160,36 @@ function user(){
 	// We don't want a user going to a site they have full access to, hopping to another and having cached permissions!
 	if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
 		$user->clearAccessStringCache();
+	}
+
+	// Did this user request sudo access for another user?
+	if(isset($_SESSION['user_sudo'])){
+		$sudo = $_SESSION['user_sudo'];
+
+		if($sudo instanceof \UserModel){
+			// It's a valid user!
+
+			if($user->checkAccess('p:/user/users/sudo')){
+				// This user can SUDO!
+				// (only if the other user is < SA or current == SA).
+				if($sudo->checkAccess('g:admin') && !$user->checkAccess('g:admin')){
+					\SystemLogModel::LogSecurityEvent('/user/sudo', 'Authorized but non-SA user requested sudo access to a system admin!', null, $sudo->get('id'));
+					unset($_SESSION['user_sudo']);
+				}
+				else{
+					// Ok, everything is good.
+					return $sudo;
+				}
+			}
+			else{
+				// This user can NOT sudo!!!
+				\SystemLogModel::LogSecurityEvent('/user/sudo', 'Unauthorized user requested sudo access to another user!', null, $sudo->get('id'));
+				unset($_SESSION['user_sudo']);
+			}
+		}
+		else{
+			unset($_SESSION['user_sudo']);
+		}
 	}
 
 	return $_SESSION['user'];

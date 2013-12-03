@@ -36,6 +36,15 @@ class AdminMenuWidget extends Widget_2_1 {
 		$pages = PageModel::Find(array('admin' => '1'));
 		$groups = array();
 		$flatlist = array();
+
+		if(isset($_SESSION['user_sudo'])){
+			$p = new PageModel('/user/sudo');
+			$p->set('title', 'Exit SUDO Mode');
+			$groups['SUDO']['Exit SUDO Mode'] = $p;
+			$flatlist[ 'Exit SUDO Mode' ] = $p;
+		}
+
+
 		if(\Core\user()){
 			foreach($pages as $p){
 				if(!\Core\user()->checkAccess($p->get('access'))) continue;
