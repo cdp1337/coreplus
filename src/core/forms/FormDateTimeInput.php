@@ -31,7 +31,7 @@
  * </p>
  *
  * <p>
- * Besides the jquery options, the datetime picker also supports the parameters "displayformat" and "saveformat".
+ * Besides the jquery options, the datetime picker also supports several additional parameters, (see below).
  * </p>
  *
  * <h4>displayformat</h4>
@@ -51,7 +51,18 @@
  * </p>
  *
  * <p>
- * This string is converted from the user's default timezone to GMT automatically.
+ * This string is converted from the user's default timezone to the value of <pre>savetimezone</pre> automatically.
+ * </p>
+ *
+ * <h4>savetimezone</h4>
+ * <p>
+ * The timezone to convert and save the time as.
+ * Defaults to GMT since most times are saved as their GMT version.
+ * However, if an actual date is saved to be used relatively to the user's local timezone, it may be more effective to save as a relative timezone.
+ * </p>
+ *
+ * <p>
+ * Pass in <pre>Time::TIMEZONE_USER</pre> for the user's timezone, or any other valid timezone option.
  * </p>
  *
  * @link http://api.jqueryui.com/datepicker/
@@ -152,10 +163,13 @@ class FormDateTimeInput extends FormTextInput {
 	}
 
 	public function setValue($value){
+
+		$timezone = isset($this->_attributes['savetimezone']) ? $this->_attributes['savetimezone'] : Time::TIMEZONE_GMT;
+
 		if(isset($this->_attributes['saveformat']) && !is_numeric($value)){
 			// Set value succeeded, now I can convert the string to an int, (if requested).
 			$dt = new CoreDateTime($value);
-			$value = $dt->getFormatted($this->_attributes['saveformat'], Time::TIMEZONE_GMT);
+			$value = $dt->getFormatted($this->_attributes['saveformat'], $timezone);
 			return parent::setValue($value);
 		}
 		else{
