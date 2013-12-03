@@ -29,7 +29,7 @@
 
 			{if $enableavatar}
 				<td>
-					{img src="public/user/`$user.avatar`" placeholder="person" dimensions="40x40"}
+					{img src="`$user.avatar`" placeholder="person" dimensions="40x40"}
 				</td>
 			{/if}
 
