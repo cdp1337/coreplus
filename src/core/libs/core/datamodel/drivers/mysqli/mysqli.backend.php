@@ -888,7 +888,10 @@ class mysqli_backend implements BackendInterface {
 		foreach($statements as $w){
 			if($w instanceof DatasetWhereClause){
 				// Recursively recurring recursion, RECURSE!
-				$ws[] = '( ' . $this->_parseWhereClause($w) . ' )';
+				$str = $this->_parseWhereClause($w);
+				if($str){
+					$ws[] = '( ' . $str . ' )';
+				}
 			}
 			elseif($w instanceof DatasetWhere){
 				// No field, what can I do?
