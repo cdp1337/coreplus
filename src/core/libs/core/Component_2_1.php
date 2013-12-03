@@ -709,6 +709,25 @@ class Component_2_1 {
 		return $this->_smartyPluginDirectory;
 	}
 
+	/**
+	 * Get an array of name => call of the registered smarty plugins on this component.
+	 *
+	 * @return array
+	 */
+	public function getSmartyPlugins(){
+		$plugins = [];
+
+		$node = $this->_xmlloader->getElement('/smartyplugins');
+		if(!$node) return $plugins;
+
+		foreach($node->getElementsByTagName('smartyplugin') as $n){
+			/** @var DOMElement $n */
+			$plugins[ $n->getAttribute('name') ] = $n->getAttribute('call');
+		}
+
+		return $plugins;
+	}
+
 	public function getScriptLibraryList() {
 		$libs = array();
 		foreach ($this->_xmlloader->getElements('/provides/scriptlibrary') as $s) {

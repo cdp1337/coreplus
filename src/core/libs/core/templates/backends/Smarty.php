@@ -44,8 +44,19 @@ class Smarty implements Templates\TemplateInterface {
 		// Tack on the search directories from the loaded components.
 		// Also handle the plugins directory search.
 		foreach (\Core::GetComponents() as $c) {
+			/** @var \Component_2_1 $c */
 			$plugindir = $c->getSmartyPluginDirectory();
 			if ($plugindir) $this->getSmarty()->addPluginsDir($plugindir);
+
+			foreach($c->getSmartyPlugins() as $name => $call){
+				if(strpos($call, '::') !== false){
+					$parts = explode('::', $call);
+					$this->getSmarty()->registerPlugin('function', $name, $parts);
+				}
+				else{
+					$this->getSmarty()->registerPlugin('function', $name, $call);
+				}
+			}
 		}
 	}
 

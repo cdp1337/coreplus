@@ -2,7 +2,7 @@
     PUBLIC ID: -//coreplus//vocabulary//EN
     SYSTEM ID: http://corepl.us/api/2_4/component.dtd
 
-	Last revision date: 2012.11.22
+	Last revision date: 2013.12.03
 -->
 
 <!--
@@ -81,10 +81,20 @@ type CDATA #IMPLIED
 	call CDATA #REQUIRED
 	>
 
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT smartyplugins EMPTY>
+<!--
+	Smarty plugins root directive.
+	Contains the directory functional plugins are located in and its children can be the individual calls.
+-->
+<!ELEMENT smartyplugins (smartyplugin)*>
 <!ATTLIST smartyplugins
 	directory CDATA #REQUIRED
+	>
+
+<!-- An individual smarty plugin registration.  Useful if you want to namespace your classes or organize them differently. -->
+<!ELEMENT smartyplugin EMPTY>
+<!ATTLIST
+	name CDATA #REQUIRED
+	call CDATA #REQUIRED
 	>
 
 <!--- Put your DTDDoc comment here. -->
