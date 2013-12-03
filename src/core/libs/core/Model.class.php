@@ -249,6 +249,26 @@ class Model implements ArrayAccess {
 	 */
 	public static $Indexes = array();
 
+	/**
+	 * @var bool Set to true if this model is searchable, (and auto-create the necessary search index fields).
+	 */
+	public static $HasSearch = false;
+
+	/**
+	 * @var bool Set to true if this model has a created timestamp, (and auto-create the necessary search index fields).
+	 */
+	public static $HasCreated = false;
+
+	/**
+	 * @var bool Set to true if this model has an updated timestamp, (and auto-create the necessary search index fields).
+	 */
+	public static $HasUpdated = false;
+
+	/**
+	 * @var bool Set to true if this model has a deleted timestamp, (and auto-create the necessary search index fields).
+	 */
+	public static $HasDeleted = false;
+
 	public static $_ModelCache = array();
 
 
@@ -258,7 +278,10 @@ class Model implements ArrayAccess {
 
 	/**
 	 * Create a new instance of the requested model.
+	 *
 	 * @param null $key
+	 *
+	 * @throws Exception
 	 */
 	public function __construct($key = null) {
 
@@ -271,6 +294,9 @@ class Model implements ArrayAccess {
 			if(isset($v['link'])){
 				// If the link is requested on this property, populate the linked array for the corresponding model!
 				if(is_array($v['link'])){
+					if(!isset($v['link']['model'])){
+						throw new Exception('Required attribute [model] not provided on link [' . $k . '] of model [' . get_class($this) . ']');
+					}
 					$linkmodel = $v['link']['model'];
 					$linktype  = isset($v['link']['type']) ? $v['link']['type'] : Model::LINK_HASONE;
 					$linkon    = isset($v['link']['on']) ? $v['link']['on'] : 'id';
@@ -454,6 +480,12 @@ class Model implements ArrayAccess {
 		// If it is, then I need to save that foreign model so I can get its updated primary key, (if it changed).
 		foreach($this->_linked as $k => $l){
 			// If this link has a 1-sized relationship and the local node is set as a FK, then read it as such.
+
+			if(!is_array($l['on'])){
+				// make sure it's an array.
+				$l['on'] = array($l['on'] => $l['on'] );
+			}
+
 			if($l['link'] == Model::LINK_HASONE && sizeof($l['on']) == 1){
 				reset($l['on']);
 				$remotek = key($l['on']);
@@ -693,6 +725,42 @@ class Model implements ArrayAccess {
 		if (!isset($s[$key])) return null;
 
 		return $s[$key];
+	}
+
+	/**
+	 * Get a textual representation of this Model as a flat string.
+	 *
+	 * Used by the search systems to index the model, (or multiple models into one).
+	 *
+	 * @return string
+	 */
+	public function getSearchIndexString(){
+		// The default behaviour is to sift through the records on this model itself.
+		$strs = [];
+
+		foreach($this->getKeySchemas() as $k => $dat){
+
+			// Skip file uploads.
+			if(isset($dat['form']) && isset($dat['form']['type'])){
+				// Skip files.
+				if($dat['form']['type'] == 'file') continue;
+			}
+
+			// Skip the search indexes themselves
+			if($k == 'search_index_str') continue;
+			if($k == 'search_index_pri') continue;
+			if($k == 'search_index_sec') continue;
+
+			switch($dat['type']){
+				case Model::ATT_TYPE_TEXT:
+				case Model::ATT_TYPE_STRING:
+					$val = $this->get($k);
+					if($val) $strs[] = $val;
+					break;
+			}
+		}
+
+		return implode(' ', $strs);
 	}
 
 	/**
@@ -2083,6 +2151,48 @@ class Model implements ArrayAccess {
 		return $fac->count();
 	}
 
+	/**
+	 * Perform a model search on the records of this Model.
+	 *
+	 * @param string $query The base query to search
+	 * @param array $where  Any additional where parameters to add onto the factory
+	 *
+	 * @return array An array of ModelResult objects.
+	 */
+	public static function Search($query, $where = array()){
+		$ret = [];
+
+		// If this object does not support searching, simply return an empty array.
+		$ref = new ReflectionClass(get_called_class());
+
+		if(!$ref->getProperty('HasSearch')->getValue()){
+			return $ret;
+		}
+
+		$fac = new ModelFactory(get_called_class());
+
+		if(sizeof($where)){
+			$fac->where($where);
+		}
+
+		if($ref->getProperty('HasDeleted')->getValue()){
+			$fac->where('deleted = 0');
+		}
+
+		$fac->where(\Core\Search\Helper::GetWhereClause($query));
+		foreach($fac->get() as $m){
+			/** @var Model $m */
+			$sr = new \Core\Search\ModelResult($query, $m);
+
+			// This may happen since the where clause can be a little open-ended.
+			if($sr->relevancy < 1) continue;
+			$sr->title = $m->getLabel();
+			$sr->link  = $m->get('baseurl');
+
+			$ret[] = $sr;
+		}
+		return $ret;
+	}
 
 	/*************************************************************************
 	 ****                    OTHER STATIC METHODS                         ****
@@ -2132,7 +2242,75 @@ class Model implements ArrayAccess {
 	public static function GetSchema() {
 		// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
 		$ref = new ReflectionClass(get_called_class());
-		return $ref->getProperty('Schema')->getValue();
+
+		$schema = $ref->getProperty('Schema')->getValue();
+
+		// There are a variety of dynamic columns that are defined in Core.
+
+		if($ref->getProperty('HasCreated')->getValue()){
+			// Only add this column if it doesn't already exist.
+			if(!isset($schema['created'])){
+				$schema['created'] = [
+					'type' => Model::ATT_TYPE_CREATED,
+					'null' => false,
+					'default' => 0,
+					'comment' => 'The created timestamp of this record, populated automatically',
+				];
+			}
+		}
+
+		if($ref->getProperty('HasUpdated')->getValue()){
+			// Only add this column if it doesn't already exist.
+			if(!isset($schema['updated'])){
+				$schema['updated'] = [
+					'type' => Model::ATT_TYPE_UPDATED,
+					'null' => false,
+					'default' => 0,
+					'comment' => 'The updated timestamp of this record, populated automatically',
+				];
+			}
+		}
+
+		if($ref->getProperty('HasDeleted')->getValue()){
+			// Only add this column if it doesn't already exist.
+			if(!isset($schema['deleted'])){
+				$schema['deleted'] = [
+					'type' => Model::ATT_TYPE_DELETED,
+					'null' => false,
+					'default' => 0,
+					'comment' => 'The deleted timestamp of this record, populated automatically',
+				];
+			}
+		}
+
+		if($ref->getProperty('HasSearch')->getValue()){
+			// Tack on the search fields automatically.
+			$schema['search_index_str'] = [
+				'type' => Model::ATT_TYPE_TEXT,
+				'required' => false,
+				'null' => true,
+				'default' => null,
+				'formtype' => 'disabled',
+				'comment' => 'The search index of this record as a string'
+			];
+			$schema['search_index_pri'] = [
+				'type' => Model::ATT_TYPE_TEXT,
+				'required' => false,
+				'null' => true,
+				'default' => null,
+				'formtype' => 'disabled',
+				'comment' => 'The search index of this record as the DMP primary version'
+			];
+			$schema['search_index_sec'] = [
+				'type' => Model::ATT_TYPE_TEXT,
+				'required' => false,
+				'null' => true,
+				'default' => null,
+				'formtype' => 'disabled',
+				'comment' => 'The search index of this record as the DMP secondary version'
+			];
+		}
+		return $schema;
 	}
 
 	public static function GetIndexes() {
@@ -2174,6 +2352,9 @@ class ModelFactory {
 	private $_dataset;
 
 
+	/**
+	 * @param string $model
+	 */
 	public function __construct($model) {
 
 		$this->_model = $model;

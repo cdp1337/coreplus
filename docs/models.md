@@ -1,3 +1,38 @@
+# Model Declarations
+
+Each table in the datastore MUST have an associated Model with a corresponding name.
+If you need your table called "`my_something`", then its Model is "`MySomethingModel`".
+
+## Static Public Properties
+
+Each model must have a small handful of static properties to define its structure.
+
+* `$Schema`
+	* The schema of the model, (see below).
+* `$Indexes`
+	* The indexes of the model, (see below).
+* `$HasSearch`
+	* bool
+	* Defaults to false
+	* Set to true if this model should have the additional search index fields and a Search method.
+	* (Will auto-create the necessary columns for this option).
+* `$HasCreated`
+    * bool
+    * Defaults to false
+    * Set to true if this model has a created timestamp.
+	* (Will auto-create the necessary columns for this option).
+* `$HasUpdated`
+    * bool
+    * Defaults to false
+    * Set to true if this model has an updated timestamp.
+	* (Will auto-create the necessary columns for this option).
+* `$HasDeleted`
+    * bool
+    * Defaults to false
+    * Set to true if this model has a deleted timestamp.
+	* (Will auto-create the necessary columns for this option).
+
+
 ## Model Schemas
 
 In order to make models as fast as possible, the schema of a given model should be readable without instantiating a new object.  In PHP, the main way to do this is with use of static properties.  As consequence, that's how the schema in models is setup.
