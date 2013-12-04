@@ -1,3 +1,7 @@
+Facebook 3.2.3~core1
+
+	* Update to newest version of the Facebook API from upstream.
+
 Facebook 3.2.0~core8
 
 	* Use the View instead of CurrentPage for attaching the HTML attribute.

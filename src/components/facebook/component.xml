@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0~core8" name="Facebook" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3~core1" name="Facebook" execmode="web">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 	</hooks>
@@ -9,7 +9,7 @@
 		<scriptlibrary name="facebook" call="FacebookHelper::Includejs"/>
 	</provides>
 	<requires>
-		<require name="user" type="component" version="2.4.3"/>
+		<require name="user" type="library" version="2.4.3"/>
 	</requires>
 	<configs>
 		<config key="/facebook/appid" mapto="FACEBOOK_APP_ID" type="string" default="" description="If you want to enable facebook connectivity, you need to create an &quot;app&quot; and enter that app's appid here."/>
@@ -27,28 +27,28 @@
 		<file filename="templates/widgets/facebook/login.tpl" md5="a2ecb2faade8f57d53a3837b6a9c0307"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="225941cce19d3676ea8559e35f1fe7dc"/>
+		<file filename="CHANGELOG" md5="0278d5f7f9b3b1e21687a7760c9d1866"/>
 		<file filename="FacebookHelper.class.php" md5="d7ac2466285ce37c587f9bb91e079aa9">
 			<class name="FacebookHelper"/>
 		</file>
 		<file filename="controllers/FacebookController.php" md5="439bcd076fb45b8f2216af0f07a80202">
 			<controller name="FacebookController"/>
 		</file>
-		<file filename="facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
-		<file filename="facebook-php-sdk/composer.json" md5="a833b32e03c4ed5375861eefad65933e"/>
-		<file filename="facebook-php-sdk/examples/example.php" md5="c16b4247b4a2506a44166fb37bb1efe2"/>
-		<file filename="facebook-php-sdk/examples/with_js_sdk.php" md5="555e738cb8c6b42834a5c5a2083bd3e6"/>
-		<file filename="facebook-php-sdk/readme.md" md5="56068d6612b394b281ccec38128db81e"/>
-		<file filename="facebook-php-sdk/src/base_facebook.php" md5="8693ab3003ce703c3c3b1be4aebea2a5">
+		<file filename="libs/facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
+		<file filename="libs/facebook-php-sdk/composer.json" md5="5d17b681de9984e9af98629c2404f0a4"/>
+		<file filename="libs/facebook-php-sdk/examples/example.php" md5="21f296ecba4b310c889ad661de54328d"/>
+		<file filename="libs/facebook-php-sdk/examples/with_js_sdk.php" md5="555e738cb8c6b42834a5c5a2083bd3e6"/>
+		<file filename="libs/facebook-php-sdk/readme.md" md5="b732598f748027abede8be4ef245bdb4"/>
+		<file filename="libs/facebook-php-sdk/src/base_facebook.php" md5="8a5ce0443a3e1fa3634565fbe31badf9">
 			<class name="FacebookApiException"/>
 			<class name="BaseFacebook"/>
 		</file>
-		<file filename="facebook-php-sdk/src/facebook.php" md5="dcb23268876023d6fa7e1d3349d13819">
+		<file filename="libs/facebook-php-sdk/src/facebook.php" md5="55eff3b0c609b03f592b3d0e8163e9b0">
 			<class name="Facebook"/>
 		</file>
-		<file filename="facebook-php-sdk/src/fb_ca_chain_bundle.crt" md5="c3055d03e94bbee13c7c6cc3a76083d9"/>
-		<file filename="facebook-php-sdk/tests/bootstrap.php" md5="b8bd1937c8d639841949a24e2fcdf983"/>
-		<file filename="facebook-php-sdk/tests/tests.php" md5="5523ebf26f9102805b9c96d5e2861b9f">
+		<file filename="libs/facebook-php-sdk/src/fb_ca_chain_bundle.crt" md5="c4290b9deb70d0bef2f88b67fc68c8ec"/>
+		<file filename="libs/facebook-php-sdk/tests/bootstrap.php" md5="b8bd1937c8d639841949a24e2fcdf983"/>
+		<file filename="libs/facebook-php-sdk/tests/tests.php" md5="c6ce6ff792706c294df3902ea5178dec">
 			<class name="PHPSDKTestCase"/>
 			<class name="TransientFacebook"/>
 			<class name="FBRecordURL"/>
@@ -59,6 +59,7 @@
 			<class name="FBAccessToken"/>
 			<class name="FBGetCurrentURLFacebook"/>
 			<class name="FBPublicCookie"/>
+			<class name="FBRewrite"/>
 			<class name="FBPublicGetAccessTokenFromCode"/>
 			<class name="FBPublicState"/>
 		</file>
@@ -75,6 +76,7 @@
 		<upgrade from="3.2.0~core5" to="3.2.0~core6"/>
 		<upgrade from="3.2.0~core6" to="3.2.0~core7"/>
 		<upgrade from="3.2.0~core7" to="3.2.0~core8"/>
+		<upgrade from="3.2.0~core8" to="3.2.3~core1"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/facebook.css" md5="b6a7a960c63910152e0f52dde3d7e86c"/>
