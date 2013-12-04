@@ -1,3 +1,34 @@
+Core Plus 2.8.0
+
+	* [Bug] Radios and checkboxes duplicated the element ID in the markup.
+	* [Bug] Ignore the HTTP_USER_AGENT key of the SERVER variable if it's not present, (CLI mode).
+	* [Bug] Better handle new Firefox useragents on Linux in Core.
+	* [Bug] Handle the Model::ATT_TYPE_DELETED flag correctly in the schema handling.
+	* [Bug] Better handle the order of form element attributes and their defaults.
+	* [Bug] Correctly ignore blank sub whereclauses instead of rendering as "( )".
+	* [Feature] New features supported in the link system.
+	* [Feature] Handling non-existent admin pages and an interface for the new model sync.
+	* [Feature] Add SUDO support in Core.
+	* [Feature] Sessions support external data.
+	* [Feature] New support for searchable models and dynamic columns.
+	* [Feature] Add support for individual smarty plugins to be registered in the component xml.
+	* [Feature] Core search indexing system for models using the DoubleMetaPhone technique.
+	* [Feature] Support shorthand arguments on smarty custom functions instead of just throwing an
+	  exception.
+	* [Feature] FormDateTime objects support a "savetimezome" attribute.
+	* [Feature] Add a building placeholder icon into Core.
+	* [Feature] Better support for automatic breadcrumbs.
+	* [Feature] Form elements can be marked as not persistent.
+	* [Feature] Component permissions now support a context attribute.
+	* [Feature] User has been migrated into Core, should alleviate some weird issues during upgrades.
+	* Work on code standards / review issues :)
+	* Rearrange the bootstrap includes.
+	* Migrate the User system into Core.
+	* Switch the ViewMeta to use the 2.8.x User system.
+	* Switch the FormController to use the new 2.8.x User system.
+	* Fancy Game of Life 404 and 500 error pages, optimized for both full-width and standard width
+	  templates
+
 Core Plus 2.7.0
 
 	* [Security] Tack on details for errors and security notices in log files.
