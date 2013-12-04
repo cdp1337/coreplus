@@ -104,19 +104,22 @@ class HookHandler implements ISingleton {
 	/**
 	 * Dispatch an event, optionally passing 1 or more parameters.
 	 *
-	 * @param string $hookName
-	 * @param mixed  $_
+	 * @param string $hookName The name of the hook to dispatch
+	 * @param mixed  $args
 	 *
-	 * @return boolean
+	 * @return mixed
 	 */
 	public static function DispatchHook($hookName, $args = null) {
+		// Prevent any hooks from being dispatched until Core is ready!
+		if(!Core::GetComponent()) return null;
+
 		$hookName = strtolower($hookName); // Case insensitive will prevent errors later on.
 		Core\Utilities\Logger\write_debug('Dispatching hook ' . $hookName);
 		//echo "Calling hook $hookName<br>";
 		//var_dump(HookHandler::$RegisteredHooks[$hookName]);
 		if (!isset(HookHandler::$RegisteredHooks[$hookName])) {
 			trigger_error('Tried to dispatch an undefined hook ' . $hookName, E_USER_NOTICE);
-			return;
+			return null;
 		}
 
 		$args = func_get_args();
@@ -240,7 +243,7 @@ class Hook {
 	/**
 	 * Dispatch the event, calling any bound functions.
 	 *
-	 * @param mixed $_
+	 * @param mixed $args
 	 *
 	 * @return bool
 	 */
@@ -308,7 +311,22 @@ class Hook {
 		// If the type is set to something and the call type is that
 		// OR
 		// The call type is not set/null.
-		$result = call_user_func_array($call['call'], $args);
+
+		if(strpos($call['call'], '::') !== false){
+			// Make sure this class exists first.
+			// This way I can throw a pretty error instead of the default "Class not found".
+			$parts = explode('::', $call['call']);
+			if(!class_exists($parts[0])){
+				trigger_error('The hook [' . $this->name . '] has an invalid call binding, the class [' . $parts[0] . '] does not appear to exist.', E_USER_NOTICE);
+				$result = null;
+			}
+			else{
+				$result = call_user_func_array($call['call'], $args);
+			}
+		}
+		else{
+			$result = call_user_func_array($call['call'], $args);
+		}
 
 		// If it's expecting an array, make sure it's an array!
 		if($this->returnType == self::RETURN_TYPE_ARRAY && !is_array($result)){

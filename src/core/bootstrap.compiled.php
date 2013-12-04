@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 03 Dec 2013 19:43:47 -0500
+ * @compiled Tue, 03 Dec 2013 20:07:11 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -11407,11 +11407,12 @@ if($description) $hook->description = $description;
 HookHandler::RegisterHook($hook);
 }
 public static function DispatchHook($hookName, $args = null) {
+if(!Core::GetComponent()) return null;
 $hookName = strtolower($hookName); // Case insensitive will prevent errors later on.
 Core\Utilities\Logger\write_debug('Dispatching hook ' . $hookName);
 if (!isset(HookHandler::$RegisteredHooks[$hookName])) {
 trigger_error('Tried to dispatch an undefined hook ' . $hookName, E_USER_NOTICE);
-return;
+return null;
 }
 $args = func_get_args();
 array_shift($args);
@@ -11492,7 +11493,19 @@ break;
 return $return;
 }
 public function callBinding($call, $args){
+if(strpos($call['call'], '::') !== false){
+$parts = explode('::', $call['call']);
+if(!class_exists($parts[0])){
+trigger_error('The hook [' . $this->name . '] has an invalid call binding, the class [' . $parts[0] . '] does not appear to exist.', E_USER_NOTICE);
+$result = null;
+}
+else{
 $result = call_user_func_array($call['call'], $args);
+}
+}
+else{
+$result = call_user_func_array($call['call'], $args);
+}
 if($this->returnType == self::RETURN_TYPE_ARRAY && !is_array($result)){
 $result = array();
 }
