@@ -327,7 +327,7 @@ EOD;
 
 file_put_contents(ROOT_PDIR . 'core/bootstrap.compiled.php', '<?php' . "\n" . $header . $contents . $globalnamespace->getClosingTag());
 
-
+echo "\n\n";
 
 
 
