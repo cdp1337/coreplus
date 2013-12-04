@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 03 Dec 2013 17:41:11 -0500
+ * @compiled Tue, 03 Dec 2013 18:47:27 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3069,6 +3069,77 @@ return $date->format($format);
 }
 
 
+### REQUIRE_ONCE FROM core/libs/core/Session.class.php
+class Session implements SessionHandlerInterface {
+public static $Instance;
+public static $Externals = [];
+public function __construct(){
+if(self::$Instance === null){
+self::$Instance = $this;
+}
+}
+public function close() {
+return true;
+}
+public function open($save_path, $session_id) {
+HookHandler::DispatchHook('/core/session/ready');
+return true;
+}
+public function destroy($session_id) {
+$dataset = new Core\Datamodel\Dataset();
+$dataset->table('session');
+$dataset->where('session_id = ' . $session_id);
+$dataset->where('ip_addr = ' . REMOTE_IP);
+$dataset->delete();
+$dataset->execute();
+$_SESSION = null;
+return true;
+}
+public function read($session_id) {
+$model = self::_GetModel($session_id);
+self::$Externals = $model->getExternalData();
+return $model->getData();
+}
+public function write($session_id, $session_data) {
+$model = self::_GetModel($session_id);
+$model->setData($session_data);
+$model->setExternalData(self::$Externals);
+return $model->save();
+}
+public function gc($maxlifetime) {
+return self::CleanupExpired();
+}
+public static function SetUser($u) {
+$model = self::_GetModel(session_id());
+$model->set('user_id', $u->get('id'));
+$model->save();
+$_SESSION['user'] = $u;
+}
+public static function DestroySession(){
+if(self::$Instance !== null){
+self::$Instance->destroy(session_id());
+}
+}
+public static function ForceSave(){
+$session = self::$Instance;
+$session->write(session_id(), serialize($_SESSION));
+}
+public static function CleanupExpired(){
+$ttl = ConfigHandler::Get('/core/session/ttl');
+$dataset = new Core\Datamodel\Dataset();
+$dataset->table('session');
+$dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl));
+$dataset->delete()->execute();
+return true;
+}
+private static function _GetModel($session_id) {
+$model = new SessionModel($session_id);
+$model->set('ip_addr', REMOTE_IP);
+return $model;
+}
+}
+
+
 ### REQUIRE_ONCE FROM core/models/ComponentModel.class.php
 class ComponentModel extends Model {
 public static $Schema = array(
@@ -4307,6 +4378,1034 @@ array(
 );
 return $log;
 }
+}
+
+
+### REQUIRE_ONCE FROM core/models/UserModel.php
+class UserModel extends Model {
+public static $Schema = array(
+'id' => array(
+'type' => Model::ATT_TYPE_UUID,
+'required' => true,
+'null' => false,
+),
+'email' => array(
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => 64,
+'null' => false,
+'validation' => ['this', 'validateEmail'],
+'required' => true,
+),
+'backend' => array(
+'type' => Model::ATT_TYPE_STRING,
+'formtype' => 'hidden',
+'default' => 'datastore'
+),
+'password' => array(
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => 60,
+'null' => false,
+),
+'apikey' => array(
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => 64,
+'null' => false,
+),
+'active' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => '1',
+'null' => false,
+),
+'admin' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => '0',
+'null' => false,
+),
+'avatar' => array(
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => '64',
+'form' => array(
+'type' => 'file',
+'accept' => 'image/*',
+'basedir' => 'public/user/avatar',
+),
+),
+'registration_ip' => array(
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => '24',
+'comment' => 'The original IP of the user registration',
+),
+'registration_source' => array(
+'type' => Model::ATT_TYPE_STRING,
+'default' => 'self',
+'comment' => 'The source of the user registration, either self, admin, or other.'
+),
+'registration_invitee' => array(
+'type' => Model::ATT_TYPE_INT,
+'comment' => 'If invited/created by a user, this is the ID of that user.',
+),
+'last_login' => array(
+'type' => Model::ATT_TYPE_INT,
+'comment' => 'The timestamp of the last login of this user',
+),
+'last_password' => array(
+'type' => Model::ATT_TYPE_INT,
+'comment' => 'The timestamp of the last password reset of this user',
+),
+);
+public static $Indexes = array(
+'primary' => array('id'),
+'unique:email' => array('email'),
+);
+public static $HasSearch  = true;
+public static $HasCreated = true;
+public static $HasUpdated = true;
+protected $_accessstringchecks = array();
+protected $_resolvedpermissions = null;
+protected $_configs = null;
+protected $_authdriver = null;
+public function __construct($id = null){
+$this->_linked['UserUserConfig'] = [
+'link' => Model::LINK_HASMANY,
+'on' => ['user_id' => 'id'],
+];
+$this->_linked['UserUserGroup'] = [
+'link' => Model::LINK_HASMANY,
+'on' => ['user_id' => 'id'],
+];
+parent::__construct($id);
+}
+public function get($key){
+if(array_key_exists($key, $this->_data)){
+return parent::get($key);
+}
+elseif(($c = $this->getConfigObject($key)) !== null){
+return $c->get('value');
+}
+elseif(array_key_exists($key, $this->_dataother)){
+return $this->_dataother[$key];
+}
+else{
+return null;
+}
+}
+public function getLabel(){
+if(!$this->exists()){
+return ConfigHandler::Get('/user/displayname/anonymous');
+}
+$displayas = ConfigHandler::Get('/user/displayas');
+switch($displayas){
+case 'username':
+return $this->get('username');
+case 'firstname':
+return $this->get('first_name');
+case 'emailfull':
+return $this->get('email');
+case 'emailbase':
+default:
+return strstr($this->get('email'), '@', true);
+}
+}
+public function getDisplayName(){
+return $this->getLabel();
+}
+public function getConfigs(){
+if($this->_configs === null){
+$this->_configs = [];
+$uucrecords     = $this->getLink('UserUserConfig');
+$fac = UserConfigModel::Find();
+foreach($fac as $f){
+$key     = $f->get('key');
+$default = $f->get('default_value');
+foreach($uucrecords as $uuc){
+if($uuc->get('key') == $key){
+$this->_configs[$key] = $uuc;
+continue 2;
+}
+}
+$uuc = new UserUserConfigModel($this->get('id'), $key);
+$uuc->set('value', $default);
+$this->setLink('UserUserConfig', $uuc);
+$this->_configs[$key] = $uuc;
+}
+}
+$ret = array();
+foreach($this->_configs as $k => $obj){
+$ret[$k] = $obj->get('value');
+}
+return $ret;
+}
+public function getConfigObject($key){
+$this->getConfigs();
+return (isset($this->_configs[$key])) ? $this->_configs[$key] : null;
+}
+public function getConfigObjects(){
+$this->getConfigs();
+return $this->_configs;
+}
+public function getGroups() {
+$out  = [];
+$uugs = $this->getLink('UserUserGroup');
+foreach($uugs as $uug){
+if($uug->get('context')) continue;
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+$g = $uug->getLink('UserGroup');
+if($g->get('site') == MultiSiteHelper::GetCurrentSiteID()){
+$out[] = $g->get('id');
+}
+}
+else{
+$out[] = $uug->get('group_id');
+}
+}
+return $out;
+}
+public function getContextGroups($context = null, $return_objects = false) {
+$out  = [];
+$uugs = $this->getLink('UserUserGroup');
+if($context && $context instanceof Model){
+$contextname = substr(get_class($context), 0, -5);
+$contextpk   = $context->getPrimaryKeyString();
+}
+elseif(is_scalar($context)){
+$contextname = $context;
+$contextpk   = null;
+}
+else{
+$contextname = null;
+$contextpk   = null;
+}
+foreach($uugs as $uug){
+if(!$uug->get('context')) continue;
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+$g = $uug->getLink('UserGroup');
+if($g->get('site') != MultiSiteHelper::GetCurrentSiteID()){
+continue;
+}
+}
+if($contextname && $uug->get('context') != $contextname) continue;
+if($contextpk && $uug->get('context_pk') != $contextpk) continue;
+if($return_objects){
+$out[] = $uug;
+}
+else{
+$out[] = [
+'group_id'   => $uug->get('group_id'),
+'context'    => $uug->get('context'),
+'context_pk' => $uug->get('context_pk'),
+];
+}
+}
+return $out;
+}
+public function getAuthDriver(){
+if($this->_authdriver === null){
+$driver = $this->get('backend');
+if(!class_exists('\\Core\\User\\AuthDrivers\\' . $driver)){
+throw new Exception('Invalid auth backend for user, ' . $driver);
+}
+$ref = new ReflectionClass('\\Core\\User\\AuthDrivers\\' . $driver);
+$this->_authdriver = $ref->newInstance($this);
+}
+return $this->_authdriver;
+}
+public function getSearchIndexString(){
+$strs = [];
+$strs[] = $this->get('email');
+foreach($this->getConfigObjects() as $uug){
+if($uug->getLink('UserConfig')->get('searchable')){
+$strs[] = $uug->get('value');
+}
+}
+return implode(' ', $strs);
+}
+public function validateEmail($email){
+if($email == $this->get('email')){
+return true;
+}
+if(!Core::CheckEmailValidity($email)){
+return 'Does not appear to be a valid email address';
+}
+if(UserModel::Find(array('email' => $email), 1)){
+return 'Requested email is already registered';
+}
+return true;
+}
+public function validatePassword($password){
+$valid = true;
+if(strlen($password) < ConfigHandler::Get('/user/password/minlength')){
+$valid = 'Please ensure that the password is at least ' . ConfigHandler::Get('/user/password/minlength') . ' characters long.';
+}
+if(ConfigHandler::Get('/user/password/requiresymbols') > 0){
+preg_match_all('/[^a-zA-Z0-9]/', $password, $matches);
+if(sizeof($matches[0]) < ConfigHandler::Get('/user/password/requiresymbols')){
+$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requiresymbols') . ' symbol(s).';
+}
+}
+if(ConfigHandler::Get('/user/password/requirecapitals') > 0){
+preg_match_all('/[A-Z]/', $password, $matches);
+if(sizeof($matches[0]) < ConfigHandler::Get('/user/password/requirecapitals')){
+$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requirecapitals') . ' capital letter(s).';
+}
+}
+if(ConfigHandler::Get('/user/password/requirenumbers') > 0){
+preg_match_all('/[0-9]/', $password, $matches);
+if(sizeof($matches[0]) < ConfigHandler::Get('/user/password/requirenumbers')){
+$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requirenumbers') . ' number(s).';
+}
+}
+return $valid;
+}
+public function set($k, $v) {
+if(array_key_exists($k, $this->_data)){
+return parent::set($k, $v);
+}
+elseif(($c = $this->getConfigObject($k)) !== null){
+return $c->set('value', $v);
+}
+else{
+$this->_dataother[$k] = $v;
+return true;
+}
+}
+public function setGroups($groups) {
+if(!is_array($groups)) $groups = [];
+$this->_setGroups($groups, false);
+}
+public function setContextGroups($groups, $context = null) {
+if(!is_array($groups)) $groups = [];
+$this->_setGroups($groups, $context === null ? true : $context);
+}
+public function setFromForm(Form $form, $prefix = null){
+foreach($form->getElements() as $el){
+$name  = $el->get('name');
+$value = $el->get('value');
+if($prefix && strpos($name, $prefix . '[') !== 0) continue;
+if($prefix){
+if(strpos($name, '][')){
+$name = str_replace('][', '[', substr($name, strlen($prefix) + 1));
+}
+else{
+$name = substr($name, strlen($prefix) + 1, -1);
+}
+}
+if($name == 'email'){
+$this->set('email', $value);
+}
+elseif(strpos($name, 'option[') === 0){
+$k = substr($el->get('name'), 7, -1);
+$obj = $this->getConfigObject($k)->getLink('UserConfig');
+if($value === null && $obj->get('formtype') == 'checkbox'){
+$value = 0;
+}
+if($el instanceof FormFileInput){
+$value = 'public/user/config/' . $value;
+}
+$this->set($k, $value);
+}
+elseif($name == 'groups[]'){
+$this->setGroups($value);
+}
+elseif($name == 'active'){
+$this->set('active', $value ? 1 : 0);
+}
+elseif($name == 'admin'){
+$this->set('admin', $value);
+}
+elseif($name == 'avatar'){
+$this->set('avatar', $value);
+}
+elseif($name == 'contextgroup[]'){
+$gids       = $value;
+$contextpks = $form->getElement('contextgroupcontext[]')->get('value');
+$groups     = [];
+foreach($gids as $key => $gid){
+if(!$gid) continue;
+$group = UserGroupModel::Construct($gid);
+$context   = $group->get('context');
+$contextpk = $contextpks[$key];
+$groups[] = [
+'group_id'   => $gid,
+'context'    => $context,
+'context_pk' => $contextpk,
+];
+}
+$this->setContextGroups($groups);
+}
+else{
+}
+} // foreach(elements)
+}
+public function save() {
+if(!$this->_data['apikey']){
+$this->generateNewApiKey();
+}
+$status = parent::save();
+HookHandler::DispatchHook('/user/postsave', $this);
+return $status;
+}
+public function generateNewApiKey(){
+$this->set('apikey', Core::RandomHex(64, true));
+}
+public function clearAccessStringCache(){
+$this->_accessstringchecks = array();
+$this->_resolvedpermissions = null;
+}
+public function checkAccess($accessstring, $context = null){
+$findkey = $accessstring . '-' . $this->_getContextKey($context);
+if(isset($this->_accessstringchecks[$findkey])){
+return $this->_accessstringchecks[$findkey];
+}
+$default  = false;
+$loggedin = $this->exists();
+$isadmin  = $this->get('admin');
+$cache    =& $this->_accessstringchecks[$findkey];
+$accessstring = strtolower($accessstring);
+if($isadmin && strpos($accessstring, 'g:!admin') === false){
+$cache = true;
+return true;
+}
+$parts = array_map('trim', explode(';', $accessstring));
+foreach($parts as $p){
+if($p == '') continue;
+if($p == '*' || $p == '!*'){
+$type = '*';
+$dat = $p;
+}
+else{
+list($type, $dat) = array_map('trim', explode(':', $p));
+}
+if($dat{0} == '!'){
+$ret = false;
+$dat = substr($dat, 1);
+}
+elseif($type{0} == '!'){
+$ret = false;
+$type = substr($type, 1);
+}
+else{
+$ret = true;
+}
+if($type == '*'){
+$default = $ret;
+continue;
+}
+elseif($type == 'g' && $dat == 'anonymous'){
+if(!$loggedin){
+$cache = $ret;
+return $ret;
+}
+}
+elseif($type == 'g' && $dat == 'authenticated'){
+if($loggedin){
+$cache = $ret;
+return $ret;
+}
+}
+elseif($type == 'g' && $dat == 'admin'){
+if($isadmin){
+$cache = $ret;
+return $ret;
+}
+}
+elseif($type == 'g'){
+if(in_array($dat, $this->getGroups())){
+$cache = $ret;
+return $ret;
+}
+}
+elseif($type == 'p'){
+if(in_array($dat, $this->_getResolvedPermissions($context))){
+$cache = $ret;
+return $ret;
+}
+}
+elseif($type == 'u'){
+var_dump($type, $dat, $ret);
+die('@todo Finish the user lookup logic in User::checkAccess()');
+}
+else{
+var_dump($type, $dat, $ret);
+die('Implement that access string check!');
+}
+}
+$cache = $default;
+return $default;
+}
+protected function _getResolvedPermissions($context = null){
+$findkey = $this->_getContextKey($context);
+if($this->_resolvedpermissions === null){
+$this->_resolvedpermissions = array();
+foreach($this->getLink('UserUserGroup') as $uug){
+$key = $uug->get('context') ? $uug->get('context') . ':' . $uug->get('context_pk') : '';
+if(!isset($this->_resolvedpermissions[$key])){
+$this->_resolvedpermissions[$key] = [];
+}
+$group = $uug->getLink('UserGroup');
+$this->_resolvedpermissions[$key] = array_merge($this->_resolvedpermissions[$key], $group->getPermissions());
+}
+}
+return isset($this->_resolvedpermissions[$findkey]) ? $this->_resolvedpermissions[$findkey] : [];
+}
+protected function _setGroups($groups, $context) {
+foreach($groups as $key => $data){
+if(!is_array($data)){
+$groups[$key] = [
+'group_id'   => $data,
+'context'    => '',
+'context_pk' => '',
+];
+}
+}
+if($context === false){
+$contextname = null;
+$contextpk   = null;
+}
+elseif($context === true){
+$contextname = null;
+$contextpk   = null;
+}
+elseif($context instanceof Model){
+$contextname = substr(get_class($context), 0, -5);
+$contextpk   = $context->getPrimaryKeyString();
+$context     = true;
+}
+elseif(is_scalar($context)){
+$contextname = $context;
+$contextpk   = null;
+$context     = true;
+}
+else{
+throw new Exception('If a context is provided, please ensure it is either a model or model name');
+}
+$uugs = $this->getLink('UserUserGroup');
+foreach($uugs as $uug){
+if($context && !$uug->get('context')){
+continue;
+}
+elseif(!$context && $uug->get('context')){
+continue;
+}
+elseif($context && $contextname && $uug->get('context') != $contextname){
+continue;
+}
+elseif($context && $contextpk && $uug->get('context_pk') != $contextpk){
+continue;
+}
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if($uug->getLink('UserGroup')->get('site') != MultiSiteHelper::GetCurrentSiteID()){
+continue;
+}
+}
+$gid        = $uug->get('group_id');
+$gcontext   = $uug->get('context');
+$gcontextpk = $uug->get('context_pk');
+foreach($groups as $key => $data){
+if(
+$data['group_id'] == $gid &&
+$data['context'] == $gcontext &&
+$data['context_pk'] == $gcontextpk
+){
+unset($groups[$key]);
+continue 2;
+}
+}
+$this->deleteLink($uug);
+}
+foreach($groups as $data){
+$this->setLink(
+'UserUserGroup',
+new UserUserGroupModel(
+$this->get('id'),
+$data['group_id'],
+$data['context'],
+$data['context_pk']
+)
+);
+}
+$this->clearAccessStringCache();
+}
+protected function _getContextKey($context){
+if($context === null || $context === ''){
+return '';
+}
+elseif($context instanceof Model){
+return substr(get_class($context), 0, -5) . ':' . $context->getPrimaryKeyString();
+}
+else{
+throw new Exception('Invalid context provided for _getResolvedPermissions!');
+}
+}
+public static function Search($query, $where = array()){
+$ret = [];
+$schema = self::GetSchema();
+$configwheres = [];
+$ref = new ReflectionClass(get_called_class());
+if(!$ref->getProperty('HasSearch')->getValue()){
+return $ret;
+}
+$fac = new ModelFactory(get_called_class());
+if(sizeof($where)){
+$clause = new \Core\Datamodel\DatasetWhereClause();
+$clause->addWhere($where);
+foreach($clause->getStatements() as $statement){
+if(isset($schema[$statement->field])){
+$fac->where($statement);
+}
+else{
+$configwheres[] = $statement;
+}
+}
+}
+if($ref->getProperty('HasDeleted')->getValue()){
+$fac->where('deleted = 0');
+}
+$fac->where(\Core\Search\Helper::GetWhereClause($query));
+foreach($fac->get() as $m){
+$add = true;
+foreach($configwheres as $statement){
+if(($config = $m->getConfigObject($statement->field))){
+switch($statement->op){
+case '=':
+if($config->get('value') != $statement->value){
+$add = false;
+break 2;
+}
+break;
+default:
+}
+}
+}
+if($add){
+$sr = new \Core\Search\ModelResult($query, $m);
+if($sr->relevancy < 1) continue;
+$sr->title = $m->getLabel();
+$sr->link  = $m->get('baseurl');
+$ret[] = $sr;
+}
+}
+return $ret;
+}
+}
+
+
+### REQUIRE_ONCE FROM core/models/ConfigModel.class.php
+class ConfigModel extends Model {
+public static $Schema = array(
+'key'           => array(
+'type'      => Model::ATT_TYPE_STRING,
+'maxlength' => 255,
+'required'  => true,
+'null'      => false,
+),
+'type'          => array(
+'type'    => Model::ATT_TYPE_ENUM,
+'options' => array('string', 'int', 'boolean', 'enum', 'set'),
+'default' => 'string',
+'null'    => false,
+),
+'encrypted' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => 0,
+),
+'default_value' => array(
+'type'    => Model::ATT_TYPE_TEXT,
+'default' => null,
+'null'    => true,
+),
+'value'         => array(
+'type'    => Model::ATT_TYPE_TEXT,
+'default' => null,
+'null'    => true,
+),
+'options'       => array(
+'type'      => Model::ATT_TYPE_STRING,
+'maxlength' => 511,
+'default'   => null,
+'null'      => true,
+),
+'description'   => array(
+'type'    => Model::ATT_TYPE_TEXT,
+'default' => null,
+'null'    => true,
+),
+'mapto'         => array(
+'type'      => Model::ATT_TYPE_STRING,
+'maxlength' => 32,
+'default'   => null,
+'comment'   => 'The define constant to map the value to on system load.',
+'null'      => true,
+),
+'overrideable' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => false,
+'comment' => 'If children sites can override this configuration option',
+),
+'created'       => array(
+'type' => Model::ATT_TYPE_CREATED
+),
+'updated'       => array(
+'type' => Model::ATT_TYPE_UPDATED
+)
+);
+public static $Indexes = array(
+'primary' => array('key'),
+);
+public function getValue() {
+$v = $this->get('value');
+if ($v === null){
+$v = $this->get('default');
+}
+elseif($this->get('encrypted') && $v !== ''){
+preg_match('/^\$([^$]*)\$([0-9]*)\$(.*)$/m', $v, $matches);
+$cipher = $matches[1];
+$passes = $matches[2];
+$size = openssl_cipher_iv_length($cipher);
+$dec = substr($v, strlen($cipher) + 5, 0-$size);
+$iv = substr($v, 0-$size);
+for($i=0; $i<$passes; $i++){
+$dec = openssl_decrypt($dec, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+}
+$v = $dec;
+}
+return self::TranslateValue($this->get('type'), $v);
+}
+public function setValue($value){
+if($this->get('encrypted')){
+$cipher = 'AES-256-CBC';
+$passes = 10;
+$size = openssl_cipher_iv_length($cipher);
+$iv = mcrypt_create_iv($size, MCRYPT_RAND);
+$enc = $value;
+for($i=0; $i<$passes; $i++){
+$enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+}
+$payload = '$' . $cipher . '$' . str_pad($passes, 2, '0', STR_PAD_LEFT) . '$' . $enc . $iv;
+return parent::set('value', $payload);
+}
+else{
+return parent::set('value', $value);
+}
+}
+public static function TranslateValue($type, $value){
+switch ($type) {
+case 'int':
+return (int)$value;
+case 'boolean':
+return ($value == '1' || $value == 'true') ? true : false;
+case 'set':
+return array_map('trim', explode('|', $value));
+default:
+return $value;
+}
+}
+} // END class ConfigModel extends Model
+
+
+### REQUIRE_ONCE FROM core/models/WidgetModel.class.php
+class WidgetModel extends Model {
+private $_settings = null;
+public static $Schema = array(
+'site' => array(
+'type' => Model::ATT_TYPE_INT,
+'default' => -1,
+'formtype' => 'system',
+'comment' => 'The site id in multisite mode, (or -1 if global)',
+),
+'baseurl' => array(
+'type'      => Model::ATT_TYPE_STRING,
+'maxlength' => 128,
+'required'  => true,
+'null'      => false,
+),
+'installable' => array(
+'type'    => Model::ATT_TYPE_STRING,
+'null'    => false,
+'default' => '',
+'comment' => 'Baseurl that this widget "plugs" into, if any.',
+),
+'title'   => array(
+'type'      => Model::ATT_TYPE_STRING,
+'maxlength' => 128,
+'default'   => null,
+'comment'   => '[Cached] Title of the page',
+'null'      => true,
+),
+'settings' => array(
+'type' => Model::ATT_TYPE_TEXT,
+'formtype' => 'disabled',
+'comment' => 'Provides a section for saving json-encoded settings on the widget.'
+),
+'created' => array(
+'type' => Model::ATT_TYPE_CREATED,
+'null' => false,
+),
+'updated' => array(
+'type' => Model::ATT_TYPE_UPDATED,
+'null' => false,
+),
+);
+public static $Indexes = array(
+'primary' => array('baseurl'),
+);
+public function getSetting($key){
+if($this->_settings === null){
+$string = $this->get('settings');
+if($string){
+$this->_settings = json_decode($this->get('settings'), true);
+if(!$this->_settings) $this->_settings = array();
+}
+else{
+$this->_settings = array();
+}
+}
+return (isset($this->_settings[$key])) ? $this->_settings[$key] : null;
+}
+public function setSetting($key, $value){
+$current = $this->getSetting($key);
+if($current === $value) return;
+$this->_settings[$key] = $value;
+$this->set('settings', json_encode($this->_settings));
+}
+public function getID(){
+$split = self::SplitBaseURL($this->get('baseurl'));
+if(!$split) return null;
+if(isset($split['parameters'][0])) return $split['parameters'][0];
+else return null;
+}
+public static function SplitBaseURL($base) {
+if (!$base) return null;
+$base = trim($base, '/');
+$args = null;
+if (($qpos = strpos($base, '?')) !== false) {
+$argstring = substr($base, $qpos + 1);
+preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
+$args = array();
+foreach ($matches[1] as $k => $v) {
+if (!$v) continue;
+$args[$v] = $matches[2][$k];
+}
+$base = substr($base, 0, $qpos);
+}
+$posofslash = strpos($base, '/');
+if ($posofslash) $controller = substr($base, 0, $posofslash);
+else $controller = $base;
+if (class_exists($controller . 'Widget')) {
+switch (true) {
+case is_subclass_of($controller . 'Widget', 'Widget_2_1'):
+case is_subclass_of($controller . 'Widget', 'Widget'):
+$controller = $controller . 'Widget';
+break;
+default:
+return null;
+}
+}
+elseif (class_exists($controller)) {
+switch (true) {
+case is_subclass_of($controller, 'Widget_2_1'):
+case is_subclass_of($controller, 'Widget'):
+$controller = $controller;
+break;
+default:
+return null;
+}
+}
+else {
+return null;
+}
+if ($posofslash !== false) $base = substr($base, $posofslash + 1);
+else $base = false;
+if ($base) {
+$posofslash = strpos($base, '/');
+if ($posofslash) {
+$method = str_replace('/', '_', $base);
+while (!method_exists($controller, $method) && strpos($method, '_')) {
+$method = substr($method, 0, strrpos($method, '_'));
+}
+}
+else {
+$method = $base;
+}
+$base = substr($base, strlen($method) + 1);
+}
+else {
+$method = 'index';
+}
+if (!method_exists($controller, $method)) {
+return null;
+}
+if ($method{0} == '_') return null;
+$params = ($base !== false) ? explode('/', $base) : null;
+$baseurl = '/' . ((strpos($controller, 'Widget') == strlen($controller) - 6) ? substr($controller, 0, -6) : $controller);
+if (!($method == 'index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
+$baseurl .= ($params) ? '/' . implode('/', $params) : '';
+if($args){
+$params = ($params) ? array_merge($params, $args) : $args;
+}
+return array('controller' => $controller,
+'method'     => $method,
+'parameters' => $params,
+'baseurl'    => $baseurl);
+}
+}
+
+
+### REQUIRE_ONCE FROM core/models/UserUserConfigModel.php
+class UserUserConfigModel extends Model{
+public static $Schema = array(
+'user_id' => array(
+'type' => Model::ATT_TYPE_UUID_FK,
+'required' => true,
+'null' => false,
+'link' => [
+'model' => 'User',
+'type' => Model::LINK_BELONGSTOONE,
+'on' => 'id',
+],
+),
+'key' => array(
+'type' => Model::ATT_TYPE_STRING,
+'required' => true,
+'null' => false,
+'maxlength' => 64,
+'link' => [
+'model' => 'UserConfig',
+'type' => Model::LINK_BELONGSTOONE,
+'on' => 'key',
+],
+),
+'value' => array(
+'type' => Model::ATT_TYPE_TEXT,
+'required' => false,
+'null' => true
+),
+'created' => array(
+'type' => Model::ATT_TYPE_CREATED,
+'null' => false,
+),
+'updated' => array(
+'type' => Model::ATT_TYPE_UPDATED,
+'null' => false,
+),
+);
+public static $Indexes = array(
+'primary' => array('user_id', 'key'),
+);
+public function set($k, $v){
+if($k == 'value'){
+$config = UserConfigModel::Construct($this->_data['key']);
+if(!$config->get('validation')){
+return parent::set($k, $v);
+}
+else{
+$check = $config->get('validation');
+$valid = true;
+if (strpos($check, '::') !== false) {
+$valid = call_user_func($check, $v, $this);
+}
+elseif (
+($check{0} == '/' && !preg_match($check, $v)) ||
+($check{0} == '#' && !preg_match($check, $v))
+) {
+$valid = false;
+}
+if($valid === true){
+return parent::set($k, $v);
+}
+else{
+throw new ModelValidationException(($valid === false) ? $this->_data['key'] . ' fails validation!' : $valid);
+}
+}
+}
+else{
+return parent::set($k, $v);
+}
+}
+}
+
+
+### REQUIRE_ONCE FROM core/models/UserConfigModel.php
+class UserConfigModel extends Model{
+public static $Schema = array(
+'key' => array(
+'type' => Model::ATT_TYPE_STRING,
+'required' => true,
+'null' => false,
+'maxlength' => 64,
+),
+'default_name' => array(
+'type' => Model::ATT_TYPE_STRING,
+'required' => false,
+'comment' => 'The default name/title',
+),
+'name' => array(
+'type' => Model::ATT_TYPE_STRING,
+'required' => false,
+'comment' => 'The name/title displayed on the system',
+),
+'formtype' => array(
+'type' => Model::ATT_TYPE_STRING,
+'required' => false,
+'default' => 'text'
+),
+'default_value' => array(
+'type' => Model::ATT_TYPE_TEXT
+),
+'options' => array(
+'type' => Model::ATT_TYPE_TEXT,
+'required' => false,
+'null' => true
+),
+'default_weight' => array(
+'type' => Model::ATT_TYPE_INT,
+'default' => 0,
+),
+'weight' => array(
+'type' => Model::ATT_TYPE_INT,
+'default' => 0,
+),
+'default_onregistration' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => true
+),
+'onregistration' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => true
+),
+'default_onedit' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => true
+),
+'onedit' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => true
+),
+'searchable' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => 0,
+),
+'required' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => 0,
+),
+'validation' => array(
+'type' => Model::ATT_TYPE_STRING,
+'formtype' => 'disabled',
+'comment' => 'Class or function to call on validation',
+),
+'created' => array(
+'type' => Model::ATT_TYPE_CREATED,
+'null' => false,
+),
+'updated' => array(
+'type' => Model::ATT_TYPE_UPDATED,
+'null' => false,
+),
+);
+public static $Indexes = array(
+'primary' => array('key'),
+'searchable' => array('searchable'),
+);
 }
 
 
@@ -11253,119 +12352,6 @@ spl_autoload_register('Core::CheckClass');
 
 Core\Utilities\Logger\write_debug('Loading configs');
 ### REQUIRE_ONCE FROM core/libs/core/ConfigHandler.class.php
-### REQUIRE_ONCE FROM core/models/ConfigModel.class.php
-class ConfigModel extends Model {
-public static $Schema = array(
-'key'           => array(
-'type'      => Model::ATT_TYPE_STRING,
-'maxlength' => 255,
-'required'  => true,
-'null'      => false,
-),
-'type'          => array(
-'type'    => Model::ATT_TYPE_ENUM,
-'options' => array('string', 'int', 'boolean', 'enum', 'set'),
-'default' => 'string',
-'null'    => false,
-),
-'encrypted' => array(
-'type' => Model::ATT_TYPE_BOOL,
-'default' => 0,
-),
-'default_value' => array(
-'type'    => Model::ATT_TYPE_TEXT,
-'default' => null,
-'null'    => true,
-),
-'value'         => array(
-'type'    => Model::ATT_TYPE_TEXT,
-'default' => null,
-'null'    => true,
-),
-'options'       => array(
-'type'      => Model::ATT_TYPE_STRING,
-'maxlength' => 511,
-'default'   => null,
-'null'      => true,
-),
-'description'   => array(
-'type'    => Model::ATT_TYPE_TEXT,
-'default' => null,
-'null'    => true,
-),
-'mapto'         => array(
-'type'      => Model::ATT_TYPE_STRING,
-'maxlength' => 32,
-'default'   => null,
-'comment'   => 'The define constant to map the value to on system load.',
-'null'      => true,
-),
-'overrideable' => array(
-'type' => Model::ATT_TYPE_BOOL,
-'default' => false,
-'comment' => 'If children sites can override this configuration option',
-),
-'created'       => array(
-'type' => Model::ATT_TYPE_CREATED
-),
-'updated'       => array(
-'type' => Model::ATT_TYPE_UPDATED
-)
-);
-public static $Indexes = array(
-'primary' => array('key'),
-);
-public function getValue() {
-$v = $this->get('value');
-if ($v === null){
-$v = $this->get('default');
-}
-elseif($this->get('encrypted') && $v !== ''){
-preg_match('/^\$([^$]*)\$([0-9]*)\$(.*)$/m', $v, $matches);
-$cipher = $matches[1];
-$passes = $matches[2];
-$size = openssl_cipher_iv_length($cipher);
-$dec = substr($v, strlen($cipher) + 5, 0-$size);
-$iv = substr($v, 0-$size);
-for($i=0; $i<$passes; $i++){
-$dec = openssl_decrypt($dec, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
-}
-$v = $dec;
-}
-return self::TranslateValue($this->get('type'), $v);
-}
-public function setValue($value){
-if($this->get('encrypted')){
-$cipher = 'AES-256-CBC';
-$passes = 10;
-$size = openssl_cipher_iv_length($cipher);
-$iv = mcrypt_create_iv($size, MCRYPT_RAND);
-$enc = $value;
-for($i=0; $i<$passes; $i++){
-$enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
-}
-$payload = '$' . $cipher . '$' . str_pad($passes, 2, '0', STR_PAD_LEFT) . '$' . $enc . $iv;
-return parent::set('value', $payload);
-}
-else{
-return parent::set('value', $value);
-}
-}
-public static function TranslateValue($type, $value){
-switch ($type) {
-case 'int':
-return (int)$value;
-case 'boolean':
-return ($value == '1' || $value == 'true') ? true : false;
-case 'set':
-return array_map('trim', explode('|', $value));
-default:
-return $value;
-}
-}
-} // END class ConfigModel extends Model
-
-
 class ConfigHandler implements ISingleton {
 private static $Instance = null;
 private $_directory;
@@ -11722,76 +12708,6 @@ date_default_timezone_set(TIME_DEFAULT_TIMEZONE);
 Core::LoadComponents();
 if (EXEC_MODE == 'WEB') {
 try {
-### REQUIRE_ONCE FROM core/libs/core/Session.class.php
-class Session implements SessionHandlerInterface {
-public static $Instance;
-public static $Externals = [];
-public function __construct(){
-if(self::$Instance === null){
-self::$Instance = $this;
-}
-}
-public function close() {
-return true;
-}
-public function open($save_path, $session_id) {
-HookHandler::DispatchHook('/core/session/ready');
-return true;
-}
-public function destroy($session_id) {
-$dataset = new Core\Datamodel\Dataset();
-$dataset->table('session');
-$dataset->where('session_id = ' . $session_id);
-$dataset->where('ip_addr = ' . REMOTE_IP);
-$dataset->delete();
-$dataset->execute();
-$_SESSION = null;
-return true;
-}
-public function read($session_id) {
-$model = self::_GetModel($session_id);
-self::$Externals = $model->getExternalData();
-return $model->getData();
-}
-public function write($session_id, $session_data) {
-$model = self::_GetModel($session_id);
-$model->setData($session_data);
-$model->setExternalData(self::$Externals);
-return $model->save();
-}
-public function gc($maxlifetime) {
-return self::CleanupExpired();
-}
-public static function SetUser($u) {
-$model = self::_GetModel(session_id());
-$model->set('user_id', $u->get('id'));
-$model->save();
-$_SESSION['user'] = $u;
-}
-public static function DestroySession(){
-if(self::$Instance !== null){
-self::$Instance->destroy(session_id());
-}
-}
-public static function ForceSave(){
-$session = self::$Instance;
-$session->write(session_id(), serialize($_SESSION));
-}
-public static function CleanupExpired(){
-$ttl = ConfigHandler::Get('/core/session/ttl');
-$dataset = new Core\Datamodel\Dataset();
-$dataset->table('session');
-$dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl));
-$dataset->delete()->execute();
-return true;
-}
-private static function _GetModel($session_id) {
-$model = new SessionModel($session_id);
-$model->set('ip_addr', REMOTE_IP);
-return $model;
-}
-}
-if(EXEC_MODE != 'CLI'){
 ini_set('session.hash_bits_per_character', 5);
 ini_set('session.hash_function', 1);
 if(defined('SESSION_COOKIE_DOMAIN') && SESSION_COOKIE_DOMAIN){
@@ -11801,9 +12717,6 @@ session_set_cookie_params(0, '/', SESSION_COOKIE_DOMAIN);
 $session = new Session();
 session_set_save_handler($session, true);
 session_start();
-}
-
-
 }
 catch (DMI_Exception $e) {
 if (DEVELOPMENT_MODE) {
@@ -15113,154 +16026,6 @@ $this->getView()->templatename = $template;
 }
 public static function Factory($name) {
 return new $name();
-}
-}
-
-
-### REQUIRE_ONCE FROM core/models/WidgetModel.class.php
-class WidgetModel extends Model {
-private $_settings = null;
-public static $Schema = array(
-'site' => array(
-'type' => Model::ATT_TYPE_INT,
-'default' => -1,
-'formtype' => 'system',
-'comment' => 'The site id in multisite mode, (or -1 if global)',
-),
-'baseurl' => array(
-'type'      => Model::ATT_TYPE_STRING,
-'maxlength' => 128,
-'required'  => true,
-'null'      => false,
-),
-'installable' => array(
-'type'    => Model::ATT_TYPE_STRING,
-'null'    => false,
-'default' => '',
-'comment' => 'Baseurl that this widget "plugs" into, if any.',
-),
-'title'   => array(
-'type'      => Model::ATT_TYPE_STRING,
-'maxlength' => 128,
-'default'   => null,
-'comment'   => '[Cached] Title of the page',
-'null'      => true,
-),
-'settings' => array(
-'type' => Model::ATT_TYPE_TEXT,
-'formtype' => 'disabled',
-'comment' => 'Provides a section for saving json-encoded settings on the widget.'
-),
-'created' => array(
-'type' => Model::ATT_TYPE_CREATED,
-'null' => false,
-),
-'updated' => array(
-'type' => Model::ATT_TYPE_UPDATED,
-'null' => false,
-),
-);
-public static $Indexes = array(
-'primary' => array('baseurl'),
-);
-public function getSetting($key){
-if($this->_settings === null){
-$string = $this->get('settings');
-if($string){
-$this->_settings = json_decode($this->get('settings'), true);
-if(!$this->_settings) $this->_settings = array();
-}
-else{
-$this->_settings = array();
-}
-}
-return (isset($this->_settings[$key])) ? $this->_settings[$key] : null;
-}
-public function setSetting($key, $value){
-$current = $this->getSetting($key);
-if($current === $value) return;
-$this->_settings[$key] = $value;
-$this->set('settings', json_encode($this->_settings));
-}
-public function getID(){
-$split = self::SplitBaseURL($this->get('baseurl'));
-if(!$split) return null;
-if(isset($split['parameters'][0])) return $split['parameters'][0];
-else return null;
-}
-public static function SplitBaseURL($base) {
-if (!$base) return null;
-$base = trim($base, '/');
-$args = null;
-if (($qpos = strpos($base, '?')) !== false) {
-$argstring = substr($base, $qpos + 1);
-preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
-$args = array();
-foreach ($matches[1] as $k => $v) {
-if (!$v) continue;
-$args[$v] = $matches[2][$k];
-}
-$base = substr($base, 0, $qpos);
-}
-$posofslash = strpos($base, '/');
-if ($posofslash) $controller = substr($base, 0, $posofslash);
-else $controller = $base;
-if (class_exists($controller . 'Widget')) {
-switch (true) {
-case is_subclass_of($controller . 'Widget', 'Widget_2_1'):
-case is_subclass_of($controller . 'Widget', 'Widget'):
-$controller = $controller . 'Widget';
-break;
-default:
-return null;
-}
-}
-elseif (class_exists($controller)) {
-switch (true) {
-case is_subclass_of($controller, 'Widget_2_1'):
-case is_subclass_of($controller, 'Widget'):
-$controller = $controller;
-break;
-default:
-return null;
-}
-}
-else {
-return null;
-}
-if ($posofslash !== false) $base = substr($base, $posofslash + 1);
-else $base = false;
-if ($base) {
-$posofslash = strpos($base, '/');
-if ($posofslash) {
-$method = str_replace('/', '_', $base);
-while (!method_exists($controller, $method) && strpos($method, '_')) {
-$method = substr($method, 0, strrpos($method, '_'));
-}
-}
-else {
-$method = $base;
-}
-$base = substr($base, strlen($method) + 1);
-}
-else {
-$method = 'index';
-}
-if (!method_exists($controller, $method)) {
-return null;
-}
-if ($method{0} == '_') return null;
-$params = ($base !== false) ? explode('/', $base) : null;
-$baseurl = '/' . ((strpos($controller, 'Widget') == strlen($controller) - 6) ? substr($controller, 0, -6) : $controller);
-if (!($method == 'index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
-$baseurl .= ($params) ? '/' . implode('/', $params) : '';
-if($args){
-$params = ($params) ? array_merge($params, $args) : $args;
-}
-return array('controller' => $controller,
-'method'     => $method,
-'parameters' => $params,
-'baseurl'    => $baseurl);
 }
 }
 

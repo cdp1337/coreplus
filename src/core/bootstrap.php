@@ -520,11 +520,26 @@ Core::AddProfileTime('core_ready');
  */
 Core::LoadComponents();
 
-// Give me some other useful core systems.
+// Now I can session_start everything.
+// Sessions are always useful for web apps :p
 if (EXEC_MODE == 'WEB') {
 	try {
-		// Sessions are always useful for web apps
-		require_once(ROOT_PDIR . 'core/libs/core/Session.class.php');
+		// Start loading the session.
+		// If this fails, I can always drop back to the installer, (since it probably isn't installed correctly).
+
+		ini_set('session.hash_bits_per_character', 5);
+		ini_set('session.hash_function', 1);
+		// Allow a config-set cookie domain.  This is required for xsite sessions in multimode.
+		if(defined('SESSION_COOKIE_DOMAIN') && SESSION_COOKIE_DOMAIN){
+			// A valid session name is required for xsite sessions to work. (not sure why)
+			session_name('CorePlusSession');
+			session_set_cookie_params(0, '/', SESSION_COOKIE_DOMAIN);
+		}
+		$session = new Session();
+		// (PhpStorm 7.0 still complains about this function even though it's allowed as of PHP 5.4)
+		/** @noinspection PhpParamsInspection */
+		session_set_save_handler($session, true);
+		session_start();
 	}
 	catch (DMI_Exception $e) {
 		// There was a DMI exception... it may not have been installed.

@@ -239,20 +239,3 @@ class Session implements SessionHandlerInterface {
 	}
 }
 
-
-// and GO
-// Now I can session_start everything.
-if(EXEC_MODE != 'CLI'){
-	ini_set('session.hash_bits_per_character', 5);
-	ini_set('session.hash_function', 1);
-// Allow a config-set cookie domain.  This is required for xsite sessions in multimode.
-	if(defined('SESSION_COOKIE_DOMAIN') && SESSION_COOKIE_DOMAIN){
-		// A valid session name is required for xsite sessions to work. (not sure why)
-		session_name('CorePlusSession');
-		session_set_cookie_params(0, '/', SESSION_COOKIE_DOMAIN);
-	}
-	$session = new Session();
-	session_set_save_handler($session, true);
-	session_start();
-
-}

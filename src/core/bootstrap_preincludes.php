@@ -43,6 +43,7 @@ require_once(ROOT_PDIR . 'core/libs/core/Controller.class.php');
 
 // Time is a useful component.
 require_once(ROOT_PDIR . 'core/libs/core/Time.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/Session.class.php');
 
 require_once(ROOT_PDIR . 'core/models/ComponentModel.class.php');
 require_once(ROOT_PDIR . 'core/models/PageModel.class.php');
@@ -50,6 +51,11 @@ require_once(ROOT_PDIR . 'core/models/SessionModel.class.php');
 require_once(ROOT_PDIR . 'core/models/PageMetaModel.class.php');
 require_once(ROOT_PDIR . 'core/models/Insertable.class.php');
 require_once(ROOT_PDIR . 'core/models/SystemLogModel.php');
+require_once(ROOT_PDIR . 'core/models/UserModel.php');
+require_once(ROOT_PDIR . 'core/models/ConfigModel.class.php');
+require_once(ROOT_PDIR . 'core/models/WidgetModel.class.php');
+require_once(ROOT_PDIR . 'core/models/UserUserConfigModel.php');
+require_once(ROOT_PDIR . 'core/models/UserConfigModel.php');
 
 /** @deprecated 2011.11 */
 require_once(ROOT_PDIR . 'core/libs/core/Component.class.php');

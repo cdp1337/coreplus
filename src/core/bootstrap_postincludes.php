@@ -30,5 +30,4 @@ require_once(ROOT_PDIR . 'core/libs/core/Form.class.php');
 
 require_once(ROOT_PDIR . 'core/libs/core/PageRequest.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Controller_2_1.class.php');
-require_once(ROOT_PDIR . 'core/models/WidgetModel.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/CoreDateTime.php');

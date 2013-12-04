@@ -26,8 +26,6 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-require_once(ROOT_PDIR . 'core/models/ConfigModel.class.php');
-
 class ConfigHandler implements ISingleton {
 
 	/**
