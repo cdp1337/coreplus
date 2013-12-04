@@ -257,7 +257,7 @@ class SystemLogModel extends Model {
 				'session_id' => session_id(),
 				'user_id' => (\Core\user() ? \Core\user()->get('id') : 0),
 				'ip_addr' => REMOTE_IP,
-				'useragent' => $_SERVER['HTTP_USER_AGENT'],
+				'useragent' => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '',
 			)
 		);
 

@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 03 Dec 2013 18:47:27 -0500
+ * @compiled Tue, 03 Dec 2013 19:43:47 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4373,7 +4373,7 @@ array(
 'session_id' => session_id(),
 'user_id' => (\Core\user() ? \Core\user()->get('id') : 0),
 'ip_addr' => REMOTE_IP,
-'useragent' => $_SERVER['HTTP_USER_AGENT'],
+'useragent' => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '',
 )
 );
 return $log;
