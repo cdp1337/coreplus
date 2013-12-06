@@ -37,22 +37,49 @@ define('BASE_DIR', realpath(dirname(__DIR__)) . '/');
 require_once(ROOT_PDIR . 'core/bootstrap.php');
 
 
-/**
- * Just a simple usage tutorial.
- */
-function print_help(){
-	echo 'This utility will compile the component.xml metafile for any component,' . NL .
-		'and optionally allow you to create a deployable package of the component.' .
-		NL . NL .
-		'Wizard Usage: simply run it without any arguments and follow the prompts.' . NL .
-		'Advanced Options:' . NL .
-		'  -c, --component=NAME   Operate on a component with the given name' . NL .
-		'  --list-components      List out the available components along with  their versions and exit.' . NL .
-		'  --list-themes          List out the available themes along with  their versions and exit.' . NL .
-		'  -r, --repackage        Simply repackage a given component or theme.  Useful for updating a package while in development.' . NL .
-		'  -t, --theme=NAME       Operate on a theme with the given name' . NL
-		. NL . NL;
-}
+require_once(ROOT_PDIR . 'core/libs/core/cli/Arguments.php');
+require_once(ROOT_PDIR . 'core/libs/core/cli/Argument.php');
+
+$arguments = new \Core\CLI\Arguments([
+	'help' => [
+		'description' => 'Display help and exit.',
+		'value' => false,
+		'shorthand' => ['?', 'h'],
+	],
+	'component' => [
+		'description' => 'Operate on a component with the given name.',
+		'value' => true,
+		'shorthand' => ['c'],
+	],
+	'list-components' => [
+		'description' => 'List out the available components along with  their versions and exit.',
+		'value' => false,
+		'shorthand' => [],
+	],
+	'list-themes' => [
+		'description' => 'List out the available themes along with  their versions and exit.',
+		'value' => false,
+		'shorthand' => [],
+	],
+	'repackage' => [
+		'description' => 'Simply repackage a given component or theme.  Useful for updating a package while in development.',
+		'value' => false,
+		'shorthand' => ['r'],
+	],
+	'theme' => [
+		'description' => 'Operate on a theme with the given name.',
+		'value' => true,
+		'shorthand' => ['t'],
+	],
+]);
+$arguments->usageHeader = 'This utility will compile the component.xml metafile for any component,
+and optionally allow you to create a deployable package of the component.
+
+Wizard Usage:
+  Simply run it without any arguments and follow the prompts.
+
+Advanced Options:';
+$arguments->processArguments();
 
 
 // Allow for inline arguments.
@@ -69,59 +96,37 @@ $opts = [
 	'listversions' => false,
 ];
 
-if($argc > 1){
-	$arguments = $argv;
-	// Drop the first, that is the filename.
-	array_shift($arguments);
 
-	// I'm using a for here instead of a foreach so I can increment $i artificially if an argument is two part,
-	// ie: --option value_for_option --option2 value_for_option2
-	for($i = 0; $i < sizeof($arguments); $i++){
-		$arg = $arguments[$i];
+// Process and validate those arguments now.
+if($arguments->getArgumentValue('help')){
+	$arguments->printUsage();
+	exit;
+}
 
-		if($arg == '-h' || $arg == '--help' || $arg == '-?'){
-			print_help();
-			exit;
-		}
-		elseif($arg == '-c'){
-			$opts['type'] = 'component';
-			$opts['name'] = isset($arguments[$i+1]) ? $arguments[$i+1] : null;
-			// And skip the name, (since that will be the next argument).
-			++$i;
-		}
-		elseif(strpos($arg, '--component=') === 0){
-			$opts['type'] = 'component';
-			$opts['name'] = substr($arg, strpos($arg, '='));
-		}
-		elseif($arg == '--list-components'){
-			$opts['type'] = 'component';
-			$opts['listonly'] = true;
-			$opts['listversions'] = true;
-		}
-		elseif($arg == '--list-themes'){
-			$opts['type'] = 'theme';
-			$opts['listonly'] = true;
-			$opts['listversions'] = true;
-		}
-		elseif($arg == '-r' || $arg == '--repackage'){
-			$opts['repackage'] = true;
-		}
-		elseif($arg == '-t'){
-			$opts['type'] = 'theme';
-			$opts['name'] = $arguments[$i+1];
-			// And skip the name, (since that will be the next argument).
-			++$i;
-		}
-		elseif(strpos($arg, '--theme=') === 0){
-			$opts['type'] = 'theme';
-			$opts['name'] = substr($arg, strpos($arg, '='));
-		}
-		else{
-			echo "ERROR: unknown argument [" . $arg . "]" . NL;
-			print_help();
-			exit;
-		}
-	}
+if($arguments->getArgumentValue('component')){
+	$opts['type'] = 'component';
+	$opts['name'] = $arguments->getArgumentValue('component');
+}
+
+if($arguments->getArgumentValue('theme')){
+	$opts['type'] = 'theme';
+	$opts['name'] = $arguments->getArgumentValue('theme');
+}
+
+if($arguments->getArgumentValue('list-components')){
+	$opts['type'] = 'component';
+	$opts['listonly'] = true;
+	$opts['listversions'] = true;
+}
+
+if($arguments->getArgumentValue('list-themes')){
+	$opts['type'] = 'theme';
+	$opts['listonly'] = true;
+	$opts['listversions'] = true;
+}
+
+if($arguments->getArgumentValue('repackage')){
+	$opts['repackage'] = true;
 }
 
 
@@ -137,6 +142,7 @@ $_cversions = null;
  * Create Unique Arrays using an md5 hash
  *
  * @param array $array
+ * @param bool $preserveKeys
  * @return array
  */
 function arrayUnique($array, $preserveKeys = false){
@@ -240,7 +246,6 @@ function get_file_licenses($file){
  *
  * Will return an array containing any author, license
  *
- * @todo This may move to the CLI system if found useful enough...
  * @param string $file
  * @return array
  */
@@ -318,7 +323,6 @@ function parse_for_documentation($file){
 					// Is this an @author line?
 					if(stripos($line, '@author') !== false){
 						$aut = preg_replace('/\*[ ]*@author[ ]*/i', '', $line);
-						$autdata = array();
 						if(strpos($aut, '<') !== false && strpos($aut, '>') !== false && preg_match('/<[^>]*(@| at )[^>]*>/i', $aut)){
 							// Resembles: @author user foo <email@domain.com>
 							// or         @author user foo <email at domain dot com>
@@ -368,7 +372,6 @@ function parse_for_documentation($file){
 					// Is this line Author: ?
 					if(stripos($line, 'author:') !== false){
 						$aut = preg_replace('/\*[ ]*author:[ ]*/i', '', $line);
-						$autdata = array();
 						if(strpos($aut, '<') !== false && strpos($aut, '>') !== false && preg_match('/<[^>]*(@| at )[^>]*>/i', $aut)){
 							// Resembles: @author user foo <email@domain.com>
 							// or         @author user foo <email at domain dot com>
@@ -542,9 +545,6 @@ function get_unique_authors($authors){
 			else $simsearch[] = $key;
 		}
 
-
-		// There may be a pattern in the names, ie: Charlie Powell == cpowell == powellc == charlie.powell
-		$aliases = array();
 		// Try to get the first and last name.
 		$ln = $fn = $funame = '';
 		foreach($na as $name){
@@ -584,7 +584,7 @@ function get_unique_authors($authors){
 function get_unique_licenses($licenses){
 	// This behaves much similar to the unique_authors system above, but much simplier.
 	$lics = array();
-	foreach($licenses as $k => $v){
+	foreach($licenses as $v){
 		$v['title'] = trim($v['title']);
 		$v['url'] = trim($v['url']);
 
@@ -607,7 +607,7 @@ function get_unique_licenses($licenses){
 
 
 function process_component($component, $forcerelease = false){
-	global $packagername, $packageremail, $opts;
+	global $packageremail, $arguments;
 
 	// Get that component, should be available via the component handler.
 	$cfile = ComponentFactory::ResolveNameToFile($component);
@@ -646,7 +646,7 @@ function process_component($component, $forcerelease = false){
 	// Get the licenses currently set.  (maybe there's one that's not in the code)
 	$licenses = array();
 
-	if($opts['repackage']){
+	if($arguments->getVal('repackage')){
 		$scanlicenses = true;
 	}
 	else{
@@ -655,6 +655,7 @@ function process_component($component, $forcerelease = false){
 	}
 	if($scanlicenses){
 		foreach($xml->getElements('//component/licenses/license') as $el){
+			/** @var DOMElement $el */
 			$url = @$el->getAttribute('url');
 			$licenses[] = array(
 				'title' => $el->nodeValue,
@@ -666,7 +667,7 @@ function process_component($component, $forcerelease = false){
 
 	// Get the authors currently set. (maybe there's one that's not in the code)
 	$authors = array();
-	if($opts['repackage']){
+	if($arguments->getVal('repackage')){
 		$scanauthors = true;
 	}
 	else{
@@ -730,6 +731,7 @@ function process_component($component, $forcerelease = false){
 
 	echo "Scanning files for documentation and metacode...";
 	foreach($it as $file){
+		/** @var \Core\Filestore\File $file */
 		// This will get an array of all licenses and authors in the file's phpdoc.
 		$docelements = parse_for_documentation($file->getFilename());
 		$licenses = array_merge($licenses, $docelements['licenses']);
@@ -848,8 +850,10 @@ function process_component($component, $forcerelease = false){
 		];
 	}
 
-	// If repackage is requested, simply save and exit.
-	if($opts['repackage']) $ans = 'save';
+	// Build a stack of operations to do from the arguments in the order that they would make sense.
+	$autostack = [];
+	// This should really be at the tail end!
+	if($arguments->getVal('repackage')) $autostack[] = 'save';
 
 	while($ans != 'save'){
 		$opts = array(
@@ -864,7 +868,15 @@ function process_component($component, $forcerelease = false){
 			'save'       => '[ FINISH      ] Save it!',
 			'exit'       => 'Abort and exit without saving changes',
 		);
-		$ans = CLI::PromptUser('What do you want to edit for component ' . $component . ' ' . $version . ' on branch ' . $gitbranch, $opts);
+
+		if(sizeof($autostack)){
+			// Do this instead!
+			$ans = array_shift($autostack);
+		}
+		else{
+			$ans = CLI::PromptUser('What do you want to edit for component ' . $component . ' ' . $version . ' on branch ' . $gitbranch, $opts);
+		}
+
 
 		switch($ans){
 			case 'editvers':
@@ -1039,7 +1051,7 @@ function process_component($component, $forcerelease = false){
 		// if force release, don't give the user an option... just do it.
 		$bundleyn = true;
 	}
-	elseif(isset($opts['repackage']) && $opts['repackage']){
+	elseif($arguments->getVal('repackage')){
 		// Repackaging doesn't bundle it.
 		$bundleyn = false;
 	}
@@ -1185,7 +1197,7 @@ function process_theme($theme, $forcerelease = false){
 	// Since "Themes" are not enabled for CLI by default, I need to manually include that file.
 	require_once(ROOT_PDIR . 'components/theme/libs/Theme/Theme.php');
 
-	global $packagername, $packageremail, $opts;
+	global $packageremail, $opts;
 
 	$t = new Theme\Theme($theme);
 	$t->load();
@@ -1210,6 +1222,7 @@ function process_theme($theme, $forcerelease = false){
 
 	echo "Scanning files for metacode...";
 	foreach($it as $file){
+		/** @var \Core\Filestore\File $file */
 		// And then, scan this file for code, ie: classes, controllers, etc.
 		$fname = substr($file->getFilename(), $basestrlen);
 
@@ -1322,7 +1335,8 @@ function process_theme($theme, $forcerelease = false){
 					}
 				}
 				catch(Exception $e){
-					$thisdate = '01 Jan 2013 00:00:00 -0400';
+					$thisdate     = '01 Jan 2013 00:00:00 -0400';
+					$versioncheck = $version;
 				}
 
 				$changes = get_git_changes_since('Theme ' . $name, $versioncheck, $thisdate, $gitpaths);
@@ -1407,8 +1421,6 @@ function process_theme($theme, $forcerelease = false){
 
 		$file = $t->getBaseDir() . 'CHANGELOG';
 		$headerprefix = 'Theme/' . $name;
-		// The header line will be exactly [name] [version].
-		$header = 'Theme/' . $name . ' ' . $version . "\n";
 
 		add_release_date_to_changelog($file, $headerprefix, $version);
 
@@ -1694,7 +1706,6 @@ function get_git_changes_since($componentname, $sinceversion, $sincedate, $gitpa
 	}
 	exec('git log --no-merges --format="%s" --since="' . $sincedate . '" ' . implode(' ', $paths), $gitlogoutput);
 
-	$linesadded = 0;
 	foreach($gitlogoutput as $line){
 		// If the line matches "[COMP NAME] [version]"... then assume that's simply a release commit and ignore it.
 		if($line == $componentname . ' ' . $sinceversion) continue;
@@ -1817,6 +1828,7 @@ switch($ans){
 		foreach($files as $k => $f){
 
 			$line = str_pad($f['title'], $longestname+1, ' ', STR_PAD_RIGHT);
+			/** @var Component_2_1 $c */
 			$c = $f['component'];
 			$lineflags = array();
 
