@@ -1397,6 +1397,7 @@
 		<file filename="core/upgrades/258_to_260_pagemetasandinsertables.php" md5="3a77d8b3def9cf561d55e374c6621143"/>
 		<file filename="core/upgrades/261_to_262.php" md5="f980ebc7df2bcdb6cb3d553b96567d07"/>
 		<file filename="core/upgrades/270_to_280_groups.php" md5="c9bf34310d9320c2396ec8a65bab8829"/>
+		<file filename="core/upgrades/270_to_280_user_avatar_paths.php" md5="e0285b80baabd86e7b2f9af45f3ee8ee"/>
 		<file filename="core/widgets/AdminMenuWidget.php" md5="840a856a3d01500352035dbf0989b8e6">
 			<class name="AdminMenuWidget"/>
 		</file>
@@ -1872,7 +1873,9 @@
 		<upgrade from="2.6.3" to="2.7.0">
 			<php file="upgrades/261_to_262.php"/>
 		</upgrade>
-		<upgrade from="2.7.0" to="2.8.0"/>
+		<upgrade from="2.7.0" to="2.8.0">
+			<php file="upgrades/270_to_280_user_avatar_paths.php"/>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
