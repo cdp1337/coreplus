@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 03 Dec 2013 20:07:11 -0500
+ * @compiled Fri, 06 Dec 2013 14:21:50 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -6581,6 +6581,16 @@ else $d = $this->getBaseDir() . 'assets/';
 if (is_dir($d)) return $d;
 else return null;
 }
+public function getUserAuthDrivers(){
+$ret = [];
+$nodes = $this->_xmlloader->getElements('/users/userauth');
+foreach($nodes as $n){
+$name = $n->getAttribute('name');
+$class = $n->getAttribute('class');
+$ret[ $name ] = $class;
+}
+return $ret;
+}
 public function getIncludePaths() {
 return array();
 }
@@ -7095,7 +7105,13 @@ if(!class_exists('UserConfigModel')) return false;
 $changes = array();
 $action = $install ? 'Installing' : 'Uninstalling';
 Core\Utilities\Logger\write_debug($action . ' User Configs for ' . $this->getName());
-$node = $this->_xmlloader->getElement('userconfigs');
+$node = $this->_xmlloader->getElement('userconfigs', false);
+if($node){
+trigger_error('Use of the &lt;userconfigs/&gt; metatag is deprecated in favour of the &lt;users/&gt; metatag.  (In the ' . $this->getName() . ' component)', E_USER_DEPRECATED);
+}
+else{
+$node = $this->_xmlloader->getElement('users');
+}
 foreach ($node->getElementsByTagName('userconfig') as $confignode) {
 $key        = $confignode->getAttribute('key');
 $name       = $confignode->getAttribute('name');
@@ -11781,6 +11797,10 @@ $this->_components[$name] = $c;
 if($c instanceof Component_2_1){
 $this->_permissions       = array_merge($this->_permissions, $c->getPermissions());
 ksort($this->_permissions);
+$auths = $c->getUserAuthDrivers();
+foreach($auths as $name => $class){
+\Core\User\Helper::$AuthDrivers[$name] = $class;
+}
 }
 $c->_setReady(true);
 }
@@ -16024,12 +16044,7 @@ return $this->getPageRequest()->getPageModel();
 }
 protected function setAccess($accessstring) {
 $this->getPageModel()->set('access', $accessstring);
-if(\Core::IsComponentAvailable('User')){
 return (\Core\user()->checkAccess($accessstring));
-}
-else{
-return false;
-}
 }
 protected function setContentType($ctype) {
 $this->getView()->contenttype = $ctype;

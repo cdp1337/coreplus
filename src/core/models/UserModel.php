@@ -106,6 +106,7 @@ class UserModel extends Model {
 
 
 
+
 	/**
 	 * Cache of the results of checkAccess.
 	 *
@@ -133,7 +134,7 @@ class UserModel extends Model {
 	protected $_configs = null;
 
 	/**
-	 * @var null|\User\AuthDriverInterface The AuthDriver backend for this user
+	 * @var null|\Core\User\AuthDriverInterface The AuthDriver backend for this user
 	 */
 	protected $_authdriver = null;
 
@@ -388,7 +389,7 @@ class UserModel extends Model {
 	/**
 	 * Get the auth driver for this usermodel.
 	 *
-	 * @return \User\AuthDriverInterface
+	 * @return \Core\User\AuthDriverInterface
 	 * @throws Exception
 	 */
 	public function getAuthDriver(){
@@ -847,8 +848,10 @@ class UserModel extends Model {
 	/**
 	 * Set all groups for a given user on the current site from a set of IDs.
 	 *
-	 * @param array $groups
+	 * @param array             $groups
 	 * @param bool|Model|string $context True to set all context groups, false to ignore, a string or model for the specific context.
+	 *
+	 * @throws Exception
 	 */
 	protected function _setGroups($groups, $context) {
 

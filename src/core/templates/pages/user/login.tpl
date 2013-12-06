@@ -1,47 +1,37 @@
 {css src="assets/css/user.css"}{/css}
 
-<!--
-	As you may have guessed by looking at the id...
-	keep this line in here else your javascript login WILL BREAK!
--->
-<div id="user-login-placeholder-for-javascript-because-otherpages-may-have-an-error"></div>
 
+<div id="login-center" class="user-login">
 
-<div id="login-center">
-
-	<fieldset id="login-existing">
+	<fieldset id="login-existing" class="user-login-existing">
 		<em>Login to your existing account.</em>
 	</fieldset>
 
-	<fieldset class="left">
-		{$form->render()}
+	{**
+	 * An alternative to this if you so please is to do:
+	 *
+	 * {$drivers.datastore->renderLogin()}
+	 * <some-markup/>
+	 * {$drivers.facebook->renderLogin()}
+	 *
+	 * The default will simply render every authentication driver enabled on the system.
+	 *}
 
-		{a class="login-forgot" href="/User/ForgotPassword"}Forgot Password?{/a}
-	</fieldset>
+	{foreach $drivers as $name => $d}
+		<div class="user-login-include user-authdriver-{$name}">
+			{$d->renderLogin()}
+		</div>
+	{/foreach}
 
-	{if $smarty.const.FACEBOOK_APP_ID && in_array('facebook', $backends)}
-		<div id="login-divider"></div>
-
-		<fieldset class="right">
-			{widget baseurl="/facebook/login"}
-		</fieldset>
-	{/if}
 
 	<div class="clear"></div>
 
 	{if $allowregister}
-		<fieldset id="user-login">
-			{a class="register-account button" href="/User/Register"}Register Account{/a}
+		<fieldset id="user-login" class="user-login-register">
+			{a class="register-account button" href="/user/register"}Register Account{/a}
 
 			<em>Like this site? Sign up for an account!</em>
 		</fieldset>
 	{/if}
 
 </div>
-
-{if Core::IsLibraryAvailable('JQuery')}
-	{script library="jquery"}{/script}
-	{script library="jqueryui"}{/script}
-	{script library="jquery.form"}{/script}
-	{script src="assets/js/user/login.js"}{/script}
-{/if}

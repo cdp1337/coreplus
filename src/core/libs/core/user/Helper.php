@@ -28,6 +28,13 @@ namespace Core\User;
 abstract class Helper{
 
 	/**
+	 * @var array Array of User Auth drivers installed and available.
+	 */
+	public static $AuthDrivers = [
+		'datastore' => '\\Core\\User\\AuthDrivers\\datastore',
+	];
+
+	/**
 	 * Function to record activity, ie: a page view.
 	 *
 	 * @static
@@ -837,5 +844,46 @@ abstract class Helper{
 		}
 
 		return true;
+	}
+
+	public static function GetEnabledAuthDrivers(){
+		static $auths = null;
+
+		if($auths === null){
+			// Get the available user auth systems available.
+			$allauths = \Core\User\Helper::$AuthDrivers;
+			// Which ones are currently enabled by the admin.
+			$enabled = array_map('trim', explode('|', \ConfigHandler::Get('/user/authdrivers')));
+			// The classes of the actual driver backend.
+			$auths    = [];
+
+			foreach($enabled as $name){
+				// Skip blank entries.
+				if(!$name) continue;
+
+				if(!isset($allauths[$name])){
+					// Skip non-present auth drivers.  Means it's currently not installed.
+					trigger_error('Bad Auth Driver [' . $name . '], it is not provided by any enabled component!', E_USER_NOTICE);
+					continue;
+				}
+
+				try{
+					$ref = new \ReflectionClass( $allauths[$name] );
+					$auths[ $name ] = $ref->newInstance();
+				}
+				catch(\Exception $e){
+					// I don't care, it just won't be enabled.
+					// Do however notify the admin of this.
+					trigger_error('Bad Auth Driver [' . $name . ']: ' . $e->getMessage(), E_USER_NOTICE);
+				}
+			}
+
+			// There needs to be at least one!
+			if(!sizeof($auths)){
+				$auths['datastore'] = new \Core\User\AuthDrivers\datastore();
+			}
+		}
+
+		return $auths;
 	}
 }

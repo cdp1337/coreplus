@@ -280,7 +280,7 @@ class XMLLoader implements Serializable {
 	/**
 	 * Get the DOM root node
 	 *
-	 * @return DOMNode
+	 * @return DOMElement
 	 */
 	public function getRootDOM() {
 

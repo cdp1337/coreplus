@@ -555,6 +555,12 @@ class Core implements ISingleton {
 		if($c instanceof Component_2_1){
 			$this->_permissions       = array_merge($this->_permissions, $c->getPermissions());
 			ksort($this->_permissions);
+
+			// Register this component's user authdrivers, if any.
+			$auths = $c->getUserAuthDrivers();
+			foreach($auths as $name => $class){
+				\Core\User\Helper::$AuthDrivers[$name] = $class;
+			}
 		}
 
 		// Lastly, mark this component as available!

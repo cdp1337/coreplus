@@ -72,6 +72,7 @@ class UserConfigController extends Controller_2_1{
 			'/user/password/requirecapitals', '/user/password/requiresymbols', '/user/password/requirenumbers',
 			'/user/profileedits/requireapproval',
 			'/user/register/allowpublic', '/user/register/requireapproval', '/user/register/requirecaptcha',
+			'/user/authdrivers',
 		];
 		$configform = new Form();
 

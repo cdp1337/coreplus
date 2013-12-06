@@ -307,42 +307,28 @@ class UserController extends Controller_2_1{
 		}
 	}
 
+	/**
+	 * Display the login page for whatever drivers may happen to be installed.
+	 *
+	 * @return View
+	 */
 	public function login(){
-		$view = $this->getView();
-
-		$this->setTemplate('/pages/user/login.tpl');
+		$request = $this->getPageRequest();
+		$view    = $this->getView();
 
 		// Is the user already logged in?
+		// Set the access permissions for this page as anonymous-only.
 		if(\Core\user()->exists()){
 			\core\redirect('/user/me');
 		}
 
-		// Set the access permissions for this page as anonymous-only.
-		if(!$this->setAccess('g:anonymous;g:!admin')){
-			return View::ERROR_ACCESSDENIED;
-		}
-
-		$form = new Form();
-		$form->set('callsMethod', 'User\\Helper::LoginHandler');
-
-		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
-		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => false));
-		$form->addElement('submit', array('name' => 'submit', 'value' => 'Login'));
-
-		$error = false;
-
-		// @todo Implement a hook handler here for UserPreLoginForm
-
+		$auths = \Core\User\Helper::GetEnabledAuthDrivers();
 
 		$view->ssl = true;
-		$view->assign('error', $error);
-		$view->assign('backends', ConfigHandler::Get('/user/backends'));
-		$view->assign('form', $form);
+		$view->assign('drivers', $auths);
 		$view->assign('allowregister', ConfigHandler::Get('/user/register/allowpublic'));
 		// Google has no business indexing user-action pages.
 		$view->addMetaName('robots', 'noindex');
-
-
 		return $view;
 	}
 

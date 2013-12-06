@@ -68,8 +68,10 @@ class datastore implements AuthDriverInterface{
 	 */
 	protected $_usermodel;
 
-	public function __construct(\UserModel $usermodel){
-		$this->_usermodel = $usermodel;
+	public function __construct(\UserModel $usermodel = null){
+		if($usermodel){
+			$this->_usermodel = $usermodel;
+		}
 	}
 
 	/**
@@ -80,7 +82,7 @@ class datastore implements AuthDriverInterface{
 	 */
 	public function checkPassword($password){
 		$hasher = new \PasswordHash(datastore::HASH_ITERATIONS);
-		// The password for datamodels are stored in the datastore.
+		// The password for datastores are stored in the datastore.
 		$currentpass = $this->_usermodel->get('password');
 
 		return $hasher->checkPassword($password, $currentpass);
@@ -136,5 +138,24 @@ class datastore implements AuthDriverInterface{
 	 */
 	public function canLoginWithPassword() {
 		return true;
+	}
+
+	/**
+	 * Generate and print the rendered login markup to STDOUT.
+	 *
+	 * @return void
+	 */
+	public function renderLogin() {
+		$form = new \Form();
+		$form->set('callsMethod', 'User\\Helper::LoginHandler');
+
+		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
+		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => false));
+		$form->addElement('submit', array('name' => 'submit', 'value' => 'Login'));
+
+		$tpl = \Core\Templates\Template::Factory('includes/user/datastore_login.tpl');
+		$tpl->assign('form', $form);
+
+		$tpl->render();
 	}
 }

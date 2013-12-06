@@ -154,13 +154,7 @@ class Controller_2_1 {
 	protected function setAccess($accessstring) {
 		// Update the model
 		$this->getPageModel()->set('access', $accessstring);
-
-		if(\Core::IsComponentAvailable('User')){
-			return (\Core\user()->checkAccess($accessstring));
-		}
-		else{
-			return false;
-		}
+		return (\Core\user()->checkAccess($accessstring));
 	}
 
 	/**

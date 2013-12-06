@@ -736,7 +736,6 @@ class Component_2_1 {
 		return $libs;
 	}
 
-
 	public function getViewSearchDir() {
 		if ($this->hasView()) {
 			if($this->_viewSearchDirectory === null){
@@ -769,6 +768,25 @@ class Component_2_1 {
 
 		if (is_dir($d)) return $d;
 		else return null;
+	}
+
+	/**
+	 * Get an array of this component's registered user auth drivers.
+	 *
+	 * @return array
+	 */
+	public function getUserAuthDrivers(){
+		$ret = [];
+		$nodes = $this->_xmlloader->getElements('/users/userauth');
+		foreach($nodes as $n){
+			/** @var DOMElement $n */
+			$name = $n->getAttribute('name');
+			$class = $n->getAttribute('class');
+
+			$ret[ $name ] = $class;
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -1703,7 +1721,15 @@ class Component_2_1 {
 		Core\Utilities\Logger\write_debug($action . ' User Configs for ' . $this->getName());
 
 		// I need to get the schema definitions first.
-		$node = $this->_xmlloader->getElement('userconfigs');
+		$node = $this->_xmlloader->getElement('userconfigs', false);
+
+		if($node){
+			trigger_error('Use of the &lt;userconfigs/&gt; metatag is deprecated in favour of the &lt;users/&gt; metatag.  (In the ' . $this->getName() . ' component)', E_USER_DEPRECATED);
+		}
+		else{
+			// Try the 2.8 version, <users/>.
+			$node = $this->_xmlloader->getElement('users');
+		}
 
 		// Now, get every table under this node.
 		foreach ($node->getElementsByTagName('userconfig') as $confignode) {

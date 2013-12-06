@@ -238,9 +238,12 @@ class FormController extends Controller_2_1 {
 		// Does the user have access to search for users?
 		// if so include that search here to!  This is for the subject matter tag, or "This x is about person y!"
 		if(\Core\user()->checkAccess('p:/user/search/autocomplete')){
-			$results = User::Search($term);
-			foreach($results as $user){
-				/** @var $user User_Backend */
+			$results = UserModel::Search($term);
+			foreach($results as $r){
+				/** @var $r \Core\Search\ModelResult */
+
+				/** @var UserModel $user */
+				$user = $r->_model;
 				$view->jsondata[] = array(
 					'id' => 'u:' . $user->get('id'),
 					'label' => $user->getDisplayName(),

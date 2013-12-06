@@ -13,7 +13,10 @@ namespace Core\User;
 
 
 interface AuthDriverInterface {
-	public function __construct(\UserModel $usermodel);
+	/**
+	 * @param \UserModel|null $usermodel
+	 */
+	public function __construct(\UserModel $usermodel = null);
 
 	/**
 	 * Check that the supplied password or key is valid for this user.
@@ -52,4 +55,11 @@ interface AuthDriverInterface {
 	 * @return boolean
 	 */
 	public function canLoginWithPassword();
+
+	/**
+	 * Generate and print the rendered login markup to STDOUT.
+	 *
+	 * @return void
+	 */
+	public function renderLogin();
 } 
