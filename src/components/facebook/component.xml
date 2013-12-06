@@ -17,17 +17,19 @@
 		-->
 		<config key="/facebook/appsecret" mapto="FACEBOOK_APP_SECRET" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
 	</configs>
-	<userconfigs>
+	<users>
 		<userconfig key="facebook_id" name="Facebook ID" onregistration="0" onedit="0"/>
 		<userconfig key="facebook_link" name="Facebook Link" onregistration="0" onedit="0"/>
 		<userconfig key="gender" name="Gender" onregistration="0" onedit="0" formtype="select" options="|Male|Female|Other"/>
 		<userconfig key="facebook_access_token" name="Facebook Access Token (set on login)" onregistration="0" onedit="0"/>
-	</userconfigs>
+		<userauth name="facebook" class="\Facebook\UserAuth"/>
+	</users>
 	<view searchdir="templates">
+		<file filename="templates/includes/user/facebook_login.tpl" md5="8237173cb0ae7b03e80c3786e89ec553"/>
 		<file filename="templates/widgets/facebook/login.tpl" md5="a2ecb2faade8f57d53a3837b6a9c0307"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="0278d5f7f9b3b1e21687a7760c9d1866"/>
+		<file filename="CHANGELOG" md5="71478b104264d14caf9d56adc5b243e2"/>
 		<file filename="FacebookHelper.class.php" md5="d7ac2466285ce37c587f9bb91e079aa9">
 			<class name="FacebookHelper"/>
 		</file>
@@ -63,6 +65,9 @@
 			<class name="FBPublicGetAccessTokenFromCode"/>
 			<class name="FBPublicState"/>
 		</file>
+		<file filename="libs/facebook/UserAuth.php" md5="acbc4c29ab2f06789dd17683dfab99f0">
+			<class name="Facebook\UserAuth"/>
+		</file>
 		<file filename="widgets/FacebookWidget.php" md5="28901aa25cdac837826fbf895c306ed1">
 			<class name="FacebookWidget"/>
 		</file>
@@ -86,5 +91,10 @@
 		<author name="Naitik Shah" email="naitik@facebook.com"/>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
 </component>
 
