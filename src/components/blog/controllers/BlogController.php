@@ -655,7 +655,7 @@ class BlogController extends Controller_2_1 {
 		//$articles = $blog->getLink('BlogArticle');
 		$manager = \Core\user()->checkAccess('p:blog_manage');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
-		$author = User::Find(array('id' => $article->get('authorid')));
+		$author = UserModel::Construct($article->get('authorid'));
 
 		//$authorid = $author->get('id');
 		//var_dump($page->getMeta('keywords')); die();

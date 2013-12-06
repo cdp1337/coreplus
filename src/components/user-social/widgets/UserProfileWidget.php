@@ -13,15 +13,12 @@ class UserProfileWidget extends Widget_2_1{
 
 
 		$uid = $request->getParameter('user');
-		if($uid instanceof User){
+		if($uid instanceof UserModel){
 			$user = $uid;
 			$uid = $user->get('id');
 		}
-		elseif(is_numeric($uid)){
-			$user = User::Find(array('id' => $uid), 1);
-		}
 		else{
-			throw new WidgetException('/userprofile/badge widget requires a user parameter.');
+			$user = UserModel::Construct($uid);
 		}
 
 		$direction = $request->getParameter('direction') ? $request->getParameter('direction') : 'horizontal';

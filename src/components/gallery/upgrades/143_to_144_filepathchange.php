@@ -23,7 +23,7 @@ foreach($images as $i){
 
 	// Don't forget to copy over the meta data too!
 	// This is because the gallery system will use the new version of metadata.
-	$u = User::Construct($i->get('uploaderid'));
+	$u = UserModel::Construct($i->get('uploaderid'));
 
 	$helper = new \Core\Filestore\FileMetaHelper($i->getOriginalFile());
 	$helper->setMeta('title', $i->get('title'));

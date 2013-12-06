@@ -219,7 +219,7 @@ class BlogArticleModel extends Model {
 	 * @return null|User_Backend
 	 */
 	public function getAuthor() {
-		$author = User::Find(array('id' => $this->get('authorid')));
+		$author = UserModel::Construct($this->get('authorid'));
 		return $author;
 	}
 

@@ -35,7 +35,7 @@ foreach($articles as $article){
 	);
 
 	if($article->get('authorid')){
-		$user = User::Construct($article->get('authorid'));
+		$user = UserModel::Construct($article->get('authorid'));
 		$page->setMeta('author', $user->getDisplayName());
 		$page->setMeta('authorid', $user->get('id'));
 	}

@@ -7,10 +7,10 @@
 
 			<span clss="tags-display-widget-keyword">
 				{if strpos($keyword.meta_value, 'u:') === 0 && Core::IsComponentAvailable('user-social')}
-					{assign var="keyworduser" value=User::Construct(substr($keyword.meta_value,2))}
+					{assign var="keyworduser" value=UserModel::Construct(substr($keyword.meta_value,2))}
 
 					<a href="{UserSocialHelper::ResolveProfileLink($keyworduser)}">
-						{img src="public/user/`$keyworduser->get('avatar')`" placeholder="person" dimensions="24x24" alt="`$keyworduser->getDisplayName()|escape`"}
+						{img src="`$keyworduser->get('avatar')`" placeholder="person" dimensions="24x24" alt="`$keyworduser->getDisplayName()|escape`"}
 						{$keyword.meta_value_title}
 					</a>
 				{else}
