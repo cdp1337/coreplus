@@ -1,3 +1,7 @@
+FontAwesome 4.0.3~core1
+
+	* Update to the newest stable version of Font Awesome from upstream.
+
 FontAwesome 3.11~core2
 
 	* Make use of the namespace versions of View instead of static.

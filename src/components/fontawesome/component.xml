@@ -1,39 +1,55 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.11~core2" name="FontAwesome" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.3~core1" name="FontAwesome" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.5.5" operation="ge"/>
+		<require name="core" type="component" version="2.8.0" operation="ge"/>
 	</requires>
 	<provides>
 		<scriptlibrary name="fontawesome" call="FontAwesome::Load"/>
 	</provides>
 	<description>
-		The iconic font designed for use with Twitter Bootstrap
+		Font Awesome gives you scalable vector icons that can instantly be customized -
+		size, color, drop shadow, and anything that can be done with the power of CSS.
+		This package contains the Core-optimized version of FA.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="b3382abc966b5e7c7697288f8615dad3"/>
-		<file filename="FontAwesome-Vectors.pdf" md5="f20834970d9f01b246f65b9939b97f11"/>
+		<file filename="CHANGELOG" md5="d4e7b3fefdfaa8b7b07a33a2b56be51f"/>
+		<file filename="FontAwesome-Vectors.pdf" md5="cab0c66ed6cd83eec4d2e844619703b4"/>
 		<file filename="FontAwesome.lib.php" md5="5028291fd224858f6a7ba312fde25312">
 			<class name="FontAwesome"/>
 		</file>
 		<file filename="README.md" md5="bcb91e0d16d1f010effa565d0c7980d2"/>
 	</files>
 	<assets>
-		<file filename="assets/css/font-awesome-ie7.css" md5="7b0428d1fcc11ad5df3b2f1b2b149cda"/>
-		<file filename="assets/css/font-awesome-ie7.min.css" md5="149eedb61546560122d34ad4e4e9cf36"/>
-		<file filename="assets/css/font-awesome-tweaks.css" md5="ffa4ef1c9f29652091f87bdc56faafd0"/>
-		<file filename="assets/css/font-awesome.css" md5="bbd098fc6d8263878a58191b4b45e7a6"/>
-		<file filename="assets/css/font-awesome.min.css" md5="5dae05e816a918899752841a07c407d1"/>
-		<file filename="assets/font/FontAwesome.otf" md5="2239f8f663372674d6cc48adc89c69de"/>
-		<file filename="assets/font/fontawesome-webfont.eot" md5="3a02d698864c3140f35ad0f7f2e208ba"/>
-		<file filename="assets/font/fontawesome-webfont.svg" md5="321db7c9564ea52084ec89b612f2cc59"/>
-		<file filename="assets/font/fontawesome-webfont.ttf" md5="1c66a4738b40ef0f6b1abca0ba9a796d"/>
-		<file filename="assets/font/fontawesome-webfont.woff" md5="9434b081ed2d237abfe96e832592ef15"/>
+		<file filename="assets/CONTRIBUTING.md" md5="51163d4979d1e0371aab27b8d29ea4b9"/>
+		<file filename="assets/README.md" md5="deabcf1bd585dd4a6462173928247612"/>
+		<file filename="assets/css/_bordered-pulled.scss" md5="e4f85472a1f6ed0e23a473b8e00ef071"/>
+		<file filename="assets/css/_core.scss" md5="460139739224bc62d9957837978c4e22"/>
+		<file filename="assets/css/_extras.scss" md5="053aed1a3705922cea94741681034652"/>
+		<file filename="assets/css/_fixed-width.scss" md5="9277ab6964a434d499873687b00be906"/>
+		<file filename="assets/css/_icons.scss" md5="9a9ecb8086c732506cc7a31d75f65442"/>
+		<file filename="assets/css/_larger.scss" md5="e95931566f6fc6ad5685c4fa9802e206"/>
+		<file filename="assets/css/_list.scss" md5="7107e80b053928271d5fcf422dc29490"/>
+		<file filename="assets/css/_mixins.scss" md5="edb0a0baf9939c54a8d1899bd7d4f510"/>
+		<file filename="assets/css/_path.scss" md5="ac2a848f68cffed328272615bfca2500"/>
+		<file filename="assets/css/_rotated-flipped.scss" md5="9d894281a3b1c265abdd5abd11f9af5d"/>
+		<file filename="assets/css/_spinning.scss" md5="8e6c7988f40f123aedd96a668c56582a"/>
+		<file filename="assets/css/_stacked.scss" md5="5594237226aedfbca2fa1c7f4604c214"/>
+		<file filename="assets/css/_variables.scss" md5="9d4f23eacae6690aa140e51d42550e5b"/>
+		<file filename="assets/css/font-awesome.css" md5="55918577f58abf50bf5df75dd7d3b1d5"/>
+		<file filename="assets/css/font-awesome.min.css" md5="11ff401674a4c06a77f28e0ed3ad7651"/>
+		<file filename="assets/css/font-awesome.scss" md5="4201fdd32cc7a7d2f6ed2706800faf75"/>
+		<file filename="assets/fonts/FontAwesome.otf" md5="3f3a623e88cb5c62eaa2367195e98b67"/>
+		<file filename="assets/fonts/fontawesome-webfont.eot" md5="8b27bc96115c2d24350f0d09e6a9433f"/>
+		<file filename="assets/fonts/fontawesome-webfont.svg" md5="0a799148a50bb02c6f380eabd8d97559"/>
+		<file filename="assets/fonts/fontawesome-webfont.ttf" md5="dcb26c7239d850266941e80370e207c1"/>
+		<file filename="assets/fonts/fontawesome-webfont.woff" md5="3293616ec0c605c7c2db25829a0a509e"/>
 	</assets>
 	<upgrades>
 		<upgrade from="2.0" to="2.0~core2"/>
 		<upgrade from="2.0~core2" to="3.11~core1"/>
 		<upgrade from="3.11~core1" to="3.11~core2"/>
+		<upgrade from="3.11~core2" to="4.0.3~core1"/>
 	</upgrades>
 	<authors>
 		<author name="Dave Gandy" email="dave@davegandy.com"/>
