@@ -245,11 +245,34 @@ class AdminController extends Controller_2_1 {
 		// This will just ensure that the component is up to date and correct as per the component.xml metafile.
 		$view = $this->getView();
 		$changes = [];
+		$outoftime = false;
+		$counter = 0;
+		$resume = isset($_SESSION['syncsearchresume']) ? $_SESSION['syncsearchresume'] : 1;
+		$timeout = ini_get('max_execution_time');
+		// Dunno why this is returning 0, but if it is, reset it to 30 seconds!
+		if(!$timeout) $timeout = 30;
+		$memorylimit = ini_get('memory_limit');
+		if(stripos($memorylimit, 'M') !== false){
+			$memorylimit = str_replace(['m', 'M'], '', $memorylimit);
+			$memorylimit *= (1024*1024);
+		}
+		elseif(stripos($memorylimit, 'G') !== false){
+			$memorylimit = str_replace(['g', 'G'], '', $memorylimit);
+			$memorylimit *= (1024*1024*1024);
+		}
 
 		foreach(\Core::GetComponents() as $c){
 			/** @var Component_2_1 $c */
 
+			if($outoftime){
+				break;
+			}
+
 			foreach($c->getClassList() as $class => $file){
+				if($outoftime){
+					break;
+				}
+
 				if($class == 'model'){
 					continue;
 				}
@@ -271,7 +294,30 @@ class AdminController extends Controller_2_1 {
 
 				$c = ['name' => $class, 'count' => 0];
 				$fac = new ModelFactory($class);
-				foreach($fac->get() as $m){
+				while(($m = $fac->getNext())){
+					++$counter;
+
+					if($counter < $resume){
+						// Allow this process to be resumed where it left off, since it may take more than 30 seconds.
+						continue;
+					}
+
+					if(\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime() + 5 >= $timeout){
+						// OUT OF TIME!
+						// Remember where this process left off and exit.
+						$_SESSION['syncsearchresume'] = $counter;
+						$outoftime = true;
+						break;
+					}
+
+					if(memory_get_usage(true) + 40485760 >= $memorylimit){
+						// OUT OF MEMORY!
+						// Remember where this process left off and exit.
+						$_SESSION['syncsearchresume'] = $counter;
+						$outoftime = true;
+						break;
+					}
+
 					/** @var Model $m */
 					$m->set('search_index_pri', '!');
 					$m->save();
@@ -282,8 +328,15 @@ class AdminController extends Controller_2_1 {
 			}
 		}
 
+		if(!$outoftime && isset($_SESSION['syncsearchresume'])){
+			// It finished!  Unset the resume counter.
+			unset($_SESSION['syncsearchresume']);
+		}
+
+
 		$view->title = 'Sync Searchable Index';
 		$view->assign('changes', $changes);
+		$view->assign('outoftime', $outoftime);
 	}
 
 	public static function _ConfigSubmit(Form $form) {
