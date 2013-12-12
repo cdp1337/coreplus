@@ -43,8 +43,8 @@ function smarty_function_widgetarea($params, $template) {
 	}
 
 	// Pages can have their own template for this theme.
-	$template = PageRequest::GetSystemRequest()->getPageModel()->get('theme_template');
-	if (!$template) $template = ConfigHandler::Get('/theme/default_template');
+	$tplname = \Core\view()->mastertemplate;
+	if (!$tplname) $tplname = ConfigHandler::Get('/theme/default_template');
 
 	$theme = ConfigHandler::Get('/theme/selected');
 
@@ -62,7 +62,7 @@ function smarty_function_widgetarea($params, $template) {
 	$skinwhere = new Core\Datamodel\DatasetWhereClause();
 	$skinwhere->setSeparator('AND');
 	$skinwhere->addWhere('theme = ' . $theme);
-	$skinwhere->addWhere('template = ' . $template);
+	$skinwhere->addWhere('template = ' . $tplname);
 	$skinwhere->addWhere('widgetarea = ' . $name);
 	$subwhere->addWhere($skinwhere);
 
