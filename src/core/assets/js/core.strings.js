@@ -157,7 +157,7 @@
 		 * @return string
 		 */
 		template: function(){
-			var template, args = [], i = 0;
+			var template, args = [], i = 0, regex;
 
 			if(arguments.length < 2){
 				throw 'Please provide at least two arguments to simple_format!';
@@ -167,15 +167,19 @@
 
 			// If an object is sent in for the second argument and there are exactly two, then a name replace should be used.
 			if(arguments.length == 2 && arguments[1] instanceof Object){
+
 				for(i in arguments[1]){
-					template = template.replace('[%%' + i + '%%]', arguments[1][i]);
+					regex = new RegExp('\\[%%' + i + '%%\\]', 'g');
+					template = template.replace(regex, arguments[1][i]);
 				}
 				return template;
 			}
 
 			for(i=0; i<arguments.length; i++){
 				if(i == 0) continue;
-				template = template.replace('[%%' + i + '%%]', arguments[i]);
+
+				regex = new RegExp('\\[%%' + i + '%%\\]', 'g');
+				template = template.replace(regex, arguments[i]);
 			}
 
 			return template;
