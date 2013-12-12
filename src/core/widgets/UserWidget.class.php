@@ -22,6 +22,10 @@
  */
 
 class UserWidget extends Widget_2_1{
+
+	/**
+	 * The small link-only widget.
+	 */
 	public function login() {
 		$v = $this->getView();
 
@@ -30,6 +34,30 @@ class UserWidget extends Widget_2_1{
 		$v->assign('user', $u);
 		$v->assign('loggedin', $u->exists());
 		$v->assign('allowregister', ConfigHandler::Get('/user/register/allowpublic'));
+	}
+
+	/**
+	 * Display a login widget with the actual login fields present.
+	 */
+	public function loginfull(){
+		$view = $this->getView();
+
+		// Is the user already logged in?
+		if(\Core\user()->exists()){
+			$view->assign('user', \Core\user());
+		}
+		else{
+			// Display the standard login forms.
+
+			// Set the page to use SSL if possible, since this login form has sensitive information, (username/pass).
+			\Core\view()->ssl = true;
+
+			$auths = \Core\User\Helper::GetEnabledAuthDrivers();
+
+			$view->assign('user', false);
+			$view->assign('drivers', $auths);
+			$view->assign('allowregister', ConfigHandler::Get('/user/register/allowpublic'));
+		}
 	}
 
 	public function register() {
