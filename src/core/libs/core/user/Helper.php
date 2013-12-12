@@ -25,6 +25,8 @@
 namespace Core\User;
 
 
+use Core\Datamodel\DatasetWhereClause;
+
 abstract class Helper{
 
 	/**
@@ -769,9 +771,15 @@ abstract class Helper{
 
 
 
-			$where = ['context != '];
+
+			$where = new DatasetWhereClause();
+			$where->addWhere('context != ');
 			if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
-				$where['site'] = \MultiSiteHelper::GetCurrentSiteID();
+				$w = new DatasetWhereClause();
+				$w->setSeparator('or');
+				$w->addWhere('site = ' . \MultiSiteHelper::GetCurrentSiteID());
+				$w->addWhere('site = -1');
+				$where->addWhere($w);
 			}
 			$contextgroups = \UserGroupModel::Count($where);
 
