@@ -158,4 +158,18 @@ class datastore implements AuthDriverInterface{
 
 		$tpl->render();
 	}
+
+	/**
+	 * Generate and print the rendered registration markup to STDOUT.
+	 *
+	 * @return void
+	 */
+	public function renderRegister() {
+		$form = \Core\User\Helper::GetRegistrationForm();
+
+		$tpl = \Core\Templates\Template::Factory('includes/user/datastore_register.tpl');
+		$tpl->assign('form', $form);
+
+		$tpl->render();
+	}
 }

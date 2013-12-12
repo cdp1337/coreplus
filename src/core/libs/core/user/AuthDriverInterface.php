@@ -62,4 +62,11 @@ interface AuthDriverInterface {
 	 * @return void
 	 */
 	public function renderLogin();
+
+	/**
+	 * Generate and print the rendered registration markup to STDOUT.
+	 *
+	 * @return void
+	 */
+	public function renderRegister();
 } 
