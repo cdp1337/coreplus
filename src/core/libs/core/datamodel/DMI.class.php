@@ -36,6 +36,7 @@ require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'Dataset.php');
 require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'DatasetWhere.php');
 require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'DatasetWhereClause.php');
 require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'Schema.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/' . 'DatasetStream.php');
 
 
 /**
