@@ -84,10 +84,11 @@ class UserConfigModel extends Model{
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => 0,
 		),
-		/*'system' => array(
+		'hidden' => array(
 			'type' => Model::ATT_TYPE_BOOL,
-			'default' => false
-		),*/
+			'default' => false,
+			'comment' => 'Set to true to make this a hidden value, ie: it will not appear even to super admins.',
+		),
 		'validation' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'formtype' => 'disabled',

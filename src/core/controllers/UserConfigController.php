@@ -62,7 +62,7 @@ class UserConfigController extends Controller_2_1{
 		require_once(ROOT_PDIR . 'core/libs/core/configs/functions.php');
 
 		// Pull all the user configs from the database.
-		$userconfigs = UserConfigModel::Find([], null, 'weight');
+		$userconfigs = UserConfigModel::Find(['hidden = 0'], null, 'weight');
 
 		// Build a form to handle the config options themselves.
 		// These will include password strength, whether or not captcha is enabled, etc.

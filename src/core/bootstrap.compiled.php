@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 10 Dec 2013 23:41:15 -0500
+ * @compiled Thu, 12 Dec 2013 12:33:14 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1599,6 +1599,36 @@ return implode(', ', $differences);
 else{
 return null;
 }
+}
+}
+} // ENDING NAMESPACE Core\Datamodel
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/DatasetStream.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel {
+class DatasetStream{
+private $_dataset;
+private $_totalcount;
+private $_counter = -1;
+private $_startlimit = 0;
+public $bufferlimit = 100;
+public function __construct(Dataset $ds){
+$this->_dataset = $ds;
+$mode = $this->_dataset->_mode;
+$this->_totalcount = $this->_dataset->count()->execute()->num_rows;
+$this->_dataset->_mode = $mode;
+}
+public function getRecord(){
+++$this->_counter;
+if($this->_dataset->_data === null || $this->_counter >= $this->bufferlimit){
+$this->_dataset->limit($this->_startlimit, $this->bufferlimit);
+$this->_dataset->execute();
+$this->_startlimit += $this->bufferlimit;
+$this->_counter = 0;
+}
+return isset($this->_dataset->_data[$this->_counter]) ? $this->_dataset->_data[$this->_counter] : null;
 }
 }
 } // ENDING NAMESPACE Core\Datamodel
@@ -5446,6 +5476,11 @@ public static $Schema = array(
 'type' => Model::ATT_TYPE_BOOL,
 'default' => 0,
 ),
+'hidden' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => false,
+'comment' => 'Set to true to make this a hidden value, ie: it will not appear even to super admins.',
+),
 'validation' => array(
 'type' => Model::ATT_TYPE_STRING,
 'formtype' => 'disabled',
@@ -7177,6 +7212,7 @@ $default    = $confignode->getAttribute('default');
 $formtype   = $confignode->getAttribute('formtype');
 $onreg      = $confignode->getAttribute('onregistration');
 $onedit     = $confignode->getAttribute('onedit');
+$hidden     = $confignode->getAttribute('hidden');
 $options    = $confignode->getAttribute('options');
 $searchable = $confignode->getAttribute('searchable');
 $validation = $confignode->getAttribute('validation');
@@ -7188,6 +7224,11 @@ if($searchable === null) $searchable = 0;
 if($required === null)   $required = 0;
 if($weight === null)     $weight = 0;
 if($weight == '')        $weight = 0;
+if($hidden === null)     $hidden = 0;
+if($hidden){
+$onedit = 0;
+$onreg  = 0;
+}
 $model = UserConfigModel::Construct($key);
 $isnew = !$model->exists();
 if(!$install){
@@ -7201,11 +7242,12 @@ if($formtype) $model->set('formtype', $formtype);
 $model->set('default_onregistration', $onreg);
 $model->set('default_onedit', $onedit);
 $model->set('searchable', $searchable);
+$model->set('hidden', $hidden);
 if($options)  $model->set('options', $options);
 $model->set('validation', $validation);
 $model->set('required', $required);
 $model->set('default_weight', $weight);
-if($isnew){
+if($isnew || $hidden){
 $model->set('name', $name);
 $model->set('onregistration', $onreg);
 $model->set('onedit', $onedit);
@@ -11326,6 +11368,9 @@ $error = error_get_last();
 if ( $error["type"] == E_ERROR ){
 $file = $error['file'];
 if(strpos($file, ROOT_PDIR) === 0) $file = '/' . substr($file, strlen(ROOT_PDIR));
+if(file_exists(TMP_DIR . 'lock.message')){
+unlink(TMP_DIR . 'lock.message');
+}
 error_handler($error["type"], $error["message"] . ' in ' . $file . ':' . $error['line'], null, null);
 }
 }
@@ -14530,10 +14575,8 @@ $debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
 $debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_peak_usage(true)) . "\n";
 $profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
 $debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
-if (true || FULL_DEBUG) {
 $debug .= "\n" . '<b>Core Profiler</b>' . "\n";
 $debug .= $profiler->getEventTimesFormatted();
-}
 $debug .= "\n" . '<b>Available Components</b>' . "\n";
 $debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
 ksort($debugcomponents);

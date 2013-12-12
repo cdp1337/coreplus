@@ -1733,6 +1733,7 @@ class Component_2_1 {
 
 		// Now, get every table under this node.
 		foreach ($node->getElementsByTagName('userconfig') as $confignode) {
+			/** @var DOMElement $confignode */
 
 			//<userconfig key="first_name" name="First Name"/>
 			//<userconfig key="last_name" name="Last Name" default="" formtype="" onregistration="" options=""/>
@@ -1743,6 +1744,7 @@ class Component_2_1 {
 			$formtype   = $confignode->getAttribute('formtype');
 			$onreg      = $confignode->getAttribute('onregistration');
 			$onedit     = $confignode->getAttribute('onedit');
+			$hidden     = $confignode->getAttribute('hidden');
 			$options    = $confignode->getAttribute('options');
 			$searchable = $confignode->getAttribute('searchable');
 			$validation = $confignode->getAttribute('validation');
@@ -1756,6 +1758,14 @@ class Component_2_1 {
 			if($required === null)   $required = 0;
 			if($weight === null)     $weight = 0;
 			if($weight == '')        $weight = 0;
+			if($hidden === null)     $hidden = 0;
+
+			// OVERRIDES!
+			// Any hidden config option must be set to not-onedit and not-onreg.
+			if($hidden){
+				$onedit = 0;
+				$onreg  = 0;
+			}
 
 			$model = UserConfigModel::Construct($key);
 			$isnew = !$model->exists();
@@ -1775,6 +1785,7 @@ class Component_2_1 {
 				$model->set('default_onregistration', $onreg);
 				$model->set('default_onedit', $onedit);
 				$model->set('searchable', $searchable);
+				$model->set('hidden', $hidden);
 				if($options)  $model->set('options', $options);
 				$model->set('validation', $validation);
 				$model->set('required', $required);
@@ -1782,7 +1793,7 @@ class Component_2_1 {
 
 				// And now the admin-editable fields.
 				// These only get set if the configuration option does not exist prior.
-				if($isnew){
+				if($isnew || $hidden){
 					$model->set('name', $name);
 					$model->set('onregistration', $onreg);
 					$model->set('onedit', $onedit);

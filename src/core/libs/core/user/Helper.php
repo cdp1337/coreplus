@@ -683,7 +683,7 @@ abstract class Helper{
 
 		// For non-admins, the factory depends on the registration type as well.
 		if($usermanager){
-			$fac = \UserConfigModel::Find(array(), null, 'weight ASC');
+			$fac = \UserConfigModel::Find(array('hidden = 0'), null, 'weight ASC');
 		}
 		elseif($type == 'registration'){
 			$fac = \UserConfigModel::Find(array('onregistration' => 1), null, 'weight ASC');
