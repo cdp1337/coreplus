@@ -196,7 +196,9 @@ class Session implements SessionHandlerInterface {
 	 */
 	public static function ForceSave(){
 		$session = self::$Instance;
-		$session->write(session_id(), serialize($_SESSION));
+		if($session){
+			$session->write(session_id(), serialize($_SESSION));
+		}
 	}
 
 	/**
@@ -205,17 +207,29 @@ class Session implements SessionHandlerInterface {
 	 * @return bool Always returns true :)
 	 */
 	public static function CleanupExpired(){
+		static $lastexecuted = 0;
+
 		/**
 		 * Delete ANY session that has expired.
 		 */
 		$ttl = ConfigHandler::Get('/core/session/ttl');
+		$datetime = (Time::GetCurrentGMT() - $ttl);
+
+		if($lastexecuted == $datetime){
+			// This operation was already called this second.  No need to do it again.
+			// This is used because if a LOT of user operations occur on a given page,
+			// this method may be called many many many times.
+			return true;
+		}
 
 		// Low-level datasets are used here because they have less overhead than
 		// the full-blown model system.
 		$dataset = new Core\Datamodel\Dataset();
 		$dataset->table('session');
-		$dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl));
+		$dataset->where('updated < ' . $datetime);
 		$dataset->delete()->execute();
+
+		$lastexecuted = $datetime;
 
 		// Always return TRUE
 		return true;
