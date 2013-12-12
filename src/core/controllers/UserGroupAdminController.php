@@ -17,16 +17,31 @@ class UserGroupAdminController extends Controller_2_1{
 
 		$permissionmanager = \Core\user()->checkAccess('p:/user/permissions/manage');
 
-		$where = array();
+		$factory = new ModelFactory('UserGroupModel');
+
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-			$where['site'] = MultiSiteHelper::GetCurrentSiteID();
+			$w = new DatasetWhereClause();
+			$w->setSeparator('or');
+			$w->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
+			$w->addWhere('site = -1');
+			$factory->where($w);
+
+			$displayglobal = true;
+			$site = MultiSiteHelper::GetCurrentSiteID();
+		}
+		else{
+			$displayglobal = false;
+			$site = null;
 		}
 
-		$groups = UserGroupModel::Find($where, null, 'name');
+		$factory->order('name');
+		$groups = $factory->get();
 
 		$view->title = 'User Group Administration';
 		$view->assign('groups', $groups);
 		$view->assign('permissionmanager', $permissionmanager);
+		$view->assign('display_global', $displayglobal);
+		$view->assign('site', $site);
 		$view->addControl('Add Group', '/usergroupadmin/create', 'add');
 	}
 
@@ -35,15 +50,36 @@ class UserGroupAdminController extends Controller_2_1{
 		$req   = $this->getPageRequest();
 		$model = new UserGroupModel();
 
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-			$model->set('site', MultiSiteHelper::GetCurrentSiteID());
-		}
+
 
 		$contextnames = [];
 		$contexts     = [];
 		$usecontexts  = false;
+		$isadmin      = \Core\user()->checkAccess('g:admin');
 
 		$form  = Form::BuildFromModel($model);
+
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			$siteid = MultiSiteHelper::GetCurrentSiteID();
+
+			if(!$isadmin || $siteid){
+				// If the user is currently on a site, this group is locked to that site.
+				// This also applies if the user is not a super admin.
+				$model->set('site', $siteid);
+			}
+			else{
+				// Otherwise, the user has a choice if this is a global or local group.
+				$form->switchElementType('model[site]', 'select');
+				$form->getElement('model[site]')->setFromArray(
+					[
+						'title' => 'Site Scope',
+						'options' => ['-1' => 'Global Scope', '0' => 'Local Scope'],
+						'description' => 'A globally-scoped group is visible across every site.'
+					]
+				);
+			}
+
+		}
 
 		$form->set('callsmethod', 'UserGroupAdminController::_UpdateFormHandler');
 		if(\Core\user()->checkAccess('p:/user/permissions/manage')){
@@ -219,8 +255,14 @@ class UserGroupAdminController extends Controller_2_1{
 			/** @var UserGroupModel $model */
 			$model = $form->getModel();
 
-			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-				if($model->exists() && $model->get('site') != MultiSiteHelper::GetCurrentSiteID()){
+			if($model->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+				// Make sure this group is editable for this site.
+				if(
+				!(
+					($model->get('site') == '-1' && MultiSiteHelper::GetCurrentSiteID() == 0) ||
+					($model->get('site') == MultiSiteHelper::GetCurrentSiteID())
+				)
+				){
 					Core::SetMessage('Invalid group specified', 'error');
 					return false;
 				}
