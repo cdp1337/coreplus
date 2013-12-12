@@ -106,7 +106,8 @@ class Profiler {
 		$this->_events[] = array(
 			'event'     => $event,
 			'microtime' => $now,
-			'timetotal' => $time
+			'timetotal' => $time,
+			'memory'  => memory_get_usage(true),
 		);
 	}
 
@@ -141,10 +142,10 @@ class Profiler {
 		if($time < 0.1){
 			return round($time, 4) * 1000000 . ' ns';
 		}
-		elseif($time < 2.5){
+		elseif($time < 2.0){
 			return round($time, 4) * 1000 . ' ms';
 		}
-		elseif($time < 200){
+		elseif($time < 60){
 			return round($time, 4) . ' seconds';
 		}
 		else{
@@ -172,7 +173,11 @@ class Profiler {
 				$time = $whole . '.' . $dec . ' ms';
 			}
 
-			$out .= "[" . $time . "] - " . $t['event'] . "\n";
+			$mem = '[mem: ' . \Core\Filestore\format_size($t['memory']) . '] ';
+
+			$event = $t['event'];
+
+			$out .= "[$time] $mem- $event" . "\n";
 		}
 
 		return $out;
