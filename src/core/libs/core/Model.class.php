@@ -232,14 +232,6 @@ class Model implements ArrayAccess {
 	protected $_cacheable = true;
 
 	/**
-	 * A cache of the schema for this object.
-	 * This is useful because the public Schema definition can have columns that are omitted.
-	 *
-	 * @var array
-	 */
-	protected $_schemacache = null;
-
-	/**
 	 * @var array The schema as per defined in the extending model.
 	 */
 	public static $Schema = array();
@@ -270,6 +262,20 @@ class Model implements ArrayAccess {
 	public static $HasDeleted = false;
 
 	public static $_ModelCache = array();
+
+	/**
+	 * @var array Cache for blank Find statements.
+	 *
+	 * ONLY used with a completely blank Find() query!!!
+	 */
+	public static $_ModelFindCache = array();
+
+	/**
+	 * @var array Array of rendered Schemas for each named model.
+	 *
+	 * Used to accelerate GetSchema on multiple calls for the same model type.
+	 */
+	protected static $_ModelSchemaCache = array();
 
 
 	/*************************************************************************
@@ -659,57 +665,12 @@ class Model implements ArrayAccess {
 	 * This will ensure all the core optional attributes are set at the
 	 * default value and a few other dynamic attributes.
 	 *
+	 * Alias of Model::GetSchema()
+	 *
 	 * @return array
 	 */
 	public function getKeySchemas() {
-		if ($this->_schemacache === null) {
-			$this->_schemacache = self::GetSchema();
-
-			foreach ($this->_schemacache as $k => $v) {
-				// These are all defaults for schemas.
-				// Setting them to the default if they're not set will ensure that
-				// 'undefined index' notices are not incurred.
-				if (!isset($v['type']))      $this->_schemacache[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
-				if (!isset($v['maxlength'])) $this->_schemacache[$k]['maxlength'] = false;
-				if (!isset($v['null']))      $this->_schemacache[$k]['null']      = false;
-				if (!isset($v['comment']))   $this->_schemacache[$k]['comment']   = '';
-				if (!isset($v['default']))   $this->_schemacache[$k]['default']   = false;
-				if (!isset($v['encrypted'])) $this->_schemacache[$k]['encrypted'] = false;
-				if (!isset($v['required']))  $this->_schemacache[$k]['required']  = false;
-
-
-				if($v['type'] == Model::ATT_TYPE_ENUM){
-					// Enums have an options array!
-					$this->_schemacache[$k]['options'] = isset($this->_schemacache[$k]['options']) ? $this->_schemacache[$k]['options'] : array();
-				}
-				else{
-					// Other fields don't.
-					$this->_schemacache[$k]['options'] = null;
-				}
-
-				// Generate a title for this key from the form data.
-				// This can be useful for Model utilities that want to display the
-				// human-friendly name instead of the machine name.
-				if(isset($v['title'])){
-					// For the schema data, the "title" attribute is the highest priority.
-					$this->_schemacache[$k]['title'] = $v['title'];
-				}
-				elseif(isset($v['form']) && is_array($v['form']) && isset($v['form']['title'])){
-					// Next, form.title is the preferred default.
-					$this->_schemacache[$k]['title'] = $v['form']['title'];
-				}
-				elseif(isset($v['formtitle'])){
-					// This is an older shorthand format that's supported too.
-					$this->_schemacache[$k]['title'] = $v['formtitle'];
-				}
-				else{
-					// Guess I need to calculate this manually then....
-					$this->_schemacache[$k]['title'] = ucwords(str_replace('_', ' ', $k));
-				}
-			}
-		}
-
-		return $this->_schemacache;
+		return self::GetSchema();
 	}
 
 	/**
@@ -720,7 +681,7 @@ class Model implements ArrayAccess {
 	 * @return boolean
 	 */
 	public function getKeySchema($key) {
-		$s = $this->getKeySchemas();
+		$s = self::GetSchema();
 
 		if (!isset($s[$key])) return null;
 
@@ -2108,7 +2069,21 @@ class Model implements ArrayAccess {
 	 * @return array|null|Model
 	 */
 	public static function Find($where = array(), $limit = null, $order = null) {
-		$fac = new ModelFactory(get_called_class());
+
+		$classname = get_called_class();
+
+		if(!sizeof($where) && $limit === null && $order === null){
+			// Try to cache them :p
+
+			if(!isset(self::$_ModelFindCache[$classname])){
+				$fac = new ModelFactory($classname);
+				self::$_ModelFindCache[$classname] = $fac->get();
+			}
+
+			return self::$_ModelFindCache[$classname];
+		}
+
+		$fac = new ModelFactory($classname);
 		$fac->where($where);
 		$fac->limit($limit);
 		$fac->order($order);
@@ -2240,77 +2215,130 @@ class Model implements ArrayAccess {
 	}
 
 	public static function GetSchema() {
-		// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
-		$ref = new ReflectionClass(get_called_class());
+		/** @var string $classname The class name of the extending class. */
+		$classname = get_called_class();
 
-		$schema = $ref->getProperty('Schema')->getValue();
+		if(!isset(self::$_ModelSchemaCache[$classname])){
+// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
+			$ref = new ReflectionClass($classname);
 
-		// There are a variety of dynamic columns that are defined in Core.
+			self::$_ModelSchemaCache[$classname] = $ref->getProperty('Schema')->getValue();
 
-		if($ref->getProperty('HasCreated')->getValue()){
-			// Only add this column if it doesn't already exist.
-			if(!isset($schema['created'])){
-				$schema['created'] = [
-					'type' => Model::ATT_TYPE_CREATED,
-					'null' => false,
-					'default' => 0,
-					'comment' => 'The created timestamp of this record, populated automatically',
+			// Link it so I don't have to type out the full path.
+			$schema =& self::$_ModelSchemaCache[$classname];
+
+			// There are a variety of dynamic columns that are defined in Core.
+
+			if($ref->getProperty('HasCreated')->getValue()){
+				// Only add this column if it doesn't already exist.
+				if(!isset($schema['created'])){
+					$schema['created'] = [
+						'type' => Model::ATT_TYPE_CREATED,
+						'null' => false,
+						'default' => 0,
+						'comment' => 'The created timestamp of this record, populated automatically',
+					];
+				}
+			}
+
+			if($ref->getProperty('HasUpdated')->getValue()){
+				// Only add this column if it doesn't already exist.
+				if(!isset($schema['updated'])){
+					$schema['updated'] = [
+						'type' => Model::ATT_TYPE_UPDATED,
+						'null' => false,
+						'default' => 0,
+						'comment' => 'The updated timestamp of this record, populated automatically',
+					];
+				}
+			}
+
+			if($ref->getProperty('HasDeleted')->getValue()){
+				// Only add this column if it doesn't already exist.
+				if(!isset($schema['deleted'])){
+					$schema['deleted'] = [
+						'type' => Model::ATT_TYPE_DELETED,
+						'null' => false,
+						'default' => 0,
+						'comment' => 'The deleted timestamp of this record, populated automatically',
+					];
+				}
+			}
+
+			if($ref->getProperty('HasSearch')->getValue()){
+				// Tack on the search fields automatically.
+				$schema['search_index_str'] = [
+					'type' => Model::ATT_TYPE_TEXT,
+					'required' => false,
+					'null' => true,
+					'default' => null,
+					'formtype' => 'disabled',
+					'comment' => 'The search index of this record as a string'
 				];
+				$schema['search_index_pri'] = [
+					'type' => Model::ATT_TYPE_TEXT,
+					'required' => false,
+					'null' => true,
+					'default' => null,
+					'formtype' => 'disabled',
+					'comment' => 'The search index of this record as the DMP primary version'
+				];
+				$schema['search_index_sec'] = [
+					'type' => Model::ATT_TYPE_TEXT,
+					'required' => false,
+					'null' => true,
+					'default' => null,
+					'formtype' => 'disabled',
+					'comment' => 'The search index of this record as the DMP secondary version'
+				];
+			}
+
+			// Now handle the optional fields that are expected by the logic regardless.
+			foreach ($schema as $k => $v) {
+				// These are all defaults for schemas.
+				// Setting them to the default if they're not set will ensure that
+				// 'undefined index' notices are not incurred.
+				if (!isset($v['type']))      $schema[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
+				if (!isset($v['maxlength'])) $schema[$k]['maxlength'] = false;
+				if (!isset($v['null']))      $schema[$k]['null']      = false;
+				if (!isset($v['comment']))   $schema[$k]['comment']   = '';
+				if (!isset($v['default']))   $schema[$k]['default']   = false;
+				if (!isset($v['encrypted'])) $schema[$k]['encrypted'] = false;
+				if (!isset($v['required']))  $schema[$k]['required']  = false;
+
+
+				if($v['type'] == Model::ATT_TYPE_ENUM){
+					// Enums have an options array!
+					$schema[$k]['options'] = isset($schema[$k]['options']) ? $schema[$k]['options'] : array();
+				}
+				else{
+					// Other fields don't.
+					$schema[$k]['options'] = null;
+				}
+
+				// Generate a title for this key from the form data.
+				// This can be useful for Model utilities that want to display the
+				// human-friendly name instead of the machine name.
+				if(isset($v['title'])){
+					// For the schema data, the "title" attribute is the highest priority.
+					$schema[$k]['title'] = $v['title'];
+				}
+				elseif(isset($v['form']) && is_array($v['form']) && isset($v['form']['title'])){
+					// Next, form.title is the preferred default.
+					$schema[$k]['title'] = $v['form']['title'];
+				}
+				elseif(isset($v['formtitle'])){
+					// This is an older shorthand format that's supported too.
+					$schema[$k]['title'] = $v['formtitle'];
+				}
+				else{
+					// Guess I need to calculate this manually then....
+					$schema[$k]['title'] = ucwords(str_replace('_', ' ', $k));
+				}
 			}
 		}
 
-		if($ref->getProperty('HasUpdated')->getValue()){
-			// Only add this column if it doesn't already exist.
-			if(!isset($schema['updated'])){
-				$schema['updated'] = [
-					'type' => Model::ATT_TYPE_UPDATED,
-					'null' => false,
-					'default' => 0,
-					'comment' => 'The updated timestamp of this record, populated automatically',
-				];
-			}
-		}
-
-		if($ref->getProperty('HasDeleted')->getValue()){
-			// Only add this column if it doesn't already exist.
-			if(!isset($schema['deleted'])){
-				$schema['deleted'] = [
-					'type' => Model::ATT_TYPE_DELETED,
-					'null' => false,
-					'default' => 0,
-					'comment' => 'The deleted timestamp of this record, populated automatically',
-				];
-			}
-		}
-
-		if($ref->getProperty('HasSearch')->getValue()){
-			// Tack on the search fields automatically.
-			$schema['search_index_str'] = [
-				'type' => Model::ATT_TYPE_TEXT,
-				'required' => false,
-				'null' => true,
-				'default' => null,
-				'formtype' => 'disabled',
-				'comment' => 'The search index of this record as a string'
-			];
-			$schema['search_index_pri'] = [
-				'type' => Model::ATT_TYPE_TEXT,
-				'required' => false,
-				'null' => true,
-				'default' => null,
-				'formtype' => 'disabled',
-				'comment' => 'The search index of this record as the DMP primary version'
-			];
-			$schema['search_index_sec'] = [
-				'type' => Model::ATT_TYPE_TEXT,
-				'required' => false,
-				'null' => true,
-				'default' => null,
-				'formtype' => 'disabled',
-				'comment' => 'The search index of this record as the DMP secondary version'
-			];
-		}
-		return $schema;
+		return self::$_ModelSchemaCache[$classname];
 	}
 
 	public static function GetIndexes() {
@@ -2350,6 +2378,11 @@ class ModelFactory {
 	 * @var Core\Datamodel\Dataset
 	 */
 	private $_dataset;
+
+	/**
+	 * @var \Core\Datamodel\DatasetStream The stream object used in getNext.
+	 */
+	private $_stream;
 
 
 	/**
@@ -2426,6 +2459,36 @@ class ModelFactory {
 	}
 
 	/**
+	 * Similar to get(), but only one model at a time is rendered and returned.
+	 *
+	 * This is ideal for large datasets and limited amounts of memory.
+	 *
+	 * When the end of the stream is hit, null is returned.
+	 *
+	 * @return Model|null
+	 */
+	public function getNext(){
+		if($this->_stream === null){
+			// Setup this stream object!
+			$this->_performMultisiteCheck();
+			$this->_stream = new \Core\Datamodel\DatasetStream($this->_dataset);
+		}
+
+		$next = $this->_stream->getRecord();
+
+		if($next === null){
+			// End of the stream has been reached!
+			return null;
+		}
+
+		/** @var Model $model */
+		$model = new $this->_model();
+		$model->_loadFromRecord($next);
+
+		return $model;
+	}
+
+	/**
 	 * Get a count of how many records are in this factory
 	 * (without counting the records one by one)
 	 *
@@ -2470,7 +2533,13 @@ class ModelFactory {
 			// it evidently wants it for a reason.
 			$matches = $this->_dataset->getWhereClause()->findByField('site');
 			if(!sizeof($matches)){
-				$this->_dataset->where('site = ' . MultiSiteHelper::GetCurrentSiteID());
+				$w = new DatasetWhereClause();
+				$w->setSeparator('or');
+				$w->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
+				$w->addWhere('site = -1');
+				$this->_dataset->where($w);
+
+				//$this->_dataset->where('site = ' . MultiSiteHelper::GetCurrentSiteID());
 			}
 		}
 	}
