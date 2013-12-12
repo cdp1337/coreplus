@@ -24,7 +24,7 @@
 	The name MUST match the component's directory, (capitalization is optional).
 	The version SHOULD start with a number, and ideally have minor and point revisions, optionally with a third party flag at the end.
 -->
-<!ELEMENT component (licenses|authors|files|install|(otherfiles|requires|provides|hooks|smartyplugins|includes|pages|view|description|configs|userconfigs|assets|upgrades|forms|widgets|permissions)?)>
+<!ELEMENT component (licenses|authors|files|install|(otherfiles|requires|provides|hooks|smartyplugins|includes|pages|view|description|configs|users|userconfigs|assets|upgrades|forms|widgets|permissions)?)>
 <!ATTLIST component
 	execmode (web|cli|both) "web"
 	name CDATA #REQUIRED
@@ -180,9 +180,13 @@ type CDATA #IMPLIED
 	options CDATA #IMPLIED
 	description CDATA #IMPLIED
 	default CDATA #IMPLIED
-	>
+	mapto CDATA #IMPLIED
+>
 
-<!--- User config options, since they're usually defined by the components. -->
+<!-- 2.8.x User options, all contained within the <user/> key -->
+<!ELEMENT users (userconfig|userauth)*>
+
+<!--- pre-2.8.x User config options, since they're usually defined by the components. -->
 <!ELEMENT userconfigs (userconfig)*>
 
 <!--- The actual user configuration option, contained within uesrconfigs -->
@@ -196,9 +200,16 @@ type CDATA #IMPLIED
 	weight CDATA #IMPLIED
 	onregistration (0|1) "1"
 	onedit (0|1) "1"
+	hidden (0|1) "0"
 	searchable (0|1) "0"
 	required (0|1) "0"
 	validation CDATA #IMPLIED
+>
+
+<!ELEMENT userauth EMPTY>
+<!ATTLIST userauth
+	name CDATA #REQUIRED
+	class CDATA #REQUIRED
 >
 
 <!--- Permissions contain all permissions used in this component -->
