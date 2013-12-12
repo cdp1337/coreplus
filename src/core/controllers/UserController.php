@@ -367,6 +367,11 @@ class UserController extends Controller_2_1{
 		);
 	}
 
+	/**
+	 * Display the register page for new users.
+	 *
+	 * @return int
+	 */
 	public function register(){
 
 		$view          = $this->getView();
@@ -386,7 +391,23 @@ class UserController extends Controller_2_1{
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$form = \Core\User\Helper::GetRegistrationForm();
+		$auths = \Core\User\Helper::GetEnabledAuthDrivers();
+
+		$view->title = 'Register';
+		$view->ssl = true;
+		$view->assign('drivers', $auths);
+		// Google has no business indexing user-action pages.
+		$view->addMetaName('robots', 'noindex');
+
+		// Breadcrumbs! (based on access permissions)
+		if($manager){
+			$view->addBreadcrumb('User Administration', '/user/admin');
+		}
+
+		return;
+
+
+
 
 		if($groupmanager){
 			$contextgroups = UserGroupModel::Find(['context != '], null, 'name');
@@ -410,7 +431,7 @@ class UserController extends Controller_2_1{
 			}
 		}
 
-		$view->title = 'Register';
+
 		$view->ssl = true;
 		$view->assign('form', $form);
 		$view->assign('contextnames_json', json_encode($contextnames));
@@ -418,13 +439,8 @@ class UserController extends Controller_2_1{
 		$view->assign('contexts_json', json_encode($contexts));
 		$view->assign('use_contexts', $usecontexts);
 		$view->assign('user', false);
-		// Google has no business indexing user-action pages.
-		$view->addMetaName('robots', 'noindex');
 
-		// Breadcrumbs! (based on access permissions)
-		if($manager){
-			$view->addBreadcrumb('User Administration', '/user/admin');
-		}
+
 	}
 
 	public function logout(){
@@ -1003,14 +1019,21 @@ class UserController extends Controller_2_1{
 			return true;
 		}
 
+		// I need to replace the current page with this one so that the previous controller never executes.
 		$newcontroller = new self();
 		$newcontroller->overwriteView($view);
 		//$view->baseurl = '/user/login';
+
+		$auths = \Core\User\Helper::GetEnabledAuthDrivers();
+
 		$view->ssl = true;
 		$view->error = View::ERROR_ACCESSDENIED;
 		$view->allowerrors = true;
 		$view->templatename = 'pages/user/guest403.tpl';
-
+		$view->assign('drivers', $auths);
+		$view->assign('allowregister', ConfigHandler::Get('/user/register/allowpublic'));
+		// Google has no business indexing user-action pages.
+		$view->addMetaName('robots', 'noindex');
 
 		$loginform = new Form();
 		$loginform->set('callsMethod', 'User\\Helper::LoginHandler');
