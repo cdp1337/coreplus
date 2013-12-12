@@ -4528,6 +4528,23 @@
   content: "\f186";
 }
 
+/** Icon definition for move **/
+/* line 26, _mixins.scss */
+.icon-move {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 35, _mixins.scss */
+.icon-move:before {
+  content: "\f0c9";
+}
+
 /** Icon definition for music **/
 /* line 26, _mixins.scss */
 .icon-music {

@@ -107,6 +107,7 @@ delete \$fa-var-minus
 remove \$fa-var-minus
 view \$fa-var-eye
 directory \$fa-var-folder
+move \$fa-var-bars
 EOS
 
 ## Now I can re-assemble these back to their SCSS versions.
