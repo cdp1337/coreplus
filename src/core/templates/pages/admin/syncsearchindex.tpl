@@ -8,6 +8,17 @@
 </p>
 
 {if sizeof($changes)}
+
+	{if $outoftime}
+		<p class="message-error">
+			Sync did not complete fully, please refresh this page to continue the sync operation.
+		</p>
+	{else}
+		<p class="message-success">
+			Sync operation completed successfully!
+		</p>
+	{/if}
+
 	<ul>
 		{foreach $changes as $c}
 			<li>Model {$c.name}: {$c.count} synced record(s).</li>
