@@ -4562,6 +4562,23 @@
   content: "\f001";
 }
 
+/** Icon definition for ok **/
+/* line 26, _mixins.scss */
+.icon-ok {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 35, _mixins.scss */
+.icon-ok:before {
+  content: "\f00c";
+}
+
 /** Icon definition for outdent **/
 /* line 26, _mixins.scss */
 .icon-outdent {
