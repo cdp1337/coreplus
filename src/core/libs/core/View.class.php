@@ -482,42 +482,34 @@ class View {
 		}
 		catch(SmartyException $e){
 			$this->error = View::ERROR_SERVERERROR;
-			error_log('[view error] (Smarty Exception)');
-			error_log('Template name: [' . $this->templatename . ']');
-			error_log($e->getMessage());
-			if(DEVELOPMENT_MODE){
-				trigger_error($e->getMessage(), E_USER_ERROR);
-			}
-			else{
+			trigger_error('Smarty exception in [' . $this->templatename . '],  ' . $e->getMessage(), E_USER_WARNING);
+
+			// If this was a page, stop execution and display the error page.
+			if($this->mode == View::MODE_PAGE){
 				require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+				die();
 			}
-			die();
+
 		}
 		catch(TemplateException $e){
 			$this->error = View::ERROR_SERVERERROR;
-			error_log('[view error] (Template Exception)');
-			error_log('Template name: [' . $this->templatename . ']');
-			error_log($e->getMessage());
-			if(DEVELOPMENT_MODE){
-				trigger_error($e->getMessage(), E_USER_ERROR);
-			}
-			else{
+			trigger_error('Template exception in [' . $this->templatename . '],  ' . $e->getMessage(), E_USER_WARNING);
+
+			// If this was a page, stop execution and display the error page.
+			if($this->mode == View::MODE_PAGE){
 				require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+				die();
 			}
-			die();
 		}
 		catch(Exception $e){
 			$this->error = View::ERROR_SERVERERROR;
-			error_log('[view error] (WTF Just Happened?)');
-			error_log('Template name: [' . $this->templatename . ']');
-			error_log($e->getMessage());
-			if(DEVELOPMENT_MODE){
-				trigger_error($e->getMessage(), E_USER_ERROR);
-			}
-			else{
+			trigger_error('Unknown exception in [' . $this->templatename . '],  ' . $e->getMessage(), E_USER_WARNING);
+
+			// If this was a page, stop execution and display the error page.
+			if($this->mode == View::MODE_PAGE){
 				require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+				die();
 			}
-			die();
 		}
 
 
@@ -681,12 +673,12 @@ class View {
 					$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
 					$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
 					//$debug .= "Number of queries: " . DB::Singleton()->counter . "\n";
-					$debug .= "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
+					//$debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_usage()) . "\n";
+					$debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_peak_usage(true)) . "\n";
 					$profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
 					$debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
-					if (FULL_DEBUG) {
-						$debug .= $profiler->getEventTimesFormatted();
-					}
+					$debug .= "\n" . '<b>Core Profiler</b>' . "\n";
+					$debug .= $profiler->getEventTimesFormatted();
 					// Tack on what components are currently installed.
 					$debug .= "\n" . '<b>Available Components</b>' . "\n";
 					$debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
@@ -723,7 +715,22 @@ class View {
 					$debug .= implode("\n", get_included_files()) . "\n";
 
 					$debug .= "\n" . '<b>Query Log</b>' . "\n";
-					$debug .= print_r(Core::DB()->queryLog(), true);
+					$ql = \Core\DB()->queryLog();
+					$qls = sizeof($ql);
+					foreach($ql as $i => $dat){
+						if($i > 1000){
+							$debug .= 'Plus ' . ($qls - 1000) . ' more!' . "\n";
+							break;
+						}
+
+						$typecolor = ($dat['type'] == 'read') ? '#88F' : '#005';
+						$tpad   = ($dat['type'] == 'read') ? '  ' : ' ';
+						$type   = $dat['type'];
+						$time   = str_pad($dat['time'], 5, '0', STR_PAD_RIGHT);
+						$query  = $dat['query'];
+						$caller = print_r($dat['caller'], true);
+						$debug .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time} ms] $query</span>\n";
+					}
 					$debug .= '</pre>';
 
 					// And append!
@@ -1154,8 +1161,18 @@ class View {
 	 */
 	public function addStylesheet($link, $media = "all") {
 		if (strpos($link, '<link') === false) {
+
+			// Is this a CSS file or a LESS file?
+			if(strripos($link, '.less') == strlen($link)-5 ){
+				$rel = 'stylesheet/less';
+				Core::_AttachLessJS();
+			}
+			else{
+				$rel = 'stylesheet';
+			}
+
 			// Resolve the script and wrap it with a script block.
-			$link = '<link type="text/css" href="' . Core::ResolveAsset($link) . '" media="' . $media . '" rel="stylesheet"/>';
+			$link = '<link type="text/css" href="' . Core::ResolveAsset($link) . '" media="' . $media . '" rel="' . $rel . '"/>';
 		}
 
 		// This snippet is to allow AddStylesheet to be called statically.
@@ -1181,6 +1198,14 @@ class View {
 	public function addStyle($style) {
 		if (strpos($style, '<style') === false) {
 			$style = '<style>' . $style . '</style>';
+		}
+
+		// Don't forget to include the less compiler if it was requested!
+		if(strpos($style, 'rel="stylesheet/less"') !== false){
+			Core::_AttachLessJS();
+		}
+		if(strpos($style, "rel='stylesheet/less'") !== false){
+			Core::_AttachLessJS();
 		}
 
 		// This snippet is to allow AddStyle to be called statically.
