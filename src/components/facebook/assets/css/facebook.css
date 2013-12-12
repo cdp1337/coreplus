@@ -36,3 +36,11 @@ a.facebook-button:hover {
 	line-height: 15px;
 	text-decoration: none;
 }
+
+/** Just put a little styling on facebook icons. **/
+.icon-facebook {
+	background-color: #5B74A8;
+	color: white;
+	font-size: 160%;
+	padding: 0 5px;
+}

@@ -160,4 +160,14 @@ class UserAuth implements AuthDriverInterface {
 		$tpl->assign('facebooklink', $facebooklink);
 		$tpl->render();
 	}
+
+	/**
+	 * Generate and print the rendered registration markup to STDOUT.
+	 *
+	 * @return void
+	 */
+	public function renderRegister() {
+		// This is identical to the login, so just use the same function.
+		$this->renderLogin();
+	}
 }

@@ -7,7 +7,7 @@
 <div id="fb-root"></div>
 <div id="facebook-connecting-section" style="display:none;"></div>
 <a href="#" scope="email" style="display:none" id="facebook-login-button">
-	Login with Facebook
+	<i class="icon-facebook"></i> Login with Facebook
 </a>
 
 <noscript>
