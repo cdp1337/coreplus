@@ -1515,15 +1515,36 @@ class Core implements ISingleton {
 		//\Core\view()->addScript('js/core-foot.js', 'foot');
 	}
 
+	/**
+	 * Add the Core.Strings library to the page
+	 *
+	 * @return bool
+	 */
 	public static function _AttachCoreStrings() {
 		\Core\view()->addScript('js/core.strings.js');
 
 		return true;
 	}
 
+	/**
+	 * Add the Core.Ajaxlinks library to the page
+	 *
+	 * @return bool
+	 */
 	public static function _AttachAjaxLinks(){
 		JQuery::IncludeJQueryUI();
 		\Core\view()->addScript('js/core.ajaxlinks.js', 'foot');
+
+		return true;
+	}
+
+	/**
+	 * Add the LESS library to the page
+	 *
+	 * @return bool
+	 */
+	public static function _AttachLessJS(){
+		\Core\view()->addScript('js/less-1.5.0.js', 'head');
 
 		return true;
 	}
