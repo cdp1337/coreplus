@@ -64,7 +64,10 @@ for i in $COMPONENTS; do
 			rsync $OPTIONS --delete "$UPSTREAM/src/components/$i/" "$BASEDIR/src/components/$i"
 		fi
 
-
+	elif [ "$i" == "user" ]; then
+		# User has been migrated into Core as of 2.8.x
+		echo "Deleting legacy component $i..."
+		rm -fr "$BASEDIR/src/components/$i"
 	else
 		echo "Skipping component $i, (does not exist in upstream)"
 	fi
