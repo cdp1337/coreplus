@@ -93,7 +93,18 @@ class UserUserConfigModel extends Model{
 					return parent::set($k, $v);
 				}
 				else{
-					throw new ModelValidationException(($valid === false) ? $this->_data['key'] . ' fails validation!' : $valid);
+
+					if($valid === false){
+						$msg = $this->_data['key'] . ' fails validation!';
+					}
+					elseif($valid === null){
+						$msg = $this->_data['key'] . ' fails validation! (no reason given though)';
+					}
+					else{
+						$msg = $valid;
+					}
+
+					throw new ModelValidationException($msg);
 				}
 			}
 		}
