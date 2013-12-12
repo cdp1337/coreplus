@@ -122,6 +122,8 @@ class HookHandler implements ISingleton {
 			return null;
 		}
 
+		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Dispatching hook ' . $hookName);
+
 		$args = func_get_args();
 		// Drop off the hook name from the arguments.
 		array_shift($args);
@@ -130,6 +132,7 @@ class HookHandler implements ISingleton {
 		$result = call_user_func_array(array(&$hook, 'dispatch'), $args);
 
 		Core\Utilities\Logger\write_debug('Dispatched hook ' . $hookName);
+		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Dispatched hook ' . $hookName);
 		return $result;
 	}
 
@@ -332,6 +335,8 @@ class Hook {
 		if($this->returnType == self::RETURN_TYPE_ARRAY && !is_array($result)){
 			$result = array();
 		}
+
+		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Called Hook Binding ' . $call['call']);
 		return $result;
 	}
 
