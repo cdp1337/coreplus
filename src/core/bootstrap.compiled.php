@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 06 Dec 2013 14:21:50 -0500
+ * @compiled Tue, 10 Dec 2013 23:41:15 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -94,7 +94,8 @@ $time = $now - $this->_microtime;
 $this->_events[] = array(
 'event'     => $event,
 'microtime' => $now,
-'timetotal' => $time
+'timetotal' => $time,
+'memory'  => memory_get_usage(true),
 );
 }
 public function getTime(){
@@ -108,10 +109,10 @@ $time = $this->getTime();
 if($time < 0.1){
 return round($time, 4) * 1000000 . ' ns';
 }
-elseif($time < 2.5){
+elseif($time < 2.0){
 return round($time, 4) * 1000 . ' ms';
 }
-elseif($time < 200){
+elseif($time < 60){
 return round($time, 4) . ' seconds';
 }
 else{
@@ -131,7 +132,9 @@ $whole = str_pad($parts[0], 4, 0, STR_PAD_LEFT);
 $dec   = (isset($parts[1])) ? str_pad($parts[1], 2, 0, STR_PAD_RIGHT) : '00';
 $time = $whole . '.' . $dec . ' ms';
 }
-$out .= "[" . $time . "] - " . $t['event'] . "\n";
+$mem = '[mem: ' . \Core\Filestore\format_size($t['memory']) . '] ';
+$event = $t['event'];
+$out .= "[$time] $mem- $event" . "\n";
 }
 return $out;
 }
@@ -1703,7 +1706,6 @@ protected $_dataother = array();
 protected $_exists = false;
 protected $_linked = array();
 protected $_cacheable = true;
-protected $_schemacache = null;
 public static $Schema = array();
 public static $Indexes = array();
 public static $HasSearch = false;
@@ -1711,6 +1713,8 @@ public static $HasCreated = false;
 public static $HasUpdated = false;
 public static $HasDeleted = false;
 public static $_ModelCache = array();
+public static $_ModelFindCache = array();
+protected static $_ModelSchemaCache = array();
 public function __construct($key = null) {
 $s = self::GetSchema();
 foreach ($s as $k => $v) {
@@ -1913,40 +1917,10 @@ public function getInitialData(){
 return $this->_datainit;
 }
 public function getKeySchemas() {
-if ($this->_schemacache === null) {
-$this->_schemacache = self::GetSchema();
-foreach ($this->_schemacache as $k => $v) {
-if (!isset($v['type']))      $this->_schemacache[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
-if (!isset($v['maxlength'])) $this->_schemacache[$k]['maxlength'] = false;
-if (!isset($v['null']))      $this->_schemacache[$k]['null']      = false;
-if (!isset($v['comment']))   $this->_schemacache[$k]['comment']   = '';
-if (!isset($v['default']))   $this->_schemacache[$k]['default']   = false;
-if (!isset($v['encrypted'])) $this->_schemacache[$k]['encrypted'] = false;
-if (!isset($v['required']))  $this->_schemacache[$k]['required']  = false;
-if($v['type'] == Model::ATT_TYPE_ENUM){
-$this->_schemacache[$k]['options'] = isset($this->_schemacache[$k]['options']) ? $this->_schemacache[$k]['options'] : array();
-}
-else{
-$this->_schemacache[$k]['options'] = null;
-}
-if(isset($v['title'])){
-$this->_schemacache[$k]['title'] = $v['title'];
-}
-elseif(isset($v['form']) && is_array($v['form']) && isset($v['form']['title'])){
-$this->_schemacache[$k]['title'] = $v['form']['title'];
-}
-elseif(isset($v['formtitle'])){
-$this->_schemacache[$k]['title'] = $v['formtitle'];
-}
-else{
-$this->_schemacache[$k]['title'] = ucwords(str_replace('_', ' ', $k));
-}
-}
-}
-return $this->_schemacache;
+return self::GetSchema();
 }
 public function getKeySchema($key) {
-$s = $this->getKeySchemas();
+$s = self::GetSchema();
 if (!isset($s[$key])) return null;
 return $s[$key];
 }
@@ -2684,7 +2658,15 @@ self::$_ModelCache[$class][$cache] = $obj;
 return self::$_ModelCache[$class][$cache];
 }
 public static function Find($where = array(), $limit = null, $order = null) {
-$fac = new ModelFactory(get_called_class());
+$classname = get_called_class();
+if(!sizeof($where) && $limit === null && $order === null){
+if(!isset(self::$_ModelFindCache[$classname])){
+$fac = new ModelFactory($classname);
+self::$_ModelFindCache[$classname] = $fac->get();
+}
+return self::$_ModelFindCache[$classname];
+}
+$fac = new ModelFactory($classname);
 $fac->where($where);
 $fac->limit($limit);
 $fac->order($order);
@@ -2740,8 +2722,11 @@ $_tablenames[$m] = DB_PREFIX . $tbl;
 return $_tablenames[$m];
 }
 public static function GetSchema() {
-$ref = new ReflectionClass(get_called_class());
-$schema = $ref->getProperty('Schema')->getValue();
+$classname = get_called_class();
+if(!isset(self::$_ModelSchemaCache[$classname])){
+$ref = new ReflectionClass($classname);
+self::$_ModelSchemaCache[$classname] = $ref->getProperty('Schema')->getValue();
+$schema =& self::$_ModelSchemaCache[$classname];
 if($ref->getProperty('HasCreated')->getValue()){
 if(!isset($schema['created'])){
 $schema['created'] = [
@@ -2798,7 +2783,35 @@ $schema['search_index_sec'] = [
 'comment' => 'The search index of this record as the DMP secondary version'
 ];
 }
-return $schema;
+foreach ($schema as $k => $v) {
+if (!isset($v['type']))      $schema[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
+if (!isset($v['maxlength'])) $schema[$k]['maxlength'] = false;
+if (!isset($v['null']))      $schema[$k]['null']      = false;
+if (!isset($v['comment']))   $schema[$k]['comment']   = '';
+if (!isset($v['default']))   $schema[$k]['default']   = false;
+if (!isset($v['encrypted'])) $schema[$k]['encrypted'] = false;
+if (!isset($v['required']))  $schema[$k]['required']  = false;
+if($v['type'] == Model::ATT_TYPE_ENUM){
+$schema[$k]['options'] = isset($schema[$k]['options']) ? $schema[$k]['options'] : array();
+}
+else{
+$schema[$k]['options'] = null;
+}
+if(isset($v['title'])){
+$schema[$k]['title'] = $v['title'];
+}
+elseif(isset($v['form']) && is_array($v['form']) && isset($v['form']['title'])){
+$schema[$k]['title'] = $v['form']['title'];
+}
+elseif(isset($v['formtitle'])){
+$schema[$k]['title'] = $v['formtitle'];
+}
+else{
+$schema[$k]['title'] = ucwords(str_replace('_', ' ', $k));
+}
+}
+}
+return self::$_ModelSchemaCache[$classname];
 }
 public static function GetIndexes() {
 $ref = new ReflectionClass(get_called_class());
@@ -2809,6 +2822,7 @@ class ModelFactory {
 public $interface = null;
 private $_model;
 private $_dataset;
+private $_stream;
 public function __construct($model) {
 $this->_model = $model;
 $m              = $this->_model;
@@ -2849,6 +2863,19 @@ $this->_performMultisiteCheck();
 $rs = $this->_dataset->execute($this->interface);
 return $rs->_data;
 }
+public function getNext(){
+if($this->_stream === null){
+$this->_performMultisiteCheck();
+$this->_stream = new \Core\Datamodel\DatasetStream($this->_dataset);
+}
+$next = $this->_stream->getRecord();
+if($next === null){
+return null;
+}
+$model = new $this->_model();
+$model->_loadFromRecord($next);
+return $model;
+}
 public function count() {
 $this->_performMultisiteCheck();
 $clone = clone $this->_dataset;
@@ -2869,7 +2896,11 @@ MultiSiteHelper::IsEnabled()
 ){
 $matches = $this->_dataset->getWhereClause()->findByField('site');
 if(!sizeof($matches)){
-$this->_dataset->where('site = ' . MultiSiteHelper::GetCurrentSiteID());
+$w = new DatasetWhereClause();
+$w->setSeparator('or');
+$w->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
+$w->addWhere('site = -1');
+$this->_dataset->where($w);
 }
 }
 }
@@ -3122,14 +3153,22 @@ self::$Instance->destroy(session_id());
 }
 public static function ForceSave(){
 $session = self::$Instance;
+if($session){
 $session->write(session_id(), serialize($_SESSION));
 }
+}
 public static function CleanupExpired(){
+static $lastexecuted = 0;
 $ttl = ConfigHandler::Get('/core/session/ttl');
+$datetime = (Time::GetCurrentGMT() - $ttl);
+if($lastexecuted == $datetime){
+return true;
+}
 $dataset = new Core\Datamodel\Dataset();
 $dataset->table('session');
-$dataset->where('updated < ' . (Time::GetCurrentGMT() - $ttl));
+$dataset->where('updated < ' . $datetime);
 $dataset->delete()->execute();
+$lastexecuted = $datetime;
 return true;
 }
 private static function _GetModel($session_id) {
@@ -4523,10 +4562,15 @@ $this->_configs[$key] = $uuc;
 continue 2;
 }
 }
+try{
 $uuc = new UserUserConfigModel($this->get('id'), $key);
 $uuc->set('value', $default);
 $this->setLink('UserUserConfig', $uuc);
 $this->_configs[$key] = $uuc;
+}
+catch(Exception $e){
+trigger_error('Invalid UserConfig [' . $f->get('key') . '], ' . $e->getMessage(), E_USER_NOTICE);
+}
 }
 }
 $ret = array();
@@ -4579,7 +4623,10 @@ foreach($uugs as $uug){
 if(!$uug->get('context')) continue;
 if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
 $g = $uug->getLink('UserGroup');
-if($g->get('site') != MultiSiteHelper::GetCurrentSiteID()){
+$gsite = $g->get('site');
+if(
+!($gsite == '-1' || $gsite == MultiSiteHelper::GetCurrentSiteID())
+){
 continue;
 }
 }
@@ -4612,9 +4659,10 @@ return $this->_authdriver;
 public function getSearchIndexString(){
 $strs = [];
 $strs[] = $this->get('email');
-foreach($this->getConfigObjects() as $uug){
-if($uug->getLink('UserConfig')->get('searchable')){
-$strs[] = $uug->get('value');
+$opts = UserConfigModel::Find();
+foreach($opts as $uc){
+if($uc->get('searchable')){
+$strs[] = $this->get($uc->get('key'));
 }
 }
 return implode(' ', $strs);
@@ -4893,7 +4941,8 @@ elseif($context && $contextpk && $uug->get('context_pk') != $contextpk){
 continue;
 }
 if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-if($uug->getLink('UserGroup')->get('site') != MultiSiteHelper::GetCurrentSiteID()){
+$ugsite = $uug->getLink('UserGroup')->get('site');
+if(!($ugsite == -1 || $ugsite == MultiSiteHelper::GetCurrentSiteID())){
 continue;
 }
 }
@@ -5313,7 +5362,16 @@ if($valid === true){
 return parent::set($k, $v);
 }
 else{
-throw new ModelValidationException(($valid === false) ? $this->_data['key'] . ' fails validation!' : $valid);
+if($valid === false){
+$msg = $this->_data['key'] . ' fails validation!';
+}
+elseif($valid === null){
+$msg = $this->_data['key'] . ' fails validation! (no reason given though)';
+}
+else{
+$msg = $valid;
+}
+throw new ModelValidationException($msg);
 }
 }
 }
@@ -11430,11 +11488,13 @@ if (!isset(HookHandler::$RegisteredHooks[$hookName])) {
 trigger_error('Tried to dispatch an undefined hook ' . $hookName, E_USER_NOTICE);
 return null;
 }
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Dispatching hook ' . $hookName);
 $args = func_get_args();
 array_shift($args);
 $hook   = HookHandler::$RegisteredHooks[$hookName];
 $result = call_user_func_array(array(&$hook, 'dispatch'), $args);
 Core\Utilities\Logger\write_debug('Dispatched hook ' . $hookName);
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Dispatched hook ' . $hookName);
 return $result;
 }
 public static function GetAllHooks() {
@@ -11525,6 +11585,7 @@ $result = call_user_func_array($call['call'], $args);
 if($this->returnType == self::RETURN_TYPE_ARRAY && !is_array($result)){
 $result = array();
 }
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Called Hook Binding ' . $call['call']);
 return $result;
 }
 public function __toString() {
@@ -12249,6 +12310,10 @@ return true;
 public static function _AttachAjaxLinks(){
 JQuery::IncludeJQueryUI();
 \Core\view()->addScript('js/core.ajaxlinks.js', 'foot');
+return true;
+}
+public static function _AttachLessJS(){
+\Core\view()->addScript('js/less-1.5.0.js', 'head');
 return true;
 }
 public static function VersionCompare($version1, $version2, $operation = null) {
@@ -14334,42 +14399,27 @@ $body = $this->fetchBody();
 }
 catch(SmartyException $e){
 $this->error = View::ERROR_SERVERERROR;
-error_log('[view error] (Smarty Exception)');
-error_log('Template name: [' . $this->templatename . ']');
-error_log($e->getMessage());
-if(DEVELOPMENT_MODE){
-trigger_error($e->getMessage(), E_USER_ERROR);
-}
-else{
+trigger_error('Smarty exception in [' . $this->templatename . '],  ' . $e->getMessage(), E_USER_WARNING);
+if($this->mode == View::MODE_PAGE){
 require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
-}
 die();
+}
 }
 catch(TemplateException $e){
 $this->error = View::ERROR_SERVERERROR;
-error_log('[view error] (Template Exception)');
-error_log('Template name: [' . $this->templatename . ']');
-error_log($e->getMessage());
-if(DEVELOPMENT_MODE){
-trigger_error($e->getMessage(), E_USER_ERROR);
-}
-else{
+trigger_error('Template exception in [' . $this->templatename . '],  ' . $e->getMessage(), E_USER_WARNING);
+if($this->mode == View::MODE_PAGE){
 require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
-}
 die();
+}
 }
 catch(Exception $e){
 $this->error = View::ERROR_SERVERERROR;
-error_log('[view error] (WTF Just Happened?)');
-error_log('Template name: [' . $this->templatename . ']');
-error_log($e->getMessage());
-if(DEVELOPMENT_MODE){
-trigger_error($e->getMessage(), E_USER_ERROR);
-}
-else{
+trigger_error('Unknown exception in [' . $this->templatename . '],  ' . $e->getMessage(), E_USER_WARNING);
+if($this->mode == View::MODE_PAGE){
 require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
-}
 die();
+}
 }
 if ($this->mastertemplate === false) {
 return $body;
@@ -14477,10 +14527,11 @@ $debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
 $debug .= "\n" . '<b>Performance Information</b>' . "\n";
 $debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
 $debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
-$debug .= "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
+$debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_peak_usage(true)) . "\n";
 $profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
 $debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
-if (FULL_DEBUG) {
+if (true || FULL_DEBUG) {
+$debug .= "\n" . '<b>Core Profiler</b>' . "\n";
 $debug .= $profiler->getEventTimesFormatted();
 }
 $debug .= "\n" . '<b>Available Components</b>' . "\n";
@@ -14509,7 +14560,21 @@ $debug .= "\n" . '<b>Included Files</b>' . "\n";
 $debug .= 'Number: ' . sizeof(get_included_files()) . "\n";
 $debug .= implode("\n", get_included_files()) . "\n";
 $debug .= "\n" . '<b>Query Log</b>' . "\n";
-$debug .= print_r(Core::DB()->queryLog(), true);
+$ql = \Core\DB()->queryLog();
+$qls = sizeof($ql);
+foreach($ql as $i => $dat){
+if($i > 1000){
+$debug .= 'Plus ' . ($qls - 1000) . ' more!' . "\n";
+break;
+}
+$typecolor = ($dat['type'] == 'read') ? '#88F' : '#005';
+$tpad   = ($dat['type'] == 'read') ? '  ' : ' ';
+$type   = $dat['type'];
+$time   = str_pad($dat['time'], 5, '0', STR_PAD_RIGHT);
+$query  = $dat['query'];
+$caller = print_r($dat['caller'], true);
+$debug .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time} ms] $query</span>\n";
+}
 $debug .= '</pre>';
 $foot .= "\n" . $debug;
 }
@@ -14727,7 +14792,14 @@ $scripts['foot'][] = $content;
 }
 public function addStylesheet($link, $media = "all") {
 if (strpos($link, '<link') === false) {
-$link = '<link type="text/css" href="' . Core::ResolveAsset($link) . '" media="' . $media . '" rel="stylesheet"/>';
+if(strripos($link, '.less') == strlen($link)-5 ){
+$rel = 'stylesheet/less';
+Core::_AttachLessJS();
+}
+else{
+$rel = 'stylesheet';
+}
+$link = '<link type="text/css" href="' . Core::ResolveAsset($link) . '" media="' . $media . '" rel="' . $rel . '"/>';
 }
 if(isset($this)){
 $styles =& $this->stylesheets;
@@ -14740,6 +14812,12 @@ if (!in_array($link, $styles)) $styles[] = $link;
 public function addStyle($style) {
 if (strpos($style, '<style') === false) {
 $style = '<style>' . $style . '</style>';
+}
+if(strpos($style, 'rel="stylesheet/less"') !== false){
+Core::_AttachLessJS();
+}
+if(strpos($style, "rel='stylesheet/less'") !== false){
+Core::_AttachLessJS();
 }
 if(isset($this)){
 $styles =& $this->stylesheets;
@@ -15767,6 +15845,21 @@ $view->error = View::ERROR_BADREQUEST;
 return $view;
 }
 }
+if(!$page->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+$site = MultiSiteHelper::GetCurrentSiteID();
+$anypage = PageModel::Find(['baseurl = ' . $page->get('baseurl')], 1);
+if($anypage){
+if($anypage->get('site') == -1){
+$page = $anypage;
+}
+elseif($anypage->get('site') == $site){
+$page = $anypage;
+}
+else{
+\Core\redirect($anypage->getResolvedURL());
+}
+}
+}
 $return = call_user_func(array($controller, $pagedat['method']));
 if (is_int($return)) {
 $view->error = $return;
@@ -15860,7 +15953,19 @@ elseif(sizeof($return->breadcrumbs) && $return->breadcrumbs[0]['title'] == 'Admi
 $return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 }
 else{
-$this->mastertemplate = ConfigHandler::Get('/theme/default_template');
+$return->mastertemplate = ConfigHandler::Get('/theme/default_template');
+}
+$themeskins = ThemeHandler::GetTheme()->getSkins();
+$mastertplgood = false;
+foreach($themeskins as $skin){
+if($skin['file'] == $return->mastertemplate){
+$mastertplgood =true;
+break;
+}
+}
+if(!$mastertplgood){
+trigger_error('Invalid skin [' . $return->mastertemplate . '] selected for this page, skin is not located within the selected theme!  Using first available instead.', E_USER_NOTICE);
+$return->mastertemplate = $themeskins[0]['file'];
 }
 if ($page->exists() && $return->error == View::ERROR_NOERROR) {
 $page->set('pageviews', $page->get('pageviews') + 1);
@@ -16184,5 +16289,4 @@ define('REMOTE_COUNTRY', $geocountry);
 define('REMOTE_TIMEZONE', $geotimezone);
 unset($geocity, $geoprovince, $geocountry, $geotimezone);
 HookHandler::DispatchHook('/core/components/ready');
-$profiler->record('Components Ready Complete');
 } // ENDING GLOBAL NAMESPACE
