@@ -351,6 +351,32 @@ class PageRequest {
 			}
 		}
 
+		// Additional security logic for existing pages in multi-site mode.
+		// If this exact URL is registered to another site, then
+		// don't allow this site to display it.
+		if(!$page->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			$site = MultiSiteHelper::GetCurrentSiteID();
+
+			$anypage = PageModel::Find(['baseurl = ' . $page->get('baseurl')], 1);
+
+			if($anypage){
+
+				if($anypage->get('site') == -1){
+					// If this is a global page.... that's ok.
+					// Just remap the page variable to this one!
+					$page = $anypage;
+				}
+				elseif($anypage->get('site') == $site){
+					// Strange... it should have located this page...
+					// Anyway, it's allowed, the site matches up.
+					$page = $anypage;
+				}
+				else{
+					\Core\redirect($anypage->getResolvedURL());
+				}
+			}
+		}
+
 		$return = call_user_func(array($controller, $pagedat['method']));
 		if (is_int($return)) {
 			// A generic error code was returned.  Create a View with that code and return that instead.
@@ -493,7 +519,24 @@ class PageRequest {
 			$return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 		}
 		else{
-			$this->mastertemplate = ConfigHandler::Get('/theme/default_template');
+			$return->mastertemplate = ConfigHandler::Get('/theme/default_template');
+		}
+
+
+		// Make sure the selected mastertemplate actually exists!
+		$themeskins = ThemeHandler::GetTheme()->getSkins();
+		$mastertplgood = false;
+		foreach($themeskins as $skin){
+			if($skin['file'] == $return->mastertemplate){
+				// It's located!
+				$mastertplgood =true;
+				break;
+			}
+		}
+		if(!$mastertplgood){
+			// Just use the first one instead!
+			trigger_error('Invalid skin [' . $return->mastertemplate . '] selected for this page, skin is not located within the selected theme!  Using first available instead.', E_USER_NOTICE);
+			$return->mastertemplate = $themeskins[0]['file'];
 		}
 
 
