@@ -2,8 +2,8 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="1.0.5">
 	<requires>
-		<require name="User" type="library" version="2.6.0"/>
-		<require name="Core" type="component" version="2.6.1"/>
+		<require name="User" type="library" version="2.8.0"/>
+		<require name="Core" type="component" version="2.8.0"/>
 	</requires>
 	<userconfigs>
 		<userconfig weight="2" key="first_name" name="First Name" onedit="1" onregistration="1" searchable="1"/>
@@ -11,7 +11,7 @@
 		<userconfig weight="4" key="phone" name="Phone Number" onedit="1" onregistration="0"/>
 		<userconfig weight="50" key="bio" name="Biography" formtype="wysiwyg" onedit="1" onregistration="0"/>
 		<userconfig weight="1" key="username" name="Username" required="1" onedit="1" onregistration="1" validation="UserSocialHelper::ValidateUsername" searchable="1"/>
-		<userconfig weight="" key="json:profiles" name="Connected Profiles (json encoded)" onedit="0" onregistration="0" formtype="disabled"/>
+		<userconfig weight="" key="json:profiles" name="Connected Profiles (json encoded)" hidden="1"/>
 	</userconfigs>
 	<hooks>
 		<hook name="/core/controllinks/user/view" call="UserSocialHelper::GetUserLinks"/>
