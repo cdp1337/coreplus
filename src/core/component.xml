@@ -1878,6 +1878,7 @@
 			<php file="core/upgrades/261_to_262.php"/>
 		</upgrade>
 		<upgrade from="2.7.0" to="2.8.0">
+			<php file="core/upgrades/270_to_280_groups.php"/>
 			<php file="core/upgrades/270_to_280_user_avatar_paths.php"/>
 		</upgrade>
 	</upgrades>
