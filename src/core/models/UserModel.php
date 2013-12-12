@@ -249,12 +249,19 @@ class UserModel extends Model {
 
 				// If it's still here, the previous UUC logic didn't break out,
 				// which means the uuc doesn't exist.... yet :p
-				$uuc = new UserUserConfigModel($this->get('id'), $key);
-				$uuc->set('value', $default);
-				// Add this object to the list set of child models, just in case it's saved.
-				$this->setLink('UserUserConfig', $uuc);
-				// And add to the stack.
-				$this->_configs[$key] = $uuc;
+				try{
+					$uuc = new UserUserConfigModel($this->get('id'), $key);
+					$uuc->set('value', $default);
+					// Add this object to the list set of child models, just in case it's saved.
+					$this->setLink('UserUserConfig', $uuc);
+					// And add to the stack.
+					$this->_configs[$key] = $uuc;
+				}
+				catch(Exception $e){
+					trigger_error('Invalid UserConfig [' . $f->get('key') . '], ' . $e->getMessage(), E_USER_NOTICE);
+					// And simply don't add this one onto the user stack.
+					// This is allowed because if the default isn't valid, then the user config itself isn't valid.
+				}
 			}
 		}
 
@@ -362,7 +369,10 @@ class UserModel extends Model {
 			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
 				// Only return this site's groups if in multisite mode
 				$g = $uug->getLink('UserGroup');
-				if($g->get('site') != MultiSiteHelper::GetCurrentSiteID()){
+				$gsite = $g->get('site');
+				if(
+					!($gsite == '-1' || $gsite == MultiSiteHelper::GetCurrentSiteID())
+				){
 					continue;
 				}
 			}
@@ -421,10 +431,11 @@ class UserModel extends Model {
 		$strs[] = $this->get('email');
 
 		// I also need to sift over the user config options, since they relate to this object too.
-		foreach($this->getConfigObjects() as $uug){
-			/** @var UserUserGroupModel $uug */
-			if($uug->getLink('UserConfig')->get('searchable')){
-				$strs[] = $uug->get('value');
+		$opts = UserConfigModel::Find();
+		foreach($opts as $uc){
+			/** @var UserConfigModel $uc */
+			if($uc->get('searchable')){
+				$strs[] = $this->get($uc->get('key'));
 			}
 		}
 
@@ -916,7 +927,8 @@ class UserModel extends Model {
 
 			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
 				// Only return this site's groups if in multisite mode
-				if($uug->getLink('UserGroup')->get('site') != MultiSiteHelper::GetCurrentSiteID()){
+				$ugsite = $uug->getLink('UserGroup')->get('site');
+				if(!($ugsite == -1 || $ugsite == MultiSiteHelper::GetCurrentSiteID())){
 					/// Skip any group not on this site... they'll simply be ignored.
 					continue;
 				}
