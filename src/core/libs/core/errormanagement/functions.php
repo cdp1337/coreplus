@@ -136,6 +136,11 @@ function check_for_fatal() {
 		$file = $error['file'];
 		if(strpos($file, ROOT_PDIR) === 0) $file = '/' . substr($file, strlen(ROOT_PDIR));
 
+		if(file_exists(TMP_DIR . 'lock.message')){
+			// If the upgrade had a fatal error, remove the lock file.
+			unlink(TMP_DIR . 'lock.message');
+		}
+
 		error_handler($error["type"], $error["message"] . ' in ' . $file . ':' . $error['line'], null, null);
 	}
 }
