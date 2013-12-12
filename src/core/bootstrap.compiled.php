@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 12 Dec 2013 12:33:14 -0500
+ * @compiled Thu, 12 Dec 2013 16:30:55 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3174,7 +3174,12 @@ public static function SetUser($u) {
 $model = self::_GetModel(session_id());
 $model->set('user_id', $u->get('id'));
 $model->save();
+if(isset($_SESSION['user_sudo'])){
+$_SESSION['user_sudo'] = $u;
+}
+else{
 $_SESSION['user'] = $u;
+}
 }
 public static function DestroySession(){
 if(self::$Instance !== null){
@@ -7589,16 +7594,16 @@ $sudo = $_SESSION['user_sudo'];
 if($sudo instanceof \UserModel){
 if($user->checkAccess('p:/user/users/sudo')){
 if($sudo->checkAccess('g:admin') && !$user->checkAccess('g:admin')){
-\SystemLogModel::LogSecurityEvent('/user/sudo', 'Authorized but non-SA user requested sudo access to a system admin!', null, $sudo->get('id'));
 unset($_SESSION['user_sudo']);
+\SystemLogModel::LogSecurityEvent('/user/sudo', 'Authorized but non-SA user requested sudo access to a system admin!', null, $sudo->get('id'));
 }
 else{
 return $sudo;
 }
 }
 else{
-\SystemLogModel::LogSecurityEvent('/user/sudo', 'Unauthorized user requested sudo access to another user!', null, $sudo->get('id'));
 unset($_SESSION['user_sudo']);
+\SystemLogModel::LogSecurityEvent('/user/sudo', 'Unauthorized user requested sudo access to another user!', null, $sudo->get('id'));
 }
 }
 else{

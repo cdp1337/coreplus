@@ -178,7 +178,14 @@ class Session implements SessionHandlerInterface {
 
 		$model->set('user_id', $u->get('id'));
 		$model->save();
-		$_SESSION['user'] = $u;
+
+		// If this user is currently SUDO, then set the SUDO'd user and NOT the actual user.
+		if(isset($_SESSION['user_sudo'])){
+			$_SESSION['user_sudo'] = $u;
+		}
+		else{
+			$_SESSION['user'] = $u;
+		}
 	}
 
 	/**

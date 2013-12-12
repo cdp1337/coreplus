@@ -452,7 +452,7 @@ abstract class Helper{
 
 		// If this was the current user, update the session data too!
 		if($user->get('id') == \core\user()->get('id')){
-			$_SESSION['user'] = $user;
+			\Session::SetUser($user);
 
 			if(\ConfigHandler::Get('/user/profileedits/requireapproval') && \Core::IsComponentAvailable('model-audit')){
 				\Core::SetMessage('Updated your account successfully, but an administrator will need to approve all changes.', 'success');
@@ -841,7 +841,7 @@ abstract class Helper{
 				// It's this current session!
 				// Reload this user object :)
 				// Remember, the external data cannot be set from within the same session!
-				$_SESSION['user'] = $user;
+				\Session::SetUser($user);
 				continue;
 			}
 

@@ -153,8 +153,8 @@ function user(){
 				// This user can SUDO!
 				// (only if the other user is < SA or current == SA).
 				if($sudo->checkAccess('g:admin') && !$user->checkAccess('g:admin')){
-					\SystemLogModel::LogSecurityEvent('/user/sudo', 'Authorized but non-SA user requested sudo access to a system admin!', null, $sudo->get('id'));
 					unset($_SESSION['user_sudo']);
+					\SystemLogModel::LogSecurityEvent('/user/sudo', 'Authorized but non-SA user requested sudo access to a system admin!', null, $sudo->get('id'));
 				}
 				else{
 					// Ok, everything is good.
@@ -163,8 +163,8 @@ function user(){
 			}
 			else{
 				// This user can NOT sudo!!!
-				\SystemLogModel::LogSecurityEvent('/user/sudo', 'Unauthorized user requested sudo access to another user!', null, $sudo->get('id'));
 				unset($_SESSION['user_sudo']);
+				\SystemLogModel::LogSecurityEvent('/user/sudo', 'Unauthorized user requested sudo access to another user!', null, $sudo->get('id'));
 			}
 		}
 		else{
