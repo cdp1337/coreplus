@@ -654,4 +654,4 @@ unset($geocity, $geoprovince, $geocountry, $geotimezone);
 
 
 HookHandler::DispatchHook('/core/components/ready');
-$profiler->record('Components Ready Complete');
+
