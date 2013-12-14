@@ -1111,13 +1111,16 @@ class PageModel extends Model {
 	 * Split a base url into its corresponding parts, controller method and parameters.
 	 * Also supports the rewriteurl.
 	 *
-	 * @param string $url
+	 * @param string $base
 	 *
 	 * @return array
 	 */
 	public static function SplitBaseURL($base) {
 
 		if (!$base) return null;
+
+		// Default ctype.
+		$ctype = 'text/html';
 
 		// Update the cache!
 		self::_LookupUrl(null);
@@ -1243,6 +1246,18 @@ class PageModel extends Model {
 			$method = 'Index';
 		}
 
+		// If there was a content type requested, (.something), then trim that off too!
+		if(strpos($method, '.') !== false){
+			$ctype = \Core\Filestore\extension_to_mimetype(substr($method, strpos($method, '.') + 1));
+
+			// Invalid mimetype?  Default to an HTML file.
+			if(!$ctype){
+				$ctype = 'text/html';
+			}
+
+			$method = substr($method, 0, strpos($method, '.'));
+		}
+
 		// One last check that the method exists, (because there's only 1 scenario that checks above)
 		if (!method_exists($controller, $method)) {
 			return null;
@@ -1267,6 +1282,11 @@ class PageModel extends Model {
 		// Rewrite URL may be useful too!
 		$rewriteurl = self::_LookupReverseUrl($baseurl);
 
+		// Keep the original mimetype extension if set.
+		if($ctype != 'text/html'){
+			$rewriteurl .= '.' . \Core\Filestore\mimetype_to_extension($ctype);
+		}
+
 		// Keep the arguments on the rewrite version.
 		if ($args) {
 			$rewriteurl .= '?' . $argstring;
@@ -1276,11 +1296,14 @@ class PageModel extends Model {
 
 		// Tack on the "arguments" too, these are 
 
-		return array('controller' => $controller,
-		             'method' => $method,
-		             'parameters' => $params,
-		             'baseurl' => $baseurl,
-		             'rewriteurl' => $rewriteurl);
+		return array(
+			'controller' => $controller,
+			'method'     => $method,
+			'parameters' => $params,
+			'baseurl'    => $baseurl,
+			'rewriteurl' => $rewriteurl,
+			'ctype'      => $ctype,
+		);
 	}
 
 	/**
