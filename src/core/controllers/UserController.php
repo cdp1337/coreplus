@@ -68,17 +68,17 @@ class UserController extends Controller_2_1{
 			array(
 				'title' => 'Ever logged in?',
 				'name' => 'last_login',
-				'options' => array('' => '-- Any --', '0' => 'No', '1' => 'Yes'),
+				'options' => array('' => 'Both', '1' => 'No', '2' => 'Yes'),
 			)
 		);
 
 		$filters->load($request);
 		$factory = new ModelFactory('UserModel');
 
-		if($filters->get('last_login') == 0) {
+		if($filters->get('last_login') == 1) {
 			$factory->where('last_login = 0');
 		}
-		elseif($filters->get('last_login') == 1) {
+		elseif($filters->get('last_login') == 2) {
 			$factory->where('last_login > 0');
 		}
 
