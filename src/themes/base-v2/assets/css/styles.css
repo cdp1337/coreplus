@@ -1,4 +1,32 @@
 /**
+ *           _____                _____                   _______                   _____
+ *          /\    \              /\    \                 /::\    \                 /\    \
+ *         /::\    \            /::\    \               /::::\    \               /::\    \
+ *        /::::\    \           \:::\    \             /::::::\    \             /::::\    \
+ *       /::::::\    \           \:::\    \           /::::::::\    \           /::::::\    \
+ *      /:::/\:::\    \           \:::\    \         /:::/~~\:::\    \         /:::/\:::\    \
+ *     /:::/__\:::\    \           \:::\    \       /:::/    \:::\    \       /:::/__\:::\    \
+ *     \:::\   \:::\    \          /::::\    \     /:::/    / \:::\    \     /::::\   \:::\    \
+ *   ___\:::\   \:::\    \        /::::::\    \   /:::/____/   \:::\____\   /::::::\   \:::\    \
+ *  /\   \:::\   \:::\    \      /:::/\:::\    \ |:::|    |     |:::|    | /:::/\:::\   \:::\____\
+ * /::\   \:::\   \:::\____\    /:::/  \:::\____\|:::|____|     |:::|    |/:::/  \:::\   \:::|    |
+ * \:::\   \:::\   \::/    /   /:::/    \::/    / \:::\    \   /:::/    / \::/    \:::\  /:::|____|
+ *  \:::\   \:::\   \/____/   /:::/    / \/____/   \:::\    \ /:::/    /   \/_____/\:::\/:::/    /
+ *   \:::\   \:::\    \      /:::/    /             \:::\    /:::/    /             \::::::/    /
+ *    \:::\   \:::\____\    /:::/    /               \:::\__/:::/    /               \::::/    /
+ *     \:::\  /:::/    /    \::/    /                 \::::::::/    /                 \::/____/
+ *      \:::\/:::/    /      \/____/                   \::::::/    /                   ~~
+ *       \::::::/    /                                  \::::/    /
+ *        \::::/    /                                    \::/____/
+ *         \::/    /                                      ~~
+ *          \/____/
+ *
+ *
+ * If you are wanting to edit something in this file, you're looking in the wrong place!
+ *
+ * Look at the style.scss or one of the _*.scss include files.
+ */
+/**
  * normalize.css
  *
  * Normalize.css is a customisable CSS file that makes browsers render all elements more consistently and in line with modern standards.
@@ -690,7 +718,7 @@ Helper classes
  **                           GENERIC ELEMENTS                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 18, styles.scss */
+/* line 20, styles.scss */
 body {
   text-align: center;
   padding: 0;
@@ -701,22 +729,22 @@ body {
   color: #222;
 }
 
-/* line 27, styles.scss */
+/* line 29, styles.scss */
 a {
   color: #1C2B0D;
 }
 
-/* line 30, styles.scss */
+/* line 32, styles.scss */
 a:hover {
   text-shadow: 0 1px 1px rgba(150, 150, 150, 0.8);
 }
 
-/* line 33, styles.scss */
+/* line 35, styles.scss */
 img {
   border: 0;
 }
 
-/* line 36, styles.scss */
+/* line 38, styles.scss */
 p {
   padding: 0.5em 0;
   line-height: 1.25em;
@@ -725,7 +753,7 @@ p {
 /**
  * In this template, the page title, (H1), is displayed in the breadcrumbs.
  */
-/* line 43, styles.scss */
+/* line 45, styles.scss */
 h1 {
   /*
   border-bottom: 1px solid rgba(90, 90, 90, 0.7);
@@ -738,19 +766,19 @@ h1 {
   display: inline;
 }
 
-/* line 54, styles.scss */
+/* line 56, styles.scss */
 h2 {
   font-weight: bold;
   font-size: 125%;
 }
 
-/* line 58, styles.scss */
+/* line 60, styles.scss */
 h3 {
   font-weight: bold;
   font-size: 110%;
 }
 
-/* line 62, styles.scss */
+/* line 64, styles.scss */
 h4 {
   font-weight: bold;
 }
@@ -768,7 +796,7 @@ h4:after { content: " ]" }
 p:before { content:"P: ["; }
 p:after { content:"]"; }
 */
-/* line 81, styles.scss */
+/* line 83, styles.scss */
 #wrapper {
   width: 75%;
   margin: 0 auto;
@@ -779,7 +807,7 @@ p:after { content:"]"; }
   -webkit-box-shadow: 0 0 3px #ddd;
 }
 
-/* line 90, styles.scss */
+/* line 92, styles.scss */
 #innerwrapper {
   background: #EDEDED;
   padding: 1em 1em 2em;
@@ -787,7 +815,7 @@ p:after { content:"]"; }
   min-height: 400px;
 }
 
-/* line 96, styles.scss */
+/* line 98, styles.scss */
 fieldset {
   border: 1px solid #AAA;
   padding: 0.75em;
@@ -797,20 +825,20 @@ fieldset {
   -webkit-border-radius: 5px;
 }
 
-/* line 104, styles.scss */
+/* line 106, styles.scss */
 fieldset legend {
   color: #555;
   font-size: 84%;
   padding: 0 0.5em;
 }
 
-/* line 109, styles.scss */
+/* line 111, styles.scss */
 header {
   padding: 5px 2px 1px;
   display: block;
 }
 
-/* line 113, styles.scss */
+/* line 115, styles.scss */
 footer {
   min-height: 50px;
   clear: both;
@@ -819,17 +847,17 @@ footer {
   padding: 0.25em 1em;
 }
 
-/* line 120, styles.scss */
+/* line 122, styles.scss */
 footer a {
   color: #999;
 }
 
-/* line 123, styles.scss */
+/* line 125, styles.scss */
 footer p {
   clear: both;
 }
 
-/* line 126, styles.scss */
+/* line 128, styles.scss */
 .clear {
   clear: both;
 }
@@ -839,13 +867,13 @@ footer p {
  **                        IMAGE METADATA STYLES                            **
  *****************************************************************************
  *****************************************************************************/
-/* line 138, styles.scss */
+/* line 140, styles.scss */
 .image-metadata-wrapper {
   display: inline-block;
   position: relative;
 }
 
-/* line 142, styles.scss */
+/* line 144, styles.scss */
 .image-metadata-wrapper .image-metadata {
   background: none repeat scroll 0 0 #DDDDDD;
   bottom: 0;
@@ -856,7 +884,7 @@ footer p {
   position: absolute;
 }
 
-/* line 151, styles.scss */
+/* line 153, styles.scss */
 .image-metadata-wrapper:hover .image-metadata {
   opacity: 0.7;
 }
@@ -873,29 +901,29 @@ For dimensions between 1300 and 975, keep it locked at 975px, it'll float in the
 For dimensions smaller than 975, just be at 100%.
 */
 @media screen and (max-width: 1300px) {
-  /* line 171, styles.scss */
+  /* line 173, styles.scss */
   #wrapper {
     width: 975px;
   }
 }
 @media screen and (max-width: 975px) {
-  /* line 174, styles.scss */
+  /* line 176, styles.scss */
   #wrapper {
     width: 100%;
   }
 }
 @media screen and (max-width: 640px) {
-  /* line 177, styles.scss */
+  /* line 179, styles.scss */
   #wrapper {
     width: 100%;
   }
 
-  /* line 180, styles.scss */
+  /* line 182, styles.scss */
   #wrapper #leftcol {
     display: none;
   }
 
-  /* line 183, styles.scss */
+  /* line 185, styles.scss */
   #wrapper.column1 section.pagecontent {
     margin-left: 0;
   }
@@ -916,7 +944,7 @@ For dimensions smaller than 975, just be at 100%.
  ** Navigation breadcrumbs and other sub-nav elements                       **
  *****************************************************************************
  *****************************************************************************/
-/* line 209, styles.scss */
+/* line 211, styles.scss */
 nav#breadcrumbs {
   font-size: 80%;
   margin-bottom: 0.5em;
@@ -926,34 +954,34 @@ nav#breadcrumbs {
   border-bottom: 1px solid #888;
 }
 
-/* line 218, styles.scss */
+/* line 220, styles.scss */
 #breadcrumbs #controls {
   margin: 0;
 }
 
-/* line 222, styles.scss */
+/* line 224, styles.scss */
 nav#breadcrumbs a {
   color: #555;
 }
 
-/* line 225, styles.scss */
+/* line 227, styles.scss */
 nav#breadcrumbs ul.controls {
   float: right;
   margin-top: -4px;
 }
 
 /*** Left-column ***/
-/* line 231, styles.scss */
+/* line 233, styles.scss */
 .pagecolumn {
   width: 170px;
 }
 
-/* line 232, styles.scss */
+/* line 234, styles.scss */
 .column1 #leftcol {
   float: left;
 }
 
-/* line 233, styles.scss */
+/* line 235, styles.scss */
 .column1 section.pagecontent {
   margin-left: 175px;
   /* Re-enabling the body overflow to allow for context menus.
@@ -961,14 +989,14 @@ nav#breadcrumbs ul.controls {
   */
 }
 
-/* line 241, styles.scss */
+/* line 243, styles.scss */
 .rounded-large {
   border-radius: 10px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
 }
 
-/* line 242, styles.scss */
+/* line 244, styles.scss */
 .rounded {
   border-radius: 5px;
   -moz-border-radius: 5px;
@@ -985,14 +1013,14 @@ nav#breadcrumbs ul.controls {
  *****************************************************************************
  *****************************************************************************/
 /*** Controls that can be implemented throughout the site ***/
-/* line 259, styles.scss */
+/* line 261, styles.scss */
 ul.controls {
   height: 20px;
   margin: 0;
   padding: 0;
 }
 
-/* line 264, styles.scss */
+/* line 266, styles.scss */
 ul.controls li {
   float: left;
   margin-right: 0.1em;
@@ -1004,7 +1032,7 @@ And their images.  Stand-alone "control" buttons also get the same styling.
 Since the icons are now being handled by font-awesome, the bulk of this logic will have been removed.
 */
 /* First, the common styles for all icon'd controls. */
-/* line 276, styles.scss */
+/* line 278, styles.scss */
 ul.controls li a {
   text-decoration: none;
   font-size: 14px;
@@ -1012,37 +1040,37 @@ ul.controls li a {
   line-height: 18px;
 }
 
-/* line 277, styles.scss */
+/* line 279, styles.scss */
 ul.controls li a:hover {
   text-shadow: none;
   font-size: 18px;
   padding: 0;
 }
 
-/* line 279, styles.scss */
+/* line 281, styles.scss */
 ul.controls li a span {
   display: none;
 }
 
 /** Spruce up FA with some color :) **/
-/* line 289, styles.scss */
+/* line 291, styles.scss */
 ul.controls li a i.icon-remove,
 ul.controls li a i.icon-delete {
   color: #7a0200;
 }
 
-/* line 290, styles.scss */
+/* line 292, styles.scss */
 ul.controls li a i.icon-edit {
   color: blue;
 }
 
-/* line 292, styles.scss */
+/* line 294, styles.scss */
 ul.controls li a i.icon-plus,
 ul.controls li a i.icon-add {
   color: green;
 }
 
-/* line 293, styles.scss */
+/* line 295, styles.scss */
 ul.controls li a i.icon-rss {
   color: #e99700;
 }
@@ -1051,7 +1079,7 @@ ul.controls li a i.icon-rss {
  * Contextual controls are similar, but slightly different.
  * Instead of being inline, they're in a context menu.
  */
-/* line 299, styles.scss */
+/* line 301, styles.scss */
 ul.controls.context-menu {
   position: absolute;
   border: 1px solid #999;
@@ -1062,7 +1090,7 @@ ul.controls.context-menu {
 }
 
 /* The many links have a bit different styles. */
-/* line 309, styles.scss */
+/* line 311, styles.scss */
 ul.controls.context-menu-many-links {
   box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
   left: 20px;
@@ -1070,7 +1098,7 @@ ul.controls.context-menu-many-links {
   top: -3px;
 }
 
-/* line 315, styles.scss */
+/* line 317, styles.scss */
 ul.controls.context-menu li {
   font-size: 14px;
   float: none;
@@ -1080,31 +1108,31 @@ ul.controls.context-menu li {
   color: #555;
 }
 
-/* line 323, styles.scss */
+/* line 325, styles.scss */
 ul.controls.context-menu li i {
   line-height: 1.5em;
 }
 
-/* line 326, styles.scss */
+/* line 328, styles.scss */
 ul.controls.context-menu li a {
   padding: 0;
   display: block;
   color: #000;
 }
 
-/* line 331, styles.scss */
+/* line 333, styles.scss */
 ul.controls.context-menu li a:hover {
   font-size: 14px;
   background: #AFC5EE;
   color: #000;
 }
 
-/* line 337, styles.scss */
+/* line 339, styles.scss */
 ul.controls.context-menu i {
   padding-left: 4px;
 }
 
-/* line 340, styles.scss */
+/* line 342, styles.scss */
 ul.controls.context-menu span {
   line-height: 1.9em;
   padding: 0 2px;
@@ -1126,7 +1154,7 @@ ul.controls.context-menu span {
  *****************************************************************************
  *****************************************************************************/
 /* First, all the shared elements amongst the buttons. */
-/* line 373, styles.scss */
+/* line 375, styles.scss */
 a.button,
 .ui-widget-content a.button,
 span.button,
@@ -1154,7 +1182,7 @@ button {
 }
 
 /* Standard nodes that act as buttons require a little more care */
-/* line 395, styles.scss */
+/* line 397, styles.scss */
 a.button,
 .ui-widget-content a.button,
 span.button {
@@ -1163,7 +1191,7 @@ span.button {
   text-decoration: none !important;
 }
 
-/* line 405, styles.scss */
+/* line 407, styles.scss */
 a.button:hover,
 .ui-widget-content a.button:hover,
 span.button:hover,
@@ -1173,7 +1201,7 @@ button:hover {
   background: #888;
 }
 
-/* line 410, styles.scss */
+/* line 412, styles.scss */
 a.button[disabled=disabled] {
   background-color: rgba(126, 126, 128, 0.69);
   border: 1px outset rgba(80, 84, 87, 0.32);
@@ -1182,14 +1210,14 @@ a.button[disabled=disabled] {
 }
 
 /** Tweak the autocomplete styles slightly **/
-/* line 418, styles.scss */
+/* line 420, styles.scss */
 .formelement input[type="text"].ui-autocomplete-loading {
   background-image: url("../images/loading-bar-small.gif");
   background-position: center right;
   background-repeat: no-repeat;
 }
 
-/* line 424, styles.scss */
+/* line 426, styles.scss */
 .formelement input[type="text"].ui-autocomplete-input {
   border: 1px solid #47C6CB;
 }
@@ -1200,7 +1228,7 @@ a.button[disabled=disabled] {
  *****************************************************************************
  *****************************************************************************/
 /** general styles for most of the messages **/
-/* line 444, styles.scss */
+/* line 446, styles.scss */
 .message-note,
 .message-info,
 .message-success,
@@ -1216,7 +1244,7 @@ a.button[disabled=disabled] {
   position: relative;
 }
 
-/* line 453, styles.scss */
+/* line 455, styles.scss */
 .message-tutorial {
   padding: 15px 10px 15px 55px;
   margin: 10px;
@@ -1227,48 +1255,48 @@ a.button[disabled=disabled] {
 }
 
 /** Specific colors **/
-/* line 463, styles.scss */
+/* line 465, styles.scss */
 .message-note {
   background: #FCF0AD;
   border: 1px solid #BCB06D;
 }
 
-/* line 467, styles.scss */
+/* line 469, styles.scss */
 .message-info {
   background: #EEE9FF;
   border: 1px solid #2667FF;
   color: #0a1250;
 }
 
-/* line 472, styles.scss */
+/* line 474, styles.scss */
 .message-success {
   background: #AFA;
   border: 1px solid #373;
   color: #151;
 }
 
-/* line 477, styles.scss */
+/* line 479, styles.scss */
 .message-deprecated {
   background: #fff4bd;
   border: 1px solid #ded081;
   color: #c1b572;
 }
 
-/* line 482, styles.scss */
+/* line 484, styles.scss */
 .message-warning {
   background: #fce8d1;
   border: 1px solid #bc8565;
   color: #df5c25;
 }
 
-/* line 487, styles.scss */
+/* line 489, styles.scss */
 .message-error {
   background: #FCe5ed;
   border: 1px solid #BC606D;
   color: #DF101D;
 }
 
-/* line 492, styles.scss */
+/* line 494, styles.scss */
 .message-tutorial {
   background: #faefb9;
   border: 1px solid #BCB06D;
@@ -1276,33 +1304,33 @@ a.button[disabled=disabled] {
 }
 
 /** I need to color the A tags too **/
-/* line 499, styles.scss */
+/* line 501, styles.scss */
 body .pagecontent .message-note a {
   color: #7f774a;
 }
 
-/* line 502, styles.scss */
+/* line 504, styles.scss */
 body .pagecontent .message-info a {
   color: #0a1250;
 }
 
-/* line 505, styles.scss */
+/* line 507, styles.scss */
 body .pagecontent .message-success a {
   color: #151;
 }
 
-/* line 508, styles.scss */
+/* line 510, styles.scss */
 body .pagecontent .message-error a {
   color: #DF101D;
 }
 
-/* line 511, styles.scss */
+/* line 513, styles.scss */
 body .pagecontent .message-tutorial a {
   color: #7f774a;
 }
 
 /** And the message's icons **/
-/* line 517, styles.scss */
+/* line 519, styles.scss */
 div[class^="message-"] .message-background-icon i,
 p[class^="message-"] .message-background-icon i {
   font-size: 75px;
@@ -1314,43 +1342,43 @@ p[class^="message-"] .message-background-icon i {
 }
 
 /** And the specific message types icon colors **/
-/* line 527, styles.scss */
+/* line 529, styles.scss */
 3.message-note .message-background-icon i  [class^="icon-"] {
   color: #BCB06D;
 }
 
-/* line 530, styles.scss */
+/* line 532, styles.scss */
 .message-info .message-background-icon i[class^="icon-"] {
   color: #2667FF;
 }
 
-/* line 533, styles.scss */
+/* line 535, styles.scss */
 .message-success .message-background-icon i[class^="icon-"] {
   color: #373;
 }
 
-/* line 536, styles.scss */
+/* line 538, styles.scss */
 .message-error .message-background-icon i[class^="icon-"] {
   color: #DF101D;
 }
 
-/* line 539, styles.scss */
+/* line 541, styles.scss */
 .message-tutorial .message-background-icon i[class^="icon-"] {
   color: #BCB06D;
 }
 
-/* line 543, styles.scss */
+/* line 545, styles.scss */
 table.stacktrace {
   width: 100%;
   border: 1px solid;
 }
 
-/* line 547, styles.scss */
+/* line 549, styles.scss */
 table.stacktrace th {
   border: 1px solid;
 }
 
-/* line 550, styles.scss */
+/* line 552, styles.scss */
 table.stacktrace td {
   border: 1px solid;
   font-size: 80%;
@@ -1362,7 +1390,7 @@ table.stacktrace td {
  *****************************************************************************
  *****************************************************************************/
 /* Error messages for everything */
-/* line 568, styles.scss */
+/* line 570, styles.scss */
 .formelement.formerror input,
 .formelement.formerror select,
 .formelement.formerror textarea {
@@ -1371,7 +1399,7 @@ table.stacktrace td {
 }
 
 /* Description tag for form elements */
-/* line 575, styles.scss */
+/* line 577, styles.scss */
 .formelement .formdescription,
 fieldset .formdescription {
   font-size: 85%;
@@ -1379,13 +1407,13 @@ fieldset .formdescription {
   margin: 0.25em 0 0.25em 1em;
 }
 
-/* line 581, styles.scss */
+/* line 583, styles.scss */
 .formelement {
   margin-bottom: 0.75em;
   position: relative;
 }
 
-/* line 586, styles.scss */
+/* line 588, styles.scss */
 .formelement .formelement-labelinputgroup {
   background: #F6F6F6;
   border: 1px solid #CBCBCB;
@@ -1394,7 +1422,7 @@ fieldset .formdescription {
   float: left;
 }
 
-/* line 594, styles.scss */
+/* line 596, styles.scss */
 .formelement .formelement-labelinputgroup label {
   float: left;
   color: #888;
@@ -1403,7 +1431,7 @@ fieldset .formdescription {
   min-width: 120px;
 }
 
-/* line 602, styles.scss */
+/* line 604, styles.scss */
 .formelement .formelement-labelinputgroup input {
   color: #3C3C3C;
   float: left;
@@ -1414,13 +1442,13 @@ fieldset .formdescription {
 }
 
 /* Select specific styles */
-/* line 612, styles.scss */
+/* line 614, styles.scss */
 .formelement.formselect .formelement-labelinputgroup label {
   /* Select boxes generally are a little taller than inputs, have more padding for the label. */
   padding: 7px 4px 8px 9px;
 }
 
-/* line 616, styles.scss */
+/* line 618, styles.scss */
 .formelement.formselect .formelement-labelinputgroup select {
   background: #F6F6F6;
   border: 0 none;
@@ -1432,7 +1460,7 @@ fieldset .formdescription {
 }
 
 /* Radio specific styles */
-/* line 627, styles.scss */
+/* line 629, styles.scss */
 .formelement.formradioinput {
   max-width: 415px;
   display: block;
@@ -1444,13 +1472,13 @@ fieldset .formdescription {
   margin-right: 0.75em;
 }
 
-/* line 637, styles.scss */
+/* line 639, styles.scss */
 .formelement.formradioinput .formelement-labelinputgroup {
   float: none;
   border: 0 none;
 }
 
-/* line 641, styles.scss */
+/* line 643, styles.scss */
 .formelement.formradioinput .formelement-labelinputgroup > label {
   background: #DDDDDD;
   color: #888888;
@@ -1461,7 +1489,7 @@ fieldset .formdescription {
   top: 0;
 }
 
-/* line 650, styles.scss */
+/* line 652, styles.scss */
 .formelement.formradioinput span.radio-label {
   display: block;
   background: #DDD;
@@ -1470,7 +1498,7 @@ fieldset .formdescription {
   color: #888888;
 }
 
-/* line 657, styles.scss */
+/* line 659, styles.scss */
 .formelement.formradioinput label {
   border: none;
   color: #3C3C3C;
@@ -1485,13 +1513,13 @@ fieldset .formdescription {
   left: 6px;
 }
 
-/* line 670, styles.scss */
+/* line 672, styles.scss */
 .formelement.formradioinput label input {
   margin-top: 0;
 }
 
 /* Checkbox and checkboxes specific styles */
-/* line 675, styles.scss */
+/* line 677, styles.scss */
 .formelement.formcheckboxinput {
   display: inline-block;
   clear: both;
@@ -1503,7 +1531,7 @@ fieldset .formdescription {
   margin-right: 0.75em;
 }
 
-/* line 685, styles.scss */
+/* line 687, styles.scss */
 .formelement.formcheckboxesinput {
   background: #F6F6F6;
   border: 1px solid #CBCBCB;
@@ -1513,14 +1541,14 @@ fieldset .formdescription {
   padding-bottom: 4px;
 }
 
-/* line 693, styles.scss */
+/* line 695, styles.scss */
 .formelement.formcheckboxinput label {
   padding: 0.25em 0;
   white-space: nowrap;
   top: 4px;
 }
 
-/* line 698, styles.scss */
+/* line 700, styles.scss */
 .formelement.formcheckboxesinput label {
   display: block;
   margin: 0 8px;
@@ -1530,34 +1558,34 @@ fieldset .formdescription {
   top: 4px;
 }
 
-/* line 706, styles.scss */
+/* line 708, styles.scss */
 .formelement.formcheckboxinput input {
   color: #3C3C3C;
   padding: 0.35em 0;
 }
 
-/* line 710, styles.scss */
+/* line 712, styles.scss */
 .formelement.formcheckboxesinput input {
   margin-left: 0;
   color: #3C3C3C;
   padding: 0.35em 0;
 }
 
-/* line 715, styles.scss */
+/* line 717, styles.scss */
 .formelement.formcheckboxesinput span.checkboxes-label {
   display: block;
   background: #DDD;
   padding: 8px 7px;
 }
 
-/* line 720, styles.scss */
+/* line 722, styles.scss */
 .formelement.formcheckboxesinput span.checkboxes-label span.checkboxes-toggle {
   cursor: pointer;
   float: right;
 }
 
 /* Textarea specific styles */
-/* line 727, styles.scss */
+/* line 729, styles.scss */
 .formelement.formtextareainput .formelement-labelinputgroup label {
   display: block;
   float: none;
@@ -1565,7 +1593,7 @@ fieldset .formdescription {
   top: 0;
 }
 
-/* line 733, styles.scss */
+/* line 735, styles.scss */
 .formelement.formtextareainput .formelement-labelinputgroup textarea {
   padding: 2px;
   width: 400px;
@@ -1575,29 +1603,29 @@ fieldset .formdescription {
 }
 
 /* File input specific styles */
-/* line 742, styles.scss */
+/* line 744, styles.scss */
 .formelement.formfileinput {
   clear: both;
 }
 
-/* line 745, styles.scss */
+/* line 747, styles.scss */
 .formelement.formfileinput label {
   float: none;
   display: block;
 }
 
-/* line 749, styles.scss */
+/* line 751, styles.scss */
 .formelement.formfileinput .file-input-innercontainer {
   padding: 4px;
 }
 
-/* line 752, styles.scss */
+/* line 754, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .formfileinput-selector {
   vertical-align: top;
   width: 150px;
 }
 
-/* line 756, styles.scss */
+/* line 758, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .formfileinput-selector label {
   position: relative;
   top: 0;
@@ -1605,12 +1633,12 @@ fieldset .formdescription {
   background: none;
 }
 
-/* line 762, styles.scss */
+/* line 764, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .file-input-actions {
   vertical-align: top;
 }
 
-/* line 765, styles.scss */
+/* line 767, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .fileinput-action {
   max-height: 350px;
   min-width: 200px;
@@ -1618,7 +1646,7 @@ fieldset .formdescription {
   overflow-y: auto;
 }
 
-/* line 771, styles.scss */
+/* line 773, styles.scss */
 .formelement.formfileinput .file-input-innercontainer .fileinput-action input {
   background: white;
   border: 1px solid #888;
@@ -1627,13 +1655,13 @@ fieldset .formdescription {
 }
 
 /* Page Keywords input specific styles */
-/* line 779, styles.scss */
+/* line 781, styles.scss */
 .formelement.formpagemetakeywordsinput label {
   display: block;
   float: none;
 }
 
-/* line 783, styles.scss */
+/* line 785, styles.scss */
 .formelement.formpagemetakeywordsinput .keywords-multi-select {
   background: none repeat scroll 0 0 #F6F6F6;
   border: 1px solid #47C6CB;
@@ -1644,7 +1672,7 @@ fieldset .formdescription {
   padding: 2px;
 }
 
-/* line 792, styles.scss */
+/* line 794, styles.scss */
 .formelement.formpagemetakeywordsinput .keywords-multi-select input[type="text"] {
   border: 0 none;
   float: left;
@@ -1652,7 +1680,7 @@ fieldset .formdescription {
   padding: 0;
 }
 
-/* line 798, styles.scss */
+/* line 800, styles.scss */
 .formelement.formpagemetakeywordsinput .keywords-multi-select .keywords-multi-select-option {
   background: none repeat scroll 0 0 #EEEEFF;
   border: 1px solid #DDDDDD;
@@ -1663,7 +1691,7 @@ fieldset .formdescription {
 }
 
 /* Disabled selects should look a little more ... disabled. */
-/* line 810, styles.scss */
+/* line 812, styles.scss */
 .formelement.formselect .formelement-labelinputgroup select[disabled],
 .formelement.formselect select[disabled] {
   opacity: 0.4;
@@ -1671,13 +1699,13 @@ fieldset .formdescription {
   cursor: no-drop;
 }
 
-/* line 817, styles.scss */
+/* line 819, styles.scss */
 .facebook-integration {
   margin-left: 0;
   max-width: 515px;
 }
 
-/* line 822, styles.scss */
+/* line 824, styles.scss */
 .ui-dialog .formelement label {
   position: relative;
   top: 0;
@@ -1685,19 +1713,19 @@ fieldset .formdescription {
   text-align: left;
 }
 
-/* line 828, styles.scss */
+/* line 830, styles.scss */
 .ui-dialog .formelement input {
   padding: 0.35em 0.8em;
   display: block;
 }
 
-/* line 833, styles.scss */
+/* line 835, styles.scss */
 .ui-dialog .formelement select {
   display: block;
   max-width: 100%;
 }
 
-/* line 838, styles.scss */
+/* line 840, styles.scss */
 .tinymce label {
   position: relative;
   top: 0;
@@ -1709,19 +1737,19 @@ fieldset .formdescription {
  **                            LISTING TABLES                               **
  *****************************************************************************
  *****************************************************************************/
-/* line 852, styles.scss */
+/* line 854, styles.scss */
 table.listing {
   width: 100%;
   border: 1px solid #AAA;
   border-collapse: collapse;
 }
 
-/* line 857, styles.scss */
+/* line 859, styles.scss */
 table.listing tr:nth-child(odd) {
   background-color: #d4d6d9;
 }
 
-/* line 860, styles.scss */
+/* line 862, styles.scss */
 table.listing th {
   padding: 0.15em 0.5em;
   border: 1px solid #AAA;
@@ -1730,7 +1758,7 @@ table.listing th {
   color: #EEE;
 }
 
-/* line 867, styles.scss */
+/* line 869, styles.scss */
 table.listing td {
   padding: 0.15em 0.5em;
   border: 1px solid #AAA;
@@ -1738,7 +1766,7 @@ table.listing td {
 }
 
 /* Give a little high-lighting effect on mouseover for the records. */
-/* line 874, styles.scss */
+/* line 876, styles.scss */
 table.listing tr:hover {
   background-color: #c7d5eb;
 }
@@ -1748,7 +1776,7 @@ table.listing tr:hover {
  **                          DEBUGGING CLASSES                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 886, styles.scss */
+/* line 888, styles.scss */
 pre.xdebug-var-dump {
   border: 1px solid #FFE5C0;
   padding: 0.5em;
@@ -1763,35 +1791,35 @@ pre.xdebug-var-dump {
  **                     SORTABLES & NESTED SORTABLES                        **
  *****************************************************************************
  *****************************************************************************/
-/* line 903, styles.scss */
+/* line 905, styles.scss */
 ol.sortable-listing {
   margin: 0.5em 0;
 }
 
-/* line 906, styles.scss */
+/* line 908, styles.scss */
 ol.sortable-listing li {
   display: block;
   list-style: none outside none;
 }
 
-/* line 910, styles.scss */
+/* line 912, styles.scss */
 ol.sortable-listing li div.entry {
   border: 1px solid #BBBBBB;
   padding: 0.25em;
 }
 
-/* line 914, styles.scss */
+/* line 916, styles.scss */
 ol.sortable-listing li.placeholder {
   border: 1px solid #BBBBBB;
   background: #BBB;
 }
 
-/* line 918, styles.scss */
+/* line 920, styles.scss */
 ol.sortable-listing li a.control {
   margin-top: -2px;
 }
 
-/* line 921, styles.scss */
+/* line 923, styles.scss */
 ol.sortable-listing ol {
   margin-left: 1em;
 }
@@ -1801,19 +1829,19 @@ ol.sortable-listing ol {
  **                           PRIMARY NAVIGATION                            **
  *****************************************************************************
  *****************************************************************************/
-/* line 933, styles.scss */
+/* line 935, styles.scss */
 #primary-nav li {
   display: inline-block;
   position: relative;
   text-align: center;
 }
 
-/* line 938, styles.scss */
+/* line 940, styles.scss */
 #primary-nav li.navigation-menu-over a:hover {
   background: #333;
 }
 
-/* line 942, styles.scss */
+/* line 944, styles.scss */
 #primary-nav a,
 #primary-nav span {
   color: #777;
@@ -1826,13 +1854,13 @@ ol.sortable-listing ol {
 }
 
 /* Enable the mouse over menu */
-/* line 952, styles.scss */
+/* line 954, styles.scss */
 #primary-nav li.navigation-menu-over > ul {
   display: block;
 }
 
 /* And the sub menu */
-/* line 956, styles.scss */
+/* line 958, styles.scss */
 #primary-nav li ul {
   display: none;
   position: absolute;
@@ -1845,13 +1873,13 @@ ol.sortable-listing ol {
   box-shadow: 0 3px 6px #000;
 }
 
-/* line 967, styles.scss */
+/* line 969, styles.scss */
 #primary-nav li ul li {
   width: 190px;
   text-align: left;
 }
 
-/* line 972, styles.scss */
+/* line 974, styles.scss */
 #primary-nav li ul a,
 #primary-nav li ul span {
   padding-left: 20px;
@@ -1859,7 +1887,7 @@ ol.sortable-listing ol {
 }
 
 /* And any sub sub menu */
-/* line 977, styles.scss */
+/* line 979, styles.scss */
 #primary-nav li ul li ul {
   top: -2px;
   left: 180px;
@@ -1874,7 +1902,7 @@ ol.sortable-listing ol {
   box-shadow: 0 3px 6px #000;
 }
 
-/* line 990, styles.scss */
+/* line 992, styles.scss */
 #primary-nav a:hover {
   text-shadow: none;
 }
@@ -1884,14 +1912,14 @@ ol.sortable-listing ol {
  **                          FOOTER NAVIGATION                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 1001, styles.scss */
+/* line 1003, styles.scss */
 footer ul.navigation-menu li {
   list-style-type: none;
   float: left;
   padding: 0 0.5em;
 }
 
-/* line 1006, styles.scss */
+/* line 1008, styles.scss */
 footer ul.navigation-menu li li {
   float: none;
 }
@@ -1901,7 +1929,7 @@ footer ul.navigation-menu li li {
  **                         COLLAPSIBLE FIELDSETS                           **
  *****************************************************************************
  *****************************************************************************/
-/* line 1018, styles.scss */
+/* line 1020, styles.scss */
 fieldset.collapsed {
   padding: 0;
   border-width: 1px 0 0;
@@ -1912,12 +1940,12 @@ fieldset.collapsed {
  **                            PROGRESS BARS                                **
  *****************************************************************************
  *****************************************************************************/
-/* line 1028, styles.scss */
+/* line 1030, styles.scss */
 .progress-container {
   position: relative;
 }
 
-/* line 1031, styles.scss */
+/* line 1033, styles.scss */
 .progress-success {
   background: none repeat scroll 0 0 #992222;
   border: 2px solid green;
@@ -1925,13 +1953,13 @@ fieldset.collapsed {
   margin-bottom: 5px;
 }
 
-/* line 1037, styles.scss */
+/* line 1039, styles.scss */
 .progress-success .bar {
   background: none repeat scroll 0 0 green;
   height: 20px;
 }
 
-/* line 1041, styles.scss */
+/* line 1043, styles.scss */
 .progress-container .progress-extended {
   color: white;
   left: 46px;
@@ -1940,22 +1968,22 @@ fieldset.collapsed {
 }
 
 /** Theme Editor **/
-/* line 1050, styles.scss */
+/* line 1052, styles.scss */
 .page-themeeditor .column1 section.pagecontent {
   margin-left: 12px;
 }
 
-/* line 1057, styles.scss */
+/* line 1059, styles.scss */
 .editor-container {
   position: relative;
 }
 
-/* line 1061, styles.scss */
+/* line 1063, styles.scss */
 #code {
   min-width: 590px;
 }
 
-/* line 1065, styles.scss */
+/* line 1067, styles.scss */
 #theme-editor-browser {
   background: transparent;
   position: absolute;
@@ -1964,12 +1992,12 @@ fieldset.collapsed {
   top: 52px;
 }
 
-/* line 1073, styles.scss */
+/* line 1075, styles.scss */
 #theme-editor-browser a {
   color: #222;
 }
 
-/* line 1077, styles.scss */
+/* line 1079, styles.scss */
 #theme-editor-browser .left {
   float: left;
   width: 300px;
@@ -1981,12 +2009,12 @@ fieldset.collapsed {
   overflow-y: auto;
 }
 
-/* line 1088, styles.scss */
+/* line 1090, styles.scss */
 #theme-editor-browser .left:hover {
   opacity: 0.9;
 }
 
-/* line 1090, styles.scss */
+/* line 1092, styles.scss */
 #theme-editor-browser .right {
   float: right;
   width: 28px;
@@ -2001,112 +2029,112 @@ fieldset.collapsed {
   border-top: 1px solid #2b2b2b;
 }
 
-/* line 1104, styles.scss */
+/* line 1106, styles.scss */
 #theme-editor-browser .right:hover {
   opacity: 1;
 }
 
-/* line 1106, styles.scss */
+/* line 1108, styles.scss */
 #theme-editor-browser .right i {
   margin-left: 8px;
 }
 
-/* line 1108, styles.scss */
+/* line 1110, styles.scss */
 #theme-editor-browser .icon {
   float: right;
   margin-right: 2px;
 }
 
-/* line 1113, styles.scss */
+/* line 1115, styles.scss */
 #theme-editor-browser li .icon {
   margin-right: 0;
 }
 
-/* line 1115, styles.scss */
+/* line 1117, styles.scss */
 #theme-editor-browser h2 {
   color: #666;
   margin-bottom: 3px;
 }
 
-/* line 1117, styles.scss */
+/* line 1119, styles.scss */
 #theme-editor-browser ul {
   margin-bottom: 9px;
   padding-bottom: 3px;
   border-bottom: 1px solid #e1e1e1;
 }
 
-/* line 1123, styles.scss */
+/* line 1125, styles.scss */
 #theme-editor-browser .sub {
   display: none;
 }
 
-/* line 1125, styles.scss */
+/* line 1127, styles.scss */
 #theme-editor-browser li .icon {
   cursor: pointer;
 }
 
-/* line 1127, styles.scss */
+/* line 1129, styles.scss */
 #theme-editor-browser li {
   list-style-type: none;
   margin-bottom: 3px;
 }
 
-/* line 1132, styles.scss */
+/* line 1134, styles.scss */
 #theme-editor-browser ul ul {
   margin-left: 10px;
 }
 
-/* line 1134, styles.scss */
+/* line 1136, styles.scss */
 #theme-editor-browser h2 {
   cursor: pointer;
 }
 
-/* line 1138, styles.scss */
+/* line 1140, styles.scss */
 .theme-editor {
   display: none;
 }
 
-/* line 1142, styles.scss */
+/* line 1144, styles.scss */
 #theme-editor-wysiwyg .image-editor {
   background: #202020;
   padding-bottom: 25px;
   padding-left: 285px;
 }
 
-/* line 1148, styles.scss */
+/* line 1150, styles.scss */
 .image-editor h2 {
   margin-bottom: 5px;
 }
 
-/* line 1150, styles.scss */
+/* line 1152, styles.scss */
 #revert {
   cursor: pointer;
   font-weight: bold;
   text-decoration: underline;
 }
 
-/* line 1156, styles.scss */
+/* line 1158, styles.scss */
 #revisions li.revision {
   margin-bottom: 3px;
 }
 
-/* line 1158, styles.scss */
+/* line 1160, styles.scss */
 #revisions .revision-title {
   cursor: pointer;
 }
 
-/* line 1159, styles.scss */
+/* line 1161, styles.scss */
 #revisions .revision-date {
   color: #888;
 }
 
-/* line 1161, styles.scss */
+/* line 1163, styles.scss */
 .page-themeeditor #dialog-confirm {
   display: none;
 }
 
 /** Pagination styles **/
-/* line 1165, styles.scss */
+/* line 1167, styles.scss */
 .pagination {
   color: #555555;
   font-size: 84%;
@@ -2114,45 +2142,45 @@ fieldset.collapsed {
   margin: 0.5em 0;
 }
 
-/* line 1171, styles.scss */
+/* line 1173, styles.scss */
 .pagination a {
   text-decoration: none;
   color: #555555;
 }
 
-/* line 1175, styles.scss */
+/* line 1177, styles.scss */
 .pagination .disabled {
   color: #999;
 }
 
-/* line 1179, styles.scss */
+/* line 1181, styles.scss */
 .pagination-pager {
   float: left;
 }
 
-/* line 1183, styles.scss */
+/* line 1185, styles.scss */
 .pagination-list {
   float: right;
 }
 
 /* login page */
-/* line 1189, styles.scss */
+/* line 1191, styles.scss */
 .page-user-login #leftcol,
 .page-user-login #breadcrumbs {
   display: none;
 }
 
-/* line 1191, styles.scss */
+/* line 1193, styles.scss */
 body.page-user-login .column1 section.pagecontent {
   margin-left: 0;
 }
 
-/* line 1194, styles.scss */
+/* line 1196, styles.scss */
 .page-user-login .register-account {
   margin-right: 15px;
 }
 
-/* line 1198, styles.scss */
+/* line 1200, styles.scss */
 #facebook-login-button {
   padding: 6px 8px;
   text-decoration: none;
@@ -2165,7 +2193,7 @@ body.page-user-login .column1 section.pagecontent {
   top: 0;
 }
 
-/* line 1210, styles.scss */
+/* line 1212, styles.scss */
 .page-user-login fieldset {
   border: none;
   border-radius: 0;
@@ -2173,18 +2201,18 @@ body.page-user-login .column1 section.pagecontent {
   padding: 15px 10px;
 }
 
-/* line 1217, styles.scss */
+/* line 1219, styles.scss */
 .page-user-login fieldset.left {
   min-width: 51%;
   width: 51%;
 }
 
-/* line 1222, styles.scss */
+/* line 1224, styles.scss */
 .page-user-login fieldset.left .formelement {
   margin-bottom: 1.25em;
 }
 
-/* line 1226, styles.scss */
+/* line 1228, styles.scss */
 .page-user-login #login-divider {
   background: #ccc;
   background: radial-gradient(ellipse at center center, rgba(50, 50, 50, 0.25) 0%, transparent 70%) repeat scroll 0 0 transparent;
@@ -2195,33 +2223,33 @@ body.page-user-login .column1 section.pagecontent {
   float: left;
 }
 
-/* line 1236, styles.scss */
+/* line 1238, styles.scss */
 .page-user-login fieldset.right {
   min-width: 33%;
 }
 
-/* line 1240, styles.scss */
+/* line 1242, styles.scss */
 .page-user-login fieldset fieldset {
   background: transparent;
 }
 
-/* line 1243, styles.scss */
+/* line 1245, styles.scss */
 .left {
   float: left;
 }
 
-/* line 1244, styles.scss */
+/* line 1246, styles.scss */
 .right {
   float: right;
 }
 
-/* line 1247, styles.scss */
+/* line 1249, styles.scss */
 fieldset.left,
 fieldset.right {
   min-height: 180px;
 }
 
-/* line 1251, styles.scss */
+/* line 1253, styles.scss */
 .login-forgot {
   display: block;
   float: right;
@@ -2232,7 +2260,7 @@ fieldset.right {
   font-style: italic;
 }
 
-/* line 1262, styles.scss */
+/* line 1264, styles.scss */
 #login-existing,
 #user-login {
   background: rgba(0, 0, 0, 0.05);
@@ -2240,18 +2268,18 @@ fieldset.right {
   margin: 25px 0.5em 20px;
 }
 
-/* line 1268, styles.scss */
+/* line 1270, styles.scss */
 #login-center {
   width: 720px;
   margin: 25px auto 0 auto;
 }
 
-/* line 1273, styles.scss */
+/* line 1275, styles.scss */
 .page-user-login label {
   max-width: 100px;
 }
 
-/* line 1276, styles.scss */
+/* line 1278, styles.scss */
 .widgetarea-admindashboard .widget {
   background: #e9e9e9;
   border: 1px solid #BBBBBB;
@@ -2261,7 +2289,7 @@ fieldset.right {
   padding: 1em;
 }
 
-/* line 1285, styles.scss */
+/* line 1287, styles.scss */
 .widgetarea-admindashboard .widget h3 {
   text-align: center;
   margin-bottom: 0.5em;
