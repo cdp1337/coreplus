@@ -1229,6 +1229,18 @@ class PageModel extends Model {
 			$method = 'Index';
 		}
 
+		// If there was a content type requested, (.something), then trim that off too!
+		if(strpos($method, '.') !== false){
+			$ctype = \Core\Filestore\extension_to_mimetype(substr($method, strpos($method, '.') + 1));
+
+			// Invalid mimetype?  Default to an HTML file.
+			if(!$ctype){
+				$ctype = 'text/html';
+			}
+
+			$method = substr($method, 0, strpos($method, '.'));
+		}
+
 		// One last check that the method exists, (because there's only 1 scenario that checks above)
 		if (!method_exists($controller, $method)) {
 			return null;
