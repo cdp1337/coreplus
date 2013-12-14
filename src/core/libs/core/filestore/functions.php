@@ -618,3 +618,41 @@ function extension_to_mimetype($ext){
 			return 'application/octet-stream';
 	}
 }
+
+/**
+ * Convert a common mimetype to its extension.
+ *
+ * @param $mimetype
+ *
+ * @return string
+ */
+function mimetype_to_extension($mimetype){
+	switch($mimetype){
+		case 'application/atom+xml':
+			return 'atom';
+		case 'text/csv':
+			return 'csv';
+		case 'text/css':
+			return 'css';
+		case 'text/html':
+			return 'html';
+		case 'text/calendar':
+			return 'ics';
+		case 'text/javascript':
+			return 'js';
+		case 'application/json':
+			return 'json';
+		case 'font/otf':
+			return 'otf';
+		case 'application/rss+xml':
+			return 'rss';
+		case 'font/ttf':
+			return 'ttf';
+		case 'application/xhtml+xml':
+			return 'xhtml';
+		case 'application/xml':
+			return 'xml';
+		default:
+			return '';
+	}
+}
