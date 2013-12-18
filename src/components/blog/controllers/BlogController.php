@@ -684,13 +684,13 @@ class BlogController extends Controller_2_1 {
 			$image                  = \Core\Filestore\Factory::File($article->get('image'));
 			$view->meta['og:image'] = $image->getPreviewURL('200x200');
 		}
-		if($author){
-			/** @var $author User */
-			//$view->meta['author'] = $author->getDisplayName();
-			$view->meta['author'] = $author;
-		}
+		//if($author){
+		//	/** @var $author User */
+		//	//$view->meta['author'] = $author->getDisplayName();
+		//	$view->meta['author'] = $author;
+		//}
 		$view->meta['description'] = $article->getTeaser();
-		$view->assign('author', $author);
+		$view->assign('author', $author->exists() ? $author : null);
 		$view->assign('article', $article);
 		$view->assign('body', \Core\parse_html($article->get('body')));
 
