@@ -45,7 +45,7 @@ class UserController extends Controller_2_1{
 		$filters->setName('user-admin');
 		$filters->haspagination = true;
 		$filters->hassort = true;
-		$filters->setSortkeys(array('email', 'active', 'created'));
+		$filters->setSortkeys(array('email', 'active', 'created','last_login'));
 		$filters->addElement(
 			'text',
 			array(
@@ -63,14 +63,28 @@ class UserController extends Controller_2_1{
 				'link' => FilterForm::LINK_TYPE_STANDARD,
 			)
 		);
+		$filters->addElement(
+			'select',
+			array(
+				'title' => 'Ever logged in?',
+				'name' => 'last_login',
+				'options' => array('' => 'Both', '1' => 'No', '2' => 'Yes'),
+			)
+		);
 
 		$filters->load($request);
 		$factory = new ModelFactory('UserModel');
+
+		if($filters->get('last_login') == 1) {
+			$factory->where('last_login = 0');
+		}
+		elseif($filters->get('last_login') == 2) {
+			$factory->where('last_login > 0');
+		}
+
 		$filters->applyToFactory($factory);
 
 		$users = $factory->get();
-		//$users = UserModel::Find(null, null, 'email');
-
 
 		$view->title = 'User Administration';
 		$view->assign('enableavatar', (\ConfigHandler::Get('/user/enableavatar')));
