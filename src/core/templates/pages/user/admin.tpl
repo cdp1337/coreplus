@@ -104,6 +104,8 @@
 					update_user_table();
 				}
 			});
+
+			return false;
 		});
 	});
 </script>
