@@ -109,12 +109,18 @@ abstract class BlogHelper {
 			/** @var $pageauthor PageMetaModel|null */
 			$pageauthor = $page->getMeta('author');
 
-			// Allow the user to override who is posting this article, if set.
+
 			if($pageauthor && $pageauthor->get('meta_value_title') && $pageauthor->get('meta_value')){
+				// Allow the user to override who is posting this article, if set.
 				$article->set('authorid', $pageauthor->get('meta_value'));
 			}
-			// Otherwise Set the article author to the current user.
+			elseif($pageauthor && $pageauthor->get('meta_value_title')){
+				// If they never selected a valid user, allow that to go through too.
+				// The page will have saved the name that they type in regardless.
+				$article->set('authorid', 0);
+			}
 			else{
+				// Otherwise Set the article author to the current user.
 				$article->set('authorid', \Core\user()->get('id'));
 				$page->setMeta('author', \Core\user()->getDisplayName());
 				$page->setMeta('authorid', \Core\user()->get('id'));
