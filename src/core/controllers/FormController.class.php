@@ -188,13 +188,27 @@ class FormController extends Controller_2_1 {
 		$term = $request->getParameter('term');
 		$results = UserModel::Search($term);
 
+		// I want to order them by relevancy.
+		$sr = new Core\Search\SearchResults();
+		$sr->addResults($results);
+		$sr->sortResults();
+
 		$filteredresults = array();
-		foreach($results as $user){
-			/** @var UserModel $user */
+		foreach($sr->get() as $user){
+			/** @var Core\Search\ModelResult $user */
+
+			/** @var UserModel $model */
+			$model = $user->_model;
+
+			// This model will only be added to the form if it's active.
+			if(!$model->get('active')){
+				continue;
+			}
+
 			$filteredresults[] = array(
-				'id' => $user->get('id'),
-				'label' => $user->getDisplayName(),
-				'value' => $user->get('id'),
+				'id'    => $model->get('id'),
+				'label' => $model->getDisplayName(),
+				'value' => $model->get('id'),
 			);
 		}
 
