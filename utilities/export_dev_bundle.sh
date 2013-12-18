@@ -36,7 +36,6 @@ src/components/navigation src/components/nonce \
 src/components/phpwhois \
 src/components/security-suite src/components/sitemap \
 src/components/tinymce src/components/theme \
-src/components/user \
 src/themes/base-v2 \
 src/config/configuration.xml.ant src/config/configuration.xml.ex src/config/.htaccess \
 src/core src/install src/htaccess.ant src/htaccess.ex src/index.php
