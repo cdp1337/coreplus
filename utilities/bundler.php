@@ -69,18 +69,33 @@ foreach($bundlefiles as $b){
 	$name  = $xml->getRootDOM()->getAttribute('name');
 	$sname = preg_replace('/[^a-z0-9-\.\+]*/i', '', str_replace(' ', '-', $name));
 	$bundles[] = [
-		'file' => $b,
-		'name' => $name,
+		'file'  => $b,
+		'name'  => $name,
 		'sname' => $sname,
+		'xml'   => $xml,
 	];
 }
 
 
-echo "Found the following bundles:" . NL;
-foreach($bundles as $b){
-	echo $b['name'] . ' (' . $b['file'] . ')' . NL;
+if(!sizeof($bundles)){
+	echo "No bundles found, exporting will bundle the entire site." . NL;
+	$bundles = [
+		'file'  => '',
+		'name'  => SITENAME,
+		'sname' =>  preg_replace('/[^a-z0-9-\.\+]*/i', '', str_replace(' ', '-', SITENAME)),
+		'xml'   => null,
+	];
+}
+else{
+	echo "Found the following bundles:" . NL;
+	foreach($bundles as $b){
+		echo $b['name'] . ' (' . $b['file'] . ')' . NL;
+	}
 }
 sleep(1);
+
+
+
 
 
 // Prompt the user with what version the new bundles will be.
@@ -88,6 +103,8 @@ $version = Core::GetComponent('core')->getVersion();
 $version = CLI::PromptUser('Please set the bundled version or', 'text', $version);
 
 foreach($bundles as $b){
+	/** @var XMLLoader|null $xml */
+	$xml = $b['xml'];
 	$destdir = $dir . '/' . $b['sname'];
 
 	// Check the dest directory for current versions.
@@ -103,22 +120,52 @@ foreach($bundles as $b){
 		'src'  => BASE_DIR . 'exports/core',
 		'dest' => $destdir . '/' . $desttgz
 	);
-	foreach($xml->getElements('//component') as $el){
-		$export[] = array(
-			'name' => strtolower($el->getAttribute('name')),
-			'type' => 'component',
-			'src'  => BASE_DIR . 'exports/components',
-			'dest' => $destdir . '/' . $desttgz . '/components/' . strtolower($el->getAttribute('name'))
-		);
+
+	// Add the components.
+	if($xml){
+		foreach($xml->getElements('//component') as $el){
+			$export[] = array(
+				'name' => strtolower($el->getAttribute('name')),
+				'type' => 'component',
+				'src'  => BASE_DIR . 'exports/components',
+				'dest' => $destdir . '/' . $desttgz . '/components/' . strtolower($el->getAttribute('name'))
+			);
+		}
 	}
-	foreach($xml->getElements('//theme') as $el){
-		$export[] = array(
-			'name' => strtolower($el->getAttribute('name')),
-			'type' => 'theme',
-			'src'  => BASE_DIR . 'exports/themes',
-			'dest' => $destdir . '/' . $desttgz . '/themes/' . strtolower($el->getAttribute('name'))
-		);
+	else{
+		foreach(Core::GetComponents() as $c){
+			/** @var Component_2_1 $c */
+			$export[] = array(
+				'name' => strtolower($c->getName()),
+				'type' => 'component',
+				'src'  => BASE_DIR . 'exports/components',
+				'dest' => $destdir . '/' . $desttgz . '/components/' . $c->getKeyName(),
+			);
+		}
 	}
+
+	if($xml){
+		foreach($xml->getElements('//theme') as $el){
+			$export[] = array(
+				'name' => strtolower($el->getAttribute('name')),
+				'type' => 'theme',
+				'src'  => BASE_DIR . 'exports/themes',
+				'dest' => $destdir . '/' . $desttgz . '/themes/' . strtolower($el->getAttribute('name'))
+			);
+		}
+	}
+	else{
+		foreach(\ThemeHandler::GetAllThemes() as $t){
+			/** @var Theme\Theme $t */
+			$export[] = array(
+				'name' => strtolower($t->getName()),
+				'type' => 'theme',
+				'src'  => BASE_DIR . 'exports/themes',
+				'dest' => $destdir . '/' . $desttgz . '/themes/' . $t->getKeyName(),
+			);
+		}
+	}
+
 
 	$changelog = '<h2>Packages included in ' . $b['name'] . ' ' . $version . '</h2>' . "\n\n";
 
@@ -132,7 +179,7 @@ foreach($bundles as $b){
 		$compversion = '0.0.0';
 		$dh = opendir($dat['src']);
 		if(!$dh){
-			die('Unable to open required directory for the bundler' . "\n");
+			die('Unable to open required directory for the bundler [' . $dat['src'] . ']' . "\n");
 		}
 		while(($file = readdir($dh)) !== false){
 			// Skip hidden files
@@ -200,16 +247,19 @@ foreach($bundles as $b){
 	}
 
 	// Keys
-	foreach($xml->getElements('//key') as $el){
-		$id = $el->getAttribute('id');
-		echo "\n";
-		echo "--------------------------------\n";
-		echo "Exporting key " . $id . "...\n";
-		exec('gpg -a --export ' . $id . ' > "' . $destdir . '/' . $id . '.gpg"');
-		exec('gpg --homedir "' . $destdir . '/' . $desttgz . '/gnupg" --no-permission-warning --import "' . $destdir . '/' . $id . '.gpg"', $output, $result);
-		unlink($destdir . '/' . $id . '.gpg');
-		echo "OK!\n";
+	if($xml){
+		foreach($xml->getElements('//key') as $el){
+			$id = $el->getAttribute('id');
+			echo "\n";
+			echo "--------------------------------\n";
+			echo "Exporting key " . $id . "...\n";
+			exec('gpg -a --export ' . $id . ' > "' . $destdir . '/' . $id . '.gpg"');
+			exec('gpg --homedir "' . $destdir . '/' . $desttgz . '/gnupg" --no-permission-warning --import "' . $destdir . '/' . $id . '.gpg"', $output, $result);
+			unlink($destdir . '/' . $id . '.gpg');
+			echo "OK!\n";
+		}
 	}
+
 
 	// Write out the changelog for the bundle.
 	file_put_contents($destdir . '/' . $desttgz . '/packages.html', $changelog);
