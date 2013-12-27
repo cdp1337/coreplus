@@ -16,7 +16,7 @@ class BlogArticleModel extends Model {
 			'form' => array('type' => 'system'),
 		),
 		'authorid'    => array(
-			'type' => Model::ATT_TYPE_INT,
+			'type' => Model::ATT_TYPE_UUID_FK,
 			'form' => array('type' => 'system'),
 		),
 		'guid' => array(
