@@ -15,30 +15,43 @@ BASEPDIR="$(readlink -f $(dirname $0)/../../../../)"
 
 if [ -e "$COMPONENTDIR/assets/css/font-awesome.css" ]; then
 	PVERSION=$(egrep 'Font Awesome [0-9\.]+' "$COMPONENTDIR/assets/css/font-awesome.css" | sed 's:.*Awesome ::' | sed 's:^\([^ ]*\).*:\1:');
-	rm -fr "$COMPONENTDIR/assets"
+
 else
 	PVERSION=""
 fi
 
 
-download git://https://github.com/FortAwesome/Font-Awesome.git "$COMPONENTDIR/assets"
-# I don't actually need many of these.
-rm -fr "$COMPONENTDIR/assets/.git"
-rm -fr "$COMPONENTDIR/assets/.gitignore"
-rm -fr "$COMPONENTDIR/assets/less"
-rm -fr "$COMPONENTDIR/assets/src"
-rm -fr "$COMPONENTDIR/assets/Gemfile"
-rm -fr "$COMPONENTDIR/assets/Gemfile.lock"
-rm -fr "$COMPONENTDIR/assets/_config.yml"
-rm -fr "$COMPONENTDIR/assets/component.json"
-rm -fr "$COMPONENTDIR/assets/composer.json"
-rm -fr "$COMPONENTDIR/assets/package.json"
+if [ ! -e "$COMPONENTDIR/assets/css/_icons-original.scss" ]; then
+	# If the icons original isn't present, force a re-download.
+	PVERSION=""
+fi
 
-# And these are in the wrong directory!
-ls "$COMPONENTDIR/assets/scss/" | while read i; do
-	mv "$COMPONENTDIR/assets/scss/$i" "$COMPONENTDIR/assets/css/"
-done
-rm -fr "$COMPONENTDIR/assets/scss/"
+VERSIONTHERE=$(wget -q https://raw.github.com/FortAwesome/Font-Awesome/master/css/font-awesome.css -O - | egrep 'Font Awesome [0-9\.]+' | sed 's:.*Awesome ::' | sed 's:^\([^ ]*\).*:\1:');
+if [ "$PVERSION" == "$VERSIONTHERE" ]; then
+	echo "Skipping re-downloading of github project, no version change!"
+else
+	rm -fr "$COMPONENTDIR/assets"
+	download git://https://github.com/FortAwesome/Font-Awesome.git "$COMPONENTDIR/assets"
+	# I don't actually need many of these.
+	rm -fr "$COMPONENTDIR/assets/.git"
+	rm -fr "$COMPONENTDIR/assets/.gitignore"
+	rm -fr "$COMPONENTDIR/assets/less"
+	rm -fr "$COMPONENTDIR/assets/src"
+	rm -fr "$COMPONENTDIR/assets/Gemfile"
+	rm -fr "$COMPONENTDIR/assets/Gemfile.lock"
+	rm -fr "$COMPONENTDIR/assets/_config.yml"
+	rm -fr "$COMPONENTDIR/assets/component.json"
+	rm -fr "$COMPONENTDIR/assets/composer.json"
+	rm -fr "$COMPONENTDIR/assets/package.json"
+
+	# And these are in the wrong directory!
+	ls "$COMPONENTDIR/assets/scss/" | while read i; do
+		mv "$COMPONENTDIR/assets/scss/$i" "$COMPONENTDIR/assets/css/"
+	done
+	rm -fr "$COMPONENTDIR/assets/scss/"
+
+	mv "$COMPONENTDIR/assets/css/_icons.scss" "$COMPONENTDIR/assets/css/_icons-original.scss"
+fi
 
 
 # Font Awesome 1.2.3
@@ -73,7 +86,7 @@ EOS
 
 ## Re-index the icons file completely to use this new method.
 printheader "Extracting current icon list"
-tac "$COMPONENTDIR/assets/css/_icons.scss" > /tmp/fa-builder-icons.1
+tac "$COMPONENTDIR/assets/css/_icons-original.scss" > /tmp/fa-builder-icons.1
 
 echo "/** Core-optimized icon set for FA **/" > "$COMPONENTDIR/assets/css/_icons.scss"
 
@@ -109,6 +122,8 @@ view \$fa-var-eye
 directory \$fa-var-folder
 move \$fa-var-bars
 ok \$fa-var-check
+folder-close \$fa-var-folder
+exclamation-sign \$fa-var-exclamation-triangle
 EOS
 
 ## Now I can re-assemble these back to their SCSS versions.
@@ -126,7 +141,9 @@ rm -fr /tmp/fa-builder-icons.last
 
 
 
-`"$BASEPDIR/utilities/packager.php" -r -c fontawesome`
+if [ -e $BASEPDIR/utilities/packager.php ]; then
+	$BASEPDIR/utilities/packager.php -r -c fontawesome
+fi
 
 if [ "$PVERSION" != "$VERSION" ]; then
 	printline "Upgraded Font Awesome from $PVERSION to $VERSION"

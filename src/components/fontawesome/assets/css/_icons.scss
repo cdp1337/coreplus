@@ -135,6 +135,7 @@
 @include render-icon('exchange', $fa-var-exchange);
 @include render-icon('exclamation-circle', $fa-var-exclamation-circle);
 @include render-icon('exclamation', $fa-var-exclamation);
+@include render-icon('exclamation-sign', $fa-var-exclamation-triangle);
 @include render-icon('exclamation-triangle', $fa-var-exclamation-triangle);
 @include render-icon('expand', $fa-var-expand);
 @include render-icon('external-link', $fa-var-external-link);
@@ -163,6 +164,7 @@
 @include render-icon('flask', $fa-var-flask);
 @include render-icon('flickr', $fa-var-flickr);
 @include render-icon('floppy-o', $fa-var-floppy-o);
+@include render-icon('folder-close', $fa-var-folder);
 @include render-icon('folder', $fa-var-folder);
 @include render-icon('folder-o', $fa-var-folder-o);
 @include render-icon('folder-open', $fa-var-folder-open);

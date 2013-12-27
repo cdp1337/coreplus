@@ -27,17 +27,18 @@
 		<file filename="assets/css/_core.scss" md5="460139739224bc62d9957837978c4e22"/>
 		<file filename="assets/css/_extras.scss" md5="053aed1a3705922cea94741681034652"/>
 		<file filename="assets/css/_fixed-width.scss" md5="9277ab6964a434d499873687b00be906"/>
-		<file filename="assets/css/_icons.scss" md5="ebd13af18b3ba90bad6dbee68491e0b3"/>
+		<file filename="assets/css/_icons-original.scss" md5="691e5398b8513cd310e847aae3112b27"/>
+		<file filename="assets/css/_icons.scss" md5="633bfb25362f00580eacc93cd58ac71a"/>
 		<file filename="assets/css/_larger.scss" md5="e95931566f6fc6ad5685c4fa9802e206"/>
 		<file filename="assets/css/_list.scss" md5="7107e80b053928271d5fcf422dc29490"/>
-		<file filename="assets/css/_mixins.scss" md5="edb0a0baf9939c54a8d1899bd7d4f510"/>
+		<file filename="assets/css/_mixins.scss" md5="e77fa4281a32902337cb56cda0b15a69"/>
 		<file filename="assets/css/_path.scss" md5="ac2a848f68cffed328272615bfca2500"/>
 		<file filename="assets/css/_rotated-flipped.scss" md5="9d894281a3b1c265abdd5abd11f9af5d"/>
 		<file filename="assets/css/_spinning.scss" md5="8e6c7988f40f123aedd96a668c56582a"/>
 		<file filename="assets/css/_stacked.scss" md5="5594237226aedfbca2fa1c7f4604c214"/>
 		<file filename="assets/css/_variables.scss" md5="9d4f23eacae6690aa140e51d42550e5b"/>
-		<file filename="assets/css/font-awesome.css" md5="e694e23d577a4eca3d4ed79f34a58a0b"/>
-		<file filename="assets/css/font-awesome.min.css" md5="cbfc70c4faa111ddb639c2e06a5ccacb"/>
+		<file filename="assets/css/font-awesome.css" md5="92adf7e62d20e26d07c89a214266e973"/>
+		<file filename="assets/css/font-awesome.min.css" md5="7adf918320cc55bc88f63c6bbb51751a"/>
 		<file filename="assets/css/font-awesome.scss" md5="4201fdd32cc7a7d2f6ed2706800faf75"/>
 		<file filename="assets/fonts/FontAwesome.otf" md5="3f3a623e88cb5c62eaa2367195e98b67"/>
 		<file filename="assets/fonts/fontawesome-webfont.eot" md5="8b27bc96115c2d24350f0d09e6a9433f"/>

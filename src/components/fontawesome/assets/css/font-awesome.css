@@ -4,6 +4,8 @@
  */
 /** Core mixin to actually create the icon. **/
 /** Core uses the "icon" prefix! **/
+/** Core mixin to actually create the icon. **/
+/** Core uses the "icon" prefix! **/
 /* FONT PATH
  * -------------------------- */
 @font-face {
@@ -262,7 +264,7 @@
 
 /** Core-optimized icon set for FA **/
 /** Icon definition for add **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-add {
   display: inline-block;
   font-family: FontAwesome;
@@ -273,13 +275,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-add:before {
   content: "\f067";
 }
 
 /** Icon definition for adjust **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-adjust {
   display: inline-block;
   font-family: FontAwesome;
@@ -290,13 +292,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-adjust:before {
   content: "\f042";
 }
 
 /** Icon definition for adn **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-adn {
   display: inline-block;
   font-family: FontAwesome;
@@ -307,13 +309,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-adn:before {
   content: "\f170";
 }
 
 /** Icon definition for align-center **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-align-center {
   display: inline-block;
   font-family: FontAwesome;
@@ -324,13 +326,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-align-center:before {
   content: "\f037";
 }
 
 /** Icon definition for align-justify **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-align-justify {
   display: inline-block;
   font-family: FontAwesome;
@@ -341,13 +343,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-align-justify:before {
   content: "\f039";
 }
 
 /** Icon definition for align-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-align-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -358,13 +360,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-align-left:before {
   content: "\f036";
 }
 
 /** Icon definition for align-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-align-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -375,13 +377,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-align-right:before {
   content: "\f038";
 }
 
 /** Icon definition for ambulance **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-ambulance {
   display: inline-block;
   font-family: FontAwesome;
@@ -392,13 +394,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-ambulance:before {
   content: "\f0f9";
 }
 
 /** Icon definition for anchor **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-anchor {
   display: inline-block;
   font-family: FontAwesome;
@@ -409,13 +411,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-anchor:before {
   content: "\f13d";
 }
 
 /** Icon definition for android **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-android {
   display: inline-block;
   font-family: FontAwesome;
@@ -426,13 +428,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-android:before {
   content: "\f17b";
 }
 
 /** Icon definition for angle-double-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-angle-double-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -443,13 +445,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-angle-double-down:before {
   content: "\f103";
 }
 
 /** Icon definition for angle-double-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-angle-double-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -460,13 +462,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-angle-double-left:before {
   content: "\f100";
 }
 
 /** Icon definition for angle-double-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-angle-double-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -477,13 +479,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-angle-double-right:before {
   content: "\f101";
 }
 
 /** Icon definition for angle-double-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-angle-double-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -494,13 +496,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-angle-double-up:before {
   content: "\f102";
 }
 
 /** Icon definition for angle-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-angle-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -511,13 +513,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-angle-down:before {
   content: "\f107";
 }
 
 /** Icon definition for angle-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-angle-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -528,13 +530,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-angle-left:before {
   content: "\f104";
 }
 
 /** Icon definition for angle-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-angle-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -545,13 +547,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-angle-right:before {
   content: "\f105";
 }
 
 /** Icon definition for angle-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-angle-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -562,13 +564,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-angle-up:before {
   content: "\f106";
 }
 
 /** Icon definition for apple **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-apple {
   display: inline-block;
   font-family: FontAwesome;
@@ -579,13 +581,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-apple:before {
   content: "\f179";
 }
 
 /** Icon definition for archive **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-archive {
   display: inline-block;
   font-family: FontAwesome;
@@ -596,13 +598,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-archive:before {
   content: "\f187";
 }
 
 /** Icon definition for arrow-circle-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrow-circle-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -613,13 +615,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrow-circle-down:before {
   content: "\f0ab";
 }
 
 /** Icon definition for arrow-circle-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrow-circle-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -630,13 +632,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrow-circle-left:before {
   content: "\f0a8";
 }
 
 /** Icon definition for arrow-circle-o-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrow-circle-o-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -647,13 +649,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrow-circle-o-down:before {
   content: "\f01a";
 }
 
 /** Icon definition for arrow-circle-o-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrow-circle-o-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -664,13 +666,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrow-circle-o-left:before {
   content: "\f190";
 }
 
 /** Icon definition for arrow-circle-o-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrow-circle-o-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -681,13 +683,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrow-circle-o-right:before {
   content: "\f18e";
 }
 
 /** Icon definition for arrow-circle-o-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrow-circle-o-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -698,13 +700,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrow-circle-o-up:before {
   content: "\f01b";
 }
 
 /** Icon definition for arrow-circle-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrow-circle-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -715,13 +717,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrow-circle-right:before {
   content: "\f0a9";
 }
 
 /** Icon definition for arrow-circle-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrow-circle-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -732,13 +734,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrow-circle-up:before {
   content: "\f0aa";
 }
 
 /** Icon definition for arrow-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrow-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -749,13 +751,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrow-down:before {
   content: "\f063";
 }
 
 /** Icon definition for arrow-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrow-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -766,13 +768,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrow-left:before {
   content: "\f060";
 }
 
 /** Icon definition for arrow-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrow-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -783,13 +785,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrow-right:before {
   content: "\f061";
 }
 
 /** Icon definition for arrows-alt **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrows-alt {
   display: inline-block;
   font-family: FontAwesome;
@@ -800,13 +802,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrows-alt:before {
   content: "\f0b2";
 }
 
 /** Icon definition for arrows **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrows {
   display: inline-block;
   font-family: FontAwesome;
@@ -817,13 +819,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrows:before {
   content: "\f047";
 }
 
 /** Icon definition for arrows-h **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrows-h {
   display: inline-block;
   font-family: FontAwesome;
@@ -834,13 +836,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrows-h:before {
   content: "\f07e";
 }
 
 /** Icon definition for arrows-v **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrows-v {
   display: inline-block;
   font-family: FontAwesome;
@@ -851,13 +853,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrows-v:before {
   content: "\f07d";
 }
 
 /** Icon definition for arrow-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-arrow-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -868,13 +870,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-arrow-up:before {
   content: "\f062";
 }
 
 /** Icon definition for asterisk **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-asterisk {
   display: inline-block;
   font-family: FontAwesome;
@@ -885,13 +887,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-asterisk:before {
   content: "\f069";
 }
 
 /** Icon definition for backward **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-backward {
   display: inline-block;
   font-family: FontAwesome;
@@ -902,13 +904,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-backward:before {
   content: "\f04a";
 }
 
 /** Icon definition for ban **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-ban {
   display: inline-block;
   font-family: FontAwesome;
@@ -919,13 +921,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-ban:before {
   content: "\f05e";
 }
 
 /** Icon definition for bar-chart-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bar-chart-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -936,13 +938,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bar-chart-o:before {
   content: "\f080";
 }
 
 /** Icon definition for barcode **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-barcode {
   display: inline-block;
   font-family: FontAwesome;
@@ -953,13 +955,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-barcode:before {
   content: "\f02a";
 }
 
 /** Icon definition for bars **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bars {
   display: inline-block;
   font-family: FontAwesome;
@@ -970,13 +972,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bars:before {
   content: "\f0c9";
 }
 
 /** Icon definition for beer **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-beer {
   display: inline-block;
   font-family: FontAwesome;
@@ -987,13 +989,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-beer:before {
   content: "\f0fc";
 }
 
 /** Icon definition for bell **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bell {
   display: inline-block;
   font-family: FontAwesome;
@@ -1004,13 +1006,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bell:before {
   content: "\f0f3";
 }
 
 /** Icon definition for bell-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bell-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -1021,13 +1023,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bell-o:before {
   content: "\f0a2";
 }
 
 /** Icon definition for bitbucket **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bitbucket {
   display: inline-block;
   font-family: FontAwesome;
@@ -1038,13 +1040,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bitbucket:before {
   content: "\f171";
 }
 
 /** Icon definition for bitbucket-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bitbucket-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -1055,13 +1057,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bitbucket-square:before {
   content: "\f172";
 }
 
 /** Icon definition for bitcoin **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bitcoin {
   display: inline-block;
   font-family: FontAwesome;
@@ -1072,13 +1074,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bitcoin:before {
   content: "\f15a";
 }
 
 /** Icon definition for bold **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bold {
   display: inline-block;
   font-family: FontAwesome;
@@ -1089,13 +1091,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bold:before {
   content: "\f032";
 }
 
 /** Icon definition for bolt **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bolt {
   display: inline-block;
   font-family: FontAwesome;
@@ -1106,13 +1108,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bolt:before {
   content: "\f0e7";
 }
 
 /** Icon definition for book **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-book {
   display: inline-block;
   font-family: FontAwesome;
@@ -1123,13 +1125,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-book:before {
   content: "\f02d";
 }
 
 /** Icon definition for bookmark **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bookmark {
   display: inline-block;
   font-family: FontAwesome;
@@ -1140,13 +1142,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bookmark:before {
   content: "\f02e";
 }
 
 /** Icon definition for bookmark-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bookmark-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -1157,13 +1159,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bookmark-o:before {
   content: "\f097";
 }
 
 /** Icon definition for briefcase **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-briefcase {
   display: inline-block;
   font-family: FontAwesome;
@@ -1174,13 +1176,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-briefcase:before {
   content: "\f0b1";
 }
 
 /** Icon definition for btc **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-btc {
   display: inline-block;
   font-family: FontAwesome;
@@ -1191,13 +1193,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-btc:before {
   content: "\f15a";
 }
 
 /** Icon definition for bug **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bug {
   display: inline-block;
   font-family: FontAwesome;
@@ -1208,13 +1210,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bug:before {
   content: "\f188";
 }
 
 /** Icon definition for building-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-building-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -1225,13 +1227,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-building-o:before {
   content: "\f0f7";
 }
 
 /** Icon definition for bullhorn **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bullhorn {
   display: inline-block;
   font-family: FontAwesome;
@@ -1242,13 +1244,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bullhorn:before {
   content: "\f0a1";
 }
 
 /** Icon definition for bullseye **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-bullseye {
   display: inline-block;
   font-family: FontAwesome;
@@ -1259,13 +1261,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-bullseye:before {
   content: "\f140";
 }
 
 /** Icon definition for calendar **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-calendar {
   display: inline-block;
   font-family: FontAwesome;
@@ -1276,13 +1278,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-calendar:before {
   content: "\f073";
 }
 
 /** Icon definition for calendar-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-calendar-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -1293,13 +1295,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-calendar-o:before {
   content: "\f133";
 }
 
 /** Icon definition for camera **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-camera {
   display: inline-block;
   font-family: FontAwesome;
@@ -1310,13 +1312,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-camera:before {
   content: "\f030";
 }
 
 /** Icon definition for camera-retro **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-camera-retro {
   display: inline-block;
   font-family: FontAwesome;
@@ -1327,13 +1329,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-camera-retro:before {
   content: "\f083";
 }
 
 /** Icon definition for caret-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-caret-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -1344,13 +1346,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-caret-down:before {
   content: "\f0d7";
 }
 
 /** Icon definition for caret-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-caret-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -1361,13 +1363,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-caret-left:before {
   content: "\f0d9";
 }
 
 /** Icon definition for caret-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-caret-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -1378,13 +1380,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-caret-right:before {
   content: "\f0da";
 }
 
 /** Icon definition for caret-square-o-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-caret-square-o-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -1395,13 +1397,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-caret-square-o-down:before {
   content: "\f150";
 }
 
 /** Icon definition for caret-square-o-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-caret-square-o-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -1412,13 +1414,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-caret-square-o-left:before {
   content: "\f191";
 }
 
 /** Icon definition for caret-square-o-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-caret-square-o-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -1429,13 +1431,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-caret-square-o-right:before {
   content: "\f152";
 }
 
 /** Icon definition for caret-square-o-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-caret-square-o-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -1446,13 +1448,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-caret-square-o-up:before {
   content: "\f151";
 }
 
 /** Icon definition for caret-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-caret-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -1463,13 +1465,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-caret-up:before {
   content: "\f0d8";
 }
 
 /** Icon definition for certificate **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-certificate {
   display: inline-block;
   font-family: FontAwesome;
@@ -1480,13 +1482,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-certificate:before {
   content: "\f0a3";
 }
 
 /** Icon definition for chain-broken **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-chain-broken {
   display: inline-block;
   font-family: FontAwesome;
@@ -1497,13 +1499,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-chain-broken:before {
   content: "\f127";
 }
 
 /** Icon definition for chain **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-chain {
   display: inline-block;
   font-family: FontAwesome;
@@ -1514,13 +1516,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-chain:before {
   content: "\f0c1";
 }
 
 /** Icon definition for check-circle **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-check-circle {
   display: inline-block;
   font-family: FontAwesome;
@@ -1531,13 +1533,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-check-circle:before {
   content: "\f058";
 }
 
 /** Icon definition for check-circle-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-check-circle-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -1548,13 +1550,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-check-circle-o:before {
   content: "\f05d";
 }
 
 /** Icon definition for check **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-check {
   display: inline-block;
   font-family: FontAwesome;
@@ -1565,13 +1567,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-check:before {
   content: "\f00c";
 }
 
 /** Icon definition for check-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-check-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -1582,13 +1584,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-check-square:before {
   content: "\f14a";
 }
 
 /** Icon definition for check-square-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-check-square-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -1599,13 +1601,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-check-square-o:before {
   content: "\f046";
 }
 
 /** Icon definition for chevron-circle-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-chevron-circle-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -1616,13 +1618,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-chevron-circle-down:before {
   content: "\f13a";
 }
 
 /** Icon definition for chevron-circle-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-chevron-circle-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -1633,13 +1635,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-chevron-circle-left:before {
   content: "\f137";
 }
 
 /** Icon definition for chevron-circle-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-chevron-circle-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -1650,13 +1652,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-chevron-circle-right:before {
   content: "\f138";
 }
 
 /** Icon definition for chevron-circle-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-chevron-circle-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -1667,13 +1669,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-chevron-circle-up:before {
   content: "\f139";
 }
 
 /** Icon definition for chevron-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-chevron-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -1684,13 +1686,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-chevron-down:before {
   content: "\f078";
 }
 
 /** Icon definition for chevron-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-chevron-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -1701,13 +1703,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-chevron-left:before {
   content: "\f053";
 }
 
 /** Icon definition for chevron-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-chevron-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -1718,13 +1720,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-chevron-right:before {
   content: "\f054";
 }
 
 /** Icon definition for chevron-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-chevron-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -1735,13 +1737,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-chevron-up:before {
   content: "\f077";
 }
 
 /** Icon definition for circle **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-circle {
   display: inline-block;
   font-family: FontAwesome;
@@ -1752,13 +1754,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-circle:before {
   content: "\f111";
 }
 
 /** Icon definition for circle-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-circle-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -1769,13 +1771,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-circle-o:before {
   content: "\f10c";
 }
 
 /** Icon definition for clipboard **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-clipboard {
   display: inline-block;
   font-family: FontAwesome;
@@ -1786,13 +1788,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-clipboard:before {
   content: "\f0ea";
 }
 
 /** Icon definition for clock-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-clock-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -1803,13 +1805,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-clock-o:before {
   content: "\f017";
 }
 
 /** Icon definition for cloud-download **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-cloud-download {
   display: inline-block;
   font-family: FontAwesome;
@@ -1820,13 +1822,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-cloud-download:before {
   content: "\f0ed";
 }
 
 /** Icon definition for cloud **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-cloud {
   display: inline-block;
   font-family: FontAwesome;
@@ -1837,13 +1839,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-cloud:before {
   content: "\f0c2";
 }
 
 /** Icon definition for cloud-upload **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-cloud-upload {
   display: inline-block;
   font-family: FontAwesome;
@@ -1854,13 +1856,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-cloud-upload:before {
   content: "\f0ee";
 }
 
 /** Icon definition for cny **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-cny {
   display: inline-block;
   font-family: FontAwesome;
@@ -1871,13 +1873,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-cny:before {
   content: "\f157";
 }
 
 /** Icon definition for code **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-code {
   display: inline-block;
   font-family: FontAwesome;
@@ -1888,13 +1890,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-code:before {
   content: "\f121";
 }
 
 /** Icon definition for code-fork **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-code-fork {
   display: inline-block;
   font-family: FontAwesome;
@@ -1905,13 +1907,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-code-fork:before {
   content: "\f126";
 }
 
 /** Icon definition for coffee **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-coffee {
   display: inline-block;
   font-family: FontAwesome;
@@ -1922,13 +1924,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-coffee:before {
   content: "\f0f4";
 }
 
 /** Icon definition for cog **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-cog {
   display: inline-block;
   font-family: FontAwesome;
@@ -1939,13 +1941,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-cog:before {
   content: "\f013";
 }
 
 /** Icon definition for cogs **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-cogs {
   display: inline-block;
   font-family: FontAwesome;
@@ -1956,13 +1958,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-cogs:before {
   content: "\f085";
 }
 
 /** Icon definition for columns **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-columns {
   display: inline-block;
   font-family: FontAwesome;
@@ -1973,13 +1975,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-columns:before {
   content: "\f0db";
 }
 
 /** Icon definition for comment **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-comment {
   display: inline-block;
   font-family: FontAwesome;
@@ -1990,13 +1992,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-comment:before {
   content: "\f075";
 }
 
 /** Icon definition for comment-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-comment-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -2007,13 +2009,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-comment-o:before {
   content: "\f0e5";
 }
 
 /** Icon definition for comments **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-comments {
   display: inline-block;
   font-family: FontAwesome;
@@ -2024,13 +2026,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-comments:before {
   content: "\f086";
 }
 
 /** Icon definition for comments-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-comments-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -2041,13 +2043,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-comments-o:before {
   content: "\f0e6";
 }
 
 /** Icon definition for compass **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-compass {
   display: inline-block;
   font-family: FontAwesome;
@@ -2058,13 +2060,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-compass:before {
   content: "\f14e";
 }
 
 /** Icon definition for compress **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-compress {
   display: inline-block;
   font-family: FontAwesome;
@@ -2075,13 +2077,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-compress:before {
   content: "\f066";
 }
 
 /** Icon definition for copy **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-copy {
   display: inline-block;
   font-family: FontAwesome;
@@ -2092,13 +2094,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-copy:before {
   content: "\f0c5";
 }
 
 /** Icon definition for credit-card **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-credit-card {
   display: inline-block;
   font-family: FontAwesome;
@@ -2109,13 +2111,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-credit-card:before {
   content: "\f09d";
 }
 
 /** Icon definition for crop **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-crop {
   display: inline-block;
   font-family: FontAwesome;
@@ -2126,13 +2128,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-crop:before {
   content: "\f125";
 }
 
 /** Icon definition for crosshairs **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-crosshairs {
   display: inline-block;
   font-family: FontAwesome;
@@ -2143,13 +2145,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-crosshairs:before {
   content: "\f05b";
 }
 
 /** Icon definition for css3 **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-css3 {
   display: inline-block;
   font-family: FontAwesome;
@@ -2160,13 +2162,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-css3:before {
   content: "\f13c";
 }
 
 /** Icon definition for cut **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-cut {
   display: inline-block;
   font-family: FontAwesome;
@@ -2177,13 +2179,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-cut:before {
   content: "\f0c4";
 }
 
 /** Icon definition for cutlery **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-cutlery {
   display: inline-block;
   font-family: FontAwesome;
@@ -2194,13 +2196,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-cutlery:before {
   content: "\f0f5";
 }
 
 /** Icon definition for dashboard **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-dashboard {
   display: inline-block;
   font-family: FontAwesome;
@@ -2211,13 +2213,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-dashboard:before {
   content: "\f0e4";
 }
 
 /** Icon definition for dedent **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-dedent {
   display: inline-block;
   font-family: FontAwesome;
@@ -2228,13 +2230,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-dedent:before {
   content: "\f03b";
 }
 
 /** Icon definition for delete **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-delete {
   display: inline-block;
   font-family: FontAwesome;
@@ -2245,13 +2247,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-delete:before {
   content: "\f068";
 }
 
 /** Icon definition for desktop **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-desktop {
   display: inline-block;
   font-family: FontAwesome;
@@ -2262,13 +2264,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-desktop:before {
   content: "\f108";
 }
 
 /** Icon definition for directory **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-directory {
   display: inline-block;
   font-family: FontAwesome;
@@ -2279,13 +2281,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-directory:before {
   content: "\f07b";
 }
 
 /** Icon definition for dollar **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-dollar {
   display: inline-block;
   font-family: FontAwesome;
@@ -2296,13 +2298,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-dollar:before {
   content: "\f155";
 }
 
 /** Icon definition for dot-circle-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-dot-circle-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -2313,13 +2315,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-dot-circle-o:before {
   content: "\f192";
 }
 
 /** Icon definition for download **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-download {
   display: inline-block;
   font-family: FontAwesome;
@@ -2330,13 +2332,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-download:before {
   content: "\f019";
 }
 
 /** Icon definition for dribbble **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-dribbble {
   display: inline-block;
   font-family: FontAwesome;
@@ -2347,13 +2349,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-dribbble:before {
   content: "\f17d";
 }
 
 /** Icon definition for dropbox **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-dropbox {
   display: inline-block;
   font-family: FontAwesome;
@@ -2364,13 +2366,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-dropbox:before {
   content: "\f16b";
 }
 
 /** Icon definition for edit **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-edit {
   display: inline-block;
   font-family: FontAwesome;
@@ -2381,13 +2383,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-edit:before {
   content: "\f044";
 }
 
 /** Icon definition for eject **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-eject {
   display: inline-block;
   font-family: FontAwesome;
@@ -2398,13 +2400,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-eject:before {
   content: "\f052";
 }
 
 /** Icon definition for ellipsis-h **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-ellipsis-h {
   display: inline-block;
   font-family: FontAwesome;
@@ -2415,13 +2417,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-ellipsis-h:before {
   content: "\f141";
 }
 
 /** Icon definition for ellipsis-v **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-ellipsis-v {
   display: inline-block;
   font-family: FontAwesome;
@@ -2432,13 +2434,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-ellipsis-v:before {
   content: "\f142";
 }
 
 /** Icon definition for envelope **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-envelope {
   display: inline-block;
   font-family: FontAwesome;
@@ -2449,13 +2451,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-envelope:before {
   content: "\f0e0";
 }
 
 /** Icon definition for envelope-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-envelope-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -2466,13 +2468,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-envelope-o:before {
   content: "\f003";
 }
 
 /** Icon definition for eraser **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-eraser {
   display: inline-block;
   font-family: FontAwesome;
@@ -2483,13 +2485,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-eraser:before {
   content: "\f12d";
 }
 
 /** Icon definition for eur **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-eur {
   display: inline-block;
   font-family: FontAwesome;
@@ -2500,13 +2502,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-eur:before {
   content: "\f153";
 }
 
 /** Icon definition for euro **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-euro {
   display: inline-block;
   font-family: FontAwesome;
@@ -2517,13 +2519,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-euro:before {
   content: "\f153";
 }
 
 /** Icon definition for exchange **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-exchange {
   display: inline-block;
   font-family: FontAwesome;
@@ -2534,13 +2536,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-exchange:before {
   content: "\f0ec";
 }
 
 /** Icon definition for exclamation-circle **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-exclamation-circle {
   display: inline-block;
   font-family: FontAwesome;
@@ -2551,13 +2553,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-exclamation-circle:before {
   content: "\f06a";
 }
 
 /** Icon definition for exclamation **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-exclamation {
   display: inline-block;
   font-family: FontAwesome;
@@ -2568,13 +2570,30 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-exclamation:before {
   content: "\f12a";
 }
 
+/** Icon definition for exclamation-sign **/
+/* line 47, _mixins.scss */
+.icon-exclamation-sign {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 56, _mixins.scss */
+.icon-exclamation-sign:before {
+  content: "\f071";
+}
+
 /** Icon definition for exclamation-triangle **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-exclamation-triangle {
   display: inline-block;
   font-family: FontAwesome;
@@ -2585,13 +2604,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-exclamation-triangle:before {
   content: "\f071";
 }
 
 /** Icon definition for expand **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-expand {
   display: inline-block;
   font-family: FontAwesome;
@@ -2602,13 +2621,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-expand:before {
   content: "\f065";
 }
 
 /** Icon definition for external-link **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-external-link {
   display: inline-block;
   font-family: FontAwesome;
@@ -2619,13 +2638,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-external-link:before {
   content: "\f08e";
 }
 
 /** Icon definition for external-link-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-external-link-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -2636,13 +2655,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-external-link-square:before {
   content: "\f14c";
 }
 
 /** Icon definition for eye **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-eye {
   display: inline-block;
   font-family: FontAwesome;
@@ -2653,13 +2672,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-eye:before {
   content: "\f06e";
 }
 
 /** Icon definition for eye-slash **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-eye-slash {
   display: inline-block;
   font-family: FontAwesome;
@@ -2670,13 +2689,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-eye-slash:before {
   content: "\f070";
 }
 
 /** Icon definition for facebook **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-facebook {
   display: inline-block;
   font-family: FontAwesome;
@@ -2687,13 +2706,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-facebook:before {
   content: "\f09a";
 }
 
 /** Icon definition for facebook-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-facebook-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -2704,13 +2723,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-facebook-square:before {
   content: "\f082";
 }
 
 /** Icon definition for fast-backward **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-fast-backward {
   display: inline-block;
   font-family: FontAwesome;
@@ -2721,13 +2740,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-fast-backward:before {
   content: "\f049";
 }
 
 /** Icon definition for fast-forward **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-fast-forward {
   display: inline-block;
   font-family: FontAwesome;
@@ -2738,13 +2757,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-fast-forward:before {
   content: "\f050";
 }
 
 /** Icon definition for female **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-female {
   display: inline-block;
   font-family: FontAwesome;
@@ -2755,13 +2774,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-female:before {
   content: "\f182";
 }
 
 /** Icon definition for fighter-jet **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-fighter-jet {
   display: inline-block;
   font-family: FontAwesome;
@@ -2772,13 +2791,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-fighter-jet:before {
   content: "\f0fb";
 }
 
 /** Icon definition for file **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-file {
   display: inline-block;
   font-family: FontAwesome;
@@ -2789,13 +2808,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-file:before {
   content: "\f15b";
 }
 
 /** Icon definition for file-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-file-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -2806,13 +2825,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-file-o:before {
   content: "\f016";
 }
 
 /** Icon definition for files-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-files-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -2823,13 +2842,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-files-o:before {
   content: "\f0c5";
 }
 
 /** Icon definition for file-text **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-file-text {
   display: inline-block;
   font-family: FontAwesome;
@@ -2840,13 +2859,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-file-text:before {
   content: "\f15c";
 }
 
 /** Icon definition for file-text-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-file-text-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -2857,13 +2876,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-file-text-o:before {
   content: "\f0f6";
 }
 
 /** Icon definition for film **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-film {
   display: inline-block;
   font-family: FontAwesome;
@@ -2874,13 +2893,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-film:before {
   content: "\f008";
 }
 
 /** Icon definition for filter **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-filter {
   display: inline-block;
   font-family: FontAwesome;
@@ -2891,13 +2910,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-filter:before {
   content: "\f0b0";
 }
 
 /** Icon definition for fire-extinguisher **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-fire-extinguisher {
   display: inline-block;
   font-family: FontAwesome;
@@ -2908,13 +2927,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-fire-extinguisher:before {
   content: "\f134";
 }
 
 /** Icon definition for fire **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-fire {
   display: inline-block;
   font-family: FontAwesome;
@@ -2925,13 +2944,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-fire:before {
   content: "\f06d";
 }
 
 /** Icon definition for flag-checkered **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-flag-checkered {
   display: inline-block;
   font-family: FontAwesome;
@@ -2942,13 +2961,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-flag-checkered:before {
   content: "\f11e";
 }
 
 /** Icon definition for flag **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-flag {
   display: inline-block;
   font-family: FontAwesome;
@@ -2959,13 +2978,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-flag:before {
   content: "\f024";
 }
 
 /** Icon definition for flag-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-flag-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -2976,13 +2995,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-flag-o:before {
   content: "\f11d";
 }
 
 /** Icon definition for flash **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-flash {
   display: inline-block;
   font-family: FontAwesome;
@@ -2993,13 +3012,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-flash:before {
   content: "\f0e7";
 }
 
 /** Icon definition for flask **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-flask {
   display: inline-block;
   font-family: FontAwesome;
@@ -3010,13 +3029,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-flask:before {
   content: "\f0c3";
 }
 
 /** Icon definition for flickr **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-flickr {
   display: inline-block;
   font-family: FontAwesome;
@@ -3027,13 +3046,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-flickr:before {
   content: "\f16e";
 }
 
 /** Icon definition for floppy-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-floppy-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -3044,13 +3063,30 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-floppy-o:before {
   content: "\f0c7";
 }
 
+/** Icon definition for folder-close **/
+/* line 47, _mixins.scss */
+.icon-folder-close {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 56, _mixins.scss */
+.icon-folder-close:before {
+  content: "\f07b";
+}
+
 /** Icon definition for folder **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-folder {
   display: inline-block;
   font-family: FontAwesome;
@@ -3061,13 +3097,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-folder:before {
   content: "\f07b";
 }
 
 /** Icon definition for folder-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-folder-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -3078,13 +3114,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-folder-o:before {
   content: "\f114";
 }
 
 /** Icon definition for folder-open **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-folder-open {
   display: inline-block;
   font-family: FontAwesome;
@@ -3095,13 +3131,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-folder-open:before {
   content: "\f07c";
 }
 
 /** Icon definition for folder-open-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-folder-open-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -3112,13 +3148,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-folder-open-o:before {
   content: "\f115";
 }
 
 /** Icon definition for font **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-font {
   display: inline-block;
   font-family: FontAwesome;
@@ -3129,13 +3165,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-font:before {
   content: "\f031";
 }
 
 /** Icon definition for forward **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-forward {
   display: inline-block;
   font-family: FontAwesome;
@@ -3146,13 +3182,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-forward:before {
   content: "\f04e";
 }
 
 /** Icon definition for foursquare **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-foursquare {
   display: inline-block;
   font-family: FontAwesome;
@@ -3163,13 +3199,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-foursquare:before {
   content: "\f180";
 }
 
 /** Icon definition for frown-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-frown-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -3180,13 +3216,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-frown-o:before {
   content: "\f119";
 }
 
 /** Icon definition for gamepad **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-gamepad {
   display: inline-block;
   font-family: FontAwesome;
@@ -3197,13 +3233,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-gamepad:before {
   content: "\f11b";
 }
 
 /** Icon definition for gavel **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-gavel {
   display: inline-block;
   font-family: FontAwesome;
@@ -3214,13 +3250,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-gavel:before {
   content: "\f0e3";
 }
 
 /** Icon definition for gbp **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-gbp {
   display: inline-block;
   font-family: FontAwesome;
@@ -3231,13 +3267,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-gbp:before {
   content: "\f154";
 }
 
 /** Icon definition for gear **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-gear {
   display: inline-block;
   font-family: FontAwesome;
@@ -3248,13 +3284,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-gear:before {
   content: "\f013";
 }
 
 /** Icon definition for gears **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-gears {
   display: inline-block;
   font-family: FontAwesome;
@@ -3265,13 +3301,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-gears:before {
   content: "\f085";
 }
 
 /** Icon definition for gift **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-gift {
   display: inline-block;
   font-family: FontAwesome;
@@ -3282,13 +3318,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-gift:before {
   content: "\f06b";
 }
 
 /** Icon definition for github-alt **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-github-alt {
   display: inline-block;
   font-family: FontAwesome;
@@ -3299,13 +3335,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-github-alt:before {
   content: "\f113";
 }
 
 /** Icon definition for github **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-github {
   display: inline-block;
   font-family: FontAwesome;
@@ -3316,13 +3352,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-github:before {
   content: "\f09b";
 }
 
 /** Icon definition for github-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-github-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -3333,13 +3369,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-github-square:before {
   content: "\f092";
 }
 
 /** Icon definition for gittip **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-gittip {
   display: inline-block;
   font-family: FontAwesome;
@@ -3350,13 +3386,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-gittip:before {
   content: "\f184";
 }
 
 /** Icon definition for glass **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-glass {
   display: inline-block;
   font-family: FontAwesome;
@@ -3367,13 +3403,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-glass:before {
   content: "\f000";
 }
 
 /** Icon definition for globe **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-globe {
   display: inline-block;
   font-family: FontAwesome;
@@ -3384,13 +3420,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-globe:before {
   content: "\f0ac";
 }
 
 /** Icon definition for google-plus **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-google-plus {
   display: inline-block;
   font-family: FontAwesome;
@@ -3401,13 +3437,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-google-plus:before {
   content: "\f0d5";
 }
 
 /** Icon definition for google-plus-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-google-plus-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -3418,13 +3454,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-google-plus-square:before {
   content: "\f0d4";
 }
 
 /** Icon definition for group **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-group {
   display: inline-block;
   font-family: FontAwesome;
@@ -3435,13 +3471,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-group:before {
   content: "\f0c0";
 }
 
 /** Icon definition for hand-o-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-hand-o-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -3452,13 +3488,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-hand-o-down:before {
   content: "\f0a7";
 }
 
 /** Icon definition for hand-o-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-hand-o-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -3469,13 +3505,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-hand-o-left:before {
   content: "\f0a5";
 }
 
 /** Icon definition for hand-o-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-hand-o-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -3486,13 +3522,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-hand-o-right:before {
   content: "\f0a4";
 }
 
 /** Icon definition for hand-o-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-hand-o-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -3503,13 +3539,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-hand-o-up:before {
   content: "\f0a6";
 }
 
 /** Icon definition for hdd-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-hdd-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -3520,13 +3556,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-hdd-o:before {
   content: "\f0a0";
 }
 
 /** Icon definition for headphones **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-headphones {
   display: inline-block;
   font-family: FontAwesome;
@@ -3537,13 +3573,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-headphones:before {
   content: "\f025";
 }
 
 /** Icon definition for heart **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-heart {
   display: inline-block;
   font-family: FontAwesome;
@@ -3554,13 +3590,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-heart:before {
   content: "\f004";
 }
 
 /** Icon definition for heart-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-heart-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -3571,13 +3607,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-heart-o:before {
   content: "\f08a";
 }
 
 /** Icon definition for home **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-home {
   display: inline-block;
   font-family: FontAwesome;
@@ -3588,13 +3624,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-home:before {
   content: "\f015";
 }
 
 /** Icon definition for hospital-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-hospital-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -3605,13 +3641,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-hospital-o:before {
   content: "\f0f8";
 }
 
 /** Icon definition for h-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-h-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -3622,13 +3658,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-h-square:before {
   content: "\f0fd";
 }
 
 /** Icon definition for html5 **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-html5 {
   display: inline-block;
   font-family: FontAwesome;
@@ -3639,13 +3675,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-html5:before {
   content: "\f13b";
 }
 
 /** Icon definition for inbox **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-inbox {
   display: inline-block;
   font-family: FontAwesome;
@@ -3656,13 +3692,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-inbox:before {
   content: "\f01c";
 }
 
 /** Icon definition for indent **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-indent {
   display: inline-block;
   font-family: FontAwesome;
@@ -3673,13 +3709,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-indent:before {
   content: "\f03c";
 }
 
 /** Icon definition for info-circle **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-info-circle {
   display: inline-block;
   font-family: FontAwesome;
@@ -3690,13 +3726,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-info-circle:before {
   content: "\f05a";
 }
 
 /** Icon definition for info **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-info {
   display: inline-block;
   font-family: FontAwesome;
@@ -3707,13 +3743,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-info:before {
   content: "\f129";
 }
 
 /** Icon definition for inr **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-inr {
   display: inline-block;
   font-family: FontAwesome;
@@ -3724,13 +3760,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-inr:before {
   content: "\f156";
 }
 
 /** Icon definition for instagram **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-instagram {
   display: inline-block;
   font-family: FontAwesome;
@@ -3741,13 +3777,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-instagram:before {
   content: "\f16d";
 }
 
 /** Icon definition for italic **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-italic {
   display: inline-block;
   font-family: FontAwesome;
@@ -3758,13 +3794,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-italic:before {
   content: "\f033";
 }
 
 /** Icon definition for jpy **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-jpy {
   display: inline-block;
   font-family: FontAwesome;
@@ -3775,13 +3811,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-jpy:before {
   content: "\f157";
 }
 
 /** Icon definition for keyboard-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-keyboard-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -3792,13 +3828,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-keyboard-o:before {
   content: "\f11c";
 }
 
 /** Icon definition for key **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-key {
   display: inline-block;
   font-family: FontAwesome;
@@ -3809,13 +3845,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-key:before {
   content: "\f084";
 }
 
 /** Icon definition for krw **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-krw {
   display: inline-block;
   font-family: FontAwesome;
@@ -3826,13 +3862,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-krw:before {
   content: "\f159";
 }
 
 /** Icon definition for laptop **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-laptop {
   display: inline-block;
   font-family: FontAwesome;
@@ -3843,13 +3879,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-laptop:before {
   content: "\f109";
 }
 
 /** Icon definition for leaf **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-leaf {
   display: inline-block;
   font-family: FontAwesome;
@@ -3860,13 +3896,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-leaf:before {
   content: "\f06c";
 }
 
 /** Icon definition for legal **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-legal {
   display: inline-block;
   font-family: FontAwesome;
@@ -3877,13 +3913,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-legal:before {
   content: "\f0e3";
 }
 
 /** Icon definition for lemon-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-lemon-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -3894,13 +3930,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-lemon-o:before {
   content: "\f094";
 }
 
 /** Icon definition for level-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-level-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -3911,13 +3947,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-level-down:before {
   content: "\f149";
 }
 
 /** Icon definition for level-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-level-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -3928,13 +3964,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-level-up:before {
   content: "\f148";
 }
 
 /** Icon definition for lightbulb-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-lightbulb-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -3945,13 +3981,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-lightbulb-o:before {
   content: "\f0eb";
 }
 
 /** Icon definition for linkedin **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-linkedin {
   display: inline-block;
   font-family: FontAwesome;
@@ -3962,13 +3998,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-linkedin:before {
   content: "\f0e1";
 }
 
 /** Icon definition for linkedin-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-linkedin-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -3979,13 +4015,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-linkedin-square:before {
   content: "\f08c";
 }
 
 /** Icon definition for link **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-link {
   display: inline-block;
   font-family: FontAwesome;
@@ -3996,13 +4032,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-link:before {
   content: "\f0c1";
 }
 
 /** Icon definition for linux **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-linux {
   display: inline-block;
   font-family: FontAwesome;
@@ -4013,13 +4049,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-linux:before {
   content: "\f17c";
 }
 
 /** Icon definition for list-alt **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-list-alt {
   display: inline-block;
   font-family: FontAwesome;
@@ -4030,13 +4066,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-list-alt:before {
   content: "\f022";
 }
 
 /** Icon definition for list **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-list {
   display: inline-block;
   font-family: FontAwesome;
@@ -4047,13 +4083,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-list:before {
   content: "\f03a";
 }
 
 /** Icon definition for list-ol **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-list-ol {
   display: inline-block;
   font-family: FontAwesome;
@@ -4064,13 +4100,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-list-ol:before {
   content: "\f0cb";
 }
 
 /** Icon definition for list-ul **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-list-ul {
   display: inline-block;
   font-family: FontAwesome;
@@ -4081,13 +4117,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-list-ul:before {
   content: "\f0ca";
 }
 
 /** Icon definition for location-arrow **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-location-arrow {
   display: inline-block;
   font-family: FontAwesome;
@@ -4098,13 +4134,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-location-arrow:before {
   content: "\f124";
 }
 
 /** Icon definition for lock **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-lock {
   display: inline-block;
   font-family: FontAwesome;
@@ -4115,13 +4151,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-lock:before {
   content: "\f023";
 }
 
 /** Icon definition for long-arrow-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-long-arrow-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -4132,13 +4168,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-long-arrow-down:before {
   content: "\f175";
 }
 
 /** Icon definition for long-arrow-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-long-arrow-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -4149,13 +4185,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-long-arrow-left:before {
   content: "\f177";
 }
 
 /** Icon definition for long-arrow-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-long-arrow-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -4166,13 +4202,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-long-arrow-right:before {
   content: "\f178";
 }
 
 /** Icon definition for long-arrow-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-long-arrow-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -4183,13 +4219,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-long-arrow-up:before {
   content: "\f176";
 }
 
 /** Icon definition for magic **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-magic {
   display: inline-block;
   font-family: FontAwesome;
@@ -4200,13 +4236,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-magic:before {
   content: "\f0d0";
 }
 
 /** Icon definition for magnet **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-magnet {
   display: inline-block;
   font-family: FontAwesome;
@@ -4217,13 +4253,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-magnet:before {
   content: "\f076";
 }
 
 /** Icon definition for mail-forward **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-mail-forward {
   display: inline-block;
   font-family: FontAwesome;
@@ -4234,13 +4270,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-mail-forward:before {
   content: "\f064";
 }
 
 /** Icon definition for mail-reply-all **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-mail-reply-all {
   display: inline-block;
   font-family: FontAwesome;
@@ -4251,13 +4287,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-mail-reply-all:before {
   content: "\f122";
 }
 
 /** Icon definition for mail-reply **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-mail-reply {
   display: inline-block;
   font-family: FontAwesome;
@@ -4268,13 +4304,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-mail-reply:before {
   content: "\f112";
 }
 
 /** Icon definition for male **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-male {
   display: inline-block;
   font-family: FontAwesome;
@@ -4285,13 +4321,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-male:before {
   content: "\f183";
 }
 
 /** Icon definition for map-marker **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-map-marker {
   display: inline-block;
   font-family: FontAwesome;
@@ -4302,13 +4338,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-map-marker:before {
   content: "\f041";
 }
 
 /** Icon definition for maxcdn **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-maxcdn {
   display: inline-block;
   font-family: FontAwesome;
@@ -4319,13 +4355,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-maxcdn:before {
   content: "\f136";
 }
 
 /** Icon definition for medkit **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-medkit {
   display: inline-block;
   font-family: FontAwesome;
@@ -4336,13 +4372,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-medkit:before {
   content: "\f0fa";
 }
 
 /** Icon definition for meh-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-meh-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -4353,13 +4389,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-meh-o:before {
   content: "\f11a";
 }
 
 /** Icon definition for microphone **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-microphone {
   display: inline-block;
   font-family: FontAwesome;
@@ -4370,13 +4406,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-microphone:before {
   content: "\f130";
 }
 
 /** Icon definition for microphone-slash **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-microphone-slash {
   display: inline-block;
   font-family: FontAwesome;
@@ -4387,13 +4423,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-microphone-slash:before {
   content: "\f131";
 }
 
 /** Icon definition for minus-circle **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-minus-circle {
   display: inline-block;
   font-family: FontAwesome;
@@ -4404,13 +4440,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-minus-circle:before {
   content: "\f056";
 }
 
 /** Icon definition for minus **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-minus {
   display: inline-block;
   font-family: FontAwesome;
@@ -4421,13 +4457,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-minus:before {
   content: "\f068";
 }
 
 /** Icon definition for minus-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-minus-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -4438,13 +4474,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-minus-square:before {
   content: "\f146";
 }
 
 /** Icon definition for minus-square-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-minus-square-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -4455,13 +4491,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-minus-square-o:before {
   content: "\f147";
 }
 
 /** Icon definition for mobile **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-mobile {
   display: inline-block;
   font-family: FontAwesome;
@@ -4472,13 +4508,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-mobile:before {
   content: "\f10b";
 }
 
 /** Icon definition for mobile-phone **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-mobile-phone {
   display: inline-block;
   font-family: FontAwesome;
@@ -4489,13 +4525,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-mobile-phone:before {
   content: "\f10b";
 }
 
 /** Icon definition for money **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-money {
   display: inline-block;
   font-family: FontAwesome;
@@ -4506,13 +4542,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-money:before {
   content: "\f0d6";
 }
 
 /** Icon definition for moon-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-moon-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -4523,13 +4559,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-moon-o:before {
   content: "\f186";
 }
 
 /** Icon definition for move **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-move {
   display: inline-block;
   font-family: FontAwesome;
@@ -4540,13 +4576,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-move:before {
   content: "\f0c9";
 }
 
 /** Icon definition for music **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-music {
   display: inline-block;
   font-family: FontAwesome;
@@ -4557,13 +4593,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-music:before {
   content: "\f001";
 }
 
 /** Icon definition for ok **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-ok {
   display: inline-block;
   font-family: FontAwesome;
@@ -4574,13 +4610,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-ok:before {
   content: "\f00c";
 }
 
 /** Icon definition for outdent **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-outdent {
   display: inline-block;
   font-family: FontAwesome;
@@ -4591,13 +4627,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-outdent:before {
   content: "\f03b";
 }
 
 /** Icon definition for pagelines **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-pagelines {
   display: inline-block;
   font-family: FontAwesome;
@@ -4608,13 +4644,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-pagelines:before {
   content: "\f18c";
 }
 
 /** Icon definition for paperclip **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-paperclip {
   display: inline-block;
   font-family: FontAwesome;
@@ -4625,13 +4661,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-paperclip:before {
   content: "\f0c6";
 }
 
 /** Icon definition for paste **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-paste {
   display: inline-block;
   font-family: FontAwesome;
@@ -4642,13 +4678,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-paste:before {
   content: "\f0ea";
 }
 
 /** Icon definition for pause **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-pause {
   display: inline-block;
   font-family: FontAwesome;
@@ -4659,13 +4695,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-pause:before {
   content: "\f04c";
 }
 
 /** Icon definition for pencil **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-pencil {
   display: inline-block;
   font-family: FontAwesome;
@@ -4676,13 +4712,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-pencil:before {
   content: "\f040";
 }
 
 /** Icon definition for pencil-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-pencil-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -4693,13 +4729,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-pencil-square:before {
   content: "\f14b";
 }
 
 /** Icon definition for pencil-square-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-pencil-square-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -4710,13 +4746,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-pencil-square-o:before {
   content: "\f044";
 }
 
 /** Icon definition for phone **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-phone {
   display: inline-block;
   font-family: FontAwesome;
@@ -4727,13 +4763,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-phone:before {
   content: "\f095";
 }
 
 /** Icon definition for phone-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-phone-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -4744,13 +4780,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-phone-square:before {
   content: "\f098";
 }
 
 /** Icon definition for picture-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-picture-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -4761,13 +4797,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-picture-o:before {
   content: "\f03e";
 }
 
 /** Icon definition for pinterest **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-pinterest {
   display: inline-block;
   font-family: FontAwesome;
@@ -4778,13 +4814,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-pinterest:before {
   content: "\f0d2";
 }
 
 /** Icon definition for pinterest-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-pinterest-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -4795,13 +4831,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-pinterest-square:before {
   content: "\f0d3";
 }
 
 /** Icon definition for plane **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-plane {
   display: inline-block;
   font-family: FontAwesome;
@@ -4812,13 +4848,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-plane:before {
   content: "\f072";
 }
 
 /** Icon definition for play-circle **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-play-circle {
   display: inline-block;
   font-family: FontAwesome;
@@ -4829,13 +4865,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-play-circle:before {
   content: "\f144";
 }
 
 /** Icon definition for play-circle-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-play-circle-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -4846,13 +4882,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-play-circle-o:before {
   content: "\f01d";
 }
 
 /** Icon definition for play **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-play {
   display: inline-block;
   font-family: FontAwesome;
@@ -4863,13 +4899,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-play:before {
   content: "\f04b";
 }
 
 /** Icon definition for plus-circle **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-plus-circle {
   display: inline-block;
   font-family: FontAwesome;
@@ -4880,13 +4916,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-plus-circle:before {
   content: "\f055";
 }
 
 /** Icon definition for plus **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-plus {
   display: inline-block;
   font-family: FontAwesome;
@@ -4897,13 +4933,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-plus:before {
   content: "\f067";
 }
 
 /** Icon definition for plus-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-plus-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -4914,13 +4950,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-plus-square:before {
   content: "\f0fe";
 }
 
 /** Icon definition for plus-square-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-plus-square-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -4931,13 +4967,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-plus-square-o:before {
   content: "\f196";
 }
 
 /** Icon definition for power-off **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-power-off {
   display: inline-block;
   font-family: FontAwesome;
@@ -4948,13 +4984,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-power-off:before {
   content: "\f011";
 }
 
 /** Icon definition for print **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-print {
   display: inline-block;
   font-family: FontAwesome;
@@ -4965,13 +5001,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-print:before {
   content: "\f02f";
 }
 
 /** Icon definition for puzzle-piece **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-puzzle-piece {
   display: inline-block;
   font-family: FontAwesome;
@@ -4982,13 +5018,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-puzzle-piece:before {
   content: "\f12e";
 }
 
 /** Icon definition for qrcode **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-qrcode {
   display: inline-block;
   font-family: FontAwesome;
@@ -4999,13 +5035,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-qrcode:before {
   content: "\f029";
 }
 
 /** Icon definition for question-circle **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-question-circle {
   display: inline-block;
   font-family: FontAwesome;
@@ -5016,13 +5052,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-question-circle:before {
   content: "\f059";
 }
 
 /** Icon definition for question **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-question {
   display: inline-block;
   font-family: FontAwesome;
@@ -5033,13 +5069,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-question:before {
   content: "\f128";
 }
 
 /** Icon definition for quote-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-quote-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -5050,13 +5086,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-quote-left:before {
   content: "\f10d";
 }
 
 /** Icon definition for quote-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-quote-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -5067,13 +5103,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-quote-right:before {
   content: "\f10e";
 }
 
 /** Icon definition for random **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-random {
   display: inline-block;
   font-family: FontAwesome;
@@ -5084,13 +5120,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-random:before {
   content: "\f074";
 }
 
 /** Icon definition for refresh **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-refresh {
   display: inline-block;
   font-family: FontAwesome;
@@ -5101,13 +5137,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-refresh:before {
   content: "\f021";
 }
 
 /** Icon definition for remove **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-remove {
   display: inline-block;
   font-family: FontAwesome;
@@ -5118,13 +5154,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-remove:before {
   content: "\f068";
 }
 
 /** Icon definition for renren **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-renren {
   display: inline-block;
   font-family: FontAwesome;
@@ -5135,13 +5171,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-renren:before {
   content: "\f18b";
 }
 
 /** Icon definition for repeat **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-repeat {
   display: inline-block;
   font-family: FontAwesome;
@@ -5152,13 +5188,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-repeat:before {
   content: "\f01e";
 }
 
 /** Icon definition for reply-all **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-reply-all {
   display: inline-block;
   font-family: FontAwesome;
@@ -5169,13 +5205,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-reply-all:before {
   content: "\f122";
 }
 
 /** Icon definition for reply **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-reply {
   display: inline-block;
   font-family: FontAwesome;
@@ -5186,13 +5222,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-reply:before {
   content: "\f112";
 }
 
 /** Icon definition for retweet **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-retweet {
   display: inline-block;
   font-family: FontAwesome;
@@ -5203,13 +5239,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-retweet:before {
   content: "\f079";
 }
 
 /** Icon definition for rmb **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-rmb {
   display: inline-block;
   font-family: FontAwesome;
@@ -5220,13 +5256,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-rmb:before {
   content: "\f157";
 }
 
 /** Icon definition for road **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-road {
   display: inline-block;
   font-family: FontAwesome;
@@ -5237,13 +5273,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-road:before {
   content: "\f018";
 }
 
 /** Icon definition for rocket **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-rocket {
   display: inline-block;
   font-family: FontAwesome;
@@ -5254,13 +5290,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-rocket:before {
   content: "\f135";
 }
 
 /** Icon definition for rotate-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-rotate-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -5271,13 +5307,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-rotate-left:before {
   content: "\f0e2";
 }
 
 /** Icon definition for rotate-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-rotate-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -5288,13 +5324,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-rotate-right:before {
   content: "\f01e";
 }
 
 /** Icon definition for rouble **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-rouble {
   display: inline-block;
   font-family: FontAwesome;
@@ -5305,13 +5341,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-rouble:before {
   content: "\f158";
 }
 
 /** Icon definition for rss **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-rss {
   display: inline-block;
   font-family: FontAwesome;
@@ -5322,13 +5358,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-rss:before {
   content: "\f09e";
 }
 
 /** Icon definition for rss-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-rss-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -5339,13 +5375,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-rss-square:before {
   content: "\f143";
 }
 
 /** Icon definition for rub **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-rub {
   display: inline-block;
   font-family: FontAwesome;
@@ -5356,13 +5392,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-rub:before {
   content: "\f158";
 }
 
 /** Icon definition for ruble **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-ruble {
   display: inline-block;
   font-family: FontAwesome;
@@ -5373,13 +5409,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-ruble:before {
   content: "\f158";
 }
 
 /** Icon definition for rupee **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-rupee {
   display: inline-block;
   font-family: FontAwesome;
@@ -5390,13 +5426,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-rupee:before {
   content: "\f156";
 }
 
 /** Icon definition for save **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-save {
   display: inline-block;
   font-family: FontAwesome;
@@ -5407,13 +5443,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-save:before {
   content: "\f0c7";
 }
 
 /** Icon definition for scissors **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-scissors {
   display: inline-block;
   font-family: FontAwesome;
@@ -5424,13 +5460,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-scissors:before {
   content: "\f0c4";
 }
 
 /** Icon definition for search **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-search {
   display: inline-block;
   font-family: FontAwesome;
@@ -5441,13 +5477,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-search:before {
   content: "\f002";
 }
 
 /** Icon definition for search-minus **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-search-minus {
   display: inline-block;
   font-family: FontAwesome;
@@ -5458,13 +5494,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-search-minus:before {
   content: "\f010";
 }
 
 /** Icon definition for search-plus **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-search-plus {
   display: inline-block;
   font-family: FontAwesome;
@@ -5475,13 +5511,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-search-plus:before {
   content: "\f00e";
 }
 
 /** Icon definition for share **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-share {
   display: inline-block;
   font-family: FontAwesome;
@@ -5492,13 +5528,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-share:before {
   content: "\f064";
 }
 
 /** Icon definition for share-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-share-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -5509,13 +5545,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-share-square:before {
   content: "\f14d";
 }
 
 /** Icon definition for share-square-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-share-square-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -5526,13 +5562,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-share-square-o:before {
   content: "\f045";
 }
 
 /** Icon definition for shield **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-shield {
   display: inline-block;
   font-family: FontAwesome;
@@ -5543,13 +5579,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-shield:before {
   content: "\f132";
 }
 
 /** Icon definition for shopping-cart **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-shopping-cart {
   display: inline-block;
   font-family: FontAwesome;
@@ -5560,13 +5596,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-shopping-cart:before {
   content: "\f07a";
 }
 
 /** Icon definition for signal **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-signal {
   display: inline-block;
   font-family: FontAwesome;
@@ -5577,13 +5613,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-signal:before {
   content: "\f012";
 }
 
 /** Icon definition for sign-in **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sign-in {
   display: inline-block;
   font-family: FontAwesome;
@@ -5594,13 +5630,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sign-in:before {
   content: "\f090";
 }
 
 /** Icon definition for sign-out **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sign-out {
   display: inline-block;
   font-family: FontAwesome;
@@ -5611,13 +5647,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sign-out:before {
   content: "\f08b";
 }
 
 /** Icon definition for sitemap **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sitemap {
   display: inline-block;
   font-family: FontAwesome;
@@ -5628,13 +5664,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sitemap:before {
   content: "\f0e8";
 }
 
 /** Icon definition for skype **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-skype {
   display: inline-block;
   font-family: FontAwesome;
@@ -5645,13 +5681,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-skype:before {
   content: "\f17e";
 }
 
 /** Icon definition for smile-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-smile-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -5662,13 +5698,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-smile-o:before {
   content: "\f118";
 }
 
 /** Icon definition for sort-alpha-asc **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sort-alpha-asc {
   display: inline-block;
   font-family: FontAwesome;
@@ -5679,13 +5715,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sort-alpha-asc:before {
   content: "\f15d";
 }
 
 /** Icon definition for sort-alpha-desc **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sort-alpha-desc {
   display: inline-block;
   font-family: FontAwesome;
@@ -5696,13 +5732,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sort-alpha-desc:before {
   content: "\f15e";
 }
 
 /** Icon definition for sort-amount-asc **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sort-amount-asc {
   display: inline-block;
   font-family: FontAwesome;
@@ -5713,13 +5749,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sort-amount-asc:before {
   content: "\f160";
 }
 
 /** Icon definition for sort-amount-desc **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sort-amount-desc {
   display: inline-block;
   font-family: FontAwesome;
@@ -5730,13 +5766,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sort-amount-desc:before {
   content: "\f161";
 }
 
 /** Icon definition for sort-asc **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sort-asc {
   display: inline-block;
   font-family: FontAwesome;
@@ -5747,13 +5783,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sort-asc:before {
   content: "\f0dd";
 }
 
 /** Icon definition for sort-desc **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sort-desc {
   display: inline-block;
   font-family: FontAwesome;
@@ -5764,13 +5800,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sort-desc:before {
   content: "\f0de";
 }
 
 /** Icon definition for sort-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sort-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -5781,13 +5817,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sort-down:before {
   content: "\f0dd";
 }
 
 /** Icon definition for sort **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sort {
   display: inline-block;
   font-family: FontAwesome;
@@ -5798,13 +5834,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sort:before {
   content: "\f0dc";
 }
 
 /** Icon definition for sort-numeric-asc **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sort-numeric-asc {
   display: inline-block;
   font-family: FontAwesome;
@@ -5815,13 +5851,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sort-numeric-asc:before {
   content: "\f162";
 }
 
 /** Icon definition for sort-numeric-desc **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sort-numeric-desc {
   display: inline-block;
   font-family: FontAwesome;
@@ -5832,13 +5868,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sort-numeric-desc:before {
   content: "\f163";
 }
 
 /** Icon definition for sort-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sort-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -5849,13 +5885,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sort-up:before {
   content: "\f0de";
 }
 
 /** Icon definition for spinner **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-spinner {
   display: inline-block;
   font-family: FontAwesome;
@@ -5866,13 +5902,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-spinner:before {
   content: "\f110";
 }
 
 /** Icon definition for square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -5883,13 +5919,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-square:before {
   content: "\f0c8";
 }
 
 /** Icon definition for square-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-square-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -5900,13 +5936,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-square-o:before {
   content: "\f096";
 }
 
 /** Icon definition for stack-exchange **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-stack-exchange {
   display: inline-block;
   font-family: FontAwesome;
@@ -5917,13 +5953,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-stack-exchange:before {
   content: "\f18d";
 }
 
 /** Icon definition for stack-overflow **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-stack-overflow {
   display: inline-block;
   font-family: FontAwesome;
@@ -5934,13 +5970,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-stack-overflow:before {
   content: "\f16c";
 }
 
 /** Icon definition for star **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-star {
   display: inline-block;
   font-family: FontAwesome;
@@ -5951,13 +5987,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-star:before {
   content: "\f005";
 }
 
 /** Icon definition for star-half-empty **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-star-half-empty {
   display: inline-block;
   font-family: FontAwesome;
@@ -5968,13 +6004,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-star-half-empty:before {
   content: "\f123";
 }
 
 /** Icon definition for star-half **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-star-half {
   display: inline-block;
   font-family: FontAwesome;
@@ -5985,13 +6021,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-star-half:before {
   content: "\f089";
 }
 
 /** Icon definition for star-half-full **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-star-half-full {
   display: inline-block;
   font-family: FontAwesome;
@@ -6002,13 +6038,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-star-half-full:before {
   content: "\f123";
 }
 
 /** Icon definition for star-half-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-star-half-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -6019,13 +6055,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-star-half-o:before {
   content: "\f123";
 }
 
 /** Icon definition for star-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-star-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -6036,13 +6072,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-star-o:before {
   content: "\f006";
 }
 
 /** Icon definition for step-backward **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-step-backward {
   display: inline-block;
   font-family: FontAwesome;
@@ -6053,13 +6089,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-step-backward:before {
   content: "\f048";
 }
 
 /** Icon definition for step-forward **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-step-forward {
   display: inline-block;
   font-family: FontAwesome;
@@ -6070,13 +6106,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-step-forward:before {
   content: "\f051";
 }
 
 /** Icon definition for stethoscope **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-stethoscope {
   display: inline-block;
   font-family: FontAwesome;
@@ -6087,13 +6123,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-stethoscope:before {
   content: "\f0f1";
 }
 
 /** Icon definition for stop **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-stop {
   display: inline-block;
   font-family: FontAwesome;
@@ -6104,13 +6140,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-stop:before {
   content: "\f04d";
 }
 
 /** Icon definition for strikethrough **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-strikethrough {
   display: inline-block;
   font-family: FontAwesome;
@@ -6121,13 +6157,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-strikethrough:before {
   content: "\f0cc";
 }
 
 /** Icon definition for subscript **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-subscript {
   display: inline-block;
   font-family: FontAwesome;
@@ -6138,13 +6174,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-subscript:before {
   content: "\f12c";
 }
 
 /** Icon definition for suitcase **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-suitcase {
   display: inline-block;
   font-family: FontAwesome;
@@ -6155,13 +6191,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-suitcase:before {
   content: "\f0f2";
 }
 
 /** Icon definition for sun-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-sun-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -6172,13 +6208,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-sun-o:before {
   content: "\f185";
 }
 
 /** Icon definition for superscript **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-superscript {
   display: inline-block;
   font-family: FontAwesome;
@@ -6189,13 +6225,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-superscript:before {
   content: "\f12b";
 }
 
 /** Icon definition for table **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-table {
   display: inline-block;
   font-family: FontAwesome;
@@ -6206,13 +6242,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-table:before {
   content: "\f0ce";
 }
 
 /** Icon definition for tablet **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-tablet {
   display: inline-block;
   font-family: FontAwesome;
@@ -6223,13 +6259,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-tablet:before {
   content: "\f10a";
 }
 
 /** Icon definition for tachometer **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-tachometer {
   display: inline-block;
   font-family: FontAwesome;
@@ -6240,13 +6276,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-tachometer:before {
   content: "\f0e4";
 }
 
 /** Icon definition for tag **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-tag {
   display: inline-block;
   font-family: FontAwesome;
@@ -6257,13 +6293,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-tag:before {
   content: "\f02b";
 }
 
 /** Icon definition for tags **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-tags {
   display: inline-block;
   font-family: FontAwesome;
@@ -6274,13 +6310,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-tags:before {
   content: "\f02c";
 }
 
 /** Icon definition for tasks **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-tasks {
   display: inline-block;
   font-family: FontAwesome;
@@ -6291,13 +6327,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-tasks:before {
   content: "\f0ae";
 }
 
 /** Icon definition for terminal **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-terminal {
   display: inline-block;
   font-family: FontAwesome;
@@ -6308,13 +6344,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-terminal:before {
   content: "\f120";
 }
 
 /** Icon definition for text-height **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-text-height {
   display: inline-block;
   font-family: FontAwesome;
@@ -6325,13 +6361,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-text-height:before {
   content: "\f034";
 }
 
 /** Icon definition for text-width **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-text-width {
   display: inline-block;
   font-family: FontAwesome;
@@ -6342,13 +6378,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-text-width:before {
   content: "\f035";
 }
 
 /** Icon definition for th **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-th {
   display: inline-block;
   font-family: FontAwesome;
@@ -6359,13 +6395,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-th:before {
   content: "\f00a";
 }
 
 /** Icon definition for th-large **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-th-large {
   display: inline-block;
   font-family: FontAwesome;
@@ -6376,13 +6412,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-th-large:before {
   content: "\f009";
 }
 
 /** Icon definition for th-list **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-th-list {
   display: inline-block;
   font-family: FontAwesome;
@@ -6393,13 +6429,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-th-list:before {
   content: "\f00b";
 }
 
 /** Icon definition for thumbs-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-thumbs-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -6410,13 +6446,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-thumbs-down:before {
   content: "\f165";
 }
 
 /** Icon definition for thumbs-o-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-thumbs-o-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -6427,13 +6463,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-thumbs-o-down:before {
   content: "\f088";
 }
 
 /** Icon definition for thumbs-o-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-thumbs-o-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -6444,13 +6480,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-thumbs-o-up:before {
   content: "\f087";
 }
 
 /** Icon definition for thumbs-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-thumbs-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -6461,13 +6497,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-thumbs-up:before {
   content: "\f164";
 }
 
 /** Icon definition for thumb-tack **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-thumb-tack {
   display: inline-block;
   font-family: FontAwesome;
@@ -6478,13 +6514,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-thumb-tack:before {
   content: "\f08d";
 }
 
 /** Icon definition for ticket **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-ticket {
   display: inline-block;
   font-family: FontAwesome;
@@ -6495,13 +6531,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-ticket:before {
   content: "\f145";
 }
 
 /** Icon definition for times-circle **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-times-circle {
   display: inline-block;
   font-family: FontAwesome;
@@ -6512,13 +6548,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-times-circle:before {
   content: "\f057";
 }
 
 /** Icon definition for times-circle-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-times-circle-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -6529,13 +6565,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-times-circle-o:before {
   content: "\f05c";
 }
 
 /** Icon definition for times **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-times {
   display: inline-block;
   font-family: FontAwesome;
@@ -6546,13 +6582,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-times:before {
   content: "\f00d";
 }
 
 /** Icon definition for tint **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-tint {
   display: inline-block;
   font-family: FontAwesome;
@@ -6563,13 +6599,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-tint:before {
   content: "\f043";
 }
 
 /** Icon definition for toggle-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-toggle-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -6580,13 +6616,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-toggle-down:before {
   content: "\f150";
 }
 
 /** Icon definition for toggle-left **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-toggle-left {
   display: inline-block;
   font-family: FontAwesome;
@@ -6597,13 +6633,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-toggle-left:before {
   content: "\f191";
 }
 
 /** Icon definition for toggle-right **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-toggle-right {
   display: inline-block;
   font-family: FontAwesome;
@@ -6614,13 +6650,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-toggle-right:before {
   content: "\f152";
 }
 
 /** Icon definition for toggle-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-toggle-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -6631,13 +6667,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-toggle-up:before {
   content: "\f151";
 }
 
 /** Icon definition for trash-o **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-trash-o {
   display: inline-block;
   font-family: FontAwesome;
@@ -6648,13 +6684,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-trash-o:before {
   content: "\f014";
 }
 
 /** Icon definition for trello **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-trello {
   display: inline-block;
   font-family: FontAwesome;
@@ -6665,13 +6701,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-trello:before {
   content: "\f181";
 }
 
 /** Icon definition for trophy **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-trophy {
   display: inline-block;
   font-family: FontAwesome;
@@ -6682,13 +6718,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-trophy:before {
   content: "\f091";
 }
 
 /** Icon definition for truck **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-truck {
   display: inline-block;
   font-family: FontAwesome;
@@ -6699,13 +6735,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-truck:before {
   content: "\f0d1";
 }
 
 /** Icon definition for try **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-try {
   display: inline-block;
   font-family: FontAwesome;
@@ -6716,13 +6752,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-try:before {
   content: "\f195";
 }
 
 /** Icon definition for tumblr **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-tumblr {
   display: inline-block;
   font-family: FontAwesome;
@@ -6733,13 +6769,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-tumblr:before {
   content: "\f173";
 }
 
 /** Icon definition for tumblr-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-tumblr-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -6750,13 +6786,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-tumblr-square:before {
   content: "\f174";
 }
 
 /** Icon definition for turkish-lira **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-turkish-lira {
   display: inline-block;
   font-family: FontAwesome;
@@ -6767,13 +6803,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-turkish-lira:before {
   content: "\f195";
 }
 
 /** Icon definition for twitter **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-twitter {
   display: inline-block;
   font-family: FontAwesome;
@@ -6784,13 +6820,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-twitter:before {
   content: "\f099";
 }
 
 /** Icon definition for twitter-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-twitter-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -6801,13 +6837,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-twitter-square:before {
   content: "\f081";
 }
 
 /** Icon definition for umbrella **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-umbrella {
   display: inline-block;
   font-family: FontAwesome;
@@ -6818,13 +6854,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-umbrella:before {
   content: "\f0e9";
 }
 
 /** Icon definition for underline **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-underline {
   display: inline-block;
   font-family: FontAwesome;
@@ -6835,13 +6871,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-underline:before {
   content: "\f0cd";
 }
 
 /** Icon definition for undo **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-undo {
   display: inline-block;
   font-family: FontAwesome;
@@ -6852,13 +6888,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-undo:before {
   content: "\f0e2";
 }
 
 /** Icon definition for unlink **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-unlink {
   display: inline-block;
   font-family: FontAwesome;
@@ -6869,13 +6905,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-unlink:before {
   content: "\f127";
 }
 
 /** Icon definition for unlock-alt **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-unlock-alt {
   display: inline-block;
   font-family: FontAwesome;
@@ -6886,13 +6922,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-unlock-alt:before {
   content: "\f13e";
 }
 
 /** Icon definition for unlock **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-unlock {
   display: inline-block;
   font-family: FontAwesome;
@@ -6903,13 +6939,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-unlock:before {
   content: "\f09c";
 }
 
 /** Icon definition for unsorted **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-unsorted {
   display: inline-block;
   font-family: FontAwesome;
@@ -6920,13 +6956,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-unsorted:before {
   content: "\f0dc";
 }
 
 /** Icon definition for upload **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-upload {
   display: inline-block;
   font-family: FontAwesome;
@@ -6937,13 +6973,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-upload:before {
   content: "\f093";
 }
 
 /** Icon definition for usd **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-usd {
   display: inline-block;
   font-family: FontAwesome;
@@ -6954,13 +6990,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-usd:before {
   content: "\f155";
 }
 
 /** Icon definition for user **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-user {
   display: inline-block;
   font-family: FontAwesome;
@@ -6971,13 +7007,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-user:before {
   content: "\f007";
 }
 
 /** Icon definition for user-md **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-user-md {
   display: inline-block;
   font-family: FontAwesome;
@@ -6988,13 +7024,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-user-md:before {
   content: "\f0f0";
 }
 
 /** Icon definition for users **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-users {
   display: inline-block;
   font-family: FontAwesome;
@@ -7005,13 +7041,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-users:before {
   content: "\f0c0";
 }
 
 /** Icon definition for video-camera **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-video-camera {
   display: inline-block;
   font-family: FontAwesome;
@@ -7022,13 +7058,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-video-camera:before {
   content: "\f03d";
 }
 
 /** Icon definition for view **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-view {
   display: inline-block;
   font-family: FontAwesome;
@@ -7039,13 +7075,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-view:before {
   content: "\f06e";
 }
 
 /** Icon definition for vimeo-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-vimeo-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -7056,13 +7092,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-vimeo-square:before {
   content: "\f194";
 }
 
 /** Icon definition for vk **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-vk {
   display: inline-block;
   font-family: FontAwesome;
@@ -7073,13 +7109,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-vk:before {
   content: "\f189";
 }
 
 /** Icon definition for volume-down **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-volume-down {
   display: inline-block;
   font-family: FontAwesome;
@@ -7090,13 +7126,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-volume-down:before {
   content: "\f027";
 }
 
 /** Icon definition for volume-off **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-volume-off {
   display: inline-block;
   font-family: FontAwesome;
@@ -7107,13 +7143,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-volume-off:before {
   content: "\f026";
 }
 
 /** Icon definition for volume-up **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-volume-up {
   display: inline-block;
   font-family: FontAwesome;
@@ -7124,13 +7160,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-volume-up:before {
   content: "\f028";
 }
 
 /** Icon definition for warning **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-warning {
   display: inline-block;
   font-family: FontAwesome;
@@ -7141,13 +7177,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-warning:before {
   content: "\f071";
 }
 
 /** Icon definition for weibo **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-weibo {
   display: inline-block;
   font-family: FontAwesome;
@@ -7158,13 +7194,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-weibo:before {
   content: "\f18a";
 }
 
 /** Icon definition for wheelchair **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-wheelchair {
   display: inline-block;
   font-family: FontAwesome;
@@ -7175,13 +7211,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-wheelchair:before {
   content: "\f193";
 }
 
 /** Icon definition for windows **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-windows {
   display: inline-block;
   font-family: FontAwesome;
@@ -7192,13 +7228,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-windows:before {
   content: "\f17a";
 }
 
 /** Icon definition for won **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-won {
   display: inline-block;
   font-family: FontAwesome;
@@ -7209,13 +7245,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-won:before {
   content: "\f159";
 }
 
 /** Icon definition for wrench **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-wrench {
   display: inline-block;
   font-family: FontAwesome;
@@ -7226,13 +7262,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-wrench:before {
   content: "\f0ad";
 }
 
 /** Icon definition for xing **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-xing {
   display: inline-block;
   font-family: FontAwesome;
@@ -7243,13 +7279,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-xing:before {
   content: "\f168";
 }
 
 /** Icon definition for xing-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-xing-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -7260,13 +7296,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-xing-square:before {
   content: "\f169";
 }
 
 /** Icon definition for yen **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-yen {
   display: inline-block;
   font-family: FontAwesome;
@@ -7277,13 +7313,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-yen:before {
   content: "\f157";
 }
 
 /** Icon definition for youtube **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-youtube {
   display: inline-block;
   font-family: FontAwesome;
@@ -7294,13 +7330,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-youtube:before {
   content: "\f167";
 }
 
 /** Icon definition for youtube-play **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-youtube-play {
   display: inline-block;
   font-family: FontAwesome;
@@ -7311,13 +7347,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-youtube-play:before {
   content: "\f16a";
 }
 
 /** Icon definition for youtube-square **/
-/* line 26, _mixins.scss */
+/* line 47, _mixins.scss */
 .icon-youtube-square {
   display: inline-block;
   font-family: FontAwesome;
@@ -7328,7 +7364,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 35, _mixins.scss */
+/* line 56, _mixins.scss */
 .icon-youtube-square:before {
   content: "\f166";
 }
