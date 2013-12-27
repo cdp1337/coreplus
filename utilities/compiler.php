@@ -370,3 +370,29 @@ else{
 	// sass styles.scss:styles.css -l -f -t expanded --unix-newlines
 	// sass styles.scss:styles.min.css --style compressed
 }
+
+
+/*
+echo "Scanning for JS resources...\n";
+exec('find "' . ROOT_PDIR . 'components/" -name "[a-z][a-z0-9_-]*.js"', $compresults);
+exec('find "' . ROOT_PDIR . 'core/" -name "[a-z][a-z0-9_-]*.js"', $coreresults);
+exec('find "' . ROOT_PDIR . 'themes/" -name "[a-z][a-z0-9_-]*.js"', $themeresults);
+
+$results = array_merge($compresults, $coreresults, $themeresults);
+
+foreach($results as $file){
+
+	// Is this already a minified file?
+	if(strpos($file, 'min.js') !== false){
+		continue;
+	}
+
+	echo "Compiling $file...\n";
+
+
+	$cmd = escapeshellarg(BASE_DIR . 'utilities/minify.js.sh');
+	$cmd .= ' ' . $file;
+
+	exec($cmd);
+}
+*/
