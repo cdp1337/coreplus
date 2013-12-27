@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.5~core2" name="JQuery-lightbox" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.5~core3" name="JQuery-lightbox" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.1.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.4" operation="ge"/>
+		<require name="fontawesome" type="library" version="4.0.0" operation="ge"/>
 	</requires>
 	<provides>
 		<library name="JQuery.lightbox"/>
@@ -16,10 +17,11 @@
 		<file filename="assets/css/images/lightbox-btn-prev.gif" md5="5a9118de4ef6226473190d6e82f6d80d"/>
 		<file filename="assets/css/images/lightbox-ico-loading.gif" md5="b5fe8df97005341f898e2cf84e68de01"/>
 		<file filename="assets/css/jquery.lightbox-0.5.css" md5="96ffc5ef3f274ad20bc77e293a8b0722"/>
-		<file filename="assets/js/jquery.lightbox-0.5.js" md5="f82a95292da1810815fe8521aa03a0c1"/>
-		<file filename="assets/js/jquery.lightbox-0.5.min.js" md5="89a2ef0f8dc320697d03148604fd5526"/>
+		<file filename="assets/js/jquery.lightbox-0.5.js" md5="1ef2f8dd5868dc9571821afc7ca7da27"/>
+		<file filename="assets/js/jquery.lightbox-0.5.min.js" md5="392188831ef280bf9d4e71cdd12d4f17"/>
 	</assets>
 	<files>
+		<file filename="CHANGELOG" md5="d8a552afc35aa7cd068a7869b9dc02ac"/>
 		<file filename="JQueryLightbox.lib.php" md5="5a1333e1703f65954cf15c6fe723bd8d">
 			<class name="JQueryLightbox"/>
 		</file>
@@ -29,6 +31,10 @@
 		lightBox is a plugin for jQuery. It was inspired in Lightbox JS by Lokesh Dhakar.
 		Visit http://leandrovieira.com/projects/jquery/lightbox/ for more informations about this jQuery plugin
 	</description>
+	<upgrades>
+		<upgrade from="0.5~core1" to="0.5~core2"/>
+		<upgrade from="0.5~core2" to="0.5~core3"/>
+	</upgrades>
 	<authors>
 		<author name="Leandro Vieira Pinho"/>
 	</authors>
@@ -37,8 +43,5 @@
 			CCAttribution-ShareAlike 2.5 Brazil
 		</license>
 	</licenses>
-	<upgrades>
-		<upgrade from="0.5~core1" to="0.5~core2"/>
-	</upgrades>
 </component>
 

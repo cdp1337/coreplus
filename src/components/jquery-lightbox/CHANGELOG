@@ -1,3 +1,8 @@
+JQuery-lightbox 0.5~core3
+
+	* Support the new FontAwesome names.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 26 Dec 2013 22:38:25 -0500
+
 JQuery-lightbox 0.5~core2
 
 	* Make use of the namespace versions of View instead of static.

@@ -147,7 +147,7 @@
 				'<span id="lightbox-image-details-caption"></span>' +
 				'<span id="lightbox-image-details-currentNumber"></span>' +
 				'</div>' +
-				'<div id="lightbox-secNav"><a href="#" id="lightbox-secNav-btnClose"><i class="icon-remove-circle"></i> <span>Close</span></a></div>' +
+				'<div id="lightbox-secNav"><a href="#" id="lightbox-secNav-btnClose"><i class="icon-times-circle"></i> <span>Close</span></a></div>' +
 				'</div>' +
 				'</div>' +
 				'</div>'
