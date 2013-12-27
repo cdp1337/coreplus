@@ -6,7 +6,8 @@
 # 
 # @author Charlie Powell <charlie@eval.bz>
 
-YUICOMPRESSOR="$(dirname $0)/yuicompressor-2.4.7.jar"
+BASEDIR="$(readlink -f $(dirname $0)/..)"
+YUICOMPRESSOR="$BASEDIR/vendor/yuicompressor-2.4.8.jar"
 
 function help {
 	echo "Usage: $0 '/path/to/fullcode.js'"
