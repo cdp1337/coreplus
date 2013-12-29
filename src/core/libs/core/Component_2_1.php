@@ -1477,6 +1477,17 @@ class Component_2_1 {
 		return $this->_xmlloader->getRootDOM();
 	}
 
+	/**
+	 * Get the XML Loader backend of this component.
+	 *
+	 * Useful for manipulating the XML structure.
+	 *
+	 * @return XMLLoader
+	 */
+	public function getXML(){
+		return $this->_xmlloader;
+	}
+
 	public function getProvides() {
 		$ret = array();
 		// This element itself.
