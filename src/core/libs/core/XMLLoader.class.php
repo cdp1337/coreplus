@@ -381,9 +381,9 @@ class XMLLoader implements Serializable {
 	/**
 	 * Lookup an element using XPath.
 	 *
-	 * @param string  $path The path to search for.
-	 * @param DOMNode $el The element to search for the path in.
-	 * @param boolean $autocreate Automatically create the element if it does not exist.
+	 * @param string       $path The path to search for.
+	 * @param DOMNode|bool $el The element to search for the path in.
+	 * @param bool         $autocreate Automatically create the element if it does not exist.
 	 *
 	 * @return DOMElement
 	 */
