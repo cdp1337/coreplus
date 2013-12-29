@@ -37,3 +37,29 @@ LOGIN / REGISTER PAGES
 	margin: 3px;
 	padding: 7px 3px 3px;
 }
+
+
+/**
+ * Styles for the meta author input
+ */
+.meta-author-input-wrapper {
+	float: left;
+	position: relative;
+}
+
+.meta-author-indicator {
+	position: absolute;
+	left: 8px;
+	top: 4px;
+}
+
+.formelement .formelement-labelinputgroup .meta-author-input-wrapper input[type="text"] {
+	padding-left: 24px;
+}
+
+.formelement.user-valid .meta-author-invalid-indicator {
+	display: none;
+}
+.formelement.user-invalid .meta-author-valid-indicator {
+	display: none;
+}
