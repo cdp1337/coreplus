@@ -1028,6 +1028,15 @@ function process_component($component, $forcerelease = false){
 		}
 	}
 
+	// If this is not Core, set the required version to the current Core version.
+	if($comp->getName() != 'core'){
+		$xml = $comp->getXML();
+		$node = $xml->getElement('requires/require[@name="core"]');
+		$node->setAttribute('type', 'component');
+		$node->setAttribute('version', Core::GetComponent('core')->getVersion());
+		$node->setAttribute('operation', 'ge');
+	}
+
 	// User must have selected 'save'...
 	$comp->save();
 
