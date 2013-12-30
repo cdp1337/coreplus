@@ -1883,6 +1883,9 @@
 			<php file="core/upgrades/270_to_280_groups.php"/>
 			<php file="core/upgrades/270_to_280_user_avatar_paths.php"/>
 		</upgrade>
+		<upgrade from="2.8.0" to="3.0.0">
+			<php file="core/upgrades/280_to_300.php"/>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
