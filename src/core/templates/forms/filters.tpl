@@ -20,7 +20,7 @@
 						<i class="icon-remove"></i>
 						<span>Reset Filters</span>
 					</a>
-					<a href="#" class="button apply-filters" style="float:right;">
+					<a href="#" class="button apply-filters">
 						<i class="icon-ok"></i>
 						<span>Apply Filters</span>
 					</a>
