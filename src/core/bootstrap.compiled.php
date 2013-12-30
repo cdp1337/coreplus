@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 18 Dec 2013 18:07:45 -0500
+ * @compiled Mon, 30 Dec 2013 04:04:43 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -2520,8 +2520,13 @@ $dat->setID($k, $this->_data[$k]);
 $idcol = $k; // Remember this for after the save.
 break;
 case Model::ATT_TYPE_UUID:
-if($this->_data[$k]){
+if($this->_data[$k] && isset($this->_datainit[$k]) && $this->_datainit[$k]){
 $nv = $this->_data[$k];
+$dat->setID($k, $nv);
+}
+elseif($this->_data[$k]){
+$nv = $this->_data[$k];
+$dat->insert($k, $nv);
 $dat->setID($k, $nv);
 }
 else{
@@ -7103,6 +7108,9 @@ return (sizeof($changed)) ? $changed : false;
 }
 public function getRootDOM(){
 return $this->_xmlloader->getRootDOM();
+}
+public function getXML(){
+return $this->_xmlloader;
 }
 public function getProvides() {
 $ret = array();
