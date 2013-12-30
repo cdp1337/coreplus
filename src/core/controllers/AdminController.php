@@ -339,6 +339,147 @@ class AdminController extends Controller_2_1 {
 		$view->assign('outoftime', $outoftime);
 	}
 
+
+
+	/**
+	 * Display a list of system logs that have been recorded.
+	 *
+	 * @return int
+	 */
+	public function log(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/core/systemlog/view')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$codes = ['' => '-- All --'];
+		$ds = Dataset::Init()
+			->table('system_log')
+			->select('code')
+			->unique(true)
+			->order('code')
+			->execute();
+
+		foreach($ds as $row){
+			$codes[$row['code']] = $row['code'];
+		}
+
+		$filters = new FilterForm();
+		$filters->setName('system-log');
+		$filters->hassort = true;
+		$filters->haspagination = true;
+
+		$filters->addElement(
+			'select',
+			array(
+				'title' => 'Type',
+				'name' => 'type',
+				'options' => array(
+					'' => '-- All --',
+					'info' => 'Informative',
+					'error' => 'Warning/Error',
+					'security' => 'Security',
+				),
+				'link' => FilterForm::LINK_TYPE_STANDARD,
+			)
+		);
+
+		$filters->addElement(
+			'select',
+			[
+				'title' => 'Code',
+				'name' => 'code',
+				'options' => $codes,
+				'link' => FilterForm::LINK_TYPE_STANDARD,
+			]
+		);
+
+		$filters->addElement(
+			'date',
+			[
+				'title' => 'On or After',
+				'name' => 'datetime_onafter',
+				'linkname' => 'datetime',
+				'link' => FilterForm::LINK_TYPE_GE,
+			]
+		);
+		$filters->addElement(
+			'date',
+			[
+				'title' => 'On or Before',
+				'name' => 'datetime_onbefore',
+				'linkname' => 'datetime',
+				'link' => FilterForm::LINK_TYPE_LE,
+				'linkvaluesuffix' => ' 23:59:59'
+			]
+		);
+
+		/*$filters->addElement(
+			'select',
+			array(
+				'title' => 'Cron',
+				'name' => 'cron',
+				'options' => array(
+					'' => '-- All --',
+					'hourly' => 'hourly',
+					'daily' => 'daily',
+					'weekly' => 'weekly',
+					'monthly' => 'monthly'
+				),
+				'link' => FilterForm::LINK_TYPE_STANDARD,
+			)
+		);
+		$filters->addElement(
+			'select',
+			array(
+				'title' => 'Status',
+				'name' => 'status',
+				'options' => array(
+					'' => '-- All --',
+					'pass' => 'pass',
+					'fail' => 'fail'
+				),
+				'link' => FilterForm::LINK_TYPE_STANDARD,
+			)
+		);*/
+
+		$filters->addElement(
+			'hidden',
+			array(
+				'title' => 'Session',
+				'name' => 'session_id',
+				'link' => FilterForm::LINK_TYPE_STANDARD,
+			)
+		);
+		$filters->addElement(
+			'hidden',
+			array(
+				'title' => 'Affected User',
+				'name' => 'affected_user_id',
+				'link' => FilterForm::LINK_TYPE_STANDARD,
+			)
+		);
+		$filters->setSortkeys(array('datetime', 'session_id', 'user_id', 'useragent', 'action', 'affected_user_id', 'status'));
+		$filters->load($request);
+
+
+		$factory = new ModelFactory('SystemLogModel');
+		$filters->applyToFactory($factory);
+		$listings = $factory->get();
+
+		$view->title = 'System Log';
+		$view->assign('filters', $filters);
+		$view->assign('listings', $listings);
+		//$view->assign('sortkey', $filters->getSortKey());
+		//$view->assign('sortdir', $filters->getSortDirection());
+
+		//var_dump($listings); die();
+	}
+
+
+
 	public static function _ConfigSubmit(Form $form) {
 		$elements = $form->getElements();
 
