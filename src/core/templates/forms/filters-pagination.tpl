@@ -42,8 +42,8 @@
 		Page:
 		{assign var='prev' value=null}
 		{for $x=1; $x<=$page_max; $x++}
-			{if ($x == 1) || ($x == $page_max) || ($x >= $display_min && $x <= $display_max)}
-				{if $prev && ($prev+1 != $x)} ... {/if}
+			{if ($x == 1) || ($x == $page_max) || ($x >= $display_min && $x <= $display_max) || $x % 100 == 0}
+				{if $prev && ($prev+1 != $x)} .. {/if}
 
 				{if $x == $page_current}
 
