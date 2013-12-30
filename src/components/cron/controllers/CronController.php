@@ -25,7 +25,8 @@ class CronController extends Controller_2_1 {
 
 			// Report this.
 			$logmsg = "Not re-running, already executed hourly cron " . floor((Time::GetCurrentGMT() - $last->get('created')) / 60) . ' minutes ago';
-			error_log('[CRON] - ' . $logmsg);
+
+			SystemLogModel::LogInfoEvent('/cron/hourly', $logmsg);
 			return;
 		}
 
@@ -54,7 +55,7 @@ class CronController extends Controller_2_1 {
 			else $timelast .= ' minutes';
 
 			$logmsg = "Not re-running, already executed daily cron " . $timelast . ' ago';
-			error_log('[CRON] - ' . $logmsg);
+			SystemLogModel::LogInfoEvent('/cron/daily', $logmsg);
 			return;
 		}
 
@@ -85,7 +86,7 @@ class CronController extends Controller_2_1 {
 			else $timelast .= ' minutes';
 
 			$logmsg = "Not re-running, already executed weekly cron " . $timelast . ' ago';
-			error_log('[CRON] - ' . $logmsg);
+			SystemLogModel::LogInfoEvent('/cron/weekly', $logmsg);
 			return;
 		}
 
@@ -115,7 +116,7 @@ class CronController extends Controller_2_1 {
 			else $timelast .= ' minutes';
 
 			$logmsg = "Not re-running, already executed monthly cron " . $timelast . ' ago';
-			error_log('[CRON] - ' . $logmsg);
+			SystemLogModel::LogInfoEvent('/cron/monthly', $logmsg);
 			return;
 		}
 
@@ -234,7 +235,9 @@ class CronController extends Controller_2_1 {
 
 
 	/**
-	 * @param $cron
+	 * Execute the actual cron for the requested type.
+	 *
+	 * @param string $cron Cron type to execute.
 	 *
 	 * @return CronLogModel
 	 * @throws Exception
@@ -248,6 +251,16 @@ class CronController extends Controller_2_1 {
 				break;
 			default:
 				throw new Exception('Unsupported cron type: [' . $cron . ']');
+		}
+
+		if(!ConfigHandler::Get('/cron/enabled')){
+			$msg = 'Cron execution is globally disabled via the site configuration, not executing cron!';
+			SystemLogModel::LogInfoEvent('/cron/' . $cron, $msg);
+
+			// It needs to return something.
+			$log = new CronLogModel();
+			$log->set('status', 'fail');
+			return $log;
 		}
 
 		// First, check and see if there's one that's still running.
@@ -279,8 +292,12 @@ class CronController extends Controller_2_1 {
 		// This uses the hook system, but will be slightly different than most things.
 		$overallresult = true;
 		$hook = HookHandler::GetHook('/cron/' . $cron);
+		$hookcount = 0;
+		$hooksuccesses = 0;
+
 		if($hook){
 			if($hook->getBindingCount()){
+				$hookcount = $hook->getBindingCount();
 				$bindings = $hook->getBindings();
 				foreach($bindings as $b){
 					$contents .= sprintf(
@@ -294,9 +311,11 @@ class CronController extends Controller_2_1 {
 
 					if($executiondata == '' && $execution){
 						$contents .= "Cron executed successfully with no output\n";
+						++$hooksuccesses;
 					}
 					elseif($execution){
 						$contents .= $executiondata . "\n";
+						++$hooksuccesses;
 					}
 					else{
 						$contents .= $executiondata . "\n!!FAILED\n";
@@ -326,6 +345,26 @@ class CronController extends Controller_2_1 {
 		$log->set('log', $contents);
 		$log->set('status', ($overallresult ? 'pass' : 'fail') );
 		$log->save();
+
+		// Make a copy of this in the system log too if applicable.
+		$time = ( (microtime(true) * 1000) - $start );
+		if($time < 0.1){
+			$time = round($time, 4) * 1000000 . ' ns';
+		}
+		elseif($time < 2.0){
+			$time = round($time, 4) * 1000 . ' ms';
+		}
+		elseif($time < 60){
+			$time = round($time, 4) . ' seconds';
+		}
+		else{
+			$time = round($time, 4) / 60 . ' minutes';
+		}
+
+		if($hookcount > 0){
+			$msg = 'Cron ' . $cron . ' completed in ' . $time . '.  ' . $hooksuccesses . ' out of ' . $hookcount . ' hooks called successfully.';
+			SystemLogModel::LogInfoEvent('/cron/' . $cron, $msg, $contents);
+		}
 
 		// Just to notify the calling function.
 		return $log;

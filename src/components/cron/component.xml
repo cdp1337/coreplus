@@ -14,6 +14,9 @@
 	<permissions>
 		<permission key="/cron/viewlog" description="View log of cron jobs that have run"/>
 	</permissions>
+	<configs>
+		<config key="/cron/enabled" default="1" description="Cron system is disabled or enabled globally" type="boolean"/>
+	</configs>
 	<pages>
 		<page access="p:/cron/viewlog" admin="1" baseurl="/cron/admin" title="Cron Results"/>
 	</pages>
