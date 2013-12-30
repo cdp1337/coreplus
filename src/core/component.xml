@@ -1480,6 +1480,7 @@
 		<page baseurl="/usergroupadmin" admin="1" access="p:/user/groups/manage" title="User Group Administration"/>
 		<page baseurl="/useractivity" admin="1" access="p:/user/activity/view" title="User Activity" group="Reporting"/>
 		<page baseurl="/userconfig/admin" admin="1" access="g:admin" title="User Options" group="Configure"/>
+		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="System Log" group="Admin"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/updater/check" title="Check For Updates" installable="/admin"/>
@@ -1637,6 +1638,7 @@
 		<config key="/user/activity/keephistory" type="enum" default="3-months" options="1-week|1-month|2-months|3-months|6-months|12-months|24-months|36-months|all" description="How long should the full verbose user activity be kept."/>
 	</configs>
 	<permissions>
+		<permission key="/core/systemlog/view" description="View system log entries"/>
 		<permission key="/user/search/autocomplete" description="Search for users in the system via autocomplete widgets"/>
 		<permission key="/user/users/manage" description="Manage site users"/>
 		<permission key="/user/users/sudo" description="Can assume the role of ANY other use on the system."/>
