@@ -1776,11 +1776,20 @@ class Model implements ArrayAccess {
 					break;
 
 				case Model::ATT_TYPE_UUID:
-					if($this->_data[$k]){
+					if($this->_data[$k] && isset($this->_datainit[$k]) && $this->_datainit[$k]){
 						// Yay, a UUID is already set, no need to really do much.
 						$nv = $this->_data[$k];
 						// It's already set and this will most likely be ignored, but may not be for UPDATE statements...
 						// although there shouldn't be any update statements here.... but ya never know
+						$dat->setID($k, $nv);
+					}
+					elseif($this->_data[$k]){
+						// a UUID is already set, but it doesn't exist yet still.
+						// This means that the UUID was set externally even though the record is new.
+						// THIS IS ALLOWED!
+						// Insert it as typical key.
+						$nv = $this->_data[$k];
+						$dat->insert($k, $nv);
 						$dat->setID($k, $nv);
 					}
 					else{
