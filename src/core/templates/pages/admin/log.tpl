@@ -54,7 +54,6 @@
 			<td>
 				{a href="/useractivity/details?filter[session_id]=`$entry.session_id`" title="Track User Activity" style="text-decoration:none;"}<i class="icon-list-alt"></i>{/a}
 				{$entry.session_id|truncate:10}
-
 			</td>
 			<td>{user $entry.user_id}</td>
 			<td>
