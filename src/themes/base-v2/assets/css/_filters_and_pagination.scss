@@ -1,0 +1,33 @@
+.pagination {
+	color: #555555;
+	font-size: 84%;
+	padding: 0 0.5em;
+	margin: 0.5em 0;
+}
+.pagination a {
+	text-decoration: none;
+	color: #555555;
+}
+.pagination .disabled {
+	color: #999;
+}
+
+.pagination-pager {
+	float: left;
+}
+
+.pagination-list {
+	float: right;
+}
+
+.listing-filters {
+	.reset-filters {
+		float: right;
+		background-color: rgb(61, 27, 27);
+	}
+
+	.apply-filters {
+		float: right;
+		background-color: rgb(44, 61, 49);
+	}
+}

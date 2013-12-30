@@ -1163,28 +1163,8 @@ fieldset.collapsed { padding:0; border-width: 1px 0 0; }
 .page-themeeditor #dialog-confirm {display:none;}
 
 
-/** Pagination styles **/
-.pagination {
-	color: #555555;
-	font-size: 84%;
-	padding: 0 0.5em;
-	margin: 0.5em 0;
-}
-.pagination a {
-	text-decoration: none;
-	color: #555555;
-}
-.pagination .disabled {
-	color: #999;
-}
+@import "filters_and_pagination";
 
-.pagination-pager {
-	float: left;
-}
-
-.pagination-list {
-	float: right;
-}
 
 /* login page */
 .page-user-login #leftcol,
