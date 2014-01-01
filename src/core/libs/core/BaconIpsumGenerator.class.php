@@ -25,6 +25,7 @@
  *
  * @author Pete Nelson (@GunGeekATX)
  * @author Charlie Powell <charlie@eval.bz>
+ * @link https://github.com/petenelson/bacon-ipsum Original code
  *
  * @version 2.1.3~cdp1337-1
  */
@@ -170,7 +171,7 @@ class BaconIpsumGenerator {
 	 *
 	 * @return string
 	 */
-	function getSentence()	{
+	public function getSentence()	{
 		// A sentence should be between 4 and 15 words.
 		$sentence = '';
 		$length = rand(4, 15);
@@ -281,17 +282,17 @@ class BaconIpsumGenerator {
 
 	### COMPATIBILITY LAYER ####
 
-	public static function GetWords($type){
+	public static function GetWords($type = 'meat-and-filler'){
 		$bacon = self::_CompatFactory($type);
 		return $bacon->_getWords();
 	}
 
-	public static function Make_a_Sentence($type) {
+	public static function Make_a_Sentence($type = 'meat-and-filler') {
 		$bacon = self::_CompatFactory($type);
 		return $bacon->getSentence();
 	}
 
-	public static function Make_a_Paragraph($type) {
+	public static function Make_a_Paragraph($type = 'meat-and-filler') {
 		$bacon = self::_CompatFactory($type);
 		return $bacon->getParagraph();
 	}
