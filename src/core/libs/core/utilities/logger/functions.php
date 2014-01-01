@@ -64,65 +64,6 @@ function write_debug($message, $level = DEBUG_LEVEL_FULL){
  * @throws \Exception
  */
 function append_to($filebase, $message, $code = null){
-
-	// Make sure it contains only valid characters!
-	$filebase = preg_replace('/[^a-z0-9\-]/', '', str_replace(' ', '-', strtolower($filebase)));
-
-	if(!$filebase) $filebase = 'unknown';
-
-	$logpath = ROOT_PDIR . 'logs/';
-	$outfile = $logpath . $filebase . '.log';
-
-	if(!is_dir($logpath)){
-		if(!is_writable(ROOT_PDIR)){
-			// Not writable, no log!
-			throw new \Exception('Unable to open ' . $logpath . ' for writing, access denied on parent directory!');
-		}
-
-		if(!mkdir($logpath)){
-			// Can't create log directory, no log!
-			throw new \Exception('Unable to create directory ' . $logpath . ', access denied on parent directory!');
-		}
-
-		$htaccessfh = fopen($logpath . '.htaccess', 'w');
-		if(!$htaccessfh){
-			// Couldn't open the htaccess for writing!
-			throw new \Exception('Unable to create protective .htaccess file in ' . $logpath . '!');
-		}
-
-		$htaccesscontents = <<<EOD
-<Files *>
-	Order deny,allow
-	Deny from All
-</Files>
-EOD;
-
-		fwrite($htaccessfh, $htaccesscontents);
-		fclose($htaccessfh);
-	}
-	elseif(!is_writable($logpath)){
-		throw new \Exception('Unable to write to log directory ' . $logpath . '!');
-	}
-	// No else needed, else is everything dandy!
-
-
-	// Generate a nice line header to prepend on the line.
-	$header = '[' . \Time::GetCurrent(\Time::TIMEZONE_DEFAULT, 'r') . '] ';
-	if(EXEC_MODE == 'WEB'){
-		$header .= '[client: ' . REMOTE_IP . '] ';
-	}
-	else{
-		$header .= '[client: CLI] ';
-	}
-
-	if($code) $header .= '[' . $code . '] ';
-
-	$logfh = fopen($outfile, 'a');
-	if(!$logfh){
-		throw new \Exception('Unable to open ' . $outfile . ' for appending!');
-	}
-	foreach(explode("\n", $message) as $line){
-		fwrite($logfh, $header . $line . "\n");
-	}
-	fclose($logfh);
+	$log = new LogFile($filebase);
+	$log->write($message, $code);
 }
