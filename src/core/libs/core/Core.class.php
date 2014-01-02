@@ -903,9 +903,6 @@ class Core implements ISingleton {
 		if(isset(self::$instance->_classes[$classname])){
 			return true;
 		}
-		elseif(isset(self::$instance->_tmpclasses[$classname])){
-			return true;
-		}
 		else{
 			return false;
 		}
