@@ -64,6 +64,12 @@ function write_debug($message, $level = DEBUG_LEVEL_FULL){
  * @throws \Exception
  */
 function append_to($filebase, $message, $code = null){
-	$log = new LogFile($filebase);
-	$log->write($message, $code);
+	if(class_exists('Core\\Utilities\\Logger\\LogFile')){
+		$log = new LogFile($filebase);
+		$log->write($message, $code);
+	}
+	else{
+		error_log($message);
+	}
+
 }

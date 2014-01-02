@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 01 Jan 2014 20:21:44 -0500
+ * @compiled Thu, 02 Jan 2014 11:26:27 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -177,8 +177,13 @@ echo '<pre class="xdebug-var-dump screen">[' . $time . ' ms] ' . $message . '</p
 }
 }
 function append_to($filebase, $message, $code = null){
+if(class_exists('Core\\Utilities\\Logger\\LogFile')){
 $log = new LogFile($filebase);
 $log->write($message, $code);
+}
+else{
+error_log($message);
+}
 }
 } // ENDING NAMESPACE Core\Utilities\Logger
 
@@ -2361,7 +2366,7 @@ $this->_datadecrypted = array();
 foreach($this->getKeySchemas() as $k => $v){
 if($v['encrypted']){
 $payload = $this->_data[$k];
-if($payload === null || $payload === ''){
+if($payload === null || $payload === '' || $payload === false){
 $this->_datadecrypted[$k] = null;
 continue;
 }
@@ -11356,7 +11361,13 @@ $log->save();
 }
 catch(\Exception $e){
 try{
-Logger\append_to($type, $details . $errstr, $code);
+if(class_exists('Core\\Utilities\\Logger\\LogFile')){
+$log = new \Core\Utilities\Logger\LogFile($type);
+$log->write($details . $errstr, $code);
+}
+else{
+error_log($details . $errstr);
+}
 }
 catch(\Exception $e){
 }
@@ -12062,9 +12073,6 @@ if(self::$instance == null){
 self::Singleton();
 }
 if(isset(self::$instance->_classes[$classname])){
-return true;
-}
-elseif(isset(self::$instance->_tmpclasses[$classname])){
 return true;
 }
 else{

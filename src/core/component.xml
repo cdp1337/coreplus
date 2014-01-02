@@ -56,7 +56,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
 		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
-		<file filename="core/CHANGELOG" md5="6985fbb2906af324102b6251cc4ca049"/>
+		<file filename="core/CHANGELOG" md5="f21cac42f5c8ff8419389a3e33c50444"/>
 		<file filename="core/bootstrap.php" md5="7a32b5d79a2748dceb1d940fd167a853"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="216525795b6b97e55e9a534e94e6798b"/>
@@ -500,7 +500,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="06f428768946473576150df4b8b69a02">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="49224a608348a0042921fddcefd4becb">
+		<file filename="core/libs/core/Core.class.php" md5="5ed320e35a99528603237e818a2c7651">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -541,7 +541,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="200bf9ec898ce469bc1781c273f8a739">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="137a0cd1b2ded2a182e2d8cfd312af7d">
+		<file filename="core/libs/core/Model.class.php" md5="cf22a90f24ac727daa8dd22aa69793ee">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -653,7 +653,7 @@
 		<file filename="core/libs/core/datamodel/tests/SQL_Parser_DatasetTest.php" md5="9aed174ba2bfdbe6e9d9ab82ecfa8397">
 			<class name="SQL_Parser_DatasetTest"/>
 		</file>
-		<file filename="core/libs/core/errormanagement/functions.php" md5="8243039af0a6c6b17f8e8335df63e5b5"/>
+		<file filename="core/libs/core/errormanagement/functions.php" md5="f6070e21ce306340f667defa0410bf76"/>
 		<file filename="core/libs/core/filestore/Contents.interface.php" md5="7fe2366ab60c9f0a432c76b41f49a923">
 			<interface name="Core\Filestore\Contents"/>
 		</file>
@@ -775,7 +775,7 @@
 		<file filename="core/libs/core/utilities/logger/LogFile.php" md5="641c635f15f07299a704a918f5746fe0">
 			<class name="Core\Utilities\Logger\LogFile"/>
 		</file>
-		<file filename="core/libs/core/utilities/logger/functions.php" md5="3ea0b10d0ae61aeaaada24a7ac28715e"/>
+		<file filename="core/libs/core/utilities/logger/functions.php" md5="08accdcd0615f18ef4f0f0e76448efc5"/>
 		<file filename="core/libs/core/utilities/profiler/Profiler.php" md5="115e00acadc52d8108b574eb86bb0fa5">
 			<class name="Core\Utilities\Profiler\Profiler"/>
 		</file>
@@ -1403,7 +1403,6 @@
 		<file filename="core/upgrades/261_to_262.php" md5="f980ebc7df2bcdb6cb3d553b96567d07"/>
 		<file filename="core/upgrades/270_to_280_groups.php" md5="60e4e3e8e2fe7a0de877a5310962204b"/>
 		<file filename="core/upgrades/270_to_280_user_avatar_paths.php" md5="957526b35aa8d9a84fcbc4c98cd09471"/>
-		<file filename="core/upgrades/280_to_300.php" md5="68f79b8f086a773a1780cbcd8d6cd2ec"/>
 		<file filename="core/widgets/AdminMenuWidget.php" md5="8439a18a8cba772be2b82cb0dec5aa41">
 			<class name="AdminMenuWidget"/>
 		</file>
@@ -1432,11 +1431,12 @@
 			<class name="InstallPage"/>
 		</file>
 		<file filename="install/assets/jquery-1.7.1.min.js" md5="ddb84c1587287b2df08966081ef063bf"/>
+		<file filename="install/assets/logo.png" md5="a4d441acf634337bc88eec82fcc79a3f"/>
 		<file filename="install/assets/style.css" md5="56aab5fb013265c4ab8cc85899df7dd1"/>
 		<file filename="install/classes/InstallerStep.php" md5="8d913a65a6c4dbacadb6ede2e2fd5320">
 			<class name="Core\Installer\InstallerStep"/>
 		</file>
-		<file filename="install/index.php" md5="d2294600c1929883ff815ff768d0db20"/>
+		<file filename="install/index.php" md5="a209adc85ea99f15d4b3b60179401f3b"/>
 		<file filename="install/steps/InstallConfigurationStep.php" md5="03aedf478bff52e9dbe9dcd094990bfd">
 			<class name="Core\Installer\InstallConfigurationStep"/>
 		</file>
@@ -1446,7 +1446,7 @@
 		<file filename="install/steps/PerformInstallStep.php" md5="c0d67d56c4c550e862d0457ec19da101">
 			<class name="Core\Installer\PerformInstallStep"/>
 		</file>
-		<file filename="install/steps/PreflightCheckStep.php" md5="91b6728a76831da09c954ed4ba329798">
+		<file filename="install/steps/PreflightCheckStep.php" md5="afda6a0f4a2376e10cc3130ab11afb1a">
 			<class name="Core\Installer\PreflightCheckStep"/>
 		</file>
 		<file filename="install/steps/SetupConfigurationStep.php" md5="99857df25561e5ad5c7370bb7507d4da">
@@ -1464,27 +1464,14 @@
 		<file filename="install/templates/installconfigurationstep.phtml" md5="b602c9c62db2275dfb8efa75ca223ce5"/>
 		<file filename="install/templates/installhtaccessstep.phtml" md5="b62232303cfe45193eeae98e0a6b6529"/>
 		<file filename="install/templates/performinstallstep.phtml" md5="cde1ce3f06fbca705fbc47fe66c9e0c0"/>
-		<file filename="install/templates/preflightcheckstep.phtml" md5="6c86b03da485166fbd1ad98b97a262de"/>
+		<file filename="install/templates/preflightcheckstep.phtml" md5="ea47fbedca541b65e317118ac29e1d25"/>
 		<file filename="install/templates/setupconfigurationstep.phtml" md5="02315042be1d79c4702f643c85997688"/>
-		<file filename="install/templates/skin.phtml" md5="c561a1a88e701e70208bb1b1f47bf540"/>
+		<file filename="install/templates/skin.phtml" md5="6560b0a3f00d6fb48d6317c5be237e1f"/>
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 		<file filename="install/utilities.php" md5="19b6e7d1483e8ec8e0a6fad9932ce850"/>
-		<file filename="logs/error.log" md5="4e6ca04eff717414b8803eea8a5336c0"/>
-		<file filename="logs/error.log.201401010000.gz" md5="bd3e79344ec30d05550ef879fe329b42"/>
-		<file filename="logs/error.log.201401010300.gz" md5="eb435d2e77644fa88c34dbdd45baa1c8"/>
-		<file filename="logs/error.log.201401011900.gz" md5="942be0035ba5fd96096bc5d75c686105"/>
-		<file filename="logs/error.log.201401012000.gz" md5="992d7c6dd07c37b6158fc576a6fbac23"/>
-		<file filename="logs/foo.log.128.gz" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="logs/foo.log.129" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="logs/foo.log.130" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="logs/info.log" md5="96aefb7660978557737586865d26f770"/>
-		<file filename="logs/info.log.201401010200.gz" md5="2b371633fa99483b32da166708046c01"/>
-		<file filename="logs/info.log.201401010300.gz" md5="04fcd7c183ff67b79421214762f82ad9"/>
-		<file filename="logs/info.log.201401011900.gz" md5="9a802eb4bd8974ded05204929e012944"/>
-		<file filename="logs/info.log.201401012000.gz" md5="d415fae5c3885e703ccce28f303ac928"/>
-		<file filename="logs/security.log.20131231.gz" md5="d169d1303e4623b4427a1998e3edff02"/>
-		<file filename="logs/unknown.log.20131231.gz" md5="c6e8b2b83790a444ca91ac567dc9711c"/>
+		<file filename="logs/error.log" md5="737f2bea906d0c60332f2c24fc3245a7"/>
+		<file filename="logs/info.log" md5="f62da920dfb8a708878517ab096f7e6d"/>
 	</files>
 	<pages>
 		<page baseurl="/admin" admin="1" access="g:admin" title="Administration"/>
@@ -1906,8 +1893,7 @@
 			<php file="core/upgrades/270_to_280_groups.php"/>
 			<php file="core/upgrades/270_to_280_user_avatar_paths.php"/>
 		</upgrade>
-		<upgrade from="2.8.0" to="3.0.0">
-		</upgrade>
+		<upgrade from="2.8.0" to="3.0.0"></upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

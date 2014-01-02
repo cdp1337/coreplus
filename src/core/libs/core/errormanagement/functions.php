@@ -94,7 +94,13 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 	catch(\Exception $e){
 		// meh, try a traditional log.
 		try{
-			Logger\append_to($type, $details . $errstr, $code);
+			if(class_exists('Core\\Utilities\\Logger\\LogFile')){
+				$log = new \Core\Utilities\Logger\LogFile($type);
+				$log->write($details . $errstr, $code);
+			}
+			else{
+				error_log($details . $errstr);
+			}
 		}
 		catch(\Exception $e){
 			// Really meh now!

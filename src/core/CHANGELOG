@@ -3,6 +3,9 @@ Core Plus 3.0.0
 	* [Bug] #436: Widgets do not display when added to a non-default site skin.
 	* [Feature] #541: Log Rotate for /logs
 	* [Feature] #545: System Log Viewer
+	* [Feature] Improved installer
+	* Components can now autoload their own classes before the component is fully installed.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 11:26:39 -0500
 
 Core Plus 2.8.0
 
