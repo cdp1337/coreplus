@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.3" name="Content" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.4" name="Content" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.6.0" operation="ge"/>
+		<require name="core" type="component" version="3.0.0" operation="ge"/>
 	</requires>
 	<permissions>
 		<permission key="content_manage" description="Manage Site Content"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="2214e528156e9acbd56af893b186771e"/>
-		<file filename="ContentController.php" md5="1345bf8d65d100e3e1f2bf7916675142">
+		<file filename="CHANGELOG" md5="cd73e4fcc2279630cd84249f4048e7ea"/>
+		<file filename="ContentController.php" md5="c614375b573beb74200eb2caac8518e6">
 			<controller name="ContentController"/>
 		</file>
-		<file filename="ContentModel.php" md5="ac505b424472e15ad85ae6cdf1e633d4">
+		<file filename="ContentModel.php" md5="e3cd746f9b1715b09ca876edfe8415d1">
 			<class name="ContentModel"/>
 		</file>
 	</files>
@@ -44,6 +44,7 @@
 		<upgrade from="2.0.1b1" to="2.0.1"/>
 		<upgrade from="2.0.1" to="2.0.2"/>
 		<upgrade from="2.0.2" to="2.0.3"/>
+		<upgrade from="2.0.3" to="2.0.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
