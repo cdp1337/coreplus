@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" name="Geographic Codes" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.1" name="Geographic Codes" execmode="both">
 	<description>
 		A collection of geographic utilities for geocoding, ip-lookups, and dealing with geographic addresses in general.
 	</description>
@@ -8,9 +8,9 @@
 		<formelement name="geoaddress" class="GeoAddressFormInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="50b45cf2aaa5bd8db937aca08529382b"/>
+		<file filename="CHANGELOG" md5="690e84fd7fed9839be1a9bd8d69e39d0"/>
 		<file filename="README.md" md5="f9b7f8a97be5c4f55afea2ef46724f50"/>
-		<file filename="classes/GeoAddressFormInput.php" md5="447402c02cb31393129a00a6e8383fbd">
+		<file filename="classes/GeoAddressFormInput.php" md5="803268dc5e1cc729adafb3347d6c226e">
 			<class name="GeoAddressFormInput"/>
 		</file>
 		<file filename="controllers/GeoAddressController.php" md5="b4eabb65ecc77166c583879a2c536408">
@@ -437,6 +437,7 @@
 			<sql file="datafiles/countries.sql"/>
 			<sql file="datafiles/provinces.sql"/>
 		</upgrade>
+		<upgrade from="1.1.0" to="1.1.1"/>
 	</upgrades>
 	<view>
 		<file filename="templates/forms/elements/geoaddressforminput.tpl" md5="954d7af422c98d57100d5fdc18437884"/>
@@ -450,5 +451,8 @@
 			GNU Affero General Public License v3
 		</license>
 	</licenses>
+	<requires>
+		<require name="core" type="component" version="3.0.0" operation="ge"/>
+	</requires>
 </component>
 

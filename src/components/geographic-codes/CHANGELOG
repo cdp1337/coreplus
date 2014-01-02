@@ -1,3 +1,8 @@
+Geographic Codes 1.1.1
+
+	* Use the defaults on the geo address form if the model set does not exist.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 11:06:32 -0500
+
 Geographic Codes 1.1.0
 
 	* [Feature] Add the MaxMind ip-geolocation libraries for more accurate and faster geo loookups.
