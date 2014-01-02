@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.3" name="Sitemap" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.4" name="Sitemap" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.5.0"/>
+		<require name="core" type="component" version="3.0.0" operation="ge"/>
 	</requires>
 	<hooks>
 		<hookregister name="/sitemap/getlisting" return="array" description="Called during the listing retrieval of the links to display in the sitemap.  Useful for injecting links into the sitemap and sitemap.xml."/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="94f5f7ddd0a3a0a91d5d8b27cb94ccbf"/>
-		<file filename="controllers/SitemapController.php" md5="aca7db3239fbfdbefefab0676b237d8e">
+		<file filename="CHANGELOG" md5="6234c35d06a9c73068013476a019ad9d"/>
+		<file filename="controllers/SitemapController.php" md5="cd65280c5b76e1aa4e2c2b41034ed2cf">
 			<controller name="SitemapController"/>
 		</file>
 	</files>
@@ -23,6 +23,7 @@
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="1.0.3"/>
+		<upgrade from="1.0.3" to="1.0.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
