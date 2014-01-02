@@ -1,3 +1,10 @@
+Google 1.3.0
+
+	* [Bug] Fixing coding standards / review issues :)
+	* [Feature] Add new feature, Google Custom Search.
+	* [Feature] Google custom search widget for 404 pages.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 11:18:22 -0500
+
 Google 1.2.1
 
 	* [Feature] Add postal-only geocode requests.
