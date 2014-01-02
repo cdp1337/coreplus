@@ -77,8 +77,14 @@ class GoogleController extends Controller_2_1 {
 			\Core\Configs\get_form_element_from_config(ConfigModel::Construct('/googlemaps/enterprise/clientname'))
 		);
 
+		$cse = new FormTabsGroup(['name' => 'cse', 'title' => 'Custom Search']);
+		$cse->addElement(
+			\Core\Configs\get_form_element_from_config(ConfigModel::Construct('/google/cse/key'))
+		);
+
 		$form->addElement($analytics);
 		$form->addElement($maps);
+		$form->addElement($cse);
 		$form->addElement('submit', ['name' => 'submit', 'value' => 'Update Settings']);
 
 		$view->title = 'Google Keys and Apps ';
