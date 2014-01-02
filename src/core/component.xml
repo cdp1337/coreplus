@@ -56,7 +56,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
 		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
-		<file filename="core/CHANGELOG" md5="931a67b148ae43974b84c92fa9c7a4e7"/>
+		<file filename="core/CHANGELOG" md5="f21cac42f5c8ff8419389a3e33c50444"/>
 		<file filename="core/bootstrap.php" md5="7a32b5d79a2748dceb1d940fd167a853"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="216525795b6b97e55e9a534e94e6798b"/>
@@ -500,7 +500,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="06f428768946473576150df4b8b69a02">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="5ed320e35a99528603237e818a2c7651">
+		<file filename="core/libs/core/Core.class.php" md5="15d1f457f3a1dbeaa12e7b5cc96b053c">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -553,7 +553,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="56818b4124a9dabd843b011c226d9b25">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="76c1c7802fa2f6144ce4850eb31306fa">
+		<file filename="core/libs/core/PageRequest.class.php" md5="27f4930202f86cb987582cbefb256a8c">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="026c83b5188f74fd815f1cd7a0403498">
@@ -1470,8 +1470,8 @@
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 		<file filename="install/utilities.php" md5="19b6e7d1483e8ec8e0a6fad9932ce850"/>
-		<file filename="logs/error.log" md5="737f2bea906d0c60332f2c24fc3245a7"/>
-		<file filename="logs/info.log" md5="f62da920dfb8a708878517ab096f7e6d"/>
+		<file filename="logs/error.log" md5="b1e81513e63840bd13c1df90d044756d"/>
+		<file filename="logs/info.log" md5="9035824f0ba029bc2605fd39a607dfe8"/>
 	</files>
 	<pages>
 		<page baseurl="/admin" admin="1" access="g:admin" title="Administration"/>
@@ -1555,7 +1555,7 @@
 		<file filename="core/templates/pages/error/error500.tpl" md5="286730a5c35399f12541addc65006492"/>
 		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="c3856d7798a76f98caf744dcc381c9d3"/>
 		<file filename="core/templates/pages/updater/browse.tpl" md5="46164efb30e799b0daa3062cb53ed548"/>
-		<file filename="core/templates/pages/updater/index.tpl" md5="dbee2e7b1eb3f207ed758425205d81e9"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="9f3d27034de672c264b2a6119b1cb66b"/>
 		<file filename="core/templates/pages/updater/keys.tpl" md5="4ff939a015c21167bda5a5a8d47f3f37"/>
 		<file filename="core/templates/pages/updater/keys_import.tpl" md5="3dc1de19f1f96e5ea92b67ef0d0ebc01"/>
 		<file filename="core/templates/pages/updater/repos.tpl" md5="a89ad644a891497f8641c259c69cf159"/>
@@ -1582,7 +1582,7 @@
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
 		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
 		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
-		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="d41a6967f1fab7882cf024310d626162"/>
+		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="5151a935e8339af4dd16986052145deb"/>
 		<file filename="core/templates/widgets/updater/check.tpl" md5="72e3def2db04a820ebc32d3659e15f76"/>
 		<file filename="core/templates/widgets/user/login.tpl" md5="054c8c86b99b890e6490b96d3ff0c634"/>
 		<file filename="core/templates/widgets/user/loginfull.tpl" md5="f820d1e6812c64fe049d1c8d8292d6ff"/>
@@ -1657,7 +1657,7 @@
 		<permission key="/user/activity/view" description="View user activity and analytics"/>
 	</permissions>
 	<assets>
-		<file filename="core/assets/css/admin/adminbar.css" md5="3c2c59235032e5dcf5f56cc15695def6"/>
+		<file filename="core/assets/css/admin/adminbar.css" md5="13fe9725206ba5322959a0d7e4553195"/>
 		<file filename="core/assets/css/admin/config.css" md5="1cae5af5ea1e4821b3f53684cdc416bf"/>
 		<file filename="core/assets/css/reset.css" md5="968510374a9ff8a69e49ddd2719eca0d"/>
 		<file filename="core/assets/css/reset.min.css" md5="44b43a8b1471320ee192b0938fab3372"/>

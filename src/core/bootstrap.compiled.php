@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 02 Jan 2014 11:50:01 -0500
+ * @compiled Thu, 02 Jan 2014 14:59:04 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -11902,10 +11902,10 @@ continue;
 }
 }
 while ($size > 0 && ($size != sizeof($list)));
-if (DEVELOPMENT_MODE) {
 foreach ($list as $n => $c) {
 $this->_componentsDisabled[$n] = $c;
 if ($c->error & Component::ERROR_WRONGEXECMODE) continue;
+if (DEVELOPMENT_MODE) {
 SystemLogModel::LogErrorEvent('/core/component/missingrequirement', 'Could not load installed component ' . $n . ' due to requirement failed.', $c->getErrors());
 }
 }
@@ -16028,6 +16028,8 @@ $return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 }
 elseif($return->mastertemplate){
 }
+elseif($return->mastertemplate === false){
+}
 elseif ($defaultpage->get('theme_template')) {
 $return->mastertemplate = $defaultpage->get('theme_template');
 }
@@ -16040,6 +16042,7 @@ $return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 else{
 $return->mastertemplate = ConfigHandler::Get('/theme/default_template');
 }
+if($return->mastertemplate !== false){
 $themeskins = ThemeHandler::GetTheme()->getSkins();
 $mastertplgood = false;
 foreach($themeskins as $skin){
@@ -16051,6 +16054,7 @@ break;
 if(!$mastertplgood){
 trigger_error('Invalid skin [' . $return->mastertemplate . '] selected for this page, skin is not located within the selected theme!  Using first available instead.', E_USER_NOTICE);
 $return->mastertemplate = $themeskins[0]['file'];
+}
 }
 if ($page->exists() && $return->error == View::ERROR_NOERROR) {
 $page->set('pageviews', $page->get('pageviews') + 1);

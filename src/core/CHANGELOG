@@ -1,11 +1,15 @@
 Core Plus 3.0.0
 
 	* [Bug] #436: Widgets do not display when added to a non-default site skin.
+	* [Bug] Fix the admin bar hiding error on Safari and some versions of Chrome.
+	* [Bug] Maintain the option to upgrade invalid components in the updater.
+	* [Bug] a DEVELOPMENT_MODE check was a little too greedy for invalid components.
+	* [Bug] Need to ensure that exceptions are preserved for false mastertemplates.
 	* [Feature] #541: Log Rotate for /logs
 	* [Feature] #545: System Log Viewer
 	* [Feature] Improved installer
 	* Components can now autoload their own classes before the component is fully installed.
-	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 11:50:11 -0500
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 15:00:14 -0500
 
 Core Plus 2.8.0
 
