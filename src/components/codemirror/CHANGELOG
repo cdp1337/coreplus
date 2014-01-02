@@ -1,3 +1,8 @@
+CodeMirror 3.12~core3
+
+	* Bump the copyright date to 2014.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 10:56:54 -0500
+
 CodeMirror 3.12~core2
 
 	* Make use of the namespace versions of View instead of static.
