@@ -513,15 +513,16 @@ class Core implements ISingleton {
 		while ($size > 0 && ($size != sizeof($list)));
 
 		// If dev mode is enabled, display a list of components installed but not loadable.
-		if (DEVELOPMENT_MODE) {
-			foreach ($list as $n => $c) {
 
-				//$this->_components[$n] = $c;
-				$this->_componentsDisabled[$n] = $c;
+		foreach ($list as $n => $c) {
 
-				// Ignore anything with the execmode different, those should be minor notices for debugging if anything.
-				if ($c->error & Component::ERROR_WRONGEXECMODE) continue;
+			//$this->_components[$n] = $c;
+			$this->_componentsDisabled[$n] = $c;
 
+			// Ignore anything with the execmode different, those should be minor notices for debugging if anything.
+			if ($c->error & Component::ERROR_WRONGEXECMODE) continue;
+
+			if (DEVELOPMENT_MODE) {
 				SystemLogModel::LogErrorEvent('/core/component/missingrequirement', 'Could not load installed component ' . $n . ' due to requirement failed.', $c->getErrors());
 			}
 		}
