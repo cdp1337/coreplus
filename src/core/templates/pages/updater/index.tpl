@@ -56,6 +56,7 @@
 					<p class="message-error">
 						Errors with {$c->getName()} {$c->getVersion()}
 						&nbsp;&nbsp;<a href="#" class="disable-link">Disable Component</a>
+						<a href="#" class="update-link perform-update" style="display:none;">Update</a>
 					</p>
 					{$c->getErrors()}
 				</td>
