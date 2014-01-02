@@ -1,3 +1,8 @@
+CoolPHPCaptcha 1.0.2
+
+	* Bump the copyright date to 2014.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 10:58:33 -0500
+
 CoolPHPCaptcha 1.0.1
 
 	* [Bug] Fix the captcha image registering as a page call.

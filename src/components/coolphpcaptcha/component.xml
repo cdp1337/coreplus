@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="CoolPHPCaptcha" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="CoolPHPCaptcha" execmode="web">
 	<requires>
-		<require name="core" type="component"/>
+		<require name="core" type="component" version="3.0.0" operation="ge"/>
 	</requires>
 	<provides>
 		<provide type="library" name="captcha" version="1.0.0"/>
@@ -31,15 +31,15 @@
 		<page baseurl="/simplecaptcha/admin" title="Captcha Tweaks" access="g:admin" admin="1" group="Configure"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="85ff1caa930a956c67e68a2af49983d3"/>
-		<file filename="FormCaptchaInput.class.php" md5="cb24b8b0b04c2858c8430ded68acd1ac">
+		<file filename="CHANGELOG" md5="d4ee7f28a01d73e6846cf273056f19e6"/>
+		<file filename="FormCaptchaInput.class.php" md5="6b42e265cd95996c4310891c7cf37d80">
 			<class name="FormCaptchaInput"/>
 		</file>
-		<file filename="SimpleCaptchaController.class.php" md5="86feef575e2e821c87c1f5c7154745e3">
+		<file filename="SimpleCaptchaController.class.php" md5="75252e64e378f07991c80ed1f2dd8259">
 			<controller name="SimpleCaptchaController"/>
 		</file>
 		<file filename="libs/cool-php-captcha/LICENSE.txt" md5="d32239bcb673463ab874e80d47fae504"/>
-		<file filename="libs/cool-php-captcha/SimpleCaptcha.class.php" md5="bb4075033659e9a18a6b9da654424683">
+		<file filename="libs/cool-php-captcha/SimpleCaptcha.class.php" md5="c0040b2a7c2cc364bd4dd3cb2ea9064c">
 			<class name="SimpleCaptcha"/>
 		</file>
 		<file filename="libs/cool-php-captcha/example.jpg" md5="c43a4ccb03c2ab8d5daaad15e0c93192"/>
@@ -65,6 +65,7 @@
 		<upgrade from="0.3~core4" to="0.3~core5"/>
 		<upgrade from="0.3~core5" to="1.0.0"/>
 		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
