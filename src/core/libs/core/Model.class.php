@@ -1535,7 +1535,7 @@ class Model implements ArrayAccess {
 				// Since certain keys in a model may be encrypted.
 				if($v['encrypted']){
 					$payload = $this->_data[$k];
-					if($payload === null || $payload === ''){
+					if($payload === null || $payload === '' || $payload === false){
 						$this->_datadecrypted[$k] = null;
 						continue;
 					}
