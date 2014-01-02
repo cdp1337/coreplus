@@ -1,3 +1,16 @@
+Theme/Base V2 1.3.0
+
+	* [Bug] Fixing coding standards / review issues :)
+	* Move the pagination and filter styles out into their own file.
+	* Disclaimer in the compiled styles css.
+	* STOP disclaimer added to styles.css to remind developers to edit the styles in the original file.
+	* The error page should show the error when in development mode.
+	* Switched the game of life algorithm to use jquery's parseJSON and removed the json-sans-eval script
+	* Fancy game of life author link should point to the actual project page :/
+	* Fancy Game of Life 404 and 500 error pages, optimized for both full-width and standard width
+	  templates
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 11:26:11 -0500
+
 Theme/Base V2 1.2.0
 
 	* New message types, "message-warning" and "message-deprecated".
