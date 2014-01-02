@@ -1,19 +1,23 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Tags" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="Tags" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.5.6"/>
+		<require name="core" type="component" version="3.0.0" operation="ge"/>
 		<require name="user" type="library"/>
 	</requires>
 	<view searchdir="templates">
-		<file filename="templates/widgets/tags/display.tpl" md5="d817935e0c5a4a37c58ba555d38b5417"/>
+		<file filename="templates/widgets/tags/display.tpl" md5="996f7e27fee023d4746420afce23c6c2"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="72d4c5a5bf47d3dc554f65470da62dcf"/>
+		<file filename="CHANGELOG" md5="3fa3bd3a40195f6a1b19011cc9b79cc3"/>
 		<file filename="widgets/TagsWidget.php" md5="374cfa66e8b651a72d1c1cd279a71d1b">
 			<class name="TagsWidget"/>
 		</file>
 	</files>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.2"/>
+	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
@@ -22,8 +26,5 @@
 			GNU Affero General Public License v3
 		</license>
 	</licenses>
-	<upgrades>
-		<upgrade from="1.0.0" to="1.0.1"/>
-	</upgrades>
 </component>
 

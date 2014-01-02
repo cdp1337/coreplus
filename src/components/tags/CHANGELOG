@@ -1,3 +1,9 @@
+Tags 1.0.2
+
+	* Support for the 2.8 User systems.
+	* Migrate the User system into Core.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 13:33:16 -0500
+
 Tags 1.0.1
 
 	* [Feature] Added a check in the template to allow the tag system to run without the user-social
