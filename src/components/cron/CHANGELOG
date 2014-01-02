@@ -1,3 +1,10 @@
+Cron 1.2.0
+
+	* [Bug] Fix ref #309 - Cron disabling globally
+	* Correctly display cron execution times that are > 2 minutes.
+	* Bump the copyright date to 2014.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 10:59:54 -0500
+
 Cron 1.1.7
 
 	* [Bug] Fix on the admin pages of the Cron system, incorrect master template was being used.
