@@ -2,7 +2,7 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.3~core1" name="FontAwesome" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.8.0" operation="ge"/>
+		<require name="core" type="component" version="3.0.0" operation="ge"/>
 	</requires>
 	<provides>
 		<scriptlibrary name="fontawesome" call="FontAwesome::Load"/>

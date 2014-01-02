@@ -1,6 +1,9 @@
 FontAwesome 4.0.3~core1
 
-	* Update to the newest stable version of Font Awesome from upstream.
+	* Update to the newest stable version of Font Awesome from upstream (4.0.3).
+	* Add "icon-ok" to the list of compiled icons.
+	* Add the "move" icon back in, alias of "bars".
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 11:03:42 -0500
 
 FontAwesome 3.11~core2
 
