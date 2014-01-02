@@ -46,6 +46,7 @@ class UserUserGroupModel extends Model {
 		),
 		'context' => array(
 			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => '40',
 			'default' => '',
 			'comment' => 'If this user group is tied to a specific context, the Model base name is here.',
 			'form' => array(
@@ -55,6 +56,7 @@ class UserUserGroupModel extends Model {
 		),
 		'context_pk' => array(
 			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => '200',
 			'default' => '',
 			'comment' => 'The PK of the context for this group, if applicable.'
 		),
