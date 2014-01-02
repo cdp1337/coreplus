@@ -1,3 +1,9 @@
+Gallery 1.5.2
+
+	* Support for the 2.8 User systems.
+	* Migrate the User system into Core.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 11:05:22 -0500
+
 Gallery 1.5.1
 
 	* Alt tags for the gallery images.

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.1" name="Gallery" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.2" name="Gallery" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.6.0" operation="ge"/>
+		<require name="core" type="component" version="3.0.0" operation="ge"/>
 		<require name="user" type="library"/>
 	</requires>
 	<permissions>
@@ -33,7 +33,7 @@
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="3adadac6fe0b8051ccaafe91bdb111a5"/>
+		<file filename="CHANGELOG" md5="117d06d70f255aa3b7352bd413502dc3"/>
 		<file filename="controllers/GalleryController.php" md5="ac672f45fa2c0bdcc0739a277585fd15">
 			<controller name="GalleryController"/>
 		</file>
@@ -50,7 +50,7 @@
 			<class name="GalleryImageModel"/>
 		</file>
 		<file filename="upgrades/140_to_141_cachedtitles.php" md5="0e316e5f9a13a315331c93f1fc44b4dc"/>
-		<file filename="upgrades/143_to_144_filepathchange.php" md5="6556ad176be0b1119219a7b0becd9109"/>
+		<file filename="upgrades/143_to_144_filepathchange.php" md5="c18cc4452f6f806c4b91f82e48f25e73"/>
 		<file filename="widgets/GalleryWidget.php" md5="7daa22785667f4e5ec91e4991952114b">
 			<class name="GalleryWidget"/>
 		</file>
@@ -88,6 +88,7 @@
 		</upgrade>
 		<upgrade from="1.4.5" to="1.5.0"/>
 		<upgrade from="1.5.0" to="1.5.1"/>
+		<upgrade from="1.5.1" to="1.5.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
