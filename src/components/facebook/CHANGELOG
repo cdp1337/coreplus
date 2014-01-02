@@ -1,6 +1,11 @@
 Facebook 3.2.3~core1
 
 	* Update to newest version of the Facebook API from upstream.
+	* Hide the appropriate facebook user configs from the interface.
+	* Facebook needs to use the new Auth driver register system too.
+	* Implement the new userauth driver in the Facebook component.
+	* Bump the copyright date to 2014.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 11:01:38 -0500
 
 Facebook 3.2.0~core8
 

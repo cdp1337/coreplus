@@ -10,6 +10,7 @@
 	</provides>
 	<requires>
 		<require name="user" type="library" version="2.8.0"/>
+		<require name="core" type="component" version="3.0.0" operation="ge"/>
 	</requires>
 	<configs>
 		<config key="/facebook/appid" mapto="FACEBOOK_APP_ID" type="string" default="" description="If you want to enable facebook connectivity, you need to create an &quot;app&quot; and enter that app's appid here."/>
@@ -25,7 +26,7 @@
 		<userauth name="facebook" class="\Facebook\UserAuth"/>
 	</users>
 	<view searchdir="templates">
-		<file filename="templates/includes/user/facebook_login.tpl" md5="8237173cb0ae7b03e80c3786e89ec553"/>
+		<file filename="templates/includes/user/facebook_login.tpl" md5="f9b10e29c5609f3bdcf1b67603060630"/>
 		<file filename="templates/widgets/facebook/login.tpl" md5="a2ecb2faade8f57d53a3837b6a9c0307"/>
 	</view>
 	<files>
@@ -33,7 +34,7 @@
 		<file filename="FacebookHelper.class.php" md5="d7ac2466285ce37c587f9bb91e079aa9">
 			<class name="FacebookHelper"/>
 		</file>
-		<file filename="controllers/FacebookController.php" md5="439bcd076fb45b8f2216af0f07a80202">
+		<file filename="controllers/FacebookController.php" md5="4d232669b31d1e0ea48fca36958347df">
 			<controller name="FacebookController"/>
 		</file>
 		<file filename="libs/facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
@@ -65,7 +66,7 @@
 			<class name="FBPublicGetAccessTokenFromCode"/>
 			<class name="FBPublicState"/>
 		</file>
-		<file filename="libs/facebook/UserAuth.php" md5="acbc4c29ab2f06789dd17683dfab99f0">
+		<file filename="libs/facebook/UserAuth.php" md5="ed92e5835440016c48601e95f964389a">
 			<class name="Facebook\UserAuth"/>
 		</file>
 		<file filename="widgets/FacebookWidget.php" md5="28901aa25cdac837826fbf895c306ed1">
@@ -84,7 +85,7 @@
 		<upgrade from="3.2.0~core8" to="3.2.3~core1"/>
 	</upgrades>
 	<assets>
-		<file filename="assets/css/facebook.css" md5="b6a7a960c63910152e0f52dde3d7e86c"/>
+		<file filename="assets/css/facebook.css" md5="705ee2ca2a443c5ff690c277ef26a2fe"/>
 		<file filename="assets/js/facebook/login.js" md5="17a212d8244b41d712db7dbb480da122"/>
 	</assets>
 	<authors>
