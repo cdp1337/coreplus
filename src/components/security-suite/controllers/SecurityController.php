@@ -11,6 +11,10 @@ class SecurityController extends Controller_2_1 {
 	 * @return int
 	 */
 	public function log(){
+
+		// As of 3.0.0, this has been merged into Core.
+		\Core\redirect('admin/log?filter[type]=security');
+
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
