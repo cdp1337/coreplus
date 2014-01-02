@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.9" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="Navigation" execmode="web">
 	<requires>
-		<require name="core" type="component" operation="ge" version="2.5.6"/>
+		<require name="core" type="component" operation="ge" version="3.0.0"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="e6389cccc1b959677ca2058268b310e8"/>
-		<file filename="controllers/NavigationController.php" md5="e1f41f41e41aff37a4098c14198f2327">
+		<file filename="CHANGELOG" md5="f910b8d132f1ff4af2b3abd2103b47d8"/>
+		<file filename="controllers/NavigationController.php" md5="09c6f36cc6d527faf9c035b0e10c874a">
 			<controller name="NavigationController"/>
 		</file>
-		<file filename="models/Navigation.model.php" md5="556a19051c430a73a838bcf5e44d09e7">
+		<file filename="models/Navigation.model.php" md5="eb4cbbd5a7358e37fbce0e1ce6d4faa2">
 			<class name="NavigationModel"/>
 		</file>
-		<file filename="models/NavigationEntry.model.php" md5="86d030909068fa026a1e8d4ba1836dde">
+		<file filename="models/NavigationEntry.model.php" md5="b65fb8a4aad99b7a608027fdac97fca7">
 			<class name="NavigationEntryModel"/>
 		</file>
-		<file filename="widgets/NavigationWidget.php" md5="8321c54fcb1743d2fbb80ad556ec7530">
+		<file filename="widgets/NavigationWidget.php" md5="9a21c4c75f24b88e41206e1f08960c4e">
 			<class name="NavigationWidget"/>
 		</file>
 	</files>
@@ -57,6 +57,7 @@
 		<upgrade from="2.1.6" to="2.1.7"/>
 		<upgrade from="2.1.7" to="2.1.8"/>
 		<upgrade from="2.1.8" to="2.1.9"/>
+		<upgrade from="2.1.9" to="2.2.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
