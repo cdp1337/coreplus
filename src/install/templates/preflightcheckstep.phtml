@@ -12,6 +12,15 @@
 				</td>
 			</tr>
 		<?php endif; ?>
+		<?php if(isset($test['fix']) && $test['fix']): ?>
+			<tr>
+				<td colspan="3" class="checklist-quickfix">
+					<strong>Quick Fix: </strong>
+					<p>Execute the following in a shell window or contact your server administrator for assistance.</p>
+					<pre><?php echo $test['fix']; ?></pre>
+				</td>
+			</tr>
+		<?php endif; ?>
 	<?php endforeach; ?>
 </table>
 

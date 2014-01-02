@@ -142,6 +142,55 @@ if(!defined('FTP_PASSWORD')){
 }
 
 
+
+
+
+// Try to determine the server distro that's running.
+// This helps to provide accurate fix instructions.
+$distro = 'unknown';
+$version = 'unknown';
+$family = 'unknown';
+if(file_exists('/etc/lsb-release')){
+	$contents = explode("\n", file_get_contents('/etc/lsb-release'));
+	foreach($contents as $line){
+		if(strpos($line, 'DISTRIB_ID=') === 0){
+			$distro = substr($line, 11);
+		}
+		elseif(strpos($line, 'DISTRIB_RELEASE=') === 0){
+			$version = substr($line, 16);
+		}
+	}
+
+	if($distro == 'Ubuntu' || $distro == 'Debian'){
+		$family = 'debian';
+	}
+}
+elseif(file_exists('/etc/redhat-release')){
+	$line = file_get_contents('/etc/redhat-release');
+	$family = 'redhat';
+	if(strpos($line, 'release') !== false){
+		$distro = trim(substr($line, 0, strpos($line, 'release')));
+		$version = substr($line, strpos($line, 'release')+8);
+		$version = trim(preg_replace('#[^0-9\.]#', '', $version));
+	}
+}
+elseif(file_exists('/etc/SuSE-release')){
+	$contents = explode("\n", file_get_contents('/etc/SuSE-release'));
+	$distro = 'SuSE';
+	$family = 'suse';
+	foreach($contents as $line){
+		if(strpos($line, 'VERSION = ') === 0){
+			$version = substr($line, 10);
+		}
+	}
+}
+define('SERVER_DISTRO', $distro);
+define('SERVER_VERSION', $version);
+define('SERVER_FAMILY', $family);
+
+unset($distro, $version, $family);
+
+
 // These are the installer steps, put them in the order that they need to be executed!
 $steps = array(
 	'PreflightCheckStep',

@@ -177,11 +177,22 @@ class PreflightCheckStep extends InstallerStep {
 			];
 		}
 		else{
+			if(SERVER_FAMILY == 'redhat'){
+				$fix = 'sudo yum install php-mcrypt' . NL . 'sudo service httpd restart';
+			}
+			elseif(SERVER_FAMILY == 'debian'){
+				$fix = 'sudo apt-get install php5-mcrypt' . NL . 'sudo service apache2 restart';
+			}
+			else{
+				$fix = null;
+			}
+
 			return [
 				'title' => 'php-mcrypt',
 				'status' => 'error',
 				'message' => 'php-mcrypt is not available',
 				'description' => 'Core Plus utilizes encryption via the mcrypt library.  Please install php5-mcrypt.',
+				'fix' => $fix,
 			];
 		}
 	}
@@ -196,11 +207,23 @@ class PreflightCheckStep extends InstallerStep {
 			];
 		}
 		else{
+
+			if(SERVER_FAMILY == 'redhat'){
+				$fix = 'sudo yum install php-curl; ' . NL . 'sudo service httpd restart';
+			}
+			elseif(SERVER_FAMILY == 'debian'){
+				$fix = 'sudo apt-get install php5-curl' . NL . 'sudo service apache2 restart';
+			}
+			else{
+				$fix = null;
+			}
+
 			return [
 				'title' => 'php-curl',
 				'status' => 'error',
 				'message' => 'php-curl is not available',
 				'description' => 'Please install php5-curl.',
+				'fix' => $fix,
 			];
 		}
 	}
@@ -312,7 +335,9 @@ class PreflightCheckStep extends InstallerStep {
 				'title' => 'Log Directory',
 				'status' => 'error',
 				'message' => 'Log directory is not writable',
-				'description' => $dir . ' is not writable!  Since this is the directory that logs get saved in, you will not see any site logs.  To fix this, please issue a chmod a+x on the directory.',
+				'description' => $dir . ' is not writable!  Since this is the directory that logs get saved in, ' .
+					'you will not see any site logs.  To fix this, please issue a chmod a+x on the directory.',
+				'fix' => 'chmod a+wrx "' . $dir . '"',
 			];
 		}
 		else{
@@ -320,7 +345,9 @@ class PreflightCheckStep extends InstallerStep {
 				'title' => 'Log Directory',
 				'status' => 'error',
 				'message' => 'Log directory does not exist',
-				'description' => $dir . ' does not exist.  Since this is the directory that logs get saved in, you will not see any site logs.  To fix this, please create it and issue a chmod a+x on the directory.',
+				'description' => $dir . ' does not exist.  Since this is the directory that logs get saved in, ' .
+					'you will not see any site logs.',
+				'fix' => 'mkdir "' . $dir . '"' . NL . 'chmod a+wrx "' . $dir . '"',
 			];
 		}
 	}
