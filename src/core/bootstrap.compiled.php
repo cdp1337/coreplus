@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 31 Dec 2013 15:29:39 -0500
+ * @compiled Wed, 01 Jan 2014 20:21:44 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -177,49 +177,8 @@ echo '<pre class="xdebug-var-dump screen">[' . $time . ' ms] ' . $message . '</p
 }
 }
 function append_to($filebase, $message, $code = null){
-$filebase = preg_replace('/[^a-z0-9\-]/', '', str_replace(' ', '-', strtolower($filebase)));
-if(!$filebase) $filebase = 'unknown';
-$logpath = ROOT_PDIR . 'logs/';
-$outfile = $logpath . $filebase . '.log';
-if(!is_dir($logpath)){
-if(!is_writable(ROOT_PDIR)){
-throw new \Exception('Unable to open ' . $logpath . ' for writing, access denied on parent directory!');
-}
-if(!mkdir($logpath)){
-throw new \Exception('Unable to create directory ' . $logpath . ', access denied on parent directory!');
-}
-$htaccessfh = fopen($logpath . '.htaccess', 'w');
-if(!$htaccessfh){
-throw new \Exception('Unable to create protective .htaccess file in ' . $logpath . '!');
-}
-$htaccesscontents = <<<EOD
-<Files *>
-Order deny,allow
-Deny from All
-</Files>
-EOD;
-fwrite($htaccessfh, $htaccesscontents);
-fclose($htaccessfh);
-}
-elseif(!is_writable($logpath)){
-throw new \Exception('Unable to write to log directory ' . $logpath . '!');
-}
-$header = '[' . \Time::GetCurrent(\Time::TIMEZONE_DEFAULT, 'r') . '] ';
-if(EXEC_MODE == 'WEB'){
-$header .= '[client: ' . REMOTE_IP . '] ';
-}
-else{
-$header .= '[client: CLI] ';
-}
-if($code) $header .= '[' . $code . '] ';
-$logfh = fopen($outfile, 'a');
-if(!$logfh){
-throw new \Exception('Unable to open ' . $outfile . ' for appending!');
-}
-foreach(explode("\n", $message) as $line){
-fwrite($logfh, $header . $line . "\n");
-}
-fclose($logfh);
+$log = new LogFile($filebase);
+$log->write($message, $code);
 }
 } // ENDING NAMESPACE Core\Utilities\Logger
 
@@ -11716,6 +11675,7 @@ private $_components = null;
 private $_componentsDisabled = array();
 private $_libraries = array();
 private $_classes = array();
+private $_tmpclasses = array();
 private $_widgets = array();
 private $_viewClasses = array();
 private $_scriptlibraries = array();
@@ -11878,9 +11838,11 @@ $this->_componentsDisabled[$n] = $c;
 unset($list[$n]);
 continue;
 }
+$this->_tmpclasses = [];
 if ($c->isInstalled() && $c->isLoadable() && $c->loadFiles()) {
 try{
 if ($c->needsUpdated()) {
+$this->_tmpclasses = $c->getClassList();
 file_put_contents(TMP_DIR . 'lock.message', 'Core Plus is being upgraded, please try again in a minute. ');
 $c->upgrade();
 unlink(TMP_DIR . 'lock.message');
@@ -11917,6 +11879,7 @@ unset($list[$n]);
 continue;
 }
 if (!$c->isInstalled() && $c->isLoadable()) {
+$this->_tmpclasses = $c->getClassList();
 $c->install();
 $c->enable();
 $c->loadFiles();
@@ -11975,6 +11938,12 @@ if(!file_exists(Core::Singleton()->_classes[$classname])){
 throw new Exception('Unable to open file for class ' . $classname . ' (' . Core::Singleton()->_classes[$classname] . ')');
 }
 require_once(Core::Singleton()->_classes[$classname]);
+}
+elseif (isset(Core::Singleton()->_tmpclasses[$classname])) {
+if(!file_exists(Core::Singleton()->_tmpclasses[$classname])){
+throw new Exception('Unable to open file for class ' . $classname . ' (' . Core::Singleton()->_tmpclasses[$classname] . ')');
+}
+require_once(Core::Singleton()->_tmpclasses[$classname]);
 }
 }
 public static function LoadComponents() {
@@ -12092,7 +12061,15 @@ public static function IsClassAvailable($classname) {
 if(self::$instance == null){
 self::Singleton();
 }
-return (isset(self::$instance->_classes[$classname]));
+if(isset(self::$instance->_classes[$classname])){
+return true;
+}
+elseif(isset(self::$instance->_tmpclasses[$classname])){
+return true;
+}
+else{
+return false;
+}
 }
 public static function IsLibraryAvailable($name, $version = false, $operation = 'ge') {
 $ch   = self::Singleton();

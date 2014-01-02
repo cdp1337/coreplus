@@ -1,3 +1,9 @@
+Core Plus 3.0.0
+
+	* [Bug] #436: Widgets do not display when added to a non-default site skin.
+	* [Feature] #541: Log Rotate for /logs
+	* [Feature] #545: System Log Viewer
+
 Core Plus 2.8.0
 
 	* [Bug] Radios and checkboxes duplicated the element ID in the markup.
