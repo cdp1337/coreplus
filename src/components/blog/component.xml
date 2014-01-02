@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.5" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.6" name="Blog" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.7.0" operation="ge"/>
-		<require name="user" type="library" version="2.5.4"/>
+		<require name="core" type="component" version="3.0.0" operation="ge"/>
 		<require name="tags" type="component"/>
 		<require name="JQuery-Full" type="component" version="1.9"/>
 	</requires>
@@ -14,20 +13,20 @@
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="fe0dd80938f93f22647c6cfc2ba0f8ed"/>
-		<file filename="controllers/BlogController.php" md5="099b38e845abce6138aba083f193592c">
+		<file filename="CHANGELOG" md5="5a222587aa6cb8dcee15b793a2020b4c"/>
+		<file filename="controllers/BlogController.php" md5="0611ad0c7be311b0d4c190a6231427fb">
 			<controller name="BlogController"/>
 		</file>
-		<file filename="helpers/BlogHelper.php" md5="27d8ed9093c1d35d3bdbc84b370afe58">
+		<file filename="helpers/BlogHelper.php" md5="8aeede89c7dfe26dd2bcb117549953c1">
 			<class name="BlogHelper"/>
 		</file>
-		<file filename="models/BlogArticleModel.php" md5="04ba3337f16bf87457b3e84076cb31b3">
+		<file filename="models/BlogArticleModel.php" md5="11fb87529be5e587f02a728870c89939">
 			<class name="BlogArticleModel"/>
 		</file>
 		<file filename="models/BlogModel.php" md5="37bc0cf4adbacd59cd96fcb68f39a080">
 			<class name="BlogModel"/>
 		</file>
-		<file filename="upgrades/121_to_130.php" md5="4f71587ed4a65da58490523dd9581684"/>
+		<file filename="upgrades/121_to_130.php" md5="74f9e19bffde5be37788a696b7790b46"/>
 		<file filename="upgrades/130_to_140_published.php" md5="4ab899aa7768154bde4f5197a7cfbf2b"/>
 		<file filename="upgrades/130_to_140_selectable.php" md5="33c3b2e0c9456a6a900d7340f1c65c5b"/>
 		<file filename="upgrades/150_to_151_filepathchange.php" md5="d37162704ef850a8954bf11dcc66dc43"/>
@@ -93,6 +92,7 @@
 		<upgrade from="1.5.2" to="1.5.3"/>
 		<upgrade from="1.5.3" to="1.5.4"/>
 		<upgrade from="1.5.4" to="1.5.5"/>
+		<upgrade from="1.5.5" to="1.5.6"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>

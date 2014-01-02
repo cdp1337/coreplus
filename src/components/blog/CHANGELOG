@@ -1,3 +1,11 @@
+Blog 1.5.6
+
+	* [Bug] Fix Bug #543 - Blog author not saving correctly
+	* [Feature] Allow a non-valid user to be set for blog articles, ref #542.
+	* The Page's user system now handles the author tag, so no need to handle that internally.
+	* Support for the 2.8 User systems.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 10:44:25 -0500
+
 Blog 1.5.5
 
 	* Smarty no longer supports wrapping an object assigned to a template in quotes within the smarty tag
