@@ -505,6 +505,9 @@ class PageRequest {
 		elseif($return->mastertemplate){
 			// No change needed, just skip the below cases.
 		}
+		elseif($return->mastertemplate === false){
+			// If the master template is explictly set to false, the page wanted no master template!
+		}
 		elseif ($defaultpage->get('theme_template')) {
 			// Master template set in the database?
 			$return->mastertemplate = $defaultpage->get('theme_template');
@@ -524,21 +527,22 @@ class PageRequest {
 
 
 		// Make sure the selected mastertemplate actually exists!
-		$themeskins = ThemeHandler::GetTheme()->getSkins();
-		$mastertplgood = false;
-		foreach($themeskins as $skin){
-			if($skin['file'] == $return->mastertemplate){
-				// It's located!
-				$mastertplgood =true;
-				break;
+		if($return->mastertemplate !== false){
+			$themeskins = ThemeHandler::GetTheme()->getSkins();
+			$mastertplgood = false;
+			foreach($themeskins as $skin){
+				if($skin['file'] == $return->mastertemplate){
+					// It's located!
+					$mastertplgood =true;
+					break;
+				}
+			}
+			if(!$mastertplgood){
+				// Just use the first one instead!
+				trigger_error('Invalid skin [' . $return->mastertemplate . '] selected for this page, skin is not located within the selected theme!  Using first available instead.', E_USER_NOTICE);
+				$return->mastertemplate = $themeskins[0]['file'];
 			}
 		}
-		if(!$mastertplgood){
-			// Just use the first one instead!
-			trigger_error('Invalid skin [' . $return->mastertemplate . '] selected for this page, skin is not located within the selected theme!  Using first available instead.', E_USER_NOTICE);
-			$return->mastertemplate = $themeskins[0]['file'];
-		}
-
 
 
 		// Make sure I update any existing page now that the controller has ran.
