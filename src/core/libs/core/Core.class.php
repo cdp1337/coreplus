@@ -65,6 +65,11 @@ class Core implements ISingleton {
 	private $_classes = array();
 
 	/**
+	 * @var array Temporary list of classes on the current component, used during upgrades.
+	 */
+	private $_tmpclasses = array();
+
+	/**
 	 * List of widgets available on the system.
 	 *
 	 * @var array
@@ -408,12 +413,20 @@ class Core implements ISingleton {
 					continue;
 				}
 
+				// Clear out the temporary class list
+				$this->_tmpclasses = [];
+
 				// If it's loaded, register it and remove it from the list!
 				if ($c->isInstalled() && $c->isLoadable() && $c->loadFiles()) {
 
 					try{
 						// Allow for on-the-fly package upgrading regardless of DEV mode or not.
 						if ($c->needsUpdated()) {
+
+							// Load this component's classes in case an upgrade operation requires one.
+							// This allows a component to be loaded partially without completely being loaded.
+							$this->_tmpclasses = $c->getClassList();
+
 							// Lock the site first!
 							// This is because some upgrade procedures take a long time to upgrade.
 							file_put_contents(TMP_DIR . 'lock.message', 'Core Plus is being upgraded, please try again in a minute. ');
@@ -469,6 +482,10 @@ class Core implements ISingleton {
 				// Allow packages to be auto-installed if in DEV mode.
 				// If DEV mode is not enabled, just install the new component, do not enable it.
 				if (!$c->isInstalled() && $c->isLoadable()) {
+					// Load this component's classes in case an install operation requires one.
+					// This allows a component to be loaded partially without completely being loaded.
+					$this->_tmpclasses = $c->getClassList();
+
 					// w00t
 					$c->install();
 					// BLAH, until I fix the disabled-packages-not-viewable bug...
@@ -601,6 +618,14 @@ class Core implements ISingleton {
 			}
 
 			require_once(Core::Singleton()->_classes[$classname]);
+		}
+		elseif (isset(Core::Singleton()->_tmpclasses[$classname])) {
+			if(!file_exists(Core::Singleton()->_tmpclasses[$classname])){
+				// Eek, I can't open the file!
+				throw new Exception('Unable to open file for class ' . $classname . ' (' . Core::Singleton()->_tmpclasses[$classname] . ')');
+			}
+
+			require_once(Core::Singleton()->_tmpclasses[$classname]);
 		}
 	}
 
@@ -875,7 +900,15 @@ class Core implements ISingleton {
 			self::Singleton();
 		}
 
-		return (isset(self::$instance->_classes[$classname]));
+		if(isset(self::$instance->_classes[$classname])){
+			return true;
+		}
+		elseif(isset(self::$instance->_tmpclasses[$classname])){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 	public static function IsLibraryAvailable($name, $version = false, $operation = 'ge') {
