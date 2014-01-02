@@ -7,6 +7,12 @@ define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
 define('ROOT_WDIR', '/');
 define('TMP_DIR', sys_get_temp_dir() . '/coreplus-phpunit-tests/');
 
+// Remove the tmp directory if it exists already.
+if(is_dir(TMP_DIR)){
+	exec('rm -fr ' . escapeshellarg(TMP_DIR));
+	mkdir(TMP_DIR);
+}
+
 
 // I need to load up the configuration file to get some settings first... namely the site_url.
 // This is because if the site url doesn't match the incoming HTTP_HOST... the system is going to redirect without executing anything.
