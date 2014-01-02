@@ -1,3 +1,11 @@
+User-Social 1.1.0
+
+	* Hide the necessary user-social config from the interface.
+	* Support for the 2.8 User systems.
+	* Migrate the User system into Core.
+	* Updates to UserSocial to work with the 2.8.x User system.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 11:25:24 -0500
+
 User-Social 1.0.5
 
 	* [Bug] Fix a minor error where the edit public profiles control wasn't displaying for the own user.

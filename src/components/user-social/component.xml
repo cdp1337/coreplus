@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="1.0.5">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="1.1.0">
 	<requires>
 		<require name="User" type="library" version="2.8.0"/>
 		<require name="Core" type="component" version="2.8.0"/>
+		<require name="core" type="component" version="3.0.0" operation="ge"/>
 	</requires>
 	<userconfigs>
 		<userconfig weight="2" key="first_name" name="First Name" onedit="1" onregistration="1" searchable="1"/>
@@ -17,15 +18,15 @@
 		<hook name="/core/controllinks/user/view" call="UserSocialHelper::GetUserLinks"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="bf86aa6f04b173eb047cd6c57369160d"/>
+		<file filename="CHANGELOG" md5="768a365f041d8b8b15591fd7970623f0"/>
 		<file filename="README.md" md5="97aac508b463a1040b383a0f0654d113"/>
-		<file filename="controllers/UserProfileController.php" md5="73a5c46d0c7119ed4db4681d24fec805">
+		<file filename="controllers/UserProfileController.php" md5="cf5f7e68a5ccc934d9fb51ae9b979f23">
 			<controller name="UserProfileController"/>
 		</file>
-		<file filename="helpers/UserSocialHelper.class.php" md5="6be401b583e663ba57f1fa303541f3d2">
+		<file filename="helpers/UserSocialHelper.class.php" md5="6e661c470175b210000758f0ac88dad6">
 			<class name="UserSocialHelper"/>
 		</file>
-		<file filename="widgets/UserProfileWidget.php" md5="a99a6802a1f87d6b23d53cbe92436495">
+		<file filename="widgets/UserProfileWidget.php" md5="cf95b5bffd25c23ea54b8d82b35684fe">
 			<class name="UserProfileWidget"/>
 		</file>
 	</files>
@@ -43,6 +44,7 @@
 		<upgrade from="1.0.2" to="1.0.3"/>
 		<upgrade from="1.0.3" to="1.0.4"/>
 		<upgrade from="1.0.4" to="1.0.5"/>
+		<upgrade from="1.0.5" to="1.1.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
