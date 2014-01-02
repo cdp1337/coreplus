@@ -1,3 +1,8 @@
+JQuery-Full 1.10.2~core4
+
+	* Bump copyright date to 2014.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 02 Jan 2014 11:19:18 -0500
+
 JQuery-Full 1.10.2~core3
 
 	* [Feature] added in the sticky waypoints plugin
