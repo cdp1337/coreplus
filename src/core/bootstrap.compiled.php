@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 02 Jan 2014 14:59:04 -0500
+ * @compiled Fri, 10 Jan 2014 14:21:07 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1454,10 +1454,12 @@ $diffs = array();
 foreach($schema->definitions as $name => $dat){
 $thiscol = $this->getColumn($name);
 if(!$thiscol){
+if($dat->type != \Model::ATT_TYPE_ALIAS){
 $diffs[] = array(
 'title' => 'A does not have column ' . $name,
 'type' => 'column',
 );
+}
 continue;
 }
 if(($colchange = $thiscol->getDiff($dat)) !== null){
@@ -1507,6 +1509,7 @@ public $precision = null;
 public $encrypted = false;
 public $autoinc = false;
 public $encoding = null;
+public $aliasof = null;
 public function isIdenticalTo(SchemaColumn $col){
 $diff = $this->getDiff($col);
 return ($diff === null);
@@ -1543,6 +1546,7 @@ $typematches = array(
 array(
 \Model::ATT_TYPE_INT,
 \Model::ATT_TYPE_UUID,
+\Model::ATT_TYPE_UUID_FK,
 \Model::ATT_TYPE_CREATED,
 \Model::ATT_TYPE_UPDATED,
 \Model::ATT_TYPE_DELETED,
@@ -1681,6 +1685,7 @@ const ATT_TYPE_UPDATED = '__updated';
 const ATT_TYPE_CREATED = '__created';
 const ATT_TYPE_DELETED = '__deleted';
 const ATT_TYPE_SITE = '__site';
+const ATT_TYPE_ALIAS = '__alias';
 const ATT_TYPE_ISO_8601_DATETIME = 'ISO_8601_datetime';
 const ATT_TYPE_MYSQL_TIMESTAMP = 'mysql_timestamp';
 const ATT_TYPE_ISO_8601_DATE = 'ISO_8601_date';
@@ -1870,6 +1875,9 @@ return $this->_datadecrypted[$k];
 }
 elseif (array_key_exists($k, $this->_data)) {
 return $this->_data[$k];
+}
+elseif($this->getKeySchema($k) && $this->getKeySchema($k)['type'] == Model::ATT_TYPE_ALIAS){
+return $this->get( $this->getKeySchema($k)['alias'] );
 }
 elseif (array_key_exists($k, $this->_dataother)) {
 return $this->_dataother[$k];
@@ -2166,6 +2174,9 @@ else{
 $this->_data[$k] = $v;
 }
 return true;
+}
+elseif($this->getKeySchema($k) && $this->getKeySchema($k)['type'] == Model::ATT_TYPE_ALIAS){
+return $this->set( $this->getKeySchema($k)['alias'], $v);
 }
 else {
 $this->_dataother[$k] = $v;
@@ -2790,6 +2801,17 @@ if (!isset($v['comment']))   $schema[$k]['comment']   = '';
 if (!isset($v['default']))   $schema[$k]['default']   = false;
 if (!isset($v['encrypted'])) $schema[$k]['encrypted'] = false;
 if (!isset($v['required']))  $schema[$k]['required']  = false;
+if($v['type'] == Model::ATT_TYPE_ALIAS){
+if(!isset($v['alias'])){
+throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that does not have an "alias" attribute.  Every ATT_TYPE_ALIAS key MUST have exactly one "alias"');
+}
+if(!isset($schema[ $v['alias'] ])){
+throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that points to a key that does not exist, [' . $v['alias'] . '].  All aliases MUST exist in the same model!');
+}
+if($schema[ $v['alias'] ]['type'] == Model::ATT_TYPE_ALIAS){
+throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that points to another alias.  Aliases MUST NOT point to another alias... bad things could happen.');
+}
+}
 if($v['type'] == Model::ATT_TYPE_ENUM){
 $schema[$k]['options'] = isset($schema[$k]['options']) ? $schema[$k]['options'] : array();
 }
@@ -2933,7 +2955,9 @@ foreach($schema as $name => $def){
 $def['name'] = $name;
 $column = $this->_getColumnDefinition($def);
 $this->definitions[$name] = $column;
+if($def['type'] != Model::ATT_TYPE_ALIAS){
 $this->order[] = $name;
+}
 }
 foreach($indexes as $key => $dat){
 if(!is_array($dat)){
@@ -2987,6 +3011,9 @@ if($column->type == Model::ATT_TYPE_SITE){
 $column->default = 0;
 $column->comment = 'The site id in multisite mode, (or 0 otherwise)';
 $column->maxlength = 15;
+}
+if($column->type == Model::ATT_TYPE_ALIAS){
+$column->aliasof = $def['alias'];
 }
 if($column->default === false){
 if($column->null){
@@ -3818,6 +3845,12 @@ $p = PageModel::Construct($altbaseurl);
 if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
 return array_merge($p->getParentTree(), array($p));
 }
+elseif(!$p->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+$p = PageModel::Construct(-1, $altbaseurl);
+if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
+return array_merge($p->getParentTree(), array($p));
+}
+}
 }
 if(
 ($m == 'create' || $m == 'update' || $m == 'edit' || $m == 'delete') && $hasadmin
@@ -3827,6 +3860,12 @@ $parentb .= '/admin';
 $p = PageModel::Construct($parentb);
 if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
 return array_merge($p->getParentTree(), array($p));
+}
+elseif(!$p->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+$p = PageModel::Construct(-1, $parentb);
+if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
+return array_merge($p->getParentTree(), array($p));
+}
 }
 }
 }
@@ -8526,6 +8565,7 @@ public function exists();
 public function isReadable();
 public function isWritable();
 public function getMTime();
+public function sendToUserAgent($forcedownload = false);
 }
 } // ENDING NAMESPACE Core\Filestore
 
@@ -8872,6 +8912,9 @@ $this->_type = 'asset';
 elseif(strpos($this->_filename, Filestore\get_public_path()) === 0){
 $this->_type = 'public';
 }
+elseif(strpos($this->_filename, Filestore\get_private_path()) === 0){
+$this->_type = 'private';
+}
 elseif(strpos($this->_filename, Filestore\get_tmp_path()) === 0){
 $this->_type = 'tmp';
 }
@@ -9189,6 +9232,23 @@ return true;
 public function getMTime() {
 if (!$this->exists()) return false;
 return filemtime($this->getFilename());
+}
+public function sendToUserAgent($forcedownload = false) {
+$view = \Core\view();
+$request = \Core\page_request();
+$view->mode = \View::MODE_NOOUTPUT;
+$view->contenttype = $this->getMimetype();
+$view->updated = $this->getMTime();
+if($forcedownload){
+$view->headers['Content-Disposition'] = 'attachment; filename="' . $this->getBasename() . '"';
+$view->headers['Cache-Control'] = 'no-cache, must-revalidate';
+$view->headers['Content-Transfer-Encoding'] = 'binary';
+}
+$view->headers['Content-Length'] = $this->getFilesize();
+$view->render();
+if($request->method != \PageRequest::METHOD_HEAD){
+echo $this->getContents();
+}
 }
 public static function _Mkdir($pathname, $mode = null, $recursive = false) {
 $ftp    = \Core\FTP();
@@ -9638,9 +9698,29 @@ $this->_type = 'asset';
 elseif(strpos($prefix . $filename, Filestore\get_public_path()) === 0){
 $this->_type = 'public';
 }
+elseif(strpos($prefix . $filename, Filestore\get_private_path()) === 0){
+$this->_type = 'private';
+}
 $this->_filename = $filename;
 $this->_prefix = $prefix;
 $this->_tmplocal = null;
+}
+public function sendToUserAgent($forcedownload = false) {
+$view = \Core\view();
+$request = \Core\page_request();
+$view->mode = \View::MODE_NOOUTPUT;
+$view->contenttype = $this->getMimetype();
+$view->updated = $this->getMTime();
+if($forcedownload){
+$view->headers['Content-Disposition'] = 'attachment; filename="' . $this->getBasename() . '"';
+$view->headers['Cache-Control'] = 'no-cache, must-revalidate';
+$view->headers['Content-Transfer-Encoding'] = 'binary';
+}
+$view->headers['Content-Length'] = $this->getFilesize();
+$view->render();
+if($request->method != \PageRequest::METHOD_HEAD){
+echo $this->getContents();
+}
 }
 private function _mkdir($pathname, $mode = null, $recursive = false) {
 if (strpos($pathname, ROOT_PDIR) === 0){
@@ -9966,6 +10046,23 @@ $this->_getHeaders()
 }
 }
 return $this->_tmplocal;
+}
+public function sendToUserAgent($forcedownload = false) {
+$view = \Core\view();
+$request = \Core\page_request();
+$view->mode = \View::MODE_NOOUTPUT;
+$view->contenttype = $this->getMimetype();
+$view->updated = $this->getMTime();
+if($forcedownload){
+$view->headers['Content-Disposition'] = 'attachment; filename="' . $this->getBasename() . '"';
+$view->headers['Cache-Control'] = 'no-cache, must-revalidate';
+$view->headers['Content-Transfer-Encoding'] = 'binary';
+}
+$view->headers['Content-Length'] = $this->getFilesize();
+$view->render();
+if($request->method != \PageRequest::METHOD_HEAD){
+echo $this->getContents();
+}
 }
 }
 } // ENDING NAMESPACE Core\Filestore\Backends
@@ -14338,7 +14435,8 @@ public $allowerrors = false;
 public $ssl = false;
 public $record = true;
 public $bodyclasses = [];
-public $htmlAttributes = array();
+public $htmlAttributes = [];
+public $headers = [];
 public function __construct() {
 $this->error = View::ERROR_NOERROR;
 $this->mode  = View::MODE_PAGE;
@@ -14674,7 +14772,7 @@ if ($this->contenttype && $this->contenttype == View::CTYPE_HTML) {
 View::AddMeta('http-equiv="Content-Type" content="text/html;charset=UTF-8"');
 }
 $data = $this->fetch();
-if ($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX) {
+if ($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX || $this->mode == View::MODE_NOOUTPUT) {
 switch ($this->error) {
 case View::ERROR_NOERROR:
 header('Status: 200 OK', true, $this->error);
@@ -14696,9 +14794,15 @@ if ($this->contenttype) {
 if ($this->contenttype == View::CTYPE_HTML) header('Content-Type: text/html; charset=UTF-8');
 else header('Content-Type: ' . $this->contenttype);
 }
-header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? Core::GetComponent()->getVersion() : ''));
+header('X-Content-Encoded-By: Core Plus' . (DEVELOPMENT_MODE ? ' ' . Core::GetComponent()->getVersion() : ''));
 if(\ConfigHandler::Get('/core/security/x-frame-options')){
 header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
+}
+if($this->updated !== null){
+header('Last-Modified: ' . Time::FormatGMT($this->updated, Time::TIMEZONE_USER, Time::FORMAT_RFC2822));
+}
+foreach($this->headers as $k => $v){
+header($k . ': ' . $v);
 }
 }
 if(SSL_MODE != SSL_MODE_DISABLED){
