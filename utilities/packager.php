@@ -856,6 +856,15 @@ function process_component($component, $forcerelease = false){
 	if($arguments->getVal('repackage')) $autostack[] = 'save';
 
 	while($ans != 'save'){
+
+
+		$changelogparser = new Core\Utilities\Changelog\Parser($name, $changelogfile);
+		$changelogparser->parse();
+		$thischange      = $changelogparser->getSection($version);
+		$isreleased      = ($thischange->getReleasedDate());
+
+
+
 		$opts = array(
 			'editvers'   => '[ VERSION     ] Set version number',
 			'editdesc'   => '[ DESCRIPTION ] Edit description',
@@ -868,6 +877,12 @@ function process_component($component, $forcerelease = false){
 			'save'       => '[ FINISH      ] Save it!',
 			'exit'       => 'Abort and exit without saving changes',
 		);
+
+		if($isreleased){
+			$opts['viewgit'] = '[ GIT         ] View GIT commits since ' . $version;
+			$opts['importgit'] = '[ CHNGLOG/GIT ] *DISABLED* Import GIT commit logs into version ' . $version;
+			$opts['editchange'] = '[ CHNGLOG     ] *DISABLED* Edit for version ' . $version;
+		}
 
 		if(sizeof($autostack)){
 			// Do this instead!
@@ -937,7 +952,13 @@ function process_component($component, $forcerelease = false){
 				$comp->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $comp->getDescription()));
 				break;
 			case 'editchange':
-				manage_changelog($changelogfile, $name, $version);
+				$thischange      = $changelogparser->getSection($version);
+				if($thischange->getReleasedDate()){
+					print 'Version ' . $version . ' is already marked as released!  Refusing to import GIT changes into a released version.' . NL;
+				}
+				else{
+					manage_changelog($changelogfile, $name, $version);
+				}
 				break;
 			case 'viewgit':
 				try{
@@ -967,12 +988,9 @@ function process_component($component, $forcerelease = false){
 				break;
 
 			case 'importgit':
-				$parser = new Core\Utilities\Changelog\Parser($name, $changelogfile);
-				$parser->parse();
-
 				/** @var $thisversion Core\Utilities\Changelog\Section */
-				$thischange      = $parser->getSection($version);
-				$previouschange  = $parser->getPreviousSection($version);
+				$thischange      = $changelogparser->getSection($version);
+				$previouschange  = $changelogparser->getPreviousSection($version);
 				$previousversion = $previouschange ? $previouschange->getVersion() : '0.0.0';
 				$previousdate    = $previouschange ? $previouschange->getReleasedDate() : '2000-01-01';
 
@@ -989,7 +1007,7 @@ function process_component($component, $forcerelease = false){
 					$linesadded = sizeof($thischange->getEntriesSorted()) - $linecount;
 
 					// Don't forget to save this changelog back down to the original file!
-					$parser->save();
+					$changelogparser->save();
 
 					// And notify the user of what happened.
 					if(!sizeof($changes)){
