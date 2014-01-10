@@ -342,13 +342,35 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testIsWritable() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		$file = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png');
+		$this->assertTrue($file->isWritable());
 	}
 
 	public function testGetMTime() {
 		$file1 = new \Core\Filestore\Backends\FileLocal('core/tests/updater-testdocument.txt');
 
 		$this->assertGreaterThan(100, $file1->getMTime());
+	}
+
+	/**
+	 * Test that a file can be sent to the user agent via the File interface.
+	 */
+	public function testSendToUserAgent(){
+		$file = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png');
+
+		ob_start();
+		$file->sendToUserAgent(true);
+		$contents = ob_get_clean();
+
+		$headers = \Core\view()->headers;
+
+		$this->assertArrayHasKey('Content-Disposition', $headers);
+		$this->assertArrayHasKey('Cache-Control', $headers);
+		$this->assertArrayHasKey('Content-Transfer-Encoding', $headers);
+		$this->assertArrayHasKey('Content-Length', $headers);
+
+		$this->assertEquals('image/png', \Core\view()->contenttype);
+
+		$this->assertNotEmpty($contents);
 	}
 }
