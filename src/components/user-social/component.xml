@@ -6,14 +6,14 @@
 		<require name="Core" type="component" version="2.8.0"/>
 		<require name="core" type="component" version="3.0.0" operation="ge"/>
 	</requires>
-	<userconfigs>
+	<users>
 		<userconfig weight="2" key="first_name" name="First Name" onedit="1" onregistration="1" searchable="1"/>
 		<userconfig weight="3" key="last_name" name="Last Name" onedit="1" onregistration="1" searchable="1"/>
 		<userconfig weight="4" key="phone" name="Phone Number" onedit="1" onregistration="0"/>
 		<userconfig weight="50" key="bio" name="Biography" formtype="wysiwyg" onedit="1" onregistration="0"/>
 		<userconfig weight="1" key="username" name="Username" required="1" onedit="1" onregistration="1" validation="UserSocialHelper::ValidateUsername" searchable="1"/>
 		<userconfig weight="" key="json:profiles" name="Connected Profiles (json encoded)" hidden="1"/>
-	</userconfigs>
+	</users>
 	<hooks>
 		<hook name="/core/controllinks/user/view" call="UserSocialHelper::GetUserLinks"/>
 	</hooks>
