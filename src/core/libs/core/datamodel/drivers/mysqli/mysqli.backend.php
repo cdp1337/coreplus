@@ -308,31 +308,64 @@ class mysqli_backend implements BackendInterface {
 
 			// This is the column definition, (without the AI attribute, I'll get to that in a second).
 			$columndef = str_replace(' AUTO_INCREMENT', '', $this->_getColumnString($column));
+			$oldname   = isset($old_schema->definitions[$column->field]) ? $column->field : null;
+			$newname   = $column->field;
 
-			if(isset($old_schema->order[$x]) && $old_schema->order[$x] == $column->field){
+			if($column->aliasof){
+				// This column is an alias.
+				// Check if it exists in the old schema (database), and rename it to the aliased column if necessary.
+
+				if(!isset($old_schema->definitions[$column->field])){
+					// This column doesn't exist in the database, no need to perform any changes!
+					continue;
+				}
+
+				$alias = false;
+				foreach($schema->definitions as $checkcol){
+					/** @var SchemaColumn $checkcol */
+					if($checkcol->field == $column->aliasof){
+						$alias = $checkcol;
+						break;
+					}
+				}
+
+				$columndef = str_replace(' AUTO_INCREMENT', '', $this->_getColumnString($alias));
+				$newname = $alias->field;
+
+				//var_dump($column, $columndef, $alias); die();
+			}
+
+
+			if($oldname && isset($old_schema->order[$x]) && $old_schema->order[$x] == $oldname){
 				// Yay, the column is in the same order in the new schema as the old schema!
 				// All I need to do here is just ensure the structure is appropriate.
-				$q = 'ALTER TABLE _tmptable MODIFY COLUMN `' . $column->field . '` ' . $columndef;
-				$neednewschema = false;
+				$q = 'ALTER TABLE _tmptable CHANGE COLUMN `' . $oldname . '` `' . $newname . '` ' . $columndef;
+				$neednewschema = ($oldname != $newname);
 			}
-			elseif(isset($old_schema->definitions[$column->field])){
+			elseif($oldname){
 				// Well, it's in the old schema, just not necessarily in the same order.
 				// Move it along with the updated attributes.
-				$q = 'ALTER TABLE _tmptable MODIFY COLUMN `' . $column->field . '` ' . $columndef . ' ';
+				$q = 'ALTER TABLE _tmptable CHANGE COLUMN `' . $oldname . '` `' . $newname . '` ' . $columndef . ' ';
 				$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $old_schema->order[$x-1] . '`';
 				$neednewschema = true;
 			}
 			else{
 				$newcolumns[$column->field] = $column;
 				// It's a new column altogether!  ADD IT!
-				$q = 'ALTER TABLE _tmptable ADD `' . $column->field . '` ' . $columndef . ' ';
+				$q = 'ALTER TABLE _tmptable ADD `' . $newname . '` ' . $columndef . ' ';
 				$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $old_schema->order[$x-1] . '`';
 				$neednewschema = true;
 			}
 
 			// Execute this query, increment X, and re-read the "old" structure.
 			$this->_rawExecute('write', $q);
-			$x++;
+			//echo 'EXECUTE [' . $q . ']' . NL . '<br/>';
+
+			// Aliases do not count as steps.
+			if(!$column->aliasof){
+				$x++;
+			}
+
 			if($neednewschema){
 				// Only update the schema if the column order changed.
 				// This is to increase performance a little.
@@ -1037,6 +1070,8 @@ class mysqli_backend implements BackendInterface {
 			case \Model::ATT_TYPE_ISO_8601_DATE:
 				$type = 'date';
 				break;
+			case \Model::ATT_TYPE_ALIAS:
+				return '__ALIAS__';
 			default:
 				throw new \DMI_Exception('Unsupported model type for [' . $column->type . ']');
 				break;

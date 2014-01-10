@@ -110,10 +110,14 @@ class Schema {
 
 			// This model doesn't have a column the other one has... DIFFERENCE!
 			if(!$thiscol){
-				$diffs[] = array(
-					'title' => 'A does not have column ' . $name,
-					'type' => 'column',
-				);
+				// Only complain about these if this column is not an alias.
+				// Aliased columns are ignored otherwise.
+				if($dat->type != \Model::ATT_TYPE_ALIAS){
+					$diffs[] = array(
+						'title' => 'A does not have column ' . $name,
+						'type' => 'column',
+					);
+				}
 				continue;
 			}
 
@@ -250,6 +254,11 @@ class SchemaColumn {
 	public $encoding = null;
 
 	/**
+	 * @var null|string If this column is actually an alias of another column, that other column name is here.
+	 */
+	public $aliasof = null;
+
+	/**
 	 * Check to see if this column is datastore identical to another column.
 	 *
 	 * @param SchemaColumn $col
@@ -325,6 +334,7 @@ class SchemaColumn {
 			array(
 				\Model::ATT_TYPE_INT,
 				\Model::ATT_TYPE_UUID,
+				\Model::ATT_TYPE_UUID_FK,
 				\Model::ATT_TYPE_CREATED,
 				\Model::ATT_TYPE_UPDATED,
 				\Model::ATT_TYPE_DELETED,

@@ -102,6 +102,12 @@ class Model implements ArrayAccess {
 	const ATT_TYPE_SITE = '__site';
 
 	/**
+	 * Alias of another column in the record.
+	 * Useful for column renames where the data needs to persist to the new column name.
+	 */
+	const ATT_TYPE_ALIAS = '__alias';
+
+	/**
 	 * Mysql datetime and ISO 8601 formatted datetime field.
 	 * This format is discouraged in Core+, but allowed.
 	 *
@@ -585,6 +591,10 @@ class Model implements ArrayAccess {
 		elseif (array_key_exists($k, $this->_data)) {
 			// Check if this data was loaded from the original data array
 			return $this->_data[$k];
+		}
+		elseif($this->getKeySchema($k) && $this->getKeySchema($k)['type'] == Model::ATT_TYPE_ALIAS){
+			// This key is actually just an alias to another key.
+			return $this->get( $this->getKeySchema($k)['alias'] );
 		}
 		elseif (array_key_exists($k, $this->_dataother)) {
 			// Check if this data was set from the "set" command on a non-tracked column.
@@ -1136,6 +1146,10 @@ class Model implements ArrayAccess {
 				$this->_data[$k] = $v;
 			}
 			return true;
+		}
+		elseif($this->getKeySchema($k) && $this->getKeySchema($k)['type'] == Model::ATT_TYPE_ALIAS){
+			// It's an alias, set the aliased column instead.
+			return $this->set( $this->getKeySchema($k)['alias'], $v);
 		}
 		else {
 			// Ok, let data to get overloaded for convenience sake.
@@ -2223,12 +2237,21 @@ class Model implements ArrayAccess {
 		return $_tablenames[$m];
 	}
 
+	/**
+	 * Get the resolved schema for this Model type.
+	 *
+	 * This is called by several other methods, including getKeySchemas and getKeySchema.
+	 *
+	 * @throws Exception
+	 *
+	 * @return mixed
+	 */
 	public static function GetSchema() {
 		/** @var string $classname The class name of the extending class. */
 		$classname = get_called_class();
 
 		if(!isset(self::$_ModelSchemaCache[$classname])){
-// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
+			// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
 			$ref = new ReflectionClass($classname);
 
 			self::$_ModelSchemaCache[$classname] = $ref->getProperty('Schema')->getValue();
@@ -2314,6 +2337,21 @@ class Model implements ArrayAccess {
 				if (!isset($v['default']))   $schema[$k]['default']   = false;
 				if (!isset($v['encrypted'])) $schema[$k]['encrypted'] = false;
 				if (!isset($v['required']))  $schema[$k]['required']  = false;
+
+				// Aliases reference other columns.  The other column must exist.
+				if($v['type'] == Model::ATT_TYPE_ALIAS){
+					if(!isset($v['alias'])){
+						throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that does not have an "alias" attribute.  Every ATT_TYPE_ALIAS key MUST have exactly one "alias"');
+					}
+
+					if(!isset($schema[ $v['alias'] ])){
+						throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that points to a key that does not exist, [' . $v['alias'] . '].  All aliases MUST exist in the same model!');
+					}
+
+					if($schema[ $v['alias'] ]['type'] == Model::ATT_TYPE_ALIAS){
+						throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that points to another alias.  Aliases MUST NOT point to another alias... bad things could happen.');
+					}
+				}
 
 
 				if($v['type'] == Model::ATT_TYPE_ENUM){

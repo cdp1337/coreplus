@@ -76,7 +76,11 @@ class ModelSchema extends Core\Datamodel\Schema{
 			$column = $this->_getColumnDefinition($def);
 
 			$this->definitions[$name] = $column;
-			$this->order[] = $name;
+
+			// Aliases are skipped when considering the order of columns.
+			if($def['type'] != Model::ATT_TYPE_ALIAS){
+				$this->order[] = $name;
+			}
 		}
 
 
@@ -159,6 +163,10 @@ class ModelSchema extends Core\Datamodel\Schema{
 			$column->default = 0;
 			$column->comment = 'The site id in multisite mode, (or 0 otherwise)';
 			$column->maxlength = 15;
+		}
+
+		if($column->type == Model::ATT_TYPE_ALIAS){
+			$column->aliasof = $def['alias'];
 		}
 
 		// Is default not set?  Some columns would really like this to be!
