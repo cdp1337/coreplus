@@ -121,7 +121,7 @@ class View {
 	 * The content type of this view.
 	 * Generally set from the controller.
 	 *
-	 * This IS sent to the browser if it's a page-type view!
+	 * This is sent to the browser if it's a page-type view as the Header: Content-Type field.
 	 *
 	 * @var string
 	 */
@@ -164,6 +164,8 @@ class View {
 
 	/**
 	 * Set this to a non-null value to set the http-equiv="last-modified" metatag.
+	 *
+	 * Also handles the Header: Last-Modified field.
 	 *
 	 * @var null|int
 	 */
@@ -249,7 +251,12 @@ class View {
 	/**
 	 * @var array Associative array of attributes for the <html> tag.
 	 */
-	public $htmlAttributes = array();
+	public $htmlAttributes = [];
+
+	/**
+	 * @var array Associative array of custom headers to send to the browser automatically.
+	 */
+	public $headers = [];
 
 	public function __construct() {
 		$this->error = View::ERROR_NOERROR;
@@ -792,7 +799,7 @@ class View {
 		$data = $this->fetch();
 
 		// Be sure to send the content type and status to the browser, (if it's a page)
-		if ($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX) {
+		if ($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX || $this->mode == View::MODE_NOOUTPUT) {
 			switch ($this->error) {
 				case View::ERROR_NOERROR:
 					header('Status: 200 OK', true, $this->error);
@@ -817,9 +824,19 @@ class View {
 			}
 			//mb_internal_encoding('utf-8');
 
-			header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? Core::GetComponent()->getVersion() : ''));
+			header('X-Content-Encoded-By: Core Plus' . (DEVELOPMENT_MODE ? ' ' . Core::GetComponent()->getVersion() : ''));
 			if(\ConfigHandler::Get('/core/security/x-frame-options')){
 				header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
+			}
+
+			if($this->updated !== null){
+				header('Last-Modified: ' . Time::FormatGMT($this->updated, Time::TIMEZONE_USER, Time::FORMAT_RFC2822));
+				//header('Last-Modified: ' . Time::FormatGMT($this->updated, Time::TIMEZONE_USER, Time::FORMAT_ISO8601));
+			}
+
+			// Are there any custom headers to send also?
+			foreach($this->headers as $k => $v){
+				header($k . ': ' . $v);
 			}
 		}
 
