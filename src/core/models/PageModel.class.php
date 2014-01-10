@@ -987,6 +987,16 @@ class PageModel extends Model {
 					// I need the array merge because getParentTree only returns << parents >>.
 					return array_merge($p->getParentTree(), array($p));
 				}
+				elseif(!$p->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+					// Perform the same check with a "-1" for the site ID.
+					// This is because many admin pages are global.
+					// Reset the Page and re-perform the check.
+					$p = PageModel::Construct(-1, $altbaseurl);
+					if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
+						// I need the array merge because getParentTree only returns << parents >>.
+						return array_merge($p->getParentTree(), array($p));
+					}
+				}
 			}
 
 			// If the page is currently update, edit, or create and there is an "admin" page, link that instead.
@@ -1002,6 +1012,16 @@ class PageModel extends Model {
 				if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
 					// I need the array merge because getParentTree only returns << parents >>.
 					return array_merge($p->getParentTree(), array($p));
+				}
+				elseif(!$p->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+					// Perform the same check with a "-1" for the site ID.
+					// This is because many admin pages are global.
+					// Reset the Page and re-perform the check.
+					$p = PageModel::Construct(-1, $parentb);
+					if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
+						// I need the array merge because getParentTree only returns << parents >>.
+						return array_merge($p->getParentTree(), array($p));
+					}
 				}
 			}
 		}
