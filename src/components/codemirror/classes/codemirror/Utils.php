@@ -74,6 +74,10 @@ abstract class Utils {
 		return self::_IncludeMode('css');
 	}
 
+	public static function IncludeSQL() {
+		return self::_IncludeMode('sql');
+	}
+
 	public static function IncludeHTML() {
 		self::_IncludeMode('css');
 		self::_IncludeMode('xml');
