@@ -167,6 +167,9 @@ class FileLocal implements Filestore\File {
 		elseif(strpos($this->_filename, Filestore\get_public_path()) === 0){
 			$this->_type = 'public';
 		}
+		elseif(strpos($this->_filename, Filestore\get_private_path()) === 0){
+			$this->_type = 'private';
+		}
 		elseif(strpos($this->_filename, Filestore\get_tmp_path()) === 0){
 			$this->_type = 'tmp';
 		}
@@ -736,6 +739,37 @@ class FileLocal implements Filestore\File {
 		return filemtime($this->getFilename());
 	}
 
+	/**
+	 * Send a file to the user agent
+	 *
+	 * @param bool $forcedownload Set to true to force download instead of just sending the file.
+	 *
+	 * @throws \Exception
+	 *
+	 * @return void
+	 */
+	public function sendToUserAgent($forcedownload = false) {
+		$view = \Core\view();
+		$request = \Core\page_request();
+
+		$view->mode = \View::MODE_NOOUTPUT;
+		$view->contenttype = $this->getMimetype();
+		$view->updated = $this->getMTime();
+		if($forcedownload){
+			$view->headers['Content-Disposition'] = 'attachment; filename="' . $this->getBasename() . '"';
+			$view->headers['Cache-Control'] = 'no-cache, must-revalidate';
+			$view->headers['Content-Transfer-Encoding'] = 'binary';
+		}
+		$view->headers['Content-Length'] = $this->getFilesize();
+
+		// Send all the view headers
+		$view->render();
+
+		// And now the actual content if it's not a HEAD request.
+		if($request->method != \PageRequest::METHOD_HEAD){
+			echo $this->getContents();
+		}
+	}
 
 	/**
 	 * Makes directory

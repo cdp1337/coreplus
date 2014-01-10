@@ -326,5 +326,16 @@ interface File {
 	 * @return int
 	 */
 	public function getMTime();
+
+	/**
+	 * Send a file to the user agent
+	 *
+	 * @param bool $forcedownload Set to true to force download instead of just sending the file.
+	 *
+	 * @throws \Exception
+	 *
+	 * @return void
+	 */
+	public function sendToUserAgent($forcedownload = false);
 }
 
