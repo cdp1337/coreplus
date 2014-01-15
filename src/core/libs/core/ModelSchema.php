@@ -4,7 +4,7 @@
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20131022.1632
- * @copyright Copyright (C) 2009-2013  Author
+ * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -114,6 +114,8 @@ class ModelSchema extends Core\Datamodel\Schema{
 		$column->default   = $def['default'];
 		$column->null      = $def['null'];
 		$column->comment   = $def['comment'];
+
+		if(isset($def['precision'])) $column->precision = $def['precision'];
 
 		// Some defaults.
 		if($column->type == Model::ATT_TYPE_STRING && !$column->maxlength){
