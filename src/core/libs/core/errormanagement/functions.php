@@ -12,6 +12,100 @@
 namespace Core\ErrorManagement;
 use Core\Utilities\Logger;
 
+/**
+ * Handle an exception and report it to the Core system log.
+ *
+ * If $fatal is set to true, then the fatal error page will be loaded and sent to the browser if in WEB mode,
+ * and will exit the script gracefully automatically.
+ *
+ * @param \Exception $e     The Exception to render out.
+ * @param boolean    $fatal Set to true if this exception is fatal.
+ */
+function exception_handler(\Exception $e, $fatal = false){
+	$type  = 'error';
+	$class = $fatal ? 'error' : 'warning';
+	$code  = get_class($e);
+
+	$errstr  = $e->getMessage();
+	$errfile = $e->getFile();
+	$errline = $e->getLine();
+
+	// All errors/warnings/notices get logged!
+	if($errfile && strpos($errfile, ROOT_PDIR) === 0){
+		$details = '[src: ' . '/' . substr($errfile, strlen(ROOT_PDIR)) . ':' . $errline . '] ';
+	}
+	elseif($errfile){
+		$details = '[src: ' . $errfile . ':' . $errline . '] ';
+	}
+	else{
+		$details = '';
+	}
+
+	try{
+		if(!\Core::GetComponent()){
+			// SQUAK!  Core isn't even loaded yet!
+			return;
+			//throw new \Exception('Error retrieved before Core was loaded!');
+		}
+
+		$log = \SystemLogModel::Factory();
+		$log->setFromArray([
+				'type'    => $type,
+				'code'    => $code,
+				'message' => $details . $errstr
+			]);
+		$log->save();
+	}
+	catch(\Exception $e){
+		// meh, try a traditional log.
+		try{
+			if(class_exists('Core\\Utilities\\Logger\\LogFile')){
+				$log = new \Core\Utilities\Logger\LogFile($type);
+				$log->write($details . $errstr, $code);
+			}
+			else{
+				error_log($details . $errstr);
+			}
+		}
+		catch(\Exception $e){
+			// Really meh now!
+		}
+	}
+
+	// Display all errors when in development mode.
+	if(DEVELOPMENT_MODE){
+		// The correct way to handle output is via EXEC_MODE.
+		// HOWEVER, since the unit tests emulate a WEB mode so that the scripts behave as they would in the web browser,
+		// this is not a reliable test here.
+		if(isset($_SERVER['TERM']) || isset($_SERVER['SHELL'])){
+			print_error_as_text($class, $code, $e);
+		}
+		elseif(EXEC_MODE == 'WEB'){
+			print_error_as_html($class, $code, $e);
+		}
+		else{
+			print_error_as_text($class, $code, $e);
+		}
+	}
+
+	// If it's a fatal error and it's not in development mode, simply display a friendly error page instead.
+	if($fatal){
+		if(EXEC_MODE == 'WEB'){
+			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+		}
+		exit();
+	}
+}
+
+/**
+ * Handle an error and report it to the Core system log.
+ *
+ * @param      $errno
+ * @param      $errstr
+ * @param      $errfile
+ * @param      $errline
+ * @param null $errcontext
+ */
 function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 	$type       = null;
 	$fatal      = false;
@@ -151,8 +245,24 @@ function check_for_fatal() {
 	}
 }
 
+/**
+ * Print an error or exception as HTML.
+ *
+ * @param string            $class
+ * @param string            $code
+ * @param string|\Exception $errstr
+ */
 function print_error_as_html($class, $code, $errstr){
 	echo '<div class="message-' . $class . '">' . "\n";
+
+	if($errstr instanceof \Exception){
+		$exception = $errstr;
+		$errstr = $exception->getMessage();
+		$back = $exception->getTrace();
+	}
+	else{
+		$back = debug_backtrace();
+	}
 
 	// The header
 	echo '<strong>' . $code . ':</strong> ' . $errstr . "\n<br/>\n<br/>";
@@ -160,7 +270,7 @@ function print_error_as_html($class, $code, $errstr){
 	// And the stack trace
 	echo '<em>Stack Trace</em>' . "\n<br/>" . '<table class="stacktrace">';
 	echo '<tr><th>Function/Method</th><th>File Location:Line Number</th></tr>';
-	$back = debug_backtrace();
+
 	foreach($back as $entry){
 
 		// Parent?  Skip!
@@ -202,6 +312,9 @@ function print_error_as_html($class, $code, $errstr){
 		elseif(isset($entry['function'])){
 			$linecode = $entry['function'] . '()';
 		}
+		else{
+			$linecode = 'Unknown!?!';
+		}
 
 		echo '<tr><td>' . $linecode . '</td><td>' . $file . ':' . $line . '</td></tr>';
 	}
@@ -209,7 +322,24 @@ function print_error_as_html($class, $code, $errstr){
 	echo '</div>';
 }
 
+/**
+ * Print an error or exception as text.
+ *
+ * @param string            $class
+ * @param string            $code
+ * @param string|\Exception $errstr
+ */
 function print_error_as_text($class, $code, $errstr){
+
+	if($errstr instanceof \Exception){
+		$exception = $errstr;
+		$errstr = $exception->getMessage();
+		$back = $exception->getTrace();
+	}
+	else{
+		$back = debug_backtrace();
+	}
+
 	// The header
 	echo '[' . $code . ']' . $errstr . "\n";
 
@@ -220,7 +350,7 @@ function print_error_as_text($class, $code, $errstr){
 
 	// And the stack trace
 	// I need to render the data to a "buffer" so I know the positions of everything.
-	$back = debug_backtrace();
+
 	$lines = [];
 	$maxlength1 = $maxlength2 = 0;
 	foreach($back as $entry){
@@ -263,6 +393,9 @@ function print_error_as_text($class, $code, $errstr){
 		}
 		elseif(isset($entry['function'])){
 			$linecode = $entry['function'] . '()';
+		}
+		else{
+			$linecode = 'Unknown!?!';
 		}
 
 		$lines[] = [
