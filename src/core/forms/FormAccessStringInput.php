@@ -94,7 +94,7 @@ class FormAccessStringInput extends FormElement {
 		$groups = array();
 
 		// Tack on the system groups.
-		$anongroup = new Model();
+		$anongroup = new UserGroupModel();
 		$anongroup->setFromArray(
 			array(
 				'id'   => 'anonymous',
@@ -102,7 +102,7 @@ class FormAccessStringInput extends FormElement {
 			)
 		);
 
-		$authgroup = new Model();
+		$authgroup = new UserGroupModel();
 		$authgroup->setFromArray(
 			array(
 				'id'   => 'authenticated',
