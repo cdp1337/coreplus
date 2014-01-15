@@ -300,6 +300,9 @@ class Model implements ArrayAccess {
 		// Update the _data array based on the schema.
 		$s = self::GetSchema();
 		foreach ($s as $k => $v) {
+			// Aliases don't get special treatment :P
+			if($v['type'] == Model::ATT_TYPE_ALIAS) continue;
+
 			// Populate the default options based on the schema.
 			$this->_data[$k] = (isset($v['default'])) ? $v['default'] : null;
 
@@ -2251,10 +2254,23 @@ class Model implements ArrayAccess {
 		$classname = get_called_class();
 
 		if(!isset(self::$_ModelSchemaCache[$classname])){
-			// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
-			$ref = new ReflectionClass($classname);
 
-			self::$_ModelSchemaCache[$classname] = $ref->getProperty('Schema')->getValue();
+			// First I need the parent's class, if it's not Model.
+			$parent = get_parent_class($classname);
+			if($parent != 'Model'){
+				// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
+				$parentref = new ReflectionClass($parent);
+				$ref = new ReflectionClass($classname);
+				self::$_ModelSchemaCache[$classname] = array_merge(
+					$parentref->getProperty('Schema')->getValue(),
+					$ref->getProperty('Schema')->getValue()
+				);
+			}
+			else{
+				// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
+				$ref = new ReflectionClass($classname);
+				self::$_ModelSchemaCache[$classname] = $ref->getProperty('Schema')->getValue();
+			}
 
 			// Link it so I don't have to type out the full path.
 			$schema =& self::$_ModelSchemaCache[$classname];
@@ -2330,13 +2346,13 @@ class Model implements ArrayAccess {
 				// These are all defaults for schemas.
 				// Setting them to the default if they're not set will ensure that
 				// 'undefined index' notices are not incurred.
-				if (!isset($v['type']))      $schema[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
-				if (!isset($v['maxlength'])) $schema[$k]['maxlength'] = false;
-				if (!isset($v['null']))      $schema[$k]['null']      = false;
-				if (!isset($v['comment']))   $schema[$k]['comment']   = '';
-				if (!isset($v['default']))   $schema[$k]['default']   = false;
-				if (!isset($v['encrypted'])) $schema[$k]['encrypted'] = false;
-				if (!isset($v['required']))  $schema[$k]['required']  = false;
+				if (!isset($v['type']))               $schema[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
+				if (!isset($v['maxlength']))          $schema[$k]['maxlength'] = false;
+				if (!isset($v['null']))               $schema[$k]['null']      = false;
+				if (!isset($v['comment']))            $schema[$k]['comment']   = '';
+				if (!array_key_exists('default', $v)) $schema[$k]['default']   = false;
+				if (!isset($v['encrypted']))          $schema[$k]['encrypted'] = false;
+				if (!isset($v['required']))           $schema[$k]['required']  = false;
 
 				// Aliases reference other columns.  The other column must exist.
 				if($v['type'] == Model::ATT_TYPE_ALIAS){
@@ -2389,9 +2405,25 @@ class Model implements ArrayAccess {
 	}
 
 	public static function GetIndexes() {
-		//// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
-		$ref = new ReflectionClass(get_called_class());
-		return $ref->getProperty('Indexes')->getValue();
+		/** @var string $classname The class name of the extending class. */
+		$classname = get_called_class();
+
+		// First I need the parent's class, if it's not Model.
+		$parent = get_parent_class($classname);
+		if($parent != 'Model'){
+			// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
+			$parentref = new ReflectionClass($parent);
+			$ref = new ReflectionClass($classname);
+			return array_merge(
+				$parentref->getProperty('Indexes')->getValue(),
+				$ref->getProperty('Indexes')->getValue()
+			);
+		}
+		else{
+			// Because the "Model" class doesn't have a schema... that's up to classes that extend it.
+			$ref = new ReflectionClass($classname);
+			return $ref->getProperty('Indexes')->getValue();
+		}
 	}
 }
 
