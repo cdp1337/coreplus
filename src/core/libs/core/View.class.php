@@ -487,36 +487,10 @@ class View {
 		try{
 			$body = $this->fetchBody();
 		}
-		catch(SmartyException $e){
-			$this->error = View::ERROR_SERVERERROR;
-			trigger_error('Smarty exception in [' . $this->templatename . '],  ' . $e->getMessage(), E_USER_WARNING);
-
-			// If this was a page, stop execution and display the error page.
-			if($this->mode == View::MODE_PAGE){
-				require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
-				die();
-			}
-
-		}
-		catch(TemplateException $e){
-			$this->error = View::ERROR_SERVERERROR;
-			trigger_error('Template exception in [' . $this->templatename . '],  ' . $e->getMessage(), E_USER_WARNING);
-
-			// If this was a page, stop execution and display the error page.
-			if($this->mode == View::MODE_PAGE){
-				require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
-				die();
-			}
-		}
 		catch(Exception $e){
 			$this->error = View::ERROR_SERVERERROR;
-			trigger_error('Unknown exception in [' . $this->templatename . '],  ' . $e->getMessage(), E_USER_WARNING);
-
-			// If this was a page, stop execution and display the error page.
-			if($this->mode == View::MODE_PAGE){
-				require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
-				die();
-			}
+			\Core\ErrorManagement\exception_handler($e, ($this->mode == View::MODE_PAGE));
+			$body = '';
 		}
 
 
