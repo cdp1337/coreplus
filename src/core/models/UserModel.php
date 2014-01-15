@@ -405,11 +405,18 @@ class UserModel extends Model {
 	public function getAuthDriver(){
 		if($this->_authdriver === null){
 			$driver = $this->get('backend');
-			if(!class_exists('\\Core\\User\\AuthDrivers\\' . $driver)){
-				throw new Exception('Invalid auth backend for user, ' . $driver);
+
+			if(!isset(\Core\User\Helper::$AuthDrivers[$driver])){
+				throw new Exception('Invalid auth backend for user, ' . $driver . '.  Auth driver is not registered.');
 			}
 
-			$ref = new ReflectionClass('\\Core\\User\\AuthDrivers\\' . $driver);
+			$classname = \Core\User\Helper::$AuthDrivers[$driver];
+
+			if(!class_exists($classname)){
+				throw new Exception('Invalid auth backend for user, ' . $driver . '.  Auth driver class was not found.');
+			}
+
+			$ref = new ReflectionClass($classname);
 			$this->_authdriver = $ref->newInstance($this);
 		}
 
