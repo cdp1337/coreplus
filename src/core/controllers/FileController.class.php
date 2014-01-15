@@ -59,7 +59,7 @@ class FileController extends Controller_2_1 {
 		$base = base64_decode(substr($filename, 7));
 
 		if(!(strpos($base, 'public/') === 0 || strpos($base, 'assets/') === 0 || strpos($base, 'asset/') === 0)){
-			SecurityLogModel::Log('/file/preview', 'fail', null, 'Invalid file requested: ' . $base);
+			SystemLogModel::LogSecurityEvent('/file/preview', 'Invalid file requested: ' . $base);
 
 			if(DEVELOPMENT_MODE){
 				error_log('Invalid request made for /file/preview!  Expecting: [public/* or asset[s]/*], Received: [' . $base . ']');

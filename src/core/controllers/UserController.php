@@ -849,15 +849,29 @@ class UserController extends Controller_2_1{
 			$u = UserModel::Find(array('email' => $_POST['email']), 1);
 			if(!$u){
 				Core::SetMessage('Invalid user account requested', 'error');
-				SecurityLogModel::Log('/user/forgotpassword/send', 'fail', null, 'Invalid email requested for reset: [' . $_POST['email'] . ']');
+				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Failed Forgot Password. Invalid email requested for reset: [' . $_POST['email'] . ']');
 				return;
 			}
 
-			$auth = $u->getAuthDriver();
+			try{
+				$auth = $u->getAuthDriver();
+			}
+			catch(Exception $e){
+				Core::SetMessage('There was an error while retrieving your user account.  The administrator has been notified of this incident.  Please try again shortly.', 'error');
+				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', $e->getMessage());
+				return;
+			}
 
-			if(($str = $auth->canSetPassword()) !== true){
+
+			$str = $auth->canSetPassword();
+			if($str === false){
+				Core::SetMessage($auth->getAuthTitle() . ' user accounts do not support resetting the password via this method.', 'error');
+				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Failed Forgot Password. ' . $auth->getAuthTitle() . ' does not support password management locally: [' . $_POST['email'] . ']', null, $u->get('id'));
+				return;
+			}
+			elseif($str !== true){
 				Core::SetMessage($str, 'error');
-				SecurityLogModel::Log('/user/forgotpassword/send', 'fail', $u->get('id'), $str . ': [' . $_POST['email'] . ']');
+				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Failed Forgot Password. ' . $str . ': [' . $_POST['email'] . ']', null, $u->get('id'));
 				return;
 			}
 
@@ -877,10 +891,11 @@ class UserController extends Controller_2_1{
 			$e->templatename = 'emails/user/forgotpassword.tpl';
 			try{
 				$e->send();
-				SecurityLogModel::Log('/user/forgotpassword/send', 'success', $u->get('id'), 'Forgot password request sent successfully');
+				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Forgot password request sent successfully', null, $u->get('id'));
 			}
 			catch(Exception $e){
 				Core::SetMessage('Error sending the email, ' . $e->getMessage(), 'error');
+				SystemLogModel::LogErrorEvent('/user/forgotpassword/send', $e->getMessage());
 				return;
 			}
 
@@ -911,7 +926,7 @@ class UserController extends Controller_2_1{
 		/** @var UserModel $u */
 		$u = UserModel::Find(array('email' => $e), 1);
 		if(!$u){
-			SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', null, 'Invalid user account requested: [' . $e . ']');
+			SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. Invalid user account requested: [' . $e . ']');
 			Core::SetMessage('Invalid user account requested', 'error');
 			\core\redirect('/');
 			return;
@@ -926,7 +941,7 @@ class UserController extends Controller_2_1{
 		$nonce = NonceModel::Construct($n);
 		// I can't invalidate it quite yet... the user still needs to set the new password.
 		if(!$nonce->isValid(['type' => 'password-reset', 'user' => $u->get('id')])){
-			SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', $u->get('id'), 'Invalid key requested: [' . $n . ']');
+			SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. Invalid key requested: [' . $n . ']', null, $u->get('id'));
 			Core::SetMessage('Invalid key provided!', 'error');
 			\core\redirect('/');
 			return;
@@ -934,7 +949,7 @@ class UserController extends Controller_2_1{
 
 		if(($str = $auth->canSetPassword()) !== true){
 			Core::SetMessage($str, 'error');
-			SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', $u->get('id'), $str);
+			SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. ' . $str, null, $u->get('id'));
 			\core\redirect('/');
 			return;
 		}
@@ -953,7 +968,7 @@ class UserController extends Controller_2_1{
 				$u->save();
 				// NOW I can invalidate that nonce!
 				$nonce->markUsed();
-				SecurityLogModel::Log('/user/forgotpassword/confirm', 'success', $u->get('id'), 'Reset password successfully!');
+				SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Reset password successfully!', null, $u->get('id'));
 				Core::SetMessage('Reset password successfully', 'success');
 				if($u->get('active')){
 					Session::SetUser($u);
@@ -961,12 +976,12 @@ class UserController extends Controller_2_1{
 				\core\redirect('/');
 			}
 			catch(ModelValidationException $e){
-				SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', $u->get('id'), $e->getMessage());
+				SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. ' . $e->getMessage(), null, $u->get('id'));
 				Core::SetMessage($e->getMessage(), 'error');
 				return;
 			}
 			catch(Exception $e){
-				SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', $u->get('id'), $e->getMessage());
+				SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. ' . $e->getMessage(), null, $u->get('id'));
 				if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
 				else Core::SetMessage('An unknown error occured', 'error');
 

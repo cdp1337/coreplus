@@ -557,10 +557,8 @@ class UpdaterController extends Controller_2_1 {
 			}
 
 			$logmsg = implode("\n", $changes);
-			SecurityLogModel::Log(
+			SystemLogModel::LogSecurityEvent(
 				'/updater/component/disabled',
-				'success',
-				null,
 				$logmsg
 			);
 		}
@@ -639,10 +637,8 @@ class UpdaterController extends Controller_2_1 {
 			if(is_array($change)) $changes = array_merge($changes, $change);
 
 			$logmsg = implode("\n", $changes);
-			SecurityLogModel::Log(
+			SystemLogModel::LogSecurityEvent(
 				'/updater/component/enabled',
-				'success',
-				null,
 				$logmsg
 			);
 		}
@@ -739,10 +735,8 @@ class UpdaterController extends Controller_2_1 {
 				$logstatus = 'fail';
 			}
 
-			SecurityLogModel::Log(
+			SystemLogModel::LogSecurityEvent(
 				'/updater/installation',
-				$logstatus,
-				null,
 				$logmsg
 			);
 		}

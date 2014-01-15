@@ -98,8 +98,8 @@ abstract class Helper{
 
 		if(!$u){
 			// Log this as a login attempt!
-			$logmsg = 'Email not registered' . "\n" . 'Email: ' . $e->get('value') . "\n";
-			\SecurityLogModel::Log('/user/login', 'fail', null, $logmsg);
+			$logmsg = 'Failed Login. Email not registered' . "\n" . 'Email: ' . $e->get('value') . "\n";
+			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg);
 			$e->setError('Requested email is not registered.');
 			return false;
 		}
@@ -107,8 +107,8 @@ abstract class Helper{
 		if($u->get('active') == 0){
 			// The model provides a quick cut-off for active/inactive users.
 			// This is the control managed with in the admin.
-			$logmsg = 'User tried to login before account activation' . "\n" . 'User: ' . $u->get('email') . "\n";
-			\SecurityLogModel::Log('/user/login', 'fail', null, $logmsg);
+			$logmsg = 'Failed Login. User tried to login before account activation' . "\n" . 'User: ' . $u->get('email') . "\n";
+			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg, null, $u->get('id'));
 			$e->setError('Your account is not active yet.');
 			return false;
 		}
@@ -123,8 +123,8 @@ abstract class Helper{
 
 		if(!$auth->isActive()){
 			// Auth systems may have their own is-active check.
-			$logmsg = 'User tried to login before account activation' . "\n" . 'User: ' . $u->get('email') . "\n";
-			\SecurityLogModel::Log('/user/login', 'fail', null, $logmsg);
+			$logmsg = 'Failed Login. User tried to login before account activation' . "\n" . 'User: ' . $u->get('email') . "\n";
+			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg, null, $u->get('id'));
 			$e->setError('Your account is not active yet.');
 			return false;
 		}
@@ -155,7 +155,7 @@ abstract class Helper{
 			$email->templatename = 'emails/user/initialpassword.tpl';
 			try{
 				$email->send();
-				\SecurityLogModel::Log('/user/initialpassword/send', 'success', $u->get('id'), 'Initial password request sent successfully');
+				\SystemLogModel::LogSecurityEvent('/user/initialpassword/send', 'Initial password request sent successfully', null, $u->get('id'));
 
 				\Core::SetMessage('You must set a new password.  An email has been sent to your inbox containing a link and instructions on setting a new password.', 'info');
 				return true;
@@ -171,8 +171,8 @@ abstract class Helper{
 		if(!$auth->checkPassword($p->get('value'))){
 
 			// Log this as a login attempt!
-			$logmsg = 'Invalid password' . "\n" . 'Email: ' . $e->get('value') . "\n";
-			\SecurityLogModel::Log('/user/login', 'fail', $u->get('id'), $logmsg);
+			$logmsg = 'Failed Login. Invalid password' . "\n" . 'Email: ' . $e->get('value') . "\n";
+			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg, null, $u->get('id'));
 
 			// Also, I want to look up and see how many login attempts there have been in the past couple minutes.
 			// If there are too many, I need to start slowing the attempts.
@@ -212,7 +212,7 @@ abstract class Helper{
 		else $url = REL_REQUEST_PATH;
 
 		// Well, record this too!
-		\SecurityLogModel::Log('/user/login', 'success', $u->get('id'));
+		\SystemLogModel::LogSecurityEvent('/user/login', 'Login successful', null, $u->get('id'));
 
 		// yay...
 		$u->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
@@ -273,14 +273,14 @@ abstract class Helper{
 		}
 		catch(\ModelValidationException $e){
 			// Make a note of this!
-			\SecurityLogModel::Log('/user/register', 'fail', null, $e->getMessage());
+			\SystemLogModel::LogSecurityEvent('/user/register', $e->getMessage());
 
 			\Core::SetMessage($e->getMessage(), 'error');
 			return false;
 		}
 		catch(\Exception $e){
 			// Make a note of this!
-			\SecurityLogModel::Log('/user/register', 'fail', null, $e->getMessage());
+			\SystemLogModel::LogSecurityEvent('/user/register', $e->getMessage());
 
 			if(DEVELOPMENT_MODE) \Core::SetMessage($e->getMessage(), 'error');
 			else \Core::SetMessage('An unknown error occured', 'error');
@@ -329,7 +329,7 @@ abstract class Helper{
 		$user->save();
 
 		// User created... make a log of this!
-		\SecurityLogModel::Log('/user/register', 'success', $user->get('id'));
+		\SystemLogModel::LogSecurityEvent('/user/register', 'User registration successful', null, $user->get('id'));
 
 		// Send a thank you for registering email to the user.
 		try{
