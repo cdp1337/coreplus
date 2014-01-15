@@ -29,14 +29,14 @@ CacheMC::response_manager()
 		array('host' => '127.0.0.1', 'port' => 11211)
 	), 2);
 	var_dump($cache->read());
-	var_dump($cache->response_manager('fetch_data', 'http://github.com/skyzyx/cachecore/raw/master/_tests/test_request.txt'));
+	var_dump($cache->response_manager('fetch_data', 'https://raw.github.com/cdp1337/cachecore/master/_tests/test_request.txt'));
 	$start = $cache->timestamp();
 	sleep(1);
-	var_dump($cache->response_manager('fetch_data', 'http://github.com/skyzyx/cachecore/raw/master/_tests/test_request.txt'));
+	var_dump($cache->response_manager('fetch_data', 'https://raw.github.com/cdp1337/cachecore/master/_tests/test_request.txt'));
 	$end = $cache->timestamp();
 	var_dump($start == $end);
 	sleep(2);
-	var_dump($cache->response_manager('fetch_data', 'http://github.com/skyzyx/cachecore/raw/master/_tests/test_request.txt'));
+	var_dump($cache->response_manager('fetch_data', 'https://raw.github.com/cdp1337/cachecore/master/_tests/test_request.txt'));
 	$start_again = $cache->timestamp();
 	var_dump($start_again > $end);
 ?>

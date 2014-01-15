@@ -33,10 +33,10 @@ CacheMC::response_manager() with reset()
 	$cache = new CacheMC('test', array(
 		array('host' => '127.0.0.1', 'port' => 11211)
 	), 2);
-	var_dump($cache->response_manager('fetch_data', array('http://github.com/skyzyx/cachecore/raw/master/_tests/test_request.txt', true)));
+	var_dump($cache->response_manager('fetch_data', array('https://raw.github.com/cdp1337/cachecore/master/_tests/test_request.txt', true)));
 	$start = $cache->timestamp();
 	sleep(3);
-	var_dump($cache->response_manager('fetch_data', array('http://github.com/skyzyx/cachecore/raw/master/_tests/test_request.txt', false)));
+	var_dump($cache->response_manager('fetch_data', array('https://raw.github.com/cdp1337/cachecore/master/_tests/test_request.txt', false)));
 	$end = $cache->timestamp();
 	var_dump($start < $end);
 ?>
