@@ -248,15 +248,53 @@ class Email {
 	 * Send the message
 	 *
 	 * @throws phpmailerException
-	 * @return type
+	 * @return bool
 	 */
 	public function send() {
+		$m = $this->getMailer();
+
+		if(!\ConfigHandler::Get('/core/email/enable_sending')){
+			// Allow a config option to disable sending entirely.
+			SystemLogModel::LogInfoEvent('/email/disabled', 'Email sending is disabled, not sending email ' . $m->Subject . '!');
+			return false;
+		}
+
+		if(\ConfigHandler::Get('/core/email/sandbox_to')){
+			$to  = $m->getToAddresses();
+			$cc  = $m->getCCAddresses();
+			$bcc = $m->getBCCAddresses();
+			$all = [];
+
+			if(sizeof($to)){
+				foreach($to as $e){
+					$all[] = ['type' => 'To', 'email' => $e[0], 'name' => $e[1]];
+				}
+			}
+			if(sizeof($cc)){
+				foreach($cc as $e){
+					$all[] = ['type' => 'CC', 'email' => $e[0], 'name' => $e[1]];
+				}
+			}
+			if(sizeof($bcc)){
+				foreach($bcc as $e){
+					$all[] = ['type' => 'BCC', 'email' => $e[0], 'name' => $e[1]];
+				}
+			}
+
+			foreach($all as $e){
+				$m->AddCustomHeader('X-Original-' . $e['type'], ($e['name'] ? $e['name'] . ' <' . $e['email'] . '>' : $e['email']));
+			}
+
+			// Allow a config option to override the "To" address, useful for testing with production data.
+			$m->ClearAllRecipients();
+			$m->AddAddress(\ConfigHandler::Get('/core/email/sandbox_to'));
+		}
+
 		// Now, do some formatting to the body, ie: it NEEDS an alt body!
 		//if(!$this->AltBody && $this->ContentType == 'text/html'){
 		//	$this->MsgHTML($this->Body);
 		//}
 
-		$m = $this->getMailer();
 
 		// Render out the body.  Will be either HTML or text...
 		$body = $this->renderBody();

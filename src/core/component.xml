@@ -56,7 +56,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
 		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
-		<file filename="core/CHANGELOG" md5="f21cac42f5c8ff8419389a3e33c50444"/>
+		<file filename="core/CHANGELOG" md5="7cf169bca4976d9614c2a7c2313e1bf6"/>
 		<file filename="core/bootstrap.php" md5="7a32b5d79a2748dceb1d940fd167a853"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="216525795b6b97e55e9a534e94e6798b"/>
@@ -70,7 +70,7 @@
 		<file filename="core/controllers/ErrorController.php" md5="5a6f21e4b347626429e581ec427051cb">
 			<class name="ErrorController"/>
 		</file>
-		<file filename="core/controllers/FileController.class.php" md5="5d8b651ebc7b9bec6fbdb361ea025782">
+		<file filename="core/controllers/FileController.class.php" md5="31f861f4d78c1606799f3e4e1d4794e7">
 			<controller name="FileController"/>
 		</file>
 		<file filename="core/controllers/FormController.class.php" md5="9c9e5bfc3dfee03e6acb9810f1dc2c01">
@@ -79,7 +79,7 @@
 		<file filename="core/controllers/GettingStartedController.class.php" md5="aa5f05907fa3f8367f52859e48e0e526">
 			<controller name="GettingStartedController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="3e67810891f24b7bad041ee5124d7b07">
+		<file filename="core/controllers/UpdaterController.class.php" md5="5aceb7d8bbead19841d850db9d02f07e">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/UserActivityController.php" md5="29efb43eb32b3d0d0a2d5bd07d67fe06">
@@ -88,7 +88,7 @@
 		<file filename="core/controllers/UserConfigController.php" md5="cf84fe9cb2adab5bd88d101a9b2b1ba0">
 			<controller name="UserConfigController"/>
 		</file>
-		<file filename="core/controllers/UserController.php" md5="6d61570ae336211f53789ef7a63d3409">
+		<file filename="core/controllers/UserController.php" md5="3462dbac7fbb0ff2dbbc6c7ab64085f0">
 			<controller name="UserController"/>
 		</file>
 		<file filename="core/controllers/UserGroupAdminController.php" md5="5431f5de5cb7da2445e805ee85b33886">
@@ -513,7 +513,7 @@
 		<file filename="core/libs/core/DB.class.php" md5="1d097c858da269e124238e2ee78a65be">
 			<class name="DB"/>
 		</file>
-		<file filename="core/libs/core/Email.class.php" md5="4720ef61d1a592a4a8f0ded078626a65">
+		<file filename="core/libs/core/Email.class.php" md5="79a40d1ce38ee17cbd9146a55f78dd77">
 			<class name="Email"/>
 		</file>
 		<file filename="core/libs/core/FilterForm.class.php" md5="356970712eb9b57dcc2308e8788044ee">
@@ -541,13 +541,13 @@
 		<file filename="core/libs/core/InstallerException.php" md5="200bf9ec898ce469bc1781c273f8a739">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="cf22a90f24ac727daa8dd22aa69793ee">
+		<file filename="core/libs/core/Model.class.php" md5="07f849d94cde5dfd579be8ea2ba5e29f">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
 			<class name="ModelValidationException"/>
 		</file>
-		<file filename="core/libs/core/ModelSchema.php" md5="58919c339707996ae417710884f1ab5d">
+		<file filename="core/libs/core/ModelSchema.php" md5="7e4add5b348bfa31531a3aa156ac338c">
 			<class name="ModelSchema"/>
 		</file>
 		<file filename="core/libs/core/PackageXML.class.php" md5="56818b4124a9dabd843b011c226d9b25">
@@ -569,7 +569,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="5fab681a68947f90eed41b58e6b48bc1">
 			<class name="Core\UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="7df0b32f63997171ede5ce38a511693a">
+		<file filename="core/libs/core/View.class.php" md5="761485fe0c423aa5a84acd88f8e49467">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -630,7 +630,7 @@
 		<file filename="core/libs/core/datamodel/SQL_Parser_Dataset.php" md5="017d87ece8270fc61fb5156301a24a17">
 			<class name="SQL_Parser_Dataset"/>
 		</file>
-		<file filename="core/libs/core/datamodel/Schema.php" md5="f411b9aff3e1cfe31ce1a7e7babd0ad7">
+		<file filename="core/libs/core/datamodel/Schema.php" md5="049b75031132bf8110f9b07cd9c6fddc">
 			<class name="Core\Datamodel\Schema"/>
 			<class name="Core\Datamodel\SchemaColumn"/>
 		</file>
@@ -641,7 +641,7 @@
 		<file filename="core/libs/core/datamodel/backends/cassandra.backend.php" md5="7ad6494f5dd2bfe6eb6b8d46e28edcfe">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="e9fbe5b25b859deb3aa0774dc5a15408">
+		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="95521845e433bc6857b8556263980767">
 			<class name="Core\Datamodel\Drivers\mysqli\mysqli_backend"/>
 		</file>
 		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.schema.php" md5="50f6d10789e5145f565c5c48f83ff4f9">
@@ -666,7 +666,7 @@
 		<file filename="core/libs/core/filestore/Factory.php" md5="ad0a32d617c49fa541e6cbc1f40adc1d">
 			<class name="Core\Filestore\Factory"/>
 		</file>
-		<file filename="core/libs/core/filestore/File.interface.php" md5="b1e7c6d1e3c55dc9bdc7607b7d71f013">
+		<file filename="core/libs/core/filestore/File.interface.php" md5="4addb93a28227cb92ac55ba7751cb567">
 			<interface name="Core\Filestore\File"/>
 		</file>
 		<file filename="core/libs/core/filestore/FileContentFactory.class.php" md5="a6d462ec321226735cb763bfe24c66da">
@@ -684,13 +684,13 @@
 		<file filename="core/libs/core/filestore/backends/DirectoryLocal.php" md5="190df6b6884d5563ba5565b54e09335d">
 			<class name="Core\Filestore\Backends\DirectoryLocal"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="5e5313478ac0bd89e64b610a16db995d">
+		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="b2bc6828a499e032888fc07c29bc9a92">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="4151908c35b3d7531c1dc0e385132015">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="28ce8fbecb32fb53571e76e704c55070">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="ed2dfd8e95e72356b6f209b45877a9fa">
+		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="433acd3ccdcab75d79008e55748e9bee">
 			<class name="Core\Filestore\Backends\FileRemote"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/file_awss3.backend.php" md5="32f80641acf9a3a4daa99232c5bd10cc">
@@ -751,16 +751,16 @@
 		<file filename="core/libs/core/templates/backends/Smarty.php" md5="507d8cd4ba2746880448a9559ccfd5a1">
 			<class name="Core\Templates\Backends\Smarty"/>
 		</file>
-		<file filename="core/libs/core/user/AuthDriverInterface.php" md5="31143aa82cc318fa08cb5f41734b44cb">
+		<file filename="core/libs/core/user/AuthDriverInterface.php" md5="d4d7bcba91d1f5a2090bbeddfd4fe658">
 			<interface name="Core\User\AuthDriverInterface"/>
 		</file>
-		<file filename="core/libs/core/user/Helper.php" md5="21eebe1544b9f4c98a61b3e05e0f46aa">
+		<file filename="core/libs/core/user/Helper.php" md5="90365f82e71f5f41e412975e73d0610e">
 			<class name="Core\User\Helper"/>
 		</file>
 		<file filename="core/libs/core/user/ImportHelper.php" md5="02a35069ee78b770375889f6ff3f8efb">
 			<class name="Core\User\ImportHelper"/>
 		</file>
-		<file filename="core/libs/core/user/authdrivers/datastore.php" md5="5942d7a317b09ab17ee7d821d43cb74c">
+		<file filename="core/libs/core/user/authdrivers/datastore.php" md5="79bc27828ad50156943362629b200e61">
 			<class name="Core\User\AuthDrivers\datastore"/>
 		</file>
 		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="cbe5d3040cf77482bfd6f82237a29652">
@@ -799,7 +799,7 @@
 		<file filename="core/libs/phpmailer/LICENSE" md5="278f2557e3b277b94e9a8430f6a6d0a9"/>
 		<file filename="core/libs/phpmailer/README" md5="3848f3fba320c30e5d3abfb1f39cc1ae"/>
 		<file filename="core/libs/phpmailer/changelog.txt" md5="9fb661bb50b89fbb554e3e391c866762"/>
-		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="5c293086cfc0b6bb5852ac8aad5840d4">
+		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="993d1093818614c8f07084b019fc906a">
 			<class name="PHPMailer"/>
 			<class name="phpmailerException"/>
 		</file>
@@ -1352,7 +1352,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="f8f5d95606229ac021ea360055274e98">
+		<file filename="core/models/PageModel.class.php" md5="87b4d40688a56109e45cf9c88cac6f8c">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="3791a151027c417603c48e3a3c59a4d3">
@@ -1379,7 +1379,7 @@
 		<file filename="core/models/UserGroupModel.php" md5="dabdcaa62eb5987b210bbb2aef5713e8">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="core/models/UserModel.php" md5="049410fce0423d937e94439631ba9650">
+		<file filename="core/models/UserModel.php" md5="2cade1e2aab89bc56227aedf3f4b25d8">
 			<class name="UserModel"/>
 		</file>
 		<file filename="core/models/UserUserConfigModel.php" md5="017371dd135738999afac50c9f260a06">
@@ -1421,10 +1421,68 @@
 		<file filename="core/widgets/UserWidget.class.php" md5="c7d8039a7bca0c52383c375b42aa3514">
 			<class name="UserWidget"/>
 		</file>
-		<file filename="files/private/tests/ivak_TV_Test_Screen.png" md5="e23ff09f0d6d5c8f9f14877264c251b7"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0140.html" md5="bb188b7d55812cd75723a7ba36cbeff8"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0141.html" md5="ed18c9d45165b523e5ee1ced778f94ed"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0142.html" md5="80deca6e7e5be999a667f18ae12439cf"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0144.html" md5="e7c218c20abbf0437f313f0277e81949"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0145.html" md5="e698f81f7fcb7c0cbc495a5602766d1e"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0146.html" md5="6f130e944629dd7a6e4f8ccfefb5a3c5"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0148.html" md5="898f559ed6b0ed13d43c2d9dd578754e"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0149-(2).pdf" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0149.html" md5="2c7b8cbef959db069b6572ffc37aba39"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0149.pdf" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0150.html" md5="316b8b3f27ce71341983aa96ae3ab817"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0150.pdf" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0203-(2).pdf" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0203.html" md5="96551209703c288d64d9687daf581364"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0203.pdf" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0206.html" md5="b4469c9afdf3c15030ae3739d97a4e5e"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0206.pdf" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0209.html" md5="8447f7d30ad7b6b986741c58847d16da"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0211.html" md5="a5f188e85804809fd389295224094080"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0211.pdf" md5="ab0e0935df5ae014bc369c4380e865f0"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0214.html" md5="bc7452fd15fd02da48f7eb5eb1cabbe3"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0214.pdf" md5="66c5611c62b1930c6569291a0488a9c8"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0225-(2).pdf" md5="8be0d28c1b22a6719879e7a95de69c86"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0225-(3).pdf" md5="d48c3bdff982b7cd32c06089c646f22e"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0225.csv" md5="0512046fd9b322c2b9750713ff463410"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0225.html" md5="f45c1ae962ea90fa24573e2ba23e2e19"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0225.pdf" md5="630bc49c856b7e05e97a0c95e1f08cc4"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0227-(2).pdf" md5="af3b795e468458a27088d1c2d980ea6c"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0227.csv" md5="0512046fd9b322c2b9750713ff463410"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0227.html" md5="2e12d93612e0778526cdcd7535142c26"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0227.pdf" md5="a9e09bc7e9aefdfcb8c9b27c805e0cfb"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0229.csv" md5="0512046fd9b322c2b9750713ff463410"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0229.html" md5="ec897b3bcb0886a705b92b577856686f"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0229.pdf" md5="3ee6b82e32b37c9ba20c70994c3a5284"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0230-(2).pdf" md5="64937de9304842fece0c44f3e27ea80b"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0230.csv" md5="0512046fd9b322c2b9750713ff463410"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0230.html" md5="34869d5498ca9758063981e7ddd0631e"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0230.pdf" md5="c59b1b621822c2db253142ca078d845b"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0255.csv" md5="0512046fd9b322c2b9750713ff463410"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0255.html" md5="c6b59fca0fe8f703fa318b9396a45e3a"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0255.pdf" md5="22fc58a3d2e08944c4b169daa0c44d10"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1841.csv" md5="18a29930d7db6f052f8eff7ad02299d0"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1841.html" md5="86e761734c975987bdc1cf5eb9092084"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1841.pdf" md5="a60bb9a8baf8b8c599dcf0dc78465756"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1911.csv" md5="0512046fd9b322c2b9750713ff463410"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1911.html" md5="b65d7e12df526d24636b59ba44e45d3d"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1911.pdf" md5="a444a42f23e69d654439da477d3b7bb1"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1912.csv" md5="0512046fd9b322c2b9750713ff463410"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1912.html" md5="c603f69164ad375fe2fc6170103be4eb"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1912.pdf" md5="f3e164f6eaa616d66c21c1d61656a925"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.2335.csv" md5="0512046fd9b322c2b9750713ff463410"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.2335.html" md5="7f6ddfa89eac0e7da0cb6bce5d563d6f"/>
+		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.2335.pdf" md5="5149bf145de0ef7da3d263b45c130544"/>
+		<file filename="files/private/customreporting/user-test-local-users-only/user-test-local-users-only.20140110.1221.csv" md5="46a75e26a15ff4a61fdc914621b6eaab"/>
+		<file filename="files/private/customreporting/user-test-local-users-only/user-test-local-users-only.20140110.1221.html" md5="59f839f2cf90761c3c9d6c16aa772f78"/>
+		<file filename="files/private/customreporting/user-test-local-users-only/user-test-local-users-only.20140110.1221.pdf" md5="41da7d1b87c6388592712737cd9f9c4a"/>
+		<file filename="files/private/customreporting/user-test/user-test.20140106.2336.csv" md5="189962dde04df3914405f690874ddd6e"/>
+		<file filename="files/private/customreporting/user-test/user-test.20140106.2336.html" md5="0448c6e4c63798f4ea3159e658a8a727"/>
+		<file filename="files/private/customreporting/user-test/user-test.20140106.2336.pdf" md5="454eb98744ea7074e80c9cba15d3330d"/>
 		<file filename="htaccess.ant" md5="03a971bd1f755da122d8f8f458b840cf"/>
 		<file filename="htaccess.ex" md5="5b9477efc4add163473fe0ab8939bede"/>
-		<file filename="index.php" md5="7f5a20c36040efcbfca372f064890ba0"/>
+		<file filename="index.php" md5="ba4cec73285cc3177fc9da7ac41f0f39"/>
 		<file filename="install/InstallPage.class.php" md5="908d4058af1a52767fc85ce03a5f0de3">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1470,8 +1528,9 @@
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 		<file filename="install/utilities.php" md5="19b6e7d1483e8ec8e0a6fad9932ce850"/>
-		<file filename="logs/error.log" md5="b1e81513e63840bd13c1df90d044756d"/>
-		<file filename="logs/info.log" md5="9035824f0ba029bc2605fd39a607dfe8"/>
+		<file filename="logs/error.log" md5="86971354fdb6f2739f0890dba16fd33b"/>
+		<file filename="logs/info.log" md5="5e5d04cbdbf5e426a86b4b096a1b2fb1"/>
+		<file filename="logs/security.log" md5="d961bcc9ad875ebd323dbc4e39c6eb7c"/>
 	</files>
 	<pages>
 		<page baseurl="/admin" admin="1" access="g:admin" title="Administration"/>
@@ -1624,6 +1683,8 @@
 		<config key="/core/email/smtp_user" type="string" default="" description=""/>
 		<config key="/core/email/smtp_password" type="string" default="" description=""/>
 		<config key="/core/email/verify_with_dns" type="boolean" default="0" description="Verify email domains via DNS lookups.  May slow down email validation slightly, but ensures a valid domain."/>
+		<config key="/core/email/enable_sending" type="boolean" default="1" description="Set to false to disable sending emails globally.  Useful for development or stage environments."/>
+		<config key="/core/email/sandbox_to" type="string" description="Set to an email address to override all emails to be forwarded to a given email.  Useful for development or stage environments."/>
 		<config key="/core/ftp/username" type="string" description="FTP username to use when writing local files" default=""/>
 		<config key="/core/ftp/password" type="string" description="FTP password to use when writing local files" default=""/>
 		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'" default=""/>
