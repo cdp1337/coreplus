@@ -1321,7 +1321,7 @@ class Component_2_1 {
 			// Set as false to begin with, (will be set back to true if an upgrade is ran).
 			$canBeUpgraded = false;
 			foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('upgrade') as $u) {
-				/** @var $u DOMNode */
+				/** @var $u DOMElement */
 
 				// look for a valid upgrade path.
 				if ($this->_versionDB == @$u->getAttribute('from')) {
@@ -1334,7 +1334,7 @@ class Component_2_1 {
 
 					// The various upgrade tasks that can happen
 					foreach($children as $child){
-						/** @var $child DOMNode */
+						/** @var $child DOMElement */
 						switch($child->nodeName){
 							case 'dataset':
 								$datachanges = $this->_parseDatasetNode($child);
@@ -1384,7 +1384,7 @@ class Component_2_1 {
 					// Record this change.
 					$changes[] = 'Upgraded from [' . $this->_versionDB . '] to [' . $u->getAttribute('to') . ']';
 
-					SystemLogModel::LogInfoEvent('/updater/component/upgrade', 'Component ' . $this->getName() . ' upgraded successfully!', implode("\n", $changes));
+					SystemLogModel::LogInfoEvent('/updater/component/upgrade', 'Component ' . $this->getName() . ' upgraded successfully from ' . $this->_versionDB . ' to ' . $u->getAttribute('to') . '!', implode("\n", $changes));
 
 					$this->_versionDB = @$u->getAttribute('to');
 					$c                = new ComponentModel($this->_name);
