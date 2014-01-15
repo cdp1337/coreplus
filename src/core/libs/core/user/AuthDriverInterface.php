@@ -69,4 +69,11 @@ interface AuthDriverInterface {
 	 * @return void
 	 */
 	public function renderRegister();
+
+	/**
+	 * Get the title for this Auth driver.  Used in some automatic messages.
+	 *
+	 * @return string
+	 */
+	public function getAuthTitle();
 } 
