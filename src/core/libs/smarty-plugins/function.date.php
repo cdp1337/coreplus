@@ -25,11 +25,19 @@
  * @param $params
  * @param $template
  *
+ * @throws SmartyException
+ *
  * @return string
  */
 function smarty_function_date($params, $template){
 
-	if(!array_key_exists('date', $params)){
+	if(array_key_exists('date', $params)){
+		$date = $params['date'];
+	}
+	elseif(isset($params[0])){
+		$date = $params[0];
+	}
+	else{
 		if(DEVELOPMENT_MODE){
 			throw new SmartyException('Missing required parameter, date');
 		}
@@ -37,7 +45,8 @@ function smarty_function_date($params, $template){
 			return '';
 		}
 	}
-	if(!isset($params['date'])){
+
+	if(!$date){
 		if(DEVELOPMENT_MODE){
 			return 'Parameter [date] was empty, corwardly refusing to format an empty string.';
 		}
@@ -46,7 +55,7 @@ function smarty_function_date($params, $template){
 		}
 	}
 
-	$date = $params['date'];
+
 	$format = isset($params['format']) ? $params['format'] : 'RELATIVE';
 	//$timezone = isset($params['timezone']) ? $params['timezone'] : Time::TIMEZONE_GMT;
 
