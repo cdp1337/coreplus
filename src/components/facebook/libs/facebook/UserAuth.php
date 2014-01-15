@@ -5,7 +5,7 @@
  * @package Facebook
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20131204.2242
- * @copyright Copyright (C) 2009-2013  Author
+ * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -84,7 +84,7 @@ class UserAuth implements AuthDriverInterface {
 	 * @return bool|string True/False on success or failure, a string if on error.
 	 */
 	public function setPassword($password) {
-		return 'Please go to facebook.com and reset your password.';
+		return 'Please go to facebook.com to reset your password.';
 	}
 
 	/**
@@ -102,7 +102,7 @@ class UserAuth implements AuthDriverInterface {
 	 * @return bool|string True if backend allows for password management, a string if cannot.
 	 */
 	public function canSetPassword() {
-		return false;
+		return 'Please go to facebook.com to reset your password.';
 	}
 
 	/**
@@ -150,7 +150,7 @@ class UserAuth implements AuthDriverInterface {
 			}
 
 		}
-		catch(Exception $c){
+		catch(\Exception $c){
 			$facebooklink = $facebook->getLoginUrl();
 		}
 
@@ -169,5 +169,14 @@ class UserAuth implements AuthDriverInterface {
 	public function renderRegister() {
 		// This is identical to the login, so just use the same function.
 		$this->renderLogin();
+	}
+
+	/**
+	 * Get the title for this Auth driver.  Used in some automatic messages.
+	 *
+	 * @return string
+	 */
+	public function getAuthTitle() {
+		return 'Facebook';
 	}
 }
