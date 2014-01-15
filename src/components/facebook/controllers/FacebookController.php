@@ -1,15 +1,30 @@
 <?php
 /**
- * Enter a meaningful file description here!
+ * Contains the controller that intercepts and handles Facebook logins.
  *
+ * @package Facebook
  * @author Charlie Powell <charlie@eval.bz>
- * @date 20130222.1028
- * @package PackageName
  *
- * Created with JetBrains PhpStorm.
+ * @copyright Copyright (C) 2009-2014  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
+
 /**
- * Class description here
+ * Facebook Controller, handles any Facebook-related views and pages.
+ *
+ * Current, there is only one, login.
  */
 class FacebookController extends Controller_2_1{
 	/**
@@ -117,7 +132,7 @@ class FacebookController extends Controller_2_1{
 					$user->save();
 
 					// User created... make a log of this!
-					\SecurityLogModel::Log('/user/register', 'success', $user->get('id'));
+					\SystemLogModel::LogInfoEvent('/user/register', 'User registration of ' . $user->get('email') . ' successful via Facebook');
 				}
 				elseif($user->get('backend') != 'facebook'){
 					// The user exists, but is not a facebook user.  Prevent that user from logging in with facebook!
