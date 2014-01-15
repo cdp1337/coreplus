@@ -96,24 +96,11 @@ class SecurityLogModel extends Model{
 	 * @param null|int    $affecteduser
 	 * @param null|string $details
 	 *
-	 * @return SecurityLogModel
+	 * @return null
 	 */
 	public static function Log($action, $status = null, $affecteduser = null, $details = null){
-		$log = new SecurityLogModel();
-		$log->setFromArray(
-			array(
-				'session_id' => session_id(),
-				'user_id' => \Core\user()->get('id'),
-				'ip_addr' => REMOTE_IP,
-				'useragent' => $_SERVER['HTTP_USER_AGENT'],
-				'action' => $action,
-				'status' => $status,
-				'affected_user_id' => $affecteduser,
-				'details' => $details,
-			)
-		);
-		$log->save();
-
-		return $log;
+		// The security log has been removed!
+		trigger_error('SecurityLogModel::Log has been deprecated, please use SystemLogModel::LogSecurityEvent() instead.', E_USER_DEPRECATED);
+		SystemLogModel::LogSecurityEvent($action, $details, null, $affecteduser);
 	}
 }

@@ -4,7 +4,7 @@
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130423.0245
- * @copyright Copyright (C) 2009-2013  Author
+ * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -81,10 +81,9 @@ abstract class IpBlacklistHelper {
 			return;
 		}
 		// else... hehehe, happy happy fun time for you!
-		SecurityLogModel::Log(
+		SystemLogModel::LogSecurityEvent(
 			'/security/blocked',
-			null,
-			null,
+			'Blacklisted IP tried to access the site (' . REMOTE_IP . ')',
 			'Blacklisted IP tried to access the site!<br/>Remote IP: ' . REMOTE_IP . '<br/>Matching Range: ' . $ban->get('ip_addr') . '<br/>Requested URL: ' . CUR_CALL
 		);
 

@@ -118,7 +118,7 @@ class StopForumSpam {
 		if($record->get('submissions') > $highscore){
 			// YOU can haz good party tiem nau
 
-			SecurityLogModel::Log('/security/blocked', null, null, 'Blocking IP due to over ' . $highscore . ' submissions to sfs in a 24 hour period.');
+			SystemLogModel::LogSecurityEvent('/security/blocked', 'Blocking IP due to over ' . $highscore . ' submissions to sfs in a 24 hour period.');
 
 			die('IP Blocked due to high spam score');
 		}
@@ -135,16 +135,16 @@ class StopForumSpam {
 				if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['happyfuntime']) && isset($_SESSION['happyfuntimecheck'])){
 					// It's an attempt!
 					if($_POST['happyfuntime'] == $_SESSION['happyfuntimecheck']){
-						SecurityLogModel::Log('/security/unblocked', null, null, 'User successfully answered an anti-bot math question, unblocking.');
+						SystemLogModel::LogSecurityEvent('/security/unblocked', 'User successfully answered an anti-bot math question, unblocking.');
 						$_SESSION['security_antispam_allowed'] = true;
 					}
 					else{
-						SecurityLogModel::Log('/security/captchafailed', null, null, 'User attempted, but failed in answering an anti-bot math question.');
+						SystemLogModel::LogSecurityEvent('/security/captchafailed', 'User attempted, but failed in answering an anti-bot math question.');
 						$html .= '<b>NOPE!</b>';
 					}
 				}
 
-				SecurityLogModel::Log('/security/blocked', null, null, 'Blocking IP due to over ' . $warnlevel . ' submissions to sfs in a 24 hour period.');
+				SystemLogModel::LogSecurityEvent('/security/blocked', 'Blocking IP due to over ' . $warnlevel . ' submissions to sfs in a 24 hour period.');
 				$random1 = (rand(4, 6) * 2);
 				$random2 = (rand(1, 3) * 2);
 				$random3 = rand(1, 2);

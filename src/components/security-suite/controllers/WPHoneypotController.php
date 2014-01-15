@@ -4,7 +4,7 @@
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130612.1732
- * @copyright Copyright (C) 2009-2013  Author
+ * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,7 +56,7 @@ class WPHoneypotController extends Controller_2_1 {
 
 		if($request->isPost()){
 			// Did they actually try to submit this form?......  silly bot ;)
-			SecurityLogModel::Log('/wp-login Honeypot POST', 'failed', null, 'POST submission to /wp-login detected!' . "<br/>\n" . print_r($_POST, true));
+			SystemLogModel::LogSecurityEvent('/wp-login Honeypot POST', 'POST submission to /wp-login detected!', print_r($_POST, true));
 			$expireback = new CoreDateTime();
 			$expireback->modify('+2 days');
 			$block = IpBlacklistModel::Find(['ip_addr = ' . REMOTE_IP . '/32'], 1);
@@ -73,7 +73,7 @@ class WPHoneypotController extends Controller_2_1 {
 		}
 		else{
 			// Just record the hit.
-			SecurityLogModel::Log('/wp-login Honeypot GET', 'failed', null, 'GET request to /wp-login detected!');
+			SystemLogModel::LogSecurityEvent('/wp-login Honeypot GET', 'GET request to /wp-login detected!');
 		}
 
 
@@ -87,7 +87,7 @@ class WPHoneypotController extends Controller_2_1 {
 
 		if($request->isPost()){
 			// Did they actually try to submit this form?......  silly bot ;)
-			SecurityLogModel::Log('/wp-admin Honeypot POST', 'failed', null, 'POST submission to /wp-admin detected!' . "<br/>\n" . print_r($_POST, true));
+			SystemLogModel::LogSecurityEvent('/wp-admin Honeypot POST', 'POST submission to /wp-admin detected!', print_r($_POST, true));
 			$expireback = new CoreDateTime();
 			$expireback->modify('+2 days');
 			$block = IpBlacklistModel::Find(['ip_addr = ' . REMOTE_IP . '/32'], 1);
@@ -104,7 +104,7 @@ class WPHoneypotController extends Controller_2_1 {
 		}
 		else{
 			// Just record the hit.
-			SecurityLogModel::Log('/wp-admin Honeypot GET', 'failed', null, 'GET request to /wp-admin detected!');
+			SystemLogModel::LogSecurityEvent('/wp-admin Honeypot GET', 'GET request to /wp-admin detected!');
 		}
 
 		$view->templatename = 'pages/wphoneypot/wpadmin.phtml';
