@@ -330,7 +330,7 @@ class mysqli_backend implements BackendInterface {
 				}
 
 				$columndef = str_replace(' AUTO_INCREMENT', '', $this->_getColumnString($alias));
-				$newname = $alias->field;
+				$newname   = $alias->field;
 
 				//var_dump($column, $columndef, $alias); die();
 			}
@@ -349,17 +349,24 @@ class mysqli_backend implements BackendInterface {
 				$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $old_schema->order[$x-1] . '`';
 				$neednewschema = true;
 			}
-			else{
+			elseif(!$column->aliasof){
 				$newcolumns[$column->field] = $column;
 				// It's a new column altogether!  ADD IT!
 				$q = 'ALTER TABLE _tmptable ADD `' . $newname . '` ' . $columndef . ' ';
 				$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $old_schema->order[$x-1] . '`';
 				$neednewschema = true;
 			}
+			else{
+				// The column did not exist before and it is an alias... nothing needs done.
+				$q = null;
+				$neednewschema = false;
+			}
 
-			// Execute this query, increment X, and re-read the "old" structure.
-			$this->_rawExecute('write', $q);
-			//echo 'EXECUTE [' . $q . ']' . NL . '<br/>';
+			if($q){
+				// Execute this query, increment X, and re-read the "old" structure.
+				$this->_rawExecute('write', $q);
+				//echo 'EXECUTE [' . $q . ']' . NL . '<br/>';
+			}
 
 			// Aliases do not count as steps.
 			if(!$column->aliasof){
