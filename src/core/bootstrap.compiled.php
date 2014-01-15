@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 10 Jan 2014 14:21:07 -0500
+ * @compiled Tue, 14 Jan 2014 21:33:33 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1311,6 +1311,9 @@ $valid = true;
 if($op == 'IN'){
 $statement = array_map('trim', explode(',', $statement));
 }
+elseif($statement == 'NULL'){
+$statement = null;
+}
 break;
 }
 }
@@ -1717,6 +1720,7 @@ protected static $_ModelSchemaCache = array();
 public function __construct($key = null) {
 $s = self::GetSchema();
 foreach ($s as $k => $v) {
+if($v['type'] == Model::ATT_TYPE_ALIAS) continue;
 $this->_data[$k] = (isset($v['default'])) ? $v['default'] : null;
 if(isset($v['link'])){
 if(is_array($v['link'])){
@@ -2734,8 +2738,19 @@ return $_tablenames[$m];
 public static function GetSchema() {
 $classname = get_called_class();
 if(!isset(self::$_ModelSchemaCache[$classname])){
+$parent = get_parent_class($classname);
+if($parent != 'Model'){
+$parentref = new ReflectionClass($parent);
+$ref = new ReflectionClass($classname);
+self::$_ModelSchemaCache[$classname] = array_merge(
+$parentref->getProperty('Schema')->getValue(),
+$ref->getProperty('Schema')->getValue()
+);
+}
+else{
 $ref = new ReflectionClass($classname);
 self::$_ModelSchemaCache[$classname] = $ref->getProperty('Schema')->getValue();
+}
 $schema =& self::$_ModelSchemaCache[$classname];
 if($ref->getProperty('HasCreated')->getValue()){
 if(!isset($schema['created'])){
@@ -2794,13 +2809,13 @@ $schema['search_index_sec'] = [
 ];
 }
 foreach ($schema as $k => $v) {
-if (!isset($v['type']))      $schema[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
-if (!isset($v['maxlength'])) $schema[$k]['maxlength'] = false;
-if (!isset($v['null']))      $schema[$k]['null']      = false;
-if (!isset($v['comment']))   $schema[$k]['comment']   = '';
-if (!isset($v['default']))   $schema[$k]['default']   = false;
-if (!isset($v['encrypted'])) $schema[$k]['encrypted'] = false;
-if (!isset($v['required']))  $schema[$k]['required']  = false;
+if (!isset($v['type']))               $schema[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
+if (!isset($v['maxlength']))          $schema[$k]['maxlength'] = false;
+if (!isset($v['null']))               $schema[$k]['null']      = false;
+if (!isset($v['comment']))            $schema[$k]['comment']   = '';
+if (!array_key_exists('default', $v)) $schema[$k]['default']   = false;
+if (!isset($v['encrypted']))          $schema[$k]['encrypted'] = false;
+if (!isset($v['required']))           $schema[$k]['required']  = false;
 if($v['type'] == Model::ATT_TYPE_ALIAS){
 if(!isset($v['alias'])){
 throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that does not have an "alias" attribute.  Every ATT_TYPE_ALIAS key MUST have exactly one "alias"');
@@ -2835,8 +2850,20 @@ $schema[$k]['title'] = ucwords(str_replace('_', ' ', $k));
 return self::$_ModelSchemaCache[$classname];
 }
 public static function GetIndexes() {
-$ref = new ReflectionClass(get_called_class());
+$classname = get_called_class();
+$parent = get_parent_class($classname);
+if($parent != 'Model'){
+$parentref = new ReflectionClass($parent);
+$ref = new ReflectionClass($classname);
+return array_merge(
+$parentref->getProperty('Indexes')->getValue(),
+$ref->getProperty('Indexes')->getValue()
+);
+}
+else{
+$ref = new ReflectionClass($classname);
 return $ref->getProperty('Indexes')->getValue();
+}
 }
 }
 class ModelFactory {
@@ -2978,6 +3005,7 @@ $column->options   = $def['options'];
 $column->default   = $def['default'];
 $column->null      = $def['null'];
 $column->comment   = $def['comment'];
+if(isset($def['precision'])) $column->precision = $def['precision'];
 if($column->type == Model::ATT_TYPE_STRING && !$column->maxlength){
 $column->maxlength = 255;
 }
@@ -4705,10 +4733,14 @@ return $out;
 public function getAuthDriver(){
 if($this->_authdriver === null){
 $driver = $this->get('backend');
-if(!class_exists('\\Core\\User\\AuthDrivers\\' . $driver)){
-throw new Exception('Invalid auth backend for user, ' . $driver);
+if(!isset(\Core\User\Helper::$AuthDrivers[$driver])){
+throw new Exception('Invalid auth backend for user, ' . $driver . '.  Auth driver is not registered.');
 }
-$ref = new ReflectionClass('\\Core\\User\\AuthDrivers\\' . $driver);
+$classname = \Core\User\Helper::$AuthDrivers[$driver];
+if(!class_exists($classname)){
+throw new Exception('Invalid auth backend for user, ' . $driver . '.  Auth driver class was not found.');
+}
+$ref = new ReflectionClass($classname);
 $this->_authdriver = $ref->newInstance($this);
 }
 return $this->_authdriver;
@@ -7064,7 +7096,7 @@ $changes[] = 'Ignoring unsupported upgrade directive: [' . $child->nodeName . ']
 }
 }
 $changes[] = 'Upgraded from [' . $this->_versionDB . '] to [' . $u->getAttribute('to') . ']';
-SystemLogModel::LogInfoEvent('/updater/component/upgrade', 'Component ' . $this->getName() . ' upgraded successfully!', implode("\n", $changes));
+SystemLogModel::LogInfoEvent('/updater/component/upgrade', 'Component ' . $this->getName() . ' upgraded successfully from ' . $this->_versionDB . ' to ' . $u->getAttribute('to') . '!', implode("\n", $changes));
 $this->_versionDB = @$u->getAttribute('to');
 $c                = new ComponentModel($this->_name);
 $c->set('version', $this->_versionDB);
@@ -11388,6 +11420,65 @@ return array(
 } // ENDING GLOBAL NAMESPACE
 namespace Core\ErrorManagement {
 use Core\Utilities\Logger;
+function exception_handler(\Exception $e, $fatal = false){
+$type  = 'error';
+$class = $fatal ? 'error' : 'warning';
+$code  = get_class($e);
+$errstr  = $e->getMessage();
+$errfile = $e->getFile();
+$errline = $e->getLine();
+if($errfile && strpos($errfile, ROOT_PDIR) === 0){
+$details = '[src: ' . '/' . substr($errfile, strlen(ROOT_PDIR)) . ':' . $errline . '] ';
+}
+elseif($errfile){
+$details = '[src: ' . $errfile . ':' . $errline . '] ';
+}
+else{
+$details = '';
+}
+try{
+if(!\Core::GetComponent()){
+return;
+}
+$log = \SystemLogModel::Factory();
+$log->setFromArray([
+'type'    => $type,
+'code'    => $code,
+'message' => $details . $errstr
+]);
+$log->save();
+}
+catch(\Exception $e){
+try{
+if(class_exists('Core\\Utilities\\Logger\\LogFile')){
+$log = new \Core\Utilities\Logger\LogFile($type);
+$log->write($details . $errstr, $code);
+}
+else{
+error_log($details . $errstr);
+}
+}
+catch(\Exception $e){
+}
+}
+if(DEVELOPMENT_MODE){
+if(isset($_SERVER['TERM']) || isset($_SERVER['SHELL'])){
+print_error_as_text($class, $code, $e);
+}
+elseif(EXEC_MODE == 'WEB'){
+print_error_as_html($class, $code, $e);
+}
+else{
+print_error_as_text($class, $code, $e);
+}
+}
+if($fatal){
+if(EXEC_MODE == 'WEB'){
+require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+}
+exit();
+}
+}
 function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 $type       = null;
 $fatal      = false;
@@ -11500,10 +11591,17 @@ error_handler($error["type"], $error["message"] . ' in ' . $file . ':' . $error[
 }
 function print_error_as_html($class, $code, $errstr){
 echo '<div class="message-' . $class . '">' . "\n";
+if($errstr instanceof \Exception){
+$exception = $errstr;
+$errstr = $exception->getMessage();
+$back = $exception->getTrace();
+}
+else{
+$back = debug_backtrace();
+}
 echo '<strong>' . $code . ':</strong> ' . $errstr . "\n<br/>\n<br/>";
 echo '<em>Stack Trace</em>' . "\n<br/>" . '<table class="stacktrace">';
 echo '<tr><th>Function/Method</th><th>File Location:Line Number</th></tr>';
-$back = debug_backtrace();
 foreach($back as $entry){
 if(
 !isset($entry['file']) &&
@@ -11533,17 +11631,27 @@ $linecode = '****';
 elseif(isset($entry['function'])){
 $linecode = $entry['function'] . '()';
 }
+else{
+$linecode = 'Unknown!?!';
+}
 echo '<tr><td>' . $linecode . '</td><td>' . $file . ':' . $line . '</td></tr>';
 }
 echo '</table>';
 echo '</div>';
 }
 function print_error_as_text($class, $code, $errstr){
+if($errstr instanceof \Exception){
+$exception = $errstr;
+$errstr = $exception->getMessage();
+$back = $exception->getTrace();
+}
+else{
+$back = debug_backtrace();
+}
 echo '[' . $code . ']' . $errstr . "\n";
 $stderr = fopen('php://stderr', 'w');
 fwrite($stderr, '[' . $code . ']' . $errstr . "\n");
 fclose($stderr);
-$back = debug_backtrace();
 $lines = [];
 $maxlength1 = $maxlength2 = 0;
 foreach($back as $entry){
@@ -11574,6 +11682,9 @@ $linecode = '****';
 }
 elseif(isset($entry['function'])){
 $linecode = $entry['function'] . '()';
+}
+else{
+$linecode = 'Unknown!?!';
 }
 $lines[] = [
 'code' => $linecode,
@@ -14582,29 +14693,10 @@ public function fetch() {
 try{
 $body = $this->fetchBody();
 }
-catch(SmartyException $e){
-$this->error = View::ERROR_SERVERERROR;
-trigger_error('Smarty exception in [' . $this->templatename . '],  ' . $e->getMessage(), E_USER_WARNING);
-if($this->mode == View::MODE_PAGE){
-require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
-die();
-}
-}
-catch(TemplateException $e){
-$this->error = View::ERROR_SERVERERROR;
-trigger_error('Template exception in [' . $this->templatename . '],  ' . $e->getMessage(), E_USER_WARNING);
-if($this->mode == View::MODE_PAGE){
-require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
-die();
-}
-}
 catch(Exception $e){
 $this->error = View::ERROR_SERVERERROR;
-trigger_error('Unknown exception in [' . $this->templatename . '],  ' . $e->getMessage(), E_USER_WARNING);
-if($this->mode == View::MODE_PAGE){
-require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
-die();
-}
+\Core\ErrorManagement\exception_handler($e, ($this->mode == View::MODE_PAGE));
+$body = '';
 }
 if ($this->mastertemplate === false) {
 return $body;
