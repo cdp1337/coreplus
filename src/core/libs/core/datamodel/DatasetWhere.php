@@ -5,7 +5,7 @@
  * @package Core\Datamodel
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20131022.1745
- * @copyright Copyright (C) 2009-2013  Author
+ * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -88,10 +88,14 @@ class DatasetWhere{
 				$statement = trim(substr($statement, strlen($op)));
 				$valid = true;
 
-				// the IN statement has a bit of an extra functionality.
-				// This expects a comma separated list of values.
 				if($op == 'IN'){
+					// the IN statement has a bit of an extra functionality.
+					// This expects a comma separated list of values.
 					$statement = array_map('trim', explode(',', $statement));
+				}
+				elseif($statement == 'NULL'){
+					// Allow NULL to be translated to literal null.
+					$statement = null;
 				}
 				break;
 			}
