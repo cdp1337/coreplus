@@ -192,6 +192,12 @@ class mysqli_backend implements BackendInterface {
 		$directives = array();
 		foreach($newschema->definitions as $column){
 			/** @var SchemaColumn $column */
+
+			if($column->aliasof){
+				// Skip alias columns, as they do not need to be created.
+				continue;
+			}
+
 			$directives[] = '`' . $column->field . '` ' . $this->_getColumnString($column);
 		}
 
