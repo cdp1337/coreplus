@@ -41,6 +41,11 @@ function exception_handler(\Exception $e, $fatal = false){
 		$details = '';
 	}
 
+	if($e instanceof \DMI_Query_Exception){
+		// Tack on the original query into the error log; this can be valuable information to the developer for debugging the issue.
+		$details .= '[query: ' . $e->query . '] ';
+	}
+
 	try{
 		if(!\Core::GetComponent()){
 			// SQUAK!  Core isn't even loaded yet!
