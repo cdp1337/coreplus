@@ -4,7 +4,7 @@
  * Reinstall, (or install), the core, all components, and the themes on this site.
  * Useful for automated testing and building with ant.
  *
- * @package Core Plus\Utilities
+ * @package Core\Utilities
  * @since 2.5.0
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -76,7 +76,7 @@ if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
 	}
 	catch (Exception $e) {
 		// Yeah... I probably don't care at this stage... but maybe I do...
-		error_log($e->getMessage());
+		\Core\ErrorManagement\exception_handler($e);
 	}
 }
 

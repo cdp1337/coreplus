@@ -195,7 +195,7 @@ class UserController extends Controller_2_1{
 			catch(Exception $e){
 				if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
 				else Core::SetMessage('An unknown error occured', 'error');
-				error_log($e->getMessage());
+				\Core\ErrorManagement\exception_handler($e);
 			}
 		}
 
@@ -551,7 +551,7 @@ class UserController extends Controller_2_1{
 				$email->send();
 			}
 			catch(\Exception $e){
-				error_log($e->getMessage());
+				\Core\ErrorManagement\exception_handler($e);
 			}
 		}
 

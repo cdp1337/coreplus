@@ -62,7 +62,7 @@ if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
 	}
 	catch (Exception $e) {
 		// Yeah... I probably don't care at this stage... but maybe I do...
-		error_log($e->getMessage());
+		\Core\ErrorManagement\exception_handler($e);
 	}
 }
 

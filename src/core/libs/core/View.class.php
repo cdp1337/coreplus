@@ -608,7 +608,7 @@ class View {
 			$this->error = View::ERROR_SERVERERROR;
 			error_log('[view error]');
 			error_log('Template name: [' . $mastertpl . ']');
-			error_log($e->getMessage());
+			\Core\ErrorManagement\exception_handler($e);
 			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 			die();
 		}
@@ -616,7 +616,7 @@ class View {
 			$this->error = View::ERROR_SERVERERROR;
 			error_log('[view error]');
 			error_log('Template name: [' . $mastertpl . ']');
-			error_log($e->getMessage());
+			\Core\ErrorManagement\exception_handler($e);
 			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 			die();
 		}

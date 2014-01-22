@@ -161,7 +161,7 @@ abstract class Helper{
 				return true;
 			}
 			catch(\Exception $ex){
-				error_log($ex->getMessage());
+				\Core\ErrorManagement\exception_handler($e);
 				\Core::SetMessage('Unable to send new password link to your email, please contact the system administrator!', 'error');
 				return false;
 			}
@@ -347,7 +347,7 @@ abstract class Helper{
 			$email->send();
 		}
 		catch(\Exception $e){
-			error_log($e->getMessage());
+			\Core\ErrorManagement\exception_handler($e);
 			\Core::SetMessage('Unable to send welcome email', 'error');
 		}
 
@@ -445,7 +445,7 @@ abstract class Helper{
 				$email->send();
 			}
 			catch(\Exception $e){
-				error_log($e->getMessage());
+				\Core\ErrorManagement\exception_handler($e);
 			}
 		}
 

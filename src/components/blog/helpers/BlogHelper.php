@@ -194,7 +194,7 @@ abstract class BlogHelper {
 			return $article->get('rewriteurl');
 		}
 		catch(Exception $e){
-			error_log($e->getMessage());
+			\Core\ErrorManagement\exception_handler($e);
 			Core::SetMessage($e->getMessage(), 'error');
 			return false;
 		}
@@ -215,7 +215,7 @@ abstract class BlogHelper {
 			return $page->get('baseurl');
 		}
 		catch(Exception $e){
-			error_log($e->getMessage());
+			\Core\ErrorManagement\exception_handler($e);
 			Core::SetMessage($e->getMessage(), 'error');
 			return false;
 		}
