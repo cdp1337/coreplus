@@ -21,9 +21,6 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-//echo '<pre>';
-//debug_print_backtrace();
-//die();
 
 /**
  * The main controller for a set of controls, can be instantiated with either page level or inline operations,
@@ -220,13 +217,16 @@ class ViewMetas implements Iterator, ArrayAccess {
 	}
 
 	/**
-	 * Get this control set as HTML
+	 * Get this meta set as an array of key-indexed elements
+	 *
+	 * Each array key is the keyname of the meta tag, (description, keywords, etc).
 	 *
 	 * @return array
 	 */
 	public function fetch(){
 		$data = array();
 		foreach($this->_links as $l){
+			/** @var ViewMeta $l */
 			$ea = $l->fetch();
 			if(is_array($ea) && sizeof($ea)){
 				$data = array_merge($data, $l->fetch());
@@ -326,8 +326,22 @@ class ViewMeta {
 	public $multiple = false;
 
 
+	/**
+	 * Get this ViewMeta as a flat string.
+	 *
+	 * @return string
+	 */
 	public function __toString(){
-		return $this->content;
+		if($this->content === false || $this->content === null){
+			// Content shouldn't be false, but somehow it can be sometimes.
+			return '';
+		}
+		elseif(is_array($this->content)){
+			return implode("\n<br/>", $this->content);
+		}
+		else{
+			return $this->content;
+		}
 	}
 
 	/**
