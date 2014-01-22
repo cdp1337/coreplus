@@ -41,7 +41,7 @@ class FormGroup {
 	public $requiresupload = false;
 
 	/**
-	 * @var bool Persistent elements are sticky on the form between page loads.
+	 * @var bool Persistent elements are sticky on the form between page loads.  Automatically set to true/false during submissions.
 	 */
 	public $persistent = true;
 
@@ -689,6 +689,9 @@ class FormElement {
  */
 class Form extends FormGroup {
 
+	/** @var string The original URL of the page this form was rendered on.  Used for security. */
+	public $originalurl = '';
+
 	/**
 	 * Standard mappings for 'text' to class of the FormElement.
 	 * This can be extended, ie: wysiwyg or captcha.
@@ -751,6 +754,9 @@ class Form extends FormGroup {
 		$this->_validattributes = array('accept', 'accept-charset', 'action', 'enctype', 'id', 'method', 'name', 'target', 'style');
 		//$this->_attributes['uniqueid'] = rand(1, 4) . Core::RandomHex(7);
 		$this->_attributes['method'] = 'POST';
+
+		// Will get set back to true on form submission for preserving the input values.
+		$this->persistent = false;
 	}
 
 	public function getTemplateName() {
@@ -832,13 +838,18 @@ class Form extends FormGroup {
 			}
 
 			// Was this form already submitted, (and thus saved in the session?
-			// If so, render that form instead!  This way the values get transported seemlessly.
+			// If so, render that form instead!  This way the values get transported seamlessly.
 			if (isset($_SESSION['FormData'][$this->get('uniqueid')])) {
 				if (($savedform = unserialize($_SESSION['FormData'][$this->get('uniqueid')]))) {
-					foreach($this->_elements as $k => $element){
-						/** @var FormElement $element */
-						if($element->persistent){
-							$this->_elements[$k] = $savedform->_elements[$k];
+
+					/** @var Form $savedform */
+					// If this form is not set as persistent, then don't restore the values!
+					if($savedform->persistent){
+						foreach($this->_elements as $k => $element){
+							/** @var FormElement $element */
+							if($element->persistent){
+								$this->_elements[$k] = $savedform->_elements[$k];
+							}
 						}
 					}
 				}
@@ -884,6 +895,8 @@ class Form extends FormGroup {
 		}
 
 		// Save it
+		$this->originalurl = CUR_CALL;
+		$this->persistent = false;
 		if (($part === null || $part == 'foot') && $this->get('callsmethod')) {
 			$this->saveToSession();
 		}
@@ -1335,6 +1348,12 @@ class Form extends FormGroup {
 			return;
 		}
 
+		// Ensure the REFERRER and original URL match up.
+		if($_SERVER['HTTP_REFERER'] != $form->originalurl){
+			Core::SetMessage('Form submission referrer does not match', 'error');
+			return;
+		}
+
 		// Run though each element submitted and try to validate it.
 		if (strtoupper($form->get('method')) == 'POST') $src =& $_POST;
 		else $src =& $_GET;
@@ -1354,6 +1373,13 @@ class Form extends FormGroup {
 			Core::SetMessage($e->getMessage(), 'error');
 			$status = false;
 		}
+		catch(Exception $e){
+			Core\ErrorManagement\exception_handler($e);
+			$status = false;
+		}
+
+		// The form was submitted.  Set its persistent flag to true so that whatever may be listening for it can retrieve the user's values.
+		$form->persistent = true;
 
 		// Regardless, bundle this form back into the session so the controller can use it if needed.
 		$_SESSION['FormData'][$formid] = serialize($form);

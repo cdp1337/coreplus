@@ -72,6 +72,9 @@ class FormController extends Controller_2_1 {
 		// Saving the form back to the session will preserve those values.
 	}
 
+	/**
+	 * @return null|int
+	 */
 	public function pageinsertables_update(){
 		$request = $this->getPageRequest();
 		$view = $this->getView();
@@ -150,14 +153,15 @@ class FormController extends Controller_2_1 {
 				// Since there are new elements here, there may be old values that correspond to the new elements too.
 				$form->loadFrom($src, true);
 
-				// Don't forget to resave these form updates back to the session!
+				// Don't forget to re-save these form updates back to the session!
+				$form->persistent = true;
 				$form->saveToSession();
 
 				$view->jsondata = array(
 					'status' => '1',
 					'message' => 'Switched templatename successfully',
 				);
-				return;
+				return null;
 			} // if($model instanceof PageModel && $form->getElement($prefix . '[page_template]'))
 		} // foreach($form->getModels() as $prefix => $model)
 
