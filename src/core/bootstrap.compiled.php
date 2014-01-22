@@ -9,13 +9,13 @@
  * To manage some code here, please see which file the code is being included from, (as stated in the comment above
  * the respective code), edit there and re-run utilities/compiler.php
  *
- * @package Core Plus\Core
+ * @package Core\Core
  * @since 2.1.5
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 14 Jan 2014 21:33:33 -0500
+ * @compiled Wed, 22 Jan 2014 15:15:04 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3497,7 +3497,7 @@ return 'Invalid Rewrite URL, "' . $controller . '" is a reserved system name!';
 }
 $ds = Core\Datamodel\Dataset::Init()
 ->table('page')
-->count()
+->select('*')
 ->whereGroup('OR', 'baseurl = ' . $v, 'rewriteurl = ' . $v);
 if ($this->exists()) $ds->where('baseurl != ' . $this->_data['baseurl']);
 if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
@@ -3505,7 +3505,16 @@ $ds->whereGroup('OR', 'site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID
 }
 $ds->execute();
 if ($ds->num_rows > 0) {
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+foreach($ds as $row){
+if($row['site'] == $this->get('site') || $row['site'] == '-1'){
 return 'Rewrite URL already taken';
+}
+}
+}
+else{
+return 'Rewrite URL already taken';
+}
 }
 return true;
 }
@@ -11301,7 +11310,15 @@ public $otherattributes = array();
 public $parent;
 public $multiple = false;
 public function __toString(){
+if($this->content === false || $this->content === null){
+return '';
+}
+elseif(is_array($this->content)){
+return implode("\n<br/>", $this->content);
+}
+else{
 return $this->content;
+}
 }
 public function fetch(){
 switch($this->base){
@@ -11435,6 +11452,9 @@ $details = '[src: ' . $errfile . ':' . $errline . '] ';
 }
 else{
 $details = '';
+}
+if($e instanceof \DMI_Query_Exception){
+$details .= '[query: ' . $e->query . '] ';
 }
 try{
 if(!\Core::GetComponent()){
@@ -14774,7 +14794,7 @@ catch(SmartyException $e){
 $this->error = View::ERROR_SERVERERROR;
 error_log('[view error]');
 error_log('Template name: [' . $mastertpl . ']');
-error_log($e->getMessage());
+\Core\ErrorManagement\exception_handler($e);
 require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 die();
 }
@@ -14782,7 +14802,7 @@ catch(TemplateException $e){
 $this->error = View::ERROR_SERVERERROR;
 error_log('[view error]');
 error_log('Template name: [' . $mastertpl . ']');
-error_log($e->getMessage());
+\Core\ErrorManagement\exception_handler($e);
 require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 die();
 }
@@ -15597,6 +15617,7 @@ return new Form::$Mappings[$type]($attributes);
 }
 }
 class Form extends FormGroup {
+public $originalurl = '';
 public static $Mappings = array(
 'access'           => 'FormAccessStringInput',
 'checkbox'         => 'FormCheckboxInput',
@@ -15635,6 +15656,7 @@ public function  __construct($atts = null) {
 parent::__construct($atts);
 $this->_validattributes = array('accept', 'accept-charset', 'action', 'enctype', 'id', 'method', 'name', 'target', 'style');
 $this->_attributes['method'] = 'POST';
+$this->persistent = false;
 }
 public function getTemplateName() {
 return 'forms/form.tpl';
@@ -15677,9 +15699,11 @@ $this->getElementByName('___formid')->set('value', $hash);
 }
 if (isset($_SESSION['FormData'][$this->get('uniqueid')])) {
 if (($savedform = unserialize($_SESSION['FormData'][$this->get('uniqueid')]))) {
+if($savedform->persistent){
 foreach($this->_elements as $k => $element){
 if($element->persistent){
 $this->_elements[$k] = $savedform->_elements[$k];
+}
 }
 }
 }
@@ -15719,6 +15743,8 @@ case 'foot':
 $out = $tpl->fetch('forms/form.foot.tpl');
 break;
 }
+$this->originalurl = CUR_CALL;
+$this->persistent = false;
 if (($part === null || $part == 'foot') && $this->get('callsmethod')) {
 $this->saveToSession();
 }
@@ -15935,6 +15961,10 @@ if (strtoupper($form->get('method')) != $_SERVER['REQUEST_METHOD']) {
 Core::SetMessage('Form submission type does not match', 'error');
 return;
 }
+if($_SERVER['HTTP_REFERER'] != $form->originalurl){
+Core::SetMessage('Form submission referrer does not match', 'error');
+return;
+}
 if (strtoupper($form->get('method')) == 'POST') $src =& $_POST;
 else $src =& $_GET;
 $form->loadFrom($src);
@@ -15947,6 +15977,11 @@ catch(ModelValidationException $e){
 Core::SetMessage($e->getMessage(), 'error');
 $status = false;
 }
+catch(Exception $e){
+Core\ErrorManagement\exception_handler($e);
+$status = false;
+}
+$form->persistent = true;
 $_SESSION['FormData'][$formid] = serialize($form);
 if ($status === false) return;
 if ($status === null) return;
