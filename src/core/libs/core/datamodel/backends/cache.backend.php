@@ -7,7 +7,7 @@
  * ## EXPERIMENTAL! ##
  * This is an experimental system that is not finished, use of it is highly discouraged.
  * 
- * @package Core Plus\Datamodel
+ * @package Core\Datamodel
  * @since 0.1
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright 2011, Charlie Powell

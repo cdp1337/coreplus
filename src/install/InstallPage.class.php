@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  *
- * @package Core Plus\Installer
+ * @package Core\Installer
  * @author Charlie Powell <charlie@eval.bz>
  * @deprecated 2013.04 - This file has been deprecated and is a candidate for removal very soon.
  */

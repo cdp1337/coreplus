@@ -4,7 +4,7 @@
  * The purpose of this file is to archive up the core, components, and bundles.
  * and to set all the appropriate information.
  *
- * @package Core Plus\CLI Utilities
+ * @package Core\CLI Utilities
  * @since 2.1.5
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -268,7 +268,7 @@ $header = <<<EOD
  * To manage some code here, please see which file the code is being included from, (as stated in the comment above
  * the respective code), edit there and re-run utilities/compiler.php
  *
- * @package Core Plus\Core
+ * @package Core\Core
  * @since 2.1.5
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell

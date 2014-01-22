@@ -4,7 +4,7 @@
  * The purpose of this file is to archive up the core, components, and bundles.
  * and to set all the appropriate information.
  *
- * @package Core Plus\CLI Utilities
+ * @package Core\CLI Utilities
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell

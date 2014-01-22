@@ -2,7 +2,7 @@
 /**
  * Filter system
  *
- * @package Core Plus
+ * @package Core
  * @since 2.3.2
  */
 class FilterForm {

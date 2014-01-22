@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core Plus\Core
+ * @package Core
  * @since 2.1.3
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell

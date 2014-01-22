@@ -2,7 +2,7 @@
 /**
  * Smarty {css} block
  * 
- * @package Core Plus\Core
+ * @package Core
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell

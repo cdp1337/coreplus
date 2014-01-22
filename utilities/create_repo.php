@@ -4,7 +4,7 @@
  * The purpose of this file is to create a repository that can be distributed 
  * pulled from remote servers.
  *
- * @package Core Plus\CLI Utilities
+ * @package Core\CLI Utilities
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell

@@ -3,7 +3,7 @@
  * Class that closely mimics PHP's DirectoryIterator object, only with CAE specifics,
  * ie: a File object is returned for each file instead of just the filename.
  *
- * @package Core Plus\Core
+ * @package Core
  * @since 0.1
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
