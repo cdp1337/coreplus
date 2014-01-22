@@ -2,7 +2,7 @@
 /**
  * Defines the schema for the Page table
  *
- * @package Core Plus\Core
+ * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -310,7 +310,7 @@ class PageModel extends Model {
 		// Lookup if there is a conflicting URL.
 		$ds = Core\Datamodel\Dataset::Init()
 			->table('page')
-			->count()
+			->select('*')
 			->whereGroup('OR', 'baseurl = ' . $v, 'rewriteurl = ' . $v);
 
 		// If this page exists, I don't want to include this page in the count.
@@ -324,7 +324,17 @@ class PageModel extends Model {
 		$ds->execute();
 
 		if ($ds->num_rows > 0) {
-			return 'Rewrite URL already taken';
+			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+				foreach($ds as $row){
+					if($row['site'] == $this->get('site') || $row['site'] == '-1'){
+						// Only trigger the URL taken error if it's on the same site or it's a global page.
+						return 'Rewrite URL already taken';
+					}
+				}
+			}
+			else{
+				return 'Rewrite URL already taken';
+			}
 		}
 
 		// All good?
