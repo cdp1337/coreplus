@@ -27,27 +27,34 @@ DBNAME="$(egrep '^db\.name=' "$BASEDIR/ant.properties" | sed 's:^[^=]*=\(.*\):\1
 #DBPORT="$(egrep '^db\.port=' "$BASEDIR/ant.properties" | sed 's:^[^=]*=\(.*\):\1:')"
 
 
-
-# Get the newest version from the remote server.
-#REMOTESQLGZ="$(ssh $HOST \"ls -c $HOSTSRC/*.sql.gz \| head -n1\")"
-#REMOTESQLGZ="$(ssh $HOST \'ls -c \"$HOSTSRC/*.sql.gz\"\')"
-REMOTESQLGZ="$(ssh -p$PORT $USER@$HOST ls -c $DIR*.sql.gz \| head -n1)"
-if [ -z "$REMOTESQLGZ" ]; then
-	echo "No *.sql.gz file located within $DIR on host $HOST."
+if [ -e "$BASEDIR/data/data-latest.sql.gz" -a "$HOST" == "" ]; then
+	printheader "Production host not set but latest data available, importing from cached datafile."
+	DOWNLOADIT=0
+elif [ -a "$HOST" ]; then
+	printerror "Production host not set and no cached datafile available."
 	exit 1
-fi
+else
+	# Get the newest version from the remote server.
+	#REMOTESQLGZ="$(ssh $HOST \"ls -c $HOSTSRC/*.sql.gz \| head -n1\")"
+	#REMOTESQLGZ="$(ssh $HOST \'ls -c \"$HOSTSRC/*.sql.gz\"\')"
+	REMOTESQLGZ="$(ssh -p$PORT $USER@$HOST ls -c $DIR*.sql.gz \| head -n1)"
+	if [ -z "$REMOTESQLGZ" ]; then
+		echo "No *.sql.gz file located within $DIR on host $HOST."
+		exit 1
+	fi
 
-if [ -e "$BASEDIR/data/data-latest.sql.gz" ]; then
-	# Check and see if I need to re-download this file.
-	REMOTEMD5="$(ssh -p$PORT $USER@$HOST md5sum $REMOTESQLGZ \| sed \'s: .*$::\')"
-	LOCALMD5="$(md5sum "$BASEDIR/data/data-latest.sql.gz" | sed 's: .*$::')"
-	if [ "$REMOTEMD5" == "$LOCALMD5" ]; then
-		DOWNLOADIT=0
+	if [ -e "$BASEDIR/data/data-latest.sql.gz" ]; then
+		# Check and see if I need to re-download this file.
+		REMOTEMD5="$(ssh -p$PORT $USER@$HOST md5sum $REMOTESQLGZ \| sed \'s: .*$::\')"
+		LOCALMD5="$(md5sum "$BASEDIR/data/data-latest.sql.gz" | sed 's: .*$::')"
+		if [ "$REMOTEMD5" == "$LOCALMD5" ]; then
+			DOWNLOADIT=0
+		else
+			DOWNLOADIT=1
+		fi
 	else
 		DOWNLOADIT=1
 	fi
-else
-	DOWNLOADIT=1
 fi
 
 
