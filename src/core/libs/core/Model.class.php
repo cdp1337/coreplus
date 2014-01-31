@@ -654,6 +654,15 @@ class Model implements ArrayAccess {
 	}
 
 	/**
+	 * Return this object as a flattened JSON array using json_encode.
+	 *
+	 * @return string
+	 */
+	public function getAsJSON(){
+		return json_encode($this->getAsArray());
+	}
+
+	/**
 	 * Get the data of this model.
 	 * Don't use this, it's probably not what you need.
 	 *
@@ -2599,7 +2608,12 @@ class ModelFactory {
 	private function _performMultisiteCheck(){
 
 		$m = $this->_model;
-		$schema = $m::GetSchema();
+		$ref = new ReflectionClass($m);
+
+		$schema = $ref->getMethod('GetSchema')->invoke(null);
+		$index = $ref->getMethod('GetIndexes')->invoke(null);
+		//$schema = $m::GetSchema();
+		//$index = $m::
 
 		// Is there a site property?  If not I don't even care.
 		if(
@@ -2610,8 +2624,22 @@ class ModelFactory {
 		){
 			// I want to look it up because if the script actually set the site, then
 			// it evidently wants it for a reason.
-			$matches = $this->_dataset->getWhereClause()->findByField('site');
-			if(!sizeof($matches)){
+			$siteexact = (sizeof($this->_dataset->getWhereClause()->findByField('site')) > 0);
+			$idexact = false;
+
+			// The primary check will allow a model to be instantiated with the exact primary key string.
+			if(isset($index['primary'])){
+				$allids = true;
+				foreach($index['primary'] as $k){
+					if(sizeof($this->_dataset->getWhereClause()->findByField($k)) == 0){
+						$allids = false;
+						break;
+					}
+				}
+				if($allids) $idexact = true;
+			}
+
+			if(!($siteexact || $idexact)){
 				$w = new DatasetWhereClause();
 				$w->setSeparator('or');
 				$w->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
