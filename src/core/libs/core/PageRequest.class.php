@@ -537,6 +537,13 @@ class PageRequest {
 					break;
 				}
 			}
+
+			// A few special cases.
+			if($return->mastertemplate == 'blank.tpl'){
+				// This is acceptable as a default one.
+				$mastertplgood =true;
+			}
+
 			if(!$mastertplgood){
 				// Just use the first one instead!
 				trigger_error('Invalid skin [' . $return->mastertemplate . '] selected for this page, skin is not located within the selected theme!  Using first available instead.', E_USER_NOTICE);
