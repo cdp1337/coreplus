@@ -1,6 +1,6 @@
 <?php
 /**
- * File for class GeocodeRequest definition in the Alliance One project
+ * File for class GeocodeRequest definition
  *
  * @package Google\Maps
  * @author Charlie Powell <charlie@eval.bz>
@@ -67,6 +67,9 @@ class GeocodeRequest {
 
 	public $sensor = false;
 
+	/**
+	 * @return GeocodeResponse
+	 */
 	public function lookup(){
 		if($this->lat && $this->lng){
 			// @todo reverse lookup
@@ -90,19 +93,25 @@ class GeocodeRequest {
 		$params = [
 			'address' => null, // Set below!
 			'sensor' => ($this->sensor ? 'true' : 'false'),
-			'client' => $clientname,
 		];
 
 		if($this->address1 && $this->city){
 			$params['address'] = $this->address1 . ($this->city ? ','.$this->city : '') . ($this->state ? ',' . $this->state : '');
-			$address = trim($this->address1 . ' ' . $this->address2 . ' ' . $this->city . ' ' . $this->state);
 		}
 		elseif($this->postal){
 			$params['address'] = $this->postal;
-			$address = trim($this->postal);
+		}
+		else{
 		}
 
-		if($this->country) $params['region'] = $this->country;
+		if($this->country){
+			$params['region'] = $this->country;
+		}
+
+		if($clientname){
+			// Only add the client parameter if it's set in the config, otherwise it's a guest connection.
+			$params['client'] = $clientname;
+		}
 
 		// Make a request to google and update the record.
 		// http://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&sensor=true_or_false
@@ -134,23 +143,6 @@ class GeocodeRequest {
 		$json = $request->getContents();
 		$contents = json_decode($json, true);
 
-		// If contents aren't good, just continue to the next.
-		if(!$contents){
-			throw new \Exception('no contents Bad response for: ' . $address);
-		}
-		// If it's not an array, just continue.
-		if(!is_array($contents)){
-			var_dump($contents);
-			throw new \Exception('not array Bad response for: ' . $address . "\n");
-		}
-		// If the status isn't good, just continue.
-		if($contents['status'] != 'OK'){
-			echo $contents['status'] . "\n";
-			throw new \Exception('Bad status for: ' . $address . "\n");
-
-		}
-
-		// Yay, it's a valid location!
 		$result = new GeocodeResponse($contents);
 		return $result;
 	}
