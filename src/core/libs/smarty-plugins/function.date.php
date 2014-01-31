@@ -38,12 +38,8 @@ function smarty_function_date($params, $template){
 		$date = $params[0];
 	}
 	else{
-		if(DEVELOPMENT_MODE){
-			throw new SmartyException('Missing required parameter, date');
-		}
-		else{
-			return '';
-		}
+		// Use "now" as the time.
+		$date = \Core\Date\DateTime::Now(Time::FORMAT_RFC2822);
 	}
 
 	if(!$date){
@@ -59,6 +55,6 @@ function smarty_function_date($params, $template){
 	$format = isset($params['format']) ? $params['format'] : 'RELATIVE';
 	//$timezone = isset($params['timezone']) ? $params['timezone'] : Time::TIMEZONE_GMT;
 
-	$coredate = new CoreDateTime($date);
-	return $coredate->getFormatted($format);
+	$coredate = new \Core\Date\DateTime($date);
+	return $coredate->format($format);
 }
