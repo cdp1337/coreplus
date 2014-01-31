@@ -31,7 +31,7 @@
 				{/if}
 
 				<label>
-					<input type="radio" class="fileinput-selector" selectortype="upload" name="{$element->get('name')}" value="_upload_" {if !$element->get('value') && $element->get('required')}checked="checked"{/if}/>
+					<input type="radio" class="fileinput-selector" selectortype="upload" name="{$element->get('name')}" value="_upload_" {if !$element->get('value') && $element->get('required')} checked="checked"{/if}/>
 					Upload
 				</label>
 
@@ -52,7 +52,7 @@
 
 				{if !$element->get('required')}
 					<label>
-						<input type="radio" class="fileinput-selector" selectortype="none" name="{$element->get('name')}" value=""{if !$element->get('value')}checked="checked"{/if}/>
+						<input type="radio" class="fileinput-selector" selectortype="none" name="{$element->get('name')}" value=""{if !$element->get('value')} checked="checked"{/if}/>
 						None
 					</label>
 				{/if}
