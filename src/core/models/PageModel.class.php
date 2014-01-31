@@ -749,9 +749,11 @@ class PageModel extends Model {
 		// This will take care of all the standard elements.
 		parent::setFromForm($form, $prefix);
 
-		// And this will take care of the rewrites
-		$rewrites = $form->getElement($prefix . '[rewrites]')->get('value');
-		$this->setRewriteURLs($rewrites);
+		if($form->getElement($prefix . '[rewrites]')){
+			// And this will take care of the rewrites
+			$rewrites = $form->getElement($prefix . '[rewrites]')->get('value');
+			$this->setRewriteURLs($rewrites);
+		}
 
 		// And this will take care of the meta elements.
 		$baselen = strlen($prefix . '[metas]');
@@ -1073,8 +1075,11 @@ class PageModel extends Model {
 				// This works because the above statement self::_LookupUrl('/'); will
 				// load in every valid baseurl in the database into an array.
 				// therefore, obviously if a key exists in that array, the page exists! :)
-				if (isset(self::$_RewriteCache[$url])) {
-					$url = self::$_RewriteCache[$url];
+
+
+				$lookup = self::_LookupUrl($url);
+				if($lookup['found']){
+					$url = $lookup['url'];
 				}
 
 				//$p = new PageModel($url);
@@ -1141,41 +1146,57 @@ class PageModel extends Model {
 	 * Split a base url into its corresponding parts, controller method and parameters.
 	 * Also supports the rewriteurl.
 	 *
-	 * @param string $base
+	 * @param string   $base The URL base to lookup, aka baseurl.
+	 * @param int|null $site The Site ID to lookup, only functional in multi-site mode.
 	 *
 	 * @return array
 	 */
-	public static function SplitBaseURL($base) {
+	public static function SplitBaseURL($base, $site = null) {
 
 		if (!$base) return null;
 
 		// Default ctype.
 		$ctype = 'text/html';
 
-		// Update the cache!
-		self::_LookupUrl(null);
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			if($site === null){
+				$site = MultiSiteHelper::GetCurrentSiteID();
+			}
+		}
+		else{
+			$site = null;
+		}
 
-		// In order to do the match, the incoming url needs to be all lowercase!
-		$base = strtolower($base);
+		// This will ensure that the cache is updated and that any rewrite URL is remapped to its baseurl if possible.
+		$lookup = self::_LookupUrl($base, $site);
 
-		// so now I can translate that rewriteurl to the baseurl.
-		if (isset(self::$_RewriteCache[$base])) {
-			$base = self::$_RewriteCache[$base];
-		} // or find a fuzzy page if there is one.
-		// remember, fuzzy pages are meant to act as a sort of directory placeholder.
-		else {
-			$try = $base;
-			//$fuzzyfound = false;
+		if($lookup['found']){
+			$base = $lookup['url'];
+		}
+		else{
+			$try = $lookup['url'];
+
+			if($site === null){
+				$tries = [];
+				foreach(self::$_FuzzyCache as $dat){
+					$tries = array_merge($tries, $dat);
+				}
+			}
+			elseif(isset(self::$_FuzzyCache[$site])){
+				$tries = array_merge(self::$_FuzzyCache[-1], self::$_FuzzyCache[$site]);
+			}
+			else{
+				$tries = self::$_FuzzyCache[-1];
+			}
+
 			while($try != '' && $try != '/') {
-				if(isset(self::$_FuzzyCache[$try])) {
+				if(isset($tries[$try])) {
 					// The fuzzy page must have the requested arguments, they just need to be tacked onto the end of the base.
-					$base = self::$_FuzzyCache[$try] . substr($base, strlen($try));
-					//		$fuzzyfound = true;
+					$base = $tries[$try] . substr($base, strlen($try));
 					break;
 				}
-				elseif(in_array($try, self::$_FuzzyCache)) {
-					$base = self::$_FuzzyCache[array_search($try, self::$_FuzzyCache)] . substr($base, strlen($try));
-					//		$fuzzyfound = true;
+				elseif(in_array($try, $tries)) {
+					$base = $tries[array_search($try, $tries)] . substr($base, strlen($try));
 					break;
 				}
 				$try = substr($try, 0, strrpos($try, '/'));
@@ -1193,6 +1214,7 @@ class PageModel extends Model {
 
 
 		$args = null;
+		$argstring = '';
 		// Support additional arguments
 		if (($qpos = strpos($base, '?')) !== false) {
 			$argstring = substr($base, $qpos + 1);
@@ -1309,8 +1331,11 @@ class PageModel extends Model {
 		// No need to add a method if it's the index.
 		if (!($method == 'Index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
 		$baseurl .= ($params) ? '/' . implode('/', $params) : '';
+
+
 		// Rewrite URL may be useful too!
-		$rewriteurl = self::_LookupReverseUrl($baseurl);
+		$rewriteurl = self::_LookupReverseUrl($baseurl, $site);
+
 
 		// Keep the original mimetype extension if set.
 		if($ctype != 'text/html'){
@@ -1324,35 +1349,68 @@ class PageModel extends Model {
 			else $params = $args;
 		}
 
+		if($site === null){
+			$rooturl = ROOT_URL;
+		}
+		else{
+			$rooturl = MultiSiteModel::Construct($site)->getResolvedURL();
+		}
+
+		// Reassemble everything too!
+		$fullurl = trim($rooturl, '/') . '/' . trim($rewriteurl, '/');
+		/*
+		if($params && sizeof($params) > 0){
+			foreach($params as $k => $v){
+				if(is_numeric($k)){
+					$fullurl .= '/' . $v;
+				}
+				else{
+					if(strpos($fullurl, '?') === false){
+						$fullurl .= '?' . $k . '=' . $v;
+					}
+					else{
+						$fullurl .= '&' . $k . '=' . $v;
+					}
+				}
+			}
+		}
+		*/
+
 		// Tack on the "arguments" too, these are 
 
 		return array(
 			'controller' => $controller,
 			'method'     => $method,
 			'parameters' => $params,
+			'rooturl'    => $rooturl,
 			'baseurl'    => $baseurl,
 			'rewriteurl' => $rewriteurl,
 			'ctype'      => $ctype,
+			'fullurl'    => $fullurl,
 		);
 	}
 
 	/**
 	 * Lookup a url in the rewrite cache.  Useful for initial rewrite -> base conversions
 	 *
-	 * @param type $url
+	 * @param string   $url  The rewrite URL to convert to a baseurl.
+	 * @param int|null $site Optionally, supply a site ID to restrict the search to.
+	 *
+	 * @return null|array The resolved baseurl of the given URL.
 	 */
-	private static function _LookupUrl($url = null) {
+	private static function _LookupUrl($url = null, $site = null) {
 		if (self::$_RewriteCache === null) {
 			$s = new Core\Datamodel\Dataset();
-			$s->select('rewriteurl, baseurl, fuzzy');
-			$s->table(DB_PREFIX . 'page');
+			$s->select('site, rewriteurl, baseurl, fuzzy');
+			$s->table('page');
 
 			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-				$g = new Core\Datamodel\DatasetWhereClause();
-				$g->setSeparator('OR');
-				$g->addWhere('site = -1');
-				$g->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
-				$s->where($g);
+				if($site === null){
+					$site = MultiSiteHelper::GetCurrentSiteID();
+				}
+			}
+			else{
+				$site = null;
 			}
 
 			$rs = $s->execute();
@@ -1360,37 +1418,132 @@ class PageModel extends Model {
 			self::$_FuzzyCache = array();
 
 			foreach ($rs as $row) {
-				self::$_RewriteCache[strtolower($row['rewriteurl'])] = strtolower($row['baseurl']);
-				if ($row['fuzzy']) self::$_FuzzyCache[strtolower($row['rewriteurl'])] = strtolower($row['baseurl']);
+
+				$rewrite = strtolower($row['rewriteurl']);
+				$base    = strtolower($row['baseurl']);
+				$siteid  = $row['site'];
+
+				if(!isset(self::$_RewriteCache[$siteid])){
+					self::$_RewriteCache[$siteid] = [];
+				}
+
+				if(!isset(self::$_FuzzyCache[$siteid])){
+					self::$_FuzzyCache[$siteid] = [];
+				}
+
+
+				self::$_RewriteCache[$siteid][$rewrite] = $base;
+				if ($row['fuzzy']){
+					self::$_FuzzyCache[$siteid][$rewrite] = $base;
+				}
 			}
 		}
 
-		if ($url === null) return; // maybe this was just called to update the local rewrite and fuzzy caches.
-		return (isset(self::$_RewriteCache[$url])) ? self::$_RewriteCache[$url] : $url;
+		if ($url === null){
+			// maybe this was just called to update the local rewrite and fuzzy caches.
+			return null;
+		}
+
+		// All URLs are case-insensitive.
+		$url = strtolower($url);
+
+		if($site === null){
+			// No site is requested or multisite mode is not enabled.
+			foreach(self::$_RewriteCache as $set){
+				if(isset($set[$url])){
+					return [
+						'found' => true,
+						'url' => $set[$url],
+					];
+				}
+			}
+		}
+		else{
+			if(isset(self::$_RewriteCache[$site]) && isset(self::$_RewriteCache[$site][$url])){
+				return [
+					'found' => true,
+					'url' => self::$_RewriteCache[$site][$url],
+				];
+			}
+			elseif(isset(self::$_RewriteCache[-1]) && isset(self::$_RewriteCache[-1][$url])){
+				return [
+					'found' => true,
+					'url' => self::$_RewriteCache[-1][$url],
+				];
+			}
+		}
+
+		// Otherwise if neither checks above returned a baseurl... just return the rewrite url as provided.
+		return [
+			'found' => false,
+			'url' => $url,
+		];
 	}
 
 	/**
-	 * Lookup the rewrite url for a given url.
+	 * Lookup the rewrite url for a given url.  Useful for initial base -> rewrite conversions
 	 *
-	 * @param type $url
+	 * @param string $url
+	 * @param int|null $site
+	 *
+	 * @return string
 	 */
-	private static function _LookupReverseUrl($url) {
+	private static function _LookupReverseUrl($url, $site = null) {
+
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			if($site === null){
+				$site = MultiSiteHelper::GetCurrentSiteID();
+			}
+		}
+		else{
+			$site = null;
+		}
+
 		// Lookup something, just to ensure it's in the cache.
 		self::_LookupUrl(null);
 
-		$url = strtolower($url);
+		// Sift through the rewrite cache and see if it's here.
+		if($site === null){
+			foreach(self::$_RewriteCache as $set){
+				if(($key = array_search($url, $set)) !== false){
+					return $key;
+				}
+			}
+		}
+		else{
+			if(isset(self::$_RewriteCache[$site])){
+				if(($key = array_search($url, self::$_RewriteCache[$site])) !== false){
+					return $key;
+				}
+			}
 
-		// See if it directly matches a cached page
-		if (($key = array_search($url, self::$_RewriteCache)) !== false) {
-			return $key;
+			if(($key = array_search($url, self::$_RewriteCache[-1])) !== false){
+				return $key;
+			}
 		}
 
 		// Else try to look it up in the fuzzy pages.
 		$try = $url;
-		while ($try != '' && $try != '/') {
-			if (in_array($try, self::$_FuzzyCache)) {
-				$url = array_search($try, self::$_FuzzyCache) . substr($url, strlen($try));
-				return $url;
+
+		if($site === null){
+			$tries = [];
+			foreach(self::$_FuzzyCache as $dat){
+				$tries = array_merge($tries, $dat);
+			}
+		}
+		else{
+			$tries = array_merge(self::$_FuzzyCache[-1], self::$_FuzzyCache[$site]);
+		}
+
+		while($try != '' && $try != '/') {
+			if(isset($tries[$try])) {
+				// The fuzzy page must have the requested arguments, they just need to be tacked onto the end of the base.
+				$url = $tries[$try] . substr($url, strlen($try));
+				break;
+			}
+			elseif(in_array($try, $tries)) {
+				$url = $tries[array_search($try, $tries)] . substr($url, strlen($try));
+				break;
 			}
 			$try = substr($try, 0, strrpos($try, '/'));
 		}
