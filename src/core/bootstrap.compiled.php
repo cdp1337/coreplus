@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 22 Jan 2014 15:15:04 -0500
+ * @compiled Thu, 30 Jan 2014 19:30:17 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1916,6 +1916,9 @@ else{
 return array_merge($this->_data, $this->_dataother);
 }
 }
+public function getAsJSON(){
+return json_encode($this->getAsArray());
+}
 public function getData(){
 return $this->_data;
 }
@@ -2935,15 +2938,28 @@ return $this->_dataset;
 }
 private function _performMultisiteCheck(){
 $m = $this->_model;
-$schema = $m::GetSchema();
+$ref = new ReflectionClass($m);
+$schema = $ref->getMethod('GetSchema')->invoke(null);
+$index = $ref->getMethod('GetIndexes')->invoke(null);
 if(
 isset($schema['site']) &&
 $schema['site']['type'] == Model::ATT_TYPE_SITE &&
 Core::IsComponentAvailable('enterprise') &&
 MultiSiteHelper::IsEnabled()
 ){
-$matches = $this->_dataset->getWhereClause()->findByField('site');
-if(!sizeof($matches)){
+$siteexact = (sizeof($this->_dataset->getWhereClause()->findByField('site')) > 0);
+$idexact = false;
+if(isset($index['primary'])){
+$allids = true;
+foreach($index['primary'] as $k){
+if(sizeof($this->_dataset->getWhereClause()->findByField($k)) == 0){
+$allids = false;
+break;
+}
+}
+if($allids) $idexact = true;
+}
+if(!($siteexact || $idexact)){
 $w = new DatasetWhereClause();
 $w->setSeparator('or');
 $w->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
@@ -3729,8 +3745,10 @@ $this->setLink('RewriteMap', $rewrite);
 }
 public function setFromForm(Form $form, $prefix = null){
 parent::setFromForm($form, $prefix);
+if($form->getElement($prefix . '[rewrites]')){
 $rewrites = $form->getElement($prefix . '[rewrites]')->get('value');
 $this->setRewriteURLs($rewrites);
+}
 $baselen = strlen($prefix . '[metas]');
 foreach($form->getElements(true, false) as $el){
 $name = $el->get('name');
@@ -3922,8 +3940,9 @@ self::_LookupUrl('/');
 $url = strtolower($this->get('baseurl'));
 do {
 $url = substr($url, 0, strrpos($url, '/'));
-if (isset(self::$_RewriteCache[$url])) {
-$url = self::$_RewriteCache[$url];
+$lookup = self::_LookupUrl($url);
+if($lookup['found']){
+$url = $lookup['url'];
 }
 $p = PageModel::Construct($url);
 return array_merge($p->_getParentTree(--$antiinfiniteloopcounter), array($p));
@@ -3949,23 +3968,42 @@ $this->_view->templatename = $this->getTemplateName();
 $this->_view->mastertemplate = ($this->get('template')) ? $this->get('template') : ConfigHandler::Get('/theme/default_template');
 $this->_view->setBreadcrumbs($this->getParentTree());
 }
-public static function SplitBaseURL($base) {
+public static function SplitBaseURL($base, $site = null) {
 if (!$base) return null;
 $ctype = 'text/html';
-self::_LookupUrl(null);
-$base = strtolower($base);
-if (isset(self::$_RewriteCache[$base])) {
-$base = self::$_RewriteCache[$base];
-} // or find a fuzzy page if there is one.
-else {
-$try = $base;
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if($site === null){
+$site = MultiSiteHelper::GetCurrentSiteID();
+}
+}
+else{
+$site = null;
+}
+$lookup = self::_LookupUrl($base, $site);
+if($lookup['found']){
+$base = $lookup['url'];
+}
+else{
+$try = $lookup['url'];
+if($site === null){
+$tries = [];
+foreach(self::$_FuzzyCache as $dat){
+$tries = array_merge($tries, $dat);
+}
+}
+elseif(isset(self::$_FuzzyCache[$site])){
+$tries = array_merge(self::$_FuzzyCache[-1], self::$_FuzzyCache[$site]);
+}
+else{
+$tries = self::$_FuzzyCache[-1];
+}
 while($try != '' && $try != '/') {
-if(isset(self::$_FuzzyCache[$try])) {
-$base = self::$_FuzzyCache[$try] . substr($base, strlen($try));
+if(isset($tries[$try])) {
+$base = $tries[$try] . substr($base, strlen($try));
 break;
 }
-elseif(in_array($try, self::$_FuzzyCache)) {
-$base = self::$_FuzzyCache[array_search($try, self::$_FuzzyCache)] . substr($base, strlen($try));
+elseif(in_array($try, $tries)) {
+$base = $tries[array_search($try, $tries)] . substr($base, strlen($try));
 break;
 }
 $try = substr($try, 0, strrpos($try, '/'));
@@ -3973,6 +4011,7 @@ $try = substr($try, 0, strrpos($try, '/'));
 }
 $base = trim($base, '/');
 $args = null;
+$argstring = '';
 if (($qpos = strpos($base, '?')) !== false) {
 $argstring = substr($base, $qpos + 1);
 preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
@@ -4042,7 +4081,7 @@ $params = ($base !== false) ? explode('/', $base) : null;
 $baseurl = '/' . ((strpos($controller, 'Controller') == strlen($controller) - 10) ? substr($controller, 0, -10) : $controller);
 if (!($method == 'Index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
 $baseurl .= ($params) ? '/' . implode('/', $params) : '';
-$rewriteurl = self::_LookupReverseUrl($baseurl);
+$rewriteurl = self::_LookupReverseUrl($baseurl, $site);
 if($ctype != 'text/html'){
 $rewriteurl .= '.' . \Core\Filestore\mimetype_to_extension($ctype);
 }
@@ -4051,49 +4090,134 @@ $rewriteurl .= '?' . $argstring;
 if ($params) $params = array_merge($params, $args);
 else $params = $args;
 }
+if($site === null){
+$rooturl = ROOT_URL;
+}
+else{
+$rooturl = MultiSiteModel::Construct($site)->getResolvedURL();
+}
+$fullurl = trim($rooturl, '/') . '/' . trim($rewriteurl, '/');
 return array(
 'controller' => $controller,
 'method'     => $method,
 'parameters' => $params,
+'rooturl'    => $rooturl,
 'baseurl'    => $baseurl,
 'rewriteurl' => $rewriteurl,
 'ctype'      => $ctype,
+'fullurl'    => $fullurl,
 );
 }
-private static function _LookupUrl($url = null) {
+private static function _LookupUrl($url = null, $site = null) {
 if (self::$_RewriteCache === null) {
 $s = new Core\Datamodel\Dataset();
-$s->select('rewriteurl, baseurl, fuzzy');
-$s->table(DB_PREFIX . 'page');
+$s->select('site, rewriteurl, baseurl, fuzzy');
+$s->table('page');
 if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-$g = new Core\Datamodel\DatasetWhereClause();
-$g->setSeparator('OR');
-$g->addWhere('site = -1');
-$g->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
-$s->where($g);
+if($site === null){
+$site = MultiSiteHelper::GetCurrentSiteID();
+}
+}
+else{
+$site = null;
 }
 $rs = $s->execute();
 self::$_RewriteCache = array();
 self::$_FuzzyCache = array();
 foreach ($rs as $row) {
-self::$_RewriteCache[strtolower($row['rewriteurl'])] = strtolower($row['baseurl']);
-if ($row['fuzzy']) self::$_FuzzyCache[strtolower($row['rewriteurl'])] = strtolower($row['baseurl']);
+$rewrite = strtolower($row['rewriteurl']);
+$base    = strtolower($row['baseurl']);
+$siteid  = $row['site'];
+if(!isset(self::$_RewriteCache[$siteid])){
+self::$_RewriteCache[$siteid] = [];
+}
+if(!isset(self::$_FuzzyCache[$siteid])){
+self::$_FuzzyCache[$siteid] = [];
+}
+self::$_RewriteCache[$siteid][$rewrite] = $base;
+if ($row['fuzzy']){
+self::$_FuzzyCache[$siteid][$rewrite] = $base;
 }
 }
-if ($url === null) return; // maybe this was just called to update the local rewrite and fuzzy caches.
-return (isset(self::$_RewriteCache[$url])) ? self::$_RewriteCache[$url] : $url;
 }
-private static function _LookupReverseUrl($url) {
-self::_LookupUrl(null);
+if ($url === null){
+return null;
+}
 $url = strtolower($url);
-if (($key = array_search($url, self::$_RewriteCache)) !== false) {
+if($site === null){
+foreach(self::$_RewriteCache as $set){
+if(isset($set[$url])){
+return [
+'found' => true,
+'url' => $set[$url],
+];
+}
+}
+}
+else{
+if(isset(self::$_RewriteCache[$site]) && isset(self::$_RewriteCache[$site][$url])){
+return [
+'found' => true,
+'url' => self::$_RewriteCache[$site][$url],
+];
+}
+elseif(isset(self::$_RewriteCache[-1]) && isset(self::$_RewriteCache[-1][$url])){
+return [
+'found' => true,
+'url' => self::$_RewriteCache[-1][$url],
+];
+}
+}
+return [
+'found' => false,
+'url' => $url,
+];
+}
+private static function _LookupReverseUrl($url, $site = null) {
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if($site === null){
+$site = MultiSiteHelper::GetCurrentSiteID();
+}
+}
+else{
+$site = null;
+}
+self::_LookupUrl(null);
+if($site === null){
+foreach(self::$_RewriteCache as $set){
+if(($key = array_search($url, $set)) !== false){
 return $key;
 }
+}
+}
+else{
+if(isset(self::$_RewriteCache[$site])){
+if(($key = array_search($url, self::$_RewriteCache[$site])) !== false){
+return $key;
+}
+}
+if(($key = array_search($url, self::$_RewriteCache[-1])) !== false){
+return $key;
+}
+}
 $try = $url;
-while ($try != '' && $try != '/') {
-if (in_array($try, self::$_FuzzyCache)) {
-$url = array_search($try, self::$_FuzzyCache) . substr($url, strlen($try));
-return $url;
+if($site === null){
+$tries = [];
+foreach(self::$_FuzzyCache as $dat){
+$tries = array_merge($tries, $dat);
+}
+}
+else{
+$tries = array_merge(self::$_FuzzyCache[-1], self::$_FuzzyCache[$site]);
+}
+while($try != '' && $try != '/') {
+if(isset($tries[$try])) {
+$url = $tries[$try] . substr($url, strlen($try));
+break;
+}
+elseif(in_array($try, $tries)) {
+$url = $tries[array_search($try, $tries)] . substr($url, strlen($try));
+break;
 }
 $try = substr($try, 0, strrpos($try, '/'));
 }
@@ -7652,7 +7776,7 @@ $_SESSION['user'] = \UserModel::Construct($tmpuser->get('id'));
 unset(\Session::$Externals['user_forcesync']);
 }
 $user = $_SESSION['user'];
-if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
+if(\Core::IsComponentAvailable('enterprise') && class_exists('MultiSiteHelper') && \MultiSiteHelper::IsEnabled()){
 $user->clearAccessStringCache();
 }
 if(isset($_SESSION['user_sudo'])){
@@ -12395,14 +12519,23 @@ if($url{0} == '?'){
 $url = REL_REQUEST_PATH . $url;
 }
 if (strpos($url, '://') !== false) return $url;
+if(strpos($url, 'site:') === 0){
+$slashpos = strpos($url, '/');
+$site = substr($url, 5, $slashpos-5);
+$url = substr($url, $slashpos);
+}
+else{
+$site = 0;
+}
 try{
-$a = PageModel::SplitBaseURL($url);
+$a = PageModel::SplitBaseURL($url, $site);
 }
 catch(\Exception $e){
+\Core\ErrorManagement\exception_handler($e);
 error_log('Unable to resolve URL [' . $url . '] due to exception [' . $e->getMessage() . ']');
 return '';
 }
-return ROOT_URL . substr($a['rewriteurl'], 1);
+return $a['fullurl'];
 }
 public static function ResolveFilenameTo($filename, $base = ROOT_URL) {
 $file = preg_replace('/^(' . str_replace('/', '\\/', ROOT_PDIR . '|' . ROOT_URL) . ')/', '', $filename);
@@ -16281,6 +16414,9 @@ if($skin['file'] == $return->mastertemplate){
 $mastertplgood =true;
 break;
 }
+}
+if($return->mastertemplate == 'blank.tpl'){
+$mastertplgood =true;
 }
 if(!$mastertplgood){
 trigger_error('Invalid skin [' . $return->mastertemplate . '] selected for this page, skin is not located within the selected theme!  Using first available instead.', E_USER_NOTICE);

@@ -167,7 +167,7 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="fb714865047a79810589fbe1a9eab1cd">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="470f147b7c4cde489ceaaf6014e8d28d"/>
+		<file filename="core/functions/Core.functions.php" md5="d67d626130fd1309efbda47d70c98c87"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="d30419047aee346d119cf990054ab851">
 			<class name="RewriteMapHelper"/>
 		</file>
@@ -500,7 +500,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="06f428768946473576150df4b8b69a02">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="15d1f457f3a1dbeaa12e7b5cc96b053c">
+		<file filename="core/libs/core/Core.class.php" md5="377916af17a68110247f4e54f2010c77">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -541,7 +541,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="7bae1b2886a742915df7086624d5d819">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="bf406adee622f7fbbd8a2ad731c44837">
+		<file filename="core/libs/core/Model.class.php" md5="ec8c8dea78e60a8f444f7dd22af64dc5">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -553,7 +553,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="56818b4124a9dabd843b011c226d9b25">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="27f4930202f86cb987582cbefb256a8c">
+		<file filename="core/libs/core/PageRequest.class.php" md5="5cee6edb2fab162e17a31bb803d63a11">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="026c83b5188f74fd815f1cd7a0403498">
@@ -652,6 +652,12 @@
 		</file>
 		<file filename="core/libs/core/datamodel/tests/SQL_Parser_DatasetTest.php" md5="9aed174ba2bfdbe6e9d9ab82ecfa8397">
 			<class name="SQL_Parser_DatasetTest"/>
+		</file>
+		<file filename="core/libs/core/date/DateTime.php" md5="abfb8d707919e5cce8e42ce48220e159">
+			<class name="Core\Date\DateTime"/>
+		</file>
+		<file filename="core/libs/core/date/Timezone.php" md5="c30d3cffa94bd6f71b97e346a2829742">
+			<class name="Core\Date\Timezone"/>
 		</file>
 		<file filename="core/libs/core/errormanagement/functions.php" md5="31a1e52a4b2c281bb0475427023f436b"/>
 		<file filename="core/libs/core/filestore/Contents.interface.php" md5="7fe2366ab60c9f0a432c76b41f49a923">
@@ -1022,7 +1028,7 @@
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="3c1bfc3b1fdaadcb1e7e441cbc43d302"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="8cdf9a7777eb3eb3be083d10f4418bf4"/>
 		<file filename="core/libs/smarty-plugins/function.controls.php" md5="6d27ea6f00b10982d9e7741e42be46e5"/>
-		<file filename="core/libs/smarty-plugins/function.date.php" md5="ca9a149b49804734f6487bf55f072700"/>
+		<file filename="core/libs/smarty-plugins/function.date.php" md5="91c87dae1bee22cc4e73c2f6c282a06a"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="2b04283d7436c1aabf5c0a0e3ace7ac2"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="b66d149f0cafd9e86855ae7217fdcfc2"/>
 		<file filename="core/libs/smarty-plugins/function.img.php" md5="95a321c7d4b3e04e866f22d89811267c"/>
@@ -1352,7 +1358,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="832f5a3c3121e5c8422032d6dc4d6262">
+		<file filename="core/models/PageModel.class.php" md5="512ec3547849a5e1d4595748fa7fe83b">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="3791a151027c417603c48e3a3c59a4d3">
@@ -1421,7 +1427,6 @@
 		<file filename="core/widgets/UserWidget.class.php" md5="c7d8039a7bca0c52383c375b42aa3514">
 			<class name="UserWidget"/>
 		</file>
-		<file filename="files/private/tests/ivak_TV_Test_Screen.png" md5="e23ff09f0d6d5c8f9f14877264c251b7"/>
 		<file filename="htaccess.ant" md5="03a971bd1f755da122d8f8f458b840cf"/>
 		<file filename="htaccess.ex" md5="5b9477efc4add163473fe0ab8939bede"/>
 		<file filename="index.php" md5="7f5a20c36040efcbfca372f064890ba0"/>
@@ -1470,15 +1475,6 @@
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 		<file filename="install/utilities.php" md5="19b6e7d1483e8ec8e0a6fad9932ce850"/>
-		<file filename="logs/error.log" md5="9fc334983260ec395dd748a89751bc22"/>
-		<file filename="logs/error.log.201401050010.gz" md5="e843508fdb756c6bdd6073faea1736c7"/>
-		<file filename="logs/error.log.201401120010.gz" md5="cc1bf0fbb7cb6ec6ce264760d5ffc33f"/>
-		<file filename="logs/error.log.201401190010.gz" md5="05a59173d7b783801821fdcceb4e222e"/>
-		<file filename="logs/info.log" md5="2d6689534794311e57da3489a33cf846"/>
-		<file filename="logs/info.log.201401050010.gz" md5="8801d575836ad929d9e49f57eaa64e8d"/>
-		<file filename="logs/info.log.201401120010.gz" md5="c68d7ab8d8033a51c57234947763f989"/>
-		<file filename="logs/info.log.201401190010.gz" md5="b7441fcbe56c30c95d6cd1ab8f10a70a"/>
-		<file filename="logs/security.log" md5="e32aa699f7d70587726607f37acf223c"/>
 	</files>
 	<pages>
 		<page baseurl="/admin" admin="1" access="g:admin" title="Administration"/>
@@ -1514,7 +1510,7 @@
 		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="5f6f0a4d4732e1555f7afe73297f0717"/>
 		<file filename="core/templates/forms/elements/formdateinput.tpl" md5="bc5a17edff3be9f0d9dd4710b57460a8"/>
 		<file filename="core/templates/forms/elements/formdatetimeinput.tpl" md5="0dab7e1348963b014876b638d7f162af"/>
-		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="c9b357a4190a9cab5f5982896e7b4b5f"/>
+		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="0ededc7c9a3c487298e7697453bc5908"/>
 		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="b253627a7cac7c2db9c53160272e103c"/>
 		<file filename="core/templates/forms/elements/formlicenseinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formpagemetaauthorinput.tpl" md5="297c79d80fce61430946c0d6b39362af"/>
@@ -1903,7 +1899,7 @@
 			<php file="core/upgrades/270_to_280_user_avatar_paths.php"/>
 		</upgrade>
 		<upgrade from="2.8.0" to="3.0.0"/>
-		<upgrade from="3.0.0" to="3.next">
+		<upgrade from="!3.0.0" to="3.next">
 			<dataset action="update" table="widget_instance">
 				<datasetset key="baseurl">/user/login</datasetset>
 				<datasetwhere>baseurl = /UserWidget/Login</datasetwhere>
