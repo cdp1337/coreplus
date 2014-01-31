@@ -1072,17 +1072,28 @@ class Core implements ISingleton {
 		// Allow already-resolved links to be returned verbatim.
 		if (strpos($url, '://') !== false) return $url;
 
+		// Allow multisite URLs to be passed in natively.
+		if(strpos($url, 'site:') === 0){
+			$slashpos = strpos($url, '/');
+			$site = substr($url, 5, $slashpos-5);
+			$url = substr($url, $slashpos);
+		}
+		else{
+			$site = 0;
+		}
+
 		try{
-			$a = PageModel::SplitBaseURL($url);
+			$a = PageModel::SplitBaseURL($url, $site);
 		}
 		catch(\Exception $e){
 			// Well, this isn't a fatal error, so just warn the admin and continue on.
+			\Core\ErrorManagement\exception_handler($e);
 			error_log('Unable to resolve URL [' . $url . '] due to exception [' . $e->getMessage() . ']');
 			return '';
 		}
 
 		// Instead of going through the overhead of a pagemodel call, SplitBaseURL provides what I need!
-		return ROOT_URL . substr($a['rewriteurl'], 1);
+		return $a['fullurl'];
 	}
 
 	/**
