@@ -74,6 +74,7 @@ class GeoAddressFormInput extends FormElement {
 			// There is no model currently set, fine... I'll just use some defaults.
 			$v = [
 				'id'       => '',
+				'label'    => '',
 				'address1' => '',
 				'address2' => '',
 				'city'     => REMOTE_CITY,
@@ -84,6 +85,7 @@ class GeoAddressFormInput extends FormElement {
 		}
 
 		$id       = $v['id'];
+		$label    = $v['label'];
 		$address1 = $v['address1'];
 		$address2 = $v['address2'];
 		$city     = $v['city'];
@@ -108,6 +110,7 @@ class GeoAddressFormInput extends FormElement {
 		$tpl = \Core\Templates\Template::Factory($file);
 
 		$tpl->assign('id', $id);
+		$tpl->assign('label', $label);
 		$tpl->assign('address1', $address1);
 		$tpl->assign('address2', $address2);
 		$tpl->assign('city', $city);

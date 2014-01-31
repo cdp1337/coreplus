@@ -16,6 +16,13 @@ class GeoAddressModel extends Model {
 		'id' => array(
 			'type' => Model::ATT_TYPE_UUID
 		),
+		'label' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 100,
+			'form' => [
+				'title' => 'Label',
+			],
+		),
 		'address1' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 256,
@@ -60,13 +67,17 @@ class GeoAddressModel extends Model {
 			),
 		),
 		'lat' => array(
-			'type' => Model::ATT_TYPE_STRING,
+			'type' => Model::ATT_TYPE_FLOAT,
+			'precision' => '17,11',
+			'default' => 0,
 			'formtype' => 'hidden',
 			'null' => true,
 			'comment' => 'Latitude of this location',
 		),
 		'lng' => array(
-			'type' => Model::ATT_TYPE_STRING,
+			'type' => Model::ATT_TYPE_FLOAT,
+			'precision' => '17,11',
+			'default' => 0,
 			'formtype' => 'hidden',
 			'null' => true,
 			'comment' => 'Longitude of this location',
@@ -104,9 +115,36 @@ class GeoAddressModel extends Model {
 				return false;
 			}
 		}
-		else{
+		elseif($this->changed()){
+
+			if(Core::IsLibraryAvailable('GoogleMaps')){
+				// If google maps are available, use that to geocode this address.
+				$req = new Google\Maps\GeocodeRequest();
+				$req->address1 = $this->get('address1');
+				$req->address2 = $this->get('address2');
+				$req->city     = $this->get('city');
+				$req->state    = $this->get('province');
+				$req->postal   = $this->get('postal');
+				$req->country  = $this->get('country');
+
+				$lookup = $req->lookup();
+
+				if($lookup->isValid()){
+					$this->set('lat', $lookup->getLat());
+					$this->set('lng', $lookup->getLng());
+				}
+				else{
+					$this->set('lat', 0);
+					$this->set('lng', 0);
+				}
+			}
+
 			// Resume with the traditional save!
 			return parent::save();
+		}
+		else{
+			// No change!
+			return false;
 		}
 	}
 }

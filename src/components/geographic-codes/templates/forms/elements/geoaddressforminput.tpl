@@ -5,24 +5,25 @@
 		color: rgb(74, 74, 74);
 	}
 	.geoaddressforminput input[type="text"] {
-		background: none repeat scroll 0% 0% rgb(246, 246, 246);
+		background: none repeat scroll 0 0 rgb(246, 246, 246);
 		border: 1px solid rgb(203, 203, 203);
 		border-radius: 0.4em;
 		color: rgb(60, 60, 60);
 		min-width: 260px;
-		padding: 10px 0px 6px 10px;
+		padding: 10px 0 6px 10px;
 	}
 
 	.geoaddressforminput select {
-		background: none repeat scroll 0% 0% rgb(246, 246, 246);
+		background: none repeat scroll 0 0 rgb(246, 246, 246);
 		border: 1px solid rgb(203, 203, 203);
-		border-radius: 0.4em 0.4em 0px 0px;
+		border-radius: 0.4em 0.4em 0 0;
 		color: rgb(60, 60, 60);
 		padding: 7px 4px 7px 9px;
 		min-width: 100px;
 		cursor: pointer;
 	}
 
+	.geoaddressforminput .address-label,
 	.geoaddressforminput .address-address1,
 	.geoaddressforminput .address-address2,
 	.geoaddressforminput .address-city {
@@ -52,6 +53,9 @@
 	{/if}
 
 	<input type="hidden" name="{$element->get('name')}[id]" value="{$id}"/>
+
+	<input type="text" class="address-label" name="{$element->get('name')}[label]" placeholder="Label/Name" {if $req}required="required"{/if} value="{$label|escape}"/>
+	<br/>
 
 	<input type="text" class="address-address1" name="{$element->get('name')}[address1]" placeholder="Address 1" {if $req}required="required"{/if} value="{$address1|escape}"/>
 	<br/>
