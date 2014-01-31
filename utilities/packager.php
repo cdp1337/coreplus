@@ -689,9 +689,14 @@ function process_component($component, $forcerelease = false){
 
 	// The core has a "few" extra ignores to it...
 	if($component == 'core'){
-		$it->addIgnores('components/', 'config/configuration.xml', 'dropins/', 'exports/', 'nbproject/', 'themes/', 'utilities/', '.htaccess', 'gnupg', 'core/bootstrap.compiled.php');
-		if(CDN_LOCAL_ASSETDIR) $it->addIgnore(CDN_LOCAL_ASSETDIR);
-		if(CDN_LOCAL_PUBLICDIR) $it->addIgnore(CDN_LOCAL_PUBLICDIR);
+		$it->addIgnores(
+			'components/', 'config/configuration.xml', 'dropins/', 'exports/',
+			'nbproject/', 'themes/', 'utilities/', '.htaccess', 'gnupg',
+			'core/bootstrap.compiled.php', 'logs/'
+		);
+		if(CDN_LOCAL_ASSETDIR)   $it->addIgnore(CDN_LOCAL_ASSETDIR);
+		if(CDN_LOCAL_PUBLICDIR)  $it->addIgnore(CDN_LOCAL_PUBLICDIR);
+		if(CDN_LOCAL_PRIVATEDIR) $it->addIgnore(CDN_LOCAL_PRIVATEDIR);
 		if(strpos(TMP_DIR_WEB, ROOT_PDIR) === 0) $it->addIgnore(TMP_DIR_WEB);
 		if(strpos(TMP_DIR_CLI, ROOT_PDIR) === 0) $it->addIgnore(TMP_DIR_CLI);
 	}
