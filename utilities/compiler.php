@@ -355,8 +355,22 @@ else{
 	foreach($results as $file){
 		echo "Compiling $file...\n";
 
-		$cssfile = substr($file, 0, -4) . 'css';
-		$minfile = substr($file, 0, -4) . 'min.css';
+		$outfilename = basename($file);
+		$outdirname  = dirname($file) . '/';
+
+		// If the out directory name ends with "dev/assets/scss/", remap that to "assets/css/"
+		// This allows for development SCSS/SASS files to be located in the dev codebase, but not exported along with
+		// production packages.
+		if(preg_match('#/dev/assets/scss/#', $outdirname)){
+			$outdirname = preg_replace('#/dev/assets/scss/#', '/assets/css/', $outdirname);
+		}
+		elseif(preg_match('#/dev/assets/sass/#', $outdirname)){
+			$outdirname = preg_replace('#/dev/assets/sass/#', '/assets/css/', $outdirname);
+		}
+
+
+		$cssfile = $outdirname . substr($outfilename, 0, -4) . 'css';
+		$minfile = $outdirname . substr($outfilename, 0, -4) . 'min.css';
 
 		exec('sass "' . $file . '":"' . $cssfile . '" -C -l -f -t expanded --unix-newlines', $null, $ret);
 		if($ret == 0) echo "Compiled CSS file successfully!\n";
