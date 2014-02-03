@@ -1079,7 +1079,7 @@ class Core implements ISingleton {
 			$url = substr($url, $slashpos);
 		}
 		else{
-			$site = 0;
+			$site = null;
 		}
 
 		try{
