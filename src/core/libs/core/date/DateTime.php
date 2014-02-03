@@ -81,18 +81,32 @@ class DateTime extends \DateTime{
 	 */
 	public function __construct($datetime = null, $timezone = null){
 
+		// If the timezone is not set, try to resolve it automatically.
+		if($timezone === null && is_numeric($datetime)){
+			// unix timestamps are stored in GMT/UTC, so assume that.
+			$timezone = Timezone::GetTimezone('UTC');
+		}
+		elseif($timezone === null && $datetime !== null){
+			// Other dates are probably in the default timezone, so use that.
+			$timezone = Timezone::GetTimezone(Timezone::TIMEZONE_DEFAULT);
+		}
+		else{
+			// Ummm..... Just to be sure.
+			$timezone = Timezone::GetTimezone($timezone);
+		}
+
 		if($datetime === null){
 			// NULL is an alias for now.
-			parent::__construct('now', Timezone::GetTimezone($timezone));
+			parent::__construct('now', $timezone);
 		}
 		elseif(is_numeric($datetime)){
 			// A numeric datetime string, (unix timestamp), and a null timezone request translates to GMT time.
 			// This is because all unix timestamps in Core are by default stored in GMT/UTC time.
-			parent::__construct(null, Timezone::GetTimezone($timezone));
+			parent::__construct(null, $timezone);
 			$this->setTimestamp($datetime);
 		}
 		else{
-			parent::__construct($datetime, Timezone::GetTimezone($timezone));
+			parent::__construct($datetime, $timezone);
 		}
 	}
 
