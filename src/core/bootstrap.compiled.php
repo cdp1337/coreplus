@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 30 Jan 2014 19:30:17 -0500
+ * @compiled Mon, 03 Feb 2014 11:19:44 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -12525,7 +12525,7 @@ $site = substr($url, 5, $slashpos-5);
 $url = substr($url, $slashpos);
 }
 else{
-$site = 0;
+$site = null;
 }
 try{
 $a = PageModel::SplitBaseURL($url, $site);
