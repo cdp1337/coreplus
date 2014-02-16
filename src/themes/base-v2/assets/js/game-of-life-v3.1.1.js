@@ -89,16 +89,11 @@
       // { columns : 100, rows : 48, cellSize : 8 },
       {
         //columns : 216,
-	    columns: Math.floor(window.outerWidth / 8.2),
+	    columns: Math.floor(window.outerWidth / 8.2), // 16.4
         //rows : 86,
-	    rows: Math.floor(window.outerHeight / 8.2),
+	    rows: Math.floor(window.outerHeight / 8.2), // 16.4
         cellSize : 8
-      },
-
-      {
-        columns : 300,
-        rows : 144,
-        cellSize : 2
+	    //cellSize : 16
       },
 
       {
