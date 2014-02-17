@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 03 Feb 2014 11:19:44 -0500
+ * @compiled Mon, 17 Feb 2014 02:10:28 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -106,17 +106,24 @@ return $this->_events;
 }
 public function getTimeFormatted(){
 $time = $this->getTime();
-if($time < 0.1){
-return round($time, 4) * 1000000 . ' ns';
+if($time < 0.001){
+return round($time, 4) * 1000000 . ' µs';
 }
 elseif($time < 2.0){
 return round($time, 4) * 1000 . ' ms';
 }
-elseif($time < 60){
-return round($time, 4) . ' seconds';
+elseif($time < 120){
+return round($time, 0) . ' s';
+}
+elseif($time < 3600) {
+$m = round($time, 0) / 60;
+$s = round($time - $m*60, 0);
+return $m . ' m ' . $s . ' s';
 }
 else{
-return round($time, 4) / 60 . ' minutes';
+$h = round($time, 0) / 3600;
+$m = round($time - $h*3600, 0);
+return $h . ' h ' . $m . ' m';
 }
 }
 public function getEventTimesFormatted(){
@@ -1099,6 +1106,7 @@ class Dataset implements \Iterator{
 const MODE_ALTER = 'alter';
 const MODE_GET = 'get';
 const MODE_INSERT = 'insert';
+const MODE_BULK_INSERT = 'bulk_insert';
 const MODE_UPDATE = 'update';
 const MODE_INSERTUPDATE = 'insertupdate';
 const MODE_DELETE = 'delete';
@@ -1536,10 +1544,10 @@ elseif($this->default === $col->default){
 elseif(\Core\compare_values($this->default, $col->default)){
 }
 elseif($col->default === false && $this->default !== false){
-$differences[] = 'default value (1)';
+$differences[] = 'default value (#1)';
 }
 else{
-$differences[] = 'default value (2)';
+$differences[] = 'default value (#2)';
 }
 if(is_array($this->options) != is_array($col->options)) $differences[] = 'options set/unset';
 if(is_array($this->options) && is_array($col->options)){
@@ -2471,7 +2479,10 @@ $this->_linked[$lk]['records']->set($key, $newval);
 }
 }
 protected function _getLinkClassName($linkname) {
-$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname . 'Model';
+$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname;
+if(strripos($c, 'Model') === false){
+$c .= 'Model';
+}
 if (!is_subclass_of($c, 'Model')) return null; // @todo Error Handling
 return $c;
 }
@@ -2640,6 +2651,8 @@ $cipher = 'AES-256-CBC';
 $passes = 10;
 $size = openssl_cipher_iv_length($cipher);
 $iv = mcrypt_create_iv($size, MCRYPT_RAND);
+if($value === '') return '';
+elseif($value === null) return null;
 $enc = $value;
 for($i=0; $i<$passes; $i++){
 $enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
@@ -2828,6 +2841,11 @@ throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that 
 }
 if($schema[ $v['alias'] ]['type'] == Model::ATT_TYPE_ALIAS){
 throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that points to another alias.  Aliases MUST NOT point to another alias... bad things could happen.');
+}
+}
+if($schema[$k]['default'] === false && !$schema[$k]['null']){
+if($schema[$k]['type'] == Model::ATT_TYPE_TEXT){
+$schema[$k]['default'] = '';
 }
 }
 if($v['type'] == Model::ATT_TYPE_ENUM){
@@ -8049,7 +8067,7 @@ return true;
 if(is_numeric($val1) && is_numeric($val2) && $val1 == $val2){
 return true;
 }
-if(strlen($val1) == strlen($val2) && $val1 == $val2){
+if(is_scalar($val1) && is_scalar($val2) && strlen($val1) == strlen($val2) && $val1 == $val2){
 return true;
 }
 return false;
