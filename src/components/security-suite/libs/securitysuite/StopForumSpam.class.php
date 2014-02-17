@@ -1,5 +1,28 @@
 <?php
 /**
+ * File for class StopForumSpam definition in the coreplus project
+ *
+ * @author Charlie Powell <charlie@eval.bz>
+ * @copyright Copyright (C) 2009-2014  Charlie Powell
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+ */
+
+namespace SecuritySuite;
+
+
+/**
  * Created by JetBrains PhpStorm.
  * User: powellc
  * Date: 12/15/12
@@ -76,7 +99,7 @@ class StopForumSpam {
 				continue;
 			}
 
-			$record = sfsBlacklistModel::Construct($line[0]);
+			$record = \sfsBlacklistModel::Construct($line[0]);
 			$record->setFromArray(
 				array(
 					'submissions' => $line[1],
@@ -109,7 +132,7 @@ class StopForumSpam {
 	 * If it is and has a high enough submission rate, (in a 24 hour period), then block the user completely and immediately.
 	 */
 	public static function CheckIP(){
-		$record = sfsBlacklistModel::Construct(REMOTE_IP);
+		$record = \sfsBlacklistModel::Construct(REMOTE_IP);
 		// It's not in there, YAY!
 		if(!$record->exists()) return;
 
@@ -118,7 +141,7 @@ class StopForumSpam {
 		if($record->get('submissions') > $highscore){
 			// YOU can haz good party tiem nau
 
-			SystemLogModel::LogSecurityEvent('/security/blocked', 'Blocking IP due to over ' . $highscore . ' submissions to sfs in a 24 hour period.');
+			\SystemLogModel::LogSecurityEvent('/security/blocked', 'Blocking IP due to over ' . $highscore . ' submissions to sfs in a 24 hour period.');
 
 			die('IP Blocked due to high spam score');
 		}
@@ -135,16 +158,16 @@ class StopForumSpam {
 				if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['happyfuntime']) && isset($_SESSION['happyfuntimecheck'])){
 					// It's an attempt!
 					if($_POST['happyfuntime'] == $_SESSION['happyfuntimecheck']){
-						SystemLogModel::LogSecurityEvent('/security/unblocked', 'User successfully answered an anti-bot math question, unblocking.');
+						\SystemLogModel::LogSecurityEvent('/security/unblocked', 'User successfully answered an anti-bot math question, unblocking.');
 						$_SESSION['security_antispam_allowed'] = true;
 					}
 					else{
-						SystemLogModel::LogSecurityEvent('/security/captchafailed', 'User attempted, but failed in answering an anti-bot math question.');
+						\SystemLogModel::LogSecurityEvent('/security/captchafailed', 'User attempted, but failed in answering an anti-bot math question.');
 						$html .= '<b>NOPE!</b>';
 					}
 				}
 
-				SystemLogModel::LogSecurityEvent('/security/blocked', 'Blocking IP due to over ' . $warnlevel . ' submissions to sfs in a 24 hour period.');
+				\SystemLogModel::LogSecurityEvent('/security/blocked', 'Blocking IP due to over ' . $warnlevel . ' submissions to sfs in a 24 hour period.');
 				$random1 = (rand(4, 6) * 2);
 				$random2 = (rand(1, 3) * 2);
 				$random3 = rand(1, 2);

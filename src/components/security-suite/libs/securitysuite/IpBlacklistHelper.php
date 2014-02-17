@@ -20,6 +20,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+namespace SecuritySuite;
 
 /**
  * A short teaser of what IpBlacklistHelper does.
@@ -55,15 +56,15 @@ abstract class IpBlacklistHelper {
 	 */
 	public static function CheckIP() {
 
-		$factory = new ModelFactory('IpBlacklistModel');
+		$factory = new \ModelFactory('IpBlacklistModel');
 		$factory->whereGroup(
 			'OR',
 			[
-				'expires > ' . CoreDateTime::Now('U', Time::TIMEZONE_GMT),
+				'expires > ' . \CoreDateTime::Now('U', \Time::TIMEZONE_GMT),
 				'expires == 0'
 			]
 		);
-		$where = new Core\Datamodel\DatasetWhereClause();
+		$where = new \Core\Datamodel\DatasetWhereClause();
 		$where->setSeparator('or');
 
 		$longip = ip2long(REMOTE_IP);
@@ -81,7 +82,7 @@ abstract class IpBlacklistHelper {
 			return;
 		}
 		// else... hehehe, happy happy fun time for you!
-		SystemLogModel::LogSecurityEvent(
+		\SystemLogModel::LogSecurityEvent(
 			'/security/blocked',
 			'Blacklisted IP tried to access the site (' . REMOTE_IP . ')',
 			'Blacklisted IP tried to access the site!<br/>Remote IP: ' . REMOTE_IP . '<br/>Matching Range: ' . $ban->get('ip_addr') . '<br/>Requested URL: ' . CUR_CALL
@@ -96,9 +97,9 @@ abstract class IpBlacklistHelper {
 	 * @return bool
 	 */
 	public static function CleanupHook() {
-		$factory = new ModelFactory('IpBlacklistModel');
+		$factory = new \ModelFactory('IpBlacklistModel');
 		$factory->where('expires > 0'); // If they're set not to be deleted, don't purge them...
-		$factory->where('expires <= ' . CoreDateTime::Now('U', Time::TIMEZONE_GMT));
+		$factory->where('expires <= ' . \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
 
 		// DELETE!
 		$count = $factory->count();
@@ -109,7 +110,7 @@ abstract class IpBlacklistHelper {
 
 
 		foreach($factory->get() as $record){
-			/** @var $record IpBlacklistModel */
+			/** @var $record \IpBlacklistModel */
 			$record->delete();
 		}
 
