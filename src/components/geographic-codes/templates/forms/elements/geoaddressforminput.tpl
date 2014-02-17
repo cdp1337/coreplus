@@ -54,7 +54,7 @@
 
 	<input type="hidden" name="{$element->get('name')}[id]" value="{$id}"/>
 
-	<input type="text" class="address-label" name="{$element->get('name')}[label]" placeholder="Label/Name" {if $req}required="required"{/if} value="{$label|escape}"/>
+	<input type="text" class="address-label" name="{$element->get('name')}[label]" placeholder="Label / Address Nickname" {if $req}required="required"{/if} value="{$label|escape}"/>
 	<br/>
 
 	<input type="text" class="address-address1" name="{$element->get('name')}[address1]" placeholder="Address 1" {if $req}required="required"{/if} value="{$address1|escape}"/>
