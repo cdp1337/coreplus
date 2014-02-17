@@ -33,6 +33,8 @@ function get_form_element_from_config(\ConfigModel $config){
 	$title = substr($key, strlen($gname) + 2);
 	// Split the title on '/' and capitalize it to make it more user-friendly.
 	$title = str_replace('/', ' ', $title);
+	// Same thing for underscores '_', remove them and capitalize the words.
+	$title = str_replace('_', ' ', $title);
 	$title = ucwords($title);
 
 	$val   = \ConfigHandler::Get($key);
