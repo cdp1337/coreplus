@@ -367,6 +367,12 @@ else{
 		elseif(preg_match('#/dev/assets/sass/#', $outdirname)){
 			$outdirname = preg_replace('#/dev/assets/sass/#', '/assets/css/', $outdirname);
 		}
+		elseif(preg_match('#/assets/scss/#', $outdirname)){
+			$outdirname = preg_replace('#/assets/scss/#', '/assets/css/', $outdirname);
+		}
+		elseif(preg_match('#/assets/sass/#', $outdirname)){
+			$outdirname = preg_replace('#/assets/sass/#', '/assets/css/', $outdirname);
+		}
 
 
 		$cssfile = $outdirname . substr($outfilename, 0, -4) . 'css';
