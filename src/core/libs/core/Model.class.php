@@ -1757,7 +1757,12 @@ class Model implements ArrayAccess {
 	 */
 	protected function _getLinkClassName($linkname) {
 		// Determine the class.
-		$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname . 'Model';
+		$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname;
+
+		// All models must end with "Model"
+		if(strripos($c, 'Model') === false){
+			$c .= 'Model';
+		}
 
 		if (!is_subclass_of($c, 'Model')) return null; // @todo Error Handling
 
@@ -2030,6 +2035,9 @@ class Model implements ArrayAccess {
 		$passes = 10;
 		$size = openssl_cipher_iv_length($cipher);
 		$iv = mcrypt_create_iv($size, MCRYPT_RAND);
+
+		if($value === '') return '';
+		elseif($value === null) return null;
 
 		$enc = $value;
 		for($i=0; $i<$passes; $i++){
@@ -2375,6 +2383,14 @@ class Model implements ArrayAccess {
 
 					if($schema[ $v['alias'] ]['type'] == Model::ATT_TYPE_ALIAS){
 						throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that points to another alias.  Aliases MUST NOT point to another alias... bad things could happen.');
+					}
+				}
+
+				// Ensure that the default value is appropriate.
+				if($schema[$k]['default'] === false && !$schema[$k]['null']){
+					if($schema[$k]['type'] == Model::ATT_TYPE_TEXT){
+						// Strings that do not have a default but cannot be null are defaulted to "".
+						$schema[$k]['default'] = '';
 					}
 				}
 
