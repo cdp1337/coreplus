@@ -777,6 +777,10 @@ class Theme{
 			else{
 				$action = 'Installed';
 			}
+
+			if(!$f->isReadable()){
+				throw new \InstallerException('Source file [' . $f->getFilename() . '] is not readable.');
+			}
 			
 			try{
 				$f->copyTo($nf, true);
