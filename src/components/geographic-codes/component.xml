@@ -434,8 +434,8 @@
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="1.1.0">
-			<sql file="datafiles/countries.sql"/>
-			<sql file="datafiles/provinces.sql"/>
+			<sql file="datafiles/countries_bulk.sql"/>
+			<sql file="datafiles/provinces_bulk.sql"/>
 		</upgrade>
 		<upgrade from="1.1.0" to="1.1.1"/>
 	</upgrades>
