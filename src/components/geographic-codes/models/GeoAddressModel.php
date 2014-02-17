@@ -102,6 +102,20 @@ class GeoAddressModel extends Model {
 		'primary' => array('id'),
 	);
 
+	/**
+	 * Check to see if this model is "blank".
+	 *
+	 * This does not mean not filled out, but instead means no address1 and no postal code.
+	 *
+	 * @return bool
+	 */
+	public function isBlank(){
+		$a1 = $this->get('address1');
+		$po = $this->get('postal');
+
+		return ($a1 == '' && $po == '');
+	}
+
 	public function save(){
 		// Quick check to see if this address is actually populated or not.
 		if( $this->_data['address1'] == '' && $this->_data['postal'] == '' ){
@@ -146,5 +160,72 @@ class GeoAddressModel extends Model {
 			// No change!
 			return false;
 		}
+	}
+
+	/**
+	 * Get the City/Province/Postal line formatted based on the country of this address.
+	 *
+	 * @return string
+	 */
+	public function getCPPFormatted(){
+		switch($this->get('country')){
+			case 'CA':
+				$out = $this->get('city');
+				if($this->get('province') || $this->get('postal')){
+					$out .= ' ';
+				}
+
+				if($this->get('province')){
+					$out .= $this->get('province');
+					if($this->get('postal')){
+						$out .= ' ';
+					}
+				}
+
+				if($this->get('postal')){
+					$out .= ' ' . $this->get('postal');
+				}
+				return $out;
+			case 'US':
+			default:
+				$out = $this->get('city');
+				if($this->get('province') || $this->get('postal')){
+					$out .= ', ';
+				}
+
+				if($this->get('province')){
+					$out .= $this->get('province');
+					if($this->get('postal')){
+						$out .= ' ';
+					}
+				}
+
+				if($this->get('postal')){
+					$out .= $this->get('postal');
+				}
+				return $out;
+		}
+	}
+
+	/**
+	 * Get the City/State/Zip line formatted based on the country of this address.
+	 *
+	 * Alias of getCPPFormatted()
+	 *
+	 * @return string
+	 */
+	public function getCSZFormatted(){
+		return $this->getCPPFormatted();
+	}
+
+	/**
+	 * Get the City/State/Postal line formatted based on the country of this address.
+	 *
+	 * Alias of getCPPFormatted()
+	 *
+	 * @return string
+	 */
+	public function getCSPFormatted(){
+		return $this->getCPPFormatted();
 	}
 }
