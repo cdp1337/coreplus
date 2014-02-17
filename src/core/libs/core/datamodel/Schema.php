@@ -314,10 +314,10 @@ class SchemaColumn {
 			// Consider it a fuzzy comparison that actually acknowledges the difference between NULL, "", and 0.
 		}
 		elseif($col->default === false && $this->default !== false){
-			$differences[] = 'default value (1)';
+			$differences[] = 'default value (#1)';
 		}
 		else{
-			$differences[] = 'default value (2)';
+			$differences[] = 'default value (#2)';
 		}
 
 		// If one is an array but not the other....
