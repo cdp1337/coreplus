@@ -41,8 +41,25 @@
 	<div class="pagination-list">
 		Page:
 		{assign var='prev' value=null}
+
+		{**
+		 * This is the new automatic jump system.
+		 * Only 10 page jumps at most are displayed on the interface.
+		 *}
+		{if $page_max > 100000}
+			{assign var='jumpcount' value=($page_max/50000)|floor*5000}
+		{elseif $page_max > 10000}
+			{assign var='jumpcount' value=($page_max/5000)|floor*500}
+		{elseif $page_max > 1000}
+			{assign var='jumpcount' value=($page_max/500)|floor*50}
+		{elseif $page_max > 100}
+			{assign var='jumpcount' value=($page_max/50)|floor*5}
+		{else}
+			{assign var='jumpcount' value='10'}
+		{/if}
+
 		{for $x=1; $x<=$page_max; $x++}
-			{if ($x == 1) || ($x == $page_max) || ($x >= $display_min && $x <= $display_max) || $x % 100 == 0}
+			{if ($x == 1) || ($x == $page_max) || ($x >= $display_min && $x <= $display_max) || $x % $jumpcount == 0}
 				{if $prev && ($prev+1 != $x)} .. {/if}
 
 				{if $x == $page_current}
