@@ -753,6 +753,10 @@ function process_component($component, $forcerelease = false){
 			// It's a template! (view)
 			$viewfiles[] = array('file' => $fname, 'md5' => $file->getHash());
 		}
+		elseif($assetdir && $file->inDirectory($assetdir) && $file->getExtension() == 'scss'){
+			// SASS/SCSS Files are NOT assets, but other files.
+			$otherfiles[] = array('file' => $fname, 'md5' => $file->getHash());
+		}
 		elseif($assetdir && $file->inDirectory($assetdir)){
 			// It's an asset!
 			$assetfiles[] = array('file' => $fname, 'md5' => $file->getHash());
@@ -1258,11 +1262,16 @@ function process_theme($theme, $forcerelease = false){
 		// And then, scan this file for code, ie: classes, controllers, etc.
 		$fname = substr($file->getFilename(), $basestrlen);
 
-		if($assetdir && $file->inDirectory($assetdir)){
+
+		if($assetdir && $file->inDirectory($assetdir) && $file->getExtension() == 'scss'){
+			// SASS/SCSS Files are NOT assets, but other files.
+			$otherfiles[] = array('file' => $fname, 'md5' => $file->getHash());
+		}
+		elseif($assetdir && $file->inDirectory($assetdir)){
 			// It's an asset!
 			$assetfiles[] = array('file' => $fname, 'md5' => $file->getHash());
 		}
-		if($skindir && $file->inDirectory($skindir)){
+		elseif($skindir && $file->inDirectory($skindir)){
 			// It's a skin!
 			$skinfiles[] = array('file' => $fname, 'md5' => $file->getHash());
 		}
@@ -1272,7 +1281,7 @@ function process_theme($theme, $forcerelease = false){
 		}
 		else{
 			// It's a something..... I don't care.
-			//$otherfiles[] = array('file' => $fname, 'md5' => $file->getHash());
+			$otherfiles[] = array('file' => $fname, 'md5' => $file->getHash());
 		}
 		echo ".";
 	}
@@ -1281,6 +1290,7 @@ function process_theme($theme, $forcerelease = false){
 	$t->setAssetFiles($assetfiles);
 	$t->setSkinFiles($skinfiles);
 	$t->setViewFiles($viewfiles);
+	$t->setOtherFiles($otherfiles);
 
 	// Lookup the changelog text of this current version.
 	$changelogfile = $t->getBaseDir() . 'CHANGELOG';
