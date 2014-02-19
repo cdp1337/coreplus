@@ -214,11 +214,33 @@ class FormGroup {
 	 * @return string
 	 */
 	public function getClass() {
-		$c = $this->get('class');
-		$r = $this->get('required');
-		$e = $this->hasError();
 
-		return $c . (($r) ? ' formrequired' : '') . (($e) ? ' formerror' : '');
+		$classnames = [];
+
+		// class can contain multiple classes.
+		if($this->get('class')){
+			$classnames = explode(' ', $this->get('class'));
+		}
+
+		if($this->get('required')){
+			$classnames[] = 'formrequired';
+		}
+
+		if($this->hasError()){
+			$classnames[] = 'formerror';
+		}
+
+		if($this->get('orientation')){
+			$classnames[] = 'form-orientation-' . $this->get('orientation');
+		}
+
+		// Remove dupes
+		$classnames = array_unique($classnames);
+		// And sort, just for the lulz of it.
+		sort($classnames);
+
+		// And return a flattened list
+		return implode(' ', $classnames);
 	}
 
 	/**
@@ -748,12 +770,17 @@ class Form extends FormGroup {
 	 * @param array $atts Array of attribute to assign to this form off the bat.
 	 */
 	public function  __construct($atts = null) {
+
+		if($atts === null){
+			$atts = [];
+		}
+		// Some defaults
+		if(!isset($atts['method'])) $atts['method'] = 'POST';
+		if(!isset($atts['orientation'])) $atts['orientation'] = 'horizontal';
+
 		parent::__construct($atts);
 
-		// Some defaults
 		$this->_validattributes = array('accept', 'accept-charset', 'action', 'enctype', 'id', 'method', 'name', 'target', 'style');
-		//$this->_attributes['uniqueid'] = rand(1, 4) . Core::RandomHex(7);
-		$this->_attributes['method'] = 'POST';
 
 		// Will get set back to true on form submission for preserving the input values.
 		$this->persistent = false;
