@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 17 Feb 2014 02:10:28 -0500
+ * @compiled Wed, 19 Feb 2014 14:32:15 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4041,8 +4041,19 @@ $args[$v] = $matches[2][$k];
 $base = substr($base, 0, $qpos);
 }
 $posofslash = strpos($base, '/');
-if ($posofslash) $controller = substr($base, 0, $posofslash);
-else $controller = $base;
+$posofdot   = strpos($base, '.');
+if ($posofslash){
+$controller = substr($base, 0, $posofslash);
+$base = substr($base, $posofslash+1);
+}
+elseif($posofdot){
+$controller = substr($base, 0, $posofdot);
+$base = 'index' . substr($base, $posofdot);
+}
+else{
+$controller = $base;
+$base = false;
+}
 if (class_exists($controller . 'Controller')) {
 switch (true) {
 case is_subclass_of($controller . 'Controller', 'Controller_2_1'):
@@ -4066,8 +4077,6 @@ return null;
 else {
 return null;
 }
-if ($posofslash !== false) $base = substr($base, $posofslash + 1);
-else $base = false;
 if ($base) {
 $posofslash = strpos($base, '/');
 if ($posofslash) {
@@ -4082,7 +4091,7 @@ $method = $base;
 $base = substr($base, strlen($method) + 1);
 }
 else {
-$method = 'Index';
+$method = 'index';
 }
 if(strpos($method, '.') !== false){
 $ctype = \Core\Filestore\extension_to_mimetype(substr($method, strpos($method, '.') + 1));
@@ -4097,7 +4106,7 @@ return null;
 if ($method{0} == '_') return null;
 $params = ($base !== false) ? explode('/', $base) : null;
 $baseurl = '/' . ((strpos($controller, 'Controller') == strlen($controller) - 10) ? substr($controller, 0, -10) : $controller);
-if (!($method == 'Index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
+if (!($method == 'index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
 $baseurl .= ($params) ? '/' . implode('/', $params) : '';
 $rewriteurl = self::_LookupReverseUrl($baseurl, $site);
 if($ctype != 'text/html'){
@@ -8646,21 +8655,28 @@ function extension_to_mimetype($ext){
 switch($ext){
 case 'atom':
 return 'application/atom+xml';
-case 'csv':
-return 'text/csv';
 case 'css':
 return 'text/css';
+case 'csv':
+return 'text/csv';
+case 'gif':
+return 'image/gif';
 case 'html':
 case 'htm':
 return 'text/html';
 case 'ics':
 return 'text/calendar';
+case 'jpg':
+case 'jpeg':
+return 'image/jpeg';
 case 'js':
 return 'text/javascript';
 case 'json':
 return 'application/json';
 case 'otf':
 return 'font/otf';
+case 'png':
+return 'image/png';
 case 'rss':
 return 'application/rss+xml';
 case 'ttf':
@@ -8677,28 +8693,34 @@ function mimetype_to_extension($mimetype){
 switch($mimetype){
 case 'application/atom+xml':
 return 'atom';
-case 'text/csv':
-return 'csv';
-case 'text/css':
-return 'css';
-case 'text/html':
-return 'html';
-case 'text/calendar':
-return 'ics';
-case 'text/javascript':
-return 'js';
 case 'application/json':
 return 'json';
-case 'font/otf':
-return 'otf';
 case 'application/rss+xml':
 return 'rss';
-case 'font/ttf':
-return 'ttf';
 case 'application/xhtml+xml':
 return 'xhtml';
 case 'application/xml':
 return 'xml';
+case 'font/otf':
+return 'otf';
+case 'font/ttf':
+return 'ttf';
+case 'image/gif':
+return 'gif';
+case 'image/jpeg':
+return 'jpeg';
+case 'image/png':
+return 'png';
+case 'text/calendar':
+return 'ics';
+case 'text/css':
+return 'css';
+case 'text/csv':
+return 'csv';
+case 'text/html':
+return 'html';
+case 'text/javascript':
+return 'js';
 default:
 return '';
 }
@@ -9407,7 +9429,18 @@ public function isReadable() {
 return is_readable($this->_filename);
 }
 public function isWritable(){
+if(file_exists($this->_filename)){
 return is_writable($this->_filename);
+}
+else{
+$dir = dirname($this->_filename);
+if(is_dir($dir) && is_writable($dir)){
+return true;
+}
+else{
+return false;
+}
+}
 }
 public function isLocal() {
 return true;
@@ -14373,7 +14406,7 @@ $dom = new \DOMDocument();
 try{
 @$dom->loadHTML('<html>' . $fullsearch . '</html>');
 $nodes = $dom->getElementsByTagName('insertable');
-$validattributes = ['accept', 'basedir', 'cols', 'default', 'description', 'name', 'option', 'rows', 'size', 'type', 'title', 'value', 'width'];
+$validattributes = ['accept', 'basedir', 'cols', 'default', 'description', 'name', 'options', 'rows', 'size', 'type', 'title', 'value', 'width'];
 foreach($nodes as $n){
 $nodedata = [];
 foreach($validattributes as $k){
@@ -15515,10 +15548,22 @@ $tpl->assign('elements', $out);
 return $tpl->fetch();
 }
 public function getClass() {
-$c = $this->get('class');
-$r = $this->get('required');
-$e = $this->hasError();
-return $c . (($r) ? ' formrequired' : '') . (($e) ? ' formerror' : '');
+$classnames = [];
+if($this->get('class')){
+$classnames = explode(' ', $this->get('class'));
+}
+if($this->get('required')){
+$classnames[] = 'formrequired';
+}
+if($this->hasError()){
+$classnames[] = 'formerror';
+}
+if($this->get('orientation')){
+$classnames[] = 'form-orientation-' . $this->get('orientation');
+}
+$classnames = array_unique($classnames);
+sort($classnames);
+return implode(' ', $classnames);
 }
 public function getID(){
 if (!empty($this->_attributes['id'])){
@@ -15804,9 +15849,13 @@ public static $GroupMappings = array(
 );
 private $_models = array();
 public function  __construct($atts = null) {
+if($atts === null){
+$atts = [];
+}
+if(!isset($atts['method'])) $atts['method'] = 'POST';
+if(!isset($atts['orientation'])) $atts['orientation'] = 'horizontal';
 parent::__construct($atts);
 $this->_validattributes = array('accept', 'accept-charset', 'action', 'enctype', 'id', 'method', 'name', 'target', 'style');
-$this->_attributes['method'] = 'POST';
 $this->persistent = false;
 }
 public function getTemplateName() {

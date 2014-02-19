@@ -85,6 +85,9 @@
 		<file filename="assets/js/jquery/jquery-1.10.2.js" md5="91515770ce8c55de23b306444d8ea998"/>
 		<file filename="assets/js/jquery/jquery-1.10.2.min.js" md5="628072e7212db1e8cdacb22b21752cda"/>
 		<file filename="assets/js/jquery/jquery-1.10.2.min.map" md5="6c3ccfc221d36777d383b6e04d0b8af9"/>
+		<file filename="assets/js/jquery/jquery-1.11.0.js" md5="3b80424646a7ecdb19273d86800c1ac0"/>
+		<file filename="assets/js/jquery/jquery-1.11.0.min.js" md5="8fc25e27d42774aeae6edbc0a18b72aa"/>
+		<file filename="assets/js/jquery/jquery-1.11.0.min.map" md5="88960207dc799796278610d3febe4abb"/>
 		<file filename="assets/js/jquery/jquery-1.9.1.js" md5="08c235d357750c657ac1db7d1cf656a9"/>
 		<file filename="assets/js/jquery/jquery-1.9.1.min.js" md5="397754ba49e9e0cf4e7c190da78dda05"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.js" md5="c913b6b5925699cd1bf4d6aa41082f70"/>
@@ -115,7 +118,7 @@
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
 		<file filename="CHANGELOG" md5="9597bb085c8e57f922978f665eb2ca0a"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="c53c183abec22c66ed1b032960bfbe50">
+		<file filename="JQuery.lib.php" md5="95298f58afdd6ff8b601acde860817a1">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
