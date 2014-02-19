@@ -27,6 +27,7 @@ class SimpleCaptchaController extends Controller_2_1{
 		$req  = $this->getPageRequest();
 		// This will tell the system not to actually output anything.
 		$view->record = false;
+		$view->contenttype = 'image/png';
 		$view->mode = View::MODE_NOOUTPUT;
 		
 		$captcha = new SimpleCaptcha();
