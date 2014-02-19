@@ -4,19 +4,18 @@
  *}
 
 <div class="{$element->getClass()} {$element->get('id')}">
-	<div class="formelement-labelinputgroup">
-		{if $element->get('title')}
-			<label for="{$element->get('id')}">{$element->get('title')|escape}</label>
-		{/if}
 
+	<label for="{$element->get('id')}" class="form-element-label">
+		{$element->get('title')|escape}
+		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
+	</label>
+
+	<div class="form-element-value">
 		<input type="{$type}"{$element->getInputAttributes()}>
-
-			<div class="clear"></div>
 	</div>
-	<div class="clear"></div>
 
 	{if $element->get('description')}
-		<p class="formdescription">{$element->get('description')}</p>
+		<p class="form-element-description">{$element->get('description')}</p>
 	{/if}
 
 </div>

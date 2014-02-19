@@ -53,7 +53,7 @@ HTML5 display definitions
 /**
 * Correct `block` display not defined in IE 8/9.
 */
-/* line 42, _normalize.scss */
+/* line 42, ../scss/_normalize.scss */
 article,
 aside,
 details,
@@ -72,7 +72,7 @@ summary {
 /**
 * Correct `inline-block` display not defined in IE 8/9.
 */
-/* line 52, _normalize.scss */
+/* line 52, ../scss/_normalize.scss */
 audio,
 canvas,
 video {
@@ -83,7 +83,7 @@ video {
 * Prevent modern browsers from displaying `audio` without controls.
 * Remove excess height in iOS 5 devices.
 */
-/* line 61, _normalize.scss */
+/* line 61, ../scss/_normalize.scss */
 audio:not([controls]) {
   display: none;
   height: 0;
@@ -93,7 +93,7 @@ audio:not([controls]) {
 * Address `[hidden]` styling not present in IE 8/9.
 * Hide the `template` element in IE, Safari, and Firefox < 22.
 */
-/* line 72, _normalize.scss */
+/* line 72, ../scss/_normalize.scss */
 [hidden],
 template {
   display: none;
@@ -107,7 +107,7 @@ Base
 * 2. Prevent iOS text size adjust after orientation change, without disabling
 * user zoom.
 */
-/* line 86, _normalize.scss */
+/* line 86, ../scss/_normalize.scss */
 html {
   font-family: sans-serif;
   /* 1 */
@@ -120,7 +120,7 @@ html {
 /**
 * Remove default margin.
 */
-/* line 96, _normalize.scss */
+/* line 96, ../scss/_normalize.scss */
 body {
   margin: 0;
 }
@@ -131,7 +131,7 @@ Links
 /**
 * Remove the gray background color from active links in IE 10.
 */
-/* line 108, _normalize.scss */
+/* line 108, ../scss/_normalize.scss */
 a {
   background: transparent;
 }
@@ -139,7 +139,7 @@ a {
 /**
 * Address `outline` inconsistency between Chrome and other browsers.
 */
-/* line 116, _normalize.scss */
+/* line 116, ../scss/_normalize.scss */
 a:focus {
   outline: thin dotted;
 }
@@ -147,7 +147,7 @@ a:focus {
 /**
 * Improve readability when focused and also mouse hovered in all browsers.
 */
-/* line 125, _normalize.scss */
+/* line 125, ../scss/_normalize.scss */
 a:active,
 a:hover {
   outline: 0;
@@ -160,7 +160,7 @@ Typography
 * Address variable `h1` font-size and margin within `section` and `article`
 * contexts in Firefox 4+, Safari 5, and Chrome.
 */
-/* line 138, _normalize.scss */
+/* line 138, ../scss/_normalize.scss */
 h1 {
   font-size: 2em;
   margin: 0.67em 0;
@@ -169,7 +169,7 @@ h1 {
 /**
 * Address styling not present in IE 8/9, Safari 5, and Chrome.
 */
-/* line 147, _normalize.scss */
+/* line 147, ../scss/_normalize.scss */
 abbr[title] {
   border-bottom: 1px dotted;
 }
@@ -177,7 +177,7 @@ abbr[title] {
 /**
 * Address style set to `bolder` in Firefox 4+, Safari 5, and Chrome.
 */
-/* line 156, _normalize.scss */
+/* line 156, ../scss/_normalize.scss */
 b,
 strong {
   font-weight: bold;
@@ -186,7 +186,7 @@ strong {
 /**
 * Address styling not present in Safari 5 and Chrome.
 */
-/* line 164, _normalize.scss */
+/* line 164, ../scss/_normalize.scss */
 dfn {
   font-style: italic;
 }
@@ -194,7 +194,7 @@ dfn {
 /**
 * Address differences between Firefox and other browsers.
 */
-/* line 172, _normalize.scss */
+/* line 172, ../scss/_normalize.scss */
 hr {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
@@ -204,7 +204,7 @@ hr {
 /**
 * Address styling not present in IE 8/9.
 */
-/* line 182, _normalize.scss */
+/* line 182, ../scss/_normalize.scss */
 mark {
   background: #ff0;
   color: #000;
@@ -213,7 +213,7 @@ mark {
 /**
 * Correct font family set oddly in Safari 5 and Chrome.
 */
-/* line 194, _normalize.scss */
+/* line 194, ../scss/_normalize.scss */
 code,
 kbd,
 pre,
@@ -225,7 +225,7 @@ samp {
 /**
 * Improve readability of pre-formatted text in all browsers.
 */
-/* line 203, _normalize.scss */
+/* line 203, ../scss/_normalize.scss */
 pre {
   white-space: pre-wrap;
 }
@@ -233,7 +233,7 @@ pre {
 /**
 * Set consistent quote types.
 */
-/* line 211, _normalize.scss */
+/* line 211, ../scss/_normalize.scss */
 q {
   quotes: "\201C" "\201D" "\2018" "\2019";
 }
@@ -241,7 +241,7 @@ q {
 /**
 * Address inconsistent and variable font size in all browsers.
 */
-/* line 219, _normalize.scss */
+/* line 219, ../scss/_normalize.scss */
 small {
   font-size: 80%;
 }
@@ -249,7 +249,7 @@ small {
 /**
 * Prevent `sub` and `sup` affecting `line-height` in all browsers.
 */
-/* line 228, _normalize.scss */
+/* line 228, ../scss/_normalize.scss */
 sub,
 sup {
   font-size: 75%;
@@ -258,12 +258,12 @@ sup {
   vertical-align: baseline;
 }
 
-/* line 235, _normalize.scss */
+/* line 235, ../scss/_normalize.scss */
 sup {
   top: -0.5em;
 }
 
-/* line 239, _normalize.scss */
+/* line 239, ../scss/_normalize.scss */
 sub {
   bottom: -0.25em;
 }
@@ -274,7 +274,7 @@ Embedded content
 /**
 * Remove border when inside `a` element in IE 8/9.
 */
-/* line 251, _normalize.scss */
+/* line 251, ../scss/_normalize.scss */
 img {
   border: 0;
 }
@@ -282,7 +282,7 @@ img {
 /**
 * Correct overflow displayed oddly in IE 9.
 */
-/* line 259, _normalize.scss */
+/* line 259, ../scss/_normalize.scss */
 svg:not(:root) {
   overflow: hidden;
 }
@@ -293,7 +293,7 @@ Figures
 /**
 * Address margin not present in IE 8/9 and Safari 5.
 */
-/* line 271, _normalize.scss */
+/* line 271, ../scss/_normalize.scss */
 figure {
   margin: 0;
 }
@@ -304,7 +304,7 @@ Forms
 /**
 * Define consistent border, margin, and padding.
 */
-/* line 283, _normalize.scss */
+/* line 283, ../scss/_normalize.scss */
 fieldset {
   border: 1px solid #c0c0c0;
   margin: 0 2px;
@@ -315,7 +315,7 @@ fieldset {
 * 1. Correct `color` not being inherited in IE 8/9.
 * 2. Remove padding so people aren't caught out if they zero out fieldsets.
 */
-/* line 294, _normalize.scss */
+/* line 294, ../scss/_normalize.scss */
 legend {
   border: 0;
   /* 1 */
@@ -328,7 +328,7 @@ legend {
 * 2. Correct font size not being inherited in all browsers.
 * 3. Address margins set differently in Firefox 4+, Safari 5, and Chrome.
 */
-/* line 308, _normalize.scss */
+/* line 308, ../scss/_normalize.scss */
 button,
 input,
 select,
@@ -345,7 +345,7 @@ textarea {
 * Address Firefox 4+ setting `line-height` on `input` using `!important` in
 * the UA stylesheet.
 */
-/* line 320, _normalize.scss */
+/* line 320, ../scss/_normalize.scss */
 button,
 input {
   line-height: normal;
@@ -357,7 +357,7 @@ input {
 * Correct `button` style inheritance in Chrome, Safari 5+, and IE 8+.
 * Correct `select` style inheritance in Firefox 4+ and Opera.
 */
-/* line 332, _normalize.scss */
+/* line 332, ../scss/_normalize.scss */
 button,
 select {
   text-transform: none;
@@ -370,7 +370,7 @@ select {
 * 3. Improve usability and consistency of cursor style between image-type
 * `input` and others.
 */
-/* line 347, _normalize.scss */
+/* line 347, ../scss/_normalize.scss */
 button,
 html input[type="button"],
 input[type="reset"],
@@ -384,7 +384,7 @@ input[type="submit"] {
 /**
 * Re-set default cursor for disabled elements.
 */
-/* line 357, _normalize.scss */
+/* line 357, ../scss/_normalize.scss */
 button[disabled],
 html input[disabled] {
   cursor: default;
@@ -394,7 +394,7 @@ html input[disabled] {
 * 1. Address box sizing set to `content-box` in IE 8/9/10.
 * 2. Remove excess padding in IE 8/9/10.
 */
-/* line 367, _normalize.scss */
+/* line 367, ../scss/_normalize.scss */
 input[type="checkbox"],
 input[type="radio"] {
   box-sizing: border-box;
@@ -408,7 +408,7 @@ input[type="radio"] {
 * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
 * (include `-moz` to future-proof).
 */
-/* line 378, _normalize.scss */
+/* line 378, ../scss/_normalize.scss */
 input[type="search"] {
   -webkit-appearance: textfield;
   /* 1 */
@@ -422,7 +422,7 @@ input[type="search"] {
 * Remove inner padding and search cancel button in Safari 5 and Chrome
 * on OS X.
 */
-/* line 391, _normalize.scss */
+/* line 391, ../scss/_normalize.scss */
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
@@ -431,7 +431,7 @@ input[type="search"]::-webkit-search-decoration {
 /**
 * Remove inner padding and border in Firefox 4+.
 */
-/* line 400, _normalize.scss */
+/* line 400, ../scss/_normalize.scss */
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
@@ -442,7 +442,7 @@ input::-moz-focus-inner {
 * 1. Remove default vertical scrollbar in IE 8/9.
 * 2. Improve readability and alignment in all browsers.
 */
-/* line 410, _normalize.scss */
+/* line 410, ../scss/_normalize.scss */
 textarea {
   overflow: auto;
   /* 1 */
@@ -456,7 +456,7 @@ Tables
 /**
 * Remove most spacing between table cells.
 */
-/* line 423, _normalize.scss */
+/* line 423, ../scss/_normalize.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -465,37 +465,37 @@ table {
 /**
  * RE-ADDING because someone took them out from upstream........ *glares*
  */
-/* line 442, _normalize.scss */
+/* line 442, ../scss/_normalize.scss */
 h2 {
   font-size: 1.5em;
   margin: 0.83em 0;
 }
 
-/* line 447, _normalize.scss */
+/* line 447, ../scss/_normalize.scss */
 h3 {
   font-size: 1.17em;
   margin: 1em 0;
 }
 
-/* line 452, _normalize.scss */
+/* line 452, ../scss/_normalize.scss */
 h4 {
   font-size: 1em;
   margin: 1.33em 0;
 }
 
-/* line 457, _normalize.scss */
+/* line 457, ../scss/_normalize.scss */
 h5 {
   font-size: 0.83em;
   margin: 1.67em 0;
 }
 
-/* line 462, _normalize.scss */
+/* line 462, ../scss/_normalize.scss */
 h6 {
   font-size: 0.67em;
   margin: 2.33em 0;
 }
 
-/* line 468, _normalize.scss */
+/* line 468, ../scss/_normalize.scss */
 nav ul,
 nav ol {
   list-style: none;
@@ -503,13 +503,13 @@ nav ol {
 }
 
 @media print {
-  /* line 1, _print.scss */
+  /* line 1, ../scss/_print.scss */
   .screen {
     display: none !important;
   }
 }
 @media screen, projection {
-  /* line 1, _screen.scss */
+  /* line 1, ../scss/_screen.scss */
   .print {
     display: none !important;
   }
@@ -534,7 +534,7 @@ nav ol {
 /* ==========================================================================
 Base styles: opinionated defaults
 ========================================================================== */
-/* line 27, _h5bp.scss */
+/* line 27, ../scss/_h5bp.scss */
 html,
 button,
 input,
@@ -543,7 +543,7 @@ textarea {
   color: #222;
 }
 
-/* line 31, _h5bp.scss */
+/* line 31, ../scss/_h5bp.scss */
 html {
   font-size: 1em;
   line-height: 1.4;
@@ -554,13 +554,13 @@ html {
 * These selection rule sets have to be separate.
 * Customize the background color to match your design.
 */
-/* line 42, _h5bp.scss */
+/* line 42, ../scss/_h5bp.scss */
 ::-moz-selection {
   background: #b3d4fc;
   text-shadow: none;
 }
 
-/* line 47, _h5bp.scss */
+/* line 47, ../scss/_h5bp.scss */
 ::selection {
   background: #b3d4fc;
   text-shadow: none;
@@ -569,7 +569,7 @@ html {
 /*
 * A better looking default horizontal rule
 */
-/* line 56, _h5bp.scss */
+/* line 56, ../scss/_h5bp.scss */
 hr {
   display: block;
   height: 1px;
@@ -583,7 +583,7 @@ hr {
 * Remove the gap between images, videos, audio and canvas and the bottom of
 * their containers: h5bp.com/i/440
 */
-/* line 73, _h5bp.scss */
+/* line 73, ../scss/_h5bp.scss */
 audio,
 canvas,
 img,
@@ -594,7 +594,7 @@ video {
 /*
 * Remove default fieldset styles.
 */
-/* line 81, _h5bp.scss */
+/* line 81, ../scss/_h5bp.scss */
 fieldset {
   border: 0;
   margin: 0;
@@ -604,7 +604,7 @@ fieldset {
 /*
 * Allow only vertical resizing of textareas.
 */
-/* line 91, _h5bp.scss */
+/* line 91, ../scss/_h5bp.scss */
 textarea {
   resize: vertical;
 }
@@ -615,7 +615,7 @@ Helper classes
 /*
 * Image replacement
 */
-/* line 105, _h5bp.scss */
+/* line 105, ../scss/_h5bp.scss */
 .ir {
   background-color: transparent;
   border: 0;
@@ -624,7 +624,7 @@ Helper classes
   *text-indent: -9999px;
 }
 
-/* line 113, _h5bp.scss */
+/* line 113, ../scss/_h5bp.scss */
 .ir:before {
   content: "";
   display: block;
@@ -635,7 +635,7 @@ Helper classes
 /*
 * Hide from both screenreaders and browsers: h5bp.com/u
 */
-/* line 124, _h5bp.scss */
+/* line 124, ../scss/_h5bp.scss */
 .hidden {
   display: none !important;
   visibility: hidden;
@@ -644,7 +644,7 @@ Helper classes
 /*
 * Hide only visually, but have it available for screenreaders: h5bp.com/v
 */
-/* line 133, _h5bp.scss */
+/* line 133, ../scss/_h5bp.scss */
 .visuallyhidden {
   border: 0;
   clip: rect(0 0 0 0);
@@ -660,7 +660,7 @@ Helper classes
 * Extends the .visuallyhidden class to allow the element to be focusable
 * when navigated to via the keyboard: h5bp.com/p
 */
-/* line 150, _h5bp.scss */
+/* line 150, ../scss/_h5bp.scss */
 .visuallyhidden.focusable:active,
 .visuallyhidden.focusable:focus {
   clip: auto;
@@ -674,7 +674,7 @@ Helper classes
 /*
 * Hide visually and from screenreaders, but maintain layout
 */
-/* line 163, _h5bp.scss */
+/* line 163, ../scss/_h5bp.scss */
 .invisible {
   visibility: hidden;
 }
@@ -690,7 +690,7 @@ Helper classes
 * 2. The use of `table` rather than `block` is only necessary if using
 * `:before` to contain the top-margins of child elements.
 */
-/* line 180, _h5bp.scss */
+/* line 180, ../scss/_h5bp.scss */
 .clearfix:before,
 .clearfix:after {
   content: " ";
@@ -699,7 +699,7 @@ Helper classes
   /* 2 */
 }
 
-/* line 185, _h5bp.scss */
+/* line 185, ../scss/_h5bp.scss */
 .clearfix:after {
   clear: both;
 }
@@ -708,7 +708,7 @@ Helper classes
 * For IE 6/7 only
 * Include this rule to trigger hasLayout and contain floats.
 */
-/* line 194, _h5bp.scss */
+/* line 194, ../scss/_h5bp.scss */
 .clearfix {
   *zoom: 1;
 }
@@ -718,7 +718,7 @@ Helper classes
  **                           GENERIC ELEMENTS                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 20, styles.scss */
+/* line 20, ../scss/styles.scss */
 body {
   text-align: center;
   padding: 0;
@@ -729,22 +729,22 @@ body {
   color: #222;
 }
 
-/* line 29, styles.scss */
+/* line 29, ../scss/styles.scss */
 a {
   color: #1C2B0D;
 }
 
-/* line 32, styles.scss */
+/* line 32, ../scss/styles.scss */
 a:hover {
   text-shadow: 0 1px 1px rgba(150, 150, 150, 0.8);
 }
 
-/* line 35, styles.scss */
+/* line 35, ../scss/styles.scss */
 img {
   border: 0;
 }
 
-/* line 38, styles.scss */
+/* line 38, ../scss/styles.scss */
 p {
   padding: 0.5em 0;
   line-height: 1.25em;
@@ -753,7 +753,7 @@ p {
 /**
  * In this template, the page title, (H1), is displayed in the breadcrumbs.
  */
-/* line 45, styles.scss */
+/* line 45, ../scss/styles.scss */
 h1 {
   /*
   border-bottom: 1px solid rgba(90, 90, 90, 0.7);
@@ -766,19 +766,19 @@ h1 {
   display: inline;
 }
 
-/* line 56, styles.scss */
+/* line 56, ../scss/styles.scss */
 h2 {
   font-weight: bold;
   font-size: 125%;
 }
 
-/* line 60, styles.scss */
+/* line 60, ../scss/styles.scss */
 h3 {
   font-weight: bold;
   font-size: 110%;
 }
 
-/* line 64, styles.scss */
+/* line 64, ../scss/styles.scss */
 h4 {
   font-weight: bold;
 }
@@ -796,7 +796,7 @@ h4:after { content: " ]" }
 p:before { content:"P: ["; }
 p:after { content:"]"; }
 */
-/* line 83, styles.scss */
+/* line 83, ../scss/styles.scss */
 #wrapper {
   width: 75%;
   margin: 0 auto;
@@ -807,7 +807,7 @@ p:after { content:"]"; }
   -webkit-box-shadow: 0 0 3px #ddd;
 }
 
-/* line 92, styles.scss */
+/* line 92, ../scss/styles.scss */
 #innerwrapper {
   background: #EDEDED;
   padding: 1em 1em 2em;
@@ -815,7 +815,7 @@ p:after { content:"]"; }
   min-height: 400px;
 }
 
-/* line 98, styles.scss */
+/* line 98, ../scss/styles.scss */
 fieldset {
   border: 1px solid #AAA;
   padding: 0.75em;
@@ -825,20 +825,20 @@ fieldset {
   -webkit-border-radius: 5px;
 }
 
-/* line 106, styles.scss */
+/* line 106, ../scss/styles.scss */
 fieldset legend {
   color: #555;
   font-size: 84%;
   padding: 0 0.5em;
 }
 
-/* line 111, styles.scss */
+/* line 111, ../scss/styles.scss */
 header {
   padding: 5px 2px 1px;
   display: block;
 }
 
-/* line 115, styles.scss */
+/* line 115, ../scss/styles.scss */
 footer {
   min-height: 50px;
   clear: both;
@@ -847,17 +847,17 @@ footer {
   padding: 0.25em 1em;
 }
 
-/* line 122, styles.scss */
+/* line 122, ../scss/styles.scss */
 footer a {
   color: #999;
 }
 
-/* line 125, styles.scss */
+/* line 125, ../scss/styles.scss */
 footer p {
   clear: both;
 }
 
-/* line 128, styles.scss */
+/* line 128, ../scss/styles.scss */
 .clear {
   clear: both;
 }
@@ -867,13 +867,13 @@ footer p {
  **                        IMAGE METADATA STYLES                            **
  *****************************************************************************
  *****************************************************************************/
-/* line 140, styles.scss */
+/* line 140, ../scss/styles.scss */
 .image-metadata-wrapper {
   display: inline-block;
   position: relative;
 }
 
-/* line 144, styles.scss */
+/* line 144, ../scss/styles.scss */
 .image-metadata-wrapper .image-metadata {
   background: none repeat scroll 0 0 #DDDDDD;
   bottom: 0;
@@ -884,7 +884,7 @@ footer p {
   position: absolute;
 }
 
-/* line 153, styles.scss */
+/* line 153, ../scss/styles.scss */
 .image-metadata-wrapper:hover .image-metadata {
   opacity: 0.7;
 }
@@ -901,29 +901,29 @@ For dimensions between 1300 and 975, keep it locked at 975px, it'll float in the
 For dimensions smaller than 975, just be at 100%.
 */
 @media screen and (max-width: 1300px) {
-  /* line 173, styles.scss */
+  /* line 173, ../scss/styles.scss */
   #wrapper {
     width: 975px;
   }
 }
 @media screen and (max-width: 975px) {
-  /* line 176, styles.scss */
+  /* line 176, ../scss/styles.scss */
   #wrapper {
     width: 100%;
   }
 }
 @media screen and (max-width: 640px) {
-  /* line 179, styles.scss */
+  /* line 179, ../scss/styles.scss */
   #wrapper {
     width: 100%;
   }
 
-  /* line 182, styles.scss */
+  /* line 182, ../scss/styles.scss */
   #wrapper #leftcol {
     display: none;
   }
 
-  /* line 185, styles.scss */
+  /* line 185, ../scss/styles.scss */
   #wrapper.column1 section.pagecontent {
     margin-left: 0;
   }
@@ -944,7 +944,7 @@ For dimensions smaller than 975, just be at 100%.
  ** Navigation breadcrumbs and other sub-nav elements                       **
  *****************************************************************************
  *****************************************************************************/
-/* line 211, styles.scss */
+/* line 211, ../scss/styles.scss */
 nav#breadcrumbs {
   font-size: 80%;
   margin-bottom: 0.5em;
@@ -954,34 +954,34 @@ nav#breadcrumbs {
   border-bottom: 1px solid #888;
 }
 
-/* line 220, styles.scss */
+/* line 220, ../scss/styles.scss */
 #breadcrumbs #controls {
   margin: 0;
 }
 
-/* line 224, styles.scss */
+/* line 224, ../scss/styles.scss */
 nav#breadcrumbs a {
   color: #555;
 }
 
-/* line 227, styles.scss */
+/* line 227, ../scss/styles.scss */
 nav#breadcrumbs ul.controls {
   float: right;
   margin-top: -4px;
 }
 
 /*** Left-column ***/
-/* line 233, styles.scss */
+/* line 233, ../scss/styles.scss */
 .pagecolumn {
   width: 170px;
 }
 
-/* line 234, styles.scss */
+/* line 234, ../scss/styles.scss */
 .column1 #leftcol {
   float: left;
 }
 
-/* line 235, styles.scss */
+/* line 235, ../scss/styles.scss */
 .column1 section.pagecontent {
   margin-left: 175px;
   /* Re-enabling the body overflow to allow for context menus.
@@ -989,14 +989,14 @@ nav#breadcrumbs ul.controls {
   */
 }
 
-/* line 243, styles.scss */
+/* line 243, ../scss/styles.scss */
 .rounded-large {
   border-radius: 10px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
 }
 
-/* line 244, styles.scss */
+/* line 244, ../scss/styles.scss */
 .rounded {
   border-radius: 5px;
   -moz-border-radius: 5px;
@@ -1013,14 +1013,14 @@ nav#breadcrumbs ul.controls {
  *****************************************************************************
  *****************************************************************************/
 /*** Controls that can be implemented throughout the site ***/
-/* line 261, styles.scss */
+/* line 11, ../scss/_controls.scss */
 ul.controls {
   height: 20px;
   margin: 0;
   padding: 0;
 }
 
-/* line 266, styles.scss */
+/* line 16, ../scss/_controls.scss */
 ul.controls li {
   float: left;
   margin-right: 0.1em;
@@ -1032,7 +1032,7 @@ And their images.  Stand-alone "control" buttons also get the same styling.
 Since the icons are now being handled by font-awesome, the bulk of this logic will have been removed.
 */
 /* First, the common styles for all icon'd controls. */
-/* line 278, styles.scss */
+/* line 28, ../scss/_controls.scss */
 ul.controls li a {
   text-decoration: none;
   font-size: 14px;
@@ -1040,37 +1040,37 @@ ul.controls li a {
   line-height: 18px;
 }
 
-/* line 279, styles.scss */
+/* line 29, ../scss/_controls.scss */
 ul.controls li a:hover {
   text-shadow: none;
   font-size: 18px;
   padding: 0;
 }
 
-/* line 281, styles.scss */
+/* line 31, ../scss/_controls.scss */
 ul.controls li a span {
   display: none;
 }
 
 /** Spruce up FA with some color :) **/
-/* line 291, styles.scss */
+/* line 41, ../scss/_controls.scss */
 ul.controls li a i.icon-remove,
 ul.controls li a i.icon-delete {
   color: #7a0200;
 }
 
-/* line 292, styles.scss */
+/* line 42, ../scss/_controls.scss */
 ul.controls li a i.icon-edit {
   color: blue;
 }
 
-/* line 294, styles.scss */
+/* line 44, ../scss/_controls.scss */
 ul.controls li a i.icon-plus,
 ul.controls li a i.icon-add {
   color: green;
 }
 
-/* line 295, styles.scss */
+/* line 45, ../scss/_controls.scss */
 ul.controls li a i.icon-rss {
   color: #e99700;
 }
@@ -1079,7 +1079,7 @@ ul.controls li a i.icon-rss {
  * Contextual controls are similar, but slightly different.
  * Instead of being inline, they're in a context menu.
  */
-/* line 301, styles.scss */
+/* line 51, ../scss/_controls.scss */
 ul.controls.context-menu {
   position: absolute;
   border: 1px solid #999;
@@ -1090,7 +1090,7 @@ ul.controls.context-menu {
 }
 
 /* The many links have a bit different styles. */
-/* line 311, styles.scss */
+/* line 61, ../scss/_controls.scss */
 ul.controls.context-menu-many-links {
   box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
   left: 20px;
@@ -1098,7 +1098,7 @@ ul.controls.context-menu-many-links {
   top: -3px;
 }
 
-/* line 317, styles.scss */
+/* line 67, ../scss/_controls.scss */
 ul.controls.context-menu li {
   font-size: 14px;
   float: none;
@@ -1108,31 +1108,31 @@ ul.controls.context-menu li {
   color: #555;
 }
 
-/* line 325, styles.scss */
+/* line 75, ../scss/_controls.scss */
 ul.controls.context-menu li i {
   line-height: 1.5em;
 }
 
-/* line 328, styles.scss */
+/* line 78, ../scss/_controls.scss */
 ul.controls.context-menu li a {
   padding: 0;
   display: block;
   color: #000;
 }
 
-/* line 333, styles.scss */
+/* line 83, ../scss/_controls.scss */
 ul.controls.context-menu li a:hover {
   font-size: 14px;
   background: #AFC5EE;
   color: #000;
 }
 
-/* line 339, styles.scss */
+/* line 89, ../scss/_controls.scss */
 ul.controls.context-menu i {
   padding-left: 4px;
 }
 
-/* line 342, styles.scss */
+/* line 92, ../scss/_controls.scss */
 ul.controls.context-menu span {
   line-height: 1.9em;
   padding: 0 2px;
@@ -1154,7 +1154,7 @@ ul.controls.context-menu span {
  *****************************************************************************
  *****************************************************************************/
 /* First, all the shared elements amongst the buttons. */
-/* line 375, styles.scss */
+/* line 21, ../scss/_buttons.scss */
 a.button,
 .ui-widget-content a.button,
 span.button,
@@ -1182,7 +1182,7 @@ button {
 }
 
 /* Standard nodes that act as buttons require a little more care */
-/* line 397, styles.scss */
+/* line 43, ../scss/_buttons.scss */
 a.button,
 .ui-widget-content a.button,
 span.button {
@@ -1191,7 +1191,7 @@ span.button {
   text-decoration: none !important;
 }
 
-/* line 407, styles.scss */
+/* line 53, ../scss/_buttons.scss */
 a.button:hover,
 .ui-widget-content a.button:hover,
 span.button:hover,
@@ -1201,25 +1201,12 @@ button:hover {
   background: #888;
 }
 
-/* line 412, styles.scss */
+/* line 58, ../scss/_buttons.scss */
 a.button[disabled=disabled] {
   background-color: rgba(126, 126, 128, 0.69);
   border: 1px outset rgba(80, 84, 87, 0.32);
   color: #CCCCCC;
   cursor: no-drop;
-}
-
-/** Tweak the autocomplete styles slightly **/
-/* line 420, styles.scss */
-.formelement input[type="text"].ui-autocomplete-loading {
-  background-image: url("../images/loading-bar-small.gif");
-  background-position: center right;
-  background-repeat: no-repeat;
-}
-
-/* line 426, styles.scss */
-.formelement input[type="text"].ui-autocomplete-input {
-  border: 1px solid #47C6CB;
 }
 
 /*****************************************************************************
@@ -1228,7 +1215,7 @@ a.button[disabled=disabled] {
  *****************************************************************************
  *****************************************************************************/
 /** general styles for most of the messages **/
-/* line 446, styles.scss */
+/* line 12, ../scss/_messages.scss */
 .message-note,
 .message-info,
 .message-success,
@@ -1244,7 +1231,7 @@ a.button[disabled=disabled] {
   position: relative;
 }
 
-/* line 455, styles.scss */
+/* line 21, ../scss/_messages.scss */
 .message-tutorial {
   padding: 15px 10px 15px 55px;
   margin: 10px;
@@ -1255,48 +1242,48 @@ a.button[disabled=disabled] {
 }
 
 /** Specific colors **/
-/* line 465, styles.scss */
+/* line 31, ../scss/_messages.scss */
 .message-note {
   background: #FCF0AD;
   border: 1px solid #BCB06D;
 }
 
-/* line 469, styles.scss */
+/* line 35, ../scss/_messages.scss */
 .message-info {
   background: #EEE9FF;
   border: 1px solid #2667FF;
   color: #0a1250;
 }
 
-/* line 474, styles.scss */
+/* line 40, ../scss/_messages.scss */
 .message-success {
   background: #AFA;
   border: 1px solid #373;
   color: #151;
 }
 
-/* line 479, styles.scss */
+/* line 45, ../scss/_messages.scss */
 .message-deprecated {
   background: #fff4bd;
   border: 1px solid #ded081;
   color: #c1b572;
 }
 
-/* line 484, styles.scss */
+/* line 50, ../scss/_messages.scss */
 .message-warning {
   background: #fce8d1;
   border: 1px solid #bc8565;
   color: #df5c25;
 }
 
-/* line 489, styles.scss */
+/* line 55, ../scss/_messages.scss */
 .message-error {
   background: #FCe5ed;
   border: 1px solid #BC606D;
   color: #DF101D;
 }
 
-/* line 494, styles.scss */
+/* line 60, ../scss/_messages.scss */
 .message-tutorial {
   background: #faefb9;
   border: 1px solid #BCB06D;
@@ -1304,33 +1291,33 @@ a.button[disabled=disabled] {
 }
 
 /** I need to color the A tags too **/
-/* line 501, styles.scss */
+/* line 67, ../scss/_messages.scss */
 body .pagecontent .message-note a {
   color: #7f774a;
 }
 
-/* line 504, styles.scss */
+/* line 70, ../scss/_messages.scss */
 body .pagecontent .message-info a {
   color: #0a1250;
 }
 
-/* line 507, styles.scss */
+/* line 73, ../scss/_messages.scss */
 body .pagecontent .message-success a {
   color: #151;
 }
 
-/* line 510, styles.scss */
+/* line 76, ../scss/_messages.scss */
 body .pagecontent .message-error a {
   color: #DF101D;
 }
 
-/* line 513, styles.scss */
+/* line 79, ../scss/_messages.scss */
 body .pagecontent .message-tutorial a {
   color: #7f774a;
 }
 
 /** And the message's icons **/
-/* line 519, styles.scss */
+/* line 85, ../scss/_messages.scss */
 div[class^="message-"] .message-background-icon i,
 p[class^="message-"] .message-background-icon i {
   font-size: 75px;
@@ -1342,46 +1329,29 @@ p[class^="message-"] .message-background-icon i {
 }
 
 /** And the specific message types icon colors **/
-/* line 529, styles.scss */
+/* line 95, ../scss/_messages.scss */
 3.message-note .message-background-icon i  [class^="icon-"] {
   color: #BCB06D;
 }
 
-/* line 532, styles.scss */
+/* line 98, ../scss/_messages.scss */
 .message-info .message-background-icon i[class^="icon-"] {
   color: #2667FF;
 }
 
-/* line 535, styles.scss */
+/* line 101, ../scss/_messages.scss */
 .message-success .message-background-icon i[class^="icon-"] {
   color: #373;
 }
 
-/* line 538, styles.scss */
+/* line 104, ../scss/_messages.scss */
 .message-error .message-background-icon i[class^="icon-"] {
   color: #DF101D;
 }
 
-/* line 541, styles.scss */
+/* line 107, ../scss/_messages.scss */
 .message-tutorial .message-background-icon i[class^="icon-"] {
   color: #BCB06D;
-}
-
-/* line 545, styles.scss */
-table.stacktrace {
-  width: 100%;
-  border: 1px solid;
-}
-
-/* line 549, styles.scss */
-table.stacktrace th {
-  border: 1px solid;
-}
-
-/* line 552, styles.scss */
-table.stacktrace td {
-  border: 1px solid;
-  font-size: 80%;
 }
 
 /*****************************************************************************
@@ -1389,323 +1359,722 @@ table.stacktrace td {
  **                             FORM ELEMENTS                               **
  *****************************************************************************
  *****************************************************************************/
-/* Error messages for everything */
-/* line 570, styles.scss */
-.formelement.formerror input,
-.formelement.formerror select,
-.formelement.formerror textarea {
-  border: 1px inset red;
+/**
+ * Error backgrounds, borders, and colors for everything
+ */
+/* line 29, ../scss/_form_elements.scss */
+.formelement.formerror .form-element-label {
+  color: #6c0000;
+  font-weight: bold;
+}
+/* line 33, ../scss/_form_elements.scss */
+.formelement.formerror .form-element-value {
   background: #FFF0F0;
+  border: 1px inset #6c0000;
+}
+/* line 37, ../scss/_form_elements.scss */
+.formelement.formerror .form-element-value input, .formelement.formerror .form-element-value select, .formelement.formerror .form-element-value textarea {
+  border: 1px inset #6c0000;
 }
 
-/* Description tag for form elements */
-/* line 577, styles.scss */
-.formelement .formdescription,
-fieldset .formdescription {
-  font-size: 85%;
-  color: #777;
-  margin: 0.25em 0 0.25em 1em;
+/**
+ * CSS Test
+ *
+ * This is just a test class to make the colours something very obvious.
+ */
+/* line 49, ../scss/_form_elements.scss */
+.form-orientation-css-test .form-element-label {
+  background: red;
 }
-
-/* line 583, styles.scss */
-.formelement {
-  margin-bottom: 0.75em;
-  position: relative;
+/* line 53, ../scss/_form_elements.scss */
+.form-orientation-css-test .form-element-value {
+  background: blue;
 }
-
-/* line 588, styles.scss */
-.formelement .formelement-labelinputgroup {
-  background: #F6F6F6;
-  border: 1px solid #CBCBCB;
-  border-radius: .4em;
-  color: #3C3C3C;
-  float: left;
+/* line 57, ../scss/_form_elements.scss */
+.form-orientation-css-test .form-element-description {
+  background: green;
 }
-
-/* line 596, styles.scss */
-.formelement .formelement-labelinputgroup label {
-  float: left;
-  color: #888;
-  padding: 7px 6px 7px 9px;
-  background: #DDD;
-  min-width: 120px;
-}
-
-/* line 604, styles.scss */
-.formelement .formelement-labelinputgroup input {
-  color: #3C3C3C;
-  float: left;
-  min-width: 260px;
-  background: none;
-  border: 0 none;
-  padding: 5px 0 5px 10px;
-}
-
-/* Select specific styles */
-/* line 614, styles.scss */
-.formelement.formselect .formelement-labelinputgroup label {
-  /* Select boxes generally are a little taller than inputs, have more padding for the label. */
-  padding: 7px 4px 8px 9px;
-}
-
-/* line 618, styles.scss */
-.formelement.formselect .formelement-labelinputgroup select {
-  background: #F6F6F6;
-  border: 0 none;
-  border-radius: 0.4em 0.4em 0 0;
-  color: #3C3C3C;
-  padding: 7px 4px 7px 9px;
-  min-width: 100px;
-  cursor: pointer;
-}
-
-/* Radio specific styles */
-/* line 629, styles.scss */
-.formelement.formradioinput {
-  max-width: 415px;
-  display: block;
-  clear: both;
-  background: #F6F6F6;
-  border: 1px solid #CBCBCB;
-  border-radius: 0.4em;
-  color: #3C3C3C;
-  margin-right: 0.75em;
-}
-
-/* line 639, styles.scss */
-.formelement.formradioinput .formelement-labelinputgroup {
-  float: none;
-  border: 0 none;
-}
-
-/* line 643, styles.scss */
-.formelement.formradioinput .formelement-labelinputgroup > label {
-  background: #DDDDDD;
-  color: #888888;
-  display: block;
-  float: none;
-  left: 0;
-  margin: 0;
-  top: 0;
-}
-
-/* line 652, styles.scss */
-.formelement.formradioinput span.radio-label {
-  display: block;
-  background: #DDD;
-  padding: 8px 7px;
-  margin-bottom: 5px;
-  color: #888888;
-}
-
-/* line 659, styles.scss */
-.formelement.formradioinput label {
-  border: none;
-  color: #3C3C3C;
-  cursor: pointer;
-  display: block;
-  line-height: 1.7em;
-  margin-right: 0.5em;
-  padding: 0.25em 0.5em;
-  white-space: nowrap;
-  position: relative;
-  top: 7px;
-  left: 6px;
-}
-
-/* line 672, styles.scss */
-.formelement.formradioinput label input {
-  margin-top: 0;
-}
-
-/* Checkbox and checkboxes specific styles */
-/* line 677, styles.scss */
-.formelement.formcheckboxinput {
-  display: inline-block;
-  clear: both;
-  background: #F6F6F6;
-  border: 1px solid #CBCBCB;
-  border-radius: 0.4em;
-  color: #3C3C3C;
-  padding: 0.3em 0.8em;
-  margin-right: 0.75em;
-}
-
-/* line 687, styles.scss */
-.formelement.formcheckboxesinput {
-  background: #F6F6F6;
-  border: 1px solid #CBCBCB;
-  border-radius: 0.4em;
-  max-width: 415px;
-  color: #888;
-  padding-bottom: 4px;
-}
-
-/* line 695, styles.scss */
-.formelement.formcheckboxinput label {
-  padding: 0.25em 0;
-  white-space: nowrap;
-  top: 4px;
-}
-
-/* line 700, styles.scss */
-.formelement.formcheckboxesinput label {
-  display: block;
-  margin: 0 8px;
-  position: relative;
-  padding: 0.25em 0;
-  white-space: nowrap;
-  top: 4px;
-}
-
-/* line 708, styles.scss */
-.formelement.formcheckboxinput input {
-  color: #3C3C3C;
-  padding: 0.35em 0;
-}
-
-/* line 712, styles.scss */
-.formelement.formcheckboxesinput input {
-  margin-left: 0;
-  color: #3C3C3C;
-  padding: 0.35em 0;
-}
-
-/* line 717, styles.scss */
-.formelement.formcheckboxesinput span.checkboxes-label {
-  display: block;
-  background: #DDD;
-  padding: 8px 7px;
-}
-
-/* line 722, styles.scss */
-.formelement.formcheckboxesinput span.checkboxes-label span.checkboxes-toggle {
-  cursor: pointer;
-  float: right;
-}
-
-/* Textarea specific styles */
-/* line 729, styles.scss */
-.formelement.formtextareainput .formelement-labelinputgroup label {
-  display: block;
-  float: none;
-  position: relative;
-  top: 0;
-}
-
-/* line 735, styles.scss */
-.formelement.formtextareainput .formelement-labelinputgroup textarea {
-  padding: 2px;
-  width: 400px;
-  min-height: 80px;
-  border: 0 none;
-  background: #f6f6f6;
-}
-
-/* File input specific styles */
-/* line 744, styles.scss */
-.formelement.formfileinput {
-  clear: both;
-}
-
-/* line 747, styles.scss */
-.formelement.formfileinput label {
-  float: none;
-  display: block;
-}
-
-/* line 751, styles.scss */
-.formelement.formfileinput .file-input-innercontainer {
-  padding: 4px;
-}
-
-/* line 754, styles.scss */
-.formelement.formfileinput .file-input-innercontainer .formfileinput-selector {
-  vertical-align: top;
-  width: 150px;
-}
-
-/* line 758, styles.scss */
-.formelement.formfileinput .file-input-innercontainer .formfileinput-selector label {
-  position: relative;
-  top: 0;
-  margin-bottom: 5px;
-  background: none;
-}
-
-/* line 764, styles.scss */
-.formelement.formfileinput .file-input-innercontainer .file-input-actions {
-  vertical-align: top;
-}
-
-/* line 767, styles.scss */
-.formelement.formfileinput .file-input-innercontainer .fileinput-action {
-  max-height: 350px;
-  min-width: 200px;
-  max-width: 720px;
-  overflow-y: auto;
-}
-
-/* line 773, styles.scss */
-.formelement.formfileinput .file-input-innercontainer .fileinput-action input {
-  background: white;
-  border: 1px solid #888;
-  padding: 2px;
-  margin: 1px;
-}
-
-/* Page Keywords input specific styles */
-/* line 781, styles.scss */
-.formelement.formpagemetakeywordsinput label {
-  display: block;
-  float: none;
-}
-
-/* line 785, styles.scss */
-.formelement.formpagemetakeywordsinput .keywords-multi-select {
-  background: none repeat scroll 0 0 #F6F6F6;
-  border: 1px solid #47C6CB;
-  border-radius: 0.4em 0.4em 0.4em 0.4em;
-  cursor: text;
-  height: auto;
-  width: 400px;
-  padding: 2px;
-}
-
-/* line 794, styles.scss */
-.formelement.formpagemetakeywordsinput .keywords-multi-select input[type="text"] {
-  border: 0 none;
-  float: left;
-  min-width: 5px;
-  padding: 0;
-}
-
-/* line 800, styles.scss */
-.formelement.formpagemetakeywordsinput .keywords-multi-select .keywords-multi-select-option {
-  background: none repeat scroll 0 0 #EEEEFF;
-  border: 1px solid #DDDDDD;
-  border-radius: 8px 8px 8px 8px;
-  float: left;
-  margin: 0.05em;
-  padding: 0.2em 0.5em;
-}
-
-/* Disabled selects should look a little more ... disabled. */
-/* line 812, styles.scss */
-.formelement.formselect .formelement-labelinputgroup select[disabled],
-.formelement.formselect select[disabled] {
+/* line 63, ../scss/_form_elements.scss */
+.form-orientation-css-test .formelement-labelinputgroup select[disabled],
+.form-orientation-css-test select[disabled] {
+  /* Disabled selects should look a little more ... disabled. */
   opacity: 0.4;
-  color: #111;
+  color: #757575;
   cursor: no-drop;
 }
 
-/* line 819, styles.scss */
+/**
+ * Color and basic padding settings across all form orientations
+ */
+/* line 77, ../scss/_form_elements.scss */
+.formelement {
+  background: #e7e7e7;
+  border: 1px solid rgba(120, 120, 120, 0.1);
+}
+/* line 82, ../scss/_form_elements.scss */
+.formelement.formsubmitinput, .formelement.formresetinput {
+  /* Remove any background colors and borders from buttons.  They don't need'em */
+  background: none transparent;
+  border: 0 none;
+}
+/* line 89, ../scss/_form_elements.scss */
+.formelement .form-element-label {
+  background: #e7e7e7;
+  border: 0 none;
+  color: #2f2f2f;
+  line-height: 1.3em;
+  min-width: 140px;
+  padding: 1%;
+}
+/* line 97, ../scss/_form_elements.scss */
+.formelement .form-element-label a {
+  /* Any A tag inside the labels */
+  color: #6f6f6f;
+}
+/* line 103, ../scss/_form_elements.scss */
+.formelement .form-element-value {
+  color: #353535;
+  position: relative;
+}
+/* line 107, ../scss/_form_elements.scss */
+.formelement .form-element-value input[type=text], .formelement .form-element-value input[type=password] {
+  background: #f6f6f6;
+  border: 1px solid rgba(120, 120, 120, 0.4);
+  color: #353535;
+  min-width: 150px;
+  padding: 1%;
+}
+/* line 115, ../scss/_form_elements.scss */
+.formelement .form-element-value textarea {
+  background: #f6f6f6;
+  border: 1px solid rgba(120, 120, 120, 0.4);
+  color: #353535;
+  padding: 1%;
+}
+/* line 122, ../scss/_form_elements.scss */
+.formelement .form-element-value select {
+  background: #f6f6f6;
+  border: 1px solid rgba(120, 120, 120, 0.4);
+  color: #353535;
+  cursor: pointer;
+  min-width: 100px;
+  padding: 0.5%;
+}
+/* line 136, ../scss/_form_elements.scss */
+.formelement.formradioinput .form-element-value, .formelement.formcheckboxinput .form-element-value, .formelement.formcheckboxesinput .form-element-value, .formelement.formfileinput .form-element-value, .formelement.formcaptchainput .form-element-value {
+  /* These input types also contain a background on their value field */
+  background: #f6f6f6;
+  padding: 1%;
+}
+/* line 142, ../scss/_form_elements.scss */
+.formelement .form-element-description {
+  background: #e7e7e7;
+  border: 0 none;
+  color: #525252;
+  font-size: 85%;
+  margin: 0 0 0.5%;
+}
+/* line 150, ../scss/_form_elements.scss */
+.formelement .form-element-required-mark {
+  /* Required mark color and styling */
+  color: red;
+  font-weight: bold;
+}
+/* line 157, ../scss/_form_elements.scss */
+.formelement.formcheckboxesinput .checkboxes-toggle {
+  cursor: pointer;
+}
+/* line 162, ../scss/_form_elements.scss */
+.formelement.formpagemetakeywordsinput {
+  /* Meta-Keywords input styles */
+}
+/* line 164, ../scss/_form_elements.scss */
+.formelement.formpagemetakeywordsinput .form-element-value {
+  background: #f6f6f6;
+  border: 1px solid rgba(120, 120, 120, 0.4);
+  color: #353535;
+}
+/* line 169, ../scss/_form_elements.scss */
+.formelement.formpagemetakeywordsinput .form-element-value .keywords-multi-select-option {
+  border: 1px solid #f4f4f4;
+  float: left;
+  margin-right: 0.5em;
+  padding: 0.25em;
+}
+/* line 178, ../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput.user-valid .meta-author-invalid-indicator {
+  display: none;
+}
+/* line 181, ../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput.user-invalid .meta-author-valid-indicator {
+  display: none;
+}
+
+/**
+ * Horizontal form orientations
+ */
+/* line 194, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement {
+  overflow: hidden;
+  width: 100%;
+}
+/* line 199, ../scss/_form_elements.scss */
+.form-orientation-horizontal .form-element-label {
+  display: block;
+  float: left;
+  text-align: right;
+  width: 28%;
+}
+/* line 206, ../scss/_form_elements.scss */
+.form-orientation-horizontal .form-element-value {
+  margin-left: 30%;
+}
+/* line 209, ../scss/_form_elements.scss */
+.form-orientation-horizontal .form-element-value input[type=text], .form-orientation-horizontal .form-element-value input[type=password], .form-orientation-horizontal .form-element-value textarea {
+  width: 97%;
+}
+/* line 212, ../scss/_form_elements.scss */
+.form-orientation-horizontal .form-element-value select {
+  width: 99%;
+}
+/* line 217, ../scss/_form_elements.scss */
+.form-orientation-horizontal .form-element-description {
+  clear: both;
+}
+/* line 221, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formradioinput {
+  /* Radio input tweaks */
+}
+/* line 224, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formradioinput .form-element-value label {
+  float: left;
+  margin-right: 1em;
+}
+/* line 231, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formcheckboxesinput {
+  /* Checkboxes specific styles */
+}
+/* line 233, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formcheckboxesinput .checkboxes-toggle {
+  cursor: pointer;
+  float: right;
+  margin-left: 0.25em;
+}
+/* line 237, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formcheckboxesinput .checkboxes-toggle span {
+  /* Hide the label for the toggle to save some real estate. */
+  display: none;
+}
+/* line 243, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formcheckboxesinput .form-element-value label {
+  float: left;
+  margin-right: 1em;
+}
+/* line 250, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formcaptchainput {
+  /* Captcha tweaks */
+}
+/* line 252, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formcaptchainput .form-element-label a {
+  display: block;
+  float: right;
+  margin-top: 1em;
+}
+/* line 258, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formcaptchainput .form-element-value img {
+  float: left;
+  margin-right: 1em;
+}
+/* line 262, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formcaptchainput .form-element-value input {
+  min-width: 140px;
+  width: 30%;
+}
+/* line 269, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.geoaddressforminput {
+  /* GeoAddress input sections have their description above the fields. */
+}
+/* line 272, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.geoaddressforminput .form-element-description {
+  margin-left: 30%;
+  clear: none;
+}
+/* line 277, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.geoaddressforminput .form-element-value {
+  margin-left: 0;
+  clear: both;
+}
+/* line 281, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-address1 {
+  border-top-width: 0;
+  float: left;
+  min-width: 130px;
+  padding: 0.3em 0.5%;
+  width: 50%;
+}
+/* line 288, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-address2 {
+  border-left-width: 0;
+  border-top-width: 0;
+  float: left;
+  min-width: 130px;
+  padding: 0.3em 0.5%;
+  width: 46%;
+}
+/* line 296, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-city {
+  border-top-width: 0;
+  min-width: 85px;
+  padding: 0.3em 0.5%;
+  width: 33%;
+}
+/* line 302, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-province-wrapper {
+  float: left;
+  width: 20%;
+}
+/* line 305, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-province-wrapper select {
+  border-left-width: 0;
+  border-top-width: 0;
+  padding: 0.25em 0.25%;
+  width: 99%;
+}
+/* line 312, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-postal {
+  border-left-width: 0;
+  border-top-width: 0;
+  float: left;
+  min-width: 30px;
+  padding: 0.3em 0.5%;
+  width: 11%;
+}
+/* line 320, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.geoaddressforminput .form-element-value select.address-country {
+  border-left-width: 0;
+  border-top-width: 0;
+  padding: 0.25em 0.5%;
+  width: 32%;
+}
+/* line 329, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formpagemetaauthorinput {
+  /* Meta-Author input styles */
+}
+/* line 332, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formpagemetaauthorinput .form-element-value input {
+  padding-left: 24px;
+  width: 93%;
+}
+/* line 336, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator {
+  position: absolute;
+  left: 8px;
+  top: 4px;
+}
+/* line 344, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formwysiwyginput {
+  /* TinyMCE / WYSIWYG inputs have a slightly different interface, their description is above the input. */
+}
+/* line 346, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formwysiwyginput .form-element-description {
+  margin-left: 30%;
+  clear: none;
+}
+/* line 351, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formwysiwyginput .form-element-value {
+  margin-left: 0;
+  clear: both;
+}
+/* line 359, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formaccessstringinput .form-element-value .formradioinput {
+  display: block;
+  float: none;
+  overflow: hidden;
+  width: 100%;
+}
+/* line 365, ../scss/_form_elements.scss */
+.form-orientation-horizontal .formelement.formaccessstringinput .form-element-value .formcheckboxesinput {
+  display: block;
+  float: none;
+  overflow: hidden;
+  width: 100%;
+}
+
+/**
+ * Vertical form orientations
+ */
+/* line 379, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement {
+  margin-bottom: 0.5em;
+}
+/* line 383, ../scss/_form_elements.scss */
+.form-orientation-vertical .form-element-label {
+  display: block;
+  text-align: left;
+  width: 97%;
+}
+/* line 391, ../scss/_form_elements.scss */
+.form-orientation-vertical .form-element-value input[type=text], .form-orientation-vertical .form-element-value input[type=password], .form-orientation-vertical .form-element-value textarea {
+  width: 97%;
+}
+/* line 394, ../scss/_form_elements.scss */
+.form-orientation-vertical .form-element-value select {
+  width: 99%;
+}
+/* line 399, ../scss/_form_elements.scss */
+.form-orientation-vertical .form-element-description {
+  clear: both;
+  padding-left: 1em;
+}
+/* line 404, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formradioinput {
+  /* Radio input tweaks */
+}
+/* line 407, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formradioinput .form-element-value label {
+  float: left;
+  margin-right: 1em;
+}
+/* line 414, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formcheckboxesinput {
+  /* Checkboxes specific styles */
+}
+/* line 416, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formcheckboxesinput .checkboxes-toggle {
+  cursor: pointer;
+  float: right;
+  margin-left: 0.25em;
+}
+/* line 422, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formcheckboxesinput .form-element-value label {
+  float: left;
+  margin-right: 1em;
+}
+/* line 429, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formcaptchainput {
+  /* Captcha tweaks */
+}
+/* line 431, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formcaptchainput .form-element-label a {
+  display: block;
+  float: right;
+}
+/* line 436, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formcaptchainput .form-element-value img {
+  float: left;
+  margin-right: 1em;
+}
+/* line 440, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formcaptchainput .form-element-value input {
+  min-width: 140px;
+  width: 30%;
+}
+/* line 448, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formfileinput .form-element-value {
+  width: 100%;
+}
+/* line 451, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formfileinput .form-element-value label {
+  display: block;
+}
+/* line 457, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.geoaddressforminput {
+  /* GeoAddress input sections have their description above the fields. */
+}
+/* line 460, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.geoaddressforminput .form-element-value {
+  margin-left: 0;
+  clear: both;
+}
+/* line 464, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-address1 {
+  border-top-width: 0;
+  min-width: 130px;
+}
+/* line 468, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-address2 {
+  border-top-width: 0;
+  min-width: 130px;
+}
+/* line 472, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-city {
+  border-top-width: 0;
+  float: left;
+  min-width: 85px;
+  width: 40%;
+}
+/* line 478, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-province-wrapper {
+  float: left;
+  width: 30%;
+}
+/* line 481, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-province-wrapper select {
+  border-left-width: 0;
+  border-top-width: 0;
+  padding: 3%;
+  width: 99%;
+}
+/* line 488, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-postal {
+  border-left-width: 0;
+  border-top-width: 0;
+  float: left;
+  min-width: 30px;
+  width: 20%;
+}
+/* line 495, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.geoaddressforminput .form-element-value select.address-country {
+  border-top-width: 0;
+}
+/* line 501, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formpagemetaauthorinput {
+  /* Meta-Author input styles */
+}
+/* line 504, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formpagemetaauthorinput .form-element-value input {
+  padding-left: 24px;
+  width: 93%;
+}
+/* line 508, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator {
+  position: absolute;
+  left: 8px;
+  top: 4px;
+}
+/* line 518, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formaccessstringinput .form-element-value .formradioinput {
+  display: block;
+  float: none;
+  overflow: hidden;
+  width: 100%;
+}
+/* line 524, ../scss/_form_elements.scss */
+.form-orientation-vertical .formelement.formaccessstringinput .form-element-value .formcheckboxesinput {
+  display: block;
+  float: none;
+  overflow: hidden;
+  width: 100%;
+}
+
+/**
+ * Grid form orientations
+ */
+/* line 537, ../scss/_form_elements.scss */
+.form-orientation-grid {
+  /* Decrease font size to make everything fit */
+  font-size: 80%;
+}
+/* line 541, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement {
+  border-bottom: 1px solid #afafaf;
+  margin-bottom: 0.25em;
+  overflow: hidden;
+  width: 100%;
+}
+/* line 548, ../scss/_form_elements.scss */
+.form-orientation-grid .form-element-label {
+  clear: left;
+  display: block;
+  float: left;
+  text-align: left;
+  width: 20%;
+}
+/* line 556, ../scss/_form_elements.scss */
+.form-orientation-grid .form-element-value {
+  float: left;
+  width: 30%;
+}
+/* line 560, ../scss/_form_elements.scss */
+.form-orientation-grid .form-element-value input[type=text], .form-orientation-grid .form-element-value input[type=password], .form-orientation-grid .form-element-value textarea {
+  min-width: 100px;
+  width: 97%;
+}
+/* line 564, ../scss/_form_elements.scss */
+.form-orientation-grid .form-element-value select {
+  min-width: 100px;
+  width: 99%;
+}
+/* line 570, ../scss/_form_elements.scss */
+.form-orientation-grid .form-element-description {
+  float: left;
+  padding-left: 0.25em;
+}
+/* line 575, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formradioinput {
+  /* Radio input tweaks */
+}
+/* line 578, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formradioinput .form-element-value label {
+  float: left;
+  margin-right: 1em;
+}
+/* line 585, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formcheckboxesinput {
+  /* Checkboxes specific styles */
+}
+/* line 587, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formcheckboxesinput .checkboxes-toggle {
+  cursor: pointer;
+  float: right;
+  margin-left: 0.25em;
+}
+/* line 591, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formcheckboxesinput .checkboxes-toggle span {
+  /* Hide the label for the toggle to save some real estate. */
+  display: none;
+}
+/* line 597, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formcheckboxesinput .form-element-value label {
+  float: left;
+  margin-right: 1em;
+}
+/* line 604, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formcaptchainput {
+  /* Captcha tweaks */
+}
+/* line 606, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formcaptchainput .form-element-label a {
+  display: block;
+  float: right;
+  margin-top: 1em;
+}
+/* line 612, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formcaptchainput .form-element-value img {
+  float: left;
+  margin-right: 1em;
+}
+/* line 616, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formcaptchainput .form-element-value input {
+  min-width: 140px;
+  width: 30%;
+}
+/* line 623, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.geoaddressforminput {
+  /* GeoAddress input sections have their description above the fields. */
+}
+/* line 626, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.geoaddressforminput .form-element-value {
+  margin-left: 0;
+  clear: both;
+  width: 100%;
+}
+/* line 631, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-address1 {
+  border-top-width: 0;
+  float: left;
+  min-width: 130px;
+  padding: 0.3em 0.5%;
+  width: 50%;
+}
+/* line 638, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-address2 {
+  border-left-width: 0;
+  border-top-width: 0;
+  float: left;
+  min-width: 130px;
+  padding: 0.3em 0.5%;
+  width: 46%;
+}
+/* line 646, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-city {
+  border-top-width: 0;
+  min-width: 85px;
+  padding: 0.3em 0.5%;
+  width: 33%;
+}
+/* line 652, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-province-wrapper {
+  float: left;
+  width: 20%;
+}
+/* line 655, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-province-wrapper select {
+  border-left-width: 0;
+  border-top-width: 0;
+  padding: 0.25em 0.25%;
+  width: 99%;
+}
+/* line 662, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-postal {
+  border-left-width: 0;
+  border-top-width: 0;
+  float: left;
+  min-width: 30px;
+  padding: 0.3em 0.5%;
+  width: 11%;
+}
+/* line 670, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.geoaddressforminput .form-element-value select.address-country {
+  border-left-width: 0;
+  border-top-width: 0;
+  padding: 0.25em 0.5%;
+  width: 32%;
+}
+/* line 679, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formpagemetaauthorinput {
+  /* Meta-Author input styles */
+}
+/* line 682, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formpagemetaauthorinput .form-element-value input {
+  padding-left: 24px;
+  width: 93%;
+}
+/* line 686, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator {
+  position: absolute;
+  left: 8px;
+  top: 4px;
+}
+/* line 694, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formwysiwyginput {
+  /* TinyMCE / WYSIWYG inputs have a slightly different interface, their description is above the input. */
+}
+/* line 696, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formwysiwyginput .form-element-description {
+  clear: none;
+}
+/* line 700, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formwysiwyginput .form-element-value {
+  margin-left: 0;
+  clear: both;
+  width: 100%;
+}
+/* line 709, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formaccessstringinput .form-element-value .formradioinput {
+  display: block;
+  float: none;
+  overflow: hidden;
+  width: 100%;
+}
+/* line 715, ../scss/_form_elements.scss */
+.form-orientation-grid .formelement.formaccessstringinput .form-element-value .formcheckboxesinput {
+  display: block;
+  float: none;
+  overflow: hidden;
+  width: 100%;
+}
+
+/** Tweak the autocomplete styles slightly **/
+/* line 727, ../scss/_form_elements.scss */
+.formelement input[type="text"].ui-autocomplete-loading {
+  background-image: url("../images/loading-bar-small.gif");
+  background-position: center right;
+  background-repeat: no-repeat;
+}
+
+/* line 733, ../scss/_form_elements.scss */
+.formelement input[type="text"].ui-autocomplete-input {
+  border: 1px solid #47C6CB;
+}
+
+/* line 738, ../scss/_form_elements.scss */
 .facebook-integration {
   margin-left: 0;
   max-width: 515px;
 }
 
-/* line 824, styles.scss */
+/* line 743, ../scss/_form_elements.scss */
 .ui-dialog .formelement label {
   position: relative;
   top: 0;
@@ -1713,23 +2082,40 @@ fieldset .formdescription {
   text-align: left;
 }
 
-/* line 830, styles.scss */
+/* line 749, ../scss/_form_elements.scss */
 .ui-dialog .formelement input {
   padding: 0.35em 0.8em;
   display: block;
 }
 
-/* line 835, styles.scss */
+/* line 754, ../scss/_form_elements.scss */
 .ui-dialog .formelement select {
   display: block;
   max-width: 100%;
 }
 
-/* line 840, styles.scss */
+/* line 759, ../scss/_form_elements.scss */
 .tinymce label {
   position: relative;
   top: 0;
   margin-bottom: 5px;
+}
+
+/* line 253, ../scss/styles.scss */
+table.stacktrace {
+  width: 100%;
+  border: 1px solid;
+}
+
+/* line 257, ../scss/styles.scss */
+table.stacktrace th {
+  border: 1px solid;
+}
+
+/* line 260, ../scss/styles.scss */
+table.stacktrace td {
+  border: 1px solid;
+  font-size: 80%;
 }
 
 /*****************************************************************************
@@ -1737,19 +2123,19 @@ fieldset .formdescription {
  **                            LISTING TABLES                               **
  *****************************************************************************
  *****************************************************************************/
-/* line 854, styles.scss */
+/* line 276, ../scss/styles.scss */
 table.listing {
   width: 100%;
   border: 1px solid #AAA;
   border-collapse: collapse;
 }
 
-/* line 859, styles.scss */
+/* line 281, ../scss/styles.scss */
 table.listing tr:nth-child(odd) {
   background-color: #d4d6d9;
 }
 
-/* line 862, styles.scss */
+/* line 284, ../scss/styles.scss */
 table.listing th {
   padding: 0.15em 0.5em;
   border: 1px solid #AAA;
@@ -1758,7 +2144,7 @@ table.listing th {
   color: #EEE;
 }
 
-/* line 869, styles.scss */
+/* line 291, ../scss/styles.scss */
 table.listing td {
   padding: 0.15em 0.5em;
   border: 1px solid #AAA;
@@ -1766,7 +2152,7 @@ table.listing td {
 }
 
 /* Give a little high-lighting effect on mouseover for the records. */
-/* line 876, styles.scss */
+/* line 298, ../scss/styles.scss */
 table.listing tr:hover {
   background-color: #c7d5eb;
 }
@@ -1776,7 +2162,7 @@ table.listing tr:hover {
  **                          DEBUGGING CLASSES                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 888, styles.scss */
+/* line 310, ../scss/styles.scss */
 pre.xdebug-var-dump {
   border: 1px solid #FFE5C0;
   padding: 0.5em;
@@ -1791,35 +2177,35 @@ pre.xdebug-var-dump {
  **                     SORTABLES & NESTED SORTABLES                        **
  *****************************************************************************
  *****************************************************************************/
-/* line 905, styles.scss */
+/* line 327, ../scss/styles.scss */
 ol.sortable-listing {
   margin: 0.5em 0;
 }
 
-/* line 908, styles.scss */
+/* line 330, ../scss/styles.scss */
 ol.sortable-listing li {
   display: block;
   list-style: none outside none;
 }
 
-/* line 912, styles.scss */
+/* line 334, ../scss/styles.scss */
 ol.sortable-listing li div.entry {
   border: 1px solid #BBBBBB;
   padding: 0.25em;
 }
 
-/* line 916, styles.scss */
+/* line 338, ../scss/styles.scss */
 ol.sortable-listing li.placeholder {
   border: 1px solid #BBBBBB;
   background: #BBB;
 }
 
-/* line 920, styles.scss */
+/* line 342, ../scss/styles.scss */
 ol.sortable-listing li a.control {
   margin-top: -2px;
 }
 
-/* line 923, styles.scss */
+/* line 345, ../scss/styles.scss */
 ol.sortable-listing ol {
   margin-left: 1em;
 }
@@ -1829,19 +2215,19 @@ ol.sortable-listing ol {
  **                           PRIMARY NAVIGATION                            **
  *****************************************************************************
  *****************************************************************************/
-/* line 935, styles.scss */
+/* line 357, ../scss/styles.scss */
 #primary-nav li {
   display: inline-block;
   position: relative;
   text-align: center;
 }
 
-/* line 940, styles.scss */
+/* line 362, ../scss/styles.scss */
 #primary-nav li.navigation-menu-over a:hover {
   background: #333;
 }
 
-/* line 944, styles.scss */
+/* line 366, ../scss/styles.scss */
 #primary-nav a,
 #primary-nav span {
   color: #777;
@@ -1854,13 +2240,13 @@ ol.sortable-listing ol {
 }
 
 /* Enable the mouse over menu */
-/* line 954, styles.scss */
+/* line 376, ../scss/styles.scss */
 #primary-nav li.navigation-menu-over > ul {
   display: block;
 }
 
 /* And the sub menu */
-/* line 958, styles.scss */
+/* line 380, ../scss/styles.scss */
 #primary-nav li ul {
   display: none;
   position: absolute;
@@ -1873,13 +2259,13 @@ ol.sortable-listing ol {
   box-shadow: 0 3px 6px #000;
 }
 
-/* line 969, styles.scss */
+/* line 391, ../scss/styles.scss */
 #primary-nav li ul li {
   width: 190px;
   text-align: left;
 }
 
-/* line 974, styles.scss */
+/* line 396, ../scss/styles.scss */
 #primary-nav li ul a,
 #primary-nav li ul span {
   padding-left: 20px;
@@ -1887,7 +2273,7 @@ ol.sortable-listing ol {
 }
 
 /* And any sub sub menu */
-/* line 979, styles.scss */
+/* line 401, ../scss/styles.scss */
 #primary-nav li ul li ul {
   top: -2px;
   left: 180px;
@@ -1902,7 +2288,7 @@ ol.sortable-listing ol {
   box-shadow: 0 3px 6px #000;
 }
 
-/* line 992, styles.scss */
+/* line 414, ../scss/styles.scss */
 #primary-nav a:hover {
   text-shadow: none;
 }
@@ -1912,14 +2298,14 @@ ol.sortable-listing ol {
  **                          FOOTER NAVIGATION                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 1003, styles.scss */
+/* line 425, ../scss/styles.scss */
 footer ul.navigation-menu li {
   list-style-type: none;
   float: left;
   padding: 0 0.5em;
 }
 
-/* line 1008, styles.scss */
+/* line 430, ../scss/styles.scss */
 footer ul.navigation-menu li li {
   float: none;
 }
@@ -1929,7 +2315,7 @@ footer ul.navigation-menu li li {
  **                         COLLAPSIBLE FIELDSETS                           **
  *****************************************************************************
  *****************************************************************************/
-/* line 1020, styles.scss */
+/* line 442, ../scss/styles.scss */
 fieldset.collapsed {
   padding: 0;
   border-width: 1px 0 0;
@@ -1940,12 +2326,12 @@ fieldset.collapsed {
  **                            PROGRESS BARS                                **
  *****************************************************************************
  *****************************************************************************/
-/* line 1030, styles.scss */
+/* line 452, ../scss/styles.scss */
 .progress-container {
   position: relative;
 }
 
-/* line 1033, styles.scss */
+/* line 455, ../scss/styles.scss */
 .progress-success {
   background: none repeat scroll 0 0 #992222;
   border: 2px solid green;
@@ -1953,13 +2339,13 @@ fieldset.collapsed {
   margin-bottom: 5px;
 }
 
-/* line 1039, styles.scss */
+/* line 461, ../scss/styles.scss */
 .progress-success .bar {
   background: none repeat scroll 0 0 green;
   height: 20px;
 }
 
-/* line 1043, styles.scss */
+/* line 465, ../scss/styles.scss */
 .progress-container .progress-extended {
   color: white;
   left: 46px;
@@ -1968,22 +2354,22 @@ fieldset.collapsed {
 }
 
 /** Theme Editor **/
-/* line 1052, styles.scss */
+/* line 474, ../scss/styles.scss */
 .page-themeeditor .column1 section.pagecontent {
   margin-left: 12px;
 }
 
-/* line 1059, styles.scss */
+/* line 481, ../scss/styles.scss */
 .editor-container {
   position: relative;
 }
 
-/* line 1063, styles.scss */
+/* line 485, ../scss/styles.scss */
 #code {
   min-width: 590px;
 }
 
-/* line 1067, styles.scss */
+/* line 489, ../scss/styles.scss */
 #theme-editor-browser {
   background: transparent;
   position: absolute;
@@ -1992,12 +2378,12 @@ fieldset.collapsed {
   top: 52px;
 }
 
-/* line 1075, styles.scss */
+/* line 497, ../scss/styles.scss */
 #theme-editor-browser a {
   color: #222;
 }
 
-/* line 1079, styles.scss */
+/* line 501, ../scss/styles.scss */
 #theme-editor-browser .left {
   float: left;
   width: 300px;
@@ -2009,12 +2395,12 @@ fieldset.collapsed {
   overflow-y: auto;
 }
 
-/* line 1090, styles.scss */
+/* line 512, ../scss/styles.scss */
 #theme-editor-browser .left:hover {
   opacity: 0.9;
 }
 
-/* line 1092, styles.scss */
+/* line 514, ../scss/styles.scss */
 #theme-editor-browser .right {
   float: right;
   width: 28px;
@@ -2029,111 +2415,111 @@ fieldset.collapsed {
   border-top: 1px solid #2b2b2b;
 }
 
-/* line 1106, styles.scss */
+/* line 528, ../scss/styles.scss */
 #theme-editor-browser .right:hover {
   opacity: 1;
 }
 
-/* line 1108, styles.scss */
+/* line 530, ../scss/styles.scss */
 #theme-editor-browser .right i {
   margin-left: 8px;
 }
 
-/* line 1110, styles.scss */
+/* line 532, ../scss/styles.scss */
 #theme-editor-browser .icon {
   float: right;
   margin-right: 2px;
 }
 
-/* line 1115, styles.scss */
+/* line 537, ../scss/styles.scss */
 #theme-editor-browser li .icon {
   margin-right: 0;
 }
 
-/* line 1117, styles.scss */
+/* line 539, ../scss/styles.scss */
 #theme-editor-browser h2 {
   color: #666;
   margin-bottom: 3px;
 }
 
-/* line 1119, styles.scss */
+/* line 541, ../scss/styles.scss */
 #theme-editor-browser ul {
   margin-bottom: 9px;
   padding-bottom: 3px;
   border-bottom: 1px solid #e1e1e1;
 }
 
-/* line 1125, styles.scss */
+/* line 547, ../scss/styles.scss */
 #theme-editor-browser .sub {
   display: none;
 }
 
-/* line 1127, styles.scss */
+/* line 549, ../scss/styles.scss */
 #theme-editor-browser li .icon {
   cursor: pointer;
 }
 
-/* line 1129, styles.scss */
+/* line 551, ../scss/styles.scss */
 #theme-editor-browser li {
   list-style-type: none;
   margin-bottom: 3px;
 }
 
-/* line 1134, styles.scss */
+/* line 556, ../scss/styles.scss */
 #theme-editor-browser ul ul {
   margin-left: 10px;
 }
 
-/* line 1136, styles.scss */
+/* line 558, ../scss/styles.scss */
 #theme-editor-browser h2 {
   cursor: pointer;
 }
 
-/* line 1140, styles.scss */
+/* line 562, ../scss/styles.scss */
 .theme-editor {
   display: none;
 }
 
-/* line 1144, styles.scss */
+/* line 566, ../scss/styles.scss */
 #theme-editor-wysiwyg .image-editor {
   background: #202020;
   padding-bottom: 25px;
   padding-left: 285px;
 }
 
-/* line 1150, styles.scss */
+/* line 572, ../scss/styles.scss */
 .image-editor h2 {
   margin-bottom: 5px;
 }
 
-/* line 1152, styles.scss */
+/* line 574, ../scss/styles.scss */
 #revert {
   cursor: pointer;
   font-weight: bold;
   text-decoration: underline;
 }
 
-/* line 1158, styles.scss */
+/* line 580, ../scss/styles.scss */
 #revisions li.revision {
   margin-bottom: 3px;
 }
 
-/* line 1160, styles.scss */
+/* line 582, ../scss/styles.scss */
 #revisions .revision-title {
   cursor: pointer;
 }
 
-/* line 1161, styles.scss */
+/* line 583, ../scss/styles.scss */
 #revisions .revision-date {
   color: #888;
 }
 
-/* line 1163, styles.scss */
+/* line 585, ../scss/styles.scss */
 .page-themeeditor #dialog-confirm {
   display: none;
 }
 
-/* line 1, _filters_and_pagination.scss */
+/* line 1, ../scss/_filters_and_pagination.scss */
 .pagination {
   color: #555555;
   font-size: 84%;
@@ -2141,155 +2527,39 @@ fieldset.collapsed {
   margin: 0.5em 0;
 }
 
-/* line 7, _filters_and_pagination.scss */
+/* line 7, ../scss/_filters_and_pagination.scss */
 .pagination a {
   text-decoration: none;
   color: #555555;
 }
 
-/* line 11, _filters_and_pagination.scss */
+/* line 11, ../scss/_filters_and_pagination.scss */
 .pagination .disabled {
   color: #999;
 }
 
-/* line 15, _filters_and_pagination.scss */
+/* line 15, ../scss/_filters_and_pagination.scss */
 .pagination-pager {
   float: left;
 }
 
-/* line 19, _filters_and_pagination.scss */
+/* line 19, ../scss/_filters_and_pagination.scss */
 .pagination-list {
   float: right;
 }
 
-/* line 24, _filters_and_pagination.scss */
+/* line 24, ../scss/_filters_and_pagination.scss */
 .listing-filters .reset-filters {
   float: right;
   background-color: #3d1b1b;
 }
-/* line 29, _filters_and_pagination.scss */
+/* line 29, ../scss/_filters_and_pagination.scss */
 .listing-filters .apply-filters {
   float: right;
   background-color: #2c3d31;
 }
 
-/* login page */
-/* line 1171, styles.scss */
-.page-user-login #leftcol,
-.page-user-login #breadcrumbs {
-  display: none;
-}
-
-/* line 1173, styles.scss */
-body.page-user-login .column1 section.pagecontent {
-  margin-left: 0;
-}
-
-/* line 1176, styles.scss */
-.page-user-login .register-account {
-  margin-right: 15px;
-}
-
-/* line 1180, styles.scss */
-#facebook-login-button {
-  padding: 6px 8px;
-  text-decoration: none;
-  color: #fff;
-  background: #3B5998;
-  position: relative;
-  left: 0;
-  border-radius: 3px;
-  border: 1px solid #5D729F;
-  top: 0;
-}
-
-/* line 1192, styles.scss */
-.page-user-login fieldset {
-  border: none;
-  border-radius: 0;
-  margin-bottom: 0;
-  padding: 15px 10px;
-}
-
-/* line 1199, styles.scss */
-.page-user-login fieldset.left {
-  min-width: 51%;
-  width: 51%;
-}
-
-/* line 1204, styles.scss */
-.page-user-login fieldset.left .formelement {
-  margin-bottom: 1.25em;
-}
-
-/* line 1208, styles.scss */
-.page-user-login #login-divider {
-  background: #ccc;
-  background: radial-gradient(ellipse at center center, rgba(50, 50, 50, 0.25) 0%, transparent 70%) repeat scroll 0 0 transparent;
-  border: medium none;
-  min-height: 180px;
-  max-width: 1600px;
-  width: 1px;
-  float: left;
-}
-
-/* line 1218, styles.scss */
-.page-user-login fieldset.right {
-  min-width: 33%;
-}
-
-/* line 1222, styles.scss */
-.page-user-login fieldset fieldset {
-  background: transparent;
-}
-
-/* line 1225, styles.scss */
-.left {
-  float: left;
-}
-
-/* line 1226, styles.scss */
-.right {
-  float: right;
-}
-
-/* line 1229, styles.scss */
-fieldset.left,
-fieldset.right {
-  min-height: 180px;
-}
-
-/* line 1233, styles.scss */
-.login-forgot {
-  display: block;
-  float: right;
-  position: relative;
-  top: -38px;
-  right: 25px;
-  color: #969696;
-  font-style: italic;
-}
-
-/* line 1244, styles.scss */
-#login-existing,
-#user-login {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 6px 6px 6px 6px;
-  margin: 25px 0.5em 20px;
-}
-
-/* line 1250, styles.scss */
-#login-center {
-  width: 720px;
-  margin: 25px auto 0 auto;
-}
-
-/* line 1255, styles.scss */
-.page-user-login label {
-  max-width: 100px;
-}
-
-/* line 1258, styles.scss */
+/* line 591, ../scss/styles.scss */
 .widgetarea-admindashboard .widget {
   background: #e9e9e9;
   border: 1px solid #BBBBBB;
@@ -2299,8 +2569,33 @@ fieldset.right {
   padding: 1em;
 }
 
-/* line 1267, styles.scss */
+/* line 600, ../scss/styles.scss */
 .widgetarea-admindashboard .widget h3 {
   text-align: center;
   margin-bottom: 0.5em;
+}
+
+/**
+ * LOGIN / REGISTER PAGES
+ */
+/* line 610, ../scss/styles.scss */
+.user-login-center {
+  /** If the page is set to use 2-columns, then do so. */
+}
+/* line 613, ../scss/styles.scss */
+.user-login-center .user-login-existing.col-2 .user-login-include {
+  float: left;
+  width: 49%;
+}
+/* line 618, ../scss/styles.scss */
+.user-login-center .login-forgot {
+  float: right;
+  color: #969696;
+  font-style: italic;
+}
+/* line 624, ../scss/styles.scss */
+.user-login-center .user-login-section-heading {
+  text-align: center;
+  margin-bottom: 0.75em;
+  font-style: italic;
 }

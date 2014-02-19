@@ -1,16 +1,14 @@
 {script library="jquery"}{/script}
-{css src="assets/css/user.css"}{/css}
 
 <div class="{$element->getClass()} {$element->get('id')} clearfix">
-	<div class="formelement-labelinputgroup">
-	{if $element->get('title')}
-		<label>{$element->get('title')|escape}</label>
-	{/if}
 
-	{if $element->get('description')}
-		<p class="formdescription">{$element->get('description')}</p>
-	{/if}
-	<div>
+	<label class="form-element-label">
+		{$element->get('title')|escape}
+		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
+	</label>
+
+
+	<div class="form-element-value">
 		<select id="{$element->get('id')}" name="{$element->get('name')}" class="{$dynname}_main">
 			<option value="basic_anyone" {if $main_checked == 'basic_anyone'}selected="selected"{/if}>
 				Allow Anyone
@@ -32,30 +30,34 @@
 				Other...
 			</option>
 		</select>
+
+		<div class="formradioinput {$dynname}_advanced" style="display:none;">
+			<label><input type="radio" name="{$dynname}_type" value="whitelist"/>Allow Only...</label>
+			<label><input type="radio" name="{$dynname}_type" value="blacklist"/>Disallow Only...</label>
+		</div>
+		<div class="formcheckboxesinput {$dynname}_advanced" style="display:none;">
+			{foreach from=$groups item='g'}
+				<label>
+					<input type="checkbox" name="{$dynname}[]" value="{$g->get('id')}" {if $g->get('checked')}checked="checked"{/if}/>{$g->get('name')}
+				</label>
+			{/foreach}
+		</div>
+
+		<div class="clear"></div>
 	</div>
 
-	<div class="formelement formradioinput {$dynname}_advanced" style="display:none;">
-		<label><input type="radio" name="{$dynname}_type" value="whitelist"/>Allow Only...</label>
-		<label><input type="radio" name="{$dynname}_type" value="blacklist"/>Disallow Only...</label>
-	</div>
-	<div class="formelement formcheckboxinput {$dynname}_advanced" style="display:none;">
-		{foreach from=$groups item='g'}
-			<label>
-				<input type="checkbox" name="{$dynname}[]" value="{$g->get('id')}" {if $g->get('checked')}checked="checked"{/if}/>{$g->get('name')}
-			</label>
-		{/foreach}
-	</div>
+	<p class="form-element-description">{$element->get('description')}</p>
 
 	<script type="text/javascript">
 		$(function () {
 			$('input[name="{$element->get('name')}"][value="advanced"]').closest('fieldset').show();
-		{if $advanced_type}
-			$('input[name="{$dynname}_type"][value="{$advanced_type}"]').click();
-		{/if}
+			{if $advanced_type}
+				$('input[name="{$dynname}_type"][value="{$advanced_type}"]').click();
+			{/if}
 
-		{if $main_checked}
-			$('input.{$dynname}_main[value={$main_checked}]').click();
-		{/if}
+			{if $main_checked}
+				$('input.{$dynname}_main[value={$main_checked}]').click();
+			{/if}
 		});
 		$('.{$dynname}_main').click(function () {
 			var $this = $(this),
@@ -68,5 +70,4 @@
 			}
 		});
 	</script>
-	</div>
 </div>

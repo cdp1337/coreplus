@@ -1,4 +1,4 @@
-{css src="assets/css/admin/config.css"}{/css}
+{*css src="assets/css/admin/config.css"}{/css*}
 
 {if $config_count}
 	{script library="jquery"}{/script}
@@ -11,6 +11,7 @@
 	</p>
 
 	<div id="system-config-form">
+		{$form->set('orientation', 'grid')}
 		{$form->render()}
 	</div>
 {else}

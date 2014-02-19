@@ -1,6 +1,6 @@
 {script library="jquery"}{/script}
 
-{css}<style>
+{*css}<style>
 	.geoaddressforminput label {
 		color: rgb(74, 74, 74);
 	}
@@ -40,47 +40,42 @@
 		margin-left: 2px;
 		margin-bottom: 2px;
 	}
-</style>{/css}
+</style>{/css*}
 
 
 <div class="{$element->getClass()} {$element->get('id')} clearfix">
-	{if $element->get('title')}
-		<label>{$element->get('title')|escape}</label><br/>
-	{/if}
+	<label class="form-element-label">
+		{$element->get('title')|escape}
+		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
+	</label>
 
-	{if $element->get('description')}
-		<p class="formdescription">{$element->get('description')}</p>
-	{/if}
+	<p class="form-element-description">{$element->get('description')}</p>
 
-	<input type="hidden" name="{$element->get('name')}[id]" value="{$id}"/>
+	<div class="form-element-value">
+		<input type="hidden" name="{$element->get('name')}[id]" value="{$id}"/>
 
-	<input type="text" class="address-label" name="{$element->get('name')}[label]" placeholder="Label / Address Nickname" {if $req}required="required"{/if} value="{$label|escape}"/>
-	<br/>
+		<input type="text" class="address-label" name="{$element->get('name')}[label]" placeholder="Label / Address Nickname" {if $req}required="required"{/if} value="{$label|escape}"/>
 
-	<input type="text" class="address-address1" name="{$element->get('name')}[address1]" placeholder="Address 1" {if $req}required="required"{/if} value="{$address1|escape}"/>
-	<br/>
+		<input type="text" class="address-address1" name="{$element->get('name')}[address1]" placeholder="Address 1" {if $req}required="required"{/if} value="{$address1|escape}"/>
 
-	<input type="text" class="address-address2" name="{$element->get('name')}[address2]" placeholder="Address 2" value="{$address2|escape}"/>
-	<br/>
+		<input type="text" class="address-address2" name="{$element->get('name')}[address2]" placeholder="Address 2" value="{$address2|escape}"/>
 
-	<input type="text" class="address-city" name="{$element->get('name')}[city]" placeholder="City" value="{$city|escape}"/>
-	<br/>
+		<input type="text" class="address-city" name="{$element->get('name')}[city]" placeholder="City" value="{$city|escape}"/>
+
+		<div id="{$element->get('id')}-province-wrapper" class="address-province-wrapper">
+			<!-- noscript logic -->
+			<input type="text" class="address-province" name="{$element->get('name')}[province]" value="{$province}" maxlength="2"/>
+		</div>
 
 
-	<div id="{$element->get('id')}-province-wrapper" class="address-province-wrapper">
-		<!-- noscript logic -->
-		<input type="text" class="address-province" name="{$element->get('name')}[province]" value="{$province}" maxlength="2"/>
+		<input type="text" class="address-postal" name="{$element->get('name')}[postal]" value="{$postal|escape}" {if $req}required="required"{/if} maxlength="10" placeholder="Zip/Postal"/>
+
+		<select class="address-country" id="{$element->get('id')}-country" name="{$element->get('name')}[country]">
+			{foreach $countries as $c}
+				<option value="{$c.iso2}" {if $c.iso2 == $country}selected="selected"{/if}>{$c.name}</option>
+			{/foreach}
+		</select>
 	</div>
-
-
-	<input type="text" class="address-postal" name="{$element->get('name')}[postal]" value="{$postal|escape}" {if $req}required="required"{/if} maxlength="10" placeholder="Zip/Postal"/>
-	<br/>
-
-	<select class="address-country" id="{$element->get('id')}-country" name="{$element->get('name')}[country]">
-		{foreach $countries as $c}
-			<option value="{$c.iso2}" {if $c.iso2 == $country}selected="selected"{/if}>{$c.name}</option>
-		{/foreach}
-	</select>
 
 
 </div>

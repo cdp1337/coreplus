@@ -19,6 +19,9 @@
 			$form.ajaxSubmit(function(){
 				Core.Reload();
 			});
+
+			// Just in case there was an error on the submission, it's still locked out...
+			setTimeout(function(){ Core.Reload(); }, 5000);
 		});
 	});
 </script>{/script}

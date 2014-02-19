@@ -1,57 +1,59 @@
 
 <div class="container {$element->getClass()} {$element->get('id')}">
 
-	{if $element->get('title')}
-		<label for="{$element->get('name')}">{$element->get('title')|escape}</label>
-	{/if}
+	<label class="form-element-label" for="{$element->get('name')}">
+		{$element->get('title')|escape}
+		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
+	</label>
 
-	{if $element->get('description')}
-		<p class="formdescription">{$element->get('description')}</p>
-	{/if}
-
-	<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-	<div class="row fileupload-buttonbar">
-		<div class="span7">
-			<!-- The fileinput-button span is used to style the file input field as button -->
-			<label style="display:block; float:left; position:relative; overflow:hidden; width:120px; margin-right:10px;">
-				<span class="button btn-success fileinput-button" style="min-width:90px;">
-					<i class="icon-plus"></i>
-					<span>Add files...</span>
-					<input id="{$element->get('id')}" type="file" name="{$element->get('name')}[]" multiple="multiple" style="position:absolute; left:0pt; top:0pt; opacity:0;">
-				</span>
-			</label>
-			<!--<button type="submit" class="button btn-primary start">
-				<i class="icon-upload icon-white"></i>
-				<span>Start uploads</span>
-			</button>-->
-			<button type="reset" class="button btn-warning cancel">
-				<i class="icon-ban-circle"></i>
-				<span>Cancel uploads</span>
-			</button>
-		</div>
-		<!-- The global progress information -->
-		<div class="progress-container fileupload-progress" style="display:none;">
-			<!-- The global progress bar -->
-			<div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-				<div class="bar" style="width:0%;"></div>
+	<div class="form-element-value">
+		<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+		<div class="row fileupload-buttonbar">
+			<div class="span7">
+				<!-- The fileinput-button span is used to style the file input field as button -->
+				<label style="display:block; float:left; position:relative; overflow:hidden; width:120px; margin-right:10px;">
+					<span class="button btn-success fileinput-button" style="min-width:90px;">
+						<i class="icon-plus"></i>
+						<span>Add files...</span>
+						<input id="{$element->get('id')}" type="file" name="{$element->get('name')}[]" multiple="multiple" style="position:absolute; left:0pt; top:0pt; opacity:0;">
+					</span>
+				</label>
+				<!--<button type="submit" class="button btn-primary start">
+					<i class="icon-upload icon-white"></i>
+					<span>Start uploads</span>
+				</button>-->
+				<button type="reset" class="button btn-warning cancel">
+					<i class="icon-ban-circle"></i>
+					<span>Cancel uploads</span>
+				</button>
 			</div>
-			<!-- The extended global progress information -->
-			<div class="progress-extended">&nbsp;</div>
+			<!-- The global progress information -->
+			<div class="progress-container fileupload-progress" style="display:none;">
+				<!-- The global progress bar -->
+				<div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+					<div class="bar" style="width:0%;"></div>
+				</div>
+				<!-- The extended global progress information -->
+				<div class="progress-extended">&nbsp;</div>
+			</div>
 		</div>
+
+		<div class="multiupload-drag-notice">
+			<i class="icon-upload"></i>Drop files here to upload
+		</div>
+
+		<!-- The loading indicator is shown during file processing -->
+		<div class="fileupload-loading"></div>
+		<br>
+		<!-- The table listing the files available for upload/download -->
+		<table class="listing">
+			<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
+		</table>
+
 	</div>
 
-	<div class="multiupload-drag-notice">
-		<i class="icon-upload"></i>Drop files here to upload
-	</div>
 
-	<!-- The loading indicator is shown during file processing -->
-	<div class="fileupload-loading"></div>
-	<br>
-	<!-- The table listing the files available for upload/download -->
-	<table class="listing">
-		<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
-	</table>
-	<br>
+	<p class="form-element-description">{$element->get('description')}</p>
 
 </div>
 
