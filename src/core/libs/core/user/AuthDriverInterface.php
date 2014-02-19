@@ -59,9 +59,11 @@ interface AuthDriverInterface {
 	/**
 	 * Generate and print the rendered login markup to STDOUT.
 	 *
+	 * @param array $form_options
+	 * 
 	 * @return void
 	 */
-	public function renderLogin();
+	public function renderLogin($form_options = []);
 
 	/**
 	 * Generate and print the rendered registration markup to STDOUT.
