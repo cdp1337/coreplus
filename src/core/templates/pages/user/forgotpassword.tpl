@@ -1,5 +1,3 @@
-{css src="assets/css/user.css"}{/css}
-
 {if $step == 1}
 	<p class="message-tutorial">
 		Please enter your email address that is registered.

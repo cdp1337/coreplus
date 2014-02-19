@@ -1,5 +1,3 @@
-{css src="assets/css/user.css"}{/css}
-
 <div class="user-loginfull-widget">
 	{if $user}
 		<h2>WELCOME {$user->getDisplayName()}</h2>

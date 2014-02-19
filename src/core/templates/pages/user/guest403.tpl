@@ -1,5 +1,3 @@
-{css src="assets/css/user.css"}{/css}
-
 <p class="message-info">
 	Please login {if $registerform}or create an account {/if} to view this page.
 </p>
@@ -10,32 +8,43 @@
 -->
 <div id="user-login-placeholder-for-javascript-because-otherpages-may-have-an-error"></div>
 
-<div id="login-center">
-
-	<fieldset id="login-existing">
-		<em>Login to your existing account.</em>
-	</fieldset>
-
-	<fieldset class="left">
-		{$loginform->render()}
-
-		{a class="login-forgot" href="/User/ForgotPassword"}Forgot Password?{/a}
-	</fieldset>
-
-	{if $smarty.const.FACEBOOK_APP_ID && in_array('facebook', $backends)}
-		<div id="login-divider"></div>
-
-		<fieldset class="right">
-			{widget baseurl="/facebook/login"}
-		</fieldset>
+<div id="user-login-center" class="user-login-center">
+	{if sizeof($drivers) > 1}
+		{assign var='column_count' value='col-2'}
+		{assign var='form_orientation' value='vertical'}
+	{else}
+		{assign var='column_count' value='col-1'}
+		{assign var='form_orientation' value='horizontal'}
 	{/if}
 
-	<div class="clear"></div>
+	<fieldset id="user-login-existing" class="user-login-existing clearfix {$column_count}">
+		<div class="user-login-section-heading clearfix">
+			Login to your existing account.
+		</div>
+
+		{**
+		 * An alternative to this if you so please is to do:
+		 *
+		 * {$drivers.datastore->renderLogin()}
+		 * <some-markup/>
+		 * {$drivers.facebook->renderLogin()}
+		 *
+		 * The default will simply render every authentication driver enabled on the system.
+		 *}
+
+		{foreach $drivers as $name => $d}
+			<div class="user-login-include user-authdriver-{$name}">
+				{$d->renderLogin(['orientation' => {$form_orientation}])}
+			</div>
+		{/foreach}
+	</fieldset>
 
 	{if $allowregister}
-		<fieldset id="user-login">
+		<fieldset id="user-login-register" class="user-login-register">
 
-			<em>Sign up for an account!</em>
+			<div class="user-login-section-heading clearfix">
+				Sign up for an account!
+			</div>
 
 			<br/>
 
