@@ -436,6 +436,28 @@ class Theme{
 	}
 
 	/**
+	 * Set all other files in this component.  Only really usable in the installer.
+	 *
+	 * @param $files array Array of files to set.
+	 */
+	public function setOtherFiles($files) {
+		// Clear out the array first.
+		$this->_xmlloader->removeElements('//theme/otherfiles/file');
+
+		// It would be nice to have them alphabetical.
+		$newarray = array();
+		foreach ($files as $f) {
+			$newarray[$f['file']] = $f;
+		}
+		ksort($newarray);
+
+		// And recreate them all.
+		foreach ($newarray as $f) {
+			$this->_xmlloader->createElement('//theme/otherfiles/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+		}
+	}
+
+	/**
 	 * Get this component's version
 	 *
 	 * @return string
