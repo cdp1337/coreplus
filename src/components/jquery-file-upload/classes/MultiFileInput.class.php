@@ -28,6 +28,11 @@ class MultiFileInput extends FormElement {
 			throw new Exception('MultiFileInput cannot be rendered without a basedir attribute!');
 		}
 
+		// Make sure it ends with a trailing slash.
+		if(substr($this->get('basedir'), -1) != '/'){
+			$this->_attributes['basedir'] .= '/';
+		}
+
 		//var_dump($_SESSION['multifileinputobjects'], serialize($this->_attributes)); die();
 		// This is a slightly different element than the traditional form system, as it must be able to be called without
 		// the rest of the form system on submit.
@@ -87,7 +92,7 @@ class MultiFileInput extends FormElement {
 	 */
 	public function getFile() {
 		if ($this->get('value')) {
-			$f = Core::File($this->get('basedir') . '/' . $this->get('value'));
+			$f = Core::File($this->get('basedir') . $this->get('value'));
 		}
 		else {
 			$f = Core::File();
@@ -163,7 +168,7 @@ class MultiFileInput extends FormElement {
 				// Source
 				$f = \Core\Filestore\Factory::File($in['tmp_name']);
 				// Destination
-				$nf = \Core\Filestore\Factory::File($this->get('basedir') . '/' . $in['name']);
+				$nf = \Core\Filestore\Factory::File($this->get('basedir') . $in['name']);
 
 				// do NOT copy the contents over until the accept check has been ran!
 

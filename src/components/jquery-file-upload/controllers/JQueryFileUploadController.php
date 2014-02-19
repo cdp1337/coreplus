@@ -137,6 +137,11 @@ class JQueryFileUploadController extends Controller_2_1 {
 		if(file_exists($tmpfile)) $file['size'] = filesize($tmpfile);
 		else $file['size'] = 0;
 
+		if(!is_writable(TMP_DIR)){
+			$file['error'] = 'Unable to write to temporary directory.';
+			return array('files' => [$file]);
+		}
+
 		file_put_contents($tmpfile, file_get_contents('php://input'), FILE_APPEND);
 
 		// And update the size.
@@ -146,7 +151,7 @@ class JQueryFileUploadController extends Controller_2_1 {
 		if($newsize - $file['size'] != $incomingsize){
 			$file['error'] = 'Did not receive all data, unable to process upload';
 			unlink($tmpfile);
-			return array($file);
+			return array('files' => [$file]);
 		}
 
 		$file['size'] = $newsize;
@@ -160,6 +165,10 @@ class JQueryFileUploadController extends Controller_2_1 {
 			// Make sure the filename is sanitized.
 			$newbasename = \Core\str_to_url(urldecode($file['name']), true);
 			$nf = \Core\Filestore\Factory::File($this->_formelement->get('basedir') . $newbasename);
+			if(!$nf->isWritable()){
+				$file['error'] = 'File destination is not writable.';
+				return array('files' => [$file]);
+			}
 			$file['type'] = $f->getMimetype();
 
 			// do NOT copy the contents over until the accept check has been ran!
