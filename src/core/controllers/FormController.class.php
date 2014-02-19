@@ -270,5 +270,85 @@ class FormController extends Controller_2_1 {
 			}
 		}
 	}
+
+	/**
+	 * Page to test the UI of form elements.
+	 *
+	 * This will generate a form with every registered form element.
+	 */
+	public function testui(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('g:admin')){
+			// This test page is an admin-only utility.
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$form = new Form();
+
+		// What type of orientation do you want to see?
+		$orientation = $request->getParameter('orientation');
+		if(!$orientation){
+			$orientation = 'horizontal';
+		}
+		$required = ($request->getParameter('required'));
+		$error    = ($request->getParameter('error'));
+
+
+		$form->set('orientation', $orientation);
+
+		$mappings = Form::$Mappings;
+		// Make them alphabetical.
+		ksort($mappings);
+
+		foreach($mappings as $k => $v){
+			try{
+				$atts = [
+					'name' => $k,
+					'title' => $v,
+					'description' => 'This form element is a ' . $v . ', registered to the key ' . $k . '.',
+				];
+
+				if($required) $atts['required'] = true;
+
+				// Some form elements have particular requirements.
+				switch($v){
+					case 'FormFileInput':
+					case 'MultiFileInput':
+						$atts['basedir'] = 'tmp/form/testui';
+						break;
+					case 'FormPagePageSelectInput':
+						$atts['templatename'] = 'foo';
+						break;
+					case 'FormPageInsertables':
+						$atts['baseurl'] = '/';
+						break;
+					case 'FormPageMeta':
+						$atts['name'] = 'test';
+						break;
+					case 'FormCheckboxesInput':
+					case 'FormRadioInput':
+						$atts['options'] = ['key1' => 'Key 1', 'key2' => 'Key 2'];
+						break;
+				}
+				$el = FormElement::Factory($k, $atts);
+
+				if($error && $el instanceof FormElement){
+					$el->setError('Something bad happened', false);
+				}
+				$form->addElement( $el );
+			}
+			catch(Exception $e){
+				Core::SetMessage('Form element ' . $v . ' failed to load due to ' . $e->getMessage(), 'error');
+			}
+		}
+
+		$view->title = 'Test Form Element UI/UX';
+		$view->assign('form', $form);
+		$view->assign('orientation', $orientation);
+		$view->assign('required', $required);
+		$view->assign('error', $error);
+	}
 }
 
