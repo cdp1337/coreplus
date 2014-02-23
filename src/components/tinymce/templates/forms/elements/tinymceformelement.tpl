@@ -1,12 +1,10 @@
 {script library="tinymce"}{/script}
 <div class="{$element->getClass()} {$element->get('id')}">
-	{if $element->get('title')}
-		<label for="{$element->get('name')}">{$element->get('title')|escape}</label>
-	{/if}
+	<label class="form-element-label" for="{$element->get('name')}">{$element->get('title')|escape}</label>
 	
-	{if $element->get('description')}
-		<p class="formdescription">{$element->get('description')}</p>
-	{/if}
-	
-	<textarea{$element->getInputAttributes()} name="{$element->get('name')}" >{$element->get('value')}</textarea>
+	<p class="form-element-description">{$element->get('description')}</p>
+
+	<div class="form-element-value">
+		<textarea{$element->getInputAttributes()} name="{$element->get('name')}" >{$element->get('value')}</textarea>
+	</div>
 </div>

@@ -227,7 +227,6 @@ class SQL_Parser_Dataset extends SQL_Parser {
 		}
 
 		$tree = new Core\Datamodel\Dataset();
-		$tree->_mode = Core\Datamodel\Dataset::MODE_INSERT;
 		$column_names = false;
 
 		$this->getTok();
@@ -289,17 +288,14 @@ class SQL_Parser_Dataset extends SQL_Parser {
 		}
 
 		if(sizeof($valsets) > 1){
-			// I need to return multiple datasets, each one is one insert.
-			$ret = [];
-			foreach($valsets as $set){
-				$clone = clone $tree;
-				$clone->_sets = $set;
-				$ret[] = $clone;
-			}
-
-			return $ret;
+			// This is a bulk insert instead!
+			$tree->_mode = Dataset::MODE_BULK_INSERT;
+			$tree->_sets = $valsets;
+			return $tree;
 		}
 		else{
+			// Standard single insert.
+			$tree->_mode = Dataset::MODE_INSERT;
 			$tree->_sets = $valsets[0];
 			return $tree;
 		}

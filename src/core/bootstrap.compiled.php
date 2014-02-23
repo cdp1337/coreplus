@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 03 Feb 2014 11:19:44 -0500
+ * @compiled Wed, 19 Feb 2014 14:32:15 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -106,17 +106,24 @@ return $this->_events;
 }
 public function getTimeFormatted(){
 $time = $this->getTime();
-if($time < 0.1){
-return round($time, 4) * 1000000 . ' ns';
+if($time < 0.001){
+return round($time, 4) * 1000000 . ' µs';
 }
 elseif($time < 2.0){
 return round($time, 4) * 1000 . ' ms';
 }
-elseif($time < 60){
-return round($time, 4) . ' seconds';
+elseif($time < 120){
+return round($time, 0) . ' s';
+}
+elseif($time < 3600) {
+$m = round($time, 0) / 60;
+$s = round($time - $m*60, 0);
+return $m . ' m ' . $s . ' s';
 }
 else{
-return round($time, 4) / 60 . ' minutes';
+$h = round($time, 0) / 3600;
+$m = round($time - $h*3600, 0);
+return $h . ' h ' . $m . ' m';
 }
 }
 public function getEventTimesFormatted(){
@@ -1099,6 +1106,7 @@ class Dataset implements \Iterator{
 const MODE_ALTER = 'alter';
 const MODE_GET = 'get';
 const MODE_INSERT = 'insert';
+const MODE_BULK_INSERT = 'bulk_insert';
 const MODE_UPDATE = 'update';
 const MODE_INSERTUPDATE = 'insertupdate';
 const MODE_DELETE = 'delete';
@@ -1536,10 +1544,10 @@ elseif($this->default === $col->default){
 elseif(\Core\compare_values($this->default, $col->default)){
 }
 elseif($col->default === false && $this->default !== false){
-$differences[] = 'default value (1)';
+$differences[] = 'default value (#1)';
 }
 else{
-$differences[] = 'default value (2)';
+$differences[] = 'default value (#2)';
 }
 if(is_array($this->options) != is_array($col->options)) $differences[] = 'options set/unset';
 if(is_array($this->options) && is_array($col->options)){
@@ -2471,7 +2479,10 @@ $this->_linked[$lk]['records']->set($key, $newval);
 }
 }
 protected function _getLinkClassName($linkname) {
-$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname . 'Model';
+$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname;
+if(strripos($c, 'Model') === false){
+$c .= 'Model';
+}
 if (!is_subclass_of($c, 'Model')) return null; // @todo Error Handling
 return $c;
 }
@@ -2640,6 +2651,8 @@ $cipher = 'AES-256-CBC';
 $passes = 10;
 $size = openssl_cipher_iv_length($cipher);
 $iv = mcrypt_create_iv($size, MCRYPT_RAND);
+if($value === '') return '';
+elseif($value === null) return null;
 $enc = $value;
 for($i=0; $i<$passes; $i++){
 $enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
@@ -2828,6 +2841,11 @@ throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that 
 }
 if($schema[ $v['alias'] ]['type'] == Model::ATT_TYPE_ALIAS){
 throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that points to another alias.  Aliases MUST NOT point to another alias... bad things could happen.');
+}
+}
+if($schema[$k]['default'] === false && !$schema[$k]['null']){
+if($schema[$k]['type'] == Model::ATT_TYPE_TEXT){
+$schema[$k]['default'] = '';
 }
 }
 if($v['type'] == Model::ATT_TYPE_ENUM){
@@ -4023,8 +4041,19 @@ $args[$v] = $matches[2][$k];
 $base = substr($base, 0, $qpos);
 }
 $posofslash = strpos($base, '/');
-if ($posofslash) $controller = substr($base, 0, $posofslash);
-else $controller = $base;
+$posofdot   = strpos($base, '.');
+if ($posofslash){
+$controller = substr($base, 0, $posofslash);
+$base = substr($base, $posofslash+1);
+}
+elseif($posofdot){
+$controller = substr($base, 0, $posofdot);
+$base = 'index' . substr($base, $posofdot);
+}
+else{
+$controller = $base;
+$base = false;
+}
 if (class_exists($controller . 'Controller')) {
 switch (true) {
 case is_subclass_of($controller . 'Controller', 'Controller_2_1'):
@@ -4048,8 +4077,6 @@ return null;
 else {
 return null;
 }
-if ($posofslash !== false) $base = substr($base, $posofslash + 1);
-else $base = false;
 if ($base) {
 $posofslash = strpos($base, '/');
 if ($posofslash) {
@@ -4064,7 +4091,7 @@ $method = $base;
 $base = substr($base, strlen($method) + 1);
 }
 else {
-$method = 'Index';
+$method = 'index';
 }
 if(strpos($method, '.') !== false){
 $ctype = \Core\Filestore\extension_to_mimetype(substr($method, strpos($method, '.') + 1));
@@ -4079,7 +4106,7 @@ return null;
 if ($method{0} == '_') return null;
 $params = ($base !== false) ? explode('/', $base) : null;
 $baseurl = '/' . ((strpos($controller, 'Controller') == strlen($controller) - 10) ? substr($controller, 0, -10) : $controller);
-if (!($method == 'Index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
+if (!($method == 'index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
 $baseurl .= ($params) ? '/' . implode('/', $params) : '';
 $rewriteurl = self::_LookupReverseUrl($baseurl, $site);
 if($ctype != 'text/html'){
@@ -8049,7 +8076,7 @@ return true;
 if(is_numeric($val1) && is_numeric($val2) && $val1 == $val2){
 return true;
 }
-if(strlen($val1) == strlen($val2) && $val1 == $val2){
+if(is_scalar($val1) && is_scalar($val2) && strlen($val1) == strlen($val2) && $val1 == $val2){
 return true;
 }
 return false;
@@ -8628,21 +8655,28 @@ function extension_to_mimetype($ext){
 switch($ext){
 case 'atom':
 return 'application/atom+xml';
-case 'csv':
-return 'text/csv';
 case 'css':
 return 'text/css';
+case 'csv':
+return 'text/csv';
+case 'gif':
+return 'image/gif';
 case 'html':
 case 'htm':
 return 'text/html';
 case 'ics':
 return 'text/calendar';
+case 'jpg':
+case 'jpeg':
+return 'image/jpeg';
 case 'js':
 return 'text/javascript';
 case 'json':
 return 'application/json';
 case 'otf':
 return 'font/otf';
+case 'png':
+return 'image/png';
 case 'rss':
 return 'application/rss+xml';
 case 'ttf':
@@ -8659,28 +8693,34 @@ function mimetype_to_extension($mimetype){
 switch($mimetype){
 case 'application/atom+xml':
 return 'atom';
-case 'text/csv':
-return 'csv';
-case 'text/css':
-return 'css';
-case 'text/html':
-return 'html';
-case 'text/calendar':
-return 'ics';
-case 'text/javascript':
-return 'js';
 case 'application/json':
 return 'json';
-case 'font/otf':
-return 'otf';
 case 'application/rss+xml':
 return 'rss';
-case 'font/ttf':
-return 'ttf';
 case 'application/xhtml+xml':
 return 'xhtml';
 case 'application/xml':
 return 'xml';
+case 'font/otf':
+return 'otf';
+case 'font/ttf':
+return 'ttf';
+case 'image/gif':
+return 'gif';
+case 'image/jpeg':
+return 'jpeg';
+case 'image/png':
+return 'png';
+case 'text/calendar':
+return 'ics';
+case 'text/css':
+return 'css';
+case 'text/csv':
+return 'csv';
+case 'text/html':
+return 'html';
+case 'text/javascript':
+return 'js';
 default:
 return '';
 }
@@ -9389,7 +9429,18 @@ public function isReadable() {
 return is_readable($this->_filename);
 }
 public function isWritable(){
+if(file_exists($this->_filename)){
 return is_writable($this->_filename);
+}
+else{
+$dir = dirname($this->_filename);
+if(is_dir($dir) && is_writable($dir)){
+return true;
+}
+else{
+return false;
+}
+}
 }
 public function isLocal() {
 return true;
@@ -14355,7 +14406,7 @@ $dom = new \DOMDocument();
 try{
 @$dom->loadHTML('<html>' . $fullsearch . '</html>');
 $nodes = $dom->getElementsByTagName('insertable');
-$validattributes = ['accept', 'basedir', 'cols', 'default', 'description', 'name', 'option', 'rows', 'size', 'type', 'title', 'value', 'width'];
+$validattributes = ['accept', 'basedir', 'cols', 'default', 'description', 'name', 'options', 'rows', 'size', 'type', 'title', 'value', 'width'];
 foreach($nodes as $n){
 $nodedata = [];
 foreach($validattributes as $k){
@@ -15497,10 +15548,22 @@ $tpl->assign('elements', $out);
 return $tpl->fetch();
 }
 public function getClass() {
-$c = $this->get('class');
-$r = $this->get('required');
-$e = $this->hasError();
-return $c . (($r) ? ' formrequired' : '') . (($e) ? ' formerror' : '');
+$classnames = [];
+if($this->get('class')){
+$classnames = explode(' ', $this->get('class'));
+}
+if($this->get('required')){
+$classnames[] = 'formrequired';
+}
+if($this->hasError()){
+$classnames[] = 'formerror';
+}
+if($this->get('orientation')){
+$classnames[] = 'form-orientation-' . $this->get('orientation');
+}
+$classnames = array_unique($classnames);
+sort($classnames);
+return implode(' ', $classnames);
 }
 public function getID(){
 if (!empty($this->_attributes['id'])){
@@ -15786,9 +15849,13 @@ public static $GroupMappings = array(
 );
 private $_models = array();
 public function  __construct($atts = null) {
+if($atts === null){
+$atts = [];
+}
+if(!isset($atts['method'])) $atts['method'] = 'POST';
+if(!isset($atts['orientation'])) $atts['orientation'] = 'horizontal';
 parent::__construct($atts);
 $this->_validattributes = array('accept', 'accept-charset', 'action', 'enctype', 'id', 'method', 'name', 'target', 'style');
-$this->_attributes['method'] = 'POST';
 $this->persistent = false;
 }
 public function getTemplateName() {

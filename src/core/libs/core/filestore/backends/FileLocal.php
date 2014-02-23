@@ -716,8 +716,28 @@ class FileLocal implements Filestore\File {
 		return is_readable($this->_filename);
 	}
 
+	/**
+	 * Check if this file is writable.
+	 *
+	 * FileLocal will also check if the directory this file is contained within is writable if the file does not exist.
+	 *
+	 * @return boolean
+	 */
 	public function isWritable(){
-		return is_writable($this->_filename);
+		// If this file exists check the file.
+		// Otherwise, check the parent directory.
+		if(file_exists($this->_filename)){
+			return is_writable($this->_filename);
+		}
+		else{
+			$dir = dirname($this->_filename);
+			if(is_dir($dir) && is_writable($dir)){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
 	}
 
 	public function isLocal() {

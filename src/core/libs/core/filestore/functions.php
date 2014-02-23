@@ -591,21 +591,28 @@ function extension_to_mimetype($ext){
 	switch($ext){
 		case 'atom':
 			return 'application/atom+xml';
-		case 'csv':
-			return 'text/csv';
 		case 'css':
 			return 'text/css';
+		case 'csv':
+			return 'text/csv';
+		case 'gif':
+			return 'image/gif';
 		case 'html':
 		case 'htm':
 			return 'text/html';
 		case 'ics':
 			return 'text/calendar';
+		case 'jpg':
+		case 'jpeg':
+			return 'image/jpeg';
 		case 'js':
 			return 'text/javascript';
 		case 'json':
 			return 'application/json';
 		case 'otf':
 			return 'font/otf';
+		case 'png':
+			return 'image/png';
 		case 'rss':
 			return 'application/rss+xml';
 		case 'ttf':
@@ -630,28 +637,34 @@ function mimetype_to_extension($mimetype){
 	switch($mimetype){
 		case 'application/atom+xml':
 			return 'atom';
-		case 'text/csv':
-			return 'csv';
-		case 'text/css':
-			return 'css';
-		case 'text/html':
-			return 'html';
-		case 'text/calendar':
-			return 'ics';
-		case 'text/javascript':
-			return 'js';
 		case 'application/json':
 			return 'json';
-		case 'font/otf':
-			return 'otf';
 		case 'application/rss+xml':
 			return 'rss';
-		case 'font/ttf':
-			return 'ttf';
 		case 'application/xhtml+xml':
 			return 'xhtml';
 		case 'application/xml':
 			return 'xml';
+		case 'font/otf':
+			return 'otf';
+		case 'font/ttf':
+			return 'ttf';
+		case 'image/gif':
+			return 'gif';
+		case 'image/jpeg':
+			return 'jpeg';
+		case 'image/png':
+			return 'png';
+		case 'text/calendar':
+			return 'ics';
+		case 'text/css':
+			return 'css';
+		case 'text/csv':
+			return 'csv';
+		case 'text/html':
+			return 'html';
+		case 'text/javascript':
+			return 'js';
 		default:
 			return '';
 	}

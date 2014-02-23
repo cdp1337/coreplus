@@ -1,19 +1,22 @@
 {script library="jquery"}{/script}
 
 <div class="{$element->getClass()}">
-	{if $element->get('title')}
-		<label for="{$element->get('name')}">{$element->get('title')|escape}</label>
-	{/if}
-	{* This is actually a bug I do believe... you should be able to request blah.png *}
-	<img src="{link href='/simplecaptcha'}.png"/>
-	<a href="#" onclick="$(this).closest('div').find('img').attr('src', '{link href='/simplecaptcha'}.png?date=' + (new Date()).getTime()); return false;">
-		<i class="icon-refresh"></i>
-		<span>Reload Image</span>
-	</a>
+	<label for="{$element->get('name')}" class="form-element-label">
+		{$element->get('title')|escape}
 
-	<br/>
-	<input type="text"{$element->getInputAttributes()}>
-	{if $element->get('description')}
-		<p class="formdescription">{$element->get('description')}</p>
-	{/if}
+		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
+
+		<a class="reload-captcha" href="#" onclick="$(this).closest('div').find('img').attr('src', '{link href='/simplecaptcha.png'}?date=' + (new Date()).getTime()); return false;">
+			<i class="icon-refresh"></i>
+			<span>Reload Image</span>
+		</a>
+
+	</label>
+
+	<div class="form-element-value clearfix">
+		<img src="{link href='/simplecaptcha.png'}"/>
+		<input type="text"{$element->getInputAttributes()} placeholder="Letters from Image">
+	</div>
+
+	<p class="form-element-description">{$element->get('description')}</p>
 </div>

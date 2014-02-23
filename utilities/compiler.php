@@ -349,8 +349,9 @@ else{
 	echo "Scanning for SASS/SCSS resources...\n";
 	exec('find "' . ROOT_PDIR . 'components/" -name "[a-z]*.scss"', $compresults);
 	exec('find "' . ROOT_PDIR . 'themes/" -name "[a-z]*.scss"', $themeresults);
+	exec('find "' . ROOT_PDIR . 'core/" -name "[a-z]*.scss"', $coreresults);
 
-	$results = array_merge($compresults, $themeresults);
+	$results = array_merge($compresults, $themeresults, $coreresults);
 
 	foreach($results as $file){
 		echo "Compiling $file...\n";
@@ -366,6 +367,12 @@ else{
 		}
 		elseif(preg_match('#/dev/assets/sass/#', $outdirname)){
 			$outdirname = preg_replace('#/dev/assets/sass/#', '/assets/css/', $outdirname);
+		}
+		elseif(preg_match('#/assets/scss/#', $outdirname)){
+			$outdirname = preg_replace('#/assets/scss/#', '/assets/css/', $outdirname);
+		}
+		elseif(preg_match('#/assets/sass/#', $outdirname)){
+			$outdirname = preg_replace('#/assets/sass/#', '/assets/css/', $outdirname);
 		}
 
 

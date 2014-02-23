@@ -24,7 +24,7 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		\Core\view()->addScript ('js/jquery/jquery-1.10.2.js');
+		\Core\view()->addScript ('js/jquery/jquery-1.11.0.js');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -32,8 +32,8 @@ abstract class JQuery {
 	
 	public static function IncludeJQueryUI(){
 		self::IncludeJQuery();
-		\Core\view()->addScript ('js/jquery/jquery-ui-1.10.3.custom.js');
-		\Core\view()->addStylesheet('css/jquery-ui-1.10.3.custom.css');
+		\Core\view()->addScript ('js/jquery/jquery-ui-1.10.4.custom.js');
+		\Core\view()->addStylesheet('css/jquery-ui-1.10.4.custom.css');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;

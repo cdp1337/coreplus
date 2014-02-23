@@ -1,0 +1,99 @@
+/*****************************************************************************
+ *****************************************************************************
+ **                          CONTROL ELEMENTS                               **
+ ** Control objects provide little administrative functionality bits        **
+ ** throughout the site.  They generally appear as a <ul> with <a> or {a}   **
+ ** tags and spans inside.  The listing itself is re-rendered with          **
+ ** javascript to make it a popup menu for better usability.                **
+ *****************************************************************************
+ *****************************************************************************/
+/*** Controls that can be implemented throughout the site ***/
+ul.controls {
+	height:20px;
+	margin: 0;
+	padding: 0;
+}
+ul.controls li {
+	float:left;
+	margin-right:0.1em;
+	list-style:none;
+}
+/*
+And their images.  Stand-alone "control" buttons also get the same styling.
+Since the icons are now being handled by font-awesome, the bulk of this logic will have been removed.
+*/
+
+
+/* First, the common styles for all icon'd controls. */
+ul.controls li a { text-decoration: none; font-size: 14px; padding: 2px; line-height: 18px; }
+ul.controls li a:hover { text-shadow: none; font-size: 18px; padding: 0; }
+
+ul.controls li a span {
+	display: none;
+}
+
+ul.controls li a i {
+
+}
+
+/** Spruce up FA with some color :) **/
+ul.controls li a i.icon-remove,
+ul.controls li a i.icon-delete { color: #7a0200; }
+ul.controls li a i.icon-edit { color: blue; }
+ul.controls li a i.icon-plus,
+ul.controls li a i.icon-add { color: green; }
+ul.controls li a i.icon-rss { color: #e99700; }
+
+/**
+ * Contextual controls are similar, but slightly different.
+ * Instead of being inline, they're in a context menu.
+ */
+ul.controls.context-menu {
+	position: absolute;
+	border: 1px solid #999;
+	height: auto;
+	background: #eee;
+	top: 0;
+	z-index: 999;
+}
+
+/* The many links have a bit different styles. */
+ul.controls.context-menu-many-links {
+	box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
+	left: 20px;
+	opacity: 0.9;
+	top: -3px;
+}
+ul.controls.context-menu li {
+	font-size: 14px;
+	float: none;
+	white-space: nowrap;
+	width: 100%;
+	/* This will get overwritten by a's */
+	color: #555;
+}
+ul.controls.context-menu li i {
+	line-height: 1.5em;
+}
+ul.controls.context-menu li a {
+	padding: 0;
+	display: block;
+	color: #000;
+}
+ul.controls.context-menu li a:hover {
+	font-size: 14px;
+	background: #AFC5EE;
+	color: #000;
+}
+
+ul.controls.context-menu i {
+	padding-left: 4px;
+}
+ul.controls.context-menu span {
+	line-height: 1.9em;
+	padding: 0 2px;
+	display: inline;
+}
+ul.controls.context-menu a span {
+
+}

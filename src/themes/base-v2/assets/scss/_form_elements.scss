@@ -1,0 +1,763 @@
+/*****************************************************************************
+ *****************************************************************************
+ **                             FORM ELEMENTS                               **
+ *****************************************************************************
+ *****************************************************************************/
+
+
+$form_element_bg: #e7e7e7;
+$form_element_border: 1px solid rgba(120, 120, 120, 0.1);
+
+$form_element_description_bg: #e7e7e7;
+$form_element_description_border: 0 none;
+$form_element_description_color: #525252;
+
+$form_element_value_bg: #F6F6F6;
+$form_element_value_border: 1px solid rgba(120, 120, 120, 0.4);
+$form_element_value_color: #353535;
+
+$form_element_label_bg: #e7e7e7;
+$form_element_label_border: 0 none;
+$form_element_label_color: #2f2f2f;
+
+$form_element_error_color: #6c0000;
+
+/**
+ * Error backgrounds, borders, and colors for everything
+ */
+.formelement.formerror {
+	.form-element-label {
+		color: $form_element_error_color;
+		font-weight: bold;
+	}
+	.form-element-value {
+		background:#FFF0F0;
+		border:1px inset $form_element_error_color;
+
+		input, select, textarea {
+			border:1px inset $form_element_error_color;
+		}
+	}
+}
+
+/**
+ * CSS Test
+ *
+ * This is just a test class to make the colours something very obvious.
+ */
+.form-orientation-css-test {
+	.form-element-label {
+		background: red;
+	}
+
+	.form-element-value {
+		background: blue;
+	}
+
+	.form-element-description {
+		background: green;
+	}
+
+	// @todo
+	.formelement-labelinputgroup select[disabled],
+	select[disabled] {
+		/* Disabled selects should look a little more ... disabled. */
+		opacity: 0.4;
+		color: lighten($form_element_value_color, 25%);
+		cursor: no-drop;
+	}
+}
+
+
+
+
+/**
+ * Color and basic padding settings across all form orientations
+ */
+.formelement {
+	background: $form_element_bg;
+	border: $form_element_border;
+
+	&.formsubmitinput,
+	&.formresetinput {
+		/* Remove any background colors and borders from buttons.  They don't need'em */
+		background: none transparent;
+		border: 0 none;
+	}
+
+
+	.form-element-label {
+		background: $form_element_label_bg;
+		border: $form_element_label_border;
+		color: $form_element_label_color;
+		line-height: 1.3em;
+		min-width: 140px;
+		padding: 1%;
+
+		a {
+			/* Any A tag inside the labels */
+			color: lighten($form_element_label_color, 25%);
+		}
+	}
+
+	.form-element-value {
+		color: $form_element_value_color;
+		position: relative;
+
+		input[type=text], input[type=password] {
+			background: $form_element_value_bg;
+			border: $form_element_value_border;
+			color: $form_element_value_color;
+			min-width: 150px;
+			padding: 1%;
+		}
+
+		textarea {
+			background: $form_element_value_bg;
+			border: $form_element_value_border;
+			color: $form_element_value_color;
+			padding: 1%;
+		}
+
+		select {
+			background: $form_element_value_bg;
+			border: $form_element_value_border;
+			color: $form_element_value_color;
+			cursor: pointer;
+			min-width: 100px;
+			padding: 0.5%;
+		}
+	}
+
+	&.formradioinput .form-element-value,
+	&.formcheckboxinput .form-element-value,
+	&.formcheckboxesinput .form-element-value,
+	&.formfileinput .form-element-value,
+	&.formcaptchainput .form-element-value {
+		/* These input types also contain a background on their value field */
+		background: $form_element_value_bg;
+		padding: 1%;
+	}
+
+	.form-element-description {
+		background: $form_element_description_bg;
+		border: $form_element_description_border;
+		color: $form_element_description_color;
+		font-size: 85%;
+		margin: 0 0 0.5%;
+	}
+
+	.form-element-required-mark {
+		/* Required mark color and styling */
+		color: red;
+		font-weight: bold;
+	}
+
+	&.formcheckboxesinput {
+		.checkboxes-toggle {
+			cursor: pointer;
+		}
+	}
+
+	&.formpagemetakeywordsinput {
+		/* Meta-Keywords input styles */
+		.form-element-value {
+			background: $form_element_value_bg;
+			border: $form_element_value_border;
+			color: $form_element_value_color;
+
+			.keywords-multi-select-option {
+				border: 1px solid lighten($form_element_value_color, 75%);
+				float: left;
+				margin-right: 0.5em;
+				padding: 0.25em;
+			}
+		}
+	}
+
+	&.formpagemetaauthorinput.user-valid .meta-author-invalid-indicator {
+		display: none;
+	}
+	&.formpagemetaauthorinput.user-invalid .meta-author-valid-indicator {
+		display: none;
+	}
+}
+
+
+
+
+/**
+ * Horizontal form orientations
+ */
+.form-orientation-horizontal {
+
+	.formelement {
+		overflow: hidden;
+		width: 100%;
+	}
+
+	.form-element-label {
+		display: block;
+		float: left;
+		text-align: right;
+		width: 28%;
+	}
+
+	.form-element-value {
+		margin-left: 30%;
+
+		input[type=text], input[type=password], textarea {
+			width: 97%;
+		}
+		select {
+			width: 99%;
+		}
+	}
+
+	.form-element-description {
+		clear: both;
+	}
+
+	.formelement.formradioinput {
+		/* Radio input tweaks */
+		.form-element-value {
+			label {
+				float: left;
+				margin-right: 1em;
+			}
+		}
+	}
+
+	.formelement.formcheckboxesinput {
+		/* Checkboxes specific styles */
+		.checkboxes-toggle {
+			cursor: pointer;
+			float: right;
+			margin-left: 0.25em;
+			span {
+				/* Hide the label for the toggle to save some real estate. */
+				display: none;
+			}
+		}
+		.form-element-value {
+			label {
+				float: left;
+				margin-right: 1em;
+			}
+		}
+	}
+
+	.formelement.formcaptchainput {
+		/* Captcha tweaks */
+		.form-element-label a {
+			display: block;
+			float: right;
+			margin-top: 1em;
+		}
+		.form-element-value {
+			img {
+				float: left;
+				margin-right: 1em;
+			}
+			input {
+				min-width: 140px;
+				width: 30%;
+			}
+		}
+	}
+
+	.formelement.geoaddressforminput {
+		/* GeoAddress input sections have their description above the fields. */
+
+		.form-element-description {
+			margin-left: 30%;
+			clear: none;
+		}
+
+		.form-element-value {
+			margin-left: 0;
+			clear: both;
+
+			.address-address1 {
+				border-top-width: 0;
+				float: left;
+				min-width: 130px;
+				padding: 0.3em 0.5%;
+				width: 50%;
+			}
+			.address-address2 {
+				border-left-width: 0;
+				border-top-width: 0;
+				float: left;
+				min-width: 130px;
+				padding: 0.3em 0.5%;
+				width: 46%;
+			}
+			.address-city {
+				border-top-width: 0;
+				min-width: 85px;
+				padding: 0.3em 0.5%;
+				width: 33%;
+			}
+			.address-province-wrapper {
+				float: left;
+				width: 20%;
+				select {
+					border-left-width: 0;
+					border-top-width: 0;
+					padding: 0.25em 0.25%;
+					width: 99%;
+				}
+			}
+			.address-postal {
+				border-left-width: 0;
+				border-top-width: 0;
+				float: left;
+				min-width: 30px;
+				padding: 0.3em 0.5%;
+				width: 11%;
+			}
+			select.address-country {
+				border-left-width: 0;
+				border-top-width: 0;
+				padding: 0.25em 0.5%;
+				width: 32%;
+			}
+		}
+	}
+
+	.formelement.formpagemetaauthorinput {
+		/* Meta-Author input styles */
+		.form-element-value {
+			input {
+				padding-left: 24px;
+				width: 93%;
+			}
+			.meta-author-indicator {
+				position: absolute;
+				left: 8px;
+				top: 4px;
+			}
+		}
+	}
+
+	.formelement.formwysiwyginput {
+		/* TinyMCE / WYSIWYG inputs have a slightly different interface, their description is above the input. */
+		.form-element-description {
+			margin-left: 30%;
+			clear: none;
+		}
+
+		.form-element-value {
+			margin-left: 0;
+			clear: both;
+		}
+	}
+
+	.formelement.formaccessstringinput {
+		.form-element-value {
+			.formradioinput {
+				display: block;
+				float: none;
+				overflow: hidden;
+				width: 100%;
+			}
+			.formcheckboxesinput {
+				display: block;
+				float: none;
+				overflow: hidden;
+				width: 100%;
+			}
+		}
+	}
+}
+
+/**
+ * Vertical form orientations
+ */
+.form-orientation-vertical {
+	.formelement {
+		margin-bottom: 0.5em;
+	}
+
+	.form-element-label {
+		display: block;
+		text-align: left;
+		width: 97%;
+	}
+
+	.form-element-value {
+
+		input[type=text], input[type=password], textarea {
+			width: 97%;
+		}
+		select {
+			width: 99%;
+		}
+	}
+
+	.form-element-description {
+		clear: both;
+		padding-left: 1em;
+	}
+
+	.formelement.formradioinput {
+		/* Radio input tweaks */
+		.form-element-value {
+			label {
+				float: left;
+				margin-right: 1em;
+			}
+		}
+	}
+
+	.formelement.formcheckboxesinput {
+		/* Checkboxes specific styles */
+		.checkboxes-toggle {
+			cursor: pointer;
+			float: right;
+			margin-left: 0.25em;
+		}
+		.form-element-value {
+			label {
+				float: left;
+				margin-right: 1em;
+			}
+		}
+	}
+
+	.formelement.formcaptchainput {
+		/* Captcha tweaks */
+		.form-element-label a {
+			display: block;
+			float: right;
+		}
+		.form-element-value {
+			img {
+				float: left;
+				margin-right: 1em;
+			}
+			input {
+				min-width: 140px;
+				width: 30%;
+			}
+		}
+	}
+
+	.formelement.formfileinput {
+		.form-element-value {
+			width: 100%;
+
+			label {
+				display: block;
+			}
+		}
+	}
+
+	.formelement.geoaddressforminput {
+		/* GeoAddress input sections have their description above the fields. */
+
+		.form-element-value {
+			margin-left: 0;
+			clear: both;
+
+			.address-address1 {
+				border-top-width: 0;
+				min-width: 130px;
+			}
+			.address-address2 {
+				border-top-width: 0;
+				min-width: 130px;
+			}
+			.address-city {
+				border-top-width: 0;
+				float: left;
+				min-width: 85px;
+				width: 40%;
+			}
+			.address-province-wrapper {
+				float: left;
+				width: 30%;
+				select {
+					border-left-width: 0;
+					border-top-width: 0;
+					padding: 3%;
+					width: 99%;
+				}
+			}
+			.address-postal {
+				border-left-width: 0;
+				border-top-width: 0;
+				float: left;
+				min-width: 30px;
+				width: 20%;
+			}
+			select.address-country {
+				border-top-width: 0;
+			}
+		}
+	}
+
+	.formelement.formpagemetaauthorinput {
+		/* Meta-Author input styles */
+		.form-element-value {
+			input {
+				padding-left: 24px;
+				width: 93%;
+			}
+			.meta-author-indicator {
+				position: absolute;
+				left: 8px;
+				top: 4px;
+			}
+		}
+	}
+
+	.formelement.formaccessstringinput {
+		.form-element-value {
+			.formradioinput {
+				display: block;
+				float: none;
+				overflow: hidden;
+				width: 100%;
+			}
+			.formcheckboxesinput {
+				display: block;
+				float: none;
+				overflow: hidden;
+				width: 100%;
+			}
+		}
+	}
+}
+
+/**
+ * Grid form orientations
+ */
+.form-orientation-grid {
+	/* Decrease font size to make everything fit */
+	font-size: 80%;
+
+	.formelement {
+		border-bottom: 1px solid lighten($form_element_label_color, 50%);
+		margin-bottom: 0.25em;
+		overflow: hidden;
+		width: 100%;
+	}
+
+	.form-element-label {
+		clear: left;
+		display: block;
+		float: left;
+		text-align: left;
+		width: 20%;
+	}
+
+	.form-element-value {
+		float: left;
+		width: 30%;
+
+		input[type=text], input[type=password], textarea {
+			min-width: 100px;
+			width: 97%;
+		}
+		select {
+			min-width: 100px;
+			width: 99%;
+		}
+	}
+
+	.form-element-description {
+		float: left;
+		padding-left: 0.25em;
+	}
+
+	.formelement.formradioinput {
+		/* Radio input tweaks */
+		.form-element-value {
+			label {
+				float: left;
+				margin-right: 1em;
+			}
+		}
+	}
+
+	.formelement.formcheckboxesinput {
+		/* Checkboxes specific styles */
+		.checkboxes-toggle {
+			cursor: pointer;
+			float: right;
+			margin-left: 0.25em;
+			span {
+				/* Hide the label for the toggle to save some real estate. */
+				display: none;
+			}
+		}
+		.form-element-value {
+			label {
+				float: left;
+				margin-right: 1em;
+			}
+		}
+	}
+
+	.formelement.formcaptchainput {
+		/* Captcha tweaks */
+		.form-element-label a {
+			display: block;
+			float: right;
+			margin-top: 1em;
+		}
+		.form-element-value {
+			img {
+				float: left;
+				margin-right: 1em;
+			}
+			input {
+				min-width: 140px;
+				width: 30%;
+			}
+		}
+	}
+
+	.formelement.geoaddressforminput {
+		/* GeoAddress input sections have their description above the fields. */
+
+		.form-element-value {
+			margin-left: 0;
+			clear: both;
+			width: 100%;
+
+			.address-address1 {
+				border-top-width: 0;
+				float: left;
+				min-width: 130px;
+				padding: 0.3em 0.5%;
+				width: 50%;
+			}
+			.address-address2 {
+				border-left-width: 0;
+				border-top-width: 0;
+				float: left;
+				min-width: 130px;
+				padding: 0.3em 0.5%;
+				width: 46%;
+			}
+			.address-city {
+				border-top-width: 0;
+				min-width: 85px;
+				padding: 0.3em 0.5%;
+				width: 33%;
+			}
+			.address-province-wrapper {
+				float: left;
+				width: 20%;
+				select {
+					border-left-width: 0;
+					border-top-width: 0;
+					padding: 0.25em 0.25%;
+					width: 99%;
+				}
+			}
+			.address-postal {
+				border-left-width: 0;
+				border-top-width: 0;
+				float: left;
+				min-width: 30px;
+				padding: 0.3em 0.5%;
+				width: 11%;
+			}
+			select.address-country {
+				border-left-width: 0;
+				border-top-width: 0;
+				padding: 0.25em 0.5%;
+				width: 32%;
+			}
+		}
+	}
+
+	.formelement.formpagemetaauthorinput {
+		/* Meta-Author input styles */
+		.form-element-value {
+			input {
+				padding-left: 24px;
+				width: 93%;
+			}
+			.meta-author-indicator {
+				position: absolute;
+				left: 8px;
+				top: 4px;
+			}
+		}
+	}
+
+	.formelement.formwysiwyginput {
+		/* TinyMCE / WYSIWYG inputs have a slightly different interface, their description is above the input. */
+		.form-element-description {
+			clear: none;
+		}
+
+		.form-element-value {
+			margin-left: 0;
+			clear: both;
+			width: 100%;
+		}
+	}
+
+	.formelement.formaccessstringinput {
+		.form-element-value {
+			.formradioinput {
+				display: block;
+				float: none;
+				overflow: hidden;
+				width: 100%;
+			}
+			.formcheckboxesinput {
+				display: block;
+				float: none;
+				overflow: hidden;
+				width: 100%;
+			}
+		}
+	}
+}
+
+
+/** Tweak the autocomplete styles slightly **/
+.formelement input[type="text"].ui-autocomplete-loading {
+	background-image: url('../images/loading-bar-small.gif');
+	background-position: center right;
+	background-repeat: no-repeat;
+}
+
+.formelement input[type="text"].ui-autocomplete-input {
+	border: 1px solid #47C6CB;
+}
+
+
+.facebook-integration {
+	margin-left: 0;
+	max-width: 515px;
+}
+
+.ui-dialog .formelement label {
+	position:relative;
+	top:0;
+	margin-bottom:5px;
+	text-align:left;
+}
+.ui-dialog .formelement input {
+	padding: 0.35em 0.8em;
+	display: block;
+}
+
+.ui-dialog .formelement select {
+	display: block;
+	max-width: 100%;
+}
+
+.tinymce label {
+	position:relative;
+	top:0;
+	margin-bottom: 5px;
+}

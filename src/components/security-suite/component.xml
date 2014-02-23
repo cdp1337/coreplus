@@ -5,14 +5,18 @@
 		<require name="core" type="component" version="3.0.0" operation="ge"/>
 		<require name="phpwhois" type="component"/>
 	</requires>
-	<configs/>
+	<configs>
+		<config key="/security/site_password" description="General password required to access this site.  This is useful for sites still in development." type="string" default=""/>
+	</configs>
 	<hooks>
-		<hook name="/core/components/loaded" call="StopForumSpam::CheckIP"/>
-		<hook name="/core/components/loaded" call="IpBlacklistHelper::CheckIP"/>
+		<hook name="/core/components/loaded" call="SecuritySuite\StopForumSpam::CheckIP"/>
+		<hook name="/core/components/loaded" call="SecuritySuite\IpBlacklistHelper::CheckIP"/>
+		<hook name="/core/components/loaded" call="SecuritySuite\SimpleSitePassword::Check"/>
 		<hook name="/cron/daily" call="StopForumSpam::HookDaily"/>
 		<hook name="/cron/daily" call="IpBlacklistHelper::CleanupHook"/>
 	</hooks>
 	<pages>
+		<page baseurl="/security/sitepassword" title="Simple Site Password" access="g:admin" group="Configure" admin="1"/>
 		<page access="p:/security/viewlog" admin="1" baseurl="/security/log" title="Security Log" group="Security"/>
 		<page access="g:admin" admin="1" baseurl="/security/blacklistip" title="Blacklisted IP addresses" group="Security"/>
 		<page access="*" admin="0" baseurl="/wphoneypot/wplogin" rewriteurl="/wp-login" selectable="0" title="WP Login"/>
@@ -25,34 +29,39 @@
 		<file filename="templates/pages/security/blacklistip.tpl" md5="b6f9b7a4d23c7d7f025c645a9e0bfa31"/>
 		<file filename="templates/pages/security/blacklistip_add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/security/blacklistip_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/security/config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/security/log.tpl" md5="a1b15c4ff3c1937fbf9916c1e6a44f72"/>
 		<file filename="templates/pages/security/view.tpl" md5="ff23af3634c04a9a1d46076d6b5fadf2"/>
 		<file filename="templates/pages/wphoneypot/wpadmin.phtml" md5="b22f2d01e716682b27599c19a76b44e2"/>
 		<file filename="templates/pages/wphoneypot/wplogin.phtml" md5="748f545b5796b0ef78a77e38ee232417"/>
 	</view>
 	<description>
-		Collection of security suites for sites, including anti-spam.
+		Collection of security utilities for your site.
+		Includes anti-spam by stopforumspam.com, IP Blacklist, and site-wide password protection.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="191c35a5f45272f4d9a1f80a5dbf58b7"/>
-		<file filename="classes/IpBlacklistHelper.php" md5="5b137ab7e09e68b44613d7b730c60210">
-			<class name="IpBlacklistHelper"/>
-		</file>
-		<file filename="classes/StopForumSpam.class.php" md5="dd9e2a3d9dd7a535863ede6d2328ad1a">
-			<class name="StopForumSpam"/>
-		</file>
-		<file filename="controllers/SecurityController.php" md5="c89eae839eb6d9a22c6692cb531e4f4b">
+		<file filename="CHANGELOG" md5="eea9ebcc4cbd9b16ab44c60372119ce8"/>
+		<file filename="controllers/SecurityController.php" md5="3899674adf183580312dca21e48c36dc">
 			<controller name="SecurityController"/>
 		</file>
-		<file filename="controllers/WPHoneypotController.php" md5="3d3c4ccf26836b9d54261b78de9a5e8c">
+		<file filename="controllers/WPHoneypotController.php" md5="4b98e4b03b43f95ff146b862d2139e98">
 			<controller name="WPHoneypotController"/>
+		</file>
+		<file filename="libs/securitysuite/IpBlacklistHelper.php" md5="1f7fc86d3efe397c96e07babe68f4379">
+			<class name="SecuritySuite\IpBlacklistHelper"/>
+		</file>
+		<file filename="libs/securitysuite/SimpleSitePassword.php" md5="d9fc81426194128c6c5860324626acc8">
+			<class name="SecuritySuite\SimpleSitePassword"/>
+		</file>
+		<file filename="libs/securitysuite/StopForumSpam.class.php" md5="e5d576a06e7b5707d026abce06719330">
+			<class name="SecuritySuite\StopForumSpam"/>
 		</file>
 		<file filename="listed_ip_1.zip" md5="9e6a0866ba2c7b797b0bbe39af7a6736"/>
 		<file filename="listed_ip_1_all.zip" md5="aabf67226a6d5d2bebcf6cc4e6a8c187"/>
-		<file filename="models/IpBlacklistModel.php" md5="8ea58568d6ad42584032e67b1acf63c9">
+		<file filename="models/IpBlacklistModel.php" md5="109a78ea19babc9be91c8866d2e235e2">
 			<class name="IpBlacklistModel"/>
 		</file>
-		<file filename="models/SecurityLogModel.php" md5="77f74f6ae25586cdec3ad0e167d1e363">
+		<file filename="models/SecurityLogModel.php" md5="a2f1c71c47ee33fff7de2e57447cb056">
 			<class name="SecurityLogModel"/>
 		</file>
 		<file filename="models/sfsBlacklistModel.php" md5="4d6d7c012a546ea0f6b54215961af3fa">

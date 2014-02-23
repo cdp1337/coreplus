@@ -1,30 +1,23 @@
-{css src="assets/css/user.css"}{/css}
-
-
 <div class="{$element->getClass()} {$element->get('id')} clearfix">
-	<div class="formelement-labelinputgroup clearfix">
-		{if $element->get('title')}
-			<label for="{$element->get('id')}">{$element->get('title')|escape}</label>
-		{/if}
+	<label class="form-element-label" for="{$element->get('id')}">
+		{$element->get('title')|escape}
+		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
+	</label>
 
-		<div class="meta-author-input-wrapper">
-			<div class="meta-author-indicator">
-				<span class="meta-author-valid-indicator" title="User is valid!">
-					<i class="icon-ok"></i>
-				</span>
-				<span class="meta-author-invalid-indicator" title="No user account linked.">
-					<i class="icon-exclamation-circle"></i>
-				</span>
-			</div>
-
-			<input type="text"{$element->getInputAttributes()}>
+	<div class="meta-author-input-wrapper form-element-value">
+		<div class="meta-author-indicator">
+			<span class="meta-author-valid-indicator" title="User is valid!">
+				<i class="icon-ok"></i>
+			</span>
+			<span class="meta-author-invalid-indicator" title="No user account linked.">
+				<i class="icon-exclamation-circle"></i>
+			</span>
 		</div>
 
+		<input type="text"{$element->getInputAttributes()}>
 	</div>
 
-	{if $element->get('description')}
-		<p class="formdescription">{$element->get('description')}</p>
-	{/if}
+	<p class="form-element-description">{$element->get('description')}</p>
 
 </div>
 

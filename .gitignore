@@ -38,6 +38,7 @@
 /.idea/dataSources.ids
 /.idea/dataSources.xml
 /.idea/sqldialects.xml
+/.idea/deployment.xml
 
 # Skip the GPG keys.
 /src/gnupg/*.gpg

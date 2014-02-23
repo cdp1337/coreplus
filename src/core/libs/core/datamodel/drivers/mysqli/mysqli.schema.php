@@ -186,9 +186,13 @@ class mysqli_Schema extends Schema{
 			// YAY, null is allowed!
 			$column->default = null;
 		}
-		elseif($def['Default'] === false){
+		elseif($def['Default'] === false || $def['Default'] === null){
 			// Default should be intelligent based on the column type!
 			// Since the column type is already setup, I can just use that :)
+
+			// For some reason MySQL 5.5.35 changed from reporting as false to reporting as null.
+			// As such, NULL on a non-null column needs to be handled as well.
+
 			switch($column->type){
 				case \Model::ATT_TYPE_INT:
 				case \Model::ATT_TYPE_BOOL:

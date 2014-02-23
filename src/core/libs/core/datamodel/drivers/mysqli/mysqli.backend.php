@@ -128,6 +128,7 @@ class mysqli_backend implements BackendInterface {
 				$this->_executeGet($dataset);
 				break;
 			case Dataset::MODE_INSERT:
+			case Dataset::MODE_BULK_INSERT:
 				$this->_executeInsert($dataset);
 				break;
 			case Dataset::MODE_UPDATE:
@@ -720,25 +721,62 @@ class mysqli_backend implements BackendInterface {
 		// Generate a query to run.
 		$q = "INSERT INTO `" . $dataset->_table . "`";
 
-		$keys = array();
-		$vals = array();
-		foreach($dataset->_sets as $k => $v){
-			$keys[] = "`$k`";
-			if($v === null){
-				$vals[] = 'NULL';
+		if($dataset->_mode == Dataset::MODE_BULK_INSERT){
+			// New support for inserting multiple records at once.
+			$keys  = [];
+			$qvals = [];
+			$i     = 0;
+			foreach($dataset->_sets as $dat){
+				++$i;
+				$vals = array();
+
+				if($i == 1){
+					// Create the list of keys on the first pass.
+					foreach($dat as $k => $v){
+						$keys[] = "`$k`";
+					}
+					reset($dat);
+				}
+
+				foreach($dat as $v){
+					if($v === null){
+						$vals[] = 'NULL';
+					}
+					//elseif(is_int($v)){
+					//	$vals[] = $v;
+					//}
+					else{
+						$vals[] = "'" . $this->_conn->real_escape_string($v) . "'";
+					}
+				}
+
+				$qvals[] = "( " . implode(', ', $vals) . " )";
 			}
-			//elseif(is_int($v)){
-			//	$vals[] = $v;
-			//}
-			else{
-				$vals[] = "'" . $this->_conn->real_escape_string($v) . "'";
-			}
+
+			$q .= " ( " . implode(', ', $keys) . " )";
+			$q .= " VALUES ";
+			$q .= implode(', ', $qvals);
 		}
+		else{
+			$keys = array();
+			$vals = array();
+			foreach($dataset->_sets as $k => $v){
+				$keys[] = "`$k`";
+				if($v === null){
+					$vals[] = 'NULL';
+				}
+				//elseif(is_int($v)){
+				//	$vals[] = $v;
+				//}
+				else{
+					$vals[] = "'" . $this->_conn->real_escape_string($v) . "'";
+				}
+			}
 
-		$q .= " ( " . implode(', ', $keys) . " )";
-		$q .= " VALUES ";
-		$q .= " ( " . implode(', ', $vals) . " )";
-
+			$q .= " ( " . implode(', ', $keys) . " )";
+			$q .= " VALUES ";
+			$q .= " ( " . implode(', ', $vals) . " )";
+		}
 
 		// Execute this and populate the dataset appropriately.
 		$this->_rawExecute('write', $q);

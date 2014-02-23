@@ -7,6 +7,40 @@
 class SecurityController extends Controller_2_1 {
 
 	/**
+	 * Provide a UI for the simple site password option.
+	 */
+	public function sitepassword(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		require_once(ROOT_PDIR . 'core/libs/core/configs/functions.php');
+
+		// Build a form to handle the config options themselves.
+		// These will include password strength, whether or not captcha is enabled, etc.
+		$configs = [
+			'/security/site_password',
+		];
+		$configform = new Form();
+		$configform->set('callsmethod', 'SecurityController::SitePasswordSave');
+
+		foreach($configs as $key){
+			$el = \Core\Configs\get_form_element_from_config(ConfigModel::Construct($key));
+			// I don't need this, (Everything from this group will be on the root-level form).
+			$el->set('group', null);
+			$configform->addElement($el);
+		}
+
+		$configform->addElement('submit', ['name' => 'submit', 'value' => 'Save Password']);
+
+		$view->title = 'Simple Site Password';
+		$view->assign('form', $configform);
+	}
+
+	/**
 	 * Display a list of cron jobs that have ran.
 	 * @return int
 	 */
@@ -229,6 +263,21 @@ class SecurityController extends Controller_2_1 {
 		$ban->delete();
 		Core::SetMessage('Removed ban successfully', 'success');
 		Core::GoBack();
+	}
+
+	/**
+	 * Save the site password.
+	 *
+	 * @param Form $form
+	 *
+	 * @return bool
+	 */
+	public static function SitePasswordSave(Form $form){
+		$pass = $form->getElement('config[/security/site_password]')->get('value');
+
+		\ConfigHandler::Set('/security/site_password', $pass);
+
+		return true;
 	}
 
 	/**

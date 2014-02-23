@@ -35,8 +35,16 @@ class Dataset implements \Iterator{
 	const MODE_GET = 'get';
 	/**
 	 * Mode for inserting data into the datastore
+	 *
+	 * INSERT INTO (`key`, `key2) VALUES ('val1', 'val2');
 	 */
 	const MODE_INSERT = 'insert';
+	/**
+	 * Mode for bulk inserting data into the datastore
+	 *
+	 * INSERT INTO (`key`, `key2) VALUES ('val1', 'val2'), ('val1', 'val2'), ('val1', 'val2'), ('val1', 'val2')...;
+	 */
+	const MODE_BULK_INSERT = 'bulk_insert';
 	/**
 	 * Mode for updating data in the datastore
 	 */

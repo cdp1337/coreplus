@@ -3,7 +3,7 @@
  * ie: being able for SA to set which options show to users, the titles for them, etc.
  *}
 
-<form action="" method="POST">
+{$configform->render('head')}
 	<fieldset>
 		<legend> User Config Options </legend>
 
@@ -46,7 +46,7 @@
 
 	<br/>
 	<input type="submit" value="Save Options"/>
-</form>
+{$configform->render('foot')}
 
 
 {script library="jqueryui"}{/script}

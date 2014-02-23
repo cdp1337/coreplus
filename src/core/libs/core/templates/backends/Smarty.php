@@ -291,7 +291,7 @@ class Smarty implements Templates\TemplateInterface {
 		try{
 			@$dom->loadHTML('<html>' . $fullsearch . '</html>');
 			$nodes = $dom->getElementsByTagName('insertable');
-			$validattributes = ['accept', 'basedir', 'cols', 'default', 'description', 'name', 'option', 'rows', 'size', 'type', 'title', 'value', 'width'];
+			$validattributes = ['accept', 'basedir', 'cols', 'default', 'description', 'name', 'options', 'rows', 'size', 'type', 'title', 'value', 'width'];
 
 			foreach($nodes as $n){
 				/** @var $n \DOMElement */

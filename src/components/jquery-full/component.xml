@@ -5,10 +5,10 @@
 		<require name="core" type="component" version="3.0.0" operation="ge"/>
 	</requires>
 	<provides>
-		<provide name="JQuery" version="1.10.2" type="library"/>
+		<provide name="JQuery" version="1.11.0" type="library"/>
 		<provide name="JQuery.json" version="2.4" type="library"/>
 		<provide name="JQuery.cookie" version="1.3.1" type="library"/>
-		<provide name="JQueryUI" version="1.10.3" type="library"/>
+		<provide name="JQueryUI" version="1.10.4" type="library"/>
 		<provide name="JQueryUI.NestedSortable" version="1.4.0" type="library"/>
 		<provide name="JQueryUI.readonly" version="2.0.1" type="library"/>
 		<provide name="JQueryUI.timepicker" version="1.2" type="library"/>
@@ -34,17 +34,17 @@
 		<file filename="assets/css/images/animated-overlay.gif" md5="2b912f7c0653008ca28ebacda49025e7"/>
 		<file filename="assets/css/images/ui-bg_diagonals-thick_18_b81900_40x40.png" md5="95f9cceeb9d742dd3e917ec16ed754f8"/>
 		<file filename="assets/css/images/ui-bg_diagonals-thick_20_666666_40x40.png" md5="f040b255ca13e693da34ab33c7d6b554"/>
-		<file filename="assets/css/images/ui-bg_flat_0_aaaaaa_40x100.png" md5="9e31f49fa36be64d13fb70adb0e39732"/>
+		<file filename="assets/css/images/ui-bg_flat_0_aaaaaa_40x100.png" md5="478007eded887122ec8af76633b81518"/>
 		<file filename="assets/css/images/ui-bg_flat_10_000000_40x100.png" md5="c18cd01623c7fed23c80d53e2f5e7c78"/>
-		<file filename="assets/css/images/ui-bg_flat_75_ffffff_40x100.png" md5="3cbe03a1e22cb1628b2b0e81d2b5b8d7"/>
+		<file filename="assets/css/images/ui-bg_flat_75_ffffff_40x100.png" md5="bd22d9117dbef2031072a69b7996e7b6"/>
 		<file filename="assets/css/images/ui-bg_glass_100_f6f6f6_1x400.png" md5="4560b9efbc889572de9d97c9ffa04106"/>
 		<file filename="assets/css/images/ui-bg_glass_100_fdf5ce_1x400.png" md5="d26e8f463195a7b86f86b7d550cfc114"/>
-		<file filename="assets/css/images/ui-bg_glass_55_fbf9ee_1x400.png" md5="833039f9d1897ea5e5dd8ce4354ce537"/>
+		<file filename="assets/css/images/ui-bg_glass_55_fbf9ee_1x400.png" md5="7bb9349b85b24910dc095ed5fceca226"/>
 		<file filename="assets/css/images/ui-bg_glass_55_fcf0ba_1x400.png" md5="e8fa5df505b503a945e543c5816179ca"/>
-		<file filename="assets/css/images/ui-bg_glass_65_ffffff_1x400.png" md5="c40f3f8eae0fefd85e4edde374a72953"/>
-		<file filename="assets/css/images/ui-bg_glass_75_dadada_1x400.png" md5="185152a67be6cfda2a8c10ce017da9b8"/>
-		<file filename="assets/css/images/ui-bg_glass_75_e6e6e6_1x400.png" md5="37a9a513c4865aebc9dd6605b7e802e2"/>
-		<file filename="assets/css/images/ui-bg_glass_95_fef1ec_1x400.png" md5="afe1de21218a4c5bbb08389d6a3482d3"/>
+		<file filename="assets/css/images/ui-bg_glass_65_ffffff_1x400.png" md5="ddf3d0797d9494d05bf08d09ffa4754a"/>
+		<file filename="assets/css/images/ui-bg_glass_75_dadada_1x400.png" md5="316c45f99293c6f53fbdb561dfec8757"/>
+		<file filename="assets/css/images/ui-bg_glass_75_e6e6e6_1x400.png" md5="f977b42ee3230358f91459e09087e246"/>
+		<file filename="assets/css/images/ui-bg_glass_95_fef1ec_1x400.png" md5="7810a8b987893028c99f5d40fad38c41"/>
 		<file filename="assets/css/images/ui-bg_gloss-wave_100_ece8da_500x100.png" md5="dccd449740f6fd2a875fc72ef3586b53"/>
 		<file filename="assets/css/images/ui-bg_gloss-wave_35_f6a828_500x100.png" md5="58d2cd501e01573cf537089c694ba899"/>
 		<file filename="assets/css/images/ui-bg_highlight-hard_100_f5f3e5_1x100.png" md5="c3341f3735d126758336bda6f1b21ec4"/>
@@ -52,7 +52,7 @@
 		<file filename="assets/css/images/ui-bg_highlight-hard_15_459e00_1x100.png" md5="f5613fb05e1c5ae3bd9167d85d1d72a7"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_100_eeeeee_1x100.png" md5="384c3f17709ba0f809b023b6e7b10b84"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_25_67b021_1x100.png" md5="bdfc7094828e60a1e89799619382589a"/>
-		<file filename="assets/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png" md5="c37aae979b8db79f965a23c63fd23468"/>
+		<file filename="assets/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png" md5="b867f1f2843f3c1170dd8096f9556584"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_75_ffe45c_1x100.png" md5="b806658954cb4d16ade8977af737f486"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_95_ffedad_1x100.png" md5="7103bea11984ecc1ebce02dcc10cdc75"/>
 		<file filename="assets/css/images/ui-bg_inset-soft_95_cccccc_1x100.png" md5="df2dbcfe9af96aacfe13e53b108aaf5b"/>
@@ -74,6 +74,8 @@
 		<file filename="assets/css/jquery-ui-1.10.2.custom.min.css" md5="58d6ec84fa8f0eab6c5b5f48d1ae53a6"/>
 		<file filename="assets/css/jquery-ui-1.10.3.custom.css" md5="8bcc71884775417b34423780b4fd8264"/>
 		<file filename="assets/css/jquery-ui-1.10.3.custom.min.css" md5="8533ecfac90372126f3365dec1547da2"/>
+		<file filename="assets/css/jquery-ui-1.10.4.custom.css" md5="503779870833ed6da57004fa2d5db03a"/>
+		<file filename="assets/css/jquery-ui-1.10.4.custom.min.css" md5="d7fdbf6b4f0bd6831fe1b6ca4b701add"/>
 		<file filename="assets/css/jquery-ui-1.8.22.css" md5="37aee7c9e30bde3f8d1adc765619b767"/>
 		<file filename="assets/css/jquery-ui-1.9.0.css" md5="7b1117ce0cdc6d0614c1f7b106d69bd6"/>
 		<file filename="assets/css/jquery-ui.css" md5="9814a94835a5507fbc5d2903f9e41c16"/>
@@ -83,12 +85,17 @@
 		<file filename="assets/js/jquery/jquery-1.10.2.js" md5="91515770ce8c55de23b306444d8ea998"/>
 		<file filename="assets/js/jquery/jquery-1.10.2.min.js" md5="628072e7212db1e8cdacb22b21752cda"/>
 		<file filename="assets/js/jquery/jquery-1.10.2.min.map" md5="6c3ccfc221d36777d383b6e04d0b8af9"/>
+		<file filename="assets/js/jquery/jquery-1.11.0.js" md5="3b80424646a7ecdb19273d86800c1ac0"/>
+		<file filename="assets/js/jquery/jquery-1.11.0.min.js" md5="8fc25e27d42774aeae6edbc0a18b72aa"/>
+		<file filename="assets/js/jquery/jquery-1.11.0.min.map" md5="88960207dc799796278610d3febe4abb"/>
 		<file filename="assets/js/jquery/jquery-1.9.1.js" md5="08c235d357750c657ac1db7d1cf656a9"/>
 		<file filename="assets/js/jquery/jquery-1.9.1.min.js" md5="397754ba49e9e0cf4e7c190da78dda05"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.js" md5="c913b6b5925699cd1bf4d6aa41082f70"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.min.js" md5="a34697840e5bb92b47a5b28034f19b0f"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.3.custom.js" md5="387c83ae31050eee0b744c6ea62eaf9e"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.3.custom.min.js" md5="ae6f04c088d76a69d33c1c954e08fcf0"/>
+		<file filename="assets/js/jquery/jquery-ui-1.10.4.custom.js" md5="c1af2a1f16eab3aa557897e9568775b2"/>
+		<file filename="assets/js/jquery/jquery-ui-1.10.4.custom.min.js" md5="e9a4e8365783a4e3d96f908289f553ec"/>
 		<file filename="assets/js/jquery/jquery.cookie.js" md5="368c829b47c90cddb62256701654d950"/>
 		<file filename="assets/js/jquery/jquery.cookie.min.js" md5="b2b5da3ba885603b0097b9a6bd6b032c"/>
 		<file filename="assets/js/jquery/jquery.form.js" md5="a3aa2838a67b271230e38fb81dfa9748"/>
@@ -109,9 +116,9 @@
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="a03d2c88a7833cf3aa50638b2f20cfa7"/>
+		<file filename="CHANGELOG" md5="9597bb085c8e57f922978f665eb2ca0a"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="4b3650760aaef8bb0643bfb894871c3e">
+		<file filename="JQuery.lib.php" md5="95298f58afdd6ff8b601acde860817a1">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>

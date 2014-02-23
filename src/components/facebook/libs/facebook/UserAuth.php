@@ -117,9 +117,11 @@ class UserAuth implements AuthDriverInterface {
 	/**
 	 * Generate and print the rendered login markup to STDOUT.
 	 *
+	 * @param array $form_options
+	 *
 	 * @return void
 	 */
-	public function renderLogin() {
+	public function renderLogin($form_options = []) {
 
 		if(!FACEBOOK_APP_ID){
 			echo 'Please configure Facebook with your APP_ID.';

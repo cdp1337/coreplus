@@ -1229,9 +1229,25 @@ class PageModel extends Model {
 
 		// Logic for the Controller.
 		$posofslash = strpos($base, '/');
+		$posofdot   = strpos($base, '.');
 
-		if ($posofslash) $controller = substr($base, 0, $posofslash);
-		else $controller = $base;
+		if ($posofslash){
+			// The controller is usually the first part up until the first '/'.
+			$controller = substr($base, 0, $posofslash);
+			$base = substr($base, $posofslash+1);
+		}
+		elseif($posofdot){
+			// Or, it can also be the first part up until the first '.'.
+			// Also if there was a dot at this level, then the URL must be something like
+			// foo.ext
+			// This needs to be remapped to FooController->index with the extension of 'ext'.
+			$controller = substr($base, 0, $posofdot);
+			$base = 'index' . substr($base, $posofdot);
+		}
+		else{
+			$controller = $base;
+			$base = false;
+		}
 
 		// Preferred way of handling controller names.
 		if (class_exists($controller . 'Controller')) {
@@ -1267,10 +1283,6 @@ class PageModel extends Model {
 		}
 
 
-		// Trim the base.
-		if ($posofslash !== false) $base = substr($base, $posofslash + 1);
-		else $base = false;
-
 		// Logic for the Method.
 		//if(substr_count($base, '/') >= 1){
 		if ($base) {
@@ -1279,7 +1291,7 @@ class PageModel extends Model {
 
 			// The method can be extended.
 			// This means that a method can be in the format of Sites/Edit, which should resolve to Sites_Edit.
-			// This only taks effect if the method exists on the controller.
+			// This only takes effect if the method exists on the controller.
 			if ($posofslash) {
 				$method = str_replace('/', '_', $base);
 				while (!method_exists($controller, $method) && strpos($method, '_')) {
@@ -1295,7 +1307,7 @@ class PageModel extends Model {
 		}
 		else {
 			// The controller may have an "Index" controller.  That doesn't need to be explictly called.
-			$method = 'Index';
+			$method = 'index';
 		}
 
 		// If there was a content type requested, (.something), then trim that off too!
@@ -1329,7 +1341,7 @@ class PageModel extends Model {
 		// Build these onto a base for a standardized callable URL.
 		$baseurl = '/' . ((strpos($controller, 'Controller') == strlen($controller) - 10) ? substr($controller, 0, -10) : $controller);
 		// No need to add a method if it's the index.
-		if (!($method == 'Index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
+		if (!($method == 'index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
 		$baseurl .= ($params) ? '/' . implode('/', $params) : '';
 
 

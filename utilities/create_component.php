@@ -61,7 +61,7 @@ else{
 
 // Sanitize this name to a point for everything
 $component = trim($component);
-$component = preg_replace('/[^a-zA-Z\- ]/', '', $component);
+$component = preg_replace('/[^a-zA-Z\- 0-9]/', '', $component);
 
 // The proper name can have capitals and spaces in it.
 /** @var string $componentname The proper human-readable Component Name, spaces and all. */
@@ -92,11 +92,13 @@ $directories = array(
 	'assets/js',
 	//'classes', // The global classes are deprecated in favour of namespaced versions located in the libs folder.
 	'controllers',
+	'dev',
+	'dev/assets/scss/' . str_replace('-', '', $component),
+	'libs/' . str_replace('-', '', $component),
 	'models',
 	'templates/pages',
 	'templates/widgets',
 	'widgets',
-	'libs/' . str_replace('-', '', $component),
 );
 $models = array();
 $controllers = array();
@@ -190,13 +192,42 @@ class %CLASS% extends Controller_2_1 {
 }
 EOF;
 
+$devreadme = <<<EOF
+# Development Files Readme
+
+The `dev` directory of this component is useful for any file or asset that is
+not intended to be packaged in the final build.
+This is generally used because the enclosed files are applicable to the
+build team and developers only.
+
+## Common Files
+
+Some common uses of this directory are to contain
+
+* Source image files, (XCF, PNG, etc)
+* Supplemental developer-only documentation
+* Random files useful for developers only
+* SASS/SCSS source files
+
+_You get the idea here._
+
+## SASS Assets
+
+One special use of this directory is for SASS/SCSS assets.
+Any `*.scss` or `*.sass` file located in `dev/assets/scss/*`
+will get compiled and minified to `assets/css/*`.
+EOF;
+
+
 
 if(CLI::PromptUser('Create standard directory structure?', 'bool', true)){
-// Start making the directories and writing everything.
+	// Start making the directories and writing everything.
 	foreach($directories as $d){
 		$dir = new \Core\Filestore\Backends\DirectoryLocal($dirname . $d);
 		$dir->mkdir();
 	}
+
+	file_put_contents($dirname . 'dev/README.md', $devreadme);
 }
 
 

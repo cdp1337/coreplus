@@ -1,9 +1,10 @@
 <div class="{$element->getClass()} {$element->get('id')}" id="{$element->get('id')}">
-	{if $element->get('title')}
-		<span class="radio-label">{$element->get('title')|escape}</span>
-	{/if}
+	<span class="form-element-label">
+		{$element->get('title')|escape}
+		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
+	</span>
 
-	<div class="formradioinput-options">
+	<div class="form-element-value clearfix">
 		{foreach from=$element->get('options') item=title key=key}
 			<label>
 				<input type="radio" {$element->getInputAttributes()} value="{$key}" {if $key == $element->getChecked()}checked{/if}/>
@@ -12,7 +13,5 @@
 		{/foreach}
 	</div>
 
-	{if $element->get('description')}
-		<p class="formdescription">{$element->get('description')}</p>
-	{/if}
+	<p class="form-element-description">{$element->get('description')}</p>
 </div>

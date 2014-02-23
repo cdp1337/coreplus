@@ -1,6 +1,3 @@
-{css src="assets/css/user.css"}{/css}
-
-
 <div id="register-center" class="user-register">
 
 	{**

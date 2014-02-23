@@ -73,7 +73,7 @@
 		<file filename="core/controllers/FileController.class.php" md5="31f861f4d78c1606799f3e4e1d4794e7">
 			<controller name="FileController"/>
 		</file>
-		<file filename="core/controllers/FormController.class.php" md5="549dc9b0473ca8168772f3aeef325d22">
+		<file filename="core/controllers/FormController.class.php" md5="0627a5b9bb3230fd13cb03607b02373b">
 			<controller name="FormController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="aa5f05907fa3f8367f52859e48e0e526">
@@ -167,7 +167,7 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="fb714865047a79810589fbe1a9eab1cd">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="d67d626130fd1309efbda47d70c98c87"/>
+		<file filename="core/functions/Core.functions.php" md5="7a98c1225fc6b56834b33a1ec831dacc"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="d30419047aee346d119cf990054ab851">
 			<class name="RewriteMapHelper"/>
 		</file>
@@ -385,7 +385,6 @@
 		<file filename="core/libs/cachecore/backends/_tests/apc_prop_name.phpt" md5="c4b132220c9c0cac47ca48a023b48bfb"/>
 		<file filename="core/libs/cachecore/backends/_tests/apc_prop_timestamp.phpt" md5="bf8049a7140633c30b768e7437bde521"/>
 		<file filename="core/libs/cachecore/backends/_tests/cache/sqlite.db" md5="91b98d86b5af02ee68d22e6650f54d81"/>
-		<file filename="core/libs/cachecore/backends/_tests/cache/test.cache" md5="df91ef265aae7993e3707f2d252908b3"/>
 		<file filename="core/libs/cachecore/backends/_tests/core_prop_expires.phpt" md5="c5dba4c38e09a608227755359d9b5203"/>
 		<file filename="core/libs/cachecore/backends/_tests/core_prop_id.phpt" md5="68b5cca87530497288768b24f2a2e052"/>
 		<file filename="core/libs/cachecore/backends/_tests/core_prop_location.phpt" md5="549c114b8dadcf954478076612cc86ec"/>
@@ -501,11 +500,11 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="06f428768946473576150df4b8b69a02">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="15d1f457f3a1dbeaa12e7b5cc96b053c">
+		<file filename="core/libs/core/Core.class.php" md5="f4a54776dfed75391f957df51e13236a">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
-		<file filename="core/libs/core/CoreDateTime.php" md5="66785959f6cb7dc1535e5e38c4057e34">
+		<file filename="core/libs/core/CoreDateTime.php" md5="3213bb356fb936d95d1411d922ff7859">
 			<class name="CoreDateTime"/>
 		</file>
 		<file filename="core/libs/core/CurrentPage.class.php" md5="86411ef7a17b5e026a3b1b72c1ac96e2">
@@ -520,7 +519,7 @@
 		<file filename="core/libs/core/FilterForm.class.php" md5="8ce2a77254328806bd51ab47d1a371d3">
 			<class name="FilterForm"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="c3a5fe8bebe325293a40e57c2fd77a5d">
+		<file filename="core/libs/core/Form.class.php" md5="1ebbd9b43a1afdb9eeb5381ea53d16d9">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -542,7 +541,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="7bae1b2886a742915df7086624d5d819">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="bf406adee622f7fbbd8a2ad731c44837">
+		<file filename="core/libs/core/Model.class.php" md5="549718123c086c203daebba2d6021d45">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -554,7 +553,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="56818b4124a9dabd843b011c226d9b25">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="27f4930202f86cb987582cbefb256a8c">
+		<file filename="core/libs/core/PageRequest.class.php" md5="5cee6edb2fab162e17a31bb803d63a11">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="026c83b5188f74fd815f1cd7a0403498">
@@ -605,7 +604,7 @@
 		<file filename="core/libs/core/cli/Arguments.php" md5="e6e50756936f35936753274ab55cea64">
 			<class name="Core\CLI\Arguments"/>
 		</file>
-		<file filename="core/libs/core/configs/functions.php" md5="50a058e0e3a8f5e9ca42d34e68f59a22"/>
+		<file filename="core/libs/core/configs/functions.php" md5="ea587f3860c84586df887225b3a9f0b3"/>
 		<file filename="core/libs/core/datamodel/BackendInterface.php" md5="c940be662f0062513a5a30bbd44e2cdb">
 			<interface name="Core\Datamodel\BackendInterface"/>
 		</file>
@@ -616,7 +615,7 @@
 			<class name="DMI_ServerNotFound_Exception"/>
 			<class name="DMI_Query_Exception"/>
 		</file>
-		<file filename="core/libs/core/datamodel/Dataset.php" md5="1cb713c605cb525722342720fa80ea20">
+		<file filename="core/libs/core/datamodel/Dataset.php" md5="d5929a9b8d15f7950c7ef2ecf61f938a">
 			<class name="Core\Datamodel\Dataset"/>
 		</file>
 		<file filename="core/libs/core/datamodel/DatasetStream.php" md5="6f0c94d20ae05f0f5a37bb6f92bc75d1">
@@ -628,10 +627,10 @@
 		<file filename="core/libs/core/datamodel/DatasetWhereClause.php" md5="a74b89d828bd49fc34c07f86635bf790">
 			<class name="Core\Datamodel\DatasetWhereClause"/>
 		</file>
-		<file filename="core/libs/core/datamodel/SQL_Parser_Dataset.php" md5="8ab015a115d350c70b48189236c8b19f">
+		<file filename="core/libs/core/datamodel/SQL_Parser_Dataset.php" md5="ce9bba0475bbea5a5313a4af92a533af">
 			<class name="SQL_Parser_Dataset"/>
 		</file>
-		<file filename="core/libs/core/datamodel/Schema.php" md5="bec2f1779a2e5492b5cff5c811414e20">
+		<file filename="core/libs/core/datamodel/Schema.php" md5="4fcb16caec8bea61ace10a534b273f29">
 			<class name="Core\Datamodel\Schema"/>
 			<class name="Core\Datamodel\SchemaColumn"/>
 		</file>
@@ -642,10 +641,10 @@
 		<file filename="core/libs/core/datamodel/backends/cassandra.backend.php" md5="31e134b544e42e232e21c94e8503183d">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="3f9ce6369c66a2a9780877faa2db0742">
+		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="34a796b1e3d053a5a12747164aa2bbaf">
 			<class name="Core\Datamodel\Drivers\mysqli\mysqli_backend"/>
 		</file>
-		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.schema.php" md5="50f6d10789e5145f565c5c48f83ff4f9">
+		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.schema.php" md5="1152e22804d35e35852b5e13b809e43c">
 			<class name="Core\Datamodel\Drivers\mysqli\mysqli_Schema"/>
 		</file>
 		<file filename="core/libs/core/datamodel/tests/BackendInterfaceTest.php" md5="a90e585a999e0af117400a025f17cd46">
@@ -654,7 +653,7 @@
 		<file filename="core/libs/core/datamodel/tests/SQL_Parser_DatasetTest.php" md5="9aed174ba2bfdbe6e9d9ab82ecfa8397">
 			<class name="SQL_Parser_DatasetTest"/>
 		</file>
-		<file filename="core/libs/core/date/DateTime.php" md5="10c79f9aeca10e464d17b1f0808ac1ec">
+		<file filename="core/libs/core/date/DateTime.php" md5="e5c5e0fcf26dee4ef5d0834af93ff8d0">
 			<class name="Core\Date\DateTime"/>
 		</file>
 		<file filename="core/libs/core/date/Timezone.php" md5="c30d3cffa94bd6f71b97e346a2829742">
@@ -694,7 +693,7 @@
 		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="bc417af5042543db2cee65d62ee34545">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="28ce8fbecb32fb53571e76e704c55070">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="018cb6501d72960e5556caa8fd77ea6a">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="433acd3ccdcab75d79008e55748e9bee">
@@ -724,7 +723,7 @@
 		<file filename="core/libs/core/filestore/contents/ContentZIP.php" md5="049f130bb9c28cf08b33655724cde389">
 			<class name="Core\Filestore\Contents\ContentZIP"/>
 		</file>
-		<file filename="core/libs/core/filestore/functions.php" md5="2432474df5e8154c4631a9b3888ec045"/>
+		<file filename="core/libs/core/filestore/functions.php" md5="b508e1dcaf8d1356da60807653e4d8f3"/>
 		<file filename="core/libs/core/licenses/Factory.php" md5="55de36ced01c31663ebdbade0aaf3cfc">
 			<class name="Core\Licenses\Factory"/>
 		</file>
@@ -755,10 +754,10 @@
 		<file filename="core/libs/core/templates/backends/PHTML.php" md5="ca1dcd3f359574230e90860ff373f2e6">
 			<class name="Core\Templates\Backends\PHTML"/>
 		</file>
-		<file filename="core/libs/core/templates/backends/Smarty.php" md5="507d8cd4ba2746880448a9559ccfd5a1">
+		<file filename="core/libs/core/templates/backends/Smarty.php" md5="1e810d1f77ef0cf3f94d14a5e40cfb49">
 			<class name="Core\Templates\Backends\Smarty"/>
 		</file>
-		<file filename="core/libs/core/user/AuthDriverInterface.php" md5="d4d7bcba91d1f5a2090bbeddfd4fe658">
+		<file filename="core/libs/core/user/AuthDriverInterface.php" md5="a6ced64022bb5e5133388ad42a5065ad">
 			<interface name="Core\User\AuthDriverInterface"/>
 		</file>
 		<file filename="core/libs/core/user/Helper.php" md5="ae5585235ba646aebc85dff1d96ea850">
@@ -767,7 +766,7 @@
 		<file filename="core/libs/core/user/ImportHelper.php" md5="ed3b48aa118ac2a708024b3e9860ab03">
 			<class name="Core\User\ImportHelper"/>
 		</file>
-		<file filename="core/libs/core/user/authdrivers/datastore.php" md5="b4e653d347b63ffe8b260ab901c2ad44">
+		<file filename="core/libs/core/user/authdrivers/datastore.php" md5="43904f925d01f2e95aa9f56df64ecb61">
 			<class name="Core\User\AuthDrivers\datastore"/>
 		</file>
 		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="cbe5d3040cf77482bfd6f82237a29652">
@@ -783,7 +782,7 @@
 			<class name="Core\Utilities\Logger\LogFile"/>
 		</file>
 		<file filename="core/libs/core/utilities/logger/functions.php" md5="08accdcd0615f18ef4f0f0e76448efc5"/>
-		<file filename="core/libs/core/utilities/profiler/Profiler.php" md5="115e00acadc52d8108b574eb86bb0fa5">
+		<file filename="core/libs/core/utilities/profiler/Profiler.php" md5="f169e0c05a47a8445fc82e33dd34323c">
 			<class name="Core\Utilities\Profiler\Profiler"/>
 		</file>
 		<file filename="core/libs/pear/SQL_Parser/SQL/Parser.php" md5="574e264c03448de50d44653067286801">
@@ -1029,7 +1028,7 @@
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="3c1bfc3b1fdaadcb1e7e441cbc43d302"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="8cdf9a7777eb3eb3be083d10f4418bf4"/>
 		<file filename="core/libs/smarty-plugins/function.controls.php" md5="6d27ea6f00b10982d9e7741e42be46e5"/>
-		<file filename="core/libs/smarty-plugins/function.date.php" md5="8043fb2a72c7e8555a7d82ccda82153d"/>
+		<file filename="core/libs/smarty-plugins/function.date.php" md5="91c87dae1bee22cc4e73c2f6c282a06a"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="2b04283d7436c1aabf5c0a0e3ace7ac2"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="b66d149f0cafd9e86855ae7217fdcfc2"/>
 		<file filename="core/libs/smarty-plugins/function.img.php" md5="95a321c7d4b3e04e866f22d89811267c"/>
@@ -1359,7 +1358,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="832f5a3c3121e5c8422032d6dc4d6262">
+		<file filename="core/models/PageModel.class.php" md5="69be99d104d75dee630fb1517351489d">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="3791a151027c417603c48e3a3c59a4d3">
@@ -1428,68 +1427,6 @@
 		<file filename="core/widgets/UserWidget.class.php" md5="c7d8039a7bca0c52383c375b42aa3514">
 			<class name="UserWidget"/>
 		</file>
-		<file filename="files/private/customreporting/blah/blah.20140114.1144.csv" md5="59d5579214a2d12316653d9221f8319c"/>
-		<file filename="files/private/customreporting/blah/blah.20140114.1144.html" md5="41616c08b69daab2627eee1e7ecf8cc2"/>
-		<file filename="files/private/customreporting/blah/blah.20140114.1144.pdf" md5="b18fdf06af23da67583a4afbb3c2d303"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0140.html" md5="bb188b7d55812cd75723a7ba36cbeff8"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0141.html" md5="ed18c9d45165b523e5ee1ced778f94ed"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0142.html" md5="80deca6e7e5be999a667f18ae12439cf"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0144.html" md5="e7c218c20abbf0437f313f0277e81949"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0145.html" md5="e698f81f7fcb7c0cbc495a5602766d1e"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0146.html" md5="6f130e944629dd7a6e4f8ccfefb5a3c5"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0148.html" md5="898f559ed6b0ed13d43c2d9dd578754e"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0149-(2).pdf" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0149.html" md5="2c7b8cbef959db069b6572ffc37aba39"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0149.pdf" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0150.html" md5="316b8b3f27ce71341983aa96ae3ab817"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0150.pdf" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0203-(2).pdf" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0203.html" md5="96551209703c288d64d9687daf581364"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0203.pdf" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0206.html" md5="b4469c9afdf3c15030ae3739d97a4e5e"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0206.pdf" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0209.html" md5="8447f7d30ad7b6b986741c58847d16da"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0211.html" md5="a5f188e85804809fd389295224094080"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0211.pdf" md5="ab0e0935df5ae014bc369c4380e865f0"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0214.html" md5="bc7452fd15fd02da48f7eb5eb1cabbe3"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0214.pdf" md5="66c5611c62b1930c6569291a0488a9c8"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0225-(2).pdf" md5="8be0d28c1b22a6719879e7a95de69c86"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0225-(3).pdf" md5="d48c3bdff982b7cd32c06089c646f22e"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0225.csv" md5="0512046fd9b322c2b9750713ff463410"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0225.html" md5="f45c1ae962ea90fa24573e2ba23e2e19"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0225.pdf" md5="630bc49c856b7e05e97a0c95e1f08cc4"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0227-(2).pdf" md5="af3b795e468458a27088d1c2d980ea6c"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0227.csv" md5="0512046fd9b322c2b9750713ff463410"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0227.html" md5="2e12d93612e0778526cdcd7535142c26"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0227.pdf" md5="a9e09bc7e9aefdfcb8c9b27c805e0cfb"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0229.csv" md5="0512046fd9b322c2b9750713ff463410"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0229.html" md5="ec897b3bcb0886a705b92b577856686f"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0229.pdf" md5="3ee6b82e32b37c9ba20c70994c3a5284"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0230-(2).pdf" md5="64937de9304842fece0c44f3e27ea80b"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0230.csv" md5="0512046fd9b322c2b9750713ff463410"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0230.html" md5="34869d5498ca9758063981e7ddd0631e"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0230.pdf" md5="c59b1b621822c2db253142ca078d845b"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0255.csv" md5="0512046fd9b322c2b9750713ff463410"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0255.html" md5="c6b59fca0fe8f703fa318b9396a45e3a"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.0255.pdf" md5="22fc58a3d2e08944c4b169daa0c44d10"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1841.csv" md5="18a29930d7db6f052f8eff7ad02299d0"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1841.html" md5="86e761734c975987bdc1cf5eb9092084"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1841.pdf" md5="a60bb9a8baf8b8c599dcf0dc78465756"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1911.csv" md5="0512046fd9b322c2b9750713ff463410"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1911.html" md5="b65d7e12df526d24636b59ba44e45d3d"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1911.pdf" md5="a444a42f23e69d654439da477d3b7bb1"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1912.csv" md5="0512046fd9b322c2b9750713ff463410"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1912.html" md5="c603f69164ad375fe2fc6170103be4eb"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.1912.pdf" md5="f3e164f6eaa616d66c21c1d61656a925"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.2335.csv" md5="0512046fd9b322c2b9750713ff463410"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.2335.html" md5="7f6ddfa89eac0e7da0cb6bce5d563d6f"/>
-		<file filename="files/private/customreporting/unique-carts-ordered-with-000-total/unique-carts-ordered-with-000-total.20140106.2335.pdf" md5="5149bf145de0ef7da3d263b45c130544"/>
-		<file filename="files/private/customreporting/user-test-local-users-only/user-test-local-users-only.20140110.1221.csv" md5="46a75e26a15ff4a61fdc914621b6eaab"/>
-		<file filename="files/private/customreporting/user-test-local-users-only/user-test-local-users-only.20140110.1221.html" md5="59f839f2cf90761c3c9d6c16aa772f78"/>
-		<file filename="files/private/customreporting/user-test-local-users-only/user-test-local-users-only.20140110.1221.pdf" md5="41da7d1b87c6388592712737cd9f9c4a"/>
-		<file filename="files/private/customreporting/user-test/user-test.20140106.2336.csv" md5="189962dde04df3914405f690874ddd6e"/>
-		<file filename="files/private/customreporting/user-test/user-test.20140106.2336.html" md5="0448c6e4c63798f4ea3159e658a8a727"/>
-		<file filename="files/private/customreporting/user-test/user-test.20140106.2336.pdf" md5="454eb98744ea7074e80c9cba15d3330d"/>
 		<file filename="htaccess.ant" md5="03a971bd1f755da122d8f8f458b840cf"/>
 		<file filename="htaccess.ex" md5="5b9477efc4add163473fe0ab8939bede"/>
 		<file filename="index.php" md5="ba4cec73285cc3177fc9da7ac41f0f39"/>
@@ -1538,9 +1475,6 @@
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 		<file filename="install/utilities.php" md5="19b6e7d1483e8ec8e0a6fad9932ce850"/>
-		<file filename="logs/error.log" md5="902dae0ab03f28756266019ece02e5d9"/>
-		<file filename="logs/info.log" md5="486af1d69265b6fa6e0662b29d8660f0"/>
-		<file filename="logs/security.log" md5="1c1bb4dbbd706fefb4cc3572fa8fff37"/>
 	</files>
 	<pages>
 		<page baseurl="/admin" admin="1" access="g:admin" title="Administration"/>
@@ -1556,6 +1490,7 @@
 		<page baseurl="/useractivity" admin="1" access="p:/user/activity/view" title="User Activity" group="Reporting"/>
 		<page baseurl="/userconfig/admin" admin="1" access="g:admin" title="User Options" group="Configure"/>
 		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="System Log" group="Admin"/>
+		<page baseurl="/form/testui" admin="1" access="g:admin" title="Test Form Element UI/UX" group="Theme and Layouts"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/updater/check" title="Check For Updates" installable="/admin"/>
@@ -1569,36 +1504,36 @@
 		<file filename="core/templates/emails/user/forgotpassword.tpl" md5="8463f6b3726164f63e8c838a58a28ba7"/>
 		<file filename="core/templates/emails/user/initialpassword.tpl" md5="e1313d158e73c9104cd798ef5d5e39e7"/>
 		<file filename="core/templates/emails/user/registration.tpl" md5="ee342d30eb7c14725eda1d42516765bf"/>
-		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="db78818d22acfd0bf4388bdbad4f0325"/>
+		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="2499a9ce11662ce5b4e950058dfb90de"/>
 		<file filename="core/templates/forms/elements/button.tpl" md5="04458c32e1d992bba0255d8d1a2e8dee"/>
-		<file filename="core/templates/forms/elements/formaccessstringinput.tpl" md5="17f3726f9dce3b79d27b079ff1b57975"/>
-		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="529a4fc951c05b6989821c29e7ca32a3"/>
-		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="5f6f0a4d4732e1555f7afe73297f0717"/>
+		<file filename="core/templates/forms/elements/formaccessstringinput.tpl" md5="e028087fdded43a6bfa37e862dd227f7"/>
+		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="43d1d09cc4d869661f3ad3dc3610ba79"/>
+		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="e450b672f931111e93bed1181df43872"/>
 		<file filename="core/templates/forms/elements/formdateinput.tpl" md5="bc5a17edff3be9f0d9dd4710b57460a8"/>
 		<file filename="core/templates/forms/elements/formdatetimeinput.tpl" md5="0dab7e1348963b014876b638d7f162af"/>
-		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="c9b357a4190a9cab5f5982896e7b4b5f"/>
+		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="33ced6c5a4dd58a3eeeccd1ed93c94a2"/>
 		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="b253627a7cac7c2db9c53160272e103c"/>
 		<file filename="core/templates/forms/elements/formlicenseinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
-		<file filename="core/templates/forms/elements/formpagemetaauthorinput.tpl" md5="297c79d80fce61430946c0d6b39362af"/>
-		<file filename="core/templates/forms/elements/formpagemetakeywordsinput.tpl" md5="9c910adc22e802d6a9539023d8c92024"/>
+		<file filename="core/templates/forms/elements/formpagemetaauthorinput.tpl" md5="16c45944e0a678a55227a6337047a532"/>
+		<file filename="core/templates/forms/elements/formpagemetakeywordsinput.tpl" md5="a95a8737299a8ae2fb3736846588e7d2"/>
 		<file filename="core/templates/forms/elements/formpagemetasinput.tpl" md5="04851f883c681032c2fd96c80714b434"/>
-		<file filename="core/templates/forms/elements/formpagepageselectinput.tpl" md5="975bb4f2930d56a63169a371e1df884d"/>
+		<file filename="core/templates/forms/elements/formpagepageselectinput.tpl" md5="e062cc2d6fde05fedce9fc14d3458227"/>
 		<file filename="core/templates/forms/elements/formpageparentselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formpagerewriteurlinput.tpl" md5="58c0ffa26002427aa745b8b57c4eceae"/>
 		<file filename="core/templates/forms/elements/formpagethemeselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formpasswordinput.tpl" md5="9642512379195999ea4c0a71b876d80f"/>
-		<file filename="core/templates/forms/elements/formradioinput.tpl" md5="f502c35c79e01c2d83f8e0a8186173a6"/>
+		<file filename="core/templates/forms/elements/formradioinput.tpl" md5="5fc5cfcab3f5199f61fceaf9826f8fb6"/>
 		<file filename="core/templates/forms/elements/formresetinput.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
-		<file filename="core/templates/forms/elements/formselectinput.tpl" md5="0407e9d3178bdeba57fa775f877be9ac"/>
+		<file filename="core/templates/forms/elements/formselectinput.tpl" md5="ea29e561663109acf31b818ad8b79417"/>
 		<file filename="core/templates/forms/elements/formstateinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formsubmitinput.tpl" md5="70fedaa614c2a06a787540395dda8bd2"/>
-		<file filename="core/templates/forms/elements/formtextareainput.tpl" md5="f5e0b8041786f460c87c11d1e8b42e26"/>
+		<file filename="core/templates/forms/elements/formtextareainput.tpl" md5="938bbddec378b1189876ded0485dc604"/>
 		<file filename="core/templates/forms/elements/formtextinput.tpl" md5="0f09b0b0b3e6ce316e89e312c311482e"/>
 		<file filename="core/templates/forms/elements/formtimeinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/html.tpl" md5="3d4259aa7f5615453121930abe34b031"/>
 		<file filename="core/templates/forms/elements/image.tpl" md5="dc4f74a0297b099ea7913d7582125837"/>
 		<file filename="core/templates/forms/elements/reset.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
-		<file filename="core/templates/forms/filters-pagination.tpl" md5="ce1c345e5079f28538a6a4adf1a4c992"/>
+		<file filename="core/templates/forms/filters-pagination.tpl" md5="9929b64d2d9379c062dabfbf2461f66a"/>
 		<file filename="core/templates/forms/filters.tpl" md5="462083f0c00bceff021c4332cf961d76"/>
 		<file filename="core/templates/forms/form.body.tpl" md5="8ab5bcc9f1307da533c72b3d18113a74"/>
 		<file filename="core/templates/forms/form.foot.tpl" md5="6e6d3353848b64921070b812c7c99936"/>
@@ -1607,12 +1542,12 @@
 		<file filename="core/templates/forms/groups/default.tpl" md5="b3271649859bc0c7c5765bb4f2796bfe"/>
 		<file filename="core/templates/forms/groups/pageinsertables.tpl" md5="be0fed93de5310e26a207ffcecd15547"/>
 		<file filename="core/templates/forms/groups/pagemetas.tpl" md5="f8def8d34a18483bb59dddba141e5645"/>
-		<file filename="core/templates/forms/groups/tabs.tpl" md5="c3cba7b0ef3bb0af68e03b048495bc4b"/>
+		<file filename="core/templates/forms/groups/tabs.tpl" md5="7fa8235d668d17b2f1514a7e009aea4a"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="773d38b034052c270569be7a7d9bb957"/>
 		<file filename="core/templates/includes/user/datastore_login.tpl" md5="47d99ef65af289effe596bc0f18fbc3d"/>
 		<file filename="core/templates/includes/user/datastore_register.tpl" md5="32f2630482b423fd776cfa15b8079155"/>
 		<file filename="core/templates/includes/user/edit_create_contextgroups.tpl" md5="fe043ab28c1c3b3bd3dd0cdfeae2393f"/>
-		<file filename="core/templates/pages/admin/config.tpl" md5="e24bea097690df9b0a70f074f4803371"/>
+		<file filename="core/templates/pages/admin/config.tpl" md5="fc2b84d5da04d38c3f5ffe9b27363433"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
 		<file filename="core/templates/pages/admin/log.tpl" md5="03788adf6fc482a8c3d46087009f003d"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="ec73503565c3b1987c0419bbe5815aaa"/>
@@ -1622,6 +1557,7 @@
 		<file filename="core/templates/pages/error/error403.tpl" md5="9223242be43703fc7f3e6d2633626f3b"/>
 		<file filename="core/templates/pages/error/error404.tpl" md5="8505831f18aeb787cccf458d724c3545"/>
 		<file filename="core/templates/pages/error/error500.tpl" md5="286730a5c35399f12541addc65006492"/>
+		<file filename="core/templates/pages/form/testui.tpl" md5="215273e10910737230a0ce7b654dad52"/>
 		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="c3856d7798a76f98caf744dcc381c9d3"/>
 		<file filename="core/templates/pages/updater/browse.tpl" md5="46164efb30e799b0daa3062cb53ed548"/>
 		<file filename="core/templates/pages/updater/index.tpl" md5="9f3d27034de672c264b2a6119b1cb66b"/>
@@ -1633,19 +1569,19 @@
 		<file filename="core/templates/pages/updater/repos_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/updater/update.tpl" md5="dda6c77aed0d5d36ff520c02f1f9c4f9"/>
 		<file filename="core/templates/pages/user/admin.tpl" md5="9d0125264c7b4a147804d1e3a5f4da40"/>
-		<file filename="core/templates/pages/user/edit.tpl" md5="05c4df7b9aa3974a4af64a4d770c886d"/>
-		<file filename="core/templates/pages/user/forgotpassword.tpl" md5="2dc6db0e125d8c729bac0081db90bfa4"/>
-		<file filename="core/templates/pages/user/guest403.tpl" md5="336576c142f10bcd6c462e02d4e15853"/>
+		<file filename="core/templates/pages/user/edit.tpl" md5="65865c0848e8e9074b3002a86ab16c4e"/>
+		<file filename="core/templates/pages/user/forgotpassword.tpl" md5="4e44ae9de19645a4040d4fc34a5876d3"/>
+		<file filename="core/templates/pages/user/guest403.tpl" md5="26f6d42619bbfb7920264368befc3fa3"/>
 		<file filename="core/templates/pages/user/import1.tpl" md5="34d4a67fc553d310cef459dc9a288da9"/>
 		<file filename="core/templates/pages/user/import2.tpl" md5="125ea1f03cae7d6395d56c0665570e52"/>
 		<file filename="core/templates/pages/user/import3.tpl" md5="655994a8909458e93fa643349788621d"/>
-		<file filename="core/templates/pages/user/login.tpl" md5="0a301af8146d67596e2d6867a3892eb2"/>
-		<file filename="core/templates/pages/user/me.tpl" md5="d1b0fb80fdd098d3a085a018232a0264"/>
-		<file filename="core/templates/pages/user/password.tpl" md5="f03aa0a7377f78bff70374f79e050f64"/>
-		<file filename="core/templates/pages/user/register.tpl" md5="1e5f87c8ab851f3e64301e97aa92630b"/>
+		<file filename="core/templates/pages/user/login.tpl" md5="31c4263700d4fcb745ebf55708b5c7b2"/>
+		<file filename="core/templates/pages/user/me.tpl" md5="9968689a9b26cdeb9c5eb25d10b96f11"/>
+		<file filename="core/templates/pages/user/password.tpl" md5="5085e6075a5978854f1a1a40ef410c30"/>
+		<file filename="core/templates/pages/user/register.tpl" md5="f254f666a67b9d990c29fb35ee929cc5"/>
 		<file filename="core/templates/pages/useractivity/details.tpl" md5="64842bd2c660f8f88ecfcbbf70f81fd9"/>
 		<file filename="core/templates/pages/useractivity/index.tpl" md5="90893b4472a5e60805afef1b16452dee"/>
-		<file filename="core/templates/pages/userconfig/admin.tpl" md5="b052123c686d1e46bb6275fbed19eba9"/>
+		<file filename="core/templates/pages/userconfig/admin.tpl" md5="6ac3641d928b4fb080564e3a12e48664"/>
 		<file filename="core/templates/pages/usergroupadmin/create_update.tpl" md5="11147e16c5f3bc41ad5c7c6b9cfdf099"/>
 		<file filename="core/templates/pages/usergroupadmin/index.tpl" md5="cec6b41cb710d55cdef2f3a1e4a6a08c"/>
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
@@ -1654,7 +1590,7 @@
 		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="5151a935e8339af4dd16986052145deb"/>
 		<file filename="core/templates/widgets/updater/check.tpl" md5="72e3def2db04a820ebc32d3659e15f76"/>
 		<file filename="core/templates/widgets/user/login.tpl" md5="054c8c86b99b890e6490b96d3ff0c634"/>
-		<file filename="core/templates/widgets/user/loginfull.tpl" md5="f820d1e6812c64fe049d1c8d8292d6ff"/>
+		<file filename="core/templates/widgets/user/loginfull.tpl" md5="aa0a5b7785a302e8eb21e27db2b9a326"/>
 		<file filename="core/templates/widgets/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/widgets/useradmin/newestsignups.tpl" md5="eb78b6cadfcc1ee8e1c0f4bb00f5717f"/>
 		<file filename="core/templates/widgets/userlogin/execute.tpl" md5="8b33f6adb9fdadf3a6f4e10f6722de2e"/>
@@ -1733,7 +1669,6 @@
 		<file filename="core/assets/css/reset.css" md5="968510374a9ff8a69e49ddd2719eca0d"/>
 		<file filename="core/assets/css/reset.min.css" md5="44b43a8b1471320ee192b0938fab3372"/>
 		<file filename="core/assets/css/updater.css" md5="771975b286bac4ea1f55785d6ca1a5eb"/>
-		<file filename="core/assets/css/user.css" md5="71bcc1cf49c93e6e63ce6a44762106e2"/>
 		<file filename="core/assets/images/404.jpg" md5="815cb4116bbbec081a645e85de74025c"/>
 		<file filename="core/assets/images/licenses/cc-by-2.0-sm.png" md5="9f317d5f97dc715eb0e8b839dde4a2e7"/>
 		<file filename="core/assets/images/licenses/cc-by-2.0.png" md5="6ff8ed82f42f1e6d3bb3fc1210018332"/>

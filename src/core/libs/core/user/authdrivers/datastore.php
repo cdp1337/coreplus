@@ -143,10 +143,12 @@ class datastore implements AuthDriverInterface{
 	/**
 	 * Generate and print the rendered login markup to STDOUT.
 	 *
+	 * @param array $form_options
+	 *
 	 * @return void
 	 */
-	public function renderLogin() {
-		$form = new \Form();
+	public function renderLogin($form_options = []) {
+		$form = new \Form($form_options);
 		$form->set('callsMethod', 'User\\Helper::LoginHandler');
 
 		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));

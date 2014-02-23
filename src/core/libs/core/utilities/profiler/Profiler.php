@@ -133,23 +133,40 @@ class Profiler {
 	/**
 	 * Get the overall execution time of this profiler.
 	 *
-	 * This will be rounded and appended with "ns", "ms", "seconds", or "minutes".
+	 * This will be rounded and formatted as such:
+	 * "# µs", "# ms", "# s", "# m # s", or "# h # m".
 	 *
 	 * @return string
 	 */
 	public function getTimeFormatted(){
 		$time = $this->getTime();
-		if($time < 0.1){
-			return round($time, 4) * 1000000 . ' ns';
+
+		// 0.00010 = 100 µs
+		// 0.00100 = 1 ms
+		// 0.01000 = 10 ms
+		// 0.10000 = 100 ms
+		// 1.00000 = 1 second
+		// 60.0000 = 1 minute
+		// 3600.00 = 1 hour
+
+		if($time < 0.001){
+			return round($time, 4) * 1000000 . ' µs';
 		}
 		elseif($time < 2.0){
 			return round($time, 4) * 1000 . ' ms';
 		}
-		elseif($time < 60){
-			return round($time, 4) . ' seconds';
+		elseif($time < 120){
+			return round($time, 0) . ' s';
+		}
+		elseif($time < 3600) {
+			$m = round($time, 0) / 60;
+			$s = round($time - $m*60, 0);
+			return $m . ' m ' . $s . ' s';
 		}
 		else{
-			return round($time, 4) / 60 . ' minutes';
+			$h = round($time, 0) / 3600;
+			$m = round($time - $h*3600, 0);
+			return $h . ' h ' . $m . ' m';
 		}
 	}
 
