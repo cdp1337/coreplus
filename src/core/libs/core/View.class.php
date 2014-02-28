@@ -773,7 +773,10 @@ class View {
 		$data = $this->fetch();
 
 		// Be sure to send the content type and status to the browser, (if it's a page)
-		if ($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX || $this->mode == View::MODE_NOOUTPUT) {
+		if (
+			!headers_sent() &&
+			($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX || $this->mode == View::MODE_NOOUTPUT)
+		) {
 			switch ($this->error) {
 				case View::ERROR_NOERROR:
 					header('Status: 200 OK', true, $this->error);
