@@ -37,6 +37,10 @@
 		{/if}
 	</div>
 
+	{if $records_total > $records_current}
+		Displaying {$records_start}-{$records_end} of {$records_total} records.
+	{/if}
+
 
 	<div class="pagination-list">
 		Page:
