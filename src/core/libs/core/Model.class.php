@@ -613,6 +613,15 @@ class Model implements ArrayAccess {
 	}
 
 	/**
+	 * Get this model as a string
+	 *
+	 * @return string
+	 */
+	public function __toString(){
+		return $this->getLabel();
+	}
+
+	/**
 	 * Get the human-readable label for this record.
 	 *
 	 * By default, it will sift through the schema looking for keys that appear to be human-readable terms,
