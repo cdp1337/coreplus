@@ -44,6 +44,11 @@ class SimpleSitePassword {
 			return true;
 		}
 
+		if(EXEC_MODE != 'WEB'){
+			// Simple site passwords only work when on the web.
+			return true;
+		}
+
 		if(isset($_SERVER['PHP_AUTH_PW'])){
 			$userpw = $_SERVER['PHP_AUTH_PW'];
 		}
