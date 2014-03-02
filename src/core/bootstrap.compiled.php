@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 19 Feb 2014 14:32:15 -0500
+ * @compiled Sun, 02 Mar 2014 01:43:41 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -15001,19 +15001,26 @@ $foot = $this->getFootContent();
 if (DEVELOPMENT_MODE) {
 $debug = '';
 $debug .= '<pre class="xdebug-var-dump screen">';
-$debug .= '<b>Template Information</b>' . "\n";
+$debug .= '<div class="debug-section open">';
+$debug .= '<b>Template Information</b> <i></i>' . "\n";
 $debug .= 'Base URL: ' . $this->baseurl . "\n";
 $debug .= 'Template Used: ' . $this->templatename . "\n";
 $debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
-$debug .= "\n" . '<b>Performance Information</b>' . "\n";
+$debug .= '</div>';
+$debug .= '<div class="debug-section open">';
+$debug .= '<b>Performance Information</b> <i></i>' . "\n";
 $debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
 $debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
 $debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_peak_usage(true)) . "\n";
 $profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
 $debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
-$debug .= "\n" . '<b>Core Profiler</b>' . "\n";
+$debug .= '</div>';
+$debug .= '<div class="debug-section open">';
+$debug .= '<b>Core Profiler</b> <i></i>' . "\n";
 $debug .= $profiler->getEventTimesFormatted();
-$debug .= "\n" . '<b>Available Components</b>' . "\n";
+$debug .= '</div>';
+$debug .= '<div class="debug-section closed">';
+$debug .= '<b>Available Components</b> <i class="icon-ellipsis-h"></i>' . "\n";
 $debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
 ksort($debugcomponents);
 foreach ($debugcomponents as $l => $v) {
@@ -15028,17 +15035,23 @@ $debug .= '[<span style="color:red;">Disabled</span>]';
 }
 $debug .= $v->getName() . ' ' . $v->getVersion() . "\n";
 }
-$debug .= "\n" . '<b>Registered Hooks</b>' . "\n";
+$debug .= '</div>';
+$debug .= '<div class="debug-section closed">';
+$debug .= '<b>Registered Hooks</b> <i class="icon-ellipsis-h"></i>' . "\n";
 foreach(HookHandler::GetAllHooks() as $hook){
 $debug .= $hook->name;
 if($hook->description) $debug .= ' <i> - ' . $hook->description . '</i>';
 $debug .= "\n" . '<span style="color:#999;">Return expected: ' . $hook->returnType . '</span>';
 $debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
 }
-$debug .= "\n" . '<b>Included Files</b>' . "\n";
+$debug .= '</div>';
+$debug .= '<div class="debug-section closed">';
+$debug .= '<b>Included Files</b> <i class="icon-ellipsis-h"></i>' . "\n";
 $debug .= 'Number: ' . sizeof(get_included_files()) . "\n";
 $debug .= implode("\n", get_included_files()) . "\n";
-$debug .= "\n" . '<b>Query Log</b>' . "\n";
+$debug .= '</div>';
+$debug .= '<div class="debug-section closed">';
+$debug .= '<b>Query Log</b> <i class="icon-ellipsis-h"></i>' . "\n";
 $ql = \Core\DB()->queryLog();
 $qls = sizeof($ql);
 foreach($ql as $i => $dat){
@@ -15054,7 +15067,23 @@ $query  = $dat['query'];
 $caller = print_r($dat['caller'], true);
 $debug .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time} ms] $query</span>\n";
 }
+$debug .= '</div>';
 $debug .= '</pre>';
+$debug .= <<<EOF
+<script>
+$(function(){
+$(".debug-section").click(function(){
+var tgtEl = $(this);
+if(tgtEl.hasClass("open")) {
+tgtEl.removeClass("open").addClass("closed").find('i').addClass('icon-ellipsis-h');
+}
+else if(tgtEl.hasClass("closed")) {
+tgtEl.removeClass("closed").addClass("open").find('i').removeClass('icon-ellipsis-h');
+}
+});
+});
+</script>
+EOF;
 $foot .= "\n" . $debug;
 }
 $data = substr_replace($data, $foot . "\n" . '</body>', $match, 7);
