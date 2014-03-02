@@ -360,12 +360,27 @@ class FilterForm {
 			$displaymax = $maxpages;
 		}
 
+		// Calculate the "Displaying x - y records of z total" numbers here!
+
+		// Total number of records, simple.
+		$records_total = $this->_total;
+		// Current number of records on the page, only *not* the total if the total is < limit.
+		$records_current = min($this->_limit, $this->_total);
+		// Starting position.... always go n+1 here because people are used to seeing "1-10" instead of "0-9"
+		$records_start = ($currentpage - 1) * $this->_limit + 1;
+		// And the ending position.
+		$records_end = min($records_start + $records_current - 1, $this->_total);
+
 
 		$tpl = \Core\Templates\Template::Factory('forms/filters-pagination.tpl');
 		$tpl->assign('page_current', $currentpage);
 		$tpl->assign('page_max', $maxpages);
 		$tpl->assign('display_min', $displaymin);
 		$tpl->assign('display_max', $displaymax);
+		$tpl->assign('records_total', $records_total);
+		$tpl->assign('records_current', $records_current);
+		$tpl->assign('records_start', $records_start);
+		$tpl->assign('records_end', $records_end);
 		return $tpl->fetch();
 	}
 
@@ -628,6 +643,8 @@ class FilterForm {
 		$tpl->assign('sortkey', $this->getSortKey());
 		$tpl->assign('sortdir', $this->getSortDirection());
 		$tpl->assign('readonly', $readonly);
+		$tpl->assign('records_total', $this->_total);
+		$tpl->assign('records_current', min($this->_limit, $this->_total));
 		return $tpl->fetch();
 	}
 }

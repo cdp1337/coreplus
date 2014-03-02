@@ -228,4 +228,18 @@ class DateTime extends \DateTime{
 		$d = new DateTime();
 		return $d->format($format, $timezone);
 	}
+
+	/**
+	 * Shortcut function for formatting a timestamp or date string into another format and timezone.
+	 *
+	 * @param     $datetime
+	 * @param     $format
+	 * @param int $timezone
+	 *
+	 * @return string
+	 */
+	public static function FormatString($datetime, $format, $timezone = Timezone::TIMEZONE_DEFAULT){
+		$d = new DateTime($datetime);
+		return $d->format($format, $timezone);
+	}
 }
