@@ -646,15 +646,15 @@ class View {
 				if (DEVELOPMENT_MODE) {
 					$debug = '';
 					$debug .= '<pre class="xdebug-var-dump screen">';
-					$debug .= '<div class="debug-section open">';
-					$debug .= '<b>Template Information</b> <i></i>' . "\n";
+					$debug .= '<fieldset class="debug-section collapsible">';
+					$debug .= '<legend><b>Template Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 					$debug .= 'Base URL: ' . $this->baseurl . "\n";
 					$debug .= 'Template Used: ' . $this->templatename . "\n";
 					$debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
-					$debug .= '</div>';
+					$debug .= '</fieldset>';
 
-					$debug .= '<div class="debug-section open">';
-					$debug .= '<b>Performance Information</b> <i></i>' . "\n";
+					$debug .= '<fieldset class="debug-section collapsible">';
+					$debug .= '<legend><b>Performance Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 					$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
 					$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
 					//$debug .= "Number of queries: " . DB::Singleton()->counter . "\n";
@@ -662,16 +662,16 @@ class View {
 					$debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_peak_usage(true)) . "\n";
 					$profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
 					$debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
-					$debug .= '</div>';
+					$debug .= '</fieldset>';
 
-					$debug .= '<div class="debug-section open">';
-					$debug .= '<b>Core Profiler</b> <i></i>' . "\n";
+					$debug .= '<fieldset class="debug-section collapsible">';
+					$debug .= '<legend><b>Core Profiler</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 					$debug .= $profiler->getEventTimesFormatted();
-					$debug .= '</div>';
+					$debug .= '</fieldset>';
 
-					$debug .= '<div class="debug-section closed">';
+					$debug .= '<fieldset class="debug-section collapsible collapsed">';
 					// Tack on what components are currently installed.
-					$debug .= '<b>Available Components</b> <i class="icon-ellipsis-h"></i>' . "\n";
+					$debug .= '<legend><b>Available Components</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 					$debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
 					// Give me sorting!
 					ksort($debugcomponents);
@@ -689,11 +689,11 @@ class View {
 
 						$debug .= $v->getName() . ' ' . $v->getVersion() . "\n";
 					}
-					$debug .= '</div>';
+					$debug .= '</fieldset>';
 
-					$debug .= '<div class="debug-section closed">';
+					$debug .= '<fieldset class="debug-section collapsible collapsed">';
 					// I wanna see what hooks are registered too!
-					$debug .= '<b>Registered Hooks</b> <i class="icon-ellipsis-h"></i>' . "\n";
+					$debug .= '<legend><b>Registered Hooks</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 					foreach(HookHandler::GetAllHooks() as $hook){
 						/** @var $hook Hook */
 						$debug .= $hook->name;
@@ -701,17 +701,17 @@ class View {
 						$debug .= "\n" . '<span style="color:#999;">Return expected: ' . $hook->returnType . '</span>';
 						$debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
 					}
-					$debug .= '</div>';
+					$debug .= '</fieldset>';
 
-					$debug .= '<div class="debug-section closed">';
+					$debug .= '<fieldset class="debug-section collapsible collapsed">';
 					// I want to see how many files were included.
-					$debug .= '<b>Included Files</b> <i class="icon-ellipsis-h"></i>' . "\n";
+					$debug .= '<legend><b>Included Files</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 					$debug .= 'Number: ' . sizeof(get_included_files()) . "\n";
 					$debug .= implode("\n", get_included_files()) . "\n";
-					$debug .= '</div>';
+					$debug .= '</fieldset>';
 
-					$debug .= '<div class="debug-section closed">';
-					$debug .= '<b>Query Log</b> <i class="icon-ellipsis-h"></i>' . "\n";
+					$debug .= '<fieldset class="debug-section collapsible collapsed">';
+					$debug .= '<legend><b>Query Log</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 					$ql = \Core\DB()->queryLog();
 					$qls = sizeof($ql);
 					foreach($ql as $i => $dat){
@@ -728,7 +728,7 @@ class View {
 						$caller = print_r($dat['caller'], true);
 						$debug .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time} ms] $query</span>\n";
 					}
-					$debug .= '</div>';
+					$debug .= '</fieldset>';
 					$debug .= '</pre>';
 					$debug .= <<<EOF
 							  <script>

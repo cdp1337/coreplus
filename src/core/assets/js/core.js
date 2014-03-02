@@ -181,4 +181,21 @@ if(typeof jQuery != 'undefined'){
 	}
 }
 
+/**
+ * Fancy collapsible fieldsets
+ */
+if(typeof jQuery != 'undefined'){
+	jQuery(function(){
+		jQuery('fieldset.collapsible.collapsed').children(':not(legend)').hide();
+
+		jQuery('fieldset.collapsible legend').css('cursor', 'pointer').click(function(){
+			var $this, $fieldset;
+
+			$this = jQuery(this);
+			$fieldset = $this.closest('fieldset');
+
+			$fieldset.toggleClass('collapsed').children(':not(legend)').toggle('fast');
+		});
+	});
+}
 //})();

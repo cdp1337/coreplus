@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 02 Mar 2014 01:43:41 -0500
+ * @compiled Sun, 02 Mar 2014 14:51:25 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1900,6 +1900,9 @@ return $this->getLink($k);
 else {
 return null;
 }
+}
+public function __toString(){
+return $this->getLabel();
 }
 public function getLabel(){
 $s = $this->getKeySchemas();
@@ -15001,26 +15004,26 @@ $foot = $this->getFootContent();
 if (DEVELOPMENT_MODE) {
 $debug = '';
 $debug .= '<pre class="xdebug-var-dump screen">';
-$debug .= '<div class="debug-section open">';
-$debug .= '<b>Template Information</b> <i></i>' . "\n";
+$debug .= '<fieldset class="debug-section collapsible">';
+$debug .= '<legend><b>Template Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= 'Base URL: ' . $this->baseurl . "\n";
 $debug .= 'Template Used: ' . $this->templatename . "\n";
 $debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
-$debug .= '</div>';
-$debug .= '<div class="debug-section open">';
-$debug .= '<b>Performance Information</b> <i></i>' . "\n";
+$debug .= '</fieldset>';
+$debug .= '<fieldset class="debug-section collapsible">';
+$debug .= '<legend><b>Performance Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
 $debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
 $debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_peak_usage(true)) . "\n";
 $profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
 $debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
-$debug .= '</div>';
-$debug .= '<div class="debug-section open">';
-$debug .= '<b>Core Profiler</b> <i></i>' . "\n";
+$debug .= '</fieldset>';
+$debug .= '<fieldset class="debug-section collapsible">';
+$debug .= '<legend><b>Core Profiler</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= $profiler->getEventTimesFormatted();
-$debug .= '</div>';
-$debug .= '<div class="debug-section closed">';
-$debug .= '<b>Available Components</b> <i class="icon-ellipsis-h"></i>' . "\n";
+$debug .= '</fieldset>';
+$debug .= '<fieldset class="debug-section collapsible collapsed">';
+$debug .= '<legend><b>Available Components</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
 ksort($debugcomponents);
 foreach ($debugcomponents as $l => $v) {
@@ -15035,23 +15038,23 @@ $debug .= '[<span style="color:red;">Disabled</span>]';
 }
 $debug .= $v->getName() . ' ' . $v->getVersion() . "\n";
 }
-$debug .= '</div>';
-$debug .= '<div class="debug-section closed">';
-$debug .= '<b>Registered Hooks</b> <i class="icon-ellipsis-h"></i>' . "\n";
+$debug .= '</fieldset>';
+$debug .= '<fieldset class="debug-section collapsible collapsed">';
+$debug .= '<legend><b>Registered Hooks</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 foreach(HookHandler::GetAllHooks() as $hook){
 $debug .= $hook->name;
 if($hook->description) $debug .= ' <i> - ' . $hook->description . '</i>';
 $debug .= "\n" . '<span style="color:#999;">Return expected: ' . $hook->returnType . '</span>';
 $debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
 }
-$debug .= '</div>';
-$debug .= '<div class="debug-section closed">';
-$debug .= '<b>Included Files</b> <i class="icon-ellipsis-h"></i>' . "\n";
+$debug .= '</fieldset>';
+$debug .= '<fieldset class="debug-section collapsible collapsed">';
+$debug .= '<legend><b>Included Files</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= 'Number: ' . sizeof(get_included_files()) . "\n";
 $debug .= implode("\n", get_included_files()) . "\n";
-$debug .= '</div>';
-$debug .= '<div class="debug-section closed">';
-$debug .= '<b>Query Log</b> <i class="icon-ellipsis-h"></i>' . "\n";
+$debug .= '</fieldset>';
+$debug .= '<fieldset class="debug-section collapsible collapsed">';
+$debug .= '<legend><b>Query Log</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $ql = \Core\DB()->queryLog();
 $qls = sizeof($ql);
 foreach($ql as $i => $dat){
@@ -15067,7 +15070,7 @@ $query  = $dat['query'];
 $caller = print_r($dat['caller'], true);
 $debug .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time} ms] $query</span>\n";
 }
-$debug .= '</div>';
+$debug .= '</fieldset>';
 $debug .= '</pre>';
 $debug .= <<<EOF
 <script>
@@ -15097,7 +15100,10 @@ if ($this->contenttype && $this->contenttype == View::CTYPE_HTML) {
 View::AddMeta('http-equiv="Content-Type" content="text/html;charset=UTF-8"');
 }
 $data = $this->fetch();
-if ($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX || $this->mode == View::MODE_NOOUTPUT) {
+if (
+!headers_sent() &&
+($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX || $this->mode == View::MODE_NOOUTPUT)
+) {
 switch ($this->error) {
 case View::ERROR_NOERROR:
 header('Status: 200 OK', true, $this->error);
