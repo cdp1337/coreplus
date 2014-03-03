@@ -133,9 +133,6 @@ $form_element_error_color: #6c0000;
 		}
 	}
 
-	&.formradioinput .form-element-value,
-	&.formcheckboxinput .form-element-value,
-	&.formcheckboxesinput .form-element-value,
 	&.formfileinput .form-element-value,
 	&.formcaptchainput .form-element-value {
 		/* These input types also contain a background on their value field */
@@ -143,11 +140,9 @@ $form_element_error_color: #6c0000;
 		padding: 1%;
 	}
 
-	&.formcheckboxinput .form-element-value {
-		background:transparent;
-	}
+	&.formcheckboxinput .form-element-value,
 	&.formradioinput .form-element-value {
-		background:transparent;
+		padding:1%;
 	}
 
 	.form-element-description {
