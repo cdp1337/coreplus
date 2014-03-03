@@ -318,25 +318,23 @@ pre.xdebug-var-dump {
 }
 
 pre.xdebug-var-dump .debug-section {
-	background: rgba(255, 255, 255, 0.35);
-	border-bottom: 1px solid #EEE;
-	border-top: 1px solid #EEE;
-	border-left:0;
-	border-right:0;
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.35);
+	border-color: #EEEEEE -moz-use-text-color;
+	border-radius: 0;
+	border-style: solid none;
+	border-width: 1px 0;
 	box-shadow: 0 0 0.2em 0.1em rgba(0, 0, 0, 0.03);
-	margin: 0 0 1em 0;
-	padding: 0.5em 0.8em;
-	height:auto;
-	min-height:1.1em;
-	border-radius:0;
-	-webkit-border-radius: 0;
+	height: auto;
+	margin: 0 0 1em;
+	min-height: 1.1em;
+	padding: 0 0.8em;
+	position: relative;
 }
 pre.xdebug-var-dump .debug-section legend {
-	margin: 0;
-	padding: 0;
-	position: relative;
-	top: 0.75em;
 	font-size: 1em;
+	margin:0;
+	padding:0;
+	position: absolute;
 }
 pre.xdebug-var-dump .debug-section:last-child {margin-bottom:0;}
 pre.xdebug-var-dump .debug-section i {color:#bbb;}

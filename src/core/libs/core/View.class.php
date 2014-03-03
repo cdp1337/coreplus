@@ -648,13 +648,16 @@ class View {
 					$debug .= '<pre class="xdebug-var-dump screen">';
 					$debug .= '<fieldset class="debug-section collapsible">';
 					$debug .= '<legend><b>Template Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+					$debug .= "<span>";
 					$debug .= 'Base URL: ' . $this->baseurl . "\n";
 					$debug .= 'Template Used: ' . $this->templatename . "\n";
 					$debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
+					$debug .= "</span>";
 					$debug .= '</fieldset>';
 
 					$debug .= '<fieldset class="debug-section collapsible">';
 					$debug .= '<legend><b>Performance Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+					$debug .= "<span>";
 					$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
 					$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
 					//$debug .= "Number of queries: " . DB::Singleton()->counter . "\n";
@@ -662,17 +665,21 @@ class View {
 					$debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_peak_usage(true)) . "\n";
 					$profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
 					$debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
+					$debug .= "</span>";
 					$debug .= '</fieldset>';
 
 					$debug .= '<fieldset class="debug-section collapsible">';
 					$debug .= '<legend><b>Core Profiler</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+					$debug .= "<span>";
 					$debug .= $profiler->getEventTimesFormatted();
+					$debug .= "</span>";
 					$debug .= '</fieldset>';
 
 					$debug .= '<fieldset class="debug-section collapsible collapsed">';
 					// Tack on what components are currently installed.
 					$debug .= '<legend><b>Available Components</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 					$debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
+					$debug .= "<span>";
 					// Give me sorting!
 					ksort($debugcomponents);
 					foreach ($debugcomponents as $l => $v) {
@@ -687,27 +694,30 @@ class View {
 						}
 
 
-						$debug .= $v->getName() . ' ' . $v->getVersion() . "\n";
+						$debug .= $v->getName() . ' ' . $v->getVersion() . "<br/>";
 					}
+					$debug .= "</span>";
 					$debug .= '</fieldset>';
 
 					$debug .= '<fieldset class="debug-section collapsible collapsed">';
 					// I wanna see what hooks are registered too!
 					$debug .= '<legend><b>Registered Hooks</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 					foreach(HookHandler::GetAllHooks() as $hook){
+						$debug .= "<span>";
 						/** @var $hook Hook */
 						$debug .= $hook->name;
 						if($hook->description) $debug .= ' <i> - ' . $hook->description . '</i>';
 						$debug .= "\n" . '<span style="color:#999;">Return expected: ' . $hook->returnType . '</span>';
 						$debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
+						$debug .= "</span>";
 					}
 					$debug .= '</fieldset>';
 
 					$debug .= '<fieldset class="debug-section collapsible collapsed">';
 					// I want to see how many files were included.
 					$debug .= '<legend><b>Included Files</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
-					$debug .= 'Number: ' . sizeof(get_included_files()) . "\n";
-					$debug .= implode("\n", get_included_files()) . "\n";
+					$debug .= '<span>Number: ' . sizeof(get_included_files()) . "</span>";
+					$debug .= '<span>'. implode("<br/>", get_included_files()) . "</span>";
 					$debug .= '</fieldset>';
 
 					$debug .= '<fieldset class="debug-section collapsible collapsed">';
@@ -730,22 +740,6 @@ class View {
 					}
 					$debug .= '</fieldset>';
 					$debug .= '</pre>';
-					$debug .= <<<EOF
-							  <script>
-								  $(function(){
-									  $(".debug-section").click(function(){
-									      var tgtEl = $(this);
-
-								          if(tgtEl.hasClass("open")) {
-						                    tgtEl.removeClass("open").addClass("closed").find('i').addClass('icon-ellipsis-h');
-									      }
-									      else if(tgtEl.hasClass("closed")) {
-									        tgtEl.removeClass("closed").addClass("open").find('i').removeClass('icon-ellipsis-h');
-									      }
-									    });
-								  });
-							  </script>
-EOF;
 
 
 					// And append!

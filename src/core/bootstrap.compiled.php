@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 02 Mar 2014 15:01:16 -0500
+ * @compiled Mon, 03 Mar 2014 10:40:37 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -15006,25 +15006,32 @@ $debug = '';
 $debug .= '<pre class="xdebug-var-dump screen">';
 $debug .= '<fieldset class="debug-section collapsible">';
 $debug .= '<legend><b>Template Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+$debug .= "<span>";
 $debug .= 'Base URL: ' . $this->baseurl . "\n";
 $debug .= 'Template Used: ' . $this->templatename . "\n";
 $debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
+$debug .= "</span>";
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible">';
 $debug .= '<legend><b>Performance Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+$debug .= "<span>";
 $debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
 $debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
 $debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_peak_usage(true)) . "\n";
 $profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
 $debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
+$debug .= "</span>";
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible">';
 $debug .= '<legend><b>Core Profiler</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+$debug .= "<span>";
 $debug .= $profiler->getEventTimesFormatted();
+$debug .= "</span>";
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed">';
 $debug .= '<legend><b>Available Components</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
+$debug .= "<span>";
 ksort($debugcomponents);
 foreach ($debugcomponents as $l => $v) {
 if($v->isEnabled() && $v->isReady()){
@@ -15036,22 +15043,25 @@ $debug .= '[<span style="color:red;">!ERROR!</span>]';
 else{
 $debug .= '[<span style="color:red;">Disabled</span>]';
 }
-$debug .= $v->getName() . ' ' . $v->getVersion() . "\n";
+$debug .= $v->getName() . ' ' . $v->getVersion() . "<br/>";
 }
+$debug .= "</span>";
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed">';
 $debug .= '<legend><b>Registered Hooks</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 foreach(HookHandler::GetAllHooks() as $hook){
+$debug .= "<span>";
 $debug .= $hook->name;
 if($hook->description) $debug .= ' <i> - ' . $hook->description . '</i>';
 $debug .= "\n" . '<span style="color:#999;">Return expected: ' . $hook->returnType . '</span>';
 $debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
+$debug .= "</span>";
 }
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed">';
 $debug .= '<legend><b>Included Files</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
-$debug .= 'Number: ' . sizeof(get_included_files()) . "\n";
-$debug .= implode("\n", get_included_files()) . "\n";
+$debug .= '<span>Number: ' . sizeof(get_included_files()) . "</span>";
+$debug .= '<span>'. implode("<br/>", get_included_files()) . "</span>";
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed">';
 $debug .= '<legend><b>Query Log</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
@@ -15072,21 +15082,6 @@ $debug .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{
 }
 $debug .= '</fieldset>';
 $debug .= '</pre>';
-$debug .= <<<EOF
-<script>
-$(function(){
-$(".debug-section").click(function(){
-var tgtEl = $(this);
-if(tgtEl.hasClass("open")) {
-tgtEl.removeClass("open").addClass("closed").find('i').addClass('icon-ellipsis-h');
-}
-else if(tgtEl.hasClass("closed")) {
-tgtEl.removeClass("closed").addClass("open").find('i').removeClass('icon-ellipsis-h');
-}
-});
-});
-</script>
-EOF;
 $foot .= "\n" . $debug;
 }
 $data = substr_replace($data, $foot . "\n" . '</body>', $match, 7);
