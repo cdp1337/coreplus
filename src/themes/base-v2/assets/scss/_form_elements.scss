@@ -104,6 +104,10 @@ $form_element_error_color: #6c0000;
 		color: $form_element_value_color;
 		position: relative;
 
+		input, select {
+			margin-top:0.3em;
+		}
+
 		input[type=text], input[type=password] {
 			background: $form_element_value_bg;
 			border: $form_element_value_border;
@@ -137,6 +141,13 @@ $form_element_error_color: #6c0000;
 		/* These input types also contain a background on their value field */
 		background: $form_element_value_bg;
 		padding: 1%;
+	}
+
+	&.formcheckboxinput .form-element-value {
+		background:transparent;
+	}
+	&.formradioinput .form-element-value {
+		background:transparent;
 	}
 
 	.form-element-description {

@@ -1437,6 +1437,10 @@ p[class^="message-"] .message-background-icon i {
   position: relative;
 }
 /* line 107, ../scss/_form_elements.scss */
+.formelement .form-element-value input, .formelement .form-element-value select {
+  margin-top: 0.3em;
+}
+/* line 111, ../scss/_form_elements.scss */
 .formelement .form-element-value input[type=text], .formelement .form-element-value input[type=password] {
   background: #f6f6f6;
   border: 1px solid rgba(120, 120, 120, 0.4);
@@ -1444,14 +1448,14 @@ p[class^="message-"] .message-background-icon i {
   min-width: 150px;
   padding: 1%;
 }
-/* line 115, ../scss/_form_elements.scss */
+/* line 119, ../scss/_form_elements.scss */
 .formelement .form-element-value textarea {
   background: #f6f6f6;
   border: 1px solid rgba(120, 120, 120, 0.4);
   color: #353535;
   padding: 1%;
 }
-/* line 122, ../scss/_form_elements.scss */
+/* line 126, ../scss/_form_elements.scss */
 .formelement .form-element-value select {
   background: #f6f6f6;
   border: 1px solid rgba(120, 120, 120, 0.4);
@@ -1460,13 +1464,21 @@ p[class^="message-"] .message-background-icon i {
   min-width: 100px;
   padding: 0.5%;
 }
-/* line 136, ../scss/_form_elements.scss */
+/* line 140, ../scss/_form_elements.scss */
 .formelement.formradioinput .form-element-value, .formelement.formcheckboxinput .form-element-value, .formelement.formcheckboxesinput .form-element-value, .formelement.formfileinput .form-element-value, .formelement.formcaptchainput .form-element-value {
   /* These input types also contain a background on their value field */
   background: #f6f6f6;
   padding: 1%;
 }
-/* line 142, ../scss/_form_elements.scss */
+/* line 146, ../scss/_form_elements.scss */
+.formelement.formcheckboxinput .form-element-value {
+  background: transparent;
+}
+/* line 149, ../scss/_form_elements.scss */
+.formelement.formradioinput .form-element-value {
+  background: transparent;
+}
+/* line 153, ../scss/_form_elements.scss */
 .formelement .form-element-description {
   background: #e7e7e7;
   border: 0 none;
@@ -1474,38 +1486,38 @@ p[class^="message-"] .message-background-icon i {
   font-size: 85%;
   margin: 0 0 0.5%;
 }
-/* line 150, ../scss/_form_elements.scss */
+/* line 161, ../scss/_form_elements.scss */
 .formelement .form-element-required-mark {
   /* Required mark color and styling */
   color: red;
   font-weight: bold;
 }
-/* line 157, ../scss/_form_elements.scss */
+/* line 168, ../scss/_form_elements.scss */
 .formelement.formcheckboxesinput .checkboxes-toggle {
   cursor: pointer;
 }
-/* line 162, ../scss/_form_elements.scss */
+/* line 173, ../scss/_form_elements.scss */
 .formelement.formpagemetakeywordsinput {
   /* Meta-Keywords input styles */
 }
-/* line 164, ../scss/_form_elements.scss */
+/* line 175, ../scss/_form_elements.scss */
 .formelement.formpagemetakeywordsinput .form-element-value {
   background: #f6f6f6;
   border: 1px solid rgba(120, 120, 120, 0.4);
   color: #353535;
 }
-/* line 169, ../scss/_form_elements.scss */
+/* line 180, ../scss/_form_elements.scss */
 .formelement.formpagemetakeywordsinput .form-element-value .keywords-multi-select-option {
   border: 1px solid #f4f4f4;
   float: left;
   margin-right: 0.5em;
   padding: 0.25em;
 }
-/* line 178, ../scss/_form_elements.scss */
+/* line 189, ../scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput.user-valid .meta-author-invalid-indicator {
   display: none;
 }
-/* line 181, ../scss/_form_elements.scss */
+/* line 192, ../scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput.user-invalid .meta-author-valid-indicator {
   display: none;
 }
@@ -1513,98 +1525,98 @@ p[class^="message-"] .message-background-icon i {
 /**
  * Horizontal form orientations
  */
-/* line 194, ../scss/_form_elements.scss */
+/* line 205, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement {
   overflow: hidden;
   width: 100%;
 }
-/* line 199, ../scss/_form_elements.scss */
+/* line 210, ../scss/_form_elements.scss */
 .form-orientation-horizontal .form-element-label {
   display: block;
   float: left;
   text-align: right;
   width: 28%;
 }
-/* line 206, ../scss/_form_elements.scss */
+/* line 217, ../scss/_form_elements.scss */
 .form-orientation-horizontal .form-element-value {
   margin-left: 30%;
 }
-/* line 209, ../scss/_form_elements.scss */
+/* line 220, ../scss/_form_elements.scss */
 .form-orientation-horizontal .form-element-value input[type=text], .form-orientation-horizontal .form-element-value input[type=password], .form-orientation-horizontal .form-element-value textarea {
   width: 97%;
 }
-/* line 212, ../scss/_form_elements.scss */
+/* line 223, ../scss/_form_elements.scss */
 .form-orientation-horizontal .form-element-value select {
   width: 99%;
 }
-/* line 217, ../scss/_form_elements.scss */
+/* line 228, ../scss/_form_elements.scss */
 .form-orientation-horizontal .form-element-description {
   clear: both;
 }
-/* line 221, ../scss/_form_elements.scss */
+/* line 232, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formradioinput {
   /* Radio input tweaks */
 }
-/* line 224, ../scss/_form_elements.scss */
+/* line 235, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formradioinput .form-element-value label {
   float: left;
   margin-right: 1em;
 }
-/* line 231, ../scss/_form_elements.scss */
+/* line 242, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcheckboxesinput {
   /* Checkboxes specific styles */
 }
-/* line 233, ../scss/_form_elements.scss */
+/* line 244, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcheckboxesinput .checkboxes-toggle {
   cursor: pointer;
   float: right;
   margin-left: 0.25em;
 }
-/* line 237, ../scss/_form_elements.scss */
+/* line 248, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcheckboxesinput .checkboxes-toggle span {
   /* Hide the label for the toggle to save some real estate. */
   display: none;
 }
-/* line 243, ../scss/_form_elements.scss */
+/* line 254, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcheckboxesinput .form-element-value label {
   float: left;
   margin-right: 1em;
 }
-/* line 250, ../scss/_form_elements.scss */
+/* line 261, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcaptchainput {
   /* Captcha tweaks */
 }
-/* line 252, ../scss/_form_elements.scss */
+/* line 263, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcaptchainput .form-element-label a {
   display: block;
   float: right;
   margin-top: 1em;
 }
-/* line 258, ../scss/_form_elements.scss */
+/* line 269, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcaptchainput .form-element-value img {
   float: left;
   margin-right: 1em;
 }
-/* line 262, ../scss/_form_elements.scss */
+/* line 273, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcaptchainput .form-element-value input {
   min-width: 140px;
   width: 30%;
 }
-/* line 269, ../scss/_form_elements.scss */
+/* line 280, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput {
   /* GeoAddress input sections have their description above the fields. */
 }
-/* line 272, ../scss/_form_elements.scss */
+/* line 283, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-description {
   margin-left: 30%;
   clear: none;
 }
-/* line 277, ../scss/_form_elements.scss */
+/* line 288, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value {
   margin-left: 0;
   clear: both;
 }
-/* line 281, ../scss/_form_elements.scss */
+/* line 292, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-address1 {
   border-top-width: 0;
   float: left;
@@ -1612,7 +1624,7 @@ p[class^="message-"] .message-background-icon i {
   padding: 0.3em 0.5%;
   width: 50%;
 }
-/* line 288, ../scss/_form_elements.scss */
+/* line 299, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-address2 {
   border-left-width: 0;
   border-top-width: 0;
@@ -1621,26 +1633,26 @@ p[class^="message-"] .message-background-icon i {
   padding: 0.3em 0.5%;
   width: 46%;
 }
-/* line 296, ../scss/_form_elements.scss */
+/* line 307, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-city {
   border-top-width: 0;
   min-width: 85px;
   padding: 0.3em 0.5%;
   width: 33%;
 }
-/* line 302, ../scss/_form_elements.scss */
+/* line 313, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-province-wrapper {
   float: left;
   width: 20%;
 }
-/* line 305, ../scss/_form_elements.scss */
+/* line 316, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-province-wrapper select {
   border-left-width: 0;
   border-top-width: 0;
   padding: 0.25em 0.25%;
   width: 99%;
 }
-/* line 312, ../scss/_form_elements.scss */
+/* line 323, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-postal {
   border-left-width: 0;
   border-top-width: 0;
@@ -1649,50 +1661,50 @@ p[class^="message-"] .message-background-icon i {
   padding: 0.3em 0.5%;
   width: 11%;
 }
-/* line 320, ../scss/_form_elements.scss */
+/* line 331, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value select.address-country {
   border-left-width: 0;
   border-top-width: 0;
   padding: 0.25em 0.5%;
   width: 32%;
 }
-/* line 329, ../scss/_form_elements.scss */
+/* line 340, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formpagemetaauthorinput {
   /* Meta-Author input styles */
 }
-/* line 332, ../scss/_form_elements.scss */
+/* line 343, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formpagemetaauthorinput .form-element-value input {
   padding-left: 24px;
   width: 93%;
 }
-/* line 336, ../scss/_form_elements.scss */
+/* line 347, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator {
   position: absolute;
   left: 8px;
   top: 4px;
 }
-/* line 344, ../scss/_form_elements.scss */
+/* line 355, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formwysiwyginput {
   /* TinyMCE / WYSIWYG inputs have a slightly different interface, their description is above the input. */
 }
-/* line 346, ../scss/_form_elements.scss */
+/* line 357, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formwysiwyginput .form-element-description {
   margin-left: 30%;
   clear: none;
 }
-/* line 351, ../scss/_form_elements.scss */
+/* line 362, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formwysiwyginput .form-element-value {
   margin-left: 0;
   clear: both;
 }
-/* line 359, ../scss/_form_elements.scss */
+/* line 370, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formaccessstringinput .form-element-value .formradioinput {
   display: block;
   float: none;
   overflow: hidden;
   width: 100%;
 }
-/* line 365, ../scss/_form_elements.scss */
+/* line 376, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formaccessstringinput .form-element-value .formcheckboxesinput {
   display: block;
   float: none;
@@ -1703,119 +1715,119 @@ p[class^="message-"] .message-background-icon i {
 /**
  * Vertical form orientations
  */
-/* line 379, ../scss/_form_elements.scss */
+/* line 390, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement {
   margin-bottom: 0.5em;
 }
-/* line 383, ../scss/_form_elements.scss */
+/* line 394, ../scss/_form_elements.scss */
 .form-orientation-vertical .form-element-label {
   display: block;
   text-align: left;
   width: 97%;
 }
-/* line 391, ../scss/_form_elements.scss */
+/* line 402, ../scss/_form_elements.scss */
 .form-orientation-vertical .form-element-value input[type=text], .form-orientation-vertical .form-element-value input[type=password], .form-orientation-vertical .form-element-value textarea {
   width: 97%;
 }
-/* line 394, ../scss/_form_elements.scss */
+/* line 405, ../scss/_form_elements.scss */
 .form-orientation-vertical .form-element-value select {
   width: 99%;
 }
-/* line 399, ../scss/_form_elements.scss */
+/* line 410, ../scss/_form_elements.scss */
 .form-orientation-vertical .form-element-description {
   clear: both;
   padding-left: 1em;
 }
-/* line 404, ../scss/_form_elements.scss */
+/* line 415, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formradioinput {
   /* Radio input tweaks */
 }
-/* line 407, ../scss/_form_elements.scss */
+/* line 418, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formradioinput .form-element-value label {
   float: left;
   margin-right: 1em;
 }
-/* line 414, ../scss/_form_elements.scss */
+/* line 425, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcheckboxesinput {
   /* Checkboxes specific styles */
 }
-/* line 416, ../scss/_form_elements.scss */
+/* line 427, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcheckboxesinput .checkboxes-toggle {
   cursor: pointer;
   float: right;
   margin-left: 0.25em;
 }
-/* line 422, ../scss/_form_elements.scss */
+/* line 433, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcheckboxesinput .form-element-value label {
   float: left;
   margin-right: 1em;
 }
-/* line 429, ../scss/_form_elements.scss */
+/* line 440, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcaptchainput {
   /* Captcha tweaks */
 }
-/* line 431, ../scss/_form_elements.scss */
+/* line 442, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcaptchainput .form-element-label a {
   display: block;
   float: right;
 }
-/* line 436, ../scss/_form_elements.scss */
+/* line 447, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcaptchainput .form-element-value img {
   float: left;
   margin-right: 1em;
 }
-/* line 440, ../scss/_form_elements.scss */
+/* line 451, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcaptchainput .form-element-value input {
   min-width: 140px;
   width: 30%;
 }
-/* line 448, ../scss/_form_elements.scss */
+/* line 459, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formfileinput .form-element-value {
   width: 100%;
 }
-/* line 451, ../scss/_form_elements.scss */
+/* line 462, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formfileinput .form-element-value label {
   display: block;
 }
-/* line 457, ../scss/_form_elements.scss */
+/* line 468, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput {
   /* GeoAddress input sections have their description above the fields. */
 }
-/* line 460, ../scss/_form_elements.scss */
+/* line 471, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value {
   margin-left: 0;
   clear: both;
 }
-/* line 464, ../scss/_form_elements.scss */
+/* line 475, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-address1 {
   border-top-width: 0;
   min-width: 130px;
 }
-/* line 468, ../scss/_form_elements.scss */
+/* line 479, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-address2 {
   border-top-width: 0;
   min-width: 130px;
 }
-/* line 472, ../scss/_form_elements.scss */
+/* line 483, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-city {
   border-top-width: 0;
   float: left;
   min-width: 85px;
   width: 40%;
 }
-/* line 478, ../scss/_form_elements.scss */
+/* line 489, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-province-wrapper {
   float: left;
   width: 30%;
 }
-/* line 481, ../scss/_form_elements.scss */
+/* line 492, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-province-wrapper select {
   border-left-width: 0;
   border-top-width: 0;
   padding: 3%;
   width: 99%;
 }
-/* line 488, ../scss/_form_elements.scss */
+/* line 499, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-postal {
   border-left-width: 0;
   border-top-width: 0;
@@ -1823,33 +1835,33 @@ p[class^="message-"] .message-background-icon i {
   min-width: 30px;
   width: 20%;
 }
-/* line 495, ../scss/_form_elements.scss */
+/* line 506, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value select.address-country {
   border-top-width: 0;
 }
-/* line 501, ../scss/_form_elements.scss */
+/* line 512, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formpagemetaauthorinput {
   /* Meta-Author input styles */
 }
-/* line 504, ../scss/_form_elements.scss */
+/* line 515, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formpagemetaauthorinput .form-element-value input {
   padding-left: 24px;
   width: 93%;
 }
-/* line 508, ../scss/_form_elements.scss */
+/* line 519, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator {
   position: absolute;
   left: 8px;
   top: 4px;
 }
-/* line 518, ../scss/_form_elements.scss */
+/* line 529, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formaccessstringinput .form-element-value .formradioinput {
   display: block;
   float: none;
   overflow: hidden;
   width: 100%;
 }
-/* line 524, ../scss/_form_elements.scss */
+/* line 535, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formaccessstringinput .form-element-value .formcheckboxesinput {
   display: block;
   float: none;
@@ -1860,19 +1872,19 @@ p[class^="message-"] .message-background-icon i {
 /**
  * Grid form orientations
  */
-/* line 537, ../scss/_form_elements.scss */
+/* line 548, ../scss/_form_elements.scss */
 .form-orientation-grid {
   /* Decrease font size to make everything fit */
   font-size: 80%;
 }
-/* line 541, ../scss/_form_elements.scss */
+/* line 552, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement {
   border-bottom: 1px solid #afafaf;
   margin-bottom: 0.25em;
   overflow: hidden;
   width: 100%;
 }
-/* line 548, ../scss/_form_elements.scss */
+/* line 559, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-label {
   clear: left;
   display: block;
@@ -1880,86 +1892,86 @@ p[class^="message-"] .message-background-icon i {
   text-align: left;
   width: 20%;
 }
-/* line 556, ../scss/_form_elements.scss */
+/* line 567, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-value {
   float: left;
   width: 30%;
 }
-/* line 560, ../scss/_form_elements.scss */
+/* line 571, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-value input[type=text], .form-orientation-grid .form-element-value input[type=password], .form-orientation-grid .form-element-value textarea {
   min-width: 100px;
   width: 97%;
 }
-/* line 564, ../scss/_form_elements.scss */
+/* line 575, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-value select {
   min-width: 100px;
   width: 99%;
 }
-/* line 570, ../scss/_form_elements.scss */
+/* line 581, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-description {
   float: left;
   padding-left: 0.25em;
 }
-/* line 575, ../scss/_form_elements.scss */
+/* line 586, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formradioinput {
   /* Radio input tweaks */
 }
-/* line 578, ../scss/_form_elements.scss */
+/* line 589, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formradioinput .form-element-value label {
   float: left;
   margin-right: 1em;
 }
-/* line 585, ../scss/_form_elements.scss */
+/* line 596, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcheckboxesinput {
   /* Checkboxes specific styles */
 }
-/* line 587, ../scss/_form_elements.scss */
+/* line 598, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcheckboxesinput .checkboxes-toggle {
   cursor: pointer;
   float: right;
   margin-left: 0.25em;
 }
-/* line 591, ../scss/_form_elements.scss */
+/* line 602, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcheckboxesinput .checkboxes-toggle span {
   /* Hide the label for the toggle to save some real estate. */
   display: none;
 }
-/* line 597, ../scss/_form_elements.scss */
+/* line 608, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcheckboxesinput .form-element-value label {
   float: left;
   margin-right: 1em;
 }
-/* line 604, ../scss/_form_elements.scss */
+/* line 615, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcaptchainput {
   /* Captcha tweaks */
 }
-/* line 606, ../scss/_form_elements.scss */
+/* line 617, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcaptchainput .form-element-label a {
   display: block;
   float: right;
   margin-top: 1em;
 }
-/* line 612, ../scss/_form_elements.scss */
+/* line 623, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcaptchainput .form-element-value img {
   float: left;
   margin-right: 1em;
 }
-/* line 616, ../scss/_form_elements.scss */
+/* line 627, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcaptchainput .form-element-value input {
   min-width: 140px;
   width: 30%;
 }
-/* line 623, ../scss/_form_elements.scss */
+/* line 634, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput {
   /* GeoAddress input sections have their description above the fields. */
 }
-/* line 626, ../scss/_form_elements.scss */
+/* line 637, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value {
   margin-left: 0;
   clear: both;
   width: 100%;
 }
-/* line 631, ../scss/_form_elements.scss */
+/* line 642, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-address1 {
   border-top-width: 0;
   float: left;
@@ -1967,7 +1979,7 @@ p[class^="message-"] .message-background-icon i {
   padding: 0.3em 0.5%;
   width: 50%;
 }
-/* line 638, ../scss/_form_elements.scss */
+/* line 649, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-address2 {
   border-left-width: 0;
   border-top-width: 0;
@@ -1976,26 +1988,26 @@ p[class^="message-"] .message-background-icon i {
   padding: 0.3em 0.5%;
   width: 46%;
 }
-/* line 646, ../scss/_form_elements.scss */
+/* line 657, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-city {
   border-top-width: 0;
   min-width: 85px;
   padding: 0.3em 0.5%;
   width: 33%;
 }
-/* line 652, ../scss/_form_elements.scss */
+/* line 663, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-province-wrapper {
   float: left;
   width: 20%;
 }
-/* line 655, ../scss/_form_elements.scss */
+/* line 666, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-province-wrapper select {
   border-left-width: 0;
   border-top-width: 0;
   padding: 0.25em 0.25%;
   width: 99%;
 }
-/* line 662, ../scss/_form_elements.scss */
+/* line 673, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-postal {
   border-left-width: 0;
   border-top-width: 0;
@@ -2004,50 +2016,50 @@ p[class^="message-"] .message-background-icon i {
   padding: 0.3em 0.5%;
   width: 11%;
 }
-/* line 670, ../scss/_form_elements.scss */
+/* line 681, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value select.address-country {
   border-left-width: 0;
   border-top-width: 0;
   padding: 0.25em 0.5%;
   width: 32%;
 }
-/* line 679, ../scss/_form_elements.scss */
+/* line 690, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formpagemetaauthorinput {
   /* Meta-Author input styles */
 }
-/* line 682, ../scss/_form_elements.scss */
+/* line 693, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formpagemetaauthorinput .form-element-value input {
   padding-left: 24px;
   width: 93%;
 }
-/* line 686, ../scss/_form_elements.scss */
+/* line 697, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator {
   position: absolute;
   left: 8px;
   top: 4px;
 }
-/* line 694, ../scss/_form_elements.scss */
+/* line 705, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formwysiwyginput {
   /* TinyMCE / WYSIWYG inputs have a slightly different interface, their description is above the input. */
 }
-/* line 696, ../scss/_form_elements.scss */
+/* line 707, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formwysiwyginput .form-element-description {
   clear: none;
 }
-/* line 700, ../scss/_form_elements.scss */
+/* line 711, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formwysiwyginput .form-element-value {
   margin-left: 0;
   clear: both;
   width: 100%;
 }
-/* line 709, ../scss/_form_elements.scss */
+/* line 720, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formaccessstringinput .form-element-value .formradioinput {
   display: block;
   float: none;
   overflow: hidden;
   width: 100%;
 }
-/* line 715, ../scss/_form_elements.scss */
+/* line 726, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formaccessstringinput .form-element-value .formcheckboxesinput {
   display: block;
   float: none;
@@ -2056,25 +2068,25 @@ p[class^="message-"] .message-background-icon i {
 }
 
 /** Tweak the autocomplete styles slightly **/
-/* line 727, ../scss/_form_elements.scss */
+/* line 738, ../scss/_form_elements.scss */
 .formelement input[type="text"].ui-autocomplete-loading {
   background-image: url("../images/loading-bar-small.gif");
   background-position: center right;
   background-repeat: no-repeat;
 }
 
-/* line 733, ../scss/_form_elements.scss */
+/* line 744, ../scss/_form_elements.scss */
 .formelement input[type="text"].ui-autocomplete-input {
   border: 1px solid #47C6CB;
 }
 
-/* line 738, ../scss/_form_elements.scss */
+/* line 749, ../scss/_form_elements.scss */
 .facebook-integration {
   margin-left: 0;
   max-width: 515px;
 }
 
-/* line 743, ../scss/_form_elements.scss */
+/* line 754, ../scss/_form_elements.scss */
 .ui-dialog .formelement label {
   position: relative;
   top: 0;
@@ -2082,19 +2094,19 @@ p[class^="message-"] .message-background-icon i {
   text-align: left;
 }
 
-/* line 749, ../scss/_form_elements.scss */
+/* line 760, ../scss/_form_elements.scss */
 .ui-dialog .formelement input {
   padding: 0.35em 0.8em;
   display: block;
 }
 
-/* line 754, ../scss/_form_elements.scss */
+/* line 765, ../scss/_form_elements.scss */
 .ui-dialog .formelement select {
   display: block;
   max-width: 100%;
 }
 
-/* line 759, ../scss/_form_elements.scss */
+/* line 770, ../scss/_form_elements.scss */
 .tinymce label {
   position: relative;
   top: 0;
