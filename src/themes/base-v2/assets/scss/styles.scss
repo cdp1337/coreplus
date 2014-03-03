@@ -326,7 +326,7 @@ pre.xdebug-var-dump .debug-section {
 	box-shadow: 0 0 0.2em 0.1em rgba(0, 0, 0, 0.03);
 	height: auto;
 	margin: 0 0 1em;
-	min-height: 1.1em;
+	min-height: 1.2em;
 	padding: 0 0.8em;
 	position: relative;
 }
@@ -339,7 +339,7 @@ pre.xdebug-var-dump .debug-section legend {
 pre.xdebug-var-dump .debug-section:last-child {margin-bottom:0;}
 pre.xdebug-var-dump .debug-section i {color:#bbb;}
 pre.xdebug-var-dump .debug-section.collapsed {
-	height:1.1em;
+	height:1.2em;
 	overflow:hidden;
 }
 pre.xdebug-var-dump .debug-section.collapsible i {display:none;}

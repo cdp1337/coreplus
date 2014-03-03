@@ -194,7 +194,11 @@ if(typeof jQuery != 'undefined'){
 			$this = jQuery(this);
 			$fieldset = $this.closest('fieldset');
 
-			$fieldset.toggleClass('collapsed').children(':not(legend)').toggle('fast');
+			if(!$fieldset.hasClass('debug-section')) {
+				$fieldset.toggleClass('collapsed').children(':not(legend)').toggle('fast');
+			} else {
+				$fieldset.toggleClass('collapsed').children(':not(legend)').toggle();
+			}
 		});
 	});
 }
