@@ -60,6 +60,10 @@
 			$unchecktoggle.click(function(){
 				$inputs.each(function(){
 					$(this).prop('checked', false);
+
+					if( $(this).parent().hasClass('icheckbox_flat') ) {
+						$(this).iCheck('update');
+					}
 				});
 				$unchecktoggle.toggle();
 				$checktoggle.toggle();
@@ -68,6 +72,10 @@
 			$checktoggle.click(function(){
 				$inputs.each(function(){
 					$(this).prop('checked', true);
+
+					if( $(this).parent().hasClass('icheckbox_flat') ) {
+						$(this).iCheck('update');
+					}
 				});
 				$unchecktoggle.toggle();
 				$checktoggle.toggle();

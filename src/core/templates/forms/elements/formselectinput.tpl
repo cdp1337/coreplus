@@ -22,3 +22,10 @@
 		$('#{$element->get("id")}').readonly();
 	</script>{/script}
 {/if}
+
+{script location="foot"}<script>
+	{script library="jquery.minimalect"}{/script}
+	$(function(){
+		$("select").minimalect();
+	});
+</script>{/script}

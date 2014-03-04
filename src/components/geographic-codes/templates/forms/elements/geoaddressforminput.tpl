@@ -70,11 +70,14 @@
 
 		<input type="text" class="address-postal" name="{$element->get('name')}[postal]" value="{$postal|escape}" {if $req}required="required"{/if} maxlength="10" placeholder="Zip/Postal"/>
 
-		<select class="address-country" id="{$element->get('id')}-country" name="{$element->get('name')}[country]">
-			{foreach $countries as $c}
-				<option value="{$c.iso2}" {if $c.iso2 == $country}selected="selected"{/if}>{$c.name}</option>
-			{/foreach}
-		</select>
+		<div id="{$element->get('id')}-country-wrapper" class="address-country-wrapper">
+			<select class="address-country" id="{$element->get('id')}-country" name="{$element->get('name')}[country]">
+				{foreach $countries as $c}
+					<option value="{$c.iso2}" {if $c.iso2 == $country}selected="selected"{/if}>{$c.name}</option>
+				{/foreach}
+			</select>
+		</div>
+
 	</div>
 
 

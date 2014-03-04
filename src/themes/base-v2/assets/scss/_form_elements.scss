@@ -198,7 +198,7 @@ $form_element_error_color: #6c0000;
 .form-orientation-horizontal {
 
 	.formelement {
-		overflow: hidden;
+		display:inline-block;
 		width: 100%;
 	}
 
@@ -286,7 +286,7 @@ $form_element_error_color: #6c0000;
 
 			.address-address1 {
 				border-top-width: 0;
-				float: left;
+				display: inline-block;
 				min-width: 130px;
 				padding: 0.3em 0.5%;
 				width: 50%;
@@ -294,20 +294,21 @@ $form_element_error_color: #6c0000;
 			.address-address2 {
 				border-left-width: 0;
 				border-top-width: 0;
-				float: left;
+				display: inline-block;
 				min-width: 130px;
 				padding: 0.3em 0.5%;
-				width: 46%;
+				width: 46.5%;
 			}
 			.address-city {
 				border-top-width: 0;
 				min-width: 85px;
 				padding: 0.3em 0.5%;
 				width: 33%;
+				display: inline-block;
 			}
 			.address-province-wrapper {
-				float: left;
-				width: 20%;
+				display: inline-block;
+				width: 24%;
 				select {
 					border-left-width: 0;
 					border-top-width: 0;
@@ -315,10 +316,13 @@ $form_element_error_color: #6c0000;
 					width: 99%;
 				}
 			}
+			.address-country-wrapper {
+				display: inline-block;
+			}
 			.address-postal {
 				border-left-width: 0;
 				border-top-width: 0;
-				float: left;
+				display: inline-block;
 				min-width: 30px;
 				padding: 0.3em 0.5%;
 				width: 11%;
@@ -330,6 +334,11 @@ $form_element_error_color: #6c0000;
 				width: 32%;
 			}
 		}
+	}
+
+	.formelement.formlicenseinput-license .minict_wrapper {
+		width:auto;
+		min-width:38em;
 	}
 
 	.formelement.formpagemetaauthorinput {
@@ -477,13 +486,14 @@ $form_element_error_color: #6c0000;
 			}
 			.address-city {
 				border-top-width: 0;
-				float: left;
+				display: inline-block;
 				min-width: 85px;
-				width: 40%;
+				width: 30%;
 			}
 			.address-province-wrapper {
-				float: left;
-				width: 30%;
+				display: inline-block;
+				width: 24%;
+				min-width:0;
 				select {
 					border-left-width: 0;
 					border-top-width: 0;
@@ -491,17 +501,25 @@ $form_element_error_color: #6c0000;
 					width: 99%;
 				}
 			}
+			.address-country-wrapper {
+				display: inline-block;
+			}
 			.address-postal {
 				border-left-width: 0;
 				border-top-width: 0;
-				float: left;
+				display: inline-block;
 				min-width: 30px;
-				width: 20%;
+				width: 12%;
 			}
 			select.address-country {
 				border-top-width: 0;
 			}
 		}
+	}
+
+	.formelement.formlicenseinput-license .minict_wrapper {
+		width:auto;
+		min-width:38em;
 	}
 
 	.formelement.formpagemetaauthorinput {
@@ -546,8 +564,8 @@ $form_element_error_color: #6c0000;
 
 	.formelement {
 		border-bottom: 1px solid lighten($form_element_label_color, 50%);
-		margin-bottom: 0.25em;
-		overflow: hidden;
+		margin-bottom: 0.5em;
+		display:inline-block;
 		width: 100%;
 	}
 
@@ -560,7 +578,7 @@ $form_element_error_color: #6c0000;
 	}
 
 	.form-element-value {
-		float: left;
+		display:inline-block;
 		width: 30%;
 
 		input[type=text], input[type=password], textarea {
@@ -656,8 +674,9 @@ $form_element_error_color: #6c0000;
 				width: 33%;
 			}
 			.address-province-wrapper {
-				float: left;
+				display: inline-block;
 				width: 20%;
+				min-width:0;
 				select {
 					border-left-width: 0;
 					border-top-width: 0;
@@ -665,10 +684,13 @@ $form_element_error_color: #6c0000;
 					width: 99%;
 				}
 			}
+			.address-country-wrapper {
+				display: inline-block;
+			}
 			.address-postal {
 				border-left-width: 0;
 				border-top-width: 0;
-				float: left;
+				display: inline-block;
 				min-width: 30px;
 				padding: 0.3em 0.5%;
 				width: 11%;
@@ -680,6 +702,11 @@ $form_element_error_color: #6c0000;
 				width: 32%;
 			}
 		}
+	}
+
+	.formelement.formlicenseinput-license .minict_wrapper {
+		width:auto;
+		min-width:48em;
 	}
 
 	.formelement.formpagemetaauthorinput {
@@ -766,4 +793,216 @@ $form_element_error_color: #6c0000;
 	position:relative;
 	top:0;
 	margin-bottom: 5px;
+}
+
+/**
+ * Fancy Minimalect Selects
+ */
+
+.form-orientation-horizontal .form-element-value .minict_wrapper input,
+.form-orientation-vertical .form-element-value .minict_wrapper input {
+	width:100%;
+	padding:0 3%;
+	margin:0;
+	display: inline-block;
+	height:2.5em;
+}
+
+.form-orientation-grid .form-element-value .minict_wrapper {margin-top:0.3em;}
+.form-orientation-grid .form-element-value .minict_wrapper input {
+	width:100%;
+	padding:0 3%;
+	margin:0;
+	display: inline-block;
+	height:1.5em;
+}
+
+.address-province-wrapper {
+
+}
+.address-province-wrapper .minict_wrapper {
+	width:100%;
+	min-width:0;
+}
+
+.address-country-wrapper {
+	width:28%;
+}
+.address-country-wrapper .minict_wrapper {
+	width:100%;
+	min-width:0;
+}
+
+.minict_wrapper {
+	font-family: "Segoe UI", Segoe, "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+	color: #333;
+	background: #fff;
+
+	display: inline-block;
+	position: relative;
+	width: auto;
+	min-width:29em;
+
+	border: 1px solid rgba(120, 120, 120, 0.4);
+	border-top-width:0;
+	border-radius: 3px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	* {
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	&:after {
+		content: "\25BC";
+		display: block;
+		position: absolute;
+		height: 2.1rem;
+		width: 2.1rem;
+		top: 0;
+		right: 0;
+		font-size: 0.6rem;
+		line-height: 1.9rem;
+		text-align: center;
+		color: #555;
+	}
+
+	&.active:after {
+		content: "\25B2";
+	}
+
+	input {
+		border: 0;
+		outline: none;
+		background: none;
+		font-family: "Segoe UI", Segoe, "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+		color: #333;
+		font-size: 1rem;
+		height: 1.9rem;
+		padding: 1% 2.2rem 1% 0.4rem;
+		cursor: default;
+		width: 100%;
+	}
+
+	ul {
+		display: none;
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		position: absolute;
+		width: 100%;
+		border: 1px solid #e5e5e5;
+		border-radius: 3px;
+		top: 2rem;
+		left: 0;
+		max-height: 22rem;
+		overflow-y: auto;
+		z-index: 999999;
+
+		li {
+			list-style: none;
+			font-size: 1rem;
+			padding: 0 0.7rem;
+			cursor: pointer;
+			background: #fff;
+			height: 2.2rem;
+			line-height: 2rem;
+
+			&:hover {
+				background: #fcfcfc;
+				color: #111;
+			}
+
+			&.minict_group {
+				color: #444;
+				background: #f6f6f6;
+				font-weight: bold;
+				cursor: default;
+			}
+
+			&.minict_empty {
+				display: none;
+				background: #fff !important;
+				color: #bbb;
+				text-align: center;
+				font-size: 0.9rem;
+				height: 3.5rem;
+				line-height: 3.3rem;
+			}
+
+			&.selected {
+				color: #819a9a;
+				background: #f9fcff;
+			}
+
+			&.highlighted {
+				color: #fff;
+				background: #819a9a;
+			}
+
+			&.hidden {
+				display: none;
+			}
+		}
+	}
+}
+
+/**
+ * Fancy Checkboxes and Radios
+ */
+/* iCheck plugin flat skin, black
+----------------------------------- */
+.icheckbox_flat,
+.iradio_flat {
+	display: inline-block;
+	*display: inline;
+	vertical-align: middle;
+	margin: 0;
+	padding: 0;
+	width: 20px;
+	height: 20px;
+	background: url(../images/flat.png) no-repeat;
+	border: none;
+	cursor: pointer;
+}
+
+.icheckbox_flat {
+	background-position: 0 0;
+}
+.icheckbox_flat.checked {
+	background-position: -22px 0;
+}
+.icheckbox_flat.disabled {
+	background-position: -44px 0;
+	cursor: default;
+}
+.icheckbox_flat.checked.disabled {
+	background-position: -66px 0;
+}
+
+.iradio_flat {
+	background-position: -88px 0;
+}
+.iradio_flat.checked {
+	background-position: -110px 0;
+}
+.iradio_flat.disabled {
+	background-position: -132px 0;
+	cursor: default;
+}
+.iradio_flat.checked.disabled {
+	background-position: -154px 0;
+}
+
+/* HiDPI support */
+@media (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
+	.icheckbox_flat,
+	.iradio_flat {
+		background-image: url(../images/flat@2x.png);
+		-webkit-background-size: 176px 22px;
+		background-size: 176px 22px;
+	}
 }

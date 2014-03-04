@@ -15,3 +15,17 @@
 
 	<p class="form-element-description">{$element->get('description')}</p>
 </div>
+
+{script location="foot"}<script>
+	{script library="jquery.icheck"}{/script}
+	$(function(){
+		var $radio = $('input[type=radio]');
+
+		$radio.iCheck({ 'radioClass': 'iradio_flat'});
+
+		$radio.on('ifChecked', function(event){
+			$(this).closest('.fileinput-selector').click();
+		});
+
+	});
+</script>{/script}

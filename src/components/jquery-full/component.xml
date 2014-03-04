@@ -29,6 +29,8 @@
 		<scriptlibrary name="jquery.form" call="JQuery::Include_form"/>
 		<scriptlibrary name="jquery.waypoints" call="JQuery::Include_waypoints"/>
 		<scriptlibrary name="jquery.smoothscroll" call="JQuery::Include_Smoothscroll"/>
+		<scriptlibrary name="jquery.minimalect" call="JQuery::Include_Minimalect"/>
+		<scriptlibrary name="jquery.icheck" call="JQuery::Include_Icheck"/>
 	</provides>
 	<assets>
 		<file filename="assets/css/images/animated-overlay.gif" md5="2b912f7c0653008ca28ebacda49025e7"/>
@@ -100,9 +102,11 @@
 		<file filename="assets/js/jquery/jquery.cookie.min.js" md5="b2b5da3ba885603b0097b9a6bd6b032c"/>
 		<file filename="assets/js/jquery/jquery.form.js" md5="a3aa2838a67b271230e38fb81dfa9748"/>
 		<file filename="assets/js/jquery/jquery.form.min.js" md5="95061e7415903f550f181206aa99e8d9"/>
+		<file filename="assets/js/jquery/jquery.icheck.min.js" md5="ebb79e17587418d2e366a95b33bb0996"/>
 		<file filename="assets/js/jquery/jquery.json-2.4.js" md5="916c946e972ec0315db82ebaacbcf111"/>
 		<file filename="assets/js/jquery/jquery.json-2.4.min.js" md5="f7b87723e700272150f9785de8f03f1c"/>
 		<file filename="assets/js/jquery/jquery.masonry.min.js" md5="a6b726ee7fce43453a6eb25e8a1cb819"/>
+		<file filename="assets/js/jquery/jquery.minimalect.min.js" md5="aa31f535fc0a9c3d2fc52da3caae1497"/>
 		<file filename="assets/js/jquery/jquery.smooth-scroll.min.js" md5="34b5513756446947afd1b7399d02ea65"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.js" md5="fbd3ec46c4cb84a8433f3b5c468e98cf"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.min.js" md5="28fb224b45d2fdb5e5eef85d2dfc8458"/>
@@ -118,7 +122,7 @@
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
 		<file filename="CHANGELOG" md5="9597bb085c8e57f922978f665eb2ca0a"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="95298f58afdd6ff8b601acde860817a1">
+		<file filename="JQuery.lib.php" md5="c0a2beaac1da7da9cdbaa57fa9f5c0b5">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>

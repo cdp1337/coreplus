@@ -12,3 +12,10 @@
 	<p class="form-element-description">{$element->get('description')}</p>
 
 </div>
+
+{script location="foot"}<script>
+	{script library="jquery.icheck"}{/script}
+	$(function(){
+		$('input[type=checkbox]').iCheck({ 'checkboxClass': 'icheckbox_flat'});
+	});
+</script>{/script}
