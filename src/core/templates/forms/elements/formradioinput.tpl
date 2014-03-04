@@ -16,8 +16,8 @@
 	<p class="form-element-description">{$element->get('description')}</p>
 </div>
 
+{script library="jquery.icheck"}{/script}
 {script location="foot"}<script>
-	{script library="jquery.icheck"}{/script}
 	$(function(){
 		var $radio = $('input[type=radio]');
 

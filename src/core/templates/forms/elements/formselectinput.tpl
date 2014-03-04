@@ -23,8 +23,8 @@
 	</script>{/script}
 {/if}
 
+{script library="jquery.minimalect"}{/script}
 {script location="foot"}<script>
-	{script library="jquery.minimalect"}{/script}
 	$(function(){
 		$("select").minimalect();
 	});

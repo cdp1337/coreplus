@@ -93,7 +93,7 @@
 	</select>
 </template>
 
-<script>
+{script location="foot"}<script>
 	$(function(){
 		var provinces        = {$province_json},
 			current_province = "{$province}",
@@ -127,6 +127,11 @@
 			else{
 				$provinceselect.hide();
 			}
+
+			if( $countryselect.closest('minict_wrapper')){
+				$("select").minimalect();
+			}
+
 		}
 
 
@@ -148,4 +153,4 @@
 		});
 
 	});
-</script>
+</script>{/script}

@@ -59,11 +59,12 @@
 				$('input.{$dynname}_main[value={$main_checked}]').click();
 			{/if}
 		});
-		$('.{$dynname}_main').click(function () {
+		$('.{$dynname}_main').change(function () {
 			var $this = $(this),
 					v = $this.val();
 			if (v == 'advanced') {
 				$('.{$dynname}_advanced').show();
+
 			}
 			else {
 				$('.{$dynname}_advanced').hide();

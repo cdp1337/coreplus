@@ -2153,11 +2153,16 @@ p[class^="message-"] .message-background-icon i {
 }
 
 /* line 811, ../scss/_form_elements.scss */
+.form-orientation-horizontal .form-element-value .minict_wrapper input {
+  height: 1.75em;
+}
+
+/* line 815, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-value .minict_wrapper {
   margin-top: 0.3em;
 }
 
-/* line 812, ../scss/_form_elements.scss */
+/* line 816, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-value .minict_wrapper input {
   width: 100%;
   padding: 0 3%;
@@ -2166,24 +2171,24 @@ p[class^="message-"] .message-background-icon i {
   height: 1.5em;
 }
 
-/* line 823, ../scss/_form_elements.scss */
+/* line 827, ../scss/_form_elements.scss */
 .address-province-wrapper .minict_wrapper {
   width: 100%;
   min-width: 0;
 }
 
-/* line 828, ../scss/_form_elements.scss */
+/* line 832, ../scss/_form_elements.scss */
 .address-country-wrapper {
   width: 28%;
 }
 
-/* line 831, ../scss/_form_elements.scss */
+/* line 835, ../scss/_form_elements.scss */
 .address-country-wrapper .minict_wrapper {
   width: 100%;
   min-width: 0;
 }
 
-/* line 836, ../scss/_form_elements.scss */
+/* line 840, ../scss/_form_elements.scss */
 .minict_wrapper {
   font-family: "Segoe UI", Segoe, "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
   color: #333;
@@ -2199,13 +2204,13 @@ p[class^="message-"] .message-background-icon i {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-/* line 853, ../scss/_form_elements.scss */
+/* line 857, ../scss/_form_elements.scss */
 .minict_wrapper * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-/* line 859, ../scss/_form_elements.scss */
+/* line 863, ../scss/_form_elements.scss */
 .minict_wrapper:after {
   content: "\25BC";
   display: block;
@@ -2219,11 +2224,11 @@ p[class^="message-"] .message-background-icon i {
   text-align: center;
   color: #555;
 }
-/* line 873, ../scss/_form_elements.scss */
+/* line 877, ../scss/_form_elements.scss */
 .minict_wrapper.active:after {
   content: "\25B2";
 }
-/* line 877, ../scss/_form_elements.scss */
+/* line 881, ../scss/_form_elements.scss */
 .minict_wrapper input {
   border: 0;
   outline: none;
@@ -2236,7 +2241,7 @@ p[class^="message-"] .message-background-icon i {
   cursor: default;
   width: 100%;
 }
-/* line 890, ../scss/_form_elements.scss */
+/* line 894, ../scss/_form_elements.scss */
 .minict_wrapper ul {
   display: none;
   list-style: none;
@@ -2252,7 +2257,7 @@ p[class^="message-"] .message-background-icon i {
   overflow-y: auto;
   z-index: 999999;
 }
-/* line 905, ../scss/_form_elements.scss */
+/* line 909, ../scss/_form_elements.scss */
 .minict_wrapper ul li {
   list-style: none;
   font-size: 1rem;
@@ -2262,19 +2267,19 @@ p[class^="message-"] .message-background-icon i {
   height: 2.2rem;
   line-height: 2rem;
 }
-/* line 914, ../scss/_form_elements.scss */
+/* line 918, ../scss/_form_elements.scss */
 .minict_wrapper ul li:hover {
-  background: #fcfcfc;
+  background: #dedede;
   color: #111;
 }
-/* line 919, ../scss/_form_elements.scss */
+/* line 923, ../scss/_form_elements.scss */
 .minict_wrapper ul li.minict_group {
   color: #444;
   background: #f6f6f6;
   font-weight: bold;
   cursor: default;
 }
-/* line 926, ../scss/_form_elements.scss */
+/* line 930, ../scss/_form_elements.scss */
 .minict_wrapper ul li.minict_empty {
   display: none;
   background: #fff !important;
@@ -2284,17 +2289,17 @@ p[class^="message-"] .message-background-icon i {
   height: 3.5rem;
   line-height: 3.3rem;
 }
-/* line 936, ../scss/_form_elements.scss */
+/* line 940, ../scss/_form_elements.scss */
 .minict_wrapper ul li.selected {
   color: #819a9a;
   background: #f9fcff;
 }
-/* line 941, ../scss/_form_elements.scss */
+/* line 945, ../scss/_form_elements.scss */
 .minict_wrapper ul li.highlighted {
   color: #fff;
   background: #819a9a;
 }
-/* line 946, ../scss/_form_elements.scss */
+/* line 950, ../scss/_form_elements.scss */
 .minict_wrapper ul li.hidden {
   display: none;
 }
@@ -2304,7 +2309,7 @@ p[class^="message-"] .message-background-icon i {
  */
 /* iCheck plugin flat skin, black
 ----------------------------------- */
-/* line 959, ../scss/_form_elements.scss */
+/* line 963, ../scss/_form_elements.scss */
 .icheckbox_flat,
 .iradio_flat {
   display: inline-block;
@@ -2319,51 +2324,51 @@ p[class^="message-"] .message-background-icon i {
   cursor: pointer;
 }
 
-/* line 972, ../scss/_form_elements.scss */
+/* line 976, ../scss/_form_elements.scss */
 .icheckbox_flat {
   background-position: 0 0;
 }
 
-/* line 975, ../scss/_form_elements.scss */
+/* line 979, ../scss/_form_elements.scss */
 .icheckbox_flat.checked {
   background-position: -22px 0;
 }
 
-/* line 978, ../scss/_form_elements.scss */
+/* line 982, ../scss/_form_elements.scss */
 .icheckbox_flat.disabled {
   background-position: -44px 0;
   cursor: default;
 }
 
-/* line 982, ../scss/_form_elements.scss */
+/* line 986, ../scss/_form_elements.scss */
 .icheckbox_flat.checked.disabled {
   background-position: -66px 0;
 }
 
-/* line 986, ../scss/_form_elements.scss */
+/* line 990, ../scss/_form_elements.scss */
 .iradio_flat {
   background-position: -88px 0;
 }
 
-/* line 989, ../scss/_form_elements.scss */
+/* line 993, ../scss/_form_elements.scss */
 .iradio_flat.checked {
   background-position: -110px 0;
 }
 
-/* line 992, ../scss/_form_elements.scss */
+/* line 996, ../scss/_form_elements.scss */
 .iradio_flat.disabled {
   background-position: -132px 0;
   cursor: default;
 }
 
-/* line 996, ../scss/_form_elements.scss */
+/* line 1000, ../scss/_form_elements.scss */
 .iradio_flat.checked.disabled {
   background-position: -154px 0;
 }
 
 /* HiDPI support */
 @media (-o-min-device-pixel-ratio: 5 / 4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
-  /* line 1003, ../scss/_form_elements.scss */
+  /* line 1007, ../scss/_form_elements.scss */
   .icheckbox_flat,
   .iradio_flat {
     background-image: url(../images/flat@2x.png);

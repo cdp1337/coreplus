@@ -808,6 +808,10 @@ $form_element_error_color: #6c0000;
 	height:2.5em;
 }
 
+.form-orientation-horizontal .form-element-value .minict_wrapper input {
+	height:1.75em;
+}
+
 .form-orientation-grid .form-element-value .minict_wrapper {margin-top:0.3em;}
 .form-orientation-grid .form-element-value .minict_wrapper input {
 	width:100%;
@@ -912,7 +916,7 @@ $form_element_error_color: #6c0000;
 			line-height: 2rem;
 
 			&:hover {
-				background: #fcfcfc;
+				background: #dedede;
 				color: #111;
 			}
 
