@@ -131,10 +131,10 @@ type CDATA #IMPLIED
 	name CDATA #REQUIRED
 >
 
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT pages (page)*>
+<!-- Pages contain all page information, including hard-mapped pages and links to create new user-created pages. -->
+<!ELEMENT pages (page|pagecreate)*>
 
-<!--- Put your DTDDoc comment here. -->
+<!-- The individual page directive, only necessary for hard-mapped pages, generally useful for admin pages. -->
 <!ELEMENT page EMPTY>
 <!ATTLIST page
 	baseurl CDATA #REQUIRED
@@ -144,18 +144,32 @@ type CDATA #IMPLIED
 	admin (0|1) "0"
 	group CDATA #IMPLIED
 	selectable (0|1) "1"
+	editurl CDATA #IMPLIED
 >
 
-<!--- Put your DTDDoc comment here. -->
-<!ELEMENT widgets (widget)*>
+<!-- Link to create new admin-definable pages -->
+<!ELEMENT pagecreate EMPTY>
+<!ATTLIST pagecreate title CDATA #REQUIRED baseurl CDATA #REQUIRED>
 
-<!--- Put your DTDDoc comment here. -->
+<!-- Put your DTDDoc comment here. -->
+<!ELEMENT widgets (widget|widgetcreate)*>
+
+<!-- Put your DTDDoc comment here. -->
 <!ELEMENT widget EMPTY>
 <!ATTLIST widget
 	baseurl CDATA #REQUIRED
 	title CDATA #IMPLIED
 	installable CDATA #IMPLIED
 >
+
+<!--
+Link to create new admin-definable widgets
+
+For standard widgets, set the baseurl to the controller that manages creation of this widget type.
+For simple widgets, set the class to the class name of the widget.
+-->
+<!ELEMENT widgetcreate EMPTY>
+<!ATTLIST widgetcreate title CDATA #REQUIRED baseurl CDATA #IMPLIED class CDATA #IMPLIED>
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT view (file)*>
