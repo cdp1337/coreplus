@@ -1,0 +1,55 @@
+@mixin gradient($color, $adjustment: 16.6%) {
+	$bot-color: darken($color, $adjustment);
+	//$top-color: lighten($color, 33%);
+	$top-color: $color;
+
+
+	@if (lightness($color) > 70%) {
+		$top-color: $color;
+		$bot-color: darken($color, $adjustment);
+	}
+
+	background-color: $color; /* Old browsers */
+	background-image: -moz-linear-gradient(top, $top-color 0%, $bot-color 100%); /* FF3.6+ */
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$top-color), color-stop(100%,$bot-color)); /* Chrome,Safari4+ */
+	background-image: -webkit-linear-gradient(top, $top-color 0%, $bot-color 100%); /* Chrome10+,Safari5.1+ */
+	background-image: -o-linear-gradient(top, $top-color 0%, $bot-color 100%); /* Opera 11.10+ */
+	background-image: -ms-linear-gradient(top, $top-color 0%, $bot-color 100%); /* IE10+ */
+	background-image: linear-gradient(to bottom, $top-color 0%, $bot-color 100%); /* W3C */
+}
+
+
+a.button,
+.ui-widget-content a.button,
+span.button,
+input[type="submit"],
+input[type="reset"],
+button {
+	@include gradient(#a2a2a2);
+}
+
+table.listing th {
+	@include gradient(#a2a2a2);
+}
+
+.message-note {
+	@include gradient(#FCF0AD);
+}
+.message-info {
+	@include gradient(#EEE9FF);
+}
+.message-deprecated {
+	@include gradient(#fff4bd);
+}
+.message-warning {
+	@include gradient(#fce8d1);
+}
+.message-tutorial {
+	@include gradient(#faefb9);
+}
+.message-success {
+	@include gradient(#AAFFAA);
+}
+.message-error {
+	@include gradient(#f0d8e0);
+}
