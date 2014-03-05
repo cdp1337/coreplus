@@ -5,7 +5,7 @@
 		<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
 		{css src="css/styles.css"}{/css}
 		{css src="css/opt/gradients.css" optional="1" default="0"}{/css}
-		{css src="css/opt/full-width.css" optional="1" default="0" title="Set the page to be full width"}{/css}
+		{css src="css/opt/full-width.css" optional="1" default="1" title="Set the page to be full width"}{/css}
 
 		<!--[if lt IE 9]>
 		<script type="text/javascript" src="{asset src='js/html5shiv.js'}"></script>

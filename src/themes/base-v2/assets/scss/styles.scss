@@ -21,7 +21,7 @@ body {
 	text-align:center;
 	padding:0;
 	margin:0;
-	background:#f3f3f3;
+	background: white;
 	font-family:Helvetica, sans-serif;
 	font-size:11pt;
 	color:#222;
@@ -273,24 +273,25 @@ table.stacktrace td {
  *****************************************************************************
  *****************************************************************************/
 
+$listing-table-bg: #e0e0e0;
 table.listing {
 	width: 100%;
-	border: 1px solid #AAA;
+	border: 1px solid darken($listing-table-bg, 15%);
 	border-collapse: collapse;
 }
 table.listing tr:nth-child(odd) {
-	background-color: #d4d6d9;
+	background-color: darken($listing-table-bg, 5%);
 }
 table.listing th {
 	padding: 0.15em 0.5em;
-	border: 1px solid #AAA;
+	border: 1px solid darken($listing-table-bg, 30%);
 	vertical-align: top;
-	background: #666;
+	background: darken($listing-table-bg, 30%);
 	color: #EEE;
 }
 table.listing td {
-	padding: 0.15em 0.5em;
-	border: 1px solid #AAA;
+	padding: 0.2em 0.5em;
+	border: 1px solid darken($listing-table-bg, 15%);
 	vertical-align: top;
 }
 

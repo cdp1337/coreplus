@@ -5,10 +5,10 @@
  *****************************************************************************/
 
 
-$form_element_bg: #e7e7e7;
-$form_element_border: 1px solid rgba(120, 120, 120, 0.1);
+$form_element_bg: transparent;
+$form_element_border: 0px none;
 
-$form_element_description_bg: #e7e7e7;
+$form_element_description_bg: transparent;
 $form_element_description_border: 0 none;
 $form_element_description_color: #525252;
 
@@ -16,7 +16,7 @@ $form_element_value_bg: #F6F6F6;
 $form_element_value_border: 1px solid rgba(120, 120, 120, 0.4);
 $form_element_value_color: #353535;
 
-$form_element_label_bg: #e7e7e7;
+$form_element_label_bg: transparent;
 $form_element_label_border: 0 none;
 $form_element_label_color: #2f2f2f;
 
