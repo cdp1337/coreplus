@@ -52,7 +52,7 @@ function smarty_function_date($params, $template){
 	}
 
 
-	$format = isset($params['format']) ? $params['format'] : 'RELATIVE';
+	$format = isset($params['format']) ? $params['format'] : \Core\Date\DateTime::RELATIVE;
 	//$timezone = isset($params['timezone']) ? $params['timezone'] : Time::TIMEZONE_GMT;
 
 	$coredate = new \Core\Date\DateTime($date);
