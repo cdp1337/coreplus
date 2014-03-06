@@ -427,7 +427,11 @@ class Dataset implements \Iterator{
 		// This actually goes the other way, as the interface has the logic.
 		$interface->connection()->execute($this);
 
-		if($this->_data !== null) reset($this->_data);
+		if($this->_data === null){
+			// It's been executed, so data should at least be something.
+			$this->_data = [];
+		}
+		reset($this->_data);
 
 		// Allow Chaining
 		return $this;
@@ -443,6 +447,8 @@ class Dataset implements \Iterator{
 		// If no data was selected before... I need to execute the query!
 		if($this->_data === null) $this->execute();
 
+		$k = key($this->_data);
+		return isset($this->_data[$k]) ? $this->_data[$k] : null;
 		return $this->_data[key($this->_data)];
 	}
 
