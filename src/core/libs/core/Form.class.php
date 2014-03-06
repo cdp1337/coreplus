@@ -714,6 +714,9 @@ class Form extends FormGroup {
 	/** @var string The original URL of the page this form was rendered on.  Used for security. */
 	public $originalurl = '';
 
+	/** @var string The referring page from this form.  Used for redirect purposes. */
+	public $referrer = '';
+
 	/**
 	 * Standard mappings for 'text' to class of the FormElement.
 	 * This can be extended, ie: wysiwyg or captcha.
@@ -922,6 +925,9 @@ class Form extends FormGroup {
 		}
 
 		// Save it
+		if(!$this->referrer && isset($_SERVER['HTTP_REFERER'])){
+			$this->referrer = $_SERVER['HTTP_REFERER'];
+		}
 		$this->originalurl = CUR_CALL;
 		$this->persistent = false;
 		if (($part === null || $part == 'foot') && $this->get('callsmethod')) {
@@ -1423,14 +1429,32 @@ class Form extends FormGroup {
 		unset($_SESSION['FormData'][$formid]);
 
 
-		// If it's set to die, simply exit the script without outputting anything.
-		if ($status === 'die') exit;
-		// If the return code is boolean true, it's a reload.
-		elseif ($status === true) \Core\reload();
-		// If the page returned the same page as the current url, force a reload, (as redirect will ignore it)
-		elseif($status === REL_REQUEST_PATH) \Core\reload();
-		// Anything else gets sent to the redirect system.
-		else \core\redirect($status);
+		if ($status === 'die'){
+			// If it's set to die, simply exit the script without outputting anything.
+			exit;
+		}
+		elseif($status === 'back'){
+			if($form->referrer && $form->referrer != REL_REQUEST_PATH){
+				// Go back to the original form's referrer.
+				\Core\redirect($form->referrer);
+			}
+			else{
+				// Use Core to guess which page to redirect back to, (not as reliable).
+				\Core\go_back(2);
+			}
+		}
+		elseif ($status === true){
+			// If the return code is boolean true, it's a reload.
+			\Core\reload();
+		}
+		elseif($status === REL_REQUEST_PATH){
+			// If the page returned the same page as the current url, force a reload, (as redirect will ignore it)
+			\Core\reload();
+		}
+		else{
+			// Anything else gets sent to the redirect system.
+			\core\redirect($status);
+		}
 	}
 
 	/**
