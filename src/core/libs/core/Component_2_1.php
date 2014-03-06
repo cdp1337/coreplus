@@ -1304,10 +1304,12 @@ class Component_2_1 {
 	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 *
+	 * @param boolean $next Set to true to run the "next" upgrades as well as any current.
+	 *
 	 * @return boolean | array
 	 * @throws InstallerException
 	 */
-	public function upgrade() {
+	public function upgrade($next = false) {
 		if (!$this->isInstalled()) return false;
 
 		$changes = array();
@@ -1323,8 +1325,11 @@ class Component_2_1 {
 			foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('upgrade') as $u) {
 				/** @var $u DOMElement */
 
+				$from = $u->getAttribute('from');
+				$to   = $u->getAttribute('to') ? $u->getAttribute('to') : 'next';
+
 				// look for a valid upgrade path.
-				if ($this->_versionDB == @$u->getAttribute('from')) {
+				if (($this->_versionDB == $from) || ($next && $from == 'next')) {
 					// w00t, found one...
 					$canBeUpgraded = true;
 
@@ -1386,10 +1391,15 @@ class Component_2_1 {
 
 					SystemLogModel::LogInfoEvent('/updater/component/upgrade', 'Component ' . $this->getName() . ' upgraded successfully from ' . $this->_versionDB . ' to ' . $u->getAttribute('to') . '!', implode("\n", $changes));
 
-					$this->_versionDB = @$u->getAttribute('to');
-					$c                = new ComponentModel($this->_name);
-					$c->set('version', $this->_versionDB);
-					$c->save();
+					if($to == 'next'){
+						$canBeUpgraded = false;
+					}
+					else{
+						$this->_versionDB = $to;
+						$c = new ComponentModel($this->_name);
+						$c->set('version', $this->_versionDB);
+						$c->save();
+					}
 				}
 			}
 		}
@@ -1849,6 +1859,7 @@ class Component_2_1 {
 
 		// Now, get every table under this node.
 		foreach ($node->getElementsByTagName('page') as $subnode) {
+			/** @var DomElement $subnode */
 			// Insert/Update the defaults for an entry in the database.
 			// These are always global pages.
 			$m = new PageModel(-1, $subnode->getAttribute('baseurl'));
@@ -1867,6 +1878,7 @@ class Component_2_1 {
 				if($subnode->getAttribute('selectable') !== ''){
 					$selectable = $subnode->getAttribute('selectable');
 				}
+				$editurl = $subnode->getAttribute('editurl') ? $subnode->getAttribute('editurl') : '';
 
 				// Do not "update" value, keep whatever the user set previously.
 				if (!$m->get('rewriteurl')) {
@@ -1884,6 +1896,8 @@ class Component_2_1 {
 				$m->set('admin', $admin);
 				$m->set('admin_group', $group);
 				$m->set('selectable', $selectable);
+				$m->set('component', $this->getKeyName());
+				$m->set('editurl', $editurl);
 				if ($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';
 			}
 		}
