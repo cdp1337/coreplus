@@ -20,6 +20,8 @@
 						<i class="icon-remove"></i>
 						<span>Reset Filters</span>
 					</a>
+					<!-- Render a submit button so 'Enter' works... -->
+					<input type="submit" style="display:none;"/>
 					<a href="#" class="button apply-filters">
 						<i class="icon-ok"></i>
 						<span>Apply Filters</span>
