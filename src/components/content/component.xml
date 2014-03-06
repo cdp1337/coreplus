@@ -5,7 +5,7 @@
 		<require name="core" type="component" version="3.0.0" operation="ge"/>
 	</requires>
 	<permissions>
-		<permission key="content_manage" description="Manage Site Content"/>
+		<permission key="/content/manage_all" description="Manage Site Content"/>
 	</permissions>
 	<files>
 		<file filename="CHANGELOG" md5="cd73e4fcc2279630cd84249f4048e7ea"/>
@@ -17,7 +17,8 @@
 		</file>
 	</files>
 	<pages>
-		<page baseurl="/content" admin="1" access="p:content_manage" title="Content Page Listings" group="Content"/>
+		<page baseurl="/content" admin="1" access="p:/content/manage_all" title="Content Page Listings" group="Content"/>
+		<pagecreate title="Content" baseurl="/content/create"/>
 	</pages>
 	<description>
 		Provides basic HTML page functionality.
