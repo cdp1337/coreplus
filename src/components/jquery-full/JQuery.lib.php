@@ -135,4 +135,22 @@ abstract class JQuery {
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
+
+	public static function Include_Minimalect(){
+		self::IncludeJQuery();
+
+		\Core\view()->addScript('js/jquery/jquery.minimalect.min.js');
+
+		// IMPORTANT!  Tells the script that the include succeeded!
+		return true;
+	}
+
+	public static function Include_Icheck(){
+		self::IncludeJQuery();
+
+		\Core\view()->addScript('js/jquery/jquery.icheck.min.js');
+
+		// IMPORTANT!  Tells the script that the include succeeded!
+		return true;
+	}
 }

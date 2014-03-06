@@ -309,13 +309,42 @@ table.listing tr:hover {
  *****************************************************************************
  *****************************************************************************/
 pre.xdebug-var-dump {
-	border: 1px solid #FFE5C0;
-	padding: 0.5em;
+	border-top: 2px solid #FFE5C0;
+	padding: 0;
 	text-align: left;
 	font-size: 0.8em;
-	background: #f5f5f5;
+	background: rgb(222, 222, 222);
 	color: #555;
+	margin-bottom: 0;
 }
+
+pre.xdebug-var-dump .debug-section {
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.35);
+	border-color: #EEEEEE -moz-use-text-color;
+	border-radius: 0;
+	border-style: solid none;
+	border-width: 1px 0;
+	box-shadow: 0 0 0.2em 0.1em rgba(0, 0, 0, 0.03);
+	height: auto;
+	margin: 0 0 1em;
+	min-height: 1.2em;
+	padding: 0 0.8em;
+	position: relative;
+}
+pre.xdebug-var-dump .debug-section legend {
+	font-size: 1em;
+	margin:0;
+	padding:0;
+	position: absolute;
+}
+pre.xdebug-var-dump .debug-section:last-child {margin-bottom:0;}
+pre.xdebug-var-dump .debug-section i {color:#bbb;}
+pre.xdebug-var-dump .debug-section.collapsed {
+	height:1.2em;
+	overflow:hidden;
+}
+pre.xdebug-var-dump .debug-section.collapsible i {display:none;}
+pre.xdebug-var-dump .debug-section.collapsed i {display:inline;}
 
 
 
@@ -362,6 +391,7 @@ ol.sortable-listing ol {
 }
 #primary-nav li.navigation-menu-over a:hover {
 	background: #333;
+	transition: background 0.3s;
 }
 #primary-nav a,
 #primary-nav span {

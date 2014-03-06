@@ -145,6 +145,7 @@ class BlogController extends Controller_2_1 {
 			}
 
 			return $this->_viewBlogArticle($blog, $article);
+
 		}
 	}
 
