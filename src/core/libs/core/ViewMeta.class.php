@@ -515,3 +515,19 @@ class ViewMeta_generator extends ViewMeta {
 		);
 	}
 }
+
+class ViewMeta_image extends ViewMeta {
+	public function fetch(){
+		if(!$this->content) return array();
+
+		$image   = \Core\Filestore\Factory::File($this->content);
+		$preview = $image->getPreviewURL('200x200');
+		$large   = $image->getPreviewURL('800x800');
+
+		$data = [];
+		$data['link-apple-touch-startup-image'] = '<link rel="apple-touch-startup-image" href="' . $large . '" />';
+		$data['og:image'] = '<meta name="og:image" content="' . $preview . '"/>';
+
+		return $data;
+	}
+}
