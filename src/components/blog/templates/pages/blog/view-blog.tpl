@@ -6,7 +6,6 @@
 
 {$filters->pagination()}
 <div itemscope="itemscope" itemtype="http://schema.org/Blog" class="single-blog-listing blog-listing">
-	<h1>{$page.title}</h1>
 
 	{if $page.description}
 		<div itemprop="description" style="display:none;">{$page.description}</div>
@@ -14,8 +13,8 @@
 
 	{foreach $articles as $article}
 		<div class="blog-article blog-article-status-{$article.status}" itemscope="itemscope" itemtype="http://schema.org/BlogPosting">
-			<link itemprop="url" href="{$article->getResolvedLink()}"/>
-			<a class="blog-article-title" href="{$article->getResolvedLink()}" itemprop="name">
+			<link itemprop="url" href="{link $article.baseurl}"/>
+			<a class="blog-article-title" href="{$article.baseurl}" itemprop="name">
 				{$article.title}
 			</a>
 
@@ -27,16 +26,16 @@
 			{/if}
 
 
-			{if $article.image}
+			{if $article->getImage()}
 				<div class="blog-article-image">
-					{img placeholder="blog" src="`$article.image`" width='75' height='75' itemprop="thumbnailUrl"}
+					{img placeholder="blog" file=$article->getImage() width='75' height='75' itemprop="thumbnailUrl"}
 				</div>
 			{/if}
 
 
 			<p class="blog-article-excerpt" itemprop="articleBody">
 				{$article->getTeaser()}
-				... <a class="blog-article-read-more" href="{$article->getResolvedLink()}">Read More</a>
+				... <a class="blog-article-read-more" href="{$article.baseurl}">Read More</a>
 			</p>
 
 			<div class="clear"></div>

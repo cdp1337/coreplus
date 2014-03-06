@@ -71,7 +71,7 @@ class BlogArticleModel extends Model {
 			'required' => false,
 		),
 		*/
-		'status'      => array(
+		/*'status'      => array(
 			'type'    => Model::ATT_TYPE_ENUM,
 			'options' => array('published', 'draft'),
 			'default' => 'draft',
@@ -82,7 +82,7 @@ class BlogArticleModel extends Model {
 				'group' => 'Publish Settings',
 				'grouptype' => 'tabs',
 			)
-		),
+		),*/
 		'fb_account_id' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'formtype' => 'hidden',
@@ -91,7 +91,7 @@ class BlogArticleModel extends Model {
 			'type' => Model::ATT_TYPE_STRING,
 			'formtype' => 'hidden',
 		),
-		'published' => array(
+		/*'published' => array(
 			'type' => Model::ATT_TYPE_INT,
 			'form' => array(
 				'title' => 'Published Date',
@@ -101,7 +101,7 @@ class BlogArticleModel extends Model {
 				'grouptype' => 'tabs',
 			),
 			'comment' => 'The published date',
-		),
+		),*/
 		'created'     => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
@@ -115,6 +115,8 @@ class BlogArticleModel extends Model {
 	public static $Indexes = array(
 		'primary' => array('id'),
 	);
+
+	public static $HasSearch = true;
 
 	public function __construct($key = null) {
 		$this->_linked = array(

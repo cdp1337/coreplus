@@ -7,20 +7,23 @@
 		<require name="JQuery-Full" type="component" version="1.9"/>
 	</requires>
 	<permissions>
-		<permission key="blog_manage" description="Manage Blogs"/>
+		<permission key="/blog/manage_all" description="Manage Blogs"/>
 	</permissions>
 	<hooks>
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="5a222587aa6cb8dcee15b793a2020b4c"/>
-		<file filename="controllers/BlogController.php" md5="0611ad0c7be311b0d4c190a6231427fb">
+		<file filename="CHANGELOG" md5="4e8aafaf240b9ad1d9f57683781b7edb"/>
+		<file filename="controllers/BlogController.php" md5="bc65362d8aa6085c8fec111a4012caab">
 			<controller name="BlogController"/>
 		</file>
-		<file filename="helpers/BlogHelper.php" md5="8aeede89c7dfe26dd2bcb117549953c1">
+		<file filename="controllers/BlogWidgetController.php" md5="b7ef7dc60aadee17092504922ffbd7d8">
+			<controller name="BlogWidgetController"/>
+		</file>
+		<file filename="helpers/BlogHelper.php" md5="212027dc352255c40525032ebc8fd698">
 			<class name="BlogHelper"/>
 		</file>
-		<file filename="models/BlogArticleModel.php" md5="11fb87529be5e587f02a728870c89939">
+		<file filename="models/BlogArticleModel.php" md5="ff5049bcf671d41d0baf37d4e4cbaaa5">
 			<class name="BlogArticleModel"/>
 		</file>
 		<file filename="models/BlogModel.php" md5="37bc0cf4adbacd59cd96fcb68f39a080">
@@ -30,26 +33,42 @@
 		<file filename="upgrades/130_to_140_published.php" md5="4ab899aa7768154bde4f5197a7cfbf2b"/>
 		<file filename="upgrades/130_to_140_selectable.php" md5="33c3b2e0c9456a6a900d7340f1c65c5b"/>
 		<file filename="upgrades/150_to_151_filepathchange.php" md5="d37162704ef850a8954bf11dcc66dc43"/>
+		<file filename="upgrades/next.php" md5="6b3303d860ae1ce0f118b63b1f3aa29c"/>
+		<file filename="widgets/BlogArticleWidget.php" md5="6b3ea0a6641e69178c6e0e2f8ab94325">
+			<class name="BlogArticleWidget"/>
+		</file>
+		<file filename="widgets/BlogSearchWidget.php" md5="a507d40a8ee8a3f556b833463205c033">
+			<class name="BlogSearchWidget"/>
+		</file>
 	</files>
 	<pages>
-		<page baseurl="/blog/admin" admin="1" access="p:blog_manage" title="Blog Administration" group="Content"/>
-		<page baseurl="/blog" title="Blogs"/>
+		<page baseurl="/blog/create" admin="1" access="p:/blog/manage_all" title="Create Blog" group="Content"/>
+		<page baseurl="/blog" title="Blogs" editurl="/blog/editindex"/>
+		<pagecreate title="Blog" baseurl="/blog/create"/>
 	</pages>
-	<description>Blog system.</description>
+	<widgets>
+		<widget baseurl="/blogsearch" title="Search All Blogs"/>
+		<widgetcreate title="Blog Articles" class="BlogArticleWidget"/>
+	</widgets>
+	<description>Advanced blogging system.</description>
 	<view searchdir="templates">
 		<file filename="templates/pages/blog/admin.tpl" md5="44274363e8c7fea512396a63293c63fd"/>
-		<file filename="templates/pages/blog/admin_view.tpl" md5="e1ca90792ff8835bee5ef1d03c54a851"/>
+		<file filename="templates/pages/blog/admin_view.tpl" md5="6cbb741118ecc6e6c388921a89eee01d"/>
 		<file filename="templates/pages/blog/article_create_update.tpl" md5="782384ef977b501e5b80dabf783ecd2d"/>
 		<file filename="templates/pages/blog/article_view.tpl" md5="03e79d65af8e9865f31b2ac1f05facee"/>
 		<file filename="templates/pages/blog/article_view/review-post.tpl" md5="bf28ec2ea5c0caf7e1a2f0fb55ab969f"/>
 		<file filename="templates/pages/blog/create.tpl" md5="88a92a02a91699df3f24063112502867"/>
 		<file filename="templates/pages/blog/editindex.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/blog/import.tpl" md5="7e3f8c90db26ba500fa9e3ee439d2655"/>
-		<file filename="templates/pages/blog/index.tpl" md5="e2fb2f2a1b19f35279ebe9a1eb6c863c"/>
+		<file filename="templates/pages/blog/index.tpl" md5="278cde1a74a2e1ab2fae315ba93862bd"/>
 		<file filename="templates/pages/blog/update.tpl" md5="e2df73ed8b507c4318fa29588015a80f"/>
 		<file filename="templates/pages/blog/view-blog.atom.tpl" md5="5e7fe2a6a81b5c70b69094dce22ee078"/>
 		<file filename="templates/pages/blog/view-blog.rss.tpl" md5="dc2fd8c75e28eb869d068c1919654c96"/>
 		<file filename="templates/pages/blog/view-blog.tpl" md5="7de8922f83fdb8451e0581bfa71527e0"/>
+		<file filename="templates/pages/blogwidget/create_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/widgets/blog/recent.tpl" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="templates/widgets/blog/search.tpl" md5="8caeeca1b465a469f10f8fe7e9f55c9a"/>
+		<file filename="templates/widgets/blogsearch.tpl" md5="8caeeca1b465a469f10f8fe7e9f55c9a"/>
 	</view>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.1.0"/>
@@ -93,9 +112,12 @@
 		<upgrade from="1.5.3" to="1.5.4"/>
 		<upgrade from="1.5.4" to="1.5.5"/>
 		<upgrade from="1.5.5" to="1.5.6"/>
+		<upgrade from="next" to="next">
+			<php file="upgrades/next_page_updates.php"/>
+		</upgrade>
 	</upgrades>
 	<assets>
-		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>
+		<file filename="assets/css/blog.css" md5="1e4c4e40cb33dcae8f62d36404c5e117"/>
 		<file filename="assets/images/valid-atom.png" md5="e343955a970cb2f7834fdb550f600ab2"/>
 		<file filename="assets/images/valid-rss.png" md5="7dac8fdd319e86cf82fa27bc7e2d416f"/>
 		<file filename="assets/js/blog-waypoint-scroll.js" md5="33b327ff598cb3c05f8a2d109ca6d9f9"/>

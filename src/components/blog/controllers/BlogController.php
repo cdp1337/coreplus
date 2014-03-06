@@ -9,12 +9,12 @@
 class BlogController extends Controller_2_1 {
 
 	/**
-	 * This is the frontend blog listing page
+	 * The frontend listing page that displays all blog articles that are published across the system.
 	 */
 	public function index(){
 		$view     = $this->getView();
 		$request  = $this->getPageRequest();
-		$manager  = \Core\user()->checkAccess('p:blog_manage');
+		$manager  = \Core\user()->checkAccess('p:/blog/manage_all');
 
 
 		// Get a list of all the blogs on the system.  I'll get the page object from each one and see if the current user has access
@@ -43,6 +43,15 @@ class BlogController extends Controller_2_1 {
 
 		$factory = new ModelFactory('BlogArticleModel');
 		$factory->where('blogid IN ' . implode(',', $ids));
+
+		if($request->getParameter('q')){
+			$query = $request->getParameter('q');
+			$factory->where(\Core\Search\Helper::GetWhereClause($request->getParameter('q')));
+		}
+		else{
+			$query = null;
+		}
+
 		$factory->order('published DESC');
 		if(!$editor){
 			// Limit these to published articles.
@@ -60,6 +69,7 @@ class BlogController extends Controller_2_1 {
 		$view->assign('articles', $articles);
 		$view->assign('page', $page);
 		$view->assign('filters', $filters);
+		$view->assign('query', $query);
 		if ($editor) {
 			//$view->addControl('Add Blog Article', '/blog/article/create/' . $blog->get('id'), 'add');
 		}
@@ -73,7 +83,7 @@ class BlogController extends Controller_2_1 {
 	 * Edit the index listing page.
 	 */
 	public function editindex() {
-		if (!$this->setAccess('p:blog_manage')) {
+		if (!$this->setAccess('p:/blog/manage_all')) {
 			return View::ERROR_ACCESSDENIED;
 		}
 
@@ -86,88 +96,9 @@ class BlogController extends Controller_2_1 {
 
 		$form->addElement('submit', array('value' => 'Update Page Listing'));
 
+		$view->mastertemplate = 'admin';
 		$view->title = 'Update Page Listing';
 		$view->assignVariable('form', $form);
-	}
-
-	/**
-	 * Display all blogs in an administrative interface.
-	 *
-	 * Requires the p:blog_manage permission.
-	 */
-	public function admin() {
-		// This is a manager-only function!
-		if (!$this->setAccess('p:blog_manage')) {
-			return View::ERROR_ACCESSDENIED;
-		}
-
-		$view  = $this->getView();
-		$blogs = BlogModel::Find(null, null, null);
-
-		$view->title = 'Blog Administration';
-		$view->assignVariable('blogs', $blogs);
-		$view->addControl('Add Blog', '/blog/create', 'add');
-		$view->addControl('All Articles', '/blog/admin/view', 'tasks');
-	}
-
-	/**
-	 * View a specific blog in an admin-type view.  This provides more analytical data than
-	 */
-	public function admin_view(){
-		if (!$this->setAccess('p:blog_manage')) {
-			return View::ERROR_ACCESSDENIED;
-		}
-
-		$view  = $this->getView();
-		$request = $this->getPageRequest();
-
-		if($request->getParameter(0)){
-			// A specific blog was requested, limit results to that!
-			$blog = new BlogModel($request->getParameter(0));
-			if (!$blog->exists()) {
-				return View::ERROR_NOTFOUND;
-			}
-			$blogid = $blog->get('id');
-			$title = $blog->get('title') . ' Articles';
-		}
-		else{
-			$blog = null;
-			$blogid = null;
-			$title = 'All Articles';
-		}
-
-
-		$filters = new FilterForm();
-		$filters->setName('blog-admin-' . $blogid);
-		$filters->haspagination = true;
-		$filters->hassort = true;
-		$filters->setSortkeys(array('created', 'title', 'status', 'published', 'updated'));
-		$filters->load($request);
-
-
-		$factory = new ModelFactory('BlogArticleModel');
-		if($blogid){
-			$factory->where('blogid = ' . $blogid);
-		}
-		$filters->applyToFactory($factory);
-		$articles = $factory->get();
-
-
-		if($blogid){
-			if($blog->get('type') == 'remote') {
-				$view->addControl('Import Feed', '/blog/import/' . $blog->get('id'), 'exchange');
-			}
-			else{
-				$view->addControl('Add Blog Article', '/blog/article/create/' . $blog->get('id'), 'add');
-			}
-		}
-
-		$view->title = $title;
-		$view->assign('articles', $articles);
-		$view->assign('filters', $filters);
-		$view->assign('blogid', $blogid);
-
-		//var_dump($articles);
 	}
 
 	/**
@@ -182,7 +113,7 @@ class BlogController extends Controller_2_1 {
 		if (!$blog->exists()) {
 			return View::ERROR_NOTFOUND;
 		}
-		$manager = \Core\user()->checkAccess('p:blog_manage');
+		$manager = \Core\user()->checkAccess('p:/blog/manage_all');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 		$viewer  = \Core\user()->checkAccess($blog->get('access')) || $editor;
 
@@ -221,7 +152,7 @@ class BlogController extends Controller_2_1 {
 	 * Create a new blog page
 	 */
 	public function create() {
-		if (!$this->setAccess('p:blog_manage')) {
+		if (!$this->setAccess('p:/blog/manage_all')) {
 			return View::ERROR_ACCESSDENIED;
 		}
 
@@ -235,7 +166,8 @@ class BlogController extends Controller_2_1 {
 
 		$form->addElement('submit', array('value' => 'Create'));
 
-		$view->addBreadcrumb('Blog Administration', '/blog/admin');
+		//$view->addBreadcrumb('Blog Administration', '/blog/admin');
+		$view->mastertemplate = 'admin';
 		$view->title = 'Create Blog';
 		$view->assignVariable('form', $form);
 	}
@@ -244,7 +176,7 @@ class BlogController extends Controller_2_1 {
 	 * Update an existing blog page
 	 */
 	public function update() {
-		if (!$this->setAccess('p:blog_manage')) {
+		if (!$this->setAccess('p:/blog/manage_all')) {
 			return View::ERROR_ACCESSDENIED;
 		}
 
@@ -267,6 +199,7 @@ class BlogController extends Controller_2_1 {
 		$form->getElement('model[type]')->set('disabled', true);
 
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
+		$view->mastertemplate = 'admin';
 		$view->title = 'Update Blog';
 		$view->assignVariable('form', $form);
 	}
@@ -277,7 +210,7 @@ class BlogController extends Controller_2_1 {
 	 * @return int
 	 */
 	public function import() {
-		if (!$this->setAccess('p:blog_manage')) {
+		if (!$this->setAccess('p:/blog/manage_all')) {
 			return View::ERROR_ACCESSDENIED;
 		}
 
@@ -318,7 +251,7 @@ class BlogController extends Controller_2_1 {
 		if (!$blog->exists()) {
 			return View::ERROR_NOTFOUND;
 		}
-		$manager = \Core\user()->checkAccess('p:blog_manage');
+		$manager = \Core\user()->checkAccess('p:/blog/manage_all');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 
 		if (!$manager) {
@@ -330,7 +263,7 @@ class BlogController extends Controller_2_1 {
 		}
 
 		$blog->delete();
-		\core\redirect('/blog/admin');
+		\core\go_back();
 	}
 
 	/**
@@ -344,7 +277,7 @@ class BlogController extends Controller_2_1 {
 		if (!$blog->exists()) {
 			return View::ERROR_NOTFOUND;
 		}
-		$manager = \Core\user()->checkAccess('p:blog_manage');
+		$manager = \Core\user()->checkAccess('p:/blog/manage_all');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 
 		if (!$editor) {
@@ -360,6 +293,7 @@ class BlogController extends Controller_2_1 {
 		$article->set('blogid', $blog->get('id'));
 		$form = BlogHelper::GetArticleForm($article);
 
+		$view->mastertemplate = 'admin';
 		$view->templatename = 'pages/blog/article_create_update.tpl';
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->title = 'Create Blog Article';
@@ -374,27 +308,24 @@ class BlogController extends Controller_2_1 {
 		$view    = $this->getView();
 		$request = $this->getPageRequest();
 
-		$blog = new BlogModel($request->getParameter(0));
+		$article = new BlogArticleModel($request->getParameter(0));
+		if (!$article->exists()) {
+			return View::ERROR_NOTFOUND;
+		}
+		$blog = $article->getLink('Blog');
 		if (!$blog->exists()) {
 			return View::ERROR_NOTFOUND;
 		}
-		$manager = \Core\user()->checkAccess('p:blog_manage');
+		$manager = \Core\user()->checkAccess('p:/blog/manage_all');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 
 		if (!$editor) {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$article = new BlogArticleModel($request->getParameter(1));
-		if (!$article->exists()) {
-			return View::ERROR_NOTFOUND;
-		}
-		if ($article->get('blogid') != $blog->get('id')) {
-			return View::ERROR_NOTFOUND;
-		}
-
 		$form = BlogHelper::GetArticleForm($article);
 
+		$view->mastertemplate = 'admin';
 		$view->templatename = 'pages/blog/article_create_update.tpl';
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->addBreadcrumb($article->get('title'), $article->get('rewriteurl'));
@@ -414,7 +345,7 @@ class BlogController extends Controller_2_1 {
 		if (!$blog->exists()) {
 			return View::ERROR_NOTFOUND;
 		}
-		$manager = \Core\user()->checkAccess('p:blog_manage');
+		$manager = \Core\user()->checkAccess('p:/blog/manage_all');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 
 		if (!$editor) {
@@ -457,7 +388,7 @@ class BlogController extends Controller_2_1 {
 		if (!$blog->exists()) {
 			return View::ERROR_NOTFOUND;
 		}
-		$manager = \Core\user()->checkAccess('p:blog_manage');
+		$manager = \Core\user()->checkAccess('p:/blog/manage_all');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 
 		if (!$editor) {
@@ -496,23 +427,19 @@ class BlogController extends Controller_2_1 {
 		$view    = $this->getView();
 		$request = $this->getPageRequest();
 
-		$blog = new BlogModel($request->getParameter(0));
+		$article = new BlogArticleModel($request->getParameter(0));
+		if (!$article->exists()) {
+			return View::ERROR_NOTFOUND;
+		}
+		$blog = $article->getLink('Blog');
 		if (!$blog->exists()) {
 			return View::ERROR_NOTFOUND;
 		}
-		$manager = \Core\user()->checkAccess('p:blog_manage');
+		$manager = \Core\user()->checkAccess('p:/blog/manage_all');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 
 		if (!$editor) {
 			return View::ERROR_ACCESSDENIED;
-		}
-
-		$article = new BlogArticleModel($request->getParameter(1));
-		if (!$article->exists()) {
-			return View::ERROR_NOTFOUND;
-		}
-		if ($article->get('blogid') != $blog->get('id')) {
-			return View::ERROR_NOTFOUND;
 		}
 
 		if (!$request->isPost()) {
@@ -520,7 +447,7 @@ class BlogController extends Controller_2_1 {
 		}
 
 		$article->delete();
-		Core::GoBack(1);
+		\Core\go_back();
 	}
 
 	/**
@@ -537,7 +464,7 @@ class BlogController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 
-		$manager = \Core\user()->checkAccess('p:blog_manage');
+		$manager = \Core\user()->checkAccess('p:/blog/manage_all');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 		$viewer  = \Core\user()->checkAccess($blog->get('access')) || $editor;
 
@@ -563,20 +490,20 @@ class BlogController extends Controller_2_1 {
 		$page     = $blog->getLink('Page');
 		$request  = $this->getPageRequest();
 
-		$manager  = \Core\user()->checkAccess('p:blog_manage');
+		$manager  = \Core\user()->checkAccess('p:/blog/manage_all');
 		$editor   = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 		$viewer   = \Core\user()->checkAccess($blog->get('access')) || $editor;
 
 		// Get the latest published article's update date.  This will be used for the blog updated timestamp.
-		$latest = $blog->getLinkFactory('BlogArticle');
-		$latest->order('published DESC');
-
-		$latest->where('status = published');
-		// And where the published date is >= now.
-		$latest->where('published <= ' . CoreDateTime::Now('U', Time::TIMEZONE_GMT));
-
-		$latest->limit(1);
-		$latestarticle = $latest->get();
+		// (This doesn't have a whole lot of benefit above the ModelFactory, simply illustrating a different way to query data).
+		$latest = Dataset::Init()
+			->select('*')
+			->table('page')
+			->where('parenturl = ' . $blog->get('baseurl'))
+			->where('published_status = published')
+			->order('published DESC')
+			->limit(1)
+			->current();
 
 
 		$filters = new FilterForm();
@@ -606,11 +533,12 @@ class BlogController extends Controller_2_1 {
 
 		$filters->load($this->getPageRequest());
 
-		$factory = $blog->getLinkFactory('BlogArticle');
+		$factory = new ModelFactory('PageModel');
+		$factory->where('parenturl = ' . $blog->get('baseurl'));
 		$factory->order('published DESC');
 		if(!$editor){
 			// Limit these to published articles.
-			$factory->where('status = published');
+			$factory->where('published_status = published');
 
 			// And where the published date is >= now.
 			$factory->where('published <= ' . CoreDateTime::Now('U', Time::TIMEZONE_GMT));
@@ -625,7 +553,7 @@ class BlogController extends Controller_2_1 {
 		$view->assign('page', $page);
 		$view->assign('filters', $filters);
 		$view->assign('canonical_url', Core::ResolveLink($blog->get('baseurl')));
-		$view->assign('last_updated', ($latestarticle ? $latestarticle->get('updated') : 0));
+		$view->assign('last_updated', ($latest ? $latest['updated'] : 0));
 		$view->assign('servername', SERVERNAME_NOSSL);
 
 		// Add the extra view types for this page
@@ -637,12 +565,12 @@ class BlogController extends Controller_2_1 {
 				$view->addControl('Import Feed', '/blog/import/' . $blog->get('id'), 'exchange');
 			}
 			else{
-				$view->addControl('Add Blog Article', '/blog/article/create/' . $blog->get('id'), 'add');
+				$view->addControl('Add Article', '/content/create?parenturl=' . $blog->get('baseurl'), 'add');
 			}
 		}
 		if ($manager) {
 			$view->addControl('Edit Blog', '/blog/update/' . $blog->get('id'), 'edit');
-			$view->addControl('All Articles', '/blog/admin/view/' . $blog->get('id'), 'tasks');
+			$view->addControl('All Articles', '/admin/pages/?filter[parenturl]=' . $blog->get('baseurl'), 'tasks');
 		}
 		$view->addControl('RSS Feed', Core::ResolveLink($blog->get('baseurl')) . '.rss', 'rss');
 		//$view->addControl('Atom Feed', Core::ResolveLink($blog->get('baseurl')) . '.atom', 'rss');
@@ -653,7 +581,7 @@ class BlogController extends Controller_2_1 {
 		/** @var $page PageModel */
 		$page = $article->getLink('Page');
 		//$articles = $blog->getLink('BlogArticle');
-		$manager = \Core\user()->checkAccess('p:blog_manage');
+		$manager = \Core\user()->checkAccess('p:/blog/manage_all');
 		$editor  = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 		$author = UserModel::Construct($article->get('authorid'));
 
@@ -695,7 +623,7 @@ class BlogController extends Controller_2_1 {
 		$view->assign('body', \Core\parse_html($article->get('body')));
 
 		if ($editor) {
-			$view->addControl('Edit Article', '/blog/article/update/' . $blog->get('id') . '/' . $article->get('id'), 'edit');
+			$view->addControl('Edit Article', '/blog/article/update/' . $article->get('id'), 'edit');
 			if($article->get('status') == 'draft'){
 				$view->addControl( [
 					'title'   => 'Publish Article',
@@ -707,7 +635,7 @@ class BlogController extends Controller_2_1 {
 			$view->addControl(
 				array(
 					'title'   => 'Delete Article',
-					'link'    => '/blog/article/delete/' . $blog->get('id') . '/' . $article->get('id'),
+					'link'    => '/blog/article/delete/' . $article->get('id'),
 					'icon'    => 'remove',
 					'confirm' => 'Remove blog article?'
 				)

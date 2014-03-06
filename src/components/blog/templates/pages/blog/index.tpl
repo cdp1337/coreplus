@@ -1,7 +1,13 @@
 {css src="assets/css/blog.css"}{/css}
 
+{widget baseurl="/blogsearch/execute"}
+
 {if count($articles) == 0}
-	<p class="message-info">This blog has no articles created yet, please try back later.</p>
+	{if $query}
+		<p class="message-info">Your search yielded no results.</p>
+	{else}
+		<p class="message-info">This blog has no articles created yet, please try back later.</p>
+	{/if}
 {/if}
 
 {$filters->pagination()}

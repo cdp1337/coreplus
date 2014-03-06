@@ -40,3 +40,19 @@ Backend styles
 table.listing tbody .blog-article-status-draft {
 	background-color: rgba(200, 150, 50, 0.4);
 }
+
+/**
+ * Search Widget
+ */
+.blog-widget-search .blog-widget-search-entry {
+	float: right;
+	position: relative;
+}
+.blog-widget-search .blog-widget-search-entry i {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+}
+.blog-widget-search .blog-widget-search-submit {
+	display: none;
+}

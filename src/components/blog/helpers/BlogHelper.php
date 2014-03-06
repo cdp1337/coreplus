@@ -81,11 +81,23 @@ abstract class BlogHelper {
 		$model = $form->getModel();
 		$page = $form->getModel('page');
 		$page->set('fuzzy', '1'); // Needs to be fuzzy since it supports children
+		$isnew = !$model->exists();
 
 		$model->save();
+
+		$page->set('component', 'blog');
+		$page->set('editurl', '/blog/update/' . $model->get('id'));
+		$page->set('deleteurl', '/blog/delete/' . $model->get('id'));
 		$page->save();
 
-		return $model->get('baseurl');
+		if($isnew){
+			Core::SetMessage('Created blog successfully!', 'success');
+			return $page->get('baseurl');
+		}
+		else{
+			Core::SetMessage('Updated blog successfully!', 'success');
+			return 'back';
+		}
 	}
 
 	/**
@@ -139,10 +151,11 @@ abstract class BlogHelper {
 
 			$article->save();
 
-			if($isnew){
-				// Set the baseurls too!
-				$page->set('baseurl', $article->get('baseurl'));
-			}
+			// Set the baseurl and some other data on the page
+			$page->set('baseurl', $article->get('baseurl'));
+			$page->set('component', 'blog');
+			$page->set('editurl', '/blog/article/update/' . $article->get('blogid') . '/' . $article->get('id'));
+
 			$page->save();
 
 			// if it's new, allow the user to post it to facebook.
@@ -181,7 +194,7 @@ abstract class BlogHelper {
 			}
 
 			Core::SetMessage(($isnew ? 'Created' : 'Updated') . ' blog article successfully!', 'success');
-			return Core::GetHistory();
+			return 'back';
 			//return $article->get('baseurl');
 		}
 		catch(ModelValidationException $e){
@@ -212,7 +225,9 @@ abstract class BlogHelper {
 		try{
 			$page = $form->getModel('page');
 			$page->save();
-			return $page->get('baseurl');
+
+			Core::SetMessage('Updated Listing Information', 'success');
+			return 'back';
 		}
 		catch(Exception $e){
 			\Core\ErrorManagement\exception_handler($e);
