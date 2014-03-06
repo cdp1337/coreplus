@@ -79,6 +79,41 @@ class PageModel extends Model {
 				'grouptype' => 'tabs',
 			),
 		),
+		'editurl' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'default' => '',
+			'required' => false,
+			'null' => false,
+			'form' => array(
+				'type' => 'disabled',
+			),
+			'comment' => 'The edit URL for this page, set by the creating application.',
+		),
+		'deleteurl' => array(
+			'type'      => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'default'   => '',
+			'required'  => false,
+			'null'      => false,
+			'form' => array(
+				'type' => 'disabled',
+			),
+			'comment'   => 'The URL to perform the POST on to delete this page',
+		),
+		// Added on 2014.02 to keep track of which pages need to be cleaned up on component removal.
+		// Do not enforce this until all components support it.
+		'component'    => array(
+			'type'      => Model::ATT_TYPE_STRING,
+			'maxlength' => 48,
+			'required'  => false,
+			'default'   => '',
+			'null'      => false,
+			'form' => array(
+				'type' => 'disabled',
+			),
+			'comment'   => 'The component that registered this page, useful for uninstalling and cleanups',
+		),
 		'theme_template' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
@@ -159,6 +194,35 @@ class PageModel extends Model {
 			'default' => 1,
 			'comment' => 'Selectable as a parent url and sitemap page',
 			'formtype' => 'disabled',
+		),
+		'popularity' => array(
+			'type' => Model::ATT_TYPE_FLOAT,
+			'default' => 0,
+			'comment' => 'Cache of the popularity score of this page',
+			'formtype' => 'disabled',
+		),
+		'published_status'      => array(
+			'type'    => Model::ATT_TYPE_ENUM,
+			'options' => array('published', 'draft'),
+			'default' => 'published',
+			'form' => array(
+				'title' => 'Published Status',
+				'description' => 'Set this to "draft" to make it visible to editors and admins
+					only.  Useful for saving a page without releasing it to public users.',
+				'group' => 'Publish Settings',
+				'grouptype' => 'tabs',
+			)
+		),
+		'published' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'form' => array(
+				'title' => 'Published Date',
+				'type' => 'datetime',
+				'description' => 'Leave this blank for default published time, or set it to a desired date/time to set the published time.  Note, you CAN set this to a future date to set the page to be published at that time.',
+				'group' => 'Publish Settings',
+				'grouptype' => 'tabs',
+			),
+			'comment' => 'The published date',
 		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
@@ -428,6 +492,14 @@ class PageModel extends Model {
 				'type'        => 'text',
 				'value'       => (($meta = $this->getMeta('title')) ? $meta->get('meta_value_title') : null),
 			),
+			// Image
+			'image' => array(
+				'title'       => 'Image',
+				'description' => 'Optional image to showcase this page',
+				'type'        => 'file',
+				'basedir'     => 'public/page/image/',
+				'value'       => (($meta = $this->getMeta('image')) ? $meta->get('meta_value_title') : null),
+			),
 			// Author
 			'author' => array(
 				'title'       => 'Author',
@@ -448,8 +520,8 @@ class PageModel extends Model {
 				'model'       => $this,
 			),
 			'description' => array(
-				'title'       => 'Description',
-				'description' => 'Text that displays on search engine and social network preview links',
+				'title'       => 'Description/Teaser',
+				'description' => 'Teaser text that displays on search engine and social network preview links',
 				'type'        => 'textarea',
 				'value'       => (($meta = $this->getMeta('description')) ? $meta->get('meta_value_title') : null),
 			)
@@ -945,7 +1017,7 @@ class PageModel extends Model {
 		return $transport;
 	}
 
-	public function  save() {
+	public function save() {
 		// Ensure some helper variables are set.
 		if (!$this->get('rewriteurl')) $this->set('rewriteurl', $this->get('baseurl'));
 
@@ -969,6 +1041,21 @@ class PageModel extends Model {
 			$map->set('fuzzy', $this->_data['fuzzy']);
 			$map->save();
 		}
+
+		// Make sure the page's published date is correct.
+		if($this->get('published_status') == 'published' && !$this->get('published')){
+			// If this is set to published, but the date hasn't been set yet, (ie: the user just didn't fill in a date),
+			// set the published date to right now!
+			$this->set('published', \Core\Date\DateTime::NowGMT());
+		}
+		elseif($this->get('published_status') == 'draft'){
+			// Draft pages are not allowed to have a published date at all.
+			// This doesn't have any technical reason, simply to keep the data clean.
+			$this->set('published', 0);
+		}
+
+		// Update this page's popularity score, just for freshness.
+		$this->set('popularity', $this->getPopularityScore());
 
 		return parent::save();
 	}
@@ -1049,6 +1136,99 @@ class PageModel extends Model {
 
 		return $ret;
 		//return $this->_getParentTree();
+	}
+
+	/**
+	 * Calculate the popularity score of this page based on views and age.
+	 *
+	 * This will actually perform the calculation, not just use the cached version.
+	 *
+	 * @return float
+	 */
+	public function getPopularityScore(){
+		$score = $this->get('pageviews');
+		$created = $this->get('published');
+
+		if(!$created){
+			// If this page is not published yet, then it shouldn't have a score.
+			return 0.000;
+		}
+
+		// log(10)   = 1
+		// log(100)  = 2
+		// log(1000) = 3
+		$order = log10($score);
+
+		// Number of seconds that have elapsed since creation and now.
+		$seconds = time() - $created;
+
+		// Convert the seconds age to months.  Each month that lapses is another magnitude required to remain popular.
+		// Estimating that each month is approximately 28.5 days long.
+		$secs_per_month = 86400 * 28.5;
+		// (scratch that, 57, [or two months], as a date basis is better.)
+		$months = $seconds / ($secs_per_month * 2);
+
+		// If the age is less than a week, then average the age up to a week to pad new pages a little.
+		// This helps prevent new pages from severely out-ranking actually-popular pages.
+		$months = max($months, 0.5);
+
+		// This effectively makes it so
+		// 10 views     now         = 0.5 (with the above skewing)
+		// 32 views     now         = 1.
+		// 100 views    in 2 months = 1.
+		// 1000 views   in 4 months = 1.
+		// 10000 views  in 6 months = 1.
+		// 100000 views in 8 months = 1.
+		$long_number = $order - $months;
+
+		// Increment score by 10 to help keep them above non-ranked pages.
+		$long_number += 10;
+
+		return round($long_number, 5);
+	}
+
+	/**
+	 * Get the teaser of this page, aka meta description
+	 *
+	 * @return string
+	 */
+	public function getTeaser(){
+		$meta = $this->getMeta('description');
+		return $meta ? $meta->get('meta_value_title') : '';
+	}
+	/**
+	 * Get the image object or null
+	 *
+	 * @return Core\Filestore\File|null
+	 */
+	public function getImage(){
+		$meta = $this->getMeta('image');
+		if(!$meta) return null;
+
+		$file = $meta->get('meta_value_title');
+		$f = \Core\Filestore\Factory::File($file);
+		return $f;
+	}
+
+
+	/**
+	 * Get if this page is published and the published date is at least now or earlier.
+	 *
+	 * @return bool
+	 */
+	public function isPublished(){
+		if($this->get('published_status') == 'draft'){
+			// The page is set as "draft".  Not published.
+			return false;
+		}
+
+		if($this->get('published') > \Core\Date\DateTime::NowGMT()){
+			// The publish date is in the future. Not published.
+			return false;
+		}
+
+		// That's it, there are only two things that go into isPublished.
+		return true;
 	}
 
 	private function _getParentTree($antiinfiniteloopcounter = 5) {
@@ -1637,5 +1817,21 @@ class PageModel extends Model {
 
 		// And here ya go!
 		return $opts;
+	}
+
+	/**
+	 * Update all pages' popularity ranking as part of a hook.
+	 *
+	 * @return bool
+	 */
+	public static function PopularityMassUpdateHook(){
+		$pages = PageModel::Find();
+		foreach($pages as $page){
+			/** @var PageModel $page */
+			$page->save();
+			// Yup, all that is needed to be done is save the page.
+			// The PageModel will auto-update the popularity ranking on saves.
+		}
+		return true;
 	}
 }
