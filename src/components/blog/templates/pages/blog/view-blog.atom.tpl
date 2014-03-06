@@ -17,8 +17,8 @@
 
 	<entry>
 		<title>{$article.title|escape}</title>
-		<link href="{$article->getResolvedLink()}"/>
-		<id>{$servername}/blog/view/{$blog.id}/{$article.id}</id>
+		<link href="{link $article.baseurl}"/>
+		<id>{$servername}{$article.baseurl}</id>
 		{if $article->getAuthor() && Core::IsComponentAvailable('user-social')}
 
 		<author>

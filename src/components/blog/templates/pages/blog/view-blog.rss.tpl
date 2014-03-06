@@ -11,7 +11,7 @@
 		<language>en-us</language>
 		<lastBuildDate>{date date="`$last_updated`" format="r"}</lastBuildDate>
 		<docs>http://www.rssboard.org/rss-specification</docs>
-		<generator>Core Plus {if $smarty.const.DEVELOPMENT_MODE}{Core::GetComponent('core')->getVersion()}{/if}</generator>
+		<generator>Core Plus{if $smarty.const.DEVELOPMENT_MODE} {Core::GetComponent('core')->getVersion()}{/if}</generator>
 
 		<atom:link href="{$canonical_url}.rss"  rel="self" type="application/rss+xml" />
 		<atom:link href="{$canonical_url}"      rel="alternate" type="text/html" />
@@ -22,14 +22,14 @@
 
 		<item>
 			<title>{$article.title|escape}</title>
-			<link>{$article->getResolvedLink()}</link>
+			<link>{link $article.baseurl}</link>
 			<description><![CDATA[{$article->getTeaser()}]]></description>
 			<pubDate>{date format='r' date="`$article.published`"}</pubDate>
-			<guid>{$servername}/blog/view/{$blog.id}/{$article.id}</guid>
+			<guid>{$servername}{$article.baseurl}</guid>
 			{if $article->getAuthor() && Core::IsComponentAvailable('user-social')}
 <dc:creator>{$article->getAuthor()->getDisplayName()|escape}</dc:creator>{/if}
 
-			{if $article.image}
+			{if $article->getImage()}
 <media:thumbnail url="{$article->getImage()->getPreviewURL('200x200')}"/>
 			{/if}
 
