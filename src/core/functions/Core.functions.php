@@ -403,7 +403,7 @@ function go_back($depth=1) {
 		// go back to the page before that!
 		// This can happen commonly on form submissions.
 		// You display a form on page X, submit it, and request to go back,
-		// but simply dsiplaying the same page should be done with reload.
+		// but simply displaying the same page should be done with reload.
 		$hist = \Core::GetHistory(2);
 	}
 
