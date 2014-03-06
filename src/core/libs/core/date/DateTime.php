@@ -200,10 +200,12 @@ class DateTime extends \DateTime{
 		$nowStamp = $now->format('Ymd');
 		$cStamp   = $this->format('Ymd', $timezone);
 
+		// @todo Locale Setting, g:i A needs to be the actual locale time instead.
+
 		// The first couple days will always be converted, today and tomorrow/yesterday.
-		if ($nowStamp - $cStamp == 0) return 'Today at ' . $this->format(DateTime::TIME, $timezone);
-		elseif ($nowStamp - $cStamp == 1) return 'Yesterday at ' . $this->format(DateTime::TIME, $timezone);
-		elseif ($nowStamp - $cStamp == -1) return 'Tomorrow at ' . $this->format(DateTime::TIME, $timezone);
+		if ($nowStamp - $cStamp == 0) return 'Today at ' . $this->format('g:i A', $timezone);
+		elseif ($nowStamp - $cStamp == 1) return 'Yesterday at ' . $this->format('g:i A', $timezone);
+		elseif ($nowStamp - $cStamp == -1) return 'Tomorrow at ' . $this->format('g:i A', $timezone);
 
 		// If accuracy is the minimum and neither today/tomorrow/yesterday, simply return the date.
 		if ($accuracy <= 2) return $this->format(DateTime::SHORTDATE, $timezone);
@@ -212,7 +214,7 @@ class DateTime extends \DateTime{
 		if (abs($nowStamp - $cStamp) > 6) return $this->format(DateTime::SHORTDATE, $timezone);
 
 		// Else, return the day of the week, followed by the time.
-		return $this->format('l \a\t ' . DateTime::TIME, $timezone);
+		return $this->format('l \a\t ' . 'g:i A', $timezone);
 	}
 
 
@@ -227,6 +229,18 @@ class DateTime extends \DateTime{
 	public static function Now($format = 'Y-m-d', $timezone = Timezone::TIMEZONE_DEFAULT){
 		$d = new DateTime();
 		return $d->format($format, $timezone);
+	}
+
+	/**
+	 * Shortcut function for getting the GMT time at "now".
+	 *
+	 * @param string $format the format to return, by default will return unix timestamp.
+	 *
+	 * @return string
+	 */
+	public static function NowGMT($format = 'U'){
+		$d = new DateTime();
+		return $d->format($format, Timezone::TIMEZONE_GMT);
 	}
 
 	/**
