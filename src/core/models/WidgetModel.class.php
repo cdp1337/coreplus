@@ -43,6 +43,11 @@ class WidgetModel extends Model {
 			'maxlength' => 128,
 			'required'  => true,
 			'null'      => false,
+			'link'      => [
+				'model' => 'WidgetInstance',
+				'type'  => Model::LINK_HASMANY,
+				'on'    => 'baseurl',
+			],
 		),
 		// This indicates which type of widgetarea it's installable to.
 		// ie: {widgetarea installable="/admin"} and {widgetarea installable="/user-social/view/###"}
@@ -66,6 +71,22 @@ class WidgetModel extends Model {
 			'type' => Model::ATT_TYPE_TEXT,
 			'formtype' => 'disabled',
 			'comment' => 'Provides a section for saving json-encoded settings on the widget.'
+		),
+		'editurl' => array(
+			'type'      => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'default'   => '',
+			'required'  => false,
+			'null'      => false,
+			'comment'   => 'The URL to edit this widget',
+		),
+		'deleteurl' => array(
+			'type'      => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'default'   => '',
+			'required'  => false,
+			'null'      => false,
+			'comment'   => 'The URL to perform the POST on to delete this widget',
 		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
@@ -228,7 +249,6 @@ class WidgetModel extends Model {
 		else $base = false;
 
 		// Logic for the Method.
-		//if(substr_count($base, '/') >= 1){
 		if ($base) {
 
 			$posofslash = strpos($base, '/');
