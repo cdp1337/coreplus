@@ -6,13 +6,17 @@
 		<require name="user" type="library"/>
 	</requires>
 	<permissions>
-		<permission key="gallery_manage" description="Manage Galleries"/>
+		<permission key="/gallery/manage_all" description="Manage All Galleries"/>
 	</permissions>
 	<pages>
 		<page baseurl="/gallery" admin="0" access="*" title="Gallery Listings"/>
-		<page baseurl="/gallery/admin" admin="1" access="p:gallery_manage" title="Gallery Albums Administration" group="Content"/>
-		<page baseurl="/gallerywidget/admin" admin="1" access="p:gallery_manage" title="Gallery Widgets Administration" group="Content" parenturl="/admin"/>
+		<page baseurl="/gallery/admin" admin="1" access="p:/gallery/manage_all" title="Gallery Albums Administration" group="Content"/>
+		<page baseurl="/gallerywidget/admin" admin="1" access="p:/gallery/manage_all" title="Gallery Widgets Administration" group="Content" parenturl="/admin"/>
+		<pagecreate title="Gallery" baseurl="/gallery/create"/>
 	</pages>
+	<widgets>
+		<widgetcreate title="Gallery" baseurl="/gallerywidget/create"/>
+	</widgets>
 	<description>
 		Gallery browsing system for core+
 	</description>

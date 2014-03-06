@@ -42,6 +42,8 @@ abstract class GalleryFormHandler{
 
 
 		$model = new WidgetModel('/gallery/view/' . $id);
+		$model->set('editurl', '/gallerywidget/update/' . $id);
+		$model->set('deleteurl', '/gallerywidget/delete/' . $id);
 		$model->set('title', $form->getElement('title')->get('value'));
 		$model->setSetting('album', $form->getElement('album')->get('value'));
 		$model->setSetting('count', $form->getElement('count')->get('value'));
@@ -51,6 +53,6 @@ abstract class GalleryFormHandler{
 
 		$model->save();
 
-		return '/gallerywidget/admin';
+		return 'back';
 	}
 }

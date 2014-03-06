@@ -24,7 +24,7 @@
 				<ul class="controls">
 				{*{a href="/calendaradmin/delete/`$e.id`" confirm="Do you really want to delete the event?" class="control control-delete"}Delete{/a}*}
 					<li>
-						{a href="/galleryadmin/widgets/update/`$widget->getID()`" class="control-edit"}
+						{a href="/gallerywidget/update/`$widget->getID()`" class="control-edit"}
 							<i class="icon-edit"></i>
 							<span>Edit</span>
 						{/a}

@@ -36,7 +36,7 @@ class GalleryController extends Controller_2_1 {
 			}
 		}
 
-		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$manager = \Core\user()->checkAccess('p:/gallery/manage_all');
 
 		// The user is allowed to edit the title now. -- 2013.08
 		//$view->title = 'Gallery Listings';
@@ -84,7 +84,7 @@ class GalleryController extends Controller_2_1 {
 	 */
 	public function updatelisting(){
 		$view = $this->getView();
-		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$manager = \Core\user()->checkAccess('p:/gallery/manage_all');
 
 		if(!$manager){
 			return View::ERROR_ACCESSDENIED;
@@ -135,14 +135,14 @@ class GalleryController extends Controller_2_1 {
 	/**
 	 * Create a new gallery album
 	 *
-	 * This is an administrative-only function, ie: p:gallery_manage.
+	 * This is an administrative-only function, ie: p:/gallery/manage_all.
 	 *
 	 * @return int
 	 */
 	public function create(){
 		$view = $this->getView();
 
-		if(!$this->setAccess('p:gallery_manage')){
+		if(!$this->setAccess('p:/gallery/manage_all')){
 			return View::ERROR_ACCESSDENIED;
 		}
 
@@ -169,7 +169,7 @@ class GalleryController extends Controller_2_1 {
 	/**
 	 * Edit an existing gallery album
 	 *
-	 * This should be either an administrative, (p:gallery_manage) or editpermission.
+	 * This should be either an administrative, (p:/gallery/manage_all) or editpermission.
 	 *
 	 * @return int
 	 */
@@ -182,8 +182,8 @@ class GalleryController extends Controller_2_1 {
 
 		if(!$album->exists()) return View::ERROR_NOTFOUND;
 
-		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || \Core\user()->checkAccess('p:gallery_manage'));
-		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || \Core\user()->checkAccess('p:/gallery/manage_all'));
+		$manager = \Core\user()->checkAccess('p:/gallery/manage_all');
 
 		if(!($editor || $manager)){
 			return View::ERROR_ACCESSDENIED;
@@ -225,8 +225,8 @@ class GalleryController extends Controller_2_1 {
 
 		if(!$album->exists()) return View::ERROR_NOTFOUND;
 
-		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || \Core\user()->checkAccess('p:gallery_manage'));
-		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || \Core\user()->checkAccess('p:/gallery/manage_all'));
+		$manager = \Core\user()->checkAccess('p:/gallery/manage_all');
 
 		if(!($editor || $manager)){
 			return View::ERROR_ACCESSDENIED;
@@ -248,7 +248,7 @@ class GalleryController extends Controller_2_1 {
 		$albumid = $request->getParameter(0);
 		$album   = GalleryAlbumModel::Construct($albumid);
 		$images  = $album->getLink('GalleryImage', 'weight');
-		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$manager = \Core\user()->checkAccess('p:/gallery/manage_all');
 		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
 		$uploader  = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
 
@@ -295,7 +295,7 @@ class GalleryController extends Controller_2_1 {
 		$albumid   = $request->getParameter(0);
 		$album     = new GalleryAlbumModel($albumid);
 		$image     = new GalleryImageModel($request->getParameter('image'));
-		$manager   = \Core\user()->checkAccess('p:gallery_manage');
+		$manager   = \Core\user()->checkAccess('p:/gallery/manage_all');
 		$editor    = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
 		$uploader  = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
 
@@ -510,7 +510,7 @@ class GalleryController extends Controller_2_1 {
 			return View::ERROR_BADREQUEST;
 		}
 
-		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$manager = \Core\user()->checkAccess('p:/gallery/manage_all');
 		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
 		$uploader  = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
 
@@ -557,7 +557,7 @@ class GalleryController extends Controller_2_1 {
 		$album = $image->getLink('GalleryAlbum');
 		$view = $this->getView();
 
-		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$manager = \Core\user()->checkAccess('p:/gallery/manage_all');
 		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
 		$uploader = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
 
@@ -684,7 +684,7 @@ class GalleryController extends Controller_2_1 {
 
 		$view = $this->getView();
 
-		$manager = \Core\user()->checkAccess('p:gallery_manage');
+		$manager = \Core\user()->checkAccess('p:/gallery/manage_all');
 		$editor  = (\Core\user()->checkAccess($album->get('editpermissions')) || $manager);
 		$uploader = (\Core\user()->checkAccess($album->get('uploadpermissions')) || $editor);
 

@@ -57,6 +57,10 @@ class GalleryWidgetController extends Controller_2_1{
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
+		if(!\Core\user()->checkAccess('p:/gallery/manage_all')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
 		$factory = new ModelFactory('WidgetModel');
 		$factory->where('baseurl LIKE /gallery/view/%');
 		$factory->order('title');
@@ -70,11 +74,22 @@ class GalleryWidgetController extends Controller_2_1{
 	}
 
 	/**
+	 * Direct alias of update.
+	 */
+	public function create(){
+		return $this->update();
+	}
+
+	/**
 	 * Page for creating and updating a gallery widget
 	 */
 	public function update(){
 		$view = $this->getView();
 		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/gallery/manage_all')){
+			return View::ERROR_ACCESSDENIED;
+		}
 
 		if($request->getParameter(0)){
 			$model = new WidgetModel('/gallery/view/' . $request->getParameter(0));
@@ -182,11 +197,38 @@ class GalleryWidgetController extends Controller_2_1{
 
 		$form->addElement('submit', array('value' => ($isnew ? 'Create' : 'Update') . ' Widget'));
 
+		$view->templatename = 'pages/gallerywidget/update.tpl';
 		$view->mastertemplate = 'admin';
-		$view->addBreadcrumb('Gallery Widgets', '/gallerywidget/admin');
 		$view->title = ($isnew ? 'Create' : 'Update') . ' Gallery Widget';
 		$view->assign('form', $form);
 
 		$view->addControl('Gallery Widgets', '/gallerywidget/admin', 'directory');
+	}
+
+	public function delete(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/gallery/manage_all')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		if($request->getParameter(0)){
+			$model = new WidgetModel('/gallery/view/' . $request->getParameter(0));
+		}
+		else{
+			$model = new WidgetModel();
+		}
+
+		if(!$request->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		if(!$model->exists()){
+			return View::ERROR_NOTFOUND;
+		}
+
+		$model->delete();
+		\Core\go_back();
 	}
 }
