@@ -33,6 +33,8 @@ function smarty_function_link($params, $template){
 	if(isset($params['href'])) $href = $params['href'];
 	elseif(isset($params['link'])) $href = $params['link'];
 	elseif(isset($params['to'])) $href = $params['to'];
+	elseif(isset($params[0])) $href = $params[0];
+	else $href = '/';
 	
 	$href = Core::ResolveLink($href);
 	
