@@ -86,6 +86,7 @@ require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
 Core\Utilities\Logger\write_debug('Loading configs');
 require_once(ROOT_PDIR . "core/libs/core/ConfigHandler.class.php");
 ConfigHandler::Singleton();
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Configuration loaded and available');
 
 
 // Give me core settings!
@@ -434,6 +435,7 @@ $maindefines_time = microtime(true);
 
 
 /**************************  START EXECUTION *****************************/
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus bootstrapped and application starting');
 
 // Datamodel, GOGO!
 //require_once(ROOT_PDIR . 'core/libs/core/datamodel/DMI.class.php');
@@ -459,6 +461,7 @@ catch (Exception $e) {
 		die();
 	}
 }
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus Data Model Interface loaded and ready');
 
 
 unset($start_time, $predefines_time, $preincludes_time, $maindefines_time);
