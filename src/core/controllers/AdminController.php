@@ -837,6 +837,50 @@ class AdminController extends Controller_2_1 {
 		$view->assign('form', $form);
 	}
 
+	/**
+	 * Page to test the UI of various Core elements
+	 */
+	public function testui(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('g:admin')){
+			// This test page is an admin-only utility.
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$lorem = new BaconIpsumGenerator();
+
+		$skins = [];
+		$admindefault = null;
+		foreach(ThemeHandler::GetTheme()->getSkins() as $dat){
+			$skins[ $dat['file'] ] = $dat['title'];
+			if($dat['admindefault']) $admindefault = $dat['file'];
+		}
+
+		if($request->getParameter('skin')){
+			$skin = $request->getParameter('skin');
+		}
+		else{
+			$skin = $admindefault;
+		}
+
+		$view->mastertemplate = $skin;
+		$view->title = 'Test General UI/UX';
+		$view->assign('lorem_p', $lorem->getParagraphsAsMarkup(3));
+		$view->assign(
+			'lis', [
+				$lorem->getWord(3),
+				$lorem->getWord(3),
+				$lorem->getWord(3),
+				$lorem->getWord(3),
+				$lorem->getWord(3),
+			]
+		);
+		$view->assign('skins', $skins);
+		$view->assign('skin', $skin);
+	}
+
 	public static function _WidgetCreateUpdateHandler(Form $form){
 		$baseurl = $form->getElement('baseurl')->get('value');
 

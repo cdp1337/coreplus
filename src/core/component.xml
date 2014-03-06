@@ -1493,6 +1493,7 @@
 		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="System Log" group="Admin"/>
 		<page baseurl="/form/testui" admin="1" access="g:admin" title="Test Form Element UI/UX" group="Theme and Layouts"/>
 		<page baseurl="/admin/pages" admin="1" access="p:/core/pages/view" title="All Pages" group="Content"/>
+		<page baseurl="/admin/testui" admin="1" access="g:admin" title="Test General UI/UX" group="Theme and Layouts"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/updater/check" title="Check For Updates" installable="/admin"/>
