@@ -316,6 +316,7 @@ class Core implements ISingleton {
 
 
 		if(!$enablecache || $tempcomponents == false){
+			\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Scanning for component.xml files manually');
 			Core\Utilities\Logger\write_debug('Scanning for component.xml files manually');
 
 			// Core is first, (obviously)
@@ -359,6 +360,7 @@ class Core implements ISingleton {
 				unset($c);
 			}
 			closedir($dh);
+			\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Component XML files scanned');
 
 			// Now I probably could actually load the components!
 
@@ -389,6 +391,7 @@ class Core implements ISingleton {
 
 		$list = $tempcomponents;
 
+		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Component metadata loaded, starting registration');
 		Core\Utilities\Logger\write_debug(' * Component metadata loaded, starting registration');
 
 		// The core component at a minimum needs to be loaded and registered.
