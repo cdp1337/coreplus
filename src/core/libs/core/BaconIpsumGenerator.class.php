@@ -165,13 +165,24 @@ class BaconIpsumGenerator {
 		'laborum'
 	);
 
+	/**
+	 * @param int $count
+	 * @return string
+	 */
+	public function getWord($count = 1){
+		$words = $this->_getWords();
+		$words = array_splice($words, 0, $count);
+
+		return ucfirst(implode(' ', $words));
+	}
+
 
 	/**
 	 * Get a complete sentence.
 	 *
 	 * @return string
 	 */
-	public function getSentence()	{
+	public function getSentence() {
 		// A sentence should be between 4 and 15 words.
 		$sentence = '';
 		$length = rand(4, 15);
