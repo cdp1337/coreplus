@@ -38,6 +38,24 @@ class Widget_2_1 {
 	private $_request = null;
 
 	/**
+	 * Set this to true if this widget is "simple".
+	 *
+	 * Simple widgets to not require additional controllers and use the settings for the admin configuration.
+	 *
+	 * @var bool
+	 */
+	public $is_simple = false;
+
+	/**
+	 * Array of the settings as the key and their default value as the value.
+	 *
+	 * This is primarily useful on simple widgets, where Core's built-in admin manages the configuration and creation.
+	 *
+	 * @var array
+	 */
+	public $settings = [];
+
+	/**
 	 * The WidgetInstance for this request.  Every widget MUST be instanced on some widgetarea.
 	 *
 	 * @var WidgetInstanceModel
@@ -121,6 +139,17 @@ class Widget_2_1 {
 	 */
 	public function getWidgetModel(){
 		return $this->getWidgetInstanceModel()->getLink('Widget');
+	}
+
+	/**
+	 * Get the form data for the settings on this widget.
+	 *
+	 * Has no effect for non-simple widgets.
+	 *
+	 * @return array
+	 */
+	public function getFormSettings(){
+		return [];
 	}
 
 
