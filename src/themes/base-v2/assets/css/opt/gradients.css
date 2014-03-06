@@ -59,19 +59,19 @@ table.listing th {
 
 /* line 38, ../../scss/opt/gradients.scss */
 .message-info {
-  background-color: #eee9ff;
+  background-color: #f5f2ff;
   /* Old browsers */
-  background-image: -moz-linear-gradient(top, #eee9ff 0%, #ad94ff 100%);
+  background-image: -moz-linear-gradient(top, #f5f2ff 0%, #b49dff 100%);
   /* FF3.6+ */
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #eee9ff), color-stop(100%, #ad94ff));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f2ff), color-stop(100%, #b49dff));
   /* Chrome,Safari4+ */
-  background-image: -webkit-linear-gradient(top, #eee9ff 0%, #ad94ff 100%);
+  background-image: -webkit-linear-gradient(top, #f5f2ff 0%, #b49dff 100%);
   /* Chrome10+,Safari5.1+ */
-  background-image: -o-linear-gradient(top, #eee9ff 0%, #ad94ff 100%);
+  background-image: -o-linear-gradient(top, #f5f2ff 0%, #b49dff 100%);
   /* Opera 11.10+ */
-  background-image: -ms-linear-gradient(top, #eee9ff 0%, #ad94ff 100%);
+  background-image: -ms-linear-gradient(top, #f5f2ff 0%, #b49dff 100%);
   /* IE10+ */
-  background-image: linear-gradient(to bottom, #eee9ff 0%, #ad94ff 100%);
+  background-image: linear-gradient(to bottom, #f5f2ff 0%, #b49dff 100%);
   /* W3C */
 }
 
@@ -95,19 +95,19 @@ table.listing th {
 
 /* line 44, ../../scss/opt/gradients.scss */
 .message-warning {
-  background-color: #fce8d1;
+  background-color: #faead7;
   /* Old browsers */
-  background-image: -moz-linear-gradient(top, #fce8d1 0%, #f7c082 100%);
+  background-image: -moz-linear-gradient(top, #faead7 0%, #f1c28c 100%);
   /* FF3.6+ */
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fce8d1), color-stop(100%, #f7c082));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #faead7), color-stop(100%, #f1c28c));
   /* Chrome,Safari4+ */
-  background-image: -webkit-linear-gradient(top, #fce8d1 0%, #f7c082 100%);
+  background-image: -webkit-linear-gradient(top, #faead7 0%, #f1c28c 100%);
   /* Chrome10+,Safari5.1+ */
-  background-image: -o-linear-gradient(top, #fce8d1 0%, #f7c082 100%);
+  background-image: -o-linear-gradient(top, #faead7 0%, #f1c28c 100%);
   /* Opera 11.10+ */
-  background-image: -ms-linear-gradient(top, #fce8d1 0%, #f7c082 100%);
+  background-image: -ms-linear-gradient(top, #faead7 0%, #f1c28c 100%);
   /* IE10+ */
-  background-image: linear-gradient(to bottom, #fce8d1 0%, #f7c082 100%);
+  background-image: linear-gradient(to bottom, #faead7 0%, #f1c28c 100%);
   /* W3C */
 }
 
@@ -131,19 +131,19 @@ table.listing th {
 
 /* line 50, ../../scss/opt/gradients.scss */
 .message-success {
-  background-color: #aaffaa;
+  background-color: #bfffbf;
   /* Old browsers */
-  background-image: -moz-linear-gradient(top, #aaffaa 0%, #55ff55 100%);
+  background-image: -moz-linear-gradient(top, #bfffbf 0%, #6aff6a 100%);
   /* FF3.6+ */
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #aaffaa), color-stop(100%, #55ff55));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bfffbf), color-stop(100%, #6aff6a));
   /* Chrome,Safari4+ */
-  background-image: -webkit-linear-gradient(top, #aaffaa 0%, #55ff55 100%);
+  background-image: -webkit-linear-gradient(top, #bfffbf 0%, #6aff6a 100%);
   /* Chrome10+,Safari5.1+ */
-  background-image: -o-linear-gradient(top, #aaffaa 0%, #55ff55 100%);
+  background-image: -o-linear-gradient(top, #bfffbf 0%, #6aff6a 100%);
   /* Opera 11.10+ */
-  background-image: -ms-linear-gradient(top, #aaffaa 0%, #55ff55 100%);
+  background-image: -ms-linear-gradient(top, #bfffbf 0%, #6aff6a 100%);
   /* IE10+ */
-  background-image: linear-gradient(to bottom, #aaffaa 0%, #55ff55 100%);
+  background-image: linear-gradient(to bottom, #bfffbf 0%, #6aff6a 100%);
   /* W3C */
 }
 

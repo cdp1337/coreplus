@@ -92,7 +92,7 @@ p[class^="message-"] .message-background-icon i {
 }
 
 /** And the specific message types icon colors **/
-3.message-note .message-background-icon i[class^="icon-"] {
+.message-note .message-background-icon i[class^="icon-"] {
 	 color: #BCB06D;
  }
 .message-info .message-background-icon i[class^="icon-"] {

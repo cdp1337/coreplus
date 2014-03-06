@@ -36,19 +36,19 @@ table.listing th {
 	@include gradient(#FCF0AD);
 }
 .message-info {
-	@include gradient(#EEE9FF);
+	@include gradient(#f5f2ff);
 }
 .message-deprecated {
 	@include gradient(#fff4bd);
 }
 .message-warning {
-	@include gradient(#fce8d1);
+	@include gradient(#faead7);
 }
 .message-tutorial {
 	@include gradient(#faefb9);
 }
 .message-success {
-	@include gradient(#AAFFAA);
+	@include gradient(#bfffbf);
 }
 .message-error {
 	@include gradient(#f0d8e0);
