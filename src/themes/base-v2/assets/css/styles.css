@@ -723,7 +723,7 @@ body {
   text-align: center;
   padding: 0;
   margin: 0;
-  background: #f3f3f3;
+  background: white;
   font-family: Helvetica, sans-serif;
   font-size: 11pt;
   color: #222;
@@ -1161,9 +1161,9 @@ span.button,
 input[type="submit"],
 input[type="reset"],
 button {
-  background: #666;
+  background-color: #a2a2a2;
   background-repeat: no-repeat;
-  border: 1px solid #555;
+  border: 1px solid #7a7a7a;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -1408,8 +1408,8 @@ p[class^="message-"] .message-background-icon i {
  */
 /* line 77, ../scss/_form_elements.scss */
 .formelement {
-  background: #e7e7e7;
-  border: 1px solid rgba(120, 120, 120, 0.1);
+  background: transparent;
+  border: 0px none;
 }
 /* line 82, ../scss/_form_elements.scss */
 .formelement.formsubmitinput, .formelement.formresetinput {
@@ -1419,7 +1419,7 @@ p[class^="message-"] .message-background-icon i {
 }
 /* line 89, ../scss/_form_elements.scss */
 .formelement .form-element-label {
-  background: #e7e7e7;
+  background: transparent;
   border: 0 none;
   color: #2f2f2f;
   line-height: 1.3em;
@@ -1476,7 +1476,7 @@ p[class^="message-"] .message-background-icon i {
 }
 /* line 148, ../scss/_form_elements.scss */
 .formelement .form-element-description {
-  background: #e7e7e7;
+  background: transparent;
   border: 0 none;
   color: #525252;
   font-size: 85%;
@@ -2398,36 +2398,36 @@ table.stacktrace td {
  **                            LISTING TABLES                               **
  *****************************************************************************
  *****************************************************************************/
-/* line 276, ../scss/styles.scss */
+/* line 277, ../scss/styles.scss */
 table.listing {
   width: 100%;
-  border: 1px solid #AAA;
+  border: 1px solid #bababa;
   border-collapse: collapse;
 }
 
-/* line 281, ../scss/styles.scss */
+/* line 282, ../scss/styles.scss */
 table.listing tr:nth-child(odd) {
-  background-color: #d4d6d9;
+  background-color: lightgrey;
 }
 
-/* line 284, ../scss/styles.scss */
+/* line 285, ../scss/styles.scss */
 table.listing th {
   padding: 0.15em 0.5em;
-  border: 1px solid #AAA;
+  border: 1px solid #949494;
   vertical-align: top;
-  background: #666;
+  background: #949494;
   color: #EEE;
 }
 
-/* line 291, ../scss/styles.scss */
+/* line 292, ../scss/styles.scss */
 table.listing td {
-  padding: 0.15em 0.5em;
-  border: 1px solid #AAA;
+  padding: 0.2em 0.5em;
+  border: 1px solid #bababa;
   vertical-align: top;
 }
 
 /* Give a little high-lighting effect on mouseover for the records. */
-/* line 298, ../scss/styles.scss */
+/* line 299, ../scss/styles.scss */
 table.listing tr:hover {
   background-color: #c7d5eb;
 }
@@ -2437,7 +2437,7 @@ table.listing tr:hover {
  **                          DEBUGGING CLASSES                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 310, ../scss/styles.scss */
+/* line 311, ../scss/styles.scss */
 pre.xdebug-var-dump {
   border-top: 2px solid #FFE5C0;
   padding: 0;
@@ -2448,7 +2448,7 @@ pre.xdebug-var-dump {
   margin-bottom: 0;
 }
 
-/* line 320, ../scss/styles.scss */
+/* line 321, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section {
   background: none repeat scroll 0 0 rgba(255, 255, 255, 0.35);
   border-color: #EEEEEE -moz-use-text-color;
@@ -2463,7 +2463,7 @@ pre.xdebug-var-dump .debug-section {
   position: relative;
 }
 
-/* line 333, ../scss/styles.scss */
+/* line 334, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section legend {
   font-size: 1em;
   margin: 0;
@@ -2471,28 +2471,28 @@ pre.xdebug-var-dump .debug-section legend {
   position: absolute;
 }
 
-/* line 339, ../scss/styles.scss */
+/* line 340, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section:last-child {
   margin-bottom: 0;
 }
 
-/* line 340, ../scss/styles.scss */
+/* line 341, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section i {
   color: #bbb;
 }
 
-/* line 341, ../scss/styles.scss */
+/* line 342, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section.collapsed {
   height: 1.2em;
   overflow: hidden;
 }
 
-/* line 345, ../scss/styles.scss */
+/* line 346, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section.collapsible i {
   display: none;
 }
 
-/* line 346, ../scss/styles.scss */
+/* line 347, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section.collapsed i {
   display: inline;
 }
@@ -2502,35 +2502,35 @@ pre.xdebug-var-dump .debug-section.collapsed i {
  **                     SORTABLES & NESTED SORTABLES                        **
  *****************************************************************************
  *****************************************************************************/
-/* line 356, ../scss/styles.scss */
+/* line 357, ../scss/styles.scss */
 ol.sortable-listing {
   margin: 0.5em 0;
 }
 
-/* line 359, ../scss/styles.scss */
+/* line 360, ../scss/styles.scss */
 ol.sortable-listing li {
   display: block;
   list-style: none outside none;
 }
 
-/* line 363, ../scss/styles.scss */
+/* line 364, ../scss/styles.scss */
 ol.sortable-listing li div.entry {
   border: 1px solid #BBBBBB;
   padding: 0.25em;
 }
 
-/* line 367, ../scss/styles.scss */
+/* line 368, ../scss/styles.scss */
 ol.sortable-listing li.placeholder {
   border: 1px solid #BBBBBB;
   background: #BBB;
 }
 
-/* line 371, ../scss/styles.scss */
+/* line 372, ../scss/styles.scss */
 ol.sortable-listing li a.control {
   margin-top: -2px;
 }
 
-/* line 374, ../scss/styles.scss */
+/* line 375, ../scss/styles.scss */
 ol.sortable-listing ol {
   margin-left: 1em;
 }
@@ -2540,20 +2540,20 @@ ol.sortable-listing ol {
  **                           PRIMARY NAVIGATION                            **
  *****************************************************************************
  *****************************************************************************/
-/* line 386, ../scss/styles.scss */
+/* line 387, ../scss/styles.scss */
 #primary-nav li {
   display: inline-block;
   position: relative;
   text-align: center;
 }
 
-/* line 391, ../scss/styles.scss */
+/* line 392, ../scss/styles.scss */
 #primary-nav li.navigation-menu-over a:hover {
   background: #333;
   transition: background 0.3s;
 }
 
-/* line 396, ../scss/styles.scss */
+/* line 397, ../scss/styles.scss */
 #primary-nav a,
 #primary-nav span {
   color: #777;
@@ -2566,13 +2566,13 @@ ol.sortable-listing ol {
 }
 
 /* Enable the mouse over menu */
-/* line 406, ../scss/styles.scss */
+/* line 407, ../scss/styles.scss */
 #primary-nav li.navigation-menu-over > ul {
   display: block;
 }
 
 /* And the sub menu */
-/* line 410, ../scss/styles.scss */
+/* line 411, ../scss/styles.scss */
 #primary-nav li ul {
   display: none;
   position: absolute;
@@ -2585,13 +2585,13 @@ ol.sortable-listing ol {
   box-shadow: 0 3px 6px #000;
 }
 
-/* line 421, ../scss/styles.scss */
+/* line 422, ../scss/styles.scss */
 #primary-nav li ul li {
   width: 190px;
   text-align: left;
 }
 
-/* line 426, ../scss/styles.scss */
+/* line 427, ../scss/styles.scss */
 #primary-nav li ul a,
 #primary-nav li ul span {
   padding-left: 20px;
@@ -2599,7 +2599,7 @@ ol.sortable-listing ol {
 }
 
 /* And any sub sub menu */
-/* line 431, ../scss/styles.scss */
+/* line 432, ../scss/styles.scss */
 #primary-nav li ul li ul {
   top: -2px;
   left: 180px;
@@ -2614,7 +2614,7 @@ ol.sortable-listing ol {
   box-shadow: 0 3px 6px #000;
 }
 
-/* line 444, ../scss/styles.scss */
+/* line 445, ../scss/styles.scss */
 #primary-nav a:hover {
   text-shadow: none;
 }
@@ -2624,14 +2624,14 @@ ol.sortable-listing ol {
  **                          FOOTER NAVIGATION                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 455, ../scss/styles.scss */
+/* line 456, ../scss/styles.scss */
 footer ul.navigation-menu li {
   list-style-type: none;
   float: left;
   padding: 0 0.5em;
 }
 
-/* line 460, ../scss/styles.scss */
+/* line 461, ../scss/styles.scss */
 footer ul.navigation-menu li li {
   float: none;
 }
@@ -2641,7 +2641,7 @@ footer ul.navigation-menu li li {
  **                         COLLAPSIBLE FIELDSETS                           **
  *****************************************************************************
  *****************************************************************************/
-/* line 472, ../scss/styles.scss */
+/* line 473, ../scss/styles.scss */
 fieldset.collapsed {
   padding: 0;
   border-width: 1px 0 0;
@@ -2652,12 +2652,12 @@ fieldset.collapsed {
  **                            PROGRESS BARS                                **
  *****************************************************************************
  *****************************************************************************/
-/* line 482, ../scss/styles.scss */
+/* line 483, ../scss/styles.scss */
 .progress-container {
   position: relative;
 }
 
-/* line 485, ../scss/styles.scss */
+/* line 486, ../scss/styles.scss */
 .progress-success {
   background: none repeat scroll 0 0 #992222;
   border: 2px solid green;
@@ -2665,13 +2665,13 @@ fieldset.collapsed {
   margin-bottom: 5px;
 }
 
-/* line 491, ../scss/styles.scss */
+/* line 492, ../scss/styles.scss */
 .progress-success .bar {
   background: none repeat scroll 0 0 green;
   height: 20px;
 }
 
-/* line 495, ../scss/styles.scss */
+/* line 496, ../scss/styles.scss */
 .progress-container .progress-extended {
   color: white;
   left: 46px;
@@ -2680,22 +2680,22 @@ fieldset.collapsed {
 }
 
 /** Theme Editor **/
-/* line 504, ../scss/styles.scss */
+/* line 505, ../scss/styles.scss */
 .page-themeeditor .column1 section.pagecontent {
   margin-left: 12px;
 }
 
-/* line 511, ../scss/styles.scss */
+/* line 512, ../scss/styles.scss */
 .editor-container {
   position: relative;
 }
 
-/* line 515, ../scss/styles.scss */
+/* line 516, ../scss/styles.scss */
 #code {
   min-width: 590px;
 }
 
-/* line 519, ../scss/styles.scss */
+/* line 520, ../scss/styles.scss */
 #theme-editor-browser {
   background: transparent;
   position: absolute;
@@ -2704,12 +2704,12 @@ fieldset.collapsed {
   top: 52px;
 }
 
-/* line 527, ../scss/styles.scss */
+/* line 528, ../scss/styles.scss */
 #theme-editor-browser a {
   color: #222;
 }
 
-/* line 531, ../scss/styles.scss */
+/* line 532, ../scss/styles.scss */
 #theme-editor-browser .left {
   float: left;
   width: 300px;
@@ -2721,12 +2721,12 @@ fieldset.collapsed {
   overflow-y: auto;
 }
 
-/* line 542, ../scss/styles.scss */
+/* line 543, ../scss/styles.scss */
 #theme-editor-browser .left:hover {
   opacity: 0.9;
 }
 
-/* line 544, ../scss/styles.scss */
+/* line 545, ../scss/styles.scss */
 #theme-editor-browser .right {
   float: right;
   width: 28px;
@@ -2741,106 +2741,106 @@ fieldset.collapsed {
   border-top: 1px solid #2b2b2b;
 }
 
-/* line 558, ../scss/styles.scss */
+/* line 559, ../scss/styles.scss */
 #theme-editor-browser .right:hover {
   opacity: 1;
 }
 
-/* line 560, ../scss/styles.scss */
+/* line 561, ../scss/styles.scss */
 #theme-editor-browser .right i {
   margin-left: 8px;
 }
 
-/* line 562, ../scss/styles.scss */
+/* line 563, ../scss/styles.scss */
 #theme-editor-browser .icon {
   float: right;
   margin-right: 2px;
 }
 
-/* line 567, ../scss/styles.scss */
+/* line 568, ../scss/styles.scss */
 #theme-editor-browser li .icon {
   margin-right: 0;
 }
 
-/* line 569, ../scss/styles.scss */
+/* line 570, ../scss/styles.scss */
 #theme-editor-browser h2 {
   color: #666;
   margin-bottom: 3px;
 }
 
-/* line 571, ../scss/styles.scss */
+/* line 572, ../scss/styles.scss */
 #theme-editor-browser ul {
   margin-bottom: 9px;
   padding-bottom: 3px;
   border-bottom: 1px solid #e1e1e1;
 }
 
-/* line 577, ../scss/styles.scss */
+/* line 578, ../scss/styles.scss */
 #theme-editor-browser .sub {
   display: none;
 }
 
-/* line 579, ../scss/styles.scss */
+/* line 580, ../scss/styles.scss */
 #theme-editor-browser li .icon {
   cursor: pointer;
 }
 
-/* line 581, ../scss/styles.scss */
+/* line 582, ../scss/styles.scss */
 #theme-editor-browser li {
   list-style-type: none;
   margin-bottom: 3px;
 }
 
-/* line 586, ../scss/styles.scss */
+/* line 587, ../scss/styles.scss */
 #theme-editor-browser ul ul {
   margin-left: 10px;
 }
 
-/* line 588, ../scss/styles.scss */
+/* line 589, ../scss/styles.scss */
 #theme-editor-browser h2 {
   cursor: pointer;
 }
 
-/* line 592, ../scss/styles.scss */
+/* line 593, ../scss/styles.scss */
 .theme-editor {
   display: none;
 }
 
-/* line 596, ../scss/styles.scss */
+/* line 597, ../scss/styles.scss */
 #theme-editor-wysiwyg .image-editor {
   background: #202020;
   padding-bottom: 25px;
   padding-left: 285px;
 }
 
-/* line 602, ../scss/styles.scss */
+/* line 603, ../scss/styles.scss */
 .image-editor h2 {
   margin-bottom: 5px;
 }
 
-/* line 604, ../scss/styles.scss */
+/* line 605, ../scss/styles.scss */
 #revert {
   cursor: pointer;
   font-weight: bold;
   text-decoration: underline;
 }
 
-/* line 610, ../scss/styles.scss */
+/* line 611, ../scss/styles.scss */
 #revisions li.revision {
   margin-bottom: 3px;
 }
 
-/* line 612, ../scss/styles.scss */
+/* line 613, ../scss/styles.scss */
 #revisions .revision-title {
   cursor: pointer;
 }
 
-/* line 613, ../scss/styles.scss */
+/* line 614, ../scss/styles.scss */
 #revisions .revision-date {
   color: #888;
 }
 
-/* line 615, ../scss/styles.scss */
+/* line 616, ../scss/styles.scss */
 .page-themeeditor #dialog-confirm {
   display: none;
 }
@@ -2851,41 +2851,45 @@ fieldset.collapsed {
   font-size: 84%;
   padding: 0 0.5em;
   margin: 0.5em 0;
+  text-align: center;
 }
-
-/* line 7, ../scss/_filters_and_pagination.scss */
+/* line 8, ../scss/_filters_and_pagination.scss */
 .pagination a {
   text-decoration: none;
   color: #555555;
 }
-
-/* line 11, ../scss/_filters_and_pagination.scss */
+/* line 12, ../scss/_filters_and_pagination.scss */
 .pagination .disabled {
   color: #999;
 }
 
-/* line 15, ../scss/_filters_and_pagination.scss */
+/* line 17, ../scss/_filters_and_pagination.scss */
 .pagination-pager {
   float: left;
 }
 
-/* line 19, ../scss/_filters_and_pagination.scss */
+/* line 21, ../scss/_filters_and_pagination.scss */
 .pagination-list {
   float: right;
 }
 
-/* line 24, ../scss/_filters_and_pagination.scss */
+/* line 26, ../scss/_filters_and_pagination.scss */
+.listing-filters .formelement {
+  float: left;
+  margin-right: 1em;
+}
+/* line 31, ../scss/_filters_and_pagination.scss */
 .listing-filters .reset-filters {
   float: right;
-  background-color: #3d1b1b;
+  color: #a81b26;
 }
-/* line 29, ../scss/_filters_and_pagination.scss */
+/* line 36, ../scss/_filters_and_pagination.scss */
 .listing-filters .apply-filters {
   float: right;
-  background-color: #2c3d31;
+  color: #21631f;
 }
 
-/* line 621, ../scss/styles.scss */
+/* line 622, ../scss/styles.scss */
 .widgetarea-admindashboard .widget {
   background: #e9e9e9;
   border: 1px solid #BBBBBB;
@@ -2895,7 +2899,7 @@ fieldset.collapsed {
   padding: 1em;
 }
 
-/* line 630, ../scss/styles.scss */
+/* line 631, ../scss/styles.scss */
 .widgetarea-admindashboard .widget h3 {
   text-align: center;
   margin-bottom: 0.5em;
@@ -2904,22 +2908,22 @@ fieldset.collapsed {
 /**
  * LOGIN / REGISTER PAGES
  */
-/* line 640, ../scss/styles.scss */
+/* line 641, ../scss/styles.scss */
 .user-login-center {
   /** If the page is set to use 2-columns, then do so. */
 }
-/* line 643, ../scss/styles.scss */
+/* line 644, ../scss/styles.scss */
 .user-login-center .user-login-existing.col-2 .user-login-include {
   float: left;
   width: 49%;
 }
-/* line 648, ../scss/styles.scss */
+/* line 649, ../scss/styles.scss */
 .user-login-center .login-forgot {
   float: right;
   color: #969696;
   font-style: italic;
 }
-/* line 654, ../scss/styles.scss */
+/* line 655, ../scss/styles.scss */
 .user-login-center .user-login-section-heading {
   text-align: center;
   margin-bottom: 0.75em;

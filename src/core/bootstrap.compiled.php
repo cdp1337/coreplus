@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 04 Mar 2014 14:23:08 -0500
+ * @compiled Thu, 06 Mar 2014 11:47:56 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1266,7 +1266,10 @@ return $this;
 public function execute($interface = null){
 if(!$interface) $interface = \DMI::GetSystemDMI();
 $interface->connection()->execute($this);
-if($this->_data !== null) reset($this->_data);
+if($this->_data === null){
+$this->_data = [];
+}
+reset($this->_data);
 return $this;
 }
 function rewind() {
@@ -1274,6 +1277,8 @@ if($this->_data !== null) reset($this->_data);
 }
 function current() {
 if($this->_data === null) $this->execute();
+$k = key($this->_data);
+return isset($this->_data[$k]) ? $this->_data[$k] : null;
 return $this->_data[key($this->_data)];
 }
 function key() {
@@ -3357,6 +3362,39 @@ public static $Schema = array(
 'grouptype' => 'tabs',
 ),
 ),
+'editurl' => array(
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => 128,
+'default' => '',
+'required' => false,
+'null' => false,
+'form' => array(
+'type' => 'disabled',
+),
+'comment' => 'The edit URL for this page, set by the creating application.',
+),
+'deleteurl' => array(
+'type'      => Model::ATT_TYPE_STRING,
+'maxlength' => 128,
+'default'   => '',
+'required'  => false,
+'null'      => false,
+'form' => array(
+'type' => 'disabled',
+),
+'comment'   => 'The URL to perform the POST on to delete this page',
+),
+'component'    => array(
+'type'      => Model::ATT_TYPE_STRING,
+'maxlength' => 48,
+'required'  => false,
+'default'   => '',
+'null'      => false,
+'form' => array(
+'type' => 'disabled',
+),
+'comment'   => 'The component that registered this page, useful for uninstalling and cleanups',
+),
 'theme_template' => array(
 'type' => Model::ATT_TYPE_STRING,
 'maxlength' => 128,
@@ -3437,6 +3475,35 @@ public static $Schema = array(
 'default' => 1,
 'comment' => 'Selectable as a parent url and sitemap page',
 'formtype' => 'disabled',
+),
+'popularity' => array(
+'type' => Model::ATT_TYPE_FLOAT,
+'default' => 0,
+'comment' => 'Cache of the popularity score of this page',
+'formtype' => 'disabled',
+),
+'published_status'      => array(
+'type'    => Model::ATT_TYPE_ENUM,
+'options' => array('published', 'draft'),
+'default' => 'published',
+'form' => array(
+'title' => 'Published Status',
+'description' => 'Set this to "draft" to make it visible to editors and admins
+only.  Useful for saving a page without releasing it to public users.',
+'group' => 'Publish Settings',
+'grouptype' => 'tabs',
+)
+),
+'published' => array(
+'type' => Model::ATT_TYPE_INT,
+'form' => array(
+'title' => 'Published Date',
+'type' => 'datetime',
+'description' => 'Leave this blank for default published time, or set it to a desired date/time to set the published time.  Note, you CAN set this to a future date to set the page to be published at that time.',
+'group' => 'Publish Settings',
+'grouptype' => 'tabs',
+),
+'comment' => 'The published date',
 ),
 'created' => array(
 'type' => Model::ATT_TYPE_CREATED,
@@ -3594,6 +3661,13 @@ $fullmetas = array(
 'type'        => 'text',
 'value'       => (($meta = $this->getMeta('title')) ? $meta->get('meta_value_title') : null),
 ),
+'image' => array(
+'title'       => 'Image',
+'description' => 'Optional image to showcase this page',
+'type'        => 'file',
+'basedir'     => 'public/page/image/',
+'value'       => (($meta = $this->getMeta('image')) ? $meta->get('meta_value_title') : null),
+),
 'author' => array(
 'title'       => 'Author',
 'description' => 'Completely optional, but feel free to include it if relevant',
@@ -3611,8 +3685,8 @@ $fullmetas = array(
 'model'       => $this,
 ),
 'description' => array(
-'title'       => 'Description',
-'description' => 'Text that displays on search engine and social network preview links',
+'title'       => 'Description/Teaser',
+'description' => 'Teaser text that displays on search engine and social network preview links',
 'type'        => 'textarea',
 'value'       => (($meta = $this->getMeta('description')) ? $meta->get('meta_value_title') : null),
 )
@@ -3890,7 +3964,7 @@ $this->save();
 }
 return $transport;
 }
-public function  save() {
+public function save() {
 if (!$this->get('rewriteurl')) $this->set('rewriteurl', $this->get('baseurl'));
 if(!isset($this->_datainit['rewriteurl'])) $this->_datainit['rewriteurl'] = null;
 if($this->_data['rewriteurl'] != $this->_datainit['rewriteurl']){
@@ -3904,6 +3978,13 @@ $map->set('baseurl', $this->_data['baseurl']);
 $map->set('fuzzy', $this->_data['fuzzy']);
 $map->save();
 }
+if($this->get('published_status') == 'published' && !$this->get('published')){
+$this->set('published', \Core\Date\DateTime::NowGMT());
+}
+elseif($this->get('published_status') == 'draft'){
+$this->set('published', 0);
+}
+$this->set('popularity', $this->getPopularityScore());
 return parent::save();
 }
 public function getParentTree() {
@@ -3952,6 +4033,41 @@ $ret[] = $p;
 }
 }
 return $ret;
+}
+public function getPopularityScore(){
+$score = $this->get('pageviews');
+$created = $this->get('published');
+if(!$created){
+return 0.000;
+}
+$order = log10($score);
+$seconds = time() - $created;
+$secs_per_month = 86400 * 28.5;
+$months = $seconds / ($secs_per_month * 2);
+$months = max($months, 0.5);
+$long_number = $order - $months;
+$long_number += 10;
+return round($long_number, 5);
+}
+public function getTeaser(){
+$meta = $this->getMeta('description');
+return $meta ? $meta->get('meta_value_title') : '';
+}
+public function getImage(){
+$meta = $this->getMeta('image');
+if(!$meta) return null;
+$file = $meta->get('meta_value_title');
+$f = \Core\Filestore\Factory::File($file);
+return $f;
+}
+public function isPublished(){
+if($this->get('published_status') == 'draft'){
+return false;
+}
+if($this->get('published') > \Core\Date\DateTime::NowGMT()){
+return false;
+}
+return true;
 }
 private function _getParentTree($antiinfiniteloopcounter = 5) {
 if ($antiinfiniteloopcounter <= 0) return array();
@@ -4291,6 +4407,13 @@ $opts[$baseurl] = $t;
 asort($opts);
 if ($blanktext) $opts = array_merge(array("" => $blanktext), $opts);
 return $opts;
+}
+public static function PopularityMassUpdateHook(){
+$pages = PageModel::Find();
+foreach($pages as $page){
+$page->save();
+}
+return true;
 }
 }
 
@@ -5418,6 +5541,11 @@ public static $Schema = array(
 'maxlength' => 128,
 'required'  => true,
 'null'      => false,
+'link'      => [
+'model' => 'WidgetInstance',
+'type'  => Model::LINK_HASMANY,
+'on'    => 'baseurl',
+],
 ),
 'installable' => array(
 'type'    => Model::ATT_TYPE_STRING,
@@ -5436,6 +5564,22 @@ public static $Schema = array(
 'type' => Model::ATT_TYPE_TEXT,
 'formtype' => 'disabled',
 'comment' => 'Provides a section for saving json-encoded settings on the widget.'
+),
+'editurl' => array(
+'type'      => Model::ATT_TYPE_STRING,
+'maxlength' => 128,
+'default'   => '',
+'required'  => false,
+'null'      => false,
+'comment'   => 'The URL to edit this widget',
+),
+'deleteurl' => array(
+'type'      => Model::ATT_TYPE_STRING,
+'maxlength' => 128,
+'default'   => '',
+'required'  => false,
+'null'      => false,
+'comment'   => 'The URL to perform the POST on to delete this widget',
 ),
 'created' => array(
 'type' => Model::ATT_TYPE_CREATED,
@@ -7203,7 +7347,7 @@ SystemLogModel::LogInfoEvent('/updater/component/reinstall', 'Component ' . $thi
 }
 return $changes;
 }
-public function upgrade() {
+public function upgrade($next = false) {
 if (!$this->isInstalled()) return false;
 $changes = array();
 $otherchanges = $this->_performInstall();
@@ -7212,7 +7356,9 @@ $canBeUpgraded = true;
 while ($canBeUpgraded) {
 $canBeUpgraded = false;
 foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('upgrade') as $u) {
-if ($this->_versionDB == @$u->getAttribute('from')) {
+$from = $u->getAttribute('from');
+$to   = $u->getAttribute('to') ? $u->getAttribute('to') : 'next';
+if (($this->_versionDB == $from) || ($next && $from == 'next')) {
 $canBeUpgraded = true;
 $children = $u->childNodes;
 foreach($children as $child){
@@ -7260,10 +7406,15 @@ $changes[] = 'Ignoring unsupported upgrade directive: [' . $child->nodeName . ']
 }
 $changes[] = 'Upgraded from [' . $this->_versionDB . '] to [' . $u->getAttribute('to') . ']';
 SystemLogModel::LogInfoEvent('/updater/component/upgrade', 'Component ' . $this->getName() . ' upgraded successfully from ' . $this->_versionDB . ' to ' . $u->getAttribute('to') . '!', implode("\n", $changes));
-$this->_versionDB = @$u->getAttribute('to');
-$c                = new ComponentModel($this->_name);
+if($to == 'next'){
+$canBeUpgraded = false;
+}
+else{
+$this->_versionDB = $to;
+$c = new ComponentModel($this->_name);
 $c->set('version', $this->_versionDB);
 $c->save();
+}
 }
 }
 }
@@ -7511,6 +7662,7 @@ $group      = ($admin ? $subnode->getAttribute('group') : '');
 if($subnode->getAttribute('selectable') !== ''){
 $selectable = $subnode->getAttribute('selectable');
 }
+$editurl = $subnode->getAttribute('editurl') ? $subnode->getAttribute('editurl') : '';
 if (!$m->get('rewriteurl')) {
 if ($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
 else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
@@ -7521,6 +7673,8 @@ if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
 $m->set('admin', $admin);
 $m->set('admin_group', $group);
 $m->set('selectable', $selectable);
+$m->set('component', $this->getKeyName());
+$m->set('editurl', $editurl);
 if ($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';
 }
 }
@@ -11609,6 +11763,18 @@ return array(
 );
 }
 }
+class ViewMeta_image extends ViewMeta {
+public function fetch(){
+if(!$this->content) return array();
+$image   = \Core\Filestore\Factory::File($this->content);
+$preview = $image->getPreviewURL('200x200');
+$large   = $image->getPreviewURL('800x800');
+$data = [];
+$data['link-apple-touch-startup-image'] = '<link rel="apple-touch-startup-image" href="' . $large . '" />';
+$data['og:image'] = '<meta name="og:image" content="' . $preview . '"/>';
+return $data;
+}
+}
 
 
 ### REQUIRE_ONCE FROM core/libs/core/errormanagement/functions.php
@@ -12205,6 +12371,7 @@ $tempcomponents = false;
 }
 }
 if(!$enablecache || $tempcomponents == false){
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Scanning for component.xml files manually');
 Core\Utilities\Logger\write_debug('Scanning for component.xml files manually');
 $tempcomponents['core'] = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
 Core\Utilities\Logger\write_debug('Core component loaded');
@@ -12227,6 +12394,7 @@ $tempcomponents[$file] = $c;
 unset($c);
 }
 closedir($dh);
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Component XML files scanned');
 foreach ($tempcomponents as $c) {
 try {
 $c->load();
@@ -12246,6 +12414,7 @@ Cache::GetSystemCache()->set('core-components', $tempcomponents, (3600 * 24));
 }
 }
 $list = $tempcomponents;
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Component metadata loaded, starting registration');
 Core\Utilities\Logger\write_debug(' * Component metadata loaded, starting registration');
 do {
 $size = sizeof($list);
@@ -13117,6 +13286,7 @@ var_dump(ConfigHandler::$cacheFromDB);
 
 
 ConfigHandler::Singleton();
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Configuration loaded and available');
 $core_settings = ConfigHandler::LoadConfigFile("configuration");
 if (!$core_settings) {
 if(EXEC_MODE == 'WEB'){
@@ -13265,6 +13435,7 @@ define('GPG_HOMEDIR', ($gnupgdir) ? $gnupgdir : ROOT_PDIR . 'gnupg');
 }
 unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl, $gnupgdir, $host, $sslmode, $tmpdir);
 $maindefines_time = microtime(true);
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus bootstrapped and application starting');
 try {
 $dbconn = DMI::GetSystemDMI();
 ConfigHandler::_DBReadyHook();
@@ -13279,6 +13450,7 @@ require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 die();
 }
 }
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus Data Model Interface loaded and ready');
 unset($start_time, $predefines_time, $preincludes_time, $maindefines_time);
 if(!defined('FTP_USERNAME')){
 define('FTP_USERNAME', ConfigHandler::Get('/core/ftp/username'));
@@ -15398,6 +15570,8 @@ class ViewException extends Exception {
 class Widget_2_1 {
 private $_view = null;
 private $_request = null;
+public $is_simple = false;
+public $settings = [];
 public $_model = null;
 public $_params = null;
 public $_installable = null;
@@ -15432,6 +15606,9 @@ return $this->_model;
 }
 public function getWidgetModel(){
 return $this->getWidgetInstanceModel()->getLink('Widget');
+}
+public function getFormSettings(){
+return [];
 }
 protected function setAccess($accessstring) {
 $this->getWidgetInstanceModel()->set('access', $accessstring);
@@ -15844,6 +16021,7 @@ return new Form::$Mappings[$type]($attributes);
 }
 class Form extends FormGroup {
 public $originalurl = '';
+public $referrer = '';
 public static $Mappings = array(
 'access'           => 'FormAccessStringInput',
 'checkbox'         => 'FormCheckboxInput',
@@ -15972,6 +16150,9 @@ break;
 case 'foot':
 $out = $tpl->fetch('forms/form.foot.tpl');
 break;
+}
+if(!$this->referrer && isset($_SERVER['HTTP_REFERER'])){
+$this->referrer = $_SERVER['HTTP_REFERER'];
 }
 $this->originalurl = CUR_CALL;
 $this->persistent = false;
@@ -16216,10 +16397,26 @@ $_SESSION['FormData'][$formid] = serialize($form);
 if ($status === false) return;
 if ($status === null) return;
 unset($_SESSION['FormData'][$formid]);
-if ($status === 'die') exit;
-elseif ($status === true) \Core\reload();
-elseif($status === REL_REQUEST_PATH) \Core\reload();
-else \core\redirect($status);
+if ($status === 'die'){
+exit;
+}
+elseif($status === 'back'){
+if($form->referrer && $form->referrer != REL_REQUEST_PATH){
+\Core\redirect($form->referrer);
+}
+else{
+\Core\go_back(2);
+}
+}
+elseif ($status === true){
+\Core\reload();
+}
+elseif($status === REL_REQUEST_PATH){
+\Core\reload();
+}
+else{
+\core\redirect($status);
+}
 }
 public static function BuildFromModel(Model $model) {
 $f = new Form();
