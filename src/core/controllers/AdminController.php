@@ -478,6 +478,386 @@ class AdminController extends Controller_2_1 {
 		//var_dump($listings); die();
 	}
 
+	/**
+	 * Display a listing of all pages registered in the system.
+	 */
+	public function pages(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/core/pages/view')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		// Build a list of create pages for all registered components.
+		$components = Core::GetComponents();
+		$links = [];
+		foreach($components as $c){
+			/** @var Component_2_1 $c */
+			foreach($c->getXML()->getElements('/pages/pagecreate') as $node){
+				/** @var DOMElement $node */
+				$links[] = ['baseurl' => $node->getAttribute('baseurl'), 'title' => $node->getAttribute('title')];
+			}
+		}
+
+		$filters = new FilterForm();
+		$filters->setName('/admin/pages');
+		$filters->hassort = true;
+		$filters->haspagination = true;
+
+		$filters->addElement(
+			'text',
+			[
+				'name' => 'title',
+				'title' => 'Page Title',
+				'link' => FilterForm::LINK_TYPE_CONTAINS,
+			]
+		);
+
+		$filters->addElement(
+			'text',
+			[
+				'name' => 'rewriteurl',
+				'title' => 'URL',
+				'link' => FilterForm::LINK_TYPE_CONTAINS,
+			]
+		);
+
+		$filters->addElement(
+			'text',
+			[
+				'name' => 'parenturl',
+				'title' => 'Parent URL',
+				'link' => FilterForm::LINK_TYPE_STARTSWITH,
+			]
+		);
+
+		$filters->addElement(
+			'select',
+			[
+				'name' => 'page_types',
+				'title' => 'Include Admin Pages',
+				'options' => ['all' => 'All Pages', 'no_admin' => 'Exclude Admin'],
+				'value' => 'no_admin',
+			]
+		);
+
+
+		$filters->setSortkeys(['title', 'parenturl', 'rewriteurl', 'access', 'pageviews', 'popularity', 'created', 'published']);
+		$filters->getSortDirection('up');
+		$filters->load($request);
+
+		$factory = new ModelFactory('PageModel');
+		$filters->applyToFactory($factory);
+
+		if($filters->get('page_types') == 'no_admin'){
+			$factory->where('admin = 0');
+		}
+
+		$listings = $factory->get();
+
+		$view->title = 'All Pages';
+		$view->assign('filters', $filters);
+		$view->assign('listings', $listings);
+		$view->assign('links', $links);
+	}
+
+	/**
+	 * Shortcut for publishing a page.
+	 */
+	public function page_publish() {
+		$view    = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/core/pages/manage')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$baseurl = $request->getParameter('baseurl');
+
+		$page = new PageModel($baseurl);
+		if(!$page->exists()){
+			return View::ERROR_NOTFOUND;
+		}
+
+		if(!$request->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		// Is this page already published?
+		if($page->get('published_status') == 'published'){
+			Core::SetMessage('Article is already published!', 'error');
+			\Core\go_back();
+		}
+
+		$page->set('published_status', 'published');
+		$page->save();
+
+		Core::SetMessage('Published page successfully!', 'success');
+		\Core\go_back();
+	}
+
+	/**
+	 * Shortcut for unpublishing a page.
+	 */
+	public function page_unpublish() {
+		$view    = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/core/pages/manage')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$baseurl = $request->getParameter('baseurl');
+
+		$page = new PageModel($baseurl);
+		if(!$page->exists()){
+			return View::ERROR_NOTFOUND;
+		}
+
+		if(!$request->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		// Is this page already un-published?
+		if($page->get('published_status') == 'draft'){
+			Core::SetMessage('Article is already unpublished!', 'error');
+			\Core\go_back();
+		}
+
+		$page->set('published_status', 'draft');
+		$page->save();
+
+		Core::SetMessage('Unpublished page successfully!', 'success');
+		\Core\go_back();
+	}
+
+	/**
+	 * Display a listing of all pages registered in the system.
+	 */
+	public function widgets(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/core/widgets/view')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$manager = \Core\user()->checkAccess('p:/core/widgets/manage');
+
+		// Build a list of create pages for all registered components.
+		$components = Core::GetComponents();
+		$links = [];
+		foreach($components as $c){
+			/** @var Component_2_1 $c */
+			foreach($c->getXML()->getElements('/widgets/widgetcreate') as $node){
+				/** @var DOMElement $node */
+
+				if($node->getAttribute('baseurl')){
+						$baseurl = $node->getAttribute('baseurl');
+				}
+				elseif($node->getAttribute('class')){
+					$baseurl = '/admin/widget/create?class=' . $node->getAttribute('class');
+				}
+				else{
+					Core::SetMessage('Invalid "widgetcreate" found in ' . $c->getName() . ', ' . $node->getAttribute('title'), 'error');
+					continue;
+				}
+
+				$links[] = ['baseurl' => $baseurl, 'title' => $node->getAttribute('title')];
+			}
+		}
+
+		$filters = new FilterForm();
+		$filters->setName('/admin/widgets');
+		$filters->hassort = true;
+		$filters->haspagination = true;
+
+		$filters->setSortkeys(['title', 'baseurl', 'installable', 'created']);
+		$filters->getSortDirection('up');
+		$filters->load($request);
+
+		$factory = new ModelFactory('WidgetModel');
+		$filters->applyToFactory($factory);
+
+
+		$listings = $factory->get();
+
+		$view->title = 'All Widgets';
+		$view->assign('filters', $filters);
+		$view->assign('listings', $listings);
+		$view->assign('links', $links);
+		$view->assign('manager', $manager);
+	}
+
+	/**
+	 * Create a simple widget with the standard settings configurations.
+	 */
+	public function widget_create(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/core/widgets/manage')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$class = $request->getParameter('class');
+
+		// If it doesn't end in "widget", it should!
+		if(stripos($class, 'widget') != strlen($class) - 6){
+			$class .= 'Widget';
+		}
+
+		if(!class_exists($class)){
+			Core::SetMessage('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
+			\Core\go_back();
+		}
+
+		/** @var Widget_2_1 $obj */
+		$obj = new $class();
+
+		if(!($obj instanceof Widget_2_1)){
+			Core::SetMessage('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
+			\Core\go_back();
+		}
+
+		if(!$obj->is_simple){
+			Core::SetMessage('Widget [' . $class . '] does not appear to be a simple widget.  Only simple widgets can be created via this page.', 'error');
+			\Core\go_back();
+		}
+
+		$form = new Form();
+		$form->set('callsmethod', 'AdminController::_WidgetCreateUpdateHandler');
+
+		// Make the widget's "baseurl", which for simple widgets will be the widget class followed by a UUID.
+		$baseurl = strtolower(substr($class, 0, -6)) . '/execute/';
+		$baseurl .= Core::GenerateUUID();
+
+		$form->addElement('system', array('name' => 'baseurl', 'value' => $baseurl));
+
+		$form->addElement(
+			'text',
+			array(
+				'name' => 'title',
+				'required' => true,
+				'title' => 'Admin Title',
+				'description' => 'The identifying title used on admin pages.',
+			)
+		);
+
+		$defaults = $obj->settings;
+		$formdata = $obj->getFormSettings();
+
+		foreach($formdata as $dat){
+			$type = $dat['type'];
+			$name = $dat['name'];
+
+			$dat['value'] = $defaults[$name];
+			$dat['name'] = 'setting[' . $name . ']';
+
+			$form->addElement($type, $dat);
+		}
+
+
+		$form->addElement('submit', array('value' => 'Create Widget'));
+
+		$view->mastertemplate = 'admin';
+		$view->title = 'Create Widget';
+		$view->assign('form', $form);
+	}
+
+	/**
+	 * Create a simple widget with the standard settings configurations.
+	 */
+	public function widget_update(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/core/widgets/manage')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$baseurl = $request->getParameter('baseurl');
+		$class = substr($baseurl, 0, strpos($baseurl, '/')) . 'widget';
+
+		if(!class_exists($class)){
+			Core::SetMessage('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
+			\Core\go_back();
+		}
+
+		/** @var Widget_2_1 $obj */
+		$obj = new $class();
+
+		if(!($obj instanceof Widget_2_1)){
+			Core::SetMessage('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
+			\Core\go_back();
+		}
+
+		if(!$obj->is_simple){
+			Core::SetMessage('Widget [' . $class . '] does not appear to be a simple widget.  Only simple widgets can be created via this page.', 'error');
+			\Core\go_back();
+		}
+
+		$model = new WidgetModel($baseurl);
+
+		$form = new Form();
+		$form->set('callsmethod', 'AdminController::_WidgetCreateUpdateHandler');
+
+		$form->addElement('system', array('name' => 'baseurl', 'value' => $baseurl));
+
+		$form->addElement(
+			'text',
+			array(
+				'name' => 'title',
+				'required' => true,
+				'value' => $model->get('title'),
+				'title' => 'Admin Title',
+				'description' => 'The identifying title used on admin pages.',
+			)
+		);
+
+		$defaults = $obj->settings;
+		$formdata = $obj->getFormSettings();
+
+		foreach($formdata as $dat){
+			$type = $dat['type'];
+			$name = $dat['name'];
+
+			$dat['value'] = $model->getSetting($name) !== null ? $model->getSetting($name) : $defaults[$name];
+			$dat['name'] = 'setting[' . $name . ']';
+
+			$form->addElement($type, $dat);
+		}
+
+
+		$form->addElement('submit', array('value' => 'Update Widget'));
+
+		$view->mastertemplate = 'admin';
+		$view->title = 'Update Widget';
+		$view->assign('form', $form);
+	}
+
+	public static function _WidgetCreateUpdateHandler(Form $form){
+		$baseurl = $form->getElement('baseurl')->get('value');
+
+		$model = new WidgetModel($baseurl);
+		$model->set('editurl', '/admin/widget/update?baseurl=' . $baseurl);
+		$model->set('deleteurl', '/admin/widget/delete?baseurl=' . $baseurl);
+		$model->set('title', $form->getElement('title')->get('value'));
+
+		$elements = $form->getElements();
+		foreach($elements as $el){
+			/** @var FormElement $el */
+			if(strpos($el->get('name'), 'setting[') === 0){
+				$name = substr($el->get('name'), 8, -1);
+				$model->setSetting($name, $el->get('value'));
+			}
+		}
+		$model->save();
+
+		return 'back';
+	}
+
 
 
 	public static function _ConfigSubmit(Form $form) {

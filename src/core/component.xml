@@ -38,15 +38,16 @@
 		<hook name="/core/page/postrender" call="Core::_RecordNavigation"/>
 		<hook name="/core/page/postrender" call="Core\User\Helper::RecordActivity"/>
 		<hook name="/cron/hourly" call="Session::CleanupExpired"/>
+		<hook name="/cron/hourly" call="PageModel::PopularityMassUpdateHook"/>
+		<hook name="/cron/hourly" call="\Core\Utilities\Logger\LogFile::RotateHourly"/>
 		<hook name="/cron/daily" call="Core\User\Helper::PurgeUserActivityCron"/>
+		<hook name="/cron/daily" call="\Core\Utilities\Logger\LogFile::RotateDaily"/>
 		<hook name="/cron/weekly" call="UpdaterHelper::CheckWeekly"/>
+		<hook name="/cron/weekly" call="\Core\Utilities\Logger\LogFile::RotateWeekly"/>
+		<hook name="/cron/monthly" call="\Core\Utilities\Logger\LogFile::RotateMonthly"/>
 		<hook name="/core/model/presave" call="Core\Search\Helper::ModelPreSaveHandler"/>
 		<hook name="/core/controllinks/user/view" call="Core\User\Helper::GetControlLinks"/>
 		<hook name="/user/postsave" call="Core\User\Helper::ForceSessionSync"/>
-		<hook name="/cron/hourly" call="\Core\Utilities\Logger\LogFile::RotateHourly"/>
-		<hook name="/cron/daily" call="\Core\Utilities\Logger\LogFile::RotateDaily"/>
-		<hook name="/cron/weekly" call="\Core\Utilities\Logger\LogFile::RotateWeekly"/>
-		<hook name="/cron/monthly" call="\Core\Utilities\Logger\LogFile::RotateMonthly"/>
 	</hooks>
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
 	<includes>
@@ -1491,6 +1492,7 @@
 		<page baseurl="/userconfig/admin" admin="1" access="g:admin" title="User Options" group="Configure"/>
 		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="System Log" group="Admin"/>
 		<page baseurl="/form/testui" admin="1" access="g:admin" title="Test Form Element UI/UX" group="Theme and Layouts"/>
+		<page baseurl="/admin/pages" admin="1" access="p:/core/pages/view" title="All Pages" group="Content"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/updater/check" title="Check For Updates" installable="/admin"/>
@@ -1662,6 +1664,10 @@
 		<permission key="/user/permissions/manage" description="Manage site permissions"/>
 		<permission key="/user/groups/manage" description="Manage site groups"/>
 		<permission key="/user/activity/view" description="View user activity and analytics"/>
+		<permission key="/core/pages/view" description="View all pages defined on the system along with some metadata about them"/>
+		<permission key="/core/pages/manage" description="Manage all pages defined on the system along with some metadata about them"/>
+		<permission key="/core/widgets/view" description="View all widgets defined on the system along with some metadata about them"/>
+		<permission key="/core/widgets/manage" description="Manage all widgets defined on the system along with some metadata about them"/>
 	</permissions>
 	<assets>
 		<file filename="core/assets/css/admin/adminbar.css" md5="13fe9725206ba5322959a0d7e4553195"/>
@@ -1900,7 +1906,7 @@
 			<php file="core/upgrades/270_to_280_user_avatar_paths.php"/>
 		</upgrade>
 		<upgrade from="2.8.0" to="3.0.0"/>
-		<upgrade from="!3.0.0" to="3.next">
+		<upgrade from="next">
 			<dataset action="update" table="widget_instance">
 				<datasetset key="baseurl">/user/login</datasetset>
 				<datasetwhere>baseurl = /UserWidget/Login</datasetwhere>
@@ -1915,6 +1921,7 @@
 			<dataset action="delete" table="widget">
 				<datasetwhere>baseurl = /UserWidget/Register</datasetwhere>
 			</dataset>
+			<php file="core/upgrades/next_page_published.php"/>
 		</upgrade>
 	</upgrades>
 	<authors>
