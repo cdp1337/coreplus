@@ -129,6 +129,7 @@ class BlogArticleWidget extends Widget_2_1 {
 			return '';
 		}
 
+		$view->assign('sort', $this->getSetting('sort'));
 		$view->assign('title', $this->getSetting('title'));
 		$view->assign('links', $fac->get());
 	}

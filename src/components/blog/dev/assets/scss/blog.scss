@@ -1,0 +1,70 @@
+/************************************************
+ ****           Frontend styles
+ ***********************************************/
+
+.blog-listing {
+	.blog-article {
+		border-bottom: 1px solid #BBBBBB;
+		margin-bottom: 1em;
+		padding-bottom: 0.5em;
+	}
+	.blog-article-title {
+		font-size: 115%;
+		line-height: 1.5em;
+	}
+	.blog-article-image {
+		float: left;
+		width: 90px;
+		text-align: center;
+	}
+	.blog-article-date {
+		float: right;
+		font-size: 90%;
+	}
+	.blog-article-read-more {
+		color: #666;
+		font-size: 90%;
+	}
+	.blog-article.blog-article-status-draft {
+		background-color: rgba(200, 150, 50, 0.4);
+	}
+}
+
+
+/************************************************
+ ****           Backend styles
+ ***********************************************/
+
+table.listing tbody .blog-article-status-draft {
+	background-color: rgba(200, 150, 50, 0.4);
+}
+
+
+/************************************************
+ ****           Widget styles
+ ***********************************************/
+
+/**
+ * Search Widget
+ */
+.blog-search-widget {
+	.blog-search-widget-entry {
+		float: right;
+		position: relative;
+	}
+	.blog-search-widget-entry i {
+		position: absolute;
+		right: 5px;
+		top: 5px;
+	}
+	.blog-search-widget-submit {
+		display: none;
+	}
+}
+
+.blog-article-widget {
+	.blog-article-widget-link {
+		display: block;
+		padding-bottom: 0.25em;
+	}
+}

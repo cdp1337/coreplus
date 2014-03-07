@@ -47,7 +47,7 @@
 		<pagecreate title="Blog" baseurl="/blog/create"/>
 	</pages>
 	<widgets>
-		<widget baseurl="/blogsearch" title="Search All Blogs"/>
+		<widget baseurl="/blogsearch/execute" title="Search All Blogs"/>
 		<widgetcreate title="Blog Articles" class="BlogArticleWidget"/>
 	</widgets>
 	<description>Advanced blogging system.</description>
