@@ -1210,6 +1210,23 @@ class PageModel extends Model {
 		return $f;
 	}
 
+	/**
+	 * Get the image object or null
+	 *
+	 * @return UserModel|null
+	 */
+	public function getAuthor(){
+		$meta = $this->getMeta('author');
+		if(!$meta) return null;
+
+		$uid = $meta->get('meta_value');
+
+		if(!$uid) return null;
+
+		$u = UserModel::Construct($uid);
+		return $u;
+	}
+
 
 	/**
 	 * Get if this page is published and the published date is at least now or earlier.

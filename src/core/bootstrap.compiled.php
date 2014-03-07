@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 06 Mar 2014 15:07:40 -0500
+ * @compiled Fri, 07 Mar 2014 11:52:42 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4059,6 +4059,14 @@ if(!$meta) return null;
 $file = $meta->get('meta_value_title');
 $f = \Core\Filestore\Factory::File($file);
 return $f;
+}
+public function getAuthor(){
+$meta = $this->getMeta('author');
+if(!$meta) return null;
+$uid = $meta->get('meta_value');
+if(!$uid) return null;
+$u = UserModel::Construct($uid);
+return $u;
 }
 public function isPublished(){
 if($this->get('published_status') == 'draft'){
