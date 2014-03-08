@@ -60,6 +60,7 @@ foreach($fac->get() as $model){
 	$page->save();
 
 	$insertable = new InsertableModel();
+	$insertable->set('site', $page->get('site'));
 	$insertable->set('baseurl', '/content/view/' . $content->get('id'));
 	$insertable->set('name', 'body');
 	$insertable->set('value', $model->get('body'));
