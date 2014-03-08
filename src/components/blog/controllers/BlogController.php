@@ -19,20 +19,21 @@ class BlogController extends Controller_2_1 {
 
 		// Get a list of all the blogs on the system.  I'll get the page object from each one and see if the current user has access
 		// to each one.  Then I'll have a list of ids that the user can view.
-		$ids = array();
+		$parents = array();
 		$blogs = BlogModel::Find(null, null, null);
 		foreach($blogs as $blog){
+			/** @var BlogModel $blog */
 			$page     = $blog->getLink('Page');
 			$editor   = \Core\user()->checkAccess($blog->get('manage_articles_permission ')) || $manager;
 			$viewer   = \Core\user()->checkAccess($blog->get('access')) || $editor;
 
 			if(!$viewer) continue;
 
-			$ids[] = $blog->get('id');
+			$parents[] = $blog->get('baseurl');
 		}
 
 		// Is the user a manager, but no blogs exist on the system?
-		if($manager && !sizeof($ids)){
+		if($manager && !sizeof($parents)){
 			\core\redirect('/blog/admin');
 		}
 
@@ -41,8 +42,8 @@ class BlogController extends Controller_2_1 {
 		$filters->setLimit(20);
 		$filters->load($this->getPageRequest());
 
-		$factory = new ModelFactory('BlogArticleModel');
-		$factory->where('blogid IN ' . implode(',', $ids));
+		$factory = new ModelFactory('PageModel');
+		$factory->where('parenturl IN ' . implode(',', $parents));
 
 		if($request->getParameter('q')){
 			$query = $request->getParameter('q');
@@ -97,7 +98,7 @@ class BlogController extends Controller_2_1 {
 		$form->addElement('submit', array('value' => 'Update Page Listing'));
 
 		$view->mastertemplate = 'admin';
-		$view->title = 'Update Page Listing';
+		$view->title = 'Blog Listing';
 		$view->assignVariable('form', $form);
 	}
 
