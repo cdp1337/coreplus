@@ -87,7 +87,7 @@ if [ -e "$BASEDIR/data/prod-to-dev.sql" ]; then
 fi
 
 # Run any developer-specific file specified in the ant.properties.
-if [ -e "$BASEDIR/data/$DEVDATA" ]; then
+if [ -n "$DEVDATA" -a -e "$BASEDIR/data/$DEVDATA" ]; then
 	printheader "Applying developer-specific $DEVDATA patch..."
 	mysql -u$DBUSER -p"$DBPASS" $DBNAME < "$BASEDIR/data/$DEVDATA"
 	checkexitstatus "$?"
