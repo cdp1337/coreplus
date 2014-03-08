@@ -639,7 +639,13 @@ class PageRequest {
 
 		// Make sure I update any existing page now that the controller has ran.
 		if ($page->exists() && $view->error == View::ERROR_NOERROR) {
-			$page->set('pageviews', $page->get('pageviews') + 1);
+
+			// Only increase the pageview count if the visitor is not a bot.
+			// UA detection isn't very accurate, but this isn't for precision accuracy, merely a rough estimate.
+			if(!\Core\UserAgent::Construct()->isBot()){
+				$page->set('pageviews', $page->get('pageviews') + 1);
+			}
+
 			$page->set('last_template', $view->templatename);
 			$page->set('body', $view->fetchBody());
 
