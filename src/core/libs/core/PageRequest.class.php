@@ -127,6 +127,7 @@ class PageRequest {
 		$this->_resolveAcceptHeader();
 		$this->_resolveUAHeader();
 
+		// Set the request parameters
 		if (is_array($_GET)) {
 			foreach ($_GET as $k => $v) {
 				if (is_numeric($k)) continue;
@@ -240,20 +241,14 @@ class PageRequest {
 	public function splitParts() {
 		$ret = PageModel::SplitBaseURL($this->uriresolved);
 
-		// No?
-		if (!$ret) {
-			$ret = array(
-				'controller' => null,
-				'method'     => null,
-				'parameters' => null,
-				'baseurl'    => null,
-				'rewriteurl' => null
-			);
+		// The PageModel handles all the Core utilities, but it skips the GET parameters, as those are not part of the page schema.
+		// Instead however, the PageRequest needs to provide all interfaces for the user's request,
+		// including GET parameters!
+		if($ret['parameters'] === null){
+			$ret['parameters'] = [];
 		}
 
-		// Tack on the parameters
-		if ($ret['parameters'] === null) $ret['parameters'] = array();
-		$ret['parameters'] = array_merge($ret['parameters'], $this->parameters);
+		$ret['parameters'] = array_merge($ret['parameters'], $_GET);
 
 		return $ret;
 	}
@@ -285,34 +280,56 @@ class PageRequest {
 
 	/**
 	 * Execute the controller and method this page request points to.
-	 *
-	 * @return View
 	 */
 	public function execute() {
-		$pagedat = $this->splitParts();
+
+		// Load the underlying controller.
+		$pagedat   = $this->splitParts();
 
 		/** @var View $view The valid view object for this page */
 		$view = $this->getView();
-
-		/// A few sanity/security checks for the controller's sake.
 
 		// The controller must exist first!
 		// (note, the SplitParts logic already takes care of the "Is this a valid controller" logic)
 		if (!$pagedat['controller']) {
 			$view->error = View::ERROR_NOTFOUND;
-			return $view;
+			return;
+		}
+
+		$component = Core::GetComponentByController($pagedat['controller']);
+
+		//////////////////////////////////////////////////////////////////////////////
+		///  In this block of logic, either the page is executed and a view returned,
+		///  or a view is generated with an error.
+		//////////////////////////////////////////////////////////////////////////////
+		if (!$component) {
+			// Not found
+			$view->error = View::ERROR_NOTFOUND;
+			return;
+		}
+		elseif (is_a($component, 'Component')) {
+			// It's a 1.0 style component...
+			CurrentPage::Render();
+			die();
+		}
+		//elseif (is_a($component, 'Component_2_1')) {
+		//	$this->_pageview = $view = $request->execute();
+		//}
+		elseif(!is_a($component, 'Component_2_1')) {
+			$view->error = View::ERROR_NOTFOUND;
+			return;
 		}
 
 		// Any method that starts with a "_" is an internal-only method!
 		if ($pagedat['method']{0} == '_') {
 			$view->error = View::ERROR_NOTFOUND;
-			return $view;
+			return;
 		}
 
 		// It also must be a part of the class... obviously
 		if (!method_exists($pagedat['controller'], $pagedat['method'])) {
 			$view->error = View::ERROR_NOTFOUND;
-			return $view;
+			return;
 		}
 
 
@@ -336,7 +353,7 @@ class PageRequest {
 			// And if the user doesn't have access to it...
 			if (!\Core\user()->checkAccess($controller->accessstring)) {
 				$view->error = View::ERROR_ACCESSDENIED;
-				return $view;
+				return;
 			}
 		}
 
@@ -347,7 +364,7 @@ class PageRequest {
 			$parentmethod = strtolower($parentmethod);
 			if($parentmethod == $pagedat['method']){
 				$view->error = View::ERROR_BADREQUEST;
-				return $view;
+				return;
 			}
 		}
 
@@ -381,11 +398,19 @@ class PageRequest {
 		if (is_int($return)) {
 			// A generic error code was returned.  Create a View with that code and return that instead.
 			$view->error = $return;
-			return $view;
+			return;
+		}
+		elseif(is_a($return, 'View') && $return != $view){
+			// The controller method changed the view, (which is allowed),
+			// but this needs to be remapped to this object so render knows about it.
+			$this->_pageview = $view = $return;
 		}
 		elseif ($return === null) {
 			// Hopefully it's setup!
 			$return = $controller->getView();
+			if($return != $view){
+				$this->_pageview = $view = $return;
+			}
 		}
 		elseif(!is_a($return, 'View')){
 			if(DEVELOPMENT_MODE){
@@ -394,7 +419,7 @@ class PageRequest {
 			}
 			else{
 				$view->error = View::ERROR_SERVERERROR;
-				return $view;
+				return;
 			}
 		}
 		// No else needed, else it's a valid object.
@@ -404,17 +429,17 @@ class PageRequest {
 		// GREAT QUESTION, The $view is the original view object created from the page request.  That is passed into
 		// the controller and exposed via $this->getView().  The return can be a view, int, or other status indicator.
 		// However since the controller can return a different view, that view should be used instead!
-		/** @var $return View */
+		///** @var $return View */
 
 
 		// Allow the controller to assign controls via a shortcut function.
-		if($return->error == View::ERROR_NOERROR){
+		if($view->error == View::ERROR_NOERROR){
 			$controls = $controller->getControls();
 
 			// This method may do absolutely nothing, add the controls to the view itself, or return an array of them.
 			if(is_array($controls)){
 				foreach($controls as $control){
-					$return->addControl($control);
+					$view->addControl($control);
 				}
 			}
 		}
@@ -447,7 +472,7 @@ class PageRequest {
 		// Make a list of the existing ones so I know which ones not to overwrite!
 		// Just the key will suffice quite nicely.
 		$currentmetas = array();
-		foreach($return->meta as $k => $meta){
+		foreach($view->meta as $k => $meta){
 			$currentmetas[] = $k;
 		}
 
@@ -460,78 +485,108 @@ class PageRequest {
 
 			// again, allow the executed controller have the final say on meta information.
 			if ($meta->get('meta_value_title') && !in_array($key, $currentmetas)) {
-				$return->meta[$key] = $viewmeta;
+				$view->meta[$key] = $viewmeta;
 			}
 		}
 
 
 		// Since the controller already ran, do not overwrite the title.
-		if ($return->title === null){
-			$return->title = $defaultpage->get('title');
+		if ($view->title === null){
+			$view->title = $defaultpage->get('title');
 		}
 
+		// Tracker to see if this page, (or a parent's page), is an admin-level page.
+		// This is required because "admin" pages may have a different skin and should always have the dashboard as the top-level breadcrumb.
+		/** @var boolean $isadmin */
+		$isadmin = ($page->get('admin') == '1');
+
 		$parents = array();
-		foreach ($page->getParentTree() as $parent) {
+		$parenttree = $page->getParentTree();
+		foreach ($parenttree as $parent) {
+			/** @var PageModel $parent */
 			$parents[] = array(
 				'title' => $parent->get('title'),
 				'link'  => $parent->getResolvedURL()
 			);
+
+			// Since I'm here, check if this page is an admin page.
+			if($parent->get('admin')){
+				$isadmin = true;
+			}
 		}
-		$return->breadcrumbs = array_merge($parents, $return->breadcrumbs);
+		$view->breadcrumbs = array_merge($parents, $view->breadcrumbs);
+
+		if($isadmin && $view->baseurl != '/admin'){
+			// Make sure that admin is the top breadcrumb.
+			// This block doesn't need to apply for the actual admin page itself, as that doesn't need its own breadcrumb :/
+			$adminlink = \Core\resolve_link('/admin');
+			if(!isset($view->breadcrumbs[0])){
+				// Nothing is even set!
+				$view->breadcrumbs[] = ['title' => 'Administration', 'link' => $adminlink];
+			}
+			elseif($view->breadcrumbs[0]['link'] != $adminlink){
+				// It's set, but not to admin.
+				$view->breadcrumbs = array_merge([['title' => 'Administration', 'link' => $adminlink]], $view->breadcrumbs);
+			}
+		}
+
 
 		// Try to guess the templatename if it wasn't set.
-		if ($return->error == View::ERROR_NOERROR && $return->contenttype == View::CTYPE_HTML && $return->templatename === null) {
+		if ($view->error == View::ERROR_NOERROR && $view->contenttype == View::CTYPE_HTML && $view->templatename === null) {
 			$cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
-			$return->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
+			$view->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
 		}
-		elseif ($return->error == View::ERROR_NOERROR && $return->contenttype == View::CTYPE_XML && $return->templatename === null) {
+		elseif ($view->error == View::ERROR_NOERROR && $view->contenttype == View::CTYPE_XML && $view->templatename === null) {
 			$cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
-			$return->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
+			$view->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
 		}
 
 		// In addition to the autogeneration, also support the page_template from the datastore.
 		if($defaultpage->get('page_template')){
 			// Switch the template over to that custom one.
-			$return->templatename = substr($return->templatename, 0, -4) . '/' . $defaultpage->get('page_template');
+			$view->templatename = substr($view->templatename, 0, -4) . '/' . $defaultpage->get('page_template');
 		}
 
-		//var_dump($defaultpage->get('page_template'), $return->templatename); die();
-
-		if($return->mastertemplate == 'admin'){
+		// Guess which theme skin (mastertemplate) should be used if one wasn't specified.
+		if($view->mastertemplate == 'admin'){
 			// If the master template is set explictly to be the admin skin, then transpose that to the set admin skin.
 			// This is useful for the pages that may not be under the "/admin" umbrella, but still rendered with the admin UI.
-			$return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
+			$view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 		}
-		elseif($return->mastertemplate){
+		elseif($view->mastertemplate){
 			// No change needed, just skip the below cases.
 		}
-		elseif($return->mastertemplate === false){
+		elseif($view->mastertemplate === false){
 			// If the master template is explictly set to false, the page wanted no master template!
+		}
+		elseif($isadmin){
+			// This page doesn't have a master template set, but it or a parent is set as an admin-level page.
+			$view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 		}
 		elseif ($defaultpage->get('theme_template')) {
 			// Master template set in the database?
-			$return->mastertemplate = $defaultpage->get('theme_template');
+			$view->mastertemplate = $defaultpage->get('theme_template');
 		}
 		elseif($defaultpage->exists() && $defaultpage->get('admin')){
 			// Or an admin level page?
-			$return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
+			$view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 		}
-		elseif(sizeof($return->breadcrumbs) && $return->breadcrumbs[0]['title'] == 'Administration'){
+		elseif(sizeof($view->breadcrumbs) && $view->breadcrumbs[0]['title'] == 'Administration'){
 			// Whatever, close e-damn-nough!
 			// This happens for pages that don't actually exist, like "edit"....
-			$return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
+			$view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 		}
 		else{
-			$return->mastertemplate = ConfigHandler::Get('/theme/default_template');
+			$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
 		}
 
 
 		// Make sure the selected mastertemplate actually exists!
-		if($return->mastertemplate !== false){
+		if($view->mastertemplate !== false){
 			$themeskins = ThemeHandler::GetTheme()->getSkins();
 			$mastertplgood = false;
 			foreach($themeskins as $skin){
-				if($skin['file'] == $return->mastertemplate){
+				if($skin['file'] == $view->mastertemplate){
 					// It's located!
 					$mastertplgood =true;
 					break;
@@ -539,27 +594,60 @@ class PageRequest {
 			}
 
 			// A few special cases.
-			if($return->mastertemplate == 'blank.tpl'){
+			if($view->mastertemplate == 'blank.tpl'){
 				// This is acceptable as a default one.
 				$mastertplgood =true;
 			}
 
 			if(!$mastertplgood){
 				// Just use the first one instead!
-				trigger_error('Invalid skin [' . $return->mastertemplate . '] selected for this page, skin is not located within the selected theme!  Using first available instead.', E_USER_NOTICE);
-				$return->mastertemplate = $themeskins[0]['file'];
+				trigger_error('Invalid skin [' . $view->mastertemplate . '] selected for this page, skin is not located within the selected theme!  Using first available instead.', E_USER_NOTICE);
+				$view->mastertemplate = $themeskins[0]['file'];
 			}
+		}
+	}
+
+	/**
+	 * Render the View to the browser.
+	 */
+	public function render(){
+
+		$view = $this->getView();
+		$page = $this->getPageModel();
+
+		// Dispatch the hooks here if it's a 404 or 403.
+		if ($view->error == View::ERROR_ACCESSDENIED || $view->error == View::ERROR_NOTFOUND) {
+			// Let other things chew through it... (optionally)
+			HookHandler::DispatchHook('/core/page/error-' . $view->error, $view);
+		}
+
+		try {
+			$view->render();
+		}
+		// If something happens in the rendering of the template... consider it a server error.
+		catch (Exception $e) {
+			$view->error   = View::ERROR_SERVERERROR;
+			$view->baseurl = '/error/error/500';
+			$view->setParameters(array());
+			$view->templatename   = '/pages/error/error500.tpl';
+			$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
+			$view->assignVariable('exception', $e);
+
+			$view->render();
 		}
 
 
 		// Make sure I update any existing page now that the controller has ran.
-		if ($page->exists() && $return->error == View::ERROR_NOERROR) {
+		if ($page->exists() && $view->error == View::ERROR_NOERROR) {
 			$page->set('pageviews', $page->get('pageviews') + 1);
-			$page->set('last_template', $return->templatename);
+			$page->set('last_template', $view->templatename);
+			$page->set('body', $view->fetchBody());
+
 			$page->save();
 		}
 
-		return $return;
+		// Just before the page stops execution...
+		HookHandler::DispatchHook('/core/page/postrender');
 	}
 
 	/**
@@ -589,7 +677,14 @@ class PageRequest {
 	 */
 	public function getParameters() {
 		$data = $this->splitParts();
-		return $data['parameters'];
+
+		if($data['parameters'] === null){
+			// There were no parameters requested.
+			return [];
+		}
+		else{
+			return $data['parameters'];
+		}
 	}
 
 	/**
@@ -601,7 +696,19 @@ class PageRequest {
 	 */
 	public function getParameter($key) {
 		$data = $this->splitParts();
-		return (array_key_exists($key, $data['parameters'])) ? $data['parameters'][$key] : null;
+
+		if($data['parameters'] === null){
+			// There were no parameters requested.
+			return null;
+		}
+		elseif(array_key_exists($key, $data['parameters'])){
+			// The parameter key was located and available.
+			return $data['parameters'][$key];
+		}
+		else{
+			// The parameter wasn't provided.
+			return null;
+		}
 	}
 
 	/**
