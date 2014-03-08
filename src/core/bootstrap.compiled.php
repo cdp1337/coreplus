@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 07 Mar 2014 11:52:42 -0500
+ * @compiled Sat, 08 Mar 2014 16:15:41 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3505,19 +3505,23 @@ only.  Useful for saving a page without releasing it to public users.',
 ),
 'comment' => 'The published date',
 ),
-'created' => array(
-'type' => Model::ATT_TYPE_CREATED,
-'null' => false,
+'body' => array(
+'type'      => Model::ATT_TYPE_TEXT,
+'default'   => '',
+'comment'   => '[Cached] Body content of this page',
+'null'      => false,
+'form'      => array(
+'type' => 'disabled',
 ),
-'updated' => array(
-'type' => Model::ATT_TYPE_UPDATED,
-'null' => false,
 ),
 );
 public static $Indexes = array(
 'primary' => array('site', 'baseurl'),
 'unique:rewrite_url' => array('site', 'rewriteurl'),
 );
+public static $HasCreated = true;
+public static $HasUpdated = true;
+public static $HasSearch  = true;
 public $templatename = null;
 private $_class;
 private $_method;
@@ -3986,6 +3990,17 @@ $this->set('published', 0);
 }
 $this->set('popularity', $this->getPopularityScore());
 return parent::save();
+}
+public function getParent(){
+if(!$this->exists()){
+return null;
+}
+$tree = $this->getParentTree();
+if(!sizeof($tree)){
+return null;
+}
+$last = sizeof($tree) - 1;
+return $tree[$last];
 }
 public function getParentTree() {
 if (!$this->exists()) {
@@ -7671,12 +7686,15 @@ if($subnode->getAttribute('selectable') !== ''){
 $selectable = $subnode->getAttribute('selectable');
 }
 $editurl = $subnode->getAttribute('editurl') ? $subnode->getAttribute('editurl') : '';
+$access = ($subnode->getAttribute('access')) ? $subnode->getAttribute('access') : null;
 if (!$m->get('rewriteurl')) {
 if ($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
 else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
 }
 if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
-$m->set('access', $subnode->getAttribute('access'));
+if($access !== null){
+$m->set('access', $access);
+}
 if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
 $m->set('admin', $admin);
 $m->set('admin_group', $group);
@@ -8034,13 +8052,29 @@ $cachevalue[$asset] = $f->getURL();
 }
 return $cachevalue[$asset];
 }
-function resolve_link($url){
-if($url == '#') return $url;
-if(strpos($url, '://') !== false) return $url;
-$a = PageModel::SplitBaseURL($url);
-return ROOT_URL . substr($a['rewriteurl'], 1);
-$p = new PageModel($url);
-return $p->getResolvedURL();
+function resolve_link($url) {
+if ($url == '#') return $url;
+if($url{0} == '?'){
+$url = REL_REQUEST_PATH . $url;
+}
+if (strpos($url, '://') !== false) return $url;
+if(strpos($url, 'site:') === 0){
+$slashpos = strpos($url, '/');
+$site = substr($url, 5, $slashpos-5);
+$url = substr($url, $slashpos);
+}
+else{
+$site = null;
+}
+try{
+$a = \PageModel::SplitBaseURL($url, $site);
+}
+catch(\Exception $e){
+\Core\ErrorManagement\exception_handler($e);
+error_log('Unable to resolve URL [' . $url . '] due to exception [' . $e->getMessage() . ']');
+return '';
+}
+return $a['fullurl'];
 }
 function ResolveFilenameTo($filename, $base = ROOT_URL){
 $file = preg_replace('/^(' . str_replace('/', '\\/', ROOT_PDIR . '|' . ROOT_URL) . ')/', '', $filename);
@@ -12745,28 +12779,7 @@ $file = $minfile;
 return $file->getURL() . ($version ? '?v=' . $version : '');
 }
 public static function ResolveLink($url) {
-if ($url == '#') return $url;
-if($url{0} == '?'){
-$url = REL_REQUEST_PATH . $url;
-}
-if (strpos($url, '://') !== false) return $url;
-if(strpos($url, 'site:') === 0){
-$slashpos = strpos($url, '/');
-$site = substr($url, 5, $slashpos-5);
-$url = substr($url, $slashpos);
-}
-else{
-$site = null;
-}
-try{
-$a = PageModel::SplitBaseURL($url, $site);
-}
-catch(\Exception $e){
-\Core\ErrorManagement\exception_handler($e);
-error_log('Unable to resolve URL [' . $url . '] due to exception [' . $e->getMessage() . ']');
-return '';
-}
-return $a['fullurl'];
+return \Core\resolve_link($url);
 }
 public static function ResolveFilenameTo($filename, $base = ROOT_URL) {
 $file = preg_replace('/^(' . str_replace('/', '\\/', ROOT_PDIR . '|' . ROOT_URL) . ')/', '', $filename);
@@ -14932,6 +14945,7 @@ public $canonicalurl = null;
 public $allowerrors = false;
 public $ssl = false;
 public $record = true;
+private $_bodyCache = null;
 public $bodyclasses = [];
 public $htmlAttributes = [];
 public $headers = [];
@@ -14987,6 +15001,9 @@ return ($v) ? $v->value : null;
 public function fetchBody() {
 if ($this->mode == View::MODE_NOOUTPUT) {
 return null;
+}
+if($this->_bodyCache !== null){
+return $this->_bodyCache;
 }
 if ($this->error != View::ERROR_NOERROR && !$this->allowerrors) {
 $tmpl = '/pages/error/error' . $this->error . '.tpl';
@@ -15044,19 +15061,6 @@ break;
 if (!$tmpl && $this->templatename == '') {
 throw new Exception('Please set the variable "templatename" on the page view.');
 }
-if(false && $this->error == View::ERROR_NOERROR && !\Core\user()->exists() && $this->updated){
-$cacheable = true;
-$key = 'page-body' . str_replace('/', '-', $this->baseurl);
-$cache = Cache::GetSystemCache()->get($key, (60*30));
-if($cache){
-if($this->updated == $cache['updated']){
-return $cache['html'];
-}
-}
-}
-else{
-$cacheable = false;
-}
 switch ($this->mode) {
 case View::MODE_PAGE:
 case View::MODE_AJAX:
@@ -15071,9 +15075,7 @@ $t = $this->getTemplate();
 $html = $t->fetch($tn);
 break;
 }
-if($cacheable){
-Cache::GetSystemCache()->set($key, array('updated' => $this->updated, 'html' => $html), (60 * 30));
-}
+$this->_bodyCache = $html;
 return $html;
 }
 public function fetch() {
@@ -16539,17 +16541,10 @@ return ($typeweight > $current);
 }
 public function splitParts() {
 $ret = PageModel::SplitBaseURL($this->uriresolved);
-if (!$ret) {
-$ret = array(
-'controller' => null,
-'method'     => null,
-'parameters' => null,
-'baseurl'    => null,
-'rewriteurl' => null
-);
+if($ret['parameters'] === null){
+$ret['parameters'] = [];
 }
-if ($ret['parameters'] === null) $ret['parameters'] = array();
-$ret['parameters'] = array_merge($ret['parameters'], $this->parameters);
+$ret['parameters'] = array_merge($ret['parameters'], $_GET);
 return $ret;
 }
 public function getBaseURL() {
@@ -16563,19 +16558,32 @@ $this->_pageview = new View();
 return $this->_pageview;
 }
 public function execute() {
-$pagedat = $this->splitParts();
+$pagedat   = $this->splitParts();
 $view = $this->getView();
 if (!$pagedat['controller']) {
 $view->error = View::ERROR_NOTFOUND;
-return $view;
+return;
+}
+$component = Core::GetComponentByController($pagedat['controller']);
+if (!$component) {
+$view->error = View::ERROR_NOTFOUND;
+return;
+}
+elseif (is_a($component, 'Component')) {
+CurrentPage::Render();
+die();
+}
+elseif(!is_a($component, 'Component_2_1')) {
+$view->error = View::ERROR_NOTFOUND;
+return;
 }
 if ($pagedat['method']{0} == '_') {
 $view->error = View::ERROR_NOTFOUND;
-return $view;
+return;
 }
 if (!method_exists($pagedat['controller'], $pagedat['method'])) {
 $view->error = View::ERROR_NOTFOUND;
-return $view;
+return;
 }
 $controller = Controller_2_1::Factory($pagedat['controller']);
 $view->baseurl = $this->getBaseURL();
@@ -16586,14 +16594,14 @@ if ($controller->accessstring !== null) {
 $page->set('access', $controller->accessstring);
 if (!\Core\user()->checkAccess($controller->accessstring)) {
 $view->error = View::ERROR_ACCESSDENIED;
-return $view;
+return;
 }
 }
 foreach(get_class_methods('Controller_2_1') as $parentmethod){
 $parentmethod = strtolower($parentmethod);
 if($parentmethod == $pagedat['method']){
 $view->error = View::ERROR_BADREQUEST;
-return $view;
+return;
 }
 }
 if(!$page->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
@@ -16614,10 +16622,16 @@ else{
 $return = call_user_func(array($controller, $pagedat['method']));
 if (is_int($return)) {
 $view->error = $return;
-return $view;
+return;
+}
+elseif(is_a($return, 'View') && $return != $view){
+$this->_pageview = $view = $return;
 }
 elseif ($return === null) {
 $return = $controller->getView();
+if($return != $view){
+$this->_pageview = $view = $return;
+}
 }
 elseif(!is_a($return, 'View')){
 if(DEVELOPMENT_MODE){
@@ -16626,14 +16640,14 @@ die('Sorry, but this controller did not return a valid object.  Please ensure th
 }
 else{
 $view->error = View::ERROR_SERVERERROR;
-return $view;
+return;
 }
 }
-if($return->error == View::ERROR_NOERROR){
+if($view->error == View::ERROR_NOERROR){
 $controls = $controller->getControls();
 if(is_array($controls)){
 foreach($controls as $control){
-$return->addControl($control);
+$view->addControl($control);
 }
 }
 }
@@ -16657,80 +16671,117 @@ $defaultpage = $page;
 }
 $defaultmetas = $defaultpage->getLink('PageMeta');
 $currentmetas = array();
-foreach($return->meta as $k => $meta){
+foreach($view->meta as $k => $meta){
 $currentmetas[] = $k;
 }
 foreach($defaultmetas as $meta){
 $key = $meta->get('meta_key');
 $viewmeta = $meta->getViewMetaObject();
 if ($meta->get('meta_value_title') && !in_array($key, $currentmetas)) {
-$return->meta[$key] = $viewmeta;
+$view->meta[$key] = $viewmeta;
 }
 }
-if ($return->title === null){
-$return->title = $defaultpage->get('title');
+if ($view->title === null){
+$view->title = $defaultpage->get('title');
 }
+$isadmin = ($page->get('admin') == '1');
 $parents = array();
-foreach ($page->getParentTree() as $parent) {
+$parenttree = $page->getParentTree();
+foreach ($parenttree as $parent) {
 $parents[] = array(
 'title' => $parent->get('title'),
 'link'  => $parent->getResolvedURL()
 );
+if($parent->get('admin')){
+$isadmin = true;
 }
-$return->breadcrumbs = array_merge($parents, $return->breadcrumbs);
-if ($return->error == View::ERROR_NOERROR && $return->contenttype == View::CTYPE_HTML && $return->templatename === null) {
-$cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
-$return->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
 }
-elseif ($return->error == View::ERROR_NOERROR && $return->contenttype == View::CTYPE_XML && $return->templatename === null) {
+$view->breadcrumbs = array_merge($parents, $view->breadcrumbs);
+if($isadmin && $view->baseurl != '/admin'){
+$adminlink = \Core\resolve_link('/admin');
+if(!isset($view->breadcrumbs[0])){
+$view->breadcrumbs[] = ['title' => 'Administration', 'link' => $adminlink];
+}
+elseif($view->breadcrumbs[0]['link'] != $adminlink){
+$view->breadcrumbs = array_merge([['title' => 'Administration', 'link' => $adminlink]], $view->breadcrumbs);
+}
+}
+if ($view->error == View::ERROR_NOERROR && $view->contenttype == View::CTYPE_HTML && $view->templatename === null) {
 $cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
-$return->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
+$view->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
+}
+elseif ($view->error == View::ERROR_NOERROR && $view->contenttype == View::CTYPE_XML && $view->templatename === null) {
+$cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
+$view->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
 }
 if($defaultpage->get('page_template')){
-$return->templatename = substr($return->templatename, 0, -4) . '/' . $defaultpage->get('page_template');
+$view->templatename = substr($view->templatename, 0, -4) . '/' . $defaultpage->get('page_template');
 }
-if($return->mastertemplate == 'admin'){
-$return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
+if($view->mastertemplate == 'admin'){
+$view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 }
-elseif($return->mastertemplate){
+elseif($view->mastertemplate){
 }
-elseif($return->mastertemplate === false){
+elseif($view->mastertemplate === false){
+}
+elseif($isadmin){
+$view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 }
 elseif ($defaultpage->get('theme_template')) {
-$return->mastertemplate = $defaultpage->get('theme_template');
+$view->mastertemplate = $defaultpage->get('theme_template');
 }
 elseif($defaultpage->exists() && $defaultpage->get('admin')){
-$return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
+$view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 }
-elseif(sizeof($return->breadcrumbs) && $return->breadcrumbs[0]['title'] == 'Administration'){
-$return->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
+elseif(sizeof($view->breadcrumbs) && $view->breadcrumbs[0]['title'] == 'Administration'){
+$view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 }
 else{
-$return->mastertemplate = ConfigHandler::Get('/theme/default_template');
+$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
 }
-if($return->mastertemplate !== false){
+if($view->mastertemplate !== false){
 $themeskins = ThemeHandler::GetTheme()->getSkins();
 $mastertplgood = false;
 foreach($themeskins as $skin){
-if($skin['file'] == $return->mastertemplate){
+if($skin['file'] == $view->mastertemplate){
 $mastertplgood =true;
 break;
 }
 }
-if($return->mastertemplate == 'blank.tpl'){
+if($view->mastertemplate == 'blank.tpl'){
 $mastertplgood =true;
 }
 if(!$mastertplgood){
-trigger_error('Invalid skin [' . $return->mastertemplate . '] selected for this page, skin is not located within the selected theme!  Using first available instead.', E_USER_NOTICE);
-$return->mastertemplate = $themeskins[0]['file'];
+trigger_error('Invalid skin [' . $view->mastertemplate . '] selected for this page, skin is not located within the selected theme!  Using first available instead.', E_USER_NOTICE);
+$view->mastertemplate = $themeskins[0]['file'];
 }
 }
-if ($page->exists() && $return->error == View::ERROR_NOERROR) {
+}
+public function render(){
+$view = $this->getView();
+$page = $this->getPageModel();
+if ($view->error == View::ERROR_ACCESSDENIED || $view->error == View::ERROR_NOTFOUND) {
+HookHandler::DispatchHook('/core/page/error-' . $view->error, $view);
+}
+try {
+$view->render();
+}
+catch (Exception $e) {
+$view->error   = View::ERROR_SERVERERROR;
+$view->baseurl = '/error/error/500';
+$view->setParameters(array());
+$view->templatename   = '/pages/error/error500.tpl';
+$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
+$view->assignVariable('exception', $e);
+$view->render();
+}
+if ($page->exists() && $view->error == View::ERROR_NOERROR) {
 $page->set('pageviews', $page->get('pageviews') + 1);
-$page->set('last_template', $return->templatename);
+$page->set('last_template', $view->templatename);
+$page->set('body', $view->fetchBody());
 $page->save();
 }
-return $return;
+HookHandler::DispatchHook('/core/page/postrender');
 }
 public function setParameters($params) {
 $this->parameters = $params;
@@ -16740,11 +16791,24 @@ $this->parameters[$key] = $value;
 }
 public function getParameters() {
 $data = $this->splitParts();
+if($data['parameters'] === null){
+return [];
+}
+else{
 return $data['parameters'];
+}
 }
 public function getParameter($key) {
 $data = $this->splitParts();
-return (array_key_exists($key, $data['parameters'])) ? $data['parameters'][$key] : null;
+if($data['parameters'] === null){
+return null;
+}
+elseif(array_key_exists($key, $data['parameters'])){
+return $data['parameters'][$key];
+}
+else{
+return null;
+}
 }
 public function getPost($key){
 $src = &$_POST;
