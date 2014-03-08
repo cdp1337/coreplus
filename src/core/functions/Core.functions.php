@@ -286,29 +286,43 @@ function resolve_asset($asset){
  *  and the original URL is returned unchanged.
  *
  * @param string $url
+ *
  * @return string The full url of the link, including the http://...
  */
-function resolve_link($url){
+function resolve_link($url) {
 	// Allow "#" to be verbatim without translation.
-	if($url == '#') return $url;
+	if ($url == '#') return $url;
+
+	// Allow links starting with ? to be read as the current page.
+	if($url{0} == '?'){
+		$url = REL_REQUEST_PATH . $url;
+	}
 
 	// Allow already-resolved links to be returned verbatim.
-	if(strpos($url, '://') !== false) return $url;
+	if (strpos($url, '://') !== false) return $url;
 
-	$a = PageModel::SplitBaseURL($url);
+	// Allow multisite URLs to be passed in natively.
+	if(strpos($url, 'site:') === 0){
+		$slashpos = strpos($url, '/');
+		$site = substr($url, 5, $slashpos-5);
+		$url = substr($url, $slashpos);
+	}
+	else{
+		$site = null;
+	}
+
+	try{
+		$a = \PageModel::SplitBaseURL($url, $site);
+	}
+	catch(\Exception $e){
+		// Well, this isn't a fatal error, so just warn the admin and continue on.
+		\Core\ErrorManagement\exception_handler($e);
+		error_log('Unable to resolve URL [' . $url . '] due to exception [' . $e->getMessage() . ']');
+		return '';
+	}
 
 	// Instead of going through the overhead of a pagemodel call, SplitBaseURL provides what I need!
-	return ROOT_URL . substr($a['rewriteurl'], 1);
-
-	$p = new PageModel($url);
-
-	// @todo Add support for already-resolved links.
-
-	return $p->getResolvedURL();
-
-	//if($p->exists()) return $p->getResolvedURL();
-	//else return ROOT_URL . substr($url, 1);
-
+	return $a['fullurl'];
 }
 
 
