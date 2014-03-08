@@ -224,13 +224,14 @@ class PageModel extends Model {
 			),
 			'comment' => 'The published date',
 		),
-		'created' => array(
-			'type' => Model::ATT_TYPE_CREATED,
-			'null' => false,
-		),
-		'updated' => array(
-			'type' => Model::ATT_TYPE_UPDATED,
-			'null' => false,
+		'body' => array(
+			'type'      => Model::ATT_TYPE_TEXT,
+			'default'   => '',
+			'comment'   => '[Cached] Body content of this page',
+			'null'      => false,
+			'form'      => array(
+				'type' => 'disabled',
+			),
 		),
 	);
 
@@ -238,6 +239,10 @@ class PageModel extends Model {
 		'primary' => array('site', 'baseurl'),
 		'unique:rewrite_url' => array('site', 'rewriteurl'),
 	);
+
+	public static $HasCreated = true;
+	public static $HasUpdated = true;
+	public static $HasSearch  = true;
 
 	/**
 	 * Set this to the full templatename path to enable resolution of the template and any optional subtemplates.
@@ -1058,6 +1063,29 @@ class PageModel extends Model {
 		$this->set('popularity', $this->getPopularityScore());
 
 		return parent::save();
+	}
+
+	/**
+	 * Get the immediate parent page of this page, based on its parenturl.
+	 *
+	 * Will return null if this page has no parent.
+	 *
+	 * @return PageModel|null
+	 */
+	public function getParent(){
+
+		if(!$this->exists()){
+			return null;
+		}
+
+		$tree = $this->getParentTree();
+		if(!sizeof($tree)){
+			return null;
+		}
+
+		$last = sizeof($tree) - 1;
+
+		return $tree[$last];
 	}
 
 	public function getParentTree() {
