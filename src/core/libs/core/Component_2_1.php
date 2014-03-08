@@ -1879,6 +1879,7 @@ class Component_2_1 {
 					$selectable = $subnode->getAttribute('selectable');
 				}
 				$editurl = $subnode->getAttribute('editurl') ? $subnode->getAttribute('editurl') : '';
+				$access = ($subnode->getAttribute('access')) ? $subnode->getAttribute('access') : null;
 
 				// Do not "update" value, keep whatever the user set previously.
 				if (!$m->get('rewriteurl')) {
@@ -1887,9 +1888,11 @@ class Component_2_1 {
 				}
 				// Do not "update" value, keep whatever the user set previously.
 				if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
-				// Do not "update" value, keep whatever the user set previously.
-				//if ($m->get('access') == '*') $m->set('access', $subnode->getAttribute('access'));
-				$m->set('access', $subnode->getAttribute('access'));
+
+				if($access !== null){
+					$m->set('access', $access);
+				}
+
 				// Do not update parent urls if the page already exists.
 				if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
 				//$m->set('widget', $subnode->getAttribute('widget'));
