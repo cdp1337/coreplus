@@ -240,6 +240,13 @@ class View {
 	public $record = true;
 
 	/**
+	 * When fetching the body numerous times, the contents may be cached here to speed up fetchBody().
+	 *
+	 * @var null|string
+	 */
+	private $_bodyCache = null;
+
+	/**
 	 * An array of the body classes and their values.
 	 *
 	 * These automatically get appended in the <body> tag of the skin, providing the skin supports it.
@@ -357,6 +364,11 @@ class View {
 			return null;
 		}
 
+		// Was this called before?
+		if($this->_bodyCache !== null){
+			return $this->_bodyCache;
+		}
+
 		// Resolve the template based on the error code. (if present)
 		if ($this->error != View::ERROR_NOERROR && !$this->allowerrors) {
 			// Update some information in the view.
@@ -431,28 +443,6 @@ class View {
 			throw new Exception('Please set the variable "templatename" on the page view.');
 		}
 
-
-		// Allow pages requested by anonymous users to be cached if there are no errors.
-		// @todo Implement caching like this.... only that works :/
-		if(false && $this->error == View::ERROR_NOERROR && !\Core\user()->exists() && $this->updated){
-			// Yay, see if there's a cached version available!
-			$cacheable = true;
-			$key = 'page-body' . str_replace('/', '-', $this->baseurl);
-			$cache = Cache::GetSystemCache()->get($key, (60*30));
-			if($cache){
-				//var_dump($cache, $key); die();
-				// Check the updated timestamp.
-				if($this->updated == $cache['updated']){
-					return $cache['html'];
-				}
-			}
-		}
-		else{
-			$cacheable = false;
-		}
-
-
-
 		switch ($this->mode) {
 			case View::MODE_PAGE:
 			case View::MODE_AJAX:
@@ -471,10 +461,9 @@ class View {
 				break;
 		}
 
-		// Is it cacheable?
-		if($cacheable){
-			Cache::GetSystemCache()->set($key, array('updated' => $this->updated, 'html' => $html), (60 * 30));
-		}
+		// Save this HTML in local cache
+		$this->_bodyCache = $html;
+
 		return $html;
 	}
 
