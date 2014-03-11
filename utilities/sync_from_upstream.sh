@@ -28,6 +28,7 @@ rsync $OPTIONS --delete "$UPSTREAM/build/" "$BASEDIR/build"
 rsync $OPTIONS "$UPSTREAM/build.xml" "$BASEDIR/"
 rsync $OPTIONS "$UPSTREAM/ant.properties.ex" "$BASEDIR/"
 rsync $OPTIONS "$UPSTREAM/build.xml" "$BASEDIR/"
+rsync $OPTIONS "$UPSTREAM/.idea/codeStyleSettings.xml" "$BASEDIR/.idea/"
 
 echo "Syncing vendor..."
 rsync $OPTIONS --delete "$UPSTREAM/vendor/" "$BASEDIR/vendor"
