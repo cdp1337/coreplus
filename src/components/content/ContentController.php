@@ -58,7 +58,8 @@ class ContentController extends Controller_2_1 {
 		$page = $m->getLink('Page');
 		//$template = ($page->get('page_template')) ? 'view/' . $page->get('page_template') : 'view.tpl';
 
-		$view->assignVariable('model', $m);
+		$view->assign('model', $m);
+	    $view->assign('page', $page);
 		//$view->templatename = '/pages/content/' . $template;
 		$view->updated = $m->get('updated');
 
@@ -130,6 +131,9 @@ class ContentController extends Controller_2_1 {
 		// This is used with the "add page 'here'" option.
 		if($request->getParameter('parenturl')){
 			$page->set('parenturl', $request->getParameter('parenturl'));
+		}
+		if($request->getParameter('page_template')){
+			$page->set('page_template', $request->getParameter('page_template'));
 		}
 
 		$form = new Form();
