@@ -57,6 +57,7 @@ foreach($fac->get() as $model){
 	$page->set('baseurl', '/content/view/' . $content->get('id'));
 	$page->set('editurl', '/content/edit/' . $content->get('id'));
 	$page->set('deleteurl', '/content/delete/' . $content->get('id'));
+	$page->set('page_template', 'blog-article.tpl');
 	$page->save();
 
 	$insertable = new InsertableModel();

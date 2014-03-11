@@ -567,7 +567,7 @@ class BlogController extends Controller_2_1 {
 				$view->addControl('Import Feed', '/blog/import/' . $blog->get('id'), 'exchange');
 			}
 			else{
-				$view->addControl('Add Article', '/content/create?parenturl=' . $blog->get('baseurl'), 'add');
+				$view->addControl('Add Article', '/content/create?page_template=blog-article.tpl&parenturl=' . $blog->get('baseurl'), 'add');
 			}
 		}
 		if ($manager) {
