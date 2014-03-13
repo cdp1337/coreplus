@@ -145,6 +145,15 @@ class PHTML implements Templates\TemplateInterface {
 	}
 
 	/**
+	 * Get the basename of this template.
+	 *
+	 * @return string
+	 */
+	public function getBasename(){
+		return basename($this->_filename);
+	}
+
+	/**
 	 * Scan through this template file and see if it has optional stylesheets that the admin can select to enable.
 	 *
 	 * @return boolean
@@ -160,6 +169,19 @@ class PHTML implements Templates\TemplateInterface {
 	 */
 	public function hasWidgetAreas() {
 		return false;
+	}
+
+	/**
+	 * Get an array of widget areas defined on this template.
+	 *
+	 * The returning array is associative with the widgetarea name as the key,
+	 * and each value is an array of name and installable.
+	 *
+	 * @return array
+	 */
+	public function getWidgetAreas(){
+		// PHTML templates do not support widget areas yet.
+		return [];
 	}
 
 	/**

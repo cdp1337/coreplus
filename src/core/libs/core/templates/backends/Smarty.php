@@ -202,6 +202,15 @@ class Smarty implements Templates\TemplateInterface {
 	}
 
 	/**
+	 * Get the basename of this template.
+	 *
+	 * @return string
+	 */
+	public function getBasename(){
+		return basename($this->_filename);
+	}
+
+	/**
 	 * Scan through this template file and see if it has optional stylesheets that the admin can select to enable.
 	 *
 	 * @return boolean
@@ -259,6 +268,55 @@ class Smarty implements Templates\TemplateInterface {
 		else{
 			return false;
 		}
+	}
+
+	/**
+	 * Get an array of widget areas defined on this template.
+	 *
+	 * The returning array is associative with the widgetarea name as the key,
+	 * and each value is an array of name and installable.
+	 *
+	 * @return array
+	 */
+	public function getWidgetAreas(){
+		// Easiest way.... convert this to XML/HTML!
+		$fullsearch = file_get_contents($this->_filename);
+		$fullsearch = preg_replace('#\{widgetarea(.*)\}#isU', '<widgetarea$1>', $fullsearch);
+		$fullsearch = preg_replace('#\{\/widgetarea[ ]*\}#', '</widgetarea>', $fullsearch);
+
+		//echo '<pre>' . str_replace('<', '&lt;', $fullsearch) . '</pre>';
+
+		$areas = [];
+		$dom = new \DOMDocument();
+		// I don't care about parsing errors here... I just want the damn nodes!
+		// @TODO Find a better way to ignore errors!
+		try{
+			@$dom->loadHTML('<html>' . $fullsearch . '</html>');
+			$nodes = $dom->getElementsByTagName('widgetarea');
+			$validattributes = ['name', 'installable'];
+
+			foreach($nodes as $n){
+				/** @var $n \DOMElement */
+				// Pull out all the valid attributes for each node.
+				$nodedata = [];
+				foreach($validattributes as $k){
+					$nodedata[$k] = $n->getAttribute($k);
+				}
+
+				if(!isset($nodedata['installable'])){
+					$nodedata['installable'] = '';
+				}
+
+				// Add the actual elements now!
+				$areas[ $nodedata['name'] ] = $nodedata;
+
+			}
+		}
+		catch(\Exception $e){
+			// I honestly don't care if it failed.
+		}
+
+		return $areas;
 	}
 
 	/**
