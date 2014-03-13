@@ -668,6 +668,55 @@ class AdminController extends Controller_2_1 {
 			}
 		}
 
+		$theme = ThemeHandler::GetTheme();
+		$skins = $theme->getSkins();
+		$skinopts = [];
+		$skin = null;
+		foreach($skins as $dat){
+			if($request->getParameter('skin') && $dat['file'] == $request->getParameter('skin')){
+				$selected = true;
+				$skin = \Core\Templates\Template::Factory($dat['filename']);
+			}
+			elseif(!$request->getParameter('skin') && $dat['default']){
+				$selected = true;
+				$skin = \Core\Templates\Template::Factory($dat['filename']);
+			}
+			else{
+				$selected = false;
+			}
+			$skinopts[] = [
+				'title'    => $dat['title'],
+				'value'    => $dat['file'],
+				'selected' => $selected,
+			];
+		}
+
+		$areas = $skin->getWidgetAreas();
+		foreach($areas as $k => $dat){
+			// Ensure that each area has a widgets array, (even if it's empty)
+			$areas[$k]['widgets'] = [];
+		}
+
+		$factory = new ModelFactory('WidgetInstanceModel');
+		$factory->order('weight');
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			$factory->where('site = ' . MultiSiteHelper::GetCurrentSiteID());
+		}
+
+		// First, the skin-level where clause.
+		$skinwhere = new Core\Datamodel\DatasetWhereClause();
+		$skinwhere->setSeparator('AND');
+		$skinwhere->addWhere('theme = ' . $theme->getKeyName());
+		$skinwhere->addWhere('template = ' . $skin->getBasename());
+		$factory->where($skinwhere);
+
+		foreach($factory->get() as $wi){
+			/** @var $wi WidgetInstanceModel */
+
+			$a = $wi->get('widgetarea');
+			$areas[$a]['widgets'][] = $wi;
+		}
+
 		$filters = new FilterForm();
 		$filters->setName('/admin/widgets');
 		$filters->hassort = true;
@@ -688,6 +737,10 @@ class AdminController extends Controller_2_1 {
 		$view->assign('listings', $listings);
 		$view->assign('links', $links);
 		$view->assign('manager', $manager);
+		$view->assign('skins', $skinopts);
+		$view->assign('theme', $theme->getKeyName());
+		$view->assign('skin', $skin->getBasename());
+		$view->assign('areas', $areas);
 	}
 
 	/**
@@ -730,7 +783,7 @@ class AdminController extends Controller_2_1 {
 		$form->set('callsmethod', 'AdminController::_WidgetCreateUpdateHandler');
 
 		// Make the widget's "baseurl", which for simple widgets will be the widget class followed by a UUID.
-		$baseurl = strtolower(substr($class, 0, -6)) . '/execute/';
+		$baseurl = '/' . strtolower(substr($class, 0, -6)) . '/execute/';
 		$baseurl .= Core::GenerateUUID();
 
 		$form->addElement('system', array('name' => 'baseurl', 'value' => $baseurl));
@@ -778,7 +831,7 @@ class AdminController extends Controller_2_1 {
 		}
 
 		$baseurl = $request->getParameter('baseurl');
-		$class = substr($baseurl, 0, strpos($baseurl, '/')) . 'widget';
+		$class = substr($baseurl, 1, strpos($baseurl, '/', 1)-1) . 'widget';
 
 		if(!class_exists($class)){
 			Core::SetMessage('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
@@ -835,6 +888,118 @@ class AdminController extends Controller_2_1 {
 		$view->mastertemplate = 'admin';
 		$view->title = 'Update Widget';
 		$view->assign('form', $form);
+	}
+
+	/**
+	 * Delete a simple widget.
+	 */
+	public function widget_delete(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/core/widgets/manage')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		if(!$request->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		$baseurl = $request->getParameter('baseurl');
+		$class = substr($baseurl, 0, strpos($baseurl, '/')) . 'widget';
+
+		if(!class_exists($class)){
+			Core::SetMessage('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
+			\Core\go_back();
+		}
+
+		/** @var Widget_2_1 $obj */
+		$obj = new $class();
+
+		if(!($obj instanceof Widget_2_1)){
+			Core::SetMessage('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
+			\Core\go_back();
+		}
+
+		if(!$obj->is_simple){
+			Core::SetMessage('Widget [' . $class . '] does not appear to be a simple widget.  Only simple widgets can be created via this page.', 'error');
+			\Core\go_back();
+		}
+
+		$model = new WidgetModel($baseurl);
+
+		$model->delete();
+		Core::SetMessage('Deleted widget ' . $model->get('title') . ' successfully!', 'success');
+		\Core\go_back();
+	}
+
+	public function widgetinstances_save(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/core/widgets/manage')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		if(!$request->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		$counter = 0;
+		$changes = ['created' => 0, 'updated' => 0, 'deleted' => 0];
+
+		$theme = $_POST['theme'];
+		$skin = $_POST['skin'];
+
+		foreach($_POST['widgetarea'] as $id => $dat){
+
+			// Merge in the global information for this request
+			$dat['theme'] = $theme;
+			$dat['template'] = $skin;
+
+			$dat['weight'] = ++$counter;
+			$dat['access'] = $dat['widgetaccess'];
+
+			if(strpos($id, 'new') !== false){
+				$w = new WidgetInstanceModel();
+				$w->setFromArray($dat);
+				$w->save();
+				$changes['created']++;
+			}
+			elseif(strpos($id, 'del-') !== false){
+				$w = new WidgetInstanceModel(substr($id, 4));
+				$w->delete();
+				// Reset the counter back down one notch since this was a deletion request.
+				--$counter;
+				$changes['deleted']++;
+			}
+			else{
+				$w = new WidgetInstanceModel($id);
+				$w->setFromArray($dat);
+				if($w->save()) $changes['updated']++;
+			}
+		} // foreach($_POST['widgetarea'] as $id => $dat)
+
+		// Display some human friendly status message.
+		if($changes['created'] || $changes['updated'] || $changes['deleted']){
+			$changetext = [];
+
+			if($changes['created'] == 1) $changetext[] = 'One widget added';
+			elseif($changes['created'] > 1) $changetext[] = $changes['created'] . ' widgets added';
+
+			if($changes['updated'] == 1) $changetext[] = 'One widget updated';
+			elseif($changes['updated'] > 1) $changetext[] = $changes['updated'] . ' widgets updated';
+
+			if($changes['deleted'] == 1) $changetext[] = 'One widget deleted';
+			elseif($changes['deleted'] > 1) $changetext[] = $changes['deleted'] . ' widgets deleted';
+
+			Core::SetMessage(implode('<br/>', $changetext), 'success');
+		}
+		else{
+			Core::SetMessage('No changes performed', 'info');
+		}
+
+		\Core\redirect('/admin/widgets');
 	}
 
 	/**

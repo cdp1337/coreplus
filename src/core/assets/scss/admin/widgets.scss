@@ -1,0 +1,109 @@
+/*** Widget and Widgetareas ***/
+
+#skin-selection-form {
+	width: 250px;
+	float: left;
+}
+
+/* The drop target at the top of the page */
+.widget-bucket-destination {
+	margin-left: 260px;
+
+	.widgetarea {
+		float: left;
+		width: 150px;
+		margin-right: 10px;
+	}
+
+	.widget-droptarget {
+		border: 2px dashed #c6c2bb;
+		min-height: 150px;
+
+		&.highlightdroptarget {
+			border: 2px dashed green;
+		}
+
+		/* The widget when it's in the droptarget */
+		.widget-dragdropped {
+			border: 1px solid #888888;
+			cursor: move;
+			font-size: 80%;
+			height: 36px;
+			margin-bottom: 2px;
+			overflow: hidden;
+			padding-top: 2px;
+			padding-left: 2px;
+			position: relative;
+			width: 142px;
+
+			span.widget-title {
+				display: inline-block;
+				overflow: hidden;
+				white-space: nowrap;
+				width: 100%
+			}
+			span.widget-title-listing {
+				display: none;
+			}
+
+			.widget-controls {
+				background: #888888;
+				bottom: 0;
+				display: none;
+				padding: 0 5px;
+				position: absolute;
+				right: 0;
+
+				a {
+					color: white;
+				}
+			}
+
+			&:hover .widget-controls {
+				display: block;
+			}
+		}
+	}
+}
+
+
+/** The drag source, and the proxy object **/
+.widget-dragsource {
+	cursor: move;
+
+	&.ui-draggable-dragging {
+		border: 1px solid #888888;
+		height: 36px !IMPORTANT;
+		margin-bottom: 2px;
+		overflow: hidden;
+		padding-top: 2px;
+		padding-left: 2px;
+		width: 142px;
+
+		span.widget-title-listing {
+			display: none;
+		}
+
+		span.widget-title {
+			display: inline-block;
+			font-size: 80%;
+			overflow: hidden;
+			text-align: left;
+			white-space: nowrap;
+			width: 100%
+		}
+		.widget-controls {
+			display: none;
+		}
+	}
+}
+
+/** The listing table and the contained widget drag sources. **/
+.listing {
+	.widget-dragsource .widget-title {
+		display: none;
+	}
+	.widget-dragsource .widget-controls {
+		display: none;
+	}
+}

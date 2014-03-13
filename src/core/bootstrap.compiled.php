@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 08 Mar 2014 16:15:41 -0500
+ * @compiled Thu, 13 Mar 2014 00:51:36 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -14457,9 +14457,11 @@ public function getTemplateVars($varname = null);
 public function getVariable($varname);
 public function assign($tpl_var, $value = null);
 public function setFilename($template);
+public function getBasename();
 public function hasOptionalStylesheets();
 public function getOptionalStylesheets();
 public function hasWidgetAreas();
+public function getWidgetAreas();
 public function getInsertables();
 }
 } // ENDING NAMESPACE Core\Templates
@@ -14562,6 +14564,9 @@ return $this->getSmarty()->getVariable($varname);
 public function setFilename($template) {
 $this->_filename = Templates\Template::ResolveFile($template);
 }
+public function getBasename(){
+return basename($this->_filename);
+}
 public function hasOptionalStylesheets() {
 $contents = file_get_contents($this->_filename);
 return (preg_match('/{css[^}]*optional=["\']1["\'].*}/', $contents) == 1);
@@ -14591,6 +14596,31 @@ return true;
 else{
 return false;
 }
+}
+public function getWidgetAreas(){
+$fullsearch = file_get_contents($this->_filename);
+$fullsearch = preg_replace('#\{widgetarea(.*)\}#isU', '<widgetarea$1>', $fullsearch);
+$fullsearch = preg_replace('#\{\/widgetarea[ ]*\}#', '</widgetarea>', $fullsearch);
+$areas = [];
+$dom = new \DOMDocument();
+try{
+@$dom->loadHTML('<html>' . $fullsearch . '</html>');
+$nodes = $dom->getElementsByTagName('widgetarea');
+$validattributes = ['name', 'installable'];
+foreach($nodes as $n){
+$nodedata = [];
+foreach($validattributes as $k){
+$nodedata[$k] = $n->getAttribute($k);
+}
+if(!isset($nodedata['installable'])){
+$nodedata['installable'] = '';
+}
+$areas[ $nodedata['name'] ] = $nodedata;
+}
+}
+catch(\Exception $e){
+}
+return $areas;
 }
 public function getInsertables() {
 $insertables = [];
@@ -16776,7 +16806,9 @@ $view->assignVariable('exception', $e);
 $view->render();
 }
 if ($page->exists() && $view->error == View::ERROR_NOERROR) {
+if(!\Core\UserAgent::Construct()->isBot()){
 $page->set('pageviews', $page->get('pageviews') + 1);
+}
 $page->set('last_template', $view->templatename);
 $page->set('body', $view->fetchBody());
 $page->save();
