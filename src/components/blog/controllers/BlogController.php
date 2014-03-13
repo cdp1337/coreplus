@@ -536,6 +536,15 @@ class BlogController extends Controller_2_1 {
 		$filters->load($this->getPageRequest());
 
 		$factory = new ModelFactory('PageModel');
+
+		if($request->getParameter('q')){
+			$query = $request->getParameter('q');
+			$factory->where(\Core\Search\Helper::GetWhereClause($request->getParameter('q')));
+		}
+		else{
+			$query = null;
+		}
+
 		$factory->where('parenturl = ' . $blog->get('baseurl'));
 		$factory->order('published DESC');
 		if(!$editor){

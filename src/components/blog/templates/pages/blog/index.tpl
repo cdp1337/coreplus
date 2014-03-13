@@ -1,7 +1,5 @@
 {css src="assets/css/blog.css"}{/css}
 
-{widget baseurl="/blogsearch/execute"}
-
 {if count($articles) == 0}
 	{if $query}
 		<p class="message-info">Your search yielded no results.</p>

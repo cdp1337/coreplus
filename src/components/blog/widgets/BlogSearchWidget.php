@@ -54,21 +54,61 @@
 class BlogSearchWidget extends Widget_2_1 {
 	public $is_simple = true;
 
+	public $settings = [
+		'title' => 'Blog Articles',
+		'blog'  => '',
+	];
+
+	public function getFormSettings(){
+
+		$pages = PageModel::Find(['baseurl LIKE /blog/view/%'], null, 'title');
+		$opts = array('' => 'All Blogs');
+		foreach($pages as $page){
+			$id = substr($page->get('baseurl'), 11);
+			$opts[ $id ] = $page->get('title');
+		}
+
+		$settings = [
+			[
+				'type'        => 'text',
+				'name'        => 'title',
+				'title'       => 'Displayed Title',
+				'description' => 'Displayed title on the page where this widget is added to.',
+			],
+			[
+				'type'        => 'select',
+				'name'        => 'blog',
+				'title'       => 'Blog',
+				'options'     => $opts,
+				'description' => 'Choose a specific blog if you wish to retrieve posts from a specific blog.',
+			],
+		];
+
+		return $settings;
+	}
+
 	/**
 	 * Widget to display a simple blog search box
 	 */
 	public function execute(){
 		$view = $this->getView();
 
-		$url = Core::ResolveLink('/blog');
+		if($this->getSetting('blog')){
+			$urlbase = '/blog/view/' . $this->getSetting('blog');
+		}
+		else{
+			$urlbase = '/blog';
+		}
+		$url = Core::ResolveLink($urlbase);
 
-		if(PageRequest::GetSystemRequest()->getBaseURL() == '/blog' && PageRequest::GetSystemRequest()->getParameter('q')){
+		if(PageRequest::GetSystemRequest()->getBaseURL() == $urlbase && PageRequest::GetSystemRequest()->getParameter('q')){
 			$query = PageRequest::GetSystemRequest()->getParameter('q');
 		}
 		else{
 			$query = null;
 		}
 
+		$view->assign('title', $this->getSetting('title'));
 		$view->assign('url', $url);
 		$view->assign('query', $query);
 	}
