@@ -141,11 +141,13 @@ class Theme{
 
 			$skin = \Core\Templates\Template::Factory($filename);
 
+			$title = $f->getAttribute('title') ? $f->getAttribute('title') : $basefilename;
+
 			// The return is expecting an array.
 			$out[] = array(
 				'filename'        => $filename,
 				'file'            => $basefilename,
-				'title'           => $f->getAttribute('title'),
+				'title'           => $title,
 				'default'         => ($default == $basefilename),
 				'admindefault'    => ($admindefault == $basefilename),
 				'has_stylesheets' => $skin->hasOptionalStylesheets(),
