@@ -999,7 +999,7 @@ class AdminController extends Controller_2_1 {
 			Core::SetMessage('No changes performed', 'info');
 		}
 
-		\Core\redirect('/admin/widgets');
+		\Core\redirect('/admin/widgets?skin=' . $skin);
 	}
 
 	/**
