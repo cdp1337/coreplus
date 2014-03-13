@@ -548,11 +548,11 @@ class AdminController extends Controller_2_1 {
 		$filters->load($request);
 
 		$factory = new ModelFactory('PageModel');
-		$filters->applyToFactory($factory);
 
 		if($filters->get('page_types') == 'no_admin'){
 			$factory->where('admin = 0');
 		}
+		$filters->applyToFactory($factory);
 
 		$listings = $factory->get();
 
