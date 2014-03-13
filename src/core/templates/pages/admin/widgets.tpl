@@ -60,8 +60,14 @@
 				</div>
 			{/foreach}
 
-			<br/>
-			<input type="submit" value="Update Widgets"/>
+			{if sizeof($areas)}
+				<br/>
+				<input type="submit" value="Update Widgets"/>
+			{else}
+				<p class="message-info">
+					The skin {$skin} does not appear to have any widget areas!
+				</p>
+			{/if}
 		</div>
 	</form>
 
