@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 13 Mar 2014 00:51:36 -0400
+ * @compiled Thu, 13 Mar 2014 11:21:07 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1266,10 +1266,10 @@ return $this;
 public function execute($interface = null){
 if(!$interface) $interface = \DMI::GetSystemDMI();
 $interface->connection()->execute($this);
-if($this->_data === null){
+if( $this->_data === null && $this->_mode == Dataset::MODE_GET ){
 $this->_data = [];
-}
 reset($this->_data);
+}
 return $this;
 }
 function rewind() {

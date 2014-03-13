@@ -427,11 +427,11 @@ class Dataset implements \Iterator{
 		// This actually goes the other way, as the interface has the logic.
 		$interface->connection()->execute($this);
 
-		if($this->_data === null){
+		if( $this->_data === null && $this->_mode == Dataset::MODE_GET ){
 			// It's been executed, so data should at least be something.
 			$this->_data = [];
+			reset($this->_data);
 		}
-		reset($this->_data);
 
 		// Allow Chaining
 		return $this;
