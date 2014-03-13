@@ -50,17 +50,6 @@
 {script library="jqueryui"}{/script}
 {script location="foot"}<script>
 	$(function(){
-		$('fieldset.collapsible.collapsed').find('.collapsible-contents').hide();
-
-		$('fieldset.collapsible legend').css('cursor', 'pointer').click(function(){
-			var $this, $fieldset;
-
-			$this = $(this);
-			$fieldset = $this.closest('fieldset');
-
-			$fieldset.toggleClass('collapsed').find('.collapsible-contents').toggle('fast');
-		});
-
 		$('.apply-filters').click(function(){
 			$(this).closest('form').submit();
 			return false;
