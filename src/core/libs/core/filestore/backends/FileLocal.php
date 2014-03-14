@@ -1079,15 +1079,29 @@ class FileLocal implements Filestore\File {
 						break;
 					// Resize image based on smallest dimension
 					case '^':
-						if(($width * $sH / $sW) > ($height * $sW / $sH)){
-							$nH = $width * $sH / $sW;
+						$ratioheight = $sW / $height;
+						$ratiowidth  = $sH / $width;
+
+						if($ratioheight > 1 && $ratiowidth > 1){
+							// The image is larger than any of the dimensions, I can use the reduction logic.
+							if(($width * $sH / $sW) > ($height * $sW / $sH)){
+								$nH = $width * $sH / $sW;
+								$nW = $width;
+							}
+							else{
+								$nH = $height;
+								$nW = $height * $sW / $sH;
+							}
+						}
+						elseif($ratiowidth < $ratioheight){
+							// The image needs to be increased in size, this logic is slightly different.
 							$nW = $width;
+							$nH = round($width * $sH / $sW);
 						}
 						else{
 							$nH = $height;
-							$nW = $height * $sW / $sH;
+							$nW = round($height * $sW / $sH);
 						}
-						break;
 				}
 
 
