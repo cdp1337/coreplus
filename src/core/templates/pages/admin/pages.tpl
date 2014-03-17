@@ -29,7 +29,13 @@
 			<td>{$entry.parenturl}</td>
 			<td>{$entry.rewriteurl}</td>
 			<td>{$entry.pageviews}</td>
-			<td>{$entry.popularity}</td>
+			<td>
+				{if $entry.indexable}
+					{$entry.popularity}
+				{else}
+					N/A
+				{/if}
+			</td>
 			<td>{date format="SD" $entry.created}</td>
 			<td>
 				{if $entry.published}
