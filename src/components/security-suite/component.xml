@@ -19,8 +19,8 @@
 		<page baseurl="/security/sitepassword" title="Simple Site Password" access="g:admin" group="Configure" admin="1"/>
 		<page access="p:/security/viewlog" admin="1" baseurl="/security/log" title="Security Log" group="Security"/>
 		<page access="g:admin" admin="1" baseurl="/security/blacklistip" title="Blacklisted IP addresses" group="Security"/>
-		<page access="*" admin="0" baseurl="/wphoneypot/wplogin" rewriteurl="/wp-login" selectable="0" title="WP Login"/>
-		<page access="*" admin="0" baseurl="/wphoneypot/wpadmin" rewriteurl="/wp-admin" selectable="0" title="WP Admin"/>
+		<page access="*" admin="0" baseurl="/wphoneypot/wplogin" rewriteurl="/wp-login" selectable="0" title="WP Login" indexable="0"/>
+		<page access="*" admin="0" baseurl="/wphoneypot/wpadmin" rewriteurl="/wp-admin" selectable="0" title="WP Admin" indexable="0"/>
 	</pages>
 	<permissions>
 		<permission key="/security/viewlog" description="View Security Log"/>
