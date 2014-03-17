@@ -1878,6 +1878,7 @@ class Component_2_1 {
 				if($subnode->getAttribute('selectable') !== ''){
 					$selectable = $subnode->getAttribute('selectable');
 				}
+				$indexable = ($subnode->getAttribute('indexable') !== '') ? $subnode->getAttribute('indexable') : $selectable;
 				$editurl = $subnode->getAttribute('editurl') ? $subnode->getAttribute('editurl') : '';
 				$access = ($subnode->getAttribute('access')) ? $subnode->getAttribute('access') : null;
 
@@ -1899,6 +1900,7 @@ class Component_2_1 {
 				$m->set('admin', $admin);
 				$m->set('admin_group', $group);
 				$m->set('selectable', $selectable);
+				$m->set('indexable', $indexable);
 				$m->set('component', $this->getKeyName());
 				$m->set('editurl', $editurl);
 				if ($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';

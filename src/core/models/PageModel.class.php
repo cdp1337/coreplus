@@ -192,8 +192,19 @@ class PageModel extends Model {
 		'selectable' => array(
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => 1,
-			'comment' => 'Selectable as a parent url and sitemap page',
+			'comment' => 'Selectable as a parent url',
 			'formtype' => 'disabled',
+		),
+		'indexable' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'default' => 1,
+			'comment' => 'Page is displayed on the sitemap, search, and search crawlers',
+			'form' => [
+				//'type' => 'checkbox',
+				'description' => 'Set to No if you do not want this page to be listed in search results.',
+				'group' => 'Meta Information & URL (SEO)',
+				'grouptype' => 'tabs',
+			],
 		),
 		'popularity' => array(
 			'type' => Model::ATT_TYPE_FLOAT,
@@ -1179,6 +1190,12 @@ class PageModel extends Model {
 
 		if(!$created){
 			// If this page is not published yet, then it shouldn't have a score.
+			return 0.000;
+		}
+
+		// Pages that are not indexable never have a score either.
+		// This helps keep down on the admin pages being updated.
+		if(!$this->get('indexable')){
 			return 0.000;
 		}
 

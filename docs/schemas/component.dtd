@@ -144,6 +144,7 @@ type CDATA #IMPLIED
 	admin (0|1) "0"
 	group CDATA #IMPLIED
 	selectable (0|1) "1"
+	indexable (0|1) "1"
 	editurl CDATA #IMPLIED
 >
 
