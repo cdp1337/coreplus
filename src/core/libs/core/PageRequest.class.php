@@ -621,6 +621,11 @@ class PageRequest {
 			HookHandler::DispatchHook('/core/page/error-' . $view->error, $view);
 		}
 
+		if(!$page->get('indexable')){
+			// Bots have no business indexing user-action pages.
+			$view->addMetaName('robots', 'noindex');
+		}
+
 		try {
 			$view->render();
 		}
