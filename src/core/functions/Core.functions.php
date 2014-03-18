@@ -35,15 +35,6 @@ function db(){
 }
 
 /**
- * Shortcut function to get the current system cache interface.
- *
- * @return \Cache
- */
-function cache(){
-	return \Cache::GetSystemCache();
-}
-
-/**
  * Get the global FTP connection.
  *
  * Returns the FTP resource or false on failure.
@@ -263,7 +254,7 @@ function resolve_asset($asset){
 
 	// Maybe it's cached :)
 	$keyname = 'asset-resolveurl';
-	$cachevalue = \Core::Cache()->get($keyname, (3600 * 24));
+	$cachevalue = \Core\Cache::Get($keyname, (3600 * 24));
 
 	if(!$cachevalue) $cachevalue = array();
 
@@ -273,7 +264,7 @@ function resolve_asset($asset){
 
 		$cachevalue[$asset] = $f->getURL();
 		// Save this for future lookups.
-		\Core::Cache()->set($keyname, $cachevalue, (3600 * 24));
+		\Core\Cache::Set($keyname, $cachevalue, (3600 * 24));
 	}
 
 	return $cachevalue[$asset];

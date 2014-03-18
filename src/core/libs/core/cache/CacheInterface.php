@@ -1,30 +1,36 @@
 <?php
 /**
- * File: ICacheCore
+ * File: CacheInterface
  * Interface that all storage-specific adapters must adhere to.
  *
  * @version 2011.07.28
  * @copyright 2006-2010 Ryan Parman, Foleeo Inc., and contributors.
  * @license Simplified BSD License - http://opensource.org/licenses/bsd-license.php
- * @package CacheCore
+ * @package Core\Cache
  * 
  * @see AWS SDK for PHP (aka CloudFusion) - http://aws.amazon.com/sdkforphp/
  * @see https://github.com/cdp1337/cachecore
  * @see https://github.com/skyzyx/cachecore
  */
 
+namespace Core\Cache;
 
-/*%**************************************************************************%*/
-// INTERFACE
 
 /**
- * Interface: ICacheCore
+ * Interface: CacheInterface
  * 	Defines the methods that all implementing classes MUST have. Covers CRUD 
  * (create, read, update, delete) methods, as well as others that are used in 
  * the base CacheCore class.
  */
-interface ICacheCore
-{
+interface CacheInterface {
+
+	/**
+	 * Construct a new cache object with the given key and the given expiration.
+	 *
+	 * @param string $key
+	 * @param int    $expires
+	 */
+	public function __construct($key, $expires);
 
 	/**
 	 * Method: create()
@@ -32,7 +38,7 @@ interface ICacheCore
 	 * implementing class.
 	 * 
 	 * @access public
-	 * @param mixed The data to cache.
+	 * @param mixed $data The data to cache.
 	 * @return boolean Whether the operation was successful.
 	 */
 	public function create($data);
@@ -51,7 +57,7 @@ interface ICacheCore
 	 * Updates an existing cache. Placeholder method should be defined by the implementing class.
 	 * 
 	 * @access public
-	 * @param mixed The data to cache.
+	 * @param mixed $data The data to cache.
 	 * @return boolean Whether the operation was successful.
 	 */
 	public function update($data);
@@ -64,33 +70,6 @@ interface ICacheCore
 	 * @return boolean Whether the operation was successful.
 	 */
 	public function delete();
-
-	/**
-	 * Method: is_expired()
-	 * Determines whether a cache has expired or not. Placeholder method should be defined by the implementing class.
-	 * 
-	 * @access public
-	 * @return boolean Whether the cache is expired or not.
-	 */
-	public function is_expired();
-
-	/**
-	 * Method: timestamp()
-	 * Retrieves the time stamp of the cache. Placeholder method should be defined by the implementing class.
-	 * 
-	 * @access public
-	 * @return mixed Either the Unix time stamp of the cache creation, or _boolean_ false.
-	 */
-	public function timestamp();
-
-	/**
-	 * Method: reset()
-	 * Resets the freshness of the cache. Placeholder method should be defined by the implementing class.
-	 * 
-	 * @access public
-	 * @return boolean Whether the operation was successful.
-	 */
-	public function reset();
 	
 	/**
 	 * Method: flush()

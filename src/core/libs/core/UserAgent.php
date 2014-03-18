@@ -370,6 +370,32 @@ class UserAgent {
 	}
 
 	/**
+	 * Get a pseudo-unique identifier for this user agent.
+	 *
+	 * This is useful for identifying a certain type of UA for caching reasons.
+	 *
+	 * @param bool $as_array
+	 *
+	 * @return array|string
+	 */
+	public function getPseudoIdentifier($as_array = false){
+		$a = [];
+		$a[] = 'ua-browser-' . $this->browser;
+		$a[] = 'ua-engine-' . $this->rendering_engine_name;
+		$a[] = 'ua-browser-version-' . $this->major_ver;
+		$a[] = 'ua-platform-' . $this->platform;
+		if($this->isMobile()) $a[] = 'ua-is-mobile';
+
+		// Does the user want an array or a flat hash?
+		if($as_array){
+			return $a;
+		}
+		else{
+			return strtolower(implode(';', $a));
+		}
+	}
+
+	/**
 	 *  Load the data from the files
 	 */
 	private static function _LoadData() {
@@ -379,7 +405,7 @@ class UserAgent {
 		// The number of seconds to have Core cache the records.
 		$cachetime = 7200;
 
-		$cache = \Core\cache()->get($cachekey, $cachetime);
+		$cache = \Core\Cache::Get($cachekey, $cachetime);
 
 		if($cache === false){
 			$file = \Core\Filestore\Factory::File('tmp/php_browscap.ini');
@@ -452,7 +478,7 @@ class UserAgent {
 			}
 			unset($user_agents_keys, $properties_keys, $_browsers);
 
-			\Core\cache()->set(
+			\Core\Cache::Set(
 				$cachekey,
 				[
 					'browsers'   => $browsers,
@@ -464,7 +490,7 @@ class UserAgent {
 			);
 		}
 
-		return \Core\cache()->get($cachekey, $cachetime);
+		return \Core\Cache::Get($cachekey, $cachetime);
 	}
 
 	/**
@@ -478,10 +504,10 @@ class UserAgent {
 		if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
 
 		$cachekey = 'useragent-constructor-' . md5($useragent);
-		$cache = \Cache::GetSystemCache()->get($cachekey);
+		$cache = \Core\Cache::Get($cachekey);
 		if(!$cache){
 			$cache = new UserAgent($useragent);
-			\Cache::GetSystemCache()->set($cachekey, $cache, (3600));
+			\Core\Cache::Set($cachekey, $cache, 3600);
 		}
 
 		return $cache;

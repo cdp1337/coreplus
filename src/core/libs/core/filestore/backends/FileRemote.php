@@ -554,7 +554,7 @@ class FileRemote implements Filestore\File {
 			// File exists already!  Check and see if it needs to be redownloaded.
 			if ($this->cacheable && $this->_tmplocal->exists()) {
 				// Lookup this file in the system cache.
-				$systemcachedata = \Core::Cache()->get('remotefile-cache-header-' . $f);
+				$systemcachedata = \Core\Cache::Get('remotefile-cache-header-' . $f);
 				if ($systemcachedata) {
 					// I can only look them up if the cache is available.
 
@@ -594,7 +594,7 @@ class FileRemote implements Filestore\File {
 				$this->_tmplocal->putContents(file_get_contents($this->getURL(), false, $context));
 
 				// And remember this header data for nexttime.
-				\Core::Cache()->set(
+				\Core\Cache::Set(
 					'remotefile-cache-header-' . $f,
 					$this->_getHeaders()
 				);

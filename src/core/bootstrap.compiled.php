@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 13 Mar 2014 11:21:07 -0400
+ * @compiled Tue, 18 Mar 2014 14:38:11 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1784,8 +1784,6 @@ $keys[$k] = $v;
 }
 }
 if ($this->_cacheable) {
-$cachekey = $this->_getCacheKey();
-$cache    = Core::Cache()->get($cachekey);
 }
 if(
 isset($s['site']) &&
@@ -3335,7 +3333,7 @@ public static $Schema = array(
 ),
 ),
 'site' => array(
-'type' => Model::ATT_TYPE_INT,
+'type' => Model::ATT_TYPE_SITE,
 'default' => -1,
 'formtype' => 'system',
 'comment' => 'The site id in multisite mode, (or -1 if global)',
@@ -3430,6 +3428,35 @@ public static $Schema = array(
 'formtype'  => 'disabled',
 'comment'   => 'The last page template used to render this page, useful in edit pages.',
 ),
+'expires' => array(
+'type' => Model::ATT_TYPE_INT,
+'default' => 3600,
+'form' => [
+'title' => 'Cacheable / Expires',
+'type' => 'select',
+'options' => [
+'0'     => 'No Cache Allowed',
+'30'    => '30 seconds',
+'60'    => '1 minute',
+'120'   => '2 minutes',
+'300'   => '5 minutes',
+'600'   => '10 minutes',
+'1800'  => '30 minutes',
+'3600'  => '1 hour',
+'7200'  => '2 hours',
+'14400' => '4 hours',
+'21600' => '6 hours',
+'28800' => '8 hours',
+'43200' => '12 hours',
+'64800' => '18 hours',
+'86400' => '24 hours',
+],
+'description' => 'Amount of time this page has a valid cache for, set to 0 to completely disable.
+This cache only applies to guest users and bots.',
+'group' => 'Access & Advanced',
+'grouptype' => 'tabs',
+],
+),
 'access' => array(
 'type' => Model::ATT_TYPE_STRING,
 'maxlength' => 512,
@@ -3473,8 +3500,18 @@ public static $Schema = array(
 'selectable' => array(
 'type' => Model::ATT_TYPE_BOOL,
 'default' => 1,
-'comment' => 'Selectable as a parent url and sitemap page',
+'comment' => 'Selectable as a parent url',
 'formtype' => 'disabled',
+),
+'indexable' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => 1,
+'comment' => 'Page is displayed on the sitemap, search, and search crawlers',
+'form' => [
+'description' => 'Set to No if you do not want this page to be listed in search results.',
+'group' => 'Meta Information & URL (SEO)',
+'grouptype' => 'tabs',
+],
 ),
 'popularity' => array(
 'type' => Model::ATT_TYPE_FLOAT,
@@ -4055,6 +4092,9 @@ $created = $this->get('published');
 if(!$created){
 return 0.000;
 }
+if(!$this->get('indexable')){
+return 0.000;
+}
 $order = log10($score);
 $seconds = time() - $created;
 $secs_per_month = 86400 * 28.5;
@@ -4082,6 +4122,19 @@ $uid = $meta->get('meta_value');
 if(!$uid) return null;
 $u = UserModel::Construct($uid);
 return $u;
+}
+public function getIndexCacheKey(){
+return 'page-cache-index-' . $this->get('site') . '-' . md5($this->get('baseurl'));
+}
+public function purgePageCache(){
+$indexkey = $this->getIndexCacheKey();
+$index = \Core\Cache::Get($indexkey, 86400);
+if($index && is_array($index)){
+foreach($index as $key){
+\Core\Cache::Delete($key);
+}
+}
+\Core\Cache::Delete($indexkey);
 }
 public function isPublished(){
 if($this->get('published_status') == 'draft'){
@@ -6709,7 +6762,7 @@ $f->copyTo($nf, true);
 $changed = true;
 }
 if (!$changed) return false;
-Core::Cache()->delete('asset-resolveurl');
+\Core\Cache::Delete('asset-resolveurl');
 return true;
 }
 public function isEnabled() {
@@ -7458,7 +7511,7 @@ if ($change !== false) $changed = array_merge($changed, $change);
 if(sizeof($changed)){
 SystemLogModel::LogInfoEvent('/updater/component/disable', 'Component ' . $this->getName() . ' disabled successfully!', implode("\n", $changed));
 }
-Core::Cache()->delete('core-components');
+\Core\Cache::Delete('core-components');
 return (sizeof($changed)) ? $changed : false;
 }
 public function enable(){
@@ -7475,7 +7528,7 @@ if ($change !== false) $changed = array_merge($changed, $change);
 if(sizeof($changed)){
 SystemLogModel::LogInfoEvent('/updater/component/enable', 'Component ' . $this->getName() . ' enabled successfully!', implode("\n", $changed));
 }
-Core::Cache()->delete('core-components');
+\Core\Cache::Delete('core-components');
 return (sizeof($changed)) ? $changed : false;
 }
 public function getRootDOM(){
@@ -7560,7 +7613,7 @@ $change = $this->_parseWidgets();
 if ($change !== false) $changed = array_merge($changed, $change);
 $change = $this->_installAssets();
 if ($change !== false) $changed = array_merge($changed, $change);
-Core::Cache()->delete('core-components');
+\Core\Cache::Delete('core-components');
 return (sizeof($changed)) ? $changed : false;
 }
 private function _parseConfigs($install = true) {
@@ -7685,6 +7738,7 @@ $group      = ($admin ? $subnode->getAttribute('group') : '');
 if($subnode->getAttribute('selectable') !== ''){
 $selectable = $subnode->getAttribute('selectable');
 }
+$indexable = ($subnode->getAttribute('indexable') !== '') ? $subnode->getAttribute('indexable') : $selectable;
 $editurl = $subnode->getAttribute('editurl') ? $subnode->getAttribute('editurl') : '';
 $access = ($subnode->getAttribute('access')) ? $subnode->getAttribute('access') : null;
 if (!$m->get('rewriteurl')) {
@@ -7699,6 +7753,7 @@ if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
 $m->set('admin', $admin);
 $m->set('admin_group', $group);
 $m->set('selectable', $selectable);
+$m->set('indexable', $indexable);
 $m->set('component', $this->getKeyName());
 $m->set('editurl', $editurl);
 if ($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';
@@ -7889,7 +7944,7 @@ throw new InstallerException('Unable to copy [' . $f->getFilename() . '] to [' .
 $changes[] = $action . ' ' . $nf->getFilename();
 }
 if (!sizeof($changes)) return false;
-Core::Cache()->delete('asset-resolveurl');
+\Core\Cache::Delete('core-components');
 return $changes;
 }
 private function _checkUpgradePath(){
@@ -7935,9 +7990,6 @@ use DMI;
 use Cache;
 function db(){
 return DMI::GetSystemDMI()->connection();
-}
-function cache(){
-return \Cache::GetSystemCache();
 }
 function FTP(){
 static $ftp = null;
@@ -8043,12 +8095,12 @@ function resolve_asset($asset){
 if(strpos($asset, '://') !== false) return $asset;
 if(strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
 $keyname = 'asset-resolveurl';
-$cachevalue = \Core::Cache()->get($keyname, (3600 * 24));
+$cachevalue = \Core\Cache::Get($keyname, (3600 * 24));
 if(!$cachevalue) $cachevalue = array();
 if(!isset($cachevalue[$asset])){
 $f = \Core::File($asset);
 $cachevalue[$asset] = $f->getURL();
-\Core::Cache()->set($keyname, $cachevalue, (3600 * 24));
+\Core\Cache::Set($keyname, $cachevalue, (3600 * 24));
 }
 return $cachevalue[$asset];
 }
@@ -9833,6 +9885,9 @@ $nW = $width;
 $nH = $height;
 break;
 case '^':
+$ratioheight = $sW / $height;
+$ratiowidth  = $sH / $width;
+if($ratioheight > 1 && $ratiowidth > 1){
 if(($width * $sH / $sW) > ($height * $sW / $sH)){
 $nH = $width * $sH / $sW;
 $nW = $width;
@@ -9841,7 +9896,15 @@ else{
 $nH = $height;
 $nW = $height * $sW / $sH;
 }
-break;
+}
+elseif($ratiowidth < $ratioheight){
+$nW = $width;
+$nH = round($width * $sH / $sW);
+}
+else{
+$nH = $height;
+$nW = round($height * $sW / $sH);
+}
 }
 $img2 = imagecreatetruecolor($nW, $nH);
 imagealphablending($img2, false);
@@ -10429,7 +10492,7 @@ $f = md5($this->getFilename());
 $needtodownload = true;
 $this->_tmplocal = Filestore\Factory::File('tmp/remotefile-cache/' . $f);
 if ($this->cacheable && $this->_tmplocal->exists()) {
-$systemcachedata = \Core::Cache()->get('remotefile-cache-header-' . $f);
+$systemcachedata = \Core\Cache::Get('remotefile-cache-header-' . $f);
 if ($systemcachedata) {
 if(isset($systemcachedata['Expires']) && strtotime($systemcachedata['Expires']) > time()){
 $needtodownload = false;
@@ -10454,7 +10517,7 @@ $opts = array(
 );
 $context = stream_context_create($opts);
 $this->_tmplocal->putContents(file_get_contents($this->getURL(), false, $context));
-\Core::Cache()->set(
+\Core\Cache::Set(
 'remotefile-cache-header-' . $f,
 $this->_getHeaders()
 );
@@ -11170,239 +11233,309 @@ return ComponentHandler::Singleton()->_libraries;
 }
 
 
-### REQUIRE_ONCE FROM core/libs/cachecore/backends/icachecore.interface.php
-interface ICacheCore
-{
-public function create($data);
-public function read();
-public function update($data);
-public function delete();
-public function is_expired();
-public function timestamp();
-public function reset();
-public function flush();
+### REQUIRE_ONCE FROM core/libs/core/Cache.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core {
+define('__CACHE_PDIR', ROOT_PDIR . 'core/libs/core/cache/');
+class Cache {
+private static $_KeyCache = array();
+private static $_Backend = null;
+public static function Get($key, $expires = 7200){
+$obj = self::_Factory($key, $expires);
+return $obj->read();
 }
-
-
-### REQUIRE_ONCE FROM core/libs/cachecore/backends/cachecore.class.php
-if (file_exists(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'icachecore.interface.php')  && !interface_exists('ICacheCore'))
-{
-include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'icachecore.interface.php';
+public static function Set($key, $value, $expires = 7200){
+$obj = self::_Factory($key, $expires);
+if($obj->create($value)){
+return true;
 }
-class CacheCore
-{
-var $name;
-var $location;
-var $expires;
-var $id;
-var $timestamp;
-var $gzip;
-public function __construct($name, $location, $expires, $gzip = true)
-{
-if (!extension_loaded('zlib'))
-{
-$gzip = false;
+elseif($obj->update($value)){
+return true;
 }
-$this->name = $name;
-$this->location = $location;
-$this->expires = $expires;
-$this->gzip = $gzip;
-return $this;
-}
-public static function init($name, $location, $expires, $gzip = true)
-{
-if (version_compare(PHP_VERSION, '5.3.0', '<'))
-{
-throw new Exception('PHP 5.3 or newer is required to use CacheCore::init().');
-}
-$self = get_called_class();
-return new $self($name, $location, $expires, $gzip);
-}
-public function response_manager($callback, $params = null)
-{
-$params = is_array($params) ? $params : array($params);
-if ($data = $this->read())
-{
-if ($this->is_expired())
-{
-if ($data = call_user_func_array($callback, $params))
-{
-$this->update($data);
-}
-else
-{
-$this->reset();
-$data = $this->read();
+else{
+return false;
 }
 }
+public static function Delete($key){
+return self::_Factory($key)->delete();
 }
-else
-{
-if ($data = call_user_func_array($callback, $params))
-{
-$this->create($data);
+public static function Flush(){
+$s = self::_Factory('FLUSH')->flush();
+self::$_KeyCache = array();
+return $s;
 }
+private static function _Factory($key, $expires = 7200){
+if(self::$_Backend === null){
+$cs = \ConfigHandler::LoadConfigFile("configuration");
+self::$_Backend = $cs['cache_type'];
 }
-return $data;
+if(isset(self::$_KeyCache[$key])){
+return self::$_KeyCache[$key];
 }
-}
-
-
-### REQUIRE_ONCE FROM core/libs/cachecore/backends/cachefile.class.php
-class CacheFile extends CacheCore implements ICacheCore
+switch(self::$_Backend){
+case 'apc':
+if(!class_exists('CacheAPC')){
+### REQUIRE_ONCE FROM core/libs/core/cache/backends/cacheapc.class.php
+class CacheAPC extends CacheCore implements ICacheCore
 {
 public function __construct($name, $location, $expires, $gzip = true)
 {
-parent::__construct($name, $location, $expires, $gzip);
-$this->id = $this->location . '/' . $this->name . '.cache';
+parent::__construct($name, null, $expires, $gzip);
+$this->id = $this->name;
 }
 public function create($data)
 {
-if (file_exists($this->id))
-{
-return false;
-}
-elseif (file_exists($this->location) && is_writeable($this->location))
-{
 $data = serialize($data);
 $data = $this->gzip ? gzcompress($data) : $data;
-return (bool) file_put_contents($this->id, $data);
-}
-return false;
+return apc_add($this->id, $data, $this->expires);
 }
 public function read()
 {
-if (file_exists($this->id) && is_readable($this->id))
+if ($data = apc_fetch($this->id))
 {
-$data = file_get_contents($this->id);
 $data = $this->gzip ? gzuncompress($data) : $data;
-$data = unserialize($data);
-if ($data === false)
-{
-$this->delete();
-return false;
-}
-return $data;
+return unserialize($data);
 }
 return false;
 }
 public function update($data)
 {
-if (file_exists($this->id) && is_writeable($this->id))
-{
 $data = serialize($data);
 $data = $this->gzip ? gzcompress($data) : $data;
-return (bool) file_put_contents($this->id, $data);
-}
-return false;
+return apc_store($this->id, $data, $this->expires);
 }
 public function delete()
 {
-if (file_exists($this->id))
-{
-return unlink($this->id);
+return apc_delete($this->id);
 }
+public function is_expired()
+{
 return false;
 }
 public function timestamp()
 {
-clearstatcache();
-if (file_exists($this->id))
-{
-$this->timestamp = filemtime($this->id);
-return $this->timestamp;
-}
 return false;
 }
 public function reset()
 {
-if (file_exists($this->id))
-{
-return touch($this->id);
-}
-return false;
-}
-public function is_expired()
-{
-if ($this->timestamp() + $this->expires < time())
-{
-return true;
-}
 return false;
 }
 public function flush()
 {
-return false;
+return apc_clear_cache();
 }
 }
 
 
-### REQUIRE_ONCE FROM core/libs/cachecore/Cache.class.php
-define('__CACHE_PDIR', ROOT_PDIR . 'core/libs/cachecore/');
-if(!class_exists('CacheCore')){
-require_once(__CACHE_PDIR . 'backends/cachecore.class.php'); #SKIPCOMPILER
 }
-class Cache{
-private static $_cachecache;
-static protected $_Interface = null;
-private $_backend = null;
-private static $_KeyCache = array();
-public function __construct($backend = null){
-if(!$backend){
-$cs = ConfigHandler::LoadConfigFile("configuration");
-$backend = $cs['cache_type'];
-}
-$this->_backend = $backend;
-}
-public function get($key, $expires = 7200){
-if(!isset($this)){
-throw new Exception('Cannot call Cache::get() statically, please use Core::Cache()->get() instead.');
-}
-if(!isset(self::$_KeyCache[$key])){
-self::$_KeyCache[$key] = $this->_factory($key, $expires)->read();
-}
-return self::$_KeyCache[$key];
-}
-public function set($key, $value, $expires = 7200){
-if(!isset($this)) throw new Exception('Cannot call Cache::set() statically, please use Core::Cache()->set() instead.');
-$c = $this->_factory($key, $expires);
-self::$_KeyCache[$key] = $value;
-if($c->create($value)) return true;
-elseif($c->update($value)) return true;
-else return false;
-}
-public function delete($key){
-return $this->_factory($key)->delete();
-}
-public function flush(){
-self::$_KeyCache = array();
-return $this->_factory(null)->flush();
-}
-public function _factory($key, $expires = 7200){
-$obj = false;
-switch($this->_backend){
-case 'apc':
-if(!class_exists('CacheAPC')) require_once(__CACHE_PDIR . 'backends/cacheapc.class.php');
 $obj = new CacheAPC($key, null, $expires);
 break;
 case 'file':
 default:
-if(!class_exists('CacheFile')) require_once(__CACHE_PDIR . 'backends/cachefile.class.php');
-if(!is_dir(TMP_DIR . 'cache')) mkdir(TMP_DIR . 'cache');
-$obj = new CacheFile($key, TMP_DIR . 'cache', $expires);
+if(!class_exists('Cache\File')){
+### REQUIRE_ONCE FROM core/libs/core/cache/File.php
+} // ENDING NAMESPACE Core
+namespace Core\Cache {
+class File implements CacheInterface {
+private $_key;
+private $_expires;
+private $_dir;
+private $_file;
+private $_gzip;
+public function __construct($key, $expires) {
+$this->_key = $key;
+$this->_expires = $expires;
+$this->_dir = TMP_DIR . 'cache/';
+$this->_file = TMP_DIR . 'cache/' . $key . '.cache';
+$this->_gzip = (extension_loaded('zlib'));
+}
+public function create($data) {
+if (file_exists($this->_file)) {
+return false;
+}
+elseif (file_exists($this->_dir) && is_writeable($this->_dir)) {
+$data = serialize($data);
+$data = $this->_gzip ? gzcompress($data) : $data;
+return (bool) file_put_contents($this->_file, $data);
+}
+return false;
+}
+public function read() {
+if(!file_exists($this->_file)){
+return false;
+}
+elseif(!is_readable($this->_file)){
+return false;
+}
+elseif($this->is_expired()){
+return false;
+}
+else{
+$data = file_get_contents($this->_file);
+$data = $this->_gzip ? gzuncompress($data) : $data;
+$data = unserialize($data);
+if ($data === false) {
+$this->delete();
+return false;
+}
+return $data;
+}
+}
+public function update($data) {
+if (file_exists($this->_file) && is_writeable($this->_file)) {
+$data = serialize($data);
+$data = $this->_gzip ? gzcompress($data) : $data;
+return (bool) file_put_contents($this->_file, $data);
+}
+return false;
+}
+public function delete() {
+if (file_exists($this->_file)) {
+return unlink($this->_file);
+}
+return false;
+}
+public function flush() {
+$dir = opendir($this->_dir);
+if(!$dir){
+return true;
+}
+while(($file = readdir($dir)) !== false){
+unlink($this->_dir . $file);
+}
+closedir($dir);
+return true;
+}
+private function is_expired() {
+clearstatcache();
+if(filemtime($this->_file) + $this->_expires < time()){
+return true;
+}
+else{
+return false;
+}
+}
+}
+} // ENDING NAMESPACE Core\Cache
+
+namespace Core {
+
+}
+if(!is_dir(TMP_DIR . 'cache')){
+mkdir(TMP_DIR . 'cache');
+}
+$obj = new Cache\File($key, $expires);
 break;
 }
+self::$_KeyCache[$key] = $obj;
 return $obj;
 }
-public static function GetSystemCache(){
-if(self::$_Interface !== null) return self::$_Interface;
-self::$_Interface = new Cache();
-return self::$_Interface;
 }
-}
-class Cache_Exception extends Exception{
-}
+} // ENDING NAMESPACE Core
 
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/cache/CacheInterface.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Cache {
+interface CacheInterface {
+public function __construct($key, $expires);
+public function create($data);
+public function read();
+public function update($data);
+public function delete();
+public function flush();
+}
+} // ENDING NAMESPACE Core\Cache
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/cache/File.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Cache {
+class File implements CacheInterface {
+private $_key;
+private $_expires;
+private $_dir;
+private $_file;
+private $_gzip;
+public function __construct($key, $expires) {
+$this->_key = $key;
+$this->_expires = $expires;
+$this->_dir = TMP_DIR . 'cache/';
+$this->_file = TMP_DIR . 'cache/' . $key . '.cache';
+$this->_gzip = (extension_loaded('zlib'));
+}
+public function create($data) {
+if (file_exists($this->_file)) {
+return false;
+}
+elseif (file_exists($this->_dir) && is_writeable($this->_dir)) {
+$data = serialize($data);
+$data = $this->_gzip ? gzcompress($data) : $data;
+return (bool) file_put_contents($this->_file, $data);
+}
+return false;
+}
+public function read() {
+if(!file_exists($this->_file)){
+return false;
+}
+elseif(!is_readable($this->_file)){
+return false;
+}
+elseif($this->is_expired()){
+return false;
+}
+else{
+$data = file_get_contents($this->_file);
+$data = $this->_gzip ? gzuncompress($data) : $data;
+$data = unserialize($data);
+if ($data === false) {
+$this->delete();
+return false;
+}
+return $data;
+}
+}
+public function update($data) {
+if (file_exists($this->_file) && is_writeable($this->_file)) {
+$data = serialize($data);
+$data = $this->_gzip ? gzcompress($data) : $data;
+return (bool) file_put_contents($this->_file, $data);
+}
+return false;
+}
+public function delete() {
+if (file_exists($this->_file)) {
+return unlink($this->_file);
+}
+return false;
+}
+public function flush() {
+$dir = opendir($this->_dir);
+if(!$dir){
+return true;
+}
+while(($file = readdir($dir)) !== false){
+unlink($this->_dir . $file);
+}
+closedir($dir);
+return true;
+}
+private function is_expired() {
+clearstatcache();
+if(filemtime($this->_file) + $this->_expires < time()){
+return true;
+}
+else{
+return false;
+}
+}
+}
+} // ENDING NAMESPACE Core\Cache
+
+namespace  {
 
 ### REQUIRE_ONCE FROM core/libs/core/ViewControl.class.php
 class ViewControls implements Iterator, ArrayAccess {
@@ -12399,14 +12532,14 @@ $enablecache = true;
 }
 if($enablecache){
 Core\Utilities\Logger\write_debug('Checking core-components cache');
-$tempcomponents = Cache::GetSystemCache()->get('core-components', (3600 * 24));
+$tempcomponents = \Core\Cache::Get('core-components', (3600 * 24));
 if($tempcomponents !== false){
 foreach ($tempcomponents as $c) {
 try {
 $c->load();
 }
 catch (Exception $e) {
-Cache::GetSystemCache()->delete('core-components');
+\Core\Cache::Delete('core-components');
 $tempcomponents = false;
 }
 }
@@ -12452,7 +12585,7 @@ die();
 }
 if($enablecache){
 Core\Utilities\Logger\write_debug(' * Caching core-components for next pass');
-Cache::GetSystemCache()->set('core-components', $tempcomponents, (3600 * 24));
+\Core\Cache::Set('core-components', $tempcomponents, (3600 * 24));
 }
 }
 $list = $tempcomponents;
@@ -12580,9 +12713,6 @@ $self->_loadComponents();
 }
 public static function DB() {
 return \Core\DB();
-}
-public static function Cache() {
-return Cache::GetSystemCache();
 }
 public static function FTP() {
 return \Core\FTP();
@@ -14848,10 +14978,24 @@ $ret[$v] = $this->$v;
 }
 return $ret;
 }
+public function getPseudoIdentifier($as_array = false){
+$a = [];
+$a[] = 'ua-browser-' . $this->browser;
+$a[] = 'ua-engine-' . $this->rendering_engine_name;
+$a[] = 'ua-browser-version-' . $this->major_ver;
+$a[] = 'ua-platform-' . $this->platform;
+if($this->isMobile()) $a[] = 'ua-is-mobile';
+if($as_array){
+return $a;
+}
+else{
+return strtolower(implode(';', $a));
+}
+}
 private static function _LoadData() {
 $cachekey = 'useragent-browsecap-data';
 $cachetime = 7200;
-$cache = \Core\cache()->get($cachekey, $cachetime);
+$cache = \Core\Cache::Get($cachekey, $cachetime);
 if($cache === false){
 $file = \Core\Filestore\Factory::File('tmp/php_browscap.ini');
 $remote = \Core\Filestore\Factory::File(self::$_ini_url);
@@ -14902,7 +15046,7 @@ $browsers[] = $browser;
 unset($browser);
 }
 unset($user_agents_keys, $properties_keys, $_browsers);
-\Core\cache()->set(
+\Core\Cache::Set(
 $cachekey,
 [
 'browsers'   => $browsers,
@@ -14913,15 +15057,15 @@ $cachekey,
 $cachetime
 );
 }
-return \Core\cache()->get($cachekey, $cachetime);
+return \Core\Cache::Get($cachekey, $cachetime);
 }
 public static function Construct($useragent = null){
 if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
 $cachekey = 'useragent-constructor-' . md5($useragent);
-$cache = \Cache::GetSystemCache()->get($cachekey);
+$cache = \Core\Cache::Get($cachekey);
 if(!$cache){
 $cache = new UserAgent($useragent);
-\Cache::GetSystemCache()->set($cachekey, $cache, (3600));
+\Core\Cache::Set($cachekey, $cache, 3600);
 }
 return $cache;
 }
@@ -14976,6 +15120,7 @@ public $allowerrors = false;
 public $ssl = false;
 public $record = true;
 private $_bodyCache = null;
+private $_fetchCache = null;
 public $bodyclasses = [];
 public $htmlAttributes = [];
 public $headers = [];
@@ -15109,6 +15254,9 @@ $this->_bodyCache = $html;
 return $html;
 }
 public function fetch() {
+if($this->_fetchCache !== null){
+return $this->_fetchCache;
+}
 try{
 $body = $this->fetchBody();
 }
@@ -15166,11 +15314,7 @@ $template->assign('seotitle', $this->title);
 $template->assign('title', $this->title);
 $template->assign('body', $body);
 $ua = \Core\UserAgent::Construct();
-$this->bodyclasses[] = 'ua-browser-' . $ua->browser;
-$this->bodyclasses[] = 'ua-engine-' . $ua->rendering_engine_name;
-$this->bodyclasses[] = 'ua-browser-version-' . $ua->major_ver;
-$this->bodyclasses[] = 'ua-platform-' . $ua->platform;
-if($ua->isMobile()) $this->bodyclasses[] = 'ua-is-mobile';
+$this->bodyclasses = array_merge($this->bodyclasses, $ua->getPseudoIdentifier(true));
 $url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
 switch ($this->error) {
 case 400:
@@ -15300,6 +15444,7 @@ $data = substr_replace($data, $foot . "\n" . '</body>', $match, 7);
 }
 $data = preg_replace('#<html#', '<html ' . $this->getHTMLAttributes(), $data, 1);
 }
+$this->_fetchCache = $data;
 return $data;
 }
 public function render() {
@@ -16476,15 +16621,18 @@ const METHOD_PUSH   = 'PUSH';
 const METHOD_DELETE = 'DELETE';
 public $contentTypes = array();
 public $method = null;
-public $useragent = null;
-public $uri = null;
-public $uriresolved = null;
-public $protocol = null;
+public $useragent;
+public $uri;
+public $uriresolved;
+public $protocol;
 public $parameters = array();
 public $ctype = View::CTYPE_HTML;
+public $host;
 private $_pagemodel = null;
 private $_pageview = null;
+private $_cached = false;
 public function __construct($uri = '') {
+$this->host = SERVERNAME;
 $this->uri = $uri;
 if (!$uri) $uri = ROOT_WDIR;
 $uri = substr($uri, strlen(ROOT_WDIR));
@@ -16508,48 +16656,6 @@ foreach ($_GET as $k => $v) {
 if (is_numeric($k)) continue;
 $this->parameters[$k] = $v;
 }
-}
-return;
-$p = PageModel::Find(
-array('rewriteurl' => $uri,
-'fuzzy'      => 0), 1
-);
-$pagedat = PageModel::SplitBaseURL($uri);
-var_dump($pagedat, $_GET);
-die();
-if ($p) {
-$this->pagemodel = $p;
-}
-elseif ($pagedat) {
-$p = new PageModel();
-$p->set('baseurl', $uri);
-$p->set('rewriteurl', $uri);
-$this->pagemodel = $p;
-}
-else {
-return false;
-}
-if ($pagedat && $pagedat['parameters']) {
-foreach ($pagedat['parameters'] as $k => $v) {
-$this->pagemodel->setParameter($k, $v);
-}
-}
-if (is_array($_GET)) {
-foreach ($_GET as $k => $v) {
-if (is_numeric($k)) continue;
-$this->pagemodel->setParameter($k, $v);
-}
-}
-switch ($ctype) {
-case 'xml':
-$ctype = View::CTYPE_XML;
-break;
-case 'json':
-$ctype = View::CTYPE_JSON;
-break;
-default:
-$ctype = View::CTYPE_HTML;
-break;
 }
 }
 public function prefersContentType($type) {
@@ -16588,6 +16694,20 @@ $this->_pageview = new View();
 return $this->_pageview;
 }
 public function execute() {
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Starting PageRequest->execute()');
+if($this->isCacheable()){
+$uakey = \Core\UserAgent::Construct()->getPseudoIdentifier();
+$urlkey = $this->host . $this->uri;
+$expires = $this->getPageModel()->get('expires');
+$key = 'page-cache-' . md5($urlkey . '-' . $uakey);
+$cached = \Core\Cache::Get($key, $expires);
+if($cached && $cached instanceof View){
+$this->_pageview = $cached;
+$this->_cached = true;
+return;
+}
+}
+HookHandler::DispatchHook('/core/page/prerender');
 $pagedat   = $this->splitParts();
 $view = $this->getView();
 if (!$pagedat['controller']) {
@@ -16786,15 +16906,20 @@ trigger_error('Invalid skin [' . $view->mastertemplate . '] selected for this pa
 $view->mastertemplate = $themeskins[0]['file'];
 }
 }
+if(!$page->get('indexable')){
+$view->addMetaName('robots', 'noindex');
+}
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Completed PageRequest->execute()');
 }
 public function render(){
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Starting PageRequest->render()');
 $view = $this->getView();
 $page = $this->getPageModel();
 if ($view->error == View::ERROR_ACCESSDENIED || $view->error == View::ERROR_NOTFOUND) {
 HookHandler::DispatchHook('/core/page/error-' . $view->error, $view);
 }
 try {
-$view->render();
+$view->fetch();
 }
 catch (Exception $e) {
 $view->error   = View::ERROR_SERVERERROR;
@@ -16803,8 +16928,32 @@ $view->setParameters(array());
 $view->templatename   = '/pages/error/error500.tpl';
 $view->mastertemplate = ConfigHandler::Get('/theme/default_template');
 $view->assignVariable('exception', $e);
-$view->render();
+$view->fetch();
 }
+if($this->isCacheable()){
+$uakey = \Core\UserAgent::Construct()->getPseudoIdentifier();
+$urlkey = $this->host . $this->uri;
+$expires = $page->get('expires'); // Number of seconds.
+$key = 'page-cache-' . md5($urlkey . '-' . $uakey);
+$d = new \Core\Date\DateTime();
+$d->modify('+' . $expires . ' seconds');
+$view->headers['Cache-Control'] = 'max-age=' . $expires;
+$view->headers['Expires'] = $d->format('r', \Core\Date\Timezone::TIMEZONE_GMT);
+$view->headers['Vary'] = 'Accept-Encoding,User-Agent,Cookie';
+$view->headers['X-Core-Cached-Date'] = \Core\Date\DateTime::NowGMT('r');
+$view->headers['X-Core-Cached-Server'] = 1; // @todo Implement multi-server support.
+$view->headers['X-Core-Cached-Render-Time'] = \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTimeFormatted();
+\Core\Cache::Set($key, $view, $expires);
+$indexkey = $page->getIndexCacheKey();
+$index = \Core\Cache::Get($indexkey, 86400);
+if(!$index){
+$index = [];
+}
+$index[] = $key;
+\Core\Cache::Set($indexkey, $index, 86400);
+}
+$view->headers['X-Core-Render-Time'] = \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTimeFormatted();
+$view->render();
 if ($page->exists() && $view->error == View::ERROR_NOERROR) {
 if(!\Core\UserAgent::Construct()->isBot()){
 $page->set('pageviews', $page->get('pageviews') + 1);
@@ -16814,6 +16963,28 @@ $page->set('body', $view->fetchBody());
 $page->save();
 }
 HookHandler::DispatchHook('/core/page/postrender');
+}
+public function isCacheable(){
+$cacheable = true;
+if(DEVELOPMENT_MODE){
+$cacheable = false;
+}
+elseif($this->_cached){
+$cacheable = false;
+}
+elseif(\Core\user()->exists()){
+$cacheable = false;
+}
+elseif($this->method != PageRequest::METHOD_GET){
+$cacheable = false;
+}
+elseif($this->getPageModel()->get('expires') == 0){
+$cacheable = false;
+}
+elseif($this->getView()->mode != View::MODE_PAGE){
+$cacheable = false;
+}
+return $cacheable;
 }
 public function setParameters($params) {
 $this->parameters = $params;

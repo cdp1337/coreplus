@@ -385,8 +385,8 @@ class Model implements ArrayAccess {
 		}
 
 		if ($this->_cacheable) {
-			$cachekey = $this->_getCacheKey();
-			$cache    = Core::Cache()->get($cachekey);
+			//$cachekey = $this->_getCacheKey();
+			//$cache    = Core::Cache()->get($cachekey);
 
 			// do something if cache succeeds....
 		}
