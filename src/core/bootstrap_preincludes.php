@@ -85,9 +85,11 @@ require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/DirectoryFTP.php');
 // execute before the ComponentHandler has loaded the class locations.
 require_once(ROOT_PDIR . 'core/libs/core/ComponentFactory.php');
 require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
+// Include the caching system.
 require_once(ROOT_PDIR . 'core/libs/core/Cache.php');
 require_once(ROOT_PDIR . 'core/libs/core/cache/CacheInterface.php');
 require_once(ROOT_PDIR . 'core/libs/core/cache/File.php');
+
 require_once(ROOT_PDIR . 'core/libs/core/ViewControl.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/ViewMeta.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/errormanagement/functions.php');

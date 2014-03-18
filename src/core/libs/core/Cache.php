@@ -128,14 +128,14 @@ class Cache {
 		switch(self::$_Backend){
 			case 'apc':
 				if(!class_exists('CacheAPC')){
-					require_once(__CACHE_PDIR . 'backends/cacheapc.class.php');
+					require_once(__CACHE_PDIR . 'backends/cacheapc.class.php'); ##SKIPCOMPILER
 				}
 				$obj = new CacheAPC($key, null, $expires);
 				break;
 			case 'file':
 			default:
-				if(!class_exists('Cache\File')){
-					require_once(__CACHE_PDIR . 'File.php');
+				if(!class_exists('Core\Cache\File')){
+					require_once(__CACHE_PDIR . 'File.php'); ##SKIPCOMPILER
 				}
 				if(!is_dir(TMP_DIR . 'cache')){
 					mkdir(TMP_DIR . 'cache');

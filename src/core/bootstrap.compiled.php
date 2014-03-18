@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 18 Mar 2014 14:38:11 -0400
+ * @compiled Tue, 18 Mar 2014 15:12:27 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -11275,151 +11275,14 @@ return self::$_KeyCache[$key];
 switch(self::$_Backend){
 case 'apc':
 if(!class_exists('CacheAPC')){
-### REQUIRE_ONCE FROM core/libs/core/cache/backends/cacheapc.class.php
-class CacheAPC extends CacheCore implements ICacheCore
-{
-public function __construct($name, $location, $expires, $gzip = true)
-{
-parent::__construct($name, null, $expires, $gzip);
-$this->id = $this->name;
-}
-public function create($data)
-{
-$data = serialize($data);
-$data = $this->gzip ? gzcompress($data) : $data;
-return apc_add($this->id, $data, $this->expires);
-}
-public function read()
-{
-if ($data = apc_fetch($this->id))
-{
-$data = $this->gzip ? gzuncompress($data) : $data;
-return unserialize($data);
-}
-return false;
-}
-public function update($data)
-{
-$data = serialize($data);
-$data = $this->gzip ? gzcompress($data) : $data;
-return apc_store($this->id, $data, $this->expires);
-}
-public function delete()
-{
-return apc_delete($this->id);
-}
-public function is_expired()
-{
-return false;
-}
-public function timestamp()
-{
-return false;
-}
-public function reset()
-{
-return false;
-}
-public function flush()
-{
-return apc_clear_cache();
-}
-}
-
-
+require_once(__CACHE_PDIR . 'backends/cacheapc.class.php'); ##SKIPCOMPILER
 }
 $obj = new CacheAPC($key, null, $expires);
 break;
 case 'file':
 default:
-if(!class_exists('Cache\File')){
-### REQUIRE_ONCE FROM core/libs/core/cache/File.php
-} // ENDING NAMESPACE Core
-namespace Core\Cache {
-class File implements CacheInterface {
-private $_key;
-private $_expires;
-private $_dir;
-private $_file;
-private $_gzip;
-public function __construct($key, $expires) {
-$this->_key = $key;
-$this->_expires = $expires;
-$this->_dir = TMP_DIR . 'cache/';
-$this->_file = TMP_DIR . 'cache/' . $key . '.cache';
-$this->_gzip = (extension_loaded('zlib'));
-}
-public function create($data) {
-if (file_exists($this->_file)) {
-return false;
-}
-elseif (file_exists($this->_dir) && is_writeable($this->_dir)) {
-$data = serialize($data);
-$data = $this->_gzip ? gzcompress($data) : $data;
-return (bool) file_put_contents($this->_file, $data);
-}
-return false;
-}
-public function read() {
-if(!file_exists($this->_file)){
-return false;
-}
-elseif(!is_readable($this->_file)){
-return false;
-}
-elseif($this->is_expired()){
-return false;
-}
-else{
-$data = file_get_contents($this->_file);
-$data = $this->_gzip ? gzuncompress($data) : $data;
-$data = unserialize($data);
-if ($data === false) {
-$this->delete();
-return false;
-}
-return $data;
-}
-}
-public function update($data) {
-if (file_exists($this->_file) && is_writeable($this->_file)) {
-$data = serialize($data);
-$data = $this->_gzip ? gzcompress($data) : $data;
-return (bool) file_put_contents($this->_file, $data);
-}
-return false;
-}
-public function delete() {
-if (file_exists($this->_file)) {
-return unlink($this->_file);
-}
-return false;
-}
-public function flush() {
-$dir = opendir($this->_dir);
-if(!$dir){
-return true;
-}
-while(($file = readdir($dir)) !== false){
-unlink($this->_dir . $file);
-}
-closedir($dir);
-return true;
-}
-private function is_expired() {
-clearstatcache();
-if(filemtime($this->_file) + $this->_expires < time()){
-return true;
-}
-else{
-return false;
-}
-}
-}
-} // ENDING NAMESPACE Core\Cache
-
-namespace Core {
-
+if(!class_exists('Core\Cache\File')){
+require_once(__CACHE_PDIR . 'File.php'); ##SKIPCOMPILER
 }
 if(!is_dir(TMP_DIR . 'cache')){
 mkdir(TMP_DIR . 'cache');
