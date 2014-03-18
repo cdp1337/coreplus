@@ -35,10 +35,6 @@ $skipcompiled = false;
 if(!$skipcompiled && file_exists('core/bootstrap.compiled.php')) require_once('core/bootstrap.compiled.php');
 else require_once('core/bootstrap.php');
 
-// Anything that needs to fire off *before* the page is rendered.
-// This includes widgets, script addons, and anything else that needs a CurrentPage.
-HookHandler::DispatchHook('/core/page/prerender');
-
 
 $request   = PageRequest::GetSystemRequest();
 $request->execute();
