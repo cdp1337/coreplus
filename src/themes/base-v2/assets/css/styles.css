@@ -2374,41 +2374,25 @@ p[class^="message-"] .message-background-icon i {
     background-size: 176px 22px;
   }
 }
-/* line 251, ../scss/styles.scss */
-table.stacktrace {
-  width: 100%;
-  border: 1px solid;
-}
-
-/* line 255, ../scss/styles.scss */
-table.stacktrace th {
-  border: 1px solid;
-}
-
-/* line 258, ../scss/styles.scss */
-table.stacktrace td {
-  border: 1px solid;
-  font-size: 80%;
-}
-
 /*****************************************************************************
  *****************************************************************************
  **                            LISTING TABLES                               **
  *****************************************************************************
  *****************************************************************************/
-/* line 275, ../scss/styles.scss */
+/* line 8, ../scss/_listing_tables.scss */
 table.listing {
   width: 100%;
   border: 1px solid #bababa;
   border-collapse: collapse;
+  font-size: 90%;
 }
 
-/* line 280, ../scss/styles.scss */
+/* line 14, ../scss/_listing_tables.scss */
 table.listing tr:nth-child(odd) {
   background-color: lightgrey;
 }
 
-/* line 283, ../scss/styles.scss */
+/* line 17, ../scss/_listing_tables.scss */
 table.listing th {
   padding: 0.15em 0.5em;
   border: 1px solid #949494;
@@ -2417,7 +2401,7 @@ table.listing th {
   color: #EEE;
 }
 
-/* line 290, ../scss/styles.scss */
+/* line 24, ../scss/_listing_tables.scss */
 table.listing td {
   padding: 0.2em 0.5em;
   border: 1px solid #bababa;
@@ -2425,9 +2409,26 @@ table.listing td {
 }
 
 /* Give a little high-lighting effect on mouseover for the records. */
-/* line 297, ../scss/styles.scss */
+/* line 31, ../scss/_listing_tables.scss */
 table.listing tr:hover {
   background-color: #c7d5eb;
+}
+
+/* line 252, ../scss/styles.scss */
+table.stacktrace {
+  width: 100%;
+  border: 1px solid;
+}
+
+/* line 256, ../scss/styles.scss */
+table.stacktrace th {
+  border: 1px solid;
+}
+
+/* line 259, ../scss/styles.scss */
+table.stacktrace td {
+  border: 1px solid;
+  font-size: 80%;
 }
 
 /*****************************************************************************
@@ -2435,7 +2436,7 @@ table.listing tr:hover {
  **                          DEBUGGING CLASSES                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 309, ../scss/styles.scss */
+/* line 270, ../scss/styles.scss */
 pre.xdebug-var-dump {
   border-top: 2px solid #FFE5C0;
   padding: 0;
@@ -2446,7 +2447,7 @@ pre.xdebug-var-dump {
   margin-bottom: 0;
 }
 
-/* line 319, ../scss/styles.scss */
+/* line 280, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section {
   background: none repeat scroll 0 0 rgba(255, 255, 255, 0.35);
   border-color: #EEEEEE -moz-use-text-color;
@@ -2461,7 +2462,7 @@ pre.xdebug-var-dump .debug-section {
   position: relative;
 }
 
-/* line 332, ../scss/styles.scss */
+/* line 293, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section legend {
   font-size: 1em;
   margin: 0;
@@ -2469,28 +2470,28 @@ pre.xdebug-var-dump .debug-section legend {
   position: absolute;
 }
 
-/* line 338, ../scss/styles.scss */
+/* line 299, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section:last-child {
   margin-bottom: 0;
 }
 
-/* line 339, ../scss/styles.scss */
+/* line 300, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section i {
   color: #bbb;
 }
 
-/* line 340, ../scss/styles.scss */
+/* line 301, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section.collapsed {
   height: 1.2em;
   overflow: hidden;
 }
 
-/* line 344, ../scss/styles.scss */
+/* line 305, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section.collapsible i {
   display: none;
 }
 
-/* line 345, ../scss/styles.scss */
+/* line 306, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section.collapsed i {
   display: inline;
 }
@@ -2500,35 +2501,35 @@ pre.xdebug-var-dump .debug-section.collapsed i {
  **                     SORTABLES & NESTED SORTABLES                        **
  *****************************************************************************
  *****************************************************************************/
-/* line 355, ../scss/styles.scss */
+/* line 316, ../scss/styles.scss */
 ol.sortable-listing {
   margin: 0.5em 0;
 }
 
-/* line 358, ../scss/styles.scss */
+/* line 319, ../scss/styles.scss */
 ol.sortable-listing li {
   display: block;
   list-style: none outside none;
 }
 
-/* line 362, ../scss/styles.scss */
+/* line 323, ../scss/styles.scss */
 ol.sortable-listing li div.entry {
   border: 1px solid #BBBBBB;
   padding: 0.25em;
 }
 
-/* line 366, ../scss/styles.scss */
+/* line 327, ../scss/styles.scss */
 ol.sortable-listing li.placeholder {
   border: 1px solid #BBBBBB;
   background: #BBB;
 }
 
-/* line 370, ../scss/styles.scss */
+/* line 331, ../scss/styles.scss */
 ol.sortable-listing li a.control {
   margin-top: -2px;
 }
 
-/* line 373, ../scss/styles.scss */
+/* line 334, ../scss/styles.scss */
 ol.sortable-listing ol {
   margin-left: 1em;
 }
@@ -2538,20 +2539,20 @@ ol.sortable-listing ol {
  **                           PRIMARY NAVIGATION                            **
  *****************************************************************************
  *****************************************************************************/
-/* line 385, ../scss/styles.scss */
+/* line 346, ../scss/styles.scss */
 #primary-nav li {
   display: inline-block;
   position: relative;
   text-align: center;
 }
 
-/* line 390, ../scss/styles.scss */
+/* line 351, ../scss/styles.scss */
 #primary-nav li.navigation-menu-over a:hover {
   background: #333;
   transition: background 0.3s;
 }
 
-/* line 395, ../scss/styles.scss */
+/* line 356, ../scss/styles.scss */
 #primary-nav a,
 #primary-nav span {
   color: #777;
@@ -2564,13 +2565,13 @@ ol.sortable-listing ol {
 }
 
 /* Enable the mouse over menu */
-/* line 405, ../scss/styles.scss */
+/* line 366, ../scss/styles.scss */
 #primary-nav li.navigation-menu-over > ul {
   display: block;
 }
 
 /* And the sub menu */
-/* line 409, ../scss/styles.scss */
+/* line 370, ../scss/styles.scss */
 #primary-nav li ul {
   display: none;
   position: absolute;
@@ -2583,13 +2584,13 @@ ol.sortable-listing ol {
   box-shadow: 0 3px 6px #000;
 }
 
-/* line 420, ../scss/styles.scss */
+/* line 381, ../scss/styles.scss */
 #primary-nav li ul li {
   width: 190px;
   text-align: left;
 }
 
-/* line 425, ../scss/styles.scss */
+/* line 386, ../scss/styles.scss */
 #primary-nav li ul a,
 #primary-nav li ul span {
   padding-left: 20px;
@@ -2597,7 +2598,7 @@ ol.sortable-listing ol {
 }
 
 /* And any sub sub menu */
-/* line 430, ../scss/styles.scss */
+/* line 391, ../scss/styles.scss */
 #primary-nav li ul li ul {
   top: -2px;
   left: 180px;
@@ -2612,7 +2613,7 @@ ol.sortable-listing ol {
   box-shadow: 0 3px 6px #000;
 }
 
-/* line 443, ../scss/styles.scss */
+/* line 404, ../scss/styles.scss */
 #primary-nav a:hover {
   text-shadow: none;
 }
@@ -2622,14 +2623,14 @@ ol.sortable-listing ol {
  **                          FOOTER NAVIGATION                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 454, ../scss/styles.scss */
+/* line 415, ../scss/styles.scss */
 footer ul.navigation-menu li {
   list-style-type: none;
   float: left;
   padding: 0 0.5em;
 }
 
-/* line 459, ../scss/styles.scss */
+/* line 420, ../scss/styles.scss */
 footer ul.navigation-menu li li {
   float: none;
 }
@@ -2639,7 +2640,7 @@ footer ul.navigation-menu li li {
  **                         COLLAPSIBLE FIELDSETS                           **
  *****************************************************************************
  *****************************************************************************/
-/* line 471, ../scss/styles.scss */
+/* line 432, ../scss/styles.scss */
 fieldset.collapsed {
   padding: 0;
   border-width: 1px 0 0;
@@ -2650,12 +2651,12 @@ fieldset.collapsed {
  **                            PROGRESS BARS                                **
  *****************************************************************************
  *****************************************************************************/
-/* line 481, ../scss/styles.scss */
+/* line 442, ../scss/styles.scss */
 .progress-container {
   position: relative;
 }
 
-/* line 484, ../scss/styles.scss */
+/* line 445, ../scss/styles.scss */
 .progress-success {
   background: none repeat scroll 0 0 #992222;
   border: 2px solid green;
@@ -2663,13 +2664,13 @@ fieldset.collapsed {
   margin-bottom: 5px;
 }
 
-/* line 490, ../scss/styles.scss */
+/* line 451, ../scss/styles.scss */
 .progress-success .bar {
   background: none repeat scroll 0 0 green;
   height: 20px;
 }
 
-/* line 494, ../scss/styles.scss */
+/* line 455, ../scss/styles.scss */
 .progress-container .progress-extended {
   color: white;
   left: 46px;
@@ -2957,7 +2958,7 @@ fieldset.collapsed {
   display: none;
 }
 
-/* line 509, ../scss/styles.scss */
+/* line 470, ../scss/styles.scss */
 .widgetarea-admindashboard .widget {
   background: #e9e9e9;
   border: 1px solid #BBBBBB;
@@ -2967,7 +2968,7 @@ fieldset.collapsed {
   padding: 1em;
 }
 
-/* line 518, ../scss/styles.scss */
+/* line 479, ../scss/styles.scss */
 .widgetarea-admindashboard .widget h3 {
   text-align: center;
   margin-bottom: 0.5em;
@@ -2976,22 +2977,22 @@ fieldset.collapsed {
 /**
  * LOGIN / REGISTER PAGES
  */
-/* line 528, ../scss/styles.scss */
+/* line 489, ../scss/styles.scss */
 .user-login-center {
   /** If the page is set to use 2-columns, then do so. */
 }
-/* line 531, ../scss/styles.scss */
+/* line 492, ../scss/styles.scss */
 .user-login-center .user-login-existing.col-2 .user-login-include {
   float: left;
   width: 49%;
 }
-/* line 536, ../scss/styles.scss */
+/* line 497, ../scss/styles.scss */
 .user-login-center .login-forgot {
   float: right;
   color: #969696;
   font-style: italic;
 }
-/* line 542, ../scss/styles.scss */
+/* line 503, ../scss/styles.scss */
 .user-login-center .user-login-section-heading {
   text-align: center;
   margin-bottom: 0.75em;

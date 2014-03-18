@@ -1,0 +1,33 @@
+/*****************************************************************************
+ *****************************************************************************
+ **                            LISTING TABLES                               **
+ *****************************************************************************
+ *****************************************************************************/
+
+$listing-table-bg: #e0e0e0;
+table.listing {
+	width: 100%;
+	border: 1px solid darken($listing-table-bg, 15%);
+	border-collapse: collapse;
+	font-size: 90%;
+}
+table.listing tr:nth-child(odd) {
+	background-color: darken($listing-table-bg, 5%);
+}
+table.listing th {
+	padding: 0.15em 0.5em;
+	border: 1px solid darken($listing-table-bg, 30%);
+	vertical-align: top;
+	background: darken($listing-table-bg, 30%);
+	color: #EEE;
+}
+table.listing td {
+	padding: 0.2em 0.5em;
+	border: 1px solid darken($listing-table-bg, 15%);
+	vertical-align: top;
+}
+
+/* Give a little high-lighting effect on mouseover for the records. */
+table.listing tr:hover {
+	background-color: #c7d5eb;
+}
