@@ -23,10 +23,10 @@
 
 
 class UpdaterHelper {
-	
+
 	/**
 	 * Perform a lookup on any repository sites installed and get a list of provided pacakges.
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function GetUpdates(){
@@ -34,7 +34,7 @@ class UpdaterHelper {
 		//if(false && isset($_SESSION['updaterhelper_getupdates']) && $_SESSION['updaterhelper_getupdates']['expire'] <= time()){
 		//	return $_SESSION['updaterhelper_getupdates']['data'];
 		//}
-		
+
 		// Build a list of components currently installed, this will act as a base.
 		$components = array();
 		$core       = array();
@@ -146,7 +146,7 @@ class UpdaterHelper {
 				'destdir' => $t->getBaseDir(),
 			);
 		}
-		
+
 		// Now, look up components from all the updates sites.
 		// If the system isn't installed yet, then this will not be found.  Just use a blank array.
 		if(class_exists('UpdateSiteModel')){
@@ -284,11 +284,11 @@ class UpdaterHelper {
 							'destdir' => ROOT_PDIR . 'themes/' . $n . '/',
 						);
 				}
-				
+
 				//var_dump($pkg->asPrettyXML()); die();
 			}
 		}
-		
+
 		// Give me the components in alphabetical order.
 		ksort($components);
 		ksort($themes);
@@ -297,7 +297,7 @@ class UpdaterHelper {
 		//$_SESSION['updaterhelper_getupdates'] = array();
 		//$_SESSION['updaterhelper_getupdates']['data'] = array('core' => $core, 'components' => $components, 'themes' => $themes);
 		//$_SESSION['updaterhelper_getupdates']['expire'] = time() + 60;
-		
+
 		return [
 			'core'       => $core,
 			'components' => $components,
@@ -306,7 +306,7 @@ class UpdaterHelper {
 			'pkgcount'   => $pkgcount,
 		];
 	}
-	
+
 	public static function InstallComponent($name, $version, $dryrun = false, $verbose = false){
 		return self::PerformInstall('components', $name, $version, $dryrun, $verbose);
 	}
@@ -814,9 +814,16 @@ class UpdaterHelper {
 			// Core doesn't count here!
 			if($type == 'core') continue;
 
+			if(!is_array($availableset)) continue;
+
 			// Next inner array will be [componentname => {its data}, ... ].
 			foreach($availableset as $data){
 				// And provides is [type => "", name => "", version => ""].
+
+				if(!isset($data['provides']) || !is_array($data['provides'])){
+					continue;
+				}
+
 				foreach($data['provides'] as $prov){
 					if($prov['type'] == $rtype && $prov['name'] == $rname){
 						if(Core::VersionCompare($prov['version'], $rvers, $rvrop)){
@@ -827,7 +834,7 @@ class UpdaterHelper {
 				}
 			}
 		}
-		
+
 		// Requirement not met... ok.  This needs to be conveyed to the calling script.
 		return false;
 	}
