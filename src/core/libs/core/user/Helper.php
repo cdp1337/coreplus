@@ -172,16 +172,15 @@ abstract class Helper{
 
 			// Log this as a login attempt!
 			$logmsg = 'Failed Login. Invalid password' . "\n" . 'Email: ' . $e->get('value') . "\n";
-			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg, null, $u->get('id'));
+			\SystemLogModel::LogSecurityEvent('/user/login/failed_password', $logmsg, null, $u->get('id'));
 
 			// Also, I want to look up and see how many login attempts there have been in the past couple minutes.
 			// If there are too many, I need to start slowing the attempts.
 			$time = new \CoreDateTime();
 			$time->modify('-5 minutes');
 
-			$securityfactory = new \ModelFactory('SecurityLogModel');
-			$securityfactory->where('action = /user/login');
-			$securityfactory->where('status = fail');
+			$securityfactory = new \ModelFactory('SystemLogModel');
+			$securityfactory->where('code = /user/login/failed_password');
 			$securityfactory->where('datetime > ' . $time->getFormatted(\Time::FORMAT_EPOCH, \Time::TIMEZONE_GMT));
 			$securityfactory->where('ip_addr = ' . REMOTE_IP);
 
