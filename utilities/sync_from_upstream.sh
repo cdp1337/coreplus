@@ -60,7 +60,9 @@ echo "Syncing core..."
 rsync $OPTIONS --delete "$UPSTREAM/src/core/" "$BASEDIR/src/core"
 rsync $OPTIONS --delete "$UPSTREAM/src/install/" "$BASEDIR/src/install"
 rsync $OPTIONS "$UPSTREAM/src/config/configuration.xml.ex" "$BASEDIR/src/config/"
+rsync $OPTIONS "$UPSTREAM/src/config/configuration.xml.ant" "$BASEDIR/src/config/"
 rsync $OPTIONS "$UPSTREAM/src/htaccess.ex" "$BASEDIR/src/"
+rsync $OPTIONS "$UPSTREAM/src/htaccess.ant" "$BASEDIR/src/"
 rsync $OPTIONS "$UPSTREAM/src/index.php" "$BASEDIR/src/"
 
 echo "Syncing core themes..."
@@ -69,6 +71,7 @@ rsync $OPTIONS --delete "$UPSTREAM/src/themes/base-v2/" "$BASEDIR/src/themes/bas
 
 echo "Syncing core components..."
 sync_component "phpwhois"
+sync_component "geographic-codes"
 
 for i in $COMPONENTS; do
 	if [ -e "$UPSTREAM/src/components/$i" ]; then
