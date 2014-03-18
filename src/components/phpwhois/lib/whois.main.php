@@ -66,7 +66,7 @@ class Whois extends WhoisClient {
 
 		// See if this query has been cached by Core <3
 		$cachekey = \Core\str_to_url('whois-' . $query);
-		$cached = \Core\cache()->get($cachekey);
+		$cached = \Core\Cache::Get($cachekey);
 
 		if($cached){
 			// :)
@@ -124,7 +124,7 @@ class Whois extends WhoisClient {
 
 			$data = $this->getData('', $this->deep_whois);
 			// Cache the results for 6 hours
-			\Core\cache()->set($cachekey, $data, (3600*6));
+			\Core\Cache::Set($cachekey, $data, (3600*6));
 			// And return.
 			return $data;
 		}
@@ -145,7 +145,7 @@ class Whois extends WhoisClient {
 
 			$data = $this->getData('', $this->deep_whois);
 			// Cache the results for 6 hours
-			\Core\cache()->set($cachekey, $data, (3600*6));
+			\Core\Cache::Set($cachekey, $data, (3600*6));
 			// And return.
 			return $data;
 		}
@@ -166,7 +166,7 @@ class Whois extends WhoisClient {
 
 			$data = $this->getData('', $this->deep_whois);
 			// Cache the results for 6 hours
-			\Core\cache()->set($cachekey, $data, (3600*6));
+			\Core\Cache::Set($cachekey, $data, (3600*6));
 			// And return.
 			return $data;
 		}
@@ -259,7 +259,7 @@ class Whois extends WhoisClient {
 
 			$data = $this->getData('', $this->deep_whois);
 			// Cache the results for 6 hours
-			\Core\cache()->set($cachekey, $data, (3600*6));
+			\Core\Cache::Set($cachekey, $data, (3600*6));
 			// And return.
 			return $data;
 		}
