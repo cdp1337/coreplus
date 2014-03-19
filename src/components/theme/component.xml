@@ -2,7 +2,7 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="Theme" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.7.0"/>
+		<require name="core" type="component" version="3.0.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
 		<require name="jqueryui" type="library" version="1.8.0" operation="ge"/>
 	</requires>
@@ -10,12 +10,12 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="dab6bb3b8b9cb36b0a0b4a0ee08800d3"/>
+		<file filename="CHANGELOG" md5="e0adee7da2e3cb5d54f1a6d48298c65e"/>
 		<file filename="controllers/ThemeController.class.php" md5="f8d3eaccd2e98f7c29e8eaadeeb98ce5">
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
-		<file filename="libs/Theme/Theme.php" md5="ea48f6ded69fe4710398940ded1b64ef">
+		<file filename="libs/Theme/Theme.php" md5="ac3598dc90888d8dbe51c7f9a2816a0d">
 			<class name="Theme\Theme"/>
 		</file>
 		<file filename="libs/ThemeHandler.class.php" md5="442ad8dde9ce1ea74da0857e01b99aee">
