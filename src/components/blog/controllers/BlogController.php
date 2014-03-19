@@ -56,7 +56,7 @@ class BlogController extends Controller_2_1 {
 		$factory->order('published DESC');
 		if(!$editor){
 			// Limit these to published articles.
-			$factory->where('status = published');
+			$factory->where('published_status = published');
 			// And where the published date is >= now.
 			$factory->where('published <= ' . CoreDateTime::Now('U', Time::TIMEZONE_GMT));
 		}
