@@ -8,7 +8,7 @@
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
  * This system is licensed under the GNU LGPL, feel free to incorporate it into
  * custom applications, but keep all references of the original authors intact,
- * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>, 
+ * read the full license terms at <http://www.gnu.org/licenses/lgpl-3.0.html>,
  * and please contribute back to the community :)
  */
 
@@ -16,28 +16,28 @@ namespace Theme;
 
 /**
  * Theme object.
- * 
+ *
  * Themes consist just of the template files and corresponding assets.
  */
 class Theme{
 
 	/**
 	 * Underlying XML Loader object of the component.xml file.
-	 * 
+	 *
 	 * Responsible for retrieving most information about this component.
-	 * 
+	 *
 	 * @var \XMLLoader
 	 */
 	private $_xmlloader = null;
-	
+
 	/**
 	 * The name of the component.
 	 * Has to be unique, (because the name is a directory in /components)
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $_name;
-	
+
 	/**
 	 * Version of the component, (propagates to libraries and modules).
 	 *
@@ -52,50 +52,50 @@ class Theme{
 	 * @var string
 	 */
 	protected $_description;
-	
+
 	/**
 	 * Is this component explictly disabled?
 	 * (themes cannot be disabled...)
-	 * 
+	 *
 	 * @var boolean
 	 */
 	protected $_enabled = true;
 
 	/**
 	 * Version of the component, as per the database (installed version).
-	 * 
+	 *
 	 * @var string
 	 */
 	private $_versionDB = false;
-	
+
 	/**
 	 * This object only needs to be loaded once
 	 * @var boolean
 	 */
 	private $_loaded = false;
-	
-	
+
+
 	public function __construct($name = null){
 		$this->_xmlloader = new \XMLLoader();
 		$this->_xmlloader->setRootName('theme');
-		
+
 		$filename = ROOT_PDIR . 'themes/' . $name . '/theme.xml';
-		
+
 		if(!$this->_xmlloader->loadFromFile($filename)){
 			throw new \Exception('Parsing of XML Metafile [' . $filename . '] failed, not valid XML.');
 		}
 	}
-	
+
 	public function load(){
 		if($this->_loaded) return;
-		
+
 		$this->_name = $this->_xmlloader->getRootDOM()->getAttribute('name');
 		$this->_version = $this->_xmlloader->getRootDOM()->getAttribute("version");
-		
+
 		// Load the database information, if there is any.
 		$dat = \ComponentFactory::_LookupComponentData('theme/' . $this->_name);
 		if(!$dat) return;
-		
+
 		$this->_versionDB = $dat['version'];
 		$this->_enabled = ($dat['enabled']) ? true : false;
 
@@ -106,12 +106,12 @@ class Theme{
 
 		$this->_loaded = true;
 	}
-	
+
 	/**
 	 * Get all the templates registered for this theme.
 	 * Each template can be a different site skin, ie: 2-column, 3-column, etc.
-	 * 
-	 * @return array 
+	 *
+	 * @return array
 	 */
 	public function getSkins(){
 		$out = array();
@@ -129,7 +129,7 @@ class Theme{
 
 			$currenttheme = true;
 		}
-		
+
 		foreach($this->_xmlloader->getElements('//skins/file') as $f){
 			$basefilename = $f->getAttribute('filename');
 			$filename = $this->getBaseDir() . 'skins/' . $basefilename;
@@ -224,10 +224,10 @@ class Theme{
 	public function getKeyName(){
 		return str_replace(' ', '-', strtolower($this->_name));
 	}
-	
+
 	/**
 	 * Get this theme's name
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getName(){
@@ -246,7 +246,7 @@ class Theme{
 	public function getBaseDir($prefix = ROOT_PDIR){
 		return $prefix . 'themes/' . $this->getKeyName() . '/';
 	}
-	
+
 	/**
 	 * Save this component metadata back to its XML file.
 	 * Useful in packager scripts.
@@ -521,12 +521,12 @@ class Theme{
 		// And set the data in the original DOM.
 		$this->_xmlloader->getElement('//description')->nodeValue = $desc;
 	}
-	
+
 	public function getViewSearchDir(){
 		$d = $this->getBaseDir() . 'templates/';
 		return (is_dir($d)) ? $d : null;
 	}
-	
+
 	public function getAssetDir(){
 		$d = $this->getBaseDir() . 'assets/';
 		return (is_dir($d)) ? $d : null;
@@ -536,50 +536,50 @@ class Theme{
 		$d = $this->getBaseDir() . 'skins/';
 		return (is_dir($d)) ? $d : null;
 	}
-	
+
 	public function isLoadable(){
 		return true; // Themes really can't quite be *not* loadable.
 	}
-	
-	
+
+
 	public function isInstalled(){
 		return ($this->_versionDB === false)? false : true;
 	}
-	
+
 	public function needsUpdated(){
 		return ($this->_versionDB != $this->_version);
 	}
-	
-		
+
+
 	public function hasLibrary(){
 		return false; // Themes don't have libraries.
 	}
-	
+
 	public function hasJSLibrary(){
 		return false; // Themes don't have JS libraries, (am I even supporting this anymore???)
 	}
-	
+
 	public function hasModule(){
 		return false; // Themes don't have modules.
 	}
-	
+
 	public function hasView(){
 		return true; // This is the only thing a theme is in fact...
 	}
-	
-	
+
+
 	/**
 	 * Install this theme and its assets.
-	 * 
+	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
-	 * 
+	 *
 	 * @return false | array
 	 * @throws \InstallerException
 	 */
 	public function install(){
 		// @todo I need actual error checking here.
 		//if($this->isInstalled()) return false;
-		
+
 		$changes = $this->_performInstall();
 
 		if(is_array($changes) && sizeof($changes)){
@@ -588,12 +588,12 @@ class Theme{
 
 		return $changes;
 	}
-	
+
 	/**
 	 * "Reinstall" (aka) Install this theme and its assets.
-	 * 
+	 *
 	 * Alias of install()
-	 * 
+	 *
 	 * @return false | array
 	 * @throws \InstallerException
 	 */
@@ -612,9 +612,9 @@ class Theme{
 
 	/**
 	 * "Upgrade" (aka) Install this theme and its assets.
-	 * 
+	 *
 	 * Alias of install()
-	 * 
+	 *
 	 * @return false | array
 	 * @throws \InstallerException
 	 */
@@ -654,54 +654,57 @@ class Theme{
 			);
 		}
 		else{
+
+			$f = \Core\Filestore\Factory::File($this->getBaseDir() . $s->getAttribute('file'));
+
 			return array(
-				'file' => $this->getBaseDir() . $s->getAttribute('file'),
+				'file' => $f,
 				'title' => ($s->getAttribute('title') ? $s->getAttribute('title') : $this->getName()),
 			);
 		}
 	}
-	
+
 	/**
 	 * Because install, upgrade and remove all are actually the exact same logic for themes.
-	 * 
+	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
-	 * 
+	 *
 	 * @return false | array
 	 * @throws \InstallerException
 	 */
 	private function _performInstall(){
 		$changed = array();
-		
+
 		$change = $this->_installAssets();
 		if($change !== false) $changed = array_merge($changed, $change);
-		
+
 		$change = $this->_parseConfigs();
 		if($change !== false) $changed = array_merge($changed, $change);
-		
+
 		// Make sure the version is correct in the database.
 		$c = new \ComponentModel('theme/' . $this->_name);
 		$c->set('version', $this->_version);
 		$c->save();
-		
+
 		return (sizeof($changed)) ? $changed : false;
 	}
-	
+
 	/**
 	 * Internal function to parse and handle the configs in the component.xml file.
 	 * This is used for installations and upgrades.
-	 * 
+	 *
 	 * Returns false if nothing changed, else will return the configuration options changed.
-	 * 
+	 *
 	 * @return false | array
 	 * @throws \InstallerException
 	 */
 	private function _parseConfigs(){
 		$changes = array();
-		
+
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('configs');
 		//$prefix = $node->getAttribute('prefix');
-		
+
 		// Now, get every table under this node.
 		foreach($node->getElementsByTagName('config') as $confignode){
 			$m = new \ConfigModel($confignode->getAttribute('key'));
@@ -712,16 +715,16 @@ class Theme{
 			$m->set('description', $confignode->getAttribute('description'));
 			if($m->save()) $changes[] = 'Set configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
 		}
-		
+
 		// Are there changes?
 		return (sizeof($changes)) ? $changes : false;
 	} // private function _parseConfigs
-	
+
 	/**
 	 * Copy in all the assets for this component into the assets location.
-	 * 
+	 *
 	 * Returns false if nothing changed, else will return an array of all the changes that occured.
-	 * 
+	 *
 	 * @return false | array
 	 * @throws \InstallerException
 	 */
@@ -787,7 +790,7 @@ class Theme{
 					$nf->setFilename( str_replace($k, $v, $nf->getFilename()) );
 				}
 			}
-			
+
 			// Check if this file even needs updated. (this is primarily used for reporting reasons)
 			if($nf->exists() && $nf->identicalTo($f)){
 				//echo "Skipping file, it's identical.<br/>";
@@ -805,22 +808,22 @@ class Theme{
 			if(!$f->isReadable()){
 				throw new \InstallerException('Source file [' . $f->getFilename() . '] is not readable.');
 			}
-			
+
 			try{
 				$f->copyTo($nf, true);
 			}
 			catch(\Exception $e){
 				throw new \InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
 			}
-			
+
 			$changes[] = $action . ' ' . $nf->getFilename();
 		}
-		
+
 		if(!sizeof($changes)) return false;
-		
+
 		// Make sure the asset cache is purged!
 		\Core\Cache::Delete('asset-resolveurl');
-		
+
 		return $changes;
 	}
 }
