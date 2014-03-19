@@ -39,10 +39,12 @@
 			{/a}
 
 
-			<p class="blog-article-excerpt" itemprop="articleBody">
-				{$article->getTeaser()}
-				... <a{if $blog.type == 'remote'} target="_blank"{/if} class="blog-article-read-more" href="{link $article.baseurl}">Read More</a>
-			</p>
+			{if $article->getTeaser()}
+				<p class="blog-article-excerpt" itemprop="articleBody">
+					{$article->getTeaser()}
+					... {a class="blog-article-read-more" href="`$article.baseurl`"}Read More{/a}
+				</p>
+			{/if}
 
 			<div class="clear"></div>
 		</div>
