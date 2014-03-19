@@ -143,6 +143,8 @@ class File implements CacheInterface {
 			return true;
 		}
 		while(($file = readdir($dir)) !== false){
+			if($file == '.' || $file == '..') continue;
+
 			unlink($this->_dir . $file);
 		}
 		closedir($dir);
