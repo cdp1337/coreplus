@@ -62,11 +62,23 @@ class PageRequest {
 	 *
 	 * @var string
 	 */
-	public $useragent = null;
-	public $uri = null;
-	public $uriresolved = null;
-	public $protocol = null;
+	public $useragent;
+	/**
+	 * @var string Full string of the path + query string requested
+	 */
+	public $uri;
+	/**
+	 * @var string String of the path requested
+	 */
+	public $uriresolved;
+	/**
+	 * @var string Protocol of the requested connection, (HTTP/1.1 or HTTP/1.0 usually)
+	 */
+	public $protocol;
 
+	/**
+	 * @var array Array of the GET parameters on this request.
+	 */
 	public $parameters = array();
 
 	/**
@@ -75,6 +87,11 @@ class PageRequest {
 	 * @var string
 	 */
 	public $ctype = View::CTYPE_HTML;
+
+	/**
+	 * @var string Hostname of the requested connection
+	 */
+	public $host;
 
 	/**
 	 * The cached pagemodel for this request.
@@ -90,8 +107,16 @@ class PageRequest {
 	 */
 	private $_pageview = null;
 
+	/**
+	 * Set to true if this is already a cached View, (so it doesn't re-cache it again).
+	 *
+	 * @var bool
+	 */
+	private $_cached = false;
+
 	public function __construct($uri = '') {
 
+		$this->host = SERVERNAME;
 		$this->uri = $uri;
 
 		// Resolve the URI, this will ensure a usable, valid path.
@@ -133,71 +158,6 @@ class PageRequest {
 				if (is_numeric($k)) continue;
 				$this->parameters[$k] = $v;
 			}
-		}
-
-		return;
-
-		// Trim off anything after the first & if present.
-		//if(strpos($uri, '&') !== false) $uri = substr($uri, 0, strpos($uri, '&'));
-
-		$p = PageModel::Find(
-			array('rewriteurl' => $uri,
-			      'fuzzy'      => 0), 1
-		);
-
-		// Split this URL, it'll be used somewhere.
-
-
-		// The core information can be retrieved from the PageModel's logic.
-		$pagedat = PageModel::SplitBaseURL($uri);
-		var_dump($pagedat, $_GET);
-		die();
-
-
-		if ($p) {
-			// :) Found it
-			$this->pagemodel = $p;
-		}
-		elseif ($pagedat) {
-			// Is this even a valid controller?
-			// This will allow a page to be called with it being in the pages database.
-			$p = new PageModel();
-			$p->set('baseurl', $uri);
-			$p->set('rewriteurl', $uri);
-			$this->pagemodel = $p;
-		}
-		else {
-			// No page in the database and no valid controller... sigh
-			return false;
-		}
-
-		//var_dump($p); die();
-
-		// Make sure all the parameters from both standard GET and core parameters are tacked on.
-		if ($pagedat && $pagedat['parameters']) {
-			foreach ($pagedat['parameters'] as $k => $v) {
-				$this->pagemodel->setParameter($k, $v);
-			}
-		}
-		if (is_array($_GET)) {
-			foreach ($_GET as $k => $v) {
-				if (is_numeric($k)) continue;
-				$this->pagemodel->setParameter($k, $v);
-			}
-		}
-
-		// Some pages may support dynamic content types from the getgo.
-		// @todo Should the $_SERVER['HTTP_ACCEPT'] flag be used here?
-		switch ($ctype) {
-			case 'xml':
-				$ctype = View::CTYPE_XML;
-				break;
-			case 'json':
-				$ctype = View::CTYPE_JSON;
-				break;
-			default:
-				$ctype = View::CTYPE_HTML;
-				break;
 		}
 	}
 
@@ -282,6 +242,26 @@ class PageRequest {
 	 * Execute the controller and method this page request points to.
 	 */
 	public function execute() {
+
+		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Starting PageRequest->execute()');
+
+		if($this->isCacheable()){
+			$uakey = \Core\UserAgent::Construct()->getPseudoIdentifier();
+			$urlkey = $this->host . $this->uri;
+			$expires = $this->getPageModel()->get('expires');
+			$key = 'page-cache-' . md5($urlkey . '-' . $uakey);
+
+			$cached = \Core\Cache::Get($key, $expires);
+			if($cached && $cached instanceof View){
+				$this->_pageview = $cached;
+				$this->_cached = true;
+				return;
+			}
+		}
+
+		// Anything that needs to fire off *before* the page is rendered.
+		// This includes widgets, script addons, and anything else that needs a CurrentPage.
+		HookHandler::DispatchHook('/core/page/prerender');
 
 		// Load the underlying controller.
 		$pagedat   = $this->splitParts();
@@ -605,12 +585,21 @@ class PageRequest {
 				$view->mastertemplate = $themeskins[0]['file'];
 			}
 		}
+
+
+		if(!$page->get('indexable')){
+			// Bots have no business indexing user-action pages.
+			$view->addMetaName('robots', 'noindex');
+		}
+
+		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Completed PageRequest->execute()');
 	}
 
 	/**
 	 * Render the View to the browser.
 	 */
 	public function render(){
+		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Starting PageRequest->render()');
 
 		$view = $this->getView();
 		$page = $this->getPageModel();
@@ -622,10 +611,12 @@ class PageRequest {
 		}
 
 		try {
-			$view->render();
+			// This will pre-fetch the contents of the entire page and store it into memory.
+			// If it is cacheable, then it will be cached and used for the next execution.
+			$view->fetch();
 		}
-		// If something happens in the rendering of the template... consider it a server error.
 		catch (Exception $e) {
+			// If something happens in the rendering of the template... consider it a server error.
 			$view->error   = View::ERROR_SERVERERROR;
 			$view->baseurl = '/error/error/500';
 			$view->setParameters(array());
@@ -633,9 +624,41 @@ class PageRequest {
 			$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
 			$view->assignVariable('exception', $e);
 
-			$view->render();
+			$view->fetch();
 		}
 
+
+		if($this->isCacheable()){
+			$uakey = \Core\UserAgent::Construct()->getPseudoIdentifier();
+			$urlkey = $this->host . $this->uri;
+			$expires = $page->get('expires'); // Number of seconds.
+			$key = 'page-cache-' . md5($urlkey . '-' . $uakey);
+
+			$d = new \Core\Date\DateTime();
+			$d->modify('+' . $expires . ' seconds');
+
+			$view->headers['Cache-Control'] = 'max-age=' . $expires;
+			$view->headers['Expires'] = $d->format('r', \Core\Date\Timezone::TIMEZONE_GMT);
+			$view->headers['Vary'] = 'Accept-Encoding,User-Agent,Cookie';
+			$view->headers['X-Core-Cached-Date'] = \Core\Date\DateTime::NowGMT('r');
+			$view->headers['X-Core-Cached-Server'] = 1; // @todo Implement multi-server support.
+			$view->headers['X-Core-Cached-Render-Time'] = \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTimeFormatted();
+
+			// Record the actual View into cache.
+			\Core\Cache::Set($key, $view, $expires);
+
+			// And record the key onto an index cache record so there's a record of what to delete on updates.
+			$indexkey = $page->getIndexCacheKey();
+			$index = \Core\Cache::Get($indexkey, 86400);
+			if(!$index){
+				$index = [];
+			}
+			$index[] = $key;
+			\Core\Cache::Set($indexkey, $index, 86400);
+		}
+		$view->headers['X-Core-Render-Time'] = \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTimeFormatted();
+
+		$view->render();
 
 		// Make sure I update any existing page now that the controller has ran.
 		if ($page->exists() && $view->error == View::ERROR_NOERROR) {
@@ -654,6 +677,39 @@ class PageRequest {
 
 		// Just before the page stops execution...
 		HookHandler::DispatchHook('/core/page/postrender');
+	}
+
+	public function isCacheable(){
+		// I opted to break the cacheable logic out like this because it's easier to document than one large if block.
+		// Start with every page being cacheable, (default).
+		$cacheable = true;
+
+		if(DEVELOPMENT_MODE){
+			// If in development mode, do not cache any pages for any users.
+			$cacheable = false;
+		}
+		elseif($this->_cached){
+			// If this page is already cached, do not try to re-cache.
+			$cacheable = false;
+		}
+		elseif(\Core\user()->exists()){
+			// If the user is currently logged in, do no cache any page.
+			$cacheable = false;
+		}
+		elseif($this->method != PageRequest::METHOD_GET){
+			// Only cache and provide caching for GET requests.
+			$cacheable = false;
+		}
+		elseif($this->getPageModel()->get('expires') == 0){
+			// Pages that are set to 0 are also not cacheable.
+			$cacheable = false;
+		}
+		elseif($this->getView()->mode != View::MODE_PAGE){
+			// Only traditional page views are cacheable.
+			$cacheable = false;
+		}
+
+		return $cacheable;
 	}
 
 	/**

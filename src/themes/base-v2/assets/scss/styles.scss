@@ -250,6 +250,7 @@ nav#breadcrumbs ul.controls {
 @import "buttons";
 @import "messages";
 @import "form_elements";
+@import "listing_tables";
 
 
 table.stacktrace {
@@ -263,46 +264,6 @@ table.stacktrace td {
 	 border: 1px solid;
 	font-size: 80%;
 }
-
-
-
-
-
-
-/*****************************************************************************
- *****************************************************************************
- **                            LISTING TABLES                               **
- *****************************************************************************
- *****************************************************************************/
-
-$listing-table-bg: #e0e0e0;
-table.listing {
-	width: 100%;
-	border: 1px solid darken($listing-table-bg, 15%);
-	border-collapse: collapse;
-}
-table.listing tr:nth-child(odd) {
-	background-color: darken($listing-table-bg, 5%);
-}
-table.listing th {
-	padding: 0.15em 0.5em;
-	border: 1px solid darken($listing-table-bg, 30%);
-	vertical-align: top;
-	background: darken($listing-table-bg, 30%);
-	color: #EEE;
-}
-table.listing td {
-	padding: 0.2em 0.5em;
-	border: 1px solid darken($listing-table-bg, 15%);
-	vertical-align: top;
-}
-
-/* Give a little high-lighting effect on mouseover for the records. */
-table.listing tr:hover {
-	background-color: #c7d5eb;
-}
-
-
 
 
 /*****************************************************************************
@@ -502,123 +463,12 @@ fieldset.collapsed { padding:0; border-width: 1px 0 0; }
 	top: 6px;
 }
 
-/** Theme Editor **/
 
-.page-themeeditor .column1 section.pagecontent {
-	margin-left:12px;
-}
-#theme-editor-wysiwyg {
-
-}
-
-.editor-container {
-	position:relative;
-}
-
-#code {
-	min-width:590px;
-}
-
-#theme-editor-browser {
-	background: transparent;
-	position: absolute;
-	width: 350px;
-	z-index: 100;
-	top: 52px;
-}
-
-#theme-editor-browser a {
-	color:#222;
-}
-
-#theme-editor-browser .left {
-	float:left;
-	width:300px;
-	background:#dddddd;
-	padding: 10px;
-	box-shadow: 3px 4px 15px 6px #090909;
-	max-height: 650px;
-	opacity: 0.8;
-	overflow-y: auto;
-}
-
-#theme-editor-browser .left:hover {opacity:0.9;}
-
-#theme-editor-browser .right {
-	float:right;
-	width:28px;
-	background:#090909;
-	color:#999999;
-	padding:10px 0;
-	border-radius: 0 5px 5px 0;
-	cursor:pointer;
-	opacity: 0.8;
-	border-bottom: 1px solid #2b2b2b;
-	border-right: 1px solid #2b2b2b;
-	border-top: 1px solid #2b2b2b;
-}
-
-#theme-editor-browser .right:hover {opacity:1;}
-
-#theme-editor-browser .right i {margin-left:8px;}
-
-#theme-editor-browser .icon {
-	float:right;
-	margin-right:2px;
-}
-
-#theme-editor-browser li .icon {margin-right:0;}
-
-#theme-editor-browser h2 {color:#666;margin-bottom:3px;}
-
-#theme-editor-browser ul {
-	margin-bottom:9px;
-	padding-bottom:3px;
-	border-bottom: 1px solid #e1e1e1;
-}
-
-#theme-editor-browser .sub {display:none;}
-
-#theme-editor-browser li .icon {cursor:pointer;}
-
-#theme-editor-browser li {
-	list-style-type: none;
-	margin-bottom:3px;
-}
-
-#theme-editor-browser ul ul {margin-left:10px;}
-
-#theme-editor-browser h2 {
-	cursor:pointer;
-}
-
-.theme-editor {
-	display:none;
-}
-
-#theme-editor-wysiwyg .image-editor {
-	background: #202020;
-	padding-bottom: 25px;
-	padding-left: 285px;
-}
-
-.image-editor h2 {margin-bottom:5px;}
-
-#revert {
-	cursor:pointer;
-	font-weight:bold;
-	text-decoration:underline;
-}
-
-#revisions li.revision {margin-bottom:3px;}
-
-#revisions .revision-title {cursor:pointer;}
-#revisions .revision-date {color:#888;}
-
-.page-themeeditor #dialog-confirm {display:none;}
 
 
 @import "filters_and_pagination";
+@import "pages_page";
+@import "pages_theme";
 
 
 .widgetarea-admindashboard .widget {

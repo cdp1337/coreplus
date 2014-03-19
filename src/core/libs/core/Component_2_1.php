@@ -1439,7 +1439,7 @@ class Component_2_1 {
 		//if ($change !== false) $changed = array_merge($changed, $change);
 
 		// Ensure that the core component cache is purged too!
-		Core::Cache()->delete('core-components');
+		\Core\Cache::Delete('core-components');
 
 		return (sizeof($changed)) ? $changed : false;
 	}
@@ -1473,7 +1473,7 @@ class Component_2_1 {
 		}
 
 		// Ensure that the core component cache is purged too!
-		Core::Cache()->delete('core-components');
+		\Core\Cache::Delete('core-components');
 
 		return (sizeof($changed)) ? $changed : false;
 	}
@@ -1653,7 +1653,7 @@ class Component_2_1 {
 		if ($change !== false) $changed = array_merge($changed, $change);
 
 		// Ensure that the core component cache is purged too!
-		Core::Cache()->delete('core-components');
+		\Core\Cache::Delete('core-components');
 
 		return (sizeof($changed)) ? $changed : false;
 	}
@@ -1878,6 +1878,7 @@ class Component_2_1 {
 				if($subnode->getAttribute('selectable') !== ''){
 					$selectable = $subnode->getAttribute('selectable');
 				}
+				$indexable = ($subnode->getAttribute('indexable') !== '') ? $subnode->getAttribute('indexable') : $selectable;
 				$editurl = $subnode->getAttribute('editurl') ? $subnode->getAttribute('editurl') : '';
 				$access = ($subnode->getAttribute('access')) ? $subnode->getAttribute('access') : null;
 
@@ -1899,6 +1900,7 @@ class Component_2_1 {
 				$m->set('admin', $admin);
 				$m->set('admin_group', $group);
 				$m->set('selectable', $selectable);
+				$m->set('indexable', $indexable);
 				$m->set('component', $this->getKeyName());
 				$m->set('editurl', $editurl);
 				if ($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';
@@ -2216,7 +2218,7 @@ class Component_2_1 {
 		if (!sizeof($changes)) return false;
 
 		// Make sure the asset cache is purged!
-		Core::Cache()->delete('asset-resolveurl');
+		\Core\Cache::Delete('core-components');
 
 		return $changes;
 	}

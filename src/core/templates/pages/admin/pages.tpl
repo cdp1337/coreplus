@@ -18,6 +18,7 @@
 		<th sortkey="rewriteurl">URL</th>
 		<th sortkey="pageviews">Views</th>
 		<th sortkey="popularity">Score</th>
+		<th sortkey="expires">Expires</th>
 		<th sortkey="created">Created</th>
 		<th sortkey="published">Published</th>
 		<th sortkey="access">Access</th>
@@ -29,7 +30,24 @@
 			<td>{$entry.parenturl}</td>
 			<td>{$entry.rewriteurl}</td>
 			<td>{$entry.pageviews}</td>
-			<td>{$entry.popularity}</td>
+			<td>
+				{if $entry.indexable}
+					{$entry.popularity}
+				{else}
+					N/A
+				{/if}
+			</td>
+			<td>
+				{if $entry.expires == 0}
+					Disabled
+				{elseif $entry.expires < 60}
+					{$entry.expires} seconds
+				{elseif $entry.expires < 3600}
+					{$entry.expires/60} min
+				{else}
+					{$entry.expires/3600} hr
+				{/if}
+			</td>
 			<td>{date format="SD" $entry.created}</td>
 			<td>
 				{if $entry.published}

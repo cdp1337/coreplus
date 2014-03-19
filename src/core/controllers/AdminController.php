@@ -157,8 +157,7 @@ class AdminController extends Controller_2_1 {
 		}
 
 		// Flush the system cache, just in case
-		Core::Cache()->flush();
-		Cache::GetSystemCache()->delete('core-components');
+		\Core\Cache::Flush();
 
 		// Increment the version counter.
 		$version = ConfigHandler::Get('/core/filestore/assetversion');
@@ -999,7 +998,7 @@ class AdminController extends Controller_2_1 {
 			Core::SetMessage('No changes performed', 'info');
 		}
 
-		\Core\redirect('/admin/widgets');
+		\Core\redirect('/admin/widgets?skin=' . $skin);
 	}
 
 	/**

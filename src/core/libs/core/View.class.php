@@ -247,6 +247,14 @@ class View {
 	private $_bodyCache = null;
 
 	/**
+	 * When fetching this entire skin+body numerous times, (ie: cache uses), the entire HTML may be cached here
+	 * to be used by cache.
+	 *
+	 * @var null|string
+	 */
+	private $_fetchCache = null;
+
+	/**
 	 * An array of the body classes and their values.
 	 *
 	 * These automatically get appended in the <body> tag of the skin, providing the skin supports it.
@@ -473,6 +481,11 @@ class View {
 	 */
 	public function fetch() {
 
+		if($this->_fetchCache !== null){
+			// w00t ;)
+			return $this->_fetchCache;
+		}
+
 		try{
 			$body = $this->fetchBody();
 		}
@@ -563,11 +576,7 @@ class View {
 		// These are mainly pulled from the UA.
 		$ua = \Core\UserAgent::Construct();
 
-		$this->bodyclasses[] = 'ua-browser-' . $ua->browser;
-		$this->bodyclasses[] = 'ua-engine-' . $ua->rendering_engine_name;
-		$this->bodyclasses[] = 'ua-browser-version-' . $ua->major_ver;
-		$this->bodyclasses[] = 'ua-platform-' . $ua->platform;
-		if($ua->isMobile()) $this->bodyclasses[] = 'ua-is-mobile';
+		$this->bodyclasses = array_merge($this->bodyclasses, $ua->getPseudoIdentifier(true));
 
 		// Provide a way for stylesheets to target this page specifically.
 		$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
@@ -771,6 +780,8 @@ class View {
 			}
 			*/
 		}
+
+		$this->_fetchCache = $data;
 
 		return $data;
 	}

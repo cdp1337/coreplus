@@ -170,6 +170,9 @@ class ContentController extends Controller_2_1 {
 		$page->set('deleteurl', '/content/delete/' . $model->get('id'));
 		$page->save();
 
+		// Clear the page cache
+		$page->purgePageCache();
+
 		// w00t
 		return 'back';
 	}

@@ -79,6 +79,7 @@ abstract class BlogHelper {
 	 */
 	public static function BlogFormHandler(Form $form) {
 		$model = $form->getModel();
+		/** @var PageModel $page */
 		$page = $form->getModel('page');
 		$page->set('fuzzy', '1'); // Needs to be fuzzy since it supports children
 		$isnew = !$model->exists();
@@ -89,6 +90,9 @@ abstract class BlogHelper {
 		$page->set('editurl', '/blog/update/' . $model->get('id'));
 		$page->set('deleteurl', '/blog/delete/' . $model->get('id'));
 		$page->save();
+
+		// Clear the page cache
+		$page->purgePageCache();
 
 		if($isnew){
 			Core::SetMessage('Created blog successfully!', 'success');
@@ -158,6 +162,9 @@ abstract class BlogHelper {
 
 			$page->save();
 
+			// Clear the page cache
+			$page->purgePageCache();
+
 			// if it's new, allow the user to post it to facebook.
 			if(isset($_POST['facebook_post']) && $_POST['facebook_post']){
 				// facebook_post
@@ -223,8 +230,12 @@ abstract class BlogHelper {
 	 */
 	public static function BlogIndexFormHandler(Form $form){
 		try{
+			/** @var PageModel $page */
 			$page = $form->getModel('page');
 			$page->save();
+
+			// Clear the page cache
+			$page->purgePageCache();
 
 			Core::SetMessage('Updated Listing Information', 'success');
 			return 'back';

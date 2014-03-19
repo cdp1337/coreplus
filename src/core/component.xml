@@ -6,7 +6,8 @@
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
 		<provide type="library" name="smarty" version="3.1.8"/>
 		<provide type="library" name="phpMailer" version="5.2.4"/>
-		<provide type="library" name="user" version="2.8.0"/>
+		<provide type="library" name="user" version="3.0.0"/>
+		<provide type="library" name="sitemap" version="3.0.0"/>
 		<scriptlibrary name="Core.Strings" call="Core::_AttachCoreStrings"/>
 		<scriptlibrary name="Core.AjaxLinks" call="Core::_AttachAjaxLinks"/>
 		<scriptlibrary name="lesscss" call="Core::_AttachLessJS"/>
@@ -29,6 +30,7 @@
 		<hookregister name="/core/controllinks/user/view" description="Control links when viewing a specific user" return="array"/>
 		<hookregister name="/user/postsave" description="Hook that is called after the user object is saved"/>
 		<hookregister name="/user/postlogin/getredirecturl" description="Hook that is called after the user has successfully logged in.  Return a non-empty string to redirect to that page." return="string"/>
+		<hookregister name="/sitemap/getlisting" return="array" description="Called during the listing retrieval of the links to display in the sitemap.  Useful for injecting links into the sitemap and sitemap.xml."/>
 		<hook name="/core/components/loaded" call="CurrentPage::Singleton"/>
 		<hook name="/core/components/ready" call="Form::CheckSavedSessionData"/>
 		<hook name="/core/page/prerender" call="Core::_AttachCoreJavascript"/>
@@ -58,11 +60,12 @@
 		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
 		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
 		<file filename="core/CHANGELOG" md5="7cf169bca4976d9614c2a7c2313e1bf6"/>
+		<file filename="core/assets/scss/admin/widgets.scss" md5="d798f09f5aaec04a828e683d7725e38a"/>
 		<file filename="core/bootstrap.php" md5="4ee39a8a4a6996cfbefeb144459248e0"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="216525795b6b97e55e9a534e94e6798b"/>
-		<file filename="core/bootstrap_preincludes.php" md5="cc57796650663d5636b141c957e379a1"/>
-		<file filename="core/controllers/AdminController.php" md5="cbcee9a7c52ea0d71396e14c29ec1b23">
+		<file filename="core/bootstrap_preincludes.php" md5="0098ba76560adc406111eb5618ff73a2"/>
+		<file filename="core/controllers/AdminController.php" md5="6683c7c9b43b49548daf95ecc2b03f41">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DirectoryController.class.php" md5="3c272c73dcc0b73a83235e55bc7f84a3">
@@ -79,6 +82,9 @@
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="aa5f05907fa3f8367f52859e48e0e526">
 			<controller name="GettingStartedController"/>
+		</file>
+		<file filename="core/controllers/PageController.php" md5="aacd934c7e247762b45d0a2e9af3ab85">
+			<controller name="PageController"/>
 		</file>
 		<file filename="core/controllers/UpdaterController.class.php" md5="5aceb7d8bbead19841d850db9d02f07e">
 			<controller name="UpdaterController"/>
@@ -168,11 +174,11 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="fb714865047a79810589fbe1a9eab1cd">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="9b11559092322e036fec7a1b42518dae"/>
+		<file filename="core/functions/Core.functions.php" md5="38a9aff81253f86a2221a0ec4e87fee3"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="d30419047aee346d119cf990054ab851">
 			<class name="RewriteMapHelper"/>
 		</file>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="23326f6424f685fdd561d7dc40fd17f7">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="c44196c47e12d665f3b13c2dbb4e59bb">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/legacy-support/pre-2.5.6/Directory_local_backend.php" md5="2f0b33bbdd83163e6ba067c6450085bd">
@@ -339,138 +345,6 @@
 		<file filename="core/libs/aws-sdk/utilities/utilities.class.php" md5="7ef08a416322208d5d57cf5d95937512">
 			<class name="CFUtilities"/>
 		</file>
-		<file filename="core/libs/cachecore/Cache.class.php" md5="6fef4d34ac6ed9c91cf94b0c49297ede">
-			<class name="Cache"/>
-			<class name="Cache_Exception"/>
-		</file>
-		<file filename="core/libs/cachecore/backends/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
-		<file filename="core/libs/cachecore/backends/README" md5="69bacd091afe98a53695d99b1deca48e"/>
-		<file filename="core/libs/cachecore/backends/_sql/README" md5="bb14abe0c209c9f54256975bae796c9f"/>
-		<file filename="core/libs/cachecore/backends/_sql/mysql.sql" md5="dc8b835b3e737bfb5905a61391b6e4a6"/>
-		<file filename="core/libs/cachecore/backends/_sql/pgsql.sql" md5="ddc5308c119fb421b3d26eff1238229a"/>
-		<file filename="core/libs/cachecore/backends/_sql/sqlite3.sql" md5="12810a853ca7e2b5dc35654fb241cee5"/>
-		<file filename="core/libs/cachecore/backends/_tests/AllTests.php" md5="8971cbd66ad355fa4624e52bb79975d1">
-			<class name="Console_CommandLine_AllTests"/>
-		</file>
-		<file filename="core/libs/cachecore/backends/_tests/CacheAPC-class_exists.phpt" md5="e2676afe7d0f226e3db8bf2702ba019a"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheAPC-class_implements.phpt" md5="4425f8cd81178d537271413e20740a2e"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheAPC-object_type.phpt" md5="78d96f5d99ad0cc6a7e509ed76fd8fcd"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheCore-class_exists.phpt" md5="ddaa215b428131a0539388538c3120c2"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheCore-class_implements.phpt" md5="c974bf9bbb403e0d9ae319924cb16b71"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheCore-object_type.phpt" md5="535c7a9a90bd7bf7930b6abf887c39af"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheFile-class_exists.phpt" md5="5cf0d1a692190646a82aafc5a9cb41ee"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheFile-class_implements.phpt" md5="602b82811a51a364ce7ed990edc65474"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheFile-object_type.phpt" md5="6e1b92ed28f14a95f6c303540895e9a8"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheMC-class_exists.phpt" md5="3b8835b7207dc9c14519ac4244d1ad45"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheMC-class_implements.phpt" md5="4cc67e15c3c7835d05d23b1d143201fe"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheMC-object_type.phpt" md5="9a4d669e026d1ed6a25ba9d44b5746ab"/>
-		<file filename="core/libs/cachecore/backends/_tests/CachePDO-class_exists.phpt" md5="972c8b4878f371e8944e89048bd1b6ad"/>
-		<file filename="core/libs/cachecore/backends/_tests/CachePDO-sqlite_class_implements.phpt" md5="ba30834da8360ae21cccea385a7728e5"/>
-		<file filename="core/libs/cachecore/backends/_tests/CachePDO-sqlite_object_type.phpt" md5="f51ec3d9abbed7bfb506e3d7eb3b8c7b"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheXCache-class_exists.phpt" md5="742bbc2cfed061359dd59b191a0fce48"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheXCache-class_implements.phpt" md5="c7799c72f115968d2b91ac868b9b72c6"/>
-		<file filename="core/libs/cachecore/backends/_tests/CacheXCache-object_type.phpt" md5="f092384a06025b6a44a90f78beb8692b"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_create.phpt" md5="abc8d8c32d78fc47953620e97faef6fc"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_delete.phpt" md5="80e7a9bf46b51f21b2e2d97ae951cc99"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_delete_false.phpt" md5="4a386b005761a2ac1e68e00686c74a89"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_delete_update.phpt" md5="e985d5119ad3fbf05ff6dd0ffefeac99"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_is_expired.phpt" md5="8b2644d9f2146b8b3ea13fe63b278ea5"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_read.phpt" md5="88d6ebc86cbbc8d778c3e0d6ad19d41a"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_reset.phpt" md5="a57c25d1d5650a582cbe4a766da677e3"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_timestamp.phpt" md5="ea57f7b32cbb5ae029ebe22f0af7d79a"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_update.phpt" md5="53b1dd7f997766861f8df3f35c357b82"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_method_update_read.phpt" md5="c40ede4a83ea5fae3b0e0408b50e173f"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_prop_expires.phpt" md5="72884eeb5b08c019ae66e125d0b1a05e"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_prop_id.phpt" md5="3aa5cc75ab8a59332e3183fa02c6f5b9"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_prop_location.phpt" md5="4791b41da5643ad2525814684b528340"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_prop_name.phpt" md5="c4b132220c9c0cac47ca48a023b48bfb"/>
-		<file filename="core/libs/cachecore/backends/_tests/apc_prop_timestamp.phpt" md5="bf8049a7140633c30b768e7437bde521"/>
-		<file filename="core/libs/cachecore/backends/_tests/cache/sqlite.db" md5="91b98d86b5af02ee68d22e6650f54d81"/>
-		<file filename="core/libs/cachecore/backends/_tests/core_prop_expires.phpt" md5="c5dba4c38e09a608227755359d9b5203"/>
-		<file filename="core/libs/cachecore/backends/_tests/core_prop_id.phpt" md5="68b5cca87530497288768b24f2a2e052"/>
-		<file filename="core/libs/cachecore/backends/_tests/core_prop_location.phpt" md5="549c114b8dadcf954478076612cc86ec"/>
-		<file filename="core/libs/cachecore/backends/_tests/core_prop_name.phpt" md5="6eb6f552016acc615f77cf8b31f2eb3a"/>
-		<file filename="core/libs/cachecore/backends/_tests/core_prop_timestamp.phpt" md5="75811869e550615c66bb54b6b7782a36"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_create.phpt" md5="5a10413a335e89fa010d69f3d5110b68"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_create_fail.phpt" md5="d33722b175776010e462fc35d360babd"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_delete.phpt" md5="55932af8a5355a43e8957644893c4455"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_delete_false.phpt" md5="afae980bf020e142b6bfa1b60ce12736"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_delete_update.phpt" md5="1ebbeb4d81d3ef43fa30632932071fb6"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_is_expired.phpt" md5="808073903d0c685edc5cc3aa396d71a8"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_read.phpt" md5="00fd0d89b75b66829021f4cb34f2a304"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_reset.phpt" md5="acc6f957f5b64dbf6856f35f94d604a1"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_reset_fail.phpt" md5="3a62c819fb5605f54840405e346dcb55"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_response_manager.phpt" md5="c9370b2d4e4f8723390f825c071cea2a"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_response_manager_no_params.phpt" md5="f337eaa449f4c6f91f1aeedf9ceccc5c"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_response_manager_reset.phpt" md5="da4370e3683f5f067cee86b2bd627b1c"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_timestamp.phpt" md5="e54a52650ce23415cc5868c91b3d2a63"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_timestamp_nocreate.phpt" md5="c1d6ffdbe202ae5fb7858de8339333d7"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_update.phpt" md5="4a1b5018d2dd2ab9a90abeeef5a44253"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_method_update_read.phpt" md5="78c050672716cc7fe405e49bd1ddf0bf"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_prop_expires.phpt" md5="a16a9f3f7ae1534656481060dcb3a7af"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_prop_id.phpt" md5="5b8e9ec9fdefb093f8dcce7f00ec14c3"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_prop_location.phpt" md5="54a685fdea6dfe57a6f991deb50f379d"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_prop_name.phpt" md5="37920dda84db83afeb15fc3706940b19"/>
-		<file filename="core/libs/cachecore/backends/_tests/file_prop_timestamp.phpt" md5="5efe8cb6c356f3b7f656231cddb6f1f1"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_create.phpt" md5="eeba2163c976afff2fc4a3bbf3173c05"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_delete.phpt" md5="cd753f5371608ca390815d6c6e5e6865"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_delete_false.phpt" md5="c281e57477904715495e48b206475e1d"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_delete_update.phpt" md5="f24878049ea8050c3dcf950f57efdb93"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_is_expired.phpt" md5="e9b2dce8030058c5641179ff7c3dcd7c"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_read.phpt" md5="fd2fbd23360facb9f4d6b6f0365f5d9f"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_read2.phpt" md5="ed76c7903e6f5f71445ee986c4b9f696"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_reset.phpt" md5="43cf63834cf00a635eb67c6c8afa0ed4"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_response_manager.phpt" md5="90f1a0eee60d270fece9e77749e9119a"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_response_manager_reset.phpt" md5="e0918ccd38a52a4da34e10f97ca67478"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_timestamp.phpt" md5="d408d39c54afba96c2177841ede4b58b"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_timestamp_nocreate.phpt" md5="ea5592bb4df14e0c0400eb5add3df39c"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_update.phpt" md5="7764f87d9e122ce788eb87f5d9840cba"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_method_update_read.phpt" md5="ceae6450417900b445b8e32935684eef"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_expires.phpt" md5="34aa201e7d4290c86ffa67f728c1f459"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_id.phpt" md5="343abb1dcf0e0a1451006a227eb843a6"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_location.phpt" md5="37f0e9fa40dcced9009104f3f0bb0cd6"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_name.phpt" md5="239d3339ff0fe74ab47377b93df70ce4"/>
-		<file filename="core/libs/cachecore/backends/_tests/memcached_prop_timestamp.phpt" md5="7887616c485d3fac61595bf6cae8de38"/>
-		<file filename="core/libs/cachecore/backends/_tests/test_request.txt" md5="44daf28deeecb35cbe53e6af784082e9"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_create.phpt" md5="d0c42152bc5c352a1f9a1ebb3ca7d414"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_delete.phpt" md5="f6e7bdb38a0d56563624fae7015ee0cc"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_delete_false.phpt" md5="e2e7af5ed7d6f63cc34a2d53d552939b"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_delete_update.phpt" md5="433014a2defd357ccacb3f506a0235bc"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_is_expired.phpt" md5="a763ae799accfe8ff5d54ccfe6f46733"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_read.phpt" md5="e84930ce5d0203150c07f70c8d44c39f"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_reset.phpt" md5="af2d3e2b077b463c081325786af60d2f"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_response_manager.phpt" md5="b471d23c7fd806b291d852c9330c3aae"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_response_manager_reset.phpt" md5="5c720eb6a4edff098d05c54fca9d758a"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_timestamp.phpt" md5="7908112a183701f04b32be96cb86c1f0"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_timestamp_nocreate.phpt" md5="c1d3cf2a67508f08a7c1d3754cca11ac"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_update.phpt" md5="c3763bda14fb49ac13711a8eabebd7f1"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_method_update_read.phpt" md5="02480b4a8515ee5e3520bc3118e1660a"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_expires.phpt" md5="4c145f188d672fcd126fca5981290416"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_id.phpt" md5="6c972fcdeacc4f2af5c4725962985176"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_location.phpt" md5="c130f698e8eb8411d0a879f269792f9b"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_name.phpt" md5="0edbda82e284954a0d062a7c3d772f4c"/>
-		<file filename="core/libs/cachecore/backends/_tests/xcache_prop_timestamp.phpt" md5="277ae0c33a6d2dbdc3bfef8a3ebd2024"/>
-		<file filename="core/libs/cachecore/backends/cacheapc.class.php" md5="e8621ab82f92c7c4beef45ba25c36bbb">
-			<class name="CacheAPC"/>
-		</file>
-		<file filename="core/libs/cachecore/backends/cachecore.class.php" md5="66f91224023a559b46cc396457dd4781">
-			<class name="CacheCore"/>
-		</file>
-		<file filename="core/libs/cachecore/backends/cachefile.class.php" md5="91b5081c9286e3c35b182eea57a6169c">
-			<class name="CacheFile"/>
-		</file>
-		<file filename="core/libs/cachecore/backends/cachemc.class.php" md5="81fdb2f1dea57e622d281631961dac5f">
-			<class name="CacheMC"/>
-		</file>
-		<file filename="core/libs/cachecore/backends/cachepdo.class.php" md5="f22f2c33573350bdbb5315766e0b55f4">
-			<class name="CachePDO"/>
-		</file>
-		<file filename="core/libs/cachecore/backends/cachexcache.class.php" md5="c70fabb077c1ad1ab832a9c57781eaa1">
-			<class name="CacheXCache"/>
-		</file>
-		<file filename="core/libs/cachecore/backends/icachecore.interface.php" md5="38c793c1d311f17e7a9e7442a236e981">
-			<interface name="ICacheCore"/>
-		</file>
 		<file filename="core/libs/core/BaconIpsumGenerator.class.php" md5="45e220a4c8d075972e450ae603f7c808">
 			<class name="BaconIpsumGenerator"/>
 		</file>
@@ -480,7 +354,10 @@
 		<file filename="core/libs/core/CLI.class.php" md5="c8c05ed3cb4e167133f5e87f3e553aa1">
 			<class name="CLI"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="5f32a34c24cdf7c0a63999e34c82afa7">
+		<file filename="core/libs/core/Cache.php" md5="32d01e1be52b260956e3a9243dffb206">
+			<class name="Core\Cache"/>
+		</file>
+		<file filename="core/libs/core/Component.class.php" md5="79bac1f7482f80ec037ddd2fb3758459">
 			<class name="Component"/>
 		</file>
 		<file filename="core/libs/core/ComponentFactory.php" md5="d153c8bf2dfbf65eba63bb0e7b1ceae9">
@@ -489,7 +366,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="86528c28183175e5ca94abf369c48b99">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="ec52799bf2d6ac5bc7a66d82d8166f54">
+		<file filename="core/libs/core/Component_2_1.php" md5="0b438027e8ecfdb9200665a9f8b89221">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="feec118061ba4b35fd118affe3350f13">
@@ -501,7 +378,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="06f428768946473576150df4b8b69a02">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="6e4d2f3358c59940a3a5cb02d9277186">
+		<file filename="core/libs/core/Core.class.php" md5="6538084c36c89b77025928260241c256">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -542,7 +419,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="7bae1b2886a742915df7086624d5d819">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="c300f9d69e6f2d4e03738b168c0bf35c">
+		<file filename="core/libs/core/Model.class.php" md5="8379538e3d0072829ec49e9683194c89">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -554,7 +431,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="56818b4124a9dabd843b011c226d9b25">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="a7529768f84107b3de7786a54c07c696">
+		<file filename="core/libs/core/PageRequest.class.php" md5="122065faf5604326cb6ebba3176ef00b">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="026c83b5188f74fd815f1cd7a0403498">
@@ -567,10 +444,10 @@
 		<file filename="core/libs/core/Time.class.php" md5="9c4a3c05fe945cb3fb0035ef13fe1410">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/UserAgent.php" md5="5fab681a68947f90eed41b58e6b48bc1">
+		<file filename="core/libs/core/UserAgent.php" md5="a22689d12002d47e850109fb89c13b22">
 			<class name="Core\UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="45c5738b8104dc7478da818498130e07">
+		<file filename="core/libs/core/View.class.php" md5="5bdf071805d25e2f25546ae8d061ef6d">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -600,6 +477,131 @@
 		<file filename="core/libs/core/XMLLoader.class.php" md5="ec867dc88dc646b172f0c43b1dccd72e">
 			<class name="XMLLoader"/>
 		</file>
+		<file filename="core/libs/core/cache/CacheInterface.php" md5="996ea4d2f1059aeea423e85a602c0fa3">
+			<interface name="Core\Cache\CacheInterface"/>
+		</file>
+		<file filename="core/libs/core/cache/File.php" md5="6a6112b0f9ce8352a9cb9cb93e1aa53b">
+			<class name="Core\Cache\File"/>
+		</file>
+		<file filename="core/libs/core/cache/backends/LICENSE" md5="70f142181074f83b33d258164c008cd9"/>
+		<file filename="core/libs/core/cache/backends/README" md5="69bacd091afe98a53695d99b1deca48e"/>
+		<file filename="core/libs/core/cache/backends/_sql/README" md5="bb14abe0c209c9f54256975bae796c9f"/>
+		<file filename="core/libs/core/cache/backends/_sql/mysql.sql" md5="dc8b835b3e737bfb5905a61391b6e4a6"/>
+		<file filename="core/libs/core/cache/backends/_sql/pgsql.sql" md5="ddc5308c119fb421b3d26eff1238229a"/>
+		<file filename="core/libs/core/cache/backends/_sql/sqlite3.sql" md5="12810a853ca7e2b5dc35654fb241cee5"/>
+		<file filename="core/libs/core/cache/backends/_tests/AllTests.php" md5="8971cbd66ad355fa4624e52bb79975d1">
+			<class name="Console_CommandLine_AllTests"/>
+		</file>
+		<file filename="core/libs/core/cache/backends/_tests/CacheAPC-class_exists.phpt" md5="e2676afe7d0f226e3db8bf2702ba019a"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheAPC-class_implements.phpt" md5="4425f8cd81178d537271413e20740a2e"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheAPC-object_type.phpt" md5="78d96f5d99ad0cc6a7e509ed76fd8fcd"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheCore-class_exists.phpt" md5="ddaa215b428131a0539388538c3120c2"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheCore-class_implements.phpt" md5="c974bf9bbb403e0d9ae319924cb16b71"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheCore-object_type.phpt" md5="535c7a9a90bd7bf7930b6abf887c39af"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheFile-class_exists.phpt" md5="5cf0d1a692190646a82aafc5a9cb41ee"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheFile-class_implements.phpt" md5="602b82811a51a364ce7ed990edc65474"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheFile-object_type.phpt" md5="6e1b92ed28f14a95f6c303540895e9a8"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheMC-class_exists.phpt" md5="3b8835b7207dc9c14519ac4244d1ad45"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheMC-class_implements.phpt" md5="4cc67e15c3c7835d05d23b1d143201fe"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheMC-object_type.phpt" md5="9a4d669e026d1ed6a25ba9d44b5746ab"/>
+		<file filename="core/libs/core/cache/backends/_tests/CachePDO-class_exists.phpt" md5="972c8b4878f371e8944e89048bd1b6ad"/>
+		<file filename="core/libs/core/cache/backends/_tests/CachePDO-sqlite_class_implements.phpt" md5="ba30834da8360ae21cccea385a7728e5"/>
+		<file filename="core/libs/core/cache/backends/_tests/CachePDO-sqlite_object_type.phpt" md5="f51ec3d9abbed7bfb506e3d7eb3b8c7b"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheXCache-class_exists.phpt" md5="742bbc2cfed061359dd59b191a0fce48"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheXCache-class_implements.phpt" md5="c7799c72f115968d2b91ac868b9b72c6"/>
+		<file filename="core/libs/core/cache/backends/_tests/CacheXCache-object_type.phpt" md5="f092384a06025b6a44a90f78beb8692b"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_method_create.phpt" md5="abc8d8c32d78fc47953620e97faef6fc"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_method_delete.phpt" md5="80e7a9bf46b51f21b2e2d97ae951cc99"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_method_delete_false.phpt" md5="4a386b005761a2ac1e68e00686c74a89"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_method_delete_update.phpt" md5="e985d5119ad3fbf05ff6dd0ffefeac99"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_method_is_expired.phpt" md5="8b2644d9f2146b8b3ea13fe63b278ea5"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_method_read.phpt" md5="88d6ebc86cbbc8d778c3e0d6ad19d41a"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_method_reset.phpt" md5="a57c25d1d5650a582cbe4a766da677e3"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_method_timestamp.phpt" md5="ea57f7b32cbb5ae029ebe22f0af7d79a"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_method_update.phpt" md5="53b1dd7f997766861f8df3f35c357b82"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_method_update_read.phpt" md5="c40ede4a83ea5fae3b0e0408b50e173f"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_prop_expires.phpt" md5="72884eeb5b08c019ae66e125d0b1a05e"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_prop_id.phpt" md5="3aa5cc75ab8a59332e3183fa02c6f5b9"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_prop_location.phpt" md5="4791b41da5643ad2525814684b528340"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_prop_name.phpt" md5="c4b132220c9c0cac47ca48a023b48bfb"/>
+		<file filename="core/libs/core/cache/backends/_tests/apc_prop_timestamp.phpt" md5="bf8049a7140633c30b768e7437bde521"/>
+		<file filename="core/libs/core/cache/backends/_tests/cache/sqlite.db" md5="91b98d86b5af02ee68d22e6650f54d81"/>
+		<file filename="core/libs/core/cache/backends/_tests/core_prop_expires.phpt" md5="c5dba4c38e09a608227755359d9b5203"/>
+		<file filename="core/libs/core/cache/backends/_tests/core_prop_id.phpt" md5="68b5cca87530497288768b24f2a2e052"/>
+		<file filename="core/libs/core/cache/backends/_tests/core_prop_location.phpt" md5="549c114b8dadcf954478076612cc86ec"/>
+		<file filename="core/libs/core/cache/backends/_tests/core_prop_name.phpt" md5="6eb6f552016acc615f77cf8b31f2eb3a"/>
+		<file filename="core/libs/core/cache/backends/_tests/core_prop_timestamp.phpt" md5="75811869e550615c66bb54b6b7782a36"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_create.phpt" md5="5a10413a335e89fa010d69f3d5110b68"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_create_fail.phpt" md5="d33722b175776010e462fc35d360babd"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_delete.phpt" md5="55932af8a5355a43e8957644893c4455"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_delete_false.phpt" md5="afae980bf020e142b6bfa1b60ce12736"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_delete_update.phpt" md5="1ebbeb4d81d3ef43fa30632932071fb6"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_is_expired.phpt" md5="808073903d0c685edc5cc3aa396d71a8"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_read.phpt" md5="00fd0d89b75b66829021f4cb34f2a304"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_reset.phpt" md5="acc6f957f5b64dbf6856f35f94d604a1"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_reset_fail.phpt" md5="3a62c819fb5605f54840405e346dcb55"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_response_manager.phpt" md5="c9370b2d4e4f8723390f825c071cea2a"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_response_manager_no_params.phpt" md5="f337eaa449f4c6f91f1aeedf9ceccc5c"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_response_manager_reset.phpt" md5="da4370e3683f5f067cee86b2bd627b1c"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_timestamp.phpt" md5="e54a52650ce23415cc5868c91b3d2a63"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_timestamp_nocreate.phpt" md5="c1d6ffdbe202ae5fb7858de8339333d7"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_update.phpt" md5="4a1b5018d2dd2ab9a90abeeef5a44253"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_method_update_read.phpt" md5="78c050672716cc7fe405e49bd1ddf0bf"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_prop_expires.phpt" md5="a16a9f3f7ae1534656481060dcb3a7af"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_prop_id.phpt" md5="5b8e9ec9fdefb093f8dcce7f00ec14c3"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_prop_location.phpt" md5="54a685fdea6dfe57a6f991deb50f379d"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_prop_name.phpt" md5="37920dda84db83afeb15fc3706940b19"/>
+		<file filename="core/libs/core/cache/backends/_tests/file_prop_timestamp.phpt" md5="5efe8cb6c356f3b7f656231cddb6f1f1"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_create.phpt" md5="eeba2163c976afff2fc4a3bbf3173c05"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_delete.phpt" md5="cd753f5371608ca390815d6c6e5e6865"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_delete_false.phpt" md5="c281e57477904715495e48b206475e1d"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_delete_update.phpt" md5="f24878049ea8050c3dcf950f57efdb93"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_is_expired.phpt" md5="e9b2dce8030058c5641179ff7c3dcd7c"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_read.phpt" md5="fd2fbd23360facb9f4d6b6f0365f5d9f"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_read2.phpt" md5="ed76c7903e6f5f71445ee986c4b9f696"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_reset.phpt" md5="43cf63834cf00a635eb67c6c8afa0ed4"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_response_manager.phpt" md5="90f1a0eee60d270fece9e77749e9119a"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_response_manager_reset.phpt" md5="e0918ccd38a52a4da34e10f97ca67478"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_timestamp.phpt" md5="d408d39c54afba96c2177841ede4b58b"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_timestamp_nocreate.phpt" md5="ea5592bb4df14e0c0400eb5add3df39c"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_update.phpt" md5="7764f87d9e122ce788eb87f5d9840cba"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_method_update_read.phpt" md5="ceae6450417900b445b8e32935684eef"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_prop_expires.phpt" md5="34aa201e7d4290c86ffa67f728c1f459"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_prop_id.phpt" md5="343abb1dcf0e0a1451006a227eb843a6"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_prop_location.phpt" md5="37f0e9fa40dcced9009104f3f0bb0cd6"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_prop_name.phpt" md5="239d3339ff0fe74ab47377b93df70ce4"/>
+		<file filename="core/libs/core/cache/backends/_tests/memcached_prop_timestamp.phpt" md5="7887616c485d3fac61595bf6cae8de38"/>
+		<file filename="core/libs/core/cache/backends/_tests/test_request.txt" md5="44daf28deeecb35cbe53e6af784082e9"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_create.phpt" md5="d0c42152bc5c352a1f9a1ebb3ca7d414"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_delete.phpt" md5="f6e7bdb38a0d56563624fae7015ee0cc"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_delete_false.phpt" md5="e2e7af5ed7d6f63cc34a2d53d552939b"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_delete_update.phpt" md5="433014a2defd357ccacb3f506a0235bc"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_is_expired.phpt" md5="a763ae799accfe8ff5d54ccfe6f46733"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_read.phpt" md5="e84930ce5d0203150c07f70c8d44c39f"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_reset.phpt" md5="af2d3e2b077b463c081325786af60d2f"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_response_manager.phpt" md5="b471d23c7fd806b291d852c9330c3aae"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_response_manager_reset.phpt" md5="5c720eb6a4edff098d05c54fca9d758a"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_timestamp.phpt" md5="7908112a183701f04b32be96cb86c1f0"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_timestamp_nocreate.phpt" md5="c1d3cf2a67508f08a7c1d3754cca11ac"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_update.phpt" md5="c3763bda14fb49ac13711a8eabebd7f1"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_method_update_read.phpt" md5="02480b4a8515ee5e3520bc3118e1660a"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_prop_expires.phpt" md5="4c145f188d672fcd126fca5981290416"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_prop_id.phpt" md5="6c972fcdeacc4f2af5c4725962985176"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_prop_location.phpt" md5="c130f698e8eb8411d0a879f269792f9b"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_prop_name.phpt" md5="0edbda82e284954a0d062a7c3d772f4c"/>
+		<file filename="core/libs/core/cache/backends/_tests/xcache_prop_timestamp.phpt" md5="277ae0c33a6d2dbdc3bfef8a3ebd2024"/>
+		<file filename="core/libs/core/cache/backends/cacheapc.class.php" md5="e8621ab82f92c7c4beef45ba25c36bbb">
+			<class name="CacheAPC"/>
+		</file>
+		<file filename="core/libs/core/cache/backends/cachemc.class.php" md5="81fdb2f1dea57e622d281631961dac5f">
+			<class name="CacheMC"/>
+		</file>
+		<file filename="core/libs/core/cache/backends/cachepdo.class.php" md5="f22f2c33573350bdbb5315766e0b55f4">
+			<class name="CachePDO"/>
+		</file>
+		<file filename="core/libs/core/cache/backends/cachexcache.class.php" md5="c70fabb077c1ad1ab832a9c57781eaa1">
+			<class name="CacheXCache"/>
+		</file>
 		<file filename="core/libs/core/cli/Argument.php" md5="26e26ded2a5feff1f2cea75dc895cd06">
 			<class name="Core\CLI\Argument"/>
 		</file>
@@ -617,7 +619,7 @@
 			<class name="DMI_ServerNotFound_Exception"/>
 			<class name="DMI_Query_Exception"/>
 		</file>
-		<file filename="core/libs/core/datamodel/Dataset.php" md5="692c7e6d4e589ba31f4958fb9bb9b087">
+		<file filename="core/libs/core/datamodel/Dataset.php" md5="247b4635d73bbe94dce4a6dba52b6c1e">
 			<class name="Core\Datamodel\Dataset"/>
 		</file>
 		<file filename="core/libs/core/datamodel/DatasetStream.php" md5="6f0c94d20ae05f0f5a37bb6f92bc75d1">
@@ -695,10 +697,10 @@
 		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="bc417af5042543db2cee65d62ee34545">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="018cb6501d72960e5556caa8fd77ea6a">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="45857589f7716133814be1ad2a86d22a">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="433acd3ccdcab75d79008e55748e9bee">
+		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="027b40b3c9d1cc95bd100f5188038bc4">
 			<class name="Core\Filestore\Backends\FileRemote"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/file_awss3.backend.php" md5="32f80641acf9a3a4daa99232c5bd10cc">
@@ -1360,7 +1362,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="7b6d196a28a61ac5378edf313dadae84">
+		<file filename="core/models/PageModel.class.php" md5="9efb8d6d33f74c847c1470de6929d3d8">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="3791a151027c417603c48e3a3c59a4d3">
@@ -1415,6 +1417,9 @@
 		<file filename="core/widgets/AdminMenuWidget.php" md5="d698807b9c62540f7b5288e276e1c6f0">
 			<class name="AdminMenuWidget"/>
 		</file>
+		<file filename="core/widgets/PageSearchWidget.php" md5="2b81404e7cbb01e30d2339e7967b0eba">
+			<class name="PageSearchWidget"/>
+		</file>
 		<file filename="core/widgets/PageWidget.php" md5="612cd59aef22cda09804b489cb64f327">
 			<class name="PageWidget"/>
 		</file>
@@ -1432,7 +1437,7 @@
 		</file>
 		<file filename="htaccess.ant" md5="03a971bd1f755da122d8f8f458b840cf"/>
 		<file filename="htaccess.ex" md5="5b9477efc4add163473fe0ab8939bede"/>
-		<file filename="index.php" md5="e7c011bfe21695d78a639dd34cef97e4"/>
+		<file filename="index.php" md5="08270bc046bdbe24168de105f5fb6fb6"/>
 		<file filename="install/InstallPage.class.php" md5="027a64393425c2fb38e2b92b59c9861a">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1497,6 +1502,7 @@
 		<page baseurl="/admin/pages" admin="1" access="p:/core/pages/view" title="All Pages" group="Content"/>
 		<page baseurl="/admin/widgets" admin="1" access="p:/core/widgets/view" title="All Widgets" group="Content"/>
 		<page baseurl="/admin/testui" admin="1" access="g:admin" title="Test General UI/UX" group="Theme and Layouts"/>
+		<page baseurl="/page/sitemap" admin="0" access="*" title="Sitemap" rewriteurl="/sitemap" selectable="1" indexable="1"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/updater/check" title="Check For Updates" installable="/admin"/>
@@ -1504,6 +1510,7 @@
 		<widget baseurl="/user/loginfull" title="User Login Widget (Full)"/>
 		<widget baseurl="/user/register" title="User Registration Widget (Full)"/>
 		<widget baseurl="/useradmin/newestsignups" title="Recent User Registrations" installable="/admin"/>
+		<widgetcreate title="Page Search" class="PageSearchWidget"/>
 	</widgets>
 	<view searchdir="core/templates">
 		<file filename="core/templates/emails/user/activation.tpl" md5="2894752e5f2b582bf16dd0eed82e14e9"/>
@@ -1540,7 +1547,7 @@
 		<file filename="core/templates/forms/elements/image.tpl" md5="dc4f74a0297b099ea7913d7582125837"/>
 		<file filename="core/templates/forms/elements/reset.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
 		<file filename="core/templates/forms/filters-pagination.tpl" md5="0c6a0aaa14303c2cdfa87bfde400f469"/>
-		<file filename="core/templates/forms/filters.tpl" md5="23a72f1e0dd952954bb0033ab73620ba"/>
+		<file filename="core/templates/forms/filters.tpl" md5="76f73daf9605f8f25cd00390335ab3c1"/>
 		<file filename="core/templates/forms/form.body.tpl" md5="8ab5bcc9f1307da533c72b3d18113a74"/>
 		<file filename="core/templates/forms/form.foot.tpl" md5="6e6d3353848b64921070b812c7c99936"/>
 		<file filename="core/templates/forms/form.head.tpl" md5="efe24a11d8a7a54ad55a68fd09abb0a1"/>
@@ -1556,13 +1563,13 @@
 		<file filename="core/templates/pages/admin/config.tpl" md5="fc2b84d5da04d38c3f5ffe9b27363433"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
 		<file filename="core/templates/pages/admin/log.tpl" md5="03788adf6fc482a8c3d46087009f003d"/>
-		<file filename="core/templates/pages/admin/pages.tpl" md5="78d2c83f39824cbb8cbb3fe7698335c6"/>
+		<file filename="core/templates/pages/admin/pages.tpl" md5="58d7e018bb99b0559e2a187322afb83e"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="ec73503565c3b1987c0419bbe5815aaa"/>
 		<file filename="core/templates/pages/admin/syncsearchindex.tpl" md5="d95f9468ee0c9fb6b7623e6e0c4def4c"/>
 		<file filename="core/templates/pages/admin/testui.tpl" md5="f784ba4f9ac362e4f8ba9d60ed6f1f20"/>
 		<file filename="core/templates/pages/admin/widget_create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/admin/widget_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="core/templates/pages/admin/widgets.tpl" md5="b78c5adb1a6163105d6d2a920e4095c2"/>
+		<file filename="core/templates/pages/admin/widgets.tpl" md5="e643241700b05178344b53a9fa6bab4c"/>
 		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
 		<file filename="core/templates/pages/error/error400.tpl" md5="9784f5fce250ac584817c80e99234016"/>
 		<file filename="core/templates/pages/error/error403.tpl" md5="9223242be43703fc7f3e6d2633626f3b"/>
@@ -1570,6 +1577,9 @@
 		<file filename="core/templates/pages/error/error500.tpl" md5="286730a5c35399f12541addc65006492"/>
 		<file filename="core/templates/pages/form/testui.tpl" md5="9c786b9e5952ff16f481d45d8259f872"/>
 		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="c3856d7798a76f98caf744dcc381c9d3"/>
+		<file filename="core/templates/pages/page/search.tpl" md5="e923c707a21829f1f06428c8df92a7db"/>
+		<file filename="core/templates/pages/page/sitemap.tpl" md5="0d0f110343f6410fd34d5afd06378436"/>
+		<file filename="core/templates/pages/page/sitemap.xml.tpl" md5="a27828e243dfaac4a261b28567b49fad"/>
 		<file filename="core/templates/pages/updater/browse.tpl" md5="46164efb30e799b0daa3062cb53ed548"/>
 		<file filename="core/templates/pages/updater/index.tpl" md5="9f3d27034de672c264b2a6119b1cb66b"/>
 		<file filename="core/templates/pages/updater/keys.tpl" md5="4ff939a015c21167bda5a5a8d47f3f37"/>
@@ -1597,8 +1607,10 @@
 		<file filename="core/templates/pages/usergroupadmin/index.tpl" md5="cec6b41cb710d55cdef2f3a1e4a6a08c"/>
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
 		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
+		<file filename="core/templates/search/model/page.tpl" md5="69cd2ac6a8f3b0d3f224f200215ec766"/>
 		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
 		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="5151a935e8339af4dd16986052145deb"/>
+		<file filename="core/templates/widgets/pagesearch/execute.tpl" md5="f1ef8718e114ea3087fa602e5677dda8"/>
 		<file filename="core/templates/widgets/updater/check.tpl" md5="72e3def2db04a820ebc32d3659e15f76"/>
 		<file filename="core/templates/widgets/user/login.tpl" md5="054c8c86b99b890e6490b96d3ff0c634"/>
 		<file filename="core/templates/widgets/user/loginfull.tpl" md5="aa0a5b7785a302e8eb21e27db2b9a326"/>
@@ -1681,7 +1693,8 @@
 	<assets>
 		<file filename="core/assets/css/admin/adminbar.css" md5="13fe9725206ba5322959a0d7e4553195"/>
 		<file filename="core/assets/css/admin/config.css" md5="1cae5af5ea1e4821b3f53684cdc416bf"/>
-		<file filename="core/assets/css/admin/widgets.css" md5="c30e4f3c1849a829d1bfc47fd9eecd0a"/>
+		<file filename="core/assets/css/admin/widgets.css" md5="741839788f325369c961efe5d8f0bb64"/>
+		<file filename="core/assets/css/admin/widgets.min.css" md5="08127a6c5c72bb9cc33cafecd7ab8338"/>
 		<file filename="core/assets/css/reset.css" md5="968510374a9ff8a69e49ddd2719eca0d"/>
 		<file filename="core/assets/css/reset.min.css" md5="44b43a8b1471320ee192b0938fab3372"/>
 		<file filename="core/assets/css/updater.css" md5="771975b286bac4ea1f55785d6ca1a5eb"/>
@@ -1809,7 +1822,7 @@
 		<file filename="core/assets/images/placeholders/template.xcf" md5="2099f59f0748cd56d0f33022b5282b99"/>
 		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="306b7baee9b250a9da2b378f5047ff30"/>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
-		<file filename="core/assets/js/admin/widgets.js" md5="0ac5f62b8fb3bddc6c918379a01ed36f"/>
+		<file filename="core/assets/js/admin/widgets.js" md5="08000f5af9e2d05458df069fc744e203"/>
 		<file filename="core/assets/js/core.ajaxlinks.js" md5="afcbaf5ffaebe993b37530d7606ec956"/>
 		<file filename="core/assets/js/core.base64.js" md5="d5858756a4cf8012eb25157105718dfa"/>
 		<file filename="core/assets/js/core.context-controls.js" md5="9cceadad2a7328d7cf536c9d47562ddf"/>

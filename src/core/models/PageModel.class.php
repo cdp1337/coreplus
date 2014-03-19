@@ -52,7 +52,7 @@ class PageModel extends Model {
 			),
 		),
 		'site' => array(
-			'type' => Model::ATT_TYPE_INT,
+			'type' => Model::ATT_TYPE_SITE,
 			'default' => -1,
 			'formtype' => 'system',
 			'comment' => 'The site id in multisite mode, (or -1 if global)',
@@ -149,6 +149,35 @@ class PageModel extends Model {
 			'formtype'  => 'disabled',
 			'comment'   => 'The last page template used to render this page, useful in edit pages.',
 		),
+		'expires' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'default' => 3600,
+			'form' => [
+				'title' => 'Cacheable / Expires',
+				'type' => 'select',
+				'options' => [
+					'0'     => 'No Cache Allowed',
+					'30'    => '30 seconds',
+					'60'    => '1 minute',
+					'120'   => '2 minutes',
+					'300'   => '5 minutes',
+					'600'   => '10 minutes',
+					'1800'  => '30 minutes',
+					'3600'  => '1 hour',
+					'7200'  => '2 hours',
+					'14400' => '4 hours',
+					'21600' => '6 hours',
+					'28800' => '8 hours',
+					'43200' => '12 hours',
+					'64800' => '18 hours',
+					'86400' => '24 hours',
+				],
+				'description' => 'Amount of time this page has a valid cache for, set to 0 to completely disable.
+					This cache only applies to guest users and bots.',
+				'group' => 'Access & Advanced',
+				'grouptype' => 'tabs',
+			],
+		),
 		'access' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 512,
@@ -192,8 +221,19 @@ class PageModel extends Model {
 		'selectable' => array(
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => 1,
-			'comment' => 'Selectable as a parent url and sitemap page',
+			'comment' => 'Selectable as a parent url',
 			'formtype' => 'disabled',
+		),
+		'indexable' => array(
+			'type' => Model::ATT_TYPE_BOOL,
+			'default' => 1,
+			'comment' => 'Page is displayed on the sitemap, search, and search crawlers',
+			'form' => [
+				//'type' => 'checkbox',
+				'description' => 'Set to No if you do not want this page to be listed in search results.',
+				'group' => 'Meta Information & URL (SEO)',
+				'grouptype' => 'tabs',
+			],
 		),
 		'popularity' => array(
 			'type' => Model::ATT_TYPE_FLOAT,
@@ -1182,6 +1222,12 @@ class PageModel extends Model {
 			return 0.000;
 		}
 
+		// Pages that are not indexable never have a score either.
+		// This helps keep down on the admin pages being updated.
+		if(!$this->get('indexable')){
+			return 0.000;
+		}
+
 		// log(10)   = 1
 		// log(100)  = 2
 		// log(1000) = 3
@@ -1253,6 +1299,29 @@ class PageModel extends Model {
 
 		$u = UserModel::Construct($uid);
 		return $u;
+	}
+
+	/**
+	 * Get the cache key for this page's index that is acceptable for use on caching systems.
+	 *
+	 * @return string
+	 */
+	public function getIndexCacheKey(){
+		return 'page-cache-index-' . $this->get('site') . '-' . md5($this->get('baseurl'));
+	}
+
+	/**
+	 * Purge the entire page cache for this given page.
+	 */
+	public function purgePageCache(){
+		$indexkey = $this->getIndexCacheKey();
+		$index = \Core\Cache::Get($indexkey, 86400);
+		if($index && is_array($index)){
+			foreach($index as $key){
+				\Core\Cache::Delete($key);
+			}
+		}
+		\Core\Cache::Delete($indexkey);
 	}
 
 

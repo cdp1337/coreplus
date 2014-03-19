@@ -819,7 +819,7 @@ class Theme{
 		if(!sizeof($changes)) return false;
 		
 		// Make sure the asset cache is purged!
-		\Core::Cache()->delete('asset-resolveurl');
+		\Core\Cache::Delete('asset-resolveurl');
 		
 		return $changes;
 	}

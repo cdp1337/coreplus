@@ -297,7 +297,7 @@ class Core implements ISingleton {
 		if($enablecache){
 			Core\Utilities\Logger\write_debug('Checking core-components cache');
 			// Try to load up the cached components and check them first.
-			$tempcomponents = Cache::GetSystemCache()->get('core-components', (3600 * 24));
+			$tempcomponents = \Core\Cache::Get('core-components', (3600 * 24));
 
 			if($tempcomponents !== false){
 				// Cached components only need to be loaded.
@@ -307,7 +307,7 @@ class Core implements ISingleton {
 					}
 					catch (Exception $e) {
 						// Don't completely bail out here, just invalidate the cache and continue on.
-						Cache::GetSystemCache()->delete('core-components');
+						\Core\Cache::Delete('core-components');
 						$tempcomponents = false;
 					}
 				}
@@ -385,7 +385,7 @@ class Core implements ISingleton {
 			// Cache this list!
 			if($enablecache){
 				Core\Utilities\Logger\write_debug(' * Caching core-components for next pass');
-				Cache::GetSystemCache()->set('core-components', $tempcomponents, (3600 * 24));
+				\Core\Cache::Set('core-components', $tempcomponents, (3600 * 24));
 			}
 		}
 
@@ -647,16 +647,6 @@ class Core implements ISingleton {
 	public static function DB() {
 		return \Core\DB();
 		//return DMI::GetSystemDMI()->connection();
-	}
-
-	/**
-	 * Shortcut function to get the current system cache interface.
-	 *
-	 * @deprecated 2011.11
-	 * @return Cache
-	 */
-	public static function Cache() {
-		return Cache::GetSystemCache();
 	}
 
 	/**

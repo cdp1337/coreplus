@@ -76,7 +76,8 @@ class BlogController extends Controller_2_1 {
 		}
 		if ($manager) {
 			$view->addControl('Edit Blog Listing Page', '/blog/editindex', 'edit');
-			$view->addControl('All Articles', '/blog/admin/view', 'tasks');
+			$view->addControl('Create New Blog', '/blog/create', 'add');
+			$view->addControl('All Articles', '/admin/pages/?filter[parenturl]=/blog/view/', 'tasks');
 		}
 	}
 
