@@ -15,7 +15,7 @@
 		<div class="theme {if $theme->isDefault()}current-theme{/if}">
 			{$theme->getName()}<br/>
 
-			{img src="`$screen.file`" dimensions="220x160" placeholder="generic"}<br/><br/>
+			<img src="{$screen.file->getPreviewURL('220x160')}" title="{$screen.title}"/><br/><br/>
 
 			{if !$theme->isDefault()}
 				{a class="button" href="/theme/setdefault/`$theme->getKeyName()`" confirm="Set `$theme->getName()` as site-wide default theme?"}

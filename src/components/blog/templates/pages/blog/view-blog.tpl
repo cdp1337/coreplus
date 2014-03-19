@@ -14,9 +14,9 @@
 	{foreach $articles as $article}
 		<div class="blog-article blog-article-status-{$article.status}" itemscope="itemscope" itemtype="http://schema.org/BlogPosting">
 			<link itemprop="url" href="{link $article.baseurl}"/>
-			<a class="blog-article-title" href="{$article.baseurl}" itemprop="name">
+			{a class="blog-article-title" href="`$article.baseurl`" itemprop="name"}
 				{$article.title}
-			</a>
+			{/a}
 
 			{if $article->isPublished()}
 				<meta itemprop="dateCreated" content="{date format='c' date="`$article.published`"}"/>
@@ -36,7 +36,7 @@
 			{if $article->getTeaser()}
 				<p class="blog-article-excerpt" itemprop="articleBody">
 					{$article->getTeaser()}
-					... <a class="blog-article-read-more" href="{$article.baseurl}">Read More</a>
+					... {a class="blog-article-read-more" href="`$article.baseurl`"}Read More{/a}
 				</p>
 			{/if}
 

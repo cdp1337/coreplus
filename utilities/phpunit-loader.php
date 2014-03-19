@@ -27,7 +27,7 @@ foreach($settingsxml->return as $node){
 }
 
 // Make this page load appear as a standard web request instead of a CLI one.
-unset($_SERVER['SHELL']);
+//unset($_SERVER['SHELL']);
 $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
 $_SERVER['REQUEST_URI'] = '/phpunit-test';

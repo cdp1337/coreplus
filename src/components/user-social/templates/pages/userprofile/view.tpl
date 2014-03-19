@@ -12,8 +12,8 @@
 		{img src="public/user/`$user->get('avatar')`" placeholder="person" width="250" height="300" itemprop="image" class="user-full-profile-photo photo"}
 	</div>
 
-	<div class="user-full-profile-displayname fn nickname" itemprop="name">
-		<h1>{$user->getDisplayName()}</h1>
+	<div class="user-full-profile-displayname fn nickname">
+		<span itemprop="name">{$user->getDisplayName()}</span>'s Public Profile
 	</div>
 
 	<div class="user-full-profile-bio note" itemprop="description">

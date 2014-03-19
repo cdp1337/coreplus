@@ -41,7 +41,7 @@
 				{if $entry.expires == 0}
 					Disabled
 				{elseif $entry.expires < 60}
-					{$entry.expires} seconds
+					{$entry.expires} secs
 				{elseif $entry.expires < 3600}
 					{$entry.expires/60} min
 				{else}
