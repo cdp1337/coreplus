@@ -72,6 +72,8 @@ rsync $OPTIONS --delete "$UPSTREAM/src/themes/base-v2/" "$BASEDIR/src/themes/bas
 echo "Syncing core components..."
 sync_component "phpwhois"
 sync_component "geographic-codes"
+sync_component "jquery-full"
+sync_component "jquery-hoverintent"
 
 for i in $COMPONENTS; do
 	if [ -e "$UPSTREAM/src/components/$i" ]; then
