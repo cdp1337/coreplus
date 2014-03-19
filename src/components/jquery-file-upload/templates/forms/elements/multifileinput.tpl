@@ -1,66 +1,64 @@
 
 <div class="container {$element->getClass()} {$element->get('id')}">
 
-	<label class="form-element-label" for="{$element->get('name')}">
-		{$element->get('title')|escape}
-		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
-	</label>
+	{if $element->get('title')}
+		<label for="{$element->get('name')}">{$element->get('title')|escape}</label>
+	{/if}
 
-	<div class="form-element-value">
-		<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-		<div class="row fileupload-buttonbar">
-			<div class="span7">
-				<!-- The fileinput-button span is used to style the file input field as button -->
-				<label style="display:block; float:left; position:relative; overflow:hidden; width:120px; margin-right:10px;">
-					<span class="button btn-success fileinput-button" style="min-width:90px;">
-						<i class="icon-plus"></i>
-						<span>Add files...</span>
-						<input id="{$element->get('id')}" type="file" name="{$element->get('name')}[]" multiple="multiple" style="position:absolute; left:0pt; top:0pt; opacity:0;">
-					</span>
-				</label>
-				<!--<button type="submit" class="button btn-primary start">
-					<i class="icon-upload icon-white"></i>
-					<span>Start uploads</span>
-				</button>-->
-				<button type="reset" class="button btn-warning cancel">
-					<i class="icon-ban-circle"></i>
-					<span>Cancel uploads</span>
-				</button>
-			</div>
-			<!-- The global progress information -->
-			<div class="progress-container fileupload-progress" style="display:none;">
-				<!-- The global progress bar -->
-				<div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-					<div class="bar" style="width:0%;"></div>
-				</div>
-				<!-- The extended global progress information -->
-				<div class="progress-extended">&nbsp;</div>
-			</div>
+	{if $element->get('description')}
+		<p class="formdescription">{$element->get('description')}</p>
+	{/if}
+
+	<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+	<div class="row fileupload-buttonbar">
+		<div class="span7">
+			<!-- The fileinput-button span is used to style the file input field as button -->
+			<label style="display:block; float:left; position:relative; overflow:hidden; width:120px; margin-right:10px;">
+				<span class="button btn-success fileinput-button" style="min-width:90px;">
+					<i class="icon-plus"></i>
+					<span>Add files...</span>
+					<input id="{$element->get('id')}" type="file" name="{$element->get('name')}[]" multiple="multiple" style="position:absolute; left:0pt; top:0pt; opacity:0;">
+				</span>
+			</label>
+			<!--<button type="submit" class="button btn-primary start">
+				<i class="icon-upload icon-white"></i>
+				<span>Start uploads</span>
+			</button>-->
+			<button type="reset" class="button btn-warning cancel">
+				<i class="icon-ban-circle"></i>
+				<span>Cancel uploads</span>
+			</button>
 		</div>
-
-		<div class="multiupload-drag-notice">
-			<i class="icon-upload"></i>Drop files here to upload
+		<!-- The global progress information -->
+		<div class="progress-container fileupload-progress" style="display:none;">
+			<!-- The global progress bar -->
+			<div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+				<div class="bar" style="width:0%;"></div>
+			</div>
+			<!-- The extended global progress information -->
+			<div class="progress-extended">&nbsp;</div>
 		</div>
-
-		<!-- The loading indicator is shown during file processing -->
-		<div class="fileupload-loading"></div>
-		<br>
-		<!-- The table listing the files available for upload/download -->
-		<table class="listing">
-			<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
-		</table>
-
 	</div>
 
+	<div class="multiupload-drag-notice">
+		<i class="icon-upload"></i>Drop files here to upload
+	</div>
 
-	<p class="form-element-description">{$element->get('description')}</p>
+	<!-- The loading indicator is shown during file processing -->
+	<div class="fileupload-loading"></div>
+	<br>
+	<!-- The table listing the files available for upload/download -->
+	<table class="listing">
+		<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
+	</table>
+	<br>
 
 </div>
 
 
 {literal}
-<!-- The template to display files available for upload -->
-<script id="template-upload" type="text/x-tmpl">
+	<!-- The template to display files available for upload -->
+	<script id="template-upload" type="text/x-tmpl">
 	{% for (var i=0, file; file=o.files[i]; i++) { %}
 	<tr class="template-upload fade">
 		<td class="preview" width="100">
@@ -94,7 +92,7 @@
 	</tr>
 	{% } %}
 </script>
-<!-- The template to display files available for download -->
+	<!-- The template to display files available for download -->
 <script id="template-download" type="text/x-tmpl">
 	{% for (var i=0, file; file=o.files[i]; i++) { %}
 		<tr class="template-download fade">
@@ -154,15 +152,16 @@
 <script>
 	$(function () {
 		var $form = $('#{$element->get('id')}').closest('form'),
-			$progressbar = $('.' + '{$element->get('id')}').find('.fileupload-progress'),
-			$bargraphinner = $progressbar.find('.bar'),
-			$barextendedinfo = $progressbar.find('.progress-extended'),
-			failnotice = false,
-			bitrates = [], // keep track of the last few bit rates for averaging purposes.
-			d = new Date();
+				$formelement = $('#{$element->get('id')}').closest('.multifileinput'),
+				$progressbar = $('.' + '{$element->get('id')}').find('.fileupload-progress'),
+				$bargraphinner = $progressbar.find('.bar'),
+				$barextendedinfo = $progressbar.find('.progress-extended'),
+				failnotice = false,
+				bitrates = [], // keep track of the last few bit rates for averaging purposes.
+				d = new Date();
 
 		// Initialize the jQuery File Upload widget:
-		$form.fileupload({
+		$formelement.fileupload({
 			url: Core.ROOT_URL + 'jqueryfileupload',
 			formData: { key: '{$element->get('uploadkey')}' },
 			previewSourceFileTypes: /^.*$/, // Core+ handles previews of all files ;)
@@ -197,8 +196,8 @@
 			},
 			progressall: function (e, data) {
 				var progress = parseFloat(data.loaded / data.total * 100, 10), i, sum,
-					avgbitrate, bitratestr, timeremainingstr, totalsizestr,
-					timeremaining = { raw: 0, h: null, m: null, s: null };
+						avgbitrate, bitratestr, timeremainingstr, totalsizestr,
+						timeremaining = { raw: 0, h: null, m: null, s: null };
 
 				//console.log(data);
 				if(progress >= 99){
