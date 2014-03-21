@@ -202,7 +202,7 @@ class AdminController extends Controller_2_1 {
 				$groups[$gname] = new FormGroup(
 					[
 						'title' => $gname,
-						'class' => 'collapsible collapsed'
+						//'class' => 'collapsible collapsed'
 					]
 				);
 			}
