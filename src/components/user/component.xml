@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.2" name="User" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.3" name="User" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.6.2"/>
 		<!-- User authentication events trigger security logs. -->
@@ -58,7 +58,7 @@
 			<class name="User\ImportHelper"/>
 		</file>
 		<file filename="helpers/UserFunctions.php" md5="961ba82f194b276827eb31f58eac1d78"/>
-		<file filename="helpers/UserHelper.class.php" md5="08e23b835d3803029311ec903885e8cc">
+		<file filename="helpers/UserHelper.class.php" md5="6a5f9868d872a08546e95749881651b8">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
@@ -115,7 +115,7 @@
 		<file filename="templates/pages/usergroupadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/user/login.tpl" md5="054c8c86b99b890e6490b96d3ff0c634"/>
 		<file filename="templates/widgets/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/widgets/useradmin/newestsignups.tpl" md5="951e0e91f4c5e933fd12fdac5876159f"/>
+		<file filename="templates/widgets/useradmin/newestsignups.tpl" md5="dd413c9a47b51b6e214a999676afffdb"/>
 		<file filename="templates/widgets/userlogin/execute.tpl" md5="8b33f6adb9fdadf3a6f4e10f6722de2e"/>
 	</view>
 	<pages>
@@ -157,7 +157,7 @@
 	</permissions>
 	<assets>
 		<file filename="assets/css/user.css" md5="091b04c3f1466fbb00a32a7a51fc54cf"/>
-		<file filename="assets/js/user/admin.js" md5="3efaafb10cb8da72adf9334f0c0907a3"/>
+		<file filename="assets/js/user/admin.js" md5="3c99d2e2c8c1336ceb3e1471514033ff"/>
 		<file filename="assets/js/user/login.js" md5="12a1daec1bfee08eaf0839667b903bf0"/>
 		<file filename="assets/js/user/user.js" md5="e5e4dc7f8ff932ce7acd330031dbeec2"/>
 	</assets>
@@ -219,6 +219,7 @@
 				components/user/upgrades/261_to_262.php
 			</phpfileinclude>
 		</upgrade>
+		<upgrade from="2.6.2" to="2.6.3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

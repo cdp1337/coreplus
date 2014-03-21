@@ -1,3 +1,8 @@
+User 2.6.3
+
+	* User accounts can now be deactivated instead of simply marked as inactive (back ported from 3.1).
+	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Mar 2014 18:59:19 -0400
+
 User 2.6.2
 
 	* 2.6.x didn't support <php/> tags in the upgrader... had to revert that to phpfileinclude.
