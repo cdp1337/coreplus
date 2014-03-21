@@ -72,7 +72,6 @@ class UserConfigController extends Controller_2_1{
 			'/user/password/requirecapitals', '/user/password/requiresymbols', '/user/password/requirenumbers',
 			'/user/profileedits/requireapproval',
 			'/user/register/allowpublic', '/user/register/requireapproval', '/user/register/requirecaptcha',
-			'/user/authdrivers',
 		];
 		$configform = new Form();
 
@@ -81,6 +80,71 @@ class UserConfigController extends Controller_2_1{
 			// I don't need this, (Everything from this group will be on the root-level form).
 			$el->set('group', null);
 			$configform->addElement($el);
+		}
+
+		$authbackends = ConfigHandler::Get('/user/authdrivers');
+		if(!$authbackends){
+			$authbackendsenabled = [];
+		}
+		else{
+			$authbackendsenabled = explode('|', $authbackends);
+		}
+
+		$authbackends = [];
+		$available = [];
+		foreach(Core::GetComponents() as $c){
+			/** @var Component_2_1 $c */
+			$available = array_merge($available, $c->getUserAuthDrivers());
+		}
+
+		foreach($authbackendsenabled as $k){
+			if(!isset($available[$k])){
+				continue;
+			}
+
+			$classname = $available[$k];
+
+			if(!class_exists($classname)){
+				continue;
+			}
+			try{
+				/** @var \Core\User\AuthDriverInterface $class */
+				$class = new $classname();
+			}
+			catch(Exception $e){
+				continue;
+			}
+
+			$authbackends[] = [
+				'name' => $k,
+				'class' => $classname,
+				'title' => $class->getAuthTitle(),
+				'enabled' => true,
+			];
+
+			unset($available[$k]);
+		}
+
+
+		foreach($available as $k => $classname){
+			if(!class_exists($classname)){
+				continue;
+			}
+
+			try{
+				/** @var \Core\User\AuthDriverInterface $class */
+				$class = new $classname();
+			}
+			catch(Exception $e){
+				continue;
+			}
+
+			$authbackends[] = [
+				'name' => $k,
+				'class' => $classname,
+				'title' => $class->getAuthTitle(),
+				'enabled' => false,
+			];
 		}
 
 
@@ -109,6 +173,16 @@ class UserConfigController extends Controller_2_1{
 				$config->save();
 			}
 
+			if(!isset($_POST['authbackend'])){
+				Core::SetMessage('At least one auth backend is required, re-enabling datastore.', 'info');
+				$_POST['authbackend'] = ['datastore'];
+			}
+
+			$auths = implode('|', $_POST['authbackend']);
+			$config = ConfigModel::Construct('/user/authdrivers');
+			$config->set('value', $auths);
+			$config->save();
+
 			Core::SetMessage('Saved configuration options successfully', 'success');
 			\Core\reload();
 		}
@@ -122,5 +196,6 @@ class UserConfigController extends Controller_2_1{
 		$view->title = 'User Options';
 		$view->assign('configs', $userconfigs);
 		$view->assign('configform', $configform);
+		$view->assign('auth_backends', $authbackends);
 	}
 }
