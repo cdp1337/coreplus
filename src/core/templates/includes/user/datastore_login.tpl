@@ -1,6 +1,6 @@
 {$form->render()}
 
-{a class="login-forgot" href="/user/forgotpassword"}Forgot Password?{/a}
+{a class="login-forgot" href="/datastoreauth/forgotpassword"}Forgot Password?{/a}
 
 {if Core::IsLibraryAvailable('JQuery')}
 	{script library="jquery"}{/script}

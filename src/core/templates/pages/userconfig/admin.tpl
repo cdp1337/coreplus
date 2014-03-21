@@ -43,6 +43,31 @@
 		{$configform->render('body')}
 	</fieldset>
 
+	<fieldset>
+		<legend> Authentication Sources </legend>
+
+		<table id="user-config-admin-table">
+			<tbody>
+			{foreach $auth_backends as $backend}
+				<tr class="sortable">
+					<td>
+						<i class="icon-move" title="Drag to Rearrange" style="display:none;"></i>
+					</td>
+					<td>
+						{$backend.title}
+					</td>
+					<td>
+						<label>
+							<input type="checkbox" name="authbackend[]" value="{$backend.name}" {if $backend.enabled}checked="checked"{/if}/>
+							Enabled
+						</label>
+					</td>
+				</tr>
+			{/foreach}
+			</tbody>
+		</table>
+	</fieldset>
+
 
 	<br/>
 	<input type="submit" value="Save Options"/>

@@ -134,9 +134,9 @@ class UserModel extends Model {
 	protected $_configs = null;
 
 	/**
-	 * @var null|\Core\User\AuthDriverInterface The AuthDriver backend for this user
+	 * @var array Array of \Core\User\AuthDriverInterface that this user has enabled.
 	 */
-	protected $_authdriver = null;
+	protected $_authdriver = [];
 
 	public function __construct($id = null){
 		$this->_linked['UserUserConfig'] = [
@@ -399,13 +399,30 @@ class UserModel extends Model {
 	/**
 	 * Get the auth driver for this usermodel.
 	 *
+	 * @param string|null $driver The backend driver to query for, leave null to return the first one selected.
+	 *
 	 * @return \Core\User\AuthDriverInterface
+	 *
 	 * @throws Exception
 	 */
-	public function getAuthDriver(){
-		if($this->_authdriver === null){
-			$driver = $this->get('backend');
+	public function getAuthDriver($driver = null){
 
+		$enabled = explode('|', $this->get('backend'));
+
+		if(!sizeof($enabled)){
+			throw new Exception('There are no enabled authentication drivers for this user!');
+		}
+
+		if(!$driver){
+			$driver = $enabled[0];
+		}
+		elseif(!in_array($driver, $enabled)){
+			throw new Exception('The ' . $driver . ' authentication driver is not enabled for this user!');
+		}
+		// No else required, the driver is (presumably) valid and enabled on this user.
+
+
+		if(!isset($this->_authdriver[$driver])){
 			if(!isset(\Core\User\Helper::$AuthDrivers[$driver])){
 				throw new Exception('Invalid auth backend for user, ' . $driver . '.  Auth driver is not registered.');
 			}
@@ -417,10 +434,92 @@ class UserModel extends Model {
 			}
 
 			$ref = new ReflectionClass($classname);
-			$this->_authdriver = $ref->newInstance($this);
+			$this->_authdriver[$driver] = $ref->newInstance($this);
 		}
 
-		return $this->_authdriver;
+		return $this->_authdriver[$driver];
+	}
+
+	/**
+	 * Get all enabled authentication drivers for this user.
+	 *
+	 * @return array
+	 */
+	public function getEnabledAuthDrivers(){
+		$enabled = explode('|', $this->get('backend'));
+		$ret = [];
+
+		foreach($enabled as $name){
+			try{
+				$ret[] = $this->getAuthDriver($name);
+			}
+			catch(Exception $e){
+				// meh, if an exception was thrown here, then it's a disabled driver or something.
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Enable a given authentication driver for this user account.
+	 *
+	 * Will verify that the auth driver is valid before setting.
+	 *
+	 * Will NOT save the user, that still needs to be done externally!
+	 *
+	 * @param $driver
+	 *
+	 * @return boolean
+	 */
+	public function enableAuthDriver($driver){
+		$enabled = explode('|', $this->get('backend'));
+
+		$drivers = User\Helper::GetEnabledAuthDrivers();
+		if(!isset($drivers[$driver])){
+			return false;
+		}
+
+		if(in_array($driver, $enabled)){
+			return false;
+		}
+
+		$enabled[] = $driver;
+		$this->set('backend', implode('|', $enabled));
+		return true;
+	}
+
+	/**
+	 * Disable a given authentication driver for this user account.
+	 *
+	 * Will verify that the auth driver is valid before setting.
+	 *
+	 * Will NOT save the user, that still needs to be done externally!
+	 *
+	 * @param $driver
+	 *
+	 * @return boolean
+	 */
+	public function disableAuthDriver($driver){
+		$enabled = explode('|', $this->get('backend'));
+
+		$drivers = User\Helper::GetEnabledAuthDrivers();
+		if(!isset($drivers[$driver])){
+			return false;
+		}
+
+		if(!in_array($driver, $enabled)){
+			return false;
+		}
+
+		unset($enabled[array_search($driver, $enabled)]);
+
+		if(sizeof($enabled) == 0){
+			$enabled = ['datastore'];
+		}
+
+		$this->set('backend', implode('|', $enabled));
+		return true;
 	}
 
 	/**
@@ -470,49 +569,6 @@ class UserModel extends Model {
 		return true;
 	}
 
-	/**
-	 * Use Core's configurable logic to validate the password.
-	 *
-	 * Please note that not all auth backends may use this!!!
-	 *
-	 * @param string $password
-	 *
-	 * @return bool|string
-	 * @throws ModelValidationException
-	 */
-	public function validatePassword($password){
-		$valid = true;
-		// complexity check from the config
-		if(strlen($password) < ConfigHandler::Get('/user/password/minlength')){
-			$valid = 'Please ensure that the password is at least ' . ConfigHandler::Get('/user/password/minlength') . ' characters long.';
-		}
-
-		// complexity check from the config
-		if(ConfigHandler::Get('/user/password/requiresymbols') > 0){
-			preg_match_all('/[^a-zA-Z0-9]/', $password, $matches);
-			if(sizeof($matches[0]) < ConfigHandler::Get('/user/password/requiresymbols')){
-				$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requiresymbols') . ' symbol(s).';
-			}
-		}
-
-		// complexity check from the config
-		if(ConfigHandler::Get('/user/password/requirecapitals') > 0){
-			preg_match_all('/[A-Z]/', $password, $matches);
-			if(sizeof($matches[0]) < ConfigHandler::Get('/user/password/requirecapitals')){
-				$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requirecapitals') . ' capital letter(s).';
-			}
-		}
-
-		// complexity check from the config
-		if(ConfigHandler::Get('/user/password/requirenumbers') > 0){
-			preg_match_all('/[0-9]/', $password, $matches);
-			if(sizeof($matches[0]) < ConfigHandler::Get('/user/password/requirenumbers')){
-				$valid = 'Please ensure that the password has at least ' . ConfigHandler::Get('/user/password/requirenumbers') . ' number(s).';
-			}
-		}
-
-		return $valid;
-	}
 
 	/**
 	 * Set a key or config option on this user.

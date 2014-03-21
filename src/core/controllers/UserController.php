@@ -25,13 +25,17 @@
 
 /**
  * Main controller for the user system
+ *
+ * This controller is only responsible for Core user functions.
+ * Authentication-specific functions must be contained on the specific auth driver or its respective controller.
+ *
  */
 class UserController extends Controller_2_1{
 
 	/**
 	 * Admin listing of all the users
 	 *
-	 * @return int
+	 * @return null|int
 	 */
 	public function admin(){
 		$view = $this->getView();
@@ -92,15 +96,18 @@ class UserController extends Controller_2_1{
 		$view->assign('filters', $filters);
 		$view->addControl('Add User', '/user/register', 'add');
 		$view->addControl('Import Users', '/user/import', 'upload-alt');
+
+		return null;
 	}
 
 	/**
 	 * Show the current user's profile.
+	 *
+	 * @return null|int
 	 */
 	public function me(){
 
 		$view    = $this->getView();
-		$req     = $this->getPageRequest();
 		$user    = \Core\user();
 
 		if(!$user->exists()){
@@ -109,146 +116,15 @@ class UserController extends Controller_2_1{
 
 		$form = \Core\User\Helper::GetEditForm($user);
 
-
 		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
-		$view->controls->hovercontext = true;
 
 		$view->assign('user', $user);
 		$view->assign('form', $form);
 		$view->title = 'My Profile';
+
+		return null;
 	}
 
-	/**
-	 * View to set the user's password, both administratively and from the user's profile.
-	 *
-	 * @return int
-	 */
-	public function password(){
-
-		$view    = $this->getView();
-		$req     = $this->getPageRequest();
-		$userid  = $req->getParameter(0);
-		$manager = \Core\user()->checkAccess('p:/user/users/manage'); // Current user an admin?
-
-		// Default to current user.
-		if($userid === null){
-			$ownpassword = true;
-			$userid = \Core\user()->get('id');
-		}
-		else{
-			$ownpassword = false;
-		}
-
-		// Only allow this if the user is either the same user or has the user manage permission.
-		if(!($userid == \Core\user()->get('id') || $manager)){
-			return View::ERROR_ACCESSDENIED;
-		}
-
-		/** @var UserModel $user */
-		$user = UserModel::Construct($userid);
-
-		if(!$user->exists()){
-			Core::SetMessage('Unable to locate requested user', 'error');
-			\Core\go_back(1);
-		}
-
-		$auth = $user->getAuthDriver();
-
-		if(($canset = $auth->canSetPassword()) !== true){
-			Core::SetMessage($canset);
-			\Core\go_back(1);
-		}
-
-		if($req->isPost()){
-			try{
-				$p1val = $_POST['pass'];
-				$p2val = $_POST['pass2'];
-				// Check the passwords, (that they match).
-				if($p1val != $p2val){
-					throw new ModelValidationException('Passwords do not match');
-				}
-
-				$status = $auth->setPassword($p1val);
-				if($status === false){
-					// No change
-					Core::SetMessage('No change detected');
-				}
-				elseif($status === true){
-					$user->set('last_password', CoreDateTime::Now('U', Time::TIMEZONE_GMT));
-					$user->save();
-					Core::SetMessage('Updated Password Successfully', 'success');
-				}
-				else{
-					throw new ModelValidationException($status);
-				}
-
-				if($ownpassword){
-					\core\redirect('/user/me');
-				}
-				else{
-					\core\redirect('/user/admin');
-				}
-			}
-			catch(ModelValidationException $e){
-				Core::SetMessage($e->getMessage(), 'error');
-			}
-			catch(Exception $e){
-				if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
-				else Core::SetMessage('An unknown error occured', 'error');
-				\Core\ErrorManagement\exception_handler($e);
-			}
-		}
-
-		$form = new Form();
-
-		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => true));
-		$form->addElement('password', array('name' => 'pass2', 'title' => 'Confirm', 'required' => true));
-
-		$form->addElement('submit', array('value' => 'Update Password'));
-
-		// Pull some info about the complexity requirements.
-		$complexity = [
-			'enabled'  => false,
-			'length'   => 0,
-			'symbols'  => 0,
-			'capitals' => 0,
-			'numbers'  => 0,
-			'messages' => [],
-		];
-		if(ConfigHandler::Get('/user/password/minlength')){
-			$complexity['enabled'] = true;
-			$complexity['length'] = ConfigHandler::Get('/user/password/minlength');
-			$complexity['messages'][] = 'The password is at least ' . $complexity['length'] . ' characters long.';
-		}
-		if(ConfigHandler::Get('/user/password/requiresymbols')){
-			$complexity['enabled'] = true;
-			$complexity['symbols'] = ConfigHandler::Get('/user/password/requiresymbols');
-			$complexity['messages'][] = 'The password contains at least ' . $complexity['symbols'] . ' symbol(s).';
-		}
-		if(ConfigHandler::Get('/user/password/requirecapitals')){
-			$complexity['enabled'] = true;
-			$complexity['capitals'] = ConfigHandler::Get('/user/password/requirecapitals');
-			$complexity['messages'][] = 'The password contains at least ' . $complexity['capitals'] . ' capital(s).';
-		}
-		if(ConfigHandler::Get('/user/password/requirenumbers')){
-			$complexity['enabled'] = true;
-			$complexity['numbers'] = ConfigHandler::Get('/user/password/requirenumbers');
-			$complexity['messages'][] = 'The password contains at least ' . $complexity['numbers'] . ' number(s).';
-		}
-
-		$view->assign('complexity', $complexity);
-		$view->assign('form', $form);
-		$view->title = 'Password Management ';
-
-		// Breadcrumbs! (based on access permissions)
-		if(!$ownpassword){
-			$view->addBreadcrumb('User Administration', '/user/admin');
-			$view->addBreadcrumb($user->getDisplayName(), '/user/edit/' . $user->get('id'));
-		}
-		else{
-			$view->addBreadcrumb('My Profile', '/user/me');
-		}
-	}
 
 	/**
 	 * View to edit the user account, both administratively and from within the user's profile.
@@ -390,10 +266,6 @@ class UserController extends Controller_2_1{
 
 		$view          = $this->getView();
 		$manager       = \Core\user()->checkAccess('p:/user/users/manage'); // Current user an admin?
-		$groupmanager  = \Core\user()->checkAccess('p:/user/groups/manage');
-		$contextnames  = [];
-		$contexts      = [];
-		$usecontexts   = false;
 
 		// Anonymous users should have access to this if it's allow public.
 		if(!\Core\user()->exists() && !ConfigHandler::Get('/user/register/allowpublic')){
@@ -417,44 +289,55 @@ class UserController extends Controller_2_1{
 		if($manager){
 			$view->addBreadcrumb('User Administration', '/user/admin');
 		}
+	}
 
-		return;
+	/**
+	 * The actual Core registration page.
+	 *
+	 * This renders all the user's configurable options at registration.
+	 */
+	public function register2(){
+		$view    = $this->getView();
+		$request = $this->getPageRequest();
+		$manager = \Core\user()->checkAccess('p:/user/users/manage'); // Current user an admin?
 
-
-
-
-		if($groupmanager){
-			$contextgroups = UserGroupModel::Find(['context != '], null, 'name');
-			foreach($contextgroups as $group){
-				/** @var UserGroupModel $group */
-
-				$ckey = $group->get('context');
-				$gkey = $group->get('id');
-				$contextnames[ $group->get('name') ] = $gkey;
-
-				// I need to load *all* those models into the system so they're available to the UI.
-				$fac = new ModelFactory($ckey . 'Model');
-				$all = [];
-				foreach($fac->get() as $m){
-					/** @var Model $m */
-					$all[$m->getPrimaryKeyString()] = $m->getLabel();
-				}
-				$contexts[$gkey] = $all;
-
-				$usecontexts = true;
-			}
+		// Anonymous users should have access to this if it's allow public.
+		if(!\Core\user()->exists() && !ConfigHandler::Get('/user/register/allowpublic')){
+			return View::ERROR_BADREQUEST;
 		}
 
+		// Authenticated users must check the permission to manage users.
+		if(\Core\user()->exists() && !$manager){
+			return View::ERROR_ACCESSDENIED;
+		}
 
-		$view->ssl = true;
+		/** @var NonceModel $nonce */
+		$nonce = NonceModel::Construct($request->getParameter(0));
+		if(!$nonce->isValid()){
+			Core::SetMessage('Invalid nonce token, please try again.', 'error');
+			\Core\go_back();
+		}
+		$nonce->decryptData();
+		$data = $nonce->get('data');
+
+		if(!isset($data['user']) || !($data['user'] instanceof UserModel)){
+			if(DEVELOPMENT_MODE){
+				Core::SetMessage('Your nonce does not include a "user" key.  Please ensure that this is set to a non-existent UserModel object!', 'error');
+			}
+			else{
+				Core::SetMessage('Invalid login type, please try again later.', 'error');
+			}
+			\Core\go_back();
+		}
+
+		/** @var UserModel $user */
+		$user = $data['user'];
+
+		$form = \User\Helper::GetForm($user);
+
+
+		$view->title = 'Complete Registration';
 		$view->assign('form', $form);
-		$view->assign('contextnames_json', json_encode($contextnames));
-		$view->assign('contextnames', $contextnames);
-		$view->assign('contexts_json', json_encode($contexts));
-		$view->assign('use_contexts', $usecontexts);
-		$view->assign('user', false);
-
-
 	}
 
 	public function logout(){
@@ -469,21 +352,7 @@ class UserController extends Controller_2_1{
 		\core\redirect('/');
 	}
 
-	/**
-	 * Front-end view to allow users to reset their password.
-	 */
-	public function forgotPassword(){
-		$request = $this->getPageRequest();
 
-		// If e and k are set as parameters... it's on step 2.
-		if($request->getParameter('e') && $request->getParameter('n')){
-			return $this->_forgotPassword2();
-		}
-		// Else, just step 1.
-		else{
-			return $this->_forgotPassword1();
-		}
-	}
 
 	/**
 	 * Simple controller to activate a user account.
@@ -531,7 +400,7 @@ class UserController extends Controller_2_1{
 						'1 week',
 						['type' => 'password-reset', 'user' => $user->get('id')]
 					);
-					$setpasswordlink = Core::ResolveLink('/user/forgotpassword?e=' . urlencode($user->get('email')) . '&n=' . $nonce);
+					$setpasswordlink = Core::ResolveLink('/datastoreauth/forgotpassword?e=' . urlencode($user->get('email')) . '&n=' . $nonce);
 				}
 				else{
 					$setpasswordlink = null;
@@ -823,172 +692,7 @@ class UserController extends Controller_2_1{
 		unset($_SESSION['user-import']);
 	}
 
-	private function _forgotPassword1(){
-		$view = $this->getView();
-		$request = $this->getPageRequest();
 
-
-		// Create a simple form to render.  This is better than doing it in the template.
-		$form = new Form();
-		$form->set('method', 'POST');
-		$form->addElement('text', ['name' => 'email', 'title' => 'Email', 'required' => true]);
-		$form->addElement('submit', ['name' => 'submit', 'value' => 'Send Reset Instructions']);
-
-		$view->title = 'Forgot Password';
-		// This is step 1
-		$view->assign('step', 1);
-		$view->assign('form', $form);
-		// Google has no business indexing user-action pages.
-		$view->addMetaName('robots', 'noindex');
-
-		// There's really nothing to do here except for check the email and send it.
-
-		if($request->isPost()){
-
-			/** @var UserModel $u */
-			$u = UserModel::Find(array('email' => $_POST['email']), 1);
-			if(!$u){
-				Core::SetMessage('Invalid user account requested', 'error');
-				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Failed Forgot Password. Invalid email requested for reset: [' . $_POST['email'] . ']');
-				return;
-			}
-
-			try{
-				$auth = $u->getAuthDriver();
-			}
-			catch(Exception $e){
-				Core::SetMessage('There was an error while retrieving your user account.  The administrator has been notified of this incident.  Please try again shortly.', 'error');
-				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', $e->getMessage());
-				return;
-			}
-
-
-			$str = $auth->canSetPassword();
-			if($str === false){
-				Core::SetMessage($auth->getAuthTitle() . ' user accounts do not support resetting the password via this method.', 'error');
-				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Failed Forgot Password. ' . $auth->getAuthTitle() . ' does not support password management locally: [' . $_POST['email'] . ']', null, $u->get('id'));
-				return;
-			}
-			elseif($str !== true){
-				Core::SetMessage($str, 'error');
-				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Failed Forgot Password. ' . $str . ': [' . $_POST['email'] . ']', null, $u->get('id'));
-				return;
-			}
-
-			// Use the Nonce system to generate a one-time key with this user's data.
-			$nonce = NonceModel::Generate(
-				'20 minutes',
-				['type' => 'password-reset', 'user' => $u->get('id')]
-			);
-
-			$link = '/user/forgotpassword?e=' . urlencode($u->get('email')) . '&n=' . $nonce;
-
-			$e = new Email();
-			$e->setSubject('Forgot Password Request');
-			$e->to($u->get('email'));
-			$e->assign('link', Core::ResolveLink($link));
-			$e->assign('ip', REMOTE_IP);
-			$e->templatename = 'emails/user/forgotpassword.tpl';
-			try{
-				$e->send();
-				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Forgot password request sent successfully', null, $u->get('id'));
-			}
-			catch(Exception $e){
-				Core::SetMessage('Error sending the email, ' . $e->getMessage(), 'error');
-				SystemLogModel::LogErrorEvent('/user/forgotpassword/send', $e->getMessage());
-				return;
-			}
-
-			// Otherwise, it must have sent, (hopefully)...
-			Core::SetMessage('Sent reset instructions via email.', 'success');
-			\core\redirect('/');
-		}
-	}
-
-	private function _forgotPassword2(){
-		$view = $this->getView();
-		$request = $this->getPageRequest();
-
-		// Create a simple form to render.  This is better than doing it in the template.
-		$form = new Form();
-		$form->set('method', 'POST');
-		$form->addElement('password', ['name' => 'p1', 'title' => 'Password', 'required' => true]);
-		$form->addElement('password', ['name' => 'p2', 'title' => 'Confirm', 'required' => true]);
-		$form->addElement('submit', ['name' => 'submit', 'value' => 'Set New Password']);
-
-		$view->title = 'Forgot Password';
-		$view->assign('step', 2);
-		$view->assign('form', $form);
-
-		// Lookup and validate this information first.
-		$e = urldecode($request->getParameter('e'));
-
-		/** @var UserModel $u */
-		$u = UserModel::Find(array('email' => $e), 1);
-		if(!$u){
-			SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. Invalid user account requested: [' . $e . ']');
-			Core::SetMessage('Invalid user account requested', 'error');
-			\core\redirect('/');
-			return;
-		}
-
-		$auth = $u->getAuthDriver();
-
-		// Make sure that nonce hasn't expired yet and is still valid.
-		$n = $request->getParameter('n');
-
-		/** @var $nonce NonceModel */
-		$nonce = NonceModel::Construct($n);
-		// I can't invalidate it quite yet... the user still needs to set the new password.
-		if(!$nonce->isValid(['type' => 'password-reset', 'user' => $u->get('id')])){
-			SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. Invalid key requested: [' . $n . ']', null, $u->get('id'));
-			Core::SetMessage('Invalid key provided!', 'error');
-			\core\redirect('/');
-			return;
-		}
-
-		if(($str = $auth->canSetPassword()) !== true){
-			Core::SetMessage($str, 'error');
-			SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. ' . $str, null, $u->get('id'));
-			\core\redirect('/');
-			return;
-		}
-
-		if($request->isPost()){
-			// Validate the password.
-			if($_POST['p1'] != $_POST['p2']){
-				Core::SetMessage('Passwords do not match.', 'error');
-				return;
-			}
-
-			// Else, try to set it... the user model will complain if it's invalid.
-			try{
-				$auth->setPassword($_POST['p1']);
-				$u->set('last_password', CoreDateTime::Now('U', Time::TIMEZONE_GMT));
-				$u->save();
-				// NOW I can invalidate that nonce!
-				$nonce->markUsed();
-				SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Reset password successfully!', null, $u->get('id'));
-				Core::SetMessage('Reset password successfully', 'success');
-				if($u->get('active')){
-					Session::SetUser($u);
-				}
-				\core\redirect('/');
-			}
-			catch(ModelValidationException $e){
-				SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. ' . $e->getMessage(), null, $u->get('id'));
-				Core::SetMessage($e->getMessage(), 'error');
-				return;
-			}
-			catch(Exception $e){
-				SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. ' . $e->getMessage(), null, $u->get('id'));
-				if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
-				else Core::SetMessage('An unknown error occured', 'error');
-
-				return;
-			}
-		}
-	}
 
 	/**
 	 * This is a helper controller to expose server-side data to javascript.

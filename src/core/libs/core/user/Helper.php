@@ -76,199 +76,25 @@ abstract class Helper{
 		}
 	}
 
-
 	/**
-	 * Form Handler for logging in.
-	 *
-	 * @static
-	 *
-	 * @param \Form $form
-	 *
-	 * @return bool|null|string
-	 */
-	public static function LoginHandler(\Form $form){
-		/** @var \FormElement $e */
-		$e = $form->getElement('email');
-		/** @var \FormElement $p */
-		$p = $form->getElement('pass');
-
-
-		/** @var \UserModel $u */
-		$u = \UserModel::Find(array('email' => $e->get('value')), 1);
-
-		if(!$u){
-			// Log this as a login attempt!
-			$logmsg = 'Failed Login. Email not registered' . "\n" . 'Email: ' . $e->get('value') . "\n";
-			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg);
-			$e->setError('Requested email is not registered.');
-			return false;
-		}
-
-		if($u->get('active') == 0){
-			// The model provides a quick cut-off for active/inactive users.
-			// This is the control managed with in the admin.
-			$logmsg = 'Failed Login. User tried to login before account activation' . "\n" . 'User: ' . $u->get('email') . "\n";
-			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg, null, $u->get('id'));
-			$e->setError('Your account is not active yet.');
-			return false;
-		}
-
-		try{
-			$auth = $u->getAuthDriver();
-		}
-		catch(\Exception $ex){
-			$e->setError($ex->getMessage());
-			return false;
-		}
-
-		if(!$auth->isActive()){
-			// Auth systems may have their own is-active check.
-			$logmsg = 'Failed Login. User tried to login before account activation' . "\n" . 'User: ' . $u->get('email') . "\n";
-			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg, null, $u->get('id'));
-			$e->setError('Your account is not active yet.');
-			return false;
-		}
-
-		if(!$auth->canLoginWithPassword()){
-			// This isn't a log-worthy event (at least yet)
-			$msg = 'Your account is a(n) ' . ucwords($u->get('backend')) . ' based account and cannot login with a traditional password.';
-			$e->setError($msg);
-			return false;
-		}
-
-		// This is a special case if the password isn't set yet.
-		// It can happen with imported users or if a password is invalidated.
-		if($u->get('password') == '' && $auth->canSetPassword() === true){
-			// Use the Nonce system to generate a one-time key with this user's data.
-			$nonce = \NonceModel::Generate(
-				'20 minutes',
-				['type' => 'password-reset', 'user' => $u->get('id')]
-			);
-
-			$link = '/user/forgotpassword?e=' . urlencode($u->get('email')) . '&n=' . $nonce;
-
-			$email = new \Email();
-			$email->setSubject('Initial Password Request');
-			$email->to($u->get('email'));
-			$email->assign('link', \Core::ResolveLink($link));
-			$email->assign('ip', REMOTE_IP);
-			$email->templatename = 'emails/user/initialpassword.tpl';
-			try{
-				$email->send();
-				\SystemLogModel::LogSecurityEvent('/user/initialpassword/send', 'Initial password request sent successfully', null, $u->get('id'));
-
-				\Core::SetMessage('You must set a new password.  An email has been sent to your inbox containing a link and instructions on setting a new password.', 'info');
-				return true;
-			}
-			catch(\Exception $ex){
-				\Core\ErrorManagement\exception_handler($e);
-				\Core::SetMessage('Unable to send new password link to your email, please contact the system administrator!', 'error');
-				return false;
-			}
-		}
-
-
-		if(!$auth->checkPassword($p->get('value'))){
-
-			// Log this as a login attempt!
-			$logmsg = 'Failed Login. Invalid password' . "\n" . 'Email: ' . $e->get('value') . "\n";
-			\SystemLogModel::LogSecurityEvent('/user/login/failed_password', $logmsg, null, $u->get('id'));
-
-			// Also, I want to look up and see how many login attempts there have been in the past couple minutes.
-			// If there are too many, I need to start slowing the attempts.
-			$time = new \CoreDateTime();
-			$time->modify('-5 minutes');
-
-			$securityfactory = new \ModelFactory('SystemLogModel');
-			$securityfactory->where('code = /user/login/failed_password');
-			$securityfactory->where('datetime > ' . $time->getFormatted(\Time::FORMAT_EPOCH, \Time::TIMEZONE_GMT));
-			$securityfactory->where('ip_addr = ' . REMOTE_IP);
-
-			$attempts = $securityfactory->count();
-			if($attempts > 4){
-				// Start slowing down the response.  This should help deter brute force attempts.
-				// (x+((x-7)/4)^3)-4
-				sleep( ($attempts+(($attempts-7)/4)^3)-4 );
-				// This makes a nice little curve with the following delays:
-				// 5th  attempt: 0.85
-				// 6th  attempt: 2.05
-				// 7th  attempt: 3.02
-				// 8th  attempt: 4.05
-				// 9th  attempt: 5.15
-				// 10th attempt: 6.52
-				// 11th attempt: 8.10
-				// 12th attempt: 10.05
-			}
-
-			$p->setError('Invalid password');
-			$p->set('value', '');
-			return false;
-		}
-
-		// If the user came from the registration page, get the page before that.
-		if(REL_REQUEST_PATH == '/user/login') $url = \Core::GetHistory(2);
-		// else the registration link is now on the same page as the 403 handler.
-		else $url = REL_REQUEST_PATH;
-
-		// Well, record this too!
-		\SystemLogModel::LogSecurityEvent('/user/login', 'Login successful', null, $u->get('id'));
-
-		// yay...
-		$u->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
-		$u->save();
-		\Session::SetUser($u);
-
-		// Allow an external script to override the redirecting URL.
-		$overrideurl = \HookHandler::DispatchHook('/user/postlogin/getredirecturl');
-		if($overrideurl){
-			$url = $overrideurl;
-		}
-
-		return $url;
-	}
-
-	/**
-	 * Form handler for a basic datastore backend user.
+	 * Form handler for the rest of the user system, (auth handler has already been executed).
 	 *
 	 * @param \Form $form
 	 *
 	 * @return bool|string
 	 */
 	public static function RegisterHandler(\Form $form){
-		$p1 = $form->getElement('pass');
-		$p2 = $form->getElement('pass2');
 
 		///////       VALIDATION     \\\\\\\\
 
 		// All other validation can be done from the model.
 		// All set calls will throw a ModelValidationException if the validation fails.
 		try{
-			$user = new \UserModel();
+			/** @var \UserModel $user */
+			$user = $form->getElement('user')->get('value');
 
 			// setFromForm will handle all attributes and custom values.
 			$user->setFromForm($form);
-
-			$auth = $user->getAuthDriver();
-
-			// Users can be created with no password.  They will be prompted to set it on first login.
-			if($p1->get('value') || $p2->get('value')){
-
-				if($p1->get('value') != $p2->get('value')){
-					$p1->setError('Passwords do not match!');
-					$p2->set('value', '');
-					return false;
-				}
-
-				$passresult = $auth->setPassword($p1->get('value'));
-
-				if($passresult !== true){
-					$p1->setError($passresult === false ? 'Invalid password' : $passresult);
-					$p2->set('value', '');
-					return false;
-				}
-
-				$user->set('last_password', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
-			}
 		}
 		catch(\ModelValidationException $e){
 			// Make a note of this!
@@ -356,7 +182,7 @@ abstract class Helper{
 		if(!\Core\user()->exists()){
 
 			// If the user came from the registration page, get the page before that.
-			if(REL_REQUEST_PATH == '/user/register') $url = \Core::GetHistory(1);
+			if(REL_REQUEST_PATH == '/user/register2') $url = \Core::GetHistory(2);
 			// else the registration link is now on the same page as the 403 handler.
 			else $url = REL_REQUEST_PATH;
 
@@ -374,7 +200,7 @@ abstract class Helper{
 			if($overrideurl){
 				$url = $overrideurl;
 			}
-			elseif($url == \Core::ResolveLink('/user/register')){
+			elseif(strpos(\Core::ResolveLink('/user/register2'), $url) === 0){
 				$url = '/';
 			}
 
@@ -513,12 +339,6 @@ abstract class Helper{
 				'link' => '/user/edit/' . $user->get('id'),
 			);
 
-			$a[] = array(
-				'title' => 'Change Password',
-				'icon' => 'key',
-				'link' => '/user/password/' . $user->get('id'),
-			);
-
 			// Even though this user has admin access, he/she cannot remove his/her own account!
 			if(!$selfaccount){
 				$a[] = array(
@@ -621,19 +441,20 @@ abstract class Helper{
 		$allowemailchanging = \ConfigHandler::Get('/user/email/allowchanging');
 
 		if($type == 'registration'){
-			$form->set('callsMethod', 'User\\Helper::RegisterHandler');
+			$form->set('callsmethod', 'User\\Helper::RegisterHandler');
 		}
 		else{
-			$form->set('callsMethod', 'User\\Helper::UpdateHandler');
-			$form->addElement('system', array('name' => 'id', 'value' => $user->get('id')));
+			$form->set('callsmethod', 'User\\Helper::UpdateHandler');
 		}
+
+		$form->addElement('system', ['name' => 'user', 'value' => $user]);
 
 		// Because the user system may not use a traditional Model for the backend, (think LDAP),
 		// I cannot simply do a setModel() call here.
 
 		// Only enable email changes if the current user is an admin or it's new.
 		// (Unless the admin allows it via the site config)
-		if($type == 'registration' || $usermanager || $allowemailchanging){
+		if($type != 'registration' && ( $usermanager || $allowemailchanging)){
 			$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true, 'value' => $user->get('email')));
 		}
 
@@ -650,23 +471,8 @@ abstract class Helper{
 
 		}
 
-		// Passwords are for registrations only, at least here.
-		if($type == 'registration'){
-			// If the user is a manager, the new account can be created with an empty password.
-			// That user will get the prompt to set an initial password on login via the forgot password logic.
-			$passrequired = $usermanager ? false : true;
-			$form->addElement(
-				'password',
-				array('name' => 'pass', 'title' => 'Password', 'required' => $passrequired)
-			);
-			$form->addElement(
-				'password',
-				array('name' => 'pass2', 'title' => 'Confirm Password', 'required' => $passrequired)
-			);
-		}
-
 		// Avatars can be updated on editing the profile, if enabled.
-		if(\ConfigHandler::Get('/user/enableavatar') && ($type == 'edit' || $usermanager)){
+		if(\ConfigHandler::Get('/user/enableavatar')){
 			// Avatar is for existing accounts or admins.
 			$form->addElement(
 				'file',
@@ -692,6 +498,7 @@ abstract class Helper{
 		}
 
 		foreach($fac as $f){
+			/** @var \UserConfigModel $f */
 			$key = $f->get('key');
 
 			try{
@@ -814,8 +621,6 @@ abstract class Helper{
 				'name' => 'submit',
 			]
 		);
-
-		// @todo Implement a hook handler here for UserPreRegisterForm
 
 		return $form;
 	}

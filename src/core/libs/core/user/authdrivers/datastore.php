@@ -96,8 +96,7 @@ class datastore implements AuthDriverInterface{
 	 * @return bool|string True/False on success or failure, a string if on error.
 	 */
 	public function setPassword($password) {
-		// Use Core's built-in validation.
-		$isvalid = $this->_usermodel->validatePassword($password);
+		$isvalid = $this->validatePassword($password);
 
 		if($isvalid !== true){
 			// Core validation returned a string.... it's INVALID!
@@ -109,35 +108,20 @@ class datastore implements AuthDriverInterface{
 		$password = $hasher->hashPassword($password);
 
 		// Still here?  Then try to set it.
-		return $this->_usermodel->set('password', $password);
+		$status = $this->_usermodel->set('password', $password);
+		$this->_usermodel->set('last_password', \Core\Date\DateTime::NowGMT());
+		return $status;
 	}
 
 	/**
 	 * Check if this user is active and can login.
 	 *
-	 * @return boolean
+	 * This authentication driver doesn't support any additional checks, so just return the model's status.
+	 *
+	 * @return boolean|string
 	 */
 	public function isActive(){
 		return $this->_usermodel->get('active');
-	}
-
-	/**
-	 * Get if this user can set their password via the site.
-	 *
-	 * @return boolean
-	 */
-	public function canSetPassword() {
-		// Datastore users CAN set their password.
-		return true;
-	}
-
-	/**
-	 * Get if this user can login via a password on the traditional login interface.
-	 *
-	 * @return boolean
-	 */
-	public function canLoginWithPassword() {
-		return true;
 	}
 
 	/**
@@ -149,7 +133,7 @@ class datastore implements AuthDriverInterface{
 	 */
 	public function renderLogin($form_options = []) {
 		$form = new \Form($form_options);
-		$form->set('callsMethod', 'User\\Helper::LoginHandler');
+		$form->set('callsMethod', 'DatastoreAuthController::LoginHandler');
 
 		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
 		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => false));
@@ -167,7 +151,50 @@ class datastore implements AuthDriverInterface{
 	 * @return void
 	 */
 	public function renderRegister() {
-		$form = \Core\User\Helper::GetRegistrationForm();
+		$form = new \Form();
+
+		$complexity = $this->getPasswordComplexityAsHTML();
+
+		if($complexity){
+			$password_desc = 'Please set a secure password that meets the following conditions:<br/>' . $complexity;
+		}
+		else{
+			$password_desc = 'Please set a secure password.';
+		}
+
+		// I can utilize this form, but tweak the necessary options as necessary.
+		// Replace the password field with a text input for the GPG key.
+		$form->set('callsmethod', 'DatastoreAuthController::RegisterHandler');
+		$form->addElement(
+			'text',
+			[
+				'required' => true,
+				'name' => 'email',
+				'title' => 'Email',
+				'description' => 'Your email address',
+			]
+		);
+		$form->addElement(
+			'password',
+			[
+				'required' => true,
+				'name' => 'pass',
+				'title' => 'Password',
+				'description' => $password_desc,
+				'maxlength' => 8,
+			]
+		);
+		$form->addElement(
+			'password',
+			[
+				'required' => true,
+				'name' => 'pass2',
+				'title' => 'Confirm Password',
+				'description' => 'Please re-type your password again for confirmation.',
+				'maxlength' => 8,
+			]
+		);
+		$form->addElement('submit', array('value' => 'Continue'));
 
 		$tpl = \Core\Templates\Template::Factory('includes/user/datastore_register.tpl');
 		$tpl->assign('form', $form);
@@ -182,5 +209,77 @@ class datastore implements AuthDriverInterface{
 	 */
 	public function getAuthTitle() {
 		return 'Local Datastore';
+	}
+
+	/**
+	 * Get the password complexity requirements as HTML.
+	 *
+	 * @return string
+	 */
+	public function getPasswordComplexityAsHTML(){
+		$strs = [];
+
+		// complexity check from the config
+		if(\ConfigHandler::Get('/user/password/minlength')){
+			$strs[] = 'Is at least ' . \ConfigHandler::Get('/user/password/minlength') . ' characters long.';
+		}
+
+		// complexity check from the config
+		if(\ConfigHandler::Get('/user/password/requiresymbols') > 0){
+			$strs[] = 'Has at least ' . \ConfigHandler::Get('/user/password/requiresymbols') . ' symbol(s).';
+		}
+
+		// complexity check from the config
+		if(\ConfigHandler::Get('/user/password/requirecapitals') > 0){
+			$strs[] = 'Has at least ' . \ConfigHandler::Get('/user/password/requirecapitals') . ' capital letter(s).';
+		}
+
+		// complexity check from the config
+		if(\ConfigHandler::Get('/user/password/requirenumbers') > 0){
+			$strs[] = 'Has at least ' . \ConfigHandler::Get('/user/password/requirenumbers') . ' number(s).';
+		}
+
+		return implode('<br/>', $strs);
+	}
+
+	/**
+	 * Validate the password based on configuration rules.
+	 *
+	 * @param string $password
+	 *
+	 * @return bool|string
+	 */
+	public function validatePassword($password){
+		$valid = true;
+		// complexity check from the config
+		if(strlen($password) < \ConfigHandler::Get('/user/password/minlength')){
+			$valid = 'Please ensure that the password is at least ' . \ConfigHandler::Get('/user/password/minlength') . ' characters long.';
+		}
+
+		// complexity check from the config
+		if(\ConfigHandler::Get('/user/password/requiresymbols') > 0){
+			preg_match_all('/[^a-zA-Z0-9]/', $password, $matches);
+			if(sizeof($matches[0]) < \ConfigHandler::Get('/user/password/requiresymbols')){
+				$valid = 'Please ensure that the password has at least ' . \ConfigHandler::Get('/user/password/requiresymbols') . ' symbol(s).';
+			}
+		}
+
+		// complexity check from the config
+		if(\ConfigHandler::Get('/user/password/requirecapitals') > 0){
+			preg_match_all('/[A-Z]/', $password, $matches);
+			if(sizeof($matches[0]) < \ConfigHandler::Get('/user/password/requirecapitals')){
+				$valid = 'Please ensure that the password has at least ' . \ConfigHandler::Get('/user/password/requirecapitals') . ' capital letter(s).';
+			}
+		}
+
+		// complexity check from the config
+		if(\ConfigHandler::Get('/user/password/requirenumbers') > 0){
+			preg_match_all('/[0-9]/', $password, $matches);
+			if(sizeof($matches[0]) < \ConfigHandler::Get('/user/password/requirenumbers')){
+				$valid = 'Please ensure that the password has at least ' . \ConfigHandler::Get('/user/password/requirenumbers') . ' number(s).';
+			}
+		}
+
+		return $valid;
 	}
 }
