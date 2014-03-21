@@ -203,6 +203,7 @@ class AdminController extends Controller_2_1 {
 					[
 						'title' => $gname,
 						//'class' => 'collapsible collapsed'
+						'class' => 'system-config-group'
 					]
 				);
 			}
