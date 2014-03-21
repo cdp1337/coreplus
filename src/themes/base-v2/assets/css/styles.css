@@ -4852,71 +4852,73 @@ p[class^="message-"] .message-background-icon i {
 /* line 223, ../scss/_form_elements.scss */
 .form-orientation-horizontal .form-element-description {
   clear: both;
+  width: 69.3%;
+  margin-left: 30%;
 }
-/* line 227, ../scss/_form_elements.scss */
+/* line 229, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formradioinput {
   /* Radio input tweaks */
 }
-/* line 230, ../scss/_form_elements.scss */
+/* line 232, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formradioinput .form-element-value label {
   float: left;
   margin-right: 1em;
 }
-/* line 237, ../scss/_form_elements.scss */
+/* line 239, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcheckboxesinput {
   /* Checkboxes specific styles */
 }
-/* line 239, ../scss/_form_elements.scss */
+/* line 241, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcheckboxesinput .checkboxes-toggle {
   cursor: pointer;
   float: right;
   margin-left: 0.25em;
 }
-/* line 243, ../scss/_form_elements.scss */
+/* line 245, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcheckboxesinput .checkboxes-toggle span {
   /* Hide the label for the toggle to save some real estate. */
   display: none;
 }
-/* line 249, ../scss/_form_elements.scss */
+/* line 251, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcheckboxesinput .form-element-value label {
   float: left;
   margin-right: 1em;
 }
-/* line 256, ../scss/_form_elements.scss */
+/* line 258, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcaptchainput {
   /* Captcha tweaks */
 }
-/* line 258, ../scss/_form_elements.scss */
+/* line 260, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcaptchainput .form-element-label a {
   display: block;
   float: right;
   margin-top: 1em;
 }
-/* line 264, ../scss/_form_elements.scss */
+/* line 266, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcaptchainput .form-element-value img {
   float: left;
   margin-right: 1em;
 }
-/* line 268, ../scss/_form_elements.scss */
+/* line 270, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formcaptchainput .form-element-value input {
   min-width: 140px;
   width: 30%;
 }
-/* line 275, ../scss/_form_elements.scss */
+/* line 277, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput {
   /* GeoAddress input sections have their description above the fields. */
 }
-/* line 278, ../scss/_form_elements.scss */
+/* line 280, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-description {
   margin-left: 30%;
   clear: none;
 }
-/* line 283, ../scss/_form_elements.scss */
+/* line 285, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value {
   margin-left: 0;
   clear: both;
 }
-/* line 287, ../scss/_form_elements.scss */
+/* line 289, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-address1 {
   border-top-width: 0;
   display: inline-block;
@@ -4924,7 +4926,7 @@ p[class^="message-"] .message-background-icon i {
   padding: 0.3em 0.5%;
   width: 50%;
 }
-/* line 294, ../scss/_form_elements.scss */
+/* line 296, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-address2 {
   border-left-width: 0;
   border-top-width: 0;
@@ -4933,7 +4935,7 @@ p[class^="message-"] .message-background-icon i {
   padding: 0.3em 0.5%;
   width: 46.5%;
 }
-/* line 302, ../scss/_form_elements.scss */
+/* line 304, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-city {
   border-top-width: 0;
   min-width: 85px;
@@ -4941,23 +4943,23 @@ p[class^="message-"] .message-background-icon i {
   width: 33%;
   display: inline-block;
 }
-/* line 309, ../scss/_form_elements.scss */
+/* line 311, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-province-wrapper {
   display: inline-block;
   width: 24%;
 }
-/* line 312, ../scss/_form_elements.scss */
+/* line 314, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-province-wrapper select {
   border-left-width: 0;
   border-top-width: 0;
   padding: 0.25em 0.25%;
   width: 99%;
 }
-/* line 319, ../scss/_form_elements.scss */
+/* line 321, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-country-wrapper {
   display: inline-block;
 }
-/* line 322, ../scss/_form_elements.scss */
+/* line 324, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value .address-postal {
   border-left-width: 0;
   border-top-width: 0;
@@ -4966,55 +4968,55 @@ p[class^="message-"] .message-background-icon i {
   padding: 0.3em 0.5%;
   width: 11%;
 }
-/* line 330, ../scss/_form_elements.scss */
+/* line 332, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.geoaddressforminput .form-element-value select.address-country {
   border-left-width: 0;
   border-top-width: 0;
   padding: 0.25em 0.5%;
   width: 32%;
 }
-/* line 339, ../scss/_form_elements.scss */
+/* line 341, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formlicenseinput-license .minict_wrapper {
   width: auto;
   min-width: 38em;
 }
-/* line 344, ../scss/_form_elements.scss */
+/* line 346, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formpagemetaauthorinput {
   /* Meta-Author input styles */
 }
-/* line 347, ../scss/_form_elements.scss */
+/* line 349, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formpagemetaauthorinput .form-element-value input {
   padding-left: 24px;
   width: 93%;
 }
-/* line 351, ../scss/_form_elements.scss */
+/* line 353, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator {
   position: absolute;
   left: 8px;
   top: 4px;
 }
-/* line 359, ../scss/_form_elements.scss */
+/* line 361, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formwysiwyginput {
   /* TinyMCE / WYSIWYG inputs have a slightly different interface, their description is above the input. */
 }
-/* line 361, ../scss/_form_elements.scss */
+/* line 363, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formwysiwyginput .form-element-description {
   margin-left: 30%;
   clear: none;
 }
-/* line 366, ../scss/_form_elements.scss */
+/* line 368, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formwysiwyginput .form-element-value {
   margin-left: 0;
   clear: both;
 }
-/* line 374, ../scss/_form_elements.scss */
+/* line 376, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formaccessstringinput .form-element-value .formradioinput {
   display: block;
   float: none;
   overflow: hidden;
   width: 100%;
 }
-/* line 380, ../scss/_form_elements.scss */
+/* line 382, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formaccessstringinput .form-element-value .formcheckboxesinput {
   display: block;
   float: none;
@@ -5025,124 +5027,124 @@ p[class^="message-"] .message-background-icon i {
 /**
  * Vertical form orientations
  */
-/* line 394, ../scss/_form_elements.scss */
+/* line 396, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement {
   margin-bottom: 0.5em;
 }
-/* line 398, ../scss/_form_elements.scss */
+/* line 400, ../scss/_form_elements.scss */
 .form-orientation-vertical .form-element-label {
   display: block;
   text-align: left;
   width: 97%;
 }
-/* line 406, ../scss/_form_elements.scss */
+/* line 408, ../scss/_form_elements.scss */
 .form-orientation-vertical .form-element-value input[type=text], .form-orientation-vertical .form-element-value input[type=password], .form-orientation-vertical .form-element-value textarea {
   width: 97%;
 }
-/* line 409, ../scss/_form_elements.scss */
+/* line 411, ../scss/_form_elements.scss */
 .form-orientation-vertical .form-element-value select {
   width: 99%;
 }
-/* line 414, ../scss/_form_elements.scss */
+/* line 416, ../scss/_form_elements.scss */
 .form-orientation-vertical .form-element-description {
   clear: both;
   padding-left: 1em;
 }
-/* line 419, ../scss/_form_elements.scss */
+/* line 421, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formradioinput {
   /* Radio input tweaks */
 }
-/* line 422, ../scss/_form_elements.scss */
+/* line 424, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formradioinput .form-element-value label {
   float: left;
   margin-right: 1em;
 }
-/* line 429, ../scss/_form_elements.scss */
+/* line 431, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcheckboxesinput {
   /* Checkboxes specific styles */
 }
-/* line 431, ../scss/_form_elements.scss */
+/* line 433, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcheckboxesinput .checkboxes-toggle {
   cursor: pointer;
   float: right;
   margin-left: 0.25em;
 }
-/* line 437, ../scss/_form_elements.scss */
+/* line 439, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcheckboxesinput .form-element-value label {
   float: left;
   margin-right: 1em;
 }
-/* line 444, ../scss/_form_elements.scss */
+/* line 446, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcaptchainput {
   /* Captcha tweaks */
 }
-/* line 446, ../scss/_form_elements.scss */
+/* line 448, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcaptchainput .form-element-label a {
   display: block;
   float: right;
 }
-/* line 451, ../scss/_form_elements.scss */
+/* line 453, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcaptchainput .form-element-value img {
   float: left;
   margin-right: 1em;
 }
-/* line 455, ../scss/_form_elements.scss */
+/* line 457, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formcaptchainput .form-element-value input {
   min-width: 140px;
   width: 30%;
 }
-/* line 463, ../scss/_form_elements.scss */
+/* line 465, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formfileinput .form-element-value {
   width: 100%;
 }
-/* line 466, ../scss/_form_elements.scss */
+/* line 468, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formfileinput .form-element-value label {
   display: block;
 }
-/* line 472, ../scss/_form_elements.scss */
+/* line 474, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput {
   /* GeoAddress input sections have their description above the fields. */
 }
-/* line 475, ../scss/_form_elements.scss */
+/* line 477, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value {
   margin-left: 0;
   clear: both;
 }
-/* line 479, ../scss/_form_elements.scss */
+/* line 481, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-address1 {
   border-top-width: 0;
   min-width: 130px;
 }
-/* line 483, ../scss/_form_elements.scss */
+/* line 485, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-address2 {
   border-top-width: 0;
   min-width: 130px;
 }
-/* line 487, ../scss/_form_elements.scss */
+/* line 489, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-city {
   border-top-width: 0;
   display: inline-block;
   min-width: 85px;
   width: 30%;
 }
-/* line 493, ../scss/_form_elements.scss */
+/* line 495, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-province-wrapper {
   display: inline-block;
   width: 24%;
   min-width: 0;
 }
-/* line 497, ../scss/_form_elements.scss */
+/* line 499, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-province-wrapper select {
   border-left-width: 0;
   border-top-width: 0;
   padding: 3%;
   width: 99%;
 }
-/* line 504, ../scss/_form_elements.scss */
+/* line 506, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-country-wrapper {
   display: inline-block;
 }
-/* line 507, ../scss/_form_elements.scss */
+/* line 509, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value .address-postal {
   border-left-width: 0;
   border-top-width: 0;
@@ -5150,38 +5152,38 @@ p[class^="message-"] .message-background-icon i {
   min-width: 30px;
   width: 12%;
 }
-/* line 514, ../scss/_form_elements.scss */
+/* line 516, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.geoaddressforminput .form-element-value select.address-country {
   border-top-width: 0;
 }
-/* line 520, ../scss/_form_elements.scss */
+/* line 522, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formlicenseinput-license .minict_wrapper {
   width: auto;
   min-width: 38em;
 }
-/* line 525, ../scss/_form_elements.scss */
+/* line 527, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formpagemetaauthorinput {
   /* Meta-Author input styles */
 }
-/* line 528, ../scss/_form_elements.scss */
+/* line 530, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formpagemetaauthorinput .form-element-value input {
   padding-left: 24px;
   width: 93%;
 }
-/* line 532, ../scss/_form_elements.scss */
+/* line 534, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator {
   position: absolute;
   left: 8px;
   top: 4px;
 }
-/* line 542, ../scss/_form_elements.scss */
+/* line 544, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formaccessstringinput .form-element-value .formradioinput {
   display: block;
   float: none;
   overflow: hidden;
   width: 100%;
 }
-/* line 548, ../scss/_form_elements.scss */
+/* line 550, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formaccessstringinput .form-element-value .formcheckboxesinput {
   display: block;
   float: none;
@@ -5192,19 +5194,19 @@ p[class^="message-"] .message-background-icon i {
 /**
  * Grid form orientations
  */
-/* line 561, ../scss/_form_elements.scss */
+/* line 563, ../scss/_form_elements.scss */
 .form-orientation-grid {
   /* Decrease font size to make everything fit */
   font-size: 80%;
 }
-/* line 565, ../scss/_form_elements.scss */
+/* line 567, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement {
   border-bottom: 1px solid #afafaf;
   margin-bottom: 0.5em;
   display: inline-block;
   width: 100%;
 }
-/* line 572, ../scss/_form_elements.scss */
+/* line 574, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-label {
   clear: left;
   display: block;
@@ -5212,86 +5214,86 @@ p[class^="message-"] .message-background-icon i {
   text-align: left;
   width: 20%;
 }
-/* line 580, ../scss/_form_elements.scss */
+/* line 582, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-value {
   display: inline-block;
   width: 30%;
 }
-/* line 584, ../scss/_form_elements.scss */
+/* line 586, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-value input[type=text], .form-orientation-grid .form-element-value input[type=password], .form-orientation-grid .form-element-value textarea {
   min-width: 100px;
   width: 97%;
 }
-/* line 588, ../scss/_form_elements.scss */
+/* line 590, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-value select {
   min-width: 100px;
   width: 99%;
 }
-/* line 594, ../scss/_form_elements.scss */
+/* line 596, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-description {
   float: left;
   padding-left: 0.25em;
 }
-/* line 599, ../scss/_form_elements.scss */
+/* line 601, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formradioinput {
   /* Radio input tweaks */
 }
-/* line 602, ../scss/_form_elements.scss */
+/* line 604, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formradioinput .form-element-value label {
   float: left;
   margin-right: 1em;
 }
-/* line 609, ../scss/_form_elements.scss */
+/* line 611, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcheckboxesinput {
   /* Checkboxes specific styles */
 }
-/* line 611, ../scss/_form_elements.scss */
+/* line 613, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcheckboxesinput .checkboxes-toggle {
   cursor: pointer;
   float: right;
   margin-left: 0.25em;
 }
-/* line 615, ../scss/_form_elements.scss */
+/* line 617, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcheckboxesinput .checkboxes-toggle span {
   /* Hide the label for the toggle to save some real estate. */
   display: none;
 }
-/* line 621, ../scss/_form_elements.scss */
+/* line 623, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcheckboxesinput .form-element-value label {
   float: left;
   margin-right: 1em;
 }
-/* line 628, ../scss/_form_elements.scss */
+/* line 630, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcaptchainput {
   /* Captcha tweaks */
 }
-/* line 630, ../scss/_form_elements.scss */
+/* line 632, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcaptchainput .form-element-label a {
   display: block;
   float: right;
   margin-top: 1em;
 }
-/* line 636, ../scss/_form_elements.scss */
+/* line 638, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcaptchainput .form-element-value img {
   float: left;
   margin-right: 1em;
 }
-/* line 640, ../scss/_form_elements.scss */
+/* line 642, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formcaptchainput .form-element-value input {
   min-width: 140px;
   width: 30%;
 }
-/* line 647, ../scss/_form_elements.scss */
+/* line 649, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput {
   /* GeoAddress input sections have their description above the fields. */
 }
-/* line 650, ../scss/_form_elements.scss */
+/* line 652, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value {
   margin-left: 0;
   clear: both;
   width: 100%;
 }
-/* line 655, ../scss/_form_elements.scss */
+/* line 657, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-address1 {
   border-top-width: 0;
   float: left;
@@ -5299,7 +5301,7 @@ p[class^="message-"] .message-background-icon i {
   padding: 0.3em 0.5%;
   width: 50%;
 }
-/* line 662, ../scss/_form_elements.scss */
+/* line 664, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-address2 {
   border-left-width: 0;
   border-top-width: 0;
@@ -5308,31 +5310,31 @@ p[class^="message-"] .message-background-icon i {
   padding: 0.3em 0.5%;
   width: 46%;
 }
-/* line 670, ../scss/_form_elements.scss */
+/* line 672, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-city {
   border-top-width: 0;
   min-width: 85px;
   padding: 0.3em 0.5%;
   width: 33%;
 }
-/* line 676, ../scss/_form_elements.scss */
+/* line 678, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-province-wrapper {
   display: inline-block;
   width: 20%;
   min-width: 0;
 }
-/* line 680, ../scss/_form_elements.scss */
+/* line 682, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-province-wrapper select {
   border-left-width: 0;
   border-top-width: 0;
   padding: 0.25em 0.25%;
   width: 99%;
 }
-/* line 687, ../scss/_form_elements.scss */
+/* line 689, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-country-wrapper {
   display: inline-block;
 }
-/* line 690, ../scss/_form_elements.scss */
+/* line 692, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value .address-postal {
   border-left-width: 0;
   border-top-width: 0;
@@ -5341,55 +5343,55 @@ p[class^="message-"] .message-background-icon i {
   padding: 0.3em 0.5%;
   width: 11%;
 }
-/* line 698, ../scss/_form_elements.scss */
+/* line 700, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.geoaddressforminput .form-element-value select.address-country {
   border-left-width: 0;
   border-top-width: 0;
   padding: 0.25em 0.5%;
   width: 32%;
 }
-/* line 707, ../scss/_form_elements.scss */
+/* line 709, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formlicenseinput-license .minict_wrapper {
   width: auto;
   min-width: 48em;
 }
-/* line 712, ../scss/_form_elements.scss */
+/* line 714, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formpagemetaauthorinput {
   /* Meta-Author input styles */
 }
-/* line 715, ../scss/_form_elements.scss */
+/* line 717, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formpagemetaauthorinput .form-element-value input {
   padding-left: 24px;
   width: 93%;
 }
-/* line 719, ../scss/_form_elements.scss */
+/* line 721, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator {
   position: absolute;
   left: 8px;
   top: 4px;
 }
-/* line 727, ../scss/_form_elements.scss */
+/* line 729, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formwysiwyginput {
   /* TinyMCE / WYSIWYG inputs have a slightly different interface, their description is above the input. */
 }
-/* line 729, ../scss/_form_elements.scss */
+/* line 731, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formwysiwyginput .form-element-description {
   clear: none;
 }
-/* line 733, ../scss/_form_elements.scss */
+/* line 735, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formwysiwyginput .form-element-value {
   margin-left: 0;
   clear: both;
   width: 100%;
 }
-/* line 742, ../scss/_form_elements.scss */
+/* line 744, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formaccessstringinput .form-element-value .formradioinput {
   display: block;
   float: none;
   overflow: hidden;
   width: 100%;
 }
-/* line 748, ../scss/_form_elements.scss */
+/* line 750, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formaccessstringinput .form-element-value .formcheckboxesinput {
   display: block;
   float: none;
@@ -5398,25 +5400,25 @@ p[class^="message-"] .message-background-icon i {
 }
 
 /** Tweak the autocomplete styles slightly **/
-/* line 760, ../scss/_form_elements.scss */
+/* line 762, ../scss/_form_elements.scss */
 .formelement input[type="text"].ui-autocomplete-loading {
   background-image: url("../images/loading-bar-small.gif");
   background-position: center right;
   background-repeat: no-repeat;
 }
 
-/* line 766, ../scss/_form_elements.scss */
+/* line 768, ../scss/_form_elements.scss */
 .formelement input[type="text"].ui-autocomplete-input {
   border: 1px solid #47C6CB;
 }
 
-/* line 771, ../scss/_form_elements.scss */
+/* line 773, ../scss/_form_elements.scss */
 .facebook-integration {
   margin-left: 0;
   max-width: 515px;
 }
 
-/* line 776, ../scss/_form_elements.scss */
+/* line 778, ../scss/_form_elements.scss */
 .ui-dialog .formelement label {
   position: relative;
   top: 0;
@@ -5424,19 +5426,19 @@ p[class^="message-"] .message-background-icon i {
   text-align: left;
 }
 
-/* line 782, ../scss/_form_elements.scss */
+/* line 784, ../scss/_form_elements.scss */
 .ui-dialog .formelement input {
   padding: 0.35em 0.8em;
   display: block;
 }
 
-/* line 787, ../scss/_form_elements.scss */
+/* line 789, ../scss/_form_elements.scss */
 .ui-dialog .formelement select {
   display: block;
   max-width: 100%;
 }
 
-/* line 792, ../scss/_form_elements.scss */
+/* line 794, ../scss/_form_elements.scss */
 .tinymce label {
   position: relative;
   top: 0;
@@ -5446,7 +5448,7 @@ p[class^="message-"] .message-background-icon i {
 /**
  * Fancy Minimalect Selects
  */
-/* line 803, ../scss/_form_elements.scss */
+/* line 805, ../scss/_form_elements.scss */
 .form-orientation-horizontal .form-element-value .minict_wrapper input,
 .form-orientation-vertical .form-element-value .minict_wrapper input {
   width: 100%;
@@ -5456,17 +5458,17 @@ p[class^="message-"] .message-background-icon i {
   height: 2.5em;
 }
 
-/* line 811, ../scss/_form_elements.scss */
+/* line 813, ../scss/_form_elements.scss */
 .form-orientation-horizontal .form-element-value .minict_wrapper input {
   height: 1.75em;
 }
 
-/* line 815, ../scss/_form_elements.scss */
+/* line 817, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-value .minict_wrapper {
   margin-top: 0.3em;
 }
 
-/* line 816, ../scss/_form_elements.scss */
+/* line 818, ../scss/_form_elements.scss */
 .form-orientation-grid .form-element-value .minict_wrapper input {
   width: 100%;
   padding: 0 3%;
@@ -5475,26 +5477,25 @@ p[class^="message-"] .message-background-icon i {
   height: 1.5em;
 }
 
-/* line 827, ../scss/_form_elements.scss */
+/* line 829, ../scss/_form_elements.scss */
 .address-province-wrapper .minict_wrapper {
   width: 100%;
   min-width: 0;
 }
 
-/* line 832, ../scss/_form_elements.scss */
+/* line 834, ../scss/_form_elements.scss */
 .address-country-wrapper {
   width: 28%;
 }
 
-/* line 835, ../scss/_form_elements.scss */
+/* line 837, ../scss/_form_elements.scss */
 .address-country-wrapper .minict_wrapper {
   width: 100%;
   min-width: 0;
 }
 
-/* line 840, ../scss/_form_elements.scss */
+/* line 842, ../scss/_form_elements.scss */
 .minict_wrapper {
-  font-family: "Segoe UI", Segoe, "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
   color: #333;
   background: #fff;
   display: inline-block;
@@ -5508,13 +5509,13 @@ p[class^="message-"] .message-background-icon i {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-/* line 857, ../scss/_form_elements.scss */
+/* line 858, ../scss/_form_elements.scss */
 .minict_wrapper * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-/* line 863, ../scss/_form_elements.scss */
+/* line 864, ../scss/_form_elements.scss */
 .minict_wrapper:after {
   content: "\25BC";
   display: block;
@@ -5528,16 +5529,15 @@ p[class^="message-"] .message-background-icon i {
   text-align: center;
   color: #555;
 }
-/* line 877, ../scss/_form_elements.scss */
+/* line 878, ../scss/_form_elements.scss */
 .minict_wrapper.active:after {
   content: "\25B2";
 }
-/* line 881, ../scss/_form_elements.scss */
+/* line 882, ../scss/_form_elements.scss */
 .minict_wrapper input {
   border: 0;
   outline: none;
   background: none;
-  font-family: "Segoe UI", Segoe, "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
   color: #333;
   font-size: 1rem;
   height: 1.9rem;
@@ -5680,41 +5680,25 @@ p[class^="message-"] .message-background-icon i {
     background-size: 176px 22px;
   }
 }
-/* line 255, ../scss/styles.scss */
-table.stacktrace {
-  width: 100%;
-  border: 1px solid;
-}
-
-/* line 259, ../scss/styles.scss */
-table.stacktrace th {
-  border: 1px solid;
-}
-
-/* line 262, ../scss/styles.scss */
-table.stacktrace td {
-  border: 1px solid;
-  font-size: 80%;
-}
-
 /*****************************************************************************
  *****************************************************************************
  **                            LISTING TABLES                               **
  *****************************************************************************
  *****************************************************************************/
-/* line 279, ../scss/styles.scss */
+/* line 8, ../scss/_listing_tables.scss */
 table.listing {
   width: 100%;
   border: 1px solid #bababa;
   border-collapse: collapse;
+  font-size: 90%;
 }
 
-/* line 284, ../scss/styles.scss */
+/* line 14, ../scss/_listing_tables.scss */
 table.listing tr:nth-child(odd) {
   background-color: lightgrey;
 }
 
-/* line 287, ../scss/styles.scss */
+/* line 17, ../scss/_listing_tables.scss */
 table.listing th {
   padding: 0.15em 0.5em;
   border: 1px solid #949494;
@@ -5723,7 +5707,7 @@ table.listing th {
   color: #EEE;
 }
 
-/* line 294, ../scss/styles.scss */
+/* line 24, ../scss/_listing_tables.scss */
 table.listing td {
   padding: 0.2em 0.5em;
   border: 1px solid #bababa;
@@ -5731,9 +5715,26 @@ table.listing td {
 }
 
 /* Give a little high-lighting effect on mouseover for the records. */
-/* line 301, ../scss/styles.scss */
+/* line 31, ../scss/_listing_tables.scss */
 table.listing tr:hover {
   background-color: #c7d5eb;
+}
+
+/* line 256, ../scss/styles.scss */
+table.stacktrace {
+  width: 100%;
+  border: 1px solid;
+}
+
+/* line 260, ../scss/styles.scss */
+table.stacktrace th {
+  border: 1px solid;
+}
+
+/* line 263, ../scss/styles.scss */
+table.stacktrace td {
+  border: 1px solid;
+  font-size: 80%;
 }
 
 /*****************************************************************************
@@ -5741,7 +5742,7 @@ table.listing tr:hover {
  **                          DEBUGGING CLASSES                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 313, ../scss/styles.scss */
+/* line 274, ../scss/styles.scss */
 pre.xdebug-var-dump {
   border-top: 2px solid #FFE5C0;
   padding: 0;
@@ -5752,7 +5753,7 @@ pre.xdebug-var-dump {
   margin-bottom: 0;
 }
 
-/* line 323, ../scss/styles.scss */
+/* line 284, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section {
   background: none repeat scroll 0 0 rgba(255, 255, 255, 0.35);
   border-color: #EEEEEE -moz-use-text-color;
@@ -5767,7 +5768,7 @@ pre.xdebug-var-dump .debug-section {
   position: relative;
 }
 
-/* line 336, ../scss/styles.scss */
+/* line 297, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section legend {
   font-size: 1em;
   margin: 0;
@@ -5775,28 +5776,28 @@ pre.xdebug-var-dump .debug-section legend {
   position: absolute;
 }
 
-/* line 342, ../scss/styles.scss */
+/* line 303, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section:last-child {
   margin-bottom: 0;
 }
 
-/* line 343, ../scss/styles.scss */
+/* line 304, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section i {
   color: #bbb;
 }
 
-/* line 344, ../scss/styles.scss */
+/* line 305, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section.collapsed {
   height: 1.2em;
   overflow: hidden;
 }
 
-/* line 348, ../scss/styles.scss */
+/* line 309, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section.collapsible i {
   display: none;
 }
 
-/* line 349, ../scss/styles.scss */
+/* line 310, ../scss/styles.scss */
 pre.xdebug-var-dump .debug-section.collapsed i {
   display: inline;
 }
@@ -5806,35 +5807,35 @@ pre.xdebug-var-dump .debug-section.collapsed i {
  **                     SORTABLES & NESTED SORTABLES                        **
  *****************************************************************************
  *****************************************************************************/
-/* line 359, ../scss/styles.scss */
+/* line 320, ../scss/styles.scss */
 ol.sortable-listing {
   margin: 0.5em 0;
 }
 
-/* line 362, ../scss/styles.scss */
+/* line 323, ../scss/styles.scss */
 ol.sortable-listing li {
   display: block;
   list-style: none outside none;
 }
 
-/* line 366, ../scss/styles.scss */
+/* line 327, ../scss/styles.scss */
 ol.sortable-listing li div.entry {
   border: 1px solid #BBBBBB;
   padding: 0.25em;
 }
 
-/* line 370, ../scss/styles.scss */
+/* line 331, ../scss/styles.scss */
 ol.sortable-listing li.placeholder {
   border: 1px solid #BBBBBB;
   background: #BBB;
 }
 
-/* line 374, ../scss/styles.scss */
+/* line 335, ../scss/styles.scss */
 ol.sortable-listing li a.control {
   margin-top: -2px;
 }
 
-/* line 377, ../scss/styles.scss */
+/* line 338, ../scss/styles.scss */
 ol.sortable-listing ol {
   margin-left: 1em;
 }
@@ -5844,20 +5845,20 @@ ol.sortable-listing ol {
  **                           PRIMARY NAVIGATION                            **
  *****************************************************************************
  *****************************************************************************/
-/* line 389, ../scss/styles.scss */
+/* line 350, ../scss/styles.scss */
 #primary-nav li {
   display: inline-block;
   position: relative;
   text-align: center;
 }
 
-/* line 394, ../scss/styles.scss */
+/* line 355, ../scss/styles.scss */
 #primary-nav li.navigation-menu-over a:hover {
   background: #333;
   transition: background 0.3s;
 }
 
-/* line 399, ../scss/styles.scss */
+/* line 360, ../scss/styles.scss */
 #primary-nav a,
 #primary-nav span {
   color: #777;
@@ -5870,13 +5871,13 @@ ol.sortable-listing ol {
 }
 
 /* Enable the mouse over menu */
-/* line 409, ../scss/styles.scss */
+/* line 370, ../scss/styles.scss */
 #primary-nav li.navigation-menu-over > ul {
   display: block;
 }
 
 /* And the sub menu */
-/* line 413, ../scss/styles.scss */
+/* line 374, ../scss/styles.scss */
 #primary-nav li ul {
   display: none;
   position: absolute;
@@ -5889,13 +5890,13 @@ ol.sortable-listing ol {
   box-shadow: 0 3px 6px #000;
 }
 
-/* line 424, ../scss/styles.scss */
+/* line 385, ../scss/styles.scss */
 #primary-nav li ul li {
   width: 190px;
   text-align: left;
 }
 
-/* line 429, ../scss/styles.scss */
+/* line 390, ../scss/styles.scss */
 #primary-nav li ul a,
 #primary-nav li ul span {
   padding-left: 20px;
@@ -5903,7 +5904,7 @@ ol.sortable-listing ol {
 }
 
 /* And any sub sub menu */
-/* line 434, ../scss/styles.scss */
+/* line 395, ../scss/styles.scss */
 #primary-nav li ul li ul {
   top: -2px;
   left: 180px;
@@ -5918,7 +5919,7 @@ ol.sortable-listing ol {
   box-shadow: 0 3px 6px #000;
 }
 
-/* line 447, ../scss/styles.scss */
+/* line 408, ../scss/styles.scss */
 #primary-nav a:hover {
   text-shadow: none;
 }
@@ -5928,14 +5929,14 @@ ol.sortable-listing ol {
  **                          FOOTER NAVIGATION                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 458, ../scss/styles.scss */
+/* line 419, ../scss/styles.scss */
 footer ul.navigation-menu li {
   list-style-type: none;
   float: left;
   padding: 0 0.5em;
 }
 
-/* line 463, ../scss/styles.scss */
+/* line 424, ../scss/styles.scss */
 footer ul.navigation-menu li li {
   float: none;
 }
@@ -5945,7 +5946,7 @@ footer ul.navigation-menu li li {
  **                         COLLAPSIBLE FIELDSETS                           **
  *****************************************************************************
  *****************************************************************************/
-/* line 475, ../scss/styles.scss */
+/* line 436, ../scss/styles.scss */
 fieldset.collapsed {
   padding: 0;
   border-width: 1px 0 0;
@@ -5956,12 +5957,12 @@ fieldset.collapsed {
  **                            PROGRESS BARS                                **
  *****************************************************************************
  *****************************************************************************/
-/* line 485, ../scss/styles.scss */
+/* line 446, ../scss/styles.scss */
 .progress-container {
   position: relative;
 }
 
-/* line 488, ../scss/styles.scss */
+/* line 449, ../scss/styles.scss */
 .progress-success {
   background: none repeat scroll 0 0 #992222;
   border: 2px solid green;
@@ -5969,184 +5970,18 @@ fieldset.collapsed {
   margin-bottom: 5px;
 }
 
-/* line 494, ../scss/styles.scss */
+/* line 455, ../scss/styles.scss */
 .progress-success .bar {
   background: none repeat scroll 0 0 green;
   height: 20px;
 }
 
-/* line 498, ../scss/styles.scss */
+/* line 459, ../scss/styles.scss */
 .progress-container .progress-extended {
   color: white;
   left: 46px;
   position: absolute;
   top: 6px;
-}
-
-/** Theme Editor **/
-/* line 507, ../scss/styles.scss */
-.page-themeeditor .column1 section.pagecontent {
-  margin-left: 12px;
-}
-
-/* line 514, ../scss/styles.scss */
-.editor-container {
-  position: relative;
-}
-
-/* line 518, ../scss/styles.scss */
-#code {
-  min-width: 590px;
-}
-
-/* line 522, ../scss/styles.scss */
-#theme-editor-browser {
-  background: transparent;
-  position: absolute;
-  width: 350px;
-  z-index: 100;
-  top: 52px;
-}
-
-/* line 530, ../scss/styles.scss */
-#theme-editor-browser a {
-  color: #222;
-}
-
-/* line 534, ../scss/styles.scss */
-#theme-editor-browser .left {
-  float: left;
-  width: 300px;
-  background: #dddddd;
-  padding: 10px;
-  box-shadow: 3px 4px 15px 6px #090909;
-  max-height: 650px;
-  opacity: 0.8;
-  overflow-y: auto;
-}
-
-/* line 545, ../scss/styles.scss */
-#theme-editor-browser .left:hover {
-  opacity: 0.9;
-}
-
-/* line 547, ../scss/styles.scss */
-#theme-editor-browser .right {
-  float: right;
-  width: 28px;
-  background: #090909;
-  color: #999999;
-  padding: 10px 0;
-  border-radius: 0 5px 5px 0;
-  cursor: pointer;
-  opacity: 0.8;
-  border-bottom: 1px solid #2b2b2b;
-  border-right: 1px solid #2b2b2b;
-  border-top: 1px solid #2b2b2b;
-}
-
-/* line 561, ../scss/styles.scss */
-#theme-editor-browser .right:hover {
-  opacity: 1;
-}
-
-/* line 563, ../scss/styles.scss */
-#theme-editor-browser .right i {
-  margin-left: 8px;
-}
-
-/* line 565, ../scss/styles.scss */
-#theme-editor-browser .icon {
-  float: right;
-  margin-right: 2px;
-}
-
-/* line 570, ../scss/styles.scss */
-#theme-editor-browser li .icon {
-  margin-right: 0;
-}
-
-/* line 572, ../scss/styles.scss */
-#theme-editor-browser h2 {
-  color: #666;
-  margin-bottom: 3px;
-}
-
-/* line 574, ../scss/styles.scss */
-#theme-editor-browser ul {
-  margin-bottom: 9px;
-  padding-bottom: 3px;
-  border-bottom: 1px solid #e1e1e1;
-}
-
-/* line 580, ../scss/styles.scss */
-#theme-editor-browser .sub {
-  display: none;
-}
-
-/* line 582, ../scss/styles.scss */
-#theme-editor-browser li .icon {
-  cursor: pointer;
-}
-
-/* line 584, ../scss/styles.scss */
-#theme-editor-browser li {
-  list-style-type: none;
-  margin-bottom: 3px;
-}
-
-/* line 589, ../scss/styles.scss */
-#theme-editor-browser ul ul {
-  margin-left: 10px;
-}
-
-/* line 591, ../scss/styles.scss */
-#theme-editor-browser h2 {
-  cursor: pointer;
-}
-
-/* line 595, ../scss/styles.scss */
-.theme-editor {
-  display: none;
-}
-
-/* line 599, ../scss/styles.scss */
-#theme-editor-wysiwyg .image-editor {
-  background: #202020;
-  padding-bottom: 25px;
-  padding-left: 285px;
-}
-
-/* line 605, ../scss/styles.scss */
-.image-editor h2 {
-  margin-bottom: 5px;
-}
-
-/* line 607, ../scss/styles.scss */
-#revert {
-  cursor: pointer;
-  font-weight: bold;
-  text-decoration: underline;
-}
-
-/* line 613, ../scss/styles.scss */
-#revisions li.revision {
-  margin-bottom: 3px;
-}
-
-/* line 615, ../scss/styles.scss */
-#revisions .revision-title {
-  cursor: pointer;
-}
-
-/* line 616, ../scss/styles.scss */
-#revisions .revision-date {
-  color: #888;
-}
-
-/* line 618, ../scss/styles.scss */
-.page-themeeditor #dialog-confirm {
-  display: none;
 }
 
 /* line 1, ../scss/_filters_and_pagination.scss */
@@ -6193,7 +6028,243 @@ fieldset.collapsed {
   color: #21631f;
 }
 
-/* line 624, ../scss/styles.scss */
+                          /**
+* Handles the public /page/* styles for the theme.
+*
+* These include site search and the sitemap.
+*/
+/* line 9, ../scss/_pages_page.scss */
+.page-search-widget form .form-element-value {
+  position: relative;
+}
+/* line 13, ../scss/_pages_page.scss */
+.page-search-widget form i {
+  position: absolute;
+  right: 5px;
+  top: 8px;
+}
+/* line 19, ../scss/_pages_page.scss */
+.page-search-widget form .submit-button {
+  display: none;
+}
+
+/* line 27, ../scss/_pages_page.scss */
+.page-page-search .page-search-form .form-element-value, .page-page-sitemap .page-search-form .form-element-value {
+  position: relative;
+}
+/* line 31, ../scss/_pages_page.scss */
+.page-page-search .page-search-form i, .page-page-sitemap .page-search-form i {
+  position: absolute;
+  right: 10px;
+  top: 16px;
+}
+/* line 37, ../scss/_pages_page.scss */
+.page-page-search .page-search-form .submit-button, .page-page-sitemap .page-search-form .submit-button {
+  display: none;
+}
+
+/* line 44, ../scss/_pages_page.scss */
+.page-page-search .search-result-page {
+  margin-bottom: 0.75em;
+}
+/* line 48, ../scss/_pages_page.scss */
+.page-page-search .page-title {
+  display: block;
+  float: left;
+  font-size: 105%;
+}
+/* line 54, ../scss/_pages_page.scss */
+.page-page-search .page-image {
+  clear: left;
+  float: left;
+  margin-right: 0.25em;
+}
+/* line 60, ../scss/_pages_page.scss */
+.page-page-search .page-teaser {
+  clear: right;
+  color: #616161;
+  font-size: 90%;
+}
+/* line 66, ../scss/_pages_page.scss */
+.page-page-search .search-relevancy {
+  color: #999;
+  float: right;
+  font-size: 75%;
+}
+
+/* line 74, ../scss/_pages_page.scss */
+.page-page-sitemap .page-teaser {
+  color: #616161;
+  font-size: 90%;
+}
+
+/** Theme Editor **/
+/* line 3, ../scss/_pages_theme.scss */
+.page-themeeditor .column1 section.pagecontent {
+  margin-left: 12px;
+}
+
+/* line 10, ../scss/_pages_theme.scss */
+.editor-container {
+  position: relative;
+}
+
+/* line 14, ../scss/_pages_theme.scss */
+#code {
+  min-width: 590px;
+}
+
+/* line 18, ../scss/_pages_theme.scss */
+#theme-editor-browser {
+  background: transparent;
+  position: absolute;
+  width: 350px;
+  z-index: 100;
+  top: 52px;
+}
+
+/* line 26, ../scss/_pages_theme.scss */
+#theme-editor-browser a {
+  color: #222;
+}
+
+/* line 30, ../scss/_pages_theme.scss */
+#theme-editor-browser .left {
+  float: left;
+  width: 300px;
+  background: #dddddd;
+  padding: 10px;
+  box-shadow: 3px 4px 15px 6px #090909;
+  max-height: 650px;
+  opacity: 0.8;
+  overflow-y: auto;
+}
+
+/* line 41, ../scss/_pages_theme.scss */
+#theme-editor-browser .left:hover {
+  opacity: 0.9;
+}
+
+/* line 43, ../scss/_pages_theme.scss */
+#theme-editor-browser .right {
+  float: right;
+  width: 28px;
+  background: #090909;
+  color: #999999;
+  padding: 10px 0;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  opacity: 0.8;
+  border-bottom: 1px solid #2b2b2b;
+  border-right: 1px solid #2b2b2b;
+  border-top: 1px solid #2b2b2b;
+}
+
+/* line 57, ../scss/_pages_theme.scss */
+#theme-editor-browser .right:hover {
+  opacity: 1;
+}
+
+/* line 59, ../scss/_pages_theme.scss */
+#theme-editor-browser .right i {
+  margin-left: 8px;
+}
+
+/* line 61, ../scss/_pages_theme.scss */
+#theme-editor-browser .icon {
+  float: right;
+  margin-right: 2px;
+}
+
+/* line 66, ../scss/_pages_theme.scss */
+#theme-editor-browser li .icon {
+  margin-right: 0;
+}
+
+/* line 68, ../scss/_pages_theme.scss */
+#theme-editor-browser h2 {
+  color: #666;
+  margin-bottom: 3px;
+}
+
+/* line 70, ../scss/_pages_theme.scss */
+#theme-editor-browser ul {
+  margin-bottom: 9px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+/* line 76, ../scss/_pages_theme.scss */
+#theme-editor-browser .sub {
+  display: none;
+}
+
+/* line 78, ../scss/_pages_theme.scss */
+#theme-editor-browser li .icon {
+  cursor: pointer;
+}
+
+/* line 80, ../scss/_pages_theme.scss */
+#theme-editor-browser li {
+  list-style-type: none;
+  margin-bottom: 3px;
+}
+
+/* line 85, ../scss/_pages_theme.scss */
+#theme-editor-browser ul ul {
+  margin-left: 10px;
+}
+
+/* line 87, ../scss/_pages_theme.scss */
+#theme-editor-browser h2 {
+  cursor: pointer;
+}
+
+/* line 91, ../scss/_pages_theme.scss */
+.theme-editor {
+  display: none;
+}
+
+/* line 95, ../scss/_pages_theme.scss */
+#theme-editor-wysiwyg .image-editor {
+  background: #202020;
+  padding-bottom: 25px;
+  padding-left: 285px;
+}
+
+/* line 101, ../scss/_pages_theme.scss */
+.image-editor h2 {
+  margin-bottom: 5px;
+}
+
+/* line 103, ../scss/_pages_theme.scss */
+#revert {
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* line 109, ../scss/_pages_theme.scss */
+#revisions li.revision {
+  margin-bottom: 3px;
+}
+
+/* line 111, ../scss/_pages_theme.scss */
+#revisions .revision-title {
+  cursor: pointer;
+}
+
+/* line 112, ../scss/_pages_theme.scss */
+#revisions .revision-date {
+  color: #888;
+}
+
+/* line 114, ../scss/_pages_theme.scss */
+.page-themeeditor #dialog-confirm {
+  display: none;
+}
+
+/* line 474, ../scss/styles.scss */
 .widgetarea-admindashboard .widget {
   background: #e9e9e9;
   border: 1px solid #BBBBBB;
@@ -6203,7 +6274,7 @@ fieldset.collapsed {
   padding: 1em;
 }
 
-/* line 633, ../scss/styles.scss */
+/* line 483, ../scss/styles.scss */
 .widgetarea-admindashboard .widget h3 {
   text-align: center;
   margin-bottom: 0.5em;
@@ -6212,22 +6283,22 @@ fieldset.collapsed {
 /**
  * LOGIN / REGISTER PAGES
  */
-/* line 643, ../scss/styles.scss */
+/* line 493, ../scss/styles.scss */
 .user-login-center {
   /** If the page is set to use 2-columns, then do so. */
 }
-/* line 646, ../scss/styles.scss */
+/* line 496, ../scss/styles.scss */
 .user-login-center .user-login-existing.col-2 .user-login-include {
   float: left;
   width: 49%;
 }
-/* line 651, ../scss/styles.scss */
+/* line 501, ../scss/styles.scss */
 .user-login-center .login-forgot {
   float: right;
   color: #969696;
   font-style: italic;
 }
-/* line 657, ../scss/styles.scss */
+/* line 507, ../scss/styles.scss */
 .user-login-center .user-login-section-heading {
   text-align: center;
   margin-bottom: 0.75em;
