@@ -30,7 +30,16 @@ class FormSubmitInput extends FormElement {
 		parent::__construct($atts);
 
 		// Some defaults
-		$this->_attributes['class'] = 'formelement formsubmitinput';
+		$defaults = [
+			'class' => 'formelement formsubmitinput',
+			'name' => 'submit',
+		];
+		foreach($defaults as $k => $v){
+			if(!isset($this->_attributes[$k])){
+				$this->_attributes[$k] = $v;
+			}
+		}
+
 		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'size', 'tabindex', 'width', 'height', 'value', 'style');
 	}
 }
