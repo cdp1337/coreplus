@@ -3,6 +3,7 @@
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3~core1" name="Facebook" execmode="web">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
+		<hook name="/core/controllinks/user/view" call="FacebookController::GetUserControlLinks"/>
 	</hooks>
 	<provides>
 		<provide type="library" name="facebook-sdk" version="3.2.0"/>

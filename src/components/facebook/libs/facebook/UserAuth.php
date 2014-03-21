@@ -66,52 +66,12 @@ class UserAuth implements AuthDriverInterface {
 	}
 
 	/**
-	 * Check that the supplied password or key is valid for this user.
-	 *
-	 * @param string $password The password to verify
-	 *
-	 * @return boolean
-	 */
-	public function checkPassword($password) {
-		// TODO: Implement checkPassword() method.
-	}
-
-	/**
-	 * Set the user's password using the necessary hashing
-	 *
-	 * @param $password
-	 *
-	 * @return bool|string True/False on success or failure, a string if on error.
-	 */
-	public function setPassword($password) {
-		return 'Please go to facebook.com to reset your password.';
-	}
-
-	/**
 	 * Check if this user is active and can login.
 	 *
-	 * @return boolean
+	 * @return boolean|string
 	 */
 	public function isActive() {
 		return $this->_usermodel->get('active');
-	}
-
-	/**
-	 * Get if this user can set their password via the site.
-	 *
-	 * @return bool|string True if backend allows for password management, a string if cannot.
-	 */
-	public function canSetPassword() {
-		return 'Please go to facebook.com to reset your password.';
-	}
-
-	/**
-	 * Get if this user can login via a password on the traditional login interface.
-	 *
-	 * @return boolean
-	 */
-	public function canLoginWithPassword() {
-		return false;
 	}
 
 	/**
@@ -180,5 +140,94 @@ class UserAuth implements AuthDriverInterface {
 	 */
 	public function getAuthTitle() {
 		return 'Facebook';
+	}
+
+	/**
+	 * Sync the user back to the linked Facebook account.
+	 *
+	 * <h3>Usage:</h3>
+	 * <pre class="code">
+	 * $auth->syncUser($_POST['access-token']);
+	 * </pre>
+	 *
+	 * @param string $access_token A valid access token for the user to sync up.
+	 *
+	 * @return bool True or false on success.
+	 */
+	public function syncUser($access_token){
+		try{
+			$facebook = new \Facebook([
+				'appId'  => FACEBOOK_APP_ID,
+				'secret' => FACEBOOK_APP_SECRET,
+			]);
+			$facebook->setAccessToken($access_token);
+			/** @var array $user_profile The array of user data from Facebook */
+			$user_profile = $facebook->api('/me');
+		}
+		catch(\Exception $e){
+			return false;
+		}
+
+
+		$user = $this->_usermodel;
+
+		if(!$user->exists()){
+			// Some config options for new accounts only.
+			if($user->getConfigObject('json:profiles')){
+				// This is a field from the user-social component.
+				// Link facebook just because!
+				$user->set(
+					'json:profiles', json_encode(
+						[
+							[
+								'type' => 'facebook',
+								'url' => $user_profile['link'],
+								'title' => 'Facebook Profile',
+							]
+						]
+					)
+				);
+			}
+
+			if($user->getConfigObject('username')){
+				// Another component from the user-social component.
+				// This needs to be unique, so do a little fudging if necessary.
+				try{
+					$user->set('username', $user_profile['username']);
+				}
+				catch(\ModelValidationException $e){
+					$user->set('username', $user_profile['username'] . '-' . \Core\random_hex(3));
+				}
+			}
+
+			// Sync the user avatar.
+			$f = new \Core\Filestore\Backends\FileRemote('http://graph.facebook.com/' . $user_profile['id'] . '/picture?type=large');
+			$dest = \Core\Filestore\Factory::File('public/user/avatar/' . $f->getBaseFilename());
+			$f->copyTo($dest);
+			$user->set('avatar', 'public/user/avatar/' . $dest->getBaseFilename());
+		}
+
+		// Get all user configs and load in anything possible.
+		foreach($user->getConfigs() as $k => $v){
+			// Facebook can import several configs...
+			switch($k){
+				case 'first_name':
+				case 'last_name':
+					$user->set($k, $user_profile[$k]);
+					break;
+				case 'gender':
+					$user->set($k, ucwords($user_profile[$k]));
+					break;
+				case 'facebook_id':
+					$user->set($k, $user_profile['id']);
+					break;
+				case 'facebook_link':
+					$user->set($k, $user_profile['link']);
+					break;
+				case 'facebook_access_token':
+					$user->set($k, $facebook->getAccessToken());
+					break;
+			}
+		}
 	}
 }
