@@ -572,9 +572,7 @@ $form_element_error_color: #6c0000;
 	}
 
 	.form-element-label {
-		clear: left;
-		display: block;
-		float: left;
+		display:inline-block;
 		text-align: left;
 		width: 20%;
 	}
@@ -594,8 +592,9 @@ $form_element_error_color: #6c0000;
 	}
 
 	.form-element-description {
-		float: left;
+		display:inline-block;
 		padding-left: 0.25em;
+		width: 45%;
 	}
 
 	.formelement.formradioinput {
