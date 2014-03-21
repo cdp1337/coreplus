@@ -219,4 +219,13 @@ class gpg implements AuthDriverInterface{
 	public function getAuthTitle() {
 		return 'Local with GPG Authentication';
 	}
+
+	/**
+	 * Get the icon name for this Auth driver.
+	 *
+	 * @return string
+	 */
+	public function getAuthIcon(){
+		return 'lock';
+	}
 }

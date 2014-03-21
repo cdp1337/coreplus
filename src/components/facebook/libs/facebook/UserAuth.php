@@ -143,6 +143,15 @@ class UserAuth implements AuthDriverInterface {
 	}
 
 	/**
+	 * Get the icon name for this Auth driver.
+	 *
+	 * @return string
+	 */
+	public function getAuthIcon(){
+		return 'facebook';
+	}
+
+	/**
 	 * Sync the user back to the linked Facebook account.
 	 *
 	 * <h3>Usage:</h3>

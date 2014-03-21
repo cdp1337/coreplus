@@ -212,6 +212,15 @@ class datastore implements AuthDriverInterface{
 	}
 
 	/**
+	 * Get the icon name for this Auth driver.
+	 *
+	 * @return string
+	 */
+	public function getAuthIcon(){
+		return 'hdd-o';
+	}
+
+	/**
 	 * Get the password complexity requirements as HTML.
 	 *
 	 * @return string

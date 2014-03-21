@@ -195,13 +195,18 @@ abstract class Helper{
 			//var_dump($url); echo '<pre>'; debug_print_backtrace();
 			\Core::SetMessage('Registered account successfully!', 'success');
 
-			// Allow an external script to override the redirecting URL.
-			$overrideurl = \HookHandler::DispatchHook('/user/postlogin/getredirecturl');
-			if($overrideurl){
+
+			if(($overrideurl = \HookHandler::DispatchHook('/user/postlogin/getredirecturl'))){
+				// Allow an external script to override the redirecting URL.
 				$url = $overrideurl;
 			}
-			elseif(strpos(\Core::ResolveLink('/user/register2'), $url) === 0){
-				$url = '/';
+			elseif(strpos(REL_REQUEST_PATH, '/user/register') === 0){
+				// If the user came from the registration page, get the page before that.
+				$url = \Core::GetHistory(2);
+			}
+			else{
+				// else the registration link is now on the same page as the 403 handler.
+				$url = REL_REQUEST_PATH;
 			}
 
 			return $url;

@@ -23,12 +23,10 @@
 				{if $user->get('admin')}
 					<i class="icon-key" title="Admin Account"></i>
 				{/if}
-				{if $user->get('backend') == 'datastore'}
-					<i class="icon-hdd" title="Datastore Backend"></i>
-				{/if}
-				{if $user->get('backend') == 'facebook'}
-					<i class="icon-facebook" title="Facebook Backend"></i>
-				{/if}
+
+				{foreach $user->getEnabledAuthDrivers() as $auth}
+					<i class="icon-{$auth->getAuthIcon()}" title="{$auth->getAuthTitle()}"></i>
+				{/foreach}
 			</td>
 
 			{if $enableavatar}

@@ -51,4 +51,11 @@ interface AuthDriverInterface {
 	 * @return string
 	 */
 	public function getAuthTitle();
+
+	/**
+	 * Get the icon name for this Auth driver.
+	 *
+	 * @return string
+	 */
+	public function getAuthIcon();
 } 
