@@ -1,3 +1,6 @@
+{script library="jquery"}{/script}
+{script location="foot" src="js/user/admin.js"}{/script}
+
 <h3>Recent User Registrations</h3>
 
 <table class="listing">
@@ -14,7 +17,7 @@
 		<th width="100">&nbsp;</th>
 	</tr>
 	{foreach $users as $user}
-		<tr userid="{$user.id}" class="user-entry">
+		<tr data-userid="{$user.id}" class="user-entry">
 			<td>
 				{if $user->get('admin')}
 					<i class="icon-key" title="Admin Account"></i>
@@ -32,12 +35,16 @@
 
 			<td>{$user->get('email')}</td>
 
-			<td class="active-status" useractive="{$user.active}">
-				{if $user->get('active')}
-					<i class="icon-ok" title="Activated"></i>
-				{else}
-					<i class="icon-exclamation-sign" title="Not Activated"></i>
-				{/if}
+			<td class="active-status" data-useractive="{$user.active}">
+				<noscript>
+					{if $user.active == 1}
+						<i class="icon-ok" title="Activated"></i>
+					{elseif $user.active == -1}
+						<i class="icon-times" title="Deactivated"></i>
+					{else}
+						<i class="icon-exclamation-sign" title="Not Activated Yet"></i>
+					{/if}
+				</noscript>
 			</td>
 
 			<td>{date date="`$user.created`"}</td>
@@ -60,47 +67,3 @@
 	<i class="icon-view"></i>
 	<span>View All Recent Registrations</span>
 {/a}
-
-{script location="foot"}
-<script>
-
-	function update_user_table (){
-		$('.listing .user-entry').each(function(){
-			var $tr = $(this),
-					$status = $tr.find('.active-status');
-
-			if($status.attr('useractive') == '1'){
-				$status.html('<a href="#" class="user-activate-link" title="Activated"><i class="icon-ok"></i></a>');
-			}
-			else{
-				$status.html('<a href="#" class="user-activate-link" title="Not Activated"><i class="icon-exclamation-sign"></i></a>');
-			}
-		});
-	}
-
-	$(function(){
-		// Update the table first of all.
-		update_user_table();
-
-		$('.listing').on('click', '.user-activate-link', function(){
-			var $status = $(this).closest('.active-status'),
-					$tr = $(this).closest('tr');
-
-			$.ajax({
-				url: Core.ROOT_URL + 'user/activate.json',
-				data: {
-					user: $tr.attr('userid'),
-					status: ($status.attr('useractive') != '1') // It needs to be whatever it's currently not...
-				},
-				dataType: 'json',
-				type: 'post',
-				success: function(d){
-					$status.attr('useractive', d.active);
-					update_user_table();
-				}
-			});
-
-			return false;
-		});
-	});
-</script>{/script}

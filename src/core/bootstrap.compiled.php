@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 21 Mar 2014 17:24:21 -0400
+ * @compiled Fri, 21 Mar 2014 18:07:29 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4885,7 +4885,8 @@ public static $Schema = array(
 'backend' => array(
 'type' => Model::ATT_TYPE_STRING,
 'formtype' => 'hidden',
-'default' => 'datastore'
+'default' => 'datastore',
+'comment' => 'Pipe-delimited list of authentication drivers on this user'
 ),
 'password' => array(
 'type' => Model::ATT_TYPE_STRING,
@@ -4898,9 +4899,18 @@ public static $Schema = array(
 'null' => false,
 ),
 'active' => array(
-'type' => Model::ATT_TYPE_BOOL,
+'type' => Model::ATT_TYPE_ENUM,
 'default' => '1',
+'options' => [ '-1', '0', '1' ],
 'null' => false,
+'form' => [
+'title' => 'User Status',
+'options' => [
+'-1' => 'Disabled',
+'0' => 'Not Activated Yet',
+'1' => 'Active',
+],
+],
 ),
 'admin' => array(
 'type' => Model::ATT_TYPE_BOOL,

@@ -72,10 +72,10 @@
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="216525795b6b97e55e9a534e94e6798b"/>
 		<file filename="core/bootstrap_preincludes.php" md5="249d78de57e1dfb55c4b94a612206ca5"/>
-		<file filename="core/controllers/AdminController.php" md5="6683c7c9b43b49548daf95ecc2b03f41">
+		<file filename="core/controllers/AdminController.php" md5="c4e0de9c651334cd4195a352c3f55141">
 			<controller name="AdminController"/>
 		</file>
-		<file filename="core/controllers/DatastoreAuthController.php" md5="cf0c826cc03d53bb4a208b2200b3b148">
+		<file filename="core/controllers/DatastoreAuthController.php" md5="1e94588d7a02c781a0c3c2574fe50adf">
 			<controller name="DatastoreAuthController"/>
 		</file>
 		<file filename="core/controllers/DirectoryController.class.php" md5="3c272c73dcc0b73a83235e55bc7f84a3">
@@ -685,19 +685,19 @@
 		<file filename="core/libs/core/templates/backends/Smarty.php" md5="0fd28bb2765bd9e9eda9fd7a524b261e">
 			<class name="Core\Templates\Backends\Smarty"/>
 		</file>
-		<file filename="core/libs/core/user/AuthDriverInterface.php" md5="5f9e5427c352c36dd6df2efb62536f66">
+		<file filename="core/libs/core/user/AuthDriverInterface.php" md5="dbb0124932e1f0e81d1f2c2fec4c0b17">
 			<interface name="Core\User\AuthDriverInterface"/>
 		</file>
-		<file filename="core/libs/core/user/Helper.php" md5="a9d4e6e41bc1af01ecf68c672f75b283">
+		<file filename="core/libs/core/user/Helper.php" md5="395c4306481d543ae96e74ae76a1a04d">
 			<class name="Core\User\Helper"/>
 		</file>
 		<file filename="core/libs/core/user/ImportHelper.php" md5="ed3b48aa118ac2a708024b3e9860ab03">
 			<class name="Core\User\ImportHelper"/>
 		</file>
-		<file filename="core/libs/core/user/authdrivers/datastore.php" md5="1543d3df6e9e729cde6b06672c8bb094">
+		<file filename="core/libs/core/user/authdrivers/datastore.php" md5="0eab50c801d29b3f36936c2b24f782b5">
 			<class name="Core\User\AuthDrivers\datastore"/>
 		</file>
-		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="0d55ae25eaac203e32180d56f7b33dc2">
+		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="5eae590dfc2ca7f71f6ef04c9ce71b5b">
 			<class name="Core\User\AuthDrivers\gpg"/>
 		</file>
 		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="cbe5d3040cf77482bfd6f82237a29652">
@@ -1316,7 +1316,7 @@
 		<file filename="core/models/UserGroupModel.php" md5="dabdcaa62eb5987b210bbb2aef5713e8">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="core/models/UserModel.php" md5="ff9e8d1f5f11b0325eec5e8d1f4e24ba">
+		<file filename="core/models/UserModel.php" md5="1f907ac2e84f82807453b04d74ad9714">
 			<class name="UserModel"/>
 		</file>
 		<file filename="core/models/UserUserConfigModel.php" md5="017371dd135738999afac50c9f260a06">
@@ -1489,7 +1489,7 @@
 		<file filename="core/templates/includes/user/datastore_register.tpl" md5="32f2630482b423fd776cfa15b8079155"/>
 		<file filename="core/templates/includes/user/edit_create_contextgroups.tpl" md5="fe043ab28c1c3b3bd3dd0cdfeae2393f"/>
 		<file filename="core/templates/includes/user/gpg_login.tpl" md5="3fb4da412c32b90ed0efd3e04cf40854"/>
-		<file filename="core/templates/pages/admin/config.tpl" md5="fc2b84d5da04d38c3f5ffe9b27363433"/>
+		<file filename="core/templates/pages/admin/config.tpl" md5="d6fb7d5c0c064111b3c62a2419af43fa"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
 		<file filename="core/templates/pages/admin/log.tpl" md5="03788adf6fc482a8c3d46087009f003d"/>
 		<file filename="core/templates/pages/admin/pages.tpl" md5="13c61b8abcb1d3a5a943a012ae945d41"/>
@@ -1499,6 +1499,8 @@
 		<file filename="core/templates/pages/admin/widget_create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/admin/widget_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/admin/widgets.tpl" md5="e643241700b05178344b53a9fa6bab4c"/>
+		<file filename="core/templates/pages/datastoreauth/forgotpassword.tpl" md5="aefd7bdb2645b8171b9583a3fb02a83d"/>
+		<file filename="core/templates/pages/datastoreauth/password.tpl" md5="5085e6075a5978854f1a1a40ef410c30"/>
 		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
 		<file filename="core/templates/pages/error/error400.tpl" md5="9784f5fce250ac584817c80e99234016"/>
 		<file filename="core/templates/pages/error/error403.tpl" md5="9223242be43703fc7f3e6d2633626f3b"/>
@@ -1522,16 +1524,14 @@
 		<file filename="core/templates/pages/updater/repos_add2.tpl" md5="a1f63dcca556bce813ab72264d4e629c"/>
 		<file filename="core/templates/pages/updater/repos_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/updater/update.tpl" md5="dda6c77aed0d5d36ff520c02f1f9c4f9"/>
-		<file filename="core/templates/pages/user/admin.tpl" md5="9d0125264c7b4a147804d1e3a5f4da40"/>
+		<file filename="core/templates/pages/user/admin.tpl" md5="0917375b4895997964a7b1431e253b0c"/>
 		<file filename="core/templates/pages/user/edit.tpl" md5="65865c0848e8e9074b3002a86ab16c4e"/>
-		<file filename="core/templates/pages/user/forgotpassword.tpl" md5="4e44ae9de19645a4040d4fc34a5876d3"/>
 		<file filename="core/templates/pages/user/guest403.tpl" md5="26f6d42619bbfb7920264368befc3fa3"/>
 		<file filename="core/templates/pages/user/import1.tpl" md5="34d4a67fc553d310cef459dc9a288da9"/>
 		<file filename="core/templates/pages/user/import2.tpl" md5="125ea1f03cae7d6395d56c0665570e52"/>
 		<file filename="core/templates/pages/user/import3.tpl" md5="655994a8909458e93fa643349788621d"/>
 		<file filename="core/templates/pages/user/login.tpl" md5="31c4263700d4fcb745ebf55708b5c7b2"/>
 		<file filename="core/templates/pages/user/me.tpl" md5="9968689a9b26cdeb9c5eb25d10b96f11"/>
-		<file filename="core/templates/pages/user/password.tpl" md5="5085e6075a5978854f1a1a40ef410c30"/>
 		<file filename="core/templates/pages/user/register.tpl" md5="f254f666a67b9d990c29fb35ee929cc5"/>
 		<file filename="core/templates/pages/user/register2.tpl" md5="3e437be080512b86c2c9f24c1cdcaf5b"/>
 		<file filename="core/templates/pages/useractivity/details.tpl" md5="64842bd2c660f8f88ecfcbbf70f81fd9"/>
@@ -1549,7 +1549,7 @@
 		<file filename="core/templates/widgets/user/login.tpl" md5="054c8c86b99b890e6490b96d3ff0c634"/>
 		<file filename="core/templates/widgets/user/loginfull.tpl" md5="aa0a5b7785a302e8eb21e27db2b9a326"/>
 		<file filename="core/templates/widgets/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="core/templates/widgets/useradmin/newestsignups.tpl" md5="eb78b6cadfcc1ee8e1c0f4bb00f5717f"/>
+		<file filename="core/templates/widgets/useradmin/newestsignups.tpl" md5="927111c60ed2875460303108eec5a6b9"/>
 		<file filename="core/templates/widgets/userlogin/execute.tpl" md5="8b33f6adb9fdadf3a6f4e10f6722de2e"/>
 	</view>
 	<install/>
@@ -1770,6 +1770,7 @@
 		<file filename="core/assets/js/less-1.5.0.js" md5="1052db44a3a0b1bb238ad37f3ad5e51d"/>
 		<file filename="core/assets/js/less-1.5.0.min.js" md5="2de86cf4db63fa284fe5dd0d84d4fb02"/>
 		<file filename="core/assets/js/updater/index.js" md5="4900c41083ac914b4bd42873efa4718f"/>
+		<file filename="core/assets/js/user/admin.js" md5="d3f53ce195341a7d7d01ba263cbc1501"/>
 		<file filename="core/assets/js/user/login.js" md5="12a1daec1bfee08eaf0839667b903bf0"/>
 		<file filename="core/assets/js/user/user.js" md5="e5e4dc7f8ff932ce7acd330031dbeec2"/>
 	</assets>

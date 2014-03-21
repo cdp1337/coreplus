@@ -39,7 +39,8 @@ class UserModel extends Model {
 		'backend' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'formtype' => 'hidden',
-			'default' => 'datastore'
+			'default' => 'datastore',
+			'comment' => 'Pipe-delimited list of authentication drivers on this user'
 		),
 		'password' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -52,9 +53,18 @@ class UserModel extends Model {
 			'null' => false,
 		),
 		'active' => array(
-			'type' => Model::ATT_TYPE_BOOL,
+			'type' => Model::ATT_TYPE_ENUM,
 			'default' => '1',
+			'options' => [ '-1', '0', '1' ],
 			'null' => false,
+			'form' => [
+				'title' => 'User Status',
+				'options' => [
+					'-1' => 'Disabled',
+					'0' => 'Not Activated Yet',
+					'1' => 'Active',
+				],
+			],
 		),
 		'admin' => array(
 			'type' => Model::ATT_TYPE_BOOL,

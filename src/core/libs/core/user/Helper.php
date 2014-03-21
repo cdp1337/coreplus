@@ -221,7 +221,9 @@ abstract class Helper{
 
 	public static function UpdateHandler(\Form $form){
 
-		$userid      = $form->getElement('id')->get('value');
+		/** @var \UserModel $user */
+		$user        = $form->getElement('user')->get('value');
+		$userid      = $user->get('id');
 		$usermanager = \Core\user()->checkAccess('p:/user/users/manage');
 
 		// Only allow this if the user is either the same user or has the user manage permission.
@@ -229,9 +231,6 @@ abstract class Helper{
 			\Core::SetMessage('Insufficient Permissions', 'error');
 			return false;
 		}
-
-		/** @var \UserModel $user */
-		$user = \UserModel::Construct($userid);
 
 		if(!$user->exists()){
 			\Core::SetMessage('User not found', 'error');
@@ -254,10 +253,21 @@ abstract class Helper{
 			return false;
 		}
 
+		if($userisactive == 1 && $user->get('active') == 0){
+			// User was set from active to inactive.
+			// Instead of setting to a new account, set to deactivated.
+			$user->set('active', '-1');
+		}
+		elseif($userisactive == -1 && $user->get('active') == 0){
+			// User was deactivated before, reset back to that.
+			// This is because the active form element is simply an on/off checkbox.
+			$user->set('active', '-1');
+		}
+
 		$user->save();
 
 
-		if(!$userisactive && $user->get('active')){
+		if($userisactive == 0 && $user->get('active') == 1){
 			// If the user wasn't active before, but is now....
 			// Send an activation notice email to the user.
 			try{
@@ -470,7 +480,7 @@ abstract class Helper{
 				array(
 					'name' => 'active',
 					'title' => 'Active',
-					'checked' => $user->get('active'),
+					'checked' => ($user->get('active') == 1),
 				)
 			);
 
