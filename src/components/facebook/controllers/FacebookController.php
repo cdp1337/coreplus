@@ -134,6 +134,12 @@ class FacebookController extends Controller_2_1{
 				return null;
 			}
 
+			if(!$user->isActive()){
+				Core::SetMessage('Your account is not active!', 'error');
+				\Core\go_back();
+				return null;
+			}
+
 			// Well yay the user is available and authencation driver is ready!
 			$auth->syncUser($_POST['access-token']);
 

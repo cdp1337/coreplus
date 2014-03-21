@@ -480,6 +480,14 @@ class DatastoreAuthController extends Controller_2_1 {
 			$e->setError('Your account is not active yet.');
 			return false;
 		}
+		elseif($u->get('active') == -1){
+			// The model provides a quick cut-off for active/inactive users.
+			// This is the control managed with in the admin.
+			$logmsg = 'Failed Login. User tried to login after account deactivation.' . "\n" . 'User: ' . $u->get('email') . "\n";
+			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg, null, $u->get('id'));
+			$e->setError('Your account has been deactivated.');
+			return false;
+		}
 
 		try{
 			/** @var \Core\User\AuthDrivers\datastore $auth */

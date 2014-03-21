@@ -114,6 +114,11 @@ class UserController extends Controller_2_1{
 			return View::ERROR_ACCESSDENIED;
 		}
 
+		if(!$user->isActive()){
+			Core::SetMessage('Your account is not active!', 'error');
+			return View::ERROR_ACCESSDENIED;
+		}
+
 		$form = \Core\User\Helper::GetEditForm($user);
 
 		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
@@ -342,11 +347,6 @@ class UserController extends Controller_2_1{
 
 	public function logout(){
 		$view = $this->getView();
-
-		// Set the access permissions for this page as authenticated-only.
-		if(!$view->setAccess('g:authenticated;g:!admin')){
-			return View::ERROR_ACCESSDENIED;
-		}
 
 		Session::DestroySession();
 		\core\redirect('/');

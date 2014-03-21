@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 21 Mar 2014 18:07:29 -0400
+ * @compiled Fri, 21 Mar 2014 18:23:11 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -5190,6 +5190,17 @@ return 'Requested email is already registered';
 }
 return true;
 }
+public function isActive(){
+if(!$this->exists()){
+return false;
+}
+elseif($this->get('active') == 1){
+return true;
+}
+else{
+return false;
+}
+}
 public function set($k, $v) {
 if(array_key_exists($k, $this->_data)){
 return parent::set($k, $v);
@@ -5294,6 +5305,7 @@ $default  = false;
 $loggedin = $this->exists();
 $isadmin  = $this->get('admin');
 $cache    =& $this->_accessstringchecks[$findkey];
+$isactive = $this->isActive();
 $accessstring = strtolower($accessstring);
 if($isadmin && strpos($accessstring, 'g:!admin') === false){
 $cache = true;
@@ -5331,7 +5343,7 @@ return $ret;
 }
 }
 elseif($type == 'g' && $dat == 'authenticated'){
-if($loggedin){
+if($loggedin && $isactive){
 $cache = $ret;
 return $ret;
 }
@@ -5367,6 +5379,9 @@ $cache = $default;
 return $default;
 }
 protected function _getResolvedPermissions($context = null){
+if(!$this->isActive()){
+return [];
+}
 $findkey = $this->_getContextKey($context);
 if($this->_resolvedpermissions === null){
 $this->_resolvedpermissions = array();

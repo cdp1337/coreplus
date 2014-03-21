@@ -558,6 +558,15 @@ class UserModel extends Model {
 		return implode(' ', $strs);
 	}
 
+	/**
+	 * Validate a new email for this user account.
+	 *
+	 * Emails must be unique on the system and valid.  This method checks both.
+	 *
+	 * @param string $email The email to validate.
+	 *
+	 * @return bool|string True if good, a string if bad.
+	 */
 	public function validateEmail($email){
 		if($email == $this->get('email')){
 			// If the email is currently the user's email, then it's allowed.
@@ -577,6 +586,23 @@ class UserModel extends Model {
 
 		// Must be ok!
 		return true;
+	}
+
+	/**
+	 * Simple check to see if this user is currently activated on the system.
+	 *
+	 * @return bool
+	 */
+	public function isActive(){
+		if(!$this->exists()){
+			return false;
+		}
+		elseif($this->get('active') == 1){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 
@@ -803,6 +829,7 @@ class UserModel extends Model {
 		$loggedin = $this->exists();
 		$isadmin  = $this->get('admin');
 		$cache    =& $this->_accessstringchecks[$findkey];
+		$isactive = $this->isActive();
 
 		// All checks are case insensitive
 		$accessstring = strtolower($accessstring);
@@ -860,7 +887,7 @@ class UserModel extends Model {
 				}
 			}
 			elseif($type == 'g' && $dat == 'authenticated'){
-				if($loggedin){
+				if($loggedin && $isactive){
 					$cache = $ret;
 					return $ret;
 				}
@@ -906,6 +933,11 @@ class UserModel extends Model {
 	 * @return array
 	 */
 	protected function _getResolvedPermissions($context = null){
+
+		if(!$this->isActive()){
+			// Inactive users have no permissions.
+			return [];
+		}
 
 		$findkey = $this->_getContextKey($context);
 
