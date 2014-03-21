@@ -52,8 +52,9 @@ class UserModel extends Model {
 			'null' => false,
 		),
 		'active' => array(
-			'type' => Model::ATT_TYPE_BOOL,
+			'type' => Model::ATT_TYPE_ENUM,
 			'default' => '1',
+			'options' => [ '-1', '0', '1' ],
 			'null' => false,
 		),
 		'admin' => array(

@@ -73,6 +73,12 @@ abstract class UserHelper{
 			$e->setError('Your account is not active yet.');
 			return false;
 		}
+		if($u->get('active') == -1){
+			$logmsg = 'User tried to login after account deactivation' . "\n" . 'User: ' . $u->get('email') . "\n";
+			SecurityLogModel::Log('/user/login', 'fail', null, $logmsg);
+			$e->setError('Your account has been deactivated!');
+			return false;
+		}
 
 		// A few exceptions for backends.
 		if($u instanceof User_facebook_Backend){
@@ -352,10 +358,21 @@ abstract class UserHelper{
 			return false;
 		}
 
+		if($userisactive == 1 && $user->get('active') == 0){
+			// User was set from active to inactive.
+			// Instead of setting to a new account, set to deactivated.
+			$user->set('active', '-1');
+		}
+		elseif($userisactive == -1 && $user->get('active') == 0){
+			// User was deactivated before, reset back to that.
+			// This is because the active form element is simply an on/off checkbox.
+			$user->set('active', '-1');
+		}
+
 		$user->save();
 
 
-		if(!$userisactive && $user->get('active')){
+		if($userisactive == 0 && $user->get('active') == 1){
 			// If the user wasn't active before, but is now....
 			// Send an activation notice email to the user.
 			try{

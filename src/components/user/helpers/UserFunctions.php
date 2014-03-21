@@ -83,7 +83,7 @@ function get_form($user = null){
 			array(
 				'name' => 'active',
 				'title' => 'Active',
-				'checked' => $user->get('active'),
+				'checked' => ($user->get('active') == 1),
 			)
 		);
 

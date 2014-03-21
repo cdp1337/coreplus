@@ -22,7 +22,7 @@
 		<formelement name="access" class="FormAccessStringInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="98d44887b748a2bbeb22bc3b243740f7"/>
+		<file filename="CHANGELOG" md5="d86b0e865d8c231f04e88b94b519f51b"/>
 		<file filename="User.class.php" md5="57f400af40ad681efe0ae0ae5dcf8548">
 			<class name="User"/>
 			<class name="UserException"/>
@@ -57,8 +57,8 @@
 		<file filename="helpers/ImportHelper.php" md5="b41f16905ed807095df915d7a98f9aab">
 			<class name="User\ImportHelper"/>
 		</file>
-		<file filename="helpers/UserFunctions.php" md5="a7a13c451288acfa82b18c7a2ad75836"/>
-		<file filename="helpers/UserHelper.class.php" md5="2f6de13bfffa326df9063de2f642b2a8">
+		<file filename="helpers/UserFunctions.php" md5="961ba82f194b276827eb31f58eac1d78"/>
+		<file filename="helpers/UserHelper.class.php" md5="08e23b835d3803029311ec903885e8cc">
 			<class name="UserHelper"/>
 		</file>
 		<file filename="helpers/smarty-plugins/block.permission.php" md5="b9a8557fff875c431a53172fcf0ffa36"/>
@@ -72,7 +72,7 @@
 		<file filename="models/UserGroupModel.php" md5="ae481e6e254d45794192725314b5d360">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="models/UserModel.php" md5="402356d29752635472e248f3e7428479">
+		<file filename="models/UserModel.php" md5="e9a61a50e621107b4d8d3cde1381635a">
 			<class name="UserModel"/>
 		</file>
 		<file filename="models/UserUserConfigModel.php" md5="4effee3eafd958fa65ce9a8204767258">
@@ -108,14 +108,14 @@
 		<file filename="templates/pages/useradmin/import1.tpl" md5="34d4a67fc553d310cef459dc9a288da9"/>
 		<file filename="templates/pages/useradmin/import2.tpl" md5="bb67d4446d420094507d43e1b4d21390"/>
 		<file filename="templates/pages/useradmin/import3.tpl" md5="655994a8909458e93fa643349788621d"/>
-		<file filename="templates/pages/useradmin/index.tpl" md5="1b4464d4d28fd465b9df35d9fa77821b"/>
+		<file filename="templates/pages/useradmin/index.tpl" md5="17c48035205cc409d725f78c0eaf2508"/>
 		<file filename="templates/pages/userconfig/admin.tpl" md5="b052123c686d1e46bb6275fbed19eba9"/>
 		<file filename="templates/pages/usergroupadmin/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/usergroupadmin/index.tpl" md5="a5f88d1e78a024a0b0af9388e3a9206f"/>
 		<file filename="templates/pages/usergroupadmin/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/user/login.tpl" md5="054c8c86b99b890e6490b96d3ff0c634"/>
 		<file filename="templates/widgets/user/register.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/widgets/useradmin/newestsignups.tpl" md5="f2b204a7f171da97eab32ccca3cab2c3"/>
+		<file filename="templates/widgets/useradmin/newestsignups.tpl" md5="951e0e91f4c5e933fd12fdac5876159f"/>
 		<file filename="templates/widgets/userlogin/execute.tpl" md5="8b33f6adb9fdadf3a6f4e10f6722de2e"/>
 	</view>
 	<pages>
@@ -157,6 +157,7 @@
 	</permissions>
 	<assets>
 		<file filename="assets/css/user.css" md5="091b04c3f1466fbb00a32a7a51fc54cf"/>
+		<file filename="assets/js/user/admin.js" md5="3efaafb10cb8da72adf9334f0c0907a3"/>
 		<file filename="assets/js/user/login.js" md5="12a1daec1bfee08eaf0839667b903bf0"/>
 		<file filename="assets/js/user/user.js" md5="e5e4dc7f8ff932ce7acd330031dbeec2"/>
 	</assets>

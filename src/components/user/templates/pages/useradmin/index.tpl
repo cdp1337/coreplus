@@ -1,4 +1,5 @@
 {script library="jquery"}{/script}
+{script location="foot" src="js/user/admin.js"}{/script}
 
 {$filters->render()}
 
@@ -18,7 +19,7 @@
 		<th width="100">&nbsp;</th>
 	</tr>
 	{foreach $users as $user}
-		<tr userid="{$user.id}" class="user-entry">
+		<tr data-userid="{$user.id}" class="user-entry">
 			<td>
 				{if $user->get('admin')}
 					<i class="icon-key" title="Admin Account"></i>
@@ -39,7 +40,7 @@
 
 			<td>{$user->get('email')}</td>
 
-			<td class="active-status" useractive="{$user.active}">
+			<td class="active-status" data-useractive="{$user.active}">
 				<noscript>
 					{if $user->get('active')}
 						<i class="icon-ok" title="Activated"></i>
@@ -66,44 +67,3 @@
 	{/foreach}
 </table>
 {$filters->pagination()}
-
-<script>
-
-	function update_user_table (){
-		$('.listing .user-entry').each(function(){
-			var $tr = $(this),
-				$status = $tr.find('.active-status');
-
-			if($status.attr('useractive') == '1'){
-				$status.html('<a href="#" class="user-activate-link" title="Activated"><i class="icon-ok"></i></a>');
-			}
-			else{
-				$status.html('<a href="#" class="user-activate-link" title="Not Activated"><i class="icon-exclamation-sign"></i></a>');
-			}
-		});
-	}
-
-	$(function(){
-		// Update the table first of all.
-		update_user_table();
-
-		$('.listing').on('click', '.user-activate-link', function(){
-			var $status = $(this).closest('.active-status'),
-				$tr = $(this).closest('tr');
-
-			$.ajax({
-				url: Core.ROOT_URL + 'useradmin/activate.json',
-				data: {
-				      user: $tr.attr('userid'),
-				      status: ($status.attr('useractive') != '1') // It needs to be whatever it's currently not...
-				},
-				dataType: 'json',
-				type: 'post',
-				success: function(d){
-					$status.attr('useractive', d.active);
-					update_user_table();
-				}
-			});
-		});
-	});
-</script>
