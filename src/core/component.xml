@@ -42,7 +42,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
 		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
-		<file filename="core/CHANGELOG" md5="8ecab2f590ab53825ade2d379fd8f7e9"/>
+		<file filename="core/CHANGELOG" md5="7ecd02c5e5840985e354db8708a3add7"/>
 		<file filename="core/bootstrap.php" md5="6885762e3fd11610ea22aceffd3375ff"/>
 		<file filename="core/bootstrap_postincludes.php" md5="129d5a6cab56e728c99eb116c2786051"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -625,7 +625,7 @@
 		<file filename="core/libs/core/filestore/contents/ContentZIP.php" md5="f5bdfebfd3dffcccc13505726558efe3">
 			<class name="Core\Filestore\Contents\ContentZIP"/>
 		</file>
-		<file filename="core/libs/core/filestore/functions.php" md5="6aa0163d59efb3898336655d5cc98de9"/>
+		<file filename="core/libs/core/filestore/functions.php" md5="b782509cf6c74dc53d3af7c14b11cd16"/>
 		<file filename="core/libs/core/licenses/Factory.php" md5="ccf611bedbac87225425bb84ac08a0ab">
 			<class name="Core\Licenses\Factory"/>
 		</file>
@@ -1416,7 +1416,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="84ebe7fb8068e101e7fda5b75889d447">
+		<file filename="core/models/PageModel.class.php" md5="1eecd14cffa57140a436c441a27bdc90">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="3791a151027c417603c48e3a3c59a4d3">
@@ -1454,7 +1454,7 @@
 		<file filename="files/private/tests/ivak_TV_Test_Screen.png" md5="e23ff09f0d6d5c8f9f14877264c251b7"/>
 		<file filename="htaccess.ant" md5="03a971bd1f755da122d8f8f458b840cf"/>
 		<file filename="htaccess.ex" md5="5b9477efc4add163473fe0ab8939bede"/>
-		<file filename="index.php" md5="5a82a0099fd67a28a28a749e4c7f4d3b"/>
+		<file filename="index.php" md5="6d087b205ab2a4bda77c3a7eab7ca1c3"/>
 		<file filename="install/InstallPage.class.php" md5="908d4058af1a52767fc85ce03a5f0de3">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1499,9 +1499,21 @@
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 		<file filename="install/utilities.php" md5="19b6e7d1483e8ec8e0a6fad9932ce850"/>
-		<file filename="logs/error.log" md5="f9a2dcbc32595ecfae0ddf9ba569ceee"/>
-		<file filename="logs/info.log" md5="e06c9f902182722c0235e751ddd1c2a6"/>
-		<file filename="logs/unknown.log" md5="b13c3192da8d024eeb9136a071c4a2ef"/>
+		<file filename="logs/error.log" md5="77b240bfa67dcd6d3ca3f90bea5cc993"/>
+		<file filename="logs/error.log.201401050010.gz" md5="e843508fdb756c6bdd6073faea1736c7"/>
+		<file filename="logs/error.log.201401120010.gz" md5="cc1bf0fbb7cb6ec6ce264760d5ffc33f"/>
+		<file filename="logs/error.log.201401190010.gz" md5="05a59173d7b783801821fdcceb4e222e"/>
+		<file filename="logs/error.log.201402090045.gz" md5="2b32aacbf9638f1ed64804d89dc0e9a2"/>
+		<file filename="logs/error.log.201403160010.gz" md5="959af58b93e049b7db2804fd9744d22c"/>
+		<file filename="logs/info.log" md5="da850eaa1d06a761f28b6e131ae1268d"/>
+		<file filename="logs/info.log.201401050010.gz" md5="8801d575836ad929d9e49f57eaa64e8d"/>
+		<file filename="logs/info.log.201401120010.gz" md5="c68d7ab8d8033a51c57234947763f989"/>
+		<file filename="logs/info.log.201401190010.gz" md5="b7441fcbe56c30c95d6cd1ab8f10a70a"/>
+		<file filename="logs/info.log.201402090045.gz" md5="30ab9838317ca7f8f7f0e1afc4ffa994"/>
+		<file filename="logs/info.log.201403160010.gz" md5="c2d9d2f1d9d1819d657a132280fb4b4e"/>
+		<file filename="logs/security.log" md5="49fe404156df17bc8030af9aa7e0a8a9"/>
+		<file filename="logs/security.log.201402090045.gz" md5="13fa9d10d06181c970c417686da58a68"/>
+		<file filename="logs/security.log.201403160010.gz" md5="1d18a9aadd30d66318878116ac811f7a"/>
 	</files>
 	<pages>
 		<page baseurl="/admin" admin="1" access="g:admin" title="Administration"/>
@@ -1550,7 +1562,7 @@
 		<file filename="core/templates/forms/groups/default.tpl" md5="edbebf4924beac32a9f98f97cbfa23d2"/>
 		<file filename="core/templates/forms/groups/pageinsertables.tpl" md5="be0fed93de5310e26a207ffcecd15547"/>
 		<file filename="core/templates/forms/groups/pagemetas.tpl" md5="f8def8d34a18483bb59dddba141e5645"/>
-		<file filename="core/templates/forms/groups/tabs.tpl" md5="c3cba7b0ef3bb0af68e03b048495bc4b"/>
+		<file filename="core/templates/forms/groups/tabs.tpl" md5="7fa8235d668d17b2f1514a7e009aea4a"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="645d3b7a407c513622e9f6bc2590b7c9"/>
 		<file filename="core/templates/pages/admin/config.tpl" md5="e24bea097690df9b0a70f074f4803371"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>

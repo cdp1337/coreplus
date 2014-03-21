@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 07 Nov 2013 14:18:30 -0500
+ * @compiled Fri, 21 Mar 2014 18:55:05 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3052,6 +3052,7 @@ $this->_view->setBreadcrumbs($this->getParentTree());
 }
 public static function SplitBaseURL($base) {
 if (!$base) return null;
+$ctype = 'text/html';
 self::_LookupUrl(null);
 $base = strtolower($base);
 if (isset(self::$_RewriteCache[$base])) {
@@ -3127,6 +3128,13 @@ $base = substr($base, strlen($method) + 1);
 else {
 $method = 'Index';
 }
+if(strpos($method, '.') !== false){
+$ctype = \Core\Filestore\extension_to_mimetype(substr($method, strpos($method, '.') + 1));
+if(!$ctype){
+$ctype = 'text/html';
+}
+$method = substr($method, 0, strpos($method, '.'));
+}
 if (!method_exists($controller, $method)) {
 return null;
 }
@@ -3136,6 +3144,9 @@ $baseurl = '/' . ((strpos($controller, 'Controller') == strlen($controller) - 10
 if (!($method == 'Index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
 $baseurl .= ($params) ? '/' . implode('/', $params) : '';
 $rewriteurl = self::_LookupReverseUrl($baseurl);
+if($ctype != 'text/html'){
+$rewriteurl .= '.' . \Core\Filestore\mimetype_to_extension($ctype);
+}
 if ($args) {
 $rewriteurl .= '?' . $argstring;
 if ($params) $params = array_merge($params, $args);
@@ -3145,7 +3156,9 @@ return array('controller' => $controller,
 'method' => $method,
 'parameters' => $params,
 'baseurl' => $baseurl,
-'rewriteurl' => $rewriteurl);
+'rewriteurl' => $rewriteurl,
+'ctype'      => $ctype,
+);
 }
 private static function _LookupUrl($url = null) {
 if (self::$_RewriteCache === null) {
@@ -6187,6 +6200,36 @@ case 'xml':
 return 'application/xml';
 default:
 return 'application/octet-stream';
+}
+}
+function mimetype_to_extension($mimetype){
+switch($mimetype){
+case 'application/atom+xml':
+return 'atom';
+case 'text/csv':
+return 'csv';
+case 'text/css':
+return 'css';
+case 'text/html':
+return 'html';
+case 'text/calendar':
+return 'ics';
+case 'text/javascript':
+return 'js';
+case 'application/json':
+return 'json';
+case 'font/otf':
+return 'otf';
+case 'application/rss+xml':
+return 'rss';
+case 'font/ttf':
+return 'ttf';
+case 'application/xhtml+xml':
+return 'xhtml';
+case 'application/xml':
+return 'xml';
+default:
+return '';
 }
 }
 } // ENDING NAMESPACE Core\Filestore
