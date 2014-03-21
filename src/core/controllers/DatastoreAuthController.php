@@ -570,7 +570,7 @@ class DatastoreAuthController extends Controller_2_1 {
 		else $url = REL_REQUEST_PATH;
 
 		// Well, record this too!
-		\SystemLogModel::LogSecurityEvent('/user/login', 'Login successful', null, $u->get('id'));
+		\SystemLogModel::LogSecurityEvent('/user/login', 'Login successful (via password)', null, $u->get('id'));
 
 		// yay...
 		$u->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
@@ -645,7 +645,7 @@ class DatastoreAuthController extends Controller_2_1 {
 				'link' => '/datastoreauth/disable/' . $user->get('id'),
 				'title' => 'Disable Password Login',
 				'icon' => 'ban',
-				'confirm' => 'Are you sure you want to remove password-based logins?  (They can be re-enabled if requested.)',
+				'confirm' => 'Are you sure you want to disable password-based logins?  (They can be re-enabled if requested.)',
 			];
 		}
 
