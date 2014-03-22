@@ -1,3 +1,12 @@
+Content 2.1.0
+
+	* New interface for managing Cache systems.
+	* Better integration for blog-style content pages.
+	* Switch the permission key name for content management.
+	* Remove the <h2> tag on default content pages.
+	* Correct the cached access permission for the content admin page.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 22 Mar 2014 14:55:39 -0400
+
 Content 2.0.4
 
 	* Extraneous "?>" on a file.
