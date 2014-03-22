@@ -1,3 +1,11 @@
+jQuery-File-Upload 8.5.0~core2
+
+	* [Bug] Fix the trailing slash issue on multi file uploads.
+	* [Bug] jquery file upload was a bit greedy with input selection... not anymore! Only
+	  jquery-file-upload inputs are watched instead of all file inputs.
+	* [Feature] Completely overhaul the form styling and templates on Core.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 22 Mar 2014 14:59:21 -0400
+
 jQuery-File-Upload 8.5.0~core1
 
 	* [Feature] #385 - Sanitize filenames for files uploaded

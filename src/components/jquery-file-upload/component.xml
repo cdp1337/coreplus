@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="8.5.0~core1" name="jQuery-File-Upload" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="8.5.0~core2" name="jQuery-File-Upload" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.5.9"/>
+		<require name="core" type="component" version="3.1.0" operation="ge"/>
 		<require name="JQuery" type="library" version="1.6" operation="ge"/>
 		<require name="jqueryui" type="library" version="1.8" operation="ge"/>
 	</requires>
@@ -16,6 +16,7 @@
 		<upgrade from="8.1.0~core1" to="8.1.0~core2"/>
 		<upgrade from="8.1.0~core2" to="8.1.0~core3"/>
 		<upgrade from="8.1.0~core3" to="8.5.0~core1"/>
+		<upgrade from="8.5.0~core1" to="8.5.0~core2"/>
 	</upgrades>
 	<description>
 		File Upload widget with multiple file selection, drag and drop support, progress bar, validation and preview images,
@@ -27,12 +28,12 @@
 		<formelement name="multifile" class="MultiFileInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="e36e1896ee118f7ee460140979c70d59"/>
+		<file filename="CHANGELOG" md5="5d5530d0bbc294e42d62ea0b2c3872f7"/>
 		<file filename="README.md" md5="cb22a03a2f5fc8aaf6dcf5a9c2180a66"/>
-		<file filename="classes/MultiFileInput.class.php" md5="fa63cb2293c48085befc32bca8b995a0">
+		<file filename="classes/MultiFileInput.class.php" md5="587c5d2fde3f3222af605245bca53e50">
 			<class name="MultiFileInput"/>
 		</file>
-		<file filename="controllers/JQueryFileUploadController.php" md5="ccf4e0721dcf78e952c0c86a5eea16eb">
+		<file filename="controllers/JQueryFileUploadController.php" md5="23c66351a656e3fcf4ce749b3630f5b9">
 			<controller name="JQueryFileUploadController"/>
 		</file>
 	</files>
@@ -61,7 +62,7 @@
 		<file filename="assets/libs/jquery-file-upload/js/vendor/jquery.ui.widget.js" md5="06fca9ef95fcd664b53fd10681b94a5d"/>
 	</assets>
 	<view searchdir="templates">
-		<file filename="templates/forms/elements/multifileinput.tpl" md5="a54f04eec00935831509e8547700a7fa"/>
+		<file filename="templates/forms/elements/multifileinput.tpl" md5="87944a23eadb9a72580de9c0cb75156c"/>
 	</view>
 </component>
 
