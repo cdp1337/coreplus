@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.0" name="Google" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.1" name="Google" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.0.0" operation="ge"/>
+		<require name="core" type="component" version="3.1.0" operation="ge"/>
 	</requires>
 	<provides>
 		<provide version="3.12" name="GoogleMaps" type="library"/>
@@ -26,20 +26,20 @@
 		<page baseurl="/google/configure" title="Google Keys and Apps" group="Configure" access="g:admin" admin="1" selectable="0"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="142ad141f71c93ded7368fe25e0098e5"/>
-		<file filename="controllers/GoogleController.php" md5="ec21c9facca00bb7a8c880f0668a8c0a">
+		<file filename="CHANGELOG" md5="dba887e5515dca611a74148127c4bae2"/>
+		<file filename="controllers/GoogleController.php" md5="361e33652dcd65d44c57e4d846a9cd33">
 			<controller name="GoogleController"/>
 		</file>
-		<file filename="libs/google/CSE/Helper.php" md5="192a1adec83aba5282fc4b159d193123">
+		<file filename="libs/google/CSE/Helper.php" md5="dc2a7df940960944b36541357309b1c6">
 			<class name="Google\CSE\Helper"/>
 		</file>
-		<file filename="libs/google/analytics/Helper.php" md5="c7453108f4610ca3dc1d2becf535e366">
+		<file filename="libs/google/analytics/Helper.php" md5="38d078146087d71564af262d2478cf4a">
 			<class name="Google\Analytics\Helper"/>
 		</file>
-		<file filename="libs/google/maps/GeocodeRequest.php" md5="7371ed72ba22d010d5c0996cc0c12458">
+		<file filename="libs/google/maps/GeocodeRequest.php" md5="29b8a83d0e136b1dd5027c247b3568f2">
 			<class name="Google\Maps\GeocodeRequest"/>
 		</file>
-		<file filename="libs/google/maps/GeocodeResponse.php" md5="9ed866d771e9072b43060296b62a1cad">
+		<file filename="libs/google/maps/GeocodeResponse.php" md5="86c7fd0d5cc93f30e288e76934b3bcd4">
 			<class name="Google\Maps\GeocodeResponse"/>
 		</file>
 	</files>
@@ -55,6 +55,7 @@
 		<upgrade from="1.1.0" to="1.2.0"/>
 		<upgrade from="1.2.0" to="1.2.1"/>
 		<upgrade from="1.2.1" to="1.3.0"/>
+		<upgrade from="1.3.0" to="1.3.1"/>
 	</upgrades>
 	<view>
 		<file filename="templates/pages/google/configure.tpl" md5="a3fc7915404242b727080991ab014cda"/>
