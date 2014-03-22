@@ -1865,7 +1865,7 @@
 			<php file="core/upgrades/270_to_280_user_avatar_paths.php"/>
 		</upgrade>
 		<upgrade from="2.8.0" to="3.0.0"/>
-		<upgrade from="next">
+		<upgrade from="3.0.0" to="3.1.0">
 			<dataset action="update" table="widget_instance">
 				<datasetset key="baseurl">/user/login</datasetset>
 				<datasetwhere>baseurl = /UserWidget/Login</datasetwhere>
@@ -1882,7 +1882,6 @@
 			</dataset>
 			<php file="core/upgrades/next_page_published.php"/>
 		</upgrade>
-		<upgrade from="3.0.0" to="3.1.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

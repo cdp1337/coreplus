@@ -894,7 +894,12 @@ class Component_2_1 {
 			$upg->setAttribute('from', $this->_version);
 			$upg->setAttribute('to', $vers);
 		}
-		elseif (($upg = $this->_xmlloader->getElement('/upgrades/upgrade[@from="next"][@to="next"]', false))) {
+		elseif (($upg = $this->_xmlloader->getElement('/upgrades/upgrade[@from="next"]', false))) {
+			// Add the current and dest. attribute to it.
+			$upg->setAttribute('from', $this->_version);
+			$upg->setAttribute('to', $vers);
+		}
+		elseif (($upg = $this->_xmlloader->getElement('/upgrades/upgrade[@to="next"]', false))) {
 			// Add the current and dest. attribute to it.
 			$upg->setAttribute('from', $this->_version);
 			$upg->setAttribute('to', $vers);
