@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.12~core3" name="CodeMirror" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.12~core4" name="CodeMirror" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.0.0" operation="ge"/>
+		<require name="core" type="component" version="3.1.0" operation="ge"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="e8f19aa54e63005907429bb3264d333f"/>
-		<file filename="classes/codemirror/Utils.php" md5="df0b32d524d4c7de0323428ef2b3565a">
+		<file filename="CHANGELOG" md5="8d92a9e498cebbc7523c95716c36355b"/>
+		<file filename="classes/codemirror/Utils.php" md5="936ab2dae5dd5fb01582b986aaf85180">
 			<class name="CodeMirror\Utils"/>
 		</file>
 	</files>
@@ -30,6 +30,7 @@
 	<upgrades>
 		<upgrade from="3.12~core1" to="3.12~core2"/>
 		<upgrade from="3.12~core2" to="3.12~core3"/>
+		<upgrade from="3.12~core3" to="3.12~core4"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/codemirror.css" md5="e80f3d7349a4563458e8088bce1ae39e"/>

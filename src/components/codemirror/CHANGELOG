@@ -1,3 +1,8 @@
+CodeMirror 3.12~core4
+
+	* New codemirror mode, "sql".
+	-- Charlie Powell <charlie@eval.bz>  Sat, 22 Mar 2014 14:54:54 -0400
+
 CodeMirror 3.12~core3
 
 	* Bump the copyright date to 2014.
