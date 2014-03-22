@@ -1,3 +1,11 @@
+JQuery-Full 1.11.0~core1
+
+	* minimalect shouldn't hide the default option on selects
+	* Fancy checkboxes and radios. Fully accessible and degrades nicely
+	* compile/component fun.
+	* Upgrade jQueryUI to 1.10.4 and jQuery to 1.11.0.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 22 Mar 2014 15:00:20 -0400
+
 JQuery-Full 1.10.2~core4
 
 	* Bump copyright date to 2014.
