@@ -15,7 +15,8 @@
 $secfac = new ModelFactory('SecurityLogModel');
 $stream = new \Core\Datamodel\DatasetStream($secfac->getDataset());
 while($row = $stream->getRecord()){
-	$model = SystemLogModel::Construct($row['id']);
+	//$model = SystemLogModel::Construct($row['id']);
+	$model = new SystemLogModel($row['id']);
 
 	// Standard keys
 	$model->setFromArray(
