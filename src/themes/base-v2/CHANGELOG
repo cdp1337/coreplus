@@ -1,3 +1,31 @@
+Theme/Base V2 1.4.0
+
+	* [Bug] fixed horizontal form description position
+	* [Bug] Fix the message-note class, (had an extra character in the class declaration), and muted the
+	  colours of some gradients slightly.
+	* Minor tweak to the form-grid layout.
+	* tweaked fancy form element styles a bit
+	* Split out the listing styles and reduce the font-size slightly.
+	* Add styles for the new Page systems in Core and starting to segment actual page styles into their
+	  own files.
+	* Re-add the overflow:hidden for page content.
+	* Compile Core and Base-V2.
+	* Minor changes to the base-v2 colors for the body and listing tables.
+	* New SASS-based gradients for the optional gradients stylesheet in base-V2.
+	* minimalect shouldn't hide the default option on selects
+	* Fancy checkboxes and radios. Fully accessible and degrades nicely
+	* form elements tweak for radio/checkbox background color
+	* form element background tweak for option groups (checkboxes or radio)
+	* slide animation tweak for debug section
+	* more fancy debug tweaks, removed useless styles wrapped newline blocks with a span so jquery
+	  show/hide works on all browsers, not just webkit
+	* fancy debug tweaks, removed useless styles
+	* fancy debug tweaks....using the already created collapsible fieldset code :)
+	* fancy debug tweaks
+	* Completely overhaul the form styling and templates on Core.
+	* Game of Life 404 missing asset
+	-- Charlie Powell <charlie@eval.bz>  Sat, 22 Mar 2014 15:05:05 -0400
+
 Theme/Base V2 1.3.0
 
 	* [Bug] Fixing coding standards / review issues :)
