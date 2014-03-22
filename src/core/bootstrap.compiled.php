@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 21 Mar 2014 18:23:11 -0400
+ * @compiled Sat, 22 Mar 2014 14:34:39 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -7216,6 +7216,10 @@ return $this->_version;
 public function setVersion($vers) {
 if ($vers == $this->_version) return;
 if (($upg = $this->_xmlloader->getElement('/upgrades/upgrade[@from=""][@to=""]', false))) {
+$upg->setAttribute('from', $this->_version);
+$upg->setAttribute('to', $vers);
+}
+elseif (($upg = $this->_xmlloader->getElement('/upgrades/upgrade[@from="next"][@to="next"]', false))) {
 $upg->setAttribute('from', $this->_version);
 $upg->setAttribute('to', $vers);
 }
