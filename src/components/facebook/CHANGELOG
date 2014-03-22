@@ -1,3 +1,14 @@
+Facebook 3.2.3~core2
+
+	* [Security] Use the new systemlog instead of security log and some minor documentation updates.
+	* Better handling of inactive and deactivated users.
+	* New support for authentication icons.
+	* Facebook is updated to use the new Core authentication features.
+	* Extension on the UserAuth API, renderLogin; add the ability to change Form options on execution of
+	  the method.
+	* Some auth-driver compatibility fixes for Facebook.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 22 Mar 2014 14:56:46 -0400
+
 Facebook 3.2.3~core1
 
 	* Update to newest version of the Facebook API from upstream.
