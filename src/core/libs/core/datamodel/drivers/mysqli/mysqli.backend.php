@@ -584,29 +584,37 @@ class mysqli_backend implements BackendInterface {
 			}
 		}
 
-		$debug = debug_backtrace();
-		$callinglocation = array();
-		$count = 0;
-		$totalcount = 0;
-		foreach($debug as $d){
-			$class = (isset($d['class'])) ? $d['class'] : null;
-			++$totalcount;
+		if(FULL_DEBUG || (DEVELOPMENT_MODE && $this->_reads+$this->_writes < 40)){
+			// By skipping this in production, memory usage is cut by nearly 50% on über DB heavy pages!
+			// (This occurs on pages that have more than 10k queries.
+			$debug = debug_backtrace();
+			$callinglocation = array();
+			$count = 0;
+			$totalcount = 0;
+			foreach($debug as $d){
+				$class = (isset($d['class'])) ? $d['class'] : null;
+				++$totalcount;
 
-			if($class == 'Core\\Datamodel\\Drivers\\mysqli\\mysqli_backend') continue;
-			if($class == 'Core\\Datamodel\\Dataset') continue;
-			if($class == 'Model') continue;
+				if($class == 'Core\\Datamodel\\Drivers\\mysqli\\mysqli_backend') continue;
+				if($class == 'Core\\Datamodel\\Dataset') continue;
+				if($class == 'Model') continue;
 
-			$file = (isset($d['file'])) ? (substr($d['file'], strlen(ROOT_PDIR)+2)) : 'anonymous';
-			$line = (isset($d['line'])) ? (':' . $d['line']) : '';
-			$func = ($class !== null) ? ($d['class'] . $d['type'] . $d['function']) : $d['function'];
+				$file = (isset($d['file'])) ? (substr($d['file'], strlen(ROOT_PDIR)+2)) : 'anonymous';
+				$line = (isset($d['line'])) ? (':' . $d['line']) : '';
+				$func = ($class !== null) ? ($d['class'] . $d['type'] . $d['function']) : $d['function'];
 
-			$callinglocation[] = $file . $line . ', [' . $func . '()]';
-			++$count;
-			if($count >= 3 && sizeof($debug) >= $totalcount + 2){
-				$callinglocation[] = '...';
-				break;
+				$callinglocation[] = $file . $line . ', [' . $func . '()]';
+				++$count;
+				if($count >= 3 && sizeof($debug) >= $totalcount + 2){
+					$callinglocation[] = '...';
+					break;
+				}
 			}
 		}
+		else{
+			$callinglocation = ['**SKIPPED**  Please enable FULL_DEBUG to see the calling stack.'];
+		}
+
 
 		$start = microtime(true) * 1000;
 		//echo $string . '<br/>'; // DEBUGGING //
