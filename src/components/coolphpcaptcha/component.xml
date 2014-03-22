@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="CoolPHPCaptcha" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" name="CoolPHPCaptcha" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.0.0" operation="ge"/>
+		<require name="core" type="component" version="3.1.0" operation="ge"/>
 	</requires>
 	<provides>
 		<provide type="library" name="captcha" version="1.0.0"/>
@@ -31,11 +31,11 @@
 		<page baseurl="/simplecaptcha/admin" title="Captcha Tweaks" access="g:admin" admin="1" group="Configure"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="d4ee7f28a01d73e6846cf273056f19e6"/>
+		<file filename="CHANGELOG" md5="06744a49159db90d6b4561e45c58d0ad"/>
 		<file filename="FormCaptchaInput.class.php" md5="6b42e265cd95996c4310891c7cf37d80">
 			<class name="FormCaptchaInput"/>
 		</file>
-		<file filename="SimpleCaptchaController.class.php" md5="75252e64e378f07991c80ed1f2dd8259">
+		<file filename="SimpleCaptchaController.class.php" md5="7a4cb6869026282d1cbb95634165f76b">
 			<controller name="SimpleCaptchaController"/>
 		</file>
 		<file filename="libs/cool-php-captcha/LICENSE.txt" md5="d32239bcb673463ab874e80d47fae504"/>
@@ -54,7 +54,7 @@
 		<file filename="libs/cool-php-captcha/resources/fonts/VeraSansBold.ttf" md5="4ebf664c986099acf6d151c62bdb24eb"/>
 	</files>
 	<view>
-		<file filename="templates/forms/elements/formcaptchainput.tpl" md5="266dee08cef5d48db18ddd2d35b33bd1"/>
+		<file filename="templates/forms/elements/formcaptchainput.tpl" md5="97882e5a28eee68516bd761b946a3064"/>
 		<file filename="templates/pages/simplecaptcha/admin.tpl" md5="8c95bae056b157297d7f495fa0a21f7e"/>
 	</view>
 	<upgrades>
@@ -66,6 +66,7 @@
 		<upgrade from="0.3~core5" to="1.0.0"/>
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
+		<upgrade from="1.0.2" to="1.1.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
