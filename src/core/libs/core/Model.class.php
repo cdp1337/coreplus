@@ -2076,6 +2076,9 @@ class Model implements ArrayAccess {
 	/**
 	 * Constructor alternative that utilizes caching to save on database lookups.
 	 *
+	 * Since this caches the model in memory, it is ill-advised to use this for very large numbers of records.
+	 * Around 50k records stored in memory, it'll consume about 256MB of RAM.
+	 *
 	 * @static
 	 *
 	 * @param $keys
