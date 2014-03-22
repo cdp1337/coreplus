@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.2.2~core4" name="PHPWhois" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.2.2~core5" name="PHPWhois" execmode="both">
 	<requires>
-		<require name="core" type="component" version="2.5.2"/>
+		<require name="core" type="component" version="3.1.0" operation="ge"/>
 		<require name="geographic-codes" type="component" version="1.0.0"/>
 	</requires>
 	<configs/>
@@ -15,22 +15,22 @@
 		<scriptlibrary name="fancy_ip" call="phpwhois\JSHelper::LoadFancyIP"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="bf2fcd3022c2ed92ebe0a638f2024200"/>
-		<file filename="controllers/PhpwhoisController.php" md5="70abd2f5e5f4e673fdabbb1c6d49186d">
+		<file filename="CHANGELOG" md5="939dfeb3c500bae073a032c2d99df0e0"/>
+		<file filename="controllers/PhpwhoisController.php" md5="356d80849397e687171eb18b57ced5e0">
 			<controller name="PhpwhoisController"/>
 		</file>
 		<file filename="lib/CHANGES" md5="33acf079d69323c8b980652e83598f26"/>
 		<file filename="lib/FAQ" md5="fa6daf6a58ce17160335982e1772ff9c"/>
 		<file filename="lib/HANDLERS" md5="95c8d46c77a596e1a6f5c6236d83ad0f"/>
-		<file filename="lib/JSHelper.php" md5="c04ce3762e7b33eb3d1cf250394ebb5a">
+		<file filename="lib/JSHelper.php" md5="51334fc46c1749dcc1037a4b02729469">
 			<class name="phpwhois\JSHelper"/>
 		</file>
 		<file filename="lib/LICENSE" md5="eb723b61539feef013de476e68b5c50a"/>
 		<file filename="lib/README" md5="586d7b804b4e866e86b83cf10f7d9a04"/>
-		<file filename="lib/WhoisNotFoundResult.php" md5="88569cc0f50934dc5e5277d6d8cb484a">
+		<file filename="lib/WhoisNotFoundResult.php" md5="b70ce915a59813a665c1c390cbb3e8cd">
 			<class name="phpwhois\WhoisNotFoundResult"/>
 		</file>
-		<file filename="lib/WhoisResult.php" md5="8be043310d168e6f0ff3d0105a0cee45">
+		<file filename="lib/WhoisResult.php" md5="171039637869bdcf2d8011aa2ca5d6e4">
 			<class name="phpwhois\WhoisResult"/>
 		</file>
 		<file filename="lib/example.cli.php" md5="f370214545d897b5acc792c08d43e2ff"/>
@@ -312,7 +312,7 @@
 		<file filename="lib/whois.ly.php" md5="e10ec9e00c3b696eae3468c092662a42">
 			<class name="phpwhois\ly_handler"/>
 		</file>
-		<file filename="lib/whois.main.php" md5="020163cd37af4d40584a0fae8a509b51">
+		<file filename="lib/whois.main.php" md5="95e56e08578348965cd92b1aec0c525c">
 			<class name="phpwhois\Whois"/>
 		</file>
 		<file filename="lib/whois.me.php" md5="84b9a37cb9ecfa0281823c64139ee3b2">
@@ -406,6 +406,7 @@
 		<upgrade from="4.2.2~core1" to="4.2.2~core2"/>
 		<upgrade from="4.2.2~core2" to="4.2.2~core3"/>
 		<upgrade from="4.2.2~core3" to="4.2.2~core4"/>
+		<upgrade from="4.2.2~core4" to="4.2.2~core5"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/phpwhois/fancy_ip.css" md5="c78fb7fd4a37703a00f30ef4f2524361"/>

@@ -1,3 +1,9 @@
+PHPWhois 4.2.2~core5
+
+	* Switch to the new interface for accessing Core cache.
+	* Documentation change, @copyright.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 22 Mar 2014 15:01:34 -0400
+
 PHPWhois 4.2.2~core4
 
 	* Make use of the namespace versions of View instead of static.
