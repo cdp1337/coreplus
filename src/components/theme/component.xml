@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="Theme" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3.0" name="Theme" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.0.0" operation="ge"/>
+		<require name="core" type="component" version="3.1.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
 		<require name="jqueryui" type="library" version="1.8.0" operation="ge"/>
 	</requires>
@@ -15,7 +15,7 @@
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
-		<file filename="libs/Theme/Theme.php" md5="ac3598dc90888d8dbe51c7f9a2816a0d">
+		<file filename="libs/Theme/Theme.php" md5="4e6eb94627eaee5e6fb37f9652da7542">
 			<class name="Theme\Theme"/>
 		</file>
 		<file filename="libs/ThemeHandler.class.php" md5="442ad8dde9ce1ea74da0857e01b99aee">
@@ -27,7 +27,7 @@
 	</files>
 	<view>
 		<file filename="templates/pages/theme/editor.tpl" md5="533b2423a66182e692136eefa142f081"/>
-		<file filename="templates/pages/theme/index.tpl" md5="8770858180783b20af13367f85ea09b8"/>
+		<file filename="templates/pages/theme/index.tpl" md5="22ff7f408bb5191ef0cabcff182a20c9"/>
 		<file filename="templates/pages/theme/selectstylesheets.tpl" md5="47956fc42e0954353264ab3d2f5c0e59"/>
 		<file filename="templates/pages/theme/setdefault.tpl" md5="835a5142fdb7c580502a6413909a89e0"/>
 		<file filename="templates/pages/theme/widgets.tpl" md5="e96835f12b3c789786216a905eb27008"/>
@@ -67,6 +67,7 @@
 		<upgrade from="2.1.3" to="2.1.4"/>
 		<upgrade from="2.1.4" to="2.1.5"/>
 		<upgrade from="2.1.5" to="2.2.0"/>
+		<upgrade from="2.2.0" to="2.3.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -1,3 +1,13 @@
+Theme 2.3.0
+
+	* [Feature] Properly handle the theme screenshots.
+	* tweaked fancy form element styles a bit
+	* New interface for managing Cache systems.
+	* Ensure that skins with no explicit title set still return a title.
+	* Theme support for "otherfiles".
+	* Throw an exception if the source file is not readable by the installer for Themes.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 22 Mar 2014 15:03:45 -0400
+
 Theme 2.2.0
 
 	* Downstream changes from the Dataset migration.
