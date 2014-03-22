@@ -1,3 +1,10 @@
+Piwik Analytics 1.0.3
+
+	* Piwik configuration page needed the access permission so the page link doesn't display for
+	  unauthorized users.
+	* Documentation change, @copyright.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 22 Mar 2014 15:02:02 -0400
+
 Piwik Analytics 1.0.2
 
 	* Render the piwik html snipped at the end of the body instead of in the head...
