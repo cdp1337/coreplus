@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.6" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.0" name="Blog" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.0.0" operation="ge"/>
+		<require name="core" type="component" version="3.1.0" operation="ge"/>
 		<require name="tags" type="component"/>
 		<require name="JQuery-Full" type="component" version="1.9"/>
 	</requires>
@@ -14,10 +14,10 @@
 	</hooks>
 	<files>
 		<file filename="CHANGELOG" md5="4e8aafaf240b9ad1d9f57683781b7edb"/>
-		<file filename="controllers/BlogController.php" md5="72a530cd967cb7fee10a3595446ac3d1">
+		<file filename="controllers/BlogController.php" md5="0fdae4e3b2c135f4b0a2d30013ea1c01">
 			<controller name="BlogController"/>
 		</file>
-		<file filename="helpers/BlogHelper.php" md5="212027dc352255c40525032ebc8fd698">
+		<file filename="helpers/BlogHelper.php" md5="193cbfea1cf0e3c838923053a702a24d">
 			<class name="BlogHelper"/>
 		</file>
 		<file filename="models/BlogArticleModel.php" md5="c1321472e45bf57340de0a9fd34b83d5">
@@ -60,11 +60,11 @@
 		<file filename="templates/pages/blog/create.tpl" md5="88a92a02a91699df3f24063112502867"/>
 		<file filename="templates/pages/blog/editindex.tpl" md5="54228dc0b3f751f9d587a1469b361d46"/>
 		<file filename="templates/pages/blog/import.tpl" md5="7e3f8c90db26ba500fa9e3ee439d2655"/>
-		<file filename="templates/pages/blog/index.tpl" md5="f4bf7aa9de015548115977bcc5dc2b62"/>
+		<file filename="templates/pages/blog/index.tpl" md5="c43060ca9eaf1062902b4cc8306d0ec7"/>
 		<file filename="templates/pages/blog/update.tpl" md5="e2df73ed8b507c4318fa29588015a80f"/>
 		<file filename="templates/pages/blog/view-blog.atom.tpl" md5="2ecddf86df627b3de448fe0d1d741266"/>
 		<file filename="templates/pages/blog/view-blog.rss.tpl" md5="3be4145cccde1dae477cf81ed5670f33"/>
-		<file filename="templates/pages/blog/view-blog.tpl" md5="3ac0a3d95d1b593136b48049127f475c"/>
+		<file filename="templates/pages/blog/view-blog.tpl" md5="2dbac0bdbbf6b34dcb1d8005a55934fe"/>
 		<file filename="templates/widgets/blog/execute.tpl" md5="07ef69514345efa6a6b5acc80d277236"/>
 		<file filename="templates/widgets/blogarticle/execute.tpl" md5="e425954a687b9e4545dabce7b95aa935"/>
 		<file filename="templates/widgets/blogsearch/execute.tpl" md5="084b3c6165680bd05193ea6c2f96cef4"/>
@@ -111,7 +111,7 @@
 		<upgrade from="1.5.3" to="1.5.4"/>
 		<upgrade from="1.5.4" to="1.5.5"/>
 		<upgrade from="1.5.5" to="1.5.6"/>
-		<upgrade from="next" to="next">
+		<upgrade from="1.5.6" to="1.6.0">
 			<php file="upgrades/next_page_updates.php"/>
 		</upgrade>
 	</upgrades>

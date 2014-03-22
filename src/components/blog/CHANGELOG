@@ -1,3 +1,27 @@
+Blog 1.6.0
+
+	* [Feature] Do not display the "... read more" link if there is no teaser on blog articles.
+	* [Feature] New interface for managing Cache systems.
+	* [Feature] New Blog widget, displays links to blogs currently available on the site.
+	* [Feature] New site search pages and widgets, (also migrate the sitemap into Core).
+	* [Feature] Blog supports instantiated search widgets.
+	* Blog index page needs to use the correct column key when looking up published status for pages.
+	* The actual blog view page needs to use the updated systems too, not just index.
+	* Update the control links for blog index pages.
+	* Remove unnecessary pages from blog.
+	* Do not show ellipses if there is no teaser content on blog articles.
+	* Better integration for blog-style content pages.
+	* Need to ensure the insertable has the same site as the page its bound to.
+	* Switch the blog listing page to use the new PageModel search systems.
+	* Forgot the minified blog stylesheet.
+	* Few more minor tweaks and add SASS stylesheets for the blog component.
+	* Update the rss and atom feeds to support the new PageModel system.
+	* Blog widget file, (may be removed immediately)
+	* Migrating the Blog to the new way of handling content.
+	* Game of Life 404 missing asset
+	* Use the new exception_handler for exceptions instead of simply error_logging the message.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 22 Mar 2014 14:52:37 -0400
+
 Blog 1.5.6
 
 	* [Bug] Fix Bug #543 - Blog author not saving correctly
