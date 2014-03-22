@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.1" name="Geographic Codes" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.0" name="Geographic Codes" execmode="both">
 	<description>
 		A collection of geographic utilities for geocoding, ip-lookups, and dealing with geographic addresses in general.
 	</description>
@@ -8,20 +8,22 @@
 		<formelement name="geoaddress" class="GeoAddressFormInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="690e84fd7fed9839be1a9bd8d69e39d0"/>
+		<file filename="CHANGELOG" md5="9b33f0a4e07785cae02e8db69204ba38"/>
 		<file filename="README.md" md5="f9b7f8a97be5c4f55afea2ef46724f50"/>
-		<file filename="classes/GeoAddressFormInput.php" md5="803268dc5e1cc729adafb3347d6c226e">
+		<file filename="classes/GeoAddressFormInput.php" md5="abbf558bad3bb2985f374b160660d475">
 			<class name="GeoAddressFormInput"/>
 		</file>
-		<file filename="controllers/GeoAddressController.php" md5="b4eabb65ecc77166c583879a2c536408">
+		<file filename="controllers/GeoAddressController.php" md5="dfb80eb5422dcba8d6b3e34c93fbd51a">
 			<controller name="GeoAddressController"/>
 		</file>
 		<file filename="datafiles/countries.sql" md5="a48225d34a0eaeac9d43a391449af8f4"/>
+		<file filename="datafiles/countries_bulk.sql" md5="8da1368352b8a22b274b72bb3610041c"/>
 		<file filename="datafiles/provinces.sql" md5="ab8d439b6592edb3ee0fbf14f17ed099"/>
-		<file filename="geocode/Country.php" md5="d802775bb4576622981339d7238d45e3">
+		<file filename="datafiles/provinces_bulk.sql" md5="69171fbe479e1656317b82b5ba9d997a"/>
+		<file filename="geocode/Country.php" md5="5ac98a7fa933f64f0f51d1a6bbbec8f7">
 			<class name="geocode\Country"/>
 		</file>
-		<file filename="geocode/Updater.php" md5="ce6077f3b6262894b5c0930d0ab14235">
+		<file filename="geocode/Updater.php" md5="35569631c12bf603e91c1bacdab9c3c8">
 			<class name="geocode\Updater"/>
 		</file>
 		<file filename="libs/GeoIp2/CHANGELOG.md" md5="15e498e9e60e23fc6cad82a7c8b6962a"/>
@@ -162,13 +164,13 @@
 		<file filename="libs/maxmind-geolite-db/GeoLite2-City.mmdb" md5="4db1f8e0219eabffa5ed2293f480f45d"/>
 		<file filename="libs/maxmind-geolite-db/LICENSE" md5="85eefaa2cbb8581ef26edbdbc7e4f926"/>
 		<file filename="libs/maxmind-geolite-db/SUPPORT" md5="2831aedc85a165bf7db688c39233366c"/>
-		<file filename="models/GeoAddressModel.php" md5="9ad95fb3a98102a976fbdebe44372861">
+		<file filename="models/GeoAddressModel.php" md5="d778b2a91590dc2276293d75e0dcca87">
 			<class name="GeoAddressModel"/>
 		</file>
-		<file filename="models/GeoCountryModel.php" md5="c1b43f93683dbb60af61f815d96d5f28">
+		<file filename="models/GeoCountryModel.php" md5="34a72a9b1fdf67fea8a1f7bddd23a2d9">
 			<class name="GeoCountryModel"/>
 		</file>
-		<file filename="models/GeoProvinceModel.php" md5="3b2bc5144be9ee504c2e9c1c6875548a">
+		<file filename="models/GeoProvinceModel.php" md5="553b1e62a9fc8d54a8a987350a4ba28d">
 			<class name="GeoProvinceModel"/>
 		</file>
 	</files>
@@ -438,11 +440,15 @@
 			<sql file="datafiles/provinces_bulk.sql"/>
 		</upgrade>
 		<upgrade from="1.1.0" to="1.1.1"/>
+		<upgrade from="1.1.1" to="1.2.0"/>
 	</upgrades>
 	<view>
-		<file filename="templates/forms/elements/geoaddressforminput.tpl" md5="954d7af422c98d57100d5fdc18437884"/>
+		<file filename="templates/forms/elements/geoaddressforminput.tpl" md5="4ab75427fa40baef2cb285f0c9e6cb3d"/>
 		<file filename="templates/pages/geoaddress/testform.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 	</view>
+	<requires>
+		<require name="core" type="component" version="3.1.0" operation="ge"/>
+	</requires>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
@@ -451,8 +457,5 @@
 			GNU Affero General Public License v3
 		</license>
 	</licenses>
-	<requires>
-		<require name="core" type="component" version="3.0.0" operation="ge"/>
-	</requires>
 </component>
 

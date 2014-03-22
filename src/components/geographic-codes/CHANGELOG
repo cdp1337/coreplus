@@ -1,3 +1,15 @@
+Geographic Codes 1.2.0
+
+	* minimalect shouldn't hide the default option on selects
+	* Fancy checkboxes and radios. Fully accessible and degrades nicely
+	* Completely overhaul the form styling and templates on Core.
+	* Switch to the bulk insert method now that Core supports it.
+	* Textual/Comment change on the geoaddressforminput label input.
+	* New methods for GeoAddressModel, isBlank and getCPPFormatted (aka, getCSZFormatted).
+	* Add label to GeoAddress models and the respective UI.
+	* Documentation change, @copyright.
+	-- Charlie Powell <charlie@eval.bz>  Sat, 22 Mar 2014 14:58:00 -0400
+
 Geographic Codes 1.1.1
 
 	* Use the defaults on the geo address form if the model set does not exist.
