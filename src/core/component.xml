@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.0" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.0" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -75,7 +75,7 @@
 		<file filename="core/controllers/AdminController.php" md5="c4e0de9c651334cd4195a352c3f55141">
 			<controller name="AdminController"/>
 		</file>
-		<file filename="core/controllers/DatastoreAuthController.php" md5="1e94588d7a02c781a0c3c2574fe50adf">
+		<file filename="core/controllers/DatastoreAuthController.php" md5="20c4f3cc872bdcad5f93a0cdea9144bf">
 			<controller name="DatastoreAuthController"/>
 		</file>
 		<file filename="core/controllers/DirectoryController.class.php" md5="3c272c73dcc0b73a83235e55bc7f84a3">
@@ -90,7 +90,7 @@
 		<file filename="core/controllers/FormController.class.php" md5="d10fab282e5fc51491492a37783e8724">
 			<controller name="FormController"/>
 		</file>
-		<file filename="core/controllers/GPGAuthController.php" md5="25bd2e4c9767148ccfb15382c7bf1335">
+		<file filename="core/controllers/GPGAuthController.php" md5="c6beaea9677aa2dabfae8d5366e6c8f8">
 			<controller name="GPGAuthController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="aa5f05907fa3f8367f52859e48e0e526">
@@ -108,7 +108,7 @@
 		<file filename="core/controllers/UserConfigController.php" md5="1aebdb773a3fc6503816be6366892f9a">
 			<controller name="UserConfigController"/>
 		</file>
-		<file filename="core/controllers/UserController.php" md5="0706493511392e0352ec01b86cd5ffbb">
+		<file filename="core/controllers/UserController.php" md5="8e93dd3ef91b8fde052247216068da57">
 			<controller name="UserController"/>
 		</file>
 		<file filename="core/controllers/UserGroupAdminController.php" md5="5431f5de5cb7da2445e805ee85b33886">
@@ -379,7 +379,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="86528c28183175e5ca94abf369c48b99">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="0b438027e8ecfdb9200665a9f8b89221">
+		<file filename="core/libs/core/Component_2_1.php" md5="ccd2583af26ede9fbeeca9f2cc574031">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="feec118061ba4b35fd118affe3350f13">
@@ -432,7 +432,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="7bae1b2886a742915df7086624d5d819">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="8379538e3d0072829ec49e9683194c89">
+		<file filename="core/libs/core/Model.class.php" md5="53e3852bb077e58020f51da2d12d1d05">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -551,7 +551,7 @@
 		<file filename="core/libs/core/datamodel/backends/cassandra.backend.php" md5="31e134b544e42e232e21c94e8503183d">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="34a796b1e3d053a5a12747164aa2bbaf">
+		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="1b16143c431c9671dac497dc2edf1c31">
 			<class name="Core\Datamodel\Drivers\mysqli\mysqli_backend"/>
 		</file>
 		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.schema.php" md5="1152e22804d35e35852b5e13b809e43c">
@@ -1316,7 +1316,7 @@
 		<file filename="core/models/UserGroupModel.php" md5="dabdcaa62eb5987b210bbb2aef5713e8">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="core/models/UserModel.php" md5="1f907ac2e84f82807453b04d74ad9714">
+		<file filename="core/models/UserModel.php" md5="18cefad9ad85c6ba7f0a213461c12d09">
 			<class name="UserModel"/>
 		</file>
 		<file filename="core/models/UserUserConfigModel.php" md5="017371dd135738999afac50c9f260a06">
@@ -1364,7 +1364,7 @@
 		</file>
 		<file filename="htaccess.ant" md5="03a971bd1f755da122d8f8f458b840cf"/>
 		<file filename="htaccess.ex" md5="5b9477efc4add163473fe0ab8939bede"/>
-		<file filename="index.php" md5="dc4ba9ed0ca0e5e070c2f0bb5a012afc"/>
+		<file filename="index.php" md5="f22e51ad3145f01dd5d820e7c5d25453"/>
 		<file filename="install/InstallPage.class.php" md5="027a64393425c2fb38e2b92b59c9861a">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1882,6 +1882,7 @@
 			</dataset>
 			<php file="core/upgrades/next_page_published.php"/>
 		</upgrade>
+		<upgrade from="3.0.0" to="3.1.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

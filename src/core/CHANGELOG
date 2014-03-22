@@ -1,3 +1,126 @@
+Core Plus 3.1.0
+
+	* [Security] Switch from the SecurityLog to the SystemLog.
+	* [Bug] Fix horizontal form description position
+	* [Bug] Fix the filters form, add a hidden submit button so [enter] works on filters.
+	* [Bug] Fix the DateTime relative formatting, although we still need a proper locale system.
+	* [Bug] Fix Set data to at least a blank array on Dataset::execute.
+	* [Bug] Fix a minor typo on the Smarty getInsertable method.  "option" should have been "options".
+	* [Bug] Fix for MySQL 5.5.35 Default flag.
+	* [Bug] Fix the memcache tests, (was using an incorrect URL).
+	* [Bug] Fix the lookup the user's AuthDriver appropriately.
+	* [Bug] Fix the ModelSchema supports precision again.
+	* [Bug] Set submit buttons to have a name of "submit" by default if none provided.
+	* [Bug] Skip "." and ".." when purging file caches.
+	* [Bug] Some fixes for the udpater on installing components.
+	* [Bug] Rewrite the Caching backend on Core to better support what it needs to, (expire times).
+	* [Bug] PageModel "site" type needs to be a SITE instead of INT.
+	* [Bug] Only reset _data on Datasets when the query is a GET query.
+	* [Bug] Use the namespaced version of resolve_link instead.
+	* [Bug] Do not overwrite the access string if none is provided from component.xml files.
+	* [Bug] Ensure that the View does not try to send headers if they have already been sent to the
+	  browser.
+	* [Bug] Add support for controllers with an index method to be called with a file extension.
+	* [Bug] Ensure that Core\compare_values only runs strlen on strings.
+	* [Bug] Was missing a space in the file upload template.
+	* [Performance] Do not record the full backtrace when executing a query if no need to, this is a
+	  rather expensive operation performance-wise.
+	* [Performance] View saves its body content locally for multiple calls to fetchBody().
+	* [Feature] Security logging tweak.
+	* [Feature] Models can now extend other Models!
+	* [Feature] Ability to disable emails and provide a sandbox destination globally, ref #544.
+	* [Feature] Grab the "next" upgrades automatically when setting the next version of a component.
+	* [Feature] User accounts can now be deactivated, which behaves differently than not-yet active users.
+	* [Feature] New support for authentication icons.
+	* [Feature] A quick-search option on /admin/config.
+	* [Feature] New support for handling GPG keys in Core.
+	* [Feature] New interface to manage user authentication drivers, now that more are supported.
+	* [Feature] Enable GPG authentication and rework the user system a bit.
+	* [Feature] Non-indexable pages need to set their noindex meta attribute automatically.
+	* [Feature] New site search pages and widgets, (also migrate the sitemap into Core).
+	* [Feature] Better handle scaling images up to fit a minimum width/height.
+	* [Feature] Widget instances can now be managed via /admin/widgets!
+	* [Feature] Add Template->getWidgetAreas to return an array of all the available widget areas on a
+	  given template.
+	* [Feature] Skip incrementing the page view if the current user is detected as a bot.
+	* [Feature] Add body and search indexes to PageModels.
+	* [Feature] Migrate much of the request logic into PageRequest from index.
+	* [Feature] Add PageModel::getAuthor to return the UserModel from the metadata of the page.
+	* [Feature] New page, test general UI controls.
+	* [Feature] Add "getWord" to bacon ipsum.
+	* [Feature] New systems, /admin/pages and /admin/widgets
+	* [Feature] Add the WidgetInstance link and editurl to Widgets.
+	* [Feature] New support for PageModel editurl, deleteurl, images, and popularity scores.
+	* [Feature] Allow for short-hand {link} usage in smarty.
+	* [Feature] New support for simple widgets and settings data in widgets.
+	* [Feature] New image meta tag, sets the og:image meta.
+	* [Feature] New referrer tracking and better exit status handling in Form systems.
+	* [Feature] Components can run the "next" upgrade.
+	* [Feature] Fancy checkboxes and radios. Fully accessible and degrades nicely
+	* [Feature] Slide animation tweak for debug section
+	* [Feature] Add the generic __toString method for Models.
+	* [Feature] Add total record count and current view count to the pagination bar.
+	* [Feature] Add DateTime::FormatString for a shortcut method.
+	* [Feature] Cleanup the getClass method of Forms and also add support for form orientations.
+	* [Feature] New view for frontend developers, Form/TestUI.
+	* [Feature] Extension on the UserAuth API, renderLogin; add the ability to change Form options on
+	  execution of the method.
+	* [Feature] Automatic pagination jump points.
+	* [Feature] Dataset supports bulk inserts.
+	* [Feature] Remove underscores from config options when displaying them in forms.
+	* [Feature] Clean up the formatting of Core\Utilities\Profiler\getTimeFormatted.
+	* [Feature] Allow multisite sites to be passed into the URL resolution system of Core.
+	* [Feature] Add a Model->getAsJSON() method.
+	* [Feature] New Core\Date namespace for useful Date and Time systems.
+	* [Feature] Support alias columns on table creation as well.
+	* [Feature] The smarty {date} function now supports short-hand calling.
+	* [Feature] Record which version was upgraded during automatic upgrades.
+	* [Feature] New method on the AuthDriverInterface, getAuthTitle.
+	* [Feature] New function, Core\ErrorManagement\exception_handler.
+	* Prevent /admin/config from being collapsed.
+	* tweaked fancy form element styles a bit
+	* User forgot password needs to use the correct log backend.
+	* Update /admin/page to display seconds as "sec" instead of the full word, saves some horizontal
+	  space.
+	* Need to be more specific on the Cache system for class exist checks.
+	* feaure Add a column "indexable" onto pages.
+	* Move Core::ResolveLink to \Core\resolve_link.
+	* Add a few more profiling points in Core.
+	* Switch the smarty date function to use a constant instead of the string.
+	* minimalect shouldn't hide the default option on selects
+	* Form element background tweak for option groups (checkboxes or radio)
+	* Extend the built-in list of file extension and mimetypes to inlcude image/*.
+	* A little more intelligent check for a given local file and it being writable.
+	* Migrate the user styles into the theme, now that User is an integrated part of Core.
+	* Completely overhaul the form styling and templates on Core.
+	* Model clean ups, including better link name handling, not encrypting empty values, and setting TEXT
+	  types to an empty string default value.
+	* Better handle automatic timezones when performing date/time manipulation.
+	* A default of "Current Site" and not "Root Site" is needed on the Core::ResolveLink method.
+	* Use the new Core\Date namespace in the smarty {date} function.
+	* Allow blank.tpl as an allowed skin in the PageRequest.
+	* Be a little more exact with the addition of a class_exists check.
+	* A few tweaks to the user metadata in the core component.xml.
+	* Ensure that accessing a ViewMeta object as a string will return a string.
+	* More accurate checking for taken page urls when in multisite mode.
+	* Support for less-persistent forms.
+	* Add the query into the log for DMI_Query_Exceptions.
+	* Use the new exception_handler for exceptions instead of simply error_logging the message.
+	* Update the phpdoc @package for Core.
+	* Use the exception handler instead of transposing View Exceptions and Template Exceptions to a
+	  standard error.
+	* DatasetWhere statements support sending 'NULL' as a string in where clauses.
+	* Skip alias columns when creating tables if the column did not exist prior.
+	* The system was complaining about 'Model' as a class, so switched to the more specific UserGroupModel
+	  instead.
+	* Documentation change, @copyright.
+	* Models support column aliases.
+	* Test for FileLocal -> sendToUserAgent().
+	* Additional checks for parent pages when in enterprise mode.
+	* Better header support in the View API.
+	* New File API method, sentToUserAgent().
+	-- Charlie Powell <charlie@eval.bz>  Sat, 22 Mar 2014 14:47:15 -0400
+
 Core Plus 3.0.0
 
 	* [Bug] #436: Widgets do not display when added to a non-default site skin.
