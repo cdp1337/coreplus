@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Favicon" version="1.0.0">
+	<description>
+		A simple component to display a favicon for various browsers and mobile devices.
+	</description>
+	<configs>
+		<config key="/favicon/image" type="string" description="Filename of the favicon"/>
+	</configs>
+	<pages>
+		<page baseurl="/favicon/admin" title="Site Favicon" access="g:admin" admin="1" group="Configure"/>
+	</pages>
+	<hooks>
+		<hook name="/core/page/rendering" call="FaviconController::PageHook"/>
+	</hooks>
+	<files>
+		<file filename="CHANGELOG" md5="15007daa2cf64a2365cb8832b0cbc144"/>
+		<file filename="README.md" md5="e758db0d8cb23bbfe0b3132575fed948"/>
+		<file filename="controllers/FaviconController.php" md5="1abe734d489fd19057e1829fc167a178">
+			<controller name="FaviconController"/>
+		</file>
+		<file filename="libs/favicon/ViewMeta_favicon.php" md5="9b0a11ca48105a938994268a24be92a2">
+			<class name="ViewMeta_favicon"/>
+		</file>
+	</files>
+	<view>
+		<file filename="templates/pages/favicon/admin.tpl" md5="2556dd61a6b283b0fb6d614ae4d27831"/>
+	</view>
+	<requires>
+		<require name="core" type="component" version="3.1.0" operation="ge"/>
+	</requires>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+</component>
+
