@@ -74,6 +74,7 @@ sync_component "phpwhois"
 sync_component "geographic-codes"
 sync_component "jquery-full"
 sync_component "jquery-hoverintent"
+sync_component "nonce"
 
 for i in $COMPONENTS; do
 	if [ -e "$UPSTREAM/src/components/$i" ]; then
