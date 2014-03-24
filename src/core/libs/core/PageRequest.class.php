@@ -222,7 +222,7 @@ class PageRequest {
 	 */
 	public function getBaseURL() {
 		$parts = $this->splitParts();
-		return $parts['baseurl'];
+		return isset($parts['baseurl']) ? $parts['baseurl'] : null;
 	}
 
 	/**
@@ -271,7 +271,7 @@ class PageRequest {
 
 		// The controller must exist first!
 		// (note, the SplitParts logic already takes care of the "Is this a valid controller" logic)
-		if (!$pagedat['controller']) {
+		if (!(isset($pagedat['controller']) && $pagedat['controller'])) {
 			$view->error = View::ERROR_NOTFOUND;
 			return;
 		}
@@ -560,10 +560,18 @@ class PageRequest {
 			$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
 		}
 
+		// First of all, if the current theme is not available, reset back to the first theme available!
+		if(!($theme = ThemeHandler::GetTheme())){
+			/** @var \Theme\Theme $theme */
+			$theme = ThemeHandler::GetTheme('base-v2');
+			$view->mastertemplate = 'basic.tpl';
+
+			Core::SetMessage('You have an invalid theme selected, please fix that!', 'error');
+		}
 
 		// Make sure the selected mastertemplate actually exists!
 		if($view->mastertemplate !== false){
-			$themeskins = ThemeHandler::GetTheme()->getSkins();
+			$themeskins = $theme->getSkins();
 			$mastertplgood = false;
 			foreach($themeskins as $skin){
 				if($skin['file'] == $view->mastertemplate){
@@ -661,7 +669,7 @@ class PageRequest {
 		$view->render();
 
 		// Make sure I update any existing page now that the controller has ran.
-		if ($page->exists() && $view->error == View::ERROR_NOERROR) {
+		if ($page && $page->exists() && $view->error == View::ERROR_NOERROR) {
 
 			// Only increase the pageview count if the visitor is not a bot.
 			// UA detection isn't very accurate, but this isn't for precision accuracy, merely a rough estimate.
@@ -823,7 +831,7 @@ class PageRequest {
 				// :) Found it
 				$this->_pagemodel = $p;
 			}
-			elseif ($pagedat) {
+			elseif ($pagedat && isset($pagedat['baseurl'])) {
 				// Is this even a valid controller?
 				// This will allow a page to be called with it being in the pages database.
 				$p = new PageModel($pagedat['baseurl']);

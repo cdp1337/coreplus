@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 22 Mar 2014 14:50:11 -0400
+ * @compiled Mon, 24 Mar 2014 16:04:47 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16607,7 +16607,7 @@ return $ret;
 }
 public function getBaseURL() {
 $parts = $this->splitParts();
-return $parts['baseurl'];
+return isset($parts['baseurl']) ? $parts['baseurl'] : null;
 }
 public function getView(){
 if($this->_pageview === null){
@@ -16632,7 +16632,7 @@ return;
 HookHandler::DispatchHook('/core/page/prerender');
 $pagedat   = $this->splitParts();
 $view = $this->getView();
-if (!$pagedat['controller']) {
+if (!(isset($pagedat['controller']) && $pagedat['controller'])) {
 $view->error = View::ERROR_NOTFOUND;
 return;
 }
@@ -16811,8 +16811,13 @@ $view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 else{
 $view->mastertemplate = ConfigHandler::Get('/theme/default_template');
 }
+if(!($theme = ThemeHandler::GetTheme())){
+$theme = ThemeHandler::GetTheme('base-v2');
+$view->mastertemplate = 'basic.tpl';
+Core::SetMessage('You have an invalid theme selected, please fix that!', 'error');
+}
 if($view->mastertemplate !== false){
-$themeskins = ThemeHandler::GetTheme()->getSkins();
+$themeskins = $theme->getSkins();
 $mastertplgood = false;
 foreach($themeskins as $skin){
 if($skin['file'] == $view->mastertemplate){
@@ -16876,7 +16881,7 @@ $index[] = $key;
 }
 $view->headers['X-Core-Render-Time'] = \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTimeFormatted();
 $view->render();
-if ($page->exists() && $view->error == View::ERROR_NOERROR) {
+if ($page && $page->exists() && $view->error == View::ERROR_NOERROR) {
 if(!\Core\UserAgent::Construct()->isBot()){
 $page->set('pageviews', $page->get('pageviews') + 1);
 }
@@ -16959,7 +16964,7 @@ $pagedat = $this->splitParts();
 if ($p) {
 $this->_pagemodel = $p;
 }
-elseif ($pagedat) {
+elseif ($pagedat && isset($pagedat['baseurl'])) {
 $p = new PageModel($pagedat['baseurl']);
 if(!$p->exists()){
 $p->set('rewriteurl', $pagedat['rewriteurl']);
