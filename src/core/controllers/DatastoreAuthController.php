@@ -65,12 +65,10 @@ class DatastoreAuthController extends Controller_2_1 {
 
 		// Default to current user.
 		if($userid === null){
-			$ownpassword = true;
 			$userid = \Core\user()->get('id');
 		}
-		else{
-			$ownpassword = false;
-		}
+
+		$ownpassword = ($userid == \Core\user()->get('id'));
 
 		// Only allow this if the user is either the same user or has the user manage permission.
 		if(!($userid == \Core\user()->get('id') || $manager)){
@@ -85,12 +83,8 @@ class DatastoreAuthController extends Controller_2_1 {
 			\Core\go_back(1);
 		}
 
-		$auth = $user->getAuthDriver();
-
-		if(($canset = $auth->canSetPassword()) !== true){
-			Core::SetMessage($canset);
-			\Core\go_back(1);
-		}
+		/** @var \Core\User\AuthDrivers\datastore $auth */
+		$auth = $user->getAuthDriver('datastore');
 
 		if($req->isPost()){
 			try{
@@ -107,7 +101,6 @@ class DatastoreAuthController extends Controller_2_1 {
 					Core::SetMessage('No change detected');
 				}
 				elseif($status === true){
-					$user->set('last_password', CoreDateTime::Now('U', Time::TIMEZONE_GMT));
 					$user->save();
 					Core::SetMessage('Updated Password Successfully', 'success');
 				}
