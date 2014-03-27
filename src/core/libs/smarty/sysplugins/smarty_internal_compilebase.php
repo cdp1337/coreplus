@@ -67,7 +67,7 @@ abstract class Smarty_Internal_CompileBase
                 } elseif (isset($this->shorttag_order[$key])) {
                     $_indexed_attr[$this->shorttag_order[$key]] = $mixed;
                 } else {
-	                $_indexed_attr[0] = $mixed;
+	                $_indexed_attr[] = $mixed;
                     // too many shorthands
                     //$compiler->trigger_template_error('too many shorthand attributes', $compiler->lex->taglineno);
                 }
