@@ -22,8 +22,8 @@
 /**
  * Take a GMT date and return the formatted string.
  *
- * @param $params
- * @param $template
+ * @param array $params
+ * @param Smarty $template
  *
  * @throws SmartyException
  *
@@ -44,7 +44,7 @@ function smarty_function_date($params, $template){
 
 	if(!$date){
 		if(DEVELOPMENT_MODE){
-			return 'Parameter [date] was empty, corwardly refusing to format an empty string.';
+			return 'Parameter [date] was empty, cowardly refusing to format an empty string.';
 		}
 		else{
 			return '';
@@ -56,5 +56,11 @@ function smarty_function_date($params, $template){
 	//$timezone = isset($params['timezone']) ? $params['timezone'] : Time::TIMEZONE_GMT;
 
 	$coredate = new \Core\Date\DateTime($date);
-	return $coredate->format($format);
+
+	if(isset($params['assign']) && $params['assign']){
+		$template->assign($params['assign'], $coredate->format($format));
+	}
+	else{
+		return $coredate->format($format);
+	}
 }
