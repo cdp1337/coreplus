@@ -36,6 +36,7 @@
 		<hookregister name="/user/postsave" description="Hook that is called after the user object is saved"/>
 		<hookregister name="/user/postlogin/getredirecturl" description="Hook that is called after the user has successfully logged in.  Return a non-empty string to redirect to that page." return="string"/>
 		<hookregister name="/sitemap/getlisting" return="array" description="Called during the listing retrieval of the links to display in the sitemap.  Useful for injecting links into the sitemap and sitemap.xml."/>
+		<hook name="/core/components/loaded" call="\Core\i18n\Loader::Init"/>
 		<hook name="/core/components/loaded" call="CurrentPage::Singleton"/>
 		<hook name="/core/components/ready" call="Form::CheckSavedSessionData"/>
 		<hook name="/core/page/prerender" call="Core::_AttachCoreJavascript"/>
@@ -66,7 +67,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
 		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
-		<file filename="core/CHANGELOG" md5="7cf169bca4976d9614c2a7c2313e1bf6"/>
+		<file filename="core/CHANGELOG" md5="a8b535ad4dde63f8f55c6b79e0b5fa71"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="d798f09f5aaec04a828e683d7725e38a"/>
 		<file filename="core/bootstrap.php" md5="4ee39a8a4a6996cfbefeb144459248e0"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
@@ -379,7 +380,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="86528c28183175e5ca94abf369c48b99">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="ccd2583af26ede9fbeeca9f2cc574031">
+		<file filename="core/libs/core/Component_2_1.php" md5="4c2d064373b838008d632f9ca8406f47">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="feec118061ba4b35fd118affe3350f13">
@@ -410,7 +411,7 @@
 		<file filename="core/libs/core/FilterForm.class.php" md5="dd4c821c1f1909518103d8d99ec6fe6d">
 			<class name="FilterForm"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="cee09d36ebd9b10c337856b430eeb7c6">
+		<file filename="core/libs/core/Form.class.php" md5="a871c6984ab394500dc7b34c3dff203e">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -444,7 +445,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="56818b4124a9dabd843b011c226d9b25">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="ac208f4b582e311017a1a589af321236">
+		<file filename="core/libs/core/PageRequest.class.php" md5="0dfe2e47b42ab12a2ed11056edeb08cf">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="026c83b5188f74fd815f1cd7a0403498">
@@ -651,6 +652,9 @@
 		</file>
 		<file filename="core/libs/core/gpg/UID.php" md5="3e39f0e2f5d283d74d2ed15d14bf2f21">
 			<class name="Core\GPG\UID"/>
+		</file>
+		<file filename="core/libs/core/i18n/Loader.php" md5="9a7a35230cb177656cf06970b03b148e">
+			<class name="Core\i18n\Loader"/>
 		</file>
 		<file filename="core/libs/core/licenses/Factory.php" md5="55de36ced01c31663ebdbade0aaf3cfc">
 			<class name="Core\Licenses\Factory"/>

@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 24 Mar 2014 16:04:47 -0400
+ * @compiled Thu, 27 Mar 2014 00:31:15 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16496,6 +16496,7 @@ Core::SetMessage($e->getMessage(), 'error');
 $status = false;
 }
 catch(Exception $e){
+Core::SetMessage('Oops, something went wrong while submitting the form.  The administrator has been notified of this issue, please try again later.', 'error');
 Core\ErrorManagement\exception_handler($e);
 $status = false;
 }

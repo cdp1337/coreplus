@@ -22,9 +22,14 @@
 
 			{if $article->isPublished()}
 				<meta itemprop="dateCreated" content="{date format='c' date="`$article.published`"}"/>
-				<div class="blog-article-date">Posted {date date="`$article.published`"}</div>
+				<div class="blog-article-date">
+					{date date="`$article.published`" assign="date_published"}
+					{t "PUBLISHED_ON_DATE" $date_published}
+				</div>
 			{else}
-				<div class="blog-article-date">Not Published</div>
+				<div class="blog-article-date">
+					{t "NOT_PUBLISHED"}
+				</div>
 			{/if}
 
 			{if $article->getImage()}
@@ -35,7 +40,7 @@
 
 			<br/>
 			{a href="`$blog->get('rewriteurl')`"}
-				Posted in {$blog->get('title')}
+				{t POSTED_IN $blog->get('title')}
 			{/a}
 
 
