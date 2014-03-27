@@ -1407,6 +1407,7 @@ class Form extends FormGroup {
 			$status = false;
 		}
 		catch(Exception $e){
+			Core::SetMessage('Oops, something went wrong while submitting the form.  The administrator has been notified of this issue, please try again later.', 'error');
 			Core\ErrorManagement\exception_handler($e);
 			$status = false;
 		}
