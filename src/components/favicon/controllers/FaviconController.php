@@ -36,6 +36,7 @@ class FaviconController extends Controller_2_1 {
 		$form->addElement('submit', ['value' => 'Save']);
 
 		$view->title = 'Site Favicon';
+		$view->assign('current', $image);
 		$view->assign('form', $form);
 	}
 
