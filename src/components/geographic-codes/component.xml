@@ -7,8 +7,9 @@
 	<forms>
 		<formelement name="geoaddress" class="GeoAddressFormInput"/>
 	</forms>
+	<smartyplugins directory="smarty-plugins"/>
 	<files>
-		<file filename="CHANGELOG" md5="9b33f0a4e07785cae02e8db69204ba38"/>
+		<file filename="CHANGELOG" md5="ce025fe43e81bc9d9318d8c1b9dd6051"/>
 		<file filename="README.md" md5="f9b7f8a97be5c4f55afea2ef46724f50"/>
 		<file filename="classes/GeoAddressFormInput.php" md5="abbf558bad3bb2985f374b160660d475">
 			<class name="GeoAddressFormInput"/>
@@ -22,6 +23,9 @@
 		<file filename="datafiles/provinces_bulk.sql" md5="69171fbe479e1656317b82b5ba9d997a"/>
 		<file filename="geocode/Country.php" md5="5ac98a7fa933f64f0f51d1a6bbbec8f7">
 			<class name="geocode\Country"/>
+		</file>
+		<file filename="geocode/IPLookup.php" md5="a14b4705ac4fb2d925f553011146aa38">
+			<class name="geocode\IPLookup"/>
 		</file>
 		<file filename="geocode/Updater.php" md5="35569631c12bf603e91c1bacdab9c3c8">
 			<class name="geocode\Updater"/>
@@ -173,6 +177,7 @@
 		<file filename="models/GeoProvinceModel.php" md5="553b1e62a9fc8d54a8a987350a4ba28d">
 			<class name="GeoProvinceModel"/>
 		</file>
+		<file filename="smarty-plugins/function.geoiplookup.php" md5="d3f01b6b996511755b94bd3eb11c2e3d"/>
 	</files>
 	<assets>
 		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/aa.png" md5="b51cd1f73e48dff9282fd18da28ebb9a"/>
