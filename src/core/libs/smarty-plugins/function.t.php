@@ -33,7 +33,7 @@ function smarty_function_t($params, $template){
 
 	$key = array_shift($params);
 
-	$ikey = \Core\i18n\Loader::Get($key, 'en_PI');
+	$ikey = \Core\i18n\Loader::Get($key);
 
 	if(!$ikey){
 		trigger_error('i18n key [' . $key . '] not located.', E_USER_NOTICE);

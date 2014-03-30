@@ -144,24 +144,19 @@ class DateTime extends \DateTime{
 			return $this->getRelative();
 		}
 		elseif($format == DateTime::FULLDATE){
-			// @todo Locale Setting!
-			$format = 'F j, Y';
+			$format = \Core\i18n\Loader::Get('FORMAT_FULLDATE');
 		}
 		elseif($format == DateTime::SHORTDATE){
-			// @todo Locale Setting!
-			$format = 'n/j/Y';
+			$format = \Core\i18n\Loader::Get('FORMAT_SHORTDATE');
 		}
 		elseif($format == DateTime::FULLDATETIME){
-			// @todo Locale Setting!
-			$format = 'F j, Y \a\t g:i A';
+			$format = \Core\i18n\Loader::Get('FORMAT_FULLDATETIME');
 		}
 		elseif($format == DateTime::SHORTDATETIME){
-			// @todo Locale Setting!
-			$format = 'g:i A, n/j/Y';
+			$format = \Core\i18n\Loader::Get('FORMAT_SHORTDATETIME');
 		}
 		elseif($format == DateTIme::TIME){
-			// @todo Locale Setting!
-			$format = 'g:i A';
+			$format = \Core\i18n\Loader::Get('FORMAT_TIME');
 		}
 
 

@@ -47,8 +47,7 @@ class PageRequest {
 	 *
 	 * @var array
 	 */
-	// @todo Complete this
-	//public $acceptLanguages = array();
+	public $acceptLanguages = array();
 
 	/**
 	 * Request method, one of the PageRequest::METHOD_* strings.
@@ -151,6 +150,7 @@ class PageRequest {
 		$this->_resolveMethod();
 		$this->_resolveAcceptHeader();
 		$this->_resolveUAHeader();
+		$this->_resolveLanguageHeader();
 
 		// Set the request parameters
 		if (is_array($_GET)) {
@@ -976,6 +976,41 @@ class PageRequest {
 		// And finally, run through all the content types and make them a little easier to parse.
 		foreach ($this->contentTypes as $k => $v) {
 			$this->contentTypes[$k]['group'] = substr($v['type'], 0, strpos($v['type'], '/'));
+		}
+	}
+
+	private function _resolveLanguageHeader() {
+		// I need to ensure there's at least a default.
+		$header = (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : 'en';
+
+		// As per the Accept HTTP 1.1 spec, all accepts MUST be separated with a comma.
+		$header = explode(',', $header);
+
+		// Clear the array
+		$this->acceptLanguages = array();
+		$langs = [];
+
+		// And set each one.
+		foreach ($header as $h) {
+			if (strpos($h, ';') === false) {
+				$weight  = 1.0; // Do 1.0 to ensure it's parsed as a float and not an int.
+				$content = $h;
+			}
+			else {
+				list($content, $weight) = explode(';', $h);
+				// Trim off the "q=" bit.
+				$weight = floatval(substr($weight, 3));
+			}
+
+			$content = str_replace('-', '_', $content);
+
+			$langs[$content] = $weight;
+		}
+
+		// Sort the languages by weight.
+		arsort($langs);
+		foreach($langs as $l => $w){
+			$this->acceptLanguages[] = $l;
 		}
 	}
 

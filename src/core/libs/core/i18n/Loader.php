@@ -77,7 +77,12 @@ class Loader {
 
 		foreach(\Core::GetComponents() as $c){
 			/** @var \Component_2_1 $c */
-			$dir = $c->getBaseDir() . 'i18n/';
+			if($c->getName() == 'core'){
+				$dir = ROOT_PDIR . 'core/i18n/';
+			}
+			else{
+				$dir = $c->getBaseDir() . 'i18n/';
+			}
 
 			if(!is_dir($dir)){
 				// No i18n directory defined in this component, simply skip over.
@@ -105,7 +110,15 @@ class Loader {
 
 		foreach($files as $f){
 			$ini = parse_ini_file($f, true);
-			self::$Strings = array_merge(self::$Strings, $ini);
+
+			foreach($ini as $lang => $dat){
+				if(!isset(self::$Strings[$lang])){
+					self::$Strings[$lang] = $dat;
+				}
+				else{
+					self::$Strings[$lang] = array_merge(self::$Strings[$lang], $dat);
+				}
+			}
 		}
 
 		// Make sure that each language set has all base directives set too!
@@ -135,31 +148,39 @@ class Loader {
 	 * Will return the located string, or null if not located.
 	 *
 	 * @param string $key
-	 * @param string $lang
+	 * @param string|null $lang
 	 *
 	 * @return string|null
 	 */
-	public static function Get($key, $lang){
+	public static function Get($key, $lang = null){
+		// @todo Make this pull from the site config for the default language setting.
 		$default = 'en';
-		if(strpos($lang, '_') !== false){
-			// Skip the root language setting itself.
-			$base = substr($lang, 0, strpos($lang, '_'));
+
+		if($lang === null){
+			// Pull the supported languages from the system.
+			$langs = \PageRequest::GetSystemRequest()->acceptLanguages;
+			$langs[] = $default;
 		}
 		else{
-			$base = false;
+			if(strpos($lang, '_') !== false){
+				// Skip the root language setting itself.
+				$base = substr($lang, 0, strpos($lang, '_'));
+
+				$langs = [$lang, $base, $default];
+			}
+			else{
+				$langs = [$lang, $default];
+			}
 		}
 
-		if(isset(self::$Strings[$lang][$key])){
-			return self::$Strings[$lang][$key];
+		$langs = array_unique($langs);
+
+		foreach($langs as $l){
+			if(isset(self::$Strings[$l]) && isset(self::$Strings[$l][$key])){
+				return self::$Strings[$l][$key];
+			}
 		}
-		elseif($base && isset(self::$Strings[$base][$key])){
-			return self::$Strings[$default][$key];
-		}
-		elseif(isset(self::$Strings[$default][$key])){
-			return self::$Strings[$default][$key];
-		}
-		else{
-			return null;
-		}
+
+		return $key;
 	}
 } 
