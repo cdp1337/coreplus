@@ -121,11 +121,21 @@ class UserController extends Controller_2_1{
 
 		$form = \Core\User\Helper::GetEditForm($user);
 
+		// Grab the login attempts for this user
+		$logins = SystemLogModel::Find(
+			//['affected_user_id = ' . $user->get('id'), 'code = /user/login'],
+			['affected_user_id = ' . $user->get('id')],
+			20,
+			'datetime DESC'
+		);
+
 		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
 
+		$view->mastertemplate = ConfigHandler::Get('/theme/siteskin/user');
+		$view->title = 'My Profile';
 		$view->assign('user', $user);
 		$view->assign('form', $form);
-		$view->title = 'My Profile';
+		$view->assign('logins', $logins);
 
 		return null;
 	}
@@ -188,6 +198,7 @@ class UserController extends Controller_2_1{
 
 
 		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
+		$view->mastertemplate = ConfigHandler::Get('/theme/siteskin/user');
 		$view->title = 'Editing ' . $user->getDisplayName();
 		$view->assign('form', $form);
 		$view->assign('contextnames_json', json_encode($contextnames));
