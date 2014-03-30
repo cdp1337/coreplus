@@ -954,6 +954,17 @@ class UserModel extends Model {
 
 				/** @var UserGroupModel $group */
 				$group = $uug->getLink('UserGroup');
+
+				if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+					// Only return this site's groups if in multisite mode
+					if(!(
+						$group->get('site') == -1 ||
+						$group->get('site') == MultiSiteHelper::GetCurrentSiteID()
+					)){
+						continue;
+					}
+				}
+
 				$this->_resolvedpermissions[$key] = array_merge($this->_resolvedpermissions[$key], $group->getPermissions());
 			}
 		}
