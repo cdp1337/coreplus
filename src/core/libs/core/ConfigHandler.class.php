@@ -312,6 +312,42 @@ class ConfigHandler implements ISingleton {
 	}
 
 	/**
+	 * Find config options based on a given string.
+	 *
+	 * @param string $keymatch
+	 *
+	 * @return array
+	 */
+	public static function FindConfigs($keymatch){
+
+		$return = [];
+
+		foreach(self::Singleton()->_cacheFromDB as $k => $config){
+			/** @var ConfigModel $config */
+			if(strpos($k, $keymatch) !== false){
+				$return[$k] = $config;
+			}
+		}
+/*
+		foreach(self::Singleton()->_overrides as $k => $v){
+			if(strpos($k, $keymatch) !== false){
+				$return[$k] = $v;
+			}
+		}
+
+		if(isset($_SESSION['configs'])){
+			foreach($_SESSION['configs'] as $k => $v){
+				if(strpos($k, $keymatch) !== false){
+					$return[$k] = $v;
+				}
+			}
+		}
+*/
+
+		return $return;
+	}
+
+	/**
 	 * Set a configuration override value.  This is NOT saved in the database or anything, simply available in memory.
 	 *
 	 * @param $key
