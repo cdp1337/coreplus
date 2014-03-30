@@ -74,7 +74,7 @@ class SystemLogModel extends Model {
 			'maxlength' => 160,
 		),
 		'user_id'    => array(
-			'type'    => Model::ATT_TYPE_INT,
+			'type'    => Model::ATT_TYPE_UUID_FK,
 			'default' => 0,
 		),
 		'ip_addr'    => array(
@@ -86,7 +86,7 @@ class SystemLogModel extends Model {
 			'maxlength' => 128
 		),
 		'affected_user_id'    => array(
-			'type'    => Model::ATT_TYPE_INT,
+			'type'    => Model::ATT_TYPE_UUID_FK,
 			'default' => null,
 			'null'    => true,
 			'comment' => 'If this action potentially affects a user, list the ID here.'
