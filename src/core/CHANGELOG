@@ -1,3 +1,10 @@
+Core Plus 2.6.4
+
+	* Browscap changed their download URL.......
+	* Forgot an upstream block...
+	* Backport the fix of the page URL resolution including a custom content type.
+	-- Charlie Powell <charlie@eval.bz>  Mon, 31 Mar 2014 03:24:55 -0400
+
 Core Plus 2.6.3
 
 	* [Security] Fix Prevent the installer from being executed after the site has been installed.

@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 21 Mar 2014 18:55:05 -0400
+ * @compiled Mon, 31 Mar 2014 03:24:01 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -12108,7 +12108,7 @@ namespace  {
 namespace Core {
 class UserAgent {
 private static $updateInterval =   604800; // 1 week
-private static $_ini_url    =   'http://tempdownloads.browserscap.com/stream.asp?Full_PHP_BrowscapINI';
+private static $_ini_url    =   'http://browscap.org/stream?q=Full_PHP_BrowsCapINI';
 const REGEX_DELIMITER = '@';
 const REGEX_MODIFIERS = 'i';
 const VALUES_TO_QUOTE = 'Browser|Parent';

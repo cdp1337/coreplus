@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.3" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.4" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -529,7 +529,7 @@
 		<file filename="core/libs/core/Time.class.php" md5="ae56c336aefe716b5272de4d95f3bc19">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/UserAgent.php" md5="278ad7ddb3e300c5165328a00eb635da">
+		<file filename="core/libs/core/UserAgent.php" md5="cc42c9f3a2ef53938d73a49659e99fd6">
 			<class name="Core\UserAgent"/>
 		</file>
 		<file filename="core/libs/core/View.class.php" md5="a332fad46ffd049aaf57e2250751f324">
@@ -1454,7 +1454,7 @@
 		<file filename="files/private/tests/ivak_TV_Test_Screen.png" md5="e23ff09f0d6d5c8f9f14877264c251b7"/>
 		<file filename="htaccess.ant" md5="03a971bd1f755da122d8f8f458b840cf"/>
 		<file filename="htaccess.ex" md5="5b9477efc4add163473fe0ab8939bede"/>
-		<file filename="index.php" md5="6d087b205ab2a4bda77c3a7eab7ca1c3"/>
+		<file filename="index.php" md5="5a82a0099fd67a28a28a749e4c7f4d3b"/>
 		<file filename="install/InstallPage.class.php" md5="908d4058af1a52767fc85ce03a5f0de3">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1499,21 +1499,27 @@
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 		<file filename="install/utilities.php" md5="19b6e7d1483e8ec8e0a6fad9932ce850"/>
-		<file filename="logs/error.log" md5="77b240bfa67dcd6d3ca3f90bea5cc993"/>
+		<file filename="logs/error.log" md5="a6b7bf411c6982e7fa35c7b011f7852e"/>
 		<file filename="logs/error.log.201401050010.gz" md5="e843508fdb756c6bdd6073faea1736c7"/>
 		<file filename="logs/error.log.201401120010.gz" md5="cc1bf0fbb7cb6ec6ce264760d5ffc33f"/>
 		<file filename="logs/error.log.201401190010.gz" md5="05a59173d7b783801821fdcceb4e222e"/>
 		<file filename="logs/error.log.201402090045.gz" md5="2b32aacbf9638f1ed64804d89dc0e9a2"/>
 		<file filename="logs/error.log.201403160010.gz" md5="959af58b93e049b7db2804fd9744d22c"/>
-		<file filename="logs/info.log" md5="da850eaa1d06a761f28b6e131ae1268d"/>
+		<file filename="logs/error.log.201403230010.gz" md5="ef62b5134beebcee3a1521911e7c1272"/>
+		<file filename="logs/error.log.201403300010.gz" md5="5fb7c7cf641fa0aee537ca5007eb079c"/>
+		<file filename="logs/info.log" md5="7041c200a4d5c25ef0420c86acc3ad14"/>
 		<file filename="logs/info.log.201401050010.gz" md5="8801d575836ad929d9e49f57eaa64e8d"/>
 		<file filename="logs/info.log.201401120010.gz" md5="c68d7ab8d8033a51c57234947763f989"/>
 		<file filename="logs/info.log.201401190010.gz" md5="b7441fcbe56c30c95d6cd1ab8f10a70a"/>
 		<file filename="logs/info.log.201402090045.gz" md5="30ab9838317ca7f8f7f0e1afc4ffa994"/>
 		<file filename="logs/info.log.201403160010.gz" md5="c2d9d2f1d9d1819d657a132280fb4b4e"/>
-		<file filename="logs/security.log" md5="49fe404156df17bc8030af9aa7e0a8a9"/>
+		<file filename="logs/info.log.201403230010.gz" md5="55d1e52c6cbae41d04014d1980ba19bc"/>
+		<file filename="logs/info.log.201403300010.gz" md5="571bf9874c7b7191981a5fbe0a3bbcb6"/>
+		<file filename="logs/security.log" md5="e858df8d12a477cd17a673c9fde3a528"/>
 		<file filename="logs/security.log.201402090045.gz" md5="13fa9d10d06181c970c417686da58a68"/>
 		<file filename="logs/security.log.201403160010.gz" md5="1d18a9aadd30d66318878116ac811f7a"/>
+		<file filename="logs/security.log.201403230010.gz" md5="8bdd2fe478f9a8c72cc7c96b64d1c90f"/>
+		<file filename="logs/security.log.201403300010.gz" md5="39c173aa969551409a32cceb9eb0f2b1"/>
 	</files>
 	<pages>
 		<page baseurl="/admin" admin="1" access="g:admin" title="Administration"/>
@@ -1844,6 +1850,7 @@
 		<upgrade from="2.6.0" to="2.6.1"/>
 		<upgrade from="2.6.1" to="2.6.2"/>
 		<upgrade from="2.6.2" to="2.6.3"/>
+		<upgrade from="2.6.3" to="2.6.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
