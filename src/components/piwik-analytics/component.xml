@@ -5,7 +5,7 @@
 		<require name="core" type="component" version="3.1.0" operation="ge"/>
 	</requires>
 	<hooks>
-		<hook name="/core/page/prerender" call="\Piwik\PiwikHelper::InstallTracking"/>
+		<hook name="/core/page/preexecute" call="\Piwik\PiwikHelper::InstallTracking"/>
 	</hooks>
 	<description>
 		Piwik displays reports regarding the geographic location of visits, the source of visits

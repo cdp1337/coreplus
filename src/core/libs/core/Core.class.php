@@ -1460,7 +1460,7 @@ class Core implements ISingleton {
 	/**
 	 * Function that attaches the core javascript to the page.
 	 *
-	 * This should be called automatically from the hook /core/page/prerender.
+	 * This should be called automatically from the hook /core/page/preexecute.
 	 */
 	public static function _AttachCoreJavascript() {
 

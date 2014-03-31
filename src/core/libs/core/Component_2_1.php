@@ -1959,13 +1959,13 @@ class Component_2_1 {
 				if($action == 'Added' && $installable == '/admin'){
 					$weight = WidgetInstanceModel::Count([
 								'widgetarea' => 'Admin Dashboard',
-								'page' => 'pages/admin/index.tpl',
+								'page_baseurl' => '/admin',
 							]) + 1;
 
 					$wi = new WidgetInstanceModel();
 					$wi->setFromArray([
 							'baseurl' => $m->get('baseurl'),
-							'page' => 'pages/admin/index.tpl',
+							'page_baseurl' => '/admin',
 							'widgetarea' => 'Admin Dashboard',
 							'weight' => $weight
 						]);

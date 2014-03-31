@@ -704,9 +704,13 @@ class View {
 						$debug .= "<span>";
 						/** @var $hook Hook */
 						$debug .= $hook->name;
-						if($hook->description) $debug .= ' <i> - ' . $hook->description . '</i>';
+						if($hook->description) $debug .= ' <em> - ' . $hook->description . '</em>';
 						$debug .= "\n" . '<span style="color:#999;">Return expected: ' . $hook->returnType . '</span>';
-						$debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
+						$debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>';
+						foreach($hook->getBindings() as $b){
+							$debug .= "\n" . ' * ' . $b['call'];
+						}
+						$debug .= "\n\n";
 						$debug .= "</span>";
 					}
 					$debug .= '</fieldset>';

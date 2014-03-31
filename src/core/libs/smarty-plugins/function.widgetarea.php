@@ -30,7 +30,7 @@ function smarty_function_widgetarea($params, $template) {
 
 	$body = '';
 	$name = $params['name'];
-	$page = $template->template_resource;
+	$page = PageRequest::GetSystemRequest()->getBaseURL();
 	// May provide metadata useful for the called widget.... maybe.
 	$installable = (isset($params['installable'])) ? $params['installable'] : null;
 
@@ -62,14 +62,14 @@ function smarty_function_widgetarea($params, $template) {
 	$skinwhere = new Core\Datamodel\DatasetWhereClause();
 	$skinwhere->setSeparator('AND');
 	$skinwhere->addWhere('theme = ' . $theme);
-	$skinwhere->addWhere('template = ' . $tplname);
+	$skinwhere->addWhere('skin = ' . $tplname);
 	$skinwhere->addWhere('widgetarea = ' . $name);
 	$subwhere->addWhere($skinwhere);
 
 	// And second, the page-level where clause.
 	$pagewhere = new Core\Datamodel\DatasetWhereClause();
 	$pagewhere->setSeparator('AND');
-	$pagewhere->addWhere('page = ' . $page);
+	$pagewhere->addWhere('page_baseurl = ' . $page);
 	$pagewhere->addWhere('widgetarea = ' . $name);
 	$subwhere->addWhere($pagewhere);
 

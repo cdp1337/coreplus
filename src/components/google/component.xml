@@ -10,7 +10,7 @@
 		<provide version="1.1.0" name="GoogleAnalytics" type="component"/>
 	</provides>
 	<hooks>
-		<hook name="/core/page/prerender" call="\Google\Analytics\Helper::InstallTracking"/>
+		<hook name="/core/page/preexecute" call="\Google\Analytics\Helper::InstallTracking"/>
 		<hook name="/core/page/error-404" call="\Google\CSE\Helper::SiteSearch"/>
 	</hooks>
 	<description>

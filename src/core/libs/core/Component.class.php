@@ -450,6 +450,7 @@ class Component extends XMLLoader {
 
 		// Register any hooks that may be present.
 		foreach ($this->getElementsByTagName('hookregister') as $h) {
+			/** @var DOMElement $h */
 			$hook              = new Hook($h->getAttribute('name'));
 			$hook->description = $h->getAttribute('description');
 			HookHandler::RegisterHook($hook);

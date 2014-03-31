@@ -212,6 +212,34 @@ class Widget_2_1 {
 		return new $name();
 	}
 
+	/**
+	 * Hook into /core/page/rendering to add the control link for this page if necessary and the user has the appropriate permissions.
+	 */
+	public static function HookPageRender(){
+		$viewer = \Core\user()->checkAccess('p:/core/widgets/manage');
+		$manager = \Core\user()->checkAccess('p:/core/widgets/manage');
+
+		if(!($viewer || $manager)){
+			// User does not have access to view nor to edit widgets, simply return out of here.
+			return true;
+		}
+
+		$request  = \Core\page_request();
+		$view     = \Core\view();
+		$page     = $request->getPageModel();
+		$template = \Core\Templates\Template::Factory($page->get('last_template'));
+		$areas    = $template->getWidgetAreas();
+
+		if(!sizeof($areas)){
+			// Selected template does not have any widget areas defined, no need to display the option then!
+			return true;
+		}
+
+		// Otherwise...
+		$view->addControl('Page Widgets', '/admin/widgets?baseurl=' . $page->get('baseurl'), 'cog');
+		return true;
+	}
+
 }
 
 class WidgetRequest{

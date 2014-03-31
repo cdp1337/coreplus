@@ -492,12 +492,15 @@ class AdminController extends Controller_2_1 {
 		// Build a list of create pages for all registered components.
 		$components = Core::GetComponents();
 		$links = [];
+		$componentopts = ['' => '-- All Components --'];
 		foreach($components as $c){
 			/** @var Component_2_1 $c */
 			foreach($c->getXML()->getElements('/pages/pagecreate') as $node){
 				/** @var DOMElement $node */
 				$links[] = ['baseurl' => $node->getAttribute('baseurl'), 'title' => $node->getAttribute('title')];
 			}
+
+			$componentopts[$c->getKeyName()] = $c->getName();
 		}
 
 		$filters = new FilterForm();
@@ -529,6 +532,16 @@ class AdminController extends Controller_2_1 {
 				'name' => 'parenturl',
 				'title' => 'Parent URL',
 				'link' => FilterForm::LINK_TYPE_STARTSWITH,
+			]
+		);
+
+		$filters->addElement(
+			'select',
+			[
+				'name' => 'component',
+				'title' => 'Source Component',
+				'options' => $componentopts,
+				'link' => FilterForm::LINK_TYPE_STANDARD,
 			]
 		);
 
@@ -639,11 +652,11 @@ class AdminController extends Controller_2_1 {
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
-		if(!\Core\user()->checkAccess('p:/core/widgets/view')){
+		$viewer = \Core\user()->checkAccess('p:/core/widgets/manage');
+		$manager = \Core\user()->checkAccess('p:/core/widgets/manage');
+		if(!($viewer || $manager)){
 			return View::ERROR_ACCESSDENIED;
 		}
-
-		$manager = \Core\user()->checkAccess('p:/core/widgets/manage');
 
 		// Build a list of create pages for all registered components.
 		$components = Core::GetComponents();
@@ -668,30 +681,44 @@ class AdminController extends Controller_2_1 {
 			}
 		}
 
-		$theme = ThemeHandler::GetTheme();
-		$skins = $theme->getSkins();
-		$skinopts = [];
-		$skin = null;
-		foreach($skins as $dat){
-			if($request->getParameter('skin') && $dat['file'] == $request->getParameter('skin')){
-				$selected = true;
-				$skin = \Core\Templates\Template::Factory($dat['filename']);
+		if($request->getParameter('baseurl')){
+			// It's a page request.
+			$skinopts = [];
+			$theme = null;
+			$skin = null;
+			$page = PageModel::Construct($request->getParameter('baseurl'));
+			$template = \Core\Templates\Template::Factory($page->get('last_template'));
+			$areas = $template->getWidgetAreas();
+		}
+		else{
+			$theme = ThemeHandler::GetTheme();
+			$skins = $theme->getSkins();
+			$skinopts = [];
+			$skin = null;
+			$page = null;
+			foreach($skins as $dat){
+				if($request->getParameter('skin') && $dat['file'] == $request->getParameter('skin')){
+					$selected = true;
+					$skin = \Core\Templates\Template::Factory($dat['filename']);
+				}
+				elseif(!$request->getParameter('skin') && $dat['default']){
+					$selected = true;
+					$skin = \Core\Templates\Template::Factory($dat['filename']);
+				}
+				else{
+					$selected = false;
+				}
+				$skinopts[] = [
+					'title'    => $dat['title'],
+					'value'    => $dat['file'],
+					'selected' => $selected,
+				];
 			}
-			elseif(!$request->getParameter('skin') && $dat['default']){
-				$selected = true;
-				$skin = \Core\Templates\Template::Factory($dat['filename']);
-			}
-			else{
-				$selected = false;
-			}
-			$skinopts[] = [
-				'title'    => $dat['title'],
-				'value'    => $dat['file'],
-				'selected' => $selected,
-			];
+			$areas = $skin->getWidgetAreas();
 		}
 
-		$areas = $skin->getWidgetAreas();
+
+
 		foreach($areas as $k => $dat){
 			// Ensure that each area has a widgets array, (even if it's empty)
 			$areas[$k]['widgets'] = [];
@@ -703,12 +730,18 @@ class AdminController extends Controller_2_1 {
 			$factory->where('site = ' . MultiSiteHelper::GetCurrentSiteID());
 		}
 
-		// First, the skin-level where clause.
-		$skinwhere = new Core\Datamodel\DatasetWhereClause();
-		$skinwhere->setSeparator('AND');
-		$skinwhere->addWhere('theme = ' . $theme->getKeyName());
-		$skinwhere->addWhere('template = ' . $skin->getBasename());
-		$factory->where($skinwhere);
+		if($theme){
+			// First, the skin-level where clause.
+			$skinwhere = new Core\Datamodel\DatasetWhereClause();
+			$skinwhere->setSeparator('AND');
+			$skinwhere->addWhere('theme = ' . $theme->getKeyName());
+			$skinwhere->addWhere('skin = ' . $skin->getBasename());
+			$factory->where($skinwhere);
+		}
+		elseif($page){
+			$factory->where('page_baseurl = ' . $page->get('baseurl'));
+		}
+
 
 		foreach($factory->get() as $wi){
 			/** @var $wi WidgetInstanceModel */
@@ -738,8 +771,9 @@ class AdminController extends Controller_2_1 {
 		$view->assign('links', $links);
 		$view->assign('manager', $manager);
 		$view->assign('skins', $skinopts);
-		$view->assign('theme', $theme->getKeyName());
-		$view->assign('skin', $skin->getBasename());
+		$view->assign('page_baseurl', ($page ? $page->get('baseurl') : null));
+		$view->assign('theme', ($theme ? $theme->getKeyName() : null));
+		$view->assign('skin', ($skin ? $skin->getBasename() : null));
 		$view->assign('areas', $areas);
 	}
 
@@ -950,12 +984,14 @@ class AdminController extends Controller_2_1 {
 
 		$theme = $_POST['theme'];
 		$skin = $_POST['skin'];
+		$page = $_POST['page_baseurl'];
 
 		foreach($_POST['widgetarea'] as $id => $dat){
 
 			// Merge in the global information for this request
-			$dat['theme'] = $theme;
-			$dat['template'] = $skin;
+			$dat['theme']        = $theme;
+			$dat['template']     = $skin;
+			$dat['page_baseurl'] = $page;
 
 			$dat['weight'] = ++$counter;
 			$dat['access'] = $dat['widgetaccess'];
@@ -999,7 +1035,13 @@ class AdminController extends Controller_2_1 {
 			Core::SetMessage('No changes performed', 'info');
 		}
 
-		\Core\redirect('/admin/widgets?skin=' . $skin);
+		if($page){
+			\Core\redirect($page);
+		}
+		else{
+			\Core\redirect('/admin/widgets?skin=' . $skin);
+		}
+
 	}
 
 	/**

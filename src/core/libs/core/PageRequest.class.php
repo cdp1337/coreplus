@@ -261,7 +261,7 @@ class PageRequest {
 
 		// Anything that needs to fire off *before* the page is rendered.
 		// This includes widgets, script addons, and anything else that needs a CurrentPage.
-		HookHandler::DispatchHook('/core/page/prerender');
+		HookHandler::DispatchHook('/core/page/preexecute');
 
 		// Load the underlying controller.
 		$pagedat   = $this->splitParts();
@@ -599,6 +599,8 @@ class PageRequest {
 			// Bots have no business indexing user-action pages.
 			$view->addMetaName('robots', 'noindex');
 		}
+
+		HookHandler::DispatchHook('/core/page/postexecute');
 
 		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Completed PageRequest->execute()');
 	}

@@ -1,7 +1,7 @@
 {script library="jqueryui"}{/script}
 {script library="jquery.json"}{/script}
 {script src="js/user/user.js"}{/script}
-{script src="js/admin/widgets.js"}{/script}
+{if $manager}{script src="js/admin/widgets.js"}{/script}{/if}
 {css href="css/admin/widgets.css"}{/css}
 
 <p class="message-tutorial">
@@ -11,22 +11,25 @@
 </p>
 
 <div>
-	<form method="GET" action="" id="skin-selection-form" class="form-orientation-vertical">
-		<div class="formelement formelementselect">
-			<label class="form-element-label">Theme Skin</label>
-			<div class="form-element-value">
-				<select name="skin" id="skin-selection-select">
-					{foreach $skins as $s}
-						<option value="{$s.value}" {if $s.selected}selected="selected"{/if}>{$s.title}</option>
-					{/foreach}
-				</select>
+	{if sizeof($skins)}
+		<form method="GET" action="" id="skin-selection-form" class="form-orientation-horizontal">
+			<div class="formelement formelementselect">
+				<label class="form-element-label">Theme Skin</label>
+				<div class="form-element-value">
+					<select name="skin" id="skin-selection-select">
+						{foreach $skins as $s}
+							<option value="{$s.value}" {if $s.selected}selected="selected"{/if}>{$s.title}</option>
+						{/foreach}
+					</select>
+				</div>
 			</div>
-		</div>
-	</form>
+		</form>
+	{/if}
 
 
 	<form action="{link '/admin/widgetinstances/save'}" method="POST">
 
+		<input type="hidden" name="page_baseurl" value="{$page_baseurl}"/>
 		<input type="hidden" name="theme" value="{$theme}"/>
 		<input type="hidden" name="skin" value="{$skin}"/>
 
@@ -43,8 +46,7 @@
 
 								<span class="widget-title">
 									{if $widget.Widget.title}
-										{$widget.Widget.title} <br/>
-										[{$widget.baseurl}]
+										{$widget.Widget.title} [{$widget.baseurl}]
 									{else}
 										{$widget.baseurl}
 									{/if}
@@ -61,8 +63,10 @@
 			{/foreach}
 
 			{if sizeof($areas)}
-				<br/>
-				<input type="submit" value="Update Widgets"/>
+				{if $manager}
+					<br/>
+					<input type="submit" value="Update Widgets"/>
+				{/if}
 			{else}
 				<p class="message-info">
 					The skin {$skin} does not appear to have any widget areas!

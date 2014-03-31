@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 27 Mar 2014 00:31:15 -0400
+ * @compiled Mon, 31 Mar 2014 02:39:20 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4739,7 +4739,7 @@ public static $Schema = array(
 'maxlength' => 160,
 ),
 'user_id'    => array(
-'type'    => Model::ATT_TYPE_INT,
+'type'    => Model::ATT_TYPE_UUID_FK,
 'default' => 0,
 ),
 'ip_addr'    => array(
@@ -4751,7 +4751,7 @@ public static $Schema = array(
 'maxlength' => 128
 ),
 'affected_user_id'    => array(
-'type'    => Model::ATT_TYPE_INT,
+'type'    => Model::ATT_TYPE_UUID_FK,
 'default' => null,
 'null'    => true,
 'comment' => 'If this action potentially affects a user, list the ID here.'
@@ -5391,6 +5391,14 @@ if(!isset($this->_resolvedpermissions[$key])){
 $this->_resolvedpermissions[$key] = [];
 }
 $group = $uug->getLink('UserGroup');
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(!(
+$group->get('site') == -1 ||
+$group->get('site') == MultiSiteHelper::GetCurrentSiteID()
+)){
+continue;
+}
+}
 $this->_resolvedpermissions[$key] = array_merge($this->_resolvedpermissions[$key], $group->getPermissions());
 }
 }
@@ -7834,12 +7842,12 @@ $changes[] = $action . ' widget [' . $m->get('baseurl') . ']';
 if($action == 'Added' && $installable == '/admin'){
 $weight = WidgetInstanceModel::Count([
 'widgetarea' => 'Admin Dashboard',
-'page' => 'pages/admin/index.tpl',
+'page_baseurl' => '/admin',
 ]) + 1;
 $wi = new WidgetInstanceModel();
 $wi->setFromArray([
 'baseurl' => $m->get('baseurl'),
-'page' => 'pages/admin/index.tpl',
+'page_baseurl' => '/admin',
 'widgetarea' => 'Admin Dashboard',
 'weight' => $weight
 ]);
@@ -13335,6 +13343,15 @@ $config->save();
 }
 return true;
 }
+public static function FindConfigs($keymatch){
+$return = [];
+foreach(self::Singleton()->_cacheFromDB as $k => $config){
+if(strpos($k, $keymatch) !== false){
+$return[$k] = $config;
+}
+}
+return $return;
+}
 public static function SetOverride($key, $value){
 self::Singleton()->_overrides[$key] = $value;
 }
@@ -15330,9 +15347,13 @@ $debug .= '<legend><b>Registered Hooks</b> <i class="icon-ellipsis-h"></i></lege
 foreach(HookHandler::GetAllHooks() as $hook){
 $debug .= "<span>";
 $debug .= $hook->name;
-if($hook->description) $debug .= ' <i> - ' . $hook->description . '</i>';
+if($hook->description) $debug .= ' <em> - ' . $hook->description . '</em>';
 $debug .= "\n" . '<span style="color:#999;">Return expected: ' . $hook->returnType . '</span>';
-$debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>' . "\n\n";
+$debug .= "\n" . '<span style="color:#999;">Attached by ' . $hook->getBindingCount() . ' binding(s).</span>';
+foreach($hook->getBindings() as $b){
+$debug .= "\n" . ' * ' . $b['call'];
+}
+$debug .= "\n\n";
 $debug .= "</span>";
 }
 $debug .= '</fieldset>';
@@ -15739,6 +15760,23 @@ return $this->getWidgetModel()->getSetting($key);
 }
 public static function Factory($name) {
 return new $name();
+}
+public static function HookPageRender(){
+$viewer = \Core\user()->checkAccess('p:/core/widgets/manage');
+$manager = \Core\user()->checkAccess('p:/core/widgets/manage');
+if(!($viewer || $manager)){
+return true;
+}
+$request  = \Core\page_request();
+$view     = \Core\view();
+$page     = $request->getPageModel();
+$template = \Core\Templates\Template::Factory($page->get('last_template'));
+$areas    = $template->getWidgetAreas();
+if(!sizeof($areas)){
+return true;
+}
+$view->addControl('Page Widgets', '/admin/widgets?baseurl=' . $page->get('baseurl'), 'cog');
+return true;
 }
 }
 class WidgetRequest{
@@ -16543,6 +16581,7 @@ const METHOD_PUT    = 'PUT';
 const METHOD_PUSH   = 'PUSH';
 const METHOD_DELETE = 'DELETE';
 public $contentTypes = array();
+public $acceptLanguages = array();
 public $method = null;
 public $useragent;
 public $uri;
@@ -16574,6 +16613,7 @@ $this->ctype = \Core\Filestore\extension_to_mimetype($ctype);
 $this->_resolveMethod();
 $this->_resolveAcceptHeader();
 $this->_resolveUAHeader();
+$this->_resolveLanguageHeader();
 if (is_array($_GET)) {
 foreach ($_GET as $k => $v) {
 if (is_numeric($k)) continue;
@@ -16630,7 +16670,7 @@ $this->_cached = true;
 return;
 }
 }
-HookHandler::DispatchHook('/core/page/prerender');
+HookHandler::DispatchHook('/core/page/preexecute');
 $pagedat   = $this->splitParts();
 $view = $this->getView();
 if (!(isset($pagedat['controller']) && $pagedat['controller'])) {
@@ -16837,6 +16877,7 @@ $view->mastertemplate = $themeskins[0]['file'];
 if(!$page->get('indexable')){
 $view->addMetaName('robots', 'noindex');
 }
+HookHandler::DispatchHook('/core/page/postexecute');
 \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Completed PageRequest->execute()');
 }
 public function render(){
@@ -17049,6 +17090,28 @@ $this->contentTypes[] = array(
 }
 foreach ($this->contentTypes as $k => $v) {
 $this->contentTypes[$k]['group'] = substr($v['type'], 0, strpos($v['type'], '/'));
+}
+}
+private function _resolveLanguageHeader() {
+$header = (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : 'en';
+$header = explode(',', $header);
+$this->acceptLanguages = array();
+$langs = [];
+foreach ($header as $h) {
+if (strpos($h, ';') === false) {
+$weight  = 1.0; // Do 1.0 to ensure it's parsed as a float and not an int.
+$content = $h;
+}
+else {
+list($content, $weight) = explode(';', $h);
+$weight = floatval(substr($weight, 3));
+}
+$content = str_replace('-', '_', $content);
+$langs[$content] = $weight;
+}
+arsort($langs);
+foreach($langs as $l => $w){
+$this->acceptLanguages[] = $l;
 }
 }
 private function _resolveUAHeader() {

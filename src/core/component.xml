@@ -24,11 +24,14 @@
 		<hookregister name="/core/components/loaded" description="Called immediately after all components have been loaded into memory."/>
 		<hookregister name="/core/components/ready" description="Called after all components have been loaded into memory and made available."/>
 		<hookregister name="/core/session/ready" description="Called after the session is available"/>
-		<hookregister name="/core/page/prerender" description="Called before the page is rendered"/>
-		<hookregister name="/core/page/postrender" description="Called after all the rendering has been completed on the page."/>
+		<!-- The page execution hooks, in order -->
+		<hookregister name="/core/page/preexecute" description="Called before the page is executed"/>
+		<hookregister name="/core/page/postexecute" description="Called immediately after a successful page execution, but before any rendering"/>
 		<hookregister name="/core/page/error-404" description="Called anytime there is a 404 error"/>
 		<hookregister name="/core/page/error-403" description="Called anytime there is a 403 error"/>
-		<hookregister name="/core/page/rendering" description="Called during page rendering.    This is called after the page execution, but just before the metadata and head data is finalized.    If you need something to modify data based on the page output, use this!"/>
+		<hookregister name="/core/page/rendering" description="Called during page rendering. This is called after the page execution, but just before the metadata and head data is finalized.    If you need something to modify data based on the page output, use this!"/>
+		<hookregister name="/core/page/postrender" description="Called after all the rendering has been completed on the page."/>
+
 		<hookregister name="/core/admin/view" description="Called when an admin views the /admin page.  Useful for functions that need to inform the admin of happenings or what not."/>
 		<hookregister name="/core/model/presave" description="Called immediately before a model save"/>
 		<hookregister name="/core/model/postsave" description="Called immediately after a model save"/>
@@ -39,11 +42,12 @@
 		<hook name="/core/components/loaded" call="\Core\i18n\Loader::Init"/>
 		<hook name="/core/components/loaded" call="CurrentPage::Singleton"/>
 		<hook name="/core/components/ready" call="Form::CheckSavedSessionData"/>
-		<hook name="/core/page/prerender" call="Core::_AttachCoreJavascript"/>
+		<hook name="/core/page/preexecute" call="Core::_AttachCoreJavascript"/>
 		<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
 		<hook name="/core/page/error-404" call="GettingStartedController::_HookCatch404"/>
 		<hook name="/core/page/error-404" call="RewriteMapHelper::Catch404Hook"/>
 		<hook name="/core/page/postrender" call="Core::_RecordNavigation"/>
+		<hook name="/core/page/postexecute" call="Widget_2_1::HookPageRender"/>
 		<hook name="/core/page/postrender" call="Core\User\Helper::RecordActivity"/>
 		<hook name="/cron/hourly" call="Session::CleanupExpired"/>
 		<hook name="/cron/hourly" call="PageModel::PopularityMassUpdateHook"/>
@@ -1431,7 +1435,7 @@
 		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="System Log" group="Admin"/>
 		<page baseurl="/form/testui" admin="1" access="g:admin" title="Test Form Element UI/UX" group="Theme and Layouts"/>
 		<page baseurl="/admin/pages" admin="1" access="p:/core/pages/view" title="All Pages" group="Content"/>
-		<page baseurl="/admin/widgets" admin="1" access="p:/core/widgets/view" title="All Widgets" group="Content"/>
+		<page baseurl="/admin/widgets" admin="1" access="p:/core/widgets/view;p:/core/widgets/manage" title="All Widgets" group="Content"/>
 		<page baseurl="/admin/testui" admin="1" access="g:admin" title="Test General UI/UX" group="Theme and Layouts"/>
 		<page baseurl="/page/sitemap" admin="0" access="*" title="Sitemap" rewriteurl="/sitemap" selectable="1" indexable="1"/>
 	</pages>
@@ -1614,6 +1618,7 @@
 		<config key="/core/logs/rotate/frequency" type="enum" options="hourly|daily|weekly|monthly|never" default="weekly" description="Frequency to rotate log files"/>
 		<config key="/core/logs/rotate/compress" type="boolean" default="1" description="Compress rotated log files"/>
 		<config key="/core/logs/rotate/keep" type="int" default="14" description="How many rotated log files to keep, set to 0 to disable purging old logs."/>
+		<config key="/theme/siteskin/user" type="string" description="User-frontend Skin"/>
 	</configs>
 	<permissions>
 		<permission key="/core/systemlog/view" description="View system log entries"/>
@@ -1885,6 +1890,12 @@
 				<datasetwhere>baseurl = /UserWidget/Register</datasetwhere>
 			</dataset>
 			<php file="core/upgrades/next_page_published.php"/>
+		</upgrade>
+		<upgrade from="next">
+			<dataset action="update" table="widget_instance">
+				<datasetset key="page_baseurl">/admin</datasetset>
+				<datasetwhere>page = pages/admin/index.tpl</datasetwhere>
+			</dataset>
 		</upgrade>
 	</upgrades>
 	<authors>
