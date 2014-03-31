@@ -56,7 +56,7 @@ class UserAgent {
 	/**
 	 * @var string Location of the browscap file.
 	 */
-	private static $_ini_url    =   'http://tempdownloads.browserscap.com/stream.asp?Full_PHP_BrowscapINI';
+	private static $_ini_url    =   'http://browscap.org/stream?q=Full_PHP_BrowsCapINI';
 
 	/**
 	 * Options for regex patterns.
