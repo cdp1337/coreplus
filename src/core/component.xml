@@ -1704,6 +1704,7 @@
 		<upgrade from="2.6.1" to="2.6.2"/>
 		<upgrade from="2.6.2" to="2.7.0"/>
 		<upgrade from="2.6.3" to="2.7.0"/>
+		<upgrade from="2.6.4" to="2.7.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
