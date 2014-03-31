@@ -1,0 +1,25 @@
+# Example robots.txt for Core Plus.
+# This file nor its functionality really isn't used by the framework,
+# as Core has its own internal mechanisms for dealing with bots and indexing.
+#
+# However, many crawlers will request this page,
+# resulting in a bogus 404 if it doesn't find one.
+#
+# See http://www.robotstxt.org/robotstxt.html for more information regarding this file.
+#
+# So alas, have a generic robots.txt file! :)
+#
+
+
+
+
+# Disallow EVERYTHING!
+#
+# User-agent: *
+# Disallow: /
+
+
+
+# Allow EVERYTHING, (remember Core handles disallowing automatically so no worries doing this)
+User-agent: *
+Disallow:
