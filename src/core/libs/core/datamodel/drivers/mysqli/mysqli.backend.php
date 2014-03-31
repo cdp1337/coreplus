@@ -327,6 +327,12 @@ class mysqli_backend implements BackendInterface {
 					continue;
 				}
 
+				if(isset($schema->definitions[$column->aliasof])){
+					// The new alias already exists in the new schema.
+					// This could happen because the developer already ran this upgrade.
+					continue;
+				}
+
 				$alias = false;
 				foreach($schema->definitions as $checkcol){
 					/** @var SchemaColumn $checkcol */
