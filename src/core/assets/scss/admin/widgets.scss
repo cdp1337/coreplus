@@ -1,18 +1,16 @@
 /*** Widget and Widgetareas ***/
 
 #skin-selection-form {
-	width: 250px;
-	float: left;
+
 }
 
 /* The drop target at the top of the page */
 .widget-bucket-destination {
-	margin-left: 260px;
 
 	.widgetarea {
 		float: left;
-		width: 150px;
-		margin-right: 10px;
+		width: 250px;
+		margin-right: 5px;
 	}
 
 	.widget-droptarget {
@@ -28,13 +26,13 @@
 			border: 1px solid #888888;
 			cursor: move;
 			font-size: 80%;
-			height: 36px;
+			height: 20px;
 			margin-bottom: 2px;
 			overflow: hidden;
 			padding-top: 2px;
 			padding-left: 2px;
 			position: relative;
-			width: 142px;
+			width: 242px;
 
 			span.widget-title {
 				display: inline-block;
