@@ -39,6 +39,7 @@
 		<widget baseurl="/navigation/siblings" title="Page Siblings Nav"/>
 		<widget baseurl="/navigation/siblingsandchildren" title="Page Siblings w/Children Nav"/>
 		<widget baseurl="/navigation/children" title="Page Children Nav"/>
+		<widgetcreate title="Navigation Menu" baseurl="/navigation/create"/>
 	</widgets>
 	<assets>
 		<file filename="assets/js/navigation/manager.js" md5="e7852b3c06f5b208e35b1cb5ad08f84f"/>
