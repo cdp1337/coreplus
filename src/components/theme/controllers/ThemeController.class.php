@@ -35,6 +35,8 @@ class ThemeController extends Controller_2_1{
 
 		// Give me the current theme!
 		foreach($assetsources as $source) {
+			/** @var Component_2_1 $source */
+
 			$dir = $source->getAssetDir();
 			if(!$dir) continue;
 
@@ -147,6 +149,26 @@ class ThemeController extends Controller_2_1{
 			}
 		}
 
+		$siteskinform = new Form();
+		$siteskinform->set('callsmethod', 'ThemeController::SaveSiteSkins');
+		$opts = ['' => '-- Public Default --'];
+		foreach($current->getSkins() as $skin){
+			$opts[$skin['file']] = $skin['title'];
+		}
+		foreach(ConfigHandler::FindConfigs('/theme/siteskin/') as $k => $config){
+			$siteskinform->addElement(
+				'select',
+				[
+					'name' => 'config[' . $k . ']',
+					'title' => $config->get('description'),
+					'value' => $config->getValue(),
+					'options' => $opts,
+				]
+			);
+		}
+
+		$siteskinform->addElement('submit', ['value' => 'Save']);
+
 
 		$view->title = 'Theme Manager';
 		$view->assign('themes', $themes);
@@ -156,6 +178,7 @@ class ThemeController extends Controller_2_1{
 		$view->assign('url_themeeditor', Core::ResolveLink('/theme/editor'));
 		$view->assign('url_themewidgets', Core::ResolveLink('/theme/widgets'));
 		$view->assign('url_themestylesheets', Core::ResolveLink('/theme/selectstylesheets'));
+		$view->assign('site_skins_form', $siteskinform);
 	}
 
 	/**
@@ -472,238 +495,6 @@ class ThemeController extends Controller_2_1{
 		}
 	}
 
-	public function widgets(){
-		$view = $this->getView();
-		$request = $this->getPageRequest();
-		$filename = null;
-
-		// Traditional template management
-		$template = $request->getParameter('template');
-		if($template){
-			$t = $request->getParameter(0);
-
-			// Validate
-			if(!\Theme\validate_theme_name($t)){
-				Core::SetMessage('Invalid theme requested', 'error');
-				\core\redirect('/theme');
-			}
-
-			$filename = ROOT_PDIR . 'themes/' . $t . '/skins/' . $template;
-
-			if(!\Theme\validate_template_name($t, $template)){
-				Core::SetMessage('Invalid template requested', 'error');
-				\core\redirect('/theme');
-			}
-		}
-
-		// New page management
-		$page = $request->getParameter('page');
-		if($page){
-			$filename = Core\Templates\Template::ResolveFile($page);
-			$t = null;
-		}
-
-
-		if($request->isPost()){
-
-			$counter = 0;
-			$changes = ['created' => 0, 'updated' => 0, 'deleted' => 0];
-
-			foreach($_POST['widgetarea'] as $id => $dat){
-
-				// Merge in the global information for this request
-				if($template){
-					$dat['theme'] = $t;
-					$dat['template'] = $template;
-				}
-				elseif($page){
-					$dat['page'] = $page;
-				}
-				$dat['weight'] = ++$counter;
-				$dat['access'] = $dat['widgetaccess'];
-
-				if(strpos($id, 'new') !== false){
-					$w = new WidgetInstanceModel();
-					$w->setFromArray($dat);
-					$w->save();
-					$changes['created']++;
-				}
-				elseif(strpos($id, 'del-') !== false){
-					$w = new WidgetInstanceModel(substr($id, 4));
-					$w->delete();
-					// Reset the counter back down one notch since this was a deletion request.
-					--$counter;
-					$changes['deleted']++;
-				}
-				else{
-					$w = new WidgetInstanceModel($id);
-					$w->setFromArray($dat);
-					if($w->save()) $changes['updated']++;
-				}
-			} // foreach($_POST['widgetarea'] as $id => $dat)
-
-			// Display some human friendly status message.
-			if($changes['created'] || $changes['updated'] || $changes['deleted']){
-				$changetext = [];
-
-				if($changes['created'] == 1) $changetext[] = 'One widget added';
-				elseif($changes['created'] > 1) $changetext[] = $changes['created'] . ' widgets added';
-
-				if($changes['updated'] == 1) $changetext[] = 'One widget updated';
-				elseif($changes['updated'] > 1) $changetext[] = $changes['updated'] . ' widgets updated';
-
-				if($changes['deleted'] == 1) $changetext[] = 'One widget deleted';
-				elseif($changes['deleted'] > 1) $changetext[] = $changes['deleted'] . ' widgets deleted';
-
-				Core::SetMessage(implode('<br/>', $changetext), 'success');
-			}
-			else{
-				Core::SetMessage('No changes performed', 'info');
-			}
-
-			\Core\reload();
-		} // if($this->getPageRequest()->isPost())
-
-		// Get a list of the widgetareas on the theme.
-		// These are going to be {widgetarea} tags.
-		// @todo It might make sense to move this into Theme class at some point.
-		$tplcontents = file_get_contents($filename);
-		preg_match_all("/\{widgetarea.*name=[\"'](.*)[\"'].*\}/isU", $tplcontents, $matches);
-
-		// I need to assemble a list of installables to search for as well.
-		// this is because if a page has installable="/abc", I don't want to display
-		// widgets for installable="/def".
-		$installables = array(''); // Start with empty, they can go anywhere.
-		foreach($matches[0] as $str){
-			if(!strpos($str, 'installable')) continue;
-
-			$baseurl = preg_replace('/.*installable="([^"]*)".*/', '$1', $str);
-			// This is required because matches can be fuzzy, probably won't, but can be.
-			// ie: /user-social/view/`$user->get('id')` probably won't be used to mark as installable,
-			// but /user-social/view might be.
-			while($baseurl){
-				$installables[] = $baseurl;
-				if(strpos($baseurl, '/') === false) break;
-				$baseurl = substr($baseurl, 0, strrpos($baseurl, '/'));
-			}
-		}
-
-		// These are all the available widgets on the site otherwise.
-		$widgetfactory = new ModelFactory('WidgetModel');
-		$widgetfactory->order('title');
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-			$where = new Core\Datamodel\DatasetWhereClause();
-			$where->setSeparator('OR');
-			$where->addWhere('site = -1');
-			$where->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
-			$widgetfactory->where($where);
-		}
-
-		if(sizeof($installables) > 1){
-			$where = new Core\Datamodel\DatasetWhereClause();
-			$where->setSeparator('OR');
-			foreach($installables as $baseurl){
-				$where->addWhereParts('installable', '=', $baseurl);
-			}
-			$widgetfactory->where($where);
-		}
-		else{
-			$widgetfactory->where('installable = ');
-		}
-
-		$widgets = $widgetfactory->get();
-
-		// This is a lookup of widget titles to URL, since the title is derived from the widget's controller and
-		// saved in the widget table separate from the instances.
-		$widgetnames = array();
-		foreach($widgets as $widget){
-			$widgetnames[$widget->get('baseurl')] = $widget->get('title');
-		}
-
-		$areas = array();
-		foreach($matches[1] as $v){
-			$instancewidgets = array();
-			if($page){
-				$wifac = WidgetInstanceModel::Find(array('page' => $page, 'widgetarea' => $v), null, 'weight');
-			}
-			else{
-				$wifac = WidgetInstanceModel::Find(array('theme' => $t, 'template' => $template, 'widgetarea' => $v), null, 'weight');
-			}
-
-			foreach($wifac as $wi){
-				$baseurl = $wi->get('baseurl');
-				$title = isset($widgetnames[ $baseurl ]) ? $widgetnames[ $baseurl ] : null;
-				// All I need is the name and metadata, TYVM.
-				$instancewidgets[] = array(
-					'title' => $title,
-					'baseurl' => $baseurl,
-					'id' => $wi->get('id'),
-					'access' => $wi->get('access')
-				);
-			}
-
-			$areas[] = array('name' => $v, 'instances' => $instancewidgets);
-		}
-
-
-
-		$view->assign('widget_areas', $areas);
-		$view->assign('widgets', $widgets);
-		$view->assign('theme', $t);
-		$view->assign('template', $template);
-		if($template){
-			$view->title = 'Widgets on ' . $t . '-' . $template;
-		}
-		elseif($page){
-			$view->title = 'Widgets for ' . $page;
-		}
-
-		//$view->addBreadcrumb($view->title);
-	}
-
-	public function widgets_Add(){
-		$view = $this->getView();
-
-		$widgets = array();
-		foreach(ComponentHandler::GetLoadedWidgets() as $w){
-			$widgets[] = $w;
-		}
-
-		$view->assign('widget_classes', $widgets);
-
-		if($view->request['method'] == View::METHOD_POST){
-			$w = $_POST['widgetclass'];
-			if(!$w){
-				Core::SetMessage('No widget type requested, please select one.', 'error');
-				return;
-			}
-			if(!is_subclass_of($w, 'Widget') ){
-				Core::SetMessage('Invalid widget requested', 'error');
-				return;
-			}
-
-			$title = $_POST['title'] ? $_POST['title'] : 'New ' . $w;
-
-			// Save this widget into the database.
-			$m = new WidgetModel();
-			$m->set('class', $w);
-			$m->set('title', $title);
-			$m->save();
-
-			if($w::MustBeInstanced()){
-				// This widget requires additional settings in order for it to be instantiated.
-				// Redirect to the edit page.
-				Core::SetMessage('Created widget, please configure it.', 'info');
-				\core\redirect('/Theme/Widgets/Edit/' . $m->get('id'));
-			}
-			else{
-				// Doesn't need instantiated, can be used as is.
-				Core::SetMessage('Created widget.', 'success');
-				\core\redirect(Core::GetNavigation('/Theme/Widgets'));
-			}
-		}
-	}
-
 	public function editor(){
 		$view = $this->getView();
 		$request = $this->getPageRequest();
@@ -935,11 +726,6 @@ class ThemeController extends Controller_2_1{
 		}
 	}
 
-	public static function Widgets_Save(View $view){
-		var_dump(CurrentPage::Singleton());
-		var_dump($view); die();
-	}
-
 	public static function _SaveEditorHandler(Form $form){
 		$newmodel = $form->getModel();
 		$file = $form->getElement('file')->get('value');
@@ -1052,5 +838,20 @@ class ThemeController extends Controller_2_1{
 
 		Core::SetMessage('Updated file successfully', 'success');
 		return '/theme';
+	}
+
+	public static function SaveSiteSkins(Form $form){
+		foreach($form->getElements() as $el){
+			/** @var FormElement $el */
+
+			$n = $el->get('name');
+			$v = $el->get('value');
+			if(strpos($n, 'config[') === 0){
+				$k = substr($n, 7, -1);
+				ConfigHandler::Set($k, $v);
+			}
+		}
+
+		return true;
 	}
 }

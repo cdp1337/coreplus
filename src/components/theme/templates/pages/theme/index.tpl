@@ -15,7 +15,9 @@
 		<div class="theme {if $theme->isDefault()}current-theme{/if}">
 			{$theme->getName()}<br/>
 
-			<img src="{$screen.file->getPreviewURL('220x160')}" title="{$screen.title}"/><br/><br/>
+			{if $screen.file}
+				<img src="{$screen.file->getPreviewURL('220x160')}" title="{$screen.title}"/><br/><br/>
+			{/if}
 
 			{if !$theme->isDefault()}
 				{a class="button" href="/theme/setdefault/`$theme->getKeyName()`" confirm="Set `$theme->getName()` as site-wide default theme?"}
@@ -81,7 +83,7 @@
 			<td>
 				<ul class="controls controls-hover">
 					<li>
-						{a href="/theme/widgets/`$current->getKeyName()`?template=`$template.file`"}
+						{a href="/admin/widgets?skin=`$template.file`"}
 							<i class="icon-cogs"></i>
 							<span>Widgets</span>
 						{/a}
@@ -109,6 +111,16 @@
 		</tr>
 	{/foreach}
 </table>
+
+
+<br/><br/>
+<h3>Site Skin Options</h3>
+<p class="message-tutorial">
+	Any application that supports a skin to be set site-wide.
+</p>
+{$site_skins_form->render()}
+
+
 
 
 <br/><br/>
