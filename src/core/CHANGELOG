@@ -1,3 +1,9 @@
+Core Plus 2.7.1
+
+	* Upgrade paths.
+	* Browscap changed their download URL.......
+	-- Charlie Powell <charlie@eval.bz>  Mon, 31 Mar 2014 03:30:43 -0400
+
 Core Plus 2.7.0
 
 	* [Security] Tack on details for errors and security notices in log files.
