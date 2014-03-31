@@ -11,6 +11,7 @@ abstract class GalleryFormHandler{
 	 */
 	public static function SaveAlbum(Form $form){
 
+		/** @var GalleryAlbumModel $model */
 		$model = $form->getModel('model');
 		/** @var $page PageModel */
 		$page  = $form->getModel('page');
@@ -26,6 +27,10 @@ abstract class GalleryFormHandler{
 
 		//var_dump($model); die();
 		$model->save();
+
+		// Make sure the directory exists.
+		$dir = \Core\Filestore\Factory::Directory($model->getFullUploadDirectory());
+		$dir->mkdir();
 
 		// w00t
 		return $page->getResolvedURL();
