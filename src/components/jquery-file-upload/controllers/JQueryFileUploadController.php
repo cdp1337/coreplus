@@ -167,6 +167,7 @@ class JQueryFileUploadController extends Controller_2_1 {
 			$nf = \Core\Filestore\Factory::File($this->_formelement->get('basedir') . $newbasename);
 			if(!$nf->isWritable()){
 				$file['error'] = 'File destination is not writable.';
+				\SystemLogModel::LogErrorEvent('warning', dirname($nf->getFilename()) . ' does not appear to be writable!');
 				return array('files' => [$file]);
 			}
 			$file['type'] = $f->getMimetype();
