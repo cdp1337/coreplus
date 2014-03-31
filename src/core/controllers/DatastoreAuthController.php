@@ -162,6 +162,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			$complexity['messages'][] = 'The password contains at least ' . $complexity['numbers'] . ' number(s).';
 		}
 
+		$view->mastertemplate = ConfigHandler::Get('/theme/siteskin/user');
 		$view->assign('complexity', $complexity);
 		$view->assign('form', $form);
 		$view->title = 'Password Management ';
