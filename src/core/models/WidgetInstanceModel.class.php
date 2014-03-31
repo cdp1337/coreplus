@@ -53,18 +53,22 @@ class WidgetInstanceModel extends Model {
 			'maxlength' => 64,
 			'null'      => true,
 			'required'  => false,
-			'comment'   => 'The theme to display on. (for skin-level widgets)',
+			'comment'   => 'The theme to display on (for skin-level widgets)',
 			'default' => null,
 		),
-		'template'   => array(
+		'template' => array(
+			'type' => Model::ATT_TYPE_ALIAS,
+			'alias' => 'skin',
+		),
+		'skin'   => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'null'      => true,
 			'required'  => false,
-			'comment'   => 'The template name on which to display on. (for skin-level widgets)',
+			'comment'   => 'The template name on which to display on (for skin-level widgets)',
 			'default' => null,
 		),
-		'page' => array(
+		'page_baseurl' => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'null'      => true,
