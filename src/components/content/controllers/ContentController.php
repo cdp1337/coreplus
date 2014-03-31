@@ -22,23 +22,7 @@
  */
 
 class ContentController extends Controller_2_1 {
-	public function index(){
-		
-		$view = $this->getView();
-		
-		if(!$this->setAccess('p:/content/manage_all')){
-			return View::ERROR_ACCESSDENIED;
-		}
-		
-		$f = ContentModel::Find(null, null, 'nickname');
-		
-		$view->templatename = '/pages/content/index.tpl';
-		$view->title = 'Content Page Listings';
-		$view->assignVariable('pages', $f);
-		$view->addControl('Add Page', '/Content/Create', 'add');
-	}
-	
-    public function view(){
+	public function view(){
 		// I'm calling check access here because the cached access string is canonical in this case.
 		$page    = $this->getPageModel();
 		$view    = $this->getView();
@@ -63,7 +47,7 @@ class ContentController extends Controller_2_1 {
 		//$view->templatename = '/pages/content/' . $template;
 		$view->updated = $m->get('updated');
 
-		if($manager) $view->addControl('Add Page', '/content/create', 'add');
+		if($manager) $view->addControl('Add Page', '/content/create?page_template=' . $page->get('base_template') . '&parenturl=' . $page->get('baseurl'), 'add');
 		if($editor)  $view->addControl('Edit Page', '/content/edit/' . $m->get('id'), 'edit');
 		if($manager) $view->addControl('Delete Page', '/content/delete/' . $m->get('id'), 'delete');
 	}
@@ -107,9 +91,9 @@ class ContentController extends Controller_2_1 {
 		$view->assignVariable('model', $model);
 		$view->assignVariable('form', $form);
 
-		if ($manager) $view->addControl('Add Page', '/content/create', 'add');
+		//if ($manager) $view->addControl('Add Page', '/content/create', 'add');
 		$view->addControl('View Page', '/content/view/' . $model->get('id'), 'view');
-		if ($manager) $view->addControl('Delete Page', '/content/delete/' . $model->get('id'), 'delete');
+		//if ($manager) $view->addControl('Delete Page', '/content/delete/' . $model->get('id'), 'delete');
 	}
 
 	public function create() {
@@ -158,6 +142,8 @@ class ContentController extends Controller_2_1 {
 		/** @var $page PageModel Page object for this model, already linked up! */
 		$page = $form->getModel('page');
 
+		$isnew = $model->isnew();
+
 		// The content nickname is derived from the page title.
 		$model->set('nickname', $page->get('title'));
 		$model->save();
@@ -171,6 +157,9 @@ class ContentController extends Controller_2_1 {
 		$page->purgePageCache();
 
 		// w00t
+		$msg = ($isnew ? 'Added' : 'Updated');
+		$link = Core::ResolveLink($page->get('baseurl'));
+		Core::SetMessage('<a href="' . $link . '">' . $msg . ' page successfully!</a>', 'success');
 		return 'back';
 	}
 

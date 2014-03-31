@@ -17,7 +17,6 @@
 		</file>
 	</files>
 	<pages>
-		<page baseurl="/content" admin="1" access="p:/content/manage_all" title="Content Page Listings" group="Content"/>
 		<pagecreate title="Content" baseurl="/content/create"/>
 	</pages>
 	<description>
