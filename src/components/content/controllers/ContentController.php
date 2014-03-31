@@ -66,7 +66,6 @@ class ContentController extends Controller_2_1 {
 		if($manager) $view->addControl('Add Page', '/content/create', 'add');
 		if($editor)  $view->addControl('Edit Page', '/content/edit/' . $m->get('id'), 'edit');
 		if($manager) $view->addControl('Delete Page', '/content/delete/' . $m->get('id'), 'delete');
-		if($manager) $view->addControl('All Content Pages', '/content', 'directory');
 	}
 
 	public function edit(){
@@ -111,7 +110,6 @@ class ContentController extends Controller_2_1 {
 		if ($manager) $view->addControl('Add Page', '/content/create', 'add');
 		$view->addControl('View Page', '/content/view/' . $model->get('id'), 'view');
 		if ($manager) $view->addControl('Delete Page', '/content/delete/' . $model->get('id'), 'delete');
-		if ($manager) $view->addControl('All Content Pages', '/content', 'directory');
 	}
 
 	public function create() {
@@ -151,8 +149,6 @@ class ContentController extends Controller_2_1 {
 		$view->title        = 'New Content Page';
 		$view->assignVariable('model', $model);
 		$view->assignVariable('form', $form);
-
-		$view->addControl('All Content Pages', '/content', 'directory');
 	}
 
 	public static function _SaveHandler(Form $form) {
@@ -168,6 +164,7 @@ class ContentController extends Controller_2_1 {
 
 		$page->set('editurl', '/content/edit/' . $model->get('id'));
 		$page->set('deleteurl', '/content/delete/' . $model->get('id'));
+		$page->set('component', 'content');
 		$page->save();
 
 		// Clear the page cache

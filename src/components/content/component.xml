@@ -9,10 +9,10 @@
 	</permissions>
 	<files>
 		<file filename="CHANGELOG" md5="43720994e07bbdb02fe3e66b83fc4de6"/>
-		<file filename="ContentController.php" md5="5fe0674651b76261606fc5a3c36dfbaf">
+		<file filename="controllers/ContentController.php" md5="5fe0674651b76261606fc5a3c36dfbaf">
 			<controller name="ContentController"/>
 		</file>
-		<file filename="ContentModel.php" md5="e3cd746f9b1715b09ca876edfe8415d1">
+		<file filename="models/ContentModel.php" md5="e3cd746f9b1715b09ca876edfe8415d1">
 			<class name="ContentModel"/>
 		</file>
 	</files>
@@ -49,6 +49,9 @@
 		<upgrade from="2.0.2" to="2.0.3"/>
 		<upgrade from="2.0.3" to="2.0.4"/>
 		<upgrade from="2.0.4" to="2.1.0"/>
+		<upgrade from="next">
+			<php file="upgrades/310_page_updates.php"/>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
