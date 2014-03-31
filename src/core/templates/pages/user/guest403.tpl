@@ -48,7 +48,24 @@
 
 			<br/>
 
-			{$registerform->render()}
+			{**
+			 * An alternative to this if you so please is to do:
+			 *
+			 * {$drivers.datastore->renderRegister()}
+			 * <some-markup/>
+			 * {$drivers.facebook->renderRegister()}
+			 *
+			 * The default will simply render every authentication driver enabled on the system.
+			 *}
+
+			{foreach from=$drivers key=$name item='d' name='driver'}
+				{** Only render the first driver in the list. *}
+				{if $smarty.foreach.driver.first}
+					<div class="user-register-include user-authdriver-{$name}">
+						{$d->renderRegister()}
+					</div>
+				{/if}
+			{/foreach}
 
 		</fieldset>
 	{/if}
