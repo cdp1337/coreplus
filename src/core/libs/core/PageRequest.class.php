@@ -378,7 +378,7 @@ class PageRequest {
 		if (is_int($return)) {
 			// A generic error code was returned.  Create a View with that code and return that instead.
 			$view->error = $return;
-			return;
+			//return;
 		}
 		elseif(is_a($return, 'View') && $return != $view){
 			// The controller method changed the view, (which is allowed),
@@ -427,87 +427,93 @@ class PageRequest {
 
 		// For some of the options, there may be some that can be used for a fuzzy page, ie: a page's non-fuzzy template,
 		// title, or meta information.
-		if ($page->exists()) {
-			$defaultpage = $page;
-		} else {
-			$defaultpage = null;
-			$url         = $view->baseurl;
-			while ($url != '') {
-				$url = substr($url, 0, strrpos($url, '/'));
-				$p   = PageModel::Find(array('baseurl' => $url, 'fuzzy' => 1), 1);
-				if ($p === null) continue;
-				if ($p->exists()) {
-					$defaultpage = $p;
-					break;
+		if($view->error == View::ERROR_NOERROR){
+			if ($page->exists()) {
+				$defaultpage = $page;
+			} else {
+				$defaultpage = null;
+				$url         = $view->baseurl;
+				while ($url != '') {
+					$url = substr($url, 0, strrpos($url, '/'));
+					$p   = PageModel::Find(array('baseurl' => $url, 'fuzzy' => 1), 1);
+					if ($p === null) continue;
+					if ($p->exists()) {
+						$defaultpage = $p;
+						break;
+					}
+				}
+				if ($defaultpage === null) {
+					// Fine....
+					$defaultpage = $page;
 				}
 			}
-			if ($defaultpage === null) {
-				// Fine....
-				$defaultpage = $page;
+
+			$defaultmetas = $defaultpage->getLink('PageMeta');
+
+			// Make a list of the existing ones so I know which ones not to overwrite!
+			// Just the key will suffice quite nicely.
+			$currentmetas = array();
+			foreach($view->meta as $k => $meta){
+				$currentmetas[] = $k;
+			}
+
+			// Load some of the page information into the view now!
+			foreach($defaultmetas as $meta){
+				/** @var $meta PageMetaModel */
+				$key = $meta->get('meta_key');
+
+				$viewmeta = $meta->getViewMetaObject();
+
+				// again, allow the executed controller have the final say on meta information.
+				if ($meta->get('meta_value_title') && !in_array($key, $currentmetas)) {
+					$view->meta[$key] = $viewmeta;
+				}
+			}
+
+
+			// Since the controller already ran, do not overwrite the title.
+			if ($view->title === null){
+				$view->title = $defaultpage->get('title');
+			}
+
+			// Tracker to see if this page, (or a parent's page), is an admin-level page.
+			// This is required because "admin" pages may have a different skin and should always have the dashboard as the top-level breadcrumb.
+			/** @var boolean $isadmin */
+			$isadmin = ($page->get('admin') == '1');
+
+			$parents = array();
+			$parenttree = $page->getParentTree();
+			foreach ($parenttree as $parent) {
+				/** @var PageModel $parent */
+				$parents[] = array(
+					'title' => $parent->get('title'),
+					'link'  => $parent->getResolvedURL()
+				);
+
+				// Since I'm here, check if this page is an admin page.
+				if($parent->get('admin')){
+					$isadmin = true;
+				}
+			}
+			$view->breadcrumbs = array_merge($parents, $view->breadcrumbs);
+
+			if($isadmin && $view->baseurl != '/admin'){
+				// Make sure that admin is the top breadcrumb.
+				// This block doesn't need to apply for the actual admin page itself, as that doesn't need its own breadcrumb :/
+				$adminlink = \Core\resolve_link('/admin');
+				if(!isset($view->breadcrumbs[0])){
+					// Nothing is even set!
+					$view->breadcrumbs[] = ['title' => 'Administration', 'link' => $adminlink];
+				}
+				elseif($view->breadcrumbs[0]['link'] != $adminlink){
+					// It's set, but not to admin.
+					$view->breadcrumbs = array_merge([['title' => 'Administration', 'link' => $adminlink]], $view->breadcrumbs);
+				}
 			}
 		}
-
-		$defaultmetas = $defaultpage->getLink('PageMeta');
-
-		// Make a list of the existing ones so I know which ones not to overwrite!
-		// Just the key will suffice quite nicely.
-		$currentmetas = array();
-		foreach($view->meta as $k => $meta){
-			$currentmetas[] = $k;
-		}
-
-		// Load some of the page information into the view now!
-		foreach($defaultmetas as $meta){
-			/** @var $meta PageMetaModel */
-			$key = $meta->get('meta_key');
-
-			$viewmeta = $meta->getViewMetaObject();
-
-			// again, allow the executed controller have the final say on meta information.
-			if ($meta->get('meta_value_title') && !in_array($key, $currentmetas)) {
-				$view->meta[$key] = $viewmeta;
-			}
-		}
-
-
-		// Since the controller already ran, do not overwrite the title.
-		if ($view->title === null){
-			$view->title = $defaultpage->get('title');
-		}
-
-		// Tracker to see if this page, (or a parent's page), is an admin-level page.
-		// This is required because "admin" pages may have a different skin and should always have the dashboard as the top-level breadcrumb.
-		/** @var boolean $isadmin */
-		$isadmin = ($page->get('admin') == '1');
-
-		$parents = array();
-		$parenttree = $page->getParentTree();
-		foreach ($parenttree as $parent) {
-			/** @var PageModel $parent */
-			$parents[] = array(
-				'title' => $parent->get('title'),
-				'link'  => $parent->getResolvedURL()
-			);
-
-			// Since I'm here, check if this page is an admin page.
-			if($parent->get('admin')){
-				$isadmin = true;
-			}
-		}
-		$view->breadcrumbs = array_merge($parents, $view->breadcrumbs);
-
-		if($isadmin && $view->baseurl != '/admin'){
-			// Make sure that admin is the top breadcrumb.
-			// This block doesn't need to apply for the actual admin page itself, as that doesn't need its own breadcrumb :/
-			$adminlink = \Core\resolve_link('/admin');
-			if(!isset($view->breadcrumbs[0])){
-				// Nothing is even set!
-				$view->breadcrumbs[] = ['title' => 'Administration', 'link' => $adminlink];
-			}
-			elseif($view->breadcrumbs[0]['link'] != $adminlink){
-				// It's set, but not to admin.
-				$view->breadcrumbs = array_merge([['title' => 'Administration', 'link' => $adminlink]], $view->breadcrumbs);
-			}
+		else{
+			$defaultpage = null;
+			$isadmin = false;
 		}
 
 
@@ -522,7 +528,7 @@ class PageRequest {
 		}
 
 		// In addition to the autogeneration, also support the page_template from the datastore.
-		if($defaultpage->get('page_template')){
+		if($defaultpage && $defaultpage->get('page_template')){
 			// Switch the template over to that custom one.
 			$view->templatename = substr($view->templatename, 0, -4) . '/' . $defaultpage->get('page_template');
 		}
