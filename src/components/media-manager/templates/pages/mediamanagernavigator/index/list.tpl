@@ -35,7 +35,7 @@
 					<td>
 						<div class="directory-image-wrapper">
 							<a href="{$uplink}">
-								<i class="icon-double-angle-up" style="font-size:36px;"></i>
+								<i class="icon-angle-double-up" style="font-size:36px;"></i>
 							</a>
 						</div>
 					</td>

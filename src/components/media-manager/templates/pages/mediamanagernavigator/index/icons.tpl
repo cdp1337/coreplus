@@ -27,7 +27,7 @@
 			<div class="directory">
 				<div class="directory-image-wrapper">
 					<a href="{$uplink}">
-						<i class="icon-double-angle-up" style="font-size:96px;"></i>
+						<i class="icon-angle-double-up" style="font-size:96px;"></i>
 					</a>
 				</div>
 				<a href="{$uplink}">
