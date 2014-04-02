@@ -10,6 +10,7 @@
  */
 
 namespace Core;
+use Core\Filestore\Contents\ContentGZ;
 
 /**
  * User Agent object, fancy alternative PHP's native get_browser function.
@@ -56,7 +57,9 @@ class UserAgent {
 	/**
 	 * @var string Location of the browscap file.
 	 */
-	private static $_ini_url    =   'http://browscap.org/stream?q=Full_PHP_BrowsCapINI';
+	private static $_ini_url    =   'http://repo.corepl.us/full_php_browscap.ini.gz';
+	// Argh, when developers are little bitches and place horribly low rate limits on services :/
+	//private static $_ini_url    =   'http://browscap.org/stream?q=Full_PHP_BrowsCapINI';
 
 	/**
 	 * Options for regex patterns.
@@ -403,22 +406,31 @@ class UserAgent {
 		// The key for this data, must be unique on the system.
 		$cachekey = 'useragent-browsecap-data';
 		// The number of seconds to have Core cache the records.
-		$cachetime = 7200;
+		$cachetime = 86400;
 
 		$cache = \Core\Cache::Get($cachekey, $cachetime);
 
 		if($cache === false){
-			$file = \Core\Filestore\Factory::File('tmp/php_browscap.ini');
+			$file   = \Core\Filestore\Factory::File('tmp/php_browscap.ini');
 			$remote = \Core\Filestore\Factory::File(self::$_ini_url);
 
-			// Doesn't exist? download it!
-			if(!$file->exists()){
-				$remote->copyTo($file);
+			$rcontents = $remote->getContentsObject();
+			if($rcontents instanceof ContentGZ){
+				// yay...
+				// Core handles all the remote file caching automatically, so no worries about anything here.
+				$rcontents->uncompress($file);
 			}
+			else {
+				// Ok, it may be a standard text file then... try the conventional logic.
+				// Doesn't exist? download it!
+				if(!$file->exists()){
+					$remote->copyTo($file);
+				}
 
-			// Too old? download it!
-			if($file->getMTime() < (\Time::GetCurrent() - self::$updateInterval)){
-				$remote->copyTo($file);
+				// Too old? download it!
+				if($file->getMTime() < (\Time::GetCurrent() - self::$updateInterval)){
+					$remote->copyTo($file);
+				}
 			}
 
 			$_browsers = parse_ini_file($file->getFilename(), true, INI_SCANNER_RAW);
