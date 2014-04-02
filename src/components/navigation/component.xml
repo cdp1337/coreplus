@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.1" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3.0" name="Navigation" execmode="web">
 	<requires>
-		<require name="core" type="component" operation="ge" version="3.1.0"/>
+		<require name="core" type="component" operation="ge" version="3.2.0"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="99db7477ac5d8334b83fb844d08ecdf9"/>
-		<file filename="controllers/NavigationController.php" md5="50540f62c31c98fc84b2448e371809f1">
+		<file filename="CHANGELOG" md5="46d90444923d6a88831f7fa91930860e"/>
+		<file filename="controllers/NavigationController.php" md5="2d6a8ea5266373ea6384f25a7059ab68">
 			<controller name="NavigationController"/>
 		</file>
-		<file filename="models/Navigation.model.php" md5="e7aa5dd2a15abd852dc26e99a115a9cd">
+		<file filename="models/Navigation.model.php" md5="b32c7e6c49435b94bb3abc18053d5729">
 			<class name="NavigationModel"/>
 		</file>
 		<file filename="models/NavigationEntry.model.php" md5="b65fb8a4aad99b7a608027fdac97fca7">
@@ -60,6 +60,7 @@
 		<upgrade from="2.1.8" to="2.1.9"/>
 		<upgrade from="2.1.9" to="2.2.0"/>
 		<upgrade from="2.2.0" to="2.2.1"/>
+		<upgrade from="2.2.1" to="2.3.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

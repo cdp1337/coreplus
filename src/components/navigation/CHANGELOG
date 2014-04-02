@@ -1,3 +1,8 @@
+Navigation 2.3.0
+
+	* Update the navigation component to play nicer with the new Widget interface.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 02 Apr 2014 03:36:44 -0400
+
 Navigation 2.2.1
 
 	* Update the phpdoc @package for Core.
