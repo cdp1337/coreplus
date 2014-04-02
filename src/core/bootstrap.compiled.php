@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 02 Apr 2014 03:31:07 -0400
+ * @compiled Wed, 02 Apr 2014 04:49:58 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -14823,9 +14823,10 @@ namespace  {
 ### REQUIRE_ONCE FROM core/libs/core/UserAgent.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core {
+use Core\Filestore\Contents\ContentGZ;
 class UserAgent {
 private static $updateInterval =   604800; // 1 week
-private static $_ini_url    =   'http://browscap.org/stream?q=Full_PHP_BrowsCapINI';
+private static $_ini_url    =   'http://repo.corepl.us/full_php_browscap.ini.gz';
 const REGEX_DELIMITER = '@';
 const REGEX_MODIFIERS = 'i';
 const VALUES_TO_QUOTE = 'Browser|Parent';
@@ -14994,16 +14995,22 @@ return strtolower(implode(';', $a));
 }
 private static function _LoadData() {
 $cachekey = 'useragent-browsecap-data';
-$cachetime = 7200;
+$cachetime = 86400;
 $cache = \Core\Cache::Get($cachekey, $cachetime);
 if($cache === false){
-$file = \Core\Filestore\Factory::File('tmp/php_browscap.ini');
+$file   = \Core\Filestore\Factory::File('tmp/php_browscap.ini');
 $remote = \Core\Filestore\Factory::File(self::$_ini_url);
+$rcontents = $remote->getContentsObject();
+if($rcontents instanceof ContentGZ){
+$rcontents->uncompress($file);
+}
+else {
 if(!$file->exists()){
 $remote->copyTo($file);
 }
 if($file->getMTime() < (\Time::GetCurrent() - self::$updateInterval)){
 $remote->copyTo($file);
+}
 }
 $_browsers = parse_ini_file($file->getFilename(), true, INI_SCANNER_RAW);
 $patterns = [];
