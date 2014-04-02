@@ -1,20 +1,21 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.0" name="Content" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="Content" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.1.0" operation="ge"/>
+		<require name="core" type="component" version="3.2.0" operation="ge"/>
 	</requires>
 	<permissions>
 		<permission key="/content/manage_all" description="Manage Site Content"/>
 	</permissions>
 	<files>
-		<file filename="CHANGELOG" md5="43720994e07bbdb02fe3e66b83fc4de6"/>
-		<file filename="controllers/ContentController.php" md5="5fe0674651b76261606fc5a3c36dfbaf">
+		<file filename="CHANGELOG" md5="cdd1b855187159875c07ffa2bc15b7cd"/>
+		<file filename="controllers/ContentController.php" md5="2b51e556f443e2f49ff235da4221e955">
 			<controller name="ContentController"/>
 		</file>
 		<file filename="models/ContentModel.php" md5="e3cd746f9b1715b09ca876edfe8415d1">
 			<class name="ContentModel"/>
 		</file>
+		<file filename="upgrades/310_page_updates.php" md5="a4e4254e0707bd85a9a2b88783acf1a9"/>
 	</files>
 	<pages>
 		<pagecreate title="Content" baseurl="/content/create"/>
@@ -26,7 +27,6 @@
 		<file filename="templates/pages/content/create.tpl" md5="1f45af7838e6eb4421220a6dd5a8428d"/>
 		<file filename="templates/pages/content/delete.tpl" md5="64255b05d03ba0b58cbacb107e2b2dff"/>
 		<file filename="templates/pages/content/edit.tpl" md5="1f45af7838e6eb4421220a6dd5a8428d"/>
-		<file filename="templates/pages/content/index.tpl" md5="9f35bc9ec83575bec0135d3a65865f29"/>
 		<file filename="templates/pages/content/view.tpl" md5="09cce0de6b10ccbe7a956f2904ae5172"/>
 		<file filename="templates/pages/content/view/blog-article-review.tpl" md5="029be8352e08a3e9f6b20d44a93f2dfb"/>
 		<file filename="templates/pages/content/view/blog-article.tpl" md5="1fabbb0cf51a6a336d0372e3dfe7f474"/>
@@ -48,7 +48,7 @@
 		<upgrade from="2.0.2" to="2.0.3"/>
 		<upgrade from="2.0.3" to="2.0.4"/>
 		<upgrade from="2.0.4" to="2.1.0"/>
-		<upgrade from="next">
+		<upgrade from="2.1.0" to="2.2.0">
 			<php file="upgrades/310_page_updates.php"/>
 		</upgrade>
 	</upgrades>

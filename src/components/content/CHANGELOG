@@ -1,3 +1,9 @@
+Content 2.2.0
+
+	* Remove the legacy content listing page now that Core supports it and more out of the box.
+	* Rearranged the Content component a little and performed the necessary upgrades for 3.1.0.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 02 Apr 2014 03:34:02 -0400
+
 Content 2.1.0
 
 	* New interface for managing Cache systems.
