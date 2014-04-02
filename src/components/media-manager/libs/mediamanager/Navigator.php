@@ -184,6 +184,12 @@ class Navigator {
 		}
 	}
 
+	/**
+	 * Execute the navigator and return the exit code of the application.
+	 *
+	 * @return int
+	 * @throws \Exception
+	 */
 	public function render(){
 		if(!$this->_view){
 			throw new \Exception('No view provided, please set one first!');
