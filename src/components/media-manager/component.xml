@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="Media Manager">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.3" name="Media Manager">
 	<requires>
-		<require name="core" type="component" version="3.1.0" operation="ge"/>
+		<require name="core" type="component" version="3.2.0" operation="ge"/>
 		<require name="jquery" type="library"/>
 	</requires>
 	<permissions>
@@ -18,15 +18,15 @@
 	<view>
 		<file filename="templates/pages/mediamanagernavigator/file_metadata.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/mediamanagernavigator/index.tpl" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="templates/pages/mediamanagernavigator/index/icons.tpl" md5="c9d2c9d331b9cd848dd1ce74cc8225c6"/>
-		<file filename="templates/pages/mediamanagernavigator/index/list.tpl" md5="ebe362af28ed768c736ac99d6cf86639"/>
+		<file filename="templates/pages/mediamanagernavigator/index/icons.tpl" md5="0f3b966fafb5b5fbf4269f76ffae47ee"/>
+		<file filename="templates/pages/mediamanagernavigator/index/list.tpl" md5="df42bc275811ec62f719fe0d4dddf100"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="9b01fcefd08cc4911487be527519fbf9"/>
-		<file filename="controllers/MediaManagerNavigatorController.php" md5="f93d39a6e1dd6d9aa59ccaae2d00f491">
+		<file filename="CHANGELOG" md5="78a5b24428378b0c4cab28d2941f0518"/>
+		<file filename="controllers/MediaManagerNavigatorController.php" md5="193b4922553986442956968c9c576617">
 			<controller name="MediaManagerNavigatorController"/>
 		</file>
-		<file filename="libs/mediamanager/Navigator.php" md5="7ed0e4eede28af8650d61167d80deca5">
+		<file filename="libs/mediamanager/Navigator.php" md5="20e1800f891f03ffd92e4a3643b1fcb4">
 			<class name="MediaManager\Navigator"/>
 		</file>
 	</files>
@@ -37,6 +37,7 @@
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
+		<upgrade from="1.0.2" to="1.0.3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -1,3 +1,10 @@
+Media Manager 1.0.3
+
+	* Font-Awesome changed some of the icon names, just reflecting that change.
+	* documentation comment.
+	* Ensure that 403 pages are sent back to the PageRequest system for proper handling.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 02 Apr 2014 03:36:19 -0400
+
 Media Manager 1.0.2
 
 	* Documentation change, @copyright.
