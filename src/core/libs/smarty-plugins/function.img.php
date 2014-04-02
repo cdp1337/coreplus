@@ -119,6 +119,11 @@ function smarty_function_img($params, $template){
 	else{
 		$attributes['src'] = $previewfile->getURL();
 	}
+
+	// All images need alt data!
+	if(!isset($attributes['alt'])){
+		$attributes['alt'] = $f->getTitle();
+	}
 	
 	// Merge them back together in one string.
 	$html = '<img';

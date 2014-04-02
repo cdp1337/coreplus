@@ -461,8 +461,17 @@ function parse_html($html){
 				$attributes[$k] = (string)$v;
 			}
 
+			$file = \Core\Filestore\Factory::File($attributes['src']);
+
+			// All images need alt tags.
+			if(!isset($attributes['alt']) || $attributes['alt'] == ''){
+				// Since this is usually only used to render content and the images contained therein,
+				// and tinymce auto-adds a blank alt="" attribute,
+				// I can safely add the alt based on the file's rendered title.
+				$attributes['alt'] = $file->getTitle();
+			}
+
 			if(isset($attributes['width']) || isset($attributes['height'])){
-				$file = \Core\Filestore\Factory::File($attributes['src']);
 
 				if(isset($attributes['width']) && isset($attributes['height'])){
 					$dimension = $attributes['width'] . 'x' . $attributes['height'] . '!';
@@ -478,25 +487,26 @@ function parse_html($html){
 				}
 
 				$attributes['src'] = $file->getPreviewURL($dimension);
-
-				// And rebuild.
-				$img = '<img';
-				foreach($attributes as $k => $v){
-					$img .= ' ' . $k . '="' . str_replace('"', '&quot;', $v) . '"';
-				}
-				$img .= '/>';
-
-				$metahelper  = new \Core\Filestore\FileMetaHelper($file);
-				$metacontent = $metahelper->getAsHTML();
-				if($metacontent){
-					$img = '<div class="image-metadata-wrapper">' . $img . $metacontent . '</div>';
-				}
-
-				// Figure out the offset for X.  I'll need to modify this after I merge it in.
-				$x += strlen($img) - strlen($fullimagetag);
-				// Split this string back in.
-				$html = substr_replace($html, $img, $imagestart, strlen($fullimagetag));
 			}
+
+			// And rebuild.
+			$img = '<img';
+			foreach($attributes as $k => $v){
+				$img .= ' ' . $k . '="' . str_replace('"', '&quot;', $v) . '"';
+			}
+			$img .= '/>';
+
+			$metahelper  = new \Core\Filestore\FileMetaHelper($file);
+			$metacontent = $metahelper->getAsHTML();
+			if($metacontent){
+				$img = '<div class="image-metadata-wrapper">' . $img . $metacontent . '</div>';
+			}
+
+			// Figure out the offset for X.  I'll need to modify this after I merge it in.
+			$x += strlen($img) - strlen($fullimagetag);
+			// Split this string back in.
+			$html = substr_replace($html, $img, $imagestart, strlen($fullimagetag));
+
 			// Reset...
 			$imagestart = null;
 		}
