@@ -1,3 +1,9 @@
+jQuery-File-Upload 8.5.0~core3
+
+	* Log a message to the system logger when a jquery-file-upload fails due to incorrect directory
+	  permissions.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 02 Apr 2014 03:35:58 -0400
+
 jQuery-File-Upload 8.5.0~core2
 
 	* [Bug] Fix the trailing slash issue on multi file uploads.
