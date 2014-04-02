@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.0" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -31,7 +31,6 @@
 		<hookregister name="/core/page/error-403" description="Called anytime there is a 403 error"/>
 		<hookregister name="/core/page/rendering" description="Called during page rendering. This is called after the page execution, but just before the metadata and head data is finalized.    If you need something to modify data based on the page output, use this!"/>
 		<hookregister name="/core/page/postrender" description="Called after all the rendering has been completed on the page."/>
-
 		<hookregister name="/core/admin/view" description="Called when an admin views the /admin page.  Useful for functions that need to inform the admin of happenings or what not."/>
 		<hookregister name="/core/model/presave" description="Called immediately before a model save"/>
 		<hookregister name="/core/model/postsave" description="Called immediately after a model save"/>
@@ -72,15 +71,15 @@
 		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
 		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
 		<file filename="core/CHANGELOG" md5="a8b535ad4dde63f8f55c6b79e0b5fa71"/>
-		<file filename="core/assets/scss/admin/widgets.scss" md5="d798f09f5aaec04a828e683d7725e38a"/>
+		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="4ee39a8a4a6996cfbefeb144459248e0"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="216525795b6b97e55e9a534e94e6798b"/>
 		<file filename="core/bootstrap_preincludes.php" md5="249d78de57e1dfb55c4b94a612206ca5"/>
-		<file filename="core/controllers/AdminController.php" md5="c4e0de9c651334cd4195a352c3f55141">
+		<file filename="core/controllers/AdminController.php" md5="3870698fd56009583d9e8adec298b869">
 			<controller name="AdminController"/>
 		</file>
-		<file filename="core/controllers/DatastoreAuthController.php" md5="20c4f3cc872bdcad5f93a0cdea9144bf">
+		<file filename="core/controllers/DatastoreAuthController.php" md5="cdf8421c18695adac540a2e538d6b054">
 			<controller name="DatastoreAuthController"/>
 		</file>
 		<file filename="core/controllers/DirectoryController.class.php" md5="3c272c73dcc0b73a83235e55bc7f84a3">
@@ -113,7 +112,7 @@
 		<file filename="core/controllers/UserConfigController.php" md5="1aebdb773a3fc6503816be6366892f9a">
 			<controller name="UserConfigController"/>
 		</file>
-		<file filename="core/controllers/UserController.php" md5="8e93dd3ef91b8fde052247216068da57">
+		<file filename="core/controllers/UserController.php" md5="657d3df3bb7ce803df2cb75cba4d8eee">
 			<controller name="UserController"/>
 		</file>
 		<file filename="core/controllers/UserGroupAdminController.php" md5="5431f5de5cb7da2445e805ee85b33886">
@@ -192,13 +191,14 @@
 		<file filename="core/forms/FormTimeInput.class.php" md5="fb714865047a79810589fbe1a9eab1cd">
 			<class name="FormTimeInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="38a9aff81253f86a2221a0ec4e87fee3"/>
+		<file filename="core/functions/Core.functions.php" md5="2db7cf04882ff761a95ceb356079262b"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="d30419047aee346d119cf990054ab851">
 			<class name="RewriteMapHelper"/>
 		</file>
 		<file filename="core/helpers/UpdaterHelper.class.php" md5="2357d5b3390a70fa86c6d0243dca957b">
 			<class name="UpdaterHelper"/>
 		</file>
+		<file filename="core/i18n/en.ini" md5="bac6af36dd5b1b668912b0d5983ac2ee"/>
 		<file filename="core/legacy-support/pre-2.5.6/Directory_local_backend.php" md5="2f0b33bbdd83163e6ba067c6450085bd">
 			<class name="Directory_local_backend"/>
 		</file>
@@ -375,7 +375,7 @@
 		<file filename="core/libs/core/Cache.php" md5="44b866c002f09d494870b434c5186e82">
 			<class name="Core\Cache"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="79bac1f7482f80ec037ddd2fb3758459">
+		<file filename="core/libs/core/Component.class.php" md5="3b0aec8b77ad6a6a38eceea42488f045">
 			<class name="Component"/>
 		</file>
 		<file filename="core/libs/core/ComponentFactory.php" md5="d153c8bf2dfbf65eba63bb0e7b1ceae9">
@@ -384,10 +384,10 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="86528c28183175e5ca94abf369c48b99">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="4c2d064373b838008d632f9ca8406f47">
+		<file filename="core/libs/core/Component_2_1.php" md5="366004208841defbbb1ccb53df6a7b9f">
 			<class name="Component_2_1"/>
 		</file>
-		<file filename="core/libs/core/ConfigHandler.class.php" md5="feec118061ba4b35fd118affe3350f13">
+		<file filename="core/libs/core/ConfigHandler.class.php" md5="8b4b2ef389a78145e454630c0b7efca4">
 			<class name="ConfigHandler"/>
 		</file>
 		<file filename="core/libs/core/Controller.class.php" md5="4a3878d079bb023ff3fd5fac74ffe830">
@@ -396,7 +396,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="06f428768946473576150df4b8b69a02">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="6538084c36c89b77025928260241c256">
+		<file filename="core/libs/core/Core.class.php" md5="95db379fc6eb331f95f0f65f450d4368">
 			<class name="Core"/>
 			<class name="CoreException"/>
 		</file>
@@ -449,7 +449,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="56818b4124a9dabd843b011c226d9b25">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="0dfe2e47b42ab12a2ed11056edeb08cf">
+		<file filename="core/libs/core/PageRequest.class.php" md5="d1167015ef5f07fdd9983f5ca3a0e46d">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="026c83b5188f74fd815f1cd7a0403498">
@@ -462,10 +462,10 @@
 		<file filename="core/libs/core/Time.class.php" md5="9c4a3c05fe945cb3fb0035ef13fe1410">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/UserAgent.php" md5="0c1d09d62f4981c021edfc7dda937211">
+		<file filename="core/libs/core/UserAgent.php" md5="a1601f3b0d7a7790ac9197ed72709782">
 			<class name="Core\UserAgent"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="5bdf071805d25e2f25546ae8d061ef6d">
+		<file filename="core/libs/core/View.class.php" md5="26ff877bab1a7e12a454f95bbf26d5cf">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -488,7 +488,7 @@
 			<class name="Widget"/>
 			<class name="WidgetException"/>
 		</file>
-		<file filename="core/libs/core/Widget_2_1.class.php" md5="82e2668682de405004cdef9ad96aa60b">
+		<file filename="core/libs/core/Widget_2_1.class.php" md5="3b1c00c28bc74e7340bf27b2930c8c7a">
 			<class name="Widget_2_1"/>
 			<class name="WidgetRequest"/>
 		</file>
@@ -556,7 +556,7 @@
 		<file filename="core/libs/core/datamodel/backends/cassandra.backend.php" md5="31e134b544e42e232e21c94e8503183d">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="1b16143c431c9671dac497dc2edf1c31">
+		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="32449ee6870166ee87c4ae7794f3c314">
 			<class name="Core\Datamodel\Drivers\mysqli\mysqli_backend"/>
 		</file>
 		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.schema.php" md5="1152e22804d35e35852b5e13b809e43c">
@@ -568,7 +568,7 @@
 		<file filename="core/libs/core/datamodel/tests/SQL_Parser_DatasetTest.php" md5="9aed174ba2bfdbe6e9d9ab82ecfa8397">
 			<class name="SQL_Parser_DatasetTest"/>
 		</file>
-		<file filename="core/libs/core/date/DateTime.php" md5="c93535edacba69db9f0b2bd779ae6d6a">
+		<file filename="core/libs/core/date/DateTime.php" md5="d0efdb540e0b3d204b6c1cedda5767ac">
 			<class name="Core\Date\DateTime"/>
 		</file>
 		<file filename="core/libs/core/date/Timezone.php" md5="c30d3cffa94bd6f71b97e346a2829742">
@@ -587,7 +587,7 @@
 		<file filename="core/libs/core/filestore/Factory.php" md5="ba88f2427b52f0c8ab5135c550a24c77">
 			<class name="Core\Filestore\Factory"/>
 		</file>
-		<file filename="core/libs/core/filestore/File.interface.php" md5="4addb93a28227cb92ac55ba7751cb567">
+		<file filename="core/libs/core/filestore/File.interface.php" md5="c12f651f16f70e13b25d096942b0abd5">
 			<interface name="Core\Filestore\File"/>
 		</file>
 		<file filename="core/libs/core/filestore/FileContentFactory.class.php" md5="5b983b2bc6219dacd48fe90dae39054a">
@@ -605,13 +605,13 @@
 		<file filename="core/libs/core/filestore/backends/DirectoryLocal.php" md5="190df6b6884d5563ba5565b54e09335d">
 			<class name="Core\Filestore\Backends\DirectoryLocal"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="bc417af5042543db2cee65d62ee34545">
+		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="c01afe200adaa28ec61429c789247faa">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="45857589f7716133814be1ad2a86d22a">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="60d98a9351c0204d1b7692dbd9a64c3c">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="027b40b3c9d1cc95bd100f5188038bc4">
+		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="4ac4a58b6a6c7a1fa49a01bf7bfb1c6e">
 			<class name="Core\Filestore\Backends\FileRemote"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/file_awss3.backend.php" md5="32f80641acf9a3a4daa99232c5bd10cc">
@@ -657,7 +657,7 @@
 		<file filename="core/libs/core/gpg/UID.php" md5="3e39f0e2f5d283d74d2ed15d14bf2f21">
 			<class name="Core\GPG\UID"/>
 		</file>
-		<file filename="core/libs/core/i18n/Loader.php" md5="9a7a35230cb177656cf06970b03b148e">
+		<file filename="core/libs/core/i18n/Loader.php" md5="b989fa879c47a99bd0acf17c67ce1771">
 			<class name="Core\i18n\Loader"/>
 		</file>
 		<file filename="core/libs/core/licenses/Factory.php" md5="55de36ced01c31663ebdbade0aaf3cfc">
@@ -961,21 +961,23 @@
 		<file filename="core/libs/phpmailer/test_script/styles/wrapping.png" md5="9a4ffd836c709958eff80a3260f8a1cb"/>
 		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="6508b03bbaf6cf75ede58a1af55b33e3"/>
+		<file filename="core/libs/smarty-plugins/block.access.php" md5="3d0e67d4862c33e5f2da7376c07ba8e5"/>
 		<file filename="core/libs/smarty-plugins/block.css.php" md5="1133736f25a8a1fb567245d1ac123f99"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="cc5604081ea2b2137d26c5f06303462e"/>
 		<file filename="core/libs/smarty-plugins/block.permission.php" md5="0ef58b04cecf6c394fc8d16af677a733"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="3c1bfc3b1fdaadcb1e7e441cbc43d302"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="8cdf9a7777eb3eb3be083d10f4418bf4"/>
 		<file filename="core/libs/smarty-plugins/function.controls.php" md5="6d27ea6f00b10982d9e7741e42be46e5"/>
-		<file filename="core/libs/smarty-plugins/function.date.php" md5="a88ce4991227e5e0843cc2cda0e94d32"/>
+		<file filename="core/libs/smarty-plugins/function.date.php" md5="383a0eb6f9bd0ba5860432c2c8d6f06f"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="2b04283d7436c1aabf5c0a0e3ace7ac2"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="b66d149f0cafd9e86855ae7217fdcfc2"/>
-		<file filename="core/libs/smarty-plugins/function.img.php" md5="95a321c7d4b3e04e866f22d89811267c"/>
+		<file filename="core/libs/smarty-plugins/function.img.php" md5="f8ef7a76b6e17ce9fe89fa50850b971c"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="24d3659abfc1aab6e1d901eb26b8a2f7"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="9d979bc556f8a006dd9ea5d8bd8f4434"/>
+		<file filename="core/libs/smarty-plugins/function.t.php" md5="5f1bdeb09fff0f34da2ab56c0c7837b1"/>
 		<file filename="core/libs/smarty-plugins/function.user.php" md5="2f7f5cd5991b960f22028925bb18a391"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="66c5303f61fb43a5ec314261408e82b3"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="0de88caf8b0a0c69ff38cadbcec09293"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="dde3258bce818f6693b58d3cfdf27968"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/smarty/README" md5="aca8e14a483f2fc601a88e7d6051be28"/>
 		<file filename="core/libs/smarty/SMARTY_2_BC_NOTES.txt" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
@@ -1170,7 +1172,7 @@
 			<class name="Smarty_Internal_Compile_While"/>
 			<class name="Smarty_Internal_Compile_Whileclose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compilebase.php" md5="27202c449394791c62d2e3920d7732f8">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compilebase.php" md5="47e81c3455aaea4c72ef1ecdf1469508">
 			<class name="Smarty_Internal_CompileBase"/>
 		</file>
 		<file filename="core/libs/smarty/sysplugins/smarty_internal_config.php" md5="67ba0e2b63fa9f26567de1c27e2996f5">
@@ -1306,7 +1308,7 @@
 		<file filename="core/models/SessionModel.class.php" md5="3c48cc3ab360f4df1dcce117ab5095c0">
 			<class name="SessionModel"/>
 		</file>
-		<file filename="core/models/SystemLogModel.php" md5="3c1819fe193c03531d209ac9a8e67944">
+		<file filename="core/models/SystemLogModel.php" md5="35f8e2aa0afd2d07c0dc96dd41584d37">
 			<class name="SystemLogModel"/>
 		</file>
 		<file filename="core/models/TemplateCssModel.php" md5="035af7fbc97dacd40b945e1edf650569">
@@ -1324,7 +1326,7 @@
 		<file filename="core/models/UserGroupModel.php" md5="dabdcaa62eb5987b210bbb2aef5713e8">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="core/models/UserModel.php" md5="18cefad9ad85c6ba7f0a213461c12d09">
+		<file filename="core/models/UserModel.php" md5="3838331f3c849b73acdff25b95acaab1">
 			<class name="UserModel"/>
 		</file>
 		<file filename="core/models/UserUserConfigModel.php" md5="017371dd135738999afac50c9f260a06">
@@ -1333,7 +1335,7 @@
 		<file filename="core/models/UserUserGroupModel.php" md5="b73a3b87b6c88707449404fa942cf90e">
 			<class name="UserUserGroupModel"/>
 		</file>
-		<file filename="core/models/WidgetInstanceModel.class.php" md5="783b0df8a51e815e99968c4b92074185">
+		<file filename="core/models/WidgetInstanceModel.class.php" md5="87b4197bc217382377aef88bc4f75a32">
 			<class name="WidgetInstanceModel"/>
 		</file>
 		<file filename="core/models/WidgetModel.class.php" md5="c6f85f25218b6fb2943afe84e569418b">
@@ -1418,6 +1420,7 @@
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 		<file filename="install/utilities.php" md5="19b6e7d1483e8ec8e0a6fad9932ce850"/>
+		<file filename="robots.txt" md5="c0c01a1b2c4285e804f9f217e4f2692f"/>
 	</files>
 	<pages>
 		<page baseurl="/admin" admin="1" access="g:admin" title="Administration"/>
@@ -1506,7 +1509,7 @@
 		<file filename="core/templates/pages/admin/testui.tpl" md5="f784ba4f9ac362e4f8ba9d60ed6f1f20"/>
 		<file filename="core/templates/pages/admin/widget_create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/admin/widget_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="core/templates/pages/admin/widgets.tpl" md5="e643241700b05178344b53a9fa6bab4c"/>
+		<file filename="core/templates/pages/admin/widgets.tpl" md5="9fc36fe1888f43cd89fae5724af0ad91"/>
 		<file filename="core/templates/pages/datastoreauth/forgotpassword.tpl" md5="aefd7bdb2645b8171b9583a3fb02a83d"/>
 		<file filename="core/templates/pages/datastoreauth/password.tpl" md5="5085e6075a5978854f1a1a40ef410c30"/>
 		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
@@ -1534,12 +1537,12 @@
 		<file filename="core/templates/pages/updater/update.tpl" md5="dda6c77aed0d5d36ff520c02f1f9c4f9"/>
 		<file filename="core/templates/pages/user/admin.tpl" md5="0917375b4895997964a7b1431e253b0c"/>
 		<file filename="core/templates/pages/user/edit.tpl" md5="65865c0848e8e9074b3002a86ab16c4e"/>
-		<file filename="core/templates/pages/user/guest403.tpl" md5="26f6d42619bbfb7920264368befc3fa3"/>
+		<file filename="core/templates/pages/user/guest403.tpl" md5="422122d04242335743e0e636108b2dd2"/>
 		<file filename="core/templates/pages/user/import1.tpl" md5="34d4a67fc553d310cef459dc9a288da9"/>
 		<file filename="core/templates/pages/user/import2.tpl" md5="125ea1f03cae7d6395d56c0665570e52"/>
 		<file filename="core/templates/pages/user/import3.tpl" md5="655994a8909458e93fa643349788621d"/>
 		<file filename="core/templates/pages/user/login.tpl" md5="31c4263700d4fcb745ebf55708b5c7b2"/>
-		<file filename="core/templates/pages/user/me.tpl" md5="9968689a9b26cdeb9c5eb25d10b96f11"/>
+		<file filename="core/templates/pages/user/me.tpl" md5="4121d8713eb0abbdb19023b6da4224e9"/>
 		<file filename="core/templates/pages/user/register.tpl" md5="f254f666a67b9d990c29fb35ee929cc5"/>
 		<file filename="core/templates/pages/user/register2.tpl" md5="3e437be080512b86c2c9f24c1cdcaf5b"/>
 		<file filename="core/templates/pages/useractivity/details.tpl" md5="64842bd2c660f8f88ecfcbbf70f81fd9"/>
@@ -1636,8 +1639,8 @@
 	<assets>
 		<file filename="core/assets/css/admin/adminbar.css" md5="13fe9725206ba5322959a0d7e4553195"/>
 		<file filename="core/assets/css/admin/config.css" md5="1cae5af5ea1e4821b3f53684cdc416bf"/>
-		<file filename="core/assets/css/admin/widgets.css" md5="741839788f325369c961efe5d8f0bb64"/>
-		<file filename="core/assets/css/admin/widgets.min.css" md5="08127a6c5c72bb9cc33cafecd7ab8338"/>
+		<file filename="core/assets/css/admin/widgets.css" md5="1ea0e193de52a80be52159811baec08b"/>
+		<file filename="core/assets/css/admin/widgets.min.css" md5="ced1cc61f4203874ef3fc29ec5c6224d"/>
 		<file filename="core/assets/css/reset.css" md5="968510374a9ff8a69e49ddd2719eca0d"/>
 		<file filename="core/assets/css/reset.min.css" md5="44b43a8b1471320ee192b0938fab3372"/>
 		<file filename="core/assets/css/updater.css" md5="771975b286bac4ea1f55785d6ca1a5eb"/>
@@ -1894,7 +1897,7 @@
 			</dataset>
 			<php file="core/upgrades/next_page_published.php"/>
 		</upgrade>
-		<upgrade from="next">
+		<upgrade from="3.1.0" to="3.2.0">
 			<dataset action="update" table="widget_instance">
 				<datasetset key="page_baseurl">/admin</datasetset>
 				<datasetwhere>page = pages/admin/index.tpl</datasetwhere>

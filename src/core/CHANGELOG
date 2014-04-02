@@ -1,3 +1,35 @@
+Core Plus 3.2.0
+
+	* [Security] Display login attempts and other security notices for users when viewing their profile.
+	* [Bug] User IDs are UUID, not INTs.
+	* [Bug] Minor fix to ensure that 403 errors from admin pages still render the skin.
+	* [Bug] Skip alias renaming if it already exists.
+	* [Bug] Browscap changed their download URL.......
+	* [Bug] 403 should not display the "register" form, as that is no longer sufficient for a user
+	  registration.
+	* [Bug] Only apply the groups on the current site when running checkAccess.
+	* [Bug] Of course password-based accounts can set their password :P
+	* [Bug] A few fixes for 404 pages and invalid themes.
+	* [Feature] New image resizing systems, these now produce smaller files and retain GIF animations
+	  whenever possible!
+	* [Feature] Ensure that all images have alt text.
+	* [Feature] New hooks and better widget support for pages.
+	* [Feature] New support for a site skin config option for user functions.
+	* [Feature] Better support for i18n and l10n.
+	* [Feature] New smarty function, {access}.  This limits access to a given subset of the template to
+	  only specific users based on their access string.
+	* [Feature] New function to find config options based on a keyname.
+	* [Feature] The startings of i18n support!
+	* [Feature] Allow multiple short-hand arguments in Smarty functions.
+	* "Skin" is more accurate and less ambiguous than "template", so that is used on the WidgetInstance
+	  model; also widgets are now linked on the actual baseurl and not the page template.
+	* Widen up /admin/widgets a bit.
+	* Allow the smarty {date} function to use the "assign" parameter.
+	* Display a message to the user when a form submission hits an Exception, even when in production
+	  mode.
+	* Also include other variations of the "next" for component upgrades.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 02 Apr 2014 03:33:10 -0400
+
 Core Plus 3.1.0
 
 	* [Security] Switch from the SecurityLog to the SystemLog.
