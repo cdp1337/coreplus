@@ -96,7 +96,8 @@ class MediaManagerNavigatorController extends  Controller_2_1{
 		}
 
 		$view->title = 'File Media Navigator';
-		$navigator->render();
+		$ret = $navigator->render();
+		return $ret;
 		//var_dump($navigator, $navigator->render()); die();
 	}
 
