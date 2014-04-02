@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 31 Mar 2014 03:56:32 -0400
+ * @compiled Wed, 02 Apr 2014 03:23:33 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -8263,8 +8263,11 @@ $attributes = array();
 foreach($simple->attributes() as $k => $v){
 $attributes[$k] = (string)$v;
 }
-if(isset($attributes['width']) || isset($attributes['height'])){
 $file = \Core\Filestore\Factory::File($attributes['src']);
+if(!isset($attributes['alt']) || $attributes['alt'] == ''){
+$attributes['alt'] = $file->getTitle();
+}
+if(isset($attributes['width']) || isset($attributes['height'])){
 if(isset($attributes['width']) && isset($attributes['height'])){
 $dimension = $attributes['width'] . 'x' . $attributes['height'] . '!';
 unset($attributes['width'], $attributes['height']);
@@ -8278,6 +8281,7 @@ $dimension = $attributes['height'];
 unset($attributes['height']);
 }
 $attributes['src'] = $file->getPreviewURL($dimension);
+}
 $img = '<img';
 foreach($attributes as $k => $v){
 $img .= ' ' . $k . '="' . str_replace('"', '&quot;', $v) . '"';
@@ -8290,7 +8294,6 @@ $img = '<div class="image-metadata-wrapper">' . $img . $metacontent . '</div>';
 }
 $x += strlen($img) - strlen($fullimagetag);
 $html = substr_replace($html, $img, $imagestart, strlen($fullimagetag));
-}
 $imagestart = null;
 }
 $x++;
@@ -9058,6 +9061,7 @@ const TYPE_OTHER = 'other';
 public function getFilesize($formatted = false);
 public function getMimetype();
 public function getExtension();
+public function getTitle();
 public function getURL();
 public function getPreviewURL($dimensions = "300x300");
 public function getFilename($prefix = \ROOT_PDIR);
@@ -9351,12 +9355,26 @@ namespace  {
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Filestore\Backends {
 use Core\Filestore;
+use Core\Filestore\Factory;
 class FileLocal implements Filestore\File {
 public $_type = Filestore\File::TYPE_OTHER;
 protected $_filename = null;
 private $_filenamecache = [];
 public function __construct($filename = null) {
 if ($filename) $this->setFilename($filename);
+}
+public function getTitle(){
+$metas = new Filestore\FileMetaHelper($this);
+if(($t = $metas->getMetaTitle('title'))){
+return $t;
+}
+else{
+$title = $this->getBasename(true);
+$title = preg_replace('/[^a-zA-Z0-9 ]/', ' ', $title);
+$title = trim(preg_replace('/[ ]+/', ' ', $title));
+$title = ucwords($title);
+return $title;
+}
 }
 public function getFilesize($formatted = false) {
 $f = filesize($this->_filename);
@@ -9422,7 +9440,7 @@ return $this->_filenamecache[$prefix];
 }
 public function setFilename($filename) {
 if($this->_filename){
-Filestore\Factory::RemoveFromCache($this);
+Factory::RemoveFromCache($this);
 $this->_filenamecache = [];
 }
 if ($filename{0} != '/') $filename = ROOT_PDIR . $filename; // Needs to be fully resolved
@@ -9527,7 +9545,7 @@ $file = dirname($this->_filename) . '/' . $file;
 if (substr($file, -1) == '/') {
 $file .= $this->getBaseFilename();
 }
-$dest = Filestore\Factory::File($file);
+$dest = Factory::File($file);
 }
 if ($this->identicalTo($dest)) return $dest;
 $dest->copyFrom($this, $overwrite);
@@ -9639,12 +9657,12 @@ return;
 }
 public function getMimetypeIconURL($dimensions = '32x32'){
 $filemime = str_replace('/', '-', $this->getMimetype());
-$file = Filestore\Factory::File('assets/images/mimetypes/' . $filemime . '.png');
+$file = Factory::File('assets/images/mimetypes/' . $filemime . '.png');
 if(!$file->exists()){
 if(DEVELOPMENT_MODE){
 error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown" (filename: ' . $this->getFilename('') . ')');
 }
-$file = Filestore\Factory::File('assets/images/mimetypes/unknown.png');
+$file = Factory::File('assets/images/mimetypes/unknown.png');
 }
 return $file->getPreviewURL($dimensions);
 }
@@ -9656,21 +9674,21 @@ $mode   = $bits['mode'];
 $key    = $bits['key'];
 if (!$this->exists()) {
 error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
-$file = \Core\Filestore\Factory::File('assets/images/mimetypes/notfound.png');
+$file = Factory::File('assets/images/mimetypes/notfound.png');
 $preview = $file->getPreviewFile($dimensions);
 }
 elseif ($this->isPreviewable()) {
 if($width === false) return $this;
-$preview = \Core\Filestore\Factory::File('public/tmp/' . $key);
+$preview = Factory::File('public/tmp/' . $key);
 }
 else {
 $filemime = str_replace('/', '-', $this->getMimetype());
-$file = \Core\Filestore\Factory::File('assets/images/mimetypes/' . $filemime . '.png');
+$file = Factory::File('assets/images/mimetypes/' . $filemime . '.png');
 if(!$file->exists()){
 if(DEVELOPMENT_MODE){
 error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown"');
 }
-$file = \Core\Filestore\Factory::File('assets/images/mimetypes/unknown.png');
+$file = Factory::File('assets/images/mimetypes/unknown.png');
 }
 $preview = $file->getPreviewFile($dimensions);
 }
@@ -9679,9 +9697,9 @@ return $preview;
 public function getPreviewFile($dimensions = '300x300'){
 if(ini_get('max_execution_time') && \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime() + 5 >= ini_get('max_execution_time')){
 $filemime = str_replace('/', '-', $this->getMimetype());
-$file = \Core\Filestore\Factory::File('assets/images/mimetypes/' . $filemime . '.png');
+$file = Factory::File('assets/images/mimetypes/' . $filemime . '.png');
 if(!$file->exists()){
-$file = \Core\Filestore\Factory::File('assets/images/mimetypes/unknown.png');
+$file = Factory::File('assets/images/mimetypes/unknown.png');
 }
 return $file;
 }
@@ -9704,10 +9722,7 @@ if(($mode == '' || $mode == '<') && $currentdata[0] <= $width){
 return $this;
 }
 if (!$file->exists()) {
-$img2 = $this->_getResizedImage($width, $height, $mode);
-imagepng($img2, TMP_DIR . $key);
-$file->putContents(file_get_contents(TMP_DIR . $key));
-unlink(TMP_DIR . $key);
+$this->_resizeTo($file, $width, $height, $mode);
 }
 return $file;
 }
@@ -9897,7 +9912,7 @@ $vals   = explode('x', strtolower($dimensions));
 $width  = (int)$vals[0];
 $height = (int)$vals[1];
 }
-$key = str_replace(' ', '-', $this->getBasename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.png';
+$key = str_replace(' ', '-', $this->getBasename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $this->getExtension();
 return array(
 'width' => $width,
 'height' => $height,
@@ -9905,9 +9920,16 @@ return array(
 'key' => $key,
 );
 }
-private function _getResizedImage($width, $height, $mode = '') {
+private function _resizeTo(Filestore\File $file, $width, $height, $mode){
+if(!$this->isImage()){
+return;
+}
 $m = $this->getMimetype();
-if ($this->isImage()) {
+if($m == 'image/gif' && exec('which convert 2>/dev/null')){
+$resize = escapeshellarg($mode . $width . 'x' . $height);
+exec('convert ' . escapeshellarg($this->getFilename()) . ' -resize ' . $resize . ' ' . escapeshellarg($file->getFilename()));
+return;
+}
 switch ($m) {
 case 'image/jpeg':
 $img = imagecreatefromjpeg($this->getFilename());
@@ -9918,6 +9940,8 @@ break;
 case 'image/gif':
 $img = imagecreatefromgif($this->getFilename());
 break;
+default:
+return;
 }
 if ($img) {
 $sW = imagesx($img);
@@ -9978,7 +10002,18 @@ imagesavealpha($img2, true);
 imagealphablending($img, true);
 imagecopyresampled($img2, $img, 0, 0, 0, 0, $nW, $nH, $sW, $sH);
 imagedestroy($img);
-return $img2;
+switch ($m) {
+case 'image/jpeg':
+imagejpeg($img2, $file->getFilename(), 60);
+break;
+case 'image/png':
+imagepng($img2, $file->getFilename(), 9);
+break;
+case 'image/gif':
+imagegif($img2, $file->getFilename());
+break;
+default:
+return;
 }
 }
 }
@@ -10022,6 +10057,19 @@ return ($formatted) ? Filestore\format_size($f, 2) : $f;
 }
 public function getMimetype() {
 return $this->_getTmpLocal()->getMimetype();
+}
+public function getTitle(){
+$metas = new Filestore\FileMetaHelper($this);
+if(($t = $metas->getMetaTitle('title'))){
+return $t;
+}
+else{
+$title = $this->getBasename(true);
+$title = preg_replace('/[^a-zA-Z0-9 ]/', ' ', $title);
+$title = trim(preg_replace('/[ ]+/', ' ', $title));
+$title = ucwords($title);
+return $title;
+}
 }
 public function getExtension() {
 return \Core::GetExtensionFromString($this->getBasename());
@@ -10318,6 +10366,19 @@ private $_response = null;
 private $_tmplocal = null;
 public function __construct($filename = null) {
 if ($filename) $this->setFilename($filename);
+}
+public function getTitle(){
+$metas = new Filestore\FileMetaHelper($this);
+if(($t = $metas->getMetaTitle('title'))){
+return $t;
+}
+else{
+$title = $this->getBasename(true);
+$title = preg_replace('/[^a-zA-Z0-9 ]/', ' ', $title);
+$title = trim(preg_replace('/[ ]+/', ' ', $title));
+$title = ucwords($title);
+return $title;
+}
 }
 public function getFilesize($formatted = false) {
 $h = $this->_getHeaders();
@@ -16735,7 +16796,6 @@ else{
 $return = call_user_func(array($controller, $pagedat['method']));
 if (is_int($return)) {
 $view->error = $return;
-return;
 }
 elseif(is_a($return, 'View') && $return != $view){
 $this->_pageview = $view = $return;
@@ -16764,6 +16824,7 @@ $view->addControl($control);
 }
 }
 }
+if($view->error == View::ERROR_NOERROR){
 if ($page->exists()) {
 $defaultpage = $page;
 } else {
@@ -16819,6 +16880,11 @@ elseif($view->breadcrumbs[0]['link'] != $adminlink){
 $view->breadcrumbs = array_merge([['title' => 'Administration', 'link' => $adminlink]], $view->breadcrumbs);
 }
 }
+}
+else{
+$defaultpage = null;
+$isadmin = false;
+}
 if ($view->error == View::ERROR_NOERROR && $view->contenttype == View::CTYPE_HTML && $view->templatename === null) {
 $cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
 $view->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
@@ -16827,7 +16893,7 @@ elseif ($view->error == View::ERROR_NOERROR && $view->contenttype == View::CTYPE
 $cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
 $view->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
 }
-if($defaultpage->get('page_template')){
+if($defaultpage && $defaultpage->get('page_template')){
 $view->templatename = substr($view->templatename, 0, -4) . '/' . $defaultpage->get('page_template');
 }
 if($view->mastertemplate == 'admin'){

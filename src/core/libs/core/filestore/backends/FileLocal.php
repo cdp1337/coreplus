@@ -24,6 +24,7 @@
 namespace Core\Filestore\Backends;
 
 use Core\Filestore;
+use Core\Filestore\Factory;
 
 class FileLocal implements Filestore\File {
 
@@ -43,6 +44,28 @@ class FileLocal implements Filestore\File {
 
 	public function __construct($filename = null) {
 		if ($filename) $this->setFilename($filename);
+	}
+
+	/**
+	 * Get the title of this file, either generated from the filename or pulled from the meta data as appropriate.
+	 *
+	 * @return string
+	 */
+	public function getTitle(){
+		$metas = new Filestore\FileMetaHelper($this);
+
+		// If no title was set, I need to pick one by default.
+		if(($t = $metas->getMetaTitle('title'))){
+			return $t;
+		}
+		else{
+			// Generate a moderately meaningful title from the filename.
+			$title = $this->getBasename(true);
+			$title = preg_replace('/[^a-zA-Z0-9 ]/', ' ', $title);
+			$title = trim(preg_replace('/[ ]+/', ' ', $title));
+			$title = ucwords($title);
+			return $title;
+		}
 	}
 
 	public function getFilesize($formatted = false) {
@@ -147,7 +170,7 @@ class FileLocal implements Filestore\File {
 	public function setFilename($filename) {
 		// If this file already has a filename, ensure that it's deleted from cache!
 		if($this->_filename){
-			Filestore\Factory::RemoveFromCache($this);
+			Factory::RemoveFromCache($this);
 			$this->_filenamecache = [];
 		}
 
@@ -309,8 +332,8 @@ class FileLocal implements Filestore\File {
 	 * If the destination is a directory (ends with a '/'), the same filename is used, (if possible).
 	 * If the destination is relative, ('.' or 'subdir/'), it is assumed relative to the current file.
 	 *
-	 * @param string|File $dest
-	 * @param boolean     $overwrite
+	 * @param string|Filestore\File $dest
+	 * @param boolean               $overwrite
 	 *
 	 * @return Filestore\File
 	 */
@@ -334,7 +357,7 @@ class FileLocal implements Filestore\File {
 			}
 
 			// Now dest can be instantiated as a valid file object!
-			$dest = Filestore\Factory::File($file);
+			$dest = Factory::File($file);
 		}
 
 		if ($this->identicalTo($dest)) return $dest;
@@ -534,13 +557,13 @@ class FileLocal implements Filestore\File {
 	public function getMimetypeIconURL($dimensions = '32x32'){
 		$filemime = str_replace('/', '-', $this->getMimetype());
 
-		$file = Filestore\Factory::File('assets/images/mimetypes/' . $filemime . '.png');
+		$file = Factory::File('assets/images/mimetypes/' . $filemime . '.png');
 		if(!$file->exists()){
 			if(DEVELOPMENT_MODE){
 				// Inform the developer, otherwise it's not a huge issue.
 				error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown" (filename: ' . $this->getFilename('') . ')');
 			}
-			$file = Filestore\Factory::File('assets/images/mimetypes/unknown.png');
+			$file = Factory::File('assets/images/mimetypes/unknown.png');
 		}
 		return $file->getPreviewURL($dimensions);
 	}
@@ -553,7 +576,7 @@ class FileLocal implements Filestore\File {
 	 *
 	 * @param string $dimensions
 	 *
-	 * @return Filestore\File_backend
+	 * @return Filestore\File
 	 */
 	public function getQuickPreviewFile($dimensions = '300x300'){
 		//var_dump('Requesting quick file preview for ' . __CLASS__);
@@ -570,7 +593,7 @@ class FileLocal implements Filestore\File {
 			error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
 
 			// Return a 404 image.
-			$file = \Core\Filestore\Factory::File('assets/images/mimetypes/notfound.png');
+			$file = Factory::File('assets/images/mimetypes/notfound.png');
 			$preview = $file->getPreviewFile($dimensions);
 		}
 		elseif ($this->isPreviewable()) {
@@ -578,19 +601,19 @@ class FileLocal implements Filestore\File {
 			if($width === false) return $this;
 
 			// Yes, this must be within public because it's meant to be publicly visible.
-			$preview = \Core\Filestore\Factory::File('public/tmp/' . $key);
+			$preview = Factory::File('public/tmp/' . $key);
 		}
 		else {
 			// Try and get the mime icon for this file.
 			$filemime = str_replace('/', '-', $this->getMimetype());
 
-			$file = \Core\Filestore\Factory::File('assets/images/mimetypes/' . $filemime . '.png');
+			$file = Factory::File('assets/images/mimetypes/' . $filemime . '.png');
 			if(!$file->exists()){
 				if(DEVELOPMENT_MODE){
 					// Inform the developer, otherwise it's not a huge issue.
 					error_log('Unable to locate mimetype icon [' . $filemime . '], resorting to "unknown"');
 				}
-				$file = \Core\Filestore\Factory::File('assets/images/mimetypes/unknown.png');
+				$file = Factory::File('assets/images/mimetypes/unknown.png');
 			}
 
 			$preview = $file->getPreviewFile($dimensions);
@@ -609,9 +632,9 @@ class FileLocal implements Filestore\File {
 			// Try and get the mime icon for this file.
 			$filemime = str_replace('/', '-', $this->getMimetype());
 
-			$file = \Core\Filestore\Factory::File('assets/images/mimetypes/' . $filemime . '.png');
+			$file = Factory::File('assets/images/mimetypes/' . $filemime . '.png');
 			if(!$file->exists()){
-				$file = \Core\Filestore\Factory::File('assets/images/mimetypes/unknown.png');
+				$file = Factory::File('assets/images/mimetypes/unknown.png');
 			}
 			return $file;
 		}
@@ -647,13 +670,7 @@ class FileLocal implements Filestore\File {
 			//var_dump($currentdata, $width, $mode); die();
 
 			if (!$file->exists()) {
-				$img2 = $this->_getResizedImage($width, $height, $mode);
-				// Save this image to a temporary fs location.
-				imagepng($img2, TMP_DIR . $key);
-				// So I can put the contents in, (know of an easier method?  patch it!)
-				$file->putContents(file_get_contents(TMP_DIR . $key));
-				// And cleanup
-				unlink(TMP_DIR . $key);
+				$this->_resizeTo($file, $width, $height, $mode);
 			}
 
 			return $file;
@@ -1012,7 +1029,9 @@ class FileLocal implements Filestore\File {
 		//  might conflict without this hash.
 		// Finally, the width and height dimensions are there just because as well; it gives more of a human
 		//  touch to the file. :p
-		$key = str_replace(' ', '-', $this->getBasename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.png';
+		// Also, keep the original file extension, this way PNGs remain PNGs, GIFs remain GIFs, JPEGs remain JPEGs.
+		// This is critical particularly when it comes to animated GIFs.
+		$key = str_replace(' ', '-', $this->getBasename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $this->getExtension();
 
 		return array(
 			'width' => $width,
@@ -1022,146 +1041,141 @@ class FileLocal implements Filestore\File {
 		);
 	}
 
+	/**
+	 * Resize this image and save the output as another File object.
+	 *
+	 * This is used on conjunction with getPreview* and getQuickPreview.
+	 * QuickPreview creates the destination file in the correct directory
+	 * and getPreview* methods request the actual resizing.
+	 *
+	 * @param Filestore\File $file   The destination file
+	 * @param int            $width  Width of the final image (in px)
+	 * @param int            $height Height of the final image (in px)
+	 * @param string         $mode   Mode (part of the geometry)
+	 */
+	private function _resizeTo(Filestore\File $file, $width, $height, $mode){
 
-	private function _getResizedImage($width, $height, $mode = '') {
+		if(!$this->isImage()){
+			// :/
+			return;
+		}
+
 		$m = $this->getMimetype();
 
-		if ($this->isImage()) {
-			switch ($m) {
-				case 'image/jpeg':
-					$img = imagecreatefromjpeg($this->getFilename());
-					break;
-				case 'image/png':
-					$img = imagecreatefrompng($this->getFilename());
-					break;
-				case 'image/gif':
-					$img = imagecreatefromgif($this->getFilename());
-					break;
-			}
-			if ($img) {
-				$sW = imagesx($img);
-				$sH = imagesy($img);
+		if($m == 'image/gif' && exec('which convert 2>/dev/null')){
+			// The GIF resizer handles EVERYTHING :)
+			// Granted of course, that imagemagick's convert is available on the server.
+			$resize = escapeshellarg($mode . $width . 'x' . $height);
+			exec('convert ' . escapeshellarg($this->getFilename()) . ' -resize ' . $resize . ' ' . escapeshellarg($file->getFilename()));
+			return;
+		}
 
-				$nW = $sW;
-				$nH = $sH;
+		// Traditional resizing logic.
+		switch ($m) {
+			case 'image/jpeg':
+				$img = imagecreatefromjpeg($this->getFilename());
+				break;
+			case 'image/png':
+				$img = imagecreatefrompng($this->getFilename());
+				break;
+			case 'image/gif':
+				$img = imagecreatefromgif($this->getFilename());
+				break;
+			default:
+				// Hmmm...
+				return;
+		}
+		if ($img) {
+			$sW = imagesx($img);
+			$sH = imagesy($img);
+
+			$nW = $sW;
+			$nH = $sH;
 
 
-				switch($mode){
-					// Standard mode, images are scaled down (only) while preserving aspect ratio
-					case '':
-					case '<':
-						if ($nW > $width) {
-							$nH = $width * $sH / $sW;
-							$nW = $width;
-						}
-
-						if ($nH > $height) {
-							$nW = $height * $sW / $sH;
-							$nH = $height;
-						}
-						break;
-					// Only resize up
-					case '>':
-						if ($nW < $width) {
-							$nH = $width * $sH / $sW;
-							$nW = $width;
-						}
-
-						if ($nH < $height) {
-							$nW = $height * $sW / $sH;
-							$nH = $height;
-						}
-						break;
-					// Resize to new size, regardless about aspect ratio
-					case '!':
+			switch($mode){
+				// Standard mode, images are scaled down (only) while preserving aspect ratio
+				case '':
+				case '<':
+					if ($nW > $width) {
+						$nH = $width * $sH / $sW;
 						$nW = $width;
-						$nH = $height;
-						break;
-					// Resize image based on smallest dimension
-					case '^':
-						$ratioheight = $sW / $height;
-						$ratiowidth  = $sH / $width;
+					}
 
-						if($ratioheight > 1 && $ratiowidth > 1){
-							// The image is larger than any of the dimensions, I can use the reduction logic.
-							if(($width * $sH / $sW) > ($height * $sW / $sH)){
-								$nH = $width * $sH / $sW;
-								$nW = $width;
-							}
-							else{
-								$nH = $height;
-								$nW = $height * $sW / $sH;
-							}
-						}
-						elseif($ratiowidth < $ratioheight){
-							// The image needs to be increased in size, this logic is slightly different.
+					if ($nH > $height) {
+						$nW = $height * $sW / $sH;
+						$nH = $height;
+					}
+					break;
+				// Only resize up
+				case '>':
+					if ($nW < $width) {
+						$nH = $width * $sH / $sW;
+						$nW = $width;
+					}
+
+					if ($nH < $height) {
+						$nW = $height * $sW / $sH;
+						$nH = $height;
+					}
+					break;
+				// Resize to new size, regardless about aspect ratio
+				case '!':
+					$nW = $width;
+					$nH = $height;
+					break;
+				// Resize image based on smallest dimension
+				case '^':
+					$ratioheight = $sW / $height;
+					$ratiowidth  = $sH / $width;
+
+					if($ratioheight > 1 && $ratiowidth > 1){
+						// The image is larger than any of the dimensions, I can use the reduction logic.
+						if(($width * $sH / $sW) > ($height * $sW / $sH)){
+							$nH = $width * $sH / $sW;
 							$nW = $width;
-							$nH = round($width * $sH / $sW);
 						}
 						else{
 							$nH = $height;
-							$nW = round($height * $sW / $sH);
+							$nW = $height * $sW / $sH;
 						}
-				}
+					}
+					elseif($ratiowidth < $ratioheight){
+						// The image needs to be increased in size, this logic is slightly different.
+						$nW = $width;
+						$nH = round($width * $sH / $sW);
+					}
+					else{
+						$nH = $height;
+						$nW = round($height * $sW / $sH);
+					}
+			}
 
 
-				$img2 = imagecreatetruecolor($nW, $nH);
-				imagealphablending($img2, false);
-				imagesavealpha($img2, true);
-				imagealphablending($img, true);
-				// Assign a transparency color.
-				//$trans = imagecolorallocatealpha($img2, 0, 0, 0, 0);
-				//imagefill($img2, 0, 0, $trans);
-				imagecopyresampled($img2, $img, 0, 0, 0, 0, $nW, $nH, $sW, $sH);
-				imagedestroy($img);
+			$img2 = imagecreatetruecolor($nW, $nH);
+			imagealphablending($img2, false);
+			imagesavealpha($img2, true);
+			imagealphablending($img, true);
+			// Assign a transparency color.
+			//$trans = imagecolorallocatealpha($img2, 0, 0, 0, 0);
+			//imagefill($img2, 0, 0, $trans);
+			imagecopyresampled($img2, $img, 0, 0, 0, 0, $nW, $nH, $sW, $sH);
+			imagedestroy($img);
 
-				return $img2;
+			switch ($m) {
+				case 'image/jpeg':
+					imagejpeg($img2, $file->getFilename(), 60);
+					break;
+				case 'image/png':
+					imagepng($img2, $file->getFilename(), 9);
+					break;
+				case 'image/gif':
+					imagegif($img2, $file->getFilename());
+					break;
+				default:
+					// Hmmm...
+					return;
 			}
 		}
 	}
-
-
-	/**
-	 * Guess the mimetype for a given extension.
-	 *
-	 * Some extensions may have multiple mimetypes based on the detection software,
-	 *    so an array is returned with all possibilities for that extension.
-	 *
-	 * @return array
-	 */
-	/*public static function GetMimetypeFromExtension($ext){
-		// Remove the beginning '.' if there is one.
-		if($ext{0} == '.') $ext = substr($ext, 1);
-		
-		switch(strtolower($ext)){
-			case 'gif':
-				return array('image/gif');
-			case 'jpg':
-			case 'jpeg':
-				return array('image/jpeg');
-			case 'pdf':
-				return array('application/pdf');
-			case 'png':
-				return array('image/png');
-			case 'sh':
-				return array('application/x-shellscript', 'text/plain');
-			case 'txt':
-				return array('text/plain');
-			case 'zip':
-				return array('application/x-zip', 'application/zip');
-			default:
-				return array();
-		}
-	}
-	*/
-	/*
-	public static function GetMimetypesFromExtensions($exts = array()){
-		if(!is_array($exts)) return array();
-		$ret = array();
-		foreach($exts as $ext){
-			$ret = array_merge($ret, File::GetMimetypeFromExtension($ext));
-		}
-		return $ret;
-	}
-	*/
 }

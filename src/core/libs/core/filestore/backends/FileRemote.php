@@ -85,6 +85,28 @@ class FileRemote implements Filestore\File {
 		if ($filename) $this->setFilename($filename);
 	}
 
+	/**
+	 * Get the title of this file, either generated from the filename or pulled from the meta data as appropriate.
+	 *
+	 * @return string
+	 */
+	public function getTitle(){
+		$metas = new Filestore\FileMetaHelper($this);
+
+		// If no title was set, I need to pick one by default.
+		if(($t = $metas->getMetaTitle('title'))){
+			return $t;
+		}
+		else{
+			// Generate a moderately meaningful title from the filename.
+			$title = $this->getBasename(true);
+			$title = preg_replace('/[^a-zA-Z0-9 ]/', ' ', $title);
+			$title = trim(preg_replace('/[ ]+/', ' ', $title));
+			$title = ucwords($title);
+			return $title;
+		}
+	}
+
 	public function getFilesize($formatted = false) {
 		$h = $this->_getHeaders();
 

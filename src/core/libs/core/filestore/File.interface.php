@@ -84,6 +84,13 @@ interface File {
 	public function getExtension();
 
 	/**
+	 * Get the title of this file, either generated from the filename or pulled from the meta data as appropriate.
+	 *
+	 * @return string
+	 */
+	public function getTitle();
+
+	/**
 	 * Get a filename that can be retrieved from the web.
 	 * Resolves with the ROOT_DIR prefix already attached.
 	 *
