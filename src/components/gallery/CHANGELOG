@@ -1,3 +1,8 @@
+Gallery 1.5.4
+
+	* Try to create the directory automatically when creating/updating an album.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 02 Apr 2014 03:35:00 -0400
+
 Gallery 1.5.3
 
 	* Switch the permission key name for gallery management.

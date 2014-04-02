@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.3" name="Gallery" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.4" name="Gallery" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.1.0" operation="ge"/>
+		<require name="core" type="component" version="3.2.0" operation="ge"/>
 		<require name="user" type="library"/>
 	</requires>
 	<permissions>
@@ -37,14 +37,14 @@
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="583db25d918a77fc35312875cd73c6a3"/>
+		<file filename="CHANGELOG" md5="fb9f12f8b4743b72bc23a6766cc3070d"/>
 		<file filename="controllers/GalleryController.php" md5="52a012b19267b67a54cd9076afa7ad2f">
 			<controller name="GalleryController"/>
 		</file>
 		<file filename="controllers/GalleryWidgetController.php" md5="a0bb1c17c4cb7bc83f0c58386d759f74">
 			<controller name="GalleryWidgetController"/>
 		</file>
-		<file filename="helpers/GalleryFormHandler.class.php" md5="0478e415450457c17a4e72afb12fdff2">
+		<file filename="helpers/GalleryFormHandler.class.php" md5="ceaf744fa429e3edaff24e8d4ef62621">
 			<class name="GalleryFormHandler"/>
 		</file>
 		<file filename="models/GalleryAlbumModel.php" md5="42e066aebc160e4bf0f587cf588157c2">
@@ -94,6 +94,7 @@
 		<upgrade from="1.5.0" to="1.5.1"/>
 		<upgrade from="1.5.1" to="1.5.2"/>
 		<upgrade from="1.5.2" to="1.5.3"/>
+		<upgrade from="1.5.3" to="1.5.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
