@@ -1,3 +1,9 @@
+Favicon 1.0.1
+
+	* [Feature] Favicon administration displays how the currently selected image looks across different
+	  browsers and devices.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 02 Apr 2014 03:34:27 -0400
+
 Favicon 1.0.0
 
 	* Initial version
