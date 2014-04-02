@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3.0" name="Theme" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.0" name="Theme" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.1.0" operation="ge"/>
+		<require name="core" type="component" version="3.2.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
 		<require name="jqueryui" type="library" version="1.8.0" operation="ge"/>
 	</requires>
@@ -10,8 +10,8 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="e0adee7da2e3cb5d54f1a6d48298c65e"/>
-		<file filename="controllers/ThemeController.class.php" md5="f8d3eaccd2e98f7c29e8eaadeeb98ce5">
+		<file filename="CHANGELOG" md5="3c34280b8f1f8a8ea78b1f9ede9d1bf1"/>
+		<file filename="controllers/ThemeController.class.php" md5="17f81d9ed27b4fc81fc9e3a24233de8d">
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
@@ -27,11 +27,9 @@
 	</files>
 	<view>
 		<file filename="templates/pages/theme/editor.tpl" md5="533b2423a66182e692136eefa142f081"/>
-		<file filename="templates/pages/theme/index.tpl" md5="22ff7f408bb5191ef0cabcff182a20c9"/>
+		<file filename="templates/pages/theme/index.tpl" md5="e7690410c26f3c40256ccf684006be48"/>
 		<file filename="templates/pages/theme/selectstylesheets.tpl" md5="47956fc42e0954353264ab3d2f5c0e59"/>
 		<file filename="templates/pages/theme/setdefault.tpl" md5="835a5142fdb7c580502a6413909a89e0"/>
-		<file filename="templates/pages/theme/widgets.tpl" md5="e96835f12b3c789786216a905eb27008"/>
-		<file filename="templates/pages/theme/widgets_add.tpl" md5="ea20ae172979c68410c6da05813753a9"/>
 	</view>
 	<pages>
 		<page baseurl="/theme" admin="1" access="g:admin" title="Theme Manager" group="Theme and Layouts"/>
@@ -68,6 +66,7 @@
 		<upgrade from="2.1.4" to="2.1.5"/>
 		<upgrade from="2.1.5" to="2.2.0"/>
 		<upgrade from="2.2.0" to="2.3.0"/>
+		<upgrade from="2.3.0" to="2.4.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

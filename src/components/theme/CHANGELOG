@@ -1,3 +1,8 @@
+Theme 2.4.0
+
+	* Migrated all widget functionality into Core.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 02 Apr 2014 03:37:06 -0400
+
 Theme 2.3.0
 
 	* [Feature] Properly handle the theme screenshots.
