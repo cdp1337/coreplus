@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.1" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.2" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -70,7 +70,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
 		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
-		<file filename="core/CHANGELOG" md5="533ab807b3fa99e5cb73498df52aa56e"/>
+		<file filename="core/CHANGELOG" md5="2f889b6dfd8b4cfafcccc901375958d3"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="4ee39a8a4a6996cfbefeb144459248e0"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
@@ -449,7 +449,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="56818b4124a9dabd843b011c226d9b25">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="d1167015ef5f07fdd9983f5ca3a0e46d">
+		<file filename="core/libs/core/PageRequest.class.php" md5="43a7a4b1cc9e1096c4de10eabf98ad12">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="026c83b5188f74fd815f1cd7a0403498">
@@ -690,7 +690,7 @@
 		<file filename="core/libs/core/templates/backends/PHTML.php" md5="044654cde48e315a4f0b2ce2a6eb819d">
 			<class name="Core\Templates\Backends\PHTML"/>
 		</file>
-		<file filename="core/libs/core/templates/backends/Smarty.php" md5="0fd28bb2765bd9e9eda9fd7a524b261e">
+		<file filename="core/libs/core/templates/backends/Smarty.php" md5="055e15a766543ca79327e8df1fdc8093">
 			<class name="Core\Templates\Backends\Smarty"/>
 		</file>
 		<file filename="core/libs/core/user/AuthDriverInterface.php" md5="dbb0124932e1f0e81d1f2c2fec4c0b17">
@@ -1782,6 +1782,7 @@
 			</dataset>
 		</upgrade>
 		<upgrade from="3.2.0" to="3.2.1"/>
+		<upgrade from="3.2.1" to="3.2.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

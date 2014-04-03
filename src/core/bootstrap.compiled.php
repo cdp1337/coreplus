@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 02 Apr 2014 17:36:01 -0400
+ * @compiled Wed, 02 Apr 2014 22:11:04 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17086,7 +17086,7 @@ $p->set('rewriteurl', $pagedat['rewriteurl']);
 $this->_pagemodel = $p;
 }
 else {
-return false;
+$this->_pagemodel = new PageModel();
 }
 if ($pagedat && $pagedat['parameters']) {
 foreach ($pagedat['parameters'] as $k => $v) {

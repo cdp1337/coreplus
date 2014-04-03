@@ -1,3 +1,10 @@
+Core Plus 3.2.2
+
+	* Some fixes in the PageRequest now that invalid views can be continued through the system a little
+	  longer.
+	* Widgetareas are singleton tags, there is no closing tag associated to them.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 02 Apr 2014 22:11:25 -0400
+
 Core Plus 3.2.1
 
 	* Change the UA download source, yet again!
