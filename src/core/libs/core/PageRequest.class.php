@@ -549,11 +549,11 @@ class PageRequest {
 			// This page doesn't have a master template set, but it or a parent is set as an admin-level page.
 			$view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 		}
-		elseif ($defaultpage->get('theme_template')) {
+		elseif ($defaultpage && $defaultpage->get('theme_template')) {
 			// Master template set in the database?
 			$view->mastertemplate = $defaultpage->get('theme_template');
 		}
-		elseif($defaultpage->exists() && $defaultpage->get('admin')){
+		elseif($defaultpage && $defaultpage->exists() && $defaultpage->get('admin')){
 			// Or an admin level page?
 			$view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 		}
@@ -850,7 +850,7 @@ class PageRequest {
 			}
 			else {
 				// No page in the database and no valid controller... sigh
-				return false;
+				$this->_pagemodel = new PageModel();
 			}
 
 			//var_dump($p); die();

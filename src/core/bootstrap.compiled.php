@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 02 Apr 2014 04:52:32 -0400
+ * @compiled Wed, 02 Apr 2014 17:36:01 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -14729,8 +14729,7 @@ return false;
 }
 public function getWidgetAreas(){
 $fullsearch = file_get_contents($this->_filename);
-$fullsearch = preg_replace('#\{widgetarea(.*)\}#isU', '<widgetarea$1>', $fullsearch);
-$fullsearch = preg_replace('#\{\/widgetarea[ ]*\}#', '</widgetarea>', $fullsearch);
+$fullsearch = preg_replace('#\{widgetarea(.*)\}#isU', '<widgetarea$1/>', $fullsearch);
 $areas = [];
 $dom = new \DOMDocument();
 try{
@@ -16913,10 +16912,10 @@ elseif($view->mastertemplate === false){
 elseif($isadmin){
 $view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 }
-elseif ($defaultpage->get('theme_template')) {
+elseif ($defaultpage && $defaultpage->get('theme_template')) {
 $view->mastertemplate = $defaultpage->get('theme_template');
 }
-elseif($defaultpage->exists() && $defaultpage->get('admin')){
+elseif($defaultpage && $defaultpage->exists() && $defaultpage->get('admin')){
 $view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
 }
 elseif(sizeof($view->breadcrumbs) && $view->breadcrumbs[0]['title'] == 'Administration'){
