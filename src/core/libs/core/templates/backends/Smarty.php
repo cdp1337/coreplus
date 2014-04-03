@@ -281,8 +281,7 @@ class Smarty implements Templates\TemplateInterface {
 	public function getWidgetAreas(){
 		// Easiest way.... convert this to XML/HTML!
 		$fullsearch = file_get_contents($this->_filename);
-		$fullsearch = preg_replace('#\{widgetarea(.*)\}#isU', '<widgetarea$1>', $fullsearch);
-		$fullsearch = preg_replace('#\{\/widgetarea[ ]*\}#', '</widgetarea>', $fullsearch);
+		$fullsearch = preg_replace('#\{widgetarea(.*)\}#isU', '<widgetarea$1/>', $fullsearch);
 
 		//echo '<pre>' . str_replace('<', '&lt;', $fullsearch) . '</pre>';
 
