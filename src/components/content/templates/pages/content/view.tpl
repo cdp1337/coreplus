@@ -5,3 +5,4 @@
 		</p>
 	{/insertable}
 </div>
+{widgetarea name="After Content"}
