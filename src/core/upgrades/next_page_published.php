@@ -2,6 +2,8 @@
 /**
  * Upgrade script to update the published timestamp of all pages.
  * This is necessary because <= 3.0.0, pages did not have the published flag.
+ *
+ * @package Core
  */
 
 // Get every page that currently exists

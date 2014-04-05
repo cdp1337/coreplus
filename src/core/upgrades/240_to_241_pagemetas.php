@@ -1,11 +1,8 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: powellc
- * Date: 1/23/13
- * Time: 2:29 PM
- *
  * Upgrade file from 2.4.0 to 2.4.1 to handle converting legacy meta data to the new format.
+ *
+ * @package Core
  */
 
 

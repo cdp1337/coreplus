@@ -1,12 +1,10 @@
 <?php
 /**
- * Enter a meaningful file description here!
+ * Test file to ensure that logs can be written and are correctly written.
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20131231.1718
- * @package PackageName
- * 
- * Created with PhpStorm.
+ * @package Core\Utilities\Logger
  */
 
 class LogFileTest extends PHPUnit_Framework_TestCase {

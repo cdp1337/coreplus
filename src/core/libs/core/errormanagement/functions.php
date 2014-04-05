@@ -5,8 +5,6 @@
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20131018.0206
  * @package Core\ErrorManagement
- * 
- * Created with JetBrains PhpStorm.
  */
 
 namespace Core\ErrorManagement;

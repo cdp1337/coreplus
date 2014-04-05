@@ -29,10 +29,10 @@ class UserWidget extends Widget_2_1{
 	public function login() {
 		$v = $this->getView();
 
-		$u = Core::User();
+		$user = \Core\user();
 
-		$v->assign('user', $u);
-		$v->assign('loggedin', $u->exists());
+		$v->assign('user', $user);
+		$v->assign('loggedin', $user->exists());
 		$v->assign('allowregister', ConfigHandler::Get('/user/register/allowpublic'));
 	}
 
@@ -63,7 +63,7 @@ class UserWidget extends Widget_2_1{
 	public function register() {
 
 		$view = $this->getView();
-		$user = Core::User();
+		$user = \Core\user();
 
 		// Set the access permissions for this page as anonymous-only.
 		if(!$user->checkAccess('g:anonymous;g:!admin')){
@@ -75,8 +75,7 @@ class UserWidget extends Widget_2_1{
 			return '';
 		}
 
-		$form = \Core\User\Helper::GetRegistrationForm();
-
-		$view->assign('form', $form);
+		$auths = \Core\User\Helper::GetEnabledAuthDrivers();
+		$view->assign('drivers', $auths);
 	}
 }

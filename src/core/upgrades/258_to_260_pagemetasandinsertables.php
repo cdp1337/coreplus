@@ -1,4 +1,9 @@
 <?php
+/**
+ * Upgrade file to update the page insertables on 2.6.0
+ *
+ * @package Core
+ */
 
 // Give me the page system!
 if(!class_exists('PageModel')) require_once(ROOT_PDIR . 'core/models/PageModel.class.php');

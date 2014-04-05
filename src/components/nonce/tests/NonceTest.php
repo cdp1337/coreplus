@@ -1,14 +1,19 @@
 <?php
 /**
- * Enter a meaningful file description here!
+ * File for the NonceTest test suite.
  *
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130412.1031
- * @package PackageName
- *
- * Created with JetBrains PhpStorm.
+ * @package Nonce
  */
 
+/**
+ * Class NonceTest
+ *
+ * Tests the Nonce system to ensure it's operating as expected.
+ *
+ * @package Nonce
+ */
 class NonceTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Test the creation and validation of a good nonce.

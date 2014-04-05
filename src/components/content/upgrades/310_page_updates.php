@@ -1,12 +1,10 @@
 <?php
 /**
- * Enter a meaningful file description here!
+ * Upgrade file to add control links for content pages.
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20140228.1049
- * @package PackageName
- * 
- * Created with PhpStorm.
+ * @package Content
  */
 
 $fac = new ModelFactory('PageModel');

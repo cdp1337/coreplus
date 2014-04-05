@@ -1,14 +1,17 @@
 <?php
 /**
- * Enter a meaningful file description here!
+ * File for SQL_Parser_DatasetTest
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20131017.0955
- * @package PackageName
- * 
- * Created with JetBrains PhpStorm.
+ * @package Core\Datamodel
  */
 
+/**
+ * Class SQL_Parser_DatasetTest
+ *
+ * @package Core\Datamodel
+ */
 class SQL_Parser_DatasetTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Test that a simple SELECT statement parses

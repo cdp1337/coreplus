@@ -1,11 +1,11 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: powellc
  * This is the upgrade file from 2.7.0 (technically 2.6.0, but...), to 2.8.0.
  *
  * Required because with the file input change in 2.6.0 returning core resolved paths,
  * the data in the database will contain that path now.
+ *
+ * @package Core
  */
 
 // I'm using raw objects here because if there are a lot of user accounts in the system,

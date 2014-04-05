@@ -4,14 +4,13 @@
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130530.1925
- * @package PackageName
- * 
- * Created with JetBrains PhpStorm.
+ * @package Core\Filestore
  */
 
 /**
  * Class FileLocalTest
  *
+ * @package Core\Filestore
  * @see core/libs/core/filestore/File.interface.php
  * @see core/libs/core/filestore/backends/FileLocal.php
  */

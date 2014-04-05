@@ -15,7 +15,6 @@
   font-weight: normal;
   font-style: normal;
 }
-
 /* line 4, _core.scss */
 .icon {
   display: inline-block;
@@ -130,7 +129,6 @@
     -moz-transform: rotate(359deg);
   }
 }
-
 @-webkit-keyframes spin {
   /* line 16, _spinning.scss */
   0% {
@@ -142,7 +140,6 @@
     -webkit-transform: rotate(359deg);
   }
 }
-
 @-o-keyframes spin {
   /* line 20, _spinning.scss */
   0% {
@@ -154,7 +151,6 @@
     -o-transform: rotate(359deg);
   }
 }
-
 @-ms-keyframes spin {
   /* line 24, _spinning.scss */
   0% {
@@ -166,7 +162,6 @@
     -ms-transform: rotate(359deg);
   }
 }
-
 @keyframes spin {
   /* line 28, _spinning.scss */
   0% {
@@ -178,7 +173,6 @@
     transform: rotate(359deg);
   }
 }
-
 /* line 4, _rotated-flipped.scss */
 .icon-rotate-90 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=$rotation);

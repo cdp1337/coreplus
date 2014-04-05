@@ -1,15 +1,16 @@
 <?php
 /**
- * Enter a meaningful file description here!
+ * File for FacebookWidget
  *
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130222.1011
- * @package PackageName
- *
- * Created with JetBrains PhpStorm.
+ * @package Facebook
  */
+
 /**
- * Class description here
+ * Provides the Facebook login widget.
+ *
+ * @package Facebook
  */
 class FacebookWidget extends Widget_2_1{
 	/**

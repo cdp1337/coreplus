@@ -4,11 +4,17 @@
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130712.1210
- * @package PackageName
- * 
- * Created with JetBrains PhpStorm.
+ * @package Blog
  */
 
+
+/**
+ * Class Bug409Test
+ *
+ * Ensure that RSS Feeds validate with W3C.
+ *
+ * @package Blog
+ */
 class Bug409Test extends PHPUnit_Framework_TestCase {
 
 	/**

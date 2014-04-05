@@ -5,7 +5,7 @@
  * @package Core\i18n
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20140326.2321
- * @copyright Copyright (C) 2009-2013  Author
+ * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify

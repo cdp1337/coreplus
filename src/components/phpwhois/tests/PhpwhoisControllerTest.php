@@ -1,14 +1,17 @@
 <?php
 /**
- * Enter a meaningful file description here!
+ * File for the PhpWhoisController.
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130429.0134
- * @package PackageName
- * 
- * Created with JetBrains PhpStorm.
+ * @package phpwhois
  */
 
+/**
+ * Class PhpwhoisControllerTest
+ *
+ * @package phpwhois
+ */
 class PhpwhoisControllerTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Test a lookup to localhost and make sure that it returns appropriate information.

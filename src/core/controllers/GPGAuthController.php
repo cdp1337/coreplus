@@ -1,10 +1,11 @@
 <?php
 /**
  * File for class GPGAuthController definition in the coreplus project
- * 
+ *
+ * @package Core\User
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20140319.1608
- * @copyright Copyright (C) 2009-2013  Author
+ * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,8 +29,6 @@
  *
  * <h3>Usage Examples</h3>
  *
- *
- * @todo Write documentation for GPGAuthController
  * <h4>Example 1</h4>
  * <p>Description 1</p>
  * <code>
@@ -45,7 +44,8 @@
  * $b = $a;
  * </code>
  *
- * 
+ * @todo Write documentation for GPGAuthController
+ * @package Core\User
  * @author Charlie Powell <charlie@eval.bz>
  *
  */
@@ -183,6 +183,12 @@ class GPGAuthController extends Controller_2_1 {
 		$view->assign('form', $form);
 	}
 
+	/**
+	 * The second page for setting or updating GPG keys for a given user.
+	 *
+	 * This is required because the command is sent to the user's email,
+	 * and this page will display the text area to submit the signed content.
+	 */
 	public function configure2(){
 		$view = $this->getView();
 		$request = $this->getPageRequest();
@@ -255,6 +261,15 @@ class GPGAuthController extends Controller_2_1 {
 		return '/gpgauth/configure/' . $nonce;
 	}
 
+	/**
+	 * Form handler for the initial key set or reset request.
+	 *
+	 * This sends out the email with the signing command.
+	 *
+	 * @param Form $form
+	 *
+	 * @return bool|string
+	 */
 	public static function ConfigureHandler(Form $form){
 		// Generate a random sentence to be decoded with the given nonce.
 		$sentence = trim(BaconIpsumGenerator::Make_a_Sentence());
@@ -288,6 +303,15 @@ class GPGAuthController extends Controller_2_1 {
 		}
 	}
 
+	/**
+	 * Form handler for the final submit to set or reset a GPG key.
+	 *
+	 * This performs the actual key change in the database.
+	 *
+	 * @param Form $form
+	 *
+	 * @return bool|string
+	 */
 	public static function Configure2Handler(Form $form){
 		/** @var NonceModel $nonce */
 		$nonce = NonceModel::Construct($form->getElement('nonce')->get('value'));
@@ -354,6 +378,15 @@ class GPGAuthController extends Controller_2_1 {
 		return '/user/me';
 	}
 
+	/**
+	 * Form handler for login requests.
+	 *
+	 * This looks up the user's email and ensures that it's linked to a key.
+	 *
+	 * @param Form $form
+	 *
+	 * @return bool|string
+	 */
 	public static function LoginHandler(Form $form){
 		$email = $form->getElement('email');
 
@@ -425,6 +458,19 @@ class GPGAuthController extends Controller_2_1 {
 		return '/gpgauth/login2/' . $nonce;
 	}
 
+	/**
+	 * Form handler for the login page.
+	 *
+	 * This will read the signed content and ensure that it was signed with
+	 * 1) The user's exact key that they have previously registered
+	 * 2) That the key has not been revoked
+	 * 3) That the key has not expired
+	 * 4) That the signed content matches the original content submitted for the challange/response.
+	 *
+	 * @param Form $form
+	 *
+	 * @return bool|mixed|string
+	 */
 	public static function Login2Handler(Form $form){
 		/** @var NonceModel $nonce */
 		$nonce = NonceModel::Construct($form->getElement('nonce')->get('value'));

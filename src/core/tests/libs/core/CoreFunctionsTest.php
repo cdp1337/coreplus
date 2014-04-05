@@ -4,11 +4,14 @@
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130708.1110
- * @package PackageName
- * 
- * Created with JetBrains PhpStorm.
+ * @package Core
  */
 
+/**
+ * Class CoreFunctionsTest
+ *
+ * @package Core
+ */
 class CoreFunctionsTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Tests that \Core\str_to_url is functioning properly.

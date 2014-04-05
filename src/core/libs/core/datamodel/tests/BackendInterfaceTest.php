@@ -6,12 +6,12 @@
  *
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130312.0529
- * @package PackageName
- *
- * Created with JetBrains PhpStorm.
+ * @package Core\Datamodel
  */
 /**
  * This will test the currently selected BackendInterface in the system.
+ *
+ * @package Core\Datamodel
  */
 class BackendInterfaceTest extends PHPUnit_Framework_TestCase{
 	/**

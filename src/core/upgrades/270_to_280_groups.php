@@ -1,6 +1,8 @@
 <?php
 /**
  * Upgrade script to convert all the JSON-encoded user groups and transpose them to the new UserUserGroup object.
+ *
+ * @package Core
  */
 
 $fac = new ModelFactory('UserModel');

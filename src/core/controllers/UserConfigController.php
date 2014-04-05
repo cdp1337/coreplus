@@ -1,7 +1,8 @@
 <?php
 /**
  * File for class UserConfigController definition in the coreplus project
- * 
+ *
+ * @package Core\User
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130818.2234
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -45,11 +46,18 @@
  * $b = $a;
  * </code>
  *
- * 
+ * @package Core\User
  * @author Charlie Powell <charlie@eval.bz>
  *
  */
 class UserConfigController extends Controller_2_1{
+	/**
+	 * The main configuration for any user option on the site.
+	 *
+	 * Displayed under the "Configure" menu.
+	 *
+	 * @return int
+	 */
 	public function admin() {
 		$view    = $this->getView();
 		$request = $this->getPageRequest();

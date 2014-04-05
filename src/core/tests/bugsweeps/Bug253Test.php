@@ -4,12 +4,13 @@
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130313.1611
- * @package PackageName
- * 
- * Created with JetBrains PhpStorm.
+ * @package Core
  */
+
 /**
  * Class description here
+ *
+ * @package Core
  */
 class Bug253Test extends PHPUnit_Framework_TestCase {
 	public function testBug(){

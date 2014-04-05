@@ -1,8 +1,8 @@
 <?php
 /**
- * Main controller for the user system
+ * File for the user activity controller
  *
- * @package User
+ * @package Core\User
  * @since 2.0.4
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -21,6 +21,12 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+
+/**
+ * Class UserActivityController
+ *
+ * @package Core\User
+ */
 class UserActivityController extends Controller_2_1 {
 	public function __construct(){
 		$this->accessstring = 'p:user_activity_list';

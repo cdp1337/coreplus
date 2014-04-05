@@ -4,6 +4,8 @@
  *
  * This is meant to run through every registered user group on the site and
  * migrate their permissions to the new expanded version.
+ *
+ * @package Core
  */
 
 

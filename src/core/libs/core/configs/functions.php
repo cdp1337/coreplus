@@ -1,12 +1,10 @@
 <?php
 /**
- * Enter a meaningful file description here!
+ * Common functions used in conjunction with the Config system.
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130818.2333
- * @package PackageName
- * 
- * Created with JetBrains PhpStorm.
+ * @package Core
  */
 
 namespace Core\Configs;

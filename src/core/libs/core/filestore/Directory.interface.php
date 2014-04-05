@@ -4,13 +4,16 @@
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130604.1113
- * @package PackageName
- * 
- * Created with JetBrains PhpStorm.
+ * @package Core\Filestore
  */
 
 namespace Core\Filestore;
 
+/**
+ * Interface Directory
+ *
+ * @package Core\Filestore
+ */
 interface Directory {
 	/**
 	 * List the files and directories in this directory and return the

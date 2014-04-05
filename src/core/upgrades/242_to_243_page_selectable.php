@@ -1,12 +1,9 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: powellc
- * Date: 1/23/13
- * Time: 2:29 PM
- *
  * Upgrade file for 2.4.2 to 2.4.3 to handle setting the selectable flag appropriately.  Admin pages should
  * not be selectable.
+ *
+ * @package Core
  */
 
 

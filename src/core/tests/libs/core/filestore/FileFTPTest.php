@@ -4,9 +4,7 @@
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130530.1925
- * @package PackageName
- * 
- * Created with JetBrains PhpStorm.
+ * @package Core\Filestore
  */
 
 /**
@@ -14,6 +12,8 @@
  *
  * @see core/libs/core/filestore/File.interface.php
  * @see core/libs/core/filestore/backends/FileFTP.php
+ *
+ * @package Core\Filestore
  */
 class FileFTPTest extends PHPUnit_Framework_TestCase {
 

@@ -1,9 +1,28 @@
 /**
- * Created with JetBrains PhpStorm.
- * User: powellc
- * Date: 6/4/13
- * Time: 9:53 AM
- * To change this template use File | Settings | File Templates.
+ * Navigator javascript logic
+ *
+ * @author Charlie Powell <charlie@eval.bz>
+ */
+
+/**
+ *
+ * @type {
+ * {
+ * DOM: {$bargraph: null},
+ * Location: null,
+ * Mode: null,
+ * UploadTimer: boolean,
+ * UploadProgress: number,
+ * UploadTotalProgress: number,
+ * FakeBarProgress: boolean,
+ * Setup: Setup,
+ * Mkdir: Mkdir,
+ * Rename: Rename,
+ * Delete: Delete,
+ * SelectFile: SelectFile,
+ * Bargraph: {_value: number, Set: Set, Get: Get},
+ * __last: null}
+ * }
  */
 
 Navigator = {

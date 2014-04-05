@@ -4,7 +4,7 @@
  *
  * Provides both admin functions and front-end user functions.
  *
- * @package User
+ * @package Core\User
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -29,6 +29,7 @@
  * This controller is only responsible for Core user functions.
  * Authentication-specific functions must be contained on the specific auth driver or its respective controller.
  *
+ * @package Core\User
  */
 class UserController extends Controller_2_1{
 

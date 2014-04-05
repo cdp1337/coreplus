@@ -4,12 +4,13 @@
  *
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20130218.0859
- * @package PackageName
- *
- * Created with JetBrains PhpStorm.
+ * @package Core
  */
+
 /**
  * Class description here
+ *
+ * @package Core
  */
 class UpdaterWidget extends Widget_2_1{
 	public function check(){

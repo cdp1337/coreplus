@@ -7,6 +7,7 @@
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20131030.2031
+ * @package Core
  */
 
 $timenow = Time::GetCurrentGMT();

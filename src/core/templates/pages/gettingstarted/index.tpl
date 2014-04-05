@@ -14,8 +14,8 @@
 
 {if $showusercreate}
 	<p class="message-info">Please create the administrative user account.  This first account will be granted with full access to the site.</p>
-	{widget baseurl="User/Register"}
+	{widget baseurl="user/register"}
 {else}
-	{widget baseurl="UserLogin/Execute"}
+	{widget baseurl="userlogin/execute"}
 {/if}
 

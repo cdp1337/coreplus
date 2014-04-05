@@ -1,17 +1,21 @@
 <?php
 /**
- * Enter a meaningful file description here!
+ * File for AuthDriverInterface
  * 
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20131113.1510
- * @package PackageName
- * 
- * Created with PhpStorm.
+ * @package Core\User
  */
 
 namespace Core\User;
 
 
+/**
+ * The interface that dictates how user authentication backends function.
+ *
+ * @author Charlie Powell <charlie@eval.bz>
+ * @package Core\User
+ */
 interface AuthDriverInterface {
 	/**
 	 * @param \UserModel|null $usermodel
