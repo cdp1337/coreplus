@@ -87,7 +87,7 @@ done
 # This will check and see if phpdoc is installed, but is installed as version 1.x
 pear info phpdoc/phpDocumentor 1>/dev/null
 if [ "$?" == "0" ]; then
-	if [ -z "$(pear info phpdoc/phpDocumentor | grep 'API Version' | grep '2.1')" ]; then
+	if [ -z "$(pear info phpdoc/phpDocumentor | grep 'API Version' | grep '2.4')" ]; then
 		pear uninstall phpdoc/phpDocumentor	
 	fi
 fi
@@ -95,10 +95,10 @@ fi
 # Now I can check/install v2!
 pear info phpdoc/phpDocumentor 1>/dev/null
 if [ "$?" == "0" ]; then
-	printline "phpdoc/phpDocumentor-alpha already installed, skipping"
+	printline "phpdoc/phpDocumentor already installed, skipping"
 else
-	printline "phpdoc/phpDocumentor-alpha is new, installing..."
-	pear install phpdoc/phpDocumentor-alpha
+	printline "phpdoc/phpDocumentor is new, installing..."
+	pear install phpdoc/phpDocumentor
 	checkexitstatus "$?"
 fi
 
