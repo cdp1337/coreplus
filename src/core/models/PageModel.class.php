@@ -1264,11 +1264,22 @@ class PageModel extends Model {
 	/**
 	 * Get the teaser of this page, aka meta description
 	 *
+	 * @param boolean $require_something Set to true if you want to require *something* to be returned.
 	 * @return string
 	 */
-	public function getTeaser(){
+	public function getTeaser($require_something){
 		$meta = $this->getMeta('description');
-		return $meta ? $meta->get('meta_value_title') : '';
+
+		if($meta){
+			return $meta->get('meta_value_title');
+		}
+		elseif($require_something){
+			// Return the body text.
+			return strip_tags($this->get('body'));
+		}
+		else{
+			return '';
+		}
 	}
 	/**
 	 * Get the image object or null
