@@ -17,6 +17,8 @@
 	<configs>
 		<config key="/piwik/server/host" type="string" default="" description="Set to the hostname of your Piwik server"/>
 		<config key="/piwik/siteid" type="int" default="" description="Set to your site id"/>
+		<config key="/piwik/tracking/all_subdomains" type="boolean" default="0" description="So if one visitor visits x.corepl.us and y.corepl.us, they will be counted as a unique visitor."/>
+		<config key="/piwik/tracking/domain_title" type="boolean" default="0" description="if someone visits the 'About' page on blog.corepl.us it will be recorded as 'blog / About'. This is the easiest way to get an overview of your traffic by sub-domain."/>
 	</configs>
 	<pages>
 		<page baseurl="/piwik/configure" title="Piwik Analytics" access="g:admin" selectable="0" admin="1" group="Configure"/>

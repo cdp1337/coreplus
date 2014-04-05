@@ -61,6 +61,8 @@ class PiwikController extends Controller_2_1 {
 		if($request->isPost()){
 			\ConfigHandler::Set('/piwik/server/host', $_POST['server_host']);
 			\ConfigHandler::Set('/piwik/siteid', $_POST['site_id']);
+			\ConfigHandler::Set('/piwik/tracking/all_subdomains', $_POST['all_domains']);
+			\ConfigHandler::Set('/piwik/tracking/domain_title', $_POST['domain_title']);
 
 			Core::SetMessage('Updated Piwik settings successfully', 'success');
 			\Core\reload();
@@ -87,6 +89,29 @@ class PiwikController extends Controller_2_1 {
 				'description' => 'Enter the Site ID of this installation',
 			]
 		);
+
+		$form->addElement(
+			'checkbox',
+			[
+				'name' => 'all_domains',
+				'title' => 'Track visitors across all subdomains of your site',
+				'description' => 'So if one visitor visits x.corepl.us and y.corepl.us, they will be counted as a single unique visitor.',
+				'value' => '1',
+				'checked' => \ConfigHandler::Get('/piwik/tracking/all_subdomains'),
+			]
+		);
+
+		$form->addElement(
+			'checkbox',
+			[
+				'name' => 'domain_title',
+				'title' => 'Prepend the site domain to the page title when tracking',
+				'description' => 'So if someone visits the "About" page on blog.corepl.us it will be recorded as "blog / About". This is the easiest way to get an overview of your traffic by sub-domain. ',
+				'value' => '1',
+				'checked' => \ConfigHandler::Get('/piwik/tracking/domain_title'),
+			]
+		);
+
 		$form->addElement('submit', ['name' => 'submit', 'value' => 'Update']);
 
 		$view->title = 'Piwik Analytics';
