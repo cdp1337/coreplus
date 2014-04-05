@@ -31,6 +31,6 @@ class FormTextareaInput extends FormElement {
 
 		// Some defaults
 		$this->_attributes['class'] = 'formelement formtextareainput';
-		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'readonly', 'required', 'tabindex', 'rows', 'cols', 'style', 'class');
+		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'placeholder', 'readonly', 'required', 'tabindex', 'rows', 'cols', 'style', 'class');
 	}
 }
