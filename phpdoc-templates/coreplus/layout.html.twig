@@ -9,6 +9,7 @@
 
     {% block stylesheets %}
         <link href="{{ path('css/template.css') }}" rel="stylesheet" media="all"/>
+        <link href="{{ path('css/font-awesome.min.css') }}" rel="stylesheet" media="all"/>
     {% endblock %}
 
     {% block javascripts %}
@@ -117,10 +118,13 @@
 
     {% block footer %}
     <footer class="span12">
-            Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by
-            <a href="http://glyphicons.com/">Glyphicons</a>.<br/>
-            Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor {{ version }}</a> and<br/>
-            generated on {{ now|date("r") }}.<br/>
+        Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a>
+        and icons provided by
+        <strike>Glyphicons</strike>
+        <a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a>.
+        <br/>
+        Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor {{ version }}</a> and<br/>
+        generated on {{ now|date("r") }}.<br/>
     </footer>
     {% endblock %}
 
