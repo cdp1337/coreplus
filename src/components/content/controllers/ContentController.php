@@ -178,8 +178,19 @@ class ContentController extends Controller_2_1 {
 
 		$m = new ContentModel($request->getParameter(0));
 
+		$link = Core::ResolveLink($m->get('baseurl'));
+
 		if (!$m->exists()) return View::ERROR_NOTFOUND;
 		$m->delete();
-		\core\redirect('/content');
+
+		Core::SetMessage('Removed ' . $m->get('nickname') . ' successfully!', 'success');
+
+		$hist = \Core::GetHistory(1);
+		if($hist == $link){
+			\Core\go_back(2);
+		}
+		else{
+			\Core\go_back(1);
+		}
 	}
 }

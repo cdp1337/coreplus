@@ -2,20 +2,26 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="Content" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.2.0" operation="ge"/>
+		<require name="core" type="component" version="3.2.2" operation="ge"/>
 	</requires>
 	<permissions>
 		<permission key="/content/manage_all" description="Manage Site Content"/>
 	</permissions>
+	<widgets>
+		<widget baseurl="/contentadmin/quickdraft" title="Quick Draft" installable="/admin"/>
+	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="cdd1b855187159875c07ffa2bc15b7cd"/>
+		<file filename="CHANGELOG" md5="65f17d91c370d04b8bf9b942ee6bb5f9"/>
 		<file filename="controllers/ContentController.php" md5="2b51e556f443e2f49ff235da4221e955">
 			<controller name="ContentController"/>
 		</file>
 		<file filename="models/ContentModel.php" md5="e3cd746f9b1715b09ca876edfe8415d1">
 			<class name="ContentModel"/>
 		</file>
-		<file filename="upgrades/310_page_updates.php" md5="a4e4254e0707bd85a9a2b88783acf1a9"/>
+		<file filename="upgrades/310_page_updates.php" md5="36d51b99e101d8a93b6fc83cc7efb20d"/>
+		<file filename="widgets/ContentAdminWidget.php" md5="0c99dc419fe33a6501f1060059e85f14">
+			<class name="ContentAdminWidget"/>
+		</file>
 	</files>
 	<pages>
 		<pagecreate title="Content" baseurl="/content/create"/>
@@ -27,10 +33,11 @@
 		<file filename="templates/pages/content/create.tpl" md5="1f45af7838e6eb4421220a6dd5a8428d"/>
 		<file filename="templates/pages/content/delete.tpl" md5="64255b05d03ba0b58cbacb107e2b2dff"/>
 		<file filename="templates/pages/content/edit.tpl" md5="1f45af7838e6eb4421220a6dd5a8428d"/>
-		<file filename="templates/pages/content/view.tpl" md5="09cce0de6b10ccbe7a956f2904ae5172"/>
+		<file filename="templates/pages/content/view.tpl" md5="eac14689b1edded185bbf09630b85c72"/>
 		<file filename="templates/pages/content/view/blog-article-review.tpl" md5="029be8352e08a3e9f6b20d44a93f2dfb"/>
 		<file filename="templates/pages/content/view/blog-article.tpl" md5="1fabbb0cf51a6a336d0372e3dfe7f474"/>
 		<file filename="templates/pages/content/view/option1.tpl" md5="4c8037182441dcac26d7f31496ac2a1a"/>
+		<file filename="templates/widgets/contentadmin/quickdraft.tpl" md5="5db2ee4656dc5019921e7a562aae3ecf"/>
 	</view>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>
