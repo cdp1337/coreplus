@@ -6,11 +6,18 @@
 		<ul>
 
 
-			{foreach $groups as $gname => $pages}
+			{foreach $groups as $gdat}
 				<li class="has-sub">
-					<span>{$gname}</span>
+					{if $gdat.href}
+						{a href="`$gdat.href`"}
+							<span>{$gdat.title}</span>
+						{/a}
+					{else}
+						<span>{$gdat.title}</span>
+					{/if}
+
 					<ul class="sub-menu">
-						{foreach from=$pages item=page}
+						{foreach from=$gdat.children item=page}
 							<li>
 								{a href=$page->get('baseurl')}{$page->get('title')}{/a}
 							</li>

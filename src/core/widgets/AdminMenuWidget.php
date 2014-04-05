@@ -47,12 +47,31 @@ class AdminMenuWidget extends Widget_2_1 {
 
 		if(\Core\user()){
 			foreach($pages as $p){
+				/** @var PageModel $p */
 				if(!\Core\user()->checkAccess($p->get('access'))) continue;
 
+				// Pages can define which sub-menu they get grouped under.
+				// The 'Admin' submenu is the default.
+				$group = $p->get('admin_group') ? $p->get('admin_group') : 'Admin';
+
+				// Some group tweaks ;)
+				$group = str_replace('and', '&', $group);
+
+				if(!isset($groups[$group])){
+					$groups[$group] = [
+						'title'    => $group,
+						'href'     => '',
+						'children' => [],
+					];
+				}
+
+				if($p->get('baseurl') == '/admin'){
+					// Admin gets special treatment.
+					$groups['Admin']['href'] = '/admin';
+					continue;
+				}
+
 				switch($p->get('title')){
-					case 'Administration':
-						$p->set('title', 'Admin');
-						break;
 					case 'System Configuration':
 						$p->set('title', "System Config");
 						break;
@@ -69,28 +88,19 @@ class AdminMenuWidget extends Widget_2_1 {
 						);
 				}
 
-				// Pages can define which sub-menu they get grouped under.
-				// The 'Admin' submenu is the default.
-				$group = $p->get('admin_group') ? $p->get('admin_group') : 'Admin';
-
-				// Some group tweaks ;)
-				$group = str_replace('and', '&', $group);
-
-				if(!isset($groups[$group])){
-					$groups[$group] = array();
-				}
 
 				// The new grouped pages
-				$groups[$group][ $p->get('title') ] = $p;
+				$groups[$group]['children'][ $p->get('title') ] = $p;
 				// And the flattened list to support legacy templates.
 				$flatlist[ $p->get('title') ] = $p;
 			}
 
 			// This is a hack to make sure that users can view the /admin link if they can view other admin pages.
-			if(sizeof($flatlist) && !isset($groups['Admin']['Admin'])){
-				$groups['Admin']['Admin'] = new PageModel('/admin');
-				$groups['Admin']['Admin']->set('title', 'Admin');
-			}
+			/*if(sizeof($flatlist) && !isset($groups['Admin']['Dashboard'])){
+				$p = new PageModel('/admin');
+				$p->set('title', 'Dashboard');
+				$groups['Admin']['Dashboard'] = $p;
+			}*/
 		}
 
 		ksort($flatlist);
