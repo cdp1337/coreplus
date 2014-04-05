@@ -1301,7 +1301,7 @@
 		<file filename="robots.txt" md5="c0c01a1b2c4285e804f9f217e4f2692f"/>
 	</files>
 	<pages>
-		<page baseurl="/admin" admin="1" access="g:admin" title="Administration"/>
+		<page baseurl="/admin" admin="1" access="g:admin" title="Admin Dashboard"/>
 		<page baseurl="/admin/reinstallall" admin="1" access="g:admin" title="Reinstall All Components"/>
 		<page baseurl="/admin/config" admin="1" access="g:admin" title="System Configuration" group="Configure"/>
 		<page baseurl="/updater" admin="1" access="g:admin" title="System Updater"/>

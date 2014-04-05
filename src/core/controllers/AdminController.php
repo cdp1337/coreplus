@@ -50,7 +50,7 @@ class AdminController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$view->title = 'Administration';
+		$view->title = 'Admin Dashboard';
 		$view->assign('links', $viewable);
 
 		// Dispatch the hook that other systems can hook into and perform checks or operations on the admin dashboard page.
