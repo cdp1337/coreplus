@@ -338,6 +338,22 @@ class FormGroup {
 
 		return false;
 	}
+
+	/**
+	 * Shortcut to get the child element's value
+	 *
+	 * @param string $name
+	 *
+	 * @return mixed
+	 */
+	public function getElementValue($name){
+		$el = $this->getElement($name);
+		if(!$el){
+			return null;
+		}
+
+		return $el->get('value');
+	}
 }
 
 /**
