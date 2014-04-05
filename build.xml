@@ -215,16 +215,22 @@
 			<!-- Output to this directory (build directory) -->
 			<arg value="-t"/>
 			<arg value="${basedir}/build/phpdoc"/>
+
 			<!-- Ignore files -->
 			<arg value="-i"/>
-			<arg value="${basedir}/src/core/bootstrap.compiled.php"/>
+			<arg value="${basedir}/src/core/bootstrap.compiled.php,${basedir}/src/core/libs/smarty/*,${basedir}/src/core/libs/phpmailer/*,${basedir}/src/core/libs/aws-sdk/*"/>
+
 			<!-- Page title -->
 			<arg value="--title"/>
-			<arg value="Core Plus"/>
+			<arg value="Core Plus Framework API Documentation"/>
+
 			<!-- Scan and log private and @internal methods too -->
 			<arg value="--parseprivate"/>
-			<!-- Generate source code -->
-			<arg value="--sourcecode"/>
+
+			<!-- Set the template to Core's phpdoc template. -->
+			<arg value="--template"/>
+			<arg value="phpdoc-templates/coreplus"/>
+
 		</exec>
 	</target>
 	<target name="phpdoc-ci" depends="prepare_build,clean_src" description="Generate phpDoc Documentation on the product (CI Compatible version)">
@@ -235,16 +241,22 @@
 			<!-- Output to this directory (build directory) -->
 			<arg value="-t"/>
 			<arg value="${basedir}/build/phpdoc"/>
+
 			<!-- Ignore files -->
 			<arg value="-i"/>
-			<arg value="${basedir}/src/core/bootstrap.compiled.php"/>
+			<arg value="${basedir}/src/core/bootstrap.compiled.php,${basedir}/src/core/libs/smarty/*,${basedir}/src/core/libs/phpmailer/*,${basedir}/src/core/libs/aws-sdk/*"/>
+
 			<!-- Page title -->
 			<arg value="--title"/>
 			<arg value="Core Plus"/>
+
 			<!-- Scan and log private and @internal methods too -->
 			<arg value="--parseprivate"/>
-			<!-- Generate source code -->
-			<arg value="--sourcecode"/>
+
+			<!-- Set the template to Core's phpdoc template. -->
+			<arg value="--template"/>
+			<arg value="phpdoc-templates/coreplus"/>
+
 		</exec>
 	</target>
 
