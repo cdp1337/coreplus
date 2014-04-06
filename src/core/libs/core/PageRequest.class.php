@@ -600,10 +600,14 @@ class PageRequest {
 			}
 		}
 
+		// Handle some of the new automatic meta data associated with Pages and the resulting View.
 
 		if(!$page->get('indexable')){
 			// Bots have no business indexing user-action pages.
 			$view->addMetaName('robots', 'noindex');
+		}
+		if(!isset($view->meta['title'])){
+			$view->meta['title'] = $page->getSEOTitle();
 		}
 
 		HookHandler::DispatchHook('/core/page/postexecute');

@@ -1319,6 +1319,7 @@
 		<page baseurl="/admin/widgets" admin="1" access="p:/core/widgets/view;p:/core/widgets/manage" title="All Widgets" group="Content"/>
 		<page baseurl="/admin/testui" admin="1" access="g:admin" title="Test General UI/UX" group="Theme and Layouts"/>
 		<page baseurl="/page/sitemap" admin="0" access="*" title="Sitemap" rewriteurl="/sitemap" selectable="1" indexable="1"/>
+		<page baseurl="/admin/seo/config" admin="1" access="g:admin" title="SEO Options" group="Configure"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/updater/check" title="Check For Updates" installable="/admin"/>
@@ -1500,6 +1501,9 @@
 		<config key="/core/logs/rotate/compress" type="boolean" default="1" description="Compress rotated log files"/>
 		<config key="/core/logs/rotate/keep" type="int" default="14" description="How many rotated log files to keep, set to 0 to disable purging old logs."/>
 		<config key="/theme/siteskin/user" type="string" description="User-frontend Skin"/>
+		<config key="/core/page/title_remove_stop_words" type="boolean" default="0" description="Set to true to remove 'stop words' that browsers will ignore from page and file titles"/>
+		<config key="/core/page/title_template" type="string" default="" description="The template for SEO title tags."/>
+		<config key="/core/page/teaser_template" type="string" default="" description="The template for SEO Meta Description and Teaser tag."/>
 	</configs>
 	<permissions>
 		<permission key="/core/systemlog/view" description="View system log entries"/>

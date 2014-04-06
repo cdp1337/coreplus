@@ -339,8 +339,6 @@ class AdminController extends Controller_2_1 {
 		$view->assign('outoftime', $outoftime);
 	}
 
-
-
 	/**
 	 * Display a list of system logs that have been recorded.
 	 *
@@ -1088,6 +1086,67 @@ class AdminController extends Controller_2_1 {
 		$view->assign('skin', $skin);
 	}
 
+	/**
+	 * Configure several of the SEO-based options on Core.
+	 */
+	public function seo_config(){
+		// Admin-only page.
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$view = $this->getView();
+
+		$title_remove_stop_words = ConfigHandler::Get('/core/page/title_remove_stop_words');
+		$title_template = ConfigHandler::Get('/core/page/title_template');
+		$teaser_template = ConfigHandler::Get('/core/page/teaser_template');
+
+		$form = new Form();
+		$form->set('callsmethod', 'AdminController::SeoConfigSave');
+
+		$form->addElement(
+			'checkbox',
+			[
+				'name' => 'config[title_remove_stop_words]',
+				'title' => 'Remove "stop" words from titles',
+				'description' => '"Stop" words are words that many search engines ignore such as "a", "an", "the", etc.' .
+					'  Please note, this only applies to <em>new</em> pages and pages that do not have the SEO title field explicitly set.',
+				'value' => '1',
+				'checked' => $title_remove_stop_words,
+			]
+		);
+
+		$form->addElement(
+			'text',
+			[
+				'name' => 'config[title_template]',
+				'title' => 'Title Template',
+				'description' => 'The title template for SEO titles on pages.' .
+					'  You can enter various keywords here to have them automatically replaced with the appropriate values.' .
+					'  Please note, this only applies to page that do not already have their SEO title explicitly set.<br/><br/>' .
+					'  If this is blank, then the page title will be used as the SEO title as-is.',
+				'value' => $title_template,
+			]
+		);
+
+		$form->addElement(
+			'text',
+			[
+				'name' => 'config[teaser_template]',
+				'title' => 'Meta Description Template',
+				'description' => 'The meta description (aka teaser), template on pages.' .
+					'  You can enter various keywords here to have them automatically replaced with the appropriate values.' .
+					'  Please note, this only applies to page that contain a blank meta description/teaser value.<br/><br/>' .
+					'  If this is blank, then <em>no</em> automatic teaser is generated.',
+				'value' => $teaser_template,
+			]
+		);
+		$form->addElement('submit', ['value' => 'Save Options']);
+
+		$view->title = 'SEO Options';
+		$view->assign('form', $form);
+	}
+
 	public static function _WidgetCreateUpdateHandler(Form $form){
 		$baseurl = $form->getElement('baseurl')->get('value');
 
@@ -1108,8 +1167,6 @@ class AdminController extends Controller_2_1 {
 
 		return 'back';
 	}
-
-
 
 	public static function _ConfigSubmit(Form $form) {
 		$elements = $form->getElements();
@@ -1168,5 +1225,30 @@ class AdminController extends Controller_2_1 {
 		}
 
 		return '/';
+	}
+
+	/**
+	 * Form handler for the SEO Options.
+	 *
+	 * @param Form $form
+	 *
+	 * @return string|bool
+	 */
+	public static function SeoConfigSave(Form $form) {
+		$elements = $form->getElements();
+
+		foreach ($elements as $e) {
+			/** @var FormElement $e */
+			// I'm only interested in config options.
+			if (strpos($e->get('name'), 'config[') === false) continue;
+
+			// Make the name usable a little.
+			$n = $e->get('name');
+			$n = substr($n, 7, -1);
+
+			ConfigHandler::Set('/core/page/' . $n, $e->get('value'));
+		}
+
+		return true;
 	}
 }

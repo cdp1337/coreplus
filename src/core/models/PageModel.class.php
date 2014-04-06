@@ -156,21 +156,24 @@ class PageModel extends Model {
 				'title' => 'Cacheable / Expires',
 				'type' => 'select',
 				'options' => [
-					'0'     => 'No Cache Allowed',
-					'30'    => '30 seconds',
-					'60'    => '1 minute',
-					'120'   => '2 minutes',
-					'300'   => '5 minutes',
-					'600'   => '10 minutes',
-					'1800'  => '30 minutes',
-					'3600'  => '1 hour',
-					'7200'  => '2 hours',
-					'14400' => '4 hours',
-					'21600' => '6 hours',
-					'28800' => '8 hours',
-					'43200' => '12 hours',
-					'64800' => '18 hours',
-					'86400' => '24 hours',
+					'0'       => 'No Cache Allowed',
+					'30'      => '30 seconds',
+					'60'      => '1 minute',
+					'120'     => '2 minutes',
+					'300'     => '5 minutes',
+					'600'     => '10 minutes',
+					'1800'    => '30 minutes',
+					'3600'    => '1 hour',
+					'7200'    => '2 hours',
+					'14400'   => '4 hours',
+					'21600'   => '6 hours',
+					'28800'   => '8 hours',
+					'43200'   => '12 hours',
+					'64800'   => '18 hours',
+					'86400'   => '24 hours',
+					'172800'  => '2 days',
+					'604800'  => '1 week',
+					'2462400' => '1 month',
 				],
 				'description' => 'Amount of time this page has a valid cache for, set to 0 to completely disable.
 					This cache only applies to guest users and bots.',
@@ -1262,20 +1265,71 @@ class PageModel extends Model {
 	}
 
 	/**
+	 * Get the *automatic* SEO title for this page.
+	 *
+	 * This can be overridden by setting the meta title attribute explicitly!
+	 *
+	 * @return string
+	 */
+	public function getSEOTitle(){
+		$metatitle = $this->getMeta('title');
+		$title = $this->get('title');
+		$config = \ConfigHandler::Get('/core/page/title_template');
+
+		if($metatitle){
+			// This is the meta attribute from the page.
+			$t = $metatitle->get('meta_value_title');
+		}
+		elseif($config){
+			// If there is a template set, then render with that.
+			$t = $this->_parseTemplateString($config);
+		}
+		else{
+			// Otherwise, just pull the page's title.
+			$t = $title;
+		}
+
+
+
+		if(ConfigHandler::Get('/core/page/title_remove_stop_words')){
+			$stopwords = array('a', 'about', 'above', 'above', 'across', 'after', 'afterwards', 'again', 'against', 'all', 'almost', 'alone', 'along', 'already', 'also','although','always','am','among', 'amongst', 'amoungst', 'amount',  'an', 'and', 'another', 'any','anyhow','anyone','anything','anyway', 'anywhere', 'are', 'around', 'as',  'at', 'back','be','became', 'because','become','becomes', 'becoming', 'been', 'before', 'beforehand', 'behind', 'being', 'below', 'beside', 'besides', 'between', 'beyond', 'bill', 'both', 'bottom','but', 'by', 'call', 'can', 'cannot', 'cant', 'co', 'con', 'could', 'couldnt', 'cry', 'de', 'describe', 'detail', 'do', 'done', 'down', 'due', 'during', 'each', 'eg', 'eight', 'either', 'eleven','else', 'elsewhere', 'empty', 'enough', 'etc', 'even', 'ever', 'every', 'everyone', 'everything', 'everywhere', 'except', 'few', 'fifteen', 'fify', 'fill', 'find', 'fire', 'first', 'five', 'for', 'former', 'formerly', 'forty', 'found', 'four', 'from', 'front', 'full', 'further', 'get', 'give', 'go', 'had', 'has', 'hasnt', 'have', 'he', 'hence', 'her', 'here', 'hereafter', 'hereby', 'herein', 'hereupon', 'hers', 'herself', 'him', 'himself', 'his', 'how', 'however', 'hundred', 'ie', 'if', 'in', 'inc', 'indeed', 'interest', 'into', 'is', 'it', 'its', 'itself', 'keep', 'last', 'latter', 'latterly', 'least', 'less', 'ltd', 'made', 'many', 'may', 'me', 'meanwhile', 'might', 'mill', 'mine', 'more', 'moreover', 'most', 'mostly', 'move', 'much', 'must', 'my', 'myself', 'name', 'namely', 'neither', 'never', 'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone', 'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often', 'on', 'once', 'one', 'only', 'onto', 'or', 'other', 'others', 'otherwise', 'our', 'ours', 'ourselves', 'out', 'over', 'own','part', 'per', 'perhaps', 'please', 'put', 'rather', 're', 'same', 'see', 'seem', 'seemed', 'seeming', 'seems', 'serious', 'several', 'she', 'should', 'show', 'side', 'since', 'sincere', 'six', 'sixty', 'so', 'some', 'somehow', 'someone', 'something', 'sometime', 'sometimes', 'somewhere', 'still', 'such', 'system', 'take', 'ten', 'than', 'that', 'the', 'their', 'them', 'themselves', 'then', 'thence', 'there', 'thereafter', 'thereby', 'therefore', 'therein', 'thereupon', 'these', 'they', 'thickv', 'thin', 'third', 'this', 'those', 'though', 'three', 'through', 'throughout', 'thru', 'thus', 'to', 'together', 'too', 'top', 'toward', 'towards', 'twelve', 'twenty', 'two', 'un', 'under', 'until', 'up', 'upon', 'us', 'very', 'via', 'was', 'we', 'well', 'were', 'what', 'whatever', 'when', 'whence', 'whenever', 'where', 'whereafter', 'whereas', 'whereby', 'wherein', 'whereupon', 'wherever', 'whether', 'which', 'while', 'whither', 'who', 'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with', 'within', 'without', 'would', 'yet', 'you', 'your', 'yours', 'yourself', 'yourselves', 'the');
+
+
+			$exploded = explode(' ', $t);
+			$nt = '';
+			foreach($exploded as $w){
+				$lw = strtolower($w);
+				if(!in_array($lw, $stopwords)){
+					$nt .= ' ' . $w;
+				}
+			}
+			$t = trim($t);
+		}
+
+		return $t;
+	}
+
+	/**
 	 * Get the teaser of this page, aka meta description
 	 *
 	 * @param boolean $require_something Set to true if you want to require *something* to be returned.
 	 * @return string
 	 */
-	public function getTeaser($require_something){
+	public function getTeaser($require_something = false){
 		$meta = $this->getMeta('description');
+		$config = \ConfigHandler::Get('/core/page/teaser_template');
 
 		if($meta){
+			// An explicit meta tag always overrides any template settings.
 			return $meta->get('meta_value_title');
+		}
+		elseif($config){
+			// Next up is the configuration template.
+			return $this->_parseTemplateString($config);
 		}
 		elseif($require_something){
 			// Return the body text.
-			return strip_tags($this->get('body'));
+			return substr(strip_tags($this->get('body')), 0, 300);
 		}
 		else{
 			return '';
@@ -1442,6 +1496,59 @@ class PageModel extends Model {
 		$this->_view->mastertemplate = ($this->get('template')) ? $this->get('template') : ConfigHandler::Get('/theme/default_template');
 
 		$this->_view->setBreadcrumbs($this->getParentTree());
+	}
+
+	/**
+	 * Parse one of the SEO template options that are configurable and return the result.
+	 *
+	 * @param $string_template
+	 *
+	 * @return string
+	 */
+	private function _parseTemplateString($string_template){
+
+		$parent = $this->getParent();
+
+		$metadescription = $this->getMeta('description');
+		$bodysnippet = substr(strip_tags($this->get('body')), 0, 300);
+		$author = $this->getAuthor();
+
+		$rep = [
+			//Replaced with the published date of the page
+			'%%date%%' => \Core\Date\DateTime::FormatString($this->get('published'), \Core\Date\DateTime::SHORTDATE),
+			//Replaced with the title of the page
+			'%%title%%' => $this->get('title'),
+			//Replaced with the title of the parent page of the current page
+			'%%parent_title%%' => ($parent ? $parent->get('title') : ''),
+			//The site's name
+			'%%sitename%%' => SITENAME,
+			//Replaced with the page excerpt (or auto-generated if it does not exist)
+			'%%excerpt%%' => ($metadescription ? $metadescription->get('meta_value_title') : $bodysnippet),
+			//Replaced with the current tag/tags
+			'%%tag%%' => '',
+			//Replaced with the current search phrase
+			'%%searchphrase%%' => '',
+			//Replaced with the page modified time
+			'%%modified%%' => \Core\Date\DateTime::FormatString($this->get('updated'), \Core\Date\DateTime::SHORTDATE),
+			//Replaced with the page author's username
+			'%%name%%' => ($author ? $author->getDisplayName() : ''),
+			//Replaced with the current time
+			'%%currenttime%%' => \Core\Date\DateTime::Now(\Core\Date\DateTime::TIME),
+			//Replaced with the current date
+			'%%currentdate%%' => \Core\Date\DateTime::Now(\Core\Date\DateTime::SHORTDATE),
+			//Replaced with the current day
+			'%%currentday%%' => \Core\Date\DateTime::Now('d'),
+			//Replaced with the current month
+			'%%currentmonth%%' => \Core\Date\DateTime::Now('m'),
+			//Replaced with the current year
+			'%%currentyear%%' => \Core\Date\DateTime::Now('Y'),
+			//Replaced with the current page number (i.e. page 2 of 4)
+			'%%page%%' => '1', // @todo Support for this.
+			//Replaced with the current page total
+			'%%pagetotal%%' => '1', // @todo Support for this.
+		];
+
+		return str_ireplace(array_keys($rep), array_values($rep), $string_template);
 	}
 
 

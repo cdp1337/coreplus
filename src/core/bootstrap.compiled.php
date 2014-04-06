@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 04 Apr 2014 23:04:39 -0400
+ * @compiled Sat, 05 Apr 2014 19:57:45 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3435,21 +3435,24 @@ public static $Schema = array(
 'title' => 'Cacheable / Expires',
 'type' => 'select',
 'options' => [
-'0'     => 'No Cache Allowed',
-'30'    => '30 seconds',
-'60'    => '1 minute',
-'120'   => '2 minutes',
-'300'   => '5 minutes',
-'600'   => '10 minutes',
-'1800'  => '30 minutes',
-'3600'  => '1 hour',
-'7200'  => '2 hours',
-'14400' => '4 hours',
-'21600' => '6 hours',
-'28800' => '8 hours',
-'43200' => '12 hours',
-'64800' => '18 hours',
-'86400' => '24 hours',
+'0'       => 'No Cache Allowed',
+'30'      => '30 seconds',
+'60'      => '1 minute',
+'120'     => '2 minutes',
+'300'     => '5 minutes',
+'600'     => '10 minutes',
+'1800'    => '30 minutes',
+'3600'    => '1 hour',
+'7200'    => '2 hours',
+'14400'   => '4 hours',
+'21600'   => '6 hours',
+'28800'   => '8 hours',
+'43200'   => '12 hours',
+'64800'   => '18 hours',
+'86400'   => '24 hours',
+'172800'  => '2 days',
+'604800'  => '1 week',
+'2462400' => '1 month',
 ],
 'description' => 'Amount of time this page has a valid cache for, set to 0 to completely disable.
 This cache only applies to guest users and bots.',
@@ -4104,9 +4107,17 @@ $long_number = $order - $months;
 $long_number += 10;
 return round($long_number, 5);
 }
-public function getTeaser(){
+public function getTeaser($require_something = false){
 $meta = $this->getMeta('description');
-return $meta ? $meta->get('meta_value_title') : '';
+if($meta){
+return $meta->get('meta_value_title');
+}
+elseif($require_something){
+return strip_tags($this->get('body'));
+}
+else{
+return '';
+}
 }
 public function getImage(){
 $meta = $this->getMeta('image');
@@ -16026,6 +16037,13 @@ foreach ($els as $el) {
 if ($el->get('name') == $name) return $el;
 }
 return false;
+}
+public function getElementValue($name){
+$el = $this->getElement($name);
+if(!$el){
+return null;
+}
+return $el->get('value');
 }
 }
 class FormElement {

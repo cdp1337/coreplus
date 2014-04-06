@@ -18,7 +18,7 @@
 		<th sortkey="rewriteurl">URL</th>
 		<th sortkey="pageviews">Views</th>
 		<th sortkey="popularity">Score</th>
-		<th sortkey="expires">Expires</th>
+		<th sortkey="expires">Cache</th>
 		<th sortkey="created">Created</th>
 		<th sortkey="published">Published</th>
 		<th sortkey="access">Access</th>
