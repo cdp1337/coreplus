@@ -1662,6 +1662,27 @@ class Component_2_1 {
 		$change = $this->_installAssets();
 		if ($change !== false) $changed = array_merge($changed, $change);
 
+		// Core has some additional things that need to ran through.
+		if($this->getKeyName() == 'core'){
+			// Make sure that files/private has a restrictive .htaccess file installed.
+			$f = \Core\Filestore\Factory::File('files/private/.htaccess');
+			if(!$f->exists() && $f->isWritable()){
+				$src = \Core\Filestore\Factory::File('htaccess.private');
+				if($src->copyTo($f)){
+					$changed[] = 'Installed private htaccess file into ' . $f->getFilename();
+				}
+			}
+
+			// Make sure that files/public has the appropriate .htaccess file installed.
+			$f = \Core\Filestore\Factory::File('files/public/.htaccess');
+			if(!$f->exists() && $f->isWritable()){
+				$src = \Core\Filestore\Factory::File('htaccess.public');
+				if($src->copyTo($f)){
+					$changed[] = 'Installed public htaccess file into ' . $f->getFilename();
+				}
+			}
+		}
+
 		// Ensure that the core component cache is purged too!
 		\Core\Cache::Delete('core-components');
 

@@ -1,0 +1,18 @@
+# This is a .htaccess file that is meant to be copied into files/public to disallow certain scripts from running.
+#
+# This shouldn't happen, as applications should be enforcing their mimetype via the "accept" attribute,
+# but since it is theoretically possible to do so, it needs to be accounted for!
+
+# PHP Scripts get the source code displayed.
+<FilesMatch "\.php[3456s]?$">
+    SetHandler application/x-httpd-php-source
+</FilesMatch>
+
+# Anything that can be processed on the client-side needs to be squashed.
+<FilesMatch "\.(as|asp|css|dart|hta|htm|html|js|ts|vbe|vbs|wsc|wsf|xhtml)$">
+    Order deny,allow
+    Deny from All
+</FilesMatch>
+
+# Other files get just plain text.
+AddType text/plain .aspx .cgi .pl .py .rb
