@@ -62,7 +62,12 @@ class NavigationWidget extends Widget_2_1 {
 
 						$classes = array();
 						$classes[] = Core\str_to_url($e->get('title')) . '-link';
-						if($e->get('baseurl') == $currenturl) $classes[] = 'active';
+						if($e->get('baseurl') == $currenturl) {
+							$classes[] = 'active';
+
+							// also set active class on the parent so frontenders don't rage :)
+							$sortedentries[$sk]['classes'][] =  'active';
+						}
 
 						// Add the "more" class to the parent.
 						$sortedentries[$sk]['classes'][] = 'more';
@@ -88,7 +93,12 @@ class NavigationWidget extends Widget_2_1 {
 
 							$classes = array();
 							$classes[] = Core\str_to_url($e->get('title')) . '-link';
-							if($e->get('baseurl') == $currenturl) $classes[] = 'active';
+							if($e->get('baseurl') == $currenturl) {
+								$classes[] = 'active';
+
+								// also set active class on the top-most nav parent so frontenders don't rage :)
+								$sortedentries[$sk]['children'][$subsk]['class'][] =  'active';
+							}
 
 							// Add the "more" class to the parent.
 							$sortedentries[$sk]['children'][$subsk]['class'][] = 'more';
