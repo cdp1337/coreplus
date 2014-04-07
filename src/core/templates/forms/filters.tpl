@@ -66,6 +66,7 @@
 {if $hassort}
 	{css}<style>
 		.column-sortable th[sortkey] { cursor: pointer; }
+		.column-sortable th[data-sortkey] { cursor: pointer; }
 		.column-sortable th i { float: right; }
 		.column-sortable th i.other { visibility: hidden; }
 		.column-sortable th:hover i.other { visibility: visible; }
@@ -76,15 +77,17 @@
 		var $columnsortabletable = $('.column-sortable'),
 			sortkey = "{$sortkey}",
 			sortdir ="{$sortdir}",
-			sortother = (sortdir == 'up' ? 'down' : 'up');
+			sortother = (sortdir == 'up' ? 'down' : 'up'),
+			$tableheads = $columnsortabletable.find('th[sortkey],th[data-sortkey]');
 
-		$('.column-sortable th[sortkey]').each(function(){
-			var $th = $(this);
+		$tableheads.each(function(){
+			var $th = $(this),
+				thissortkey = $th.data('sortkey') !== undefined ? $th.data('sortkey') : $th.attr('sortkey');
 
 			// Make sure it has a useful title.
 			if(!$th.attr('title')) $th.attr('title', 'Sort by ' + $th.html());
 
-			if($th.attr('sortkey') == sortkey){
+			if(thissortkey == sortkey){
 				$th.append('<i class="icon-sort-' + sortdir + ' current"></i>');
 				$th.append('<i class="icon-sort-' + sortother + ' other"></i>');
 			}
@@ -93,10 +96,11 @@
 			}
 		});
 
-		$('.column-sortable th[sortkey]').click(function(){
-			var $th = $(this), newkey, newdir, req;
+		$tableheads.click(function(){
+			var $th = $(this), newkey, newdir, req,
+				thissortkey = $th.data('sortkey') !== undefined ? $th.data('sortkey') : $th.attr('sortkey');
 
-			if($th.attr('sortkey') == sortkey){
+			if(thissortkey == sortkey){
 				// Set the dir
 				newkey = sortkey;
 
@@ -104,7 +108,7 @@
 				else newdir = 'up';
 			}
 			else{
-				newkey = $th.attr('sortkey');
+				newkey = thissortkey;
 				newdir = sortdir;
 			}
 

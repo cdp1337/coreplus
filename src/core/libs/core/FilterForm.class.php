@@ -443,6 +443,25 @@ class FilterForm {
 	}
 
 	/**
+	 * Add a single sort key onto this Filter.
+	 *
+	 * @since 3.4.0
+	 * @param string $key
+	 *
+	 * @return bool
+	 */
+	public function addSortKey($key){
+		if(!$this->hassort) return false;
+
+		if(!is_array($this->_sortkeys)){
+			$this->_sortkeys = [];
+		}
+
+		$this->_sortkeys[] = $key;
+		return true;
+	}
+
+	/**
 	 * Set the valid sort keys for this filterset.
 	 *
 	 * @since 2.4.0

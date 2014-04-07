@@ -501,12 +501,9 @@ class AdminController extends Controller_2_1 {
 			$componentopts[$c->getKeyName()] = $c->getName();
 		}
 
-		$filters = new FilterForm();
-		$filters->setName('/admin/pages');
-		$filters->hassort = true;
-		$filters->haspagination = true;
-
-		$filters->addElement(
+		$table = new Core\ListingTable\Table();
+		$table->setModelName('PageModel');
+		$table->addFilter(
 			'text',
 			[
 				'name' => 'title',
@@ -515,7 +512,7 @@ class AdminController extends Controller_2_1 {
 			]
 		);
 
-		$filters->addElement(
+		$table->addFilter(
 			'text',
 			[
 				'name' => 'rewriteurl',
@@ -524,7 +521,7 @@ class AdminController extends Controller_2_1 {
 			]
 		);
 
-		$filters->addElement(
+		$table->addFilter(
 			'text',
 			[
 				'name' => 'parenturl',
@@ -533,7 +530,7 @@ class AdminController extends Controller_2_1 {
 			]
 		);
 
-		$filters->addElement(
+		$table->addFilter(
 			'select',
 			[
 				'name' => 'component',
@@ -543,7 +540,7 @@ class AdminController extends Controller_2_1 {
 			]
 		);
 
-		$filters->addElement(
+		$table->addFilter(
 			'select',
 			[
 				'name' => 'page_types',
@@ -552,25 +549,29 @@ class AdminController extends Controller_2_1 {
 				'value' => 'no_admin',
 			]
 		);
+		$table->addColumn('Title', 'title');
+		$table->addColumn('URL', 'rewriteurl');
+		$table->addColumn('Views', 'pageviews', true);
+		$table->addColumn('Score', 'popularity');
+		$table->addColumn('Cache', 'expires');
+		$table->addColumn('Created', 'created', true);
+		$table->addColumn('Published', 'published');
+		$table->addColumn('SEO Title');
+		$table->addColumn('SEO Description / Teaser');
+		$table->addColumn('Access', 'access');
 
+		$table->loadFiltersFromRequest();
 
-		$filters->setSortkeys(['title', 'parenturl', 'rewriteurl', 'access', 'pageviews', 'popularity', 'created', 'published']);
-		$filters->getSortDirection('up');
-		$filters->load($request);
-
-		$factory = new ModelFactory('PageModel');
-
-		if($filters->get('page_types') == 'no_admin'){
-			$factory->where('admin = 0');
+		if($table->getFilterValue('page_types') == 'no_admin'){
+			$table->getModelFactory()->where('admin = 0');
 		}
-		$filters->applyToFactory($factory);
-
-		$listings = $factory->get();
 
 		$view->title = 'All Pages';
-		$view->assign('filters', $filters);
-		$view->assign('listings', $listings);
+		//$view->assign('filters', $filters);
+		//$view->assign('listings', $listings);
 		$view->assign('links', $links);
+
+		$view->assign('listing', $table);
 	}
 
 	/**

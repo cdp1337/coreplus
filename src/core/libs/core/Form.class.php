@@ -815,13 +815,20 @@ class Form extends FormGroup {
 	 */
 	public function generateUniqueHash(){
 		$hash = '';
+		$set = false;
 
+		// Tack on the destination method of this form.
+		$hash .= $this->get('callsmethod');
+
+		// Add in any/all model primary keys on this form.
 		if ($this->get('___modelpks')) {
+			$set = true;
 			foreach ($this->get('___modelpks') as $k => $v) {
 				$hash .= $k . ':' . $v . ';';
 			}
 		}
 
+		// And lastly any system inputs that may be present on the form.
 		foreach ($this->getElements() as $el) {
 			// Skip the ___formid element... this shouldn't affect the unique hash!
 			if($el->get('name') == '___formid') continue;
@@ -829,12 +836,28 @@ class Form extends FormGroup {
 			// System inputs require the value as well, since they're set by the controller; they're not
 			// meant to be changed.
 			if($el instanceof FormSystemInput){
+				$set = true;
 				$hash .= get_class($el) . ':' . $el->get('name') . ':' . json_encode($el->get('value')) . ';';
 			}
-			else{
-				$hash .= get_class($el) . ':' . $el->get('name') . ';';
+			//else{
+			//	$hash .= get_class($el) . ':' . $el->get('name') . ';';
+			//}
+		}
+
+		if(!$set){
+			// If there are no unique values set, then go back through and re-add the standard inputs.
+			foreach ($this->getElements() as $el) {
+				// Skip the ___formid element... this shouldn't affect the unique hash!
+				if($el->get('name') == '___formid') continue;
+
+				// System inputs require the value as well, since they're set by the controller; they're not
+				// meant to be changed.
+				if(!($el instanceof FormSystemInput)){
+					$hash .= get_class($el) . ':' . $el->get('name') . ';';
+				}
 			}
 		}
+
 		// Hash it!
 		$hash = md5($hash);
 
@@ -871,10 +894,12 @@ class Form extends FormGroup {
 
 		// Slip in the formid tracker to remember this submission.
 		if (($part === null || $part == 'body') && $this->get('callsmethod')) {
-			$e               = new FormHiddenInput(array('name'  => '___formid',
+			/*$e               = new FormHiddenInput(array('name'  => '___formid',
 			                                             'value' => $this->get('uniqueid')));
 			$this->_elements = array_merge(array($e), $this->_elements);
+			*/
 
+			/*
 			// I need to ensure a repeatable but unique id for this form.
 			// Essentially when this form is submitted, I need to be able to know that it's the same form upon re-rendering.
 			if (!$this->get('uniqueid')) {
@@ -882,11 +907,16 @@ class Form extends FormGroup {
 				$this->set('uniqueid', $hash);
 				$this->getElementByName('___formid')->set('value', $hash);
 			}
+			*/
 
 			// Was this form already submitted, (and thus saved in the session?
 			// If so, render that form instead!  This way the values get transported seamlessly.
-			if (isset($_SESSION['FormData'][$this->get('uniqueid')])) {
-				if (($savedform = unserialize($_SESSION['FormData'][$this->get('uniqueid')]))) {
+
+			// I need the hash at present, regardless if all elements have been rendered to the screen or not.
+			$hash = ($this->get('uniqueid') ? $this->get('uniqueid') : $this->generateUniqueHash());
+
+			if (isset($_SESSION['FormData'][$hash])) {
+				if (($savedform = unserialize($_SESSION['FormData'][$hash]))) {
 
 					/** @var Form $savedform */
 					// If this form is not set as persistent, then don't restore the values!
@@ -905,6 +935,15 @@ class Form extends FormGroup {
 			}
 			else {
 				$ignoreerrors = true;
+			}
+		}
+
+		if(($part == null || $part == 'foot') && $this->get('callsmethod')){
+			// I need to ensure a repeatable but unique id for this form.
+			// Essentially when this form is submitted, I need to be able to know that it's the same form upon re-rendering.
+			if (!$this->get('uniqueid')) {
+				$hash = $this->generateUniqueHash();
+				$this->set('uniqueid', $hash);
 			}
 		}
 

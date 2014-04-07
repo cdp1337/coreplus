@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 05 Apr 2014 19:57:45 -0400
+ * @compiled Sun, 06 Apr 2014 23:52:07 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4107,13 +4107,46 @@ $long_number = $order - $months;
 $long_number += 10;
 return round($long_number, 5);
 }
+public function getSEOTitle(){
+$metatitle = $this->getMeta('title');
+$title = $this->get('title');
+$config = \ConfigHandler::Get('/core/page/title_template');
+if($metatitle){
+$t = $metatitle->get('meta_value_title');
+}
+elseif($config){
+$t = $this->_parseTemplateString($config);
+}
+else{
+$t = $title;
+}
+if(ConfigHandler::Get('/core/page/title_remove_stop_words')){
+$stopwords = array('a', 'about', 'above', 'above', 'across', 'after', 'afterwards', 'again', 'against', 'all', 'almost', 'alone', 'along', 'already', 'also','although','always','am','among', 'amongst', 'amoungst', 'amount',  'an', 'and', 'another', 'any','anyhow','anyone','anything','anyway', 'anywhere', 'are', 'around', 'as',  'at', 'back','be','became', 'because','become','becomes', 'becoming', 'been', 'before', 'beforehand', 'behind', 'being', 'below', 'beside', 'besides', 'between', 'beyond', 'bill', 'both', 'bottom','but', 'by', 'call', 'can', 'cannot', 'cant', 'co', 'con', 'could', 'couldnt', 'cry', 'de', 'describe', 'detail', 'do', 'done', 'down', 'due', 'during', 'each', 'eg', 'eight', 'either', 'eleven','else', 'elsewhere', 'empty', 'enough', 'etc', 'even', 'ever', 'every', 'everyone', 'everything', 'everywhere', 'except', 'few', 'fifteen', 'fify', 'fill', 'find', 'fire', 'first', 'five', 'for', 'former', 'formerly', 'forty', 'found', 'four', 'from', 'front', 'full', 'further', 'get', 'give', 'go
+', 'had', 'has', 'hasnt', 'have', 'he', 'hence', 'her', 'here', 'hereafter', 'hereby', 'herein', 'hereupon', 'hers', 'herself', 'him', 'himself', 'his', 'how', 'however', 'hundred', 'ie', 'if', 'in', 'inc', 'indeed', 'interest', 'into', 'is', 'it', 'its', 'itself', 'keep', 'last', 'latter', 'latterly', 'least', 'less', 'ltd', 'made', 'many', 'may', 'me', 'meanwhile', 'might', 'mill', 'mine', 'more', 'moreover', 'most', 'mostly', 'move', 'much', 'must', 'my', 'myself', 'name', 'namely', 'neither', 'never', 'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone', 'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often', 'on', 'once', 'one', 'only', 'onto', 'or', 'other', 'others', 'otherwise', 'our', 'ours', 'ourselves', 'out', 'over', 'own','part', 'per', 'perhaps', 'please', 'put', 'rather', 're', 'same', 'see', 'seem', 'seemed', 'seeming', 'seems', 'serious', 'several', 'she', 'should', 'show', 'side', 'since', 'sincere', 'six', 'sixty', 'so', 'some', 'somehow', 'someone', 'something', 'somet
+ime', 'sometimes', 'somewhere', 'still', 'such', 'system', 'take', 'ten', 'than', 'that', 'the', 'their', 'them', 'themselves', 'then', 'thence', 'there', 'thereafter', 'thereby', 'therefore', 'therein', 'thereupon', 'these', 'they', 'thickv', 'thin', 'third', 'this', 'those', 'though', 'three', 'through', 'throughout', 'thru', 'thus', 'to', 'together', 'too', 'top', 'toward', 'towards', 'twelve', 'twenty', 'two', 'un', 'under', 'until', 'up', 'upon', 'us', 'very', 'via', 'was', 'we', 'well', 'were', 'what', 'whatever', 'when', 'whence', 'whenever', 'where', 'whereafter', 'whereas', 'whereby', 'wherein', 'whereupon', 'wherever', 'whether', 'which', 'while', 'whither', 'who', 'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with', 'within', 'without', 'would', 'yet', 'you', 'your', 'yours', 'yourself', 'yourselves', 'the');
+$exploded = explode(' ', $t);
+$nt = '';
+foreach($exploded as $w){
+$lw = strtolower($w);
+if(!in_array($lw, $stopwords)){
+$nt .= ' ' . $w;
+}
+}
+$t = trim($t);
+}
+return $t;
+}
 public function getTeaser($require_something = false){
 $meta = $this->getMeta('description');
+$config = \ConfigHandler::Get('/core/page/teaser_template');
 if($meta){
 return $meta->get('meta_value_title');
 }
+elseif($config){
+return $this->_parseTemplateString($config);
+}
 elseif($require_something){
-return strip_tags($this->get('body'));
+return substr(strip_tags($this->get('body')), 0, 150);
 }
 else{
 return '';
@@ -4191,6 +4224,31 @@ $this->_view->setParameters($this->getParameters());
 $this->_view->templatename = $this->getTemplateName();
 $this->_view->mastertemplate = ($this->get('template')) ? $this->get('template') : ConfigHandler::Get('/theme/default_template');
 $this->_view->setBreadcrumbs($this->getParentTree());
+}
+private function _parseTemplateString($string_template){
+$parent = $this->getParent();
+$metadescription = $this->getMeta('description');
+$bodysnippet = substr(strip_tags($this->get('body')), 0, 150);
+$author = $this->getAuthor();
+$rep = [
+'%%date%%' => \Core\Date\DateTime::FormatString($this->get('published'), \Core\Date\DateTime::SHORTDATE),
+'%%title%%' => $this->get('title'),
+'%%parent_title%%' => ($parent ? $parent->get('title') : ''),
+'%%sitename%%' => SITENAME,
+'%%excerpt%%' => ($metadescription ? $metadescription->get('meta_value_title') : $bodysnippet),
+'%%tag%%' => '',
+'%%searchphrase%%' => '',
+'%%modified%%' => \Core\Date\DateTime::FormatString($this->get('updated'), \Core\Date\DateTime::SHORTDATE),
+'%%name%%' => ($author ? $author->getDisplayName() : ''),
+'%%currenttime%%' => \Core\Date\DateTime::Now(\Core\Date\DateTime::TIME),
+'%%currentdate%%' => \Core\Date\DateTime::Now(\Core\Date\DateTime::SHORTDATE),
+'%%currentday%%' => \Core\Date\DateTime::Now('d'),
+'%%currentmonth%%' => \Core\Date\DateTime::Now('m'),
+'%%currentyear%%' => \Core\Date\DateTime::Now('Y'),
+'%%page%%' => '1', // @todo Support for this.
+'%%pagetotal%%' => '1', // @todo Support for this.
+];
+return str_ireplace(array_keys($rep), array_values($rep), $string_template);
 }
 public static function SplitBaseURL($base, $site = null) {
 if (!$base) return null;
@@ -7690,6 +7748,22 @@ $change = $this->_parseWidgets();
 if ($change !== false) $changed = array_merge($changed, $change);
 $change = $this->_installAssets();
 if ($change !== false) $changed = array_merge($changed, $change);
+if($this->getKeyName() == 'core'){
+$f = \Core\Filestore\Factory::File('files/private/.htaccess');
+if(!$f->exists() && $f->isWritable()){
+$src = \Core\Filestore\Factory::File('htaccess.private');
+if($src->copyTo($f)){
+$changed[] = 'Installed private htaccess file into ' . $f->getFilename();
+}
+}
+$f = \Core\Filestore\Factory::File('files/public/.htaccess');
+if(!$f->exists() && $f->isWritable()){
+$src = \Core\Filestore\Factory::File('htaccess.public');
+if($src->copyTo($f)){
+$changed[] = 'Installed public htaccess file into ' . $f->getFilename();
+}
+}
+}
 \Core\Cache::Delete('core-components');
 return (sizeof($changed)) ? $changed : false;
 }
@@ -16301,7 +16375,10 @@ return 'forms/form.tpl';
 }
 public function generateUniqueHash(){
 $hash = '';
+$set = false;
+$hash .= $this->get('callsmethod');
 if ($this->get('___modelpks')) {
+$set = true;
 foreach ($this->get('___modelpks') as $k => $v) {
 $hash .= $k . ':' . $v . ';';
 }
@@ -16309,10 +16386,16 @@ $hash .= $k . ':' . $v . ';';
 foreach ($this->getElements() as $el) {
 if($el->get('name') == '___formid') continue;
 if($el instanceof FormSystemInput){
+$set = true;
 $hash .= get_class($el) . ':' . $el->get('name') . ':' . json_encode($el->get('value')) . ';';
 }
-else{
+}
+if(!$set){
+foreach ($this->getElements() as $el) {
+if($el->get('name') == '___formid') continue;
+if(!($el instanceof FormSystemInput)){
 $hash .= get_class($el) . ':' . $el->get('name') . ';';
+}
 }
 }
 $hash = md5($hash);
@@ -16327,16 +16410,9 @@ break;
 }
 $ignoreerrors = false;
 if (($part === null || $part == 'body') && $this->get('callsmethod')) {
-$e               = new FormHiddenInput(array('name'  => '___formid',
-'value' => $this->get('uniqueid')));
-$this->_elements = array_merge(array($e), $this->_elements);
-if (!$this->get('uniqueid')) {
-$hash = $this->generateUniqueHash();
-$this->set('uniqueid', $hash);
-$this->getElementByName('___formid')->set('value', $hash);
-}
-if (isset($_SESSION['FormData'][$this->get('uniqueid')])) {
-if (($savedform = unserialize($_SESSION['FormData'][$this->get('uniqueid')]))) {
+$hash = ($this->get('uniqueid') ? $this->get('uniqueid') : $this->generateUniqueHash());
+if (isset($_SESSION['FormData'][$hash])) {
+if (($savedform = unserialize($_SESSION['FormData'][$hash]))) {
 if($savedform->persistent){
 foreach($this->_elements as $k => $element){
 if($element->persistent){
@@ -16351,6 +16427,12 @@ $ignoreerrors = true;
 }
 else {
 $ignoreerrors = true;
+}
+}
+if(($part == null || $part == 'foot') && $this->get('callsmethod')){
+if (!$this->get('uniqueid')) {
+$hash = $this->generateUniqueHash();
+$this->set('uniqueid', $hash);
 }
 }
 if ($ignoreerrors) {
@@ -16966,6 +17048,9 @@ $view->mastertemplate = $themeskins[0]['file'];
 }
 if(!$page->get('indexable')){
 $view->addMetaName('robots', 'noindex');
+}
+if(!isset($view->meta['title'])){
+$view->meta['title'] = $page->getSEOTitle();
 }
 HookHandler::DispatchHook('/core/page/postexecute');
 \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Completed PageRequest->execute()');
