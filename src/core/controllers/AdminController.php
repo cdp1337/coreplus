@@ -505,6 +505,8 @@ class AdminController extends Controller_2_1 {
 
 		$table = new Core\ListingTable\Table();
 
+		$table->setLimit(20);
+
 		// Set the model that this table will be pulling data from.
 		$table->setModelName('PageModel');
 

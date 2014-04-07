@@ -244,6 +244,15 @@ class Table implements \Iterator {
 		$this->getEditForm()->set('callsmethod', $method);
 	}
 
+	/**
+	 * Set the limit of results to show before pagination kicks in.
+	 *
+	 * @param $limit
+	 */
+	public function setLimit($limit){
+		$this->getFilters()->setLimit($limit);
+	}
+
 
 
 	//-----------------------------------------------------------------------\\
