@@ -5565,15 +5565,18 @@ table.listing {
   width: 100%;
   border: 1px solid #bababa;
   border-collapse: collapse;
-  font-size: 90%;
+  font-size: 95%;
 }
-
 /* line 14, ../scss/_listing_tables.scss */
 table.listing tr:nth-child(odd) {
   background-color: lightgray;
 }
-
-/* line 17, ../scss/_listing_tables.scss */
+/* line 18, ../scss/_listing_tables.scss */
+table.listing tr:hover {
+  /* Give a little high-lighting effect on mouseover for the records. */
+  background-color: #c7d5eb;
+}
+/* line 23, ../scss/_listing_tables.scss */
 table.listing th {
   padding: 0.15em 0.5em;
   border: 1px solid #949494;
@@ -5581,18 +5584,16 @@ table.listing th {
   background: #949494;
   color: #EEE;
 }
-
-/* line 24, ../scss/_listing_tables.scss */
+/* line 31, ../scss/_listing_tables.scss */
 table.listing td {
   padding: 0.2em 0.5em;
   border: 1px solid #bababa;
   vertical-align: top;
 }
-
-/* Give a little high-lighting effect on mouseover for the records. */
-/* line 31, ../scss/_listing_tables.scss */
-table.listing tr:hover {
-  background-color: #c7d5eb;
+/* line 37, ../scss/_listing_tables.scss */
+table.listing .column-optional {
+  /* Optional columns are hidden by default. */
+  visibility: collapse;
 }
 
 /* line 256, ../scss/styles.scss */
