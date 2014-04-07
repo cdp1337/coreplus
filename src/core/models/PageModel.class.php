@@ -1329,7 +1329,7 @@ class PageModel extends Model {
 		}
 		elseif($require_something){
 			// Return the body text.
-			return substr(strip_tags($this->get('body')), 0, 300);
+			return substr(strip_tags($this->get('body')), 0, 150);
 		}
 		else{
 			return '';
@@ -1510,7 +1510,7 @@ class PageModel extends Model {
 		$parent = $this->getParent();
 
 		$metadescription = $this->getMeta('description');
-		$bodysnippet = substr(strip_tags($this->get('body')), 0, 300);
+		$bodysnippet = substr(strip_tags($this->get('body')), 0, 150);
 		$author = $this->getAuthor();
 
 		$rep = [
