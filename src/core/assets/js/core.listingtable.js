@@ -11,6 +11,7 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 	this.$table = $table;
 	this.$tableheads = this.$table.find('th[data-sortkey]');
 	this.storagename = 'core-listingtable-columns-' + $table.data('table-name');
+	this.mode = 'view';
 
 	this.refreshColumns = function(){
 		var current = JSON.parse(localStorage.getItem(self.storagename)), i;
@@ -135,6 +136,21 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 
 			self.refreshColumns();
 		});
+
+		return false;
+	});
+
+	self.$table.find('.control-edit-toggle').click(function(){
+		if(self.mode == 'view'){
+			$table.find('.view').hide();
+			$table.find('.edit').show();
+			self.mode = 'edit';
+		}
+		else{
+			$table.find('.view').show();
+			$table.find('.edit').hide();
+			self.mode = 'view';
+		}
 
 		return false;
 	});

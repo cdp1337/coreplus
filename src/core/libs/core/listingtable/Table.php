@@ -64,6 +64,9 @@ class Table implements \Iterator {
 	/** @var \FilterForm|null The underlying FilterForm to handle pagination and filters on this listing table. */
 	private $_filters;
 
+	/** @var \Form|null The underlying Form object used with quick-edit on this listing table. */
+	private $_editform;
+
 	/** @var array The columns on this listing table. */
 	private $_columns = [];
 
@@ -156,6 +159,20 @@ class Table implements \Iterator {
 		return $this->getFilters()->getTotalCount();
 	}
 
+	/**
+	 * Get the edit form for this listing table.
+	 *
+	 * @return \Form
+	 */
+	public function getEditForm(){
+		if($this->_editform === null){
+			$this->_editform = new \Form();
+			$this->_editform->set('orientation', 'vertical');
+		}
+
+		return $this->_editform;
+	}
+
 
 
 	//-----------------------------------------------------------------------\\
@@ -216,6 +233,15 @@ class Table implements \Iterator {
 		if($this->_filters !== null){
 			$this->_filters->setName($this->_name);
 		}
+	}
+
+	/**
+	 * Set the callsmethod attribute on the edit form.
+	 *
+	 * @param string $method
+	 */
+	public function setEditFormCaller($method){
+		$this->getEditForm()->set('callsmethod', $method);
 	}
 
 
@@ -315,6 +341,10 @@ class Table implements \Iterator {
 		$atts['data-table-name'] = $this->_name;
 		$atts['data-table-sortable'] = ($this->_hassort ? 1 : 0);
 
+		if($this->_editform !== null){
+			$out .= $this->_editform->render('head') . $this->_editform->render('body');
+		}
+
 		$out .= '<table';
 		foreach($atts as $k => $v){
 			$out .= ' ' . $k . '="' . $v . '"';
@@ -327,8 +357,18 @@ class Table implements \Iterator {
 		// One extra column for the control links.
 		$out .= '<th><ul class="controls">';
 		$out .= '<li><a href="#" class="control-column-selection"><i class="icon-columns"></i><span>Show / Hide Columns</span></a></li>';
+		if($this->_editform !== null){
+			$out .= '<li><a href="#" class="control-edit-toggle"><i class="icon-pencil-square-o"></i><span>Quick Edit</span></a></li>';
+		}
 		$out .= '</ul></th>';
 		$out .= '</tr>';
+
+		if($this->_editform !== null){
+			$out .= '<tr class="edit"><td colspan="' . (sizeof($this->_columns) + 1) . '">' .
+				'<a href="#" class="control-edit-toggle button">Cancel</a>' .
+				'<input type="submit" value="Save Quick Edit"/>' .
+				'</td></tr>';
+		}
 
 		return $out;
 	}
@@ -368,7 +408,20 @@ class Table implements \Iterator {
 	 * @return string Full HTML Markup
 	 */
 	private function _renderFoot(){
-		$out = '</table>';
+		$out = '';
+
+		if($this->_editform !== null){
+			$out .= '<tr class="edit"><td colspan="' . (sizeof($this->_columns) + 1) . '">' .
+				'<a href="#" class="control-edit-toggle button">Cancel</a>' .
+				'<input type="submit" value="Save Quick Edit"/>' .
+				'</td></tr>';
+		}
+
+		$out .= '</table>';
+
+		if($this->_editform !== null){
+			$out .= $this->_editform->render('foot');
+		}
 
 		$f = $this->getFilters();
 		$out .= $f->pagination();

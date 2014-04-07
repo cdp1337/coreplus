@@ -607,6 +607,12 @@ class PageModel extends Model {
 		return null;
 	}
 
+	public function getMetaValue($name){
+		$m = $this->getMeta($name);
+
+		return $m ? $m->get('meta_value_title') : '';
+	}
+
 	/**
 	 * Set all meta data for this page
 	 *

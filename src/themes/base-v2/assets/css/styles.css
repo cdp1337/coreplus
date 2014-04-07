@@ -5615,6 +5615,10 @@ table.listing.listing-table-sortable th:hover i.sort-icon.other {
 table.listing.listing-table-sortable th:hover i.sort-icon.current {
   visibility: hidden;
 }
+/* line 62, ../scss/_listing_tables.scss */
+table.listing .edit {
+  display: none;
+}
 
 /* line 256, ../scss/styles.scss */
 table.stacktrace {

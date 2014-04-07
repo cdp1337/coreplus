@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 07 Apr 2014 02:09:46 -0400
+ * @compiled Mon, 07 Apr 2014 05:25:30 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3752,6 +3752,10 @@ if($meta->get('meta_key') == $name) return $meta;
 }
 }
 return null;
+}
+public function getMetaValue($name){
+$m = $this->getMeta($name);
+return $m ? $m->get('meta_value_title') : '';
 }
 public function setMetas($metaarray) {
 if (is_array($metaarray) && count($metaarray)){

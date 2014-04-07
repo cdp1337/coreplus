@@ -57,4 +57,9 @@ table.listing {
 			visibility: hidden;
 		}
 	}
+
+	// by default, edit is hidden.
+	.edit {
+		display: none;
+	}
 }

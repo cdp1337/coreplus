@@ -501,8 +501,14 @@ class AdminController extends Controller_2_1 {
 			$componentopts[$c->getKeyName()] = $c->getName();
 		}
 
+		$pageschema = PageModel::GetSchema();
+
 		$table = new Core\ListingTable\Table();
+
+		// Set the model that this table will be pulling data from.
 		$table->setModelName('PageModel');
+
+		// Gimme filters!
 		$table->addFilter(
 			'text',
 			[
@@ -549,6 +555,8 @@ class AdminController extends Controller_2_1 {
 				'value' => 'no_admin',
 			]
 		);
+
+		// Add in all the columns for this listing table.
 		$table->addColumn('Title', 'title');
 		$table->addColumn('URL', 'rewriteurl');
 		$table->addColumn('Views', 'pageviews', false);
@@ -559,6 +567,9 @@ class AdminController extends Controller_2_1 {
 		$table->addColumn('SEO Title');
 		$table->addColumn('SEO Description / Teaser', null, false);
 		$table->addColumn('Access', 'access');
+
+		// This page will also feature a quick-edit feature.
+		$table->setEditFormCaller('AdminController::PagesSave');
 
 		$table->loadFiltersFromRequest();
 
@@ -572,6 +583,8 @@ class AdminController extends Controller_2_1 {
 		$view->assign('links', $links);
 
 		$view->assign('listing', $table);
+		$view->assign('page_opts', PageModel::GetPagesAsOptions(false, '-- Select Parent URL --'));
+		$view->assign('expire_opts', $pageschema['expires']['form']['options']);
 	}
 
 	/**
@@ -1248,6 +1261,61 @@ class AdminController extends Controller_2_1 {
 			$n = substr($n, 7, -1);
 
 			ConfigHandler::Set('/core/page/' . $n, $e->get('value'));
+		}
+
+		return true;
+	}
+
+	/**
+	 * The save handler for /admin/pages quick edit.
+	 *
+	 * @param Form $form
+	 *
+	 * @return bool
+	 */
+	public static function PagesSave(Form $form) {
+		$models = [];
+
+		foreach($form->getElements() as $el){
+			/** @var FormElement $el */
+			$n = $el->get('name');
+
+			// i only want model
+			if(strpos($n, 'model[') !== 0){
+				continue;
+			}
+
+			$baseurl = substr($n, 6, strpos($n, ']')-6);
+			$n = substr($n, strpos($n, ']')+1);
+
+			// Is this a meta attribute?
+			if(strpos($n, '[meta][') === 0){
+				$ismeta = true;
+				$n = substr($n, 7, -1);
+			}
+			else{
+				$ismeta = false;
+				$n = substr($n, 1, -1);
+			}
+
+			// Make sure the model is available.
+			if(!isset($models[$baseurl])){
+				$models[$baseurl] = PageModel::Construct($baseurl);
+			}
+			/** @var PageModel $p */
+			$p = $models[$baseurl];
+
+			if($ismeta){
+				$p->setMeta($n, $el->get('value'));
+			}
+			else{
+				$p->set($n, $el->get('value'));
+			}
+		}
+
+		foreach($models as $p){
+			/** @var PageModel $p */
+			$p->save();
 		}
 
 		return true;
