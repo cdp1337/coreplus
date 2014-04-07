@@ -5566,6 +5566,7 @@ table.listing {
   border: 1px solid #bababa;
   border-collapse: collapse;
   font-size: 95%;
+  /* Hidden columns, set by javascript. */
 }
 /* line 14, ../scss/_listing_tables.scss */
 table.listing tr:nth-child(odd) {
@@ -5590,10 +5591,29 @@ table.listing td {
   border: 1px solid #bababa;
   vertical-align: top;
 }
-/* line 37, ../scss/_listing_tables.scss */
+/* line 38, ../scss/_listing_tables.scss */
 table.listing .column-optional {
-  /* Optional columns are hidden by default. */
-  visibility: collapse;
+  display: none;
+}
+/* line 43, ../scss/_listing_tables.scss */
+table.listing.listing-table-sortable th[data-sortkey] {
+  cursor: pointer;
+}
+/* line 47, ../scss/_listing_tables.scss */
+table.listing.listing-table-sortable th i.sort-icon {
+  float: right;
+}
+/* line 50, ../scss/_listing_tables.scss */
+table.listing.listing-table-sortable th i.sort-icon.other {
+  visibility: hidden;
+}
+/* line 53, ../scss/_listing_tables.scss */
+table.listing.listing-table-sortable th:hover i.sort-icon.other {
+  visibility: visible;
+}
+/* line 56, ../scss/_listing_tables.scss */
+table.listing.listing-table-sortable th:hover i.sort-icon.current {
+  visibility: hidden;
 }
 
 /* line 256, ../scss/styles.scss */

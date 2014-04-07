@@ -551,13 +551,13 @@ class AdminController extends Controller_2_1 {
 		);
 		$table->addColumn('Title', 'title');
 		$table->addColumn('URL', 'rewriteurl');
-		$table->addColumn('Views', 'pageviews', true);
+		$table->addColumn('Views', 'pageviews', false);
 		$table->addColumn('Score', 'popularity');
 		$table->addColumn('Cache', 'expires');
-		$table->addColumn('Created', 'created', true);
+		$table->addColumn('Created', 'created', false);
 		$table->addColumn('Published', 'published');
 		$table->addColumn('SEO Title');
-		$table->addColumn('SEO Description / Teaser');
+		$table->addColumn('SEO Description / Teaser', null, false);
 		$table->addColumn('Access', 'access');
 
 		$table->loadFiltersFromRequest();

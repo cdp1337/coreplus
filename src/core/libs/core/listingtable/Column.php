@@ -59,13 +59,13 @@ class Column {
 	/** @var string The model column name used for sorting */
 	public $sortkey;
 	/** @var boolean T/F if this column is hidden by default. */
-	public $hidden = false;
+	public $visible = true;
 
 	public function getClass(){
 		$classes = [];
 
 		$classes[] = 'column-name-' . \Core\str_to_url($this->title);
-		if($this->hidden){
+		if(!$this->visible){
 			$classes[] = 'column-optional';
 		}
 
@@ -75,11 +75,20 @@ class Column {
 	public function getTH(){
 		$out = '';
 
-		$out .= '<th' .
-			($this->sortkey ? ' data-sortkey="' . $this->sortkey . '"' : '') .
-			' title="Sort By ' . str_replace('"', '&quot;', $this->title) . '">' .
-			$this->title .
-			'</th>';
+		$atts = [];
+		if($this->sortkey){
+			$atts['data-sortkey'] = $this->sortkey;
+			$atts['title'] = 'Sort By ' . str_replace('"', '&quot;', $this->title);
+		}
+		$atts['class'] = $this->getClass();
+		$atts['data-viewkey'] = 'column-name-' . \Core\str_to_url($this->title);
+		$atts['data-viewtitle'] = $this->title;
+
+		$out .= '<th';
+		foreach($atts as $k => $v){
+			$out .= ' ' . $k . '="' . $v . '"';
+		}
+		$out .= '>' . $this->title . '</th>';
 
 		return $out;
 	}

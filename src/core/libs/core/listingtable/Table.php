@@ -180,13 +180,13 @@ class Table implements \Iterator {
 	 *
 	 * @param string      $title
 	 * @param string|null $sortkey
-	 * @param boolean     $hidden
+	 * @param boolean     $visible
 	 */
-	public function addColumn($title, $sortkey = null, $hidden = false){
+	public function addColumn($title, $sortkey = null, $visible = true){
 		$c = new Column();
 		$c->title = $title;
 		$c->sortkey = $sortkey;
-		$c->hidden = $hidden;
+		$c->visible = $visible;
 		$this->_columns[] = $c;
 
 		if($sortkey){
@@ -308,24 +308,26 @@ class Table implements \Iterator {
 
 		$tableclasses = ['listing'];
 		if($this->_hassort){
-			$tableclasses[] = 'column-sortable';
+			$tableclasses[] = 'listing-table-sortable';
 		}
+		$atts = [];
+		$atts['class'] = implode(' ', $tableclasses);
+		$atts['data-table-name'] = $this->_name;
+		$atts['data-table-sortable'] = ($this->_hassort ? 1 : 0);
 
-		$out .= '<table class="' . implode(' ', $tableclasses) . '"><colgroup>';
-		foreach($this->_columns as $c){
-			/** @var Column $c */
-			$out .= '<col class="' . $c->getClass() . '"/>';
+		$out .= '<table';
+		foreach($atts as $k => $v){
+			$out .= ' ' . $k . '="' . $v . '"';
 		}
-		$out .= '<col class="column-controls"/>';
-
-		$out .= '</colgroup><tr>';
+		$out .= '><tr>';
 		foreach($this->_columns as $c){
 			/** @var Column $c */
 			$out .= $c->getTH();
 		}
-
 		// One extra column for the control links.
-		$out .= '<th>&nbsp;</th>';
+		$out .= '<th><ul class="controls">';
+		$out .= '<li><a href="#" class="control-column-selection"><i class="icon-columns"></i><span>Show / Hide Columns</span></a></li>';
+		$out .= '</ul></th>';
 		$out .= '</tr>';
 
 		return $out;
@@ -370,6 +372,10 @@ class Table implements \Iterator {
 
 		$f = $this->getFilters();
 		$out .= $f->pagination();
+
+		// Don't forget the necessary scripts!
+		\Core\view()->addScript('assets/js/core.listingtable.js', 'foot');
+		\Core\view()->addScript("<script>new Core.ListingTable(\$('table[data-table-name=\"" . $this->_name . "\"]'), '" . $this->getFilters()->getSortKey() . "', '" . $this->getFilters()->getSortDirection() . "');</script>", 'foot');
 
 		return $out;
 	}
