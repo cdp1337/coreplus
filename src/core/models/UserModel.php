@@ -91,7 +91,7 @@ class UserModel extends Model {
 			'comment' => 'The source of the user registration, either self, admin, or other.'
 		),
 		'registration_invitee' => array(
-			'type' => Model::ATT_TYPE_UUID,
+			'type' => Model::ATT_TYPE_UUID_FK,
 			'comment' => 'If invited/created by a user, this is the ID of that user.',
 		),
 		'last_login' => array(
