@@ -61,6 +61,10 @@
 			<div class="edit">&nbsp;</div>
 		</td>
 		<td>
+			<div class="view">{date format="SD" $entry.updated}</div>
+			<div class="edit">&nbsp;</div>
+		</td>
+		<td>
 			<div class="view">
 				{if $entry.published}
 					{date format="SD" $entry.published}
@@ -102,6 +106,10 @@
 					{$entry.access}
 				{/if}
 			</div>
+			<div class="edit">&nbsp;</div>
+		</td>
+		<td>
+			<div class="view">{$entry.component}</div>
 			<div class="edit">&nbsp;</div>
 		</td>
 

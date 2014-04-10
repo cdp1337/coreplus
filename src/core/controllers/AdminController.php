@@ -565,10 +565,12 @@ class AdminController extends Controller_2_1 {
 		$table->addColumn('Score', 'popularity');
 		$table->addColumn('Cache', 'expires');
 		$table->addColumn('Created', 'created', false);
+		$table->addColumn('Last Updated', 'updated', false);
 		$table->addColumn('Published', 'published');
 		$table->addColumn('SEO Title');
 		$table->addColumn('SEO Description / Teaser', null, false);
 		$table->addColumn('Access', 'access');
+		$table->addColumn('Component', 'component', false);
 
 		// This page will also feature a quick-edit feature.
 		$table->setEditFormCaller('AdminController::PagesSave');
