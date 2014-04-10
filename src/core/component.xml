@@ -76,7 +76,7 @@
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="216525795b6b97e55e9a534e94e6798b"/>
 		<file filename="core/bootstrap_preincludes.php" md5="249d78de57e1dfb55c4b94a612206ca5"/>
-		<file filename="core/controllers/AdminController.php" md5="8a0abcfbbdb907e1f422f9125c49fff9">
+		<file filename="core/controllers/AdminController.php" md5="b2d490df50810f46394374f416a3e911">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DatastoreAuthController.php" md5="5b95c9d7e0070be4ff5bd88e887cd8c0">
@@ -187,6 +187,9 @@
 		</file>
 		<file filename="core/forms/FormTimeInput.class.php" md5="fb714865047a79810589fbe1a9eab1cd">
 			<class name="FormTimeInput"/>
+		</file>
+		<file filename="core/forms/FormUserInput.php" md5="066b4714a259c453c7d82a90d107fb64">
+			<class name="FormUserInput"/>
 		</file>
 		<file filename="core/functions/Core.functions.php" md5="2db7cf04882ff761a95ceb356079262b"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="d30419047aee346d119cf990054ab851">
@@ -412,7 +415,7 @@
 		<file filename="core/libs/core/FilterForm.class.php" md5="042c46397b4193495e7bc22fa87e7b08">
 			<class name="FilterForm"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="8845084e049a213cffe4d61152a6eb29">
+		<file filename="core/libs/core/Form.class.php" md5="93829a9fb0f55bf9c3153e3f98975258">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -605,7 +608,7 @@
 		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="c01afe200adaa28ec61429c789247faa">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="60d98a9351c0204d1b7692dbd9a64c3c">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="4998ee5a78ce715b3075e754defc1d1b">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="4ac4a58b6a6c7a1fa49a01bf7bfb1c6e">
@@ -663,7 +666,7 @@
 		<file filename="core/libs/core/listingtable/Column.php" md5="22fdfe8137e3128adb947056d31640e3">
 			<class name="Core\ListingTable\Column"/>
 		</file>
-		<file filename="core/libs/core/listingtable/Table.php" md5="c8ad4b1312e2df1f5ffab9f54a9518b1">
+		<file filename="core/libs/core/listingtable/Table.php" md5="d4ea1e29cf0418ea163a3eb9e9ce9603">
 			<class name="Core\ListingTable\Table"/>
 		</file>
 		<file filename="core/libs/core/search/DoubleMetaPhone.php" md5="83b809f860d8bbad75fc44499c60bdcc">
@@ -847,12 +850,13 @@
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="cc5604081ea2b2137d26c5f06303462e"/>
 		<file filename="core/libs/smarty-plugins/block.permission.php" md5="0ef58b04cecf6c394fc8d16af677a733"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="3c1bfc3b1fdaadcb1e7e441cbc43d302"/>
+		<file filename="core/libs/smarty-plugins/function.add_form_element.php" md5="a8006e893a5ee00f2e8cf676148b0074"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="8cdf9a7777eb3eb3be083d10f4418bf4"/>
 		<file filename="core/libs/smarty-plugins/function.controls.php" md5="6d27ea6f00b10982d9e7741e42be46e5"/>
 		<file filename="core/libs/smarty-plugins/function.date.php" md5="383a0eb6f9bd0ba5860432c2c8d6f06f"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="2b04283d7436c1aabf5c0a0e3ace7ac2"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="b66d149f0cafd9e86855ae7217fdcfc2"/>
-		<file filename="core/libs/smarty-plugins/function.img.php" md5="f8ef7a76b6e17ce9fe89fa50850b971c"/>
+		<file filename="core/libs/smarty-plugins/function.img.php" md5="e6cf0d31eafeff097baf7ee6058fdbd6"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="24d3659abfc1aab6e1d901eb26b8a2f7"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="9d979bc556f8a006dd9ea5d8bd8f4434"/>
 		<file filename="core/libs/smarty-plugins/function.t.php" md5="5f1bdeb09fff0f34da2ab56c0c7837b1"/>
@@ -1180,7 +1184,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="cfcef89800ec2b018e39607b52eddff4">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="26e9c7a6a8612e0399483e80f7403a17">
+		<file filename="core/models/PageModel.class.php" md5="c4a148b3c5ea5f2911bbb029a5c52b14">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="3791a151027c417603c48e3a3c59a4d3">
@@ -1207,7 +1211,7 @@
 		<file filename="core/models/UserGroupModel.php" md5="dabdcaa62eb5987b210bbb2aef5713e8">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="core/models/UserModel.php" md5="3838331f3c849b73acdff25b95acaab1">
+		<file filename="core/models/UserModel.php" md5="4a043396ef9e098f27031f609dd2f2df">
 			<class name="UserModel"/>
 		</file>
 		<file filename="core/models/UserUserConfigModel.php" md5="017371dd135738999afac50c9f260a06">
@@ -1366,6 +1370,7 @@
 		<file filename="core/templates/forms/elements/formtextareainput.tpl" md5="938bbddec378b1189876ded0485dc604"/>
 		<file filename="core/templates/forms/elements/formtextinput.tpl" md5="0f09b0b0b3e6ce316e89e312c311482e"/>
 		<file filename="core/templates/forms/elements/formtimeinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
+		<file filename="core/templates/forms/elements/formuserinput.tpl" md5="f6ab667f92850321021eba51a8abae87"/>
 		<file filename="core/templates/forms/elements/html.tpl" md5="3d4259aa7f5615453121930abe34b031"/>
 		<file filename="core/templates/forms/elements/image.tpl" md5="dc4f74a0297b099ea7913d7582125837"/>
 		<file filename="core/templates/forms/elements/reset.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
@@ -1387,7 +1392,7 @@
 		<file filename="core/templates/pages/admin/config.tpl" md5="d6fb7d5c0c064111b3c62a2419af43fa"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
 		<file filename="core/templates/pages/admin/log.tpl" md5="03788adf6fc482a8c3d46087009f003d"/>
-		<file filename="core/templates/pages/admin/pages.tpl" md5="d9c68f8c035ae04015ca1c96b2132166"/>
+		<file filename="core/templates/pages/admin/pages.tpl" md5="dafbcbc9746e7c4c01f8c8d7de3d2743"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="ec73503565c3b1987c0419bbe5815aaa"/>
 		<file filename="core/templates/pages/admin/seo_config.tpl" md5="214967a352786e78563f5b875e9b3d7c"/>
 		<file filename="core/templates/pages/admin/syncsearchindex.tpl" md5="d95f9468ee0c9fb6b7623e6e0c4def4c"/>
@@ -1664,7 +1669,7 @@
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.fileupload.js" md5="410f3db11a6426a7d0f9b3f27da0063c"/>
 		<file filename="core/assets/js/core.js" md5="f9c4cd7edb699a518162d5aa137d4ce4"/>
-		<file filename="core/assets/js/core.listingtable.js" md5="5ef605aace5776031f1dda8e64711af9"/>
+		<file filename="core/assets/js/core.listingtable.js" md5="c0db23b4cc23ab46fe50fd6e7a7214d0"/>
 		<file filename="core/assets/js/core.strings.js" md5="302a98cc6b18f96cff21f06a302824f2"/>
 		<file filename="core/assets/js/html5shiv.js" md5="6f9ae49ba54ad8f6751991a0eb0b27e8"/>
 		<file filename="core/assets/js/html5shiv.min.js" md5="62ac572189514315ebfb31c43a225009"/>

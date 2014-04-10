@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 07 Apr 2014 05:25:30 -0400
+ * @compiled Mon, 07 Apr 2014 22:50:57 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -5010,7 +5010,7 @@ public static $Schema = array(
 'comment' => 'The source of the user registration, either self, admin, or other.'
 ),
 'registration_invitee' => array(
-'type' => Model::ATT_TYPE_INT,
+'type' => Model::ATT_TYPE_UUID_FK,
 'comment' => 'If invited/created by a user, this is the ID of that user.',
 ),
 'last_login' => array(
@@ -9764,6 +9764,10 @@ $key    = $bits['key'];
 if (!$this->exists()) {
 error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
 $file = Factory::File('assets/images/mimetypes/notfound.png');
+if(!$file->exists()){
+trigger_error('The 404 image could not be located.', E_USER_WARNING);
+return null;
+}
 $preview = $file->getPreviewFile($dimensions);
 }
 elseif ($this->isPreviewable()) {
@@ -16358,6 +16362,7 @@ public static $Mappings = array(
 'text'             => 'FormTextInput',
 'textarea'         => 'FormTextareaInput',
 'time'             => 'FormTimeInput',
+'user'             => 'FormUserInput',
 'wysiwyg'          => 'FormTextareaInput',
 );
 public static $GroupMappings = array(
