@@ -19,6 +19,7 @@
 		<userauth name="datastore" class="Core\User\AuthDrivers\datastore"/>
 		<userauth name="gpg" class="Core\User\AuthDrivers\gpg"/>
 		<userconfig key="/user/gpgauth/pubkey" name="GPG Public Key" formtype="disabled" onedit="0" onregistration="0" hidden="1"/>
+		<userconfig weight="" key="json:profiles" name="Connected Profiles (json encoded)" hidden="1"/>
 	</users>
 	<hooks>
 		<hookregister name="/core/components/loaded" description="Called immediately after all components have been loaded into memory."/>

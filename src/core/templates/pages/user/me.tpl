@@ -1,9 +1,23 @@
 <div id="user-edit-listing">
 	{img src="`$user->get('avatar')`" placeholder="person" width="150" height="300"}
 
-	User Name: {$user->getDisplayName()}<br/>
-	Email: {$user.email}<br/>
-	Member Since: {date format="FD" $user.created}<br/>
+
+	<ul>
+		<li>User Name: {$user->getDisplayName()}</li>
+		<li>Email: {$user.email}</li>
+		<li>Member Since: {date format="FD" $user.created}</li>
+
+		{if $profiles}
+			{foreach $profiles as $profile}
+				<li>
+					<i class="icon-{$profile.type}"></i>
+					<a href="{$profile.url}" rel="me" title="{($profile.title) ? $profile.title : $profile.type}">
+						{if $profile.title}{$profile.title}{else}{$profile.url}{/if}
+					</a>
+				</li>
+			{/foreach}
+		{/if}
+	</ul>
 
 	<br/>
 	<a href="#" class="edit-user-toggle">Edit Account</a>

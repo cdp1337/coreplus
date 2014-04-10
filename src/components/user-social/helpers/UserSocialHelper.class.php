@@ -88,13 +88,7 @@ class UserSocialHelper {
 			'link' => self::ResolveProfileLink($user),
 		);
 
-		if($usermanager || $selfaccount){
-			$a[] = array(
-				'title' => 'Public Profiles',
-				'icon' => 'link',
-				'link' => '/userprofile/connectedprofiles/' . $user->get('id'),
-			);
-		}
+
 
 		return $a;
 	}
