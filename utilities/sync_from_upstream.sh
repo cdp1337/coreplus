@@ -63,6 +63,7 @@ rsync $OPTIONS "$UPSTREAM/src/config/configuration.xml.ex" "$BASEDIR/src/config/
 rsync $OPTIONS "$UPSTREAM/src/config/configuration.xml.ant" "$BASEDIR/src/config/"
 rsync $OPTIONS "$UPSTREAM/src/htaccess.ex" "$BASEDIR/src/"
 rsync $OPTIONS "$UPSTREAM/src/htaccess.ant" "$BASEDIR/src/"
+rsync $OPTIONS "$UPSTREAM/src/robots.txt" "$BASEDIR/src/"
 rsync $OPTIONS "$UPSTREAM/src/index.php" "$BASEDIR/src/"
 
 echo "Syncing core themes..."
