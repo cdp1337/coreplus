@@ -38,7 +38,7 @@ function smarty_function_geoiplookup($params, $template){
 		$file = \Core\Filestore\Factory::File($flag);
 
 		if($file->exists()){
-			$out = '<img src="' . $file->getPreviewURL('20x20') . '" title="' . $lookup->country . '"/> ';
+			$out = '<img src="' . $file->getPreviewURL('20x20') . '" title="' . $lookup->country . '" alt="' . $lookup->country . '"/> ';
 		}
 		else{
 			$out = '';
