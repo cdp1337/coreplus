@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 07 Apr 2014 22:50:57 -0400
+ * @compiled Fri, 11 Apr 2014 08:08:34 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1478,6 +1478,9 @@ $diffs[] = array(
 }
 continue;
 }
+if($dat->type == \Model::ATT_TYPE_ALIAS){
+continue;
+}
 if(($colchange = $thiscol->getDiff($dat)) !== null){
 $diffs[] = array(
 'title' => 'Column ' . $name . ' does not match up: ' . $colchange,
@@ -1487,7 +1490,12 @@ $diffs[] = array(
 }
 $a_order = $this->order;
 foreach($this->definitions as $name => $dat){
-if(!$schema->getColumn($name)) unset($a_order[array_search($name, $a_order)]);
+if(!$schema->getColumn($name)){
+unset($a_order[array_search($name, $a_order)]);
+}
+elseif($schema->getColumn($name)->type == \Model::ATT_TYPE_ALIAS){
+unset($a_order[array_search($name, $a_order)]);
+}
 }
 if(implode(',', $a_order) != implode(',', $schema->order)){
 $diffs[] = array(
@@ -1498,7 +1506,7 @@ $diffs[] = array(
 $thisidx = '';
 foreach($this->indexes as $name => $cols) $thisidx .= ';' . $name . '-' . implode(',', $cols);
 $thatidx = '';
-foreach($this->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
+foreach($schema->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
 if($thisidx != $thatidx){
 $diffs[] = array(
 'title' => 'Indexes do not match up',
@@ -15459,7 +15467,7 @@ $foot = $this->getFootContent();
 if (DEVELOPMENT_MODE) {
 $debug = '';
 $debug .= '<pre class="xdebug-var-dump screen">';
-$debug .= '<fieldset class="debug-section collapsible">';
+$debug .= '<fieldset class="debug-section collapsible" id="debug-section-template-information">';
 $debug .= '<legend><b>Template Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= "<span>";
 $debug .= 'Base URL: ' . $this->baseurl . "\n";
@@ -15467,7 +15475,7 @@ $debug .= 'Template Used: ' . $this->templatename . "\n";
 $debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
 $debug .= "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible">';
+$debug .= '<fieldset class="debug-section collapsible" id="debug-section-performance-information">';
 $debug .= '<legend><b>Performance Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= "<span>";
 $debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
@@ -15477,13 +15485,13 @@ $profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
 $debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
 $debug .= "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible">';
+$debug .= '<fieldset class="debug-section collapsible" id="debug-section-profiler-information">';
 $debug .= '<legend><b>Core Profiler</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= "<span>";
 $debug .= $profiler->getEventTimesFormatted();
 $debug .= "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible collapsed">';
+$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-components-information">';
 $debug .= '<legend><b>Available Components</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
 $debug .= "<span>";
@@ -15502,7 +15510,7 @@ $debug .= $v->getName() . ' ' . $v->getVersion() . "<br/>";
 }
 $debug .= "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible collapsed">';
+$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-hooks-information">';
 $debug .= '<legend><b>Registered Hooks</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 foreach(HookHandler::GetAllHooks() as $hook){
 $debug .= "<span>";
@@ -15517,12 +15525,12 @@ $debug .= "\n\n";
 $debug .= "</span>";
 }
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible collapsed">';
+$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-includes-information">';
 $debug .= '<legend><b>Included Files</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= '<span>Number: ' . sizeof(get_included_files()) . "</span>";
 $debug .= '<span>'. implode("<br/>", get_included_files()) . "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible collapsed">';
+$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-query-information">';
 $debug .= '<legend><b>Query Log</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $ql = \Core\DB()->queryLog();
 $qls = sizeof($ql);
