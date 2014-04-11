@@ -4892,7 +4892,7 @@ p[class^="message-"] .message-background-icon i {
 .form-orientation-horizontal .formelement.formuserinput .form-element-value .user-indicator {
   position: absolute;
   left: 8px;
-  top: 4px;
+  top: 35%;
 }
 /* line 383, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formwysiwyginput {
