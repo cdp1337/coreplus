@@ -23,7 +23,7 @@ class UserActivityModel extends Model{
 			'maxlength' => 64,
 		),
 		'user_id'    => array(
-			'type'    => Model::ATT_TYPE_INT,
+			'type'    => Model::ATT_TYPE_UUID_FK,
 			'default' => 0,
 		),
 		'ip_addr'    => array(
