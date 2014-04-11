@@ -11,6 +11,7 @@
 	<hooks>
 		<hook name="/core/components/loaded" call="SecuritySuite\StopForumSpam::CheckIP"/>
 		<hook name="/core/components/loaded" call="SecuritySuite\IpBlacklistHelper::CheckIP"/>
+		<hook name="/core/components/loaded" call="SecuritySuite\IpBlacklistHelper::Check404Pages"/>
 		<hook name="/core/components/loaded" call="SecuritySuite\SimpleSitePassword::Check"/>
 		<hook name="/cron/daily" call="StopForumSpam::HookDaily"/>
 		<hook name="/cron/daily" call="IpBlacklistHelper::CleanupHook"/>

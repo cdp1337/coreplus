@@ -21,6 +21,8 @@
  */
 
 namespace SecuritySuite;
+use Core\Datamodel\Dataset;
+use Core\Date\DateTime;
 
 /**
  * A short teaser of what IpBlacklistHelper does.
@@ -57,22 +59,27 @@ abstract class IpBlacklistHelper {
 	public static function CheckIP() {
 
 		$factory = new \ModelFactory('IpBlacklistModel');
-		$factory->whereGroup(
+		/*$factory->whereGroup(
 			'OR',
 			[
 				'expires > ' . \CoreDateTime::Now('U', \Time::TIMEZONE_GMT),
-				'expires == 0'
+				'expires = 0'
 			]
-		);
+		);*/
 		$where = new \Core\Datamodel\DatasetWhereClause();
-		$where->setSeparator('or');
 
+		$ips = [];
 		$longip = ip2long(REMOTE_IP);
 		for($i=32; $i>0; $i--){
+			if($i < 16){
+				// Skip anything smaller than a /16.
+				break;
+			}
 			$mask = ~((1 << (32 - $i)) - 1);
-			$where->addWhere('ip_addr = ' . long2ip($longip & $mask) . '/' . $i);
+			$ips[] = long2ip($longip & $mask) . '/' . $i;
+			//$where->addWhere('ip_addr = ' . long2ip($longip & $mask) . '/' . $i);
 		}
-		$factory->where($where);
+		$factory->where('ip_addr IN ' . implode(',', $ips));
 		$factory->limit(1);
 
 		$ban = $factory->get();
@@ -81,6 +88,14 @@ abstract class IpBlacklistHelper {
 			// Ok, you may pass.
 			return;
 		}
+		// Check the date
+		if($ban->get('expires') != 0 && $ban->get('expires') < DateTime::NowGMT()){
+			// Well it has one, but it's already expired.
+			// Go ahead and clean it up.
+			$ban->delete();
+			return;
+		}
+
 		// else... hehehe, happy happy fun time for you!
 		\SystemLogModel::LogSecurityEvent(
 			'/security/blocked',
@@ -88,7 +103,52 @@ abstract class IpBlacklistHelper {
 			'Blacklisted IP tried to access the site!<br/>Remote IP: ' . REMOTE_IP . '<br/>Matching Range: ' . $ban->get('ip_addr') . '<br/>Requested URL: ' . CUR_CALL
 		);
 
+		header('HTTP/1.0 420 Enhance Your Calm');
 		die($ban->get('message'));
+	}
+
+	/**
+	 * This will check and see how many 404 requests there have been recently.
+	 *
+	 * @return bool
+	 */
+	public static function Check404Pages() {
+		// How long back do I want to check the logs?
+		$time = new DateTime();
+		$time->modify('-30 seconds');
+
+		$ds = Dataset::Init()
+			->table('user_activity')
+			->where(
+				[
+					'status = 404',
+					'ip_addr = ' . REMOTE_IP,
+					'datetime > ' . $time->format('U')
+				]
+			)
+			->count()
+			->execute();
+
+		if($ds->num_rows > 30){
+			// CHILL THAR FUCKER!
+
+			$time->modify('+6 minutes');
+
+			$blacklist = new \IpBlacklistModel();
+			$blacklist->setFromArray(
+				[
+					'ip_addr' => REMOTE_IP . '/24',
+					'expires' => $time->format('U'),
+					'message' => 'You have requested too many "404" pages recently, please go get some coffee and wait for a short bit.  If you are a bot and/or spammer, please bugger off.',
+					'comment' => '5-minute auto-ban for too many 404 requests in 30 seconds',
+				]
+			);
+			$blacklist->save();
+
+			\SystemLogModel::LogSecurityEvent('/security/blocked', 'Blocking IP due to too many 404 requests in 30 seconds.');
+
+			die($blacklist->get('message'));
+		}
 	}
 
 	/**
