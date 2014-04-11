@@ -186,7 +186,27 @@ if(typeof jQuery != 'undefined'){
  */
 if(typeof jQuery != 'undefined'){
 	jQuery(function(){
-		jQuery('fieldset.collapsible.collapsed').children(':not(legend)').hide();
+		jQuery('fieldset.collapsible').each(function(){
+			var $this = jQuery(this), ls;
+			if($this.attr('id')){
+				// Lookup if this fieldset is expanded or collapsed in the local storage.
+				ls = localStorage.getItem('fieldset-collapsible-' + $this.attr('id'));
+				if(ls === '0'){
+					$this.addClass('collapsed').children(':not(legend)').hide();
+				}
+				else if(ls === '1'){
+					$this.removeClass('collapsed');
+					return;
+				}
+			}
+
+			// If the fieldset doesn't have an ID or just wasn't in cache, go with the default.
+			if($this.hasClass('collapsed')){
+				$this.children(':not(legend)').hide();
+			}
+		});
+
+		//jQuery('fieldset.collapsible.collapsed').children(':not(legend)').hide();
 
 		jQuery('fieldset.collapsible legend').css('cursor', 'pointer').click(function(){
 			var $this, $fieldset;
@@ -198,6 +218,11 @@ if(typeof jQuery != 'undefined'){
 				$fieldset.toggleClass('collapsed').children(':not(legend)').toggle('fast');
 			} else {
 				$fieldset.toggleClass('collapsed').children(':not(legend)').toggle();
+			}
+
+			// Record this setting.
+			if($fieldset.attr('id')){
+				localStorage.setItem('fieldset-collapsible-' + $fieldset.attr('id'), ($fieldset.hasClass('collapsed') ? '0' : '1'));
 			}
 		});
 	});
