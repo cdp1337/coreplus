@@ -11,7 +11,7 @@
 			{foreach $profiles as $profile}
 				<li>
 					<i class="icon-{$profile.type}"></i>
-					<a href="{$profile.url}" rel="me" title="{($profile.title) ? $profile.title : $profile.type}">
+					<a href="{$profile.url}" rel="me" title="{($profile.title) ? $profile.title : $profile.type}" target="_blank">
 						{if $profile.title}{$profile.title}{else}{$profile.url}{/if}
 					</a>
 				</li>
