@@ -107,7 +107,7 @@ class AdminMenuWidget extends Widget_2_1 {
 		ksort($groups);
 
 		foreach($groups as $gname => $dat){
-			ksort($groups[$gname]);
+			ksort($groups[$gname]['children']);
 		}
 
 		$v->templatename = 'widgets/adminmenu/view.tpl';
