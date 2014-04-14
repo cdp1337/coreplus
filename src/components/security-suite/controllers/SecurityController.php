@@ -266,6 +266,129 @@ class SecurityController extends Controller_2_1 {
 	}
 
 	/**
+	 * Interface to display and manage the spam keywords on the site.
+	 */
+	public function spam_keywords(){
+		$view = $this->getView();
+
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$threshold = \ConfigHandler::Get('/security/spam_threshold');
+		$table = new Core\ListingTable\Table();
+
+		$table->setLimit(100);
+
+		// Set the model that this table will be pulling data from.
+		$table->setModelName('SpamHamKeywordModel');
+
+		// Add in all the columns for this listing table.
+		$table->addColumn('Keyword', 'keyword');
+		$table->addColumn('Score', 'score');
+
+		// This page will also feature a quick-edit feature.
+		$table->setEditFormCaller('SecurityController::SpamKeywordsSave');
+
+		$table->loadFiltersFromRequest();
+
+		$view->addControl('Import Spam Training', '/security/spam/train', 'strikethrough');
+
+		$view->mastertemplate = 'admin';
+		$view->title = 'Spam Keywords';
+
+		$view->assign('listing', $table);
+		$view->assign('threshold', $threshold);
+	}
+
+	/**
+	 * Interface to "train" the system to learn spam keywords.
+	 *
+	 * A block of content can be submitted to this page, where the user has the options to score phrases and words.
+	 */
+	public function spam_train() {
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$view->title = 'Spam Training';
+		$view->mastertemplate = 'admin';
+
+		if($request->isPost() && $request->getPost('keywords')){
+			foreach($_POST['keywords'] as $w => $s){
+				if($s == 0){
+					// Populating the database with a bunch of neutral scores is pointless.
+					continue;
+				}
+				$k = SpamHamKeywordModel::Construct($w);
+				$k->set('score', $s);
+				$k->save();
+			}
+
+			Core::SetMessage('Trained keywords successfully!', 'success');
+			\Core\redirect('/security/spam/keywords');
+		}
+		elseif(!$request->isPost() || !$request->getPost('content')){
+			// Step 1 for training with content, provide a text area to submit content!
+			$view->templatename = 'pages/security/spam_train_1.tpl';
+
+			$form = new Form();
+			$form->addElement(
+				'textarea',
+				[
+					'name' => 'content',
+					'value' => '',
+					'title' => 'Content',
+					'description' => 'Paste in the content to parse for keywords.  You will have the ability to fine-tune specific keywords on the next page.',
+					'rows' => 6,
+				]
+			);
+			$form->addElement('submit', ['value' => 'Next']);
+
+			$view->assign('form', $form);
+		}
+		else{
+			// Step 2,
+			$view->templatename = 'pages/security/spam_train_2.tpl';
+
+			$check = new \SecuritySuite\SpamCan\SpamCheck($request->getPost('content'));
+			$keywords = $check->getKeywords();
+
+			$form = new Form();
+			$form->set('orientation', 'grid');
+
+			foreach($keywords as $dat){
+				if($dat['score'] != 0){
+					// Skip keywords that are already weighted.
+					continue;
+				}
+
+				if(preg_match_all('# #', $dat['keyword']) == 1){
+					// Skip keywords that only contain one space.
+					// Here, we only want single words and 3-word phrases.
+					continue;
+				}
+
+				$form->addElement(
+					'text',
+					[
+						'name' => 'keywords[' . $dat['keyword'] . ']',
+						'title' => $dat['keyword'],
+						'value' => 0,
+					]
+				);
+			}
+
+			$form->addElement('submit', ['value' => 'Train!']);
+
+			$view->assign('form', $form);
+		}
+	}
+
+	/**
 	 * Save the site password.
 	 *
 	 * @param Form $form
@@ -313,5 +436,37 @@ class SecurityController extends Controller_2_1 {
 			Core::SetMessage($e->getMessage());
 			return false;
 		}
+	}
+
+	public static function SpamKeywordsSave(Form $form) {
+		ConfigHandler::Set('/security/spam_threshold', $form->getElementValue('threshold'));
+
+		foreach($form->getElements() as $el){
+			/** @var FormElement $el */
+			$n = $el->get('name');
+			if(strpos($n, 'score[') === 0){
+				$n = substr($n, 6, -1);
+				$s = $el->get('value');
+
+				if($s == '') $s = 1;
+
+				$model = SpamHamKeywordModel::Construct($n);
+				$model->set('score', $s);
+				$model->save();
+			}
+		}
+
+		if($form->getElementValue('new_keyword')){
+			$n = $form->getElementValue('new_keyword');
+			$s = $form->getElementValue('new_score');
+
+			if($s == '') $s = 1;
+
+			$model = SpamHamKeywordModel::Construct($n);
+			$model->set('score', $s);
+			$model->save();
+		}
+
+		return true;
 	}
 }
