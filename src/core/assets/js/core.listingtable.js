@@ -141,10 +141,17 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 	});
 
 	self.$table.find('.control-edit-toggle').click(function(){
+		var $this = $(this);
+
 		if(self.mode == 'view'){
 			$table.find('.view').hide();
 			$table.find('.edit').show();
 			self.mode = 'edit';
+
+			// See if there's an input somewhere nearby.
+			if($this.closest('td').find(':input').length > 0){
+				$this.closest('td').find(':input').first().select();
+			}
 		}
 		else{
 			$table.find('.view').show();
