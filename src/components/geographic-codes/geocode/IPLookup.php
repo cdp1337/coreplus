@@ -84,8 +84,13 @@ class IPLookup {
 
 				$this->city = $geo->city->name;
 				/** @var \GeoIp2\Record\Subdivision $geoprovinceobj */
-				$geoprovinceobj = $geo->subdivisions[0];
-				$this->province = $geoprovinceobj->isoCode;
+				if(isset($geo->subdivisions[0])){
+					$geoprovinceobj = $geo->subdivisions[0];
+					$this->province = $geoprovinceobj->isoCode;
+				}
+				else{
+					$this->province = '';
+				}
 				$this->country  = $geo->country->isoCode;
 				$this->timezone = $geo->location->timeZone;
 
