@@ -48,7 +48,7 @@
 				placeholder="Keyword"
 				name="new_keyword"
 				type="text"
-				size="3"
+				size="20"
 				value=""}
 		</div>
 	</td>
