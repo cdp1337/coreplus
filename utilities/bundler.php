@@ -33,10 +33,30 @@ define('BASE_DIR', realpath(dirname(__DIR__)) . '/');
 // Include the core bootstrap, this will get the system functional.
 require_once(ROOT_PDIR . 'core/bootstrap.php');
 
+$args = new \Core\CLI\Arguments(
+	[
+		'help' => [
+			'description' => 'Display help and exit.',
+			'value' => false,
+			'shorthand' => ['?', 'h'],
+		],
+	]
+);
+
+$args->processArguments();
+
+if($args->getArgumentValue('help')){
+	$args->printUsage();
+	exit;
+}
+
+
+$dir = BASE_DIR . 'exports/bundles';
+$bundles = [];
+
 
 // Get the bundler metafiles
 $bundlefiles = array();
-$dir = BASE_DIR . 'exports/bundles';
 if(is_dir($dir)){
 	$dh = opendir($dir);
 	if($dh){
@@ -59,7 +79,6 @@ if(is_dir($dir)){
 sort($bundlefiles);
 
 // Transpose them to the keyname => human readable name.
-$bundles = [];
 foreach($bundlefiles as $b){
 	// Open it up
 	$xml = new XMLLoader();
@@ -79,7 +98,7 @@ foreach($bundlefiles as $b){
 
 if(!sizeof($bundles)){
 	echo "No bundles found, exporting will bundle the entire site." . NL;
-	$bundles = [
+	$bundles[] = [
 		'file'  => '',
 		'name'  => SITENAME,
 		'sname' =>  preg_replace('/[^a-z0-9-\.\+]*/i', '', str_replace(' ', '-', SITENAME)),
@@ -94,13 +113,11 @@ else{
 }
 sleep(1);
 
-
-
-
-
 // Prompt the user with what version the new bundles will be.
 $version = Core::GetComponent('core')->getVersion();
 $version = CLI::PromptUser('Please set the bundled version or', 'text', $version);
+
+
 
 foreach($bundles as $b){
 	/** @var XMLLoader|null $xml */
@@ -135,6 +152,10 @@ foreach($bundles as $b){
 	else{
 		foreach(Core::GetComponents() as $c){
 			/** @var Component_2_1 $c */
+			if($c->getKeyName() == 'core'){
+				// Core is already included above.
+				continue;
+			}
 			$export[] = array(
 				'name' => strtolower($c->getName()),
 				'type' => 'component',
