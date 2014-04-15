@@ -25,28 +25,38 @@ namespace Core\CLI;
 
 
 /**
- * A short teaser of what Arguments does.
- *
- * More lengthy description of what Arguments does and why it's fantastic.
+ * Provides a utility layer to easily manage and use command line arguments.
  *
  * <h3>Usage Examples</h3>
  *
+ * $arguments = new \Core\CLI\Arguments(
+ *     [
+ *         'help' => [
+ *             'description' => 'Display help and exit.',
+ *             'value' => false,
+ *             'shorthand' => ['?', 'h'],
+ *         ],
+ *         'component' => [
+ *             'description' => 'Operate on a component with the given name.',
+ *             'value' => true,
+ *             'shorthand' => ['c'],
+ *             ],
+ *         ],
+ *     ]
+ * );
+ * $arguments->usageHeader = 'A little more information to the user as to what this script does.';
  *
- * @todo Write documentation for Arguments
- * <h4>Example 1</h4>
- * <p>Description 1</p>
- * <code>
- * // Some code for example 1
- * $a = $b;
- * </code>
+ * // Process and validate those arguments now.
+ * $arguments->processArguments();
  *
+ * if($arguments->getArgumentValue('help')){
+ *     $arguments->printUsage();
+ *     exit;
+ * }
  *
- * <h4>Example 2</h4>
- * <p>Description 2</p>
- * <code>
- * // Some code for example 2
- * $b = $a;
- * </code>
+ * if($arguments->getArgumentValue('component')){
+ *     // Do something with this option.
+ * }
  *
  * 
  * @package Core\CLI
