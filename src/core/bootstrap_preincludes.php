@@ -62,6 +62,7 @@ require_once(ROOT_PDIR . 'core/libs/core/Component.class.php');
 /**
  * The Component system written for API 2.1
  */
+require_once(ROOT_PDIR . 'core/libs/core/VersionString.php');
 require_once(ROOT_PDIR . 'core/libs/core/Component_2_1.php');
 require_once(ROOT_PDIR . 'core/functions/Core.functions.php');
 
