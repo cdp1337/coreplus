@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 14 Apr 2014 16:11:49 -0400
+ * @compiled Sun, 27 Apr 2014 04:38:56 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1085,6 +1085,7 @@ define('__DMI_PDIR', ROOT_PDIR . 'core/libs/core/datamodel/');
 namespace Core\Datamodel {
 interface BackendInterface {
 public function execute(Dataset $dataset);
+public function _rawExecute($type, $string);
 public function tableExists($tablename);
 public function createTable($table, Schema $schema);
 public function modifyTable($table, Schema $schema);
@@ -2142,13 +2143,6 @@ if($v == '' || $v == '0000-00-00 00:00:00' || $v === null){
 $v = $default;
 }
 break;
-default:
-if($v === null){
-$v = $default;
-}
-break;
-}
-switch($type){
 case Model::ATT_TYPE_BOOL:
 if($v === true){
 $v = '1';
@@ -2167,6 +2161,11 @@ break;
 default:
 $v = '0';
 }
+}
+break;
+default:
+if($v === null){
+$v = $default;
 }
 break;
 }
@@ -2373,9 +2372,12 @@ return false;
 public function isnew() {
 return !$this->_exists;
 }
-public function changed(){
+public function changed($key = null){
 $s = self::GetSchema();
 foreach ($this->_data as $k => $v) {
+if($key !== null && $key != $k){
+continue;
+}
 if(!isset($s[$k])){
 continue;
 }
@@ -3343,7 +3345,12 @@ public static $Schema = array(
 'site' => array(
 'type' => Model::ATT_TYPE_SITE,
 'default' => -1,
-'formtype' => 'system',
+'form' => [
+'type' => 'system',
+'group' => 'Access & Advanced',
+'grouptype' => 'tabs',
+'description' => 'Please note, changing the site ID on an existing page may result in loss of data or unexpected results.',
+],
 'comment' => 'The site id in multisite mode, (or -1 if global)',
 ),
 'baseurl' => array(
@@ -3834,6 +3841,7 @@ public function setInsertable($name, $value){
 $insertables = $this->getLink('Insertable');
 foreach($insertables as $ins){
 if($ins->get('name') == $name){
+$ins->set('site', $this->get('site'));
 $ins->set('value', $value);
 return; // :)
 }
@@ -3895,6 +3903,8 @@ $this->setLink('RewriteMap', $rewrite);
 }
 }
 public function setFromForm(Form $form, $prefix = null){
+$this->getLink('Insertable');
+$this->getLink('PageMeta');
 parent::setFromForm($form, $prefix);
 if($form->getElement($prefix . '[rewrites]')){
 $rewrites = $form->getElement($prefix . '[rewrites]')->get('value');
@@ -3923,6 +3933,22 @@ $element->set('templatename', $this->getBaseTemplateName());
 }
 }
 public function addToFormPost(Form $form, $prefix){
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
+$form->switchElementType($prefix . '[site]', 'select');
+$el = $form->getElement($prefix . '[site]');
+$opts = [
+'-1' => 'Global Page',
+'0'  => 'Root-Only Page',
+];
+$fac = MultiSiteModel::FindRaw([], null, null);
+foreach($fac as $dat){
+if($dat['status'] != 'active'){
+continue;
+}
+$opts[ $dat['id'] ] = $dat['name'] . ' (' . $dat['id'] . ')';
+}
+$el->set( 'options', $opts );
+}
 $metasgroupname = 'Meta Information & URL (SEO)';
 $insertablesgroupname = 'Basic';
 $metasgroup = $form->getElement($metasgroupname);
@@ -6908,15 +6934,16 @@ return ($this->_versionDB !== false);
 }
 
 
-### REQUIRE_ONCE FROM core/libs/core/Version.php
+### REQUIRE_ONCE FROM core/libs/core/VersionString.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core {
-class Version implements \ArrayAccess {
+class VersionString implements \ArrayAccess {
 public $major;
 public $minor = 0;
 public $point = 0;
 public $user;
 public $stability;
+public $build;
 public function __construct($version = null){
 if($version){
 $this->parseString($version);
@@ -6926,6 +6953,9 @@ public function __toString(){
 $ret = $this->major . '.' . $this->minor . '.' . $this->point;
 if($this->stability){
 $ret .= $this->stability;
+}
+if($this->build){
+$ret .= '.' . $this->build;
 }
 if($this->user){
 $ret .= '~' . $this->user;
@@ -6985,10 +7015,62 @@ $this->stability = substr($digit, $pos);
 }
 }
 }
+if(isset($parts[3])){
+if(is_numeric($parts[3])){
+$this->build = $parts[3];
+}
+else{
+$digit = $parts[3];
+if(($pos = strpos($digit, '~')) !== false){
+$this->build = substr($digit, 0, $pos);
+$this->user = substr($digit, $pos);
+}
+else{
+$this->build = $digit;
+}
+}
+}
+}
+public function setMajor($int){
+$this->major = $int;
+}
+public function setMinor($int){
+$this->minor = $int;
+}
+public function setPoint($int){
+$this->point = $int;
+}
+public function setUser($string){
+$this->user = $string;
+}
+public function setBuild($string){
+$this->build = $string;
+}
+public function setStability($type){
+$type = strtolower($type);
+switch($type){
+case 'dev':
+$this->stability = 'dev';
+break;
+case 'a':
+case 'alpha':
+$this->stability = 'a';
+break;
+case 'b':
+case 'beta':
+$this->stability = 'b';
+break;
+case 'rc':
+$this->stability = 'rc';
+break;
+default:
+$this->stability = null;
+break;
+}
 }
 public function compare($other, $operation = null){
-if(!$other instanceof Version){
-$other = new Version($other);
+if(!$other instanceof VersionString){
+$other = new VersionString($other);
 }
 $v1    = $this->major . '.' . $this->minor . '.' . $this->point;
 $v2    = $other->major . '.' . $other->minor . '.' . $other->point;
@@ -13383,11 +13465,11 @@ public static function _AttachLessJS(){
 return true;
 }
 public static function VersionCompare($version1, $version2, $operation = null) {
-$version1 = new \Core\Version($version1);
+$version1 = new \Core\VersionString($version1);
 return $version1->compare($version2, $operation);
 }
 public static function VersionSplit($version) {
-return new \Core\Version($version);
+return new \Core\VersionString($version);
 }
 public static function CompareValues($val1, $val2){
 return \Core\compare_values($val1, $val2);
@@ -13706,12 +13788,12 @@ define('HOST', $host);
 if (!is_dir(TMP_DIR)) {
 mkdir(TMP_DIR, 0777, true);
 }
-if(SSL_MODE == SSL_MODE_REQUIRED && !SSL){
+if(EXEC_MODE == 'WEB' && SSL_MODE == SSL_MODE_REQUIRED && !SSL){
 if(!DEVELOPMENT_MODE) header("HTTP/1.1 301 Moved Permanently");
 header('Location: ' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1));
 die('This site requires SSL, if it does not redirect you automatically, please <a href="' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
 }
-elseif(SSL_MODE == SSL_MODE_DISABLED && SSL){
+elseif(EXEC_MODE == 'WEB' && SSL_MODE == SSL_MODE_DISABLED && SSL){
 if(!DEVELOPMENT_MODE) header("HTTP/1.1 301 Moved Permanently");
 header('Location: ' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1));
 die('This site has SSL disabled, if it does not redirect you automatically, please <a href="' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');

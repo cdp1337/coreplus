@@ -1115,9 +1115,13 @@ class mysqli_backend implements BackendInterface {
 				break;
 			case \Model::ATT_TYPE_TEXT:
 				$type = "text";
+				// A bug in MySQL 5.6 where text fields cannot have a default value!
+				$default = false;
 				break;
 			case \Model::ATT_TYPE_DATA:
 				$type = 'mediumblob';
+				// A bug in MySQL 5.6 where text fields cannot have a default value!
+				$default = false;
 				break;
 			case \Model::ATT_TYPE_INT:
 			case \Model::ATT_TYPE_CREATED:
