@@ -4,7 +4,24 @@ $(function(){
 		var $original = $(this),
 			$clone = $original.clone(),
 			$wrapper = $('<div style="position:relative;" class="controls-hover-wrapper"/>'),
-			controlcount = $clone.find('li').length;
+			controlcount = $clone.find('li').length,
+			defaults = {
+				proxyicon: 'cog',
+				proxytext: 'Controls',
+				proxyforce: false
+			},
+			options = {
+				proxyicon: $original.data('proxy-icon'),
+				proxytext: $original.data('proxy-text'),
+				proxyforce: $original.data('proxy-force')
+			}, i;
+
+		for(i in options){
+			if(options[i] == undefined){
+				options[i] = defaults[i];
+			}
+		}
+
 
 		$original.addClass('controls-hover').after($wrapper);
 
@@ -30,8 +47,8 @@ $(function(){
 		$original.hide();
 
 		// If there are more than 3 options, hide the rest.
-		if(controlcount > 3){
-			$clone.html('<li><i class="icon-cog"></i> Controls</li>');
+		if(controlcount > 3 || options.proxyforce){
+			$clone.html('<li><i class="icon-' + options.proxyicon + '"></i>' + (options.proxytext ? ' ' + options.proxytext : '') + '</li>');
 		}
 
 		$wrapper
