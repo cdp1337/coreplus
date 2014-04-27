@@ -10,6 +10,17 @@
 {$listing->render('head')}
 {foreach $listing as $entry}
 	<tr>
+		{if $multisite}
+			<td>
+				{if $entry.site == -1}
+					Global
+				{elseif $entry.site == 0}
+					Root-Only
+				{else}
+					Local ({$entry.site})
+				{/if}
+			</td>
+		{/if}
 		<td>
 			<div class="view">
 				{if $entry->getParent()}

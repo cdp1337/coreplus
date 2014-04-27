@@ -559,6 +559,13 @@ class AdminController extends Controller_2_1 {
 		);
 
 		// Add in all the columns for this listing table.
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
+			$table->addColumn('Site', 'site', false);
+			$ms = true;
+		}
+		else{
+			$ms = false;
+		}
 		$table->addColumn('Title', 'title');
 		$table->addColumn('URL', 'rewriteurl');
 		$table->addColumn('Views', 'pageviews', false);
@@ -586,6 +593,7 @@ class AdminController extends Controller_2_1 {
 		//$view->assign('listings', $listings);
 		$view->assign('links', $links);
 
+		$view->assign('multisite', $ms);
 		$view->assign('listing', $table);
 		$view->assign('page_opts', PageModel::GetPagesAsOptions(false, '-- Select Parent URL --'));
 		$view->assign('expire_opts', $pageschema['expires']['form']['options']);
@@ -743,7 +751,7 @@ class AdminController extends Controller_2_1 {
 		$factory = new ModelFactory('WidgetInstanceModel');
 		$factory->order('weight');
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-			$factory->where('site = ' . MultiSiteHelper::GetCurrentSiteID());
+			$factory->whereGroup('or', ['site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID()]);
 		}
 
 		if($theme){
@@ -766,24 +774,26 @@ class AdminController extends Controller_2_1 {
 			$areas[$a]['widgets'][] = $wi;
 		}
 
-		$filters = new FilterForm();
-		$filters->setName('/admin/widgets');
-		$filters->hassort = true;
-		$filters->haspagination = true;
+		$table = new Core\ListingTable\Table();
+		$table->setName('/admin/widgets');
+		$table->setModelName('WidgetModel');
+		// Add in all the columns for this listing table.
+		$table->addColumn('Title', 'title');
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
+			$table->addColumn('Site', 'site', false);
+			$ms = true;
+		}
+		else{
+			$ms = false;
+		}
+		$table->addColumn('Base URL', 'baseurl');
+		$table->addColumn('Installable', 'installable');
+		$table->addColumn('Created', 'created');
 
-		$filters->setSortkeys(['title', 'baseurl', 'installable', 'created']);
-		$filters->getSortDirection('up');
-		$filters->load($request);
-
-		$factory = new ModelFactory('WidgetModel');
-		$filters->applyToFactory($factory);
-
-
-		$listings = $factory->get();
+		$table->loadFiltersFromRequest();
 
 		$view->title = 'All Widgets';
-		$view->assign('filters', $filters);
-		$view->assign('listings', $listings);
+		$view->assign('table', $table);
 		$view->assign('links', $links);
 		$view->assign('manager', $manager);
 		$view->assign('skins', $skinopts);
@@ -1011,6 +1021,9 @@ class AdminController extends Controller_2_1 {
 
 			$dat['weight'] = ++$counter;
 			$dat['access'] = $dat['widgetaccess'];
+
+			$w = WidgetModel::Construct($dat['baseurl']);
+			$dat['site'] = $w->get('site');
 
 			if(strpos($id, 'new') !== false){
 				$w = new WidgetInstanceModel();
