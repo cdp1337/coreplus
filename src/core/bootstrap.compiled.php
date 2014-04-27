@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 27 Apr 2014 04:43:55 -0400
+ * @compiled Sun, 27 Apr 2014 05:13:19 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1085,7 +1085,6 @@ define('__DMI_PDIR', ROOT_PDIR . 'core/libs/core/datamodel/');
 namespace Core\Datamodel {
 interface BackendInterface {
 public function execute(Dataset $dataset);
-public function _rawExecute($type, $string);
 public function tableExists($tablename);
 public function createTable($table, Schema $schema);
 public function modifyTable($table, Schema $schema);
@@ -2143,6 +2142,13 @@ if($v == '' || $v == '0000-00-00 00:00:00' || $v === null){
 $v = $default;
 }
 break;
+default:
+if($v === null){
+$v = $default;
+}
+break;
+}
+switch($type){
 case Model::ATT_TYPE_BOOL:
 if($v === true){
 $v = '1';
@@ -2161,11 +2167,6 @@ break;
 default:
 $v = '0';
 }
-}
-break;
-default:
-if($v === null){
-$v = $default;
 }
 break;
 }
@@ -2372,12 +2373,9 @@ return false;
 public function isnew() {
 return !$this->_exists;
 }
-public function changed($key = null){
+public function changed(){
 $s = self::GetSchema();
 foreach ($this->_data as $k => $v) {
-if($key !== null && $key != $k){
-continue;
-}
 if(!isset($s[$k])){
 continue;
 }
@@ -3345,12 +3343,7 @@ public static $Schema = array(
 'site' => array(
 'type' => Model::ATT_TYPE_SITE,
 'default' => -1,
-'form' => [
-'type' => 'system',
-'group' => 'Access & Advanced',
-'grouptype' => 'tabs',
-'description' => 'Please note, changing the site ID on an existing page may result in loss of data or unexpected results.',
-],
+'formtype' => 'system',
 'comment' => 'The site id in multisite mode, (or -1 if global)',
 ),
 'baseurl' => array(
@@ -3512,6 +3505,7 @@ This cache only applies to guest users and bots.',
 'pageviews' => array(
 'type' => Model::ATT_TYPE_INT,
 'formtype' => 'disabled',
+'default' => 0,
 'comment' => 'Number of page views',
 'model_audit_ignore' => true, // Custom key for the component "Model Audit".
 ),
@@ -3533,7 +3527,8 @@ This cache only applies to guest users and bots.',
 ),
 'popularity' => array(
 'type' => Model::ATT_TYPE_FLOAT,
-'default' => 0,
+'default' => 0.000,
+'precision' => '10,8',
 'comment' => 'Cache of the popularity score of this page',
 'formtype' => 'disabled',
 ),
@@ -3841,7 +3836,6 @@ public function setInsertable($name, $value){
 $insertables = $this->getLink('Insertable');
 foreach($insertables as $ins){
 if($ins->get('name') == $name){
-$ins->set('site', $this->get('site'));
 $ins->set('value', $value);
 return; // :)
 }
@@ -3903,8 +3897,6 @@ $this->setLink('RewriteMap', $rewrite);
 }
 }
 public function setFromForm(Form $form, $prefix = null){
-$this->getLink('Insertable');
-$this->getLink('PageMeta');
 parent::setFromForm($form, $prefix);
 if($form->getElement($prefix . '[rewrites]')){
 $rewrites = $form->getElement($prefix . '[rewrites]')->get('value');
@@ -3933,22 +3925,6 @@ $element->set('templatename', $this->getBaseTemplateName());
 }
 }
 public function addToFormPost(Form $form, $prefix){
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
-$form->switchElementType($prefix . '[site]', 'select');
-$el = $form->getElement($prefix . '[site]');
-$opts = [
-'-1' => 'Global Page',
-'0'  => 'Root-Only Page',
-];
-$fac = MultiSiteModel::FindRaw([], null, null);
-foreach($fac as $dat){
-if($dat['status'] != 'active'){
-continue;
-}
-$opts[ $dat['id'] ] = $dat['name'] . ' (' . $dat['id'] . ')';
-}
-$el->set( 'options', $opts );
-}
 $metasgroupname = 'Meta Information & URL (SEO)';
 $insertablesgroupname = 'Basic';
 $metasgroup = $form->getElement($metasgroupname);
@@ -4134,6 +4110,9 @@ if(!$created){
 return 0.000;
 }
 if(!$this->get('indexable')){
+return 0.000;
+}
+if($score == 0){
 return 0.000;
 }
 $order = log10($score);
@@ -13788,12 +13767,12 @@ define('HOST', $host);
 if (!is_dir(TMP_DIR)) {
 mkdir(TMP_DIR, 0777, true);
 }
-if(EXEC_MODE == 'WEB' && SSL_MODE == SSL_MODE_REQUIRED && !SSL){
+if(SSL_MODE == SSL_MODE_REQUIRED && !SSL){
 if(!DEVELOPMENT_MODE) header("HTTP/1.1 301 Moved Permanently");
 header('Location: ' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1));
 die('This site requires SSL, if it does not redirect you automatically, please <a href="' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
 }
-elseif(EXEC_MODE == 'WEB' && SSL_MODE == SSL_MODE_DISABLED && SSL){
+elseif(SSL_MODE == SSL_MODE_DISABLED && SSL){
 if(!DEVELOPMENT_MODE) header("HTTP/1.1 301 Moved Permanently");
 header('Location: ' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1));
 die('This site has SSL disabled, if it does not redirect you automatically, please <a href="' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
