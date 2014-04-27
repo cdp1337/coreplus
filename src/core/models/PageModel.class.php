@@ -54,7 +54,12 @@ class PageModel extends Model {
 		'site' => array(
 			'type' => Model::ATT_TYPE_SITE,
 			'default' => -1,
-			'formtype' => 'system',
+			'form' => [
+				'type' => 'system',
+				'group' => 'Access & Advanced',
+				'grouptype' => 'tabs',
+				'description' => 'Please note, changing the site ID on an existing page may result in loss of data or unexpected results.',
+			],
 			'comment' => 'The site id in multisite mode, (or -1 if global)',
 		),
 		'baseurl' => array(
@@ -759,6 +764,7 @@ class PageModel extends Model {
 
 			// I'm only interested in this one!
 			if($ins->get('name') == $name){
+				$ins->set('site', $this->get('site'));
 				$ins->set('value', $value);
 				return; // :)
 			}
@@ -874,6 +880,10 @@ class PageModel extends Model {
 	 */
 	public function setFromForm(Form $form, $prefix = null){
 
+		// Pull the meta and insertables to try to minimize data loss when changing the site id.
+		$this->getLink('Insertable');
+		$this->getLink('PageMeta');
+
 		// This will take care of all the standard elements.
 		parent::setFromForm($form, $prefix);
 
@@ -922,6 +932,28 @@ class PageModel extends Model {
 	 * @param string $prefix  The form prefix to use, ie: "page" or "model", etc.
 	 */
 	public function addToFormPost(Form $form, $prefix){
+
+		// If the user has access to manage sites globally, then enable that option!
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
+			$form->switchElementType($prefix . '[site]', 'select');
+			$el = $form->getElement($prefix . '[site]');
+
+			$opts = [
+				'-1' => 'Global Page',
+				'0'  => 'Root-Only Page',
+			];
+
+			$fac = MultiSiteModel::FindRaw([], null, null);
+			foreach($fac as $dat){
+				if($dat['status'] != 'active'){
+					continue;
+				}
+				$opts[ $dat['id'] ] = $dat['name'] . ' (' . $dat['id'] . ')';
+			}
+
+			$el->set( 'options', $opts );
+		}
+
 		// Get the groups that these additional elements will tack onto,
 		// and create them if necessary.
 		$metasgroupname = 'Meta Information & URL (SEO)';
