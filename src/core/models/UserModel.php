@@ -96,10 +96,12 @@ class UserModel extends Model {
 		),
 		'last_login' => array(
 			'type' => Model::ATT_TYPE_INT,
+			'default' => 0,
 			'comment' => 'The timestamp of the last login of this user',
 		),
 		'last_password' => array(
 			'type' => Model::ATT_TYPE_INT,
+			'default' => 0,
 			'comment' => 'The timestamp of the last password reset of this user',
 		),
 	);

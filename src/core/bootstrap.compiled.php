@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 27 Apr 2014 05:13:19 -0400
+ * @compiled Sun, 27 Apr 2014 05:44:50 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -5026,10 +5026,12 @@ public static $Schema = array(
 ),
 'last_login' => array(
 'type' => Model::ATT_TYPE_INT,
+'default' => 0,
 'comment' => 'The timestamp of the last login of this user',
 ),
 'last_password' => array(
 'type' => Model::ATT_TYPE_INT,
+'default' => 0,
 'comment' => 'The timestamp of the last password reset of this user',
 ),
 );
