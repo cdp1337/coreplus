@@ -218,6 +218,7 @@ class PageModel extends Model {
 		'pageviews' => array(
 			'type' => Model::ATT_TYPE_INT,
 			'formtype' => 'disabled',
+			'default' => 0,
 			'comment' => 'Number of page views',
 			'model_audit_ignore' => true, // Custom key for the component "Model Audit".
 		),
@@ -240,7 +241,8 @@ class PageModel extends Model {
 		),
 		'popularity' => array(
 			'type' => Model::ATT_TYPE_FLOAT,
-			'default' => 0,
+			'default' => 0.000,
+			'precision' => '10,8',
 			'comment' => 'Cache of the popularity score of this page',
 			'formtype' => 'disabled',
 		),
@@ -1237,6 +1239,10 @@ class PageModel extends Model {
 			return 0.000;
 		}
 
+		if($score == 0){
+			return 0.000;
+		}
+
 		// log(10)   = 1
 		// log(100)  = 2
 		// log(1000) = 3
@@ -1805,7 +1811,7 @@ class PageModel extends Model {
 		}
 		*/
 
-		// Tack on the "arguments" too, these are 
+		// Tack on the "arguments" too, these are
 
 		return array(
 			'controller' => $controller,
