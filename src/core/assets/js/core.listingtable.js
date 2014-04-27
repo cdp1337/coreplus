@@ -141,24 +141,43 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 	});
 
 	self.$table.find('.control-edit-toggle').click(function(){
-		var $this = $(this);
+		var $this = $(this),
+			$nearbyInputs = $this.closest('td').find(':input'),
+			isrecord = $this.closest('tr').hasClass('edit-record-buttons'),
+			$targetPointer;
 
-		if(self.mode == 'view'){
-			$table.find('.view').hide();
-			$table.find('.edit').show();
+		if($nearbyInputs.length > 0 && !isrecord){
+			// It's near an input field.  Show only this specific record and highlight the nearby input.
+			$targetPointer = $this.closest('tr');
+
+			// First, hide the rest of the edit links on the table.
+			$table.find('.edit').hide();
+			$table.find('.view').show();
+
+			// And show this specific record's edit links.
+			$targetPointer.find('.view').hide();
+			$targetPointer.find('.edit').show();
 			self.mode = 'edit';
 
-			// See if there's an input somewhere nearby.
-			if($this.closest('td').find(':input').length > 0){
-				$this.closest('td').find(':input').first().select();
-			}
+			// Not to mention, show the edit button records.
+			$table.find('.edit-record-buttons').show();
+
+			// Select that first input field.
+			$nearbyInputs.first().select();
 		}
 		else{
-			$table.find('.view').show();
-			$table.find('.edit').hide();
-			self.mode = 'view';
+			// Full table edit, behave as normal.
+			if(self.mode == 'view'){
+				$table.find('.view').hide();
+				$table.find('.edit').show();
+				self.mode = 'edit';
+			}
+			else{
+				$table.find('.view').show();
+				$table.find('.edit').hide();
+				self.mode = 'view';
+			}
 		}
-
 		return false;
 	});
 
