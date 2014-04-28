@@ -34,8 +34,32 @@ table.listing {
 		vertical-align: top;
 	}
 
+	/* Hidden columns, set by javascript. */
 	.column-optional {
-		/* Optional columns are hidden by default. */
-		visibility: collapse;
+		display: none;
+	}
+
+	&.listing-table-sortable {
+		th[data-sortkey] {
+			cursor: pointer;
+		}
+
+		th i.sort-icon {
+			float: right;
+		}
+		th i.sort-icon.other {
+			visibility: hidden;
+		}
+		th:hover i.sort-icon.other {
+			visibility: visible;
+		}
+		th:hover i.sort-icon.current {
+			visibility: hidden;
+		}
+	}
+
+	// by default, edit is hidden.
+	.edit {
+		display: none;
 	}
 }

@@ -501,8 +501,16 @@ class AdminController extends Controller_2_1 {
 			$componentopts[$c->getKeyName()] = $c->getName();
 		}
 
+		$pageschema = PageModel::GetSchema();
+
 		$table = new Core\ListingTable\Table();
+
+		$table->setLimit(20);
+
+		// Set the model that this table will be pulling data from.
 		$table->setModelName('PageModel');
+
+		// Gimme filters!
 		$table->addFilter(
 			'text',
 			[
@@ -549,16 +557,30 @@ class AdminController extends Controller_2_1 {
 				'value' => 'no_admin',
 			]
 		);
+
+		// Add in all the columns for this listing table.
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
+			$table->addColumn('Site', 'site', false);
+			$ms = true;
+		}
+		else{
+			$ms = false;
+		}
 		$table->addColumn('Title', 'title');
 		$table->addColumn('URL', 'rewriteurl');
-		$table->addColumn('Views', 'pageviews', true);
+		$table->addColumn('Views', 'pageviews', false);
 		$table->addColumn('Score', 'popularity');
 		$table->addColumn('Cache', 'expires');
-		$table->addColumn('Created', 'created', true);
+		$table->addColumn('Created', 'created', false);
+		$table->addColumn('Last Updated', 'updated', false);
 		$table->addColumn('Published', 'published');
 		$table->addColumn('SEO Title');
-		$table->addColumn('SEO Description / Teaser');
+		$table->addColumn('SEO Description / Teaser', null, false);
 		$table->addColumn('Access', 'access');
+		$table->addColumn('Component', 'component', false);
+
+		// This page will also feature a quick-edit feature.
+		$table->setEditFormCaller('AdminController::PagesSave');
 
 		$table->loadFiltersFromRequest();
 
@@ -571,7 +593,10 @@ class AdminController extends Controller_2_1 {
 		//$view->assign('listings', $listings);
 		$view->assign('links', $links);
 
+		$view->assign('multisite', $ms);
 		$view->assign('listing', $table);
+		$view->assign('page_opts', PageModel::GetPagesAsOptions(false, '-- Select Parent URL --'));
+		$view->assign('expire_opts', $pageschema['expires']['form']['options']);
 	}
 
 	/**
@@ -726,7 +751,7 @@ class AdminController extends Controller_2_1 {
 		$factory = new ModelFactory('WidgetInstanceModel');
 		$factory->order('weight');
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-			$factory->where('site = ' . MultiSiteHelper::GetCurrentSiteID());
+			$factory->whereGroup('or', ['site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID()]);
 		}
 
 		if($theme){
@@ -749,24 +774,26 @@ class AdminController extends Controller_2_1 {
 			$areas[$a]['widgets'][] = $wi;
 		}
 
-		$filters = new FilterForm();
-		$filters->setName('/admin/widgets');
-		$filters->hassort = true;
-		$filters->haspagination = true;
+		$table = new Core\ListingTable\Table();
+		$table->setName('/admin/widgets');
+		$table->setModelName('WidgetModel');
+		// Add in all the columns for this listing table.
+		$table->addColumn('Title', 'title');
+		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
+			$table->addColumn('Site', 'site', false);
+			$ms = true;
+		}
+		else{
+			$ms = false;
+		}
+		$table->addColumn('Base URL', 'baseurl');
+		$table->addColumn('Installable', 'installable');
+		$table->addColumn('Created', 'created');
 
-		$filters->setSortkeys(['title', 'baseurl', 'installable', 'created']);
-		$filters->getSortDirection('up');
-		$filters->load($request);
-
-		$factory = new ModelFactory('WidgetModel');
-		$filters->applyToFactory($factory);
-
-
-		$listings = $factory->get();
+		$table->loadFiltersFromRequest();
 
 		$view->title = 'All Widgets';
-		$view->assign('filters', $filters);
-		$view->assign('listings', $listings);
+		$view->assign('table', $table);
 		$view->assign('links', $links);
 		$view->assign('manager', $manager);
 		$view->assign('skins', $skinopts);
@@ -994,6 +1021,9 @@ class AdminController extends Controller_2_1 {
 
 			$dat['weight'] = ++$counter;
 			$dat['access'] = $dat['widgetaccess'];
+
+			$w = WidgetModel::Construct($dat['baseurl']);
+			$dat['site'] = $w->get('site');
 
 			if(strpos($id, 'new') !== false){
 				$w = new WidgetInstanceModel();
@@ -1248,6 +1278,61 @@ class AdminController extends Controller_2_1 {
 			$n = substr($n, 7, -1);
 
 			ConfigHandler::Set('/core/page/' . $n, $e->get('value'));
+		}
+
+		return true;
+	}
+
+	/**
+	 * The save handler for /admin/pages quick edit.
+	 *
+	 * @param Form $form
+	 *
+	 * @return bool
+	 */
+	public static function PagesSave(Form $form) {
+		$models = [];
+
+		foreach($form->getElements() as $el){
+			/** @var FormElement $el */
+			$n = $el->get('name');
+
+			// i only want model
+			if(strpos($n, 'model[') !== 0){
+				continue;
+			}
+
+			$baseurl = substr($n, 6, strpos($n, ']')-6);
+			$n = substr($n, strpos($n, ']')+1);
+
+			// Is this a meta attribute?
+			if(strpos($n, '[meta][') === 0){
+				$ismeta = true;
+				$n = substr($n, 7, -1);
+			}
+			else{
+				$ismeta = false;
+				$n = substr($n, 1, -1);
+			}
+
+			// Make sure the model is available.
+			if(!isset($models[$baseurl])){
+				$models[$baseurl] = PageModel::Construct($baseurl);
+			}
+			/** @var PageModel $p */
+			$p = $models[$baseurl];
+
+			if($ismeta){
+				$p->setMeta($n, $el->get('value'));
+			}
+			else{
+				$p->set($n, $el->get('value'));
+			}
+		}
+
+		foreach($models as $p){
+			/** @var PageModel $p */
+			$p->save();
 		}
 
 		return true;

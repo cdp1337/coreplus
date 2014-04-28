@@ -10,58 +10,118 @@
 {$listing->render('head')}
 {foreach $listing as $entry}
 	<tr>
+		{if $multisite}
+			<td>
+				{if $entry.site == -1}
+					Global
+				{elseif $entry.site == 0}
+					Root-Only
+				{else}
+					Local ({$entry.site})
+				{/if}
+			</td>
+		{/if}
 		<td>
-			{if $entry->getParent()}
-				{$entry->getParent()->get('title')} &raquo;<br/>
-			{/if}
-			{$entry.title}
-		</td>
-		<td>{$entry.rewriteurl}</td>
-		<td>{$entry.pageviews}</td>
-		<td>
-			{if $entry.indexable}
-				{$entry.popularity}
-			{else}
-				N/A
-			{/if}
-		</td>
-		<td>
-			{if $entry.expires == 0}
-				Disabled
-			{elseif $entry.expires < 60}
-				{$entry.expires} secs
-			{elseif $entry.expires < 3600}
-				{$entry.expires/60} min
-			{else}
-				{$entry.expires/3600} hr
-			{/if}
-		</td>
-		<td>{date format="SD" $entry.created}</td>
-		<td>
-			{if $entry.published}
-				{date format="SD" $entry.published}
-			{else}
-				Not Published
-			{/if}
+			<div class="view">
+				{if $entry->getParent()}
+					{$entry->getParent()->get('title')} &raquo;<br/>
+				{/if}
+				{$entry.title}
+			</div>
+			<div class="edit">
+				{add_form_element form=$listing type="select" options=$page_opts value="`$entry.parenturl`" name="model[`$entry.baseurl`][parenturl]"}
+				{add_form_element form=$listing type="text" value="`$entry.title`" name="model[`$entry.baseurl`][title]"}
+			</div>
 		</td>
 		<td>
-			{$entry->getSEOTitle()}
+			<div class="view">{$entry.rewriteurl}</div>
+			<div class="edit">{add_form_element form=$listing type="text" value="`$entry.rewriteurl`" name="model[`$entry.baseurl`][rewriteurl]"}</div>
 		</td>
 		<td>
-			{$entry->getTeaser()}
+			<div class="view">{$entry.pageviews}</div>
+			<div class="edit">&nbsp;</div>
 		</td>
 		<td>
-			{if $entry.access == 'g:admin'}
-				Only Super Admins
-			{elseif $entry.access == '*'}
-				Anyone, (guests and users)
-			{elseif $entry.access == 'g:authenticated'}
-				Only Authenticated Users
-			{elseif $entry.access == '!g:authenticated'}
-				Only Anonymous Guests
-			{else}
-				{$entry.access}
-			{/if}
+			<div class="view">
+				{if $entry.indexable}
+					{$entry.popularity}
+				{else}
+					N/A
+				{/if}
+			</div>
+			<div class="edit">&nbsp;</div>
+		</td>
+		<td>
+			<div class="view">
+				{if $entry.expires == 0}
+					Disabled
+				{elseif $entry.expires < 60}
+					{$entry.expires} secs
+				{elseif $entry.expires < 3600}
+					{$entry.expires/60} min
+				{else}
+					{$entry.expires/3600} hr
+				{/if}
+			</div>
+			<div class="edit">
+				{add_form_element form=$listing type="select" options=$expire_opts value="`$entry.expires`" name="model[`$entry.baseurl`][expires]"}
+			</div>
+		</td>
+		<td>
+			<div class="view">{date format="SD" $entry.created}</div>
+			<div class="edit">&nbsp;</div>
+		</td>
+		<td>
+			<div class="view">{date format="SD" $entry.updated}</div>
+			<div class="edit">&nbsp;</div>
+		</td>
+		<td>
+			<div class="view">
+				{if $entry.published}
+					{date format="SD" $entry.published}
+				{else}
+					Not Published
+				{/if}
+			</div>
+			<div class="edit">
+				{add_form_element form=$listing type="select" options=['published', 'draft'] value="`$entry.published_status`" name="model[`$entry.baseurl`][published_status]"}
+			</div>
+		</td>
+		<td>
+			<div class="view">
+				{$entry->getSEOTitle()}
+			</div>
+			<div class="edit">
+				{add_form_element form=$listing type="text" value="`$entry->getMetaValue('title')`" name="model[`$entry.baseurl`][meta][title]"}
+			</div>
+		</td>
+		<td>
+			<div class="view">
+				{$entry->getTeaser()}
+			</div>
+			<div class="edit">
+				{add_form_element form=$listing type="textarea" value="`$entry->getMetaValue('description')`" name="model[`$entry.baseurl`][meta][description]"}
+			</div>
+		</td>
+		<td>
+			<div class="view">
+				{if $entry.access == 'g:admin'}
+					Only Super Admins
+				{elseif $entry.access == '*'}
+					Anyone, (guests and users)
+				{elseif $entry.access == 'g:authenticated'}
+					Only Authenticated Users
+				{elseif $entry.access == '!g:authenticated'}
+					Only Anonymous Guests
+				{else}
+					{$entry.access}
+				{/if}
+			</div>
+			<div class="edit">&nbsp;</div>
+		</td>
+		<td>
+			<div class="view">{$entry.component}</div>
+			<div class="edit">&nbsp;</div>
 		</td>
 
 		<td>

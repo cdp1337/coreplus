@@ -13,22 +13,22 @@
 		 * @return string
 		 */
 
-		assemble: function($node){
+		Assemble: function(nodeid){
 
-			var id      = $node.attr('id'),
-				user    = Core.Strings.rot13( $node.attr('user') ),
-				domain  = $node.attr('domain'),
-				tld     = $node.attr('tld');
+			var node   = document.getElementById(nodeid),
+				user   = Core.Strings.rot13( node.dataset.user ),
+				domain = node.dataset.domain,
+				tld    = node.dataset.tld;
 
 			var address = user + '@' + domain + '.' + tld;
 
-			$node.html(address).attr('href', 'mailto:' + address);
+			node.innerHTML = address;
+			node.setAttribute('href', 'mailto:' + address);
 		}
-
 	};
 
-	String.prototype.assemble = function(){
-		return Core.Strings.assemble(this.toString());
-	};
+	// String.prototype.assemble = function(){
+	// 	return Core.Strings.assemble(this.toString());
+	// };
 
 })();

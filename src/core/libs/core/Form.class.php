@@ -767,6 +767,7 @@ class Form extends FormGroup {
 		'text'             => 'FormTextInput',
 		'textarea'         => 'FormTextareaInput',
 		'time'             => 'FormTimeInput',
+		'user'             => 'FormUserInput',
 		'wysiwyg'          => 'FormTextareaInput',
 	);
 

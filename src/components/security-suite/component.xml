@@ -2,15 +2,17 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.0" name="Security-Suite" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.1.0" operation="ge"/>
+		<require name="core" type="component" version="3.2.2" operation="ge"/>
 		<require name="phpwhois" type="component"/>
 	</requires>
 	<configs>
 		<config key="/security/site_password" description="General password required to access this site.  This is useful for sites still in development." type="string" default=""/>
+		<config key="/security/spam_threshold" description="The score threshold for content before it is marked as spam." default="10" type="int"/>
 	</configs>
 	<hooks>
 		<hook name="/core/components/loaded" call="SecuritySuite\StopForumSpam::CheckIP"/>
 		<hook name="/core/components/loaded" call="SecuritySuite\IpBlacklistHelper::CheckIP"/>
+		<hook name="/core/components/loaded" call="SecuritySuite\IpBlacklistHelper::Check404Pages"/>
 		<hook name="/core/components/loaded" call="SecuritySuite\SimpleSitePassword::Check"/>
 		<hook name="/cron/daily" call="StopForumSpam::HookDaily"/>
 		<hook name="/cron/daily" call="IpBlacklistHelper::CleanupHook"/>
@@ -21,6 +23,7 @@
 		<page access="g:admin" admin="1" baseurl="/security/blacklistip" title="Blacklisted IP addresses" group="Security"/>
 		<page access="*" admin="0" baseurl="/wphoneypot/wplogin" rewriteurl="/wp-login" selectable="0" title="WP Login" indexable="0"/>
 		<page access="*" admin="0" baseurl="/wphoneypot/wpadmin" rewriteurl="/wp-admin" selectable="0" title="WP Admin" indexable="0"/>
+		<page baseurl="/security/spam/keywords" title="Spam Keywords" group="Configure" access="g:admin" admin="1"/>
 	</pages>
 	<permissions>
 		<permission key="/security/viewlog" description="View Security Log"/>
@@ -40,29 +43,36 @@
 		Includes anti-spam by stopforumspam.com, IP Blacklist, and site-wide password protection.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="eea9ebcc4cbd9b16ab44c60372119ce8"/>
+		<file filename="CHANGELOG" md5="05da38c2a157b8d8f9fb372b202581e0"/>
 		<file filename="controllers/SecurityController.php" md5="13ee9c6aa75bd26f573756067677410d">
 			<controller name="SecurityController"/>
 		</file>
 		<file filename="controllers/WPHoneypotController.php" md5="4b98e4b03b43f95ff146b862d2139e98">
 			<controller name="WPHoneypotController"/>
 		</file>
-		<file filename="libs/securitysuite/IpBlacklistHelper.php" md5="005b83e57e7f3862a6a6b84df7cebaee">
+		<file filename="libs/securitysuite/IpBlacklistHelper.php" md5="69daca35e73dbf638b052ea6f3aced8b">
 			<class name="SecuritySuite\IpBlacklistHelper"/>
 		</file>
-		<file filename="libs/securitysuite/SimpleSitePassword.php" md5="2bfe64cacf1fba330452c512c47e1c9c">
+		<file filename="libs/securitysuite/SimpleSitePassword.php" md5="f202ef9f6063c5f44976be98658a1c40">
 			<class name="SecuritySuite\SimpleSitePassword"/>
 		</file>
 		<file filename="libs/securitysuite/StopForumSpam.class.php" md5="e5d576a06e7b5707d026abce06719330">
 			<class name="SecuritySuite\StopForumSpam"/>
 		</file>
+		<file filename="libs/securitysuite/spamcan/SpamCheck.php" md5="0b8e34dc819dfe84fc34594ac694a39c">
+			<class name="SecuritySuite\SpamCan\SpamCheck"/>
+			<class name="SecuritySuite\SpamCan\SpamCheckResult"/>
+		</file>
 		<file filename="listed_ip_1.zip" md5="9e6a0866ba2c7b797b0bbe39af7a6736"/>
 		<file filename="listed_ip_1_all.zip" md5="aabf67226a6d5d2bebcf6cc4e6a8c187"/>
-		<file filename="models/IpBlacklistModel.php" md5="109a78ea19babc9be91c8866d2e235e2">
+		<file filename="models/IpBlacklistModel.php" md5="3d314585d0e3663dac4477eea39cf6d1">
 			<class name="IpBlacklistModel"/>
 		</file>
 		<file filename="models/SecurityLogModel.php" md5="a2f1c71c47ee33fff7de2e57447cb056">
 			<class name="SecurityLogModel"/>
+		</file>
+		<file filename="models/SpamHamKeywordModel.php" md5="3a1c803167863f196cab47bab4e9d1e9">
+			<class name="SpamHamKeywordModel"/>
 		</file>
 		<file filename="models/sfsBlacklistModel.php" md5="4d6d7c012a546ea0f6b54215961af3fa">
 			<class name="sfsBlacklistModel"/>

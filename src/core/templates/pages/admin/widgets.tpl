@@ -81,89 +81,79 @@
 
 
 
-
-
-{$filters->render()}
-
-{$filters->pagination()}
-<table class="listing column-sortable">
+{$table->render('head')}
+{foreach $table as $entry}
 	<tr>
-		<th sortkey="title">Title</th>
-		<th sortkey="baseurl">Base URL</th>
-		<th>Installable</th>
-		<th sortkey="created">Created</th>
-		<th width="50">&nbsp;</th>
+		<td>
+			<div class="widget-dragsource" style="position: relative;">
+				<input type="hidden" class="baseurl" name="widgets[0][baseurl]" value="{$entry.baseurl}"/>
+				<input type="hidden" class="widgetarea" name="widgets[0][widgetarea]" value=""/>
+				<input type="hidden" class="widgetaccess" name="widgets[0][widgetaccess]" value="*"/>
+
+				<span class="widget-title-listing">
+					<i class="icon-arrows"></i>
+					{$entry.title}
+				</span>
+
+				<span class="widget-title">
+					{if $entry.title}
+						{$entry.title} <br/>
+						[{$entry.baseurl}]
+					{else}
+						{$entry.baseurl}
+					{/if}
+				</span>
+
+				<div class="widget-controls">
+					<a href="#" class="control control-edit"><i class="icon-edit"></i></a>&nbsp;
+					<a href="#" class="control control-delete"><i class="icon-remove"></i></a>
+				</div>
+			</div>
+		</td>
+		<td>
+			{$entry.site}
+		</td>
+		<td>{$entry.baseurl}</td>
+		<td>{$entry.installable}</td>
+		<td>{date format="SD" $entry.created}</td>
+
+		<td>
+			{if $manager}
+			<ul class="controls">
+				{if $entry.editurl}
+					<li>
+						{a href="`$entry.editurl`"}
+							<i class="icon-edit"></i>
+							<span>Edit</span>
+						{/a}
+					</li>
+				{/if}
+				{if $entry.deleteurl}
+					<li>
+						{a href="`$entry.deleteurl`" confirm="Are you sure you want to completely delete this widget?"}
+							<i class="icon-remove"></i>
+							<span>Delete</span>
+						{/a}
+					</li>
+				{/if}
+			</ul>
+			{/if}
+		</td>
 	</tr>
-	{foreach $listings as $entry}
+
+{/foreach}
+
+{if $manager}
+	{foreach $links as $l}
 		<tr>
 			<td>
-				<div class="widget-dragsource" style="position: relative;">
-					<input type="hidden" class="baseurl" name="widgets[0][baseurl]" value="{$entry.baseurl}"/>
-					<input type="hidden" class="widgetarea" name="widgets[0][widgetarea]" value=""/>
-					<input type="hidden" class="widgetaccess" name="widgets[0][widgetaccess]" value="*"/>
-
-					<span class="widget-title-listing">
-						<i class="icon-arrows"></i>
-						{$entry.title}
-					</span>
-
-					<span class="widget-title">
-						{if $entry.title}
-							{$entry.title} <br/>
-							[{$entry.baseurl}]
-						{else}
-							{$entry.baseurl}
-						{/if}
-					</span>
-
-					<div class="widget-controls">
-						<a href="#" class="control control-edit"><i class="icon-edit"></i></a>&nbsp;
-						<a href="#" class="control control-delete"><i class="icon-remove"></i></a>
-					</div>
-				</div>
+				{a href="`$l.baseurl`" title="Create New `$l.title` Widget"}
+					<i class="icon-add"></i>
+					<span>New {$l.title} Widget</span>
+				{/a}
 			</td>
-			<td>{$entry.baseurl}</td>
-			<td>{$entry.installable}</td>
-			<td>{date format="SD" $entry.created}</td>
-
-			<td>
-				{if $manager}
-				<ul class="controls">
-					{if $entry.editurl}
-						<li>
-							{a href="`$entry.editurl`"}
-								<i class="icon-edit"></i>
-								<span>Edit</span>
-							{/a}
-						</li>
-					{/if}
-					{if $entry.deleteurl}
-						<li>
-							{a href="`$entry.deleteurl`" confirm="Are you sure you want to completely delete this widget?"}
-								<i class="icon-remove"></i>
-								<span>Delete</span>
-							{/a}
-						</li>
-					{/if}
-				</ul>
-				{/if}
-			</td>
+			<td colspan="4"></td>
 		</tr>
-
 	{/foreach}
-
-	{if $manager}
-		{foreach $links as $l}
-			<tr>
-				<td>
-					{a href="`$l.baseurl`" title="Create New `$l.title` Widget"}
-						<i class="icon-add"></i>
-						<span>New {$l.title} Widget</span>
-					{/a}
-				</td>
-				<td colspan="4"></td>
-			</tr>
-		{/foreach}
-	{/if}
-</table>
-{$filters->pagination()}
+{/if}
+{$table->render('foot')}

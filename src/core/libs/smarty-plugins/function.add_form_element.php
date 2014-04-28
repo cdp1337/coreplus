@@ -26,29 +26,33 @@
  * @return string
  * @throws SmartyException
  */
-function smarty_function_geoiplookup($params, $template){
+function smarty_function_add_form_element($params, $template){
 
-	$ip = $params[0];
-	$getflag = isset($params['flag']) ? $params['flag'] : true;
+	if(!isset($params['form'])){
+		throw new SmartyException('{add_form_element} requires a form attribute!');
+	}
 
-	$lookup = new \geocode\IPLookup($ip);
-
-	if($getflag){
-		$flag = 'assets/images/iso-country-flags/png-country-4x3/res-640x480/' . strtolower($lookup->country) . '.png';
-		$file = \Core\Filestore\Factory::File($flag);
-
-		if($file->exists()){
-			$out = '<img src="' . $file->getPreviewURL('20x20') . '" title="' . $lookup->country . '" alt="' . $lookup->country . '"/> ';
-		}
-		else{
-			$out = '';
-		}
+	if($params['form'] instanceof Form){
+		$form = $params['form'];
+	}
+	elseif($params['form'] instanceof \Core\ListingTable\Table){
+		$form = $params['form']->getEditForm();
 	}
 	else{
-		$out = '';
+		throw new SmartyException('Unsupported value provided for "form", please ensure it is a valid Form object!');
 	}
 
-	$out .= $lookup->city . ', ' . $lookup->province;
+	$type = isset($params['type']) ? $params['type'] : 'text';
 
-	return $out;
+	$element = FormElement::Factory($type, $params);
+
+	$form->addElement($element);
+
+	// Assign or render?
+	if(isset($params['assign'])){
+		$template->assign($params['assign'], $element->render());
+	}
+	else{
+		echo $element->render();
+	}
 }

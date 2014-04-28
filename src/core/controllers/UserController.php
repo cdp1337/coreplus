@@ -137,6 +137,7 @@ class UserController extends Controller_2_1{
 		$view->assign('user', $user);
 		$view->assign('form', $form);
 		$view->assign('logins', $logins);
+		$view->assign('profiles', json_decode($user->get('json:profiles'), true));
 
 		return null;
 	}
@@ -212,6 +213,63 @@ class UserController extends Controller_2_1{
 		if($manager){
 			//$view->addBreadcrumb('User Administration', '/user/admin');
 		}
+	}
+
+	/**
+	 * Function to edit the user's connected profiles.
+	 */
+	public function connectedprofiles(){
+		$view    = $this->getView();
+		$req     = $this->getPageRequest();
+		$userid  = $req->getParameter(0);
+		$manager = \Core\user()->checkAccess('p:/user/users/manage'); // Current user an admin?
+
+		if($userid === null) $userid = \Core\user()->get('id'); // Default to current user.
+
+		// Only allow this if the user is either the same user or has the user manage permission.
+		if(!($userid == \Core\user()->get('id') || $manager)){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		/** @var UserModel $user */
+		$user = UserModel::Construct($userid);
+		// I will be dealing with only one custom field...
+		$jsonprofiles = $user->get('json:profiles');
+		$profiles = json_decode($jsonprofiles, true);
+
+		if($req->isPost()){
+			// Update the new profiles.... yay
+			$error = false;
+			$profiles = array();
+			foreach($_POST['type'] as $k => $v){
+				// Check that this looks like a URL.
+				if(!preg_match(Model::VALIDATION_URL_WEB, $_POST['url'][$k])){
+					$error = true;
+					Core::SetMessage($_POST['url'][$k] . ' does not appear to be a valid URL!  Please ensure that it starts with http:// or https://', 'error');
+				}
+
+				$profiles[] = array(
+					'type' => $_POST['type'][$k],
+					'url' => $_POST['url'][$k],
+					'title' => $_POST['title'][$k],
+				);
+			}
+
+			if(!$error){
+				$user->set('json:profiles', json_encode($profiles));
+				$user->save();
+				Core::SetMessage('Updated profiles successfully', 'success');
+				Core::GoBack();
+			}
+			else{
+				$jsonprofiles = json_encode($profiles);
+			}
+		}
+
+		//$view->addBreadcrumb($user->getDisplayName(), UserSocialHelper::ResolveProfileLinkById($user->get('id')));
+		$view->title = 'Edit Connected Profiles';
+		$view->assign('profiles_json', $jsonprofiles);
+		$view->assign('profiles', $profiles);
 	}
 
 	/**

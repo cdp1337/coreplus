@@ -120,6 +120,10 @@ class Schema {
 				}
 				continue;
 			}
+			// Conversely, if *that* column is an alias, I can also safely skip it.
+			if($dat->type == \Model::ATT_TYPE_ALIAS){
+				continue;
+			}
 
 			if(($colchange = $thiscol->getDiff($dat)) !== null){
 				$diffs[] = array(
@@ -131,8 +135,14 @@ class Schema {
 
 		$a_order = $this->order;
 		foreach($this->definitions as $name => $dat){
-			// If A has a column but B does not, drop that from the b order so the checks are accurate.
-			if(!$schema->getColumn($name)) unset($a_order[array_search($name, $a_order)]);
+			if(!$schema->getColumn($name)){
+				// If A has a column but B does not, drop that from the b order so the checks are accurate.
+				unset($a_order[array_search($name, $a_order)]);
+			}
+			elseif($schema->getColumn($name)->type == \Model::ATT_TYPE_ALIAS){
+				// If the other column is an alias, it also doesn't matter.
+				unset($a_order[array_search($name, $a_order)]);
+			}
 		}
 
 		// Check the order of them.
@@ -147,7 +157,7 @@ class Schema {
 		$thisidx = '';
 		foreach($this->indexes as $name => $cols) $thisidx .= ';' . $name . '-' . implode(',', $cols);
 		$thatidx = '';
-		foreach($this->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
+		foreach($schema->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
 
 		if($thisidx != $thatidx){
 			$diffs[] = array(

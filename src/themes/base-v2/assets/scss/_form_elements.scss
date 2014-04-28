@@ -187,6 +187,13 @@ $form_element_error_color: #6c0000;
 	&.formpagemetaauthorinput.user-invalid .meta-author-valid-indicator {
 		display: none;
 	}
+
+	&.formuserinput.user-valid .user-invalid-indicator {
+		display: none;
+	}
+	&.formuserinput.user-invalid .user-valid-indicator {
+		display: none;
+	}
 }
 
 
@@ -354,6 +361,21 @@ $form_element_error_color: #6c0000;
 				position: absolute;
 				left: 8px;
 				top: 4px;
+			}
+		}
+	}
+
+	.formelement.formuserinput {
+		/* User input styles */
+		.form-element-value {
+			input {
+				padding-left: 24px;
+				width: 93%;
+			}
+			.user-indicator {
+				position: absolute;
+				left: 8px;
+				top: 35%;
 			}
 		}
 	}
@@ -532,6 +554,21 @@ $form_element_error_color: #6c0000;
 				width: 93%;
 			}
 			.meta-author-indicator {
+				position: absolute;
+				left: 8px;
+				top: 4px;
+			}
+		}
+	}
+
+	.formelement.formuserinput {
+		/* Meta-Author input styles */
+		.form-element-value {
+			input {
+				padding-left: 24px;
+				width: 93%;
+			}
+			.user-indicator {
 				position: absolute;
 				left: 8px;
 				top: 4px;
@@ -718,6 +755,21 @@ $form_element_error_color: #6c0000;
 				width: 93%;
 			}
 			.meta-author-indicator {
+				position: absolute;
+				left: 8px;
+				top: 4px;
+			}
+		}
+	}
+
+	.formelement.formuserinput {
+		/* Meta-Author input styles */
+		.form-element-value {
+			input {
+				padding-left: 24px;
+				width: 93%;
+			}
+			.user-indicator {
 				position: absolute;
 				left: 8px;
 				top: 4px;

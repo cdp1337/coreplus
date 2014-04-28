@@ -576,7 +576,7 @@ class FileLocal implements Filestore\File {
 	 *
 	 * @param string $dimensions
 	 *
-	 * @return Filestore\File
+	 * @return Filestore\File|null
 	 */
 	public function getQuickPreviewFile($dimensions = '300x300'){
 		//var_dump('Requesting quick file preview for ' . __CLASS__);
@@ -594,6 +594,13 @@ class FileLocal implements Filestore\File {
 
 			// Return a 404 image.
 			$file = Factory::File('assets/images/mimetypes/notfound.png');
+
+			if(!$file->exists()){
+				// If the 404 image for this 404 file couldn't be located, then just stop.
+				trigger_error('The 404 image could not be located.', E_USER_WARNING);
+				return null;
+			}
+
 			$preview = $file->getPreviewFile($dimensions);
 		}
 		elseif ($this->isPreviewable()) {

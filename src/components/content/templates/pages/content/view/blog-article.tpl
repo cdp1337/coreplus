@@ -1,8 +1,12 @@
 <div itemscope itemtype="http://schema.org/BlogPosting" class="blog-article" xmlns="http://www.w3.org/1999/html">
 
 	<div class="blog-article-posting-stats">
-		{if $page->getAuthor() && Core::IsComponentAvailable('user-social')}
-			{widget baseurl="/userprofile/badge" user=$page->getAuthor() title="Posted By" orientation="right"}
+		{if $page->getAuthor()}
+			{if Core::IsComponentAvailable('user-social')}
+				{widget baseurl="/userprofile/badge" user=$page->getAuthor() title="Posted By" orientation="right"}
+			{elseif Core::IsComponentAvailable('team')}
+				{widget baseurl="/teambadge/execute" user=$page->getAuthor() title="Posted By" orientation="right"}
+			{/if}
 		{/if}
 
 		{if $page->isPublished()}

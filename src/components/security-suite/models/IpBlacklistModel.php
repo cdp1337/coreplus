@@ -90,8 +90,9 @@ class IpBlacklistModel extends Model{
 	);
 
 	public static $Indexes = array(
-		'primary' => array('id'),
-		'unique:ip_addr' => array('ip_addr'),
+		'primary' => ['id'],
+		'ip_addr' => ['ip_addr'],
+		'expire_ip' => ['expires', 'ip_addr'],
 	);
 
 	/**

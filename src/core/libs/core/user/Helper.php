@@ -354,6 +354,12 @@ abstract class Helper{
 				'link' => '/user/edit/' . $user->get('id'),
 			);
 
+			$a[] = array(
+				'title' => 'Public Profiles',
+				'icon' => 'link',
+				'link' => '/user/connectedprofiles/' . $user->get('id'),
+			);
+
 			// Even though this user has admin access, he/she cannot remove his/her own account!
 			if(!$selfaccount){
 				$a[] = array(

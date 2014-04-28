@@ -112,7 +112,11 @@ function smarty_function_img($params, $template){
 	// To improve the perception of performance, that can be offloaded to the browser requesting the <img/> contents.
 	$previewfile = $d ? $f->getQuickPreviewFile($d) : $f;
 
-	if(!$previewfile->exists()){
+	if(!$previewfile){
+		$attributes['src'] = '#';
+		$attributes['title'] = 'No preview files available!';
+	}
+	elseif(!$previewfile->exists()){
 		// Ok, it doesn't exist... return a link to the controller to render this file.
 		$attributes['src'] = Core::ResolveLink('/file/preview') . '?f=' . $f->getFilenameHash() . '&d=' . $d;
 	}

@@ -64,6 +64,9 @@ class Table implements \Iterator {
 	/** @var \FilterForm|null The underlying FilterForm to handle pagination and filters on this listing table. */
 	private $_filters;
 
+	/** @var \Form|null The underlying Form object used with quick-edit on this listing table. */
+	private $_editform;
+
 	/** @var array The columns on this listing table. */
 	private $_columns = [];
 
@@ -156,6 +159,20 @@ class Table implements \Iterator {
 		return $this->getFilters()->getTotalCount();
 	}
 
+	/**
+	 * Get the edit form for this listing table.
+	 *
+	 * @return \Form
+	 */
+	public function getEditForm(){
+		if($this->_editform === null){
+			$this->_editform = new \Form();
+			$this->_editform->set('orientation', 'vertical');
+		}
+
+		return $this->_editform;
+	}
+
 
 
 	//-----------------------------------------------------------------------\\
@@ -180,13 +197,13 @@ class Table implements \Iterator {
 	 *
 	 * @param string      $title
 	 * @param string|null $sortkey
-	 * @param boolean     $hidden
+	 * @param boolean     $visible
 	 */
-	public function addColumn($title, $sortkey = null, $hidden = false){
+	public function addColumn($title, $sortkey = null, $visible = true){
 		$c = new Column();
 		$c->title = $title;
 		$c->sortkey = $sortkey;
-		$c->hidden = $hidden;
+		$c->visible = $visible;
 		$this->_columns[] = $c;
 
 		if($sortkey){
@@ -216,6 +233,24 @@ class Table implements \Iterator {
 		if($this->_filters !== null){
 			$this->_filters->setName($this->_name);
 		}
+	}
+
+	/**
+	 * Set the callsmethod attribute on the edit form.
+	 *
+	 * @param string $method
+	 */
+	public function setEditFormCaller($method){
+		$this->getEditForm()->set('callsmethod', $method);
+	}
+
+	/**
+	 * Set the limit of results to show before pagination kicks in.
+	 *
+	 * @param $limit
+	 */
+	public function setLimit($limit){
+		$this->getFilters()->setLimit($limit);
 	}
 
 
@@ -308,25 +343,41 @@ class Table implements \Iterator {
 
 		$tableclasses = ['listing'];
 		if($this->_hassort){
-			$tableclasses[] = 'column-sortable';
+			$tableclasses[] = 'listing-table-sortable';
+		}
+		$atts = [];
+		$atts['class'] = implode(' ', $tableclasses);
+		$atts['data-table-name'] = $this->_name;
+		$atts['data-table-sortable'] = ($this->_hassort ? 1 : 0);
+
+		if($this->_editform !== null){
+			$out .= $this->_editform->render('head') . $this->_editform->render('body');
 		}
 
-		$out .= '<table class="' . implode(' ', $tableclasses) . '"><colgroup>';
-		foreach($this->_columns as $c){
-			/** @var Column $c */
-			$out .= '<col class="' . $c->getClass() . '"/>';
+		$out .= '<table';
+		foreach($atts as $k => $v){
+			$out .= ' ' . $k . '="' . $v . '"';
 		}
-		$out .= '<col class="column-controls"/>';
-
-		$out .= '</colgroup><tr>';
+		$out .= '><tr>';
 		foreach($this->_columns as $c){
 			/** @var Column $c */
 			$out .= $c->getTH();
 		}
-
 		// One extra column for the control links.
-		$out .= '<th>&nbsp;</th>';
+		$out .= '<th><ul class="controls">';
+		$out .= '<li><a href="#" class="control-column-selection"><i class="icon-columns"></i><span>Show / Hide Columns</span></a></li>';
+		if($this->_editform !== null){
+			$out .= '<li><a href="#" class="control-edit-toggle"><i class="icon-pencil-square-o"></i><span>Quick Edit</span></a></li>';
+		}
+		$out .= '</ul></th>';
 		$out .= '</tr>';
+
+		if($this->_editform !== null){
+			$out .= '<tr class="edit"><td colspan="' . (sizeof($this->_columns) + 1) . '">' .
+				'<a href="#" class="control-edit-toggle button">Cancel</a>' .
+				'<input type="submit" value="Save Quick Edit"/>' .
+				'</td></tr>';
+		}
 
 		return $out;
 	}
@@ -366,10 +417,27 @@ class Table implements \Iterator {
 	 * @return string Full HTML Markup
 	 */
 	private function _renderFoot(){
-		$out = '</table>';
+		$out = '';
+
+		if($this->_editform !== null){
+			$out .= '<tr class="edit"><td colspan="' . (sizeof($this->_columns) + 1) . '">' .
+				'<a href="#" class="control-edit-toggle button">Cancel</a>' .
+				'<input type="submit" value="Save Quick Edit"/>' .
+				'</td></tr>';
+		}
+
+		$out .= '</table>';
+
+		if($this->_editform !== null){
+			$out .= $this->_editform->render('foot');
+		}
 
 		$f = $this->getFilters();
 		$out .= $f->pagination();
+
+		// Don't forget the necessary scripts!
+		\Core\view()->addScript('assets/js/core.listingtable.js', 'foot');
+		\Core\view()->addScript("<script>new Core.ListingTable(\$('table[data-table-name=\"" . $this->_name . "\"]'), '" . $this->getFilters()->getSortKey() . "', '" . $this->getFilters()->getSortDirection() . "');</script>", 'foot');
 
 		return $out;
 	}
