@@ -1064,20 +1064,6 @@ class Model implements ArrayAccess {
 				}
 				break;
 
-			default:
-				// These may or may not remapped... all depends on what the "default" value is.
-				if($v === null){
-					$v = $default;
-				}
-				break;
-		}
-
-
-
-		// Now for the validation.
-		// This will translate invalid values to valid ones!
-		// Most values are suitable as-is.
-		switch($type){
 			case Model::ATT_TYPE_BOOL:
 				if($v === true){
 					$v = '1';
@@ -1100,6 +1086,13 @@ class Model implements ArrayAccess {
 						default:
 							$v = '0';
 					}
+				}
+				break;
+
+			default:
+				// These may or may not remapped... all depends on what the "default" value is.
+				if($v === null){
+					$v = $default;
 				}
 				break;
 		}
@@ -1502,12 +1495,19 @@ class Model implements ArrayAccess {
 	/**
 	 * Get if this model has changes that are pending to be applied back to the datastore.
 	 *
+	 * @param string|null $key Optionally set a key name here to check only that one key.
+	 *
 	 * @return bool
 	 */
-	public function changed(){
+	public function changed($key = null){
 		$s = self::GetSchema();
 
 		foreach ($this->_data as $k => $v) {
+			if($key !== null && $key != $k){
+				// Allow checking only a specific key.
+				continue;
+			}
+
 			if(!isset($s[$k])){
 				// This key was not in the schema.  Probable reasons for this would be a column that was
 				// removed from the schema in an upgrade, but was never removed from the database.
