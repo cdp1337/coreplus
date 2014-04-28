@@ -1,0 +1,8 @@
+# This is specifically created to prevent access to ANYTHING in this directory.
+#  Under no situation should anything in this directory be readable
+#  by anyone at any time.
+
+<Files *>
+	Order deny,allow
+	Deny from All
+</Files>
