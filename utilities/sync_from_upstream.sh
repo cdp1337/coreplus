@@ -66,6 +66,7 @@ rsync $OPTIONS "$UPSTREAM/src/htaccess.ex" "$BASEDIR/src/"
 rsync $OPTIONS "$UPSTREAM/src/htaccess.ant" "$BASEDIR/src/"
 rsync $OPTIONS "$UPSTREAM/src/robots.txt" "$BASEDIR/src/"
 rsync $OPTIONS "$UPSTREAM/src/index.php" "$BASEDIR/src/"
+rsync $OPTIONS "$UPSTREAM/src/utilities" "$BASEDIR/src/"
 
 echo "Syncing core themes..."
 #rsync $OPTIONS --delete "$UPSTREAM/src/themes/default/" "$BASEDIR/src/themes/default"
