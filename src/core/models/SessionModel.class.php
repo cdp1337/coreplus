@@ -39,7 +39,7 @@ class SessionModel extends Model {
 			'null'      => false,
 		),
 		'user_id'    => array(
-			'type'    => Model::ATT_TYPE_UUID,
+			'type'    => Model::ATT_TYPE_UUID_FK,
 			'default' => 0,
 		),
 		'ip_addr'    => array(
