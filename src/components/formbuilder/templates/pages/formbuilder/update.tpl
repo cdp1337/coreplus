@@ -84,10 +84,10 @@
 
 
 				if(eltype == 'text'){
-					preview.push("<input type='text' id='' name='" + elname + "' placeholder='" + placeholder +"'></input><label for='" + elname + "'>" + ellabel + "</label>");
+					preview.push("<div class='formelement formtextelement'><label class='form-element-label' for='" + elname + "'>" + ellabel + "</label><div class='form-element-value'><input type='text' id='' name='" + elname + "' placeholder='" + placeholder +"'></input></div></div>");
 				}
 				else if(eltype == 'textarea'){
-					preview.push("<textarea id='' name='" + elname + "' placeholder='" + placeholder +"'></textarea><label for='" + elname + "'>" + ellabel + "</label>");
+					preview.push("<div class='formelement formtextareaelement'><label for='" + elname + "'>" + ellabel + "</label><div class='form-element-value'><textarea id='' name='" + elname + "' placeholder='" + placeholder +"'></textarea></div></div>");
 				}
 				else if(eltype == 'email'){
 
