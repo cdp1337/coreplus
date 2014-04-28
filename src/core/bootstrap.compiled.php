@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 27 Apr 2014 05:44:50 -0400
+ * @compiled Mon, 28 Apr 2014 00:33:53 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1478,9 +1478,6 @@ $diffs[] = array(
 }
 continue;
 }
-if($dat->type == \Model::ATT_TYPE_ALIAS){
-continue;
-}
 if(($colchange = $thiscol->getDiff($dat)) !== null){
 $diffs[] = array(
 'title' => 'Column ' . $name . ' does not match up: ' . $colchange,
@@ -1490,12 +1487,7 @@ $diffs[] = array(
 }
 $a_order = $this->order;
 foreach($this->definitions as $name => $dat){
-if(!$schema->getColumn($name)){
-unset($a_order[array_search($name, $a_order)]);
-}
-elseif($schema->getColumn($name)->type == \Model::ATT_TYPE_ALIAS){
-unset($a_order[array_search($name, $a_order)]);
-}
+if(!$schema->getColumn($name)) unset($a_order[array_search($name, $a_order)]);
 }
 if(implode(',', $a_order) != implode(',', $schema->order)){
 $diffs[] = array(
@@ -1506,7 +1498,7 @@ $diffs[] = array(
 $thisidx = '';
 foreach($this->indexes as $name => $cols) $thisidx .= ';' . $name . '-' . implode(',', $cols);
 $thatidx = '';
-foreach($schema->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
+foreach($this->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
 if($thisidx != $thatidx){
 $diffs[] = array(
 'title' => 'Indexes do not match up',
@@ -3505,7 +3497,6 @@ This cache only applies to guest users and bots.',
 'pageviews' => array(
 'type' => Model::ATT_TYPE_INT,
 'formtype' => 'disabled',
-'default' => 0,
 'comment' => 'Number of page views',
 'model_audit_ignore' => true, // Custom key for the component "Model Audit".
 ),
@@ -3527,8 +3518,7 @@ This cache only applies to guest users and bots.',
 ),
 'popularity' => array(
 'type' => Model::ATT_TYPE_FLOAT,
-'default' => 0.000,
-'precision' => '10,8',
+'default' => 0,
 'comment' => 'Cache of the popularity score of this page',
 'formtype' => 'disabled',
 ),
@@ -3762,10 +3752,6 @@ if($meta->get('meta_key') == $name) return $meta;
 }
 }
 return null;
-}
-public function getMetaValue($name){
-$m = $this->getMeta($name);
-return $m ? $m->get('meta_value_title') : '';
 }
 public function setMetas($metaarray) {
 if (is_array($metaarray) && count($metaarray)){
@@ -4112,9 +4098,6 @@ return 0.000;
 if(!$this->get('indexable')){
 return 0.000;
 }
-if($score == 0){
-return 0.000;
-}
 $order = log10($score);
 $seconds = time() - $created;
 $secs_per_month = 86400 * 28.5;
@@ -4138,7 +4121,9 @@ else{
 $t = $title;
 }
 if(ConfigHandler::Get('/core/page/title_remove_stop_words')){
-$stopwords = \Core\get_stop_words();
+$stopwords = array('a', 'about', 'above', 'above', 'across', 'after', 'afterwards', 'again', 'against', 'all', 'almost', 'alone', 'along', 'already', 'also','although','always','am','among', 'amongst', 'amoungst', 'amount',  'an', 'and', 'another', 'any','anyhow','anyone','anything','anyway', 'anywhere', 'are', 'around', 'as',  'at', 'back','be','became', 'because','become','becomes', 'becoming', 'been', 'before', 'beforehand', 'behind', 'being', 'below', 'beside', 'besides', 'between', 'beyond', 'bill', 'both', 'bottom','but', 'by', 'call', 'can', 'cannot', 'cant', 'co', 'con', 'could', 'couldnt', 'cry', 'de', 'describe', 'detail', 'do', 'done', 'down', 'due', 'during', 'each', 'eg', 'eight', 'either', 'eleven','else', 'elsewhere', 'empty', 'enough', 'etc', 'even', 'ever', 'every', 'everyone', 'everything', 'everywhere', 'except', 'few', 'fifteen', 'fify', 'fill', 'find', 'fire', 'first', 'five', 'for', 'former', 'formerly', 'forty', 'found', 'four', 'from', 'front', 'full', 'further', 'get', 'give', 'go
+', 'had', 'has', 'hasnt', 'have', 'he', 'hence', 'her', 'here', 'hereafter', 'hereby', 'herein', 'hereupon', 'hers', 'herself', 'him', 'himself', 'his', 'how', 'however', 'hundred', 'ie', 'if', 'in', 'inc', 'indeed', 'interest', 'into', 'is', 'it', 'its', 'itself', 'keep', 'last', 'latter', 'latterly', 'least', 'less', 'ltd', 'made', 'many', 'may', 'me', 'meanwhile', 'might', 'mill', 'mine', 'more', 'moreover', 'most', 'mostly', 'move', 'much', 'must', 'my', 'myself', 'name', 'namely', 'neither', 'never', 'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone', 'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often', 'on', 'once', 'one', 'only', 'onto', 'or', 'other', 'others', 'otherwise', 'our', 'ours', 'ourselves', 'out', 'over', 'own','part', 'per', 'perhaps', 'please', 'put', 'rather', 're', 'same', 'see', 'seem', 'seemed', 'seeming', 'seems', 'serious', 'several', 'she', 'should', 'show', 'side', 'since', 'sincere', 'six', 'sixty', 'so', 'some', 'somehow', 'someone', 'something', 'somet
+ime', 'sometimes', 'somewhere', 'still', 'such', 'system', 'take', 'ten', 'than', 'that', 'the', 'their', 'them', 'themselves', 'then', 'thence', 'there', 'thereafter', 'thereby', 'therefore', 'therein', 'thereupon', 'these', 'they', 'thickv', 'thin', 'third', 'this', 'those', 'though', 'three', 'through', 'throughout', 'thru', 'thus', 'to', 'together', 'too', 'top', 'toward', 'towards', 'twelve', 'twenty', 'two', 'un', 'under', 'until', 'up', 'upon', 'us', 'very', 'via', 'was', 'we', 'well', 'were', 'what', 'whatever', 'when', 'whence', 'whenever', 'where', 'whereafter', 'whereas', 'whereby', 'wherein', 'whereupon', 'wherever', 'whether', 'which', 'while', 'whither', 'who', 'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with', 'within', 'without', 'would', 'yet', 'you', 'your', 'yours', 'yourself', 'yourselves', 'the');
 $exploded = explode(' ', $t);
 $nt = '';
 foreach($exploded as $w){
@@ -4147,7 +4132,7 @@ if(!in_array($lw, $stopwords)){
 $nt .= ' ' . $w;
 }
 }
-$t = trim($nt);
+$t = trim($t);
 }
 return $t;
 }
@@ -5021,17 +5006,15 @@ public static $Schema = array(
 'comment' => 'The source of the user registration, either self, admin, or other.'
 ),
 'registration_invitee' => array(
-'type' => Model::ATT_TYPE_UUID_FK,
+'type' => Model::ATT_TYPE_INT,
 'comment' => 'If invited/created by a user, this is the ID of that user.',
 ),
 'last_login' => array(
 'type' => Model::ATT_TYPE_INT,
-'default' => 0,
 'comment' => 'The timestamp of the last login of this user',
 ),
 'last_password' => array(
 'type' => Model::ATT_TYPE_INT,
-'default' => 0,
 'comment' => 'The timestamp of the last password reset of this user',
 ),
 );
@@ -6915,210 +6898,6 @@ return ($this->_versionDB !== false);
 }
 
 
-### REQUIRE_ONCE FROM core/libs/core/VersionString.php
-} // ENDING GLOBAL NAMESPACE
-namespace Core {
-class VersionString implements \ArrayAccess {
-public $major;
-public $minor = 0;
-public $point = 0;
-public $user;
-public $stability;
-public $build;
-public function __construct($version = null){
-if($version){
-$this->parseString($version);
-}
-}
-public function __toString(){
-$ret = $this->major . '.' . $this->minor . '.' . $this->point;
-if($this->stability){
-$ret .= $this->stability;
-}
-if($this->build){
-$ret .= '.' . $this->build;
-}
-if($this->user){
-$ret .= '~' . $this->user;
-}
-return $ret;
-}
-public function parseString($version) {
-$parts = explode('.', strtolower($version));
-if(isset($parts[0])){
-$this->major = $parts[0];
-}
-if(isset($parts[1])){
-if(is_numeric($parts[1])){
-$this->minor = $parts[1];
-}
-else{
-$digit = $parts[1];
-if(($pos = strpos($digit, '~')) !== false){
-$this->minor = substr($digit, 0, $pos);
-$this->user = substr($digit, $pos);
-}
-elseif(($pos = strpos($digit, 'a')) !== false){
-$this->minor = substr($digit, 0, $pos);
-$this->stability = substr($digit, $pos);
-}
-elseif(($pos = strpos($digit, 'b')) !== false){
-$this->minor = substr($digit, 0, $pos);
-$this->stability = substr($digit, $pos);
-}
-elseif(($pos = strpos($digit, 'rc')) !== false){
-$this->minor = substr($digit, 0, $pos);
-$this->stability = substr($digit, $pos);
-}
-}
-}
-if(isset($parts[2])){
-if(is_numeric($parts[2])){
-$this->point = $parts[2];
-}
-else{
-$digit = $parts[2];
-if(($pos = strpos($digit, '~')) !== false){
-$this->point = substr($digit, 0, $pos);
-$this->user = substr($digit, $pos);
-}
-elseif(($pos = strpos($digit, 'a')) !== false){
-$this->point = substr($digit, 0, $pos);
-$this->stability = substr($digit, $pos);
-}
-elseif(($pos = strpos($digit, 'b')) !== false){
-$this->point = substr($digit, 0, $pos);
-$this->stability = substr($digit, $pos);
-}
-elseif(($pos = strpos($digit, 'rc')) !== false){
-$this->point = substr($digit, 0, $pos);
-$this->stability = substr($digit, $pos);
-}
-}
-}
-if(isset($parts[3])){
-if(is_numeric($parts[3])){
-$this->build = $parts[3];
-}
-else{
-$digit = $parts[3];
-if(($pos = strpos($digit, '~')) !== false){
-$this->build = substr($digit, 0, $pos);
-$this->user = substr($digit, $pos);
-}
-else{
-$this->build = $digit;
-}
-}
-}
-}
-public function setMajor($int){
-$this->major = $int;
-}
-public function setMinor($int){
-$this->minor = $int;
-}
-public function setPoint($int){
-$this->point = $int;
-}
-public function setUser($string){
-$this->user = $string;
-}
-public function setBuild($string){
-$this->build = $string;
-}
-public function setStability($type){
-$type = strtolower($type);
-switch($type){
-case 'dev':
-$this->stability = 'dev';
-break;
-case 'a':
-case 'alpha':
-$this->stability = 'a';
-break;
-case 'b':
-case 'beta':
-$this->stability = 'b';
-break;
-case 'rc':
-$this->stability = 'rc';
-break;
-default:
-$this->stability = null;
-break;
-}
-}
-public function compare($other, $operation = null){
-if(!$other instanceof VersionString){
-$other = new VersionString($other);
-}
-$v1    = $this->major . '.' . $this->minor . '.' . $this->point;
-$v2    = $other->major . '.' . $other->minor . '.' . $other->point;
-$check = version_compare($v1, $v2);
-if($check == 0 && $this->user && $other->user){
-$check = version_compare($this->user, $other->user);
-}
-if($check == 0 && ($this->stability || $other->stability)){
-$check = version_compare($this->stability, $other->stability);
-}
-if ($operation === null){
-return $check;
-}
-elseif($check == -1){
-switch($operation){
-case 'lt':
-case '<':
-case 'le':
-case '<=':
-return true;
-default:
-return false;
-}
-}
-elseif($check == 0){
-switch($operation){
-case 'le':
-case '<=':
-case 'eq':
-case '=':
-case '==':
-case 'ge':
-case '>=':
-return true;
-default:
-return false;
-}
-}
-else{
-switch($operation){
-case 'ge':
-case '>=':
-case 'gt':
-case '>':
-return true;
-default:
-return false;
-}
-}
-}
-public function offsetExists($offset) {
-return property_exists($this, $offset);
-}
-public function offsetGet($offset) {
-return $this->$offset;
-}
-public function offsetSet($offset, $value) {
-$this->$offset = $value;
-}
-public function offsetUnset($offset) {
-$this->$offset = null;
-}
-}
-} // ENDING NAMESPACE Core
-
-namespace  {
-
 ### REQUIRE_ONCE FROM core/libs/core/Component_2_1.php
 class Component_2_1 {
 private $_xmlloader = null;
@@ -8945,12 +8724,6 @@ end($array);
 if(key($array) !== $c) return false;
 return true;
 }
-function get_stop_words(){
-$stopwords = array('a', 'about', 'above', 'above', 'across', 'after', 'afterwards', 'again', 'against', 'all', 'almost', 'alone', 'along', 'already', 'also','although','always','am','among', 'amongst', 'amoungst', 'amount',  'an', 'and', 'another', 'any','anyhow','anyone','anything','anyway', 'anywhere', 'are', 'around', 'as',  'at', 'back','be','became', 'because','become','becomes', 'becoming', 'been', 'before', 'beforehand', 'behind', 'being', 'below', 'beside', 'besides', 'between', 'beyond', 'bill', 'both', 'bottom','but', 'by', 'call', 'can', 'cannot', 'cant', 'co', 'con', 'could', 'couldnt', 'cry', 'de', 'describe', 'detail', 'do', 'done', 'down', 'due', 'during', 'each', 'eg', 'eight', 'either', 'eleven','else', 'elsewhere', 'empty', 'enough', 'etc', 'even', 'ever', 'every', 'everyone', 'everything', 'everywhere', 'except', 'few', 'fifteen', 'fify', 'fill', 'find', 'fire', 'first', 'five', 'for', 'former', 'formerly', 'forty', 'found', 'four', 'from', 'front', 'full', 'further', 'get', 'give', 'go',
-'had', 'has', 'hasnt', 'have', 'he', 'hence', 'her', 'here', 'hereafter', 'hereby', 'herein', 'hereupon', 'hers', 'herself', 'him', 'himself', 'his', 'how', 'however', 'hundred', 'ie', 'if', 'in', 'inc', 'indeed', 'interest', 'into', 'is', 'it', 'its', 'itself', 'keep', 'last', 'latter', 'latterly', 'least', 'less', 'ltd', 'made', 'many', 'may', 'me', 'meanwhile', 'might', 'mill', 'mine', 'more', 'moreover', 'most', 'mostly', 'move', 'much', 'must', 'my', 'myself', 'name', 'namely', 'neither', 'never', 'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone', 'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often', 'on', 'once', 'one', 'only', 'onto', 'or', 'other', 'others', 'otherwise', 'our', 'ours', 'ourselves', 'out', 'over', 'own','part', 'per', 'perhaps', 'please', 'put', 'rather', 're', 'same', 'see', 'seem', 'seemed', 'seeming', 'seems', 'serious', 'several', 'she', 'should', 'show', 'side', 'since', 'sincere', 'six', 'sixty', 'so', 'some', 'somehow', 'someone', 'something', 'sometim
-e', 'sometimes', 'somewhere', 'still', 'such', 'system', 'take', 'ten', 'than', 'that', 'the', 'their', 'them', 'themselves', 'then', 'thence', 'there', 'thereafter', 'thereby', 'therefore', 'therein', 'thereupon', 'these', 'they', 'thickv', 'thin', 'third', 'this', 'those', 'though', 'three', 'through', 'throughout', 'thru', 'thus', 'to', 'together', 'too', 'top', 'toward', 'towards', 'twelve', 'twenty', 'two', 'un', 'under', 'until', 'up', 'upon', 'us', 'very', 'via', 'was', 'we', 'well', 'were', 'what', 'whatever', 'when', 'whence', 'whenever', 'where', 'whereafter', 'whereas', 'whereby', 'wherein', 'whereupon', 'wherever', 'whether', 'which', 'while', 'whither', 'who', 'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with', 'within', 'without', 'would', 'yet', 'you', 'your', 'yours', 'yourself', 'yourselves', 'the');
-return $stopwords;
-}
 } // ENDING NAMESPACE Core
 
 namespace  {
@@ -9987,10 +9760,6 @@ $key    = $bits['key'];
 if (!$this->exists()) {
 error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
 $file = Factory::File('assets/images/mimetypes/notfound.png');
-if(!$file->exists()){
-trigger_error('The 404 image could not be located.', E_USER_WARNING);
-return null;
-}
 $preview = $file->getPreviewFile($dimensions);
 }
 elseif ($this->isPreviewable()) {
@@ -13446,11 +13215,120 @@ public static function _AttachLessJS(){
 return true;
 }
 public static function VersionCompare($version1, $version2, $operation = null) {
-$version1 = new \Core\VersionString($version1);
-return $version1->compare($version2, $operation);
+if (!$version1) $version1 = 0;
+if (!$version2) $version2 = 0;
+$version1 = Core::VersionSplit($version1);
+$version2 = Core::VersionSplit($version2);
+$v1    = $version1['major'] . '.' . $version1['minor'] . '.' . $version1['point'];
+$v2    = $version2['major'] . '.' . $version2['minor'] . '.' . $version2['point'];
+$check = version_compare($v1, $v2);
+if($check == 0 && $version1['user'] && $version2['user']){
+$check = version_compare($version1['user'], $version2['user']);
+}
+if($check == 0 && ($version1['stability'] || $version2['stability'])){
+$check = version_compare($version1['stability'], $version2['stability']);
+}
+if ($operation === null){
+return $check;
+}
+elseif($check == -1){
+switch($operation){
+case 'lt':
+case '<':
+case 'le':
+case '<=':
+return true;
+default:
+return false;
+}
+}
+elseif($check == 0){
+switch($operation){
+case 'le':
+case '<=':
+case 'eq':
+case '=':
+case '==':
+case 'ge':
+case '>=':
+return true;
+default:
+return false;
+}
+}
+else{
+switch($operation){
+case 'ge':
+case '>=':
+case 'gt':
+case '>':
+return true;
+default:
+return false;
+}
+}
 }
 public static function VersionSplit($version) {
-return new \Core\VersionString($version);
+$ret = array(
+'major'     => 0,
+'minor'     => 0,
+'point'     => 0,
+'user'      => 0,
+'stability' => '1',
+);
+$parts = explode('.', strtolower($version));
+if(isset($parts[0])){
+$ret['major'] = $parts[0];
+}
+if(isset($parts[1])){
+if(is_numeric($parts[1])){
+$ret['minor'] = $parts[1];
+}
+else{
+$digit = $parts[1];
+if(($pos = strpos($digit, '~')) !== false){
+$ret['minor'] = substr($digit, 0, $pos);
+$ret['user'] = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, 'a')) !== false){
+$ret['minor'] = substr($digit, 0, $pos);
+$ret['stability'] = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, 'b')) !== false){
+$ret['minor'] = substr($digit, 0, $pos);
+$ret['stability'] = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, 'rc')) !== false){
+$ret['minor'] = substr($digit, 0, $pos);
+$ret['stability'] = substr($digit, $pos);
+}
+}
+}
+if(isset($parts[2])){
+if(is_numeric($parts[2])){
+$ret['point'] = $parts[2];
+}
+else{
+$digit = $parts[2];
+if(($pos = strpos($digit, '~')) !== false){
+$ret['point'] = substr($digit, 0, $pos);
+$ret['user'] = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, 'a')) !== false){
+$ret['point'] = substr($digit, 0, $pos);
+$ret['stability'] = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, 'b')) !== false){
+$ret['point'] = substr($digit, 0, $pos);
+$ret['stability'] = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, 'rc')) !== false){
+$ret['point'] = substr($digit, 0, $pos);
+$ret['stability'] = substr($digit, $pos);
+}
+}
+}
+return $ret;
 }
 public static function CompareValues($val1, $val2){
 return \Core\compare_values($val1, $val2);
@@ -15573,7 +15451,7 @@ $foot = $this->getFootContent();
 if (DEVELOPMENT_MODE) {
 $debug = '';
 $debug .= '<pre class="xdebug-var-dump screen">';
-$debug .= '<fieldset class="debug-section collapsible" id="debug-section-template-information">';
+$debug .= '<fieldset class="debug-section collapsible">';
 $debug .= '<legend><b>Template Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= "<span>";
 $debug .= 'Base URL: ' . $this->baseurl . "\n";
@@ -15581,7 +15459,7 @@ $debug .= 'Template Used: ' . $this->templatename . "\n";
 $debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
 $debug .= "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible" id="debug-section-performance-information">';
+$debug .= '<fieldset class="debug-section collapsible">';
 $debug .= '<legend><b>Performance Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= "<span>";
 $debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
@@ -15591,13 +15469,13 @@ $profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
 $debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
 $debug .= "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible" id="debug-section-profiler-information">';
+$debug .= '<fieldset class="debug-section collapsible">';
 $debug .= '<legend><b>Core Profiler</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= "<span>";
 $debug .= $profiler->getEventTimesFormatted();
 $debug .= "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-components-information">';
+$debug .= '<fieldset class="debug-section collapsible collapsed">';
 $debug .= '<legend><b>Available Components</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
 $debug .= "<span>";
@@ -15616,7 +15494,7 @@ $debug .= $v->getName() . ' ' . $v->getVersion() . "<br/>";
 }
 $debug .= "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-hooks-information">';
+$debug .= '<fieldset class="debug-section collapsible collapsed">';
 $debug .= '<legend><b>Registered Hooks</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 foreach(HookHandler::GetAllHooks() as $hook){
 $debug .= "<span>";
@@ -15631,12 +15509,12 @@ $debug .= "\n\n";
 $debug .= "</span>";
 }
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-includes-information">';
+$debug .= '<fieldset class="debug-section collapsible collapsed">';
 $debug .= '<legend><b>Included Files</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= '<span>Number: ' . sizeof(get_included_files()) . "</span>";
 $debug .= '<span>'. implode("<br/>", get_included_files()) . "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-query-information">';
+$debug .= '<fieldset class="debug-section collapsible collapsed">';
 $debug .= '<legend><b>Query Log</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $ql = \Core\DB()->queryLog();
 $qls = sizeof($ql);
@@ -16476,7 +16354,6 @@ public static $Mappings = array(
 'text'             => 'FormTextInput',
 'textarea'         => 'FormTextareaInput',
 'time'             => 'FormTimeInput',
-'user'             => 'FormUserInput',
 'wysiwyg'          => 'FormTextareaInput',
 );
 public static $GroupMappings = array(

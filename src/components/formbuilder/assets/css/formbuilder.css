@@ -1,0 +1,17 @@
+.custom-field.expanded{
+	opacity:1;
+}
+
+.custom-field {
+	max-height:12.5em;
+	outline: 1px solid #ccc;
+	overflow-y:hidden;
+	background:#eee;
+	opacity:0.5;
+	transition: all 1s cubic-bezier(0, 1.05, 0, 1);
+}
+
+.custom-field.expanded {
+	max-height:1000px;
+	opacity:1;
+}
