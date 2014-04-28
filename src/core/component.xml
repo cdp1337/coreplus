@@ -76,7 +76,7 @@
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="216525795b6b97e55e9a534e94e6798b"/>
 		<file filename="core/bootstrap_preincludes.php" md5="249d78de57e1dfb55c4b94a612206ca5"/>
-		<file filename="core/controllers/AdminController.php" md5="9db4829cc0095050516a2ae1353c5479">
+		<file filename="core/controllers/AdminController.php" md5="a710ddf23bceaf7edf6a736fb9e1fd92">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DatastoreAuthController.php" md5="5b95c9d7e0070be4ff5bd88e887cd8c0">
@@ -409,10 +409,10 @@
 		<file filename="core/libs/core/Email.class.php" md5="79a40d1ce38ee17cbd9146a55f78dd77">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/FilterForm.class.php" md5="dd4c821c1f1909518103d8d99ec6fe6d">
+		<file filename="core/libs/core/FilterForm.class.php" md5="042c46397b4193495e7bc22fa87e7b08">
 			<class name="FilterForm"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="64a0a92f111351766e744a16f6ebec70">
+		<file filename="core/libs/core/Form.class.php" md5="a5ce27f66613bb7db0a0d403ed4b852d">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -660,10 +660,10 @@
 		<file filename="core/libs/core/licenses/Factory.php" md5="55de36ced01c31663ebdbade0aaf3cfc">
 			<class name="Core\Licenses\Factory"/>
 		</file>
-		<file filename="core/libs/core/listingtable/Column.php" md5="c381e1433a9131878a431308c72b603d">
+		<file filename="core/libs/core/listingtable/Column.php" md5="7ef5b7996ec6b04b445931cab47cd49d">
 			<class name="Core\ListingTable\Column"/>
 		</file>
-		<file filename="core/libs/core/listingtable/Table.php" md5="99597347303b493c0f3f0edb9ee2bb86">
+		<file filename="core/libs/core/listingtable/Table.php" md5="4db76f8527c9d332cba40dc896bb02f6">
 			<class name="Core\ListingTable\Table"/>
 		</file>
 		<file filename="core/libs/core/search/DoubleMetaPhone.php" md5="83b809f860d8bbad75fc44499c60bdcc">
@@ -1387,7 +1387,7 @@
 		<file filename="core/templates/pages/admin/config.tpl" md5="d6fb7d5c0c064111b3c62a2419af43fa"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
 		<file filename="core/templates/pages/admin/log.tpl" md5="03788adf6fc482a8c3d46087009f003d"/>
-		<file filename="core/templates/pages/admin/pages.tpl" md5="ccb89ec6474120d4be530f26f48d20e7"/>
+		<file filename="core/templates/pages/admin/pages.tpl" md5="d9c68f8c035ae04015ca1c96b2132166"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="ec73503565c3b1987c0419bbe5815aaa"/>
 		<file filename="core/templates/pages/admin/seo_config.tpl" md5="214967a352786e78563f5b875e9b3d7c"/>
 		<file filename="core/templates/pages/admin/syncsearchindex.tpl" md5="d95f9468ee0c9fb6b7623e6e0c4def4c"/>
@@ -1836,6 +1836,7 @@
 		<author name="Jason Pell" email="jasonpell@hotmail.com"/>
 		<author name="Lauren Matheson" email="inan@canada.com"/>
 		<author name="John Griffin" email="jgriffin316@netscape.net"/>
+		<author name="Nicholas Hinsch" email="nicholas@eval.bz"/>
 	</authors>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">

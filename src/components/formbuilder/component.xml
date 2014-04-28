@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="FormBuilder" version="1.0.0">
+	<files>
+		<file filename="CHANGELOG" md5="04134b50af4f1e7092162f4f3386e93c"/>
+		<file filename="README.md" md5="3565fc1952ab13f807da2cc55b32696d"/>
+		<file filename="controllers/FormBuilderController.php" md5="b37c8ec8711b0c740e55d2370eccbec2">
+			<controller name="FormBuilderController"/>
+		</file>
+		<file filename="controllers/FormBuilderEntryController.php" md5="c321862e0b66c765c04db1b3da5a5a06">
+			<controller name="FormBuilderEntryController"/>
+		</file>
+		<file filename="helpers/FormBuilderHelper.php" md5="29c6b4dc829d1dbd880c951b8a7a7035">
+			<class name="FormBuilderHelper"/>
+		</file>
+		<file filename="models/FormBuilderEntryModel.php" md5="b52a67fd7e1038c9bb14f62f4d4dee0e">
+			<class name="FormBuilderEntryModel"/>
+		</file>
+		<file filename="models/FormBuilderFieldModel.php" md5="6829da6783688d0d9eeb44bec842b668">
+			<class name="FormBuilderFieldModel"/>
+		</file>
+		<file filename="models/FormBuilderModel.php" md5="323d58d56fa94de6d253424f320ea049">
+			<class name="FormBuilderModel"/>
+		</file>
+	</files>
+	<view>
+		<file filename="templates/pages/formbuilder.tpl" md5="acbd18db4cc2f85cedef654fccc4a4d8"/>
+		<file filename="templates/pages/formbuilder/update.tpl" md5="a0bb11e4f3ee84476ce58dc46315ca3b"/>
+	</view>
+	<pages>
+		<page baseurl="/formbuilder/create" access="p:/formbuilder/manage_all" title="Create Custom Form" group="FormBuilder"/>
+		<page baseurl="/formbuilder" access="p:/formbuilder/manage_all" title="Custom Forms" editurl="/admin/formbuilder/edit" group="FormBuilder"/>
+		<page baseurl="/formbuilder/edit" title="Edit Custom Forms" access="p:/formbuilder/manage_all" admin="1" group="FormBuilder"/>
+		<pagecreate title="Form Builder" baseurl="/formbuilder/create"/>
+	</pages>
+	<widgets>
+		<widgetcreate title="Custom Forms" class="FormBuilderWidget"/>
+	</widgets>
+	<requires>
+		<require name="core" type="component" version="3.2.2" operation="ge"/>
+	</requires>
+	<authors>
+		<author name="Nicholas Hinsch" email="nicholas@eval.bz"/>
+	</authors>
+	<assets>
+		<file filename="assets/css/formbuilder.css" md5="93ddc52b909fa6846e16f8323cfe9077"/>
+	</assets>
+</component>
+
