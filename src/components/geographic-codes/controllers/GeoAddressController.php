@@ -1,7 +1,7 @@
 <?php
 /**
  * File for class GeoAddressController definition in the coreplus project
- * 
+ *
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20131104.1541
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -45,7 +45,7 @@
  * $b = $a;
  * </code>
  *
- * 
+ *
  * @author Charlie Powell <charlie@eval.bz>
  *
  */
@@ -128,4 +128,4 @@ class GeoAddressController extends Controller_2_1{
 
 		$view->jsondata = $provincejs;
 	}
-} 
+}
