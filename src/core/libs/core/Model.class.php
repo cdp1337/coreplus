@@ -194,7 +194,7 @@ class Model implements ArrayAccess {
 	 * system DMI.  If however you want to utilize a Model with Memcache,
 	 * (say for session information), it can be useful.
 	 *
-	 * @var DMI_Backend
+	 * @var \Core\Datamodel\BackendInterface
 	 */
 	public $interface = null;
 
@@ -449,7 +449,7 @@ class Model implements ArrayAccess {
 			$save = true;
 		}
 		else{
-			foreach($this->_linked as $k => $l){
+			foreach($this->_linked as $l){
 				if(isset($l['records'])){
 					// If there are any linked models in the records array, trigger the save.
 					$save = true;
@@ -493,7 +493,7 @@ class Model implements ArrayAccess {
 
 		// NEW in 2.8, I need to run through the linked models and see if any local key is a foreign key of a linked model.
 		// If it is, then I need to save that foreign model so I can get its updated primary key, (if it changed).
-		foreach($this->_linked as $k => $l){
+		foreach($this->_linked as $l){
 			// If this link has a 1-sized relationship and the local node is set as a FK, then read it as such.
 
 			if(!is_array($l['on'])){
@@ -572,6 +572,26 @@ class Model implements ArrayAccess {
 
 		$this->_exists     = true;
 		$this->_datainit = $this->_data;
+
+		// Check and see if this model extends another model.
+		// If it does, then create/update that parent object to keep it in sync!
+		if(($class = get_parent_class($this)) != 'Model'){
+			$idx = self::GetIndexes();
+			if(isset($idx['primary']) && sizeof($idx['primary']) == 1){
+				$schema = $this->getKeySchema($idx['primary'][0]);
+				if($schema['type'] == Model::ATT_TYPE_UUID){
+					$refp = new ReflectionClass($class);
+					$refm = $refp->getMethod('Construct');
+					/** @var Model $parent */
+					$parent = $refm->invoke(null, $this->get($idx['primary'][0]));
+
+					// Populate the parent with this child's data.
+					// Any non-existent field will simply be ignored.
+					$parent->setFromArray($this->getAsArray());
+					$parent->save();
+				}
+			}
+		}
 
 		HookHandler::DispatchHook('/core/model/postsave', $this);
 
@@ -867,6 +887,7 @@ class Model implements ArrayAccess {
 					// Request all the children and issue a delete on them.
 					$children = $this->getLink($k);
 					foreach($children as $child){
+						/** @var Model $child */
 						$child->delete();
 					}
 					break;
@@ -903,7 +924,7 @@ class Model implements ArrayAccess {
 			}
 		}
 
-
+		return true;
 	}
 
 	/**
