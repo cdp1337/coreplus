@@ -152,7 +152,7 @@
 					<span>New {$l.title} Widget</span>
 				{/a}
 			</td>
-			<td colspan="4"></td>
+			<td colspan="5"></td>
 		</tr>
 	{/foreach}
 {/if}
