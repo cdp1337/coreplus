@@ -61,6 +61,9 @@
 		<upgrade from="2.1.9" to="2.2.0"/>
 		<upgrade from="2.2.0" to="2.2.1"/>
 		<upgrade from="2.2.1" to="2.3.0"/>
+		<upgrade from="next">
+			<php file="upgrades/230_nav_widget_editables.php"/>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
