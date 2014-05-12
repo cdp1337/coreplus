@@ -48,8 +48,6 @@ function smarty_block_a($params, $innercontent, $template, &$repeat){
 		$params['href'] = '#false';
 	}
 
-	if(isset($params['history'])) $href = Core::GetHistory($params['history']);
-
 	// Add in any attributes.
 	foreach($params as $k => $v){
 		$k = strtolower($k);
