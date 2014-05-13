@@ -139,7 +139,7 @@ abstract class JQuery {
 	public static function Include_Minimalect(){
 		self::IncludeJQuery();
 
-		\Core\view()->addScript('js/jquery/jquery.minimalect.min.js');
+		\Core\view()->addScript('js/jquery/jquery.minimalect.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;

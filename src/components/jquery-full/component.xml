@@ -106,7 +106,7 @@
 		<file filename="assets/js/jquery/jquery.json-2.4.js" md5="916c946e972ec0315db82ebaacbcf111"/>
 		<file filename="assets/js/jquery/jquery.json-2.4.min.js" md5="f7b87723e700272150f9785de8f03f1c"/>
 		<file filename="assets/js/jquery/jquery.masonry.min.js" md5="a6b726ee7fce43453a6eb25e8a1cb819"/>
-		<file filename="assets/js/jquery/jquery.minimalect.min.js" md5="ba21f05f72d872e6e91459b9a1e4a340"/>
+		<file filename="assets/js/jquery/jquery.minimalect.js" md5="ba21f05f72d872e6e91459b9a1e4a340"/>
 		<file filename="assets/js/jquery/jquery.smooth-scroll.min.js" md5="34b5513756446947afd1b7399d02ea65"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.js" md5="fbd3ec46c4cb84a8433f3b5c468e98cf"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.min.js" md5="28fb224b45d2fdb5e5eef85d2dfc8458"/>
