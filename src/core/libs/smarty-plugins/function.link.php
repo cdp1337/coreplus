@@ -37,6 +37,27 @@ function smarty_function_link($params, $template){
 	else $href = '/';
 	
 	$href = \Core\resolve_link($href);
-	
-    return $assign ? $template->assign($assign, $href) : $href;
+
+	if(isset($params['ssl'])){
+		// Perform SSL translation of some sort.
+		$ssl = (isset($_SERVER['HTTPS']));
+
+		if(
+			($ssl && $params['ssl'] == 'auto') ||
+			$params['ssl'] == '1' ||
+			$params['ssl'] == 'true'
+		){
+			$href = str_replace('http://', 'https://', $href);
+		}
+		elseif(!$params['ssl']){
+			$href = str_replace('https://', 'http://', $href);
+		}
+	}
+
+	if($assign){
+		$template->assign($assign, $href);
+	}
+	else{
+		return $href;
+	}
 }

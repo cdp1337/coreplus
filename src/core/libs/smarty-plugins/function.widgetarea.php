@@ -52,7 +52,7 @@ function smarty_function_widgetarea($params, $template) {
 	$factory = new ModelFactory('WidgetInstanceModel');
 	$factory->order('weight');
 	if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-		$factory->where('site = ' . MultiSiteHelper::GetCurrentSiteID());
+		$factory->whereGroup('or', ['site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID()]);
 	}
 
 	$subwhere = new Core\Datamodel\DatasetWhereClause();

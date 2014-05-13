@@ -146,6 +146,9 @@ class ContentController extends Controller_2_1 {
 
 		// The content nickname is derived from the page title.
 		$model->set('nickname', $page->get('title'));
+		if($page->exists() && $page->changed('site')){
+			$model->set('site', $page->get('site'));
+		}
 		$model->save();
 
 		$page->set('editurl', '/content/edit/' . $model->get('id'));

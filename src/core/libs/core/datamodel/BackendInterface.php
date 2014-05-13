@@ -35,6 +35,20 @@ interface BackendInterface {
 	public function execute(Dataset $dataset);
 
 	/**
+	 * Execute a raw query
+	 *
+	 * Returns FALSE on failure. For successful SELECT, SHOW, DESCRIBE or
+	 * EXPLAIN queries mysqli_query() will return a result object. For other
+	 * successful queries mysqli_query() will return TRUE.
+	 *
+	 * @param string $type Either read or write.
+	 * @param string $string The string to execute
+	 * @return mixed
+	 * @throws \DMI_Query_Exception
+	 */
+	public function _rawExecute($type, $string);
+
+	/**
 	 * Check to see if a given table exists without causing an error.
 	 *
 	 * @param string $tablename

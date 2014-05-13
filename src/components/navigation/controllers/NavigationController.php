@@ -26,18 +26,6 @@ class NavigationController extends Controller_2_1 {
 		$this->accessstring = 'g:admin';
 	}
 
-	public function index() {
-		$view = $this->getView();
-
-		$f = NavigationModel::Find(null, null, 'name');
-
-		$view->title = 'Navigation Listings';
-		$view->assign('navs', $f);
-		$view->assign('current_theme', ConfigHandler::Get('/theme/selected') . '?template=' . ConfigHandler::Get('/theme/default_template'));
-		$view->templatename = '/pages/navigation/index.tpl';
-		$view->addControl('New Navigation Menu', '/Navigation/Create', 'add');
-	}
-
 
 	public function edit() {
 		$view = $this->getView();
@@ -167,5 +155,3 @@ class NavigationController extends Controller_2_1 {
 		return '/Navigation';
 	}
 }
-
-?>

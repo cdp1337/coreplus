@@ -1,7 +1,7 @@
 <?php
 /**
  * File for class GeoAddressFormInput definition in the coreplus project
- * 
+ *
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20131030.1729
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -45,7 +45,7 @@
  * $b = $a;
  * </code>
  *
- * 
+ *
  * @author Charlie Powell <charlie@eval.bz>
  *
  */
@@ -55,10 +55,19 @@ class GeoAddressFormInput extends FormElement {
 	private $_model;
 
 	public function __construct($atts = null) {
+
+		$defaults = [
+			'class' => 'formelement geoaddressforminput',
+			'use_label' => true,
+		];
 		parent::__construct($atts);
 
 		// Some defaults
-		$this->_attributes['class'] = 'formelement geoaddressforminput';
+		foreach($defaults as $k => $v){
+			if(!isset($this->_attributes[$k])){
+				$this->_attributes[$k] = $v;
+			}
+		}
 	}
 
 	public function render(){
@@ -110,6 +119,7 @@ class GeoAddressFormInput extends FormElement {
 		$tpl = \Core\Templates\Template::Factory($file);
 
 		$tpl->assign('id', $id);
+		$tpl->assign('use_label', $this->_attributes['use_label']);
 		$tpl->assign('label', $label);
 		$tpl->assign('address1', $address1);
 		$tpl->assign('address2', $address2);

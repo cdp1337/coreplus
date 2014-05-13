@@ -32,9 +32,6 @@
 		<file filename="templates/widgets/navigation/siblingsandchildren.tpl" md5="2f26fdaa35d28a1a094699a825db64d8"/>
 		<file filename="templates/widgets/navigation/view.tpl" md5="629c5fcb1cd7f3ecddff0451bc1eee7a"/>
 	</view>
-	<pages>
-		<page baseurl="/Navigation" admin="1" access="g:admin" title="Navigation Listings" group="Theme and Layouts"/>
-	</pages>
 	<widgets>
 		<widget baseurl="/navigation/siblings" title="Page Siblings Nav"/>
 		<widget baseurl="/navigation/siblingsandchildren" title="Page Siblings w/Children Nav"/>
@@ -61,6 +58,9 @@
 		<upgrade from="2.1.9" to="2.2.0"/>
 		<upgrade from="2.2.0" to="2.2.1"/>
 		<upgrade from="2.2.1" to="2.3.0"/>
+		<upgrade from="next">
+			<php file="upgrades/230_nav_widget_editables.php"/>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

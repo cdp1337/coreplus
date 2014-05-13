@@ -359,6 +359,10 @@ function redirect($page, $code = 302){
 		case 302:
 			$movetext = '302 Moved Temporarily';
 			break;
+		default:
+			// Umm...
+			$movetext = $code . ' Moved Temporarily';
+			break;
 	}
 
 	header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));

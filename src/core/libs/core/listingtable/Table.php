@@ -223,6 +223,17 @@ class Table implements \Iterator {
 	}
 
 	/**
+	 * Set the model factory itself.
+	 *
+	 * This is useful if it's a child model from another Model.
+	 *
+	 * @param \ModelFactory $factory
+	 */
+	public function setModelFactory(\ModelFactory $factory){
+		$this->_modelFactory = $factory;
+	}
+
+	/**
 	 * Set the name for this table (and the corresponding filters), required for any session saving/lookup.
 	 *
 	 * @param string $name
@@ -373,7 +384,7 @@ class Table implements \Iterator {
 		$out .= '</tr>';
 
 		if($this->_editform !== null){
-			$out .= '<tr class="edit"><td colspan="' . (sizeof($this->_columns) + 1) . '">' .
+			$out .= '<tr class="edit edit-record-buttons"><td colspan="' . (sizeof($this->_columns) + 1) . '">' .
 				'<a href="#" class="control-edit-toggle button">Cancel</a>' .
 				'<input type="submit" value="Save Quick Edit"/>' .
 				'</td></tr>';
@@ -420,7 +431,7 @@ class Table implements \Iterator {
 		$out = '';
 
 		if($this->_editform !== null){
-			$out .= '<tr class="edit"><td colspan="' . (sizeof($this->_columns) + 1) . '">' .
+			$out .= '<tr class="edit edit-record-buttons"><td colspan="' . (sizeof($this->_columns) + 1) . '">' .
 				'<a href="#" class="control-edit-toggle button">Cancel</a>' .
 				'<input type="submit" value="Save Quick Edit"/>' .
 				'</td></tr>';
