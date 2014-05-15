@@ -284,6 +284,12 @@ function resolve_link($url) {
 	// Allow "#" to be verbatim without translation.
 	if ($url == '#') return $url;
 
+	// FIRST THING!?!?!
+	// All URLs should be case insensitive.
+	// As such, I *should* be able to safely strlower everything and be fine.
+	// This is particularly important because all URL lookups from the database are performed in lowercase.
+	$url = strtolower($url);
+
 	// Allow links starting with ? to be read as the current page.
 	if($url{0} == '?'){
 		$url = REL_REQUEST_PATH . $url;
