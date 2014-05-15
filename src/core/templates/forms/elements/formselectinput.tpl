@@ -19,13 +19,15 @@
 	{* select options do not support readonly, but no reason why core plus can't ;) *}
 	{script library="jqueryui.readonly"}{/script}
 	{script location="foot"}<script>
-		$('#{$element->get("id")}').readonly();
+		$('.{$element->get("id")}').readonly();
 	</script>{/script}
 {/if}
 
-{script library="jquery.minimalect"}{/script}
-{script location="foot"}<script>
+{if Core::IsLibraryAvailable('jquery')}
+	{script library="jquery.minimalect"}{/script}
+	{script location="foot"}<script>
 	$(function(){
 		$("select").minimalect();
 	});
-</script>{/script}
+	</script>{/script}
+{/if}
