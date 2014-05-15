@@ -172,6 +172,37 @@ class %CLASS% extends Model {
 	public static \$Indexes = array(
 		'primary' => array('id'),
 	);
+
+	/**
+	 * Get the human-readable label for this record.
+	 *
+	 * The parent method will sift through the schema looking for keys that appear to be human-readable terms,
+	 * but for best results, please extend this method and have it return what's necessary for the given Model.
+	 *
+	 * @return string
+	 */
+	public function getLabel(){
+		// @todo Have a particular key to use as the label for this model?
+		// If so, have the following as necessary.
+		// return \$this->get('blah');
+
+		// Otherwise, the default is fine or simply remove the method on this child.
+		return parent::getLabel();
+	}
+
+	/**
+	 * Get an array of control links for this model.
+	 *
+	 * The returned data MUST be either an empty array or an index array of arrays.
+	 * Each internal array should have link, title, icon, and any other parameter supported by the ViewControl
+	 *
+	 * @see ViewControl.class.php
+	 *
+	 * @return array
+	 */
+	public function getControlLinks(){
+		return [];
+	}
 }
 EOF;
 

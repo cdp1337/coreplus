@@ -821,6 +821,11 @@ class Model implements ArrayAccess {
 	 *
 	 * In order to use this method, you MUST extend it on your own model!
 	 *
+	 * The returned data MUST be either an empty array or an index array of arrays.
+	 * Each internal array should have link, title, icon, and any other parameter supported by the ViewControl
+	 *
+	 * @see ViewControl.class.php
+	 *
 	 * @return array
 	 */
 	public function getControlLinks(){
