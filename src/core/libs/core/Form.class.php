@@ -819,13 +819,17 @@ class Form extends FormGroup {
 		$set = false;
 
 		// Tack on the destination method of this form.
-		$hash .= $this->get('callsmethod');
+		$hash .= $this->get('callsmethod') . ';';
 
 		// Add in any/all model primary keys on this form.
-		if ($this->get('___modelpks')) {
-			$set = true;
-			foreach ($this->get('___modelpks') as $k => $v) {
-				$hash .= $k . ':' . $v . ';';
+		foreach($this->_models as $m => $model){
+			/** @var Model $model */
+			$i = $model->GetIndexes();
+
+			if(isset($i['primary'])){
+				foreach($i['primary'] as $k){
+					$hash .= $m . '.' . $k . ':' . $model->get($k) . ';';
+				}
 			}
 		}
 
