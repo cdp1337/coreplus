@@ -817,6 +817,17 @@ class Model implements ArrayAccess {
 	}
 
 	/**
+	 * Get an array of control links for this model.
+	 *
+	 * In order to use this method, you MUST extend it on your own model!
+	 *
+	 * @return array
+	 */
+	public function getControlLinks(){
+		return [];
+	}
+
+	/**
 	 * Load this model from an associative array, or record.
 	 * This is meant to be called from the Factory system, and the data passed in
 	 * MUST be sanitized and valid!
