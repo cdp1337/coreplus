@@ -611,6 +611,32 @@ class Component_2_1 {
 	}
 
 	/**
+	 * Get the list of models provided in this component, (and their filenames)
+	 *
+	 * @return array
+	 */
+	public function getModelList(){
+		// Get the table structure as it exists in the database first, this will be the comparison point.
+		$classes = $this->getClassList();
+		foreach ($classes as $k => $v) {
+			if($k == 'model'){
+				// Anything named "Model" is the actual Model object... the base object doesn't have an associated table!
+				unset($classes[$k]);
+			}
+			elseif(strrpos($k, 'model') !== strlen($k) - 5){
+				// If the class doesn't explicitly end with "Model", it's also not a model.
+				unset($classes[$k]);
+			}
+			elseif(strpos($k, '\\') !== false){
+				// If this "Model" class is namespaced, it's not a valid model!
+				// All Models MUST reside in the global namespace in order to be valid.
+				unset($classes[$k]);
+			}
+		}
+		return $classes;
+	}
+
+	/**
 	 * Get an array of widget names provided in this component.
 	 *
 	 * @return array
@@ -2021,22 +2047,7 @@ class Component_2_1 {
 		Core\Utilities\Logger\write_debug('Installing database schema for ' . $this->getName());
 
 		// Get the table structure as it exists in the database first, this will be the comparison point.
-		$classes = $this->getClassList();
-		foreach ($classes as $k => $v) {
-			if($k == 'model'){
-				// Anything named "Model" is the actual Model object... the base object doesn't have an associated table!
-				unset($classes[$k]);
-			}
-			elseif(strrpos($k, 'model') !== strlen($k) - 5){
-				// If the class doesn't explicitly end with "Model", it's also not a model.
-				unset($classes[$k]);
-			}
-			elseif(strpos($k, '\\') !== false){
-				// If this "Model" class is namespaced, it's not a valid model!
-				// All Models MUST reside in the global namespace in order to be valid.
-				unset($classes[$k]);
-			}
-		}
+		$classes = $this->getModelList();
 
 		// Do the actual processing of every Model.
 		foreach ($classes as $m => $file) {
