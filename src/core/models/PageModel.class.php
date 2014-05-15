@@ -734,7 +734,7 @@ class PageModel extends Model {
 			}
 
 			// Doesn't exist?
-			if($value){
+			if($value !== null){
 				$meta = new PageMetaModel($this->get('site'), $this->get('baseurl'), $name, '');
 				$meta->set('meta_value_title', $value);
 
@@ -1638,10 +1638,10 @@ class PageModel extends Model {
 				}
 			}
 			elseif(isset(self::$_FuzzyCache[$site])){
-				$tries = array_merge(self::$_FuzzyCache[-1], self::$_FuzzyCache[$site]);
+				$tries = array_merge(self::$_FuzzyCache['_GLOBAL_'], self::$_FuzzyCache[$site]);
 			}
 			else{
-				$tries = self::$_FuzzyCache[-1];
+				$tries = self::$_FuzzyCache['_GLOBAL_'];
 			}
 
 			while($try != '' && $try != '/') {
@@ -1888,7 +1888,7 @@ class PageModel extends Model {
 
 				$rewrite = strtolower($row['rewriteurl']);
 				$base    = strtolower($row['baseurl']);
-				$siteid  = $row['site'];
+				$siteid  = ($row['site'] == -1) ? '_GLOBAL_' : $row['site'];
 
 				if(!isset(self::$_RewriteCache[$siteid])){
 					self::$_RewriteCache[$siteid] = [];
@@ -1932,10 +1932,10 @@ class PageModel extends Model {
 					'url' => self::$_RewriteCache[$site][$url],
 				];
 			}
-			elseif(isset(self::$_RewriteCache[-1]) && isset(self::$_RewriteCache[-1][$url])){
+			elseif(isset(self::$_RewriteCache['_GLOBAL_']) && isset(self::$_RewriteCache['_GLOBAL_'][$url])){
 				return [
 					'found' => true,
-					'url' => self::$_RewriteCache[-1][$url],
+					'url' => self::$_RewriteCache['_GLOBAL_'][$url],
 				];
 			}
 		}
@@ -1984,7 +1984,7 @@ class PageModel extends Model {
 				}
 			}
 
-			if(($key = array_search($url, self::$_RewriteCache[-1])) !== false){
+			if(($key = array_search($url, self::$_RewriteCache['_GLOBAL_'])) !== false){
 				return $key;
 			}
 		}
@@ -1999,7 +1999,7 @@ class PageModel extends Model {
 			}
 		}
 		else{
-			$tries = array_merge(self::$_FuzzyCache[-1], self::$_FuzzyCache[$site]);
+			$tries = array_merge(self::$_FuzzyCache['_GLOBAL_'], self::$_FuzzyCache[$site]);
 		}
 
 		while($try != '' && $try != '/') {
