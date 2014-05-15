@@ -584,6 +584,16 @@ class Core implements ISingleton {
 			}
 		}
 
+		// All models get a control link registered automatically :)
+		$models = $c->getModelList();
+		foreach($models as $class => $file){
+			if(!HookHandler::GetHook('/core/controllinks/' . $class)){
+				$h = new Hook('/core/controllinks/' . $class);
+				$h->returnType = Hook::RETURN_TYPE_ARRAY;
+				$h->description = 'Automatic hook for control links on the ' . $class . ' object.  Attach onto this hook if you want to add a custom link anytime this object\'s control is displayed.';
+			}
+		}
+
 		// Lastly, mark this component as available!
 		$c->_setReady(true);
 	}
