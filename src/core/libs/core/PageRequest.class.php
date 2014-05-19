@@ -88,6 +88,13 @@ class PageRequest {
 	public $ctype = View::CTYPE_HTML;
 
 	/**
+	 * The extension of the file requested, usually html, but may be pdf, gif, png, etc if necessary.
+	 *
+	 * @var string
+	 */
+	public $ext = 'html';
+
+	/**
 	 * @var string Hostname of the requested connection
 	 */
 	public $host;
@@ -145,6 +152,7 @@ class PageRequest {
 		$this->protocol    = $_SERVER['SERVER_PROTOCOL'];
 		// Specified with prepending ".xml|.json,etc" to the resource.
 		// This is merely a suggestion by the user agent.  If the application doesn't support this medium.... it won't return it.
+		$this->ext = $ctype;
 		$this->ctype = \Core\Filestore\extension_to_mimetype($ctype);
 
 		$this->_resolveMethod();
