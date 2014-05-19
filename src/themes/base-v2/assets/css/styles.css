@@ -4212,46 +4212,44 @@ And their images.  Stand-alone "control" buttons also get the same styling.
 Since the icons are now being handled by font-awesome, the bulk of this logic will have been removed.
 */
 /* First, the common styles for all icon'd controls. */
-/* line 28, ../scss/_controls.scss */
+/* line 29, ../scss/_controls.scss */
 ul.controls li a {
   text-decoration: none;
   font-size: 14px;
   padding: 2px;
   line-height: 18px;
 }
-
-/* line 29, ../scss/_controls.scss */
+/* line 36, ../scss/_controls.scss */
 ul.controls li a:hover {
   text-shadow: none;
   font-size: 18px;
   padding: 0;
 }
-
-/* line 31, ../scss/_controls.scss */
-ul.controls li a span {
+/* line 42, ../scss/_controls.scss */
+ul.controls li span {
   display: none;
 }
 
 /** Spruce up FA with some color :) **/
-/* line 40, ../scss/_controls.scss */
-ul.controls li a i.icon-remove,
-ul.controls li a i.icon-delete {
+/* line 49, ../scss/_controls.scss */
+ul.controls li i.icon-remove,
+ul.controls li i.icon-delete {
   color: #7a0200;
 }
 
-/* line 42, ../scss/_controls.scss */
-ul.controls li a i.icon-edit {
+/* line 51, ../scss/_controls.scss */
+ul.controls li i.icon-edit {
   color: blue;
 }
 
-/* line 43, ../scss/_controls.scss */
-ul.controls li a i.icon-plus,
-ul.controls li a i.icon-add {
+/* line 52, ../scss/_controls.scss */
+ul.controls li i.icon-plus,
+ul.controls li i.icon-add {
   color: green;
 }
 
-/* line 45, ../scss/_controls.scss */
-ul.controls li a i.icon-rss {
+/* line 54, ../scss/_controls.scss */
+ul.controls li i.icon-rss {
   color: #e99700;
 }
 
@@ -4259,26 +4257,17 @@ ul.controls li a i.icon-rss {
  * Contextual controls are similar, but slightly different.
  * Instead of being inline, they're in a context menu.
  */
-/* line 51, ../scss/_controls.scss */
+/* line 60, ../scss/_controls.scss */
 ul.controls.context-menu {
-  position: absolute;
+  background: #eee;
   border: 1px solid #999;
   height: auto;
-  background: #eee;
+  position: absolute;
   top: 0;
-  z-index: 999;
+  text-align: left;
+  z-index: 9999;
 }
-
-/* The many links have a bit different styles. */
-/* line 61, ../scss/_controls.scss */
-ul.controls.context-menu-many-links {
-  box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
-  left: 20px;
-  opacity: 0.9;
-  top: -3px;
-}
-
-/* line 67, ../scss/_controls.scss */
+/* line 69, ../scss/_controls.scss */
 ul.controls.context-menu li {
   font-size: 14px;
   float: none;
@@ -4287,36 +4276,38 @@ ul.controls.context-menu li {
   /* This will get overwritten by a's */
   color: #555;
 }
-
-/* line 75, ../scss/_controls.scss */
+/* line 77, ../scss/_controls.scss */
 ul.controls.context-menu li i {
   line-height: 1.5em;
 }
-
-/* line 78, ../scss/_controls.scss */
-ul.controls.context-menu li a {
+/* line 82, ../scss/_controls.scss */
+ul.controls.context-menu a {
   padding: 0;
   display: block;
   color: #000;
 }
-
-/* line 83, ../scss/_controls.scss */
-ul.controls.context-menu li a:hover {
+/* line 88, ../scss/_controls.scss */
+ul.controls.context-menu a:hover {
   font-size: 14px;
   background: #AFC5EE;
   color: #000;
 }
-
-/* line 89, ../scss/_controls.scss */
+/* line 94, ../scss/_controls.scss */
 ul.controls.context-menu i {
   padding-left: 4px;
 }
-
-/* line 92, ../scss/_controls.scss */
+/* line 98, ../scss/_controls.scss */
 ul.controls.context-menu span {
   line-height: 1.9em;
   padding: 0 2px;
   display: inline;
+}
+
+/* The many links have a bit different styles. */
+/* line 106, ../scss/_controls.scss */
+ul.controls.context-menu-many-links {
+  box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
+  opacity: 0.9;
 }
 
 /*****************************************************************************
