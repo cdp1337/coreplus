@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 28 Apr 2014 00:33:53 -0400
+ * @compiled Mon, 19 May 2014 14:39:06 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1085,6 +1085,7 @@ define('__DMI_PDIR', ROOT_PDIR . 'core/libs/core/datamodel/');
 namespace Core\Datamodel {
 interface BackendInterface {
 public function execute(Dataset $dataset);
+public function _rawExecute($type, $string);
 public function tableExists($tablename);
 public function createTable($table, Schema $schema);
 public function modifyTable($table, Schema $schema);
@@ -1478,6 +1479,9 @@ $diffs[] = array(
 }
 continue;
 }
+if($dat->type == \Model::ATT_TYPE_ALIAS){
+continue;
+}
 if(($colchange = $thiscol->getDiff($dat)) !== null){
 $diffs[] = array(
 'title' => 'Column ' . $name . ' does not match up: ' . $colchange,
@@ -1487,7 +1491,12 @@ $diffs[] = array(
 }
 $a_order = $this->order;
 foreach($this->definitions as $name => $dat){
-if(!$schema->getColumn($name)) unset($a_order[array_search($name, $a_order)]);
+if(!$schema->getColumn($name)){
+unset($a_order[array_search($name, $a_order)]);
+}
+elseif($schema->getColumn($name)->type == \Model::ATT_TYPE_ALIAS){
+unset($a_order[array_search($name, $a_order)]);
+}
 }
 if(implode(',', $a_order) != implode(',', $schema->order)){
 $diffs[] = array(
@@ -1498,7 +1507,7 @@ $diffs[] = array(
 $thisidx = '';
 foreach($this->indexes as $name => $cols) $thisidx .= ';' . $name . '-' . implode(',', $cols);
 $thatidx = '';
-foreach($this->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
+foreach($schema->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
 if($thisidx != $thatidx){
 $diffs[] = array(
 'title' => 'Indexes do not match up',
@@ -1818,7 +1827,7 @@ elseif($this->changed()){
 $save = true;
 }
 else{
-foreach($this->_linked as $k => $l){
+foreach($this->_linked as $l){
 if(isset($l['records'])){
 $save = true;
 break;
@@ -1833,7 +1842,7 @@ if(!$save){
 return false;
 }
 HookHandler::DispatchHook('/core/model/presave', $this);
-foreach($this->_linked as $k => $l){
+foreach($this->_linked as $l){
 if(!is_array($l['on'])){
 $l['on'] = array($l['on'] => $l['on'] );
 }
@@ -1881,6 +1890,19 @@ unset($l['purged']);
 }
 $this->_exists     = true;
 $this->_datainit = $this->_data;
+if(($class = get_parent_class($this)) != 'Model'){
+$idx = self::GetIndexes();
+if(isset($idx['primary']) && sizeof($idx['primary']) == 1){
+$schema = $this->getKeySchema($idx['primary'][0]);
+if($schema['type'] == Model::ATT_TYPE_UUID){
+$refp = new ReflectionClass($class);
+$refm = $refp->getMethod('Construct');
+$parent = $refm->invoke(null, $this->get($idx['primary'][0]));
+$parent->setFromArray($this->getAsArray());
+$parent->save();
+}
+}
+}
 HookHandler::DispatchHook('/core/model/postsave', $this);
 return true;
 }
@@ -1988,6 +2010,9 @@ else{
 return '';
 }
 }
+public function getControlLinks(){
+return [];
+}
 public function _loadFromRecord($record) {
 $this->_data = $record;
 $this->_datainit = $this->_data;
@@ -2044,6 +2069,7 @@ if ($dat->execute($this->interface)) {
 $this->_exists = false;
 }
 }
+return true;
 }
 public function validate($k, $v, $throwexception = false) {
 $s = self::GetSchema();
@@ -2134,13 +2160,6 @@ if($v == '' || $v == '0000-00-00 00:00:00' || $v === null){
 $v = $default;
 }
 break;
-default:
-if($v === null){
-$v = $default;
-}
-break;
-}
-switch($type){
 case Model::ATT_TYPE_BOOL:
 if($v === true){
 $v = '1';
@@ -2159,6 +2178,11 @@ break;
 default:
 $v = '0';
 }
+}
+break;
+default:
+if($v === null){
+$v = $default;
 }
 break;
 }
@@ -2365,9 +2389,12 @@ return false;
 public function isnew() {
 return !$this->_exists;
 }
-public function changed(){
+public function changed($key = null){
 $s = self::GetSchema();
 foreach ($this->_data as $k => $v) {
+if($key !== null && $key != $k){
+continue;
+}
 if(!isset($s[$k])){
 continue;
 }
@@ -3335,7 +3362,12 @@ public static $Schema = array(
 'site' => array(
 'type' => Model::ATT_TYPE_SITE,
 'default' => -1,
-'formtype' => 'system',
+'form' => [
+'type' => 'system',
+'group' => 'Access & Advanced',
+'grouptype' => 'tabs',
+'description' => 'Please note, changing the site ID on an existing page may result in loss of data or unexpected results.',
+],
 'comment' => 'The site id in multisite mode, (or -1 if global)',
 ),
 'baseurl' => array(
@@ -3497,6 +3529,7 @@ This cache only applies to guest users and bots.',
 'pageviews' => array(
 'type' => Model::ATT_TYPE_INT,
 'formtype' => 'disabled',
+'default' => 0,
 'comment' => 'Number of page views',
 'model_audit_ignore' => true, // Custom key for the component "Model Audit".
 ),
@@ -3518,7 +3551,8 @@ This cache only applies to guest users and bots.',
 ),
 'popularity' => array(
 'type' => Model::ATT_TYPE_FLOAT,
-'default' => 0,
+'default' => 0.000,
+'precision' => '10,8',
 'comment' => 'Cache of the popularity score of this page',
 'formtype' => 'disabled',
 ),
@@ -3753,6 +3787,10 @@ if($meta->get('meta_key') == $name) return $meta;
 }
 return null;
 }
+public function getMetaValue($name){
+$m = $this->getMeta($name);
+return $m ? $m->get('meta_value_title') : '';
+}
 public function setMetas($metaarray) {
 if (is_array($metaarray) && count($metaarray)){
 foreach($metaarray as $k => $v){
@@ -3811,7 +3849,7 @@ unset($this->_linked['PageMeta']['records'][$idx]);
 }
 return; // :)
 }
-if($value){
+if($value !== null){
 $meta = new PageMetaModel($this->get('site'), $this->get('baseurl'), $name, '');
 $meta->set('meta_value_title', $value);
 $this->_linked['PageMeta']['records'][] = $meta;
@@ -3822,6 +3860,7 @@ public function setInsertable($name, $value){
 $insertables = $this->getLink('Insertable');
 foreach($insertables as $ins){
 if($ins->get('name') == $name){
+$ins->set('site', $this->get('site'));
 $ins->set('value', $value);
 return; // :)
 }
@@ -3883,6 +3922,8 @@ $this->setLink('RewriteMap', $rewrite);
 }
 }
 public function setFromForm(Form $form, $prefix = null){
+$this->getLink('Insertable');
+$this->getLink('PageMeta');
 parent::setFromForm($form, $prefix);
 if($form->getElement($prefix . '[rewrites]')){
 $rewrites = $form->getElement($prefix . '[rewrites]')->get('value');
@@ -3911,6 +3952,22 @@ $element->set('templatename', $this->getBaseTemplateName());
 }
 }
 public function addToFormPost(Form $form, $prefix){
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
+$form->switchElementType($prefix . '[site]', 'select');
+$el = $form->getElement($prefix . '[site]');
+$opts = [
+'-1' => 'Global Page',
+'0'  => 'Root-Only Page',
+];
+$fac = MultiSiteModel::FindRaw([], null, null);
+foreach($fac as $dat){
+if($dat['status'] != 'active'){
+continue;
+}
+$opts[ $dat['id'] ] = $dat['name'] . ' (' . $dat['id'] . ')';
+}
+$el->set( 'options', $opts );
+}
 $metasgroupname = 'Meta Information & URL (SEO)';
 $insertablesgroupname = 'Basic';
 $metasgroup = $form->getElement($metasgroupname);
@@ -4098,6 +4155,9 @@ return 0.000;
 if(!$this->get('indexable')){
 return 0.000;
 }
+if($score == 0){
+return 0.000;
+}
 $order = log10($score);
 $seconds = time() - $created;
 $secs_per_month = 86400 * 28.5;
@@ -4121,9 +4181,7 @@ else{
 $t = $title;
 }
 if(ConfigHandler::Get('/core/page/title_remove_stop_words')){
-$stopwords = array('a', 'about', 'above', 'above', 'across', 'after', 'afterwards', 'again', 'against', 'all', 'almost', 'alone', 'along', 'already', 'also','although','always','am','among', 'amongst', 'amoungst', 'amount',  'an', 'and', 'another', 'any','anyhow','anyone','anything','anyway', 'anywhere', 'are', 'around', 'as',  'at', 'back','be','became', 'because','become','becomes', 'becoming', 'been', 'before', 'beforehand', 'behind', 'being', 'below', 'beside', 'besides', 'between', 'beyond', 'bill', 'both', 'bottom','but', 'by', 'call', 'can', 'cannot', 'cant', 'co', 'con', 'could', 'couldnt', 'cry', 'de', 'describe', 'detail', 'do', 'done', 'down', 'due', 'during', 'each', 'eg', 'eight', 'either', 'eleven','else', 'elsewhere', 'empty', 'enough', 'etc', 'even', 'ever', 'every', 'everyone', 'everything', 'everywhere', 'except', 'few', 'fifteen', 'fify', 'fill', 'find', 'fire', 'first', 'five', 'for', 'former', 'formerly', 'forty', 'found', 'four', 'from', 'front', 'full', 'further', 'get', 'give', 'go
-', 'had', 'has', 'hasnt', 'have', 'he', 'hence', 'her', 'here', 'hereafter', 'hereby', 'herein', 'hereupon', 'hers', 'herself', 'him', 'himself', 'his', 'how', 'however', 'hundred', 'ie', 'if', 'in', 'inc', 'indeed', 'interest', 'into', 'is', 'it', 'its', 'itself', 'keep', 'last', 'latter', 'latterly', 'least', 'less', 'ltd', 'made', 'many', 'may', 'me', 'meanwhile', 'might', 'mill', 'mine', 'more', 'moreover', 'most', 'mostly', 'move', 'much', 'must', 'my', 'myself', 'name', 'namely', 'neither', 'never', 'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone', 'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often', 'on', 'once', 'one', 'only', 'onto', 'or', 'other', 'others', 'otherwise', 'our', 'ours', 'ourselves', 'out', 'over', 'own','part', 'per', 'perhaps', 'please', 'put', 'rather', 're', 'same', 'see', 'seem', 'seemed', 'seeming', 'seems', 'serious', 'several', 'she', 'should', 'show', 'side', 'since', 'sincere', 'six', 'sixty', 'so', 'some', 'somehow', 'someone', 'something', 'somet
-ime', 'sometimes', 'somewhere', 'still', 'such', 'system', 'take', 'ten', 'than', 'that', 'the', 'their', 'them', 'themselves', 'then', 'thence', 'there', 'thereafter', 'thereby', 'therefore', 'therein', 'thereupon', 'these', 'they', 'thickv', 'thin', 'third', 'this', 'those', 'though', 'three', 'through', 'throughout', 'thru', 'thus', 'to', 'together', 'too', 'top', 'toward', 'towards', 'twelve', 'twenty', 'two', 'un', 'under', 'until', 'up', 'upon', 'us', 'very', 'via', 'was', 'we', 'well', 'were', 'what', 'whatever', 'when', 'whence', 'whenever', 'where', 'whereafter', 'whereas', 'whereby', 'wherein', 'whereupon', 'wherever', 'whether', 'which', 'while', 'whither', 'who', 'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with', 'within', 'without', 'would', 'yet', 'you', 'your', 'yours', 'yourself', 'yourselves', 'the');
+$stopwords = \Core\get_stop_words();
 $exploded = explode(' ', $t);
 $nt = '';
 foreach($exploded as $w){
@@ -4132,7 +4190,7 @@ if(!in_array($lw, $stopwords)){
 $nt .= ' ' . $w;
 }
 }
-$t = trim($t);
+$t = trim($nt);
 }
 return $t;
 }
@@ -4274,10 +4332,10 @@ $tries = array_merge($tries, $dat);
 }
 }
 elseif(isset(self::$_FuzzyCache[$site])){
-$tries = array_merge(self::$_FuzzyCache[-1], self::$_FuzzyCache[$site]);
+$tries = array_merge(self::$_FuzzyCache['_GLOBAL_'], self::$_FuzzyCache[$site]);
 }
 else{
-$tries = self::$_FuzzyCache[-1];
+$tries = self::$_FuzzyCache['_GLOBAL_'];
 }
 while($try != '' && $try != '/') {
 if(isset($tries[$try])) {
@@ -4418,7 +4476,7 @@ self::$_FuzzyCache = array();
 foreach ($rs as $row) {
 $rewrite = strtolower($row['rewriteurl']);
 $base    = strtolower($row['baseurl']);
-$siteid  = $row['site'];
+$siteid  = ($row['site'] == -1) ? '_GLOBAL_' : $row['site'];
 if(!isset(self::$_RewriteCache[$siteid])){
 self::$_RewriteCache[$siteid] = [];
 }
@@ -4452,10 +4510,10 @@ return [
 'url' => self::$_RewriteCache[$site][$url],
 ];
 }
-elseif(isset(self::$_RewriteCache[-1]) && isset(self::$_RewriteCache[-1][$url])){
+elseif(isset(self::$_RewriteCache['_GLOBAL_']) && isset(self::$_RewriteCache['_GLOBAL_'][$url])){
 return [
 'found' => true,
-'url' => self::$_RewriteCache[-1][$url],
+'url' => self::$_RewriteCache['_GLOBAL_'][$url],
 ];
 }
 }
@@ -4487,7 +4545,7 @@ if(($key = array_search($url, self::$_RewriteCache[$site])) !== false){
 return $key;
 }
 }
-if(($key = array_search($url, self::$_RewriteCache[-1])) !== false){
+if(($key = array_search($url, self::$_RewriteCache['_GLOBAL_'])) !== false){
 return $key;
 }
 }
@@ -4499,7 +4557,7 @@ $tries = array_merge($tries, $dat);
 }
 }
 else{
-$tries = array_merge(self::$_FuzzyCache[-1], self::$_FuzzyCache[$site]);
+$tries = array_merge(self::$_FuzzyCache['_GLOBAL_'], self::$_FuzzyCache[$site]);
 }
 while($try != '' && $try != '/') {
 if(isset($tries[$try])) {
@@ -4573,7 +4631,7 @@ public static $Schema = array(
 'null'      => false,
 ),
 'user_id'    => array(
-'type'    => Model::ATT_TYPE_INT,
+'type'    => Model::ATT_TYPE_UUID_FK,
 'default' => 0,
 ),
 'ip_addr'    => array(
@@ -5006,15 +5064,17 @@ public static $Schema = array(
 'comment' => 'The source of the user registration, either self, admin, or other.'
 ),
 'registration_invitee' => array(
-'type' => Model::ATT_TYPE_INT,
+'type' => Model::ATT_TYPE_UUID_FK,
 'comment' => 'If invited/created by a user, this is the ID of that user.',
 ),
 'last_login' => array(
 'type' => Model::ATT_TYPE_INT,
+'default' => 0,
 'comment' => 'The timestamp of the last login of this user',
 ),
 'last_password' => array(
 'type' => Model::ATT_TYPE_INT,
+'default' => 0,
 'comment' => 'The timestamp of the last password reset of this user',
 ),
 );
@@ -6898,6 +6958,210 @@ return ($this->_versionDB !== false);
 }
 
 
+### REQUIRE_ONCE FROM core/libs/core/VersionString.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core {
+class VersionString implements \ArrayAccess {
+public $major;
+public $minor = 0;
+public $point = 0;
+public $user;
+public $stability;
+public $build;
+public function __construct($version = null){
+if($version){
+$this->parseString($version);
+}
+}
+public function __toString(){
+$ret = $this->major . '.' . $this->minor . '.' . $this->point;
+if($this->stability){
+$ret .= $this->stability;
+}
+if($this->build){
+$ret .= '.' . $this->build;
+}
+if($this->user){
+$ret .= '~' . $this->user;
+}
+return $ret;
+}
+public function parseString($version) {
+$parts = explode('.', strtolower($version));
+if(isset($parts[0])){
+$this->major = $parts[0];
+}
+if(isset($parts[1])){
+if(is_numeric($parts[1])){
+$this->minor = $parts[1];
+}
+else{
+$digit = $parts[1];
+if(($pos = strpos($digit, '~')) !== false){
+$this->minor = substr($digit, 0, $pos);
+$this->user = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, 'a')) !== false){
+$this->minor = substr($digit, 0, $pos);
+$this->stability = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, 'b')) !== false){
+$this->minor = substr($digit, 0, $pos);
+$this->stability = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, 'rc')) !== false){
+$this->minor = substr($digit, 0, $pos);
+$this->stability = substr($digit, $pos);
+}
+}
+}
+if(isset($parts[2])){
+if(is_numeric($parts[2])){
+$this->point = $parts[2];
+}
+else{
+$digit = $parts[2];
+if(($pos = strpos($digit, '~')) !== false){
+$this->point = substr($digit, 0, $pos);
+$this->user = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, 'a')) !== false){
+$this->point = substr($digit, 0, $pos);
+$this->stability = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, 'b')) !== false){
+$this->point = substr($digit, 0, $pos);
+$this->stability = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, 'rc')) !== false){
+$this->point = substr($digit, 0, $pos);
+$this->stability = substr($digit, $pos);
+}
+}
+}
+if(isset($parts[3])){
+if(is_numeric($parts[3])){
+$this->build = $parts[3];
+}
+else{
+$digit = $parts[3];
+if(($pos = strpos($digit, '~')) !== false){
+$this->build = substr($digit, 0, $pos);
+$this->user = substr($digit, $pos);
+}
+else{
+$this->build = $digit;
+}
+}
+}
+}
+public function setMajor($int){
+$this->major = $int;
+}
+public function setMinor($int){
+$this->minor = $int;
+}
+public function setPoint($int){
+$this->point = $int;
+}
+public function setUser($string){
+$this->user = $string;
+}
+public function setBuild($string){
+$this->build = $string;
+}
+public function setStability($type){
+$type = strtolower($type);
+switch($type){
+case 'dev':
+$this->stability = 'dev';
+break;
+case 'a':
+case 'alpha':
+$this->stability = 'a';
+break;
+case 'b':
+case 'beta':
+$this->stability = 'b';
+break;
+case 'rc':
+$this->stability = 'rc';
+break;
+default:
+$this->stability = null;
+break;
+}
+}
+public function compare($other, $operation = null){
+if(!$other instanceof VersionString){
+$other = new VersionString($other);
+}
+$v1    = $this->major . '.' . $this->minor . '.' . $this->point;
+$v2    = $other->major . '.' . $other->minor . '.' . $other->point;
+$check = version_compare($v1, $v2);
+if($check == 0 && $this->user && $other->user){
+$check = version_compare($this->user, $other->user);
+}
+if($check == 0 && ($this->stability || $other->stability)){
+$check = version_compare($this->stability, $other->stability);
+}
+if ($operation === null){
+return $check;
+}
+elseif($check == -1){
+switch($operation){
+case 'lt':
+case '<':
+case 'le':
+case '<=':
+return true;
+default:
+return false;
+}
+}
+elseif($check == 0){
+switch($operation){
+case 'le':
+case '<=':
+case 'eq':
+case '=':
+case '==':
+case 'ge':
+case '>=':
+return true;
+default:
+return false;
+}
+}
+else{
+switch($operation){
+case 'ge':
+case '>=':
+case 'gt':
+case '>':
+return true;
+default:
+return false;
+}
+}
+}
+public function offsetExists($offset) {
+return property_exists($this, $offset);
+}
+public function offsetGet($offset) {
+return $this->$offset;
+}
+public function offsetSet($offset, $value) {
+$this->$offset = $value;
+}
+public function offsetUnset($offset) {
+$this->$offset = null;
+}
+}
+} // ENDING NAMESPACE Core
+
+namespace  {
+
 ### REQUIRE_ONCE FROM core/libs/core/Component_2_1.php
 class Component_2_1 {
 private $_xmlloader = null;
@@ -7136,6 +7400,21 @@ $this->_classlist[$n] = $filename;
 }
 }
 return $this->_classlist;
+}
+public function getModelList(){
+$classes = $this->getClassList();
+foreach ($classes as $k => $v) {
+if($k == 'model'){
+unset($classes[$k]);
+}
+elseif(strrpos($k, 'model') !== strlen($k) - 5){
+unset($classes[$k]);
+}
+elseif(strpos($k, '\\') !== false){
+unset($classes[$k]);
+}
+}
+return $classes;
 }
 public function getWidgetList() {
 $dir = $this->getBaseDir();
@@ -7948,18 +8227,7 @@ $node   = $this->_xmlloader->getElement('dbschema');
 $prefix = $node->getAttribute('prefix');
 $changes = array();
 Core\Utilities\Logger\write_debug('Installing database schema for ' . $this->getName());
-$classes = $this->getClassList();
-foreach ($classes as $k => $v) {
-if($k == 'model'){
-unset($classes[$k]);
-}
-elseif(strrpos($k, 'model') !== strlen($k) - 5){
-unset($classes[$k]);
-}
-elseif(strpos($k, '\\') !== false){
-unset($classes[$k]);
-}
-}
+$classes = $this->getModelList();
 foreach ($classes as $m => $file) {
 if(!class_exists($m)) require_once($file);
 $schema = ModelFactory::GetSchema($m);
@@ -8257,6 +8525,7 @@ return $cachevalue[$asset];
 }
 function resolve_link($url) {
 if ($url == '#') return $url;
+$url = strtolower($url);
 if($url{0} == '?'){
 $url = REL_REQUEST_PATH . $url;
 }
@@ -8295,6 +8564,9 @@ $movetext = '301 Moved Permanently';
 break;
 case 302:
 $movetext = '302 Moved Temporarily';
+break;
+default:
+$movetext = $code . ' Moved Temporarily';
 break;
 }
 header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
@@ -8723,6 +8995,12 @@ $c = count($array) - 1;
 end($array);
 if(key($array) !== $c) return false;
 return true;
+}
+function get_stop_words(){
+$stopwords = array('a', 'about', 'above', 'above', 'across', 'after', 'afterwards', 'again', 'against', 'all', 'almost', 'alone', 'along', 'already', 'also','although','always','am','among', 'amongst', 'amoungst', 'amount',  'an', 'and', 'another', 'any','anyhow','anyone','anything','anyway', 'anywhere', 'are', 'around', 'as',  'at', 'back','be','became', 'because','become','becomes', 'becoming', 'been', 'before', 'beforehand', 'behind', 'being', 'below', 'beside', 'besides', 'between', 'beyond', 'bill', 'both', 'bottom','but', 'by', 'call', 'can', 'cannot', 'cant', 'co', 'con', 'could', 'couldnt', 'cry', 'de', 'describe', 'detail', 'do', 'done', 'down', 'due', 'during', 'each', 'eg', 'eight', 'either', 'eleven','else', 'elsewhere', 'empty', 'enough', 'etc', 'even', 'ever', 'every', 'everyone', 'everything', 'everywhere', 'except', 'few', 'fifteen', 'fify', 'fill', 'find', 'fire', 'first', 'five', 'for', 'former', 'formerly', 'forty', 'found', 'four', 'from', 'front', 'full', 'further', 'get', 'give', 'go',
+'had', 'has', 'hasnt', 'have', 'he', 'hence', 'her', 'here', 'hereafter', 'hereby', 'herein', 'hereupon', 'hers', 'herself', 'him', 'himself', 'his', 'how', 'however', 'hundred', 'ie', 'if', 'in', 'inc', 'indeed', 'interest', 'into', 'is', 'it', 'its', 'itself', 'keep', 'last', 'latter', 'latterly', 'least', 'less', 'ltd', 'made', 'many', 'may', 'me', 'meanwhile', 'might', 'mill', 'mine', 'more', 'moreover', 'most', 'mostly', 'move', 'much', 'must', 'my', 'myself', 'name', 'namely', 'neither', 'never', 'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone', 'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often', 'on', 'once', 'one', 'only', 'onto', 'or', 'other', 'others', 'otherwise', 'our', 'ours', 'ourselves', 'out', 'over', 'own','part', 'per', 'perhaps', 'please', 'put', 'rather', 're', 'same', 'see', 'seem', 'seemed', 'seeming', 'seems', 'serious', 'several', 'she', 'should', 'show', 'side', 'since', 'sincere', 'six', 'sixty', 'so', 'some', 'somehow', 'someone', 'something', 'sometim
+e', 'sometimes', 'somewhere', 'still', 'such', 'system', 'take', 'ten', 'than', 'that', 'the', 'their', 'them', 'themselves', 'then', 'thence', 'there', 'thereafter', 'thereby', 'therefore', 'therein', 'thereupon', 'these', 'they', 'thickv', 'thin', 'third', 'this', 'those', 'though', 'three', 'through', 'throughout', 'thru', 'thus', 'to', 'together', 'too', 'top', 'toward', 'towards', 'twelve', 'twenty', 'two', 'un', 'under', 'until', 'up', 'upon', 'us', 'very', 'via', 'was', 'we', 'well', 'were', 'what', 'whatever', 'when', 'whence', 'whenever', 'where', 'whereafter', 'whereas', 'whereby', 'wherein', 'whereupon', 'wherever', 'whether', 'which', 'while', 'whither', 'who', 'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with', 'within', 'without', 'would', 'yet', 'you', 'your', 'yours', 'yourself', 'yourselves', 'the');
+return $stopwords;
 }
 } // ENDING NAMESPACE Core
 
@@ -9760,6 +10038,10 @@ $key    = $bits['key'];
 if (!$this->exists()) {
 error_log('File not found [ ' . $this->_filename . ' ]', E_USER_NOTICE);
 $file = Factory::File('assets/images/mimetypes/notfound.png');
+if(!$file->exists()){
+trigger_error('The 404 image could not be located.', E_USER_WARNING);
+return null;
+}
 $preview = $file->getPreviewFile($dimensions);
 }
 elseif ($this->isPreviewable()) {
@@ -12765,6 +13047,14 @@ foreach($auths as $name => $class){
 \Core\User\Helper::$AuthDrivers[$name] = $class;
 }
 }
+$models = $c->getModelList();
+foreach($models as $class => $file){
+if(!HookHandler::GetHook('/core/controllinks/' . $class)){
+$h = new Hook('/core/controllinks/' . $class);
+$h->returnType = Hook::RETURN_TYPE_ARRAY;
+$h->description = 'Automatic hook for control links on the ' . $class . ' object.  Attach onto this hook if you want to add a custom link anytime this object\'s control is displayed.';
+}
+}
 $c->_setReady(true);
 }
 public static function CheckClass($classname) {
@@ -13215,120 +13505,11 @@ public static function _AttachLessJS(){
 return true;
 }
 public static function VersionCompare($version1, $version2, $operation = null) {
-if (!$version1) $version1 = 0;
-if (!$version2) $version2 = 0;
-$version1 = Core::VersionSplit($version1);
-$version2 = Core::VersionSplit($version2);
-$v1    = $version1['major'] . '.' . $version1['minor'] . '.' . $version1['point'];
-$v2    = $version2['major'] . '.' . $version2['minor'] . '.' . $version2['point'];
-$check = version_compare($v1, $v2);
-if($check == 0 && $version1['user'] && $version2['user']){
-$check = version_compare($version1['user'], $version2['user']);
-}
-if($check == 0 && ($version1['stability'] || $version2['stability'])){
-$check = version_compare($version1['stability'], $version2['stability']);
-}
-if ($operation === null){
-return $check;
-}
-elseif($check == -1){
-switch($operation){
-case 'lt':
-case '<':
-case 'le':
-case '<=':
-return true;
-default:
-return false;
-}
-}
-elseif($check == 0){
-switch($operation){
-case 'le':
-case '<=':
-case 'eq':
-case '=':
-case '==':
-case 'ge':
-case '>=':
-return true;
-default:
-return false;
-}
-}
-else{
-switch($operation){
-case 'ge':
-case '>=':
-case 'gt':
-case '>':
-return true;
-default:
-return false;
-}
-}
+$version1 = new \Core\VersionString($version1);
+return $version1->compare($version2, $operation);
 }
 public static function VersionSplit($version) {
-$ret = array(
-'major'     => 0,
-'minor'     => 0,
-'point'     => 0,
-'user'      => 0,
-'stability' => '1',
-);
-$parts = explode('.', strtolower($version));
-if(isset($parts[0])){
-$ret['major'] = $parts[0];
-}
-if(isset($parts[1])){
-if(is_numeric($parts[1])){
-$ret['minor'] = $parts[1];
-}
-else{
-$digit = $parts[1];
-if(($pos = strpos($digit, '~')) !== false){
-$ret['minor'] = substr($digit, 0, $pos);
-$ret['user'] = substr($digit, $pos);
-}
-elseif(($pos = strpos($digit, 'a')) !== false){
-$ret['minor'] = substr($digit, 0, $pos);
-$ret['stability'] = substr($digit, $pos);
-}
-elseif(($pos = strpos($digit, 'b')) !== false){
-$ret['minor'] = substr($digit, 0, $pos);
-$ret['stability'] = substr($digit, $pos);
-}
-elseif(($pos = strpos($digit, 'rc')) !== false){
-$ret['minor'] = substr($digit, 0, $pos);
-$ret['stability'] = substr($digit, $pos);
-}
-}
-}
-if(isset($parts[2])){
-if(is_numeric($parts[2])){
-$ret['point'] = $parts[2];
-}
-else{
-$digit = $parts[2];
-if(($pos = strpos($digit, '~')) !== false){
-$ret['point'] = substr($digit, 0, $pos);
-$ret['user'] = substr($digit, $pos);
-}
-elseif(($pos = strpos($digit, 'a')) !== false){
-$ret['point'] = substr($digit, 0, $pos);
-$ret['stability'] = substr($digit, $pos);
-}
-elseif(($pos = strpos($digit, 'b')) !== false){
-$ret['point'] = substr($digit, 0, $pos);
-$ret['stability'] = substr($digit, $pos);
-}
-elseif(($pos = strpos($digit, 'rc')) !== false){
-$ret['point'] = substr($digit, 0, $pos);
-$ret['stability'] = substr($digit, $pos);
-}
-}
-}
-return $ret;
+return new \Core\VersionString($version);
 }
 public static function CompareValues($val1, $val2){
 return \Core\compare_values($val1, $val2);
@@ -13647,12 +13828,12 @@ define('HOST', $host);
 if (!is_dir(TMP_DIR)) {
 mkdir(TMP_DIR, 0777, true);
 }
-if(SSL_MODE == SSL_MODE_REQUIRED && !SSL){
+if(EXEC_MODE == 'WEB' && SSL_MODE == SSL_MODE_REQUIRED && !SSL){
 if(!DEVELOPMENT_MODE) header("HTTP/1.1 301 Moved Permanently");
 header('Location: ' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1));
 die('This site requires SSL, if it does not redirect you automatically, please <a href="' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
 }
-elseif(SSL_MODE == SSL_MODE_DISABLED && SSL){
+elseif(EXEC_MODE == 'WEB' && SSL_MODE == SSL_MODE_DISABLED && SSL){
 if(!DEVELOPMENT_MODE) header("HTTP/1.1 301 Moved Permanently");
 header('Location: ' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1));
 die('This site has SSL disabled, if it does not redirect you automatically, please <a href="' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
@@ -15451,7 +15632,7 @@ $foot = $this->getFootContent();
 if (DEVELOPMENT_MODE) {
 $debug = '';
 $debug .= '<pre class="xdebug-var-dump screen">';
-$debug .= '<fieldset class="debug-section collapsible">';
+$debug .= '<fieldset class="debug-section collapsible" id="debug-section-template-information">';
 $debug .= '<legend><b>Template Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= "<span>";
 $debug .= 'Base URL: ' . $this->baseurl . "\n";
@@ -15459,7 +15640,7 @@ $debug .= 'Template Used: ' . $this->templatename . "\n";
 $debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
 $debug .= "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible">';
+$debug .= '<fieldset class="debug-section collapsible" id="debug-section-performance-information">';
 $debug .= '<legend><b>Performance Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= "<span>";
 $debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
@@ -15469,13 +15650,13 @@ $profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
 $debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
 $debug .= "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible">';
+$debug .= '<fieldset class="debug-section collapsible" id="debug-section-profiler-information">';
 $debug .= '<legend><b>Core Profiler</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= "<span>";
 $debug .= $profiler->getEventTimesFormatted();
 $debug .= "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible collapsed">';
+$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-components-information">';
 $debug .= '<legend><b>Available Components</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
 $debug .= "<span>";
@@ -15494,7 +15675,7 @@ $debug .= $v->getName() . ' ' . $v->getVersion() . "<br/>";
 }
 $debug .= "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible collapsed">';
+$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-hooks-information">';
 $debug .= '<legend><b>Registered Hooks</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 foreach(HookHandler::GetAllHooks() as $hook){
 $debug .= "<span>";
@@ -15509,12 +15690,12 @@ $debug .= "\n\n";
 $debug .= "</span>";
 }
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible collapsed">';
+$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-includes-information">';
 $debug .= '<legend><b>Included Files</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= '<span>Number: ' . sizeof(get_included_files()) . "</span>";
 $debug .= '<span>'. implode("<br/>", get_included_files()) . "</span>";
 $debug .= '</fieldset>';
-$debug .= '<fieldset class="debug-section collapsible collapsed">';
+$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-query-information">';
 $debug .= '<legend><b>Query Log</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $ql = \Core\DB()->queryLog();
 $qls = sizeof($ql);
@@ -16354,6 +16535,7 @@ public static $Mappings = array(
 'text'             => 'FormTextInput',
 'textarea'         => 'FormTextareaInput',
 'time'             => 'FormTimeInput',
+'user'             => 'FormUserInput',
 'wysiwyg'          => 'FormTextareaInput',
 );
 public static $GroupMappings = array(
@@ -16376,11 +16558,13 @@ return 'forms/form.tpl';
 public function generateUniqueHash(){
 $hash = '';
 $set = false;
-$hash .= $this->get('callsmethod');
-if ($this->get('___modelpks')) {
-$set = true;
-foreach ($this->get('___modelpks') as $k => $v) {
-$hash .= $k . ':' . $v . ';';
+$hash .= $this->get('callsmethod') . ';';
+foreach($this->_models as $m => $model){
+$i = $model->GetIndexes();
+if(isset($i['primary'])){
+foreach($i['primary'] as $k){
+$hash .= $m . '.' . $k . ':' . $model->get($k) . ';';
+}
 }
 }
 foreach ($this->getElements() as $el) {
@@ -16756,6 +16940,7 @@ public $uriresolved;
 public $protocol;
 public $parameters = array();
 public $ctype = View::CTYPE_HTML;
+public $ext = 'html';
 public $host;
 private $_pagemodel = null;
 private $_pageview = null;
@@ -16776,6 +16961,7 @@ $ctype = 'html';
 }
 $this->uriresolved = $uri;
 $this->protocol    = $_SERVER['SERVER_PROTOCOL'];
+$this->ext = $ctype;
 $this->ctype = \Core\Filestore\extension_to_mimetype($ctype);
 $this->_resolveMethod();
 $this->_resolveAcceptHeader();
