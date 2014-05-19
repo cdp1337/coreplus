@@ -2,7 +2,7 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.11.0~core1" name="JQuery-Full" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.1.0" operation="ge"/>
+		<require name="core" type="component" version="3.2.2" operation="ge"/>
 	</requires>
 	<provides>
 		<provide name="JQuery" version="1.11.0" type="library"/>
@@ -107,6 +107,7 @@
 		<file filename="assets/js/jquery/jquery.json-2.4.min.js" md5="f7b87723e700272150f9785de8f03f1c"/>
 		<file filename="assets/js/jquery/jquery.masonry.min.js" md5="a6b726ee7fce43453a6eb25e8a1cb819"/>
 		<file filename="assets/js/jquery/jquery.minimalect.js" md5="ba21f05f72d872e6e91459b9a1e4a340"/>
+		<file filename="assets/js/jquery/jquery.minimalect.min.js" md5="51afae54e66879808f99bbef9e3bfa3e"/>
 		<file filename="assets/js/jquery/jquery.smooth-scroll.min.js" md5="34b5513756446947afd1b7399d02ea65"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.js" md5="fbd3ec46c4cb84a8433f3b5c468e98cf"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.min.js" md5="28fb224b45d2fdb5e5eef85d2dfc8458"/>
@@ -120,9 +121,9 @@
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="9597bb085c8e57f922978f665eb2ca0a"/>
+		<file filename="CHANGELOG" md5="71ea9f64bc91a804ae148f4fc717e79a"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="c0a2beaac1da7da9cdbaa57fa9f5c0b5">
+		<file filename="JQuery.lib.php" md5="ac3fd84ee09ef68be55af9c9793efe18">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
