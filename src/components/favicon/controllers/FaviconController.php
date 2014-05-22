@@ -53,6 +53,15 @@ class FaviconController extends Controller_2_1 {
 		$view->record = false;
 		$view->mode = View::MODE_NOOUTPUT;
 
+		// Fix Bug #562, Favicon "none" option.
+		// Do not render anything if no icon is selected.
+		if(!$image){
+			return;
+		}
+		if(!$file->exists()){
+			return;
+		}
+
 		$file->displayPreview( '32x32!');
 	}
 
