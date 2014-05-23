@@ -32,61 +32,65 @@
  */
 class ConfigModel extends Model {
 	public static $Schema = array(
-		'key'           => array(
+		'key'           => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 255,
 			'required'  => true,
 			'null'      => false,
-		),
-		'type'          => array(
+		],
+		'type'          => [
 			'type'    => Model::ATT_TYPE_ENUM,
-			'options' => array('string', 'int', 'boolean', 'enum', 'set'),
+			'options' => ['string', 'int', 'boolean', 'enum', 'set'],
 			'default' => 'string',
 			'null'    => false,
-		),
-		'encrypted' => array(
+		],
+		'encrypted' => [
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => 0,
-		),
-		'default_value' => array(
+		],
+		'default_value' => [
 			'type'    => Model::ATT_TYPE_TEXT,
 			'default' => null,
 			'null'    => true,
-		),
-		'value'         => array(
+		],
+		'value'         => [
 			'type'    => Model::ATT_TYPE_TEXT,
 			'default' => null,
 			'null'    => true,
-		),
-		'options'       => array(
+		],
+		'options'       => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 511,
 			'default'   => null,
 			'null'      => true,
-		),
-		'description'   => array(
+		],
+		'title'         => [
+			'type'    => Model::ATT_TYPE_STRING,
+			'comment' => 'The title from the config parameter, optional',
+		],
+		'description'   => [
 			'type'    => Model::ATT_TYPE_TEXT,
 			'default' => null,
 			'null'    => true,
-		),
-		'mapto'         => array(
+		],
+		'mapto'         => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 32,
 			'default'   => null,
 			'comment'   => 'The define constant to map the value to on system load.',
 			'null'      => true,
-		),
-		'overrideable' => array(
+		],
+		'overrideable' => [
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => false,
 			'comment' => 'If children sites can override this configuration option',
-		),
-		'created'       => array(
+		],
+		'created'       => [
 			'type' => Model::ATT_TYPE_CREATED
-		),
-		'updated'       => array(
+		],
+		'updated'       => [
 			'type' => Model::ATT_TYPE_UPDATED
-		)
+		]
 	);
 
 	public static $Indexes = array(
@@ -172,4 +176,84 @@ class ConfigModel extends Model {
 		}
 	}
 
+	/**
+	 * Transpose a populated form element from the underlying ConfigModel object.
+	 * Will populate the name, options, validation, etc.
+	 *
+	 * @return \FormElement
+	 *
+	 * @throws \Exception
+	 */
+	function asFormElement(){
+		// key is in the format of:
+		// /user/displayname/displayoptions
+
+		$key = $this->get('key');
+
+		$gname = substr($key, 1);
+		$gname = ucwords(substr($gname, 0, strpos($gname, '/')));
+
+
+		// If the title is set, use that.  Otherwise pull it from the key name less the group.
+		$title = $this->get('title') ? $this->get('title') : substr($key, strlen($gname) + 2);
+		// Split the title on '/' and capitalize it to make it more user-friendly.
+		$title = str_replace('/', ' ', $title);
+		// Same thing for underscores '_', remove them and capitalize the words.
+		$title = str_replace('_', ' ', $title);
+		$title = ucwords($title);
+
+		$val   = \ConfigHandler::Get($key);
+		$name  = 'config[' . $key . ']';
+
+		switch ($this->get('type')) {
+			case 'string':
+				$el = \FormElement::Factory('text');
+				break;
+			case 'enum':
+				$el = \FormElement::Factory('select');
+				$el->set('options', array_map('trim', explode('|', $this->get('options'))));
+				break;
+			case 'boolean':
+				$el = \FormElement::Factory('radio');
+				$el->set(
+					'options', array('false' => 'No/False',
+					                 'true'  => 'Yes/True')
+				);
+				if ($val == '1' || $val == 'true' || $val == 'yes') $val = 'true';
+				else $val = 'false';
+				break;
+			case 'int':
+				$el                    = \FormElement::Factory('text');
+				$el->validation        = '/^[0-9]*$/';
+				$el->validationmessage = $gname . ' - ' . $title . ' expects only whole numbers with no punctuation.';
+				break;
+			case 'set':
+				$el = \FormElement::Factory('checkboxes');
+				$el->set('options', array_map('trim', explode('|', $this->get('options'))));
+				if(is_array($val)){
+					// Yay, it's already setup
+				}
+				else{
+					$val  = array_map('trim', explode('|', $val));
+				}
+				$name = 'config[' . $key . '][]';
+				break;
+			default:
+				throw new \Exception('Unsupported configuration type for ' . $key . ', [' . $this->get('type') . ']');
+				break;
+		}
+
+		$el->set('group', $gname);
+		$el->set('title', $title);
+		$el->set('name', $name);
+		$el->set('value', $val);
+
+		$desc = $this->get('description');
+		if ($this->get('default_value') && $desc) $desc .= ' (default value is ' . $this->get('default_value') . ')';
+		elseif ($this->get('default_value')) $desc = 'Default value is ' . $this->get('default_value');
+
+		$el->set('description', $desc);
+
+		return $el;
+	}
 } // END class ConfigModel extends Model
