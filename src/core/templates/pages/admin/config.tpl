@@ -6,18 +6,19 @@
 	{script location="foot"}<script>
 		$(function(){
 			var $configform = $('#system-config-form'),
-				$els = $configform.find('.formelement'),
-				$groups = $configform.find('.system-config-group'),
-				els = [],
-				groups = [];
+				$els        = $configform.find('.formelement').not('.formsubmitinput'),
+				$groups     = $configform.find('.system-config-group'),
+				els         = [],
+				groups      = [],
+				groupids    = { };
 
-			// Make a shortcut of these so keyup has less work to perform.
 			$els.each(function(){
 				$this = $(this);
 				els.push(
 					{
 						$el: $this,
-						str: $this.find('.form-element-label').text().toLowerCase() + ' ' + $this.find('.form-element-description').text().toLowerCase()
+						str: $this.find('.form-element-label').text().toLowerCase() + ' ' + $this.find('.form-element-description').text().toLowerCase(),
+						group: $this.closest('.system-config-group').attr('id')
 					}
 				)
 			});
@@ -27,11 +28,17 @@
 
 				groups.push(
 					{
+						id: $this.attr('id'),
 						$el: $this,
 						str: $this.find('legend').text().toLowerCase(),
 						$els: $this.find('.formelement')
 					}
-				)
+				);
+
+				groupids[$this.attr('id')] = {
+					display: true,
+					$el: $this
+				};
 			});
 
 			$('#quicksearch').keyup(function(){
@@ -39,7 +46,12 @@
 
 				if(!val){
 					$els.show();
+					$groups.show();
 					return true;
+				}
+
+				for(i in groupids){
+					groupids[i].display = false;
 				}
 
 				i = 0;
@@ -49,6 +61,7 @@
 					}
 					else{
 						els[i].$el.show();
+						groupids[ els[i].group ].display = true;
 					}
 
 					i++;
@@ -58,9 +71,19 @@
 				while(i < groups.length){
 					if( groups[i].str.indexOf(val) != -1 ){
 						groups[i].$els.show();
+						groupids[ groups[i].id ].display = true;
 					}
 
 					i++;
+				}
+
+				for(i in groupids){
+					if(groupids[i].display){
+						groupids[i].$el.show();
+					}
+					else{
+						groupids[i].$el.hide();
+					}
 				}
 			});
 		});

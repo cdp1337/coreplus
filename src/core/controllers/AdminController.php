@@ -202,6 +202,7 @@ class AdminController extends Controller_2_1 {
 				$groups[$gname] = new FormGroup(
 					[
 						'title' => $gname,
+						'name' => $gname,
 						//'class' => 'collapsible collapsed'
 						'class' => 'system-config-group'
 					]
@@ -586,7 +587,10 @@ class AdminController extends Controller_2_1 {
 
 		if($table->getFilterValue('page_types') == 'no_admin'){
 			$table->getModelFactory()->where('admin = 0');
+			$table->getModelFactory()->where('selectable = 1');
 		}
+
+
 
 		$view->title = 'All Pages';
 		//$view->assign('filters', $filters);
@@ -1128,53 +1132,60 @@ class AdminController extends Controller_2_1 {
 
 		$view = $this->getView();
 
-		$title_remove_stop_words = ConfigHandler::Get('/core/page/title_remove_stop_words');
-		$title_template = ConfigHandler::Get('/core/page/title_template');
-		$teaser_template = ConfigHandler::Get('/core/page/teaser_template');
+		$keys = [
+			'/core/page/title_remove_stop_words',
+			'/core/page/title_template',
+			'/core/page/teaser_template',
+		];
 
 		$form = new Form();
-		$form->set('callsmethod', 'AdminController::SeoConfigSave');
+		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
 
-		$form->addElement(
-			'checkbox',
-			[
-				'name' => 'config[title_remove_stop_words]',
-				'title' => 'Remove "stop" words from titles',
-				'description' => '"Stop" words are words that many search engines ignore such as "a", "an", "the", etc.' .
-					'  Please note, this only applies to <em>new</em> pages and pages that do not have the SEO title field explicitly set.',
-				'value' => '1',
-				'checked' => $title_remove_stop_words,
-			]
-		);
-
-		$form->addElement(
-			'text',
-			[
-				'name' => 'config[title_template]',
-				'title' => 'Title Template',
-				'description' => 'The title template for SEO titles on pages.' .
-					'  You can enter various keywords here to have them automatically replaced with the appropriate values.' .
-					'  Please note, this only applies to page that do not already have their SEO title explicitly set.<br/><br/>' .
-					'  If this is blank, then the page title will be used as the SEO title as-is.',
-				'value' => $title_template,
-			]
-		);
-
-		$form->addElement(
-			'text',
-			[
-				'name' => 'config[teaser_template]',
-				'title' => 'Meta Description Template',
-				'description' => 'The meta description (aka teaser), template on pages.' .
-					'  You can enter various keywords here to have them automatically replaced with the appropriate values.' .
-					'  Please note, this only applies to page that contain a blank meta description/teaser value.<br/><br/>' .
-					'  If this is blank, then <em>no</em> automatic teaser is generated.',
-				'value' => $teaser_template,
-			]
-		);
+		foreach($keys as $k){
+			$c = ConfigHandler::GetConfig($k);
+			$f = $c->asFormElement();
+			// Don't need them grouped
+			$f->set('group', '');
+			$form->addElement($f);
+		}
 		$form->addElement('submit', ['value' => 'Save Options']);
 
 		$view->title = 'SEO Options';
+		$view->assign('form', $form);
+	}
+
+	/**
+	 * Configure several of the performance-based options on Core.
+	 */
+	public function performance_config(){
+		// Admin-only page.
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$view = $this->getView();
+
+		$keys = [
+			'/core/javascript/minified',
+			'/core/markup/minified',
+			//'/core/filestore/assetversion',
+			'/core/assetversion/proxyfriendly',
+		];
+
+		$form = new Form();
+		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
+
+		foreach($keys as $k){
+			$c = ConfigHandler::GetConfig($k);
+			$f = $c->asFormElement();
+			// Don't need them grouped
+			$f->set('group', '');
+			$form->addElement($f);
+		}
+
+		$form->addElement('submit', ['value' => 'Save Options']);
+
+		$view->title = 'Performance Options';
 		$view->assign('form', $form);
 	}
 
@@ -1255,32 +1266,7 @@ class AdminController extends Controller_2_1 {
 			Core::SetMessage('Updated ' . $updatedcount . ' configuration options', 'success');
 		}
 
-		return '/';
-	}
-
-	/**
-	 * Form handler for the SEO Options.
-	 *
-	 * @param Form $form
-	 *
-	 * @return string|bool
-	 */
-	public static function SeoConfigSave(Form $form) {
-		$elements = $form->getElements();
-
-		foreach ($elements as $e) {
-			/** @var FormElement $e */
-			// I'm only interested in config options.
-			if (strpos($e->get('name'), 'config[') === false) continue;
-
-			// Make the name usable a little.
-			$n = $e->get('name');
-			$n = substr($n, 7, -1);
-
-			ConfigHandler::Set('/core/page/' . $n, $e->get('value'));
-		}
-
-		return true;
+		return 'back';
 	}
 
 	/**
