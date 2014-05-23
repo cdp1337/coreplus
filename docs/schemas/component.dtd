@@ -192,6 +192,7 @@ For simple widgets, set the class to the class name of the widget.
 <!ATTLIST config
 	key CDATA #REQUIRED
 	type (string|int|boolean|enum|set) 'string'
+	title CDATA #IMPLIED
 	options CDATA #IMPLIED
 	description CDATA #IMPLIED
 	default CDATA #IMPLIED
