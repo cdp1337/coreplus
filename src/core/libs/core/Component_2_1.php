@@ -1741,11 +1741,12 @@ class Component_2_1 {
 
 		// Now, get every table under this node.
 		foreach ($node->getElementsByTagName('config') as $confignode) {
-
+			/** @var DOMElement $confignode */
 			$key         = $confignode->getAttribute('key');
 			$options     = $confignode->getAttribute('options');
 			$type        = $confignode->getAttribute('type');
 			$default     = $confignode->getAttribute('default');
+			$title       = $confignode->getAttribute('title');
 			$description = $confignode->getAttribute('description');
 			$mapto       = $confignode->getAttribute('mapto');
 			$encrypted   = $confignode->getAttribute('encrypted');
@@ -1757,6 +1758,7 @@ class Component_2_1 {
 			$m->set('options', $options);
 			$m->set('type', $type);
 			$m->set('default_value', $default);
+			$m->set('title', $title);
 			$m->set('description', $description);
 			$m->set('mapto', $mapto);
 			$m->set('encrypted', $encrypted);
