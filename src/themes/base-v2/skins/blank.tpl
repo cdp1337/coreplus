@@ -16,9 +16,12 @@
 		{$body}
 		<footer>
 			<p class="legal-notice">
-				This software is distributed under the <a href="http://www.gnu.org/licenses/agpl-3.0.html" target="_BLANK">AGPL v3 License</a>, this means that as a user of this
-				service, you are allowed to, (and encouraged to), look at the <a href="http://corepl.us" target="
-_BLANK">complete unobfuscated source code of Core Plus</a>.
+				Licensed under the
+				<a href="https://www.gnu.org/licenses/agpl" target="_blank" title="Licensed Under AGPLv3" class="agplv3-tag">AGPLv3</a>.
+
+				&nbsp;&nbsp;
+
+				Powered by the <a href="http://corepl.us" target="_blank">Secure PHP Framework and CMS, Core Plus</a>.
 			</p>
 		</footer>
 	</body>

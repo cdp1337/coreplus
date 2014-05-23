@@ -6248,3 +6248,14 @@ fieldset.collapsed {
   margin-bottom: 0.75em;
   font-style: italic;
 }
+
+/* line 514, ../scss/styles.scss */
+a.agplv3-tag {
+  color: white;
+  text-shadow: 0px 0px 3px #636;
+}
+/* line 518, ../scss/styles.scss */
+a.agplv3-tag:hover {
+  color: #636;
+  text-shadow: 0px 0px 3px white;
+}
