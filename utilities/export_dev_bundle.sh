@@ -34,7 +34,7 @@ src/components/geographic-codes src/components/google \
 src/components/jquery-full src/components/jquery-file-upload src/components/jquery-hoverintent src/components/jsonjs \
 src/components/navigation src/components/nonce \
 src/components/phpwhois \
-src/components/security-suite src/components/sitemap \
+src/components/security-suite \
 src/components/tinymce src/components/theme \
 src/themes/base-v2 \
 src/config/configuration.xml.ant src/config/configuration.xml.ex src/config/.htaccess \
