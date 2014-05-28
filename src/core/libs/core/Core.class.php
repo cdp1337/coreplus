@@ -1020,11 +1020,16 @@ class Core implements ISingleton {
 		if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
 
 		$version = ConfigHandler::Get('/core/filestore/assetversion');
+		$proxyfriendly = ConfigHandler::Get('/core/assetversion/proxyfriendly');
 
 
 		$file     = \Core\Filestore\Factory::File($asset);
 		$filename = $file->getFilename();
 		$ext      = $file->getExtension();
+		$suffix   = '';
+
+		// Remove the extension from the filename, (makes the logic cleaner).
+		$url = substr($file->getURL(), 0, -1-strlen($ext));
 
 		if(ConfigHandler::Get('/core/javascript/minified')){
 			// Core is set to use minified css and javascript assets, try to locate those!
@@ -1032,11 +1037,11 @@ class Core implements ISingleton {
 			// of many locations, and not all of them may have a minified version.
 			if($ext == 'js'){
 				// Try to load the minified version instead.
-				$minified = substr($filename, 0, -3) . '.min.js';
+				$minified = $filename . '.min.js';
 				$minfile = \Core\Filestore\Factory::File($minified);
 				if($minfile->exists()){
 					// Overwrite the $file variable so it's returned instead.
-					$file = $minfile;
+					$ext = 'min.js';
 				}
 			}
 			elseif($ext == 'css'){
@@ -1045,12 +1050,19 @@ class Core implements ISingleton {
 				$minfile = \Core\Filestore\Factory::File($minified);
 				if($minfile->exists()){
 					// Overwrite the $file variable so it's returned instead.
-					$file = $minfile;
+					$ext = 'min.css';
 				}
 			}
 		}
 
-		return $file->getURL() . ($version ? '?v=' . $version : '');
+		if($version && $proxyfriendly){
+			$ext = 'v' . $version . '.' . $ext;
+		}
+		elseif($version){
+			$suffix = '?v=' . $version;
+		}
+
+		return $url . '.' . $ext . $suffix;
 	}
 
 	/**
