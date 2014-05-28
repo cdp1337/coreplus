@@ -1,3 +1,8 @@
+FontAwesome 4.0.3~core2
+
+	* Documentation cleanup.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 28 May 2014 19:40:52 -0400
+
 FontAwesome 4.0.3~core1
 
 	* Update to the newest stable version of Font Awesome from upstream (4.0.3).
