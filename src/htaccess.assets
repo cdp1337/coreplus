@@ -18,11 +18,12 @@
 
 	# Rewrite ".v123.css" to simply ".css"
 	RewriteCond %{SCRIPT_FILENAME} \.v[0-9]+\.[a-z]+$
-    RewriteRule ^(.*)\.v[0-9]+\.([a-z]+)$ $1.$2
+    RewriteRule ^(.*)\.v[0-9]+\.([a-z]+)$ $1.$2 [L]
 
 	# Rewrite ".v123.min.css" to simply ".min.css"
     RewriteCond %{SCRIPT_FILENAME} \.v[0-9]+\.min\.[a-z]+$
-    RewriteRule ^(.*)\.v[0-9]+\.min\.([a-z]+)$ $1.min.$2
+    RewriteRule ^(.*)\.v[0-9]+\.min\.([a-z]+)$ $1.min.$2 [L]
 
-    # Otherwise, pass this request over to Core??
+    # Otherwise, pass this request over to Core.
+    RewriteRule ^(.+) - [PT,L]
 </IfModule>
