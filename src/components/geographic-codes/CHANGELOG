@@ -1,3 +1,11 @@
+Geographic Codes 1.4.0
+
+	* Add support for 'use_label' on GeoAddressFormInputs.
+	* Failsafe logic if the province check from an IP doesn't find a valid match.
+	* Include the alt tag for {geoiplookup}.
+	* Documentation cleanup.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 28 May 2014 19:41:18 -0400
+
 Geographic Codes 1.3.0
 
 	* Geo-IP Lookup has a more developer-friendly API.
