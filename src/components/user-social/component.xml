@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="1.1.0">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="1.2.0">
 	<requires>
 		<require name="User" type="library" version="2.8.0"/>
 		<require name="Core" type="component" version="2.8.0"/>
-		<require name="core" type="component" version="3.0.0" operation="ge"/>
+		<require name="core" type="component" version="3.4.0" operation="ge"/>
 	</requires>
 	<users>
 		<userconfig weight="2" key="first_name" name="First Name" onedit="1" onregistration="1" searchable="1"/>
@@ -17,12 +17,12 @@
 		<hook name="/core/controllinks/user/view" call="UserSocialHelper::GetUserLinks"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="768a365f041d8b8b15591fd7970623f0"/>
+		<file filename="CHANGELOG" md5="d70293948a34857a02bf790f00cb6eeb"/>
 		<file filename="README.md" md5="97aac508b463a1040b383a0f0654d113"/>
-		<file filename="controllers/UserProfileController.php" md5="cf5f7e68a5ccc934d9fb51ae9b979f23">
+		<file filename="controllers/UserProfileController.php" md5="91a0175f89b09648dc03359a84c9c3f6">
 			<controller name="UserProfileController"/>
 		</file>
-		<file filename="helpers/UserSocialHelper.class.php" md5="6e661c470175b210000758f0ac88dad6">
+		<file filename="helpers/UserSocialHelper.class.php" md5="b8bad44fd33a9fc7fb35097ad5515fea">
 			<class name="UserSocialHelper"/>
 		</file>
 		<file filename="widgets/UserProfileWidget.php" md5="cf95b5bffd25c23ea54b8d82b35684fe">
@@ -33,9 +33,8 @@
 		<file filename="assets/css/usersocial.css" md5="4cf64ea147f88e890f4c79d8c7c5f7e3"/>
 	</assets>
 	<view searchdir="templates">
-		<file filename="templates/pages/userprofile/connectedprofiles.tpl" md5="aa7df8ae9e197157efcdd397c78eddba"/>
-		<file filename="templates/pages/userprofile/view.tpl" md5="1261b0e0555d06fd13afd92da3565e87"/>
-		<file filename="templates/widgets/userprofile/badge.tpl" md5="8a54fa0fc88e57a0bb970f21e648c713"/>
+		<file filename="templates/pages/userprofile/view.tpl" md5="536e622b31e96058a91581ea662bda5d"/>
+		<file filename="templates/widgets/userprofile/badge.tpl" md5="721768468480ec97e806fdfd3fe47a2f"/>
 	</view>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
@@ -44,6 +43,7 @@
 		<upgrade from="1.0.3" to="1.0.4"/>
 		<upgrade from="1.0.4" to="1.0.5"/>
 		<upgrade from="1.0.5" to="1.1.0"/>
+		<upgrade from="1.1.0" to="1.2.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
