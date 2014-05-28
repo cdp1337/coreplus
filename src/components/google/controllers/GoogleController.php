@@ -59,32 +59,34 @@ class GoogleController extends Controller_2_1 {
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
+		$configs = [
+			'analytics' => [
+				'title' => 'Analytics',
+				'configs' => ['/google-analytics/accountid', '/google/tagmanager/tagid'],
+			],
+			'maps' => [
+				'title' => 'Maps',
+				'configs' => ['/googlemaps/enterprise/privatekey', '/googlemaps/enterprise/clientname'],
+			],
+			'cse' => [
+				'title' => 'Custom Search',
+				'configs' => ['/google/cse/key'],
+			]
+		];
+
 		$form = new Form();
 		$form->set('callsmethod', 'GoogleController::ConfigureSave');
 
-		$analytics = new FormTabsGroup(['name' => 'analytics', 'title' => 'Analytics']);
+		foreach($configs as $gk => $gdat){
+			$group = new FormTabsGroup(['name' => $gk, 'title' => $gdat['title']]);
+			foreach($gdat['configs'] as $c){
+				/** @var ConfigModel $config */
+				$config = ConfigHandler::GetConfig($c);
+				$group->addElement($config->getAsFormElement());
+			}
+			$form->addElement($group);
+		}
 
-		$analytics->addElement(
-			\Core\Configs\get_form_element_from_config(ConfigModel::Construct('/google-analytics/accountid'))
-		);
-
-		$maps = new FormTabsGroup(['name' => 'maps', 'title' => 'Maps']);
-
-		$maps->addElement(
-			\Core\Configs\get_form_element_from_config(ConfigModel::Construct('/googlemaps/enterprise/privatekey'))
-		);
-		$maps->addElement(
-			\Core\Configs\get_form_element_from_config(ConfigModel::Construct('/googlemaps/enterprise/clientname'))
-		);
-
-		$cse = new FormTabsGroup(['name' => 'cse', 'title' => 'Custom Search']);
-		$cse->addElement(
-			\Core\Configs\get_form_element_from_config(ConfigModel::Construct('/google/cse/key'))
-		);
-
-		$form->addElement($analytics);
-		$form->addElement($maps);
-		$form->addElement($cse);
 		$form->addElement('submit', ['name' => 'submit', 'value' => 'Update Settings']);
 
 		$view->title = 'Google Keys and Apps ';

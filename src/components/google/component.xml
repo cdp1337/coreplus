@@ -19,7 +19,8 @@
 	<configs>
 		<config key="/googlemaps/enterprise/privatekey" type="string" default="" description="Private key for Google Maps Enterprise"/>
 		<config key="/googlemaps/enterprise/clientname" type="string" description="Client name for Google Maps Enterprise"/>
-		<config key="/google-analytics/accountid" type="string" default="" description="This is the Account ID (sometimes called 'Web Property ID') listed for this account in google analytics.  Leaving this blank will disable GA; likewise populating it will automatically enable GA."/>
+		<config key="/google-analytics/accountid" type="string" default="" title="Google Account ID" description="This is the Account ID (sometimes called 'Web Property ID') listed for this account in google analytics.  Leaving this blank will disable GA; likewise populating it will automatically enable GA."/>
+		<config key="/google/tagmanager/tagid" type="string" default="" title="Google Tag ID" description="If you use Tag Manager to manage tags, enter your tag ID here &lt;em&gt;instead of&lt;/em&gt; your account ID."/>
 		<config key="/google/cse/key" type="string" default="" description="The cx for Google CSE Site Search"/>
 	</configs>
 	<pages>
