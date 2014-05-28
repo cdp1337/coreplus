@@ -1,3 +1,13 @@
+Content 2.3.0
+
+	* Keep the content site ID in sync with its page.
+	* Add support for the Team component, (this still needs to be handled better at some point in time).
+	* New content admin dashboard widget, quick draft.
+	* Documentation cleanup.
+	* Add a widgetarea after the page content template.
+	* Class name tweak, all of Core uses the dashed-lowercase notation for class names.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 28 May 2014 19:39:30 -0400
+
 Content 2.2.0
 
 	* Remove the legacy content listing page now that Core supports it and more out of the box.

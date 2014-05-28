@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="Content" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3.0" name="Content" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.2.2" operation="ge"/>
+		<require name="core" type="component" version="3.4.0" operation="ge"/>
 	</requires>
 	<permissions>
 		<permission key="/content/manage_all" description="Manage Site Content"/>
@@ -12,14 +12,14 @@
 	</widgets>
 	<files>
 		<file filename="CHANGELOG" md5="65f17d91c370d04b8bf9b942ee6bb5f9"/>
-		<file filename="controllers/ContentController.php" md5="2b51e556f443e2f49ff235da4221e955">
+		<file filename="controllers/ContentController.php" md5="7d70732cbe4b825296ef0e3898b2f38a">
 			<controller name="ContentController"/>
 		</file>
 		<file filename="models/ContentModel.php" md5="e3cd746f9b1715b09ca876edfe8415d1">
 			<class name="ContentModel"/>
 		</file>
 		<file filename="upgrades/310_page_updates.php" md5="36d51b99e101d8a93b6fc83cc7efb20d"/>
-		<file filename="widgets/ContentAdminWidget.php" md5="0c99dc419fe33a6501f1060059e85f14">
+		<file filename="widgets/ContentAdminWidget.php" md5="e62079570faedb85128d03369f40befa">
 			<class name="ContentAdminWidget"/>
 		</file>
 	</files>
@@ -34,10 +34,10 @@
 		<file filename="templates/pages/content/delete.tpl" md5="64255b05d03ba0b58cbacb107e2b2dff"/>
 		<file filename="templates/pages/content/edit.tpl" md5="1f45af7838e6eb4421220a6dd5a8428d"/>
 		<file filename="templates/pages/content/view.tpl" md5="eac14689b1edded185bbf09630b85c72"/>
-		<file filename="templates/pages/content/view/blog-article-review.tpl" md5="029be8352e08a3e9f6b20d44a93f2dfb"/>
-		<file filename="templates/pages/content/view/blog-article.tpl" md5="1fabbb0cf51a6a336d0372e3dfe7f474"/>
+		<file filename="templates/pages/content/view/blog-article-review.tpl" md5="e1e5c9eecae297583fb1b91f9a6a6bd8"/>
+		<file filename="templates/pages/content/view/blog-article.tpl" md5="89f39519e4d3553c1a03b8fb585d8070"/>
 		<file filename="templates/pages/content/view/option1.tpl" md5="4c8037182441dcac26d7f31496ac2a1a"/>
-		<file filename="templates/widgets/contentadmin/quickdraft.tpl" md5="5db2ee4656dc5019921e7a562aae3ecf"/>
+		<file filename="templates/widgets/contentadmin/quickdraft.tpl" md5="3cecd393584eb3ddc9684b9f4196fe5d"/>
 	</view>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>
@@ -58,6 +58,7 @@
 		<upgrade from="2.1.0" to="2.2.0">
 			<php file="upgrades/310_page_updates.php"/>
 		</upgrade>
+		<upgrade from="2.2.0" to="2.3.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
