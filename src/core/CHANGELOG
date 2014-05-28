@@ -1,3 +1,68 @@
+Core Plus 3.4.0
+
+	* [Security] New restrictive .htaccess files for files/private and files/public.
+	* [Bug] Fix a bug with default values for models and add the ability to query a specific key to see if
+	  it has been changed.
+	* [Bug] Fix the mysql 5.6 issue where ints cannot contain a default value.
+	* [Bug] Fix the mysql 5.6 issue where BLOB/TEXT cannot contain a default value.
+	* [Bug] Fix the model schema issues with aliases and indexes on reinstallation.
+	* [Bug] Fix rendering of images when public/tmp isn't writable, (prevents a loop issue).
+	* [Bug] Rewrite the controls logic to behave better with overflow:hidden.
+	* [Bug] Target the select container on readonly selects instead of the specific input.
+	* [Bug] Ensure that link resolution is handled in all lowercase.
+	* [Bug] Do not perform any URL redirects when running in CLI mode.
+	* [Bug] UI Bug - width on the widgets listing table was incorrect.
+	* [Bug] Minor tweak to prevent the editor from giving an undeclared variable notice.
+	* [Bug] User IDs are UUIDs instead of INTs.
+	* [Feature] Consolidate some admin config logic and add performance options.
+	* [Feature] form edit quick thingy, yay!
+	* [Feature] Support for the proxy-friendly asset versioning.
+	* [Feature] Install the asset htaccess automatically on reinstall.
+	* [Feature] Add support for titles being defined in the component xml for configuration options.
+	* [Feature] Allow shorthand calling of the smarty function {asset}.
+	* [Feature] Add the extension of the file requested onto PageRequest.
+	* [Feature] Add the new Model methods to the create component scaffolding and some documentation.
+	* [Feature] New API feature for Models, getControlLinks.
+	* [Feature] Automatic hook registration for every model's Control Links.
+	* [Feature] New method, getModelList on the components.
+	* [Feature] Support global widgets
+	* [Feature] Add support for ssl="auto" or ssl="1" in the smarty {link} function.
+	* [Feature] Add support for inherited Models and documentation tweaks.
+	* [Feature] Allow a Factory to be set on the Listing Table in addition to just its name.
+	* [Feature] Add the public method _rawExecute to Core\DataModel\BackendInterface.
+	* [Feature] Implement VersionString to centralize that functionality.
+	* [Feature] More Documentation!
+	* [Feature] Collapsible fieldsets with an ID now preserve state across page loads.
+	* [Feature] Listing tables now have selectable columns.
+	* [Feature] New SEO customization options for Core.
+	* [Feature] Allow the getTeaser to always return content, even if no teaser was set.
+	* Rename asFormElement to getAsFormElement for the ConfigModel.
+	* Move the getAsFormElement logic for Configuration options into the ConfigModel.
+	* Remove the {permission} smarty function.
+	* Switch "-1" to "_GLOBAL_" when dealing with global pages internally.
+	* Tweak the unique hash generator for forms to include (again), model primary keys.
+	* Some multisite tweaks in the admin controller and templates.
+	* Only expand the specific record when clicking on the edit link on a given record.
+	* Some options for contextual controls.
+	* Some additions for the site in multi-site logic.
+	* Set a couple defaults on the user model.
+	* Fee Fi Fo Fum, I fixed me a page popularity score...or watched, at least
+	* Need to sort the *children* array instead of the parent array for the admin navigation.
+	* Auto-select the first input, (if found), when clicking on an inline edit link in the listing table.
+	* Move the stop word list into a Core function so that other utilities can easily utilize it as well.
+	* Set the profile links to target=_blank.
+	* Add IDs to the debug-sections, (used in javascript now).
+	* Migrate the connected profiles from User-Social to User proper.
+	* New form element, user.
+	* Re-add the email smarty function and corresponding javascript for it.
+	* Add last updated and source component to the list of columns selectable on /admin/pages.
+	* Set the page description length to 150 characters.
+	* Rename "Administration" to "Admin Dashboard".
+	* Tweak the admin menu to allow top-level groups to have links.
+	* New shortcut method for the Form system, getElementValue.
+	* Allow placeholder on text-based form elements.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 28 May 2014 19:37:26 -0400
+
 Core Plus 3.2.2
 
 	* Some fixes in the PageRequest now that invalid views can be continued through the system a little
