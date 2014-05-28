@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 19 May 2014 14:39:06 -0400
+ * @compiled Wed, 28 May 2014 19:17:58 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -5679,61 +5679,65 @@ return $ret;
 ### REQUIRE_ONCE FROM core/models/ConfigModel.class.php
 class ConfigModel extends Model {
 public static $Schema = array(
-'key'           => array(
+'key'           => [
 'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => 255,
 'required'  => true,
 'null'      => false,
-),
-'type'          => array(
+],
+'type'          => [
 'type'    => Model::ATT_TYPE_ENUM,
-'options' => array('string', 'int', 'boolean', 'enum', 'set'),
+'options' => ['string', 'int', 'boolean', 'enum', 'set'],
 'default' => 'string',
 'null'    => false,
-),
-'encrypted' => array(
+],
+'encrypted' => [
 'type' => Model::ATT_TYPE_BOOL,
 'default' => 0,
-),
-'default_value' => array(
+],
+'default_value' => [
 'type'    => Model::ATT_TYPE_TEXT,
 'default' => null,
 'null'    => true,
-),
-'value'         => array(
+],
+'value'         => [
 'type'    => Model::ATT_TYPE_TEXT,
 'default' => null,
 'null'    => true,
-),
-'options'       => array(
+],
+'options'       => [
 'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => 511,
 'default'   => null,
 'null'      => true,
-),
-'description'   => array(
+],
+'title'         => [
+'type'    => Model::ATT_TYPE_STRING,
+'comment' => 'The title from the config parameter, optional',
+],
+'description'   => [
 'type'    => Model::ATT_TYPE_TEXT,
 'default' => null,
 'null'    => true,
-),
-'mapto'         => array(
+],
+'mapto'         => [
 'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => 32,
 'default'   => null,
 'comment'   => 'The define constant to map the value to on system load.',
 'null'      => true,
-),
-'overrideable' => array(
+],
+'overrideable' => [
 'type' => Model::ATT_TYPE_BOOL,
 'default' => false,
 'comment' => 'If children sites can override this configuration option',
-),
-'created'       => array(
+],
+'created'       => [
 'type' => Model::ATT_TYPE_CREATED
-),
-'updated'       => array(
+],
+'updated'       => [
 'type' => Model::ATT_TYPE_UPDATED
-)
+]
 );
 public static $Indexes = array(
 'primary' => array('key'),
@@ -5785,6 +5789,65 @@ return array_map('trim', explode('|', $value));
 default:
 return $value;
 }
+}
+function getAsFormElement(){
+$key = $this->get('key');
+$gname = substr($key, 1);
+$gname = ucwords(substr($gname, 0, strpos($gname, '/')));
+$title = $this->get('title') ? $this->get('title') : substr($key, strlen($gname) + 2);
+$title = str_replace('/', ' ', $title);
+$title = str_replace('_', ' ', $title);
+$title = ucwords($title);
+$val   = \ConfigHandler::Get($key);
+$name  = 'config[' . $key . ']';
+switch ($this->get('type')) {
+case 'string':
+$el = \FormElement::Factory('text');
+break;
+case 'enum':
+$el = \FormElement::Factory('select');
+$el->set('options', array_map('trim', explode('|', $this->get('options'))));
+break;
+case 'boolean':
+$el = \FormElement::Factory('radio');
+$el->set(
+'options', array('false' => 'No/False',
+'true'  => 'Yes/True')
+);
+if ($val == '1' || $val == 'true' || $val == 'yes') $val = 'true';
+else $val = 'false';
+break;
+case 'int':
+$el                    = \FormElement::Factory('text');
+$el->validation        = '/^[0-9]*$/';
+$el->validationmessage = $gname . ' - ' . $title . ' expects only whole numbers with no punctuation.';
+break;
+case 'set':
+$el = \FormElement::Factory('checkboxes');
+$el->set('options', array_map('trim', explode('|', $this->get('options'))));
+if(is_array($val)){
+}
+else{
+$val  = array_map('trim', explode('|', $val));
+}
+$name = 'config[' . $key . '][]';
+break;
+default:
+throw new \Exception('Unsupported configuration type for ' . $key . ', [' . $this->get('type') . ']');
+break;
+}
+$el->set('group', $gname);
+$el->set('title', $title);
+$el->set('name', $name);
+$el->set('value', $val);
+$desc = $this->get('description');
+if ($this->get('default_value') && $desc) $desc .= ' (default value is ' . $this->get('default_value') . ')';
+elseif ($this->get('default_value')) $desc = 'Default value is ' . $this->get('default_value');
+$el->set('description', $desc);
+return $el;
+}
+function asFormElement(){
+return self::getAsFormElement();
 }
 } // END class ConfigModel extends Model
 
@@ -8028,18 +8091,26 @@ if ($change !== false) $changed = array_merge($changed, $change);
 $change = $this->_installAssets();
 if ($change !== false) $changed = array_merge($changed, $change);
 if($this->getKeyName() == 'core'){
-$f = \Core\Filestore\Factory::File('files/private/.htaccess');
+$f = \Core\Filestore\Factory::File('private/.htaccess');
 if(!$f->exists() && $f->isWritable()){
 $src = \Core\Filestore\Factory::File('htaccess.private');
 if($src->copyTo($f)){
 $changed[] = 'Installed private htaccess file into ' . $f->getFilename();
 }
 }
-$f = \Core\Filestore\Factory::File('files/public/.htaccess');
+$f = \Core\Filestore\Factory::File('public/.htaccess');
 if(!$f->exists() && $f->isWritable()){
 $src = \Core\Filestore\Factory::File('htaccess.public');
 if($src->copyTo($f)){
 $changed[] = 'Installed public htaccess file into ' . $f->getFilename();
+}
+}
+$f = \Core\Filestore\Factory::File('asset/.htaccess');
+$f->setFilename(dirname(dirname($f->getFilename())) . '/.htaccess');
+if(!$f->exists() && $f->isWritable()){
+$src = \Core\Filestore\Factory::File('htaccess.assets');
+if($src->copyTo($f)){
+$changed[] = 'Installed assets htaccess file into ' . $f->getFilename();
 }
 }
 }
@@ -8057,6 +8128,7 @@ $key         = $confignode->getAttribute('key');
 $options     = $confignode->getAttribute('options');
 $type        = $confignode->getAttribute('type');
 $default     = $confignode->getAttribute('default');
+$title       = $confignode->getAttribute('title');
 $description = $confignode->getAttribute('description');
 $mapto       = $confignode->getAttribute('mapto');
 $encrypted   = $confignode->getAttribute('encrypted');
@@ -8065,6 +8137,7 @@ $m   = ConfigHandler::GetConfig($key);
 $m->set('options', $options);
 $m->set('type', $type);
 $m->set('default_value', $default);
+$m->set('title', $title);
 $m->set('description', $description);
 $m->set('mapto', $mapto);
 $m->set('encrypted', $encrypted);
@@ -13253,26 +13326,35 @@ public static function ResolveAsset($asset) {
 if (strpos($asset, '://') !== false) return $asset;
 if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
 $version = ConfigHandler::Get('/core/filestore/assetversion');
+$proxyfriendly = ConfigHandler::Get('/core/assetversion/proxyfriendly');
 $file     = \Core\Filestore\Factory::File($asset);
 $filename = $file->getFilename();
 $ext      = $file->getExtension();
+$suffix   = '';
+$url = substr($file->getURL(), 0, -1-strlen($ext));
 if(ConfigHandler::Get('/core/javascript/minified')){
 if($ext == 'js'){
-$minified = substr($filename, 0, -3) . '.min.js';
+$minified = $filename . '.min.js';
 $minfile = \Core\Filestore\Factory::File($minified);
 if($minfile->exists()){
-$file = $minfile;
+$ext = 'min.js';
 }
 }
 elseif($ext == 'css'){
 $minified = substr($filename, 0, -4) . '.min.css';
 $minfile = \Core\Filestore\Factory::File($minified);
 if($minfile->exists()){
-$file = $minfile;
+$ext = 'min.css';
 }
 }
 }
-return $file->getURL() . ($version ? '?v=' . $version : '');
+if($version && $proxyfriendly){
+$ext = 'v' . $version . '.' . $ext;
+}
+elseif($version){
+$suffix = '?v=' . $version;
+}
+return $url . '.' . $ext . $suffix;
 }
 public static function ResolveLink($url) {
 return \Core\resolve_link($url);

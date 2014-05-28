@@ -1334,6 +1334,7 @@
 		<page baseurl="/admin/testui" admin="1" access="g:admin" title="Test General UI/UX" group="Theme and Layouts"/>
 		<page baseurl="/page/sitemap" admin="0" access="*" title="Sitemap" rewriteurl="/sitemap" selectable="1" indexable="1"/>
 		<page baseurl="/admin/seo/config" admin="1" access="g:admin" title="SEO Options" group="Configure"/>
+		<page baseurl="/admin/performance/config" admin="1" access="g:admin" title="Performance Options" group="Configure"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/updater/check" title="Check For Updates" installable="/admin"/>
@@ -1469,19 +1470,14 @@
 		<config key="/core/aws/accountid" type="string" default="" description="Amazon Account ID without dashes. Used for identification with Amazon EC2. Found in the AWS Security Credentials."/>
 		<config key="/core/aws/canonicalid" type="string" default="" description="Your CanonicalUser ID. Used for setting access control settings in AmazonS3. Found in the AWS Security Credentials."/>
 		<config key="/core/aws/canonicalname" type="string" default="" description="Your CanonicalUser DisplayName. Used for setting access control settings in AmazonS3. Found in the AWS Security Credentials (i.e. &quot;Welcome, AWS_CANONICAL_NAME&quot;)."/>
-		<!--<config key="/core/aws/asset_bucket" type="string" default="" description=""/>
-		-->
 		<config key="/core/cache_backend" type="string" default="file" description="apc; file; memcache; xcache; BLAH"/>
-		<config key="/core/javascript/minified" type="boolean" default="true" description="Try to use minified javascript and CSS files whenever possible."/>
-		<config key="/core/markup/minified" type="boolean" default="true" description="Try to collapse rendered markup whenever possible."/>
-		<!-- These are now contained inside the configuration.xml file! -->
-		<!--
-			<config key="/core/filestore/backend" type="enum" options="aws|local" default="local" description="What type of storage should be used for assets?  This will determine the CDN that is used."/>
-			<config key="/core/filestore/assetdir" type="string" default="files/assets/" description="Directory for assets, must be directly accessable via the web."/>
-			<config key="/core/filestore/publicdir" type="string" default="files/public/" description="Directory for public files (uploads), must be directly accessable via the web."/>
-			<config key="/core/filestore/privatedir" type="string" default="files/private/" description="Directory for private files (uploads), should not be directly accessable via the web."/>
-		-->
+
+		<!-- Performance Options -->
+		<config key="/core/javascript/minified" title="Use Minified Javascript &amp; CSS" type="boolean" default="true" description="Try to use minified javascript and CSS files whenever possible."/>
+		<config key="/core/markup/minified" title="Minify HTML Markup" type="boolean" default="true" description="Try to collapse rendered markup whenever possible."/>
 		<config key="/core/filestore/assetversion" type="int" default="1" description="Auto-incrementer for the asset version; incremented by calling reinstall on the system."/>
+		<config key="/core/assetversion/proxyfriendly" title="Use Proxy-Friendly Asset Versioning" type="boolean" default="0" description="Use proxy friendly version strings for assets instead of query string version.  Requires the appropriate .htaccess file in place!"/>
+
 		<config key="/core/session/ttl" type="int" default="3600" description="Time to live for sessions.  Amount of seconds to keep an idle session active before requesting the user to log back in due to inactivity."/>
 		<config key="/core/email/from" type="string" description="Email address emails should be sent 'from' by defualt." default=""/>
 		<config key="/core/email/from_name" type="string" description="Name emails should be sent 'from' by default." default=""/>
@@ -1518,9 +1514,25 @@
 		<config key="/core/logs/rotate/compress" type="boolean" default="1" description="Compress rotated log files"/>
 		<config key="/core/logs/rotate/keep" type="int" default="14" description="How many rotated log files to keep, set to 0 to disable purging old logs."/>
 		<config key="/theme/siteskin/user" type="string" description="User-frontend Skin"/>
-		<config key="/core/page/title_remove_stop_words" type="boolean" default="0" description="Set to true to remove 'stop words' that browsers will ignore from page and file titles"/>
-		<config key="/core/page/title_template" type="string" default="" description="The template for SEO title tags."/>
-		<config key="/core/page/teaser_template" type="string" default="" description="The template for SEO Meta Description and Teaser tag."/>
+
+		<!-- SEO Options -->
+		<config
+			key="/core/page/title_remove_stop_words"
+			title="Remove &quot;stop&quot; words from titles"
+			type="boolean"
+			default="0"
+			description="&quot;Stop&quot; words are words that many search engines ignore such as &quot;a&quot;, &quot;an&quot;, &quot;the&quot;, etc.  Please note, this only applies to &lt;em&gt;new&lt;/em&gt; pages and pages that do not have the SEO title field explicitly set."/>
+		<config
+			key="/core/page/title_template"
+			type="string"
+			default=""
+			description="The title template for SEO titles on pages.  You can enter various keywords here to have them automatically replaced with the appropriate values.  Please note, this only applies to page that do not already have their SEO title explicitly set.  &lt;br/&gt;&lt;br/&gt;If this is blank, then the page title will be used as the SEO title as-is."/>
+		<config
+			key="/core/page/teaser_template"
+			type="string"
+			default=""
+			title="Meta Description Template"
+			description="The meta description (aka teaser), template on pages.  You can enter various keywords here to have them automatically replaced with the appropriate values.  Please note, this only applies to page that contain a blank meta description/teaser value.&lt;br/&gt;&lt;br/&gt;  If this is blank, then &lt;em&gt;no&lt;/em&gt; automatic teaser is generated."/>
 	</configs>
 	<permissions>
 		<permission key="/core/systemlog/view" description="View system log entries"/>
