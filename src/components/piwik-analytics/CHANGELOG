@@ -1,3 +1,9 @@
+Piwik Analytics 1.1.0
+
+	* New options for Piwik, track all subdomains and add domain to page titles.
+	* New hooks and better widget support for pages.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 28 May 2014 19:43:03 -0400
+
 Piwik Analytics 1.0.3
 
 	* Piwik configuration page needed the access permission so the page link doesn't display for
