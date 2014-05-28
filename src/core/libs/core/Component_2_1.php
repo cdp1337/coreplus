@@ -1691,7 +1691,7 @@ class Component_2_1 {
 		// Core has some additional things that need to ran through.
 		if($this->getKeyName() == 'core'){
 			// Make sure that files/private has a restrictive .htaccess file installed.
-			$f = \Core\Filestore\Factory::File('files/private/.htaccess');
+			$f = \Core\Filestore\Factory::File('private/.htaccess');
 			if(!$f->exists() && $f->isWritable()){
 				$src = \Core\Filestore\Factory::File('htaccess.private');
 				if($src->copyTo($f)){
@@ -1700,11 +1700,22 @@ class Component_2_1 {
 			}
 
 			// Make sure that files/public has the appropriate .htaccess file installed.
-			$f = \Core\Filestore\Factory::File('files/public/.htaccess');
+			$f = \Core\Filestore\Factory::File('public/.htaccess');
 			if(!$f->exists() && $f->isWritable()){
 				$src = \Core\Filestore\Factory::File('htaccess.public');
 				if($src->copyTo($f)){
 					$changed[] = 'Installed public htaccess file into ' . $f->getFilename();
+				}
+			}
+
+			// Make sure that files/public has the appropriate .htaccess file installed.
+			$f = \Core\Filestore\Factory::File('asset/.htaccess');
+			// This is a bit of a hack because I need the parent directory for assets, not the theme-specific version.
+			$f->setFilename(dirname(dirname($f->getFilename())) . '/.htaccess');
+			if(!$f->exists() && $f->isWritable()){
+				$src = \Core\Filestore\Factory::File('htaccess.assets');
+				if($src->copyTo($f)){
+					$changed[] = 'Installed assets htaccess file into ' . $f->getFilename();
 				}
 			}
 		}
