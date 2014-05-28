@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.0" name="Base V2">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.0" name="Base V2">
 	<assets>
 		<file filename="assets/css/codemirror.css" md5="3ae79db8923119601aa32d46e9074a29"/>
 		<file filename="assets/css/error404.css" md5="fa34d572efcc3c1ca91fe7a0c362dd1b"/>
 		<file filename="assets/css/error500.css" md5="2d4a2b8debc361fef2137abfea5c9428"/>
 		<file filename="assets/css/opt/full-width.css" md5="b874f3da2ccf0890f507834f8ae1a3fc"/>
-		<file filename="assets/css/opt/gradients.css" md5="3167fa978bbfea7867b36128130c93a9"/>
+		<file filename="assets/css/opt/gradients.css" md5="b8cc69b5f694ca7ca4f42715eaede9b6"/>
 		<file filename="assets/css/opt/gradients.min.css" md5="a3fc3a440d48b51330a3d0e993c843cd"/>
 		<file filename="assets/css/print.css" md5="5bcfc09ac6affe440f91a89e44070ef0"/>
 		<file filename="assets/css/screen.css" md5="3671c7323c4cdd2a6deb8242e6fdd518"/>
-		<file filename="assets/css/styles.css" md5="654b20036ea497d6fbf4a8d78ece1b1f"/>
-		<file filename="assets/css/styles.min.css" md5="ba135b1923582c781acdb6035bfcc7cd"/>
+		<file filename="assets/css/styles.css" md5="527d4e07dddf26076566026f5e300e67"/>
+		<file filename="assets/css/styles.min.css" md5="fba08242921bbaafd823d88443a23c04"/>
 		<file filename="assets/css/tinymce/content.css" md5="1ff045c082c1f366dd16e8322644e484"/>
 		<file filename="assets/images/404.jpg" md5="815cb4116bbbec081a645e85de74025c"/>
 		<file filename="assets/images/flat.png" md5="2176d6d6e814b0da1c71b73ca7a675e8"/>
@@ -20,25 +20,25 @@
 		<file filename="assets/js/game-of-life-v3.1.1.js" md5="c4bfc497e798c286eb4e48a67471c89a"/>
 	</assets>
 	<skins>
-		<file filename="basic.tpl" title="Standard skin with one left column" md5="9e73c4b0f94cb55c0c749f02940da9de"/>
-		<file filename="wide.tpl" title="Full-width body skin, contains no columns" md5="edc0332891cf3c7c312b9bf6f9e4028c"/>
-		<file filename="blank.tpl" title="Blank template, do not use" md5="261d8d70a592918d16da399060d13ef7"/>
+		<file filename="basic.tpl" title="Standard skin with one left column" md5="d48a49442b3fbcc60435749eb707ba35"/>
+		<file filename="wide.tpl" title="Full-width body skin, contains no columns" md5="d7ac1fabd612205bf7fd277e88fa3747"/>
+		<file filename="blank.tpl" title="Blank template, do not use" md5="c73963bd4bc30a9ed39b724ce2f90385"/>
 	</skins>
 	<emailskins>
 		<file filename="basic.tpl"/>
 	</emailskins>
 	<view/>
 	<otherfiles>
-		<file filename="CHANGELOG" md5="8efa0472deec5b1fac212c9be8033ddb"/>
+		<file filename="CHANGELOG" md5="2e1244915a586d99914c057e05769cb1"/>
 		<file filename="assets/scss/_animate.scss" md5="593db137ba418d807e997ebc50fa85e2"/>
 		<file filename="assets/scss/_buttons.scss" md5="064a5d4da0dca01c71b6dfae9608c25d"/>
-		<file filename="assets/scss/_controls.scss" md5="2107d1d01ea0473ff6936431b0c5591d"/>
+		<file filename="assets/scss/_controls.scss" md5="1364f913b7f211d928e473d4fce43aee"/>
 		<file filename="assets/scss/_disclaimer.scss" md5="19c48173e074c37c8c2c131346d2aa8b"/>
 		<file filename="assets/scss/_filters_and_pagination.scss" md5="b5eada7f048b7e236099bc6fa2b79ef0"/>
-		<file filename="assets/scss/_form_elements.scss" md5="1bc33ef83e997241b905c308d91439dd"/>
+		<file filename="assets/scss/_form_elements.scss" md5="046204c834c927c0650c85b2eb3609b0"/>
 		<file filename="assets/scss/_grid.scss" md5="262ce1bd682e61ff2ff1c5aeafef9562"/>
 		<file filename="assets/scss/_h5bp.scss" md5="116831636be07686f46026a66e6587bf"/>
-		<file filename="assets/scss/_listing_tables.scss" md5="ea30965cdbc0d09753c055eceab11cf6"/>
+		<file filename="assets/scss/_listing_tables.scss" md5="a571aeee85902d21c9e1c2edda04b9a1"/>
 		<file filename="assets/scss/_messages.scss" md5="a9d074ffa08d2666817361033b835361"/>
 		<file filename="assets/scss/_normalize.scss" md5="91507f70613b12359e35b966afad8c30"/>
 		<file filename="assets/scss/_pages_page.scss" md5="f7de279a99902ca38737f504c1502512"/>
@@ -46,7 +46,7 @@
 		<file filename="assets/scss/_print.scss" md5="f3dd7a5f96e67e8d2156b5887ea785d4"/>
 		<file filename="assets/scss/_screen.scss" md5="616a30b3d90d734a28c0b429991eb77e"/>
 		<file filename="assets/scss/opt/gradients.scss" md5="68f09f05e93b913251e19d84efc68278"/>
-		<file filename="assets/scss/styles.scss" md5="400f4263505867c96c736bcc244f8338"/>
+		<file filename="assets/scss/styles.scss" md5="ae9cb9d1d6f999fb2c58afd532b3e953"/>
 		<file filename="emailskins/basic.tpl" md5="1a8d5b86f3c06a20dd6f79b37ce06c4e"/>
 		<file filename="game-of-life-LICENSE" md5="42cd4e2f7d79141002c2ee2a3ee750dd"/>
 		<file filename="grid-readme.md" md5="5ca052855a965d2dc3dbf6937c5c8274"/>
@@ -66,6 +66,7 @@
 		<upgrade from="1.1.0" to="1.2.0"/>
 		<upgrade from="1.2.0" to="1.3.0"/>
 		<upgrade from="1.3.0" to="1.4.0"/>
+		<upgrade from="1.4.0" to="1.5.0"/>
 	</upgrades>
 	<screenshots>
 		<screenshot file="screenshots/screen1.png" title="Home Page"/>

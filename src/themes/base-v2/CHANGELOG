@@ -1,3 +1,16 @@
+Theme/Base V2 1.5.0
+
+	* [Feature] form edit quick thingy, yay!
+	* Update the default footer text for base-v2.
+	* Bump up the z-index on contextual controls to 4-9's.
+	* Rewrite the controls logic to behave better with overflow:hidden.
+	* form styling change?...
+	* New form element, user.
+	* Listing tables now have selectable columns.
+	* Add collapsable column support for listing tables.
+	* Different line numbers and less whitespace from the SASS compiler, hmm.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 28 May 2014 19:44:30 -0400
+
 Theme/Base V2 1.4.0
 
 	* [Bug] fixed horizontal form description position
