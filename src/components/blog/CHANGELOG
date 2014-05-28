@@ -1,3 +1,9 @@
+Blog 1.6.1
+
+	* Documentation cleanup.
+	* The startings of i18n support!
+	-- Charlie Powell <charlie@eval.bz>  Wed, 28 May 2014 19:38:57 -0400
+
 Blog 1.6.0
 
 	* [Feature] Do not display the "... read more" link if there is no teaser on blog articles.
