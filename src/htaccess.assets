@@ -1,0 +1,28 @@
+# Core Plus "files/assets" .htaccess template
+#
+# This file is responsible for performing any tasks required by the file assets.
+# It's in a sub directory because this directory may be named differently based on site configuration.
+#
+# @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+# @author Charlie Powell <charlie@eval.bz>
+
+
+# I'm not real sure why this is inside an if block, because the site won't work without it anyway
+# But I suppose the installer will warn the user of that.
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	# Direct requests to files.
+	RewriteCond %{SCRIPT_FILENAME} -f
+	RewriteRule ^(.+) - [PT,L]
+
+	# Rewrite ".v123.css" to simply ".css"
+	RewriteCond %{SCRIPT_FILENAME} \.v[0-9]+\.[a-z]+$
+    RewriteRule ^(.*)\.v[0-9]+\.([a-z]+)$ $1.$2
+
+	# Rewrite ".v123.min.css" to simply ".min.css"
+    RewriteCond %{SCRIPT_FILENAME} \.v[0-9]+\.min\.[a-z]+$
+    RewriteRule ^(.*)\.v[0-9]+\.min\.([a-z]+)$ $1.min.$2
+
+    # Otherwise, pass this request over to Core??
+</IfModule>
