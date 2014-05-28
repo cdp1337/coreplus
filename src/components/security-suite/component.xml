@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4.0" name="Security-Suite" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.0" name="Security-Suite" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.2.2" operation="ge"/>
+		<require name="core" type="component" version="3.4.0" operation="ge"/>
 		<require name="phpwhois" type="component"/>
 	</requires>
 	<configs>
@@ -34,6 +34,9 @@
 		<file filename="templates/pages/security/blacklistip_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/security/log.tpl" md5="a1b15c4ff3c1937fbf9916c1e6a44f72"/>
 		<file filename="templates/pages/security/sitepassword.tpl" md5="44e8ee8b73a89a53209e8d39f066c352"/>
+		<file filename="templates/pages/security/spam_keywords.tpl" md5="e55ac368f605fc2a2f386f29d335e86d"/>
+		<file filename="templates/pages/security/spam_train_1.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/security/spam_train_2.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/security/view.tpl" md5="ff23af3634c04a9a1d46076d6b5fadf2"/>
 		<file filename="templates/pages/wphoneypot/wpadmin.phtml" md5="b22f2d01e716682b27599c19a76b44e2"/>
 		<file filename="templates/pages/wphoneypot/wplogin.phtml" md5="748f545b5796b0ef78a77e38ee232417"/>
@@ -44,7 +47,7 @@
 	</description>
 	<files>
 		<file filename="CHANGELOG" md5="05da38c2a157b8d8f9fb372b202581e0"/>
-		<file filename="controllers/SecurityController.php" md5="13ee9c6aa75bd26f573756067677410d">
+		<file filename="controllers/SecurityController.php" md5="5bc1156c8a55c785d803e93fe17b290b">
 			<controller name="SecurityController"/>
 		</file>
 		<file filename="controllers/WPHoneypotController.php" md5="4b98e4b03b43f95ff146b862d2139e98">
@@ -59,7 +62,7 @@
 		<file filename="libs/securitysuite/StopForumSpam.class.php" md5="e5d576a06e7b5707d026abce06719330">
 			<class name="SecuritySuite\StopForumSpam"/>
 		</file>
-		<file filename="libs/securitysuite/spamcan/SpamCheck.php" md5="0b8e34dc819dfe84fc34594ac694a39c">
+		<file filename="libs/securitysuite/spamcan/SpamCheck.php" md5="54475e189b4a0e1f4b7eb7de1488fa02">
 			<class name="SecuritySuite\SpamCan\SpamCheck"/>
 			<class name="SecuritySuite\SpamCan\SpamCheckResult"/>
 		</file>
@@ -71,7 +74,7 @@
 		<file filename="models/SecurityLogModel.php" md5="a2f1c71c47ee33fff7de2e57447cb056">
 			<class name="SecurityLogModel"/>
 		</file>
-		<file filename="models/SpamHamKeywordModel.php" md5="3a1c803167863f196cab47bab4e9d1e9">
+		<file filename="models/SpamHamKeywordModel.php" md5="b291e0da10240f012e401553ae5c5ce0">
 			<class name="SpamHamKeywordModel"/>
 		</file>
 		<file filename="models/sfsBlacklistModel.php" md5="4d6d7c012a546ea0f6b54215961af3fa">
@@ -92,6 +95,7 @@
 			<php file="upgrades/120_to_130.php"/>
 		</upgrade>
 		<upgrade from="1.3.0" to="1.4.0"/>
+		<upgrade from="1.4.0" to="1.5.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/wp-admin/css/wp-admin.min.css" md5="1060bbdd464bed007f6fa460dd3f6a56"/>

@@ -1,3 +1,12 @@
+Security-Suite 1.5.0
+
+	* [Feature] New feature to ban a connection that's requesting too many 404 pages in too short of a
+	  time period.
+	* Tweak the input size for keywords.
+	* New anti-spam systems!
+	* Documentation cleanup.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 28 May 2014 19:43:33 -0400
+
 Security-Suite 1.4.0
 
 	* [Security] Disable the SecurityLog entirely, (SytemLog now handles all of that).
