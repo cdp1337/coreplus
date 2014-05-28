@@ -184,7 +184,7 @@ class ConfigModel extends Model {
 	 *
 	 * @throws \Exception
 	 */
-	function asFormElement(){
+	function getAsFormElement(){
 		// key is in the format of:
 		// /user/displayname/displayoptions
 
@@ -255,5 +255,16 @@ class ConfigModel extends Model {
 		$el->set('description', $desc);
 
 		return $el;
+	}
+
+	/**
+	 * Alias of getAsFormElement
+	 *
+	 * @return \FormElement
+	 *
+	 * @throws \Exception
+	 */
+	function asFormElement(){
+		return self::getAsFormElement();
 	}
 } // END class ConfigModel extends Model
