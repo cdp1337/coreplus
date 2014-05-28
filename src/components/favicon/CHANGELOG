@@ -1,3 +1,9 @@
+Favicon 1.1.0
+
+	* [Bug] Fix Bug #562, Favicon "none" option.
+	* Documentation cleanup.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 28 May 2014 19:40:29 -0400
+
 Favicon 1.0.1
 
 	* [Feature] Favicon administration displays how the currently selected image looks across different
