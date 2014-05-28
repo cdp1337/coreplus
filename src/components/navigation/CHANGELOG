@@ -1,3 +1,11 @@
+Navigation 2.4.0
+
+	* Navigation listing page is no longer required, as Core upstream now provides this functionality.
+	* Navigation upgrade script to add the necessary attributes to nav widgets.
+	* navigation menus need to set an active class on the top-most parent element if a child is active
+	* Documentation cleanup.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 28 May 2014 19:42:40 -0400
+
 Navigation 2.3.0
 
 	* Update the navigation component to play nicer with the new Widget interface.

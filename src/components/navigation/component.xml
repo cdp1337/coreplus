@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3.0" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.0" name="Navigation" execmode="web">
 	<requires>
-		<require name="core" type="component" operation="ge" version="3.2.0"/>
+		<require name="core" type="component" operation="ge" version="3.4.0"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="46d90444923d6a88831f7fa91930860e"/>
-		<file filename="controllers/NavigationController.php" md5="2d6a8ea5266373ea6384f25a7059ab68">
+		<file filename="CHANGELOG" md5="eb24fc1f5da6740ad37ed8d00a214f69"/>
+		<file filename="controllers/NavigationController.php" md5="2931c3c881dbf618f00534db85542d8f">
 			<controller name="NavigationController"/>
 		</file>
 		<file filename="models/Navigation.model.php" md5="b32c7e6c49435b94bb3abc18053d5729">
@@ -15,7 +15,8 @@
 		<file filename="models/NavigationEntry.model.php" md5="b65fb8a4aad99b7a608027fdac97fca7">
 			<class name="NavigationEntryModel"/>
 		</file>
-		<file filename="widgets/NavigationWidget.php" md5="b7cd2b6cc124640c5a676df6b35341e0">
+		<file filename="upgrades/230_nav_widget_editables.php" md5="69e975de8b8c91420a6f5759d154e6aa"/>
+		<file filename="widgets/NavigationWidget.php" md5="0102d5769009f5e3e420d563595c90b2">
 			<class name="NavigationWidget"/>
 		</file>
 	</files>
@@ -58,7 +59,7 @@
 		<upgrade from="2.1.9" to="2.2.0"/>
 		<upgrade from="2.2.0" to="2.2.1"/>
 		<upgrade from="2.2.1" to="2.3.0"/>
-		<upgrade from="next">
+		<upgrade from="2.3.0" to="2.4.0">
 			<php file="upgrades/230_nav_widget_editables.php"/>
 		</upgrade>
 	</upgrades>
