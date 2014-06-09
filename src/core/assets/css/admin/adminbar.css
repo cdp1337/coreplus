@@ -21,6 +21,17 @@
 	margin: 0;
 }
 
+#admin-bar ul.controls.context-menu {
+	position: absolute;
+	left: -125%;
+	min-width: 0 !important;
+	top: 3.2em;
+	padding: 0;
+	margin: 0;
+	background: #000;
+	border:1px solid #222;
+}
+
 .icon-chevron-right,
 .icon-chevron-left {color:#fff;}
 
@@ -28,6 +39,24 @@
 #admin-bar a:visited {
 	color:#aaa;
 	text-decoration:none;
+}
+
+#admin-bar ul.controls.context-menu li {
+	height:auto;
+}
+
+#admin-bar ul.controls.context-menu li a {
+	padding:0.5em 0;
+}
+
+#admin-bar ul.controls.context-menu li a:hover {
+	color:#fff;
+	background:#333;
+	border:0 none;
+}
+
+#admin-bar ul.controls.context-menu li:hover a {
+	border-bottom:0 none;
 }
 
 #admin-bar.admin-bar-collapsed{
