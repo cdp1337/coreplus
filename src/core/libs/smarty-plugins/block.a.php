@@ -40,7 +40,7 @@ function smarty_block_a($params, $innercontent, $template, &$repeat){
 
 	// Allow "confirm" text to override the href and onClick functions.
 	// This has the cool ability of not requiring jquery to run, since it is all handled with PHP logic.
-	if(isset($params['confirm']) && $params['confirm']){
+	if(isset($params['confirm'])){
 		$params['onclick'] = 'return Core.ConfirmEvent(this);';
 		$params['data:href'] = Core::ResolveLink($params['href']);
 		$params['data:confirm'] = $params['confirm'];
