@@ -4853,7 +4853,7 @@ p[class^="message-"] .message-background-icon i {
 /* line 348, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formlicenseinput-license .minict_wrapper {
   width: auto;
-  min-width: 38em;
+  min-width: 5em;
 }
 /* line 353, ../scss/_form_elements.scss */
 .form-orientation-horizontal .formelement.formpagemetaauthorinput {
@@ -5049,7 +5049,7 @@ p[class^="message-"] .message-background-icon i {
 /* line 544, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formlicenseinput-license .minict_wrapper {
   width: auto;
-  min-width: 38em;
+  min-width: 5em;
 }
 /* line 549, ../scss/_form_elements.scss */
 .form-orientation-vertical .formelement.formpagemetaauthorinput {
@@ -5257,7 +5257,7 @@ p[class^="message-"] .message-background-icon i {
 /* line 745, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formlicenseinput-license .minict_wrapper {
   width: auto;
-  min-width: 48em;
+  min-width: 5em;
 }
 /* line 750, ../scss/_form_elements.scss */
 .form-orientation-grid .formelement.formpagemetaauthorinput {
@@ -5420,7 +5420,7 @@ p[class^="message-"] .message-background-icon i {
   display: inline-block;
   position: relative;
   width: auto;
-  min-width: 29em;
+  min-width: 5em;
   border: 1px solid rgba(120, 120, 120, 0.4);
   border-top-width: 0;
   border-radius: 3px;
@@ -6259,3 +6259,5 @@ a.agplv3-tag:hover {
   color: #636;
   text-shadow: 0px 0px 3px white;
 }
+
+/*# sourceMappingURL=styles.css.map */
