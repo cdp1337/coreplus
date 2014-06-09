@@ -409,6 +409,7 @@ class UserController extends Controller_2_1{
 		$user = $data['user'];
 
 		$form = \User\Helper::GetForm($user);
+		$form->addElement('hidden', ['name' => 'redirect', 'value' => $data['redirect']]);
 
 
 		$view->title = 'Complete Registration';

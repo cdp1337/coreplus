@@ -49,24 +49,25 @@ abstract class Helper{
 
 		if(!$view->record) return;
 
-		$log = new \UserActivityModel();
-		$log->setFromArray(
-			array(
-				'session_id' => session_id(),
-				'user_id' => \Core\user()->get('id'),
-				'ip_addr' => REMOTE_IP,
-				'useragent' => $_SERVER['HTTP_USER_AGENT'],
-				'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''),
-				'type' => $_SERVER['REQUEST_METHOD'],
-				'request' => $_SERVER['REQUEST_URI'],
-				'baseurl' => $request->getBaseURL(),
-				'status' => $view->error,
-				'db_reads' => \Core::DB()->readCount(),
-				'db_writes' => (\Core::DB()->writeCount() + 1),
-				'processing_time' => (round(\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime(), 4) * 1000)
-			)
-		);
 		try{
+			$log = new \UserActivityModel();
+			$log->setFromArray(
+				array(
+					'session_id' => session_id(),
+					'user_id' => \Core\user()->get('id'),
+					'ip_addr' => REMOTE_IP,
+					'useragent' => $_SERVER['HTTP_USER_AGENT'],
+					'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''),
+					'type' => $_SERVER['REQUEST_METHOD'],
+					'request' => $_SERVER['REQUEST_URI'],
+					'baseurl' => $request->getBaseURL(),
+					'status' => $view->error,
+					'db_reads' => \Core::DB()->readCount(),
+					'db_writes' => (\Core::DB()->writeCount() + 1),
+					'processing_time' => (round(\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime(), 3) * 1000)
+				)
+			);
+
 			$log->save();
 		}
 		catch(\Exception $e){
@@ -199,6 +200,11 @@ abstract class Helper{
 			if(($overrideurl = \HookHandler::DispatchHook('/user/postlogin/getredirecturl'))){
 				// Allow an external script to override the redirecting URL.
 				$url = $overrideurl;
+			}
+			elseif($form->getElementValue('redirect')){
+				// The preferred default redirect method.
+				// This is set from /user/register2, which is in turn passed in, (hopefully), by the original callee registration page.
+				$url = $form->getElementValue('redirect');
 			}
 			elseif(strpos(REL_REQUEST_PATH, '/user/register') === 0){
 				// If the user came from the registration page, get the page before that.

@@ -55,6 +55,29 @@ initialize_form = function(){
 
 
 $(function(){
+
+	if(Core.Url != '/user/login' && Core.Url != '/user/register' && Core.Url != '/user/register2'){
+		// Don't run these event hooks on the actual login or register pages.
+		// They're only meant for supplemental pages such as 403 or login widgets.
+
+		$('.user-login form').submit(function(){
+			// Set the form's redirect value to the window location just before submit.
+			// This is useful here because some javascript based applications will change the location's hash
+			// which is not sent to the server,
+			// but is still essential in providing a seamless user experience at times.
+			$(this).find(':input[name=redirect]').val(window.location.href);
+		});
+
+		$('.user-register form').submit(function(){
+			// Set the form's redirect value to the window location just before submit.
+			// This is useful here because some javascript based applications will change the location's hash
+			// which is not sent to the server,
+			// but is still essential in providing a seamless user experience at times.
+			$(this).find(':input[name=redirect]').val(window.location.href);
+		});
+	}
+
+
 	// The login input should have focus by default.
 	$('#formtextinput-email').focus();
 	// Initialize the ajax submission form.

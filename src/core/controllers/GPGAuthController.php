@@ -450,7 +450,8 @@ class GPGAuthController extends Controller_2_1 {
 			null,
 			[
 				'sentence' => $sentence,
-				'user' => $u->get('id')
+				'user' => $u->get('id'),
+				'redirect' => $form->getElementValue('redirect'),
 			]
 		);
 
@@ -516,8 +517,15 @@ class GPGAuthController extends Controller_2_1 {
 		}
 
 		// Otherwise?
-		// If the user came from the registration page, get the page before that.
-		$url = \Core::GetHistory(2);
+		if($data['redirect']){
+			// The page was set via client-side javascript on the login page.
+			// This is the most reliable option.
+			$url = $data['redirect'];
+		}
+		else{
+			// If the user came from the registration page, get the page before that.
+			$url = \Core::GetHistory(2);
+		}
 
 		// Well, record this too!
 		\SystemLogModel::LogSecurityEvent('/user/login', 'Login successful (via GPG Key)', null, $user->get('id'));
@@ -605,7 +613,14 @@ class GPGAuthController extends Controller_2_1 {
 		}
 
 		// Otherwise, w00t!  Record this user into a nonce and forward to step 2 of registration.
-		$nonce = NonceModel::Generate('20 minutes', null, ['user' => $user]);
+		$nonce = NonceModel::Generate(
+			'20 minutes',
+			null,
+			[
+				'user' => $user,
+				'redirect' => $form->getElementValue('redirect'),
+			]
+		);
 		return '/user/register2/' . $nonce;
 	}
 

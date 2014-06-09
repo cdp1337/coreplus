@@ -102,7 +102,14 @@ class FacebookController extends Controller_2_1{
 					$auth->syncUser($_POST['access-token']);
 
 					// Otherwise, w00t!  Record this user into a nonce and forward to step 2 of registration.
-					$nonce = NonceModel::Generate('20 minutes', null, ['user' => $user]);
+					$nonce = NonceModel::Generate(
+						'20 minutes',
+						null,
+						[
+							'user' => $user,
+							'redirect' => $_POST['redirect'],
+						]
+					);
 					\Core\redirect('/user/register2/' . $nonce);
 				}
 				else{
@@ -143,11 +150,20 @@ class FacebookController extends Controller_2_1{
 			// Well yay the user is available and authencation driver is ready!
 			$auth->syncUser($_POST['access-token']);
 
-			// If the user came from the registration page, get the page before that.
-			if(REL_REQUEST_PATH == '/user/login') $url = \Core::GetHistory(2);
-			elseif(REL_REQUEST_PATH == '/facebook/login') $url = \Core::GetHistory(2);
-			// else the registration link is now on the same page as the 403 handler.
-			else $url = REL_REQUEST_PATH;
+
+			if($_POST['redirect']){
+				// The page was set via client-side javascript on the login page.
+				// This is the most reliable option.
+				$url = $_POST['redirect'];
+			}
+			elseif(REL_REQUEST_PATH == '/facebook/login'){
+				// If the user came from the registration page, get the page before that.
+				$url = \Core::GetHistory(2);
+			}
+			else{
+				// else the registration link is now on the same page as the 403 handler.
+				$url = REL_REQUEST_PATH;
+			}
 
 			// Well, record this too!
 			\SystemLogModel::LogSecurityEvent('/user/login', 'Login successful (via Facebook)', null, $user->get('id'));

@@ -135,6 +135,7 @@ class datastore implements AuthDriverInterface{
 		$form = new \Form($form_options);
 		$form->set('callsMethod', 'DatastoreAuthController::LoginHandler');
 
+		$form->addElement('hidden', ['name' => 'redirect']);
 		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
 		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => false));
 		$form->addElement('submit', array('name' => 'submit', 'value' => 'Login'));
@@ -165,6 +166,8 @@ class datastore implements AuthDriverInterface{
 		// I can utilize this form, but tweak the necessary options as necessary.
 		// Replace the password field with a text input for the GPG key.
 		$form->set('callsmethod', 'DatastoreAuthController::RegisterHandler');
+
+		$form->addElement('hidden', ['name' => 'redirect']);
 		$form->addElement(
 			'text',
 			[

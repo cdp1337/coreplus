@@ -239,13 +239,26 @@ class DatastoreAuthController extends Controller_2_1 {
 		// Create a simple form to render.  This is better than doing it in the template.
 		$form = new Form();
 		$form->set('method', 'POST');
-		$form->addElement('text', ['name' => 'email', 'title' => 'Email', 'required' => true]);
+
+		if(\Core\user()->exists()){
+			// This may happen with the enable-password feature for facebook accounts.
+			// They shouldn't have the option to change the email, but it should display where the information will go to.
+			$form->addElement('system', ['name' => 'email', 'value' => \Core\user()->get('email')]);
+			$current = \Core\user()->get('email');
+		}
+		else{
+			$form->addElement('text', ['name' => 'email', 'title' => 'Email', 'required' => true]);
+			$current = false;
+		}
+
 		$form->addElement('submit', ['name' => 'submit', 'value' => 'Send Reset Instructions']);
 
 		$view->title = 'Forgot Password';
 		// This is step 1
 		$view->assign('step', 1);
 		$view->assign('form', $form);
+		$view->assign('current', $current);
+		$view->assign('can_change_email', \ConfigHandler::Get('/user/email/allowchanging'));
 		// Google has no business indexing user-action pages.
 		$view->addMetaName('robots', 'noindex');
 
@@ -253,8 +266,15 @@ class DatastoreAuthController extends Controller_2_1 {
 
 		if($request->isPost()){
 
-			/** @var UserModel $u */
-			$u = UserModel::Find(array('email' => $_POST['email']), 1);
+			if(\Core\user()->exists()){
+				/** @var UserModel $u */
+				$u = \Core\user();
+			}
+			else{
+				/** @var UserModel $u */
+				$u = UserModel::Find(array('email' => $_POST['email']), 1);
+			}
+
 			if(!$u){
 				Core::SetMessage('Invalid user account requested', 'error');
 				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Failed Forgot Password. Invalid email requested for reset: [' . $_POST['email'] . ']');
@@ -436,7 +456,14 @@ class DatastoreAuthController extends Controller_2_1 {
 		}
 
 		// Otherwise, w00t!  Record this user into a nonce and forward to step 2 of registration.
-		$nonce = NonceModel::Generate('20 minutes', null, ['user' => $user]);
+		$nonce = NonceModel::Generate(
+			'20 minutes',
+			null,
+			[
+				'user' => $user,
+				'redirect' => $form->getElementValue('redirect'),
+			]
+		);
 		return '/user/register2/' . $nonce;
 	}
 
@@ -567,10 +594,20 @@ class DatastoreAuthController extends Controller_2_1 {
 			return false;
 		}
 
-		// If the user came from the registration page, get the page before that.
-		if(REL_REQUEST_PATH == '/user/login') $url = \Core::GetHistory(2);
-		// else the registration link is now on the same page as the 403 handler.
-		else $url = REL_REQUEST_PATH;
+
+		if($form->getElementValue('redirect')){
+			// The page was set via client-side javascript on the login page.
+			// This is the most reliable option.
+			$url = $form->getElementValue('redirect');
+		}
+		elseif(REL_REQUEST_PATH == '/user/login'){
+			// If the user came from the registration page, get the page before that.
+			$url = \Core::GetHistory(2);
+		}
+		else{
+			// else the registration link is now on the same page as the 403 handler.
+			$url = REL_REQUEST_PATH;
+		}
 
 		// Well, record this too!
 		\SystemLogModel::LogSecurityEvent('/user/login', 'Login successful (via password)', null, $u->get('id'));
