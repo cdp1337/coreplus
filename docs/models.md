@@ -58,23 +58,27 @@ This is an example of a very simple schema containing two columns or keys.
 Each key supports several attributes, one ("type"), required, the rest optional.
 
 * type
-    * Specifies the data type contained in this column.  Must be one of the Model::ATT_TYPE_* fields.
-    * Type: string
+	* Specifies the data type contained in this column.  Must be one of the Model::ATT_TYPE_* fields.
+	* Type: string
 
 * required
-    * Set to true to disallow blank values
-    * Type: boolean
-    * Default: false
+	* Set to true to disallow blank values
+	* Type: boolean
+	* Default: false
 
 * maxlength
-    * Maximum length in characters (or bytes), of data stored.  
-    * This is automatic for many of the types, as appropriate.  For example, ATT_TYPE_STRING defaults to 255, ATT_TYPE_INT defaults to 15, ATT_TYPE_DATA defaults to something really big such as 24 Mb or some such.
-    * Type: int
+	* Maximum length in characters (or bytes), of data stored.
+	* This is automatic for many of the types, as appropriate.  For example, ATT_TYPE_STRING defaults to 255, ATT_TYPE_INT defaults to 15, ATT_TYPE_DATA defaults to something really big such as 24 Mb or some such.
+	* Type: int
 
 * validation
-    * Validation options for this column.
-    * The validation logic for data in the column, can be a regex (indicated by "/ ... /" or "# ... #"), a public static method ("SomeClass::ValidateSomething"), or an internal method ("this::validateField").
-    * Type: string
+	* Validation options for this column.
+	* The validation logic for data in the column, can be a regex (indicated by "/ ... /" or "# ... #"), a public static method ("SomeClass::ValidateSomething"), or an internal method ("this::validateField").
+	* Type: string
+
+* validationmessage
+	* The message to send to the user if validation of this property fails.
+	* Type: string
 
 * options
     * ATT_TYPE_ENUM column types expect a set of values.  This is defined here as an array.
