@@ -328,7 +328,7 @@ class FilterForm {
 		$maxpages = ceil($this->_total / $this->_limit);
 
 		// If there are no more pages beyond the first, just return null, no pagination available!
-		if($maxpages <= 1) return null;
+		//if($maxpages <= 1) return null;
 
 		// The current page can't exceed past the maxpages.
 		$currentpage = min($maxpages, $this->_currentpage);
