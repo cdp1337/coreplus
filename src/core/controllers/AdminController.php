@@ -805,6 +805,7 @@ class AdminController extends Controller_2_1 {
 		$view->assign('theme', ($theme ? $theme->getKeyName() : null));
 		$view->assign('skin', ($skin ? $skin->getBasename() : null));
 		$view->assign('areas', $areas);
+		$view->assign('multisite', $ms);
 	}
 
 	/**
