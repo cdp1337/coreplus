@@ -1480,6 +1480,24 @@ class Core implements ISingleton {
 	}
 
 	/**
+	 * Simple function to check if a number is an int and greater than 0.
+	 * This is useful as a default validation option for model properties.
+	 *
+	 * @param $val
+	 * @return bool
+	 */
+	public static function CheckIntGT0Validity($val){
+		if(!(is_int($val) || ctype_digit($val))){
+			return false;
+		}
+		if($val <= 0){
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Function that attaches the core javascript to the page.
 	 *
 	 * This should be called automatically from the hook /core/page/preexecute.
@@ -1511,6 +1529,8 @@ class Core implements ISingleton {
 		}
 		$uastring .= "\t\t\tis_mobile: " . ($ua->isMobile() ? 'true' : 'false') . "\n";
 
+		$url = \Core\page_request()->uriresolved;
+
 		$script = '<script type="text/javascript">
 	var Core = {
 		Version: "' . (DEVELOPMENT_MODE ? self::GetComponent()->getVersion() : '') . '",
@@ -1524,6 +1544,7 @@ class Core implements ISingleton {
 			id: "' . $userid . '",
 			authenticated: ' . $userauth . '
 		},
+		Url: "' . $url . '",
 		Browser: {
 ' . $uastring . '
 		}
