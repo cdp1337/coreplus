@@ -159,6 +159,11 @@ class Model implements ArrayAccess {
 	const VALIDATION_URL_WEB = '#^[hH][tT][tT][pP][sS]{0,1}://.+$#';
 
 	/**
+	 * Validation for GT 0 ints.
+	 */
+	const VALIDATION_INT_GT0 = 'Core::CheckIntGT0Validity';
+
+	/**
 	 * Definition for a model that has exactly one child table as a dependency.
 	 *
 	 * !WARNING! This gets deleted automatically if the parent is deleted!
@@ -725,11 +730,11 @@ class Model implements ArrayAccess {
 	}
 
 	/**
-	 * Get a valid schema of the requested key of this model.
+	 * Get a valid schema of the requested key of this model or null if it doesn't exist.
 	 *
 	 * @param string $key
 	 *
-	 * @return boolean
+	 * @return null|array
 	 */
 	public function getKeySchema($key) {
 		$s = self::GetSchema();
@@ -989,6 +994,16 @@ class Model implements ArrayAccess {
 				($check{0} == '/' && !preg_match($check, $v)) ||
 				($check{0} == '#' && !preg_match($check, $v))
 			) {
+				$valid = false;
+			}
+		}
+		elseif($s[$k]['type'] == Model::ATT_TYPE_INT){
+			// Default validation for INTs.
+			if(!isset($s[$k]['validationmessage'])){
+				$s[$k]['validationmessage'] = $k . ' must be a valid number.';
+			}
+
+			if(!(is_int($v) || ctype_digit($v))){
 				$valid = false;
 			}
 		}
