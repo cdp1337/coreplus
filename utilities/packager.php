@@ -1214,7 +1214,8 @@ EOD;
 					exec('git del "' . $nf . '"');
 				}
 
-				exec('git commit -s -m "Release ' . $name . ' ' . $version . '" "' . implode('" "', $gitpaths) . '"');
+				// Does git automatically create tags for anything "Release [name] [version]???"
+				exec('git commit -s -m "Update ' . $name . ' to ' . $version . '" "' . implode('" "', $gitpaths) . '"');
 
 				echo "Don't forget to do a git push ;)" . NL;
 			}
