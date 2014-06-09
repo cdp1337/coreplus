@@ -9,13 +9,15 @@
 			<a href="?page={$page_current-1}" title="Page {$page_current-1}">
 				<i class="icon-backward"></i>
 			</a>
+			{*
 		{else}
-			<a href="?page=1" title="First Page" class="disabled">
+			<a href="#" title="First Page" class="disabled" onclick="return false;">
 				<i class="icon-fast-backward"></i>
 			</a>
-			<a href="?page=1" title="Page 1" class="disabled">
+			<a href="#" title="Page 1" class="disabled" onclick="return false;">
 				<i class="icon-backward"></i>
 			</a>
+			*}
 		{/if}
 
 		Page {$page_current}
@@ -27,19 +29,21 @@
 			<a href="?page={$page_max}" title="Last Page">
 				<i class="icon-fast-forward"></i>
 			</a>
+			{*
 		{else}
-			<a href="?page={$page_max}" title="Page {$page_current+1}" class="disabled">
-				<i class="icon-forward"></i>
-			</a>
-			<a href="?page={$page_max}" title="Last Page" class="disabled">
-				<i class="icon-fast-forward"></i>
-			</a>
-		{/if}
-	</div>
-
-	{if $records_total > $records_current}
-		Displaying {$records_start}-{$records_end} of {$records_total} records.
+		<a href="#" title="Page {$page_current+1}" class="disabled" onclick="return false;">
+			<i class="icon-forward"></i>
+		</a>
+		<a href="#" title="Last Page" class="disabled" onclick="return false;">
+			<i class="icon-fast-forward"></i>
+		</a>
+			*}
 	{/if}
+</div>
+
+{*if $records_total > $records_current*}
+		Displaying {$records_start}-{$records_end} of {$records_total} records.
+	{*/if*}
 
 
 	<div class="pagination-list">
