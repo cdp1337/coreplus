@@ -3,7 +3,8 @@ $(function(){
 		defaults = {
 			proxyicon: 'cog',
 			proxytext: 'Controls',
-			proxyforce: false
+			proxyforce: false,
+			position: 'right'
 		},
 		$currentopen = null,
 		$currentover = null,
@@ -21,7 +22,8 @@ $(function(){
 			options = {
 				proxyicon: $original.data('proxy-icon'),
 				proxytext: $original.data('proxy-text'),
-				proxyforce: $original.data('proxy-force')
+				proxyforce: $original.data('proxy-force'),
+				position: $original.data('position')
 			}, i;
 
 		for(i in options){
@@ -29,6 +31,9 @@ $(function(){
 				options[i] = defaults[i];
 			}
 		}
+
+		// Transpose the appropriate defaults to the object.
+		$original.data('position', options.position);
 
 
 
@@ -65,18 +70,40 @@ $(function(){
 		$clone
 			.mouseenter(function(){
 				// Show this element's companion context menu always when the mouse enters its space.
-				var o = $clone.offset();
+				var co = $clone.offset(),
+					bw = $('body').width(),
+					padding = 5,
+					position = $original.data('position'),
+					nc, oo, ow;
 
 				if($currentopen){
 					$currentopen.hide();
 				}
 
-				$original.css(
-					{
-						top: o.top + 'px',
-						left: (o.left + $clone.innerHeight()) + 'px'
-					}
-				).show();
+				if(position == 'bottom'){
+					nc = {
+						top: (co.top + $clone.height()) + 'px',
+						left: co.left + 'px'
+					};
+				}
+				else{
+					// Left is the default, so it's last just in case the user does something silly.
+					nc = {
+						top: co.top + 'px',
+						left: (co.left + $clone.innerHeight()) + 'px'
+					};
+				}
+
+				$original.css( nc );
+
+				$original.show();
+
+				// Ensure that the dialog doesn't open past the edge of the window.
+				oo = $original.offset();
+				ow = $original.width();
+				if(oo.left + ow + padding > bw){
+					$original.css({ left: (bw - padding - ow) + 'px' });
+				}
 
 				$currentopen = $original;
 				$currentover = $clone;
