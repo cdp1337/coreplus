@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 28 May 2014 19:31:57 -0400
+ * @compiled Mon, 09 Jun 2014 18:05:21 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1718,6 +1718,7 @@ const VALIDATION_NOTBLANK = "/^.+$/";
 const VALIDATION_EMAIL = 'Core::CheckEmailValidity';
 const VALIDATION_URL = '#^[a-zA-Z]+://.+$#';
 const VALIDATION_URL_WEB = '#^[hH][tT][tT][pP][sS]{0,1}://.+$#';
+const VALIDATION_INT_GT0 = 'Core::CheckIntGT0Validity';
 const LINK_HASONE  = 'one';
 const LINK_HASMANY = 'many';
 const LINK_BELONGSTOONE = 'belongs_one';
@@ -2074,6 +2075,7 @@ return true;
 public function validate($k, $v, $throwexception = false) {
 $s = self::GetSchema();
 $valid = true;
+$msg   = null;
 if($v == '' || $v === null){
 if(!isset($s['required']) || !$s['required']){
 return true;
@@ -2091,6 +2093,14 @@ elseif (
 ($check{0} == '/' && !preg_match($check, $v)) ||
 ($check{0} == '#' && !preg_match($check, $v))
 ) {
+$valid = false;
+}
+}
+elseif($s[$k]['type'] == Model::ATT_TYPE_INT){
+if(!isset($s[$k]['validationmessage'])){
+$s[$k]['validationmessage'] = $k . ' must be a valid number.';
+}
+if(!(is_int($v) || ctype_digit($v))){
 $valid = false;
 }
 }
@@ -13525,6 +13535,15 @@ return false;
 }
 return true;
 }
+public static function CheckIntGT0Validity($val){
+if(!(is_int($val) || ctype_digit($val))){
+return false;
+}
+if($val <= 0){
+return false;
+}
+return true;
+}
 public static function _AttachCoreJavascript() {
 if(Core::IsComponentAvailable('User')){
 $userid   = (\Core\user()->get('id') ? \Core\user()->get('id') : 0);
@@ -13548,6 +13567,7 @@ $uastring .= "\t\t\t$k: \"$v\",\n";
 }
 }
 $uastring .= "\t\t\tis_mobile: " . ($ua->isMobile() ? 'true' : 'false') . "\n";
+$url = \Core\page_request()->uriresolved;
 $script = '<script type="text/javascript">
 var Core = {
 Version: "' . (DEVELOPMENT_MODE ? self::GetComponent()->getVersion() : '') . '",
@@ -13561,6 +13581,7 @@ User: {
 id: "' . $userid . '",
 authenticated: ' . $userauth . '
 },
+Url: "' . $url . '",
 Browser: {
 ' . $uastring . '
 }
@@ -13831,6 +13852,7 @@ if ($core_settings['site_url'] != '') $servername .= $core_settings['site_url'];
 else $servername .= $_SERVER ['HTTP_HOST'];
 if ($core_settings['site_url'] != '' && $_SERVER['HTTP_HOST'] != $core_settings['site_url']) {
 $newURL = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $core_settings['site_url'] . $_SERVER['REQUEST_URI'];
+header('HTTP/1.1 301 Moved Permanently'); // 301 transfers page rank.
 header("Location:" . $newURL);
 die("If your browser does not refresh, please <a href=\"{$newURL}\">Click Here</a>");
 }
@@ -17041,6 +17063,7 @@ $uri   = substr($uri, 0, -1 - strlen($ctype));
 else {
 $ctype = 'html';
 }
+$uri = rtrim($uri, '/');
 $this->uriresolved = $uri;
 $this->protocol    = $_SERVER['SERVER_PROTOCOL'];
 $this->ext = $ctype;

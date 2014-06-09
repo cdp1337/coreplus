@@ -178,6 +178,7 @@ else {
 	//  can happen.
 	if ($core_settings['site_url'] != '' && $_SERVER['HTTP_HOST'] != $core_settings['site_url']) {
 		$newURL = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $core_settings['site_url'] . $_SERVER['REQUEST_URI'];
+		header('HTTP/1.1 301 Moved Permanently'); // 301 transfers page rank.
 		header("Location:" . $newURL);
 		die("If your browser does not refresh, please <a href=\"{$newURL}\">Click Here</a>");
 	}
