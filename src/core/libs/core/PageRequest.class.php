@@ -148,6 +148,9 @@ class PageRequest {
 			$ctype = 'html';
 		}
 
+		// The URL should not end with a trailing slash.
+		$uri = rtrim($uri, '/');
+
 		$this->uriresolved = $uri;
 		$this->protocol    = $_SERVER['SERVER_PROTOCOL'];
 		// Specified with prepending ".xml|.json,etc" to the resource.
