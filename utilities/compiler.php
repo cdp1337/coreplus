@@ -379,7 +379,7 @@ else{
 		$cssfile = $outdirname . substr($outfilename, 0, -4) . 'css';
 		$minfile = $outdirname . substr($outfilename, 0, -4) . 'min.css';
 
-		exec('sass "' . $file . '":"' . $cssfile . '" -C -l -f -t expanded --unix-newlines', $null, $ret);
+		exec('sass "' . $file . '":"' . $cssfile . '" -C -l -f -t expanded --unix-newlines --sourcemap', $null, $ret);
 		if($ret == 0) echo "Compiled CSS file successfully!\n";
 		else echo "Couldn't compile CSS file!\n";
 
