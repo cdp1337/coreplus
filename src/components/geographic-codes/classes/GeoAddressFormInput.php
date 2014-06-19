@@ -75,8 +75,11 @@ class GeoAddressFormInput extends FormElement {
 		// Make sure that some defaults are set first.
 		if(!$this->get('name')) $this->set('name', 'address');
 
-		if($this->_model && $this->_model->exists()){
+		if($this->_model && ($this->_model->exists() || $this->_model->changed())){
 			// There is a valid model set, I can pull all the values from that!
+			// This should also be used if the model was created but doesn't exist in the database, but was changed.
+			// ie: a user entered information on a new model, but had an error that kicked it back.
+			// that model may not exist, but it has been changed with the user's data, and so needs to be preserved.
 			$v = $this->_model->getAsArray();
 		}
 		else{
