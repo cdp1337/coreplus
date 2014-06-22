@@ -77,6 +77,14 @@
 		</td>
 		<td>
 			<div class="view">
+				{$entry->getPublishedStatus()}
+			</div>
+			<div class="edit">
+
+			</div>
+		</td>
+		<td>
+			<div class="view">
 				{if $entry.published}
 					{date format="SD" $entry.published}
 				{else}
@@ -84,7 +92,19 @@
 				{/if}
 			</div>
 			<div class="edit">
-				{add_form_element form=$listing type="select" options=['published', 'draft'] value="`$entry.published_status`" name="model[`$entry.baseurl`][published_status]"}
+
+			</div>
+		</td>
+		<td>
+			<div class="view">
+				{if $entry.published_expires}
+					{date format="SD" $entry.published_expires}
+				{else}
+					No Expiration
+				{/if}
+			</div>
+			<div class="edit">
+
 			</div>
 		</td>
 		<td>

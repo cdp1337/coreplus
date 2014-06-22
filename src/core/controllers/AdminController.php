@@ -574,7 +574,9 @@ class AdminController extends Controller_2_1 {
 		$table->addColumn('Cache', 'expires');
 		$table->addColumn('Created', 'created', false);
 		$table->addColumn('Last Updated', 'updated', false);
+		$table->addColumn('Status');
 		$table->addColumn('Published', 'published');
+		$table->addColumn('Expires', 'published_expires');
 		$table->addColumn('SEO Title');
 		$table->addColumn('SEO Description / Teaser', null, false);
 		$table->addColumn('Access', 'access');

@@ -268,11 +268,23 @@ class PageModel extends Model {
 			'form' => array(
 				'title' => 'Published Date',
 				'type' => 'datetime',
-				'description' => 'Leave this blank for default published time, or set it to a desired date/time to set the published time.  Note, you CAN set this to a future date to set the page to be published at that time.',
+				'description' => 'Set this field to a desired date/time to mark the page to be published at that specific date and time.  If left blank, the current date and time are set automatically.  This CAN be set this to a future date to have the page to be published at that time.',
 				'group' => 'Publish Settings',
 				'grouptype' => 'tabs',
 			),
 			'comment' => 'The published date',
+		),
+		'published_expires' => array(
+			'type' => Model::ATT_TYPE_INT,
+			'null' => true,
+			'default' => null,
+			'form' => array(
+				'title' => 'Publish Expires Date',
+				'type' => 'datetime',
+				'description' => 'Set to a future date/time to un-publish this page automatically at that specific date and time.',
+				'group' => 'Publish Settings',
+				'grouptype' => 'tabs',
+			),
 		),
 		'body' => array(
 			'type'      => Model::ATT_TYPE_TEXT,
@@ -618,6 +630,27 @@ class PageModel extends Model {
 		$m = $this->getMeta($name);
 
 		return $m ? $m->get('meta_value_title') : '';
+	}
+
+	public function set($k, $v){
+		if($k == 'site'){
+			// I need to run through and ensure that insertables remain linked up to the same site ID as their parent page.
+			// This is a bit atypical on page creation because when the insertable is created, the page doesn't exist yet,
+			// and potentially has an invalid site ID, that is only corrected after the insertables are assigned.
+			//
+			// Please note, this only applies when in multi-site mode.
+			$insertables = $this->getLink('Insertable');
+
+			foreach($insertables as $ins){
+				/** @var $ins InsertableModel */
+				$ins->set('site', $v);
+			}
+
+			return parent::set($k, $v);
+		}
+		else{
+			return parent::set($k, $v);
+		}
 	}
 
 	/**
@@ -1320,7 +1353,7 @@ class PageModel extends Model {
 		$title = $this->get('title');
 		$config = \ConfigHandler::Get('/core/page/title_template');
 
-		if($metatitle){
+		if($metatitle && $metatitle->get('meta_value_title')){
 			// This is the meta attribute from the page.
 			$t = $metatitle->get('meta_value_title');
 		}
@@ -1432,6 +1465,31 @@ class PageModel extends Model {
 		\Core\Cache::Delete($indexkey);
 	}
 
+	/**
+	 * Get a string representation of the published status of this article.
+	 * This is primarily an internal and administrative function, since from the user's perspective,
+	 * pages are simply available or not.
+	 *
+	 * @return string
+	 */
+	public function getPublishedStatus(){
+		if($this->get('published_status') == 'draft'){
+			// The page is set as "draft".  Not published.
+			return 'draft';
+		}
+
+		if($this->get('published') > \Core\Date\DateTime::NowGMT()){
+			// The publish date is in the future. Not published.
+			return 'pending';
+		}
+
+		if($this->get('published_expires') && $this->get('published_expires') <= \Core\Date\DateTime::NowGMT()){
+			// The publish expire date is set but that date has already passed.  Not published.
+			return 'expired';
+		}
+
+		return 'published';
+	}
 
 	/**
 	 * Get if this page is published and the published date is at least now or earlier.
@@ -1439,18 +1497,7 @@ class PageModel extends Model {
 	 * @return bool
 	 */
 	public function isPublished(){
-		if($this->get('published_status') == 'draft'){
-			// The page is set as "draft".  Not published.
-			return false;
-		}
-
-		if($this->get('published') > \Core\Date\DateTime::NowGMT()){
-			// The publish date is in the future. Not published.
-			return false;
-		}
-
-		// That's it, there are only two things that go into isPublished.
-		return true;
+		return ($this->getPublishedStatus() == 'published');
 	}
 
 	private function _getParentTree($antiinfiniteloopcounter = 5) {
