@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 09 Jun 2014 18:05:21 -0400
+ * @compiled Sun, 22 Jun 2014 14:13:46 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1719,6 +1719,8 @@ const VALIDATION_EMAIL = 'Core::CheckEmailValidity';
 const VALIDATION_URL = '#^[a-zA-Z]+://.+$#';
 const VALIDATION_URL_WEB = '#^[hH][tT][tT][pP][sS]{0,1}://.+$#';
 const VALIDATION_INT_GT0 = 'Core::CheckIntGT0Validity';
+const VALIDATION_NUMBER_WHOLE = "/^[0-9]*$/";
+const VALIDATION_CURRENCY_USD = '#^(\$)?[,0-9]*(?:\.[0-9]{2})?$#';
 const LINK_HASONE  = 'one';
 const LINK_HASMANY = 'many';
 const LINK_BELONGSTOONE = 'belongs_one';
@@ -2075,7 +2077,6 @@ return true;
 public function validate($k, $v, $throwexception = false) {
 $s = self::GetSchema();
 $valid = true;
-$msg   = null;
 if($v == '' || $v === null){
 if(!isset($s['required']) || !$s['required']){
 return true;
@@ -3583,11 +3584,23 @@ only.  Useful for saving a page without releasing it to public users.',
 'form' => array(
 'title' => 'Published Date',
 'type' => 'datetime',
-'description' => 'Leave this blank for default published time, or set it to a desired date/time to set the published time.  Note, you CAN set this to a future date to set the page to be published at that time.',
+'description' => 'Set this field to a desired date/time to mark the page to be published at that specific date and time.  If left blank, the current date and time are set automatically.  This CAN be set this to a future date to have the page to be published at that time.',
 'group' => 'Publish Settings',
 'grouptype' => 'tabs',
 ),
 'comment' => 'The published date',
+),
+'published_expires' => array(
+'type' => Model::ATT_TYPE_INT,
+'null' => true,
+'default' => null,
+'form' => array(
+'title' => 'Publish Expires Date',
+'type' => 'datetime',
+'description' => 'Set to a future date/time to un-publish this page automatically at that specific date and time.',
+'group' => 'Publish Settings',
+'grouptype' => 'tabs',
+),
 ),
 'body' => array(
 'type'      => Model::ATT_TYPE_TEXT,
@@ -3800,6 +3813,18 @@ return null;
 public function getMetaValue($name){
 $m = $this->getMeta($name);
 return $m ? $m->get('meta_value_title') : '';
+}
+public function set($k, $v){
+if($k == 'site'){
+$insertables = $this->getLink('Insertable');
+foreach($insertables as $ins){
+$ins->set('site', $v);
+}
+return parent::set($k, $v);
+}
+else{
+return parent::set($k, $v);
+}
 }
 public function setMetas($metaarray) {
 if (is_array($metaarray) && count($metaarray)){
@@ -4181,7 +4206,7 @@ public function getSEOTitle(){
 $metatitle = $this->getMeta('title');
 $title = $this->get('title');
 $config = \ConfigHandler::Get('/core/page/title_template');
-if($metatitle){
+if($metatitle && $metatitle->get('meta_value_title')){
 $t = $metatitle->get('meta_value_title');
 }
 elseif($config){
@@ -4248,14 +4273,20 @@ foreach($index as $key){
 }
 \Core\Cache::Delete($indexkey);
 }
-public function isPublished(){
+public function getPublishedStatus(){
 if($this->get('published_status') == 'draft'){
-return false;
+return 'draft';
 }
 if($this->get('published') > \Core\Date\DateTime::NowGMT()){
-return false;
+return 'pending';
 }
-return true;
+if($this->get('published_expires') && $this->get('published_expires') <= \Core\Date\DateTime::NowGMT()){
+return 'expired';
+}
+return 'published';
+}
+public function isPublished(){
+return ($this->getPublishedStatus() == 'published');
 }
 private function _getParentTree($antiinfiniteloopcounter = 5) {
 if ($antiinfiniteloopcounter <= 0) return array();
@@ -4727,7 +4758,7 @@ $this->set('external_data', json_encode($data));
 class PageMetaModel extends Model {
 public static $Schema = array(
 'site' => array(
-'type' => Model::ATT_TYPE_INT,
+'type' => Model::ATT_TYPE_SITE,
 'default' => -1,
 'formtype' => 'system',
 'comment' => 'The site id in multisite mode, (or -1 if global)',
@@ -13604,7 +13635,7 @@ JQuery::IncludeJQueryUI();
 return true;
 }
 public static function _AttachLessJS(){
-\Core\view()->addScript('js/less-1.5.0.js', 'head');
+\Core\view()->addScript('js/less-1.7.1.js', 'head');
 return true;
 }
 public static function VersionCompare($version1, $version2, $operation = null) {
@@ -15538,6 +15569,7 @@ $template->assign($k, $v);
 }
 }
 $this->_template = $template;
+return true;
 }
 public function assign($key, $val) {
 $this->getTemplate()->assign($key, $val);
@@ -15740,7 +15772,8 @@ $debug .= '<fieldset class="debug-section collapsible" id="debug-section-templat
 $debug .= '<legend><b>Template Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= "<span>";
 $debug .= 'Base URL: ' . $this->baseurl . "\n";
-$debug .= 'Template Used: ' . $this->templatename . "\n";
+$debug .= 'Template Requested: ' . $this->templatename . "\n";
+$debug .= 'Template Actually Used: ' . \Core\Templates\Template::ResolveFile($this->templatename) . "\n";
 $debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
 $debug .= "</span>";
 $debug .= '</fieldset>';
@@ -17064,6 +17097,9 @@ else {
 $ctype = 'html';
 }
 $uri = rtrim($uri, '/');
+if($uri == ''){
+$uri = '/';
+}
 $this->uriresolved = $uri;
 $this->protocol    = $_SERVER['SERVER_PROTOCOL'];
 $this->ext = $ctype;
@@ -17291,7 +17327,14 @@ $cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen(
 $view->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
 }
 if($defaultpage && $defaultpage->get('page_template')){
-$view->templatename = substr($view->templatename, 0, -4) . '/' . $defaultpage->get('page_template');
+$base     = substr($view->templatename, 0, -4);
+$override = $defaultpage->get('page_template');
+if($base && strpos($override, $base) === 0){
+$view->templatename = $override;
+}
+elseif($base){
+$view->templatename = $base . '/' . $override;
+}
 }
 if($view->mastertemplate == 'admin'){
 $view->mastertemplate = ConfigHandler::Get('/theme/default_admin_template');
@@ -17745,8 +17788,13 @@ $profiler->record('Read GeoLite Database');
 $reader->close();
 $profiler->record('Closed GeoLite Database');
 $geocity = $geo->city->name;
+if(isset($geo->subdivisions[0]) && $geo->subdivisions[0] !== null){
 $geoprovinceobj = $geo->subdivisions[0];
 $geoprovince = $geoprovinceobj->isoCode;
+}
+else{
+$geoprovince = '';
+}
 $geocountry  = $geo->country->isoCode;
 $geotimezone = $geo->location->timeZone;
 unset($geoprovinceobj, $geo, $reader);
