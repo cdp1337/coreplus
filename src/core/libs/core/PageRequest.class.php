@@ -150,6 +150,10 @@ class PageRequest {
 
 		// The URL should not end with a trailing slash.
 		$uri = rtrim($uri, '/');
+		if($uri == ''){
+			// Ensure that the index page remains "/".
+			$uri = '/';
+		}
 
 		$this->uriresolved = $uri;
 		$this->protocol    = $_SERVER['SERVER_PROTOCOL'];
@@ -541,7 +545,18 @@ class PageRequest {
 		// In addition to the autogeneration, also support the page_template from the datastore.
 		if($defaultpage && $defaultpage->get('page_template')){
 			// Switch the template over to that custom one.
-			$view->templatename = substr($view->templatename, 0, -4) . '/' . $defaultpage->get('page_template');
+			// Some legacy data will have the fully resolved path for this template.
+			// This has been switched to just the basename of the custom template,
+			// but legacy data be legacy, 'yo.                            0.o
+
+			$base     = substr($view->templatename, 0, -4);
+			$override = $defaultpage->get('page_template');
+			if($base && strpos($override, $base) === 0){
+				$view->templatename = $override;
+			}
+			elseif($base){
+				$view->templatename = $base . '/' . $override;
+			}
 		}
 
 		// Guess which theme skin (mastertemplate) should be used if one wasn't specified.
