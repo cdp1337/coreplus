@@ -1592,7 +1592,7 @@ class Core implements ISingleton {
 	 * @return bool
 	 */
 	public static function _AttachLessJS(){
-		\Core\view()->addScript('js/less-1.5.0.js', 'head');
+		\Core\view()->addScript('js/less-1.7.1.js', 'head');
 
 		return true;
 	}
