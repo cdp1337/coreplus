@@ -1,7 +1,12 @@
-{script library="jquery"}{/script}
 {script library="facebook"}{/script}
-{script src="assets/js/facebook/login.js"}{/script}
 {css src="assets/css/facebook.css"}{/css}
+
+{if Core::IsLibraryAvailable('JQuery')}
+	{script library="jquery"}{/script}
+	{script library="jqueryui"}{/script}
+	{script src="assets/js/facebook/login.js"}{/script}
+	{script src="assets/js/user/login.js"}{/script}
+{/if}
 
 
 <div id="fb-root"></div>
