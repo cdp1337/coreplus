@@ -120,11 +120,27 @@ class PageController extends Controller_2_1 {
 		$user = \Core\user();
 		$toshow = array();
 		while(($record = $stream->getRecord())){
-			if($user->checkAccess( $record['access'] )){
-				$page = new PageModel();
-				$page->_loadFromRecord($record);
-				$toshow[] = $page;
+			if(!$user->checkAccess( $record['access'] )){
+				// Skip any further operations if the user does not have access to this page
+				continue;
 			}
+
+			if($record['published_status'] != 'published'){
+				// Skip any further operations if the page isn't even marked as published.
+				continue;
+			}
+
+			$page = new PageModel();
+			$page->_loadFromRecord($record);
+
+			if(!$page->isPublished()){
+				// Skip out if the page is not marked as published.
+				// This has extended checks other than simply if the status is set as "published",
+				// such as publish date and expiration date.
+				continue;
+			}
+
+			$toshow[] = $page;
 		}
 
 		// Anything else?
