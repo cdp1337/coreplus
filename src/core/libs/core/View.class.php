@@ -299,7 +299,7 @@ class View {
 
 	/**
 	 *
-	 * @return Core\Templates\Template
+	 * @return Core\Templates\TemplateInterface
 	 */
 	public function getTemplate() {
 		if (!$this->_template) {
@@ -314,6 +314,7 @@ class View {
 	 * Override a template, useful for forcing a different template type for this view.
 	 *
 	 * @param $template Core\Templates\TemplateInterface
+	 * @return bool False on failure, True on success.
 	 */
 	public function overrideTemplate($template){
 		if(!is_a($template, 'TemplateInterface')){
@@ -331,6 +332,7 @@ class View {
 		}
 
 		$this->_template = $template;
+		return true;
 	}
 
 	/**
@@ -648,7 +650,8 @@ class View {
 					$debug .= '<legend><b>Template Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 					$debug .= "<span>";
 					$debug .= 'Base URL: ' . $this->baseurl . "\n";
-					$debug .= 'Template Used: ' . $this->templatename . "\n";
+					$debug .= 'Template Requested: ' . $this->templatename . "\n";
+					$debug .= 'Template Actually Used: ' . \Core\Templates\Template::ResolveFile($this->templatename) . "\n";
 					$debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
 					$debug .= "</span>";
 					$debug .= '</fieldset>';
