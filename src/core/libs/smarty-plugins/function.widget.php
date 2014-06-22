@@ -21,20 +21,23 @@
 
 /**
  * Manually add a widget onto a template.
- * 
+ *
  * @param array $params
  * @param Object $template
- * @return mixed 
+ * @return mixed
+ *
+ * @throws SmartyException
  */
 function smarty_function_widget($params, $template){
-	
-	
+
+
 	$assign= (isset($params['assign']))? $params['assign'] : false;
-	
+
 	// Version 2.0 uses baseurl as the defining call.
 	if(isset($params['baseurl'])){
 		$api = 2.0;
 		$parts = WidgetModel::SplitBaseURL($params['baseurl']);
+		$original = $params['baseurl'];
 		$name = $parts['controller'];
 		$method = $parts['method'];
 		$parameters = $parts['parameters'];
@@ -42,18 +45,34 @@ function smarty_function_widget($params, $template){
 	// Version 1.0 uses name.
 	elseif(isset($params['name'])){
 		$api = 1.0;
+		$original = $params['name'];
 		$name = $params['name'];
 		// Try to look up this requested widget.
 		$name .= 'Widget';
 		$parameters = null;
+		$method = null;
+	}
+	else{
+		$api = 0.0;
+		$name = null;
+		$original = null;
+		$parameters = null;
+		$method = null;
 	}
 
 
 	if(!class_exists($name)){
-		throw new SmartyException('Unable to locate class [' . $name . '] for requested widget', null, null);
+		if(DEVELOPMENT_MODE){
+			return '[ERROR, Class for ' . $original . ' not found on system, widget disabled.]';
+		}
+		else{
+			return '';
+		}
+
+		//throw new SmartyException('Unable to locate class [' . $name . '] for requested widget', null, null);
 	}
 	// @todo Add support for requiring instancing.
-	
+
 	/** @var $w Widget_2_1 */
 	$w = new $name();
 	// Version 1.0 API
@@ -98,7 +117,10 @@ function smarty_function_widget($params, $template){
 			$dat = $return->fetch();
 		}
 	}
-	
-	
+	else{
+		$dat = 'Invalid API version';
+	}
+
+
 	return $assign ? $template->assign($assign, $dat) : $dat;
 }
