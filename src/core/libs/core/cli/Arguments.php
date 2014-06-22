@@ -1,7 +1,7 @@
 <?php
 /**
  * File for class Arguments definition in the coreplus project
- * 
+ *
  * @package Core\CLI
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20131204.1445
@@ -22,6 +22,10 @@
  */
 
 namespace Core\CLI;
+
+if(!defined('NL')){
+	define('NL', "\n");
+}
 
 
 /**
@@ -58,7 +62,7 @@ namespace Core\CLI;
  *     // Do something with this option.
  * }
  *
- * 
+ *
  * @package Core\CLI
  * @author Charlie Powell <charlie@eval.bz>
  *
@@ -120,12 +124,12 @@ class Arguments {
 			$descparts = explode("\n", wordwrap($desc, 80));
 
 			$out .= $lineprefix;
-			foreach($descparts as $i => $desc){
+			foreach($descparts as $i => $idesc){
 				if($i == 0){
-					$out .= $desc . NL;
+					$out .= $idesc . NL;
 				}
 				else{
-					$out .= str_repeat(' ', strlen($lineprefix)) . $desc . NL;
+					$out .= str_repeat(' ', strlen($lineprefix)) . $idesc . NL;
 				}
 			}
 		}
