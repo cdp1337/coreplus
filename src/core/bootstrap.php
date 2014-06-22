@@ -600,9 +600,17 @@ if(Core::IsComponentAvailable('geographic-codes') && class_exists('GeoIp2\\Datab
 			$profiler->record('Closed GeoLite Database');
 
 			$geocity = $geo->city->name;
-			/** @var GeoIp2\Record\Subdivision $geoprovinceobj */
-			$geoprovinceobj = $geo->subdivisions[0];
-			$geoprovince = $geoprovinceobj->isoCode;
+			// Some IP addresses do not resolve as a valid province.
+			//This tends to happen with privately owned networks.
+			if(isset($geo->subdivisions[0]) && $geo->subdivisions[0] !== null){
+				/** @var GeoIp2\Record\Subdivision $geoprovinceobj */
+				$geoprovinceobj = $geo->subdivisions[0];
+				$geoprovince = $geoprovinceobj->isoCode;
+			}
+			else{
+				$geoprovince = '';
+			}
+
 			$geocountry  = $geo->country->isoCode;
 			$geotimezone = $geo->location->timeZone;
 
