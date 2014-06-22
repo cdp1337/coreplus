@@ -9,7 +9,7 @@
 class PageMetaModel extends Model {
 	public static $Schema = array(
 		'site' => array(
-			'type' => Model::ATT_TYPE_INT,
+			'type' => Model::ATT_TYPE_SITE,
 			'default' => -1,
 			'formtype' => 'system',
 			'comment' => 'The site id in multisite mode, (or -1 if global)',
