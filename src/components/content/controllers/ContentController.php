@@ -39,8 +39,18 @@ class ContentController extends Controller_2_1 {
 		$editor  = (\Core\user()->checkAccess($m->get('editpermissions')) || \Core\user()->checkAccess('p:/content/manage_all'));
 		$manager = \Core\user()->checkAccess('p:/content/manage_all');
 
+		/** @var PageModel $page */
 		$page = $m->getLink('Page');
 		//$template = ($page->get('page_template')) ? 'view/' . $page->get('page_template') : 'view.tpl';
+
+		if(!$page->isPublished()){
+			if($editor){
+				Core::SetMessage('This page is currently set as ' . $page->getPublishedStatus() . '.', 'info');
+			}
+			else{
+				return View::ERROR_NOTFOUND;
+			}
+		}
 
 		$view->assign('model', $m);
 	    $view->assign('page', $page);
