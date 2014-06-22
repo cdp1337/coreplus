@@ -164,6 +164,18 @@ class Model implements ArrayAccess {
 	const VALIDATION_INT_GT0 = 'Core::CheckIntGT0Validity';
 
 	/**
+	 * Simple validation for any whole numeric digits.
+	 *
+	 * 0, 1, 1337, 100000 are all valid whole numbers
+	 */
+	const VALIDATION_NUMBER_WHOLE = "/^[0-9]*$/";
+
+	/**
+	 * Simple validation for USD currencies
+	 */
+	const VALIDATION_CURRENCY_USD = '#^(\$)?[,0-9]*(?:\.[0-9]{2})?$#';
+
+	/**
 	 * Definition for a model that has exactly one child table as a dependency.
 	 *
 	 * !WARNING! This gets deleted automatically if the parent is deleted!
