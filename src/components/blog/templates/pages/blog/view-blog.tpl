@@ -1,7 +1,13 @@
 {css src="assets/css/blog.css"}{/css}
 
 {if count($articles) == 0}
-	<p class="message-info">This blog has no articles created yet, please try back later.</p>
+	{if $editor && $blog.type == 'local'}
+		<p class="message-tutorial">
+			There are no articles yet, {a href="$add_article_link"}create one!{/a}
+		</p>
+	{else}
+		<p class="message-info">This blog has no articles created yet, please try back later.</p>
+	{/if}
 {/if}
 
 {$filters->pagination()}

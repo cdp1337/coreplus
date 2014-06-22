@@ -20,6 +20,8 @@ class BlogController extends Controller_2_1 {
 		// Get a list of all the blogs on the system.  I'll get the page object from each one and see if the current user has access
 		// to each one.  Then I'll have a list of ids that the user can view.
 		$parents = array();
+		$editor = false;
+		$page = null;
 		$blogs = BlogModel::Find(null, null, null);
 		foreach($blogs as $blog){
 			/** @var BlogModel $blog */
@@ -34,7 +36,8 @@ class BlogController extends Controller_2_1 {
 
 		// Is the user a manager, but no blogs exist on the system?
 		if($manager && !sizeof($parents)){
-			\core\redirect('/blog/admin');
+			Core::SetMessage('There are no blogs on the system currently, you can use the All Pages interface to create one.', 'tutorial');
+			\core\redirect('/admin/pages');
 		}
 
 		$filters = new FilterForm();
@@ -43,7 +46,14 @@ class BlogController extends Controller_2_1 {
 		$filters->load($this->getPageRequest());
 
 		$factory = new ModelFactory('PageModel');
-		$factory->where('parenturl IN ' . implode(',', $parents));
+
+		if(sizeof($blogs)){
+			$factory->where('parenturl IN ' . implode(',', $parents));
+		}
+		else{
+			// This is to prevent the system from trying to load all pages that have a parent of "".
+			$factory->where('parenturl = -there-are-no-blogs-');
+		}
 
 		if($request->getParameter('q')){
 			$query = $request->getParameter('q');
@@ -488,6 +498,12 @@ class BlogController extends Controller_2_1 {
 		return $this->_viewBlogArticle($blog, $article);
 	}
 
+	/**
+	 * View controller for a blog article listing page.
+	 * This will only display articles under this same blog.
+	 *
+	 * @param BlogModel $blog
+	 */
 	private function _viewBlog(BlogModel $blog) {
 		$view     = $this->getView();
 		$page     = $blog->getLink('Page');
@@ -567,6 +583,8 @@ class BlogController extends Controller_2_1 {
 		$view->assign('canonical_url', Core::ResolveLink($blog->get('baseurl')));
 		$view->assign('last_updated', ($latest ? $latest['updated'] : 0));
 		$view->assign('servername', SERVERNAME_NOSSL);
+		$view->assign('editor', $editor);
+		$view->assign('add_article_link', '/content/create?page_template=blog-article.tpl&parenturl=' . $blog->get('baseurl'));
 
 		// Add the extra view types for this page
 		$view->addHead('<link rel="alternate" type="application/atom+xml" title="' . $page->get('title') . ' Atom Feed" href="' . Core::ResolveLink($blog->get('baseurl')) . '.atom"/>');
@@ -638,11 +656,11 @@ class BlogController extends Controller_2_1 {
 			$view->addControl('Edit Article', '/blog/article/update/' . $article->get('id'), 'edit');
 			if($article->get('status') == 'draft'){
 				$view->addControl( [
-					'title'   => 'Publish Article',
-					'link'    => '/blog/article/publish/' . $blog->get('id') . '/' . $article->get('id'),
-					'icon'    => 'arrow-up',
-					'confirm' => 'Publish article?'
-				] );
+						'title'   => 'Publish Article',
+						'link'    => '/blog/article/publish/' . $blog->get('id') . '/' . $article->get('id'),
+						'icon'    => 'arrow-up',
+						'confirm' => 'Publish article?'
+					] );
 			}
 			$view->addControl(
 				array(
