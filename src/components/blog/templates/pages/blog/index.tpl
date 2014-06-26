@@ -1,11 +1,7 @@
 {css src="assets/css/blog.css"}{/css}
 
 {if count($articles) == 0}
-	{if $query}
-		<p class="message-info">Your search yielded no results.</p>
-	{else}
-		<p class="message-info">This blog has no articles created yet, please try back later.</p>
-	{/if}
+	<p class="message-info">This blog has no articles created yet, please try back later.</p>
 {/if}
 
 {$filters->pagination()}
@@ -22,15 +18,11 @@
 
 			{if $article->isPublished()}
 				<meta itemprop="dateCreated" content="{date format='c' date="`$article.published`"}"/>
-				<div class="blog-article-date">
-					{date date="`$article.published`" assign="date_published"}
-					{t "PUBLISHED_ON_DATE" $date_published}
-				</div>
+				<div class="blog-article-date">Posted {date date="`$article.published`"}</div>
 			{else}
-				<div class="blog-article-date">
-					{t "NOT_PUBLISHED"}
-				</div>
+				<div class="blog-article-date">Not Published</div>
 			{/if}
+
 
 			{if $article->getImage()}
 				<div class="blog-article-image">
@@ -40,14 +32,14 @@
 
 			<br/>
 			{a href="`$blog->get('rewriteurl')`"}
-				{t POSTED_IN $blog->get('title')}
+				Posted in {$blog->get('title')}
 			{/a}
 
 
 			{if $article->getTeaser()}
 				<p class="blog-article-excerpt" itemprop="articleBody">
 					{$article->getTeaser()}
-					... {a class="blog-article-read-more" href="`$article.baseurl`"}Read More{/a}
+					... <a{if $blog.type == 'remote'} target="_blank"{/if} class="blog-article-read-more" href="{link $article.baseurl}">Read More</a>
 				</p>
 			{/if}
 
