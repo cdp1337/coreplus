@@ -5,12 +5,14 @@
 		<file filename="assets/css/error404.css" md5="fa34d572efcc3c1ca91fe7a0c362dd1b"/>
 		<file filename="assets/css/error500.css" md5="2d4a2b8debc361fef2137abfea5c9428"/>
 		<file filename="assets/css/opt/full-width.css" md5="b874f3da2ccf0890f507834f8ae1a3fc"/>
-		<file filename="assets/css/opt/gradients.css" md5="b8cc69b5f694ca7ca4f42715eaede9b6"/>
+		<file filename="assets/css/opt/gradients.css" md5="55e5506a43a9fa94e032ebf679e51ad6"/>
+		<file filename="assets/css/opt/gradients.css.map" md5="15564876e00c86752691d875749fffc0"/>
 		<file filename="assets/css/opt/gradients.min.css" md5="a3fc3a440d48b51330a3d0e993c843cd"/>
 		<file filename="assets/css/print.css" md5="5bcfc09ac6affe440f91a89e44070ef0"/>
 		<file filename="assets/css/screen.css" md5="3671c7323c4cdd2a6deb8242e6fdd518"/>
-		<file filename="assets/css/styles.css" md5="527d4e07dddf26076566026f5e300e67"/>
-		<file filename="assets/css/styles.min.css" md5="fba08242921bbaafd823d88443a23c04"/>
+		<file filename="assets/css/styles.css" md5="65bf07ed7babdb38e96959e0eb1bb3f5"/>
+		<file filename="assets/css/styles.css.map" md5="c1072768bd27c85e72a16629e9e9d7b0"/>
+		<file filename="assets/css/styles.min.css" md5="9978c2dc4ad390d9fb634ab0f8e9b07c"/>
 		<file filename="assets/css/tinymce/content.css" md5="1ff045c082c1f366dd16e8322644e484"/>
 		<file filename="assets/images/404.jpg" md5="815cb4116bbbec081a645e85de74025c"/>
 		<file filename="assets/images/flat.png" md5="2176d6d6e814b0da1c71b73ca7a675e8"/>
@@ -29,13 +31,13 @@
 	</emailskins>
 	<view/>
 	<otherfiles>
-		<file filename="CHANGELOG" md5="2e1244915a586d99914c057e05769cb1"/>
+		<file filename="CHANGELOG" md5="4eac0ad8997351daa0065a235d9df2e9"/>
 		<file filename="assets/scss/_animate.scss" md5="593db137ba418d807e997ebc50fa85e2"/>
 		<file filename="assets/scss/_buttons.scss" md5="064a5d4da0dca01c71b6dfae9608c25d"/>
 		<file filename="assets/scss/_controls.scss" md5="1364f913b7f211d928e473d4fce43aee"/>
 		<file filename="assets/scss/_disclaimer.scss" md5="19c48173e074c37c8c2c131346d2aa8b"/>
 		<file filename="assets/scss/_filters_and_pagination.scss" md5="b5eada7f048b7e236099bc6fa2b79ef0"/>
-		<file filename="assets/scss/_form_elements.scss" md5="046204c834c927c0650c85b2eb3609b0"/>
+		<file filename="assets/scss/_form_elements.scss" md5="26c3683bddc115b7fecab3096fde6d36"/>
 		<file filename="assets/scss/_grid.scss" md5="262ce1bd682e61ff2ff1c5aeafef9562"/>
 		<file filename="assets/scss/_h5bp.scss" md5="116831636be07686f46026a66e6587bf"/>
 		<file filename="assets/scss/_listing_tables.scss" md5="a571aeee85902d21c9e1c2edda04b9a1"/>
