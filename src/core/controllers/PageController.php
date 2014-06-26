@@ -75,6 +75,11 @@ class PageController extends Controller_2_1 {
 				continue;
 			}
 
+			// Skip the sitemap page iteself, as that will probably contain most of the keywords.
+			if($model->get('baseurl') == '/page/sitemap'){
+				continue;
+			}
+
 			if(!\Core\user()->checkAccess($model->get('access'))){
 				// User does not have access to this page!
 				continue;
