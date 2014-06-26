@@ -346,7 +346,10 @@ if(exec('which sass') == ''){
 	echo "Skipping compiling of SASS resources, you do not have the sass compiler installed!\n";
 }
 else{
-	echo "Scanning for SASS/SCSS resources...\n";
+	echo "Compiling SASS/SCSS resources...\n\n";
+	// [Filename] [CSS] [MIN]
+	echo 'FILENAME                                                                          DEV    MIN' . "\n";
+	echo '---------------------------------------------------------------------------------------------' . "\n";
 	exec('find "' . ROOT_PDIR . 'components/" -name "[a-z]*.scss"', $compresults);
 	exec('find "' . ROOT_PDIR . 'themes/" -name "[a-z]*.scss"', $themeresults);
 	exec('find "' . ROOT_PDIR . 'core/" -name "[a-z]*.scss"', $coreresults);
@@ -354,7 +357,6 @@ else{
 	$results = array_merge($compresults, $themeresults, $coreresults);
 
 	foreach($results as $file){
-		echo "Compiling $file...\n";
 
 		$outfilename = basename($file);
 		$outdirname  = dirname($file) . '/';
@@ -374,18 +376,28 @@ else{
 		elseif(preg_match('#/assets/sass/#', $outdirname)){
 			$outdirname = preg_replace('#/assets/sass/#', '/assets/css/', $outdirname);
 		}
+		elseif(preg_match('#/dev/#', $outdirname)){
+			// Skip
+			continue;
+		}
+
+		$dfile = substr($file, strlen(ROOT_PDIR));
+		$flen = strlen($dfile) + 3;
+		echo "$dfile..." . str_repeat(' ', max(80 - $flen, 1));
 
 
 		$cssfile = $outdirname . substr($outfilename, 0, -4) . 'css';
 		$minfile = $outdirname . substr($outfilename, 0, -4) . 'min.css';
 
 		exec('sass "' . $file . '":"' . $cssfile . '" -C -l -f -t expanded --unix-newlines --sourcemap', $null, $ret);
-		if($ret == 0) echo "Compiled CSS file successfully!\n";
-		else echo "Couldn't compile CSS file!\n";
+		if($ret == 0) echo "[ OK ] ";
+		else echo "[ !! ]";
 
 		exec('sass "' . $file . '":"' . $minfile . '" -C -f -t compressed --unix-newlines', $null, $ret);
-		if($ret == 0) echo "Compiled minified CSS file successfully!\n";
-		else echo "Couldn't compile minified CSS file!\n";
+		if($ret == 0) echo "[ OK ] ";
+		else echo "[ !! ]";
+
+		echo "\n";
 	}
 
 	// sass styles.scss:styles.css -l -f -t expanded --unix-newlines
@@ -417,3 +429,5 @@ foreach($results as $file){
 	exec($cmd);
 }
 */
+
+echo "\n";
