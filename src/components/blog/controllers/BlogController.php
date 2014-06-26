@@ -47,7 +47,7 @@ class BlogController extends Controller_2_1 {
 
 		$factory = new ModelFactory('PageModel');
 
-		if(sizeof($blogs)){
+		if(sizeof($parents)){
 			$factory->where('parenturl IN ' . implode(',', $parents));
 		}
 		else{
