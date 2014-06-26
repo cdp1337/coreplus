@@ -33,7 +33,7 @@
 				url:   "{$e->get('baseurl')}",
 				target:"{$e->get('target')}",
 				title: "{$e->get('title')}",
-				parent:"{$e->get('parentid')}",
+				parent:"{$e->get('parentid')}"
 			});
 		{/foreach}
 	});
