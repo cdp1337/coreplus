@@ -284,7 +284,10 @@ function resolve_link($url) {
 	// Allow "#" to be verbatim without translation.
 	if ($url == '#') return $url;
 
-	// FIRST THING!?!?!
+	// Allow already-resolved links to be returned verbatim.
+	if (strpos($url, '://') !== false) return $url;
+
+	// <strike>FIRST</strike> Second THING!?!?!
 	// All URLs should be case insensitive.
 	// As such, I *should* be able to safely strlower everything and be fine.
 	// This is particularly important because all URL lookups from the database are performed in lowercase.
@@ -294,9 +297,6 @@ function resolve_link($url) {
 	if($url{0} == '?'){
 		$url = REL_REQUEST_PATH . $url;
 	}
-
-	// Allow already-resolved links to be returned verbatim.
-	if (strpos($url, '://') !== false) return $url;
 
 	// Allow multisite URLs to be passed in natively.
 	if(strpos($url, 'site:') === 0){
