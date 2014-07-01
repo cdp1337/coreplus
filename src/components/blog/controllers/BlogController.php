@@ -235,22 +235,37 @@ class BlogController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 
-		// Try to perform the import.
-		try{
-			$results = $blog->importFeed();
-		}
-		catch(Exception $e){
-			Core::SetMessage($e->getMessage(), 'error');
-			\Core\go_back();
+
+		if($request->isPost()){
+			$view->mode = View::MODE_NOOUTPUT;
+			$view->contenttype = View::CTYPE_HTML;
+			$view->record = false;
+			$view->templatename = null;
+			$view->render();
+
+			// Try to perform the import.
+			try{
+				$results = $blog->importFeed(true);
+			}
+			catch(Exception $e){
+				echo '<p class="message-error">' . $e->getMessage() . '</p>';
+				\Core\ErrorManagement\exception_handler($e);
+				die();
+			}
+
+			echo 'DONE!' . "<br/>\n";
+			echo 'Added: ' . $results['added'] . "<br/>\n";
+			echo 'Updated: ' . $results['updated'] . "<br/>\n";
+			echo 'Skipped: ' . $results['skipped'] . "<br/>\n";
 		}
 
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->title = 'Import Blog Feed';
-		$view->assign('changelog', $results['changelog']);
-		$view->assign('added', $results['added']);
-		$view->assign('updated', $results['updated']);
-		$view->assign('skipped', $results['skipped']);
-		$view->assign('deleted', $results['deleted']);
+		//$view->assign('changelog', $results['changelog']);
+		//$view->assign('added', $results['added']);
+		//$view->assign('updated', $results['updated']);
+		//$view->assign('skipped', $results['skipped']);
+		//$view->assign('deleted', $results['deleted']);
 	}
 
 	/**

@@ -77,11 +77,12 @@ class BlogModel extends Model {
 	/**
 	 * Helper utility to import a given remote blog.
 	 *
+	 * @param bool $verbose Set to true to enable real-time verbose output of the operation.
 	 * @return array
 	 *
 	 * @throws Exception
 	 */
-	public function importFeed(){
+	public function importFeed($verbose = false){
 		$blogid  = $this->get('id');
 		if (!$this->exists()) {
 			throw new Exception('Unable to import a blog that does not exist!');
@@ -97,6 +98,12 @@ class BlogModel extends Model {
 			throw new Exception($this->get('remote_url') . ' does not appear to exist');
 		}
 
+		$defaults = [
+			'parenturl' => $this->get('baseurl'),
+			'site' => $this->get('site'),
+			'component' => 'blog'
+		];
+
 		$changes = ['added' => 0, 'updated' => 0, 'skipped' => 0, 'deleted' => 0];
 		$changelog = '';
 
@@ -111,20 +118,6 @@ class BlogModel extends Model {
 		// (WP in specific), do not correctly use content-types :/
 		$contents = $file->getContents();
 
-		// WTF Apple, WHAT.... THE.... FUCK?....
-		// 00004000\n\n<?xml version="1.0" encoding="utf-8"
-		// REALLY?????
-		// When loading the feed "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=25/xml",
-		// I got that as the body!
-		if($contents{0} != '<'){
-			$x=0;
-			do{
-				$x++;
-			} while ($x < 1000 && $contents{$x} != '<');
-			$contents = substr($contents, $x);
-		}
-
-
 		// Which feed type is this?
 		$header = substr($contents, 0, 400);
 
@@ -132,6 +125,12 @@ class BlogModel extends Model {
 		$records = array();
 
 		if(strpos($header, '<rss ') !== false){
+			if($verbose){
+				echo 'Found an RSS feed with the URL of ' . $file->getURL() . '!<br/>' . "\n";
+				ob_flush();
+				flush();
+			}
+
 			$xml = new XMLLoader();
 			$xml->setRootName('rss');
 			$xml->loadFromString($contents);
@@ -163,6 +162,12 @@ class BlogModel extends Model {
 			}
 		}
 		elseif(strpos($header, 'http://www.w3.org/2005/Atom') !== false){
+			if($verbose){
+				echo 'Found an ATOM feed with the URL of ' . $file->getURL() . '!<br/>' . "\n";
+				ob_flush();
+				flush();
+			}
+
 			$xml = new XMLLoader();
 			$xml->setRootName('feed');
 			$xml->loadFromString($contents);
@@ -223,60 +228,62 @@ class BlogModel extends Model {
 			throw new Exception('Invalid remote file found, please ensure it is either an RSS or Atom feed!');
 		}
 
-
 		// Now that they're standardized...
 		foreach($records as $dat){
-			$article = BlogArticleModel::Find(['blogid = ' . $blogid, 'guid = ' . $dat['guid']], 1);
-			if($article){
-				$thischange = 'updated';
-			}
-			else{
-				$article = new BlogArticleModel();
-				$article->setFromArray([
-					'blogid' => $blogid,
-					'guid' => $dat['guid'],
-					'status' => 'published',
-					'published' => $dat['published']
-				]);
-				$thischange = 'added';
-			}
+			/** @var PageModel $page */
+			$page = PageModel::Construct( $dat['link'] );
 
-			$article->setFromArray([
+			$published = ($dat['published'] == '' || is_numeric($dat['published'])) ? $dat['published'] :  strtotime($dat['published']);
+			$updated = ($dat['updated'] != '') ? (is_numeric($dat['updated']) ? $dat['updated'] : strtotime($dat['updated'])) : $published;
+
+			$pagedat = [
+				'published' => $published,
 				'title' => $dat['title'],
-				'link' => $dat['link'],
 				'body' => $dat['description'],
+				'updated' => $updated,
+			];
+
+			$newpagedat = array_merge($defaults, [
+				'selectable' => '0',
 			]);
+
+			$page->setFromArray($pagedat);
+
+			if(!$page->exists()){
+				// Add the "new" dat only if the page doesn't exist before.
+				$page->setFromArray($newpagedat);
+			}
 
 			if($dat['thumbnail']){
 				$remote = \Core\Filestore\Factory::File($dat['thumbnail']);
 				$new = $remote->copyTo('public/blog/');
-				$article->set('image', $new->getFilename(false));
+				$page->setMeta('image', $new->getFilename(false));
 			}
 
-			if($dat['updated']){
-				$article->set('updated', $dat['updated']);
-			}
+			$page->setMeta('guid', $dat['guid']);
 
-			if($article->save()){
+			$thischange = $page->exists() ? 'updated' : 'added';
+
+			if($page->changed()){
+				$page->save();
 				$changes[$thischange]++;
 				$changelog .= $thischange . ' ' . $dat['title'] . "<br/>\n";
+
+				if($verbose){
+					echo $thischange . ' ' . $dat['title'] . "<br/>\n";
+					ob_flush();
+					flush();
+				}
 			}
 			else{
 				$changes['skipped']++;
+
+				if($verbose){
+					echo 'No changes to ' . $dat['title'] . "<br/>\n";
+					ob_flush();
+					flush();
+				}
 			}
-
-			// Uncheck this GUID from the map so I know that it's still a valid one.
-			if(isset($map[ $dat['guid'] ])) unset($map[ $dat['guid'] ]);
-		}
-
-
-		foreach($map as $k => $v){
-			// Delete these now.
-			$article = BlogArticleModel::Construct($v);
-			$article->set('status', 'draft');
-			$article->save();
-			$changes['deleted']++;
-			$changelog .= 'deleted ' . $article->get('title') . "<br/>\n";
 		}
 
 		return [
