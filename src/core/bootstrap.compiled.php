@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 22 Jun 2014 14:13:46 -0400
+ * @compiled Tue, 01 Jul 2014 14:04:58 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -8639,11 +8639,11 @@ return $cachevalue[$asset];
 }
 function resolve_link($url) {
 if ($url == '#') return $url;
+if (strpos($url, '://') !== false) return $url;
 $url = strtolower($url);
 if($url{0} == '?'){
 $url = REL_REQUEST_PATH . $url;
 }
-if (strpos($url, '://') !== false) return $url;
 if(strpos($url, 'site:') === 0){
 $slashpos = strpos($url, '/');
 $site = substr($url, 5, $slashpos-5);
@@ -9567,6 +9567,7 @@ public function getContentsObject();
 public function exists();
 public function isReadable();
 public function isWritable();
+public function isLocal();
 public function getMTime();
 public function sendToUserAgent($forcedownload = false);
 }
@@ -10393,7 +10394,11 @@ $vals   = explode('x', strtolower($dimensions));
 $width  = (int)$vals[0];
 $height = (int)$vals[1];
 }
-$key = str_replace(' ', '-', $this->getBasename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $this->getExtension();
+$ext = $this->getExtension();
+if(!$ext){
+$ext = \Core\Filestore\mimetype_to_extension($this->getMimetype());
+}
+$key = str_replace(' ', '-', $this->getBasename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $ext;
 return array(
 'width' => $width,
 'height' => $height,
@@ -10744,6 +10749,9 @@ return $this->exists();
 public function isWritable() {
 return $this->exists();
 }
+public function isLocal(){
+return false;
+}
 public function getMTime() {
 if (!$this->exists()) return false;
 return ftp_mdtm($this->_ftp, $this->_filename);
@@ -11038,8 +11046,10 @@ $file = Filestore\Factory::File('assets/images/mimetypes/unknown.png');
 return $file->getPreviewURL($dimensions);
 }
 public function getQuickPreviewFile($dimensions = '300x300') {
+return $this->_getTmpLocal()->getQuickPreviewFile($dimensions);
 }
 public function getPreviewFile($dimensions = '300x300') {
+return $this->_getTmpLocal()->getPreviewFile($dimensions);
 }
 public function isWritable() {
 return false;
@@ -11116,15 +11126,33 @@ $needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['Last-
 }
 }
 if ($needtodownload || !$this->cacheable) {
-$opts = array(
-'http' => array(
-'protocol_version' => '1.1',
-'method'           => "GET",
-'header'           => \Core::GetStandardHTTPHeaders(false, true)
+$curl = curl_init();
+curl_setopt_array(
+$curl, array(
+CURLOPT_HEADER         => false,
+CURLOPT_NOBODY         => false,
+CURLOPT_RETURNTRANSFER => true,
+CURLOPT_URL            => $this->getURL(),
+CURLOPT_HTTPHEADER     => \Core::GetStandardHTTPHeaders(true),
 )
 );
-$context = stream_context_create($opts);
-$this->_tmplocal->putContents(file_get_contents($this->getURL(), false, $context));
+$result = curl_exec($curl);
+if($result === false){
+switch(curl_errno($curl)){
+case CURLE_COULDNT_CONNECT:
+case CURLE_COULDNT_RESOLVE_HOST:
+case CURLE_COULDNT_RESOLVE_PROXY:
+$this->_response = 404;
+return $this->_tmplocal;
+break;
+default:
+$this->_response = 500;
+return $this->_tmplocal;
+break;
+}
+}
+curl_close($curl);
+$this->_tmplocal->putContents($result);
 \Core\Cache::Set(
 'remotefile-cache-header-' . $f,
 $this->_getHeaders()
