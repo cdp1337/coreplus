@@ -67,6 +67,8 @@ function smarty_function_img($params, $template){
 
 	if(isset($params['dimensions'])){
 		$dimensions = $params['dimensions'];
+		$width = preg_replace('#[^0-9]?([0-9]*)x.*#', '$1', $dimensions);
+		$height = preg_replace('#.*x([0-9]*)[^0-9]?#', '$1', $dimensions);
 		unset($params['dimensions']);
 	}
 
@@ -103,25 +105,33 @@ function smarty_function_img($params, $template){
 		$attributes[$k] = $v;
 	}
 
-	// Try to lookup the preview file.
-	// if it exists, then YAY... I can return that direct resource.
-	// otherwise, I should check and see if the file is larger than a set filesize.
-	// if it is, then I want to return a link to a controller to render that file instead of rendering the file from within the {img} tag.
-	//
-	// This is useful because any logic contained within this block will halt page execution!
-	// To improve the perception of performance, that can be offloaded to the browser requesting the <img/> contents.
-	$previewfile = $d ? $f->getQuickPreviewFile($d) : $f;
-
-	if(!$previewfile){
-		$attributes['src'] = '#';
-		$attributes['title'] = 'No preview files available!';
-	}
-	elseif(!$previewfile->exists()){
-		// Ok, it doesn't exist... return a link to the controller to render this file.
-		$attributes['src'] = Core::ResolveLink('/file/preview') . '?f=' . $f->getFilenameHash() . '&d=' . $d;
+	if($f instanceof Core\Filestore\Backends\FileRemote){
+		// Erm... Give the original URL with the dimension requests.
+		$attributes['src'] = $f->getURL();
+		if($width) $attributes['width'] = $width;
+		if($height) $attributes['height'] = $height;
 	}
 	else{
-		$attributes['src'] = $previewfile->getURL();
+		// Try to lookup the preview file.
+		// if it exists, then YAY... I can return that direct resource.
+		// otherwise, I should check and see if the file is larger than a set filesize.
+		// if it is, then I want to return a link to a controller to render that file instead of rendering the file from within the {img} tag.
+		//
+		// This is useful because any logic contained within this block will halt page execution!
+		// To improve the perception of performance, that can be offloaded to the browser requesting the <img/> contents.
+		$previewfile = $d ? $f->getQuickPreviewFile($d) : $f;
+
+		if(!$previewfile){
+			$attributes['src'] = '#';
+			$attributes['title'] = 'No preview files available!';
+		}
+		elseif(!$previewfile->exists()){
+			// Ok, it doesn't exist... return a link to the controller to render this file.
+			$attributes['src'] = Core::ResolveLink('/file/preview') . '?f=' . $f->getFilenameHash() . '&d=' . $d;
+		}
+		else{
+			$attributes['src'] = $previewfile->getURL();
+		}
 	}
 
 	// All images need alt data!
