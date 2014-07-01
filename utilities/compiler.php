@@ -76,16 +76,27 @@ function compile_file($filename, $recursivelevel = 0, CompilerNamespace $parentn
 
 	$filedisplay = '/' . substr($filename, strlen(ROOT_PDIR));
 
+	echo "\n";
+	$lineprefix = '';
+
+	if($recursivelevel > 0){
+		$lineprefix .= str_repeat(' |   ', $recursivelevel-1) .  ' |>- ';
+	}
+
 	if(in_array($filename, $included_files)){
+		echo $lineprefix;
 		echo "Skipping " . $filedisplay . ", already included!\n";
 		return false;
 	}
 
-	if($recursivelevel > 0){
-		echo "\n" . str_repeat(' |   ', $recursivelevel-1) .  ' |>- ';
-	}
+
 	//echo "[$recursivelevel] ";
-	echo "Scanning " . $filedisplay . "... ";
+
+	$flen = strlen($lineprefix . $filedisplay) + 3;
+	echo $lineprefix;
+	echo "Scanning $filedisplay..." . str_repeat(' ', max(80 - $flen, 1));
+
+	//echo "Scanning " . $filedisplay . "... ";
 	$fh = fopen($filename, 'r');
 	if(!$fh) die('Unable to open [' .$filename . '] for reading.');
 
@@ -234,17 +245,17 @@ function compile_file($filename, $recursivelevel = 0, CompilerNamespace $parentn
 	}
 
 	if($haschildren){
+		echo "\n";
+		$lineprefix = '';
 		if($recursivelevel > 0){
-			echo "\n" . str_repeat(' |   ', $recursivelevel-1) .  ' |>- ';
-		}
-		else{
-			echo "\n";
+			$lineprefix .= str_repeat(' |   ', $recursivelevel-1) .  ' |>- ';
 		}
 
-		echo $filedisplay . " - found $codenumber lines and $haschildren children files";
+		$flen = strlen($lineprefix . $filedisplay) + 3;
+		echo $lineprefix . $filedisplay . "..." . str_repeat(' ', max(89 - $flen, 1)) . "Found $codenumber lines and $haschildren children files";
 	}
 	else{
-		echo "found $codenumber lines!";
+		echo "Found $codenumber lines!";
 	}
 
 	return $contents;
