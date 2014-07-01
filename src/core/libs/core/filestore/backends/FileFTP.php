@@ -618,6 +618,17 @@ class FileFTP implements Filestore\File{
 	}
 
 	/**
+	 * Simple function to indicate if this file is on the local filesystem.
+	 *
+	 * For remote file types, just return false, otherwise return true.
+	 *
+	 * @return boolean
+	 */
+	public function isLocal(){
+		return false;
+	}
+
+	/**
 	 * Get the modified time for this file as a unix timestamp.
 	 *
 	 * @return int

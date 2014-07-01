@@ -110,6 +110,13 @@ interface File {
 
 	/**
 	 * Get the filename of this file resolved to a specific directory, usually ROOT_PDIR or ROOT_WDIR.
+	 *
+	 * @param bool|null|string|mixed $prefix Determine the prefix requested
+	 *                                       FALSE will return the Core-encoded string, ("public/", "asset/", etc)
+	 *                                       NULL defaults to the ROOT_PDIR
+	 *                                       '' returns the relative directory from the install base
+	 *
+	 * @return string
 	 */
 	public function getFilename($prefix = \ROOT_PDIR);
 
@@ -326,6 +333,15 @@ interface File {
 	 * @return boolean
 	 */
 	public function isWritable();
+
+	/**
+	 * Simple function to indicate if this file is on the local filesystem.
+	 *
+	 * For remote file types, just return false, otherwise return true.
+	 *
+	 * @return boolean
+	 */
+	public function isLocal();
 
 	/**
 	 * Get the modified time for this file as a unix timestamp.

@@ -469,7 +469,7 @@ class FileRemote implements Filestore\File {
 	 * @return File
 	 */
 	public function getQuickPreviewFile($dimensions = '300x300') {
-		// TODO: Implement getQuickPreviewFile() method.
+		return $this->_getTmpLocal()->getQuickPreviewFile($dimensions);
 	}
 
 	/**
@@ -480,7 +480,7 @@ class FileRemote implements Filestore\File {
 	 * @return File
 	 */
 	public function getPreviewFile($dimensions = '300x300') {
-		// TODO: Implement getPreviewFile() method.
+		return $this->_getTmpLocal()->getPreviewFile($dimensions);
 	}
 
 	/**
@@ -501,8 +501,7 @@ class FileRemote implements Filestore\File {
 			$this->_headers = array();
 
 			// I like curl better because it doesn't make a GET request when 
-			// all I want to do is a HEAD request.
-			// Just give me HEAD damnit!..... :p
+			// all I want to do is a HEAD request, JUST THE TIP!
 
 			$curl = curl_init();
 			curl_setopt_array(
@@ -602,18 +601,39 @@ class FileRemote implements Filestore\File {
 			}
 
 			if ($needtodownload || !$this->cacheable) {
-				// Create a stream
-				$opts = array(
-					'http' => array(
-						'protocol_version' => '1.1',
-						'method'           => "GET",
-						'header'           => \Core::GetStandardHTTPHeaders(false, true)
+
+				// NOPE, use cURL.
+				$curl = curl_init();
+				curl_setopt_array(
+					$curl, array(
+						CURLOPT_HEADER         => false,
+						CURLOPT_NOBODY         => false,
+						CURLOPT_RETURNTRANSFER => true,
+						CURLOPT_URL            => $this->getURL(),
+						CURLOPT_HTTPHEADER     => \Core::GetStandardHTTPHeaders(true),
 					)
 				);
 
-				$context = stream_context_create($opts);
+				$result = curl_exec($curl);
+				if($result === false){
+					switch(curl_errno($curl)){
+						case CURLE_COULDNT_CONNECT:
+						case CURLE_COULDNT_RESOLVE_HOST:
+						case CURLE_COULDNT_RESOLVE_PROXY:
+							$this->_response = 404;
+							return $this->_tmplocal;
+							break;
+						default:
+							$this->_response = 500;
+							return $this->_tmplocal;
+							break;
+					}
+				}
+
+				curl_close($curl);
+
 				// Copy the data down to the local file.
-				$this->_tmplocal->putContents(file_get_contents($this->getURL(), false, $context));
+				$this->_tmplocal->putContents($result);
 
 				// And remember this header data for nexttime.
 				\Core\Cache::Set(
