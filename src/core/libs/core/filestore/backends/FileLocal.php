@@ -1031,6 +1031,12 @@ class FileLocal implements Filestore\File {
 			$height = (int)$vals[1];
 		}
 
+		$ext = $this->getExtension();
+		// Ensure that an extension is used if none present, (may happen with temporary files).
+		if(!$ext){
+			$ext = \Core\Filestore\mimetype_to_extension($this->getMimetype());
+		}
+
 		// The basename is for SEO purposes, that way even resized images still contain the filename.
 		// The hash is just to ensure that no two files conflict, ie: /public/a/file1.png and /public/b/file1.png
 		//  might conflict without this hash.
@@ -1038,7 +1044,7 @@ class FileLocal implements Filestore\File {
 		//  touch to the file. :p
 		// Also, keep the original file extension, this way PNGs remain PNGs, GIFs remain GIFs, JPEGs remain JPEGs.
 		// This is critical particularly when it comes to animated GIFs.
-		$key = str_replace(' ', '-', $this->getBasename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $this->getExtension();
+		$key = str_replace(' ', '-', $this->getBasename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $ext;
 
 		return array(
 			'width' => $width,
