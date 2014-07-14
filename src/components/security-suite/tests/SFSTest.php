@@ -28,7 +28,7 @@ class SFSTest extends PHPUnit_Framework_TestCase {
 		// The import function just prints straight to stdout.  Capture that to get the status.
 		$file = ROOT_PDIR . 'components/security-suite/tests/test_listed_ip_1_all.zip';
 		$this->setUseOutputBuffering(true);
-		StopForumSpam::ImportList($file);
+		SecuritySuite\StopForumSpam::ImportList($file);
 		$out = $this->getActualOutput();
 
 		$string = 'Processed 2 records from ' . $file . ' successfully!';
