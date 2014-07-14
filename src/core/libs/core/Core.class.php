@@ -821,9 +821,10 @@ class Core implements ISingleton {
 	/**
 	 * Get the standard HTTP request headers for retrieving remote files.
 	 *
-	 * @param bool $forcurl
+	 * @param bool $forcurl   Set to true to return headers suitable for cURL.
+	 * @param bool $autoclose Set to true to include a "Connection: close" header.
 	 *
-	 * @return array | string
+	 * @return array|string
 	 */
 	public static function GetStandardHTTPHeaders($forcurl = false, $autoclose = false) {
 		$headers = array(
