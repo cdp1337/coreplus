@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 01 Jul 2014 14:04:58 -0400
+ * @compiled Thu, 03 Jul 2014 13:04:25 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -15999,6 +15999,11 @@ break;
 }
 if($control->link != Core::ResolveLink($this->baseurl)){
 $this->controls[] = $control;
+}
+}
+public function addControls($controls){
+foreach($controls as $c){
+$this->addControl($c);
 }
 }
 public function setAccess($accessstring) {
