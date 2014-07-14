@@ -932,6 +932,23 @@ class Model implements ArrayAccess {
 
 
 		if ($this->exists()) {
+
+			// Check and see if this model extends another model.
+			// If it does, then create/update that parent object to keep it in sync!
+			if(($class = get_parent_class($this)) != 'Model'){
+				$idx = self::GetIndexes();
+				if(isset($idx['primary']) && sizeof($idx['primary']) == 1){
+					$schema = $this->getKeySchema($idx['primary'][0]);
+					if($schema['type'] == Model::ATT_TYPE_UUID){
+						$refp = new ReflectionClass($class);
+						$refm = $refp->getMethod('Construct');
+						/** @var Model $parent */
+						$parent = $refm->invoke(null, $this->get($idx['primary'][0]));
+						$parent->delete();
+					}
+				}
+			}
+
 			$n = $this->_getTableName();
 			$i = self::GetIndexes();
 			// Delete the data from the database.
