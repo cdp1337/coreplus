@@ -581,21 +581,24 @@ class View {
 		$this->bodyclasses = array_merge($this->bodyclasses, $ua->getPseudoIdentifier(true));
 
 		// Provide a way for stylesheets to target this page specifically.
-		$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
 		switch ($this->error) {
 			case 400:
-				$url = "error error-400";
+				$url = "error-400";
 				break;
-
 			case 403:
-				$url = "error error-403 page-user-login";
+				$url = "error-403 page-user-login";
 				break;
-
 			case 404:
-				$url = "error error-404";
+				$url = "error-404";
 				break;
+			default:
+				$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
 		}
-		$this->bodyclasses[] = 'page-' . $url;
+
+		while($url != ''){
+			$this->bodyclasses[] = 'page-' . $url;
+			$url = substr($url, 0, strrpos($url, '-'));
+		}
 
 
 		$bodyclasses = strtolower(implode(' ', $this->bodyclasses));
@@ -978,6 +981,17 @@ class View {
 		// Is this control the current page?  If so don't display it.
 		if($control->link != Core::ResolveLink($this->baseurl)){
 			$this->controls[] = $control;
+		}
+	}
+
+	/**
+	 * Add an array of controls at once, useful in conjunction with the model->getControlLinks method.
+	 *
+	 * @param array $controls
+	 */
+	public function addControls($controls){
+		foreach($controls as $c){
+			$this->addControl($c);
 		}
 	}
 
