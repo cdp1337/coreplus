@@ -35,6 +35,12 @@
 
 			<td>
 
+				{if $l.xhprof_run &&$l.xhprof_source}
+					<a
+						href="{$smarty.const.SERVERNAME}/xhprof/index.php?run={$l.xhprof_run}&source={$l.xhprof_source}"
+						target="_blank"
+						title="View XHprof Profiler Report"><i class="icon-view"></i></a>
+				{/if}
 				{$l->getTimeFormatted()}
 
 			</td>

@@ -645,6 +645,27 @@ class View {
 
 				$foot = $this->getFootContent();
 
+				if(ENABLE_XHPROF){
+					require_once('xhprof_lib/utils/xhprof_lib.php');
+					require_once('xhprof_lib/utils/xhprof_runs.php');
+					$xhprof_data = xhprof_disable();
+					$namespace = trim(str_replace(['.', '/'], '-', HOST . REL_REQUEST_PATH), '-');
+					$xhprof_runs = new XHProfRuns_Default();
+					$run_id = $xhprof_runs->save_run($xhprof_data, $namespace);
+
+					define('XHPROF_RUN', $run_id);
+					define('XHPROF_SOURCE', $namespace);
+
+					$xhprof_link = sprintf(
+						'<a href="' . SERVERNAME . '/xhprof/index.php?run=%s&source=%s" target="_blank">View XHprof Profiler Report</a>' . "\n",
+						$run_id,
+						$namespace
+					);
+				}
+				else{
+					$xhprof_link = '';
+				}
+
 				// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
 				if (DEVELOPMENT_MODE) {
 					$debug = '';
@@ -662,6 +683,7 @@ class View {
 					$debug .= '<fieldset class="debug-section collapsible" id="debug-section-performance-information">';
 					$debug .= '<legend><b>Performance Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 					$debug .= "<span>";
+					$debug .= $xhprof_link;
 					$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
 					$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
 					//$debug .= "Number of queries: " . DB::Singleton()->counter . "\n";
@@ -1355,6 +1377,16 @@ class View {
 		else{
 			\Core\view()->head[] = $string;
 		}
+	}
+
+	/**
+	 * Method to append a header onto the array of headers to be sent to the browser when render is called.
+	 *
+	 * @param string $key
+	 * @param string $value
+	 */
+	public function addHeader($key, $value){
+		$this->headers[$key] = $value;
 	}
 
 

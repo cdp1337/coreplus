@@ -62,7 +62,14 @@ class UserActivityModel extends Model{
 		),
 		'processing_time' => array(
 			'type' => Model::ATT_TYPE_INT
-		)
+		),
+		'xhprof_run' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 16,
+		),
+		'xhprof_source' => array(
+			'type' => Model::ATT_TYPE_STRING,
+		),
 	);
 
 	public static $Indexes = array(
