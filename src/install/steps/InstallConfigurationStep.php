@@ -29,7 +29,7 @@ class InstallConfigurationStep extends InstallerStep{
 		// Load in the configuration example, merge in the SESSION data, and apply them or display the code.
 		$xml = new \XMLLoader();
 		$xml->setRootName('configuration');
-		$xml->loadFromFile(ROOT_PDIR . 'config/configuration.xml.ex');
+		$xml->loadFromFile(ROOT_PDIR . 'config/configuration.example.xml');
 
 		$elements = $xml->getElements('return|define');
 		foreach($elements as $el){

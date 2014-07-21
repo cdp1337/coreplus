@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 03 Jul 2014 13:04:25 -0400
+ * @compiled Tue, 15 Jul 2014 17:21:34 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -2055,6 +2055,18 @@ break;
 if (isset($this->_linked[$k]['records'])) unset($this->_linked[$k]['records']);
 }
 if ($this->exists()) {
+if(($class = get_parent_class($this)) != 'Model'){
+$idx = self::GetIndexes();
+if(isset($idx['primary']) && sizeof($idx['primary']) == 1){
+$schema = $this->getKeySchema($idx['primary'][0]);
+if($schema['type'] == Model::ATT_TYPE_UUID){
+$refp = new ReflectionClass($class);
+$refm = $refp->getMethod('Construct');
+$parent = $refm->invoke(null, $this->get($idx['primary'][0]));
+$parent->delete();
+}
+}
+}
 $n = $this->_getTableName();
 $i = self::GetIndexes();
 $dat = new Core\Datamodel\Dataset();
@@ -7267,6 +7279,7 @@ $this->$offset = null;
 namespace  {
 
 ### REQUIRE_ONCE FROM core/libs/core/Component_2_1.php
+use Core\CLI\CLI;
 class Component_2_1 {
 private $_xmlloader = null;
 protected $_name;
@@ -7933,9 +7946,9 @@ $ch->_registerComponent($this);
 }
 return $changes;
 }
-public function reinstall() {
+public function reinstall($verbose = 0) {
 if (!$this->isInstalled()) return false;
-$changes = $this->_performInstall();
+$changes = $this->_performInstall($verbose);
 if(is_array($changes) && sizeof($changes) > 0){
 SystemLogModel::LogInfoEvent('/updater/component/reinstall', 'Component ' . $this->getName() . ' reinstalled successfully!', implode("\n", $changes));
 }
@@ -8116,20 +8129,20 @@ $changes[] = $filename;
 }
 return $changes;
 }
-private function _performInstall() {
+private function _performInstall($verbose = 0) {
 require_once(ROOT_PDIR . 'core/libs/core/InstallerException.php'); #SKIPCOMPILER
 $changed = array();
-$change = $this->_parseDBSchema();
+$change = $this->_parseDBSchema($verbose);
 if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parseConfigs();
+$change = $this->_parseConfigs($verbose);
 if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parseUserConfigs();
+$change = $this->_parseUserConfigs($verbose);
 if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parsePages();
+$change = $this->_parsePages($verbose);
 if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parseWidgets();
+$change = $this->_parseWidgets($verbose);
 if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_installAssets();
+$change = $this->_installAssets($verbose);
 if ($change !== false) $changed = array_merge($changed, $change);
 if($this->getKeyName() == 'core'){
 $f = \Core\Filestore\Factory::File('private/.htaccess');
@@ -8426,9 +8439,10 @@ return false;
 private function _includeFileForUpgrade($filename){
 include($filename);
 }
-private function _installAssets() {
+private function _installAssets($verbose = 0) {
 $assetbase = CDN_LOCAL_ASSETDIR;
 $theme     = ConfigHandler::Get('/theme/selected');
+$change    = '';
 $changes   = array();
 Core\Utilities\Logger\write_debug('Installing assets for ' . $this->getName());
 foreach ($this->_xmlloader->getElements('/assets/file') as $node) {
@@ -8439,6 +8453,11 @@ $f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/custom/' . $newf
 }
 else{
 $f = new \Core\Filestore\Backends\FileLocal($b . $node->getAttribute('filename'));
+}
+if($verbose == 2){
+CLI::PrintActionStart('Installing asset ' . $f->getBasename());
+CLI::PrintActionStatus(true);
+die(':)');
 }
 $nf = \Core\Filestore\Factory::File($newfilename);
 if ($theme === null) {
@@ -8456,7 +8475,11 @@ $nf instanceof \Core\Filestore\Backends\FileLocal &&
 $f->getMTime() != $nf->getMTime()
 ){
 touch($nf->getFilename(), $f->getMTime());
-$changes[] = 'Modified timestamp on ' . $nf->getFilename();
+$change = 'Modified timestamp on ' . $nf->getFilename();
+if($verbose){
+echo $change . "\n";
+}
+$changes[] = $change;
 continue;
 }
 elseif($newfileexists && $newfileidentical){
@@ -8474,7 +8497,11 @@ $f->copyTo($nf, true);
 catch (Exception $e) {
 throw new InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
 }
-$changes[] = $action . ' ' . $nf->getFilename();
+$change = $action . ' ' . $nf->getFilename();
+if($verbose){
+echo $change . "\n";
+}
+$changes[] = $change;
 }
 if (!sizeof($changes)) return false;
 \Core\Cache::Delete('core-components');
@@ -8519,6 +8546,7 @@ return true;
 } // ENDING GLOBAL NAMESPACE
 namespace Core {
 use Core\Datamodel;
+use Core\Filestore\FTP\FTPConnection;
 use DMI;
 use Cache;
 function db(){
@@ -8527,28 +8555,27 @@ return DMI::GetSystemDMI()->connection();
 function FTP(){
 static $ftp = null;
 if($ftp === null){
-$ftpuser = FTP_USERNAME;
-$ftppass = FTP_PASSWORD;
-if(!($ftpuser && $ftppass)){
+$ftp = new FTPConnection();
+$ftp->host = '127.0.0.1';
+$ftp->username = FTP_USERNAME;
+$ftp->password = FTP_PASSWORD;
+$ftp->root = FTP_PATH;
+$ftp->url = ROOT_WDIR;
+try{
+$ftp->connect();
+}
+catch(\Exception $e){
+\Core\ErrorManagement\exception_handler($e);
 $ftp = false;
 return false;
 }
-$ftp = ftp_connect('127.0.0.1');
-if(!$ftp){
-error_log('FTP enabled, but connection to "127.0.0.1" failed!');
-$ftp = false;
-return false;
 }
-if(!ftp_login($ftp, $ftpuser, $ftppass)){
-error_log('FTP enabled, but a bad username or password was used!');
-$ftp = false;
-return false;
+if($ftp && $ftp instanceof FTPConnection){
+try{
+$ftp->reset();
 }
-}
-if($ftp){
-$ftproot = FTP_PATH;
-if(!ftp_chdir($ftp, $ftproot)){
-error_log('FTP enabled, but FTP root of [' . $ftproot . '] was not valid or does not exist!');
+catch(\Exception $e){
+\Core\ErrorManagement\exception_handler($e);
 $ftp = false;
 return false;
 }
@@ -9124,6 +9151,7 @@ namespace  {
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Filestore {
 use Core\Filestore\CDN;
+use Core\Filestore\FTP\FTPConnection;
 function format_size($filesize, $round = 2) {
 $suf = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');
 $c   = 0;
@@ -9136,11 +9164,19 @@ return (round($filesize, $round) . ' ' . $suf[$c]);
 function get_asset_path(){
 static $_path;
 if ($_path === null) {
-$dir = CDN_LOCAL_ASSETDIR;
 switch(CDN_TYPE){
 case 'local':
+$dir = CDN_LOCAL_ASSETDIR;
 if($dir){
 if ($dir{0} != '/') $dir = ROOT_PDIR . $dir;
+if (substr($dir, -1) != '/') $dir = $dir . '/';
+$_path = $dir;
+}
+break;
+case 'ftp':
+$dir = CDN_FTP_ASSETDIR;
+if($dir){
+if ($dir{0} != '/') $dir = CDN_FTP_PATH . $dir;
 if (substr($dir, -1) != '/') $dir = $dir . '/';
 $_path = $dir;
 }
@@ -9154,11 +9190,19 @@ return $_path;
 function get_public_path(){
 static $_path;
 if ($_path === null) {
-$dir = CDN_LOCAL_PUBLICDIR;
 switch(CDN_TYPE){
 case 'local':
+$dir = CDN_LOCAL_PUBLICDIR;
 if($dir){
 if ($dir{0} != '/') $dir = ROOT_PDIR . $dir;
+if (substr($dir, -1) != '/') $dir = $dir . '/';
+$_path = $dir;
+}
+break;
+case 'ftp':
+$dir = CDN_FTP_PUBLICDIR;
+if($dir){
+if ($dir{0} != '/') $dir = CDN_FTP_PATH . $dir;
 if (substr($dir, -1) != '/') $dir = $dir . '/';
 $_path = $dir;
 }
@@ -9172,11 +9216,19 @@ return $_path;
 function get_private_path(){
 static $_path;
 if ($_path === null) {
-$dir = CDN_LOCAL_PRIVATEDIR;
 switch(CDN_TYPE){
 case 'local':
+$dir = CDN_LOCAL_PRIVATEDIR;
 if($dir){
 if ($dir{0} != '/') $dir = ROOT_PDIR . $dir;
+if (substr($dir, -1) != '/') $dir = $dir . '/';
+$_path = $dir;
+}
+break;
+case 'ftp':
+$dir = CDN_FTP_PRIVATEDIR;
+if($dir){
+if ($dir{0} != '/') $dir = CDN_FTP_PATH . $dir;
 if (substr($dir, -1) != '/') $dir = $dir . '/';
 $_path = $dir;
 }
@@ -9270,6 +9322,46 @@ return 'tar.gz';
 }
 return $ext;
 }
+function resolve_asset_file($filename){
+$resolved = get_asset_path();
+$theme = \ConfigHandler::Get('/theme/selected');
+if (strpos($filename, 'assets/') === 0) {
+$filename = substr($filename, 7);
+}
+elseif(strpos($filename, 'asset/') === 0){
+$filename = substr($filename, 6);
+}
+elseif(strpos($filename, $resolved) === 0){
+if(strpos($filename, $resolved . 'custom/') === 0){
+$filename = substr($filename, strlen($resolved . 'custom/'));
+}
+elseif(strpos($filename, $resolved . $theme . '/') === 0){
+$filename = substr($filename, strlen($resolved . $theme . '/'));
+}
+elseif(strpos($filename, $resolved . 'default/') === 0){
+$filename = substr($filename, strlen($resolved . 'default/'));
+}
+else{
+$filename = substr($filename, strlen($resolved));
+}
+}
+switch(CDN_TYPE){
+case 'local':
+if(\Core\ftp()){
+return new Backends\FileFTP($resolved  . $filename);
+}
+else{
+return new Backends\FileLocal($resolved  . $filename);
+}
+break;
+case 'ftp':
+return new Backends\FileFTP($resolved  . $filename, cdn_ftp());
+break;
+default:
+throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
+break;
+}
+}
 function resolve_public_file($filename){
 $resolved = get_public_path();
 if (strpos($filename, 'public/') === 0) {
@@ -9286,6 +9378,9 @@ return new Backends\FileFTP($resolved . $filename);
 else{
 return new Backends\FileLocal($resolved . $filename);
 }
+break;
+case 'ftp':
+return new Backends\FileFTP($resolved  . $filename, cdn_ftp());
 break;
 default:
 throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
@@ -9308,6 +9403,9 @@ return new Backends\FileFTP($resolved . $filename);
 else{
 return new Backends\FileLocal($resolved . $filename);
 }
+break;
+case 'ftp':
+return new Backends\FileFTP($resolved  . $filename, cdn_ftp());
 break;
 default:
 throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
@@ -9522,6 +9620,36 @@ default:
 return '';
 }
 }
+function cdn_ftp(){
+static $ftp = null;
+if($ftp === null){
+$ftp = new FTPConnection();
+$ftp->host = CDN_FTP_HOST;
+$ftp->username = CDN_FTP_USERNAME;
+$ftp->password = CDN_FTP_PASSWORD;
+$ftp->root = CDN_FTP_PATH;
+$ftp->url = CDN_FTP_URL;
+try{
+$ftp->connect();
+}
+catch(\Exception $e){
+\Core\ErrorManagement\exception_handler($e);
+$ftp = false;
+return false;
+}
+}
+if($ftp && $ftp instanceof FTPConnection){
+try{
+$ftp->reset();
+}
+catch(\Exception $e){
+\Core\ErrorManagement\exception_handler($e);
+$ftp = false;
+return false;
+}
+}
+return $ftp;
+}
 } // ENDING NAMESPACE Core\Filestore
 
 namespace  {
@@ -9633,7 +9761,7 @@ strpos($uri, 'asset/') === 0 ||
 strpos($uri, 'assets/') === 0 ||
 strpos($uri, get_asset_path()) === 0
 ){
-$file = self::ResolveAssetFile($uri);
+$file = resolve_asset_file($uri);
 }
 elseif(
 strpos($uri, 'public/') === 0 ||
@@ -9701,58 +9829,7 @@ return new Backends\DirectoryLocal($uri);
 return new Backends\DirectoryLocal($uri);
 }
 public static function ResolveAssetFile($filename){
-$originaluri = $filename;
-if(false && isset(self::$_ResolveCache[$originaluri])){
-return self::$_ResolveCache[$originaluri];
-}
-$resolved = get_asset_path();
-$theme = \ConfigHandler::Get('/theme/selected');
-if (strpos($filename, 'assets/') === 0) {
-$filename = substr($filename, 7);
-}
-elseif(strpos($filename, 'asset/') === 0){
-$filename = substr($filename, 6);
-}
-elseif(strpos($filename, $resolved) === 0){
-if(strpos($filename, $resolved . 'custom/') === 0){
-$filename = substr($filename, strlen($resolved . 'custom/'));
-}
-elseif(strpos($filename, $resolved . $theme . '/') === 0){
-$filename = substr($filename, strlen($resolved . $theme . '/'));
-}
-elseif(strpos($filename, $resolved . 'default/') === 0){
-$filename = substr($filename, strlen($resolved . 'default/'));
-}
-else{
-$filename = substr($filename, strlen($resolved));
-}
-}
-switch(CDN_TYPE){
-case 'local':
-if(\Core\ftp()){
-$custom  = new Backends\FileFTP($resolved  . 'custom/' . $filename);
-$themed  = new Backends\FileFTP($resolved  . $theme . '/' . $filename);
-$default = new Backends\FileFTP($resolved  . 'default/' . $filename);
-}
-else{
-$custom  = new Backends\FileLocal($resolved  . 'custom/' . $filename);
-$themed  = new Backends\FileLocal($resolved  . $theme . '/' . $filename);
-$default = new Backends\FileLocal($resolved  . 'default/' . $filename);
-}
-break;
-default:
-throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
-break;
-}
-if($custom->exists()){
-return $custom;
-}
-elseif($themed->exists()){
-return $themed;
-}
-else{
-return $default;
-}
+return resolve_asset_file($filename);
 }
 public static function RemoveFromCache($file) {
 if($file instanceof File){
@@ -10508,6 +10585,230 @@ return;
 
 namespace  {
 
+### REQUIRE_ONCE FROM core/libs/core/filestore/ftp/FTPConnection.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Filestore\FTP {
+class FTPConnection {
+public $conn;
+public $username;
+public $password;
+public $host;
+public $url;
+public $root;
+public $isLocal = false;
+protected $metaFiles = [];
+private static $_OpenConnections = [];
+private $lastSave = 0;
+public function connect(){
+if(!$this->host){
+throw new \Exception('Please set the host before connecting to an FTP server.');
+}
+if(!$this->root){
+throw new \Exception('Please set the root path before connecting to an FTP server.');
+}
+$this->conn = ftp_connect($this->host);
+if(!$this->conn){
+throw new \Exception('Unable to connect to the FTP server at ' . $this->host);
+}
+if($this->username){
+if(!ftp_login($this->conn, $this->username, $this->password)){
+throw new \Exception('Bad FTP username or password for ' . $this->host);
+}
+$this->password = '--hidden--';
+}
+else{
+if(!ftp_login($this->conn, 'anonymous', '')){
+throw new \Exception('Anonymous logins are disabled for ' . $this->host);
+}
+}
+ftp_set_option($this->conn, FTP_TIMEOUT_SEC, 600);
+$this->reset();
+if($this->host == '127.0.0.1'){
+$this->isLocal = true;
+}
+self::$_OpenConnections[] = $this;
+if(sizeof(self::$_OpenConnections) == 1){
+\HookHandler::AttachToHook('/core/shutdown', '\\Core\\Filestore\\FTP\\FTPConnection::ShutdownHook');
+}
+}
+public function reset(){
+if(!ftp_chdir($this->conn, $this->root)){
+throw new \Exception('FTP functional, but root of [' . $this->root . '] was not valid or does not exist!');
+}
+}
+public function getFileHash($filename){
+$dir   = dirname($filename) . '/';
+$file  = basename($filename);
+$obj   = $this->getMetaFileObject($dir);
+$metas = $obj->getMetas($file);
+return $metas['hash'];
+}
+public function getFileModified($filename){
+$dir   = dirname($filename) . '/';
+$file  = basename($filename);
+$obj   = $this->getMetaFileObject($dir);
+$metas = $obj->getMetas($file);
+return $metas['modified'];
+}
+public function setFileHash($filename, $hash){
+$dir = dirname($filename) . '/';
+$file = basename($filename);
+$obj = $this->getMetaFileObject($dir);
+$obj->set($file, 'hash', $hash);
+$this->_syncMetas();
+}
+public function setFileModified($filename, $timestamp){
+$dir = dirname($filename) . '/';
+$file = basename($filename);
+$obj = $this->getMetaFileObject($dir);
+$obj->set($file, 'modified', $timestamp);
+$this->_syncMetas();
+}
+public function getMetaFileObject($directory){
+if(!isset($this->metaFiles[$directory])){
+$this->metaFiles[$directory] = new FTPMetaFile($directory, $this);
+}
+return $this->metaFiles[$directory];
+}
+private function _syncMetas(){
+if($this->lastSave + 10 >= \Core\Date\DateTime::NowGMT()){
+return;
+}
+$this->lastSave = \Core\Date\DateTime::NowGMT();
+foreach($this->metaFiles as $file){
+$file->saveMetas();
+}
+}
+public static function ShutdownHook(){
+foreach(self::$_OpenConnections as $conn){
+foreach($conn->metaFiles as $file){
+$file->saveMetas();
+}
+}
+}
+}
+} // ENDING NAMESPACE Core\Filestore\FTP
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/filestore/ftp/FTPMetaFile.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Filestore\FTP {
+use Core\Filestore\Backends\FileLocal;
+use Core\Filestore\Factory;
+class FTPMetaFile {
+private $_ftp;
+private $_dir;
+private $_contents;
+private $_local;
+private $_changed = false;
+public function __construct($directory, $ftp){
+$this->_dir = $directory;
+$this->_ftp = $ftp;
+}
+public function getMetas($file){
+if($this->_contents === null){
+$this->_contents = [];
+$remotefile = $this->_dir . '.ftpmetas';
+$f = md5($remotefile);
+$this->_local = Factory::File('tmp/remotefile-cache/' . $f);
+if(ftp_size($this->_ftp->conn, $remotefile) != -1){
+if(
+(!$this->_local->exists()) ||
+($this->_local->exists() && $this->_local->getMTime() + 1800 < \Core\Date\DateTime::NowGMT())
+){
+ftp_get($this->_ftp->conn, $this->_local->getFilename(), $remotefile, FTP_BINARY);
+}
+}
+if(!$this->_local->exists()){
+return [
+'filename' => $file,
+'hash' => '',
+'modified' => '',
+];
+}
+$fh = fopen($this->_local->getFilename(), 'r');
+if(!$fh){
+throw new \Exception('Unable to open ' . $this->_local->getFilename() . ' for reading.');
+}
+$line = 0;
+$map = [];
+do{
+$data = fgetcsv($fh, 2048);
+if($data === null) break;
+if($data === false) break;
+$line++;
+if($line == 1){
+$map = $data;
+}
+else{
+$assoc = [];
+foreach($map as $k => $v){
+$assoc[$v] = $data[$k];
+}
+if(!isset($assoc['filename'])){
+fclose($fh);
+return [
+'filename' => $file,
+'hash' => '',
+'modified' => '',
+];
+}
+$this->_contents[ $assoc['filename'] ] = $assoc;
+}
+}
+while(true);
+}
+return
+isset($this->_contents[$file]) ?
+$this->_contents[$file] :
+[
+'filename' => $file,
+'hash' => '',
+'modified' => '',
+];
+}
+public function set($file, $key, $value, $commit = false){
+$this->getMetas($file);
+if(!isset($this->_contents[$file])){
+$this->_contents[$file] = [
+'filename' => $file,
+'hash' => '',
+'modified' => '',
+];
+}
+$this->_contents[$file][$key] = $value;
+$this->_changed = true;
+if($commit){
+$this->saveMetas();
+}
+}
+public function saveMetas(){
+if($this->_contents === null){
+return;
+}
+if(!$this->_changed){
+return;
+}
+$remotefile = $this->_dir . '.ftpmetas';
+$this->_local->putContents('');
+$fh = fopen($this->_local->getFilename(), 'w');
+if(!$fh){
+throw new \Exception('Unable to open ' . $this->_local->getFilename() . ' for writing.');
+}
+fputcsv($fh, ['filename', 'hash', 'modified']);
+foreach($this->_contents as $c){
+fputcsv($fh, array_values($c));
+}
+fclose($fh);
+ftp_put($this->_ftp->conn, $remotefile, $this->_local->getFilename(), FTP_BINARY);
+$this->_changed = false;
+}
+}
+} // ENDING NAMESPACE Core\Filestore\FTP
+
+namespace  {
+
 ### REQUIRE_ONCE FROM core/libs/core/filestore/backends/FileFTP.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Filestore\Backends {
@@ -10519,7 +10820,6 @@ protected $_ftp;
 protected $_prefix;
 protected $_filename;
 protected $_tmplocal;
-protected $_islocal = false;
 public function __construct($filename = null, $ftpobject = null) {
 if($ftpobject !== null){
 $this->_ftp = $ftpobject;
@@ -10527,15 +10827,12 @@ $this->_ftp = $ftpobject;
 else{
 $this->_ftp = \Core\FTP();
 }
-if($this->_ftp == \Core\FTP()){
-$this->_islocal = true;
-}
 if($filename){
 $this->setFilename($filename);
 }
 }
 public function getFilesize($formatted = false) {
-$f = ftp_size($this->_ftp, $this->_filename);
+$f = ftp_size($this->_ftp->conn, $this->_filename);
 if($f == -1){
 return 0;
 }
@@ -10569,7 +10866,7 @@ $file = $this->_getTmpLocal()->getPreviewFile($dimensions);
 return $file->getURL();
 }
 public function getFilename($prefix = \ROOT_PDIR) {
-if($this->_islocal){
+if($this->_ftp->isLocal){
 return $this->_getTmpLocal()->getFilename($prefix);
 }
 else{
@@ -10594,13 +10891,13 @@ public function getLocalFilename() {
 return $this->_getTmpLocal()->getFilename();
 }
 public function getHash() {
-if(!$this->exists()) return null;
-if($this->_islocal){
+if(!$this->exists()){
+return null;
+}
+if($this->_ftp->isLocal){
 return md5_file(ROOT_PDIR . $this->_filename);
 }
-else{
-return md5_file($this->getLocalFilename());
-}
+return $this->_ftp->getFileHash($this->getFilename());
 }
 public function getFilenameHash() {
 $full = $this->getFilename();
@@ -10630,10 +10927,10 @@ $filename = $full;
 return 'base64:' . base64_encode($filename);
 }
 public function delete() {
-return ftp_delete($this->_ftp, $this->_filename);
+return ftp_delete($this->_ftp->conn, $this->_filename);
 }
 public function rename($newname) {
-$cwd = ftp_pwd($this->_ftp);
+$cwd = ftp_pwd($this->_ftp->conn);
 if(strpos($newname, ROOT_PDIR) === 0){
 $newname = substr($newname, strlen(ROOT_PDIR));
 }
@@ -10643,7 +10940,7 @@ $newname = substr($newname, strlen($cwd));
 else{
 $newname = dirname($this->_filename) . '/' . $newname;
 }
-$status = ftp_rename($this->_ftp, $this->_filename, $newname);
+$status = ftp_rename($this->_ftp->conn, $this->_filename, $newname);
 if($status){
 $this->_filename = $newname;
 $this->_tmplocal = null;
@@ -10677,7 +10974,9 @@ public function inDirectory($path) {
 return (strpos($this->_prefix . $this->_filename, $path) !== false);
 }
 public function identicalTo($otherfile) {
-return $this->_getTmpLocal()->identicalTo($otherfile);
+$thish = $this->getHash();
+$thath = $otherfile->getHash();
+return ($thish == $thath);
 }
 public function copyTo($dest, $overwrite = false) {
 if (!(is_a($dest, 'File') || $dest instanceof Filestore\File)) {
@@ -10707,16 +11006,18 @@ $f = $prefix . ' (' . ++$c . ')' . $suffix;
 $this->_filename = $f;
 }
 $localfilename = $src->getLocalFilename();
+$localhash     = $src->getHash();
+$localmodified = $src->getMTime();
 $mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
 $this->_mkdir(dirname($this->_filename), null, true);
-if (!ftp_put($this->_ftp, $this->_filename, $localfilename, FTP_BINARY)) {
+if (!ftp_put($this->_ftp->conn, $this->_filename, $localfilename, FTP_BINARY)) {
 throw new \Exception(error_get_last()['message']);
-return false;
 }
-if (!ftp_chmod($this->_ftp, $mode, $this->_filename)){
+if (!ftp_chmod($this->_ftp->conn, $mode, $this->_filename)){
 throw new \Exception(error_get_last()['message']);
-return false;
 }
+$this->_ftp->setFileHash($this->getFilename(), $localhash, false);
+$this->_ftp->setFileModified($this->getFilename(), $localmodified, true);
 return true;
 }
 public function getContents() {
@@ -10727,11 +11028,11 @@ public function putContents($data) {
 $mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
 $tmpfile = Filestore\get_tmp_path() . 'ftpupload-' . \Core::RandomHex(4);
 file_put_contents($tmpfile, $data);
-if (!ftp_put($this->_ftp, $this->_filename, $tmpfile, FTP_BINARY)) {
+if (!ftp_put($this->_ftp->conn, $this->_filename, $tmpfile, FTP_BINARY)) {
 unlink($tmpfile);
 return false;
 }
-if (!ftp_chmod($this->_ftp, $mode, $this->_filename)) return false;
+if (!ftp_chmod($this->_ftp->conn, $mode, $this->_filename)) return false;
 unlink($tmpfile);
 $this->_tmplocal = null;
 return true;
@@ -10740,7 +11041,7 @@ public function getContentsObject() {
 return $this->_getTmpLocal()->getContentsObject();
 }
 public function exists() {
-$f = ftp_size($this->_ftp, $this->_filename);
+$f = ftp_size($this->_ftp->conn, $this->_filename);
 return ($f != -1);
 }
 public function isReadable() {
@@ -10754,13 +11055,13 @@ return false;
 }
 public function getMTime() {
 if (!$this->exists()) return false;
-return ftp_mdtm($this->_ftp, $this->_filename);
+return ftp_mdtm($this->_ftp->conn, $this->_filename);
 }
 public function setFilename($filename) {
 if($this->_filename){
 Filestore\Factory::RemoveFromCache($this);
 }
-$cwd = ftp_pwd($this->_ftp);
+$cwd = ftp_pwd($this->_ftp->conn);
 if(strpos($filename, ROOT_PDIR) === 0){
 $filename = substr($filename, strlen(ROOT_PDIR));
 $prefix = ROOT_PDIR;
@@ -10811,27 +11112,27 @@ if ($mode === null) {
 $mode = (defined('DEFAULT_DIRECTORY_PERMS') ? DEFAULT_DIRECTORY_PERMS : 0777);
 }
 $paths = explode('/', $pathname);
-$cwd = ftp_pwd($this->_ftp);
+$cwd = ftp_pwd($this->_ftp->conn);
 foreach ($paths as $p) {
 if(trim($p) == '') continue;
-if (!@ftp_chdir($this->_ftp, $p)) {
-if (!ftp_mkdir($this->_ftp, $p)) return false;
-if (!ftp_chmod($this->_ftp, $mode, $p)) return false;
-ftp_chdir($this->_ftp, $p);
+if (!@ftp_chdir($this->_ftp->conn, $p)) {
+if (!ftp_mkdir($this->_ftp->conn, $p)) return false;
+if (!ftp_chmod($this->_ftp->conn, $mode, $p)) return false;
+ftp_chdir($this->_ftp->conn, $p);
 }
 }
-ftp_chdir($this->_ftp, $cwd);
+ftp_chdir($this->_ftp->conn, $cwd);
 return true;
 }
 private function _getTmpLocal() {
 if ($this->_tmplocal === null) {
-if($this->_islocal){
+if($this->_ftp->isLocal){
 $this->_tmplocal = new FileLocal(ROOT_PDIR . $this->_filename);
 }
 else{
 $f = md5($this->getFilename());
 $this->_tmplocal = Filestore\Factory::File('tmp/remotefile-cache/' . $f);
-ftp_get($this->_ftp, $this->_tmplocal->getFilename(), $this->_filename, FTP_BINARY);
+ftp_get($this->_ftp->conn, $this->_tmplocal->getFilename(), $this->_filename, FTP_BINARY);
 }
 }
 return $this->_tmplocal;
@@ -12831,6 +13132,8 @@ echo "<br/>\n";
 }
 echo '</dl>';
 }
+public static function ShutdownHook(){
+}
 }
 class Hook {
 const RETURN_TYPE_BOOL = 'bool';
@@ -13886,6 +14189,7 @@ ini_set('display_errors', 1);
 ini_set('html_errors', 1);
 }
 set_error_handler('Core\\ErrorManagement\\error_handler', error_reporting());
+register_shutdown_function('HookHandler::DispatchHook', '/core/shutdown');
 register_shutdown_function('Core\\ErrorManagement\\check_for_fatal');
 if (EXEC_MODE == 'CLI') {
 $servername          = null;
@@ -15751,19 +16055,23 @@ $template->assign('title', $this->title);
 $template->assign('body', $body);
 $ua = \Core\UserAgent::Construct();
 $this->bodyclasses = array_merge($this->bodyclasses, $ua->getPseudoIdentifier(true));
-$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
 switch ($this->error) {
 case 400:
-$url = "error error-400";
+$url = "error-400";
 break;
 case 403:
-$url = "error error-403 page-user-login";
+$url = "error-403 page-user-login";
 break;
 case 404:
-$url = "error error-404";
+$url = "error-404";
 break;
+default:
+$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
 }
+while($url != ''){
 $this->bodyclasses[] = 'page-' . $url;
+$url = substr($url, 0, strrpos($url, '-'));
+}
 $bodyclasses = strtolower(implode(' ', $this->bodyclasses));
 $template->assign('body_classes', $bodyclasses);
 try{

@@ -39,6 +39,7 @@
 		<hookregister name="/user/postsave" description="Hook that is called after the user object is saved"/>
 		<hookregister name="/user/postlogin/getredirecturl" description="Hook that is called after the user has successfully logged in.  Return a non-empty string to redirect to that page." return="string"/>
 		<hookregister name="/sitemap/getlisting" return="array" description="Called during the listing retrieval of the links to display in the sitemap.  Useful for injecting links into the sitemap and sitemap.xml."/>
+		<hookregister name="/core/shutdown" description="Hooks onto the PHP shutdown_register function to be called very very last after any page execution."/>
 		<hook name="/core/components/loaded" call="\Core\i18n\Loader::Init"/>
 		<hook name="/core/components/loaded" call="CurrentPage::Singleton"/>
 		<hook name="/core/components/ready" call="Form::CheckSavedSessionData"/>
@@ -69,8 +70,7 @@
 		-->
 	</includes>
 	<files>
-		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
-		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
+		<file filename="config/configuration.example.xml" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
 		<file filename="core/CHANGELOG" md5="4ff8640fba7d25456473a820a042d1c5"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="932f2f54e144e6a784eb904f3daa9693"/>
@@ -370,8 +370,8 @@
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="2dea7ad169238e63fad6f9c617ac2b68">
 			<class name="CAEDirectoryIterator"/>
 		</file>
-		<file filename="core/libs/core/CLI.class.php" md5="c8c05ed3cb4e167133f5e87f3e553aa1">
-			<class name="CLI"/>
+		<file filename="core/libs/core/cli/CLI.class.php" md5="c8c05ed3cb4e167133f5e87f3e553aa1">
+			<class name="Core\CLI\CLI"/>
 		</file>
 		<file filename="core/libs/core/Cache.php" md5="44b866c002f09d494870b434c5186e82">
 			<class name="Core\Cache"/>
@@ -1261,11 +1261,7 @@
 		<file filename="core/widgets/UserWidget.class.php" md5="ba266261af6678b97ec674758eeb95aa">
 			<class name="UserWidget"/>
 		</file>
-		<file filename="htaccess.ant" md5="03a971bd1f755da122d8f8f458b840cf"/>
-		<file filename="htaccess.assets" md5="828d3a3392693e389232e0d2055d43ed"/>
-		<file filename="htaccess.ex" md5="5b9477efc4add163473fe0ab8939bede"/>
-		<file filename="htaccess.private" md5="b07a184de48e4aec56e48171e253b3da"/>
-		<file filename="htaccess.public" md5="1ca087ba6a4a69941045d909be5bcbb5"/>
+		<file filename="htaccess.example" md5="03a971bd1f755da122d8f8f458b840cf"/>
 		<file filename="index.php" md5="f22e51ad3145f01dd5d820e7c5d25453"/>
 		<file filename="install/InstallPage.class.php" md5="027a64393425c2fb38e2b92b59c9861a">
 			<class name="_InstallTemplate"/>
@@ -1490,9 +1486,11 @@
 		<config key="/core/email/verify_with_dns" type="boolean" default="0" description="Verify email domains via DNS lookups.  May slow down email validation slightly, but ensures a valid domain."/>
 		<config key="/core/email/enable_sending" type="boolean" default="1" description="Set to false to disable sending emails globally.  Useful for development or stage environments."/>
 		<config key="/core/email/sandbox_to" type="string" description="Set to an email address to override all emails to be forwarded to a given email.  Useful for development or stage environments."/>
+		<!--
 		<config key="/core/ftp/username" type="string" description="FTP username to use when writing local files" default=""/>
 		<config key="/core/ftp/password" type="string" description="FTP password to use when writing local files" default=""/>
 		<config key="/core/ftp/path" type="string" description="Relative FTP path to use when writing local files.  Please ensure to end with a '/'" default=""/>
+		-->
 		<config key="/core/security/x-frame-options" type="string" description="Value for the X-Frame-Options header." default="SAMEORIGIN"/>
 		<config key="/core/updater/versionfreeze" type="boolean" default="1" description="Lock this version of Core and its libraries at the feature version it is currently at, (Recommended for enterprise sites)."/>
 		<config key="/user/register/requirecaptcha" type="boolean" default="0" description="If a captcha system is available, set to true to require it to be completed on the registration page."/>

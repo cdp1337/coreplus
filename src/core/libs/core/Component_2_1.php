@@ -1,4 +1,6 @@
 <?php
+use Core\CLI\CLI;
+
 /**
  * Core component system, responsible for reading and parsing the component.xml,
  * saving it, and installing all components on the system.
@@ -242,6 +244,7 @@ class Component_2_1 {
 		// Set the permissions
 		$this->_permissions = array();
 		foreach($this->_xmlloader->getElements('/permissions/permission') as $el){
+			/** @var $el DOMElement */
 			$this->_permissions[$el->getAttribute('key')] = [
 				'description' => $el->getAttribute('description'),
 				'context' => ($el->getAttribute('context')) ? $el->getAttribute('context') : '',
@@ -529,7 +532,7 @@ class Component_2_1 {
 			Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
 		}
 
-		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB'){
+		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB' && CDN_TYPE == 'local'){
 			Core\Utilities\Logger\write_debug('Auto-installing assets for component [' . $this->getName() . ']');
 			$this->_installAssets();
 		}
@@ -1319,14 +1322,16 @@ class Component_2_1 {
 	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 *
+	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
+	 *
 	 * @return boolean | array
 	 * @throws InstallerException
 	 */
-	public function reinstall() {
+	public function reinstall($verbose = 0) {
 		// @todo I need actual error checking here.
 		if (!$this->isInstalled()) return false;
 
-		$changes = $this->_performInstall();
+		$changes = $this->_performInstall($verbose);
 
 		if(is_array($changes) && sizeof($changes) > 0){
 			SystemLogModel::LogInfoEvent('/updater/component/reinstall', 'Component ' . $this->getName() . ' reinstalled successfully!', implode("\n", $changes));
@@ -1661,31 +1666,33 @@ class Component_2_1 {
 	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 *
+	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
+	 *
 	 * @return false | array
 	 * @throws InstallerException
 	 */
-	private function _performInstall() {
+	private function _performInstall($verbose = 0) {
 		// make sure that some of the installer elements are available!
 		require_once(ROOT_PDIR . 'core/libs/core/InstallerException.php'); #SKIPCOMPILER
 
 		$changed = array();
 
-		$change = $this->_parseDBSchema();
+		$change = $this->_parseDBSchema($verbose);
 		if ($change !== false) $changed = array_merge($changed, $change);
 
-		$change = $this->_parseConfigs();
+		$change = $this->_parseConfigs(true, $verbose);
 		if ($change !== false) $changed = array_merge($changed, $change);
 
-		$change = $this->_parseUserConfigs();
+		$change = $this->_parseUserConfigs(true, $verbose);
 		if ($change !== false) $changed = array_merge($changed, $change);
 
-		$change = $this->_parsePages();
+		$change = $this->_parsePages(true, $verbose);
 		if ($change !== false) $changed = array_merge($changed, $change);
 
-		$change = $this->_parseWidgets();
+		$change = $this->_parseWidgets($verbose);
 		if ($change !== false) $changed = array_merge($changed, $change);
 
-		$change = $this->_installAssets();
+		$change = $this->_installAssets($verbose);
 		if ($change !== false) $changed = array_merge($changed, $change);
 
 		// Core has some additional things that need to ran through.
@@ -1693,7 +1700,7 @@ class Component_2_1 {
 			// Make sure that files/private has a restrictive .htaccess file installed.
 			$f = \Core\Filestore\Factory::File('private/.htaccess');
 			if(!$f->exists() && $f->isWritable()){
-				$src = \Core\Filestore\Factory::File('htaccess.private');
+				$src = \Core\Filestore\Factory::File('core/htaccess.private');
 				if($src->copyTo($f)){
 					$changed[] = 'Installed private htaccess file into ' . $f->getFilename();
 				}
@@ -1702,7 +1709,7 @@ class Component_2_1 {
 			// Make sure that files/public has the appropriate .htaccess file installed.
 			$f = \Core\Filestore\Factory::File('public/.htaccess');
 			if(!$f->exists() && $f->isWritable()){
-				$src = \Core\Filestore\Factory::File('htaccess.public');
+				$src = \Core\Filestore\Factory::File('core/htaccess.public');
 				if($src->copyTo($f)){
 					$changed[] = 'Installed public htaccess file into ' . $f->getFilename();
 				}
@@ -1713,7 +1720,7 @@ class Component_2_1 {
 			// This is a bit of a hack because I need the parent directory for assets, not the theme-specific version.
 			$f->setFilename(dirname(dirname($f->getFilename())) . '/.htaccess');
 			if(!$f->exists() && $f->isWritable()){
-				$src = \Core\Filestore\Factory::File('htaccess.assets');
+				$src = \Core\Filestore\Factory::File('core/htaccess.assets');
 				if($src->copyTo($f)){
 					$changed[] = 'Installed assets htaccess file into ' . $f->getFilename();
 				}
@@ -1912,11 +1919,13 @@ class Component_2_1 {
 	/**
 	 * Internal function to parse and handle the configs in the component.xml file.
 	 * This is used for installations and upgrades.
+	 *
 	 * @param boolean $install Set to false to force uninstall/disable mode.
+	 * @param int     $verbose
 	 * @return boolean | int
 	 * @throws InstallerException
 	 */
-	private function _parsePages($install = true) {
+	private function _parsePages($install = true, $verbose = 0) {
 		$changes = array();
 
 		$action = $install ? 'Installing' : 'Uninstalling';
@@ -2044,13 +2053,13 @@ class Component_2_1 {
 	 * Internal function to parse and handle the DBSchema in the component.xml file.
 	 * This is used for installations and upgrades.
 	 *
-	 * @param boolean $install Set to false to force uninstall/disable mode.
+	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
 	 *
 	 * @throws DMI_Query_Exception
 	 * @throws Exception
 	 * @return boolean | int
 	 */
-	private function _parseDBSchema($install = true) {
+	private function _parseDBSchema($verbose = 0) {
 		// I need to get the schema definitions first.
 		$node   = $this->_xmlloader->getElement('dbschema');
 		$prefix = $node->getAttribute('prefix');
@@ -2069,6 +2078,10 @@ class Component_2_1 {
 			$schema = ModelFactory::GetSchema($m);
 			$tablename = $m::GetTableName();
 
+			if($verbose == 2){
+				CLI::PrintActionStart('Processing database table ' . $tablename);
+			}
+
 			try{
 				if (\Core\db()->tableExists($tablename)) {
 
@@ -2083,12 +2096,17 @@ class Component_2_1 {
 						foreach($tablediffs as $d){
 							$changes[] = '[' . $d['type'] . '] ' . $d['title'];
 						}
+						if($verbose == 2) CLI::PrintActionStatus('ok');
+					}
+					else{
+						if($verbose == 2) CLI::PrintActionStatus('skip');
 					}
 				}
 				else {
 					// Pass this schema into the DMI processor for create table.
 					\Core\db()->createTable($tablename, $schema);
 					$changes[] = 'Created table ' . $tablename;
+					if($verbose == 2) CLI::PrintActionStatus('ok');
 				}
 			}
 			catch(DMI_Query_Exception $e){
@@ -2187,19 +2205,22 @@ class Component_2_1 {
 	 *
 	 * Returns false if nothing changed, else will return an array of all the changes that occured.
 	 *
+	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
+	 *
 	 * @return false | array
 	 * @throws InstallerException
 	 */
-	private function _installAssets() {
+	private function _installAssets($verbose = 0) {
 		$assetbase = CDN_LOCAL_ASSETDIR;
 		$theme     = ConfigHandler::Get('/theme/selected');
+		$change    = '';
 		$changes   = array();
 
 		Core\Utilities\Logger\write_debug('Installing assets for ' . $this->getName());
 
 		foreach ($this->_xmlloader->getElements('/assets/file') as $node) {
+			/** @var DOMElement $node */
 			$b = $this->getBaseDir();
-
 
 			// The new file should have a filename identical to the original, with the exception of
 			// everything before the filename.. ie: the ROOT_PDIR and the asset directory.
@@ -2209,24 +2230,35 @@ class Component_2_1 {
 			if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
 				// If so, then copy that asset to the custom directory too!
 				$f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/custom/' . $newfilename);
+				$srcname = 'custom override';
+			}
+			elseif(file_exists(ROOT_PDIR . 'themes/' . $theme . '/' . $newfilename)){
+				// Allow the currently enabled theme to override assets too.
+				$f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/' . $theme . '/' . $newfilename);
+				$srcname = 'enabled theme';
 			}
 			else{
 				// Otherwise, the local file is guaranteed to be a local file.
 				$f = new \Core\Filestore\Backends\FileLocal($b . $node->getAttribute('filename'));
+				$srcname = 'original';
+			}
+
+			if($verbose == 2){
+				CLI::PrintActionStart('Installing asset ' . $f->getBasename() . ' from ' . $srcname);
 			}
 
 			$nf = \Core\Filestore\Factory::File($newfilename);
 			//var_dump($newfilename, $nf->getFilename(), $nf);
 
 			// If it's null, don't change the path any.
-			if ($theme === null) {
+			/*if ($theme === null) {
 				// Don't do anything.
 			}
 			// The new destination must be in the default directory, this is a 
 			// bit of a hack from the usual behaviour of the filestore system.
 			elseif ($theme != 'default' && strpos($nf->getFilename(), $assetbase . $theme) !== false) {
 				$nf->setFilename(str_replace($assetbase . $theme, $assetbase . 'default', $nf->getFilename()));
-			}
+			}*/
 
 			// Check if this file even needs updated. (this is primarily used for reporting reasons)
 			$newfileexists    = $nf->exists();
@@ -2243,11 +2275,25 @@ class Component_2_1 {
 				// This is a bit of a hack because in 2.6.0 and above, the mtime is duplicated along with the contents.
 				// This is to speed up file scans for local -> local disk changes.
 				touch($nf->getFilename(), $f->getMTime());
-				$changes[] = 'Modified timestamp on ' . $nf->getFilename();
+				$change = 'Modified timestamp on ' . $nf->getFilename();
+				$changes[] = $change;
+
+				if($verbose == 1){
+					CLI::PrintLine($change);
+				}
+				elseif($verbose == 2){
+					CLI::PrintActionStatus('ok');
+				}
+
 				continue;
 			}
 			elseif($newfileexists && $newfileidentical){
 				// The new file and old file are identical, just continue.
+
+				if($verbose == 2){
+					CLI::PrintActionStatus('skip');
+				}
+
 				continue;
 			}
 			// Otherwise if it exists, I want to be able to inform the user that it was replaced and not just installed.
@@ -2267,10 +2313,24 @@ class Component_2_1 {
 				throw new InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
 			}
 
-			$changes[] = $action . ' ' . $nf->getFilename();
+			$change = $action . ' ' . $nf->getFilename();
+			$changes[] = $change;
+
+			if($verbose == 1){
+				CLI::PrintLine($change);
+			}
+			elseif($verbose == 2){
+				CLI::PrintActionStatus('ok');
+			}
+
 		}
 
-		if (!sizeof($changes)) return false;
+		if (!sizeof($changes)){
+			if($verbose > 0){
+				CLI::PrintLine('No changes required');
+			}
+			return false;
+		}
 
 		// Make sure the asset cache is purged!
 		\Core\Cache::Delete('core-components');

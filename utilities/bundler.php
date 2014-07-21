@@ -115,7 +115,7 @@ sleep(1);
 
 // Prompt the user with what version the new bundles will be.
 $version = Core::GetComponent('core')->getVersion();
-$version = CLI::PromptUser('Please set the bundled version or', 'text', $version);
+$version = \Core\CLI\CLI::PromptUser('Please set the bundled version or', 'text', $version);
 
 
 
@@ -303,7 +303,7 @@ foreach($bundles as $b){
 
 
 // Give the option to automatically commit and tag all changes for the component.
-if(CLI::PromptUser('Bundles created, GIT tag the release for ' . $version . '?', 'boolean', true)){
+if(\Core\CLI\CLI::PromptUser('Bundles created, GIT tag the release for ' . $version . '?', 'boolean', true)){
 	exec('git tag -m "Release Version ' . $version . '" -f ' . 'v' . str_replace('~', '-', $version));
 	exec('git push --tags');
 }

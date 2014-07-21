@@ -23,6 +23,7 @@
 namespace Core;
 
 use Core\Datamodel;
+use Core\Filestore\FTP\FTPConnection;
 use DMI;
 use Cache;
 
@@ -39,49 +40,54 @@ function db(){
  *
  * Returns the FTP resource or false on failure.
  *
- * @return resource | false
+ * @return FTPConnection | false
  */
 function FTP(){
 	static $ftp = null;
 
 	if($ftp === null){
-		// Is FTP enabled?
-		$ftpuser = FTP_USERNAME;
-		$ftppass = FTP_PASSWORD;
 
-		if(!($ftpuser && $ftppass)){
-			// This is the most common case; if the either the username or password is not set,
-			// just don't try to connect to anything and set the FTP to false immediately.
-			// This is usually because the admin never entered in credentials and wishes to use direct file access.
+		if(!defined('FTP_USERNAME')){
+			// Prevent the installer from freaking out.
 			$ftp = false;
 			return false;
 		}
 
-		$ftp = ftp_connect('127.0.0.1');
-		if(!$ftp){
-			error_log('FTP enabled, but connection to "127.0.0.1" failed!');
-
+		if(!defined('FTP_PASSWORD')){
+			// Prevent the installer from freaking out.
 			$ftp = false;
 			return false;
 		}
 
-		if(!ftp_login($ftp, $ftpuser, $ftppass)){
-			error_log('FTP enabled, but a bad username or password was used!');
+		if(!defined('FTP_PATH')){
+			// Prevent the installer from freaking out.
+			$ftp = false;
+			return false;
+		}
 
+		$ftp = new FTPConnection();
+		$ftp->host = '127.0.0.1';
+		$ftp->username = FTP_USERNAME;
+		$ftp->password = FTP_PASSWORD;
+		$ftp->root = FTP_PATH;
+		$ftp->url = ROOT_WDIR;
+
+		try{
+			$ftp->connect();
+		}
+		catch(\Exception $e){
+			\Core\ErrorManagement\exception_handler($e);
 			$ftp = false;
 			return false;
 		}
 	}
 
-	// if FTP is not enabled, I can't chdir...
-	if($ftp){
-		// Make sure the FTP directory is always as root whenever this is called.
-		$ftproot = FTP_PATH;
-
-		// This serves two purposes, one it resets the location of the FTP back to the home directory
-		// and two, it ensures that the directory exists!
-		if(!ftp_chdir($ftp, $ftproot)){
-			error_log('FTP enabled, but FTP root of [' . $ftproot . '] was not valid or does not exist!');
+	if($ftp && $ftp instanceof FTPConnection){
+		try{
+			$ftp->reset();
+		}
+		catch(\Exception $e){
+			\Core\ErrorManagement\exception_handler($e);
 			$ftp = false;
 			return false;
 		}

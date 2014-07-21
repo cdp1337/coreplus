@@ -63,7 +63,7 @@ class FileFTP implements Filestore\File{
 	 * The backend FTP resource.
 	 * This is a native PHP object.
 	 *
-	 * @var
+	 * @var Filestore\FTP\FTPConnection
 	 */
 	protected $_ftp;
 
@@ -72,18 +72,11 @@ class FileFTP implements Filestore\File{
 
 	protected $_tmplocal;
 
-
-	/**
-	 * Set to true if this FTP connection is the proxy for local files.
-	 * @var bool
-	 */
-	protected $_islocal = false;
-
 	/**
 	 * Construct a new File object with the requested filename or URL.
 	 *
 	 * @param null $filename
-	 * @param mixed $ftpobject
+	 * @param Filestore\FTP\FTPConnection|null $ftpobject
 	 */
 	public function __construct($filename = null, $ftpobject = null) {
 		if($ftpobject !== null){
@@ -91,10 +84,6 @@ class FileFTP implements Filestore\File{
 		}
 		else{
 			$this->_ftp = \Core\FTP();
-		}
-
-		if($this->_ftp == \Core\FTP()){
-			$this->_islocal = true;
 		}
 
 		if($filename){
@@ -110,7 +99,14 @@ class FileFTP implements Filestore\File{
 	 * @return string|int
 	 */
 	public function getFilesize($formatted = false) {
-		$f = ftp_size($this->_ftp, $this->_filename);
+		$filename = $this->getFilename();
+
+		if(($f = $this->_ftp->getFileSize($filename)) == ''){
+			// The cached query failed, lookup on the actual FTP server.
+			$f = ftp_size($this->_ftp->getConn(), $filename);
+
+			$this->_ftp->setFileSize($filename, $f);
+		}
 
 		if($f == -1){
 			return 0;
@@ -125,6 +121,10 @@ class FileFTP implements Filestore\File{
 	 * @return string
 	 */
 	public function getMimetype() {
+		if(!$this->exists()){
+			return '';
+		}
+
 		return $this->_getTmpLocal()->getMimetype();
 	}
 
@@ -166,8 +166,13 @@ class FileFTP implements Filestore\File{
 	 * @return string|boolean
 	 */
 	public function getURL() {
-		$file = $this->_getTmpLocal();
-		return $file->getURL();
+		if($this->_ftp->isLocal){
+			$file = $this->_getTmpLocal();
+			return $file->getURL();
+		}
+		else{
+			return (SSL ? 'https' : 'http') . '://' . $this->_ftp->url . $this->_filename;
+		}
 	}
 
 	/**
@@ -178,22 +183,62 @@ class FileFTP implements Filestore\File{
 	 * @return string
 	 */
 	public function getPreviewURL($dimensions = "300x300") {
-		$file = $this->_getTmpLocal()->getPreviewFile($dimensions);
-		return $file->getURL();
+		if(!$this->exists()){
+			// Return a 404 image.
+			$file = Filestore\Factory::File('assets/images/mimetypes/notfound.png');
+
+			if(!$file->exists()){
+				// If the 404 image for this 404 file couldn't be located, then just stop.
+				trigger_error('The 404 image could not be located.', E_USER_WARNING);
+				return null;
+			}
+
+			return $file->getPreviewURL($dimensions);
+		}
+		else{
+			$file = $this->getPreviewFile($dimensions);
+			return $file->getURL();
+		}
 	}
 
 	/**
 	 * Get the filename of this file resolved to a specific directory, usually ROOT_PDIR or ROOT_WDIR.
+	 *
+	 * @param bool|null|string|mixed $prefix Determine the prefix requested
+	 *                                       FALSE will return the Core-encoded string, ("public/", "asset/", etc)
+	 *                                       NULL defaults to the ROOT_PDIR
+	 *                                       '' returns the relative directory from the install base
+	 *
+	 * @return string
 	 */
 	public function getFilename($prefix = \ROOT_PDIR) {
-		if($this->_islocal){
+		if($this->_ftp->isLocal){
 			// Map this to the underlying local version.
 			return $this->_getTmpLocal()->getFilename($prefix);
 		}
 		else{
 			$full = $this->_prefix . $this->_filename;
-
-			return $full;
+			if ($prefix === false) {
+				// Trim off all the prefacing components from the filename.
+				if ($this->_type == 'asset'){
+					return 'asset/' . substr($full, strlen(Filestore\get_asset_path()));
+				}
+				elseif ($this->_type == 'public'){
+					return 'public/' . substr($full, strlen(Filestore\get_public_path()));
+				}
+				elseif ($this->_type == 'private'){
+					return 'private/' . substr($full, strlen(Filestore\get_private_path()));
+				}
+				elseif ($this->_type == 'tmp'){
+					return 'tmp/' . substr($full, strlen(Filestore\get_tmp_path()));
+				}
+				else{
+					return $this->_filename;
+				}
+			}
+			else{
+				return $full;
+			}
 		}
 	}
 
@@ -247,19 +292,26 @@ class FileFTP implements Filestore\File{
 	 * @return string
 	 */
 	public function getHash() {
-		if(!$this->exists()) return null;
-		// To increase performance here, I can check and see if the current FTP connection is Core's FTP connection.
-		// If it is, then I can safely assume that the file is local,
-		// it's just being used over FTP for write access.
+		if(!$this->exists()){
+			return null;
+		}
 
-		if($this->_islocal){
-			// :)
+		if($this->_ftp->isLocal){
+			// To increase performance here, I can check and see if the current FTP connection is Core's FTP connection.
+			// If it is, then I can safely assume that the file is local,
+			// it's just being used over FTP for write access.
 			return md5_file(ROOT_PDIR . $this->_filename);
 		}
-		else{
-			// *tear*, I need to download the file and check that.
-			return md5_file($this->getLocalFilename());
+
+		// Default operation
+		// Check the server's metafile and see if this entry is in there.
+		if(($hash = $this->_ftp->getFileHash($this->getFilename())) == ''){
+			// Well, cache it and save the information!
+			$this->_getTmpLocal();
+			$hash = $this->_ftp->getFileHash($this->getFilename());
 		}
+
+		return $hash;
 	}
 
 	/**
@@ -308,7 +360,7 @@ class FileFTP implements Filestore\File{
 	 * @return boolean
 	 */
 	public function delete() {
-		return ftp_delete($this->_ftp, $this->_filename);
+		return ftp_delete($this->_ftp->getConn(), $this->_filename);
 	}
 
 	/**
@@ -319,7 +371,7 @@ class FileFTP implements Filestore\File{
 	 * @return boolean
 	 */
 	public function rename($newname) {
-		$cwd = ftp_pwd($this->_ftp);
+		$cwd = ftp_pwd($this->_ftp->getConn());
 
 		if(strpos($newname, ROOT_PDIR) === 0){
 			// If the file starts with the PDIR... trim that off!
@@ -333,7 +385,7 @@ class FileFTP implements Filestore\File{
 			$newname = dirname($this->_filename) . '/' . $newname;
 		}
 
-		$status = ftp_rename($this->_ftp, $this->_filename, $newname);
+		$status = ftp_rename($this->_ftp->getConn(), $this->_filename, $newname);
 
 		if($status){
 			$this->_filename = $newname;
@@ -380,7 +432,42 @@ class FileFTP implements Filestore\File{
 	 * @param boolean    $includeHeader Include the correct mimetype header or no.
 	 */
 	public function displayPreview($dimensions = "300x300", $includeHeader = true) {
-		return $this->_getTmpLocal()->displayPreview($dimensions, $includeHeader);
+
+		if($this->_ftp->isLocal){
+			$this->_getTmpLocal()->displayPreview($dimensions, $includeHeader);
+		}
+		else{
+			$bits         = \Core\Filestore\get_resized_key_components($dimensions, $this);
+			$resized      = Filestore\Factory::File($bits['dir'] . $bits['key']);
+			$localresized = null;
+			$view         = \Core\view();
+
+			if(!$resized->exists()){
+				// The file doesn't exist yet, so download the original, resize it, and upload the resulting image.
+
+				// Download.
+				$local = $this->_getTmpLocal();
+				// Resize
+				$localresized = $local->getPreviewFile($dimensions);
+				// And upload.
+				$localresized->copyTo($resized);
+			}
+
+			if ($includeHeader){
+				$view->contenttype = $this->getMimetype();
+				$view->updated = $this->getMTime();
+				$view->addHeader('Content-Length', $resized->getFilesize());
+				$view->addHeader('X-Alternate-Location', $resized->getURL());
+				$view->mode = \View::MODE_NOOUTPUT;
+
+				$view->render();
+				//header('X-Content-Encoded-ByCore Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
+			}
+
+			// Display the contents from either the local cached copy, (that was used for resizing),
+			// or download the remote file and display that.
+			echo $localresized ? $localresized->getContents() : $resized->getContents();
+		}
 	}
 
 	/**
@@ -405,7 +492,16 @@ class FileFTP implements Filestore\File{
 	 * @return Filestore\File
 	 */
 	public function getQuickPreviewFile($dimensions = '300x300') {
-		return $this->_getTmpLocal()->getQuickPreviewFile($dimensions);
+
+		if($this->_ftp->isLocal){
+			return $this->_getTmpLocal()->getQuickPreviewFile($dimensions);
+		}
+		else{
+			$bits         = \Core\Filestore\get_resized_key_components($dimensions, $this);
+			$resized      = Filestore\Factory::File($bits['dir'] . $bits['key']);
+
+			return $resized;
+		}
 	}
 
 	/**
@@ -416,7 +512,26 @@ class FileFTP implements Filestore\File{
 	 * @return Filestore\File
 	 */
 	public function getPreviewFile($dimensions = '300x300') {
-		return $this->_getTmpLocal()->getPreviewFile($dimensions);
+		if($this->_ftp->isLocal){
+			return $this->_getTmpLocal()->getPreviewFile($dimensions);
+		}
+		else{
+			$bits         = \Core\Filestore\get_resized_key_components($dimensions, $this);
+			$resized      = Filestore\Factory::File($bits['dir'] . $bits['key']);
+
+			if(!$resized->exists()){
+				// The file doesn't exist yet, so download the original, resize it, and upload the resulting image.
+
+				// Download.
+				$local = $this->_getTmpLocal();
+				// Resize
+				$localresized = $local->getPreviewFile($dimensions);
+				// And upload.
+				$localresized->copyTo($resized);
+			}
+
+			return $resized;
+		}
 	}
 
 	/**
@@ -431,8 +546,19 @@ class FileFTP implements Filestore\File{
 		return (strpos($this->_prefix . $this->_filename, $path) !== false);
 	}
 
+	/**
+	 * Check, (to the best of the interface's ability), if another file is identical to this one.
+	 *
+	 * @param Filestore\File $otherfile
+	 *
+	 * @return boolean
+	 */
 	public function identicalTo($otherfile) {
-		return $this->_getTmpLocal()->identicalTo($otherfile);
+		// With FTP, the timestamp is about the most effective way to compare files.
+		$thish = $this->getHash();
+		$thath = $otherfile->getHash();
+
+		return ($thish == $thath);
 	}
 
 	/**
@@ -508,6 +634,9 @@ class FileFTP implements Filestore\File{
 		// And do the actual copy!
 		// To save memory, try to use as low-level functions as possible.
 		$localfilename = $src->getLocalFilename();
+		$localhash     = $src->getHash();
+		$localmodified = $src->getMTime();
+		$localsize     = $src->getFilesize();
 
 		// Resolve it from its default.
 		// This is provided from a config define, (probably).
@@ -518,15 +647,19 @@ class FileFTP implements Filestore\File{
 
 		// FTP requires a filename, not data...
 		// WELL how bout that!  I happen to have a local filename ;)
-		if (!ftp_put($this->_ftp, $this->_filename, $localfilename, FTP_BINARY)) {
+		if (!ftp_put($this->_ftp->getConn(), $this->_filename, $localfilename, FTP_BINARY)) {
 			throw new \Exception(error_get_last()['message']);
-			return false;
 		}
 
-		if (!ftp_chmod($this->_ftp, $mode, $this->_filename)){
+		if (!ftp_chmod($this->_ftp->getConn(), $mode, $this->_filename)){
 			throw new \Exception(error_get_last()['message']);
-			return false;
 		}
+
+		// Don't forget to save the metadata for this file!
+		$filename = $this->getFilename();
+		$this->_ftp->setFileHash($filename, $localhash);
+		$this->_ftp->setFileModified($filename, $localmodified);
+		$this->_ftp->setFileSize($filename, $localsize);
 
 		// woot...
 		return true;
@@ -564,13 +697,13 @@ class FileFTP implements Filestore\File{
 		$tmpfile = Filestore\get_tmp_path() . 'ftpupload-' . \Core::RandomHex(4);
 		file_put_contents($tmpfile, $data);
 
-		if (!ftp_put($this->_ftp, $this->_filename, $tmpfile, FTP_BINARY)) {
+		if (!ftp_put($this->_ftp->getConn(), $this->_filename, $tmpfile, FTP_BINARY)) {
 			// Well, delete the temp file anyway...
 			unlink($tmpfile);
 			return false;
 		}
 
-		if (!ftp_chmod($this->_ftp, $mode, $this->_filename)) return false;
+		if (!ftp_chmod($this->_ftp->getConn(), $mode, $this->_filename)) return false;
 
 		// woot... but cleanup the trash first.
 		unlink($tmpfile);
@@ -594,7 +727,14 @@ class FileFTP implements Filestore\File{
 	 * @return boolean
 	 */
 	public function exists() {
-		$f = ftp_size($this->_ftp, $this->_filename);
+		$filename = $this->getFilename();
+
+		if(($f = $this->_ftp->getFileSize($filename)) == ''){
+			// The cached query failed, lookup on the actual FTP server.
+			$f = ftp_size($this->_ftp->getConn(), $filename);
+
+			$this->_ftp->setFileSize($filename, $f);
+		}
 
 		return ($f != -1);
 	}
@@ -614,7 +754,9 @@ class FileFTP implements Filestore\File{
 	 * @return boolean
 	 */
 	public function isWritable() {
-		return $this->exists();
+		// @todo Decide on a better way to handle detecting if an FTP server location can be written to.
+		// For now, simply return false on anonymous connections and true on registered connections.
+		return ($this->_ftp->username != '');
 	}
 
 	/**
@@ -636,7 +778,7 @@ class FileFTP implements Filestore\File{
 	public function getMTime() {
 		if (!$this->exists()) return false;
 
-		return ftp_mdtm($this->_ftp, $this->_filename);
+		return ftp_mdtm($this->_ftp->getConn(), $this->_filename);
 	}
 
 
@@ -654,7 +796,8 @@ class FileFTP implements Filestore\File{
 			Filestore\Factory::RemoveFromCache($this);
 		}
 
-		$cwd = ftp_pwd($this->_ftp);
+		//$cwd = ftp_pwd($this->_ftp->conn);
+		$cwd = $this->_ftp->root;
 
 		if(strpos($filename, ROOT_PDIR) === 0){
 			// If the file starts with the PDIR... trim that off!
@@ -739,20 +882,20 @@ class FileFTP implements Filestore\File{
 		// Because ftp_mkdir doesn't like to create parent directories...
 		$paths = explode('/', $pathname);
 
-		$cwd = ftp_pwd($this->_ftp);
+		$cwd = ftp_pwd($this->_ftp->getConn());
 
 		foreach ($paths as $p) {
 			if(trim($p) == '') continue;
 
-			if (!@ftp_chdir($this->_ftp, $p)) {
-				if (!ftp_mkdir($this->_ftp, $p)) return false;
-				if (!ftp_chmod($this->_ftp, $mode, $p)) return false;
-				ftp_chdir($this->_ftp, $p);
+			if (!@ftp_chdir($this->_ftp->getConn(), $p)) {
+				if (!ftp_mkdir($this->_ftp->getConn(), $p)) return false;
+				if (!ftp_chmod($this->_ftp->getConn(), $mode, $p)) return false;
+				ftp_chdir($this->_ftp->getConn(), $p);
 			}
 		}
 
 		// And go back to root.
-		ftp_chdir($this->_ftp, $cwd);
+		ftp_chdir($this->_ftp->getConn(), $cwd);
 
 		// woot...
 		return true;
@@ -768,15 +911,29 @@ class FileFTP implements Filestore\File{
 		if ($this->_tmplocal === null) {
 			// If this FTP object is simply a proxy for the local file store, I can cheat and not actually request the files over FTP.
 			// This makes it quicker.
-			if($this->_islocal){
+			if($this->_ftp->isLocal){
 				$this->_tmplocal = new FileLocal(ROOT_PDIR . $this->_filename);
 			}
 			else{
-				$f = md5($this->getFilename());
+				$filename = $this->getFilename();
+				$fhash = md5($filename);
 
-				$this->_tmplocal = Filestore\Factory::File('tmp/remotefile-cache/' . $f);
+				$this->_tmplocal = Filestore\Factory::File('tmp/remotefile-cache/' . $fhash);
 
-				ftp_get($this->_ftp, $this->_tmplocal->getFilename(), $this->_filename, FTP_BINARY);
+				if(!$this->_tmplocal->exists()){
+					ftp_get($this->_ftp->getConn(), $this->_tmplocal->getFilename(), $filename, FTP_BINARY);
+				}
+
+				// Since I have a local copy, I might as well make sure that the cache is as updated as possible.
+				if(!$this->_ftp->getFileHash($filename)){
+					$this->_ftp->setFileHash($filename, $this->_tmplocal->getHash());
+				}
+				if(!$this->_ftp->getFileModified($filename)){
+					$this->_ftp->setFileModified($filename, ftp_mdtm($this->_ftp->getConn(), $filename));
+				}
+				if(!$this->_ftp->getFileSize($filename)){
+					$this->_ftp->setFileSize($filename, ftp_size($this->_ftp->getConn(), $filename));
+				}
 			}
 		}
 		return $this->_tmplocal;

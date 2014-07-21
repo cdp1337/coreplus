@@ -258,6 +258,13 @@ interface File {
 	 */
 	public function inDirectory($path);
 
+	/**
+	 * Check, (to the best of the interface's ability), if another file is identical to this one.
+	 *
+	 * @param File $otherfile
+	 *
+	 * @return boolean
+	 */
 	public function identicalTo($otherfile);
 
 	/**

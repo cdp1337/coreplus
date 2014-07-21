@@ -47,9 +47,12 @@ abstract class Helper{
 		$request = \PageRequest::GetSystemRequest();
 		$view = $request->getView();
 
-		if(!$view->record) return;
+		if(!$view->record) return true;
 
 		try{
+
+			$processingtime = (round(\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime(), 3) * 1000);
+
 			$log = new \UserActivityModel();
 			$log->setFromArray(
 				array(
@@ -64,9 +67,14 @@ abstract class Helper{
 					'status' => $view->error,
 					'db_reads' => \Core::DB()->readCount(),
 					'db_writes' => (\Core::DB()->writeCount() + 1),
-					'processing_time' => (round(\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime(), 3) * 1000)
+					'processing_time' => $processingtime,
 				)
 			);
+
+			if(defined('XHPROF_RUN') && defined('XHPROF_SOURCE')){
+				$log->set('xhprof_run', XHPROF_RUN);
+				$log->set('xhprof_source', XHPROF_SOURCE);
+			}
 
 			$log->save();
 		}
@@ -74,6 +82,7 @@ abstract class Helper{
 			// I don't actually care if it couldn't save.
 			// This could happen if the user refreshes the page twice with in a second.
 			// (and with a system that responds in about 100ms, it's very possible).
+			\Core\ErrorManagement\exception_handler($e);
 		}
 	}
 

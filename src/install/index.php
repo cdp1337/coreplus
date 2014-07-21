@@ -111,7 +111,7 @@ if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
 		// If I can poll the components table.... just stop right the fuck here!
 		// This is a pretty good indication that the system is installed.
 		if($backend->tableExists('component')){
-			die('The system appears to be installed already.  Try dropping off the "/install" from the URL and hitting refresh a couple times.');
+			die('Core Plus has been successfully installed!  <a href="../">Continue</a>');
 		}
 	}
 	catch (Exception $e) {

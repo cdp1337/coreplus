@@ -30,6 +30,7 @@ class FileController extends Controller_2_1 {
 		// This is designed to only return data!
 		$view->mode = View::MODE_NOOUTPUT;
 		// And it's going to be an image of some sorts.
+		// This will get overridden by the actual image displaying method.
 		$view->contenttype = 'image/png';
 		// And it shouldn't be recorded in navigation.
 		$view->record = false;

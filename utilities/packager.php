@@ -132,7 +132,7 @@ if($arguments->getArgumentValue('repackage')){
 
 
 // I need a valid editor.
-CLI::RequireEditor();
+\Core\CLI\CLI::RequireEditor();
 
 // Some cache variables.
 $_cversions = null;
@@ -650,7 +650,7 @@ function process_component($component, $forcerelease = false){
 		$scanlicenses = true;
 	}
 	else{
-		//$scanlicenses = CLI::PromptUser('Retrieve current list of licenses and merge in from code?', 'boolean', true);
+		//$scanlicenses = \Core\CLI\CLI::PromptUser('Retrieve current list of licenses and merge in from code?', 'boolean', true);
 		$scanlicenses = true;
 	}
 	if($scanlicenses){
@@ -671,7 +671,7 @@ function process_component($component, $forcerelease = false){
 		$scanauthors = true;
 	}
 	else{
-		//$scanauthors = CLI::PromptUser('Retrieve current list of authors and merge in from code?', 'boolean', true);
+		//$scanauthors = \Core\CLI\CLI::PromptUser('Retrieve current list of authors and merge in from code?', 'boolean', true);
 		$scanauthors = true;
 	}
 	if($scanauthors){
@@ -898,7 +898,7 @@ function process_component($component, $forcerelease = false){
 			$ans = array_shift($autostack);
 		}
 		else{
-			$ans = CLI::PromptUser('What do you want to edit for component ' . $component . ' ' . $version . ' on branch ' . $gitbranch, $opts);
+			$ans = \Core\CLI\CLI::PromptUser('What do you want to edit for component ' . $component . ' ' . $version . ' on branch ' . $gitbranch, $opts);
 		}
 
 
@@ -914,11 +914,11 @@ function process_component($component, $forcerelease = false){
 				$previousversion = $version;
 				$version = _increment_version($version, $original);
 
-				$version = CLI::PromptUser('Please set the new version on branch ' . $gitbranch . ' or', 'text', $version);
+				$version = \Core\CLI\CLI::PromptUser('Please set the new version on branch ' . $gitbranch . ' or', 'text', $version);
 				$comp->setVersion($version);
 
 				if($version != $previousversion){
-					$importgit = CLI::PromptUser('Do you want to automatically import GIT commits performed after ' . $previousversion . ' into the ' . $version . ' changelog?', 'boolean', true);
+					$importgit = \Core\CLI\CLI::PromptUser('Do you want to automatically import GIT commits performed after ' . $previousversion . ' into the ' . $version . ' changelog?', 'boolean', true);
 					if($importgit){
 						$parser = new Core\Utilities\Changelog\Parser($name, $changelogfile);
 						try{
@@ -958,7 +958,7 @@ function process_component($component, $forcerelease = false){
 				}
 				break;
 			case 'editdesc':
-				$comp->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $comp->getDescription()));
+				$comp->setDescription(\Core\CLI\CLI::PromptUser('Enter a description.', 'textarea', $comp->getDescription()));
 				break;
 			case 'editchange':
 				$thischange      = $changelogparser->getSection($version);
@@ -1043,7 +1043,7 @@ function process_component($component, $forcerelease = false){
 				print $changelog . NL . NL;
 				break;
 			//case 'dbtables':
-			//	$comp->setDBSchemaTableNames(explode("\n", CLI::PromptUser('Enter the tables that are included in this component', 'textarea', implode("\n", $comp->getDBSchemaTableNames()))));
+			//	$comp->setDBSchemaTableNames(explode("\n", \Core\CLI\CLI::PromptUser('Enter the tables that are included in this component', 'textarea', implode("\n", $comp->getDBSchemaTableNames()))));
 			//	break;
 			case 'printdebug':
 				echo $comp->getRawXML() . NL;
@@ -1092,7 +1092,7 @@ function process_component($component, $forcerelease = false){
 		$bundleyn = false;
 	}
 	else{
-		$bundleyn = CLI::PromptUser('Package saved, do you want to bundle the changes into a package?', 'boolean');
+		$bundleyn = \Core\CLI\CLI::PromptUser('Package saved, do you want to bundle the changes into a package?', 'boolean');
 	}
 
 	if($bundleyn){
@@ -1192,12 +1192,12 @@ EOD;
 		exec('tar -czf "' . $tgz . '" -C "' . $dir . '" --exclude-vcs --exclude=*~ --exclude=._* .');
 		$bundle = $tgz;
 
-		if(CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
+		if(\Core\CLI\CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
 			exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -u "' . $packageremail . '" -a --sign "' . $tgz . '"');
 			$bundle .= '.asc';
 
 			// If the user signed it... give the option to automatically commit and tag all changes for the component.
-			if(CLI::PromptUser('Package signed, GIT commit everything?', 'boolean', true)){
+			if(\Core\CLI\CLI::PromptUser('Package signed, GIT commit everything?', 'boolean', true)){
 				// First, see if any new files need to be added to GIT in the directories.
 				exec('git status -u -s "' . implode('" "', $gitpaths) . '" | egrep "^\?\?" | sed "s:?? ::"', $newfiles);
 				foreach($newfiles as $nf){
@@ -1313,17 +1313,17 @@ function process_theme($theme, $forcerelease = false){
 			'save'       => '[ FINISH      ] Save it!',
 			'exit'       => 'Abort and exit without saving changes',
 		);
-		$ans = CLI::PromptUser('What do you want to edit for theme ' . $name . ' ' . $version, $opts);
+		$ans = \Core\CLI\CLI::PromptUser('What do you want to edit for theme ' . $name . ' ' . $version, $opts);
 
 		switch($ans){
 			case 'editvers':
 				$previousversion = $t->getVersion();
 				$version = _increment_version($t->getVersion(), true);
-				$version = CLI::PromptUser('Please set the version of the new release', 'text', $version);
+				$version = \Core\CLI\CLI::PromptUser('Please set the version of the new release', 'text', $version);
 				$t->setVersion($version);
 
 				if($version != $previousversion){
-					$importgit = CLI::PromptUser('Do you want to automatically import GIT commits performed after ' . $previousversion . ' into the ' . $version . ' changelog?', 'boolean', true);
+					$importgit = \Core\CLI\CLI::PromptUser('Do you want to automatically import GIT commits performed after ' . $previousversion . ' into the ' . $version . ' changelog?', 'boolean', true);
 					if($importgit){
 						$parser = new Core\Utilities\Changelog\Parser('Theme/' . $name, $changelogfile);
 						$parser->parse();
@@ -1356,7 +1356,7 @@ function process_theme($theme, $forcerelease = false){
 
 				break;
 			case 'editdesc':
-				$t->setDescription(CLI::PromptUser('Enter a description.', 'textarea', $t->getDescription()));
+				$t->setDescription(\Core\CLI\CLI::PromptUser('Enter a description.', 'textarea', $t->getDescription()));
 				break;
 			case 'editchange':
 				manage_changelog($changelogfile, 'Theme/' . $name, $version);
@@ -1456,7 +1456,7 @@ function process_theme($theme, $forcerelease = false){
 		$bundleyn = true;
 	}
 	else{
-		$bundleyn = CLI::PromptUser('Theme saved, do you want to bundle the changes into a package?', 'boolean');
+		$bundleyn = \Core\CLI\CLI::PromptUser('Theme saved, do you want to bundle the changes into a package?', 'boolean');
 	}
 
 
@@ -1500,12 +1500,12 @@ function process_theme($theme, $forcerelease = false){
 		exec('tar -czf ' . $tgz . ' -C ' . $dir . ' --exclude-vcs --exclude=*~ --exclude=._* .');
 		$bundle = $tgz;
 
-		if(CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
+		if(\Core\CLI\CLI::PromptUser('Package created, do you want to sign it?', 'boolean', true)){
 			exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -u "' . $packageremail . '" -a --sign "' . $tgz . '"');
 			$bundle .= '.asc';
 
 			// If the user signed it... give the option to automatically commit and tag all changes for the component.
-			if(CLI::PromptUser('Package signed, GIT commit everything?', 'boolean', true)){
+			if(\Core\CLI\CLI::PromptUser('Package signed, GIT commit everything?', 'boolean', true)){
 				// First, see if any new files need to be added to GIT in the directories.
 				exec('git status -u -s "' . implode('" "', $gitpaths) . '" | egrep "^\?\?" | sed "s:?? ::"', $newfiles);
 				foreach($newfiles as $nf){
@@ -1701,7 +1701,7 @@ function manage_changelog($file, $name, $version){
 	}
 
 	// Prompt the user with the ability to change them.
-	$changelog = CLI::PromptUser(
+	$changelog = \Core\CLI\CLI::PromptUser(
 		'Enter the changelog for this release.  Separate each different bullet point on a new line with no dashes or asterisks.',
 		'textarea',
 		$changelog
@@ -1767,16 +1767,16 @@ function get_git_changes_since($componentname, $sinceversion, $sincedate, $gitpa
 $packagername = '';
 $packageremail = '';
 
-CLI::LoadSettingsFile('packager');
+\Core\CLI\CLI::LoadSettingsFile('packager');
 
 if(!$packagername){
-	$packagername = CLI::PromptUser('Please provide your name you wish to use for packaging', 'text-required');
+	$packagername = \Core\CLI\CLI::PromptUser('Please provide your name you wish to use for packaging', 'text-required');
 }
 if(!$packageremail){
-	$packageremail = CLI::Promptuser('Please provide your email you wish to use for packaging.', 'text-required');
+	$packageremail = \Core\CLI\CLI::Promptuser('Please provide your email you wish to use for packaging.', 'text-required');
 }
 
-CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
+\Core\CLI\CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 
 
 // Before ANYTHING happens.... make sure that the system is compiled!
@@ -1789,7 +1789,7 @@ if($opts['type']){
 	$ans = $opts['type'];
 }
 else{
-	$ans = CLI::PromptUser(
+	$ans = \Core\CLI\CLI::PromptUser(
 		"What operation do you want to do?",
 		array(
 			'component' => 'Manage a Component',
@@ -1909,7 +1909,7 @@ switch($ans){
 			process_component($opts['name']);
 		}
 		else{
-			$ans = CLI::PromptUser("Which component do you want to package/manage?", $versionedfiles);
+			$ans = \Core\CLI\CLI::PromptUser("Which component do you want to package/manage?", $versionedfiles);
 			process_component($files[$ans]['name']);
 		}
 
@@ -1939,7 +1939,7 @@ switch($ans){
 			process_theme($opts['name']);
 		}
 		else{
-			$ans = CLI::PromptUser("Which theme do you want to package/manage?", $files);
+			$ans = \Core\CLI\CLI::PromptUser("Which theme do you want to package/manage?", $files);
 			process_theme($files[$ans]);
 		}
 

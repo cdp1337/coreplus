@@ -111,6 +111,70 @@ define('TAB', "\t");
  */
 define('DS', DIRECTORY_SEPARATOR);
 
+##
+# Gimme some colors!
+# These are used to prettify the terminal.
+# Color 1 is always standard and
+# Color 2 is always the bold version.
+
+/*
+const C_BLK1 = "\033[0;30m";
+const C_BLK2 = "\033[1;30m";
+const C_RED1 = "\033[0;31m";
+const C_RED2 = "\033[1;31m";
+const C_GRN1 = "\033[0;32m";
+const C_GRN2 = "\033[1;32m";
+const C_YLW1 = "\033[0;33m";
+const C_YLW2 = "\033[1;33m";
+const C_BLU1 = "\033[0;34m";
+const C_BLU2 = "\033[1;34m";
+const C_PRP1 = "\033[0;35m";
+const C_PRP2 = "\033[1;35m";
+const C_CYN1 = "\033[0;36m";
+const C_CYN2 = "\033[1;36m";
+const C_WHT1 = "\033[0;37m";
+const C_WHT2 = "\033[1;37m";
+const C_RESET = "\033[0m";
+const C_NONE = "";
+*/
+
+if(EXEC_MODE == 'CLI'){
+	// Line color, the separating characters
+	define('COLOR_LINE', "\033[0;30m");
+	// Heading color
+	define('COLOR_HEADER', "\033[1;36m");
+	// Success color
+	define('COLOR_SUCCESS', "\033[1;32m");
+	// Warning color
+	define('COLOR_WARNING', "\033[1;33m");
+	// Error color
+	define('COLOR_ERROR', "\033[1;31m");
+	// Debug color
+	define('COLOR_DEBUG', "\033[0;34m");
+	// Reset color
+	define('COLOR_RESET', "\033[0m");
+	// Space character
+	define('NBSP', ' ');
+}
+else{
+	// Line color, the separating characters
+	define('COLOR_LINE', "<span style='color:grey;'>");
+	// Heading color
+	define('COLOR_HEADER', "<span style='color:cyan; font-weight:bold;'>");
+	// Success color
+	define('COLOR_SUCCESS', "<span style='color:green; font-weight:bold;'>");
+	// Warning color
+	define('COLOR_WARNING', "<span style='color:yellow; font-weight:bold;'>");
+	// Error color
+	define('COLOR_ERROR', "<span style='color:red; font-weight:bold;'>");
+	// Debug color
+	define('COLOR_DEBUG', "<span style='color:lightskyblue;'>");
+	// Reset color
+	define('COLOR_RESET', "</span>");
+	// Space character
+	define('NBSP', '&nbsp;');
+}
+
 
 // Cleanup!
 unset($em, $rpdr, $rwdr, $rip);

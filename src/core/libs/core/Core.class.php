@@ -1223,17 +1223,17 @@ class Core implements ISingleton {
 		$view = $request->getView();
 
 		// If the page is set to be ignored, do not record it.
-		if(!$view->record) return;
+		if(!$view->record) return true;
 
 		// Also do not record anything other than a GET request.
-		if(!$request->isGet()) return;
+		if(!$request->isGet()) return true;
 
 		// If it's an ajax or json request, don't record that either!
-		if($request->isAjax()) return;
-		if($request->isJSON()) return;
+		if($request->isAjax()) return true;
+		if($request->isJSON()) return true;
 
 		// If it's an error... don't record either.
-		if($view->error != View::ERROR_NOERROR) return;
+		if($view->error != View::ERROR_NOERROR) return true;
 
 
 		if (!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
@@ -1250,7 +1250,7 @@ class Core implements ISingleton {
 
 		// Skip duplicate requests
 		$s = sizeof($_SESSION['nav']);
-		if($s && $_SESSION['nav'][$s-1]['uri'] == $dat['uri']) return;
+		if($s && $_SESSION['nav'][$s-1]['uri'] == $dat['uri']) return true;
 
 		// Otherwise, YAY!
 		// But keep it neatly trimmed at 5 entries.
@@ -1259,7 +1259,7 @@ class Core implements ISingleton {
 			$_SESSION['nav'] = array_values($_SESSION['nav']);
 		}
 		$_SESSION['nav'][] = $dat;
-		return;
+		return true;
 	}
 
 	/**

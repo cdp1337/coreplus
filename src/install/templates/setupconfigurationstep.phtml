@@ -1,5 +1,5 @@
 <?php if($message): ?>
-	<p class="message-error"><?php echo $message; ?></p>
+	<p class="message-error">Whoopsie! <?php echo $message; ?></p>
 <?php endif; ?>
 
 <?php if($instructions): ?>
@@ -72,14 +72,78 @@
 
 <script>
 	$(function(){
+		var cdnopts = [
+			{
+				group: 'local',
+				$wrapper: $('#formelement-CDN_LOCAL_ASSETDIR').closest('.formelement')
+			},
+			{
+				group: 'local',
+				$wrapper: $('#formelement-CDN_LOCAL_PUBLICDIR').closest('.formelement')
+			},
+			{
+				group: 'local',
+				$wrapper: $('#formelement-CDN_LOCAL_PRIVATEDIR').closest('.formelement')
+			},
+			{
+				group: 'ftp',
+				$wrapper: $('#formelement-CDN_FTP_USERNAME').closest('.formelement')
+			},
+			{
+				group: 'ftp',
+				$wrapper: $('#formelement-CDN_FTP_PASSWORD').closest('.formelement')
+			},
+			{
+				group: 'ftp',
+				$wrapper: $('#formelement-CDN_FTP_HOST').closest('.formelement')
+			},
+			{
+				group: 'ftp',
+				$wrapper: $('#formelement-CDN_FTP_PATH').closest('.formelement')
+			},
+			{
+				group: 'ftp',
+				$wrapper: $('#formelement-CDN_FTP_URL').closest('.formelement')
+			},
+			{
+				group: 'ftp',
+				$wrapper: $('#formelement-CDN_FTP_ASSETDIR').closest('.formelement')
+			},
+			{
+				group: 'ftp',
+				$wrapper: $('#formelement-CDN_FTP_PUBLICDIR').closest('.formelement')
+			},
+			{
+				group: 'ftp',
+				$wrapper: $('#formelement-CDN_FTP_PRIVATEDIR').closest('.formelement')
+			}
+		];
 		$('#advanced-options').click(function(){
-				if($(this).is(':checked')) $('.advanced').show();
-				else $('.advanced').hide();
+				if($(this).is(':checked')){
+					$('.advanced').show();
+					$('#formelement-CDN_TYPE').change();
+				}
+				else{
+					$('.advanced').hide();
+				}
 		});
 
 		$('#solutions-toggle').click(function(){
 			if($(this).is(':checked')) $('.solutions').show();
 			else $('.solutions').hide();
+		});
+
+		$('#formelement-CDN_TYPE').change(function(){
+			var v = $(this).val(), i;
+
+			for(i in cdnopts){
+				if(cdnopts[i].group == v){
+					cdnopts[i].$wrapper.show();
+				}
+				else{
+					cdnopts[i].$wrapper.hide();
+				}
+			}
 		});
 	});
 </script>

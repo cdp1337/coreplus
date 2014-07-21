@@ -29,8 +29,22 @@ class SetupConfigurationStep extends InstallerStep{
 
 		$xml = new \XMLLoader();
 		$xml->setRootName('configuration');
-		$xml->loadFromFile(ROOT_PDIR . 'config/configuration.xml.ex');
+		$xml->loadFromFile(ROOT_PDIR . 'config/configuration.example.xml');
 		$formelements = [];
+
+		// Since we're pulling from the ant version, set some nice defaults for the user.
+		$valuedefaults = [
+			'@{db.server}@' => 'localhost',
+			'@{db.port}@' => '3306',
+			'@{db.type}@' => 'mysqli',
+			'@{db.name}@' => '',
+			'@{db.user}@' => '',
+			'@{db.pass}@' => '',
+			'@{devmode}@' => 'false',
+			'/tmp/coreplus-web/' => '/tmp/' . $_SERVER['HTTP_HOST'] . '-web/',
+			'/tmp/coreplus-cli/' => '/tmp/' . $_SERVER['HTTP_HOST'] . '-cli/',
+			'RANDOM' => \Core\random_hex(96),
+		];
 
 		$elements = $xml->getElements('return|define');
 		foreach($elements as $el){
@@ -67,6 +81,11 @@ class SetupConfigurationStep extends InstallerStep{
 					default:
 						trigger_error('Unknown sub-node for ' . $node . ' ' . $name . ': ' . $c->nodeName);
 				}
+			}
+
+			// Since we're pulling from the ant version, set some nice defaults for the user.
+			if(isset($valuedefaults[$value])){
+				$value = $valuedefaults[$value];
 			}
 
 			// Save the value?
@@ -326,10 +345,26 @@ EOD;
 		/** @var $dir \Directory_Backend */
 		$dir = \Core\directory($dir);
 		if(!$dir->isWritable()){
+			$dirname = $dir->getPath();
+			$whoami = trim(`whoami`);
+			$instructions = <<<EOD
+<strong>GUI, FTP, or Web Management Method</strong>
+<p>
+Right click on the directory and set "group" and "other" to writable and executable.
+<p>
+<strong>CLI Lazy (insecure) Method</strong>
+<p>
+<pre>chmod -R a+wx "$dirname"</pre>
+</p>
+<strong>CLI Secure Method</strong>
+<p>
+<pre>sudo chown -R $whoami "$dirname"</pre>
+</p>
+EOD;
 			return [
 				'status' => 'failed',
-				'message' => $dir->getPath() . ' is not writable!',
-				'instructions' => '',
+				'message' => $dir->getPath() . ' is not writable.',
+				'instructions' => $instructions,
 			];
 		}
 		else{

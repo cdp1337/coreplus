@@ -1,18 +1,28 @@
-{if !sizeof($changes)}
-	<p>No changes required!</p>
-{else}
+<iframe id="reinstall-log" name="reinstall-log" style="width:90%; height:30em;"></iframe>
 
-	{if sizeof($errors) > 0}
-		{foreach $errors as $e}
-			<p class="message-error">
-				Error while processing {$e.type} {$e.name}: <br/>
-				{$e.message}
-			</p>
-		{/foreach}
-	{/if}
-	<ul>
-		{foreach from=$changes item='change'}
-			<li>{$change}</li>
-		{/foreach}
-	</ul>
-{/if}
+<form action="" method="post" target="reinstall-log" id="reinstall-form">
+
+</form>
+
+{script library="jquery"}{/script}
+{script location="foot"}<script>
+$(function(){
+	var go = null,
+		log = document.getElementById('reinstall-log');
+
+	// Fix the width of the iframe.
+	//log.width = $('body').width() * .8;
+
+	$('#reinstall-form').submit();
+
+	go = setInterval(function(){
+		log.contentWindow.scrollBy(0,100);
+		}, 50
+	);
+
+	$('#reinstall-log').load(function(){
+		clearInterval(go);
+		log.contentWindow.scrollBy(0,500);
+	});
+});
+</script>{/script}

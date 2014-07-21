@@ -61,6 +61,7 @@ Options -Indexes
 	BrowserMatch ^Mozilla/4 gzip-only-text/html
 	BrowserMatch ^Mozilla/4\.[0678] no-gzip
 	BrowserMatch \bMSIE !no-gzip
+
 	<IfModule mod_headers.c>
 		Header append Vary User-Agent env=!dont-vary
 	</IfModule>

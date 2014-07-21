@@ -14,23 +14,23 @@ define('BASE_DIR', realpath(dirname(__DIR__)) . '/');
 // Include the core bootstrap, this will get the system functional.
 require_once(ROOT_PDIR . 'core/bootstrap.php');
 
-CLI::RequireEditor();
+\Core\CLI\CLI::RequireEditor();
 
 
 // I need a few variables first about the user...
 $packagername = '';
 $packageremail = '';
 
-CLI::LoadSettingsFile('packager');
+\Core\CLI\CLI::LoadSettingsFile('packager');
 
 if(!$packagername){
-	$packagername = CLI::PromptUser('Please provide your name you wish to use for packaging', 'text-required');
+	$packagername = \Core\CLI\CLI::PromptUser('Please provide your name you wish to use for packaging', 'text-required');
 }
 if(!$packageremail){
-	$packageremail = CLI::Promptuser('Please provide your email you wish to use for packaging.', 'text-required');
+	$packageremail = \Core\CLI\CLI::Promptuser('Please provide your email you wish to use for packaging.', 'text-required');
 }
 
-CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
+\Core\CLI\CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 
 
 
@@ -54,7 +54,7 @@ if($argc > 1){
 }
 else{
 	/** @var string $component The name of the component as supplied by the user */
-	$component = CLI::PromptUser('Enter the name of the component to create', 'text-required');
+	$component = \Core\CLI\CLI::PromptUser('Enter the name of the component to create', 'text-required');
 }
 
 
@@ -104,7 +104,7 @@ $models = array();
 $controllers = array();
 
 
-$modellines = CLI::PromptUser('Enter the models to create on this component initially, separated by a newline', 'textarea');
+$modellines = \Core\CLI\CLI::PromptUser('Enter the models to create on this component initially, separated by a newline', 'textarea');
 foreach(explode("\n", $modellines) as $line){
 	$line = trim($line);
 
@@ -121,7 +121,7 @@ foreach(explode("\n", $modellines) as $line){
 }
 
 
-$controllerlines = CLI::PromptUser('Enter the controllers to create on this component initially, separated by a newline.', 'textarea', implode("\n", $controllers));
+$controllerlines = \Core\CLI\CLI::PromptUser('Enter the controllers to create on this component initially, separated by a newline.', 'textarea', implode("\n", $controllers));
 $controllers = array();
 foreach(explode("\n", $controllerlines) as $line){
 	$line = trim($line);
@@ -251,7 +251,7 @@ EOF;
 
 
 
-if(CLI::PromptUser('Create standard directory structure?', 'bool', true)){
+if(\Core\CLI\CLI::PromptUser('Create standard directory structure?', 'bool', true)){
 	// Start making the directories and writing everything.
 	foreach($directories as $d){
 		$dir = new \Core\Filestore\Backends\DirectoryLocal($dirname . $d);

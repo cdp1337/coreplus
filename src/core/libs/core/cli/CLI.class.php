@@ -20,7 +20,10 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+namespace Core\CLI;
+
 class CLI {
+	
 	/**
 	 * Prompt the user a question and return the result.
 	 *
@@ -32,7 +35,7 @@ class CLI {
 	 *                               "text-required" - Open-ended text input, user can type in anything (non-blank), and that value is returned.
 	 * @param string|bool  $default  string The default answer if the user simply presses "enter". [optional]
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return bool|string
 	 */
 	public static function PromptUser($question, $answers, $default = false) {
@@ -158,7 +161,7 @@ class CLI {
 						echo '(Press enter to open with ' . basename($_SERVER['EDITOR']) . '.  Save and close when done.)';
 						fgets(STDIN);
 
-						$file = "/tmp/cae2-cli-textarea-" . Core::RandomHex(4) . '.tmp';
+						$file = "/tmp/cae2-cli-textarea-" . \Core::RandomHex(4) . '.tmp';
 						file_put_contents($file, $default);
 						system($_SERVER['EDITOR'] . " " . $file . " > `tty`");
 						// And read back in that file.
@@ -185,7 +188,7 @@ class CLI {
 		global $previous_editor;
 
 		// First, check the editor in the "session" file.
-		CLI::LoadSettingsFile('editor');
+		\Core\CLI\CLI::LoadSettingsFile('editor');
 		if (isset($previous_editor)) $_SERVER['EDITOR'] = $previous_editor;
 
 
@@ -201,7 +204,7 @@ class CLI {
 				$default    = $loc;
 			}
 
-			$_SERVER['EDITOR'] = CLI::PromptUser(
+			$_SERVER['EDITOR'] = \Core\CLI\CLI::PromptUser(
 				'Which editor do you want to use for editing text files?  If you are unsure, simply press enter if there is a default option.',
 				$opts,
 				$default
@@ -209,7 +212,96 @@ class CLI {
 
 			// And remember this option.
 			$previous_editor = $_SERVER['EDITOR'];
-			CLI::SaveSettingsFile('editor', array('previous_editor'));
+			\Core\CLI\CLI::SaveSettingsFile('editor', array('previous_editor'));
+		}
+	}
+
+	public static function PrintHeader($line, $maxlen = 90) {
+		$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
+
+		echo COLOR_LINE;
+		echo "| " . $nl;
+		echo "+" . str_repeat('=', $maxlen-1) . $nl;
+		echo "| " . COLOR_RESET . COLOR_HEADER;
+
+		// Make this text centered.
+		echo str_repeat(NBSP, (90 - strlen($line)) / 2);
+		echo $line . $nl . COLOR_RESET . COLOR_LINE;
+		echo "+" . str_repeat('=', $maxlen-1);
+		echo COLOR_RESET . $nl;
+
+		if(EXEC_MODE == 'WEB'){
+			ob_flush();
+			flush();
+		}
+	}
+
+	public static function PrintLine($line) {
+		$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
+		echo COLOR_LINE . '| ' . COLOR_RESET . $line . $nl;
+
+		if(EXEC_MODE == 'WEB'){
+			ob_flush();
+			flush();
+		}
+	}
+
+	public static function PrintError($line) {
+		$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
+		echo COLOR_LINE . '| ' . COLOR_RESET . COLOR_ERROR . $line . COLOR_RESET . $nl;
+
+		if(EXEC_MODE == 'WEB'){
+			ob_flush();
+			flush();
+		}
+	}
+
+	public static function PrintActionStart($line, $maxlen = 90, $suffix = '...'){
+		$flen = strlen($line) + strlen($suffix) + 8;
+		echo "$line..." . str_repeat(NBSP, max($maxlen - $flen, 1));
+
+		if(EXEC_MODE == 'WEB'){
+			ob_flush();
+			flush();
+		}
+	}
+
+	public static function PrintActionStatus($status){
+		$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
+
+		if($status === true){
+			$status = 'ok';
+		}
+		elseif($status === false){
+			$status = 'fail';
+		}
+
+		switch($status){
+			case 1:
+			case 'OK':
+			case 'ok':
+				echo COLOR_SUCCESS . "[  OK  ]" . COLOR_RESET;
+				break;
+
+			case 'skip':
+			case 'SKIP':
+				echo '[ SKIP ]';
+				break;
+
+			case 0:
+			case 'fail':
+				echo COLOR_ERROR . "[  !!  ]" . COLOR_RESET;
+				break;
+
+			default:
+				echo "[  ??  ]";
+		}
+
+		echo $nl;
+
+		if(EXEC_MODE == 'WEB'){
+			ob_flush();
+			flush();
 		}
 	}
 

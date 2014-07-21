@@ -15,6 +15,6 @@ fi
 echo "Exporting full tarball..."
 tar -czf "$FULLEXPORTTGZ" -C "$BASEDIR/src/" \
 components \
-config/configuration.xml.ex config/.htaccess \
-core install themes htaccess.ex index.php utilities
+config/configuration.example.xml config/.htaccess \
+core install themes htaccess.example index.php utilities
 echo "OK!  Created $FULLEXPORTTGZ"

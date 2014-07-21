@@ -18,8 +18,8 @@ tar -czf "$FULLEXPORTTGZ" -C "$BASEDIR" \
 docs LICENSES utilities vendor .gitignore ant.properties.ex build.xml README.md \
 .idea/codeStyleSettings.xml .idea/php.xml \
 src/components \
-src/config/configuration.xml.ant src/config/configuration.xml.ex src/config/.htaccess \
-src/core src/install src/themes src/htaccess.ant src/htaccess.ex src/index.php
+src/config/configuration.example.xml src/config/.htaccess \
+src/core src/install src/themes src/htaccess.example src/index.php
 echo "OK!  Created $FULLEXPORTTGZ"
 
 
@@ -37,6 +37,6 @@ src/components/phpwhois \
 src/components/security-suite \
 src/components/tinymce src/components/theme \
 src/themes/base-v2 \
-src/config/configuration.xml.ant src/config/configuration.xml.ex src/config/.htaccess \
-src/core src/install src/htaccess.ant src/htaccess.ex src/index.php
+src/config/configuration.example.xml src/config/.htaccess \
+src/core src/install src/htaccess.example src/index.php
 echo "OK!  Created $BASEEXPORTTGZ"

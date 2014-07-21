@@ -140,7 +140,7 @@ abstract class Factory {
 			strpos($uri, get_asset_path()) === 0
 		){
 			// Is this an asset request?
-			$file = self::ResolveAssetFile($uri);
+			$file = resolve_asset_file($uri);
 		}
 		elseif(
 			strpos($uri, 'public/') === 0 ||
@@ -260,80 +260,7 @@ abstract class Factory {
 	 * @throws \Exception
 	 */
 	public static function ResolveAssetFile($filename){
-		$originaluri = $filename;
-
-		// Cache is disabled on this element for the time being.
-		// it returns inconsistent results across different themes.
-		if(false && isset(self::$_ResolveCache[$originaluri])){
-			return self::$_ResolveCache[$originaluri];
-		}
-
-		$resolved = get_asset_path();
-
-		// I need to check the custom, current theme, and finally default locations for the file.
-		$theme = \ConfigHandler::Get('/theme/selected');
-
-		if (strpos($filename, 'assets/') === 0) {
-			// Allow "assets/blah" to be passed in
-			$filename = substr($filename, 7);
-		}
-		elseif(strpos($filename, 'asset/') === 0){
-			// Allow "asset/blah" to be passed in.
-			$filename = substr($filename, 6);
-		}
-		elseif(strpos($filename, $resolved) === 0){
-			// Allow the fully resolved name to be passed in
-			// The caveat here is that the fully resolve file will probably have "default/" or "themename/" in it too.
-			// I need to trim that off as well.
-			if(strpos($filename, $resolved . 'custom/') === 0){
-				$filename = substr($filename, strlen($resolved . 'custom/'));
-			}
-			elseif(strpos($filename, $resolved . $theme . '/') === 0){
-				$filename = substr($filename, strlen($resolved . $theme . '/'));
-			}
-			elseif(strpos($filename, $resolved . 'default/') === 0){
-				$filename = substr($filename, strlen($resolved . 'default/'));
-			}
-			else{
-				$filename = substr($filename, strlen($resolved));
-			}
-		}
-
-
-		switch(CDN_TYPE){
-			case 'local':
-				if(\Core\ftp()){
-					// FTP has its own sub-type.
-					$custom  = new Backends\FileFTP($resolved  . 'custom/' . $filename);
-					$themed  = new Backends\FileFTP($resolved  . $theme . '/' . $filename);
-					$default = new Backends\FileFTP($resolved  . 'default/' . $filename);
-				}
-				else{
-					$custom  = new Backends\FileLocal($resolved  . 'custom/' . $filename);
-					$themed  = new Backends\FileLocal($resolved  . $theme . '/' . $filename);
-					$default = new Backends\FileLocal($resolved  . 'default/' . $filename);
-				}
-
-				break;
-			default:
-				throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
-				break;
-		}
-
-		if($custom->exists()){
-			// If there is a custom asset installed, USE THAT FIRST!
-			//self::$_ResolveCache[$originaluri] = $custom;
-			return $custom;
-		}
-		elseif($themed->exists()){
-			// Otherwise, the themes can override component assets too.
-			//self::$_ResolveCache[$originaluri] = $themed;
-			return $themed;
-		}
-		else{
-			//self::$_ResolveCache[$originaluri] = $default;
-			return $default;
-		}
+		return resolve_asset_file($filename);
 	}
 
 	/**

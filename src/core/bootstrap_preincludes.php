@@ -77,6 +77,8 @@ require_once(ROOT_PDIR . 'core/libs/core/filestore/Contents.interface.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/contents/ContentXML.php');
 //require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/file_awss3.backend.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/FileLocal.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/ftp/FTPConnection.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/ftp/FTPMetaFile.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/FileFTP.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/FileRemote.php');
 require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/DirectoryLocal.php');

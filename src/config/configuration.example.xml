@@ -1,0 +1,372 @@
+<?xml version="1.0"?>
+<!DOCTYPE configuration>
+<configuration>
+	<!--+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~}
+	    |          IMPORTANT OPTIONS, DATABASE, SSL MODE, ETC.            |
+	    |                                                                 |
+	    | You probably need to edit most of the options in this section   |
+	    | Built by ant on @{build.time}@                                |
+	{~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~-->
+
+	<return name="database_server" type="string" formtype="text" advanced="1">
+		<value>@{db.server}@</value>
+		<description>
+			Database hostname or IP address.  "localhost" or "127.0.0.1" is generally used.
+		</description>
+	</return>
+
+	<return name="database_port" type="int" formtype="text" advanced="1">
+		<value>@{db.port}@</value>
+		<description>
+			Database port number.  Usually 3306 works here for mysql.
+		</description>
+	</return>
+
+	<return name="database_type" type="enum" formtype="select" advanced="1">
+		<value>@{db.type}@</value>
+		<description>
+			Database type... (currently only mysqli is fully supported!)
+		</description>
+		<option>mysqli</option>
+		<!--<option>cassandra</option>-->
+	</return>
+
+	<return name="database_name" type="string" formtype="text" advanced="0">
+		<value>@{db.name}@</value>
+		<description>
+			Database name.  This is usually prefixed with your username when on shared hosting, eg: userfoo_site.
+		</description>
+	</return>
+
+	<return name="database_user" type="string" formtype="text" advanced="0">
+		<value>@{db.user}@</value>
+		<description>
+			Database user name.
+		</description>
+	</return>
+
+	<return name="database_pass" type="string" formtype="password" advanced="0">
+		<value>@{db.pass}@</value>
+		<description>
+			Database password.
+		</description>
+	</return>
+
+	<define name="SSL_MODE" type="enum" formtype="select">
+		<value>disabled</value>
+		<description><![CDATA[
+Select what type of SSL operation you want for the site.  Please be forewarned that you should probably have SSL already setup before enabling it!
+<pre>
+disabled - SSL is disabled completely.
+ondemand - SSL is allowed only on secure pages, while non-secure pages redirect to non-ssl.
+allowed  - SSL is allowed on any page throughout the site, and required on secure pages.
+required - SSL is always required for all pages.
+</pre>
+		]]></description>
+		<option>disabled</option>
+		<option>ondemand</option>
+		<option>allowed</option>
+		<option>required</option>
+	</define>
+
+	<define name="SITENAME" type="string" formtype="text" advanced="0">
+		<value>Core Plus Site</value>
+		<description>
+			The site name that can be used for emails and page titles.
+		</description>
+	</define>
+
+	<return name="site_url" type="string" formtype="text">
+		<value></value>
+		<description><![CDATA[
+			If a site url is provided and not blank, force the servername
+			to match it. Useful for restricting access to www.domain.com.
+			Please note, if you set this to an invalid location, you or anyone else will
+			not be able to access the site.
+			<br/><br/>
+			<strong>Do not include the http:// prefix!</strong>
+		]]></description>
+	</return>
+
+	<define name="DEVELOPMENT_MODE" type="boolean" formtype="checkbox">
+		<value>@{devmode}@</value>
+		<description>
+			Check if this site will be used in a development environment.  Extra debugging information and verbose error messages are enabled if this is checked.
+		</description>
+	</define>
+
+	<define name="SESSION_COOKIE_DOMAIN" type="string" formtype="text">
+		<value></value>
+		<description>
+			If you would like to enforce a domain to be used for your cookies, set that here.
+			For example, if you have sites on example1.domain.com, example2.domain.com, and
+			www.domain.com, setting this value to ".domain.com" is recommended to have the sessions shared.
+		</description>
+	</define>
+
+	<define name="FTP_USERNAME" type="string" formtype="text">
+		<value></value>
+		<description>
+			<![CDATA[
+			For any local file write access, providing the FTP username, password, and base directory will utilize
+			an FTP connection instead of direct writing.
+			<br/>
+			<br/>
+			This is useful for running the site as "www-data" or "apache" users, but having the files owned by a different user.
+			]]>
+		</description>
+	</define>
+
+	<define name="FTP_PASSWORD" type="string" formtype="password">
+		<value></value>
+		<description>FTP Password</description>
+	</define>
+
+	<define name="FTP_PATH" type="string" formtype="text">
+		<value></value>
+		<description>FTP Root Path</description>
+	</define>
+
+	<define name="CDN_TYPE" type="string" formtype="select">
+		<value>local</value>
+		<description>
+			The CDN type for asset and public files.  Choose "local" if you don't know what this means.
+		</description>
+		<option>local</option>
+		<option>ftp</option>
+		<!-- Disabling untested and unbuilt backends -->
+		<!--
+		<option>aws</option>
+		<option>rackspace</option>
+		-->
+	</define>
+
+	<!-- Local CDN Options -->
+	<define name="CDN_LOCAL_ASSETDIR" type="string" formtype="text">
+		<value>files/assets/</value>
+		<description>
+			The asset (JS, CSS, Images, etc), resources that get access directly by the browser.
+		</description>
+	</define>
+
+	<define name="CDN_LOCAL_PUBLICDIR" type="string" formtype="text">
+		<value>files/public/</value>
+		<description>
+			The user-supplied and admin-supplied public uploads that get access directly by the browser.
+		</description>
+	</define>
+
+	<define name="CDN_LOCAL_PRIVATEDIR" type="string" formtype="text">
+		<value>files/private/</value>
+		<description>
+			The user-supplied and admin-supplied private uploads that cannot be accessed directly.
+		</description>
+	</define>
+
+	<!-- FTP CDN Options -->
+	<define name="CDN_FTP_USERNAME" type="string" formtype="text">
+		<value></value>
+		<description>
+			<![CDATA[
+			FTP Username to push/pull files over an FTP connection for use as a CDN.
+			]]>
+		</description>
+	</define>
+
+	<define name="CDN_FTP_PASSWORD" type="string" formtype="password">
+		<value></value>
+		<description><![CDATA[
+			FTP Password to push/pull files over an FTP connection for use as a CDN.
+			]]></description>
+	</define>
+
+	<define name="CDN_FTP_HOST" type="string" formtype="text">
+		<value></value>
+		<description><![CDATA[
+			FTP base path to push/pull files over an FTP connection for use as a CDN.
+			<br/><br/>
+			This is usually a fully resolved path starting and ending with a slash.
+			]]></description>
+	</define>
+
+	<define name="CDN_FTP_PATH" type="string" formtype="text">
+		<value></value>
+		<description><![CDATA[
+			FTP base path to push/pull files over an FTP connection for use as a CDN.
+			<br/><br/>
+			This is usually a fully resolved path starting and ending with a slash.
+			]]></description>
+	</define>
+
+	<define name="CDN_FTP_URL" type="string" formtype="text">
+		<value></value>
+		<description><![CDATA[
+			The URL used as a base for all FTP CDN resources.
+			This must be the URL form of your base CDN_FTP_PATH variable.
+			<br/><br/>
+			eg: If your FTP path is /home/user/public_html/content/,
+			then your URL may be cdn.domain.tld/~user/content/.
+			<br/><br/>
+			You do not need to include the HTTP:// or HTTPS:// prefix, as that is added automatically.
+		]]></description>
+	</define>
+
+	<define name="CDN_FTP_ASSETDIR" type="string" formtype="text">
+		<value>assets/</value>
+		<description>
+			The asset (JS, CSS, Images, etc), resources that get access directly by the browser.
+		</description>
+	</define>
+
+	<define name="CDN_FTP_PUBLICDIR" type="string" formtype="text">
+		<value>public/</value>
+		<description>
+			The user-supplied and admin-supplied public uploads that get access directly by the browser.
+		</description>
+	</define>
+
+	<define name="CDN_FTP_PRIVATEDIR" type="string" formtype="text">
+		<value>.private/</value>
+		<description>
+			The user-supplied and admin-supplied private uploads that cannot be accessed directly.
+		</description>
+	</define>
+
+	<!--+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~}
+	    |                       TECHNICAL OPTIONS                         |
+	    |                                                                 |
+	    | Technical things you probably don't need to worry about,        |
+	    |  but feel free to if you so choose                              |
+	{~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~-->
+
+	<define name="AUTO_INSTALL_ASSETS" type="boolean" formtype="checkbox">
+		<value>false</value>
+		<description>
+			Auto-install any modified asset resource when in DEVELOPMENT_MODE and using a local CDN.
+		</description>
+	</define>
+
+	<define name="XHPROF" type="int" formtype="text">
+		<value>0</value>
+		<description>
+			Set to a value greater than 0 to enable the XHprof profiler that percentage of the time.
+			For example, setting to 100 will enable the profiler on every page; setting to 50 will enable the profiler on 50% of the page views.
+		</description>
+	</define>
+
+	<return name="tmp_dir_web" type="string" formtype="text">
+		<value>/tmp/coreplus-web/</value>
+		<description>
+			The location of the tmp directory for cache, compile, and general temporary files.
+			This directory MUST be writable by the apache user.
+			Please ensure that this ends with a "/"
+		</description>
+	</return>
+
+	<return name="tmp_dir_cli" type="string" formtype="text">
+		<value>/tmp/coreplus-cli/</value>
+		<description>
+			The location of the tmp directory for anything on the CLI that needs temp storage.
+			Please ensure that this ends with a "/"
+		</description>
+	</return>
+
+	<define name="TIME_GMT_OFFSET" type="int" formtype="text">
+		<value>0</value>
+		<description>
+			The number of seconds this machine is off from the current GMT time.
+		</description>
+	</define>
+
+	<define name="TIME_DEFAULT_TIMEZONE" type="string" formtype="text">
+		<value>America/New_York</value>
+		<description>
+			The default timezone to display times in.
+		</description>
+	</define>
+
+	<define name="PORT_NUMBER" type="int" formtype="text">
+		<value>80</value>
+		<description>
+			Port number server is listening on for normal connections.
+		</description>
+	</define>
+
+	<define name="PORT_NUMBER_SSL" type="int" formtype="text">
+		<value>443</value>
+		<description>
+			Port number server is listening on for secured connections.
+		</description>
+	</define>
+
+	<return name="cache_type" type="enum" formtype="select">
+		<value>file</value>
+		<description>Leave this as file...</description>
+		<option>apc</option>
+		<option>file</option>
+	</return>
+
+	<define name="DB_PREFIX" type="string" formtype="text">
+		<value></value>
+		<description>
+			Set this to something non-blank if you are running this system on the same database as other software.
+		</description>
+	</define>
+	<!-- Uncomment this to change the GnuPG home directory to a more secure location. -->
+	<!--
+		<define name="GPG_HOMEDIR" type="string">
+		<value>
+		/path/to/secure/directory/gnupg
+		</value>
+		</define>
+	-->
+	<define name="DEFAULT_DIRECTORY_PERMS" type="octal" formtype="text">
+		<value>0755</value>
+		<description>
+			<![CDATA[<pre>
+				Default directory permissions to use for the system.
+				If security oriented, set as 0755.
+				If convenience is more important, set to 0777.
+			</pre>
+			]]>
+		</description>
+	</define>
+
+	<define name="DEFAULT_FILE_PERMS" type="octal" formtype="text">
+		<value>0644</value>
+		<description>
+			<![CDATA[<pre>
+				Default file permissions to use for the system.
+				If security oriented, set as 0644.
+				If convenience is more important, set to 0666.
+			</pre>
+			]]>
+		</description>
+	</define>
+
+	<define name="ALLOW_NONXHR_JSON" type="boolean" formtype="checkbox">
+		<value>false</value>
+		<description>
+			Debug variable, set this to true to allow calling *.json pages explicitly.
+			By default this is set to false, so that json requests cannot proceed without at least the
+			HTTP_X_REQUESTED_WITH header being set correctly.
+
+			This by far is not an acceptable security measure to protect these assets, more of just a
+			quick patch to keep the common passer-byer away from json data.
+		</description>
+	</define>
+
+	<define name="SECRET_ENCRYPTION_PASSPHRASE" type="string" formtype="text">
+		<value>RANDOM</value>
+		<description>
+			The encryption key used for sensitive information that must be saved in the database and retrieved as plain text.
+			Storing the passphrase with the code is required beccause the encrypted data must be visible via the application.
+
+			This does provide one level of security however, that is if the database is leaked, it would be difficult to
+			decrypt those bits of information without the correct pass phrase.
+
+			!!! IMPORTANT !!!  Once you set this and start using the site, DO NOT CHANGE IT!
+			Doing so will make the encrypted data unusable!
+		</description>
+	</define>
+</configuration>

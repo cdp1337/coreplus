@@ -13,6 +13,7 @@
  */
 
 namespace Theme;
+use Core\CLI\CLI;
 
 /**
  * Theme object.
@@ -99,7 +100,7 @@ class Theme{
 		$this->_versionDB = $dat['version'];
 		$this->_enabled = ($dat['enabled']) ? true : false;
 
-		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB'){
+		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB' && CDN_TYPE == 'local'){
 			\Core\Utilities\Logger\write_debug('Auto-installing assets for theme [' . $this->getName() . ']');
 			$this->_installAssets();
 		}
@@ -573,14 +574,16 @@ class Theme{
 	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 *
+	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
+	 *
 	 * @return false | array
 	 * @throws \InstallerException
 	 */
-	public function install(){
+	public function install($verbose = 0){
 		// @todo I need actual error checking here.
 		//if($this->isInstalled()) return false;
 
-		$changes = $this->_performInstall();
+		$changes = $this->_performInstall($verbose);
 
 		if(is_array($changes) && sizeof($changes)){
 			\SystemLogModel::LogInfoEvent('/updater/theme/install', 'Theme ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
@@ -594,14 +597,16 @@ class Theme{
 	 *
 	 * Alias of install()
 	 *
+	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
+	 *
 	 * @return false | array
 	 * @throws \InstallerException
 	 */
-	public function reinstall(){
+	public function reinstall($verbose = 0){
 		// @todo I need actual error checking here.
 		//if(!$this->isInstalled()) return false;
 
-		$changes =  $this->_performInstall();
+		$changes =  $this->_performInstall($verbose);
 
 		if(is_array($changes) && sizeof($changes)){
 			\SystemLogModel::LogInfoEvent('/updater/theme/reinstall', 'Theme ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
@@ -669,16 +674,18 @@ class Theme{
 	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 *
+	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
+	 *
 	 * @return false | array
 	 * @throws \InstallerException
 	 */
-	private function _performInstall(){
+	private function _performInstall($verbose = 0){
 		$changed = array();
 
-		$change = $this->_installAssets();
+		$change = $this->_installAssets($verbose);
 		if($change !== false) $changed = array_merge($changed, $change);
 
-		$change = $this->_parseConfigs();
+		$change = $this->_parseConfigs($verbose);
 		if($change !== false) $changed = array_merge($changed, $change);
 
 		// Make sure the version is correct in the database.
@@ -725,10 +732,12 @@ class Theme{
 	 *
 	 * Returns false if nothing changed, else will return an array of all the changes that occured.
 	 *
+	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
+	 *
 	 * @return false | array
 	 * @throws \InstallerException
 	 */
-	private function _installAssets(){
+	private function _installAssets($verbose = 0){
 		$assetbase = \Core\Filestore\get_asset_path();
 
 		$coretheme = \ConfigHandler::Get('/theme/selected');
@@ -766,8 +775,13 @@ class Theme{
 				$f = new \Core\Filestore\Backends\FileLocal($b . $filename);
 			}
 
+			if($verbose == 2){
+				CLI::PrintActionStart('Installing asset ' . $f->getBasename());
+			}
+
 			$nf = \Core\Filestore\Factory::File($newfilename);
 
+			/*
 			// The various replacement possibilities for this file.
 			// The new destination must be in the theme-specific directory, this is a
 			// bit of a hack from the usual behaviour of the filestore system.
@@ -790,10 +804,15 @@ class Theme{
 					$nf->setFilename( str_replace($k, $v, $nf->getFilename()) );
 				}
 			}
-
+*/
 			// Check if this file even needs updated. (this is primarily used for reporting reasons)
 			if($nf->exists() && $nf->identicalTo($f)){
 				//echo "Skipping file, it's identical.<br/>";
+
+				if($verbose == 2){
+					CLI::PrintActionStatus('skip');
+				}
+
 				continue;
 			}
 			// Otherwise if it exists, I want to be able to inform the user that it was replaced and not just installed.
@@ -816,10 +835,24 @@ class Theme{
 				throw new \InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
 			}
 
-			$changes[] = $action . ' ' . $nf->getFilename();
+
+			$change = $action . ' ' . $nf->getFilename();
+			$changes[] = $change;
+
+			if($verbose == 1){
+				CLI::PrintLine($change);
+			}
+			elseif($verbose == 2){
+				CLI::PrintActionStatus('ok');
+			}
 		}
 
-		if(!sizeof($changes)) return false;
+		if(!sizeof($changes)){
+			if($verbose > 0){
+				CLI::PrintLine('No changes required');
+			}
+			return false;
+		}
 
 		// Make sure the asset cache is purged!
 		\Core\Cache::Delete('asset-resolveurl');

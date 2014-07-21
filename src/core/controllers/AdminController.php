@@ -1,4 +1,6 @@
 <?php
+use Core\CLI\CLI;
+
 /**
  * Admin controller, handles all /Admin requests
  *
@@ -70,54 +72,81 @@ class AdminController extends Controller_2_1 {
 
 		// Just run through every component currently installed and reinstall it.
 		// This will just ensure that the component is up to date and correct as per the component.xml metafile.
-		$view = $this->getView();
+		$view    = $this->getView();
+		$request = $this->getPageRequest();
 
-		$changes  = array();
-		$errors   = array();
-		$allpages = [];
 
-		foreach (ThemeHandler::GetAllThemes() as $t) {
+		if($request->isPost()){
+			$view->mode = View::MODE_NOOUTPUT;
+			$view->contenttype = View::CTYPE_HTML;
+			$view->record = false;
+			$view->templatename = null;
+			$view->render();
 
-			if (!$t->isInstalled()) continue;
+			// Try to perform the reinstall.
+			$changes  = array();
+			$errors   = array();
+			$allpages = [];
 
-			if (($change = $t->reinstall()) !== false) {
+			$t = ThemeHandler::GetTheme();
+
+			CLI::PrintHeader('Reinstalling Theme ' . $t->getName());
+			if (($change = $t->reinstall(1)) !== false) {
 
 				SystemLogModel::LogInfoEvent('/updater/theme/reinstall', 'Theme ' . $t->getName() . ' reinstalled successfully', implode("\n", $change));
 
 				$changes[] = '<b>Changes to theme [' . $t->getName() . ']:</b><br/>' . "\n" . implode("<br/>\n", $change) . "<br/>\n<br/>\n";
 			}
-		}
 
-		try{
 			foreach (Core::GetComponents() as $c) {
 				/** @var $c Component_2_1 */
 
-				if(!$c->isInstalled()) continue;
-				if(!$c->isEnabled()) continue;
+				try{
+					if(!$c->isInstalled()) continue;
+					if(!$c->isEnabled()) continue;
 
+					CLI::PrintHeader('Reinstalling Component ' . $c->getName());
+					// Request the reinstallation
+					$change = $c->reinstall(1);
 
-				// Request the reinstallation
-				$change = $c->reinstall();
+					// 1.0 version components don't support verbose changes :(
+					if ($change === true) {
+						$changes[] = '<b>Changes to component [' . $c->getName() . ']:</b><br/>' . "\n(list of changes not supported with this component!)<br/>\n<br/>\n";
+					}
+					// 2.1 components support an array of changes, yay!
+					elseif ($change !== false) {
+						$changes[] = '<b>Changes to component [' . $c->getName() . ']:</b><br/>' . "\n" . implode("<br/>\n", $change) . "<br/>\n<br/>\n";
+					}
+					// I don't care about "else", nothing changed if it was false.
 
-				// 1.0 version components don't support verbose changes :(
-				if ($change === true) {
-					$changes[] = '<b>Changes to component [' . $c->getName() . ']:</b><br/>' . "\n(list of changes not supported with this component!)<br/>\n<br/>\n";
+					// Get the pages, (for the cleanup operation)
+					$allpages = array_merge($allpages, $c->getPagesDefined());
 				}
-				// 2.1 components support an array of changes, yay!
-				elseif ($change !== false) {
-					$changes[] = '<b>Changes to component [' . $c->getName() . ']:</b><br/>' . "\n" . implode("<br/>\n", $change) . "<br/>\n<br/>\n";
+				catch(DMI_Query_Exception $e){
+					$changes[] = 'Attempted database changes to component [' . $c->getName() . '], but failed!<br/>';
+					//var_dump($e); die();
+					$errors[] = array(
+						'type' => 'component',
+						'name' => $c->getName(),
+						'message' => $e->getMessage() . '<br/>' . $e->query,
+					);
 				}
-				// I don't care about "else", nothing changed if it was false.
-
-				// Get the pages, (for the cleanup operation)
-				$allpages = array_merge($allpages, $c->getPagesDefined());
-
+				catch(Exception $e){
+					$changes[] = 'Attempted changes to component [' . $c->getName() . '], but failed!<br/>';
+					//var_dump($e); die();
+					$errors[] = array(
+						'type' => 'component',
+						'name' => $c->getName(),
+						'message' => $e->getMessage(),
+					);
+				}
 			}
-
 
 			// Flush any non-existent admin page.
 			// These can be created from developers changing their page URLs after the page is already registered.
 			// Purging admin-only pages is relatively safe because these are defined in component metafiles anyway.
+			CLI::PrintHeader('Cleaning up non-existent pages');
+			$pageremovecount = 0;
 			foreach(
 				\Core\Datamodel\Dataset::Init()
 					->select('baseurl')
@@ -130,43 +159,43 @@ class AdminController extends Controller_2_1 {
 				// This page existed already, no need to do anything :)
 				if(isset($allpages[$baseurl])) continue;
 
+				++$pageremovecount;
+
 				// Otherwise, this page was deleted or for some reason doesn't exist in the component list.....
 				// BUH BAI
 				\Core\Datamodel\Dataset::Init()->delete()->table('page')->where('baseurl = ' . $baseurl)->execute();
 				\Core\Datamodel\Dataset::Init()->delete()->table('page_meta')->where('baseurl = ' . $baseurl)->execute();
+				CLI::PrintLine("Flushed non-existent admin page: " . $baseurl);
 				$changes[] = "<b>Flushed non-existent admin page:</b> " . $baseurl;
 			}
-		}
-		catch(DMI_Query_Exception $e){
-			$changes[] = 'Attempted database changes to component [' . $c->getName() . '], but failed!<br/>';
-			//var_dump($e); die();
-			$errors[] = array(
-				'type' => 'component',
-				'name' => $c->getName(),
-				'message' => $e->getMessage() . '<br/>' . $e->query,
-			);
-		}
-		catch(Exception $e){
-			$changes[] = 'Attempted changes to component [' . $c->getName() . '], but failed!<br/>';
-			//var_dump($e); die();
-			$errors[] = array(
-				'type' => 'component',
-				'name' => $c->getName(),
-				'message' => $e->getMessage(),
-			);
-		}
+			if($pageremovecount == 0){
+				CLI::PrintLine('No pages flushed');
+			}
 
-		// Flush the system cache, just in case
-		\Core\Cache::Flush();
 
-		// Increment the version counter.
-		$version = ConfigHandler::Get('/core/filestore/assetversion');
-		ConfigHandler::Set('/core/filestore/assetversion', ++$version);
+
+			if(sizeof($errors) > 0){
+				CLI::PrintHeader('Done, but with errors');
+				foreach($errors as $e){
+					CLI::PrintError('Error while processing ' . $e['type'] . ' ' . $e['name'] . ': ' . $e['message']);
+				}
+			}
+			else{
+				CLI::PrintHeader('DONE!');
+			}
+
+			var_dump($changes);
+
+			// Flush the system cache, just in case
+			\Core\Cache::Flush();
+
+			// Increment the version counter.
+			$version = ConfigHandler::Get('/core/filestore/assetversion');
+			ConfigHandler::Set('/core/filestore/assetversion', ++$version);
+		} // End if is post.
 
 		//$page->title = 'Reinstall All Components';
 		$this->setTemplate('/pages/admin/reinstallall.tpl');
-		$view->assign('changes', $changes);
-		$view->assign('errors', $errors);
 	}
 
 	/**

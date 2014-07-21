@@ -128,6 +128,13 @@ class FileLocal implements Filestore\File {
 
 	/**
 	 * Get the filename of this file resolved to a specific directory, usually ROOT_PDIR or ROOT_WDIR.
+	 *
+	 * @param bool|null|string|mixed $prefix Determine the prefix requested
+	 *                                       FALSE will return the Core-encoded string, ("public/", "asset/", etc)
+	 *                                       NULL defaults to the ROOT_PDIR
+	 *                                       '' returns the relative directory from the install base
+	 *
+	 * @return string
 	 */
 	public function getFilename($prefix = ROOT_PDIR) {
 		// Since the filename is stored fully resolved...
@@ -537,7 +544,7 @@ class FileLocal implements Filestore\File {
 
 		//var_dump($preview, $this); die(';)');
 		if ($includeHeader){
-			header('Content-Type: image/png');
+			header('Content-Type: ' . $this->getMimetype());
 			header('Content-Length: ' . $preview->getFilesize());
 			header('X-Alternate-Location: ' . $preview->getURL());
 			header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
@@ -581,7 +588,7 @@ class FileLocal implements Filestore\File {
 	public function getQuickPreviewFile($dimensions = '300x300'){
 		//var_dump('Requesting quick file preview for ' . __CLASS__);
 
-		$bits   = $this->_getReizedKeyComponents($dimensions);
+		$bits   = \Core\Filestore\get_resized_key_components($dimensions, $this);
 		$width  = $bits['width'];
 		$height = $bits['height'];
 		$mode   = $bits['mode'];
@@ -608,7 +615,9 @@ class FileLocal implements Filestore\File {
 			if($width === false) return $this;
 
 			// Yes, this must be within public because it's meant to be publicly visible.
-			$preview = Factory::File('public/tmp/' . $key);
+			//$preview = Factory::File('public/tmp/' . $key);
+			$preview = Factory::File($bits['dir'] . $bits['key']);
+			//$preview = new FileLocal($bits['dir'] . $bits['key']);
 		}
 		else {
 			// Try and get the mime icon for this file.
@@ -649,7 +658,7 @@ class FileLocal implements Filestore\File {
 		// This will get me the file, but none of the data or anything.
 		$file = $this->getQuickPreviewFile($dimensions);
 
-		$bits   = $this->_getReizedKeyComponents($dimensions);
+		$bits   = \Core\Filestore\get_resized_key_components($dimensions, $this);
 		$width  = $bits['width'];
 		$height = $bits['height'];
 		$mode   = $bits['mode'];
@@ -973,87 +982,6 @@ class FileLocal implements Filestore\File {
 		}
 	}
 
-
-	/**
-	 * Get an array of the various resize components from a given dimension set.
-	 * These include: width, height, mode, key.
-	 *
-	 * @param $dimensions
-	 *
-	 * @return array
-	 */
-	private function _getReizedKeyComponents($dimensions){
-		// The legacy support for simply a number.
-		if (is_numeric($dimensions)) {
-			$width  = $dimensions;
-			$height = $dimensions;
-			$mode = '';
-		}
-		elseif ($dimensions === null) {
-			$width  = 300;
-			$height = 300;
-			$mode = '';
-		}
-		elseif($dimensions === false){
-			$width = false;
-			$height = false;
-			$mode = '';
-		}
-		else {
-			// Allow some special modifiers.
-			if(strpos($dimensions, '^') !== false){
-				// Fit the smallest dimension instead of the largest, (useful for overflow tricks)
-				$mode = '^';
-				$dimensions = str_replace('^', '', $dimensions);
-			}
-			elseif(strpos($dimensions, '!') !== false){
-				// Absolutely resize, regardless of aspect ratio
-				$mode = '!';
-				$dimensions = str_replace('!', '', $dimensions);
-			}
-			elseif(strpos($dimensions, '>') !== false){
-				// Only increase images.
-				$mode = '>';
-				$dimensions = str_replace('>', '', $dimensions);
-			}
-			elseif(strpos($dimensions, '<') !== false){
-				// Only decrease images.
-				$mode = '<';
-				$dimensions = str_replace('<', '', $dimensions);
-			}
-			else{
-				// Default mode
-				$mode = '';
-			}
-			// New method. Split on the "x" and that should give me the width/height.
-			$vals   = explode('x', strtolower($dimensions));
-			$width  = (int)$vals[0];
-			$height = (int)$vals[1];
-		}
-
-		$ext = $this->getExtension();
-		// Ensure that an extension is used if none present, (may happen with temporary files).
-		if(!$ext){
-			$ext = \Core\Filestore\mimetype_to_extension($this->getMimetype());
-		}
-
-		// The basename is for SEO purposes, that way even resized images still contain the filename.
-		// The hash is just to ensure that no two files conflict, ie: /public/a/file1.png and /public/b/file1.png
-		//  might conflict without this hash.
-		// Finally, the width and height dimensions are there just because as well; it gives more of a human
-		//  touch to the file. :p
-		// Also, keep the original file extension, this way PNGs remain PNGs, GIFs remain GIFs, JPEGs remain JPEGs.
-		// This is critical particularly when it comes to animated GIFs.
-		$key = str_replace(' ', '-', $this->getBasename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $ext;
-
-		return array(
-			'width' => $width,
-			'height' => $height,
-			'mode' => $mode,
-			'key' => $key,
-		);
-	}
-
 	/**
 	 * Resize this image and save the output as another File object.
 	 *
@@ -1174,6 +1102,10 @@ class FileLocal implements Filestore\File {
 			//imagefill($img2, 0, 0, $trans);
 			imagecopyresampled($img2, $img, 0, 0, 0, 0, $nW, $nH, $sW, $sH);
 			imagedestroy($img);
+
+			// Make sure the directory of the destination file exists!
+			// By touching the file, Core will create all parent directories as necessary.
+			$file->putContents('');
 
 			switch ($m) {
 				case 'image/jpeg':

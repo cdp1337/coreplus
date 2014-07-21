@@ -98,7 +98,9 @@ if (!$core_settings) {
 		$newURL = 'install/';
 		//header('HTTP/1.1 302 Moved Temporarily');
 		//header("Location:" . $newURL);
-		die("Please <a href=\"{$newURL}\">install Core Plus.</a><br/><br/>(You may need to refresh this page a time or two if you just installed)");
+		// This is not just redirected automatically because many browsers remember the redirect and just insist on redirecting from / to /install!
+		// The notice about needing to refresh the page is again, because browsers may cache the install message.
+		die("Please <a href=\"{$newURL}\">install Core Plus.</a><br/><br/>(You may need to hard-refresh this page a time or two if you just installed)");
 	}
 	else{
 		die('Please install core plus through the web interface first!' . "\n");
@@ -124,6 +126,8 @@ else{
 	ini_set('html_errors', 1);
 }
 set_error_handler('Core\\ErrorManagement\\error_handler', error_reporting());
+//register_shutdown_function('HookHandler::ShutdownHook');
+register_shutdown_function('HookHandler::DispatchHook', '/core/shutdown');
 register_shutdown_function('Core\\ErrorManagement\\check_for_fatal');
 
 
@@ -426,6 +430,22 @@ if (!defined('GPG_HOMEDIR')) {
 	define('GPG_HOMEDIR', ($gnupgdir) ? $gnupgdir : ROOT_PDIR . 'gnupg');
 }
 
+if(!defined('XHPROF')){
+	define('XHPROF', 0);
+}
+
+if(XHPROF > 0 && function_exists('xhprof_enable')){
+	if(XHPROF == 100){
+		define('ENABLE_XHPROF', true);
+	}
+	else{
+		define('ENABLE_XHPROF', (XHPROF > rand(1,100)));
+	}
+}
+else{
+	define('ENABLE_XHPROF', false);
+}
+
 // Cleanup!
 unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl, $gnupgdir, $host, $sslmode, $tmpdir);
 $maindefines_time = microtime(true);
@@ -436,6 +456,10 @@ $maindefines_time = microtime(true);
 
 
 /**************************  START EXECUTION *****************************/
+if(ENABLE_XHPROF){
+	xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+}
+
 \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus bootstrapped and application starting');
 
 // Datamodel, GOGO!

@@ -36,23 +36,23 @@ require_once(ROOT_PDIR . 'core/bootstrap.php');
 
 
 // I need a valid editor.
-CLI::RequireEditor();
+\Core\CLI\CLI::RequireEditor();
 
 // And some info about the user.
 // I need a few variables first about the user...
 $packagername = '';
 $packageremail = '';
 
-CLI::LoadSettingsFile('packager');
+\Core\CLI\CLI::LoadSettingsFile('packager');
 
 if(!$packagername){
-	$packagername = CLI::PromptUser('Please provide your name you wish to use for packaging', 'text-required');
+	$packagername = \Core\CLI\CLI::PromptUser('Please provide your name you wish to use for packaging', 'text-required');
 }
 if(!$packageremail){
-	$packageremail = CLI::Promptuser('Please provide your email you wish to use for packaging.', 'text-required');
+	$packageremail = \Core\CLI\CLI::Promptuser('Please provide your email you wish to use for packaging.', 'text-required');
 }
 
-CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
+\Core\CLI\CLI::SaveSettingsFile('packager', array('packagername', 'packageremail'));
 
 
 $destdir = BASE_DIR . 'exports/';
@@ -76,7 +76,7 @@ else{
 
 // Prompt the user if there's not information already set on the necessary ones.
 if(!$repo->getDescription()){
-	$desc = CLI::PromptUser('Please enter a short description for this repo.', 'textarea');
+	$desc = \Core\CLI\CLI::PromptUser('Please enter a short description for this repo.', 'textarea');
 	$repo->setDescription($desc);
 }
 

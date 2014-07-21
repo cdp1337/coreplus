@@ -78,7 +78,7 @@
 	</target>
 
 	<target name="setup_htaccess" description="Populate and setup the htaccess file from the template and ant properties">
-		<copy tofile="${basedir}/src/.htaccess" file="${basedir}/src/htaccess.ant" overwrite="true"/>
+		<copy tofile="${basedir}/src/.htaccess" file="${basedir}/src/htaccess.example" overwrite="true"/>
 		<replace file="${basedir}/src/.htaccess">
 			<replacefilter value="${rewritebase}" token="@{rewritebase}@"/>
 			<replacefilter value="${build.time}" token="@{build.time}@"/>
@@ -86,7 +86,7 @@
 	</target>
 	
 	<target name="setup_configuration" description="Populate and setup the configuration file from the template and ant properties">
-		<copy tofile="${basedir}/src/config/configuration.xml" file="${basedir}/src/config/configuration.xml.ant" overwrite="true"/>
+		<copy tofile="${basedir}/src/config/configuration.xml" file="${basedir}/src/config/configuration.example.xml" overwrite="true"/>
 		<replace file="${basedir}/src/config/configuration.xml">
 			<replacefilter value="${build.time}" token="@{build.time}@"/>
 			<replacefilter value="${db.server}" token="@{db.server}@"/>

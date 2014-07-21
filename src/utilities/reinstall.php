@@ -23,11 +23,13 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+use Core\CLI\CLI;
+
 if(!isset($_SERVER['SHELL'])){
 	die("Please run this script from the command line.");
 }
 
-define('ROOT_PDIR', realpath(dirname(__DIR__) . '/../') . '/');
+define('ROOT_PDIR', realpath(dirname(__DIR__)) . '/');
 // I need to override some defines here...
 define('ROOT_WDIR', '/cli-installer/');
 define('ROOT_URL', ROOT_WDIR);
@@ -104,6 +106,7 @@ require_once(ROOT_PDIR . 'core/helpers/UpdaterHelper.class.php');
 \Core::LoadComponents();
 
 $allpages = [];
+$changes = [];
 
 // And perform an actual reinstall
 foreach(\Core::GetComponents() as $c){
@@ -112,14 +115,11 @@ foreach(\Core::GetComponents() as $c){
 	// Get the pages, (for the cleanup operation)
 	$allpages = array_merge($allpages, $c->getPagesDefined());
 
-	echo 'Reinstalling ' . $c->getName() . "...";
-	$change = $c->reinstall();
+	CLI::PrintHeader('Reinstalling Component ' . $c->getName());
+	$change = $c->reinstall(2);
 
-	if($change === false){
-		echo '   No changes' . "\n";
-	}
-	else{
-		echo "\n" . implode("\n", $change) . "\n";
+	if($change !== false){
+		$changes = array_merge($changes, $change);
 	}
 }
 
@@ -138,31 +138,72 @@ else{
 // And the current theme if it's different.
 $theme    = ConfigHandler::Get('/theme/selected');
 if($theme != 'default'){
-	echo 'Installing ' . $theme . ' theme...';
-	\ThemeHandler::GetTheme($theme)->install();
-	if($change === false){
-		echo '   No changes' . "\n";
-	}
-	else{
-		echo "\n" . implode("\n", $change) . "\n";
+	CLI::PrintHeader('Reinstalling Theme ' . $theme);
+	$change = \ThemeHandler::GetTheme($theme)->install(2);
+	if($change !== false){
+		$changes = array_merge($changes, $change);
 	}
 }
 
-echo 'Cleaning up non-existent pages...' . "\n";
+
+
+if(CDN_TYPE != 'local'){
+	CLI::PrintHeader('Synchronizing Public Files');
+	// Check to see if any public files need to be deployed to the CDN.
+	// This behaves the same as asset deployment, but is a utility-only function that is beyond the normal reinstallation procedure.
+	// However, seeing as this is a utility script... :)
+	$public  = new \Core\Filestore\Backends\DirectoryLocal(CDN_LOCAL_PUBLICDIR);
+	$dirname = $public->getPath();
+	$dirlen  = strlen($dirname);
+	foreach($public->ls(null, true) as $file){
+		if($file instanceof \Core\Filestore\Backends\FileLocal){
+			/** @var \Core\Filestore\Backends\FileLocal $file */
+
+			$filename   = $file->getFilename();
+			$remotename = 'public/' . substr($filename, $dirlen);
+
+			CLI::PrintActionStart('Copying public file ' . $remotename);
+
+			$deployed = \Core\Filestore\Factory::File($remotename);
+			if($deployed->identicalTo($file)){
+				CLI::PrintActionStatus('skip');
+				continue;
+			}
+
+			$file->copyTo($deployed);
+			CLI::PrintActionStatus('ok');
+			$changes[] = 'Deployed public file ' . $remotename;
+		}
+	}
+}
+
+
+
+
+
+CLI::PrintHeader('Cleaning up non-existent pages');
+$pageremovecount = 0;
 foreach(\Core\Datamodel\Dataset::Init()->select('baseurl')->table('page')->where('admin = 1')->execute() as $row){
 	$baseurl = $row['baseurl'];
 
 	// This page existed already, no need to do anything :)
 	if(isset($allpages[$baseurl])) continue;
 
+	++$pageremovecount;
+
 	// Otherwise, this page was deleted or for some reason doesn't exist in the component list.....
 	// BUH BAI
-	echo "Deleting page " . $baseurl . "\n";
+	CLI::PrintActionStart('Deleting page ' . $baseurl);
+	$changes[] = "Deleted page " . $baseurl;
 	\Core\Datamodel\Dataset::Init()->delete()->table('page')->where('baseurl = ' . $baseurl)->execute();
 	\Core\Datamodel\Dataset::Init()->delete()->table('page_meta')->where('baseurl = ' . $baseurl)->execute();
+	CLI::PrintActionStatus('ok');
+}
+if($pageremovecount == 0){
+	CLI::PrintLine('No pages flushed');
 }
 
-echo 'Synchronizing searchable models...' . "\n";
+CLI::PrintHeader('Synchronizing Searchable Models');
 foreach(\Core::GetComponents() as $c){
 	/** @var Component_2_1 $c */
 
@@ -186,12 +227,20 @@ foreach(\Core::GetComponents() as $c){
 			continue;
 		}
 
-		echo "Syncing $class\n";
+		CLI::PrintActionStart("Syncing searchable model $class");
 		$fac = new ModelFactory($class);
 		foreach($fac->get() as $m){
 			/** @var Model $m */
 			$m->set('search_index_pri', '!');
 			$m->save();
 		}
+		CLI::PrintActionStatus('ok');
+		$changes[] = "Synced searchable model " . $class;
 	}
+}
+
+
+CLI::PrintHeader('DONE!');
+foreach($changes as $line){
+	CLI::PrintLine($line);
 }
