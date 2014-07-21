@@ -1032,7 +1032,11 @@ class Model implements ArrayAccess {
 				$s[$k]['validationmessage'] = $k . ' must be a valid number.';
 			}
 
-			if(!(is_int($v) || ctype_digit($v))){
+			if(!(
+				is_int($v) ||
+				ctype_digit($v) ||
+				(is_float($v) && strpos($v, '.') === false)
+			)){
 				$valid = false;
 			}
 		}
