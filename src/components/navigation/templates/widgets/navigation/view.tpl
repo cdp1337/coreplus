@@ -1,4 +1,3 @@
-<!-- Me needs JQuery... -->
 {script name="jquery" location="head"}{/script}
 
 <ul class="navigation-menu">
