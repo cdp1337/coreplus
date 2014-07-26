@@ -15,6 +15,7 @@
 		{script library="jquery"}{/script}
 		{script src="js/core.context-controls.js"}{/script}
 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>{$seotitle}</title>
 	</head>
 

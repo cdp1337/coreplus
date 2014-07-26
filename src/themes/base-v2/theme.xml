@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.0" name="Base V2">
 	<assets>
 		<file filename="assets/css/codemirror.css" md5="3ae79db8923119601aa32d46e9074a29"/>
