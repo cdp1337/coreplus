@@ -646,8 +646,8 @@ class View {
 				$foot = $this->getFootContent();
 
 				if(ENABLE_XHPROF){
-					require_once('xhprof_lib/utils/xhprof_lib.php');
-					require_once('xhprof_lib/utils/xhprof_runs.php');
+					require_once('xhprof_lib/utils/xhprof_lib.php'); #SKIPCOMPILER
+					require_once('xhprof_lib/utils/xhprof_runs.php'); #SKIPCOMPILER
 					$xhprof_data = xhprof_disable();
 					$namespace = trim(str_replace(['.', '/'], '-', HOST . REL_REQUEST_PATH), '-');
 					$xhprof_runs = new XHProfRuns_Default();
