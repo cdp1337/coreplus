@@ -669,6 +669,7 @@ class PageRequest {
 			$view->templatename   = '/pages/error/error500.tpl';
 			$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
 			$view->assignVariable('exception', $e);
+			\Core\ErrorManagement\exception_handler($e);
 
 			$view->fetch();
 		}
