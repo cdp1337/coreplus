@@ -56,7 +56,9 @@ class UserAgent {
 	/**
 	 * @var string Location of the browscap file.
 	 */
-	private static $_ini_url    =   'http://browscap.org/stream?q=Full_PHP_BrowsCapINI';
+	private static $_ini_url    =   'http://repo.corepl.us/full_php_browscap.ini.gz';
+	// Argh, when developers are little bitches and place horribly low rate limits on services :/
+	//private static $_ini_url    =   'http://browscap.org/stream?q=Full_PHP_BrowsCapINI';
 
 	/**
 	 * Options for regex patterns.
