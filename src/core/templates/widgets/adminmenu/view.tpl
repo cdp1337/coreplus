@@ -2,7 +2,7 @@
 
 	{css src="css/admin/adminbar.css"}{/css}
 
-	<div id="admin-bar" class="screen">
+	<div id="admin-bar" class="screen clearfix">
 		<ul>
 
 
