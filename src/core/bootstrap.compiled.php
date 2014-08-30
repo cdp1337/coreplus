@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 15 Jul 2014 17:21:34 -0400
+ * @compiled Wed, 30 Jul 2014 11:36:44 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -228,6 +228,31 @@ define('FULL_DEBUG', false);
 define('NL', "\n");
 define('TAB', "\t");
 define('DS', DIRECTORY_SEPARATOR);
+##
+# Gimme some colors!
+# These are used to prettify the terminal.
+# Color 1 is always standard and
+# Color 2 is always the bold version.
+if(EXEC_MODE == 'CLI'){
+define('COLOR_LINE', "\033[0;30m");
+define('COLOR_HEADER', "\033[1;36m");
+define('COLOR_SUCCESS', "\033[1;32m");
+define('COLOR_WARNING', "\033[1;33m");
+define('COLOR_ERROR', "\033[1;31m");
+define('COLOR_DEBUG', "\033[0;34m");
+define('COLOR_RESET', "\033[0m");
+define('NBSP', ' ');
+}
+else{
+define('COLOR_LINE', "<span style='color:grey;'>");
+define('COLOR_HEADER', "<span style='color:cyan; font-weight:bold;'>");
+define('COLOR_SUCCESS', "<span style='color:green; font-weight:bold;'>");
+define('COLOR_WARNING', "<span style='color:yellow; font-weight:bold;'>");
+define('COLOR_ERROR', "<span style='color:red; font-weight:bold;'>");
+define('COLOR_DEBUG', "<span style='color:lightskyblue;'>");
+define('COLOR_RESET', "</span>");
+define('NBSP', '&nbsp;');
+}
 unset($em, $rpdr, $rwdr, $rip);
 
 
@@ -2113,7 +2138,11 @@ elseif($s[$k]['type'] == Model::ATT_TYPE_INT){
 if(!isset($s[$k]['validationmessage'])){
 $s[$k]['validationmessage'] = $k . ' must be a valid number.';
 }
-if(!(is_int($v) || ctype_digit($v))){
+if(!(
+is_int($v) ||
+ctype_digit($v) ||
+(is_float($v) && strpos($v, '.') === false)
+)){
 $valid = false;
 }
 }
@@ -7467,7 +7496,7 @@ HookHandler::AttachToHook($event, $call, $type);
 foreach ($this->_xmlloader->getElements('/forms/formelement') as $node) {
 Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
 }
-if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB'){
+if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB' && CDN_TYPE == 'local'){
 Core\Utilities\Logger\write_debug('Auto-installing assets for component [' . $this->getName() . ']');
 $this->_installAssets();
 }
@@ -8134,11 +8163,11 @@ require_once(ROOT_PDIR . 'core/libs/core/InstallerException.php'); #SKIPCOMPILER
 $changed = array();
 $change = $this->_parseDBSchema($verbose);
 if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parseConfigs($verbose);
+$change = $this->_parseConfigs(true, $verbose);
 if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parseUserConfigs($verbose);
+$change = $this->_parseUserConfigs(true, $verbose);
 if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parsePages($verbose);
+$change = $this->_parsePages(true, $verbose);
 if ($change !== false) $changed = array_merge($changed, $change);
 $change = $this->_parseWidgets($verbose);
 if ($change !== false) $changed = array_merge($changed, $change);
@@ -8147,14 +8176,14 @@ if ($change !== false) $changed = array_merge($changed, $change);
 if($this->getKeyName() == 'core'){
 $f = \Core\Filestore\Factory::File('private/.htaccess');
 if(!$f->exists() && $f->isWritable()){
-$src = \Core\Filestore\Factory::File('htaccess.private');
+$src = \Core\Filestore\Factory::File('core/htaccess.private');
 if($src->copyTo($f)){
 $changed[] = 'Installed private htaccess file into ' . $f->getFilename();
 }
 }
 $f = \Core\Filestore\Factory::File('public/.htaccess');
 if(!$f->exists() && $f->isWritable()){
-$src = \Core\Filestore\Factory::File('htaccess.public');
+$src = \Core\Filestore\Factory::File('core/htaccess.public');
 if($src->copyTo($f)){
 $changed[] = 'Installed public htaccess file into ' . $f->getFilename();
 }
@@ -8162,7 +8191,7 @@ $changed[] = 'Installed public htaccess file into ' . $f->getFilename();
 $f = \Core\Filestore\Factory::File('asset/.htaccess');
 $f->setFilename(dirname(dirname($f->getFilename())) . '/.htaccess');
 if(!$f->exists() && $f->isWritable()){
-$src = \Core\Filestore\Factory::File('htaccess.assets');
+$src = \Core\Filestore\Factory::File('core/htaccess.assets');
 if($src->copyTo($f)){
 $changed[] = 'Installed assets htaccess file into ' . $f->getFilename();
 }
@@ -8276,7 +8305,7 @@ $changes[] = 'Updated user config [' . $model->get('key') . '] as a [' . $model-
 }
 return (sizeof($changes)) ? $changes : false;
 } // private function _parseUserConfigs
-private function _parsePages($install = true) {
+private function _parsePages($install = true, $verbose = 0) {
 $changes = array();
 $action = $install ? 'Installing' : 'Uninstalling';
 Core\Utilities\Logger\write_debug($action . ' pages for ' . $this->getName());
@@ -8349,7 +8378,7 @@ $changes[] = 'Installed  widget ' . $m->get('baseurl') . ' into the admin dashbo
 }
 return ($changes > 0) ? $changes : false;
 }
-private function _parseDBSchema($install = true) {
+private function _parseDBSchema($verbose = 0) {
 $node   = $this->_xmlloader->getElement('dbschema');
 $prefix = $node->getAttribute('prefix');
 $changes = array();
@@ -8359,6 +8388,9 @@ foreach ($classes as $m => $file) {
 if(!class_exists($m)) require_once($file);
 $schema = ModelFactory::GetSchema($m);
 $tablename = $m::GetTableName();
+if($verbose == 2){
+CLI::PrintActionStart('Processing database table ' . $tablename);
+}
 try{
 if (\Core\db()->tableExists($tablename)) {
 $old_schema = \Core\db()->describeTable($tablename);
@@ -8369,11 +8401,16 @@ $changes[] = 'Modified table ' . $tablename;
 foreach($tablediffs as $d){
 $changes[] = '[' . $d['type'] . '] ' . $d['title'];
 }
+if($verbose == 2) CLI::PrintActionStatus('ok');
+}
+else{
+if($verbose == 2) CLI::PrintActionStatus('skip');
 }
 }
 else {
 \Core\db()->createTable($tablename, $schema);
 $changes[] = 'Created table ' . $tablename;
+if($verbose == 2) CLI::PrintActionStatus('ok');
 }
 }
 catch(DMI_Query_Exception $e){
@@ -8450,21 +8487,20 @@ $b = $this->getBaseDir();
 $newfilename = 'assets/' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
 if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
 $f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/custom/' . $newfilename);
+$srcname = 'custom override';
+}
+elseif(file_exists(ROOT_PDIR . 'themes/' . $theme . '/' . $newfilename)){
+$f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/' . $theme . '/' . $newfilename);
+$srcname = 'enabled theme';
 }
 else{
 $f = new \Core\Filestore\Backends\FileLocal($b . $node->getAttribute('filename'));
+$srcname = 'original';
 }
 if($verbose == 2){
-CLI::PrintActionStart('Installing asset ' . $f->getBasename());
-CLI::PrintActionStatus(true);
-die(':)');
+CLI::PrintActionStart('Installing asset ' . $f->getBasename() . ' from ' . $srcname);
 }
 $nf = \Core\Filestore\Factory::File($newfilename);
-if ($theme === null) {
-}
-elseif ($theme != 'default' && strpos($nf->getFilename(), $assetbase . $theme) !== false) {
-$nf->setFilename(str_replace($assetbase . $theme, $assetbase . 'default', $nf->getFilename()));
-}
 $newfileexists    = $nf->exists();
 $newfileidentical = $nf->identicalTo($f);
 if(
@@ -8476,13 +8512,19 @@ $f->getMTime() != $nf->getMTime()
 ){
 touch($nf->getFilename(), $f->getMTime());
 $change = 'Modified timestamp on ' . $nf->getFilename();
-if($verbose){
-echo $change . "\n";
-}
 $changes[] = $change;
+if($verbose == 1){
+CLI::PrintLine($change);
+}
+elseif($verbose == 2){
+CLI::PrintActionStatus('ok');
+}
 continue;
 }
 elseif($newfileexists && $newfileidentical){
+if($verbose == 2){
+CLI::PrintActionStatus('skip');
+}
 continue;
 }
 elseif ($newfileexists) {
@@ -8498,12 +8540,20 @@ catch (Exception $e) {
 throw new InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
 }
 $change = $action . ' ' . $nf->getFilename();
-if($verbose){
-echo $change . "\n";
-}
 $changes[] = $change;
+if($verbose == 1){
+CLI::PrintLine($change);
 }
-if (!sizeof($changes)) return false;
+elseif($verbose == 2){
+CLI::PrintActionStatus('ok');
+}
+}
+if (!sizeof($changes)){
+if($verbose > 0){
+CLI::PrintLine('No changes required');
+}
+return false;
+}
 \Core\Cache::Delete('core-components');
 return $changes;
 }
@@ -8555,6 +8605,18 @@ return DMI::GetSystemDMI()->connection();
 function FTP(){
 static $ftp = null;
 if($ftp === null){
+if(!defined('FTP_USERNAME')){
+$ftp = false;
+return false;
+}
+if(!defined('FTP_PASSWORD')){
+$ftp = false;
+return false;
+}
+if(!defined('FTP_PATH')){
+$ftp = false;
+return false;
+}
 $ftp = new FTPConnection();
 $ftp->host = '127.0.0.1';
 $ftp->username = FTP_USERNAME;
@@ -9629,26 +9691,66 @@ $ftp->username = CDN_FTP_USERNAME;
 $ftp->password = CDN_FTP_PASSWORD;
 $ftp->root = CDN_FTP_PATH;
 $ftp->url = CDN_FTP_URL;
-try{
-$ftp->connect();
-}
-catch(\Exception $e){
-\Core\ErrorManagement\exception_handler($e);
-$ftp = false;
-return false;
-}
-}
-if($ftp && $ftp instanceof FTPConnection){
-try{
-$ftp->reset();
-}
-catch(\Exception $e){
-\Core\ErrorManagement\exception_handler($e);
-$ftp = false;
-return false;
-}
 }
 return $ftp;
+}
+function get_resized_key_components($dimensions, $file){
+if (is_numeric($dimensions)) {
+$width  = $dimensions;
+$height = $dimensions;
+$mode = '';
+}
+elseif ($dimensions === null) {
+$width  = 300;
+$height = 300;
+$mode = '';
+}
+elseif($dimensions === false){
+$width = false;
+$height = false;
+$mode = '';
+}
+else {
+if(strpos($dimensions, '^') !== false){
+$mode = '^';
+$dimensions = str_replace('^', '', $dimensions);
+}
+elseif(strpos($dimensions, '!') !== false){
+$mode = '!';
+$dimensions = str_replace('!', '', $dimensions);
+}
+elseif(strpos($dimensions, '>') !== false){
+$mode = '>';
+$dimensions = str_replace('>', '', $dimensions);
+}
+elseif(strpos($dimensions, '<') !== false){
+$mode = '<';
+$dimensions = str_replace('<', '', $dimensions);
+}
+else{
+$mode = '';
+}
+$vals   = explode('x', strtolower($dimensions));
+$width  = (int)$vals[0];
+$height = (int)$vals[1];
+}
+$ext = $file->getExtension();
+if(!$ext){
+$ext = mimetype_to_extension($file->getMimetype());
+}
+$key = str_replace(' ', '-', $file->getBasename(true)) . '-' . $file->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $ext;
+$dir = dirname($file->getFilename(false)) . '/';
+if(substr($dir, 0, 7) == 'public/'){
+$dir = 'public/tmp/' . substr($dir, 7);
+}
+return array(
+'width'  => $width,
+'height' => $height,
+'mode'   => $mode,
+'key'    => $key,
+'ext'    => $ext,
+'dir'    => $dir,
+);
 }
 } // ENDING NAMESPACE Core\Filestore
 
@@ -9983,6 +10085,9 @@ $this->_filenamecache[$prefix] = 'private/' . substr($this->_filename, strlen(Fi
 elseif ($this->_type == 'tmp'){
 $this->_filenamecache[$prefix] = 'tmp/' . substr($this->_filename, strlen(Filestore\get_tmp_path()));
 }
+elseif(strpos(ROOT_PDIR, $this->_filename) === 0){
+$this->_filenamecache[$prefix] = substr($this->_filename, strlen(ROOT_PDIR));
+}
 else{
 $this->_filenamecache[$prefix] = $this->_filename;
 }
@@ -10202,7 +10307,7 @@ return ($this->isImage());
 public function displayPreview($dimensions = "300x300", $includeHeader = true) {
 $preview = $this->getPreviewFile($dimensions);
 if ($includeHeader){
-header('Content-Type: image/png');
+header('Content-Type: ' . $this->getMimetype());
 header('Content-Length: ' . $preview->getFilesize());
 header('X-Alternate-Location: ' . $preview->getURL());
 header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
@@ -10222,7 +10327,7 @@ $file = Factory::File('assets/images/mimetypes/unknown.png');
 return $file->getPreviewURL($dimensions);
 }
 public function getQuickPreviewFile($dimensions = '300x300'){
-$bits   = $this->_getReizedKeyComponents($dimensions);
+$bits   = \Core\Filestore\get_resized_key_components($dimensions, $this);
 $width  = $bits['width'];
 $height = $bits['height'];
 $mode   = $bits['mode'];
@@ -10238,7 +10343,7 @@ $preview = $file->getPreviewFile($dimensions);
 }
 elseif ($this->isPreviewable()) {
 if($width === false) return $this;
-$preview = Factory::File('public/tmp/' . $key);
+$preview = Factory::File($bits['dir'] . $bits['key']);
 }
 else {
 $filemime = str_replace('/', '-', $this->getMimetype());
@@ -10263,7 +10368,7 @@ $file = Factory::File('assets/images/mimetypes/unknown.png');
 return $file;
 }
 $file = $this->getQuickPreviewFile($dimensions);
-$bits   = $this->_getReizedKeyComponents($dimensions);
+$bits   = \Core\Filestore\get_resized_key_components($dimensions, $this);
 $width  = $bits['width'];
 $height = $bits['height'];
 $mode   = $bits['mode'];
@@ -10431,58 +10536,6 @@ unlink($tmpfile);
 return true;
 }
 }
-private function _getReizedKeyComponents($dimensions){
-if (is_numeric($dimensions)) {
-$width  = $dimensions;
-$height = $dimensions;
-$mode = '';
-}
-elseif ($dimensions === null) {
-$width  = 300;
-$height = 300;
-$mode = '';
-}
-elseif($dimensions === false){
-$width = false;
-$height = false;
-$mode = '';
-}
-else {
-if(strpos($dimensions, '^') !== false){
-$mode = '^';
-$dimensions = str_replace('^', '', $dimensions);
-}
-elseif(strpos($dimensions, '!') !== false){
-$mode = '!';
-$dimensions = str_replace('!', '', $dimensions);
-}
-elseif(strpos($dimensions, '>') !== false){
-$mode = '>';
-$dimensions = str_replace('>', '', $dimensions);
-}
-elseif(strpos($dimensions, '<') !== false){
-$mode = '<';
-$dimensions = str_replace('<', '', $dimensions);
-}
-else{
-$mode = '';
-}
-$vals   = explode('x', strtolower($dimensions));
-$width  = (int)$vals[0];
-$height = (int)$vals[1];
-}
-$ext = $this->getExtension();
-if(!$ext){
-$ext = \Core\Filestore\mimetype_to_extension($this->getMimetype());
-}
-$key = str_replace(' ', '-', $this->getBasename(true)) . '-' . $this->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $ext;
-return array(
-'width' => $width,
-'height' => $height,
-'mode' => $mode,
-'key' => $key,
-);
-}
 private function _resizeTo(Filestore\File $file, $width, $height, $mode){
 if(!$this->isImage()){
 return;
@@ -10565,6 +10618,7 @@ imagesavealpha($img2, true);
 imagealphablending($img, true);
 imagecopyresampled($img2, $img, 0, 0, 0, 0, $nW, $nH, $sW, $sH);
 imagedestroy($img);
+$file->putContents('');
 switch ($m) {
 case 'image/jpeg':
 imagejpeg($img2, $file->getFilename(), 60);
@@ -10589,7 +10643,7 @@ namespace  {
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Filestore\FTP {
 class FTPConnection {
-public $conn;
+private $conn;
 public $username;
 public $password;
 public $host;
@@ -10599,7 +10653,15 @@ public $isLocal = false;
 protected $metaFiles = [];
 private static $_OpenConnections = [];
 private $lastSave = 0;
+private $connected = false;
+public function getConn(){
+$this->connect();
+return $this->conn;
+}
 public function connect(){
+if($this->connected){
+return;
+}
 if(!$this->host){
 throw new \Exception('Please set the host before connecting to an FTP server.');
 }
@@ -10626,6 +10688,8 @@ $this->reset();
 if($this->host == '127.0.0.1'){
 $this->isLocal = true;
 }
+$this->connected = true;
+$this->lastSave = \Core\Date\DateTime::NowGMT();
 self::$_OpenConnections[] = $this;
 if(sizeof(self::$_OpenConnections) == 1){
 \HookHandler::AttachToHook('/core/shutdown', '\\Core\\Filestore\\FTP\\FTPConnection::ShutdownHook');
@@ -10641,14 +10705,21 @@ $dir   = dirname($filename) . '/';
 $file  = basename($filename);
 $obj   = $this->getMetaFileObject($dir);
 $metas = $obj->getMetas($file);
-return $metas['hash'];
+return isset($metas['hash']) ? $metas['hash'] : '';
 }
 public function getFileModified($filename){
 $dir   = dirname($filename) . '/';
 $file  = basename($filename);
 $obj   = $this->getMetaFileObject($dir);
 $metas = $obj->getMetas($file);
-return $metas['modified'];
+return isset($metas['modified']) ? $metas['modified'] : '';
+}
+public function getFileSize($filename){
+$dir   = dirname($filename) . '/';
+$file  = basename($filename);
+$obj   = $this->getMetaFileObject($dir);
+$metas = $obj->getMetas($file);
+return isset($metas['size']) ? $metas['size'] : '';
 }
 public function setFileHash($filename, $hash){
 $dir = dirname($filename) . '/';
@@ -10664,6 +10735,13 @@ $obj = $this->getMetaFileObject($dir);
 $obj->set($file, 'modified', $timestamp);
 $this->_syncMetas();
 }
+public function setFileSize($filename, $size){
+$dir = dirname($filename) . '/';
+$file = basename($filename);
+$obj = $this->getMetaFileObject($dir);
+$obj->set($file, 'size', $size);
+$this->_syncMetas();
+}
 public function getMetaFileObject($directory){
 if(!isset($this->metaFiles[$directory])){
 $this->metaFiles[$directory] = new FTPMetaFile($directory, $this);
@@ -10671,7 +10749,7 @@ $this->metaFiles[$directory] = new FTPMetaFile($directory, $this);
 return $this->metaFiles[$directory];
 }
 private function _syncMetas(){
-if($this->lastSave + 10 >= \Core\Date\DateTime::NowGMT()){
+if($this->lastSave + 25 >= \Core\Date\DateTime::NowGMT()){
 return;
 }
 $this->lastSave = \Core\Date\DateTime::NowGMT();
@@ -10707,32 +10785,31 @@ $this->_dir = $directory;
 $this->_ftp = $ftp;
 }
 public function getMetas($file){
+$allkeys = ['filename', 'hash', 'modified', 'size'];
 if($this->_contents === null){
 $this->_contents = [];
 $remotefile = $this->_dir . '.ftpmetas';
 $f = md5($remotefile);
 $this->_local = Factory::File('tmp/remotefile-cache/' . $f);
-if(ftp_size($this->_ftp->conn, $remotefile) != -1){
 if(
 (!$this->_local->exists()) ||
 ($this->_local->exists() && $this->_local->getMTime() + 1800 < \Core\Date\DateTime::NowGMT())
 ){
-ftp_get($this->_ftp->conn, $this->_local->getFilename(), $remotefile, FTP_BINARY);
+if(ftp_size($this->_ftp->getConn(), $remotefile) != -1){
+$this->_local->putContents('');
+ftp_get($this->_ftp->getConn(), $this->_local->getFilename(), $remotefile, FTP_BINARY);
 }
 }
 if(!$this->_local->exists()){
-return [
-'filename' => $file,
-'hash' => '',
-'modified' => '',
-];
+return array_merge($allkeys, ['filename' => $file]);
 }
 $fh = fopen($this->_local->getFilename(), 'r');
 if(!$fh){
 throw new \Exception('Unable to open ' . $this->_local->getFilename() . ' for reading.');
 }
-$line = 0;
-$map = [];
+$line    = 0;
+$map     = [];
+$headers = [];
 do{
 $data = fgetcsv($fh, 2048);
 if($data === null) break;
@@ -10740,33 +10817,31 @@ if($data === false) break;
 $line++;
 if($line == 1){
 $map = $data;
+foreach($data as $k => $v){
+$headers[$v] = $k;
+}
+foreach($allkeys as $key){
+if(!isset($headers[$key])){
+$map[] = $key;
+$headers[$key] = -1;
+}
+}
 }
 else{
 $assoc = [];
 foreach($map as $k => $v){
-$assoc[$v] = $data[$k];
+$assoc[$v] = isset($data[$k]) ? $data[$k] : '';
 }
 if(!isset($assoc['filename'])){
 fclose($fh);
-return [
-'filename' => $file,
-'hash' => '',
-'modified' => '',
-];
+return array_merge($allkeys, ['filename' => $file]);
 }
 $this->_contents[ $assoc['filename'] ] = $assoc;
 }
 }
 while(true);
 }
-return
-isset($this->_contents[$file]) ?
-$this->_contents[$file] :
-[
-'filename' => $file,
-'hash' => '',
-'modified' => '',
-];
+return isset($this->_contents[$file]) ? $this->_contents[$file] : array_merge($allkeys, ['filename' => $file]);
 }
 public function set($file, $key, $value, $commit = false){
 $this->getMetas($file);
@@ -10775,6 +10850,7 @@ $this->_contents[$file] = [
 'filename' => $file,
 'hash' => '',
 'modified' => '',
+'size' => '',
 ];
 }
 $this->_contents[$file][$key] = $value;
@@ -10796,12 +10872,12 @@ $fh = fopen($this->_local->getFilename(), 'w');
 if(!$fh){
 throw new \Exception('Unable to open ' . $this->_local->getFilename() . ' for writing.');
 }
-fputcsv($fh, ['filename', 'hash', 'modified']);
+fputcsv($fh, ['filename', 'hash', 'modified', 'size']);
 foreach($this->_contents as $c){
 fputcsv($fh, array_values($c));
 }
 fclose($fh);
-ftp_put($this->_ftp->conn, $remotefile, $this->_local->getFilename(), FTP_BINARY);
+ftp_put($this->_ftp->getConn(), $remotefile, $this->_local->getFilename(), FTP_BINARY);
 $this->_changed = false;
 }
 }
@@ -10832,13 +10908,20 @@ $this->setFilename($filename);
 }
 }
 public function getFilesize($formatted = false) {
-$f = ftp_size($this->_ftp->conn, $this->_filename);
+$filename = $this->getFilename();
+if(($f = $this->_ftp->getFileSize($filename)) == ''){
+$f = ftp_size($this->_ftp->getConn(), $filename);
+$this->_ftp->setFileSize($filename, $f);
+}
 if($f == -1){
 return 0;
 }
 return ($formatted) ? Filestore\format_size($f, 2) : $f;
 }
 public function getMimetype() {
+if(!$this->exists()){
+return '';
+}
 return $this->_getTmpLocal()->getMimetype();
 }
 public function getTitle(){
@@ -10858,12 +10941,27 @@ public function getExtension() {
 return \Core::GetExtensionFromString($this->getBasename());
 }
 public function getURL() {
+if($this->_ftp->isLocal){
 $file = $this->_getTmpLocal();
 return $file->getURL();
 }
+else{
+return (SSL ? 'https' : 'http') . '://' . $this->_ftp->url . $this->_filename;
+}
+}
 public function getPreviewURL($dimensions = "300x300") {
-$file = $this->_getTmpLocal()->getPreviewFile($dimensions);
+if(!$this->exists()){
+$file = Filestore\Factory::File('assets/images/mimetypes/notfound.png');
+if(!$file->exists()){
+trigger_error('The 404 image could not be located.', E_USER_WARNING);
+return null;
+}
+return $file->getPreviewURL($dimensions);
+}
+else{
+$file = $this->getPreviewFile($dimensions);
 return $file->getURL();
+}
 }
 public function getFilename($prefix = \ROOT_PDIR) {
 if($this->_ftp->isLocal){
@@ -10871,7 +10969,26 @@ return $this->_getTmpLocal()->getFilename($prefix);
 }
 else{
 $full = $this->_prefix . $this->_filename;
+if ($prefix === false) {
+if ($this->_type == 'asset'){
+return 'asset/' . substr($full, strlen(Filestore\get_asset_path()));
+}
+elseif ($this->_type == 'public'){
+return 'public/' . substr($full, strlen(Filestore\get_public_path()));
+}
+elseif ($this->_type == 'private'){
+return 'private/' . substr($full, strlen(Filestore\get_private_path()));
+}
+elseif ($this->_type == 'tmp'){
+return 'tmp/' . substr($full, strlen(Filestore\get_tmp_path()));
+}
+else{
+return $this->_filename;
+}
+}
+else{
 return $full;
+}
 }
 }
 public function getBasename($withoutext = false) {
@@ -10897,7 +11014,11 @@ return null;
 if($this->_ftp->isLocal){
 return md5_file(ROOT_PDIR . $this->_filename);
 }
-return $this->_ftp->getFileHash($this->getFilename());
+if(($hash = $this->_ftp->getFileHash($this->getFilename())) == ''){
+$this->_getTmpLocal();
+$hash = $this->_ftp->getFileHash($this->getFilename());
+}
+return $hash;
 }
 public function getFilenameHash() {
 $full = $this->getFilename();
@@ -10927,10 +11048,10 @@ $filename = $full;
 return 'base64:' . base64_encode($filename);
 }
 public function delete() {
-return ftp_delete($this->_ftp->conn, $this->_filename);
+return ftp_delete($this->_ftp->getConn(), $this->_filename);
 }
 public function rename($newname) {
-$cwd = ftp_pwd($this->_ftp->conn);
+$cwd = ftp_pwd($this->_ftp->getConn());
 if(strpos($newname, ROOT_PDIR) === 0){
 $newname = substr($newname, strlen(ROOT_PDIR));
 }
@@ -10940,7 +11061,7 @@ $newname = substr($newname, strlen($cwd));
 else{
 $newname = dirname($this->_filename) . '/' . $newname;
 }
-$status = ftp_rename($this->_ftp->conn, $this->_filename, $newname);
+$status = ftp_rename($this->_ftp->getConn(), $this->_filename, $newname);
 if($status){
 $this->_filename = $newname;
 $this->_tmplocal = null;
@@ -10959,16 +11080,57 @@ public function isPreviewable() {
 return ($this->isImage());
 }
 public function displayPreview($dimensions = "300x300", $includeHeader = true) {
-return $this->_getTmpLocal()->displayPreview($dimensions, $includeHeader);
+if($this->_ftp->isLocal){
+$this->_getTmpLocal()->displayPreview($dimensions, $includeHeader);
+}
+else{
+$bits         = \Core\Filestore\get_resized_key_components($dimensions, $this);
+$resized      = Filestore\Factory::File($bits['dir'] . $bits['key']);
+$localresized = null;
+$view         = \Core\view();
+if(!$resized->exists()){
+$local = $this->_getTmpLocal();
+$localresized = $local->getPreviewFile($dimensions);
+$localresized->copyTo($resized);
+}
+if ($includeHeader){
+$view->contenttype = $this->getMimetype();
+$view->updated = $this->getMTime();
+$view->addHeader('Content-Length', $resized->getFilesize());
+$view->addHeader('X-Alternate-Location', $resized->getURL());
+$view->mode = \View::MODE_NOOUTPUT;
+$view->render();
+}
+echo $localresized ? $localresized->getContents() : $resized->getContents();
+}
 }
 public function getMimetypeIconURL($dimensions = '32x32') {
 return $this->_getTmpLocal()->getMimetypeIconURL($dimensions);
 }
 public function getQuickPreviewFile($dimensions = '300x300') {
+if($this->_ftp->isLocal){
 return $this->_getTmpLocal()->getQuickPreviewFile($dimensions);
 }
+else{
+$bits         = \Core\Filestore\get_resized_key_components($dimensions, $this);
+$resized      = Filestore\Factory::File($bits['dir'] . $bits['key']);
+return $resized;
+}
+}
 public function getPreviewFile($dimensions = '300x300') {
+if($this->_ftp->isLocal){
 return $this->_getTmpLocal()->getPreviewFile($dimensions);
+}
+else{
+$bits         = \Core\Filestore\get_resized_key_components($dimensions, $this);
+$resized      = Filestore\Factory::File($bits['dir'] . $bits['key']);
+if(!$resized->exists()){
+$local = $this->_getTmpLocal();
+$localresized = $local->getPreviewFile($dimensions);
+$localresized->copyTo($resized);
+}
+return $resized;
+}
 }
 public function inDirectory($path) {
 return (strpos($this->_prefix . $this->_filename, $path) !== false);
@@ -11008,16 +11170,19 @@ $this->_filename = $f;
 $localfilename = $src->getLocalFilename();
 $localhash     = $src->getHash();
 $localmodified = $src->getMTime();
+$localsize     = $src->getFilesize();
 $mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
 $this->_mkdir(dirname($this->_filename), null, true);
-if (!ftp_put($this->_ftp->conn, $this->_filename, $localfilename, FTP_BINARY)) {
+if (!ftp_put($this->_ftp->getConn(), $this->_filename, $localfilename, FTP_BINARY)) {
 throw new \Exception(error_get_last()['message']);
 }
-if (!ftp_chmod($this->_ftp->conn, $mode, $this->_filename)){
+if (!ftp_chmod($this->_ftp->getConn(), $mode, $this->_filename)){
 throw new \Exception(error_get_last()['message']);
 }
-$this->_ftp->setFileHash($this->getFilename(), $localhash, false);
-$this->_ftp->setFileModified($this->getFilename(), $localmodified, true);
+$filename = $this->getFilename();
+$this->_ftp->setFileHash($filename, $localhash);
+$this->_ftp->setFileModified($filename, $localmodified);
+$this->_ftp->setFileSize($filename, $localsize);
 return true;
 }
 public function getContents() {
@@ -11028,11 +11193,11 @@ public function putContents($data) {
 $mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
 $tmpfile = Filestore\get_tmp_path() . 'ftpupload-' . \Core::RandomHex(4);
 file_put_contents($tmpfile, $data);
-if (!ftp_put($this->_ftp->conn, $this->_filename, $tmpfile, FTP_BINARY)) {
+if (!ftp_put($this->_ftp->getConn(), $this->_filename, $tmpfile, FTP_BINARY)) {
 unlink($tmpfile);
 return false;
 }
-if (!ftp_chmod($this->_ftp->conn, $mode, $this->_filename)) return false;
+if (!ftp_chmod($this->_ftp->getConn(), $mode, $this->_filename)) return false;
 unlink($tmpfile);
 $this->_tmplocal = null;
 return true;
@@ -11041,27 +11206,31 @@ public function getContentsObject() {
 return $this->_getTmpLocal()->getContentsObject();
 }
 public function exists() {
-$f = ftp_size($this->_ftp->conn, $this->_filename);
+$filename = $this->getFilename();
+if(($f = $this->_ftp->getFileSize($filename)) == ''){
+$f = ftp_size($this->_ftp->getConn(), $filename);
+$this->_ftp->setFileSize($filename, $f);
+}
 return ($f != -1);
 }
 public function isReadable() {
 return $this->exists();
 }
 public function isWritable() {
-return $this->exists();
+return ($this->_ftp->username != '');
 }
 public function isLocal(){
 return false;
 }
 public function getMTime() {
 if (!$this->exists()) return false;
-return ftp_mdtm($this->_ftp->conn, $this->_filename);
+return ftp_mdtm($this->_ftp->getConn(), $this->_filename);
 }
 public function setFilename($filename) {
 if($this->_filename){
 Filestore\Factory::RemoveFromCache($this);
 }
-$cwd = ftp_pwd($this->_ftp->conn);
+$cwd = $this->_ftp->root;
 if(strpos($filename, ROOT_PDIR) === 0){
 $filename = substr($filename, strlen(ROOT_PDIR));
 $prefix = ROOT_PDIR;
@@ -11112,16 +11281,16 @@ if ($mode === null) {
 $mode = (defined('DEFAULT_DIRECTORY_PERMS') ? DEFAULT_DIRECTORY_PERMS : 0777);
 }
 $paths = explode('/', $pathname);
-$cwd = ftp_pwd($this->_ftp->conn);
+$cwd = ftp_pwd($this->_ftp->getConn());
 foreach ($paths as $p) {
 if(trim($p) == '') continue;
-if (!@ftp_chdir($this->_ftp->conn, $p)) {
-if (!ftp_mkdir($this->_ftp->conn, $p)) return false;
-if (!ftp_chmod($this->_ftp->conn, $mode, $p)) return false;
-ftp_chdir($this->_ftp->conn, $p);
+if (!@ftp_chdir($this->_ftp->getConn(), $p)) {
+if (!ftp_mkdir($this->_ftp->getConn(), $p)) return false;
+if (!ftp_chmod($this->_ftp->getConn(), $mode, $p)) return false;
+ftp_chdir($this->_ftp->getConn(), $p);
 }
 }
-ftp_chdir($this->_ftp->conn, $cwd);
+ftp_chdir($this->_ftp->getConn(), $cwd);
 return true;
 }
 private function _getTmpLocal() {
@@ -11130,9 +11299,21 @@ if($this->_ftp->isLocal){
 $this->_tmplocal = new FileLocal(ROOT_PDIR . $this->_filename);
 }
 else{
-$f = md5($this->getFilename());
-$this->_tmplocal = Filestore\Factory::File('tmp/remotefile-cache/' . $f);
-ftp_get($this->_ftp->conn, $this->_tmplocal->getFilename(), $this->_filename, FTP_BINARY);
+$filename = $this->getFilename();
+$fhash = md5($filename);
+$this->_tmplocal = Filestore\Factory::File('tmp/remotefile-cache/' . $fhash);
+if(!$this->_tmplocal->exists()){
+ftp_get($this->_ftp->getConn(), $this->_tmplocal->getFilename(), $filename, FTP_BINARY);
+}
+if(!$this->_ftp->getFileHash($filename)){
+$this->_ftp->setFileHash($filename, $this->_tmplocal->getHash());
+}
+if(!$this->_ftp->getFileModified($filename)){
+$this->_ftp->setFileModified($filename, ftp_mdtm($this->_ftp->getConn(), $filename));
+}
+if(!$this->_ftp->getFileSize($filename)){
+$this->_ftp->setFileSize($filename, ftp_size($this->_ftp->getConn(), $filename));
+}
 }
 }
 return $this->_tmplocal;
@@ -13132,8 +13313,6 @@ echo "<br/>\n";
 }
 echo '</dl>';
 }
-public static function ShutdownHook(){
-}
 }
 class Hook {
 const RETURN_TYPE_BOOL = 'bool';
@@ -13785,11 +13964,11 @@ return $base .
 static public function _RecordNavigation() {
 $request = PageRequest::GetSystemRequest();
 $view = $request->getView();
-if(!$view->record) return;
-if(!$request->isGet()) return;
-if($request->isAjax()) return;
-if($request->isJSON()) return;
-if($view->error != View::ERROR_NOERROR) return;
+if(!$view->record) return true;
+if(!$request->isGet()) return true;
+if($request->isAjax()) return true;
+if($request->isJSON()) return true;
+if($view->error != View::ERROR_NOERROR) return true;
 if (!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
 $rel = substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
 if($rel === false) $rel = '';
@@ -13798,13 +13977,13 @@ $dat = array(
 'title' => $view->title,
 );
 $s = sizeof($_SESSION['nav']);
-if($s && $_SESSION['nav'][$s-1]['uri'] == $dat['uri']) return;
+if($s && $_SESSION['nav'][$s-1]['uri'] == $dat['uri']) return true;
 if($s >= 5){
 array_shift($_SESSION['nav']);
 $_SESSION['nav'] = array_values($_SESSION['nav']);
 }
 $_SESSION['nav'][] = $dat;
-return;
+return true;
 }
 static public function SetMessage($messageText, $messageType = 'info') {
 if (trim($messageText) == '') return;
@@ -14173,7 +14352,7 @@ $core_settings = ConfigHandler::LoadConfigFile("configuration");
 if (!$core_settings) {
 if(EXEC_MODE == 'WEB'){
 $newURL = 'install/';
-die("Please <a href=\"{$newURL}\">install Core Plus.</a><br/><br/>(You may need to refresh this page a time or two if you just installed)");
+die("Please <a href=\"{$newURL}\">install Core Plus.</a><br/><br/>(You may need to hard-refresh this page a time or two if you just installed)");
 }
 else{
 die('Please install core plus through the web interface first!' . "\n");
@@ -14317,8 +14496,25 @@ die($contents);
 if (!defined('GPG_HOMEDIR')) {
 define('GPG_HOMEDIR', ($gnupgdir) ? $gnupgdir : ROOT_PDIR . 'gnupg');
 }
+if(!defined('XHPROF')){
+define('XHPROF', 0);
+}
+if(XHPROF > 0 && function_exists('xhprof_enable')){
+if(XHPROF == 100){
+define('ENABLE_XHPROF', true);
+}
+else{
+define('ENABLE_XHPROF', (XHPROF > rand(1,100)));
+}
+}
+else{
+define('ENABLE_XHPROF', false);
+}
 unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl, $gnupgdir, $host, $sslmode, $tmpdir);
 $maindefines_time = microtime(true);
+if(ENABLE_XHPROF){
+xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+}
 \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus bootstrapped and application starting');
 try {
 $dbconn = DMI::GetSystemDMI();
@@ -16101,6 +16297,24 @@ $data = preg_replace('#</head>#i', $this->getHeadContent() . "\n" . '</head>', $
 if(preg_match('#</body>#i', $data)){
 $match = strrpos($data, '</body>');
 $foot = $this->getFootContent();
+if(ENABLE_XHPROF){
+require_once('xhprof_lib/utils/xhprof_lib.php'); #SKIPCOMPILER
+require_once('xhprof_lib/utils/xhprof_runs.php'); #SKIPCOMPILER
+$xhprof_data = xhprof_disable();
+$namespace = trim(str_replace(['.', '/'], '-', HOST . REL_REQUEST_PATH), '-');
+$xhprof_runs = new XHProfRuns_Default();
+$run_id = $xhprof_runs->save_run($xhprof_data, $namespace);
+define('XHPROF_RUN', $run_id);
+define('XHPROF_SOURCE', $namespace);
+$xhprof_link = sprintf(
+'<a href="' . SERVERNAME . '/xhprof/index.php?run=%s&source=%s" target="_blank">View XHprof Profiler Report</a>' . "\n",
+$run_id,
+$namespace
+);
+}
+else{
+$xhprof_link = '';
+}
 if (DEVELOPMENT_MODE) {
 $debug = '';
 $debug .= '<pre class="xdebug-var-dump screen">';
@@ -16116,6 +16330,7 @@ $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible" id="debug-section-performance-information">';
 $debug .= '<legend><b>Performance Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
 $debug .= "<span>";
+$debug .= $xhprof_link;
 $debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
 $debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
 $debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_peak_usage(true)) . "\n";
@@ -16491,6 +16706,9 @@ $this->head[] = $string;
 else{
 \Core\view()->head[] = $string;
 }
+}
+public function addHeader($key, $value){
+$this->headers[$key] = $value;
 }
 public static function GetHead() {
 trigger_error('View::GetHead is deprecated, please use \Core\view()->getHeadContent instead!', E_USER_DEPRECATED);
@@ -17747,6 +17965,7 @@ $view->setParameters(array());
 $view->templatename   = '/pages/error/error500.tpl';
 $view->mastertemplate = ConfigHandler::Get('/theme/default_template');
 $view->assignVariable('exception', $e);
+\Core\ErrorManagement\exception_handler($e);
 $view->fetch();
 }
 if($this->isCacheable()){

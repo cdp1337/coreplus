@@ -275,7 +275,7 @@ class PageModel extends Model {
 			'comment' => 'The published date',
 		),
 		'published_expires' => array(
-			'type' => Model::ATT_TYPE_INT,
+			'type' => Model::ATT_TYPE_STRING,
 			'null' => true,
 			'default' => null,
 			'form' => array(
