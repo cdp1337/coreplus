@@ -184,7 +184,9 @@ class AdminController extends Controller_2_1 {
 				CLI::PrintHeader('DONE!');
 			}
 
-			var_dump($changes);
+			foreach($changes as $c){
+				echo $c;
+			}
 
 			// Flush the system cache, just in case
 			\Core\Cache::Flush();
