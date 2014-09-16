@@ -1299,7 +1299,21 @@ class Model implements ArrayAccess {
 	 * @return Model|array
 	 */
 	public function getLink($linkname, $order = null) {
-		if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
+		if (!isset($this->_linked[$linkname])){
+			if(strrpos($linkname, 'Model') === strlen($linkname) - 5 ){
+				// Try it without the Model suffix.
+				$linkname = substr($linkname, 0, -5);
+			}
+			else{
+				// It doesn't have the suffix, try adding it!
+				$linkname .= 'Model';
+			}
+
+			if(!isset($this->_linked[$linkname])){
+				return null; // @todo Error Handling
+			}
+			// No else, it found it! :)
+		}
 
 		// Allow order to be set from the model itself.
 		if($order === null && isset($this->_linked[$linkname]['order'])){
