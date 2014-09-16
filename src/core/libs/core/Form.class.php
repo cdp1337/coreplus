@@ -672,6 +672,15 @@ class FormElement {
 				$out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
 			}
 		}
+
+		// Find any "data-" attribute too!
+		foreach($this->_attributes as $k => $v){
+			if(strpos($k, 'data-') === 0){
+				// Allow all data- attributes to simply be passed in verbatim.
+				$out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
+			}
+		}
+
 		return $out;
 	}
 
@@ -741,6 +750,7 @@ class Form extends FormGroup {
 	 */
 	public static $Mappings = array(
 		'access'           => 'FormAccessStringInput',
+		'button'           => 'FormButtonInput',
 		'checkbox'         => 'FormCheckboxInput',
 		'checkboxes'       => 'FormCheckboxesInput',
 		'date'             => 'FormDateInput',
@@ -1443,7 +1453,7 @@ class Form extends FormGroup {
 
 		// Ensure the REFERRER and original URL match up.
 		if($_SERVER['HTTP_REFERER'] != $form->originalurl){
-			Core::SetMessage('Form submission referrer does not match', 'error');
+			Core::SetMessage('Form submission referrer does not match, please try your submission again.', 'error');
 			return;
 		}
 
