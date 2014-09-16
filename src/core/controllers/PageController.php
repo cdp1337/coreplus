@@ -118,7 +118,12 @@ class PageController extends Controller_2_1 {
 					'site = -1'
 				)
 			);
+			$site = MultiSiteHelper::GetCurrentSiteID();
 		}
+		else{
+			$site = null;
+		}
+
 		// Run this through the streamer, just in case there are a lot of pages...
 		$stream = new DatasetStream($factory->getDataset());
 
@@ -164,5 +169,6 @@ class PageController extends Controller_2_1 {
 
 		$view->title = 'Sitemap';
 		$view->assign('pages', $toshow);
+		$view->assign('site', $site);
 	}
 } 

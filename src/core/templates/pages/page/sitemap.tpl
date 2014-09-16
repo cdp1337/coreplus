@@ -19,9 +19,20 @@ $('.page-search-form').find('i').css('cursor', 'pointer').click(function(){
 <ul class="page-sitemap">
 	{foreach $pages as $page}
 		<li itemscope itemtype="http://schema.org/Thing">
-			{a href="`$page.baseurl`" title="`$page.title`" class="page-title" itemprop="url"}
-				<span itemprop="name">{$page.title}</span>
-			{/a}
+			{**
+			 * This if statement is for multi-site mode,
+			 * since pages on other sites do not technically exist when on a different site.
+			 *}
+			{if $page.site != $site}
+				{a href="site:`$page.site``$page.baseurl`" title="`$page.title`" class="page-title" itemprop="url"}
+					<span itemprop="name">{$page.title}</span>
+				{/a}
+			{else}
+				{a href="`$page.baseurl`" title="`$page.title`" class="page-title" itemprop="url"}
+					<span itemprop="name">{$page.title}</span>
+				{/a}
+			{/if}
+
 			{if $page->getTeaser()}
 				<span class="page-teaser" itemprop="description">
 					- {$page->getTeaser()|truncate:100}
