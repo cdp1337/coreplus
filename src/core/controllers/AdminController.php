@@ -1204,6 +1204,7 @@ class AdminController extends Controller_2_1 {
 			'/core/markup/minified',
 			//'/core/filestore/assetversion',
 			'/core/assetversion/proxyfriendly',
+			'/core/performance/anonymous_user_page_cache',
 		];
 
 		$form = new Form();

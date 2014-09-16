@@ -273,6 +273,11 @@ class View {
 	 */
 	public $headers = [];
 
+	/**
+	 * @var bool Set to false to prevent this page from being cacheable by Core.
+	 */
+	public $cacheable = true;
+
 	public function __construct() {
 		$this->error = View::ERROR_NOERROR;
 		$this->mode  = View::MODE_PAGE;

@@ -532,12 +532,32 @@ class PageRequest {
 		}
 
 
-		// Try to guess the templatename if it wasn't set.
-		if ($view->error == View::ERROR_NOERROR && $view->contenttype == View::CTYPE_HTML && $view->templatename === null) {
+		if(
+			$view->mode == View::MODE_PAGEORAJAX &&
+			$this->isAjax() &&
+			$view->jsondata !== null &&
+			$view->templatename === null
+		){
+			// Allow the content type to be overridden for ajax pages that have JSON data embedded in them.
+			$view->contenttype = View::CTYPE_JSON;
+		}
+
+
+		if(
+			$view->error == View::ERROR_NOERROR &&
+			$view->contenttype == View::CTYPE_HTML &&
+			$view->templatename === null
+		){
+			// Try to guess the templatename if it wasn't set.
+			// This
 			$cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
 			$view->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
 		}
-		elseif ($view->error == View::ERROR_NOERROR && $view->contenttype == View::CTYPE_XML && $view->templatename === null) {
+		elseif(
+			$view->error == View::ERROR_NOERROR &&
+			$view->contenttype == View::CTYPE_XML &&
+			$view->templatename === null
+		){
 			$cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
 			$view->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
 		}
@@ -703,6 +723,9 @@ class PageRequest {
 			$index[] = $key;
 			\Core\Cache::Set($indexkey, $index, 86400);
 		}
+		elseif(($reason = $this->isNotCacheableReason()) !== null){
+			$view->headers['X-Core-NotCached-Reason'] = $reason;
+		}
 		$view->headers['X-Core-Render-Time'] = \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTimeFormatted();
 
 		$view->render();
@@ -726,37 +749,61 @@ class PageRequest {
 		HookHandler::DispatchHook('/core/page/postrender');
 	}
 
-	public function isCacheable(){
+	/**
+	 * Run some checks and return a reason that the page cannot be cached.
+	 * This is used in conjunction with the isCacheable method and used to write a header value as to why a page could not be cached.
+	 *
+	 * @return null|string
+	 */
+	public function isNotCacheableReason(){
 		// I opted to break the cacheable logic out like this because it's easier to document than one large if block.
 		// Start with every page being cacheable, (default).
-		$cacheable = true;
+		$cacheable = null;
 
 		if(DEVELOPMENT_MODE){
 			// If in development mode, do not cache any pages for any users.
-			$cacheable = false;
+			$cacheable = 'Site is in development mode';
 		}
-		elseif($this->_cached){
-			// If this page is already cached, do not try to re-cache.
-			$cacheable = false;
+		if(!\ConfigHandler::Get('/core/performance/anonymous_user_page_cache')){
+			$cacheable = 'Anonymous user cache disabled in the system';
 		}
 		elseif(\Core\user()->exists()){
 			// If the user is currently logged in, do no cache any page.
-			$cacheable = false;
+			$cacheable = 'Logged in users do not get cached pages';
 		}
 		elseif($this->method != PageRequest::METHOD_GET){
 			// Only cache and provide caching for GET requests.
-			$cacheable = false;
+			$cacheable = 'Request is not a GET';
+		}
+		elseif(!$this->getView()->cacheable){
+			// If the view is explicitly set as not cacheable, then don't cache the view!
+			$cacheable = 'Page explicitly set as not cacheable';
 		}
 		elseif($this->getPageModel()->get('expires') == 0){
 			// Pages that are set to 0 are also not cacheable.
-			$cacheable = false;
+			$cacheable = 'Page expire set to 0, cache disabled';
 		}
 		elseif($this->getView()->mode != View::MODE_PAGE){
 			// Only traditional page views are cacheable.
-			$cacheable = false;
+			$cacheable = 'Request is not a PAGE type';
 		}
 
 		return $cacheable;
+	}
+
+	/**
+	 * Run the checks to see if this page request can be cached.
+	 *
+	 * @return bool
+	 */
+	public function isCacheable(){
+		if($this->_cached){
+			// If this page is already cached, do not try to re-cache.
+			// This is a system check used internally.
+			return false;
+		}
+
+		return ($this->isNotCacheableReason() === null);
 	}
 
 	/**
