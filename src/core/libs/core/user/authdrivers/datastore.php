@@ -157,7 +157,7 @@ class datastore implements AuthDriverInterface{
 		$complexity = $this->getPasswordComplexityAsHTML();
 
 		if($complexity){
-			$password_desc = 'Please set a secure password that meets the following conditions:<br/>' . $complexity;
+			$password_desc = 'Please set a secure password that <br/>' . $complexity;
 		}
 		else{
 			$password_desc = 'Please set a secure password.';
@@ -193,7 +193,7 @@ class datastore implements AuthDriverInterface{
 				'required' => true,
 				'name' => 'pass2',
 				'title' => 'Confirm Password',
-				'description' => 'Please re-type your password again for confirmation.',
+				'description' => 'Please re-type your password to confirm.',
 				'maxlength' => 8,
 			]
 		);
