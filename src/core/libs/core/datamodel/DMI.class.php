@@ -96,7 +96,7 @@ class DMI {
 	 * @throws DMI_Exception
 	 * @throws DMI_Authentication_Exception
 	 *
-	 * @return DMI_Backend|null
+	 * @return \Core\Datamodel\BackendInterface|null
 	 */
 	public function connect($host, $user, $pass, $database){
 		$this->_backend->connect($host, $user, $pass, $database);
@@ -105,7 +105,7 @@ class DMI {
 	}
 
 	/**
-	 * @return \DMI_Backend
+	 * @return \Core\Datamodel\BackendInterface
 	 */
 	public function connection(){
 		return $this->_backend;
