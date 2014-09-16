@@ -403,7 +403,7 @@ class FileLocal implements Filestore\File {
 
 			$f = $prefix . $suffix;
 			while(file_exists($f) && md5_file($f) != $thathash){
-				$f = $prefix . ' (' . ++$c . ')' . $suffix;
+				$f = $prefix . '-' . ++$c . '' . $suffix;
 			}
 
 			$this->_filename = $f;
