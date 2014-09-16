@@ -115,7 +115,8 @@ class Dataset implements \Iterator{
 	 * array of values: add each value to the columns
 	 * multiple arguments: add each value to the columns
 	 *
-	 * @param mixed $select
+	 * @throws \DMI_Exception
+	 * @internal param mixed $select
 	 * @return Dataset
 	 */
 	public function select(){
@@ -274,7 +275,11 @@ class Dataset implements \Iterator{
 	 */
 	public function table($tablename){
 		// Is this name prefixed by the DB_PREFIX variable?
-		if(DB_PREFIX && strpos($tablename, DB_PREFIX) === false) $tablename = DB_PREFIX . $tablename;
+		/** @noinspection PhpUndefinedConstantInspection */
+		if(DB_PREFIX && strpos($tablename, DB_PREFIX) === false){
+			/** @noinspection PhpUndefinedConstantInspection */
+			$tablename = DB_PREFIX . $tablename;
+		}
 
 		$this->_table = $tablename;
 
@@ -402,6 +407,7 @@ class Dataset implements \Iterator{
 	}
 
 	/**
+	 * @throws \DMI_Exception
 	 * @return Dataset
 	 */
 	public function order(){
@@ -437,6 +443,45 @@ class Dataset implements \Iterator{
 		return $this;
 	}
 
+	/**
+	 * Execute this query and return the records or record, based on requested criteria.
+	 *
+	 * If limit == 1 and only one select was issued, that singular value or null is returned.
+	 * If limit == 1 and more than one select was issued, an associative array is returned.
+	 * Otherwise, an array of associative arrays is returned.
+	 *
+	 * @param null $interface
+	 *
+	 * @return array|null|mixed
+	 */
+	public function executeAndGet($interface = null){
+		$this->execute($interface);
+
+		if($this->_mode == Dataset::MODE_COUNT){
+			// The user only requested the total number of rows, so return just that.
+			return $this->num_rows;
+		}
+		elseif($this->_limit == 1 && $this->num_rows == 1){
+			if(sizeof($this->_selects) == 1 && $this->_selects[0] != '*'){
+				$k = $this->_selects[0];
+
+				// Return a single key's value or null if not found.
+				return (isset($this->_data[0][$k])) ? $this->_data[0][$k] : null;
+			}
+			else{
+				// Return a single record
+				return $this->_data[0];
+			}
+		}
+		else{
+			$ret = [];
+			foreach($this as $d){
+				$ret[] = $d;
+			}
+			return $ret;
+		}
+	}
+
 	/****  Iterator Methods *****/
 
 	function rewind() {
@@ -449,7 +494,7 @@ class Dataset implements \Iterator{
 
 		$k = key($this->_data);
 		return isset($this->_data[$k]) ? $this->_data[$k] : null;
-		return $this->_data[key($this->_data)];
+		//return $this->_data[key($this->_data)];
 	}
 
 	function key() {
