@@ -65,6 +65,12 @@ function FTP(){
 			return false;
 		}
 
+		if(!FTP_USERNAME){
+			// If there is no username for the FTP server, don't try to connect either.
+			$ftp = false;
+			return false;
+		}
+
 		$ftp = new FTPConnection();
 		$ftp->host = '127.0.0.1';
 		$ftp->username = FTP_USERNAME;
