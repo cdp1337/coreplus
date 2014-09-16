@@ -137,6 +137,35 @@ class Controller_2_1 {
 		return $this->getPageRequest()->getPageModel();
 	}
 
+	/**
+	 * Set a JSON error message and optionally redirect if the page is not an ajax request.
+	 *
+	 * @param $code
+	 * @param $message
+	 * @param $redirect
+	 *
+	 * @return int
+	 */
+	public function sendJSONError($code, $message, $redirect){
+		$view    = $this->getView();
+		$request = $this->getPageRequest();
+
+		if($request->isAjax()){
+			$view->mode = View::MODE_PAGEORAJAX;
+			$view->jsondata = ['status' => $code, 'message' => $message];
+			$view->error = $code;
+		}
+		else{
+			Core::SetMessage($message, 'error');
+			if($redirect){
+				\Core\redirect($redirect);
+			}
+			else{
+				\Core\go_back();
+			}
+		}
+	}
+
 
 	/**
 	 * Set the access string for this view and do the access checks against the
