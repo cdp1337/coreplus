@@ -7,7 +7,15 @@
 	<div class="form-element-value">
 		<select {$element->getInputAttributes()}>
 			{foreach from=$element->get('options') item=title key=key}
-				<option value="{$key}" {if Core::CompareValues($key, $element->get('value'))}selected{/if}>{$title}</option>
+				{if is_array($title)}
+					<optgroup label="{$key}">
+						{foreach $title as $subkey => $subtitle}
+							<option value="{$subkey}" {if Core::CompareValues($subkey, $element->get('value'))}selected{/if}>{$subtitle}</option>
+						{/foreach}
+					</optgroup>
+				{else}
+					<option value="{$key}" {if Core::CompareValues($key, $element->get('value'))}selected{/if}>{$title}</option>
+				{/if}
 			{/foreach}
 		</select>
 	</div>
