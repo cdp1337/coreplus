@@ -1006,6 +1006,10 @@ class FileLocal implements Filestore\File {
 
 		$m = $this->getMimetype();
 
+		// Make sure the directory of the destination file exists!
+		// By touching the file, Core will create all parent directories as necessary.
+		$file->putContents('');
+
 		if($m == 'image/gif' && exec('which convert 2>/dev/null')){
 			// The GIF resizer handles EVERYTHING :)
 			// Granted of course, that imagemagick's convert is available on the server.
@@ -1106,9 +1110,6 @@ class FileLocal implements Filestore\File {
 			imagecopyresampled($img2, $img, 0, 0, 0, 0, $nW, $nH, $sW, $sH);
 			imagedestroy($img);
 
-			// Make sure the directory of the destination file exists!
-			// By touching the file, Core will create all parent directories as necessary.
-			$file->putContents('');
 
 			switch ($m) {
 				case 'image/jpeg':
