@@ -202,6 +202,8 @@ class FormGroup {
 		// Groups may not have a template... if so just render the children directly.
 		if (!$file) return $out;
 
+		// There is a form on the page, do not allow caching.
+		\Core\view()->cacheable = false;
 		$tpl = \Core\Templates\Template::Factory($file);
 		$tpl->assign('group', $this);
 		$tpl->assign('elements', $out);
