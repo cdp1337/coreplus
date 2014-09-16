@@ -81,6 +81,25 @@ class FileRemote implements Filestore\File {
 	 */
 	private $_tmplocal = null;
 
+	/**
+	 * If the file was a 302, this is the temporary redirect placeholder.
+	 *
+	 * This is a separate file because according to the RFC2616 spec,
+	 * requests that fall under a 302 are independent of each other and should be cached independently.
+	 *
+	 * @var null|FileRemote
+	 */
+	protected $_redirectFile = null;
+
+	/**
+	 * Level of redirect counts this file request is under.
+	 *
+	 * Used to prevent infinite redirect loops.
+	 *
+	 * @var int
+	 */
+	protected $_redirectCount = 0;
+
 	public function __construct($filename = null) {
 		if ($filename) $this->setFilename($filename);
 	}
@@ -496,7 +515,7 @@ class FileRemote implements Filestore\File {
 	 * Get the headers for this given file.
 	 * This will go out and query the server with a HEAD request if no headers set otherwise.
 	 */
-	private function _getHeaders() {
+	protected function _getHeaders() {
 		if ($this->_headers === null) {
 			$this->_headers = array();
 
@@ -548,12 +567,42 @@ class FileRemote implements Filestore\File {
 					$this->_headers[$k] = $v;
 				}
 			}
+
+			if($this->_response == '302' && isset($this->_headers['Location'])){
+				/*
+				From: http://www.ietf.org/rfc/rfc2616.txt and http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+
+				10.3.3 302 Found
+
+				The requested resource resides temporarily under a different URI.
+				Since the redirection might be altered on occasion, the client SHOULD continue to use the Request-URI for future requests.
+				This response is only cacheable if indicated by a Cache-Control or Expires header field.
+
+				The temporary URI SHOULD be given by the Location field in the response.
+				Unless the request method was HEAD,
+				the entity of the response SHOULD contain a short hypertext note with a hyperlink to the new URI(s).
+
+				If the 302 status code is received in response to a request other than GET or HEAD,
+				the user agent MUST NOT automatically redirect the request unless it can be confirmed by the user,
+				since this might change the conditions under which the request was issued.
+				*/
+				$newcount = $this->_redirectCount + 1;
+				if($newcount <= 5){
+					$this->_redirectFile = new FileRemote();
+					$this->_redirectFile->_redirectCount = ($this->_redirectCount + 1);
+					$this->_redirectFile->setFilename($this->_headers['Location']);
+					$this->_redirectFile->_getHeaders();
+				}
+				else{
+					trigger_error('Too many redirects when requesting ' . $this->getURL(), E_USER_WARNING);
+				}
+			}
 		}
 
 		return $this->_headers;
 	}
 
-	private function _getHeader($header) {
+	protected function _getHeader($header) {
 		$h = $this->_getHeaders();
 		return (isset($h[$header])) ? $h[$header] : null;
 	}
@@ -564,9 +613,10 @@ class FileRemote implements Filestore\File {
 	 *
 	 * @return FileLocal
 	 */
-	private function _getTmpLocal() {
+	protected function _getTmpLocal() {
 		if ($this->_tmplocal === null) {
 			$f = md5($this->getFilename());
+
 			// Gotta love obviously-named flags.
 			$needtodownload = true;
 
@@ -576,69 +626,77 @@ class FileRemote implements Filestore\File {
 			if ($this->cacheable && $this->_tmplocal->exists()) {
 				// Lookup this file in the system cache.
 				$systemcachedata = \Core\Cache::Get('remotefile-cache-header-' . $f);
-				if ($systemcachedata) {
+				if ($systemcachedata && isset($systemcachedata['headers'])) {
 					// I can only look them up if the cache is available.
 
 					// First check will be the expires header.
-					// If this is set and the data exists locally, don't even try to
-					if(isset($systemcachedata['Expires']) && strtotime($systemcachedata['Expires']) > time()){
+					if(isset($systemcachedata['headers']['Expires']) && strtotime($systemcachedata['headers']['Expires']) > time()){
 						$needtodownload = false;
 						// And set the headers!
 						// This is required
-						$this->_headers = $systemcachedata;
-						$this->_response = 200;
+						$this->_headers = $systemcachedata['headers'];
+						$this->_response = $systemcachedata['response'];
 					}
 					// Next, try ETag.
-					elseif ($this->_getHeader('ETag')) {
-						$needtodownload = ($this->_getHeader('ETag') != $systemcachedata['ETag']);
+					elseif ($this->_getHeader('ETag') && isset($systemcachedata['headers']['ETag'])) {
+						$needtodownload = ($this->_getHeader('ETag') != $systemcachedata['headers']['ETag']);
 					}
 					// No?  How 'bout 
-					elseif ($this->_getHeader('Last-Modified')) {
-						$needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['Last-Modified']);
+					elseif ($this->_getHeader('Last-Modified') && isset($systemcachedata['headers']['Last-Modified'])) {
+						$needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['headers']['Last-Modified']);
 					}
-					// Still no?  The default is to download it anway.
+					// Still no?  The default is to download it anyway.
 				}
 			}
 
 			if ($needtodownload || !$this->cacheable) {
-
-				// NOPE, use cURL.
-				$curl = curl_init();
-				curl_setopt_array(
-					$curl, array(
-						CURLOPT_HEADER         => false,
-						CURLOPT_NOBODY         => false,
-						CURLOPT_RETURNTRANSFER => true,
-						CURLOPT_URL            => $this->getURL(),
-						CURLOPT_HTTPHEADER     => \Core::GetStandardHTTPHeaders(true),
-					)
-				);
-
-				$result = curl_exec($curl);
-				if($result === false){
-					switch(curl_errno($curl)){
-						case CURLE_COULDNT_CONNECT:
-						case CURLE_COULDNT_RESOLVE_HOST:
-						case CURLE_COULDNT_RESOLVE_PROXY:
-							$this->_response = 404;
-							return $this->_tmplocal;
-							break;
-						default:
-							$this->_response = 500;
-							return $this->_tmplocal;
-							break;
-					}
+				// Make sure that the headers are updated, this is a requirement to use the 302 tag.
+				$this->_getHeaders();
+				if($this->_response == '302' && $this->_redirectFile !== null){
+					$this->_tmplocal = $this->_redirectFile->_getTmpLocal();
 				}
+				else{
+					// BTW, use cURL.
+					$curl = curl_init();
+					curl_setopt_array(
+						$curl, array(
+							CURLOPT_HEADER         => false,
+							CURLOPT_NOBODY         => false,
+							CURLOPT_RETURNTRANSFER => true,
+							CURLOPT_URL            => $this->getURL(),
+							CURLOPT_HTTPHEADER     => \Core::GetStandardHTTPHeaders(true),
+						)
+					);
 
-				curl_close($curl);
+					$result = curl_exec($curl);
+					if($result === false){
+						switch(curl_errno($curl)){
+							case CURLE_COULDNT_CONNECT:
+							case CURLE_COULDNT_RESOLVE_HOST:
+							case CURLE_COULDNT_RESOLVE_PROXY:
+								$this->_response = 404;
+								return $this->_tmplocal;
+								break;
+							default:
+								$this->_response = 500;
+								return $this->_tmplocal;
+								break;
+						}
+					}
 
-				// Copy the data down to the local file.
-				$this->_tmplocal->putContents($result);
+					curl_close($curl);
+
+					// Copy the data down to the local file.
+					$this->_tmplocal->putContents($result);
+				}
 
 				// And remember this header data for nexttime.
 				\Core\Cache::Set(
 					'remotefile-cache-header-' . $f,
-					$this->_getHeaders()
+					[
+						'headers'  => $this->_getHeaders(),
+						'response' => $this->_response,
+					]
 				);
 			}
 		}
