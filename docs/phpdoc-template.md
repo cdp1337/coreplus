@@ -1,6 +1,6 @@
 ## PHPDoc Inline Documentation Template
 
-Use PHPDoc-style inline documentation for your code.  Below is an example of a file header.
+Use PHPDoc-style inline documentation for your code.  Below is an example of a file header for a class.
 
     <?php
     /**
@@ -8,7 +8,7 @@ Use PHPDoc-style inline documentation for your code.  Below is an example of a f
      *
      * @package Example
      * @author Author <email@domain.tld>
-     * @copyright Copyright (C) 2009-2012  Author
+     * @copyright Copyright (C) 2009-2014  Author
      * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
      *
      * This program is free software: you can redistribute it and/or modify
@@ -29,23 +29,23 @@ Use PHPDoc-style inline documentation for your code.  Below is an example of a f
      *
      * More lengthy description of what ExampleClass does and why it's fantastic.
      *
-     * <h3>Usage Examples</h3>
+     * ## Usage
      *
+     * This class is used in XYZ ways and can do something.
      *
-     * <h4>Example 1</h4>
-     * <p>Description 1</p>
-     * <code>
+     * Class tags all start with as an H2 (two `#` signs).
+     *
+     * Example 1 does XYZ
+     * <pre>
      * // Some code for example 1
      * $a = $b;
-     * </code>
+     * </pre>
      *
-     *
-     * <h4>Example 2</h4>
-     * <p>Description 2</p>
-     * <code>
+     * Example 2 does something too
+     * <pre>
      * // Some code for example 2
      * $b = $a;
-     * </code>
+     * </pre>
      *
      *
      * @package Example
@@ -54,7 +54,25 @@ Use PHPDoc-style inline documentation for your code.  Below is an example of a f
      */
     class ExampleClass {
     	// ...
+
+    	/**
+    	 * Do some example thing (short 1-line description)
+    	 *
+    	 * This method does some example operation (long description)
+    	 *
+    	 * #### Usage
+    	 *
+    	 * Usage examples and other tags in methods all start with an H4 tag.
+    	 *
+    	 * @param string $param1 Param 1 does something useful,
+    	 * and is important because foo (continuations start at the beginning of the line).
+    	 */
+    	public function example_method($param1){
+    	    // do some logic here
+    	}
     }
+
+PHP functions are identical to the class file, except the top-level phpdoc, (for the function), mimics the formatting of a class's method, (use H4's instead of H2's).
 
 ## Core Plus Packages
 
