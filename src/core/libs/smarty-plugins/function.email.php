@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 2.3.0
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -22,14 +22,16 @@
 /**
  * Encode an email address in a way that makes it difficult for standard bots to read.
  *
- * @param array $params
- * @param Smarty $template
+ * @todo Finish documentation of smarty_function_email
+ *
+ * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param Smarty $smarty  Parent Smarty template object
  *
  * @throws SmartyException
  *
  * @return string
  */
-function smarty_function_email($params, $template){
+function smarty_function_email($params, $smarty){
 
 	if(isset($params['address']) && $params['address']){
 		$email = $params['address'];

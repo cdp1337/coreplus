@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -19,7 +19,52 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-function smarty_block_insertable($params, $content, $template, &$repeat){
+/**
+ * Primary method for a block of user-customizable content inside a template.
+ *
+ * Insertables are the core method of injecting blocks of user-customizable content into a template.
+ *
+ * An insertable must be on a template that has a registered page URL, as the baseurl is what is tracked as one of the main primary keys.
+ * The other PK is the insertable's name, which must be unique on that one template.
+ *
+ * #### Smarty Parameters
+ *
+ *  * name
+ *    * The key name of this input value, must be present and unique on this template.
+ *  * assign
+ *    * Assign the value instead of outputting to the screen.
+ *  * title
+ *    * When editing the insertable, the title displayed along side the input field.
+ *  * type
+ *
+ * #### Example Usage
+ *
+ * <pre>
+ * {insertable name="body" title="Body Content"}
+ * <p>
+ * This is some example content!
+ * </p>
+ * {/insertable}
+ * </pre>
+ *
+ * <pre>
+ * {insertable name="img1" title="Large Image" assign="img1"}
+ * {img src="`$img1`" placeholder="generic" dimensions="800x400"}
+ * {/insertable}
+ * </pre>
+ *
+ * @param array       $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param string|null $content Null on opening pass, rendered source of the contents inside the block on closing pass
+ * @param Smarty      $smarty  Parent Smarty template object
+ * @param boolean     $repeat  True at the first call of the block-function (the opening tag) and
+ * false on all subsequent calls to the block function (the block's closing tag).
+ * Each time the function implementation returns with $repeat being TRUE,
+ * the contents between {func}...{/func} are evaluated and the function implementation
+ * is called again with the new block contents in the parameter $content.
+ *
+ * @return string
+ */
+function smarty_block_insertable($params, $content, $smarty, &$repeat){
 
 	$assign = (isset($params['assign']))? $params['assign'] : false;
 
@@ -63,7 +108,7 @@ function smarty_block_insertable($params, $content, $template, &$repeat){
 	$value = \Core\parse_html($value);
 
 	if($assign){
-		$template->assign($assign, $value);
+		$smarty->assign($assign, $value);
 	}
 	else{
 		return $value;

@@ -1,8 +1,8 @@
 <?php
 /**
- * Smarty {css} block
+ * File for the smarty css block function
  * 
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -22,10 +22,67 @@
  */
 
 /**
- * @param type $params
- * @param type $template 
+ * Inject a CSS file or snippet into the head of a page.
+ *
+ * This is the recommended way to inject stylesheets into your application.
+ *
+ * Any inline styles or links to stylesheets added via the `{css}` smarty block are automatically moved into the head of the document.
+ * Redundant file includes and inline styles are omitted automatically.
+ *
+ * CSS files have their minified version sent automatically when the Core config option is set to do so.
+ *
+ * #### Smarty Parameters
+ *
+ *  * media
+ *    * (string) The media attribute, defaults to "all".
+ *  * href
+ *    * The source of the linked CSS asset.
+ *    * Can be fully resolved or a Core asset/* path.
+ *  * link
+ *    * alias of href.
+ *  * src
+ *    * alias of href.
+ *  * optional
+ *    * Set to "1" if this is an optional stylesheet where the admin can toggle on/off its inclusion.
+ *    * Currently only supported in theme skins.
+ *  * default
+ *    * If optional="1", this is if the file is included by default or not.
+ *  * title
+ *    * If optional="1", this is an optional title displayed for the admin.
+ *
+ * #### Example Usage
+ *
+ * Include an asset file located in css/ called styles.css.
+ * <pre>
+ * {css src="css/styles.css"}{/css}
+ * </pre>
+ *
+ * (For a theme skin), provide the admin with the option to include this stylesheet
+ * <pre>
+ * {css src="css/opt/full-width.css" optional="1" default="0" title="Set the page to be full width"}{/css}
+ * </pre>
+ *
+ * Inject these styles into the page
+ * <pre>
+ * {css}
+ *     &lt;style&gt;
+ *         .blah {
+ *             width: auto;
+ *         }
+ *     &lt;/style&gt;
+ * {/css}
+ * </pre>
+ *
+ * @param array       $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param string|null $content Null on opening pass, rendered source of the contents inside the block on closing pass
+ * @param Smarty      $smarty  Parent Smarty template object
+ * @param boolean     $repeat  True at the first call of the block-function (the opening tag) and
+ * false on all subsequent calls to the block function (the block's closing tag).
+ * Each time the function implementation returns with $repeat being TRUE,
+ * the contents between {func}...{/func} are evaluated and the function implementation
+ * is called again with the new block contents in the parameter $content.
  */
-function smarty_block_css($params, $innercontent, $template, &$repeat){
+function smarty_block_css($params, $content, $smarty, &$repeat){
 	// This only needs to be called once.
 	if($repeat) return;
 	
@@ -46,7 +103,7 @@ function smarty_block_css($params, $innercontent, $template, &$repeat){
 
 		// If optional is set, then look up the data to see if it's set.
 		if(isset($params['optional']) && $params['optional']){
-			$file = $template->template_resource;
+			$file = $smarty->template_resource;
 			// Trim off the base directory.
 			$paths = \Core\Templates\Template::GetPaths();
 			foreach($paths as $p){
@@ -66,7 +123,7 @@ function smarty_block_css($params, $innercontent, $template, &$repeat){
 		\Core\view()->addStylesheet($href, $media);
 	}
 	// Styles defined inline, fine as well.  The styles will be displayed in the head.
-	elseif($innercontent){
-		\Core\view()->addStyle($innercontent);
+	elseif($content){
+		\Core\view()->addStyle($content);
 	}
 }

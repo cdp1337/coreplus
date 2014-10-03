@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -22,13 +22,16 @@
 /**
  * Manually add a widget onto a template.
  *
- * @param array $params
- * @param Object $template
+ * @todo Finish documentation of smarty_function_widget
+ *
+ * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param Smarty $smarty  Parent Smarty template object
+ *
  * @return mixed
  *
  * @throws SmartyException
  */
-function smarty_function_widget($params, $template){
+function smarty_function_widget($params, $smarty){
 
 
 	$assign= (isset($params['assign']))? $params['assign'] : false;
@@ -122,5 +125,5 @@ function smarty_function_widget($params, $template){
 	}
 
 
-	return $assign ? $template->assign($assign, $dat) : $dat;
+	return $assign ? $smarty->assign($assign, $dat) : $dat;
 }

@@ -2,7 +2,7 @@
 /**
  * File for the smarty "a" block function
  *
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -66,21 +66,25 @@
  * &lt;a href="http://child-12-url.example.com/about-us"&gt;Child #12 About Page&lt;/a&gt;
  * </pre>
  *
- * @param $params array
- * @param $innercontent string
- * @param $template Smarty
- * @param $repeat boolean
+ * @param array       $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param string|null $content Null on opening pass, rendered source of the contents inside the block on closing pass
+ * @param Smarty      $smarty  Parent Smarty template object
+ * @param boolean     $repeat  True at the first call of the block-function (the opening tag) and
+ * false on all subsequent calls to the block function (the block's closing tag).
+ * Each time the function implementation returns with $repeat being TRUE,
+ * the contents between {func}...{/func} are evaluated and the function implementation
+ * is called again with the new block contents in the parameter $content.
  *
  * @return string
  */
-function smarty_block_a($params, $innercontent, $template, &$repeat){
+function smarty_block_a($params, $content, $smarty, &$repeat){
 	// This only needs to be called once.
 	if($repeat) return '';
 
 	$assign= false;
 
 	// Start the A tag
-	$content = '<a';
+	$newcontent = '<a';
 
 	// Allow "confirm" text to override the href and onClick functions.
 	// This has the cool ability of not requiring jquery to run, since it is all handled with PHP logic.
@@ -111,13 +115,13 @@ function smarty_block_a($params, $innercontent, $template, &$repeat){
 		}
 	}
 	// Close the starting tag.
-	$content .= '>';
+	$newcontent .= '>';
 
 	// Add any content inside.
-	$content .= $innercontent;
+	$newcontent .= $content;
 
 	// Close the set.
-	$content .= '</a>';
+	$newcontent .= '</a>';
 
-	return $assign ? $template->assign($assign, $content) : $content;
+	return $assign ? $smarty->assign($assign, $newcontent) : $newcontent;
 }

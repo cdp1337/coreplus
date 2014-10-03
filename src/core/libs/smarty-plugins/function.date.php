@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 2.1.3
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -22,14 +22,28 @@
 /**
  * Take a GMT date and return the formatted string.
  *
- * @param array $params
- * @param Smarty $template
+ * @todo Finish documentation of smarty_function_date
+ *
+ * #### Smarty Parameters
+ *
+ * * date (or unnamed variable)
+ * * format
+ * * assign
+ *
+ * #### Example Usage
+ *
+ * <pre>
+ * {date 1234567890}
+ * </pre>
+ *
+ * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param Smarty $smarty  Parent Smarty template object
  *
  * @throws SmartyException
  *
  * @return string
  */
-function smarty_function_date($params, $template){
+function smarty_function_date($params, $smarty){
 
 	if(array_key_exists('date', $params)){
 		$date = $params['date'];
@@ -58,7 +72,7 @@ function smarty_function_date($params, $template){
 	$coredate = new \Core\Date\DateTime($date);
 
 	if(isset($params['assign']) && $params['assign']){
-		$template->assign($params['assign'], $coredate->format($format));
+		$smarty->assign($params['assign'], $coredate->format($format));
 	}
 	else{
 		return $coredate->format($format);

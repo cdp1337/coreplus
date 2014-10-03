@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 2.1.3
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -20,16 +20,16 @@
  */
 
 /**
- * Take a GMT date and return the formatted string.
+ * @experimental
  *
- * @param $params
- * @param $template
+ * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param Smarty $smarty  Parent Smarty template object
  *
  * @throws SmartyException
  *
  * @return string
  */
-function smarty_function_t($params, $template){
+function smarty_function_t($params, $smarty){
 
 	$key = array_shift($params);
 

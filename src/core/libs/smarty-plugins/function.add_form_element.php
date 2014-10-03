@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -20,13 +20,16 @@
  */
 
 /**
- * @param $params
- * @param $template
+ * Render and add a form element to both the PHP session and HTML output.
+ *
+ * @experimental
+ * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param Smarty $smarty  Parent Smarty template object
  *
  * @return string
  * @throws SmartyException
  */
-function smarty_function_add_form_element($params, $template){
+function smarty_function_add_form_element($params, $smarty){
 
 	if(!isset($params['form'])){
 		throw new SmartyException('{add_form_element} requires a form attribute!');
@@ -50,7 +53,7 @@ function smarty_function_add_form_element($params, $template){
 
 	// Assign or render?
 	if(isset($params['assign'])){
-		$template->assign($params['assign'], $element->render());
+		$smarty->assign($params['assign'], $element->render());
 	}
 	else{
 		echo $element->render();

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -20,13 +20,72 @@
  */
 
 /**
- * @param $params
- * @param $template
+ * Render markup for an image tag in smarty
+ *
+ * The {img} smarty function is the recommended way to load images in templates from asset or public directories.
+ * In addition to automatically resolving URLs, it can also handle server-side resizing and a few other nifty features.
+ *
+ * #### Image Types &amp; Animations
+ *
+ * As of Core 3.3.0, image types are preserved, so if a .jpg is requested, an image/jpeg is returned.
+ * This changed from the previous behaviour where all images were converted to a PNG.
+ *
+ * Supported image types are `.jp[e]g`, `.png`, and `.gif`.
+ *
+ * If an animated gif is resized, the server will attempt to preserve the animation on the resized image.
+ * This is done via imagemagick, (so that library needs to be present on the server in order for this trick to work).
+ *
+ * #### SEO Data
+ *
+ * As of Core 3.2.0, alt tags are automatically added to every image that does not have the alt attribute explicitly set.
+ * This alt name is pulled from the filename of the image, with automatic capitalization and '_' => (space) converting.
+ *
+ * #### Smarty Parameters
+ *
+ *  * file
+ *    * \Core\Filestore\File
+ *    * File object passed in to display
+ *    * Either "file" or "src" is required.
+ *  * src
+ *    * string
+ *    * Source filename to display.  This can start with "assets" for an asset, or "public" for a public file.
+ *    * Either "file" or "src" is required.
+ *  * width
+ *    * int
+ *    * Maximum image width (in pixels).  If both width and height are provided, the image will be constrained to both without any distortion.
+ *
+ *  * height
+ *    * int
+ *    * Maximum image height (in pixels).  If both width and height are provided, the image will be constrained to both without any distortion.
+ *  * dimensions
+ *    * Provide both width and height in pixels, along with special instructions
+ *    * Structure is "widthxheight" with no spaces between the "x" and the two integers.
+ *    * Special modes available are:
+ *    * Carat "`^`" at the beginning of the string fits the smallest dimension instead of the largest.
+ *    * Exclamation mark "`!`" at the beginning forces size regardless of aspect ratio.
+ *    * Greater than "`>`" at the beginning will only increase image sizes.
+ *    * Less than "`<`" at the beginning will only decrease image sizes.
+ *  * placeholder
+ *    * string
+ *    * placeholder image if the requested image is blank or not found.  Useful for optional fields that should still display something.
+ *    * Current values: "building", "generic", "person", "person-tall", "person-wide", "photo"
+ *
+ * Any other parameter is transparently sent to the resulting `<img/>` tag.
+ *
+ *
+ * #### Example Usage
+ *
+ * <pre>
+ * {img src="public/gallery/photo123.png" width="123" height="123" placeholder="photo" alt="My photo 123"}
+ * </pre>
+ *
+ * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param Smarty $smarty  Parent Smarty template object
  *
  * @return string
  * @throws SmartyException
  */
-function smarty_function_img($params, $template){
+function smarty_function_img($params, $smarty){
 
 	// Key/value array of attributes for the resulting HTML.
 	$attributes = array();
@@ -154,5 +213,5 @@ function smarty_function_img($params, $template){
 		}
 	}
 
-    return $assign ? $template->assign($assign, $html) : $html;
+    return $assign ? $smarty->assign($assign, $html) : $html;
 }

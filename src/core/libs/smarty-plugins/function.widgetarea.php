@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -20,12 +20,13 @@
  */
 
 /**
- * @param $params
- * @param $template
+ * @todo Finish documentation of smarty_function_widgetarea
+ * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param Smarty $smarty  Parent Smarty template object
  *
  * @return string
  */
-function smarty_function_widgetarea($params, $template) {
+function smarty_function_widgetarea($params, $smarty) {
 	// Get all widgets set to load in this area.
 
 	$body = '';

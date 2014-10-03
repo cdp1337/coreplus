@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -23,13 +23,13 @@
  * @deprecated 2013.07 - cpowell
  *             The {img} function now supports all of what this did.
  *
- * @param $params
- * @param $template
+ * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param Smarty $smarty  Parent Smarty template object
  *
  * @return string
  * @throws SmartyException
  */
-function smarty_function_file_thumbnail($params, $template){
+function smarty_function_file_thumbnail($params, $smarty){
 
 	error_log('file_thumbnail is deprecated, please use the {img} tag instead.', E_USER_DEPRECATED);
 	
@@ -124,5 +124,5 @@ function smarty_function_file_thumbnail($params, $template){
 	foreach($attributes as $k => $v) $html .= " $k=\"$v\"";
 	$html .= '/>';
 	
-	return $assign ? $template->assign($assign, $html) : $html;
+	return $assign ? $smarty->assign($assign, $html) : $html;
 }

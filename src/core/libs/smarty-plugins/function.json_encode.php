@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -20,12 +20,13 @@
  */
 
 /**
- * @param $params
- * @param $template
+ * @todo Finish documentation of smarty_function_json_encode
+ * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param Smarty $smarty  Parent Smarty template object
  *
  * @return string
  */
-function smarty_function_json_encode($params, $template){
+function smarty_function_json_encode($params, $smarty){
 	
 	
 	if(isset($params['assign'])){
@@ -39,5 +40,5 @@ function smarty_function_json_encode($params, $template){
 	$out = json_encode($params);
 	//var_dump($out); die();
 	
-    return $assign ? $template->assign($assign, $out) : $out;
+    return $assign ? $smarty->assign($assign, $out) : $out;
 }

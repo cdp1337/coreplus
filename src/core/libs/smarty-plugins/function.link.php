@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -20,12 +20,16 @@
  */
 
 /**
- * @param $params
- * @param $template
+ * Resolve a dynamic or static link with smarty.
+ *
+ * @todo Finish documentation of smarty_function_link
+ *
+ * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param Smarty $smarty  Parent Smarty template object
  *
  * @return string
  */
-function smarty_function_link($params, $template){
+function smarty_function_link($params, $smarty){
 	
 	$assign= (isset($params['assign']))? $params['assign'] : false;
 	
@@ -35,8 +39,17 @@ function smarty_function_link($params, $template){
 	elseif(isset($params['to'])) $href = $params['to'];
 	elseif(isset($params[0])) $href = $params[0];
 	else $href = '/';
+
+	$originalHref = $href;
 	
 	$href = \Core\resolve_link($href);
+
+	if(!$href && strpos($originalHref, 'public/') === 0){
+		$file = \Core\Filestore\Factory::File($originalHref);
+		if($file->exists()){
+			$href = $file->getURL();
+		}
+	}
 
 	if(isset($params['ssl'])){
 		// Perform SSL translation of some sort.
@@ -55,7 +68,7 @@ function smarty_function_link($params, $template){
 	}
 
 	if($assign){
-		$template->assign($assign, $href);
+		$smarty->assign($assign, $href);
 	}
 	else{
 		return $href;

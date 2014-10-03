@@ -2,7 +2,7 @@
 /**
  * Smarty {script} block
  * 
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -22,35 +22,63 @@
  */
 
 /**
- * Include a script in the main template
- * 
- * Usage:
+ * Include a script in the main template in either the head or at the end of the body
+ *
+ * {script} is the preferred way to load javascript from a template.
+ *
+ * #### Smarty Parameters
+ *
+ *  * library
+ *    * string, the name of the registered script library to include
+ *    * ex: "jquery", "jqueryui", etc.
+ *  * src
+ *    * string, full resolved URL or Core-resolvable location of the asset.
+ *  * location
+ *    * string, "foot", or "head".  Foot will append the script block at the end of the body, head inside the &lt;head/&gt; tag.
+ *
+ * #### Example Usage
+ *
+ * Include jquery on this page.
  * <pre>
- * // Include jquery on this page.
- * {script name="jquery"}{/script}
- * 
- * // Another way to call javascript libraries
  * {script library="jquery"}{/script}
- * 
- * // Traditional "src" tags work too
+ * </pre>
+ *
+ * Another way to call javascript libraries
+ * <pre>
+ * {script library="jquery"}{/script}
+ * </pre>
+ *
+ * Traditional "src" tags work too
+ * <pre>
  * {script src="http://blah.tld/js/jquery.js"}{/script}
- * 
- * // Because it's a block-type tag... you can also do
+ * </pre>
+ *
+ * Because it's a block-type tag... you can also do
+ * <pre>
  * {script}
- *   // This section is automatically plugged into a <script> tag.
+ * // This section is automatically plugged into a &lt;script&gt; tag.
  * {/script}
- * 
- * // Specifying the location of the target rendering area is also allowable.
- * // This is useful for scripts that expect to be at the end of the body tag.
+ * </pre>
+ *
+ * Specifying the location of the target rendering area is also allowable.
+ * This is useful for scripts that expect to be at the end of the body tag.
+ * <pre>
  * {script src="js/mylib/foo.js" location="head"}{/script}
  * {script src="js/mylib/foo.js" location="foot"}{/script}
  * </pre>
- * 
- * 
- * @param type $params
- * @param type $template 
+ *
+ * @param array       $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param string|null $content Null on opening pass, rendered source of the contents inside the block on closing pass
+ * @param Smarty      $smarty  Parent Smarty template object
+ * @param boolean     $repeat  True at the first call of the block-function (the opening tag) and
+ * false on all subsequent calls to the block function (the block's closing tag).
+ * Each time the function implementation returns with $repeat being TRUE,
+ * the contents between {func}...{/func} are evaluated and the function implementation
+ * is called again with the new block contents in the parameter $content.
+ *
+ * @throws SmartyException
  */
-function smarty_block_script($params, $innercontent, $template, &$repeat){
+function smarty_block_script($params, $content, $smarty, &$repeat){
 	// This only needs to be called once.
 	if($repeat) return;
 
@@ -74,12 +102,12 @@ function smarty_block_script($params, $innercontent, $template, &$repeat){
 		\Core\view()->addScript($params['src'], $loc);
 	}
 	// a script tag can be called with no parameters, it is after all a script tag....
-	elseif($innercontent){
+	elseif($content){
 		// Does this content have a <script> tag already around it?
-		if(strpos($innercontent, '<script') === false){
-			$innercontent = '<script type="text/javascript">' . $innercontent . '</script>';
+		if(strpos($content, '<script') === false){
+			$content = '<script type="text/javascript">' . $content . '</script>';
 		}
 		$loc = (isset($params['location']))? $params['location'] : 'head';
-		\Core\view()->addScript($innercontent, $loc);
+		\Core\view()->addScript($content, $loc);
 	}
 }

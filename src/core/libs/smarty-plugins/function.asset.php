@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Core
+ * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@eval.bz>
  * @copyright Copyright (C) 2009-2014  Charlie Powell
@@ -19,7 +19,17 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-function smarty_function_asset($params, $template){
+/**
+ * Resolve an asset to a fully-resolved URL from within Smarty.
+ *
+ * This is the recommended way to handle asset url resolving from within templates.
+ *
+ * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
+ * @param Smarty $smarty  Parent Smarty template object
+ *
+ * @return string
+ */
+function smarty_function_asset($params, $smarty){
 
 	// I don't really care what it's called!
 	if(isset($params['file']))     $file = $params['file'];
@@ -28,8 +38,8 @@ function smarty_function_asset($params, $template){
 	elseif(isset($params[0]))      $file = $params[0];
 	else                           $file = 'images/404.jpg';
 
-	$f = Core::ResolveAsset($file);
+	$f = \Core\resolve_asset($file);
 
-	if(isset($params['assign'])) $template->assign($params['assign'], $f);
+	if(isset($params['assign'])) $smarty->assign($params['assign'], $f);
 	else return $f;
 }
