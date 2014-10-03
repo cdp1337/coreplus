@@ -357,6 +357,9 @@ if(exec('which sass') == ''){
 	echo "Skipping compiling of SASS resources, you do not have the sass compiler installed!\n";
 }
 else{
+	$sassversion = exec("sass --version | sed 's:^Sass \\([0-9\\.]*\\).*:\\1:'");
+	echo "Using SASS version " . $sassversion . "\n";
+
 	echo "Compiling SASS/SCSS resources...\n\n";
 	// [Filename] [CSS] [MIN]
 	echo 'FILENAME                                                                          DEV    MIN' . "\n";
@@ -400,13 +403,29 @@ else{
 		$cssfile = $outdirname . substr($outfilename, 0, -4) . 'css';
 		$minfile = $outdirname . substr($outfilename, 0, -4) . 'min.css';
 
-		exec('sass "' . $file . '":"' . $cssfile . '" -C -l -f -t expanded --unix-newlines --sourcemap', $null, $ret);
-		if($ret == 0) echo "[ OK ] ";
-		else echo "[ !! ]";
+		if(version_compare($sassversion, '3.4.4', '>=')){
+			// Version 3.4.4 of Sass changed some of the arguments for sourcemap,
+			// namely they reversed them.  So now the compressed version requires sourcemap instead of the standard one.
 
-		exec('sass "' . $file . '":"' . $minfile . '" -C -f -t compressed --unix-newlines', $null, $ret);
-		if($ret == 0) echo "[ OK ] ";
-		else echo "[ !! ]";
+			exec('sass "' . $file . '":"' . $cssfile . '" -C -l -f -t expanded --unix-newlines', $null, $ret);
+			if($ret == 0) echo "[ OK ] ";
+			else echo "[ !! ]";
+
+			exec('sass "' . $file . '":"' . $minfile . '" -C -f -t compressed --unix-newlines --sourcemap=none', $null, $ret);
+			if($ret == 0) echo "[ OK ] ";
+			else echo "[ !! ]";
+		}
+		else{
+			// Provide backwards compatibility for developers using an older version of SASS.
+			exec('sass "' . $file . '":"' . $cssfile . '" -C -l -f -t expanded --unix-newlines --sourcemap', $null, $ret);
+			if($ret == 0) echo "[ OK ] ";
+			else echo "[ !! ]";
+
+			exec('sass "' . $file . '":"' . $minfile . '" -C -f -t compressed --unix-newlines', $null, $ret);
+			if($ret == 0) echo "[ OK ] ";
+			else echo "[ !! ]";
+		}
+
 
 		echo "\n";
 	}
