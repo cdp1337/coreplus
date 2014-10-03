@@ -34,7 +34,13 @@ source "/opt/eval/basescript.sh"
 
 # Install the necessary dependencies
 if [ "$OSFAMILY" == "debian" ]; then
-	install ant php-pear php5-xsl php5-dev libxml-xpath-perl rubygems
+	if [ "$OS" == "ubuntu" -a "$OSVERSIONMAJ" -ge 14 ]; then
+		# Ubuntu 14.04 changed the name from rubygems to simply ruby, (all encompassing).
+		install ant php-pear php5-xsl php5-dev libxml-xpath-perl ruby
+	else
+		install ant php-pear php5-xsl php5-dev libxml-xpath-perl rubygems
+	fi
+
 elif [ "$OSFAMILY" == "redhat" ]; then
 	# RH based distros need some updates to utilize 3rd party projects.
 	if [ "$OSVERSIONMAJ" == "6" ]; then
@@ -48,6 +54,11 @@ elif [ "$OSFAMILY" == "redhat" ]; then
 	yum --enablerepo=remi,remi-test install -y \
 		php php-common php-devel php-xsl php-mbstring php-pear php-mysql php-gd php-xdebug \
 		ant mysql-server mysql perl-XML-XPath graphviz rubygems
+elif [ "$OSFAMILY" == "suse" ]; then
+	install ant php5-pear php5-xsl php5-bcmath
+else
+	printerror "Unknown / Unsupported operating system, [${OSFAMILY}]."
+	exit 1
 fi
 
 
@@ -63,6 +74,16 @@ pear channel-update pear.phpdoc.org
 
 printheader "Installing PEAR packages"
 
+# Actually remove the previous one... it may have sneaked in.
+# This will check and see if phpdoc is installed, but is installed as version 1.x
+pear info phpdoc/phpDocumentor 1>/dev/null
+if [ "$?" == "0" ]; then
+	if [ -n "$(pear info phpdoc/phpDocumentor | grep 'API Version' | egrep '[ ]*(1\.|2\.[0123])')" ]; then
+		printline "phpDocumentor is too old to support upgrading, uninstalling old version first."
+		pear uninstall phpdoc/phpDocumentor
+	fi
+fi
+
 # Install the phpunit libraries.
 for i in \
 	pear.phpunit.de/phploc \
@@ -71,36 +92,21 @@ for i in \
 	pdepend/PHP_Depend-beta \
 	phpmd/PHP_PMD \
 	pear.php.net/Text_Highlighter-0.7.3 \
-	PHP_CodeSniffer-1.5.0RC1;
+	PHP_CodeSniffer-1.5.0RC1 \
+	phpdoc/phpDocumentor;
 do
 	pear info $i 1>/dev/null
 	if [ "$?" == "0" ]; then
-		printline "$i already installed, skipping"
+		#printline "$i already installed, skipping"
+		printline "$i is installed, so checking for updates... ('install failed' is acceptable here.)"
+		pear install $i
+		#checkexitstatus "$?"
 	else
 		printline "$i is new, installing..."
 		pear install $i
 		checkexitstatus "$?"
 	fi
 done
-
-# Actually remove the previous one... it may have sneaked in.
-# This will check and see if phpdoc is installed, but is installed as version 1.x
-pear info phpdoc/phpDocumentor 1>/dev/null
-if [ "$?" == "0" ]; then
-	if [ -z "$(pear info phpdoc/phpDocumentor | grep 'API Version' | grep '2.4')" ]; then
-		pear uninstall phpdoc/phpDocumentor	
-	fi
-fi
-
-# Now I can check/install v2!
-pear info phpdoc/phpDocumentor 1>/dev/null
-if [ "$?" == "0" ]; then
-	printline "phpdoc/phpDocumentor already installed, skipping"
-else
-	printline "phpdoc/phpDocumentor is new, installing..."
-	pear install phpdoc/phpDocumentor
-	checkexitstatus "$?"
-fi
 
 printheader "Installing GEM packages"
 gem install sass
