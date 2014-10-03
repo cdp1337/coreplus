@@ -1004,75 +1004,25 @@ class Core implements ISingleton {
 	/**
 	 * Resolve an asset to a fully-resolved URL.
 	 *
-	 * @todo Add support for external assets.
+	 * @deprecated
+	 * @see \Core\resolve_asset
 	 *
 	 * @param string $asset
 	 *
 	 * @return string The full url of the asset, including the http://...
 	 */
 	public static function ResolveAsset($asset) {
-		// Allow already-resolved links to be returned verbatim.
-		if (strpos($asset, '://') !== false) return $asset;
-
-		// Since an asset is just a file, I'll use the builtin file store system.
-		// (although every file coming in should be assumed to be an asset, so
-		//  allow for a partial path name to come in, assuming asset/).
-
-		if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
-
-		$version = ConfigHandler::Get('/core/filestore/assetversion');
-		$proxyfriendly = ConfigHandler::Get('/core/assetversion/proxyfriendly');
-
-
-		$file     = \Core\Filestore\Factory::File($asset);
-		$filename = $file->getFilename();
-		$ext      = $file->getExtension();
-		$suffix   = '';
-
-		// Remove the extension from the filename, (makes the logic cleaner).
-		$url = substr($file->getURL(), 0, -1-strlen($ext));
-
-		if(ConfigHandler::Get('/core/javascript/minified')){
-			// Core is set to use minified css and javascript assets, try to locate those!
-			// I need to do the check based on the base $filename, because 'assets/css/reset.css' may reside in one
-			// of many locations, and not all of them may have a minified version.
-			if($ext == 'js'){
-				// Try to load the minified version instead.
-				$minified = $filename . '.min.js';
-				$minfile = \Core\Filestore\Factory::File($minified);
-				if($minfile->exists()){
-					// Overwrite the $file variable so it's returned instead.
-					$ext = 'min.js';
-				}
-			}
-			elseif($ext == 'css'){
-				// Try to load the minified version instead.
-				$minified = substr($filename, 0, -4) . '.min.css';
-				$minfile = \Core\Filestore\Factory::File($minified);
-				if($minfile->exists()){
-					// Overwrite the $file variable so it's returned instead.
-					$ext = 'min.css';
-				}
-			}
-		}
-
-		if($version && $proxyfriendly){
-			$ext = 'v' . $version . '.' . $ext;
-		}
-		elseif($version){
-			$suffix = '?v=' . $version;
-		}
-
-		return $url . '.' . $ext . $suffix;
+		return \Core\resolve_asset($asset);
 	}
 
 	/**
 	 * Resolve a url or application path to a fully-resolved URL.
 	 *
 	 * This can also be an already-resolved link.  If so, no action is taken
-	 *  and the original URL is returned unchanged.
+	 * and the original URL is returned unchanged.
 	 *
-	 * Alias of \Core\resolve_link
+	 * @deprecated
+	 * @see \Core\resolve_link
 	 *
 	 * @param string $url
 	 *
@@ -1208,8 +1158,8 @@ class Core implements ISingleton {
 			else $extraparams[] = $k . '=' . $v;
 		}
 		return $base .
-			(sizeof($coreparams) ? '/' . implode('/', $coreparams) : '') .
-			(sizeof($extraparams) ? '?' . implode('&', $extraparams) : '');
+			(sizeof($coreparams) > 0 ? '/' . implode('/', $coreparams) : '') .
+			(sizeof($extraparams) > 0 ? '?' . implode('&', $extraparams) : '');
 	}
 
 	/**
@@ -1302,11 +1252,12 @@ class Core implements ISingleton {
 	/**
 	 * Retrieve the messages and optionally clear the message stack.
 	 *
-	 * @param unknown_type $return_type
+	 * @param bool $returnSorted
+	 * @param bool $clearStack
 	 *
-	 * @return unknown
+	 * @return array
 	 */
-	static public function GetMessages($returnSorted = FALSE, $clearStack = TRUE) {
+	static public function GetMessages($returnSorted = false, $clearStack = true) {
 		/*
 		global $_DB;
 		global $_SESS;
