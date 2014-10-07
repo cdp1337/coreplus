@@ -7,7 +7,7 @@
  * @package
  * @since 0.1
  * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,20 +49,19 @@ class ContentGZ implements Filestore\Contents {
 	 * @return mixed
 	 */
 	public function uncompress($dst = false) {
-		if ($dst) {
-			// @todo decompress the file to the requested destination file.
+		$zd = gzopen($this->_file->getLocalFilename(), "r");
+		if (!$zd) return false;
+
+		$contents = '';
+		while (!feof($zd)) {
+			$contents .= gzread($zd, 2048);
 		}
-		else {
-			// Just return the file contents.
-			$zd = gzopen($this->_file->getLocalFilename(), "r");
-			if (!$zd) return false;
+		gzclose($zd);
 
-			$contents = '';
-			while (!feof($zd)) {
-				$contents .= gzread($zd, 2048);
-			}
-			gzclose($zd);
-
+		if($dst){
+			$dst->putContents($contents);
+		}
+		else{
 			return $contents;
 		}
 	}
