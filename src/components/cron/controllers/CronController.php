@@ -305,9 +305,16 @@ class CronController extends Controller_2_1 {
 						$b['call']
 					);
 					// Since these systems will just be writing to STDOUT, I'll need to capture that.
-					ob_start();
-					$execution = $hook->callBinding($b, array());
-					$executiondata = ob_get_clean();
+					try{
+						ob_start();
+						$execution = $hook->callBinding($b, array());
+						$executiondata = ob_get_clean();
+					}
+					catch(Exception $e){
+						$execution     = false;
+						$executiondata = $e->getMessage();
+					}
+
 
 					if($executiondata == '' && $execution){
 						$contents .= "Cron executed successfully with no output\n";
