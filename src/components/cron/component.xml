@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.1.7">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.1.8">
 	<hooks>
 		<hookregister name="/cron/hourly" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/daily" description="Daily hook called from the cron system"/>
@@ -21,18 +21,18 @@
 		<file filename="templates/pages/cron/admin.tpl" md5="b46c7df494d30a0f3daa43a2ba24cc33"/>
 		<file filename="templates/pages/cron/howto.tpl" md5="2e383dac65fc8c90dfbeb215234c1c83"/>
 		<file filename="templates/pages/cron/view.tpl" md5="85a11c600e0df17c5eec99df61b508d4"/>
-		<file filename="templates/widgets/cron/dashboard.tpl" md5="3f84d62f8bfc35e709062b70b9ef9fd9"/>
+		<file filename="templates/widgets/cron/dashboard.tpl" md5="529c9f4d014a4a59e40d20eea6265d1c"/>
 	</view>
 	<widgets>
 		<widget baseurl="/cron/dashboard" title="Cron Status Dashboard" installable="/admin"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="a21726c40554aae5f3495785d65f1a3e"/>
+		<file filename="CHANGELOG" md5="5038c6844df3d6fcdfc907cf3b1e2460"/>
 		<file filename="README.md" md5="addbc7f6e77640e87a70e40a44948e61"/>
 		<file filename="classes/CronHelper.php" md5="ba7b794f691ba12729d42f2275cee260">
 			<class name="CronHelper"/>
 		</file>
-		<file filename="controllers/CronController.php" md5="18c1d4005606e22ed4e748bfa86cd67c">
+		<file filename="controllers/CronController.php" md5="b01fc3ffe347e6ef54fbeb25bac9b0d4">
 			<controller name="CronController"/>
 		</file>
 		<file filename="models/CronLogModel.php" md5="febfe029a9b79996df5fb99e26e279fc">
@@ -51,6 +51,7 @@
 		<upgrade from="1.1.4" to="1.1.5"/>
 		<upgrade from="1.1.5" to="1.1.6"/>
 		<upgrade from="1.1.6" to="1.1.7"/>
+		<upgrade from="1.1.7" to="1.1.8"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/cron.css" md5="1fb2835458acdf8e3a098952e4eafa32"/>

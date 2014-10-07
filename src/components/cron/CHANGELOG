@@ -1,3 +1,9 @@
+Cron 1.1.8
+
+	* Wrap cron executions with a try/catch to prevent Exceptions from bombing out the rest of the calls.
+	* Correctly display cron execution times that are > 2 minutes.
+	-- Charlie Powell <charlie@eval.bz>  Tue, 07 Oct 2014 16:03:59 -0400
+
 Cron 1.1.7
 
 	* [Bug] Fix on the admin pages of the Cron system, incorrect master template was being used.
