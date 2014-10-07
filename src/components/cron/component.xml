@@ -55,6 +55,7 @@
 		<upgrade from="1.1.5" to="1.1.6"/>
 		<upgrade from="1.1.6" to="1.1.7"/>
 		<upgrade from="1.1.7" to="1.2.0"/>
+		<upgrade from="1.1.8" to="1.2.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/cron.css" md5="1fb2835458acdf8e3a098952e4eafa32"/>
