@@ -31,7 +31,7 @@
 		The complete complete build with all purging, building, source code scanning, and validation. 
 		This takes about 10 minutes to complete on a high speed SSD, so be warned with running it!
 	-->
-	<target name="fullbuild" depends="prepare_build,purge_src,reinstall_src,lint,phploc,pdepend,phpcpd,phpdoc-ci,compile,phpunit-ci,phpcb,changelogs"/>
+	<target name="fullbuild" depends="clean_build,prepare_build,purge_src,reinstall_src,lint,phploc,pdepend,phpcpd,phpdoc-ci,compile,phpunit-ci,phpcb,changelogs"/>
 
 	<!--
 		Delete the dynamic resources created in the build directory.
@@ -55,7 +55,7 @@
 	<!--
 		Create the 
 	-->
-	<target name="prepare_build" depends="clean_build" description="Prepare for build">
+	<target name="prepare_build" description="Ensure that all the build destination directories exist">
 		<mkdir dir="${basedir}/build/api"/>
 		<mkdir dir="${basedir}/build/code-browser"/>
 		<mkdir dir="${basedir}/build/coverage"/>
@@ -227,13 +227,12 @@
 			<!-- Scan and log private and @internal methods too -->
 			<arg value="--parseprivate"/>
 
-			<!-- Set the template to Core's phpdoc template. -->
-			<arg value="--template"/>
-			<arg value="phpdoc-templates/coreplus"/>
+			<!-- Include Sourcecode -->
+			<arg value="--sourcecode"/>
 
 		</exec>
 	</target>
-	<target name="phpdoc-ci" depends="prepare_build,clean_src" description="Generate phpDoc Documentation on the product (CI Compatible version)">
+	<target name="phpdoc-ci" depends="clean_build,prepare_build,clean_src" description="Generate phpDoc Documentation on the product (CI Compatible version)">
 		<exec executable="phpdoc" failonerror="false">
 			<!-- Scan this directory (source code) -->
 			<arg value="-d"/>
@@ -253,9 +252,15 @@
 			<!-- Scan and log private and @internal methods too -->
 			<arg value="--parseprivate"/>
 
+			<!-- Include Sourcecode -->
+			<arg value="--sourcecode"/>
+
+			<!-- SSSH -->
+			<arg value="--quiet"/>
+
 			<!-- Set the template to Core's phpdoc template. -->
-			<arg value="--template"/>
-			<arg value="phpdoc-templates/coreplus"/>
+			<!--<arg value="- -template"/>
+			<arg value="phpdoc-templates/coreplus"/>-->
 
 		</exec>
 	</target>
