@@ -1,17 +1,17 @@
 # This is the public and asset files directory.  It is changeable in the installer, so
 # if you set the root directory as something else, please _add_ the directory to this list.
 # Please do not remove the directories that are listed, as someone else is probably expecting that directory exclusion.
-/src/filestore
-/src/files
+src/filestore
+src/files
 
 # Skip the netbeans project directory, this is developer centric
-/nbproject
+nbproject
 
 # Skip the htaccess file, this is server centric
-/src/.htaccess
+src/.htaccess
 
 # Skip the configuration file, this is developer and server centric
-/src/config/configuration.xml
+src/config/configuration.xml
 
 # Skip some Apple directories, these is machine centric
 .DS_Store
@@ -25,35 +25,23 @@
 *.swp
 
 # Skip some additional PhpStorm metafiles.  These are all project centric
-# I need to explicitly list the files to ignore in this directory because ONE needs to be included,
-# codeStyleSettings.xml is extremely useful for ensuring that additional installations of phpStorm play nicely.
-/.idea/*.iml
-/.idea/.name
-/.idea/dataSources.ids
-/.idea/dataSources.xml
-/.idea/deployment.xml
-/.idea/encodings.xml
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/scopes
-/.idea/sqldialects.xml
-/.idea/vcs.xml
-/.idea/watcherTasks.xml
-/.idea/workspace.xml
+# I need to include codeStyleSettings.xml since that is useful to have in the project.
+.idea/*
+!.idea/codeStyleSettings.xml
 
 # Skip the GPG keys.
-/src/gnupg/*.gpg
+src/gnupg/*.gpg
 
 # These are used in development environments.
-/exports
-/exports-archived
+exports
+exports-archived
 
 # These are used in the build system.
-/ant.properties
-/build/*
-/cache.properties
-/message.txt
+ant.properties
+build/*
+cache.properties
+message.txt
 
 # Skip any compiled and dynamic resource.
-/src/logs
-/src/themes/custom
+src/logs
+src/themes/custom
