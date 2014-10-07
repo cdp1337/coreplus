@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*!
  *  Font Awesome 4.0.3 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -87,7 +88,7 @@
 /* line 4, _bordered-pulled.scss */
 .icon-border {
   padding: .2em .25em .15em;
-  border: solid 0.08em #eeeeee;
+  border: solid 0.08em #eee;
   border-radius: .1em;
 }
 
@@ -119,56 +120,41 @@
 }
 
 @-moz-keyframes spin {
-  /* line 12, _spinning.scss */
   0% {
     -moz-transform: rotate(0deg);
   }
-
-  /* line 13, _spinning.scss */
   100% {
     -moz-transform: rotate(359deg);
   }
 }
 @-webkit-keyframes spin {
-  /* line 16, _spinning.scss */
   0% {
     -webkit-transform: rotate(0deg);
   }
-
-  /* line 17, _spinning.scss */
   100% {
     -webkit-transform: rotate(359deg);
   }
 }
 @-o-keyframes spin {
-  /* line 20, _spinning.scss */
   0% {
     -o-transform: rotate(0deg);
   }
-
-  /* line 21, _spinning.scss */
   100% {
     -o-transform: rotate(359deg);
   }
 }
 @-ms-keyframes spin {
-  /* line 24, _spinning.scss */
   0% {
     -ms-transform: rotate(0deg);
   }
-
-  /* line 25, _spinning.scss */
   100% {
     -ms-transform: rotate(359deg);
   }
 }
 @keyframes spin {
-  /* line 28, _spinning.scss */
   0% {
     transform: rotate(0deg);
   }
-
-  /* line 29, _spinning.scss */
   100% {
     transform: rotate(359deg);
   }
@@ -253,7 +239,7 @@
 
 /* line 20, _stacked.scss */
 .icon-inverse {
-  color: white;
+  color: #fff;
 }
 
 /** Core-optimized icon set for FA **/
@@ -271,7 +257,7 @@
 
 /* line 56, _mixins.scss */
 .icon-add:before {
-  content: "\f067";
+  content: "";
 }
 
 /** Icon definition for adjust **/
@@ -288,7 +274,7 @@
 
 /* line 56, _mixins.scss */
 .icon-adjust:before {
-  content: "\f042";
+  content: "";
 }
 
 /** Icon definition for adn **/
@@ -305,7 +291,7 @@
 
 /* line 56, _mixins.scss */
 .icon-adn:before {
-  content: "\f170";
+  content: "";
 }
 
 /** Icon definition for align-center **/
@@ -322,7 +308,7 @@
 
 /* line 56, _mixins.scss */
 .icon-align-center:before {
-  content: "\f037";
+  content: "";
 }
 
 /** Icon definition for align-justify **/
@@ -339,7 +325,7 @@
 
 /* line 56, _mixins.scss */
 .icon-align-justify:before {
-  content: "\f039";
+  content: "";
 }
 
 /** Icon definition for align-left **/
@@ -356,7 +342,7 @@
 
 /* line 56, _mixins.scss */
 .icon-align-left:before {
-  content: "\f036";
+  content: "";
 }
 
 /** Icon definition for align-right **/
@@ -373,7 +359,7 @@
 
 /* line 56, _mixins.scss */
 .icon-align-right:before {
-  content: "\f038";
+  content: "";
 }
 
 /** Icon definition for ambulance **/
@@ -390,7 +376,7 @@
 
 /* line 56, _mixins.scss */
 .icon-ambulance:before {
-  content: "\f0f9";
+  content: "";
 }
 
 /** Icon definition for anchor **/
@@ -407,7 +393,7 @@
 
 /* line 56, _mixins.scss */
 .icon-anchor:before {
-  content: "\f13d";
+  content: "";
 }
 
 /** Icon definition for android **/
@@ -424,7 +410,7 @@
 
 /* line 56, _mixins.scss */
 .icon-android:before {
-  content: "\f17b";
+  content: "";
 }
 
 /** Icon definition for angle-double-down **/
@@ -441,7 +427,7 @@
 
 /* line 56, _mixins.scss */
 .icon-angle-double-down:before {
-  content: "\f103";
+  content: "";
 }
 
 /** Icon definition for angle-double-left **/
@@ -458,7 +444,7 @@
 
 /* line 56, _mixins.scss */
 .icon-angle-double-left:before {
-  content: "\f100";
+  content: "";
 }
 
 /** Icon definition for angle-double-right **/
@@ -475,7 +461,7 @@
 
 /* line 56, _mixins.scss */
 .icon-angle-double-right:before {
-  content: "\f101";
+  content: "";
 }
 
 /** Icon definition for angle-double-up **/
@@ -492,7 +478,7 @@
 
 /* line 56, _mixins.scss */
 .icon-angle-double-up:before {
-  content: "\f102";
+  content: "";
 }
 
 /** Icon definition for angle-down **/
@@ -509,7 +495,7 @@
 
 /* line 56, _mixins.scss */
 .icon-angle-down:before {
-  content: "\f107";
+  content: "";
 }
 
 /** Icon definition for angle-left **/
@@ -526,7 +512,7 @@
 
 /* line 56, _mixins.scss */
 .icon-angle-left:before {
-  content: "\f104";
+  content: "";
 }
 
 /** Icon definition for angle-right **/
@@ -543,7 +529,7 @@
 
 /* line 56, _mixins.scss */
 .icon-angle-right:before {
-  content: "\f105";
+  content: "";
 }
 
 /** Icon definition for angle-up **/
@@ -560,7 +546,7 @@
 
 /* line 56, _mixins.scss */
 .icon-angle-up:before {
-  content: "\f106";
+  content: "";
 }
 
 /** Icon definition for apple **/
@@ -577,7 +563,7 @@
 
 /* line 56, _mixins.scss */
 .icon-apple:before {
-  content: "\f179";
+  content: "";
 }
 
 /** Icon definition for archive **/
@@ -594,7 +580,7 @@
 
 /* line 56, _mixins.scss */
 .icon-archive:before {
-  content: "\f187";
+  content: "";
 }
 
 /** Icon definition for arrow-circle-down **/
@@ -611,7 +597,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrow-circle-down:before {
-  content: "\f0ab";
+  content: "";
 }
 
 /** Icon definition for arrow-circle-left **/
@@ -628,7 +614,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrow-circle-left:before {
-  content: "\f0a8";
+  content: "";
 }
 
 /** Icon definition for arrow-circle-o-down **/
@@ -645,7 +631,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrow-circle-o-down:before {
-  content: "\f01a";
+  content: "";
 }
 
 /** Icon definition for arrow-circle-o-left **/
@@ -662,7 +648,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrow-circle-o-left:before {
-  content: "\f190";
+  content: "";
 }
 
 /** Icon definition for arrow-circle-o-right **/
@@ -679,7 +665,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrow-circle-o-right:before {
-  content: "\f18e";
+  content: "";
 }
 
 /** Icon definition for arrow-circle-o-up **/
@@ -696,7 +682,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrow-circle-o-up:before {
-  content: "\f01b";
+  content: "";
 }
 
 /** Icon definition for arrow-circle-right **/
@@ -713,7 +699,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrow-circle-right:before {
-  content: "\f0a9";
+  content: "";
 }
 
 /** Icon definition for arrow-circle-up **/
@@ -730,7 +716,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrow-circle-up:before {
-  content: "\f0aa";
+  content: "";
 }
 
 /** Icon definition for arrow-down **/
@@ -747,7 +733,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrow-down:before {
-  content: "\f063";
+  content: "";
 }
 
 /** Icon definition for arrow-left **/
@@ -764,7 +750,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrow-left:before {
-  content: "\f060";
+  content: "";
 }
 
 /** Icon definition for arrow-right **/
@@ -781,7 +767,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrow-right:before {
-  content: "\f061";
+  content: "";
 }
 
 /** Icon definition for arrows-alt **/
@@ -798,7 +784,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrows-alt:before {
-  content: "\f0b2";
+  content: "";
 }
 
 /** Icon definition for arrows **/
@@ -815,7 +801,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrows:before {
-  content: "\f047";
+  content: "";
 }
 
 /** Icon definition for arrows-h **/
@@ -832,7 +818,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrows-h:before {
-  content: "\f07e";
+  content: "";
 }
 
 /** Icon definition for arrows-v **/
@@ -849,7 +835,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrows-v:before {
-  content: "\f07d";
+  content: "";
 }
 
 /** Icon definition for arrow-up **/
@@ -866,7 +852,7 @@
 
 /* line 56, _mixins.scss */
 .icon-arrow-up:before {
-  content: "\f062";
+  content: "";
 }
 
 /** Icon definition for asterisk **/
@@ -883,7 +869,7 @@
 
 /* line 56, _mixins.scss */
 .icon-asterisk:before {
-  content: "\f069";
+  content: "";
 }
 
 /** Icon definition for backward **/
@@ -900,7 +886,7 @@
 
 /* line 56, _mixins.scss */
 .icon-backward:before {
-  content: "\f04a";
+  content: "";
 }
 
 /** Icon definition for ban **/
@@ -917,7 +903,7 @@
 
 /* line 56, _mixins.scss */
 .icon-ban:before {
-  content: "\f05e";
+  content: "";
 }
 
 /** Icon definition for bar-chart-o **/
@@ -934,7 +920,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bar-chart-o:before {
-  content: "\f080";
+  content: "";
 }
 
 /** Icon definition for barcode **/
@@ -951,7 +937,7 @@
 
 /* line 56, _mixins.scss */
 .icon-barcode:before {
-  content: "\f02a";
+  content: "";
 }
 
 /** Icon definition for bars **/
@@ -968,7 +954,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bars:before {
-  content: "\f0c9";
+  content: "";
 }
 
 /** Icon definition for beer **/
@@ -985,7 +971,7 @@
 
 /* line 56, _mixins.scss */
 .icon-beer:before {
-  content: "\f0fc";
+  content: "";
 }
 
 /** Icon definition for bell **/
@@ -1002,7 +988,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bell:before {
-  content: "\f0f3";
+  content: "";
 }
 
 /** Icon definition for bell-o **/
@@ -1019,7 +1005,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bell-o:before {
-  content: "\f0a2";
+  content: "";
 }
 
 /** Icon definition for bitbucket **/
@@ -1036,7 +1022,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bitbucket:before {
-  content: "\f171";
+  content: "";
 }
 
 /** Icon definition for bitbucket-square **/
@@ -1053,7 +1039,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bitbucket-square:before {
-  content: "\f172";
+  content: "";
 }
 
 /** Icon definition for bitcoin **/
@@ -1070,7 +1056,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bitcoin:before {
-  content: "\f15a";
+  content: "";
 }
 
 /** Icon definition for bold **/
@@ -1087,7 +1073,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bold:before {
-  content: "\f032";
+  content: "";
 }
 
 /** Icon definition for bolt **/
@@ -1104,7 +1090,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bolt:before {
-  content: "\f0e7";
+  content: "";
 }
 
 /** Icon definition for book **/
@@ -1121,7 +1107,7 @@
 
 /* line 56, _mixins.scss */
 .icon-book:before {
-  content: "\f02d";
+  content: "";
 }
 
 /** Icon definition for bookmark **/
@@ -1138,7 +1124,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bookmark:before {
-  content: "\f02e";
+  content: "";
 }
 
 /** Icon definition for bookmark-o **/
@@ -1155,7 +1141,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bookmark-o:before {
-  content: "\f097";
+  content: "";
 }
 
 /** Icon definition for briefcase **/
@@ -1172,7 +1158,7 @@
 
 /* line 56, _mixins.scss */
 .icon-briefcase:before {
-  content: "\f0b1";
+  content: "";
 }
 
 /** Icon definition for btc **/
@@ -1189,7 +1175,7 @@
 
 /* line 56, _mixins.scss */
 .icon-btc:before {
-  content: "\f15a";
+  content: "";
 }
 
 /** Icon definition for bug **/
@@ -1206,7 +1192,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bug:before {
-  content: "\f188";
+  content: "";
 }
 
 /** Icon definition for building-o **/
@@ -1223,7 +1209,7 @@
 
 /* line 56, _mixins.scss */
 .icon-building-o:before {
-  content: "\f0f7";
+  content: "";
 }
 
 /** Icon definition for bullhorn **/
@@ -1240,7 +1226,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bullhorn:before {
-  content: "\f0a1";
+  content: "";
 }
 
 /** Icon definition for bullseye **/
@@ -1257,7 +1243,7 @@
 
 /* line 56, _mixins.scss */
 .icon-bullseye:before {
-  content: "\f140";
+  content: "";
 }
 
 /** Icon definition for calendar **/
@@ -1274,7 +1260,7 @@
 
 /* line 56, _mixins.scss */
 .icon-calendar:before {
-  content: "\f073";
+  content: "";
 }
 
 /** Icon definition for calendar-o **/
@@ -1291,7 +1277,7 @@
 
 /* line 56, _mixins.scss */
 .icon-calendar-o:before {
-  content: "\f133";
+  content: "";
 }
 
 /** Icon definition for camera **/
@@ -1308,7 +1294,7 @@
 
 /* line 56, _mixins.scss */
 .icon-camera:before {
-  content: "\f030";
+  content: "";
 }
 
 /** Icon definition for camera-retro **/
@@ -1325,7 +1311,7 @@
 
 /* line 56, _mixins.scss */
 .icon-camera-retro:before {
-  content: "\f083";
+  content: "";
 }
 
 /** Icon definition for caret-down **/
@@ -1342,7 +1328,7 @@
 
 /* line 56, _mixins.scss */
 .icon-caret-down:before {
-  content: "\f0d7";
+  content: "";
 }
 
 /** Icon definition for caret-left **/
@@ -1359,7 +1345,7 @@
 
 /* line 56, _mixins.scss */
 .icon-caret-left:before {
-  content: "\f0d9";
+  content: "";
 }
 
 /** Icon definition for caret-right **/
@@ -1376,7 +1362,7 @@
 
 /* line 56, _mixins.scss */
 .icon-caret-right:before {
-  content: "\f0da";
+  content: "";
 }
 
 /** Icon definition for caret-square-o-down **/
@@ -1393,7 +1379,7 @@
 
 /* line 56, _mixins.scss */
 .icon-caret-square-o-down:before {
-  content: "\f150";
+  content: "";
 }
 
 /** Icon definition for caret-square-o-left **/
@@ -1410,7 +1396,7 @@
 
 /* line 56, _mixins.scss */
 .icon-caret-square-o-left:before {
-  content: "\f191";
+  content: "";
 }
 
 /** Icon definition for caret-square-o-right **/
@@ -1427,7 +1413,7 @@
 
 /* line 56, _mixins.scss */
 .icon-caret-square-o-right:before {
-  content: "\f152";
+  content: "";
 }
 
 /** Icon definition for caret-square-o-up **/
@@ -1444,7 +1430,7 @@
 
 /* line 56, _mixins.scss */
 .icon-caret-square-o-up:before {
-  content: "\f151";
+  content: "";
 }
 
 /** Icon definition for caret-up **/
@@ -1461,7 +1447,7 @@
 
 /* line 56, _mixins.scss */
 .icon-caret-up:before {
-  content: "\f0d8";
+  content: "";
 }
 
 /** Icon definition for certificate **/
@@ -1478,7 +1464,7 @@
 
 /* line 56, _mixins.scss */
 .icon-certificate:before {
-  content: "\f0a3";
+  content: "";
 }
 
 /** Icon definition for chain-broken **/
@@ -1495,7 +1481,7 @@
 
 /* line 56, _mixins.scss */
 .icon-chain-broken:before {
-  content: "\f127";
+  content: "";
 }
 
 /** Icon definition for chain **/
@@ -1512,7 +1498,7 @@
 
 /* line 56, _mixins.scss */
 .icon-chain:before {
-  content: "\f0c1";
+  content: "";
 }
 
 /** Icon definition for check-circle **/
@@ -1529,7 +1515,7 @@
 
 /* line 56, _mixins.scss */
 .icon-check-circle:before {
-  content: "\f058";
+  content: "";
 }
 
 /** Icon definition for check-circle-o **/
@@ -1546,7 +1532,7 @@
 
 /* line 56, _mixins.scss */
 .icon-check-circle-o:before {
-  content: "\f05d";
+  content: "";
 }
 
 /** Icon definition for check **/
@@ -1563,7 +1549,7 @@
 
 /* line 56, _mixins.scss */
 .icon-check:before {
-  content: "\f00c";
+  content: "";
 }
 
 /** Icon definition for check-square **/
@@ -1580,7 +1566,7 @@
 
 /* line 56, _mixins.scss */
 .icon-check-square:before {
-  content: "\f14a";
+  content: "";
 }
 
 /** Icon definition for check-square-o **/
@@ -1597,7 +1583,7 @@
 
 /* line 56, _mixins.scss */
 .icon-check-square-o:before {
-  content: "\f046";
+  content: "";
 }
 
 /** Icon definition for chevron-circle-down **/
@@ -1614,7 +1600,7 @@
 
 /* line 56, _mixins.scss */
 .icon-chevron-circle-down:before {
-  content: "\f13a";
+  content: "";
 }
 
 /** Icon definition for chevron-circle-left **/
@@ -1631,7 +1617,7 @@
 
 /* line 56, _mixins.scss */
 .icon-chevron-circle-left:before {
-  content: "\f137";
+  content: "";
 }
 
 /** Icon definition for chevron-circle-right **/
@@ -1648,7 +1634,7 @@
 
 /* line 56, _mixins.scss */
 .icon-chevron-circle-right:before {
-  content: "\f138";
+  content: "";
 }
 
 /** Icon definition for chevron-circle-up **/
@@ -1665,7 +1651,7 @@
 
 /* line 56, _mixins.scss */
 .icon-chevron-circle-up:before {
-  content: "\f139";
+  content: "";
 }
 
 /** Icon definition for chevron-down **/
@@ -1682,7 +1668,7 @@
 
 /* line 56, _mixins.scss */
 .icon-chevron-down:before {
-  content: "\f078";
+  content: "";
 }
 
 /** Icon definition for chevron-left **/
@@ -1699,7 +1685,7 @@
 
 /* line 56, _mixins.scss */
 .icon-chevron-left:before {
-  content: "\f053";
+  content: "";
 }
 
 /** Icon definition for chevron-right **/
@@ -1716,7 +1702,7 @@
 
 /* line 56, _mixins.scss */
 .icon-chevron-right:before {
-  content: "\f054";
+  content: "";
 }
 
 /** Icon definition for chevron-up **/
@@ -1733,7 +1719,7 @@
 
 /* line 56, _mixins.scss */
 .icon-chevron-up:before {
-  content: "\f077";
+  content: "";
 }
 
 /** Icon definition for circle **/
@@ -1750,7 +1736,7 @@
 
 /* line 56, _mixins.scss */
 .icon-circle:before {
-  content: "\f111";
+  content: "";
 }
 
 /** Icon definition for circle-o **/
@@ -1767,7 +1753,7 @@
 
 /* line 56, _mixins.scss */
 .icon-circle-o:before {
-  content: "\f10c";
+  content: "";
 }
 
 /** Icon definition for clipboard **/
@@ -1784,7 +1770,7 @@
 
 /* line 56, _mixins.scss */
 .icon-clipboard:before {
-  content: "\f0ea";
+  content: "";
 }
 
 /** Icon definition for clock-o **/
@@ -1801,7 +1787,7 @@
 
 /* line 56, _mixins.scss */
 .icon-clock-o:before {
-  content: "\f017";
+  content: "";
 }
 
 /** Icon definition for cloud-download **/
@@ -1818,7 +1804,7 @@
 
 /* line 56, _mixins.scss */
 .icon-cloud-download:before {
-  content: "\f0ed";
+  content: "";
 }
 
 /** Icon definition for cloud **/
@@ -1835,7 +1821,7 @@
 
 /* line 56, _mixins.scss */
 .icon-cloud:before {
-  content: "\f0c2";
+  content: "";
 }
 
 /** Icon definition for cloud-upload **/
@@ -1852,7 +1838,7 @@
 
 /* line 56, _mixins.scss */
 .icon-cloud-upload:before {
-  content: "\f0ee";
+  content: "";
 }
 
 /** Icon definition for cny **/
@@ -1869,7 +1855,7 @@
 
 /* line 56, _mixins.scss */
 .icon-cny:before {
-  content: "\f157";
+  content: "";
 }
 
 /** Icon definition for code **/
@@ -1886,7 +1872,7 @@
 
 /* line 56, _mixins.scss */
 .icon-code:before {
-  content: "\f121";
+  content: "";
 }
 
 /** Icon definition for code-fork **/
@@ -1903,7 +1889,7 @@
 
 /* line 56, _mixins.scss */
 .icon-code-fork:before {
-  content: "\f126";
+  content: "";
 }
 
 /** Icon definition for coffee **/
@@ -1920,7 +1906,7 @@
 
 /* line 56, _mixins.scss */
 .icon-coffee:before {
-  content: "\f0f4";
+  content: "";
 }
 
 /** Icon definition for cog **/
@@ -1937,7 +1923,7 @@
 
 /* line 56, _mixins.scss */
 .icon-cog:before {
-  content: "\f013";
+  content: "";
 }
 
 /** Icon definition for cogs **/
@@ -1954,7 +1940,7 @@
 
 /* line 56, _mixins.scss */
 .icon-cogs:before {
-  content: "\f085";
+  content: "";
 }
 
 /** Icon definition for columns **/
@@ -1971,7 +1957,7 @@
 
 /* line 56, _mixins.scss */
 .icon-columns:before {
-  content: "\f0db";
+  content: "";
 }
 
 /** Icon definition for comment **/
@@ -1988,7 +1974,7 @@
 
 /* line 56, _mixins.scss */
 .icon-comment:before {
-  content: "\f075";
+  content: "";
 }
 
 /** Icon definition for comment-o **/
@@ -2005,7 +1991,7 @@
 
 /* line 56, _mixins.scss */
 .icon-comment-o:before {
-  content: "\f0e5";
+  content: "";
 }
 
 /** Icon definition for comments **/
@@ -2022,7 +2008,7 @@
 
 /* line 56, _mixins.scss */
 .icon-comments:before {
-  content: "\f086";
+  content: "";
 }
 
 /** Icon definition for comments-o **/
@@ -2039,7 +2025,7 @@
 
 /* line 56, _mixins.scss */
 .icon-comments-o:before {
-  content: "\f0e6";
+  content: "";
 }
 
 /** Icon definition for compass **/
@@ -2056,7 +2042,7 @@
 
 /* line 56, _mixins.scss */
 .icon-compass:before {
-  content: "\f14e";
+  content: "";
 }
 
 /** Icon definition for compress **/
@@ -2073,7 +2059,7 @@
 
 /* line 56, _mixins.scss */
 .icon-compress:before {
-  content: "\f066";
+  content: "";
 }
 
 /** Icon definition for copy **/
@@ -2090,7 +2076,7 @@
 
 /* line 56, _mixins.scss */
 .icon-copy:before {
-  content: "\f0c5";
+  content: "";
 }
 
 /** Icon definition for credit-card **/
@@ -2107,7 +2093,7 @@
 
 /* line 56, _mixins.scss */
 .icon-credit-card:before {
-  content: "\f09d";
+  content: "";
 }
 
 /** Icon definition for crop **/
@@ -2124,7 +2110,7 @@
 
 /* line 56, _mixins.scss */
 .icon-crop:before {
-  content: "\f125";
+  content: "";
 }
 
 /** Icon definition for crosshairs **/
@@ -2141,7 +2127,7 @@
 
 /* line 56, _mixins.scss */
 .icon-crosshairs:before {
-  content: "\f05b";
+  content: "";
 }
 
 /** Icon definition for css3 **/
@@ -2158,7 +2144,7 @@
 
 /* line 56, _mixins.scss */
 .icon-css3:before {
-  content: "\f13c";
+  content: "";
 }
 
 /** Icon definition for cut **/
@@ -2175,7 +2161,7 @@
 
 /* line 56, _mixins.scss */
 .icon-cut:before {
-  content: "\f0c4";
+  content: "";
 }
 
 /** Icon definition for cutlery **/
@@ -2192,7 +2178,7 @@
 
 /* line 56, _mixins.scss */
 .icon-cutlery:before {
-  content: "\f0f5";
+  content: "";
 }
 
 /** Icon definition for dashboard **/
@@ -2209,7 +2195,7 @@
 
 /* line 56, _mixins.scss */
 .icon-dashboard:before {
-  content: "\f0e4";
+  content: "";
 }
 
 /** Icon definition for dedent **/
@@ -2226,7 +2212,7 @@
 
 /* line 56, _mixins.scss */
 .icon-dedent:before {
-  content: "\f03b";
+  content: "";
 }
 
 /** Icon definition for delete **/
@@ -2243,7 +2229,7 @@
 
 /* line 56, _mixins.scss */
 .icon-delete:before {
-  content: "\f068";
+  content: "";
 }
 
 /** Icon definition for desktop **/
@@ -2260,7 +2246,7 @@
 
 /* line 56, _mixins.scss */
 .icon-desktop:before {
-  content: "\f108";
+  content: "";
 }
 
 /** Icon definition for directory **/
@@ -2277,7 +2263,7 @@
 
 /* line 56, _mixins.scss */
 .icon-directory:before {
-  content: "\f07b";
+  content: "";
 }
 
 /** Icon definition for dollar **/
@@ -2294,7 +2280,7 @@
 
 /* line 56, _mixins.scss */
 .icon-dollar:before {
-  content: "\f155";
+  content: "";
 }
 
 /** Icon definition for dot-circle-o **/
@@ -2311,7 +2297,7 @@
 
 /* line 56, _mixins.scss */
 .icon-dot-circle-o:before {
-  content: "\f192";
+  content: "";
 }
 
 /** Icon definition for download **/
@@ -2328,7 +2314,7 @@
 
 /* line 56, _mixins.scss */
 .icon-download:before {
-  content: "\f019";
+  content: "";
 }
 
 /** Icon definition for dribbble **/
@@ -2345,7 +2331,7 @@
 
 /* line 56, _mixins.scss */
 .icon-dribbble:before {
-  content: "\f17d";
+  content: "";
 }
 
 /** Icon definition for dropbox **/
@@ -2362,7 +2348,7 @@
 
 /* line 56, _mixins.scss */
 .icon-dropbox:before {
-  content: "\f16b";
+  content: "";
 }
 
 /** Icon definition for edit **/
@@ -2379,7 +2365,7 @@
 
 /* line 56, _mixins.scss */
 .icon-edit:before {
-  content: "\f044";
+  content: "";
 }
 
 /** Icon definition for eject **/
@@ -2396,7 +2382,7 @@
 
 /* line 56, _mixins.scss */
 .icon-eject:before {
-  content: "\f052";
+  content: "";
 }
 
 /** Icon definition for ellipsis-h **/
@@ -2413,7 +2399,7 @@
 
 /* line 56, _mixins.scss */
 .icon-ellipsis-h:before {
-  content: "\f141";
+  content: "";
 }
 
 /** Icon definition for ellipsis-v **/
@@ -2430,7 +2416,7 @@
 
 /* line 56, _mixins.scss */
 .icon-ellipsis-v:before {
-  content: "\f142";
+  content: "";
 }
 
 /** Icon definition for envelope **/
@@ -2447,7 +2433,7 @@
 
 /* line 56, _mixins.scss */
 .icon-envelope:before {
-  content: "\f0e0";
+  content: "";
 }
 
 /** Icon definition for envelope-o **/
@@ -2464,7 +2450,7 @@
 
 /* line 56, _mixins.scss */
 .icon-envelope-o:before {
-  content: "\f003";
+  content: "";
 }
 
 /** Icon definition for eraser **/
@@ -2481,7 +2467,7 @@
 
 /* line 56, _mixins.scss */
 .icon-eraser:before {
-  content: "\f12d";
+  content: "";
 }
 
 /** Icon definition for eur **/
@@ -2498,7 +2484,7 @@
 
 /* line 56, _mixins.scss */
 .icon-eur:before {
-  content: "\f153";
+  content: "";
 }
 
 /** Icon definition for euro **/
@@ -2515,7 +2501,7 @@
 
 /* line 56, _mixins.scss */
 .icon-euro:before {
-  content: "\f153";
+  content: "";
 }
 
 /** Icon definition for exchange **/
@@ -2532,7 +2518,7 @@
 
 /* line 56, _mixins.scss */
 .icon-exchange:before {
-  content: "\f0ec";
+  content: "";
 }
 
 /** Icon definition for exclamation-circle **/
@@ -2549,7 +2535,7 @@
 
 /* line 56, _mixins.scss */
 .icon-exclamation-circle:before {
-  content: "\f06a";
+  content: "";
 }
 
 /** Icon definition for exclamation **/
@@ -2566,7 +2552,7 @@
 
 /* line 56, _mixins.scss */
 .icon-exclamation:before {
-  content: "\f12a";
+  content: "";
 }
 
 /** Icon definition for exclamation-sign **/
@@ -2583,7 +2569,7 @@
 
 /* line 56, _mixins.scss */
 .icon-exclamation-sign:before {
-  content: "\f071";
+  content: "";
 }
 
 /** Icon definition for exclamation-triangle **/
@@ -2600,7 +2586,7 @@
 
 /* line 56, _mixins.scss */
 .icon-exclamation-triangle:before {
-  content: "\f071";
+  content: "";
 }
 
 /** Icon definition for expand **/
@@ -2617,7 +2603,7 @@
 
 /* line 56, _mixins.scss */
 .icon-expand:before {
-  content: "\f065";
+  content: "";
 }
 
 /** Icon definition for external-link **/
@@ -2634,7 +2620,7 @@
 
 /* line 56, _mixins.scss */
 .icon-external-link:before {
-  content: "\f08e";
+  content: "";
 }
 
 /** Icon definition for external-link-square **/
@@ -2651,7 +2637,7 @@
 
 /* line 56, _mixins.scss */
 .icon-external-link-square:before {
-  content: "\f14c";
+  content: "";
 }
 
 /** Icon definition for eye **/
@@ -2668,7 +2654,7 @@
 
 /* line 56, _mixins.scss */
 .icon-eye:before {
-  content: "\f06e";
+  content: "";
 }
 
 /** Icon definition for eye-slash **/
@@ -2685,7 +2671,7 @@
 
 /* line 56, _mixins.scss */
 .icon-eye-slash:before {
-  content: "\f070";
+  content: "";
 }
 
 /** Icon definition for facebook **/
@@ -2702,7 +2688,7 @@
 
 /* line 56, _mixins.scss */
 .icon-facebook:before {
-  content: "\f09a";
+  content: "";
 }
 
 /** Icon definition for facebook-square **/
@@ -2719,7 +2705,7 @@
 
 /* line 56, _mixins.scss */
 .icon-facebook-square:before {
-  content: "\f082";
+  content: "";
 }
 
 /** Icon definition for fast-backward **/
@@ -2736,7 +2722,7 @@
 
 /* line 56, _mixins.scss */
 .icon-fast-backward:before {
-  content: "\f049";
+  content: "";
 }
 
 /** Icon definition for fast-forward **/
@@ -2753,7 +2739,7 @@
 
 /* line 56, _mixins.scss */
 .icon-fast-forward:before {
-  content: "\f050";
+  content: "";
 }
 
 /** Icon definition for female **/
@@ -2770,7 +2756,7 @@
 
 /* line 56, _mixins.scss */
 .icon-female:before {
-  content: "\f182";
+  content: "";
 }
 
 /** Icon definition for fighter-jet **/
@@ -2787,7 +2773,7 @@
 
 /* line 56, _mixins.scss */
 .icon-fighter-jet:before {
-  content: "\f0fb";
+  content: "";
 }
 
 /** Icon definition for file **/
@@ -2804,7 +2790,7 @@
 
 /* line 56, _mixins.scss */
 .icon-file:before {
-  content: "\f15b";
+  content: "";
 }
 
 /** Icon definition for file-o **/
@@ -2821,7 +2807,7 @@
 
 /* line 56, _mixins.scss */
 .icon-file-o:before {
-  content: "\f016";
+  content: "";
 }
 
 /** Icon definition for files-o **/
@@ -2838,7 +2824,7 @@
 
 /* line 56, _mixins.scss */
 .icon-files-o:before {
-  content: "\f0c5";
+  content: "";
 }
 
 /** Icon definition for file-text **/
@@ -2855,7 +2841,7 @@
 
 /* line 56, _mixins.scss */
 .icon-file-text:before {
-  content: "\f15c";
+  content: "";
 }
 
 /** Icon definition for file-text-o **/
@@ -2872,7 +2858,7 @@
 
 /* line 56, _mixins.scss */
 .icon-file-text-o:before {
-  content: "\f0f6";
+  content: "";
 }
 
 /** Icon definition for film **/
@@ -2889,7 +2875,7 @@
 
 /* line 56, _mixins.scss */
 .icon-film:before {
-  content: "\f008";
+  content: "";
 }
 
 /** Icon definition for filter **/
@@ -2906,7 +2892,7 @@
 
 /* line 56, _mixins.scss */
 .icon-filter:before {
-  content: "\f0b0";
+  content: "";
 }
 
 /** Icon definition for fire-extinguisher **/
@@ -2923,7 +2909,7 @@
 
 /* line 56, _mixins.scss */
 .icon-fire-extinguisher:before {
-  content: "\f134";
+  content: "";
 }
 
 /** Icon definition for fire **/
@@ -2940,7 +2926,7 @@
 
 /* line 56, _mixins.scss */
 .icon-fire:before {
-  content: "\f06d";
+  content: "";
 }
 
 /** Icon definition for flag-checkered **/
@@ -2957,7 +2943,7 @@
 
 /* line 56, _mixins.scss */
 .icon-flag-checkered:before {
-  content: "\f11e";
+  content: "";
 }
 
 /** Icon definition for flag **/
@@ -2974,7 +2960,7 @@
 
 /* line 56, _mixins.scss */
 .icon-flag:before {
-  content: "\f024";
+  content: "";
 }
 
 /** Icon definition for flag-o **/
@@ -2991,7 +2977,7 @@
 
 /* line 56, _mixins.scss */
 .icon-flag-o:before {
-  content: "\f11d";
+  content: "";
 }
 
 /** Icon definition for flash **/
@@ -3008,7 +2994,7 @@
 
 /* line 56, _mixins.scss */
 .icon-flash:before {
-  content: "\f0e7";
+  content: "";
 }
 
 /** Icon definition for flask **/
@@ -3025,7 +3011,7 @@
 
 /* line 56, _mixins.scss */
 .icon-flask:before {
-  content: "\f0c3";
+  content: "";
 }
 
 /** Icon definition for flickr **/
@@ -3042,7 +3028,7 @@
 
 /* line 56, _mixins.scss */
 .icon-flickr:before {
-  content: "\f16e";
+  content: "";
 }
 
 /** Icon definition for floppy-o **/
@@ -3059,7 +3045,7 @@
 
 /* line 56, _mixins.scss */
 .icon-floppy-o:before {
-  content: "\f0c7";
+  content: "";
 }
 
 /** Icon definition for folder-close **/
@@ -3076,7 +3062,7 @@
 
 /* line 56, _mixins.scss */
 .icon-folder-close:before {
-  content: "\f07b";
+  content: "";
 }
 
 /** Icon definition for folder **/
@@ -3093,7 +3079,7 @@
 
 /* line 56, _mixins.scss */
 .icon-folder:before {
-  content: "\f07b";
+  content: "";
 }
 
 /** Icon definition for folder-o **/
@@ -3110,7 +3096,7 @@
 
 /* line 56, _mixins.scss */
 .icon-folder-o:before {
-  content: "\f114";
+  content: "";
 }
 
 /** Icon definition for folder-open **/
@@ -3127,7 +3113,7 @@
 
 /* line 56, _mixins.scss */
 .icon-folder-open:before {
-  content: "\f07c";
+  content: "";
 }
 
 /** Icon definition for folder-open-o **/
@@ -3144,7 +3130,7 @@
 
 /* line 56, _mixins.scss */
 .icon-folder-open-o:before {
-  content: "\f115";
+  content: "";
 }
 
 /** Icon definition for font **/
@@ -3161,7 +3147,7 @@
 
 /* line 56, _mixins.scss */
 .icon-font:before {
-  content: "\f031";
+  content: "";
 }
 
 /** Icon definition for forward **/
@@ -3178,7 +3164,7 @@
 
 /* line 56, _mixins.scss */
 .icon-forward:before {
-  content: "\f04e";
+  content: "";
 }
 
 /** Icon definition for foursquare **/
@@ -3195,7 +3181,7 @@
 
 /* line 56, _mixins.scss */
 .icon-foursquare:before {
-  content: "\f180";
+  content: "";
 }
 
 /** Icon definition for frown-o **/
@@ -3212,7 +3198,7 @@
 
 /* line 56, _mixins.scss */
 .icon-frown-o:before {
-  content: "\f119";
+  content: "";
 }
 
 /** Icon definition for gamepad **/
@@ -3229,7 +3215,7 @@
 
 /* line 56, _mixins.scss */
 .icon-gamepad:before {
-  content: "\f11b";
+  content: "";
 }
 
 /** Icon definition for gavel **/
@@ -3246,7 +3232,7 @@
 
 /* line 56, _mixins.scss */
 .icon-gavel:before {
-  content: "\f0e3";
+  content: "";
 }
 
 /** Icon definition for gbp **/
@@ -3263,7 +3249,7 @@
 
 /* line 56, _mixins.scss */
 .icon-gbp:before {
-  content: "\f154";
+  content: "";
 }
 
 /** Icon definition for gear **/
@@ -3280,7 +3266,7 @@
 
 /* line 56, _mixins.scss */
 .icon-gear:before {
-  content: "\f013";
+  content: "";
 }
 
 /** Icon definition for gears **/
@@ -3297,7 +3283,7 @@
 
 /* line 56, _mixins.scss */
 .icon-gears:before {
-  content: "\f085";
+  content: "";
 }
 
 /** Icon definition for gift **/
@@ -3314,7 +3300,7 @@
 
 /* line 56, _mixins.scss */
 .icon-gift:before {
-  content: "\f06b";
+  content: "";
 }
 
 /** Icon definition for github-alt **/
@@ -3331,7 +3317,7 @@
 
 /* line 56, _mixins.scss */
 .icon-github-alt:before {
-  content: "\f113";
+  content: "";
 }
 
 /** Icon definition for github **/
@@ -3348,7 +3334,7 @@
 
 /* line 56, _mixins.scss */
 .icon-github:before {
-  content: "\f09b";
+  content: "";
 }
 
 /** Icon definition for github-square **/
@@ -3365,7 +3351,7 @@
 
 /* line 56, _mixins.scss */
 .icon-github-square:before {
-  content: "\f092";
+  content: "";
 }
 
 /** Icon definition for gittip **/
@@ -3382,7 +3368,7 @@
 
 /* line 56, _mixins.scss */
 .icon-gittip:before {
-  content: "\f184";
+  content: "";
 }
 
 /** Icon definition for glass **/
@@ -3399,7 +3385,7 @@
 
 /* line 56, _mixins.scss */
 .icon-glass:before {
-  content: "\f000";
+  content: "";
 }
 
 /** Icon definition for globe **/
@@ -3416,7 +3402,7 @@
 
 /* line 56, _mixins.scss */
 .icon-globe:before {
-  content: "\f0ac";
+  content: "";
 }
 
 /** Icon definition for google-plus **/
@@ -3433,7 +3419,7 @@
 
 /* line 56, _mixins.scss */
 .icon-google-plus:before {
-  content: "\f0d5";
+  content: "";
 }
 
 /** Icon definition for google-plus-square **/
@@ -3450,7 +3436,7 @@
 
 /* line 56, _mixins.scss */
 .icon-google-plus-square:before {
-  content: "\f0d4";
+  content: "";
 }
 
 /** Icon definition for group **/
@@ -3467,7 +3453,7 @@
 
 /* line 56, _mixins.scss */
 .icon-group:before {
-  content: "\f0c0";
+  content: "";
 }
 
 /** Icon definition for hand-o-down **/
@@ -3484,7 +3470,7 @@
 
 /* line 56, _mixins.scss */
 .icon-hand-o-down:before {
-  content: "\f0a7";
+  content: "";
 }
 
 /** Icon definition for hand-o-left **/
@@ -3501,7 +3487,7 @@
 
 /* line 56, _mixins.scss */
 .icon-hand-o-left:before {
-  content: "\f0a5";
+  content: "";
 }
 
 /** Icon definition for hand-o-right **/
@@ -3518,7 +3504,7 @@
 
 /* line 56, _mixins.scss */
 .icon-hand-o-right:before {
-  content: "\f0a4";
+  content: "";
 }
 
 /** Icon definition for hand-o-up **/
@@ -3535,7 +3521,7 @@
 
 /* line 56, _mixins.scss */
 .icon-hand-o-up:before {
-  content: "\f0a6";
+  content: "";
 }
 
 /** Icon definition for hdd-o **/
@@ -3552,7 +3538,7 @@
 
 /* line 56, _mixins.scss */
 .icon-hdd-o:before {
-  content: "\f0a0";
+  content: "";
 }
 
 /** Icon definition for headphones **/
@@ -3569,7 +3555,7 @@
 
 /* line 56, _mixins.scss */
 .icon-headphones:before {
-  content: "\f025";
+  content: "";
 }
 
 /** Icon definition for heart **/
@@ -3586,7 +3572,7 @@
 
 /* line 56, _mixins.scss */
 .icon-heart:before {
-  content: "\f004";
+  content: "";
 }
 
 /** Icon definition for heart-o **/
@@ -3603,7 +3589,7 @@
 
 /* line 56, _mixins.scss */
 .icon-heart-o:before {
-  content: "\f08a";
+  content: "";
 }
 
 /** Icon definition for home **/
@@ -3620,7 +3606,7 @@
 
 /* line 56, _mixins.scss */
 .icon-home:before {
-  content: "\f015";
+  content: "";
 }
 
 /** Icon definition for hospital-o **/
@@ -3637,7 +3623,7 @@
 
 /* line 56, _mixins.scss */
 .icon-hospital-o:before {
-  content: "\f0f8";
+  content: "";
 }
 
 /** Icon definition for h-square **/
@@ -3654,7 +3640,7 @@
 
 /* line 56, _mixins.scss */
 .icon-h-square:before {
-  content: "\f0fd";
+  content: "";
 }
 
 /** Icon definition for html5 **/
@@ -3671,7 +3657,7 @@
 
 /* line 56, _mixins.scss */
 .icon-html5:before {
-  content: "\f13b";
+  content: "";
 }
 
 /** Icon definition for inbox **/
@@ -3688,7 +3674,7 @@
 
 /* line 56, _mixins.scss */
 .icon-inbox:before {
-  content: "\f01c";
+  content: "";
 }
 
 /** Icon definition for indent **/
@@ -3705,7 +3691,7 @@
 
 /* line 56, _mixins.scss */
 .icon-indent:before {
-  content: "\f03c";
+  content: "";
 }
 
 /** Icon definition for info-circle **/
@@ -3722,7 +3708,7 @@
 
 /* line 56, _mixins.scss */
 .icon-info-circle:before {
-  content: "\f05a";
+  content: "";
 }
 
 /** Icon definition for info **/
@@ -3739,7 +3725,7 @@
 
 /* line 56, _mixins.scss */
 .icon-info:before {
-  content: "\f129";
+  content: "";
 }
 
 /** Icon definition for inr **/
@@ -3756,7 +3742,7 @@
 
 /* line 56, _mixins.scss */
 .icon-inr:before {
-  content: "\f156";
+  content: "";
 }
 
 /** Icon definition for instagram **/
@@ -3773,7 +3759,7 @@
 
 /* line 56, _mixins.scss */
 .icon-instagram:before {
-  content: "\f16d";
+  content: "";
 }
 
 /** Icon definition for italic **/
@@ -3790,7 +3776,7 @@
 
 /* line 56, _mixins.scss */
 .icon-italic:before {
-  content: "\f033";
+  content: "";
 }
 
 /** Icon definition for jpy **/
@@ -3807,7 +3793,7 @@
 
 /* line 56, _mixins.scss */
 .icon-jpy:before {
-  content: "\f157";
+  content: "";
 }
 
 /** Icon definition for keyboard-o **/
@@ -3824,7 +3810,7 @@
 
 /* line 56, _mixins.scss */
 .icon-keyboard-o:before {
-  content: "\f11c";
+  content: "";
 }
 
 /** Icon definition for key **/
@@ -3841,7 +3827,7 @@
 
 /* line 56, _mixins.scss */
 .icon-key:before {
-  content: "\f084";
+  content: "";
 }
 
 /** Icon definition for krw **/
@@ -3858,7 +3844,7 @@
 
 /* line 56, _mixins.scss */
 .icon-krw:before {
-  content: "\f159";
+  content: "";
 }
 
 /** Icon definition for laptop **/
@@ -3875,7 +3861,7 @@
 
 /* line 56, _mixins.scss */
 .icon-laptop:before {
-  content: "\f109";
+  content: "";
 }
 
 /** Icon definition for leaf **/
@@ -3892,7 +3878,7 @@
 
 /* line 56, _mixins.scss */
 .icon-leaf:before {
-  content: "\f06c";
+  content: "";
 }
 
 /** Icon definition for legal **/
@@ -3909,7 +3895,7 @@
 
 /* line 56, _mixins.scss */
 .icon-legal:before {
-  content: "\f0e3";
+  content: "";
 }
 
 /** Icon definition for lemon-o **/
@@ -3926,7 +3912,7 @@
 
 /* line 56, _mixins.scss */
 .icon-lemon-o:before {
-  content: "\f094";
+  content: "";
 }
 
 /** Icon definition for level-down **/
@@ -3943,7 +3929,7 @@
 
 /* line 56, _mixins.scss */
 .icon-level-down:before {
-  content: "\f149";
+  content: "";
 }
 
 /** Icon definition for level-up **/
@@ -3960,7 +3946,7 @@
 
 /* line 56, _mixins.scss */
 .icon-level-up:before {
-  content: "\f148";
+  content: "";
 }
 
 /** Icon definition for lightbulb-o **/
@@ -3977,7 +3963,7 @@
 
 /* line 56, _mixins.scss */
 .icon-lightbulb-o:before {
-  content: "\f0eb";
+  content: "";
 }
 
 /** Icon definition for linkedin **/
@@ -3994,7 +3980,7 @@
 
 /* line 56, _mixins.scss */
 .icon-linkedin:before {
-  content: "\f0e1";
+  content: "";
 }
 
 /** Icon definition for linkedin-square **/
@@ -4011,7 +3997,7 @@
 
 /* line 56, _mixins.scss */
 .icon-linkedin-square:before {
-  content: "\f08c";
+  content: "";
 }
 
 /** Icon definition for link **/
@@ -4028,7 +4014,7 @@
 
 /* line 56, _mixins.scss */
 .icon-link:before {
-  content: "\f0c1";
+  content: "";
 }
 
 /** Icon definition for linux **/
@@ -4045,7 +4031,7 @@
 
 /* line 56, _mixins.scss */
 .icon-linux:before {
-  content: "\f17c";
+  content: "";
 }
 
 /** Icon definition for list-alt **/
@@ -4062,7 +4048,7 @@
 
 /* line 56, _mixins.scss */
 .icon-list-alt:before {
-  content: "\f022";
+  content: "";
 }
 
 /** Icon definition for list **/
@@ -4079,7 +4065,7 @@
 
 /* line 56, _mixins.scss */
 .icon-list:before {
-  content: "\f03a";
+  content: "";
 }
 
 /** Icon definition for list-ol **/
@@ -4096,7 +4082,7 @@
 
 /* line 56, _mixins.scss */
 .icon-list-ol:before {
-  content: "\f0cb";
+  content: "";
 }
 
 /** Icon definition for list-ul **/
@@ -4113,7 +4099,7 @@
 
 /* line 56, _mixins.scss */
 .icon-list-ul:before {
-  content: "\f0ca";
+  content: "";
 }
 
 /** Icon definition for location-arrow **/
@@ -4130,7 +4116,7 @@
 
 /* line 56, _mixins.scss */
 .icon-location-arrow:before {
-  content: "\f124";
+  content: "";
 }
 
 /** Icon definition for lock **/
@@ -4147,7 +4133,7 @@
 
 /* line 56, _mixins.scss */
 .icon-lock:before {
-  content: "\f023";
+  content: "";
 }
 
 /** Icon definition for long-arrow-down **/
@@ -4164,7 +4150,7 @@
 
 /* line 56, _mixins.scss */
 .icon-long-arrow-down:before {
-  content: "\f175";
+  content: "";
 }
 
 /** Icon definition for long-arrow-left **/
@@ -4181,7 +4167,7 @@
 
 /* line 56, _mixins.scss */
 .icon-long-arrow-left:before {
-  content: "\f177";
+  content: "";
 }
 
 /** Icon definition for long-arrow-right **/
@@ -4198,7 +4184,7 @@
 
 /* line 56, _mixins.scss */
 .icon-long-arrow-right:before {
-  content: "\f178";
+  content: "";
 }
 
 /** Icon definition for long-arrow-up **/
@@ -4215,7 +4201,7 @@
 
 /* line 56, _mixins.scss */
 .icon-long-arrow-up:before {
-  content: "\f176";
+  content: "";
 }
 
 /** Icon definition for magic **/
@@ -4232,7 +4218,7 @@
 
 /* line 56, _mixins.scss */
 .icon-magic:before {
-  content: "\f0d0";
+  content: "";
 }
 
 /** Icon definition for magnet **/
@@ -4249,7 +4235,7 @@
 
 /* line 56, _mixins.scss */
 .icon-magnet:before {
-  content: "\f076";
+  content: "";
 }
 
 /** Icon definition for mail-forward **/
@@ -4266,7 +4252,7 @@
 
 /* line 56, _mixins.scss */
 .icon-mail-forward:before {
-  content: "\f064";
+  content: "";
 }
 
 /** Icon definition for mail-reply-all **/
@@ -4283,7 +4269,7 @@
 
 /* line 56, _mixins.scss */
 .icon-mail-reply-all:before {
-  content: "\f122";
+  content: "";
 }
 
 /** Icon definition for mail-reply **/
@@ -4300,7 +4286,7 @@
 
 /* line 56, _mixins.scss */
 .icon-mail-reply:before {
-  content: "\f112";
+  content: "";
 }
 
 /** Icon definition for male **/
@@ -4317,7 +4303,7 @@
 
 /* line 56, _mixins.scss */
 .icon-male:before {
-  content: "\f183";
+  content: "";
 }
 
 /** Icon definition for map-marker **/
@@ -4334,7 +4320,7 @@
 
 /* line 56, _mixins.scss */
 .icon-map-marker:before {
-  content: "\f041";
+  content: "";
 }
 
 /** Icon definition for maxcdn **/
@@ -4351,7 +4337,7 @@
 
 /* line 56, _mixins.scss */
 .icon-maxcdn:before {
-  content: "\f136";
+  content: "";
 }
 
 /** Icon definition for medkit **/
@@ -4368,7 +4354,7 @@
 
 /* line 56, _mixins.scss */
 .icon-medkit:before {
-  content: "\f0fa";
+  content: "";
 }
 
 /** Icon definition for meh-o **/
@@ -4385,7 +4371,7 @@
 
 /* line 56, _mixins.scss */
 .icon-meh-o:before {
-  content: "\f11a";
+  content: "";
 }
 
 /** Icon definition for microphone **/
@@ -4402,7 +4388,7 @@
 
 /* line 56, _mixins.scss */
 .icon-microphone:before {
-  content: "\f130";
+  content: "";
 }
 
 /** Icon definition for microphone-slash **/
@@ -4419,7 +4405,7 @@
 
 /* line 56, _mixins.scss */
 .icon-microphone-slash:before {
-  content: "\f131";
+  content: "";
 }
 
 /** Icon definition for minus-circle **/
@@ -4436,7 +4422,7 @@
 
 /* line 56, _mixins.scss */
 .icon-minus-circle:before {
-  content: "\f056";
+  content: "";
 }
 
 /** Icon definition for minus **/
@@ -4453,7 +4439,7 @@
 
 /* line 56, _mixins.scss */
 .icon-minus:before {
-  content: "\f068";
+  content: "";
 }
 
 /** Icon definition for minus-square **/
@@ -4470,7 +4456,7 @@
 
 /* line 56, _mixins.scss */
 .icon-minus-square:before {
-  content: "\f146";
+  content: "";
 }
 
 /** Icon definition for minus-square-o **/
@@ -4487,7 +4473,7 @@
 
 /* line 56, _mixins.scss */
 .icon-minus-square-o:before {
-  content: "\f147";
+  content: "";
 }
 
 /** Icon definition for mobile **/
@@ -4504,7 +4490,7 @@
 
 /* line 56, _mixins.scss */
 .icon-mobile:before {
-  content: "\f10b";
+  content: "";
 }
 
 /** Icon definition for mobile-phone **/
@@ -4521,7 +4507,7 @@
 
 /* line 56, _mixins.scss */
 .icon-mobile-phone:before {
-  content: "\f10b";
+  content: "";
 }
 
 /** Icon definition for money **/
@@ -4538,7 +4524,7 @@
 
 /* line 56, _mixins.scss */
 .icon-money:before {
-  content: "\f0d6";
+  content: "";
 }
 
 /** Icon definition for moon-o **/
@@ -4555,7 +4541,7 @@
 
 /* line 56, _mixins.scss */
 .icon-moon-o:before {
-  content: "\f186";
+  content: "";
 }
 
 /** Icon definition for move **/
@@ -4572,7 +4558,7 @@
 
 /* line 56, _mixins.scss */
 .icon-move:before {
-  content: "\f0c9";
+  content: "";
 }
 
 /** Icon definition for music **/
@@ -4589,7 +4575,7 @@
 
 /* line 56, _mixins.scss */
 .icon-music:before {
-  content: "\f001";
+  content: "";
 }
 
 /** Icon definition for ok **/
@@ -4606,7 +4592,7 @@
 
 /* line 56, _mixins.scss */
 .icon-ok:before {
-  content: "\f00c";
+  content: "";
 }
 
 /** Icon definition for outdent **/
@@ -4623,7 +4609,7 @@
 
 /* line 56, _mixins.scss */
 .icon-outdent:before {
-  content: "\f03b";
+  content: "";
 }
 
 /** Icon definition for pagelines **/
@@ -4640,7 +4626,7 @@
 
 /* line 56, _mixins.scss */
 .icon-pagelines:before {
-  content: "\f18c";
+  content: "";
 }
 
 /** Icon definition for paperclip **/
@@ -4657,7 +4643,7 @@
 
 /* line 56, _mixins.scss */
 .icon-paperclip:before {
-  content: "\f0c6";
+  content: "";
 }
 
 /** Icon definition for paste **/
@@ -4674,7 +4660,7 @@
 
 /* line 56, _mixins.scss */
 .icon-paste:before {
-  content: "\f0ea";
+  content: "";
 }
 
 /** Icon definition for pause **/
@@ -4691,7 +4677,7 @@
 
 /* line 56, _mixins.scss */
 .icon-pause:before {
-  content: "\f04c";
+  content: "";
 }
 
 /** Icon definition for pencil **/
@@ -4708,7 +4694,7 @@
 
 /* line 56, _mixins.scss */
 .icon-pencil:before {
-  content: "\f040";
+  content: "";
 }
 
 /** Icon definition for pencil-square **/
@@ -4725,7 +4711,7 @@
 
 /* line 56, _mixins.scss */
 .icon-pencil-square:before {
-  content: "\f14b";
+  content: "";
 }
 
 /** Icon definition for pencil-square-o **/
@@ -4742,7 +4728,7 @@
 
 /* line 56, _mixins.scss */
 .icon-pencil-square-o:before {
-  content: "\f044";
+  content: "";
 }
 
 /** Icon definition for phone **/
@@ -4759,7 +4745,7 @@
 
 /* line 56, _mixins.scss */
 .icon-phone:before {
-  content: "\f095";
+  content: "";
 }
 
 /** Icon definition for phone-square **/
@@ -4776,7 +4762,7 @@
 
 /* line 56, _mixins.scss */
 .icon-phone-square:before {
-  content: "\f098";
+  content: "";
 }
 
 /** Icon definition for picture-o **/
@@ -4793,7 +4779,7 @@
 
 /* line 56, _mixins.scss */
 .icon-picture-o:before {
-  content: "\f03e";
+  content: "";
 }
 
 /** Icon definition for pinterest **/
@@ -4810,7 +4796,7 @@
 
 /* line 56, _mixins.scss */
 .icon-pinterest:before {
-  content: "\f0d2";
+  content: "";
 }
 
 /** Icon definition for pinterest-square **/
@@ -4827,7 +4813,7 @@
 
 /* line 56, _mixins.scss */
 .icon-pinterest-square:before {
-  content: "\f0d3";
+  content: "";
 }
 
 /** Icon definition for plane **/
@@ -4844,7 +4830,7 @@
 
 /* line 56, _mixins.scss */
 .icon-plane:before {
-  content: "\f072";
+  content: "";
 }
 
 /** Icon definition for play-circle **/
@@ -4861,7 +4847,7 @@
 
 /* line 56, _mixins.scss */
 .icon-play-circle:before {
-  content: "\f144";
+  content: "";
 }
 
 /** Icon definition for play-circle-o **/
@@ -4878,7 +4864,7 @@
 
 /* line 56, _mixins.scss */
 .icon-play-circle-o:before {
-  content: "\f01d";
+  content: "";
 }
 
 /** Icon definition for play **/
@@ -4895,7 +4881,7 @@
 
 /* line 56, _mixins.scss */
 .icon-play:before {
-  content: "\f04b";
+  content: "";
 }
 
 /** Icon definition for plus-circle **/
@@ -4912,7 +4898,7 @@
 
 /* line 56, _mixins.scss */
 .icon-plus-circle:before {
-  content: "\f055";
+  content: "";
 }
 
 /** Icon definition for plus **/
@@ -4929,7 +4915,7 @@
 
 /* line 56, _mixins.scss */
 .icon-plus:before {
-  content: "\f067";
+  content: "";
 }
 
 /** Icon definition for plus-square **/
@@ -4946,7 +4932,7 @@
 
 /* line 56, _mixins.scss */
 .icon-plus-square:before {
-  content: "\f0fe";
+  content: "";
 }
 
 /** Icon definition for plus-square-o **/
@@ -4963,7 +4949,7 @@
 
 /* line 56, _mixins.scss */
 .icon-plus-square-o:before {
-  content: "\f196";
+  content: "";
 }
 
 /** Icon definition for power-off **/
@@ -4980,7 +4966,7 @@
 
 /* line 56, _mixins.scss */
 .icon-power-off:before {
-  content: "\f011";
+  content: "";
 }
 
 /** Icon definition for print **/
@@ -4997,7 +4983,7 @@
 
 /* line 56, _mixins.scss */
 .icon-print:before {
-  content: "\f02f";
+  content: "";
 }
 
 /** Icon definition for puzzle-piece **/
@@ -5014,7 +5000,7 @@
 
 /* line 56, _mixins.scss */
 .icon-puzzle-piece:before {
-  content: "\f12e";
+  content: "";
 }
 
 /** Icon definition for qrcode **/
@@ -5031,7 +5017,7 @@
 
 /* line 56, _mixins.scss */
 .icon-qrcode:before {
-  content: "\f029";
+  content: "";
 }
 
 /** Icon definition for question-circle **/
@@ -5048,7 +5034,7 @@
 
 /* line 56, _mixins.scss */
 .icon-question-circle:before {
-  content: "\f059";
+  content: "";
 }
 
 /** Icon definition for question **/
@@ -5065,7 +5051,7 @@
 
 /* line 56, _mixins.scss */
 .icon-question:before {
-  content: "\f128";
+  content: "";
 }
 
 /** Icon definition for quote-left **/
@@ -5082,7 +5068,7 @@
 
 /* line 56, _mixins.scss */
 .icon-quote-left:before {
-  content: "\f10d";
+  content: "";
 }
 
 /** Icon definition for quote-right **/
@@ -5099,7 +5085,7 @@
 
 /* line 56, _mixins.scss */
 .icon-quote-right:before {
-  content: "\f10e";
+  content: "";
 }
 
 /** Icon definition for random **/
@@ -5116,7 +5102,7 @@
 
 /* line 56, _mixins.scss */
 .icon-random:before {
-  content: "\f074";
+  content: "";
 }
 
 /** Icon definition for refresh **/
@@ -5133,7 +5119,7 @@
 
 /* line 56, _mixins.scss */
 .icon-refresh:before {
-  content: "\f021";
+  content: "";
 }
 
 /** Icon definition for remove **/
@@ -5150,7 +5136,7 @@
 
 /* line 56, _mixins.scss */
 .icon-remove:before {
-  content: "\f068";
+  content: "";
 }
 
 /** Icon definition for renren **/
@@ -5167,7 +5153,7 @@
 
 /* line 56, _mixins.scss */
 .icon-renren:before {
-  content: "\f18b";
+  content: "";
 }
 
 /** Icon definition for repeat **/
@@ -5184,7 +5170,7 @@
 
 /* line 56, _mixins.scss */
 .icon-repeat:before {
-  content: "\f01e";
+  content: "";
 }
 
 /** Icon definition for reply-all **/
@@ -5201,7 +5187,7 @@
 
 /* line 56, _mixins.scss */
 .icon-reply-all:before {
-  content: "\f122";
+  content: "";
 }
 
 /** Icon definition for reply **/
@@ -5218,7 +5204,7 @@
 
 /* line 56, _mixins.scss */
 .icon-reply:before {
-  content: "\f112";
+  content: "";
 }
 
 /** Icon definition for retweet **/
@@ -5235,7 +5221,7 @@
 
 /* line 56, _mixins.scss */
 .icon-retweet:before {
-  content: "\f079";
+  content: "";
 }
 
 /** Icon definition for rmb **/
@@ -5252,7 +5238,7 @@
 
 /* line 56, _mixins.scss */
 .icon-rmb:before {
-  content: "\f157";
+  content: "";
 }
 
 /** Icon definition for road **/
@@ -5269,7 +5255,7 @@
 
 /* line 56, _mixins.scss */
 .icon-road:before {
-  content: "\f018";
+  content: "";
 }
 
 /** Icon definition for rocket **/
@@ -5286,7 +5272,7 @@
 
 /* line 56, _mixins.scss */
 .icon-rocket:before {
-  content: "\f135";
+  content: "";
 }
 
 /** Icon definition for rotate-left **/
@@ -5303,7 +5289,7 @@
 
 /* line 56, _mixins.scss */
 .icon-rotate-left:before {
-  content: "\f0e2";
+  content: "";
 }
 
 /** Icon definition for rotate-right **/
@@ -5320,7 +5306,7 @@
 
 /* line 56, _mixins.scss */
 .icon-rotate-right:before {
-  content: "\f01e";
+  content: "";
 }
 
 /** Icon definition for rouble **/
@@ -5337,7 +5323,7 @@
 
 /* line 56, _mixins.scss */
 .icon-rouble:before {
-  content: "\f158";
+  content: "";
 }
 
 /** Icon definition for rss **/
@@ -5354,7 +5340,7 @@
 
 /* line 56, _mixins.scss */
 .icon-rss:before {
-  content: "\f09e";
+  content: "";
 }
 
 /** Icon definition for rss-square **/
@@ -5371,7 +5357,7 @@
 
 /* line 56, _mixins.scss */
 .icon-rss-square:before {
-  content: "\f143";
+  content: "";
 }
 
 /** Icon definition for rub **/
@@ -5388,7 +5374,7 @@
 
 /* line 56, _mixins.scss */
 .icon-rub:before {
-  content: "\f158";
+  content: "";
 }
 
 /** Icon definition for ruble **/
@@ -5405,7 +5391,7 @@
 
 /* line 56, _mixins.scss */
 .icon-ruble:before {
-  content: "\f158";
+  content: "";
 }
 
 /** Icon definition for rupee **/
@@ -5422,7 +5408,7 @@
 
 /* line 56, _mixins.scss */
 .icon-rupee:before {
-  content: "\f156";
+  content: "";
 }
 
 /** Icon definition for save **/
@@ -5439,7 +5425,7 @@
 
 /* line 56, _mixins.scss */
 .icon-save:before {
-  content: "\f0c7";
+  content: "";
 }
 
 /** Icon definition for scissors **/
@@ -5456,7 +5442,7 @@
 
 /* line 56, _mixins.scss */
 .icon-scissors:before {
-  content: "\f0c4";
+  content: "";
 }
 
 /** Icon definition for search **/
@@ -5473,7 +5459,7 @@
 
 /* line 56, _mixins.scss */
 .icon-search:before {
-  content: "\f002";
+  content: "";
 }
 
 /** Icon definition for search-minus **/
@@ -5490,7 +5476,7 @@
 
 /* line 56, _mixins.scss */
 .icon-search-minus:before {
-  content: "\f010";
+  content: "";
 }
 
 /** Icon definition for search-plus **/
@@ -5507,7 +5493,7 @@
 
 /* line 56, _mixins.scss */
 .icon-search-plus:before {
-  content: "\f00e";
+  content: "";
 }
 
 /** Icon definition for share **/
@@ -5524,7 +5510,7 @@
 
 /* line 56, _mixins.scss */
 .icon-share:before {
-  content: "\f064";
+  content: "";
 }
 
 /** Icon definition for share-square **/
@@ -5541,7 +5527,7 @@
 
 /* line 56, _mixins.scss */
 .icon-share-square:before {
-  content: "\f14d";
+  content: "";
 }
 
 /** Icon definition for share-square-o **/
@@ -5558,7 +5544,7 @@
 
 /* line 56, _mixins.scss */
 .icon-share-square-o:before {
-  content: "\f045";
+  content: "";
 }
 
 /** Icon definition for shield **/
@@ -5575,7 +5561,7 @@
 
 /* line 56, _mixins.scss */
 .icon-shield:before {
-  content: "\f132";
+  content: "";
 }
 
 /** Icon definition for shopping-cart **/
@@ -5592,7 +5578,7 @@
 
 /* line 56, _mixins.scss */
 .icon-shopping-cart:before {
-  content: "\f07a";
+  content: "";
 }
 
 /** Icon definition for signal **/
@@ -5609,7 +5595,7 @@
 
 /* line 56, _mixins.scss */
 .icon-signal:before {
-  content: "\f012";
+  content: "";
 }
 
 /** Icon definition for sign-in **/
@@ -5626,7 +5612,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sign-in:before {
-  content: "\f090";
+  content: "";
 }
 
 /** Icon definition for sign-out **/
@@ -5643,7 +5629,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sign-out:before {
-  content: "\f08b";
+  content: "";
 }
 
 /** Icon definition for sitemap **/
@@ -5660,7 +5646,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sitemap:before {
-  content: "\f0e8";
+  content: "";
 }
 
 /** Icon definition for skype **/
@@ -5677,7 +5663,7 @@
 
 /* line 56, _mixins.scss */
 .icon-skype:before {
-  content: "\f17e";
+  content: "";
 }
 
 /** Icon definition for smile-o **/
@@ -5694,7 +5680,7 @@
 
 /* line 56, _mixins.scss */
 .icon-smile-o:before {
-  content: "\f118";
+  content: "";
 }
 
 /** Icon definition for sort-alpha-asc **/
@@ -5711,7 +5697,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sort-alpha-asc:before {
-  content: "\f15d";
+  content: "";
 }
 
 /** Icon definition for sort-alpha-desc **/
@@ -5728,7 +5714,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sort-alpha-desc:before {
-  content: "\f15e";
+  content: "";
 }
 
 /** Icon definition for sort-amount-asc **/
@@ -5745,7 +5731,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sort-amount-asc:before {
-  content: "\f160";
+  content: "";
 }
 
 /** Icon definition for sort-amount-desc **/
@@ -5762,7 +5748,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sort-amount-desc:before {
-  content: "\f161";
+  content: "";
 }
 
 /** Icon definition for sort-asc **/
@@ -5779,7 +5765,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sort-asc:before {
-  content: "\f0dd";
+  content: "";
 }
 
 /** Icon definition for sort-desc **/
@@ -5796,7 +5782,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sort-desc:before {
-  content: "\f0de";
+  content: "";
 }
 
 /** Icon definition for sort-down **/
@@ -5813,7 +5799,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sort-down:before {
-  content: "\f0dd";
+  content: "";
 }
 
 /** Icon definition for sort **/
@@ -5830,7 +5816,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sort:before {
-  content: "\f0dc";
+  content: "";
 }
 
 /** Icon definition for sort-numeric-asc **/
@@ -5847,7 +5833,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sort-numeric-asc:before {
-  content: "\f162";
+  content: "";
 }
 
 /** Icon definition for sort-numeric-desc **/
@@ -5864,7 +5850,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sort-numeric-desc:before {
-  content: "\f163";
+  content: "";
 }
 
 /** Icon definition for sort-up **/
@@ -5881,7 +5867,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sort-up:before {
-  content: "\f0de";
+  content: "";
 }
 
 /** Icon definition for spinner **/
@@ -5898,7 +5884,7 @@
 
 /* line 56, _mixins.scss */
 .icon-spinner:before {
-  content: "\f110";
+  content: "";
 }
 
 /** Icon definition for square **/
@@ -5915,7 +5901,7 @@
 
 /* line 56, _mixins.scss */
 .icon-square:before {
-  content: "\f0c8";
+  content: "";
 }
 
 /** Icon definition for square-o **/
@@ -5932,7 +5918,7 @@
 
 /* line 56, _mixins.scss */
 .icon-square-o:before {
-  content: "\f096";
+  content: "";
 }
 
 /** Icon definition for stack-exchange **/
@@ -5949,7 +5935,7 @@
 
 /* line 56, _mixins.scss */
 .icon-stack-exchange:before {
-  content: "\f18d";
+  content: "";
 }
 
 /** Icon definition for stack-overflow **/
@@ -5966,7 +5952,7 @@
 
 /* line 56, _mixins.scss */
 .icon-stack-overflow:before {
-  content: "\f16c";
+  content: "";
 }
 
 /** Icon definition for star **/
@@ -5983,7 +5969,7 @@
 
 /* line 56, _mixins.scss */
 .icon-star:before {
-  content: "\f005";
+  content: "";
 }
 
 /** Icon definition for star-half-empty **/
@@ -6000,7 +5986,7 @@
 
 /* line 56, _mixins.scss */
 .icon-star-half-empty:before {
-  content: "\f123";
+  content: "";
 }
 
 /** Icon definition for star-half **/
@@ -6017,7 +6003,7 @@
 
 /* line 56, _mixins.scss */
 .icon-star-half:before {
-  content: "\f089";
+  content: "";
 }
 
 /** Icon definition for star-half-full **/
@@ -6034,7 +6020,7 @@
 
 /* line 56, _mixins.scss */
 .icon-star-half-full:before {
-  content: "\f123";
+  content: "";
 }
 
 /** Icon definition for star-half-o **/
@@ -6051,7 +6037,7 @@
 
 /* line 56, _mixins.scss */
 .icon-star-half-o:before {
-  content: "\f123";
+  content: "";
 }
 
 /** Icon definition for star-o **/
@@ -6068,7 +6054,7 @@
 
 /* line 56, _mixins.scss */
 .icon-star-o:before {
-  content: "\f006";
+  content: "";
 }
 
 /** Icon definition for step-backward **/
@@ -6085,7 +6071,7 @@
 
 /* line 56, _mixins.scss */
 .icon-step-backward:before {
-  content: "\f048";
+  content: "";
 }
 
 /** Icon definition for step-forward **/
@@ -6102,7 +6088,7 @@
 
 /* line 56, _mixins.scss */
 .icon-step-forward:before {
-  content: "\f051";
+  content: "";
 }
 
 /** Icon definition for stethoscope **/
@@ -6119,7 +6105,7 @@
 
 /* line 56, _mixins.scss */
 .icon-stethoscope:before {
-  content: "\f0f1";
+  content: "";
 }
 
 /** Icon definition for stop **/
@@ -6136,7 +6122,7 @@
 
 /* line 56, _mixins.scss */
 .icon-stop:before {
-  content: "\f04d";
+  content: "";
 }
 
 /** Icon definition for strikethrough **/
@@ -6153,7 +6139,7 @@
 
 /* line 56, _mixins.scss */
 .icon-strikethrough:before {
-  content: "\f0cc";
+  content: "";
 }
 
 /** Icon definition for subscript **/
@@ -6170,7 +6156,7 @@
 
 /* line 56, _mixins.scss */
 .icon-subscript:before {
-  content: "\f12c";
+  content: "";
 }
 
 /** Icon definition for suitcase **/
@@ -6187,7 +6173,7 @@
 
 /* line 56, _mixins.scss */
 .icon-suitcase:before {
-  content: "\f0f2";
+  content: "";
 }
 
 /** Icon definition for sun-o **/
@@ -6204,7 +6190,7 @@
 
 /* line 56, _mixins.scss */
 .icon-sun-o:before {
-  content: "\f185";
+  content: "";
 }
 
 /** Icon definition for superscript **/
@@ -6221,7 +6207,7 @@
 
 /* line 56, _mixins.scss */
 .icon-superscript:before {
-  content: "\f12b";
+  content: "";
 }
 
 /** Icon definition for table **/
@@ -6238,7 +6224,7 @@
 
 /* line 56, _mixins.scss */
 .icon-table:before {
-  content: "\f0ce";
+  content: "";
 }
 
 /** Icon definition for tablet **/
@@ -6255,7 +6241,7 @@
 
 /* line 56, _mixins.scss */
 .icon-tablet:before {
-  content: "\f10a";
+  content: "";
 }
 
 /** Icon definition for tachometer **/
@@ -6272,7 +6258,7 @@
 
 /* line 56, _mixins.scss */
 .icon-tachometer:before {
-  content: "\f0e4";
+  content: "";
 }
 
 /** Icon definition for tag **/
@@ -6289,7 +6275,7 @@
 
 /* line 56, _mixins.scss */
 .icon-tag:before {
-  content: "\f02b";
+  content: "";
 }
 
 /** Icon definition for tags **/
@@ -6306,7 +6292,7 @@
 
 /* line 56, _mixins.scss */
 .icon-tags:before {
-  content: "\f02c";
+  content: "";
 }
 
 /** Icon definition for tasks **/
@@ -6323,7 +6309,7 @@
 
 /* line 56, _mixins.scss */
 .icon-tasks:before {
-  content: "\f0ae";
+  content: "";
 }
 
 /** Icon definition for terminal **/
@@ -6340,7 +6326,7 @@
 
 /* line 56, _mixins.scss */
 .icon-terminal:before {
-  content: "\f120";
+  content: "";
 }
 
 /** Icon definition for text-height **/
@@ -6357,7 +6343,7 @@
 
 /* line 56, _mixins.scss */
 .icon-text-height:before {
-  content: "\f034";
+  content: "";
 }
 
 /** Icon definition for text-width **/
@@ -6374,7 +6360,7 @@
 
 /* line 56, _mixins.scss */
 .icon-text-width:before {
-  content: "\f035";
+  content: "";
 }
 
 /** Icon definition for th **/
@@ -6391,7 +6377,7 @@
 
 /* line 56, _mixins.scss */
 .icon-th:before {
-  content: "\f00a";
+  content: "";
 }
 
 /** Icon definition for th-large **/
@@ -6408,7 +6394,7 @@
 
 /* line 56, _mixins.scss */
 .icon-th-large:before {
-  content: "\f009";
+  content: "";
 }
 
 /** Icon definition for th-list **/
@@ -6425,7 +6411,7 @@
 
 /* line 56, _mixins.scss */
 .icon-th-list:before {
-  content: "\f00b";
+  content: "";
 }
 
 /** Icon definition for thumbs-down **/
@@ -6442,7 +6428,7 @@
 
 /* line 56, _mixins.scss */
 .icon-thumbs-down:before {
-  content: "\f165";
+  content: "";
 }
 
 /** Icon definition for thumbs-o-down **/
@@ -6459,7 +6445,7 @@
 
 /* line 56, _mixins.scss */
 .icon-thumbs-o-down:before {
-  content: "\f088";
+  content: "";
 }
 
 /** Icon definition for thumbs-o-up **/
@@ -6476,7 +6462,7 @@
 
 /* line 56, _mixins.scss */
 .icon-thumbs-o-up:before {
-  content: "\f087";
+  content: "";
 }
 
 /** Icon definition for thumbs-up **/
@@ -6493,7 +6479,7 @@
 
 /* line 56, _mixins.scss */
 .icon-thumbs-up:before {
-  content: "\f164";
+  content: "";
 }
 
 /** Icon definition for thumb-tack **/
@@ -6510,7 +6496,7 @@
 
 /* line 56, _mixins.scss */
 .icon-thumb-tack:before {
-  content: "\f08d";
+  content: "";
 }
 
 /** Icon definition for ticket **/
@@ -6527,7 +6513,7 @@
 
 /* line 56, _mixins.scss */
 .icon-ticket:before {
-  content: "\f145";
+  content: "";
 }
 
 /** Icon definition for times-circle **/
@@ -6544,7 +6530,7 @@
 
 /* line 56, _mixins.scss */
 .icon-times-circle:before {
-  content: "\f057";
+  content: "";
 }
 
 /** Icon definition for times-circle-o **/
@@ -6561,7 +6547,7 @@
 
 /* line 56, _mixins.scss */
 .icon-times-circle-o:before {
-  content: "\f05c";
+  content: "";
 }
 
 /** Icon definition for times **/
@@ -6578,7 +6564,7 @@
 
 /* line 56, _mixins.scss */
 .icon-times:before {
-  content: "\f00d";
+  content: "";
 }
 
 /** Icon definition for tint **/
@@ -6595,7 +6581,7 @@
 
 /* line 56, _mixins.scss */
 .icon-tint:before {
-  content: "\f043";
+  content: "";
 }
 
 /** Icon definition for toggle-down **/
@@ -6612,7 +6598,7 @@
 
 /* line 56, _mixins.scss */
 .icon-toggle-down:before {
-  content: "\f150";
+  content: "";
 }
 
 /** Icon definition for toggle-left **/
@@ -6629,7 +6615,7 @@
 
 /* line 56, _mixins.scss */
 .icon-toggle-left:before {
-  content: "\f191";
+  content: "";
 }
 
 /** Icon definition for toggle-right **/
@@ -6646,7 +6632,7 @@
 
 /* line 56, _mixins.scss */
 .icon-toggle-right:before {
-  content: "\f152";
+  content: "";
 }
 
 /** Icon definition for toggle-up **/
@@ -6663,7 +6649,7 @@
 
 /* line 56, _mixins.scss */
 .icon-toggle-up:before {
-  content: "\f151";
+  content: "";
 }
 
 /** Icon definition for trash-o **/
@@ -6680,7 +6666,7 @@
 
 /* line 56, _mixins.scss */
 .icon-trash-o:before {
-  content: "\f014";
+  content: "";
 }
 
 /** Icon definition for trello **/
@@ -6697,7 +6683,7 @@
 
 /* line 56, _mixins.scss */
 .icon-trello:before {
-  content: "\f181";
+  content: "";
 }
 
 /** Icon definition for trophy **/
@@ -6714,7 +6700,7 @@
 
 /* line 56, _mixins.scss */
 .icon-trophy:before {
-  content: "\f091";
+  content: "";
 }
 
 /** Icon definition for truck **/
@@ -6731,7 +6717,7 @@
 
 /* line 56, _mixins.scss */
 .icon-truck:before {
-  content: "\f0d1";
+  content: "";
 }
 
 /** Icon definition for try **/
@@ -6748,7 +6734,7 @@
 
 /* line 56, _mixins.scss */
 .icon-try:before {
-  content: "\f195";
+  content: "";
 }
 
 /** Icon definition for tumblr **/
@@ -6765,7 +6751,7 @@
 
 /* line 56, _mixins.scss */
 .icon-tumblr:before {
-  content: "\f173";
+  content: "";
 }
 
 /** Icon definition for tumblr-square **/
@@ -6782,7 +6768,7 @@
 
 /* line 56, _mixins.scss */
 .icon-tumblr-square:before {
-  content: "\f174";
+  content: "";
 }
 
 /** Icon definition for turkish-lira **/
@@ -6799,7 +6785,7 @@
 
 /* line 56, _mixins.scss */
 .icon-turkish-lira:before {
-  content: "\f195";
+  content: "";
 }
 
 /** Icon definition for twitter **/
@@ -6816,7 +6802,7 @@
 
 /* line 56, _mixins.scss */
 .icon-twitter:before {
-  content: "\f099";
+  content: "";
 }
 
 /** Icon definition for twitter-square **/
@@ -6833,7 +6819,7 @@
 
 /* line 56, _mixins.scss */
 .icon-twitter-square:before {
-  content: "\f081";
+  content: "";
 }
 
 /** Icon definition for umbrella **/
@@ -6850,7 +6836,7 @@
 
 /* line 56, _mixins.scss */
 .icon-umbrella:before {
-  content: "\f0e9";
+  content: "";
 }
 
 /** Icon definition for underline **/
@@ -6867,7 +6853,7 @@
 
 /* line 56, _mixins.scss */
 .icon-underline:before {
-  content: "\f0cd";
+  content: "";
 }
 
 /** Icon definition for undo **/
@@ -6884,7 +6870,7 @@
 
 /* line 56, _mixins.scss */
 .icon-undo:before {
-  content: "\f0e2";
+  content: "";
 }
 
 /** Icon definition for unlink **/
@@ -6901,7 +6887,7 @@
 
 /* line 56, _mixins.scss */
 .icon-unlink:before {
-  content: "\f127";
+  content: "";
 }
 
 /** Icon definition for unlock-alt **/
@@ -6918,7 +6904,7 @@
 
 /* line 56, _mixins.scss */
 .icon-unlock-alt:before {
-  content: "\f13e";
+  content: "";
 }
 
 /** Icon definition for unlock **/
@@ -6935,7 +6921,7 @@
 
 /* line 56, _mixins.scss */
 .icon-unlock:before {
-  content: "\f09c";
+  content: "";
 }
 
 /** Icon definition for unsorted **/
@@ -6952,7 +6938,7 @@
 
 /* line 56, _mixins.scss */
 .icon-unsorted:before {
-  content: "\f0dc";
+  content: "";
 }
 
 /** Icon definition for upload **/
@@ -6969,7 +6955,7 @@
 
 /* line 56, _mixins.scss */
 .icon-upload:before {
-  content: "\f093";
+  content: "";
 }
 
 /** Icon definition for usd **/
@@ -6986,7 +6972,7 @@
 
 /* line 56, _mixins.scss */
 .icon-usd:before {
-  content: "\f155";
+  content: "";
 }
 
 /** Icon definition for user **/
@@ -7003,7 +6989,7 @@
 
 /* line 56, _mixins.scss */
 .icon-user:before {
-  content: "\f007";
+  content: "";
 }
 
 /** Icon definition for user-md **/
@@ -7020,7 +7006,7 @@
 
 /* line 56, _mixins.scss */
 .icon-user-md:before {
-  content: "\f0f0";
+  content: "";
 }
 
 /** Icon definition for users **/
@@ -7037,7 +7023,7 @@
 
 /* line 56, _mixins.scss */
 .icon-users:before {
-  content: "\f0c0";
+  content: "";
 }
 
 /** Icon definition for video-camera **/
@@ -7054,7 +7040,7 @@
 
 /* line 56, _mixins.scss */
 .icon-video-camera:before {
-  content: "\f03d";
+  content: "";
 }
 
 /** Icon definition for view **/
@@ -7071,7 +7057,7 @@
 
 /* line 56, _mixins.scss */
 .icon-view:before {
-  content: "\f06e";
+  content: "";
 }
 
 /** Icon definition for vimeo-square **/
@@ -7088,7 +7074,7 @@
 
 /* line 56, _mixins.scss */
 .icon-vimeo-square:before {
-  content: "\f194";
+  content: "";
 }
 
 /** Icon definition for vk **/
@@ -7105,7 +7091,7 @@
 
 /* line 56, _mixins.scss */
 .icon-vk:before {
-  content: "\f189";
+  content: "";
 }
 
 /** Icon definition for volume-down **/
@@ -7122,7 +7108,7 @@
 
 /* line 56, _mixins.scss */
 .icon-volume-down:before {
-  content: "\f027";
+  content: "";
 }
 
 /** Icon definition for volume-off **/
@@ -7139,7 +7125,7 @@
 
 /* line 56, _mixins.scss */
 .icon-volume-off:before {
-  content: "\f026";
+  content: "";
 }
 
 /** Icon definition for volume-up **/
@@ -7156,7 +7142,7 @@
 
 /* line 56, _mixins.scss */
 .icon-volume-up:before {
-  content: "\f028";
+  content: "";
 }
 
 /** Icon definition for warning **/
@@ -7173,7 +7159,7 @@
 
 /* line 56, _mixins.scss */
 .icon-warning:before {
-  content: "\f071";
+  content: "";
 }
 
 /** Icon definition for weibo **/
@@ -7190,7 +7176,7 @@
 
 /* line 56, _mixins.scss */
 .icon-weibo:before {
-  content: "\f18a";
+  content: "";
 }
 
 /** Icon definition for wheelchair **/
@@ -7207,7 +7193,7 @@
 
 /* line 56, _mixins.scss */
 .icon-wheelchair:before {
-  content: "\f193";
+  content: "";
 }
 
 /** Icon definition for windows **/
@@ -7224,7 +7210,7 @@
 
 /* line 56, _mixins.scss */
 .icon-windows:before {
-  content: "\f17a";
+  content: "";
 }
 
 /** Icon definition for won **/
@@ -7241,7 +7227,7 @@
 
 /* line 56, _mixins.scss */
 .icon-won:before {
-  content: "\f159";
+  content: "";
 }
 
 /** Icon definition for wrench **/
@@ -7258,7 +7244,7 @@
 
 /* line 56, _mixins.scss */
 .icon-wrench:before {
-  content: "\f0ad";
+  content: "";
 }
 
 /** Icon definition for xing **/
@@ -7275,7 +7261,7 @@
 
 /* line 56, _mixins.scss */
 .icon-xing:before {
-  content: "\f168";
+  content: "";
 }
 
 /** Icon definition for xing-square **/
@@ -7292,7 +7278,7 @@
 
 /* line 56, _mixins.scss */
 .icon-xing-square:before {
-  content: "\f169";
+  content: "";
 }
 
 /** Icon definition for yen **/
@@ -7309,7 +7295,7 @@
 
 /* line 56, _mixins.scss */
 .icon-yen:before {
-  content: "\f157";
+  content: "";
 }
 
 /** Icon definition for youtube **/
@@ -7326,7 +7312,7 @@
 
 /* line 56, _mixins.scss */
 .icon-youtube:before {
-  content: "\f167";
+  content: "";
 }
 
 /** Icon definition for youtube-play **/
@@ -7343,7 +7329,7 @@
 
 /* line 56, _mixins.scss */
 .icon-youtube-play:before {
-  content: "\f16a";
+  content: "";
 }
 
 /** Icon definition for youtube-square **/
@@ -7360,7 +7346,7 @@
 
 /* line 56, _mixins.scss */
 .icon-youtube-square:before {
-  content: "\f166";
+  content: "";
 }
 
 /*# sourceMappingURL=font-awesome.css.map */
