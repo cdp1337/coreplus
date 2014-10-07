@@ -41,19 +41,19 @@ table.listing th {
 
 /* line 35, ../../scss/opt/gradients.scss */
 .message-note {
-  background-color: #fcf0ad;
+  background-color: #FCF0AD;
   /* Old browsers */
-  background-image: -moz-linear-gradient(top, #fcf0ad 0%, #f9e15b 100%);
+  background-image: -moz-linear-gradient(top, #FCF0AD 0%, #f9e15b 100%);
   /* FF3.6+ */
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fcf0ad), color-stop(100%, #f9e15b));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FCF0AD), color-stop(100%, #f9e15b));
   /* Chrome,Safari4+ */
-  background-image: -webkit-linear-gradient(top, #fcf0ad 0%, #f9e15b 100%);
+  background-image: -webkit-linear-gradient(top, #FCF0AD 0%, #f9e15b 100%);
   /* Chrome10+,Safari5.1+ */
-  background-image: -o-linear-gradient(top, #fcf0ad 0%, #f9e15b 100%);
+  background-image: -o-linear-gradient(top, #FCF0AD 0%, #f9e15b 100%);
   /* Opera 11.10+ */
-  background-image: -ms-linear-gradient(top, #fcf0ad 0%, #f9e15b 100%);
+  background-image: -ms-linear-gradient(top, #FCF0AD 0%, #f9e15b 100%);
   /* IE10+ */
-  background-image: linear-gradient(to bottom, #fcf0ad 0%, #f9e15b 100%);
+  background-image: linear-gradient(to bottom, #FCF0AD 0%, #f9e15b 100%);
   /* W3C */
 }
 

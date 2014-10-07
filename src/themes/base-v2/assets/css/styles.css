@@ -630,40 +630,30 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes bounce {
-  /* line 31, ../scss/_animate.scss */
   0%, 20%, 50%, 80%, 100% {
     -webkit-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 36, ../scss/_animate.scss */
   40% {
     -webkit-transform: translateY(-30px);
     transform: translateY(-30px);
   }
-
-  /* line 41, ../scss/_animate.scss */
   60% {
     -webkit-transform: translateY(-15px);
     transform: translateY(-15px);
   }
 }
 @keyframes bounce {
-  /* line 48, ../scss/_animate.scss */
   0%, 20%, 50%, 80%, 100% {
     -webkit-transform: translateY(0);
     -ms-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 54, ../scss/_animate.scss */
   40% {
     -webkit-transform: translateY(-30px);
     -ms-transform: translateY(-30px);
     transform: translateY(-30px);
   }
-
-  /* line 60, ../scss/_animate.scss */
   60% {
     -webkit-transform: translateY(-15px);
     -ms-transform: translateY(-15px);
@@ -677,23 +667,17 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes flash {
-  /* line 73, ../scss/_animate.scss */
   0%, 50%, 100% {
     opacity: 1;
   }
-
-  /* line 77, ../scss/_animate.scss */
   25%, 75% {
     opacity: 0;
   }
 }
 @keyframes flash {
-  /* line 83, ../scss/_animate.scss */
   0%, 50%, 100% {
     opacity: 1;
   }
-
-  /* line 87, ../scss/_animate.scss */
   25%, 75% {
     opacity: 0;
   }
@@ -706,40 +690,30 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 
 /* originally authored by Nick Pettit - https://github.com/nickpettit/glide */
 @-webkit-keyframes pulse {
-  /* line 100, ../scss/_animate.scss */
   0% {
     -webkit-transform: scale(1);
     transform: scale(1);
   }
-
-  /* line 105, ../scss/_animate.scss */
   50% {
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
   }
-
-  /* line 110, ../scss/_animate.scss */
   100% {
     -webkit-transform: scale(1);
     transform: scale(1);
   }
 }
 @keyframes pulse {
-  /* line 117, ../scss/_animate.scss */
   0% {
     -webkit-transform: scale(1);
     -ms-transform: scale(1);
     transform: scale(1);
   }
-
-  /* line 123, ../scss/_animate.scss */
   50% {
     -webkit-transform: scale(1.1);
     -ms-transform: scale(1.1);
     transform: scale(1.1);
   }
-
-  /* line 129, ../scss/_animate.scss */
   100% {
     -webkit-transform: scale(1);
     -ms-transform: scale(1);
@@ -753,66 +727,48 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes rubberBand {
-  /* line 142, ../scss/_animate.scss */
   0% {
     -webkit-transform: scale(1);
     transform: scale(1);
   }
-
-  /* line 147, ../scss/_animate.scss */
   30% {
     -webkit-transform: scaleX(1.25) scaleY(0.75);
     transform: scaleX(1.25) scaleY(0.75);
   }
-
-  /* line 152, ../scss/_animate.scss */
   40% {
     -webkit-transform: scaleX(0.75) scaleY(1.25);
     transform: scaleX(0.75) scaleY(1.25);
   }
-
-  /* line 157, ../scss/_animate.scss */
   60% {
     -webkit-transform: scaleX(1.15) scaleY(0.85);
     transform: scaleX(1.15) scaleY(0.85);
   }
-
-  /* line 162, ../scss/_animate.scss */
   100% {
     -webkit-transform: scale(1);
     transform: scale(1);
   }
 }
 @keyframes rubberBand {
-  /* line 169, ../scss/_animate.scss */
   0% {
     -webkit-transform: scale(1);
     -ms-transform: scale(1);
     transform: scale(1);
   }
-
-  /* line 175, ../scss/_animate.scss */
   30% {
     -webkit-transform: scaleX(1.25) scaleY(0.75);
     -ms-transform: scaleX(1.25) scaleY(0.75);
     transform: scaleX(1.25) scaleY(0.75);
   }
-
-  /* line 181, ../scss/_animate.scss */
   40% {
     -webkit-transform: scaleX(0.75) scaleY(1.25);
     -ms-transform: scaleX(0.75) scaleY(1.25);
     transform: scaleX(0.75) scaleY(1.25);
   }
-
-  /* line 187, ../scss/_animate.scss */
   60% {
     -webkit-transform: scaleX(1.15) scaleY(0.85);
     -ms-transform: scaleX(1.15) scaleY(0.85);
     transform: scaleX(1.15) scaleY(0.85);
   }
-
-  /* line 193, ../scss/_animate.scss */
   100% {
     -webkit-transform: scale(1);
     -ms-transform: scale(1);
@@ -826,40 +782,30 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes shake {
-  /* line 206, ../scss/_animate.scss */
   0%, 100% {
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 211, ../scss/_animate.scss */
   10%, 30%, 50%, 70%, 90% {
     -webkit-transform: translateX(-10px);
     transform: translateX(-10px);
   }
-
-  /* line 216, ../scss/_animate.scss */
   20%, 40%, 60%, 80% {
     -webkit-transform: translateX(10px);
     transform: translateX(10px);
   }
 }
 @keyframes shake {
-  /* line 223, ../scss/_animate.scss */
   0%, 100% {
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 229, ../scss/_animate.scss */
   10%, 30%, 50%, 70%, 90% {
     -webkit-transform: translateX(-10px);
     -ms-transform: translateX(-10px);
     transform: translateX(-10px);
   }
-
-  /* line 235, ../scss/_animate.scss */
   20%, 40%, 60%, 80% {
     -webkit-transform: translateX(10px);
     -ms-transform: translateX(10px);
@@ -873,66 +819,48 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes swing {
-  /* line 248, ../scss/_animate.scss */
   20% {
     -webkit-transform: rotate(15deg);
     transform: rotate(15deg);
   }
-
-  /* line 253, ../scss/_animate.scss */
   40% {
     -webkit-transform: rotate(-10deg);
     transform: rotate(-10deg);
   }
-
-  /* line 258, ../scss/_animate.scss */
   60% {
     -webkit-transform: rotate(5deg);
     transform: rotate(5deg);
   }
-
-  /* line 263, ../scss/_animate.scss */
   80% {
     -webkit-transform: rotate(-5deg);
     transform: rotate(-5deg);
   }
-
-  /* line 268, ../scss/_animate.scss */
   100% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
 }
 @keyframes swing {
-  /* line 275, ../scss/_animate.scss */
   20% {
     -webkit-transform: rotate(15deg);
     -ms-transform: rotate(15deg);
     transform: rotate(15deg);
   }
-
-  /* line 281, ../scss/_animate.scss */
   40% {
     -webkit-transform: rotate(-10deg);
     -ms-transform: rotate(-10deg);
     transform: rotate(-10deg);
   }
-
-  /* line 287, ../scss/_animate.scss */
   60% {
     -webkit-transform: rotate(5deg);
     -ms-transform: rotate(5deg);
     transform: rotate(5deg);
   }
-
-  /* line 293, ../scss/_animate.scss */
   80% {
     -webkit-transform: rotate(-5deg);
     -ms-transform: rotate(-5deg);
     transform: rotate(-5deg);
   }
-
-  /* line 299, ../scss/_animate.scss */
   100% {
     -webkit-transform: rotate(0deg);
     -ms-transform: rotate(0deg);
@@ -949,66 +877,48 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes tada {
-  /* line 315, ../scss/_animate.scss */
   0% {
     -webkit-transform: scale(1);
     transform: scale(1);
   }
-
-  /* line 320, ../scss/_animate.scss */
   10%, 20% {
     -webkit-transform: scale(0.9) rotate(-3deg);
     transform: scale(0.9) rotate(-3deg);
   }
-
-  /* line 325, ../scss/_animate.scss */
   30%, 50%, 70%, 90% {
     -webkit-transform: scale(1.1) rotate(3deg);
     transform: scale(1.1) rotate(3deg);
   }
-
-  /* line 330, ../scss/_animate.scss */
   40%, 60%, 80% {
     -webkit-transform: scale(1.1) rotate(-3deg);
     transform: scale(1.1) rotate(-3deg);
   }
-
-  /* line 335, ../scss/_animate.scss */
   100% {
     -webkit-transform: scale(1) rotate(0);
     transform: scale(1) rotate(0);
   }
 }
 @keyframes tada {
-  /* line 342, ../scss/_animate.scss */
   0% {
     -webkit-transform: scale(1);
     -ms-transform: scale(1);
     transform: scale(1);
   }
-
-  /* line 348, ../scss/_animate.scss */
   10%, 20% {
     -webkit-transform: scale(0.9) rotate(-3deg);
     -ms-transform: scale(0.9) rotate(-3deg);
     transform: scale(0.9) rotate(-3deg);
   }
-
-  /* line 354, ../scss/_animate.scss */
   30%, 50%, 70%, 90% {
     -webkit-transform: scale(1.1) rotate(3deg);
     -ms-transform: scale(1.1) rotate(3deg);
     transform: scale(1.1) rotate(3deg);
   }
-
-  /* line 360, ../scss/_animate.scss */
   40%, 60%, 80% {
     -webkit-transform: scale(1.1) rotate(-3deg);
     -ms-transform: scale(1.1) rotate(-3deg);
     transform: scale(1.1) rotate(-3deg);
   }
-
-  /* line 366, ../scss/_animate.scss */
   100% {
     -webkit-transform: scale(1) rotate(0);
     -ms-transform: scale(1) rotate(0);
@@ -1023,92 +933,66 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 
 /* originally authored by Nick Pettit - https://github.com/nickpettit/glide */
 @-webkit-keyframes wobble {
-  /* line 381, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(0%);
     transform: translateX(0%);
   }
-
-  /* line 386, ../scss/_animate.scss */
   15% {
     -webkit-transform: translateX(-25%) rotate(-5deg);
     transform: translateX(-25%) rotate(-5deg);
   }
-
-  /* line 391, ../scss/_animate.scss */
   30% {
     -webkit-transform: translateX(20%) rotate(3deg);
     transform: translateX(20%) rotate(3deg);
   }
-
-  /* line 396, ../scss/_animate.scss */
   45% {
     -webkit-transform: translateX(-15%) rotate(-3deg);
     transform: translateX(-15%) rotate(-3deg);
   }
-
-  /* line 401, ../scss/_animate.scss */
   60% {
     -webkit-transform: translateX(10%) rotate(2deg);
     transform: translateX(10%) rotate(2deg);
   }
-
-  /* line 406, ../scss/_animate.scss */
   75% {
     -webkit-transform: translateX(-5%) rotate(-1deg);
     transform: translateX(-5%) rotate(-1deg);
   }
-
-  /* line 411, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(0%);
     transform: translateX(0%);
   }
 }
 @keyframes wobble {
-  /* line 418, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(0%);
     -ms-transform: translateX(0%);
     transform: translateX(0%);
   }
-
-  /* line 424, ../scss/_animate.scss */
   15% {
     -webkit-transform: translateX(-25%) rotate(-5deg);
     -ms-transform: translateX(-25%) rotate(-5deg);
     transform: translateX(-25%) rotate(-5deg);
   }
-
-  /* line 430, ../scss/_animate.scss */
   30% {
     -webkit-transform: translateX(20%) rotate(3deg);
     -ms-transform: translateX(20%) rotate(3deg);
     transform: translateX(20%) rotate(3deg);
   }
-
-  /* line 436, ../scss/_animate.scss */
   45% {
     -webkit-transform: translateX(-15%) rotate(-3deg);
     -ms-transform: translateX(-15%) rotate(-3deg);
     transform: translateX(-15%) rotate(-3deg);
   }
-
-  /* line 442, ../scss/_animate.scss */
   60% {
     -webkit-transform: translateX(10%) rotate(2deg);
     -ms-transform: translateX(10%) rotate(2deg);
     transform: translateX(10%) rotate(2deg);
   }
-
-  /* line 448, ../scss/_animate.scss */
   75% {
     -webkit-transform: translateX(-5%) rotate(-1deg);
     -ms-transform: translateX(-5%) rotate(-1deg);
     transform: translateX(-5%) rotate(-1deg);
   }
-
-  /* line 454, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(0%);
     -ms-transform: translateX(0%);
@@ -1122,27 +1006,20 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes bounceIn {
-  /* line 467, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: scale(0.3);
     transform: scale(0.3);
   }
-
-  /* line 473, ../scss/_animate.scss */
   50% {
     opacity: 1;
     -webkit-transform: scale(1.05);
     transform: scale(1.05);
   }
-
-  /* line 479, ../scss/_animate.scss */
   70% {
     -webkit-transform: scale(0.9);
     transform: scale(0.9);
   }
-
-  /* line 484, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: scale(1);
@@ -1150,30 +1027,23 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes bounceIn {
-  /* line 492, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: scale(0.3);
     -ms-transform: scale(0.3);
     transform: scale(0.3);
   }
-
-  /* line 499, ../scss/_animate.scss */
   50% {
     opacity: 1;
     -webkit-transform: scale(1.05);
     -ms-transform: scale(1.05);
     transform: scale(1.05);
   }
-
-  /* line 506, ../scss/_animate.scss */
   70% {
     -webkit-transform: scale(0.9);
     -ms-transform: scale(0.9);
     transform: scale(0.9);
   }
-
-  /* line 512, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: scale(1);
@@ -1188,57 +1058,43 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes bounceInDown {
-  /* line 526, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(-2000px);
     transform: translateY(-2000px);
   }
-
-  /* line 532, ../scss/_animate.scss */
   60% {
     opacity: 1;
     -webkit-transform: translateY(30px);
     transform: translateY(30px);
   }
-
-  /* line 538, ../scss/_animate.scss */
   80% {
     -webkit-transform: translateY(-10px);
     transform: translateY(-10px);
   }
-
-  /* line 543, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateY(0);
     transform: translateY(0);
   }
 }
 @keyframes bounceInDown {
-  /* line 550, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(-2000px);
     -ms-transform: translateY(-2000px);
     transform: translateY(-2000px);
   }
-
-  /* line 557, ../scss/_animate.scss */
   60% {
     opacity: 1;
     -webkit-transform: translateY(30px);
     -ms-transform: translateY(30px);
     transform: translateY(30px);
   }
-
-  /* line 564, ../scss/_animate.scss */
   80% {
     -webkit-transform: translateY(-10px);
     -ms-transform: translateY(-10px);
     transform: translateY(-10px);
   }
-
-  /* line 570, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateY(0);
     -ms-transform: translateY(0);
@@ -1252,57 +1108,43 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes bounceInLeft {
-  /* line 583, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(-2000px);
     transform: translateX(-2000px);
   }
-
-  /* line 589, ../scss/_animate.scss */
   60% {
     opacity: 1;
     -webkit-transform: translateX(30px);
     transform: translateX(30px);
   }
-
-  /* line 595, ../scss/_animate.scss */
   80% {
     -webkit-transform: translateX(-10px);
     transform: translateX(-10px);
   }
-
-  /* line 600, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
 }
 @keyframes bounceInLeft {
-  /* line 607, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(-2000px);
     -ms-transform: translateX(-2000px);
     transform: translateX(-2000px);
   }
-
-  /* line 614, ../scss/_animate.scss */
   60% {
     opacity: 1;
     -webkit-transform: translateX(30px);
     -ms-transform: translateX(30px);
     transform: translateX(30px);
   }
-
-  /* line 621, ../scss/_animate.scss */
   80% {
     -webkit-transform: translateX(-10px);
     -ms-transform: translateX(-10px);
     transform: translateX(-10px);
   }
-
-  /* line 627, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
@@ -1316,57 +1158,43 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes bounceInRight {
-  /* line 640, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(2000px);
     transform: translateX(2000px);
   }
-
-  /* line 646, ../scss/_animate.scss */
   60% {
     opacity: 1;
     -webkit-transform: translateX(-30px);
     transform: translateX(-30px);
   }
-
-  /* line 652, ../scss/_animate.scss */
   80% {
     -webkit-transform: translateX(10px);
     transform: translateX(10px);
   }
-
-  /* line 657, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
 }
 @keyframes bounceInRight {
-  /* line 664, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(2000px);
     -ms-transform: translateX(2000px);
     transform: translateX(2000px);
   }
-
-  /* line 671, ../scss/_animate.scss */
   60% {
     opacity: 1;
     -webkit-transform: translateX(-30px);
     -ms-transform: translateX(-30px);
     transform: translateX(-30px);
   }
-
-  /* line 678, ../scss/_animate.scss */
   80% {
     -webkit-transform: translateX(10px);
     -ms-transform: translateX(10px);
     transform: translateX(10px);
   }
-
-  /* line 684, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
@@ -1380,57 +1208,43 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes bounceInUp {
-  /* line 697, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(2000px);
     transform: translateY(2000px);
   }
-
-  /* line 703, ../scss/_animate.scss */
   60% {
     opacity: 1;
     -webkit-transform: translateY(-30px);
     transform: translateY(-30px);
   }
-
-  /* line 709, ../scss/_animate.scss */
   80% {
     -webkit-transform: translateY(10px);
     transform: translateY(10px);
   }
-
-  /* line 714, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateY(0);
     transform: translateY(0);
   }
 }
 @keyframes bounceInUp {
-  /* line 721, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(2000px);
     -ms-transform: translateY(2000px);
     transform: translateY(2000px);
   }
-
-  /* line 728, ../scss/_animate.scss */
   60% {
     opacity: 1;
     -webkit-transform: translateY(-30px);
     -ms-transform: translateY(-30px);
     transform: translateY(-30px);
   }
-
-  /* line 735, ../scss/_animate.scss */
   80% {
     -webkit-transform: translateY(10px);
     -ms-transform: translateY(10px);
     transform: translateY(10px);
   }
-
-  /* line 741, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateY(0);
     -ms-transform: translateY(0);
@@ -1444,26 +1258,19 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes bounceOut {
-  /* line 754, ../scss/_animate.scss */
   0% {
     -webkit-transform: scale(1);
     transform: scale(1);
   }
-
-  /* line 759, ../scss/_animate.scss */
   25% {
     -webkit-transform: scale(0.95);
     transform: scale(0.95);
   }
-
-  /* line 764, ../scss/_animate.scss */
   50% {
     opacity: 1;
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
   }
-
-  /* line 770, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: scale(0.3);
@@ -1471,29 +1278,22 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes bounceOut {
-  /* line 778, ../scss/_animate.scss */
   0% {
     -webkit-transform: scale(1);
     -ms-transform: scale(1);
     transform: scale(1);
   }
-
-  /* line 784, ../scss/_animate.scss */
   25% {
     -webkit-transform: scale(0.95);
     -ms-transform: scale(0.95);
     transform: scale(0.95);
   }
-
-  /* line 790, ../scss/_animate.scss */
   50% {
     opacity: 1;
     -webkit-transform: scale(1.1);
     -ms-transform: scale(1.1);
     transform: scale(1.1);
   }
-
-  /* line 797, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: scale(0.3);
@@ -1508,20 +1308,15 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes bounceOutDown {
-  /* line 811, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 816, ../scss/_animate.scss */
   20% {
     opacity: 1;
     -webkit-transform: translateY(-20px);
     transform: translateY(-20px);
   }
-
-  /* line 822, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(2000px);
@@ -1529,22 +1324,17 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes bounceOutDown {
-  /* line 830, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateY(0);
     -ms-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 836, ../scss/_animate.scss */
   20% {
     opacity: 1;
     -webkit-transform: translateY(-20px);
     -ms-transform: translateY(-20px);
     transform: translateY(-20px);
   }
-
-  /* line 843, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(2000px);
@@ -1559,20 +1349,15 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes bounceOutLeft {
-  /* line 857, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 862, ../scss/_animate.scss */
   20% {
     opacity: 1;
     -webkit-transform: translateX(20px);
     transform: translateX(20px);
   }
-
-  /* line 868, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(-2000px);
@@ -1580,22 +1365,17 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes bounceOutLeft {
-  /* line 876, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 882, ../scss/_animate.scss */
   20% {
     opacity: 1;
     -webkit-transform: translateX(20px);
     -ms-transform: translateX(20px);
     transform: translateX(20px);
   }
-
-  /* line 889, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(-2000px);
@@ -1610,20 +1390,15 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes bounceOutRight {
-  /* line 903, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 908, ../scss/_animate.scss */
   20% {
     opacity: 1;
     -webkit-transform: translateX(-20px);
     transform: translateX(-20px);
   }
-
-  /* line 914, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(2000px);
@@ -1631,22 +1406,17 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes bounceOutRight {
-  /* line 922, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 928, ../scss/_animate.scss */
   20% {
     opacity: 1;
     -webkit-transform: translateX(-20px);
     -ms-transform: translateX(-20px);
     transform: translateX(-20px);
   }
-
-  /* line 935, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(2000px);
@@ -1661,20 +1431,15 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes bounceOutUp {
-  /* line 949, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 954, ../scss/_animate.scss */
   20% {
     opacity: 1;
     -webkit-transform: translateY(20px);
     transform: translateY(20px);
   }
-
-  /* line 960, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(-2000px);
@@ -1682,22 +1447,17 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes bounceOutUp {
-  /* line 968, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateY(0);
     -ms-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 974, ../scss/_animate.scss */
   20% {
     opacity: 1;
     -webkit-transform: translateY(20px);
     -ms-transform: translateY(20px);
     transform: translateY(20px);
   }
-
-  /* line 981, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(-2000px);
@@ -1712,23 +1472,17 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeIn {
-  /* line 995, ../scss/_animate.scss */
   0% {
     opacity: 0;
   }
-
-  /* line 999, ../scss/_animate.scss */
   100% {
     opacity: 1;
   }
 }
 @keyframes fadeIn {
-  /* line 1005, ../scss/_animate.scss */
   0% {
     opacity: 0;
   }
-
-  /* line 1009, ../scss/_animate.scss */
   100% {
     opacity: 1;
   }
@@ -1740,14 +1494,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeInDown {
-  /* line 1020, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(-20px);
     transform: translateY(-20px);
   }
-
-  /* line 1026, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateY(0);
@@ -1755,15 +1506,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeInDown {
-  /* line 1034, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(-20px);
     -ms-transform: translateY(-20px);
     transform: translateY(-20px);
   }
-
-  /* line 1041, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateY(0);
@@ -1778,14 +1526,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeInDownBig {
-  /* line 1055, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(-2000px);
     transform: translateY(-2000px);
   }
-
-  /* line 1061, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateY(0);
@@ -1793,15 +1538,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeInDownBig {
-  /* line 1069, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(-2000px);
     -ms-transform: translateY(-2000px);
     transform: translateY(-2000px);
   }
-
-  /* line 1076, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateY(0);
@@ -1816,14 +1558,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeInLeft {
-  /* line 1090, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(-20px);
     transform: translateX(-20px);
   }
-
-  /* line 1096, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateX(0);
@@ -1831,15 +1570,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeInLeft {
-  /* line 1104, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(-20px);
     -ms-transform: translateX(-20px);
     transform: translateX(-20px);
   }
-
-  /* line 1111, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateX(0);
@@ -1854,14 +1590,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeInLeftBig {
-  /* line 1125, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(-2000px);
     transform: translateX(-2000px);
   }
-
-  /* line 1131, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateX(0);
@@ -1869,15 +1602,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeInLeftBig {
-  /* line 1139, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(-2000px);
     -ms-transform: translateX(-2000px);
     transform: translateX(-2000px);
   }
-
-  /* line 1146, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateX(0);
@@ -1892,14 +1622,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeInRight {
-  /* line 1160, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(20px);
     transform: translateX(20px);
   }
-
-  /* line 1166, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateX(0);
@@ -1907,15 +1634,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeInRight {
-  /* line 1174, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(20px);
     -ms-transform: translateX(20px);
     transform: translateX(20px);
   }
-
-  /* line 1181, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateX(0);
@@ -1930,14 +1654,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeInRightBig {
-  /* line 1195, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(2000px);
     transform: translateX(2000px);
   }
-
-  /* line 1201, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateX(0);
@@ -1945,15 +1666,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeInRightBig {
-  /* line 1209, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(2000px);
     -ms-transform: translateX(2000px);
     transform: translateX(2000px);
   }
-
-  /* line 1216, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateX(0);
@@ -1968,14 +1686,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeInUp {
-  /* line 1230, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(20px);
     transform: translateY(20px);
   }
-
-  /* line 1236, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateY(0);
@@ -1983,15 +1698,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeInUp {
-  /* line 1244, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(20px);
     -ms-transform: translateY(20px);
     transform: translateY(20px);
   }
-
-  /* line 1251, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateY(0);
@@ -2006,14 +1718,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeInUpBig {
-  /* line 1265, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(2000px);
     transform: translateY(2000px);
   }
-
-  /* line 1271, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateY(0);
@@ -2021,15 +1730,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeInUpBig {
-  /* line 1279, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(2000px);
     -ms-transform: translateY(2000px);
     transform: translateY(2000px);
   }
-
-  /* line 1286, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateY(0);
@@ -2044,23 +1750,17 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeOut {
-  /* line 1300, ../scss/_animate.scss */
   0% {
     opacity: 1;
   }
-
-  /* line 1304, ../scss/_animate.scss */
   100% {
     opacity: 0;
   }
 }
 @keyframes fadeOut {
-  /* line 1310, ../scss/_animate.scss */
   0% {
     opacity: 1;
   }
-
-  /* line 1314, ../scss/_animate.scss */
   100% {
     opacity: 0;
   }
@@ -2072,14 +1772,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeOutDown {
-  /* line 1325, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 1331, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(20px);
@@ -2087,15 +1784,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeOutDown {
-  /* line 1339, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateY(0);
     -ms-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 1346, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(20px);
@@ -2110,14 +1804,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeOutDownBig {
-  /* line 1360, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 1366, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(2000px);
@@ -2125,15 +1816,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeOutDownBig {
-  /* line 1374, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateY(0);
     -ms-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 1381, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(2000px);
@@ -2148,14 +1836,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeOutLeft {
-  /* line 1395, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 1401, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(-20px);
@@ -2163,15 +1848,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeOutLeft {
-  /* line 1409, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 1416, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(-20px);
@@ -2186,14 +1868,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeOutLeftBig {
-  /* line 1430, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 1436, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(-2000px);
@@ -2201,15 +1880,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeOutLeftBig {
-  /* line 1444, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 1451, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(-2000px);
@@ -2224,14 +1900,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeOutRight {
-  /* line 1465, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 1471, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(20px);
@@ -2239,15 +1912,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeOutRight {
-  /* line 1479, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 1486, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(20px);
@@ -2262,14 +1932,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeOutRightBig {
-  /* line 1500, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 1506, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(2000px);
@@ -2277,15 +1944,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeOutRightBig {
-  /* line 1514, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 1521, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(2000px);
@@ -2300,14 +1964,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeOutUp {
-  /* line 1535, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 1541, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(-20px);
@@ -2315,15 +1976,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeOutUp {
-  /* line 1549, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateY(0);
     -ms-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 1556, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(-20px);
@@ -2338,14 +1996,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes fadeOutUpBig {
-  /* line 1570, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 1576, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(-2000px);
@@ -2353,15 +2008,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes fadeOutUpBig {
-  /* line 1584, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateY(0);
     -ms-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 1591, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(-2000px);
@@ -2376,39 +2028,30 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes flip {
-  /* line 1605, ../scss/_animate.scss */
   0% {
     -webkit-transform: perspective(400px) translateZ(0) rotateY(0) scale(1);
     transform: perspective(400px) translateZ(0) rotateY(0) scale(1);
     -webkit-animation-timing-function: ease-out;
     animation-timing-function: ease-out;
   }
-
-  /* line 1612, ../scss/_animate.scss */
   40% {
     -webkit-transform: perspective(400px) translateZ(150px) rotateY(170deg) scale(1);
     transform: perspective(400px) translateZ(150px) rotateY(170deg) scale(1);
     -webkit-animation-timing-function: ease-out;
     animation-timing-function: ease-out;
   }
-
-  /* line 1619, ../scss/_animate.scss */
   50% {
     -webkit-transform: perspective(400px) translateZ(150px) rotateY(190deg) scale(1);
     transform: perspective(400px) translateZ(150px) rotateY(190deg) scale(1);
     -webkit-animation-timing-function: ease-in;
     animation-timing-function: ease-in;
   }
-
-  /* line 1626, ../scss/_animate.scss */
   80% {
     -webkit-transform: perspective(400px) translateZ(0) rotateY(360deg) scale(0.95);
     transform: perspective(400px) translateZ(0) rotateY(360deg) scale(0.95);
     -webkit-animation-timing-function: ease-in;
     animation-timing-function: ease-in;
   }
-
-  /* line 1633, ../scss/_animate.scss */
   100% {
     -webkit-transform: perspective(400px) translateZ(0) rotateY(360deg) scale(1);
     transform: perspective(400px) translateZ(0) rotateY(360deg) scale(1);
@@ -2417,7 +2060,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes flip {
-  /* line 1642, ../scss/_animate.scss */
   0% {
     -webkit-transform: perspective(400px) translateZ(0) rotateY(0) scale(1);
     -ms-transform: perspective(400px) translateZ(0) rotateY(0) scale(1);
@@ -2425,8 +2067,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     -webkit-animation-timing-function: ease-out;
     animation-timing-function: ease-out;
   }
-
-  /* line 1650, ../scss/_animate.scss */
   40% {
     -webkit-transform: perspective(400px) translateZ(150px) rotateY(170deg) scale(1);
     -ms-transform: perspective(400px) translateZ(150px) rotateY(170deg) scale(1);
@@ -2434,8 +2074,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     -webkit-animation-timing-function: ease-out;
     animation-timing-function: ease-out;
   }
-
-  /* line 1658, ../scss/_animate.scss */
   50% {
     -webkit-transform: perspective(400px) translateZ(150px) rotateY(190deg) scale(1);
     -ms-transform: perspective(400px) translateZ(150px) rotateY(190deg) scale(1);
@@ -2443,8 +2081,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     -webkit-animation-timing-function: ease-in;
     animation-timing-function: ease-in;
   }
-
-  /* line 1666, ../scss/_animate.scss */
   80% {
     -webkit-transform: perspective(400px) translateZ(0) rotateY(360deg) scale(0.95);
     -ms-transform: perspective(400px) translateZ(0) rotateY(360deg) scale(0.95);
@@ -2452,8 +2088,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     -webkit-animation-timing-function: ease-in;
     animation-timing-function: ease-in;
   }
-
-  /* line 1674, ../scss/_animate.scss */
   100% {
     -webkit-transform: perspective(400px) translateZ(0) rotateY(360deg) scale(1);
     -ms-transform: perspective(400px) translateZ(0) rotateY(360deg) scale(1);
@@ -2472,26 +2106,19 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes flipInX {
-  /* line 1692, ../scss/_animate.scss */
   0% {
     -webkit-transform: perspective(400px) rotateX(90deg);
     transform: perspective(400px) rotateX(90deg);
     opacity: 0;
   }
-
-  /* line 1698, ../scss/_animate.scss */
   40% {
     -webkit-transform: perspective(400px) rotateX(-10deg);
     transform: perspective(400px) rotateX(-10deg);
   }
-
-  /* line 1703, ../scss/_animate.scss */
   70% {
     -webkit-transform: perspective(400px) rotateX(10deg);
     transform: perspective(400px) rotateX(10deg);
   }
-
-  /* line 1708, ../scss/_animate.scss */
   100% {
     -webkit-transform: perspective(400px) rotateX(0deg);
     transform: perspective(400px) rotateX(0deg);
@@ -2499,29 +2126,22 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes flipInX {
-  /* line 1716, ../scss/_animate.scss */
   0% {
     -webkit-transform: perspective(400px) rotateX(90deg);
     -ms-transform: perspective(400px) rotateX(90deg);
     transform: perspective(400px) rotateX(90deg);
     opacity: 0;
   }
-
-  /* line 1723, ../scss/_animate.scss */
   40% {
     -webkit-transform: perspective(400px) rotateX(-10deg);
     -ms-transform: perspective(400px) rotateX(-10deg);
     transform: perspective(400px) rotateX(-10deg);
   }
-
-  /* line 1729, ../scss/_animate.scss */
   70% {
     -webkit-transform: perspective(400px) rotateX(10deg);
     -ms-transform: perspective(400px) rotateX(10deg);
     transform: perspective(400px) rotateX(10deg);
   }
-
-  /* line 1735, ../scss/_animate.scss */
   100% {
     -webkit-transform: perspective(400px) rotateX(0deg);
     -ms-transform: perspective(400px) rotateX(0deg);
@@ -2539,26 +2159,19 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes flipInY {
-  /* line 1752, ../scss/_animate.scss */
   0% {
     -webkit-transform: perspective(400px) rotateY(90deg);
     transform: perspective(400px) rotateY(90deg);
     opacity: 0;
   }
-
-  /* line 1758, ../scss/_animate.scss */
   40% {
     -webkit-transform: perspective(400px) rotateY(-10deg);
     transform: perspective(400px) rotateY(-10deg);
   }
-
-  /* line 1763, ../scss/_animate.scss */
   70% {
     -webkit-transform: perspective(400px) rotateY(10deg);
     transform: perspective(400px) rotateY(10deg);
   }
-
-  /* line 1768, ../scss/_animate.scss */
   100% {
     -webkit-transform: perspective(400px) rotateY(0deg);
     transform: perspective(400px) rotateY(0deg);
@@ -2566,29 +2179,22 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes flipInY {
-  /* line 1776, ../scss/_animate.scss */
   0% {
     -webkit-transform: perspective(400px) rotateY(90deg);
     -ms-transform: perspective(400px) rotateY(90deg);
     transform: perspective(400px) rotateY(90deg);
     opacity: 0;
   }
-
-  /* line 1783, ../scss/_animate.scss */
   40% {
     -webkit-transform: perspective(400px) rotateY(-10deg);
     -ms-transform: perspective(400px) rotateY(-10deg);
     transform: perspective(400px) rotateY(-10deg);
   }
-
-  /* line 1789, ../scss/_animate.scss */
   70% {
     -webkit-transform: perspective(400px) rotateY(10deg);
     -ms-transform: perspective(400px) rotateY(10deg);
     transform: perspective(400px) rotateY(10deg);
   }
-
-  /* line 1795, ../scss/_animate.scss */
   100% {
     -webkit-transform: perspective(400px) rotateY(0deg);
     -ms-transform: perspective(400px) rotateY(0deg);
@@ -2606,14 +2212,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes flipOutX {
-  /* line 1812, ../scss/_animate.scss */
   0% {
     -webkit-transform: perspective(400px) rotateX(0deg);
     transform: perspective(400px) rotateX(0deg);
     opacity: 1;
   }
-
-  /* line 1818, ../scss/_animate.scss */
   100% {
     -webkit-transform: perspective(400px) rotateX(90deg);
     transform: perspective(400px) rotateX(90deg);
@@ -2621,15 +2224,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes flipOutX {
-  /* line 1826, ../scss/_animate.scss */
   0% {
     -webkit-transform: perspective(400px) rotateX(0deg);
     -ms-transform: perspective(400px) rotateX(0deg);
     transform: perspective(400px) rotateX(0deg);
     opacity: 1;
   }
-
-  /* line 1833, ../scss/_animate.scss */
   100% {
     -webkit-transform: perspective(400px) rotateX(90deg);
     -ms-transform: perspective(400px) rotateX(90deg);
@@ -2647,14 +2247,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes flipOutY {
-  /* line 1850, ../scss/_animate.scss */
   0% {
     -webkit-transform: perspective(400px) rotateY(0deg);
     transform: perspective(400px) rotateY(0deg);
     opacity: 1;
   }
-
-  /* line 1856, ../scss/_animate.scss */
   100% {
     -webkit-transform: perspective(400px) rotateY(90deg);
     transform: perspective(400px) rotateY(90deg);
@@ -2662,15 +2259,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes flipOutY {
-  /* line 1864, ../scss/_animate.scss */
   0% {
     -webkit-transform: perspective(400px) rotateY(0deg);
     -ms-transform: perspective(400px) rotateY(0deg);
     transform: perspective(400px) rotateY(0deg);
     opacity: 1;
   }
-
-  /* line 1871, ../scss/_animate.scss */
   100% {
     -webkit-transform: perspective(400px) rotateY(90deg);
     -ms-transform: perspective(400px) rotateY(90deg);
@@ -2688,28 +2282,21 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes lightSpeedIn {
-  /* line 1888, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(100%) skewX(-30deg);
     transform: translateX(100%) skewX(-30deg);
     opacity: 0;
   }
-
-  /* line 1894, ../scss/_animate.scss */
   60% {
     -webkit-transform: translateX(-20%) skewX(30deg);
     transform: translateX(-20%) skewX(30deg);
     opacity: 1;
   }
-
-  /* line 1900, ../scss/_animate.scss */
   80% {
     -webkit-transform: translateX(0%) skewX(-15deg);
     transform: translateX(0%) skewX(-15deg);
     opacity: 1;
   }
-
-  /* line 1906, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(0%) skewX(0deg);
     transform: translateX(0%) skewX(0deg);
@@ -2717,31 +2304,24 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes lightSpeedIn {
-  /* line 1914, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(100%) skewX(-30deg);
     -ms-transform: translateX(100%) skewX(-30deg);
     transform: translateX(100%) skewX(-30deg);
     opacity: 0;
   }
-
-  /* line 1921, ../scss/_animate.scss */
   60% {
     -webkit-transform: translateX(-20%) skewX(30deg);
     -ms-transform: translateX(-20%) skewX(30deg);
     transform: translateX(-20%) skewX(30deg);
     opacity: 1;
   }
-
-  /* line 1928, ../scss/_animate.scss */
   80% {
     -webkit-transform: translateX(0%) skewX(-15deg);
     -ms-transform: translateX(0%) skewX(-15deg);
     transform: translateX(0%) skewX(-15deg);
     opacity: 1;
   }
-
-  /* line 1935, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(0%) skewX(0deg);
     -ms-transform: translateX(0%) skewX(0deg);
@@ -2758,14 +2338,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes lightSpeedOut {
-  /* line 1951, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(0%) skewX(0deg);
     transform: translateX(0%) skewX(0deg);
     opacity: 1;
   }
-
-  /* line 1957, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(100%) skewX(-30deg);
     transform: translateX(100%) skewX(-30deg);
@@ -2773,15 +2350,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes lightSpeedOut {
-  /* line 1965, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(0%) skewX(0deg);
     -ms-transform: translateX(0%) skewX(0deg);
     transform: translateX(0%) skewX(0deg);
     opacity: 1;
   }
-
-  /* line 1972, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(100%) skewX(-30deg);
     -ms-transform: translateX(100%) skewX(-30deg);
@@ -2798,7 +2372,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes rotateIn {
-  /* line 1988, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: center center;
     transform-origin: center center;
@@ -2806,8 +2379,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(-200deg);
     opacity: 0;
   }
-
-  /* line 1996, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: center center;
     transform-origin: center center;
@@ -2817,7 +2388,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes rotateIn {
-  /* line 2006, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: center center;
     -ms-transform-origin: center center;
@@ -2827,8 +2397,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(-200deg);
     opacity: 0;
   }
-
-  /* line 2016, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: center center;
     -ms-transform-origin: center center;
@@ -2846,7 +2414,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes rotateInDownLeft {
-  /* line 2033, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: left bottom;
     transform-origin: left bottom;
@@ -2854,8 +2421,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(-90deg);
     opacity: 0;
   }
-
-  /* line 2041, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: left bottom;
     transform-origin: left bottom;
@@ -2865,7 +2430,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes rotateInDownLeft {
-  /* line 2051, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: left bottom;
     -ms-transform-origin: left bottom;
@@ -2875,8 +2439,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(-90deg);
     opacity: 0;
   }
-
-  /* line 2061, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: left bottom;
     -ms-transform-origin: left bottom;
@@ -2894,7 +2456,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes rotateInDownRight {
-  /* line 2078, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: right bottom;
     transform-origin: right bottom;
@@ -2902,8 +2463,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(90deg);
     opacity: 0;
   }
-
-  /* line 2086, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: right bottom;
     transform-origin: right bottom;
@@ -2913,7 +2472,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes rotateInDownRight {
-  /* line 2096, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: right bottom;
     -ms-transform-origin: right bottom;
@@ -2923,8 +2481,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(90deg);
     opacity: 0;
   }
-
-  /* line 2106, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: right bottom;
     -ms-transform-origin: right bottom;
@@ -2942,7 +2498,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes rotateInUpLeft {
-  /* line 2123, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: left bottom;
     transform-origin: left bottom;
@@ -2950,8 +2505,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(90deg);
     opacity: 0;
   }
-
-  /* line 2131, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: left bottom;
     transform-origin: left bottom;
@@ -2961,7 +2514,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes rotateInUpLeft {
-  /* line 2141, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: left bottom;
     -ms-transform-origin: left bottom;
@@ -2971,8 +2523,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(90deg);
     opacity: 0;
   }
-
-  /* line 2151, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: left bottom;
     -ms-transform-origin: left bottom;
@@ -2990,7 +2540,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes rotateInUpRight {
-  /* line 2168, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: right bottom;
     transform-origin: right bottom;
@@ -2998,8 +2547,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(-90deg);
     opacity: 0;
   }
-
-  /* line 2176, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: right bottom;
     transform-origin: right bottom;
@@ -3009,7 +2556,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes rotateInUpRight {
-  /* line 2186, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: right bottom;
     -ms-transform-origin: right bottom;
@@ -3019,8 +2565,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(-90deg);
     opacity: 0;
   }
-
-  /* line 2196, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: right bottom;
     -ms-transform-origin: right bottom;
@@ -3038,7 +2582,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes rotateOut {
-  /* line 2213, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: center center;
     transform-origin: center center;
@@ -3046,8 +2589,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(0);
     opacity: 1;
   }
-
-  /* line 2221, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: center center;
     transform-origin: center center;
@@ -3057,7 +2598,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes rotateOut {
-  /* line 2231, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: center center;
     -ms-transform-origin: center center;
@@ -3067,8 +2607,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(0);
     opacity: 1;
   }
-
-  /* line 2241, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: center center;
     -ms-transform-origin: center center;
@@ -3086,7 +2624,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes rotateOutDownLeft {
-  /* line 2258, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: left bottom;
     transform-origin: left bottom;
@@ -3094,8 +2631,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(0);
     opacity: 1;
   }
-
-  /* line 2266, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: left bottom;
     transform-origin: left bottom;
@@ -3105,7 +2640,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes rotateOutDownLeft {
-  /* line 2276, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: left bottom;
     -ms-transform-origin: left bottom;
@@ -3115,8 +2649,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(0);
     opacity: 1;
   }
-
-  /* line 2286, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: left bottom;
     -ms-transform-origin: left bottom;
@@ -3134,7 +2666,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes rotateOutDownRight {
-  /* line 2303, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: right bottom;
     transform-origin: right bottom;
@@ -3142,8 +2673,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(0);
     opacity: 1;
   }
-
-  /* line 2311, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: right bottom;
     transform-origin: right bottom;
@@ -3153,7 +2682,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes rotateOutDownRight {
-  /* line 2321, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: right bottom;
     -ms-transform-origin: right bottom;
@@ -3163,8 +2691,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(0);
     opacity: 1;
   }
-
-  /* line 2331, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: right bottom;
     -ms-transform-origin: right bottom;
@@ -3182,7 +2708,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes rotateOutUpLeft {
-  /* line 2348, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: left bottom;
     transform-origin: left bottom;
@@ -3190,8 +2715,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(0);
     opacity: 1;
   }
-
-  /* line 2356, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: left bottom;
     transform-origin: left bottom;
@@ -3201,7 +2724,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes rotateOutUpLeft {
-  /* line 2366, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: left bottom;
     -ms-transform-origin: left bottom;
@@ -3211,8 +2733,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(0);
     opacity: 1;
   }
-
-  /* line 2376, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: left bottom;
     -ms-transform-origin: left bottom;
@@ -3230,7 +2750,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes rotateOutUpRight {
-  /* line 2393, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: right bottom;
     transform-origin: right bottom;
@@ -3238,8 +2757,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(0);
     opacity: 1;
   }
-
-  /* line 2401, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: right bottom;
     transform-origin: right bottom;
@@ -3249,7 +2766,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes rotateOutUpRight {
-  /* line 2411, ../scss/_animate.scss */
   0% {
     -webkit-transform-origin: right bottom;
     -ms-transform-origin: right bottom;
@@ -3259,8 +2775,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     transform: rotate(0);
     opacity: 1;
   }
-
-  /* line 2421, ../scss/_animate.scss */
   100% {
     -webkit-transform-origin: right bottom;
     -ms-transform-origin: right bottom;
@@ -3278,29 +2792,23 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes slideInDown {
-  /* line 2438, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(-2000px);
     transform: translateY(-2000px);
   }
-
-  /* line 2444, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateY(0);
     transform: translateY(0);
   }
 }
 @keyframes slideInDown {
-  /* line 2451, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateY(-2000px);
     -ms-transform: translateY(-2000px);
     transform: translateY(-2000px);
   }
-
-  /* line 2458, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateY(0);
     -ms-transform: translateY(0);
@@ -3314,29 +2822,23 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes slideInLeft {
-  /* line 2471, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(-2000px);
     transform: translateX(-2000px);
   }
-
-  /* line 2477, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
 }
 @keyframes slideInLeft {
-  /* line 2484, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(-2000px);
     -ms-transform: translateX(-2000px);
     transform: translateX(-2000px);
   }
-
-  /* line 2491, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
@@ -3350,29 +2852,23 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes slideInRight {
-  /* line 2504, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(2000px);
     transform: translateX(2000px);
   }
-
-  /* line 2510, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
 }
 @keyframes slideInRight {
-  /* line 2517, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(2000px);
     -ms-transform: translateX(2000px);
     transform: translateX(2000px);
   }
-
-  /* line 2524, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
@@ -3386,13 +2882,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes slideOutLeft {
-  /* line 2537, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 2542, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(-2000px);
@@ -3400,14 +2893,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes slideOutLeft {
-  /* line 2550, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 2556, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(-2000px);
@@ -3422,13 +2912,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes slideOutRight {
-  /* line 2570, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 2575, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(2000px);
@@ -3436,14 +2923,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes slideOutRight {
-  /* line 2583, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateX(0);
     -ms-transform: translateX(0);
     transform: translateX(0);
   }
-
-  /* line 2589, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(2000px);
@@ -3458,13 +2942,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes slideOutUp {
-  /* line 2603, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 2608, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(-2000px);
@@ -3472,14 +2953,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes slideOutUp {
-  /* line 2616, ../scss/_animate.scss */
   0% {
     -webkit-transform: translateY(0);
     -ms-transform: translateY(0);
     transform: translateY(0);
   }
-
-  /* line 2622, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateY(-2000px);
@@ -3494,7 +2972,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 }
 
 @-webkit-keyframes hinge {
-  /* line 2636, ../scss/_animate.scss */
   0% {
     -webkit-transform: rotate(0);
     transform: rotate(0);
@@ -3503,8 +2980,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     -webkit-animation-timing-function: ease-in-out;
     animation-timing-function: ease-in-out;
   }
-
-  /* line 2645, ../scss/_animate.scss */
   20%, 60% {
     -webkit-transform: rotate(80deg);
     transform: rotate(80deg);
@@ -3513,8 +2988,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     -webkit-animation-timing-function: ease-in-out;
     animation-timing-function: ease-in-out;
   }
-
-  /* line 2654, ../scss/_animate.scss */
   40% {
     -webkit-transform: rotate(60deg);
     transform: rotate(60deg);
@@ -3523,8 +2996,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     -webkit-animation-timing-function: ease-in-out;
     animation-timing-function: ease-in-out;
   }
-
-  /* line 2663, ../scss/_animate.scss */
   80% {
     -webkit-transform: rotate(60deg) translateY(0);
     transform: rotate(60deg) translateY(0);
@@ -3534,8 +3005,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     animation-timing-function: ease-in-out;
     opacity: 1;
   }
-
-  /* line 2673, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateY(700px);
     transform: translateY(700px);
@@ -3543,7 +3012,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes hinge {
-  /* line 2681, ../scss/_animate.scss */
   0% {
     -webkit-transform: rotate(0);
     -ms-transform: rotate(0);
@@ -3554,8 +3022,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     -webkit-animation-timing-function: ease-in-out;
     animation-timing-function: ease-in-out;
   }
-
-  /* line 2692, ../scss/_animate.scss */
   20%, 60% {
     -webkit-transform: rotate(80deg);
     -ms-transform: rotate(80deg);
@@ -3566,8 +3032,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     -webkit-animation-timing-function: ease-in-out;
     animation-timing-function: ease-in-out;
   }
-
-  /* line 2703, ../scss/_animate.scss */
   40% {
     -webkit-transform: rotate(60deg);
     -ms-transform: rotate(60deg);
@@ -3578,8 +3042,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     -webkit-animation-timing-function: ease-in-out;
     animation-timing-function: ease-in-out;
   }
-
-  /* line 2714, ../scss/_animate.scss */
   80% {
     -webkit-transform: rotate(60deg) translateY(0);
     -ms-transform: rotate(60deg) translateY(0);
@@ -3591,8 +3053,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
     animation-timing-function: ease-in-out;
     opacity: 1;
   }
-
-  /* line 2726, ../scss/_animate.scss */
   100% {
     -webkit-transform: translateY(700px);
     -ms-transform: translateY(700px);
@@ -3608,14 +3068,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 
 /* originally authored by Nick Pettit - https://github.com/nickpettit/glide */
 @-webkit-keyframes rollIn {
-  /* line 2742, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(-100%) rotate(-120deg);
     transform: translateX(-100%) rotate(-120deg);
   }
-
-  /* line 2748, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateX(0px) rotate(0deg);
@@ -3623,15 +3080,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes rollIn {
-  /* line 2756, ../scss/_animate.scss */
   0% {
     opacity: 0;
     -webkit-transform: translateX(-100%) rotate(-120deg);
     -ms-transform: translateX(-100%) rotate(-120deg);
     transform: translateX(-100%) rotate(-120deg);
   }
-
-  /* line 2763, ../scss/_animate.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateX(0px) rotate(0deg);
@@ -3647,14 +3101,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 
 /* originally authored by Nick Pettit - https://github.com/nickpettit/glide */
 @-webkit-keyframes rollOut {
-  /* line 2779, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateX(0px) rotate(0deg);
     transform: translateX(0px) rotate(0deg);
   }
-
-  /* line 2785, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(100%) rotate(120deg);
@@ -3662,15 +3113,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
   }
 }
 @keyframes rollOut {
-  /* line 2793, ../scss/_animate.scss */
   0% {
     opacity: 1;
     -webkit-transform: translateX(0px) rotate(0deg);
     -ms-transform: translateX(0px) rotate(0deg);
     transform: translateX(0px) rotate(0deg);
   }
-
-  /* line 2800, ../scss/_animate.scss */
   100% {
     opacity: 0;
     -webkit-transform: translateX(100%) rotate(120deg);
@@ -4613,7 +4061,7 @@ p[class^="message-"] .message-background-icon i {
 }
 /* line 111, ../scss/_form_elements.scss */
 .formelement .form-element-value input[type=text], .formelement .form-element-value input[type=password] {
-  background: #f6f6f6;
+  background: #F6F6F6;
   border: 1px solid rgba(120, 120, 120, 0.4);
   color: #353535;
   min-width: 150px;
@@ -4621,14 +4069,14 @@ p[class^="message-"] .message-background-icon i {
 }
 /* line 119, ../scss/_form_elements.scss */
 .formelement .form-element-value textarea {
-  background: #f6f6f6;
+  background: #F6F6F6;
   border: 1px solid rgba(120, 120, 120, 0.4);
   color: #353535;
   padding: 1%;
 }
 /* line 126, ../scss/_form_elements.scss */
 .formelement .form-element-value select {
-  background: #f6f6f6;
+  background: #F6F6F6;
   border: 1px solid rgba(120, 120, 120, 0.4);
   color: #353535;
   cursor: pointer;
@@ -4638,7 +4086,7 @@ p[class^="message-"] .message-background-icon i {
 /* line 136, ../scss/_form_elements.scss */
 .formelement.formfileinput .form-element-value, .formelement.formcaptchainput .form-element-value {
   /* These input types also contain a background on their value field */
-  background: #f6f6f6;
+  background: #F6F6F6;
   padding: 1%;
 }
 /* line 143, ../scss/_form_elements.scss */
@@ -4669,7 +4117,7 @@ p[class^="message-"] .message-background-icon i {
 }
 /* line 170, ../scss/_form_elements.scss */
 .formelement.formpagemetakeywordsinput .form-element-value {
-  background: #f6f6f6;
+  background: #F6F6F6;
   border: 1px solid rgba(120, 120, 120, 0.4);
   color: #353535;
 }
