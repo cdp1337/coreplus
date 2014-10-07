@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 30 Jul 2014 11:36:44 -0400
+ * @compiled Tue, 07 Oct 2014 15:38:20 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1242,7 +1242,9 @@ public function getID(){
 return $this->_idval;
 }
 public function table($tablename){
-if(DB_PREFIX && strpos($tablename, DB_PREFIX) === false) $tablename = DB_PREFIX . $tablename;
+if(DB_PREFIX && strpos($tablename, DB_PREFIX) === false){
+$tablename = DB_PREFIX . $tablename;
+}
 $this->_table = $tablename;
 return $this;
 }
@@ -1298,6 +1300,28 @@ reset($this->_data);
 }
 return $this;
 }
+public function executeAndGet($interface = null){
+$this->execute($interface);
+if($this->_mode == Dataset::MODE_COUNT){
+return $this->num_rows;
+}
+elseif($this->_limit == 1 && $this->num_rows == 1){
+if(sizeof($this->_selects) == 1 && $this->_selects[0] != '*'){
+$k = $this->_selects[0];
+return (isset($this->_data[0][$k])) ? $this->_data[0][$k] : null;
+}
+else{
+return $this->_data[0];
+}
+}
+else{
+$ret = [];
+foreach($this as $d){
+$ret[] = $d;
+}
+return $ret;
+}
+}
 function rewind() {
 if($this->_data !== null) reset($this->_data);
 }
@@ -1305,7 +1329,6 @@ function current() {
 if($this->_data === null) $this->execute();
 $k = key($this->_data);
 return isset($this->_data[$k]) ? $this->_data[$k] : null;
-return $this->_data[key($this->_data)];
 }
 function key() {
 if($this->_data === null) $this->execute();
@@ -2295,7 +2318,17 @@ $f->where($wheres);
 return $f;
 }
 public function getLink($linkname, $order = null) {
-if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
+if (!isset($this->_linked[$linkname])){
+if(strrpos($linkname, 'Model') === strlen($linkname) - 5 ){
+$linkname = substr($linkname, 0, -5);
+}
+else{
+$linkname .= 'Model';
+}
+if(!isset($this->_linked[$linkname])){
+return null; // @todo Error Handling
+}
+}
 if($order === null && isset($this->_linked[$linkname]['order'])){
 $order = $this->_linked[$linkname]['order'];
 }
@@ -3632,7 +3665,7 @@ only.  Useful for saving a page without releasing it to public users.',
 'comment' => 'The published date',
 ),
 'published_expires' => array(
-'type' => Model::ATT_TYPE_INT,
+'type' => Model::ATT_TYPE_STRING,
 'null' => true,
 'default' => null,
 'form' => array(
@@ -8617,6 +8650,10 @@ if(!defined('FTP_PATH')){
 $ftp = false;
 return false;
 }
+if(!FTP_USERNAME){
+$ftp = false;
+return false;
+}
 $ftp = new FTPConnection();
 $ftp->host = '127.0.0.1';
 $ftp->username = FTP_USERNAME;
@@ -8714,17 +8751,38 @@ return implode("\r\n", $headers);
 }
 }
 function resolve_asset($asset){
-if(strpos($asset, '://') !== false) return $asset;
-if(strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
-$keyname = 'asset-resolveurl';
-$cachevalue = \Core\Cache::Get($keyname, (3600 * 24));
-if(!$cachevalue) $cachevalue = array();
-if(!isset($cachevalue[$asset])){
-$f = \Core::File($asset);
-$cachevalue[$asset] = $f->getURL();
-\Core\Cache::Set($keyname, $cachevalue, (3600 * 24));
+if (strpos($asset, '://') !== false) return $asset;
+if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
+$version = \ConfigHandler::Get('/core/filestore/assetversion');
+$proxyfriendly = \ConfigHandler::Get('/core/assetversion/proxyfriendly');
+$file     = \Core\Filestore\Factory::File($asset);
+$filename = $file->getFilename();
+$ext      = $file->getExtension();
+$suffix   = '';
+$url = substr($file->getURL(), 0, -1-strlen($ext));
+if(\ConfigHandler::Get('/core/javascript/minified')){
+if($ext == 'js'){
+$minified = $filename . '.min.js';
+$minfile = \Core\Filestore\Factory::File($minified);
+if($minfile->exists()){
+$ext = 'min.js';
 }
-return $cachevalue[$asset];
+}
+elseif($ext == 'css'){
+$minified = substr($filename, 0, -4) . '.min.css';
+$minfile = \Core\Filestore\Factory::File($minified);
+if($minfile->exists()){
+$ext = 'min.css';
+}
+}
+}
+if($version && $proxyfriendly){
+$ext = 'v' . $version . '.' . $ext;
+}
+elseif($version){
+$suffix = '?v=' . $version;
+}
+return $url . '.' . $ext . $suffix;
 }
 function resolve_link($url) {
 if ($url == '#') return $url;
@@ -10222,7 +10280,7 @@ $suffix = (($ext == '') ? '' : '.' . $ext);
 $thathash = $src->getHash();
 $f = $prefix . $suffix;
 while(file_exists($f) && md5_file($f) != $thathash){
-$f = $prefix . ' (' . ++$c . ')' . $suffix;
+$f = $prefix . '-' . ++$c . '' . $suffix;
 }
 $this->_filename = $f;
 }
@@ -10541,6 +10599,7 @@ if(!$this->isImage()){
 return;
 }
 $m = $this->getMimetype();
+$file->putContents('');
 if($m == 'image/gif' && exec('which convert 2>/dev/null')){
 $resize = escapeshellarg($mode . $width . 'x' . $height);
 exec('convert ' . escapeshellarg($this->getFilename()) . ' -resize ' . $resize . ' ' . escapeshellarg($file->getFilename()));
@@ -10618,7 +10677,6 @@ imagesavealpha($img2, true);
 imagealphablending($img, true);
 imagecopyresampled($img2, $img, 0, 0, 0, 0, $nW, $nH, $sW, $sH);
 imagedestroy($img);
-$file->putContents('');
 switch ($m) {
 case 'image/jpeg':
 imagejpeg($img2, $file->getFilename(), 60);
@@ -11335,6 +11393,8 @@ private $_url = null;
 private $_headers = null;
 private $_response = null;
 private $_tmplocal = null;
+protected $_redirectFile = null;
+protected $_redirectCount = 0;
 public function __construct($filename = null) {
 if ($filename) $this->setFilename($filename);
 }
@@ -11536,7 +11596,7 @@ return $this->_getTmpLocal()->getPreviewFile($dimensions);
 public function isWritable() {
 return false;
 }
-private function _getHeaders() {
+protected function _getHeaders() {
 if ($this->_headers === null) {
 $this->_headers = array();
 $curl = curl_init();
@@ -11579,35 +11639,52 @@ $v = substr($v, 0, strpos($v, 'charset=') - 2);
 $this->_headers[$k] = $v;
 }
 }
+if($this->_response == '302' && isset($this->_headers['Location'])){
+$newcount = $this->_redirectCount + 1;
+if($newcount <= 5){
+$this->_redirectFile = new FileRemote();
+$this->_redirectFile->_redirectCount = ($this->_redirectCount + 1);
+$this->_redirectFile->setFilename($this->_headers['Location']);
+$this->_redirectFile->_getHeaders();
+}
+else{
+trigger_error('Too many redirects when requesting ' . $this->getURL(), E_USER_WARNING);
+}
+}
 }
 return $this->_headers;
 }
-private function _getHeader($header) {
+protected function _getHeader($header) {
 $h = $this->_getHeaders();
 return (isset($h[$header])) ? $h[$header] : null;
 }
-private function _getTmpLocal() {
+protected function _getTmpLocal() {
 if ($this->_tmplocal === null) {
 $f = md5($this->getFilename());
 $needtodownload = true;
 $this->_tmplocal = Filestore\Factory::File('tmp/remotefile-cache/' . $f);
 if ($this->cacheable && $this->_tmplocal->exists()) {
 $systemcachedata = \Core\Cache::Get('remotefile-cache-header-' . $f);
-if ($systemcachedata) {
-if(isset($systemcachedata['Expires']) && strtotime($systemcachedata['Expires']) > time()){
+if ($systemcachedata && isset($systemcachedata['headers'])) {
+if(isset($systemcachedata['headers']['Expires']) && strtotime($systemcachedata['headers']['Expires']) > time()){
 $needtodownload = false;
-$this->_headers = $systemcachedata;
-$this->_response = 200;
+$this->_headers = $systemcachedata['headers'];
+$this->_response = $systemcachedata['response'];
 }
-elseif ($this->_getHeader('ETag')) {
-$needtodownload = ($this->_getHeader('ETag') != $systemcachedata['ETag']);
+elseif ($this->_getHeader('ETag') && isset($systemcachedata['headers']['ETag'])) {
+$needtodownload = ($this->_getHeader('ETag') != $systemcachedata['headers']['ETag']);
 }
-elseif ($this->_getHeader('Last-Modified')) {
-$needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['Last-Modified']);
+elseif ($this->_getHeader('Last-Modified') && isset($systemcachedata['headers']['Last-Modified'])) {
+$needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['headers']['Last-Modified']);
 }
 }
 }
 if ($needtodownload || !$this->cacheable) {
+$this->_getHeaders();
+if($this->_response == '302' && $this->_redirectFile !== null){
+$this->_tmplocal = $this->_redirectFile->_getTmpLocal();
+}
+else{
 $curl = curl_init();
 curl_setopt_array(
 $curl, array(
@@ -11635,9 +11712,13 @@ break;
 }
 curl_close($curl);
 $this->_tmplocal->putContents($result);
+}
 \Core\Cache::Set(
 'remotefile-cache-header-' . $f,
-$this->_getHeaders()
+[
+'headers'  => $this->_getHeaders(),
+'response' => $this->_response,
+]
 );
 }
 }
@@ -13874,38 +13955,7 @@ public static function GetVersion() {
 return Core::GetComponent()->getVersionInstalled();
 }
 public static function ResolveAsset($asset) {
-if (strpos($asset, '://') !== false) return $asset;
-if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
-$version = ConfigHandler::Get('/core/filestore/assetversion');
-$proxyfriendly = ConfigHandler::Get('/core/assetversion/proxyfriendly');
-$file     = \Core\Filestore\Factory::File($asset);
-$filename = $file->getFilename();
-$ext      = $file->getExtension();
-$suffix   = '';
-$url = substr($file->getURL(), 0, -1-strlen($ext));
-if(ConfigHandler::Get('/core/javascript/minified')){
-if($ext == 'js'){
-$minified = $filename . '.min.js';
-$minfile = \Core\Filestore\Factory::File($minified);
-if($minfile->exists()){
-$ext = 'min.js';
-}
-}
-elseif($ext == 'css'){
-$minified = substr($filename, 0, -4) . '.min.css';
-$minfile = \Core\Filestore\Factory::File($minified);
-if($minfile->exists()){
-$ext = 'min.css';
-}
-}
-}
-if($version && $proxyfriendly){
-$ext = 'v' . $version . '.' . $ext;
-}
-elseif($version){
-$suffix = '?v=' . $version;
-}
-return $url . '.' . $ext . $suffix;
+return \Core\resolve_asset($asset);
 }
 public static function ResolveLink($url) {
 return \Core\resolve_link($url);
@@ -13958,8 +14008,8 @@ if (is_numeric($k)) $coreparams[] = $v;
 else $extraparams[] = $k . '=' . $v;
 }
 return $base .
-(sizeof($coreparams) ? '/' . implode('/', $coreparams) : '') .
-(sizeof($extraparams) ? '?' . implode('&', $extraparams) : '');
+(sizeof($coreparams) > 0 ? '/' . implode('/', $coreparams) : '') .
+(sizeof($extraparams) > 0 ? '?' . implode('&', $extraparams) : '');
 }
 static public function _RecordNavigation() {
 $request = PageRequest::GetSystemRequest();
@@ -14004,7 +14054,7 @@ $_SESSION['message_stack'][$key] = array(
 static public function AddMessage($messageText, $messageType = 'info') {
 Core::SetMessage($messageText, $messageType);
 }
-static public function GetMessages($returnSorted = FALSE, $clearStack = TRUE) {
+static public function GetMessages($returnSorted = false, $clearStack = true) {
 if (!isset($_SESSION['message_stack'])) return array();
 $return = $_SESSION['message_stack'];
 if ($returnSorted) $return = Core::SortByKey($return, 'mtype');
@@ -16059,6 +16109,7 @@ private $_fetchCache = null;
 public $bodyclasses = [];
 public $htmlAttributes = [];
 public $headers = [];
+public $cacheable = true;
 public function __construct() {
 $this->error = View::ERROR_NOERROR;
 $this->mode  = View::MODE_PAGE;
@@ -16923,6 +16974,7 @@ $out .= $e->render();
 }
 $file = $this->getTemplateName();
 if (!$file) return $out;
+\Core\view()->cacheable = false;
 $tpl = \Core\Templates\Template::Factory($file);
 $tpl->assign('group', $this);
 $tpl->assign('elements', $out);
@@ -17175,6 +17227,11 @@ elseif (($v = $this->get($k)) !== null){
 $out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
 }
 }
+foreach($this->_attributes as $k => $v){
+if(strpos($k, 'data-') === 0){
+$out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
+}
+}
 return $out;
 }
 public function lookupValueFrom(&$src) {
@@ -17205,6 +17262,7 @@ public $originalurl = '';
 public $referrer = '';
 public static $Mappings = array(
 'access'           => 'FormAccessStringInput',
+'button'           => 'FormButtonInput',
 'checkbox'         => 'FormCheckboxInput',
 'checkboxes'       => 'FormCheckboxesInput',
 'date'             => 'FormDateInput',
@@ -17565,7 +17623,7 @@ Core::SetMessage('Form submission type does not match', 'error');
 return;
 }
 if($_SERVER['HTTP_REFERER'] != $form->originalurl){
-Core::SetMessage('Form submission referrer does not match', 'error');
+Core::SetMessage('Form submission referrer does not match, please try your submission again.', 'error');
 return;
 }
 if (strtoupper($form->get('method')) == 'POST') $src =& $_POST;
@@ -17877,11 +17935,27 @@ else{
 $defaultpage = null;
 $isadmin = false;
 }
-if ($view->error == View::ERROR_NOERROR && $view->contenttype == View::CTYPE_HTML && $view->templatename === null) {
+if(
+$view->mode == View::MODE_PAGEORAJAX &&
+$this->isAjax() &&
+$view->jsondata !== null &&
+$view->templatename === null
+){
+$view->contenttype = View::CTYPE_JSON;
+}
+if(
+$view->error == View::ERROR_NOERROR &&
+$view->contenttype == View::CTYPE_HTML &&
+$view->templatename === null
+){
 $cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
 $view->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
 }
-elseif ($view->error == View::ERROR_NOERROR && $view->contenttype == View::CTYPE_XML && $view->templatename === null) {
+elseif(
+$view->error == View::ERROR_NOERROR &&
+$view->contenttype == View::CTYPE_XML &&
+$view->templatename === null
+){
 $cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
 $view->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
 }
@@ -17990,6 +18064,9 @@ $index = [];
 $index[] = $key;
 \Core\Cache::Set($indexkey, $index, 86400);
 }
+elseif(($reason = $this->isNotCacheableReason()) !== null){
+$view->headers['X-Core-NotCached-Reason'] = $reason;
+}
 $view->headers['X-Core-Render-Time'] = \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTimeFormatted();
 $view->render();
 if ($page && $page->exists() && $view->error == View::ERROR_NOERROR) {
@@ -18002,27 +18079,36 @@ $page->save();
 }
 HookHandler::DispatchHook('/core/page/postrender');
 }
-public function isCacheable(){
-$cacheable = true;
+public function isNotCacheableReason(){
+$cacheable = null;
 if(DEVELOPMENT_MODE){
-$cacheable = false;
+$cacheable = 'Site is in development mode';
 }
-elseif($this->_cached){
-$cacheable = false;
+if(!\ConfigHandler::Get('/core/performance/anonymous_user_page_cache')){
+$cacheable = 'Anonymous user cache disabled in the system';
 }
 elseif(\Core\user()->exists()){
-$cacheable = false;
+$cacheable = 'Logged in users do not get cached pages';
 }
 elseif($this->method != PageRequest::METHOD_GET){
-$cacheable = false;
+$cacheable = 'Request is not a GET';
+}
+elseif(!$this->getView()->cacheable){
+$cacheable = 'Page explicitly set as not cacheable';
 }
 elseif($this->getPageModel()->get('expires') == 0){
-$cacheable = false;
+$cacheable = 'Page expire set to 0, cache disabled';
 }
 elseif($this->getView()->mode != View::MODE_PAGE){
-$cacheable = false;
+$cacheable = 'Request is not a PAGE type';
 }
 return $cacheable;
+}
+public function isCacheable(){
+if($this->_cached){
+return false;
+}
+return ($this->isNotCacheableReason() === null);
 }
 public function setParameters($params) {
 $this->parameters = $params;
@@ -18231,6 +18317,24 @@ $this->_view = $newview;
 }
 public function getPageModel() {
 return $this->getPageRequest()->getPageModel();
+}
+public function sendJSONError($code, $message, $redirect){
+$view    = $this->getView();
+$request = $this->getPageRequest();
+if($request->isAjax()){
+$view->mode = View::MODE_PAGEORAJAX;
+$view->jsondata = ['status' => $code, 'message' => $message];
+$view->error = $code;
+}
+else{
+Core::SetMessage($message, 'error');
+if($redirect){
+\Core\redirect($redirect);
+}
+else{
+\Core\go_back();
+}
+}
 }
 protected function setAccess($accessstring) {
 $this->getPageModel()->set('access', $accessstring);
