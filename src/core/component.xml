@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.5" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.6" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -42,7 +42,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
 		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
-		<file filename="core/CHANGELOG" md5="ad7b3bc3bd9aee168853dd54b64d1ae1"/>
+		<file filename="core/CHANGELOG" md5="cf46123c25af40fcea8432046b23f3ad"/>
 		<file filename="core/bootstrap.php" md5="6885762e3fd11610ea22aceffd3375ff"/>
 		<file filename="core/bootstrap_postincludes.php" md5="129d5a6cab56e728c99eb116c2786051"/>
 		<file filename="core/bootstrap_predefines.php" md5="6c7a3ab5663e579fa0851d813b8bf05b"/>
@@ -529,7 +529,7 @@
 		<file filename="core/libs/core/Time.class.php" md5="ae56c336aefe716b5272de4d95f3bc19">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/UserAgent.php" md5="6e007ddc67d05efc3afd56a17d6c7cda">
+		<file filename="core/libs/core/UserAgent.php" md5="ec3c9444fd9331bd8b88bc09fd9a07fe">
 			<class name="Core\UserAgent"/>
 		</file>
 		<file filename="core/libs/core/View.class.php" md5="a332fad46ffd049aaf57e2250751f324">
@@ -610,7 +610,7 @@
 		<file filename="core/libs/core/filestore/contents/ContentCSV.php" md5="408b5af95ecd6d812120504af3082306">
 			<class name="Core\Filestore\Contents\ContentCSV"/>
 		</file>
-		<file filename="core/libs/core/filestore/contents/ContentGZ.php" md5="b4ae7e21bea0e77a229fd0b8a972fe2b">
+		<file filename="core/libs/core/filestore/contents/ContentGZ.php" md5="da7b5a7849d4ffa5bfd85b0302e91d03">
 			<class name="Core\Filestore\Contents\ContentGZ"/>
 		</file>
 		<file filename="core/libs/core/filestore/contents/ContentTGZ.php" md5="c04e51d0fe82a186c560241c86a4e719">
@@ -1499,7 +1499,7 @@
 		<file filename="install/test_rewrite/index.html" md5="c2759effffc94bb9acc71d69fe3e8a1f"/>
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 		<file filename="install/utilities.php" md5="19b6e7d1483e8ec8e0a6fad9932ce850"/>
-		<file filename="logs/error.log" md5="06701fcd9ac49c2ac375d29a111cfa4b"/>
+		<file filename="logs/error.log" md5="02a024344a736b8afe01178001cc2207"/>
 		<file filename="logs/error.log.201404060010.gz" md5="0f9f1dfe03a45dae5b6815f0990fca37"/>
 		<file filename="logs/error.log.201404130010.gz" md5="b9602de3fea6f43a0ae0664f35d72bcc"/>
 		<file filename="logs/error.log.201404200010.gz" md5="f177c53d9fa8e31cfb3cb392137e9835"/>
@@ -1515,7 +1515,7 @@
 		<file filename="logs/error.log.201409210010.gz" md5="4c730b0c6f28f6b88a17aa11a16ad494"/>
 		<file filename="logs/error.log.201409280010.gz" md5="2f315b02f2965394b519071bc79801f5"/>
 		<file filename="logs/error.log.201410050010.gz" md5="a952e5b14f04198231dae1d1c15ecc94"/>
-		<file filename="logs/info.log" md5="3af63e44b9e0feadfb3caba2182ebb69"/>
+		<file filename="logs/info.log" md5="e2a3cf79623d65b18fd749d6bc36cbe3"/>
 		<file filename="logs/info.log.201404200010.gz" md5="3f49a752975d5a29007e2710737db3f7"/>
 		<file filename="logs/info.log.201404270010.gz" md5="e04f6b19925433325dc58f0bcb6eac66"/>
 		<file filename="logs/info.log.201405040010.gz" md5="57e0bcff6ba5f8ac747b8481b3b4abe6"/>
@@ -1877,6 +1877,7 @@
 		<upgrade from="2.6.2" to="2.6.3"/>
 		<upgrade from="2.6.3" to="2.6.4"/>
 		<upgrade from="2.6.4" to="2.6.5"/>
+		<upgrade from="2.6.5" to="2.6.6"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
