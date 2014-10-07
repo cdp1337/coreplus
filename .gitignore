@@ -27,19 +27,19 @@
 # Skip some additional PhpStorm metafiles.  These are all project centric
 # I need to explicitly list the files to ignore in this directory because ONE needs to be included,
 # codeStyleSettings.xml is extremely useful for ensuring that additional installations of phpStorm play nicely.
-/.idea/.*
 /.idea/*.iml
-/.idea/*/
+/.idea/.name
+/.idea/dataSources.ids
+/.idea/dataSources.xml
+/.idea/deployment.xml
 /.idea/encodings.xml
 /.idea/misc.xml
 /.idea/modules.xml
-/.idea/vcs.xml
-/.idea/workspace.xml
-/.idea/dataSources.ids
-/.idea/dataSources.xml
+/.idea/scopes
 /.idea/sqldialects.xml
-/.idea/deployment.xml
+/.idea/vcs.xml
 /.idea/watcherTasks.xml
+/.idea/workspace.xml
 
 # Skip the GPG keys.
 /src/gnupg/*.gpg
