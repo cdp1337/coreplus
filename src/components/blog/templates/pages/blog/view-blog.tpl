@@ -13,6 +13,10 @@
 {$filters->pagination()}
 <div itemscope="itemscope" itemtype="http://schema.org/Blog" class="single-blog-listing blog-listing">
 
+	{insertable name="page_h1" assign="page_h1" title="Page Heading" type="text" description="The page H1 tag."}
+		{if $page_h1}<h1>{$page_h1}</h1>{/if}
+	{/insertable}
+
 	{if $page.description}
 		<div itemprop="description" style="display:none;">{$page.description}</div>
 	{/if}

@@ -1,5 +1,9 @@
 <div itemscope itemtype="http://schema.org/BlogPosting" class="blog-article" xmlns="http://www.w3.org/1999/html">
 
+	{insertable name="page_h1" assign="page_h1" title="Page Heading" type="text" description="The page H1 tag."}
+		{if $page_h1}<h1>{$page_h1}</h1>{/if}
+	{/insertable}
+
 	<div class="blog-article-posting-stats">
 		{if $page->getAuthor()}
 			{if Core::IsComponentAvailable('user-social')}
