@@ -10,6 +10,7 @@
  */
 
 namespace Core;
+use Core\Filestore\Contents\ContentGZ;
 
 /**
  * User Agent object, fancy alternative PHP's native get_browser function.
@@ -358,14 +359,23 @@ class UserAgent {
 			$file = \Core\Filestore\Factory::File('tmp/php_browscap.ini');
 			$remote = \Core\Filestore\Factory::File(self::$_ini_url);
 
-			// Doesn't exist? download it!
-			if(!$file->exists()){
-				$remote->copyTo($file);
+			$rcontents = $remote->getContentsObject();
+			if($rcontents instanceof ContentGZ){
+				// yay...
+				// Core handles all the remote file caching automatically, so no worries about anything here.
+				$rcontents->uncompress($file);
 			}
+			else {
+				// Ok, it may be a standard text file then... try the conventional logic.
+				// Doesn't exist? download it!
+				if(!$file->exists()){
+					$remote->copyTo($file);
+				}
 
-			// Too old? download it!
-			if($file->getMTime() < (\Time::GetCurrent() - self::$updateInterval)){
-				$remote->copyTo($file);
+				// Too old? download it!
+				if($file->getMTime() < (\Time::GetCurrent() - self::$updateInterval)){
+					$remote->copyTo($file);
+				}
 			}
 
 			$_browsers = parse_ini_file($file->getFilename(), true, INI_SCANNER_RAW);
