@@ -91,6 +91,10 @@ class DatasetWhere{
 				if($op == 'IN'){
 					// the IN statement has a bit of an extra functionality.
 					// This expects a comma separated list of values.
+					// If there are any spaces or parentheses, remove them first.
+					$statement = ltrim($statement, " \t\n\r\0\x0B(");
+					$statement = rtrim($statement, " \t\n\r\0\x0B)");
+
 					$statement = array_map('trim', explode(',', $statement));
 				}
 				elseif($statement == 'NULL'){
