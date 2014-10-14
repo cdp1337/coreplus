@@ -692,6 +692,10 @@ class mysqli_backend implements BackendInterface {
 
 			$ss[] = $s;
 		}
+		// Nothing to select?  The user probably wanted '*'.
+		if(!sizeof($ss)){
+			$ss[] = '*';
+		}
 		$q .= ' ' . implode(', ', $ss);
 
 		$q .= ' FROM `' . $dataset->_table . '`';
