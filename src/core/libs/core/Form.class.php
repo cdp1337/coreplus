@@ -994,6 +994,10 @@ class Form extends FormGroup {
 			case 'foot':
 				$out = $tpl->fetch('forms/form.foot.tpl');
 				break;
+			default:
+				if(($el = $this->getElement($part)) !== false){
+					$out = $el->render();
+				}
 		}
 
 		// Save it
