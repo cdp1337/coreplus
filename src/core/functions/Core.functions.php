@@ -257,13 +257,13 @@ function get_standard_http_headers($forcurl = false, $autoclose = false){
  */
 function resolve_asset($asset){
 	// Allow already-resolved links to be returned verbatim.
-	if (strpos($asset, '://') !== false) return $asset;
+	if(strpos($asset, '://') !== false) return $asset;
 
 	// Since an asset is just a file, I'll use the builtin file store system.
 	// (although every file coming in should be assumed to be an asset, so
 	//  allow for a partial path name to come in, assuming asset/).
 
-	if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
+	if(strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
 
 	$version = \ConfigHandler::Get('/core/filestore/assetversion');
 	$proxyfriendly = \ConfigHandler::Get('/core/assetversion/proxyfriendly');
