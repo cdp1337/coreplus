@@ -102,16 +102,16 @@ function smarty_block_a($params, $content, $smarty, &$repeat){
 		$k = strtolower($k);
 		switch($k){
 			case 'href':
-				$content .= ' href="' . Core::ResolveLink ($v) . '"';
+				$newcontent .= ' href="' . Core::ResolveLink ($v) . '"';
 				break;
 			case 'history':
-				$content .= ' href="' . Core::GetHistory($v) . '"';
+				$newcontent .= ' href="' . Core::GetHistory($v) . '"';
 				break;
 			case 'assign':
 				$assign = $v;
 				break;
 			default:
-				$content .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
+				$newcontent .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
 		}
 	}
 	// Close the starting tag.
