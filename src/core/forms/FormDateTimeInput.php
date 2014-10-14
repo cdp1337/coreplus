@@ -166,7 +166,13 @@ class FormDateTimeInput extends FormTextInput {
 
 		$timezone = isset($this->_attributes['savetimezone']) ? $this->_attributes['savetimezone'] : Time::TIMEZONE_GMT;
 
-		if(isset($this->_attributes['saveformat']) && !is_numeric($value)){
+		if($value === '' || $value === NULL){
+			// Allow empty values to be entered without manipulation.
+			// This is to prevent an empty value from tripping up the !is_numeric check below and
+			// getting set to an empty date string, which evaluates to the current date/time.
+			return parent::setValue($value);
+		}
+		elseif(isset($this->_attributes['saveformat']) && !is_numeric($value)){
 			// Set value succeeded, now I can convert the string to an int, (if requested).
 			$dt = new CoreDateTime($value);
 			$value = $dt->getFormatted($this->_attributes['saveformat'], $timezone);
