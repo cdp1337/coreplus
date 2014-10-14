@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 07 Oct 2014 15:38:20 -0400
+ * @compiled Mon, 13 Oct 2014 17:21:44 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1371,6 +1371,8 @@ $op = $c;
 $statement = trim(substr($statement, strlen($op)));
 $valid = true;
 if($op == 'IN'){
+$statement = ltrim($statement, " \t\n\r\0\x0B(");
+$statement = rtrim($statement, " \t\n\r\0\x0B)");
 $statement = array_map('trim', explode(',', $statement));
 }
 elseif($statement == 'NULL'){
@@ -2382,7 +2384,17 @@ return $model;
 }
 }
 public function setLink($linkname, Model $model) {
-if (!isset($this->_linked[$linkname])) return; // @todo Error Handling
+if (!isset($this->_linked[$linkname])){
+if(strrpos($linkname, 'Model') === strlen($linkname) - 5 ){
+$linkname = substr($linkname, 0, -5);
+}
+else{
+$linkname .= 'Model';
+}
+if(!isset($this->_linked[$linkname])){
+return null; // @todo Error Handling
+}
+}
 switch($this->_linked[$linkname]['link']){
 case Model::LINK_HASONE:
 case Model::LINK_BELONGSTOONE:
@@ -3153,7 +3165,6 @@ $column->field     = $def['name'];
 $column->type      = $def['type'];
 $column->required  = $def['required'];
 $column->maxlength = $def['maxlength'];
-$column->options   = $def['options'];
 $column->default   = $def['default'];
 $column->null      = $def['null'];
 $column->comment   = $def['comment'];
@@ -3194,6 +3205,14 @@ $column->maxlength = 15;
 }
 if($column->type == Model::ATT_TYPE_ALIAS){
 $column->aliasof = $def['alias'];
+}
+if($column->type == Model::ATT_TYPE_ENUM){
+if(!\Core\is_numeric_array($def['options'])){
+$column->options = array_keys($def['options']);
+}
+else{
+$column->options = $def['options'];
+}
 }
 if($column->default === false){
 if($column->null){
@@ -8751,38 +8770,17 @@ return implode("\r\n", $headers);
 }
 }
 function resolve_asset($asset){
-if (strpos($asset, '://') !== false) return $asset;
-if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
-$version = \ConfigHandler::Get('/core/filestore/assetversion');
-$proxyfriendly = \ConfigHandler::Get('/core/assetversion/proxyfriendly');
-$file     = \Core\Filestore\Factory::File($asset);
-$filename = $file->getFilename();
-$ext      = $file->getExtension();
-$suffix   = '';
-$url = substr($file->getURL(), 0, -1-strlen($ext));
-if(\ConfigHandler::Get('/core/javascript/minified')){
-if($ext == 'js'){
-$minified = $filename . '.min.js';
-$minfile = \Core\Filestore\Factory::File($minified);
-if($minfile->exists()){
-$ext = 'min.js';
+if(strpos($asset, '://') !== false) return $asset;
+if(strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
+$keyname = 'asset-resolveurl';
+$cachevalue = \Core\Cache::Get($keyname, (3600 * 24));
+if(!$cachevalue) $cachevalue = array();
+if(!isset($cachevalue[$asset])){
+$f = \Core::File($asset);
+$cachevalue[$asset] = $f->getURL();
+\Core\Cache::Set($keyname, $cachevalue, (3600 * 24));
 }
-}
-elseif($ext == 'css'){
-$minified = substr($filename, 0, -4) . '.min.css';
-$minfile = \Core\Filestore\Factory::File($minified);
-if($minfile->exists()){
-$ext = 'min.css';
-}
-}
-}
-if($version && $proxyfriendly){
-$ext = 'v' . $version . '.' . $ext;
-}
-elseif($version){
-$suffix = '?v=' . $version;
-}
-return $url . '.' . $ext . $suffix;
+return $cachevalue[$asset];
 }
 function resolve_link($url) {
 if ($url == '#') return $url;
@@ -12805,7 +12803,14 @@ public function rewind() {
 $this->_pos = 0;
 }
 public function offsetExists($offset) {
-return array_key_exists($offset, $this->_links);
+if(!isset($this->_links[$offset])){
+return false;
+}
+$meta = $this->_links[$offset];
+if($meta->content === null){
+return false;
+}
+return true;
 }
 public function offsetGet($offset) {
 return $this->_links[$offset];
@@ -13955,7 +13960,38 @@ public static function GetVersion() {
 return Core::GetComponent()->getVersionInstalled();
 }
 public static function ResolveAsset($asset) {
-return \Core\resolve_asset($asset);
+if (strpos($asset, '://') !== false) return $asset;
+if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
+$version = ConfigHandler::Get('/core/filestore/assetversion');
+$proxyfriendly = ConfigHandler::Get('/core/assetversion/proxyfriendly');
+$file     = \Core\Filestore\Factory::File($asset);
+$filename = $file->getFilename();
+$ext      = $file->getExtension();
+$suffix   = '';
+$url = substr($file->getURL(), 0, -1-strlen($ext));
+if(ConfigHandler::Get('/core/javascript/minified')){
+if($ext == 'js'){
+$minified = $filename . '.min.js';
+$minfile = \Core\Filestore\Factory::File($minified);
+if($minfile->exists()){
+$ext = 'min.js';
+}
+}
+elseif($ext == 'css'){
+$minified = substr($filename, 0, -4) . '.min.css';
+$minfile = \Core\Filestore\Factory::File($minified);
+if($minfile->exists()){
+$ext = 'min.css';
+}
+}
+}
+if($version && $proxyfriendly){
+$ext = 'v' . $version . '.' . $ext;
+}
+elseif($version){
+$suffix = '?v=' . $version;
+}
+return $url . '.' . $ext . $suffix;
 }
 public static function ResolveLink($url) {
 return \Core\resolve_link($url);
@@ -14008,8 +14044,8 @@ if (is_numeric($k)) $coreparams[] = $v;
 else $extraparams[] = $k . '=' . $v;
 }
 return $base .
-(sizeof($coreparams) > 0 ? '/' . implode('/', $coreparams) : '') .
-(sizeof($extraparams) > 0 ? '?' . implode('&', $extraparams) : '');
+(sizeof($coreparams) ? '/' . implode('/', $coreparams) : '') .
+(sizeof($extraparams) ? '?' . implode('&', $extraparams) : '');
 }
 static public function _RecordNavigation() {
 $request = PageRequest::GetSystemRequest();
@@ -14054,7 +14090,7 @@ $_SESSION['message_stack'][$key] = array(
 static public function AddMessage($messageText, $messageType = 'info') {
 Core::SetMessage($messageText, $messageType);
 }
-static public function GetMessages($returnSorted = false, $clearStack = true) {
+static public function GetMessages($returnSorted = FALSE, $clearStack = TRUE) {
 if (!isset($_SESSION['message_stack'])) return array();
 $return = $_SESSION['message_stack'];
 if ($returnSorted) $return = Core::SortByKey($return, 'mtype');
@@ -17227,11 +17263,6 @@ elseif (($v = $this->get($k)) !== null){
 $out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
 }
 }
-foreach($this->_attributes as $k => $v){
-if(strpos($k, 'data-') === 0){
-$out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
-}
-}
 return $out;
 }
 public function lookupValueFrom(&$src) {
@@ -17262,7 +17293,6 @@ public $originalurl = '';
 public $referrer = '';
 public static $Mappings = array(
 'access'           => 'FormAccessStringInput',
-'button'           => 'FormButtonInput',
 'checkbox'         => 'FormCheckboxInput',
 'checkboxes'       => 'FormCheckboxesInput',
 'date'             => 'FormDateInput',
@@ -17400,6 +17430,10 @@ break;
 case 'foot':
 $out = $tpl->fetch('forms/form.foot.tpl');
 break;
+default:
+if(($el = $this->getElement($part)) !== false){
+$out = $el->render();
+}
 }
 if(!$this->referrer && isset($_SERVER['HTTP_REFERER'])){
 $this->referrer = $_SERVER['HTTP_REFERER'];
