@@ -110,7 +110,8 @@ class ModelSchema extends Core\Datamodel\Schema{
 		$column->type      = $def['type'];
 		$column->required  = $def['required'];
 		$column->maxlength = $def['maxlength'];
-		$column->options   = $def['options'];
+		// Options have been moved below to support associative arrays.
+		//$column->options   = $def['options'];
 		$column->default   = $def['default'];
 		$column->null      = $def['null'];
 		$column->comment   = $def['comment'];
@@ -169,6 +170,20 @@ class ModelSchema extends Core\Datamodel\Schema{
 
 		if($column->type == Model::ATT_TYPE_ALIAS){
 			$column->aliasof = $def['alias'];
+		}
+
+		if($column->type == Model::ATT_TYPE_ENUM){
+			// This logic is to support model definitions such as
+			// 'foo' => [
+			//          'type' => Model::ATT_TYPE_ENUM,
+			//          'options' => ['key-1' => 'Key One', 'key-2' => 'Key TWO'],
+			// ...
+			if(!\Core\is_numeric_array($def['options'])){
+				$column->options = array_keys($def['options']);
+			}
+			else{
+				$column->options = $def['options'];
+			}
 		}
 
 		// Is default not set?  Some columns would really like this to be!
