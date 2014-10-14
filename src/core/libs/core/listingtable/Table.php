@@ -264,6 +264,19 @@ class Table implements \Iterator {
 		$this->getFilters()->setLimit($limit);
 	}
 
+	/**
+	 * Set the default sort key and direction.
+	 *
+	 * This should be done prior to loading the results!
+	 *
+	 * @param string $key       The key of the column to sort by
+	 * @param string $direction "DESC" or "ASC" for descending or ascending sort
+	 */
+	public function setDefaultSort($key, $direction = 'DESC'){
+		$this->getFilters()->setSortKey($key);
+		$this->getFilters()->setSortDirection($direction);
+	}
+
 
 
 	//-----------------------------------------------------------------------\\
@@ -304,6 +317,89 @@ class Table implements \Iterator {
 		}
 	}
 
+	/**
+	 * Send a CSV header and setup all necessary options to the View object to provide a download.
+	 *
+	 * All the data headers will be rendered automatically, (with the exception of the final 'controls' column).
+	 *
+	 * @param \View  $view  Page view to manipulate
+	 * @param string $title Title of the file, (will get converted to a valid URL)
+	 */
+	public function sendCSVHeader(\View $view, $title = 'csv export'){
+		$filename = \Core\str_to_url($title) . '-' . date('Y-m-d') . '.csv';
+
+		$view->mode = \View::MODE_NOOUTPUT;
+		$view->contenttype = 'text/csv';
+		$view->addHeader('Content-Disposition', 'attachment; filename=' . $filename);
+
+		// Set the limits and everything as necessary.
+		$this->setLimit(99999);
+		if(!$this->_applied){
+			$this->getFilters()->applyToFactory($this->getModelFactory());
+			$this->_results = $this->getModelFactory()->get();
+			$this->_applied = true;
+		}
+
+		// Build the CSV header to send, (the first record).
+		$header = [];
+		foreach($this->_columns as $c){
+			/** @var Column $c */
+			$header[] = $c->title;
+		}
+
+		// Send the headers and start the output.
+		$view->render();
+		$this->sendCSVRecord($header);
+	}
+
+	/**
+	 * Send an indexed array to the browser as a valid CSV record.
+	 *
+	 * To be used in conjunction with sendCSVHeader().
+	 *
+	 * All scalar data in the array will be sanitized automatically.
+	 *
+	 * @param array $data
+	 */
+	public function sendCSVRecord($data){
+		// CSV data is.... difficult.
+		foreach($data as $k => $v){
+			$v = trim($v);
+
+			$escape = false;
+			if($v == ''){
+				$escape = false;
+			}
+			elseif(strpos($v, '"') !== false){
+				// Strings with a quote in them get the quote escaped out and then wrapped in quotes.
+				$escape = true;
+				$v = str_replace('"', '\\"', $v);
+			}
+			elseif(strpos($v, ' ') !== false){
+				// Strings with a space in the content get wrapped in quotes.
+				$escape = true;
+			}
+			elseif(strpos($v, ',') !== false){
+				// Strings with a comma in the content get wrapped in quotes.
+				$escape = true;
+			}
+			elseif(strpos($v, "\n") !== false){
+				// Strings with a newline in the content get wrapped in quotes.
+				$escape = true;
+			}
+			elseif(strpos($v, "\r") !== false){
+				// Strings with a newline in the content get wrapped in quotes.
+				$escape = true;
+			}
+
+			if($escape){
+				$data[$k] = '"' . $v . '"';
+			}
+		}
+
+		// Now...
+		echo implode(',', $data) . "\r\n";
+	}
 
 
 	//-----------------------------------------------------------------------\\
