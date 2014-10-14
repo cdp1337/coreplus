@@ -98,7 +98,22 @@ class ViewMetas implements Iterator, ArrayAccess {
 	 * The return value will be casted to boolean if non-boolean was returned.
 	 */
 	public function offsetExists($offset) {
-		return array_key_exists($offset, $this->_links);
+		if(!isset($this->_links[$offset])){
+			// The key doesn't exist, then false.
+			return false;
+		}
+
+		// Also if the key is explictly empty...
+		/** @var ViewMeta $meta */
+		$meta = $this->_links[$offset];
+		if($meta->content === null){
+			return false;
+		}
+
+		// Otherwise...
+		return true;
+
+		//return array_key_exists($offset, $this->_links);
 	}
 
 	/**
