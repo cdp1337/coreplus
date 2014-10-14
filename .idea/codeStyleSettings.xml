@@ -6,7 +6,7 @@
         <option name="OTHER_INDENT_OPTIONS">
           <value>
             <option name="INDENT_SIZE" value="4" />
-            <option name="CONTINUATION_INDENT_SIZE" value="8" />
+            <option name="CONTINUATION_INDENT_SIZE" value="4" />
             <option name="TAB_SIZE" value="4" />
             <option name="USE_TAB_CHARACTER" value="true" />
             <option name="SMART_TABS" value="true" />
@@ -15,9 +15,11 @@
             <option name="USE_RELATIVE_INDENTS" value="false" />
           </value>
         </option>
+        <option name="LINE_SEPARATOR" value="&#10;" />
         <option name="HTML_ATTRIBUTE_WRAP" value="0" />
         <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="thead,tbody,tfoot" />
         <option name="HTML_DONT_ADD_BREAKS_IF_INLINE_CONTENT" value="" />
+        <option name="FORMATTER_TAGS_ENABLED" value="true" />
         <CssCodeStyleSettings>
           <option name="BLANK_LINES_BETWEEN_BLOCKS" value="0" />
         </CssCodeStyleSettings>
@@ -30,6 +32,12 @@
           <option name="ALIGN_PHPDOC_COMMENTS" value="true" />
           <option name="ALIGN_ASSIGNMENTS" value="true" />
           <option name="PHPDOC_BLANK_LINES_AROUND_PARAMETERS" value="true" />
+          <option name="PHPDOC_WRAP_LONG_LINES" value="true" />
+          <option name="LOWER_CASE_BOOLEAN_CONST" value="true" />
+          <option name="LOWER_CASE_NULL_CONST" value="true" />
+          <option name="BLANK_LINE_BEFORE_RETURN_STATEMENT" value="true" />
+          <option name="SPACES_AROUND_VAR_WITHIN_BRACKETS" value="true" />
+          <option name="FORCE_SHORT_DECLARATION_ARRAY_STYLE" value="true" />
         </PHPCodeStyleSettings>
         <XML>
           <option name="XML_KEEP_WHITE_SPACES_INSIDE_CDATA" value="true" />
@@ -65,13 +73,32 @@
           </indentOptions>
         </codeStyleSettings>
         <codeStyleSettings language="PHP">
+          <option name="KEEP_LINE_BREAKS" value="false" />
+          <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
           <option name="CLASS_BRACE_STYLE" value="1" />
           <option name="METHOD_BRACE_STYLE" value="1" />
+          <option name="ELSE_ON_NEW_LINE" value="true" />
           <option name="WHILE_ON_NEW_LINE" value="true" />
+          <option name="CATCH_ON_NEW_LINE" value="true" />
+          <option name="FINALLY_ON_NEW_LINE" value="true" />
           <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
           <option name="ALIGN_MULTILINE_FOR" value="false" />
+          <option name="ALIGN_MULTILINE_ARRAY_INITIALIZER_EXPRESSION" value="true" />
+          <option name="SPACE_BEFORE_IF_PARENTHESES" value="false" />
+          <option name="SPACE_BEFORE_WHILE_PARENTHESES" value="false" />
+          <option name="SPACE_BEFORE_FOR_PARENTHESES" value="false" />
+          <option name="SPACE_BEFORE_CATCH_PARENTHESES" value="false" />
+          <option name="SPACE_BEFORE_SWITCH_PARENTHESES" value="false" />
+          <option name="CALL_PARAMETERS_WRAP" value="1" />
           <option name="CALL_PARAMETERS_LPAREN_ON_NEXT_LINE" value="true" />
           <option name="CALL_PARAMETERS_RPAREN_ON_NEXT_LINE" value="true" />
+          <option name="METHOD_PARAMETERS_WRAP" value="1" />
+          <option name="METHOD_CALL_CHAIN_WRAP" value="1" />
+          <option name="BINARY_OPERATION_WRAP" value="1" />
+          <option name="ARRAY_INITIALIZER_WRAP" value="5" />
+          <option name="ARRAY_INITIALIZER_LBRACE_ON_NEXT_LINE" value="true" />
+          <option name="ARRAY_INITIALIZER_RBRACE_ON_NEXT_LINE" value="true" />
+          <option name="ASSIGNMENT_WRAP" value="5" />
           <option name="FOR_BRACE_FORCE" value="1" />
           <indentOptions>
             <option name="USE_TAB_CHARACTER" value="true" />
