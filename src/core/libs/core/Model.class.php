@@ -1405,7 +1405,21 @@ class Model implements ArrayAccess {
 	 * @return void
 	 */
 	public function setLink($linkname, Model $model) {
-		if (!isset($this->_linked[$linkname])) return; // @todo Error Handling
+		if (!isset($this->_linked[$linkname])){
+			if(strrpos($linkname, 'Model') === strlen($linkname) - 5 ){
+				// Try it without the Model suffix.
+				$linkname = substr($linkname, 0, -5);
+			}
+			else{
+				// It doesn't have the suffix, try adding it!
+				$linkname .= 'Model';
+			}
+
+			if(!isset($this->_linked[$linkname])){
+				return null; // @todo Error Handling
+			}
+			// No else, it found it! :)
+		}
 
 		// Update the cached model.
 		switch($this->_linked[$linkname]['link']){
