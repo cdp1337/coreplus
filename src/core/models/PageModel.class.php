@@ -1836,6 +1836,18 @@ class PageModel extends Model {
 		if ($method{0} == '_') return null;
 
 
+		// Look for a content type request on the base parameter itself
+		if(strpos($base, '.') !== false){
+			$ctype = \Core\Filestore\extension_to_mimetype(substr($base, strpos($base, '.') + 1));
+
+			// Invalid mimetype?  Default to an HTML file.
+			if(!$ctype){
+				$ctype = 'text/html';
+			}
+
+			$base = substr($base, 0, strpos($base, '.'));
+		}
+
 		// Logic for the parameters.
 		$params = ($base !== false) ? explode('/', $base) : null;
 
