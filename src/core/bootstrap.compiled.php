@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 13 Oct 2014 17:21:44 -0400
+ * @compiled Wed, 15 Oct 2014 04:15:45 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4340,8 +4340,13 @@ return '';
 }
 public function getImage(){
 $meta = $this->getMeta('image');
-if(!$meta) return null;
+if(!$meta){
+return null;
+}
 $file = $meta->get('meta_value_title');
+if(!$file){
+return null;
+}
 $f = \Core\Filestore\Factory::File($file);
 return $f;
 }
@@ -4560,6 +4565,13 @@ if (!method_exists($controller, $method)) {
 return null;
 }
 if ($method{0} == '_') return null;
+if(strpos($base, '.') !== false){
+$ctype = \Core\Filestore\extension_to_mimetype(substr($base, strpos($base, '.') + 1));
+if(!$ctype){
+$ctype = 'text/html';
+}
+$base = substr($base, 0, strpos($base, '.'));
+}
 $params = ($base !== false) ? explode('/', $base) : null;
 $baseurl = '/' . ((strpos($controller, 'Controller') == strlen($controller) - 10) ? substr($controller, 0, -10) : $controller);
 if (!($method == 'index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
@@ -8772,15 +8784,36 @@ return implode("\r\n", $headers);
 function resolve_asset($asset){
 if(strpos($asset, '://') !== false) return $asset;
 if(strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
-$keyname = 'asset-resolveurl';
-$cachevalue = \Core\Cache::Get($keyname, (3600 * 24));
-if(!$cachevalue) $cachevalue = array();
-if(!isset($cachevalue[$asset])){
-$f = \Core::File($asset);
-$cachevalue[$asset] = $f->getURL();
-\Core\Cache::Set($keyname, $cachevalue, (3600 * 24));
+$version = \ConfigHandler::Get('/core/filestore/assetversion');
+$proxyfriendly = \ConfigHandler::Get('/core/assetversion/proxyfriendly');
+$file     = \Core\Filestore\Factory::File($asset);
+$filename = $file->getFilename();
+$ext      = $file->getExtension();
+$suffix   = '';
+$url = substr($file->getURL(), 0, -1-strlen($ext));
+if(\ConfigHandler::Get('/core/javascript/minified')){
+if($ext == 'js'){
+$minified = $filename . '.min.js';
+$minfile = \Core\Filestore\Factory::File($minified);
+if($minfile->exists()){
+$ext = 'min.js';
 }
-return $cachevalue[$asset];
+}
+elseif($ext == 'css'){
+$minified = substr($filename, 0, -4) . '.min.css';
+$minfile = \Core\Filestore\Factory::File($minified);
+if($minfile->exists()){
+$ext = 'min.css';
+}
+}
+}
+if($version && $proxyfriendly){
+$ext = 'v' . $version . '.' . $ext;
+}
+elseif($version){
+$suffix = '?v=' . $version;
+}
+return $url . '.' . $ext . $suffix;
 }
 function resolve_link($url) {
 if ($url == '#') return $url;
@@ -13960,38 +13993,7 @@ public static function GetVersion() {
 return Core::GetComponent()->getVersionInstalled();
 }
 public static function ResolveAsset($asset) {
-if (strpos($asset, '://') !== false) return $asset;
-if (strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
-$version = ConfigHandler::Get('/core/filestore/assetversion');
-$proxyfriendly = ConfigHandler::Get('/core/assetversion/proxyfriendly');
-$file     = \Core\Filestore\Factory::File($asset);
-$filename = $file->getFilename();
-$ext      = $file->getExtension();
-$suffix   = '';
-$url = substr($file->getURL(), 0, -1-strlen($ext));
-if(ConfigHandler::Get('/core/javascript/minified')){
-if($ext == 'js'){
-$minified = $filename . '.min.js';
-$minfile = \Core\Filestore\Factory::File($minified);
-if($minfile->exists()){
-$ext = 'min.js';
-}
-}
-elseif($ext == 'css'){
-$minified = substr($filename, 0, -4) . '.min.css';
-$minfile = \Core\Filestore\Factory::File($minified);
-if($minfile->exists()){
-$ext = 'min.css';
-}
-}
-}
-if($version && $proxyfriendly){
-$ext = 'v' . $version . '.' . $ext;
-}
-elseif($version){
-$suffix = '?v=' . $version;
-}
-return $url . '.' . $ext . $suffix;
+return \Core\resolve_asset($asset);
 }
 public static function ResolveLink($url) {
 return \Core\resolve_link($url);
@@ -14044,8 +14046,8 @@ if (is_numeric($k)) $coreparams[] = $v;
 else $extraparams[] = $k . '=' . $v;
 }
 return $base .
-(sizeof($coreparams) ? '/' . implode('/', $coreparams) : '') .
-(sizeof($extraparams) ? '?' . implode('&', $extraparams) : '');
+(sizeof($coreparams) > 0 ? '/' . implode('/', $coreparams) : '') .
+(sizeof($extraparams) > 0 ? '?' . implode('&', $extraparams) : '');
 }
 static public function _RecordNavigation() {
 $request = PageRequest::GetSystemRequest();
@@ -14090,7 +14092,7 @@ $_SESSION['message_stack'][$key] = array(
 static public function AddMessage($messageText, $messageType = 'info') {
 Core::SetMessage($messageText, $messageType);
 }
-static public function GetMessages($returnSorted = FALSE, $clearStack = TRUE) {
+static public function GetMessages($returnSorted = false, $clearStack = true) {
 if (!isset($_SESSION['message_stack'])) return array();
 $return = $_SESSION['message_stack'];
 if ($returnSorted) $return = Core::SortByKey($return, 'mtype');
@@ -17263,6 +17265,11 @@ elseif (($v = $this->get($k)) !== null){
 $out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
 }
 }
+foreach($this->_attributes as $k => $v){
+if(strpos($k, 'data-') === 0){
+$out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
+}
+}
 return $out;
 }
 public function lookupValueFrom(&$src) {
@@ -17293,6 +17300,7 @@ public $originalurl = '';
 public $referrer = '';
 public static $Mappings = array(
 'access'           => 'FormAccessStringInput',
+'button'           => 'FormButtonInput',
 'checkbox'         => 'FormCheckboxInput',
 'checkboxes'       => 'FormCheckboxesInput',
 'date'             => 'FormDateInput',
