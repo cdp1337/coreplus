@@ -170,7 +170,7 @@ class DateTime extends \DateTime{
 		// In this case, changing the timezone will handle all translation operations internally :)
 		$clone = clone $this;
 		$clone->setTimezone($tzto);
-		return $clone->format($format);
+		return $clone->format($format, $desttimezone);
 	}
 
 	/**
