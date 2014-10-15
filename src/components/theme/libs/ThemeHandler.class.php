@@ -82,7 +82,7 @@ class ThemeHandler implements ISingleton{
 			// Make sure the theme is loaded first.
 			// This sets up the internal data from the XML file.
 			$t->load();
-		
+		/*
 			if($t->isInstalled() && $t->needsUpdated()){
 				$t->upgrade();
 			}
@@ -90,6 +90,7 @@ class ThemeHandler implements ISingleton{
 			elseif(DEVELOPMENT_MODE && !$t->isInstalled()){
 				$t->install();
 			}
+		*/
 		}
 	}
 	
