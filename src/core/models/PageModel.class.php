@@ -1418,9 +1418,15 @@ class PageModel extends Model {
 	 */
 	public function getImage(){
 		$meta = $this->getMeta('image');
-		if(!$meta) return null;
+		if(!$meta){
+			return null;
+		}
 
 		$file = $meta->get('meta_value_title');
+
+		if(!$file){
+			return null;
+		}
 		$f = \Core\Filestore\Factory::File($file);
 		return $f;
 	}
