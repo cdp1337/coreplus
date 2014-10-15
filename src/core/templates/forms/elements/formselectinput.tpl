@@ -30,12 +30,3 @@
 		$('.{$element->get("id")}').readonly();
 	</script>{/script}
 {/if}
-
-{if Core::IsLibraryAvailable('jquery')}
-	{script library="jquery.minimalect"}{/script}
-	{script location="foot"}<script>
-	$(function(){
-		$("select").minimalect();
-	});
-	</script>{/script}
-{/if}
