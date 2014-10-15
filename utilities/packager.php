@@ -773,7 +773,7 @@ function process_component($component, $forcerelease = false){
 			);
 
 			// PHP files get checked.
-			if(preg_match('/\.php$/i', $fname)){
+			if(preg_match('/\.(php|inc)$/i', $fname)){
 				$fconts = file_get_contents($file->getFilename());
 
 				// Trim out the comments to prevent false readings.
