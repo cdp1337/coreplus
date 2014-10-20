@@ -212,6 +212,17 @@ class DateTime extends \DateTime{
 		return $this->format('l \a\t ' . 'g:i A', $timezone);
 	}
 
+	/**
+	 * Get the day of the week of this event, 0 being Sunday and 6 being Saturday.
+	 *
+	 * This is just a shortcut function that calls format('w').
+	 *
+	 * @return int
+	 */
+	public function getDayOfWeek(){
+		return $this->format('w');
+	}
+
 
 	/**
 	 * Shortcut function for getting the time now.
