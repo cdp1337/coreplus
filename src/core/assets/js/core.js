@@ -166,11 +166,12 @@ if(typeof jQuery != 'undefined'){
 	 * Just a simple script to spruce up the message-* blocks with a bit of flair.
 	 */
 	var types = [
-			{ msgclass: 'error',    icon: 'exclamation-sign' },
-			{ msgclass: 'info',     icon: 'info-sign' },
+			{ msgclass: 'error',    icon: 'exclamation-circle' },
+			{ msgclass: 'info',     icon: 'info-circle' },
 			{ msgclass: 'note',     icon: 'asterisk' },
-			{ msgclass: 'success',  icon: 'ok-sign' },
-			{ msgclass: 'tutorial', icon: 'question-sign' }
+			{ msgclass: 'success',  icon: 'check-circle' },
+			{ msgclass: 'tutorial', icon: 'question-circle' },
+			{ msgclass: 'warning',  icon: 'exclamation-triangle' }
 		],
 		i;
 
