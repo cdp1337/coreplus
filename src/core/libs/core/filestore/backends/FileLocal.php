@@ -156,7 +156,7 @@ class FileLocal implements Filestore\File {
 				elseif ($this->_type == 'tmp'){
 					$this->_filenamecache[$prefix] = 'tmp/' . substr($this->_filename, strlen(Filestore\get_tmp_path()));
 				}
-				elseif(strpos(ROOT_PDIR, $this->_filename) === 0){
+				elseif(strpos($this->_filename, ROOT_PDIR) === 0){
 					$this->_filenamecache[$prefix] = substr($this->_filename, strlen(ROOT_PDIR));
 				}
 				else{
