@@ -1,3 +1,5 @@
+<h1>Test General UI/UX (H1 tag)</h1>
+
 <form action="" method="GET">
 	<select name="skin">
 		{foreach $skins as $s => $t}
@@ -17,10 +19,51 @@
 <a href="#">
 	Generic Link
 </a>
+<a class="button" href="#">
+	Generic Button/Link
+</a>
+<a class="button" href="#">
+	<i class="icon-ok"></i>
+	<span>Generic Button/Link (Now with 100% more icons!)</span>
+</a>
 <br/>
+
+<div>
+<ul class="controls">
+	<li>
+		<a href="#">
+			<i class="icon-edit"></i>
+			<span>Edit Something</span>
+		</a>
+	</li>
+	<li>
+		<a href="#">
+			<i class="icon-delete"></i>
+			<span>Delete Something</span>
+		</a>
+	</li>
+	<li>
+		<a href="#">
+			<span>Non-descript something</span>
+		</a>
+	</li>
+	<li>
+		<span>Not even a link!</span>
+	</li>
+</ul>
+</div>
+<br/>
+
+<fieldset class="collapsible collapsed">
+	<legend>Collapsed Fieldset (click me!)</legend>
+	<div>
+		Content!
+	</div>
+</fieldset>
 
 <h2>Header #2</h2>
 <h3>Header #3</h3>
+<h4>Header #4</h4>
 
 {$lorem_p}
 
