@@ -332,7 +332,7 @@ function resolve_link($url) {
 	// All URLs should be case insensitive.
 	// As such, I *should* be able to safely strlower everything and be fine.
 	// This is particularly important because all URL lookups from the database are performed in lowercase.
-	$url = strtolower($url);
+	//$url = strtolower($url);
 
 	// Allow links starting with ? to be read as the current page.
 	if($url{0} == '?'){
@@ -340,7 +340,7 @@ function resolve_link($url) {
 	}
 
 	// Allow multisite URLs to be passed in natively.
-	if(strpos($url, 'site:') === 0){
+	if(stripos($url, 'site:') === 0){
 		$slashpos = strpos($url, '/');
 		$site = substr($url, 5, $slashpos-5);
 		$url = substr($url, $slashpos);
