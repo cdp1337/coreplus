@@ -1,0 +1,70 @@
+/*****************************************************************************
+ *****************************************************************************
+ **                            LISTING TABLES                               **
+ *****************************************************************************
+ *****************************************************************************/
+
+
+table.listing {
+	width: 100%;
+	border: $base-border;
+	border-collapse: collapse;
+	font-size: 95%;
+
+	tr:nth-child(even) {
+		background-color: $listing-table-tr-even-bg;
+	}
+
+	tr:nth-child(odd) {
+		background-color: $listing-table-tr-odd-bg;
+	}
+
+	tr:hover {
+		/* Give a little high-lighting effect on mouseover for the records. */
+		background-color: $listing-table-tr-hover-bg;
+	}
+
+
+	th {
+		padding: ($base-spacing / 4) ($base-spacing / 6);
+		border: 1px solid darken($base-border-color, 15);
+		vertical-align: top;
+		background: $listing-table-th-background;
+		color: $listing-table-th-color;
+	}
+
+	td {
+		padding: ($base-spacing / 4) ($base-spacing / 6);
+		border: $base-border;
+		vertical-align: top;
+	}
+
+	/* Hidden columns, set by javascript. */
+	.column-optional {
+		display: none;
+	}
+
+	&.listing-table-sortable {
+		th[data-sortkey] {
+			cursor: pointer;
+		}
+
+		th i.sort-icon {
+			float: right;
+		}
+		th i.sort-icon.other {
+			visibility: hidden;
+		}
+		th:hover i.sort-icon.other {
+			visibility: visible;
+		}
+		th:hover i.sort-icon.current {
+			visibility: hidden;
+		}
+	}
+
+	// by default, edit is hidden.
+	.edit {
+		display: none;
+	}
+}

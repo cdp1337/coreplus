@@ -1,0 +1,40 @@
+.pagination {
+	color: #555555;
+	font-size: 84%;
+	padding: 0 0.5em;
+	margin: 0.5em 0;
+	text-align: center;
+
+	a {
+		text-decoration: none;
+		color: #555555;
+	}
+	.disabled {
+		color: #999;
+	}
+}
+
+.pagination-pager {
+	float: left;
+}
+
+.pagination-list {
+	float: right;
+}
+
+.listing-filters {
+	.formelement {
+		float: left;
+		margin-right: 1em;
+	}
+
+	.reset-filters {
+		float: right;
+		color: rgb(168, 27, 38);
+	}
+
+	.apply-filters {
+		float: right;
+		color: rgb(33, 99, 31);
+	}
+}

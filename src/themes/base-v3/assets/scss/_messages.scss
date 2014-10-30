@@ -1,0 +1,109 @@
+/*****************************************************************************
+ *****************************************************************************
+ **                               MESSAGES                                  **
+ *****************************************************************************
+ *****************************************************************************/
+/** general styles for most of the messages **/
+.message-note,
+.message-info,
+.message-success,
+.message-warning,
+.message-deprecated,
+.message-error {
+	border-radius: $base-border-radius;
+	padding: ($base-spacing / 2) ($base-spacing / 2) ($base-spacing / 2) 55px;
+	margin: ($base-spacing / 4);
+	text-align:center;
+	overflow: hidden;
+	font-size: 106%;
+	position: relative;;
+}
+.message-tutorial {
+	padding: ($base-spacing / 2) ($base-spacing / 2) ($base-spacing / 2) 55px;
+	margin: ($base-spacing / 4);
+	text-align: left;
+	overflow: hidden;
+	font-size: 92%;
+	position: relative;;
+}
+
+/** Specific colors **/
+.message-note {
+	background:#FCF0AD;
+	border:1px solid #BCB06D;
+}
+.message-info {
+	background: #EEE9FF;
+	border:1px solid #2667FF;
+	color: #0a1250;
+}
+.message-success {
+	background:#AFA;
+	border: 1px solid #373;
+	color: #151;
+}
+.message-deprecated {
+	background: #fff4bd;
+	border:1px solid #ded081;
+	color: #c1b572;
+}
+.message-warning {
+	background: #fce8d1;
+	border:1px solid #bc8565;
+	color: #df5c25;
+}
+.message-error {
+	background:#FCe5ed;
+	border:1px solid #BC606D;
+	color:#DF101D;
+}
+.message-tutorial {
+	background: #faefb9;
+	border:1px solid #BCB06D;
+	color: #6f6841;
+}
+
+/** I need to color the A tags too **/
+body .pagecontent .message-note a {
+	color: #7f774a;
+}
+body .pagecontent .message-info a {
+	color: #0a1250;
+}
+body .pagecontent .message-success a {
+	color: #151;
+}
+body .pagecontent .message-error a {
+	color:#DF101D;
+}
+body .pagecontent .message-tutorial a {
+	color: #7f774a;
+}
+
+/** And the message's icons **/
+div[class^="message-"] .message-background-icon i,
+p[class^="message-"] .message-background-icon i {
+	font-size: 75px;
+	left: -6px;
+	line-height: 70px;
+	opacity: 0.3;
+	position: absolute;
+	top: -11px;
+}
+
+/** And the specific message types icon colors **/
+.message-note .message-background-icon i[class^="icon-"] {
+	 color: #BCB06D;
+ }
+.message-info .message-background-icon i[class^="icon-"] {
+	color: #2667FF;
+}
+.message-success .message-background-icon i[class^="icon-"] {
+	color: #373;
+}
+.message-error .message-background-icon i[class^="icon-"] {
+	color: #DF101D;
+}
+.message-tutorial .message-background-icon i[class^="icon-"] {
+	color: #BCB06D;
+}

@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Base V3">
+	<assets>
+		<file filename="assets/css/styles.css" md5="44c295ef3946dfd2306e72db5c7ea4bb"/>
+		<file filename="assets/css/styles.css.map" md5="5973c241ef1b4400cc50b108b6998d71"/>
+		<file filename="assets/css/styles.min.css" md5="a6b2a73e0ec0e5d0072dbba0c39e271c"/>
+	</assets>
+	<skins>
+		<file filename="basic.tpl" md5="757f16a88f7bd63c098175b93d117ea4" title=""/>
+		<file filename="blank.tpl" md5="63f7271e77cbb7b9360116b6ac0b3863" title=""/>
+		<file filename="wide.tpl" md5="715824d7cdb1ce78f4121401b4756ed3" title=""/>
+	</skins>
+	<emailskins>
+		<file filename="basic.tpl"/>
+	</emailskins>
+	<view/>
+	<otherfiles>
+		<file filename="assets/scss/styles.scss" md5="ecf5370232bf5d9b9e144122fb443491"/>
+		<file filename="assets/scss/vendor/bitters/_base.scss" md5="18ecd73f71e515f07469ab118eb55bf2"/>
+		<file filename="assets/scss/vendor/bitters/_buttons.scss" md5="2cc3b73db33cad69dc358bfff51b7f43"/>
+		<file filename="assets/scss/vendor/bitters/_forms.scss" md5="c132547f66e4beb443d96063c91ae37f"/>
+		<file filename="assets/scss/vendor/bitters/_grid-settings.scss" md5="b2fc883699314b823458b5ea92d8bc33"/>
+		<file filename="assets/scss/vendor/bitters/_lists.scss" md5="6eaab410bcb19243d18a9b5063f367f5"/>
+		<file filename="assets/scss/vendor/bitters/_tables.scss" md5="cb3c7bac724da0ec973201b75d8866c7"/>
+		<file filename="assets/scss/vendor/bitters/_typography.scss" md5="a1213cb1ffa3efcc313cabe0208cc00b"/>
+		<file filename="assets/scss/vendor/bitters/_variables.scss" md5="9019d9060f46d29e1d50763cf17f0f57"/>
+		<file filename="assets/scss/vendor/bitters/extends/_button.scss" md5="3a318bfacf2e3b1465b4202d8958187c"/>
+		<file filename="assets/scss/vendor/bitters/extends/_clearfix.scss" md5="947d5bcc17f37c8335fd77c7c81d3c39"/>
+		<file filename="assets/scss/vendor/bitters/extends/_hide-text.scss" md5="2ed482c4524a0492a7e728469baf5286"/>
+		<file filename="assets/scss/vendor/bourbon/_bourbon-deprecated-upcoming.scss" md5="1232ed1bd5ea801bc7bc3c0b60c73aec"/>
+		<file filename="assets/scss/vendor/bourbon/_bourbon.scss" md5="8c93c531116d021b37ff29a50bd84f42"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_button.scss" md5="081902245bacc759f1562e7bf3ec18dd"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_clearfix.scss" md5="0da01a56462807d2628530556e0e7c76"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_directional-values.scss" md5="2f5ad412c7d3ee343790a9a67178385a"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_ellipsis.scss" md5="9ad2c8f7ca715ad36dcf825b864e4dda"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_font-family.scss" md5="07ff627848a6862b4a95e19e2c783283"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_hide-text.scss" md5="29bcfb7d95e49d76a08c0a87c6d8cae5"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_html5-input-types.scss" md5="048744a9ea771df7c781f89c94b123a6"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_position.scss" md5="af45a0272e2f78f6b5f152026e88c2e9"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_prefixer.scss" md5="a413205d04665888a1e7586e821f3c1b"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_retina-image.scss" md5="6582394779684e22e5c7fea8342136ec"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_size.scss" md5="95888df85645bab27db66b4be611c79d"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_timing-functions.scss" md5="cce5583ad9adfa72d147681a45f0a0f3"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_triangle.scss" md5="3593e83843a8460c6dfef58d6ce98a17"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_word-wrap.scss" md5="c79b8b2344b0e8f23431c3ed52e70a2d"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_animation.scss" md5="4d3d5364521d737d0998d92ce5178df8"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_appearance.scss" md5="6c436dc81b892aecec061649ad74d71e"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_backface-visibility.scss" md5="7759cec69b20500438e6afbbb8c81a02"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_background-image.scss" md5="fc0c968102173bf343eda7140d65b2ff"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_background.scss" md5="9bd21e818fb612fef14180ecbc25acb8"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_border-image.scss" md5="938056a2097ae322ea00e7f893e0ae04"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_border-radius.scss" md5="373a4d781651d8f70d3a881c2a73e847"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_box-sizing.scss" md5="1d693a6a2827e8f5cd149031832e5599"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_calc.scss" md5="fb95ce1dcd297370874dbabadbae5028"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_columns.scss" md5="e2940a3267c9d75552907a477ce090e8"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_filter.scss" md5="16e358ff42e362d07da723c62ee31484"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_flex-box.scss" md5="a5dd5b10dffa7f1ddda378b9e742fbae"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_font-face.scss" md5="995b120c7fbdc698149b8a0c4b93b7fa"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_font-feature-settings.scss" md5="91e2bced8d742cf1a61442103ce348ed"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_hidpi-media-query.scss" md5="5fbe0b8110e24dbf2b7d4720e5ad01aa"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_hyphens.scss" md5="a16eee1b9701f0bbb69600960f34d00f"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_image-rendering.scss" md5="863218e471076c6ce38a1509d1fb900d"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_keyframes.scss" md5="dc3ecbf496646e5b271fc63f11b389a8"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_linear-gradient.scss" md5="3ed75658f56b71bd13018d86faa7eb1d"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_perspective.scss" md5="793baf79388c99d5a1ba92ba6e1d026f"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_placeholder.scss" md5="961f5d7df43b4323fdf47635634a5c83"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_radial-gradient.scss" md5="7bd48370bfbfd57b543251c912f2f3e0"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_transform.scss" md5="70afecfd28f823fa6bc13fb43eb35a4b"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_transition.scss" md5="660c835cf41f095408f11a9f5c3f151f"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_user-select.scss" md5="fcf794c47fa8279503bf60b68715bb47"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_assign.scss" md5="9de805eb0dfc1ca8972c733c6403d0ce"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_color-lightness.scss" md5="11da9622d359b34a7250cf9cc2f65478"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_flex-grid.scss" md5="2803056bf58562ee5fded423dcb9f527"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_golden-ratio.scss" md5="fcf9ed49bbbe1c3d2ecdd9a688e09fe2"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_grid-width.scss" md5="f22bf5eee2d939854da12ece0ac5bbaf"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_modular-scale.scss" md5="eb8376cb932de12d6f768700439b3b10"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_px-to-em.scss" md5="00dd169ade4de45df164a73ff88b45ad"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_px-to-rem.scss" md5="faaf612eee4688c70074e70d04f24f46"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_strip-units.scss" md5="230b3c2cdceeccd2b358eebae3ef064e"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_tint-shade.scss" md5="b5c422224be3d36942b3a92d8c2ec89e"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_transition-property-name.scss" md5="8a88f39d99dc5747e4ae991d3f4e69e4"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_unpack.scss" md5="309ad420d2b039eee2ec10260c16f742"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_convert-units.scss" md5="86729c86214a69441448b26517670982"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_gradient-positions-parser.scss" md5="fd4157198cf4848a2ec892dd0a4b6343"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_is-num.scss" md5="1fa346e230af3977103d7d787fe7eebe"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_linear-angle-parser.scss" md5="520ed0742bb2eb9cf21515ecadca7fda"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_linear-gradient-parser.scss" md5="8f3709be826b6f6e1a8c7093507cf4f9"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_linear-positions-parser.scss" md5="8b2a16ec9d8156a06c0e6ca6b9824bcc"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_linear-side-corner-parser.scss" md5="e3af6af431b255e3f8dd0f337bf576b9"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_radial-arg-parser.scss" md5="a5497a6a006c4f2cd2b3bd61eacb964f"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_radial-gradient-parser.scss" md5="6fd34f4b02a1181d3fef21cbeacc6d8f"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_radial-positions-parser.scss" md5="8fe35e46c19a0e3f05851e77635aa385"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_render-gradients.scss" md5="d2982aa29f132f4e4ee76153c6011479"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_shape-size-stripper.scss" md5="a0e10c7137e2127c985293a3802fafb6"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_str-to-num.scss" md5="7b72e74372c171df1ea45e63623451bb"/>
+		<file filename="assets/scss/vendor/bourbon/settings/_asset-pipeline.scss" md5="986eab922e7a47c91ead3a37d1f74fc0"/>
+		<file filename="assets/scss/vendor/bourbon/settings/_prefixer.scss" md5="520c130917995eb37187c6a81f32ce1b"/>
+		<file filename="assets/scss/vendor/bourbon/settings/_px-to-em.scss" md5="af526a5742a9ecc661aac5779748523c"/>
+		<file filename="assets/scss/vendor/neat/_neat-helpers.scss" md5="a6a91d52582ef94e69d76b64055c3419"/>
+		<file filename="assets/scss/vendor/neat/_neat.scss" md5="ed50e623880dd7b6e0d4f4392e5228c7"/>
+		<file filename="assets/scss/vendor/neat/functions/_new-breakpoint.scss" md5="5f98f1349a6875e5fab3b8507d53e694"/>
+		<file filename="assets/scss/vendor/neat/functions/_private.scss" md5="a845c347f077eeee25cc1cd0fc771e00"/>
+		<file filename="assets/scss/vendor/neat/grid/_box-sizing.scss" md5="de73264d920844301a8317da4c204b36"/>
+		<file filename="assets/scss/vendor/neat/grid/_direction-context.scss" md5="132e00e6c939e19fc070912bcead9842"/>
+		<file filename="assets/scss/vendor/neat/grid/_display-context.scss" md5="b682b0db99892fc8c1830d41a8e46409"/>
+		<file filename="assets/scss/vendor/neat/grid/_fill-parent.scss" md5="fc6cb276729e7bfb9db748959f0b85ae"/>
+		<file filename="assets/scss/vendor/neat/grid/_media.scss" md5="fffda6fc6a4ffb2fb4be10612c573bcd"/>
+		<file filename="assets/scss/vendor/neat/grid/_omega.scss" md5="2360c54cf708f82fc0bf08d27efbbee6"/>
+		<file filename="assets/scss/vendor/neat/grid/_outer-container.scss" md5="1f7821f2fda8958da5c7b122be11b7c1"/>
+		<file filename="assets/scss/vendor/neat/grid/_pad.scss" md5="f3940f1464d97e728c520ac5b66e3987"/>
+		<file filename="assets/scss/vendor/neat/grid/_private.scss" md5="d247111e6c029f89474ad98adc0f2a59"/>
+		<file filename="assets/scss/vendor/neat/grid/_row.scss" md5="fa46ee9b2131d593564f455376aed8c2"/>
+		<file filename="assets/scss/vendor/neat/grid/_shift.scss" md5="fb6f4056cc4ca492a6c322fb3663bb6e"/>
+		<file filename="assets/scss/vendor/neat/grid/_span-columns.scss" md5="538b49299f060a6626547d3fd09040c5"/>
+		<file filename="assets/scss/vendor/neat/grid/_to-deprecate.scss" md5="108072fe24c1be06f84a55a9a01a0425"/>
+		<file filename="assets/scss/vendor/neat/grid/_visual-grid.scss" md5="032022335451585769d465b59f1df5ac"/>
+		<file filename="assets/scss/vendor/neat/settings/_disable-warnings.scss" md5="9b0c3c10625b66595cb87d72e26d69e6"/>
+		<file filename="assets/scss/vendor/neat/settings/_grid.scss" md5="ed4a618a431e9ebfacdf6b892df37c20"/>
+		<file filename="assets/scss/vendor/neat/settings/_visual-grid.scss" md5="1092956edf19213f321958c061bf7517"/>
+		<file filename="dev/update-vendor.sh" md5="f7c3113855ffe762665f487d73ccb76e"/>
+	</otherfiles>
+	<upgrades/>
+	<screenshots>
+		<!--<screenshot file="screenshots/screen1.png" title="Home Page"/>-->
+	</screenshots>
+</theme>
+

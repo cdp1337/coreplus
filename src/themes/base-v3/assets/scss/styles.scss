@@ -1,0 +1,47 @@
+// Normalize styling.
+@import "vendor/normalize";
+
+// Bourbon base styles.
+@import "vendor/bourbon/bourbon";
+
+// Variables is used by Bitters, and defined outside vendor for customizations.
+@import "variables";
+@import "vendor/bitters/base";
+
+// Bourbon grid system, Neat.
+@import "vendor/neat/neat";
+
+// Start Core-specific components
+@import "debugging";
+@import "controls";
+@import "filters_and_pagination";
+@import "listing_tables";
+@import "messages";
+@import "layout";
+
+#admin-bar {
+	@include clearfix;
+}
+
+a.button {
+	@include button();
+}
+
+
+@media print {
+	@import "print";
+}
+
+@media screen,projection {
+	@import "screen";
+}
+
+a.agplv3-tag {
+	color: white;
+	text-shadow: 0px 0px 3px #636;
+
+	&:hover {
+		color: #636;
+		text-shadow: 0px 0px 3px white;
+	}
+}
