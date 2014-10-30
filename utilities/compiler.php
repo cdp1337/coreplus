@@ -399,6 +399,10 @@ else{
 		$flen = strlen($dfile) + 3;
 		echo "$dfile..." . str_repeat(' ', max(80 - $flen, 1));
 
+		if(!is_dir($outdirname)){
+			mkdir($outdirname);
+		}
+
 
 		$cssfile = $outdirname . substr($outfilename, 0, -4) . 'css';
 		$minfile = $outdirname . substr($outfilename, 0, -4) . 'min.css';
