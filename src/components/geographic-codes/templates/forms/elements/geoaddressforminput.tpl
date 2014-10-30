@@ -130,10 +130,6 @@
 				$provinceselect.hide();
 			}
 
-			if( $countryselect.closest('minict_wrapper')){
-				$("select").minimalect();
-			}
-
 		}
 
 
