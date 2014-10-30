@@ -2,13 +2,13 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.11.0~core1" name="JQuery-Full" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.2.2" operation="ge"/>
+		<require name="core" type="component" version="3.4.0" operation="ge"/>
 	</requires>
 	<provides>
-		<provide name="JQuery" version="1.11.0" type="library"/>
+		<provide name="JQuery" version="2.1.1" type="library"/>
 		<provide name="JQuery.json" version="2.4" type="library"/>
 		<provide name="JQuery.cookie" version="1.3.1" type="library"/>
-		<provide name="JQueryUI" version="1.10.4" type="library"/>
+		<provide name="JQueryUI" version="1.11.2" type="library"/>
 		<provide name="JQueryUI.NestedSortable" version="1.4.0" type="library"/>
 		<provide name="JQueryUI.readonly" version="2.0.1" type="library"/>
 		<provide name="JQueryUI.timepicker" version="1.2" type="library"/>
@@ -32,21 +32,26 @@
 		<scriptlibrary name="jquery.minimalect" call="JQuery::Include_Minimalect"/>
 		<scriptlibrary name="jquery.icheck" call="JQuery::Include_Icheck"/>
 	</provides>
+	<configs>
+		<config key="/jquery/use_2_x" title="Use JQuery 2.x" type="boolean" default="1" description="jQuery 2.x includes performance gains, but breaks IE 8 compatibility.  Uncheck this to revert back to 1.11 when calling jQuery if you need to support clients running old versions of IE."/>
+	</configs>
 	<assets>
 		<file filename="assets/css/images/animated-overlay.gif" md5="2b912f7c0653008ca28ebacda49025e7"/>
+		<file filename="assets/css/images/flat.png" md5="2176d6d6e814b0da1c71b73ca7a675e8"/>
+		<file filename="assets/css/images/flat@2x.png" md5="0fd2837df39867a90c7a6fca9ca6fe6e"/>
 		<file filename="assets/css/images/ui-bg_diagonals-thick_18_b81900_40x40.png" md5="95f9cceeb9d742dd3e917ec16ed754f8"/>
 		<file filename="assets/css/images/ui-bg_diagonals-thick_20_666666_40x40.png" md5="f040b255ca13e693da34ab33c7d6b554"/>
-		<file filename="assets/css/images/ui-bg_flat_0_aaaaaa_40x100.png" md5="478007eded887122ec8af76633b81518"/>
+		<file filename="assets/css/images/ui-bg_flat_0_aaaaaa_40x100.png" md5="6250e15589bac28842a11e70d1aa6f94"/>
 		<file filename="assets/css/images/ui-bg_flat_10_000000_40x100.png" md5="c18cd01623c7fed23c80d53e2f5e7c78"/>
-		<file filename="assets/css/images/ui-bg_flat_75_ffffff_40x100.png" md5="bd22d9117dbef2031072a69b7996e7b6"/>
+		<file filename="assets/css/images/ui-bg_flat_75_ffffff_40x100.png" md5="d2f6dd3ec2712648219c50d557f57178"/>
 		<file filename="assets/css/images/ui-bg_glass_100_f6f6f6_1x400.png" md5="4560b9efbc889572de9d97c9ffa04106"/>
 		<file filename="assets/css/images/ui-bg_glass_100_fdf5ce_1x400.png" md5="d26e8f463195a7b86f86b7d550cfc114"/>
-		<file filename="assets/css/images/ui-bg_glass_55_fbf9ee_1x400.png" md5="7bb9349b85b24910dc095ed5fceca226"/>
+		<file filename="assets/css/images/ui-bg_glass_55_fbf9ee_1x400.png" md5="3faa91eae76b41f9b35ee69d88dfcd4e"/>
 		<file filename="assets/css/images/ui-bg_glass_55_fcf0ba_1x400.png" md5="e8fa5df505b503a945e543c5816179ca"/>
-		<file filename="assets/css/images/ui-bg_glass_65_ffffff_1x400.png" md5="ddf3d0797d9494d05bf08d09ffa4754a"/>
-		<file filename="assets/css/images/ui-bg_glass_75_dadada_1x400.png" md5="316c45f99293c6f53fbdb561dfec8757"/>
-		<file filename="assets/css/images/ui-bg_glass_75_e6e6e6_1x400.png" md5="f977b42ee3230358f91459e09087e246"/>
-		<file filename="assets/css/images/ui-bg_glass_95_fef1ec_1x400.png" md5="7810a8b987893028c99f5d40fad38c41"/>
+		<file filename="assets/css/images/ui-bg_glass_65_ffffff_1x400.png" md5="609cf2f95f89da6f8b89ee78865513b0"/>
+		<file filename="assets/css/images/ui-bg_glass_75_dadada_1x400.png" md5="d8d975e9a56670b187d9b31a9e114f8d"/>
+		<file filename="assets/css/images/ui-bg_glass_75_e6e6e6_1x400.png" md5="02dd09f3963eaeb70344a7a859057018"/>
+		<file filename="assets/css/images/ui-bg_glass_95_fef1ec_1x400.png" md5="da135b78e22f5bf66a95a7837c1cda92"/>
 		<file filename="assets/css/images/ui-bg_gloss-wave_100_ece8da_500x100.png" md5="dccd449740f6fd2a875fc72ef3586b53"/>
 		<file filename="assets/css/images/ui-bg_gloss-wave_35_f6a828_500x100.png" md5="58d2cd501e01573cf537089c694ba899"/>
 		<file filename="assets/css/images/ui-bg_highlight-hard_100_f5f3e5_1x100.png" md5="c3341f3735d126758336bda6f1b21ec4"/>
@@ -54,7 +59,7 @@
 		<file filename="assets/css/images/ui-bg_highlight-hard_15_459e00_1x100.png" md5="f5613fb05e1c5ae3bd9167d85d1d72a7"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_100_eeeeee_1x100.png" md5="384c3f17709ba0f809b023b6e7b10b84"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_25_67b021_1x100.png" md5="bdfc7094828e60a1e89799619382589a"/>
-		<file filename="assets/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png" md5="b867f1f2843f3c1170dd8096f9556584"/>
+		<file filename="assets/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png" md5="44ef42c1bc1ff7c8cd485b0b193135a1"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_75_ffe45c_1x100.png" md5="b806658954cb4d16ade8977af737f486"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_95_ffedad_1x100.png" md5="7103bea11984ecc1ebce02dcc10cdc75"/>
 		<file filename="assets/css/images/ui-bg_inset-soft_95_cccccc_1x100.png" md5="df2dbcfe9af96aacfe13e53b108aaf5b"/>
@@ -78,9 +83,11 @@
 		<file filename="assets/css/jquery-ui-1.10.3.custom.min.css" md5="8533ecfac90372126f3365dec1547da2"/>
 		<file filename="assets/css/jquery-ui-1.10.4.custom.css" md5="503779870833ed6da57004fa2d5db03a"/>
 		<file filename="assets/css/jquery-ui-1.10.4.custom.min.css" md5="d7fdbf6b4f0bd6831fe1b6ca4b701add"/>
+		<file filename="assets/css/jquery-ui-1.11.2.css" md5="0bbc1c4cefe64688f7177848baf72520"/>
+		<file filename="assets/css/jquery-ui-1.11.2.min.css" md5="c3fb533136297b8478b4826d35c2eca0"/>
 		<file filename="assets/css/jquery-ui-1.8.22.css" md5="37aee7c9e30bde3f8d1adc765619b767"/>
 		<file filename="assets/css/jquery-ui-1.9.0.css" md5="7b1117ce0cdc6d0614c1f7b106d69bd6"/>
-		<file filename="assets/css/jquery-ui.css" md5="9814a94835a5507fbc5d2903f9e41c16"/>
+		<file filename="assets/css/jquery.icheck.css" md5="a75642d46565de832b31f2d073d25272"/>
 		<file filename="assets/css/jquery.readonly.css" md5="ca07e99b858d310cd3e855abf65d9b06"/>
 		<file filename="assets/js/jquery/jquery-1.10.0.js" md5="7afc740382f2bf4147d8f63850a9c2b9"/>
 		<file filename="assets/js/jquery/jquery-1.10.0.min.js" md5="00ff34b67a328f219fa3ae2423d4f252"/>
@@ -92,12 +99,17 @@
 		<file filename="assets/js/jquery/jquery-1.11.0.min.map" md5="88960207dc799796278610d3febe4abb"/>
 		<file filename="assets/js/jquery/jquery-1.9.1.js" md5="08c235d357750c657ac1db7d1cf656a9"/>
 		<file filename="assets/js/jquery/jquery-1.9.1.min.js" md5="397754ba49e9e0cf4e7c190da78dda05"/>
+		<file filename="assets/js/jquery/jquery-2.1.1.js" md5="7403060950f4a13be3b3dfde0490ee05"/>
+		<file filename="assets/js/jquery/jquery-2.1.1.min.js" md5="e40ec2161fe7993196f23c8a07346306"/>
+		<file filename="assets/js/jquery/jquery-2.1.1.min.map" md5="91543d9441aca2e30f9786273d044569"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.js" md5="c913b6b5925699cd1bf4d6aa41082f70"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.min.js" md5="a34697840e5bb92b47a5b28034f19b0f"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.3.custom.js" md5="387c83ae31050eee0b744c6ea62eaf9e"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.3.custom.min.js" md5="ae6f04c088d76a69d33c1c954e08fcf0"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.4.custom.js" md5="c1af2a1f16eab3aa557897e9568775b2"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.4.custom.min.js" md5="e9a4e8365783a4e3d96f908289f553ec"/>
+		<file filename="assets/js/jquery/jquery-ui-1.11.2.js" md5="b5f3656496ccb995aacdccc0e91437c2"/>
+		<file filename="assets/js/jquery/jquery-ui-1.11.2.min.js" md5="870b75c273a97501e7d1fb27776bafd0"/>
 		<file filename="assets/js/jquery/jquery.cookie.js" md5="368c829b47c90cddb62256701654d950"/>
 		<file filename="assets/js/jquery/jquery.cookie.min.js" md5="b2b5da3ba885603b0097b9a6bd6b032c"/>
 		<file filename="assets/js/jquery/jquery.form.js" md5="a3aa2838a67b271230e38fb81dfa9748"/>
@@ -106,8 +118,8 @@
 		<file filename="assets/js/jquery/jquery.json-2.4.js" md5="916c946e972ec0315db82ebaacbcf111"/>
 		<file filename="assets/js/jquery/jquery.json-2.4.min.js" md5="f7b87723e700272150f9785de8f03f1c"/>
 		<file filename="assets/js/jquery/jquery.masonry.min.js" md5="a6b726ee7fce43453a6eb25e8a1cb819"/>
-		<file filename="assets/js/jquery/jquery.minimalect.js" md5="ba21f05f72d872e6e91459b9a1e4a340"/>
-		<file filename="assets/js/jquery/jquery.minimalect.min.js" md5="51afae54e66879808f99bbef9e3bfa3e"/>
+		<file filename="assets/js/jquery/jquery.minimalect.js" md5="1e544516b82f596d8ff5d6a81e514ecc"/>
+		<file filename="assets/js/jquery/jquery.minimalect.min.js" md5="aeaf108178bbe71a560f20519b28960e"/>
 		<file filename="assets/js/jquery/jquery.smooth-scroll.min.js" md5="34b5513756446947afd1b7399d02ea65"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.js" md5="fbd3ec46c4cb84a8433f3b5c468e98cf"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.min.js" md5="28fb224b45d2fdb5e5eef85d2dfc8458"/>
@@ -123,7 +135,7 @@
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
 		<file filename="CHANGELOG" md5="71ea9f64bc91a804ae148f4fc717e79a"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="ac3fd84ee09ef68be55af9c9793efe18">
+		<file filename="JQuery.lib.php" md5="69bffa345325a340ab7871a63176e334">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>

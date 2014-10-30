@@ -24,7 +24,15 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		\Core\view()->addScript ('js/jquery/jquery-1.11.0.js');
+		if(\ConfigHandler::Get('/jquery/use_2_x')){
+			// The site is setup to use 2.x, (default as of Core 4.0).
+			\Core\view()->addScript ('js/jquery/jquery-2.1.1.js');
+		}
+		else{
+			// The admin requested not to use the new version of jQuery.  Stick with 1.11 then.
+			\Core\view()->addScript ('js/jquery/jquery-1.11.0.js');
+		}
+
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -32,8 +40,8 @@ abstract class JQuery {
 	
 	public static function IncludeJQueryUI(){
 		self::IncludeJQuery();
-		\Core\view()->addScript ('js/jquery/jquery-ui-1.10.4.custom.js');
-		\Core\view()->addStylesheet('css/jquery-ui-1.10.4.custom.css');
+		\Core\view()->addScript ('js/jquery/jquery-ui-1.11.2.js');
+		\Core\view()->addStylesheet('css/jquery-ui-1.11.2.css');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -148,6 +156,7 @@ abstract class JQuery {
 	public static function Include_Icheck(){
 		self::IncludeJQuery();
 
+		\Core\view()->addStylesheet('css/jquery.icheck.css');
 		\Core\view()->addScript('js/jquery/jquery.icheck.min.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
