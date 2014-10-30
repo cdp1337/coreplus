@@ -38,7 +38,7 @@ class ViewControls implements Iterator, ArrayAccess {
 	 */
 	public $hovercontext = true;
 
-	private $_links = array();
+	private $_links = [];
 
 	private $_pos = 0;
 
@@ -214,7 +214,7 @@ class ViewControls implements Iterator, ArrayAccess {
 	 * @return string HTML
 	 */
 	public function fetch(){
-		$ulclass = array('controls');
+		$ulclass = ['controls'];
 		if($this->hovercontext) $ulclass[] = 'controls-hover';
 
 		$html = '<ul class="' . implode(' ', $ulclass) . '">';
@@ -226,6 +226,16 @@ class ViewControls implements Iterator, ArrayAccess {
 		$html .= '</ul>';
 
 		return $html;
+	}
+
+	/**
+	 * Check if this control set has any links in it.
+	 * Useful for templates where you don't want to render the container if there is nothing to render inside.
+	 *
+	 * @return bool
+	 */
+	public function hasLinks(){
+		return (sizeof($this->_links) > 0);
 	}
 
 	/**
@@ -332,7 +342,7 @@ class ViewControl implements ArrayAccess {
 	 *
 	 * @var array
 	 */
-	public $otherattributes = array();
+	public $otherattributes = [];
 
 	/**
 	 * Get this control as HTML
