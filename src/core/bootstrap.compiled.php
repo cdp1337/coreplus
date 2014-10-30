@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 15 Oct 2014 04:15:45 -0400
+ * @compiled Thu, 30 Oct 2014 18:55:06 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -8818,11 +8818,10 @@ return $url . '.' . $ext . $suffix;
 function resolve_link($url) {
 if ($url == '#') return $url;
 if (strpos($url, '://') !== false) return $url;
-$url = strtolower($url);
 if($url{0} == '?'){
 $url = REL_REQUEST_PATH . $url;
 }
-if(strpos($url, 'site:') === 0){
+if(stripos($url, 'site:') === 0){
 $slashpos = strpos($url, '/');
 $site = substr($url, 5, $slashpos-5);
 $url = substr($url, $slashpos);
@@ -9832,6 +9831,9 @@ $dir = dirname($file->getFilename(false)) . '/';
 if(substr($dir, 0, 7) == 'public/'){
 $dir = 'public/tmp/' . substr($dir, 7);
 }
+else{
+$dir = 'public/tmp/';
+}
 return array(
 'width'  => $width,
 'height' => $height,
@@ -10174,7 +10176,7 @@ $this->_filenamecache[$prefix] = 'private/' . substr($this->_filename, strlen(Fi
 elseif ($this->_type == 'tmp'){
 $this->_filenamecache[$prefix] = 'tmp/' . substr($this->_filename, strlen(Filestore\get_tmp_path()));
 }
-elseif(strpos(ROOT_PDIR, $this->_filename) === 0){
+elseif(strpos($this->_filename, ROOT_PDIR) === 0){
 $this->_filenamecache[$prefix] = substr($this->_filename, strlen(ROOT_PDIR));
 }
 else{
@@ -12634,7 +12636,7 @@ namespace  {
 ### REQUIRE_ONCE FROM core/libs/core/ViewControl.class.php
 class ViewControls implements Iterator, ArrayAccess {
 public $hovercontext = true;
-private $_links = array();
+private $_links = [];
 private $_pos = 0;
 public function current() {
 return $this->_links[$this->_pos];
@@ -12702,7 +12704,7 @@ $this[] = $l;
 }
 }
 public function fetch(){
-$ulclass = array('controls');
+$ulclass = ['controls'];
 if($this->hovercontext) $ulclass[] = 'controls-hover';
 $html = '<ul class="' . implode(' ', $ulclass) . '">';
 foreach($this->_links as $l){
@@ -12710,6 +12712,9 @@ $html .= $l->fetch();
 }
 $html .= '</ul>';
 return $html;
+}
+public function hasLinks(){
+return (sizeof($this->_links) > 0);
 }
 public static function Dispatch($baseurl, $subject){
 $links = HookHandler::DispatchHook('/core/controllinks' . $baseurl, $subject);
@@ -12730,7 +12735,7 @@ public $title = '';
 public $class = '';
 public $icon = '';
 public $confirm = '';
-public $otherattributes = array();
+public $otherattributes = [];
 public function fetch(){
 $html = '';
 $html .= '<li' . ($this->class ? (' class="' . $this->class . '"') : '') . '>';
