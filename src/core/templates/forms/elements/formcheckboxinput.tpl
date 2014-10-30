@@ -13,8 +13,8 @@
 
 </div>
 
+{script library="jquery.icheck"}{/script}
 {script location="foot"}<script>
-	{script library="jquery.icheck"}{/script}
 	$(function(){
 		$('input[type=checkbox]').iCheck({ 'checkboxClass': 'icheckbox_flat'});
 	});
