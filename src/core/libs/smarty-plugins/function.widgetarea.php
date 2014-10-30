@@ -24,7 +24,7 @@
  * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
  * @param Smarty $smarty  Parent Smarty template object
  *
- * @return string
+ * @return string|void
  */
 function smarty_function_widgetarea($params, $smarty) {
 	// Get all widgets set to load in this area.
@@ -34,6 +34,7 @@ function smarty_function_widgetarea($params, $smarty) {
 	$page = PageRequest::GetSystemRequest()->getBaseURL();
 	// May provide metadata useful for the called widget.... maybe.
 	$installable = (isset($params['installable'])) ? $params['installable'] : null;
+	$assign      = (isset($params['assign'])) ? $params['assign'] : false;
 
 	// I need to resolve the page template down to the base version in order for the lookup to work.
 	foreach(Core\Templates\Template::GetPaths() as $base){
@@ -77,6 +78,7 @@ function smarty_function_widgetarea($params, $smarty) {
 	$factory->where($subwhere);
 
 
+	$widgetcount = 0;
 	foreach ($factory->get() as $wi) {
 		/** @var $wi WidgetInstanceModel */
 		// User cannot access this widget? Don't display it...
@@ -101,6 +103,7 @@ function smarty_function_widgetarea($params, $smarty) {
 		else{
 			$contents = 'Error displaying widget [' . $wi->get('baseurl') . '], returned error [' . $view->error . ']';
 		}
+		++$widgetcount;
 
 		$body .= '<div class="widget">' . $contents . '</div>';
 	}
@@ -108,5 +111,17 @@ function smarty_function_widgetarea($params, $smarty) {
 	// Do some sanitizing for the css data
 	$class = 'widgetarea-' . strtolower(str_replace(' ', '', $name));
 
-	return '<div class="widgetarea ' . $class . '" widgetarea="' . $name . '">' . $body . '</div>';
+	$html = '<div class="widgetarea ' . $class . '" widgetarea="' . $name . '">' . $body . '</div>';
+
+	// No widgets, no inner content!
+	if($widgetcount == 0){
+		$html = '';
+	}
+
+	if($assign){
+		$smarty->assign($assign, $html);
+	}
+	else{
+		return $html;
+	}
 }
