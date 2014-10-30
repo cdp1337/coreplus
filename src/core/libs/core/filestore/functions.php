@@ -923,9 +923,17 @@ function get_resized_key_components($dimensions, $file){
 
 	// The directory can be used with the new File backend to create this file in a correctly nested subdirectory.
 	$dir = dirname($file->getFilename(false)) . '/';
-	// Replace the necessary prefix with a more useful one.
+
 	if(substr($dir, 0, 7) == 'public/'){
+		// Replace the necessary prefix with a more useful one.
+		// Anything within public/ needs to be remapped to public/tmp
 		$dir = 'public/tmp/' . substr($dir, 7);
+	}
+	else{
+		// Everything else gets prepended to public/tmp/
+		// so if the original file is in themes/blah/imgs/blah.jpg,
+		// it will be copied to public/tmp/blah.jpg
+		$dir = 'public/tmp/';
 	}
 
 	return array(
