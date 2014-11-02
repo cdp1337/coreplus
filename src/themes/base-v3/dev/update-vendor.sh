@@ -53,6 +53,6 @@ wget https://raw.githubusercontent.com/necolas/normalize.css/master/normalize.cs
 
 
 printheader "Applying local patches"
-for i in "$(find $THEMEDIR/dev/vendor-patches/ -type f -name '*.diff')"; do
+find $THEMEDIR/dev/vendor-patches/ -type f -name '*.diff' | while read i; do
 	patch -p0 < "$i"
 done
