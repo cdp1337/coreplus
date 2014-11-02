@@ -69,6 +69,7 @@ rsync $OPTIONS "$UPSTREAM/src/utilities" "$BASEDIR/src/"
 echo "Syncing core themes..."
 #rsync $OPTIONS --delete "$UPSTREAM/src/themes/default/" "$BASEDIR/src/themes/default"
 rsync $OPTIONS --delete "$UPSTREAM/src/themes/base-v2/" "$BASEDIR/src/themes/base-v2"
+rsync $OPTIONS --delete "$UPSTREAM/src/themes/base-v3/" "$BASEDIR/src/themes/base-v3"
 
 echo "Syncing core components..."
 sync_component "phpwhois"
