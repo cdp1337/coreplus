@@ -1,0 +1,29 @@
+Index: src/themes/base-v3/assets/scss/vendor/bitters/_base.scss
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/themes/base-v3/assets/scss/vendor/bitters/_base.scss	(revision 1e0884b74cdb4d863a60b970cb8de197c9c9e5c9)
++++ src/themes/base-v3/assets/scss/vendor/bitters/_base.scss	(revision )
+@@ -4,10 +4,10 @@
+  * MIT License */
+ 
+ // Variables
+-@import "variables";
++// @import "variables";
+ 
+ // Neat Settings -- uncomment if using Neat -- must be imported before Neat
+-// @import "grid-settings";
++@import "grid-settings";
+
+ // Extends
+ @import "extends/button";
+Index: src/themes/base-v3/assets/scss/vendor/bitters/_grid-settings.scss
+--- src/themes/base-v3/assets/scss/vendor/bitters/_grid-settings.scss
++++ src/themes/base-v3/assets/scss/vendor/bitters/_grid-settings.scss
+@@ -1,4 +1,4 @@
+-@import "neat-helpers"; // or "../neat/neat-helpers" when not in Rails
++@import "../neat/neat-helpers"; // or "../neat/neat-helpers" when not in Rails
+
+ // Neat Overrides
+ // $column: 90px;

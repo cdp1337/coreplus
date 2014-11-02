@@ -48,22 +48,11 @@ mkdir "$THEMEDIR/assets/scss/vendor/bitters"
 cp -r /tmp/https-github.com-thoughtbot-bitters.git/app/assets/stylesheets/* "$THEMEDIR/assets/scss/vendor/bitters/"
 
 
-# Patch bitters base, (since we are using Neat).
-printheader "Patching bitters"
-cat "$THEMEDIR/assets/scss/vendor/bitters/_base.scss" \
- | sed 's:^// @import "grid-settings":@import "grid-settings":' \
- | sed 's:^@import "variables":// @import "variables":' \
- > "$THEMEDIR/assets/scss/vendor/bitters/_base.scss.new"
-rm -fr "$THEMEDIR/assets/scss/vendor/bitters/_base.scss"
-mv "$THEMEDIR/assets/scss/vendor/bitters/_base.scss.new" "$THEMEDIR/assets/scss/vendor/bitters/_base.scss"
-
-
-cat "$THEMEDIR/assets/scss/vendor/bitters/_grid-settings.scss" \
- | sed 's:^@import "neat-helpers":@import "../neat/neat-helpers":' \
- > "$THEMEDIR/assets/scss/vendor/bitters/_grid-settings.scss.new"
-rm -fr "$THEMEDIR/assets/scss/vendor/bitters/_grid-settings.scss"
-mv "$THEMEDIR/assets/scss/vendor/bitters/_grid-settings.scss.new" "$THEMEDIR/assets/scss/vendor/bitters/_grid-settings.scss"
-
-
 printheader "Downloading newest normalize from github"
 wget https://raw.githubusercontent.com/necolas/normalize.css/master/normalize.css -O "$THEMEDIR/assets/scss/vendor/_normalize.scss"
+
+
+printheader "Applying local patches"
+for i in "$(find $THEMEDIR/dev/vendor-patches/ -type f -name '*.diff')"; do
+	patch -p0 < "$i"
+done
