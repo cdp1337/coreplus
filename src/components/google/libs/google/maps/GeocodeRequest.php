@@ -55,12 +55,20 @@ namespace Google\Maps;
  */
 class GeocodeRequest {
 
+	/** @var string Set to the address line 1 of the location to lookup */
 	public $address1;
+	/** @var string Set to the address line 2 of the location to lookup */
 	public $address2;
+	/** @var string Set to the city to lookup */
 	public $city;
+	/** @var string Set to the state to lookup */
 	public $state;
+	/** @var string Set to the postal/zip code to lookup */
 	public $postal;
+	/** @var string Set to the country (two-letter code) to restrict the region to */
 	public $country = 'US';
+	/** @var string Set to any Google-parsable string, may or may not succeed */
+	public $fullAddress;
 
 	public $lat;
 	public $lng;
@@ -82,7 +90,12 @@ class GeocodeRequest {
 	private function _lookup() {
 
 		// At least address or city are required.
-		if(!($this->address1 || $this->city || $this->postal)){
+		if(!(
+			($this->address1 && $this->city) ||
+			$this->city ||
+			$this->postal ||
+			$this->fullAddress
+		)){
 			throw new \Exception('At least the address or city are required for geocode lookups.');
 		}
 
@@ -101,7 +114,8 @@ class GeocodeRequest {
 		elseif($this->postal){
 			$params['address'] = $this->postal;
 		}
-		else{
+		elseif($this->fullAddress){
+			$params['address'] = $this->fullAddress;
 		}
 
 		if($this->country){
