@@ -84,10 +84,16 @@ if [ "$?" == "0" ]; then
 	fi
 fi
 
+## PHPUnit no longer supports installing from pear... blah :/
+pear info phpunit/PHPUnit 1>/dev/null
+if [ "$?" == "0" ]; then
+	printline "PHPUnit migrated its distrubution channel to a PHAR as of Dec. 2014.  Uninstalling the legacy version now."
+	pear uninstall phpunit/PHPUnit
+fi
+
 # Install the phpunit libraries.
 for i in \
 	pear.phpunit.de/phploc \
-	phpunit/PHPUnit \
 	pear.phpunit.de/phpcpd \
 	pdepend/PHP_Depend-beta \
 	phpmd/PHP_PMD \
@@ -107,6 +113,27 @@ do
 		checkexitstatus "$?"
 	fi
 done
+
+# Here, we use a subdirectory so that developers' IDEs can be pointed to /opt/php for the file include to pick up these dependencies.
+# Since editors like a full path instead of specific libraries, (this isn't Java 'yo).
+printheader "Checking for PHPUnit..."
+safemkdir "/opt/php"
+if [ -e "/opt/php/phpunit.phar" ]; then
+	REMSIZE="$(wget -S --spider https://phar.phpunit.de/phpunit.phar 2>&1 | grep 'Content-Length' | sed 's#^[ ]*Content-Length: ##')"
+	LOCSIZE="$(stat -c "%s" /opt/php/phpunit.phar)"
+	if [ $REMSIZE -eq $LOCSIZE ]; then
+		printline "Skipping download, files are the same size."
+	else
+		printline "Downloading replacement version"
+		wget https://phar.phpunit.de/phpunit.phar -O /opt/phpunit.phar
+		chmod a+x /opt/php/phpunit.phar
+	fi
+else
+	printline "Downloading PHPUnit"
+	wget https://phar.phpunit.de/phpunit.phar -O /opt/phpunit.phar
+	chmod a+x /opt/php/phpunit.phar
+fi
+
 
 printheader "Installing GEM packages"
 gem install sass
