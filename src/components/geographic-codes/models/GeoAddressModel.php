@@ -228,4 +228,29 @@ class GeoAddressModel extends Model {
 	public function getCSPFormatted(){
 		return $this->getCPPFormatted();
 	}
+
+	/**
+	 * Get the human-readable label for this record.
+	 *
+	 * By default, it will sift through the schema looking for keys that appear to be human-readable terms,
+	 * but for best results, please extend this method and have it return what's necessary for the given Model.
+	 *
+	 * @return string
+	 */
+	public function getLabel(){
+
+		$lines = [];
+
+		if($this->get('label')){
+			$lines[] = $this->get('label');
+		}
+
+		$lines[] = $this->get('address1');
+		if($this->get('address2')){
+			$lines[] = $this->get('address2');
+		}
+		$lines[] = $this->getCPPFormatted();
+
+		return implode("<br/>\n", $lines);
+	}
 }
