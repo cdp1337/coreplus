@@ -531,8 +531,21 @@ class Model implements ArrayAccess {
 				if($locals['type'] != Model::ATT_TYPE_UUID_FK) continue;
 
 				// OTHERWISE..... ;)
-				/** @var Model $model */
-				$model = $l['records'];
+				if(isset($l['records'])){
+					/** @var Model $model */
+					$model = $l['records'];
+				}
+				elseif(isset($this->_data[$localk]) && $this->_data[$localk] instanceof Model){
+					// The alternative location for this linked model to be.
+					// This can happen when the link is established in the Schema data and the parent record doesn't exist yet.
+					/** @var Model $model */
+					$model = $this->_data[$localk];
+				}
+				else{
+					// No valid model found... :/
+					continue;
+				}
+
 				$model->save();
 				$this->set($localk, $model->get($remotek));
 			}
