@@ -1176,7 +1176,7 @@ class Form extends FormGroup {
 			// These get mapped by the necessary fields.
 			$formatts = array(
 				'type' => null,
-				'title' => ucwords($k),
+				'title' => ucwords(str_replace('_', ' ', $k)),
 				'description' => null,
 				'required' => false,
 				'value' => $model->get($k),
