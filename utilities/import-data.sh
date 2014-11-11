@@ -69,26 +69,26 @@ if [ "$DOWNLOADIT" == "1" ]; then
 fi
 
 printheader "Importing database..."
-gunzip "$BASEDIR/data/data-latest.sql.gz" -c | mysql -u$DBUSER -p"$DBPASS" $DBNAME
+gunzip "$BASEDIR/data/data-latest.sql.gz" -c | mysql -h$DBHOST -u$DBUSER -p"$DBPASS" $DBNAME
 checkexitstatus "$?"
 
 # Run any upgrades queued up for the "next" version of production.
 if [ -e "$BASEDIR/data/prod-next-upgrade.sql" ]; then
 	printheader "Applying production upgrade patch..."
-	mysql -u$DBUSER -p"$DBPASS" $DBNAME < "$BASEDIR/data/prod-next-upgrade.sql"
+	mysql -h$DBHOST -u$DBUSER -p"$DBPASS" $DBNAME < "$BASEDIR/data/prod-next-upgrade.sql"
 	checkexitstatus "$?"
 fi
 
 # Run any production-to-development data.
 if [ -e "$BASEDIR/data/prod-to-dev.sql" ]; then
 	printheader "Applying production-to-development patch..."
-	mysql -u$DBUSER -p"$DBPASS" $DBNAME < "$BASEDIR/data/prod-to-dev.sql"
+	mysql -h$DBHOST -u$DBUSER -p"$DBPASS" $DBNAME < "$BASEDIR/data/prod-to-dev.sql"
 	checkexitstatus "$?"
 fi
 
 # Run any developer-specific file specified in the ant.properties.
 if [ -n "$DEVDATA" -a -e "$BASEDIR/data/$DEVDATA" ]; then
 	printheader "Applying developer-specific $DEVDATA patch..."
-	mysql -u$DBUSER -p"$DBPASS" $DBNAME < "$BASEDIR/data/$DEVDATA"
+	mysql -h$DBHOST -u$DBUSER -p"$DBPASS" $DBNAME < "$BASEDIR/data/$DEVDATA"
 	checkexitstatus "$?"
 fi
