@@ -23,8 +23,9 @@ BASEDIR="$(readlink -f $(dirname $0)/..)"
 ROOTPDIR="$(readlink -f $(dirname $0)/../src)"
 
 # Where is PHPUnit at?
-EXEC="$(which phpunit)"
+#EXEC="$(which phpunit)"
 #EXEC="$BASEDIR/vendor/phpunit.phar"
+EXEC="/opt/php/phpunit.phar"
 
 
 OPTS="--colors"
