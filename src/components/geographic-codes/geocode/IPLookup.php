@@ -63,6 +63,8 @@ class IPLookup {
 	public $country;
 	/** @var string The timezone of the lookup */
 	public $timezone;
+	/** @var string The postal code of the lookup */
+	public $postal;
 
 	public function __construct($ip_addr) {
 		try{
@@ -73,10 +75,12 @@ class IPLookup {
 				$this->province = 'OH';
 				$this->country  = 'US';
 				$this->timezone = 'America/New_York';
+				$this->postal   = '43215';
 			}
 			else{
 				$reader = new \GeoIp2\Database\Reader(ROOT_PDIR . 'components/geographic-codes/libs/maxmind-geolite-db/GeoLite2-City.mmdb');
 
+				/** @var \GeoIp2\Model\CityIspOrg $geo */
 				$geo = $reader->cityIspOrg($ip_addr);
 				//$geo = $reader->cityIspOrg('67.149.214.236');
 
@@ -93,6 +97,7 @@ class IPLookup {
 				}
 				$this->country  = $geo->country->isoCode;
 				$this->timezone = $geo->location->timeZone;
+				$this->postal   = $geo->postal->code;
 
 				// Memory cleanup
 				unset($geoprovinceobj, $geo, $reader);
