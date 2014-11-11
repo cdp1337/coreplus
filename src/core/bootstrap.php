@@ -611,6 +611,7 @@ if(Core::IsComponentAvailable('geographic-codes') && class_exists('GeoIp2\\Datab
 			$geoprovince = 'OH';
 			$geocountry  = 'US';
 			$geotimezone = 'America/New_York';
+			$geopostal   = '43215';
 		}
 		else{
 			$reader = new GeoIp2\Database\Reader(ROOT_PDIR . 'components/geographic-codes/libs/maxmind-geolite-db/GeoLite2-City.mmdb');
@@ -637,6 +638,7 @@ if(Core::IsComponentAvailable('geographic-codes') && class_exists('GeoIp2\\Datab
 
 			$geocountry  = $geo->country->isoCode;
 			$geotimezone = $geo->location->timeZone;
+			$geopostal   = $geo->postal->code;
 
 			// Memory cleanup
 			unset($geoprovinceobj, $geo, $reader);
@@ -648,6 +650,7 @@ if(Core::IsComponentAvailable('geographic-codes') && class_exists('GeoIp2\\Datab
 		$geoprovince = '';
 		$geocountry  = 'AQ'; // Yes, AQ is Antarctica!
 		$geotimezone = 'CAST';
+		$geopostal   = null;
 	}
 }
 else{
@@ -656,6 +659,7 @@ else{
 	$geoprovince = '';
 	$geocountry  = 'AQ'; // Yes, AQ is Antarctica!
 	$geotimezone = 'CAST';
+	$geopostal   = null;
 }
 
 // And define these.
@@ -683,6 +687,13 @@ define('REMOTE_COUNTRY', $geocountry);
  * eg: "America/New_York", etc.
  */
 define('REMOTE_TIMEZONE', $geotimezone);
+
+/**
+ * The postal code of the remote user
+ * eg: "43215"
+ * Note, this define CAN be NULL if the IP does not resolve to a valid address
+ */
+define('REMOTE_POSTAL', $geopostal);
 
 // And cleanup the geo information
 unset($geocity, $geoprovince, $geocountry, $geotimezone);
