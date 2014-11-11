@@ -943,8 +943,25 @@ class View {
 	 */
 	public function getBreadcrumbs() {
 		$crumbs = $this->breadcrumbs;
-		if ($this->title) $crumbs[] = array('title' => $this->title,
-		                                    'link'  => null);
+		if ($this->title){
+			$crumbs[] = [
+				'title' => $this->title,
+				'link'  => null
+			];
+		}
+
+		// Remove duplicates
+		// This can happen when the developer sets a breadcrumb manually AND the system adds the same breadcrumb,
+		// (since breadcrumbs can be managed automatically by Core).
+		$seen = [];
+		foreach($crumbs as $k => $dat){
+			if(in_array($dat['link'], $seen)){
+				unset($crumbs[$k]);
+			}
+			else{
+				$seen[] = $dat['link'];
+			}
+		}
 
 		return $crumbs;
 	}
