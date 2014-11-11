@@ -8,6 +8,7 @@
 		<provide version="3.12" name="GoogleMaps" type="library"/>
 		<provide version="1.1.0" name="GoogleAnalytics" type="library"/>
 		<provide version="1.1.0" name="GoogleAnalytics" type="component"/>
+		<scriptlibrary name="googlemaps" call="Google\Maps\Helper::Load"/>
 	</provides>
 	<hooks>
 		<hook name="/core/page/preexecute" call="\Google\Analytics\Helper::InstallTracking"/>
@@ -22,13 +23,14 @@
 		<config key="/google-analytics/accountid" type="string" default="" title="Google Account ID" description="This is the Account ID (sometimes called 'Web Property ID') listed for this account in google analytics.  Leaving this blank will disable GA; likewise populating it will automatically enable GA."/>
 		<config key="/google/tagmanager/tagid" type="string" default="" title="Google Tag ID" description="If you use Tag Manager to manage tags, enter your tag ID here &lt;em&gt;instead of&lt;/em&gt; your account ID."/>
 		<config key="/google/cse/key" type="string" default="" description="The cx for Google CSE Site Search"/>
+		<config key="/google/services/public_api_key" type="string" description="The Simple/Public API Access key defined in https://console.developers.google.com"/>
 	</configs>
 	<pages>
 		<page baseurl="/google/configure" title="Google Keys and Apps" group="Configure" access="g:admin" admin="1" selectable="0"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="d12a12d43442d1a22269cf26a54764fb"/>
-		<file filename="controllers/GoogleController.php" md5="54d2494188cb6d9c37fc41b1eb56f09f">
+		<file filename="CHANGELOG" md5="94dd00268a43f4c44d0cffff3b7b5905"/>
+		<file filename="controllers/GoogleController.php" md5="5bf7dd535c58df182b22c9ecf8c43906">
 			<controller name="GoogleController"/>
 		</file>
 		<file filename="libs/google/CSE/Helper.php" md5="dc2a7df940960944b36541357309b1c6">
@@ -42,6 +44,9 @@
 		</file>
 		<file filename="libs/google/maps/GeocodeResponse.php" md5="86c7fd0d5cc93f30e288e76934b3bcd4">
 			<class name="Google\Maps\GeocodeResponse"/>
+		</file>
+		<file filename="libs/google/maps/Helper.php" md5="dd8752c00774d43c7d886701c6addc86">
+			<class name="Google\Maps\Helper"/>
 		</file>
 	</files>
 	<upgrades>

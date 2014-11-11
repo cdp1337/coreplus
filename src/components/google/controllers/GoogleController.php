@@ -60,6 +60,10 @@ class GoogleController extends Controller_2_1 {
 		$request = $this->getPageRequest();
 
 		$configs = [
+			'general' => [
+				'title' => 'General',
+			    'configs' => ['/google/services/public_api_key'],
+			],
 			'analytics' => [
 				'title' => 'Analytics',
 				'configs' => ['/google-analytics/accountid', '/google/tagmanager/tagid'],
