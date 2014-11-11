@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 30 Oct 2014 18:55:06 -0400
+ * @compiled Mon, 10 Nov 2014 22:07:37 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1906,7 +1906,15 @@ $localk  = $l['on'][$remotek];
 $locals = $this->getKeySchema($localk);
 if(!$locals) continue;
 if($locals['type'] != Model::ATT_TYPE_UUID_FK) continue;
+if(isset($l['records'])){
 $model = $l['records'];
+}
+elseif(isset($this->_data[$localk]) && $this->_data[$localk] instanceof Model){
+$model = $this->_data[$localk];
+}
+else{
+continue;
+}
 $model->save();
 $this->set($localk, $model->get($remotek));
 }
@@ -16573,8 +16581,21 @@ else $this->addBreadcrumb($v, $k);
 }
 public function getBreadcrumbs() {
 $crumbs = $this->breadcrumbs;
-if ($this->title) $crumbs[] = array('title' => $this->title,
-'link'  => null);
+if ($this->title){
+$crumbs[] = [
+'title' => $this->title,
+'link'  => null
+];
+}
+$seen = [];
+foreach($crumbs as $k => $dat){
+if(in_array($dat['link'], $seen)){
+unset($crumbs[$k]);
+}
+else{
+$seen[] = $dat['link'];
+}
+}
 return $crumbs;
 }
 public function addControl($title, $link = null, $class = 'edit') {
@@ -17504,7 +17525,7 @@ $new = $model->isnew();
 foreach ($s as $k => $v) {
 $formatts = array(
 'type' => null,
-'title' => ucwords($k),
+'title' => ucwords(str_replace('_', ' ', $k)),
 'description' => null,
 'required' => false,
 'value' => $model->get($k),
@@ -18490,6 +18511,7 @@ $geocity     = 'Columbus';
 $geoprovince = 'OH';
 $geocountry  = 'US';
 $geotimezone = 'America/New_York';
+$geopostal   = '43215';
 }
 else{
 $reader = new GeoIp2\Database\Reader(ROOT_PDIR . 'components/geographic-codes/libs/maxmind-geolite-db/GeoLite2-City.mmdb');
@@ -18508,6 +18530,7 @@ $geoprovince = '';
 }
 $geocountry  = $geo->country->isoCode;
 $geotimezone = $geo->location->timeZone;
+$geopostal   = $geo->postal->code;
 unset($geoprovinceobj, $geo, $reader);
 }
 }
@@ -18516,6 +18539,7 @@ $geocity     = 'McMurdo Base';
 $geoprovince = '';
 $geocountry  = 'AQ'; // Yes, AQ is Antarctica!
 $geotimezone = 'CAST';
+$geopostal   = null;
 }
 }
 else{
@@ -18523,11 +18547,13 @@ $geocity     = 'McMurdo Base';
 $geoprovince = '';
 $geocountry  = 'AQ'; // Yes, AQ is Antarctica!
 $geotimezone = 'CAST';
+$geopostal   = null;
 }
 define('REMOTE_CITY', $geocity);
 define('REMOTE_PROVINCE', $geoprovince);
 define('REMOTE_COUNTRY', $geocountry);
 define('REMOTE_TIMEZONE', $geotimezone);
+define('REMOTE_POSTAL', $geopostal);
 unset($geocity, $geoprovince, $geocountry, $geotimezone);
 HookHandler::DispatchHook('/core/components/ready');
 } // ENDING GLOBAL NAMESPACE
