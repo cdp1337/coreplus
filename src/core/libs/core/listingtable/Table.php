@@ -446,6 +446,10 @@ class Table implements \Iterator {
 			$f->hassort = false;
 		}
 
+		if($f->getTotalCount() == 0 && !$f->hasSet()){
+			return '<p class="message-info">No records found!</p>';
+		}
+
 		$out .= $this->_renderFilters() . $this->_renderPagination();
 
 		$tableclasses = ['listing'];
@@ -541,6 +545,10 @@ class Table implements \Iterator {
 
 		$f = $this->getFilters();
 		$out .= $f->pagination();
+
+		if($f->getTotalCount() == 0 && !$f->hasSet()){
+			return '';
+		}
 
 		// Don't forget the necessary scripts!
 		\Core\view()->addScript('assets/js/core.listingtable.js', 'foot');
