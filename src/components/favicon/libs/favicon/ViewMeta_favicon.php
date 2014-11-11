@@ -54,10 +54,15 @@ class ViewMeta_favicon extends ViewMeta {
 		$data = [];
 
 		$image = ConfigHandler::Get('/favicon/image');
-		if(!$image){
-			return [];
+		if($image){
+			$file = \Core\Filestore\Factory::File($image);
 		}
-		$file = \Core\Filestore\Factory::File($image);
+		else{
+			// Check the theme default.
+			$file = \Core\Filestore\Factory::File('asset/images/favicon.png');
+			//return [];
+		}
+
 		if(!$file->exists()){
 			return [];
 		}
