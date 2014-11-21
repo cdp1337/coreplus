@@ -17,12 +17,13 @@ class BlogTest extends PHPUnit_Framework_TestCase {
 		$request = new PageRequest('/blog/create');
 
 		// Run the method, it should give me a 200 since the user is now an admin.
-		$return = $request->execute();
-		$this->assertEquals(200, $return->error, 'Checking that admin users can create blogs');
+		$request->execute();
+		$view = $request->getView();
+		$this->assertEquals(200, $view->error, 'Checking that admin users can create blogs');
 
 		// The returned data should have a "form" available.  This is the actual creation form.
 		/** @var $form Form */
-		$form = $return->getVariable('form');
+		$form = $view->getVariable('form');
 		$this->assertInstanceOf('Form', $form, 'Checking that the form is set from the blog create controller');
 
 		// Set some variables on the form
@@ -46,10 +47,11 @@ class BlogTest extends PHPUnit_Framework_TestCase {
 
 		// Go to the page and make sure that it loads up!
 		$request = new PageRequest('/blog/view/' . self::$TestBlogID);
-		$return = $request->execute();
-		$this->assertEquals(200, $return->error, 'Checking that public blog page exists');
+		$request->execute();
+		$view = $request->getView();
+		$this->assertEquals(200, $view->error, 'Checking that public blog page exists');
 
-		$html = $return->fetch();
+		$html = $view->fetch();
 		$this->assertContains($title, $html, 'Checking that the public blog page contains the correct title');
 	}
 
@@ -75,12 +77,13 @@ class BlogTest extends PHPUnit_Framework_TestCase {
 
 		$request = new PageRequest('/blog/article/create/' . self::$TestBlogID);
 
-		$return = $request->execute();
-		$this->assertEquals(200, $return->error, 'Checking that article creation returns a valid page');
+		$request->execute();
+		$view = $request->getView();
+		$this->assertEquals(200, $view->error, 'Checking that article creation returns a valid page');
 
 		// The returned data should have a "form" available.  This is the actual creation form.
 		/** @var $form Form */
-		$form = $return->getVariable('form');
+		$form = $view->getVariable('form');
 		$this->assertInstanceOf('Form', $form, 'Checking that the form is set from the blog article create controller');
 
 		// Set some variables on the form
@@ -109,9 +112,10 @@ class BlogTest extends PHPUnit_Framework_TestCase {
 
 		// Go to the parent listing page and find this entry.
 		$request = new PageRequest($blog->get('rewriteurl'));
-		$return = $request->execute();
-		$this->assertEquals(200, $return->error);
-		$html = $return->fetch();
+		$request->execute();
+		$view = $request->getView();
+		$this->assertEquals(200, $view->error);
+		$html = $view->fetch();
 
 		$this->assertContains($title, $html);
 		$this->assertContains('itemtype="http://schema.org/BlogPosting"', $html);
@@ -137,10 +141,11 @@ class BlogTest extends PHPUnit_Framework_TestCase {
 
 		// Go to the page and make sure that it loads up!
 		$request = new PageRequest($foundurl);
-		$return = $request->execute();
-		$this->assertEquals(200, $return->error, 'Checking that public blog article exists');
+		$request->execute();
+		$view = $request->getView();
+		$this->assertEquals(200, $view->error, 'Checking that public blog article exists');
 
-		$html = $return->fetch();
+		$html = $view->fetch();
 		$this->assertContains($title, $html, 'Checking that the public blog article page contains the correct title');
 		$this->assertContains($randomsnippet, $html, 'Checking that the public blog article page contains the correct body');
 		$this->assertContains('blog-test-image', $html, 'Checking that the public blog article page contains the correct image');

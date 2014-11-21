@@ -66,10 +66,11 @@ class Bug409Test extends PHPUnit_Framework_TestCase {
 
 		// Go to the page and make sure that it loads up!
 		$request = new PageRequest($rewriteurl . '.rss');
-		$return = $request->execute();
-		$this->assertEquals(200, $return->error);
+		$request->execute();
+		$view = $request->getView();
+		$this->assertEquals(200, $view->error);
 
-		$markup = $return->fetch();
+		$markup = $view->fetch();
 		$this->assertNotEmpty($markup);
 
 		// DEVELOPMENT DEBUG
@@ -97,10 +98,11 @@ class Bug409Test extends PHPUnit_Framework_TestCase {
 
 		// Go to the page and make sure that it loads up!
 		$request = new PageRequest($rewriteurl . '.atom');
-		$return = $request->execute();
-		$this->assertEquals(200, $return->error);
+		$request->execute();
+		$view = $request->getView();
+		$this->assertEquals(200, $view->error);
 
-		$markup = $return->fetch();
+		$markup = $view->fetch();
 		$this->assertNotEmpty($markup);
 
 		// DEVELOPMENT DEBUG

@@ -17,6 +17,8 @@ class SFSTest extends PHPUnit_Framework_TestCase {
 	 * Test to verify that the import is working.  This will verify that the syste can import the zipped CSV from the website.
 	 *
 	 * Note that the live sfs website is not actually used, but instead a local test zip.
+	 *
+	 * @setUseOutputBuffering
 	 */
 	public function testImport(){
 
@@ -27,7 +29,6 @@ class SFSTest extends PHPUnit_Framework_TestCase {
 
 		// The import function just prints straight to stdout.  Capture that to get the status.
 		$file = ROOT_PDIR . 'components/security-suite/tests/test_listed_ip_1_all.zip';
-		$this->setUseOutputBuffering(true);
 		SecuritySuite\StopForumSpam::ImportList($file);
 		$out = $this->getActualOutput();
 
