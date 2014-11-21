@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 10 Nov 2014 22:07:37 -0500
+ * @compiled Fri, 21 Nov 2014 15:19:50 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -8801,7 +8801,7 @@ $suffix   = '';
 $url = substr($file->getURL(), 0, -1-strlen($ext));
 if(\ConfigHandler::Get('/core/javascript/minified')){
 if($ext == 'js'){
-$minified = $filename . '.min.js';
+$minified = substr($filename, 0, -3) . '.min.js';
 $minfile = \Core\Filestore\Factory::File($minified);
 if($minfile->exists()){
 $ext = 'min.js';
@@ -10504,7 +10504,7 @@ return (strpos($this->_filename, $path) !== false);
 public function identicalTo($otherfile) {
 if (is_a($otherfile, 'File') || $otherfile instanceof Filestore\File) {
 if($otherfile instanceof FileLocal){
-if($this->getMTime() == $otherfile->getMTime()){
+if($this->getMTime() == $otherfile->getMTime() && $this->getFilesize() == $otherfile->getFilesize()){
 return true;
 }
 }
@@ -14301,7 +14301,7 @@ $xml->load($file);
 foreach ($xml->getElementsByTagName("define") as $xmlEl) {
 $name  = $xmlEl->getAttribute("name");
 $type  = $xmlEl->getAttribute("type");
-$value = $xmlEl->getElementsByTagName("value")->item(0)->nodeValue;
+$value = trim($xmlEl->getElementsByTagName("value")->item(0)->nodeValue);
 switch (strtolower($type)) {
 case 'int':
 $value = (int)$value;
@@ -14319,7 +14319,7 @@ define($name, $value);
 foreach ($xml->getElementsByTagName("return") as $xmlEl) {
 $name  = $xmlEl->getAttribute("name");
 $type  = $xmlEl->getAttribute("type");
-$value = $xmlEl->getElementsByTagName("value")->item(0)->nodeValue;
+$value = trim($xmlEl->getElementsByTagName("value")->item(0)->nodeValue);
 switch (strtolower($type)) {
 case 'int':
 $value = (int)$value;
@@ -14475,9 +14475,9 @@ if (EXEC_MODE == 'CLI') {
 $servername          = null;
 $servernameSSL       = null;
 $servernameNOSSL     = null;
-$rooturl             = null;
-$rooturlNOSSL        = null;
-$rooturlSSL          = null;
+$rooturl             = isset($_SERVER['HTTP_HOST']) ? 'http://' . $_SERVER['HTTP_HOST'] : null;
+$rooturlNOSSL        = $rooturl;
+$rooturlSSL          = $rooturl;
 $curcall             = null;
 $relativerequestpath = null;
 $ssl                 = false;
@@ -14492,7 +14492,7 @@ else {
 if (isset ($_SERVER ['HTTPS'])) $servername = "https://";
 else $servername = "http://";
 if ($core_settings['site_url'] != '') $servername .= $core_settings['site_url'];
-else $servername .= $_SERVER ['HTTP_HOST'];
+else $servername .= $_SERVER['HTTP_HOST'];
 if ($core_settings['site_url'] != '' && $_SERVER['HTTP_HOST'] != $core_settings['site_url']) {
 $newURL = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $core_settings['site_url'] . $_SERVER['REQUEST_URI'];
 header('HTTP/1.1 301 Moved Permanently'); // 301 transfers page rank.
@@ -15980,6 +15980,16 @@ $this->tables = true;
 $this->frames = true;
 $this->iframes = true;
 }
+elseif(stripos($this->useragent, 'googlebot/') !== false){
+$this->browser = 'Googlebot';
+$this->rendering_engine_name = 'WebKit';
+$this->javascript = true;
+$this->cookies = true;
+$this->tables = true;
+$this->frames = true;
+$this->iframes = true;
+$this->crawler = true;
+}
 }
 if($this->version == 0.0){
 if(preg_match('#' . $this->browser . '/[0-9\.]+#', $this->useragent) !== 0){
@@ -15988,9 +15998,12 @@ $this->major_ver = substr($this->version, 0, strpos($this->version, '.'));
 $this->minor_ver = substr($this->version, strpos($this->version, '.')+1);
 }
 }
-if($this->rendering_engine_name == 'unknown'){
+if($this->rendering_engine_name == 'unknown' || $this->rendering_engine_name == null){
 if(stripos($this->useragent, 'gecko/') !== false){
 $this->rendering_engine_name = 'Gecko';
+}
+elseif(stripos($this->useragent, 'AppleWebKit/')){
+$this->rendering_engine_name = 'WebKit';
 }
 }
 }
@@ -17772,10 +17785,16 @@ $this->host = SERVERNAME;
 $this->uri = $uri;
 if (!$uri) $uri = ROOT_WDIR;
 $uri = substr($uri, strlen(ROOT_WDIR));
-if (($_qpos = strpos($uri, '?')) !== false) $uri = substr($uri, 0, $_qpos);
-if ($uri{0} != '/') $uri = '/' . $uri;
-if (preg_match('/\.[a-z]{3,4}$/i', $uri)) {
-$ctype = strtolower(preg_replace('/^.*\.([a-z]{3,4})$/i', '\1', $uri));
+if (($_qpos = strpos($uri, '?')) !== false){
+$params = substr($uri, $_qpos + 1);
+$uri = substr($uri, 0, $_qpos);
+}
+else{
+$params = null;
+}
+if (strlen($uri) > 0 && $uri{0} != '/') $uri = '/' . $uri;
+if (preg_match('/\.[a-z]{2,4}$/i', $uri)) {
+$ctype = strtolower(preg_replace('/^.*\.([a-z]{2,4})$/i', '\1', $uri));
 $uri   = substr($uri, 0, -1 - strlen($ctype));
 }
 else {
@@ -17793,7 +17812,16 @@ $this->_resolveMethod();
 $this->_resolveAcceptHeader();
 $this->_resolveUAHeader();
 $this->_resolveLanguageHeader();
-if (is_array($_GET)) {
+if($params){
+$_p = explode('&', $params);
+foreach($_p as $p){
+list($k, $v) = explode('=', $p);
+if(!is_numeric($k)){
+$this->parameters[$k] = $v;
+}
+}
+}
+elseif (is_array($_GET)) {
 foreach ($_GET as $k => $v) {
 if (is_numeric($k)) continue;
 $this->parameters[$k] = $v;
@@ -17822,7 +17850,7 @@ $ret = PageModel::SplitBaseURL($this->uriresolved);
 if($ret['parameters'] === null){
 $ret['parameters'] = [];
 }
-$ret['parameters'] = array_merge($ret['parameters'], $_GET);
+$ret['parameters'] = array_merge($ret['parameters'], $this->parameters);
 return $ret;
 }
 public function getBaseURL() {
