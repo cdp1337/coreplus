@@ -1780,8 +1780,8 @@ if(!$packageremail){
 
 
 // Before ANYTHING happens.... make sure that the system is compiled!
-echo '# Compiling system...' . "\n";
-exec(escapeshellarg(BASE_DIR . 'utilities/compiler.php'));
+// echo '# Compiling system...' . "\n";
+// exec(escapeshellarg(BASE_DIR . 'utilities/compiler.php'));
 echo "OK!\n";
 
 
