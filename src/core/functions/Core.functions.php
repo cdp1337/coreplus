@@ -283,7 +283,7 @@ function resolve_asset($asset){
 		// of many locations, and not all of them may have a minified version.
 		if($ext == 'js'){
 			// Try to load the minified version instead.
-			$minified = $filename . '.min.js';
+			$minified = substr($filename, 0, -3) . '.min.js';
 			$minfile = \Core\Filestore\Factory::File($minified);
 			if($minfile->exists()){
 				// Overwrite the $file variable so it's returned instead.
