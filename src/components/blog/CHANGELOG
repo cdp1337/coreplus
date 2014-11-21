@@ -1,3 +1,14 @@
+Blog 1.6.2
+
+	* [Bug] Fix bug where the wrong variable was being checked on blog indexes.
+	* Update tests to work with new version of phpunit.
+	* Move the H1 tag  to a page-level insert.
+	* Retool how the blog import works now that pages have been retooled.
+	* Template text update for the blog index.
+	* Additional sanity checks for sites that do not have any blogs created yet.
+	* Enable CSS source maps for compiled assets.
+	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 16:42:49 -0500
+
 Blog 1.6.1
 
 	* Documentation cleanup.
