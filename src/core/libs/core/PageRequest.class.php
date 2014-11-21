@@ -134,14 +134,20 @@ class PageRequest {
 		$uri = substr($uri, strlen(ROOT_WDIR));
 
 		// Split the string on the '?'.  Obviously anything after are parameters.
-		if (($_qpos = strpos($uri, '?')) !== false) $uri = substr($uri, 0, $_qpos);
+		if (($_qpos = strpos($uri, '?')) !== false){
+			$params = substr($uri, $_qpos + 1);
+			$uri = substr($uri, 0, $_qpos);
+		}
+		else{
+			$params = null;
+		}
 
 		// the URI should start with a '/'.
-		if ($uri{0} != '/') $uri = '/' . $uri;
+		if (strlen($uri) > 0 && $uri{0} != '/') $uri = '/' . $uri;
 
 		// If the useragent requested a specifc mode type, remember that and set it for the page.
-		if (preg_match('/\.[a-z]{3,4}$/i', $uri)) {
-			$ctype = strtolower(preg_replace('/^.*\.([a-z]{3,4})$/i', '\1', $uri));
+		if (preg_match('/\.[a-z]{2,4}$/i', $uri)) {
+			$ctype = strtolower(preg_replace('/^.*\.([a-z]{2,4})$/i', '\1', $uri));
 			$uri   = substr($uri, 0, -1 - strlen($ctype));
 		}
 		else {
@@ -168,7 +174,17 @@ class PageRequest {
 		$this->_resolveLanguageHeader();
 
 		// Set the request parameters
-		if (is_array($_GET)) {
+		if($params){
+			$_p = explode('&', $params);
+			foreach($_p as $p){
+				list($k, $v) = explode('=', $p);
+
+				if(!is_numeric($k)){
+					$this->parameters[$k] = $v;
+				}
+			}
+		}
+		elseif (is_array($_GET)) {
 			foreach ($_GET as $k => $v) {
 				if (is_numeric($k)) continue;
 				$this->parameters[$k] = $v;
@@ -223,7 +239,8 @@ class PageRequest {
 			$ret['parameters'] = [];
 		}
 
-		$ret['parameters'] = array_merge($ret['parameters'], $_GET);
+		//$ret['parameters'] = array_merge($ret['parameters'], $_GET);
+		$ret['parameters'] = array_merge($ret['parameters'], $this->parameters);
 
 		return $ret;
 	}
