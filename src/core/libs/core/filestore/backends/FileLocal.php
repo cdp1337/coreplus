@@ -721,12 +721,11 @@ class FileLocal implements Filestore\File {
 	}
 
 	public function identicalTo($otherfile) {
-
 		if (is_a($otherfile, 'File') || $otherfile instanceof Filestore\File) {
 			if($otherfile instanceof FileLocal){
 				// I can do a faster comparison than md5.
 				// mtime only accesses the file headers and not the entire file contents.
-				if($this->getMTime() == $otherfile->getMTime()){
+				if($this->getMTime() == $otherfile->getMTime() && $this->getFilesize() == $otherfile->getFilesize()){
 					// It's the same!
 					return true;
 				}
