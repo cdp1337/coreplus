@@ -1,3 +1,9 @@
+PHPWhois 4.2.2~core6
+
+	* Newest version of phpwhois from github.
+	* Documentation cleanup.
+	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 16:51:10 -0500
+
 PHPWhois 4.2.2~core5
 
 	* Switch to the new interface for accessing Core cache.
