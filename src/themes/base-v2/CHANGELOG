@@ -1,3 +1,17 @@
+Theme/Base V2 1.5.1
+
+	* Upgrade the bundled versions of jQuery to 2.1.1 and jQueryUI to 1.11.2
+	* Remove the icheckbox jquery plugin from base-v2, (it should have never been there in the first
+	  place).
+	* Slightly different output from the SASS compiler.
+	* Page published_expires had a value set on form submission because MySQL *always* parses int fields
+	  to 0 if null or empty is sent...regardless if the field allows null.
+	* Include the viewport scale metatag by default.
+	* Do not have a margin on navigation ULs.
+	* Include the .map files in base-v2 theme metafile.
+	* Decrease the min-width on minict select elements.
+	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 16:52:22 -0500
+
 Theme/Base V2 1.5.0
 
 	* [Feature] form edit quick thingy, yay!
