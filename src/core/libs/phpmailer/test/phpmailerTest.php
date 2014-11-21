@@ -13,8 +13,6 @@
  * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  */
 
-require 'PHPUnit/Autoload.php';
-
 /**
  * PHPMailer - PHP email transport unit test class
  * Performs authentication tests
