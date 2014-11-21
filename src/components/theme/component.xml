@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.0" name="Theme" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.1" name="Theme" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.2.0" operation="ge"/>
+		<require name="core" type="component" version="3.5.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
 		<require name="jqueryui" type="library" version="1.8.0" operation="ge"/>
 	</requires>
@@ -10,15 +10,15 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="3c34280b8f1f8a8ea78b1f9ede9d1bf1"/>
+		<file filename="CHANGELOG" md5="7fd16162f8327a8cd53f330e9f6c718b"/>
 		<file filename="controllers/ThemeController.class.php" md5="17f81d9ed27b4fc81fc9e3a24233de8d">
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
-		<file filename="libs/Theme/Theme.php" md5="4e6eb94627eaee5e6fb37f9652da7542">
+		<file filename="libs/Theme/Theme.php" md5="f0ccde6c22498f0d8e1d57fd5c50a0f3">
 			<class name="Theme\Theme"/>
 		</file>
-		<file filename="libs/ThemeHandler.class.php" md5="442ad8dde9ce1ea74da0857e01b99aee">
+		<file filename="libs/ThemeHandler.class.php" md5="f9406dd7a2af3c1e76ae3c90f57dc62f">
 			<class name="ThemeHandler"/>
 		</file>
 		<file filename="models/ThemeTemplateChangeModel.php" md5="4e14433a608d4d43bd55910fb7c9c172">
@@ -67,6 +67,7 @@
 		<upgrade from="2.1.5" to="2.2.0"/>
 		<upgrade from="2.2.0" to="2.3.0"/>
 		<upgrade from="2.3.0" to="2.4.0"/>
+		<upgrade from="2.4.0" to="2.4.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
