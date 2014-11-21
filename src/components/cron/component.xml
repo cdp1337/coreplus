@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.2.0">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.2.1">
 	<hooks>
 		<hookregister name="/cron/hourly" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/daily" description="Daily hook called from the cron system"/>
@@ -9,7 +9,7 @@
 		<hook name="/core/admin/view" call="CronHelper::AdminHook"/>
 	</hooks>
 	<requires>
-		<require name="core" type="component" version="3.0.0" operation="ge"/>
+		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
 	<permissions>
 		<permission key="/cron/viewlog" description="View log of cron jobs that have run"/>
@@ -30,12 +30,12 @@
 		<widget baseurl="/cron/dashboard" title="Cron Status Dashboard" installable="/admin"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="5038c6844df3d6fcdfc907cf3b1e2460"/>
+		<file filename="CHANGELOG" md5="07a1edf71b9c480596e043a42b8cef0e"/>
 		<file filename="README.md" md5="addbc7f6e77640e87a70e40a44948e61"/>
 		<file filename="classes/CronHelper.php" md5="ba7b794f691ba12729d42f2275cee260">
 			<class name="CronHelper"/>
 		</file>
-		<file filename="controllers/CronController.php" md5="47f1f2f007e0025bcdcddea3ab2d53f9">
+		<file filename="controllers/CronController.php" md5="8dac18c4b08731a926b1840805a14f06">
 			<controller name="CronController"/>
 		</file>
 		<file filename="models/CronLogModel.php" md5="febfe029a9b79996df5fb99e26e279fc">
@@ -56,6 +56,7 @@
 		<upgrade from="1.1.6" to="1.1.7"/>
 		<upgrade from="1.1.7" to="1.2.0"/>
 		<upgrade from="1.1.8" to="1.2.0"/>
+		<upgrade from="1.2.0" to="1.2.1"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/cron.css" md5="1fb2835458acdf8e3a098952e4eafa32"/>
