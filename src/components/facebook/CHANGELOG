@@ -1,3 +1,10 @@
+Facebook 3.2.3~core4
+
+	* [Bug] Fix the include order of the user login javascripts.
+	* Add/standardize some supplemental javascript files for the various authentication sources.
+	* Better handle the redirect URL for user logins and registrations.
+	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 16:45:07 -0500
+
 Facebook 3.2.3~core3
 
 	* Documentation cleanup.

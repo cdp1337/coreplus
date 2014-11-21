@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3~core3" name="Facebook" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3~core4" name="Facebook" execmode="web">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 		<hook name="/core/controllinks/user/view" call="FacebookController::GetUserControlLinks"/>
@@ -11,7 +11,7 @@
 	</provides>
 	<requires>
 		<require name="user" type="library" version="2.8.0"/>
-		<require name="core" type="component" version="3.4.0" operation="ge"/>
+		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
 	<configs>
 		<config key="/facebook/appid" mapto="FACEBOOK_APP_ID" type="string" default="" description="If you want to enable facebook connectivity, you need to create an &quot;app&quot; and enter that app's appid here."/>
@@ -28,17 +28,17 @@
 	</users>
 	<view searchdir="templates">
 		<file filename="templates/emails/facebook/enable_confirmation.tpl" md5="bb92457d47699f47892941267c00f83b"/>
-		<file filename="templates/includes/user/facebook_login.tpl" md5="f9b10e29c5609f3bdcf1b67603060630"/>
+		<file filename="templates/includes/user/facebook_login.tpl" md5="0e46264f35b41cfc4908ef2f599ab16a"/>
 		<file filename="templates/pages/facebook/enable.tpl" md5="ef5061ca42ad0ad233b0b1db5175d96b"/>
 		<file filename="templates/pages/facebook/login.tpl" md5="3271d46acd1a48dd6aec8c71dcc07862"/>
-		<file filename="templates/widgets/facebook/login.tpl" md5="a2ecb2faade8f57d53a3837b6a9c0307"/>
+		<file filename="templates/widgets/facebook/login.tpl" md5="d2c35fdad4e78240358e39c4c4ee3db1"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="c8a60f8f9d356cd70bd5aada6426f7ad"/>
+		<file filename="CHANGELOG" md5="c7d3e287ee3aec800eec956ff2d863de"/>
 		<file filename="FacebookHelper.class.php" md5="d7ac2466285ce37c587f9bb91e079aa9">
 			<class name="FacebookHelper"/>
 		</file>
-		<file filename="controllers/FacebookController.php" md5="5975835cabbe307867fe87feae28e39d">
+		<file filename="controllers/FacebookController.php" md5="7c3c4ffe2e91970cd368242337b20b17">
 			<controller name="FacebookController"/>
 		</file>
 		<file filename="libs/facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
@@ -89,6 +89,7 @@
 		<upgrade from="3.2.0~core8" to="3.2.3~core1"/>
 		<upgrade from="3.2.3~core1" to="3.2.3~core2"/>
 		<upgrade from="3.2.3~core2" to="3.2.3~core3"/>
+		<upgrade from="3.2.3~core3" to="3.2.3~core4"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/facebook.css" md5="705ee2ca2a443c5ff690c277ef26a2fe"/>
