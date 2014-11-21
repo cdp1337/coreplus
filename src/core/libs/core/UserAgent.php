@@ -325,6 +325,16 @@ class UserAgent {
 				$this->frames = true;
 				$this->iframes = true;
 			}
+			elseif(stripos($this->useragent, 'googlebot/') !== false){
+				$this->browser = 'Googlebot';
+				$this->rendering_engine_name = 'WebKit';
+				$this->javascript = true;
+				$this->cookies = true;
+				$this->tables = true;
+				$this->frames = true;
+				$this->iframes = true;
+				$this->crawler = true;
+			}
 		}
 		if($this->version == 0.0){
 			if(preg_match('#' . $this->browser . '/[0-9\.]+#', $this->useragent) !== 0){
@@ -333,9 +343,12 @@ class UserAgent {
 				$this->minor_ver = substr($this->version, strpos($this->version, '.')+1);
 			}
 		}
-		if($this->rendering_engine_name == 'unknown'){
+		if($this->rendering_engine_name == 'unknown' || $this->rendering_engine_name == null){
 			if(stripos($this->useragent, 'gecko/') !== false){
 				$this->rendering_engine_name = 'Gecko';
+			}
+			elseif(stripos($this->useragent, 'AppleWebKit/')){
+				$this->rendering_engine_name = 'WebKit';
 			}
 		}
 	}
