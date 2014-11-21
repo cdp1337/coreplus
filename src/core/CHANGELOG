@@ -1,3 +1,108 @@
+Core Plus 3.5.0
+
+	* [Security] Replace the html2text version included with phpMailer with a more secure, more updated
+	  version by mtibben.
+	* [Bug] Fix for fringe case on linked model records.
+	* [Bug] Fix the order of strpos for other filetypes in getFilename(false).
+	* [Bug] Fix the message icons to match new FontAwesome names.
+	* [Bug] Pass the originally requested timezone into DateTime->format.
+	* [Bug] Fix the issue where empty date/time inputs were defaulting to NOW().
+	* [Bug] Fix the include order of the user login javascripts.
+	* [Bug] Fix the time at when the resized image file is created in the logic.
+	* [Bug] Fix spaces being added to filenames for non-clobbing behaviour.
+	* [Bug] Fix automatic int validation for models when the value was a float type, but did not contain
+	  any precision.
+	* [Bug] fix, the site key needs to be a SITE type, not INT.
+	* [Bug] Fix for legacy data, namely the page_template key.
+	* [Bug] Allow the server ROOTURL to be spoofed via the command line, (required for some tests).
+	* [Bug] Use requested parameters and allow for 2-character file extensions, ("js").
+	* [Bug] Trim configuration values from XML files.
+	* [Bug] Compare modified time AND filesize for the quick identicalTo test for local files.
+	* [Bug] Update tests to work with new version of phpunit.
+	* [Bug] ".js" needs to be trimmed off minified javascript filenames, (so that .min.js can be
+	  appended).
+	* [Bug] Remove duplicate page breadcrumbs.
+	* [Bug] Remove underscores "_" on automatic form titles from Model schemas.
+	* [Bug] Revert the wide-scale strtolower on URLs to prevent URLs with query strings from being
+	  lowercased.
+	* [Bug] All image resizes should be performed within public/tmp.
+	* [Bug] Move jquery.icheck outside of the foot script for form checkbox inputs.
+	* [Bug] Do not render a blank value for page images, results in a broken image.
+	* [Bug] Allow link parameters to have an extension on them, such as /something/view/1.png
+	* [Bug] Forgot to update a variable on the smarty {a} block.
+	* [Bug] Do not return a valid offset if the ViewMeta's value has not been set.
+	* [Bug] Add a couple upgrade paths from new backports of 2.6.x.
+	* [Bug] Do not cache pages that have a form rendered on them.
+	* [Bug] Multisite fixes on the sitemap page.
+	* [Bug] New configuration option to disable the anonymous user page cache.
+	* [Bug] Delete parent Model objects before the extending child is deleted.
+	* [Bug] Skip the sitemap listing itself on page search.
+	* [Feature] New version of Html2Text from https://github.com/mtibben/html2text
+	* [Feature] Include a new constant REMOTE_POSTAL in the bootstrap system.
+	* [Feature] Include a message if a listing table is rendered and no records present saying "No records
+	  found" instead of an awkwardly empty table.
+	* [Feature] New method, ViewControls->hasLinks().
+	* [Feature] Add a few more elements to the test UI page.
+	* [Feature] Add assign to {widgetarea} and do not render anything if no widgets are present.
+	* [Feature] New shortcut function, DateTime->getDayOfWeek.
+	* [Feature] Allow for labelled options on enum definitions.
+	* [Feature] Try to resolve the link name when setLink is called.
+	* [Feature] Allow render() to be called with any named element in the form.
+	* [Feature] Add default sort and CSV capabilities into the listing table system.
+	* [Feature] Trim off "(" and ")" from WHERE IN statements.
+	* [Feature] Add allowance for Datasets to be constructed without a select statement, (even though that
+	  is technically required).
+	* [Feature] Major documentation work on the smarty plugins.
+	* [Feature] New method available for controllers, sendJSONError.
+	* [Feature] Automatic trimming or removal of the "Model" suffix on link names when executing
+	  getLink().
+	* [Feature] Add support for "data-" attributes on form inputs.
+	* [Feature] Add support for nested 302 redirects for remote files.
+	* [Feature] New method for datasets, executeAndGet.
+	* [Feature] New support for optgroups on select inputs.
+	* [Feature] New form input type, "button"
+	* [Feature] Expand the number of page-* classes appended onto the body to include the complete baseurl
+	  structure.
+	* [Feature] Allow extensions to be determined by the mimetype for resizing images.
+	* [Feature] Add published expiration dates to all Pages.
+	* [Feature] Add Model::VALIDATION_NUMBER_WHOLE and Model::VALIDATION_CURRENCY_USD regex strings for
+	  models.
+	* [Feature] Upgrade less to newest released version.
+	* [Feature] Display pagination options even if there is only one page.
+	* [Feature] Simple check Core::CheckIntGT0Validity for use on Model validation.
+	* Add a couple more common default browsers into the UserAgent system.
+	* Line ending correction.
+	* Migrate Core::ResolveAsset to the namespaced function.
+	* Textual changes to some password related notices.
+	* Do not try to connect to an FTP server if no username is defined.  (Prevents warnings in the error
+	  log.)
+	* Minor cleanup of the output for admin reinstall.
+	* Page published_expires had a value set on form submission because MySQL *always* parses int fields
+	  to 0 if null or empty is sent...regardless if the field allows null.
+	* Skip xhprof includes in the compiler.
+	* Pass template exceptions to the system error management.
+	* Try to trim off the ROOT_PDIR when not requested and "other" is the file type.
+	* Add support for XHprof profiling.
+	* CLI and installation work.
+	* Add "isLocal" method to all File backends.
+	* Flip the order of strtolower in the URL resolution.
+	* Allow remote {img} requests to be passed through straight to the UA.
+	* Respect page published statuses on the sitemap generation.
+	* Some improvements for standalone inclusion of the CLI utilities.
+	* Add/standardize some supplemental javascript files for the various authentication sources.
+	* Additional sanity logic if the remote IP does not resolve to a valid province.
+	* Better handle the redirect URL for user logins and registrations.
+	* Use a 301 status code (permanent instead of temporary), for site-url redirects.
+	* Trim off any trailing slash on page URLs in the PageRequest.
+	* Some default model validation options for INTs.
+	* Contextual control positioning options and off-page fix.
+	* Allow empty confirm text to be set on links to allow for an empty POST request.
+	* CSS Source map addition.
+	* Styling for contextual controls embedded in the admin bar.
+	* Need to assign the multisite option onto the /admin/pages template.
+	* Hide the unusable links in the pagination and always show number of results.
+	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 15:40:44 -0500
+
 Core Plus 3.4.0
 
 	* [Security] New restrictive .htaccess files for files/private and files/public.
