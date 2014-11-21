@@ -1,3 +1,9 @@
+FontAwesome 4.0.3~core3
+
+	* Updated sass compiler, updated css output.
+	* Enable CSS source maps for compiled assets.
+	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 16:48:28 -0500
+
 FontAwesome 4.0.3~core2
 
 	* Documentation cleanup.

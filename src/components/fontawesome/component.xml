@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.3~core2" name="FontAwesome" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.3~core3" name="FontAwesome" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.4.0" operation="ge"/>
+		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
 	<provides>
 		<scriptlibrary name="fontawesome" call="FontAwesome::Load"/>
@@ -13,7 +13,7 @@
 		This package contains the Core-optimized version of FA.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="9199fa06c38763c404f5ce8149e9fb96"/>
+		<file filename="CHANGELOG" md5="f9c1f416fce38a40959a0e39dd230248"/>
 		<file filename="FontAwesome-Vectors.pdf" md5="cab0c66ed6cd83eec4d2e844619703b4"/>
 		<file filename="FontAwesome.lib.php" md5="0bd12edc9c443d9a1e5ad44828f0601a">
 			<class name="FontAwesome"/>
@@ -38,8 +38,9 @@
 	<assets>
 		<file filename="assets/CONTRIBUTING.md" md5="51163d4979d1e0371aab27b8d29ea4b9"/>
 		<file filename="assets/README.md" md5="deabcf1bd585dd4a6462173928247612"/>
-		<file filename="assets/css/font-awesome.css" md5="9ac59a4227fbc8db8fb8bf88f0970c33"/>
-		<file filename="assets/css/font-awesome.min.css" md5="7adf918320cc55bc88f63c6bbb51751a"/>
+		<file filename="assets/css/font-awesome.css" md5="9693c97eb1832debee48f90814988047"/>
+		<file filename="assets/css/font-awesome.css.map" md5="55abc3dd5d42bef0db17f52169887680"/>
+		<file filename="assets/css/font-awesome.min.css" md5="2da14727794f7199ef2986aad8fd9ca5"/>
 		<file filename="assets/fonts/FontAwesome.otf" md5="3f3a623e88cb5c62eaa2367195e98b67"/>
 		<file filename="assets/fonts/fontawesome-webfont.eot" md5="8b27bc96115c2d24350f0d09e6a9433f"/>
 		<file filename="assets/fonts/fontawesome-webfont.svg" md5="0a799148a50bb02c6f380eabd8d97559"/>
@@ -52,6 +53,7 @@
 		<upgrade from="3.11~core1" to="3.11~core2"/>
 		<upgrade from="3.11~core2" to="4.0.3~core1"/>
 		<upgrade from="4.0.3~core1" to="4.0.3~core2"/>
+		<upgrade from="4.0.3~core2" to="4.0.3~core3"/>
 	</upgrades>
 	<authors>
 		<author name="Dave Gandy" email="dave@davegandy.com"/>
