@@ -187,7 +187,7 @@
 	</target>
 
 	<target name="phpunit" depends="compile" description="Run unit tests with PHPUnit">
-		<exec executable="phpunit" failonerror="true">
+		<exec executable="/opt/php/phpunit.phar" failonerror="true">
 			<arg value="--colors"/>
 			<arg value="--bootstrap"/>
 			<arg value="${basedir}/utilities/phpunit-loader.php"/>
@@ -196,7 +196,7 @@
 	</target>
 
 	<target name="phpunit-ci" depends="compile" description="Run unit tests with PHPUnit (CI Compatible version)">
-		<exec executable="phpunit" failonerror="true">
+		<exec executable="/opt/php/phpunit.phar" failonerror="true">
 			<arg value="--log-junit"/>
 			<arg value="${basedir}/build/logs/junit.xml"/>
 			<arg value="--coverage-clover"/>
