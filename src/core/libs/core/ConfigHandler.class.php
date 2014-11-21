@@ -99,7 +99,7 @@ class ConfigHandler implements ISingleton {
 		foreach ($xml->getElementsByTagName("define") as $xmlEl) {
 			$name  = $xmlEl->getAttribute("name");
 			$type  = $xmlEl->getAttribute("type");
-			$value = $xmlEl->getElementsByTagName("value")->item(0)->nodeValue;
+			$value = trim($xmlEl->getElementsByTagName("value")->item(0)->nodeValue);
 			switch (strtolower($type)) {
 				case 'int':
 					$value = (int)$value;
@@ -118,7 +118,7 @@ class ConfigHandler implements ISingleton {
 		foreach ($xml->getElementsByTagName("return") as $xmlEl) {
 			$name  = $xmlEl->getAttribute("name");
 			$type  = $xmlEl->getAttribute("type");
-			$value = $xmlEl->getElementsByTagName("value")->item(0)->nodeValue;
+			$value = trim($xmlEl->getElementsByTagName("value")->item(0)->nodeValue);
 			switch (strtolower($type)) {
 				case 'int':
 					$value = (int)$value;
