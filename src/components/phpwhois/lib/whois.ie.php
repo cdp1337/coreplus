@@ -27,40 +27,36 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__IE_HANDLER__'))
-	define('__IE_HANDLER__', 1);
+if(!defined('__IE_HANDLER__')) define('__IE_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class ie_handler
-	{
-	function parse($data_str, $query)
-		{
-		$translate = array(
+class ie_handler {
+	function parse($data_str, $query) {
+		$translate = [
 			'nic-hdl' => 'handle',
-			'person' => 'name',
+			'person'  => 'name',
 			'renewal' => 'expires'
-			);
+		];
 
-		$contacts = array(
-                    'admin-c' => 'admin',
-                    'tech-c' => 'tech',
-		                );
+		$contacts = [
+			'admin-c' => 'admin',
+			'tech-c'  => 'tech',
+		];
 
 		$reg = generic_parser_a($data_str['rawdata'], $translate, $contacts, 'domain', 'Ymd');
 
-		if (isset($reg['domain']['descr']))
-			{
+		if(isset($reg['domain']['descr'])) {
 			$reg['owner']['organization'] = $reg['domain']['descr'][0];
 			unset($reg['domain']['descr']);
-			}
+		}
 
 		$r['regrinfo'] = $reg;
-		$r['regyinfo'] = array(
-                    'referrer' => 'http://www.domainregistry.ie',
-                    'registrar' => 'IE Domain Registry'
-                    );
+		$r['regyinfo'] = [
+			'referrer'  => 'http://www.domainregistry.ie',
+			'registrar' => 'IE Domain Registry'
+		];
+
 		return $r;
-		}
 	}
-?>
+}

@@ -23,24 +23,32 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
+ */
 
 namespace phpwhois;
 
-if(!defined('__ASIA_HANDLER__')) define('__ASIA_HANDLER__', 1);
+if(!defined('__NAME_HANDLER__')) define('__NAME_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class asia_handler {
+class name_handler {
 	function parse($data_str, $query) {
-		$r['regrinfo'] = generic_parser_b($data_str['rawdata']);
-		$r['regyinfo'] = [
-			'referrer'  => 'http://www.dotasia.org/',
-			'registrar' => 'DotAsia'
+		$items = [
+			'owner'          => 'REGISTRANT CONTACT INFO',
+			'admin'          => 'ADMINISTRATIVE CONTACT INFO',
+			'tech'           => 'TECHNICAL CONTACT INFO',
+			'billing'        => 'BILLING CONTACT INFO',
+			'domain.name'    => 'Domain Name:',
+			'domain.sponsor' => 'Registrar',
+			'domain.created' => 'Creation Date',
+			'domain.expires' => 'Expiration Date'
 		];
 
-		return $r;
+		$extra = [
+			'phone:'         => 'phone',
+			'email address:' => 'email'
+		];
+
+		return easy_parser($data_str, $items, 'y-m-d', $extra, false, true);
 	}
 }
-
-?>

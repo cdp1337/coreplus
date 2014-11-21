@@ -27,49 +27,44 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__CZ_HANDLER__'))
-	define('__CZ_HANDLER__', 1);
+if(!defined('__CZ_HANDLER__')) define('__CZ_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class cz_handler
-	{
-	function parse($data_str, $query)
-		{
-		$translate = array(
-                      'expire' 	=> 'expires',
-                      'registered' => 'created',
-                      'nserver' => 'nserver',
-                      'domain' 	=> 'name',
-                      'contact' => 'handle',
-                      'reg-c'	=> '',
-                      'descr'	=> 'desc',
-                      'e-mail'	=> 'email',
-                      'person'	=> 'name',
-                      'org'		=> 'organization',
-                      'fax-no'	=> 'fax'
-		                  );
+class cz_handler {
+	function parse($data_str, $query) {
+		$translate = [
+			'expire'     => 'expires',
+			'registered' => 'created',
+			'nserver'    => 'nserver',
+			'domain'     => 'name',
+			'contact'    => 'handle',
+			'reg-c'      => '',
+			'descr'      => 'desc',
+			'e-mail'     => 'email',
+			'person'     => 'name',
+			'org'        => 'organization',
+			'fax-no'     => 'fax'
+		];
 
-		$contacts = array(
-                      'admin-c' => 'admin',
-                      'tech-c' => 'tech',
-                      'bill-c' => 'billing',
-                      'registrant' => 'owner'
-		                  );
+		$contacts = [
+			'admin-c'    => 'admin',
+			'tech-c'     => 'tech',
+			'bill-c'     => 'billing',
+			'registrant' => 'owner'
+		];
 
 		$r['regrinfo'] = generic_parser_a($data_str['rawdata'], $translate, $contacts, 'domain', 'dmy');
 
-		$r['regyinfo'] = array(
-                          'referrer' => 'http://www.nic.cz',
-                          'registrar' => 'CZ-NIC'
-                          );
+		$r['regyinfo'] = [
+			'referrer'  => 'http://www.nic.cz',
+			'registrar' => 'CZ-NIC'
+		];
 
-		if ($data_str['rawdata'][0] == 'Your connection limit exceeded. Please slow down and try again later.')
-			{
+		if($data_str['rawdata'][0] == 'Your connection limit exceeded. Please slow down and try again later.') {
 			$r['regrinfo']['registered'] = 'unknown';
-			}
+		}
 
 		return $r;
-		}
 	}
-?>
+}

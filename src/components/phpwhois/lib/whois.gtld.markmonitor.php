@@ -27,31 +27,62 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__MARKMONITOR_HANDLER__'))
-	define('__MARKMONITOR_HANDLER__', 1);
+if(!defined('__MARKMONITOR_HANDLER__')) define('__MARKMONITOR_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class markmonitor_handler
-	{
-	function parse($data_str, $query)
-		{
-		$items = array(
-                  'owner' => 'Registrant:',
-                  'admin' => 'Administrative Contact:',
-                  'tech' => 'Technical Contact, Zone Contact:',
-                  'domain.name' => 'Domain Name:',
-                  'domain.sponsor' => 'Registrar Name:',
-                  'domain.nserver' => 'Domain servers in listed order:',
-                  'domain.created' => 'Created on..............:',
-                  'domain.expires' => 'Expires on..............:',
-                  'domain.changed' => 'Record last updated on..:'
-		              );
+class markmonitor_handler {
+	function parse($data_str, $query) {
+		$items = [
+			'owner.name'            => 'Registrant Name:',
+			'owner.organization'    => 'Registrant Organization:',
+			'owner.address.street'  => 'Registrant Street:',
+			'owner.address.city'    => 'Registrant City:',
+			'owner.address.state'   => 'Registrant State/Province:',
+			'owner.address.pcode'   => 'Registrant Postal Code:',
+			'owner.address.country' => 'Registrant Country:',
+			'owner.phone'           => 'Registrant Phone:',
+			'owner.fax'             => 'Registrant Fax:',
+			'owner.email'           => 'Registrant Email:',
 
-		$r = easy_parser($data_str, $items, 'dmy', false, false, true);
-		if (isset($r['domain']['sponsor']) && is_array($r['domain']['sponsor']))
-		$r['domain']['sponsor'] = $r['domain']['sponsor'][0];
-		return $r;
+			'admin.name'            => 'Admin Name:',
+			'admin.organization'    => 'Admin Organization:',
+			'admin.address.street'  => 'Admin Street:',
+			'admin.address.city'    => 'Admin City:',
+			'admin.address.state'   => 'Admin State/Province:',
+			'admin.address.pcode'   => 'Admin Postal Code:',
+			'admin.address.country' => 'Admin Country:',
+			'admin.phone'           => 'Admin Phone:',
+			'admin.fax'             => 'Admin Fax:',
+			'admin.email'           => 'Admin Email:',
+
+			'tech.name'             => 'Tech Name:',
+			'tech.organization'     => 'Tech Organization:',
+			'tech.address.street'   => 'Tech Street:',
+			'tech.address.city'     => 'Tech City:',
+			'tech.address.state'    => 'Tech State/Province:',
+			'tech.address.pcode'    => 'Tech Postal Code:',
+			'tech.address.country'  => 'Tech Country:',
+			'tech.phone'            => 'Tech Phone:',
+			'tech.fax'              => 'Tech Fax:',
+			'tech.email'            => 'Tech Email:',
+
+			'domain.name'           => 'Domain Name:',
+			'domain.sponsor'        => 'Registrar Name:',
+			'domain.nserver'        => 'Domain servers in listed order:',
+			'domain.created'        => 'Created on..............:',
+			'domain.expires'        => 'Expires on..............:',
+			'domain.changed'        => 'Record last updated on..:'
+		];
+
+		//$r = easy_parser($data_str, $items, 'dmy', false, false, true);
+		$r = get_blocks($data_str, $items, false, false);
+		format_dates($r, 'dmy');
+
+		if(isset($r['domain']['sponsor']) && is_array($r['domain']['sponsor'])){
+			$r['domain']['sponsor'] = $r['domain']['sponsor'][0];
 		}
+
+		return $r;
 	}
-?>
+}

@@ -64,8 +64,6 @@ class PhpwhoisController extends Controller_2_1{
 
 		$result = $whois->lookup($query);
 
-//var_dump($result, $result->getOrganization(), $result->getNetwork()); die();
-
 		$view->jsondata = [
 			'query'        => $query,
 			'ip'           => $result->getIP(),

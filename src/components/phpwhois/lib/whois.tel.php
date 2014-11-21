@@ -27,21 +27,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__TEL_HANDLER__'))
-	define('__TEL_HANDLER__', 1);
+if(!defined('__TEL_HANDLER__')) define('__TEL_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class tel_handler
-	{
-	function parse($data_str, $query)
-		{
+class tel_handler {
+	function parse($data_str, $query) {
 		$r['regrinfo'] = generic_parser_b($data_str['rawdata'], false, '-md--y');
-		$r['regyinfo'] = array(
-                  'referrer' => 'http://www.telnic.org',
-                  'registrar' => 'Telnic'
-                  );
+		$r['regyinfo'] = [
+			'referrer'  => 'http://www.telnic.org',
+			'registrar' => 'Telnic'
+		];
+
 		return $r;
-		}
 	}
-?>
+}

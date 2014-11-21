@@ -27,16 +27,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__GENERICB_HANDLER__'))
-	define('__GENERICB_HANDLER__', 1);
+if(!defined('__GENERICB_HANDLER__')) define('__GENERICB_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class genericb_handler
-	{
-	function parse($data_str, $query)
-		{
+class genericb_handler {
+	function parse($data_str, $query) {
 		return generic_parser_b($data_str);
-		}
 	}
-?>
+}
+

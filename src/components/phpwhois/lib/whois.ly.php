@@ -29,46 +29,41 @@ namespace phpwhois;
 
 require_once('whois.parser.php');
 
-if (!defined('__LY_HANDLER__'))
-	define('__LY_HANDLER__', 1);
+if(!defined('__LY_HANDLER__')) define('__LY_HANDLER__', 1);
 
-class ly_handler
-	{
-	function parse($data_str, $query)
-		{
-		$items = array(
-				'owner' => 'Registrant:',
-				'admin' => 'Administrative Contact:',
-				'tech' => 'Technical Contact:',
-				'domain.name' => 'Domain Name:',
-				'domain.status' => 'Domain Status:',
-				'domain.created' => 'Created:',
-				'domain.changed' => 'Updated:',
-				'domain.expires' => 'Expired:',
-				'domain.nserver' => 'Domain servers in listed order:'
-		            );
+class ly_handler {
+	function parse($data_str, $query) {
+		$items = [
+			'owner'          => 'Registrant:',
+			'admin'          => 'Administrative Contact:',
+			'tech'           => 'Technical Contact:',
+			'domain.name'    => 'Domain Name:',
+			'domain.status'  => 'Domain Status:',
+			'domain.created' => 'Created:',
+			'domain.changed' => 'Updated:',
+			'domain.expires' => 'Expired:',
+			'domain.nserver' => 'Domain servers in listed order:'
+		];
 
-		$extra = array( 'zip/postal code:' => 'address.pcode' );
+		$extra = ['zip/postal code:' => 'address.pcode'];
 
 		$r['regrinfo'] = get_blocks($data_str['rawdata'], $items);
 
-		if (!empty($r['regrinfo']['domain']['name']))
-			{
-			$r['regrinfo'] = get_contacts($r['regrinfo'],$extra);
+		if(!empty($r['regrinfo']['domain']['name'])) {
+			$r['regrinfo']                   = get_contacts($r['regrinfo'], $extra);
 			$r['regrinfo']['domain']['name'] = $r['regrinfo']['domain']['name'][0];
-			$r['regrinfo']['registered'] = 'yes';
-			}
-		else
-			{
-			$r = '';
-			$r['regrinfo']['registered'] = 'no';
-			}
-
-		$r['regyinfo'] = array(
-                          'referrer' => 'http://www.nic.ly',
-                          'registrar' => 'Libya ccTLD'
-                          );
-		return $r;
+			$r['regrinfo']['registered']     = 'yes';
 		}
+		else {
+			$r                           = '';
+			$r['regrinfo']['registered'] = 'no';
+		}
+
+		$r['regyinfo'] = [
+			'referrer'  => 'http://www.nic.ly',
+			'registrar' => 'Libya ccTLD'
+		];
+
+		return $r;
 	}
-?>
+}

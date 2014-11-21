@@ -27,33 +27,30 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__FI_HANDLER__'))
-	define('__FI_HANDLER__', 1);
+if(!defined('__FI_HANDLER__')) define('__FI_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class fi_handler
-	{
-	function parse($data_str, $query)
-		{
-		$items = array(
-                  'domain:' => 'domain.name',
-                  'created:' => 'domain.created',
-                  'expires:' => 'domain.expires',
-                  'status:' => 'domain.status',
-                  'nserver:' => 'domain.nserver.',
-                  'descr:' => 'owner.name.',
-                  'address:' => 'owner.address.',
-                  'phone:' => 'owner.phone',
-                    );
+class fi_handler {
+	function parse($data_str, $query) {
+		$items = [
+			'domain:'  => 'domain.name',
+			'created:' => 'domain.created',
+			'expires:' => 'domain.expires',
+			'status:'  => 'domain.status',
+			'nserver:' => 'domain.nserver.',
+			'descr:'   => 'owner.name.',
+			'address:' => 'owner.address.',
+			'phone:'   => 'owner.phone',
+		];
 
 		$r['regrinfo'] = generic_parser_b($data_str['rawdata'], $items);
 
-		$r['regyinfo'] = array(
-                          'referrer' => 'https://domain.ficora.fi/',
-                          'registrar' => 'Finnish Communications Regulatory Authority'
-                          );
+		$r['regyinfo'] = [
+			'referrer'  => 'https://domain.ficora.fi/',
+			'registrar' => 'Finnish Communications Regulatory Authority'
+		];
+
 		return $r;
-		}
 	}
-?>
+}

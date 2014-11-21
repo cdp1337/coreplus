@@ -27,38 +27,58 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__ENOM_HANDLER__'))
-	define('__ENOM_HANDLER__', 1);
+if(!defined('__ENOM_HANDLER__')) define('__ENOM_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class enom_handler
-	{
-	function parse($data_str, $query)
-		{
-		$items = array(
-                  'owner#0'				=> 'Registrant Contact',
-                  'owner#1'				=> 'REGISTRANT Contact:',
-                  'admin#0'				=> 'Administrative Contact',
-                  'admin#1'				=> 'ADMINISTRATIVE Contact:',
-                  'tech#0'				=> 'Technical Contact',
-                  'tech#1'				=> 'TECHNICAL Contact:',
-                  'billing#0'			=> 'Billing Contact',
-                  'billing#1'			=> 'BILLING Contact:',
-                  'domain.nserver'		=> 'Nameservers',
-                  'domain.name#0'		=> 'Domain name:',
-                  'domain.name#1'		=> 'Domain name-',
-                  'domain.sponsor'		=> 'Registration Service Provided By:',
-                  'domain.status'		=> 'Status:',
-                  'domain.created#0'	=> 'Creation date:',
-                  'domain.expires#0'	=> 'Expiration date:',
-                  'domain.created#1'	=> 'Created:',
-                  'domain.expires#1'	=> 'Expires:',
-                  'domain.created#2'	=> 'Start of registration-',
-                  'domain.expires#2'	=> 'Registered through-'
-                  );
+class enom_handler {
+	function parse($data_str, $query) {
+		$items = [
+			'owner.name'            => 'Registrant Name:',
+			'owner.organization'    => 'Registrant Organization:',
+			'owner.address.street'  => 'Registrant Street:',
+			'owner.address.city'    => 'Registrant City:',
+			'owner.address.state'   => 'Registrant State/Province:',
+			'owner.address.pcode'   => 'Registrant Postal Code:',
+			'owner.address.country' => 'Registrant Country:',
+			'owner.phone'           => 'Registrant Phone:',
+			'owner.fax'             => 'Registrant Fax:',
+			'owner.email'           => 'Registrant Email:',
 
-		return easy_parser($data_str, $items, 'dmy', false, false, true);
-		}
+			'admin.name'            => 'Admin Name:',
+			'admin.organization'    => 'Admin Organization:',
+			'admin.address.street'  => 'Admin Street:',
+			'admin.address.city'    => 'Admin City:',
+			'admin.address.state'   => 'Admin State/Province:',
+			'admin.address.pcode'   => 'Admin Postal Code:',
+			'admin.address.country' => 'Admin Country:',
+			'admin.phone'           => 'Admin Phone:',
+			'admin.fax'             => 'Admin Fax:',
+			'admin.email'           => 'Admin Email:',
+
+			'tech.name'             => 'Tech Name:',
+			'tech.organization'     => 'Tech Organization:',
+			'tech.address.street'   => 'Tech Street:',
+			'tech.address.city'     => 'Tech City:',
+			'tech.address.state'    => 'Tech State/Province:',
+			'tech.address.pcode'    => 'Tech Postal Code:',
+			'tech.address.country'  => 'Tech Country:',
+			'tech.phone'            => 'Tech Phone:',
+			'tech.fax'              => 'Tech Fax:',
+			'tech.email'            => 'Tech Email:',
+
+			'domain.name'           => 'Domain Name:',
+			'domain.sponsor'        => 'Reseller:',
+			'domain.nserver'        => 'Name Server:',
+			'domain.created'        => 'Creation Date:',
+			'domain.expires'        => 'Registrar Registration Expiration Date:',
+			'domain.changed'        => 'Updated Date:',
+		    'domain.dnssrc'         => 'DNSSRC:',
+		];
+
+		//return easy_parser($data_str, $items, 'dmy', false, false, true);
+		$r = get_blocks($data_str, $items, false, false);
+		format_dates($r, 'dmy');
+		return $r;
 	}
-?>
+}

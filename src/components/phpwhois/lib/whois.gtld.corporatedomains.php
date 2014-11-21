@@ -27,29 +27,25 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__CORPORATEDOMAINS_HANDLER__'))
-	define('__CORPORATEDOMAINS_HANDLER__', 1);
+if(!defined('__CORPORATEDOMAINS_HANDLER__')) define('__CORPORATEDOMAINS_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class corporatedomains_handler
-	{
-	function parse($data_str, $query)
-		{
-		$items = array(
-                'owner' => 'Registrant:',
-                'admin' => 'Administrative Contact',
-                'tech' => 'Technical Contact',
-                'zone' => 'Zone Contact',
-                'domain.name' => 'Domain Name:',
-                'domain.changed' => 'Last updated on',
-                'domain.created' => 'Domain created on',
-                'domain.expires' => 'Domain expires on',
-                'domain.sponsor' => 'Registrar Name....:',
-                'domain.nserver' => 'DNS Servers:'
-		            );
+class corporatedomains_handler {
+	function parse($data_str, $query) {
+		$items = [
+			'owner'          => 'Registrant:',
+			'admin'          => 'Administrative Contact',
+			'tech'           => 'Technical Contact',
+			'zone'           => 'Zone Contact',
+			'domain.name'    => 'Domain Name:',
+			'domain.changed' => 'Last updated on',
+			'domain.created' => 'Domain created on',
+			'domain.expires' => 'Domain expires on',
+			'domain.sponsor' => 'Registrar Name....:',
+			'domain.nserver' => 'DNS Servers:'
+		];
 
 		return easy_parser($data_str, $items, 'dmy', false, false, true);
-		}
 	}
-?>
+}

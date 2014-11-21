@@ -27,21 +27,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__AERO_HANDLER__'))
-	define('__AERO_HANDLER__', 1);
+if(!defined('__AERO_HANDLER__')) define('__AERO_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class aero_handler
-	{
-	function parse($data_str, $query)
-		{
+class aero_handler {
+	function parse($data_str, $query) {
 		$r['regrinfo'] = generic_parser_b($data_str['rawdata'], false, 'ymd');
-		$r['regyinfo'] = array(
-                          'referrer' => 'http://www.nic.aero',
-                          'registrar' => 'Societe Internationale de Telecommunications Aeronautiques SC'
-                          );
+		$r['regyinfo'] = [
+			'referrer'  => 'http://www.nic.aero',
+			'registrar' => 'Societe Internationale de Telecommunications Aeronautiques SC'
+		];
+
 		return $r;
-		}
 	}
+}
+
 ?>

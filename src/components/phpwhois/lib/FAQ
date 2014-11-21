@@ -20,7 +20,7 @@ Anyways, for .com/.net/.org you can tell that a domain is available
 or not if the regyinfo array is empty.
 
 $whois = new Whois("test.com");
-$result = $whois->Lookup();
+$result = $whois->lookup();
 
 if(empty($result["regyinfo"])) {
         // available

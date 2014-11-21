@@ -1,6 +1,6 @@
 <?php
 /**
- * PHPWhois IR Lookup Extension - http://github.com/sepehr/phpwhois-ir
+ * PHPWhois IR lookup Extension - http://github.com/sepehr/phpwhois-ir
  *
  * An extension to PHPWhois (http://phpwhois.org) library to support IR lookups.
  *
@@ -21,8 +21,7 @@
 namespace phpwhois;
 
 // Define the handler flag.
-if (!defined('__IR_HANDLER__'))
-  define('__IR_HANDLER__', 1);
+if(!defined('__IR_HANDLER__')) define('__IR_HANDLER__', 1);
 
 // Loadup the parser.
 require_once('whois.parser.php');
@@ -30,35 +29,31 @@ require_once('whois.parser.php');
 /**
  * IR Domain names lookup handler class.
  */
+class ir_handler {
+	function parse($data_str, $query) {
+		$translate = [
+			'nic-hdl' => 'handle',
+			'org'     => 'organization',
+			'e-mail'  => 'email',
+			'person'  => 'name',
+			'fax-no'  => 'fax',
+			'domain'  => 'name'
+		];
 
-namespace phpwhois;
-class ir_handler
-	{
-	function parse($data_str, $query)
-		{
-		$translate = array(
-			'nic-hdl'	=> 'handle',
-			'org'		=> 'organization',
-			'e-mail'	=> 'email',
-			'person'	=> 'name',
-			'fax-no'	=> 'fax',
-			'domain'	=> 'name'
-			);
-
-		$contacts = array(
-                    'admin-c'	=> 'admin',
-                    'tech-c'	=> 'tech',
-                    'holder-c'	=> 'owner'
-		                );
+		$contacts = [
+			'admin-c'  => 'admin',
+			'tech-c'   => 'tech',
+			'holder-c' => 'owner'
+		];
 
 		$reg = generic_parser_a($data_str['rawdata'], $translate, $contacts, 'domain', 'Ymd');
 
 		$r['regrinfo'] = $reg;
-		$r['regyinfo'] = array(
-                    'referrer'=>'http://whois.nic.ir/',
-					'registrar' => 'NIC-IR'
-                    );
+		$r['regyinfo'] = [
+			'referrer'  => 'http://whois.nic.ir/',
+			'registrar' => 'NIC-IR'
+		];
+
 		return $r;
-		}
 	}
-?>
+}

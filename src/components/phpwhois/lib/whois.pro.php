@@ -29,17 +29,14 @@ namespace phpwhois;
 
 require_once('whois.parser.php');
 
-if (!defined('__PRO_HANDLER__'))
-	define('__PRO_HANDLER__', 1);
+if(!defined('__PRO_HANDLER__')) define('__PRO_HANDLER__', 1);
 
-class pro_handler
-	{
-	function parse($data, $query)
-		{
-		$r['regrinfo'] = generic_parser_b($data['rawdata']);
-		$r['regyinfo']['referrer'] = 'http://www.registrypro.pro';
+class pro_handler {
+	function parse($data, $query) {
+		$r['regrinfo']              = generic_parser_b($data['rawdata']);
+		$r['regyinfo']['referrer']  = 'http://www.registrypro.pro';
 		$r['regyinfo']['registrar'] = 'RegistryPRO';
+
 		return $r;
-		}
 	}
-?>
+}

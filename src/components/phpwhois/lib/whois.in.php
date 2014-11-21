@@ -27,21 +27,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__IN_HANDLER__'))
-	define('__IN_HANDLER__', 1);
+if(!defined('__IN_HANDLER__')) define('__IN_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class in_handler
-	{
-	function parse($data_str, $query)
-		{
+class in_handler {
+	function parse($data_str, $query) {
 		$r['regrinfo'] = generic_parser_b($data_str['rawdata']);
-		$r['regyinfo'] = array(
-                          'referrer' => 'http://whois.registry.in',
-                          'registrar' => 'INRegistry'
-                          );
+		$r['regyinfo'] = [
+			'referrer'  => 'http://whois.registry.in',
+			'registrar' => 'INRegistry'
+		];
+
 		return $r;
-		}
 	}
-?>
+}

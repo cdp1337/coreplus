@@ -27,22 +27,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if(!defined('__AT_HANDLER__')) define('__AT_HANDLER__', 1);
+if(!defined('__IL_HANDLER__')) define('__IL_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class at_handler {
+class il_handler {
 	function parse($data_str, $query) {
 		$translate = [
-			'fax-no'         => 'fax',
-			'e-mail'         => 'email',
-			'nic-hdl'        => 'handle',
-			'person'         => 'name',
-			'personname'     => 'name',
-			'street address' => 'address.street',
-			'city'           => 'address.city',
-			'postal code'    => 'address.pcode',
-			'country'        => 'address.country'
+			'fax-no'     => 'fax',
+			'e-mail'     => 'email',
+			'nic-hdl'    => 'handle',
+			'person'     => 'name',
+			'personname' => 'name',
+			'address'    => 'address'/*,
+			'address' => 'address.city',
+			'address' => 'address.pcode',
+			'address' => 'address.country'*/
 		];
 
 		$contacts = [
@@ -52,13 +52,17 @@ class at_handler {
 			'billing-c'  => 'billing',
 			'zone-c'     => 'zone'
 		];
-
+		//unset($data_str['rawdata'][19]);
+		array_splice($data_str['rawdata'], 16, 1);
+		array_splice($data_str['rawdata'], 18, 1);
+		//print_r($data_str['rawdata']);
+		//die;
 		$reg = generic_parser_a($data_str['rawdata'], $translate, $contacts, 'domain', 'Ymd');
 
 		if(isset($reg['domain']['remarks'])) unset($reg['domain']['remarks']);
 
-		if(isset($reg['domain']['descr'])) {
-			while(list($key, $val) = each($reg['domain']['descr'])) {
+		if(isset($reg['domain']['descr:'])) {
+			while(list($key, $val) = each($reg['domain']['descr:'])) {
 				$v = trim(substr(strstr($val, ':'), 1));
 				if(strstr($val, '[organization]:')) {
 					$reg['owner']['organization'] = $v;
@@ -80,17 +84,15 @@ class at_handler {
 				$reg['owner']['address'][ $key ] = $v;
 			}
 
-			if(isset($reg['domain']['descr'])) unset($reg['domain']['descr']);
+			if(isset($reg['domain']['descr:'])) unset($reg['domain']['descr:']);
 		}
 
 		$r['regrinfo'] = $reg;
 		$r['regyinfo'] = [
-			'referrer'  => 'http://www.nic.at',
-			'registrar' => 'NIC-AT'
+			'referrer'  => 'http://www.isoc.org.il/',
+			'registrar' => 'ISOC-IL'
 		];
 
 		return $r;
 	}
 }
-
-?>

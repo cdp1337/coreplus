@@ -27,32 +27,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__GANDI_HANDLER__'))
-	define('__GANDI_HANDLER__', 1);
+if(!defined('__GANDI_HANDLER__')) define('__GANDI_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class gandi_handler
-	{
-	function parse($data_str, $query)
-		{
-		$items = array(
-                  'owner' => 'owner-c',
-                  'admin' => 'admin-c',
-                  'tech' => 'tech-c',
-                  'billing' => 'bill-c'
-		              );
+class gandi_handler {
+	function parse($data_str, $query) {
+		$items = [
+			'owner'   => 'owner-c',
+			'admin'   => 'admin-c',
+			'tech'    => 'tech-c',
+			'billing' => 'bill-c'
+		];
 
-		$trans = array(
-					'nic-hdl:'	=> 'handle',
-					'person:'	=> 'name',
-					'zipcode:'	=> 'address.pcode',
-					'city:'		=> 'address.city',
-					'lastupdated:' => 'changed',
-					'owner-name:' => ''
-					);
+		$trans = [
+			'nic-hdl:'     => 'handle',
+			'person:'      => 'name',
+			'zipcode:'     => 'address.pcode',
+			'city:'        => 'address.city',
+			'lastupdated:' => 'changed',
+			'owner-name:'  => ''
+		];
 
 		return easy_parser($data_str, $items, 'dmy', $trans);
-		}
 	}
-?>
+}

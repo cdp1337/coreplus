@@ -27,8 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__XX_HANDLER__'))
-	define('__XX_HANDLER__', 1);
+if(!defined('__XX_HANDLER__')) define('__XX_HANDLER__', 1);
 
 require_once('whois.parser.php');
 

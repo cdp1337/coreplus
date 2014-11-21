@@ -25,23 +25,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-
 namespace phpwhois;
 
-if(!defined('__US_HANDLER__')) define('__US_HANDLER__',1);
+if(!defined('__US_HANDLER__')) define('__US_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class us_handler
-	{
-	function parse ($data_str, $query)
-		{
+class us_handler {
+	function parse($data_str, $query) {
 		$r['regrinfo'] = generic_parser_b($data_str['rawdata'], false, '-md--y');
-		$r['regyinfo'] = array(
-								'referrer'=>'http://www.neustar.us',
-								'registrar' => 'NEUSTAR INC.'
-							);
+		$r['regyinfo'] = [
+			'referrer'  => 'http://www.neustar.us',
+			'registrar' => 'NEUSTAR INC.'
+		];
+
 		return $r;
-		}
 	}
-?>
+}

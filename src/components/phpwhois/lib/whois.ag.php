@@ -27,21 +27,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__AG_HANDLER__'))
-	define('__AG_HANDLER__', 1);
+if(!defined('__AG_HANDLER__')) define('__AG_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class ag_handler
-	{
-	function parse($data_str, $query)
-		{
+class ag_handler {
+	function parse($data_str, $query) {
 		$r['regrinfo'] = generic_parser_b($data_str['rawdata']);
-		$r['regyinfo'] = array(
-                          'referrer' => 'http://www.nic.ag',
-                          'registrar' => 'Nic AG'
-                          );
+		$r['regyinfo'] = [
+			'referrer'  => 'http://www.nic.ag',
+			'registrar' => 'Nic AG'
+		];
+
 		return $r;
-		}
 	}
+}
+
 ?>

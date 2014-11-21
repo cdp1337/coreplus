@@ -33,48 +33,44 @@ BUG
 - ContactID in address
 */
 
-if (!defined('__IT_HANDLER__'))
-	define('__IT_HANDLER__', 1);
+if(!defined('__IT_HANDLER__')) define('__IT_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class it_handler
-	{
-	function parse($data_str, $query)
-		{
-		$items = array(
-			'domain.name' =>	'Domain:',
-			'domain.nserver' =>	'Nameservers',
-			'domain.status' =>	'Status:',
-			'domain.expires' =>	'Expire Date:',
-			'owner' 	=>	'Registrant',
-			'admin' 	=>	'Admin Contact',
-			'tech' 		=>	'Technical Contacts',
-			'registrar' =>	'Registrar'
-		            );
+class it_handler {
+	function parse($data_str, $query) {
+		$items = [
+			'domain.name'    => 'Domain:',
+			'domain.nserver' => 'Nameservers',
+			'domain.status'  => 'Status:',
+			'domain.expires' => 'Expire Date:',
+			'owner'          => 'Registrant',
+			'admin'          => 'Admin Contact',
+			'tech'           => 'Technical Contacts',
+			'registrar'      => 'Registrar'
+		];
 
-		$extra = array(
-			'address:' 		=> 'address.',
-			'contactid:'	=> 'handle',
+		$extra = [
+			'address:'      => 'address.',
+			'contactid:'    => 'handle',
 			'organization:' => 'organization',
-			'created:'		=> 'created',
-			'last update:' 	=> 'changed',
-			'web:'			=> 'web'
-		            );
+			'created:'      => 'created',
+			'last update:'  => 'changed',
+			'web:'          => 'web'
+		];
 
-		$r['regrinfo'] = easy_parser($data_str['rawdata'], $items, 'ymd',$extra);
+		$r['regrinfo'] = easy_parser($data_str['rawdata'], $items, 'ymd', $extra);
 
-		if (isset($r['regrinfo']['registrar']))
-			{
+		if(isset($r['regrinfo']['registrar'])) {
 			$r['regrinfo']['domain']['registrar'] = $r['regrinfo']['registrar'];
 			unset($r['regrinfo']['registrar']);
-			}
-
-		$r['regyinfo'] = array(
-                  'registrar' => 'IT-Nic',
-                  'referrer' => 'http://www.nic.it/'
-                  );
-		return $r;
 		}
+
+		$r['regyinfo'] = [
+			'registrar' => 'IT-Nic',
+			'referrer'  => 'http://www.nic.it/'
+		];
+
+		return $r;
 	}
-?>
+}

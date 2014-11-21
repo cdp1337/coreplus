@@ -1,12 +1,12 @@
 <?php
 /**
  * File for class JSHelper definition in the coreplus project
- * 
- * @package phpwhois
- * @author Charlie Powell <charlie@eval.bz>
- * @date 20130425.0302
+ *
+ * @package   phpwhois
+ * @author    Charlie Powell <charlie@eval.bz>
+ * @date      20130425.0302
  * @copyright Copyright (C) 2009-2014  Charlie Powell
- * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ * @license   GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -32,7 +32,7 @@ namespace phpwhois;
  * <h3>Usage Examples</h3>
  *
  *
- * @todo Write documentation for JSHelper
+ * @todo    Write documentation for JSHelper
  * <h4>Example 1</h4>
  * <p>Description 1</p>
  * <code>
@@ -48,9 +48,9 @@ namespace phpwhois;
  * $b = $a;
  * </code>
  *
- * 
+ *
  * @package phpwhois
- * @author Charlie Powell <charlie@eval.bz>
+ * @author  Charlie Powell <charlie@eval.bz>
  *
  */
 abstract class JSHelper {

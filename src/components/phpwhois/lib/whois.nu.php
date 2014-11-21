@@ -27,66 +27,55 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__NU_HANDLER__'))
-	define('__NU_HANDLER__', 1);
+if(!defined('__NU_HANDLER__')) define('__NU_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class nu_handler
-	{
-	function parse($data_str, $query)
-		{
-		$items = array(
-                  'name' => 'Domain Name (UTF-8):',
-                  'created' => 'Record created on',
-                  'expires' => 'Record expires on',
-                  'changed' => 'Record last updated on',
-                  'status' => 'Record status:',
-                  'handle' => 'Record ID:'
-		              );
+class nu_handler {
+	function parse($data_str, $query) {
+		$items = [
+			'name'    => 'Domain Name (UTF-8):',
+			'created' => 'Record created on',
+			'expires' => 'Record expires on',
+			'changed' => 'Record last updated on',
+			'status'  => 'Record status:',
+			'handle'  => 'Record ID:'
+		];
 
-		while (list($key, $val) = each($data_str['rawdata']))
-			{
+		while(list($key, $val) = each($data_str['rawdata'])) {
 			$val = trim($val);
 
-			if ($val != '')
-				{
-				if ($val == 'Domain servers in listed order:')
-					{
-					while (list($key, $val) = each($data_str['rawdata']))
-						{
+			if($val != '') {
+				if($val == 'Domain servers in listed order:') {
+					while(list($key, $val) = each($data_str['rawdata'])) {
 						$val = trim($val);
-						if ($val == '')
-							break;
+						if($val == '') break;
 						$r['regrinfo']['domain']['nserver'][] = $val;
-						}
-					break;
 					}
+					break;
+				}
 
 				reset($items);
 
-				while (list($field, $match) = each($items))
-				if (strstr($val, $match))
-					{
-					$r['regrinfo']['domain'][$field] = trim(substr($val, strlen($match)));
+				while(list($field, $match) = each($items)) if(strstr($val, $match)) {
+					$r['regrinfo']['domain'][ $field ] = trim(substr($val, strlen($match)));
 					break;
-					}
 				}
 			}
+		}
 
-		if (isset($r['regrinfo']['domain']))
-			$r['regrinfo']['registered'] = 'yes';
+		if(isset($r['regrinfo']['domain'])) $r['regrinfo']['registered'] = 'yes';
 		else
 			$r['regrinfo']['registered'] = 'no';
 
-		$r['regyinfo'] = array(
-                          'whois' => 'whois.nic.nu',
-                          'referrer' => 'http://www.nunames.nu',
-                          'registrar' => '.NU Domain, Ltd'
-		                      );
+		$r['regyinfo'] = [
+			'whois'     => 'whois.nic.nu',
+			'referrer'  => 'http://www.nunames.nu',
+			'registrar' => '.NU Domain, Ltd'
+		];
 
 		format_dates($r, 'dmy');
+
 		return $r;
-		}
 	}
-?>
+}

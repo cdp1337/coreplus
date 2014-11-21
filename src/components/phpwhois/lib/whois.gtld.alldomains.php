@@ -27,25 +27,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__ALLDOMAINS_HANDLER__'))
-	define('__ALLDOMAINS_HANDLER__', 1);
+if(!defined('__ALLDOMAINS_HANDLER__')) define('__ALLDOMAINS_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class alldomains_handler
-	{
-	function parse($data_str, $query)
-		{
-		$items = array(
-                'owner'	=> 'Registrant:',
-                'admin' => 'Administrative',
-                'tech' => 'Technical',
-                'domain.name' => 'Domain name:',
-                'domain.sponsor' => 'Registrar:',
-                'domain.nserver.' => 'Domain servers in listed order:'
-		            );
+class alldomains_handler {
+	function parse($data_str, $query) {
+		$items = [
+			'owner'           => 'Registrant:',
+			'admin'           => 'Administrative',
+			'tech'            => 'Technical',
+			'domain.name'     => 'Domain name:',
+			'domain.sponsor'  => 'Registrar:',
+			'domain.nserver.' => 'Domain servers in listed order:'
+		];
 
 		return easy_parser($data_str, $items, 'ymd');
-		}
 	}
-?>
+}

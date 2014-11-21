@@ -27,31 +27,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__SI_HANDLER__'))
-    define('__SI_HANDLER__', 1);
+if(!defined('__SI_HANDLER__')) define('__SI_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class si_handler
-    {
-    function parse($data_str, $query)
-        {
-		$translate = array(
-			'nic-hdl' => 'handle',
+class si_handler {
+	function parse($data_str, $query) {
+		$translate = [
+			'nic-hdl'    => 'handle',
 			'nameserver' => 'nserver'
-			);
+		];
 
-		$contacts = array(
-                    'registrant' => 'owner',
-                    'tech-c' => 'tech'
-                        );
+		$contacts = [
+			'registrant' => 'owner',
+			'tech-c'     => 'tech'
+		];
 
-		$r['regrinfo'] = generic_parser_a($data_str['rawdata'], $translate, $contacts, 'domain', 'Ymd');		
-		$r['regyinfo'] = array(
-                  'referrer' => 'http://www.arnes.si',
-                  'registrar' => 'ARNES'
-                  );
+		$r['regrinfo'] = generic_parser_a($data_str['rawdata'], $translate, $contacts, 'domain', 'Ymd');
+		$r['regyinfo'] = [
+			'referrer'  => 'http://www.arnes.si',
+			'registrar' => 'ARNES'
+		];
+
 		return $r;
-        }
-    }
-?>
+	}
+}

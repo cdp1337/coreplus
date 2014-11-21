@@ -27,34 +27,32 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__AE_HANDLER__'))
-	define('__AE_HANDLER__', 1);
+if(!defined('__AE_HANDLER__')) define('__AE_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class ae_handler
-	{
-	function parse($data_str, $query)
-		{
-		$items = array(
-                    'Domain Name:'		=> 'domain.name',
-                    'Registrar Name:'	=> 'domain.sponsor',
-                    'Status:'			=> 'domain.status',
-                    'Registrant Contact ID:'	=> 'owner.handle',
-                    'Registrant Contact Name:' => 'owner.name',
-                    'Tech Contact Name:'		=> 'tech.name',
-                    'Tech Contact ID:'			=> 'tech.handle',
-                    'Name Server:'		=> 'domain.nserver.'
-		              );
+class ae_handler {
+	function parse($data_str, $query) {
+		$items = [
+			'Domain Name:'             => 'domain.name',
+			'Registrar Name:'          => 'domain.sponsor',
+			'Status:'                  => 'domain.status',
+			'Registrant Contact ID:'   => 'owner.handle',
+			'Registrant Contact Name:' => 'owner.name',
+			'Tech Contact Name:'       => 'tech.name',
+			'Tech Contact ID:'         => 'tech.handle',
+			'Name Server:'             => 'domain.nserver.'
+		];
 
 		$r['regrinfo'] = generic_parser_b($data_str['rawdata'], $items, 'ymd');
 
-		$r['regyinfo'] = array(
-                    'referrer' => 'http://www.nic.ae',
-                    'registrar' => 'UAENIC'
-                    );
+		$r['regyinfo'] = [
+			'referrer'  => 'http://www.nic.ae',
+			'registrar' => 'UAENIC'
+		];
 
 		return $r;
-		}
 	}
+}
+
 ?>

@@ -27,57 +27,64 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
-if (!defined('__GTLD_HANDLER__'))
-	define('__GTLD_HANDLER__', 1);
+if(!defined('__GTLD_HANDLER__')) define('__GTLD_HANDLER__', 1);
 
 require_once('whois.parser.php');
 
-class gtld_handler extends WhoisClient
-	{
+class gtld_handler extends WhoisClient {
 	var $HANDLER_VERSION = '1.1';
 
-	var $REG_FIELDS = array(
-                        'Domain Name:' => 'regrinfo.domain.name',
-                        'Registrar:' => 'regyinfo.registrar',
-                        'Whois Server:' => 'regyinfo.whois',
-                        'Referral URL:' => 'regyinfo.referrer',
-                        'Name Server:' => 'regrinfo.domain.nserver.',  // identical descriptors
-						'Updated Date:' => 'regrinfo.domain.changed',
-                        'Last Updated On:' => 'regrinfo.domain.changed',
-                        'EPP Status:' => 'regrinfo.domain.epp_status.',
-                        'Status:' => 'regrinfo.domain.status.',
-                        'Creation Date:' => 'regrinfo.domain.created',
-                        'Created On:' => 'regrinfo.domain.created',
-                        'Expiration Date:' => 'regrinfo.domain.expires',
-                        'Updated Date:' => 'regrinfo.domain.changed',
-                        'No match for ' => 'nodomain'
-	                     );
+	var $REG_FIELDS = [
+		'Domain Name:'     => 'regrinfo.domain.name',
+		'Registrar:'       => 'regyinfo.registrar',
+		'Whois Server:'    => 'regyinfo.whois',
+		'WHOIS Server:'    => 'regyinfo.whois',
+		'Referral URL:'    => 'regyinfo.referrer',
+		'Name Server:'     => 'regrinfo.domain.nserver.',  // identical descriptors
+		'Updated Date:'    => 'regrinfo.domain.changed',
+		'Last Updated On:' => 'regrinfo.domain.changed',
+		'EPP Status:'      => 'regrinfo.domain.epp_status.',
+		'Status:'          => 'regrinfo.domain.status.',
+		'Creation Date:'   => 'regrinfo.domain.created',
+		'Created On:'      => 'regrinfo.domain.created',
+		'Expiration Date:' => 'regrinfo.domain.expires',
+		'No match for '    => 'nodomain'
+	];
 
-	function parse($data, $query)
-		{
-		$this->Query = array();
-		//$this->SUBVERSION = sprintf('%s-%s', $query['handler'], $this->HANDLER_VERSION);
+	public $result;
+
+	public $deep_whois = true;
+
+	function parse($data, $query) {
+		$this->Query  = [];
 		$this->result = generic_parser_b($data['rawdata'], $this->REG_FIELDS, 'dmy');
+
+		// eNOM has a bug with how the results are returned for new TLD's.
+		if(isset($this->result['regyinfo']['registrar']) && isset($this->result['regyinfo']['whois']) && strpos($this->result['regyinfo']['whois'], ':') !== false){
+			$this->result['regyinfo']['whois'] = 'whois.enom.com';
+		}
 
 		unset($this->result['registered']);
 
-		if (isset($this->result['nodomain']))
-			{
+		if(isset($this->result['nodomain'])) {
 			unset($this->result['nodomain']);
 			$this->result['regrinfo']['registered'] = 'no';
-			return $this->result;
-			}
 
-		if ($this->deep_whois) $this->result = $this->DeepWhois($query,$this->result);
+			return $this->result;
+		}
+
+		if($this->deep_whois){
+			$this->result = $this->DeepWhois($query, $this->result);
+		}
 
 		// Next server could fail to return data
-		if (empty($this->result['rawdata']) || count($this->result['rawdata']) < 3)
+		if(empty($this->result['rawdata']) || count($this->result['rawdata']) < 3){
 			$this->result['rawdata'] = $data['rawdata'];
+		}
 
 		// Domain is registered no matter what next server says
 		$this->result['regrinfo']['registered'] = 'yes';
 
 		return $this->result;
-		}
 	}
-?>
+}
