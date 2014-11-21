@@ -148,9 +148,9 @@ if (EXEC_MODE == 'CLI') {
 	$servername          = null;
 	$servernameSSL       = null;
 	$servernameNOSSL     = null;
-	$rooturl             = null;
-	$rooturlNOSSL        = null;
-	$rooturlSSL          = null;
+	$rooturl             = isset($_SERVER['HTTP_HOST']) ? 'http://' . $_SERVER['HTTP_HOST'] : null;
+	$rooturlNOSSL        = $rooturl;
+	$rooturlSSL          = $rooturl;
 	$curcall             = null;
 	$relativerequestpath = null;
 	$ssl                 = false;
@@ -175,7 +175,7 @@ else {
 	else $servername = "http://";
 
 	if ($core_settings['site_url'] != '') $servername .= $core_settings['site_url'];
-	else $servername .= $_SERVER ['HTTP_HOST'];
+	else $servername .= $_SERVER['HTTP_HOST'];
 
 	// First things are first... if site_url is set, it's expected that THAT should
 	//  be the only valid URL to use.  If I wait until post-rendering, bad things
