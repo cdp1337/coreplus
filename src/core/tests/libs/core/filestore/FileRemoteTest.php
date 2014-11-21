@@ -22,8 +22,8 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 
 	protected function setUp(){
 		$this->_testimage = 'http://corepl.us/files/assets/coreplus/img/core-plus.png';
-		$this->_testfile = 'https://raw.github.com/nicholasryan/CorePlus/master/README.md';
-		$this->_test404 = 'https://raw.github.com/nicholasryan/CorePlus/master/NOTFOUND';
+		$this->_testfile = 'https://raw.githubusercontent.com/nicholasryan/CorePlus/master/README.md';
+		$this->_test404 = 'https://raw.githubusercontent.com/nicholasryan/CorePlus/master/NOTFOUND';
 	}
 
 	/**

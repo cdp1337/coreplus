@@ -46,7 +46,8 @@ class Bug253Test extends PHPUnit_Framework_TestCase {
 		\Core\user()->set('admin', true);
 
 		$request = new PageRequest('/updater');
-		$view = $request->execute();
+		$request->execute();
+		$view = $request->getView();
 		$this->assertEquals(200, $view->error);
 		// Obviously if the title gets changed, change it here to keep the bug from breaking!
 		$this->assertEquals('System Updater', $view->title);

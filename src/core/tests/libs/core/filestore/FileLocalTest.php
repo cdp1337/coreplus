@@ -248,13 +248,27 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetQuickPreviewFile() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		$file1 = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png');
+
+		$preview = $file1->getQuickPreviewFile();
+
+		// Preview File needs to return a valid file.
+		$this->assertInstanceOf('Core\\Filestore\\Backends\\FileLocal', $preview);
+		// That's publicly visible.
+		$this->assertEquals('public', $preview->_type);
 	}
 
 	public function testGetPreviewFile() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		$file1 = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png');
+
+		$preview = $file1->getPreviewFile();
+
+		// Preview File needs to return a valid file.
+		$this->assertInstanceOf('Core\\Filestore\\Backends\\FileLocal', $preview);
+		// That's publicly visible.
+		$this->assertEquals('public', $preview->_type);
+		// And it must exist.
+		$this->assertTrue($preview->exists());
 	}
 
 	public function testInDirectory() {
@@ -293,8 +307,19 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCopyFrom() {
-		// @todo Finish this
-		$this->markTestIncomplete('@todo Finish this');
+		$copy = Core\Filestore\Factory::File('tmp/tests-filelocaltest-testcopyfrom.dat');
+		if($copy->exists()){
+			$this->assertTrue($copy->delete(), 'Delete files in tmp/');
+		}
+		$file = new \Core\Filestore\Backends\FileLocal('core/tests/updater-testdocument.txt');
+
+		// I should be able to copy from a filename.
+		// this gets resolved to a local file.
+		$copy->copyFrom($file);
+		$this->assertInstanceOf('\\Core\\Filestore\\File', $copy);
+		$this->assertTrue($copy->exists());
+		$this->assertTrue($copy->identicalTo($file));
+		$this->assertTrue($copy->delete());
 	}
 
 	public function testGetContents() {
