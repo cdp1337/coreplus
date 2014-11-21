@@ -2,23 +2,34 @@
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Base V3">
 	<assets>
-		<file filename="assets/css/styles.css" md5="44c295ef3946dfd2306e72db5c7ea4bb"/>
-		<file filename="assets/css/styles.css.map" md5="5973c241ef1b4400cc50b108b6998d71"/>
-		<file filename="assets/css/styles.min.css" md5="a6b2a73e0ec0e5d0072dbba0c39e271c"/>
+		<file filename="assets/css/styles.css" md5="6e8a599d1ce0e7520165ef3c3df8c897"/>
+		<file filename="assets/css/styles.css.map" md5="9448a693581c112e27d00ed6e400f1d2"/>
+		<file filename="assets/css/styles.min.css" md5="5cbdcc2d606982215e664e0204ae7b80"/>
 	</assets>
 	<skins>
-		<file filename="basic.tpl" md5="757f16a88f7bd63c098175b93d117ea4" title=""/>
+		<file filename="basic.tpl" md5="e8ce7da242e5f6a2501348d59c651895" title=""/>
 		<file filename="blank.tpl" md5="63f7271e77cbb7b9360116b6ac0b3863" title=""/>
-		<file filename="wide.tpl" md5="715824d7cdb1ce78f4121401b4756ed3" title=""/>
+		<file filename="wide.tpl" md5="06601cbb8e8e18077d84cfed8c5390aa" title=""/>
 	</skins>
 	<emailskins>
 		<file filename="basic.tpl"/>
 	</emailskins>
 	<view/>
 	<otherfiles>
-		<file filename="assets/scss/styles.scss" md5="ecf5370232bf5d9b9e144122fb443491"/>
-		<file filename="assets/scss/vendor/bitters/_base.scss" md5="18ecd73f71e515f07469ab118eb55bf2"/>
-		<file filename="assets/scss/vendor/bitters/_buttons.scss" md5="2cc3b73db33cad69dc358bfff51b7f43"/>
+		<file filename="CHANGELOG" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="assets/scss/_controls.scss" md5="1364f913b7f211d928e473d4fce43aee"/>
+		<file filename="assets/scss/_debugging.scss" md5="8571b7d5ac6fa29b2d471e89a86d54fc"/>
+		<file filename="assets/scss/_filters_and_pagination.scss" md5="b5eada7f048b7e236099bc6fa2b79ef0"/>
+		<file filename="assets/scss/_layout.scss" md5="d657d7d5745797e8b8ebe1ea6bcd04fd"/>
+		<file filename="assets/scss/_listing_tables.scss" md5="d5c0cf7726f491b42cdbe1cb41aa34cb"/>
+		<file filename="assets/scss/_messages.scss" md5="ceb827b9796e9a072d3f6bfbd4137e00"/>
+		<file filename="assets/scss/_print.scss" md5="f3dd7a5f96e67e8d2156b5887ea785d4"/>
+		<file filename="assets/scss/_screen.scss" md5="616a30b3d90d734a28c0b429991eb77e"/>
+		<file filename="assets/scss/_variables.scss" md5="f794f0e1772690a01ab3c4fea0ea5e3a"/>
+		<file filename="assets/scss/styles.scss" md5="763efce2c0defc2c58b1c17ca262a8e8"/>
+		<file filename="assets/scss/vendor/_normalize.scss" md5="7caceed677229c6cc84aa3f4754ff3a4"/>
+		<file filename="assets/scss/vendor/bitters/_base.scss" md5="563284be5f71a4f841237d8fc09b3957"/>
+		<file filename="assets/scss/vendor/bitters/_buttons.scss" md5="a699743c04866fcf0d71cfd2acf3e2de"/>
 		<file filename="assets/scss/vendor/bitters/_forms.scss" md5="c132547f66e4beb443d96063c91ae37f"/>
 		<file filename="assets/scss/vendor/bitters/_grid-settings.scss" md5="b2fc883699314b823458b5ea92d8bc33"/>
 		<file filename="assets/scss/vendor/bitters/_lists.scss" md5="6eaab410bcb19243d18a9b5063f367f5"/>
@@ -29,8 +40,8 @@
 		<file filename="assets/scss/vendor/bitters/extends/_clearfix.scss" md5="947d5bcc17f37c8335fd77c7c81d3c39"/>
 		<file filename="assets/scss/vendor/bitters/extends/_hide-text.scss" md5="2ed482c4524a0492a7e728469baf5286"/>
 		<file filename="assets/scss/vendor/bourbon/_bourbon-deprecated-upcoming.scss" md5="1232ed1bd5ea801bc7bc3c0b60c73aec"/>
-		<file filename="assets/scss/vendor/bourbon/_bourbon.scss" md5="8c93c531116d021b37ff29a50bd84f42"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_button.scss" md5="081902245bacc759f1562e7bf3ec18dd"/>
+		<file filename="assets/scss/vendor/bourbon/_bourbon.scss" md5="edf7d07be7ec4dcecd6580927aeea72d"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_button.scss" md5="ff7b1f9dc205b3cef0f5a8dad2af52a9"/>
 		<file filename="assets/scss/vendor/bourbon/addons/_clearfix.scss" md5="0da01a56462807d2628530556e0e7c76"/>
 		<file filename="assets/scss/vendor/bourbon/addons/_directional-values.scss" md5="2f5ad412c7d3ee343790a9a67178385a"/>
 		<file filename="assets/scss/vendor/bourbon/addons/_ellipsis.scss" md5="9ad2c8f7ca715ad36dcf825b864e4dda"/>
@@ -66,6 +77,7 @@
 		<file filename="assets/scss/vendor/bourbon/css3/_perspective.scss" md5="793baf79388c99d5a1ba92ba6e1d026f"/>
 		<file filename="assets/scss/vendor/bourbon/css3/_placeholder.scss" md5="961f5d7df43b4323fdf47635634a5c83"/>
 		<file filename="assets/scss/vendor/bourbon/css3/_radial-gradient.scss" md5="7bd48370bfbfd57b543251c912f2f3e0"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_selection.scss" md5="7fa62f6509b7b5c14505d8fa2e1ef733"/>
 		<file filename="assets/scss/vendor/bourbon/css3/_transform.scss" md5="70afecfd28f823fa6bc13fb43eb35a4b"/>
 		<file filename="assets/scss/vendor/bourbon/css3/_transition.scss" md5="660c835cf41f095408f11a9f5c3f151f"/>
 		<file filename="assets/scss/vendor/bourbon/css3/_user-select.scss" md5="fcf794c47fa8279503bf60b68715bb47"/>
@@ -118,11 +130,14 @@
 		<file filename="assets/scss/vendor/neat/settings/_disable-warnings.scss" md5="9b0c3c10625b66595cb87d72e26d69e6"/>
 		<file filename="assets/scss/vendor/neat/settings/_grid.scss" md5="ed4a618a431e9ebfacdf6b892df37c20"/>
 		<file filename="assets/scss/vendor/neat/settings/_visual-grid.scss" md5="1092956edf19213f321958c061bf7517"/>
-		<file filename="dev/update-vendor.sh" md5="f7c3113855ffe762665f487d73ccb76e"/>
+		<file filename="dev/update-vendor.sh" md5="f9dd627503dded48c401d049fb383852"/>
+		<file filename="dev/vendor-patches/20141101-bitters.diff" md5="279d56dbbe7496341de17aed922b942a"/>
+		<file filename="dev/vendor-patches/20141101_buttons_use_default_colors.diff" md5="f034c099c68df89b68f99f954957df06"/>
 	</otherfiles>
 	<upgrades/>
 	<screenshots>
-		<!--<screenshot file="screenshots/screen1.png" title="Home Page"/>-->
+		<!--<screenshot file="screenshots/screen1.png" title="Home Page"/>
+		-->
 	</screenshots>
 </theme>
 
