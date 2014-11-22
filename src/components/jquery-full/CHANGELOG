@@ -1,3 +1,22 @@
+JQuery-Full 1.11.2~core1
+
+	* Include jqueryUI Touch Punch by default with jQuery UI to add support for touch devices.
+	* Upgrade the bundled versions of jQuery to 2.1.1 and jQueryUI to 1.11.2
+	* New version of mimimalect.
+	* Include the minified version of minimalect.
+	* Changed minimalect to not explicitly use minified version...which wasn't actually minified to begin
+	  with ^_^
+	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 22:43:42 -0500
+
+JQuery-Full 1.11.0~core2
+
+	* Include jqueryUI Touch Punch by default with jQuery UI to add support for touch devices.
+	* Upgrade the bundled versions of jQuery to 2.1.1 and jQueryUI to 1.11.2
+	* New version of mimimalect.
+	* Include the minified version of minimalect.
+	* Changed minimalect to not explicitly use minified version...which wasn't actually minified to begin
+	  with ^_^
+
 JQuery-Full 1.11.0~core1
 
 	* minimalect shouldn't hide the default option on selects
