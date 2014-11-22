@@ -41,6 +41,7 @@ abstract class JQuery {
 	public static function IncludeJQueryUI(){
 		self::IncludeJQuery();
 		\Core\view()->addScript ('js/jquery/jquery-ui-1.11.2.js');
+		\Core\view()->addScript ('js/jquery/jquery.ui.touch-punch.js');
 		\Core\view()->addStylesheet('css/jquery-ui-1.11.2.css');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
