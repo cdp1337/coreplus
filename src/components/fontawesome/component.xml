@@ -13,7 +13,7 @@
 		This package contains the Core-optimized version of FA.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="f9c1f416fce38a40959a0e39dd230248"/>
+		<file filename="CHANGELOG" md5="55b999ce5a9364756220c4d2160a9890"/>
 		<file filename="FontAwesome-Vectors.pdf" md5="cab0c66ed6cd83eec4d2e844619703b4"/>
 		<file filename="FontAwesome.lib.php" md5="0bd12edc9c443d9a1e5ad44828f0601a">
 			<class name="FontAwesome"/>

@@ -15,7 +15,7 @@
 		<scriptlibrary name="fancy_ip" call="phpwhois\JSHelper::LoadFancyIP"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="a17f6992d36502a0b3f506849f7b790d"/>
+		<file filename="CHANGELOG" md5="c187668a0746e414bf9f9a1a4c4df7a9"/>
 		<file filename="controllers/PhpwhoisController.php" md5="8820d417a29e532de9ed42ae95faddce">
 			<controller name="PhpwhoisController"/>
 		</file>

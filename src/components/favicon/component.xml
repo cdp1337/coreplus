@@ -14,7 +14,7 @@
 		<hook name="/core/page/rendering" call="FaviconController::PageHook"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="58ed1c3f8a64905d9330c30609bb0b8f"/>
+		<file filename="CHANGELOG" md5="75a9fba269e2377deba6b0f09fcc43ba"/>
 		<file filename="README.md" md5="e758db0d8cb23bbfe0b3132575fed948"/>
 		<file filename="controllers/FaviconController.php" md5="61eeb0ebb19199712010bdc024830046">
 			<controller name="FaviconController"/>

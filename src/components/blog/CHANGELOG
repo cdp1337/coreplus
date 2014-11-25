@@ -7,7 +7,7 @@ Blog 1.6.2
 	* Template text update for the blog index.
 	* Additional sanity checks for sites that do not have any blogs created yet.
 	* Enable CSS source maps for compiled assets.
-	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 16:42:49 -0500
+	-- Charlie Powell <charlie@eval.bz>  Mon, 24 Nov 2014 22:58:47 -0500
 
 Blog 1.6.1
 

@@ -30,7 +30,7 @@
 		<widget baseurl="/cron/dashboard" title="Cron Status Dashboard" installable="/admin"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="07a1edf71b9c480596e043a42b8cef0e"/>
+		<file filename="CHANGELOG" md5="cd77a0c2c609393b60d943b8901c93f8"/>
 		<file filename="README.md" md5="addbc7f6e77640e87a70e40a44948e61"/>
 		<file filename="classes/CronHelper.php" md5="ba7b794f691ba12729d42f2275cee260">
 			<class name="CronHelper"/>

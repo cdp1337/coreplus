@@ -10,7 +10,7 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="7fd16162f8327a8cd53f330e9f6c718b"/>
+		<file filename="CHANGELOG" md5="dbf0f113cccd016f49486eb378fc4c25"/>
 		<file filename="controllers/ThemeController.class.php" md5="17f81d9ed27b4fc81fc9e3a24233de8d">
 			<controller name="ThemeController"/>
 		</file>

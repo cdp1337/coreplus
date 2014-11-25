@@ -2,7 +2,7 @@ Google 1.5.0
 
 	* [Feature] New GoogleMaps library support, along with the public API key.
 	* [Feature] Add fullAddress support into Google's Geocode system.
-	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 16:50:23 -0500
+	-- Charlie Powell <charlie@eval.bz>  Mon, 24 Nov 2014 23:00:39 -0500
 
 Google 1.4.0
 

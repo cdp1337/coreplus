@@ -11,7 +11,7 @@
 		<widget baseurl="/contentadmin/quickdraft" title="Quick Draft" installable="/admin"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="eff49adff1b09b0940db60a02650976b"/>
+		<file filename="CHANGELOG" md5="7924ab3c68bfe78688c3db83fb49d0be"/>
 		<file filename="controllers/ContentController.php" md5="a96ed475182ab305124dceb68a2dd209">
 			<controller name="ContentController"/>
 		</file>

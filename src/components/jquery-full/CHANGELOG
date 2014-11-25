@@ -6,7 +6,7 @@ JQuery-Full 1.11.2~core1
 	* Include the minified version of minimalect.
 	* Changed minimalect to not explicitly use minified version...which wasn't actually minified to begin
 	  with ^_^
-	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 22:43:42 -0500
+	-- Charlie Powell <charlie@eval.bz>  Mon, 24 Nov 2014 23:01:17 -0500
 
 JQuery-Full 1.11.0~core1
 

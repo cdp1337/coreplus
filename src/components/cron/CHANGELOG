@@ -2,7 +2,7 @@ Cron 1.2.1
 
 	* Provide an upgrade path from a backported fix.
 	* Wrap cron executions with a try/catch to prevent Exceptions from bombing out the rest of the calls.
-	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 16:43:46 -0500
+	-- Charlie Powell <charlie@eval.bz>  Mon, 24 Nov 2014 22:59:24 -0500
 
 Cron 1.2.0
 

@@ -34,7 +34,7 @@
 		<file filename="templates/widgets/facebook/login.tpl" md5="d2c35fdad4e78240358e39c4c4ee3db1"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="c7d3e287ee3aec800eec956ff2d863de"/>
+		<file filename="CHANGELOG" md5="35b2a6072abff4258da431af266863be"/>
 		<file filename="FacebookHelper.class.php" md5="d7ac2466285ce37c587f9bb91e079aa9">
 			<class name="FacebookHelper"/>
 		</file>

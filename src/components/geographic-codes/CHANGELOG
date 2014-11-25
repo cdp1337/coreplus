@@ -4,7 +4,7 @@ Geographic Codes 1.5.0
 	* Return a more human-readable label for geographic addresses.
 	* Include postal in IPLookup().
 	* Remove minimalect from geo address inputs.
-	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 16:49:48 -0500
+	-- Charlie Powell <charlie@eval.bz>  Mon, 24 Nov 2014 23:00:09 -0500
 
 Geographic Codes 1.4.0
 

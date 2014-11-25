@@ -9,7 +9,7 @@
 	</forms>
 	<smartyplugins directory="smarty-plugins"/>
 	<files>
-		<file filename="CHANGELOG" md5="90352d3b23a192de4cdf206032d6ba1b"/>
+		<file filename="CHANGELOG" md5="40f31cc2e7daae4bc412d269f8f6b9e5"/>
 		<file filename="README.md" md5="f9b7f8a97be5c4f55afea2ef46724f50"/>
 		<file filename="classes/GeoAddressFormInput.php" md5="33de8bb8d9b108715b5759bf2c5fb372">
 			<class name="GeoAddressFormInput"/>

@@ -1,7 +1,7 @@
 Theme 2.4.1
 
 	* [Bug] Do not reinstall themes on every page view when in development mode.
-	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 16:51:33 -0500
+	-- Charlie Powell <charlie@eval.bz>  Mon, 24 Nov 2014 23:01:07 -0500
 
 Theme 2.4.0
 

@@ -134,7 +134,7 @@
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="9073d3de4da68ca5fcdb2af23323b07f"/>
+		<file filename="CHANGELOG" md5="90386c645f646737a5a6a2912d633f48"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
 		<file filename="JQuery.lib.php" md5="113910f95dce1f5cb57a10fe666608e4">
 			<class name="JQuery"/>
