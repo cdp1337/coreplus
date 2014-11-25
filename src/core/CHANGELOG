@@ -101,7 +101,7 @@ Core Plus 3.5.0
 	* Styling for contextual controls embedded in the admin bar.
 	* Need to assign the multisite option onto the /admin/pages template.
 	* Hide the unusable links in the pagination and always show number of results.
-	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 15:40:44 -0500
+	-- Charlie Powell <charlie@eval.bz>  Mon, 24 Nov 2014 22:57:22 -0500
 
 Core Plus 3.4.0
 

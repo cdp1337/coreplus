@@ -71,7 +71,7 @@
 	</includes>
 	<files>
 		<file filename="config/configuration.example.xml" md5="eac5d52f582025aca84e54796592b7b5"/>
-		<file filename="core/CHANGELOG" md5="87e289d824b05be1b6dd340a776e3ff5"/>
+		<file filename="core/CHANGELOG" md5="d282932d073a61eb5670e7dff0fc45e1"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="7a9184f8d8cc9f4680c52b1c5f3f1859"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
