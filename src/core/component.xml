@@ -70,6 +70,9 @@
 		-->
 	</includes>
 	<files>
+		<file filename="core/libs/core/utilities/Packager.php">
+			<class name="Core\Utilities\Packager"/>
+		</file>
 		<file filename="config/configuration.example.xml" md5="eac5d52f582025aca84e54796592b7b5"/>
 		<file filename="core/CHANGELOG" md5="d282932d073a61eb5670e7dff0fc45e1"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
