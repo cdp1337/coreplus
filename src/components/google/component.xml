@@ -29,7 +29,7 @@
 		<page baseurl="/google/configure" title="Google Keys and Apps" group="Configure" access="g:admin" admin="1" selectable="0"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="b04835716f9a8c145c489583f35294cd"/>
+		<file filename="CHANGELOG" md5="e7d5ddd596e12d108dc1693323d42e5c"/>
 		<file filename="controllers/GoogleController.php" md5="5bf7dd535c58df182b22c9ecf8c43906">
 			<controller name="GoogleController"/>
 		</file>

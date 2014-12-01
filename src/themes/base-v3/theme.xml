@@ -16,7 +16,7 @@
 	</emailskins>
 	<view/>
 	<otherfiles>
-		<file filename="CHANGELOG" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="CHANGELOG" md5="497e662617622f7f4f273bb7ac6b697a"/>
 		<file filename="assets/scss/_controls.scss" md5="1364f913b7f211d928e473d4fce43aee"/>
 		<file filename="assets/scss/_debugging.scss" md5="8571b7d5ac6fa29b2d471e89a86d54fc"/>
 		<file filename="assets/scss/_filters_and_pagination.scss" md5="b5eada7f048b7e236099bc6fa2b79ef0"/>
