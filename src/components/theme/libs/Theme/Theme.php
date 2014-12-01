@@ -23,24 +23,24 @@ use Core\CLI\CLI;
 class Theme{
 
 	/**
-	 * Underlying XML Loader object of the component.xml file.
+	 * Underlying XML Loader object of the theme.xml file.
 	 *
-	 * Responsible for retrieving most information about this component.
+	 * Responsible for retrieving most information about this theme.
 	 *
 	 * @var \XMLLoader
 	 */
 	private $_xmlloader = null;
 
 	/**
-	 * The name of the component.
-	 * Has to be unique, (because the name is a directory in /components)
+	 * The name of the theme.
+	 * Has to be unique, (because the name is a directory in /theme)
 	 *
 	 * @var string
 	 */
 	protected $_name;
 
 	/**
-	 * Version of the component, (propagates to libraries and modules).
+	 * Version of the theme, (propagates to libraries and modules).
 	 *
 	 * @var string
 	 */
@@ -55,7 +55,7 @@ class Theme{
 	protected $_description;
 
 	/**
-	 * Is this component explictly disabled?
+	 * Is this theme explictly disabled?
 	 * (themes cannot be disabled...)
 	 *
 	 * @var boolean
@@ -63,7 +63,7 @@ class Theme{
 	protected $_enabled = true;
 
 	/**
-	 * Version of the component, as per the database (installed version).
+	 * Version of the theme, as per the database (installed version).
 	 *
 	 * @var string
 	 */
@@ -115,7 +115,7 @@ class Theme{
 	 * @return array
 	 */
 	public function getSkins(){
-		$out = array();
+		$out = [];
 		$default = null;
 		$admindefault = null;
 		$currenttheme = false;
@@ -145,7 +145,7 @@ class Theme{
 			$title = $f->getAttribute('title') ? $f->getAttribute('title') : $basefilename;
 
 			// The return is expecting an array.
-			$out[] = array(
+			$out[] = [
 				'filename'        => $filename,
 				'file'            => $basefilename,
 				'title'           => $title,
@@ -153,7 +153,7 @@ class Theme{
 				'admindefault'    => ($admindefault == $basefilename),
 				'has_stylesheets' => $skin->hasOptionalStylesheets(),
 				'current_theme'   => $currenttheme,
-			);
+			];
 		}
 
 		return $out;
@@ -166,7 +166,7 @@ class Theme{
 	 * @return array
 	 */
 	public function getEmailSkins(){
-		$out = array();
+		$out = [];
 		$default = null;
 		$currenttheme = false;
 
@@ -185,23 +185,23 @@ class Theme{
 			$title = $basefilename;
 
 			// The return is expecting an array.
-			$out[] = array(
+			$out[] = [
 				'filename'        => $filename,
 				'file'            => $basefilename,
 				'title'           => $title,
 				'default'         => ($default == $basefilename),
 				'current_theme'   => $currenttheme,
-			);
+			];
 		}
 
 		// Tack on the main default... no skin!
-		$out[] = array(
+		$out[] = [
 			'filename'        => '',
 			'file'            => '',
 			'title'           => '-- No Skin --',
 			'default'         => ($default == ''),
 			'current_theme'   => $currenttheme,
-		);
+		];
 
 		return $out;
 	}
@@ -215,7 +215,7 @@ class Theme{
 	}
 
 	/**
-	 * Get this component's "key" name.
+	 * Get this theme's "key" name.
 	 *
 	 * This *must* be the name of the directory it's installed in
 	 * and *must not* contain spaces or other weird characters.
@@ -236,7 +236,7 @@ class Theme{
 	}
 
 	/**
-	 * Get the base directory of this component
+	 * Get the base directory of this theme
 	 *
 	 * Generally /home/foo/public_html/themes/theme-name/
 	 *
@@ -249,7 +249,7 @@ class Theme{
 	}
 
 	/**
-	 * Save this component metadata back to its XML file.
+	 * Save this theme metadata back to its XML file.
 	 * Useful in packager scripts.
 	 */
 	public function save($minified = false){
@@ -268,7 +268,7 @@ class Theme{
 	}
 
 	/**
-	 * Save or get the package XML for this component.  This is useful for the
+	 * Save or get the package XML for this theme.  This is useful for the
 	 * packager
 	 *
 	 * @param boolean $minified
@@ -281,7 +281,7 @@ class Theme{
 		$dom->setRootName('package');
 		$dom->load();
 
-		// Populate the root attributes for this component package.
+		// Populate the root attributes for this theme package.
 		$dom->getRootDOM()->setAttribute('type', 'theme');
 		$dom->getRootDOM()->setAttribute('name', $this->getName());
 		$dom->getRootDOM()->setAttribute('version', $this->getVersion());
@@ -334,7 +334,7 @@ class Theme{
 	}
 
 	/**
-	 * Get the raw XML of this component, useful for debugging.
+	 * Get the raw XML of this theme, useful for debugging.
 	 *
 	 * @return string (XML)
 	 */
@@ -343,7 +343,7 @@ class Theme{
 	}
 
 	/**
-	 * Set all asset files in this component.  Only really usable in the installer.
+	 * Set all asset files in this theme.  Only really usable in the installer.
 	 *
 	 * @param $files array Array of files to set.
 	 */
@@ -352,7 +352,7 @@ class Theme{
 		$this->_xmlloader->removeElements('//theme/assets/file');
 
 		// It would be nice to have them alphabetical.
-		$newarray = array();
+		$newarray = [];
 		foreach ($files as $f) {
 			$newarray[$f['file']] = $f;
 		}
@@ -374,7 +374,7 @@ class Theme{
 	}
 
 	/**
-	 * Set all skin files in this component.  Only really usable in the installer.
+	 * Set all skin files in this theme.  Only really usable in the installer.
 	 *
 	 * @param $files array Array of files to set.
 	 */
@@ -384,7 +384,7 @@ class Theme{
 		// As such, they are not simply deleted to begin with.
 
 		// It would be nice to have them alphabetical.
-		$newarray = array();
+		$newarray = [];
 		foreach ($files as $f) {
 			// Make sure that the file does not start with 'skins/'...
 			if(strpos($f['file'], 'skins/') === 0) $f['file'] = substr($f['file'], 6);
@@ -392,7 +392,7 @@ class Theme{
 		}
 		ksort($newarray);
 
-		$used = array();
+		$used = [];
 		// Instead, I'm checking each existing one.
 		foreach($this->_xmlloader->getElements('//theme/skins/file') as $el){
 			$att_file = $el->getAttribute('filename');
@@ -417,7 +417,7 @@ class Theme{
 	}
 
 	/**
-	 * Set all view files in this component.  Only really usable in the installer.
+	 * Set all view files in this theme.  Only really usable in the installer.
 	 *
 	 * @param $files array Array of files to set.
 	 */
@@ -426,7 +426,7 @@ class Theme{
 		$this->_xmlloader->removeElements('//theme/view/file');
 
 		// It would be nice to have them alphabetical.
-		$newarray = array();
+		$newarray = [];
 		foreach ($files as $f) {
 			$newarray[$f['file']] = $f;
 		}
@@ -439,7 +439,7 @@ class Theme{
 	}
 
 	/**
-	 * Set all other files in this component.  Only really usable in the installer.
+	 * Set all other files in this theme.  Only really usable in the installer.
 	 *
 	 * @param $files array Array of files to set.
 	 */
@@ -448,7 +448,7 @@ class Theme{
 		$this->_xmlloader->removeElements('//theme/otherfiles/file');
 
 		// It would be nice to have them alphabetical.
-		$newarray = array();
+		$newarray = [];
 		foreach ($files as $f) {
 			$newarray[$f['file']] = $f;
 		}
@@ -461,7 +461,72 @@ class Theme{
 	}
 
 	/**
-	 * Get this component's version
+	 * Alias of setOtherFiles
+	 *
+	 * @param $files
+	 */
+	public function setFiles($files) {
+		$this->setOtherFiles($files);
+	}
+
+	/**
+	 * Return an array of every license, (and its URL), in this theme.
+	 */
+	public function getLicenses() {
+		$ret = [];
+		foreach ($this->_xmlloader->getElementsByTagName('license') as $el) {
+			$url   = @$el->getAttribute('url');
+			$ret[] = [
+				'title' => $el->nodeValue,
+				'url'   => $url
+			];
+		}
+		return $ret;
+	}
+
+	public function setLicenses($licenses) {
+		// First, remove any licenses currently in the XML.
+		$this->_xmlloader->removeElements('/license');
+
+		// Now I can add the ones in the licenses array.
+		foreach ($licenses as $lic) {
+			$str          = '/license' . ((isset($lic['url']) && $lic['url']) ? '[@url="' . $lic['url'] . '"]' : '');
+			$l            = $this->_xmlloader->getElement($str);
+			$l->nodeValue = $lic['title'];
+		}
+	}
+
+	/**
+	 * Return an array of every author in this theme.
+	 */
+	public function getAuthors() {
+		$ret = [];
+		foreach ($this->_xmlloader->getElementsByTagName('author') as $el) {
+			$ret[] = [
+				'name'  => $el->getAttribute('name'),
+				'email' => @$el->getAttribute('email'),
+			];
+		}
+		return $ret;
+	}
+
+	public function setAuthors($authors) {
+		// First, remove any authors currently in the XML.
+		$this->_xmlloader->removeElements('/author');
+
+		// Now I can add the ones in the authors array.
+		foreach ($authors as $a) {
+			if (isset($a['email']) && $a['email']) {
+				$this->_xmlloader->getElement('//theme/author[@name="' . $a['name'] . '"][@email="' . $a['email'] . '"]');
+			}
+			else {
+				$this->_xmlloader->getElement('//theme/author[@name="' . $a['name'] . '"]');
+			}
+		}
+	}
+
+	/**
+	 * Get this theme's version
 	 *
 	 * @return string
 	 */
@@ -470,9 +535,9 @@ class Theme{
 	}
 
 	/**
-	 * Set the version of this component
+	 * Set the version of this theme
 	 *
-	 * This affects the component.xml metafile of the package.
+	 * This affects the theme.xml metafile of the package.
 	 *
 	 * @param $vers string
 	 *
@@ -501,7 +566,7 @@ class Theme{
 	}
 
 	/**
-	 * Get the description for this component
+	 * Get the description for this theme
 	 * @return string
 	 */
 	public function getDescription() {
@@ -513,7 +578,7 @@ class Theme{
 	}
 
 	/**
-	 * Set the description for this component
+	 * Set the description for this theme
 	 * @param $desc string
 	 */
 	public function setDescription($desc) {
@@ -653,19 +718,19 @@ class Theme{
 		$s = $this->_xmlloader->getElement('//screenshots/screenshot', false);
 
 		if(!$s){
-			return array(
+			return [
 				'file' => '',
 				'title' => $this->getName()
-			);
+			];
 		}
 		else{
 
 			$f = \Core\Filestore\Factory::File($this->getBaseDir() . $s->getAttribute('file'));
 
-			return array(
+			return [
 				'file' => $f,
 				'title' => ($s->getAttribute('title') ? $s->getAttribute('title') : $this->getName()),
-			);
+			];
 		}
 	}
 
@@ -680,7 +745,7 @@ class Theme{
 	 * @throws \InstallerException
 	 */
 	private function _performInstall($verbose = 0){
-		$changed = array();
+		$changed = [];
 
 		$change = $this->_installAssets($verbose);
 		if($change !== false) $changed = array_merge($changed, $change);
@@ -697,7 +762,7 @@ class Theme{
 	}
 
 	/**
-	 * Internal function to parse and handle the configs in the component.xml file.
+	 * Internal function to parse and handle the configs in the theme.xml file.
 	 * This is used for installations and upgrades.
 	 *
 	 * Returns false if nothing changed, else will return the configuration options changed.
@@ -706,7 +771,7 @@ class Theme{
 	 * @throws \InstallerException
 	 */
 	private function _parseConfigs(){
-		$changes = array();
+		$changes = [];
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('configs');
@@ -728,7 +793,7 @@ class Theme{
 	} // private function _parseConfigs
 
 	/**
-	 * Copy in all the assets for this component into the assets location.
+	 * Copy in all the assets for this theme into the assets location.
 	 *
 	 * Returns false if nothing changed, else will return an array of all the changes that occured.
 	 *
@@ -746,7 +811,7 @@ class Theme{
 		// this happens in the installer.
 		if($coretheme === null) $coretheme = 'default';
 		$theme = $this->getKeyName();
-		$changes = array();
+		$changes = [];
 
 		foreach($this->_xmlloader->getElements('/assets/file') as $node){
 			// Cannot install assets if the directory is not setup!
