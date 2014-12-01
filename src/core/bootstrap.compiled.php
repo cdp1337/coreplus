@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 21 Nov 2014 15:19:50 -0500
+ * @compiled Mon, 01 Dec 2014 11:53:26 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -6226,7 +6226,20 @@ else{
 $check = $config->get('validation');
 $valid = true;
 if (strpos($check, '::') !== false) {
+$ref = new ReflectionClass(substr($check, 0, strpos($check, ':')));
+$checklast = substr($check, strrpos($check, ':')+1);
+if($ref->hasMethod($checklast)){
 $valid = call_user_func($check, $v, $this);
+}
+elseif($ref->hasProperty($checklast)){
+$check = $ref->getProperty($checklast)->getValue();
+if (
+($check{0} == '/' && !preg_match($check, $v)) ||
+($check{0} == '#' && !preg_match($check, $v))
+) {
+$valid = false;
+}
+}
 }
 elseif (
 ($check{0} == '/' && !preg_match($check, $v)) ||
@@ -6353,13 +6366,13 @@ class Component extends XMLLoader {
 protected $_name;
 protected $_version;
 protected $_description;
-protected $_updateSites = array();
-protected $_authors = array();
+protected $_updateSites = [];
+protected $_authors = [];
 protected $_iterator;
 protected $_type;
 public $enabled = true;
 public $_versionDB = false;
-private $_requires = array();
+private $_requires = [];
 private $_execMode = 'WEB';
 const ERROR_NOERROR = 0;           // 000000
 const ERROR_INVALID = 1;           // 000001
@@ -6368,7 +6381,7 @@ const ERROR_MISSINGDEPENDENCY = 4; // 000100
 const ERROR_CONFLICT = 8;          // 001000
 const ERROR_UPGRADEPATH = 16;      // 010000
 public $error = 0;
-public $errstrs = array();
+public $errstrs = [];
 public function __construct($name = null) {
 $this->_name     = $name;
 $this->_type     = InstallArchiveAPI::TYPE_COMPONENT;
@@ -6456,7 +6469,7 @@ $getnames = false;
 }
 }
 if ($getnames) {
-$viewclasses = array();
+$viewclasses = [];
 preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller/im', $fconts, $ret);
 foreach ($ret[2] as $foundclass) {
 $this->getElementFrom('provides[@type="controller"][@name="' . $foundclass . '"]', $el);
@@ -6487,7 +6500,7 @@ if ($el) {
 $el->setAttribute('md5', $file->getHash());
 }
 }
-if (!isset($viewclasses)) $viewclasses = array();
+if (!isset($viewclasses)) $viewclasses = [];
 foreach ($viewclasses as $c) {
 if (strlen($c) - strpos($c, 'Controller') == 10) $c = substr($c, 0, -10);
 $data = Core\Datamodel\Dataset::Init()->table('page')->select('*')->where("baseurl = /$c", 'admin=1', 'fuzzy=0')->execute();
@@ -6583,7 +6596,7 @@ Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
 return true;
 }
 public function getLibraryList() {
-$libs = array();
+$libs = [];
 if ($this->hasLibrary()) {
 $libs[strtolower($this->_name)] = $this->_versionDB;
 }
@@ -6597,7 +6610,7 @@ $libs[strtolower($p->getAttribute('name'))] = $v;
 return $libs;
 }
 public function getClassList() {
-$classes = array();
+$classes = [];
 if ($this->hasLibrary()) {
 foreach ($this->getElementByTagName('library')->getElementsByTagName('file') as $f) {
 $filename = $this->getBaseDir() . $f->getAttribute('filename');
@@ -6626,7 +6639,7 @@ break;
 return $classes;
 }
 public function getWidgetList() {
-$widgets = array();
+$widgets = [];
 if ($this->hasModule()) {
 foreach ($this->getElementByTagName('module')->getElementsByTagName('file') as $f) {
 foreach ($f->getElementsByTagName('provides') as $p) {
@@ -6639,7 +6652,7 @@ $widgets[] = $p->getAttribute('name');
 return $widgets;
 }
 public function getViewClassList() {
-$classes = array();
+$classes = [];
 if ($this->hasModule()) {
 foreach ($this->getElementByTagName('module')->getElementsByTagName('file') as $f) {
 $filename = $this->getBaseDir() . $f->getAttribute('filename');
@@ -6656,7 +6669,7 @@ break;
 return $classes;
 }
 public function getViewList() {
-$views = array();
+$views = [];
 if ($this->hasView()) {
 foreach ($this->getElementByTagName('view')->getElementsByTagName('tpl') as $t) {
 $filename     = $this->getBaseDir() . $t->getAttribute('filename');
@@ -6667,7 +6680,7 @@ $views[$name] = $filename;
 return $views;
 }
 public function getControllerList() {
-$classes = array();
+$classes = [];
 if ($this->hasModule()) {
 foreach ($this->getElementByTagName('module')->getElementsByTagName('file') as $f) {
 $filename = $this->getBaseDir() . $f->getAttribute('filename');
@@ -6689,7 +6702,7 @@ if ($d) return $this->getBaseDir() . $d;
 else return false;
 }
 public function getScriptLibraryList() {
-$libs = array();
+$libs = [];
 if ($this->hasLibrary()) {
 foreach ($this->getElementByTagName('library')->getElementsByTagName('scriptlibrary') as $s) {
 $libs[strtolower($s->getAttribute('name'))] = $s->getAttribute('call');
@@ -6698,7 +6711,7 @@ $libs[strtolower($s->getAttribute('name'))] = $s->getAttribute('call');
 return $libs;
 }
 public function getViewSearchDir() {
-if ($this->hasView()) {
+if($this->hasView()) {
 $att = @$this->getElement('/view')->getAttribute('searchdir');
 if ($att) {
 return $this->getBaseDir() . $att . '/';
@@ -6719,7 +6732,7 @@ if (is_dir($d)) return $d;
 else return null;
 }
 public function getIncludePaths() {
-$dirs = array();
+$dirs = [];
 if ($this->hasLibrary()) {
 foreach ($this->getElementByTagName('library')->getElementsByTagName('includepath') as $t) {
 $dir = $t->getAttribute('dir');
@@ -6730,7 +6743,7 @@ else $dirs[] = $this->getBaseDir() . $t->getAttribute('dir') . '/';
 return $dirs;
 }
 public function getDBSchemaTableNames() {
-$ret = array();
+$ret = [];
 foreach ($this->getElement('dbschema')->getElementsByTagName('table') as $table) {
 $ret[] = $table->getAttribute('name');
 }
@@ -6776,7 +6789,7 @@ if ($this->error & Component::ERROR_INVALID) {
 return false;
 }
 $this->error   = 0;
-$this->errstrs = array();
+$this->errstrs = [];
 if ($this->_execMode != 'BOTH') {
 if ($this->_execMode != EXEC_MODE) {
 $this->error     = $this->error | Component::ERROR_WRONGEXECMODE;
@@ -6827,7 +6840,7 @@ break;
 return (!$this->error) ? true : false;
 }
 public function getJSLibraries() {
-$ret = array();
+$ret = [];
 foreach ($this->getRootDOM()->getElementsByTagName('jslibrary') as $node) {
 $lib       = new JSLibrary();
 $lib->name = $node->getAttribute('name');
@@ -6905,24 +6918,24 @@ $this->_parsePages();
 $this->_installAssets();
 }
 public function getProvides() {
-$ret = array();
-$ret[] = array(
+$ret = [];
+$ret[] = [
 'name'    => strtolower($this->getName()),
 'type'    => 'component',
 'version' => $this->getVersion()
-);
+];
 foreach ($this->getElements('provides') as $el) {
-$ret[] = array(
+$ret[] = [
 'name'      => strtolower($el->getAttribute('name')),
 'type'      => $el->getAttribute('type'),
 'version'   => $el->getAttribute('version'),
 'operation' => $el->getAttribute('operation'),
-);
+];
 }
 return $ret;
 }
 public function getRequires() {
-$ret = array();
+$ret = [];
 foreach ($this->getRootDOM()->getElementsByTagName('requires') as $r) {
 $t  = $r->getAttribute('type');
 $n  = $r->getAttribute('name');
@@ -6930,12 +6943,12 @@ $v  = @$r->getAttribute('version');
 $op = @$r->getAttribute('operation');
 if ($v == '') $v = false;
 if ($op == '') $op = 'ge';
-$ret[] = array(
+$ret[] = [
 'type'      => strtolower($t),
 'name'      => $n,
 'version'   => strtolower($v),
 'operation' => strtolower($op),
-);
+];
 }
 return $ret;
 }
@@ -6979,7 +6992,7 @@ break;
 }
 }
 public function getChangedFiles() {
-$ret = array();
+$ret = [];
 foreach ($this->getElementsByTagName('file') as $node) {
 if (!($filename = @$node->getAttribute('filename'))) continue;
 if ($node->getAttribute('md5') != md5_file($this->getBaseDir() . $filename)) {
@@ -7021,13 +7034,13 @@ public function getRawXML() {
 return $this->asPrettyXML();
 }
 public function getLicenses() {
-$ret = array();
+$ret = [];
 foreach ($this->getRootDOM()->getElementsByTagName('license') as $el) {
 $url   = @$el->getAttribute('url');
-$ret[] = array(
+$ret[] = [
 'title' => $el->nodeValue,
 'url'   => $url
-);
+];
 }
 return $ret;
 }
@@ -7040,12 +7053,12 @@ $l->nodeValue = $lic['title'];
 }
 }
 public function getAuthors() {
-$ret = array();
+$ret = [];
 foreach ($this->getRootDOM()->getElementsByTagName('author') as $el) {
-$ret[] = array(
+$ret[] = [
 'name'  => $el->getAttribute('name'),
 'email' => @$el->getAttribute('email'),
-);
+];
 }
 return $ret;
 }
@@ -7061,14 +7074,14 @@ $this->getElement('//component/author[@name="' . $a['name'] . '"]');
 }
 }
 public function getAllFilenames() {
-$ret  = array();
+$ret  = [];
 $list = $this->getElements('//component/library/file|//component/module/file|//component/view/file|//component/otherfiles/file|//component/assets/file');
 foreach ($list as $el) {
 $md5   = @$el->getAttribute('md5');
-$ret[] = array(
+$ret[] = [
 'file' => $el->getAttribute('filename'),
 'md5'  => $md5
-);
+];
 }
 return $ret;
 }
@@ -7136,8 +7149,8 @@ require_once($file);
 $s         = $m::GetSchema();
 $i         = $m::GetIndexes();
 $tablename = $m::GetTableName();
-$schema = array('schema'  => $s,
-'indexes' => $i);
+$schema = ['schema'  => $s,
+'indexes' => $i];
 if (Core::DB()->tableExists($tablename)) {
 Core::DB()->modifyTable($tablename, $schema);
 }
@@ -7442,6 +7455,9 @@ $this->_permissions[$el->getAttribute('key')] = [
 public function save($minified = false) {
 $this->_xmlloader->setSchema('http://corepl.us/api/2_4/component.dtd');
 $this->_xmlloader->getRootDOM()->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
+if(!$this->getSmartyPluginDirectory()){
+$this->_xmlloader->removeElements('//smartyplugins');
+}
 $XMLFilename = $this->_file->getFilename();
 if ($minified) {
 file_put_contents($XMLFilename, $this->_xmlloader->asMinifiedXML());
@@ -11795,7 +11811,6 @@ class DirectoryLocal implements Filestore\Directory {
 private $_path;
 private $_type;
 private $_files = null;
-private $_ignores = array();
 public function __construct($directory) {
 if (!is_null($directory)) {
 $this->setPath($directory);
@@ -11806,7 +11821,6 @@ if (!$this->isReadable()) return array();
 if ($this->_files === null) $this->_sift();
 $ret = array();
 foreach ($this->_files as $file => $obj) {
-if (sizeof($this->_ignores) && in_array($file, $this->_ignores)) continue;
 if($extension){
 if($obj instanceof Filestore\Directory && $recursive){
 $ret = array_merge($ret, $obj->ls($extension, $recursive));
