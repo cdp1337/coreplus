@@ -67,6 +67,11 @@ class Argument {
 		if(isset($dat['description'])) $this->description = $dat['description'];
 		if(isset($dat['value'])) $this->requireValue = $dat['value'];
 		if(isset($dat['multiple'])) $this->multiple = $dat['multiple'];
+
+		// Allow shorthands to be sent as a single string.
+		if(!is_array($this->shorthands)){
+			$this->shorthands = [$this->shorthands];
+		}
 	}
 
 	public function setValue($val){

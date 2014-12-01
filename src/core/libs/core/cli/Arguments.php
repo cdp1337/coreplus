@@ -43,7 +43,7 @@ if(!defined('NL')){
  *         'component' => [
  *             'description' => 'Operate on a component with the given name.',
  *             'value' => true,
- *             'shorthand' => ['c'],
+ *             'shorthand' => 'c',
  *             ],
  *         ],
  *     ]
@@ -70,14 +70,18 @@ if(!defined('NL')){
 class Arguments {
 	protected $_args = [];
 
+	/** @var string Short header message when executing printUsage(). */
 	public $usageHeader = 'Usage:';
+
+	/** @var bool Keep track of if processArguments has been executed. */
+	private $_processed = false;
 
 	/**
 	 * Construct a new Arguments set with the set of arguments allowed.
 	 *
 	 * @param array $allowed_arguments Allowed arguments to send.
 	 */
-	public function __construct($allowed_arguments = array()){
+	public function __construct($allowed_arguments = []){
 		foreach($allowed_arguments as $key => $arg){
 			if(!isset($arg['name'])) $arg['name'] = $key;
 
@@ -85,8 +89,45 @@ class Arguments {
 		}
 	}
 
+	/**
+	 * Add a new allowed argument to the script.
+	 *
+	 * The array supports the following keys:
+	 * <dl>
+	 *
+	 * <dt>name (required)</dt>
+	 * <dd>Name of this argument, required and must not contain spaces, used to generate the "--[name]" context.
+	 *
+	 * <dt>description (recommended)</dt>
+	 * <dd>Help text to print to the user when executing printUsage().</dd>
+	 *
+	 * <dt>value</dt>
+	 * <dd>
+	 * True/false if this argument requires or supports a value set.
+	 * If false, simply --[name] is used.
+	 * If true, --[name]="blah" is used.
+	 * </dd>
+	 *
+	 * <dt>shorthand</dt>
+	 * <dd>
+	 * Any shorthand arguments that are allowed, these are exposed via a single dash on the CLI.
+	 * Can be either an array or a string.
+	 * </dd>
+	 *
+	 * <dt>multiple</dt>
+	 * <dd>
+	 * Set to true if multiple instances of the same argument are allowed.
+	 * This is useful if you need to allow the user to provide a list of something.
+	 * Setting this to true will force getVal and getArgumentValue to always return an array.
+	 * </dd>
+	 *
+	 * </dl>
+	 *
+	 * @param array $argument_data Array data of the argument to add
+	 */
 	public function addAllowedArgument($argument_data){
 		/*
+		 *
 		'description' => 'List out the available components along with  their versions and exit.',
 		'value' => false,
 		'shorthand' => [],
@@ -94,6 +135,9 @@ class Arguments {
 		$this->_args[] = new Argument($argument_data);
 	}
 
+	/**
+	 * Print usage of this argument set to STDOUT.
+	 */
 	public function printUsage(){
 		$out = $this->usageHeader . NL . NL;
 
@@ -139,9 +183,13 @@ class Arguments {
 
 	/**
 	 * Process the actual arguments passed in from the user.
+	 *
+	 * This is a required step if you want this system to work as intended.
 	 */
 	public function processArguments(){
 		global $argc, $argv;
+
+		$this->_processed = true;
 
 		if($argc > 1){
 
@@ -155,6 +203,10 @@ class Arguments {
 			$shorthands = [];
 			foreach($this->_args as $arg){
 				/** @var Argument $arg */
+				if(!is_array($arg->shorthands)){
+					$arg->shorthands = [$arg->shorthands];
+				}
+
 				foreach($arg->shorthands as $s){
 					$shorthands['-' . $s] = $arg;
 				}
@@ -190,7 +242,7 @@ class Arguments {
 						}
 					}
 					else{
-						$this->printError('Invalid shorthand argument provided: ' . $arg);
+						$this->printError('Unknown shorthand argument provided: ' . $arg);
 					}
 				}
 				elseif(preg_match('#--([^=]*)=#', $arg)){
@@ -207,7 +259,7 @@ class Arguments {
 						}
 					}
 					else{
-						$this->printError('Invalid argument provided: ' . $opt);
+						$this->printError('Unknown argument provided: ' . $opt);
 					}
 				}
 				elseif(strpos($arg, '--') === 0){
@@ -224,7 +276,7 @@ class Arguments {
 						}
 					}
 					else{
-						$this->printError('Invalid argument provided: ' . $opt);
+						$this->printError('Unknown argument provided: ' . $opt);
 					}
 				}
 				else{
@@ -247,6 +299,11 @@ class Arguments {
 	 * @return array
 	 */
 	public function getArguments(){
+		if(!$this->_processed){
+			// This methods requires arguments to have been processed from STDIN!
+			$this->processArguments();
+		}
+
 		return $this->_args;
 	}
 
@@ -258,6 +315,11 @@ class Arguments {
 	 * @return Argument|null
 	 */
 	public function getArgument($name){
+		if(!$this->_processed){
+			// This methods requires arguments to have been processed from STDIN!
+			$this->processArguments();
+		}
+
 		foreach($this->_args as $arg){
 			/** @var Argument $arg */
 			if($arg->name == $name){
@@ -296,7 +358,7 @@ class Arguments {
 	 * @param string $error
 	 */
 	public function printError($error){
-		echo 'ERROR: ' . $error . NL;
+		CLI::PrintError('ERROR: ' . $error);
 		$this->printUsage();
 		exit;
 	}
