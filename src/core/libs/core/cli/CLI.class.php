@@ -42,8 +42,7 @@ class CLI {
 		$isanswered = false;
 		while (!$isanswered) {
 			echo NL . $question . NL;
-			$hasexit = false;
-			$hassave = false;
+			$extras = [];
 
 			if (is_array($answers)) {
 				$answerhash = array();
@@ -53,12 +52,22 @@ class CLI {
 						// This is a 'special' action, so it gets a special key.
 						$answerhash['x'] = $a;
 						echo TAB . " x - $q" . NL;
-						$hasexit = true;
+						$extras[] = 'x';
+					}
+					elseif($a === 'quit'){
+						$answerhash['q'] = $a;
+						echo TAB . " q - $q" . NL;
+						$extras[] = 'q';
+					}
+					elseif($a === 'menu'){
+						$answerhash['m'] = $a;
+						echo TAB . " m - $q" . NL;
+						$extras[] = 'm';
 					}
 					elseif ($a === 'save') {
 						$answerhash['s'] = $a;
 						echo TAB . " s - $q" . NL;
-						$hassave = true;
+						$extras[] = 's';
 					}
 					else {
 						$x++;
@@ -74,13 +83,24 @@ class CLI {
 				}
 
 				// Print the "enter a number 1-10..." text.
-				if ($x == 1) echo NL . '(Enter 1 to continue';
-				else echo NL . "(Enter a number, 1-$x";
-
-				if ($hassave) echo " or 's'";
-				if ($hasexit) echo " or 'x'";
-
-				echo ") ";
+				if ($x == 1 && !sizeof($extras)){
+					echo NL . '(Enter 1 to continue) ';
+				}
+				elseif($x > 1 && !sizeof($extras)){
+					echo NL . "(Enter a number, 1-$x) ";
+				}
+				else{
+					$extras = array_merge(['1-' . $x], $extras);
+					echo NL . '(Enter ';
+					$last = null;
+					while(($e = array_shift($extras))){
+						if($last){
+							echo $last . ', ';
+						}
+						$last = $e;
+					}
+					echo 'or ' . $last . ') ';
+				}
 
 				// Read the response.
 				$line = strtolower(trim(fgets(STDIN)));
@@ -236,7 +256,19 @@ class CLI {
 		}
 	}
 
+	/**
+	 * Print a single line or multiple lines of text to the screen or console.
+	 *
+	 * @param string|array $line
+	 */
 	public static function PrintLine($line) {
+		if(is_array($line)){
+			foreach($line as $l){
+				self::PrintLine($l);
+			}
+			return;
+		}
+
 		$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
 		echo COLOR_LINE . '| ' . COLOR_RESET . $line . $nl;
 
