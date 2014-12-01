@@ -38,13 +38,6 @@ class DirectoryLocal implements Filestore\Directory {
 	 */
 	private $_files = null;
 
-	/**
-	 * A list of files/directories to ignore when listing files
-	 *
-	 * @var array
-	 */
-	private $_ignores = array();
-
 	public function __construct($directory) {
 		if (!is_null($directory)) {
 			$this->setPath($directory);
@@ -69,8 +62,6 @@ class DirectoryLocal implements Filestore\Directory {
 
 		$ret = array();
 		foreach ($this->_files as $file => $obj) {
-			// Skip the file if it's in the array of ignore files.
-			if (sizeof($this->_ignores) && in_array($file, $this->_ignores)) continue;
 
 			// Is there an extension requested?
 			if($extension){
