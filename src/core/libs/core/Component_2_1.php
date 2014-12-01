@@ -263,6 +263,12 @@ class Component_2_1 {
 		// Ensure there's a required namespace on the root node.
 		$this->_xmlloader->getRootDOM()->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 
+		// Hack
+		// If there is an empty smartydir set, don't let that get saved.
+		if(!$this->getSmartyPluginDirectory()){
+			$this->_xmlloader->removeElements('//smartyplugins');
+		}
+
 		/*
 		///////////////  Handle the hard-set pages, ie: admin ones \\\\\\\\\\\\\
 		if(!isset($viewclasses)) $viewclasses = array();
