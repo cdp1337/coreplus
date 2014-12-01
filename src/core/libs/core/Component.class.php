@@ -55,7 +55,7 @@ class Component extends XMLLoader {
 	 *
 	 * @var array <<string>>
 	 */
-	protected $_updateSites = array();
+	protected $_updateSites = [];
 
 	/**
 	 * Array of any authors for the library.
@@ -63,7 +63,7 @@ class Component extends XMLLoader {
 	 *
 	 * @var array <<array>>
 	 */
-	protected $_authors = array();
+	protected $_authors = [];
 
 	/**
 	 * The iterator for this object, kept as a cache.
@@ -96,7 +96,7 @@ class Component extends XMLLoader {
 	 *
 	 * @var array
 	 */
-	private $_requires = array();
+	private $_requires = [];
 
 	/**
 	 * Each component can have an execution mode, by default it's "web".
@@ -123,7 +123,7 @@ class Component extends XMLLoader {
 	 * Any error messages encountered in this component, mainly while loading.
 	 * @var array <<string>>
 	 */
-	public $errstrs = array();
+	public $errstrs = [];
 
 
 	public function __construct($name = null) {
@@ -276,7 +276,7 @@ class Component extends XMLLoader {
 
 					if ($getnames) {
 						// Well... get the classes!
-						$viewclasses = array();
+						$viewclasses = [];
 						preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller/im', $fconts, $ret);
 						foreach ($ret[2] as $foundclass) {
 							$this->getElementFrom('provides[@type="controller"][@name="' . $foundclass . '"]', $el);
@@ -322,7 +322,7 @@ class Component extends XMLLoader {
 
 
 		///////////////  Handle the hard-set pages, ie: admin ones \\\\\\\\\\\\\
-		if (!isset($viewclasses)) $viewclasses = array();
+		if (!isset($viewclasses)) $viewclasses = [];
 		foreach ($viewclasses as $c) {
 			// Should end in Controller.
 			if (strlen($c) - strpos($c, 'Controller') == 10) $c = substr($c, 0, -10);
@@ -476,7 +476,7 @@ class Component extends XMLLoader {
 
 	public function getLibraryList() {
 		// Get an array of library -> version
-		$libs = array();
+		$libs = [];
 
 		if ($this->hasLibrary()) {
 			$libs[strtolower($this->_name)] = $this->_versionDB;
@@ -501,7 +501,7 @@ class Component extends XMLLoader {
 	 */
 	public function getClassList() {
 		// Get an array of class -> file (fully resolved)
-		$classes = array();
+		$classes = [];
 
 		if ($this->hasLibrary()) {
 			foreach ($this->getElementByTagName('library')->getElementsByTagName('file') as $f) {
@@ -542,7 +542,7 @@ class Component extends XMLLoader {
 	 * @return array
 	 */
 	public function getWidgetList() {
-		$widgets = array();
+		$widgets = [];
 
 		if ($this->hasModule()) {
 			foreach ($this->getElementByTagName('module')->getElementsByTagName('file') as $f) {
@@ -558,7 +558,7 @@ class Component extends XMLLoader {
 	}
 
 	public function getViewClassList() {
-		$classes = array();
+		$classes = [];
 		if ($this->hasModule()) {
 			foreach ($this->getElementByTagName('module')->getElementsByTagName('file') as $f) {
 				$filename = $this->getBaseDir() . $f->getAttribute('filename');
@@ -579,7 +579,7 @@ class Component extends XMLLoader {
 	 * Get a list of view templates provided by this component.
 	 */
 	public function getViewList() {
-		$views = array();
+		$views = [];
 		if ($this->hasView()) {
 			foreach ($this->getElementByTagName('view')->getElementsByTagName('tpl') as $t) {
 				$filename     = $this->getBaseDir() . $t->getAttribute('filename');
@@ -597,7 +597,7 @@ class Component extends XMLLoader {
 	 */
 	public function getControllerList() {
 		// Get an array of class -> file (fully resolved)
-		$classes = array();
+		$classes = [];
 
 		if ($this->hasModule()) {
 			foreach ($this->getElementByTagName('module')->getElementsByTagName('file') as $f) {
@@ -632,7 +632,7 @@ class Component extends XMLLoader {
 	}
 
 	public function getScriptLibraryList() {
-		$libs = array();
+		$libs = [];
 		if ($this->hasLibrary()) {
 			foreach ($this->getElementByTagName('library')->getElementsByTagName('scriptlibrary') as $s) {
 				$libs[strtolower($s->getAttribute('name'))] = $s->getAttribute('call');
@@ -642,8 +642,16 @@ class Component extends XMLLoader {
 	}
 
 
+	/**
+	 * Get the view search directory, AKA templates directory.
+	 *
+	 * If set explicitly from the XMl metafile, that will be used,
+	 * otherwise the directory "templates/" is used, since that's where 99% of them reside.
+	 *
+	 * @return bool|string
+	 */
 	public function getViewSearchDir() {
-		if ($this->hasView()) {
+		if($this->hasView()) {
 			// Using the searchdir attribute is the preferred method.
 			$att = @$this->getElement('/view')->getAttribute('searchdir');
 			if ($att) {
@@ -671,7 +679,7 @@ class Component extends XMLLoader {
 	}
 
 	public function getIncludePaths() {
-		$dirs = array();
+		$dirs = [];
 		if ($this->hasLibrary()) {
 			foreach ($this->getElementByTagName('library')->getElementsByTagName('includepath') as $t) {
 				$dir = $t->getAttribute('dir');
@@ -688,7 +696,7 @@ class Component extends XMLLoader {
 	 * @return array
 	 */
 	public function getDBSchemaTableNames() {
-		$ret = array();
+		$ret = [];
 		foreach ($this->getElement('dbschema')->getElementsByTagName('table') as $table) {
 			$ret[] = $table->getAttribute('name');
 		}
@@ -766,7 +774,7 @@ class Component extends XMLLoader {
 
 		// Reset the error info.
 		$this->error   = 0;
-		$this->errstrs = array();
+		$this->errstrs = [];
 
 		// Check the mode of it also, quick check.
 		if ($this->_execMode != 'BOTH') {
@@ -833,7 +841,7 @@ class Component extends XMLLoader {
 	 * Get every JSLibrary in this component as an object.
 	 */
 	public function getJSLibraries() {
-		$ret = array();
+		$ret = [];
 		foreach ($this->getRootDOM()->getElementsByTagName('jslibrary') as $node) {
 			$lib       = new JSLibrary();
 			$lib->name = $node->getAttribute('name');
@@ -966,27 +974,27 @@ class Component extends XMLLoader {
 	}
 
 	public function getProvides() {
-		$ret = array();
+		$ret = [];
 		// This element itself.
-		$ret[] = array(
+		$ret[] = [
 			'name'    => strtolower($this->getName()),
 			'type'    => 'component',
 			'version' => $this->getVersion()
-		);
+		];
 		foreach ($this->getElements('provides') as $el) {
 			// <requires name="JQuery" type="library" version="1.4" operation="ge"/>
-			$ret[] = array(
+			$ret[] = [
 				'name'      => strtolower($el->getAttribute('name')),
 				'type'      => $el->getAttribute('type'),
 				'version'   => $el->getAttribute('version'),
 				'operation' => $el->getAttribute('operation'),
-			);
+			];
 		}
 		return $ret;
 	}
 
 	public function getRequires() {
-		$ret = array();
+		$ret = [];
 		foreach ($this->getRootDOM()->getElementsByTagName('requires') as $r) {
 			$t  = $r->getAttribute('type');
 			$n  = $r->getAttribute('name');
@@ -998,13 +1006,13 @@ class Component extends XMLLoader {
 			if ($v == '') $v = false;
 			if ($op == '') $op = 'ge';
 
-			$ret[] = array(
+			$ret[] = [
 				'type'      => strtolower($t),
 				'name'      => $n,
 				'version'   => strtolower($v),
 				'operation' => strtolower($op),
 				//'value' => $value,
-			);
+			];
 		}
 		return $ret;
 	}
@@ -1076,7 +1084,7 @@ class Component extends XMLLoader {
 	 * @return array
 	 */
 	public function getChangedFiles() {
-		$ret = array();
+		$ret = [];
 		// Run through each file listed under '<file>' and get its md5sum.
 		foreach ($this->getElementsByTagName('file') as $node) {
 			if (!($filename = @$node->getAttribute('filename'))) continue;
@@ -1141,13 +1149,13 @@ class Component extends XMLLoader {
 	 * Return an array of every license, (and its URL), in this component.
 	 */
 	public function getLicenses() {
-		$ret = array();
+		$ret = [];
 		foreach ($this->getRootDOM()->getElementsByTagName('license') as $el) {
 			$url   = @$el->getAttribute('url');
-			$ret[] = array(
+			$ret[] = [
 				'title' => $el->nodeValue,
 				'url'   => $url
-			);
+			];
 		}
 		return $ret;
 	}
@@ -1168,12 +1176,12 @@ class Component extends XMLLoader {
 	 * Return an array of every author in this component.
 	 */
 	public function getAuthors() {
-		$ret = array();
+		$ret = [];
 		foreach ($this->getRootDOM()->getElementsByTagName('author') as $el) {
-			$ret[] = array(
+			$ret[] = [
 				'name'  => $el->getAttribute('name'),
 				'email' => @$el->getAttribute('email'),
-			);
+			];
 		}
 		return $ret;
 	}
@@ -1197,15 +1205,15 @@ class Component extends XMLLoader {
 	 * Get every registered filename and its hash in this component.
 	 */
 	public function getAllFilenames() {
-		$ret  = array();
+		$ret  = [];
 		$list = $this->getElements('//component/library/file|//component/module/file|//component/view/file|//component/otherfiles/file|//component/assets/file');
 		//foreach($this->getRootDOM()->getElementsByTagName('file') as $el){
 		foreach ($list as $el) {
 			$md5   = @$el->getAttribute('md5');
-			$ret[] = array(
+			$ret[] = [
 				'file' => $el->getAttribute('filename'),
 				'md5'  => $md5
-			);
+			];
 		}
 		return $ret;
 	}
@@ -1341,8 +1349,8 @@ class Component extends XMLLoader {
 			$i         = $m::GetIndexes();
 			$tablename = $m::GetTableName();
 
-			$schema = array('schema'  => $s,
-			                'indexes' => $i);
+			$schema = ['schema'  => $s,
+			                'indexes' => $i];
 
 			if (Core::DB()->tableExists($tablename)) {
 				// Exists, ensure that it's up to date instead.
