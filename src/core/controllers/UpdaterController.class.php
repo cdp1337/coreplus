@@ -217,6 +217,22 @@ class UpdaterController extends Controller_2_1 {
 
 		$view->assign('form', $form);
 
+		if(!is_dir(GPG_HOMEDIR)){
+			// Try to create it?
+			if(is_writable(dirname(GPG_HOMEDIR))){
+				// w00t
+				mkdir(GPG_HOMEDIR);
+			}
+			else{
+				Core::SetMessage(GPG_HOMEDIR . ' does not exist and could not be created!  Please fix this before proceeding!', 'error');
+				$form = null;
+			}
+		}
+		elseif(!is_writable(GPG_HOMEDIR)){
+			Core::SetMessage(GPG_HOMEDIR . ' is not writable!  Please fix this before proceeding!', 'error');
+			$form = null;
+		}
+
 
 		// This is the logic for step 2 (confirmation).
 		// This is after all the template logic from step 1 because it will fallback to that form if necessary.
