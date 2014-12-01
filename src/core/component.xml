@@ -70,11 +70,8 @@
 		-->
 	</includes>
 	<files>
-		<file filename="core/libs/core/utilities/Packager.php">
-			<class name="Core\Utilities\Packager"/>
-		</file>
 		<file filename="config/configuration.example.xml" md5="eac5d52f582025aca84e54796592b7b5"/>
-		<file filename="core/CHANGELOG" md5="d282932d073a61eb5670e7dff0fc45e1"/>
+		<file filename="core/CHANGELOG" md5="040eea7167fae7c1026aed079cf394ef"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="7a9184f8d8cc9f4680c52b1c5f3f1859"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
@@ -83,7 +80,7 @@
 		<file filename="core/controllers/AdminController.php" md5="e98bb2a5ec7345f6c60037db7b11aa20">
 			<controller name="AdminController"/>
 		</file>
-		<file filename="core/controllers/DatastoreAuthController.php" md5="2bff6eecbe8d680af8a2231a4e2fa234">
+		<file filename="core/controllers/DatastoreAuthController.php" md5="4dbc0eddd9a3538357bf59b3b83d1866">
 			<controller name="DatastoreAuthController"/>
 		</file>
 		<file filename="core/controllers/DirectoryController.class.php" md5="3c272c73dcc0b73a83235e55bc7f84a3">
@@ -107,7 +104,7 @@
 		<file filename="core/controllers/PageController.php" md5="9e0642bcc280707dcd72cf0bf4bc6f33">
 			<controller name="PageController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="5aceb7d8bbead19841d850db9d02f07e">
+		<file filename="core/controllers/UpdaterController.class.php" md5="c3c16c2eb919fdb3d382961f122c08d2">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/UserActivityController.php" md5="fed49f9912687b213621b3bcf9f8f222">
@@ -382,7 +379,7 @@
 		<file filename="core/libs/core/Cache.php" md5="44b866c002f09d494870b434c5186e82">
 			<class name="Core\Cache"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="3b0aec8b77ad6a6a38eceea42488f045">
+		<file filename="core/libs/core/Component.class.php" md5="7349e5bc05f53ec1cf6fc64a8dac5ce8">
 			<class name="Component"/>
 		</file>
 		<file filename="core/libs/core/ComponentFactory.php" md5="d153c8bf2dfbf65eba63bb0e7b1ceae9">
@@ -529,7 +526,7 @@
 		<file filename="core/libs/core/cli/Arguments.php" md5="f29ac27abf99b1ab173810d2a578af81">
 			<class name="Core\CLI\Arguments"/>
 		</file>
-		<file filename="core/libs/core/cli/CLI.class.php" md5="aae73bed93c862647505852cab24193f">
+		<file filename="core/libs/core/cli/CLI.class.php" md5="1188554edad3778b8340aa54c60f3a40">
 			<class name="Core\CLI\CLI"/>
 		</file>
 		<file filename="core/libs/core/configs/functions.php" md5="a6bc12ca5676115441f5df0f59dbfbb8"/>
@@ -594,6 +591,9 @@
 		<file filename="core/libs/core/filestore/Directory.interface.php" md5="74555ae72ec7f26a25ff16cac86d3a55">
 			<interface name="Core\Filestore\Directory"/>
 		</file>
+		<file filename="core/libs/core/filestore/DirectoryIterator.php" md5="8d0aa2515bdc3a9b6860776eee1e03d6">
+			<class name="Core\Filestore\DirectoryIterator"/>
+		</file>
 		<file filename="core/libs/core/filestore/Directory_Backend.interface.php" md5="3585655f8c033729879b699323a2e03e">
 			<interface name="Directory_Backend"/>
 		</file>
@@ -615,7 +615,7 @@
 		<file filename="core/libs/core/filestore/backends/DirectoryFTP.php" md5="59fb5e0d5bf2c200f99feeb5cec8ea70">
 			<class name="Core\Filestore\Backends\DirectoryFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/DirectoryLocal.php" md5="190df6b6884d5563ba5565b54e09335d">
+		<file filename="core/libs/core/filestore/backends/DirectoryLocal.php" md5="a1704d9f81e28f66ed7cf349f110993f">
 			<class name="Core\Filestore\Backends\DirectoryLocal"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="40ac29997756410b4d5772b8a15dc2fd">
@@ -727,19 +727,22 @@
 		<file filename="core/libs/core/user/ImportHelper.php" md5="ed3b48aa118ac2a708024b3e9860ab03">
 			<class name="Core\User\ImportHelper"/>
 		</file>
-		<file filename="core/libs/core/user/authdrivers/datastore.php" md5="d6847d99b40e46374ec151484b16448f">
+		<file filename="core/libs/core/user/authdrivers/datastore.php" md5="59dfb8c355d38ed64d3fdd2338425cac">
 			<class name="Core\User\AuthDrivers\datastore"/>
 		</file>
 		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="5eae590dfc2ca7f71f6ef04c9ce71b5b">
 			<class name="Core\User\AuthDrivers\gpg"/>
 		</file>
+		<file filename="core/libs/core/utilities/Packager.php" md5="a09c3787d06dde1e58e3f0b4af826514">
+			<class name="Core\Utilities\Packager"/>
+		</file>
 		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="cbe5d3040cf77482bfd6f82237a29652">
 			<class name="Core\Utilities\Changelog\Entry"/>
 		</file>
-		<file filename="core/libs/core/utilities/changelog/Parser.php" md5="da35795efa76c11ac1d24f134d5c2d4f">
+		<file filename="core/libs/core/utilities/changelog/Parser.php" md5="7ac05e7a56aed8cf5ae7191233e6058a">
 			<class name="Core\Utilities\Changelog\Parser"/>
 		</file>
-		<file filename="core/libs/core/utilities/changelog/Section.php" md5="8e85a79851a4b31f2bbcf374498c1048">
+		<file filename="core/libs/core/utilities/changelog/Section.php" md5="d5b070b200e111a5029cde6ef734d861">
 			<class name="Core\Utilities\Changelog\Section"/>
 		</file>
 		<file filename="core/libs/core/utilities/logger/LogFile.php" md5="e56e2d5e0a805c436996b5aca728091f">
@@ -1285,7 +1288,7 @@
 		<file filename="core/models/UserModel.php" md5="ad67c305950055e270c2234fe143ba8a">
 			<class name="UserModel"/>
 		</file>
-		<file filename="core/models/UserUserConfigModel.php" md5="017371dd135738999afac50c9f260a06">
+		<file filename="core/models/UserUserConfigModel.php" md5="3368396778db47d634b6dad65f13ad94">
 			<class name="UserUserConfigModel"/>
 		</file>
 		<file filename="core/models/UserUserGroupModel.php" md5="b73a3b87b6c88707449404fa942cf90e">
@@ -1376,6 +1379,8 @@
 		<file filename="install/test_rewrite/success.html" md5="d0749aaba8b833466dfcbb0428e4f89c"/>
 		<file filename="install/utilities.php" md5="19b6e7d1483e8ec8e0a6fad9932ce850"/>
 		<file filename="robots.txt" md5="c0c01a1b2c4285e804f9f217e4f2692f"/>
+		<file filename="utilities/README.md" md5="0577aa929316ed135fcb094ab848fd48"/>
+		<file filename="utilities/reinstall.php" md5="30aaacc13b2ddc7402df7786f4d42342"/>
 	</files>
 	<pages>
 		<page baseurl="/admin" admin="1" access="g:admin" title="Admin Dashboard"/>
@@ -1492,7 +1497,7 @@
 		<file filename="core/templates/pages/updater/keys.tpl" md5="4ff939a015c21167bda5a5a8d47f3f37"/>
 		<file filename="core/templates/pages/updater/keys_import.tpl" md5="3dc1de19f1f96e5ea92b67ef0d0ebc01"/>
 		<file filename="core/templates/pages/updater/repos.tpl" md5="a89ad644a891497f8641c259c69cf159"/>
-		<file filename="core/templates/pages/updater/repos_add.tpl" md5="cef69bdbee6456bf08512d0674835cbe"/>
+		<file filename="core/templates/pages/updater/repos_add.tpl" md5="5f27f816e963d390088e7e49b8fb05f0"/>
 		<file filename="core/templates/pages/updater/repos_add2.tpl" md5="a1f63dcca556bce813ab72264d4e629c"/>
 		<file filename="core/templates/pages/updater/repos_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/updater/update.tpl" md5="dda6c77aed0d5d36ff520c02f1f9c4f9"/>
@@ -1890,6 +1895,8 @@
 		<author name="Dmitry Petrov"/>
 		<author name="John Millaway"/>
 		<author name="Brent Cook &lt;busterbcook@yahoo.com"/>
+		<author name="Koh Zi Han, based on implementation by Koh Zi Chun"/>
+		<author name="Hans Engel"/>
 		<author name="Monte Ohrt" email="monte at ohrt dot com"/>
 		<author name="Mark Priatel" email="mpriatel@rogers.com"/>
 		<author name="Gerard" email="gerard@interfold.com"/>
@@ -1918,6 +1925,9 @@
 		<author name="Jason Pell" email="jasonpell@hotmail.com"/>
 		<author name="Lauren Matheson" email="inan@canada.com"/>
 		<author name="John Griffin" email="jgriffin316@netscape.net"/>
+		<author name="Stas Kobzar" email="stas@modulis.ca"/>
+		<author name="Author: Mike Brevoort" email="mike@brevoort.com"/>
+		<author name="Constantin Jucovschi" email="c.jucovschi@jacobs-university.de"/>
 	</authors>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
