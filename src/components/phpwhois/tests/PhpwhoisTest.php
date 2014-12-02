@@ -71,14 +71,14 @@ class PhpwhoisTest extends PHPUnit_Framework_TestCase {
 	public function test_corepl_us_Lookup(){
 		$whois = new phpwhois\Whois();
 		$result = $whois->lookup('corepl.us');
-		$this->assertEquals('EVAL, LTD.', $result->getOrganization());
+		$this->assertEquals('eVAL, Ltd.', $result->getOrganization());
 
 		$address = $result->getAddress();
 
 		$this->assertArrayHasKey('street', $address);
-		$this->assertEquals('COLUMBUS', $address['city']);
+		$this->assertEquals('Columbus', $address['city']);
 		$this->assertEquals('OH', $address['state']);
 		$this->assertEquals('43215', $address['pcode']);
-		$this->assertEquals('US', $address['country']);
+		$this->assertEquals('United States', $address['country']);
 	}
 }
