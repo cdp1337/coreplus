@@ -842,21 +842,21 @@ while(true){
 			case 'package':
 				$bundle = $packager->package($packagername, $packageremail, false);
 				echo "Created unsigned package of " . $packager->getLabel() . ' ' . $packager->getVersion() . NL . " as " . $bundle . NL;
-				break;
+				break 2; // Exit back to the menu.
 			case 'package-sign':
 				$bundle = $packager->package($packagername, $packageremail, true);
 				echo "Created signed package of " . $packager->getLabel() . ' ' . $packager->getVersion() . NL . " as " . $bundle . NL;
-				break;
+				break 2; // Exit back to the menu.
 			case 'package-sign-commit':
 				$bundle = $packager->package($packagername, $packageremail, true);
 				echo "Created signed package of " . $packager->getLabel() . ' ' . $packager->getVersion() . NL . " as " . $bundle . NL;
 				$packager->gitCommit();
-				break;
+				break 2; // Exit back to the menu.
 			case 'commit':
 				$packager->gitCommit();
-				break;
+				break 2; // Exit back to the menu.
 			case 'menu':
-				break 2;
+				break 2; // Exit back to the menu.
 			case 'quit':
 				if($saved){
 					echo 'Bye!' . NL;
