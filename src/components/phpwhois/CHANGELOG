@@ -1,3 +1,12 @@
+PHPWhois 5.0.0~core1
+
+	* Import newest version of phpwhois from the new eVAL library
+	* Re-architect the entire structure of phpWhois to make it more manageable and compliant with PHP 5.5
+	  standards.
+	* Documentation standardization
+	* Repackage a number of components to fix a minor packaging bug.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 04 Dec 2014 18:19:35 -0500
+
 PHPWhois 4.2.2~core6
 
 	* Newest version of phpwhois from github.

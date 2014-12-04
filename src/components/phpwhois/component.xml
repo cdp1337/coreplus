@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.2.2~core6" name="PHPWhois" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.0.0~core1" name="PHPWhois" execmode="both">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 		<require name="geographic-codes" type="component" version="1.0.0"/>
@@ -15,13 +15,13 @@
 		<scriptlibrary name="fancy_ip" call="phpwhois\JSHelper::LoadFancyIP"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="3ef14f52f35f18e56b3993becdf367cd"/>
+		<file filename="CHANGELOG" md5="b7fdb9fa42c42670f8b82655fd318795"/>
 		<file filename="LICENSE" md5="eb723b61539feef013de476e68b5c50a"/>
 		<file filename="README.md" md5="69c7d3436fca6c02694c8ed9427053a7"/>
 		<file filename="controllers/PhpwhoisController.php" md5="e9cdd00cd66b0ff1b9eeb39e6fca8150">
 			<controller name="PhpwhoisController"/>
 		</file>
-		<file filename="lib/Whois.php" md5="fedc7668ba285a828b178ecf1b574b3f">
+		<file filename="lib/Whois.php" md5="db6fd0320aa9f4aabac9f7b14ffb4b12">
 			<class name="Whois"/>
 		</file>
 		<file filename="lib/WhoisNotFoundResult.php" md5="816e32f7d753e898b1a1eeec75fef5b4">
@@ -409,6 +409,7 @@
 		<upgrade from="4.2.2~core3" to="4.2.2~core4"/>
 		<upgrade from="4.2.2~core4" to="4.2.2~core5"/>
 		<upgrade from="4.2.2~core5" to="4.2.2~core6"/>
+		<upgrade from="4.2.2~core6" to="5.0.0~core1"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/phpwhois/fancy_ip.css" md5="c78fb7fd4a37703a00f30ef4f2524361"/>
