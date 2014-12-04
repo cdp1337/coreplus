@@ -32,7 +32,9 @@
 
 namespace phpwhois\whois\domain;
 
-class jp_handler extends WhoisClient {
+use phpwhois\whois\WhoisQuery;
+
+class jp_handler extends WhoisQuery {
 	function parse($data_str, $query) {
 		$items = [
 			'[State]'                  => 'domain.status',
@@ -75,7 +77,7 @@ class jp_handler extends WhoisClient {
 			'[Last Update]'     => 'changed'
 		];
 
-		$this->Query['server'] = 'jp.whois-servers.net';
+		$this->server = 'jp.whois-servers.net';
 
 		if(!empty($r['regrinfo']['admin']['handle'])) {
 			$rwdata                 = $this->getRawData('CONTACT ' . $r['regrinfo']['admin']['handle'] . '/e');
@@ -92,8 +94,7 @@ class jp_handler extends WhoisClient {
 				$r['regrinfo']['tech'] = $r['regrinfo']['admin'];
 			}
 			else {
-				unset($this->Query);
-				$this->Query['server'] = 'jp.whois-servers.net';
+				$this->server = 'jp.whois-servers.net';
 				$rwdata                = $this->getRawData('CONTACT ' . $r['regrinfo']['tech']['handle'] . '/e');
 				$r['rawdata'][]        = '';
 				$r['rawdata']          = array_merge($r['rawdata'], $rwdata);

@@ -16,24 +16,32 @@
 	</provides>
 	<files>
 		<file filename="CHANGELOG" md5="3ef14f52f35f18e56b3993becdf367cd"/>
-		<file filename="controllers/PhpwhoisController.php" md5="8820d417a29e532de9ed42ae95faddce">
+		<file filename="LICENSE" md5="eb723b61539feef013de476e68b5c50a"/>
+		<file filename="README.md" md5="69c7d3436fca6c02694c8ed9427053a7"/>
+		<file filename="controllers/PhpwhoisController.php" md5="e9cdd00cd66b0ff1b9eeb39e6fca8150">
 			<controller name="PhpwhoisController"/>
 		</file>
-		<file filename="lib/phpwhois/WhoisNotFoundResult.php" md5="ddee88de7a87dfac43a8c0ae74dfa487">
-			<class name="phpwhois\WhoisNotFoundResult"/>
+		<file filename="lib/Whois.php" md5="fedc7668ba285a828b178ecf1b574b3f">
+			<class name="Whois"/>
 		</file>
-		<file filename="lib/phpwhois/WhoisResult.php" md5="ef8236360445dcfb78bebc1a02341f60">
-			<class name="phpwhois\WhoisResult"/>
+		<file filename="lib/WhoisNotFoundResult.php" md5="816e32f7d753e898b1a1eeec75fef5b4">
+			<class name="WhoisNotFoundResult"/>
+		</file>
+		<file filename="lib/WhoisResult.php" md5="52ea8193dea721dd80167db60529e333">
+			<class name="WhoisResult"/>
 		</file>
 		<file filename="lib/phpwhois/whois.idna.php" md5="0748aae8ea6c86ababbaad4b08ba49ad">
 			<class name="phpwhois\idna_convert"/>
 			<class name="phpwhois\Net_IDNA_php4"/>
 		</file>
-		<file filename="lib/phpwhois/whois.ip.lib.php" md5="8533607293132fde7fe4f9b92e3078f1"/>
-		<file filename="lib/phpwhois/whois.main.php" md5="d57a0b9a87c34488c21fb6a5b0ed46ad">
+		<file filename="lib/phpwhois/whois.ip.lib.php" md5="fcd3b95515d7ea56f1a6d905c2f23368"/>
+		<file filename="lib/phpwhois/whois.main.php" md5="fd129f19f912c50ad29409c666eb8442">
 			<class name="phpwhois\Whois"/>
 		</file>
 		<file filename="lib/phpwhois/whois.parser.php" md5="6b295b31e11cb5f01796a04a64b4d241"/>
+		<file filename="lib/phpwhois/whois/WhoisQuery.php" md5="b35cc26ca3e5479eab69408d19d4d1ca">
+			<class name="phpwhois\whois\WhoisQuery"/>
+		</file>
 		<file filename="lib/phpwhois/whois/domain/whois.ae.php" md5="ffa7831b0ed6fc302c967a99cb7d486e">
 			<class name="phpwhois\whois\domain\ae_handler"/>
 		</file>
@@ -142,7 +150,7 @@
 		<file filename="lib/phpwhois/whois/domain/whois.it.php" md5="a6b390917c8e63cb463c341aa7cbd0e3">
 			<class name="phpwhois\whois\domain\it_handler"/>
 		</file>
-		<file filename="lib/phpwhois/whois/domain/whois.jp.php" md5="a5cc04ed47ab8d9343c40653a84a1f52">
+		<file filename="lib/phpwhois/whois/domain/whois.jp.php" md5="2963d73809f1d25a933a677b605aa279">
 			<class name="phpwhois\whois\domain\jp_handler"/>
 		</file>
 		<file filename="lib/phpwhois/whois/domain/whois.lt.php" md5="90cbb810e958b7394b6761b82a8b411d">
@@ -220,13 +228,13 @@
 		<file filename="lib/phpwhois/whois/domain/whois.uk.php" md5="3f0351f4d52a7c692d93df93eae64112">
 			<class name="phpwhois\whois\domain\uk_handler"/>
 		</file>
-		<file filename="lib/phpwhois/whois/domain/whois.us.php" md5="53cac1e44439333f6ecc1ecf4ec8d9f5">
+		<file filename="lib/phpwhois/whois/domain/whois.us.php" md5="805355d3611873d5747c2afcd9d3c643">
 			<class name="phpwhois\whois\domain\us_handler"/>
 		</file>
 		<file filename="lib/phpwhois/whois/domain/whois.ve.php" md5="d216869d8dbd7b3c03f4420564a1ee81">
 			<class name="phpwhois\whois\domain\ve_handler"/>
 		</file>
-		<file filename="lib/phpwhois/whois/domain/whois.ws.php" md5="8bb1b790aa518168330c943e4e3cde1a">
+		<file filename="lib/phpwhois/whois/domain/whois.ws.php" md5="d596667a7168f1ab37214ce80b46fa80">
 			<class name="phpwhois\whois\domain\ws_handler"/>
 		</file>
 		<file filename="lib/phpwhois/whois/domain/whois.xxx.php" md5="825e0c31a4c769836f7ad676ec63f3e4">
@@ -265,7 +273,7 @@
 		<file filename="lib/phpwhois/whois/gtld/whois.gtld.dreamhost.php" md5="b28c9b2615607d8f5afbd7d0759a7b8c">
 			<class name="phpwhois\whois\gtld\dreamhost_handler"/>
 		</file>
-		<file filename="lib/phpwhois/whois/gtld/whois.gtld.enom.php" md5="6ae8bda4dff3daacc7eabb6f24b4da85">
+		<file filename="lib/phpwhois/whois/gtld/whois.gtld.enom.php" md5="972740196be2084a769708546106833e">
 			<class name="phpwhois\whois\gtld\enom_handler"/>
 		</file>
 		<file filename="lib/phpwhois/whois/gtld/whois.gtld.fabulous.php" md5="4dc003e49b265c4cfc86a7f99a6c1ee4">
@@ -385,13 +393,10 @@
 		<file filename="lib/phpwhois/whois/ip/whois.ip.ripe.php" md5="484a24c9ad0732e5d16130f8a892d1fe">
 			<class name="phpwhois\whois\ip\ripe_handler"/>
 		</file>
-		<file filename="lib/phpwhois/whois/whois.client.php" md5="206aa5da8fc2aa9c8c59056df98a377e">
-			<class name="phpwhois\whois\WhoisClient"/>
-		</file>
-		<file filename="lib/phpwhois/whois/whois.gtld.php" md5="7130f77c16e4ea2c04204bc98a67b23e">
+		<file filename="lib/phpwhois/whois/whois.gtld.php" md5="ecc1daea1a5c5e63e2a2a502470a1a5a">
 			<class name="phpwhois\whois\gtld_handler"/>
 		</file>
-		<file filename="lib/phpwhois/whois/whois.ip.php" md5="7b9d0fe4c45caa9607817ba8c7a69385">
+		<file filename="lib/phpwhois/whois/whois.ip.php" md5="bf3435940080dcbf0599cf5f39728186">
 			<class name="phpwhois\whois\ip_handler"/>
 		</file>
 		<file filename="lib/phpwhois/whois/whois.rwhois.php" md5="c5621241a0ec7096373157504626b5ba">

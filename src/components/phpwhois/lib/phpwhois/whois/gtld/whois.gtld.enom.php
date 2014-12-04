@@ -75,6 +75,30 @@ class enom_handler {
 		//return easy_parser($data_str, $items, 'dmy', false, false, true);
 		$r = \phpwhois\get_blocks($data_str, $items, false, false);
 		\phpwhois\format_dates($r, 'dmy');
+
+		$this->_strlower($r);
 		return $r;
+	}
+
+	private function _strlower(&$array){
+		foreach($array as $k => $val){
+			if(is_array($val)){
+				$this->_strlower($array[$k]);
+			}
+			elseif(
+				$k == 'state' ||
+				$k == 'country'
+			){
+				$array[$k] = strtoupper($val);
+			}
+			elseif(
+				$k == 'email'
+			){
+				$array[$k] = strtolower($val);
+			}
+			elseif(is_scalar($val)){
+				$array[$k] = ucwords(strtolower($val));
+			}
+		}
 	}
 }

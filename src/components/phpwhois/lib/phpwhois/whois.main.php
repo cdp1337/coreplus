@@ -27,42 +27,25 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois;
 
+use phpwhois\whois\WhoisQuery;
 require_once('whois.parser.php');
 require_once('whois.ip.lib.php');
 require_once('whois.idna.php');
-require_once('whois/whois.client.php');
+require_once('whois/WhoisQuery.php');
 
-class Whois extends Whois\WhoisClient {
-	// Deep whois ?
-	var $deep_whois = true;
+/**
+ * Class Whois
+ *
+ * Primary public interface for requesting whois lookups.
+ *
+ * @package phpwhois
+ */
+class Whois {
 
-	// Windows based ?
-	var $windows = false;
+	public $query;
 
-	// Recursion allowed ?
-	var $gtld_recurse = true;
-
-	// Support for non-ICANN tld's
-	var $non_icann = false;
-
-	// Network Solutions registry server
-	var $NSI_REGISTRY = 'whois.nsiregistry.net';
-
-	/**
-	 * Constructor function
-	 */
-	public function __construct() {
-
-		if((substr(php_uname(), 0, 7) == 'Windows')) $this->windows = true;
-		else
-			$this->windows = false;
-	}
-
-	/**
-	 *  Use special whois server
-	 */
-	public function useServer($tld, $server) {
-		self::$WHOIS_SPECIAL[ $tld ] = $server;
+	public function __construct(){
+		$this->query = new WhoisQuery();
 	}
 
 	/**
@@ -71,245 +54,9 @@ class Whois extends Whois\WhoisClient {
 	 * @param string $query  IP or hostname to lookup
 	 * @param bool   $is_utf Require UTF-8
 	 *
-	 * @return WhoisResult
+	 * @return array
 	 */
-
-	function lookup($query = '', $is_utf = true) {
-		// See if this query has been cached by Core <3
-		$cachekey = \Core\str_to_url('whois-' . $query);
-		$cached = \Core\Cache::Get($cachekey);
-
-		if($cached){
-			// :)
-			return $cached;
-		}
-
-		// start clean
-		$this->Query = ['status' => ''];
-
-		$query = trim($query);
-
-		$IDN = new idna_convert();
-
-		if($is_utf) {
-			$query = $IDN->encode($query);
-		}
-		else {
-			$query = $IDN->encode(utf8_encode($query));
-		}
-
-		// If domain to query was not set
-		if (!isset($query) || $query == '') {
-			// Configure to use default whois server
-			$this->Query['server'] = $this->NSI_REGISTRY;
-			return new WhoisNotFoundResult($query);
-		}
-
-		// If the query is an IP range, just drop off the network identifier.
-		// The whois agent should still be able to lookup the network base.
-		if(preg_match('/^[0-9\.]*\/[0-9]+$/', $query)){
-			$query = substr($query, 0, strpos($query, '/'));
-		}
-
-		// Set domain to query in query array
-
-		$this->Query['query'] = $domain = strtolower($query);
-
-		// If query is an ip address do ip lookup
-
-		if($query == long2ip(ip2long($query))) {
-			// IPv4 Prepare to do lookup via the 'ip' handler
-			$ip = gethostbyname($query);
-
-			if(isset(self::$WHOIS_SPECIAL['ip'])) {
-				$this->Query['server'] = self::$WHOIS_SPECIAL['ip'];
-				$this->Query['args']   = $ip;
-			}
-			else {
-				$this->Query['server']  = 'whois.arin.net';
-				$this->Query['args']    = "n $ip";
-				$this->Query['file']    = 'whois.ip.php';
-				$this->Query['handler'] = 'ip';
-			}
-			$this->Query['host_ip']   = $ip;
-			$this->Query['query']     = $ip;
-			$this->Query['tld']       = 'ip';
-			$this->Query['host_name'] = @gethostbyaddr($ip);
-
-			$data = $this->getData('', $this->deep_whois);
-			// Cache the results for 6 hours
-			\Core\Cache::Set($cachekey, $data, (3600*6));
-			// And return.
-			return $data;
-		}
-
-		if(strpos($query, ':')) {
-			// IPv6 AS Prepare to do lookup via the 'ip' handler
-			$ip = @gethostbyname($query);
-
-			if(isset(self::$WHOIS_SPECIAL['ip'])) {
-				$this->Query['server'] = self::$WHOIS_SPECIAL['ip'];
-			}
-			else {
-				$this->Query['server']  = 'whois.ripe.net';
-				$this->Query['file']    = 'whois.ip.ripe.php';
-				$this->Query['handler'] = 'ripe';
-			}
-			$this->Query['query'] = $ip;
-			$this->Query['tld']   = 'ip';
-
-			return $this->GetData('', $this->deep_whois);
-		}
-
-		if(!strpos($query, '.')) {
-			// AS Prepare to do lookup via the 'ip' handler
-			$ip                    = @gethostbyname($query);
-			$this->Query['server'] = 'whois.arin.net';
-			if(strtolower(substr($ip, 0, 2)) == 'as') $as = substr($ip, 2);
-			else
-				$as = $ip;
-			$this->Query['args']    = "a $as";
-			$this->Query['file']    = 'whois.ip.php';
-			$this->Query['handler'] = 'ip';
-			$this->Query['query']   = $ip;
-			$this->Query['tld']     = 'as';
-
-			return $this->GetData('', $this->deep_whois);
-		}
-
-		// Build array of all possible tld's for that domain
-
-		$tld      = '';
-		$server   = '';
-		$dp       = explode('.', $domain);
-		$np       = count($dp) - 1;
-		$tldtests = [];
-
-		for($i = 0; $i < $np; $i++) {
-			array_shift($dp);
-			$tldtests[] = implode('.', $dp);
-		}
-
-		// Search the correct whois server
-
-		if($this->non_icann) $special_tlds = array_merge(self::$WHOIS_SPECIAL, self::$WHOIS_NON_ICANN);
-		else $special_tlds = self::$WHOIS_SPECIAL;
-
-		foreach($tldtests as $tld) {
-			// Test if we know in advance that no whois server is
-			// available for this domain and that we can get the
-			// data via http or whois request
-
-			if(isset($special_tlds[ $tld ])) {
-				$val = $special_tlds[ $tld ];
-
-				if($val == '') return $this->Unknown();
-
-				$domain = substr($query, 0, -strlen($tld) - 1);
-				$val    = str_replace('{domain}', $domain, $val);
-				$server = str_replace('{tld}', $tld, $val);
-				break;
-			}
-		}
-
-		if($server == ''){
-			foreach($tldtests as $tld) {
-				// Determine the top level domain, and it's whois server using
-				// DNS lookups on 'whois-servers.net'.
-				// Assumes a valid DNS response indicates a recognised tld (!?)
-
-				$cname = $tld . '.whois-servers.net';
-
-				if(gethostbyname($cname) == $cname) continue;
-				$server = $tld . '.whois-servers.net';
-				break;
-			}
-		}
-
-		if($tld && $server) {
-			// If found, set tld and whois server in query array
-			$this->Query['server'] = $server;
-			$this->Query['tld']    = $tld;
-			$handler               = '';
-
-			foreach($tldtests as $htld) {
-				// special handler exists for the tld ?
-
-				if(isset(self::$DATA[ $htld ])) {
-					$handler = self::$DATA[ $htld ];
-					break;
-				}
-
-				// Regular handler exists for the tld ?
-				if(file_exists(__DIR__ . '/whois/domain/whois.' . $htld . '.php') && is_readable(__DIR__ . '/whois/domain/whois.' . $htld . '.php')){
-					$this->Query['handler'] = $htld;
-					$this->Query['type']    = 'domain';
-					$this->Query['file']    = "whois.$htld.php";
-					break;
-				}
-				//if(($fp = @fopen('whois.' . $htld . '.php', 'r', 1)) and fclose($fp)) {
-				//	$handler = $htld;
-				//	break;
-				//}
-			}
-
-			// If there is a handler set it
-
-			if($handler != '') {
-				$this->Query['file']    = "whois.$handler.php";
-				$this->Query['handler'] = $handler;
-			}
-
-			// Special parameters ?
-
-			if(isset(self::$WHOIS_PARAM[ $server ])) $this->Query['server'] =
-				$this->Query['server'] . '?' . str_replace('$', $domain, self::$WHOIS_PARAM[ $server ]);
-
-			$result = $this->GetData('', $this->deep_whois);
-
-			return $result;
-		}
-
-		// If tld not known, and domain not in DNS, return error
-		return $this->Unknown();
-	}
-
-	/* Unsupported domains */
-
-	function Unknown() {
-		unset($this->Query['server']);
-		$this->Query['status']                          = 'error';
-		$result['rawdata'][] = $this->Query['errstr'][] = $this->Query['query'] . ' domain is not supported';
-		$this->FixResult($result, $this->Query['query']);
-
-		return $result;
-	}
-
-	/*
-	 *  Fix and/or add name server information
-	 */
-
-	function FixResult(&$result, $domain) {
-		// Add usual fields
-		$result['regrinfo']['domain']['name'] = $domain;
-
-		// Check if nameservers exist
-
-		if(!isset($result['regrinfo']['registered'])) {
-			if(function_exists('checkdnsrr') && checkdnsrr($domain, 'NS')) $result['regrinfo']['registered'] = 'yes';
-			else
-				$result['regrinfo']['registered'] = 'unknown';
-		}
-
-		// Normalize nameserver fields
-
-		if(isset($result['regrinfo']['domain']['nserver'])) {
-			if(!is_array($result['regrinfo']['domain']['nserver'])) {
-				unset($result['regrinfo']['domain']['nserver']);
-			}
-			else
-				$result['regrinfo']['domain']['nserver'] =
-					$this->FixNameServer($result['regrinfo']['domain']['nserver']);
-		}
+	public function lookup($query = '', $is_utf = true) {
+		return $this->query->lookup($query, $is_utf);
 	}
 }

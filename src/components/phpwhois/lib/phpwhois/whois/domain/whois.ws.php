@@ -32,7 +32,9 @@
 
 namespace phpwhois\whois\domain;
 
-class ws_handler extends WhoisClient {
+use phpwhois\whois\WhoisQuery;
+
+class ws_handler extends WhoisQuery {
 	function parse($data_str, $query) {
 		$items = [
 			'Domain Name:'                      => 'domain.name',
@@ -58,7 +60,7 @@ class ws_handler extends WhoisClient {
 			if(isset($r['regrinfo']['rwhois'])) {
 				if($this->deep_whois) {
 					$r['regyinfo']['whois'] = $r['regrinfo']['rwhois'];
-					$r                      = $this->DeepWhois($query, $r);
+					$r                      = $this->_deepWhois($query, $r);
 				}
 
 				unset($r['regrinfo']['rwhois']);

@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois\whois;
 
-class ip_handler extends WhoisClient {
+class ip_handler extends WhoisQuery {
 	// Deep whois ?
 	var $deep_whois = true;
 
@@ -65,10 +65,9 @@ class ip_handler extends WhoisClient {
 
 		if(!$this->deep_whois) return null;
 
-		$this->Query           = [];
-		$this->Query['server'] = 'whois.arin.net';
-		$this->Query['query']  = $query;
-		$this->Query['type']   = 'ip';
+		$this->server = 'whois.arin.net';
+		$this->query  = $query;
+		$this->type   = 'ip';
 
 		$rawdata = $data['rawdata'];
 
@@ -118,7 +117,7 @@ class ip_handler extends WhoisClient {
 							break 2;
 						}
 						else {
-							$this->Query['args'] = 'n ' . $net;
+							$this->args = 'n ' . $net;
 							$presults[]          = $this->getRawData($net);
 							$done[ $net ]        = 1;
 						}
@@ -128,28 +127,28 @@ class ip_handler extends WhoisClient {
 			}
 
 			if(!$found) {
-				$this->Query['file']    = 'ip/whois.ip.arin.php';
-				$this->Query['handler'] = 'arin';
-				$result                 = $this->parse_results($result, $rwdata, $query, true);
+				$this->file    = __DIR__ . '/ip/whois.ip.arin.php';
+				$this->handler = 'arin';
+				$result        = $this->parse_results($result, $rwdata, $query, true);
 			}
 		}
 
-		unset($this->Query['args']);
+		$this->args = '';
 
 		while(count($this->more_data) > 0) {
 			$srv_data              = array_shift($this->more_data);
-			$this->Query['server'] = $srv_data['server'];
-			unset($this->Query['handler']);
+			$this->server = $srv_data['server'];
+			unset($this->handler);
 			// Use original query
 			$rwdata = $this->getRawData($srv_data['query']);
 
 			if(!empty($rwdata)) {
 				if(!empty($srv_data['handler'])) {
-					$this->Query['handler'] = $srv_data['handler'];
+					$this->handler = $srv_data['handler'];
 
-					if(!empty($srv_data['file'])) $this->Query['file'] = $srv_data['file'];
+					if(!empty($srv_data['file'])) $this->file = $srv_data['file'];
 					else
-						$this->Query['file'] = 'ip/whois.' . $this->Query['handler'] . '.php';
+						$this->file = __DIR__  . '/ip/whois.' . $this->handler . '.php';
 				}
 
 				$result = $this->parse_results($result, $rwdata, $query, $srv_data['reset']);
@@ -176,7 +175,7 @@ class ip_handler extends WhoisClient {
 	//-----------------------------------------------------------------
 
 	function parse_results($result, $rwdata, $query, $reset) {
-		$rwres = $this->Process($rwdata);
+		$rwres = $this->_process($rwdata);
 
 		if($result['regyinfo']['type'] == 'AS' && !empty($rwres['regrinfo']['network'])) {
 			$rwres['regrinfo']['AS'] = $rwres['regrinfo']['network'];

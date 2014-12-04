@@ -1,9 +1,9 @@
 <?php
 /**
- * File for class PhpwhoisController definition in the coreplus project
+ * File for class Whois definition in the Core Plus project
  * 
  * @author Charlie Powell <charlie@eval.bz>
- * @date 20130424.2342
+ * @date 20141202.2209
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
@@ -22,14 +22,14 @@
 
 
 /**
- * A short teaser of what PhpwhoisController does.
+ * A short teaser of what Whois does.
  *
- * More lengthy description of what PhpwhoisController does and why it's fantastic.
+ * More lengthy description of what Whois does and why it's fantastic.
  *
  * <h3>Usage Examples</h3>
  *
  *
- * @todo Write documentation for PhpwhoisController
+ * @todo Write documentation for Whois
  * <h4>Example 1</h4>
  * <p>Description 1</p>
  * <code>
@@ -49,28 +49,40 @@
  * @author Charlie Powell <charlie@eval.bz>
  *
  */
-class PhpwhoisController extends Controller_2_1{
-	public function lookup(){
-		$view = $this->getView();
-		$request = $this->getPageRequest();
+class Whois {
 
-		$query = $request->getParameter('q');
+	/**
+	 * Lookup query
+	 *
+	 * @param string $query  IP or hostname to lookup
+	 * @param bool   $is_utf Require UTF-8
+	 *
+	 * @return WhoisResult
+	 */
+	public static function Lookup($query = '', $is_utf = true) {
+		// See if this query has been cached by Core <3
+		$cachekey = \Core\str_to_url('whois-' . $query);
+		$cached   = \Core\Cache::Get($cachekey);
 
-		$view->contenttype = View::CTYPE_JSON;
-		$view->mode = View::MODE_AJAX;
-		$view->record = false;
+		if($cached){
+			$result = $cached;
+		}
+		else{
+			$whois = new phpwhois\Whois();
+			$result = $whois->lookup($query, $is_utf);
 
-		$result = Whois::Lookup($query);
+			// Cache the results for 6 hours
+			\Core\Cache::Set($cachekey, $result, (3600*6));
+		}
 
-		$view->jsondata = [
-			'query'        => $query,
-			'ip'           => $result->getIP(),
-			'network'      => $result->getNetwork(),
-			'organization' => $result->getOrganization(),
-			'country'      => $result->getCountry(),
-			'country_name' => $result->getCountryName(),
-			'flag_sm'      => $result->getCountryIcon('20x20'),
-			'flag_lg'      => $result->getCountryIcon('100x100'),
-		];
+		if(!is_array($result)){
+			return new WhoisNotFoundResult($query);
+		}
+
+		if(!sizeof($result)){
+			return new WhoisNotFoundResult($query);
+		}
+
+		return new WhoisResult($result, $query);
 	}
-}
+} 

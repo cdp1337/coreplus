@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 namespace phpwhois\whois;
 
-class gtld_handler extends WhoisClient {
+class gtld_handler extends WhoisQuery {
 	var $HANDLER_VERSION = '1.1';
 
 	var $REG_FIELDS = [
@@ -70,7 +70,7 @@ class gtld_handler extends WhoisClient {
 		}
 
 		if($this->deep_whois){
-			$this->result = $this->DeepWhois($query, $this->result);
+			$this->result = $this->_deepWhois($query, $this->result);
 		}
 
 		// Next server could fail to return data
