@@ -218,14 +218,14 @@ class Model implements ArrayAccess {
 	/**
 	 * @var array Associative array of the data in this corresponding record.
 	 */
-	protected $_data = array();
+	protected $_data = [];
 
 	/**
 	 * The data according to the database.
 	 * Useful for something.... :/
 	 * @var array
 	 */
-	protected $_datainit = array();
+	protected $_datainit = [];
 
 	/**
 	 * Some models have encrypted fields.  This will store the decrypted data for the application to access.
@@ -240,29 +240,30 @@ class Model implements ArrayAccess {
 	 *
 	 * @var array
 	 */
-	protected $_dataother = array();
+	protected $_dataother = [];
 
 	/**
 	 * @var boolean Flag to signify if this record exists in the database.
 	 */
 	protected $_exists = false;
 
-	/**
-	 * @var array Set of linked children models on this model, populated by the Constructor and *link methods.
-	 */
-	protected $_linked = array();
+	/** @var array Set of linked children models on this model, populated by the Constructor and *link methods. */
+	protected $_linked = [];
+
+	/** @var array Cache of link names to their index, used to speed up repeated queries. */
+	protected $_linkIndexCache = [];
 
 	protected $_cacheable = true;
 
 	/**
 	 * @var array The schema as per defined in the extending model.
 	 */
-	public static $Schema = array();
+	public static $Schema = [];
 
 	/**
 	 * @var array Any indexes that are required on this data.  Must be defined in the extending model if used.
 	 */
-	public static $Indexes = array();
+	public static $Indexes = [];
 
 	/**
 	 * @var bool Set to true if this model is searchable, (and auto-create the necessary search index fields).
@@ -284,21 +285,21 @@ class Model implements ArrayAccess {
 	 */
 	public static $HasDeleted = false;
 
-	public static $_ModelCache = array();
+	public static $_ModelCache = [];
 
 	/**
 	 * @var array Cache for blank Find statements.
 	 *
 	 * ONLY used with a completely blank Find() query!!!
 	 */
-	public static $_ModelFindCache = array();
+	public static $_ModelFindCache = [];
 
 	/**
 	 * @var array Array of rendered Schemas for each named model.
 	 *
 	 * Used to accelerate GetSchema on multiple calls for the same model type.
 	 */
-	protected static $_ModelSchemaCache = array();
+	protected static $_ModelSchemaCache = [];
 
 
 	/*************************************************************************
@@ -313,6 +314,20 @@ class Model implements ArrayAccess {
 	 * @throws Exception
 	 */
 	public function __construct($key = null) {
+
+		// If an extending model set links in that constructor, reformat them to ensure they're set correctly.
+		if(sizeof($this->_linked)){
+			$clone = $this->_linked;
+			$this->_linked = [];
+			foreach($clone as $model => $dat){
+				if(strrpos($model, 'Model') !== strlen($model) - 5){
+					// All models need to end with Model, (allow shorthand definitions to ignore that though)
+					$model .= 'Model';
+				}
+				$dat['model'] = $model;
+				$this->_linked[] = $dat;
+			}
+		}
 
 		// Update the _data array based on the schema.
 		$s = self::GetSchema();
@@ -341,11 +356,18 @@ class Model implements ArrayAccess {
 					$linkon    = 'id'; // ... erm yeah... hopefully this is it!
 				}
 
+				if(strrpos($linkmodel, 'Model') !== strlen($linkmodel) - 5){
+					// All models need to end with Model, (allow shorthand definitions to ignore that though)
+					$linkmodel .= 'Model';
+				}
+
 
 				// And populate the linked array with this link data.
-				$this->_linked[$linkmodel] = [
-					'on'   => [$linkon => $k],
-					'link' => $linktype,
+				$this->_linked[] = [
+					'key'   => $k,
+					'model' => $linkmodel,
+					'on'    => [$linkon => $k],
+					'link'  => $linktype,
 				];
 			}
 		}
@@ -353,7 +375,7 @@ class Model implements ArrayAccess {
 		// Check the index (primary), and the incoming data.  If it matches, load it up!
 		$i = self::GetIndexes();
 		$pri = (isset($i['primary'])) ? $i['primary'] : false;
-		if($pri && !is_array($pri)) $pri = array($pri);
+		if($pri && !is_array($pri)) $pri = [$pri];
 
 		if ($pri && func_num_args() == sizeof($i['primary'])) {
 			foreach ($pri as $k => $v) {
@@ -384,9 +406,9 @@ class Model implements ArrayAccess {
 		$s = self::GetSchema();
 
 		$pri = (isset($i['primary'])) ? $i['primary'] : false;
-		if($pri && !is_array($pri)) $pri = array($pri);
+		if($pri && !is_array($pri)) $pri = [$pri];
 
-		$keys = array();
+		$keys = [];
 		if ($pri && sizeof($i['primary'])) {
 			foreach ($pri as $k) {
 				$v = $this->get($k);
@@ -515,7 +537,7 @@ class Model implements ArrayAccess {
 
 			if(!is_array($l['on'])){
 				// make sure it's an array.
-				$l['on'] = array($l['on'] => $l['on'] );
+				$l['on'] = [$l['on'] => $l['on'] ];
 			}
 
 			if($l['link'] == Model::LINK_HASONE && sizeof($l['on']) == 1){
@@ -566,7 +588,7 @@ class Model implements ArrayAccess {
 
 			switch($l['link']){
 				case Model::LINK_HASONE:
-					$models = isset($l['records']) ? array($l['records']) : null;
+					$models = isset($l['records']) ? [$l['records']] : null;
 					$deletes = isset($l['purged']) ? $l['purged'] : null;
 					break;
 				case Model::LINK_HASMANY:
@@ -974,10 +996,10 @@ class Model implements ArrayAccess {
 			}
 
 			$pri = $i['primary'];
-			if(!is_array($pri)) $pri = array($pri);
+			if(!is_array($pri)) $pri = [$pri];
 
 			foreach ($pri as $k) {
-				$dat->where(array($k => $this->_data[$k]));
+				$dat->where([$k => $this->_data[$k]]);
 			}
 
 			$dat->limit(1)->delete();
@@ -1023,7 +1045,7 @@ class Model implements ArrayAccess {
 
 			// Special "this" method.
 			if (is_array($check) && sizeof($check) == 2 && $check[0] == 'this') {
-				$valid = call_user_func(array($this, $check[1]), $v);
+				$valid = call_user_func([$this, $check[1]], $v);
 			}
 			// Method-based validation.
 			elseif (strpos($check, '::') !== false) {
@@ -1276,17 +1298,20 @@ class Model implements ArrayAccess {
 	 *
 	 * Useful for manipulating the factory of the data.
 	 *
-	 * @param $linkname
+	 * @param string $linkname
 	 *
 	 * @return ModelFactory
 	 */
 	public function getLinkFactory($linkname){
-		if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
+		$idx = $this->_getLinkIndex($linkname);
+		if($idx === null){
+			return null; // @todo Error Handling
+		}
 
 		$c = $this->_getLinkClassName($linkname);
 
 		$f = new ModelFactory($c);
-		switch($this->_linked[$linkname]['link']){
+		switch($this->_linked[$idx]['link']){
 			case Model::LINK_HASONE:
 			case Model::LINK_BELONGSTOONE:
 				$f->limit(1);
@@ -1312,47 +1337,36 @@ class Model implements ArrayAccess {
 	 * @return Model|array
 	 */
 	public function getLink($linkname, $order = null) {
-		if (!isset($this->_linked[$linkname])){
-			if(strrpos($linkname, 'Model') === strlen($linkname) - 5 ){
-				// Try it without the Model suffix.
-				$linkname = substr($linkname, 0, -5);
-			}
-			else{
-				// It doesn't have the suffix, try adding it!
-				$linkname .= 'Model';
-			}
-
-			if(!isset($this->_linked[$linkname])){
-				return null; // @todo Error Handling
-			}
-			// No else, it found it! :)
+		$idx = $this->_getLinkIndex($linkname);
+		if($idx === null){
+			return null; // @todo Error Handling
 		}
 
 		// Allow order to be set from the model itself.
-		if($order === null && isset($this->_linked[$linkname]['order'])){
-			$order = $this->_linked[$linkname]['order'];
+		if($order === null && isset($this->_linked[$idx]['order'])){
+			$order = $this->_linked[$idx]['order'];
 		}
 
 		// Try to keep these in cache, so when they change I'll be able to save them on the parent's save function.
-		if (!isset($this->_linked[$linkname]['records'])) {
+		if (!isset($this->_linked[$idx]['records'])) {
 
 			$f = $this->getLinkFactory($linkname);
 			$c = $this->_getLinkClassName($linkname);
 			$wheres = $this->_getLinkWhereArray($linkname);
 
 			if ($order) $f->order($order);
-			$this->_linked[$linkname]['records'] = $f->get();
+			$this->_linked[$idx]['records'] = $f->get();
 
 			// Ensure that it's a valid record and not null.  If it's a LINK_ONE, the factory will return null if it doesn't exist.
-			if ($this->_linked[$linkname]['records'] === null) {
-				$this->_linked[$linkname]['records'] = new $c();
+			if ($this->_linked[$idx]['records'] === null) {
+				$this->_linked[$idx]['records'] = new $c();
 				foreach ($wheres as $k => $v) {
-					$this->_linked[$linkname]['records']->set($k, $v);
+					$this->_linked[$idx]['records']->set($k, $v);
 				}
 			}
 		}
 
-		return $this->_linked[$linkname]['records'];
+		return $this->_linked[$idx]['records'];
 	}
 
 	/**
@@ -1363,7 +1377,7 @@ class Model implements ArrayAccess {
 	 * @param array  $searchkeys
 	 * @return bool|\Model|null
 	 */
-	public function findLink($linkname, $searchkeys = array()) {
+	public function findLink($linkname, $searchkeys = []) {
 		$l = $this->getLink($linkname);
 		if ($l === null) return null;
 
@@ -1418,32 +1432,21 @@ class Model implements ArrayAccess {
 	 * @return void
 	 */
 	public function setLink($linkname, Model $model) {
-		if (!isset($this->_linked[$linkname])){
-			if(strrpos($linkname, 'Model') === strlen($linkname) - 5 ){
-				// Try it without the Model suffix.
-				$linkname = substr($linkname, 0, -5);
-			}
-			else{
-				// It doesn't have the suffix, try adding it!
-				$linkname .= 'Model';
-			}
-
-			if(!isset($this->_linked[$linkname])){
-				return null; // @todo Error Handling
-			}
-			// No else, it found it! :)
+		$idx = $this->_getLinkIndex($linkname);
+		if($idx === null){
+			return null; // @todo Error Handling
 		}
 
 		// Update the cached model.
-		switch($this->_linked[$linkname]['link']){
+		switch($this->_linked[$idx]['link']){
 			case Model::LINK_HASONE:
 			case Model::LINK_BELONGSTOONE:
-				$this->_linked[$linkname]['records'] = $model;
+				$this->_linked[$idx]['records'] = $model;
 				break;
 			case Model::LINK_HASMANY:
 			case Model::LINK_BELONGSTOMANY:
-				if(!isset($this->_linked[$linkname]['records'])) $this->_linked[$linkname]['records'] = array();
-				$this->_linked[$linkname]['records'][] = $model;
+				if(!isset($this->_linked[$idx]['records'])) $this->_linked[$idx]['records'] = [];
+				$this->_linked[$idx]['records'][] = $model;
 				break;
 		}
 	}
@@ -1454,9 +1457,15 @@ class Model implements ArrayAccess {
 	 * @param $linkname
 	 */
 	public function resetLink($linkname){
-		if (!isset($this->_linked[$linkname])) return; // @todo Error Handling
+		$idx = $this->_getLinkIndex($linkname);
+		if($idx === null){
+			return null; // @todo Error Handling
+		}
 
-		$this->_linked[$linkname]['records'] = null;
+		$this->_linked[$idx]['records'] = null;
+		if(isset($this->_linked[$idx]['purged'])){
+			unset($this->_linked[$idx]['purged']);
+		}
 	}
 
 	/**
@@ -1468,27 +1477,27 @@ class Model implements ArrayAccess {
 	 */
 	public function deleteLink(Model $link){
 		// Since I don't get the linkname like usual ones...
-		foreach($this->_linked as $linkname => $linkset){
+		foreach($this->_linked as $idx => $linkset){
 			if(!isset($linkset['records'])) continue;
 
 			if(is_array($linkset['records'])){
 				foreach($linkset['records'] as $k => $rec){
 					if($rec == $link){
-						if(!isset($this->_linked[$linkname]['purged'])){
-							$this->_linked[$linkname]['purged'] = array();
+						if(!isset($this->_linked[$idx]['purged'])){
+							$this->_linked[$idx]['purged'] = [];
 						}
-						$this->_linked[$linkname]['purged'][] = $link;
-						unset($this->_linked[$linkname]['records'][$k]);
+						$this->_linked[$idx]['purged'][] = $link;
+						unset($this->_linked[$idx]['records'][$k]);
 						return true;
 					}
 				}
 			}
 			elseif($linkset['records'] == $link){
-				if(!isset($this->_linked[$linkname]['purged'])){
-					$this->_linked[$linkname]['purged'] = array();
+				if(!isset($this->_linked[$idx]['purged'])){
+					$this->_linked[$idx]['purged'] = [];
 				}
-				$this->_linked[$linkname]['purged'][] = $link;
-				$this->_linked[$linkname]['records'] = null;
+				$this->_linked[$idx]['purged'][] = $link;
+				$this->_linked[$idx]['records'] = null;
 				return true;
 			}
 		}
@@ -1690,7 +1699,7 @@ class Model implements ArrayAccess {
 	 */
 	public function decryptData(){
 		if($this->_datadecrypted === null){
-			$this->_datadecrypted = array();
+			$this->_datadecrypted = [];
 
 			foreach($this->getKeySchemas() as $k => $v){
 				// Since certain keys in a model may be encrypted.
@@ -1735,13 +1744,13 @@ class Model implements ArrayAccess {
 	 * @return string
 	 */
 	public function getPrimaryKeyString(){
-		$bits = array();
+		$bits = [];
 		$i = self::GetIndexes();
 
 		if(isset($i['primary'])){
 			// It should be an array, but doesn't have to be.
 			$pri = $i['primary'];
-			if(!is_array($pri)) $pri = array($pri);
+			if(!is_array($pri)) $pri = [$pri];
 
 			foreach ($pri as $k) {
 				$val = $this->get($k);
@@ -1859,7 +1868,7 @@ class Model implements ArrayAccess {
 			if($exists){
 				// Get the data and update it!
 				$links = $this->getLink($lk);
-				if (!is_array($links)) $links = array($links);
+				if (!is_array($links)) $links = [$links];
 
 				foreach ($links as $model) {
 					$model->set($key, $newval);
@@ -1891,15 +1900,17 @@ class Model implements ArrayAccess {
 	 * @return null|string
 	 */
 	protected function _getLinkClassName($linkname) {
-		// Determine the class.
-		$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname;
-
-		// All models must end with "Model"
-		if(strripos($c, 'Model') === false){
-			$c .= 'Model';
+		$idx = $this->_getLinkIndex($linkname);
+		if($idx === null){
+			return null; // @todo Error Handling
 		}
 
-		if (!is_subclass_of($c, 'Model')) return null; // @todo Error Handling
+		// Determine the class.
+		$c = $this->_linked[$idx]['model'];
+
+		if (!is_subclass_of($c, 'Model')){
+			return null; // @todo Error Handling
+		}
 
 		return $c;
 	}
@@ -1912,7 +1923,7 @@ class Model implements ArrayAccess {
 		$s = self::GetSchema();
 		$n = $this->_getTableName();
 
-		if (!isset($i['primary'])) $i['primary'] = array(); // No primary schema defined... just don't make the in_array bail out.
+		if (!isset($i['primary'])) $i['primary'] = []; // No primary schema defined... just don't make the in_array bail out.
 
 		$dat = new Core\Datamodel\Dataset();
 		$dat->table($n);
@@ -2024,11 +2035,11 @@ class Model implements ArrayAccess {
 		$n = $this->_getTableName();
 
 		// No primary schema defined or it's a string, (single value)... just don't make the in_array bail out.
-		$pri = isset($i['primary']) ? $i['primary'] : array();
+		$pri = isset($i['primary']) ? $i['primary'] : [];
 
-		if($pri && !is_array($pri)) $pri = array($pri);
+		if($pri && !is_array($pri)) $pri = [$pri];
 
-		if($pri && !is_array($pri)) $pri = array($pri);
+		if($pri && !is_array($pri)) $pri = [$pri];
 
 		// This is the dataset object that will be integral in this function.
 		$dat = new Core\Datamodel\Dataset();
@@ -2118,27 +2129,30 @@ class Model implements ArrayAccess {
 	 * Get the where array of criteria for a given link.
 	 * Useful for manually tweaking the clause.
 	 *
-	 * @param $linkname
+	 * @param string $linkname
 	 *
 	 * @return array|null
 	 */
 	protected function _getLinkWhereArray($linkname) {
-		if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
+		$idx = $this->_getLinkIndex($linkname);
+		if($idx === null){
+			return null; // @todo Error Handling
+		}
 
 		// Build a standard where criteria that can be used throughout this function.
-		$wheres = array();
+		$wheres = [];
 
-		if (!isset($this->_linked[$linkname]['on'])) {
+		if (!isset($this->_linked[$idx]['on'])) {
 			return null; // @todo automatic linking.
 		}
-		elseif (is_array($this->_linked[$linkname]['on'])) {
-			foreach ($this->_linked[$linkname]['on'] as $k => $v) {
+		elseif (is_array($this->_linked[$idx]['on'])) {
+			foreach ($this->_linked[$idx]['on'] as $k => $v) {
 				if (is_numeric($k)) $wheres[$v] = $this->get($v);
 				else $wheres[$k] = $this->get($v);
 			}
 		}
 		else {
-			$k          = $this->_linked[$linkname]['on'];
+			$k          = $this->_linked[$idx]['on'];
 			$wheres[$k] = $this->get($k);
 		}
 
@@ -2154,6 +2168,42 @@ class Model implements ArrayAccess {
 
 
 		return $wheres;
+	}
+
+	/**
+	 * Translate a link name, (be it full Model name, partial model name, or linked key name), to the index in _linked.
+	 *
+	 * @param string $name
+	 *
+	 * @return int|null
+	 */
+	protected function _getLinkIndex($name){
+		if(isset($this->_linkIndexCache[$name])){
+			return $this->_linkIndexCache[ $name ];
+		}
+
+		foreach($this->_linked as $idx => $dat){
+			if($idx === $name){
+				// May happen if the index is passed in, (could happen internally).
+				return $idx;
+			}
+			if(isset($dat['key']) && $dat['key'] == $name){
+				$this->_linkIndexCache[$name] = $idx;
+				return $idx;
+			}
+			if(isset($dat['model']) && $dat['model'] == $name){
+				$this->_linkIndexCache[$name] = $idx;
+				return $idx;
+			}
+			if(isset($dat['model']) && $dat['model'] == $name . 'Model'){
+				$this->_linkIndexCache[$name] = $idx;
+				return $idx;
+			}
+		}
+
+		// No matches?
+		$this->_linkIndexCache[$name] = null;
+		return null;
 	}
 
 	/**
@@ -2225,7 +2275,7 @@ class Model implements ArrayAccess {
 		$cache = substr($cache, 0, -1);
 
 		if(!isset(self::$_ModelCache[$class])){
-			self::$_ModelCache[$class] = array();
+			self::$_ModelCache[$class] = [];
 		}
 		if(!isset(self::$_ModelCache[$class][$cache])){
 			$reflection = new ReflectionClass($class);
@@ -2249,7 +2299,7 @@ class Model implements ArrayAccess {
 	 *
 	 * @return array|null|Model
 	 */
-	public static function Find($where = array(), $limit = null, $order = null) {
+	public static function Find($where = [], $limit = null, $order = null) {
 
 		$classname = get_called_class();
 
@@ -2283,7 +2333,7 @@ class Model implements ArrayAccess {
 	 *
 	 * @return array
 	 */
-	public static function FindRaw($where = array(), $limit = null, $order = null) {
+	public static function FindRaw($where = [], $limit = null, $order = null) {
 		$fac = new ModelFactory(get_called_class());
 		$fac->where($where);
 		$fac->limit($limit);
@@ -2301,7 +2351,7 @@ class Model implements ArrayAccess {
 	 *
 	 * @return int
 	 */
-	public static function Count($where = array()) {
+	public static function Count($where = []) {
 		$fac = new ModelFactory(get_called_class());
 		$fac->where($where);
 		return $fac->count();
@@ -2315,7 +2365,7 @@ class Model implements ArrayAccess {
 	 *
 	 * @return array An array of ModelResult objects.
 	 */
-	public static function Search($query, $where = array()){
+	public static function Search($query, $where = []){
 		$ret = [];
 
 		// If this object does not support searching, simply return an empty array.
@@ -2363,7 +2413,7 @@ class Model implements ArrayAccess {
 	public static function GetTableName() {
 		// Just a lookup table for rendered table names.
 		// This is useful so the regex functions don't have to run more than once.
-		static $_tablenames = array();
+		static $_tablenames = [];
 		$m = get_called_class();
 
 		// Generic models cannot have tables.
@@ -2535,7 +2585,7 @@ class Model implements ArrayAccess {
 
 				if($v['type'] == Model::ATT_TYPE_ENUM){
 					// Enums have an options array!
-					$schema[$k]['options'] = isset($schema[$k]['options']) ? $schema[$k]['options'] : array();
+					$schema[$k]['options'] = isset($schema[$k]['options']) ? $schema[$k]['options'] : [];
 				}
 				else{
 					// Other fields don't.
@@ -2644,19 +2694,19 @@ class ModelFactory {
 	 * Where clause for the search, passed directly to the dataset object.
 	 */
 	public function where() {
-		call_user_func_array(array($this->_dataset, 'where'), func_get_args());
+		call_user_func_array([$this->_dataset, 'where'], func_get_args());
 	}
 
 	public function whereGroup() {
-		call_user_func_array(array($this->_dataset, 'whereGroup'), func_get_args());
+		call_user_func_array([$this->_dataset, 'whereGroup'], func_get_args());
 	}
 
 	public function order() {
-		call_user_func_array(array($this->_dataset, 'order'), func_get_args());
+		call_user_func_array([$this->_dataset, 'order'], func_get_args());
 	}
 
 	public function limit() {
-		call_user_func_array(array($this->_dataset, 'limit'), func_get_args());
+		call_user_func_array([$this->_dataset, 'limit'], func_get_args());
 	}
 
 	/**
@@ -2671,7 +2721,7 @@ class ModelFactory {
 		$this->_performMultisiteCheck();
 		$rs = $this->_dataset->execute($this->interface);
 
-		$ret = array();
+		$ret = [];
 		foreach ($rs as $row) {
 			$model = new $this->_model();
 			$model->_loadFromRecord($row);

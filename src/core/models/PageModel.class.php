@@ -709,8 +709,7 @@ class PageModel extends Model {
 				}
 				else{
 					// Nope?  Delete it!
-					$meta->delete();
-					unset($this->_linked['PageMeta']['records'][$idx]);
+					$this->deleteLink($meta);
 				}
 			}
 
@@ -722,7 +721,7 @@ class PageModel extends Model {
 				$meta->set('meta_value_title', $metavaluetitle);
 
 				// And append it so it'll get saved on save!
-				$this->_linked['PageMeta']['records'][] = $meta;
+				$this->setLink('PageMeta', $meta);
 			}
 		}
 		elseif($name == 'authorid'){
@@ -742,7 +741,7 @@ class PageModel extends Model {
 			$meta = new PageMetaModel($this->get('baseurl'), 'author', $value);
 
 			// And append it so it'll get saved on save!
-			$this->_linked['PageMeta']['records'][] = $meta;
+			$this->setLink('PageMeta', $meta);
 		}
 		// Default action, one to one!
 		else{
@@ -760,8 +759,7 @@ class PageModel extends Model {
 				}
 				else{
 					// It's blank but exists... I can fix that :p
-					$meta->delete();
-					unset($this->_linked['PageMeta']['records'][$idx]);
+					$this->deleteLink($meta);
 				}
 				return; // :)
 			}
@@ -772,7 +770,7 @@ class PageModel extends Model {
 				$meta->set('meta_value_title', $value);
 
 				// And append it so it'll get saved on save!
-				$this->_linked['PageMeta']['records'][] = $meta;
+				$this->setLink('PageMeta', $meta);
 			}
 		}
 	}
@@ -808,7 +806,7 @@ class PageModel extends Model {
 		$ins->set('value', $value);
 
 		// And append it so it'll get saved on save!
-		$this->_linked['Insertable']['records'][] = $ins;
+		$this->setLink('Insertable', $ins);
 	}
 
 	/**
