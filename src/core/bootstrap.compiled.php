@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 01 Dec 2014 11:53:26 -0500
+ * @compiled Fri, 05 Dec 2014 15:41:24 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1776,23 +1776,35 @@ const LINK_HASMANY = 'many';
 const LINK_BELONGSTOONE = 'belongs_one';
 const LINK_BELONGSTOMANY = 'belongs_many';
 public $interface = null;
-protected $_data = array();
-protected $_datainit = array();
+protected $_data = [];
+protected $_datainit = [];
 protected $_datadecrypted = null;
-protected $_dataother = array();
+protected $_dataother = [];
 protected $_exists = false;
-protected $_linked = array();
+protected $_linked = [];
+protected $_linkIndexCache = [];
 protected $_cacheable = true;
-public static $Schema = array();
-public static $Indexes = array();
+public static $Schema = [];
+public static $Indexes = [];
 public static $HasSearch = false;
 public static $HasCreated = false;
 public static $HasUpdated = false;
 public static $HasDeleted = false;
-public static $_ModelCache = array();
-public static $_ModelFindCache = array();
-protected static $_ModelSchemaCache = array();
+public static $_ModelCache = [];
+public static $_ModelFindCache = [];
+protected static $_ModelSchemaCache = [];
 public function __construct($key = null) {
+if(sizeof($this->_linked)){
+$clone = $this->_linked;
+$this->_linked = [];
+foreach($clone as $model => $dat){
+if(strrpos($model, 'Model') !== strlen($model) - 5){
+$model .= 'Model';
+}
+$dat['model'] = $model;
+$this->_linked[] = $dat;
+}
+}
 $s = self::GetSchema();
 foreach ($s as $k => $v) {
 if($v['type'] == Model::ATT_TYPE_ALIAS) continue;
@@ -1811,15 +1823,20 @@ $linkmodel = $v['link'];
 $linktype  = Model::LINK_HASONE;
 $linkon    = 'id'; // ... erm yeah... hopefully this is it!
 }
-$this->_linked[$linkmodel] = [
-'on'   => [$linkon => $k],
-'link' => $linktype,
+if(strrpos($linkmodel, 'Model') !== strlen($linkmodel) - 5){
+$linkmodel .= 'Model';
+}
+$this->_linked[] = [
+'key'   => $k,
+'model' => $linkmodel,
+'on'    => [$linkon => $k],
+'link'  => $linktype,
 ];
 }
 }
 $i = self::GetIndexes();
 $pri = (isset($i['primary'])) ? $i['primary'] : false;
-if($pri && !is_array($pri)) $pri = array($pri);
+if($pri && !is_array($pri)) $pri = [$pri];
 if ($pri && func_num_args() == sizeof($i['primary'])) {
 foreach ($pri as $k => $v) {
 $this->_data[$v] = func_get_arg($k);
@@ -1836,8 +1853,8 @@ return;
 $i = self::GetIndexes();
 $s = self::GetSchema();
 $pri = (isset($i['primary'])) ? $i['primary'] : false;
-if($pri && !is_array($pri)) $pri = array($pri);
-$keys = array();
+if($pri && !is_array($pri)) $pri = [$pri];
+$keys = [];
 if ($pri && sizeof($i['primary'])) {
 foreach ($pri as $k) {
 $v = $this->get($k);
@@ -1897,7 +1914,7 @@ return false;
 HookHandler::DispatchHook('/core/model/presave', $this);
 foreach($this->_linked as $l){
 if(!is_array($l['on'])){
-$l['on'] = array($l['on'] => $l['on'] );
+$l['on'] = [$l['on'] => $l['on'] ];
 }
 if($l['link'] == Model::LINK_HASONE && sizeof($l['on']) == 1){
 reset($l['on']);
@@ -1924,7 +1941,7 @@ else $this->_saveNew();
 foreach($this->_linked as $k => $l){
 switch($l['link']){
 case Model::LINK_HASONE:
-$models = isset($l['records']) ? array($l['records']) : null;
+$models = isset($l['records']) ? [$l['records']] : null;
 $deletes = isset($l['purged']) ? $l['purged'] : null;
 break;
 case Model::LINK_HASMANY:
@@ -2133,9 +2150,9 @@ if (!isset($i['primary'])) {
 throw new Exception('Unable to delete model [ ' . get_class($this) . ' ] without any primary keys.');
 }
 $pri = $i['primary'];
-if(!is_array($pri)) $pri = array($pri);
+if(!is_array($pri)) $pri = [$pri];
 foreach ($pri as $k) {
-$dat->where(array($k => $this->_data[$k]));
+$dat->where([$k => $this->_data[$k]]);
 }
 $dat->limit(1)->delete();
 if ($dat->execute($this->interface)) {
@@ -2155,7 +2172,7 @@ return true;
 if (isset($s[$k]['validation'])) {
 $check = $s[$k]['validation'];
 if (is_array($check) && sizeof($check) == 2 && $check[0] == 'this') {
-$valid = call_user_func(array($this, $check[1]), $v);
+$valid = call_user_func([$this, $check[1]], $v);
 }
 elseif (strpos($check, '::') !== false) {
 $valid = call_user_func($check, $v);
@@ -2314,10 +2331,13 @@ return true;
 }
 }
 public function getLinkFactory($linkname){
-if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
+$idx = $this->_getLinkIndex($linkname);
+if($idx === null){
+return null; // @todo Error Handling
+}
 $c = $this->_getLinkClassName($linkname);
 $f = new ModelFactory($c);
-switch($this->_linked[$linkname]['link']){
+switch($this->_linked[$idx]['link']){
 case Model::LINK_HASONE:
 case Model::LINK_BELONGSTOONE:
 $f->limit(1);
@@ -2328,36 +2348,29 @@ $f->where($wheres);
 return $f;
 }
 public function getLink($linkname, $order = null) {
-if (!isset($this->_linked[$linkname])){
-if(strrpos($linkname, 'Model') === strlen($linkname) - 5 ){
-$linkname = substr($linkname, 0, -5);
-}
-else{
-$linkname .= 'Model';
-}
-if(!isset($this->_linked[$linkname])){
+$idx = $this->_getLinkIndex($linkname);
+if($idx === null){
 return null; // @todo Error Handling
 }
+if($order === null && isset($this->_linked[$idx]['order'])){
+$order = $this->_linked[$idx]['order'];
 }
-if($order === null && isset($this->_linked[$linkname]['order'])){
-$order = $this->_linked[$linkname]['order'];
-}
-if (!isset($this->_linked[$linkname]['records'])) {
+if (!isset($this->_linked[$idx]['records'])) {
 $f = $this->getLinkFactory($linkname);
 $c = $this->_getLinkClassName($linkname);
 $wheres = $this->_getLinkWhereArray($linkname);
 if ($order) $f->order($order);
-$this->_linked[$linkname]['records'] = $f->get();
-if ($this->_linked[$linkname]['records'] === null) {
-$this->_linked[$linkname]['records'] = new $c();
+$this->_linked[$idx]['records'] = $f->get();
+if ($this->_linked[$idx]['records'] === null) {
+$this->_linked[$idx]['records'] = new $c();
 foreach ($wheres as $k => $v) {
-$this->_linked[$linkname]['records']->set($k, $v);
+$this->_linked[$idx]['records']->set($k, $v);
 }
 }
 }
-return $this->_linked[$linkname]['records'];
+return $this->_linked[$idx]['records'];
 }
-public function findLink($linkname, $searchkeys = array()) {
+public function findLink($linkname, $searchkeys = []) {
 $l = $this->getLink($linkname);
 if ($l === null) return null;
 if (!is_array($l)) {
@@ -2392,54 +2405,53 @@ return $model;
 }
 }
 public function setLink($linkname, Model $model) {
-if (!isset($this->_linked[$linkname])){
-if(strrpos($linkname, 'Model') === strlen($linkname) - 5 ){
-$linkname = substr($linkname, 0, -5);
-}
-else{
-$linkname .= 'Model';
-}
-if(!isset($this->_linked[$linkname])){
+$idx = $this->_getLinkIndex($linkname);
+if($idx === null){
 return null; // @todo Error Handling
 }
-}
-switch($this->_linked[$linkname]['link']){
+switch($this->_linked[$idx]['link']){
 case Model::LINK_HASONE:
 case Model::LINK_BELONGSTOONE:
-$this->_linked[$linkname]['records'] = $model;
+$this->_linked[$idx]['records'] = $model;
 break;
 case Model::LINK_HASMANY:
 case Model::LINK_BELONGSTOMANY:
-if(!isset($this->_linked[$linkname]['records'])) $this->_linked[$linkname]['records'] = array();
-$this->_linked[$linkname]['records'][] = $model;
+if(!isset($this->_linked[$idx]['records'])) $this->_linked[$idx]['records'] = [];
+$this->_linked[$idx]['records'][] = $model;
 break;
 }
 }
 public function resetLink($linkname){
-if (!isset($this->_linked[$linkname])) return; // @todo Error Handling
-$this->_linked[$linkname]['records'] = null;
+$idx = $this->_getLinkIndex($linkname);
+if($idx === null){
+return null; // @todo Error Handling
+}
+$this->_linked[$idx]['records'] = null;
+if(isset($this->_linked[$idx]['purged'])){
+unset($this->_linked[$idx]['purged']);
+}
 }
 public function deleteLink(Model $link){
-foreach($this->_linked as $linkname => $linkset){
+foreach($this->_linked as $idx => $linkset){
 if(!isset($linkset['records'])) continue;
 if(is_array($linkset['records'])){
 foreach($linkset['records'] as $k => $rec){
 if($rec == $link){
-if(!isset($this->_linked[$linkname]['purged'])){
-$this->_linked[$linkname]['purged'] = array();
+if(!isset($this->_linked[$idx]['purged'])){
+$this->_linked[$idx]['purged'] = [];
 }
-$this->_linked[$linkname]['purged'][] = $link;
-unset($this->_linked[$linkname]['records'][$k]);
+$this->_linked[$idx]['purged'][] = $link;
+unset($this->_linked[$idx]['records'][$k]);
 return true;
 }
 }
 }
 elseif($linkset['records'] == $link){
-if(!isset($this->_linked[$linkname]['purged'])){
-$this->_linked[$linkname]['purged'] = array();
+if(!isset($this->_linked[$idx]['purged'])){
+$this->_linked[$idx]['purged'] = [];
 }
-$this->_linked[$linkname]['purged'][] = $link;
-$this->_linked[$linkname]['records'] = null;
+$this->_linked[$idx]['purged'][] = $link;
+$this->_linked[$idx]['records'] = null;
 return true;
 }
 }
@@ -2526,7 +2538,7 @@ return false;
 }
 public function decryptData(){
 if($this->_datadecrypted === null){
-$this->_datadecrypted = array();
+$this->_datadecrypted = [];
 foreach($this->getKeySchemas() as $k => $v){
 if($v['encrypted']){
 $payload = $this->_data[$k];
@@ -2552,11 +2564,11 @@ public function _getTableName(){
 return self::GetTableName();
 }
 public function getPrimaryKeyString(){
-$bits = array();
+$bits = [];
 $i = self::GetIndexes();
 if(isset($i['primary'])){
 $pri = $i['primary'];
-if(!is_array($pri)) $pri = array($pri);
+if(!is_array($pri)) $pri = [$pri];
 foreach ($pri as $k) {
 $val = $this->get($k);
 if ($val === null) $val = 'null';
@@ -2598,7 +2610,7 @@ if ($l['on'] == $key) $dolink = true;
 if (!$dolink) continue;
 if($exists){
 $links = $this->getLink($lk);
-if (!is_array($links)) $links = array($links);
+if (!is_array($links)) $links = [$links];
 foreach ($links as $model) {
 $model->set($key, $newval);
 }
@@ -2617,18 +2629,21 @@ $this->_linked[$lk]['records']->set($key, $newval);
 }
 }
 protected function _getLinkClassName($linkname) {
-$c = (isset($this->_linked[$linkname]['class'])) ? $this->_linked[$linkname]['class'] : $linkname;
-if(strripos($c, 'Model') === false){
-$c .= 'Model';
+$idx = $this->_getLinkIndex($linkname);
+if($idx === null){
+return null; // @todo Error Handling
 }
-if (!is_subclass_of($c, 'Model')) return null; // @todo Error Handling
+$c = $this->_linked[$idx]['model'];
+if (!is_subclass_of($c, 'Model')){
+return null; // @todo Error Handling
+}
 return $c;
 }
 protected function _saveNew() {
 $i = self::GetIndexes();
 $s = self::GetSchema();
 $n = $this->_getTableName();
-if (!isset($i['primary'])) $i['primary'] = array(); // No primary schema defined... just don't make the in_array bail out.
+if (!isset($i['primary'])) $i['primary'] = []; // No primary schema defined... just don't make the in_array bail out.
 $dat = new Core\Datamodel\Dataset();
 $dat->table($n);
 $idcol = false;
@@ -2700,9 +2715,9 @@ if(!$this->changed()) return false;
 $i = self::GetIndexes();
 $s = self::GetSchema();
 $n = $this->_getTableName();
-$pri = isset($i['primary']) ? $i['primary'] : array();
-if($pri && !is_array($pri)) $pri = array($pri);
-if($pri && !is_array($pri)) $pri = array($pri);
+$pri = isset($i['primary']) ? $i['primary'] : [];
+if($pri && !is_array($pri)) $pri = [$pri];
+if($pri && !is_array($pri)) $pri = [$pri];
 $dat = new Core\Datamodel\Dataset();
 $dat->table($n);
 $idcol = false;
@@ -2761,19 +2776,22 @@ return false;
 $dat->execute($this->interface);
 }
 protected function _getLinkWhereArray($linkname) {
-if (!isset($this->_linked[$linkname])) return null; // @todo Error Handling
-$wheres = array();
-if (!isset($this->_linked[$linkname]['on'])) {
+$idx = $this->_getLinkIndex($linkname);
+if($idx === null){
+return null; // @todo Error Handling
+}
+$wheres = [];
+if (!isset($this->_linked[$idx]['on'])) {
 return null; // @todo automatic linking.
 }
-elseif (is_array($this->_linked[$linkname]['on'])) {
-foreach ($this->_linked[$linkname]['on'] as $k => $v) {
+elseif (is_array($this->_linked[$idx]['on'])) {
+foreach ($this->_linked[$idx]['on'] as $k => $v) {
 if (is_numeric($k)) $wheres[$v] = $this->get($v);
 else $wheres[$k] = $this->get($v);
 }
 }
 else {
-$k          = $this->_linked[$linkname]['on'];
+$k          = $this->_linked[$idx]['on'];
 $wheres[$k] = $this->get($k);
 }
 if($linkname == 'Page' && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
@@ -2783,6 +2801,30 @@ $wheres['site'] = $this->get('site');
 }
 }
 return $wheres;
+}
+protected function _getLinkIndex($name){
+if(isset($this->_linkIndexCache[$name])){
+return $this->_linkIndexCache[ $name ];
+}
+foreach($this->_linked as $idx => $dat){
+if($idx === $name){
+return $idx;
+}
+if(isset($dat['key']) && $dat['key'] == $name){
+$this->_linkIndexCache[$name] = $idx;
+return $idx;
+}
+if(isset($dat['model']) && $dat['model'] == $name){
+$this->_linkIndexCache[$name] = $idx;
+return $idx;
+}
+if(isset($dat['model']) && $dat['model'] == $name . 'Model'){
+$this->_linkIndexCache[$name] = $idx;
+return $idx;
+}
+}
+$this->_linkIndexCache[$name] = null;
+return null;
 }
 protected function encryptValue($value){
 $cipher = 'AES-256-CBC';
@@ -2816,7 +2858,7 @@ $cache .= $a . '-';
 }
 $cache = substr($cache, 0, -1);
 if(!isset(self::$_ModelCache[$class])){
-self::$_ModelCache[$class] = array();
+self::$_ModelCache[$class] = [];
 }
 if(!isset(self::$_ModelCache[$class][$cache])){
 $reflection = new ReflectionClass($class);
@@ -2825,7 +2867,7 @@ self::$_ModelCache[$class][$cache] = $obj;
 }
 return self::$_ModelCache[$class][$cache];
 }
-public static function Find($where = array(), $limit = null, $order = null) {
+public static function Find($where = [], $limit = null, $order = null) {
 $classname = get_called_class();
 if(!sizeof($where) && $limit === null && $order === null){
 if(!isset(self::$_ModelFindCache[$classname])){
@@ -2840,19 +2882,19 @@ $fac->limit($limit);
 $fac->order($order);
 return $fac->get();
 }
-public static function FindRaw($where = array(), $limit = null, $order = null) {
+public static function FindRaw($where = [], $limit = null, $order = null) {
 $fac = new ModelFactory(get_called_class());
 $fac->where($where);
 $fac->limit($limit);
 $fac->order($order);
 return $fac->getRaw();
 }
-public static function Count($where = array()) {
+public static function Count($where = []) {
 $fac = new ModelFactory(get_called_class());
 $fac->where($where);
 return $fac->count();
 }
-public static function Search($query, $where = array()){
+public static function Search($query, $where = []){
 $ret = [];
 $ref = new ReflectionClass(get_called_class());
 if(!$ref->getProperty('HasSearch')->getValue()){
@@ -2876,7 +2918,7 @@ $ret[] = $sr;
 return $ret;
 }
 public static function GetTableName() {
-static $_tablenames = array();
+static $_tablenames = [];
 $m = get_called_class();
 if ($m == 'Model') return null;
 if (!isset($_tablenames[$m])) {
@@ -2987,7 +3029,7 @@ $schema[$k]['default'] = '';
 }
 }
 if($v['type'] == Model::ATT_TYPE_ENUM){
-$schema[$k]['options'] = isset($schema[$k]['options']) ? $schema[$k]['options'] : array();
+$schema[$k]['options'] = isset($schema[$k]['options']) ? $schema[$k]['options'] : [];
 }
 else{
 $schema[$k]['options'] = null;
@@ -3038,21 +3080,21 @@ $this->_dataset->table($m::GetTablename());
 $this->_dataset->select('*');
 }
 public function where() {
-call_user_func_array(array($this->_dataset, 'where'), func_get_args());
+call_user_func_array([$this->_dataset, 'where'], func_get_args());
 }
 public function whereGroup() {
-call_user_func_array(array($this->_dataset, 'whereGroup'), func_get_args());
+call_user_func_array([$this->_dataset, 'whereGroup'], func_get_args());
 }
 public function order() {
-call_user_func_array(array($this->_dataset, 'order'), func_get_args());
+call_user_func_array([$this->_dataset, 'order'], func_get_args());
 }
 public function limit() {
-call_user_func_array(array($this->_dataset, 'limit'), func_get_args());
+call_user_func_array([$this->_dataset, 'limit'], func_get_args());
 }
 public function get() {
 $this->_performMultisiteCheck();
 $rs = $this->_dataset->execute($this->interface);
-$ret = array();
+$ret = [];
 foreach ($rs as $row) {
 $model = new $this->_model();
 $model->_loadFromRecord($row);
@@ -3953,15 +3995,14 @@ $meta->set('meta_value_title', $value[ $meta->get('meta_value') ]);
 unset($value[ $meta->get('meta_value') ]);
 }
 else{
-$meta->delete();
-unset($this->_linked['PageMeta']['records'][$idx]);
+$this->deleteLink($meta);
 }
 }
 foreach($value as $metavalue => $metavaluetitle){
 if(!$metavaluetitle) continue;
 $meta = new PageMetaModel($this->get('site'), $this->get('baseurl'), 'keyword', $metavalue);
 $meta->set('meta_value_title', $metavaluetitle);
-$this->_linked['PageMeta']['records'][] = $meta;
+$this->setLink('PageMeta', $meta);
 }
 }
 elseif($name == 'authorid'){
@@ -3971,7 +4012,7 @@ $meta->set('meta_value', $value);
 return; // :)
 }
 $meta = new PageMetaModel($this->get('baseurl'), 'author', $value);
-$this->_linked['PageMeta']['records'][] = $meta;
+$this->setLink('PageMeta', $meta);
 }
 else{
 foreach($metas as $idx => $meta){
@@ -3980,15 +4021,14 @@ if($value){
 $meta->set('meta_value_title', $value);
 }
 else{
-$meta->delete();
-unset($this->_linked['PageMeta']['records'][$idx]);
+$this->deleteLink($meta);
 }
 return; // :)
 }
 if($value !== null){
 $meta = new PageMetaModel($this->get('site'), $this->get('baseurl'), $name, '');
 $meta->set('meta_value_title', $value);
-$this->_linked['PageMeta']['records'][] = $meta;
+$this->setLink('PageMeta', $meta);
 }
 }
 }
@@ -4003,7 +4043,7 @@ return; // :)
 }
 $ins = new InsertableModel($this->get('site'), $this->get('baseurl'), $name);
 $ins->set('value', $value);
-$this->_linked['Insertable']['records'][] = $ins;
+$this->setLink('Insertable', $ins);
 }
 public function getRewriteURLs(){
 $rewrites = $this->getLink('RewriteMap');
