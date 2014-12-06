@@ -77,9 +77,27 @@ class UserUserConfigModel extends Model{
 				$check = $config->get('validation');
 				$valid = true;
 				if (strpos($check, '::') !== false) {
-					// the method can either be true, false or a string.
-					// Only if true is returned will that be triggered as success.
-					$valid = call_user_func($check, $v, $this);
+					$ref = new ReflectionClass(substr($check, 0, strpos($check, ':')));
+					$checklast = substr($check, strrpos($check, ':')+1);
+
+					if($ref->hasMethod($checklast)){
+						// the method can either be true, false or a string.
+						// Only if true is returned will that be triggered as success.
+						$valid = call_user_func($check, $v, $this);
+					}
+					elseif($ref->hasProperty($checklast)){
+						// Allow a class's static property to be used,
+						// EX: Model::VALIDATION_EMAIL.
+						// This property contains a string of the regex.
+						$check = $ref->getProperty($checklast)->getValue();
+
+						if (
+							($check{0} == '/' && !preg_match($check, $v)) ||
+							($check{0} == '#' && !preg_match($check, $v))
+						) {
+							$valid = false;
+						}
+					}
 				}
 				// regex-based validation.  These don't have any return strings so they're easier.
 				elseif (
