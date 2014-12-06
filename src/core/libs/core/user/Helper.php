@@ -105,6 +105,10 @@ abstract class Helper{
 
 			// setFromForm will handle all attributes and custom values.
 			$user->setFromForm($form);
+
+			// Remember, this password field is ONLY meant to be a generated password!
+			// Do NOT send the user's assigned password via email.
+			$password = ($form->getElement('password')) ? $form->getElementValue('password') : null;
 		}
 		catch(\ModelValidationException $e){
 			// Make a note of this!
@@ -170,6 +174,7 @@ abstract class Helper{
 		try{
 			$email = new \Email();
 			$email->assign('user', $user);
+			$email->assign('password', $password);
 			$email->assign('sitename', SITENAME);
 			$email->assign('rooturl', ROOT_URL);
 			$email->assign('loginurl', \Core::ResolveLink('/user/login'));

@@ -410,6 +410,12 @@ class UserController extends Controller_2_1{
 
 		$form = \User\Helper::GetForm($user);
 		$form->addElement('hidden', ['name' => 'redirect', 'value' => $data['redirect']]);
+		if(isset($data['password'])){
+			// Password should ONLY set by a generate password system.
+			// This is NOT the user's password they entered into the system.
+			// The reason for this is so that the form handler has the original generated password available to send with the welcome email.
+			$form->addElement('system', ['name' => 'password', 'value' => $data['password']]);
+		}
 
 
 		$view->title = 'Complete Registration';

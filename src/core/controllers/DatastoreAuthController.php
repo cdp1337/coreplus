@@ -351,7 +351,7 @@ class DatastoreAuthController extends Controller_2_1 {
 		/** @var UserModel $u */
 		$u = UserModel::Construct($data['user']);
 		if(!$u){
-			SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. Invalid user account requested: [' . $e . ']');
+			SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. Invalid user account requested: [' . $data['user'] . ']');
 			Core::SetMessage('Invalid user account requested', 'error');
 			\core\redirect('/');
 			return;
@@ -414,11 +414,17 @@ class DatastoreAuthController extends Controller_2_1 {
 		// All set calls will throw a ModelValidationException if the validation fails.
 		try{
 			$user = new \UserModel();
+			$password = null;
 
 			$user->set('email', $form->getElement('email')->get('value'));
 			$user->enableAuthDriver('datastore');
 			/** @var \Core\User\AuthDrivers\datastore $auth */
 			$auth = $user->getAuthDriver('datastore');
+
+			if($form->getElement('pwgen') && $form->getElementValue('pwgen')){
+				$password = $auth->pwgen();
+				$auth->setPassword($password);
+			}
 
 			// Users can be created with no password.  They will be prompted to set it on first login.
 			if($p1->get('value') || $p2->get('value')){
@@ -461,6 +467,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			null,
 			[
 				'user' => $user,
+				'password' => $password,
 				'redirect' => $form->getElementValue('redirect'),
 			]
 		);

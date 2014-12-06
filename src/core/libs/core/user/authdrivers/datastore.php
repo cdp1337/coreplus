@@ -1,7 +1,7 @@
 <?php
 /**
  * File for class datastore definition in the tenant-visitor project
- * 
+ *
  * @package User\AuthDrivers
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20131113.1512
@@ -49,7 +49,7 @@ use Core\User\AuthDriverInterface;
  * $b = $a;
  * </code>
  *
- * 
+ *
  * @package User\AuthDrivers
  * @author Charlie Powell <charlie@eval.bz>
  *
@@ -136,9 +136,9 @@ class datastore implements AuthDriverInterface{
 		$form->set('callsMethod', 'DatastoreAuthController::LoginHandler');
 
 		$form->addElement('hidden', ['name' => 'redirect']);
-		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
-		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => false));
-		$form->addElement('submit', array('name' => 'submit', 'value' => 'Login'));
+		$form->addElement('text', ['name' => 'email', 'title' => 'Email', 'required' => true]);
+		$form->addElement('password', ['name' => 'pass', 'title' => 'Password', 'required' => false]);
+		$form->addElement('submit', ['name' => 'submit', 'value' => 'Login']);
 
 		$tpl = \Core\Templates\Template::Factory('includes/user/datastore_login.tpl');
 		$tpl->assign('form', $form);
@@ -154,7 +154,8 @@ class datastore implements AuthDriverInterface{
 	public function renderRegister() {
 		$form = new \Form();
 
-		$complexity = $this->getPasswordComplexityAsHTML();
+		$complexity  = $this->getPasswordComplexityAsHTML();
+		$usermanager = \Core\user()->checkAccess('p:/user/users/manage');
 
 		if($complexity){
 			$password_desc = 'Please set a secure password that <br/>' . $complexity;
@@ -174,32 +175,41 @@ class datastore implements AuthDriverInterface{
 				'required' => true,
 				'name' => 'email',
 				'title' => 'Email',
-				'description' => 'Your email address',
+				'description' => ($usermanager ? 'The email address of the user to create' : 'Your email address'),
 			]
 		);
+		if($usermanager){
+			$form->addElement(
+				'checkbox', [
+					'name' => 'pwgen',
+					'value' => '1',
+					'title' => 'Automatically generate a secure password',
+					'description' => 'Check to generate a secure password to email to the user.',
+				]
+			);
+		}
 		$form->addElement(
 			'password',
 			[
-				'required' => true,
+				'required' => ($usermanager ? false : true),
 				'name' => 'pass',
 				'title' => 'Password',
 				'description' => $password_desc,
-				'maxlength' => 8,
 			]
 		);
 		$form->addElement(
 			'password',
 			[
-				'required' => true,
+				'required' => ($usermanager ? false : true),
 				'name' => 'pass2',
 				'title' => 'Confirm Password',
 				'description' => 'Please re-type your password to confirm.',
-				'maxlength' => 8,
 			]
 		);
-		$form->addElement('submit', array('value' => 'Continue'));
+		$form->addElement('submit', ['value' => 'Continue']);
 
 		$tpl = \Core\Templates\Template::Factory('includes/user/datastore_register.tpl');
+		$tpl->assign('is_manager', $usermanager);
 		$tpl->assign('form', $form);
 
 		$tpl->render();
@@ -293,5 +303,84 @@ class datastore implements AuthDriverInterface{
 		}
 
 		return $valid;
+	}
+
+	/**
+	 * Generate a password that meets the site complexity requirements.
+	 *
+	 * @return string
+	 */
+	public function pwgen(){
+		$minlength       = \ConfigHandler::Get('/user/password/minlength');
+		$requiresymbols  = \ConfigHandler::Get('/user/password/requiresymbols');
+		$requirecapitals = \ConfigHandler::Get('/user/password/requirecapitals');
+		$requirenumbers  = \ConfigHandler::Get('/user/password/requirenumbers');
+
+		$length = ($minlength ? $minlength : 8) + rand(2,6);
+		$str = '';
+		$strS = $strC = $strN = 0;
+
+		$symbols  = [
+			'?', '@', '#', '$', '%', '&', '*', '(', ')', // Common
+			'?', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '+', '"', "'", '/', '<', '>', '.', ',', ';', ':', '[', ']', '{', '}', '|' // Common + rest
+		];
+		$letters  = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+		$capitals = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+		// Capital letters and numbers are simple enough!
+		// Add them even if the minimum is 0.
+		$requirecapitals = max($requirecapitals, 1);
+		$requirenumbers  = max($requirenumbers, 1);
+
+		if($requiresymbols){
+			$map = ['l', 's', 'l', 'c', 'l', 'n'];
+		}
+		else{
+			$map = ['l', 'c', 'l', 'n'];
+		}
+
+		do{
+			$key = rand(0, sizeof($map) - 1);
+
+			switch($map[$key]){
+				case 'l':
+					$str .= $letters[ rand(0, sizeof($letters) - 1) ];
+					break;
+				case 'c':
+					$str .= $capitals[ rand(0, sizeof($capitals) - 1) ];
+					++$strC;
+					break;
+				case 'n':
+					$str .= rand(0, 9);
+					++$strN;
+					break;
+				case 's':
+					$str .= $symbols[ rand(0, sizeof($symbols) - 1) ];
+					++$strS;
+					break;
+			}
+
+			// If the total number of everything has been met, break out of the do... while loop.
+			if(
+				strlen($str) >= $length &&
+				$strS >= $requiresymbols &&
+				$strC >= $requirecapitals &&
+				$strN >= $requirenumbers
+			){
+				break;
+			}
+
+			if(strlen($str) > $length * 2){
+				// Ok, the length is getting ridiculously long, drop the lowercase letters and start running just symbols/caps.
+				$map = [];
+				if($strS < $requiresymbols) $map[] = 's';
+				if($strC < $requirecapitals) $map[] = 'c';
+				if($strN < $requirenumbers) $map[] = 'n';
+			}
+
+		} while(strlen($str) < $length * 6);
+
+
+		return $str;
 	}
 }
