@@ -62,7 +62,7 @@
 					$(this).prop('checked', false);
 
 					if( $(this).parent().hasClass('icheckbox_flat') ) {
-						$(this).iCheck('update');
+						$(this).icheck('update');
 					}
 				});
 				$unchecktoggle.toggle();
@@ -74,7 +74,7 @@
 					$(this).prop('checked', true);
 
 					if( $(this).parent().hasClass('icheckbox_flat') ) {
-						$(this).iCheck('update');
+						$(this).icheck('update');
 					}
 				});
 				$unchecktoggle.toggle();

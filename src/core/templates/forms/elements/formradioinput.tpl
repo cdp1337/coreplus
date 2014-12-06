@@ -21,7 +21,7 @@
 	$(function(){
 		var $radio = $('input[type=radio]');
 
-		$radio.iCheck({ 'radioClass': 'iradio_flat'});
+		$radio.icheck({ 'radioClass': 'iradio_flat'});
 
 		$radio.on('ifChecked', function(event){
 			$(this).closest('.fileinput-selector').click();
