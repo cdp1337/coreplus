@@ -102,7 +102,7 @@ abstract class JQuery {
 	public static function Include_masonry(){
 		// I need jquery first.
 		self::IncludeJQuery();
-		\Core\view()->addScript('js/jquery/jquery.masonry.min.js');
+		\Core\view()->addScript('js/jquery/jquery.masonry.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -158,7 +158,7 @@ abstract class JQuery {
 		self::IncludeJQuery();
 
 		\Core\view()->addStylesheet('css/jquery.icheck.css');
-		\Core\view()->addScript('js/jquery/jquery.icheck.min.js');
+		\Core\view()->addScript('js/jquery/jquery.icheck.js');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
