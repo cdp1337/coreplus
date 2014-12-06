@@ -20,7 +20,7 @@ fi
 
 #mkdir -p "$HERE/assets/js/chart-js"
 
-download git://github.com/koppi/iso-country-flags-svg-collection.git "$HERE/dev/iso-country-flags-svg-collection"
+download git://https://github.com/dalembertian/iso-country-flags-svg-collection.git "$HERE/dev/iso-country-flags-svg-collection"
 rm -fr "$HERE/dev/iso-country-flags-svg-collection/.git"
 rm -fr "$HERE/dev/iso-country-flags-svg-collection/.gitignore"
 
@@ -28,6 +28,7 @@ cd "$HERE/dev/iso-country-flags-svg-collection"
 printheader "Building icon collections..."
 scripts/build.pl --cmd svg2png --json iso-3166-1.json --out "$HERE/assets/images/iso-country-flags" --res 640x480 --svgs svg/country-4x3/
 checkexitstatus "$?"
+pngcrush -q -d "$HERE/assets/images/iso-country-flags"
 cd -
 
 exit 1;

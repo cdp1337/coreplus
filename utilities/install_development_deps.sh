@@ -36,9 +36,9 @@ source "/opt/eval/basescript.sh"
 if [ "$OSFAMILY" == "debian" ]; then
 	if [ "$OS" == "ubuntu" -a "$OSVERSIONMAJ" -ge 14 ]; then
 		# Ubuntu 14.04 changed the name from rubygems to simply ruby, (all encompassing).
-		install ant php-pear php5-xsl php5-dev libxml-xpath-perl ruby
+		install ant php-pear php5-xsl php5-dev libxml-xpath-perl ruby pngcrush
 	else
-		install ant php-pear php5-xsl php5-dev libxml-xpath-perl rubygems
+		install ant php-pear php5-xsl php5-dev libxml-xpath-perl rubygems pngcrush
 	fi
 
 elif [ "$OSFAMILY" == "redhat" ]; then
@@ -53,9 +53,9 @@ elif [ "$OSFAMILY" == "redhat" ]; then
 
 	yum --enablerepo=remi,remi-test install -y \
 		php php-common php-devel php-xsl php-mbstring php-pear php-mysql php-gd php-xdebug \
-		ant mysql-server mysql perl-XML-XPath graphviz rubygems
+		ant mysql-server mysql perl-XML-XPath graphviz rubygems pngcrush
 elif [ "$OSFAMILY" == "suse" ]; then
-	install ant php5-pear php5-xsl php5-bcmath
+	install ant php5-pear php5-xsl php5-bcmath pngcrush
 else
 	printerror "Unknown / Unsupported operating system, [${OSFAMILY}]."
 	exit 1
