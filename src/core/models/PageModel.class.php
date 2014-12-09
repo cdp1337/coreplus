@@ -1659,10 +1659,84 @@ class PageModel extends Model {
 	 */
 	public static function SplitBaseURL($base, $site = null) {
 
+		// Example of incoming data at this point:
+		// "/"
+		// ""
+		// "/repo.xml.gz"
+		// "/controllerfoo/methodblah/param1/param2?qstr=foo"
+
 		if (!$base) return null;
 
-		// Default ctype.
-		$ctype = 'text/html';
+		// Support additional arguments
+		// This should be done prior to checking for aliases and what not because
+		// the query string parameters should NOT effect the rewrite URL and aliases.
+		$args = null;
+		$argstring = '';
+		if (($qpos = strpos($base, '?')) !== false) {
+			$argstring = substr($base, $qpos + 1);
+			preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
+			$args = array();
+			foreach ($matches[1] as $k => $v) {
+				if (!$v) continue;
+				$args[$v] = $matches[2][$k];
+			}
+			$base = substr($base, 0, $qpos);
+		}
+
+		// Example of incoming data at this point:
+		// "/"
+		//     base: "/"
+		//     args: NULL
+		// ""
+		//     RETURNED NULL
+		// "/repo.xml.gz"
+		//     base: "/repo.xml.gz"
+		//     args: NULL
+		// "/controllerfoo/methodblah/param1/param2?qstr=foo"
+		//     base: "/controllerfoo/methodblah/param1/param2"
+		//     args: [qstr] => foo
+
+
+		// Content Types should not dictate the controller and method either!
+		$ext = 'html';
+		$posofdot = strpos($base, '.');
+		if($posofdot){
+			// Or, it can also be the first part up until the first '.'.
+			// Also if there was a dot at this level, then the URL must be something like
+			// foo.ext
+			// This needs to be remapped to FooController->index with the extension of 'ext'.
+			$ext  = substr($base, $posofdot+1);
+			$base = substr($base, 0, $posofdot);
+		}
+
+		$ctype = \Core\Filestore\extension_to_mimetype($ext);
+		// Invalid mimetype?  Default to an HTML file.
+		if(!$ctype){
+			$ctype = 'text/html';
+		}
+
+		// Example of incoming data at this point:
+		// "/"
+		//     base:  "/"
+		//     args:  NULL
+		//     ext:   'html'
+		//     ctype: 'text/html'
+		//
+		// ""
+		//     RETURNED NULL
+		//
+		// "/repo.xml.gz"
+		//     base:  "/repo"
+		//     args:  NULL
+		//     ext:   xml.gz
+		//     ctype: 'application/octet-stream'
+		//
+		// "/controllerfoo/methodblah/param1/param2?qstr=foo"
+		//     base:  "/controllerfoo/methodblah/param1/param2"
+		//     args:  [qstr] => foo
+		//     ext:   'html'
+		//     ctype: 'text/html'
+
 
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
 			if($site === null){
@@ -1718,37 +1792,14 @@ class PageModel extends Model {
 		// Trim off both beginning and trailing slashes.
 		$base = trim($base, '/');
 
-
-		$args = null;
-		$argstring = '';
-		// Support additional arguments
-		if (($qpos = strpos($base, '?')) !== false) {
-			$argstring = substr($base, $qpos + 1);
-			preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
-			$args = array();
-			foreach ($matches[1] as $k => $v) {
-				if (!$v) continue;
-				$args[$v] = $matches[2][$k];
-			}
-			$base = substr($base, 0, $qpos);
-		}
-
 		// Logic for the Controller.
 		$posofslash = strpos($base, '/');
-		$posofdot   = strpos($base, '.');
+
 
 		if ($posofslash){
 			// The controller is usually the first part up until the first '/'.
 			$controller = substr($base, 0, $posofslash);
 			$base = substr($base, $posofslash+1);
-		}
-		elseif($posofdot){
-			// Or, it can also be the first part up until the first '.'.
-			// Also if there was a dot at this level, then the URL must be something like
-			// foo.ext
-			// This needs to be remapped to FooController->index with the extension of 'ext'.
-			$controller = substr($base, 0, $posofdot);
-			$base = 'index' . substr($base, $posofdot);
 		}
 		else{
 			$controller = $base;
@@ -1816,18 +1867,6 @@ class PageModel extends Model {
 			$method = 'index';
 		}
 
-		// If there was a content type requested, (.something), then trim that off too!
-		if(strpos($method, '.') !== false){
-			$ctype = \Core\Filestore\extension_to_mimetype(substr($method, strpos($method, '.') + 1));
-
-			// Invalid mimetype?  Default to an HTML file.
-			if(!$ctype){
-				$ctype = 'text/html';
-			}
-
-			$method = substr($method, 0, strpos($method, '.'));
-		}
-
 		// One last check that the method exists, (because there's only 1 scenario that checks above)
 		if (!method_exists($controller, $method)) {
 			return null;
@@ -1838,19 +1877,6 @@ class PageModel extends Model {
 		// Keep any method starting with a '_' private by preventing
 		// direct access from the browser.
 		if ($method{0} == '_') return null;
-
-
-		// Look for a content type request on the base parameter itself
-		if(strpos($base, '.') !== false){
-			$ctype = \Core\Filestore\extension_to_mimetype(substr($base, strpos($base, '.') + 1));
-
-			// Invalid mimetype?  Default to an HTML file.
-			if(!$ctype){
-				$ctype = 'text/html';
-			}
-
-			$base = substr($base, 0, strpos($base, '.'));
-		}
 
 		// Logic for the parameters.
 		$params = ($base !== false) ? explode('/', $base) : null;
@@ -1868,8 +1894,11 @@ class PageModel extends Model {
 
 
 		// Keep the original mimetype extension if set.
-		if($ctype != 'text/html'){
-			$rewriteurl .= '.' . \Core\Filestore\mimetype_to_extension($ctype);
+		if($ext != 'html'){
+			//$rewriteurl .= '.' . \Core\Filestore\mimetype_to_extension($ctype);
+			// Some binary types of data just return a generic "application/octet-stream",
+			// which is useless for figuring out which extension it original was.
+			$rewriteurl .= '.' . $ext;
 		}
 
 		// Keep the arguments on the rewrite version.
@@ -1916,6 +1945,7 @@ class PageModel extends Model {
 			'baseurl'    => $baseurl,
 			'rewriteurl' => $rewriteurl,
 			'ctype'      => $ctype,
+			'extension'  => $ext,
 			'fullurl'    => $fullurl,
 		);
 	}

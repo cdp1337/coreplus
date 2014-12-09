@@ -122,74 +122,31 @@ class PageRequest {
 
 	public function __construct($uri = '') {
 
-		$this->host = SERVERNAME;
-		$this->uri = $uri;
-
-		// Resolve the URI, this will ensure a usable, valid path.
-
 		// If blank, default to '/' (should be root url)
 		if (!$uri) $uri = ROOT_WDIR;
 
 		// Now I can trim off the prefix, since that's not needed in deciding the path.
 		$uri = substr($uri, strlen(ROOT_WDIR));
 
-		// Split the string on the '?'.  Obviously anything after are parameters.
-		if (($_qpos = strpos($uri, '?')) !== false){
-			$params = substr($uri, $_qpos + 1);
-			$uri = substr($uri, 0, $_qpos);
-		}
-		else{
-			$params = null;
-		}
-
 		// the URI should start with a '/'.
-		if (strlen($uri) > 0 && $uri{0} != '/') $uri = '/' . $uri;
+		if ($uri{0} != '/') $uri = '/' . $uri;
 
-		// If the useragent requested a specifc mode type, remember that and set it for the page.
-		if (preg_match('/\.[a-z]{2,4}$/i', $uri)) {
-			$ctype = strtolower(preg_replace('/^.*\.([a-z]{2,4})$/i', '\1', $uri));
-			$uri   = substr($uri, 0, -1 - strlen($ctype));
-		}
-		else {
-			$ctype = 'html';
-		}
+		// Split this URL, it'll be used somewhere.
+		$pagedat = PageModel::SplitBaseURL($uri);
 
-		// The URL should not end with a trailing slash.
-		$uri = rtrim($uri, '/');
-		if($uri == ''){
-			// Ensure that the index page remains "/".
-			$uri = '/';
-		}
+		$this->host = SERVERNAME;
+		$this->uri = $uri;
 
-		$this->uriresolved = $uri;
+		$this->uriresolved = $pagedat['rewriteurl'];
 		$this->protocol    = $_SERVER['SERVER_PROTOCOL'];
-		// Specified with prepending ".xml|.json,etc" to the resource.
-		// This is merely a suggestion by the user agent.  If the application doesn't support this medium.... it won't return it.
-		$this->ext = $ctype;
-		$this->ctype = \Core\Filestore\extension_to_mimetype($ctype);
+		$this->ext         = $pagedat['extension'];
+		$this->ctype       = $pagedat['ctype'];
+		$this->parameters  = ($pagedat['parameters'] === null) ? [] : $pagedat['parameters'];
 
 		$this->_resolveMethod();
 		$this->_resolveAcceptHeader();
 		$this->_resolveUAHeader();
 		$this->_resolveLanguageHeader();
-
-		// Set the request parameters
-		if($params){
-			$_p = explode('&', $params);
-			foreach($_p as $p){
-				list($k, $v) = explode('=', $p);
-
-				if(!is_numeric($k)){
-					$this->parameters[$k] = $v;
-				}
-			}
-		}
-		elseif (is_array($_GET)) {
-			foreach ($_GET as $k => $v) {
-				if (is_numeric($k)) continue;
-				$this->parameters[$k] = $v;
-			}
-		}
 	}
 
 	/**
