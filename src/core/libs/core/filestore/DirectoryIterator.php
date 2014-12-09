@@ -66,6 +66,12 @@ class DirectoryIterator implements \Iterator {
 	public $ignores = [];
 	/** @var string Optional preg match for files and directories */
 	public $pregMatch = '';
+	/** @var bool Set to true to enable automatic sorting of results */
+	public $sort = false;
+	/** @var string How to sort results, currently only filename is supported */
+	public $sortOn = 'filename';
+	/** @var string Which direction to sort results by */
+	public $sortDir = 'asc';
 
 	private $_results = null;
 
@@ -77,12 +83,67 @@ class DirectoryIterator implements \Iterator {
 	}
 
 	/**
+	 * Enable sorting on a specific key.
+	 *
+	 * @param string $on
+	 * @param string $dir
+	 *
+	 * @throws \Exception
+	 */
+	public function sortBy($on = 'filename', $dir = 'asc'){
+		// Enable sort first off.
+		$this->sort = true;
+
+		$on = strtolower($on);
+		if($on == 'filename'){
+			$this->sortOn = $on;
+		}
+		else{
+			throw new \Exception('Unsupported sort by requested, [' . $on . ']');
+		}
+
+		$dir = strtolower($dir);
+		if($dir == 'asc' || $dir == 'desc'){
+			$this->sortDir = $dir;
+		}
+		else{
+			throw new \Exception('Unsupported sort direction requested, [' . $dir . ']');
+		}
+	}
+
+	/**
 	 * Scan the directory for the given matches and return the results.
 	 *
 	 * @return array
 	 */
 	public function scan(){
 		$this->_results = $this->_sift();
+
+		// If sort was requested, then sort the results!
+		if($this->sort){
+			$sorted = [];
+
+			foreach($this->_results as $result){
+				if($this->sortOn == 'filename'){
+					if($result instanceof File){
+						$sorted[$result->getFilename()] = $result;
+					}
+					elseif($result instanceof Directory){
+						$sorted[$result->getPath()] = $result;
+					}
+				}
+				// @todo Add other sort options as required.
+			}
+
+			if($this->sortDir == 'asc'){
+				ksort($sorted);
+			}
+			else{
+				krsort($sorted);
+			}
+
+			$this->_results = array_values($sorted);
+		}
 
 		return $this->_results;
 	}
