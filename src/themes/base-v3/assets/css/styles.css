@@ -1022,22 +1022,24 @@ table.listing {
   border: 1px solid #DDD;
   border-collapse: collapse;
   font-size: 95%;
+  word-wrap: break-word;
+  table-layout: auto;
   /* Hidden columns, set by javascript. */
 }
-/* line 14, ../scss/_listing_tables.scss */
+/* line 16, ../scss/_listing_tables.scss */
 table.listing tr:nth-child(even) {
   background-color: white;
 }
-/* line 18, ../scss/_listing_tables.scss */
+/* line 20, ../scss/_listing_tables.scss */
 table.listing tr:nth-child(odd) {
   background-color: #DDD;
 }
-/* line 22, ../scss/_listing_tables.scss */
+/* line 24, ../scss/_listing_tables.scss */
 table.listing tr:hover {
   /* Give a little high-lighting effect on mouseover for the records. */
   background-color: #cad9f0;
 }
-/* line 28, ../scss/_listing_tables.scss */
+/* line 30, ../scss/_listing_tables.scss */
 table.listing th {
   padding: 0.375em 0.25em;
   border: 1px solid #b7b7b7;
@@ -1045,37 +1047,37 @@ table.listing th {
   background: #999;
   color: white;
 }
-/* line 36, ../scss/_listing_tables.scss */
+/* line 38, ../scss/_listing_tables.scss */
 table.listing td {
   padding: 0.375em 0.25em;
   border: 1px solid #DDD;
   vertical-align: top;
 }
-/* line 43, ../scss/_listing_tables.scss */
+/* line 45, ../scss/_listing_tables.scss */
 table.listing .column-optional {
   display: none;
 }
-/* line 48, ../scss/_listing_tables.scss */
+/* line 50, ../scss/_listing_tables.scss */
 table.listing.listing-table-sortable th[data-sortkey] {
   cursor: pointer;
 }
-/* line 52, ../scss/_listing_tables.scss */
+/* line 54, ../scss/_listing_tables.scss */
 table.listing.listing-table-sortable th i.sort-icon {
   float: right;
 }
-/* line 55, ../scss/_listing_tables.scss */
+/* line 57, ../scss/_listing_tables.scss */
 table.listing.listing-table-sortable th i.sort-icon.other {
   visibility: hidden;
 }
-/* line 58, ../scss/_listing_tables.scss */
+/* line 60, ../scss/_listing_tables.scss */
 table.listing.listing-table-sortable th:hover i.sort-icon.other {
   visibility: visible;
 }
-/* line 61, ../scss/_listing_tables.scss */
+/* line 63, ../scss/_listing_tables.scss */
 table.listing.listing-table-sortable th:hover i.sort-icon.current {
   visibility: hidden;
 }
-/* line 67, ../scss/_listing_tables.scss */
+/* line 69, ../scss/_listing_tables.scss */
 table.listing .edit {
   display: none;
 }

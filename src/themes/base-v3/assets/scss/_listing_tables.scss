@@ -10,6 +10,8 @@ table.listing {
 	border: $base-border;
 	border-collapse: collapse;
 	font-size: 95%;
+	word-wrap: break-word;
+	table-layout: auto;
 
 	tr:nth-child(even) {
 		background-color: $listing-table-tr-even-bg;
