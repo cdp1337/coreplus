@@ -508,6 +508,10 @@ class Table implements \Iterator {
 			$f->hassort = false;
 		}
 
+		if(!$f->hasSet()){
+			return '';
+		}
+
 		$out .= '<div class="screen">' . $f->render() . '</div>';
 		$out .= '<div class="print">' . $f->renderReadonly() . '</div>';
 
