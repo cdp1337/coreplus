@@ -227,6 +227,7 @@ function resolve_contents_object(File $file){
 
 	switch ($mime) {
 		case 'application/x-gzip':
+		case 'application/gzip':
 			// gzip can be a wrapper around a lot of things.
 			// Some of them even have their own content functions.
 			if ($ext == 'tgz'){
