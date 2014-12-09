@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component name="Package Repository" version="1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<configs>
+		<config key="/package_repository/base_directory" description="Base directory of the package files" type="string"/>
+		<config key="/package_repository/is_private" description="Set to true if this is a private repository, (behind a license/password)." default="0" type="boolean"/>
+		<config key="/package_repository/description" description="Description for this repository, (visible publicly)." type="string"/>
+		<config key="/package_repository/auto_ip_restrict" description="Set to true to restrict the IP of the connecting server on first connect." default="1" type="boolean"/>
+	</configs>
+	<permissions>
+		<permission key="/package_repository/licenses/manager" description="Manage licenses in the repo"/>
+	</permissions>
+	<pages>
+		<page baseurl="/packagerepository" title="Package Repository" rewriteurl="/repo" indexable="1" admin="0" access="*"/>
+		<page baseurl="/packagerepositorylicense/admin" title="Package Repository License Manager" admin="1" group="Admin"/>
+	</pages>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<files>
+		<file filename="CHANGELOG" md5="be7787903cc0a79262aeaedb58dfb1f3"/>
+		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
+		<file filename="controllers/PackageRepositoryController.php" md5="e7002ec3325e5606b2f8755d1915caed">
+			<controller name="PackageRepositoryController"/>
+		</file>
+		<file filename="controllers/PackageRepositoryLicenseController.php" md5="4f87c863957893eeedab350e0fb77858">
+			<controller name="PackageRepositoryLicenseController"/>
+		</file>
+		<file filename="models/PackageRepositoryLicenseModel.php" md5="9d59b62f08bfa60ef8748211777863a2">
+			<class name="PackageRepositoryLicenseModel"/>
+		</file>
+	</files>
+</component>
