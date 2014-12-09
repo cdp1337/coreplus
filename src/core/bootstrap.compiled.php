@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 05 Dec 2014 15:41:24 -0500
+ * @compiled Tue, 09 Dec 2014 04:01:07 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4497,7 +4497,28 @@ return str_ireplace(array_keys($rep), array_values($rep), $string_template);
 }
 public static function SplitBaseURL($base, $site = null) {
 if (!$base) return null;
+$args = null;
+$argstring = '';
+if (($qpos = strpos($base, '?')) !== false) {
+$argstring = substr($base, $qpos + 1);
+preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
+$args = array();
+foreach ($matches[1] as $k => $v) {
+if (!$v) continue;
+$args[$v] = $matches[2][$k];
+}
+$base = substr($base, 0, $qpos);
+}
+$ext = 'html';
+$posofdot = strpos($base, '.');
+if($posofdot){
+$ext  = substr($base, $posofdot+1);
+$base = substr($base, 0, $posofdot);
+}
+$ctype = \Core\Filestore\extension_to_mimetype($ext);
+if(!$ctype){
 $ctype = 'text/html';
+}
 if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
 if($site === null){
 $site = MultiSiteHelper::GetCurrentSiteID();
@@ -4537,27 +4558,10 @@ $try = substr($try, 0, strrpos($try, '/'));
 }
 }
 $base = trim($base, '/');
-$args = null;
-$argstring = '';
-if (($qpos = strpos($base, '?')) !== false) {
-$argstring = substr($base, $qpos + 1);
-preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
-$args = array();
-foreach ($matches[1] as $k => $v) {
-if (!$v) continue;
-$args[$v] = $matches[2][$k];
-}
-$base = substr($base, 0, $qpos);
-}
 $posofslash = strpos($base, '/');
-$posofdot   = strpos($base, '.');
 if ($posofslash){
 $controller = substr($base, 0, $posofslash);
 $base = substr($base, $posofslash+1);
-}
-elseif($posofdot){
-$controller = substr($base, 0, $posofdot);
-$base = 'index' . substr($base, $posofdot);
 }
 else{
 $controller = $base;
@@ -4602,31 +4606,17 @@ $base = substr($base, strlen($method) + 1);
 else {
 $method = 'index';
 }
-if(strpos($method, '.') !== false){
-$ctype = \Core\Filestore\extension_to_mimetype(substr($method, strpos($method, '.') + 1));
-if(!$ctype){
-$ctype = 'text/html';
-}
-$method = substr($method, 0, strpos($method, '.'));
-}
 if (!method_exists($controller, $method)) {
 return null;
 }
 if ($method{0} == '_') return null;
-if(strpos($base, '.') !== false){
-$ctype = \Core\Filestore\extension_to_mimetype(substr($base, strpos($base, '.') + 1));
-if(!$ctype){
-$ctype = 'text/html';
-}
-$base = substr($base, 0, strpos($base, '.'));
-}
 $params = ($base !== false) ? explode('/', $base) : null;
 $baseurl = '/' . ((strpos($controller, 'Controller') == strlen($controller) - 10) ? substr($controller, 0, -10) : $controller);
 if (!($method == 'index' && !$params)) $baseurl .= '/' . str_replace('_', '/', $method);
 $baseurl .= ($params) ? '/' . implode('/', $params) : '';
 $rewriteurl = self::_LookupReverseUrl($baseurl, $site);
-if($ctype != 'text/html'){
-$rewriteurl .= '.' . \Core\Filestore\mimetype_to_extension($ctype);
+if($ext != 'html'){
+$rewriteurl .= '.' . $ext;
 }
 if ($args) {
 $rewriteurl .= '?' . $argstring;
@@ -4648,6 +4638,7 @@ return array(
 'baseurl'    => $baseurl,
 'rewriteurl' => $rewriteurl,
 'ctype'      => $ctype,
+'extension'  => $ext,
 'fullurl'    => $fullurl,
 );
 }
@@ -9471,6 +9462,7 @@ $ext = $file->getExtension();
 $mime = $file->getMimetype();
 switch ($mime) {
 case 'application/x-gzip':
+case 'application/gzip':
 if ($ext == 'tgz'){
 $class = 'ContentTGZ';
 }
@@ -11643,6 +11635,10 @@ return ($this->_response != 404);
 public function isOK(){
 $this->_getHeaders();
 return ($this->_response == 200);
+}
+public function requiresAuthentication(){
+$this->_getHeaders();
+return ($this->_response == 401 || $this->_response == 403);
 }
 public function getStatus(){
 $this->_getHeaders();
@@ -15412,30 +15408,12 @@ private function __construct() {
 $uri = $_SERVER['REQUEST_URI'];
 if (!$uri) $uri = ROOT_WDIR;
 $uri = substr($uri, strlen(ROOT_WDIR));
-if (($_qpos = strpos($uri, '?')) !== false) $uri = substr($uri, 0, $_qpos);
 if ($uri{0} != '/') $uri = '/' . $uri;
-if (preg_match('/\.[a-z]{3,4}$/i', $uri)) {
-$ctype = strtolower(preg_replace('/^.*\.([a-z]{3,4})$/i', '\1', $uri));
-$uri   = substr($uri, 0, -1 - strlen($ctype));
-}
-else {
-$ctype = 'html';
-}
-$p = PageModel::Find(
-array('rewriteurl' => $uri,
-'fuzzy'      => 0), 1
-);
 $pagedat = PageModel::SplitBaseURL($uri);
-if ($p) {
-$this->_page = $p;
+if($pagedat){
+$this->_page = PageModel::Construct($pagedat['baseurl']);
 }
-elseif ($pagedat) {
-$p = new PageModel();
-$p->set('baseurl', $uri);
-$p->set('rewriteurl', $uri);
-$this->_page = $p;
-}
-else {
+else{
 return false;
 }
 if ($pagedat && $pagedat['parameters']) {
@@ -15449,24 +15427,13 @@ if (is_numeric($k)) continue;
 $this->_page->setParameter($k, $v);
 }
 }
-switch ($ctype) {
-case 'xml':
-$ctype = View::CTYPE_XML;
-break;
-case 'json':
-$ctype = View::CTYPE_JSON;
-break;
-default:
-$ctype = View::CTYPE_HTML;
-break;
-}
 $view                          = $this->_page->getView();
-$view->request['contenttype']  = $ctype;
-$view->response['contenttype'] = $ctype; // By default, this can be the same.
+$view->request['contenttype']  = $pagedat['ctype'];
+$view->response['contenttype'] = $pagedat['ctype']; // By default, this can be the same.
 $view->request['method']       = $_SERVER['REQUEST_METHOD'];
 $view->request['useragent']    = $_SERVER['HTTP_USER_AGENT'];
 $view->request['uri']          = $_SERVER['REQUEST_URI'];
-$view->request['uriresolved']  = $uri;
+$view->request['uriresolved']  = $pagedat['rewriteurl'];
 $view->request['protocol']     = $_SERVER['SERVER_PROTOCOL'];
 }
 public static function Singleton() {
@@ -17835,52 +17802,21 @@ private $_pagemodel = null;
 private $_pageview = null;
 private $_cached = false;
 public function __construct($uri = '') {
-$this->host = SERVERNAME;
-$this->uri = $uri;
 if (!$uri) $uri = ROOT_WDIR;
 $uri = substr($uri, strlen(ROOT_WDIR));
-if (($_qpos = strpos($uri, '?')) !== false){
-$params = substr($uri, $_qpos + 1);
-$uri = substr($uri, 0, $_qpos);
-}
-else{
-$params = null;
-}
-if (strlen($uri) > 0 && $uri{0} != '/') $uri = '/' . $uri;
-if (preg_match('/\.[a-z]{2,4}$/i', $uri)) {
-$ctype = strtolower(preg_replace('/^.*\.([a-z]{2,4})$/i', '\1', $uri));
-$uri   = substr($uri, 0, -1 - strlen($ctype));
-}
-else {
-$ctype = 'html';
-}
-$uri = rtrim($uri, '/');
-if($uri == ''){
-$uri = '/';
-}
-$this->uriresolved = $uri;
+if ($uri{0} != '/') $uri = '/' . $uri;
+$pagedat = PageModel::SplitBaseURL($uri);
+$this->host = SERVERNAME;
+$this->uri = $uri;
+$this->uriresolved = $pagedat['rewriteurl'];
 $this->protocol    = $_SERVER['SERVER_PROTOCOL'];
-$this->ext = $ctype;
-$this->ctype = \Core\Filestore\extension_to_mimetype($ctype);
+$this->ext         = $pagedat['extension'];
+$this->ctype       = $pagedat['ctype'];
+$this->parameters  = ($pagedat['parameters'] === null) ? [] : $pagedat['parameters'];
 $this->_resolveMethod();
 $this->_resolveAcceptHeader();
 $this->_resolveUAHeader();
 $this->_resolveLanguageHeader();
-if($params){
-$_p = explode('&', $params);
-foreach($_p as $p){
-list($k, $v) = explode('=', $p);
-if(!is_numeric($k)){
-$this->parameters[$k] = $v;
-}
-}
-}
-elseif (is_array($_GET)) {
-foreach ($_GET as $k => $v) {
-if (is_numeric($k)) continue;
-$this->parameters[$k] = $v;
-}
-}
 }
 public function prefersContentType($type) {
 $current     = 0;
