@@ -267,13 +267,27 @@ class UpdaterController extends Controller_2_1 {
 			$form->addElement('submit', array('value' => 'Next'));
 			$view->assign('form', $form);
 
+			/** @var \Core\Filestore\Backends\FileRemote $remote */
+			$remote = $model->getFile();
+
+			if($remote->requiresAuthentication()){
+				if(!$username){
+					Core::SetMessage($url . ' requires authentication!', 'error');
+					return;
+				}
+				else{
+					Core::SetMessage('Invalid credentials for ' . $url, 'error');
+					return;
+				}
+			}
+
 			if(!$model->isValid()){
 				Core::SetMessage($url . ' does not appear to be a valid repository!', 'error');
 				return;
 			}
 
 			$repo = new RepoXML();
-			$repo->loadFromFile($model->getFile());
+			$repo->loadFromFile($remote);
 
 			// Make sure the keys are good
 			if(!$repo->validateKeys()){

@@ -91,14 +91,10 @@ class UpdateSiteModel extends Model {
 	 * @return boolean
 	 */
 	public function isValid() {
+		/** @var \Core\Filestore\Backends\FileRemote $remote */
 		$remote = $this->getFile();
 
-		if (!$remote->exists()) {
-			return false;
-		}
-
-		// I should probably do additional checks here, but eh.....
-		return true;
+		return ($remote->exists() && $remote->isOK());
 	}
 
 	/**
