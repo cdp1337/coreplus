@@ -21,6 +21,9 @@
 		<file filename="controllers/PhpwhoisController.php" md5="e9cdd00cd66b0ff1b9eeb39e6fca8150">
 			<controller name="PhpwhoisController"/>
 		</file>
+		<file filename="lib/JSHelper.php" md5="c402ae1d8b4b76a3852bbd10a3049c32">
+			<class name="phpwhois\JSHelper"/>
+		</file>
 		<file filename="lib/Whois.php" md5="db6fd0320aa9f4aabac9f7b14ffb4b12">
 			<class name="Whois"/>
 		</file>
