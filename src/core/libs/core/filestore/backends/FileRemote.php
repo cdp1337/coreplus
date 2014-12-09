@@ -389,6 +389,12 @@ class FileRemote implements Filestore\File {
 		return ($this->_response == 200);
 	}
 
+	public function requiresAuthentication(){
+		$this->_getHeaders();
+
+		return ($this->_response == 401 || $this->_response == 403);
+	}
+
 	/**
 	 * Get the HTTP status code for this file.
 	 *
