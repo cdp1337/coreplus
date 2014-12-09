@@ -119,9 +119,9 @@ class RepoXML extends XMLLoader {
 	/**
 	 * Add a key to this repo to be downloaded automatically upon installing.
 	 *
-	 * @param $id    The ID of the key
-	 * @param $name  The name, used for reference.
-	 * @param $email The email, used to confirm against the public data upon installing.
+	 * @param string $id    The ID of the key
+	 * @param string $name  The name, used for reference.
+	 * @param string $email The email, used to confirm against the public data upon installing.
 	 */
 	public function addKey($id, $name, $email){
 		$key = $this->getElement('keys/key');
