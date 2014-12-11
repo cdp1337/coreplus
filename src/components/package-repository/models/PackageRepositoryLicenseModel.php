@@ -7,11 +7,11 @@
  */
 class PackageRepositoryLicenseModel extends Model {
 
-	const VALID_VALID    = 0x00000;
-	const VALID_INVALID  = 0x00001;
-	const VALID_EXPIRED  = 0x00010;
-	const VALID_ACCESS   = 0x00100;
-	const VALID_PASSWORD = 0x01000;
+	const VALID_VALID    = 0;
+	const VALID_INVALID  = 1;
+	const VALID_EXPIRED  = 2;
+	const VALID_ACCESS   = 4;
+	const VALID_PASSWORD = 8;
 
 	/**
 	 * Schema definition for PackageRepositoryLicenseModel
@@ -26,18 +26,31 @@ class PackageRepositoryLicenseModel extends Model {
 		],
 	    'password' => [
 		    'type' => Model::ATT_TYPE_STRING,
+		    'form' => [
+			    'description' => 'Password of this license to send to the client',
+		    ],
 	        'comment' => 'Password of this license to send to the client',
 	    ],
 	    'comment' => [
 		    'type' => Model::ATT_TYPE_STRING,
+		    'form' => [
+			    'description' => 'Administrative comment, displayed on the listing page',
+		    ],
 	        'comment' => 'Administrative comment',
 	    ],
 	    'expires' => [
 		    'type' => Model::ATT_TYPE_ISO_8601_DATE,
+		    'form' => [
+			    'description' => 'Date this license expires',
+		    ],
 	        'comment' => 'Y-m-d format of expiration date for this license',
 	    ],
 	    'ip_restriction' => [
 		    'type' => Model::ATT_TYPE_TEXT,
+		    'form' => [
+			    'title' => 'IP Restriction',
+		        'description' => 'Set to an IP, IP network, or newline-separated list of IPs to restrict for this license key.',
+		    ],
 	        'comment' => 'Single IP, single network, or newline-separated list of IPs to allow for this license key',
 	    ],
 	];
@@ -76,7 +89,7 @@ class PackageRepositoryLicenseModel extends Model {
 				$ips[] = long2ip($longip & $mask) . '/' . $i;
 			}
 
-			$iplist = explode("\n", $this->get('ip_restriction'));
+			$iplist = explode("\n", str_replace("\r", "", $this->get('ip_restriction')));
 			$allowed = false;
 			foreach($ips as $ip){
 				if(in_array($ip, $iplist)){
@@ -124,6 +137,16 @@ class PackageRepositoryLicenseModel extends Model {
 	 * @return array
 	 */
 	public function getControlLinks(){
-		return [];
+
+		$links = [];
+		$manager = \Core\user()->checkAccess('p:/package_repository/licenses/manager');
+		if($manager && $this->exists()){
+			$links[] = [
+				'link' => '/packagerepositorylicense/edit/' . $this->get('id'),
+			    'title' => 'Edit License',
+			    'icon' => 'edit',
+			];
+		}
+		return $links;
 	}
 }

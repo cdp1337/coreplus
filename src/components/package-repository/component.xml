@@ -12,7 +12,7 @@
 	</permissions>
 	<pages>
 		<page baseurl="/packagerepository" title="Package Repository" rewriteurl="/repo" indexable="1" admin="0" access="*"/>
-		<page baseurl="/packagerepositorylicense/admin" title="Package Repository License Manager" admin="1" group="Admin"/>
+		<page baseurl="/packagerepositorylicense/admin" title="Package Repository License Manager" admin="1" group="Admin" access="p:/package_repository/licenses/manager"/>
 	</pages>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

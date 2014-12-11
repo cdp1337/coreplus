@@ -164,26 +164,30 @@ class PackageRepositoryController extends Controller_2_1 {
 					return null;
 				}
 				else{
-					if($licvalid & PackageRepositoryLicenseModel::VALID_PASSWORD == PackageRepositoryLicenseModel::VALID_PASSWORD){
+					if(($licvalid & PackageRepositoryLicenseModel::VALID_PASSWORD) == PackageRepositoryLicenseModel::VALID_PASSWORD){
 						$autherror = '[' . $user . '] Invalid license password';
+						$status = View::ERROR_ACCESSDENIED;
 						SystemLogModel::LogSecurityEvent('/packagerepository/password_failure', $autherror);
 					}
-					if($licvalid & PackageRepositoryLicenseModel::VALID_ACCESS == PackageRepositoryLicenseModel::VALID_ACCESS){
+					if(($licvalid & PackageRepositoryLicenseModel::VALID_ACCESS) == PackageRepositoryLicenseModel::VALID_ACCESS){
 						$autherror = '[' . $user . '] IP address not authorized';
+						$status = View::ERROR_ACCESSDENIED;
 						SystemLogModel::LogSecurityEvent('/packagerepository/ip_restriction', $autherror);
 					}
 
-					if($licvalid & PackageRepositoryLicenseModel::VALID_EXPIRED == PackageRepositoryLicenseModel::VALID_EXPIRED){
+					if(($licvalid & PackageRepositoryLicenseModel::VALID_EXPIRED) == PackageRepositoryLicenseModel::VALID_EXPIRED){
 						$autherror = '[' . $user . '] License provided has expired, please request a new one.';
+						$status = View::ERROR_GONE;
 						SystemLogModel::LogSecurityEvent('/packagerepository/expired_license', $autherror);
 					}
-					if($licvalid & PackageRepositoryLicenseModel::VALID_INVALID == PackageRepositoryLicenseModel::VALID_INVALID){
+					if(($licvalid & PackageRepositoryLicenseModel::VALID_INVALID) == PackageRepositoryLicenseModel::VALID_INVALID){
 						$autherror = '[' . $user . '] License does not exist';
+						$status = View::ERROR_EXPECTATIONFAILED;
 						SystemLogModel::LogSecurityEvent('/packagerepository/invalid_license', $autherror);
 					}
 
 					return [
-						'status' => View::ERROR_ACCESSDENIED,
+						'status' => $status,
 						'message' => $autherror
 			        ];
 				}

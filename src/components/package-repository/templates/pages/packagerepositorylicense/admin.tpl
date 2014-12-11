@@ -16,7 +16,9 @@
 			<td>{$l.comment}</td>
 			<td>{$l.expires}</td>
 			<td>{$l.ip_restriction}</td>
-			<td></td>
+			<td>
+				{controls model=$l}
+			</td>
 		</tr>
 	{/foreach}
 {$listings->render('foot')}

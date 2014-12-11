@@ -61,6 +61,8 @@ class PackageRepositoryLicenseController extends Controller_2_1 {
 		$view->title = 'Package Repository License Manager';
 		$view->assign('generate_form', $generateform);
 		$view->assign('listings', $table);
+
+		$view->addControl('Manually Add License', '/packagerepositorylicense/add', 'add');
 	}
 
 	public function add(){
@@ -74,10 +76,35 @@ class PackageRepositoryLicenseController extends Controller_2_1 {
 		}
 
 		$form = new Form();
+		$form->set('callsmethod', 'PackageRepositoryLicenseController::_SaveLicense');
 		$form->addModel(new PackageRepositoryLicenseModel());
 		$form->addElement('submit', ['value' => 'Create License']);
 
 		$view->title = 'Create License';
+		$view->assign('form', $form);
+	}
+
+	public function edit(){
+		$request = $this->getPageRequest();
+		$view = $this->getView();
+
+		$manager = \Core\user()->checkAccess('p:/package_repository/licenses/manager');
+
+		if(!$manager){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$model = PackageRepositoryLicenseModel::Construct($request->getParameter(0));
+		if(!$model->exists()){
+			return View::ERROR_NOTFOUND;
+		}
+
+		$form = new Form();
+		$form->set('callsmethod', 'PackageRepositoryLicenseController::_SaveLicense');
+		$form->addModel($model);
+		$form->addElement('submit', ['value' => 'Update License']);
+
+		$view->title = 'Edit License';
 		$view->assign('form', $form);
 	}
 
@@ -110,6 +137,26 @@ class PackageRepositoryLicenseController extends Controller_2_1 {
 		}
 
 		Core::SetMessage('Generated ' . $qty . ' license(s)!', 'success');
+		return '/packagerepositorylicense/admin';
+	}
+
+	public static function _SaveLicense(Form $form) {
+		try{
+			$model = $form->getModel();
+			$msg = $model->exists() ? 'Updated' : 'Created';
+			$model->save();
+		}
+		catch(ModelValidationException $e){
+			Core::SetMessage($e->getMessage(), 'error');
+			return false;
+		}
+		catch(Exception $e){
+			\Core\ErrorManagement\exception_handler($e);
+			Core::SetMessage($e->getMessage(), 'error');
+			return false;
+		}
+
+		Core::SetMessage($msg . ' license successfully!','success');
 		return '/packagerepositorylicense/admin';
 	}
 }
