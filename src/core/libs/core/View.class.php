@@ -23,13 +23,28 @@
 
 class View {
 
-	/* Errors that may be occured with views */
-	const ERROR_OTHER        = 1;
-	const ERROR_NOERROR      = 200;
-	const ERROR_BADREQUEST   = 400;
-	const ERROR_ACCESSDENIED = 403;
-	const ERROR_NOTFOUND     = 404;
-	const ERROR_SERVERERROR  = 500;
+	/* Errors that may be occurred with views */
+	const ERROR_OTHER                       = 1;
+	const ERROR_NOERROR                     = 200;  // Request OK
+	const ERROR_BADREQUEST                  = 400;  // Section 10.4.1: Bad Request
+	const ERROR_UNAUTHORIZED                = 401;  // Section 10.4.2: Unauthorized
+	const ERROR_PAYMENTREQUIRED             = 402;  // Section 10.4.3: Payment Required
+	const ERROR_ACCESSDENIED                = 403;  // Section 10.4.4: Forbidden
+	const ERROR_NOTFOUND                    = 404;  // Section 10.4.5: Not Found
+	const ERROR_METHODNOTALLOWED            = 405;  // Section 10.4.6: Method Not Allowed
+	const ERROR_NOTACCEPTABLE               = 406;  // Section 10.4.7: Not Acceptable
+	const ERROR_PROXYAUTHENTICATIONREQUIRED = 407;  // Section 10.4.8: Proxy Authentication Required
+	const ERROR_REQUESTTIMEOUT              = 408;  // Section 10.4.9: Request Time-out
+	const ERROR_CONFLICT                    = 409;  // Section 10.4.10: Conflict
+	const ERROR_GONE                        = 410;  // Section 10.4.11: Gone
+	const ERROR_LENGTHREQUIRED              = 411;  // Section 10.4.12: Length Required
+	const ERROR_PRECONDITIONFAILED          = 412;  // Section 10.4.13: Precondition Failed
+	const ERROR_ENTITYTOOLARGE              = 413;  // Section 10.4.14: Request Entity Too Large
+	const ERROR_URITOOLARGE                 = 414;  // Section 10.4.15: Request-URI Too Large
+	const ERROR_UNSUPPORTEDMEDIATYPE        = 415;  // Section 10.4.16: Unsupported Media Type
+	const ERROR_RANGENOTSATISFIABLE         = 416;  // Section 10.4.17: Requested range not satisfiable
+	const ERROR_EXPECTATIONFAILED           = 417;  // Section 10.4.18: Expectation Failed
+	const ERROR_SERVERERROR                 = 500;  // Generic server error
 
 	/*** Modes for handling the rendering of the view ***/
 
@@ -587,14 +602,28 @@ class View {
 
 		// Provide a way for stylesheets to target this page specifically.
 		switch ($this->error) {
-			case 400:
-				$url = "error-400";
+			case View::ERROR_BADREQUEST:
+			case View::ERROR_PAYMENTREQUIRED:
+			case View::ERROR_ACCESSDENIED:
+			case View::ERROR_NOTFOUND:
+			case View::ERROR_METHODNOTALLOWED:
+			case View::ERROR_NOTACCEPTABLE:
+			case View::ERROR_PROXYAUTHENTICATIONREQUIRED:
+			case View::ERROR_REQUESTTIMEOUT:
+			case View::ERROR_CONFLICT:
+			case View::ERROR_GONE:
+			case View::ERROR_LENGTHREQUIRED:
+			case View::ERROR_PRECONDITIONFAILED:
+			case View::ERROR_ENTITYTOOLARGE:
+			case View::ERROR_URITOOLARGE:
+			case View::ERROR_UNSUPPORTEDMEDIATYPE:
+			case View::ERROR_RANGENOTSATISFIABLE:
+			case View::ERROR_EXPECTATIONFAILED:
+			case View::ERROR_UNAUTHORIZED:
+				$url = 'error-' . $this->error;
 				break;
 			case 403:
 				$url = "error-403 page-user-login";
-				break;
-			case 404:
-				$url = "error-404";
 				break;
 			default:
 				$url  = strtolower(trim(preg_replace('/[^a-z0-9\-]*/i', '', str_replace('/', '-', $this->baseurl)), '-'));
@@ -846,11 +875,59 @@ class View {
 				case View::ERROR_NOERROR:
 					header('Status: 200 OK', true, $this->error);
 					break;
+				case View::ERROR_BADREQUEST:
+					header('Status: 400 Bad Request', true, $this->error);
+					break;
+				case View::ERROR_UNAUTHORIZED:
+					header('Status: 401 Unauthorized', true, $this->error);
+					break;
+				case View::ERROR_PAYMENTREQUIRED:
+					header('Status: 402 Payment Required', true, $this->error);
+					break;
 				case View::ERROR_ACCESSDENIED:
 					header('Status: 403 Forbidden', true, $this->error);
 					break;
 				case View::ERROR_NOTFOUND:
 					header('Status: 404 Not Found', true, $this->error);
+					break;
+				case View::ERROR_METHODNOTALLOWED:
+					header('Status: 405 Method Not Allowed', true, $this->error);
+					break;
+				case View::ERROR_NOTACCEPTABLE:
+					header('Status: 406 Not Acceptable', true, $this->error);
+					break;
+				case View::ERROR_PROXYAUTHENTICATIONREQUIRED:
+					header('Status: 407 Proxy Authentication Required', true, $this->error);
+					break;
+				case View::ERROR_REQUESTTIMEOUT:
+					header('Status: 408 Request Time-out', true, $this->error);
+					break;
+				case View::ERROR_CONFLICT:
+					header('Status: 409 Conflict', true, $this->error);
+					break;
+				case View::ERROR_GONE:
+					header('Status: 410 Gone', true, $this->error);
+					break;
+				case View::ERROR_LENGTHREQUIRED:
+					header('Status: 411 Length Required', true, $this->error);
+					break;
+				case View::ERROR_PRECONDITIONFAILED:
+					header('Status: 412 Precondition Failed', true, $this->error);
+					break;
+				case View::ERROR_ENTITYTOOLARGE:
+					header('Status: 413 Request Entity Too Large', true, $this->error);
+					break;
+				case View::ERROR_URITOOLARGE:
+					header('Status: 414 Request-URI Too Large', true, $this->error);
+					break;
+				case View::ERROR_UNSUPPORTEDMEDIATYPE:
+					header('Status: 415 Unsupported Media Type', true, $this->error);
+					break;
+				case View::ERROR_RANGENOTSATISFIABLE:
+					header('Status: 416 Requested range not satisfiable', true, $this->error);
+					break;
+				case View::ERROR_EXPECTATIONFAILED:
+					header('Status: 417 Expectation Failed', true, $this->error);
 					break;
 				case View::ERROR_SERVERERROR:
 					header('Status: 500 Internal Server Error', true, $this->error);

@@ -1,6 +1,6 @@
 <h1>Bad Request</h1>
 
-<p class="message-error">The request you made is invalid.</p>
+<p class="message-error">The request could not be understood by the server due to malformed syntax.</p>
 
 <p>
 	This is either a server error and the administrator needs to be notified 
