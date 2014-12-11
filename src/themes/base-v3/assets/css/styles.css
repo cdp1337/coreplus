@@ -1124,23 +1124,23 @@ table.listing .edit {
 
 /* line 35, ../scss/_messages.scss */
 .message-info {
-  background: #b9c0f6;
-  border: 1px solid #1f36e3;
-  color: #0a1250;
+  background: #eff0fd;
+  border: 1px solid #5464eb;
+  color: #101d86;
 }
 
 /* line 40, ../scss/_messages.scss */
 .message-success {
-  background: #c8f4c8;
-  border: 1px solid #37d737;
-  color: #151;
+  background: #d7f7d7;
+  border: 1px solid #46da46;
+  color: #146414;
 }
 
 /* line 45, ../scss/_messages.scss */
 .message-deprecated {
   background: white;
-  border: 1px solid #f4f2e7;
-  color: #c1b572;
+  border: 1px solid #e9e6d5;
+  color: #aea467;
 }
 
 /* line 50, ../scss/_messages.scss */
@@ -1153,8 +1153,8 @@ table.listing .edit {
 /* line 55, ../scss/_messages.scss */
 .message-error {
   background: white;
-  border: 1px solid #f89fa5;
-  color: #DF101D;
+  border: 1px solid #f57c84;
+  color: #bb0e19;
 }
 
 /* line 60, ../scss/_messages.scss */
@@ -1308,11 +1308,11 @@ p[class^="message-"] .message-background-icon i {
 
 /* line 2, ../scss/pages/_updater.scss */
 .page-updater .repository-status-bad {
-  color: #DF101D;
+  color: #bb0e19;
 }
 /* line 6, ../scss/pages/_updater.scss */
 .page-updater .repository-status-good {
-  color: #151;
+  color: #146414;
 }
 
 /* line 15, ../scss/vendor/bourbon/addons/_clearfix.scss */
