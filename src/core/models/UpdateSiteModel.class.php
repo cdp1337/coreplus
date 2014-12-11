@@ -97,6 +97,14 @@ class UpdateSiteModel extends Model {
 		return ($remote->exists() && $remote->isOK());
 	}
 
+	public function set($k, $v){
+		if($k == 'password'){
+			$v = trim($v);
+		}
+
+		return parent::set($k, $v);
+	}
+
 	/**
 	 * Get the remote file for this update site
 	 *
