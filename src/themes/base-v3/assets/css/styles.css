@@ -855,9 +855,10 @@ ul.controls {
   height: 20px;
   margin: 0;
   padding: 0;
+  max-width: 200px;
 }
 
-/* line 16, ../scss/_controls.scss */
+/* line 17, ../scss/_controls.scss */
 ul.controls li {
   float: left;
   margin-right: 0.1em;
@@ -869,43 +870,43 @@ And their images.  Stand-alone "control" buttons also get the same styling.
 Since the icons are now being handled by font-awesome, the bulk of this logic will have been removed.
 */
 /* First, the common styles for all icon'd controls. */
-/* line 29, ../scss/_controls.scss */
+/* line 30, ../scss/_controls.scss */
 ul.controls li a {
   text-decoration: none;
   font-size: 14px;
   padding: 2px;
   line-height: 18px;
 }
-/* line 36, ../scss/_controls.scss */
+/* line 37, ../scss/_controls.scss */
 ul.controls li a:hover {
   text-shadow: none;
   font-size: 18px;
   padding: 0;
 }
-/* line 42, ../scss/_controls.scss */
+/* line 43, ../scss/_controls.scss */
 ul.controls li span {
   display: none;
 }
 
 /** Spruce up FA with some color :) **/
-/* line 49, ../scss/_controls.scss */
+/* line 50, ../scss/_controls.scss */
 ul.controls li i.icon-remove,
 ul.controls li i.icon-delete {
   color: #7a0200;
 }
 
-/* line 51, ../scss/_controls.scss */
+/* line 52, ../scss/_controls.scss */
 ul.controls li i.icon-edit {
   color: blue;
 }
 
-/* line 52, ../scss/_controls.scss */
+/* line 53, ../scss/_controls.scss */
 ul.controls li i.icon-plus,
 ul.controls li i.icon-add {
   color: green;
 }
 
-/* line 54, ../scss/_controls.scss */
+/* line 55, ../scss/_controls.scss */
 ul.controls li i.icon-rss {
   color: #e99700;
 }
@@ -914,7 +915,7 @@ ul.controls li i.icon-rss {
  * Contextual controls are similar, but slightly different.
  * Instead of being inline, they're in a context menu.
  */
-/* line 60, ../scss/_controls.scss */
+/* line 61, ../scss/_controls.scss */
 ul.controls.context-menu {
   background: #eee;
   border: 1px solid #999;
@@ -924,7 +925,7 @@ ul.controls.context-menu {
   text-align: left;
   z-index: 9999;
 }
-/* line 69, ../scss/_controls.scss */
+/* line 70, ../scss/_controls.scss */
 ul.controls.context-menu li {
   font-size: 14px;
   float: none;
@@ -933,27 +934,27 @@ ul.controls.context-menu li {
   /* This will get overwritten by a's */
   color: #555;
 }
-/* line 77, ../scss/_controls.scss */
+/* line 78, ../scss/_controls.scss */
 ul.controls.context-menu li i {
   line-height: 1.5em;
 }
-/* line 82, ../scss/_controls.scss */
+/* line 83, ../scss/_controls.scss */
 ul.controls.context-menu a {
   padding: 0;
   display: block;
   color: #000;
 }
-/* line 88, ../scss/_controls.scss */
+/* line 89, ../scss/_controls.scss */
 ul.controls.context-menu a:hover {
   font-size: 14px;
   background: #AFC5EE;
   color: #000;
 }
-/* line 94, ../scss/_controls.scss */
+/* line 95, ../scss/_controls.scss */
 ul.controls.context-menu i {
   padding-left: 4px;
 }
-/* line 98, ../scss/_controls.scss */
+/* line 99, ../scss/_controls.scss */
 ul.controls.context-menu span {
   line-height: 1.9em;
   padding: 0 2px;
@@ -961,7 +962,7 @@ ul.controls.context-menu span {
 }
 
 /* The many links have a bit different styles. */
-/* line 106, ../scss/_controls.scss */
+/* line 107, ../scss/_controls.scss */
 ul.controls.context-menu-many-links {
   box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
   opacity: 0.9;
@@ -1123,43 +1124,43 @@ table.listing .edit {
 
 /* line 35, ../scss/_messages.scss */
 .message-info {
-  background: #EEE9FF;
-  border: 1px solid #2667FF;
+  background: #b9c0f6;
+  border: 1px solid #1f36e3;
   color: #0a1250;
 }
 
 /* line 40, ../scss/_messages.scss */
 .message-success {
-  background: #AFA;
-  border: 1px solid #373;
+  background: #c8f4c8;
+  border: 1px solid #37d737;
   color: #151;
 }
 
 /* line 45, ../scss/_messages.scss */
 .message-deprecated {
-  background: #fff4bd;
-  border: 1px solid #ded081;
+  background: white;
+  border: 1px solid #f4f2e7;
   color: #c1b572;
 }
 
 /* line 50, ../scss/_messages.scss */
 .message-warning {
-  background: #fce8d1;
-  border: 1px solid #bc8565;
+  background: white;
+  border: 1px solid #f5cab8;
   color: #df5c25;
 }
 
 /* line 55, ../scss/_messages.scss */
 .message-error {
-  background: #FCe5ed;
-  border: 1px solid #BC606D;
+  background: white;
+  border: 1px solid #f89fa5;
   color: #DF101D;
 }
 
 /* line 60, ../scss/_messages.scss */
 .message-tutorial {
-  background: #faefb9;
-  border: 1px solid #BCB06D;
+  background: white;
+  border: 1px solid #c2bb96;
   color: #6f6841;
 }
 
@@ -1305,6 +1306,15 @@ p[class^="message-"] .message-background-icon i {
   clear: both;
 }
 
+/* line 2, ../scss/pages/_updater.scss */
+.page-updater .repository-status-bad {
+  color: #DF101D;
+}
+/* line 6, ../scss/pages/_updater.scss */
+.page-updater .repository-status-good {
+  color: #151;
+}
+
 /* line 15, ../scss/vendor/bourbon/addons/_clearfix.scss */
 #admin-bar:after {
   content: "";
@@ -1312,7 +1322,7 @@ p[class^="message-"] .message-background-icon i {
   clear: both;
 }
 
-/* line 26, ../scss/styles.scss */
+/* line 27, ../scss/styles.scss */
 a.button {
   border: 1px solid #2459a6;
   border-radius: 3px;
@@ -1360,12 +1370,12 @@ a.button:disabled {
     display: none !important;
   }
 }
-/* line 39, ../scss/styles.scss */
+/* line 40, ../scss/styles.scss */
 a.agplv3-tag {
   color: white;
   text-shadow: 0px 0px 3px #636;
 }
-/* line 43, ../scss/styles.scss */
+/* line 44, ../scss/styles.scss */
 a.agplv3-tag:hover {
   color: #636;
   text-shadow: 0px 0px 3px white;

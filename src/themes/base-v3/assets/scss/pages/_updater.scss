@@ -1,0 +1,9 @@
+.page-updater {
+	.repository-status-bad {
+		color: $error;
+	}
+
+	.repository-status-good {
+		color: $success;
+	}
+}

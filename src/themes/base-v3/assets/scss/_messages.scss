@@ -33,34 +33,34 @@
 	border:1px solid #BCB06D;
 }
 .message-info {
-	background: #EEE9FF;
-	border:1px solid #2667FF;
-	color: #0a1250;
+	background: lighten($info, 67%);
+	border:1px solid lighten($info, 33%);
+	color: $info;
 }
 .message-success {
-	background:#AFA;
-	border: 1px solid #373;
-	color: #151;
+	background: lighten($success, 67%);
+	border: 1px solid lighten($success, 33%);
+	color: $success;
 }
 .message-deprecated {
-	background: #fff4bd;
-	border:1px solid #ded081;
-	color: #c1b572;
+	background: lighten($deprecated, 67%);
+	border:1px solid lighten($deprecated, 33%);
+	color: $deprecated;
 }
 .message-warning {
-	background: #fce8d1;
-	border:1px solid #bc8565;
-	color: #df5c25;
+	background: lighten($warning, 67%);
+	border:1px solid lighten($warning, 33%);
+	color: $warning;
 }
 .message-error {
-	background:#FCe5ed;
-	border:1px solid #BC606D;
-	color:#DF101D;
+	background: lighten($error, 67%);
+	border:1px solid lighten($error, 33%);
+	color: $error;
 }
 .message-tutorial {
-	background: #faefb9;
-	border:1px solid #BCB06D;
-	color: #6f6841;
+	background: lighten($tutorial, 67%);
+	border:1px solid lighten($tutorial, 33%);
+	color: $tutorial;
 }
 
 /** I need to color the A tags too **/

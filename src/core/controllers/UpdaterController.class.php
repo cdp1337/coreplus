@@ -337,6 +337,25 @@ class UpdaterController extends Controller_2_1 {
 		}
 	}
 
+	public function repos_edit() {
+		$request = $this->getPageRequest();
+		$view    = $this->getView();
+
+		$site = UpdateSiteModel::Construct($request->getParameter(0));
+		if(!$site->exists()){
+			return View::ERROR_NOTFOUND;
+		}
+
+		$form = Form::BuildFromModel($site);
+		$form->set('callsmethod', 'UpdaterController::_SaveRepo');
+		$form->addElement('submit', array('value' => 'Update'));
+
+		$view->title = 'Update Repo';
+		// Needed because dynamic pages do not record navigation.
+		$view->addBreadcrumb('Repositories', 'updater/repos');
+		$view->assign('form', $form);
+	}
+
 	/**
 	 * Page to remove a repository.
 	 */
@@ -794,4 +813,17 @@ class UpdaterController extends Controller_2_1 {
 
 	}
 
+	public static function _SaveRepo(Form $form) {
+		try{
+			$model = $form->getModel();
+			$model->save();
+		}
+		catch(Exception $e){
+			Core::SetMessage($e->getMessage(), 'error');
+			return false;
+		}
+
+		Core::SetMessage('Updated repository successfully', 'success');
+		return '/updater/repos';
+	}
 }
