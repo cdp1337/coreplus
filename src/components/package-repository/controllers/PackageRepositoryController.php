@@ -307,7 +307,7 @@ class PackageRepositoryController extends Controller_2_1 {
 
 			// But I can still cleanup!
 			unlink($tmpdir->getPath() . 'package.xml');
-			unlink($tgz->getFilename());
+			$tgz->delete();
 		}
 
 		return $repo->asPrettyXML();

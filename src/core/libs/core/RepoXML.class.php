@@ -124,8 +124,8 @@ class RepoXML extends XMLLoader {
 	 * @param string $email The email, used to confirm against the public data upon installing.
 	 */
 	public function addKey($id, $name, $email){
-		$key = $this->getElement('keys/key');
-		$key->setAttribute('id', $id);
+		$key = $this->getElement('keys/key[id="' . $id . '"]');
+		//$key->setAttribute('id', $id);
 		$key->setAttribute('name', $name);
 		$key->setAttribute('email', $email);
 	}
