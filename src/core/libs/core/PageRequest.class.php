@@ -187,19 +187,7 @@ class PageRequest {
 	 * @return array
 	 */
 	public function splitParts() {
-		$ret = PageModel::SplitBaseURL($this->uriresolved);
-
-		// The PageModel handles all the Core utilities, but it skips the GET parameters, as those are not part of the page schema.
-		// Instead however, the PageRequest needs to provide all interfaces for the user's request,
-		// including GET parameters!
-		if($ret['parameters'] === null){
-			$ret['parameters'] = [];
-		}
-
-		//$ret['parameters'] = array_merge($ret['parameters'], $_GET);
-		$ret['parameters'] = array_merge($ret['parameters'], $this->parameters);
-
-		return $ret;
+		return PageModel::SplitBaseURL($this->uriresolved);
 	}
 
 	/**
