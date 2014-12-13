@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 11 Dec 2014 04:45:01 -0500
+ * @compiled Sat, 13 Dec 2014 17:11:18 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -14661,7 +14661,11 @@ define('ENABLE_XHPROF', (XHPROF > rand(1,100)));
 else{
 define('ENABLE_XHPROF', false);
 }
-unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl, $gnupgdir, $host, $sslmode, $tmpdir);
+unset(
+$enablessl, $servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL,
+$rooturlSSL, $curcall, $ssl, $gnupgdir, $host, $sslmode, $tmpdir, $relativerequestpath,
+$core_settings
+);
 $maindefines_time = microtime(true);
 if(ENABLE_XHPROF){
 xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
@@ -14682,7 +14686,7 @@ die();
 }
 }
 \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus Data Model Interface loaded and ready');
-unset($start_time, $predefines_time, $preincludes_time, $maindefines_time);
+unset($start_time, $predefines_time, $preincludes_time, $maindefines_time, $dbconn);
 if(!defined('FTP_USERNAME')){
 define('FTP_USERNAME', ConfigHandler::Get('/core/ftp/username'));
 }
@@ -17913,12 +17917,7 @@ $typeweight = max($typeweight, $t['weight']);
 return ($typeweight > $current);
 }
 public function splitParts() {
-$ret = PageModel::SplitBaseURL($this->uriresolved);
-if($ret['parameters'] === null){
-$ret['parameters'] = [];
-}
-$ret['parameters'] = array_merge($ret['parameters'], $this->parameters);
-return $ret;
+return PageModel::SplitBaseURL($this->uriresolved);
 }
 public function getBaseURL() {
 $parts = $this->splitParts();
@@ -18649,6 +18648,7 @@ define('REMOTE_PROVINCE', $geoprovince);
 define('REMOTE_COUNTRY', $geocountry);
 define('REMOTE_TIMEZONE', $geotimezone);
 define('REMOTE_POSTAL', $geopostal);
-unset($geocity, $geoprovince, $geocountry, $geotimezone);
+unset($geocity, $geoprovince, $geocountry, $geotimezone, $geopostal);
 HookHandler::DispatchHook('/core/components/ready');
+unset($profiler);
 } // ENDING GLOBAL NAMESPACE
