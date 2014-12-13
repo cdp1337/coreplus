@@ -447,7 +447,11 @@ else{
 }
 
 // Cleanup!
-unset($servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL, $rooturlSSL, $curcall, $ssl, $gnupgdir, $host, $sslmode, $tmpdir);
+unset(
+	$enablessl, $servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL,
+	$rooturlSSL, $curcall, $ssl, $gnupgdir, $host, $sslmode, $tmpdir, $relativerequestpath,
+	$core_settings
+);
 $maindefines_time = microtime(true);
 
 
@@ -489,7 +493,7 @@ catch (Exception $e) {
 \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus Data Model Interface loaded and ready');
 
 
-unset($start_time, $predefines_time, $preincludes_time, $maindefines_time);
+unset($start_time, $predefines_time, $preincludes_time, $maindefines_time, $dbconn);
 
 
 
@@ -696,9 +700,12 @@ define('REMOTE_TIMEZONE', $geotimezone);
 define('REMOTE_POSTAL', $geopostal);
 
 // And cleanup the geo information
-unset($geocity, $geoprovince, $geocountry, $geotimezone);
+unset($geocity, $geoprovince, $geocountry, $geotimezone, $geopostal);
 
 
 
 HookHandler::DispatchHook('/core/components/ready');
 
+
+// And we don't need the profiler object anymore.
+unset($profiler);
