@@ -181,7 +181,7 @@ class BlogController extends Controller_2_1 {
 
 		//$view->addBreadcrumb('Blog Administration', '/blog/admin');
 		$view->mastertemplate = 'admin';
-		$view->title = 'Create Blog';
+		$view->title = 'Create Blog Listing';
 		$view->assignVariable('form', $form);
 	}
 
@@ -213,7 +213,7 @@ class BlogController extends Controller_2_1 {
 
 		$view->addBreadcrumb($blog->get('title'), $blog->get('rewriteurl'));
 		$view->mastertemplate = 'admin';
-		$view->title = 'Update Blog';
+		$view->title = 'Update Blog Listing';
 		$view->assignVariable('form', $form);
 	}
 
