@@ -1883,7 +1883,7 @@
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
-		<author name="Nicholas Hinsch" email="charlie@evalagency.com"/>
+		<author name="Nicholas Hinsch" email="nicholas@evalagency.com"/>
 		<author name="Uwe Tews"/>
 		<author name="Rodney Rehm"/>
 		<author name="Thue Kristensen"/>
@@ -1895,7 +1895,7 @@
 		<author name="Mark J Panaghiston"/>
 		<author name="Dmitry Petrov"/>
 		<author name="John Millaway"/>
-		<author name="Brent Cook &lt;busterbcook@yahoo.com"/>
+		<author name="Brent Cook" email="busterbcook@yahoo.com"/>
 		<author name="Koh Zi Han, based on implementation by Koh Zi Chun"/>
 		<author name="Hans Engel"/>
 		<author name="Monte Ohrt" email="monte at ohrt dot com"/>
