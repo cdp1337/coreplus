@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 13 Dec 2014 17:11:18 -0500
+ * @compiled Thu, 18 Dec 2014 12:25:05 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -3655,6 +3655,19 @@ This cache only applies to guest users and bots.',
 'form' => array(
 'type' => 'access',
 'title' => 'Access Permissions',
+'group' => 'Access & Advanced',
+'grouptype' => 'tabs',
+),
+),
+'password_protected' => array(
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => 128,
+'comment' => 'Password or phrase to protect this page',
+'null' => false,
+'default' => '',
+'form' => array(
+'type' => 'text',
+'title' => 'Password',
 'group' => 'Access & Advanced',
 'grouptype' => 'tabs',
 ),
@@ -17983,6 +17996,40 @@ $view->error = View::ERROR_ACCESSDENIED;
 return;
 }
 }
+if($page->get('password_protected')) {
+if(!isset($_SESSION['page-password-protected'])) {
+$_SESSION['page-password-protected'] = [];
+}
+if (!isset($_SESSION['page-password-protected'][$page->get('baseurl')])) {
+$_SESSION['page-password-protected'][$page->get('baseurl')] = '';
+}
+if ($_SESSION['page-password-protected'][$page->get('baseurl')] !== $page->get('password_protected')) {
+$view->templatename = '/pages/page/passwordprotected.tpl';
+$form = new Form();
+$form->set('callsmethod', 'PageRequest::PasswordProtectHandler');
+$form->addElement(
+'system', [
+'name'  => 'page',
+'value' => $page
+]
+);
+$form->addElement(
+'password', [
+'name'      => 'passinput',
+'title'     => 'Password',
+'required'  => 'required',
+'maxlength' => 128
+]
+);
+$form->addElement(
+'submit', [
+'value' => 'Submit'
+]
+);
+$view->assign('form', $form);
+return;
+}
+}
 foreach(get_class_methods('Controller_2_1') as $parentmethod){
 $parentmethod = strtolower($parentmethod);
 if($parentmethod == $pagedat['method']){
@@ -18441,6 +18488,21 @@ if ($instance === null) {
 $instance = new PageRequest($_SERVER['REQUEST_URI']);
 }
 return $instance;
+}
+public static function PasswordProtectHandler(Form $form){
+$page = $form->getElementValue('page');
+$val  = $form->getElementValue('passinput');
+if( $val !== $page->get('password_protected') ){
+Core::SetMessage('Wrong password! Try again.','error');
+return false;
+}
+else {
+if(!isset($_SESSION['page-password-protected'])){
+$_SESSION['page-password-protected'] = [];
+}
+$_SESSION['page-password-protected'][ $page->get('baseurl') ] = $val;
+return true;
+}
 }
 }
 

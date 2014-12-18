@@ -314,6 +314,49 @@ class PageRequest {
 			}
 		}
 
+		if($page->get('password_protected')) {
+			if(!isset($_SESSION['page-password-protected'])) {
+				$_SESSION['page-password-protected'] = [];
+			}
+
+			if (!isset($_SESSION['page-password-protected'][$page->get('baseurl')])) {
+				$_SESSION['page-password-protected'][$page->get('baseurl')] = '';
+			}
+
+			if ($_SESSION['page-password-protected'][$page->get('baseurl')] !== $page->get('password_protected')) {
+
+				$view->templatename = '/pages/page/passwordprotected.tpl';
+
+				$form = new Form();
+
+				$form->set('callsmethod', 'PageRequest::PasswordProtectHandler');
+				$form->addElement(
+					'system', [
+						'name'  => 'page',
+						'value' => $page
+					]
+				);
+
+				$form->addElement(
+					'password', [
+						'name'      => 'passinput',
+						'title'     => 'Password',
+						'required'  => 'required',
+						'maxlength' => 128
+					]
+				);
+				$form->addElement(
+					'submit', [
+						'value' => 'Submit'
+					]
+				);
+
+				$view->assign('form', $form);
+
+				return;
+			}
+		}
+
 		// If the parent Controller object has a method named $pagedat['method'], assume it's a security error!
 		// This is because if the parent Controller object has a method, it's most likely a utility method
 		// that shouldn't be called from the public web!
@@ -1079,6 +1122,31 @@ class PageRequest {
 			$instance = new PageRequest($_SERVER['REQUEST_URI']);
 		}
 		return $instance;
+	}
+
+
+	/**
+	 * This is the form handler for a password protected page.
+	 *
+	 * @return bool
+	 */
+	public static function PasswordProtectHandler(Form $form){
+		/** @var PageModel $page */
+		$page = $form->getElementValue('page');
+		$val  = $form->getElementValue('passinput');
+		if( $val !== $page->get('password_protected') ){
+			Core::SetMessage('Wrong password! Try again.','error');
+			return false;
+		}
+		else {
+			if(!isset($_SESSION['page-password-protected'])){
+				$_SESSION['page-password-protected'] = [];
+			}
+			$_SESSION['page-password-protected'][ $page->get('baseurl') ] = $val;
+			return true;
+		}
+
+
 	}
 }
 

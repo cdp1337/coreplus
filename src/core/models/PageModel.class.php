@@ -199,6 +199,19 @@ class PageModel extends Model {
 				'grouptype' => 'tabs',
 			),
 		),
+		'password_protected' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'comment' => 'Password or phrase to protect this page',
+			'null' => false,
+			'default' => '',
+			'form' => array(
+				'type' => 'text',
+				'title' => 'Password',
+				'group' => 'Access & Advanced',
+				'grouptype' => 'tabs',
+			),
+		),
 		'fuzzy' => array(
 			'type' => Model::ATT_TYPE_BOOL,
 			'comment' => 'If this url is fuzzy or an exact match',
