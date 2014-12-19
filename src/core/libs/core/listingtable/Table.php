@@ -508,7 +508,7 @@ class Table implements \Iterator {
 			$f->hassort = false;
 		}
 
-		if(!$f->hasSet()){
+		if(!$f->hasFilters()){
 			return '';
 		}
 
