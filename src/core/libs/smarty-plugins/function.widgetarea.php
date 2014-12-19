@@ -69,11 +69,13 @@ function smarty_function_widgetarea($params, $smarty) {
 	$subwhere->addWhere($skinwhere);
 
 	// And second, the page-level where clause.
-	$pagewhere = new Core\Datamodel\DatasetWhereClause();
-	$pagewhere->setSeparator('AND');
-	$pagewhere->addWhere('page_baseurl = ' . $page);
-	$pagewhere->addWhere('widgetarea = ' . $name);
-	$subwhere->addWhere($pagewhere);
+	if($page){
+		$pagewhere = new Core\Datamodel\DatasetWhereClause();
+		$pagewhere->setSeparator('AND');
+		$pagewhere->addWhere('page_baseurl = ' . $page);
+		$pagewhere->addWhere('widgetarea = ' . $name);
+		$subwhere->addWhere($pagewhere);
+	}
 
 	$factory->where($subwhere);
 
