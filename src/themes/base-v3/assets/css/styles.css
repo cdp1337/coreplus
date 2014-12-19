@@ -1306,6 +1306,31 @@ p[class^="message-"] .message-background-icon i {
   clear: both;
 }
 
+/* line 2, ../scss/_collapsible_fieldsets.scss */
+fieldset.collapsible .fieldset-title {
+  margin: -1em -1em 0.5em;
+}
+/* line 6, ../scss/_collapsible_fieldsets.scss */
+fieldset.collapsible .expandable-hint {
+  display: none;
+}
+/* line 9, ../scss/_collapsible_fieldsets.scss */
+fieldset.collapsible .collapsible-hint {
+  display: inline-block;
+}
+/* line 13, ../scss/_collapsible_fieldsets.scss */
+fieldset.collapsible.collapsed {
+  padding: 1.5em 1.5em 0;
+}
+/* line 16, ../scss/_collapsible_fieldsets.scss */
+fieldset.collapsible.collapsed .expandable-hint {
+  display: inline-block;
+}
+/* line 19, ../scss/_collapsible_fieldsets.scss */
+fieldset.collapsible.collapsed .collapsible-hint {
+  display: none;
+}
+
 /* line 2, ../scss/pages/_updater.scss */
 .page-updater .repository-status-bad {
   color: #bb0e19;
@@ -1322,7 +1347,7 @@ p[class^="message-"] .message-background-icon i {
   clear: both;
 }
 
-/* line 27, ../scss/styles.scss */
+/* line 28, ../scss/styles.scss */
 a.button {
   border: 1px solid #2459a6;
   border-radius: 3px;
@@ -1370,12 +1395,12 @@ a.button:disabled {
     display: none !important;
   }
 }
-/* line 40, ../scss/styles.scss */
+/* line 41, ../scss/styles.scss */
 a.agplv3-tag {
   color: white;
   text-shadow: 0px 0px 3px #636;
 }
-/* line 44, ../scss/styles.scss */
+/* line 45, ../scss/styles.scss */
 a.agplv3-tag:hover {
   color: #636;
   text-shadow: 0px 0px 3px white;

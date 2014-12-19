@@ -55,7 +55,18 @@
 <br/>
 
 <fieldset class="collapsible collapsed">
-	<legend>Collapsed Fieldset (click me!)</legend>
+	<legend>Collapsed Fieldset w/legend (click me!)</legend>
+	<div>
+		Content!
+	</div>
+</fieldset>
+
+<fieldset class="collapsible collapsed">
+	<div class="fieldset-title">
+		Collapsed Fieldset w/.fieldset-title (click me!)
+		<i class="icon-chevron-down expandable-hint"></i>
+		<i class="icon-chevron-up collapsible-hint"></i>
+	</div>
 	<div>
 		Content!
 	</div>

@@ -1,6 +1,11 @@
 {if sizeof($elements)}
 	<fieldset class="listing-filters collapsible {if !$filtersset}collapsed screen{/if}">
-		<legend> Filters </legend>
+		<div class="fieldset-title">
+			Filters
+			<i class="icon-chevron-down expandable-hint"></i>
+			<i class="icon-chevron-up collapsible-hint"></i>
+		</div>
+
 		<div class="collapsible-contents screen">
 			{if $readonly}
 				{foreach $elements as $element}

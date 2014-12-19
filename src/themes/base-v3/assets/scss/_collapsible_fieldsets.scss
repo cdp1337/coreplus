@@ -1,0 +1,23 @@
+fieldset.collapsible {
+	.fieldset-title {
+		margin: -1em -1em 0.5em;
+	}
+
+	.expandable-hint {
+		display: none;
+	}
+	.collapsible-hint {
+		display: inline-block;
+	}
+
+	&.collapsed {
+		padding: 1.5em 1.5em 0;
+
+		.expandable-hint {
+			display: inline-block;
+		}
+		.collapsible-hint {
+			display: none;
+		}
+	}
+}
