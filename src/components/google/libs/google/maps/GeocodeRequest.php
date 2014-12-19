@@ -109,7 +109,7 @@ class GeocodeRequest {
 		];
 
 		if($this->address1 && $this->city){
-			$params['address'] = $this->address1 . ($this->city ? ','.$this->city : '') . ($this->state ? ',' . $this->state : '');
+			$params['address'] = $this->address1 . ($this->city ? ', '.$this->city : '') . ($this->state ? ', ' . $this->state : '');
 		}
 		elseif($this->postal){
 			$params['address'] = $this->postal;
