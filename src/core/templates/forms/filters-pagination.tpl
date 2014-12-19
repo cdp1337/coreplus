@@ -52,16 +52,32 @@
 
 		{**
 		 * This is the new automatic jump system.
-		 * Only 10 page jumps at most are displayed on the interface.
+		 * Only ~8 page jumps at most are displayed on the interface.
 		 *}
 		{if $page_max > 100000}
-			{assign var='jumpcount' value=($page_max/50000)|floor*5000}
+			{*
+			 * /50000 * 5000 is to preserve mods of 5000, for readibility
+			 * This follows the same idea of the 10000 count, only with an even wider gap in numbers,
+			 * producing an even smaller set of links.
+			 *}
+			{assign var='jumpcount' value=($page_max/30000)|ceil*5000}
 		{elseif $page_max > 10000}
-			{assign var='jumpcount' value=($page_max/5000)|floor*500}
+			{*
+			 * /5000 * 500 is to preserve mods of 500, for readibility
+			 * since there are so many zeros in these large numbers though, the base divisible number is slightly smaller,
+			 * to make the resulting jump larger, and therefore less numbers cluttering the screen.
+			 *}
+			{assign var='jumpcount' value=($page_max/4000)|ceil*500}
 		{elseif $page_max > 1000}
-			{assign var='jumpcount' value=($page_max/500)|floor*50}
+			{*
+			 * /500 * 50 is to preserve mods of 50, for readibility
+			 *}
+			{assign var='jumpcount' value=($page_max/500)|ceil*50}
 		{elseif $page_max > 100}
-			{assign var='jumpcount' value=($page_max/50)|floor*5}
+			{*
+			 * /50 * 5 is to preserve mods of 5, for readibility
+			 *}
+			{assign var='jumpcount' value=($page_max/50)|ceil*5}
 		{else}
 			{assign var='jumpcount' value='10'}
 		{/if}
