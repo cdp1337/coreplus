@@ -317,6 +317,17 @@ class FilterForm {
 	}
 
 	/**
+	 * Return true or false if this filterset has any filters set.
+	 *
+	 * Useful for detecting if the filters HTML should be rendered.
+	 *
+	 * @return bool
+	 */
+	public function hasFilters(){
+		return (sizeof($this->_elements) > 0);
+	}
+
+	/**
 	 * Fet this filter set's pagination options as a string.
 	 *
 	 * @return string
