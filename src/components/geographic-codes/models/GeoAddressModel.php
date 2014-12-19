@@ -66,6 +66,11 @@ class GeoAddressModel extends Model {
 				'type' => 'select',
 			),
 		),
+		'beansbooks_id' => [
+			'type' => Model::ATT_TYPE_INT,
+			'comment' => 'If the beansbooks module is installed, this may be the beans ID of the customer',
+			'formtype' => 'disabled',
+		],
 		'lat' => array(
 			'type' => Model::ATT_TYPE_FLOAT,
 			'precision' => '17,11',
@@ -252,5 +257,50 @@ class GeoAddressModel extends Model {
 		$lines[] = $this->getCPPFormatted();
 
 		return implode("<br/>\n", $lines);
+	}
+
+	/**
+	 * Get the BeansBooks keys for this object
+	 */
+	public function getBeansKeys(){
+		return [
+			'standard' => 'label',
+			'address1' => 'address1',
+			'address2' => 'address2',
+			'city'     => 'city',
+			'state'    => 'province',
+			'zip'      => 'postal',
+			'country'  => 'country',
+			'id'       => 'beansbooks_id',
+		];
+	}
+
+	public function setFromBeansObject($address){
+		/** @noinspection PhpUndefinedNamespaceInspection This method is only available if the BeansBooks module is installed. */
+		if(!(
+			$address instanceof \BeansBooks\Models\CustomerAddress ||
+			$address instanceof \BeansBooks\Models\VendorAddress
+		)){
+			throw new Exception('Please only set an address from a beansbooks CustomerAddress or VendorAddress.');
+		}
+
+		$keys = $this->getBeansKeys();
+
+		foreach($keys as $rk => $lk){
+			$rv = $address->get($rk);
+
+			if($lk == 'state'){
+				if(strlen($rv) > 3){
+					// They typed in the state name here?
+					// This needs to be the state code.
+					$province = GeoProvinceModel::Find(['country = ' . $address->get('country'), 'name = ' . $rv], 1);
+					if($province){
+						$rv = $province->get('code');
+					}
+				}
+			}
+
+			$this->set($lk, $rv);
+		}
 	}
 }
