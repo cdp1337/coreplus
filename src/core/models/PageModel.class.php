@@ -1686,12 +1686,22 @@ class PageModel extends Model {
 		$args = null;
 		$argstring = '';
 		if (($qpos = strpos($base, '?')) !== false) {
-			$argstring = substr($base, $qpos + 1);
+			$argstring = urldecode(substr($base, $qpos + 1));
 			preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
 			$args = array();
-			foreach ($matches[1] as $k => $v) {
+			foreach ($matches[1] as $idx => $v) {
 				if (!$v) continue;
-				$args[$v] = $matches[2][$k];
+				$a =& $args;
+				while(($paranpos = strpos($v, '[')) !== false){
+					$k1 = substr($v, 0, $paranpos);
+					$v = substr($v, $paranpos+1, strpos($v, ']')-$paranpos-1);
+
+					if(!isset($a[$k1])){
+						$a[$k1] = [];
+					}
+					$a =& $a[$k1];
+				}
+				$a[$v] = $matches[2][$idx];
 			}
 			$base = substr($base, 0, $qpos);
 		}
