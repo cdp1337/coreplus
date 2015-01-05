@@ -38,7 +38,7 @@
 		<config key="/theme/default_template" type="string" default="basic.tpl" description=""/>
 		<config key="/theme/default_admin_template" type="string" default="basic.tpl" description=""/>
 		<config key="/theme/default_email_template" type="string" default="" description=""/>
-		<config key="/theme/selected" type="string" default="base-v2" description=""/>
+		<config key="/theme/selected" type="string" default="base-v3" description=""/>
 	</configs>
 	<assets>
 		<file filename="assets/css/theme/admin.css" md5="1dac65e0841fd3651dff672e7c5a2e39"/>
