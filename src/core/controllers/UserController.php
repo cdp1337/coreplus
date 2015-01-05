@@ -243,7 +243,12 @@ class UserController extends Controller_2_1{
 			$profiles = array();
 			foreach($_POST['type'] as $k => $v){
 				// Check that this looks like a URL.
-				if(!preg_match(Model::VALIDATION_URL_WEB, $_POST['url'][$k])){
+				if(!(
+					// Links should be a valid URL (starting with HTTP or HTTPS).
+					preg_match(Model::VALIDATION_URL_WEB, $_POST['url'][$k]) ||
+					// Or twitter-style links using the '@' prefix.
+					$_POST['url'][$k]{0} == '@'
+				)){
 					$error = true;
 					Core::SetMessage($_POST['url'][$k] . ' does not appear to be a valid URL!  Please ensure that it starts with http:// or https://', 'error');
 				}
