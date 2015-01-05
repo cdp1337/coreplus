@@ -259,33 +259,36 @@ class CLI {
 	/**
 	 * Print a single line or multiple lines of text to the screen or console.
 	 *
-	 * @param string|array $line
+	 * @param string|array $line  Line (or array of lines) to output
+	 * @param string       $color Colour to render the output with
 	 */
-	public static function PrintLine($line) {
+	public static function PrintLine($line, $color = COLOR_NORMAL) {
 		if(is_array($line)){
 			foreach($line as $l){
-				self::PrintLine($l);
+				self::PrintLine($l, $color);
 			}
-			return;
 		}
+		else{
+			$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
+			echo COLOR_LINE . '| ' . COLOR_RESET . $color . $line . COLOR_RESET . $nl;
 
-		$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
-		echo COLOR_LINE . '| ' . COLOR_RESET . $line . $nl;
-
-		if(EXEC_MODE == 'WEB'){
-			ob_flush();
-			flush();
+			if(EXEC_MODE == 'WEB'){
+				ob_flush();
+				flush();
+			}
 		}
 	}
 
 	public static function PrintError($line) {
-		$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
-		echo COLOR_LINE . '| ' . COLOR_RESET . COLOR_ERROR . $line . COLOR_RESET . $nl;
+		self::PrintLine($line, COLOR_ERROR);
+	}
 
-		if(EXEC_MODE == 'WEB'){
-			ob_flush();
-			flush();
-		}
+	public static function PrintSuccess($line) {
+		self::PrintLine($line, COLOR_SUCCESS);
+	}
+
+	public static function PrintWarning($line) {
+		self::PrintLine($line, COLOR_WARNING);
 	}
 
 	public static function PrintActionStart($line, $maxlen = 90, $suffix = '...'){
