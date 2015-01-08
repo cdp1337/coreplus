@@ -1,3 +1,9 @@
+Blog 1.6.3
+
+	* Change the terminology for creating a new blog listing page.
+	* Repackage a number of components to fix a minor packaging bug.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 08 Jan 2015 00:12:28 -0500
+
 Blog 1.6.2
 
 	* [Bug] Fix bug where the wrong variable was being checked on blog indexes.
