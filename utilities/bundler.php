@@ -89,6 +89,11 @@ foreach($updatesites as $site){
 
 		$n = str_replace(' ', '-', strtolower($pkg->getName()));
 		$type = $pkg->getType();
+		$location = $pkg->getFileLocation();
+		if(strpos($location, '://') === false){
+			// The remote location may or may not be fully resolved.
+			$location = $rootpath . $location;
+		}
 
 		switch($type){
 			case 'component':
@@ -100,6 +105,7 @@ foreach($updatesites as $site){
 				}
 
 				$parts = Core::VersionSplit($pkg->getVersion());
+
 
 				$remoteComponents[$n] = [
 					'name'            => $n,
@@ -113,7 +119,7 @@ foreach($updatesites as $site){
 					'description'     => $pkg->getDescription(),
 					'provides'        => $pkg->getProvides(),
 					'requires'        => $pkg->getRequires(),
-					'location'        => $rootpath . $pkg->getFileLocation(),
+					'location'        => $location,
 					'type'            => 'component',
 					'typetitle'       => 'Component ' . $pkg->getName(),
 					'key'             => $pkg->getKey(),
@@ -138,7 +144,7 @@ foreach($updatesites as $site){
 					'source_username' => $site->get('username'),
 					'source_password' => $site->get('password'),
 					'description'     => $pkg->getDescription(),
-					'location'        => $rootpath . $pkg->getFileLocation(),
+					'location'        => $location,
 					'type'            => 'themes',
 					'typetitle'       => 'Theme ' . $pkg->getName(),
 					'key'             => $pkg->getKey(),
@@ -319,6 +325,12 @@ foreach($bundles as $b){
 
 	foreach($export as $dat){
 		CLI::PrintActionStart("Searching for " . $dat['type'] . ' ' . $dat['name']);
+
+		// Ensure the directory exists.
+		if(!is_dir($dat['src'])){
+			$dir = new \Core\Filestore\Backends\DirectoryLocal($dat['src']);
+			$dir->mkdir();
+		}
 
 		// Extract out the newest version of this component
 		$compversion = '0.0.0';
