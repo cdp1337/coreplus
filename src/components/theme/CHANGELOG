@@ -1,3 +1,10 @@
+Theme 2.4.2
+
+	* Set base-v3 as the default theme for new installs.
+	* Merge in some of the recent additions from Component into Theme & code cleanup.
+	* Repackage a number of components to fix a minor packaging bug.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 08 Jan 2015 00:14:22 -0500
+
 Theme 2.4.1
 
 	* [Bug] Do not reinstall themes on every page view when in development mode.
