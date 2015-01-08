@@ -151,6 +151,8 @@ if(EXEC_MODE == 'CLI'){
 	define('COLOR_ERROR', "\033[1;31m");
 	// Debug color
 	define('COLOR_DEBUG', "\033[0;34m");
+	// Normal color, alias of RESET for CLI operation, but has other meaning on WEB operation.
+	define('COLOR_NORMAL', "\033[0m");
 	// Reset color
 	define('COLOR_RESET', "\033[0m");
 	// Space character
@@ -169,6 +171,8 @@ else{
 	define('COLOR_ERROR', "<span style='color:red; font-weight:bold;'>");
 	// Debug color
 	define('COLOR_DEBUG', "<span style='color:lightskyblue;'>");
+	// Normal color, no styles applied, required because any RESET (</span>) needs a start span.
+	define('COLOR_NORMAL', "<span>");
 	// Reset color
 	define('COLOR_RESET', "</span>");
 	// Space character
