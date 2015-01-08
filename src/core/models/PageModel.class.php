@@ -313,6 +313,10 @@ class PageModel extends Model {
 	public static $Indexes = array(
 		'primary' => array('site', 'baseurl'),
 		'unique:rewrite_url' => array('site', 'rewriteurl'),
+		'baseurlidx' => ['baseurl'],
+		'adminidx' => ['admin'],
+		'rewritefuzzy' => ['rewriteurl', 'fuzzy'],
+		'baseurlfuzzy' => ['baseurl', 'fuzzy'],
 	);
 
 	public static $HasCreated = true;
