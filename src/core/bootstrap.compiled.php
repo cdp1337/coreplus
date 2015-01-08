@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 07 Jan 2015 23:35:33 -0500
+ * @compiled Thu, 08 Jan 2015 01:01:39 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -11662,7 +11662,7 @@ return ($this->_response != 404);
 }
 public function isOK(){
 $this->_getHeaders();
-return ($this->_response == 200);
+return ($this->_response == 200 || $this->_response == 301 || $this->_response == 302);
 }
 public function requiresAuthentication(){
 $this->_getHeaders();
@@ -11760,7 +11760,7 @@ $v = substr($v, 0, strpos($v, 'charset=') - 2);
 $this->_headers[$k] = $v;
 }
 }
-if($this->_response == '302' && isset($this->_headers['Location'])){
+if(($this->_response == '302' || $this->_response == '301') && isset($this->_headers['Location'])){
 $newcount = $this->_redirectCount + 1;
 if($newcount <= 5){
 $this->_redirectFile = new FileRemote();
@@ -11773,7 +11773,12 @@ trigger_error('Too many redirects when requesting ' . $this->getURL(), E_USER_WA
 }
 }
 }
+if(($this->_response == '302' || $this->_response == '301') && $this->_redirectFile !== null){
+return $this->_redirectFile->_headers;
+}
+else{
 return $this->_headers;
+}
 }
 protected function _getHeader($header) {
 $h = $this->_getHeaders();
@@ -11802,7 +11807,7 @@ $needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['heade
 }
 if ($needtodownload || !$this->cacheable) {
 $this->_getHeaders();
-if($this->_response == '302' && $this->_redirectFile !== null){
+if(($this->_response == '302' || $this->_response == '301') && $this->_redirectFile !== null){
 $this->_tmplocal = $this->_redirectFile->_getTmpLocal();
 }
 else{
