@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.0" name="Google" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.1" name="Google" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
@@ -29,7 +29,7 @@
 		<page baseurl="/google/configure" title="Google Keys and Apps" group="Configure" access="g:admin" admin="1" selectable="0"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="e7d5ddd596e12d108dc1693323d42e5c"/>
+		<file filename="CHANGELOG" md5="0567dacfa62802c63d03fd3aa70e7e4d"/>
 		<file filename="controllers/GoogleController.php" md5="5bf7dd535c58df182b22c9ecf8c43906">
 			<controller name="GoogleController"/>
 		</file>
@@ -39,7 +39,7 @@
 		<file filename="libs/google/analytics/Helper.php" md5="739c3de8a435882d8d71b59b471a6ddc">
 			<class name="Google\Analytics\Helper"/>
 		</file>
-		<file filename="libs/google/maps/GeocodeRequest.php" md5="754f026f42c5deff3a36d5f4e55d483a">
+		<file filename="libs/google/maps/GeocodeRequest.php" md5="6f554939f917283fb2dafd557849585f">
 			<class name="Google\Maps\GeocodeRequest"/>
 		</file>
 		<file filename="libs/google/maps/GeocodeResponse.php" md5="86c7fd0d5cc93f30e288e76934b3bcd4">
@@ -64,6 +64,7 @@
 		<upgrade from="1.3.0" to="1.3.1"/>
 		<upgrade from="1.3.1" to="1.4.0"/>
 		<upgrade from="1.4.0" to="1.5.0"/>
+		<upgrade from="1.5.0" to="1.5.1"/>
 	</upgrades>
 	<view>
 		<file filename="templates/pages/google/configure.tpl" md5="a3fc7915404242b727080991ab014cda"/>
