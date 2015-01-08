@@ -257,6 +257,7 @@ function resolve_contents_object(File $file){
 			break;
 
 		case 'application/pgp-signature':
+		case 'application/pgp':
 			$class = 'ContentASC';
 			break;
 
