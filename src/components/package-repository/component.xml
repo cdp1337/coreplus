@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component name="Package Repository" version="1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.0.0">
 	<configs>
 		<config key="/package_repository/base_directory" description="Base directory of the package files" type="string"/>
 		<config key="/package_repository/is_private" description="Set to true if this is a private repository, (behind a license/password)." default="0" type="boolean"/>
@@ -14,20 +14,27 @@
 		<page baseurl="/packagerepository" title="Package Repository" rewriteurl="/repo" indexable="1" admin="0" access="*"/>
 		<page baseurl="/packagerepositorylicense/admin" title="Package Repository License Manager" admin="1" group="Admin" access="p:/package_repository/licenses/manager"/>
 	</pages>
-	<authors>
-		<author name="Charlie Powell" email="charlie@eval.bz"/>
-	</authors>
 	<files>
-		<file filename="CHANGELOG" md5="be7787903cc0a79262aeaedb58dfb1f3"/>
+		<file filename="CHANGELOG" md5="a9bef6b7da00881219e7df69839f963b"/>
 		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
-		<file filename="controllers/PackageRepositoryController.php" md5="e7002ec3325e5606b2f8755d1915caed">
+		<file filename="controllers/PackageRepositoryController.php" md5="99a7e7eaa1087f9a6fdd54c9ef76588a">
 			<controller name="PackageRepositoryController"/>
 		</file>
-		<file filename="controllers/PackageRepositoryLicenseController.php" md5="4f87c863957893eeedab350e0fb77858">
+		<file filename="controllers/PackageRepositoryLicenseController.php" md5="864567ef6ca9b018ca590973d1e07ea4">
 			<controller name="PackageRepositoryLicenseController"/>
 		</file>
-		<file filename="models/PackageRepositoryLicenseModel.php" md5="9d59b62f08bfa60ef8748211777863a2">
+		<file filename="models/PackageRepositoryLicenseModel.php" md5="ab717e31d2ff558535262909aca3070d">
 			<class name="PackageRepositoryLicenseModel"/>
 		</file>
 	</files>
+	<view>
+		<file filename="templates/pages/packagerepository/index.tpl" md5="d3aa9c13d349b126b87c0e2ccbf9401e"/>
+		<file filename="templates/pages/packagerepositorylicense/add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/packagerepositorylicense/admin.tpl" md5="0bfc0cac42ab230d9d2d319f63dd8ca3"/>
+		<file filename="templates/pages/packagerepositorylicense/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+	</view>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
 </component>
+
