@@ -1,3 +1,62 @@
+Core Plus 4.0.0
+
+	* [Bug] Switch the View debugging information to use the standard UI structure for collapsible
+	  fieldsets as of base-v3.
+	* [Bug] Do not try to pull widgets on a per-page basis when there is no valid page.
+	* [Bug] fix - Core now handles the GET parameters internally in PageModel::SPlitBaseURL if applicable.
+	* [Bug] Check if the verification for a UserConfiguration option is valid before blindly executing it.
+	* [Performance] Optimize the indexes of PageModel for performance.
+	* [Performance] A few more unsets in the bootstrap to try to keep the memory footprint at a minimum.
+	* [Feature] Retool how widgets areas work to allow page-level templates to be specified and managed.
+	* [Feature] Rework how icons on the User/connectedprofiles page appear and function to make them more
+	  user-friendly.
+	* [Feature] Allow twitter-style '@' links on profiles.
+	* [Feature] New collapsible fieldset legend support with chevron hints.
+	* [Feature] New method, FilterForm->hasFilters(); returns if the filter set has any filters available.
+	* [Feature] Reduce how many page jump links are displayed when there are > 1000 pages to improve
+	  readability of the listing.
+	* [Feature] Added password protection ability on a per-page basis.
+	* [Feature] A couple more fixes to #7, among the previous commits.
+	* [Feature] Implement #727, the physical button for reinstallations.
+	* [Feature] Edit repository functionality and additional stats on remote repos on the updater system.
+	* [Feature] Trim the password automatically for the UpdateSiteModel, copy/paste will often contain
+	  whitespace.
+	* [Feature] Add all RFC7231 client error codes into Core.
+	* [Feature] Better check in the updater if a remote file is OK and/or requires authentication.
+	* [Feature] New method for remote files, requiresAuthentication.
+	* [Feature] Add support for sorting on the DirectoryIterator system.
+	* [Feature] Do not return any filter HTML if no filters are present on a given listing table.
+	* [Feature] New support for generating a password for a user when creating users administratively.
+	* Add "Normal" color, useful for CLI writing as HTML, (COLOR_RESET has </span>, so it needed something
+	  to start that).
+	* Add readonly as a valid text input parameter.
+	* Allow the primary key to be a single value, (for shorthand), and display more verbose errors when
+	  error submissions fail on DEVELOPMENT sites.
+	* Expand CLI::Print* methods to support arrays across the board,
+	* Set base-v3 as the default theme for new installs.
+	* Parse GET parameters correctly when performing a SplitURL check.
+	* Was checking the incorrect criteria; should skip filter rendering if there are no filters, not if
+	  there are no filters set.
+	* Reorganize PageModel::SplitBaseURL to better support extensions, query strings, and aliased URLs and
+	  remove functionality from CurrentPage and PageRequest, since that logic was duplicated in PageModel.
+	* Documentation tweak.
+	* GZ files can be either application/x-gzip or application/gzip...
+	* Upgrade icheck to latest upstream version, 2.0.0, (requires changing "iCheck" to "icheck").
+	* Refactor how Model links are handled internally to allow for multiple child Model objects that share
+	  the same type but different keys.
+	* New tests for a few Core systems.
+	* Migrate all of the available logic out of the Packager utility script and into a new class.
+	* Documentation and new methods, Parser::changed() and Section::markReleased().
+	* Test file for DirectoryIterator
+	* The form on updater/repos/add will not display when an error is present.
+	* Remove blank <smartyplugins/> tags when saving a component.xml file.
+	* New filestore class, DirectoryIterator.
+	* Remove unsupported "ignores" directive in DirectoryLocal, (this was a fragment from Core v1.x).
+	* Provide more documentation for CLI\Arguments and general code cleanups.
+	* New options for generated CLI menus, "q" and "m" & support array of lines for PrintLine
+	* Print useful debug messages when viewing updater/repo/add without having a gnupg directory setup.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 08 Jan 2015 00:08:44 -0500
+
 Core Plus 3.5.0
 
 	* [Security] Replace the html2text version included with phpMailer with a more secure, more updated
