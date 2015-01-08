@@ -702,10 +702,12 @@ class View {
 
 				// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
 				if (DEVELOPMENT_MODE) {
+					$legend = '<div class="fieldset-title">%s<i class="icon-chevron-down expandable-hint"></i><i class="icon-chevron-up collapsible-hint"></i></div>' . "\n";
+
 					$debug = '';
 					$debug .= '<pre class="xdebug-var-dump screen">';
 					$debug .= '<fieldset class="debug-section collapsible" id="debug-section-template-information">';
-					$debug .= '<legend><b>Template Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+					$debug .= sprintf($legend, 'Template Information');
 					$debug .= "<span>";
 					$debug .= 'Base URL: ' . $this->baseurl . "\n";
 					$debug .= 'Template Requested: ' . $this->templatename . "\n";
@@ -715,7 +717,7 @@ class View {
 					$debug .= '</fieldset>';
 
 					$debug .= '<fieldset class="debug-section collapsible" id="debug-section-performance-information">';
-					$debug .= '<legend><b>Performance Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+					$debug .= sprintf($legend, 'Performance Information');
 					$debug .= "<span>";
 					$debug .= $xhprof_link;
 					$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
@@ -729,7 +731,7 @@ class View {
 					$debug .= '</fieldset>';
 
 					$debug .= '<fieldset class="debug-section collapsible" id="debug-section-profiler-information">';
-					$debug .= '<legend><b>Core Profiler</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+					$debug .= sprintf($legend, 'Core Profiler');
 					$debug .= "<span>";
 					$debug .= $profiler->getEventTimesFormatted();
 					$debug .= "</span>";
@@ -737,7 +739,7 @@ class View {
 
 					$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-components-information">';
 					// Tack on what components are currently installed.
-					$debug .= '<legend><b>Available Components</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+					$debug .= sprintf($legend, 'Available Components');
 					$debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
 					$debug .= "<span>";
 					// Give me sorting!
@@ -761,7 +763,7 @@ class View {
 
 					$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-hooks-information">';
 					// I wanna see what hooks are registered too!
-					$debug .= '<legend><b>Registered Hooks</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+					$debug .= sprintf($legend, 'Registered Hooks');
 					foreach(HookHandler::GetAllHooks() as $hook){
 						$debug .= "<span>";
 						/** @var $hook Hook */
@@ -779,13 +781,13 @@ class View {
 
 					$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-includes-information">';
 					// I want to see how many files were included.
-					$debug .= '<legend><b>Included Files</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+					$debug .= sprintf($legend, 'Included Files');
 					$debug .= '<span>Number: ' . sizeof(get_included_files()) . "</span>";
 					$debug .= '<span>'. implode("<br/>", get_included_files()) . "</span>";
 					$debug .= '</fieldset>';
 
 					$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-query-information">';
-					$debug .= '<legend><b>Query Log</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+					$debug .= sprintf($legend, 'Query Log');
 					$ql = \Core\DB()->queryLog();
 					$qls = sizeof($ql);
 					foreach($ql as $i => $dat){

@@ -791,55 +791,35 @@ pre.xdebug-var-dump {
   margin-bottom: 0;
 }
 
-/* line 16, ../scss/_debugging.scss */
+/*
 pre.xdebug-var-dump .debug-section {
-  background: none repeat scroll 0 0 rgba(255, 255, 255, 0.35);
-  border-color: #EEEEEE -moz-use-text-color;
-  border-radius: 0;
-  border-style: solid none;
-  border-width: 1px 0;
-  box-shadow: 0 0 0.2em 0.1em rgba(0, 0, 0, 0.03);
-  height: auto;
-  margin: 0 0 1em;
-  min-height: 1.2em;
-  padding: 0 0.8em;
-  position: relative;
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.35);
+	border-color: #EEEEEE -moz-use-text-color;
+	border-radius: 0;
+	border-style: solid none;
+	border-width: 1px 0;
+	box-shadow: 0 0 0.2em 0.1em rgba(0, 0, 0, 0.03);
+	height: auto;
+	margin: 0 0 1em;
+	min-height: 1.2em;
+	padding: 0 0.8em;
+	position: relative;
 }
-
-/* line 29, ../scss/_debugging.scss */
 pre.xdebug-var-dump .debug-section legend {
-  font-size: 1em;
-  margin: 0;
-  padding: 0;
-  position: absolute;
+	font-size: 1em;
+	margin:0;
+	padding:0;
+	position: absolute;
 }
-
-/* line 35, ../scss/_debugging.scss */
-pre.xdebug-var-dump .debug-section:last-child {
-  margin-bottom: 0;
-}
-
-/* line 36, ../scss/_debugging.scss */
-pre.xdebug-var-dump .debug-section i {
-  color: #bbb;
-}
-
-/* line 37, ../scss/_debugging.scss */
+pre.xdebug-var-dump .debug-section:last-child {margin-bottom:0;}
+pre.xdebug-var-dump .debug-section i {color:#bbb;}
 pre.xdebug-var-dump .debug-section.collapsed {
-  height: 1.5em;
-  overflow: hidden;
+	height:1.5em;
+	overflow:hidden;
 }
-
-/* line 41, ../scss/_debugging.scss */
-pre.xdebug-var-dump .debug-section.collapsible i {
-  display: none;
-}
-
-/* line 42, ../scss/_debugging.scss */
-pre.xdebug-var-dump .debug-section.collapsed i {
-  display: inline;
-}
-
+pre.xdebug-var-dump .debug-section.collapsible i {display:none;}
+pre.xdebug-var-dump .debug-section.collapsed i {display:inline;}
+*/
 /*****************************************************************************
  *****************************************************************************
  **                          CONTROL ELEMENTS                               **
@@ -1341,13 +1321,20 @@ fieldset.collapsible.collapsed .collapsible-hint {
 }
 
 /* line 15, ../scss/vendor/bourbon/addons/_clearfix.scss */
+.page-admin-widgets .widget-bucket-destination:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* line 15, ../scss/vendor/bourbon/addons/_clearfix.scss */
 #admin-bar:after {
   content: "";
   display: table;
   clear: both;
 }
 
-/* line 28, ../scss/styles.scss */
+/* line 29, ../scss/styles.scss */
 a.button {
   border: 1px solid #2459a6;
   border-radius: 3px;
@@ -1395,12 +1382,12 @@ a.button:disabled {
     display: none !important;
   }
 }
-/* line 41, ../scss/styles.scss */
+/* line 42, ../scss/styles.scss */
 a.agplv3-tag {
   color: white;
   text-shadow: 0px 0px 3px #636;
 }
-/* line 45, ../scss/styles.scss */
+/* line 46, ../scss/styles.scss */
 a.agplv3-tag:hover {
   color: #636;
   text-shadow: 0px 0px 3px white;
