@@ -839,8 +839,13 @@ class Form extends FormGroup {
 			$i = $model->GetIndexes();
 
 			if(isset($i['primary'])){
-				foreach($i['primary'] as $k){
-					$hash .= $m . '.' . $k . ':' . $model->get($k) . ';';
+				if(is_array($i['primary'])){
+					foreach($i['primary'] as $k){
+						$hash .= $m . '.' . $k . ':' . $model->get($k) . ';';
+					}
+				}
+				else{
+					$hash .= $m . '.' . $i['primary'] . ':' . $model->get( $i['primary'] ) . ';';
 				}
 			}
 		}
@@ -1483,7 +1488,14 @@ class Form extends FormGroup {
 			$status = false;
 		}
 		catch(Exception $e){
-			Core::SetMessage('Oops, something went wrong while submitting the form.  The administrator has been notified of this issue, please try again later.', 'error');
+			if(DEVELOPMENT_MODE){
+				// Developers get the full message
+				Core::SetMessage($e->getMessage(), 'error');
+			}
+			else{
+				// While users of production-enabled sites get a friendlier message.
+				Core::SetMessage('Oops, something went wrong while submitting the form.  The administrator has been notified of this issue, please try again later.', 'error');
+			}
 			Core\ErrorManagement\exception_handler($e);
 			$status = false;
 		}
