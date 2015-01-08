@@ -68,12 +68,20 @@ class WidgetInstanceModel extends Model {
 			'comment'   => 'The template name on which to display on (for skin-level widgets)',
 			'default' => null,
 		),
-		'page_baseurl' => array(
+		'page_template' => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'null'      => true,
 			'required'  => false,
 			'comment'   => 'The page template file on which to display on. (for page-level widgets)',
+			'default' => null,
+		),
+		'page_baseurl' => array(
+			'type'      => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
+			'null'      => true,
+			'required'  => false,
+			'comment'   => 'The page baseurl on which to display on.',
 			'default' => null,
 		),
 		'widgetarea' => array(
@@ -152,11 +160,13 @@ class WidgetInstanceModel extends Model {
 	}
 
 	/**
-	 * Execute the controller and method this page request points to.
+	 * Execute the controller and method this widget request points to.
+	 *
+	 * @param array $parameters Array of custom parameters passed in from the template
 	 *
 	 * @return View
 	 */
-	public function execute() {
+	public function execute($parameters = []) {
 		$pagedat = $this->splitParts();
 		/// A few sanity/security checks for the controller's sake.
 
@@ -184,6 +194,7 @@ class WidgetInstanceModel extends Model {
 
 
 		// This will be a Widget object.
+		/** @var Widget_2_1 $c */
 		$c = Widget_2_1::Factory($pagedat['controller']);
 
 		// Make sure it's linked
@@ -193,6 +204,9 @@ class WidgetInstanceModel extends Model {
 		if($this->get('installable')){
 			$c->_installable = $this->get('installable');
 		}
+
+		// Pass in any customer parameters
+		$c->_params = $parameters;
 
 		$return = call_user_func(array($c, $pagedat['method']));
 		if (is_int($return)) {

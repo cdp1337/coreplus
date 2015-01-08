@@ -11,27 +11,32 @@
 </p>
 
 <div>
-	{if sizeof($skins)}
-		<form method="GET" action="" id="skin-selection-form" class="form-orientation-horizontal">
-			<div class="formelement formelementselect">
-				<label class="form-element-label">Theme Skin</label>
-				<div class="form-element-value">
-					<select name="skin" id="skin-selection-select">
-						{foreach $skins as $s}
-							<option value="{$s.value}" {if $s.selected}selected="selected"{/if}>{$s.title}</option>
-						{/foreach}
-					</select>
-				</div>
+	<form method="GET" action="" id="skin-selection-form" class="form-orientation-horizontal">
+		<div class="formelement formelementselect">
+			<label class="form-element-label">Template</label>
+			<div class="form-element-value">
+				<select name="selected" id="skin-selection-select">
+					{foreach $options as $k => $v}
+						<option value="{$k}" {if $k == $selected}selected="selected"{/if}>{$v}</option>
+					{/foreach}
+				</select>
 			</div>
-		</form>
-	{/if}
+		</div>
+	</form>
 
 
 	<form action="{link '/admin/widgetinstances/save'}" method="POST">
 
-		<input type="hidden" name="page_baseurl" value="{$page_baseurl}"/>
+		<input type="hidden" name="selected" value="{$selected}"/>
 		<input type="hidden" name="theme" value="{$theme}"/>
 		<input type="hidden" name="skin" value="{$skin}"/>
+		<input type="hidden" name="page_template" value="{$page_template}"/>
+		<input type="hidden" name="page_baseurl" value="{$page_baseurl}"/>
+
+		{*
+		<input type="hidden" name="theme" value="{$theme}"/>
+		<input type="hidden" name="skin" value="{$skin}"/>
+		*}
 
 		<div class="widget-bucket-destination clearfix">
 			{foreach from=$areas item='area'}
@@ -110,33 +115,35 @@
 				</div>
 			</div>
 		</td>
-		<td>
-			{$entry.site}
-		</td>
+		{if $multisite}
+			<td>
+				{$entry.site}
+			</td>
+		{/if}
 		<td>{$entry.baseurl}</td>
 		<td>{$entry.installable}</td>
 		<td>{date format="SD" $entry.created}</td>
 
 		<td>
 			{if $manager}
-			<ul class="controls">
-				{if $entry.editurl}
-					<li>
-						{a href="`$entry.editurl`"}
-							<i class="icon-edit"></i>
-							<span>Edit</span>
-						{/a}
-					</li>
-				{/if}
-				{if $entry.deleteurl}
-					<li>
-						{a href="`$entry.deleteurl`" confirm="Are you sure you want to completely delete this widget?"}
-							<i class="icon-remove"></i>
-							<span>Delete</span>
-						{/a}
-					</li>
-				{/if}
-			</ul>
+				<ul class="controls">
+					{if $entry.editurl}
+						<li>
+							{a href="`$entry.editurl`"}
+								<i class="icon-edit"></i>
+								<span>Edit</span>
+							{/a}
+						</li>
+					{/if}
+					{if $entry.deleteurl}
+						<li>
+							{a href="`$entry.deleteurl`" confirm="Are you sure you want to completely delete this widget?"}
+								<i class="icon-remove"></i>
+								<span>Delete</span>
+							{/a}
+						</li>
+					{/if}
+				</ul>
 			{/if}
 		</td>
 	</tr>

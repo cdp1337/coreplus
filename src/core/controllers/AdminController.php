@@ -720,70 +720,145 @@ class AdminController extends Controller_2_1 {
 		}
 
 		// Build a list of create pages for all registered components.
-		$components = Core::GetComponents();
-		$links = [];
+		$components    = Core::GetComponents();
+		$pages         = [];
+		$skins         = [];
+		$selected      = null;
+		$selectedtype  = null;
+		$baseurl       = null;
+		$selectoptions = [];
+		$links         = [];
+		$theme         = ThemeHandler::GetTheme();
+		$formtheme     = null;
+		$formskin      = null;
+		$formtemplate  = null;
+
 		foreach($components as $c){
 			/** @var Component_2_1 $c */
+
+			$viewdir = $c->getViewSearchDir();
+			if($viewdir){
+				$dirlen = strlen($viewdir);
+				$component = $c->getName();
+
+				$dh = \Core\Filestore\Factory::Directory($viewdir);
+				//$pagetplfiles = $dh->ls('tpl', true);
+				$pagetplfiles = $dh->ls(null, true);
+
+				// not sure why getFilename(path) isn't working as expected, but this works too.
+				foreach($pagetplfiles as $obj){
+
+					// I don't want directories.
+					if($obj instanceof \Core\Filestore\Directory) continue;
+
+					/** @var $obj \Core\Filestore\File */
+					$file = substr($obj->getFilename(), $dirlen);
+
+					// Since this is a template, it may actually be in a different location than where the package maintainer put it.
+					// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
+					$tpl = Core\Templates\Template::Factory($file);
+
+					if($tpl->hasWidgetAreas()){
+						$pagetitle = $file;
+						if(strpos($pagetitle, 'pages/') === 0){
+							$pagetitle = substr($pagetitle, 6);
+						}
+						// Replace directory slashes with a space
+						$pagetitle = str_replace(['/', '-'], ' ', $pagetitle);
+						// Capitalize them
+						$pagetitle = ucwords($pagetitle);
+						// And trim off the ".tpl" suffix.
+						$pagetitle = substr($pagetitle, 0, -4);
+						$pages[$file] = $pagetitle;
+					}
+				}
+			}
+
 			foreach($c->getXML()->getElements('/widgets/widgetcreate') as $node){
 				/** @var DOMElement $node */
 
 				if($node->getAttribute('baseurl')){
-						$baseurl = $node->getAttribute('baseurl');
+					$nodebaseurl = $node->getAttribute('baseurl');
 				}
 				elseif($node->getAttribute('class')){
-					$baseurl = '/admin/widget/create?class=' . $node->getAttribute('class');
+					$nodebaseurl = '/admin/widget/create?class=' . $node->getAttribute('class');
 				}
 				else{
 					Core::SetMessage('Invalid "widgetcreate" found in ' . $c->getName() . ', ' . $node->getAttribute('title'), 'error');
 					continue;
 				}
 
-				$links[] = ['baseurl' => $baseurl, 'title' => $node->getAttribute('title')];
+				$links[] = ['baseurl' => $nodebaseurl, 'title' => $node->getAttribute('title')];
 			}
+		}
+
+		// Build the array of skins for the current theme
+		$themeskins  = $theme->getSkins();
+		$defaultskin = null;
+		foreach($themeskins as $dat){
+
+			$skins[ 'skins/' . $dat['file'] ] = $dat['title'];
+
+			if($dat['default']){
+				$defaultskin = 'skins/' . $dat['file'];
+			}
+		}
+
+		// Now that the various templates have been loaded into a flat array, I need to sort them.
+		asort($pages);
+		asort($skins);
+
+		foreach($skins as $k => $v){
+			$selectoptions[ $k ] = 'Skin: ' . $v;
+		}
+		foreach($pages as $k => $v){
+			$selectoptions[ $k ] = 'Page: ' . $v;
 		}
 
 		if($request->getParameter('baseurl')){
-			// It's a page request.
-			$skinopts = [];
-			$theme = null;
-			$skin = null;
-			$page = PageModel::Construct($request->getParameter('baseurl'));
-			$template = \Core\Templates\Template::Factory($page->get('last_template'));
-			$areas = $template->getWidgetAreas();
+			// It's a URL-specific request, lookup which template that page used last.
+			$baseurl  = $request->getParameter('baseurl');
+			$page     = PageModel::Construct($baseurl);
+
+			if(!isset($pages[ $page->get('last_template') ])){
+				Core::SetMessage('Requested page template does not seem to contain any widget areas.', 'error');
+				Core::GoBack();
+			}
+
+			$selected = $page->get('last_template');
+			$selectedtype = 'url';
+			$formtemplate = $selected;
+		}
+		elseif($request->getParameter('selected')){
+			$selected = $request->getParameter('selected');
+
+			if(isset($pages[ $selected ])){
+				$selectedtype = 'page';
+				$formtemplate = $selected;
+			}
+			else{
+				$selectedtype = 'skin';
+				$formtheme = $theme->getKeyName();
+				$formskin  = $selected;
+			}
 		}
 		else{
-			$theme = ThemeHandler::GetTheme();
-			$skins = $theme->getSkins();
-			$skinopts = [];
-			$skin = null;
-			$page = null;
-			foreach($skins as $dat){
-				if($request->getParameter('skin') && $dat['file'] == $request->getParameter('skin')){
-					$selected = true;
-					$skin = \Core\Templates\Template::Factory($dat['filename']);
-				}
-				elseif(!$request->getParameter('skin') && $dat['default']){
-					$selected = true;
-					$skin = \Core\Templates\Template::Factory($dat['filename']);
-				}
-				else{
-					$selected = false;
-				}
-				$skinopts[] = [
-					'title'    => $dat['title'],
-					'value'    => $dat['file'],
-					'selected' => $selected,
-				];
-			}
-			$areas = $skin->getWidgetAreas();
+			// Just use the default theme skin.
+			$selected = $defaultskin;
+			$selectedtype = 'skin';$formtheme = $theme->getKeyName();
+			$formskin  = $selected;
 		}
 
-
+		$template     = \Core\Templates\Template::Factory($selected);
+		$areas        = $template->getWidgetAreas();
+		$installables = [0 => ''];
 
 		foreach($areas as $k => $dat){
 			// Ensure that each area has a widgets array, (even if it's empty)
 			$areas[$k]['widgets'] = [];
+			$installables[] = $dat['installable'];
 		}
+		$installables = array_unique($installables);
 
 		$factory = new ModelFactory('WidgetInstanceModel');
 		$factory->order('weight');
@@ -791,16 +866,23 @@ class AdminController extends Controller_2_1 {
 			$factory->whereGroup('or', ['site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID()]);
 		}
 
-		if($theme){
+		if($selectedtype == 'skin'){
 			// First, the skin-level where clause.
 			$skinwhere = new Core\Datamodel\DatasetWhereClause();
 			$skinwhere->setSeparator('AND');
 			$skinwhere->addWhere('theme = ' . $theme->getKeyName());
-			$skinwhere->addWhere('skin = ' . $skin->getBasename());
+			$skinwhere->addWhere('skin = ' . $selected);
 			$factory->where($skinwhere);
 		}
-		elseif($page){
-			$factory->where('page_baseurl = ' . $page->get('baseurl'));
+		elseif($selectedtype == 'page'){
+			$factory->where('page_template = ' . $selected);
+		}
+		elseif($selectedtype == 'url'){
+			$factory->where('page_baseurl = ' . $baseurl);
+		}
+		else{
+			Core::SetMessage('Invalid/unknown template type', 'error');
+			Core::GoBack();
 		}
 
 
@@ -823,6 +905,7 @@ class AdminController extends Controller_2_1 {
 		else{
 			$ms = false;
 		}
+		$table->getModelFactory()->where('installable IN ' . implode(', ', $installables));
 		$table->addColumn('Base URL', 'baseurl');
 		$table->addColumn('Installable', 'installable');
 		$table->addColumn('Created', 'created');
@@ -833,10 +916,12 @@ class AdminController extends Controller_2_1 {
 		$view->assign('table', $table);
 		$view->assign('links', $links);
 		$view->assign('manager', $manager);
-		$view->assign('skins', $skinopts);
-		$view->assign('page_baseurl', ($page ? $page->get('baseurl') : null));
-		$view->assign('theme', ($theme ? $theme->getKeyName() : null));
-		$view->assign('skin', ($skin ? $skin->getBasename() : null));
+		$view->assign('theme', $formtheme);
+		$view->assign('skin', $formskin);
+		$view->assign('page_template', $formtemplate);
+		$view->assign('page_baseurl', $baseurl);
+		$view->assign('options', $selectoptions);
+		$view->assign('selected', $selected);
 		$view->assign('areas', $areas);
 		$view->assign('multisite', $ms);
 	}
@@ -1046,16 +1131,20 @@ class AdminController extends Controller_2_1 {
 		$counter = 0;
 		$changes = ['created' => 0, 'updated' => 0, 'deleted' => 0];
 
-		$theme = $_POST['theme'];
-		$skin = $_POST['skin'];
-		$page = $_POST['page_baseurl'];
+		$selected = $_POST['selected'];
+		// For the incoming options, I want an explicit NULL if it's empty.
+		$theme    = $_POST['theme'] == '' ? null : $_POST['theme'];
+		$skin     = $_POST['skin'] == '' ? null : $_POST['skin']; $_POST['skin'];
+		$page     = $_POST['page_template'] == '' ? null : $_POST['page_template'];
+		$baseurl  = $_POST['page_baseurl'] == '' ? null : $_POST['page_baseurl'];
 
 		foreach($_POST['widgetarea'] as $id => $dat){
 
 			// Merge in the global information for this request
-			$dat['theme']        = $theme;
-			$dat['template']     = $skin;
-			$dat['page_baseurl'] = $page;
+			$dat['theme']         = $theme;
+			$dat['skin']          = $skin;
+			$dat['page_template'] = $page;
+			$dat['page_baseurl']  = $baseurl;
 
 			$dat['weight'] = ++$counter;
 			$dat['access'] = $dat['widgetaccess'];
@@ -1102,11 +1191,11 @@ class AdminController extends Controller_2_1 {
 			Core::SetMessage('No changes performed', 'info');
 		}
 
-		if($page){
-			\Core\redirect($page);
+		if($baseurl){
+			\Core\redirect($baseurl);
 		}
 		else{
-			\Core\redirect('/admin/widgets?skin=' . $skin);
+			\Core\redirect('/admin/widgets?selected=' . $selected);
 		}
 
 	}

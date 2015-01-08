@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 18 Dec 2014 12:25:05 -0500
+ * @compiled Wed, 07 Jan 2015 23:35:33 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -240,6 +240,7 @@ define('COLOR_SUCCESS', "\033[1;32m");
 define('COLOR_WARNING', "\033[1;33m");
 define('COLOR_ERROR', "\033[1;31m");
 define('COLOR_DEBUG', "\033[0;34m");
+define('COLOR_NORMAL', "\033[0m");
 define('COLOR_RESET', "\033[0m");
 define('NBSP', ' ');
 }
@@ -250,6 +251,7 @@ define('COLOR_SUCCESS', "<span style='color:green; font-weight:bold;'>");
 define('COLOR_WARNING', "<span style='color:yellow; font-weight:bold;'>");
 define('COLOR_ERROR', "<span style='color:red; font-weight:bold;'>");
 define('COLOR_DEBUG', "<span style='color:lightskyblue;'>");
+define('COLOR_NORMAL', "<span>");
 define('COLOR_RESET', "</span>");
 define('NBSP', '&nbsp;');
 }
@@ -3771,6 +3773,10 @@ only.  Useful for saving a page without releasing it to public users.',
 public static $Indexes = array(
 'primary' => array('site', 'baseurl'),
 'unique:rewrite_url' => array('site', 'rewriteurl'),
+'baseurlidx' => ['baseurl'],
+'adminidx' => ['admin'],
+'rewritefuzzy' => ['rewriteurl', 'fuzzy'],
+'baseurlfuzzy' => ['baseurl', 'fuzzy'],
 );
 public static $HasCreated = true;
 public static $HasUpdated = true;
@@ -4513,12 +4519,21 @@ if (!$base) return null;
 $args = null;
 $argstring = '';
 if (($qpos = strpos($base, '?')) !== false) {
-$argstring = substr($base, $qpos + 1);
+$argstring = urldecode(substr($base, $qpos + 1));
 preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
 $args = array();
-foreach ($matches[1] as $k => $v) {
+foreach ($matches[1] as $idx => $v) {
 if (!$v) continue;
-$args[$v] = $matches[2][$k];
+$a =& $args;
+while(($paranpos = strpos($v, '[')) !== false){
+$k1 = substr($v, 0, $paranpos);
+$v = substr($v, $paranpos+1, strpos($v, ']')-$paranpos-1);
+if(!isset($a[$k1])){
+$a[$k1] = [];
+}
+$a =& $a[$k1];
+}
+$a[$v] = $matches[2][$idx];
 }
 $base = substr($base, 0, $qpos);
 }
@@ -16498,10 +16513,11 @@ else{
 $xhprof_link = '';
 }
 if (DEVELOPMENT_MODE) {
+$legend = '<div class="fieldset-title">%s<i class="icon-chevron-down expandable-hint"></i><i class="icon-chevron-up collapsible-hint"></i></div>' . "\n";
 $debug = '';
 $debug .= '<pre class="xdebug-var-dump screen">';
 $debug .= '<fieldset class="debug-section collapsible" id="debug-section-template-information">';
-$debug .= '<legend><b>Template Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+$debug .= sprintf($legend, 'Template Information');
 $debug .= "<span>";
 $debug .= 'Base URL: ' . $this->baseurl . "\n";
 $debug .= 'Template Requested: ' . $this->templatename . "\n";
@@ -16510,7 +16526,7 @@ $debug .= 'Master Skin: ' . $this->mastertemplate . "\n";
 $debug .= "</span>";
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible" id="debug-section-performance-information">';
-$debug .= '<legend><b>Performance Information</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+$debug .= sprintf($legend, 'Performance Information');
 $debug .= "<span>";
 $debug .= $xhprof_link;
 $debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
@@ -16521,13 +16537,13 @@ $debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
 $debug .= "</span>";
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible" id="debug-section-profiler-information">';
-$debug .= '<legend><b>Core Profiler</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+$debug .= sprintf($legend, 'Core Profiler');
 $debug .= "<span>";
 $debug .= $profiler->getEventTimesFormatted();
 $debug .= "</span>";
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-components-information">';
-$debug .= '<legend><b>Available Components</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+$debug .= sprintf($legend, 'Available Components');
 $debugcomponents = array_merge(Core::GetComponents(), Core::GetDisabledComponents());
 $debug .= "<span>";
 ksort($debugcomponents);
@@ -16546,7 +16562,7 @@ $debug .= $v->getName() . ' ' . $v->getVersion() . "<br/>";
 $debug .= "</span>";
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-hooks-information">';
-$debug .= '<legend><b>Registered Hooks</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+$debug .= sprintf($legend, 'Registered Hooks');
 foreach(HookHandler::GetAllHooks() as $hook){
 $debug .= "<span>";
 $debug .= $hook->name;
@@ -16561,12 +16577,12 @@ $debug .= "</span>";
 }
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-includes-information">';
-$debug .= '<legend><b>Included Files</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+$debug .= sprintf($legend, 'Included Files');
 $debug .= '<span>Number: ' . sizeof(get_included_files()) . "</span>";
 $debug .= '<span>'. implode("<br/>", get_included_files()) . "</span>";
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-query-information">';
-$debug .= '<legend><b>Query Log</b> <i class="icon-ellipsis-h"></i></legend>' . "\n";
+$debug .= sprintf($legend, 'Query Log');
 $ql = \Core\DB()->queryLog();
 $qls = sizeof($ql);
 foreach($ql as $i => $dat){
@@ -17508,8 +17524,13 @@ $hash .= $this->get('callsmethod') . ';';
 foreach($this->_models as $m => $model){
 $i = $model->GetIndexes();
 if(isset($i['primary'])){
+if(is_array($i['primary'])){
 foreach($i['primary'] as $k){
 $hash .= $m . '.' . $k . ':' . $model->get($k) . ';';
+}
+}
+else{
+$hash .= $m . '.' . $i['primary'] . ':' . $model->get( $i['primary'] ) . ';';
 }
 }
 }
@@ -17835,7 +17856,12 @@ Core::SetMessage($e->getMessage(), 'error');
 $status = false;
 }
 catch(Exception $e){
+if(DEVELOPMENT_MODE){
+Core::SetMessage($e->getMessage(), 'error');
+}
+else{
 Core::SetMessage('Oops, something went wrong while submitting the form.  The administrator has been notified of this issue, please try again later.', 'error');
+}
 Core\ErrorManagement\exception_handler($e);
 $status = false;
 }

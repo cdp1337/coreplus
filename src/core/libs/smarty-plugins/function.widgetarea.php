@@ -22,7 +22,7 @@
 /**
  * @todo Finish documentation of smarty_function_widgetarea
  * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
- * @param Smarty $smarty  Parent Smarty template object
+ * @param Smarty_Internal_Template $smarty  Parent Smarty template object
  *
  * @return string|void
  */
@@ -30,11 +30,30 @@ function smarty_function_widgetarea($params, $smarty) {
 	// Get all widgets set to load in this area.
 
 	$body = '';
-	$name = $params['name'];
-	$page = PageRequest::GetSystemRequest()->getBaseURL();
-	// May provide metadata useful for the called widget.... maybe.
-	$installable = (isset($params['installable'])) ? $params['installable'] : null;
-	$assign      = (isset($params['assign'])) ? $params['assign'] : false;
+
+	$baseurl = PageRequest::GetSystemRequest()->getBaseURL();
+	$page = $smarty->template_resource;
+
+	$parameters  = [];
+	$name        = null;
+	$installable = null;
+	$assign      = null;
+	foreach($params as $k => $v){
+		switch($k){
+			case 'name':
+				$name = $v;
+				break;
+			case 'installable':
+				$installable = $v;
+				break;
+			case 'assign':
+				$assign = $v;
+				break;
+			default:
+				$parameters[$k] = $v;
+				break;
+		}
+	}
 
 	// I need to resolve the page template down to the base version in order for the lookup to work.
 	foreach(Core\Templates\Template::GetPaths() as $base){
@@ -44,9 +63,8 @@ function smarty_function_widgetarea($params, $smarty) {
 		}
 	}
 
-	// Pages can have their own template for this theme.
-	$tplname = \Core\view()->mastertemplate;
-	if (!$tplname) $tplname = ConfigHandler::Get('/theme/default_template');
+	$skin = \Core\view()->mastertemplate;
+	if (!$skin) $skin = ConfigHandler::Get('/theme/default_template');
 
 	$theme = ConfigHandler::Get('/theme/selected');
 
@@ -64,15 +82,24 @@ function smarty_function_widgetarea($params, $smarty) {
 	$skinwhere = new Core\Datamodel\DatasetWhereClause();
 	$skinwhere->setSeparator('AND');
 	$skinwhere->addWhere('theme = ' . $theme);
-	$skinwhere->addWhere('skin = ' . $tplname);
+	$skinwhere->addWhere('skin = ' . $skin);
 	$skinwhere->addWhere('widgetarea = ' . $name);
 	$subwhere->addWhere($skinwhere);
 
 	// And second, the page-level where clause.
+	if($baseurl){
+		$pagewhere = new Core\Datamodel\DatasetWhereClause();
+		$pagewhere->setSeparator('AND');
+		$pagewhere->addWhere('page_baseurl = ' . $baseurl);
+		$pagewhere->addWhere('widgetarea = ' . $name);
+		$subwhere->addWhere($pagewhere);
+	}
+
+	// Lastly, the page-level template.
 	if($page){
 		$pagewhere = new Core\Datamodel\DatasetWhereClause();
 		$pagewhere->setSeparator('AND');
-		$pagewhere->addWhere('page_baseurl = ' . $page);
+		$pagewhere->addWhere('page_template = ' . $page);
 		$pagewhere->addWhere('widgetarea = ' . $name);
 		$subwhere->addWhere($pagewhere);
 	}
@@ -81,7 +108,23 @@ function smarty_function_widgetarea($params, $smarty) {
 
 
 	$widgetcount = 0;
-	foreach ($factory->get() as $wi) {
+	try{
+		$widgets = $factory->get();
+	}
+	catch(Exception $e){
+		if(DEVELOPMENT_MODE){
+			$body .= '<p class="message-error">Exception while trying to load widget area ' . $name . '!</p>';
+			$body .= '<pre class="xdebug-var-dump">' . $e->getMessage() . '</pre>';
+		}
+		else{
+			\Core\ErrorManagement\exception_handler($e, false);
+		}
+		$widgets = [];
+		++$widgetcount;
+	}
+
+
+	foreach ($widgets as $wi) {
 		/** @var $wi WidgetInstanceModel */
 		// User cannot access this widget? Don't display it...
 		if(!\Core\user()) continue;
@@ -90,7 +133,7 @@ function smarty_function_widgetarea($params, $smarty) {
 		if($installable){
 			$wi->set('installable', $installable);
 		}
-		$view = $wi->execute();
+		$view = $wi->execute($parameters);
 
 		// Some widgets may return simply a blank string.  Those should just be ignored.
 		if ($view == '') continue;
