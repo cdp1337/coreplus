@@ -386,7 +386,7 @@ class FileRemote implements Filestore\File {
 	public function isOK(){
 		$this->_getHeaders();
 
-		return ($this->_response == 200);
+		return ($this->_response == 200 || $this->_response == 301 || $this->_response == 302);
 	}
 
 	public function requiresAuthentication(){
@@ -574,7 +574,7 @@ class FileRemote implements Filestore\File {
 				}
 			}
 
-			if($this->_response == '302' && isset($this->_headers['Location'])){
+			if(($this->_response == '302' || $this->_response == '301') && isset($this->_headers['Location'])){
 				/*
 				From: http://www.ietf.org/rfc/rfc2616.txt and http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
 
@@ -605,7 +605,13 @@ class FileRemote implements Filestore\File {
 			}
 		}
 
-		return $this->_headers;
+		if(($this->_response == '302' || $this->_response == '301') && $this->_redirectFile !== null){
+			return $this->_redirectFile->_headers;
+		}
+		else{
+			return $this->_headers;
+		}
+
 	}
 
 	protected function _getHeader($header) {
@@ -658,7 +664,7 @@ class FileRemote implements Filestore\File {
 			if ($needtodownload || !$this->cacheable) {
 				// Make sure that the headers are updated, this is a requirement to use the 302 tag.
 				$this->_getHeaders();
-				if($this->_response == '302' && $this->_redirectFile !== null){
+				if(($this->_response == '302' || $this->_response == '301') && $this->_redirectFile !== null){
 					$this->_tmplocal = $this->_redirectFile->_getTmpLocal();
 				}
 				else{
