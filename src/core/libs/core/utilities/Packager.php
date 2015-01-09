@@ -466,7 +466,9 @@ EOD;
 	public function package($packager_name, $packager_email, $signed){
 		// Update the changelog version first!
 		// This is done here to signify that the version has actually been bundled up.
-		$this->getChangelogSection()->markReleased($packager_name, $packager_email);
+		if(!$this->getChangelogSection()->getReleasedDate()){
+			$this->getChangelogSection()->markReleased($packager_name, $packager_email);
+		}
 
 		// The packager needs to be resaved since the CHANGELOG file changed.
 		$this->save();
@@ -491,7 +493,8 @@ EOD;
 		if(!is_dir($dir))           mkdir($dir, 0777, true);
 		if(!is_dir($dir . 'data/')) mkdir($dir . 'data/', 0777, true);
 
-		$basestrlen = strlen($this->_base->getPath());
+		$basepath   = $this->_base->getPath();
+		$basestrlen = strlen($basepath);
 		foreach($this->_iterator as $file){
 			/** @var FileLocal $file */
 			$fname = substr($file->getFilename(), $basestrlen);
@@ -521,7 +524,13 @@ EOD;
 		}
 
 		// Because the destination is relative...
-		$xmldest = 'data/' . substr($this->_xmlFile, $basestrlen);
+		if(strpos($this->_xmlFile, $basepath) === 0){
+			$xmldest = 'data/' . substr($this->_xmlFile, $basestrlen);
+		}
+		else{
+			$xmldest = 'data/' . $this->_xmlFile;
+		}
+
 		$xmloutput = \Core\Filestore\Factory::File($dir . $xmldest);
 		$xmloutput->putContents($this->_xmlLoader->asMinifiedXML());
 
