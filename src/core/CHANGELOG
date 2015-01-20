@@ -1,3 +1,13 @@
+Core Plus 4.0.1
+
+	* New ModelImport subsystems available for use, (scaffolding at least).
+	* Allow a "source" to be specified for select options.
+	* Allow the packager to re-run on a released version and fix the weird issue with Core's XML metafile
+	  not being included :/
+	* Include "application/pgp" as a GPG/PGP signature mimetype.
+	* Handle 301 redirects identically as 302 redirects.
+	-- Charlie Powell <charlie@eval.bz>  Tue, 20 Jan 2015 15:02:49 -0500
+
 Core Plus 4.0.0
 
 	* [Bug] Switch the View debugging information to use the standard UI structure for collapsible
