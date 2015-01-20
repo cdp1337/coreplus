@@ -450,6 +450,21 @@ EOD;
 		$cmodel = \ComponentModel::Construct($name);
 		$cmodel->set('version', $this->_version);
 		$cmodel->save();
+
+
+		// Reload the data from disk,
+		// this is to ensure that subsequent operations on the component are synced up with the disk's data and not just running from memory.
+		switch($this->_type){
+			case 'theme':
+				$this->_setupTheme();
+				break;
+			case 'component':
+				$this->_setupComponent();
+				break;
+			case 'core':
+				$this->_setupCore();
+				break;
+		}
 	}
 
 	/**

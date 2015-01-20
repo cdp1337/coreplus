@@ -71,7 +71,7 @@
 	</includes>
 	<files>
 		<file filename="config/configuration.example.xml" md5="eac5d52f582025aca84e54796592b7b5"/>
-		<file filename="core/CHANGELOG" md5="ee9fa39e512b3dfd4db42a26169f9fbb"/>
+		<file filename="core/CHANGELOG" md5="bae9fbc14e00db589f6d53032a1d5c8e"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="4413ef9bdb639f2c0d2064c5631491cc"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
@@ -736,7 +736,7 @@
 		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="5eae590dfc2ca7f71f6ef04c9ce71b5b">
 			<class name="Core\User\AuthDrivers\gpg"/>
 		</file>
-		<file filename="core/libs/core/utilities/Packager.php" md5="3a9171ce68e639f447a6531a50d770fc">
+		<file filename="core/libs/core/utilities/Packager.php" md5="bacc676c05ba94acf6481a27e5f71a88">
 			<class name="Core\Utilities\Packager"/>
 		</file>
 		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="cbe5d3040cf77482bfd6f82237a29652">
