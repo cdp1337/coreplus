@@ -656,21 +656,33 @@ class FormElement {
 	 */
 	public function getInputAttributes() {
 		$out = '';
+
+		if(isset($this->_attributes['source']) && !isset($this->_attributes['options'])){
+			// Validation exists... check it.
+			$source = $this->_attributes['source'];
+
+			// Allow the source to be specified as a static public function
+			if (strpos($source, '::') !== false) {
+				// the method can either be true, false or a string.
+				// Only if true is returned will that be triggered as success.
+				$this->_attributes['options'] = call_user_func($source);
+			}
+		}
+
 		foreach ($this->_validattributes as $k) {
 			if (
 				$k == 'required' ||
-				$k == 'disabled' ||
-				$k == 'checked'
-			){
+				$k == 'disabled' || $k == 'checked'
+			) {
 				// These are all $k = $k if they're enabled.
-				if(!$this->get($k)){
+				if(!$this->get($k)) {
 					continue;
 				}
-				else{
+				else {
 					$out .= sprintf(' %s="%s"', $k, $k);
 				}
 			}
-			elseif (($v = $this->get($k)) !== null){
+			elseif(($v = $this->get($k)) !== null) {
 				$out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
 			}
 		}
