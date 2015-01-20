@@ -1,7 +1,23 @@
 # Model Declarations
 
+The Model in Core is the foundation of the "M" part of "MVC".
+It provides a control point for all metadata, structures, indexes, and datalogic associated with a given database table.
+
 Each table in the datastore MUST have an associated Model with a corresponding name.
 If you need your table called "`my_something`", then its Model is "`MySomethingModel`".
+
+## Business Logic vs Data Logic
+
+["Business logic"](https://en.wikipedia.org/wiki/Business_logic), is the part of the program that encodes the real-world business rules that determine how data can be created, displayed, stored, and changed.
+**THIS HAS NO PLACE IN MODELS!**
+All business logic *MUST* reside inside Controllers, as business logic generally applies to user roles, so user A may have different permissions than user B,
+such as being able to create a user without a password or assign admin rights to a user.
+
+These are all business logic examples that *must not* be in Models.
+
+Data logic on the other hand, *(@todo find correct term for this)*, 
+such as no two users on the system can have the same email address otherwise there would be data corruption,
+**DOES** belong in Models, as the Model is one of the lowest tiers that interact with the raw data.
 
 ## Static Public Properties
 
@@ -127,7 +143,7 @@ If more advanced settings are required to be set, ie: setting basedir, descripti
 
     'form' => array(
         'type' => 'file',
-        'baseidr' => 'public/something',
+        'basedir' => 'public/something',
     ),
 
 
