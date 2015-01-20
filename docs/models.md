@@ -135,17 +135,22 @@ Each key supports several attributes, one ("type"), required, the rest optional.
 
 ## Models defining form elements
 
-Many times, the data contained in a given model may be expected to be a particular format, ie: a string input type may actually be a file upload, or a text type may be HTML code.
+Many times, the data contained in a given model may be expected to be a particular format, 
+ie: a string input type may actually be a file upload, or a text type may be HTML code.
 
-To define what form elements are created for each property, the "formtype" attribute can be used inside of the Model::$Schema array.
+To define what form elements are created for each property, 
+the "formtype" attribute can be used inside of the Model::$Schema array.
 
-If more advanced settings are required to be set, ie: setting basedir, descriptions, etc, use a "form" attribute which is an array containing all parameters necessary.
+If more advanced settings are required to be set, ie: setting basedir, descriptions, etc, 
+use a "form" attribute which is an array containing all parameters necessary.
 
     'form' => array(
         'type' => 'file',
         'basedir' => 'public/something',
     ),
 
+This array can contain any standard or custom attribute for the assigned FormElement type.
+Example: it wouldn't make any sense to have `type => text` and `cols => 4`, as FormElementText does not care about the "cols" attribute.
 
 ## Linked Models
 
