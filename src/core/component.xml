@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.1" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.2" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -71,13 +71,13 @@
 	</includes>
 	<files>
 		<file filename="config/configuration.example.xml" md5="eac5d52f582025aca84e54796592b7b5"/>
-		<file filename="core/CHANGELOG" md5="bae9fbc14e00db589f6d53032a1d5c8e"/>
+		<file filename="core/CHANGELOG" md5="3ad51e2e59228af8d9739c74c7a5c417"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="4413ef9bdb639f2c0d2064c5631491cc"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="4416faccfd246a2049882672b8a6d7cb"/>
 		<file filename="core/bootstrap_preincludes.php" md5="703e467a570cb33401af9a865d35a4ff"/>
-		<file filename="core/controllers/AdminController.php" md5="58136b8a722305ac134aff66dcb9a2f5">
+		<file filename="core/controllers/AdminController.php" md5="61f8b2d5e2b84fd42fdba87fdd10cd31">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DatastoreAuthController.php" md5="4dbc0eddd9a3538357bf59b3b83d1866">
@@ -939,7 +939,7 @@
 		<file filename="core/libs/smarty-plugins/function.t.php" md5="4bc9cbaf3b071bd58fd77ec21c29f34f"/>
 		<file filename="core/libs/smarty-plugins/function.user.php" md5="9e198be923b6f7e57f93447360cf9a93"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="54ff11e11ea6e8086003e3377aae1dea"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="5cf6d504b982cafdb0fdf47b626b1e9f"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="d1da68061f8be10d785501661849acfe"/>
 		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
 		<file filename="core/libs/smarty/README" md5="aca8e14a483f2fc601a88e7d6051be28"/>
 		<file filename="core/libs/smarty/SMARTY_2_BC_NOTES.txt" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
@@ -1297,7 +1297,7 @@
 		<file filename="core/models/UserUserGroupModel.php" md5="b73a3b87b6c88707449404fa942cf90e">
 			<class name="UserUserGroupModel"/>
 		</file>
-		<file filename="core/models/WidgetInstanceModel.class.php" md5="5da2f202f1afa7e2b3a2eadda8115327">
+		<file filename="core/models/WidgetInstanceModel.class.php" md5="8cb6489e61d4060f8efbef843f1e87d8">
 			<class name="WidgetInstanceModel"/>
 		</file>
 		<file filename="core/models/WidgetModel.class.php" md5="c6f85f25218b6fb2943afe84e569418b">
@@ -1478,7 +1478,7 @@
 		<file filename="core/templates/pages/admin/testui.tpl" md5="fa6b91950d5be2823472e4dfe6f1f458"/>
 		<file filename="core/templates/pages/admin/widget_create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/admin/widget_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="core/templates/pages/admin/widgets.tpl" md5="e64039e456fabb1e18e09d2db1ac57e3"/>
+		<file filename="core/templates/pages/admin/widgets.tpl" md5="40cf529f1c35e2cb8b9802d064f8b414"/>
 		<file filename="core/templates/pages/datastoreauth/forgotpassword.tpl" md5="ed40e9f26a0782f1185c46dce4d5cc4c"/>
 		<file filename="core/templates/pages/datastoreauth/password.tpl" md5="5085e6075a5978854f1a1a40ef410c30"/>
 		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
@@ -1900,6 +1900,7 @@
 		<upgrade from="3.4.0" to="3.5.0"/>
 		<upgrade from="3.5.0" to="4.0.0"/>
 		<upgrade from="4.0.0" to="4.0.1"/>
+		<upgrade from="4.0.1" to="4.0.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
