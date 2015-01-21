@@ -71,7 +71,7 @@
 	</includes>
 	<files>
 		<file filename="config/configuration.example.xml" md5="eac5d52f582025aca84e54796592b7b5"/>
-		<file filename="core/CHANGELOG" md5="3ad51e2e59228af8d9739c74c7a5c417"/>
+		<file filename="core/CHANGELOG" md5="13f972a48f33ccd487a9a902882d1f41"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="4413ef9bdb639f2c0d2064c5631491cc"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
@@ -1422,15 +1422,15 @@
 		<file filename="core/templates/emails/user/initialpassword.tpl" md5="e1313d158e73c9104cd798ef5d5e39e7"/>
 		<file filename="core/templates/emails/user/registration.tpl" md5="e8607f3c1e8a62435e503d26f2ee44f9"/>
 		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="2499a9ce11662ce5b4e950058dfb90de"/>
-		<file filename="core/templates/forms/elements/button.tpl" md5="04458c32e1d992bba0255d8d1a2e8dee"/>
+		<file filename="core/templates/forms/elements/button.tpl" md5="f3042037d97f739d995a134e879c80ea"/>
 		<file filename="core/templates/forms/elements/formaccessstringinput.tpl" md5="6d0bac3bde644f4fd1cd05a47a75bb26"/>
 		<file filename="core/templates/forms/elements/formbuttoninput.tpl" md5="50a4dbed93f33f0a4309527b87084514"/>
-		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="6478c04c4d3d1248fcfd95c1f2bec9a7"/>
-		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="9fba3428567d319e54ee30155a9ce530"/>
+		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="bed6b5939b773cd80d96a0cdda32b964"/>
+		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="16044bbcc8a0f0024e691d970305ee64"/>
 		<file filename="core/templates/forms/elements/formdateinput.tpl" md5="bc5a17edff3be9f0d9dd4710b57460a8"/>
 		<file filename="core/templates/forms/elements/formdatetimeinput.tpl" md5="0dab7e1348963b014876b638d7f162af"/>
 		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="33ced6c5a4dd58a3eeeccd1ed93c94a2"/>
-		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="b253627a7cac7c2db9c53160272e103c"/>
+		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="a11dcd84f0f7a7ee67611112f389d933"/>
 		<file filename="core/templates/forms/elements/formlicenseinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formpagemetaauthorinput.tpl" md5="16c45944e0a678a55227a6337047a532"/>
 		<file filename="core/templates/forms/elements/formpagemetakeywordsinput.tpl" md5="a95a8737299a8ae2fb3736846588e7d2"/>
@@ -1439,27 +1439,27 @@
 		<file filename="core/templates/forms/elements/formpageparentselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formpagerewriteurlinput.tpl" md5="58c0ffa26002427aa745b8b57c4eceae"/>
 		<file filename="core/templates/forms/elements/formpagethemeselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
-		<file filename="core/templates/forms/elements/formpasswordinput.tpl" md5="9642512379195999ea4c0a71b876d80f"/>
+		<file filename="core/templates/forms/elements/formpasswordinput.tpl" md5="28b80ed323ef365ff9a43ea2f146043e"/>
 		<file filename="core/templates/forms/elements/formradioinput.tpl" md5="c73b32c411d17ab3cdd7f2a8490a6857"/>
-		<file filename="core/templates/forms/elements/formresetinput.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
+		<file filename="core/templates/forms/elements/formresetinput.tpl" md5="846229516d0c919a8d2f072a5ec39336"/>
 		<file filename="core/templates/forms/elements/formselectinput.tpl" md5="09645910e43a86dfe75dee8c0f2a8983"/>
 		<file filename="core/templates/forms/elements/formstateinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
-		<file filename="core/templates/forms/elements/formsubmitinput.tpl" md5="70fedaa614c2a06a787540395dda8bd2"/>
-		<file filename="core/templates/forms/elements/formtextareainput.tpl" md5="938bbddec378b1189876ded0485dc604"/>
+		<file filename="core/templates/forms/elements/formsubmitinput.tpl" md5="fb8c85c11628a118144d4f990302960c"/>
+		<file filename="core/templates/forms/elements/formtextareainput.tpl" md5="10349ef6ef475b95a777c7bcc10833ce"/>
 		<file filename="core/templates/forms/elements/formtextinput.tpl" md5="0f09b0b0b3e6ce316e89e312c311482e"/>
 		<file filename="core/templates/forms/elements/formtimeinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formuserinput.tpl" md5="17622c778eae70825a3889aad14f46ce"/>
-		<file filename="core/templates/forms/elements/html.tpl" md5="3d4259aa7f5615453121930abe34b031"/>
-		<file filename="core/templates/forms/elements/image.tpl" md5="dc4f74a0297b099ea7913d7582125837"/>
-		<file filename="core/templates/forms/elements/reset.tpl" md5="8e07cf9e8f6aa530e7efa1a18dc93382"/>
+		<file filename="core/templates/forms/elements/html.tpl" md5="82b88be9c2b096f305051417de200991"/>
+		<file filename="core/templates/forms/elements/image.tpl" md5="c1ba661d273fa9336a68625aaadcc3db"/>
+		<file filename="core/templates/forms/elements/reset.tpl" md5="846229516d0c919a8d2f072a5ec39336"/>
 		<file filename="core/templates/forms/filters-pagination.tpl" md5="df1ea0a4ed733bdcc59c2c6c4df7a2e4"/>
 		<file filename="core/templates/forms/filters.tpl" md5="593cbc88dd4d57f4eec390c675dda93d"/>
-		<file filename="core/templates/forms/form.body.tpl" md5="8ab5bcc9f1307da533c72b3d18113a74"/>
-		<file filename="core/templates/forms/form.foot.tpl" md5="e2303904af859e852c2c3010997631e9"/>
-		<file filename="core/templates/forms/form.head.tpl" md5="efe24a11d8a7a54ad55a68fd09abb0a1"/>
-		<file filename="core/templates/forms/form.tpl" md5="2910e3a5d1cc14ff87bfea0a15c927ce"/>
+		<file filename="core/templates/forms/form.body.tpl" md5="59b4f9edf5db3068632bec2aa88d1b72"/>
+		<file filename="core/templates/forms/form.foot.tpl" md5="30832eb395bce665ce858c51270f71bc"/>
+		<file filename="core/templates/forms/form.head.tpl" md5="5e73068727fffed7f6f956ca3bdf977e"/>
+		<file filename="core/templates/forms/form.tpl" md5="a6b0a3ef46bfea0ba17b9e52dc31c62f"/>
 		<file filename="core/templates/forms/groups/default.tpl" md5="b3271649859bc0c7c5765bb4f2796bfe"/>
-		<file filename="core/templates/forms/groups/pageinsertables.tpl" md5="be0fed93de5310e26a207ffcecd15547"/>
+		<file filename="core/templates/forms/groups/pageinsertables.tpl" md5="9964560f87eb02c8b10ffe11f63626a1"/>
 		<file filename="core/templates/forms/groups/pagemetas.tpl" md5="f8def8d34a18483bb59dddba141e5645"/>
 		<file filename="core/templates/forms/groups/tabs.tpl" md5="7fa8235d668d17b2f1514a7e009aea4a"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="773d38b034052c270569be7a7d9bb957"/>
