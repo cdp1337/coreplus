@@ -465,6 +465,14 @@ EOD;
 				$this->_setupCore();
 				break;
 		}
+
+		// Don't forget to re-parse the CHANGELOG, otherwise it's lost :/
+		if(!$this->_changelog->exists()){
+			$this->_changelog->createInitial($this->_version);
+		}
+		else{
+			$this->_changelog->parse();
+		}
 	}
 
 	/**
