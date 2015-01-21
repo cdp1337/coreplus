@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.2" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.3" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -71,7 +71,7 @@
 	</includes>
 	<files>
 		<file filename="config/configuration.example.xml" md5="eac5d52f582025aca84e54796592b7b5"/>
-		<file filename="core/CHANGELOG" md5="d8d6a5bb34f73eebba0f32f788078f20"/>
+		<file filename="core/CHANGELOG" md5="cb628cc607e5b2cac5690eb8b3bcd49d"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="4413ef9bdb639f2c0d2064c5631491cc"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
@@ -475,7 +475,7 @@
 		<file filename="core/libs/core/VersionString.php" md5="e99572e6240670e3d33b630cfd588af9">
 			<class name="Core\VersionString"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="c0a3da87c1d4d47770ce21a60fd7f309">
+		<file filename="core/libs/core/View.class.php" md5="d96cde866125c24eec4fc4f27339b788">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
@@ -569,7 +569,7 @@
 		<file filename="core/libs/core/datamodel/backends/cassandra.backend.php" md5="31e134b544e42e232e21c94e8503183d">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="75b3daa21212bc5d1b87391a04315fa9">
+		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="2ac360b1fe82bcce52d8a8bb3b2c6538">
 			<class name="Core\Datamodel\Drivers\mysqli\mysqli_backend"/>
 		</file>
 		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.schema.php" md5="1152e22804d35e35852b5e13b809e43c">
@@ -1901,6 +1901,7 @@
 		<upgrade from="3.5.0" to="4.0.0"/>
 		<upgrade from="4.0.0" to="4.0.1"/>
 		<upgrade from="4.0.1" to="4.0.2"/>
+		<upgrade from="4.0.2" to="4.0.3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
