@@ -32,7 +32,7 @@ function smarty_function_widgetarea($params, $smarty) {
 	$body = '';
 
 	$baseurl = PageRequest::GetSystemRequest()->getBaseURL();
-	$page = $smarty->template_resource;
+	$template = $smarty->template_resource;
 
 	$parameters  = [];
 	$name        = null;
@@ -57,16 +57,10 @@ function smarty_function_widgetarea($params, $smarty) {
 
 	// I need to resolve the page template down to the base version in order for the lookup to work.
 	foreach(Core\Templates\Template::GetPaths() as $base){
-		if(strpos($page, $base) === 0){
-			$page = substr($page, strlen($base));
-			break;
+		if(strpos($template, $base) === 0){
+			$template = substr($template, strlen($base));
 		}
 	}
-
-	$skin = \Core\view()->mastertemplate;
-	if (!$skin) $skin = ConfigHandler::Get('/theme/default_template');
-
-	$theme = ConfigHandler::Get('/theme/selected');
 
 	// Given support for page-level widgets, this logic gets slightly more difficult...
 	$factory = new ModelFactory('WidgetInstanceModel');
@@ -81,8 +75,7 @@ function smarty_function_widgetarea($params, $smarty) {
 	// First, the skin-level where clause.
 	$skinwhere = new Core\Datamodel\DatasetWhereClause();
 	$skinwhere->setSeparator('AND');
-	$skinwhere->addWhere('theme = ' . $theme);
-	$skinwhere->addWhere('skin = ' . $skin);
+	$skinwhere->addWhere('template = ' . $template);
 	$skinwhere->addWhere('widgetarea = ' . $name);
 	$subwhere->addWhere($skinwhere);
 
@@ -91,15 +84,6 @@ function smarty_function_widgetarea($params, $smarty) {
 		$pagewhere = new Core\Datamodel\DatasetWhereClause();
 		$pagewhere->setSeparator('AND');
 		$pagewhere->addWhere('page_baseurl = ' . $baseurl);
-		$pagewhere->addWhere('widgetarea = ' . $name);
-		$subwhere->addWhere($pagewhere);
-	}
-
-	// Lastly, the page-level template.
-	if($page){
-		$pagewhere = new Core\Datamodel\DatasetWhereClause();
-		$pagewhere->setSeparator('AND');
-		$pagewhere->addWhere('page_template = ' . $page);
 		$pagewhere->addWhere('widgetarea = ' . $name);
 		$subwhere->addWhere($pagewhere);
 	}

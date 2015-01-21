@@ -870,12 +870,12 @@ class AdminController extends Controller_2_1 {
 			// First, the skin-level where clause.
 			$skinwhere = new Core\Datamodel\DatasetWhereClause();
 			$skinwhere->setSeparator('AND');
-			$skinwhere->addWhere('theme = ' . $theme->getKeyName());
-			$skinwhere->addWhere('skin = ' . $selected);
+			//$skinwhere->addWhere('theme = ' . $theme->getKeyName());
+			$skinwhere->addWhere('template = ' . $selected);
 			$factory->where($skinwhere);
 		}
 		elseif($selectedtype == 'page'){
-			$factory->where('page_template = ' . $selected);
+			$factory->where('template = ' . $selected);
 		}
 		elseif($selectedtype == 'url'){
 			$factory->where('page_baseurl = ' . $baseurl);
@@ -918,6 +918,7 @@ class AdminController extends Controller_2_1 {
 		$view->assign('manager', $manager);
 		$view->assign('theme', $formtheme);
 		$view->assign('skin', $formskin);
+		$view->assign('template', $selected);
 		$view->assign('page_template', $formtemplate);
 		$view->assign('page_baseurl', $baseurl);
 		$view->assign('options', $selectoptions);
@@ -1135,15 +1136,15 @@ class AdminController extends Controller_2_1 {
 		// For the incoming options, I want an explicit NULL if it's empty.
 		$theme    = $_POST['theme'] == '' ? null : $_POST['theme'];
 		$skin     = $_POST['skin'] == '' ? null : $_POST['skin']; $_POST['skin'];
-		$page     = $_POST['page_template'] == '' ? null : $_POST['page_template'];
+		$template = $_POST['template'] == '' ? null : $_POST['template'];
 		$baseurl  = $_POST['page_baseurl'] == '' ? null : $_POST['page_baseurl'];
 
 		foreach($_POST['widgetarea'] as $id => $dat){
 
 			// Merge in the global information for this request
-			$dat['theme']         = $theme;
-			$dat['skin']          = $skin;
-			$dat['page_template'] = $page;
+			//$dat['theme']         = $theme;
+			//$dat['skin']          = $skin;
+			$dat['template']      = $template;
 			$dat['page_baseurl']  = $baseurl;
 
 			$dat['weight'] = ++$counter;

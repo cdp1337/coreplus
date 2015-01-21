@@ -48,34 +48,34 @@ class WidgetInstanceModel extends Model {
 			'required'  => true,
 			'null'      => false,
 		),
-		'theme'      => array(
+		/*'theme'      => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,
 			'null'      => true,
 			'required'  => false,
 			'comment'   => 'The theme to display on (for skin-level widgets)',
 			'default' => null,
-		),
+		),*/
 		'template' => array(
-			'type' => Model::ATT_TYPE_ALIAS,
-			'alias' => 'skin',
-		),
-		'skin'   => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'null'      => true,
 			'required'  => false,
-			'comment'   => 'The template name on which to display on (for skin-level widgets)',
+			'comment'   => 'The template name on which to display on (for skin-level AND page-level widgets)',
 			'default' => null,
 		),
-		'page_template' => array(
+		'skin'   => array(
+			'type' => Model::ATT_TYPE_ALIAS,
+			'alias' => 'template',
+		),
+		/*'page_template' => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'null'      => true,
 			'required'  => false,
 			'comment'   => 'The page template file on which to display on. (for page-level widgets)',
 			'default' => null,
-		),
+		),*/
 		'page_baseurl' => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
@@ -205,8 +205,8 @@ class WidgetInstanceModel extends Model {
 			$c->_installable = $this->get('installable');
 		}
 
-		// Pass in any customer parameters
-		$c->_params = $parameters;
+		// Pass in any base and customer parameters
+		$c->_params = array_merge($pagedat['parameters'], $parameters);
 
 		$return = call_user_func(array($c, $pagedat['method']));
 		if (is_int($return)) {

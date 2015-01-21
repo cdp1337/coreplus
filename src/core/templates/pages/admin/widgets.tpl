@@ -28,10 +28,10 @@
 	<form action="{link '/admin/widgetinstances/save'}" method="POST">
 
 		<input type="hidden" name="selected" value="{$selected}"/>
-		<input type="hidden" name="theme" value="{$theme}"/>
-		<input type="hidden" name="skin" value="{$skin}"/>
-		<input type="hidden" name="page_template" value="{$page_template}"/>
-		<input type="hidden" name="page_baseurl" value="{$page_baseurl}"/>
+		{*<input type="hidden" name="theme" value="{$theme}"/>*}
+		<input type="hidden" name="template" value="{$template}"/>
+		{*<input type="hidden" name="page_template" value="{$page_template}"/>
+		<input type="hidden" name="page_baseurl" value="{$page_baseurl}"/>*}
 
 		{*
 		<input type="hidden" name="theme" value="{$theme}"/>
