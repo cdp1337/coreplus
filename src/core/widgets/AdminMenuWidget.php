@@ -88,11 +88,18 @@ class AdminMenuWidget extends Widget_2_1 {
 						);
 				}
 
-
-				// The new grouped pages
-				$groups[$group]['children'][ $p->get('title') ] = $p;
-				// And the flattened list to support legacy templates.
-				$flatlist[ $p->get('title') ] = $p;
+				$title = $p->get('title');
+				if(isset($groups[$title])){
+					// Link the main group to this page instead of an empty link.
+					// This removes duplicate links such as the group "User" and page "User".
+					$groups[$title]['href'] = $p->get('rewriteurl');
+				}
+				else{
+					// The new grouped pages
+					$groups[$group]['children'][ $p->get('title') ] = $p;
+					// And the flattened list to support legacy templates.
+					$flatlist[ $p->get('title') ] = $p;
+				}
 			}
 
 			// This is a hack to make sure that users can view the /admin link if they can view other admin pages.
