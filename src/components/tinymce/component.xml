@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.1~core5" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.1~core6" name="TinyMCE" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.0.0" operation="ge"/>
 		<require name="jquery" type="library"/>
@@ -15,12 +15,12 @@
 	<configs/>
 	<pages/>
 	<view>
-		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="2d1d9893d6d2e518eaa953eb460df23d"/>
+		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="feb3be1d78680691f20449d716935242"/>
 		<file filename="templates/pages/tinymce/browser-icons.tpl" md5="e9e783cbc75b5dbe1d7618e5e4e41ebe"/>
 		<file filename="templates/pages/tinymce/link.phtml" md5="524d952e87774b2bafd2324e7c15274b"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="45ab33134cb302977c5bd2f54e992475"/>
+		<file filename="CHANGELOG" md5="7ea2753959b2b13f395706cfe16ea5c3"/>
 		<file filename="LICENSE.TXT" md5="045d04e17422d99e338da75b9c749b7c"/>
 		<file filename="TinyMCEFormElement.class.php" md5="c92a201c2bd939d64a4e0fbd9a9f3ceb">
 			<class name="TinyMCEFormElement"/>
@@ -40,7 +40,7 @@
 		<file filename="assets/js/tinymce/jquery.tinymce.min.js" md5="c3b150836f2c5b282f8f24f200931c37"/>
 		<file filename="assets/js/tinymce/langs/readme.md" md5="a803b8446c1cdbaa1984d49b92bb8001"/>
 		<file filename="assets/js/tinymce/license.txt" md5="045d04e17422d99e338da75b9c749b7c"/>
-		<file filename="assets/js/tinymce/plugins/advlinkcoreplus/css/advlink.css" md5="aaf226732a7b4ae80ee680700f488a1e"/>
+		<file filename="assets/js/tinymce/plugins/advlinkcoreplus/css/advlink.css" md5="19558f5e2b7a7d11968aacdc37e6e436"/>
 		<file filename="assets/js/tinymce/plugins/advlinkcoreplus/editor_plugin.js" md5="5cb02a450489e9392c5bf29a83c720c4"/>
 		<file filename="assets/js/tinymce/plugins/advlinkcoreplus/editor_plugin_src.js" md5="5cb02a450489e9392c5bf29a83c720c4"/>
 		<file filename="assets/js/tinymce/plugins/advlinkcoreplus/js/advlink.js" md5="0e5118b55c89d8b47155154fbde8b70a"/>
@@ -226,6 +226,7 @@
 		<upgrade from="4.0.1~core2" to="4.0.1~core3"/>
 		<upgrade from="4.0.1~core3" to="4.0.1~core4"/>
 		<upgrade from="4.0.1~core4" to="4.0.1~core5"/>
+		<upgrade from="4.0.1~core5" to="4.0.1~core6"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
