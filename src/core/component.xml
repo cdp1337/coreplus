@@ -1394,8 +1394,8 @@
 		<page baseurl="/user/login" admin="0" access="!g:authenticated" selectable="0" title="Login"/>
 		<page baseurl="/user/register" admin="0" access="!g:authenticated" selectable="0" title="Register"/>
 		<page baseurl="/user/logout" admin="0" access="g:authenticated" selectable="0" title="Logout"/>
-		<page baseurl="/user/admin" admin="1" access="p:/user/users/manage" title="User Administration"/>
-		<page baseurl="/usergroupadmin" admin="1" access="p:/user/groups/manage" title="User Group Administration"/>
+		<page baseurl="/user/admin" admin="1" access="p:/user/users/manage" title="User Administration" group="User"/>
+		<page baseurl="/usergroupadmin" admin="1" access="p:/user/groups/manage" title="User Group Administration" group="User"/>
 		<page baseurl="/useractivity" admin="1" access="p:/user/activity/view" title="User Activity" group="Reporting"/>
 		<page baseurl="/userconfig/admin" admin="1" access="g:admin" title="User Options" group="Configure"/>
 		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="System Log" group="Admin"/>
