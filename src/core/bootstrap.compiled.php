@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 08 Jan 2015 01:01:39 -0500
+ * @compiled Tue, 20 Jan 2015 23:53:23 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -5209,130 +5209,130 @@ return $log;
 
 ### REQUIRE_ONCE FROM core/models/UserModel.php
 class UserModel extends Model {
-public static $Schema = array(
-'id' => array(
-'type' => Model::ATT_TYPE_UUID,
+public static $Schema = [
+'id'                   => [
+'type'     => Model::ATT_TYPE_UUID,
 'required' => true,
-'null' => false,
-),
-'email' => array(
-'type' => Model::ATT_TYPE_STRING,
-'maxlength' => 64,
-'null' => false,
+'null'     => false,
+],
+'email'                => [
+'type'       => Model::ATT_TYPE_STRING,
+'maxlength'  => 64,
+'null'       => false,
 'validation' => ['this', 'validateEmail'],
-'required' => true,
-),
-'backend' => array(
-'type' => Model::ATT_TYPE_STRING,
+'required'   => true,
+],
+'backend'              => [
+'type'     => Model::ATT_TYPE_STRING,
 'formtype' => 'hidden',
-'default' => 'datastore',
-'comment' => 'Pipe-delimited list of authentication drivers on this user'
-),
-'password' => array(
-'type' => Model::ATT_TYPE_STRING,
+'default'  => 'datastore',
+'comment'  => 'Pipe-delimited list of authentication drivers on this user'
+],
+'password'             => [
+'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => 60,
-'null' => false,
-),
-'apikey' => array(
-'type' => Model::ATT_TYPE_STRING,
+'null'      => false,
+],
+'apikey'               => [
+'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => 64,
-'null' => false,
-),
-'active' => array(
-'type' => Model::ATT_TYPE_ENUM,
+'null'      => false,
+],
+'active'               => [
+'type'    => Model::ATT_TYPE_ENUM,
 'default' => '1',
-'options' => [ '-1', '0', '1' ],
-'null' => false,
-'form' => [
-'title' => 'User Status',
+'options' => ['-1', '0', '1'],
+'null'    => false,
+'form'    => [
+'title'   => 'User Status',
 'options' => [
 '-1' => 'Disabled',
-'0' => 'Not Activated Yet',
-'1' => 'Active',
+'0'  => 'Not Activated Yet',
+'1'  => 'Active',
 ],
 ],
-),
-'admin' => array(
-'type' => Model::ATT_TYPE_BOOL,
+],
+'admin'                => [
+'type'    => Model::ATT_TYPE_BOOL,
 'default' => '0',
-'null' => false,
-),
-'avatar' => array(
-'type' => Model::ATT_TYPE_STRING,
+'null'    => false,
+],
+'avatar'               => [
+'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => '64',
-'form' => array(
-'type' => 'file',
-'accept' => 'image/*',
+'form'      => [
+'type'    => 'file',
+'accept'  => 'image/*',
 'basedir' => 'public/user/avatar',
-),
-),
-'registration_ip' => array(
-'type' => Model::ATT_TYPE_STRING,
+],
+],
+'registration_ip'      => [
+'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => '24',
-'comment' => 'The original IP of the user registration',
-),
-'registration_source' => array(
-'type' => Model::ATT_TYPE_STRING,
+'comment'   => 'The original IP of the user registration',
+],
+'registration_source'  => [
+'type'    => Model::ATT_TYPE_STRING,
 'default' => 'self',
 'comment' => 'The source of the user registration, either self, admin, or other.'
-),
-'registration_invitee' => array(
-'type' => Model::ATT_TYPE_UUID_FK,
+],
+'registration_invitee' => [
+'type'    => Model::ATT_TYPE_UUID_FK,
 'comment' => 'If invited/created by a user, this is the ID of that user.',
-),
-'last_login' => array(
-'type' => Model::ATT_TYPE_INT,
+],
+'last_login'           => [
+'type'    => Model::ATT_TYPE_INT,
 'default' => 0,
 'comment' => 'The timestamp of the last login of this user',
-),
-'last_password' => array(
-'type' => Model::ATT_TYPE_INT,
+],
+'last_password'        => [
+'type'    => Model::ATT_TYPE_INT,
 'default' => 0,
 'comment' => 'The timestamp of the last password reset of this user',
-),
-);
-public static $Indexes = array(
-'primary' => array('id'),
-'unique:email' => array('email'),
-);
-public static $HasSearch  = true;
+],
+];
+public static $Indexes = [
+'primary'      => ['id'],
+'unique:email' => ['email'],
+];
+public static $HasSearch = true;
 public static $HasCreated = true;
 public static $HasUpdated = true;
-protected $_accessstringchecks = array();
+protected $_accessstringchecks = [];
 protected $_resolvedpermissions = null;
 protected $_configs = null;
 protected $_authdriver = [];
-public function __construct($id = null){
+public function __construct($id = null) {
 $this->_linked['UserUserConfig'] = [
 'link' => Model::LINK_HASMANY,
-'on' => ['user_id' => 'id'],
+'on'   => ['user_id' => 'id'],
 ];
-$this->_linked['UserUserGroup'] = [
+$this->_linked['UserUserGroup']  = [
 'link' => Model::LINK_HASMANY,
-'on' => ['user_id' => 'id'],
+'on'   => ['user_id' => 'id'],
 ];
 parent::__construct($id);
 }
-public function get($key){
-if(array_key_exists($key, $this->_data)){
+public function get($key) {
+if(array_key_exists($key, $this->_data)) {
 return parent::get($key);
 }
-elseif(($c = $this->getConfigObject($key)) !== null){
+elseif(($c = $this->getConfigObject($key)) !== null) {
 return $c->get('value');
 }
-elseif(array_key_exists($key, $this->_dataother)){
-return $this->_dataother[$key];
+elseif(array_key_exists($key, $this->_dataother)) {
+return $this->_dataother[ $key ];
 }
-else{
+else {
 return null;
 }
 }
-public function getLabel(){
-if(!$this->exists()){
+public function getLabel() {
+if(!$this->exists()) {
 return ConfigHandler::Get('/user/displayname/anonymous');
 }
 $displayas = ConfigHandler::Get('/user/displayas');
-switch($displayas){
+switch($displayas) {
 case 'username':
 return $this->get('username');
 case 'firstname':
@@ -5344,60 +5344,60 @@ default:
 return strstr($this->get('email'), '@', true);
 }
 }
-public function getDisplayName(){
+public function getDisplayName() {
 return $this->getLabel();
 }
-public function getConfigs(){
-if($this->_configs === null){
+public function getConfigs() {
+if($this->_configs === null) {
 $this->_configs = [];
 $uucrecords     = $this->getLink('UserUserConfig');
 $fac = UserConfigModel::Find();
-foreach($fac as $f){
+foreach($fac as $f) {
 $key     = $f->get('key');
 $default = $f->get('default_value');
-foreach($uucrecords as $uuc){
-if($uuc->get('key') == $key){
-$this->_configs[$key] = $uuc;
+foreach($uucrecords as $uuc) {
+if($uuc->get('key') == $key) {
+$this->_configs[ $key ] = $uuc;
 continue 2;
 }
 }
-try{
+try {
 $uuc = new UserUserConfigModel($this->get('id'), $key);
 $uuc->set('value', $default);
 $this->setLink('UserUserConfig', $uuc);
-$this->_configs[$key] = $uuc;
+$this->_configs[ $key ] = $uuc;
 }
-catch(Exception $e){
+catch(Exception $e) {
 trigger_error('Invalid UserConfig [' . $f->get('key') . '], ' . $e->getMessage(), E_USER_NOTICE);
 }
 }
 }
-$ret = array();
-foreach($this->_configs as $k => $obj){
-$ret[$k] = $obj->get('value');
+$ret = [];
+foreach($this->_configs as $k => $obj) {
+$ret[ $k ] = $obj->get('value');
 }
 return $ret;
 }
-public function getConfigObject($key){
+public function getConfigObject($key) {
 $this->getConfigs();
-return (isset($this->_configs[$key])) ? $this->_configs[$key] : null;
+return (isset($this->_configs[ $key ])) ? $this->_configs[ $key ] : null;
 }
-public function getConfigObjects(){
+public function getConfigObjects() {
 $this->getConfigs();
 return $this->_configs;
 }
 public function getGroups() {
 $out  = [];
 $uugs = $this->getLink('UserUserGroup');
-foreach($uugs as $uug){
+foreach($uugs as $uug) {
 if($uug->get('context')) continue;
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()) {
 $g = $uug->getLink('UserGroup');
-if($g->get('site') == MultiSiteHelper::GetCurrentSiteID()){
+if($g->get('site') == MultiSiteHelper::GetCurrentSiteID()) {
 $out[] = $g->get('id');
 }
 }
-else{
+else {
 $out[] = $uug->get('group_id');
 }
 }
@@ -5406,35 +5406,34 @@ return $out;
 public function getContextGroups($context = null, $return_objects = false) {
 $out  = [];
 $uugs = $this->getLink('UserUserGroup');
-if($context && $context instanceof Model){
+if($context && $context instanceof Model) {
 $contextname = substr(get_class($context), 0, -5);
 $contextpk   = $context->getPrimaryKeyString();
 }
-elseif(is_scalar($context)){
+elseif(is_scalar($context)) {
 $contextname = $context;
 $contextpk   = null;
 }
-else{
+else {
 $contextname = null;
 $contextpk   = null;
 }
-foreach($uugs as $uug){
+foreach($uugs as $uug) {
 if(!$uug->get('context')) continue;
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-$g = $uug->getLink('UserGroup');
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()) {
+$g     = $uug->getLink('UserGroup');
 $gsite = $g->get('site');
-if(
-!($gsite == '-1' || $gsite == MultiSiteHelper::GetCurrentSiteID())
-){
+if(!($gsite == '-1' || $gsite == MultiSiteHelper::GetCurrentSiteID())
+) {
 continue;
 }
 }
 if($contextname && $uug->get('context') != $contextname) continue;
 if($contextpk && $uug->get('context_pk') != $contextpk) continue;
-if($return_objects){
+if($return_objects) {
 $out[] = $uug;
 }
-else{
+else {
 $out[] = [
 'group_id'   => $uug->get('group_id'),
 'context'    => $uug->get('context'),
@@ -5444,114 +5443,116 @@ $out[] = [
 }
 return $out;
 }
-public function getAuthDriver($driver = null){
+public function getAuthDriver($driver = null) {
 $enabled = explode('|', $this->get('backend'));
-if(!sizeof($enabled)){
+if(!sizeof($enabled)) {
 throw new Exception('There are no enabled authentication drivers for this user!');
 }
-if(!$driver){
+if(!$driver) {
 $driver = $enabled[0];
 }
-elseif(!in_array($driver, $enabled)){
+elseif(!in_array($driver, $enabled)) {
 throw new Exception('The ' . $driver . ' authentication driver is not enabled for this user!');
 }
-if(!isset($this->_authdriver[$driver])){
-if(!isset(\Core\User\Helper::$AuthDrivers[$driver])){
+if(!isset($this->_authdriver[ $driver ])) {
+if(!isset(\Core\User\Helper::$AuthDrivers[ $driver ])) {
 throw new Exception('Invalid auth backend for user, ' . $driver . '.  Auth driver is not registered.');
 }
-$classname = \Core\User\Helper::$AuthDrivers[$driver];
-if(!class_exists($classname)){
-throw new Exception('Invalid auth backend for user, ' . $driver . '.  Auth driver class was not found.');
+$classname = \Core\User\Helper::$AuthDrivers[ $driver ];
+if(!class_exists($classname)) {
+throw new Exception(
+'Invalid auth backend for user, ' . $driver . '.  Auth driver class was not found.'
+);
 }
-$ref = new ReflectionClass($classname);
-$this->_authdriver[$driver] = $ref->newInstance($this);
+$ref                          = new ReflectionClass($classname);
+$this->_authdriver[ $driver ] = $ref->newInstance($this);
 }
-return $this->_authdriver[$driver];
+return $this->_authdriver[ $driver ];
 }
-public function getEnabledAuthDrivers(){
+public function getEnabledAuthDrivers() {
 $enabled = explode('|', $this->get('backend'));
-$ret = [];
-foreach($enabled as $name){
-try{
+$ret     = [];
+foreach($enabled as $name) {
+try {
 $ret[] = $this->getAuthDriver($name);
 }
-catch(Exception $e){
+catch(Exception $e) {
 }
 }
 return $ret;
 }
-public function enableAuthDriver($driver){
+public function enableAuthDriver($driver) {
 $enabled = explode('|', $this->get('backend'));
 $drivers = User\Helper::GetEnabledAuthDrivers();
-if(!isset($drivers[$driver])){
+if(!isset($drivers[ $driver ])) {
 return false;
 }
-if(in_array($driver, $enabled)){
+if(in_array($driver, $enabled)) {
 return false;
 }
 $enabled[] = $driver;
 $this->set('backend', implode('|', $enabled));
 return true;
 }
-public function disableAuthDriver($driver){
+public function disableAuthDriver($driver) {
 $enabled = explode('|', $this->get('backend'));
 $drivers = User\Helper::GetEnabledAuthDrivers();
-if(!isset($drivers[$driver])){
+if(!isset($drivers[ $driver ])) {
 return false;
 }
-if(!in_array($driver, $enabled)){
+if(!in_array($driver, $enabled)) {
 return false;
 }
-unset($enabled[array_search($driver, $enabled)]);
-if(sizeof($enabled) == 0){
+unset($enabled[ array_search($driver, $enabled) ]);
+if(sizeof($enabled) == 0) {
 $enabled = ['datastore'];
 }
 $this->set('backend', implode('|', $enabled));
 return true;
 }
-public function getSearchIndexString(){
+public function getSearchIndexString() {
 $strs = [];
 $strs[] = $this->get('email');
 $opts = UserConfigModel::Find();
-foreach($opts as $uc){
-if($uc->get('searchable')){
+foreach($opts as $uc) {
+if($uc->get('searchable')) {
 $strs[] = $this->get($uc->get('key'));
 }
 }
 return implode(' ', $strs);
 }
-public function validateEmail($email){
-if($email == $this->get('email')){
+public function validateEmail($email) {
+if($email == $this->get('email')) {
 return true;
 }
-if(!Core::CheckEmailValidity($email)){
+if(!Core::CheckEmailValidity($email)) {
 return 'Does not appear to be a valid email address';
 }
-if(UserModel::Find(array('email' => $email), 1)){
+if(UserModel::Find(['email' => $email], 1)) {
 return 'Requested email is already registered';
 }
 return true;
 }
-public function isActive(){
-if(!$this->exists()){
+public function isActive() {
+if(!$this->exists()) {
 return false;
 }
-elseif($this->get('active') == 1){
+elseif($this->get('active') == 1) {
 return true;
 }
-else{
+else {
 return false;
 }
 }
 public function set($k, $v) {
-if(array_key_exists($k, $this->_data)){
+if(array_key_exists($k, $this->_data)) {
 return parent::set($k, $v);
 }
-elseif(($c = $this->getConfigObject($k)) !== null){
+elseif(($c = $this->getConfigObject($k)) !== null) {
 return $c->set('value', $v);
 }
-else{
-$this->_dataother[$k] = $v;
+else {
+$this->_dataother[ $k ] = $v;
 return true;
 }
 }
@@ -5563,54 +5564,54 @@ public function setContextGroups($groups, $context = null) {
 if(!is_array($groups)) $groups = [];
 $this->_setGroups($groups, $context === null ? true : $context);
 }
-public function setFromForm(Form $form, $prefix = null){
-foreach($form->getElements() as $el){
+public function setFromForm(Form $form, $prefix = null) {
+foreach($form->getElements() as $el) {
 $name  = $el->get('name');
 $value = $el->get('value');
 if($prefix && strpos($name, $prefix . '[') !== 0) continue;
-if($prefix){
-if(strpos($name, '][')){
+if($prefix) {
+if(strpos($name, '][')) {
 $name = str_replace('][', '[', substr($name, strlen($prefix) + 1));
 }
-else{
+else {
 $name = substr($name, strlen($prefix) + 1, -1);
 }
 }
-if($name == 'email'){
+if($name == 'email') {
 $this->set('email', $value);
 }
-elseif(strpos($name, 'option[') === 0){
-$k = substr($el->get('name'), 7, -1);
+elseif(strpos($name, 'option[') === 0) {
+$k   = substr($el->get('name'), 7, -1);
 $obj = $this->getConfigObject($k)->getLink('UserConfig');
-if($value === null && $obj->get('formtype') == 'checkbox'){
+if($value === null && $obj->get('formtype') == 'checkbox') {
 $value = 0;
 }
-if($el instanceof FormFileInput){
+if($el instanceof FormFileInput) {
 $value = 'public/user/config/' . $value;
 }
 $this->set($k, $value);
 }
-elseif($name == 'groups[]'){
+elseif($name == 'groups[]') {
 $this->setGroups($value);
 }
-elseif($name == 'active'){
+elseif($name == 'active') {
 $this->set('active', $value ? 1 : 0);
 }
-elseif($name == 'admin'){
+elseif($name == 'admin') {
 $this->set('admin', $value);
 }
-elseif($name == 'avatar'){
+elseif($name == 'avatar') {
 $this->set('avatar', $value);
 }
-elseif($name == 'contextgroup[]'){
+elseif($name == 'contextgroup[]') {
 $gids       = $value;
 $contextpks = $form->getElement('contextgroupcontext[]')->get('value');
 $groups     = [];
-foreach($gids as $key => $gid){
+foreach($gids as $key => $gid) {
 if(!$gid) continue;
 $group = UserGroupModel::Construct($gid);
 $context   = $group->get('context');
-$contextpk = $contextpks[$key];
+$contextpk = $contextpks[ $key ];
 $groups[] = [
 'group_id'   => $gid,
 'context'    => $context,
@@ -5619,100 +5620,100 @@ $groups[] = [
 }
 $this->setContextGroups($groups);
 }
-else{
+else {
 }
 } // foreach(elements)
 }
 public function save() {
-if(!$this->_data['apikey']){
+if(!$this->_data['apikey']) {
 $this->generateNewApiKey();
 }
 $status = parent::save();
 HookHandler::DispatchHook('/user/postsave', $this);
 return $status;
 }
-public function generateNewApiKey(){
+public function generateNewApiKey() {
 $this->set('apikey', Core::RandomHex(64, true));
 }
-public function clearAccessStringCache(){
-$this->_accessstringchecks = array();
+public function clearAccessStringCache() {
+$this->_accessstringchecks  = [];
 $this->_resolvedpermissions = null;
 }
-public function checkAccess($accessstring, $context = null){
+public function checkAccess($accessstring, $context = null) {
 $findkey = $accessstring . '-' . $this->_getContextKey($context);
-if(isset($this->_accessstringchecks[$findkey])){
-return $this->_accessstringchecks[$findkey];
+if(isset($this->_accessstringchecks[ $findkey ])) {
+return $this->_accessstringchecks[ $findkey ];
 }
-$default  = false;
+$default = false;
 $loggedin = $this->exists();
 $isadmin  = $this->get('admin');
-$cache    =& $this->_accessstringchecks[$findkey];
+$cache    =& $this->_accessstringchecks[ $findkey ];
 $isactive = $this->isActive();
 $accessstring = strtolower($accessstring);
-if($isadmin && strpos($accessstring, 'g:!admin') === false){
+if($isadmin && strpos($accessstring, 'g:!admin') === false) {
 $cache = true;
 return true;
 }
 $parts = array_map('trim', explode(';', $accessstring));
-foreach($parts as $p){
+foreach($parts as $p) {
 if($p == '') continue;
-if($p == '*' || $p == '!*'){
+if($p == '*' || $p == '!*') {
 $type = '*';
-$dat = $p;
+$dat  = $p;
 }
-else{
+else {
 list($type, $dat) = array_map('trim', explode(':', $p));
 }
-if($dat{0} == '!'){
+if($dat{0} == '!') {
 $ret = false;
 $dat = substr($dat, 1);
 }
-elseif($type{0} == '!'){
-$ret = false;
+elseif($type{0} == '!') {
+$ret  = false;
 $type = substr($type, 1);
 }
-else{
+else {
 $ret = true;
 }
-if($type == '*'){
+if($type == '*') {
 $default = $ret;
 continue;
 }
-elseif($type == 'g' && $dat == 'anonymous'){
-if(!$loggedin){
+elseif($type == 'g' && $dat == 'anonymous') {
+if(!$loggedin) {
 $cache = $ret;
 return $ret;
 }
 }
-elseif($type == 'g' && $dat == 'authenticated'){
-if($loggedin && $isactive){
+elseif($type == 'g' && $dat == 'authenticated') {
+if($loggedin && $isactive) {
 $cache = $ret;
 return $ret;
 }
 }
-elseif($type == 'g' && $dat == 'admin'){
-if($isadmin){
+elseif($type == 'g' && $dat == 'admin') {
+if($isadmin) {
 $cache = $ret;
 return $ret;
 }
 }
-elseif($type == 'g'){
-if(in_array($dat, $this->getGroups())){
+elseif($type == 'g') {
+if(in_array($dat, $this->getGroups())) {
 $cache = $ret;
 return $ret;
 }
 }
-elseif($type == 'p'){
-if(in_array($dat, $this->_getResolvedPermissions($context))){
+elseif($type == 'p') {
+if(in_array($dat, $this->_getResolvedPermissions($context))) {
 $cache = $ret;
 return $ret;
 }
 }
-elseif($type == 'u'){
+elseif($type == 'u') {
 var_dump($type, $dat, $ret);
 die('@todo Finish the user lookup logic in User::checkAccess()');
 }
-else{
+else {
 var_dump($type, $dat, $ret);
 die('Implement that access string check!');
 }
@@ -5720,154 +5721,145 @@ die('Implement that access string check!');
 $cache = $default;
 return $default;
 }
-protected function _getResolvedPermissions($context = null){
-if(!$this->isActive()){
+protected function _getResolvedPermissions($context = null) {
+if(!$this->isActive()) {
 return [];
 }
 $findkey = $this->_getContextKey($context);
-if($this->_resolvedpermissions === null){
-$this->_resolvedpermissions = array();
-foreach($this->getLink('UserUserGroup') as $uug){
+if($this->_resolvedpermissions === null) {
+$this->_resolvedpermissions = [];
+foreach($this->getLink('UserUserGroup') as $uug) {
 $key = $uug->get('context') ? $uug->get('context') . ':' . $uug->get('context_pk') : '';
-if(!isset($this->_resolvedpermissions[$key])){
-$this->_resolvedpermissions[$key] = [];
+if(!isset($this->_resolvedpermissions[ $key ])) {
+$this->_resolvedpermissions[ $key ] = [];
 }
 $group = $uug->getLink('UserGroup');
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
-if(!(
-$group->get('site') == -1 ||
-$group->get('site') == MultiSiteHelper::GetCurrentSiteID()
-)){
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()) {
+if(!($group->get('site') == -1 || $group->get('site') == MultiSiteHelper::GetCurrentSiteID())) {
 continue;
 }
 }
-$this->_resolvedpermissions[$key] = array_merge($this->_resolvedpermissions[$key], $group->getPermissions());
+$this->_resolvedpermissions[ $key ] =
+array_merge($this->_resolvedpermissions[ $key ], $group->getPermissions());
 }
 }
-return isset($this->_resolvedpermissions[$findkey]) ? $this->_resolvedpermissions[$findkey] : [];
+return isset($this->_resolvedpermissions[ $findkey ]) ? $this->_resolvedpermissions[ $findkey ] : [];
 }
 protected function _setGroups($groups, $context) {
-foreach($groups as $key => $data){
-if(!is_array($data)){
-$groups[$key] = [
+foreach($groups as $key => $data) {
+if(!is_array($data)) {
+$groups[ $key ] = [
 'group_id'   => $data,
 'context'    => '',
 'context_pk' => '',
 ];
 }
 }
-if($context === false){
+if($context === false) {
 $contextname = null;
 $contextpk   = null;
 }
-elseif($context === true){
+elseif($context === true) {
 $contextname = null;
 $contextpk   = null;
 }
-elseif($context instanceof Model){
+elseif($context instanceof Model) {
 $contextname = substr(get_class($context), 0, -5);
 $contextpk   = $context->getPrimaryKeyString();
 $context     = true;
 }
-elseif(is_scalar($context)){
+elseif(is_scalar($context)) {
 $contextname = $context;
 $contextpk   = null;
 $context     = true;
 }
-else{
+else {
 throw new Exception('If a context is provided, please ensure it is either a model or model name');
 }
 $uugs = $this->getLink('UserUserGroup');
-foreach($uugs as $uug){
-if($context && !$uug->get('context')){
+foreach($uugs as $uug) {
+if($context && !$uug->get('context')) {
 continue;
 }
-elseif(!$context && $uug->get('context')){
+elseif(!$context && $uug->get('context')) {
 continue;
 }
-elseif($context && $contextname && $uug->get('context') != $contextname){
+elseif($context && $contextname && $uug->get('context') != $contextname) {
 continue;
 }
-elseif($context && $contextpk && $uug->get('context_pk') != $contextpk){
+elseif($context && $contextpk && $uug->get('context_pk') != $contextpk) {
 continue;
 }
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()) {
 $ugsite = $uug->getLink('UserGroup')->get('site');
-if(!($ugsite == -1 || $ugsite == MultiSiteHelper::GetCurrentSiteID())){
+if(!($ugsite == -1 || $ugsite == MultiSiteHelper::GetCurrentSiteID())) {
 continue;
 }
 }
 $gid        = $uug->get('group_id');
 $gcontext   = $uug->get('context');
 $gcontextpk = $uug->get('context_pk');
-foreach($groups as $key => $data){
-if(
-$data['group_id'] == $gid &&
-$data['context'] == $gcontext &&
-$data['context_pk'] == $gcontextpk
-){
-unset($groups[$key]);
+foreach($groups as $key => $data) {
+if($data['group_id'] == $gid && $data['context'] == $gcontext && $data['context_pk'] == $gcontextpk
+) {
+unset($groups[ $key ]);
 continue 2;
 }
 }
 $this->deleteLink($uug);
 }
-foreach($groups as $data){
+foreach($groups as $data) {
 $this->setLink(
-'UserUserGroup',
-new UserUserGroupModel(
-$this->get('id'),
-$data['group_id'],
-$data['context'],
-$data['context_pk']
+'UserUserGroup', new UserUserGroupModel(
+$this->get('id'), $data['group_id'], $data['context'], $data['context_pk']
 )
 );
 }
 $this->clearAccessStringCache();
 }
-protected function _getContextKey($context){
-if($context === null || $context === ''){
+protected function _getContextKey($context) {
+if($context === null || $context === '') {
 return '';
 }
-elseif($context instanceof Model){
+elseif($context instanceof Model) {
 return substr(get_class($context), 0, -5) . ':' . $context->getPrimaryKeyString();
 }
-else{
+else {
 throw new Exception('Invalid context provided for _getResolvedPermissions!');
 }
 }
-public static function Search($query, $where = array()){
-$ret = [];
-$schema = self::GetSchema();
+public static function Search($query, $where = []) {
+$ret          = [];
+$schema       = self::GetSchema();
 $configwheres = [];
 $ref = new ReflectionClass(get_called_class());
-if(!$ref->getProperty('HasSearch')->getValue()){
+if(!$ref->getProperty('HasSearch')->getValue()) {
 return $ret;
 }
 $fac = new ModelFactory(get_called_class());
-if(sizeof($where)){
+if(sizeof($where)) {
 $clause = new \Core\Datamodel\DatasetWhereClause();
 $clause->addWhere($where);
-foreach($clause->getStatements() as $statement){
-if(isset($schema[$statement->field])){
+foreach($clause->getStatements() as $statement) {
+if(isset($schema[ $statement->field ])) {
 $fac->where($statement);
 }
-else{
+else {
 $configwheres[] = $statement;
 }
 }
 }
-if($ref->getProperty('HasDeleted')->getValue()){
+if($ref->getProperty('HasDeleted')->getValue()) {
 $fac->where('deleted = 0');
 }
 $fac->where(\Core\Search\Helper::GetWhereClause($query));
-foreach($fac->get() as $m){
+foreach($fac->get() as $m) {
 $add = true;
-foreach($configwheres as $statement){
-if(($config = $m->getConfigObject($statement->field))){
-switch($statement->op){
+foreach($configwheres as $statement) {
+if(($config = $m->getConfigObject($statement->field))) {
+switch($statement->op) {
 case '=':
-if($config->get('value') != $statement->value){
+if($config->get('value') != $statement->value) {
 $add = false;
 break 2;
 }
@@ -5876,7 +5868,7 @@ default:
 }
 }
 }
-if($add){
+if($add) {
 $sr = new \Core\Search\ModelResult($query, $m);
 if($sr->relevancy < 1) continue;
 $sr->title = $m->getLabel();
@@ -5885,6 +5877,118 @@ $ret[] = $sr;
 }
 }
 return $ret;
+}
+public static function Import($data, $options, $output_realtime = false) {
+$log = new \Core\ModelImportLogger('User Importer', $output_realtime);
+$merge = isset($options['merge']) ? $options['merge'] : true;
+$pk    = isset($options['key']) ? $options['key'] : null;
+if(!$pk) {
+throw new Exception(
+'Import requires a "key" field on options containing the primary key to compare against locally.'
+);
+}
+$defaultgroups = \UserGroupModel::Find(["default = 1"]);
+$groups        = [];
+$gnames        = [];
+foreach($defaultgroups as $g) {
+$groups[] = $g->get('id');
+$gnames[] = $g->get('name');
+}
+if(sizeof($groups)) {
+$log->log('Found ' . sizeof($groups) . ' default groups for new users: ' . implode(', ', $gnames));
+}
+else {
+$log->log('No groups set as default, new users will not belong to any groups.');
+}
+$users = [];
+foreach($data as $dat) {
+if($pk == 'email' || $pk == 'id') {
+$user = UserModel::Find([$pk . ' = ' . $dat[ $pk ]], 1);
+}
+else {
+$uucm = UserUserConfigModel::Find(['key = ' . $pk, 'value = ' . $dat[ $pk ]], 1);
+if($uucm) {
+$user = $uucm->getLink('UserModel');
+}
+else {
+$user = UserModel::Find(['email = ' . $dat['email']], 1);
+}
+}
+$status_type = $user ? 'Updated' : 'Created';
+if($user && !$merge) {
+$log->duplicate('Skipped user ' . $user->getLabel() . ', already exists and merge not requested');
+continue;
+}
+if(!$user) {
+if(!isset($dat['email'])) {
+$log->error('Unable to import user without an email address!');
+continue;
+}
+if(!isset($dat['registration_ip'])) {
+$dat['registration_ip'] = REMOTE_IP;
+}
+if(!isset($dat['registration_source'])) {
+$dat['registration_source'] = \Core\user()->exists() ? 'admin' : 'self';
+}
+if(!isset($dat['registration_invitee'])) {
+$dat['registration_invitee'] = \Core\user()->get('id');
+}
+$user = new UserModel();
+}
+if(isset($dat['avatar']) && strpos($dat['avatar'], '://') !== false) {
+$log->actionStart('Downloading ' . $dat['avatar']);
+$f    = new \Core\Filestore\Backends\FileRemote($dat['avatar']);
+$dest = \Core\Filestore\Factory::File('public/user/avatar/' . $f->getBaseFilename());
+if($dest->identicalTo($f)) {
+$log->actionSkipped();
+}
+else {
+$f->copyTo($dest);
+$dat['avatar'] = 'public/user/avatar/' . $dest->getBaseFilename();
+$log->actionSuccess();
+}
+}
+if(isset($dat['profiles']) && is_array($dat['profiles'])) {
+$new_profiles = $dat['profiles'];
+$profiles = $user->get('json:profiles');
+if($profiles) {
+$current_flat = [];
+$profiles     = json_decode($profiles, true);
+foreach($profiles as $current_profile) {
+$current_flat[] = $current_profile['url'];
+}
+foreach($new_profiles as $new_profile) {
+if(!in_array($new_profile['url'], $current_flat)) {
+$profiles[] = $new_profile;
+}
+}
+unset($new_profile, $new_profiles, $current_flat, $current_profile);
+}
+else {
+$profiles = $new_profiles;
+unset($new_profiles);
+}
+unset($dat['profiles']);
+$dat['json:profiles'] = json_encode($profiles);
+}
+try {
+$user->setFromArray($dat);
+$user->setGroups($groups);
+$status = $user->save();
+}
+catch(Exception $e) {
+$log->error($e->getMessage());
+continue;
+}
+if($status) {
+$log->success($status_type . ' user ' . $user->getLabel() . ' successfully!');
+}
+else {
+$log->skip('Skipped user ' . $user->getLabel() . ', no changes detected.');
+}
+}
+$log->finalize();
+return $log;
 }
 }
 
@@ -9514,6 +9618,7 @@ case 'application/xml':
 $class = 'ContentXML';
 break;
 case 'application/pgp-signature':
+case 'application/pgp':
 $class = 'ContentASC';
 break;
 case 'application/zip':
@@ -16601,6 +16706,9 @@ $type   = $dat['type'];
 $time   = str_pad($dat['time'], 5, '0', STR_PAD_RIGHT);
 $query  = $dat['query'];
 $caller = print_r($dat['caller'], true);
+if($dat['rows'] !== null){
+$caller .= "\n" . 'Number of affected rows: ' . $dat['rows'];
+}
 $debug .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time} ms] $query</span>\n";
 }
 $debug .= '</fieldset>';
@@ -17423,20 +17531,25 @@ return $id;
 }
 public function getInputAttributes() {
 $out = '';
+if(isset($this->_attributes['source']) && !isset($this->_attributes['options'])){
+$source = $this->_attributes['source'];
+if (strpos($source, '::') !== false) {
+$this->_attributes['options'] = call_user_func($source);
+}
+}
 foreach ($this->_validattributes as $k) {
 if (
 $k == 'required' ||
-$k == 'disabled' ||
-$k == 'checked'
-){
-if(!$this->get($k)){
+$k == 'disabled' || $k == 'checked'
+) {
+if(!$this->get($k)) {
 continue;
 }
-else{
+else {
 $out .= sprintf(' %s="%s"', $k, $k);
 }
 }
-elseif (($v = $this->get($k)) !== null){
+elseif(($v = $this->get($k)) !== null) {
 $out .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
 }
 }

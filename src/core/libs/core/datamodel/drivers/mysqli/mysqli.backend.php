@@ -626,16 +626,25 @@ class mysqli_backend implements BackendInterface {
 		//echo $string . '<br/>'; // DEBUGGING //
 		$res = $this->_conn->query($string);
 
+		if(DEVELOPMENT_MODE && is_object($res) && property_exists($res, 'num_rows')){
+			// Tack on how many rows were selected or affected for debugging purposes.
+			$rows = $res->num_rows;
+		}
+		else{
+			$rows = null;
+		}
+
 		// Record this query!
 		// This needs to include the query itself, what type it was, how long it took to execute,
 		// any errors it produced, and where in the code it was called.
 		$this->_querylog[] = array(
-			'query' => $string,
-			'type' => $type,
-			'time' => round( (microtime(true) * 1000 - $start), 3),
-			'errno' => $this->_conn->errno,
-			'error' => $this->_conn->error,
+			'query'  => $string,
+			'type'   => $type,
+			'time'   => round( (microtime(true) * 1000 - $start), 3),
+			'errno'  => $this->_conn->errno,
+			'error'  => $this->_conn->error,
 			'caller' => $callinglocation,
+			'rows'   => $rows,
 		);
 
 		// And increase the count.

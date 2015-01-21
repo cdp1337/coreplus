@@ -802,6 +802,9 @@ class View {
 						$time   = str_pad($dat['time'], 5, '0', STR_PAD_RIGHT);
 						$query  = $dat['query'];
 						$caller = print_r($dat['caller'], true);
+						if($dat['rows'] !== null){
+							$caller .= "\n" . 'Number of affected rows: ' . $dat['rows'];
+						}
 						$debug .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time} ms] $query</span>\n";
 					}
 					$debug .= '</fieldset>';
