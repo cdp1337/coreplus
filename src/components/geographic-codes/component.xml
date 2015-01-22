@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.0" name="Geographic Codes" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.1" name="Geographic Codes" execmode="both">
 	<description>
 		A collection of geographic utilities for geocoding, ip-lookups, and dealing with geographic addresses in general.
 	</description>
@@ -9,7 +9,7 @@
 	</forms>
 	<smartyplugins directory="smarty-plugins"/>
 	<files>
-		<file filename="CHANGELOG" md5="2ee5a22ccf805f2ccb92b017ba1eea2f"/>
+		<file filename="CHANGELOG" md5="f743f78a87e1a2e102a8afc5a7ad9497"/>
 		<file filename="README.md" md5="f9b7f8a97be5c4f55afea2ef46724f50"/>
 		<file filename="classes/GeoAddressFormInput.php" md5="33de8bb8d9b108715b5759bf2c5fb372">
 			<class name="GeoAddressFormInput"/>
@@ -168,7 +168,7 @@
 		<file filename="libs/maxmind-geolite-db/GeoLite2-City.mmdb" md5="4db1f8e0219eabffa5ed2293f480f45d"/>
 		<file filename="libs/maxmind-geolite-db/LICENSE" md5="85eefaa2cbb8581ef26edbdbc7e4f926"/>
 		<file filename="libs/maxmind-geolite-db/SUPPORT" md5="2831aedc85a165bf7db688c39233366c"/>
-		<file filename="models/GeoAddressModel.php" md5="c507c88c0a4b91faa00ce6df8944082e">
+		<file filename="models/GeoAddressModel.php" md5="93d5e5a9c4f5bab316e741d8b8a58bf6">
 			<class name="GeoAddressModel"/>
 		</file>
 		<file filename="models/GeoCountryModel.php" md5="34a72a9b1fdf67fea8a1f7bddd23a2d9">
@@ -452,6 +452,7 @@
 		<upgrade from="1.3.0" to="1.4.0"/>
 		<upgrade from="1.4.0" to="1.5.0"/>
 		<upgrade from="1.5.0" to="1.6.0"/>
+		<upgrade from="1.6.0" to="1.6.1"/>
 	</upgrades>
 	<view>
 		<file filename="templates/forms/elements/geoaddressforminput.tpl" md5="776939ef16bcaea206f2546b61e37ddf"/>
