@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.0" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.1" name="Navigation" execmode="web">
 	<requires>
 		<require name="core" type="component" operation="ge" version="3.4.0"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="eb24fc1f5da6740ad37ed8d00a214f69"/>
+		<file filename="CHANGELOG" md5="c9237e00fa438bf406a93952c4f5abeb"/>
 		<file filename="controllers/NavigationController.php" md5="2931c3c881dbf618f00534db85542d8f">
 			<controller name="NavigationController"/>
 		</file>
@@ -22,7 +22,7 @@
 	</files>
 	<view>
 		<file filename="templates/pages/navigation/create.tpl" md5="75c1c4157d0b64b0f5e05fa3a0ee9846"/>
-		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="4031fb3dc83afb83f716a6150a479a55"/>
+		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="f947dd94c0aa9f42b952995ce2e516b4"/>
 		<file filename="templates/pages/navigation/delete.tpl" md5="76e1949488cb9acaaf83eb1a95c9abd5"/>
 		<file filename="templates/pages/navigation/edit.tpl" md5="a6eda39bbc1a33dac2888ffe43ab7868"/>
 		<file filename="templates/pages/navigation/index.tpl" md5="8fbbccd35a3cbc609cc8845b6a3a45ee"/>
@@ -31,7 +31,7 @@
 		<file filename="templates/widgets/navigation/children.tpl" md5="2f26fdaa35d28a1a094699a825db64d8"/>
 		<file filename="templates/widgets/navigation/siblings.tpl" md5="e02e7719cfb212e4d9f5637b396e5f10"/>
 		<file filename="templates/widgets/navigation/siblingsandchildren.tpl" md5="2f26fdaa35d28a1a094699a825db64d8"/>
-		<file filename="templates/widgets/navigation/view.tpl" md5="629c5fcb1cd7f3ecddff0451bc1eee7a"/>
+		<file filename="templates/widgets/navigation/view.tpl" md5="882955f52ee2d9973b731f08f7d07187"/>
 	</view>
 	<widgets>
 		<widget baseurl="/navigation/siblings" title="Page Siblings Nav"/>
@@ -62,6 +62,7 @@
 		<upgrade from="2.3.0" to="2.4.0">
 			<php file="upgrades/230_nav_widget_editables.php"/>
 		</upgrade>
+		<upgrade from="2.4.0" to="2.4.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
