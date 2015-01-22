@@ -1,3 +1,14 @@
+Core Plus 4.0.4
+
+	* [Bug] Update the packager so that all components and themes correctly display when they need to be
+	  packaged up.
+	* [Bug] Fix the SUDO admin menu group to work with new versions of Core.
+	* [Feature] Group user and user group admins pages under the new 'User' group.
+	* [Feature] Group pages that share the same title as the group to remove duplicate links in the admin
+	  menu.
+	* Several minor, (albeit essential), fixes for the saving of user config options.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 22 Jan 2015 00:35:37 -0500
+
 Core Plus 4.0.3
 
 	* Add number of rows into the query log debug section.
