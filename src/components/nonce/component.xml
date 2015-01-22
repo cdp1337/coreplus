@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Nonce" version="1.0.4">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Nonce" version="1.0.5">
 	<requires>
 		<require name="Core" type="component" version="2.5.1"/>
 		<require name="core" type="component" version="3.0.0" operation="ge"/>
@@ -9,7 +9,7 @@
 		<hook name="/cron/hourly" call="NonceModel::Cleanup"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="9ea7ed0943f9d4170689a718dc6f50c6"/>
+		<file filename="CHANGELOG" md5="6a8785c2561aa585cf070d476b3363a2"/>
 		<file filename="README.md" md5="5bcf92183d0ab8d2045c82f264e66369"/>
 		<file filename="models/NonceModel.php" md5="16a3c8f2a55763a510e90e8bfea66244">
 			<class name="NonceModel"/>
@@ -20,6 +20,7 @@
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="1.0.3"/>
 		<upgrade from="1.0.3" to="1.0.4"/>
+		<upgrade from="1.0.4" to="1.0.5"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
