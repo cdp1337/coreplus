@@ -436,8 +436,8 @@
 		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/zz.png" md5="9ed90edb9aee2d2a912dac2a77eaf979"/>
 	</assets>
 	<install>
-		<sql file="datafiles/countries.sql"/>
-		<sql file="datafiles/provinces.sql"/>
+		<sql file="datafiles/countries_bulk.sql"/>
+		<sql file="datafiles/provinces_bulk.sql"/>
 	</install>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
