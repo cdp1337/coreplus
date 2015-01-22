@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.3" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.4" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 		<require name="tags" type="component"/>
@@ -13,7 +13,7 @@
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="d3b4845c30636b81c29a4d2984b57187"/>
+		<file filename="CHANGELOG" md5="5cfcb2c3bf907eceee4540351b156c4d"/>
 		<file filename="controllers/BlogController.php" md5="38ccca8e11a807a48816c0fe5472e3f9">
 			<controller name="BlogController"/>
 		</file>
@@ -28,7 +28,7 @@
 			<class name="BlogModel"/>
 		</file>
 		<file filename="upgrades/121_to_130.php" md5="74f9e19bffde5be37788a696b7790b46"/>
-		<file filename="upgrades/130_to_140_published.php" md5="4ab899aa7768154bde4f5197a7cfbf2b"/>
+		<file filename="upgrades/130_to_140_published.php" md5="c19cd9693ba732d34b95e4c2e2ab6f6a"/>
 		<file filename="upgrades/130_to_140_selectable.php" md5="33c3b2e0c9456a6a900d7340f1c65c5b"/>
 		<file filename="upgrades/150_to_151_filepathchange.php" md5="d37162704ef850a8954bf11dcc66dc43"/>
 		<file filename="upgrades/next_page_updates.php" md5="6d72fdf11b4261f55bf3b8bc367d4e78"/>
@@ -118,6 +118,7 @@
 		<upgrade from="1.6.0" to="1.6.1"/>
 		<upgrade from="1.6.1" to="1.6.2"/>
 		<upgrade from="1.6.2" to="1.6.3"/>
+		<upgrade from="1.6.3" to="1.6.4"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="057d4488d69c927125d516cde602edb1"/>

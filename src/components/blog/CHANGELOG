@@ -1,3 +1,9 @@
+Blog 1.6.4
+
+	* Some backport fixes for updating old versions of the blog system on new versions of Core.
+	* Update Blog to 1.6.3
+	-- Charlie Powell <charlie@eval.bz>  Thu, 22 Jan 2015 00:37:14 -0500
+
 Blog 1.6.3
 
 	* Change the terminology for creating a new blog listing page.
