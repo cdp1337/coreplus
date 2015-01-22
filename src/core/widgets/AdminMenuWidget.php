@@ -40,7 +40,13 @@ class AdminMenuWidget extends Widget_2_1 {
 		if(isset($_SESSION['user_sudo'])){
 			$p = new PageModel('/user/sudo');
 			$p->set('title', 'Exit SUDO Mode');
-			$groups['SUDO']['Exit SUDO Mode'] = $p;
+			$groups['SUDO'] = [
+				'title' => 'SUDO',
+				'href' => '',
+				'children' => [
+					'Exit SUDO Mode' => $p,
+				],
+			];
 			$flatlist[ 'Exit SUDO Mode' ] = $p;
 		}
 
