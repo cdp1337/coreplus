@@ -273,8 +273,8 @@ EOD;
 	/**
 	 * Get all GIT changes since version z.y.x and date xxxx.yy.dd for this package
 	 *
-	 * @param string $sinceversion
-	 * @param string $sincedate
+	 * @param string $sinceversion Version to ignore, (used to ignore release statements).
+	 * @param string $sincedate    Date to pull changes since
 	 *
 	 * @return array
 	 */
@@ -292,13 +292,73 @@ EOD;
 			if($line == $this->_keyname . ' ' . $sinceversion) continue;
 
 			// Or if it contains the name, since version, and "release"... same thing!
-			if(stripos($line, $this->_name . ' ' . $sinceversion) !== false && stripos($line, 'release') !== false) continue;
+			if(
+				stripos($line, $this->_name . ' ' . $sinceversion) !== false &&
+				stripos($line, 'release') !== false
+			){
+				continue;
+			}
+
+			// OR, if it contains "Update [name] to [version], that's also a release note.
+			if(
+				strpos($line, 'Update') === 0 &&
+				stripos($line, $this->_name) !== false &&
+				stripos($line, $sinceversion) !== false
+			){
+				continue;
+			}
 
 			// Otherwise, it's a change!
 			$changes[] = $line;
 		}
 
 		return $changes;
+	}
+
+	/**
+	 * Get the release date and version of the last released version on this component.
+	 *
+	 * If this current version has been released, it'll be that date.
+	 * Otherwise, it will be the previous version that has been released.
+	 *
+	 * @return array
+	 */
+	public function getLatestReleaseInfo(){
+		$label = $this->getLabel();
+
+		if($this->isVersionReleased()){
+			// Checking version against HEAD, easy enough!
+			$thischange   = $this->getChangelogSection();
+			$thisdate     = $thischange->getReleasedDate();
+			$versioncheck = $this->getVersion();
+			$type         = 'current';
+		}
+		else{
+			$thischange   = $this->getChangelogSection();
+			$thisdate     = $thischange->getReleasedDate();
+			$versioncheck = $this->getVersion();
+			$type         = 'previous';
+
+			if(!$thisdate) {
+				$previouschange = $this->getChangelog()->getPreviousSection($versioncheck);
+				if($previouschange){
+					$thisdate       = $previouschange->getReleasedDate();
+					$versioncheck   = $previouschange->getVersion();
+				}
+				else{
+					$thisdate     = '01 Jan 2013 00:00:00 -0400';
+					$versioncheck = '0.0.0';
+					$type         = 'none';
+				}
+			}
+		}
+
+		return [
+			'label'   => $label,
+		    'date'    => $thisdate,
+		    'version' => $versioncheck,
+		    'type'    => $type,
+		];
 	}
 
 	/**
@@ -354,7 +414,7 @@ EOD;
 			}
 			elseif($skindir && $file->inDirectory($skindir)){
 				// It's a skin!
-				$skinfiles[] = array('file' => $fname, 'md5' => $file->getHash());
+				$skinfiles[] = ['file' => $fname, 'md5' => $file->getHash()];
 			}
 			else{
 				// It's a something..... it goes in the "files" array!

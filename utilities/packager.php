@@ -552,7 +552,7 @@ while(true){
 				$lineflags[] = '** needs exported **';
 			}
 
-			// Change the changes
+			// Change the local changes
 			if(
 				sizeof($c->getChangedAssets()) ||
 				sizeof($c->getChangedFiles()) ||
@@ -561,6 +561,17 @@ while(true){
 				$lineflags[] = '** needs packaged **';
 			}
 
+			// Scan GIT changes since released
+			$packager = new \Core\Utilities\Packager('component', $f['name']);
+			$release_info = $packager->getLatestReleaseInfo();
+			$changes = $packager->getGitChangesSince($release_info['version'], $release_info['date']);
+			if(sizeof($changes) > 0){
+				$lineflags[] = '** needs packaged **';
+			}
+
+
+			// Strip any duplicate flags.
+			$lineflags = array_unique($lineflags);
 
 			$versionedfiles[$k] = $line . ' ' . implode(' ', $lineflags);
 		}
@@ -591,6 +602,18 @@ while(true){
 			){
 				$lineflags[] = '** needs packaged **';
 			}*/
+
+			// Scan GIT changes since released
+			$packager = new \Core\Utilities\Packager('theme', $f['name']);
+			$release_info = $packager->getLatestReleaseInfo();
+			$changes = $packager->getGitChangesSince($release_info['version'], $release_info['date']);
+			if(sizeof($changes) > 0){
+				$lineflags[] = '** needs packaged **';
+			}
+
+
+			// Strip any duplicate flags.
+			$lineflags = array_unique($lineflags);
 
 
 			$versionedfiles[$k] = $line . ' ' . implode(' ', $lineflags);
@@ -734,39 +757,18 @@ while(true){
 				}
 				break;
 			case 'viewgit':
-				if($packager->isVersionReleased()){
-					// Checking version against HEAD, easy enough!
-					$thischange   = $packager->getChangelogSection();
-					$thisdate     = $thischange->getReleasedDate();
-					$versioncheck = $packager->getVersion();
+				$release_info = $packager->getLatestReleaseInfo();
 
-					$title = 'GIT commits since ' . $packager->getLabel() . ' ' . $versioncheck . ' was released on ' . $thisdate;
+				if($release_info['version'] == '0.0.0') {
+					$title = 'All GIT commits for ' . $release_info['label'];
 				}
-				else{
-					$thischange   = $packager->getChangelogSection();
-					$thisdate     = $thischange->getReleasedDate();
-					$versioncheck = $packager->getVersion();
-
-					if($thisdate) {
-						$title = 'GIT commits since ' . $packager->getLabel() . ' ' . $versioncheck . ' was released on ' . $thisdate;
-					}
-					else{
-						$previouschange = $packager->getChangelog()->getPreviousSection($versioncheck);
-						if($previouschange){
-							$thisdate       = $previouschange->getReleasedDate();
-							$versioncheck   = $previouschange->getVersion();
-
-							$title = 'GIT commits since ' . $packager->getLabel() . ' ' . $versioncheck . ' was released on ' . $thisdate;
-						}
-						else{
-							$thisdate     = '01 Jan 2013 00:00:00 -0400';
-							$versioncheck = '0.0.0';
-							$title = 'All GIT commits for ' . $packager->getLabel();
-						}
-					}
+				else {
+					$title =
+						'GIT commits since ' . $release_info['label'] . ' ' . $release_info['version'] .
+						' was released on ' . $release_info['date'];
 				}
 
-				$changes = $packager->getGitChangesSince($versioncheck, $thisdate);
+				$changes = $packager->getGitChangesSince($release_info['version'], $release_info['date']);
 
 				CLI::PrintHeader($title);
 				if(!sizeof($changes)){
@@ -777,7 +779,7 @@ while(true){
 				}
 
 				// Cleanup
-				unset($thischange, $thisdate, $versioncheck, $previouschange, $changes);
+				unset($release_info, $changes);
 				break;
 
 			case 'importgit':
