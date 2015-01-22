@@ -707,8 +707,14 @@ class UserModel extends Model {
 
 			// Is this element a config option?
 			elseif(strpos($name, 'option[') === 0) {
-				$k   = substr($el->get('name'), 7, -1);
-				$obj = $this->getConfigObject($k)->getLink('UserConfig');
+				$k   = substr($name, 7, -1);
+				$obj = $this->getConfigObject($k);
+
+				if($obj === null){
+					// Skip invalid/non-existent fields.
+					continue;
+				}
+				$obj = $obj->getLink('UserConfig');
 
 				if($value === null && $obj->get('formtype') == 'checkbox') {
 					// Checkboxes behave slightly differently.
