@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.3~core3" name="FontAwesome" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.3~core4" name="FontAwesome" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
@@ -13,7 +13,7 @@
 		This package contains the Core-optimized version of FA.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="55b999ce5a9364756220c4d2160a9890"/>
+		<file filename="CHANGELOG" md5="b74144afc9c2f512c2048390985ba453"/>
 		<file filename="FontAwesome-Vectors.pdf" md5="cab0c66ed6cd83eec4d2e844619703b4"/>
 		<file filename="FontAwesome.lib.php" md5="0bd12edc9c443d9a1e5ad44828f0601a">
 			<class name="FontAwesome"/>
@@ -54,6 +54,7 @@
 		<upgrade from="3.11~core2" to="4.0.3~core1"/>
 		<upgrade from="4.0.3~core1" to="4.0.3~core2"/>
 		<upgrade from="4.0.3~core2" to="4.0.3~core3"/>
+		<upgrade from="4.0.3~core3" to="4.0.3~core4"/>
 	</upgrades>
 	<authors>
 		<author name="Dave Gandy" email="dave@davegandy.com"/>
