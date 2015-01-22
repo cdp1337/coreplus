@@ -1,3 +1,15 @@
+Theme/Base V3 1.1.0
+
+	* [Bug] Fix the rigid width issue for listing tables that came from bourbon.
+	* Retool how widgets areas work to allow page-level templates to be specified and managed.
+	* Switch the View debugging information to use the standard UI structure for collapsible fieldsets as
+	  of base-v3.
+	* New collapsible fieldset legend support with chevron hints.
+	* Colour tweaks for messages.
+	* Edit repository functionality and additional stats on remote repos on the updater system.
+	* Minor text changes only.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 22 Jan 2015 00:48:12 -0500
+
 Theme/Base V3 1.0.0
 
 	-- Charlie Powell <charlie@eval.bz>  Fri, 21 Nov 2014 16:53:06 -0500
