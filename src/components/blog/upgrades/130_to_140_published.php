@@ -14,15 +14,18 @@
 require_once(ROOT_PDIR . 'components/blog/models/BlogArticleModel.php');
 require_once(ROOT_PDIR . 'components/blog/models/BlogModel.php');
 
-$articles = BlogArticleModel::Find(
-	array(
-		'status' => 'published',
-		'published' => '',
-	)
-);
-foreach($articles as $article){
-	/** @var $article BlogArticleModel */
-	$article->set('published', $article->get('updated'));
-	$article->save();
+$schema = BlogArticleModel::GetSchema();
+if(isset($schema['published'])){
+	$articles = BlogArticleModel::Find(
+		array(
+			'status' => 'published',
+			'published' => '',
+		)
+	);
+	foreach($articles as $article){
+		/** @var $article BlogArticleModel */
+		$article->set('published', $article->get('updated'));
+		$article->save();
+	}
 }
 // return
