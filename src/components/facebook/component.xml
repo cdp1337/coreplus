@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3~core4" name="Facebook" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3~core5" name="Facebook" execmode="web">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 		<hook name="/core/controllinks/user/view" call="FacebookController::GetUserControlLinks"/>
@@ -34,7 +34,7 @@
 		<file filename="templates/widgets/facebook/login.tpl" md5="d2c35fdad4e78240358e39c4c4ee3db1"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="35b2a6072abff4258da431af266863be"/>
+		<file filename="CHANGELOG" md5="721b303b2621db7f78449901aaeca36f"/>
 		<file filename="FacebookHelper.class.php" md5="d7ac2466285ce37c587f9bb91e079aa9">
 			<class name="FacebookHelper"/>
 		</file>
@@ -90,6 +90,7 @@
 		<upgrade from="3.2.3~core1" to="3.2.3~core2"/>
 		<upgrade from="3.2.3~core2" to="3.2.3~core3"/>
 		<upgrade from="3.2.3~core3" to="3.2.3~core4"/>
+		<upgrade from="3.2.3~core4" to="3.2.3~core5"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/facebook.css" md5="705ee2ca2a443c5ff690c277ef26a2fe"/>

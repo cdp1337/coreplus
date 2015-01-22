@@ -1,3 +1,8 @@
+Facebook 3.2.3~core5
+
+	* Repackage a number of components to fix a minor packaging bug.
+	-- Charlie Powell <charlie@eval.bz>  Thu, 22 Jan 2015 00:44:32 -0500
+
 Facebook 3.2.3~core4
 
 	* [Bug] Fix the include order of the user login javascripts.
