@@ -1,3 +1,9 @@
+PHPWhois 5.0.0~core2
+
+	* Accidentally moved the JSHelper outside of the phpwhois/lib directory...
+	* Update PHPWhois to 5.0.0~core1
+	-- Charlie Powell <charlie@eval.bz>  Thu, 22 Jan 2015 00:47:23 -0500
+
 PHPWhois 5.0.0~core1
 
 	* Import newest version of phpwhois from the new eVAL library

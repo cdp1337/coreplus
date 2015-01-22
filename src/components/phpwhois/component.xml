@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.0.0~core1" name="PHPWhois" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.0.0~core2" name="PHPWhois" execmode="both">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 		<require name="geographic-codes" type="component" version="1.0.0"/>
@@ -15,7 +15,7 @@
 		<scriptlibrary name="fancy_ip" call="phpwhois\JSHelper::LoadFancyIP"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="b7fdb9fa42c42670f8b82655fd318795"/>
+		<file filename="CHANGELOG" md5="ef0c89c7008d9ac6c6505937709a69f3"/>
 		<file filename="LICENSE" md5="eb723b61539feef013de476e68b5c50a"/>
 		<file filename="README.md" md5="69c7d3436fca6c02694c8ed9427053a7"/>
 		<file filename="controllers/PhpwhoisController.php" md5="e9cdd00cd66b0ff1b9eeb39e6fca8150">
@@ -413,6 +413,7 @@
 		<upgrade from="4.2.2~core4" to="4.2.2~core5"/>
 		<upgrade from="4.2.2~core5" to="4.2.2~core6"/>
 		<upgrade from="4.2.2~core6" to="5.0.0~core1"/>
+		<upgrade from="5.0.0~core1" to="5.0.0~core2"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/phpwhois/fancy_ip.css" md5="c78fb7fd4a37703a00f30ef4f2524361"/>
