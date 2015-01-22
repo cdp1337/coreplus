@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.11.2~core1" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.11.2~core2" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
@@ -136,7 +136,7 @@
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="1689bbc737d43890774a9b3fac1f35d6"/>
+		<file filename="CHANGELOG" md5="704387bd2c1bcce1f095c13e67b71c79"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
 		<file filename="JQuery.lib.php" md5="1a28010fad97ef0712b04513851a153f">
 			<class name="JQuery"/>
@@ -175,6 +175,7 @@
 		<upgrade from="1.10.2~core3" to="1.10.2~core4"/>
 		<upgrade from="1.10.2~core4" to="1.11.0~core1"/>
 		<upgrade from="1.11.0~core1" to="1.11.2~core1"/>
+		<upgrade from="1.11.2~core1" to="1.11.2~core2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
