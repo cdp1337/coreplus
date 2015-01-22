@@ -14,8 +14,8 @@
 		<hook name="/core/components/loaded" call="SecuritySuite\IpBlacklistHelper::CheckIP"/>
 		<hook name="/core/components/loaded" call="SecuritySuite\IpBlacklistHelper::Check404Pages"/>
 		<hook name="/core/components/loaded" call="SecuritySuite\SimpleSitePassword::Check"/>
-		<hook name="/cron/daily" call="StopForumSpam::HookDaily"/>
-		<hook name="/cron/daily" call="IpBlacklistHelper::CleanupHook"/>
+		<hook name="/cron/daily" call="SecuritySuite\StopForumSpam::HookDaily"/>
+		<hook name="/cron/daily" call="SecuritySuite\IpBlacklistHelper::CleanupHook"/>
 	</hooks>
 	<pages>
 		<page baseurl="/security/sitepassword" title="Simple Site Password" access="g:admin" group="Configure" admin="1"/>
