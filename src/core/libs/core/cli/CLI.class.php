@@ -245,7 +245,10 @@ class CLI {
 		echo "| " . COLOR_RESET . COLOR_HEADER;
 
 		// Make this text centered.
-		echo str_repeat(NBSP, (90 - strlen($line)) / 2);
+		if(strlen($line) < $maxlen){
+			echo str_repeat(NBSP, ($maxlen - strlen($line)) / 2);
+		}
+
 		echo $line . $nl . COLOR_RESET . COLOR_LINE;
 		echo "+" . str_repeat('=', $maxlen-1);
 		echo COLOR_RESET . $nl;
