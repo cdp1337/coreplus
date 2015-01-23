@@ -404,6 +404,8 @@ while(true){
 	if(!($opts['quiet'] || $opts['name'])){
 		CLI::PrintHeader('Building Main Menu');
 	}
+	// Purge the cache of exported versions.
+	$_cversions = null;
 
 	/** @var array $files Master array containing all top-level menu options and their targets */
 	$files = [];
