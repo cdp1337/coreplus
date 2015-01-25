@@ -1234,8 +1234,14 @@ class Model implements ArrayAccess {
 	 * @throws ModelValidationException
 	 */
 	public function set($k, $v) {
-		// $this->_data will always have the schema keys at least set to null.
-		if (array_key_exists($k, $this->_data)) {
+		if($v instanceof Model && $this->_getLinkIndex($k) !== null){
+			// Allow setting a linked Model via set().
+			// This allows a full Model to be passed in from let's say a form system.
+			$this->setLink($k, $v);
+			return true;
+		}
+		elseif (array_key_exists($k, $this->_data)) {
+			// $this->_data will always have the schema keys at least set to null.
 
 			$keydat = $this->getKeySchema($k);
 
