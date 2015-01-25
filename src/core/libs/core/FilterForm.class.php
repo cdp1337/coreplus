@@ -413,6 +413,9 @@ class FilterForm {
 	/**
 	 * Set the sort direction for this filterset.
 	 *
+	 * The direction must be one of the following: "up", "down", "asc", "desc".
+	 * (asc/desc are remapped to up/down automatically)
+	 *
 	 * @since 2.4.0
 	 * @param $dir "up" or "down".  It must be up or down because fontawesome has those keys instead of "asc" and "desc" :p
 	 *
@@ -424,6 +427,12 @@ class FilterForm {
 			case 'down':
 			case 'up':
 				$this->_sortdir = $dir;
+				return true;
+			case 'asc':
+				$this->_sortdir = 'up';
+				return true;
+			case 'desc':
+				$this->_sortdir = 'down';
 				return true;
 			default:
 				return false;
