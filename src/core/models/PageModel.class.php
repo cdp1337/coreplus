@@ -297,6 +297,8 @@ class PageModel extends Model {
 				'description' => 'Set to a future date/time to un-publish this page automatically at that specific date and time.',
 				'group' => 'Publish Settings',
 				'grouptype' => 'tabs',
+				'datetimepicker_dateformat' => 'yy-mm-dd',
+				'datetimepicker_timeformat' => 'HH:mm',
 			),
 		),
 		'body' => array(
