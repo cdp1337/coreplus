@@ -215,7 +215,11 @@ class GPG {
 			// I'm only interested in the primary pub keys here.
 			if($type != 'pub:') continue;
 
-			$key = substr($line, 4, 8);
+			//offset of 5 characters to grab the pos of the second colon in the string...effectively skip the first colon.
+			$offset = strpos($line, ':', 5);
+
+			// grab the 8 characters leading to the second colon in the string (the pubkey)
+			$key = substr($line, $offset - 8, 8);
 
 			$keys[] = $key;
 		}
