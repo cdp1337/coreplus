@@ -191,7 +191,7 @@ For simple widgets, set the class to the class name of the widget.
 <!ELEMENT config EMPTY>
 <!ATTLIST config
 	key CDATA #REQUIRED
-	type (string|int|boolean|enum|set) 'string'
+	type (string|text|int|boolean|enum|set) 'string'
 	title CDATA #IMPLIED
 	options CDATA #IMPLIED
 	description CDATA #IMPLIED

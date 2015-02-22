@@ -40,7 +40,7 @@ class ConfigModel extends Model {
 		],
 		'type'          => [
 			'type'    => Model::ATT_TYPE_ENUM,
-			'options' => ['string', 'int', 'boolean', 'enum', 'set'],
+			'options' => ['string', 'text', 'int', 'boolean', 'enum', 'set'],
 			'default' => 'string',
 			'null'    => false,
 		],
@@ -208,6 +208,9 @@ class ConfigModel extends Model {
 		switch ($this->get('type')) {
 			case 'string':
 				$el = \FormElement::Factory('text');
+				break;
+			case 'text':
+				$el = \FormElement::Factory('textarea');
 				break;
 			case 'enum':
 				$el = \FormElement::Factory('select');

@@ -4,7 +4,7 @@
 	<configs>
 		<config key="/package_repository/base_directory" description="Base directory of the package files" type="string"/>
 		<config key="/package_repository/is_private" description="Set to true if this is a private repository, (behind a license/password)." default="0" type="boolean"/>
-		<config key="/package_repository/description" description="Description for this repository, (visible publicly)." type="string"/>
+		<config key="/package_repository/description" description="Description for this repository, (visible publicly)." type="text"/>
 		<config key="/package_repository/auto_ip_restrict" description="Set to true to restrict the IP of the connecting server on first connect." default="1" type="boolean"/>
 	</configs>
 	<permissions>
