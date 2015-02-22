@@ -383,8 +383,15 @@ class ThemeController extends Controller_2_1{
 			ConfigHandler::Set('/theme/default_template', $template);
 			ConfigHandler::Set('/theme/selected', $themename);
 
+			// reinstall theme and zee assets
+			$t = ThemeHandler::GetTheme();
+
+			if (($change = $t->reinstall(0)) !== false) {
+				SystemLogModel::LogInfoEvent('/updater/theme/reinstall', 'Theme ' . $t->getName() . ' reinstalled successfully', implode("\n", $change));
+			}
+
 			Core::SetMessage('Updated default theme', 'success');
-			Core::GoBack();
+			Core::Redirect('/theme');
 		}
 
 		$view->assign('theme', $themename);
