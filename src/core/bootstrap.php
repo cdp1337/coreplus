@@ -49,13 +49,13 @@ $memory_limit = ini_get('memory_limit');
 
 if (preg_match('/^(\d+)(.)$/', $memory_limit, $matches)) {
 	if ($matches[2] == 'M') {
-		$memory_limit = $matches[1] * 1024 * 1024;
+		$memory_limit = $matches[1];
 	} else if ($matches[2] == 'K') {
 		$memory_limit = $matches[1] * 1024;
 	}
 }
 
-if($memory_limit < 2560 * 1024 * 1024){
+if($memory_limit < 256){
 	die('This application requires at least 256MB of memory to install! Please increase the memory_limit directive in your php.ini');
 }
 
