@@ -287,10 +287,12 @@ class Smarty implements Templates\TemplateInterface {
 
 		$areas = [];
 		$dom = new \DOMDocument();
+
 		// I don't care about parsing errors here... I just want the damn nodes!
-		// @TODO Find a better way to ignore errors!
+		libxml_use_internal_errors(true);
+
 		try{
-			@$dom->loadHTML('<html>' . $fullsearch . '</html>');
+			$dom->loadHTML('<html>' . $fullsearch . '</html>');
 			$nodes = $dom->getElementsByTagName('widgetarea');
 			$validattributes = ['name', 'installable'];
 
@@ -343,8 +345,10 @@ class Smarty implements Templates\TemplateInterface {
 		//echo '<pre>' . str_replace('<', '&lt;', $fullsearch) . '</pre>';
 
 		$dom = new \DOMDocument();
+
 		// I don't care about parsing errors here... I just want the damn nodes!
-		// @TODO Find a better way to ignore errors!
+		libxml_use_internal_errors(true);
+
 		try{
 			@$dom->loadHTML('<html>' . $fullsearch . '</html>');
 			$nodes = $dom->getElementsByTagName('insertable');
