@@ -40,6 +40,10 @@ if (PHP_VERSION < '5.4.0') {
 	die('This application requires at least PHP 5.4 to run!');
 }
 
+if (!function_exists('bcadd')){
+	die('This application requires BCMath. http://php.net/manual/en/book.bc.php');
+}
+
 // Core requires at least 256MB of memory to install
 $memory_limit = ini_get('memory_limit');
 
