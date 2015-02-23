@@ -22,6 +22,8 @@ class PreflightCheckStep extends InstallerStep {
 
 		$tests = array(
 			$this->testPHPVersion(),
+			$this->testPHPMemoryLimit(),
+			$this->testBCMath(),
 			$this->testRewrite(),
 			$this->testPHPXML(),
 			$this->testPHPMcrypt(),
@@ -85,6 +87,72 @@ class PreflightCheckStep extends InstallerStep {
 			'description' => 'Your version of PHP is ' . $version . '.  That\'ll work.',
 		];
 	}
+
+
+	/**
+	 * Test that the PHP memory_limit is large enough.
+	 *
+	 * @return array
+	 */
+	private function testPHPMemoryLimit() {
+		$mlimit = ini_get('memory_limit');
+		$munits = substr($mlimit, -1);
+		$msize  = substr($mlimit, 0, -1);
+
+		if($munits == 'G'){
+			$msize = $msize * 1024 * 1024 * 1024;
+		}
+		else if($munits == 'M'){
+			$msize = $msize * 1024 * 1024;
+		}
+		else if($munits == 'K'){
+			$msize = $msize * 1024;
+		}
+
+
+		if($msize < 256 * 1024 * 1024){
+			return [
+				'title' => 'PHP Memory Limit',
+				'status' => 'error',
+				'message' => 'Not enough memory to install!',
+				'description' => 'This application requires at least 256M of memory to install! Please increase the memory_limit directive in your php.ini'
+			];
+		}
+
+		return [
+			'title' => 'PHP Memory Limit',
+			'status' => 'passed',
+			'message' => 'PHP memory_limit is sufficient!',
+			'description' => 'PHP\'s memory_limit is ' . $mlimit,
+		];
+	}
+
+
+	/**
+	 * Test that BCMath is available.
+	 *
+	 * @return array
+	 */
+	private function testBCMath() {
+
+		if( !function_exists('bcadd') ){
+			return [
+				'title' => 'BCMath',
+				'status' => 'error',
+				'message' => 'BCMath is missing!',
+				'description' => 'This application requires BCMath. http://php.net/manual/en/book.bc.php'
+			];
+		}
+
+		return [
+			'title' => 'BCMath',
+			'status' => 'passed',
+			'message' => 'Success! BCMath is available!',
+			'description' => 'This application requires BCMath. http://php.net/manual/en/book.bc.php',
+		];
+	}
+
+
 
 	/**
 	 * Check that mod_rewrite is available.

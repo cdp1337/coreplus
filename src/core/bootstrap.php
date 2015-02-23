@@ -40,25 +40,6 @@ if (PHP_VERSION < '5.4.0') {
 	die('This application requires at least PHP 5.4 to run!');
 }
 
-if (!function_exists('bcadd')){
-	die('This application requires BCMath. http://php.net/manual/en/book.bc.php');
-}
-
-// Core requires at least 256MB of memory to install
-$memory_limit = ini_get('memory_limit');
-
-if (preg_match('/^(\d+)(.)$/', $memory_limit, $matches)) {
-	if ($matches[2] == 'M') {
-		$memory_limit = $matches[1];
-	} else if ($matches[2] == 'K') {
-		$memory_limit = $matches[1] * 1024;
-	}
-}
-
-if($memory_limit < 256){
-	die('This application requires at least 256MB of memory to install! Please increase the memory_limit directive in your php.ini');
-}
-
 // Damn suPHP, I can handle my own permissions, TYVM
 umask(0);
 
