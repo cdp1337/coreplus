@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 20 Jan 2015 23:53:23 -0500
+ * @compiled Sun, 22 Feb 2015 19:11:01 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -70,6 +70,20 @@ die('This application cannot run with magic_quotes_gpc enabled, please disable t
 }
 if (PHP_VERSION < '5.4.0') {
 die('This application requires at least PHP 5.4 to run!');
+}
+if (!function_exists('bcadd')){
+die('This application requires BCMath. http://php.net/manual/en/book.bc.php');
+}
+$memory_limit = ini_get('memory_limit');
+if (preg_match('/^(\d+)(.)$/', $memory_limit, $matches)) {
+if ($matches[2] == 'M') {
+$memory_limit = $matches[1];
+} else if ($matches[2] == 'K') {
+$memory_limit = $matches[1] * 1024;
+}
+}
+if($memory_limit < 256){
+die('This application requires at least 256MB of memory to install! Please increase the memory_limit directive in your php.ini');
 }
 umask(0);
 ### REQUIRE_ONCE FROM core/libs/core/utilities/profiler/Profiler.php
@@ -2293,7 +2307,11 @@ break;
 return $v;
 }
 public function set($k, $v) {
-if (array_key_exists($k, $this->_data)) {
+if($v instanceof Model && $this->_getLinkIndex($k) !== null){
+$this->setLink($k, $v);
+return true;
+}
+elseif (array_key_exists($k, $this->_data)) {
 $keydat = $this->getKeySchema($k);
 if($this->_data[$k] === null && $v === null){
 return false;
@@ -3758,6 +3776,8 @@ only.  Useful for saving a page without releasing it to public users.',
 'description' => 'Set to a future date/time to un-publish this page automatically at that specific date and time.',
 'group' => 'Publish Settings',
 'grouptype' => 'tabs',
+'datetimepicker_dateformat' => 'yy-mm-dd',
+'datetimepicker_timeformat' => 'HH:mm',
 ),
 ),
 'body' => array(
@@ -5581,8 +5601,12 @@ if($name == 'email') {
 $this->set('email', $value);
 }
 elseif(strpos($name, 'option[') === 0) {
-$k   = substr($el->get('name'), 7, -1);
-$obj = $this->getConfigObject($k)->getLink('UserConfig');
+$k   = substr($name, 7, -1);
+$obj = $this->getConfigObject($k);
+if($obj === null){
+continue;
+}
+$obj = $obj->getLink('UserConfig');
 if($value === null && $obj->get('formtype') == 'checkbox') {
 $value = 0;
 }
@@ -6004,7 +6028,7 @@ public static $Schema = array(
 ],
 'type'          => [
 'type'    => Model::ATT_TYPE_ENUM,
-'options' => ['string', 'int', 'boolean', 'enum', 'set'],
+'options' => ['string', 'text', 'int', 'boolean', 'enum', 'set'],
 'default' => 'string',
 'null'    => false,
 ],
@@ -6120,6 +6144,9 @@ $name  = 'config[' . $key . ']';
 switch ($this->get('type')) {
 case 'string':
 $el = \FormElement::Factory('text');
+break;
+case 'text':
+$el = \FormElement::Factory('textarea');
 break;
 case 'enum':
 $el = \FormElement::Factory('select');
@@ -15925,8 +15952,9 @@ $fullsearch = file_get_contents($this->_filename);
 $fullsearch = preg_replace('#\{widgetarea(.*)\}#isU', '<widgetarea$1/>', $fullsearch);
 $areas = [];
 $dom = new \DOMDocument();
+libxml_use_internal_errors(true);
 try{
-@$dom->loadHTML('<html>' . $fullsearch . '</html>');
+$dom->loadHTML('<html>' . $fullsearch . '</html>');
 $nodes = $dom->getElementsByTagName('widgetarea');
 $validattributes = ['name', 'installable'];
 foreach($nodes as $n){
@@ -15951,6 +15979,7 @@ $fullsearch = $contents;
 $fullsearch = preg_replace('#\{insertable(.*)\}#isU', '<insertable$1>', $fullsearch);
 $fullsearch = preg_replace('#\{\/insertable[ ]*\}#', '</insertable>', $fullsearch);
 $dom = new \DOMDocument();
+libxml_use_internal_errors(true);
 try{
 @$dom->loadHTML('<html>' . $fullsearch . '</html>');
 $nodes = $dom->getElementsByTagName('insertable');
