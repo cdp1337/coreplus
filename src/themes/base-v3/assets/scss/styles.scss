@@ -22,7 +22,9 @@
 @import "pages/updater";
 @import "pages/widgets";
 
-#admin-bar {
+#admin-bar,
+.clear,
+.clearfix {
 	@include clearfix;
 }
 

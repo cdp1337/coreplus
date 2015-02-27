@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 22 Feb 2015 19:11:01 -0500
+ * @compiled Thu, 26 Feb 2015 19:37:41 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -70,20 +70,6 @@ die('This application cannot run with magic_quotes_gpc enabled, please disable t
 }
 if (PHP_VERSION < '5.4.0') {
 die('This application requires at least PHP 5.4 to run!');
-}
-if (!function_exists('bcadd')){
-die('This application requires BCMath. http://php.net/manual/en/book.bc.php');
-}
-$memory_limit = ini_get('memory_limit');
-if (preg_match('/^(\d+)(.)$/', $memory_limit, $matches)) {
-if ($matches[2] == 'M') {
-$memory_limit = $matches[1];
-} else if ($matches[2] == 'K') {
-$memory_limit = $matches[1] * 1024;
-}
-}
-if($memory_limit < 256){
-die('This application requires at least 256MB of memory to install! Please increase the memory_limit directive in your php.ini');
 }
 umask(0);
 ### REQUIRE_ONCE FROM core/libs/core/utilities/profiler/Profiler.php

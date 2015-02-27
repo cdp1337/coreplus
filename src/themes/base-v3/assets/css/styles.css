@@ -1328,13 +1328,15 @@ fieldset.collapsible.collapsed .collapsible-hint {
 }
 
 /* line 15, ../scss/vendor/bourbon/addons/_clearfix.scss */
-#admin-bar:after {
+#admin-bar:after,
+.clear:after,
+.clearfix:after {
   content: "";
   display: table;
   clear: both;
 }
 
-/* line 29, ../scss/styles.scss */
+/* line 31, ../scss/styles.scss */
 a.button {
   border: 1px solid #2459a6;
   border-radius: 3px;
@@ -1382,12 +1384,12 @@ a.button:disabled {
     display: none !important;
   }
 }
-/* line 42, ../scss/styles.scss */
+/* line 44, ../scss/styles.scss */
 a.agplv3-tag {
   color: white;
   text-shadow: 0px 0px 3px #636;
 }
-/* line 46, ../scss/styles.scss */
+/* line 48, ../scss/styles.scss */
 a.agplv3-tag:hover {
   color: #636;
   text-shadow: 0px 0px 3px white;
