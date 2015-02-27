@@ -5,8 +5,15 @@
 	padding: 10px;
 	text-align: center;
 	width: 220px;
-	height: 220px;
+	height: 15em;
 	overflow: hidden;
+	position: relative;
+}
+
+.theme-picker .theme .button {
+	position: absolute;
+	bottom: 0.8em;
+	left: 2.2em;
 }
 
 .theme-picker .theme img {

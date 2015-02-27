@@ -1297,16 +1297,18 @@ fieldset.collapsible .expandable-hint {
 /* line 9, ../scss/_collapsible_fieldsets.scss */
 fieldset.collapsible .collapsible-hint {
   display: inline-block;
+  padding: 0 0.3em;
 }
-/* line 13, ../scss/_collapsible_fieldsets.scss */
+/* line 14, ../scss/_collapsible_fieldsets.scss */
 fieldset.collapsible.collapsed {
   padding: 1.5em 1.5em 0;
 }
-/* line 16, ../scss/_collapsible_fieldsets.scss */
+/* line 17, ../scss/_collapsible_fieldsets.scss */
 fieldset.collapsible.collapsed .expandable-hint {
   display: inline-block;
+  padding: 0 0.3em;
 }
-/* line 19, ../scss/_collapsible_fieldsets.scss */
+/* line 21, ../scss/_collapsible_fieldsets.scss */
 fieldset.collapsible.collapsed .collapsible-hint {
   display: none;
 }
@@ -1383,16 +1385,6 @@ a.button:disabled {
   .print {
     display: none !important;
   }
-}
-/* line 44, ../scss/styles.scss */
-a.agplv3-tag {
-  color: white;
-  text-shadow: 0px 0px 3px #636;
-}
-/* line 48, ../scss/styles.scss */
-a.agplv3-tag:hover {
-  color: #636;
-  text-shadow: 0px 0px 3px white;
 }
 
 /*# sourceMappingURL=styles.css.map */

@@ -8,6 +8,7 @@ fieldset.collapsible {
 	}
 	.collapsible-hint {
 		display: inline-block;
+		padding: 0 0.3em;
 	}
 
 	&.collapsed {
@@ -15,6 +16,7 @@ fieldset.collapsible {
 
 		.expandable-hint {
 			display: inline-block;
+			padding: 0 0.3em;
 		}
 		.collapsible-hint {
 			display: none;
