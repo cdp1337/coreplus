@@ -1,3 +1,11 @@
+Theme 2.4.3
+
+	* [Bug] Only autoinstall the theme assets if it's the currently selected theme.
+	* [Bug] Theme switching shold reinstall assets
+	* Wrap the sections on the theme editor page with a classed div for easier targeting.
+	* Prettier styles on /theme added some padding to collapsible fieldset icons
+	-- Charlie Powell <charlie@eval.bz>  Wed, 11 Mar 2015 15:38:04 -0400
+
 Theme 2.4.2
 
 	* Set base-v3 as the default theme for new installs.
