@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.1" name="Security-Suite" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.2" name="Security-Suite" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.4.0" operation="ge"/>
 		<require name="phpwhois" type="component"/>
@@ -46,7 +46,7 @@
 		Includes anti-spam by stopforumspam.com, IP Blacklist, and site-wide password protection.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="29699f5bcd80d49ae11dab16eb2c956d"/>
+		<file filename="CHANGELOG" md5="4e35277031b01e3978440dc222bd589a"/>
 		<file filename="controllers/SecurityController.php" md5="5bc1156c8a55c785d803e93fe17b290b">
 			<controller name="SecurityController"/>
 		</file>
@@ -97,6 +97,7 @@
 		<upgrade from="1.3.0" to="1.4.0"/>
 		<upgrade from="1.4.0" to="1.5.0"/>
 		<upgrade from="1.5.0" to="1.5.1"/>
+		<upgrade from="1.5.1" to="1.5.2"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/wp-admin/css/wp-admin.min.css" md5="1060bbdd464bed007f6fa460dd3f6a56"/>

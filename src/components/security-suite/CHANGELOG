@@ -1,3 +1,8 @@
+Security-Suite 1.5.2
+
+	* [Bug] Ensure that *all* the hooks have the proper namespace...
+	-- Charlie Powell <charlie@eval.bz>  Wed, 11 Mar 2015 15:37:13 -0400
+
 Security-Suite 1.5.1
 
 	* Update tests to work with new version of phpunit.
