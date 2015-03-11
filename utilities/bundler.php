@@ -100,7 +100,16 @@ foreach($updatesites as $site){
 				$vers = $pkg->getVersion();
 
 				// Only display the newest version available.
-				if(isset($remoteComponents[$n]) && !Core::VersionCompare($vers, $remoteComponents[$n]['version'], 'gt')) {
+				if(
+					// Skip components that are already set AND
+					isset($remoteComponents[$n]) &&
+					// Skip components that have a version AND
+					isset($remoteComponents[$n]['version']) &&
+					// Skip components that have a different version than the remote version, (weird bug with incorrect location) AND
+					$vers != $remoteComponents[$n]['version'] &&
+					// Skip components that already have a newer version in cache.
+					!Core::VersionCompare($vers, $remoteComponents[$n]['version'], 'gt')
+				) {
 					continue;
 				}
 
@@ -503,11 +512,13 @@ foreach($bundles as $b){
 
 	// create the tarballs!
 	CLI::PrintActionStart("Creating tarball");
-	exec('tar -czf "' . $destdir . '/' . $desttgz . '.tgz" -C "' . $destdir . '" --exclude-vcs --exclude=*~ --exclude=._* ' . $desttgz);
+	//exec('tar -czf "' . $destdir . '/' . $desttgz . '.tgz" -C "' . $destdir . '" --exclude-vcs --exclude=*~ --exclude=._* ' . $desttgz);
+	exec('tar -czf "' . $destdir . '/' . $desttgz . '.tgz" -C "' . $destdir . '/' . $desttgz . '" --exclude-vcs --exclude=*~ --exclude=._* .');
 	CLI::PrintActionStatus('ok');
 
 	CLI::PrintActionStart("Creating zip");
-	exec('cd "' . $destdir . '/"; zip -rq "' . $desttgz . '.zip" "' . $desttgz . '"; cd -');
+	//exec('cd "' . $destdir . '/"; zip -rq "' . $desttgz . '.zip" "' . $desttgz . '"; cd -');
+	exec('cd "' . $destdir . '/' . $desttgz . '/"; zip -rq "../' . $desttgz . '.zip" .; cd -');
 	CLI::PrintActionStatus('ok');
 
 	CLI::PrintActionStart("Creating hashes");
