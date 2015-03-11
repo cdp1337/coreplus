@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.0.0">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.0.1">
 	<configs>
 		<config key="/package_repository/base_directory" description="Base directory of the package files" type="string"/>
 		<config key="/package_repository/is_private" description="Set to true if this is a private repository, (behind a license/password)." default="0" type="boolean"/>
@@ -15,7 +15,7 @@
 		<page baseurl="/packagerepositorylicense/admin" title="Package Repository License Manager" admin="1" group="Admin" access="p:/package_repository/licenses/manager"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="a9bef6b7da00881219e7df69839f963b"/>
+		<file filename="CHANGELOG" md5="b1b76265d92457bb9d9687ca54d88540"/>
 		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
 		<file filename="controllers/PackageRepositoryController.php" md5="99a7e7eaa1087f9a6fdd54c9ef76588a">
 			<controller name="PackageRepositoryController"/>
@@ -33,6 +33,9 @@
 		<file filename="templates/pages/packagerepositorylicense/admin.tpl" md5="0bfc0cac42ab230d9d2d319f63dd8ca3"/>
 		<file filename="templates/pages/packagerepositorylicense/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 	</view>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>

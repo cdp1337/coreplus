@@ -1,3 +1,8 @@
+Package Repository 1.0.1
+
+	* Set the description for a package repo to be a textarea instead of a string.
+	-- Charlie Powell <charlie@eval.bz>  Wed, 11 Mar 2015 15:36:44 -0400
+
 Package Repository 1.0.0
 
 	* Initial version
