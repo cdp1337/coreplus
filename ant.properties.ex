@@ -98,7 +98,13 @@ data.import.production.port=22
 
 # Directory on the server that contains the database backup.
 # MUST end with a trailing slash.
+#
+# This directory is searched for the most recent *.sql.gz file.
 data.import.production.datadir=/home/example/backups/
+
+# Alternatively, if a specific file is known on the remote server,
+# uncomment the following and set to pull from that file.
+#data.import.production.datafile=/var/unified_backups/db-local-copies/database.sql.gz
 
 
 # Any developer-specific operations to perform after import.

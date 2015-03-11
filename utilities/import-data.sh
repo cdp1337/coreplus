@@ -17,6 +17,7 @@ HOST="$(egrep '^data\.import\.production\.host=' "$BASEDIR/ant.properties" | sed
 USER="$(egrep '^data\.import\.production\.user=' "$BASEDIR/ant.properties" | sed 's:^[^=]*=\(.*\):\1:')"
 PORT="$(egrep '^data\.import\.production\.port=' "$BASEDIR/ant.properties" | sed 's:^[^=]*=\(.*\):\1:')"
 DIR="$(egrep '^data\.import\.production\.datadir=' "$BASEDIR/ant.properties" | sed 's:^[^=]*=\(.*\):\1:')"
+FILE="$(egrep '^data\.import\.production\.datafile=' "$BASEDIR/ant.properties" | sed 's:^[^=]*=\(.*\):\1:')"
 DEVDATA="$(egrep '^data\.import\.custom\.datafile=' "$BASEDIR/ant.properties" | sed 's:^[^=]*=\(.*\):\1:')"
 
 # Local settings.
@@ -37,7 +38,13 @@ else
 	# Get the newest version from the remote server.
 	#REMOTESQLGZ="$(ssh $HOST \"ls -c $HOSTSRC/*.sql.gz \| head -n1\")"
 	#REMOTESQLGZ="$(ssh $HOST \'ls -c \"$HOSTSRC/*.sql.gz\"\')"
-	REMOTESQLGZ="$(ssh -p$PORT $USER@$HOST ls -c $DIR*.sql.gz \| head -n1)"
+	if [ -n "$FILE" ]; then
+		# If the file is set explictly, just use that.
+		REMOTESQLGZ="$FILE"
+	else
+		REMOTESQLGZ="$(ssh -p$PORT $USER@$HOST ls -c $DIR*.sql.gz \| head -n1)"
+	fi
+
 	if [ -z "$REMOTESQLGZ" ]; then
 		echo "No *.sql.gz file located within $DIR on host $HOST."
 		exit 1
