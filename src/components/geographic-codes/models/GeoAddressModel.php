@@ -275,13 +275,20 @@ class GeoAddressModel extends Model {
 		];
 	}
 
-	public function setFromBeansObject($address){
+	/**
+	 * Populate this model with data directly from BeansBooks
+	 *
+	 * @param $address
+	 *
+	 * @throws Exception
+	 */
+	public function setFromBeansObject($address) {
 		/** @noinspection PhpUndefinedNamespaceInspection This method is only available if the BeansBooks module is installed. */
 		if(!(
-			$address instanceof \BeansBooks\Models\CustomerAddress ||
-			$address instanceof \BeansBooks\Models\VendorAddress
+			$address instanceof \BeansBooks\Objects\CustomerAddress ||
+			$address instanceof \BeansBooks\Objects\VendorAddress
 		)){
-			throw new Exception('Please only set an address from a beansbooks CustomerAddress or VendorAddress.');
+			throw new Exception('Please only set an address from a BeansBooks CustomerAddress or VendorAddress.');
 		}
 
 		$keys = $this->getBeansKeys();
@@ -301,6 +308,49 @@ class GeoAddressModel extends Model {
 			}
 
 			$this->set($lk, $rv);
+		}
+	}
+
+	/**
+	 * Populate BeansBooks with data from this model, (and sync back any changes afterwards too).
+	 *
+	 * This requires an additional array because beans has additional metainfo about the address than the GeoAddressModel stores,
+	 * such as customer or vendor associated with the address.
+	 *
+	 * As such, a second array is required to be passed in to provide any of this metadata.
+	 *
+	 * @param $address \BeansBooks\Objects\CustomerAddress|\BeansBooks\Objects\VendorAddress
+	 * @param $additionalData array
+	 *
+	 * @throws Exception
+	 */
+	public function setToBeansObject($address, $additionalData = []){
+		/** @noinspection PhpUndefinedNamespaceInspection This method is only available if the BeansBooks module is installed. */
+		if(!(
+			$address instanceof \BeansBooks\Objects\CustomerAddress ||
+			$address instanceof \BeansBooks\Objects\VendorAddress
+		)){
+			throw new Exception('Please only set an address to a BeansBooks CustomerAddress or VendorAddress.');
+		}
+
+		if($this->changed() || $this->get('beansbooks_id') == ''){
+			// Something changed or it just doesn't exist in Beans, save it!
+			// This is to save page execution time for saves that are saving something other than this field.
+			$data = $additionalData;
+			$keys = $this->getBeansKeys();
+
+			foreach($keys as $rk => $lk){
+				$data[$rk] = $this->get($lk);
+			}
+
+			$address->setFromArray($data);
+			if($address->exists()){
+				$address->update();
+			}
+			else{
+				$address->create();
+				$this->set('beansbooks_id', $address->get('id'));
+			}
 		}
 	}
 }
