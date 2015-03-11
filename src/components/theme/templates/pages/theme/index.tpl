@@ -7,7 +7,7 @@
 	Only the currently active theme can be used for selecting skins and email skins.
 </p>
 
-<div class="theme-picker">
+<div class="theme-picker theme-section">
 	{foreach $themes as $theme}
 
 		{assign var='screen' value=$theme->getScreenshot()}
@@ -16,8 +16,12 @@
 			{$theme->getName()}<br/>
 
 			{if $screen.file}
-				<img src="{$screen.file->getPreviewURL('220x160')}" title="{$screen.title}"/><br/><br/>
+				{img src="assets/images/placeholders/generic.png" dimensions="220x160"}
+				<!--<img src="{$screen.file->getPreviewURL('220x160')}" title="{$screen.title}"/>-->
+			{else}
+				{img src="assets/images/placeholders/generic.png" dimensions="220x160"}
 			{/if}
+			<br/>
 
 			{if !$theme->isDefault()}
 				{a class="button" href="/theme/setdefault/`$theme->getKeyName()`" confirm="Set `$theme->getName()` as site-wide default theme?"}
@@ -30,125 +34,28 @@
 	{/foreach}
 </div>
 
-<div class="clear"></div>
-
-<br/>
-<h3>Theme {$current->getName()} Skins</h3>
-<p class="message-tutorial">
-	Theme skins are your site's main container controlling the entire look and feel.
-	Some applications can use a different skin if your theme has multiple to choose from, but generally the "public" skin
-	is used for all public-facing, (anonymous), pages.
-	The admin skin will only be used for administrative pages.
-</p>
-
-<table class="listing">
-	<tr>
-		<th colspan="1">Skin</th>
-		<th>Public Default</th>
-		<th>Admin Default</th>
-		<th width="100">&nbsp;</th>
-	</tr>
-	{foreach from=$current->getSkins() item=template}
-		<tr>
-			<td>
-				{if $template.title && $template.title != $template.file}
-					{$template.title}
-					( {$template.file} )
-				{else}
-					{$template.file}
-				{/if}
-			</td>
-			<td>
-				{if $template.default}
-					<i class="icon-star"></i>
-					<span>Current Default</span>
-				{else}
-					{a href="/theme/setdefault/`$current->getKeyName()`?template=`$template.file`" confirm="Set `$template.file` as default?"}
-						<i class="icon-ok"></i>
-						<span>Set As Default</span>
-					{/a}
-				{/if}
-			</td>
-			<td>
-				{if $template.admindefault}
-					<i class="icon-star"></i>
-					<span>Current Default</span>
-				{else}
-					{a href="/theme/setadmindefault/`$current->getKeyName()`?template=`$template.file`" confirm="Set `$template.file` as default for admin pages?"}
-						<i class="icon-ok"></i>
-						<span>Set As Default</span>
-					{/a}
-				{/if}
-			</td>
-			<td>
-				<ul class="controls controls-hover">
-					<li>
-						{a href="/admin/widgets?skin=`$template.file`"}
-							<i class="icon-cogs"></i>
-							<span>Widgets</span>
-						{/a}
-					</li>
-
-					{if $template.has_stylesheets}
-						<li>
-							{a href="/theme/selectstylesheets/?template=skins/`$template.file`"}
-								<i class="icon-strikethrough"></i>
-								<span>Optional Stylesheets</span>
-							{/a}
-						</li>
-					{/if}
-
-					<li>
-						{a href="/theme/editor?template=skins/`$template.file`"}
-							<i class="icon-pencil"></i>
-							<span>Editor</span>
-						{/a}
-					</li>
-
-				</ul>
-
-			</td>
-		</tr>
-	{/foreach}
-</table>
-
-
-<br/><br/>
-<h3>Site Skin Options</h3>
-<p class="message-tutorial">
-	Any application that supports a skin to be set site-wide.
-</p>
-{$site_skins_form->render()}
-
-
-
-
-<br/><br/>
-<h3>Theme {$current->getName()} Email Skins</h3>
-{if sizeof($current->getEmailSkins()) == 1}
-	<p class="message-info">
-		Your currently selected theme has no email skins available.
-	</p>
-{else}
+<div class="theme-section">
+	<h3>Theme {$current->getName()} Skins</h3>
 	<p class="message-tutorial">
-		The email skin is an optional container for all outbound emails sent to your users.
-		If you want to stylize your automated site communications, select the skin here.
+		Theme skins are your site's main container controlling the entire look and feel.
+		Some applications can use a different skin if your theme has multiple to choose from, but generally the "public" skin
+		is used for all public-facing, (anonymous), pages.
+		The admin skin will only be used for administrative pages.
 	</p>
 
 	<table class="listing">
 		<tr>
 			<th colspan="1">Skin</th>
-			<th>Default</th>
+			<th>Public Default</th>
+			<th>Admin Default</th>
 			<th width="100">&nbsp;</th>
 		</tr>
-		{foreach from=$current->getEmailSkins() item=template}
+		{foreach from=$current->getSkins() item=template}
 			<tr>
 				<td>
-					{if $template.title && $template.title != $template.file && $template.file}
+					{if $template.title && $template.title != $template.file}
 						{$template.title}
 						( {$template.file} )
-					{elseif $template.title}
-						{$template.title}
 					{else}
 						{$template.file}
 					{/if}
@@ -158,7 +65,18 @@
 						<i class="icon-star"></i>
 						<span>Current Default</span>
 					{else}
-						{a href="/theme/setemaildefault/`$current->getKeyName()`?template=`$template.file`" confirm="Set `$template.file` as default?"}
+						{a href="/theme/setdefault/`$current->getKeyName()`?template=`$template.file`" confirm="Set `$template.file` as default?"}
+							<i class="icon-ok"></i>
+							<span>Set As Default</span>
+						{/a}
+					{/if}
+				</td>
+				<td>
+					{if $template.admindefault}
+						<i class="icon-star"></i>
+						<span>Current Default</span>
+					{else}
+						{a href="/theme/setadmindefault/`$current->getKeyName()`?template=`$template.file`" confirm="Set `$template.file` as default for admin pages?"}
 							<i class="icon-ok"></i>
 							<span>Set As Default</span>
 						{/a}
@@ -166,14 +84,28 @@
 				</td>
 				<td>
 					<ul class="controls controls-hover">
-						{if $template.file}
+						<li>
+							{a href="/admin/widgets?skin=`$template.file`"}
+								<i class="icon-cogs"></i>
+								<span>Widgets</span>
+							{/a}
+						</li>
+
+						{if $template.has_stylesheets}
 							<li>
-								{a href="/theme/editor?template=emailskins/`$template.file`"}
-									<i class="icon-pencil"></i>
-									<span>Editor</span>
+								{a href="/theme/selectstylesheets/?template=skins/`$template.file`"}
+									<i class="icon-strikethrough"></i>
+									<span>Optional Stylesheets</span>
 								{/a}
 							</li>
 						{/if}
+
+						<li>
+							{a href="/theme/editor?template=skins/`$template.file`"}
+								<i class="icon-pencil"></i>
+								<span>Editor</span>
+							{/a}
+						</li>
 
 					</ul>
 
@@ -181,8 +113,79 @@
 			</tr>
 		{/foreach}
 	</table>
+</div>
 
-{/if}
+
+<div class="theme-section">
+	<h3>Site Skin Options</h3>
+	<p class="message-tutorial">
+		Any application that supports a skin to be set site-wide.
+	</p>
+	{$site_skins_form->render()}
+</div>
+
+
+<div class="theme-section">
+	<h3>Theme {$current->getName()} Email Skins</h3>
+	{if sizeof($current->getEmailSkins()) == 1}
+		<p class="message-info">
+			Your currently selected theme has no email skins available.
+		</p>
+	{else}
+		<p class="message-tutorial">
+			The email skin is an optional container for all outbound emails sent to your users.
+			If you want to stylize your automated site communications, select the skin here.
+		</p>
+
+		<table class="listing">
+			<tr>
+				<th colspan="1">Skin</th>
+				<th>Default</th>
+				<th width="100">&nbsp;</th>
+			</tr>
+			{foreach from=$current->getEmailSkins() item=template}
+				<tr>
+					<td>
+						{if $template.title && $template.title != $template.file && $template.file}
+							{$template.title}
+							( {$template.file} )
+						{elseif $template.title}
+							{$template.title}
+						{else}
+							{$template.file}
+						{/if}
+					</td>
+					<td>
+						{if $template.default}
+							<i class="icon-star"></i>
+							<span>Current Default</span>
+						{else}
+							{a href="/theme/setemaildefault/`$current->getKeyName()`?template=`$template.file`" confirm="Set `$template.file` as default?"}
+								<i class="icon-ok"></i>
+								<span>Set As Default</span>
+							{/a}
+						{/if}
+					</td>
+					<td>
+						<ul class="controls controls-hover">
+							{if $template.file}
+								<li>
+									{a href="/theme/editor?template=emailskins/`$template.file`"}
+										<i class="icon-pencil"></i>
+										<span>Editor</span>
+									{/a}
+								</li>
+							{/if}
+
+						</ul>
+
+					</td>
+				</tr>
+			{/foreach}
+		</table>
+
+	{/if}
+</div>
 
 
 
