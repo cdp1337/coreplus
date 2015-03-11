@@ -775,6 +775,20 @@ html {
   box-sizing: inherit;
 }
 
+/* line 1, ../scss/_form_elements.scss */
+.formelement {
+  margin-bottom: 0.35em;
+}
+/* line 5, ../scss/_form_elements.scss */
+.formelement.formselect select {
+  margin-bottom: 0.20em;
+}
+/* line 10, ../scss/_form_elements.scss */
+.formelement .form-element-description {
+  color: #5c5c5c;
+  font-size: 0.9em;
+}
+
 /*****************************************************************************
  *****************************************************************************
  **                          DEBUGGING CLASSES                              **
@@ -1329,10 +1343,46 @@ fieldset.collapsible.collapsed .collapsible-hint {
   clear: both;
 }
 
+/* line 2, ../scss/pages/_theme.scss */
+.page-theme .theme-section {
+  margin-top: 1em;
+}
 /* line 15, ../scss/vendor/bourbon/addons/_clearfix.scss */
-#admin-bar:after,
-.clear:after,
-.clearfix:after {
+.page-theme .theme-section:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+/* line 7, ../scss/pages/_theme.scss */
+.page-theme .theme-picker .theme {
+  border: 1px solid #AAAAAA;
+  float: left;
+  margin: 10px;
+  padding: 10px;
+  text-align: center;
+  width: 220px;
+  height: 16em;
+  overflow: hidden;
+  position: relative;
+}
+/* line 19, ../scss/pages/_theme.scss */
+.page-theme .theme-picker .theme .button {
+  position: absolute;
+  bottom: 0.8em;
+  left: 2.2em;
+}
+/* line 25, ../scss/pages/_theme.scss */
+.page-theme .theme-picker .theme img {
+  box-shadow: 0 1px 4px rgba(45, 45, 45, 0.4);
+}
+/* line 29, ../scss/pages/_theme.scss */
+.page-theme .theme-picker .current-theme {
+  background: white;
+  font-weight: bold;
+}
+
+/* line 15, ../scss/vendor/bourbon/addons/_clearfix.scss */
+#admin-bar:after {
   content: "";
   display: table;
   clear: both;
@@ -1385,6 +1435,18 @@ a.button:disabled {
   .print {
     display: none !important;
   }
+}
+/* line 44, ../scss/styles.scss */
+a.agplv3-tag {
+  display: inline-block;
+  padding: 0 0.25em;
+  color: #636;
+}
+/* line 49, ../scss/styles.scss */
+a.agplv3-tag:hover {
+  border-radius: 0.5em;
+  background-color: #636;
+  color: white;
 }
 
 /*# sourceMappingURL=styles.css.map */

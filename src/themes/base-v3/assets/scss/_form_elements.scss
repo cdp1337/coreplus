@@ -1,0 +1,14 @@
+.formelement {
+
+	margin-bottom: 0.35em;
+
+	&.formselect select {
+		// Reducing the padding set from bourbon for these, as the p.description following should be closer.
+		margin-bottom: 0.20em;
+	}
+
+	.form-element-description {
+		color: lighten($dark-gray, 16%);
+		font-size: $base-font-size * .9;
+	}
+}

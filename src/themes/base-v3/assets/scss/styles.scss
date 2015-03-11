@@ -12,6 +12,7 @@
 @import "vendor/neat/neat";
 
 // Start Core-specific components
+@import "form_elements";
 @import "debugging";
 @import "controls";
 @import "filters_and_pagination";
@@ -21,10 +22,9 @@
 @import "collapsible_fieldsets";
 @import "pages/updater";
 @import "pages/widgets";
+@import "pages/theme";
 
-#admin-bar,
-.clear,
-.clearfix {
+#admin-bar {
 	@include clearfix;
 }
 
@@ -42,8 +42,13 @@ a.button {
 }
 
 a.agplv3-tag {
+	display: inline-block;
+	padding: 0 0.25em;
+	color: #636;
 
 	&:hover {
-
+		border-radius: 0.5em;
+		background-color: #636;
+		color: white;
 	}
 }
