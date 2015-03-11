@@ -1,3 +1,21 @@
+Core Plus 4.0.5
+
+	* [Bug] GPG key lookup was returning the first 8 characters in the pub:keystring instead of the last 8
+	  characters, which is the actual requested key.
+	* [Bug] Minor fix on CLI::PrintHeader for when the line is longer than the maximum allowed length.
+	* [Performance] Found a better way to supress DOM errors...that doesn't actually try to write to the
+	  query log. As a result, I shaved off 10ms from each page render.
+	* [Feature] New smarty function for rendering a logging iframe, useful on reinstallation scripts,
+	  import scripts, and the like.
+	* [Feature] Added in missing clearfix selector includes. This fixes  /theme tutorial display quirks
+	  when 3 themes are installed.
+	* [Feature] Core requires 256MB of memory, check this on the installer
+	* [Feature] Core requires BC Math in PHP, check this in the installer
+	* [Feature] Config options should support type="text"
+	* [Feature] Allow setting the sort direction for FilterForms with "asc" and "desc" too.
+	* [Feature] Handle setting a linked Model directly via set().
+	-- Charlie Powell <charlie@eval.bz>  Wed, 11 Mar 2015 15:34:42 -0400
+
 Core Plus 4.0.4
 
 	* [Bug] Update the packager so that all components and themes correctly display when they need to be

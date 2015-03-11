@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.4" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.5" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -71,7 +71,7 @@
 	</includes>
 	<files>
 		<file filename="config/configuration.example.xml" md5="eac5d52f582025aca84e54796592b7b5"/>
-		<file filename="core/CHANGELOG" md5="a30cd3f9f4476b68a886414130a6a90c"/>
+		<file filename="core/CHANGELOG" md5="d34cf151b794e0cb1acc61eed87cfc2a"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="4413ef9bdb639f2c0d2064c5631491cc"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
@@ -416,7 +416,7 @@
 		<file filename="core/libs/core/Email.class.php" md5="79a40d1ce38ee17cbd9146a55f78dd77">
 			<class name="Email"/>
 		</file>
-		<file filename="core/libs/core/FilterForm.class.php" md5="3689e95742d096b095c5bf732a0f8d94">
+		<file filename="core/libs/core/FilterForm.class.php" md5="7fc2721d14be167410f99375132d87f2">
 			<class name="FilterForm"/>
 		</file>
 		<file filename="core/libs/core/Form.class.php" md5="3bc70972113fa90cdf087a9b9bf90a17">
@@ -441,7 +441,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="7bae1b2886a742915df7086624d5d819">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="92ce941541c0b90c1f151158a43edd65">
+		<file filename="core/libs/core/Model.class.php" md5="ddb8bae7c0b797f17a279a49089ebadb">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -529,7 +529,7 @@
 		<file filename="core/libs/core/cli/Arguments.php" md5="f0f16b9e350e36810073f63c81efa829">
 			<class name="Core\CLI\Arguments"/>
 		</file>
-		<file filename="core/libs/core/cli/CLI.class.php" md5="1c1a3768020621c9046d9934c5738faf">
+		<file filename="core/libs/core/cli/CLI.class.php" md5="b56648dc2fb2edc382b769ec9d23c2fc">
 			<class name="Core\CLI\CLI"/>
 		</file>
 		<file filename="core/libs/core/configs/functions.php" md5="a6bc12ca5676115441f5df0f59dbfbb8"/>
@@ -661,7 +661,7 @@
 			<class name="Core\Filestore\FTP\FTPMetaFile"/>
 		</file>
 		<file filename="core/libs/core/filestore/functions.php" md5="67ed815a878c0f8ab3e51c39df69b1d0"/>
-		<file filename="core/libs/core/gpg/GPG.php" md5="634df6917864acdc610eebbf1d53faab">
+		<file filename="core/libs/core/gpg/GPG.php" md5="5fd408d81a0ed9683497e8b6e17852bd">
 			<class name="Core\GPG\GPG"/>
 		</file>
 		<file filename="core/libs/core/gpg/Key.php" md5="dd6691afaf80ab034936c80e4f3dd5b8">
@@ -718,7 +718,7 @@
 		<file filename="core/libs/core/templates/backends/PHTML.php" md5="044654cde48e315a4f0b2ce2a6eb819d">
 			<class name="Core\Templates\Backends\PHTML"/>
 		</file>
-		<file filename="core/libs/core/templates/backends/Smarty.php" md5="055e15a766543ca79327e8df1fdc8093">
+		<file filename="core/libs/core/templates/backends/Smarty.php" md5="934e46aebdf940c9f6af53244afd82f8">
 			<class name="Core\Templates\Backends\Smarty"/>
 		</file>
 		<file filename="core/libs/core/user/AuthDriverInterface.php" md5="7a1b0b7276c84fce573b616b0e068f36">
@@ -936,6 +936,7 @@
 		<file filename="core/libs/smarty-plugins/function.img.php" md5="00433e3c27b583df61634cc421fbed86"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="bb8663ae7349b945e6a4c9199c0df78e"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="3006e7c5864245da4e64e72d7f019a12"/>
+		<file filename="core/libs/smarty-plugins/function.progress_log_iframe.php" md5="82ea26ab3eac02fd41e2d720e8c4db90"/>
 		<file filename="core/libs/smarty-plugins/function.t.php" md5="4bc9cbaf3b071bd58fd77ec21c29f34f"/>
 		<file filename="core/libs/smarty-plugins/function.user.php" md5="9e198be923b6f7e57f93447360cf9a93"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="54ff11e11ea6e8086003e3377aae1dea"/>
@@ -1249,7 +1250,7 @@
 		<file filename="core/models/ComponentModel.class.php" md5="f5a7e7dc0c7891d309bb84760dd2916c">
 			<class name="ComponentModel"/>
 		</file>
-		<file filename="core/models/ConfigModel.class.php" md5="4db9253e308247a1249f7e803102db46">
+		<file filename="core/models/ConfigModel.class.php" md5="232726b61aa35bc30065e1fce910fc4b">
 			<class name="ConfigModel"/>
 		</file>
 		<file filename="core/models/FileMetaModel.class.php" md5="f93510ffd032f6e686758e596cb0ff33">
@@ -1261,7 +1262,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="19e1cdca6223ec714e3e35a1ac14f5ea">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="de1ca33f4cd3caf157cf59a0e599080f">
+		<file filename="core/models/PageModel.class.php" md5="c77129c6af7392d7b3127112902dcfdf">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="3791a151027c417603c48e3a3c59a4d3">
@@ -1357,7 +1358,7 @@
 		<file filename="install/steps/PerformInstallStep.php" md5="e33b3ac7bd9542980ea1cf64088f4a5a">
 			<class name="Core\Installer\PerformInstallStep"/>
 		</file>
-		<file filename="install/steps/PreflightCheckStep.php" md5="afda6a0f4a2376e10cc3130ab11afb1a">
+		<file filename="install/steps/PreflightCheckStep.php" md5="229f812945604990bbddfdeb6f0a1c59">
 			<class name="Core\Installer\PreflightCheckStep"/>
 		</file>
 		<file filename="install/steps/SetupConfigurationStep.php" md5="276b952bd951e79859e936551f9915a9">
@@ -1903,6 +1904,7 @@
 		<upgrade from="4.0.1" to="4.0.2"/>
 		<upgrade from="4.0.2" to="4.0.3"/>
 		<upgrade from="4.0.3" to="4.0.4"/>
+		<upgrade from="4.0.4" to="4.0.5"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
