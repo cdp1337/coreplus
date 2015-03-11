@@ -1,3 +1,12 @@
+Theme/Base V3 1.1.1
+
+	* [Feature] Added in missing clearfix selector includes. This fixes  /theme tutorial display quirks
+	  when 3 themes are installed.
+	* A few more tweaks to theme management, form selects, form descriptions, and the AGPLv3 footer
+	  styling.
+	* Prettier styles on /theme added some padding to collapsible fieldset icons
+	-- Charlie Powell <charlie@eval.bz>  Wed, 11 Mar 2015 15:38:22 -0400
+
 Theme/Base V3 1.1.0
 
 	* [Bug] Fix the rigid width issue for listing tables that came from bourbon.
