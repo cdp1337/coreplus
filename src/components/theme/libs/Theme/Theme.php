@@ -100,7 +100,14 @@ class Theme{
 		$this->_versionDB = $dat['version'];
 		$this->_enabled = ($dat['enabled']) ? true : false;
 
-		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB' && CDN_TYPE == 'local'){
+		if(
+			DEVELOPMENT_MODE &&
+			defined('AUTO_INSTALL_ASSETS') &&
+			AUTO_INSTALL_ASSETS &&
+			EXEC_MODE == 'WEB' &&
+			CDN_TYPE == 'local' &&
+			$this->getKeyName() == \ConfigHandler::Get('/theme/selected')
+		){
 			\Core\Utilities\Logger\write_debug('Auto-installing assets for theme [' . $this->getName() . ']');
 			$this->_installAssets();
 		}
