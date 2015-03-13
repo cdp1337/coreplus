@@ -536,12 +536,12 @@ class ViewMeta_image extends ViewMeta {
 		if(!$this->content) return array();
 
 		$image   = \Core\Filestore\Factory::File($this->content);
-		$preview = $image->getPreviewURL('200x200');
-		$large   = $image->getPreviewURL('800x800');
+		$apple   = $image->getPreviewURL('800x800');
+		$large   = $image->getPreviewURL('1500x1500');
 
 		$data = [];
-		$data['link-apple-touch-startup-image'] = '<link rel="apple-touch-startup-image" href="' . $large . '" />';
-		$data['og:image'] = '<meta name="og:image" content="' . $preview . '"/>';
+		$data['link-apple-touch-startup-image'] = '<link rel="apple-touch-startup-image" href="' . $apple . '" />';
+		$data['og:image'] = '<meta name="og:image" content="' . $large . '"/>';
 
 		return $data;
 	}
