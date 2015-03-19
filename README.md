@@ -3,18 +3,19 @@
 Core Plus is a PHP-based web framework written to be fast, secure and scalable.  Ultimately, I created this framework
 because there were certain quirks with other frameworks and systems that I was not completely satisfied with.
 
-For more info, checkout the [Core Plus project site](http://corepl.us)
+For more info, check out the [Core Plus project site](http://corepl.us)
 
 
 # Requirements
 
-* PHP 5.4.0 or newer
-* MySQL (currently the only supported database)
+* PHP 5.4.6 or newer (PHP 5.5.0 and higher is recommended)
+* MySQL or MariaDB
 * Mod Rewrite, (or comparable module)
-* php-xml
-* php-mcrypt
-* php-curl
-* Linux or BSD environment
+* php5-xml
+* php5-mcrypt
+* php5-curl
+* Linux or BSD environment (Tested with Ubuntu 14.04, 14.10, 15.04, Debian 7, CentOS 6.6, and CentOS 7.0)
+* memory_limit of 256MB or higher, (installation can be a bit heavy)
 
 
 # Installation
@@ -24,8 +25,31 @@ This is the directory that can be exported to production servers.
 
 To install, simply browse to the /install directory via a web browser and follow the instructions.
 
+*NOTE* If you get a bunch of warnings when first loading the page before the framework is installed,
+feel free to ignore them and proceed straight to the installer at `/install`.
+This is normal to see if `DEVELOPMENT_MODE` is enabled and/or errors are displaying.  It's a side effect of the framework
+trying to execute without being initialized first.
+
+@todo If you have recommendations or a patch on how to get around this, feel free to submit them for review!
+I'm open to code critique :)
+
 
 # Known Quirks
+
+## Shared Hosting Environments
+
+Core is not designed to run inside a shared hosting environment, but it can none-the-less.
+To get the best performance, a dedicated environment with APC and Memcache running is recommended.
+
+## Windows / WAMP Environment
+
+Installation and running inside a WAMP environment is unsupported at present and may not work.  
+If you need this, proceed at your own risk. 
+
+## MariaDB Backend
+
+When running with MariaDB, the php5-mysqlnd driver is required instead of php5-mysql!  To fix this on Ubuntu 15.04 and
+newer, run `sudo apt-get install php5-mysqlnd`.  This fixes the "Headers and client library minor version mismatch" notice.
 
 ## Ubuntu 13.10 Saucy Salamander
 
@@ -38,6 +62,15 @@ and then issue `sudo php5enmod mcrypt` followed by `sudo service apache2 restart
 Occasionally there are no assets for new installations.
 If this happens, switch DEVELOPMENT_MODE to true in your config/configuration.xml and refresh the page.
 
+
+# Support
+
+Core Plus is provided as-is and is not guaranteed not to kill your cat and eat your first born.
+Feel free to submit bug tickets and feature requests on [Github's bug tracker](https://github.com/nicholasryan/CorePlus/issues).
+
+If you need enterprise support for the framework, (and any other custom development requests), 
+[eVAL Agency](https://eval.agency/services/business-communications/core-plus-licensing)
+is the official service partner for Core Plus.
 
 # Licenses
 
