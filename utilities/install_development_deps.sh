@@ -68,7 +68,7 @@ pear config-set auto_discover 1
 pear channel-update pear.php.net
 pear channel-discover pear.pdepend.org
 pear channel-discover pear.phpmd.org
-pear channel-discover pear.phpqatools.org
+#pear channel-discover pear.phpqatools.org
 pear channel-discover pear.phpdoc.org
 pear channel-update pear.phpdoc.org
 
@@ -91,10 +91,20 @@ if [ "$?" == "0" ]; then
 	pear uninstall phpunit/PHPUnit
 fi
 
+pear info pear.phpunit.de/phploc 1>/dev/null
+if [ "$?" == "0" ]; then
+	printline "PHPUnit migrated its distrubution channel to a PHAR as of Dec. 2014.  Uninstalling the legacy version now."
+	pear uninstall pear.phpunit.de/phploc
+fi
+
+pear info pear.phpunit.de/phpcpd 1>/dev/null
+if [ "$?" == "0" ]; then
+	printline "PHPUnit migrated its distrubution channel to a PHAR as of Dec. 2014.  Uninstalling the legacy version now."
+	pear uninstall pear.phpunit.de/phpcpd
+fi
+
 # Install the phpunit libraries.
 for i in \
-	pear.phpunit.de/phploc \
-	pear.phpunit.de/phpcpd \
 	pdepend/PHP_Depend-beta \
 	phpmd/PHP_PMD \
 	pear.php.net/Text_Highlighter-0.7.3 \
@@ -116,6 +126,7 @@ done
 
 # Here, we use a subdirectory so that developers' IDEs can be pointed to /opt/php for the file include to pick up these dependencies.
 # Since editors like a full path instead of specific libraries, (this isn't Java 'yo).
+# @todo Make this logic a function, (or a part of the download utility), so that I don't have to repeat code here.
 printheader "Checking for PHPUnit..."
 safemkdir "/opt/php"
 if [ -e "/opt/php/phpunit.phar" ]; then
@@ -125,15 +136,54 @@ if [ -e "/opt/php/phpunit.phar" ]; then
 		printline "Skipping download, files are the same size."
 	else
 		printline "Downloading replacement version"
-		wget https://phar.phpunit.de/phpunit.phar -O /opt/phpunit.phar
+		wget https://phar.phpunit.de/phpunit.phar -O /opt/php/phpunit.phar
 		chmod a+x /opt/php/phpunit.phar
 	fi
 else
 	printline "Downloading PHPUnit"
-	wget https://phar.phpunit.de/phpunit.phar -O /opt/phpunit.phar
+	wget https://phar.phpunit.de/phpunit.phar -O /opt/php/phpunit.phar
 	chmod a+x /opt/php/phpunit.phar
 fi
 
+# Here, we use a subdirectory so that developers' IDEs can be pointed to /opt/php for the file include to pick up these dependencies.
+# Since editors like a full path instead of specific libraries, (this isn't Java 'yo).
+printheader "Checking for PHPloc..."
+safemkdir "/opt/php"
+if [ -e "/opt/php/phploc.phar" ]; then
+	REMSIZE="$(wget -S --spider https://phar.phpunit.de/phploc.phar 2>&1 | grep 'Content-Length' | sed 's#^[ ]*Content-Length: ##')"
+	LOCSIZE="$(stat -c "%s" /opt/php/phploc.phar)"
+	if [ $REMSIZE -eq $LOCSIZE ]; then
+		printline "Skipping download, files are the same size."
+	else
+		printline "Downloading replacement version"
+		wget https://phar.phpunit.de/phploc.phar -O /opt/php/phploc.phar
+		chmod a+x /opt/php/phploc.phar
+	fi
+else
+	printline "Downloading PHPloc"
+	wget https://phar.phpunit.de/phploc.phar -O /opt/php/phploc.phar
+	chmod a+x /opt/php/phploc.phar
+fi
+
+# Here, we use a subdirectory so that developers' IDEs can be pointed to /opt/php for the file include to pick up these dependencies.
+# Since editors like a full path instead of specific libraries, (this isn't Java 'yo).
+printheader "Checking for phpcpd..."
+safemkdir "/opt/php"
+if [ -e "/opt/php/phpcpd.phar" ]; then
+	REMSIZE="$(wget -S --spider https://phar.phpunit.de/phpcpd.phar 2>&1 | grep 'Content-Length' | sed 's#^[ ]*Content-Length: ##')"
+	LOCSIZE="$(stat -c "%s" /opt/php/phpcpd.phar)"
+	if [ $REMSIZE -eq $LOCSIZE ]; then
+		printline "Skipping download, files are the same size."
+	else
+		printline "Downloading replacement version"
+		wget https://phar.phpunit.de/phpcpd.phar -O /opt/php/phpcpd.phar
+		chmod a+x /opt/php/phpcpd.phar
+	fi
+else
+	printline "Downloading phpcpd"
+	wget https://phar.phpunit.de/phpcpd.phar -O /opt/php/phpcpd.phar
+	chmod a+x /opt/php/phpcpd.phar
+fi
 
 printheader "Installing GEM packages"
 gem install sass
