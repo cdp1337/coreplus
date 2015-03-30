@@ -8,8 +8,11 @@
  *****************************************************************************
  *****************************************************************************/
 
-#outer-wrapper {
+.outer-wrapper {
 	@include outer-container;
+}
+.skin-wide .outer-wrapper {
+	@include outer-container(115em);
 }
 
 .page-column-width-2 {

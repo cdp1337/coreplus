@@ -2,14 +2,14 @@
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.1" name="Base V3">
 	<assets>
-		<file filename="assets/css/styles.css" md5="21a4268d9b1a6fb1ad82d3ca109ea93f"/>
-		<file filename="assets/css/styles.css.map" md5="3fed1d6768412828ec0ceb7487b0254f"/>
-		<file filename="assets/css/styles.min.css" md5="1fd0a6bcec9c835fa16aa6a1ed30d213"/>
+		<file filename="assets/css/styles.css" md5="02d951d9cf5ea9bafa1d392279c7a8d3"/>
+		<file filename="assets/css/styles.css.map" md5="af214b332d377c7d20c35acc24ce0655"/>
+		<file filename="assets/css/styles.min.css" md5="a25f28971d02fac0cef78387e6290a99"/>
 	</assets>
 	<skins>
 		<file filename="basic.tpl" md5="e8ce7da242e5f6a2501348d59c651895" title=""/>
 		<file filename="blank.tpl" md5="63f7271e77cbb7b9360116b6ac0b3863" title=""/>
-		<file filename="wide.tpl" md5="06601cbb8e8e18077d84cfed8c5390aa" title=""/>
+		<file filename="wide.tpl" md5="1906f9a61fb21755ff8c40ae1843905c" title=""/>
 	</skins>
 	<emailskins>
 		<file filename="basic.tpl"/>
@@ -22,7 +22,7 @@
 		<file filename="assets/scss/_debugging.scss" md5="c1198bfbb9dfde4845b95f855ab3d6a1"/>
 		<file filename="assets/scss/_filters_and_pagination.scss" md5="b5eada7f048b7e236099bc6fa2b79ef0"/>
 		<file filename="assets/scss/_form_elements.scss" md5="053ef1b0713e10e49c2eee4c47def953"/>
-		<file filename="assets/scss/_layout.scss" md5="d657d7d5745797e8b8ebe1ea6bcd04fd"/>
+		<file filename="assets/scss/_layout.scss" md5="a68495db61287838291f4fea2ed9d152"/>
 		<file filename="assets/scss/_listing_tables.scss" md5="445bf87b5085fe82f48b04c6dd765d67"/>
 		<file filename="assets/scss/_messages.scss" md5="002d7e2910f33c36ff9bcccb9a49e2ed"/>
 		<file filename="assets/scss/_print.scss" md5="f3dd7a5f96e67e8d2156b5887ea785d4"/>

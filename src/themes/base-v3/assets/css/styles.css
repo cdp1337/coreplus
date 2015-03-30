@@ -1232,19 +1232,32 @@ p[class^="message-"] .message-background-icon i {
  *****************************************************************************
  *****************************************************************************/
 /* line 11, ../scss/_layout.scss */
-#outer-wrapper {
+.outer-wrapper {
   max-width: 68em;
   margin-left: auto;
   margin-right: auto;
 }
 /* line 15, ../scss/vendor/bourbon/addons/_clearfix.scss */
-#outer-wrapper:after {
+.outer-wrapper:after {
   content: "";
   display: table;
   clear: both;
 }
 
-/* line 16, ../scss/_layout.scss */
+/* line 14, ../scss/_layout.scss */
+.skin-wide .outer-wrapper {
+  max-width: 115em;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* line 15, ../scss/vendor/bourbon/addons/_clearfix.scss */
+.skin-wide .outer-wrapper:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* line 19, ../scss/_layout.scss */
 .page-column-width-2 .page-column {
   float: left;
   display: block;
@@ -1255,7 +1268,7 @@ p[class^="message-"] .message-background-icon i {
 .page-column-width-2 .page-column:last-child {
   margin-right: 0;
 }
-/* line 21, ../scss/_layout.scss */
+/* line 24, ../scss/_layout.scss */
 .page-column-width-2 .page-content {
   float: left;
   display: block;
@@ -1267,7 +1280,7 @@ p[class^="message-"] .message-background-icon i {
   margin-right: 0;
 }
 
-/* line 27, ../scss/_layout.scss */
+/* line 30, ../scss/_layout.scss */
 .page-column-width-1 .page-column {
   float: left;
   display: block;
@@ -1278,7 +1291,7 @@ p[class^="message-"] .message-background-icon i {
 .page-column-width-1 .page-column:last-child {
   margin-right: 0;
 }
-/* line 31, ../scss/_layout.scss */
+/* line 34, ../scss/_layout.scss */
 .page-column-width-1 .page-content {
   float: left;
   display: block;
@@ -1290,12 +1303,12 @@ p[class^="message-"] .message-background-icon i {
   margin-right: 0;
 }
 
-/* line 37, ../scss/_layout.scss */
+/* line 40, ../scss/_layout.scss */
 .page-column-width-0 .page-column {
   display: none;
 }
 
-/* line 47, ../scss/_layout.scss */
+/* line 50, ../scss/_layout.scss */
 .page-footer {
   clear: both;
 }

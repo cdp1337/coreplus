@@ -17,7 +17,7 @@
 		<title>{$seotitle}</title>
 	</head>
 
-	<body class="base-v3-skin skin-basic {$body_classes}">
+	<body class="base-v3-skin skin-wide {$body_classes}">
 		{widget name="AdminMenu"}
 
 		{widgetarea name="Left Column" assign="left_col"}
@@ -31,7 +31,7 @@
 			{assign var="col_width" value="0"}
 		{/if}
 
-		<div id="outer-wrapper">
+		<div class="outer-wrapper" id="outer-wrapper">
 			<header>
 				<a href="{$smarty.const.ROOT_URL}" title="{$smarty.const.SITENAME|escape}"><img src="{asset src='images/logo.png'}" alt="{$smarty.const.SITENAME|escape}"/></a>
 			</header>
@@ -40,7 +40,7 @@
 				{widgetarea name="Primary Navigation"}
 			</nav>
 
-			<div id="inner-wrapper" class="page-column-width-{$col_width}">
+			<div id="inner-wrapper" class="inner-wrapper page-column-width-{$col_width}">
 
 				<nav id="breadcrumbs">
 					{if isset($breadcrumbs)}
