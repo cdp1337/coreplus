@@ -223,6 +223,56 @@ class DateTime extends \DateTime{
 		return $this->format('w');
 	}
 
+	/**
+	 * Skip ahead to the "next" month
+	 *
+	 * This is a skip to increase the day to the same day, (if possible), the next month of the gregorian calendar.
+	 *
+	 * If the day does not exist, the closest possible day will be selected. (such as Jan 30th -> Feb 28th)
+	 *
+	 * @param $jump int Amount of months to jump, (default: 1)
+	 */
+	public function nextMonth($jump = 1){
+		$y = $this->format('Y', $this->getTimezone());
+		$m = $this->format('n', $this->getTimezone());
+		$d = $this->format('d', $this->getTimezone());
+
+		$m += $jump;
+		while($m > 12){
+			$m -= 12;
+			++$y;
+		}
+
+		$this->setDate($y, $m, 1);
+		$d = min($this->format('t', $this->getTimezone()), $d);
+		$this->setDate($y, $m, $d);
+	}
+
+	/**
+	 * Skip behind to the "previous" month
+	 *
+	 * This is a skip to increase the day to the same day, (if possible), the previous month of the gregorian calendar.
+	 *
+	 * If the day does not exist, the closest possible day will be selected. (such as Mar 30th -> Feb 28th)
+	 *
+	 * @param $jump int Amount of months to jump, (default: 1)
+	 */
+	public function prevMonth($jump = 1){
+		$y = $this->format('Y', $this->getTimezone());
+		$m = $this->format('n', $this->getTimezone());
+		$d = $this->format('d', $this->getTimezone());
+
+		$m -= $jump;
+		while($m <= 12){
+			$m += 12;
+			--$y;
+		}
+
+		$this->setDate($y, $m, 1);
+		$d = min($this->format('t', $this->getTimezone()), $d);
+		$this->setDate($y, $m, $d);
+	}
+
 
 	/**
 	 * Shortcut function for getting the time now.
