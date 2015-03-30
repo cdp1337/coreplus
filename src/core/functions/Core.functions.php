@@ -393,7 +393,14 @@ function redirect($page, $code = 302){
 	//This is NOT designed to refresh the current page.	If the pageto redirect to IS
 	// this current page, simply do nothing.
 
+	// If the index page is requested, just return there regardless if anything exists there or not.
+	// This is to get around an infinite redirect loop bug when there is no page set as the index page,
+	// despite many systems redirecting back to "/" when there is an unexpected error or behaviour.
+	$hp = ($page == '/');
+
 	$page = \Core::ResolveLink($page);
+
+	if(!$page && $hp) $page = ROOT_URL;
 
 	// Do nothing if the page is the current page.... that is Reload()'s job.
 	if ($page == CUR_CALL) return;
