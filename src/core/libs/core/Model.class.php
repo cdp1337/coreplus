@@ -2296,7 +2296,7 @@ class Model implements ArrayAccess {
 	}
 
 	/**
-	 * Factory shortcut function to do a search for the specific records.
+	 * Shortcut method to find instances of this Model that match a given where clause.
 	 *
 	 * @static
 	 * @param array|string    $where Where clause
@@ -2326,6 +2326,46 @@ class Model implements ArrayAccess {
 		$fac->order($order);
 		//var_dump($fac);
 		return $fac->get();
+	}
+
+	/**
+	 * Get all records of this Model type as a set of options that can be used with a select box.
+	 *
+	 * This can be extended in the specific Model if additional functionality is required;
+	 * this is simply a default scaffolding that may not work on all instances.
+	 *
+	 * @static
+	 *
+	 * @return array
+	 */
+	public static function GetAllAsOptions() {
+
+		$classname = get_called_class();
+		$ref = new ReflectionClass($classname);
+
+		// Execute Find using default parameters.
+		// (That method will cache results by default).
+		$results = $ref->getMethod('Find')->invoke(null);
+		$idx = $ref->getMethod('GetIndexes')->invoke(null);
+
+		if(!isset($idx['primary'])){
+			return ['' => 'Unable to automatically get ' . $classname . ' as options because no primary key defined!'];
+		}
+
+		if(sizeof($idx['primary']) > 1){
+			return ['' => 'Unable to automatically get ' . $classname . ' as options because primary key defined as multiple columns!'];
+		}
+
+		$id = $idx['primary'][0];
+
+		$options = [];
+
+		foreach($results as $res){
+			/** @var Model $res */
+			$options[ $res->get($id) ] = $res->getLabel();
+		}
+
+		return $options;
 	}
 
 	/**
