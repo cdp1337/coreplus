@@ -1,7 +1,7 @@
 <?php
 /**
  * File for class Packager definition in the Core Plus project
- * 
+ *
  * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20141125.2112
@@ -53,7 +53,7 @@ use Core\Filestore\File;
  * $b = $a;
  * </code>
  *
- * 
+ *
  * @package Core
  * @author Charlie Powell <charlie@eval.bz>
  *
@@ -110,7 +110,7 @@ EOD;
 				break;
 			case 'core':
 				$this->_type = $type;
-			$this->_setupCore();
+				$this->_setupCore();
 				break;
 			default:
 				throw new \Exception('Invalid type requested, please set only "theme", "component", or "core".  Provided type: [' . $type . ']');
@@ -355,9 +355,9 @@ EOD;
 
 		return [
 			'label'   => $label,
-		    'date'    => $thisdate,
-		    'version' => $versioncheck,
-		    'type'    => $type,
+			'date'    => $thisdate,
+			'version' => $versioncheck,
+			'type'    => $type,
 		];
 	}
 
@@ -390,15 +390,15 @@ EOD;
 
 			// And then, scan this file for code, ie: classes, controllers, etc.
 			$fname = substr($file->getFilename(), $basestrlen);
-/*
-			// Skip the component.xml file itself
-			if($fname == 'component.xml'){
-				continue;
-			}
-			// Applies to themes too
-			if($fname == 'theme.xml'){
-				continue;
-			}*/
+			/*
+						// Skip the component.xml file itself
+						if($fname == 'component.xml'){
+							continue;
+						}
+						// Applies to themes too
+						if($fname == 'theme.xml'){
+							continue;
+						}*/
 
 			if($viewdir && $file->inDirectory($viewdir)){
 				// It's a template! (view)
@@ -448,13 +448,13 @@ EOD;
 					}
 
 					// Well... get the classes!
-					preg_match_all('/^\s*(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller_2_1/im', $fconts, $ret);
+					preg_match_all('/^\s*(abstract |final ){0,1}class [ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller_2_1/im', $fconts, $ret);
 					foreach($ret[2] as $foundclass){
 						$filedat['controllers'][] = $namespace . $foundclass;
 					}
 
 					// Add any class found in this file. (skipping the ones I already found)
-					preg_match_all('/^\s*(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
+					preg_match_all('/^\s*(abstract |final ){0,1}class [ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
 					foreach($ret[2] as $foundclass){
 						if(in_array($foundclass, $filedat['controllers'])) continue;
 						$filedat['classes'][] = $namespace . $foundclass;
