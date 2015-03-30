@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 26 Feb 2015 19:37:41 -0500
+ * @compiled Mon, 30 Mar 2015 15:51:20 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -2887,6 +2887,24 @@ $fac->where($where);
 $fac->limit($limit);
 $fac->order($order);
 return $fac->get();
+}
+public static function GetAllAsOptions() {
+$classname = get_called_class();
+$ref = new ReflectionClass($classname);
+$results = $ref->getMethod('Find')->invoke(null);
+$idx = $ref->getMethod('GetIndexes')->invoke(null);
+if(!isset($idx['primary'])){
+return ['' => 'Unable to automatically get ' . $classname . ' as options because no primary key defined!'];
+}
+if(sizeof($idx['primary']) > 1){
+return ['' => 'Unable to automatically get ' . $classname . ' as options because primary key defined as multiple columns!'];
+}
+$id = $idx['primary'][0];
+$options = [];
+foreach($results as $res){
+$options[ $res->get($id) ] = $res->getLabel();
+}
+return $options;
 }
 public static function FindRaw($where = [], $limit = null, $order = null) {
 $fac = new ModelFactory(get_called_class());
@@ -9047,7 +9065,9 @@ function redirect($page, $code = 302){
 if(!($code == 301 || $code == 302)){
 throw new \Exception('Invalid response code requested for redirect, [' . $code . '].  Please ensure it is either a 301 (permanent), or 302 (temporary) redirect!');
 }
+$hp = ($page == '/');
 $page = \Core::ResolveLink($page);
+if(!$page && $hp) $page = ROOT_URL;
 if ($page == CUR_CALL) return;
 switch($code){
 case 301:
@@ -13257,11 +13277,11 @@ class ViewMeta_image extends ViewMeta {
 public function fetch(){
 if(!$this->content) return array();
 $image   = \Core\Filestore\Factory::File($this->content);
-$preview = $image->getPreviewURL('200x200');
-$large   = $image->getPreviewURL('800x800');
+$apple   = $image->getPreviewURL('800x800');
+$large   = $image->getPreviewURL('1500x1500');
 $data = [];
-$data['link-apple-touch-startup-image'] = '<link rel="apple-touch-startup-image" href="' . $large . '" />';
-$data['og:image'] = '<meta name="og:image" content="' . $preview . '"/>';
+$data['link-apple-touch-startup-image'] = '<link rel="apple-touch-startup-image" href="' . $apple . '" />';
+$data['og:image'] = '<meta name="og:image" content="' . $large . '"/>';
 return $data;
 }
 }
