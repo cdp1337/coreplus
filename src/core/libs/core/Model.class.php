@@ -1954,7 +1954,14 @@ class Model implements ArrayAccess {
 					break;
 
 				case Model::ATT_TYPE_ID:
-					$dat->setID($k, $this->_data[$k]);
+					$nv = $this->_data[$k];
+					if($this->_data[$k]){
+						// An ID is already set on this key, even though it's an auto-increment ID.
+						// Allow this as you may be syncing a model from another system and want their IDs to match up.
+						// NOTE, this can be a dangerous operation.
+						$dat->insert($k, $nv);
+					}
+					$dat->setID($k, $nv);
 					$idcol = $k; // Remember this for after the save.
 					break;
 
