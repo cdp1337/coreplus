@@ -1,3 +1,10 @@
+Theme/Base V3 1.2.0
+
+	* [Bug] Fix the wide template on base-v3, (it wasn't wide...)
+	* [Feature] Add a custom.css for webmasters to customize the styling of their site without needing
+	  full development environments.
+	-- Charlie Powell <charlie@evalagency.com>  Fri, 03 Apr 2015 17:24:49 -0400
+
 Theme/Base V3 1.1.1
 
 	* [Feature] Added in missing clearfix selector includes. This fixes  /theme tutorial display quirks
