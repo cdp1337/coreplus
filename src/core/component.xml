@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.5" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.6" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -71,7 +71,7 @@
 	</includes>
 	<files>
 		<file filename="config/configuration.example.xml" md5="eac5d52f582025aca84e54796592b7b5"/>
-		<file filename="core/CHANGELOG" md5="d34cf151b794e0cb1acc61eed87cfc2a"/>
+		<file filename="core/CHANGELOG" md5="05ef4e9206e23aad567e7a8977bf33ba"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="4413ef9bdb639f2c0d2064c5631491cc"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
@@ -195,7 +195,7 @@
 		<file filename="core/forms/FormUserInput.php" md5="ef1fbd4fff17d8ea275b723746643078">
 			<class name="FormUserInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="d5993ce23a4e5f226371bd700346c66c"/>
+		<file filename="core/functions/Core.functions.php" md5="eb1073fdec6a907c7e98a793b09ec3c2"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="d30419047aee346d119cf990054ab851">
 			<class name="RewriteMapHelper"/>
 		</file>
@@ -441,7 +441,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="7bae1b2886a742915df7086624d5d819">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="ddb8bae7c0b797f17a279a49089ebadb">
+		<file filename="core/libs/core/Model.class.php" md5="4bde628f7111c20dc8cfd05ac7cd1105">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -483,7 +483,7 @@
 			<class name="ViewControls"/>
 			<class name="ViewControl"/>
 		</file>
-		<file filename="core/libs/core/ViewMeta.class.php" md5="ac5061c63bf497217838d35b6d0bc604">
+		<file filename="core/libs/core/ViewMeta.class.php" md5="76dadc63a8fd95c612ac5bd611ee84bf">
 			<class name="ViewMetas"/>
 			<class name="ViewMeta"/>
 			<class name="ViewMeta_description"/>
@@ -581,7 +581,7 @@
 		<file filename="core/libs/core/datamodel/tests/SQL_Parser_DatasetTest.php" md5="5b9526f241141d3663abd8419225296a">
 			<class name="SQL_Parser_DatasetTest"/>
 		</file>
-		<file filename="core/libs/core/date/DateTime.php" md5="c73c5385fde1217c4334c9b35871c952">
+		<file filename="core/libs/core/date/DateTime.php" md5="d0e8ddca693a8acb49954c765defe03a">
 			<class name="Core\Date\DateTime"/>
 		</file>
 		<file filename="core/libs/core/date/Timezone.php" md5="af88c695b1f24eeb9f4dcdd6df31b242">
@@ -736,7 +736,7 @@
 		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="5eae590dfc2ca7f71f6ef04c9ce71b5b">
 			<class name="Core\User\AuthDrivers\gpg"/>
 		</file>
-		<file filename="core/libs/core/utilities/Packager.php" md5="7c7fdf285cd40e4a9c9ab61b08481821">
+		<file filename="core/libs/core/utilities/Packager.php" md5="6649ff30f55de14b72e858be28459fbe">
 			<class name="Core\Utilities\Packager"/>
 		</file>
 		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="cbe5d3040cf77482bfd6f82237a29652">
@@ -1905,6 +1905,7 @@
 		<upgrade from="4.0.2" to="4.0.3"/>
 		<upgrade from="4.0.3" to="4.0.4"/>
 		<upgrade from="4.0.4" to="4.0.5"/>
+		<upgrade from="4.0.5" to="4.0.6"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

@@ -1,3 +1,14 @@
+Core Plus 4.0.6
+
+	* [Bug] Add extra spacing to some regex checks when searching through code for class names.
+	* [Bug] Fix Additional check for Core::Redirect('/') when there is no registered home page.
+	* [Bug] Facebook recommends larger images for their og:image tag, increase the size to 1500x1500.
+	  (#1027)
+	* [Feature] Allow auto-increment IDs to be set on new Models.
+	* [Feature] New static method, Model::GetAllAsOptions.
+	* [Feature] New shortcut methods, DateTime->nextMonth() and DateTime->prevMonth().
+	-- Charlie Powell <charlie@evalagency.com>  Fri, 03 Apr 2015 17:22:12 -0400
+
 Core Plus 4.0.5
 
 	* [Bug] GPG key lookup was returning the first 8 characters in the pub:keystring instead of the last 8
