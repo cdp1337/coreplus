@@ -4,6 +4,7 @@
 		<!-- Force latest IE rendering engine or ChromeFrame if installed -->
 		<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
 		{css src="css/styles.css"}{/css}
+		{css src="css/custom.css"}{/css}
 
 		<!--[if lt IE 9]>
 			<script type="text/javascript" src="{asset src='js/html5shiv.js'}"></script>
@@ -31,7 +32,7 @@
 			{assign var="col_width" value="0"}
 		{/if}
 
-		<div id="outer-wrapper">
+		<div class="outer-wrapper" id="outer-wrapper">
 			<header>
 				<a href="{$smarty.const.ROOT_URL}" title="{$smarty.const.SITENAME|escape}"><img src="{asset src='images/logo.png'}" alt="{$smarty.const.SITENAME|escape}"/></a>
 			</header>

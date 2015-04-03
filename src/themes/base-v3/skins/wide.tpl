@@ -4,6 +4,7 @@
 		<!-- Force latest IE rendering engine or ChromeFrame if installed -->
 		<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
 		{css src="css/styles.css"}{/css}
+		{css src="css/custom.css"}{/css}
 
 		<!--[if lt IE 9]>
 			<script type="text/javascript" src="{asset src='js/html5shiv.js'}"></script>

@@ -2,14 +2,15 @@
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.1" name="Base V3">
 	<assets>
+		<file filename="assets/css/custom.css" md5="a48d02e7c72d9a0ec1adcf942f910b16"/>
 		<file filename="assets/css/styles.css" md5="02d951d9cf5ea9bafa1d392279c7a8d3"/>
 		<file filename="assets/css/styles.css.map" md5="af214b332d377c7d20c35acc24ce0655"/>
 		<file filename="assets/css/styles.min.css" md5="a25f28971d02fac0cef78387e6290a99"/>
 	</assets>
 	<skins>
-		<file filename="basic.tpl" md5="e8ce7da242e5f6a2501348d59c651895" title=""/>
+		<file filename="basic.tpl" md5="fc54e131676f32ef0fbdce13951c961f" title=""/>
 		<file filename="blank.tpl" md5="63f7271e77cbb7b9360116b6ac0b3863" title=""/>
-		<file filename="wide.tpl" md5="1906f9a61fb21755ff8c40ae1843905c" title=""/>
+		<file filename="wide.tpl" md5="7df81db8c88c763bb16365b7e86155a0" title=""/>
 	</skins>
 	<emailskins>
 		<file filename="basic.tpl"/>
