@@ -1355,6 +1355,7 @@ class AdminController extends Controller_2_1 {
 
 			switch ($c->get('type')) {
 				case 'string':
+				case 'text':
 				case 'enum':
 				case 'boolean':
 				case 'int':
@@ -1364,7 +1365,7 @@ class AdminController extends Controller_2_1 {
 					$val = implode('|', $e->get('value'));
 					break;
 				default:
-					throw new Exception('Supported configuration type for ' . $c->get('key') . ', [' . $c->get('type') . ']');
+					throw new Exception('Unsupported configuration type for ' . $c->get('key') . ', [' . $c->get('type') . ']');
 					break;
 			}
 
