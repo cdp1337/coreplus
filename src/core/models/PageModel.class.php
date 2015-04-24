@@ -2131,7 +2131,7 @@ class PageModel extends Model {
 				break;
 			}
 			elseif(in_array($try, $tries)) {
-				$url = $tries[array_search($try, $tries)] . substr($url, strlen($try));
+				$url = array_search($try, $tries) . substr($url, strlen($try));
 				break;
 			}
 			$try = substr($try, 0, strrpos($try, '/'));
