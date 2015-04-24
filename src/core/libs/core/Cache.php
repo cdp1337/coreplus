@@ -132,6 +132,13 @@ class Cache {
 				}
 				$obj = new CacheAPC($key, null, $expires);
 				break;
+			case 'memcache':
+			case 'memcached':
+				if(!class_exists('Core\Cache\Memcache')){
+					require_once(__CACHE_PDIR . 'Memcache.php'); ##SKIPCOMPILER
+				}
+				$obj = new Cache\Memcache($key, $expires);
+				break;
 			case 'file':
 			default:
 				if(!class_exists('Core\Cache\File')){

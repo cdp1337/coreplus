@@ -301,9 +301,10 @@ required - SSL is always required for all pages.
 
 	<return name="cache_type" type="enum" formtype="select">
 		<value>file</value>
-		<description>Leave this as file...</description>
-		<option>apc</option>
+		<description>Either "file" for a cache on the filesystem or "memcache" if Memcached is available for a cache in system memory.</description>
+		<!--<option>apc</option>-->
 		<option>file</option>
+		<option>memcache</option>
 	</return>
 
 	<define name="DB_PREFIX" type="string" formtype="text">
