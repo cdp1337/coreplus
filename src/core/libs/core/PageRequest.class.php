@@ -907,7 +907,7 @@ class PageRequest {
 
 			$pagefac = new ModelFactory('PageModel');
 			$pagefac->where('rewriteurl = ' . $uri);
-			$pagefac->where('fuzzy = 0');
+			//$pagefac->where('fuzzy = 0');
 			$pagefac->limit(1);
 			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
 				$pagefac->whereGroup('OR', array('site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID()));
