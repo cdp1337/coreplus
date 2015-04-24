@@ -397,4 +397,65 @@ class FileLocalTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertNotEmpty($contents);
 	}
+
+	public function testImageResizing(){
+		// Start with this 1024x768 image.
+		$file = new \Core\Filestore\Backends\FileLocal('core/tests/ivak_TV_Test_Screen.png');
+
+		// Basic resize will scale large images down but will not scale small images up.
+		$test = $file->getPreviewFile('32x32');
+		$this->assertTrue($test->isImage());
+		$dimensions = getimagesize($test->getFilename());
+		$this->assertEquals(32, $dimensions[0]);
+		$this->assertEquals(24, $dimensions[1]);
+
+		// Basic resize will scale down images if one of the dimensions is greater than the requested.
+		$test = $file->getPreviewFile('800x800');
+		$this->assertTrue($test->isImage());
+		$dimensions = getimagesize($test->getFilename());
+		$this->assertEquals(800, $dimensions[0]);
+		$this->assertEquals(600, $dimensions[1]);
+
+		// Basic resize will NOT scale up an image.
+		$test = $file->getPreviewFile('2048x2048');
+		$this->assertTrue($test->isImage());
+		$dimensions = getimagesize($test->getFilename());
+		$this->assertEquals(1024, $dimensions[0]);
+		$this->assertEquals(768, $dimensions[1]);
+
+		// Force-Constraint forces the constraint regardless of original image source.
+		$test = $file->getPreviewFile('32x32!');
+		$this->assertTrue($test->isImage());
+		$dimensions = getimagesize($test->getFilename());
+		$this->assertEquals(32, $dimensions[0]);
+		$this->assertEquals(32, $dimensions[1]);
+
+		// Force-Constraint forces the constraint regardless of original image source.
+		$test = $file->getPreviewFile('1040x1040!');
+		$this->assertTrue($test->isImage());
+		$dimensions = getimagesize($test->getFilename());
+		$this->assertEquals(1040, $dimensions[0]);
+		$this->assertEquals(1040, $dimensions[1]);
+
+		// Fill area will scale up to match the smallest dimension.
+		$test = $file->getPreviewFile('800x800^');
+		$this->assertTrue($test->isImage());
+		$dimensions = getimagesize($test->getFilename());
+		$this->assertEquals(1067, $dimensions[0]);
+		$this->assertEquals(800, $dimensions[1]);
+
+		// Fill area will scale up to match the smallest dimension.
+		$test = $file->getPreviewFile('1200x1200^');
+		$this->assertTrue($test->isImage());
+		$dimensions = getimagesize($test->getFilename());
+		$this->assertEquals(1600, $dimensions[0]);
+		$this->assertEquals(1200, $dimensions[1]);
+
+		// Fill area will scale up to match the smallest dimension.
+		$test = $file->getPreviewFile('32x32^');
+		$this->assertTrue($test->isImage());
+		$dimensions = getimagesize($test->getFilename());
+		$this->assertEquals(42, $dimensions[0]);
+		$this->assertEquals(32, $dimensions[1]);
+	}
 }

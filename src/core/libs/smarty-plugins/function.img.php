@@ -61,10 +61,10 @@
  *    * Provide both width and height in pixels, along with special instructions
  *    * Structure is "widthxheight" with no spaces between the "x" and the two integers.
  *    * Special modes available are:
- *    * Carat "`^`" at the beginning of the string fits the smallest dimension instead of the largest.
- *    * Exclamation mark "`!`" at the beginning forces size regardless of aspect ratio.
- *    * Greater than "`>`" at the beginning will only increase image sizes.
- *    * Less than "`<`" at the beginning will only decrease image sizes.
+ *    * Carat "`^`" at the end of the string fits the smallest dimension instead of the largest.
+ *    * Exclamation mark "`!`" at the end forces size regardless of aspect ratio.
+ *    * Greater than "`>`" at the end will only increase image sizes.
+ *    * Less than "`<`" at the end will only decrease image sizes.
  *  * placeholder
  *    * string
  *    * placeholder image if the requested image is blank or not found.  Useful for optional fields that should still display something.
