@@ -121,6 +121,7 @@ class FormDateTimeInput extends FormTextInput {
 			'showon' => 'showOn',
 			'showoptions' => 'showOptions',
 			'showothermonths' => 'showOtherMonths',
+			'showminute' => 'showMinute',
 			'showweek' => 'showWeek',
 			'stepmonths' => 'stepMonths',
 			'weekheader' => 'weekHeader',
