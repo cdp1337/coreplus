@@ -602,6 +602,22 @@ class Model implements ArrayAccess {
 					break;
 			}
 
+			// Are there deletes requested?
+			// Deletes MUST happen before creates because if there is a record that overrides an existing record,
+			// but that existing record is set to be deleted, the delete operation must be before the create operation.
+			//
+			// This happens on the page updates with meta fields.
+			// The meta fields are completely re-created, and saved at one time only.
+			// Since the incoming data has the same PK as the existing data, (that's already marked as deteled),
+			// the operation fails if these orders are reversed.
+			if($deletes){
+				foreach($deletes as $model){
+					$model->delete();
+				}
+
+				unset($l['purged']);
+			}
+
 			// Are there saves requested?
 			if($models){
 				foreach($models as $model){
@@ -610,15 +626,6 @@ class Model implements ArrayAccess {
 					$model->setFromArray($this->_getLinkWhereArray($k));
 					$model->save();
 				}
-			}
-
-			// Are there deletes requested?
-			if($deletes){
-				foreach($deletes as $model){
-					$model->delete();
-				}
-
-				unset($l['purged']);
 			}
 		}
 
@@ -2171,7 +2178,7 @@ class Model implements ArrayAccess {
 
 
 		// Pages have a special extra here.  If it's enterprise/multisite mode, enforce that relationship.
-		if($linkname == 'Page' && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+		if($linkname === 'Page' && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
 			// See if there's a site column on this schema.  If there is, enforce that binding too!
 			$schema = self::GetSchema();
 			if(isset($schema['site']) && $schema['site']['type'] == Model::ATT_TYPE_SITE){
