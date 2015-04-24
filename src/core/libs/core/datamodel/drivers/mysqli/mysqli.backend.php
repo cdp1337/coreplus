@@ -327,7 +327,7 @@ class mysqli_backend implements BackendInterface {
 					continue;
 				}
 
-				if(isset($schema->definitions[$column->aliasof])){
+				if(isset($old_schema->definitions[$column->aliasof])){
 					// The new alias already exists in the new schema.
 					// This could happen because the developer already ran this upgrade.
 					continue;
