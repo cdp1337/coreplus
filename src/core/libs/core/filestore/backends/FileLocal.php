@@ -1087,7 +1087,7 @@ class FileLocal implements Filestore\File {
 							$nW = $height * $sW / $sH;
 						}
 					}
-					elseif($ratiowidth < $ratioheight){
+					elseif($ratiowidth > $ratioheight){
 						// The image needs to be increased in size, this logic is slightly different.
 						$nW = $width;
 						$nH = round($width * $sH / $sW);
