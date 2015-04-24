@@ -18,9 +18,8 @@
 			var node   = document.getElementById(nodeid),
 				user   = Core.Strings.rot13( node.dataset.user ),
 				domain = node.dataset.domain,
-				tld    = node.dataset.tld;
-
-			var address = user + '@' + domain + '.' + tld;
+				tld    = node.dataset.tld,
+				address = user + '@' + domain + '.' + tld;
 
 			node.innerHTML = address;
 			node.setAttribute('href', 'mailto:' + address);

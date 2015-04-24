@@ -7,7 +7,7 @@
 
 //(function(){
 
-var _getParameterObject = null, _getParameters;
+var _getParameterObject = null, _getParameters, types, i;
 
 _getParameters = function(){
 	if(_getParameterObject !== null) return _getParameterObject;
@@ -165,15 +165,14 @@ if(typeof jQuery != 'undefined'){
 	/**
 	 * Just a simple script to spruce up the message-* blocks with a bit of flair.
 	 */
-	var types = [
-			{ msgclass: 'error',    icon: 'exclamation-circle' },
-			{ msgclass: 'info',     icon: 'info-circle' },
-			{ msgclass: 'note',     icon: 'asterisk' },
-			{ msgclass: 'success',  icon: 'check-circle' },
-			{ msgclass: 'tutorial', icon: 'question-circle' },
-			{ msgclass: 'warning',  icon: 'exclamation-triangle' }
-		],
-		i;
+	types = [
+		{ msgclass: 'error',    icon: 'exclamation-circle' },
+		{ msgclass: 'info',     icon: 'info-circle' },
+		{ msgclass: 'note',     icon: 'asterisk' },
+		{ msgclass: 'success',  icon: 'check-circle' },
+		{ msgclass: 'tutorial', icon: 'question-circle' },
+		{ msgclass: 'warning',  icon: 'exclamation-triangle' }
+	];
 
 	for(i in types){
 		jQuery('.message-' + types[i].msgclass).each(function(){
