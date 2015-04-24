@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 30 Mar 2015 15:51:20 -0400
+ * @compiled Thu, 23 Apr 2015 23:17:38 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1955,17 +1955,17 @@ $models = null;
 $deletes = null;
 break;
 }
-if($models){
-foreach($models as $model){
-$model->setFromArray($this->_getLinkWhereArray($k));
-$model->save();
-}
-}
 if($deletes){
 foreach($deletes as $model){
 $model->delete();
 }
 unset($l['purged']);
+}
+if($models){
+foreach($models as $model){
+$model->setFromArray($this->_getLinkWhereArray($k));
+$model->save();
+}
 }
 }
 $this->_exists     = true;
@@ -2668,7 +2668,11 @@ $this->_data[$k] = $nv;
 }
 break;
 case Model::ATT_TYPE_ID:
-$dat->setID($k, $this->_data[$k]);
+$nv = $this->_data[$k];
+if($this->_data[$k]){
+$dat->insert($k, $nv);
+}
+$dat->setID($k, $nv);
 $idcol = $k; // Remember this for after the save.
 break;
 case Model::ATT_TYPE_UUID:
@@ -2800,7 +2804,7 @@ else {
 $k          = $this->_linked[$idx]['on'];
 $wheres[$k] = $this->get($k);
 }
-if($linkname == 'Page' && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if($linkname === 'Page' && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
 $schema = self::GetSchema();
 if(isset($schema['site']) && $schema['site']['type'] == Model::ATT_TYPE_SITE){
 $wheres['site'] = $this->get('site');
@@ -4802,7 +4806,7 @@ $url = $tries[$try] . substr($url, strlen($try));
 break;
 }
 elseif(in_array($try, $tries)) {
-$url = $tries[array_search($try, $tries)] . substr($url, strlen($try));
+$url = array_search($try, $tries) . substr($url, strlen($try));
 break;
 }
 $try = substr($try, 0, strrpos($try, '/'));
@@ -10917,7 +10921,7 @@ $nH = $height;
 $nW = $height * $sW / $sH;
 }
 }
-elseif($ratiowidth < $ratioheight){
+elseif($ratiowidth > $ratioheight){
 $nW = $width;
 $nH = round($width * $sH / $sW);
 }
@@ -12739,6 +12743,13 @@ if(!class_exists('CacheAPC')){
 require_once(__CACHE_PDIR . 'backends/cacheapc.class.php'); ##SKIPCOMPILER
 }
 $obj = new CacheAPC($key, null, $expires);
+break;
+case 'memcache':
+case 'memcached':
+if(!class_exists('Core\Cache\Memcache')){
+require_once(__CACHE_PDIR . 'Memcache.php'); ##SKIPCOMPILER
+}
+$obj = new Cache\Memcache($key, $expires);
 break;
 case 'file':
 default:
@@ -17904,6 +17915,9 @@ continue;
 elseif ($v['type'] == Model::ATT_TYPE_DELETED) {
 continue;
 }
+elseif ($v['type'] == Model::ATT_TYPE_ALIAS) {
+continue;
+}
 elseif ($v['type'] == Model::ATT_TYPE_ENUM) {
 $el   = FormElement::Factory('select');
 $opts = $v['options'];
@@ -18539,7 +18553,6 @@ if ($this->_pagemodel === null) {
 $uri = $this->uriresolved;
 $pagefac = new ModelFactory('PageModel');
 $pagefac->where('rewriteurl = ' . $uri);
-$pagefac->where('fuzzy = 0');
 $pagefac->limit(1);
 if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
 $pagefac->whereGroup('OR', array('site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID()));

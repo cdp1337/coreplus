@@ -70,14 +70,14 @@
 		-->
 	</includes>
 	<files>
-		<file filename="config/configuration.example.xml" md5="eac5d52f582025aca84e54796592b7b5"/>
+		<file filename="config/configuration.example.xml" md5="a756e78cb48c89692edd57f2a3cdce28"/>
 		<file filename="core/CHANGELOG" md5="05ef4e9206e23aad567e7a8977bf33ba"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="4413ef9bdb639f2c0d2064c5631491cc"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="4416faccfd246a2049882672b8a6d7cb"/>
 		<file filename="core/bootstrap_preincludes.php" md5="703e467a570cb33401af9a865d35a4ff"/>
-		<file filename="core/controllers/AdminController.php" md5="61f8b2d5e2b84fd42fdba87fdd10cd31">
+		<file filename="core/controllers/AdminController.php" md5="54bdbd4f95eb81b1083abf06ccc7f199">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DatastoreAuthController.php" md5="4dbc0eddd9a3538357bf59b3b83d1866">
@@ -134,7 +134,7 @@
 		<file filename="core/forms/FormDateInput.php" md5="0cd800d750b14d132eaeedd9a4c9eb06">
 			<class name="FormDateInput"/>
 		</file>
-		<file filename="core/forms/FormDateTimeInput.php" md5="bfd4ae905964f51f07f31c5f4477afc7">
+		<file filename="core/forms/FormDateTimeInput.php" md5="0a2a83f417efc56612fa134bfa76d5d7">
 			<class name="FormDateTimeInput"/>
 		</file>
 		<file filename="core/forms/FormFileInput.class.php" md5="68e37ae2b244d07f43fe363e454fd875">
@@ -376,7 +376,7 @@
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="2dea7ad169238e63fad6f9c617ac2b68">
 			<class name="CAEDirectoryIterator"/>
 		</file>
-		<file filename="core/libs/core/Cache.php" md5="44b866c002f09d494870b434c5186e82">
+		<file filename="core/libs/core/Cache.php" md5="75f4084ec3f15399b5de5f222554017e">
 			<class name="Core\Cache"/>
 		</file>
 		<file filename="core/libs/core/Component.class.php" md5="7349e5bc05f53ec1cf6fc64a8dac5ce8">
@@ -419,7 +419,7 @@
 		<file filename="core/libs/core/FilterForm.class.php" md5="7fc2721d14be167410f99375132d87f2">
 			<class name="FilterForm"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="3bc70972113fa90cdf087a9b9bf90a17">
+		<file filename="core/libs/core/Form.class.php" md5="419361d27f5cb3c12b95ac0ae80e85b6">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -441,7 +441,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="7bae1b2886a742915df7086624d5d819">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="4bde628f7111c20dc8cfd05ac7cd1105">
+		<file filename="core/libs/core/Model.class.php" md5="f1010940ed2fc9537c0fb31b8cc19aff">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -456,7 +456,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="56818b4124a9dabd843b011c226d9b25">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="6cec03b4112918b0127483cc826dc26a">
+		<file filename="core/libs/core/PageRequest.class.php" md5="225b2d14d54de131c8052a51e4f542e8">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="bd3274a0b229e4f016c4240545ec256c">
@@ -510,6 +510,9 @@
 		</file>
 		<file filename="core/libs/core/cache/File.php" md5="46fcbcfbd3b8d216f1ff392855e1beb0">
 			<class name="Core\Cache\File"/>
+		</file>
+		<file filename="core/libs/core/cache/Memcache.php" md5="bd2f175e9a7f3a754c5a8f9eca5378f6">
+			<class name="Core\Cache\Memcache"/>
 		</file>
 		<file filename="core/libs/core/cache/backends/cacheapc.class.php" md5="e8621ab82f92c7c4beef45ba25c36bbb">
 			<class name="CacheAPC"/>
@@ -569,7 +572,7 @@
 		<file filename="core/libs/core/datamodel/backends/cassandra.backend.php" md5="31e134b544e42e232e21c94e8503183d">
 			<class name="DMI_cassandra_backend"/>
 		</file>
-		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="2ac360b1fe82bcce52d8a8bb3b2c6538">
+		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="4dcb6ac4e3435927b2df3c04b720f911">
 			<class name="Core\Datamodel\Drivers\mysqli\mysqli_backend"/>
 		</file>
 		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.schema.php" md5="1152e22804d35e35852b5e13b809e43c">
@@ -624,7 +627,7 @@
 		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="40ac29997756410b4d5772b8a15dc2fd">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="c5cbefac1547c1a4c08e8883d4f30a40">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="a00204515606919502c2543cbc950b82">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="aeeca0844b4d79ae040936f0bfdc6564">
@@ -933,7 +936,7 @@
 		<file filename="core/libs/smarty-plugins/function.email.php" md5="0dd2faff21df8947dc4a62cd9f3fdb30"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="bb5c4b7904d3c986c80e111239ac449d"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="492e8f9c10e19af8c676a6856a027829"/>
-		<file filename="core/libs/smarty-plugins/function.img.php" md5="00433e3c27b583df61634cc421fbed86"/>
+		<file filename="core/libs/smarty-plugins/function.img.php" md5="5427eb7f3a9227070c4bb4314c8ab70c"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="bb8663ae7349b945e6a4c9199c0df78e"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="3006e7c5864245da4e64e72d7f019a12"/>
 		<file filename="core/libs/smarty-plugins/function.progress_log_iframe.php" md5="82ea26ab3eac02fd41e2d720e8c4db90"/>
@@ -1262,7 +1265,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="19e1cdca6223ec714e3e35a1ac14f5ea">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="c77129c6af7392d7b3127112902dcfdf">
+		<file filename="core/models/PageModel.class.php" md5="5605ec6863d17828d1246034ee8166f7">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="3791a151027c417603c48e3a3c59a4d3">
@@ -1757,13 +1760,17 @@
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
 		<file filename="core/assets/js/admin/widgets.js" md5="08000f5af9e2d05458df069fc744e203"/>
 		<file filename="core/assets/js/core.ajaxlinks.js" md5="afcbaf5ffaebe993b37530d7606ec956"/>
+		<file filename="core/assets/js/core.ajaxlinks.min.js" md5="e944625c6a07892bc4b4de2d8defe9c8"/>
 		<file filename="core/assets/js/core.base64.js" md5="d5858756a4cf8012eb25157105718dfa"/>
 		<file filename="core/assets/js/core.context-controls.js" md5="f6747cb55af47b0f2457f2a169bb6b47"/>
-		<file filename="core/assets/js/core.email.js" md5="6a7921f38eab722338580b1c90743b48"/>
+		<file filename="core/assets/js/core.context-controls.min.js" md5="ebaca3e4872e53327acb4bec47df325c"/>
+		<file filename="core/assets/js/core.email.js" md5="b5f2a018dd9a739e19bba3b9c34ef862"/>
+		<file filename="core/assets/js/core.email.min.js" md5="20aea3e7761dbdf2817f121cf0d702ae"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
 		<file filename="core/assets/js/core.fileupload.js" md5="410f3db11a6426a7d0f9b3f27da0063c"/>
-		<file filename="core/assets/js/core.js" md5="b03400c4fac341c93e24008923662ae5"/>
+		<file filename="core/assets/js/core.js" md5="2118f03b4f84204a991378b85a28f20e"/>
 		<file filename="core/assets/js/core.listingtable.js" md5="18548b296ff1dd98108c3e13db815643"/>
+		<file filename="core/assets/js/core.min.js" md5="e3750038c81c0685c54c6cf89d020820"/>
 		<file filename="core/assets/js/core.strings.js" md5="302a98cc6b18f96cff21f06a302824f2"/>
 		<file filename="core/assets/js/html5shiv.js" md5="6f9ae49ba54ad8f6751991a0eb0b27e8"/>
 		<file filename="core/assets/js/html5shiv.min.js" md5="62ac572189514315ebfb31c43a225009"/>
