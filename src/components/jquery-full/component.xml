@@ -5,10 +5,10 @@
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
 	<provides>
-		<provide name="JQuery" version="2.1.1" type="library"/>
+		<provide name="JQuery" version="2.1.3" type="library"/>
 		<provide name="JQuery.json" version="2.4" type="library"/>
 		<provide name="JQuery.cookie" version="1.3.1" type="library"/>
-		<provide name="JQueryUI" version="1.11.2" type="library"/>
+		<provide name="JQueryUI" version="1.11.4" type="library"/>
 		<provide name="JQueryUI.NestedSortable" version="1.4.0" type="library"/>
 		<provide name="JQueryUI.readonly" version="2.0.1" type="library"/>
 		<provide name="JQueryUI.timepicker" version="1.2" type="library"/>
