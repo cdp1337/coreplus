@@ -1159,7 +1159,7 @@ class WhoisQuery {
 
 		if(empty($ip)) return false;
 
-		if((ip2long($ip) == -1) or (ip2long($ip) === false)) return false;
+		if((ip2long($ip) == -1) || (ip2long($ip) === false)) return false;
 
 		$reserved_ips = [
 			['0.0.0.0', '2.255.255.255'],

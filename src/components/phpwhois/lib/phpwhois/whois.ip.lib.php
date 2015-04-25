@@ -57,8 +57,8 @@ function cidr_conv($net) {
 
 	for($i = 0; $i < 32; $i++) {
 		if($bits1[ $i ] == $bits2[ $i ]) $final .= $bits1[ $i ];
-		if($bits1[ $i ] == 1 and $bits2[ $i ] == 0) $final .= $bits1[ $i ];
-		if($bits1[ $i ] == 0 and $bits2[ $i ] == 1) $final .= $bits2[ $i ];
+		if($bits1[ $i ] == 1 && $bits2[ $i ] == 0) $final .= $bits1[ $i ];
+		if($bits1[ $i ] == 0 && $bits2[ $i ] == 1) $final .= $bits2[ $i ];
 	}
 
 	return $start . " - " . long2ip(bindec($final));

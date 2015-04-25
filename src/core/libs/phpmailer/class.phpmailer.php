@@ -1017,7 +1017,7 @@ class PHPMailer {
 		} else {
 			$params = sprintf("-oi -f%s", $this->Sender);
 		}
-		if ($this->Sender != '' and !ini_get('safe_mode')) {
+		if ($this->Sender != '' && !ini_get('safe_mode')) {
 			$old_from = ini_get('sendmail_from');
 			ini_set('sendmail_from', $this->Sender);
 		}
@@ -1332,7 +1332,7 @@ class PHPMailer {
 			$buf       = '';
 			for ($e = 0; $e < count($line_part); $e++) {
 				$word = $line_part[$e];
-				if ($qp_mode and (strlen($word) > $length)) {
+				if ($qp_mode && (strlen($word) > $length)) {
 					$space_left = $length - strlen($buf) - $crlflen;
 					if ($e != 0) {
 						if ($space_left > 20) {
@@ -1375,7 +1375,7 @@ class PHPMailer {
 					$buf_o = $buf;
 					$buf .= ($e == 0) ? $word : (' ' . $word);
 
-					if (strlen($buf) > $length and $buf_o != '') {
+					if (strlen($buf) > $length && $buf_o != '') {
 						$message .= $buf_o . $soft_break;
 						$buf = $word;
 					}
@@ -2513,9 +2513,9 @@ class PHPMailer {
 	 */
 	protected function SetError($msg) {
 		$this->error_count++;
-		if ($this->Mailer == 'smtp' and !is_null($this->smtp)) {
+		if ($this->Mailer == 'smtp' && !is_null($this->smtp)) {
 			$lasterror = $this->smtp->getError();
-			if (!empty($lasterror) and array_key_exists('smtp_msg', $lasterror)) {
+			if (!empty($lasterror) && array_key_exists('smtp_msg', $lasterror)) {
 				$msg .= '<p>' . $this->Lang('smtp_error') . $lasterror['smtp_msg'] . "</p>\n";
 			}
 		}
