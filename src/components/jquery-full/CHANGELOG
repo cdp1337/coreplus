@@ -1,3 +1,9 @@
+JQuery-Full 1.11.4~core1
+
+	* Remove unused versions of jQuery and jQueryUI.
+	* Upgrade jQuery and jQueryUI to newest upstream versions.
+	-- Charlie Powell <charlie@evalagency.com>  Sat, 25 Apr 2015 00:22:53 -0400
+
 JQuery-Full 1.11.2~core2
 
 	* Upgrade icheck to latest upstream version, 2.0.0.
