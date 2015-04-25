@@ -93,5 +93,3 @@ class at_handler {
 		return $r;
 	}
 }
-
-?>

@@ -50,61 +50,6 @@
  *
  */
 class GeoAddressController extends Controller_2_1{
-	public function testform(){
-		if(!DEVELOPMENT_MODE){
-			// This is a development-only utility.
-			return View::ERROR_ACCESSDENIED;
-		}
-
-		$view    = $this->getView();
-		$request = $this->getPageRequest();
-		$form    = new Form();
-		$el = new GeoAddressFormInput(
-			[
-				'value'       => '1-c95d72ed523-1f12',
-				'name'        => 'physical_address',
-				'title'       => 'Physical Address',
-				'description' => 'Your Physical or Shipping Address',
-				'required'    => false,
-			]
-		);
-		$form->addElement($el);
-
-		$form->addElement(
-			'text', [
-				'name' => 'test',
-				'title' => 'A Text Input',
-				'description' => 'blah',
-				'required' => false,
-			]
-		);
-
-		$form->addElement(
-			'select', [
-				'name' => 'test',
-				'title' => 'A select Input',
-				'description' => 'blah',
-				'options' => ['foo', 'bar'],
-				'required' => true,
-			]
-		);
-
-		$form->addElement('submit');
-
-		if($request->isPost()){
-			$form->loadFrom($_POST);
-
-			$address = $form->getElement('physical_address')->get('value');
-			/** @var GeoAddressModel $address */
-			var_dump($address);
-			$address->save();
-			var_dump($address);
-			die();
-			var_dump($form);
-		}
-
-		$this->getView()->assign('form', $form);
-	}
 
 	/**
 	 * View to get the provinces for a given country

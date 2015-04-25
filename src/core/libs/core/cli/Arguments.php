@@ -222,7 +222,8 @@ class Arguments {
 
 			// I'm using a for here instead of a foreach so I can increment $i artificially if an argument is two part,
 			// ie: --option value_for_option --option2 value_for_option2
-			for($i = 0; $i < sizeof($args); $i++){
+			$size = sizeof($args);
+			for($i = 0; $i < $size; $i++){
 				/** @var string $arg */
 				$arg = $args[$i];
 

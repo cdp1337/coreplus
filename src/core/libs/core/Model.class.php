@@ -1424,7 +1424,7 @@ class Model implements ArrayAccess {
 			$model = new $c();
 			$model->setFromArray($this->_getLinkWhereArray($linkname));
 			$model->setFromArray($searchkeys);
-			var_dump($model); die();
+			//var_dump($model); die();
 			$model->load();
 			$this->_linked[$linkname]['records'][] = $model;
 			return $model;

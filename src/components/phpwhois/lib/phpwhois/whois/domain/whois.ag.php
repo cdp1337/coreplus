@@ -43,5 +43,3 @@ class ag_handler {
 		return $r;
 	}
 }
-
-?>

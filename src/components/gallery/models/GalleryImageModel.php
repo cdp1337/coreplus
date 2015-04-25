@@ -373,7 +373,8 @@ class GalleryImageModel extends Model {
 		// Don't know why some of them are in fractions... but they are.
 		foreach(array('FNumber', 'ShutterSpeedValue', 'ApertureValue', 'FocalLength', 'MaxApertureValue', 'XResolution', 'YResolution') as $k){
 			if($dat[$k] && strpos($dat[$k], '/')){
-				$dat[$k] = eval('return (' . preg_replace('#[^0-9/]#', '', $dat[$k]) . ');');
+				//$dat[$k] = eval('return (' . preg_replace('#[^0-9/]#', '', $dat[$k]) . ');');
+				$dat[$k] = preg_replace('#[^0-9/]#', '', $dat[$k]);
 			}
 		}
 
@@ -551,7 +552,8 @@ decimal places, the format would be dd/1,mmmm/100,0/1.
 
 			foreach(array('lat', 'lng', 'alt') as $k){
 				if($dat['GPS'][$k]){
-					$dat['GPS'][$k] = eval('return (' . preg_replace('#[^0-9/\+ \*\(\)]#', '', $dat['GPS'][$k]) . ');');
+					//$dat['GPS'][$k] = eval('return (' . preg_replace('#[^0-9/\+ \*\(\)]#', '', $dat['GPS'][$k]) . ');');
+					$dat['GPS'][$k] = preg_replace('#[^0-9/\+ \*\(\)]#', '', $dat['GPS'][$k]);
 				}
 			}
 

@@ -43,5 +43,3 @@ class asia_handler {
 		return $r;
 	}
 }
-
-?>

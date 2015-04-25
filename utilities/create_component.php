@@ -43,7 +43,8 @@ if($argc > 1){
 
 	// I'm using a for here instead of a foreach so I can increment $i artificially if an argument is two part,
 	// ie: --option value_for_option --option2 value_for_option2
-	for($i = 0; $i < sizeof($arguments); $i++){
+	$size = sizeof($arguments);
+	for($i = 0; $i < $size; $i++){
 
 		// The next argument is the component name.
 		$arg = $arguments[$i];

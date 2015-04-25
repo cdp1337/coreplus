@@ -73,5 +73,3 @@ class ca_handler {
 		return $r;
 	}
 }
-
-?>
