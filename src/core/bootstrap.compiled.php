@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 23 Apr 2015 23:17:38 -0400
+ * @compiled Sat, 25 Apr 2015 00:24:32 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -2404,7 +2404,6 @@ $c = $this->_getLinkClassName($linkname);
 $model = new $c();
 $model->setFromArray($this->_getLinkWhereArray($linkname));
 $model->setFromArray($searchkeys);
-var_dump($model); die();
 $model->load();
 $this->_linked[$linkname]['records'][] = $model;
 return $model;

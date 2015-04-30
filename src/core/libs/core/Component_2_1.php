@@ -1788,9 +1788,13 @@ class Component_2_1 {
 			$m->set('encrypted', $encrypted);
 
 			// Default from the xml, only if it's not already set.
-			if (!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
+			if ($m->get('value') === null || !$m->exists()){
+				$m->set('value', $confignode->getAttribute('default'));
+			}
 			// Allow configurations to overwrite any value.  This is useful on the initial installation.
-			if (isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])) $m->set('value', $_SESSION['configs'][$key]);
+			if (isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])){
+				$m->set('value', $_SESSION['configs'][$key]);
+			}
 
 			if ($m->save()) $changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
 
