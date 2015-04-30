@@ -24,7 +24,21 @@
 abstract class JQuery {
 	
 	public static function IncludeJQuery(){
-		if(\ConfigHandler::Get('/jquery/use_2_x')){
+		$use2x = \ConfigHandler::Get('/jquery/use_2_x');
+
+		if($use2x === 'auto'){
+			// Determine if it should be used based on the UA.
+			// Remember, only IE <= 8.0 requires this.
+			$ua = \Core\UserAgent::Construct();
+			if($ua->browser == 'IE' && $ua->version <= 8){
+				$use2x = '0';
+			}
+			else{
+				$use2x = '1';
+			}
+		}
+
+		if($use2x == '1'){
 			// The site is setup to use 2.x, (default as of Core 4.0).
 			\Core\view()->addScript ('js/jquery/jquery-2.1.3.js');
 		}

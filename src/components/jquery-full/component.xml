@@ -34,7 +34,7 @@
 		<scriptlibrary name="jquery.icheck" call="JQuery::Include_Icheck"/>
 	</provides>
 	<configs>
-		<config key="/jquery/use_2_x" title="Use JQuery 2.x" type="boolean" default="1" description="jQuery 2.x includes performance gains, but breaks IE 8 compatibility.  Uncheck this to revert back to 1.11 when calling jQuery if you need to support clients running old versions of IE."/>
+		<config key="/jquery/use_2_x" title="Use JQuery 2.x" type="enum" options="0|1|auto" default="auto" description="jQuery 2.x includes performance gains, but breaks IE 8 compatibility.  Uncheck this to revert back to 1.11 when calling jQuery if you need to support clients running old versions of IE."/>
 	</configs>
 	<assets>
 		<file filename="assets/css/images/animated-overlay.gif" md5="2b912f7c0653008ca28ebacda49025e7"/>
