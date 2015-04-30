@@ -1766,8 +1766,9 @@
 		<file filename="core/assets/js/core.listingtable.js" md5="18548b296ff1dd98108c3e13db815643"/>
 		<file filename="core/assets/js/core.min.js" md5="e3750038c81c0685c54c6cf89d020820"/>
 		<file filename="core/assets/js/core.strings.js" md5="302a98cc6b18f96cff21f06a302824f2"/>
-		<file filename="core/assets/js/html5shiv.js" md5="6f9ae49ba54ad8f6751991a0eb0b27e8"/>
-		<file filename="core/assets/js/html5shiv.min.js" md5="62ac572189514315ebfb31c43a225009"/>
+		<file filename="core/assets/js/html5shiv.js" md5="2079db7476a330b2d0edee6210a81534"/>
+		<file filename="core/assets/js/html5shiv.min.js" md5="0c34f014c0765b3618c51684df4a0707"/>
+		<file filename="core/assets/js/json2.js" md5="530288da8a07173f94d9690d3679ac5d"/>
 		<file filename="core/assets/js/less-1.5.0.js" md5="1052db44a3a0b1bb238ad37f3ad5e51d"/>
 		<file filename="core/assets/js/less-1.5.0.min.js" md5="2de86cf4db63fa284fe5dd0d84d4fb02"/>
 		<file filename="core/assets/js/less-1.7.1.js" md5="711eed4660fc8854febd8f10d58f77a8"/>

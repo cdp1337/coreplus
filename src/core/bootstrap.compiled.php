@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 25 Apr 2015 00:24:32 -0400
+ * @compiled Thu, 30 Apr 2015 11:47:08 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -8509,8 +8509,12 @@ $m->set('title', $title);
 $m->set('description', $description);
 $m->set('mapto', $mapto);
 $m->set('encrypted', $encrypted);
-if (!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
-if (isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])) $m->set('value', $_SESSION['configs'][$key]);
+if ($m->get('value') === null || !$m->exists()){
+$m->set('value', $confignode->getAttribute('default'));
+}
+if (isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])){
+$m->set('value', $_SESSION['configs'][$key]);
+}
 if ($m->save()) $changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
 ConfigHandler::CacheConfig($m);
 }

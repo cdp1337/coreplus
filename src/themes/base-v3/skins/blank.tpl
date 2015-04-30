@@ -6,6 +6,7 @@
 		<link href="{asset src='css/styles.css'}" type="text/css" rel="stylesheet"/>
 		<!--[if lt IE 9]>
 			<script type="text/javascript" src="{asset src='js/html5.js'}"></script>
+			<script type="text/javascript" src="{asset src='js/json2.js'}"></script>
 		<![endif]-->
 		{script library="fontawesome"}{/script}
 

@@ -8,6 +8,7 @@
 
 		<!--[if lt IE 9]>
 			<script type="text/javascript" src="{asset src='js/html5shiv.js'}"></script>
+			<script type="text/javascript" src="{asset src='js/json2.js'}"></script>
 		<![endif]-->
 		{script library="fontawesome"}{/script}
 		{* This will enable the Core Plus context menus new in 2.4.0 *}
@@ -42,6 +43,18 @@
 			</nav>
 
 			<div id="inner-wrapper" class="page-column-width-{$col_width}">
+
+				<!--[if lt IE 9]>
+					<p class="message-error">
+						Internet Explorer 8.0 and lower is unsupported and usability of this site is not guaranteed.
+						For your own safety, please upgrade to a
+						<a href="http://www.mozilla.com/firefox/" target="_blank">better</a>
+						<a href="https://www.google.com/chrome/browser/desktop/" target="_blank">browser</a>.
+						<br/><br/>
+						Or at very least upgrade to the latest version of
+						<a href="http://windows.microsoft.com/en-US/internet-explorer/download-ie" target="_blank">IE</a>.
+					</p>
+				<![endif]-->
 				
 				<nav id="breadcrumbs">
 					{if isset($breadcrumbs)}
