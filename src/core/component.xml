@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.6" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.7" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -71,7 +71,7 @@
 	</includes>
 	<files>
 		<file filename="config/configuration.example.xml" md5="a756e78cb48c89692edd57f2a3cdce28"/>
-		<file filename="core/CHANGELOG" md5="05ef4e9206e23aad567e7a8977bf33ba"/>
+		<file filename="core/CHANGELOG" md5="f86a65547a7cc4ca43edf54f27cb8074"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="4413ef9bdb639f2c0d2064c5631491cc"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
@@ -388,7 +388,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="86528c28183175e5ca94abf369c48b99">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="70a6e59f13da818887bbdecc266fe9aa">
+		<file filename="core/libs/core/Component_2_1.php" md5="8569f51ceeacccd75563e35035225363">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="96a305b9360065ee8430e12e9688867f">
@@ -441,7 +441,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="7bae1b2886a742915df7086624d5d819">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="f1010940ed2fc9537c0fb31b8cc19aff">
+		<file filename="core/libs/core/Model.class.php" md5="d0bfddcfa95521a9f6445ee5086d4d0d">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 			<class name="ModelException"/>
@@ -529,7 +529,7 @@
 		<file filename="core/libs/core/cli/Argument.php" md5="6c1cd3980952596da9577e96ecc8cfaf">
 			<class name="Core\CLI\Argument"/>
 		</file>
-		<file filename="core/libs/core/cli/Arguments.php" md5="f0f16b9e350e36810073f63c81efa829">
+		<file filename="core/libs/core/cli/Arguments.php" md5="749c615240ea210a96ccdeb56648cc9e">
 			<class name="Core\CLI\Arguments"/>
 		</file>
 		<file filename="core/libs/core/cli/CLI.class.php" md5="b56648dc2fb2edc382b769ec9d23c2fc">
@@ -566,12 +566,6 @@
 			<class name="Core\Datamodel\SchemaColumn"/>
 		</file>
 		<file filename="core/libs/core/datamodel/backends/README.backends.txt" md5="32493c6e8fefe7e190b615809cae7193"/>
-		<file filename="core/libs/core/datamodel/backends/cache.backend.php" md5="3cba63a6cb94229cd2b3af97ff3a0ceb">
-			<class name="DMI_cache_backend"/>
-		</file>
-		<file filename="core/libs/core/datamodel/backends/cassandra.backend.php" md5="31e134b544e42e232e21c94e8503183d">
-			<class name="DMI_cassandra_backend"/>
-		</file>
 		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="4dcb6ac4e3435927b2df3c04b720f911">
 			<class name="Core\Datamodel\Drivers\mysqli\mysqli_backend"/>
 		</file>
@@ -831,7 +825,7 @@
 		<file filename="core/libs/phpmailer/LICENSE" md5="278f2557e3b277b94e9a8430f6a6d0a9"/>
 		<file filename="core/libs/phpmailer/README" md5="3848f3fba320c30e5d3abfb1f39cc1ae"/>
 		<file filename="core/libs/phpmailer/changelog.txt" md5="9fb661bb50b89fbb554e3e391c866762"/>
-		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="993d1093818614c8f07084b019fc906a">
+		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="aaf01a709c6c88666cf67456f303dd38">
 			<class name="PHPMailer"/>
 			<class name="phpmailerException"/>
 		</file>
@@ -1913,6 +1907,7 @@
 		<upgrade from="4.0.3" to="4.0.4"/>
 		<upgrade from="4.0.4" to="4.0.5"/>
 		<upgrade from="4.0.5" to="4.0.6"/>
+		<upgrade from="4.0.6" to="4.0.7"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

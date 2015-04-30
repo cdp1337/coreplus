@@ -1,3 +1,23 @@
+Core Plus 4.0.7
+
+	* [Security] chmod a-x on a few files
+	* [Bug] Do not override a config value if it's set to "0".
+	* [Bug] More code styling fixes.
+	* [Bug] Flip the order of delete/save linked model saving.
+	* [Bug] Support ALIAS column types in the form builder, (or rather ignore them as appropriately).
+	* [Bug] Fix a major bug with ALIAS columns where the old column was not being renamed to the new alias
+	  as expected during upgrades.
+	* [Bug] Fix the width/height property when handling fill-area images.
+	* [Bug] Do not restrict the page to be an exact match when looking up page models.
+	* [Bug] Fix issue with reverse fuzzy URL lookups returning the baseurl instead of the rewrite url.
+	* [Bug] Fix memcache as a cache backend option.
+	* [Bug] Include showminute for DateTime pickers.
+	* [Bug] Allow text as a configuration type, (since it *is* now an allowed configuration type).
+	* Minor code cleanups and removing some legacy code.
+	* Minor javascript code style cleanups and add some minified versions of Core javascript files.
+	* New documentation and tests for ensuring the image resizing subsystem works as expected.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 30 Apr 2015 11:15:31 -0400
+
 Core Plus 4.0.6
 
 	* [Bug] Add extra spacing to some regex checks when searching through code for class names.
