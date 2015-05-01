@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.0" name="Base V3">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.1" name="Base V3">
 	<assets>
 		<file filename="assets/css/custom.css" md5="a48d02e7c72d9a0ec1adcf942f910b16"/>
 		<file filename="assets/css/styles.css" md5="02d951d9cf5ea9bafa1d392279c7a8d3"/>
@@ -8,16 +8,16 @@
 		<file filename="assets/css/styles.min.css" md5="a25f28971d02fac0cef78387e6290a99"/>
 	</assets>
 	<skins>
-		<file filename="basic.tpl" md5="fc54e131676f32ef0fbdce13951c961f" title=""/>
-		<file filename="blank.tpl" md5="63f7271e77cbb7b9360116b6ac0b3863" title=""/>
-		<file filename="wide.tpl" md5="7df81db8c88c763bb16365b7e86155a0" title=""/>
+		<file filename="basic.tpl" md5="8f78a58a8c664f1e6e24fe4587956e1f" title=""/>
+		<file filename="blank.tpl" md5="598953b552263e28f6a97c930cacbec6" title=""/>
+		<file filename="wide.tpl" md5="61140233b8792c60e62b919f76b9192a" title=""/>
 	</skins>
 	<emailskins>
 		<file filename="basic.tpl"/>
 	</emailskins>
 	<view/>
 	<otherfiles>
-		<file filename="CHANGELOG" md5="ad9b139c4df130e7e3a65cb9f412624c"/>
+		<file filename="CHANGELOG" md5="8e91ef256d1a0012bcb78805a6f8ad00"/>
 		<file filename="assets/scss/_collapsible_fieldsets.scss" md5="c34fcba3463f69af6cd82dec79526d75"/>
 		<file filename="assets/scss/_controls.scss" md5="9f345b3c4cd3f4c797b4c137366c4913"/>
 		<file filename="assets/scss/_debugging.scss" md5="c1198bfbb9dfde4845b95f855ab3d6a1"/>
@@ -144,6 +144,7 @@
 		<upgrade from="1.0.0" to="1.1.0"/>
 		<upgrade from="1.1.0" to="1.1.1"/>
 		<upgrade from="1.1.1" to="1.2.0"/>
+		<upgrade from="1.2.0" to="1.2.1"/>
 	</upgrades>
 	<screenshots>
 		<!--<screenshot file="screenshots/screen1.png" title="Home Page"/>

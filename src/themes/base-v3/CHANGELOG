@@ -1,3 +1,9 @@
+Theme/Base V3 1.2.1
+
+	* New IE8 upgrade message.
+	* Include JSON2 for IE8 and lower.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 30 Apr 2015 23:09:48 -0400
+
 Theme/Base V3 1.2.0
 
 	* [Bug] Fix the wide template on base-v3, (it wasn't wide...)
