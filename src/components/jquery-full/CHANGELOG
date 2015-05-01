@@ -1,3 +1,9 @@
+JQuery-Full 1.11.4~core2
+
+	* [Bug] Reverted theme from default to smoothness
+	* [Feature] More intelligent support for IE8.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 30 Apr 2015 23:09:08 -0400
+
 JQuery-Full 1.11.4~core1
 
 	* Remove unused versions of jQuery and jQueryUI.

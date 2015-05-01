@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.11.4~core1" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.11.4~core2" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
@@ -42,17 +42,17 @@
 		<file filename="assets/css/images/flat@2x.png" md5="0fd2837df39867a90c7a6fca9ca6fe6e"/>
 		<file filename="assets/css/images/ui-bg_diagonals-thick_18_b81900_40x40.png" md5="e460a66d4b3e093fc651e62a236267cb"/>
 		<file filename="assets/css/images/ui-bg_diagonals-thick_20_666666_40x40.png" md5="4429d568c67d8dfeb9040273ea0fb8c4"/>
-		<file filename="assets/css/images/ui-bg_flat_0_aaaaaa_40x100.png" md5="6250e15589bac28842a11e70d1aa6f94"/>
+		<file filename="assets/css/images/ui-bg_flat_0_aaaaaa_40x100.png" md5="214a3dcea5efea0d6e61ba7fa62c94be"/>
 		<file filename="assets/css/images/ui-bg_flat_10_000000_40x100.png" md5="530ddcddef2ee2e551cac395c91861fa"/>
-		<file filename="assets/css/images/ui-bg_flat_75_ffffff_40x100.png" md5="d2f6dd3ec2712648219c50d557f57178"/>
+		<file filename="assets/css/images/ui-bg_flat_75_ffffff_40x100.png" md5="beca85f644d236903a3557bb82542ab5"/>
 		<file filename="assets/css/images/ui-bg_glass_100_f6f6f6_1x400.png" md5="592a83ce3108a09166a8091da1e71715"/>
 		<file filename="assets/css/images/ui-bg_glass_100_fdf5ce_1x400.png" md5="50e5db5c04ae94a0e4b168965eb2c4cf"/>
-		<file filename="assets/css/images/ui-bg_glass_55_fbf9ee_1x400.png" md5="3faa91eae76b41f9b35ee69d88dfcd4e"/>
+		<file filename="assets/css/images/ui-bg_glass_55_fbf9ee_1x400.png" md5="4804443cd111f2553009bfe6d33f4f46"/>
 		<file filename="assets/css/images/ui-bg_glass_55_fcf0ba_1x400.png" md5="e8fa5df505b503a945e543c5816179ca"/>
-		<file filename="assets/css/images/ui-bg_glass_65_ffffff_1x400.png" md5="8adce377e6c1729831d8719a227a1ec4"/>
-		<file filename="assets/css/images/ui-bg_glass_75_dadada_1x400.png" md5="d8d975e9a56670b187d9b31a9e114f8d"/>
-		<file filename="assets/css/images/ui-bg_glass_75_e6e6e6_1x400.png" md5="02dd09f3963eaeb70344a7a859057018"/>
-		<file filename="assets/css/images/ui-bg_glass_95_fef1ec_1x400.png" md5="da135b78e22f5bf66a95a7837c1cda92"/>
+		<file filename="assets/css/images/ui-bg_glass_65_ffffff_1x400.png" md5="0de77c2db9ee022b392ab561f85ac0e2"/>
+		<file filename="assets/css/images/ui-bg_glass_75_dadada_1x400.png" md5="3c06259f8823e77c3697b38ed9efbaa6"/>
+		<file filename="assets/css/images/ui-bg_glass_75_e6e6e6_1x400.png" md5="0cb40e5b899d995cf1743813df2990d2"/>
+		<file filename="assets/css/images/ui-bg_glass_95_fef1ec_1x400.png" md5="440f3af1ea70f1c03f008ad415a88554"/>
 		<file filename="assets/css/images/ui-bg_gloss-wave_100_ece8da_500x100.png" md5="dccd449740f6fd2a875fc72ef3586b53"/>
 		<file filename="assets/css/images/ui-bg_gloss-wave_35_f6a828_500x100.png" md5="17e9f57eb8b51f9256f29568af2f75c9"/>
 		<file filename="assets/css/images/ui-bg_highlight-hard_100_f5f3e5_1x100.png" md5="c3341f3735d126758336bda6f1b21ec4"/>
@@ -60,20 +60,20 @@
 		<file filename="assets/css/images/ui-bg_highlight-hard_15_459e00_1x100.png" md5="f5613fb05e1c5ae3bd9167d85d1d72a7"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_100_eeeeee_1x100.png" md5="a53d88060dc86e0fad98083f9aa21486"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_25_67b021_1x100.png" md5="bdfc7094828e60a1e89799619382589a"/>
-		<file filename="assets/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png" md5="44ef42c1bc1ff7c8cd485b0b193135a1"/>
+		<file filename="assets/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png" md5="5a575b6f1529a198004a296bbc6a95e2"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_75_ffe45c_1x100.png" md5="da532226b8a134afef1ac143ca0a3fce"/>
 		<file filename="assets/css/images/ui-bg_highlight-soft_95_ffedad_1x100.png" md5="7103bea11984ecc1ebce02dcc10cdc75"/>
 		<file filename="assets/css/images/ui-bg_inset-soft_95_cccccc_1x100.png" md5="df2dbcfe9af96aacfe13e53b108aaf5b"/>
 		<file filename="assets/css/images/ui-bg_spotlight_80_6f6b5d_600x600.png" md5="70e145838be2f61b981cd2ecfb1cd6ab"/>
 		<file filename="assets/css/images/ui-icons_222222_256x240.png" md5="3a3c5468f484f07ac4a320d9e22acb8c"/>
 		<file filename="assets/css/images/ui-icons_228ef1_256x240.png" md5="92b29683b6a48eae7de7eb4b1cfa039c"/>
-		<file filename="assets/css/images/ui-icons_2e83ff_256x240.png" md5="764c37efbf6d7ffc176b466fadc6f2ca"/>
-		<file filename="assets/css/images/ui-icons_454545_256x240.png" md5="6b29e362591a05e270b33c4fc3f67cb2"/>
+		<file filename="assets/css/images/ui-icons_2e83ff_256x240.png" md5="d92acecad29da2ccee5c9d491267f4a2"/>
+		<file filename="assets/css/images/ui-icons_454545_256x240.png" md5="3b001ae33bd74fff64bc609ce6a55628"/>
 		<file filename="assets/css/images/ui-icons_808080_256x240.png" md5="285708190686f9ee7a48a988a0eed090"/>
 		<file filename="assets/css/images/ui-icons_847e71_256x240.png" md5="6636d8ab6693c387d7c2770dbe8c178e"/>
-		<file filename="assets/css/images/ui-icons_888888_256x240.png" md5="302ae7a7aed5730c16146b677b123638"/>
+		<file filename="assets/css/images/ui-icons_888888_256x240.png" md5="6cc57703e2f287de68f76244a618f15c"/>
 		<file filename="assets/css/images/ui-icons_8dc262_256x240.png" md5="4128e64e48bfc9c6e5ab45f29bb32da7"/>
-		<file filename="assets/css/images/ui-icons_cd0a0a_256x240.png" md5="5c78585b80fbf4342d21674a04e89c8b"/>
+		<file filename="assets/css/images/ui-icons_cd0a0a_256x240.png" md5="fdc58c14e91fbb086f953818c525a7ee"/>
 		<file filename="assets/css/images/ui-icons_eeeeee_256x240.png" md5="2e6d7e1cca1cd751a6e156feb381eb0f"/>
 		<file filename="assets/css/images/ui-icons_ef8c08_256x240.png" md5="f492970693640894fb54166c75dd2925"/>
 		<file filename="assets/css/images/ui-icons_ffd27a_256x240.png" md5="dda1b6f694b0d196aefc66a1d6d758f6"/>
@@ -86,8 +86,8 @@
 		<file filename="assets/css/jquery-ui-1.10.4.custom.min.css" md5="d7fdbf6b4f0bd6831fe1b6ca4b701add"/>
 		<file filename="assets/css/jquery-ui-1.11.2.css" md5="0bbc1c4cefe64688f7177848baf72520"/>
 		<file filename="assets/css/jquery-ui-1.11.2.min.css" md5="c3fb533136297b8478b4826d35c2eca0"/>
-		<file filename="assets/css/jquery-ui-1.11.4.css" md5="cc7d25d4acbbd2ffc2f3d9c6c315bb58"/>
-		<file filename="assets/css/jquery-ui-1.11.4.min.css" md5="47880ca822eb35148c5a780ec3a2c416"/>
+		<file filename="assets/css/jquery-ui-1.11.4.css" md5="f13d3c58407b2bac7d773900d84754f5"/>
+		<file filename="assets/css/jquery-ui-1.11.4.min.css" md5="cfacb039c20e0c0c52c438e86cc175d7"/>
 		<file filename="assets/css/jquery-ui-1.8.22.css" md5="37aee7c9e30bde3f8d1adc765619b767"/>
 		<file filename="assets/css/jquery-ui-1.9.0.css" md5="7b1117ce0cdc6d0614c1f7b106d69bd6"/>
 		<file filename="assets/css/jquery.icheck.css" md5="a75642d46565de832b31f2d073d25272"/>
@@ -131,9 +131,9 @@
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="ac123789c950665cbd4524b35c3f3670"/>
+		<file filename="CHANGELOG" md5="b6e3fa7212685413286fbf62ece429a0"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="270d6f94f5a3ffeba2d895098e815cb5">
+		<file filename="JQuery.lib.php" md5="e6054a12f52fafc9ea3e910053be498b">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
@@ -172,6 +172,7 @@
 		<upgrade from="1.11.0~core1" to="1.11.2~core1"/>
 		<upgrade from="1.11.2~core1" to="1.11.2~core2"/>
 		<upgrade from="1.11.2~core2" to="1.11.4~core1"/>
+		<upgrade from="1.11.4~core1" to="1.11.4~core2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
