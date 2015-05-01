@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.7" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.8" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -71,7 +71,7 @@
 	</includes>
 	<files>
 		<file filename="config/configuration.example.xml" md5="a756e78cb48c89692edd57f2a3cdce28"/>
-		<file filename="core/CHANGELOG" md5="f86a65547a7cc4ca43edf54f27cb8074"/>
+		<file filename="core/CHANGELOG" md5="963d9abafbc5ba80b6a68f759ab99a95"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
 		<file filename="core/bootstrap.php" md5="4413ef9bdb639f2c0d2064c5631491cc"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
@@ -1909,6 +1909,7 @@
 		<upgrade from="4.0.4" to="4.0.5"/>
 		<upgrade from="4.0.5" to="4.0.6"/>
 		<upgrade from="4.0.6" to="4.0.7"/>
+		<upgrade from="4.0.7" to="4.0.8"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
