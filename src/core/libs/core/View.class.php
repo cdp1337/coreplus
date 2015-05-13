@@ -953,6 +953,10 @@ class View {
 				header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
 			}
 
+			if(\ConfigHandler::Get('/core/security/csp-frame-ancestors')){
+				header('Content-Security-Policy: frame-ancestors \'self\' ' . \ConfigHandler::Get('/core/security/content-security-policy'));
+			}
+
 			if($this->updated !== null){
 				header('Last-Modified: ' . Time::FormatGMT($this->updated, Time::TIMEZONE_USER, Time::FORMAT_RFC2822));
 				//header('Last-Modified: ' . Time::FormatGMT($this->updated, Time::TIMEZONE_USER, Time::FORMAT_ISO8601));
