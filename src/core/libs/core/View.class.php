@@ -1088,26 +1088,6 @@ class View {
 			$control->link = Core::ResolveLink($link);
 		}
 
-		// Some legacy updates for the icon.
-		if(!$control->icon){
-			switch($control->class){
-				case 'add':
-				case 'edit':
-				case 'directory':
-					$control->icon = $control->class;
-					break;
-				case 'delete':
-					$control->icon = 'remove';
-					break;
-				case 'view':
-					$control->icon = 'eye-open';
-					break;
-				default:
-					$control->icon = $control->class;
-					break;
-			}
-		}
-
 		// Is this control the current page?  If so don't display it.
 		if($control->link != Core::ResolveLink($this->baseurl)){
 			$this->controls[] = $control;

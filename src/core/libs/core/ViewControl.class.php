@@ -42,6 +42,8 @@ class ViewControls implements Iterator, ArrayAccess {
 
 	private $_pos = 0;
 
+	private $_data = [];
+
 	/**
 	 * (PHP 5 &gt;= 5.0.0)<br/>
 	 * Return the current element
@@ -209,15 +211,40 @@ class ViewControls implements Iterator, ArrayAccess {
 	}
 
 	/**
+	 * Add a single link to this control set.
+	 *
+	 * Useful for the times when you cannot access the ViewControls as an array.
+	 *
+	 * @param ViewControl $link
+	 */
+	public function addLink($link){
+		$this[] = $link;
+	}
+
+	/**
 	 * Get this control set as HTML
 	 *
 	 * @return string HTML
 	 */
 	public function fetch(){
+		if(!$this->hasLinks()){
+			return '';
+		}
+
 		$ulclass = ['controls'];
 		if($this->hovercontext) $ulclass[] = 'controls-hover';
 
-		$html = '<ul class="' . implode(' ', $ulclass) . '">';
+		$atts = [];
+		$atts['class'] = implode(' ', $ulclass);
+		foreach($this->_data as $k => $v){
+			$atts['data-' . $k] = $v;
+		}
+
+		$html = '<ul ';
+		foreach($atts as $k => $v){
+			$html .= $k . '="' . str_replace('"', '&quot;', $v) . '" ';
+		}
+		$html .= '>';
 
 		foreach($this->_links as $l){
 			$html .= $l->fetch();
@@ -236,6 +263,14 @@ class ViewControls implements Iterator, ArrayAccess {
 	 */
 	public function hasLinks(){
 		return (sizeof($this->_links) > 0);
+	}
+
+	public function setProxyText($text){
+		$this->_data['proxy-text'] = $text;
+	}
+
+	public function setProxyForce($force){
+		$this->_data['proxy-force'] = $force ? '1' : '0';
 	}
 
 	/**
@@ -351,6 +386,21 @@ class ViewControl implements ArrayAccess {
 	 */
 	public function fetch(){
 		$html = '';
+
+		// Some legacy updates for the icon.
+		if(!$this->icon){
+			switch($this->class){
+				case 'delete':
+					$this->icon = 'remove';
+					break;
+				case 'view':
+					$this->icon = 'eye-open';
+					break;
+				default:
+					$this->icon = $this->class;
+					break;
+			}
+		}
 
 		$html .= '<li' . ($this->class ? (' class="' . $this->class . '"') : '') . '>';
 		if($this->link){
